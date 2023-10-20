@@ -1,0 +1,41 @@
+# Copyright (c) 2025 Arista Networks, Inc.
+# Use of this source code is governed by the Apache License 2.0
+# that can be found in the LICENSE file.
+# yaml-language-server: $schema=../../../_schema/avd_meta_schema.json
+# Line above is used by RedHat's YAML Schema vscode extension
+# Use Ctrl + Space to get suggestions for every field. Autocomplete will pop up after typing 2 letters.
+type: dict
+keys:
+  dns_settings:
+    documentation_options:
+      table: management-settings
+    type: dict
+    description: |-
+      DNS settings
+      For DNS source-interfaces see "source_interfaces.domain_lookup"
+    keys:
+      servers:
+        type: list
+        $ref: eos_cli_config_gen#/keys/ip_name_servers
+        items:
+          type: dict
+          keys:
+            vrf:
+              type: str
+              description: |-
+                VRF Name.
+                Can be used in combination with "use_mgmt_interface_vrf" and "use_inband_mgmt_vrf" to configure the DNS server under multiple VRFs.
+              convert_types:
+                - int
+            use_mgmt_interface_vrf:
+              type: bool
+              description:
+                Configure the DNS server under the VRF set with "mgmt_interface_vrf".
+                Ignored if 'mgmt_ip' or 'ipv6_mgmt_ip' are not configured for the device, so if the host is only configured with this VRF, the server will not be configured at all.
+                Can be used in combination with "vrf" and "use_inband_mgmt_vrf" to configure the DNS server under multiple VRFs.
+            use_inband_mgmt_vrf:
+              type: bool
+              description:
+                Configure the DNS server under the VRF set with "inband_mgmt_vrf".
+                Ignored if inband management is not configured for the device, so if the host is only configured with this VRF, the server will not be configured at all.
+                Can be used in combination with "vrf" and "use_mgmt_interface_vrf" to configure the DNS server under multiple VRFs.

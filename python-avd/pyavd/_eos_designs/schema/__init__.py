@@ -2850,6 +2850,110 @@ class EosDesigns(EosDesignsRootModel):
 
                 """
 
+    class DnsSettings(AvdModel):
+        """Subclass of AvdModel."""
+
+        class ServersItem(AvdModel):
+            """Subclass of AvdModel."""
+
+            _fields: ClassVar[dict] = {
+                "vrf": {"type": str},
+                "use_mgmt_interface_vrf": {"type": bool},
+                "use_inband_mgmt_vrf": {"type": bool},
+                "ip_address": {"type": str},
+                "priority": {"type": int},
+                "_custom_data": {"type": dict},
+            }
+            vrf: str | None
+            """
+            VRF Name.
+            Can be used in combination with "use_mgmt_interface_vrf" and "use_inband_mgmt_vrf" to
+            configure the DNS server under multiple VRFs.
+            """
+            use_mgmt_interface_vrf: bool | None
+            """
+            Configure the DNS server under the VRF set with "mgmt_interface_vrf". Ignored if 'mgmt_ip' or
+            'ipv6_mgmt_ip' are not configured for the device, so if the host is only configured with this VRF,
+            the server will not be configured at all. Can be used in combination with "vrf" and
+            "use_inband_mgmt_vrf" to configure the DNS server under multiple VRFs.
+            """
+            use_inband_mgmt_vrf: bool | None
+            """
+            Configure the DNS server under the VRF set with "inband_mgmt_vrf". Ignored if inband management is
+            not configured for the device, so if the host is only configured with this VRF, the server will not
+            be configured at all. Can be used in combination with "vrf" and "use_mgmt_interface_vrf" to
+            configure the DNS server under multiple VRFs.
+            """
+            ip_address: str
+            """IPv4 or IPv6 address for DNS server."""
+            priority: int | None
+            """Priority value (lower is first)."""
+            _custom_data: dict[str, Any]
+
+            if TYPE_CHECKING:
+
+                def __init__(
+                    self,
+                    *,
+                    vrf: str | None | UndefinedType = Undefined,
+                    use_mgmt_interface_vrf: bool | None | UndefinedType = Undefined,
+                    use_inband_mgmt_vrf: bool | None | UndefinedType = Undefined,
+                    ip_address: str | UndefinedType = Undefined,
+                    priority: int | None | UndefinedType = Undefined,
+                    _custom_data: dict[str, Any] | UndefinedType = Undefined,
+                ) -> None:
+                    """
+                    ServersItem.
+
+
+                    Subclass of AvdModel.
+
+                    Args:
+                        vrf:
+                           VRF Name.
+                           Can be used in combination with "use_mgmt_interface_vrf" and "use_inband_mgmt_vrf" to
+                           configure the DNS server under multiple VRFs.
+                        use_mgmt_interface_vrf:
+                           Configure the DNS server under the VRF set with "mgmt_interface_vrf". Ignored if 'mgmt_ip' or
+                           'ipv6_mgmt_ip' are not configured for the device, so if the host is only configured with this VRF,
+                           the server will not be configured at all. Can be used in combination with "vrf" and
+                           "use_inband_mgmt_vrf" to configure the DNS server under multiple VRFs.
+                        use_inband_mgmt_vrf:
+                           Configure the DNS server under the VRF set with "inband_mgmt_vrf". Ignored if inband management is
+                           not configured for the device, so if the host is only configured with this VRF, the server will not
+                           be configured at all. Can be used in combination with "vrf" and "use_mgmt_interface_vrf" to
+                           configure the DNS server under multiple VRFs.
+                        ip_address: IPv4 or IPv6 address for DNS server.
+                        priority: Priority value (lower is first).
+                        _custom_data: _custom_data
+
+                    """
+
+        class Servers(AvdList[ServersItem]):
+            """Subclass of AvdList with `ServersItem` items."""
+
+        Servers._item_type = ServersItem
+
+        _fields: ClassVar[dict] = {"servers": {"type": Servers}, "_custom_data": {"type": dict}}
+        servers: Servers
+        """Subclass of AvdList with `ServersItem` items."""
+        _custom_data: dict[str, Any]
+
+        if TYPE_CHECKING:
+
+            def __init__(self, *, servers: Servers | UndefinedType = Undefined, _custom_data: dict[str, Any] | UndefinedType = Undefined) -> None:
+                """
+                DnsSettings.
+
+
+                Subclass of AvdModel.
+
+                Args:
+                    servers: Subclass of AvdList with `ServersItem` items.
+                    _custom_data: _custom_data
+
+                """
+
     class EosDesignsCustomTemplatesItem(AvdModel):
         """Subclass of AvdModel."""
 
@@ -54443,6 +54547,7 @@ class EosDesigns(EosDesignsRootModel):
         "default_underlay_p2p_port_channel_description": {"type": str, "default": "P2P_{peer}_{peer_interface}"},
         "default_vrf_diag_loopback_description": {"type": str, "default": "DIAG_VRF_{vrf}"},
         "design": {"type": Design},
+        "dns_settings": {"type": DnsSettings},
         "enable_trunk_groups": {"type": bool, "default": False},
         "eos_designs_custom_templates": {"type": EosDesignsCustomTemplates},
         "eos_designs_documentation": {"type": EosDesignsDocumentation},
@@ -55245,6 +55350,13 @@ class EosDesigns(EosDesignsRootModel):
     """
     design: Design
     """Subclass of AvdModel."""
+    dns_settings: DnsSettings
+    """
+    DNS settings
+    For DNS source-interfaces see "source_interfaces.domain_lookup"
+
+    Subclass of AvdModel.
+    """
     enable_trunk_groups: bool
     """
     Enable Trunk Group support across eos_designs.
@@ -56542,6 +56654,7 @@ class EosDesigns(EosDesignsRootModel):
             default_underlay_p2p_port_channel_description: str | UndefinedType = Undefined,
             default_vrf_diag_loopback_description: str | UndefinedType = Undefined,
             design: Design | UndefinedType = Undefined,
+            dns_settings: DnsSettings | UndefinedType = Undefined,
             enable_trunk_groups: bool | UndefinedType = Undefined,
             eos_designs_custom_templates: EosDesignsCustomTemplates | UndefinedType = Undefined,
             eos_designs_documentation: EosDesignsDocumentation | UndefinedType = Undefined,
@@ -57079,6 +57192,11 @@ class EosDesigns(EosDesignsRootModel):
                    By default the description is
                    templated from the VRF name.
                 design: Subclass of AvdModel.
+                dns_settings:
+                   DNS settings
+                   For DNS source-interfaces see "source_interfaces.domain_lookup"
+
+                   Subclass of AvdModel.
                 enable_trunk_groups:
                    Enable Trunk Group support across eos_designs.
                    Warning: Because of the nature of the EOS Trunk Group

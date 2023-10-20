@@ -11,6 +11,7 @@ from pyavd._errors import AristaAvdInvalidInputsError, AristaAvdMissingVariableE
 from pyavd._utils import default, get, strip_empties_from_dict, strip_null_from_data
 from pyavd.j2filters import natural_sort
 
+from .ip_name_servers import IpNameServersMixin
 from .ntp import NtpMixin
 from .router_general import RouterGeneralMixin
 from .snmp_server import SnmpServerMixin
@@ -19,7 +20,7 @@ if TYPE_CHECKING:
     from pyavd._eos_designs.schema import EosDesigns
 
 
-class AvdStructuredConfigBase(StructuredConfigGenerator, NtpMixin, SnmpServerMixin, RouterGeneralMixin):
+class AvdStructuredConfigBase(StructuredConfigGenerator, IpNameServersMixin, NtpMixin, SnmpServerMixin, RouterGeneralMixin):
     """
     The AvdStructuredConfig Class is imported by "get_structured_config" to render parts of the structured config.
 
@@ -366,19 +367,6 @@ class AvdStructuredConfigBase(StructuredConfigGenerator, NtpMixin, SnmpServerMix
         return queue_monitor_length
 
     @cached_property
-    def ip_name_servers(self) -> list | None:
-        """ip_name_servers set based on name_servers data-model and mgmt_interface_vrf."""
-        ip_name_servers = [
-            {
-                "ip_address": name_server,
-                "vrf": self.inputs.mgmt_interface_vrf,
-            }
-            for name_server in self.inputs.name_servers
-        ]
-
-        return ip_name_servers or None
-
-    @cached_property
     def redundancy(self) -> dict | None:
         """Redundancy set based on redundancy data-model."""
         if self.inputs.redundancy.protocol:
@@ -666,17 +654,6 @@ class AvdStructuredConfigBase(StructuredConfigGenerator, NtpMixin, SnmpServerMix
 
         if source_interfaces := self._build_source_interfaces(inputs.mgmt_interface, inputs.inband_mgmt_interface, "IP SSH Client"):
             return source_interfaces
-
-        return None
-
-    @cached_property
-    def ip_domain_lookup(self) -> dict | None:
-        """Parse source_interfaces.domain_lookup and return dict with nested source_interfaces list."""
-        if not (inputs := self.inputs.source_interfaces.domain_lookup):
-            return None
-
-        if source_interfaces := self._build_source_interfaces(inputs.mgmt_interface, inputs.inband_mgmt_interface, "IP Domain Lookup"):
-            return {"source_interfaces": source_interfaces}
 
         return None
 

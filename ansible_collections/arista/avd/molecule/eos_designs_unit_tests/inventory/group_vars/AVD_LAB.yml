@@ -66,11 +66,16 @@ snmp_settings:
 mgmt_gateway: 192.168.200.5
 
 # dns servers.
-name_servers:
-  - 192.168.200.5
-  - 8.8.8.8
-  - 2001:db8::1
-  - 2001:db8::2
+dns_settings:
+  servers:
+    - ip_address: 192.168.200.5
+      use_mgmt_interface_vrf: true
+    - ip_address: 8.8.8.8
+      use_mgmt_interface_vrf: true
+    - ip_address: 2001:db8::1
+      use_mgmt_interface_vrf: true
+    - ip_address: 2001:db8::2
+      use_mgmt_interface_vrf: true
 
 # Management api-http
 management_eapi:

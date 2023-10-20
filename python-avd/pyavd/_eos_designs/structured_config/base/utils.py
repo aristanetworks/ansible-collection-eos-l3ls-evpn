@@ -19,7 +19,9 @@ class UtilsMixin:
     Class should only be used as Mixin to a AvdStructuredConfig class or other Mixins.
     """
 
-    def _build_source_interfaces(self: AvdStructuredConfigBase, include_mgmt_interface: bool, include_inband_mgmt_interface: bool, error_context: str) -> list:
+    def _build_source_interfaces(
+        self: AvdStructuredConfigBase, include_mgmt_interface: bool, include_inband_mgmt_interface: bool, error_context: str
+    ) -> list[dict]:
         """
         Return list of source interfaces with VRFs.
 

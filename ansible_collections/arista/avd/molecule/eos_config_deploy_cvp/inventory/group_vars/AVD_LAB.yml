@@ -23,9 +23,12 @@ cvp_ingestauth_key: telarista
 mgmt_gateway: 192.168.200.5
 
 # dns servers.
-name_servers:
-  - 192.168.200.5
-  - 8.8.8.8
+dns_settings:
+  servers:
+    - ip_address: 192.168.200.5
+      use_mgmt_interface_vrf: true
+    - ip_address: 8.8.8.8
+      use_mgmt_interface_vrf: true
 
 # NTP Servers IP or DNS name, first NTP server will be preferred and sourced from Management
 ntp_settings:
