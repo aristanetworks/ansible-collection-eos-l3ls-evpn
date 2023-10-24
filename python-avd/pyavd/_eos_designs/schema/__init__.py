@@ -2934,14 +2934,22 @@ class EosDesigns(EosDesignsRootModel):
 
         Servers._item_type = ServersItem
 
-        _fields: ClassVar[dict] = {"servers": {"type": Servers}, "_custom_data": {"type": dict}}
+        _fields: ClassVar[dict] = {"domain": {"type": str}, "servers": {"type": Servers}, "_custom_data": {"type": dict}}
+        domain: str | None
+        """DNS domain name like 'fabric.local'"""
         servers: Servers
         """Subclass of AvdList with `ServersItem` items."""
         _custom_data: dict[str, Any]
 
         if TYPE_CHECKING:
 
-            def __init__(self, *, servers: Servers | UndefinedType = Undefined, _custom_data: dict[str, Any] | UndefinedType = Undefined) -> None:
+            def __init__(
+                self,
+                *,
+                domain: str | None | UndefinedType = Undefined,
+                servers: Servers | UndefinedType = Undefined,
+                _custom_data: dict[str, Any] | UndefinedType = Undefined,
+            ) -> None:
                 """
                 DnsSettings.
 
@@ -2949,6 +2957,7 @@ class EosDesigns(EosDesignsRootModel):
                 Subclass of AvdModel.
 
                 Args:
+                    domain: DNS domain name like 'fabric.local'
                     servers: Subclass of AvdList with `ServersItem` items.
                     _custom_data: _custom_data
 

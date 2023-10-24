@@ -21,6 +21,7 @@ management_api_http:
   enable_vrfs:
   - name: MGMT
   enable_https: true
+dns_domain: testfabric.local
 ip_name_servers:
 - ip_address: 10.10.10.1
   priority: 1

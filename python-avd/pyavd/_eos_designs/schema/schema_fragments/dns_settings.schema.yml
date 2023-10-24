@@ -14,6 +14,9 @@ keys:
       DNS settings
       For DNS source-interfaces see "source_interfaces.domain_lookup"
     keys:
+      domain:
+        type: str
+        description: DNS domain name like 'fabric.local'
       servers:
         type: list
         $ref: eos_cli_config_gen#/keys/ip_name_servers

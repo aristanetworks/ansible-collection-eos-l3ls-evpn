@@ -23,20 +23,19 @@ class IpNameServersMixin(UtilsMixin):
     """
 
     @cached_property
-    def ip_name_servers(self: AvdStructuredConfigBase) -> None:
+    def dns_settings(self: AvdStructuredConfigBase) -> None:
         """
-        ip_name_servers and ip_domain_lookup set based on "dns_settings" data-model or ip_name_servers based on the deprecated "name_servers" input data-model.
+        Parse "dns_settings" data-model and set ip_name_servers, ip_domain_lookup, dns_domain accordingly.
 
         Servers in the new data model may have management VRFs dynamically set.
+
+        This will not be set together with any of the deprecated models (enforced by schema).
         """
-        # Parse the deprecated name_servers data-model.
-        # TODO: Remove support in AVD 6.0.0
-        if self.inputs.name_servers:
-            # This will not be set together with dns_settings.servers (enforced by schema), so we can return early.
-            self.structured_config.ip_name_servers.extend(
-                [EosCliConfigGen.IpNameServersItem(ip_address=name_server, vrf=self.inputs.mgmt_interface_vrf) for name_server in self.inputs.name_servers]
-            )
+        if not self.inputs.dns_settings:
             return
+
+        if self.inputs.dns_settings.domain:
+            self.structured_config.dns_domain = self.inputs.dns_settings.domain
 
         has_mgmt_ip = bool(self.shared_utils.node_config.mgmt_ip or self.shared_utils.node_config.ipv6_mgmt_ip)
         vrf_source_interface_map = {}
@@ -79,13 +78,12 @@ class IpNameServersMixin(UtilsMixin):
     @cached_property
     def ip_domain_lookup(self: AvdStructuredConfigBase) -> dict | None:
         """
-        ip_domain_lookup set based on "dns_settings" data-model or the deprecated "source_interfaces.domain_lookup" input data-model.
+        ip_domain_lookup set based on the deprecated "source_interfaces.domain_lookup" input data-model.
 
-        Servers in the new data model may have management VRFs dynamically set.
+        This will not be set together with dns_settings (enforced by schema).
+
+        TODO: Remove support in AVD 6.0.0
         """
-        """Parse source_interfaces.domain_lookup and return dict with nested source_interfaces list."""
-        # Parse the deprecated source_interfaces.domain_lookup data-model.
-        # TODO: Remove support in AVD 6.0.0
         if self.inputs.source_interfaces.domain_lookup:
             for source_interface in self._build_source_interfaces(
                 self.inputs.source_interfaces.domain_lookup.mgmt_interface,
@@ -94,4 +92,16 @@ class IpNameServersMixin(UtilsMixin):
             ):
                 self.structured_config.ip_domain_lookup.source_interfaces.append_new(name=source_interface["name"], vrf=source_interface.get("vrf"))
 
-        # The new data model is parsed inside ip_name_servers and ip_domain_lookup is set there to avoid repeating the same logic here.
+    @cached_property
+    def ip_name_servers(self: AvdStructuredConfigBase) -> None:
+        """
+        ip_name_servers set based on the deprecated "name_servers" input data-model.
+
+        This will not be set together with dns_settings (enforced by schema).
+
+        TODO: Remove support in AVD 6.0.0
+        """
+        if self.inputs.name_servers:
+            self.structured_config.ip_name_servers.extend(
+                [EosCliConfigGen.IpNameServersItem(ip_address=name_server, vrf=self.inputs.mgmt_interface_vrf) for name_server in self.inputs.name_servers]
+            )
