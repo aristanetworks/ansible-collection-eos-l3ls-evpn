@@ -20,6 +20,8 @@ keys:
       servers:
         type: list
         $ref: eos_cli_config_gen#/keys/ip_name_servers
+        # TODO: Remove this comment in AVD5.0 when the old key has been removed.
+        description: This key replaces the deprecated `name_servers`. Both keys should not be used at the same time.
         items:
           type: dict
           keys:

@@ -25,6 +25,14 @@
 {%         endif %}
 {%     endfor %}
 {% endfor %}
+{% set mgmt_interface_vrf = hostvars[groups[fabric_group][0]].mgmt_interface_vrf | arista.avd.default("MGMT") %}
+{% set nameservers = hostvars[groups[fabric_group][0]].name_servers | arista.avd.default([]) + (
+                         hostvars[groups[fabric_group][0]].dns_settings.servers | arista.avd.default([]) |
+                             selectattr("vrf", "arista.avd.defined", mgmt_interface_vrf) | map(attribute="ip_address")
+                     ) + (
+                         hostvars[groups[fabric_group][0]].dns_settings.servers | arista.avd.default([]) |
+                             selectattr("use_mgmt_interface_vrf", "arista.avd.defined", true) | map(attribute="ip_address")
+                     ) | unique %}
 {# DHCP YAML configuration rendering #}
 ---
 ztp:
@@ -33,10 +41,10 @@ ztp:
 {% if hostvars[groups[fabric_group][0]]['mgmt_gateway'] is arista.avd.defined %}
     gateway: {{ hostvars[groups[fabric_group][0]]['mgmt_gateway'] }}
 {% endif %}
-{% if hostvars[groups[fabric_group][0]]['name_servers'] is arista.avd.defined %}
+{% if nameservers %}
     nameservers:
-{%     for name_server in hostvars[groups[fabric_group][0]]['name_servers'] | arista.avd.natural_sort %}
-      - {{ name_server }}
+{%     for nameserver in nameservers | arista.avd.natural_sort %}
+      - {{ nameserver }}
 {%     endfor %}
 {% endif %}
 {% if ztp_mac_source == 'system' %}
@@ -53,10 +61,10 @@ ztp:
 {% if hostvars[groups[fabric_group][0]]['mgmt_gateway'] is arista.avd.defined %}
         gateway: {{ hostvars[groups[fabric_group][0]]['mgmt_gateway'] }}
 {% endif %}
-{% if hostvars[groups[fabric_group][0]]['name_servers'] is arista.avd.defined %}
+{% if nameservers %}
         nameservers:
-{%     for name_server in hostvars[groups[fabric_group][0]]['name_servers'] | arista.avd.natural_sort %}
-          - {{ name_server }}
+{%     for nameserver in nameservers | arista.avd.natural_sort %}
+          - {{ nameserver }}
 {%     endfor %}
 {% endif %}
 {% if ztp_pool_start is arista.avd.defined %}

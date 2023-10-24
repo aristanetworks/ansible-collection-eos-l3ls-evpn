@@ -30,6 +30,11 @@ dns_settings:
     - ip_address: 8.8.8.8
       use_mgmt_interface_vrf: true
 
+# test that we can still use the old key.
+# TODO: AVD 5.0.0 move this server to the dns_settings above.
+name_servers:
+  - 192.168.200.5
+
 # NTP Servers IP or DNS name, first NTP server will be preferred and sourced from Management
 ntp_settings:
   server_vrf: use_mgmt_interface_vrf

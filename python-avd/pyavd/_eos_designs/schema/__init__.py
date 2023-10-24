@@ -2938,7 +2938,10 @@ class EosDesigns(EosDesignsRootModel):
         domain: str | None
         """DNS domain name like 'fabric.local'"""
         servers: Servers
-        """Subclass of AvdList with `ServersItem` items."""
+        """
+        This key replaces the deprecated `name_servers`. Both keys should not be used at the same time.
+        Subclass of AvdList with `ServersItem` items.
+        """
         _custom_data: dict[str, Any]
 
         if TYPE_CHECKING:
@@ -2958,7 +2961,9 @@ class EosDesigns(EosDesignsRootModel):
 
                 Args:
                     domain: DNS domain name like 'fabric.local'
-                    servers: Subclass of AvdList with `ServersItem` items.
+                    servers:
+                       This key replaces the deprecated `name_servers`. Both keys should not be used at the same time.
+                       Subclass of AvdList with `ServersItem` items.
                     _custom_data: _custom_data
 
                 """
