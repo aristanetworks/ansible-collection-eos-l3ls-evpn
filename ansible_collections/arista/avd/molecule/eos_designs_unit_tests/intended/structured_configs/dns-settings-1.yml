@@ -1,0 +1,41 @@
+hostname: dns-settings-1
+is_deployed: true
+service_routing_protocols_model: multi-agent
+vlan_internal_order:
+  allocation: ascending
+  range:
+    beginning: 1006
+    ending: 1199
+vrfs:
+- name: MGMT
+  ip_routing: false
+management_interfaces:
+- name: Management1
+  description: oob_management
+  shutdown: false
+  vrf: MGMT
+  ip_address: 192.168.0.2/24
+  gateway: null
+  type: oob
+management_api_http:
+  enable_vrfs:
+  - name: MGMT
+  enable_https: true
+ip_name_servers:
+- ip_address: 10.10.10.1
+  priority: 1
+  vrf: default
+- ip_address: 10.10.10.1
+  priority: 1
+  vrf: MGMT
+- ip_address: 10.10.10.2
+  priority: 1
+  vrf: default
+- ip_address: 10.10.10.3
+  vrf: default
+- ip_address: 10.10.10.5
+  vrf: MGMT
+- ip_address: 10.10.10.6
+  vrf: MGMT
+ip_igmp_snooping:
+  globally_enabled: true

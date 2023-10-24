@@ -1,0 +1,50 @@
+type: l2leaf
+l2leaf:
+  defaults:
+  nodes:
+    - name: dns-settings-1
+      mgmt_ip: 192.168.0.2/24
+
+dns_settings:
+  servers:
+      # Expected two times in the output. Once for vrf default and once for MGMT vrf.
+    - ip_address: 10.10.10.1
+      priority: 1
+      vrf: default
+      use_mgmt_interface_vrf: true
+      use_inband_mgmt_vrf: true
+
+      # Expected once in the output for vrf default.
+    - ip_address: 10.10.10.2
+      priority: 1
+      vrf: default
+      use_mgmt_interface_vrf: false
+      use_inband_mgmt_vrf: false
+
+      # Expected once in the output for vrf default.
+    - ip_address: 10.10.10.3
+      # priority: 1
+      # vrf: default
+      use_mgmt_interface_vrf: false
+      use_inband_mgmt_vrf: false
+
+      # This one should not be in the output, since this host has no inband mgmt
+    - ip_address: 10.10.10.4
+      # priority: 1
+      # vrf: default
+      # use_mgmt_interface_vrf: false
+      use_inband_mgmt_vrf: true
+
+      # Expected once in the output for vrf MGMT.
+    - ip_address: 10.10.10.5
+      # priority: 1
+      vrf: MGMT
+      use_mgmt_interface_vrf: true
+      # use_inband_mgmt_vrf: true
+
+      # Expected once in the output for vrf MGMT.
+    - ip_address: 10.10.10.6
+      # priority: 1
+      # vrf: MGMT
+      use_mgmt_interface_vrf: true
+      # use_inband_mgmt_vrf: true
