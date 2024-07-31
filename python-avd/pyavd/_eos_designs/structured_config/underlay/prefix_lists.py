@@ -5,8 +5,11 @@ from __future__ import annotations
 
 import ipaddress
 from functools import cached_property
+from ipaddress import ip_network
 from typing import TYPE_CHECKING
 
+from pyavd._utils import get, get_item
+from pyavd.j2filters import natural_sort
 from .utils import UtilsMixin
 
 if TYPE_CHECKING:
@@ -19,6 +22,16 @@ class PrefixListsMixin(UtilsMixin):
 
     Class should only be used as Mixin to a AvdStructuredConfig class.
     """
+
+    @cached_property
+    def _avd_peers(self) -> list:
+        """
+        Returns a list of peers
+
+        This cannot be loaded in shared_utils since it will not be calculated until EosDesignsFacts has been rendered
+        and shared_utils are shared between EosDesignsFacts and AvdStructuredConfig classes like this one.
+        """
+        return natural_sort(get(self._hostvars, f"avd_topology_peers..{self.shared_utils.hostname}", separator="..", default=[]))
 
     @cached_property
     def prefix_lists(self: AvdStructuredConfigUnderlay) -> list | None:
@@ -67,6 +80,37 @@ class PrefixListsMixin(UtilsMixin):
 
             if sequence_numbers:
                 prefix_lists.append({"name": "PL-WAN-HA-PEER-PREFIXES", "sequence_numbers": sequence_numbers})
+
+        prefix_lists_in_use = set()
+        for neighbor in self.shared_utils.l3_interfaces_bgp_neighbors:
+            if (prefix_list_in := get(neighbor, "ipv4_prefix_list_in")) and prefix_list_in not in prefix_lists_in_use:
+                pfx_list = self._get_prefix_list(prefix_list_in)
+                prefix_lists.append(pfx_list)
+                prefix_lists_in_use.add(prefix_list_in)
+
+            if (prefix_list_out := get(neighbor, "ipv4_prefix_list_out")) and prefix_list_out not in prefix_lists_in_use:
+                pfx_list = self._get_prefix_list(prefix_list_out)
+                prefix_lists.append(pfx_list)
+                prefix_lists_in_use.add(prefix_list_out)
+
+        # P2P-LINKS needed for L3 inband ZTP
+        p2p_links_sequence_numbers = []
+        sequence_number = 0
+        for peer in self._avd_peers:
+            peer_facts = self.shared_utils.get_peer_facts(peer, required=True)
+            for uplink in peer_facts["uplinks"]:
+                if (
+                    uplink["peer"] == self.shared_utils.hostname
+                    and uplink["type"] == "underlay_p2p"
+                    and uplink.get("ip_address")
+                    and "unnumbered" not in uplink["ip_address"]
+                    and get(peer_facts, "inband_ztp")
+                ):
+                    sequence_number += 10
+                    subnet = str(ip_network(f"{uplink['ip_address']}/{uplink['prefix_length']}", strict=False))
+                    p2p_links_sequence_numbers.append({"sequence": sequence_number, "action": f"permit {subnet}"})
+        if p2p_links_sequence_numbers:
+            prefix_lists.append({"name": "PL-P2P-LINKS", "sequence_numbers": p2p_links_sequence_numbers})
 
         return prefix_lists
 

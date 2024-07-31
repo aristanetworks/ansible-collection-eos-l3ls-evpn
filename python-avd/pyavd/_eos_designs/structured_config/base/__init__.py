@@ -10,12 +10,13 @@ from pyavd._errors import AristaAvdInvalidInputsError
 from pyavd._utils import get, get_item, strip_empties_from_dict, strip_null_from_data
 from pyavd.j2filters import natural_sort
 
+from .dhcp_server import DhcpServerMixin
 from .ntp import NtpMixin
 from .router_general import RouterGeneralMixin
 from .snmp_server import SnmpServerMixin
 
 
-class AvdStructuredConfigBase(AvdFacts, NtpMixin, SnmpServerMixin, RouterGeneralMixin):
+class AvdStructuredConfigBase(AvdFacts, NtpMixin, SnmpServerMixin, RouterGeneralMixin, DhcpServerMixin):
     """
     The AvdStructuredConfig Class is imported by "get_structured_config" to render parts of the structured config.
 
