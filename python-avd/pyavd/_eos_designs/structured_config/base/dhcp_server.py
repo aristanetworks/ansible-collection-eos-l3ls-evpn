@@ -20,7 +20,6 @@ class DhcpServerMixin(UtilsMixin):
     """
 
     _hostvars: dict
-    # shared_utils: SharedUtils
 
     @cached_property
     def _avd_peers(self) -> list:
@@ -86,6 +85,23 @@ class DhcpServerMixin(UtilsMixin):
         return dns_servers
 
     @cached_property
+    def _ntp_servers(self) -> list | None:
+        """
+        Returns the list of name servers
+        """
+        ntp_servers_settings = get(self._hostvars, "ntp_settings.servers")
+        if not ntp_servers_settings:
+            return
+
+        ntp_servers = []
+        for ntp_server in ntp_servers_settings:
+            ntp_servers.append(ntp_server["name"])
+
+        if ntp_servers:
+            ntp_dhcp_option = {"vendor_id": "NTP", "sub_options": [{"code": 42, "array_ipv4_address": ntp_servers}]}
+            return ntp_dhcp_option
+
+    @cached_property
     def dhcp_servers(self) -> dict | None:
         """
         Return structured config for dhcp_server
@@ -101,5 +117,8 @@ class DhcpServerMixin(UtilsMixin):
         # Set DNS servers
         if dns_servers := self._dns_servers:
             dhcp_server["dns_servers_ipv4"] = dns_servers
+        # Set NTP servers
+        if ntp_servers := self._ntp_servers:
+            dhcp_server["ipv4_vendor_options"] = [ntp_servers]
         dhcp_servers.append(dhcp_server)
         return dhcp_servers

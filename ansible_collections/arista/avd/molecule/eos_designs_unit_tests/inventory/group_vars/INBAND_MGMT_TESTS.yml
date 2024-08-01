@@ -25,12 +25,18 @@ default_interfaces:
     mlag_interfaces: [ Ethernet11-20 ]
     downlink_interfaces: [ Ethernet21-30 ]
 
+default_mgmt_method: none
+
 cvp_instance_ips:
   - apiserver.arista.io
 
 name_servers:
   - 1.1.1.1
   - 8.8.8.8
+
+ntp_settings:
+  servers:
+    - name: 2.2.2.55
 
 spine:
   defaults:

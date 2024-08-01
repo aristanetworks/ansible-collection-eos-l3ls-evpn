@@ -34,6 +34,14 @@ management_api_http:
   enable_vrfs:
   - name: MGMT
   enable_https: true
+ntp:
+  local_interface:
+    name: null
+    vrf: null
+  servers:
+  - name: 2.2.2.55
+    vrf: null
+    preferred: true
 ethernet_interfaces:
 - name: Ethernet1
   peer: inband-mgmt-parent
