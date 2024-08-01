@@ -7,7 +7,6 @@ from functools import cached_property
 from typing import TYPE_CHECKING
 
 from pyavd._utils import get
-from pyavd.j2filters import natural_sort
 from .utils import UtilsMixin
 
 if TYPE_CHECKING:
@@ -20,16 +19,6 @@ class RouteMapsMixin(UtilsMixin):
 
     Class should only be used as Mixin to a AvdStructuredConfig class.
     """
-
-    @cached_property
-    def _avd_peers(self) -> list:
-        """
-        Returns a list of peers
-
-        This cannot be loaded in shared_utils since it will not be calculated until EosDesignsFacts has been rendered
-        and shared_utils are shared between EosDesignsFacts and AvdStructuredConfig classes like this one.
-        """
-        return natural_sort(get(self._hostvars, f"avd_topology_peers..{self.shared_utils.hostname}", separator="..", default=[]))
 
     @cached_property
     def route_maps(self: AvdStructuredConfigUnderlay) -> list | None:
