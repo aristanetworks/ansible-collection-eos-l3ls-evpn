@@ -97,6 +97,8 @@ ntp:
   - name: 2.2.2.55
     vrf: null
     preferred: true
+  - name: pool.ntp.org
+    vrf: null
 spanning_tree:
   no_spanning_tree_vlan: 4093-4094
 vlans:

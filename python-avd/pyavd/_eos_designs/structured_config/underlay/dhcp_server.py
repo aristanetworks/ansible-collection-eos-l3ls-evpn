@@ -4,12 +4,9 @@
 from __future__ import annotations
 
 from functools import cached_property
-from ipaddress import ip_network
+from ipaddress import AddressValueError, IPv4Address, ip_network
 
 from ...._utils import get
-
-# from shared_utils import SharedUtils
-from ....j2filters import natural_sort
 from .utils import UtilsMixin
 
 
@@ -20,16 +17,6 @@ class DhcpServerMixin(UtilsMixin):
     """
 
     _hostvars: dict
-
-    @cached_property
-    def _avd_peers(self) -> list:
-        """
-        Returns a list of peers
-
-        This cannot be loaded in shared_utils since it will not be calculated until EosDesignsFacts has been rendered
-        and shared_utils are shared between EosDesignsFacts and AvdStructuredConfig classes like this one.
-        """
-        return natural_sort(get(self._hostvars, f"avd_topology_peers..{self.shared_utils.hostname}", separator="..", default=[]))
 
     @cached_property
     def _subnets(self) -> list:
@@ -95,7 +82,12 @@ class DhcpServerMixin(UtilsMixin):
 
         ntp_servers = []
         for ntp_server in ntp_servers_settings:
-            ntp_servers.append(ntp_server["name"])
+            # Validate NTP server IP address
+            try:
+                ntp_server_ip = IPv4Address(ntp_server["name"])
+            except AddressValueError:
+                continue
+            ntp_servers.append(str(ntp_server_ip))
 
         if ntp_servers:
             ntp_dhcp_option = {"vendor_id": "NTP", "sub_options": [{"code": 42, "array_ipv4_address": ntp_servers}]}

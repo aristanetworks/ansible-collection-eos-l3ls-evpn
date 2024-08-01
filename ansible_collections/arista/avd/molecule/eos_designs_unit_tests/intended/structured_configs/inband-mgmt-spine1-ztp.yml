@@ -97,32 +97,8 @@ ntp:
   - name: 2.2.2.55
     vrf: null
     preferred: true
-dhcp_servers:
-- vrf: default
-  subnets:
-  - subnet: 172.16.255.0/31
-    ranges:
-    - start: 172.16.255.1
-      end: 172.16.255.1
-    name: p2p to inband-mgmt-parent-Ethernet1
-    default_gateway: 172.16.255.0
-  - subnet: 172.16.255.2/31
-    ranges:
-    - start: 172.16.255.3
-      end: 172.16.255.3
-    name: p2p to inband-mgmt-parent-vrf-Ethernet1
-    default_gateway: 172.16.255.2
-  tftp_server:
-    file_ipv4: https://www.arista.io/ztp/bootstrap
-  dns_servers_ipv4:
-  - 1.1.1.1
-  - 8.8.8.8
-  ipv4_vendor_options:
-  - vendor_id: NTP
-    sub_options:
-    - code: 42
-      array_ipv4_address:
-      - 2.2.2.55
+  - name: pool.ntp.org
+    vrf: null
 ethernet_interfaces:
 - name: Ethernet1
   peer: inband-mgmt-parent
@@ -171,6 +147,32 @@ route_maps:
     type: permit
     match:
     - ip address prefix-list PL-P2P-LINKS
+dhcp_servers:
+- vrf: default
+  subnets:
+  - subnet: 172.16.255.0/31
+    ranges:
+    - start: 172.16.255.1
+      end: 172.16.255.1
+    name: p2p to inband-mgmt-parent-Ethernet1
+    default_gateway: 172.16.255.0
+  - subnet: 172.16.255.2/31
+    ranges:
+    - start: 172.16.255.3
+      end: 172.16.255.3
+    name: p2p to inband-mgmt-parent-vrf-Ethernet1
+    default_gateway: 172.16.255.2
+  tftp_server:
+    file_ipv4: https://www.arista.io/ztp/bootstrap
+  dns_servers_ipv4:
+  - 1.1.1.1
+  - 8.8.8.8
+  ipv4_vendor_options:
+  - vendor_id: NTP
+    sub_options:
+    - code: 42
+      array_ipv4_address:
+      - 2.2.2.55
 router_bfd:
   multihop:
     interval: 300

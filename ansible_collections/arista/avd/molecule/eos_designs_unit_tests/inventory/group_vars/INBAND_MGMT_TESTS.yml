@@ -37,6 +37,7 @@ name_servers:
 ntp_settings:
   servers:
     - name: 2.2.2.55
+    - name: pool.ntp.org
 
 spine:
   defaults:

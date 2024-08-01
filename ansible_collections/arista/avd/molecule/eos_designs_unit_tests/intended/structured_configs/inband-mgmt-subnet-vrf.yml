@@ -43,6 +43,8 @@ ntp:
   - name: 2.2.2.55
     vrf: null
     preferred: true
+  - name: pool.ntp.org
+    vrf: null
 ethernet_interfaces:
 - name: Ethernet1
   peer: inband-mgmt-parent
