@@ -9,6 +9,7 @@ from ipaddress import ip_network
 from typing import TYPE_CHECKING
 
 from pyavd._utils import get, get_item
+
 from .utils import UtilsMixin
 
 if TYPE_CHECKING:

@@ -7,6 +7,7 @@ from functools import cached_property
 from typing import TYPE_CHECKING
 
 from pyavd._utils import get
+
 from .utils import UtilsMixin
 
 if TYPE_CHECKING:
