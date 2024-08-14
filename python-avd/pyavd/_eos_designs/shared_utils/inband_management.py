@@ -180,8 +180,7 @@ class InbandManagementMixin:
 
     @cached_property
     def inband_ztp(self: SharedUtils) -> bool | None:
-        inband_ztp = get(self.switch_data_combined, "inband_ztp")
-        return inband_ztp
+        return get(self.switch_data_combined, "inband_ztp")
 
     @cached_property
     def inband_ztp_lacp_fallback_delay(self: SharedUtils) -> int | None:

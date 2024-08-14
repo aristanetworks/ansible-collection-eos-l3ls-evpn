@@ -6,14 +6,16 @@ from __future__ import annotations
 from functools import cached_property
 from ipaddress import AddressValueError, IPv4Address, ip_network
 
-from ...._utils import get
+from pyavd._utils import get
+
 from .utils import UtilsMixin
 
 
 class DhcpServerMixin(UtilsMixin):
     """
     Mixin Class used to generate structured config for one key.
-    Class should only be used as Mixin to a AvdStructuredConfig class
+
+    Class should only be used as Mixin to a AvdStructuredConfig class.
     """
 
     _hostvars: dict
@@ -21,9 +23,9 @@ class DhcpServerMixin(UtilsMixin):
     @cached_property
     def _subnets(self) -> list:
         """
-        Returns a list of dhcp subnets for downstream p2p interfaces
+        Returns a list of dhcp subnets for downstream p2p interfaces.
 
-        Used for l3 inband ztp/ztr
+        Used for l3 inband ztp/ztr.
         """
         subnets = []
         for peer in self._avd_peers:
@@ -43,19 +45,18 @@ class DhcpServerMixin(UtilsMixin):
                         "default_gateway": f"{uplink['peer_ip_address'].split('/')[0]}",
                     }
                     subnets.append(subnet)
+
         return subnets
 
     @cached_property
     def _ipv4_ztp_boot_file(self) -> str | None:
-        """
-        Returns the file name to allow for ZTP to CV
-        """
+        """Returns the file name to allow for ZTP to CV."""
         custom_bootfile = get(self._hostvars, "inband_ztp_bootstrap_file")
         if custom_bootfile:
             return custom_bootfile
         cvp_instance_ips = get(self._hostvars, "cvp_instance_ips")
         if not cvp_instance_ips:
-            return
+            return None
         if "arista.io" in cvp_instance_ips[0]:
             return "https://www.arista.io/ztp/bootstrap"
 
@@ -63,22 +64,19 @@ class DhcpServerMixin(UtilsMixin):
 
     @cached_property
     def _dns_servers(self) -> list | None:
-        """
-        Returns the list of name servers
-        """
+        """Returns the list of name servers."""
         dns_servers = get(self._hostvars, "name_servers")
         if not dns_servers:
-            return
+            return None
+
         return dns_servers
 
     @cached_property
     def _ntp_servers(self) -> list | None:
-        """
-        Returns the list of name servers
-        """
+        """Returns the list of name servers."""
         ntp_servers_settings = get(self._hostvars, "ntp_settings.servers")
         if not ntp_servers_settings:
-            return
+            return None
 
         ntp_servers = []
         for ntp_server in ntp_servers_settings:
@@ -90,19 +88,18 @@ class DhcpServerMixin(UtilsMixin):
             ntp_servers.append(str(ntp_server_ip))
 
         if ntp_servers:
-            ntp_dhcp_option = {"vendor_id": "NTP", "sub_options": [{"code": 42, "array_ipv4_address": ntp_servers}]}
-            return ntp_dhcp_option
+            return {"vendor_id": "NTP", "sub_options": [{"code": 42, "array_ipv4_address": ntp_servers}]}
+
+        return None
 
     @cached_property
     def dhcp_servers(self) -> dict | None:
-        """
-        Return structured config for dhcp_server
-        """
+        """Return structured config for dhcp_server."""
         dhcp_servers = []
         # Set subnets for DHCP server
         dhcp_server = {"vrf": "default", "subnets": self._subnets}
         if len(dhcp_server["subnets"]) == 0:
-            return
+            return None
         # Set ZTP bootfile
         if ztp_bootfile := self._ipv4_ztp_boot_file:
             dhcp_server["tftp_server"] = {"file_ipv4": ztp_bootfile}
@@ -113,4 +110,5 @@ class DhcpServerMixin(UtilsMixin):
         if ntp_servers := self._ntp_servers:
             dhcp_server["ipv4_vendor_options"] = [ntp_servers]
         dhcp_servers.append(dhcp_server)
+
         return dhcp_servers
