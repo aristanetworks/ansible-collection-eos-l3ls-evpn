@@ -83,6 +83,10 @@ convention = "google"
   "INP001",  # implicit namespace package. Add an `__init__.py` - Tests are not in packages
 ]
 
+"python-avd/pyavd/_anta/utils/index.py" = [
+  "F403",  # Allow wildcard imports to avoid cluttering the index
+  "F405",  # Allow names defined in via a wildcard import
+]
 
 [tool.ruff.lint.pylint]
 max-args = 12
@@ -95,3 +99,7 @@ known-first-party = ["pyavd", "schema_tools"]
 
 [tool.ruff.format]
 docstring-code-format = true
+
+[tool.ruff.lint.flake8-type-checking]
+# These classes require that type annotations be available at runtime
+runtime-evaluated-base-classes = ["pydantic.BaseModel"]

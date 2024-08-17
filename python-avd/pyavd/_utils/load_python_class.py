@@ -4,8 +4,15 @@
 from __future__ import annotations
 
 import importlib
+import inspect
+import pkgutil
+from typing import TYPE_CHECKING
 
 from pyavd._errors import AristaAvdError, AristaAvdMissingVariableError
+
+if TYPE_CHECKING:
+    from collections.abc import Callable
+    from types import ModuleType
 
 
 def load_python_class(module_path: str, class_name: str, parent_class: type | None = None) -> type:
@@ -52,3 +59,34 @@ def load_python_class(module_path: str, class_name: str, parent_class: type | No
         raise AristaAvdError(msg)
 
     return cls
+
+
+def load_classes(package_name: str, class_filter: Callable[[str, type], bool] | None = None) -> dict[str, type]:
+    """Recursively load all classes from a package and its sub-packages. Optionally filter the classes using a filter function.
+
+    Parameters
+    ----------
+    package_name : str
+        Name of the package to load classes from.
+    class_filter : Callable
+        Optional filter function to filter the classes to load. The function should take the class name and class object as arguments and return a boolean.
+
+    Returns:
+    -------
+    dict
+        Dictionary containing the class name as key and the class object as value.
+    """
+    classes = {}
+    package = importlib.import_module(package_name)
+
+    def load_from_module(module: ModuleType) -> None:
+        for name, obj in inspect.getmembers(module, inspect.isclass):
+            if obj.__module__.startswith(package_name) and (class_filter is None or class_filter(name, obj)):
+                classes[name] = obj  # noqa: PERF403
+
+    for _, module_name, is_pkg in pkgutil.walk_packages(package.__path__, package_name + "."):
+        module = importlib.import_module(module_name)
+        if not is_pkg:
+            load_from_module(module)
+
+    return classes

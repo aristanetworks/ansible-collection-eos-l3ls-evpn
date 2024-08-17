@@ -2,6 +2,7 @@
 # Use of this source code is governed by the Apache License 2.0
 # that can be found in the LICENSE file.
 from .get_avd_facts import get_avd_facts
+from .get_device_anta_catalog import get_device_anta_catalog
 from .get_device_config import get_device_config
 from .get_device_doc import get_device_doc
 from .get_device_structured_config import get_device_structured_config
@@ -21,6 +22,7 @@ __version__ = "5.0.0.dev5"
 
 __all__ = [
     "get_avd_facts",
+    "get_device_anta_catalog",
     "get_device_config",
     "get_device_doc",
     "get_device_structured_config",

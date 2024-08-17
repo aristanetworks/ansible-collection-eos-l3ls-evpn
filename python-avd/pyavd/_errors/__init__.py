@@ -25,6 +25,10 @@ class AristaAvdMissingVariableError(AristaAvdError):
     pass
 
 
+class AvdConfigLoadError(AristaAvdError):
+    pass
+
+
 class AvdSchemaError(AristaAvdError):
     def __init__(self, message: str = "Schema Error", path: list[str | int] | None = None) -> None:
         if path is not None:

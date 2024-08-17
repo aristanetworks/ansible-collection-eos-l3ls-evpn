@@ -12,7 +12,7 @@ from .get_ip_from_ip_prefix import get_ip_from_ip_prefix
 from .get_ip_from_pool import get_ip_from_pool
 from .get_item import get_item
 from .groupby import groupby
-from .load_python_class import load_python_class
+from .load_python_class import load_classes, load_python_class
 from .merge import merge
 from .replace_or_append_item import replace_or_append_item
 from .short_esi_to_route_target import short_esi_to_route_target
@@ -20,6 +20,7 @@ from .strip_empties import strip_empties_from_dict, strip_empties_from_list, str
 from .template import template
 from .template_var import template_var
 from .unique import unique
+from .validate_dict import validate_dict
 
 __all__ = [
     "append_if_not_duplicate",
@@ -35,6 +36,7 @@ __all__ = [
     "get",
     "get_v2",
     "groupby",
+    "load_classes",
     "load_python_class",
     "merge",
     "replace_or_append_item",
@@ -45,4 +47,5 @@ __all__ = [
     "template",
     "template_var",
     "unique",
+    "validate_dict",
 ]
