@@ -3,7 +3,6 @@
 # that can be found in the LICENSE file.
 from __future__ import annotations
 
-from collections import defaultdict
 from typing import TYPE_CHECKING
 
 from pyavd._anta.utils import LogMessage
@@ -23,7 +22,7 @@ class VerifyBGPSpecificPeersInputFactory:
     @classmethod
     def create(cls, test: type[VerifyBGPSpecificPeers], manager: ConfigManager, logger: TestLoggerAdapter) -> VerifyBGPSpecificPeers.Input | None:
         """Create Input for the VerifyBGPSpecificPeers test."""
-        address_families = defaultdict(lambda: {"peers": []})
+        inputs = []
 
         for bgp_mapping in BGP_MAPPINGS:
             bgp_neighbors = get(manager.structured_config, "router_bgp.neighbors", [])
@@ -43,20 +42,15 @@ class VerifyBGPSpecificPeersInputFactory:
                 if neighbor.get("peer_group") in filtered_peer_groups or neighbor["ip_address"] in filtered_neighbors
             ]
 
-            # Add tests for all neighbors
+            # Create input for each peer
+            peers = []
             for ip, peer in all_neighbors:
                 # Check peer availability if the 'peer' key exists. Otherwise, still include the test for potential BGP external peers
                 if peer is not None and not manager.is_peer_available(peer):
                     logger.info(LogMessage.UNAVAILABLE_PEER, entity=f"{ip} ({bgp_mapping['description']})", peer=peer)
                     continue
+                peers.append(ip)
 
-                # Add the peer IP address to the corresponding address family
-                key = (bgp_mapping["afi"], bgp_mapping["safi"])
-                address_families[key]["afi"] = bgp_mapping["afi"]
-                if bgp_mapping["safi"]:
-                    address_families[key]["safi"] = bgp_mapping["safi"]
-                address_families[key]["peers"].append(ip)
-
-        inputs = [test.Input.BgpAfi(**bgp_afi) for bgp_afi in address_families.values()]
+            inputs.append(test.Input.BgpAfi(afi=bgp_mapping["afi"], safi=bgp_mapping["safi"], peers=peers))
 
         return test.Input(address_families=inputs) if inputs else None
