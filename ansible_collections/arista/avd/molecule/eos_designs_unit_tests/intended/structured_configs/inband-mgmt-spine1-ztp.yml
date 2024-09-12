@@ -160,13 +160,13 @@ dhcp_servers:
     ranges:
     - start: 172.16.255.1
       end: 172.16.255.1
-    name: p2p to inband-mgmt-parent-Ethernet1
+    name: inband ztp for inband-mgmt-parent-Ethernet1
     default_gateway: 172.16.255.0
   - subnet: 172.16.255.2/31
     ranges:
     - start: 172.16.255.3
       end: 172.16.255.3
-    name: p2p to inband-mgmt-parent-vrf-Ethernet1
+    name: inband ztp for inband-mgmt-parent-vrf-Ethernet1
     default_gateway: 172.16.255.2
   tftp_server:
     file_ipv4: https://www.arista.io/ztp/bootstrap
