@@ -86,7 +86,6 @@ L2LS_DEFAULT_NODE_TYPE_KEYS = [
         "uplink_type": "port-channel",
     },
 ]
-
 # NOTE: There is a static list of default node_type_keys in the fabric documentation templates which must be updated as well
 
 DEFAULT_NODE_TYPE_KEYS = {
@@ -173,6 +172,39 @@ DEFAULT_NODE_TYPE_KEYS = {
             "network_services": {
                 "l3": True,
             },
+        },
+        {
+            "key": "ptp_leaf",
+            "type": "ptp_leaf",
+            "connected_endpoints": True,
+            "network_services": {
+                "l2": True,
+                "l3": True,
+            },
+            "default_overlay_routing_protocol": "none",
+            "default_ptp_priority1": 10,
+        },
+        {
+            "key": "media_spine",
+            "type": "media_spine",
+            "connected_endpoints": True,
+            "network_services": {
+                "l2": True,
+                "l3": True,
+            },
+            "default_overlay_routing_protocol": "none",
+            "default_ptp_priority1": 20,
+        },
+        {
+            "key": "media_leaf",
+            "type": "media_leaf",
+            "connected_endpoints": True,
+            "network_services": {
+                "l2": True,
+                "l3": True,
+            },
+            "default_overlay_routing_protocol": "none",
+            "default_ptp_priority1": 30,
         },
         # Avoiding duplicate code
         *MPLS_DEFAULT_NODE_TYPE_KEYS,
