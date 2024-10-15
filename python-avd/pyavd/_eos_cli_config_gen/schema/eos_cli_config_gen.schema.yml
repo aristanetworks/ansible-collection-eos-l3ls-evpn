@@ -8203,7 +8203,7 @@ keys:
             - access-request
           access_request:
             type: dict
-            description: Use RADIUS Access-Request packets as probes.
+            description: This can only be set when `method` is `access_request`.
             keys:
               username:
                 type: str
