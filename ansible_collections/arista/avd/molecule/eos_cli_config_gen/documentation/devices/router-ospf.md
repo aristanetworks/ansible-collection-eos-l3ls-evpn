@@ -252,8 +252,8 @@ router ospf 100
    maximum-paths 10
    default-information originate
    graceful-restart
-   graceful-restart-helper
    mpls ldp sync default
+   graceful-restart-helper
 !
 router ospf 101 vrf CUSTOMER01
    router-id 1.0.1.1
