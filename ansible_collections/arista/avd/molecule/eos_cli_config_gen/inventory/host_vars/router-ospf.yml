@@ -64,6 +64,7 @@ router_ospf:
           min: 200
           max: 300
       graceful_restart:
+        enabled: true
         grace_period: 10
       graceful_restart_helper: false
       eos_cli: |

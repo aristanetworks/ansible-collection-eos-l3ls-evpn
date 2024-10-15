@@ -18722,6 +18722,7 @@ keys:
               keys:
                 enabled:
                   type: bool
+                  required: true
                 grace_period:
                   type: int
                   convert_types:

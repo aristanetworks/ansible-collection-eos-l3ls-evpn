@@ -201,9 +201,11 @@ router ospf {{ process_id.id }}
 {%         endif %}
 {%     endfor %}
 {%     if process_id.graceful_restart.enabled is arista.avd.defined(true) %}
-   graceful-restart
-{%     elif process_id.graceful_restart.grace_period is arista.avd.defined %}
-   graceful-restart grace-period {{ process_id.graceful_restart.grace_period }}
+{%         set graceful_restart_cli = "graceful-restart" %}
+{%         if process_id.graceful_restart.grace_period is arista.avd.defined %}
+{%             set graceful_restart_cli = graceful_restart_cli ~ " grace-period " ~ process_id.graceful_restart.grace_period %}
+{%         endif %}
+   {{ graceful_restart_cli }}
 {%     endif %}
 {%     if process_id.graceful_restart_helper is arista.avd.defined(true) %}
    graceful-restart-helper
