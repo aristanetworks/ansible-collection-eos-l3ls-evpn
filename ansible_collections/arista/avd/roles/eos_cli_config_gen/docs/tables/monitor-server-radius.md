@@ -13,8 +13,8 @@
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;interval</samp>](## "monitor_server_radius.probe.interval") | Integer |  |  | Min: 1<br>Max: 1000 | Server probe period in seconds. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;method</samp>](## "monitor_server_radius.probe.method") | String |  |  | Valid Values:<br>- <code>status-server</code><br>- <code>access-request</code> | Method used to probe the server. `status-server` is the EOS default method. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;access_request</samp>](## "monitor_server_radius.probe.access_request") | Dictionary |  |  |  | Use RADIUS Access-Request packets as probes. |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;username</samp>](## "monitor_server_radius.probe.access_request.username") | String |  |  |  | Set the username to be used in the access-request packets. |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;password</samp>](## "monitor_server_radius.probe.access_request.password") | String |  |  |  | Set the password to be used in the access-request packets. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;username</samp>](## "monitor_server_radius.probe.access_request.username") | String |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;password</samp>](## "monitor_server_radius.probe.access_request.password") | String |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;password_type</samp>](## "monitor_server_radius.probe.access_request.password_type") | String |  | `7` | Valid Values:<br>- <code>0</code><br>- <code>7</code><br>- <code>8a</code> |  |
 
 === "YAML"
@@ -37,11 +37,7 @@
 
         # Use RADIUS Access-Request packets as probes.
         access_request:
-
-          # Set the username to be used in the access-request packets.
           username: <str>
-
-          # Set the password to be used in the access-request packets.
           password: <str>
           password_type: <str; "0" | "7" | "8a"; default="7">
     ```

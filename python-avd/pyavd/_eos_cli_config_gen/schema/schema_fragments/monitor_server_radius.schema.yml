@@ -36,10 +36,8 @@ keys:
             keys:
               username:
                 type: str
-                description: Set the username to be used in the access-request packets.
               password:
                 type: str
-                description: Set the password to be used in the access-request packets.
               password_type:
                 type: str
                 convert_types:
