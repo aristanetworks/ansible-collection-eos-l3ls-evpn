@@ -26,6 +26,9 @@ ip security
 {%         elif ike_policy.local_id is arista.avd.defined %}
       local-id {{ ike_policy.local_id }}
 {%         endif %}
+{%         if ike_policy.integrity is arista.avd.defined %}
+      integrity {{ ike_policy.integrity }}
+{%         endif %}
 {%     endfor %}
 {%     for sa_policy in ip_security.sa_policies | arista.avd.natural_sort('name') %}
    !

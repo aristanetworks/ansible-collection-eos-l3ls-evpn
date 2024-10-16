@@ -50,6 +50,14 @@ keys:
                 - str
               valid_values: [1, 2, 5, 14, 15, 16, 17, 20, 21, 24]
               description: Diffie-Hellman group for the key exchange.
+            integrity:
+              type: str
+              valid_values:
+                - sha1
+                - sha256
+                - sha384
+                - sha512
+              description: integrity algorithm
       sa_policies:
         type: list
         description: Security Association policies.
