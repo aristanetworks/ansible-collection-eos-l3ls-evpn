@@ -39,7 +39,7 @@ keys:
               - "access-request"
           access_request:
             type: dict
-            description: This can only be set when `method` is `access_request`. 
+            description: This can only be set when `method` is `access_request`.
             keys:
               username:
                 type: str
