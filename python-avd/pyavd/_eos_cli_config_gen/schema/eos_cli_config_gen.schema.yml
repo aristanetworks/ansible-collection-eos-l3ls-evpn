@@ -8207,8 +8207,10 @@ keys:
             keys:
               username:
                 type: str
+                required: true
               password:
                 type: str
+                required: true
               password_type:
                 type: str
                 convert_types:

@@ -4,6 +4,9 @@
 
 - [Management](#management)
   - [Management Interfaces](#management-interfaces)
+- [Monitor Server Radius Summary](#monitor-server-radius-summary)
+  - [Probe Settings](#probe-settings)
+  - [Monitor Server Radius Device Configuration](#monitor-server-radius-device-configuration)
 
 ## Management
 
@@ -31,4 +34,20 @@ interface Management1
    description OOB_MANAGEMENT
    vrf MGMT
    ip address 10.73.255.122/24
+```
+
+## Monitor Server Radius Summary
+
+### Probe Settings
+
+| Setting | Value |
+| ------- | ----- |
+| Probe method | status-server |
+
+### Monitor Server Radius Device Configuration
+
+```eos
+!
+monitor server radius
+   probe method status-server
 ```

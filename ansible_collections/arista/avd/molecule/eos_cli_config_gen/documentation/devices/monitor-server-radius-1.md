@@ -4,6 +4,9 @@
 
 - [Management](#management)
   - [Management Interfaces](#management-interfaces)
+- [Monitor Server Radius Summary](#monitor-server-radius-summary)
+  - [Probe Settings](#probe-settings)
+  - [Monitor Server Radius Device Configuration](#monitor-server-radius-device-configuration)
 
 ## Management
 
@@ -31,4 +34,27 @@ interface Management1
    description OOB_MANAGEMENT
    vrf MGMT
    ip address 10.73.255.122/24
+```
+
+## Monitor Server Radius Summary
+
+Monitor servers are used for 802.1x authentication.
+
+### Probe Settings
+
+| Setting | Value |
+| ------- | ----- |
+| Probe interval | 100 |
+| Threshold failure | 100 |
+| Probe method | access-request |
+
+### Monitor Server Radius Device Configuration
+
+```eos
+!
+monitor server radius
+   service dot1x
+   probe interval 100 seconds
+   probe threshold failure 100
+   probe method access-request username arista password 7 141600021F102B
 ```

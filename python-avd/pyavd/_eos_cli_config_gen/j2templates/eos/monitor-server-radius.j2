@@ -20,10 +20,6 @@ monitor server radius
    probe method status-server
 {%     elif monitor_server_radius.probe.method is arista.avd.defined("access-request") %}
 {%         set access_request = monitor_server_radius.probe.access_request %}
-{%         if access_request.username is arista.avd.defined
-              and access_request.password is arista.avd.defined
-              and access_request.password_type is arista.avd.defined %}
    probe method access-request username {{ access_request.username }} password {{ access_request.password_type }} {{ access_request.password }}
-{%         endif %}
 {%     endif %}
 {% endif %}
