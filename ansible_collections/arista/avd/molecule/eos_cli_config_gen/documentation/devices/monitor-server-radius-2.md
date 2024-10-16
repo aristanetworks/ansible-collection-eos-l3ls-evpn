@@ -5,7 +5,7 @@
 - [Management](#management)
   - [Management Interfaces](#management-interfaces)
 - [Monitor Server Radius Summary](#monitor-server-radius-summary)
-  - [Probe Settings](#probe-settings)
+  - [Server Probe Settings](#server-probe-settings)
   - [Monitor Server Radius Device Configuration](#monitor-server-radius-device-configuration)
 
 ## Management
@@ -38,7 +38,7 @@ interface Management1
 
 ## Monitor Server Radius Summary
 
-### Probe Settings
+### Server Probe Settings
 
 | Setting | Value |
 | ------- | ----- |
