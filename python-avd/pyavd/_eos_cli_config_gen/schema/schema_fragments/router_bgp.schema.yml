@@ -27,6 +27,11 @@ keys:
       router_id:
         type: str
         description: In IP address format A.B.C.D.
+      timers:
+        type: str
+        description: |-
+          BGP Keepalive and Hold Timer values in seconds as string "<0-3600> <0-3600>".
+          Example - "5 15".
       distance:
         type: dict
         keys:
@@ -185,6 +190,9 @@ keys:
               description: |-
                 BGP AS <1-4294967295> or AS number in asdot notation "<1-65535>.<0-65535>".
                 For asdot notation in YAML inputs, the value must be put in quotes, to prevent it from being interpreted as a float number.
+      send_community:
+        type: str
+        description: "'all' or a combination of 'standard', 'extended' and 'large'."
       peer_groups:
         type: list
         primary_key: name

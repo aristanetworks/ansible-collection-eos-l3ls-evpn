@@ -29,6 +29,9 @@ router bgp {{ router_bgp.as }}
 {%     elif router_bgp.bgp.default.ipv4_unicast_transport_ipv6 is arista.avd.defined(false) %}
    no bgp default ipv4-unicast transport ipv6
 {%     endif %}
+{%     if router_bgp.timers is arista.avd.defined %}
+   timers bgp {{ router_bgp.timers }}
+{%     endif %}
 {%     if router_bgp.distance.external_routes is arista.avd.defined %}
 {%         set distance_cli = "distance bgp " ~ router_bgp.distance.external_routes %}
 {%         if router_bgp.distance.internal_routes is arista.avd.defined and router_bgp.distance.local_routes is arista.avd.defined %}
@@ -111,6 +114,11 @@ router bgp {{ router_bgp.as }}
 {%     endif %}
 {%     if router_bgp.bgp.bestpath.d_path is arista.avd.defined(true) %}
    bgp bestpath d-path
+{%     endif %}
+{%     if router_bgp.send_community is arista.avd.defined('all') %}
+   neighbor default send-community
+{%     elif router_bgp.send_community is arista.avd.defined %}
+   neighbor default send-community {{ router_bgp.send_community }}
 {%     endif %}
 {%     for peer_group in router_bgp.peer_groups | arista.avd.natural_sort('name') %}
    neighbor {{ peer_group.name }} peer group
