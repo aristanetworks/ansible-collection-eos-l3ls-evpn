@@ -4,8 +4,8 @@ port_channel_interfaces:
   - name: Port-Channel5
     description: DC1_L2LEAF1_Po1
     link_tracking_groups:
-      - name: EVPN_MH_ES1
-        direction: downstream
+      direction: downstream
+      names: [EVPN_MH_ES1]
     switchport:
       enabled: true
       mode: trunk
@@ -56,8 +56,8 @@ port_channel_interfaces:
   - name: Port-Channel15
     description: DC1_L2LEAF3_Po1
     link_tracking_groups:
-      - name: EVPN_MH_ES2
-        direction: upstream
+      direction: upstream
+      names: [EVPN_MH_ES2]
     switchport:
       enabled: true
       mode: trunk

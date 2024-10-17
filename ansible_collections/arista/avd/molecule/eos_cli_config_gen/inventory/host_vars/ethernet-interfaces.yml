@@ -12,8 +12,8 @@ ethernet_interfaces:
     l2_mru: 8000
     ip_address: 172.31.255.1/31
     link_tracking_groups:
-      - name: EVPN_MH_ES1
-        direction: upstream
+      direction: upstream
+      names: [EVPN_MH_ES1, EVPN_MH_ES2]
     priority_flow_control:
       enabled: true
       priorities:
@@ -196,8 +196,8 @@ ethernet_interfaces:
     ip_address: 172.31.128.1/31
     snmp_trap_link_change: false
     link_tracking_groups:
-      - name: EVPN_MH_ES2
-        direction: downstream
+      direction: downstream
+      names: [EVPN_MH_ES2]
     ipv6_enable: true
     ipv6_address: 2002:ABDC::1/64
     ipv6_nd_prefixes:

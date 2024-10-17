@@ -221,6 +221,7 @@ sFlow is disabled.
 | Interface | Group Name | Direction |
 | --------- | ---------- | --------- |
 | Ethernet1 | EVPN_MH_ES1 | upstream |
+| Ethernet1 | EVPN_MH_ES2 | upstream |
 | Ethernet3 | EVPN_MH_ES2 | downstream |
 
 ##### Phone Interfaces
@@ -445,6 +446,7 @@ interface Ethernet1
    switchport backup initial-mac-move-delay 10
    switchport backup dest-macaddr 01:00:00:00:00:00
    link tracking group EVPN_MH_ES1 upstream
+   link tracking group EVPN_MH_ES2 upstream
    comment
    Comment created from eos_cli under ethernet_interfaces.Ethernet1
    EOF
