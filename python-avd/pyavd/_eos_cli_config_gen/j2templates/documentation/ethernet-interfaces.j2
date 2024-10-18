@@ -335,7 +335,7 @@
 {%                 endif %}
 {%             endfor %}
 {%             if link_tracking_interface.link_tracking.direction is arista.avd.defined %}
-{%                 for group_name in link_tracking_interface.link_tracking.groups | arista.avd.natural_sort %}
+{%                 for group_name in link_tracking_interface.link_tracking.groups %}
 | {{ link_tracking_interface.name }} | {{ group_name }} | {{ link_tracking_interface.link_tracking.direction }} |
 {%                 endfor %}
 {%             endif %}
