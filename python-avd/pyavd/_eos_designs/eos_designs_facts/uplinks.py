@@ -205,11 +205,7 @@ class UplinksMixin:
             uplink["peer_ip_address"] = self.shared_utils.ip_addressing.p2p_uplinks_peer_ip(uplink_index)
 
         if self.shared_utils.link_tracking_groups is not None:
-            uplink["link_tracking_groups"] = {
-                "names": [lt_group["name"] for lt_group in self.shared_utils.link_tracking_groups],
-                "direction": "upstream",
-            }
-
+            uplink["link_tracking_groups"] = [{"name": lt_group["name"], "direction": "upstream"} for lt_group in self.shared_utils.link_tracking_groups]
         if self.shared_utils.uplink_structured_config is not None:
             uplink["structured_config"] = self.shared_utils.uplink_structured_config
 
@@ -295,10 +291,7 @@ class UplinksMixin:
             uplink["peer_short_esi"] = self._short_esi
 
         if self.shared_utils.link_tracking_groups is not None:
-            uplink["link_tracking_groups"] = {
-                "names": [lt_group["name"] for lt_group in self.shared_utils.link_tracking_groups],
-                "direction": "upstream",
-            }
+            uplink["link_tracking_groups"] = [{"name": lt_group["name"], "direction": "upstream"} for lt_group in self.shared_utils.link_tracking_groups]
 
         if not self.shared_utils.network_services_l2:
             # This child device does not support VLANs, so we tell the peer to enable portfast

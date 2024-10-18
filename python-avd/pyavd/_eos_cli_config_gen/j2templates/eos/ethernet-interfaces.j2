@@ -902,11 +902,11 @@ interface {{ ethernet_interface.name }}
       priority {{ ethernet_interface.sync_e.priority }}
 {%         endif %}
 {%     endif %}
-{%     if ethernet_interface.link_tracking_groups.direction is arista.avd.defined %}
-{%         for name in ethernet_interface.link_tracking_groups.names | arista.avd.natural_sort %}
-   link tracking group {{ name }} {{ ethernet_interface.link_tracking_groups.direction }}
-{%         endfor %}
-{%     endif %}
+{%     for link_tracking_group in ethernet_interface.link_tracking_groups | arista.avd.natural_sort %}
+{%         if link_tracking_group.name is arista.avd.defined and link_tracking_group.direction is arista.avd.defined %}
+   link tracking group {{ link_tracking_group.name }} {{ link_tracking_group.direction }}
+{%         endif %}
+{%     endfor %}
 {%     if ethernet_interface.vmtracer is arista.avd.defined(true) %}
    vmtracer vmware-esx
 {%     endif %}

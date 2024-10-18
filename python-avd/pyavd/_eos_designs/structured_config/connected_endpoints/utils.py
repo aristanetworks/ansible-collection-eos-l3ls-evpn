@@ -192,10 +192,12 @@ class UtilsMixin:
         if self.shared_utils.link_tracking_groups is None or get(adapter, "link_tracking.enabled") is not True:
             return None
 
-        return {
-            "names": [get(adapter, "link_tracking.name", default=self.shared_utils.link_tracking_groups[0]["name"])],
-            "direction": "downstream",
-        }
+        return [
+            {
+                "name": get(adapter, "link_tracking.name", default=self.shared_utils.link_tracking_groups[0]["name"]),
+                "direction": "downstream",
+            },
+        ]
 
     def _get_adapter_ptp(self: AvdStructuredConfigConnectedEndpoints, adapter: dict) -> dict | None:
         """Return ptp for one adapter."""

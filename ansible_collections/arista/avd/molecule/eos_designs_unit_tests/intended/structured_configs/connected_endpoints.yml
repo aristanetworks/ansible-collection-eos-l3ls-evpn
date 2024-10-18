@@ -224,8 +224,7 @@ ethernet_interfaces:
     phone:
       vlan: 321
   link_tracking_groups:
-    names:
-    - LT_GROUP1
+  - name: LT_GROUP1
     direction: downstream
 - name: Ethernet16
   peer: INDIVIDUAL_2_TRUNK_PHONE
@@ -243,8 +242,7 @@ ethernet_interfaces:
     phone:
       vlan: 321
   link_tracking_groups:
-    names:
-    - LT_GROUP1
+  - name: LT_GROUP1
     direction: downstream
 - name: Ethernet17
   peer: DOT1X_UNAUTHORIZED_PORT_CHANNEL

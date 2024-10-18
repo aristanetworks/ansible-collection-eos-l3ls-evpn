@@ -105,8 +105,7 @@ ethernet_interfaces:
   switchport:
     enabled: true
   link_tracking_groups:
-    names:
-    - l2leaf-server02
+  - name: l2leaf-server02
     direction: downstream
 port_channel_interfaces:
 - name: Port-Channel1
@@ -118,8 +117,7 @@ port_channel_interfaces:
       allowed_vlan: '310'
   shutdown: false
   link_tracking_groups:
-    names:
-    - l2leaf-server02
+  - name: l2leaf-server02
     direction: upstream
 vlans:
 - id: 310

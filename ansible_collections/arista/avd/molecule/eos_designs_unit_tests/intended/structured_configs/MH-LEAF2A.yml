@@ -207,8 +207,7 @@ ethernet_interfaces:
   switchport:
     enabled: false
   link_tracking_groups:
-    names:
-    - Eth-conn-to-router
+  - name: Eth-conn-to-router
     direction: upstream
   ip_address: 10.10.101.5/31
 - name: Ethernet2
@@ -232,8 +231,7 @@ ethernet_interfaces:
     mode: access
     access_vlan: '310'
   link_tracking_groups:
-    names:
-    - Eth-conn-to-router
+  - name: Eth-conn-to-router
     direction: downstream
 port_channel_interfaces:
 - name: Port-Channel2

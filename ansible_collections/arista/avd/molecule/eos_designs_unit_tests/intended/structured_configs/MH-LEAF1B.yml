@@ -181,8 +181,7 @@ ethernet_interfaces:
   switchport:
     enabled: false
   link_tracking_groups:
-    names:
-    - LT_GROUP1
+  - name: LT_GROUP1
     direction: upstream
   ip_address: 10.10.101.3/31
 - name: Ethernet10
@@ -437,8 +436,7 @@ port_channel_interfaces:
   description: server01_ES1_PortChanne1
   shutdown: false
   link_tracking_groups:
-    names:
-    - LT_GROUP1
+  - name: LT_GROUP1
     direction: downstream
   switchport:
     enabled: true
@@ -452,8 +450,7 @@ port_channel_interfaces:
   description: server03_AUTO_ESI_Auto-ESI PortChannel
   shutdown: false
   link_tracking_groups:
-    names:
-    - LT_GROUP1
+  - name: LT_GROUP1
     direction: downstream
   switchport:
     enabled: true
@@ -467,8 +464,7 @@ port_channel_interfaces:
   description: server04_AUTO_ESI_Profile_Auto-ESI PortChannel from profile
   shutdown: false
   link_tracking_groups:
-    names:
-    - LT_GROUP1
+  - name: LT_GROUP1
     direction: downstream
   switchport:
     enabled: true
@@ -482,8 +478,7 @@ port_channel_interfaces:
   description: server05_AUTO_ESI_Profile_Override_Auto-ESI PortChannel overridden on server
   shutdown: false
   link_tracking_groups:
-    names:
-    - LT_GROUP1
+  - name: LT_GROUP1
     direction: downstream
   switchport:
     enabled: true

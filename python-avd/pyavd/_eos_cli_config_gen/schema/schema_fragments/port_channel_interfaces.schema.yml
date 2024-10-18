@@ -309,15 +309,19 @@ keys:
             remove_in_version: 6.0.0
             new_key: switchport.trunk.native_vlan_tag
         link_tracking_groups:
-          type: dict
-          keys:
-            direction:
-              type: str
-              valid_values: ["upstream", "downstream"]
-            names:
-              type: list
-              description: Group names.
-              min_length: 1
+          type: list
+          primary_key: name
+          items:
+            type: dict
+            keys:
+              name:
+                type: str
+                description: Group name.
+              direction:
+                type: str
+                valid_values:
+                  - upstream
+                  - downstream
         phone:
           type: dict
           deprecation:
