@@ -9519,7 +9519,6 @@ keys:
             groups:
               type: list
               description: Group names.
-              min_length: 1
               required: true
         phone:
           type: dict
