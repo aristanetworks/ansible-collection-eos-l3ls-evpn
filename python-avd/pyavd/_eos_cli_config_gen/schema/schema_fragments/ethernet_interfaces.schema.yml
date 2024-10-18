@@ -201,10 +201,11 @@ keys:
             direction:
               type: str
               valid_values: ["upstream", "downstream"]
+              required: true
             groups:
               type: list
               description: Group names.
-              min_length: 1
+              required: true
         evpn_ethernet_segment:
           type: dict
           keys:

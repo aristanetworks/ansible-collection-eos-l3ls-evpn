@@ -726,8 +726,8 @@ interface {{ port_channel_interface.name }}
    link tracking group {{ link_tracking_group.name }} {{ link_tracking_group.direction }}
 {%         endif %}
 {%     endfor %}
-{%     if port_channel_interface.link_tracking.direction is arista.avd.defined %}
-{%         for group_name in port_channel_interface.link_tracking.groups | arista.avd.natural_sort %}
+{%     if port_channel_interface.link_tracking.direction is arista.avd.defined and port_channel_interface.link_tracking.groups is arista.avd.defined %}
+{%         for group_name in port_channel_interface.link_tracking.groups %}
    link tracking group {{ group_name }} {{ port_channel_interface.link_tracking.direction }}
 {%         endfor %}
 {%     endif %}

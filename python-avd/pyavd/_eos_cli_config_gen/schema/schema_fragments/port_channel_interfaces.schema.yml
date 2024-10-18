@@ -328,10 +328,12 @@ keys:
             direction:
               type: str
               valid_values: ["upstream", "downstream"]
+              required: true
             groups:
               type: list
               description: Group names.
               min_length: 1
+              required: true
         phone:
           type: dict
           deprecation:
