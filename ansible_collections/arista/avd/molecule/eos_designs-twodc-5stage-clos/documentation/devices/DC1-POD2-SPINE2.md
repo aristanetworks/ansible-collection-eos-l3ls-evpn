@@ -215,6 +215,11 @@ interface Ethernet4
    no switchport
    ip address 200.200.200.101/24
    ptp enable
+   ptp announce interval 0
+   ptp announce timeout 3
+   ptp delay-req interval -3
+   ptp sync-message interval -3
+   ptp transport ipv4
 ```
 
 ### Loopback Interfaces

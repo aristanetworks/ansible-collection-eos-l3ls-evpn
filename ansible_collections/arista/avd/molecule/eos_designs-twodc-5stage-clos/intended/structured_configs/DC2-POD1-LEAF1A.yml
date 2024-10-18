@@ -274,6 +274,13 @@ ethernet_interfaces:
   ip_address: 11.1.0.39/31
   description: P2P_DC1-POD1-LEAF2B_Ethernet7
   ptp:
+    announce:
+      interval: 0
+      timeout: 3
+    delay_req: -3
+    sync_message:
+      interval: -3
+    transport: ipv4
     enable: true
 port_channel_interfaces:
 - name: Port-Channel3

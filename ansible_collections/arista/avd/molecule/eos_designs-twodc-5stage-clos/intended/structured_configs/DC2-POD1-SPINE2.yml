@@ -156,6 +156,13 @@ ethernet_interfaces:
   ip_address: 200.200.200.201/24
   description: P2P_DC1-POD2-SPINE2_Ethernet4
   ptp:
+    announce:
+      interval: 0
+      timeout: 3
+    delay_req: -3
+    sync_message:
+      interval: -3
+    transport: ipv4
     enable: true
 loopback_interfaces:
 - name: Loopback0
