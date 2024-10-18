@@ -12119,7 +12119,7 @@ keys:
                 to prevent it from being interpreted as a float number.'
       send_community:
         type: str
-        description: '''all'' or a combination of ''standard'', ''extended'' and ''large''.'
+        description: '`all` or a combination of `standard`, `extended` and `large`.'
       peer_groups:
         type: list
         primary_key: name
