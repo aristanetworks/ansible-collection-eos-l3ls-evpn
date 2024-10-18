@@ -122,6 +122,7 @@ router bgp 65101
    graceful-restart restart-time 300
    graceful-restart
    maximum-paths 2 ecmp 2
+   neighbor default send-community standard large extended
    neighbor EVPN-OVERLAY-PEERS peer group
    neighbor EVPN-OVERLAY-PEERS remote-as 65001
    neighbor EVPN-OVERLAY-PEERS update-source Loopback0
