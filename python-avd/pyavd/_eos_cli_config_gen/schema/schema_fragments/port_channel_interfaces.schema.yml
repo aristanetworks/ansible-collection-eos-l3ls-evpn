@@ -331,6 +331,7 @@ keys:
             groups:
               type: list
               description: Group names.
+              min_length: 1
         phone:
           type: dict
           deprecation:

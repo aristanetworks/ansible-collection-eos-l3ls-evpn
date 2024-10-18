@@ -727,8 +727,8 @@ interface {{ port_channel_interface.name }}
 {%         endif %}
 {%     endfor %}
 {%     if port_channel_interface.link_tracking.direction is arista.avd.defined %}
-{%         for group_name in ethernet_interface.link_tracking.groups | arista.avd.natural_sort %}
-   link tracking group {{ group_name }} {{ ethernet_interface.link_tracking.direction }}
+{%         for group_name in port_channel_interface.link_tracking.groups | arista.avd.natural_sort %}
+   link tracking group {{ group_name }} {{ port_channel_interface.link_tracking.direction }}
 {%         endfor %}
 {%     endif %}
 {%     if port_channel_interface.vmtracer is arista.avd.defined(true) %}

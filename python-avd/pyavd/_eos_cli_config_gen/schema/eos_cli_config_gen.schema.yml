@@ -2249,6 +2249,7 @@ keys:
             groups:
               type: list
               description: Group names.
+              min_length: 1
         evpn_ethernet_segment:
           type: dict
           keys:
@@ -9516,6 +9517,7 @@ keys:
             groups:
               type: list
               description: Group names.
+              min_length: 1
         phone:
           type: dict
           deprecation:
