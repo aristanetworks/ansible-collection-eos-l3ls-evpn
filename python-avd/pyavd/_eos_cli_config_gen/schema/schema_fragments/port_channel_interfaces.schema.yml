@@ -322,6 +322,15 @@ keys:
                 valid_values:
                   - upstream
                   - downstream
+        link_tracking:
+          type: dict
+          keys:
+            direction:
+              type: str
+              valid_values: ["upstream", "downstream"]
+            groups:
+              type: list
+              description: Group names.
         phone:
           type: dict
           deprecation:

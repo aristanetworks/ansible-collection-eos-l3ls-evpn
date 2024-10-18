@@ -291,6 +291,11 @@
 | {{ link_tracking_interface.name }} | {{ link_tracking_group.name }} | {{ link_tracking_group.direction }} |
 {%                 endif %}
 {%             endfor %}
+{%             if link_tracking_interface.link_tracking.direction is arista.avd.defined %}
+{%                 for group_name in link_tracking_interface.link_tracking.groups | arista.avd.natural_sort %}
+| {{ link_tracking_interface.name }} | {{ group_name }} | {{ link_tracking_interface.link_tracking.direction }} |
+{%                 endfor %}
+{%             endif %}
 {%         endfor %}
 {%     endif %}
 {# IPv4 #}
