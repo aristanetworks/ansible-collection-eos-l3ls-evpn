@@ -1297,6 +1297,12 @@ keys:
                   type: str
                 activate:
                   type: bool
+                route_map_in:
+                  type: str
+                  description: Inbound route-map name.
+                route_map_out:
+                  type: str
+                  description: Outbound route-map name.
                 rcf_in:
                   type: str
                   description: |-
