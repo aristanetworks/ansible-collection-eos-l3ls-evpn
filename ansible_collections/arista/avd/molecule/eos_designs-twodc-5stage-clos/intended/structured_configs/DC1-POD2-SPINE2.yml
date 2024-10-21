@@ -180,6 +180,7 @@ ethernet_interfaces:
       interval: -3
     transport: ipv4
     enable: true
+    role: master
 loopback_interfaces:
 - name: Loopback0
   description: ROUTER_ID

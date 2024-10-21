@@ -316,6 +316,10 @@ class UtilsMixin:
             ptp_config.update(self.shared_utils.ptp_profile)
 
         ptp_config["enable"] = True
+
+        if get(p2p_link, "role") != "bmca":
+            ptp_config["role"] = "master"
+
         ptp_config.pop("profile", None)
         ethernet_cfg["ptp"] = ptp_config
 

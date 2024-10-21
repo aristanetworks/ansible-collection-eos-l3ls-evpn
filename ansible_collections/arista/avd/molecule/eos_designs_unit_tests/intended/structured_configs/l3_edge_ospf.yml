@@ -63,6 +63,7 @@ ethernet_interfaces:
       interval: -3
     transport: ipv4
     enable: true
+    role: master
 - name: ethernet2
   peer: peer2
   peer_interface: ethernet2

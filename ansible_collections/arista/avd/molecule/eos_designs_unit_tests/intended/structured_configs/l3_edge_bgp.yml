@@ -116,6 +116,7 @@ ethernet_interfaces:
       interval: -3
     transport: ipv4
     enable: true
+    role: master
   service_policy:
     qos:
       input: TEST_POLICY

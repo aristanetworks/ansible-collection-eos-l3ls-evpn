@@ -217,6 +217,7 @@ ethernet_interfaces:
       interval: -3
     transport: ipv4
     enable: true
+    role: master
 - name: Ethernet7
   peer: ptp-tests-spine2
   peer_interface: Ethernet7
@@ -235,6 +236,7 @@ ethernet_interfaces:
       interval: -3
     transport: ipv4
     enable: true
+    role: master
 - name: Ethernet8
   peer: ptp-tests-spine2
   peer_interface: Ethernet8
@@ -253,6 +255,7 @@ ethernet_interfaces:
       interval: -3
     transport: ipv4
     enable: true
+    role: master
 - name: Ethernet9
   peer: ptp-tests-spine2
   peer_interface: Ethernet9
@@ -271,6 +274,7 @@ ethernet_interfaces:
       interval: -3
     transport: ipv4
     enable: true
+    role: master
 loopback_interfaces:
 - name: Loopback0
   description: ROUTER_ID

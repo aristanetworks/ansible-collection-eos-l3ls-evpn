@@ -218,6 +218,7 @@ interface Ethernet4
    ptp announce interval 0
    ptp announce timeout 3
    ptp delay-req interval -3
+   ptp role master
    ptp sync-message interval -3
    ptp transport ipv4
 !

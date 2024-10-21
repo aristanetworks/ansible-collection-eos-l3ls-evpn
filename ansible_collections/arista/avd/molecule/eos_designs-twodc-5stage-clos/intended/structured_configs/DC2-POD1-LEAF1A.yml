@@ -282,6 +282,7 @@ ethernet_interfaces:
       interval: -3
     transport: ipv4
     enable: true
+    role: master
 port_channel_interfaces:
 - name: Port-Channel3
   description: L2_DC2-POD1-L2LEAF1A_Port-Channel1

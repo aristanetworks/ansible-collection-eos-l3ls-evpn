@@ -666,6 +666,7 @@ ethernet_interfaces:
       interval: -3
     transport: ipv4
     enable: true
+    role: master
 - name: Ethernet16
   peer: server-1
   peer_interface: Eth2

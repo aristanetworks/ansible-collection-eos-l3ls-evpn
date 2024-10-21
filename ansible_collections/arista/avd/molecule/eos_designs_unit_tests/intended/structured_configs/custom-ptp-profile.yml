@@ -150,6 +150,7 @@ ethernet_interfaces:
       interval: -7
     transport: ipv4
     enable: true
+    role: master
 vlans:
 - id: 11
   name: VLAN11
