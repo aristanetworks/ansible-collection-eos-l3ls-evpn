@@ -308,7 +308,7 @@ class UtilsMixin:
         ptp_config = {}
 
         if (ptp_profile_name := get(p2p_link, "ptp.profile", default=self.shared_utils.ptp_profile_name)) is not None:
-            msg = f"PTP Profile '{ptp_profile_name}' referenced under {context} does not exist in `ptp_profiles`."
+            msg = f"PTP Profile '{ptp_profile_name}' referenced under {context}.p2p_links does not exist in `ptp_profiles`."
             ptp_config.update(get_item(self.shared_utils.ptp_profiles, "profile", ptp_profile_name, required=True, custom_error_msg=msg))
 
         # Apply PTP profile config
