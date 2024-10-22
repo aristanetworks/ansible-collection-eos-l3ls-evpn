@@ -60,8 +60,6 @@ router_bgp:
       missing_policy:
         direction_out:
           action: deny-in-out
-      route_map_in: RM1
-      route_map_out: RM2
     - ip_address: 192.168.255.3
       allowas_in:
         enabled: true
@@ -145,6 +143,8 @@ router_bgp:
       - ip_address: 10.100.100.4
         activate: true
         encapsulation: path-selection
+        route_map_in: RM1
+        route_map_out: RM2
       - ip_address: 10.100.100.5
         activate: true
         encapsulation: mpls
