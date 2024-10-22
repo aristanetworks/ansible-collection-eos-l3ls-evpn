@@ -900,7 +900,7 @@ router bgp {{ router_bgp.as }}
       neighbor {{ neighbor.ip_address }} route-map in
 {%             endif %}
 {%             if neighbor.route_map_out is arista.avd.defined %}
-      neighbor {{ neighbor.ip_address }} route-map out
+      neighbor {{ neighbor.ip_address }} route-map {{ neighbor.route_map_out }} out
 {%             endif %}
 {%             if neighbor.rcf_in is arista.avd.defined %}
       neighbor {{ neighbor.ip_address }} rcf in {{ neighbor.rcf_in }}
