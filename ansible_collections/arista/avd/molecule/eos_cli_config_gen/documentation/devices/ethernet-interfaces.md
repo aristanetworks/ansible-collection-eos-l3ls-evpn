@@ -1049,6 +1049,7 @@ interface Ethernet65
    description Multiple VRIDs
    no shutdown
    no switchport
+   mac timestamp header
    ip address 192.0.2.2/25
    ipv6 enable
    ipv6 address 2001:db8::2/64

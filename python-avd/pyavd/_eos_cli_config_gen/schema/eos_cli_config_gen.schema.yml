@@ -2140,6 +2140,9 @@ keys:
             forwarding_profile:
               type: str
               description: L2 protocol forwarding profile.
+        mac_timestamp_header:
+          type: bool
+          description: Insert timestamp in ethernet header.
         trunk_groups:
           type: list
           items:
