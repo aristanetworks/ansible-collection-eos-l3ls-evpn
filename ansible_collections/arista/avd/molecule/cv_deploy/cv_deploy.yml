@@ -12,7 +12,7 @@
     structured_dir: "{{ playbook_dir }}/intended/structured_configs/test_configs"
     intended_tag_device: avd-ci-leaf1
     intended_tags: "{{ lookup('file', structured_dir ~ '/' ~ intended_tag_device ~ '.yml')| from_yaml }}"
-    test_id: "ws-force-true-cc-run"
+    test_id: "cv-deploy"
     cv_common_pattern: "avd-cv-deploy-{{ test_id }}"
 
   tasks:
@@ -29,24 +29,19 @@
       ansible.builtin.set_fact:
         r: "{{ lookup('password', '/dev/null chars=ascii_lowercase,digits length=4') }}"
 
-    - name: "{{ test_id | upper }} Set deploy facts"
-      run_once: true
-      ansible.builtin.set_fact:
-        cv_workspace_name: "{{ cv_common_pattern }}-{{ r }}-converge"
-        cv_workspace_description: "{{ (cv_common_pattern + '-' + r + '-converge') | upper }}"
-        cv_change_control_name: "{{ cv_common_pattern }}-{{ r }}-converge"
-        cv_change_control_description: "{{ (cv_common_pattern + '-' + r + '-converge') | upper }}"
-        cv_register_detailed_results: true
-
     - name: "{{ test_id | upper }} Provision CVP with AVD configuration"
       run_once: true
       delegate_to: localhost
       ansible.builtin.import_role:
         name: arista.avd.cv_deploy
       vars:
+        cv_workspace_name: "{{ cv_common_pattern }}-{{ r }}-converge"
+        cv_workspace_description: "{{ (cv_common_pattern + '-' + r + '-converge') | upper }}"
+        cv_change_control_name: "{{ cv_common_pattern }}-{{ r }}-converge"
+        cv_change_control_description: "{{ (cv_common_pattern + '-' + r + '-converge') | upper }}"
+        cv_register_detailed_results: true
         cv_submit_workspace_force: true
         cv_run_change_control: true
-        cv_register_detailed_results: true
 
     - name: "{{ test_id | upper }} Display CVP result"
       run_once: true
@@ -60,6 +55,7 @@
           # workspace
           - cv_deploy_results.workspace.name == cv_workspace_name
           - cv_deploy_results.workspace.state == "submitted"
+          - cv_deploy_results.workspace.description == cv_workspace_description
           - cv_deploy_results.workspace.state
           # errors and warnings
           - cv_deploy_results.errors == []
@@ -71,6 +67,11 @@
           - cv_deploy_results.change_control.name == cv_change_control_name
           - cv_deploy_results.change_control.requested_state == "completed"
           - cv_deploy_results.change_control.description == cv_change_control_description
+      vars:
+        cv_workspace_name: "{{ cv_common_pattern }}-{{ r }}-converge"
+        cv_workspace_description: "{{ (cv_common_pattern + '-' + r + '-converge') | upper }}"
+        cv_change_control_name: "{{ cv_common_pattern }}-{{ r }}-converge"
+        cv_change_control_description: "{{ (cv_common_pattern + '-' + r + '-converge') | upper }}"
 
     - name: "{{ test_id | upper }} Check tags from output"
       run_once: true
@@ -135,21 +136,17 @@
         that:
           - output_devices == cv_devices
 
-    - name: "{{ test_id | upper }} Set cleanup facts"
-      run_once: true
-      ansible.builtin.set_fact:
-        cv_workspace_name: "{{ cv_common_pattern }}-{{ r }}-cleanup"
-        cv_workspace_description: "{{ cv_common_pattern + '-' + r + '-cleanup' | upper }}"
-        cv_change_control_name: "{{ cv_common_pattern }}-{{ r }}-cleanup"
-        cv_change_control_description: "{{ cv_common_pattern + '-' + r + '-cleanup' | upper }}"
-        cv_register_detailed_results: true
-
     - name: "{{ test_id | upper }} Cleanup"
       run_once: true
       delegate_to: localhost
       ansible.builtin.import_role:
         name: arista.avd.cv_deploy
       vars:
+        cv_workspace_name: "{{ cv_common_pattern }}-{{ r }}-cleanup"
+        cv_workspace_description: "{{ cv_common_pattern + '-' + r + '-cleanup' | upper }}"
+        cv_change_control_name: "{{ cv_common_pattern }}-{{ r }}-cleanup"
+        cv_change_control_description: "{{ cv_common_pattern + '-' + r + '-cleanup' | upper }}"
+        cv_register_detailed_results: true
         eos_config_dir: "{{ playbook_dir }}/intended/configs/base_configs"
         structured_dir: "{{ playbook_dir }}/intended/structured_configs/base_configs"
         cv_submit_workspace_force: true

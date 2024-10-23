@@ -12,7 +12,7 @@
     structured_dir: "{{ playbook_dir }}/intended/structured_configs/test_configs"
     intended_tag_device: avd-ci-leaf1
     intended_tags: "{{ lookup('file', structured_dir ~ '/' ~ intended_tag_device ~ '.yml')| from_yaml }}"
-    test_id: "ws-force-true-inactive"
+    test_id: "workspace-force-true"
     cv_common_pattern: "avd-cv-deploy-{{ test_id }}"
 
   tasks:
@@ -29,15 +29,6 @@
       ansible.builtin.set_fact:
         r: "{{ lookup('password', '/dev/null chars=ascii_lowercase,digits length=4') }}"
 
-    - name: "{{ test_id | upper }} Set deploy facts"
-      run_once: true
-      ansible.builtin.set_fact:
-        cv_workspace_name: "{{ cv_common_pattern }}-{{ r }}-converge"
-        cv_workspace_description: "{{ (cv_common_pattern + '-' + r + '-converge') | upper }}"
-        cv_change_control_name: "{{ cv_common_pattern }}-{{ r }}-converge"
-        cv_change_control_description: "{{ (cv_common_pattern + '-' + r + '-converge') | upper }}"
-        cv_register_detailed_results: true
-
     - name: "{{ test_id | upper }} Dynamically add inactive device avd-ci-core1 to group INACTIVE"
       run_once: true
       ansible.legacy.add_host:
@@ -50,6 +41,11 @@
       ansible.builtin.import_role:
         name: arista.avd.cv_deploy
       vars:
+        cv_workspace_name: "{{ cv_common_pattern }}-{{ r }}-converge"
+        cv_workspace_description: "{{ (cv_common_pattern + '-' + r + '-converge') | upper }}"
+        cv_change_control_name: "{{ cv_common_pattern }}-{{ r }}-converge"
+        cv_change_control_description: "{{ (cv_common_pattern + '-' + r + '-converge') | upper }}"
+        cv_register_detailed_results: true
         cv_devices: [ avd-ci-leaf1, avd-ci-core1 ]
         cv_submit_workspace_force: true
 
@@ -86,21 +82,17 @@
       ignore_errors: True
       when: cv_deploy_results.change_control.state | lower in ['pending approval', 'approved']
 
-    - name: "{{ test_id | upper }} Set cleanup facts"
-      run_once: true
-      ansible.builtin.set_fact:
-        cv_workspace_name: "{{ cv_common_pattern }}-{{ r }}-cleanup"
-        cv_workspace_description: "{{ cv_common_pattern + '-' + r + '-cleanup' | upper }}"
-        cv_change_control_name: "{{ cv_common_pattern }}-{{ r }}-cleanup"
-        cv_change_control_description: "{{ cv_common_pattern + '-' + r + '-cleanup' | upper }}"
-        cv_register_detailed_results: true
-
     - name: "{{ test_id | upper }} Cleanup"
       run_once: true
       delegate_to: localhost
       ansible.builtin.import_role:
         name: arista.avd.cv_deploy
       vars:
+        cv_workspace_name: "{{ cv_common_pattern }}-{{ r }}-cleanup"
+        cv_workspace_description: "{{ cv_common_pattern + '-' + r + '-cleanup' | upper }}"
+        cv_change_control_name: "{{ cv_common_pattern }}-{{ r }}-cleanup"
+        cv_change_control_description: "{{ cv_common_pattern + '-' + r + '-cleanup' | upper }}"
+        cv_register_detailed_results: true
         eos_config_dir: "{{ playbook_dir }}/intended/configs/base_configs"
         structured_dir: "{{ playbook_dir }}/intended/structured_configs/base_configs"
         cv_submit_workspace_force: true
