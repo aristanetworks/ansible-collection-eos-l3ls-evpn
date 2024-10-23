@@ -33,3 +33,202 @@ keys:
           ttl_exceeded_tunneling:
             type: bool
             description: Enables the MPLS tunneling of TTL exceeded ICMP replies.
+      rsvp:
+        description: RSVP configuration.
+        type: dict
+        keys:
+          authentication:
+            description: Configure cryptographic authentication.
+            type: dict
+            keys:
+              password_indexes:
+                type: list
+                primary_key: index
+                items:
+                  type: dict
+                  keys:
+                    index:
+                      description: Password index.
+                      type: int
+                      convert_types:
+                        - str
+                      min: 1
+                      max: 4294967295
+                    password_type:
+                      description: Configure authentication password type.
+                      type: str
+                      required: true
+                      convert_types:
+                        - int
+                      valid_values:
+                        - '0'
+                        - '7'
+                        - '8a'
+                    password:
+                      type: str
+                      required: true
+                      description: Password string.
+              active_index:
+                description: Use index as active password.
+                type: int
+                convert_types:
+                  - str
+              sequence_number_window:
+                description: |-
+                  Index in the sequence.
+                  Size of reorder window.
+                type: int
+                convert_types:
+                  - str
+                min: 1
+                max: 255
+              type:
+                description: Authentication mechanism.
+                type: str
+                valid_values:
+                  - 'md5'
+                  - 'none'
+          ip_access_group:
+            description: |-
+              IP config commands.
+              Access list name.
+            type: str
+          ipv6_access_group:
+            description: |-
+              IPv6 config commands.
+              Access list name.
+            type: str
+          fast_reroute:
+            description: Configure fast reroute.
+            type: dict
+            keys:
+              mode:
+                description: |-
+                  Fast reroute mode.
+                  Protect against failure of the next link.
+                  Protect against failure of the next node.
+                  Disable fast reroute.
+                type: str
+                valid_values:
+                  - 'link-protection'
+                  - 'node-protection'
+                  - 'none'
+              reversion:
+                description: |-
+                  Select reversion behavior.
+                  Global revertive repair.
+                  Local revertive repair.
+                type: str
+                valid_values:
+                  - 'global'
+                  - 'local'
+              bypass_tunnel_optimization_interval:
+                description: |-
+                  Fast-reroute bypass configuration.
+                  Interval between each re-optimization attempt.
+                type: int
+                convert_types:
+                  - str
+                min: 1
+                max: 65535
+          label_local_termination:
+            description: Local termination label to be advertised.
+            type: str
+            valid_values:
+              - 'implicit-null'
+              - 'explicit-null'
+          preemption_method:
+            description: Configure preemption.
+            type: dict
+            keys:
+              preemption:
+                type: str
+                required: true
+                valid_values:
+                  - 'hard'
+                  - 'soft'
+              timer:
+                description: Timer value in units of seconds.
+                type: int
+                convert_types:
+                  - str
+                min: 1
+                max: 65535
+          mtu_signaling:
+            description: Enable MTU signaling.
+            type: bool
+          graceful_restart:
+            description: RSVP graceful restart.
+            type: dict
+            keys:
+              role_helper:
+                type: dict
+                keys:
+                  enabled:
+                    type: bool
+                    required: true
+                  grace_period_recovery:
+                    type: int
+                    convert_types:
+                      - str
+                    min: 1
+                    max: 320
+                  grace_period_restart:
+                    type: int
+                    convert_types:
+                      - str
+                    min: 1
+                    max: 320
+              role_speaker:
+                type: dict
+                keys:
+                  enabled:
+                    type: bool
+                    required: true
+                  grace_period_recovery:
+                    type: int
+                    convert_types:
+                      - str
+                    min: 1
+                    max: 320
+                  grace_period_restart:
+                    type: int
+                    convert_types:
+                      - str
+                    min: 1
+                    max: 320
+          hello:
+            type: dict
+            keys:
+              interval:
+                description: Time between hello messages.
+                type: int
+                convert_types:
+                  - str
+                min: 1
+                max: 60
+              multiplier:
+                description: Number of missed hellos after which the neighbor is expired.
+                type: int
+                convert_types:
+                  - str
+                min: 1
+                max: 255
+          hitless_restart:
+            description: RSVP hitless restart.
+            type: dict
+            keys:
+              enabled:
+                type: bool
+              timer_recovery:
+                description: Time stale states will be preserved after restart.
+                type: int
+                convert_types:
+                  - str
+                min: 1
+                max: 320
+          p2mp_enabled:
+            type: bool
+            description: |-
+              P2MP configuration.
+              To disable P2MP make `p2mp_enabled` false.
