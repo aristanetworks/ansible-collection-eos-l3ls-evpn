@@ -27,7 +27,7 @@ class PtpMixin:
 
     @cached_property
     def ptp_uplinks(self: SharedUtils) -> bool:
-        return get(self.switch_data_combined, "ptp.uplinks")
+        return get(self.switch_data_combined, "ptp.uplinks", default=[])
 
     @cached_property
     def ptp_mlag(self: SharedUtils) -> bool:
