@@ -8515,6 +8515,23 @@ keys:
         description: RSVP configuration.
         type: dict
         keys:
+          refresh:
+            description: Configure neighbor state refresh.
+            type: dict
+            keys:
+              interval:
+                description: Time between refreshes.
+                type: int
+                convert_types:
+                - str
+                min: 1
+                max: 65535
+              method:
+                description: Neighbor refresh mechanism.
+                type: str
+                valid_values:
+                - bundled
+                - explicit
           authentication:
             description: Configure cryptographic authentication.
             type: dict
@@ -8566,6 +8583,32 @@ keys:
                 valid_values:
                 - md5
                 - none
+          neighbors:
+            description: Neighbor-specific configuration.
+            type: list
+            primary_key: ip
+            items:
+              type: dict
+              keys:
+                ip:
+                  description: Neighbor's interface IPv4 or IPv6 address.
+                  type: str
+                authentication:
+                  description: Configure cryptographic authentication.
+                  type: dict
+                  required: true
+                  keys:
+                    index:
+                      description: Password index.
+                      type: int
+                      min: 1
+                      max: 4294967295
+                    type:
+                      description: Authentication mechanism.
+                      type: str
+                      valid_values:
+                      - md5
+                      - none
           ip_access_group:
             description: 'IP config commands.
 
@@ -8612,6 +8655,16 @@ keys:
                 - str
                 min: 1
                 max: 65535
+          srlg:
+            type: dict
+            keys:
+              enabled:
+                description: Select SRLG behavior.
+                type: bool
+                required: true
+              strict:
+                description: Apply strict SRLG constraint
+                type: bool
           label_local_termination:
             description: Local termination label to be advertised.
             type: str
@@ -8713,6 +8766,9 @@ keys:
             description: 'P2MP configuration.
 
               To disable P2MP make `p2mp_enabled` false.'
+          shutdown:
+            description: Select SRLG behavior.
+            type: bool
   name_server:
     documentation_options:
       table: ip-name-servers

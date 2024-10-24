@@ -126,17 +126,27 @@ mpls ldp
 mpls icmp fragmentation-needed tunneling
 !
 mpls rsvp
+   refresh interval 3
+   refresh method explicit
    hello interval 30 multiplier 254
    authentication type md5
    authentication sequence-number window 234
-   authentication index 55 password 7 SiMpLePaSsInDeX
-   authentication index 766 password 7 SiMpLePaSs
+   authentication index 55 password 7 <removed>
+   authentication index 766 password 7 <removed>
    authentication index 766 active
+   neighbor 1.1.1.1 authentication type md5
+   neighbor 1.1.1.1 authentication index 3 active
+   neighbor 1.1.12.2 authentication type none
+   neighbor 1.1.12.2 authentication index 30 active
+   neighbor 1.10.1.2 authentication type none
+   neighbor 1.21.1.20 authentication type md5
+   neighbor 10.1.1.2 authentication index 303 active
    ip access-group RSVP_access_group_ipv4
-   ipv6 access-group RSVP_access_group_ipv4
+   ipv6 access-group RSVP_access_group_ipv6
    fast-reroute mode link-protection
    fast-reroute reversion local
    fast-reroute bypass tunnel optimization interval 65535 seconds
+   srlg strict
    label local-termination explicit-null
    preemption method soft timer 444
    mtu signaling
@@ -154,6 +164,7 @@ mpls rsvp
    !
    p2mp
       disabled
+   shutdown
 ```
 
 ### MPLS Interfaces
@@ -167,8 +178,10 @@ mpls rsvp
 
 #### MPLS RSVP Summary
 
-| Settings | Value |
-| -------- | ----- |
+| Setting | Value |
+| ------- | ----- |
+| Refresh interval | 3 |
+| Refresh method  | explicit |
 | Hello interval | 30 |
 | Timeout multiplier | 254 |
 | Authentication type | md5 |
@@ -176,15 +189,27 @@ mpls rsvp
 | Authentication active index | 766 |
 | IPv4 access-group | RSVP_access_group_ipv4 |
 | IPv6 access-group | RSVP_access_group_ipv6 |
+| SRLG strict | enabled |
 | Label local-termination | explicit-null |
 | Preemption method | soft |
 | Preemption timer | 444 |
-| Mtu signaling | True |
+| MTU signaling | True |
 | Fast reroute mode | link-protection |
 | Fast reroute reversion | local |
 | Fast reroute  bypass tunnel optimization interval | 65535 |
 | Hitless restart | Active |
 | Hitless restart recovery timer | 222 |
+| Shutdown | Active |
+
+##### Neighbor
+
+| Neighbor IP | Index | Type |
+| ----------- | ----- | ---- |
+| 1.1.1.1 | 3 | md5 |
+| 1.1.12.2 | 30 | none |
+| 1.10.1.2 | - | none |
+| 1.21.1.20 | - | md5 |
+| 10.1.1.2 | 303 | - |
 
 ##### Graceful restart
 

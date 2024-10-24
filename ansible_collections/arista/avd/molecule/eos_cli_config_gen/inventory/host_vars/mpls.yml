@@ -8,6 +8,9 @@ mpls:
   icmp:
     fragmentation_needed_tunneling: true
   rsvp:
+    refresh:
+      interval: 3
+      method: explicit
     hello:
       interval: 30
       multiplier: 254
@@ -15,10 +18,10 @@ mpls:
       password_indexes:
         - index: 766
           password_type: 7
-          password: SiMpLePaSs
+          password: 13361E3F1B20011A2A173B
         - index: 55
           password_type: '7'
-          password: SiMpLePaSsInDeX
+          password: 14241B062114062E142900260B1D23133B
       active_index: 766
       sequence_number_window: 234
       type: md5
@@ -26,6 +29,9 @@ mpls:
       mode: link-protection
       reversion: local
       bypass_tunnel_optimization_interval: 65535
+    srlg:
+      enabled: true
+      strict: true
     graceful_restart:
       role_helper:
         enabled: true
@@ -46,6 +52,25 @@ mpls:
     preemption_method:
       preemption: soft
       timer: 444
+    shutdown: true
+    neighbors:
+      - ip: 1.1.1.1
+        authentication:
+          index: 3
+          type: md5
+      - ip: 10.1.1.2
+        authentication:
+          index: 303
+      - ip: 1.1.12.2
+        authentication:
+          index: 30
+          type: none
+      - ip: 1.21.1.20
+        authentication:
+          type: md5
+      - ip: 1.10.1.2
+        authentication:
+          type: none
 
 ethernet_interfaces:
   - name: Ethernet1

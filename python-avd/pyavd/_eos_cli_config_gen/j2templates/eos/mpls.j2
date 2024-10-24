@@ -38,6 +38,14 @@ mpls icmp ttl-exceeded tunneling
 {% if mpls.rsvp is arista.avd.defined %}
 !
 mpls rsvp
+{%     if mpls.rsvp.refresh is arista.avd.defined %}
+{%         if mpls.rsvp.refresh.interval is arista.avd.defined %}
+   refresh interval {{ mpls.rsvp.refresh.interval }}
+{%         endif %}
+{%         if mpls.rsvp.refresh.method is arista.avd.defined %}
+   refresh method {{ mpls.rsvp.refresh.method }}
+{%         endif %}
+{%     endif %}
 {%     if mpls.rsvp.hello.interval is arista.avd.defined and mpls.rsvp.hello.multiplier is arista.avd.defined %}
    hello interval {{ mpls.rsvp.hello.interval }} multiplier {{ mpls.rsvp.hello.multiplier }}
 {%     endif %}
@@ -51,18 +59,26 @@ mpls rsvp
 {%         endif %}
 {%         for password_index in auth.password_indexes | arista.avd.natural_sort('index') %}
 {%             if password_index.index is arista.avd.defined and password_index.password_type is arista.avd.defined and password_index.password is arista.avd.defined %}
-   authentication index {{ password_index.index }} password {{ password_index.password_type }} {{ password_index.password }}
+   authentication index {{ password_index.index }} password {{ password_index.password_type }} {{ password_index.password | arista.avd.hide_passwords(hide_passwords) }}
 {%             endif %}
 {%         endfor %}
 {%         if auth.active_index is arista.avd.defined %}
    authentication index {{ auth.active_index }} active
 {%         endif %}
 {%     endif %}
+{%     for neighbor in mpls.rsvp.neighbors | arista.avd.natural_sort('ip') %}
+{%         if neighbor.authentication.type is arista.avd.defined %}
+   neighbor {{ neighbor.ip }} authentication type {{ neighbor.authentication.type }}
+{%         endif %}
+{%         if neighbor.authentication.index is arista.avd.defined %}
+   neighbor {{ neighbor.ip }} authentication index {{ neighbor.authentication.index }} active
+{%         endif %}
+{%     endfor %}
 {%     if mpls.rsvp.ip_access_group is arista.avd.defined %}
    ip access-group {{ mpls.rsvp.ip_access_group }}
 {%     endif %}
-{%     if mpls.rsvp.ip_access_group is arista.avd.defined %}
-   ipv6 access-group {{ mpls.rsvp.ip_access_group }}
+{%     if mpls.rsvp.ipv6_access_group is arista.avd.defined %}
+   ipv6 access-group {{ mpls.rsvp.ipv6_access_group }}
 {%     endif %}
 {%     if mpls.rsvp.fast_reroute is arista.avd.defined %}
 {%         set fast_reroute = mpls.rsvp.fast_reroute %}
@@ -75,6 +91,13 @@ mpls rsvp
 {%         if fast_reroute.bypass_tunnel_optimization_interval is arista.avd.defined %}
    fast-reroute bypass tunnel optimization interval {{ fast_reroute.bypass_tunnel_optimization_interval }} seconds
 {%         endif %}
+{%     endif %}
+{%     if mpls.rsvp.srlg.enabled is arista.avd.defined(true) %}
+{%         set srlg_cli = "srlg" %}
+{%         if mpls.rsvp.srlg.strict is arista.avd.defined(true) %}
+{%             set srlg_cli = srlg_cli ~ " strict" %}
+{%         endif %}
+   {{ srlg_cli }}
 {%     endif %}
 {%     if mpls.rsvp.label_local_termination is arista.avd.defined %}
    label local-termination {{ mpls.rsvp.label_local_termination }}
@@ -126,5 +149,8 @@ mpls rsvp
    !
    p2mp
       disabled
+{%     endif %}
+{%     if mpls.rsvp.shutdown is arista.avd.defined(true) %}
+   shutdown
 {%     endif %}
 {% endif %}
