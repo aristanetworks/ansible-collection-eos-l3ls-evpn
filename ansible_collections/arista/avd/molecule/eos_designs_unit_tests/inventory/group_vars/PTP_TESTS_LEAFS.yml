@@ -66,3 +66,21 @@ l3leaf:
                   sync: 14
             priority1: 40
             priority2: 1
+
+        - name: ptp-tests-restrict-uplinks-leaf1
+          id: 3
+          bgp_as: 65103
+          mgmt_ip: 192.168.0.103/24
+          uplink_interfaces: ['Ethernet1', 'Ethernet2', 'Ethernet3']
+          uplink_switches: ['ptp-tests-spine1', 'ptp-tests-spine2', 'ptp-tests-spine3']
+          uplink_switch_interfaces:
+            - Ethernet10
+            - Ethernet10
+            - Ethernet10
+          ptp:
+            mode: boundary
+            mode_one_step: true
+            clock_identity: "11:11:11:11:11:11"
+            uplinks:
+              - Ethernet1
+              - Ethernet2

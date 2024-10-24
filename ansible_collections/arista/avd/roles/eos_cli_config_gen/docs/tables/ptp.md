@@ -13,6 +13,7 @@
     | [<samp>&nbsp;&nbsp;mode_one_step</samp>](## "ptp.mode_one_step") | Boolean |  |  |  |  |
     | [<samp>&nbsp;&nbsp;forward_unicast</samp>](## "ptp.forward_unicast") | Boolean |  |  |  |  |
     | [<samp>&nbsp;&nbsp;clock_identity</samp>](## "ptp.clock_identity") | String |  |  |  | The clock-id in xx:xx:xx:xx:xx:xx format. |
+    | [<samp>&nbsp;&nbsp;uplinks</samp>](## "ptp.uplinks") | List |  |  |  | limit ptp to only specified interface |
     | [<samp>&nbsp;&nbsp;source</samp>](## "ptp.source") | Dictionary |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;ip</samp>](## "ptp.source.ip") | String |  |  |  | Source IP. |
     | [<samp>&nbsp;&nbsp;priority1</samp>](## "ptp.priority1") | Integer |  |  | Min: 0<br>Max: 255 |  |
@@ -55,6 +56,9 @@
 
       # The clock-id in xx:xx:xx:xx:xx:xx format.
       clock_identity: <str>
+
+      # limit ptp to only specified interface
+      uplinks: <list>
       source:
 
         # Source IP.

@@ -34,6 +34,17 @@ router_bgp:
       activate: true
     - name: EVPN-OVERLAY-PEERS
       activate: false
+  neighbors:
+  - ip_address: 10.254.2.17
+    peer_group: IPv4-UNDERLAY-PEERS
+    remote_as: '65103'
+    peer: ptp-tests-restrict-uplinks-leaf1
+    description: ptp-tests-restrict-uplinks-leaf1_Ethernet3
+  - ip_address: 10.254.1.3
+    peer_group: EVPN-OVERLAY-PEERS
+    peer: ptp-tests-restrict-uplinks-leaf1
+    description: ptp-tests-restrict-uplinks-leaf1_Loopback0
+    remote_as: '65103'
   address_family_evpn:
     peer_groups:
     - name: EVPN-OVERLAY-PEERS
@@ -90,6 +101,17 @@ ptp:
         delay_resp: 3
         follow_up: 3
         sync: 3
+ethernet_interfaces:
+- name: Ethernet10
+  peer: ptp-tests-restrict-uplinks-leaf1
+  peer_interface: Ethernet3
+  peer_type: l3leaf
+  description: P2P_ptp-tests-restrict-uplinks-leaf1_Ethernet3
+  shutdown: false
+  mtu: 9214
+  switchport:
+    enabled: false
+  ip_address: 10.254.2.16/31
 loopback_interfaces:
 - name: Loopback0
   description: ROUTER_ID

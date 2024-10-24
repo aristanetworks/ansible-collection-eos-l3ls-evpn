@@ -1,8 +1,8 @@
-hostname: ptp-tests-leaf2
+hostname: ptp-tests-restrict-uplinks-leaf1
 is_deployed: true
 router_bgp:
-  as: '65102'
-  router_id: 10.254.1.2
+  as: '65103'
+  router_id: 10.254.1.3
   bgp:
     default:
       ipv4_unicast: false
@@ -32,20 +32,35 @@ router_bgp:
     - name: EVPN-OVERLAY-PEERS
       activate: false
   neighbors:
-  - ip_address: 10.254.2.4
+  - ip_address: 10.254.2.12
     peer_group: IPv4-UNDERLAY-PEERS
     remote_as: '65200'
     peer: ptp-tests-spine1
-    description: ptp-tests-spine1_Ethernet3
-  - ip_address: 10.254.2.6
+    description: ptp-tests-spine1_Ethernet10
+  - ip_address: 10.254.2.14
     peer_group: IPv4-UNDERLAY-PEERS
     remote_as: '65200'
-    peer: ptp-tests-spine1
-    description: ptp-tests-spine1_Ethernet4
+    peer: ptp-tests-spine2
+    description: ptp-tests-spine2_Ethernet10
+  - ip_address: 10.254.2.16
+    peer_group: IPv4-UNDERLAY-PEERS
+    remote_as: '65200'
+    peer: ptp-tests-spine3
+    description: ptp-tests-spine3_Ethernet10
   - ip_address: 10.255.0.1
     peer_group: EVPN-OVERLAY-PEERS
     peer: ptp-tests-spine1
     description: ptp-tests-spine1_Loopback0
+    remote_as: '65200'
+  - ip_address: 10.255.0.2
+    peer_group: EVPN-OVERLAY-PEERS
+    peer: ptp-tests-spine2
+    description: ptp-tests-spine2_Loopback0
+    remote_as: '65200'
+  - ip_address: 10.255.0.3
+    peer_group: EVPN-OVERLAY-PEERS
+    peer: ptp-tests-spine3
+    description: ptp-tests-spine3_Loopback0
     remote_as: '65200'
   address_family_evpn:
     peer_groups:
@@ -53,7 +68,7 @@ router_bgp:
       activate: true
   vrfs:
   - name: VRF1
-    rd: 10.254.1.2:1
+    rd: 10.254.1.3:1
     route_targets:
       import:
       - address_family: evpn
@@ -63,14 +78,14 @@ router_bgp:
       - address_family: evpn
         route_targets:
         - '1:1'
-    router_id: 10.254.1.2
+    router_id: 10.254.1.3
     redistribute:
       connected:
         enabled: true
   vlans:
   - id: 11
     tenant: PTP
-    rd: 10.254.1.2:10011
+    rd: 10.254.1.3:10011
     route_targets:
       both:
       - 10011:10011
@@ -109,7 +124,7 @@ management_interfaces:
   description: OOB_MANAGEMENT
   shutdown: false
   vrf: MGMT
-  ip_address: 192.168.0.102/24
+  ip_address: 192.168.0.103/24
   gateway: 192.168.0.1
   type: oob
 management_api_http:
@@ -118,93 +133,52 @@ management_api_http:
   enable_https: true
 ptp:
   mode: boundary
-  forward_unicast: true
-  source:
-    ip: 10.254.1.2
-  priority1: 40
-  priority2: 1
-  ttl: 16
+  mode_one_step: true
+  clock_identity: '11:11:11:11:11:11'
+  priority1: 30
+  priority2: 3
   domain: 127
-  message_type:
-    general:
-      dscp: 46
-    event:
-      dscp: 48
   monitor:
     enabled: true
     threshold:
-      offset_from_master: 1234
-      mean_path_delay: 4567
+      offset_from_master: 250
+      mean_path_delay: 1500
     missing_message:
-      intervals:
-        announce: 10
-        follow_up: 9
-        sync: 8
       sequence_ids:
         enabled: true
-        announce: 11
-        delay_resp: 12
-        follow_up: 13
-        sync: 14
+        announce: 3
+        delay_resp: 3
+        follow_up: 3
+        sync: 3
 ethernet_interfaces:
 - name: Ethernet1
   peer: ptp-tests-spine1
-  peer_interface: Ethernet3
+  peer_interface: Ethernet10
   peer_type: spine
-  description: P2P_ptp-tests-spine1_Ethernet3
+  description: P2P_ptp-tests-spine1_Ethernet10
   shutdown: false
   mtu: 9214
   switchport:
     enabled: false
-  ip_address: 10.254.2.5/31
+  ptp:
+    announce:
+      interval: 0
+      timeout: 3
+    delay_req: -3
+    sync_message:
+      interval: -3
+    transport: ipv4
+    enable: true
+  ip_address: 10.254.2.13/31
 - name: Ethernet2
-  peer: ptp-tests-spine1
-  peer_interface: Ethernet4
+  peer: ptp-tests-spine2
+  peer_interface: Ethernet10
   peer_type: spine
-  description: P2P_ptp-tests-spine1_Ethernet4
+  description: P2P_ptp-tests-spine2_Ethernet10
   shutdown: false
   mtu: 9214
   switchport:
     enabled: false
-  ip_address: 10.254.2.7/31
-- name: Ethernet11
-  peer: ptp-tests-l2leaf1-ptp-disabled
-  peer_interface: Ethernet2
-  peer_type: l2leaf
-  description: L2_ptp-tests-l2leaf1-ptp-disabled_Ethernet2
-  shutdown: false
-  channel_group:
-    id: 11
-    mode: active
-- name: Ethernet12
-  peer: ptp-tests-l2leaf2-ptp-enabled
-  peer_interface: Ethernet2
-  peer_type: l2leaf
-  description: L2_ptp-tests-l2leaf2-ptp-enabled_Ethernet2
-  shutdown: false
-  channel_group:
-    id: 12
-    mode: active
-- name: Ethernet14
-  peer: ptp-tests-l2leaf2-ptp-enabled-uplink-disabled
-  peer_interface: Ethernet2
-  peer_type: l2leaf
-  description: L2_ptp-tests-l2leaf2-ptp-enabled-uplink-disabled_Ethernet2
-  shutdown: false
-  channel_group:
-    id: 14
-    mode: active
-- name: Ethernet5
-  peer: video-endpoint
-  peer_interface: PCI2
-  peer_type: server
-  description: SERVER_video-endpoint_PCI2
-  shutdown: false
-  switchport:
-    enabled: true
-    mode: access
-    access_vlan: '11'
-  spanning_tree_portfast: edge
   ptp:
     announce:
       interval: 0
@@ -214,76 +188,26 @@ ethernet_interfaces:
       interval: -3
     transport: ipv4
     enable: true
-    role: master
-- name: Ethernet6
-  peer: Endpoint-with-mpass
-  peer_interface: PCI2
-  peer_type: server
-  description: SERVER_Endpoint-with-mpass_PCI2
+  ip_address: 10.254.2.15/31
+- name: Ethernet3
+  peer: ptp-tests-spine3
+  peer_interface: Ethernet10
+  peer_type: spine
+  description: P2P_ptp-tests-spine3_Ethernet10
   shutdown: false
-  channel_group:
-    id: 6
-    mode: active
-port_channel_interfaces:
-- name: Port-Channel11
-  description: L2_ptp-tests-l2leaf1-ptp-disabled_Port-Channel1
+  mtu: 9214
   switchport:
-    enabled: true
-    mode: trunk
-    trunk:
-      allowed_vlan: '11'
-  shutdown: false
-- name: Port-Channel12
-  description: L2_ptp-tests-l2leaf2-ptp-enabled_Port-Channel1
-  switchport:
-    enabled: true
-    mode: trunk
-    trunk:
-      allowed_vlan: '11'
-  shutdown: false
-  ptp:
-    announce:
-      interval: 0
-      timeout: 3
-    delay_req: -3
-    sync_message:
-      interval: -3
-    transport: ipv4
-    enable: true
-- name: Port-Channel14
-  description: L2_ptp-tests-l2leaf2-ptp-enabled-uplink-disabled_Port-Channel1
-  switchport:
-    enabled: true
-    mode: trunk
-    trunk:
-      allowed_vlan: '11'
-  shutdown: false
-- name: Port-Channel6
-  description: SERVER_Endpoint-with-mpass
-  shutdown: false
-  ptp:
-    announce:
-      interval: 0
-      timeout: 3
-    delay_req: -3
-    sync_message:
-      interval: -3
-    transport: ipv4
-    enable: true
-    role: master
-  switchport:
-    enabled: true
-    mode: access
-    access_vlan: '11'
+    enabled: false
+  ip_address: 10.254.2.17/31
 loopback_interfaces:
 - name: Loopback0
   description: ROUTER_ID
   shutdown: false
-  ip_address: 10.254.1.2/32
+  ip_address: 10.254.1.3/32
 - name: Loopback1
   description: VXLAN_TUNNEL_SOURCE
   shutdown: false
-  ip_address: 10.254.11.2/32
+  ip_address: 10.254.11.3/32
 prefix_lists:
 - name: PL-LOOPBACKS-EVPN-OVERLAY
   sequence_numbers:
@@ -314,11 +238,10 @@ vlan_interfaces:
   tenant: PTP
   description: VLAN11
   shutdown: false
-  ip_address: 172.17.11.1/24
   vrf: VRF1
 vxlan_interface:
   vxlan1:
-    description: ptp-tests-leaf2_VTEP
+    description: ptp-tests-restrict-uplinks-leaf1_VTEP
     vxlan:
       udp_port: 4789
       source_interface: Loopback1
