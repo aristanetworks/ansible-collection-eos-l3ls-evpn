@@ -1,0 +1,41 @@
+---
+# WAN Tenants network services
+
+tenants:
+  - name: WAN-EXAMPLE-TENANT
+    mac_vrf_vni_base: 10000
+    vrfs:
+      - name: BLUE
+        vrf_vni: 100
+        svis:
+          - id: 666
+            name: BLUE-TEST
+            enabled: true
+            nodes:
+              - node: site1-border1
+                ip_address: 10.66.1.1/24
+              - node: site1-border2
+                ip_address: 10.66.11.1/24
+              - node: site2-leaf1
+                ip_address: 10.66.2.1/24
+              - node: site2-leaf2
+                ip_address: 10.66.22.1/24
+              - node: site3-wan1
+                ip_address: 10.66.3.1/24
+      - name: RED
+        vrf_vni: 101
+        svis:
+          - id: 42
+            name: RED-TEST
+            enabled: true
+            nodes:
+              - node: site1-border1
+                ip_address: 10.42.1.1/24
+              - node: site1-border2
+                ip_address: 10.42.11.1/24
+              - node: site2-leaf1
+                ip_address: 10.42.2.1/24
+              - node: site2-leaf2
+                ip_address: 10.42.22.1/24
+              - node: site3-wan1
+                ip_address: 10.42.3.1/24
