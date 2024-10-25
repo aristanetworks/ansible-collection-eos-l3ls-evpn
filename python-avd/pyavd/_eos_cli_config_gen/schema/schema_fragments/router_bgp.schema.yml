@@ -3705,6 +3705,22 @@ keys:
                     description: IPv4 prefix "A.B.C.D/E" or IPv6 prefix "A:B:C:D:E:F:G:H/I".
                   route_map:
                     type: str
+            maximum_paths:
+              type: dict
+              keys:
+                paths:
+                  type: int
+                  required: true
+                  convert_types:
+                    - str
+                  min: 1
+                  max: 600
+                ecmp:
+                  type: int
+                  convert_types:
+                    - str
+                  min: 1
+                  max: 600
             updates:
               type: dict
               keys:
