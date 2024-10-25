@@ -9,6 +9,7 @@ from typing import TYPE_CHECKING
 
 from pyavd._cv.client.exceptions import CVResourceNotFound
 from pyavd._utils import get, get_v2
+from pyavd._utils.password_utils.password import simple_7_decrypt
 
 if TYPE_CHECKING:
     from pyavd._cv.api.arista.studio.v1 import InputSchema
@@ -50,6 +51,16 @@ def is_internet_exit_zscaler_supported(studio_schema: InputSchema) -> bool:
 def is_applications_supported(studio_schema: InputSchema) -> bool:
     """Detect if applications is supported by the metadata studio."""
     return bool(get_v2(studio_schema, "fields.values.applications"))
+
+
+def is_zscaler_tunnel_key_encryption_supported(studio_schema: InputSchema) -> bool:
+    """Detect if zscaler tunnel key encryption is supported by the metadata studio."""
+    return bool(get_v2(studio_schema, "fields.values.zscalerPresharedKeyRef"))
+
+
+def is_zscaler_tunnel_endpoint_supported(studio_schema: InputSchema) -> bool:
+    """Detect if zscaler tunnel endpoint key is supported by the metadata studio."""
+    return bool(get_v2(studio_schema, "fields.values.serviceNodeEndpoint"))
 
 
 async def get_metadata_studio_schema(result: DeployToCvResult, cv_client: CVClient) -> InputSchema | None:
@@ -425,34 +436,39 @@ def generate_internet_exit_metadata(metadata: dict, device: CVDevice, studio_sch
 
         policy_name = internet_exit_policy["name"]
         services_dict.setdefault("zscaler", {"locations": [], "tunnels": []})
-        services_dict["zscaler"]["locations"].append(
-            {
-                "name": f"{device.hostname}_{policy_name}",
-                "description": f"Location corresponding to {device.hostname} for internet-exit policy {policy_name}.",
-                "city": internet_exit_policy["city"],
-                "country": internet_exit_policy["country"],
-                "uploadBandwidth": internet_exit_policy.get("upload_bandwidth"),
-                "downloadBandwidth": internet_exit_policy.get("download_bandwidth"),
-                "firewallEnabled": internet_exit_policy["firewall"],
-                "ipsControl": internet_exit_policy["ips_control"],
-                "aupEnabled": internet_exit_policy["acceptable_use_policy"],
-                "vpnCredentials": [
-                    {
-                        "fqdn": vpn_credential["fqdn"],
-                        "comments": f"Credential for {device.hostname} internet-exit policy {policy_name}",
-                        "vpnType": vpn_credential["vpn_type"],
-                        "presharedKey": vpn_credential["pre_shared_key"],  # Notice we are passing the type-7 obfuscated key.
-                        "secretServiceRef": "encrypted",
-                    }
-                    for vpn_credential in internet_exit_policy["vpn_credentials"]
-                ],
-            },
-        )
-        services_dict["zscaler"]["tunnels"].extend(
-            {
-                "name": tunnel["name"],
-                "preference": tunnel["preference"],
-                "endpoint": {
+
+        zscaler_location = {
+            "name": f"{device.hostname}_{policy_name}",
+            "description": f"Location corresponding to {device.hostname} for internet-exit policy {policy_name}.",
+            "city": internet_exit_policy["city"],
+            "country": internet_exit_policy["country"],
+            "uploadBandwidth": internet_exit_policy.get("upload_bandwidth"),
+            "downloadBandwidth": internet_exit_policy.get("download_bandwidth"),
+            "firewallEnabled": internet_exit_policy["firewall"],
+            "ipsControl": internet_exit_policy["ips_control"],
+            "aupEnabled": internet_exit_policy["acceptable_use_policy"],
+            "vpnCredentials": [],
+        }
+
+        for vpn_credential in internet_exit_policy["vpn_credentials"]:
+            zscaler_vpn_credential = {
+                "fqdn": vpn_credential["fqdn"],
+                "comments": f"Credential for {device.hostname} internet-exit policy {policy_name}",
+                "vpnType": vpn_credential["vpn_type"],
+            }
+            if is_zscaler_tunnel_key_encryption_supported(studio_schema):
+                zscaler_vpn_credential.update({"presharedKey": vpn_credential["pre_shared_key"], "secretServiceRef": "encrypted"})
+            else:
+                zscaler_vpn_credential["presharedKey"] = simple_7_decrypt(vpn_credential["pre_shared_key"])
+
+            zscaler_location["vpnCredentials"].append(zscaler_vpn_credential)
+
+        services_dict["zscaler"]["locations"].append(zscaler_location)
+
+        for tunnel in internet_exit_policy["tunnels"]:
+            zscaler_tunnel = {"name": tunnel["name"], "preference": tunnel["preference"]}
+            if is_zscaler_tunnel_endpoint_supported(studio_schema):
+                zscaler_tunnel["endpoint"] = {
                     "ipAddress": tunnel["endpoint"]["ip_address"],
                     "dcName": tunnel["endpoint"]["datacenter"],
                     "city": tunnel["endpoint"]["city"],
@@ -460,10 +476,8 @@ def generate_internet_exit_metadata(metadata: dict, device: CVDevice, studio_sch
                     "region": tunnel["endpoint"]["region"],
                     "latitude": float(tunnel["endpoint"]["latitude"]),
                     "longitude": float(tunnel["endpoint"]["longitude"]),
-                },
-            }
-            for tunnel in internet_exit_policy["tunnels"]
-        )
+                }
+            services_dict["zscaler"]["tunnels"].append(zscaler_tunnel)
 
     return services_dict, warnings
 
