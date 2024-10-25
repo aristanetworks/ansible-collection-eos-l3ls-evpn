@@ -5,6 +5,7 @@ from .get_avd_facts import get_avd_facts
 from .get_device_config import get_device_config
 from .get_device_doc import get_device_doc
 from .get_device_structured_config import get_device_structured_config
+from .get_fabric_documentation import get_fabric_documentation
 from .validate_inputs import validate_inputs
 from .validate_structured_config import validate_structured_config
 from .validation_result import ValidationResult
@@ -24,6 +25,7 @@ __all__ = [
     "get_device_config",
     "get_device_doc",
     "get_device_structured_config",
+    "get_fabric_documentation",
     "validate_inputs",
     "validate_structured_config",
     "ValidationResult",
