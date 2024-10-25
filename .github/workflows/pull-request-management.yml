@@ -215,6 +215,7 @@ jobs:
           - 'example-isis-ldp-ipvpn'
           - 'example-l2ls-fabric'
           - 'example-single-dc-l3ls'
+          - 'example-cv-pathfinder'
         ansible_version:
           # Testing all scenario with 2.16.x, due to bug with in 2.17.0 with and the way we test eos_designs_negative_unit_tests https://github.com/ansible/ansible/issues/83292
           - 'ansible-core>=2.16.0,<2.17.0 --upgrade'
