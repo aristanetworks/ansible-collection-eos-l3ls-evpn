@@ -82,12 +82,12 @@ servers:
           lacp_fallback:
             mode: individual
             individual:
-              profile: INDIVIDUAL_TRUNK
+              profile: INDIVIDUAL_TRUNK  # Notice that poe and dot1x are _not_ inherited from the fallback profile.
   - name: DOT1X_UNAUTHORIZED
     adapters:
       - switches: [connected_endpoints]
         switch_ports: [Ethernet14]
-        profile: INDIVIDUAL_TRUNK
+        profile: INDIVIDUAL_TRUNK  # Notice that poe and dot1x _are_ inherited from the main profile.
   - name: INDIVIDUAL_2_TRUNK_PHONE
     adapters:
       - switches: [connected_endpoints, connected_endpoints]
@@ -98,6 +98,13 @@ servers:
             mode: individual
             individual:
               profile: INDIVIDUAL_TRUNK_PHONE
+  - name: DOT1X_UNAUTHORIZED_PORT_CHANNEL
+    adapters:
+      - switches: [connected_endpoints, connected_endpoints]
+        switch_ports: [Ethernet17, Ethernet18]
+        profile: INDIVIDUAL_TRUNK  # Notice that poe and dot1x _are_ inherited from the main profile and applied to the member interfaces.
+        port_channel:
+          mode: active
 port_profiles:
   - profile: INDIVIDUAL_TRUNK
     mode: trunk
