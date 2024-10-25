@@ -1,0 +1,18 @@
+---
+l3_interface_profiles:
+  - profile: MPLS-WAN-INTERFACE
+    peer: mpls-cloud
+    # The static_routes uses the peer_ip as next-hop
+    static_routes:
+      - prefix: 172.18.0.0/16
+    # Enabling flow tracking on WAN interfaces
+    flow_tracking:
+      enabled: true
+  - profile: INTERNET-WAN-INTERFACE
+    peer: inet-cloud
+    ip_address: dhcp
+    dhcp_accept_default_route: true
+    ipv4_acl_in: ACL-INTERNET-IN
+    # Enabling flow tracking on WAN interfaces
+    flow_tracking:
+      enabled: true
