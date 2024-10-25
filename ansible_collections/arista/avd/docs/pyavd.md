@@ -53,7 +53,6 @@ Feedback is very welcome. Please use [GitHub discussions](https://github.com/ari
 - Add more tests (current coverage is 85%)
 - Add network state validation similar to `eos_validate_state`.
 - Add CloudVision tag integrations
-- Make PyAVD the source of AVD logic and use as a dependency for the `arista.avd` Ansible collection.
 - Explore support for custom Jinja2 templates.
 
 ## Installation
@@ -78,36 +77,77 @@ pip install pyavd[ansible]
 
 ::: pyavd.validate_inputs
     options:
+      heading_level: 3
       show_root_toc_entry: false
+      show_object_full_path: true
       paths: ../../../../python-avd
 
 ::: pyavd.get_avd_facts
     options:
+      heading_level: 3
       show_root_toc_entry: false
+      show_object_full_path: true
+      paths: ../../../../python-avd
 
 ::: pyavd.get_device_structured_config
     options:
+      heading_level: 3
       show_root_toc_entry: false
+      show_object_full_path: true
+      paths: ../../../../python-avd
 
 ::: pyavd.validate_structured_config
     options:
+      heading_level: 3
       show_root_toc_entry: false
+      show_object_full_path: true
+      paths: ../../../../python-avd
+
+::: pyavd.get_fabric_documentation
+    options:
+      heading_level: 3
+      show_root_toc_entry: false
+      show_object_full_path: true
       paths: ../../../../python-avd
 
 ::: pyavd.get_device_config
     options:
+      heading_level: 3
       show_root_toc_entry: false
+      show_object_full_path: true
+      paths: ../../../../python-avd
 
 ::: pyavd.get_device_doc
     options:
+      heading_level: 3
       show_root_toc_entry: false
+      show_object_full_path: true
+      paths: ../../../../python-avd
 
 ::: pyavd.validation_result
     options:
+      heading_level: 3
       show_root_toc_entry: false
+      show_object_full_path: true
+      paths: ../../../../python-avd
+
+::: pyavd.api.fabric_documentation
+    options:
+      heading_level: 3
+      show_root_toc_entry: false
+      show_object_full_path: true
       paths: ../../../../python-avd
 
 ::: pyavd.api.interface_descriptions
     options:
+      heading_level: 3
       show_root_toc_entry: false
+      show_object_full_path: true
+      paths: ../../../../python-avd
+
+::: pyavd.api.ip_addressing
+    options:
+      heading_level: 3
+      show_root_toc_entry: false
+      show_object_full_path: true
       paths: ../../../../python-avd
