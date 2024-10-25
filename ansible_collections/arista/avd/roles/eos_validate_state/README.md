@@ -33,7 +33,8 @@ ansible-playbook playbooks/fabric-validate.yaml --check
 
 Figure 1 below provides a visualization of the role's inputs, outputs, and tasks in order executed by the role.
 
-![Figure 1: Ansible Role eos_validate_state](../../docs/_media/eos_validate_state.svg)
+![Figure 1: Ansible Role eos_validate_state](../../docs/_media/eos_validate_state.svg#only-dark)
+![Figure 1: Ansible Role eos_validate_state](../../docs/_media/eos_validate_state.svg#only-light)
 
 **Inputs:**
 
