@@ -1,6 +1,8 @@
 ---
 ## Tacacs+ Servers
 tacacs_servers:
-  policy_unknown_mandatory_attribute_ignore: true
   hosts:
-    - host: 10.10.10.157
+    - host: 10.10.10.159
+      vrf: default
+      key: $kUVyoj7FVQ//yw9D2lbqjA==$kxxohBiofI46IX3pw18KYQ==$DOOM0l9uU4TrQt2kyA7XCKtjUA==
+      key_type: 8a

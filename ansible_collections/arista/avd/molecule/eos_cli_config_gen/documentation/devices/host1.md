@@ -79,6 +79,9 @@ username shell ssh-key secondary ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDHMTFuLHP
 | default | 10.10.10.249 | False | 23 |
 | default | 10.10.10.158 | False | - |
 | default | 10.10.10.159 | False | - |
+| default | 10.10.10.160 | False | - |
+
+Policy unknown-mandatory-attribute ignore is configured
 
 Global timeout: 10 seconds
 
@@ -87,10 +90,12 @@ Global timeout: 10 seconds
 ```eos
 !
 tacacs-server timeout 10
+tacacs-server policy unknown-mandatory-attribute ignore
 tacacs-server host 10.10.10.157 single-connection vrf mgt key 7 <removed>
 tacacs-server host 10.10.10.249 timeout 23 key 7 <removed>
 tacacs-server host 10.10.10.158 key 7 <removed>
 tacacs-server host 10.10.10.159 key 8a <removed>
+tacacs-server host 10.10.10.160
 ```
 
 ### RADIUS Server

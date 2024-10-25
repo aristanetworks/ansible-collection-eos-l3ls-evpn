@@ -2,6 +2,7 @@
 ## Tacacs+ Servers
 tacacs_servers:
   timeout: 10
+  policy_unknown_mandatory_attribute_ignore: true
   hosts:
     - host: 10.10.10.157
       vrf: mgt
@@ -20,3 +21,4 @@ tacacs_servers:
       vrf: default
       key: $kUVyoj7FVQ//yw9D2lbqjA==$kxxohBiofI46IX3pw18KYQ==$DOOM0l9uU4TrQt2kyA7XCKtjUA==
       key_type: 8a
+    - host: 10.10.10.160

@@ -10,6 +10,9 @@
   - [AAA Authentication](#aaa-authentication)
   - [AAA Authorization](#aaa-authorization)
   - [AAA Accounting](#aaa-accounting)
+- [Management Security](#management-security)
+  - [Management Security Summary](#management-security-summary)
+  - [Management Security Device Configuration](#management-security-device-configuration)
 
 ## Management
 
@@ -47,16 +50,13 @@ interface Management1
 
 | VRF | TACACS Servers | Single-Connection | Timeout |
 | --- | -------------- | ----------------- | ------- |
-| default | 10.10.10.157 | False | - |
-
-Policy unknown-mandatory-attribute ignore is configured
+| default | 10.10.10.159 | False | - |
 
 #### TACACS Servers Device Configuration
 
 ```eos
 !
-tacacs-server policy unknown-mandatory-attribute ignore
-tacacs-server host 10.10.10.157
+tacacs-server host 10.10.10.159 key 8a <removed>
 ```
 
 ### RADIUS Server
@@ -113,4 +113,20 @@ no aaa authorization config-commands
 ```eos
 aaa accounting exec console none
 aaa accounting exec default none
+```
+
+## Management Security
+
+### Management Security Summary
+
+| Settings | Value |
+| -------- | ----- |
+| Reversible password encryption | aes-256-gcm |
+
+### Management Security Device Configuration
+
+```eos
+!
+management security
+   password encryption reversible aes-256-gcm
 ```
