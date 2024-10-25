@@ -30,9 +30,6 @@ keys:
       clock_identity:
         type: str
         description: The clock-id in xx:xx:xx:xx:xx:xx format.
-      uplinks:
-        type: list
-        description: limit ptp to only specified interface
       source:
         type: dict
         keys:

@@ -41,7 +41,6 @@
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;bfd</samp>](## "l3_edge.p2p_links_profiles.[].bfd") | Boolean |  | `False` |  | Enable BFD (only considered for BGP). |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ptp</samp>](## "l3_edge.p2p_links_profiles.[].ptp") | Dictionary |  |  |  | PTP parameters. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "l3_edge.p2p_links_profiles.[].ptp.enabled") | Boolean |  | `False` |  | Enable PTP. |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;uplinks</samp>](## "l3_edge.p2p_links_profiles.[].ptp.uplinks") | List |  |  |  | limit ptp to only specified interface |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sflow</samp>](## "l3_edge.p2p_links_profiles.[].sflow") | Boolean |  |  |  | Enable sFlow. Overrides `fabric_sflow` setting. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;underlay_multicast</samp>](## "l3_edge.p2p_links_profiles.[].underlay_multicast") | Boolean |  | `False` |  | Enable PIM sparse mode. Requires `include_in_underlay_protocol` and the global `underlay_multicast` to be `true`. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;flow_tracking</samp>](## "l3_edge.p2p_links_profiles.[].flow_tracking") | Dictionary |  |  |  | Enable flow-tracking. Overrides `fabric_flow_tracking` setting. |
@@ -89,7 +88,6 @@
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;bfd</samp>](## "l3_edge.p2p_links.[].bfd") | Boolean |  | `False` |  | Enable BFD (only considered for BGP). |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ptp</samp>](## "l3_edge.p2p_links.[].ptp") | Dictionary |  |  |  | PTP parameters. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "l3_edge.p2p_links.[].ptp.enabled") | Boolean |  | `False` |  | Enable PTP. |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;uplinks</samp>](## "l3_edge.p2p_links.[].ptp.uplinks") | List |  |  |  | limit ptp to only specified interface |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sflow</samp>](## "l3_edge.p2p_links.[].sflow") | Boolean |  |  |  | Enable sFlow. Overrides `fabric_sflow` setting. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;underlay_multicast</samp>](## "l3_edge.p2p_links.[].underlay_multicast") | Boolean |  | `False` |  | Enable PIM sparse mode. Requires `include_in_underlay_protocol` and the global `underlay_multicast` to be `true`. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;flow_tracking</samp>](## "l3_edge.p2p_links.[].flow_tracking") | Dictionary |  |  |  | Enable flow-tracking. Overrides `fabric_flow_tracking` setting. |
@@ -212,9 +210,6 @@
 
             # Enable PTP.
             enabled: <bool; default=False>
-
-            # limit ptp to only specified interface
-            uplinks: <list>
 
           # Enable sFlow. Overrides `fabric_sflow` setting.
           sflow: <bool>
@@ -360,9 +355,6 @@
 
             # Enable PTP.
             enabled: <bool; default=False>
-
-            # limit ptp to only specified interface
-            uplinks: <list>
 
           # Enable sFlow. Overrides `fabric_sflow` setting.
           sflow: <bool>

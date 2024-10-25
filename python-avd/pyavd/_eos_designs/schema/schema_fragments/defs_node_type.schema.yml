@@ -1075,7 +1075,9 @@ $defs:
                 default: "aes67-r16-2016"
               uplinks:
                 type: list
-                description: limit ptp to only specified interface
+                items:
+                  type: str
+                  description: Limit PTP to the specified uplink interfaces.
               mlag:
                 description: Configure PTP on the MLAG peer-link port-channel when PTP is enabled. By default PTP will not be configured on the MLAG peer-link port-channel.
                 type: bool
