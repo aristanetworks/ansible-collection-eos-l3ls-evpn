@@ -1,0 +1,34 @@
+! Basic EOS config
+!
+! Hostname of the device
+hostname site2-wan1
+!
+! Configures username and password for the ansible user
+username ansible privilege 15 role network-admin secret sha512 $6$7u4j1rkb3VELgcZE$EJt2Qff8kd/TapRoci0XaIZsL4tFzgq1YZBLD9c6f/knXzvcYY0NcMKndZeCv0T268knGKhOEwZAxqKjlMm920
+!
+! Defines the VRF for MGMT
+vrf instance MGMT
+!
+! Defines the settings for the Management1 interface through which Ansible reaches the device
+interface Management1
+   description OOB_MANAGEMENT
+   no shutdown
+   vrf MGMT
+   ! IP address - must be set uniquely per device
+   ip address 192.168.17.16/24
+!
+! Static default route for VRF MGMT
+ip route vrf MGMT 0.0.0.0/0 192.168.17.1
+!
+! Enables API access in VRF MGMT
+management api http-commands
+   protocol https
+   no shutdown
+   !
+   vrf MGMT
+      no shutdown
+!
+end
+!
+! Save configuration to flash
+copy running-config startup-config
