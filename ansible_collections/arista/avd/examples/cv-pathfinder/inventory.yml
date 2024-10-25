@@ -1,0 +1,48 @@
+---
+all:
+  hosts:
+    cloudvision:
+      ansible_host: www.cv-staging.corp.arista.io
+      # cv_token is coming from an ENV variable
+      ansible_password: "{{ lookup('ansible.builtin.env', 'CV_TOKEN') }}"
+  children:
+    WAN:
+      children:
+        PATHFINDERS:
+          hosts:
+            pf1:
+              ansible_host: 192.168.17.10
+            pf2:
+              ansible_host: 192.168.17.11
+        SITE1:
+          hosts:
+            site1-wan1:
+              ansible_host: 192.168.17.12
+            site1-wan2:
+              ansible_host: 192.168.17.13
+            site1-border1:
+              ansible_host: 192.168.17.14
+            site1-border2:
+              ansible_host: 192.168.17.15
+        SITE2:
+          hosts:
+            site2-wan1:
+              ansible_host: 192.168.17.16
+            site2-wan2:
+              ansible_host: 192.168.17.17
+            site2-leaf1:
+              ansible_host: 192.168.17.18
+            site2-leaf2:
+              ansible_host: 192.168.17.19
+        SITE3:
+          hosts:
+            site3-wan1:
+              ansible_host: 192.168.17.20
+            site3-leaf1:
+              ansible_host: 192.168.17.21
+        TRANSPORTS:
+          hosts:
+            mpls-cloud:
+              ansible_host: 192.168.17.30
+            inet-cloud:
+              ansible_host: 192.168.17.31
