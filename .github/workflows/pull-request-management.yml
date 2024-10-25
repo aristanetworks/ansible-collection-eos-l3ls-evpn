@@ -382,14 +382,9 @@ jobs:
         with:
           python-version: |
             3.10
-            3.11
-            3.12
-          # 3.13 - Still waiting for support in ansible-test
       - name: 'Install Python requirements'
         run: |
-          python3.10 -m pip install mock pytest pytest-mock pytest-xdist pyyaml "ansible-core<2.18.0" -r .github/requirements-ci.txt --upgrade
-          python3.11 -m pip install mock pytest pytest-mock pytest-xdist pyyaml "ansible-core<2.18.0" -r .github/requirements-ci.txt --upgrade
-          python3.12 -m pip install mock pytest pytest-mock pytest-xdist pyyaml "ansible-core<2.18.0" -r .github/requirements-ci.txt --upgrade
+          pip install mock pytest pytest-mock pytest-xdist pyyaml "ansible-core<2.18.0" -r .github/requirements-ci.txt --upgrade
       - name: 'Run ansible-test units test cases'
         run: |
           cd ansible_collections/arista/avd/
