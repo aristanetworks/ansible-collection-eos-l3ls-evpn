@@ -453,7 +453,7 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: |
-            3.12
+            3.10
       - uses: actions/checkout@v4
       - name: 'Install Python & Ansible requirements'
         run: |
