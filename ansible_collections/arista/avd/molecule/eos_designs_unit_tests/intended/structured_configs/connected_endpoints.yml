@@ -131,12 +131,6 @@ ethernet_interfaces:
       native_vlan: 123
   spanning_tree_portfast: edge
   spanning_tree_bpdufilter: 'True'
-  dot1x:
-    unauthorized:
-      access_vlan_membership_egress: true
-      native_vlan_membership_egress: true
-  poe:
-    disabled: true
   ptp:
     announce:
       interval: 0
@@ -167,12 +161,6 @@ ethernet_interfaces:
       native_vlan: 123
   spanning_tree_portfast: edge
   spanning_tree_bpdufilter: 'True'
-  dot1x:
-    unauthorized:
-      access_vlan_membership_egress: true
-      native_vlan_membership_egress: true
-  poe:
-    disabled: true
   ptp:
     announce:
       interval: 0
@@ -192,6 +180,12 @@ ethernet_interfaces:
   port_profile: INDIVIDUAL_TRUNK
   description: SERVER_DOT1X_UNAUTHORIZED
   shutdown: false
+  dot1x:
+    unauthorized:
+      access_vlan_membership_egress: true
+      native_vlan_membership_egress: true
+  poe:
+    disabled: true
   switchport:
     enabled: true
     mode: trunk
@@ -201,12 +195,6 @@ ethernet_interfaces:
       native_vlan: 123
   spanning_tree_portfast: edge
   spanning_tree_bpdufilter: 'True'
-  dot1x:
-    unauthorized:
-      access_vlan_membership_egress: true
-      native_vlan_membership_egress: true
-  poe:
-    disabled: true
   ptp:
     announce:
       interval: 0
@@ -256,6 +244,36 @@ ethernet_interfaces:
   link_tracking_groups:
   - name: LT_GROUP1
     direction: downstream
+- name: Ethernet17
+  peer: DOT1X_UNAUTHORIZED_PORT_CHANNEL
+  peer_type: server
+  port_profile: INDIVIDUAL_TRUNK
+  description: SERVER_DOT1X_UNAUTHORIZED_PORT_CHANNEL
+  shutdown: false
+  dot1x:
+    unauthorized:
+      access_vlan_membership_egress: true
+      native_vlan_membership_egress: true
+  poe:
+    disabled: true
+  channel_group:
+    id: 17
+    mode: active
+- name: Ethernet18
+  peer: DOT1X_UNAUTHORIZED_PORT_CHANNEL
+  peer_type: server
+  port_profile: INDIVIDUAL_TRUNK
+  description: SERVER_DOT1X_UNAUTHORIZED_PORT_CHANNEL
+  shutdown: false
+  dot1x:
+    unauthorized:
+      access_vlan_membership_egress: true
+      native_vlan_membership_egress: true
+  poe:
+    disabled: true
+  channel_group:
+    id: 17
+    mode: active
 port_channel_interfaces:
 - name: Port-Channel1
   description: Port channel description server_OLD_SW-1/2_Po1_ENDPOINT_PORT_CHANNEL_INTERFACE DESCRIPTION SERVER_OLD_SW-1/2_ENDPOINT_PORT_CHANNEL
@@ -296,5 +314,30 @@ port_channel_interfaces:
     enabled: true
   lacp_fallback_mode: individual
   lacp_fallback_timeout: 90
+- name: Port-Channel17
+  description: SERVER_DOT1X_UNAUTHORIZED_PORT_CHANNEL
+  shutdown: false
+  service_profile: MYQOS
+  ptp:
+    announce:
+      interval: 0
+      timeout: 3
+    delay_req: -3
+    sync_message:
+      interval: -3
+    transport: ipv4
+    enable: true
+    role: master
+  sflow:
+    enable: false
+  switchport:
+    enabled: true
+    mode: trunk
+    trunk:
+      allowed_vlan: 1,2,3,4,5,6,7,123,234
+      native_vlan_tag: false
+      native_vlan: 123
+  spanning_tree_portfast: edge
+  spanning_tree_bpdufilter: 'True'
 metadata:
   platform: 720XP

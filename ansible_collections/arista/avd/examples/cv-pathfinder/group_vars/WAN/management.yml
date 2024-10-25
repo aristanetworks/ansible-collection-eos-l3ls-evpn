@@ -1,0 +1,102 @@
+---
+# WAN Management settings
+mgmt_gateway: 192.168.17.1
+
+# NTP
+ntp_settings:
+  servers:
+    - name: 0.pool.ntp.org
+
+# CloudVision/TerminAttr
+# **edit the cvp_instance_ips to match your CVaaS region**
+cvp_instance_ips: [www.cv-staging.corp.arista.io]
+terminattr_smashexcludes: "ale,flexCounter,hardware,kni,pulse,strata"
+terminattr_ingestexclude: "/Sysdb/cell/1/agent,/Sysdb/cell/2/agent"
+
+# For each local user in this example, password == username
+local_users:
+  - name: arista
+    privilege: 15
+    role: network-admin
+    sha512_password: $6$Enl0WfE32FthwyiJ$yTyGaEJ2uPKLU.F7314YtB7J1jrzrMi7ogXIRTEHQfLdLgKWWmr1UvNlZLN6AyuxET7G5aH3AI9OYRzxVTkB1.
+  - name: ansible
+    privilege: 15
+    role: network-admin
+    sha512_password: $6$7u4j1rkb3VELgcZE$EJt2Qff8kd/TapRoci0XaIZsL4tFzgq1YZBLD9c6f/knXzvcYY0NcMKndZeCv0T268knGKhOEwZAxqKjlMm920
+  - name: cvpadmin
+    privilege: 15
+    role: network-admin
+    sha512_password: $6$a7LdQWHxWzYHpvVt$n62q.1mbm4kzQ5oBr0lhXCE9ntnTn.SNa16DovZHahFQLH.iPcPMZa5JUSFtncrDW4EDQ3oSWgP8G0S4FtOFx1
+
+# Internet ACL
+ipv4_acls:
+  - name: ACL-PF-INTERNET-IN
+    entries:
+      - sequence: 1
+        remark: "Not for PRODUCTION: This ACL is built this way because the lab has an out-of-band interface"
+      - sequence: 10
+        # IPSec traffic from anywhere
+        action: permit
+        protocol: udp
+        source: any
+        destination: interface_ip
+        destination_ports_match: eq
+        destination_ports: [isakmp, non500-isakmp]
+      - sequence: 20
+        # STUN traffic from anywhere
+        action: permit
+        protocol: udp
+        source: any
+        destination: interface_ip
+        destination_ports_match: eq
+        destination_ports: [3478]
+      - sequence: 30
+        # Troubleshooting
+        action: permit
+        protocol: icmp
+        source: any
+        destination: interface_ip
+      - action: deny
+        protocol: ip
+        source: any
+        destination: any
+  - name: ACL-INTERNET-IN
+    entries:
+      - sequence: 1
+        remark: "Not for PRODUCTION: This ACL is built this way because the lab has an out-of-band interface"
+      - sequence: 10
+        # IPSec traffic from anywhere
+        action: permit
+        protocol: udp
+        source: any
+        destination: interface_ip
+        destination_ports_match: eq
+        destination_ports: [isakmp, non500-isakmp]
+      - sequence: 30
+        # Troubleshooting
+        action: permit
+        protocol: icmp
+        source: any
+        destination: interface_ip
+      - action: deny
+        protocol: ip
+        source: any
+        destination: any
+
+# DNS
+name_servers:
+  - 192.168.17.1
+
+custom_structured_configuration_dns_domain: wan.example.local
+
+# AAA
+custom_structured_configuration_aaa_authorization:
+  exec:
+    default: local
+
+# disabling LLDP on management interface
+custom_structured_configuration_management_interfaces:
+  - name: Management1
+    lldp:
+      transmit: false
+      receive: false
