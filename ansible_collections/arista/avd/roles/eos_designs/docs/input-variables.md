@@ -12,7 +12,7 @@ title: Input variables for eos_designs
 
 This document describes the supported input variables for the role `arista.avd.eos_designs`.
 
-Since several data models have changed between AVD versions 3.x and 4.x, it is recommended to study the [Porting Guide for AVD 4.x.x](../../../docs/porting-guides/4.x.x.md) for existing deployments.
+Since several data models have changed between AVD versions 4.x and 5.x, it is recommended to study the [Porting Guide for AVD 5.x.x](../../../docs/porting-guides/5.x.x.md) for existing deployments.
 
 The input variables are documented below in tables and YAML.
 

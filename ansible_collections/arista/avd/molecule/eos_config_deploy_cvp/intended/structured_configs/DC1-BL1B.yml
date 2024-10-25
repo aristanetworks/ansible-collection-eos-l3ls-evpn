@@ -11,6 +11,10 @@ router_bgp:
   maximum_paths:
     paths: 4
     ecmp: 4
+  redistribute:
+    connected:
+      enabled: true
+      route_map: RM-CONN-2-BGP
   updates:
     wait_install: true
   peer_groups:
@@ -89,9 +93,6 @@ router_bgp:
     peer: DC1-SPINE4
     description: DC1-SPINE4_Loopback0
     remote_as: '65001'
-  redistribute_routes:
-  - source_protocol: connected
-    route_map: RM-CONN-2-BGP
   address_family_evpn:
     peer_groups:
     - name: EVPN-OVERLAY-PEERS
@@ -109,9 +110,10 @@ router_bgp:
         route_targets:
         - '14:14'
     router_id: 192.168.255.11
-    redistribute_routes:
-    - source_protocol: connected
-      route_map: RM-CONN-2-BGP-VRFS
+    redistribute:
+      connected:
+        enabled: true
+        route_map: RM-CONN-2-BGP-VRFS
     neighbors:
     - ip_address: 10.255.251.10
       peer_group: MLAG-IPv4-UNDERLAY-PEER
@@ -130,9 +132,10 @@ router_bgp:
         route_targets:
         - '21:21'
     router_id: 192.168.255.11
-    redistribute_routes:
-    - source_protocol: connected
-      route_map: RM-CONN-2-BGP-VRFS
+    redistribute:
+      connected:
+        enabled: true
+        route_map: RM-CONN-2-BGP-VRFS
     neighbors:
     - ip_address: 10.255.251.10
       peer_group: MLAG-IPv4-UNDERLAY-PEER
@@ -151,9 +154,10 @@ router_bgp:
         route_targets:
         - '31:31'
     router_id: 192.168.255.11
-    redistribute_routes:
-    - source_protocol: connected
-      route_map: RM-CONN-2-BGP-VRFS
+    redistribute:
+      connected:
+        enabled: true
+        route_map: RM-CONN-2-BGP-VRFS
     neighbors:
     - ip_address: 10.255.251.10
       peer_group: MLAG-IPv4-UNDERLAY-PEER

@@ -9,6 +9,9 @@ router_bgp:
   maximum_paths:
     paths: 4
     ecmp: 4
+  redistribute:
+    connected:
+      enabled: true
   updates:
     wait_install: true
   peer_groups:
@@ -20,8 +23,6 @@ router_bgp:
     peer_groups:
     - name: IPv4-UNDERLAY-PEERS
       activate: true
-  redistribute_routes:
-  - source_protocol: connected
   neighbors:
   - ip_address: 192.168.0.0
     peer_group: IPv4-UNDERLAY-PEERS

@@ -323,10 +323,10 @@ interface Ethernet6
    switchport trunk allowed vlan 1-4094
    switchport mode trunk
    switchport
-   storm-control all level 10
    storm-control broadcast level pps 100
    storm-control multicast level 1
    storm-control unknown-unicast level 2
+   storm-control all level 10
    spanning-tree portfast
    spanning-tree bpdufilter enable
 !
@@ -631,9 +631,9 @@ ASN Notation: asplain
 !
 router bgp 65101
    router-id 192.168.255.5
-   maximum-paths 4 ecmp 4
    update wait-install
    no bgp default ipv4-unicast
+   maximum-paths 4 ecmp 4
    distance bgp 20 200 200
    neighbor EVPN-OVERLAY-PEERS peer group
    neighbor EVPN-OVERLAY-PEERS update-source Loopback0
@@ -646,10 +646,6 @@ router bgp 65101
    neighbor UNDERLAY_PEERS password 7 <removed>
    neighbor UNDERLAY_PEERS send-community
    neighbor UNDERLAY_PEERS maximum-routes 12000
-   neighbor interface Ethernet1 peer-group UNDERLAY_PEERS remote-as 65001
-   neighbor interface Ethernet2 peer-group UNDERLAY_PEERS remote-as 65001
-   neighbor interface Ethernet3 peer-group UNDERLAY_PEERS remote-as 65001
-   neighbor interface Ethernet4 peer-group UNDERLAY_PEERS remote-as 65001
    neighbor 192.168.255.1 peer group EVPN-OVERLAY-PEERS
    neighbor 192.168.255.1 remote-as 65001
    neighbor 192.168.255.1 description DC1-SPINE1_Loopback0
@@ -663,6 +659,10 @@ router bgp 65101
    neighbor 192.168.255.4 remote-as 65001
    neighbor 192.168.255.4 description DC1-SPINE4_Loopback0
    redistribute connected route-map RM-CONN-2-BGP
+   neighbor interface Ethernet1 peer-group UNDERLAY_PEERS remote-as 65001
+   neighbor interface Ethernet2 peer-group UNDERLAY_PEERS remote-as 65001
+   neighbor interface Ethernet3 peer-group UNDERLAY_PEERS remote-as 65001
+   neighbor interface Ethernet4 peer-group UNDERLAY_PEERS remote-as 65001
    !
    vlan-aware-bundle Tenant_A_APP_Zone
       rd 192.168.255.5:12
@@ -677,13 +677,13 @@ router bgp 65101
       vlan 120-121
    !
    address-family evpn
-      host-flap detection window 20 threshold 30
       neighbor EVPN-OVERLAY-PEERS activate
+      host-flap detection window 20 threshold 30
    !
    address-family ipv4
       no neighbor EVPN-OVERLAY-PEERS activate
-      neighbor UNDERLAY_PEERS next-hop address-family ipv6 originate
       neighbor UNDERLAY_PEERS activate
+      neighbor UNDERLAY_PEERS next-hop address-family ipv6 originate
    !
    vrf Tenant_A_APP_Zone
       rd 192.168.255.5:12

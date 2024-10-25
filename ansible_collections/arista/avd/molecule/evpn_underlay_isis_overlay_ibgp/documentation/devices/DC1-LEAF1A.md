@@ -510,9 +510,9 @@ ASN Notation: asplain
 !
 router bgp 65000
    router-id 192.168.255.5
-   maximum-paths 4 ecmp 4
    update wait-install
    no bgp default ipv4-unicast
+   maximum-paths 4 ecmp 4
    distance bgp 20 200 200
    neighbor OVERLAY-PEERS peer group
    neighbor OVERLAY-PEERS remote-as 65000
@@ -527,9 +527,9 @@ router bgp 65000
    neighbor 192.168.255.4 description DC1-SPINE4_Loopback0
    !
    address-family evpn
+      neighbor OVERLAY-PEERS activate
       neighbor OVERLAY-PEERS route-map RM-EVPN-SOO-IN in
       neighbor OVERLAY-PEERS route-map RM-EVPN-SOO-OUT out
-      neighbor OVERLAY-PEERS activate
    !
    address-family ipv4
       no neighbor OVERLAY-PEERS activate

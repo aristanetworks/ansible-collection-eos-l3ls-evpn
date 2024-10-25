@@ -35,7 +35,7 @@ class PortChannelInterfacesMixin(UtilsMixin):
         - Raise a duplicate error for any other duplicate port-channel interface
         """
         port_channel_interfaces = []
-        for index, connected_endpoint in enumerate(self._filtered_connected_endpoints):
+        for connected_endpoint in self._filtered_connected_endpoints:
             for adapter in connected_endpoint["adapters"]:
                 if get(adapter, "port_channel.mode") is None:
                     continue
@@ -44,8 +44,7 @@ class PortChannelInterfacesMixin(UtilsMixin):
                 channel_group_id = get(adapter, "port_channel.channel_id", default=default_channel_group_id)
 
                 port_channel_interface_name = f"Port-Channel{channel_group_id}"
-                context = f"{connected_endpoint['type']}[{connected_endpoint['name']}].adapters[{index}]"
-                port_channel_config = self._get_port_channel_interface_cfg(adapter, port_channel_interface_name, channel_group_id, connected_endpoint, context)
+                port_channel_config = self._get_port_channel_interface_cfg(adapter, port_channel_interface_name, channel_group_id, connected_endpoint)
                 append_if_not_duplicate(
                     list_of_dicts=port_channel_interfaces,
                     primary_key="name",
@@ -76,7 +75,7 @@ class PortChannelInterfacesMixin(UtilsMixin):
                         context_keys=["name"],
                     )
 
-        for index, network_port in enumerate(self._filtered_network_ports):
+        for network_port in self._filtered_network_ports:
             if get(network_port, "port_channel.mode") is None:
                 continue
 
@@ -101,10 +100,7 @@ class PortChannelInterfacesMixin(UtilsMixin):
                 channel_group_id = get(tmp_network_port, "port_channel.channel_id", default=default_channel_group_id)
 
                 port_channel_interface_name = f"Port-Channel{channel_group_id}"
-                context = f"network_ports[{index}]"
-                port_channel_config = self._get_port_channel_interface_cfg(
-                    tmp_network_port, port_channel_interface_name, channel_group_id, connected_endpoint, context
-                )
+                port_channel_config = self._get_port_channel_interface_cfg(tmp_network_port, port_channel_interface_name, channel_group_id, connected_endpoint)
                 append_if_not_duplicate(
                     list_of_dicts=port_channel_interfaces,
                     primary_key="name",
@@ -124,7 +120,6 @@ class PortChannelInterfacesMixin(UtilsMixin):
         port_channel_interface_name: str,
         channel_group_id: int,
         connected_endpoint: dict,
-        context: str,
     ) -> dict:
         """Return structured_config for one port_channel_interface."""
         peer = connected_endpoint["name"]
@@ -159,7 +154,7 @@ class PortChannelInterfacesMixin(UtilsMixin):
             "mtu": adapter.get("mtu") if self.shared_utils.platform_settings_feature_support_per_interface_mtu else None,
             "service_profile": adapter.get("qos_profile"),
             "link_tracking_groups": self._get_adapter_link_tracking_groups(adapter),
-            "ptp": self._get_adapter_ptp(adapter, context),
+            "ptp": self._get_adapter_ptp(adapter),
             "sflow": self._get_adapter_sflow(adapter),
             "flow_tracker": self._get_adapter_flow_tracking(adapter),
             "validate_state": None if adapter.get("validate_state", True) else False,

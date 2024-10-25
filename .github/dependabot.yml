@@ -17,16 +17,6 @@ updates:
       prefix: "Bump(requirements): "
     # Allow up to 10 open pull requests for pip dependencies
     open-pull-requests-limit: 10
-  # This next entry intends to ignore requirements-minimum.txt
-  # Need to check if it works or not.
-  - package-ecosystem: "pip"
-    directory: "/ansible_collections/arista/avd/requirements-minimum.txt"
-    schedule:
-      interval: "monthly"
-    # Allow up to 0 open pull requests for pip dependencies
-    open-pull-requests-limit: 0
-    ignore:
-      - dependency-name: "*"
   # This second entry for pip covers the requirements file in the ansible collection
   - package-ecosystem: "pip"
     directory: "/ansible_collections/arista/avd/"

@@ -18,7 +18,10 @@
 | Sources | Direction | Access Group Type | Access Group Name | Access Group Priority |
 | ------- | --------- | ----------------- | ----------------- | --------------------- |
 {%         for source in monitor_session.sources | arista.avd.natural_sort('name') %}
-| {{ source.name }} | {{ source.direction | arista.avd.default('both') }} | {{ source.access_group.type | arista.avd.default('-') }} | {{ source.access_group.name | arista.avd.default('-') }} | {{ source.access_group.priority | arista.avd.default('-') }} |
+{%             if monitor_session.access_group.type is arista.avd.defined and monitor_session.access_group.name is arista.avd.defined %}
+{%                 set access_group = "-" %}
+{%             endif %}
+| {{ source.name }} | {{ source.direction | arista.avd.default('both') }} | {{ access_group | arista.avd.default(source.access_group.type, '-') }} | {{ access_group | arista.avd.default(source.access_group.name, '-') }} | {{ source.access_group.priority | arista.avd.default('-') }} |
 {%         endfor %}
 
 ####### {{ monitor_session.name }} Destinations and Session Settings

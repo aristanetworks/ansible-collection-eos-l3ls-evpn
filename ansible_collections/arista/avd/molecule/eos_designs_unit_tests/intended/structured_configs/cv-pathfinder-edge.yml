@@ -8,8 +8,46 @@ router_bgp:
       ipv4_unicast: false
   maximum_paths:
     paths: 16
+  redistribute:
+    connected:
+      enabled: true
+      route_map: RM-CONN-2-BGP
+    static:
+      enabled: true
+      route_map: RM-STATIC-2-BGP
   updates:
     wait_install: true
+  neighbors:
+  - ip_address: 172.16.9.4
+    remote_as: '64520'
+    description: ATT_666_peer3_Ethernet42
+    route_map_in: RM-BGP-172.16.9.4-IN
+    route_map_out: RM-BGP-172.16.9.4-OUT
+  - ip_address: 172.16.5.4
+    remote_as: '64520'
+    description: Colt_10555
+    route_map_in: RM-BGP-172.16.5.4-IN
+    route_map_out: RM-BGP-172.16.5.4-OUT
+  - ip_address: 172.17.0.0
+    peer_group: IPv4-UNDERLAY-PEERS
+    remote_as: '65199'
+    peer: site-ha-disabled-leaf
+    description: site-ha-disabled-leaf_Ethernet1
+  - ip_address: 192.168.144.1
+    peer_group: WAN-OVERLAY-PEERS
+    peer: cv-pathfinder-pathfinder
+    description: cv-pathfinder-pathfinder_Dps1
+  address_family_ipv4:
+    neighbors:
+    - ip_address: 172.16.9.4
+      activate: true
+    - ip_address: 172.16.5.4
+      activate: true
+    peer_groups:
+    - name: IPv4-UNDERLAY-PEERS
+      activate: true
+    - name: WAN-OVERLAY-PEERS
+      activate: false
   peer_groups:
   - name: IPv4-UNDERLAY-PEERS
     type: ipv4
@@ -30,37 +68,6 @@ router_bgp:
       interval: 1000
       min_rx: 1000
       multiplier: 10
-  address_family_ipv4:
-    peer_groups:
-    - name: IPv4-UNDERLAY-PEERS
-      activate: true
-    - name: WAN-OVERLAY-PEERS
-      activate: false
-  redistribute_routes:
-  - source_protocol: connected
-    route_map: RM-CONN-2-BGP
-  - source_protocol: static
-    route_map: RM-STATIC-2-BGP
-  neighbors:
-  - ip_address: 172.17.0.0
-    peer_group: IPv4-UNDERLAY-PEERS
-    remote_as: '65199'
-    peer: site-ha-disabled-leaf
-    description: site-ha-disabled-leaf_Ethernet1
-  - ip_address: 172.16.9.4
-    remote_as: '64520'
-    description: ATT_666_peer3_Ethernet42
-    route_map_in: RM-BGP-172.16.9.4-IN
-    route_map_out: RM-BGP-172.16.9.4-OUT
-  - ip_address: 172.16.5.4
-    remote_as: '64520'
-    description: Colt_10555
-    route_map_in: RM-BGP-172.16.5.4-IN
-    route_map_out: RM-BGP-172.16.5.4-OUT
-  - ip_address: 192.168.144.1
-    peer_group: WAN-OVERLAY-PEERS
-    peer: cv-pathfinder-pathfinder
-    description: cv-pathfinder-pathfinder_Dps1
   vrfs:
   - name: IT
     router_id: 192.168.42.1
@@ -79,8 +86,9 @@ router_bgp:
       - address_family: evpn
         route_targets:
         - 1000:1000
-    redistribute_routes:
-    - source_protocol: connected
+    redistribute:
+      connected:
+        enabled: true
   - name: PROD
     router_id: 192.168.42.1
     neighbors:
@@ -98,8 +106,9 @@ router_bgp:
       - address_family: evpn
         route_targets:
         - 142:142
-    redistribute_routes:
-    - source_protocol: connected
+    redistribute:
+      connected:
+        enabled: true
   - name: ATTRACTED-VRF-FROM-UPLINK
     router_id: 192.168.42.1
     neighbors:
@@ -117,8 +126,9 @@ router_bgp:
       - address_family: evpn
         route_targets:
         - 666:666
-    redistribute_routes:
-    - source_protocol: connected
+    redistribute:
+      connected:
+        enabled: true
   - name: default
     rd: 192.168.42.1:1
     route_targets:
@@ -183,6 +193,91 @@ management_api_http:
   enable_vrfs:
   - name: MGMT
   enable_https: true
+prefix_lists:
+- name: ALLOW-DEFAULT
+  sequence_numbers:
+  - sequence: 10
+    action: permit 0.0.0.0/0
+- name: PL-LOOPBACKS-EVPN-OVERLAY
+  sequence_numbers:
+  - sequence: 10
+    action: permit 192.168.42.0/24 eq 32
+- name: PL-STATIC-VRF-DEFAULT
+  sequence_numbers:
+  - sequence: 10
+    action: permit 66.66.66.0/24
+route_maps:
+- name: RM-BGP-172.16.9.4-IN
+  sequence_numbers:
+  - sequence: 10
+    type: permit
+    match:
+    - ip address prefix-list ALLOW-DEFAULT
+    set:
+    - community no-advertise additive
+- name: RM-BGP-172.16.9.4-OUT
+  sequence_numbers:
+  - sequence: 10
+    type: deny
+- name: RM-BGP-172.16.5.4-IN
+  sequence_numbers:
+  - sequence: 10
+    type: permit
+    match:
+    - ip address prefix-list ALLOW-DEFAULT
+    set:
+    - community no-advertise additive
+- name: RM-BGP-172.16.5.4-OUT
+  sequence_numbers:
+  - sequence: 10
+    type: permit
+    match:
+    - ip address prefix-list ALLOW-DEFAULT
+  - sequence: 20
+    type: deny
+- name: RM-CONN-2-BGP
+  sequence_numbers:
+  - sequence: 10
+    type: permit
+    match:
+    - ip address prefix-list PL-LOOPBACKS-EVPN-OVERLAY
+    set:
+    - extcommunity soo 192.168.42.1:511 additive
+- name: RM-BGP-UNDERLAY-PEERS-IN
+  sequence_numbers:
+  - sequence: 40
+    type: permit
+    description: Mark prefixes originated from the LAN
+    set:
+    - extcommunity soo 192.168.42.1:511 additive
+- name: RM-EVPN-SOO-IN
+  sequence_numbers:
+  - sequence: 10
+    type: deny
+    match:
+    - extcommunity ECL-EVPN-SOO
+  - sequence: 20
+    type: permit
+- name: RM-EVPN-SOO-OUT
+  sequence_numbers:
+  - sequence: 10
+    type: permit
+    set:
+    - extcommunity soo 192.168.42.1:511 additive
+- name: RM-EVPN-EXPORT-VRF-DEFAULT
+  sequence_numbers:
+  - sequence: 10
+    type: permit
+    match:
+    - extcommunity ECL-EVPN-SOO
+- name: RM-STATIC-2-BGP
+  sequence_numbers:
+  - sequence: 10
+    type: permit
+    match:
+    - ip address prefix-list PL-STATIC-VRF-DEFAULT
+    set:
+    - extcommunity soo 192.168.42.1:511 additive
 ethernet_interfaces:
 - name: Ethernet52
   peer: site-ha-disabled-leaf
@@ -269,91 +364,6 @@ loopback_interfaces:
   description: ROUTER_ID
   shutdown: false
   ip_address: 192.168.42.1/32
-prefix_lists:
-- name: PL-LOOPBACKS-EVPN-OVERLAY
-  sequence_numbers:
-  - sequence: 10
-    action: permit 192.168.42.0/24 eq 32
-- name: ALLOW-DEFAULT
-  sequence_numbers:
-  - sequence: 10
-    action: permit 0.0.0.0/0
-- name: PL-STATIC-VRF-DEFAULT
-  sequence_numbers:
-  - sequence: 10
-    action: permit 66.66.66.0/24
-route_maps:
-- name: RM-CONN-2-BGP
-  sequence_numbers:
-  - sequence: 10
-    type: permit
-    match:
-    - ip address prefix-list PL-LOOPBACKS-EVPN-OVERLAY
-    set:
-    - extcommunity soo 192.168.42.1:511 additive
-- name: RM-BGP-UNDERLAY-PEERS-IN
-  sequence_numbers:
-  - sequence: 40
-    type: permit
-    description: Mark prefixes originated from the LAN
-    set:
-    - extcommunity soo 192.168.42.1:511 additive
-- name: RM-BGP-172.16.9.4-IN
-  sequence_numbers:
-  - sequence: 10
-    type: permit
-    match:
-    - ip address prefix-list ALLOW-DEFAULT
-    set:
-    - community no-advertise additive
-- name: RM-BGP-172.16.9.4-OUT
-  sequence_numbers:
-  - sequence: 10
-    type: deny
-- name: RM-BGP-172.16.5.4-IN
-  sequence_numbers:
-  - sequence: 10
-    type: permit
-    match:
-    - ip address prefix-list ALLOW-DEFAULT
-    set:
-    - community no-advertise additive
-- name: RM-BGP-172.16.5.4-OUT
-  sequence_numbers:
-  - sequence: 10
-    type: permit
-    match:
-    - ip address prefix-list ALLOW-DEFAULT
-  - sequence: 20
-    type: deny
-- name: RM-EVPN-SOO-IN
-  sequence_numbers:
-  - sequence: 10
-    type: deny
-    match:
-    - extcommunity ECL-EVPN-SOO
-  - sequence: 20
-    type: permit
-- name: RM-EVPN-SOO-OUT
-  sequence_numbers:
-  - sequence: 10
-    type: permit
-    set:
-    - extcommunity soo 192.168.42.1:511 additive
-- name: RM-EVPN-EXPORT-VRF-DEFAULT
-  sequence_numbers:
-  - sequence: 10
-    type: permit
-    match:
-    - extcommunity ECL-EVPN-SOO
-- name: RM-STATIC-2-BGP
-  sequence_numbers:
-  - sequence: 10
-    type: permit
-    match:
-    - ip address prefix-list PL-STATIC-VRF-DEFAULT
-    set:
-    - extcommunity soo 192.168.42.1:511 additive
 static_routes:
 - destination_address_prefix: 172.16.0.0/16
   gateway: 172.16.5.4

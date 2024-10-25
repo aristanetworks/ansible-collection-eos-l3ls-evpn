@@ -160,11 +160,11 @@ router bgp 65101
    neighbor MLAG-IPv4-UNDERLAY-PEER peer group
    neighbor MLAG-IPv4-UNDERLAY-PEER remote-as 65101
    neighbor MLAG-IPv4-UNDERLAY-PEER next-hop-self
+   neighbor MLAG-IPv4-UNDERLAY-PEER route-map RM-MLAG-PEER-IN in
+   neighbor MLAG-IPv4-UNDERLAY-PEER route-map RM-MLAG-PEER-OUT out
    neighbor MLAG-IPv4-UNDERLAY-PEER password 7 <removed>
    neighbor MLAG-IPv4-UNDERLAY-PEER send-community
    neighbor MLAG-IPv4-UNDERLAY-PEER maximum-routes 12000
-   neighbor MLAG-IPv4-UNDERLAY-PEER route-map RM-MLAG-PEER-IN in
-   neighbor MLAG-IPv4-UNDERLAY-PEER route-map RM-MLAG-PEER-OUT out
    neighbor 192.168.255.1 peer group EVPN-OVERLAY-PEERS
    neighbor 192.168.255.2 peer group EVPN-OVERLAY-PEERS
    !
@@ -187,9 +187,12 @@ router bgp 65101
       vlan 112
    !
    address-family evpn
-      host-flap detection expiry timeout 20 seconds
       neighbor EVPN-OVERLAY-PEERS activate
       no neighbor MLAG-IPv4-UNDERLAY-PEER activate
+      host-flap detection expiry timeout 20 seconds
+   !
+   address-family ipv4
+      no neighbor EVPN-OVERLAY-PEERS activate
    !
    address-family rt-membership
       neighbor EVPN-OVERLAY-PEERS activate
@@ -197,9 +200,6 @@ router bgp 65101
       neighbor EVPN-OVERLAY-RS-PEERS activate
       neighbor EVPN-OVERLAY-RS-PEERS default-route-target only
       neighbor EVPN-OVERLAY-RS-PEERS default-route-target encoding origin-as omit
-   !
-   address-family ipv4
-      no neighbor EVPN-OVERLAY-PEERS activate
    !
    vrf TENANT_A_PROJECT01
       rd 192.168.255.3:11

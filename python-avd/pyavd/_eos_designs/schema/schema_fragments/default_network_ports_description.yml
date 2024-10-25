@@ -10,10 +10,9 @@ keys:
     type: str
     documentation_options:
       table: default-network-ports-description
-    # TODO: Insert link to format string syntax article.
     description: |-
       Default description or description template to be used on all ports defined under `network_ports`.
-      This can be a template using the format string syntax.
+      This can be a template using the AVD string formatter syntax: https://avd.arista.com/devel/roles/eos_designs/docs/how-to/custom-descriptions-names.html#avd-string-formatter-syntax.
       The available template fields are:
         - `endpoint_type`: Always set to `network_port`.
         - `endpoint`: The value of the `endpoint` key if set.

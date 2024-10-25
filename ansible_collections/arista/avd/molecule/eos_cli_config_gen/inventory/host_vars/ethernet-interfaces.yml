@@ -129,6 +129,12 @@ ethernet_interfaces:
       version: 2
 
   - name: Ethernet2
+    ip_address: 10.1.255.3/24
+    ip_address_secondaries:
+      - 192.168.1.1/24
+      - 10.0.0.254/24
+      - 1.1.1.3/24
+      - 1.1.1.4/24
     peer: SRV-POD03
     peer_interface: Eth1
     peer_type: server
@@ -226,6 +232,8 @@ ethernet_interfaces:
         vlans:
           - range: 1-3
             mac_address_maximum: 3
+          - range: 41,2,22
+            mac_address_maximum: 4
       vlan_translations:
         out_required: false
         direction_out:

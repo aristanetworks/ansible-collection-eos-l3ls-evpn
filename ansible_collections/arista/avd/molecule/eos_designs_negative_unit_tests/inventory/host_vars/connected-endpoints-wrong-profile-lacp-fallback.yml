@@ -28,4 +28,4 @@ port_profiles:
     native_vlan: 123
 
 expected_error_message: >-
-  Profile 'INDIVIDUAL_TRUNK' applied under 'server[name=INDIVIDUAL_1].adapters[0].port_channel.lacp_fallback.individual' does not exist in `port_profiles`.
+  Profile 'INDIVIDUAL_TRUNK' applied under 'servers[name=INDIVIDUAL_1].adapters[0].port_channel.lacp_fallback.individual' does not exist in `port_profiles`.

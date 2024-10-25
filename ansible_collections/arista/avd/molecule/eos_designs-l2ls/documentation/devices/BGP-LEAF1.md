@@ -282,8 +282,8 @@ no ip routing vrf MGMT
 
 ```eos
 !
-ip route vrf MGMT 0.0.0.0/0 172.31.0.1
 ip route 0.0.0.0/0 172.23.254.1
+ip route vrf MGMT 0.0.0.0/0 172.31.0.1
 ```
 
 ## Multicast

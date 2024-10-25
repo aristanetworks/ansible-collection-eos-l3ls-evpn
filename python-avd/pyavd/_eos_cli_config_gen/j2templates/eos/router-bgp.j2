@@ -13,6 +13,22 @@ router bgp {{ router_bgp.as }}
 {%     if router_bgp.router_id is arista.avd.defined %}
    router-id {{ router_bgp.router_id }}
 {%     endif %}
+{%     if router_bgp.updates.wait_for_convergence is arista.avd.defined(true) %}
+   update wait-for-convergence
+{%     endif %}
+{%     if router_bgp.updates.wait_install is arista.avd.defined(true) %}
+   update wait-install
+{%     endif %}
+{%     if router_bgp.bgp.default.ipv4_unicast is arista.avd.defined(true) %}
+   bgp default ipv4-unicast
+{%     elif router_bgp.bgp.default.ipv4_unicast is arista.avd.defined(false) %}
+   no bgp default ipv4-unicast
+{%     endif %}
+{%     if router_bgp.bgp.default.ipv4_unicast_transport_ipv6 is arista.avd.defined(true) %}
+   bgp default ipv4-unicast transport ipv6
+{%     elif router_bgp.bgp.default.ipv4_unicast_transport_ipv6 is arista.avd.defined(false) %}
+   no bgp default ipv4-unicast transport ipv6
+{%     endif %}
 {%     if router_bgp.distance.external_routes is arista.avd.defined %}
 {%         set distance_cli = "distance bgp " ~ router_bgp.distance.external_routes %}
 {%         if router_bgp.distance.internal_routes is arista.avd.defined and router_bgp.distance.local_routes is arista.avd.defined %}
@@ -28,6 +44,9 @@ router bgp {{ router_bgp.as }}
    graceful-restart stalepath-time {{ router_bgp.graceful_restart.stalepath_time }}
 {%         endif %}
    graceful-restart
+{%     endif %}
+{%     if router_bgp.bgp_cluster_id is arista.avd.defined %}
+   bgp cluster-id {{ router_bgp.bgp_cluster_id }}
 {%     endif %}
 {%     if router_bgp.graceful_restart_helper.enabled is arista.avd.defined(false) %}
    no graceful-restart-helper
@@ -52,31 +71,9 @@ router bgp {{ router_bgp.as }}
 {%         endif %}
    {{ paths_cli }}
 {%     endif %}
-{%     if router_bgp.updates.wait_for_convergence is arista.avd.defined(true) %}
-   update wait-for-convergence
-{%     endif %}
-{%     if router_bgp.updates.wait_install is arista.avd.defined(true) %}
-   update wait-install
-{%     endif %}
-{%     if router_bgp.bgp.default.ipv4_unicast is arista.avd.defined(true) %}
-   bgp default ipv4-unicast
-{%     elif router_bgp.bgp.default.ipv4_unicast is arista.avd.defined(false) %}
-   no bgp default ipv4-unicast
-{%     endif %}
-{%     if router_bgp.bgp.default.ipv4_unicast_transport_ipv6 is arista.avd.defined(true) %}
-   bgp default ipv4-unicast transport ipv6
-{%     elif router_bgp.bgp.default.ipv4_unicast_transport_ipv6 is arista.avd.defined(false) %}
-   no bgp default ipv4-unicast transport ipv6
-{%     endif %}
-{%     if router_bgp.bgp_cluster_id is arista.avd.defined %}
-   bgp cluster-id {{ router_bgp.bgp_cluster_id }}
-{%     endif %}
 {%     for bgp_default in router_bgp.bgp_defaults | arista.avd.default([]) %}
    {{ bgp_default }}
 {%     endfor %}
-{%     if router_bgp.bgp.bestpath.d_path is arista.avd.defined(true) %}
-   bgp bestpath d-path
-{%     endif %}
 {%     if router_bgp.bgp.additional_paths.receive is arista.avd.defined(true) %}
    bgp additional-paths receive
 {%     endif %}
@@ -112,28 +109,22 @@ router bgp {{ router_bgp.as }}
    {{ listen_range_cli }}
 {%         endfor %}
 {%     endif %}
+{%     if router_bgp.bgp.bestpath.d_path is arista.avd.defined(true) %}
+   bgp bestpath d-path
+{%     endif %}
 {%     for peer_group in router_bgp.peer_groups | arista.avd.natural_sort('name') %}
-{%         if peer_group.shutdown is arista.avd.defined(true) %}
-   neighbor {{ peer_group.name }} shutdown
-{%         endif %}
    neighbor {{ peer_group.name }} peer group
 {%         if peer_group.remote_as is arista.avd.defined %}
    neighbor {{ peer_group.name }} remote-as {{ peer_group.remote_as }}
-{%         endif %}
-{%         if peer_group.local_as is arista.avd.defined %}
-   neighbor {{ peer_group.name }} local-as {{ peer_group.local_as }} no-prepend replace-as
-{%         endif %}
-{%         if peer_group.as_path.remote_as_replace_out is arista.avd.defined(true) %}
-   neighbor {{ peer_group.name }} as-path remote-as replace out
-{%         endif %}
-{%         if peer_group.as_path.prepend_own_disabled is arista.avd.defined(true) %}
-   neighbor {{ peer_group.name }} as-path prepend-own disabled
 {%         endif %}
 {%         if peer_group.next_hop_self is arista.avd.defined(true) %}
    neighbor {{ peer_group.name }} next-hop-self
 {%         endif %}
 {%         if peer_group.next_hop_unchanged is arista.avd.defined(true) %}
    neighbor {{ peer_group.name }} next-hop-unchanged
+{%         endif %}
+{%         if peer_group.shutdown is arista.avd.defined(true) %}
+   neighbor {{ peer_group.name }} shutdown
 {%         endif %}
 {%         if peer_group.remove_private_as.enabled is arista.avd.defined(true) %}
 {%             set remove_private_as_cli = "neighbor " ~ peer_group.name ~ " remove-private-as" %}
@@ -147,23 +138,23 @@ router bgp {{ router_bgp.as }}
 {%         elif peer_group.remove_private_as.enabled is arista.avd.defined(false) %}
    no neighbor {{ peer_group.name }} remove-private-as
 {%         endif %}
-{%         if peer_group.remove_private_as_ingress.enabled is arista.avd.defined(true) %}
-{%             set remove_private_as_ingress_cli = "neighbor " ~ peer_group.name ~ " remove-private-as ingress" %}
-{%             if peer_group.remove_private_as_ingress.replace_as is arista.avd.defined(true) %}
-{%                 set remove_private_as_ingress_cli = remove_private_as_ingress_cli ~ " replace-as" %}
-{%             endif %}
-   {{ remove_private_as_ingress_cli }}
-{%         elif peer_group.remove_private_as_ingress.enabled is arista.avd.defined(false) %}
-   no neighbor {{ peer_group.name }} remove-private-as ingress
+{%         if peer_group.as_path.prepend_own_disabled is arista.avd.defined(true) %}
+   neighbor {{ peer_group.name }} as-path prepend-own disabled
+{%         endif %}
+{%         if peer_group.as_path.remote_as_replace_out is arista.avd.defined(true) %}
+   neighbor {{ peer_group.name }} as-path remote-as replace out
+{%         endif %}
+{%         if peer_group.local_as is arista.avd.defined %}
+   neighbor {{ peer_group.name }} local-as {{ peer_group.local_as }} no-prepend replace-as
+{%         endif %}
+{%         if peer_group.weight is arista.avd.defined %}
+   neighbor {{ peer_group.name }} weight {{ peer_group.weight }}
+{%         endif %}
+{%         if peer_group.passive is arista.avd.defined(true) %}
+   neighbor {{ peer_group.name }} passive
 {%         endif %}
 {%         if peer_group.update_source is arista.avd.defined %}
    neighbor {{ peer_group.name }} update-source {{ peer_group.update_source }}
-{%         endif %}
-{%         if peer_group.description is arista.avd.defined %}
-   neighbor {{ peer_group.name }} description {{ peer_group.description }}
-{%         endif %}
-{%         if peer_group.route_reflector_client is arista.avd.defined(true) %}
-   neighbor {{ peer_group.name }} route-reflector-client
 {%         endif %}
 {%         if peer_group.bfd is arista.avd.defined(true) %}
    neighbor {{ peer_group.name }} bfd
@@ -172,6 +163,9 @@ router bgp {{ router_bgp.as }}
                   peer_group.bfd_timers.multiplier is arista.avd.defined %}
    neighbor {{ peer_group.name }} bfd interval {{ peer_group.bfd_timers.interval }} min-rx {{ peer_group.bfd_timers.min_rx }} multiplier {{ peer_group.bfd_timers.multiplier }}
 {%             endif %}
+{%         endif %}
+{%         if peer_group.description is arista.avd.defined %}
+   neighbor {{ peer_group.name }} description {{ peer_group.description }}
 {%         endif %}
 {%         if peer_group.allowas_in.enabled is arista.avd.defined(true) %}
 {%             set allowas_in_cli = "neighbor " ~ peer_group.name ~ " allowas-in" %}
@@ -196,8 +190,26 @@ router bgp {{ router_bgp.as }}
 {%         if peer_group.ttl_maximum_hops is arista.avd.defined %}
    neighbor {{ peer_group.name }} ttl maximum-hops {{ peer_group.ttl_maximum_hops }}
 {%         endif %}
+{%         if peer_group.route_reflector_client is arista.avd.defined(true) %}
+   neighbor {{ peer_group.name }} route-reflector-client
+{%         endif %}
+{%         if peer_group.session_tracker is arista.avd.defined %}
+   neighbor {{ peer_group.name }} session tracker {{ peer_group.session_tracker }}
+{%         endif %}
+{%         if peer_group.timers is arista.avd.defined %}
+   neighbor {{ peer_group.name }} timers {{ peer_group.timers }}
+{%         endif %}
+{%         if peer_group.route_map_in is arista.avd.defined %}
+   neighbor {{ peer_group.name }} route-map {{ peer_group.route_map_in }} in
+{%         endif %}
+{%         if peer_group.route_map_out is arista.avd.defined %}
+   neighbor {{ peer_group.name }} route-map {{ peer_group.route_map_out }} out
+{%         endif %}
 {%         if peer_group.password is arista.avd.defined %}
    neighbor {{ peer_group.name }} password 7 {{ peer_group.password | arista.avd.hide_passwords(hide_passwords) }}
+{%         endif %}
+{%         if peer_group.shared_secret.profile is arista.avd.defined and peer_group.shared_secret.hash_algorithm is arista.avd.defined %}
+   neighbor {{ peer_group.name }} password shared-secret profile {{ peer_group.shared_secret.profile }} algorithm {{ peer_group.shared_secret.hash_algorithm }}
 {%         endif %}
 {%         if peer_group.default_originate.enabled is arista.avd.defined(true) %}
 {%             set default_originate_cli = "neighbor " ~ peer_group.name ~ " default-originate" %}
@@ -208,15 +220,6 @@ router bgp {{ router_bgp.as }}
 {%                 set default_originate_cli = default_originate_cli ~ " always" %}
 {%             endif %}
    {{ default_originate_cli }}
-{%         endif %}
-{%         if peer_group.passive is arista.avd.defined(true) %}
-   neighbor {{ peer_group.name }} passive
-{%         endif %}
-{%         if peer_group.session_tracker is arista.avd.defined %}
-   neighbor {{ peer_group.name }} session tracker {{ peer_group.session_tracker }}
-{%         endif %}
-{%         if peer_group.shared_secret.profile is arista.avd.defined and peer_group.shared_secret.hash_algorithm is arista.avd.defined %}
-   neighbor {{ peer_group.name }} password shared-secret profile {{ peer_group.shared_secret.profile }} algorithm {{ peer_group.shared_secret.hash_algorithm }}
 {%         endif %}
 {%         if peer_group.send_community is arista.avd.defined('all') %}
    neighbor {{ peer_group.name }} send-community
@@ -263,24 +266,14 @@ router bgp {{ router_bgp.as }}
 {%             endif %}
    {{ link_bandwidth_cli }}
 {%         endif %}
-{%         if peer_group.weight is arista.avd.defined %}
-   neighbor {{ peer_group.name }} weight {{ peer_group.weight }}
-{%         endif %}
-{%         if peer_group.timers is arista.avd.defined %}
-   neighbor {{ peer_group.name }} timers {{ peer_group.timers }}
-{%         endif %}
-{%         if peer_group.route_map_in is arista.avd.defined %}
-   neighbor {{ peer_group.name }} route-map {{ peer_group.route_map_in }} in
-{%         endif %}
-{%         if peer_group.route_map_out is arista.avd.defined %}
-   neighbor {{ peer_group.name }} route-map {{ peer_group.route_map_out }} out
-{%         endif %}
-{%     endfor %}
-{%     for neighbor_interface in router_bgp.neighbor_interfaces | arista.avd.natural_sort('name') %}
-{%         if neighbor_interface.peer_group is arista.avd.defined and neighbor_interface.remote_as is arista.avd.defined %}
-   neighbor interface {{ neighbor_interface.name }} peer-group {{ neighbor_interface.peer_group }} remote-as {{ neighbor_interface.remote_as }}
-{%         elif neighbor_interface.peer_group is arista.avd.defined and neighbor_interface.peer_filter is arista.avd.defined %}
-   neighbor interface {{ neighbor_interface.name }} peer-group {{ neighbor_interface.peer_group }} peer-filter {{ neighbor_interface.peer_filter }}
+{%         if peer_group.remove_private_as_ingress.enabled is arista.avd.defined(true) %}
+{%             set remove_private_as_ingress_cli = "neighbor " ~ peer_group.name ~ " remove-private-as ingress" %}
+{%             if peer_group.remove_private_as_ingress.replace_as is arista.avd.defined(true) %}
+{%                 set remove_private_as_ingress_cli = remove_private_as_ingress_cli ~ " replace-as" %}
+{%             endif %}
+   {{ remove_private_as_ingress_cli }}
+{%         elif peer_group.remove_private_as_ingress.enabled is arista.avd.defined(false) %}
+   no neighbor {{ peer_group.name }} remove-private-as ingress
 {%         endif %}
 {%     endfor %}
 {%     for neighbor in router_bgp.neighbors | arista.avd.natural_sort('ip_address') %}
@@ -308,37 +301,20 @@ router bgp {{ router_bgp.as }}
 {%         elif neighbor.remove_private_as.enabled is arista.avd.defined(false) %}
    no neighbor {{ neighbor.ip_address }} remove-private-as
 {%         endif %}
-{%         if neighbor.remove_private_as_ingress.enabled is arista.avd.defined(true) %}
-{%             set remove_private_as_ingress_cli = "neighbor " ~ neighbor.ip_address ~ " remove-private-as ingress" %}
-{%             if neighbor.remove_private_as_ingress.replace_as is arista.avd.defined(true) %}
-{%                 set remove_private_as_ingress_cli = remove_private_as_ingress_cli ~ " replace-as" %}
-{%             endif %}
-   {{ remove_private_as_ingress_cli }}
-{%         elif neighbor.remove_private_as_ingress.enabled is arista.avd.defined(false) %}
-   no neighbor {{ neighbor.ip_address }} remove-private-as ingress
+{%         if neighbor.as_path.prepend_own_disabled is arista.avd.defined(true) %}
+   neighbor {{ neighbor.ip_address }} as-path prepend-own disabled
 {%         endif %}
 {%         if neighbor.as_path.remote_as_replace_out is arista.avd.defined(true) %}
    neighbor {{ neighbor.ip_address }} as-path remote-as replace out
 {%         endif %}
-{%         if neighbor.as_path.prepend_own_disabled is arista.avd.defined(true) %}
-   neighbor {{ neighbor.ip_address }} as-path prepend-own disabled
-{%         endif %}
 {%         if neighbor.local_as is arista.avd.defined %}
    neighbor {{ neighbor.ip_address }} local-as {{ neighbor.local_as }} no-prepend replace-as
 {%         endif %}
-{%         if neighbor.description is arista.avd.defined %}
-   neighbor {{ neighbor.ip_address }} description {{ neighbor.description }}
+{%         if neighbor.weight is arista.avd.defined %}
+   neighbor {{ neighbor.ip_address }} weight {{ neighbor.weight }}
 {%         endif %}
-{%         if neighbor.route_reflector_client is arista.avd.defined(true) %}
-   neighbor {{ neighbor.ip_address }} route-reflector-client
-{%         elif neighbor.route_reflector_client is arista.avd.defined(false) %}
-   no neighbor {{ neighbor.ip_address }} route-reflector-client
-{%         endif %}
-{%         if neighbor.ebgp_multihop is arista.avd.defined %}
-   neighbor {{ neighbor.ip_address }} ebgp-multihop {{ neighbor.ebgp_multihop }}
-{%         endif %}
-{%         if neighbor.ttl_maximum_hops is arista.avd.defined %}
-   neighbor {{ neighbor.ip_address }} ttl maximum-hops {{ neighbor.ttl_maximum_hops }}
+{%         if neighbor.passive is arista.avd.defined(true) %}
+   neighbor {{ neighbor.ip_address }} passive
 {%         endif %}
 {%         if neighbor.update_source is arista.avd.defined %}
    neighbor {{ neighbor.ip_address }} update-source {{ neighbor.update_source }}
@@ -352,6 +328,9 @@ router bgp {{ router_bgp.as }}
 {%             endif %}
 {%         elif neighbor.bfd is arista.avd.defined(false) and neighbor.peer_group is arista.avd.defined %}
    no neighbor {{ neighbor.ip_address }} bfd
+{%         endif %}
+{%         if neighbor.description is arista.avd.defined %}
+   neighbor {{ neighbor.ip_address }} description {{ neighbor.description }}
 {%         endif %}
 {%         if neighbor.allowas_in.enabled is arista.avd.defined(true) %}
 {%             set allowas_in_cli = "neighbor " ~ neighbor.ip_address ~ " allowas-in" %}
@@ -370,14 +349,16 @@ router bgp {{ router_bgp.as }}
 {%             set neighbor_rib_in_pre_policy_retain_cli = "no neighbor " ~ neighbor.ip_address ~ " rib-in pre-policy retain" %}
    {{ neighbor_rib_in_pre_policy_retain_cli }}
 {%         endif %}
-{%         if neighbor.password is arista.avd.defined %}
-   neighbor {{ neighbor.ip_address }} password 7 {{ neighbor.password | arista.avd.hide_passwords(hide_passwords) }}
+{%         if neighbor.ebgp_multihop is arista.avd.defined %}
+   neighbor {{ neighbor.ip_address }} ebgp-multihop {{ neighbor.ebgp_multihop }}
 {%         endif %}
-{%         if neighbor.passive is arista.avd.defined(true) %}
-   neighbor {{ neighbor.ip_address }} passive
+{%         if neighbor.ttl_maximum_hops is arista.avd.defined %}
+   neighbor {{ neighbor.ip_address }} ttl maximum-hops {{ neighbor.ttl_maximum_hops }}
 {%         endif %}
-{%         if neighbor.weight is arista.avd.defined %}
-   neighbor {{ neighbor.ip_address }} weight {{ neighbor.weight }}
+{%         if neighbor.route_reflector_client is arista.avd.defined(true) %}
+   neighbor {{ neighbor.ip_address }} route-reflector-client
+{%         elif neighbor.route_reflector_client is arista.avd.defined(false) %}
+   no neighbor {{ neighbor.ip_address }} route-reflector-client
 {%         endif %}
 {%         if neighbor.session_tracker is arista.avd.defined() %}
    neighbor {{ neighbor.ip_address }} session tracker {{ neighbor.session_tracker }}
@@ -393,6 +374,9 @@ router bgp {{ router_bgp.as }}
 {%         endif %}
 {%         if neighbor.shared_secret.profile is arista.avd.defined and neighbor.shared_secret.hash_algorithm is arista.avd.defined %}
    neighbor {{ neighbor.ip_address }} password shared-secret profile {{ neighbor.shared_secret.profile }} algorithm {{ neighbor.shared_secret.hash_algorithm }}
+{%         endif %}
+{%         if neighbor.password is arista.avd.defined %}
+   neighbor {{ neighbor.ip_address }} password 7 {{ neighbor.password | arista.avd.hide_passwords(hide_passwords) }}
 {%         endif %}
 {%         if neighbor.default_originate.enabled is arista.avd.defined(true) %}
 {%             set default_originate_cli = "neighbor " ~ neighbor.ip_address ~ " default-originate" %}
@@ -449,6 +433,15 @@ router bgp {{ router_bgp.as }}
 {%             endif %}
    {{ link_bandwidth_cli }}
 {%         endif %}
+{%         if neighbor.remove_private_as_ingress.enabled is arista.avd.defined(true) %}
+{%             set remove_private_as_ingress_cli = "neighbor " ~ neighbor.ip_address ~ " remove-private-as ingress" %}
+{%             if neighbor.remove_private_as_ingress.replace_as is arista.avd.defined(true) %}
+{%                 set remove_private_as_ingress_cli = remove_private_as_ingress_cli ~ " replace-as" %}
+{%             endif %}
+   {{ remove_private_as_ingress_cli }}
+{%         elif neighbor.remove_private_as_ingress.enabled is arista.avd.defined(false) %}
+   no neighbor {{ neighbor.ip_address }} remove-private-as ingress
+{%         endif %}
 {%     endfor %}
 {%     if router_bgp.bgp.redistribute_internal is arista.avd.defined(true) %}
    bgp redistribute-internal
@@ -474,8 +467,170 @@ router bgp {{ router_bgp.as }}
 {%         endif %}
    {{ aggregate_address_cli }}
 {%     endfor %}
-{%     for redistribute_route in router_bgp.redistribute_routes | arista.avd.natural_sort('source_protocol') %}
-{%         if redistribute_route.source_protocol is arista.avd.defined %}
+{%     if router_bgp.redistribute is arista.avd.defined %}
+{%         set redistribute_var = router_bgp.redistribute %}
+{%         if redistribute_var.connected.enabled is arista.avd.defined(true) %}
+{%             set redistribute_conn = "redistribute connected" %}
+{%             if redistribute_var.connected.include_leaked is arista.avd.defined(true) %}
+{%                 set redistribute_conn = redistribute_conn ~ " include leaked" %}
+{%             endif %}
+{%             if redistribute_var.connected.route_map is arista.avd.defined %}
+{%                 set redistribute_conn = redistribute_conn ~ " route-map " ~ redistribute_var.connected.route_map %}
+{%             elif redistribute_var.connected.rcf is arista.avd.defined %}
+{%                 set redistribute_conn = redistribute_conn ~ " rcf " ~ redistribute_var.connected.rcf %}
+{%             endif %}
+   {{ redistribute_conn }}
+{%         endif %}
+{%         if redistribute_var.isis.enabled is arista.avd.defined(true) %}
+{%             set redistribute_isis = "redistribute isis" %}
+{%             if redistribute_var.isis.isis_level is arista.avd.defined %}
+{%                 set redistribute_isis = redistribute_isis ~ " " ~ redistribute_var.isis.isis_level %}
+{%             endif %}
+{%             if redistribute_var.isis.include_leaked is arista.avd.defined(true) %}
+{%                 set redistribute_isis = redistribute_isis ~ " include leaked" %}
+{%             endif %}
+{%             if redistribute_var.isis.route_map is arista.avd.defined %}
+{%                 set redistribute_isis = redistribute_isis ~ " route-map " ~ redistribute_var.isis.route_map %}
+{%             elif redistribute_var.isis.rcf is arista.avd.defined %}
+{%                 set redistribute_isis = redistribute_isis ~ " rcf " ~ redistribute_var.isis.rcf %}
+{%             endif %}
+   {{ redistribute_isis }}
+{%         endif %}
+{%         if redistribute_var.ospf.enabled is arista.avd.defined(true) %}
+{%             set redistribute_ospf = "redistribute ospf" %}
+{%             if redistribute_var.ospf.include_leaked is arista.avd.defined(true) %}
+{%                 set redistribute_ospf = redistribute_ospf ~ " include leaked" %}
+{%             endif %}
+{%             if redistribute_var.ospf.route_map is arista.avd.defined %}
+{%                 set redistribute_ospf = redistribute_ospf ~ " route-map " ~ redistribute_var.ospf.route_map %}
+{%             endif %}
+   {{ redistribute_ospf }}
+{%         elif redistribute_var.ospf.match_internal.enabled is arista.avd.defined(true) %}
+{%             set redistribute_ospf = "redistribute ospf match internal" %}
+{%             if redistribute_var.ospf.match_internal.include_leaked is arista.avd.defined(true) %}
+{%                 set redistribute_ospf = redistribute_ospf ~ " include leaked" %}
+{%             endif %}
+{%             if redistribute_var.ospf.match_internal.route_map is arista.avd.defined %}
+{%                 set redistribute_ospf = redistribute_ospf ~ " route-map " ~ redistribute_var.ospf.match_internal.route_map %}
+{%             endif %}
+   {{ redistribute_ospf }}
+{%         endif %}
+{%         if redistribute_var.ospf.match_external.enabled is arista.avd.defined(true) %}
+{%             set redistribute_ospf_match = "redistribute ospf match external" %}
+{%             if redistribute_var.ospf.match_external.include_leaked is arista.avd.defined(true) %}
+{%                 set redistribute_ospf_match = redistribute_ospf_match ~ " include leaked" %}
+{%             endif %}
+{%             if redistribute_var.ospf.match_external.route_map is arista.avd.defined %}
+{%                 set redistribute_ospf_match = redistribute_ospf_match ~ " route-map " ~ redistribute_var.ospf.match_external.route_map %}
+{%             endif %}
+   {{ redistribute_ospf_match }}
+{%         endif %}
+{%         if redistribute_var.ospf.match_nssa_external.enabled is arista.avd.defined(true) %}
+{%             set redistribute_ospf_match = "redistribute ospf match nssa-external" %}
+{%             if redistribute_var.ospf.match_nssa_external.nssa_type is arista.avd.defined %}
+{%                 set redistribute_ospf_match = redistribute_ospf_match ~ " " ~ redistribute_var.ospf.match_nssa_external.nssa_type %}
+{%             endif %}
+{%             if redistribute_var.ospf.match_nssa_external.include_leaked is arista.avd.defined(true) %}
+{%                 set redistribute_ospf_match = redistribute_ospf_match ~ " include leaked" %}
+{%             endif %}
+{%             if redistribute_var.ospf.match_nssa_external.route_map is arista.avd.defined %}
+{%                 set redistribute_ospf_match = redistribute_ospf_match ~ " route-map " ~ redistribute_var.ospf.match_nssa_external.route_map %}
+{%             endif %}
+   {{ redistribute_ospf_match }}
+{%         endif %}
+{%         if redistribute_var.ospfv3.enabled is arista.avd.defined(true) %}
+{%             set redistribute_ospfv3 = "redistribute ospfv3" %}
+{%             if redistribute_var.ospfv3.include_leaked is arista.avd.defined(true) %}
+{%                 set redistribute_ospfv3 = redistribute_ospfv3 ~ " include leaked" %}
+{%             endif %}
+{%             if redistribute_var.ospfv3.route_map is arista.avd.defined %}
+{%                 set redistribute_ospfv3 = redistribute_ospfv3 ~ " route-map " ~ redistribute_var.ospfv3.route_map %}
+{%             endif %}
+   {{ redistribute_ospfv3 }}
+{%         elif redistribute_var.ospfv3.match_internal.enabled is arista.avd.defined(true) %}
+{%             set redistribute_ospfv3 = "redistribute ospfv3 match internal" %}
+{%             if redistribute_var.ospfv3.match_internal.include_leaked is arista.avd.defined(true) %}
+{%                 set redistribute_ospfv3 = redistribute_ospfv3 ~ " include leaked" %}
+{%             endif %}
+{%             if redistribute_var.ospfv3.match_internal.route_map is arista.avd.defined %}
+{%                 set redistribute_ospfv3 = redistribute_ospfv3 ~ " route-map " ~ redistribute_var.ospfv3.match_internal.route_map %}
+{%             endif %}
+   {{ redistribute_ospfv3 }}
+{%         endif %}
+{%         if redistribute_var.ospfv3.match_external.enabled is arista.avd.defined(true) %}
+{%             set redistribute_ospfv3_match = "redistribute ospfv3 match external" %}
+{%             if redistribute_var.ospfv3.match_external.include_leaked is arista.avd.defined(true) %}
+{%                 set redistribute_ospfv3_match = redistribute_ospfv3_match ~ " include leaked" %}
+{%             endif %}
+{%             if redistribute_var.ospfv3.match_external.route_map is arista.avd.defined %}
+{%                 set redistribute_ospfv3_match = redistribute_ospfv3_match ~ " route-map " ~ redistribute_var.ospfv3.match_external.route_map %}
+{%             endif %}
+   {{ redistribute_ospfv3_match }}
+{%         endif %}
+{%         if redistribute_var.ospfv3.match_nssa_external.enabled is arista.avd.defined(true) %}
+{%             set redistribute_ospfv3_match = "redistribute ospfv3 match nssa-external" %}
+{%             if redistribute_var.ospfv3.match_nssa_external.nssa_type is arista.avd.defined %}
+{%                 set redistribute_ospfv3_match = redistribute_ospfv3_match ~ " " ~ redistribute_var.ospfv3.match_nssa_external.nssa_type %}
+{%             endif %}
+{%             if redistribute_var.ospfv3.match_nssa_external.include_leaked is arista.avd.defined(true) %}
+{%                 set redistribute_ospfv3_match = redistribute_ospfv3_match ~ " include leaked" %}
+{%             endif %}
+{%             if redistribute_var.ospfv3.match_nssa_external.route_map is arista.avd.defined %}
+{%                 set redistribute_ospfv3_match = redistribute_ospfv3_match ~ " route-map " ~ redistribute_var.ospfv3.match_nssa_external.route_map %}
+{%             endif %}
+   {{ redistribute_ospfv3_match }}
+{%         endif %}
+{%         if redistribute_var.static.enabled is arista.avd.defined(true) %}
+{%             set redistribute_static = "redistribute static" %}
+{%             if redistribute_var.static.include_leaked is arista.avd.defined(true) %}
+{%                 set redistribute_static = redistribute_static ~ " include leaked" %}
+{%             endif %}
+{%             if redistribute_var.static.route_map is arista.avd.defined %}
+{%                 set redistribute_static = redistribute_static ~ " route-map " ~ redistribute_var.static.route_map %}
+{%             elif redistribute_var.static.rcf is arista.avd.defined %}
+{%                 set redistribute_static = redistribute_static ~ " rcf " ~ redistribute_var.static.rcf %}
+{%             endif %}
+   {{ redistribute_static }}
+{%         endif %}
+{%         if redistribute_var.rip.enabled is arista.avd.defined(true) %}
+{%             set redistribute_rip = "redistribute rip" %}
+{%             if redistribute_var.rip.route_map is arista.avd.defined %}
+{%                 set redistribute_rip = redistribute_rip ~ " route-map " ~ redistribute_var.rip.route_map %}
+{%             endif %}
+   {{ redistribute_rip }}
+{%         endif %}
+{%         if redistribute_var.attached_host.enabled is arista.avd.defined(true) %}
+{%             set redistribute_host = "redistribute attached-host" %}
+{%             if redistribute_var.attached_host.route_map is arista.avd.defined %}
+{%                 set redistribute_host = redistribute_host ~ " route-map " ~ redistribute_var.attached_host.route_map %}
+{%             endif %}
+   {{ redistribute_host }}
+{%         endif %}
+{%         if redistribute_var.dynamic.enabled is arista.avd.defined(true) %}
+{%             set redistribute_dynamic = "redistribute dynamic" %}
+{%             if redistribute_var.dynamic.route_map is arista.avd.defined %}
+{%                 set redistribute_dynamic = redistribute_dynamic ~ " route-map " ~ redistribute_var.dynamic.route_map %}
+{%             elif redistribute_var.dynamic.rcf is arista.avd.defined %}
+{%                 set redistribute_dynamic = redistribute_dynamic ~ " rcf " ~ redistribute_var.dynamic.rcf %}
+{%             endif %}
+   {{ redistribute_dynamic }}
+{%         endif %}
+{%         if redistribute_var.bgp.enabled is arista.avd.defined(true) %}
+{%             set redistribute_bgp = "redistribute bgp leaked" %}
+{%             if redistribute_var.bgp.route_map is arista.avd.defined %}
+{%                 set redistribute_bgp = redistribute_bgp ~ " route-map " ~ redistribute_var.bgp.route_map %}
+{%             endif %}
+   {{ redistribute_bgp }}
+{%         endif %}
+{%         if redistribute_var.user.enabled is arista.avd.defined(true) %}
+{%             set redistribute_user = "redistribute user" %}
+{%             if redistribute_var.user.rcf is arista.avd.defined %}
+{%                 set redistribute_user = redistribute_user ~ " rcf " ~ redistribute_var.user.rcf %}
+{%             endif %}
+   {{ redistribute_user }}
+{%         endif %}
+{%     elif router_bgp.redistribute_routes is arista.avd.defined %}
+{%         for redistribute_route in router_bgp.redistribute_routes | arista.avd.natural_sort('source_protocol') %}
 {%             set redistribute_route_cli = "redistribute " ~ redistribute_route.source_protocol %}
 {%             if redistribute_route.source_protocol in ["ospf", "ospfv3"] %}
 {%                 if redistribute_route.ospf_route_type is arista.avd.defined %}
@@ -495,16 +650,18 @@ router bgp {{ router_bgp.as }}
 {%                 endif %}
 {%             endif %}
    {{ redistribute_route_cli }}
+{%         endfor %}
+{%     endif %}
+{%     for neighbor_interface in router_bgp.neighbor_interfaces | arista.avd.natural_sort('name') %}
+{%         if neighbor_interface.peer_group is arista.avd.defined and neighbor_interface.remote_as is arista.avd.defined %}
+   neighbor interface {{ neighbor_interface.name }} peer-group {{ neighbor_interface.peer_group }} remote-as {{ neighbor_interface.remote_as }}
+{%         elif neighbor_interface.peer_group is arista.avd.defined and neighbor_interface.peer_filter is arista.avd.defined %}
+   neighbor interface {{ neighbor_interface.name }} peer-group {{ neighbor_interface.peer_group }} peer-filter {{ neighbor_interface.peer_filter }}
 {%         endif %}
 {%     endfor %}
 {# L2VPNs - (vxlan) vlan based #}
 {%     if router_bgp.vlans is arista.avd.defined %}
-{# Force the ids to be string to follow the same ordering as on EOS #}
-{%         set bgp_vlans = router_bgp.vlans %}
-{%         for bgp_vlan in bgp_vlans %}
-{%             do bgp_vlan.update({"id": bgp_vlan['id'] | string}) %}
-{%         endfor %}
-{%         for vlan in bgp_vlans | sort(attribute="id") %}
+{%         for vlan in router_bgp.vlans | arista.avd.natural_sort %}
    !
    vlan {{ vlan.id }}
 {%             if vlan.rd is arista.avd.defined %}
@@ -540,6 +697,37 @@ router bgp {{ router_bgp.as }}
 {%             if vlan.eos_cli is arista.avd.defined %}
       !
       {{ vlan.eos_cli | indent(6, false) }}
+{%             endif %}
+{%         endfor %}
+{%     endif %}
+{# bgp vpws services #}
+{%     if router_bgp.vpws is arista.avd.defined %}
+{%         for vpws_service in router_bgp.vpws | arista.avd.natural_sort('name') %}
+   !
+{%             if vpws_service.name is arista.avd.defined %}
+   vpws {{ vpws_service.name }}
+{%                 if vpws_service.rd is arista.avd.defined %}
+      rd {{ vpws_service.rd }}
+{%                 endif %}
+{%                 if vpws_service.route_targets.import_export is arista.avd.defined %}
+      route-target import export evpn {{ vpws_service.route_targets.import_export }}
+{%                 endif %}
+{%                 if vpws_service.mpls_control_word is arista.avd.defined(true) %}
+      mpls control-word
+{%                 endif %}
+{%                 if vpws_service.label_flow is arista.avd.defined(true) %}
+      label flow
+{%                 endif %}
+{%                 if vpws_service.mtu is arista.avd.defined %}
+      mtu {{ vpws_service.mtu }}
+{%                 endif %}
+{%                 for pw in vpws_service.pseudowires | arista.avd.natural_sort('name') %}
+{%                     if pw.name is arista.avd.defined and pw.id_local is arista.avd.defined and pw.id_remote is arista.avd.defined %}
+      !
+      pseudowire {{ pw.name }}
+         evpn vpws id local {{ pw.id_local }} remote {{ pw.id_remote }}
+{%                     endif %}
+{%                 endfor %}
 {%             endif %}
 {%         endfor %}
 {%     endif %}
@@ -583,42 +771,17 @@ router bgp {{ router_bgp.as }}
       {{ vlan_aware_bundle.eos_cli | indent(6, false) }}
 {%         endif %}
 {%     endfor %}
-{# bgp vpws services #}
-{%     if router_bgp.vpws is arista.avd.defined %}
-{%         for vpws_service in router_bgp.vpws | arista.avd.natural_sort('name') %}
-   !
-{%             if vpws_service.name is arista.avd.defined %}
-   vpws {{ vpws_service.name }}
-{%                 if vpws_service.rd is arista.avd.defined %}
-      rd {{ vpws_service.rd }}
-{%                 endif %}
-{%                 if vpws_service.route_targets.import_export is arista.avd.defined %}
-      route-target import export evpn {{ vpws_service.route_targets.import_export }}
-{%                 endif %}
-{%                 if vpws_service.mpls_control_word is arista.avd.defined(true) %}
-      mpls control-word
-{%                 endif %}
-{%                 if vpws_service.label_flow is arista.avd.defined(true) %}
-      label flow
-{%                 endif %}
-{%                 if vpws_service.mtu is arista.avd.defined %}
-      mtu {{ vpws_service.mtu }}
-{%                 endif %}
-{%                 for pw in vpws_service.pseudowires | arista.avd.natural_sort('name') %}
-{%                     if pw.name is arista.avd.defined and pw.id_local is arista.avd.defined and pw.id_remote is arista.avd.defined %}
-      !
-      pseudowire {{ pw.name }}
-         evpn vpws id local {{ pw.id_local }} remote {{ pw.id_remote }}
-{%                     endif %}
-{%                 endfor %}
-{%             endif %}
-{%         endfor %}
-{%     endif %}
 {# address families activation #}
 {# address family evpn activation #}
 {%     if router_bgp.address_family_evpn is arista.avd.defined %}
    !
    address-family evpn
+{%         if router_bgp.address_family_evpn.route.export_ethernet_segment_ip_mass_withdraw is arista.avd.defined(true) %}
+      route export ethernet-segment ip mass-withdraw
+{%         endif %}
+{%         if router_bgp.address_family_evpn.route.import_ethernet_segment_ip_mass_withdraw is arista.avd.defined(true) %}
+      route import ethernet-segment ip mass-withdraw
+{%         endif %}
 {%         if router_bgp.address_family_evpn.bgp.additional_paths.receive is arista.avd.defined(true) %}
       bgp additional-paths receive
 {%         elif router_bgp.address_family_evpn.bgp_additional_paths.receive is arista.avd.defined(true) %}
@@ -650,26 +813,6 @@ router bgp {{ router_bgp.as }}
 {%         if router_bgp.address_family_evpn.next_hop_unchanged is arista.avd.defined(true) %}
       bgp next-hop-unchanged
 {%         endif %}
-{%         if router_bgp.address_family_evpn.evpn_hostflap_detection.enabled is arista.avd.defined(false) %}
-      no host-flap detection
-{%         elif router_bgp.address_family_evpn.evpn_hostflap_detection.enabled is arista.avd.defined(true) %}
-{%             set hostflap_detection_cli = '' %}
-{%             if router_bgp.address_family_evpn.evpn_hostflap_detection.window is arista.avd.defined %}
-{%                 set hostflap_detection_cli = hostflap_detection_cli ~ ' window ' ~ router_bgp.address_family_evpn.evpn_hostflap_detection.window %}
-{%             endif %}
-{%             if router_bgp.address_family_evpn.evpn_hostflap_detection.threshold is arista.avd.defined %}
-{%                 set hostflap_detection_cli = hostflap_detection_cli ~ ' threshold ' ~ router_bgp.address_family_evpn.evpn_hostflap_detection.threshold %}
-{%             endif %}
-{%             if router_bgp.address_family_evpn.evpn_hostflap_detection.expiry_timeout is arista.avd.defined %}
-{%                 set hostflap_detection_cli = hostflap_detection_cli ~ ' expiry timeout ' ~ router_bgp.address_family_evpn.evpn_hostflap_detection.expiry_timeout ~ ' seconds' %}
-{%             endif %}
-{%             if hostflap_detection_cli != '' %}
-      host-flap detection{{ hostflap_detection_cli }}
-{%             endif %}
-{%         endif %}
-{%         if router_bgp.address_family_evpn.domain_identifier is arista.avd.defined %}
-      domain identifier {{ router_bgp.address_family_evpn.domain_identifier }}
-{%         endif %}
 {%         if router_bgp.address_family_evpn.neighbor_default.encapsulation is arista.avd.defined("mpls") %}
 {%             set evpn_neighbor_default_encap_cli = "neighbor default encapsulation mpls" %}
 {%             if router_bgp.address_family_evpn.neighbor_default.next_hop_self_source_interface is arista.avd.defined %}
@@ -695,6 +838,14 @@ router bgp {{ router_bgp.as }}
 {%             endif %}
 {%         endif %}
 {%         for peer_group in router_bgp.address_family_evpn.peer_groups | arista.avd.natural_sort('name') %}
+{%             if peer_group.activate is arista.avd.defined(true) %}
+      neighbor {{ peer_group.name }} activate
+{%             elif peer_group.activate is arista.avd.defined(false) %}
+      no neighbor {{ peer_group.name }} activate
+{%             endif %}
+{%             if peer_group.additional_paths.receive is arista.avd.defined(true) %}
+      neighbor {{ peer_group.name }} additional-paths receive
+{%             endif %}
 {%             if peer_group.route_map_in is arista.avd.defined %}
       neighbor {{ peer_group.name }} route-map {{ peer_group.route_map_in }} in
 {%             endif %}
@@ -716,14 +867,6 @@ router bgp {{ router_bgp.as }}
 {%                 endif %}
       {{ peer_group_default_route_cli }}
 {%             endif %}
-{%             if peer_group.activate is arista.avd.defined(true) %}
-      neighbor {{ peer_group.name }} activate
-{%             elif peer_group.activate is arista.avd.defined(false) %}
-      no neighbor {{ peer_group.name }} activate
-{%             endif %}
-{%             if peer_group.additional_paths.receive is arista.avd.defined(true) %}
-      neighbor {{ peer_group.name }} additional-paths receive
-{%             endif %}
 {%             if peer_group.additional_paths.send is arista.avd.defined %}
 {%                 if peer_group.additional_paths.send == 'disabled' %}
       no neighbor {{ peer_group.name }} additional-paths send
@@ -737,11 +880,11 @@ router bgp {{ router_bgp.as }}
       neighbor {{ peer_group.name }} additional-paths send {{ peer_group.additional_paths.send }}
 {%                 endif %}
 {%             endif %}
-{%             if peer_group.domain_remote is arista.avd.defined(true) %}
-      neighbor {{ peer_group.name }} domain remote
-{%             endif %}
 {%             if peer_group.encapsulation is arista.avd.defined %}
       neighbor {{ peer_group.name }} encapsulation {{ peer_group.encapsulation }}
+{%             endif %}
+{%             if peer_group.domain_remote is arista.avd.defined(true) %}
+      neighbor {{ peer_group.name }} domain remote
 {%             endif %}
 {%         endfor %}
 {%         for neighbor in router_bgp.address_family_evpn.neighbors | arista.avd.natural_sort('ip_address') %}
@@ -785,8 +928,14 @@ router bgp {{ router_bgp.as }}
       neighbor {{ neighbor.ip_address }} encapsulation {{ neighbor.encapsulation }}
 {%             endif %}
 {%         endfor %}
+{%         if router_bgp.address_family_evpn.domain_identifier is arista.avd.defined %}
+      domain identifier {{ router_bgp.address_family_evpn.domain_identifier }}
+{%         endif %}
 {%         if router_bgp.address_family_evpn.next_hop.resolution_disabled is arista.avd.defined(true) %}
       next-hop resolution disabled
+{%         endif %}
+{%         if router_bgp.address_family_evpn.route.import_match_failure_action is arista.avd.defined('discard') %}
+      route import match-failure action discard
 {%         endif %}
 {%         if router_bgp.address_family_evpn.neighbor_default.next_hop_self_received_evpn_routes.enable is arista.avd.defined(true) %}
 {%             set evpn_neighbor_default_nhs_received_evpn_routes_cli = "neighbor default next-hop-self received-evpn-routes route-type ip-prefix" %}
@@ -795,14 +944,22 @@ router bgp {{ router_bgp.as }}
 {%             endif %}
       {{ evpn_neighbor_default_nhs_received_evpn_routes_cli }}
 {%         endif %}
-{%         if router_bgp.address_family_evpn.route.import_match_failure_action is arista.avd.defined('discard') %}
-      route import match-failure action discard
-{%         endif %}
-{%         if router_bgp.address_family_evpn.route.import_ethernet_segment_ip_mass_withdraw is arista.avd.defined(true) %}
-      route import ethernet-segment ip mass-withdraw
-{%         endif %}
-{%         if router_bgp.address_family_evpn.route.export_ethernet_segment_ip_mass_withdraw is arista.avd.defined(true) %}
-      route export ethernet-segment ip mass-withdraw
+{%         if router_bgp.address_family_evpn.evpn_hostflap_detection.enabled is arista.avd.defined(false) %}
+      no host-flap detection
+{%         elif router_bgp.address_family_evpn.evpn_hostflap_detection.enabled is arista.avd.defined(true) %}
+{%             set hostflap_detection_cli = '' %}
+{%             if router_bgp.address_family_evpn.evpn_hostflap_detection.window is arista.avd.defined %}
+{%                 set hostflap_detection_cli = hostflap_detection_cli ~ ' window ' ~ router_bgp.address_family_evpn.evpn_hostflap_detection.window %}
+{%             endif %}
+{%             if router_bgp.address_family_evpn.evpn_hostflap_detection.threshold is arista.avd.defined %}
+{%                 set hostflap_detection_cli = hostflap_detection_cli ~ ' threshold ' ~ router_bgp.address_family_evpn.evpn_hostflap_detection.threshold %}
+{%             endif %}
+{%             if router_bgp.address_family_evpn.evpn_hostflap_detection.expiry_timeout is arista.avd.defined %}
+{%                 set hostflap_detection_cli = hostflap_detection_cli ~ ' expiry timeout ' ~ router_bgp.address_family_evpn.evpn_hostflap_detection.expiry_timeout ~ ' seconds' %}
+{%             endif %}
+{%             if hostflap_detection_cli != '' %}
+      host-flap detection{{ hostflap_detection_cli }}
+{%             endif %}
 {%         endif %}
 {%         if router_bgp.address_family_evpn.layer_2_fec_in_place_update.enabled is arista.avd.defined(true) %}
 {%             set layer2_cli = "layer-2 fec in-place update" %}
@@ -861,28 +1018,6 @@ router bgp {{ router_bgp.as }}
 {%             endif %}
 {%         endfor %}
 {%     endif %}
-{# address family rt-membership activation #}
-{%     if router_bgp.address_family_rtc is arista.avd.defined %}
-   !
-   address-family rt-membership
-{%         for peer_group in router_bgp.address_family_rtc.peer_groups | arista.avd.natural_sort('name') %}
-{%             if peer_group.activate is arista.avd.defined(true) %}
-      neighbor {{ peer_group.name }} activate
-{%             elif peer_group.activate is arista.avd.defined(false) %}
-      no neighbor {{ peer_group.name }} activate
-{%             endif %}
-{%             if peer_group.default_route_target is defined %}
-{%                 if peer_group.default_route_target.only is arista.avd.defined(true) %}
-      neighbor {{ peer_group.name }} default-route-target only
-{%                 else %}
-      neighbor {{ peer_group.name }} default-route-target
-{%                 endif %}
-{%             endif %}
-{%             if peer_group.default_route_target.encoding_origin_as_omit is defined %}
-      neighbor {{ peer_group.name }} default-route-target encoding origin-as omit
-{%             endif %}
-{%         endfor %}
-{%     endif %}
 {# address family ipv4 activation #}
 {%     if router_bgp.address_family_ipv4 is arista.avd.defined %}
    !
@@ -909,6 +1044,11 @@ router bgp {{ router_bgp.as }}
 {%             endif %}
 {%         endif %}
 {%         for peer_group in router_bgp.address_family_ipv4.peer_groups | arista.avd.natural_sort('name') %}
+{%             if peer_group.activate is arista.avd.defined(true) %}
+      neighbor {{ peer_group.name }} activate
+{%             elif peer_group.activate is arista.avd.defined(false) %}
+      no neighbor {{ peer_group.name }} activate
+{%             endif %}
 {%             if peer_group.additional_paths.receive is arista.avd.defined(true) %}
       neighbor {{ peer_group.name }} additional-paths receive
 {%             endif %}
@@ -940,18 +1080,6 @@ router bgp {{ router_bgp.as }}
 {%                 endif %}
       {{ neighbor_default_originate_cli }}
 {%             endif %}
-{%             if peer_group.next_hop.address_family_ipv6.enabled is arista.avd.defined(true) %}
-{%                 set nexthop_v6_cli = "neighbor " ~ peer_group.name ~ " next-hop address-family ipv6" %}
-{%                 if peer_group.next_hop.address_family_ipv6.originate is arista.avd.defined(true) %}
-{%                     set nexthop_v6_cli = nexthop_v6_cli ~ " originate" %}
-{%                 endif %}
-      {{ nexthop_v6_cli }}
-{%             endif %}
-{%             if peer_group.activate is arista.avd.defined(true) %}
-      neighbor {{ peer_group.name }} activate
-{%             elif peer_group.activate is arista.avd.defined(false) %}
-      no neighbor {{ peer_group.name }} activate
-{%             endif %}
 {%             if peer_group.additional_paths.send is arista.avd.defined %}
 {%                 if peer_group.additional_paths.send == 'disabled' %}
       no neighbor {{ peer_group.name }} additional-paths send
@@ -973,8 +1101,20 @@ router bgp {{ router_bgp.as }}
 {%                     endif %}
 {%                 endif %}
 {%             endif %}
+{%             if peer_group.next_hop.address_family_ipv6.enabled is arista.avd.defined(true) %}
+{%                 set nexthop_v6_cli = "neighbor " ~ peer_group.name ~ " next-hop address-family ipv6" %}
+{%                 if peer_group.next_hop.address_family_ipv6.originate is arista.avd.defined(true) %}
+{%                     set nexthop_v6_cli = nexthop_v6_cli ~ " originate" %}
+{%                 endif %}
+      {{ nexthop_v6_cli }}
+{%             endif %}
 {%         endfor %}
 {%         for neighbor in router_bgp.address_family_ipv4.neighbors | arista.avd.natural_sort('ip_address') %}
+{%             if neighbor.activate is arista.avd.defined(true) %}
+      neighbor {{ neighbor.ip_address }} activate
+{%             elif neighbor.activate is arista.avd.defined(false) %}
+      no neighbor {{ neighbor.ip_address }} activate
+{%             endif %}
 {%             if neighbor.additional_paths.receive is arista.avd.defined(true) %}
       neighbor {{ neighbor.ip_address }} additional-paths receive
 {%             endif %}
@@ -1027,11 +1167,6 @@ router bgp {{ router_bgp.as }}
 {%                     endif %}
 {%                 endif %}
 {%             endif %}
-{%             if neighbor.activate is arista.avd.defined(true) %}
-      neighbor {{ neighbor.ip_address }} activate
-{%             elif neighbor.activate is arista.avd.defined(false) %}
-      no neighbor {{ neighbor.ip_address }} activate
-{%             endif %}
 {%         endfor %}
 {%         for network in router_bgp.address_family_ipv4.networks | arista.avd.natural_sort('prefix') %}
 {%             if network.route_map is arista.avd.defined %}
@@ -1045,8 +1180,170 @@ router bgp {{ router_bgp.as }}
 {%         elif router_bgp.address_family_ipv4.bgp.redistribute_internal is arista.avd.defined(false) %}
       no bgp redistribute-internal
 {%         endif %}
-{%         for redistribute_route in router_bgp.address_family_ipv4.redistribute_routes | arista.avd.natural_sort('source_protocol') %}
-{%             if redistribute_route.source_protocol is arista.avd.defined %}
+{%         if router_bgp.address_family_ipv4.redistribute is arista.avd.defined %}
+{%             set redistribute_var = router_bgp.address_family_ipv4.redistribute %}
+{%             if redistribute_var.attached_host.enabled is arista.avd.defined(true) %}
+{%                 set redistribute_host = "redistribute attached-host" %}
+{%                 if redistribute_var.attached_host.route_map is arista.avd.defined %}
+{%                     set redistribute_host = redistribute_host ~ " route-map " ~ redistribute_var.attached_host.route_map %}
+{%                 endif %}
+      {{ redistribute_host }}
+{%             endif %}
+{%             if redistribute_var.bgp.enabled is arista.avd.defined(true) %}
+{%                 set redistribute_bgp = "redistribute bgp leaked" %}
+{%                 if redistribute_var.bgp.route_map is arista.avd.defined %}
+{%                     set redistribute_bgp = redistribute_bgp ~ " route-map " ~ redistribute_var.bgp.route_map %}
+{%                 endif %}
+      {{ redistribute_bgp }}
+{%             endif %}
+{%             if redistribute_var.connected.enabled is arista.avd.defined(true) %}
+{%                 set redistribute_conn = "redistribute connected" %}
+{%                 if redistribute_var.connected.include_leaked is arista.avd.defined(true) %}
+{%                     set redistribute_conn = redistribute_conn ~ " include leaked" %}
+{%                 endif %}
+{%                 if redistribute_var.connected.route_map is arista.avd.defined %}
+{%                     set redistribute_conn = redistribute_conn ~ " route-map " ~ redistribute_var.connected.route_map %}
+{%                 elif redistribute_var.connected.rcf is arista.avd.defined %}
+{%                     set redistribute_conn = redistribute_conn ~ " rcf " ~ redistribute_var.connected.rcf %}
+{%                 endif %}
+      {{ redistribute_conn }}
+{%             endif %}
+{%             if redistribute_var.dynamic.enabled is arista.avd.defined(true) %}
+{%                 set redistribute_dynamic = "redistribute dynamic" %}
+{%                 if redistribute_var.dynamic.route_map is arista.avd.defined %}
+{%                     set redistribute_dynamic = redistribute_dynamic ~ " route-map " ~ redistribute_var.dynamic.route_map %}
+{%                 elif redistribute_var.dynamic.rcf is arista.avd.defined %}
+{%                     set redistribute_dynamic = redistribute_dynamic ~ " rcf " ~ redistribute_var.dynamic.rcf %}
+{%                 endif %}
+      {{ redistribute_dynamic }}
+{%             endif %}
+{%             if redistribute_var.user.enabled is arista.avd.defined(true) %}
+{%                 set redistribute_user = "redistribute user" %}
+{%                 if redistribute_var.user.rcf is arista.avd.defined %}
+{%                     set redistribute_user = redistribute_user ~ " rcf " ~ redistribute_var.user.rcf %}
+{%                 endif %}
+      {{ redistribute_user }}
+{%             endif %}
+{%             if redistribute_var.isis.enabled is arista.avd.defined(true) %}
+{%                 set redistribute_isis = "redistribute isis" %}
+{%                 if redistribute_var.isis.isis_level is arista.avd.defined %}
+{%                     set redistribute_isis = redistribute_isis ~ " " ~ redistribute_var.isis.isis_level %}
+{%                 endif %}
+{%                 if redistribute_var.isis.include_leaked is arista.avd.defined(true) %}
+{%                     set redistribute_isis = redistribute_isis ~ " include leaked" %}
+{%                 endif %}
+{%                 if redistribute_var.isis.route_map is arista.avd.defined %}
+{%                     set redistribute_isis = redistribute_isis ~ " route-map " ~ redistribute_var.isis.route_map %}
+{%                 elif redistribute_var.isis.rcf is arista.avd.defined %}
+{%                     set redistribute_isis = redistribute_isis ~ " rcf " ~ redistribute_var.isis.rcf %}
+{%                 endif %}
+      {{ redistribute_isis }}
+{%             endif %}
+{%             if redistribute_var.ospf.enabled is arista.avd.defined(true) %}
+{%                 set redistribute_ospf = "redistribute ospf" %}
+{%                 if redistribute_var.ospf.include_leaked is arista.avd.defined(true) %}
+{%                     set redistribute_ospf = redistribute_ospf ~ " include leaked" %}
+{%                 endif %}
+{%                 if redistribute_var.ospf.route_map is arista.avd.defined %}
+{%                     set redistribute_ospf = redistribute_ospf ~ " route-map " ~ redistribute_var.ospf.route_map %}
+{%                 endif %}
+      {{ redistribute_ospf }}
+{%             elif redistribute_var.ospf.match_internal.enabled is arista.avd.defined(true) %}
+{%                 set redistribute_ospf = "redistribute ospf match internal" %}
+{%                 if redistribute_var.ospf.match_internal.include_leaked is arista.avd.defined(true) %}
+{%                     set redistribute_ospf = redistribute_ospf ~ " include leaked" %}
+{%                 endif %}
+{%                 if redistribute_var.ospf.match_internal.route_map is arista.avd.defined %}
+{%                     set redistribute_ospf = redistribute_ospf ~ " route-map " ~ redistribute_var.ospf.match_internal.route_map %}
+{%                 endif %}
+      {{ redistribute_ospf }}
+{%             endif %}
+{%             if redistribute_var.ospfv3.enabled is arista.avd.defined(true) %}
+{%                 set redistribute_ospfv3 = "redistribute ospfv3" %}
+{%                 if redistribute_var.ospfv3.include_leaked is arista.avd.defined(true) %}
+{%                     set redistribute_ospfv3 = redistribute_ospfv3 ~ " include leaked" %}
+{%                 endif %}
+{%                 if redistribute_var.ospfv3.route_map is arista.avd.defined %}
+{%                     set redistribute_ospfv3 = redistribute_ospfv3 ~ " route-map " ~ redistribute_var.ospfv3.route_map %}
+{%                 endif %}
+      {{ redistribute_ospfv3 }}
+{%             elif redistribute_var.ospfv3.match_internal.enabled is arista.avd.defined(true) %}
+{%                 set redistribute_ospfv3 = "redistribute ospfv3 match internal" %}
+{%                 if redistribute_var.ospfv3.match_internal.include_leaked is arista.avd.defined(true) %}
+{%                     set redistribute_ospfv3 = redistribute_ospfv3 ~ " include leaked" %}
+{%                 endif %}
+{%                 if redistribute_var.ospfv3.match_internal.route_map is arista.avd.defined %}
+{%                     set redistribute_ospfv3 = redistribute_ospfv3 ~ " route-map " ~ redistribute_var.ospfv3.match_internal.route_map %}
+{%                 endif %}
+      {{ redistribute_ospfv3 }}
+{%             endif %}
+{%             if redistribute_var.ospfv3.match_external.enabled is arista.avd.defined(true) %}
+{%                 set redistribute_ospfv3_match = "redistribute ospfv3 match external" %}
+{%                 if redistribute_var.ospfv3.match_external.include_leaked is arista.avd.defined(true) %}
+{%                     set redistribute_ospfv3_match = redistribute_ospfv3_match ~ " include leaked" %}
+{%                 endif %}
+{%                 if redistribute_var.ospfv3.match_external.route_map is arista.avd.defined %}
+{%                     set redistribute_ospfv3_match = redistribute_ospfv3_match ~ " route-map " ~ redistribute_var.ospfv3.match_external.route_map %}
+{%                 endif %}
+      {{ redistribute_ospfv3_match }}
+{%             endif %}
+{%             if redistribute_var.ospfv3.match_nssa_external.enabled is arista.avd.defined(true) %}
+{%                 set redistribute_ospfv3_match = "redistribute ospfv3 match nssa-external" %}
+{%                 if redistribute_var.ospfv3.match_nssa_external.nssa_type is arista.avd.defined %}
+{%                     set redistribute_ospfv3_match = redistribute_ospfv3_match ~ " " ~ redistribute_var.ospfv3.match_nssa_external.nssa_type %}
+{%                 endif %}
+{%                 if redistribute_var.ospfv3.match_nssa_external.include_leaked is arista.avd.defined(true) %}
+{%                     set redistribute_ospfv3_match = redistribute_ospfv3_match ~ " include leaked" %}
+{%                 endif %}
+{%                 if redistribute_var.ospfv3.match_nssa_external.route_map is arista.avd.defined %}
+{%                     set redistribute_ospfv3_match = redistribute_ospfv3_match ~ " route-map " ~ redistribute_var.ospfv3.match_nssa_external.route_map %}
+{%                 endif %}
+      {{ redistribute_ospfv3_match }}
+{%             endif %}
+{%             if redistribute_var.ospf.match_external.enabled is arista.avd.defined(true) %}
+{%                 set redistribute_ospf_match = "redistribute ospf match external" %}
+{%                 if redistribute_var.ospf.match_external.include_leaked is arista.avd.defined(true) %}
+{%                     set redistribute_ospf_match = redistribute_ospf_match ~ " include leaked" %}
+{%                 endif %}
+{%                 if redistribute_var.ospf.match_external.route_map is arista.avd.defined %}
+{%                     set redistribute_ospf_match = redistribute_ospf_match ~ " route-map " ~ redistribute_var.ospf.match_external.route_map %}
+{%                 endif %}
+      {{ redistribute_ospf_match }}
+{%             endif %}
+{%             if redistribute_var.ospf.match_nssa_external.enabled is arista.avd.defined(true) %}
+{%                 set redistribute_ospf_match = "redistribute ospf match nssa-external" %}
+{%                 if redistribute_var.ospf.match_nssa_external.nssa_type is arista.avd.defined %}
+{%                     set redistribute_ospf_match = redistribute_ospf_match ~ " " ~ redistribute_var.ospf.match_nssa_external.nssa_type %}
+{%                 endif %}
+{%                 if redistribute_var.ospf.match_nssa_external.include_leaked is arista.avd.defined(true) %}
+{%                     set redistribute_ospf_match = redistribute_ospf_match ~ " include leaked" %}
+{%                 endif %}
+{%                 if redistribute_var.ospf.match_nssa_external.route_map is arista.avd.defined %}
+{%                     set redistribute_ospf_match = redistribute_ospf_match ~ " route-map " ~ redistribute_var.ospf.match_nssa_external.route_map %}
+{%                 endif %}
+      {{ redistribute_ospf_match }}
+{%             endif %}
+{%             if redistribute_var.rip.enabled is arista.avd.defined(true) %}
+{%                 set redistribute_rip = "redistribute rip" %}
+{%                 if redistribute_var.rip.route_map is arista.avd.defined %}
+{%                     set redistribute_rip = redistribute_rip ~ " route-map " ~ redistribute_var.rip.route_map %}
+{%                 endif %}
+      {{ redistribute_rip }}
+{%             endif %}
+{%             if redistribute_var.static.enabled is arista.avd.defined(true) %}
+{%                 set redistribute_static = "redistribute static" %}
+{%                 if redistribute_var.static.include_leaked is arista.avd.defined(true) %}
+{%                     set redistribute_static = redistribute_static ~ " include leaked" %}
+{%                 endif %}
+{%                 if redistribute_var.static.route_map is arista.avd.defined %}
+{%                     set redistribute_static = redistribute_static ~ " route-map " ~ redistribute_var.static.route_map %}
+{%                 elif redistribute_var.static.rcf is arista.avd.defined %}
+{%                     set redistribute_static = redistribute_static ~ " rcf " ~ redistribute_var.static.rcf %}
+{%                 endif %}
+      {{ redistribute_static }}
+{%             endif %}
+{%         elif router_bgp.address_family_ipv4.redistribute_routes is arista.avd.defined %}
+{%             for redistribute_route in router_bgp.address_family_ipv4.redistribute_routes | arista.avd.natural_sort('source_protocol') %}
 {%                 set redistribute_route_cli = "redistribute " ~ redistribute_route.source_protocol %}
 {%                 if redistribute_route.source_protocol in ["ospf", "ospfv3"] %}
 {%                     if redistribute_route.ospf_route_type is arista.avd.defined %}
@@ -1066,8 +1363,8 @@ router bgp {{ router_bgp.as }}
 {%                     endif %}
 {%                 endif %}
       {{ redistribute_route_cli }}
-{%             endif %}
-{%         endfor %}
+{%             endfor %}
+{%         endif %}
 {%     endif %}
 {# address family ipv4 BGP Labeled-Unicast activation #}
 {%     if router_bgp.address_family_ipv4_labeled_unicast is arista.avd.defined %}
@@ -1117,6 +1414,9 @@ router bgp {{ router_bgp.as }}
 {%         endif %}
 {%         if router_bgp.address_family_ipv4_labeled_unicast.bgp.next_hop_unchanged is arista.avd.defined(true) %}
       bgp next-hop-unchanged
+{%         endif %}
+{%         if router_bgp.address_family_ipv4_labeled_unicast.neighbor_default.next_hop_self is arista.avd.defined(true) %}
+      neighbor default next-hop-self
 {%         endif %}
 {%         if router_bgp.address_family_ipv4_labeled_unicast.next_hop_resolution_ribs is arista.avd.defined %}
 {%             set v4_bgp_lu_resolution_ribs = [] %}
@@ -1187,7 +1487,7 @@ router bgp {{ router_bgp.as }}
       neighbor {{ peer.name }} next-hop-self source-interface {{ peer.next_hop_self_source_interface }}
 {%             endif %}
 {%             if peer.maximum_advertised_routes is arista.avd.defined %}
-{%                 set maximum_routes_cli = "neighbor " ~peer.name ~ " maximum-routes " ~peer.maximum_advertised_routes %}
+{%                 set maximum_routes_cli = "neighbor " ~ peer.name ~ " maximum-advertised-routes " ~ peer.maximum_advertised_routes %}
 {%                 if peer.maximum_advertised_routes_warning_limit is arista.avd.defined %}
 {%                     set maximum_routes_cli = maximum_routes_cli ~ " warning-limit " ~ peer.maximum_advertised_routes_warning_limit %}
 {%                 endif %}
@@ -1221,11 +1521,6 @@ router bgp {{ router_bgp.as }}
 {%             endif %}
 {%             if peer.multi_path is arista.avd.defined(true) %}
       neighbor {{ peer.name }} multi-path
-{%             endif %}
-{%             if peer.next_hop_resolution.v4_mapped_v6_translation is arista.avd.defined(true) %}
-      neighbor {{ peer.name }} next-hop resolution v4-mapped-v6 translation
-{%             elif peer.next_hop_resolution.v4_mapped_v6_translation is arista.avd.defined(false) %}
-      neighbor {{ peer.name }} next-hop resolution v4-mapped-v6 translation disabled
 {%             endif %}
 {%         endfor %}
 {%         for neighbor in router_bgp.address_family_ipv4_labeled_unicast.neighbors | arista.avd.natural_sort('ip_address') %}
@@ -1280,7 +1575,7 @@ router bgp {{ router_bgp.as }}
       neighbor {{ neighbor.ip_address }} next-hop-self source-interface {{ neighbor.next_hop_self_source_interface }}
 {%             endif %}
 {%             if neighbor.maximum_advertised_routes is arista.avd.defined %}
-{%                 set maximum_routes_cli = "neighbor " ~neighbor.ip_address ~ " maximum-advertised-routes " ~neighbor.maximum_advertised_routes %}
+{%                 set maximum_routes_cli = "neighbor " ~ neighbor.ip_address ~ " maximum-advertised-routes " ~ neighbor.maximum_advertised_routes %}
 {%                 if neighbor.maximum_advertised_routes_warning_limit is arista.avd.defined %}
 {%                     set maximum_routes_cli = maximum_routes_cli ~ " warning-limit " ~ neighbor.maximum_advertised_routes_warning_limit %}
 {%                 endif %}
@@ -1315,11 +1610,6 @@ router bgp {{ router_bgp.as }}
 {%             if neighbor.multi_path is arista.avd.defined(true) %}
       neighbor {{ neighbor.ip_address }} multi-path
 {%             endif %}
-{%             if neighbor.next_hop_resolution.v4_mapped_v6_translation is arista.avd.defined(true) %}
-      neighbor {{ neighbor.ip_address }} next-hop resolution v4-mapped-v6 translation
-{%             elif neighbor.next_hop_resolution.v4_mapped_v6_translation is arista.avd.defined(false) %}
-      neighbor {{ neighbor.ip_address }} next-hop resolution v4-mapped-v6 translation disabled
-{%             endif %}
 {%         endfor %}
 {%         if router_bgp.address_family_ipv4_labeled_unicast.networks is arista.avd.defined %}
 {%             for network in router_bgp.address_family_ipv4_labeled_unicast.networks %}
@@ -1348,9 +1638,6 @@ router bgp {{ router_bgp.as }}
 {%         if router_bgp.address_family_ipv4_labeled_unicast.graceful_restart is arista.avd.defined(true) %}
       graceful-restart
 {%         endif %}
-{%         if router_bgp.address_family_ipv4_labeled_unicast.neighbor_default.next_hop_self is arista.avd.defined(true) %}
-      neighbor default next-hop-self
-{%         endif %}
 {%         if router_bgp.address_family_ipv4_labeled_unicast.tunnel_source_protocols is arista.avd.defined %}
 {%             for tunnel_source_protocol in router_bgp.address_family_ipv4_labeled_unicast.tunnel_source_protocols %}
 {%                 set tunnel_source_protocol_cli = "tunnel source-protocol " ~ tunnel_source_protocol.protocol %}
@@ -1376,12 +1663,6 @@ router bgp {{ router_bgp.as }}
       bgp additional-paths receive
 {%         endif %}
 {%         for peer_group in router_bgp.address_family_ipv4_multicast.peer_groups | arista.avd.natural_sort('name') %}
-{%             if peer_group.route_map_in is arista.avd.defined %}
-      neighbor {{ peer_group.name }} route-map {{ peer_group.route_map_in }} in
-{%             endif %}
-{%             if peer_group.route_map_out is arista.avd.defined %}
-      neighbor {{ peer_group.name }} route-map {{ peer_group.route_map_out }} out
-{%             endif %}
 {%             if peer_group.activate is arista.avd.defined(true) %}
       neighbor {{ peer_group.name }} activate
 {%             elif peer_group.activate is arista.avd.defined(false) %}
@@ -1390,14 +1671,14 @@ router bgp {{ router_bgp.as }}
 {%             if peer_group.additional_paths.receive is arista.avd.defined(true) %}
       neighbor {{ peer_group.name }} additional-paths receive
 {%             endif %}
+{%             if peer_group.route_map_in is arista.avd.defined %}
+      neighbor {{ peer_group.name }} route-map {{ peer_group.route_map_in }} in
+{%             endif %}
+{%             if peer_group.route_map_out is arista.avd.defined %}
+      neighbor {{ peer_group.name }} route-map {{ peer_group.route_map_out }} out
+{%             endif %}
 {%         endfor %}
 {%         for neighbor in router_bgp.address_family_ipv4_multicast.neighbors | arista.avd.natural_sort('ip_address') %}
-{%             if neighbor.route_map_in is arista.avd.defined %}
-      neighbor {{ neighbor.ip_address }} route-map {{ neighbor.route_map_in }} in
-{%             endif %}
-{%             if neighbor.route_map_out is arista.avd.defined %}
-      neighbor {{ neighbor.ip_address }} route-map {{ neighbor.route_map_out }} out
-{%             endif %}
 {%             if neighbor.activate is arista.avd.defined(true) %}
       neighbor {{ neighbor.ip_address }} activate
 {%             elif neighbor.activate is arista.avd.defined(false) %}
@@ -1405,6 +1686,12 @@ router bgp {{ router_bgp.as }}
 {%             endif %}
 {%             if neighbor.additional_paths.receive is arista.avd.defined(true) %}
       neighbor {{ neighbor.ip_address }} additional-paths receive
+{%             endif %}
+{%             if neighbor.route_map_in is arista.avd.defined %}
+      neighbor {{ neighbor.ip_address }} route-map {{ neighbor.route_map_in }} in
+{%             endif %}
+{%             if neighbor.route_map_out is arista.avd.defined %}
+      neighbor {{ neighbor.ip_address }} route-map {{ neighbor.route_map_out }} out
 {%             endif %}
 {%         endfor %}
 {%         if router_bgp.address_family_ipv4_multicast.redistribute is arista.avd.defined %}
@@ -1451,23 +1738,6 @@ router bgp {{ router_bgp.as }}
 {%                 endif %}
       {{ redistribute_ospf }}
 {%             endif %}
-{%             if redistribute_var.ospf.match_external.enabled is arista.avd.defined(true) %}
-{%                 set redistribute_ospf_match = "redistribute ospf match external" %}
-{%                 if redistribute_var.ospf.match_external.route_map is arista.avd.defined %}
-{%                     set redistribute_ospf_match = redistribute_ospf_match ~ " route-map " ~ redistribute_var.ospf.match_external.route_map %}
-{%                 endif %}
-      {{ redistribute_ospf_match }}
-{%             endif %}
-{%             if redistribute_var.ospf.match_nssa_external.enabled is arista.avd.defined(true) %}
-{%                 set redistribute_ospf_match = "redistribute ospf match nssa-external" %}
-{%                 if redistribute_var.ospf.match_nssa_external.nssa_type is arista.avd.defined %}
-{%                     set redistribute_ospf_match = redistribute_ospf_match ~ " " ~ redistribute_var.ospf.match_nssa_external.nssa_type %}
-{%                 endif %}
-{%                 if redistribute_var.ospf.match_nssa_external.route_map is arista.avd.defined %}
-{%                     set redistribute_ospf_match = redistribute_ospf_match ~ " route-map " ~ redistribute_var.ospf.match_nssa_external.route_map %}
-{%                 endif %}
-      {{ redistribute_ospf_match }}
-{%             endif %}
 {%             if redistribute_var.ospfv3.enabled is arista.avd.defined(true) %}
 {%                 set redistribute_ospfv3 = "redistribute ospfv3" %}
 {%                 if redistribute_var.ospfv3.route_map is arista.avd.defined %}
@@ -1497,6 +1767,23 @@ router bgp {{ router_bgp.as }}
 {%                     set redistribute_ospfv3_match = redistribute_ospfv3_match ~ " route-map " ~ redistribute_var.ospfv3.match_nssa_external.route_map %}
 {%                 endif %}
       {{ redistribute_ospfv3_match }}
+{%             endif %}
+{%             if redistribute_var.ospf.match_external.enabled is arista.avd.defined(true) %}
+{%                 set redistribute_ospf_match = "redistribute ospf match external" %}
+{%                 if redistribute_var.ospf.match_external.route_map is arista.avd.defined %}
+{%                     set redistribute_ospf_match = redistribute_ospf_match ~ " route-map " ~ redistribute_var.ospf.match_external.route_map %}
+{%                 endif %}
+      {{ redistribute_ospf_match }}
+{%             endif %}
+{%             if redistribute_var.ospf.match_nssa_external.enabled is arista.avd.defined(true) %}
+{%                 set redistribute_ospf_match = "redistribute ospf match nssa-external" %}
+{%                 if redistribute_var.ospf.match_nssa_external.nssa_type is arista.avd.defined %}
+{%                     set redistribute_ospf_match = redistribute_ospf_match ~ " " ~ redistribute_var.ospf.match_nssa_external.nssa_type %}
+{%                 endif %}
+{%                 if redistribute_var.ospf.match_nssa_external.route_map is arista.avd.defined %}
+{%                     set redistribute_ospf_match = redistribute_ospf_match ~ " route-map " ~ redistribute_var.ospf.match_nssa_external.route_map %}
+{%                 endif %}
+      {{ redistribute_ospf_match }}
 {%             endif %}
 {%             if redistribute_var.static.enabled is arista.avd.defined(true) %}
 {%                 set redistribute_static = "redistribute static" %}
@@ -1582,6 +1869,11 @@ router bgp {{ router_bgp.as }}
 {%             endif %}
 {%         endif %}
 {%         for peer_group in router_bgp.address_family_ipv6.peer_groups | arista.avd.natural_sort('name') %}
+{%             if peer_group.activate is arista.avd.defined(true) %}
+      neighbor {{ peer_group.name }} activate
+{%             elif peer_group.activate is arista.avd.defined(false) %}
+      no neighbor {{ peer_group.name }} activate
+{%             endif %}
 {%             if peer_group.additional_paths.receive is arista.avd.defined(true) %}
       neighbor {{ peer_group.name }} additional-paths receive
 {%             endif %}
@@ -1602,11 +1894,6 @@ router bgp {{ router_bgp.as }}
 {%             endif %}
 {%             if peer_group.prefix_list_out is arista.avd.defined %}
       neighbor {{ peer_group.name }} prefix-list {{ peer_group.prefix_list_out }} out
-{%             endif %}
-{%             if peer_group.activate is arista.avd.defined(true) %}
-      neighbor {{ peer_group.name }} activate
-{%             elif peer_group.activate is arista.avd.defined(false) %}
-      no neighbor {{ peer_group.name }} activate
 {%             endif %}
 {%             if peer_group.additional_paths.send is arista.avd.defined %}
 {%                 if peer_group.additional_paths.send == 'disabled' %}
@@ -1631,6 +1918,11 @@ router bgp {{ router_bgp.as }}
 {%             endif %}
 {%         endfor %}
 {%         for neighbor in router_bgp.address_family_ipv6.neighbors | arista.avd.natural_sort('ip_address') %}
+{%             if neighbor.activate is arista.avd.defined(true) %}
+      neighbor {{ neighbor.ip_address }} activate
+{%             elif neighbor.activate is arista.avd.defined(false) %}
+      no neighbor {{ neighbor.ip_address }} activate
+{%             endif %}
 {%             if neighbor.additional_paths.receive is arista.avd.defined(true) %}
       neighbor {{ neighbor.ip_address }} additional-paths receive
 {%             endif %}
@@ -1651,11 +1943,6 @@ router bgp {{ router_bgp.as }}
 {%             endif %}
 {%             if neighbor.prefix_list_out is arista.avd.defined %}
       neighbor {{ neighbor.ip_address }} prefix-list {{ neighbor.prefix_list_out }} out
-{%             endif %}
-{%             if neighbor.activate is arista.avd.defined(true) %}
-      neighbor {{ neighbor.ip_address }} activate
-{%             elif neighbor.activate is arista.avd.defined(false) %}
-      no neighbor {{ neighbor.ip_address }} activate
 {%             endif %}
 {%             if neighbor.additional_paths.send is arista.avd.defined %}
 {%                 if neighbor.additional_paths.send == 'disabled' %}
@@ -1707,6 +1994,13 @@ router bgp {{ router_bgp.as }}
 {%                 endif %}
       {{ redistribute_bgp }}
 {%             endif %}
+{%             if redistribute_var.dhcp.enabled is arista.avd.defined(true) %}
+{%                 set redistribute_dhcp = "redistribute dhcp" %}
+{%                 if redistribute_var.dhcp.route_map is arista.avd.defined %}
+{%                     set redistribute_dhcp = redistribute_dhcp ~ " route-map " ~ redistribute_var.dhcp.route_map %}
+{%                 endif %}
+      {{ redistribute_dhcp }}
+{%             endif %}
 {%             if redistribute_var.connected.enabled is arista.avd.defined(true) %}
 {%                 set redistribute_conn = "redistribute connected" %}
 {%                 if redistribute_var.connected.include_leaked is arista.avd.defined(true) %}
@@ -1719,13 +2013,6 @@ router bgp {{ router_bgp.as }}
 {%                 endif %}
       {{ redistribute_conn }}
 {%             endif %}
-{%             if redistribute_var.dhcp.enabled is arista.avd.defined(true) %}
-{%                 set redistribute_dhcp = "redistribute dhcp" %}
-{%                 if redistribute_var.dhcp.route_map is arista.avd.defined %}
-{%                     set redistribute_dhcp = redistribute_dhcp ~ " route-map " ~ redistribute_var.dhcp.route_map %}
-{%                 endif %}
-      {{ redistribute_dhcp }}
-{%             endif %}
 {%             if redistribute_var.dynamic.enabled is arista.avd.defined(true) %}
 {%                 set redistribute_dynamic = "redistribute dynamic" %}
 {%                 if redistribute_var.dynamic.route_map is arista.avd.defined %}
@@ -1734,6 +2021,13 @@ router bgp {{ router_bgp.as }}
 {%                     set redistribute_dynamic = redistribute_dynamic ~ " rcf " ~ redistribute_var.dynamic.rcf %}
 {%                 endif %}
       {{ redistribute_dynamic }}
+{%             endif %}
+{%             if redistribute_var.user.enabled is arista.avd.defined(true) %}
+{%                 set redistribute_user = "redistribute user" %}
+{%                 if redistribute_var.user.rcf is arista.avd.defined %}
+{%                     set redistribute_user = redistribute_user ~ " rcf " ~ redistribute_var.user.rcf %}
+{%                 endif %}
+      {{ redistribute_user }}
 {%             endif %}
 {%             if redistribute_var.isis.enabled is arista.avd.defined(true) %}
 {%                 set redistribute_isis = "redistribute isis" %}
@@ -1785,19 +2079,12 @@ router bgp {{ router_bgp.as }}
 {%                     set redistribute_ospfv3_match = redistribute_ospfv3_match ~ " " ~ redistribute_var.ospfv3.match_nssa_external.nssa_type %}
 {%                 endif %}
 {%                 if redistribute_var.ospfv3.match_nssa_external.include_leaked is arista.avd.defined(true) %}
-{%                     set redistribute_ospfv3 = redistribute_ospfv3 ~ " include leaked" %}
+{%                     set redistribute_ospfv3_match = redistribute_ospfv3_match ~ " include leaked" %}
 {%                 endif %}
 {%                 if redistribute_var.ospfv3.match_nssa_external.route_map is arista.avd.defined %}
 {%                     set redistribute_ospfv3_match = redistribute_ospfv3_match ~ " route-map " ~ redistribute_var.ospfv3.match_nssa_external.route_map %}
 {%                 endif %}
       {{ redistribute_ospfv3_match }}
-{%             endif %}
-{%             if redistribute_var.rip.enabled is arista.avd.defined(true) %}
-{%                 set redistribute_rip = "redistribute rip" %}
-{%                 if redistribute_var.rip.route_map is arista.avd.defined %}
-{%                     set redistribute_rip = redistribute_rip ~ " route-map " ~ redistribute_var.rip.route_map %}
-{%                 endif %}
-      {{ redistribute_rip }}
 {%             endif %}
 {%             if redistribute_var.static.enabled is arista.avd.defined(true) %}
 {%                 set redistribute_static = "redistribute static" %}
@@ -1810,13 +2097,6 @@ router bgp {{ router_bgp.as }}
 {%                     set redistribute_static = redistribute_static ~ " rcf " ~ redistribute_var.static.rcf %}
 {%                 endif %}
       {{ redistribute_static }}
-{%             endif %}
-{%             if redistribute_var.user.enabled is arista.avd.defined(true) %}
-{%                 set redistribute_user = "redistribute user" %}
-{%                 if redistribute_var.user.rcf is arista.avd.defined %}
-{%                     set redistribute_user = redistribute_user ~ " rcf " ~ redistribute_var.user.rcf %}
-{%                 endif %}
-      {{ redistribute_user }}
 {%             endif %}
 {%         elif router_bgp.address_family_ipv6.redistribute_routes is arista.avd.defined %}
 {%             for redistribute_route in router_bgp.address_family_ipv6.redistribute_routes | arista.avd.natural_sort('source_protocol') %}
@@ -1869,14 +2149,14 @@ router bgp {{ router_bgp.as }}
 {%             if neighbor.activate is arista.avd.defined(true) %}
       neighbor {{ neighbor.ip_address }} activate
 {%             endif %}
+{%             if neighbor.additional_paths.receive is arista.avd.defined(true) %}
+      neighbor {{ neighbor.ip_address }} additional-paths receive
+{%             endif %}
 {%             if neighbor.route_map_in is arista.avd.defined %}
       neighbor {{ neighbor.ip_address }} route-map {{ neighbor.route_map_in }} in
 {%             endif %}
 {%             if neighbor.route_map_out is arista.avd.defined %}
       neighbor {{ neighbor.ip_address }} route-map {{ neighbor.route_map_out }} out
-{%             endif %}
-{%             if neighbor.additional_paths.receive is arista.avd.defined(true) %}
-      neighbor {{ neighbor.ip_address }} additional-paths receive
 {%             endif %}
 {%         endfor %}
 {%         for network in router_bgp.address_family_ipv6_multicast.networks | arista.avd.natural_sort('prefix') %}
@@ -1886,8 +2166,99 @@ router bgp {{ router_bgp.as }}
 {%             endif %}
       {{ network_cli }}
 {%         endfor %}
-{%         for redistribute_route in router_bgp.address_family_ipv6_multicast.redistribute_routes | arista.avd.natural_sort('source_protocol') %}
-{%             if redistribute_route.source_protocol is arista.avd.defined %}
+{%         if router_bgp.address_family_ipv6_multicast.redistribute is arista.avd.defined %}
+{%             set redistribute_var = router_bgp.address_family_ipv6_multicast.redistribute %}
+{%             if redistribute_var.connected.enabled is arista.avd.defined(true) %}
+{%                 set redistribute_conn = "redistribute connected" %}
+{%                 if redistribute_var.connected.route_map is arista.avd.defined %}
+{%                     set redistribute_conn = redistribute_conn ~ " route-map " ~ redistribute_var.connected.route_map %}
+{%                 endif %}
+      {{ redistribute_conn }}
+{%             endif %}
+{%             if redistribute_var.isis.enabled is arista.avd.defined(true) %}
+{%                 set redistribute_isis = "redistribute isis" %}
+{%                 if redistribute_var.isis.isis_level is arista.avd.defined %}
+{%                     set redistribute_isis = redistribute_isis ~ " " ~ redistribute_var.isis.isis_level %}
+{%                 endif %}
+{%                 if redistribute_var.isis.include_leaked is arista.avd.defined(true) %}
+{%                     set redistribute_isis = redistribute_isis ~ " include leaked" %}
+{%                 endif %}
+{%                 if redistribute_var.isis.route_map is arista.avd.defined %}
+{%                     set redistribute_isis = redistribute_isis ~ " route-map " ~ redistribute_var.isis.route_map %}
+{%                 elif redistribute_var.isis.rcf is arista.avd.defined %}
+{%                     set redistribute_isis = redistribute_isis ~ " rcf " ~ redistribute_var.isis.rcf %}
+{%                 endif %}
+      {{ redistribute_isis }}
+{%             endif %}
+{%             if redistribute_var.ospf.enabled is arista.avd.defined(true) %}
+{%                 set redistribute_ospf = "redistribute ospf" %}
+{%                 if redistribute_var.ospf.route_map is arista.avd.defined %}
+{%                     set redistribute_ospf = redistribute_ospf ~ " route-map " ~ redistribute_var.ospf.route_map %}
+{%                 endif %}
+      {{ redistribute_ospf }}
+{%             elif redistribute_var.ospf.match_internal.enabled is arista.avd.defined(true) %}
+{%                 set redistribute_ospf = "redistribute ospf match internal" %}
+{%                 if redistribute_var.ospf.match_internal.route_map is arista.avd.defined %}
+{%                     set redistribute_ospf = redistribute_ospf ~ " route-map " ~ redistribute_var.ospf.match_internal.route_map %}
+{%                 endif %}
+      {{ redistribute_ospf }}
+{%             endif %}
+{%             if redistribute_var.ospfv3.enabled is arista.avd.defined(true) %}
+{%                 set redistribute_ospfv3 = "redistribute ospfv3" %}
+{%                 if redistribute_var.ospfv3.route_map is arista.avd.defined %}
+{%                     set redistribute_ospfv3 = redistribute_ospfv3 ~ " route-map " ~ redistribute_var.ospfv3.route_map %}
+{%                 endif %}
+      {{ redistribute_ospfv3 }}
+{%             elif redistribute_var.ospfv3.match_internal.enabled is arista.avd.defined(true) %}
+{%                 set redistribute_ospfv3 = "redistribute ospfv3 match internal" %}
+{%                 if redistribute_var.ospfv3.match_internal.route_map is arista.avd.defined %}
+{%                     set redistribute_ospfv3 = redistribute_ospfv3 ~ " route-map " ~ redistribute_var.ospfv3.match_internal.route_map %}
+{%                 endif %}
+      {{ redistribute_ospfv3 }}
+{%             endif %}
+{%             if redistribute_var.ospfv3.match_external.enabled is arista.avd.defined(true) %}
+{%                 set redistribute_ospfv3_match = "redistribute ospfv3 match external" %}
+{%                 if redistribute_var.ospfv3.match_external.route_map is arista.avd.defined %}
+{%                     set redistribute_ospfv3_match = redistribute_ospfv3_match ~ " route-map " ~ redistribute_var.ospfv3.match_external.route_map %}
+{%                 endif %}
+      {{ redistribute_ospfv3_match }}
+{%             endif %}
+{%             if redistribute_var.ospfv3.match_nssa_external.enabled is arista.avd.defined(true) %}
+{%                 set redistribute_ospfv3_match = "redistribute ospfv3 match nssa-external" %}
+{%                 if redistribute_var.ospfv3.match_nssa_external.nssa_type is arista.avd.defined %}
+{%                     set redistribute_ospfv3_match = redistribute_ospfv3_match ~ " " ~ redistribute_var.ospfv3.match_nssa_external.nssa_type %}
+{%                 endif %}
+{%                 if redistribute_var.ospfv3.match_nssa_external.route_map is arista.avd.defined %}
+{%                     set redistribute_ospfv3_match = redistribute_ospfv3_match ~ " route-map " ~ redistribute_var.ospfv3.match_nssa_external.route_map %}
+{%                 endif %}
+      {{ redistribute_ospfv3_match }}
+{%             endif %}
+{%             if redistribute_var.ospf.match_external.enabled is arista.avd.defined(true) %}
+{%                 set redistribute_ospf_match = "redistribute ospf match external" %}
+{%                 if redistribute_var.ospf.match_external.route_map is arista.avd.defined %}
+{%                     set redistribute_ospf_match = redistribute_ospf_match ~ " route-map " ~ redistribute_var.ospf.match_external.route_map %}
+{%                 endif %}
+      {{ redistribute_ospf_match }}
+{%             endif %}
+{%             if redistribute_var.ospf.match_nssa_external.enabled is arista.avd.defined(true) %}
+{%                 set redistribute_ospf_match = "redistribute ospf match nssa-external" %}
+{%                 if redistribute_var.ospf.match_nssa_external.nssa_type is arista.avd.defined %}
+{%                     set redistribute_ospf_match = redistribute_ospf_match ~ " " ~ redistribute_var.ospf.match_nssa_external.nssa_type %}
+{%                 endif %}
+{%                 if redistribute_var.ospf.match_nssa_external.route_map is arista.avd.defined %}
+{%                     set redistribute_ospf_match = redistribute_ospf_match ~ " route-map " ~ redistribute_var.ospf.match_nssa_external.route_map %}
+{%                 endif %}
+      {{ redistribute_ospf_match }}
+{%             endif %}
+{%             if redistribute_var.static.enabled is arista.avd.defined(true) %}
+{%                 set redistribute_static = "redistribute static" %}
+{%                 if redistribute_var.static.route_map is arista.avd.defined %}
+{%                     set redistribute_static = redistribute_static ~ " route-map " ~ redistribute_var.static.route_map %}
+{%                 endif %}
+      {{ redistribute_static }}
+{%             endif %}
+{%         elif router_bgp.address_family_ipv6_multicast.redistribute_routes is arista.avd.defined %}
+{%             for redistribute_route in router_bgp.address_family_ipv6_multicast.redistribute_routes | arista.avd.natural_sort('source_protocol') %}
 {%                 set redistribute_route_cli = "redistribute " ~ redistribute_route.source_protocol %}
 {%                 if redistribute_route.source_protocol in ["ospf", "ospfv3"] %}
 {%                     if redistribute_route.ospf_route_type is arista.avd.defined %}
@@ -1903,8 +2274,8 @@ router bgp {{ router_bgp.as }}
 {%                     set redistribute_route_cli = redistribute_route_cli ~ " rcf " ~ redistribute_route.rcf %}
 {%                 endif %}
       {{ redistribute_route_cli }}
-{%             endif %}
-{%         endfor %}
+{%             endfor %}
+{%         endif %}
 {%     endif %}
 {# address family ipv6 sr-te activation #}
 {%     if router_bgp.address_family_ipv6_sr_te is arista.avd.defined %}
@@ -2054,13 +2425,32 @@ router bgp {{ router_bgp.as }}
 {%             endif %}
 {%         endfor %}
 {%     endif %}
+{# address family rt-membership activation #}
+{%     if router_bgp.address_family_rtc is arista.avd.defined %}
+   !
+   address-family rt-membership
+{%         for peer_group in router_bgp.address_family_rtc.peer_groups | arista.avd.natural_sort('name') %}
+{%             if peer_group.activate is arista.avd.defined(true) %}
+      neighbor {{ peer_group.name }} activate
+{%             elif peer_group.activate is arista.avd.defined(false) %}
+      no neighbor {{ peer_group.name }} activate
+{%             endif %}
+{%             if peer_group.default_route_target is defined %}
+{%                 if peer_group.default_route_target.only is arista.avd.defined(true) %}
+      neighbor {{ peer_group.name }} default-route-target only
+{%                 else %}
+      neighbor {{ peer_group.name }} default-route-target
+{%                 endif %}
+{%             endif %}
+{%             if peer_group.default_route_target.encoding_origin_as_omit is defined %}
+      neighbor {{ peer_group.name }} default-route-target encoding origin-as omit
+{%             endif %}
+{%         endfor %}
+{%     endif %}
 {# address family vpn-ipv4 activation #}
 {%     if router_bgp.address_family_vpn_ipv4 is arista.avd.defined %}
    !
    address-family vpn-ipv4
-{%         if router_bgp.address_family_vpn_ipv4.domain_identifier is arista.avd.defined %}
-      domain identifier {{ router_bgp.address_family_vpn_ipv4.domain_identifier }}
-{%         endif %}
 {%         for peer_group in router_bgp.address_family_vpn_ipv4.peer_groups | arista.avd.natural_sort('name') %}
 {%             if peer_group.activate is arista.avd.defined(true) %}
       neighbor {{ peer_group.name }} activate
@@ -2120,6 +2510,9 @@ router bgp {{ router_bgp.as }}
 {%         if router_bgp.address_family_vpn_ipv4.neighbor_default_encapsulation_mpls_next_hop_self.source_interface is arista.avd.defined %}
       neighbor default encapsulation mpls next-hop-self source-interface {{ router_bgp.address_family_vpn_ipv4.neighbor_default_encapsulation_mpls_next_hop_self.source_interface }}
 {%         endif %}
+{%         if router_bgp.address_family_vpn_ipv4.domain_identifier is arista.avd.defined %}
+      domain identifier {{ router_bgp.address_family_vpn_ipv4.domain_identifier }}
+{%         endif %}
 {%         if router_bgp.address_family_vpn_ipv4.route.import_match_failure_action is arista.avd.defined('discard') %}
       route import match-failure action discard
 {%         endif %}
@@ -2128,9 +2521,6 @@ router bgp {{ router_bgp.as }}
 {%     if router_bgp.address_family_vpn_ipv6 is arista.avd.defined %}
    !
    address-family vpn-ipv6
-{%         if router_bgp.address_family_vpn_ipv6.domain_identifier is arista.avd.defined %}
-      domain identifier {{ router_bgp.address_family_vpn_ipv6.domain_identifier }}
-{%         endif %}
 {%         for peer_group in router_bgp.address_family_vpn_ipv6.peer_groups | arista.avd.natural_sort('name') %}
 {%             if peer_group.activate is arista.avd.defined(true) %}
       neighbor {{ peer_group.name }} activate
@@ -2190,6 +2580,9 @@ router bgp {{ router_bgp.as }}
 {%         if router_bgp.address_family_vpn_ipv6.neighbor_default_encapsulation_mpls_next_hop_self.source_interface is arista.avd.defined %}
       neighbor default encapsulation mpls next-hop-self source-interface {{ router_bgp.address_family_vpn_ipv6.neighbor_default_encapsulation_mpls_next_hop_self.source_interface }}
 {%         endif %}
+{%         if router_bgp.address_family_vpn_ipv6.domain_identifier is arista.avd.defined %}
+      domain identifier {{ router_bgp.address_family_vpn_ipv6.domain_identifier }}
+{%         endif %}
 {%         if router_bgp.address_family_vpn_ipv6.route.import_match_failure_action is arista.avd.defined('discard') %}
       route import match-failure action discard
 {%         endif %}
@@ -2201,27 +2594,8 @@ router bgp {{ router_bgp.as }}
 {%         if vrf.rd is arista.avd.defined %}
       rd {{ vrf.rd }}
 {%         endif %}
-{%         if vrf.evpn_multicast is arista.avd.defined(true) %}
-      evpn multicast
-{%             if vrf.evpn_multicast_gateway_dr_election.algorithm is arista.avd.defined %}
-{%                 if vrf.evpn_multicast_gateway_dr_election.algorithm == "preference" %}
-{%                     if vrf.evpn_multicast_gateway_dr_election.preference_value is arista.avd.defined %}
-         gateway dr election algorithm preference {{ vrf.evpn_multicast_gateway_dr_election.preference_value }}
-{%                     endif %}
-{%                 else %}
-         gateway dr election algorithm {{ vrf.evpn_multicast_gateway_dr_election.algorithm }}
-{%                 endif %}
-{%             endif %}
-{%             if vrf.evpn_multicast_address_family.ipv4 is arista.avd.defined
-                   and vrf.evpn_multicast_address_family.ipv4.transit is arista.avd.defined(true) %}
-         address-family ipv4
-{%                 if vrf.evpn_multicast_address_family.ipv4.transit is arista.avd.defined(true) %}
-            transit
-{%                 endif %}
-{%             endif %}
-{%         endif %}
 {%         if vrf.default_route_exports is arista.avd.defined %}
-{%             for default_route_export in vrf.default_route_exports %}
+{%             for default_route_export in vrf.default_route_exports | arista.avd.natural_sort('address_family') %}
 {%                 set vrf_default_route_export_cli = "default-route export " ~ default_route_export.address_family %}
 {%                 if default_route_export.always is arista.avd.defined(true) %}
 {%                     set vrf_default_route_export_cli = vrf_default_route_export_cli ~ " always" %}
@@ -2284,184 +2658,6 @@ router bgp {{ router_bgp.as }}
 {%         if vrf.timers is arista.avd.defined %}
       timers bgp {{ vrf.timers }}
 {%         endif %}
-{%         if vrf.listen_ranges is arista.avd.defined %}
-{%             for listen_range in vrf.listen_ranges | arista.avd.natural_sort('peer_group') if listen_range.peer_group is arista.avd.defined and listen_range.prefix is arista.avd.defined
-                   and (listen_range.peer_filter is arista.avd.defined or listen_range.remote_as is arista.avd.defined) %}
-{%                 set listen_range_cli = "bgp listen range " ~ listen_range.prefix %}
-{%                 if listen_range.peer_id_include_router_id is arista.avd.defined(true) %}
-{%                     set listen_range_cli = listen_range_cli ~ " peer-id include router-id" %}
-{%                 endif %}
-{%                 set listen_range_cli = listen_range_cli ~ " peer-group " ~ listen_range.peer_group %}
-{%                 if listen_range.peer_filter is arista.avd.defined %}
-{%                     set listen_range_cli = listen_range_cli ~ " peer-filter " ~ listen_range.peer_filter %}
-{%                 elif listen_range.remote_as is arista.avd.defined %}
-{%                     set listen_range_cli = listen_range_cli ~ " remote-as " ~ listen_range.remote_as %}
-{%                 endif %}
-      {{ listen_range_cli }}
-{%             endfor %}
-{%         endif %}
-{%         for neighbor_interface in vrf.neighbor_interfaces | arista.avd.natural_sort('name') %}
-{%             if neighbor_interface.peer_group is arista.avd.defined and neighbor_interface.remote_as is arista.avd.defined %}
-      neighbor interface {{ neighbor_interface.name }} peer-group {{ neighbor_interface.peer_group }} remote-as {{ neighbor_interface.remote_as }}
-{%             elif neighbor_interface.peer_group is arista.avd.defined and neighbor_interface.peer_filter is arista.avd.defined %}
-      neighbor interface {{ neighbor_interface.name }} peer-group {{ neighbor_interface.peer_group }} peer-filter {{ neighbor_interface.peer_filter }}
-{%             endif %}
-{%         endfor %}
-{%         for neighbor in vrf.neighbors | arista.avd.natural_sort('ip_address') %}
-{%             if neighbor.remote_as is arista.avd.defined %}
-      neighbor {{ neighbor.ip_address }} remote-as {{ neighbor.remote_as }}
-{%             endif %}
-{%             if neighbor.peer_group is arista.avd.defined %}
-      neighbor {{ neighbor.ip_address }} peer group {{ neighbor.peer_group }}
-{%             endif %}
-{%             if neighbor.remove_private_as.enabled is arista.avd.defined(true) %}
-{%                 set remove_private_as_cli = "neighbor " ~ neighbor.ip_address ~ " remove-private-as" %}
-{%                 if neighbor.remove_private_as.all is arista.avd.defined(true) %}
-{%                     set remove_private_as_cli = remove_private_as_cli ~ " all" %}
-{%                     if neighbor.remove_private_as.replace_as is arista.avd.defined(true) %}
-{%                         set remove_private_as_cli = remove_private_as_cli ~ " replace-as" %}
-{%                     endif %}
-{%                 endif %}
-      {{ remove_private_as_cli }}
-{%             elif neighbor.remove_private_as.enabled is arista.avd.defined(false) %}
-      no neighbor {{ neighbor.ip_address }} remove-private-as
-{%             endif %}
-{%             if neighbor.remove_private_as_ingress.enabled is arista.avd.defined(true) %}
-{%                 set remove_private_as_ingress_cli = "neighbor " ~ neighbor.ip_address ~ " remove-private-as ingress" %}
-{%                 if neighbor.remove_private_as_ingress.replace_as is arista.avd.defined(true) %}
-{%                     set remove_private_as_ingress_cli = remove_private_as_ingress_cli ~ " replace-as" %}
-{%                 endif %}
-      {{ remove_private_as_ingress_cli }}
-{%             elif neighbor.remove_private_as_ingress.enabled is arista.avd.defined(false) %}
-      no neighbor {{ neighbor.ip_address }} remove-private-as ingress
-{%             endif %}
-{%             if neighbor.password is arista.avd.defined %}
-      neighbor {{ neighbor.ip_address }} password 7 {{ neighbor.password | arista.avd.hide_passwords(hide_passwords) }}
-{%             endif %}
-{%             if neighbor.passive is arista.avd.defined(true) %}
-      neighbor {{ neighbor.ip_address }} passive
-{%             endif %}
-{%             if neighbor.weight is arista.avd.defined %}
-      neighbor {{ neighbor.ip_address }} weight {{ neighbor.weight }}
-{%             endif %}
-{%             if neighbor.as_path.remote_as_replace_out is arista.avd.defined(true) %}
-      neighbor {{ neighbor.ip_address }} as-path remote-as replace out
-{%             endif %}
-{%             if neighbor.as_path.prepend_own_disabled is arista.avd.defined(true) %}
-      neighbor {{ neighbor.ip_address }} as-path prepend-own disabled
-{%             endif %}
-{%             if neighbor.local_as is arista.avd.defined %}
-      neighbor {{ neighbor.ip_address }} local-as {{ neighbor.local_as }} no-prepend replace-as
-{%             endif %}
-{%             if neighbor.description is arista.avd.defined %}
-      neighbor {{ neighbor.ip_address }} description {{ neighbor.description }}
-{%             endif %}
-{%             if neighbor.ebgp_multihop is arista.avd.defined %}
-{%                 set neighbor_ebgp_multihop_cli = "neighbor " ~ neighbor.ip_address ~ " ebgp-multihop" %}
-{%                 if neighbor.ebgp_multihop is number %}
-{%                     set neighbor_ebgp_multihop_cli = neighbor_ebgp_multihop_cli ~ " " ~ neighbor.ebgp_multihop %}
-{%                 endif %}
-      {{ neighbor_ebgp_multihop_cli }}
-{%             endif %}
-{%             if neighbor.next_hop_self is arista.avd.defined(true) %}
-      neighbor {{ neighbor.ip_address }} next-hop-self
-{%             endif %}
-{%             if neighbor.bfd is arista.avd.defined(true) %}
-      neighbor {{ neighbor.ip_address }} bfd
-{%                 if neighbor.bfd_timers.interval is arista.avd.defined and
-                      neighbor.bfd_timers.min_rx is arista.avd.defined and
-                      neighbor.bfd_timers.multiplier is arista.avd.defined %}
-      neighbor {{ neighbor.ip_address }} bfd interval {{ neighbor.bfd_timers.interval }} min-rx {{ neighbor.bfd_timers.min_rx }} multiplier {{ neighbor.bfd_timers.multiplier }}
-{%                 endif %}
-{%             elif neighbor.bfd is arista.avd.defined(false) and neighbor.peer_group is arista.avd.defined %}
-      no neighbor {{ neighbor.ip_address }} bfd
-{%             endif %}
-{%             if neighbor.allowas_in.enabled is arista.avd.defined(true) %}
-{%                 set allowas_in_cli = "neighbor " ~ neighbor.ip_address ~ " allowas-in" %}
-{%                 if neighbor.allowas_in.times is arista.avd.defined %}
-{%                     set allowas_in_cli = allowas_in_cli ~ " " ~ neighbor.allowas_in.times %}
-{%                 endif %}
-      {{ allowas_in_cli }}
-{%             endif %}
-{%             if neighbor.rib_in_pre_policy_retain.enabled is arista.avd.defined(true) %}
-{%                 set neighbor_rib_in_pre_policy_retain_cli = "neighbor " ~ neighbor.ip_address ~ " rib-in pre-policy retain" %}
-{%                 if neighbor.rib_in_pre_policy_retain.all is arista.avd.defined(true) %}
-{%                     set neighbor_rib_in_pre_policy_retain_cli = neighbor_rib_in_pre_policy_retain_cli ~ " all" %}
-{%                 endif %}
-      {{ neighbor_rib_in_pre_policy_retain_cli }}
-{%             elif neighbor.rib_in_pre_policy_retain.enabled is arista.avd.defined(false) %}
-{%                 set neighbor_rib_in_pre_policy_retain_cli = "no neighbor " ~ neighbor.ip_address ~ " rib-in pre-policy retain" %}
-      {{ neighbor_rib_in_pre_policy_retain_cli }}
-{%             endif %}
-{%             if neighbor.timers is arista.avd.defined %}
-      neighbor {{ neighbor.ip_address }} timers {{ neighbor.timers }}
-{%             endif %}
-{%             if neighbor.shutdown is arista.avd.defined(true) %}
-      neighbor {{ neighbor.ip_address }} shutdown
-{%             endif %}
-{%             if neighbor.send_community is arista.avd.defined('all') %}
-      neighbor {{ neighbor.ip_address }} send-community
-{%             elif neighbor.send_community is arista.avd.defined %}
-      neighbor {{ neighbor.ip_address }} send-community {{ neighbor.send_community }}
-{%             endif %}
-{%             if neighbor.route_reflector_client is arista.avd.defined(true) %}
-      neighbor {{ neighbor.ip_address }} route-reflector-client
-{%             elif neighbor.route_reflector_client is arista.avd.defined(false) %}
-      no neighbor {{ neighbor.ip_address }} route-reflector-client
-{%             endif %}
-{%             if neighbor.maximum_routes is arista.avd.defined %}
-{%                 set maximum_routes_cli = "neighbor " ~ neighbor.ip_address ~ " maximum-routes " ~ neighbor.maximum_routes %}
-{%                 if neighbor.maximum_routes_warning_limit is arista.avd.defined %}
-{%                     set maximum_routes_cli = maximum_routes_cli ~ " warning-limit " ~ neighbor.maximum_routes_warning_limit %}
-{%                 endif %}
-{%                 if neighbor.maximum_routes_warning_only is arista.avd.defined(true) %}
-{%                     set maximum_routes_cli = maximum_routes_cli ~ " warning-only" %}
-{%                 endif %}
-      {{ maximum_routes_cli }}
-{%             endif %}
-{%             if neighbor.default_originate is arista.avd.defined %}
-{%                 set neighbor_default_originate_cli = "neighbor " ~ neighbor.ip_address ~ " default-originate" %}
-{%                 if neighbor.default_originate.route_map is arista.avd.defined %}
-{%                     set neighbor_default_originate_cli = neighbor_default_originate_cli ~ " route-map " ~ neighbor.default_originate.route_map %}
-{%                 endif %}
-{%                 if neighbor.default_originate.always is arista.avd.defined(true) %}
-{%                     set neighbor_default_originate_cli = neighbor_default_originate_cli ~ " always" %}
-{%                 endif %}
-      {{ neighbor_default_originate_cli }}
-{%             endif %}
-{%             if neighbor.update_source is arista.avd.defined %}
-      neighbor {{ neighbor.ip_address }} update-source {{ neighbor.update_source }}
-{%             endif %}
-{%             if neighbor.route_map_out is arista.avd.defined %}
-      neighbor {{ neighbor.ip_address }} route-map {{ neighbor.route_map_out }} out
-{%             endif %}
-{%             if neighbor.route_map_in is arista.avd.defined %}
-      neighbor {{ neighbor.ip_address }} route-map {{ neighbor.route_map_in }} in
-{%             endif %}
-{%             if neighbor.additional_paths.receive is arista.avd.defined(true) %}
-      neighbor {{ neighbor.ip_address }} additional-paths receive
-{%             endif %}
-{%             if neighbor.additional_paths.send is arista.avd.defined %}
-{%                 if neighbor.additional_paths.send == 'disabled' %}
-      no neighbor {{ neighbor.ip_address }} additional-paths send
-{%                 elif neighbor.additional_paths.send_limit is arista.avd.defined and neighbor.additional_paths.send == 'ecmp' %}
-      neighbor {{ neighbor.ip_address }} additional-paths send ecmp limit {{ neighbor.additional_paths.send_limit }}
-{%                 elif neighbor.additional_paths.send == 'limit' %}
-{%                     if neighbor.additional_paths.send_limit is arista.avd.defined %}
-      neighbor {{ neighbor.ip_address }} additional-paths send limit {{ neighbor.additional_paths.send_limit }}
-{%                     endif %}
-{%                 else %}
-      neighbor {{ neighbor.ip_address }} additional-paths send {{ neighbor.additional_paths.send }}
-{%                 endif %}
-{%             endif %}
-{%         endfor %}
-{%         for network in vrf.networks | arista.avd.natural_sort('prefix') %}
-{%             if network.route_map is arista.avd.defined %}
-      network {{ network.prefix }} route-map {{ network.route_map }}
-{%             else %}
-      network {{ network.prefix }}
-{%             endif %}
-{%         endfor %}
 {%         if vrf.bgp.additional_paths.install is arista.avd.defined(true) %}
       bgp additional-paths install
 {%         elif vrf.bgp.additional_paths.install_ecmp_primary is arista.avd.defined(true) %}
@@ -2483,6 +2679,177 @@ router bgp {{ router_bgp.as }}
       bgp additional-paths send {{ vrf.bgp.additional_paths.send }}
 {%             endif %}
 {%         endif %}
+{%         if vrf.listen_ranges is arista.avd.defined %}
+{%             for listen_range in vrf.listen_ranges | arista.avd.natural_sort('peer_group') if listen_range.peer_group is arista.avd.defined and listen_range.prefix is arista.avd.defined
+                   and (listen_range.peer_filter is arista.avd.defined or listen_range.remote_as is arista.avd.defined) %}
+{%                 set listen_range_cli = "bgp listen range " ~ listen_range.prefix %}
+{%                 if listen_range.peer_id_include_router_id is arista.avd.defined(true) %}
+{%                     set listen_range_cli = listen_range_cli ~ " peer-id include router-id" %}
+{%                 endif %}
+{%                 set listen_range_cli = listen_range_cli ~ " peer-group " ~ listen_range.peer_group %}
+{%                 if listen_range.peer_filter is arista.avd.defined %}
+{%                     set listen_range_cli = listen_range_cli ~ " peer-filter " ~ listen_range.peer_filter %}
+{%                 elif listen_range.remote_as is arista.avd.defined %}
+{%                     set listen_range_cli = listen_range_cli ~ " remote-as " ~ listen_range.remote_as %}
+{%                 endif %}
+      {{ listen_range_cli }}
+{%             endfor %}
+{%         endif %}
+{%         for neighbor in vrf.neighbors | arista.avd.natural_sort('ip_address') %}
+{%             if neighbor.peer_group is arista.avd.defined %}
+      neighbor {{ neighbor.ip_address }} peer group {{ neighbor.peer_group }}
+{%             endif %}
+{%             if neighbor.remote_as is arista.avd.defined %}
+      neighbor {{ neighbor.ip_address }} remote-as {{ neighbor.remote_as }}
+{%             endif %}
+{%             if neighbor.next_hop_self is arista.avd.defined(true) %}
+      neighbor {{ neighbor.ip_address }} next-hop-self
+{%             endif %}
+{%             if neighbor.shutdown is arista.avd.defined(true) %}
+      neighbor {{ neighbor.ip_address }} shutdown
+{%             endif %}
+{%             if neighbor.remove_private_as.enabled is arista.avd.defined(true) %}
+{%                 set remove_private_as_cli = "neighbor " ~ neighbor.ip_address ~ " remove-private-as" %}
+{%                 if neighbor.remove_private_as.all is arista.avd.defined(true) %}
+{%                     set remove_private_as_cli = remove_private_as_cli ~ " all" %}
+{%                     if neighbor.remove_private_as.replace_as is arista.avd.defined(true) %}
+{%                         set remove_private_as_cli = remove_private_as_cli ~ " replace-as" %}
+{%                     endif %}
+{%                 endif %}
+      {{ remove_private_as_cli }}
+{%             elif neighbor.remove_private_as.enabled is arista.avd.defined(false) %}
+      no neighbor {{ neighbor.ip_address }} remove-private-as
+{%             endif %}
+{%             if neighbor.as_path.prepend_own_disabled is arista.avd.defined(true) %}
+      neighbor {{ neighbor.ip_address }} as-path prepend-own disabled
+{%             endif %}
+{%             if neighbor.as_path.remote_as_replace_out is arista.avd.defined(true) %}
+      neighbor {{ neighbor.ip_address }} as-path remote-as replace out
+{%             endif %}
+{%             if neighbor.local_as is arista.avd.defined %}
+      neighbor {{ neighbor.ip_address }} local-as {{ neighbor.local_as }} no-prepend replace-as
+{%             endif %}
+{%             if neighbor.weight is arista.avd.defined %}
+      neighbor {{ neighbor.ip_address }} weight {{ neighbor.weight }}
+{%             endif %}
+{%             if neighbor.passive is arista.avd.defined(true) %}
+      neighbor {{ neighbor.ip_address }} passive
+{%             endif %}
+{%             if neighbor.update_source is arista.avd.defined %}
+      neighbor {{ neighbor.ip_address }} update-source {{ neighbor.update_source }}
+{%             endif %}
+{%             if neighbor.bfd is arista.avd.defined(true) %}
+      neighbor {{ neighbor.ip_address }} bfd
+{%                 if neighbor.bfd_timers.interval is arista.avd.defined and
+                      neighbor.bfd_timers.min_rx is arista.avd.defined and
+                      neighbor.bfd_timers.multiplier is arista.avd.defined %}
+      neighbor {{ neighbor.ip_address }} bfd interval {{ neighbor.bfd_timers.interval }} min-rx {{ neighbor.bfd_timers.min_rx }} multiplier {{ neighbor.bfd_timers.multiplier }}
+{%                 endif %}
+{%             elif neighbor.bfd is arista.avd.defined(false) and neighbor.peer_group is arista.avd.defined %}
+      no neighbor {{ neighbor.ip_address }} bfd
+{%             endif %}
+{%             if neighbor.description is arista.avd.defined %}
+      neighbor {{ neighbor.ip_address }} description {{ neighbor.description }}
+{%             endif %}
+{%             if neighbor.allowas_in.enabled is arista.avd.defined(true) %}
+{%                 set allowas_in_cli = "neighbor " ~ neighbor.ip_address ~ " allowas-in" %}
+{%                 if neighbor.allowas_in.times is arista.avd.defined %}
+{%                     set allowas_in_cli = allowas_in_cli ~ " " ~ neighbor.allowas_in.times %}
+{%                 endif %}
+      {{ allowas_in_cli }}
+{%             endif %}
+{%             if neighbor.rib_in_pre_policy_retain.enabled is arista.avd.defined(true) %}
+{%                 set neighbor_rib_in_pre_policy_retain_cli = "neighbor " ~ neighbor.ip_address ~ " rib-in pre-policy retain" %}
+{%                 if neighbor.rib_in_pre_policy_retain.all is arista.avd.defined(true) %}
+{%                     set neighbor_rib_in_pre_policy_retain_cli = neighbor_rib_in_pre_policy_retain_cli ~ " all" %}
+{%                 endif %}
+      {{ neighbor_rib_in_pre_policy_retain_cli }}
+{%             elif neighbor.rib_in_pre_policy_retain.enabled is arista.avd.defined(false) %}
+{%                 set neighbor_rib_in_pre_policy_retain_cli = "no neighbor " ~ neighbor.ip_address ~ " rib-in pre-policy retain" %}
+      {{ neighbor_rib_in_pre_policy_retain_cli }}
+{%             endif %}
+{%             if neighbor.ebgp_multihop is arista.avd.defined %}
+{%                 set neighbor_ebgp_multihop_cli = "neighbor " ~ neighbor.ip_address ~ " ebgp-multihop" %}
+{%                 if neighbor.ebgp_multihop is number %}
+{%                     set neighbor_ebgp_multihop_cli = neighbor_ebgp_multihop_cli ~ " " ~ neighbor.ebgp_multihop %}
+{%                 endif %}
+      {{ neighbor_ebgp_multihop_cli }}
+{%             endif %}
+{%             if neighbor.route_reflector_client is arista.avd.defined(true) %}
+      neighbor {{ neighbor.ip_address }} route-reflector-client
+{%             elif neighbor.route_reflector_client is arista.avd.defined(false) %}
+      no neighbor {{ neighbor.ip_address }} route-reflector-client
+{%             endif %}
+{%             if neighbor.timers is arista.avd.defined %}
+      neighbor {{ neighbor.ip_address }} timers {{ neighbor.timers }}
+{%             endif %}
+{%             if neighbor.route_map_in is arista.avd.defined %}
+      neighbor {{ neighbor.ip_address }} route-map {{ neighbor.route_map_in }} in
+{%             endif %}
+{%             if neighbor.additional_paths.receive is arista.avd.defined(true) %}
+      neighbor {{ neighbor.ip_address }} additional-paths receive
+{%             endif %}
+{%             if neighbor.additional_paths.send is arista.avd.defined %}
+{%                 if neighbor.additional_paths.send == 'disabled' %}
+      no neighbor {{ neighbor.ip_address }} additional-paths send
+{%                 elif neighbor.additional_paths.send_limit is arista.avd.defined and neighbor.additional_paths.send == 'ecmp' %}
+      neighbor {{ neighbor.ip_address }} additional-paths send ecmp limit {{ neighbor.additional_paths.send_limit }}
+{%                 elif neighbor.additional_paths.send == 'limit' %}
+{%                     if neighbor.additional_paths.send_limit is arista.avd.defined %}
+      neighbor {{ neighbor.ip_address }} additional-paths send limit {{ neighbor.additional_paths.send_limit }}
+{%                     endif %}
+{%                 else %}
+      neighbor {{ neighbor.ip_address }} additional-paths send {{ neighbor.additional_paths.send }}
+{%                 endif %}
+{%             endif %}
+{%             if neighbor.route_map_out is arista.avd.defined %}
+      neighbor {{ neighbor.ip_address }} route-map {{ neighbor.route_map_out }} out
+{%             endif %}
+{%             if neighbor.password is arista.avd.defined %}
+      neighbor {{ neighbor.ip_address }} password 7 {{ neighbor.password | arista.avd.hide_passwords(hide_passwords) }}
+{%             endif %}
+{%             if neighbor.default_originate is arista.avd.defined %}
+{%                 set neighbor_default_originate_cli = "neighbor " ~ neighbor.ip_address ~ " default-originate" %}
+{%                 if neighbor.default_originate.route_map is arista.avd.defined %}
+{%                     set neighbor_default_originate_cli = neighbor_default_originate_cli ~ " route-map " ~ neighbor.default_originate.route_map %}
+{%                 endif %}
+{%                 if neighbor.default_originate.always is arista.avd.defined(true) %}
+{%                     set neighbor_default_originate_cli = neighbor_default_originate_cli ~ " always" %}
+{%                 endif %}
+      {{ neighbor_default_originate_cli }}
+{%             endif %}
+{%             if neighbor.send_community is arista.avd.defined('all') %}
+      neighbor {{ neighbor.ip_address }} send-community
+{%             elif neighbor.send_community is arista.avd.defined %}
+      neighbor {{ neighbor.ip_address }} send-community {{ neighbor.send_community }}
+{%             endif %}
+{%             if neighbor.maximum_routes is arista.avd.defined %}
+{%                 set maximum_routes_cli = "neighbor " ~ neighbor.ip_address ~ " maximum-routes " ~ neighbor.maximum_routes %}
+{%                 if neighbor.maximum_routes_warning_limit is arista.avd.defined %}
+{%                     set maximum_routes_cli = maximum_routes_cli ~ " warning-limit " ~ neighbor.maximum_routes_warning_limit %}
+{%                 endif %}
+{%                 if neighbor.maximum_routes_warning_only is arista.avd.defined(true) %}
+{%                     set maximum_routes_cli = maximum_routes_cli ~ " warning-only" %}
+{%                 endif %}
+      {{ maximum_routes_cli }}
+{%             endif %}
+{%             if neighbor.remove_private_as_ingress.enabled is arista.avd.defined(true) %}
+{%                 set remove_private_as_ingress_cli = "neighbor " ~ neighbor.ip_address ~ " remove-private-as ingress" %}
+{%                 if neighbor.remove_private_as_ingress.replace_as is arista.avd.defined(true) %}
+{%                     set remove_private_as_ingress_cli = remove_private_as_ingress_cli ~ " replace-as" %}
+{%                 endif %}
+      {{ remove_private_as_ingress_cli }}
+{%             elif neighbor.remove_private_as_ingress.enabled is arista.avd.defined(false) %}
+      no neighbor {{ neighbor.ip_address }} remove-private-as ingress
+{%             endif %}
+{%         endfor %}
+{%         for network in vrf.networks | arista.avd.natural_sort('prefix') %}
+{%             if network.route_map is arista.avd.defined %}
+      network {{ network.prefix }} route-map {{ network.route_map }}
+{%             else %}
+      network {{ network.prefix }}
+{%             endif %}
+{%         endfor %}
 {%         if vrf.bgp.redistribute_internal is arista.avd.defined(true) %}
       bgp redistribute-internal
 {%         elif vrf.bgp.redistribute_internal is arista.avd.defined(false) %}
@@ -2509,20 +2876,6 @@ router bgp {{ router_bgp.as }}
 {%         endfor %}
 {%         if vrf.redistribute is arista.avd.defined %}
 {%             set redistribute_var = vrf.redistribute %}
-{%             if redistribute_var.attached_host.enabled is arista.avd.defined(true) %}
-{%                 set redistribute_host = "redistribute attached-host" %}
-{%                 if redistribute_var.attached_host.route_map is arista.avd.defined %}
-{%                     set redistribute_host = redistribute_host ~ " route-map " ~ redistribute_var.attached_host.route_map %}
-{%                 endif %}
-      {{ redistribute_host }}
-{%             endif %}
-{%             if redistribute_var.bgp.enabled is arista.avd.defined(true) %}
-{%                 set redistribute_bgp = "redistribute bgp leaked" %}
-{%                 if redistribute_var.bgp.route_map is arista.avd.defined %}
-{%                     set redistribute_bgp = redistribute_bgp ~ " route-map " ~ redistribute_var.bgp.route_map %}
-{%                 endif %}
-      {{ redistribute_bgp }}
-{%             endif %}
 {%             if redistribute_var.connected.enabled is arista.avd.defined(true) %}
 {%                 set redistribute_conn = "redistribute connected" %}
 {%                 if redistribute_var.connected.include_leaked is arista.avd.defined(true) %}
@@ -2534,15 +2887,6 @@ router bgp {{ router_bgp.as }}
 {%                     set redistribute_conn = redistribute_conn ~ " rcf " ~ redistribute_var.connected.rcf %}
 {%                 endif %}
       {{ redistribute_conn }}
-{%             endif %}
-{%             if redistribute_var.dynamic.enabled is arista.avd.defined(true) %}
-{%                 set redistribute_dynamic = "redistribute dynamic" %}
-{%                 if redistribute_var.dynamic.route_map is arista.avd.defined %}
-{%                     set redistribute_dynamic = redistribute_dynamic ~ " route-map " ~ redistribute_var.dynamic.route_map %}
-{%                 elif redistribute_var.dynamic.rcf is arista.avd.defined %}
-{%                     set redistribute_dynamic = redistribute_dynamic ~ " rcf " ~ redistribute_var.dynamic.rcf %}
-{%                 endif %}
-      {{ redistribute_dynamic }}
 {%             endif %}
 {%             if redistribute_var.isis.enabled is arista.avd.defined(true) %}
 {%                 set redistribute_isis = "redistribute isis" %}
@@ -2594,7 +2938,7 @@ router bgp {{ router_bgp.as }}
 {%                     set redistribute_ospf_match = redistribute_ospf_match ~ " " ~ redistribute_var.ospf.match_nssa_external.nssa_type %}
 {%                 endif %}
 {%                 if redistribute_var.ospf.match_nssa_external.include_leaked is arista.avd.defined(true) %}
-{%                     set redistribute_ospf = redistribute_ospf ~ " include leaked" %}
+{%                     set redistribute_ospf_match = redistribute_ospf_match ~ " include leaked" %}
 {%                 endif %}
 {%                 if redistribute_var.ospf.match_nssa_external.route_map is arista.avd.defined %}
 {%                     set redistribute_ospf_match = redistribute_ospf_match ~ " route-map " ~ redistribute_var.ospf.match_nssa_external.route_map %}
@@ -2636,19 +2980,12 @@ router bgp {{ router_bgp.as }}
 {%                     set redistribute_ospfv3_match = redistribute_ospfv3_match ~ " " ~ redistribute_var.ospfv3.match_nssa_external.nssa_type %}
 {%                 endif %}
 {%                 if redistribute_var.ospfv3.match_nssa_external.include_leaked is arista.avd.defined(true) %}
-{%                     set redistribute_ospfv3 = redistribute_ospfv3 ~ " include leaked" %}
+{%                     set redistribute_ospfv3_match = redistribute_ospfv3_match ~ " include leaked" %}
 {%                 endif %}
 {%                 if redistribute_var.ospfv3.match_nssa_external.route_map is arista.avd.defined %}
 {%                     set redistribute_ospfv3_match = redistribute_ospfv3_match ~ " route-map " ~ redistribute_var.ospfv3.match_nssa_external.route_map %}
 {%                 endif %}
       {{ redistribute_ospfv3_match }}
-{%             endif %}
-{%             if redistribute_var.rip.enabled is arista.avd.defined(true) %}
-{%                 set redistribute_rip = "redistribute rip" %}
-{%                 if redistribute_var.rip.route_map is arista.avd.defined %}
-{%                     set redistribute_rip = redistribute_rip ~ " route-map " ~ redistribute_var.rip.route_map %}
-{%                 endif %}
-      {{ redistribute_rip }}
 {%             endif %}
 {%             if redistribute_var.static.enabled is arista.avd.defined(true) %}
 {%                 set redistribute_static = "redistribute static" %}
@@ -2661,6 +2998,36 @@ router bgp {{ router_bgp.as }}
 {%                     set redistribute_static = redistribute_static ~ " rcf " ~ redistribute_var.static.rcf %}
 {%                 endif %}
       {{ redistribute_static }}
+{%             endif %}
+{%             if redistribute_var.rip.enabled is arista.avd.defined(true) %}
+{%                 set redistribute_rip = "redistribute rip" %}
+{%                 if redistribute_var.rip.route_map is arista.avd.defined %}
+{%                     set redistribute_rip = redistribute_rip ~ " route-map " ~ redistribute_var.rip.route_map %}
+{%                 endif %}
+      {{ redistribute_rip }}
+{%             endif %}
+{%             if redistribute_var.attached_host.enabled is arista.avd.defined(true) %}
+{%                 set redistribute_host = "redistribute attached-host" %}
+{%                 if redistribute_var.attached_host.route_map is arista.avd.defined %}
+{%                     set redistribute_host = redistribute_host ~ " route-map " ~ redistribute_var.attached_host.route_map %}
+{%                 endif %}
+      {{ redistribute_host }}
+{%             endif %}
+{%             if redistribute_var.dynamic.enabled is arista.avd.defined(true) %}
+{%                 set redistribute_dynamic = "redistribute dynamic" %}
+{%                 if redistribute_var.dynamic.route_map is arista.avd.defined %}
+{%                     set redistribute_dynamic = redistribute_dynamic ~ " route-map " ~ redistribute_var.dynamic.route_map %}
+{%                 elif redistribute_var.dynamic.rcf is arista.avd.defined %}
+{%                     set redistribute_dynamic = redistribute_dynamic ~ " rcf " ~ redistribute_var.dynamic.rcf %}
+{%                 endif %}
+      {{ redistribute_dynamic }}
+{%             endif %}
+{%             if redistribute_var.bgp.enabled is arista.avd.defined(true) %}
+{%                 set redistribute_bgp = "redistribute bgp leaked" %}
+{%                 if redistribute_var.bgp.route_map is arista.avd.defined %}
+{%                     set redistribute_bgp = redistribute_bgp ~ " route-map " ~ redistribute_var.bgp.route_map %}
+{%                 endif %}
+      {{ redistribute_bgp }}
 {%             endif %}
 {%             if redistribute_var.user.enabled is arista.avd.defined(true) %}
 {%                 set redistribute_user = "redistribute user" %}
@@ -2692,6 +3059,13 @@ router bgp {{ router_bgp.as }}
       {{ redistribute_route_cli }}
 {%             endfor %}
 {%         endif %}
+{%         for neighbor_interface in vrf.neighbor_interfaces | arista.avd.natural_sort('name') %}
+{%             if neighbor_interface.peer_group is arista.avd.defined and neighbor_interface.remote_as is arista.avd.defined %}
+      neighbor interface {{ neighbor_interface.name }} peer-group {{ neighbor_interface.peer_group }} remote-as {{ neighbor_interface.remote_as }}
+{%             elif neighbor_interface.peer_group is arista.avd.defined and neighbor_interface.peer_filter is arista.avd.defined %}
+      neighbor interface {{ neighbor_interface.name }} peer-group {{ neighbor_interface.peer_group }} peer-filter {{ neighbor_interface.peer_filter }}
+{%             endif %}
+{%         endfor %}
 {%         if vrf.address_family_flow_spec_ipv4 is arista.avd.defined %}
       !
       address-family flow-spec ipv4
@@ -2725,16 +3099,16 @@ router bgp {{ router_bgp.as }}
 {%         if vrf.address_family_ipv4 is arista.avd.defined %}
       !
       address-family ipv4
+{%             if vrf.address_family_ipv4.bgp.additional_paths.install is arista.avd.defined(true) %}
+         bgp additional-paths install
+{%             elif vrf.address_family_ipv4.bgp.additional_paths.install_ecmp_primary is arista.avd.defined(true) %}
+         bgp additional-paths install ecmp-primary
+{%             endif %}
 {%             if vrf.address_family_ipv4.bgp.missing_policy.direction_in_action is arista.avd.defined %}
          bgp missing-policy direction in action {{ vrf.address_family_ipv4.bgp.missing_policy.direction_in_action }}
 {%             endif %}
 {%             if vrf.address_family_ipv4.bgp.missing_policy.direction_out_action is arista.avd.defined %}
          bgp missing-policy direction out action {{ vrf.address_family_ipv4.bgp.missing_policy.direction_out_action }}
-{%             endif %}
-{%             if vrf.address_family_ipv4.bgp.additional_paths.install is arista.avd.defined(true) %}
-         bgp additional-paths install
-{%             elif vrf.address_family_ipv4.bgp.additional_paths.install_ecmp_primary is arista.avd.defined(true) %}
-         bgp additional-paths install ecmp-primary
 {%             endif %}
 {%             if vrf.address_family_ipv4.bgp.additional_paths.receive is arista.avd.defined(true) %}
          bgp additional-paths receive
@@ -2814,8 +3188,170 @@ router bgp {{ router_bgp.as }}
 {%             elif vrf.address_family_ipv4.bgp.redistribute_internal is arista.avd.defined(false) %}
          no bgp redistribute-internal
 {%             endif %}
-{%             for redistribute_route in vrf.address_family_ipv4.redistribute_routes | arista.avd.natural_sort('source_protocol') %}
-{%                 if redistribute_route.source_protocol is arista.avd.defined %}
+{%             if vrf.address_family_ipv4.redistribute is arista.avd.defined %}
+{%                 set redistribute_var = vrf.address_family_ipv4.redistribute %}
+{%                 if redistribute_var.attached_host.enabled is arista.avd.defined(true) %}
+{%                     set redistribute_host = "redistribute attached-host" %}
+{%                     if redistribute_var.attached_host.route_map is arista.avd.defined %}
+{%                         set redistribute_host = redistribute_host ~ " route-map " ~ redistribute_var.attached_host.route_map %}
+{%                     endif %}
+         {{ redistribute_host }}
+{%                 endif %}
+{%                 if redistribute_var.bgp.enabled is arista.avd.defined(true) %}
+{%                     set redistribute_bgp = "redistribute bgp leaked" %}
+{%                     if redistribute_var.bgp.route_map is arista.avd.defined %}
+{%                         set redistribute_bgp = redistribute_bgp ~ " route-map " ~ redistribute_var.bgp.route_map %}
+{%                     endif %}
+         {{ redistribute_bgp }}
+{%                 endif %}
+{%                 if redistribute_var.connected.enabled is arista.avd.defined(true) %}
+{%                     set redistribute_conn = "redistribute connected" %}
+{%                     if redistribute_var.connected.include_leaked is arista.avd.defined(true) %}
+{%                         set redistribute_conn = redistribute_conn ~ " include leaked" %}
+{%                     endif %}
+{%                     if redistribute_var.connected.route_map is arista.avd.defined %}
+{%                         set redistribute_conn = redistribute_conn ~ " route-map " ~ redistribute_var.connected.route_map %}
+{%                     elif redistribute_var.connected.rcf is arista.avd.defined %}
+{%                         set redistribute_conn = redistribute_conn ~ " rcf " ~ redistribute_var.connected.rcf %}
+{%                     endif %}
+         {{ redistribute_conn }}
+{%                 endif %}
+{%                 if redistribute_var.dynamic.enabled is arista.avd.defined(true) %}
+{%                     set redistribute_dynamic = "redistribute dynamic" %}
+{%                     if redistribute_var.dynamic.route_map is arista.avd.defined %}
+{%                         set redistribute_dynamic = redistribute_dynamic ~ " route-map " ~ redistribute_var.dynamic.route_map %}
+{%                     elif redistribute_var.dynamic.rcf is arista.avd.defined %}
+{%                         set redistribute_dynamic = redistribute_dynamic ~ " rcf " ~ redistribute_var.dynamic.rcf %}
+{%                     endif %}
+         {{ redistribute_dynamic }}
+{%                 endif %}
+{%                 if redistribute_var.user.enabled is arista.avd.defined(true) %}
+{%                     set redistribute_user = "redistribute user" %}
+{%                     if redistribute_var.user.rcf is arista.avd.defined %}
+{%                         set redistribute_user = redistribute_user ~ " rcf " ~ redistribute_var.user.rcf %}
+{%                     endif %}
+         {{ redistribute_user }}
+{%                 endif %}
+{%                 if redistribute_var.isis.enabled is arista.avd.defined(true) %}
+{%                     set redistribute_isis = "redistribute isis" %}
+{%                     if redistribute_var.isis.isis_level is arista.avd.defined %}
+{%                         set redistribute_isis = redistribute_isis ~ " " ~ redistribute_var.isis.isis_level %}
+{%                     endif %}
+{%                     if redistribute_var.isis.include_leaked is arista.avd.defined(true) %}
+{%                         set redistribute_isis = redistribute_isis ~ " include leaked" %}
+{%                     endif %}
+{%                     if redistribute_var.isis.route_map is arista.avd.defined %}
+{%                         set redistribute_isis = redistribute_isis ~ " route-map " ~ redistribute_var.isis.route_map %}
+{%                     elif redistribute_var.isis.rcf is arista.avd.defined %}
+{%                         set redistribute_isis = redistribute_isis ~ " rcf " ~ redistribute_var.isis.rcf %}
+{%                     endif %}
+         {{ redistribute_isis }}
+{%                 endif %}
+{%                 if redistribute_var.ospf.enabled is arista.avd.defined(true) %}
+{%                     set redistribute_ospf = "redistribute ospf" %}
+{%                     if redistribute_var.ospf.include_leaked is arista.avd.defined(true) %}
+{%                         set redistribute_ospf = redistribute_ospf ~ " include leaked" %}
+{%                     endif %}
+{%                     if redistribute_var.ospf.route_map is arista.avd.defined %}
+{%                         set redistribute_ospf = redistribute_ospf ~ " route-map " ~ redistribute_var.ospf.route_map %}
+{%                     endif %}
+         {{ redistribute_ospf }}
+{%                 elif redistribute_var.ospf.match_internal.enabled is arista.avd.defined(true) %}
+{%                     set redistribute_ospf = "redistribute ospf match internal" %}
+{%                     if redistribute_var.ospf.match_internal.include_leaked is arista.avd.defined(true) %}
+{%                         set redistribute_ospf = redistribute_ospf ~ " include leaked" %}
+{%                     endif %}
+{%                     if redistribute_var.ospf.match_internal.route_map is arista.avd.defined %}
+{%                         set redistribute_ospf = redistribute_ospf ~ " route-map " ~ redistribute_var.ospf.match_internal.route_map %}
+{%                     endif %}
+         {{ redistribute_ospf }}
+{%                 endif %}
+{%                 if redistribute_var.ospfv3.enabled is arista.avd.defined(true) %}
+{%                     set redistribute_ospfv3 = "redistribute ospfv3" %}
+{%                     if redistribute_var.ospfv3.include_leaked is arista.avd.defined(true) %}
+{%                         set redistribute_ospfv3 = redistribute_ospfv3 ~ " include leaked" %}
+{%                     endif %}
+{%                     if redistribute_var.ospfv3.route_map is arista.avd.defined %}
+{%                         set redistribute_ospfv3 = redistribute_ospfv3 ~ " route-map " ~ redistribute_var.ospfv3.route_map %}
+{%                     endif %}
+         {{ redistribute_ospfv3 }}
+{%                 elif redistribute_var.ospfv3.match_internal.enabled is arista.avd.defined(true) %}
+{%                     set redistribute_ospfv3 = "redistribute ospfv3 match internal" %}
+{%                     if redistribute_var.ospfv3.match_internal.include_leaked is arista.avd.defined(true) %}
+{%                         set redistribute_ospfv3 = redistribute_ospfv3 ~ " include leaked" %}
+{%                     endif %}
+{%                     if redistribute_var.ospfv3.match_internal.route_map is arista.avd.defined %}
+{%                         set redistribute_ospfv3 = redistribute_ospfv3 ~ " route-map " ~ redistribute_var.ospfv3.match_internal.route_map %}
+{%                     endif %}
+         {{ redistribute_ospfv3 }}
+{%                 endif %}
+{%                 if redistribute_var.ospfv3.match_external.enabled is arista.avd.defined(true) %}
+{%                     set redistribute_ospfv3_match = "redistribute ospfv3 match external" %}
+{%                     if redistribute_var.ospfv3.match_external.include_leaked is arista.avd.defined(true) %}
+{%                         set redistribute_ospfv3_match = redistribute_ospfv3_match ~ " include leaked" %}
+{%                     endif %}
+{%                     if redistribute_var.ospfv3.match_external.route_map is arista.avd.defined %}
+{%                         set redistribute_ospfv3_match = redistribute_ospfv3_match ~ " route-map " ~ redistribute_var.ospfv3.match_external.route_map %}
+{%                     endif %}
+         {{ redistribute_ospfv3_match }}
+{%                 endif %}
+{%                 if redistribute_var.ospfv3.match_nssa_external.enabled is arista.avd.defined(true) %}
+{%                     set redistribute_ospfv3_match = "redistribute ospfv3 match nssa-external" %}
+{%                     if redistribute_var.ospfv3.match_nssa_external.nssa_type is arista.avd.defined %}
+{%                         set redistribute_ospfv3_match = redistribute_ospfv3_match ~ " " ~ redistribute_var.ospfv3.match_nssa_external.nssa_type %}
+{%                     endif %}
+{%                     if redistribute_var.ospfv3.match_nssa_external.include_leaked is arista.avd.defined(true) %}
+{%                         set redistribute_ospfv3_match = redistribute_ospfv3_match ~ " include leaked" %}
+{%                     endif %}
+{%                     if redistribute_var.ospfv3.match_nssa_external.route_map is arista.avd.defined %}
+{%                         set redistribute_ospfv3_match = redistribute_ospfv3_match ~ " route-map " ~ redistribute_var.ospfv3.match_nssa_external.route_map %}
+{%                     endif %}
+         {{ redistribute_ospfv3_match }}
+{%                 endif %}
+{%                 if redistribute_var.ospf.match_external.enabled is arista.avd.defined(true) %}
+{%                     set redistribute_ospf_match = "redistribute ospf match external" %}
+{%                     if redistribute_var.ospf.match_external.include_leaked is arista.avd.defined(true) %}
+{%                         set redistribute_ospf_match = redistribute_ospf_match ~ " include leaked" %}
+{%                     endif %}
+{%                     if redistribute_var.ospf.match_external.route_map is arista.avd.defined %}
+{%                         set redistribute_ospf_match = redistribute_ospf_match ~ " route-map " ~ redistribute_var.ospf.match_external.route_map %}
+{%                     endif %}
+         {{ redistribute_ospf_match }}
+{%                 endif %}
+{%                 if redistribute_var.ospf.match_nssa_external.enabled is arista.avd.defined(true) %}
+{%                     set redistribute_ospf_match = "redistribute ospf match nssa-external" %}
+{%                     if redistribute_var.ospf.match_nssa_external.nssa_type is arista.avd.defined %}
+{%                         set redistribute_ospf_match = redistribute_ospf_match ~ " " ~ redistribute_var.ospf.match_nssa_external.nssa_type %}
+{%                     endif %}
+{%                     if redistribute_var.ospf.match_nssa_external.include_leaked is arista.avd.defined(true) %}
+{%                         set redistribute_ospf_match = redistribute_ospf_match ~ " include leaked" %}
+{%                     endif %}
+{%                     if redistribute_var.ospf.match_nssa_external.route_map is arista.avd.defined %}
+{%                         set redistribute_ospf_match = redistribute_ospf_match ~ " route-map " ~ redistribute_var.ospf.match_nssa_external.route_map %}
+{%                     endif %}
+         {{ redistribute_ospf_match }}
+{%                 endif %}
+{%                 if redistribute_var.rip.enabled is arista.avd.defined(true) %}
+{%                     set redistribute_rip = "redistribute rip" %}
+{%                     if redistribute_var.rip.route_map is arista.avd.defined %}
+{%                         set redistribute_rip = redistribute_rip ~ " route-map " ~ redistribute_var.rip.route_map %}
+{%                     endif %}
+         {{ redistribute_rip }}
+{%                 endif %}
+{%                 if redistribute_var.static.enabled is arista.avd.defined(true) %}
+{%                     set redistribute_static = "redistribute static" %}
+{%                     if redistribute_var.static.include_leaked is arista.avd.defined(true) %}
+{%                         set redistribute_static = redistribute_static ~ " include leaked" %}
+{%                     endif %}
+{%                     if redistribute_var.static.route_map is arista.avd.defined %}
+{%                         set redistribute_static = redistribute_static ~ " route-map " ~ redistribute_var.static.route_map %}
+{%                     elif redistribute_var.static.rcf is arista.avd.defined %}
+{%                         set redistribute_static = redistribute_static ~ " rcf " ~ redistribute_var.static.rcf %}
+{%                     endif %}
+         {{ redistribute_static }}
+{%                 endif %}
+{%             elif vrf.address_family_ipv4.redistribute_routes is arista.avd.defined %}
+{%                 for redistribute_route in vrf.address_family_ipv4.redistribute_routes | arista.avd.natural_sort('source_protocol') %}
 {%                     set redistribute_route_cli = "redistribute " ~ redistribute_route.source_protocol %}
 {%                     if redistribute_route.source_protocol in ["ospf", "ospfv3"] %}
 {%                         if redistribute_route.ospf_route_type is arista.avd.defined %}
@@ -2835,8 +3371,8 @@ router bgp {{ router_bgp.as }}
 {%                         endif %}
 {%                     endif %}
          {{ redistribute_route_cli }}
-{%                 endif %}
-{%             endfor %}
+{%                 endfor %}
+{%             endif %}
 {%         endif %}
 {%         if vrf.address_family_ipv4_multicast is arista.avd.defined %}
       !
@@ -2854,14 +3390,14 @@ router bgp {{ router_bgp.as }}
 {%                 if neighbor.activate is arista.avd.defined(true) %}
          neighbor {{ neighbor.ip_address }} activate
 {%                 endif %}
+{%                 if neighbor.additional_paths.receive is arista.avd.defined(true) %}
+         neighbor {{ neighbor.ip_address }} additional-paths receive
+{%                 endif %}
 {%                 if neighbor.route_map_in is arista.avd.defined %}
          neighbor {{ neighbor.ip_address }} route-map {{ neighbor.route_map_in }} in
 {%                 endif %}
 {%                 if neighbor.route_map_out is arista.avd.defined %}
          neighbor {{ neighbor.ip_address }} route-map {{ neighbor.route_map_out }} out
-{%                 endif %}
-{%                 if neighbor.additional_paths.receive is arista.avd.defined(true) %}
-         neighbor {{ neighbor.ip_address }} additional-paths receive
 {%                 endif %}
 {%             endfor %}
 {%             for network in vrf.address_family_ipv4_multicast.networks | arista.avd.natural_sort('prefix') %}
@@ -2871,8 +3407,106 @@ router bgp {{ router_bgp.as }}
 {%                 endif %}
          {{ network_cli }}
 {%             endfor %}
-{%             for redistribute_route in vrf.address_family_ipv4_multicast.redistribute_routes | arista.avd.natural_sort('source_protocol') %}
-{%                 if redistribute_route.source_protocol is arista.avd.defined %}
+{%             if vrf.address_family_ipv4_multicast.redistribute is arista.avd.defined %}
+{%                 set redistribute_var = vrf.address_family_ipv4_multicast.redistribute %}
+{%                 if redistribute_var.attached_host.enabled is arista.avd.defined(true) %}
+{%                     set redistribute_host = "redistribute attached-host" %}
+{%                     if redistribute_var.attached_host.route_map is arista.avd.defined %}
+{%                         set redistribute_host = redistribute_host ~ " route-map " ~ redistribute_var.attached_host.route_map %}
+{%                     endif %}
+         {{ redistribute_host }}
+{%                 endif %}
+{%                 if redistribute_var.connected.enabled is arista.avd.defined(true) %}
+{%                     set redistribute_conn = "redistribute connected" %}
+{%                     if redistribute_var.connected.route_map is arista.avd.defined %}
+{%                         set redistribute_conn = redistribute_conn ~ " route-map " ~ redistribute_var.connected.route_map %}
+{%                     endif %}
+         {{ redistribute_conn }}
+{%                 endif %}
+{%                 if redistribute_var.isis.enabled is arista.avd.defined(true) %}
+{%                     set redistribute_isis = "redistribute isis" %}
+{%                     if redistribute_var.isis.isis_level is arista.avd.defined %}
+{%                         set redistribute_isis = redistribute_isis ~ " " ~ redistribute_var.isis.isis_level %}
+{%                     endif %}
+{%                     if redistribute_var.isis.include_leaked is arista.avd.defined(true) %}
+{%                         set redistribute_isis = redistribute_isis ~ " include leaked" %}
+{%                     endif %}
+{%                     if redistribute_var.isis.route_map is arista.avd.defined %}
+{%                         set redistribute_isis = redistribute_isis ~ " route-map " ~ redistribute_var.isis.route_map %}
+{%                     elif redistribute_var.isis.rcf is arista.avd.defined %}
+{%                         set redistribute_isis = redistribute_isis ~ " rcf " ~ redistribute_var.isis.rcf %}
+{%                     endif %}
+         {{ redistribute_isis }}
+{%                 endif %}
+{%                 if redistribute_var.ospf.enabled is arista.avd.defined(true) %}
+{%                     set redistribute_ospf = "redistribute ospf" %}
+{%                     if redistribute_var.ospf.route_map is arista.avd.defined %}
+{%                         set redistribute_ospf = redistribute_ospf ~ " route-map " ~ redistribute_var.ospf.route_map %}
+{%                     endif %}
+         {{ redistribute_ospf }}
+{%                 elif redistribute_var.ospf.match_internal.enabled is arista.avd.defined(true) %}
+{%                     set redistribute_ospf = "redistribute ospf match internal" %}
+{%                     if redistribute_var.ospf.match_internal.route_map is arista.avd.defined %}
+{%                         set redistribute_ospf = redistribute_ospf ~ " route-map " ~ redistribute_var.ospf.match_internal.route_map %}
+{%                     endif %}
+         {{ redistribute_ospf }}
+{%                 endif %}
+{%                 if redistribute_var.ospfv3.enabled is arista.avd.defined(true) %}
+{%                     set redistribute_ospfv3 = "redistribute ospfv3" %}
+{%                     if redistribute_var.ospfv3.route_map is arista.avd.defined %}
+{%                         set redistribute_ospfv3 = redistribute_ospfv3 ~ " route-map " ~ redistribute_var.ospfv3.route_map %}
+{%                     endif %}
+         {{ redistribute_ospfv3 }}
+{%                 elif redistribute_var.ospfv3.match_internal.enabled is arista.avd.defined(true) %}
+{%                     set redistribute_ospfv3 = "redistribute ospfv3 match internal" %}
+{%                     if redistribute_var.ospfv3.match_internal.route_map is arista.avd.defined %}
+{%                         set redistribute_ospfv3 = redistribute_ospfv3 ~ " route-map " ~ redistribute_var.ospfv3.match_internal.route_map %}
+{%                     endif %}
+         {{ redistribute_ospfv3 }}
+{%                 endif %}
+{%                 if redistribute_var.ospfv3.match_external.enabled is arista.avd.defined(true) %}
+{%                     set redistribute_ospfv3_match = "redistribute ospfv3 match external" %}
+{%                     if redistribute_var.ospfv3.match_external.route_map is arista.avd.defined %}
+{%                         set redistribute_ospfv3_match = redistribute_ospfv3_match ~ " route-map " ~ redistribute_var.ospfv3.match_external.route_map %}
+{%                     endif %}
+         {{ redistribute_ospfv3_match }}
+{%                 endif %}
+{%                 if redistribute_var.ospfv3.match_nssa_external.enabled is arista.avd.defined(true) %}
+{%                     set redistribute_ospfv3_match = "redistribute ospfv3 match nssa-external" %}
+{%                     if redistribute_var.ospfv3.match_nssa_external.nssa_type is arista.avd.defined %}
+{%                         set redistribute_ospfv3_match = redistribute_ospfv3_match ~ " " ~ redistribute_var.ospfv3.match_nssa_external.nssa_type %}
+{%                     endif %}
+{%                     if redistribute_var.ospfv3.match_nssa_external.route_map is arista.avd.defined %}
+{%                         set redistribute_ospfv3_match = redistribute_ospfv3_match ~ " route-map " ~ redistribute_var.ospfv3.match_nssa_external.route_map %}
+{%                     endif %}
+         {{ redistribute_ospfv3_match }}
+{%                 endif %}
+{%                 if redistribute_var.ospf.match_external.enabled is arista.avd.defined(true) %}
+{%                     set redistribute_ospf_match = "redistribute ospf match external" %}
+{%                     if redistribute_var.ospf.match_external.route_map is arista.avd.defined %}
+{%                         set redistribute_ospf_match = redistribute_ospf_match ~ " route-map " ~ redistribute_var.ospf.match_external.route_map %}
+{%                     endif %}
+         {{ redistribute_ospf_match }}
+{%                 endif %}
+{%                 if redistribute_var.ospf.match_nssa_external.enabled is arista.avd.defined(true) %}
+{%                     set redistribute_ospf_match = "redistribute ospf match nssa-external" %}
+{%                     if redistribute_var.ospf.match_nssa_external.nssa_type is arista.avd.defined %}
+{%                         set redistribute_ospf_match = redistribute_ospf_match ~ " " ~ redistribute_var.ospf.match_nssa_external.nssa_type %}
+{%                     endif %}
+{%                     if redistribute_var.ospf.match_nssa_external.route_map is arista.avd.defined %}
+{%                         set redistribute_ospf_match = redistribute_ospf_match ~ " route-map " ~ redistribute_var.ospf.match_nssa_external.route_map %}
+{%                     endif %}
+         {{ redistribute_ospf_match }}
+{%                 endif %}
+{%                 if redistribute_var.static.enabled is arista.avd.defined(true) %}
+{%                     set redistribute_static = "redistribute static" %}
+{%                     if redistribute_var.static.route_map is arista.avd.defined %}
+{%                         set redistribute_static = redistribute_static ~ " route-map " ~ redistribute_var.static.route_map %}
+{%                     endif %}
+         {{ redistribute_static }}
+{%                 endif %}
+{%             elif vrf.address_family_ipv4_multicast.redistribute_routes is arista.avd.defined %}
+{%                 for redistribute_route in vrf.address_family_ipv4_multicast.redistribute_routes | arista.avd.natural_sort('source_protocol') %}
 {%                     set redistribute_route_cli = "redistribute " ~ redistribute_route.source_protocol %}
 {%                     if redistribute_route.source_protocol in ["ospf", "ospfv3"] %}
 {%                         if redistribute_route.ospf_route_type is arista.avd.defined %}
@@ -2890,22 +3524,22 @@ router bgp {{ router_bgp.as }}
 {%                         endif %}
 {%                     endif %}
          {{ redistribute_route_cli }}
-{%                 endif %}
-{%             endfor %}
+{%                 endfor %}
+{%             endif %}
 {%         endif %}
 {%         if vrf.address_family_ipv6 is arista.avd.defined %}
       !
       address-family ipv6
+{%             if vrf.address_family_ipv6.bgp.additional_paths.install is arista.avd.defined(true) %}
+         bgp additional-paths install
+{%             elif vrf.address_family_ipv6.bgp.additional_paths.install_ecmp_primary is arista.avd.defined(true) %}
+         bgp additional-paths install ecmp-primary
+{%             endif %}
 {%             if vrf.address_family_ipv6.bgp.missing_policy.direction_in_action is arista.avd.defined %}
          bgp missing-policy direction in action {{ vrf.address_family_ipv6.bgp.missing_policy.direction_in_action }}
 {%             endif %}
 {%             if vrf.address_family_ipv6.bgp.missing_policy.direction_out_action is arista.avd.defined %}
          bgp missing-policy direction out action {{ vrf.address_family_ipv6.bgp.missing_policy.direction_out_action }}
-{%             endif %}
-{%             if vrf.address_family_ipv6.bgp.additional_paths.install is arista.avd.defined(true) %}
-         bgp additional-paths install
-{%             elif vrf.address_family_ipv6.bgp.additional_paths.install_ecmp_primary is arista.avd.defined(true) %}
-         bgp additional-paths install ecmp-primary
 {%             endif %}
 {%             if vrf.address_family_ipv6.bgp.additional_paths.receive is arista.avd.defined(true) %}
          bgp additional-paths receive
@@ -2974,8 +3608,128 @@ router bgp {{ router_bgp.as }}
 {%             elif vrf.address_family_ipv6.bgp.redistribute_internal is arista.avd.defined(false) %}
          no bgp redistribute-internal
 {%             endif %}
-{%             for redistribute_route in vrf.address_family_ipv6.redistribute_routes | arista.avd.natural_sort('source_protocol') %}
-{%                 if redistribute_route.source_protocol is arista.avd.defined %}
+{%             if vrf.address_family_ipv6.redistribute is arista.avd.defined %}
+{%                 set redistribute_var = vrf.address_family_ipv6.redistribute %}
+{%                 if redistribute_var.attached_host.enabled is arista.avd.defined(true) %}
+{%                     set redistribute_host = "redistribute attached-host" %}
+{%                     if redistribute_var.attached_host.route_map is arista.avd.defined %}
+{%                         set redistribute_host = redistribute_host ~ " route-map " ~ redistribute_var.attached_host.route_map %}
+{%                     endif %}
+         {{ redistribute_host }}
+{%                 endif %}
+{%                 if redistribute_var.bgp.enabled is arista.avd.defined(true) %}
+{%                     set redistribute_bgp = "redistribute bgp leaked" %}
+{%                     if redistribute_var.bgp.route_map is arista.avd.defined %}
+{%                         set redistribute_bgp = redistribute_bgp ~ " route-map " ~ redistribute_var.bgp.route_map %}
+{%                     endif %}
+         {{ redistribute_bgp }}
+{%                 endif %}
+{%                 if redistribute_var.dhcp.enabled is arista.avd.defined(true) %}
+{%                     set redistribute_dhcp = "redistribute dhcp" %}
+{%                     if redistribute_var.dhcp.route_map is arista.avd.defined %}
+{%                         set redistribute_dhcp = redistribute_dhcp ~ " route-map " ~ redistribute_var.dhcp.route_map %}
+{%                     endif %}
+         {{ redistribute_dhcp }}
+{%                 endif %}
+{%                 if redistribute_var.connected.enabled is arista.avd.defined(true) %}
+{%                     set redistribute_conn = "redistribute connected" %}
+{%                     if redistribute_var.connected.include_leaked is arista.avd.defined(true) %}
+{%                         set redistribute_conn = redistribute_conn ~ " include leaked" %}
+{%                     endif %}
+{%                     if redistribute_var.connected.route_map is arista.avd.defined %}
+{%                         set redistribute_conn = redistribute_conn ~ " route-map " ~ redistribute_var.connected.route_map %}
+{%                     elif redistribute_var.connected.rcf is arista.avd.defined %}
+{%                         set redistribute_conn = redistribute_conn ~ " rcf " ~ redistribute_var.connected.rcf %}
+{%                     endif %}
+         {{ redistribute_conn }}
+{%                 endif %}
+{%                 if redistribute_var.dynamic.enabled is arista.avd.defined(true) %}
+{%                     set redistribute_dynamic = "redistribute dynamic" %}
+{%                     if redistribute_var.dynamic.route_map is arista.avd.defined %}
+{%                         set redistribute_dynamic = redistribute_dynamic ~ " route-map " ~ redistribute_var.dynamic.route_map %}
+{%                     elif redistribute_var.dynamic.rcf is arista.avd.defined %}
+{%                         set redistribute_dynamic = redistribute_dynamic ~ " rcf " ~ redistribute_var.dynamic.rcf %}
+{%                     endif %}
+         {{ redistribute_dynamic }}
+{%                 endif %}
+{%                 if redistribute_var.user.enabled is arista.avd.defined(true) %}
+{%                     set redistribute_user = "redistribute user" %}
+{%                     if redistribute_var.user.rcf is arista.avd.defined %}
+{%                         set redistribute_user = redistribute_user ~ " rcf " ~ redistribute_var.user.rcf %}
+{%                     endif %}
+         {{ redistribute_user }}
+{%                 endif %}
+{%                 if redistribute_var.isis.enabled is arista.avd.defined(true) %}
+{%                     set redistribute_isis = "redistribute isis" %}
+{%                     if redistribute_var.isis.isis_level is arista.avd.defined %}
+{%                         set redistribute_isis = redistribute_isis ~ " " ~ redistribute_var.isis.isis_level %}
+{%                     endif %}
+{%                     if redistribute_var.isis.include_leaked is arista.avd.defined(true) %}
+{%                         set redistribute_isis = redistribute_isis ~ " include leaked" %}
+{%                     endif %}
+{%                     if redistribute_var.isis.route_map is arista.avd.defined %}
+{%                         set redistribute_isis = redistribute_isis ~ " route-map " ~ redistribute_var.isis.route_map %}
+{%                     elif redistribute_var.isis.rcf is arista.avd.defined %}
+{%                         set redistribute_isis = redistribute_isis ~ " rcf " ~ redistribute_var.isis.rcf %}
+{%                     endif %}
+         {{ redistribute_isis }}
+{%                 endif %}
+{%                 if redistribute_var.ospfv3.enabled is arista.avd.defined(true) %}
+{%                     set redistribute_ospfv3 = "redistribute ospfv3" %}
+{%                     if redistribute_var.ospfv3.include_leaked is arista.avd.defined(true) %}
+{%                         set redistribute_ospfv3 = redistribute_ospfv3 ~ " include leaked" %}
+{%                     endif %}
+{%                     if redistribute_var.ospfv3.route_map is arista.avd.defined %}
+{%                         set redistribute_ospfv3 = redistribute_ospfv3 ~ " route-map " ~ redistribute_var.ospfv3.route_map %}
+{%                     endif %}
+         {{ redistribute_ospfv3 }}
+{%                 elif redistribute_var.ospfv3.match_internal.enabled is arista.avd.defined(true) %}
+{%                     set redistribute_ospfv3 = "redistribute ospfv3 match internal" %}
+{%                     if redistribute_var.ospfv3.match_internal.include_leaked is arista.avd.defined(true) %}
+{%                         set redistribute_ospfv3 = redistribute_ospfv3 ~ " include leaked" %}
+{%                     endif %}
+{%                     if redistribute_var.ospfv3.match_internal.route_map is arista.avd.defined %}
+{%                         set redistribute_ospfv3 = redistribute_ospfv3 ~ " route-map " ~ redistribute_var.ospfv3.match_internal.route_map %}
+{%                     endif %}
+         {{ redistribute_ospfv3 }}
+{%                 endif %}
+{%                 if redistribute_var.ospfv3.match_external.enabled is arista.avd.defined(true) %}
+{%                     set redistribute_ospfv3_match = "redistribute ospfv3 match external" %}
+{%                     if redistribute_var.ospfv3.match_external.include_leaked is arista.avd.defined(true) %}
+{%                         set redistribute_ospfv3_match = redistribute_ospfv3_match ~ " include leaked" %}
+{%                     endif %}
+{%                     if redistribute_var.ospfv3.match_external.route_map is arista.avd.defined %}
+{%                         set redistribute_ospfv3_match = redistribute_ospfv3_match ~ " route-map " ~ redistribute_var.ospfv3.match_external.route_map %}
+{%                     endif %}
+         {{ redistribute_ospfv3_match }}
+{%                 endif %}
+{%                 if redistribute_var.ospfv3.match_nssa_external.enabled is arista.avd.defined(true) %}
+{%                     set redistribute_ospfv3_match = "redistribute ospfv3 match nssa-external" %}
+{%                     if redistribute_var.ospfv3.match_nssa_external.nssa_type is arista.avd.defined %}
+{%                         set redistribute_ospfv3_match = redistribute_ospfv3_match ~ " " ~ redistribute_var.ospfv3.match_nssa_external.nssa_type %}
+{%                     endif %}
+{%                     if redistribute_var.ospfv3.match_nssa_external.include_leaked is arista.avd.defined(true) %}
+{%                         set redistribute_ospfv3_match = redistribute_ospfv3_match ~ " include leaked" %}
+{%                     endif %}
+{%                     if redistribute_var.ospfv3.match_nssa_external.route_map is arista.avd.defined %}
+{%                         set redistribute_ospfv3_match = redistribute_ospfv3_match ~ " route-map " ~ redistribute_var.ospfv3.match_nssa_external.route_map %}
+{%                     endif %}
+         {{ redistribute_ospfv3_match }}
+{%                 endif %}
+{%                 if redistribute_var.static.enabled is arista.avd.defined(true) %}
+{%                     set redistribute_static = "redistribute static" %}
+{%                     if redistribute_var.static.include_leaked is arista.avd.defined(true) %}
+{%                         set redistribute_static = redistribute_static ~ " include leaked" %}
+{%                     endif %}
+{%                     if redistribute_var.static.route_map is arista.avd.defined %}
+{%                         set redistribute_static = redistribute_static ~ " route-map " ~ redistribute_var.static.route_map %}
+{%                     elif redistribute_var.static.rcf is arista.avd.defined %}
+{%                         set redistribute_static = redistribute_static ~ " rcf " ~ redistribute_var.static.rcf %}
+{%                     endif %}
+         {{ redistribute_static }}
+{%                 endif %}
+{%             elif vrf.address_family_ipv6.redistribute_routes is arista.avd.defined %}
+{%                 for redistribute_route in vrf.address_family_ipv6.redistribute_routes | arista.avd.natural_sort('source_protocol') %}
 {%                     set redistribute_route_cli = "redistribute " ~ redistribute_route.source_protocol %}
 {%                     if redistribute_route.source_protocol == "ospfv3" %}
 {%                         if redistribute_route.ospf_route_type is arista.avd.defined %}
@@ -2995,8 +3749,8 @@ router bgp {{ router_bgp.as }}
 {%                         endif %}
 {%                     endif %}
          {{ redistribute_route_cli }}
-{%                 endif %}
-{%             endfor %}
+{%                 endfor %}
+{%             endif %}
 {%         endif %}
 {%         if vrf.address_family_ipv6_multicast is arista.avd.defined %}
       !
@@ -3014,14 +3768,14 @@ router bgp {{ router_bgp.as }}
 {%                 if neighbor.activate is arista.avd.defined(true) %}
          neighbor {{ neighbor.ip_address }} activate
 {%                 endif %}
+{%                 if neighbor.additional_paths.receive is arista.avd.defined(true) %}
+         neighbor {{ neighbor.ip_address }} additional-paths receive
+{%                 endif %}
 {%                 if neighbor.route_map_in is arista.avd.defined %}
          neighbor {{ neighbor.ip_address }} route-map {{ neighbor.route_map_in }} in
 {%                 endif %}
 {%                 if neighbor.route_map_out is arista.avd.defined %}
          neighbor {{ neighbor.ip_address }} route-map {{ neighbor.route_map_out }} out
-{%                 endif %}
-{%                 if neighbor.additional_paths.receive is arista.avd.defined(true) %}
-         neighbor {{ neighbor.ip_address }} additional-paths receive
 {%                 endif %}
 {%             endfor %}
 {%             for network in vrf.address_family_ipv6_multicast.networks | arista.avd.natural_sort('prefix') %}
@@ -3031,8 +3785,99 @@ router bgp {{ router_bgp.as }}
 {%                 endif %}
          {{ network_cli }}
 {%             endfor %}
-{%             for redistribute_route in vrf.address_family_ipv6_multicast.redistribute_routes | arista.avd.natural_sort('source_protocol') %}
-{%                 if redistribute_route.source_protocol is arista.avd.defined %}
+{%             if vrf.address_family_ipv6_multicast.redistribute is arista.avd.defined %}
+{%                 set redistribute_var = vrf.address_family_ipv6_multicast.redistribute %}
+{%                 if redistribute_var.connected.enabled is arista.avd.defined(true) %}
+{%                     set redistribute_conn = "redistribute connected" %}
+{%                     if redistribute_var.connected.route_map is arista.avd.defined %}
+{%                         set redistribute_conn = redistribute_conn ~ " route-map " ~ redistribute_var.connected.route_map %}
+{%                     endif %}
+         {{ redistribute_conn }}
+{%                 endif %}
+{%                 if redistribute_var.isis.enabled is arista.avd.defined(true) %}
+{%                     set redistribute_isis = "redistribute isis" %}
+{%                     if redistribute_var.isis.isis_level is arista.avd.defined %}
+{%                         set redistribute_isis = redistribute_isis ~ " " ~ redistribute_var.isis.isis_level %}
+{%                     endif %}
+{%                     if redistribute_var.isis.include_leaked is arista.avd.defined(true) %}
+{%                         set redistribute_isis = redistribute_isis ~ " include leaked" %}
+{%                     endif %}
+{%                     if redistribute_var.isis.route_map is arista.avd.defined %}
+{%                         set redistribute_isis = redistribute_isis ~ " route-map " ~ redistribute_var.isis.route_map %}
+{%                     elif redistribute_var.isis.rcf is arista.avd.defined %}
+{%                         set redistribute_isis = redistribute_isis ~ " rcf " ~ redistribute_var.isis.rcf %}
+{%                     endif %}
+         {{ redistribute_isis }}
+{%                 endif %}
+{%                 if redistribute_var.ospf.enabled is arista.avd.defined(true) %}
+{%                     set redistribute_ospf = "redistribute ospf" %}
+{%                     if redistribute_var.ospf.route_map is arista.avd.defined %}
+{%                         set redistribute_ospf = redistribute_ospf ~ " route-map " ~ redistribute_var.ospf.route_map %}
+{%                     endif %}
+         {{ redistribute_ospf }}
+{%                 elif redistribute_var.ospf.match_internal.enabled is arista.avd.defined(true) %}
+{%                     set redistribute_ospf = "redistribute ospf match internal" %}
+{%                     if redistribute_var.ospf.match_internal.route_map is arista.avd.defined %}
+{%                         set redistribute_ospf = redistribute_ospf ~ " route-map " ~ redistribute_var.ospf.match_internal.route_map %}
+{%                     endif %}
+         {{ redistribute_ospf }}
+{%                 endif %}
+{%                 if redistribute_var.ospfv3.enabled is arista.avd.defined(true) %}
+{%                     set redistribute_ospfv3 = "redistribute ospfv3" %}
+{%                     if redistribute_var.ospfv3.route_map is arista.avd.defined %}
+{%                         set redistribute_ospfv3 = redistribute_ospfv3 ~ " route-map " ~ redistribute_var.ospfv3.route_map %}
+{%                     endif %}
+         {{ redistribute_ospfv3 }}
+{%                 elif redistribute_var.ospfv3.match_internal.enabled is arista.avd.defined(true) %}
+{%                     set redistribute_ospfv3 = "redistribute ospfv3 match internal" %}
+{%                     if redistribute_var.ospfv3.match_internal.route_map is arista.avd.defined %}
+{%                         set redistribute_ospfv3 = redistribute_ospfv3 ~ " route-map " ~ redistribute_var.ospfv3.match_internal.route_map %}
+{%                     endif %}
+         {{ redistribute_ospfv3 }}
+{%                 endif %}
+{%                 if redistribute_var.ospfv3.match_external.enabled is arista.avd.defined(true) %}
+{%                     set redistribute_ospfv3_match = "redistribute ospfv3 match external" %}
+{%                     if redistribute_var.ospfv3.match_external.route_map is arista.avd.defined %}
+{%                         set redistribute_ospfv3_match = redistribute_ospfv3_match ~ " route-map " ~ redistribute_var.ospfv3.match_external.route_map %}
+{%                     endif %}
+         {{ redistribute_ospfv3_match }}
+{%                 endif %}
+{%                 if redistribute_var.ospfv3.match_nssa_external.enabled is arista.avd.defined(true) %}
+{%                     set redistribute_ospfv3_match = "redistribute ospfv3 match nssa-external" %}
+{%                     if redistribute_var.ospfv3.match_nssa_external.nssa_type is arista.avd.defined %}
+{%                         set redistribute_ospfv3_match = redistribute_ospfv3_match ~ " " ~ redistribute_var.ospfv3.match_nssa_external.nssa_type %}
+{%                     endif %}
+{%                     if redistribute_var.ospfv3.match_nssa_external.route_map is arista.avd.defined %}
+{%                         set redistribute_ospfv3_match = redistribute_ospfv3_match ~ " route-map " ~ redistribute_var.ospfv3.match_nssa_external.route_map %}
+{%                     endif %}
+         {{ redistribute_ospfv3_match }}
+{%                 endif %}
+{%                 if redistribute_var.ospf.match_external.enabled is arista.avd.defined(true) %}
+{%                     set redistribute_ospf_match = "redistribute ospf match external" %}
+{%                     if redistribute_var.ospf.match_external.route_map is arista.avd.defined %}
+{%                         set redistribute_ospf_match = redistribute_ospf_match ~ " route-map " ~ redistribute_var.ospf.match_external.route_map %}
+{%                     endif %}
+         {{ redistribute_ospf_match }}
+{%                 endif %}
+{%                 if redistribute_var.ospf.match_nssa_external.enabled is arista.avd.defined(true) %}
+{%                     set redistribute_ospf_match = "redistribute ospf match nssa-external" %}
+{%                     if redistribute_var.ospf.match_nssa_external.nssa_type is arista.avd.defined %}
+{%                         set redistribute_ospf_match = redistribute_ospf_match ~ " " ~ redistribute_var.ospf.match_nssa_external.nssa_type %}
+{%                     endif %}
+{%                     if redistribute_var.ospf.match_nssa_external.route_map is arista.avd.defined %}
+{%                         set redistribute_ospf_match = redistribute_ospf_match ~ " route-map " ~ redistribute_var.ospf.match_nssa_external.route_map %}
+{%                     endif %}
+         {{ redistribute_ospf_match }}
+{%                 endif %}
+{%                 if redistribute_var.static.enabled is arista.avd.defined(true) %}
+{%                     set redistribute_static = "redistribute static" %}
+{%                     if redistribute_var.static.route_map is arista.avd.defined %}
+{%                         set redistribute_static = redistribute_static ~ " route-map " ~ redistribute_var.static.route_map %}
+{%                     endif %}
+         {{ redistribute_static }}
+{%                 endif %}
+{%             elif vrf.address_family_ipv6_multicast.redistribute_routes is arista.avd.defined %}
+{%                 for redistribute_route in vrf.address_family_ipv6_multicast.redistribute_routes | arista.avd.natural_sort('source_protocol') %}
 {%                     set redistribute_route_cli = "redistribute " ~ redistribute_route.source_protocol %}
 {%                     if redistribute_route.source_protocol in ["ospf", "ospfv3"] %}
 {%                         if redistribute_route.ospf_route_type is arista.avd.defined %}
@@ -3050,8 +3895,27 @@ router bgp {{ router_bgp.as }}
 {%                         endif %}
 {%                     endif %}
          {{ redistribute_route_cli }}
+{%                 endfor %}
+{%             endif %}
+{%         endif %}
+{%         if vrf.evpn_multicast is arista.avd.defined(true) %}
+      evpn multicast
+{%             if vrf.evpn_multicast_gateway_dr_election.algorithm is arista.avd.defined %}
+{%                 if vrf.evpn_multicast_gateway_dr_election.algorithm == "preference" %}
+{%                     if vrf.evpn_multicast_gateway_dr_election.preference_value is arista.avd.defined %}
+         gateway dr election algorithm preference {{ vrf.evpn_multicast_gateway_dr_election.preference_value }}
+{%                     endif %}
+{%                 else %}
+         gateway dr election algorithm {{ vrf.evpn_multicast_gateway_dr_election.algorithm }}
 {%                 endif %}
-{%             endfor %}
+{%             endif %}
+{%             if vrf.evpn_multicast_address_family.ipv4 is arista.avd.defined
+                   and vrf.evpn_multicast_address_family.ipv4.transit is arista.avd.defined(true) %}
+         address-family ipv4
+{%                 if vrf.evpn_multicast_address_family.ipv4.transit is arista.avd.defined(true) %}
+            transit
+{%                 endif %}
+{%             endif %}
 {%         endif %}
 {%         if vrf.eos_cli is arista.avd.defined %}
       !

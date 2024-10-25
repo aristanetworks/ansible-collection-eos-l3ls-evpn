@@ -6,7 +6,7 @@ from pathlib import Path
 from sys import path
 from textwrap import indent
 
-import jsonschema
+import jsonschema_rs
 from deepmerge import always_merger
 from yaml import CSafeDumper, CSafeLoader
 from yaml import dump as yaml_dump
@@ -48,7 +48,7 @@ def combine_schemas() -> None:
 
 def validate_schemas(schema_store: dict) -> None:
     """Validate schemas according to metaschema."""
-    schema_validator = jsonschema.Draft7Validator(schema_store["avd_meta_schema"])
+    schema_validator = jsonschema_rs.Draft7Validator(schema_store["avd_meta_schema"])
     for schema_name in SCHEMA_FRAGMENTS_PATHS:
         print(f"Validating schema '{schema_name}'")
         schema_validator.validate(schema_store[schema_name])

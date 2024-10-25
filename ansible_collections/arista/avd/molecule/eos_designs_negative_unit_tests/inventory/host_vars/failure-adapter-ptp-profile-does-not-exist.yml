@@ -29,5 +29,5 @@ servers:
           profile: THIS-PROFILE-DOES-NOT-EXIST
 
 expected_error_message: >-
-  PTP Profile 'THIS-PROFILE-DOES-NOT-EXIST' referenced under server[name=INDIVIDUAL_1].adapters[0]
+  PTP Profile 'THIS-PROFILE-DOES-NOT-EXIST' referenced under servers[name=INDIVIDUAL_1].adapters[0]
   does not exist in `ptp_profiles`.

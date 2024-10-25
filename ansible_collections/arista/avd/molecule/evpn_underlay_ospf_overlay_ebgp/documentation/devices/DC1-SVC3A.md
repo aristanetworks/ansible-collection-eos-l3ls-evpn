@@ -610,13 +610,13 @@ ip route vrf MGMT 0.0.0.0/0 192.168.200.5
 !
 router ospf 101
    router-id 192.168.255.8
+   bfd default
    passive-interface default
    no passive-interface Ethernet1
    no passive-interface Ethernet2
    no passive-interface Ethernet3
    no passive-interface Ethernet4
    no passive-interface Vlan4094
-   bfd default
    max-lsa 12000
 ```
 
@@ -702,9 +702,9 @@ ASN Notation: asplain
 !
 router bgp 65103
    router-id 192.168.255.8
-   maximum-paths 10 ecmp 10
    update wait-install
    no bgp default ipv4-unicast
+   maximum-paths 10 ecmp 10
    distance bgp 20 200 200
    neighbor EVPN-OVERLAY-PEERS peer group
    neighbor EVPN-OVERLAY-PEERS update-source Loopback0
@@ -717,10 +717,10 @@ router bgp 65103
    neighbor MLAG-IPv4-UNDERLAY-PEER remote-as 65103
    neighbor MLAG-IPv4-UNDERLAY-PEER next-hop-self
    neighbor MLAG-IPv4-UNDERLAY-PEER description DC1-SVC3B
+   neighbor MLAG-IPv4-UNDERLAY-PEER route-map RM-MLAG-PEER-IN in
    neighbor MLAG-IPv4-UNDERLAY-PEER password 7 <removed>
    neighbor MLAG-IPv4-UNDERLAY-PEER send-community
    neighbor MLAG-IPv4-UNDERLAY-PEER maximum-routes 12000
-   neighbor MLAG-IPv4-UNDERLAY-PEER route-map RM-MLAG-PEER-IN in
    neighbor 192.168.255.1 peer group EVPN-OVERLAY-PEERS
    neighbor 192.168.255.1 remote-as 65001
    neighbor 192.168.255.1 description DC1-SPINE1_Loopback0
@@ -741,8 +741,8 @@ router bgp 65103
       vlan 210
    !
    address-family evpn
-      host-flap detection window 180 threshold 30
       neighbor EVPN-OVERLAY-PEERS activate
+      host-flap detection window 180 threshold 30
    !
    address-family ipv4
       no neighbor EVPN-OVERLAY-PEERS activate

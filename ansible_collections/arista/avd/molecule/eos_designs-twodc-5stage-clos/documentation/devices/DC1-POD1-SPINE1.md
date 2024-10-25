@@ -160,45 +160,45 @@ vlan internal order ascending range 1006 1199
 interface Ethernet1
    description P2P_DC1-SUPER-SPINE1_Ethernet1
    no shutdown
-   mac security profile MACSEC_PROFILE
    no switchport
    ip address 172.16.11.1/31
+   mac security profile MACSEC_PROFILE
    ptp enable
    service-profile QOS-PROFILE
 !
 interface Ethernet2
    description P2P_DC1-SUPER-SPINE2_Ethernet1
    no shutdown
-   mac security profile MACSEC_PROFILE
    no switchport
    ip address 172.16.11.65/31
+   mac security profile MACSEC_PROFILE
    ptp enable
    service-profile QOS-PROFILE
 !
 interface Ethernet3
    description P2P_DC1-POD1-LEAF1A_Ethernet1
    no shutdown
-   mac security profile MACSEC_PROFILE
    no switchport
    ip address 172.17.110.0/31
+   mac security profile MACSEC_PROFILE
    ptp enable
    service-profile QOS-PROFILE
 !
 interface Ethernet4
    description P2P_DC1.POD1.LEAF2A_Ethernet1
    no shutdown
-   mac security profile MACSEC_PROFILE
    no switchport
    ip address 172.17.110.8/31
+   mac security profile MACSEC_PROFILE
    ptp enable
    service-profile QOS-PROFILE
 !
 interface Ethernet5
    description P2P_DC1-POD1-LEAF2B_Ethernet1
    no shutdown
-   mac security profile MACSEC_PROFILE
    no switchport
    ip address 172.17.110.16/31
+   mac security profile MACSEC_PROFILE
    ptp enable
    service-profile QOS-PROFILE
 !
@@ -212,18 +212,18 @@ interface Ethernet6
 interface Ethernet7
    description P2P_DC1.POD1.LEAF2A_Ethernet11
    no shutdown
-   mac security profile MACSEC_PROFILE
    no switchport
    ip address 172.17.110.12/31
+   mac security profile MACSEC_PROFILE
    ptp enable
    service-profile QOS-PROFILE
 !
 interface Ethernet8
    description P2P_DC1-POD1-LEAF2B_Ethernet11
    no shutdown
-   mac security profile MACSEC_PROFILE
    no switchport
    ip address 172.17.110.20/31
+   mac security profile MACSEC_PROFILE
    ptp enable
    service-profile QOS-PROFILE
 ```
@@ -378,9 +378,9 @@ ASN Notation: asplain
 !
 router bgp 65110.100
    router-id 172.16.110.1
-   maximum-paths 4 ecmp 4
    update wait-install
    no bgp default ipv4-unicast
+   maximum-paths 4 ecmp 4
    distance bgp 20 200 200
    neighbor EVPN-OVERLAY-PEERS peer group
    neighbor EVPN-OVERLAY-PEERS next-hop-unchanged
@@ -424,8 +424,8 @@ router bgp 65110.100
    neighbor 172.16.210.3 route-map RM-EVPN-FILTER-AS65211 out
    neighbor 172.17.10.3 peer group IPv4-UNDERLAY-PEERS
    neighbor 172.17.10.3 remote-as 65101
-   neighbor 172.17.10.3 description DC1-RS1_Ethernet2
    neighbor 172.17.10.3 bfd
+   neighbor 172.17.10.3 description DC1-RS1_Ethernet2
    neighbor 172.17.110.1 peer group IPv4-UNDERLAY-PEERS
    neighbor 172.17.110.1 remote-as 65111.100
    neighbor 172.17.110.1 description DC1-POD1-LEAF1A_Ethernet1
@@ -446,13 +446,13 @@ router bgp 65110.100
    address-family evpn
       neighbor EVPN-OVERLAY-PEERS activate
    !
-   address-family rt-membership
-      neighbor EVPN-OVERLAY-PEERS activate
-      neighbor EVPN-OVERLAY-PEERS default-route-target only
-   !
    address-family ipv4
       no neighbor EVPN-OVERLAY-PEERS activate
       neighbor IPv4-UNDERLAY-PEERS activate
+   !
+   address-family rt-membership
+      neighbor EVPN-OVERLAY-PEERS activate
+      neighbor EVPN-OVERLAY-PEERS default-route-target only
 ```
 
 ## BFD

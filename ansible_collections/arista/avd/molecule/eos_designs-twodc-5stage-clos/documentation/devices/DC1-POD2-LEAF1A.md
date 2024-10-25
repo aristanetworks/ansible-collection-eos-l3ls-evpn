@@ -261,18 +261,18 @@ vlan 2601
 interface Ethernet1
    description P2P_DC1-POD2-SPINE1_Ethernet3
    no shutdown
-   mac security profile MACSEC_PROFILE
    no switchport
    ip address 172.17.120.1/31
+   mac security profile MACSEC_PROFILE
    ptp enable
    service-profile QOS-PROFILE
 !
 interface Ethernet2
    description P2P_DC1-POD2-SPINE2_Ethernet3
    no shutdown
-   mac security profile MACSEC_PROFILE
    no switchport
    ip address 172.17.120.3/31
+   mac security profile MACSEC_PROFILE
    ptp enable
    service-profile QOS-PROFILE
 !
@@ -617,9 +617,9 @@ ASN Notation: asplain
 !
 router bgp 65121
    router-id 172.16.120.3
-   maximum-paths 4 ecmp 4
    update wait-install
    no bgp default ipv4-unicast
+   maximum-paths 4 ecmp 4
    distance bgp 20 200 200
    neighbor EVPN-OVERLAY-PEERS peer group
    neighbor EVPN-OVERLAY-PEERS update-source Loopback0
@@ -642,8 +642,8 @@ router bgp 65121
    neighbor 172.16.120.2 route-map RM-EVPN-FILTER-AS65120 out
    neighbor 172.17.10.13 peer group IPv4-UNDERLAY-PEERS
    neighbor 172.17.10.13 remote-as 65102
-   neighbor 172.17.10.13 description DC1-RS2_Ethernet3
    neighbor 172.17.10.13 bfd
+   neighbor 172.17.10.13 description DC1-RS2_Ethernet3
    neighbor 172.17.120.0 peer group IPv4-UNDERLAY-PEERS
    neighbor 172.17.120.0 remote-as 65120
    neighbor 172.17.120.0 description DC1-POD2-SPINE1_Ethernet3
@@ -705,12 +705,12 @@ router bgp 65121
       neighbor EVPN-OVERLAY-PEERS activate
       route import match-failure action discard
    !
-   address-family rt-membership
-      neighbor EVPN-OVERLAY-PEERS activate
-   !
    address-family ipv4
       no neighbor EVPN-OVERLAY-PEERS activate
       neighbor IPv4-UNDERLAY-PEERS activate
+   !
+   address-family rt-membership
+      neighbor EVPN-OVERLAY-PEERS activate
    !
    vrf Common_VRF
       rd 172.16.120.3:1025

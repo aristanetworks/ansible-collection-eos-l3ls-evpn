@@ -425,10 +425,9 @@ $defs:
                     max: 2100
                   loopback_description:
                     type: str
-                    # TODO: Insert link to format string syntax article.
                     description: |-
                       Provide a custom description or description template to be used on the VRF diagnostic loopback interface.
-                      This can be a template using the format string syntax.
+                      This can be a template using the AVD string formatter syntax: https://avd.arista.com/devel/roles/eos_designs/docs/how-to/custom-descriptions-names.html#avd-string-formatter-syntax.
                       The available template fields are:
                         - `interface`: The Loopback interface name.
                         - `vrf`: The VRF name.

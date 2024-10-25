@@ -9,6 +9,10 @@ router_bgp:
   maximum_paths:
     paths: 4
     ecmp: 4
+  redistribute:
+    connected:
+      enabled: true
+      route_map: RM-CONN-2-BGP
   updates:
     wait_install: true
   peer_groups:
@@ -35,9 +39,6 @@ router_bgp:
     peer_group: MLAG-IPv4-UNDERLAY-PEER
     peer: OVERLAY_ROUTING_PROTOCOL_HER_L3LEAF3A
     description: OVERLAY_ROUTING_PROTOCOL_HER_L3LEAF3A_Vlan4093
-  redistribute_routes:
-  - source_protocol: connected
-    route_map: RM-CONN-2-BGP
 service_routing_protocols_model: multi-agent
 ip_routing: true
 vlan_internal_order:

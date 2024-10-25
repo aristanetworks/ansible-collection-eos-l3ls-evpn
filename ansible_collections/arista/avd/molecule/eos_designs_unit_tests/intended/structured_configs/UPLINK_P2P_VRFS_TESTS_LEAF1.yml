@@ -9,6 +9,9 @@ router_bgp:
   maximum_paths:
     paths: 4
     ecmp: 4
+  redistribute:
+    connected:
+      enabled: true
   updates:
     wait_install: true
   peer_groups:
@@ -20,8 +23,6 @@ router_bgp:
     peer_groups:
     - name: IPv4-UNDERLAY-PEERS
       activate: true
-  redistribute_routes:
-  - source_protocol: connected
   neighbors:
   - ip_address: 10.42.42.8
     peer_group: IPv4-UNDERLAY-PEERS
@@ -45,8 +46,9 @@ router_bgp:
       peer_group: IPv4-UNDERLAY-PEERS
       remote_as: '65000'
       description: UPLINK_P2P_VRFS_TESTS_SPINE2_Ethernet2.42_vrf_PROD
-    redistribute_routes:
-    - source_protocol: connected
+    redistribute:
+      connected:
+        enabled: true
   - name: ONLY-ON-L2LEAF
     router_id: 192.168.42.3
     neighbors:
@@ -54,8 +56,9 @@ router_bgp:
       peer_group: IPv4-UNDERLAY-PEERS
       remote_as: '65000'
       description: UPLINK_P2P_VRFS_TESTS_SPINE1_Ethernet1.66_vrf_ONLY-ON-L2LEAF
-    redistribute_routes:
-    - source_protocol: connected
+    redistribute:
+      connected:
+        enabled: true
   - name: IT
     router_id: 192.168.42.3
     neighbors:
@@ -63,8 +66,9 @@ router_bgp:
       peer_group: IPv4-UNDERLAY-PEERS
       remote_as: '65000'
       description: UPLINK_P2P_VRFS_TESTS_SPINE2_Ethernet2.100_vrf_IT
-    redistribute_routes:
-    - source_protocol: connected
+    redistribute:
+      connected:
+        enabled: true
 service_routing_protocols_model: multi-agent
 ip_routing: true
 vlan_internal_order:

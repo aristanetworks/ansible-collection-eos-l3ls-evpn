@@ -519,16 +519,16 @@ ASN Notation: asplain
 !
 router bgp 65000
    router-id 192.168.255.1
-   maximum-paths 4 ecmp 4
    update wait-install
    no bgp default ipv4-unicast
    bgp cluster-id 192.168.255.1
+   maximum-paths 4 ecmp 4
    distance bgp 20 200 200
    neighbor OVERLAY-PEERS peer group
    neighbor OVERLAY-PEERS remote-as 65000
    neighbor OVERLAY-PEERS update-source Loopback0
-   neighbor OVERLAY-PEERS route-reflector-client
    neighbor OVERLAY-PEERS bfd
+   neighbor OVERLAY-PEERS route-reflector-client
    neighbor OVERLAY-PEERS password 7 <removed>
    neighbor OVERLAY-PEERS send-community
    neighbor OVERLAY-PEERS maximum-routes 0

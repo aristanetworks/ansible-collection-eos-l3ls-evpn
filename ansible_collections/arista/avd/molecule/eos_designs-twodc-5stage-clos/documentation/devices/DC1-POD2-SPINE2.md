@@ -185,27 +185,27 @@ vlan internal order ascending range 1006 1199
 interface Ethernet1
    description P2P_DC1-SUPER-SPINE1_Ethernet4
    no shutdown
-   mac security profile MACSEC_PROFILE
    no switchport
    ip address 172.16.12.3/31
+   mac security profile MACSEC_PROFILE
    ptp enable
    service-profile QOS-PROFILE
 !
 interface Ethernet2
    description P2P_DC1-SUPER-SPINE2_Ethernet4
    no shutdown
-   mac security profile MACSEC_PROFILE
    no switchport
    ip address 172.16.12.67/31
+   mac security profile MACSEC_PROFILE
    ptp enable
    service-profile QOS-PROFILE
 !
 interface Ethernet3
    description P2P_DC1-POD2-LEAF1A_Ethernet2
    no shutdown
-   mac security profile MACSEC_PROFILE
    no switchport
    ip address 172.17.120.2/31
+   mac security profile MACSEC_PROFILE
    ptp enable
    service-profile QOS-PROFILE
 !
@@ -358,9 +358,9 @@ ASN Notation: asplain
 !
 router bgp 65120
    router-id 172.16.120.2
-   maximum-paths 4 ecmp 4
    update wait-install
    no bgp default ipv4-unicast
+   maximum-paths 4 ecmp 4
    distance bgp 20 200 200
    neighbor EVPN-OVERLAY-PEERS peer group
    neighbor EVPN-OVERLAY-PEERS next-hop-unchanged
@@ -389,20 +389,20 @@ router bgp 65120
    neighbor 200.200.200.201 peer group IPv4-UNDERLAY-PEERS
    neighbor 200.200.200.201 remote-as 65210
    neighbor 200.200.200.201 local-as 65112 no-prepend replace-as
-   neighbor 200.200.200.201 description DC2-POD1-SPINE2
    no neighbor 200.200.200.201 bfd
+   neighbor 200.200.200.201 description DC2-POD1-SPINE2
    redistribute connected route-map RM-CONN-2-BGP
    !
    address-family evpn
       neighbor EVPN-OVERLAY-PEERS activate
    !
-   address-family rt-membership
-      neighbor EVPN-OVERLAY-PEERS activate
-      neighbor EVPN-OVERLAY-PEERS default-route-target only
-   !
    address-family ipv4
       no neighbor EVPN-OVERLAY-PEERS activate
       neighbor IPv4-UNDERLAY-PEERS activate
+   !
+   address-family rt-membership
+      neighbor EVPN-OVERLAY-PEERS activate
+      neighbor EVPN-OVERLAY-PEERS default-route-target only
 ```
 
 ## BFD

@@ -38,9 +38,8 @@ class UtilsMixin:
 
                 filtered_adapters = []
                 for adapter_index, adapter in enumerate(connected_endpoint["adapters"]):
-                    adapter_settings = self.shared_utils.get_merged_adapter_settings(
-                        adapter, context=f"{connected_endpoints_key['key']}[name={connected_endpoint['name']}].adapters[{adapter_index}]"
-                    )
+                    adapter["context"] = f"{connected_endpoints_key['key']}[name={connected_endpoint['name']}].adapters[{adapter_index}]"
+                    adapter_settings = self.shared_utils.get_merged_adapter_settings(adapter)
 
                     if self.shared_utils.hostname not in adapter_settings.get("switches", []):
                         continue
@@ -74,7 +73,8 @@ class UtilsMixin:
         """Return list of endpoints defined under "network_ports" which are connected to this switch."""
         filtered_network_ports = []
         for index, network_port in enumerate(get(self._hostvars, "network_ports", default=[])):
-            network_port_settings = self.shared_utils.get_merged_adapter_settings(network_port, context=f"network_ports[{index}]")
+            network_port["context"] = f"network_ports[{index}]"
+            network_port_settings = self.shared_utils.get_merged_adapter_settings(network_port)
             if not self._match_regexes(network_port_settings.get("switches"), self.shared_utils.hostname):
                 continue
 
@@ -199,7 +199,7 @@ class UtilsMixin:
             },
         ]
 
-    def _get_adapter_ptp(self: AvdStructuredConfigConnectedEndpoints, adapter: dict, context: str) -> dict | None:
+    def _get_adapter_ptp(self: AvdStructuredConfigConnectedEndpoints, adapter: dict) -> dict | None:
         """Return ptp for one adapter."""
         if get(adapter, "ptp.enabled") is not True:
             return None
@@ -208,7 +208,7 @@ class UtilsMixin:
 
         # Apply PTP profile config
         if (ptp_profile_name := get(adapter, "ptp.profile", default=self.shared_utils.ptp_profile_name)) is not None:
-            msg = f"PTP Profile '{ptp_profile_name}' referenced under {context} does not exist in `ptp_profiles`."
+            msg = f"PTP Profile '{ptp_profile_name}' referenced under {adapter['context']} does not exist in `ptp_profiles`."
             ptp_config.update(get_item(self.shared_utils.ptp_profiles, "profile", ptp_profile_name, required=True, custom_error_msg=msg))
 
         ptp_config["enable"] = True

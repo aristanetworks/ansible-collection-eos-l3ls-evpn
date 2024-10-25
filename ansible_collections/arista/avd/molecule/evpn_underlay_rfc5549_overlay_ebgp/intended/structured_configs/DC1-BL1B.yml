@@ -11,6 +11,10 @@ router_bgp:
   maximum_paths:
     paths: 4
     ecmp: 4
+  redistribute:
+    connected:
+      enabled: true
+      route_map: RM-CONN-2-BGP
   updates:
     wait_install: true
   peer_groups:
@@ -37,9 +41,6 @@ router_bgp:
           originate: true
     - name: EVPN-OVERLAY-PEERS
       activate: false
-  redistribute_routes:
-  - source_protocol: connected
-    route_map: RM-CONN-2-BGP
   neighbor_interfaces:
   - name: Ethernet1
     peer_group: UNDERLAY_PEERS
@@ -118,9 +119,11 @@ router_bgp:
         route_targets:
         - '14:14'
     router_id: 192.168.255.11
-    redistribute_routes:
-    - source_protocol: connected
-    - source_protocol: static
+    redistribute:
+      connected:
+        enabled: true
+      static:
+        enabled: true
     address_family_ipv4:
       neighbors:
       - ip_address: 123.1.1.10
@@ -163,8 +166,9 @@ router_bgp:
         route_targets:
         - '21:21'
     router_id: 192.168.255.11
-    redistribute_routes:
-    - source_protocol: connected
+    redistribute:
+      connected:
+        enabled: true
   - name: Tenant_C_WAN_Zone
     rd: 192.168.255.11:31
     route_targets:
@@ -177,8 +181,9 @@ router_bgp:
         route_targets:
         - '31:31'
     router_id: 192.168.255.11
-    redistribute_routes:
-    - source_protocol: connected
+    redistribute:
+      connected:
+        enabled: true
   vlan_aware_bundles:
   - name: Tenant_A_WAN_Zone
     rd: 192.168.255.11:14

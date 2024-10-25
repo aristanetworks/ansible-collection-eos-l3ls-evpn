@@ -121,7 +121,7 @@ class AvdStructuredConfigInbandManagement(AvdFacts):
         if not self.shared_utils.underlay_bgp:
             return None
 
-        return {"redistribute_routes": [{"source_protocol": "attached-host"}]}
+        return {"redistribute": {"attached_host": {"enabled": True}}}
 
     @cached_property
     def prefix_lists(self) -> list | None:

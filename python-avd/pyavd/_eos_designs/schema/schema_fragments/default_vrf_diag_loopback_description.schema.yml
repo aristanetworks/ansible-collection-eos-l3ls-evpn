@@ -10,10 +10,9 @@ keys:
     type: str
     documentation_options:
       table: fabric-settings
-    # TODO: Insert link to format string syntax article.
     description: |-
       The default description or description template to be used on VRF diagnostic loopback interfaces.
-      This can be a template using the format string syntax.
+      This can be a template using the AVD string formatter syntax: https://avd.arista.com/devel/roles/eos_designs/docs/how-to/custom-descriptions-names.html#avd-string-formatter-syntax.
       The available template fields are:
         - `interface`: The Loopback interface name.
         - `vrf`: The VRF name.

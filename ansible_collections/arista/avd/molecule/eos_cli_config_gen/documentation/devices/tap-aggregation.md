@@ -60,12 +60,12 @@ interface Management1
 !
 tap aggregation
    mode exclusive profile tap-aggregation-extended
-   mode exclusive no-errdisable Ethernet1/1
-   mode exclusive no-errdisable Ethetnet 42/1
-   mode exclusive no-errdisable Port-Channel200
    encapsulation dot1br strip
    encapsulation vn-tag strip
    protocol lldp trap
+   mode exclusive no-errdisable Ethernet1/1
+   mode exclusive no-errdisable Ethetnet 42/1
+   mode exclusive no-errdisable Port-Channel200
    truncation size 169
    mac timestamp header format 64-bit
    mac timestamp header eth-type 5

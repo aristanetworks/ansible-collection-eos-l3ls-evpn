@@ -9,6 +9,12 @@ router_bgp:
   maximum_paths:
     paths: 4
     ecmp: 4
+  redistribute:
+    connected:
+      enabled: true
+      route_map: RM-CONN-2-BGP
+    ospf:
+      enabled: true
   updates:
     wait_install: true
   peer_groups:
@@ -31,10 +37,6 @@ router_bgp:
       activate: true
     - name: EVPN-OVERLAY-PEERS
       activate: false
-  redistribute_routes:
-  - source_protocol: connected
-    route_map: RM-CONN-2-BGP
-  - source_protocol: ospf
   address_family_evpn:
     peer_groups:
     - name: EVPN-OVERLAY-PEERS
@@ -57,8 +59,9 @@ router_bgp:
         route_targets:
         - '12:12'
     router_id: 192.168.255.109
-    redistribute_routes:
-    - source_protocol: connected
+    redistribute:
+      connected:
+        enabled: true
   - name: Tenant_A_DB_Zone
     rd: 192.168.255.109:13
     route_targets:
@@ -71,8 +74,9 @@ router_bgp:
         route_targets:
         - '13:13'
     router_id: 192.168.255.109
-    redistribute_routes:
-    - source_protocol: connected
+    redistribute:
+      connected:
+        enabled: true
   - name: Tenant_A_OP_Zone
     rd: 192.168.255.109:9
     route_targets:
@@ -85,8 +89,9 @@ router_bgp:
         route_targets:
         - '9:9'
     router_id: 192.168.255.109
-    redistribute_routes:
-    - source_protocol: connected
+    redistribute:
+      connected:
+        enabled: true
   - name: Tenant_A_WAN_Zone
     rd: 192.168.255.109:14
     route_targets:
@@ -101,8 +106,9 @@ router_bgp:
         - '14:14'
         - 65000:789
     router_id: 192.168.255.109
-    redistribute_routes:
-    - source_protocol: connected
+    redistribute:
+      connected:
+        enabled: true
   - name: Tenant_A_WEB_Zone
     rd: 192.168.255.109:11
     route_targets:
@@ -115,8 +121,9 @@ router_bgp:
         route_targets:
         - '11:11'
     router_id: 192.168.255.109
-    redistribute_routes:
-    - source_protocol: connected
+    redistribute:
+      connected:
+        enabled: true
   - name: Tenant_B_OP_Zone
     rd: 192.168.255.109:20
     route_targets:
@@ -129,8 +136,9 @@ router_bgp:
         route_targets:
         - '20:20'
     router_id: 192.168.255.109
-    redistribute_routes:
-    - source_protocol: connected
+    redistribute:
+      connected:
+        enabled: true
   - name: Tenant_B_WAN_Zone
     rd: 192.168.255.109:21
     route_targets:
@@ -143,8 +151,9 @@ router_bgp:
         route_targets:
         - '21:21'
     router_id: 192.168.255.109
-    redistribute_routes:
-    - source_protocol: connected
+    redistribute:
+      connected:
+        enabled: true
   - name: Tenant_C_OP_Zone
     rd: 192.168.255.109:30
     route_targets:
@@ -157,8 +166,9 @@ router_bgp:
         route_targets:
         - '30:30'
     router_id: 192.168.255.109
-    redistribute_routes:
-    - source_protocol: connected
+    redistribute:
+      connected:
+        enabled: true
   - name: Tenant_C_WAN_Zone
     rd: 192.168.255.109:31
     route_targets:
@@ -171,8 +181,9 @@ router_bgp:
         route_targets:
         - '31:31'
     router_id: 192.168.255.109
-    redistribute_routes:
-    - source_protocol: connected
+    redistribute:
+      connected:
+        enabled: true
   - name: '12345678'
     rd: 192.168.255.109:41
     route_targets:
@@ -185,8 +196,9 @@ router_bgp:
         route_targets:
         - '41:41'
     router_id: 192.168.255.109
-    redistribute_routes:
-    - source_protocol: connected
+    redistribute:
+      connected:
+        enabled: true
   - name: default
     rd: 192.168.255.109:123
     route_targets:
@@ -210,8 +222,9 @@ router_bgp:
         route_targets:
         - '40:40'
     router_id: 192.168.255.109
-    redistribute_routes:
-    - source_protocol: connected
+    redistribute:
+      connected:
+        enabled: true
   vlan_aware_bundles:
   - name: Tenant_A_APP_Zone
     rd: 192.168.255.109:12

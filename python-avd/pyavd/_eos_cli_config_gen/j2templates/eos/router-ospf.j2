@@ -11,11 +11,17 @@ router ospf {{ process_id.id }} vrf {{ process_id.vrf }}
 {%     else %}
 router ospf {{ process_id.id }}
 {%     endif %}
-{%     if process_id.log_adjacency_changes_detail is arista.avd.defined(true) %}
-   log-adjacency-changes detail
-{%     endif %}
 {%     if process_id.router_id is arista.avd.defined %}
    router-id {{ process_id.router_id }}
+{%     endif %}
+{%     if process_id.auto_cost_reference_bandwidth is arista.avd.defined %}
+   auto-cost reference-bandwidth {{ process_id.auto_cost_reference_bandwidth }}
+{%     endif %}
+{%     if process_id.bfd_enable is arista.avd.defined(true) %}
+   bfd default
+{%     endif %}
+{%     if process_id.bfd_adjacency_state_any is arista.avd.defined(true) %}
+   bfd adjacency state any
 {%     endif %}
 {%     if process_id.distance is arista.avd.defined %}
 {%         if process_id.distance.intra_area is arista.avd.defined %}
@@ -32,18 +38,42 @@ router ospf {{ process_id.id }}
    passive-interface default
 {%     endif %}
 {%     if process_id.no_passive_interfaces is arista.avd.defined %}
-{%         for interface in process_id.no_passive_interfaces %}
+{%         for interface in process_id.no_passive_interfaces | arista.avd.natural_sort %}
    no passive-interface {{ interface }}
 {%         endfor %}
 {%     endif %}
-{%     for network_prefix in process_id.network_prefixes | arista.avd.natural_sort('ipv4_prefix') %}
-   network {{ network_prefix.ipv4_prefix }} area {{ network_prefix.area }}
-{%     endfor %}
-{%     if process_id.bfd_enable is arista.avd.defined(true) %}
-   bfd default
+{%     if process_id.redistribute.bgp.enabled is arista.avd.defined(true) %}
+{%         set redistribute_bgp_cli = "redistribute bgp" %}
+{%         if process_id.redistribute.bgp.include_leaked is arista.avd.defined(true) %}
+{%             set redistribute_bgp_cli = redistribute_bgp_cli ~ " include leaked" %}
+{%         endif %}
+{%         if process_id.redistribute.bgp.route_map is arista.avd.defined %}
+{%             set redistribute_bgp_cli = redistribute_bgp_cli ~ " route-map " ~ process_id.redistribute.bgp.route_map %}
+{%         endif %}
+   {{ redistribute_bgp_cli }}
 {%     endif %}
-{%     if process_id.bfd_adjacency_state_any is arista.avd.defined(true) %}
-   bfd adjacency state any
+{%     if process_id.redistribute.connected.enabled is arista.avd.defined(true) %}
+{%         set redistribute_connected_cli = "redistribute connected" %}
+{%         if process_id.redistribute.connected.include_leaked is arista.avd.defined(true) %}
+{%             set redistribute_connected_cli = redistribute_connected_cli ~ " include leaked" %}
+{%         endif %}
+{%         if process_id.redistribute.connected.route_map is arista.avd.defined %}
+{%             set redistribute_connected_cli = redistribute_connected_cli ~ " route-map " ~ process_id.redistribute.connected.route_map %}
+{%         endif %}
+   {{ redistribute_connected_cli }}
+{%     endif %}
+{%     if process_id.redistribute.static.enabled is arista.avd.defined(true) %}
+{%         set redistribute_static_cli = "redistribute static" %}
+{%         if process_id.redistribute.static.include_leaked is arista.avd.defined(true) %}
+{%             set redistribute_static_cli = redistribute_static_cli ~ " include leaked" %}
+{%         endif %}
+{%         if process_id.redistribute.static.route_map is arista.avd.defined %}
+{%             set redistribute_static_cli = redistribute_static_cli ~ " route-map " ~  process_id.redistribute.static.route_map %}
+{%         endif %}
+   {{ redistribute_static_cli }}
+{%     endif %}
+{%     if process_id.distribute_list_in.route_map is arista.avd.defined %}
+   distribute-list route-map {{ process_id.distribute_list_in.route_map }} in
 {%     endif %}
 {%     for area in process_id.areas | arista.avd.natural_sort('id') %}
 {# OSPF stub area configuration #}
@@ -89,11 +119,25 @@ router ospf {{ process_id.id }}
    area {{ area.id }} filter prefix-list {{ area.filter.prefix_list }}
 {%         endif %}
 {%     endfor %}
-{%     if process_id.distribute_list_in.route_map is arista.avd.defined %}
-   distribute-list route-map {{ process_id.distribute_list_in.route_map }} in
-{%     endif %}
+{%     for network_prefix in process_id.network_prefixes | arista.avd.natural_sort('ipv4_prefix') %}
+{%         if network_prefix.area is arista.avd.defined %}
+   network {{ network_prefix.ipv4_prefix }} area {{ network_prefix.area }}
+{%         endif %}
+{%     endfor %}
 {%     if process_id.max_lsa is arista.avd.defined %}
    max-lsa {{ process_id.max_lsa }}
+{%     endif %}
+{%     if process_id.log_adjacency_changes_detail is arista.avd.defined(true) %}
+   log-adjacency-changes detail
+{%     endif %}
+{%     if process_id.timers.spf_delay.initial is arista.avd.defined
+          and process_id.timers.spf_delay.min is arista.avd.defined
+          and process_id.timers.spf_delay.max is arista.avd.defined %}
+{%         set timer_ospf_spf_delay = "timers spf delay initial" %}
+{%         set timer_ospf_spf_delay = timer_ospf_spf_delay ~ " " ~ process_id.timers.spf_delay.initial %}
+{%         set timer_ospf_spf_delay = timer_ospf_spf_delay ~ " " ~ process_id.timers.spf_delay.min %}
+{%         set timer_ospf_spf_delay = timer_ospf_spf_delay ~ " " ~ process_id.timers.spf_delay.max %}
+   {{ timer_ospf_spf_delay }}
 {%     endif %}
 {%     if process_id.timers.lsa.rx_min_interval is arista.avd.defined %}
    timers lsa rx min interval {{ process_id.timers.lsa.rx_min_interval }}
@@ -106,61 +150,6 @@ router ospf {{ process_id.id }}
 {%         set timer_ospf_lsa_tx = timer_ospf_lsa_tx ~ " " ~ process_id.timers.lsa.tx_delay.min %}
 {%         set timer_ospf_lsa_tx = timer_ospf_lsa_tx ~ " " ~ process_id.timers.lsa.tx_delay.max %}
    {{ timer_ospf_lsa_tx }}
-{%     endif %}
-{%     if process_id.timers.spf_delay.initial is arista.avd.defined
-          and process_id.timers.spf_delay.min is arista.avd.defined
-          and process_id.timers.spf_delay.max is arista.avd.defined %}
-{%         set timer_ospf_spf_delay = "timers spf delay initial" %}
-{%         set timer_ospf_spf_delay = timer_ospf_spf_delay ~ " " ~ process_id.timers.spf_delay.initial %}
-{%         set timer_ospf_spf_delay = timer_ospf_spf_delay ~ " " ~ process_id.timers.spf_delay.min %}
-{%         set timer_ospf_spf_delay = timer_ospf_spf_delay ~ " " ~ process_id.timers.spf_delay.max %}
-   {{ timer_ospf_spf_delay }}
-{%     endif %}
-{%     if process_id.default_information_originate is defined %}
-{%         set default_information_originate_cli = "default-information originate" %}
-{%         if process_id.default_information_originate.always is arista.avd.defined(true) %}
-{%             set default_information_originate_cli = default_information_originate_cli ~ " always" %}
-{%         endif %}
-{%         if process_id.default_information_originate.metric is arista.avd.defined %}
-{%             set default_information_originate_cli = default_information_originate_cli ~ " metric " ~ process_id.default_information_originate.metric %}
-{%         endif %}
-{%         if process_id.default_information_originate.metric_type is arista.avd.defined %}
-{%             set default_information_originate_cli = default_information_originate_cli ~ " metric-type " ~ process_id.default_information_originate.metric_type %}
-{%         endif %}
-   {{ default_information_originate_cli }}
-{%     endif %}
-{%     if process_id.redistribute.static.enabled is arista.avd.defined(true) %}
-{%         set redistribute_static_cli = "redistribute static" %}
-{%         if process_id.redistribute.static.include_leaked is arista.avd.defined(true) %}
-{%             set redistribute_static_cli = redistribute_static_cli ~ " include leaked" %}
-{%         endif %}
-{%         if process_id.redistribute.static.route_map is arista.avd.defined %}
-{%             set redistribute_static_cli = redistribute_static_cli ~ " route-map " ~  process_id.redistribute.static.route_map %}
-{%         endif %}
-   {{ redistribute_static_cli }}
-{%     endif %}
-{%     if process_id.redistribute.connected.enabled is arista.avd.defined(true) %}
-{%         set redistribute_connected_cli = "redistribute connected" %}
-{%         if process_id.redistribute.connected.include_leaked is arista.avd.defined(true) %}
-{%             set redistribute_connected_cli = redistribute_connected_cli ~ " include leaked" %}
-{%         endif %}
-{%         if process_id.redistribute.connected.route_map is arista.avd.defined %}
-{%             set redistribute_connected_cli = redistribute_connected_cli ~ " route-map " ~ process_id.redistribute.connected.route_map %}
-{%         endif %}
-   {{ redistribute_connected_cli }}
-{%     endif %}
-{%     if process_id.redistribute.bgp.enabled is arista.avd.defined(true) %}
-{%         set redistribute_bgp_cli = "redistribute bgp" %}
-{%         if process_id.redistribute.bgp.include_leaked is arista.avd.defined(true) %}
-{%             set redistribute_bgp_cli = redistribute_bgp_cli ~ " include leaked" %}
-{%         endif %}
-{%         if process_id.redistribute.bgp.route_map is arista.avd.defined %}
-{%             set redistribute_bgp_cli = redistribute_bgp_cli ~ " route-map " ~ process_id.redistribute.bgp.route_map %}
-{%         endif %}
-   {{ redistribute_bgp_cli }}
-{%     endif %}
-{%     if process_id.auto_cost_reference_bandwidth is arista.avd.defined %}
-   auto-cost reference-bandwidth {{ process_id.auto_cost_reference_bandwidth }}
 {%     endif %}
 {%     if process_id.maximum_paths is arista.avd.defined %}
    maximum-paths {{ process_id.maximum_paths }}
@@ -187,23 +176,32 @@ router ospf {{ process_id.id }}
 {%         endif %}
    {{ max_metric_router_lsa_cli }}
 {%     endif %}
+{%     if process_id.default_information_originate is defined %}
+{%         set default_information_originate_cli = "default-information originate" %}
+{%         if process_id.default_information_originate.always is arista.avd.defined(true) %}
+{%             set default_information_originate_cli = default_information_originate_cli ~ " always" %}
+{%         endif %}
+{%         if process_id.default_information_originate.metric is arista.avd.defined %}
+{%             set default_information_originate_cli = default_information_originate_cli ~ " metric " ~ process_id.default_information_originate.metric %}
+{%         endif %}
+{%         if process_id.default_information_originate.metric_type is arista.avd.defined %}
+{%             set default_information_originate_cli = default_information_originate_cli ~ " metric-type " ~ process_id.default_information_originate.metric_type %}
+{%         endif %}
+   {{ default_information_originate_cli }}
+{%     endif %}
+{%     for summary_address in process_id.summary_addresses | arista.avd.natural_sort("prefix") %}
+{%         if summary_address.tag is arista.avd.defined %}
+   summary-address {{ summary_address.prefix }} tag {{ summary_address.tag }}
+{%         elif summary_address.attribute_map is arista.avd.defined %}
+   summary-address {{ summary_address.prefix }} attribute-map {{ summary_address.attribute_map }}
+{%         elif summary_address.not_advertise is arista.avd.defined(true) %}
+   summary-address {{ summary_address.prefix }} not-advertise
+{%         else %}
+   summary-address {{ summary_address.prefix }}
+{%         endif %}
+{%     endfor %}
 {%     if process_id.mpls_ldp_sync_default is arista.avd.defined(true) %}
    mpls ldp sync default
-{%     endif %}
-{%     if process_id.summary_addresses is arista.avd.defined %}
-{%         for summary_address in process_id.summary_addresses %}
-{%             if summary_address.prefix is arista.avd.defined %}
-{%                 if summary_address.tag is arista.avd.defined %}
-   summary-address {{ summary_address.prefix }} tag {{ summary_address.tag }}
-{%                 elif summary_address.attribute_map is arista.avd.defined %}
-   summary-address {{ summary_address.prefix }} attribute-map {{ summary_address.attribute_map }}
-{%                 elif summary_address.not_advertise is arista.avd.defined(true) %}
-   summary-address {{ summary_address.prefix }} not-advertise
-{%                 else %}
-   summary-address {{ summary_address.prefix }}
-{%                 endif %}
-{%             endif %}
-{%         endfor %}
 {%     endif %}
 {%     if process_id.eos_cli is arista.avd.defined %}
    {{ process_id.eos_cli | indent(3, false) }}

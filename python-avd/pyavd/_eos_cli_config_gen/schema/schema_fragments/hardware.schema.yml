@@ -24,7 +24,7 @@ keys:
             speed_group:
               type: str
               convert_types:
-              - int
+                - int
             serdes:
               type: str
               description: Serdes speed like "10g" or "25g".
@@ -37,7 +37,7 @@ keys:
             port_group:
               type: str
               convert_types:
-              - int
+                - int
             select:
               type: str
               description: Select Ports to activate

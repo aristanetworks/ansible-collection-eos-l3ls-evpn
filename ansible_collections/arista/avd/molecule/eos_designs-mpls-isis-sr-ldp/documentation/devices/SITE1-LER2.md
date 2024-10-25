@@ -313,6 +313,7 @@ interface Ethernet8
 interface Port-Channel3
    no shutdown
    no switchport
+   !
    evpn ethernet-segment
       identifier 0000:0000:0102:0000:0034
       route-target import 01:02:00:00:00:34
@@ -320,26 +321,31 @@ interface Port-Channel3
 !
 interface Port-Channel3.1000
    no shutdown
+   !
    encapsulation vlan
       client dot1q 1000 network client
 !
 interface Port-Channel3.1001
    no shutdown
+   !
    encapsulation vlan
       client dot1q 1001 network client
 !
 interface Port-Channel3.1002
    no shutdown
+   !
    encapsulation vlan
       client dot1q 1002 network client
 !
 interface Port-Channel3.1003
    no shutdown
+   !
    encapsulation vlan
       client dot1q 1003 network client
 !
 interface Port-Channel3.1004
    no shutdown
+   !
    encapsulation vlan
       client dot1q 1004 network client
 !
@@ -350,16 +356,19 @@ interface Port-Channel8
 !
 interface Port-Channel8.111
    vlan id 111
+   !
    encapsulation vlan
       client dot1q 111 network client
 !
 interface Port-Channel8.222
    vlan id 222
+   !
    encapsulation vlan
       client dot1q 222 network client
 !
 interface Port-Channel8.333
    vlan id 434
+   !
    encapsulation vlan
       client dot1q 333 network client
 ```
@@ -676,9 +685,9 @@ ASN Notation: asplain
 !
 router bgp 65000
    router-id 100.70.0.6
-   maximum-paths 4 ecmp 4
    update wait-install
    no bgp default ipv4-unicast
+   maximum-paths 4 ecmp 4
    distance bgp 20 200 200
    neighbor MPLS-OVERLAY-PEERS peer group
    neighbor MPLS-OVERLAY-PEERS remote-as 65000
@@ -761,8 +770,8 @@ router bgp 65000
       router-id 100.70.0.6
       update wait-install
       neighbor 192.168.48.1 remote-as 65201
-      neighbor 192.168.48.1 password 7 <removed>
       neighbor 192.168.48.1 description TENANT_B_CPE_SITE3
+      neighbor 192.168.48.1 password 7 <removed>
       redistribute connected
       !
       address-family ipv4

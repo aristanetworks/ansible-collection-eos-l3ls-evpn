@@ -441,17 +441,17 @@ ASN Notation: asplain
 !
 router bgp 65000
    router-id 100.70.0.8
-   maximum-paths 4 ecmp 4
    update wait-install
    no bgp default ipv4-unicast
    bgp cluster-id 1.1.1.1
+   maximum-paths 4 ecmp 4
    distance bgp 20 200 200
    bgp route-reflector preserve-attributes always
    neighbor MPLS-OVERLAY-PEERS peer group
    neighbor MPLS-OVERLAY-PEERS remote-as 65000
    neighbor MPLS-OVERLAY-PEERS update-source Loopback0
-   neighbor MPLS-OVERLAY-PEERS route-reflector-client
    neighbor MPLS-OVERLAY-PEERS bfd
+   neighbor MPLS-OVERLAY-PEERS route-reflector-client
    neighbor MPLS-OVERLAY-PEERS password 7 <removed>
    neighbor MPLS-OVERLAY-PEERS send-community
    neighbor MPLS-OVERLAY-PEERS maximum-routes 0

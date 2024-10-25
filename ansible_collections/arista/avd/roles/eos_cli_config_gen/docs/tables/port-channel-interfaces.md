@@ -17,7 +17,7 @@
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;shutdown</samp>](## "port_channel_interfaces.[].shutdown") | Boolean |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;l2_mtu</samp>](## "port_channel_interfaces.[].l2_mtu") | Integer |  |  | Min: 68<br>Max: 65535 | "l2_mtu" should only be defined for platforms supporting the "l2 mtu" CLI.<br> |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;l2_mru</samp>](## "port_channel_interfaces.[].l2_mru") | Integer |  |  | Min: 68<br>Max: 65535 | "l2_mru" should only be defined for platforms supporting the "l2 mru" CLI.<br> |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;vlans</samp>](## "port_channel_interfaces.[].vlans") <span style="color:red">deprecated</span> | String |  |  |  | List of switchport vlans as string.<br>For a trunk port this would be a range like "1-200,300".<br>For an access port this would be a single vlan "123".<br><span style="color:red">This key is deprecated. Support will be removed in AVD version 6.0.0. Use <samp>port_channel_interfaces[].switchport.access_vlan or port_channel_interfaces[].switchport.trunk.allowed_vlan</samp> instead.</span> |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;vlans</samp>](## "port_channel_interfaces.[].vlans") <span style="color:red">deprecated</span> | String |  |  |  | List of switchport vlans as string.<br>For a trunk port this would be a range like "1-200,300".<br>For an access port this would be a single vlan "123".<br><span style="color:red">This key is deprecated. Support will be removed in AVD version 6.0.0. Use <samp>switchport.access_vlan or switchport.trunk.allowed_vlan</samp> instead.</span> |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;snmp_trap_link_change</samp>](## "port_channel_interfaces.[].snmp_trap_link_change") | Boolean |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;type</samp>](## "port_channel_interfaces.[].type") <span style="color:red">deprecated</span> | String |  |  | Valid Values:<br>- <code>routed</code><br>- <code>switched</code><br>- <code>l3dot1q</code><br>- <code>l2dot1q</code> | l3dot1q and l2dot1q are used for sub-interfaces. The parent interface should be defined as routed.<br>Interface will not be listed in device documentation, unless "type" is set.<br><span style="color:red">This key is deprecated. Support will be removed in AVD version 6.0.0. See [here](https://avd.arista.com/stable/docs/release-notes/5.x.x.html#removal-of-type-key-dependency-for-rendering-ethernetport-channel-interfaces-configuration-and-documentation) for details.</span> |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;encapsulation_dot1q_vlan</samp>](## "port_channel_interfaces.[].encapsulation_dot1q_vlan") <span style="color:red">deprecated</span> | Integer |  |  |  | VLAN tag to configure on sub-interface.<span style="color:red">This key is deprecated. Support will be removed in AVD version 6.0.0. Use <samp>encapsulation_dot1q.vlan</samp> instead.</span> |
@@ -49,21 +49,21 @@
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;inner_vlan</samp>](## "port_channel_interfaces.[].encapsulation_vlan.network.inner_vlan") | Integer |  |  | Min: 1<br>Max: 4094 | Network inner VLAN ID. Not applicable for `encapsulation: untagged` or `encapsulation: client`. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;inner_encapsulation</samp>](## "port_channel_interfaces.[].encapsulation_vlan.network.inner_encapsulation") | String |  |  | Valid Values:<br>- <code>dot1q</code><br>- <code>dot1ad</code> |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;vlan_id</samp>](## "port_channel_interfaces.[].vlan_id") | Integer |  |  | Min: 1<br>Max: 4094 | This setting can only be applied to sub-interfaces on EOS.<br>Warning: `vlan_id` should not be combined with `ethernet_interfaces[].type == l2dot1q`. |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;mode</samp>](## "port_channel_interfaces.[].mode") <span style="color:red">deprecated</span> | String |  |  | Valid Values:<br>- <code>access</code><br>- <code>dot1q-tunnel</code><br>- <code>trunk</code><br>- <code>trunk phone</code> | <span style="color:red">This key is deprecated. Support will be removed in AVD version 6.0.0. Use <samp>port_channel_interfaces[].switchport.mode</samp> instead.</span> |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;native_vlan</samp>](## "port_channel_interfaces.[].native_vlan") <span style="color:red">deprecated</span> | Integer |  |  |  | If setting both native_vlan and native_vlan_tag, native_vlan_tag takes precedence.<span style="color:red">This key is deprecated. Support will be removed in AVD version 6.0.0. Use <samp>port_channel_interfaces[].switchport.trunk.native_vlan</samp> instead.</span> |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;native_vlan_tag</samp>](## "port_channel_interfaces.[].native_vlan_tag") <span style="color:red">deprecated</span> | Boolean |  | `False` |  | If setting both native_vlan and native_vlan_tag, native_vlan_tag takes precedence.<span style="color:red">This key is deprecated. Support will be removed in AVD version 6.0.0. Use <samp>port_channel_interfaces[].switchport.trunk.native_vlan_tag</samp> instead.</span> |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;mode</samp>](## "port_channel_interfaces.[].mode") <span style="color:red">deprecated</span> | String |  |  | Valid Values:<br>- <code>access</code><br>- <code>dot1q-tunnel</code><br>- <code>trunk</code><br>- <code>trunk phone</code> | <span style="color:red">This key is deprecated. Support will be removed in AVD version 6.0.0. Use <samp>switchport.mode</samp> instead.</span> |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;native_vlan</samp>](## "port_channel_interfaces.[].native_vlan") <span style="color:red">deprecated</span> | Integer |  |  |  | If setting both native_vlan and native_vlan_tag, native_vlan_tag takes precedence.<span style="color:red">This key is deprecated. Support will be removed in AVD version 6.0.0. Use <samp>switchport.trunk.native_vlan</samp> instead.</span> |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;native_vlan_tag</samp>](## "port_channel_interfaces.[].native_vlan_tag") <span style="color:red">deprecated</span> | Boolean |  | `False` |  | If setting both native_vlan and native_vlan_tag, native_vlan_tag takes precedence.<span style="color:red">This key is deprecated. Support will be removed in AVD version 6.0.0. Use <samp>switchport.trunk.native_vlan_tag</samp> instead.</span> |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;link_tracking_groups</samp>](## "port_channel_interfaces.[].link_tracking_groups") | List, items: Dictionary |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;name</samp>](## "port_channel_interfaces.[].link_tracking_groups.[].name") | String | Required, Unique |  |  | Group name. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;direction</samp>](## "port_channel_interfaces.[].link_tracking_groups.[].direction") | String |  |  | Valid Values:<br>- <code>upstream</code><br>- <code>downstream</code> |  |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;phone</samp>](## "port_channel_interfaces.[].phone") <span style="color:red">deprecated</span> | Dictionary |  |  |  | <span style="color:red">This key is deprecated. Support will be removed in AVD version 6.0.0. Use <samp>port_channel_interfaces[].switchport.phone</samp> instead.</span> |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;trunk</samp>](## "port_channel_interfaces.[].phone.trunk") <span style="color:red">deprecated</span> | String |  |  | Valid Values:<br>- <code>tagged</code><br>- <code>untagged</code> | <span style="color:red">This key is deprecated. Support will be removed in AVD version 6.0.0. Use <samp>port_channel_interfaces[].switchport.phone.trunk</samp> instead.</span> |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;vlan</samp>](## "port_channel_interfaces.[].phone.vlan") <span style="color:red">deprecated</span> | Integer |  |  | Min: 1<br>Max: 4094 | <span style="color:red">This key is deprecated. Support will be removed in AVD version 6.0.0. Use <samp>port_channel_interfaces[].switchport.phone.vlan</samp> instead.</span> |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;phone</samp>](## "port_channel_interfaces.[].phone") <span style="color:red">deprecated</span> | Dictionary |  |  |  | <span style="color:red">This key is deprecated. Support will be removed in AVD version 6.0.0. Use <samp>switchport.phone</samp> instead.</span> |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;trunk</samp>](## "port_channel_interfaces.[].phone.trunk") | String |  |  | Valid Values:<br>- <code>tagged</code><br>- <code>untagged</code> |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;vlan</samp>](## "port_channel_interfaces.[].phone.vlan") | Integer |  |  | Min: 1<br>Max: 4094 |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;l2_protocol</samp>](## "port_channel_interfaces.[].l2_protocol") | Dictionary |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;encapsulation_dot1q_vlan</samp>](## "port_channel_interfaces.[].l2_protocol.encapsulation_dot1q_vlan") | Integer |  |  |  | Vlan tag to configure on sub-interface. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;forwarding_profile</samp>](## "port_channel_interfaces.[].l2_protocol.forwarding_profile") | String |  |  |  | L2 protocol forwarding profile. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;mtu</samp>](## "port_channel_interfaces.[].mtu") | Integer |  |  | Min: 68<br>Max: 65535 |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;mlag</samp>](## "port_channel_interfaces.[].mlag") | Integer |  |  | Min: 1<br>Max: 2000 | MLAG ID. |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;trunk_groups</samp>](## "port_channel_interfaces.[].trunk_groups") <span style="color:red">deprecated</span> | List, items: String |  |  |  | <span style="color:red">This key is deprecated. Support will be removed in AVD version 6.0.0. Use <samp>port_channel_interfaces[].switchport.trunk.groups</samp> instead.</span> |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;trunk_groups</samp>](## "port_channel_interfaces.[].trunk_groups") <span style="color:red">deprecated</span> | List, items: String |  |  |  | <span style="color:red">This key is deprecated. Support will be removed in AVD version 6.0.0. Use <samp>switchport.trunk.groups</samp> instead.</span> |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;&lt;str&gt;</samp>](## "port_channel_interfaces.[].trunk_groups.[]") | String |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;lacp_fallback_timeout</samp>](## "port_channel_interfaces.[].lacp_fallback_timeout") | Integer |  | `90` | Min: 0<br>Max: 300 | Timeout in seconds. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;lacp_fallback_mode</samp>](## "port_channel_interfaces.[].lacp_fallback_mode") | String |  |  | Valid Values:<br>- <code>individual</code><br>- <code>static</code> |  |
@@ -90,9 +90,9 @@
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ldp</samp>](## "port_channel_interfaces.[].mpls.ldp") | Dictionary |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;interface</samp>](## "port_channel_interfaces.[].mpls.ldp.interface") | Boolean |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;igp_sync</samp>](## "port_channel_interfaces.[].mpls.ldp.igp_sync") | Boolean |  |  |  |  |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;trunk_private_vlan_secondary</samp>](## "port_channel_interfaces.[].trunk_private_vlan_secondary") <span style="color:red">deprecated</span> | Boolean |  |  |  | <span style="color:red">This key is deprecated. Support will be removed in AVD version 6.0.0. Use <samp>port_channel_interfaces[].switchport.trunk.private_vlan_secondary</samp> instead.</span> |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;pvlan_mapping</samp>](## "port_channel_interfaces.[].pvlan_mapping") <span style="color:red">deprecated</span> | String |  |  |  | List of vlans as string.<span style="color:red">This key is deprecated. Support will be removed in AVD version 6.0.0. Use <samp>port_channel_interfaces[].switchport.pvlan_mapping</samp> instead.</span> |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;vlan_translations</samp>](## "port_channel_interfaces.[].vlan_translations") <span style="color:red">deprecated</span> | List, items: Dictionary |  |  |  | <span style="color:red">This key is deprecated. Support will be removed in AVD version 6.0.0. Use <samp>port_channel_interfaces[].switchport.vlan_translations</samp> instead.</span> |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;trunk_private_vlan_secondary</samp>](## "port_channel_interfaces.[].trunk_private_vlan_secondary") <span style="color:red">deprecated</span> | Boolean |  |  |  | <span style="color:red">This key is deprecated. Support will be removed in AVD version 6.0.0. Use <samp>switchport.trunk.private_vlan_secondary</samp> instead.</span> |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;pvlan_mapping</samp>](## "port_channel_interfaces.[].pvlan_mapping") <span style="color:red">deprecated</span> | String |  |  |  | List of vlans as string.<span style="color:red">This key is deprecated. Support will be removed in AVD version 6.0.0. Use <samp>switchport.pvlan_mapping</samp> instead.</span> |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;vlan_translations</samp>](## "port_channel_interfaces.[].vlan_translations") <span style="color:red">deprecated</span> | List, items: Dictionary |  |  |  | <span style="color:red">This key is deprecated. Support will be removed in AVD version 6.0.0. Use <samp>switchport.vlan_translations</samp> instead.</span> |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;from</samp>](## "port_channel_interfaces.[].vlan_translations.[].from") | String |  |  |  | List of vlans as string (only one vlan if direction is "both"). |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;to</samp>](## "port_channel_interfaces.[].vlan_translations.[].to") | Integer |  |  |  | VLAN ID. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;direction</samp>](## "port_channel_interfaces.[].vlan_translations.[].direction") | String |  | `both` | Valid Values:<br>- <code>in</code><br>- <code>out</code><br>- <code>both</code> |  |
@@ -349,7 +349,7 @@
         # For an access port this would be a single vlan "123".
         # This key is deprecated.
         # Support will be removed in AVD version 6.0.0.
-        # Use <samp>port_channel_interfaces[].switchport.access_vlan or port_channel_interfaces[].switchport.trunk.allowed_vlan</samp> instead.
+        # Use <samp>switchport.access_vlan or switchport.trunk.allowed_vlan</samp> instead.
         vlans: <str>
         snmp_trap_link_change: <bool>
 
@@ -446,19 +446,19 @@
         vlan_id: <int; 1-4094>
         # This key is deprecated.
         # Support will be removed in AVD version 6.0.0.
-        # Use <samp>port_channel_interfaces[].switchport.mode</samp> instead.
+        # Use <samp>switchport.mode</samp> instead.
         mode: <str; "access" | "dot1q-tunnel" | "trunk" | "trunk phone">
 
         # If setting both native_vlan and native_vlan_tag, native_vlan_tag takes precedence.
         # This key is deprecated.
         # Support will be removed in AVD version 6.0.0.
-        # Use <samp>port_channel_interfaces[].switchport.trunk.native_vlan</samp> instead.
+        # Use <samp>switchport.trunk.native_vlan</samp> instead.
         native_vlan: <int>
 
         # If setting both native_vlan and native_vlan_tag, native_vlan_tag takes precedence.
         # This key is deprecated.
         # Support will be removed in AVD version 6.0.0.
-        # Use <samp>port_channel_interfaces[].switchport.trunk.native_vlan_tag</samp> instead.
+        # Use <samp>switchport.trunk.native_vlan_tag</samp> instead.
         native_vlan_tag: <bool; default=False>
         link_tracking_groups:
 
@@ -467,15 +467,9 @@
             direction: <str; "upstream" | "downstream">
         # This key is deprecated.
         # Support will be removed in AVD version 6.0.0.
-        # Use <samp>port_channel_interfaces[].switchport.phone</samp> instead.
+        # Use <samp>switchport.phone</samp> instead.
         phone:
-          # This key is deprecated.
-          # Support will be removed in AVD version 6.0.0.
-          # Use <samp>port_channel_interfaces[].switchport.phone.trunk</samp> instead.
           trunk: <str; "tagged" | "untagged">
-          # This key is deprecated.
-          # Support will be removed in AVD version 6.0.0.
-          # Use <samp>port_channel_interfaces[].switchport.phone.vlan</samp> instead.
           vlan: <int; 1-4094>
         l2_protocol:
 
@@ -490,7 +484,7 @@
         mlag: <int; 1-2000>
         # This key is deprecated.
         # Support will be removed in AVD version 6.0.0.
-        # Use <samp>port_channel_interfaces[].switchport.trunk.groups</samp> instead.
+        # Use <samp>switchport.trunk.groups</samp> instead.
         trunk_groups:
           - <str>
 
@@ -536,17 +530,17 @@
             igp_sync: <bool>
         # This key is deprecated.
         # Support will be removed in AVD version 6.0.0.
-        # Use <samp>port_channel_interfaces[].switchport.trunk.private_vlan_secondary</samp> instead.
+        # Use <samp>switchport.trunk.private_vlan_secondary</samp> instead.
         trunk_private_vlan_secondary: <bool>
 
         # List of vlans as string.
         # This key is deprecated.
         # Support will be removed in AVD version 6.0.0.
-        # Use <samp>port_channel_interfaces[].switchport.pvlan_mapping</samp> instead.
+        # Use <samp>switchport.pvlan_mapping</samp> instead.
         pvlan_mapping: <str>
         # This key is deprecated.
         # Support will be removed in AVD version 6.0.0.
-        # Use <samp>port_channel_interfaces[].switchport.vlan_translations</samp> instead.
+        # Use <samp>switchport.vlan_translations</samp> instead.
         vlan_translations:
 
             # List of vlans as string (only one vlan if direction is "both").

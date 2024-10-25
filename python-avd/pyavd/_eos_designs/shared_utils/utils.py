@@ -65,7 +65,7 @@ class UtilsMixin:
 
         return port_profile
 
-    def get_merged_adapter_settings(self: SharedUtils, adapter_or_network_port_settings: dict, context: str) -> dict:
+    def get_merged_adapter_settings(self: SharedUtils, adapter_or_network_port_settings: dict) -> dict:
         """
         Applies port-profiles to the given adapter_or_network_port and returns the combined result.
 
@@ -77,5 +77,5 @@ class UtilsMixin:
             # No profile to apply
             return adapter_or_network_port_settings
 
-        adapter_profile = self.get_merged_port_profile(profile_name, context)
+        adapter_profile = self.get_merged_port_profile(profile_name, adapter_or_network_port_settings["context"])
         return merge(adapter_profile, adapter_or_network_port_settings, list_merge="replace", destructive_merge=False)

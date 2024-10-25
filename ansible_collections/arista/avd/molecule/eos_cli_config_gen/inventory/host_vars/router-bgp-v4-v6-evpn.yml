@@ -66,10 +66,12 @@ router_bgp:
       remote_as: 1
       shutdown: false
       description: TEST
-  redistribute_routes:
-    - source_protocol: connected
+  redistribute:
+    connected:
+      enabled: true
       route_map: RM-CONN-2-BGP
-    - source_protocol: static
+    static:
+      enabled: true
       route_map: RM-STATIC-2-BGP
   address_family_evpn:
     peer_groups:

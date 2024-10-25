@@ -42,9 +42,11 @@ class RoutingMixin:
     @cached_property
     def bgp(self: SharedUtils) -> bool:
         """Boolean telling if BGP Routing should be configured."""
+        if not self.underlay_router:
+            return False
+
         return (
-            self.underlay_router
-            and self.uplink_type in ["p2p", "p2p-vrfs", "lan"]
+            self.uplink_type in ["p2p", "p2p-vrfs", "lan"]
             and (
                 self.underlay_routing_protocol == "ebgp"
                 or (
@@ -53,7 +55,7 @@ class RoutingMixin:
                 )
                 or self.bgp_in_network_services
             )
-        )
+        ) or bool(self.l3_interfaces_bgp_neighbors)
 
     @cached_property
     def router_id(self: SharedUtils) -> str | None:

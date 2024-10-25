@@ -690,8 +690,8 @@ ASN Notation: asplain
 !
 router bgp 65201
    router-id 10.255.128.13
-   maximum-paths 4 ecmp 4
    no bgp default ipv4-unicast
+   maximum-paths 4 ecmp 4
    neighbor EVPN-OVERLAY-PEERS peer group
    neighbor EVPN-OVERLAY-PEERS update-source Loopback0
    neighbor EVPN-OVERLAY-PEERS bfd
@@ -707,10 +707,10 @@ router bgp 65201
    neighbor MLAG-IPv4-UNDERLAY-PEER remote-as 65201
    neighbor MLAG-IPv4-UNDERLAY-PEER next-hop-self
    neighbor MLAG-IPv4-UNDERLAY-PEER description dc2-leaf1b
+   neighbor MLAG-IPv4-UNDERLAY-PEER route-map RM-MLAG-PEER-IN in
    neighbor MLAG-IPv4-UNDERLAY-PEER password 7 <removed>
    neighbor MLAG-IPv4-UNDERLAY-PEER send-community
    neighbor MLAG-IPv4-UNDERLAY-PEER maximum-routes 12000
-   neighbor MLAG-IPv4-UNDERLAY-PEER route-map RM-MLAG-PEER-IN in
    neighbor 10.255.128.11 peer group EVPN-OVERLAY-PEERS
    neighbor 10.255.128.11 remote-as 65200
    neighbor 10.255.128.11 description dc2-spine1_Loopback0

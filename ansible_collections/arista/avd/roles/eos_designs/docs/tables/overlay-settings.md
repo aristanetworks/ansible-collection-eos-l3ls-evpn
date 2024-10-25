@@ -8,7 +8,7 @@
     | Variable | Type | Required | Default | Value Restrictions | Description |
     | -------- | ---- | -------- | ------- | ------------------ | ----------- |
     | [<samp>bgp_mesh_pes</samp>](## "bgp_mesh_pes") | Boolean |  | `False` |  | Configure an iBGP full mesh between PEs, either because there is no RR used or other reasons.<br>Only supported in combination with MPLS overlay.<br> |
-    | [<samp>overlay_bgp_peer_description</samp>](## "overlay_bgp_peer_description") | String |  | `{peer}{peer_interface?<_}` |  | Description or description template to be used on the overlay BGP peers.<br>This can be a template using the format string syntax.<br>The available template fields are:<br>  - `peer`: The name of the BGP peer.<br>  - `peer_interface`: The interface on the BGP peer if available.<br><br>The default description is built from the name and interface of the BGP peer. |
+    | [<samp>overlay_bgp_peer_description</samp>](## "overlay_bgp_peer_description") | String |  | `{peer}{peer_interface?<_}` |  | Description or description template to be used on the overlay BGP peers.<br>This can be a template using the AVD string formatter syntax: https://avd.arista.com/devel/roles/eos_designs/docs/how-to/custom-descriptions-names.html#avd-string-formatter-syntax.<br>The available template fields are:<br>  - `peer`: The name of the BGP peer.<br>  - `peer_interface`: The interface on the BGP peer if available.<br><br>The default description is built from the name and interface of the BGP peer. |
     | [<samp>overlay_cvx_servers</samp>](## "overlay_cvx_servers") | List, items: String |  |  |  | List of CVX vxlan overlay controllers.<br>Required if overlay_routing_protocol == CVX.<br>CVX servers (VMs) are peering using their management interface, so mgmt_ip must be set for all CVX servers.<br> |
     | [<samp>&nbsp;&nbsp;-&nbsp;&lt;str&gt;</samp>](## "overlay_cvx_servers.[]") | String |  |  |  | 'inventory_hostname' of CVX server.<br> |
     | [<samp>overlay_her_flood_list_per_vni</samp>](## "overlay_her_flood_list_per_vni") | Boolean |  | `False` |  | When using Head-End Replication, configure flood-lists per VNI.<br>By default HER will be configured with a common flood-list containing all VTEPs.<br>This behavior can be changed to per-VNI flood-lists by setting `overlay_her_flood_list_per_vni: true`.<br>This will make `eos_designs` consider configured VLANs per VTEP, and only include the relevant VTEPs to each VNI's flood-list.<br> |
@@ -39,7 +39,7 @@
     bgp_mesh_pes: <bool; default=False>
 
     # Description or description template to be used on the overlay BGP peers.
-    # This can be a template using the format string syntax.
+    # This can be a template using the AVD string formatter syntax: https://avd.arista.com/devel/roles/eos_designs/docs/how-to/custom-descriptions-names.html#avd-string-formatter-syntax.
     # The available template fields are:
     #   - `peer`: The name of the BGP peer.
     #   - `peer_interface`: The interface on the BGP peer if available.

@@ -50,7 +50,7 @@ class RouterBgpMixin(UtilsMixin):
                 {
                     "vlans": self._router_bgp_vlans(tenant_svis_l2vlans_dict),
                     "vlan_aware_bundles": self._router_bgp_vlan_aware_bundles(tenant_svis_l2vlans_dict),
-                    "redistribute_routes": self._router_bgp_redistribute_routes,
+                    "redistribute": self._router_bgp_redistribute_routes,
                     "vpws": self._router_bgp_vpws,
                 }
             ),
@@ -169,14 +169,14 @@ class RouterBgpMixin(UtilsMixin):
                     # Non-default VRF
                     bgp_vrf |= {
                         "router_id": self.shared_utils.router_id,
-                        "redistribute_routes": [{"source_protocol": "connected"}],
+                        "redistribute": {"connected": {"enabled": True}},
                     }
                     # Redistribution of static routes for VRF default are handled elsewhere
                     # since there is a choice between redistributing to underlay or overlay.
                     if (bgp_vrf_redistribute_static := vrf.get("redistribute_static")) is True or (
                         vrf["static_routes"] and bgp_vrf_redistribute_static is not False
                     ):
-                        bgp_vrf["redistribute_routes"].append({"source_protocol": "static"})
+                        bgp_vrf["redistribute"].update({"static": {"enabled": True}})
 
                 else:
                     # VRF default
@@ -195,7 +195,7 @@ class RouterBgpMixin(UtilsMixin):
 
                     if self.shared_utils.underlay_routing_protocol == "none":
                         # We need to add redistribute connected for the default VRF when underlay_routing_protocol is "none"
-                        bgp_vrf["redistribute_routes"] = [{"source_protocol": "connected"}]
+                        bgp_vrf["redistribute"] = {"connected": {"enabled": True}}
 
                 # MLAG IBGP Peering VLANs per VRF
                 # Will only be configured for VRF default if underlay_routing_protocol == "none".
@@ -250,7 +250,7 @@ class RouterBgpMixin(UtilsMixin):
                     and vrf.get("redistribute_ospf") is not False
                     and self.shared_utils.hostname in get(vrf, "ospf.nodes", default=[self.shared_utils.hostname])
                 ):
-                    bgp_vrf.setdefault("redistribute_routes", []).append({"source_protocol": "ospf"})
+                    bgp_vrf.setdefault("redistribute", {}).update({"ospf": {"enabled": True}})
 
                 if bgp_vrf.get("neighbors"):
                     platform_bgp_update_wait_install = get(self.shared_utils.platform_settings, "feature_support.bgp_update_wait_install", default=True) is True
@@ -322,7 +322,7 @@ class RouterBgpMixin(UtilsMixin):
     def _update_router_bgp_vrf_mlag_neighbor_cfg(self: AvdStructuredConfigNetworkServices, bgp_vrf: dict, vrf: dict, tenant: dict, vlan_id: int) -> None:
         """In-place update MLAG neighbor part of structured config for *one* VRF under router_bgp.vrfs."""
         if not self._mlag_ibgp_peering_redistribute(vrf, tenant):
-            bgp_vrf["redistribute_routes"][0]["route_map"] = "RM-CONN-2-BGP-VRFS"
+            bgp_vrf["redistribute"]["connected"] = {"enabled": True, "route_map": "RM-CONN-2-BGP-VRFS"}
 
         interface_name = f"Vlan{vlan_id}"
         if self.shared_utils.underlay_rfc5549 and self.shared_utils.overlay_mlag_rfc5549:
@@ -863,9 +863,9 @@ class RouterBgpMixin(UtilsMixin):
         return f"{admin_subfield}:{bundle_number}"
 
     @cached_property
-    def _router_bgp_redistribute_routes(self: AvdStructuredConfigNetworkServices) -> list | None:
+    def _router_bgp_redistribute_routes(self: AvdStructuredConfigNetworkServices) -> dict | None:
         """
-        Return structured config for router_bgp.redistribute_routes.
+        Return structured config for router_bgp.redistribute.
 
         Add redistribute static to default if either "redistribute_in_overlay" is set or
         "redistribute_in_underlay" and underlay protocol is BGP.
@@ -879,10 +879,10 @@ class RouterBgpMixin(UtilsMixin):
         if self.shared_utils.wan_role:
             # For WAN routers we only wish to redistribute static routes defined under the tenants to BGP.
             if self._vrf_default_ipv4_static_routes["redistribute_in_overlay"]:
-                return [{"source_protocol": "static", "route_map": "RM-STATIC-2-BGP"}]
+                return {"static": {"enabled": True, "route_map": "RM-STATIC-2-BGP"}}
             return None
 
-        return [{"source_protocol": "static"}]
+        return {"static": {"enabled": True}}
 
     @cached_property
     def _router_bgp_vpws(self: AvdStructuredConfigNetworkServices) -> list[dict] | None:

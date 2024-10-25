@@ -499,10 +499,10 @@ interface Ethernet11
    switchport trunk allowed vlan 1-4094
    switchport mode trunk
    switchport
-   storm-control all level 10
    storm-control broadcast level pps 100
    storm-control multicast level 1
    storm-control unknown-unicast level 2
+   storm-control all level 10
    spanning-tree portfast
    spanning-tree bpdufilter enable
 !
@@ -512,10 +512,10 @@ interface Ethernet12
    switchport trunk allowed vlan 1-4094
    switchport mode trunk
    switchport
-   storm-control all level 10
    storm-control broadcast level pps 100
    storm-control multicast level 1
    storm-control unknown-unicast level 2
+   storm-control all level 10
    spanning-tree portfast
    spanning-tree bpdufilter enable
 !
@@ -525,10 +525,10 @@ interface Ethernet13
    switchport access vlan 210
    switchport mode access
    switchport
-   storm-control all level pps 20
    storm-control broadcast level 200
    storm-control multicast level 1
    storm-control unknown-unicast level 2
+   storm-control all level pps 20
    spanning-tree portfast network
    spanning-tree bpduguard enable
 !
@@ -548,10 +548,10 @@ interface Ethernet16
    switchport access vlan 210
    switchport mode access
    switchport
-   storm-control all level pps 20
    storm-control broadcast level 200
    storm-control multicast level 1
    storm-control unknown-unicast level 2
+   storm-control all level pps 20
    spanning-tree portfast network
    spanning-tree bpduguard enable
 ```
@@ -603,6 +603,7 @@ interface Port-Channel10
    switchport trunk allowed vlan 110-111,210-211
    switchport mode trunk
    switchport
+   !
    evpn ethernet-segment
       identifier 0000:0000:0303:0202:0101
       route-target import 03:03:02:02:01:01
@@ -615,12 +616,12 @@ interface Port-Channel14
    switchport mode trunk
    switchport
    mlag 14
-   spanning-tree portfast
-   spanning-tree bpdufilter enable
-   storm-control all level 10
    storm-control broadcast level pps 100
    storm-control multicast level 1
    storm-control unknown-unicast level 2
+   storm-control all level 10
+   spanning-tree portfast
+   spanning-tree bpdufilter enable
 !
 interface Port-Channel15
    description server08_no_profile_port_channel
@@ -629,12 +630,12 @@ interface Port-Channel15
    switchport mode trunk
    switchport
    mlag 15
-   spanning-tree portfast
-   spanning-tree bpdufilter enable
-   storm-control all level 10
    storm-control broadcast level pps 100
    storm-control multicast level 1
    storm-control unknown-unicast level 2
+   storm-control all level 10
+   spanning-tree portfast
+   spanning-tree bpdufilter enable
 ```
 
 ### Loopback Interfaces
@@ -1233,9 +1234,9 @@ ASN Notation: asplain
 !
 router bgp 65103
    router-id 192.168.255.8
-   maximum-paths 4 ecmp 4
    update wait-install
    no bgp default ipv4-unicast
+   maximum-paths 4 ecmp 4
    distance bgp 20 200 200
    neighbor EVPN-OVERLAY-PEERS peer group
    neighbor EVPN-OVERLAY-PEERS update-source Loopback0
@@ -1248,19 +1249,14 @@ router bgp 65103
    neighbor MLAG_PEER remote-as 65103
    neighbor MLAG_PEER next-hop-self
    neighbor MLAG_PEER description DC1-SVC3B
+   neighbor MLAG_PEER route-map RM-MLAG-PEER-IN in
    neighbor MLAG_PEER password 7 <removed>
    neighbor MLAG_PEER send-community
    neighbor MLAG_PEER maximum-routes 12000
-   neighbor MLAG_PEER route-map RM-MLAG-PEER-IN in
    neighbor UNDERLAY_PEERS peer group
    neighbor UNDERLAY_PEERS password 7 <removed>
    neighbor UNDERLAY_PEERS send-community
    neighbor UNDERLAY_PEERS maximum-routes 12000
-   neighbor interface Ethernet1 peer-group UNDERLAY_PEERS remote-as 65001
-   neighbor interface Ethernet2 peer-group UNDERLAY_PEERS remote-as 65001
-   neighbor interface Ethernet3 peer-group UNDERLAY_PEERS remote-as 65001
-   neighbor interface Ethernet4 peer-group UNDERLAY_PEERS remote-as 65001
-   neighbor interface Vlan4093 peer-group MLAG_PEER remote-as 65103
    neighbor 192.168.255.1 peer group EVPN-OVERLAY-PEERS
    neighbor 192.168.255.1 remote-as 65001
    neighbor 192.168.255.1 description DC1-SPINE1_Loopback0
@@ -1274,6 +1270,11 @@ router bgp 65103
    neighbor 192.168.255.4 remote-as 65001
    neighbor 192.168.255.4 description DC1-SPINE4_Loopback0
    redistribute connected route-map RM-CONN-2-BGP
+   neighbor interface Ethernet1 peer-group UNDERLAY_PEERS remote-as 65001
+   neighbor interface Ethernet2 peer-group UNDERLAY_PEERS remote-as 65001
+   neighbor interface Ethernet3 peer-group UNDERLAY_PEERS remote-as 65001
+   neighbor interface Ethernet4 peer-group UNDERLAY_PEERS remote-as 65001
+   neighbor interface Vlan4093 peer-group MLAG_PEER remote-as 65103
    !
    vlan-aware-bundle Tenant_A_APP_Zone
       rd 192.168.255.8:12
@@ -1342,87 +1343,87 @@ router bgp 65103
       vlan 350
    !
    address-family evpn
-      host-flap detection window 20 threshold 30
       neighbor EVPN-OVERLAY-PEERS activate
+      host-flap detection window 20 threshold 30
    !
    address-family ipv4
       no neighbor EVPN-OVERLAY-PEERS activate
-      neighbor MLAG_PEER next-hop address-family ipv6 originate
       neighbor MLAG_PEER activate
-      neighbor UNDERLAY_PEERS next-hop address-family ipv6 originate
+      neighbor MLAG_PEER next-hop address-family ipv6 originate
       neighbor UNDERLAY_PEERS activate
+      neighbor UNDERLAY_PEERS next-hop address-family ipv6 originate
    !
    vrf Tenant_A_APP_Zone
       rd 192.168.255.8:12
       route-target import evpn 12:12
       route-target export evpn 12:12
       router-id 192.168.255.8
-      neighbor interface Vlan3011 peer-group MLAG_PEER remote-as 65103
       redistribute connected route-map RM-CONN-2-BGP-VRFS
+      neighbor interface Vlan3011 peer-group MLAG_PEER remote-as 65103
    !
    vrf Tenant_A_DB_Zone
       rd 192.168.255.8:13
       route-target import evpn 13:13
       route-target export evpn 13:13
       router-id 192.168.255.8
-      neighbor interface Vlan3012 peer-group MLAG_PEER remote-as 65103
       redistribute connected route-map RM-CONN-2-BGP-VRFS
+      neighbor interface Vlan3012 peer-group MLAG_PEER remote-as 65103
    !
    vrf Tenant_A_OP_Zone
       rd 192.168.255.8:10
       route-target import evpn 10:10
       route-target export evpn 10:10
       router-id 192.168.255.8
-      neighbor interface Vlan3009 peer-group MLAG_PEER remote-as 65103
       redistribute connected route-map RM-CONN-2-BGP-VRFS
+      neighbor interface Vlan3009 peer-group MLAG_PEER remote-as 65103
    !
    vrf Tenant_A_WAN_Zone
       rd 192.168.255.8:14
       route-target import evpn 14:14
       route-target export evpn 14:14
       router-id 192.168.255.8
-      neighbor interface Vlan3013 peer-group MLAG_PEER remote-as 65103
       redistribute connected route-map RM-CONN-2-BGP-VRFS
+      neighbor interface Vlan3013 peer-group MLAG_PEER remote-as 65103
    !
    vrf Tenant_A_WEB_Zone
       rd 192.168.255.8:11
       route-target import evpn 11:11
       route-target export evpn 11:11
       router-id 192.168.255.8
-      neighbor interface Vlan3010 peer-group MLAG_PEER remote-as 65103
       redistribute connected route-map RM-CONN-2-BGP-VRFS
+      neighbor interface Vlan3010 peer-group MLAG_PEER remote-as 65103
    !
    vrf Tenant_B_OP_Zone
       rd 192.168.255.8:20
       route-target import evpn 20:20
       route-target export evpn 20:20
       router-id 192.168.255.8
-      neighbor interface Vlan3019 peer-group MLAG_PEER remote-as 65103
       redistribute connected route-map RM-CONN-2-BGP-VRFS
+      neighbor interface Vlan3019 peer-group MLAG_PEER remote-as 65103
    !
    vrf Tenant_B_WAN_Zone
       rd 192.168.255.8:21
       route-target import evpn 21:21
       route-target export evpn 21:21
       router-id 192.168.255.8
-      neighbor interface Vlan3020 peer-group MLAG_PEER remote-as 65103
       redistribute connected route-map RM-CONN-2-BGP-VRFS
+      neighbor interface Vlan3020 peer-group MLAG_PEER remote-as 65103
    !
    vrf Tenant_C_OP_Zone
       rd 192.168.255.8:30
       route-target import evpn 30:30
       route-target export evpn 30:30
       router-id 192.168.255.8
-      neighbor interface Vlan2 peer-group MLAG_PEER remote-as 65103
       redistribute connected route-map RM-CONN-2-BGP-VRFS
+      neighbor interface Vlan2 peer-group MLAG_PEER remote-as 65103
    !
    vrf Tenant_C_WAN_Zone
       rd 192.168.255.8:31
       route-target import evpn 31:31
       route-target export evpn 31:31
       router-id 192.168.255.8
-      neighbor interface Vlan3030 peer-group MLAG_PEER remote-as 65103
       redistribute connected route-map RM-CONN-2-BGP-VRFS
+      neighbor interface Vlan3030 peer-group MLAG_PEER remote-as 65103
 ```
 
 ## BFD

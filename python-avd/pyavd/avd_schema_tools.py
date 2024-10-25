@@ -12,7 +12,6 @@ from .constants import EOS_CLI_CONFIG_GEN_SCHEMA_ID, EOS_DESIGNS_SCHEMA_ID
 if TYPE_CHECKING:
     from collections.abc import Generator
 
-    from ._errors import AvdDeprecationWarning
     from .validation_result import ValidationResult
 
 
@@ -38,7 +37,7 @@ class AvdSchemaTools:
 
         self.avdschema = AvdSchema(schema=schema, schema_id=schema_id)
 
-    def convert_data(self, data: dict) -> list[AvdDeprecationWarning]:
+    def convert_data(self, data: dict) -> ValidationResult:
         """
         Convert data according to the schema (convert_types).
 
@@ -49,18 +48,27 @@ class AvdSchemaTools:
                 Input variables which should be converted according to the schema.
 
         Returns:
-            List of AvdDeprecationWarnings
+            ValidationResult object with any validation errors or deprecation warnings.
         """
-        from ._errors import AvdDeprecationWarning  # pylint: disable=import-outside-toplevel
+        # pylint: disable=import-outside-toplevel
+        from ._errors import AvdDeprecationWarning, AvdValidationError
+        from .validation_result import ValidationResult
+
+        # pylint: enable=import-outside-toplevel
+
+        result = ValidationResult(failed=False)
 
         # avdschema.convert returns a Generator, so we have to iterate through it to perform the actual conversions.
         exceptions: Generator = self.avdschema.convert(data)
-
-        result = []
         for exception in exceptions:
             # Store but continue for deprecations
             if isinstance(exception, AvdDeprecationWarning):
-                result.append(exception)
+                if exception.removed or exception.conflict:
+                    result.validation_errors.append(AvdValidationError(exception.message))
+                    result.failed = True
+                    continue
+
+                result.deprecation_warnings.append(exception)
                 continue
 
             # Raise on other exceptions
@@ -125,9 +133,9 @@ class AvdSchemaTools:
                 errors : list[Exception]
                     Any data validation issues.
         """
-        self.convert_data(data)
-        res = self.validate_data(data)
-        return {"failed": res.failed, "errors": res.validation_errors}
+        validation_result = self.convert_data(data)
+        validation_result.merge(self.validate_data(data))
+        return {"failed": validation_result.failed, "errors": validation_result.validation_errors}
 
 
 class EosDesignsAvdSchemaTools(AvdSchemaTools):

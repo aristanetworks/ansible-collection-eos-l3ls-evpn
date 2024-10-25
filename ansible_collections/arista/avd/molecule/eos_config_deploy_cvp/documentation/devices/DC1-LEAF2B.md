@@ -952,9 +952,9 @@ ASN Notation: asplain
 !
 router bgp 65102
    router-id 192.168.255.7
-   maximum-paths 4 ecmp 4
    update wait-install
    no bgp default ipv4-unicast
+   maximum-paths 4 ecmp 4
    distance bgp 20 200 200
    neighbor EVPN-OVERLAY-PEERS peer group
    neighbor EVPN-OVERLAY-PEERS update-source Loopback0
@@ -971,10 +971,10 @@ router bgp 65102
    neighbor MLAG-IPv4-UNDERLAY-PEER remote-as 65102
    neighbor MLAG-IPv4-UNDERLAY-PEER next-hop-self
    neighbor MLAG-IPv4-UNDERLAY-PEER description DC1-LEAF2A
+   neighbor MLAG-IPv4-UNDERLAY-PEER route-map RM-MLAG-PEER-IN in
    neighbor MLAG-IPv4-UNDERLAY-PEER password 7 <removed>
    neighbor MLAG-IPv4-UNDERLAY-PEER send-community
    neighbor MLAG-IPv4-UNDERLAY-PEER maximum-routes 12000
-   neighbor MLAG-IPv4-UNDERLAY-PEER route-map RM-MLAG-PEER-IN in
    neighbor 10.255.251.2 peer group MLAG-IPv4-UNDERLAY-PEER
    neighbor 10.255.251.2 description DC1-LEAF2A_Vlan4093
    neighbor 172.31.255.16 peer group IPv4-UNDERLAY-PEERS

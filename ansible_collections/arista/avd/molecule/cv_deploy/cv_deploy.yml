@@ -1,0 +1,142 @@
+---
+- name: Converge - Configuration deployment with CVP
+  hosts: SITE1_FABRIC
+  connection: local
+  gather_facts: false
+  vars:
+    cv_server: www.cv-staging.corp.arista.io
+    cv_token: "{{ lookup('env', 'CVAAS_AAWG_CI') }}"
+    cv_verify_certs: true
+    cv_skip_missing_devices: true
+    eos_config_dir: "{{ playbook_dir }}/intended/configs/test_configs"
+    structured_dir: "{{ playbook_dir }}/intended/structured_configs/test_configs"
+    intended_tag_device: avd-ci-leaf1
+    intended_tags: "{{ lookup('file', structured_dir ~ '/' ~ intended_tag_device ~ '.yml')| from_yaml }}"
+
+  tasks:
+    - name: Generate random string
+      ansible.builtin.set_fact:
+        r: "{{ lookup('password', '/dev/null chars=ascii_lowercase,digits length=4') }}"
+      run_once: true
+
+    - name: Set facts
+      ansible.builtin.set_fact:
+        cv_workspace_name: avd-cv-deploy-{{ r }}
+        cv_workspace_description: sample description
+        cv_change_control_name: cc_cv_deploy-{{ r }}
+        cv_change_control_description: sample description
+        cv_register_detailed_results: true
+      run_once: true
+
+###########################
+######## cv_deploy ########
+###########################
+    - name: Provision CVP with AVD configuration
+      run_once: true
+      delegate_to: localhost
+      ansible.builtin.import_role:
+        name: arista.avd.cv_deploy
+      vars:
+        cv_submit_workspace: true
+        cv_submit_workspace_force: true
+        cv_run_change_control: true
+        cv_register_detailed_results: true
+
+    - name: Display CVP result
+      run_once: true
+      ansible.builtin.debug:
+        msg: '{{ cv_deploy_results }}'
+
+    - name: Check CVP returns
+      run_once: true
+      ansible.builtin.assert:
+        that:
+          # workspace
+          - cv_deploy_results.workspace.name == cv_workspace_name
+          - cv_deploy_results.workspace.state == "submitted"
+          - cv_deploy_results.workspace.state
+          # errors and warnings
+          - cv_deploy_results.errors == []
+          - cv_deploy_results.warnings == []
+          # tags
+          - cv_deploy_results.deployed_device_tags != []
+          - cv_deploy_results.deployed_interface_tags != []
+          # Change control
+          - cv_deploy_results.change_control.name == cv_change_control_name
+          - cv_deploy_results.change_control.requested_state == "completed"
+          - cv_deploy_results.change_control.description == cv_change_control_description
+
+    - name: Check tags from output
+      run_once: true
+      ansible.builtin.assert:
+        that:
+          - item.0.label == item.1.label
+          - item.0.value == item.1.value
+      loop: "{{ cv_deploy_results.deployed_device_tags | zip(cv_deploy_results.device_tags) | list }}"
+
+    - name: Extract all device tags from structured configs
+      run_once: true
+      ansible.builtin.set_fact:
+        expected_device_tags: "{{ intended_tags.metadata.cv_tags.device_tags }}"
+        output_device_tags: "{{ cv_deploy_results.deployed_device_tags }}"
+
+    - name: Check output device tags == intended device tags
+      run_once: true
+      ansible.builtin.assert:
+        that:
+          - item.0.name == item.1.label
+          - item.0.value == item.1.value
+      loop: "{{ expected_device_tags | zip(output_device_tags) | list }}"
+
+    - name: Extract all interface tags from role output
+      run_once: true
+      ansible.builtin.set_fact:
+        output_interface_tags: "{{ cv_deploy_results.deployed_interface_tags }}"
+
+    - name: Extract all interface tags from structured configs
+      run_once: true
+      ansible.builtin.set_fact:
+        expected_interface_tags: "{{ expected_interface_tags | default([]) + [item.tags | list | first | combine({'interface': item.interface})] }}"
+      loop: "{{ intended_tags.metadata.cv_tags.interface_tags }}"
+      loop_control:
+        label: "{{ item.interface }}"
+
+    - name: Check output interface tags == intended interface tags
+      run_once: true
+      ansible.builtin.assert:
+        that:
+          - item.0.name == item.1.label
+          - item.0.value == item.1.value
+      loop: "{{ expected_interface_tags | zip(output_interface_tags) | list }}"
+
+    - name: Convert unstructed data into yaml
+      run_once: true
+      ansible.builtin.set_fact:
+        deivces_structure: '{{ cv_deploy_results.deployed_configs | from_yaml }}'
+        output_devices: []
+
+    - name: Extract devices from output
+      run_once: true
+      ansible.builtin.set_fact:
+        output_devices: "{{ output_devices + [item.device.hostname] }}"
+      loop: "{{ deivces_structure }}"
+      loop_control:
+        label: "{{ item.configlet_name }}"
+
+    - name: Check output devices == intended devices
+      run_once: true
+      ansible.builtin.assert:
+        that:
+          - output_devices == cv_devices
+
+    - name: Cleanup
+      run_once: true
+      delegate_to: localhost
+      ansible.builtin.import_role:
+        name: arista.avd.cv_deploy
+      vars:
+        eos_config_dir: "{{ playbook_dir }}/intended/configs/base_configs"
+        structured_dir: "{{ playbook_dir }}/intended/structured_configs/base_configs"
+        cv_submit_workspace: true
+        cv_submit_workspace_force: true
+        cv_run_change_control: true

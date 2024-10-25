@@ -70,9 +70,27 @@ router_bgp:
       peer_group: EVPN-OVERLAY-PEERS
     - ip_address: 10.255.251.1
       peer_group: MLAG-IPv4-UNDERLAY-PEER
-  redistribute_routes:
-    - source_protocol: connected
+  redistribute:
+    connected:
+      enabled: true
       route_map: RM-CONN-2-BGP
+    dynamic:
+      enabled: true
+      rcf: RCF-CONN-2-BGP()
+    isis:
+      enabled: true
+      isis_level: level-2
+      include_leaked: true
+      rcf: RCF-CONN-2-BGP()
+    ospfv3:
+      match_internal:
+        enabled: true
+        include_leaked: true
+        route_map: RM-CONN-2-BGP
+      match_nssa_external:
+        enabled: true
+        include_leaked: true
+        route_map: RM-CONN-2-BGP
   address_family_evpn:
     bgp:
       additional_paths:
@@ -97,6 +115,8 @@ router_bgp:
         match_nssa_external:
           enabled: true
           nssa_type: 1
+          include_leaked: true
+          route_map: RM-REDISTRIBUTE-OSPF-NSSA-EXTERNAL
       static:
         enabled: true
         route_map: RM-IPV6-STATIC-TO-BGP
@@ -105,7 +125,47 @@ router_bgp:
         route_map: RM-REDISTRIBUTE-BGP
       connected:
         enabled: true
+        include_leaked: true
         rcf: Address_Family_IPV6_Connected()
+      dynamic:
+        enabled: true
+        route_map: RM-REDISTRIBUTE-DYNAMIC
+      isis:
+        enabled: true
+        isis_level: level-1-2
+        rcf: RCF_Address_Family_IPV6_ISIS()
+  address_family_ipv6_multicast:
+    redistribute:
+      connected:
+        enabled: true
+        route_map: RM-address_family_ipv6_multicast-Connected
+      isis:
+        enabled: true
+        include_leaked: true
+        route_map: RM-address_family_ipv6_multicast-ISIS
+      ospf:
+        enabled: true
+        route_map: RM-address_family_ipv6_multicast-OSPF
+        match_external:
+          enabled: true
+          route_map: RM-address_family_ipv6_multicast-OSPF-External
+        match_nssa_external:
+          enabled: true
+          nssa_type: 2
+          route_map: RM-address_family_ipv6_multicast-OSPF-External
+      ospfv3:
+        enabled: true
+        route_map: RM-address_family_ipv6_multicast-OSPFv3
+        match_external:
+          enabled: true
+          route_map: RM-address_family_ipv6_multicast-OSPFv3-External
+        match_nssa_external:
+          enabled: true
+          nssa_type: 2
+          route_map: RM-address_family_ipv6_multicast-OSPFv3-External
+      static:
+        enabled: true
+        route_map: RM-address_family_ipv6_multicast-Static
   address_family_ipv4_multicast:
     redistribute:
       attached_host:
@@ -149,6 +209,22 @@ router_bgp:
           address_family_ipv6:
             enabled: true
             originate: true
+    redistribute:
+      isis:
+        enabled: true
+        isis_level: level-1
+        include_leaked: true
+        rcf: Address_Family_IPV4_ISIS()
+      ospf:
+        match_internal:
+          enabled: true
+          include_leaked: true
+          route_map: RM_BGP_EVPN_IPV4
+      ospfv3:
+        match_internal:
+          enabled: true
+          include_leaked: true
+          route_map: RM_BGP_EVPN_IPV4
   vlan_aware_bundles:
 ## Tenant_A ##
     - name: TENANT_A_PROJECT01
@@ -256,10 +332,12 @@ router_bgp:
           - prefix: 10.0.0.0/8
           - prefix: 100.64.0.0/10
             route_map: RM-10.2.3.4
-        redistribute_routes:
-          - source_protocol: connected
+        redistribute:
+          connected:
+            enabled: true
             rcf: VRF_AFIPV4_RCF_CONNECTED()
-          - source_protocol: static
+          static:
+            enabled: true
             route_map: VRF_AFIPV4_RM_STATIC
       redistribute:
         connected:

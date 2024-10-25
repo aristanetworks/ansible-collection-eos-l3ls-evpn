@@ -320,9 +320,9 @@ ASN Notation: asplain
 !
 router bgp 65101
    router-id 172.16.10.1
-   maximum-paths 4 ecmp 4
    update wait-install
    no bgp default ipv4-unicast
+   maximum-paths 4 ecmp 4
    distance bgp 20 200 200
    neighbor EVPN-OVERLAY-PEERS peer group
    neighbor EVPN-OVERLAY-PEERS next-hop-unchanged
@@ -360,28 +360,28 @@ router bgp 65101
    neighbor 172.16.210.3 route-map RM-EVPN-FILTER-AS65211 out
    neighbor 172.17.10.0 peer group IPv4-UNDERLAY-PEERS
    neighbor 172.17.10.0 remote-as 65100
-   neighbor 172.17.10.0 description DC1-SUPER-SPINE1_Ethernet5
    neighbor 172.17.10.0 bfd
+   neighbor 172.17.10.0 description DC1-SUPER-SPINE1_Ethernet5
    neighbor 172.17.10.2 peer group IPv4-UNDERLAY-PEERS
    neighbor 172.17.10.2 remote-as 65110.100
-   neighbor 172.17.10.2 description DC1-POD1-SPINE1_Ethernet6
    neighbor 172.17.10.2 bfd
+   neighbor 172.17.10.2 description DC1-POD1-SPINE1_Ethernet6
    neighbor 172.17.10.4 peer group IPv4-UNDERLAY-PEERS
    neighbor 172.17.10.4 remote-as 65111.100
-   neighbor 172.17.10.4 description DC1-POD1-LEAF1A_Ethernet4
    neighbor 172.17.10.4 bfd
+   neighbor 172.17.10.4 description DC1-POD1-LEAF1A_Ethernet4
    redistribute connected route-map RM-CONN-2-BGP
    !
    address-family evpn
       neighbor EVPN-OVERLAY-PEERS activate
    !
-   address-family rt-membership
-      neighbor EVPN-OVERLAY-PEERS activate
-      neighbor EVPN-OVERLAY-PEERS default-route-target only
-   !
    address-family ipv4
       no neighbor EVPN-OVERLAY-PEERS activate
       neighbor IPv4-UNDERLAY-PEERS activate
+   !
+   address-family rt-membership
+      neighbor EVPN-OVERLAY-PEERS activate
+      neighbor EVPN-OVERLAY-PEERS default-route-target only
 ```
 
 ## BFD

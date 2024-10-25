@@ -200,7 +200,74 @@
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;summary_only</samp>](## "router_bgp.aggregate_addresses.[].summary_only") | Boolean |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;attribute_map</samp>](## "router_bgp.aggregate_addresses.[].attribute_map") | String |  |  |  | Route-map name. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;match_map</samp>](## "router_bgp.aggregate_addresses.[].match_map") | String |  |  |  | Route-map name. |
-    | [<samp>&nbsp;&nbsp;redistribute_routes</samp>](## "router_bgp.redistribute_routes") | List, items: Dictionary |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;redistribute</samp>](## "router_bgp.redistribute") | Dictionary |  |  |  | Redistribute routes in to BGP. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;attached_host</samp>](## "router_bgp.redistribute.attached_host") | Dictionary |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "router_bgp.redistribute.attached_host.enabled") | Boolean | Required |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;route_map</samp>](## "router_bgp.redistribute.attached_host.route_map") | String |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;bgp</samp>](## "router_bgp.redistribute.bgp") | Dictionary |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "router_bgp.redistribute.bgp.enabled") | Boolean | Required |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;route_map</samp>](## "router_bgp.redistribute.bgp.route_map") | String |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;connected</samp>](## "router_bgp.redistribute.connected") | Dictionary |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "router_bgp.redistribute.connected.enabled") | Boolean | Required |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;route_map</samp>](## "router_bgp.redistribute.connected.route_map") | String |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;rcf</samp>](## "router_bgp.redistribute.connected.rcf") | String |  |  |  | RCF function name with parenthesis.<br>Example: MyFunction(myarg).<br>`route_map` and `rcf` are mutually exclusive. `route_map` takes precedence. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;include_leaked</samp>](## "router_bgp.redistribute.connected.include_leaked") | Boolean |  |  |  | Include following routes while redistributing. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;dynamic</samp>](## "router_bgp.redistribute.dynamic") | Dictionary |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "router_bgp.redistribute.dynamic.enabled") | Boolean | Required |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;route_map</samp>](## "router_bgp.redistribute.dynamic.route_map") | String |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;rcf</samp>](## "router_bgp.redistribute.dynamic.rcf") | String |  |  |  | RCF function name with parenthesis.<br>Example: MyFunction(myarg).<br>`route_map` and `rcf` are mutually exclusive. `route_map` takes precedence. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;isis</samp>](## "router_bgp.redistribute.isis") | Dictionary |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "router_bgp.redistribute.isis.enabled") | Boolean | Required |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;isis_level</samp>](## "router_bgp.redistribute.isis.isis_level") | String |  |  | Valid Values:<br>- <code>level-1</code><br>- <code>level-2</code><br>- <code>level-1-2</code> | Redistribute IS-IS route level. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;route_map</samp>](## "router_bgp.redistribute.isis.route_map") | String |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;rcf</samp>](## "router_bgp.redistribute.isis.rcf") | String |  |  |  | RCF function name with parenthesis.<br>Example: MyFunction(myarg).<br>`route_map` and `rcf` are mutually exclusive. `route_map` takes precedence. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;include_leaked</samp>](## "router_bgp.redistribute.isis.include_leaked") | Boolean |  |  |  | Include following routes while redistributing. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;ospf</samp>](## "router_bgp.redistribute.ospf") | Dictionary |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "router_bgp.redistribute.ospf.enabled") | Boolean |  |  |  | Redistribute OSPF routes. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;match_external</samp>](## "router_bgp.redistribute.ospf.match_external") | Dictionary |  |  |  | Redistribute OSPF routes learned from external sources. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "router_bgp.redistribute.ospf.match_external.enabled") | Boolean | Required |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;route_map</samp>](## "router_bgp.redistribute.ospf.match_external.route_map") | String |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;include_leaked</samp>](## "router_bgp.redistribute.ospf.match_external.include_leaked") | Boolean |  |  |  | Include following routes while redistributing. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;match_internal</samp>](## "router_bgp.redistribute.ospf.match_internal") | Dictionary |  |  |  | Redistribute OSPF routes learned from internal sources. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "router_bgp.redistribute.ospf.match_internal.enabled") | Boolean | Required |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;route_map</samp>](## "router_bgp.redistribute.ospf.match_internal.route_map") | String |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;include_leaked</samp>](## "router_bgp.redistribute.ospf.match_internal.include_leaked") | Boolean |  |  |  | Include following routes while redistributing. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;match_nssa_external</samp>](## "router_bgp.redistribute.ospf.match_nssa_external") | Dictionary |  |  |  | Redistribute OSPF routes learned from external NSSA sources. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "router_bgp.redistribute.ospf.match_nssa_external.enabled") | Boolean | Required |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;nssa_type</samp>](## "router_bgp.redistribute.ospf.match_nssa_external.nssa_type") | Integer |  |  | Valid Values:<br>- <code>1</code><br>- <code>2</code> | NSSA External Type Number. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;route_map</samp>](## "router_bgp.redistribute.ospf.match_nssa_external.route_map") | String |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;include_leaked</samp>](## "router_bgp.redistribute.ospf.match_nssa_external.include_leaked") | Boolean |  |  |  | Include following routes while redistributing. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;route_map</samp>](## "router_bgp.redistribute.ospf.route_map") | String |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;include_leaked</samp>](## "router_bgp.redistribute.ospf.include_leaked") | Boolean |  |  |  | Include following routes while redistributing. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;ospfv3</samp>](## "router_bgp.redistribute.ospfv3") | Dictionary |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "router_bgp.redistribute.ospfv3.enabled") | Boolean |  |  |  | Redistribute OSPFv3 routes. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;match_external</samp>](## "router_bgp.redistribute.ospfv3.match_external") | Dictionary |  |  |  | Redistribute OSPFv3 routes learned from external sources. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "router_bgp.redistribute.ospfv3.match_external.enabled") | Boolean | Required |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;route_map</samp>](## "router_bgp.redistribute.ospfv3.match_external.route_map") | String |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;include_leaked</samp>](## "router_bgp.redistribute.ospfv3.match_external.include_leaked") | Boolean |  |  |  | Include following routes while redistributing. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;match_internal</samp>](## "router_bgp.redistribute.ospfv3.match_internal") | Dictionary |  |  |  | Redistribute OSPFv3 routes learned from internal sources. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "router_bgp.redistribute.ospfv3.match_internal.enabled") | Boolean | Required |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;route_map</samp>](## "router_bgp.redistribute.ospfv3.match_internal.route_map") | String |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;include_leaked</samp>](## "router_bgp.redistribute.ospfv3.match_internal.include_leaked") | Boolean |  |  |  | Include following routes while redistributing. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;match_nssa_external</samp>](## "router_bgp.redistribute.ospfv3.match_nssa_external") | Dictionary |  |  |  | Redistribute OSPFv3 routes learned from external NSSA sources. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "router_bgp.redistribute.ospfv3.match_nssa_external.enabled") | Boolean | Required |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;nssa_type</samp>](## "router_bgp.redistribute.ospfv3.match_nssa_external.nssa_type") | Integer |  |  | Valid Values:<br>- <code>1</code><br>- <code>2</code> | NSSA External Type Number. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;route_map</samp>](## "router_bgp.redistribute.ospfv3.match_nssa_external.route_map") | String |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;include_leaked</samp>](## "router_bgp.redistribute.ospfv3.match_nssa_external.include_leaked") | Boolean |  |  |  | Include following routes while redistributing. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;route_map</samp>](## "router_bgp.redistribute.ospfv3.route_map") | String |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;include_leaked</samp>](## "router_bgp.redistribute.ospfv3.include_leaked") | Boolean |  |  |  | Include following routes while redistributing. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;rip</samp>](## "router_bgp.redistribute.rip") | Dictionary |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "router_bgp.redistribute.rip.enabled") | Boolean | Required |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;route_map</samp>](## "router_bgp.redistribute.rip.route_map") | String |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;static</samp>](## "router_bgp.redistribute.static") | Dictionary |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "router_bgp.redistribute.static.enabled") | Boolean | Required |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;route_map</samp>](## "router_bgp.redistribute.static.route_map") | String |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;rcf</samp>](## "router_bgp.redistribute.static.rcf") | String |  |  |  | RCF function name with parenthesis.<br>Example: MyFunction(myarg).<br>`route_map` and `rcf` are mutually exclusive. `route_map` takes precedence. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;include_leaked</samp>](## "router_bgp.redistribute.static.include_leaked") | Boolean |  |  |  | Include following routes while redistributing. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;user</samp>](## "router_bgp.redistribute.user") | Dictionary |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "router_bgp.redistribute.user.enabled") | Boolean | Required |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;rcf</samp>](## "router_bgp.redistribute.user.rcf") | String |  |  |  | RCF function name with parenthesis.<br>Example: MyFunction(myarg).<br>`route_map` and `rcf` are mutually exclusive. `route_map` takes precedence. |
+    | [<samp>&nbsp;&nbsp;redistribute_routes</samp>](## "router_bgp.redistribute_routes") <span style="color:red">deprecated</span> | List, items: Dictionary |  |  |  | <span style="color:red">This key is deprecated. Support will be removed in AVD version 6.0.0. Use <samp>redistribute</samp> instead.</span> |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;source_protocol</samp>](## "router_bgp.redistribute_routes.[].source_protocol") | String | Required |  | Valid Values:<br>- <code>attached-host</code><br>- <code>bgp</code><br>- <code>connected</code><br>- <code>dynamic</code><br>- <code>isis</code><br>- <code>ospf</code><br>- <code>ospfv3</code><br>- <code>rip</code><br>- <code>static</code><br>- <code>user</code> |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;route_map</samp>](## "router_bgp.redistribute_routes.[].route_map") | String |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;rcf</samp>](## "router_bgp.redistribute_routes.[].rcf") | String |  |  |  | RCF function name with parenthesis.<br>Example: MyFunction(myarg).<br>`route_map` and `rcf` are mutually exclusive. `route_map` takes precedence.<br>Only applicable if `source_protocol` is one of `connected`, `static`, `isis`, `user`, `dynamic`. |
@@ -243,7 +310,6 @@
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;rd_evpn_domain</samp>](## "router_bgp.vlans.[].rd_evpn_domain") | Dictionary |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;domain</samp>](## "router_bgp.vlans.[].rd_evpn_domain.domain") | String |  |  | Valid Values:<br>- <code>remote</code><br>- <code>all</code> |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;rd</samp>](## "router_bgp.vlans.[].rd_evpn_domain.rd") | String |  |  |  | Route distinguisher. |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;eos_cli</samp>](## "router_bgp.vlans.[].eos_cli") | String |  |  |  | Multiline EOS CLI rendered directly on the Router BGP, VLAN definition in the final EOS configuration. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;route_targets</samp>](## "router_bgp.vlans.[].route_targets") | Dictionary |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;both</samp>](## "router_bgp.vlans.[].route_targets.both") | List, items: String |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;&lt;str&gt;</samp>](## "router_bgp.vlans.[].route_targets.both.[]") | String |  |  |  |  |
@@ -264,6 +330,7 @@
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;&lt;str&gt;</samp>](## "router_bgp.vlans.[].redistribute_routes.[]") | String |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;no_redistribute_routes</samp>](## "router_bgp.vlans.[].no_redistribute_routes") | List, items: String |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;&lt;str&gt;</samp>](## "router_bgp.vlans.[].no_redistribute_routes.[]") | String |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;eos_cli</samp>](## "router_bgp.vlans.[].eos_cli") | String |  |  |  | Multiline EOS CLI rendered directly on the Router BGP, VLAN definition in the final EOS configuration. |
     | [<samp>&nbsp;&nbsp;vpws</samp>](## "router_bgp.vpws") | List, items: Dictionary |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;name</samp>](## "router_bgp.vpws.[].name") | String | Required, Unique |  |  | VPWS instance name. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;rd</samp>](## "router_bgp.vpws.[].rd") | String |  |  |  | Route distinguisher. |
@@ -331,14 +398,6 @@
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;import_overlay_index_gateway</samp>](## "router_bgp.address_family_evpn.route.import_overlay_index_gateway") | Boolean |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;export_ethernet_segment_ip_mass_withdraw</samp>](## "router_bgp.address_family_evpn.route.export_ethernet_segment_ip_mass_withdraw") | Boolean |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;next_hop_unchanged</samp>](## "router_bgp.address_family_evpn.next_hop_unchanged") | Boolean |  |  |  |  |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;bgp_additional_paths</samp>](## "router_bgp.address_family_evpn.bgp_additional_paths") <span style="color:red">deprecated</span> | Dictionary |  |  |  | BGP additional-paths commands.<span style="color:red">This key is deprecated. Support will be removed in AVD version 6.0.0. Use <samp>bgp.additional_paths</samp> instead.</span> |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;receive</samp>](## "router_bgp.address_family_evpn.bgp_additional_paths.receive") | Boolean |  |  |  | Receive multiple paths. |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;send</samp>](## "router_bgp.address_family_evpn.bgp_additional_paths.send") | Dictionary |  |  |  | Send multiple paths. |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;any</samp>](## "router_bgp.address_family_evpn.bgp_additional_paths.send.any") | Boolean |  |  |  | Any eligible path. |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;backup</samp>](## "router_bgp.address_family_evpn.bgp_additional_paths.send.backup") | Boolean |  |  |  | Best path and installed backup path. |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ecmp</samp>](## "router_bgp.address_family_evpn.bgp_additional_paths.send.ecmp") | Boolean |  |  |  | All paths in best path ECMP group. |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ecmp_limit</samp>](## "router_bgp.address_family_evpn.bgp_additional_paths.send.ecmp_limit") | Integer |  |  | Min: 2<br>Max: 64 | Amount of ECMP paths to send. |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;limit</samp>](## "router_bgp.address_family_evpn.bgp_additional_paths.send.limit") | Integer |  |  | Min: 2<br>Max: 64 | Amount of paths to send. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;bgp</samp>](## "router_bgp.address_family_evpn.bgp") | Dictionary |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;additional_paths</samp>](## "router_bgp.address_family_evpn.bgp.additional_paths") | Dictionary |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;receive</samp>](## "router_bgp.address_family_evpn.bgp.additional_paths.receive") | Boolean |  |  |  | Enable or disable reception of additional-paths. |
@@ -347,6 +406,14 @@
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;layer_2_fec_in_place_update</samp>](## "router_bgp.address_family_evpn.layer_2_fec_in_place_update") | Dictionary |  |  |  | BGP layer-2 in-place FEC operation. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "router_bgp.address_family_evpn.layer_2_fec_in_place_update.enabled") | Boolean | Required |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;timeout</samp>](## "router_bgp.address_family_evpn.layer_2_fec_in_place_update.timeout") | Integer |  |  | Min: 0<br>Max: 300 | In-place FEC update tracking timeout in seconds. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;bgp_additional_paths</samp>](## "router_bgp.address_family_evpn.bgp_additional_paths") <span style="color:red">deprecated</span> | Dictionary |  |  |  | BGP additional-paths commands.<span style="color:red">This key is deprecated. Support will be removed in AVD version 6.0.0. Use <samp>bgp.additional_paths</samp> instead.</span> |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;receive</samp>](## "router_bgp.address_family_evpn.bgp_additional_paths.receive") | Boolean |  |  |  | Receive multiple paths. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;send</samp>](## "router_bgp.address_family_evpn.bgp_additional_paths.send") | Dictionary |  |  |  | Send multiple paths. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;any</samp>](## "router_bgp.address_family_evpn.bgp_additional_paths.send.any") | Boolean |  |  |  | Any eligible path. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;backup</samp>](## "router_bgp.address_family_evpn.bgp_additional_paths.send.backup") | Boolean |  |  |  | Best path and installed backup path. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ecmp</samp>](## "router_bgp.address_family_evpn.bgp_additional_paths.send.ecmp") | Boolean |  |  |  | All paths in best path ECMP group. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ecmp_limit</samp>](## "router_bgp.address_family_evpn.bgp_additional_paths.send.ecmp_limit") | Integer |  |  | Min: 2<br>Max: 64 | Amount of ECMP paths to send. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;limit</samp>](## "router_bgp.address_family_evpn.bgp_additional_paths.send.limit") | Integer |  |  | Min: 2<br>Max: 64 | Amount of paths to send. |
     | [<samp>&nbsp;&nbsp;address_family_rtc</samp>](## "router_bgp.address_family_rtc") | Dictionary |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;peer_groups</samp>](## "router_bgp.address_family_rtc.peer_groups") | List, items: Dictionary |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;name</samp>](## "router_bgp.address_family_rtc.peer_groups.[].name") | String | Required, Unique |  |  | Peer-group name. |
@@ -405,7 +472,74 @@
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;receive</samp>](## "router_bgp.address_family_ipv4.neighbors.[].additional_paths.receive") | Boolean |  |  |  | Enable or disable reception of additional-paths. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;send</samp>](## "router_bgp.address_family_ipv4.neighbors.[].additional_paths.send") | String |  |  | Valid Values:<br>- <code>any</code><br>- <code>backup</code><br>- <code>ecmp</code><br>- <code>limit</code><br>- <code>disabled</code> | Select an option to send multiple paths for same prefix through bgp updates.<br>any: Send any eligible path.<br>backup: Best path and installed backup path.<br>ecmp: All paths in best path ECMP group.<br>limit: Limit to n eligible paths.<br>disabled: Disable sending any paths. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;send_limit</samp>](## "router_bgp.address_family_ipv4.neighbors.[].additional_paths.send_limit") | Integer |  |  | Min: 2<br>Max: 64 | Number of paths to send through bgp updates. For this setting, `send` must be set to `limit` or `ecmp`. |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;redistribute_routes</samp>](## "router_bgp.address_family_ipv4.redistribute_routes") | List, items: Dictionary |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;redistribute</samp>](## "router_bgp.address_family_ipv4.redistribute") | Dictionary |  |  |  | Redistribute routes in to BGP. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;attached_host</samp>](## "router_bgp.address_family_ipv4.redistribute.attached_host") | Dictionary |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "router_bgp.address_family_ipv4.redistribute.attached_host.enabled") | Boolean | Required |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;route_map</samp>](## "router_bgp.address_family_ipv4.redistribute.attached_host.route_map") | String |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;bgp</samp>](## "router_bgp.address_family_ipv4.redistribute.bgp") | Dictionary |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "router_bgp.address_family_ipv4.redistribute.bgp.enabled") | Boolean | Required |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;route_map</samp>](## "router_bgp.address_family_ipv4.redistribute.bgp.route_map") | String |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;connected</samp>](## "router_bgp.address_family_ipv4.redistribute.connected") | Dictionary |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "router_bgp.address_family_ipv4.redistribute.connected.enabled") | Boolean | Required |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;route_map</samp>](## "router_bgp.address_family_ipv4.redistribute.connected.route_map") | String |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;rcf</samp>](## "router_bgp.address_family_ipv4.redistribute.connected.rcf") | String |  |  |  | RCF function name with parenthesis.<br>Example: MyFunction(myarg).<br>`route_map` and `rcf` are mutually exclusive. `route_map` takes precedence. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;include_leaked</samp>](## "router_bgp.address_family_ipv4.redistribute.connected.include_leaked") | Boolean |  |  |  | Include following routes while redistributing. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dynamic</samp>](## "router_bgp.address_family_ipv4.redistribute.dynamic") | Dictionary |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "router_bgp.address_family_ipv4.redistribute.dynamic.enabled") | Boolean | Required |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;route_map</samp>](## "router_bgp.address_family_ipv4.redistribute.dynamic.route_map") | String |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;rcf</samp>](## "router_bgp.address_family_ipv4.redistribute.dynamic.rcf") | String |  |  |  | RCF function name with parenthesis.<br>Example: MyFunction(myarg).<br>`route_map` and `rcf` are mutually exclusive. `route_map` takes precedence. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;isis</samp>](## "router_bgp.address_family_ipv4.redistribute.isis") | Dictionary |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "router_bgp.address_family_ipv4.redistribute.isis.enabled") | Boolean | Required |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;isis_level</samp>](## "router_bgp.address_family_ipv4.redistribute.isis.isis_level") | String |  |  | Valid Values:<br>- <code>level-1</code><br>- <code>level-2</code><br>- <code>level-1-2</code> | Redistribute IS-IS route level. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;route_map</samp>](## "router_bgp.address_family_ipv4.redistribute.isis.route_map") | String |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;rcf</samp>](## "router_bgp.address_family_ipv4.redistribute.isis.rcf") | String |  |  |  | RCF function name with parenthesis.<br>Example: MyFunction(myarg).<br>`route_map` and `rcf` are mutually exclusive. `route_map` takes precedence. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;include_leaked</samp>](## "router_bgp.address_family_ipv4.redistribute.isis.include_leaked") | Boolean |  |  |  | Include following routes while redistributing. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ospf</samp>](## "router_bgp.address_family_ipv4.redistribute.ospf") | Dictionary |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "router_bgp.address_family_ipv4.redistribute.ospf.enabled") | Boolean |  |  |  | Redistribute OSPF routes. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;match_external</samp>](## "router_bgp.address_family_ipv4.redistribute.ospf.match_external") | Dictionary |  |  |  | Redistribute OSPF routes learned from external sources. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "router_bgp.address_family_ipv4.redistribute.ospf.match_external.enabled") | Boolean | Required |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;route_map</samp>](## "router_bgp.address_family_ipv4.redistribute.ospf.match_external.route_map") | String |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;include_leaked</samp>](## "router_bgp.address_family_ipv4.redistribute.ospf.match_external.include_leaked") | Boolean |  |  |  | Include following routes while redistributing. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;match_internal</samp>](## "router_bgp.address_family_ipv4.redistribute.ospf.match_internal") | Dictionary |  |  |  | Redistribute OSPF routes learned from internal sources. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "router_bgp.address_family_ipv4.redistribute.ospf.match_internal.enabled") | Boolean | Required |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;route_map</samp>](## "router_bgp.address_family_ipv4.redistribute.ospf.match_internal.route_map") | String |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;include_leaked</samp>](## "router_bgp.address_family_ipv4.redistribute.ospf.match_internal.include_leaked") | Boolean |  |  |  | Include following routes while redistributing. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;match_nssa_external</samp>](## "router_bgp.address_family_ipv4.redistribute.ospf.match_nssa_external") | Dictionary |  |  |  | Redistribute OSPF routes learned from external NSSA sources. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "router_bgp.address_family_ipv4.redistribute.ospf.match_nssa_external.enabled") | Boolean | Required |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;nssa_type</samp>](## "router_bgp.address_family_ipv4.redistribute.ospf.match_nssa_external.nssa_type") | Integer |  |  | Valid Values:<br>- <code>1</code><br>- <code>2</code> | NSSA External Type Number. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;route_map</samp>](## "router_bgp.address_family_ipv4.redistribute.ospf.match_nssa_external.route_map") | String |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;include_leaked</samp>](## "router_bgp.address_family_ipv4.redistribute.ospf.match_nssa_external.include_leaked") | Boolean |  |  |  | Include following routes while redistributing. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;route_map</samp>](## "router_bgp.address_family_ipv4.redistribute.ospf.route_map") | String |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;include_leaked</samp>](## "router_bgp.address_family_ipv4.redistribute.ospf.include_leaked") | Boolean |  |  |  | Include following routes while redistributing. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ospfv3</samp>](## "router_bgp.address_family_ipv4.redistribute.ospfv3") | Dictionary |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "router_bgp.address_family_ipv4.redistribute.ospfv3.enabled") | Boolean |  |  |  | Redistribute OSPFv3 routes. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;match_external</samp>](## "router_bgp.address_family_ipv4.redistribute.ospfv3.match_external") | Dictionary |  |  |  | Redistribute OSPFv3 routes learned from external sources. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "router_bgp.address_family_ipv4.redistribute.ospfv3.match_external.enabled") | Boolean | Required |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;route_map</samp>](## "router_bgp.address_family_ipv4.redistribute.ospfv3.match_external.route_map") | String |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;include_leaked</samp>](## "router_bgp.address_family_ipv4.redistribute.ospfv3.match_external.include_leaked") | Boolean |  |  |  | Include following routes while redistributing. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;match_internal</samp>](## "router_bgp.address_family_ipv4.redistribute.ospfv3.match_internal") | Dictionary |  |  |  | Redistribute OSPFv3 routes learned from internal sources. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "router_bgp.address_family_ipv4.redistribute.ospfv3.match_internal.enabled") | Boolean | Required |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;route_map</samp>](## "router_bgp.address_family_ipv4.redistribute.ospfv3.match_internal.route_map") | String |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;include_leaked</samp>](## "router_bgp.address_family_ipv4.redistribute.ospfv3.match_internal.include_leaked") | Boolean |  |  |  | Include following routes while redistributing. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;match_nssa_external</samp>](## "router_bgp.address_family_ipv4.redistribute.ospfv3.match_nssa_external") | Dictionary |  |  |  | Redistribute OSPFv3 routes learned from external NSSA sources. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "router_bgp.address_family_ipv4.redistribute.ospfv3.match_nssa_external.enabled") | Boolean | Required |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;nssa_type</samp>](## "router_bgp.address_family_ipv4.redistribute.ospfv3.match_nssa_external.nssa_type") | Integer |  |  | Valid Values:<br>- <code>1</code><br>- <code>2</code> | NSSA External Type Number. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;route_map</samp>](## "router_bgp.address_family_ipv4.redistribute.ospfv3.match_nssa_external.route_map") | String |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;include_leaked</samp>](## "router_bgp.address_family_ipv4.redistribute.ospfv3.match_nssa_external.include_leaked") | Boolean |  |  |  | Include following routes while redistributing. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;route_map</samp>](## "router_bgp.address_family_ipv4.redistribute.ospfv3.route_map") | String |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;include_leaked</samp>](## "router_bgp.address_family_ipv4.redistribute.ospfv3.include_leaked") | Boolean |  |  |  | Include following routes while redistributing. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;rip</samp>](## "router_bgp.address_family_ipv4.redistribute.rip") | Dictionary |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "router_bgp.address_family_ipv4.redistribute.rip.enabled") | Boolean | Required |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;route_map</samp>](## "router_bgp.address_family_ipv4.redistribute.rip.route_map") | String |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;static</samp>](## "router_bgp.address_family_ipv4.redistribute.static") | Dictionary |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "router_bgp.address_family_ipv4.redistribute.static.enabled") | Boolean | Required |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;route_map</samp>](## "router_bgp.address_family_ipv4.redistribute.static.route_map") | String |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;rcf</samp>](## "router_bgp.address_family_ipv4.redistribute.static.rcf") | String |  |  |  | RCF function name with parenthesis.<br>Example: MyFunction(myarg).<br>`route_map` and `rcf` are mutually exclusive. `route_map` takes precedence. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;include_leaked</samp>](## "router_bgp.address_family_ipv4.redistribute.static.include_leaked") | Boolean |  |  |  | Include following routes while redistributing. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;user</samp>](## "router_bgp.address_family_ipv4.redistribute.user") | Dictionary |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "router_bgp.address_family_ipv4.redistribute.user.enabled") | Boolean | Required |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;rcf</samp>](## "router_bgp.address_family_ipv4.redistribute.user.rcf") | String |  |  |  | RCF function name with parenthesis.<br>Example: MyFunction(myarg).<br>`route_map` and `rcf` are mutually exclusive. `route_map` takes precedence. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;redistribute_routes</samp>](## "router_bgp.address_family_ipv4.redistribute_routes") <span style="color:red">deprecated</span> | List, items: Dictionary |  |  |  | <span style="color:red">This key is deprecated. Support will be removed in AVD version 6.0.0. Use <samp>redistribute</samp> instead.</span> |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;source_protocol</samp>](## "router_bgp.address_family_ipv4.redistribute_routes.[].source_protocol") | String | Required |  | Valid Values:<br>- <code>attached-host</code><br>- <code>bgp</code><br>- <code>connected</code><br>- <code>dynamic</code><br>- <code>isis</code><br>- <code>ospf</code><br>- <code>ospfv3</code><br>- <code>rip</code><br>- <code>static</code><br>- <code>user</code> |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;route_map</samp>](## "router_bgp.address_family_ipv4.redistribute_routes.[].route_map") | String |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;include_leaked</samp>](## "router_bgp.address_family_ipv4.redistribute_routes.[].include_leaked") | Boolean |  |  |  | Only applicable if `source_protocol` is one of `connected`, `static`, `isis`, `ospf`, `ospfv3`. |
@@ -463,8 +597,7 @@
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;include_prefix_list</samp>](## "router_bgp.address_family_ipv4_labeled_unicast.peer_groups.[].missing_policy.direction_out.include_prefix_list") | Boolean |  |  |  | Include prefix-list references in missing policy decision. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;include_sub_route_map</samp>](## "router_bgp.address_family_ipv4_labeled_unicast.peer_groups.[].missing_policy.direction_out.include_sub_route_map") | Boolean |  |  |  | Include sub-route-map references in missing policy decision. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;multi_path</samp>](## "router_bgp.address_family_ipv4_labeled_unicast.peer_groups.[].multi_path") | Boolean |  |  |  |  |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;next_hop_resolution</samp>](## "router_bgp.address_family_ipv4_labeled_unicast.peer_groups.[].next_hop_resolution") | Dictionary |  |  |  |  |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;v4_mapped_v6_translation</samp>](## "router_bgp.address_family_ipv4_labeled_unicast.peer_groups.[].next_hop_resolution.v4_mapped_v6_translation") | Boolean |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;next_hop_resolution</samp>](## "router_bgp.address_family_ipv4_labeled_unicast.peer_groups.[].next_hop_resolution") <span style="color:red">removed</span> | Dictionary |  |  |  | <span style="color:red">This key was removed. Support was removed in AVD version 5.0.0.</span> |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;next_hop_self</samp>](## "router_bgp.address_family_ipv4_labeled_unicast.peer_groups.[].next_hop_self") | Boolean |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;next_hop_self_source_interface</samp>](## "router_bgp.address_family_ipv4_labeled_unicast.peer_groups.[].next_hop_self_source_interface") | String |  |  |  | Source interface name. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;next_hop_self_v4_mapped_v6_source_interface</samp>](## "router_bgp.address_family_ipv4_labeled_unicast.peer_groups.[].next_hop_self_v4_mapped_v6_source_interface") | String |  |  |  | v4-mapped-v6 source interface name. Takes precedence over the next_hop_self_source_interface. |
@@ -498,8 +631,7 @@
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;include_prefix_list</samp>](## "router_bgp.address_family_ipv4_labeled_unicast.neighbors.[].missing_policy.direction_out.include_prefix_list") | Boolean |  |  |  | Include prefix-list references in missing policy decision. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;include_sub_route_map</samp>](## "router_bgp.address_family_ipv4_labeled_unicast.neighbors.[].missing_policy.direction_out.include_sub_route_map") | Boolean |  |  |  | Include sub-route-map references in missing policy decision. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;multi_path</samp>](## "router_bgp.address_family_ipv4_labeled_unicast.neighbors.[].multi_path") | Boolean |  |  |  |  |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;next_hop_resolution</samp>](## "router_bgp.address_family_ipv4_labeled_unicast.neighbors.[].next_hop_resolution") | Dictionary |  |  |  |  |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;v4_mapped_v6_translation</samp>](## "router_bgp.address_family_ipv4_labeled_unicast.neighbors.[].next_hop_resolution.v4_mapped_v6_translation") | Boolean |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;next_hop_resolution</samp>](## "router_bgp.address_family_ipv4_labeled_unicast.neighbors.[].next_hop_resolution") <span style="color:red">removed</span> | Dictionary |  |  |  | <span style="color:red">This key was removed. Support was removed in AVD version 5.0.0.</span> |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;next_hop_self</samp>](## "router_bgp.address_family_ipv4_labeled_unicast.neighbors.[].next_hop_self") | Boolean |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;next_hop_self_source_interface</samp>](## "router_bgp.address_family_ipv4_labeled_unicast.neighbors.[].next_hop_self_source_interface") | String |  |  |  | Source interface name. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;next_hop_self_v4_mapped_v6_source_interface</samp>](## "router_bgp.address_family_ipv4_labeled_unicast.neighbors.[].next_hop_self_v4_mapped_v6_source_interface") | String |  |  |  | v4-mapped-v6 source interface name. Takes precedence over the next_hop_self_source_interface. |
@@ -716,7 +848,46 @@
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;networks</samp>](## "router_bgp.address_family_ipv6_multicast.networks") | List, items: Dictionary |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;prefix</samp>](## "router_bgp.address_family_ipv6_multicast.networks.[].prefix") | String | Required, Unique |  |  | IPv6 prefix "A:B:C:D:E:F:G:H/I". |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;route_map</samp>](## "router_bgp.address_family_ipv6_multicast.networks.[].route_map") | String |  |  |  |  |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;redistribute_routes</samp>](## "router_bgp.address_family_ipv6_multicast.redistribute_routes") | List, items: Dictionary |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;redistribute</samp>](## "router_bgp.address_family_ipv6_multicast.redistribute") | Dictionary |  |  |  | Redistribute routes in to BGP. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;connected</samp>](## "router_bgp.address_family_ipv6_multicast.redistribute.connected") | Dictionary |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "router_bgp.address_family_ipv6_multicast.redistribute.connected.enabled") | Boolean | Required |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;route_map</samp>](## "router_bgp.address_family_ipv6_multicast.redistribute.connected.route_map") | String |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;isis</samp>](## "router_bgp.address_family_ipv6_multicast.redistribute.isis") | Dictionary |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "router_bgp.address_family_ipv6_multicast.redistribute.isis.enabled") | Boolean | Required |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;isis_level</samp>](## "router_bgp.address_family_ipv6_multicast.redistribute.isis.isis_level") | String |  |  | Valid Values:<br>- <code>level-1</code><br>- <code>level-2</code><br>- <code>level-1-2</code> | Redistribute IS-IS route level. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;route_map</samp>](## "router_bgp.address_family_ipv6_multicast.redistribute.isis.route_map") | String |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;rcf</samp>](## "router_bgp.address_family_ipv6_multicast.redistribute.isis.rcf") | String |  |  |  | RCF function name with parenthesis.<br>Example: MyFunction(myarg).<br>`route_map` and `rcf` are mutually exclusive. `route_map` takes precedence. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;include_leaked</samp>](## "router_bgp.address_family_ipv6_multicast.redistribute.isis.include_leaked") | Boolean |  |  |  | Include following routes while redistributing. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ospf</samp>](## "router_bgp.address_family_ipv6_multicast.redistribute.ospf") | Dictionary |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "router_bgp.address_family_ipv6_multicast.redistribute.ospf.enabled") | Boolean |  |  |  | Redistribute OSPF routes. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;match_external</samp>](## "router_bgp.address_family_ipv6_multicast.redistribute.ospf.match_external") | Dictionary |  |  |  | Redistribute OSPF routes learned from external sources. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "router_bgp.address_family_ipv6_multicast.redistribute.ospf.match_external.enabled") | Boolean | Required |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;route_map</samp>](## "router_bgp.address_family_ipv6_multicast.redistribute.ospf.match_external.route_map") | String |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;match_internal</samp>](## "router_bgp.address_family_ipv6_multicast.redistribute.ospf.match_internal") | Dictionary |  |  |  | Redistribute OSPF routes learned from internal sources. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "router_bgp.address_family_ipv6_multicast.redistribute.ospf.match_internal.enabled") | Boolean | Required |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;route_map</samp>](## "router_bgp.address_family_ipv6_multicast.redistribute.ospf.match_internal.route_map") | String |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;match_nssa_external</samp>](## "router_bgp.address_family_ipv6_multicast.redistribute.ospf.match_nssa_external") | Dictionary |  |  |  | Redistribute OSPF routes learned from external NSSA sources. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "router_bgp.address_family_ipv6_multicast.redistribute.ospf.match_nssa_external.enabled") | Boolean | Required |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;nssa_type</samp>](## "router_bgp.address_family_ipv6_multicast.redistribute.ospf.match_nssa_external.nssa_type") | Integer |  |  | Valid Values:<br>- <code>1</code><br>- <code>2</code> | NSSA External Type Number. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;route_map</samp>](## "router_bgp.address_family_ipv6_multicast.redistribute.ospf.match_nssa_external.route_map") | String |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;route_map</samp>](## "router_bgp.address_family_ipv6_multicast.redistribute.ospf.route_map") | String |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ospfv3</samp>](## "router_bgp.address_family_ipv6_multicast.redistribute.ospfv3") | Dictionary |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "router_bgp.address_family_ipv6_multicast.redistribute.ospfv3.enabled") | Boolean |  |  |  | Redistribute OSPFv3 routes. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;match_external</samp>](## "router_bgp.address_family_ipv6_multicast.redistribute.ospfv3.match_external") | Dictionary |  |  |  | Redistribute OSPFv3 routes learned from external sources. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "router_bgp.address_family_ipv6_multicast.redistribute.ospfv3.match_external.enabled") | Boolean | Required |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;route_map</samp>](## "router_bgp.address_family_ipv6_multicast.redistribute.ospfv3.match_external.route_map") | String |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;match_internal</samp>](## "router_bgp.address_family_ipv6_multicast.redistribute.ospfv3.match_internal") | Dictionary |  |  |  | Redistribute OSPFv3 routes learned from internal sources. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "router_bgp.address_family_ipv6_multicast.redistribute.ospfv3.match_internal.enabled") | Boolean | Required |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;route_map</samp>](## "router_bgp.address_family_ipv6_multicast.redistribute.ospfv3.match_internal.route_map") | String |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;match_nssa_external</samp>](## "router_bgp.address_family_ipv6_multicast.redistribute.ospfv3.match_nssa_external") | Dictionary |  |  |  | Redistribute OSPFv3 routes learned from external NSSA sources. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "router_bgp.address_family_ipv6_multicast.redistribute.ospfv3.match_nssa_external.enabled") | Boolean | Required |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;nssa_type</samp>](## "router_bgp.address_family_ipv6_multicast.redistribute.ospfv3.match_nssa_external.nssa_type") | Integer |  |  | Valid Values:<br>- <code>1</code><br>- <code>2</code> | NSSA External Type Number. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;route_map</samp>](## "router_bgp.address_family_ipv6_multicast.redistribute.ospfv3.match_nssa_external.route_map") | String |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;route_map</samp>](## "router_bgp.address_family_ipv6_multicast.redistribute.ospfv3.route_map") | String |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;static</samp>](## "router_bgp.address_family_ipv6_multicast.redistribute.static") | Dictionary |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "router_bgp.address_family_ipv6_multicast.redistribute.static.enabled") | Boolean | Required |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;route_map</samp>](## "router_bgp.address_family_ipv6_multicast.redistribute.static.route_map") | String |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;redistribute_routes</samp>](## "router_bgp.address_family_ipv6_multicast.redistribute_routes") <span style="color:red">deprecated</span> | List, items: Dictionary |  |  |  | <span style="color:red">This key is deprecated. Support will be removed in AVD version 6.0.0. Use <samp>redistribute</samp> instead.</span> |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;source_protocol</samp>](## "router_bgp.address_family_ipv6_multicast.redistribute_routes.[].source_protocol") | String | Required |  | Valid Values:<br>- <code>connected</code><br>- <code>isis</code><br>- <code>ospf</code><br>- <code>ospfv3</code><br>- <code>static</code> |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;include_leaked</samp>](## "router_bgp.address_family_ipv6_multicast.redistribute_routes.[].include_leaked") | Boolean |  |  |  | Only applicable if `source_protocol` is `isis`. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;route_map</samp>](## "router_bgp.address_family_ipv6_multicast.redistribute_routes.[].route_map") | String |  |  |  |  |
@@ -1075,7 +1246,74 @@
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;networks</samp>](## "router_bgp.vrfs.[].address_family_ipv4.networks") | List, items: Dictionary |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;prefix</samp>](## "router_bgp.vrfs.[].address_family_ipv4.networks.[].prefix") | String | Required, Unique |  |  | IPv4 prefix "A.B.C.D/E". |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;route_map</samp>](## "router_bgp.vrfs.[].address_family_ipv4.networks.[].route_map") | String |  |  |  |  |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;redistribute_routes</samp>](## "router_bgp.vrfs.[].address_family_ipv4.redistribute_routes") | List, items: Dictionary |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;redistribute</samp>](## "router_bgp.vrfs.[].address_family_ipv4.redistribute") | Dictionary |  |  |  | Redistribute routes in to BGP. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;attached_host</samp>](## "router_bgp.vrfs.[].address_family_ipv4.redistribute.attached_host") | Dictionary |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "router_bgp.vrfs.[].address_family_ipv4.redistribute.attached_host.enabled") | Boolean | Required |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;route_map</samp>](## "router_bgp.vrfs.[].address_family_ipv4.redistribute.attached_host.route_map") | String |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;bgp</samp>](## "router_bgp.vrfs.[].address_family_ipv4.redistribute.bgp") | Dictionary |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "router_bgp.vrfs.[].address_family_ipv4.redistribute.bgp.enabled") | Boolean | Required |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;route_map</samp>](## "router_bgp.vrfs.[].address_family_ipv4.redistribute.bgp.route_map") | String |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;connected</samp>](## "router_bgp.vrfs.[].address_family_ipv4.redistribute.connected") | Dictionary |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "router_bgp.vrfs.[].address_family_ipv4.redistribute.connected.enabled") | Boolean | Required |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;route_map</samp>](## "router_bgp.vrfs.[].address_family_ipv4.redistribute.connected.route_map") | String |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;rcf</samp>](## "router_bgp.vrfs.[].address_family_ipv4.redistribute.connected.rcf") | String |  |  |  | RCF function name with parenthesis.<br>Example: MyFunction(myarg).<br>`route_map` and `rcf` are mutually exclusive. `route_map` takes precedence. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;include_leaked</samp>](## "router_bgp.vrfs.[].address_family_ipv4.redistribute.connected.include_leaked") | Boolean |  |  |  | Include following routes while redistributing. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dynamic</samp>](## "router_bgp.vrfs.[].address_family_ipv4.redistribute.dynamic") | Dictionary |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "router_bgp.vrfs.[].address_family_ipv4.redistribute.dynamic.enabled") | Boolean | Required |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;route_map</samp>](## "router_bgp.vrfs.[].address_family_ipv4.redistribute.dynamic.route_map") | String |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;rcf</samp>](## "router_bgp.vrfs.[].address_family_ipv4.redistribute.dynamic.rcf") | String |  |  |  | RCF function name with parenthesis.<br>Example: MyFunction(myarg).<br>`route_map` and `rcf` are mutually exclusive. `route_map` takes precedence. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;isis</samp>](## "router_bgp.vrfs.[].address_family_ipv4.redistribute.isis") | Dictionary |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "router_bgp.vrfs.[].address_family_ipv4.redistribute.isis.enabled") | Boolean | Required |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;isis_level</samp>](## "router_bgp.vrfs.[].address_family_ipv4.redistribute.isis.isis_level") | String |  |  | Valid Values:<br>- <code>level-1</code><br>- <code>level-2</code><br>- <code>level-1-2</code> | Redistribute IS-IS route level. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;route_map</samp>](## "router_bgp.vrfs.[].address_family_ipv4.redistribute.isis.route_map") | String |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;rcf</samp>](## "router_bgp.vrfs.[].address_family_ipv4.redistribute.isis.rcf") | String |  |  |  | RCF function name with parenthesis.<br>Example: MyFunction(myarg).<br>`route_map` and `rcf` are mutually exclusive. `route_map` takes precedence. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;include_leaked</samp>](## "router_bgp.vrfs.[].address_family_ipv4.redistribute.isis.include_leaked") | Boolean |  |  |  | Include following routes while redistributing. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ospf</samp>](## "router_bgp.vrfs.[].address_family_ipv4.redistribute.ospf") | Dictionary |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "router_bgp.vrfs.[].address_family_ipv4.redistribute.ospf.enabled") | Boolean |  |  |  | Redistribute OSPF routes. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;match_external</samp>](## "router_bgp.vrfs.[].address_family_ipv4.redistribute.ospf.match_external") | Dictionary |  |  |  | Redistribute OSPF routes learned from external sources. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "router_bgp.vrfs.[].address_family_ipv4.redistribute.ospf.match_external.enabled") | Boolean | Required |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;route_map</samp>](## "router_bgp.vrfs.[].address_family_ipv4.redistribute.ospf.match_external.route_map") | String |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;include_leaked</samp>](## "router_bgp.vrfs.[].address_family_ipv4.redistribute.ospf.match_external.include_leaked") | Boolean |  |  |  | Include following routes while redistributing. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;match_internal</samp>](## "router_bgp.vrfs.[].address_family_ipv4.redistribute.ospf.match_internal") | Dictionary |  |  |  | Redistribute OSPF routes learned from internal sources. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "router_bgp.vrfs.[].address_family_ipv4.redistribute.ospf.match_internal.enabled") | Boolean | Required |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;route_map</samp>](## "router_bgp.vrfs.[].address_family_ipv4.redistribute.ospf.match_internal.route_map") | String |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;include_leaked</samp>](## "router_bgp.vrfs.[].address_family_ipv4.redistribute.ospf.match_internal.include_leaked") | Boolean |  |  |  | Include following routes while redistributing. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;match_nssa_external</samp>](## "router_bgp.vrfs.[].address_family_ipv4.redistribute.ospf.match_nssa_external") | Dictionary |  |  |  | Redistribute OSPF routes learned from external NSSA sources. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "router_bgp.vrfs.[].address_family_ipv4.redistribute.ospf.match_nssa_external.enabled") | Boolean | Required |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;nssa_type</samp>](## "router_bgp.vrfs.[].address_family_ipv4.redistribute.ospf.match_nssa_external.nssa_type") | Integer |  |  | Valid Values:<br>- <code>1</code><br>- <code>2</code> | NSSA External Type Number. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;route_map</samp>](## "router_bgp.vrfs.[].address_family_ipv4.redistribute.ospf.match_nssa_external.route_map") | String |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;include_leaked</samp>](## "router_bgp.vrfs.[].address_family_ipv4.redistribute.ospf.match_nssa_external.include_leaked") | Boolean |  |  |  | Include following routes while redistributing. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;route_map</samp>](## "router_bgp.vrfs.[].address_family_ipv4.redistribute.ospf.route_map") | String |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;include_leaked</samp>](## "router_bgp.vrfs.[].address_family_ipv4.redistribute.ospf.include_leaked") | Boolean |  |  |  | Include following routes while redistributing. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ospfv3</samp>](## "router_bgp.vrfs.[].address_family_ipv4.redistribute.ospfv3") | Dictionary |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "router_bgp.vrfs.[].address_family_ipv4.redistribute.ospfv3.enabled") | Boolean |  |  |  | Redistribute OSPFv3 routes. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;match_external</samp>](## "router_bgp.vrfs.[].address_family_ipv4.redistribute.ospfv3.match_external") | Dictionary |  |  |  | Redistribute OSPFv3 routes learned from external sources. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "router_bgp.vrfs.[].address_family_ipv4.redistribute.ospfv3.match_external.enabled") | Boolean | Required |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;route_map</samp>](## "router_bgp.vrfs.[].address_family_ipv4.redistribute.ospfv3.match_external.route_map") | String |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;include_leaked</samp>](## "router_bgp.vrfs.[].address_family_ipv4.redistribute.ospfv3.match_external.include_leaked") | Boolean |  |  |  | Include following routes while redistributing. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;match_internal</samp>](## "router_bgp.vrfs.[].address_family_ipv4.redistribute.ospfv3.match_internal") | Dictionary |  |  |  | Redistribute OSPFv3 routes learned from internal sources. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "router_bgp.vrfs.[].address_family_ipv4.redistribute.ospfv3.match_internal.enabled") | Boolean | Required |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;route_map</samp>](## "router_bgp.vrfs.[].address_family_ipv4.redistribute.ospfv3.match_internal.route_map") | String |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;include_leaked</samp>](## "router_bgp.vrfs.[].address_family_ipv4.redistribute.ospfv3.match_internal.include_leaked") | Boolean |  |  |  | Include following routes while redistributing. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;match_nssa_external</samp>](## "router_bgp.vrfs.[].address_family_ipv4.redistribute.ospfv3.match_nssa_external") | Dictionary |  |  |  | Redistribute OSPFv3 routes learned from external NSSA sources. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "router_bgp.vrfs.[].address_family_ipv4.redistribute.ospfv3.match_nssa_external.enabled") | Boolean | Required |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;nssa_type</samp>](## "router_bgp.vrfs.[].address_family_ipv4.redistribute.ospfv3.match_nssa_external.nssa_type") | Integer |  |  | Valid Values:<br>- <code>1</code><br>- <code>2</code> | NSSA External Type Number. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;route_map</samp>](## "router_bgp.vrfs.[].address_family_ipv4.redistribute.ospfv3.match_nssa_external.route_map") | String |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;include_leaked</samp>](## "router_bgp.vrfs.[].address_family_ipv4.redistribute.ospfv3.match_nssa_external.include_leaked") | Boolean |  |  |  | Include following routes while redistributing. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;route_map</samp>](## "router_bgp.vrfs.[].address_family_ipv4.redistribute.ospfv3.route_map") | String |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;include_leaked</samp>](## "router_bgp.vrfs.[].address_family_ipv4.redistribute.ospfv3.include_leaked") | Boolean |  |  |  | Include following routes while redistributing. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;rip</samp>](## "router_bgp.vrfs.[].address_family_ipv4.redistribute.rip") | Dictionary |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "router_bgp.vrfs.[].address_family_ipv4.redistribute.rip.enabled") | Boolean | Required |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;route_map</samp>](## "router_bgp.vrfs.[].address_family_ipv4.redistribute.rip.route_map") | String |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;static</samp>](## "router_bgp.vrfs.[].address_family_ipv4.redistribute.static") | Dictionary |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "router_bgp.vrfs.[].address_family_ipv4.redistribute.static.enabled") | Boolean | Required |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;route_map</samp>](## "router_bgp.vrfs.[].address_family_ipv4.redistribute.static.route_map") | String |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;rcf</samp>](## "router_bgp.vrfs.[].address_family_ipv4.redistribute.static.rcf") | String |  |  |  | RCF function name with parenthesis.<br>Example: MyFunction(myarg).<br>`route_map` and `rcf` are mutually exclusive. `route_map` takes precedence. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;include_leaked</samp>](## "router_bgp.vrfs.[].address_family_ipv4.redistribute.static.include_leaked") | Boolean |  |  |  | Include following routes while redistributing. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;user</samp>](## "router_bgp.vrfs.[].address_family_ipv4.redistribute.user") | Dictionary |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "router_bgp.vrfs.[].address_family_ipv4.redistribute.user.enabled") | Boolean | Required |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;rcf</samp>](## "router_bgp.vrfs.[].address_family_ipv4.redistribute.user.rcf") | String |  |  |  | RCF function name with parenthesis.<br>Example: MyFunction(myarg).<br>`route_map` and `rcf` are mutually exclusive. `route_map` takes precedence. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;redistribute_routes</samp>](## "router_bgp.vrfs.[].address_family_ipv4.redistribute_routes") <span style="color:red">deprecated</span> | List, items: Dictionary |  |  |  | <span style="color:red">This key is deprecated. Support will be removed in AVD version 6.0.0. Use <samp>redistribute</samp> instead.</span> |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;source_protocol</samp>](## "router_bgp.vrfs.[].address_family_ipv4.redistribute_routes.[].source_protocol") | String | Required |  | Valid Values:<br>- <code>attached-host</code><br>- <code>bgp</code><br>- <code>connected</code><br>- <code>dynamic</code><br>- <code>isis</code><br>- <code>ospf</code><br>- <code>ospfv3</code><br>- <code>rip</code><br>- <code>static</code><br>- <code>user</code> |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;route_map</samp>](## "router_bgp.vrfs.[].address_family_ipv4.redistribute_routes.[].route_map") | String |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;include_leaked</samp>](## "router_bgp.vrfs.[].address_family_ipv4.redistribute_routes.[].include_leaked") | Boolean |  |  |  |  |
@@ -1109,7 +1347,57 @@
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;networks</samp>](## "router_bgp.vrfs.[].address_family_ipv6.networks") | List, items: Dictionary |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;prefix</samp>](## "router_bgp.vrfs.[].address_family_ipv6.networks.[].prefix") | String | Required, Unique |  |  | IPv6 prefix "A:B:C:D:E:F:G:H/I". |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;route_map</samp>](## "router_bgp.vrfs.[].address_family_ipv6.networks.[].route_map") | String |  |  |  |  |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;redistribute_routes</samp>](## "router_bgp.vrfs.[].address_family_ipv6.redistribute_routes") | List, items: Dictionary |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;redistribute</samp>](## "router_bgp.vrfs.[].address_family_ipv6.redistribute") | Dictionary |  |  |  | Redistribute routes in to BGP. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;attached_host</samp>](## "router_bgp.vrfs.[].address_family_ipv6.redistribute.attached_host") | Dictionary |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "router_bgp.vrfs.[].address_family_ipv6.redistribute.attached_host.enabled") | Boolean | Required |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;route_map</samp>](## "router_bgp.vrfs.[].address_family_ipv6.redistribute.attached_host.route_map") | String |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;bgp</samp>](## "router_bgp.vrfs.[].address_family_ipv6.redistribute.bgp") | Dictionary |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "router_bgp.vrfs.[].address_family_ipv6.redistribute.bgp.enabled") | Boolean | Required |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;route_map</samp>](## "router_bgp.vrfs.[].address_family_ipv6.redistribute.bgp.route_map") | String |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;connected</samp>](## "router_bgp.vrfs.[].address_family_ipv6.redistribute.connected") | Dictionary |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "router_bgp.vrfs.[].address_family_ipv6.redistribute.connected.enabled") | Boolean | Required |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;route_map</samp>](## "router_bgp.vrfs.[].address_family_ipv6.redistribute.connected.route_map") | String |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;rcf</samp>](## "router_bgp.vrfs.[].address_family_ipv6.redistribute.connected.rcf") | String |  |  |  | RCF function name with parenthesis.<br>Example: MyFunction(myarg).<br>`route_map` and `rcf` are mutually exclusive. `route_map` takes precedence. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;include_leaked</samp>](## "router_bgp.vrfs.[].address_family_ipv6.redistribute.connected.include_leaked") | Boolean |  |  |  | Include following routes while redistributing. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dhcp</samp>](## "router_bgp.vrfs.[].address_family_ipv6.redistribute.dhcp") | Dictionary |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "router_bgp.vrfs.[].address_family_ipv6.redistribute.dhcp.enabled") | Boolean | Required |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;route_map</samp>](## "router_bgp.vrfs.[].address_family_ipv6.redistribute.dhcp.route_map") | String |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dynamic</samp>](## "router_bgp.vrfs.[].address_family_ipv6.redistribute.dynamic") | Dictionary |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "router_bgp.vrfs.[].address_family_ipv6.redistribute.dynamic.enabled") | Boolean | Required |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;route_map</samp>](## "router_bgp.vrfs.[].address_family_ipv6.redistribute.dynamic.route_map") | String |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;rcf</samp>](## "router_bgp.vrfs.[].address_family_ipv6.redistribute.dynamic.rcf") | String |  |  |  | RCF function name with parenthesis.<br>Example: MyFunction(myarg).<br>`route_map` and `rcf` are mutually exclusive. `route_map` takes precedence. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;isis</samp>](## "router_bgp.vrfs.[].address_family_ipv6.redistribute.isis") | Dictionary |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "router_bgp.vrfs.[].address_family_ipv6.redistribute.isis.enabled") | Boolean | Required |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;isis_level</samp>](## "router_bgp.vrfs.[].address_family_ipv6.redistribute.isis.isis_level") | String |  |  | Valid Values:<br>- <code>level-1</code><br>- <code>level-2</code><br>- <code>level-1-2</code> | Redistribute IS-IS route level. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;route_map</samp>](## "router_bgp.vrfs.[].address_family_ipv6.redistribute.isis.route_map") | String |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;rcf</samp>](## "router_bgp.vrfs.[].address_family_ipv6.redistribute.isis.rcf") | String |  |  |  | RCF function name with parenthesis.<br>Example: MyFunction(myarg).<br>`route_map` and `rcf` are mutually exclusive. `route_map` takes precedence. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;include_leaked</samp>](## "router_bgp.vrfs.[].address_family_ipv6.redistribute.isis.include_leaked") | Boolean |  |  |  | Include following routes while redistributing. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ospfv3</samp>](## "router_bgp.vrfs.[].address_family_ipv6.redistribute.ospfv3") | Dictionary |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "router_bgp.vrfs.[].address_family_ipv6.redistribute.ospfv3.enabled") | Boolean |  |  |  | Redistribute OSPFv3 routes. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;match_external</samp>](## "router_bgp.vrfs.[].address_family_ipv6.redistribute.ospfv3.match_external") | Dictionary |  |  |  | Redistribute OSPFv3 routes learned from external sources. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "router_bgp.vrfs.[].address_family_ipv6.redistribute.ospfv3.match_external.enabled") | Boolean | Required |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;route_map</samp>](## "router_bgp.vrfs.[].address_family_ipv6.redistribute.ospfv3.match_external.route_map") | String |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;include_leaked</samp>](## "router_bgp.vrfs.[].address_family_ipv6.redistribute.ospfv3.match_external.include_leaked") | Boolean |  |  |  | Include following routes while redistributing. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;match_internal</samp>](## "router_bgp.vrfs.[].address_family_ipv6.redistribute.ospfv3.match_internal") | Dictionary |  |  |  | Redistribute OSPFv3 routes learned from internal sources. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "router_bgp.vrfs.[].address_family_ipv6.redistribute.ospfv3.match_internal.enabled") | Boolean | Required |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;route_map</samp>](## "router_bgp.vrfs.[].address_family_ipv6.redistribute.ospfv3.match_internal.route_map") | String |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;include_leaked</samp>](## "router_bgp.vrfs.[].address_family_ipv6.redistribute.ospfv3.match_internal.include_leaked") | Boolean |  |  |  | Include following routes while redistributing. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;match_nssa_external</samp>](## "router_bgp.vrfs.[].address_family_ipv6.redistribute.ospfv3.match_nssa_external") | Dictionary |  |  |  | Redistribute OSPFv3 routes learned from external NSSA sources. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "router_bgp.vrfs.[].address_family_ipv6.redistribute.ospfv3.match_nssa_external.enabled") | Boolean | Required |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;nssa_type</samp>](## "router_bgp.vrfs.[].address_family_ipv6.redistribute.ospfv3.match_nssa_external.nssa_type") | Integer |  |  | Valid Values:<br>- <code>1</code><br>- <code>2</code> | NSSA External Type Number. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;route_map</samp>](## "router_bgp.vrfs.[].address_family_ipv6.redistribute.ospfv3.match_nssa_external.route_map") | String |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;include_leaked</samp>](## "router_bgp.vrfs.[].address_family_ipv6.redistribute.ospfv3.match_nssa_external.include_leaked") | Boolean |  |  |  | Include following routes while redistributing. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;route_map</samp>](## "router_bgp.vrfs.[].address_family_ipv6.redistribute.ospfv3.route_map") | String |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;include_leaked</samp>](## "router_bgp.vrfs.[].address_family_ipv6.redistribute.ospfv3.include_leaked") | Boolean |  |  |  | Include following routes while redistributing. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;static</samp>](## "router_bgp.vrfs.[].address_family_ipv6.redistribute.static") | Dictionary |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "router_bgp.vrfs.[].address_family_ipv6.redistribute.static.enabled") | Boolean | Required |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;route_map</samp>](## "router_bgp.vrfs.[].address_family_ipv6.redistribute.static.route_map") | String |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;rcf</samp>](## "router_bgp.vrfs.[].address_family_ipv6.redistribute.static.rcf") | String |  |  |  | RCF function name with parenthesis.<br>Example: MyFunction(myarg).<br>`route_map` and `rcf` are mutually exclusive. `route_map` takes precedence. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;include_leaked</samp>](## "router_bgp.vrfs.[].address_family_ipv6.redistribute.static.include_leaked") | Boolean |  |  |  | Include following routes while redistributing. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;user</samp>](## "router_bgp.vrfs.[].address_family_ipv6.redistribute.user") | Dictionary |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "router_bgp.vrfs.[].address_family_ipv6.redistribute.user.enabled") | Boolean | Required |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;rcf</samp>](## "router_bgp.vrfs.[].address_family_ipv6.redistribute.user.rcf") | String |  |  |  | RCF function name with parenthesis.<br>Example: MyFunction(myarg).<br>`route_map` and `rcf` are mutually exclusive. `route_map` takes precedence. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;redistribute_routes</samp>](## "router_bgp.vrfs.[].address_family_ipv6.redistribute_routes") <span style="color:red">deprecated</span> | List, items: Dictionary |  |  |  | <span style="color:red">This key is deprecated. Support will be removed in AVD version 6.0.0. Use <samp>redistribute</samp> instead.</span> |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;source_protocol</samp>](## "router_bgp.vrfs.[].address_family_ipv6.redistribute_routes.[].source_protocol") | String | Required |  | Valid Values:<br>- <code>attached-host</code><br>- <code>bgp</code><br>- <code>connected</code><br>- <code>dhcp</code><br>- <code>dynamic</code><br>- <code>isis</code><br>- <code>ospfv3</code><br>- <code>static</code><br>- <code>user</code> |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;route_map</samp>](## "router_bgp.vrfs.[].address_family_ipv6.redistribute_routes.[].route_map") | String |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;include_leaked</samp>](## "router_bgp.vrfs.[].address_family_ipv6.redistribute_routes.[].include_leaked") | Boolean |  |  |  |  |
@@ -1132,7 +1420,53 @@
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;networks</samp>](## "router_bgp.vrfs.[].address_family_ipv4_multicast.networks") | List, items: Dictionary |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;prefix</samp>](## "router_bgp.vrfs.[].address_family_ipv4_multicast.networks.[].prefix") | String | Required, Unique |  |  | IPv6 prefix "A.B.C.D/E". |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;route_map</samp>](## "router_bgp.vrfs.[].address_family_ipv4_multicast.networks.[].route_map") | String |  |  |  |  |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;redistribute_routes</samp>](## "router_bgp.vrfs.[].address_family_ipv4_multicast.redistribute_routes") | List, items: Dictionary |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;redistribute</samp>](## "router_bgp.vrfs.[].address_family_ipv4_multicast.redistribute") | Dictionary |  |  |  | Redistribute routes in to BGP. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;attached_host</samp>](## "router_bgp.vrfs.[].address_family_ipv4_multicast.redistribute.attached_host") | Dictionary |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "router_bgp.vrfs.[].address_family_ipv4_multicast.redistribute.attached_host.enabled") | Boolean | Required |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;route_map</samp>](## "router_bgp.vrfs.[].address_family_ipv4_multicast.redistribute.attached_host.route_map") | String |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;connected</samp>](## "router_bgp.vrfs.[].address_family_ipv4_multicast.redistribute.connected") | Dictionary |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "router_bgp.vrfs.[].address_family_ipv4_multicast.redistribute.connected.enabled") | Boolean | Required |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;route_map</samp>](## "router_bgp.vrfs.[].address_family_ipv4_multicast.redistribute.connected.route_map") | String |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;isis</samp>](## "router_bgp.vrfs.[].address_family_ipv4_multicast.redistribute.isis") | Dictionary |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "router_bgp.vrfs.[].address_family_ipv4_multicast.redistribute.isis.enabled") | Boolean | Required |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;isis_level</samp>](## "router_bgp.vrfs.[].address_family_ipv4_multicast.redistribute.isis.isis_level") | String |  |  | Valid Values:<br>- <code>level-1</code><br>- <code>level-2</code><br>- <code>level-1-2</code> | Redistribute IS-IS route level. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;route_map</samp>](## "router_bgp.vrfs.[].address_family_ipv4_multicast.redistribute.isis.route_map") | String |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;rcf</samp>](## "router_bgp.vrfs.[].address_family_ipv4_multicast.redistribute.isis.rcf") | String |  |  |  | RCF function name with parenthesis.<br>Example: MyFunction(myarg).<br>`route_map` and `rcf` are mutually exclusive. `route_map` takes precedence. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;include_leaked</samp>](## "router_bgp.vrfs.[].address_family_ipv4_multicast.redistribute.isis.include_leaked") | Boolean |  |  |  | Include following routes while redistributing. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ospf</samp>](## "router_bgp.vrfs.[].address_family_ipv4_multicast.redistribute.ospf") | Dictionary |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "router_bgp.vrfs.[].address_family_ipv4_multicast.redistribute.ospf.enabled") | Boolean |  |  |  | Redistribute OSPF routes. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;match_external</samp>](## "router_bgp.vrfs.[].address_family_ipv4_multicast.redistribute.ospf.match_external") | Dictionary |  |  |  | Redistribute OSPF routes learned from external sources. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "router_bgp.vrfs.[].address_family_ipv4_multicast.redistribute.ospf.match_external.enabled") | Boolean | Required |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;route_map</samp>](## "router_bgp.vrfs.[].address_family_ipv4_multicast.redistribute.ospf.match_external.route_map") | String |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;match_internal</samp>](## "router_bgp.vrfs.[].address_family_ipv4_multicast.redistribute.ospf.match_internal") | Dictionary |  |  |  | Redistribute OSPF routes learned from internal sources. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "router_bgp.vrfs.[].address_family_ipv4_multicast.redistribute.ospf.match_internal.enabled") | Boolean | Required |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;route_map</samp>](## "router_bgp.vrfs.[].address_family_ipv4_multicast.redistribute.ospf.match_internal.route_map") | String |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;match_nssa_external</samp>](## "router_bgp.vrfs.[].address_family_ipv4_multicast.redistribute.ospf.match_nssa_external") | Dictionary |  |  |  | Redistribute OSPF routes learned from external NSSA sources. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "router_bgp.vrfs.[].address_family_ipv4_multicast.redistribute.ospf.match_nssa_external.enabled") | Boolean | Required |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;nssa_type</samp>](## "router_bgp.vrfs.[].address_family_ipv4_multicast.redistribute.ospf.match_nssa_external.nssa_type") | Integer |  |  | Valid Values:<br>- <code>1</code><br>- <code>2</code> | NSSA External Type Number. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;route_map</samp>](## "router_bgp.vrfs.[].address_family_ipv4_multicast.redistribute.ospf.match_nssa_external.route_map") | String |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;route_map</samp>](## "router_bgp.vrfs.[].address_family_ipv4_multicast.redistribute.ospf.route_map") | String |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ospfv3</samp>](## "router_bgp.vrfs.[].address_family_ipv4_multicast.redistribute.ospfv3") | Dictionary |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "router_bgp.vrfs.[].address_family_ipv4_multicast.redistribute.ospfv3.enabled") | Boolean |  |  |  | Redistribute OSPFv3 routes. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;match_external</samp>](## "router_bgp.vrfs.[].address_family_ipv4_multicast.redistribute.ospfv3.match_external") | Dictionary |  |  |  | Redistribute OSPFv3 routes learned from external sources. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "router_bgp.vrfs.[].address_family_ipv4_multicast.redistribute.ospfv3.match_external.enabled") | Boolean | Required |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;route_map</samp>](## "router_bgp.vrfs.[].address_family_ipv4_multicast.redistribute.ospfv3.match_external.route_map") | String |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;include_leaked</samp>](## "router_bgp.vrfs.[].address_family_ipv4_multicast.redistribute.ospfv3.match_external.include_leaked") | Boolean |  |  |  | Include following routes while redistributing. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;match_internal</samp>](## "router_bgp.vrfs.[].address_family_ipv4_multicast.redistribute.ospfv3.match_internal") | Dictionary |  |  |  | Redistribute OSPFv3 routes learned from internal sources. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "router_bgp.vrfs.[].address_family_ipv4_multicast.redistribute.ospfv3.match_internal.enabled") | Boolean | Required |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;route_map</samp>](## "router_bgp.vrfs.[].address_family_ipv4_multicast.redistribute.ospfv3.match_internal.route_map") | String |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;include_leaked</samp>](## "router_bgp.vrfs.[].address_family_ipv4_multicast.redistribute.ospfv3.match_internal.include_leaked") | Boolean |  |  |  | Include following routes while redistributing. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;match_nssa_external</samp>](## "router_bgp.vrfs.[].address_family_ipv4_multicast.redistribute.ospfv3.match_nssa_external") | Dictionary |  |  |  | Redistribute OSPFv3 routes learned from external NSSA sources. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "router_bgp.vrfs.[].address_family_ipv4_multicast.redistribute.ospfv3.match_nssa_external.enabled") | Boolean | Required |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;nssa_type</samp>](## "router_bgp.vrfs.[].address_family_ipv4_multicast.redistribute.ospfv3.match_nssa_external.nssa_type") | Integer |  |  | Valid Values:<br>- <code>1</code><br>- <code>2</code> | NSSA External Type Number. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;route_map</samp>](## "router_bgp.vrfs.[].address_family_ipv4_multicast.redistribute.ospfv3.match_nssa_external.route_map") | String |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;include_leaked</samp>](## "router_bgp.vrfs.[].address_family_ipv4_multicast.redistribute.ospfv3.match_nssa_external.include_leaked") | Boolean |  |  |  | Include following routes while redistributing. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;route_map</samp>](## "router_bgp.vrfs.[].address_family_ipv4_multicast.redistribute.ospfv3.route_map") | String |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;include_leaked</samp>](## "router_bgp.vrfs.[].address_family_ipv4_multicast.redistribute.ospfv3.include_leaked") | Boolean |  |  |  | Include following routes while redistributing. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;static</samp>](## "router_bgp.vrfs.[].address_family_ipv4_multicast.redistribute.static") | Dictionary |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "router_bgp.vrfs.[].address_family_ipv4_multicast.redistribute.static.enabled") | Boolean | Required |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;route_map</samp>](## "router_bgp.vrfs.[].address_family_ipv4_multicast.redistribute.static.route_map") | String |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;redistribute_routes</samp>](## "router_bgp.vrfs.[].address_family_ipv4_multicast.redistribute_routes") <span style="color:red">deprecated</span> | List, items: Dictionary |  |  |  | <span style="color:red">This key is deprecated. Support will be removed in AVD version 6.0.0. Use <samp>redistribute</samp> instead.</span> |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;source_protocol</samp>](## "router_bgp.vrfs.[].address_family_ipv4_multicast.redistribute_routes.[].source_protocol") | String | Required |  | Valid Values:<br>- <code>attached-host</code><br>- <code>connected</code><br>- <code>isis</code><br>- <code>ospf</code><br>- <code>ospfv3</code><br>- <code>static</code> |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;route_map</samp>](## "router_bgp.vrfs.[].address_family_ipv4_multicast.redistribute_routes.[].route_map") | String |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;include_leaked</samp>](## "router_bgp.vrfs.[].address_family_ipv4_multicast.redistribute_routes.[].include_leaked") | Boolean |  |  |  | Only applicable if `source_protocol` is `isis`. |
@@ -1155,7 +1489,46 @@
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;networks</samp>](## "router_bgp.vrfs.[].address_family_ipv6_multicast.networks") | List, items: Dictionary |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;prefix</samp>](## "router_bgp.vrfs.[].address_family_ipv6_multicast.networks.[].prefix") | String | Required, Unique |  |  | IPv6 prefix "A:B:C:D:E:F:G:H/I". |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;route_map</samp>](## "router_bgp.vrfs.[].address_family_ipv6_multicast.networks.[].route_map") | String |  |  |  |  |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;redistribute_routes</samp>](## "router_bgp.vrfs.[].address_family_ipv6_multicast.redistribute_routes") | List, items: Dictionary |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;redistribute</samp>](## "router_bgp.vrfs.[].address_family_ipv6_multicast.redistribute") | Dictionary |  |  |  | Redistribute routes in to BGP. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;connected</samp>](## "router_bgp.vrfs.[].address_family_ipv6_multicast.redistribute.connected") | Dictionary |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "router_bgp.vrfs.[].address_family_ipv6_multicast.redistribute.connected.enabled") | Boolean | Required |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;route_map</samp>](## "router_bgp.vrfs.[].address_family_ipv6_multicast.redistribute.connected.route_map") | String |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;isis</samp>](## "router_bgp.vrfs.[].address_family_ipv6_multicast.redistribute.isis") | Dictionary |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "router_bgp.vrfs.[].address_family_ipv6_multicast.redistribute.isis.enabled") | Boolean | Required |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;isis_level</samp>](## "router_bgp.vrfs.[].address_family_ipv6_multicast.redistribute.isis.isis_level") | String |  |  | Valid Values:<br>- <code>level-1</code><br>- <code>level-2</code><br>- <code>level-1-2</code> | Redistribute IS-IS route level. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;route_map</samp>](## "router_bgp.vrfs.[].address_family_ipv6_multicast.redistribute.isis.route_map") | String |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;rcf</samp>](## "router_bgp.vrfs.[].address_family_ipv6_multicast.redistribute.isis.rcf") | String |  |  |  | RCF function name with parenthesis.<br>Example: MyFunction(myarg).<br>`route_map` and `rcf` are mutually exclusive. `route_map` takes precedence. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;include_leaked</samp>](## "router_bgp.vrfs.[].address_family_ipv6_multicast.redistribute.isis.include_leaked") | Boolean |  |  |  | Include following routes while redistributing. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ospf</samp>](## "router_bgp.vrfs.[].address_family_ipv6_multicast.redistribute.ospf") | Dictionary |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "router_bgp.vrfs.[].address_family_ipv6_multicast.redistribute.ospf.enabled") | Boolean |  |  |  | Redistribute OSPF routes. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;match_external</samp>](## "router_bgp.vrfs.[].address_family_ipv6_multicast.redistribute.ospf.match_external") | Dictionary |  |  |  | Redistribute OSPF routes learned from external sources. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "router_bgp.vrfs.[].address_family_ipv6_multicast.redistribute.ospf.match_external.enabled") | Boolean | Required |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;route_map</samp>](## "router_bgp.vrfs.[].address_family_ipv6_multicast.redistribute.ospf.match_external.route_map") | String |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;match_internal</samp>](## "router_bgp.vrfs.[].address_family_ipv6_multicast.redistribute.ospf.match_internal") | Dictionary |  |  |  | Redistribute OSPF routes learned from internal sources. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "router_bgp.vrfs.[].address_family_ipv6_multicast.redistribute.ospf.match_internal.enabled") | Boolean | Required |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;route_map</samp>](## "router_bgp.vrfs.[].address_family_ipv6_multicast.redistribute.ospf.match_internal.route_map") | String |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;match_nssa_external</samp>](## "router_bgp.vrfs.[].address_family_ipv6_multicast.redistribute.ospf.match_nssa_external") | Dictionary |  |  |  | Redistribute OSPF routes learned from external NSSA sources. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "router_bgp.vrfs.[].address_family_ipv6_multicast.redistribute.ospf.match_nssa_external.enabled") | Boolean | Required |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;nssa_type</samp>](## "router_bgp.vrfs.[].address_family_ipv6_multicast.redistribute.ospf.match_nssa_external.nssa_type") | Integer |  |  | Valid Values:<br>- <code>1</code><br>- <code>2</code> | NSSA External Type Number. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;route_map</samp>](## "router_bgp.vrfs.[].address_family_ipv6_multicast.redistribute.ospf.match_nssa_external.route_map") | String |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;route_map</samp>](## "router_bgp.vrfs.[].address_family_ipv6_multicast.redistribute.ospf.route_map") | String |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ospfv3</samp>](## "router_bgp.vrfs.[].address_family_ipv6_multicast.redistribute.ospfv3") | Dictionary |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "router_bgp.vrfs.[].address_family_ipv6_multicast.redistribute.ospfv3.enabled") | Boolean |  |  |  | Redistribute OSPFv3 routes. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;match_external</samp>](## "router_bgp.vrfs.[].address_family_ipv6_multicast.redistribute.ospfv3.match_external") | Dictionary |  |  |  | Redistribute OSPFv3 routes learned from external sources. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "router_bgp.vrfs.[].address_family_ipv6_multicast.redistribute.ospfv3.match_external.enabled") | Boolean | Required |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;route_map</samp>](## "router_bgp.vrfs.[].address_family_ipv6_multicast.redistribute.ospfv3.match_external.route_map") | String |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;match_internal</samp>](## "router_bgp.vrfs.[].address_family_ipv6_multicast.redistribute.ospfv3.match_internal") | Dictionary |  |  |  | Redistribute OSPFv3 routes learned from internal sources. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "router_bgp.vrfs.[].address_family_ipv6_multicast.redistribute.ospfv3.match_internal.enabled") | Boolean | Required |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;route_map</samp>](## "router_bgp.vrfs.[].address_family_ipv6_multicast.redistribute.ospfv3.match_internal.route_map") | String |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;match_nssa_external</samp>](## "router_bgp.vrfs.[].address_family_ipv6_multicast.redistribute.ospfv3.match_nssa_external") | Dictionary |  |  |  | Redistribute OSPFv3 routes learned from external NSSA sources. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "router_bgp.vrfs.[].address_family_ipv6_multicast.redistribute.ospfv3.match_nssa_external.enabled") | Boolean | Required |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;nssa_type</samp>](## "router_bgp.vrfs.[].address_family_ipv6_multicast.redistribute.ospfv3.match_nssa_external.nssa_type") | Integer |  |  | Valid Values:<br>- <code>1</code><br>- <code>2</code> | NSSA External Type Number. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;route_map</samp>](## "router_bgp.vrfs.[].address_family_ipv6_multicast.redistribute.ospfv3.match_nssa_external.route_map") | String |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;route_map</samp>](## "router_bgp.vrfs.[].address_family_ipv6_multicast.redistribute.ospfv3.route_map") | String |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;static</samp>](## "router_bgp.vrfs.[].address_family_ipv6_multicast.redistribute.static") | Dictionary |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "router_bgp.vrfs.[].address_family_ipv6_multicast.redistribute.static.enabled") | Boolean | Required |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;route_map</samp>](## "router_bgp.vrfs.[].address_family_ipv6_multicast.redistribute.static.route_map") | String |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;redistribute_routes</samp>](## "router_bgp.vrfs.[].address_family_ipv6_multicast.redistribute_routes") <span style="color:red">deprecated</span> | List, items: Dictionary |  |  |  | <span style="color:red">This key is deprecated. Support will be removed in AVD version 6.0.0. Use <samp>redistribute</samp> instead.</span> |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;source_protocol</samp>](## "router_bgp.vrfs.[].address_family_ipv6_multicast.redistribute_routes.[].source_protocol") | String | Required |  | Valid Values:<br>- <code>connected</code><br>- <code>isis</code><br>- <code>ospf</code><br>- <code>ospfv3</code><br>- <code>static</code> |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;route_map</samp>](## "router_bgp.vrfs.[].address_family_ipv6_multicast.redistribute_routes.[].route_map") | String |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;include_leaked</samp>](## "router_bgp.vrfs.[].address_family_ipv6_multicast.redistribute_routes.[].include_leaked") | Boolean |  |  |  | Only applicable if `source_protocol` is `isis`. |
@@ -1602,6 +1975,142 @@
 
           # Route-map name.
           match_map: <str>
+
+      # Redistribute routes in to BGP.
+      redistribute:
+        attached_host:
+          enabled: <bool; required>
+          route_map: <str>
+        bgp:
+          enabled: <bool; required>
+          route_map: <str>
+        connected:
+          enabled: <bool; required>
+          route_map: <str>
+
+          # RCF function name with parenthesis.
+          # Example: MyFunction(myarg).
+          # `route_map` and `rcf` are mutually exclusive. `route_map` takes precedence.
+          rcf: <str>
+
+          # Include following routes while redistributing.
+          include_leaked: <bool>
+        dynamic:
+          enabled: <bool; required>
+          route_map: <str>
+
+          # RCF function name with parenthesis.
+          # Example: MyFunction(myarg).
+          # `route_map` and `rcf` are mutually exclusive. `route_map` takes precedence.
+          rcf: <str>
+        isis:
+          enabled: <bool; required>
+
+          # Redistribute IS-IS route level.
+          isis_level: <str; "level-1" | "level-2" | "level-1-2">
+          route_map: <str>
+
+          # RCF function name with parenthesis.
+          # Example: MyFunction(myarg).
+          # `route_map` and `rcf` are mutually exclusive. `route_map` takes precedence.
+          rcf: <str>
+
+          # Include following routes while redistributing.
+          include_leaked: <bool>
+        ospf:
+
+          # Redistribute OSPF routes.
+          enabled: <bool>
+
+          # Redistribute OSPF routes learned from external sources.
+          match_external:
+            enabled: <bool; required>
+            route_map: <str>
+
+            # Include following routes while redistributing.
+            include_leaked: <bool>
+
+          # Redistribute OSPF routes learned from internal sources.
+          match_internal:
+            enabled: <bool; required>
+            route_map: <str>
+
+            # Include following routes while redistributing.
+            include_leaked: <bool>
+
+          # Redistribute OSPF routes learned from external NSSA sources.
+          match_nssa_external:
+            enabled: <bool; required>
+
+            # NSSA External Type Number.
+            nssa_type: <int; 1 | 2>
+            route_map: <str>
+
+            # Include following routes while redistributing.
+            include_leaked: <bool>
+          route_map: <str>
+
+          # Include following routes while redistributing.
+          include_leaked: <bool>
+        ospfv3:
+
+          # Redistribute OSPFv3 routes.
+          enabled: <bool>
+
+          # Redistribute OSPFv3 routes learned from external sources.
+          match_external:
+            enabled: <bool; required>
+            route_map: <str>
+
+            # Include following routes while redistributing.
+            include_leaked: <bool>
+
+          # Redistribute OSPFv3 routes learned from internal sources.
+          match_internal:
+            enabled: <bool; required>
+            route_map: <str>
+
+            # Include following routes while redistributing.
+            include_leaked: <bool>
+
+          # Redistribute OSPFv3 routes learned from external NSSA sources.
+          match_nssa_external:
+            enabled: <bool; required>
+
+            # NSSA External Type Number.
+            nssa_type: <int; 1 | 2>
+            route_map: <str>
+
+            # Include following routes while redistributing.
+            include_leaked: <bool>
+          route_map: <str>
+
+          # Include following routes while redistributing.
+          include_leaked: <bool>
+        rip:
+          enabled: <bool; required>
+          route_map: <str>
+        static:
+          enabled: <bool; required>
+          route_map: <str>
+
+          # RCF function name with parenthesis.
+          # Example: MyFunction(myarg).
+          # `route_map` and `rcf` are mutually exclusive. `route_map` takes precedence.
+          rcf: <str>
+
+          # Include following routes while redistributing.
+          include_leaked: <bool>
+        user:
+          enabled: <bool; required>
+
+          # RCF function name with parenthesis.
+          # Example: MyFunction(myarg).
+          # `route_map` and `rcf` are mutually exclusive. `route_map` takes precedence.
+          rcf: <str>
+      # This key is deprecated.
+      # Support will be removed in AVD version 6.0.0.
+      # Use <samp>redistribute</samp> instead.
       redistribute_routes:
         - source_protocol: <str; "attached-host" | "bgp" | "connected" | "dynamic" | "isis" | "ospf" | "ospfv3" | "rip" | "static" | "user"; required>
           route_map: <str>
@@ -1673,9 +2182,6 @@
 
             # Route distinguisher.
             rd: <str>
-
-          # Multiline EOS CLI rendered directly on the Router BGP, VLAN definition in the final EOS configuration.
-          eos_cli: <str>
           route_targets:
             both:
               - <str>
@@ -1696,6 +2202,9 @@
             - <str>
           no_redistribute_routes:
             - <str>
+
+          # Multiline EOS CLI rendered directly on the Router BGP, VLAN definition in the final EOS configuration.
+          eos_cli: <str>
       vpws:
 
           # VPWS instance name.
@@ -1841,6 +2350,29 @@
           import_overlay_index_gateway: <bool>
           export_ethernet_segment_ip_mass_withdraw: <bool>
         next_hop_unchanged: <bool>
+        bgp:
+          additional_paths:
+
+            # Enable or disable reception of additional-paths.
+            receive: <bool>
+
+            # Select an option to send multiple paths for same prefix through bgp updates.
+            # any: Send any eligible path.
+            # backup: Best path and installed backup path.
+            # ecmp: All paths in best path ECMP group.
+            # limit: Limit to n eligible paths.
+            # disabled: Disable sending any paths.
+            send: <str; "any" | "backup" | "ecmp" | "limit" | "disabled">
+
+            # Number of paths to send through bgp updates. For this setting, `send` must be set to `limit` or `ecmp`.
+            send_limit: <int; 2-64>
+
+        # BGP layer-2 in-place FEC operation.
+        layer_2_fec_in_place_update:
+          enabled: <bool; required>
+
+          # In-place FEC update tracking timeout in seconds.
+          timeout: <int; 0-300>
 
         # BGP additional-paths commands.
         # This key is deprecated.
@@ -1868,29 +2400,6 @@
 
             # Amount of paths to send.
             limit: <int; 2-64>
-        bgp:
-          additional_paths:
-
-            # Enable or disable reception of additional-paths.
-            receive: <bool>
-
-            # Select an option to send multiple paths for same prefix through bgp updates.
-            # any: Send any eligible path.
-            # backup: Best path and installed backup path.
-            # ecmp: All paths in best path ECMP group.
-            # limit: Limit to n eligible paths.
-            # disabled: Disable sending any paths.
-            send: <str; "any" | "backup" | "ecmp" | "limit" | "disabled">
-
-            # Number of paths to send through bgp updates. For this setting, `send` must be set to `limit` or `ecmp`.
-            send_limit: <int; 2-64>
-
-        # BGP layer-2 in-place FEC operation.
-        layer_2_fec_in_place_update:
-          enabled: <bool; required>
-
-          # In-place FEC update tracking timeout in seconds.
-          timeout: <int; 0-300>
       address_family_rtc:
         peer_groups:
 
@@ -2029,6 +2538,142 @@
 
               # Number of paths to send through bgp updates. For this setting, `send` must be set to `limit` or `ecmp`.
               send_limit: <int; 2-64>
+
+        # Redistribute routes in to BGP.
+        redistribute:
+          attached_host:
+            enabled: <bool; required>
+            route_map: <str>
+          bgp:
+            enabled: <bool; required>
+            route_map: <str>
+          connected:
+            enabled: <bool; required>
+            route_map: <str>
+
+            # RCF function name with parenthesis.
+            # Example: MyFunction(myarg).
+            # `route_map` and `rcf` are mutually exclusive. `route_map` takes precedence.
+            rcf: <str>
+
+            # Include following routes while redistributing.
+            include_leaked: <bool>
+          dynamic:
+            enabled: <bool; required>
+            route_map: <str>
+
+            # RCF function name with parenthesis.
+            # Example: MyFunction(myarg).
+            # `route_map` and `rcf` are mutually exclusive. `route_map` takes precedence.
+            rcf: <str>
+          isis:
+            enabled: <bool; required>
+
+            # Redistribute IS-IS route level.
+            isis_level: <str; "level-1" | "level-2" | "level-1-2">
+            route_map: <str>
+
+            # RCF function name with parenthesis.
+            # Example: MyFunction(myarg).
+            # `route_map` and `rcf` are mutually exclusive. `route_map` takes precedence.
+            rcf: <str>
+
+            # Include following routes while redistributing.
+            include_leaked: <bool>
+          ospf:
+
+            # Redistribute OSPF routes.
+            enabled: <bool>
+
+            # Redistribute OSPF routes learned from external sources.
+            match_external:
+              enabled: <bool; required>
+              route_map: <str>
+
+              # Include following routes while redistributing.
+              include_leaked: <bool>
+
+            # Redistribute OSPF routes learned from internal sources.
+            match_internal:
+              enabled: <bool; required>
+              route_map: <str>
+
+              # Include following routes while redistributing.
+              include_leaked: <bool>
+
+            # Redistribute OSPF routes learned from external NSSA sources.
+            match_nssa_external:
+              enabled: <bool; required>
+
+              # NSSA External Type Number.
+              nssa_type: <int; 1 | 2>
+              route_map: <str>
+
+              # Include following routes while redistributing.
+              include_leaked: <bool>
+            route_map: <str>
+
+            # Include following routes while redistributing.
+            include_leaked: <bool>
+          ospfv3:
+
+            # Redistribute OSPFv3 routes.
+            enabled: <bool>
+
+            # Redistribute OSPFv3 routes learned from external sources.
+            match_external:
+              enabled: <bool; required>
+              route_map: <str>
+
+              # Include following routes while redistributing.
+              include_leaked: <bool>
+
+            # Redistribute OSPFv3 routes learned from internal sources.
+            match_internal:
+              enabled: <bool; required>
+              route_map: <str>
+
+              # Include following routes while redistributing.
+              include_leaked: <bool>
+
+            # Redistribute OSPFv3 routes learned from external NSSA sources.
+            match_nssa_external:
+              enabled: <bool; required>
+
+              # NSSA External Type Number.
+              nssa_type: <int; 1 | 2>
+              route_map: <str>
+
+              # Include following routes while redistributing.
+              include_leaked: <bool>
+            route_map: <str>
+
+            # Include following routes while redistributing.
+            include_leaked: <bool>
+          rip:
+            enabled: <bool; required>
+            route_map: <str>
+          static:
+            enabled: <bool; required>
+            route_map: <str>
+
+            # RCF function name with parenthesis.
+            # Example: MyFunction(myarg).
+            # `route_map` and `rcf` are mutually exclusive. `route_map` takes precedence.
+            rcf: <str>
+
+            # Include following routes while redistributing.
+            include_leaked: <bool>
+          user:
+            enabled: <bool; required>
+
+            # RCF function name with parenthesis.
+            # Example: MyFunction(myarg).
+            # `route_map` and `rcf` are mutually exclusive. `route_map` takes precedence.
+            rcf: <str>
+        # This key is deprecated.
+        # Support will be removed in AVD version 6.0.0.
+        # Use <samp>redistribute</samp> instead.
         redistribute_routes:
           - source_protocol: <str; "attached-host" | "bgp" | "connected" | "dynamic" | "isis" | "ospf" | "ospfv3" | "rip" | "static" | "user"; required>
             route_map: <str>
@@ -2172,8 +2817,6 @@
                 # Include sub-route-map references in missing policy decision.
                 include_sub_route_map: <bool>
             multi_path: <bool>
-            next_hop_resolution:
-              v4_mapped_v6_translation: <bool>
             next_hop_self: <bool>
 
             # Source interface name.
@@ -2259,8 +2902,6 @@
                 # Include sub-route-map references in missing policy decision.
                 include_sub_route_map: <bool>
             multi_path: <bool>
-            next_hop_resolution:
-              v4_mapped_v6_translation: <bool>
             next_hop_self: <bool>
 
             # Source interface name.
@@ -2713,6 +3354,78 @@
             # IPv6 prefix "A:B:C:D:E:F:G:H/I".
           - prefix: <str; required; unique>
             route_map: <str>
+
+        # Redistribute routes in to BGP.
+        redistribute:
+          connected:
+            enabled: <bool; required>
+            route_map: <str>
+          isis:
+            enabled: <bool; required>
+
+            # Redistribute IS-IS route level.
+            isis_level: <str; "level-1" | "level-2" | "level-1-2">
+            route_map: <str>
+
+            # RCF function name with parenthesis.
+            # Example: MyFunction(myarg).
+            # `route_map` and `rcf` are mutually exclusive. `route_map` takes precedence.
+            rcf: <str>
+
+            # Include following routes while redistributing.
+            include_leaked: <bool>
+          ospf:
+
+            # Redistribute OSPF routes.
+            enabled: <bool>
+
+            # Redistribute OSPF routes learned from external sources.
+            match_external:
+              enabled: <bool; required>
+              route_map: <str>
+
+            # Redistribute OSPF routes learned from internal sources.
+            match_internal:
+              enabled: <bool; required>
+              route_map: <str>
+
+            # Redistribute OSPF routes learned from external NSSA sources.
+            match_nssa_external:
+              enabled: <bool; required>
+
+              # NSSA External Type Number.
+              nssa_type: <int; 1 | 2>
+              route_map: <str>
+            route_map: <str>
+          ospfv3:
+
+            # Redistribute OSPFv3 routes.
+            enabled: <bool>
+
+            # Redistribute OSPFv3 routes learned from external sources.
+            match_external:
+              enabled: <bool; required>
+              route_map: <str>
+
+            # Redistribute OSPFv3 routes learned from internal sources.
+            match_internal:
+              enabled: <bool; required>
+              route_map: <str>
+
+            # Redistribute OSPFv3 routes learned from external NSSA sources.
+            match_nssa_external:
+              enabled: <bool; required>
+
+              # NSSA External Type Number.
+              nssa_type: <int; 1 | 2>
+              route_map: <str>
+            route_map: <str>
+          static:
+            enabled: <bool; required>
+            route_map: <str>
+        # This key is deprecated.
+        # Support will be removed in AVD version 6.0.0.
+        # Use <samp>redistribute</samp> instead.
         redistribute_routes:
           - source_protocol: <str; "connected" | "isis" | "ospf" | "ospfv3" | "static"; required>
 
@@ -3452,6 +4165,142 @@
                 # IPv4 prefix "A.B.C.D/E".
               - prefix: <str; required; unique>
                 route_map: <str>
+
+            # Redistribute routes in to BGP.
+            redistribute:
+              attached_host:
+                enabled: <bool; required>
+                route_map: <str>
+              bgp:
+                enabled: <bool; required>
+                route_map: <str>
+              connected:
+                enabled: <bool; required>
+                route_map: <str>
+
+                # RCF function name with parenthesis.
+                # Example: MyFunction(myarg).
+                # `route_map` and `rcf` are mutually exclusive. `route_map` takes precedence.
+                rcf: <str>
+
+                # Include following routes while redistributing.
+                include_leaked: <bool>
+              dynamic:
+                enabled: <bool; required>
+                route_map: <str>
+
+                # RCF function name with parenthesis.
+                # Example: MyFunction(myarg).
+                # `route_map` and `rcf` are mutually exclusive. `route_map` takes precedence.
+                rcf: <str>
+              isis:
+                enabled: <bool; required>
+
+                # Redistribute IS-IS route level.
+                isis_level: <str; "level-1" | "level-2" | "level-1-2">
+                route_map: <str>
+
+                # RCF function name with parenthesis.
+                # Example: MyFunction(myarg).
+                # `route_map` and `rcf` are mutually exclusive. `route_map` takes precedence.
+                rcf: <str>
+
+                # Include following routes while redistributing.
+                include_leaked: <bool>
+              ospf:
+
+                # Redistribute OSPF routes.
+                enabled: <bool>
+
+                # Redistribute OSPF routes learned from external sources.
+                match_external:
+                  enabled: <bool; required>
+                  route_map: <str>
+
+                  # Include following routes while redistributing.
+                  include_leaked: <bool>
+
+                # Redistribute OSPF routes learned from internal sources.
+                match_internal:
+                  enabled: <bool; required>
+                  route_map: <str>
+
+                  # Include following routes while redistributing.
+                  include_leaked: <bool>
+
+                # Redistribute OSPF routes learned from external NSSA sources.
+                match_nssa_external:
+                  enabled: <bool; required>
+
+                  # NSSA External Type Number.
+                  nssa_type: <int; 1 | 2>
+                  route_map: <str>
+
+                  # Include following routes while redistributing.
+                  include_leaked: <bool>
+                route_map: <str>
+
+                # Include following routes while redistributing.
+                include_leaked: <bool>
+              ospfv3:
+
+                # Redistribute OSPFv3 routes.
+                enabled: <bool>
+
+                # Redistribute OSPFv3 routes learned from external sources.
+                match_external:
+                  enabled: <bool; required>
+                  route_map: <str>
+
+                  # Include following routes while redistributing.
+                  include_leaked: <bool>
+
+                # Redistribute OSPFv3 routes learned from internal sources.
+                match_internal:
+                  enabled: <bool; required>
+                  route_map: <str>
+
+                  # Include following routes while redistributing.
+                  include_leaked: <bool>
+
+                # Redistribute OSPFv3 routes learned from external NSSA sources.
+                match_nssa_external:
+                  enabled: <bool; required>
+
+                  # NSSA External Type Number.
+                  nssa_type: <int; 1 | 2>
+                  route_map: <str>
+
+                  # Include following routes while redistributing.
+                  include_leaked: <bool>
+                route_map: <str>
+
+                # Include following routes while redistributing.
+                include_leaked: <bool>
+              rip:
+                enabled: <bool; required>
+                route_map: <str>
+              static:
+                enabled: <bool; required>
+                route_map: <str>
+
+                # RCF function name with parenthesis.
+                # Example: MyFunction(myarg).
+                # `route_map` and `rcf` are mutually exclusive. `route_map` takes precedence.
+                rcf: <str>
+
+                # Include following routes while redistributing.
+                include_leaked: <bool>
+              user:
+                enabled: <bool; required>
+
+                # RCF function name with parenthesis.
+                # Example: MyFunction(myarg).
+                # `route_map` and `rcf` are mutually exclusive. `route_map` takes precedence.
+                rcf: <str>
+            # This key is deprecated.
+            # Support will be removed in AVD version 6.0.0.
+            # Use <samp>redistribute</samp> instead.
             redistribute_routes:
               - source_protocol: <str; "attached-host" | "bgp" | "connected" | "dynamic" | "isis" | "ospf" | "ospfv3" | "rip" | "static" | "user"; required>
                 route_map: <str>
@@ -3538,6 +4387,107 @@
                 # IPv6 prefix "A:B:C:D:E:F:G:H/I".
               - prefix: <str; required; unique>
                 route_map: <str>
+
+            # Redistribute routes in to BGP.
+            redistribute:
+              attached_host:
+                enabled: <bool; required>
+                route_map: <str>
+              bgp:
+                enabled: <bool; required>
+                route_map: <str>
+              connected:
+                enabled: <bool; required>
+                route_map: <str>
+
+                # RCF function name with parenthesis.
+                # Example: MyFunction(myarg).
+                # `route_map` and `rcf` are mutually exclusive. `route_map` takes precedence.
+                rcf: <str>
+
+                # Include following routes while redistributing.
+                include_leaked: <bool>
+              dhcp:
+                enabled: <bool; required>
+                route_map: <str>
+              dynamic:
+                enabled: <bool; required>
+                route_map: <str>
+
+                # RCF function name with parenthesis.
+                # Example: MyFunction(myarg).
+                # `route_map` and `rcf` are mutually exclusive. `route_map` takes precedence.
+                rcf: <str>
+              isis:
+                enabled: <bool; required>
+
+                # Redistribute IS-IS route level.
+                isis_level: <str; "level-1" | "level-2" | "level-1-2">
+                route_map: <str>
+
+                # RCF function name with parenthesis.
+                # Example: MyFunction(myarg).
+                # `route_map` and `rcf` are mutually exclusive. `route_map` takes precedence.
+                rcf: <str>
+
+                # Include following routes while redistributing.
+                include_leaked: <bool>
+              ospfv3:
+
+                # Redistribute OSPFv3 routes.
+                enabled: <bool>
+
+                # Redistribute OSPFv3 routes learned from external sources.
+                match_external:
+                  enabled: <bool; required>
+                  route_map: <str>
+
+                  # Include following routes while redistributing.
+                  include_leaked: <bool>
+
+                # Redistribute OSPFv3 routes learned from internal sources.
+                match_internal:
+                  enabled: <bool; required>
+                  route_map: <str>
+
+                  # Include following routes while redistributing.
+                  include_leaked: <bool>
+
+                # Redistribute OSPFv3 routes learned from external NSSA sources.
+                match_nssa_external:
+                  enabled: <bool; required>
+
+                  # NSSA External Type Number.
+                  nssa_type: <int; 1 | 2>
+                  route_map: <str>
+
+                  # Include following routes while redistributing.
+                  include_leaked: <bool>
+                route_map: <str>
+
+                # Include following routes while redistributing.
+                include_leaked: <bool>
+              static:
+                enabled: <bool; required>
+                route_map: <str>
+
+                # RCF function name with parenthesis.
+                # Example: MyFunction(myarg).
+                # `route_map` and `rcf` are mutually exclusive. `route_map` takes precedence.
+                rcf: <str>
+
+                # Include following routes while redistributing.
+                include_leaked: <bool>
+              user:
+                enabled: <bool; required>
+
+                # RCF function name with parenthesis.
+                # Example: MyFunction(myarg).
+                # `route_map` and `rcf` are mutually exclusive. `route_map` takes precedence.
+                rcf: <str>
+            # This key is deprecated.
+            # Support will be removed in AVD version 6.0.0.
+            # Use <samp>redistribute</samp> instead.
             redistribute_routes:
               - source_protocol: <str; "attached-host" | "bgp" | "connected" | "dhcp" | "dynamic" | "isis" | "ospfv3" | "static" | "user"; required>
                 route_map: <str>
@@ -3575,6 +4525,93 @@
                 # IPv6 prefix "A.B.C.D/E".
               - prefix: <str; required; unique>
                 route_map: <str>
+
+            # Redistribute routes in to BGP.
+            redistribute:
+              attached_host:
+                enabled: <bool; required>
+                route_map: <str>
+              connected:
+                enabled: <bool; required>
+                route_map: <str>
+              isis:
+                enabled: <bool; required>
+
+                # Redistribute IS-IS route level.
+                isis_level: <str; "level-1" | "level-2" | "level-1-2">
+                route_map: <str>
+
+                # RCF function name with parenthesis.
+                # Example: MyFunction(myarg).
+                # `route_map` and `rcf` are mutually exclusive. `route_map` takes precedence.
+                rcf: <str>
+
+                # Include following routes while redistributing.
+                include_leaked: <bool>
+              ospf:
+
+                # Redistribute OSPF routes.
+                enabled: <bool>
+
+                # Redistribute OSPF routes learned from external sources.
+                match_external:
+                  enabled: <bool; required>
+                  route_map: <str>
+
+                # Redistribute OSPF routes learned from internal sources.
+                match_internal:
+                  enabled: <bool; required>
+                  route_map: <str>
+
+                # Redistribute OSPF routes learned from external NSSA sources.
+                match_nssa_external:
+                  enabled: <bool; required>
+
+                  # NSSA External Type Number.
+                  nssa_type: <int; 1 | 2>
+                  route_map: <str>
+                route_map: <str>
+              ospfv3:
+
+                # Redistribute OSPFv3 routes.
+                enabled: <bool>
+
+                # Redistribute OSPFv3 routes learned from external sources.
+                match_external:
+                  enabled: <bool; required>
+                  route_map: <str>
+
+                  # Include following routes while redistributing.
+                  include_leaked: <bool>
+
+                # Redistribute OSPFv3 routes learned from internal sources.
+                match_internal:
+                  enabled: <bool; required>
+                  route_map: <str>
+
+                  # Include following routes while redistributing.
+                  include_leaked: <bool>
+
+                # Redistribute OSPFv3 routes learned from external NSSA sources.
+                match_nssa_external:
+                  enabled: <bool; required>
+
+                  # NSSA External Type Number.
+                  nssa_type: <int; 1 | 2>
+                  route_map: <str>
+
+                  # Include following routes while redistributing.
+                  include_leaked: <bool>
+                route_map: <str>
+
+                # Include following routes while redistributing.
+                include_leaked: <bool>
+              static:
+                enabled: <bool; required>
+                route_map: <str>
+            # This key is deprecated.
+            # Support will be removed in AVD version 6.0.0.
+            # Use <samp>redistribute</samp> instead.
             redistribute_routes:
               - source_protocol: <str; "attached-host" | "connected" | "isis" | "ospf" | "ospfv3" | "static"; required>
                 route_map: <str>
@@ -3614,6 +4651,78 @@
                 # IPv6 prefix "A:B:C:D:E:F:G:H/I".
               - prefix: <str; required; unique>
                 route_map: <str>
+
+            # Redistribute routes in to BGP.
+            redistribute:
+              connected:
+                enabled: <bool; required>
+                route_map: <str>
+              isis:
+                enabled: <bool; required>
+
+                # Redistribute IS-IS route level.
+                isis_level: <str; "level-1" | "level-2" | "level-1-2">
+                route_map: <str>
+
+                # RCF function name with parenthesis.
+                # Example: MyFunction(myarg).
+                # `route_map` and `rcf` are mutually exclusive. `route_map` takes precedence.
+                rcf: <str>
+
+                # Include following routes while redistributing.
+                include_leaked: <bool>
+              ospf:
+
+                # Redistribute OSPF routes.
+                enabled: <bool>
+
+                # Redistribute OSPF routes learned from external sources.
+                match_external:
+                  enabled: <bool; required>
+                  route_map: <str>
+
+                # Redistribute OSPF routes learned from internal sources.
+                match_internal:
+                  enabled: <bool; required>
+                  route_map: <str>
+
+                # Redistribute OSPF routes learned from external NSSA sources.
+                match_nssa_external:
+                  enabled: <bool; required>
+
+                  # NSSA External Type Number.
+                  nssa_type: <int; 1 | 2>
+                  route_map: <str>
+                route_map: <str>
+              ospfv3:
+
+                # Redistribute OSPFv3 routes.
+                enabled: <bool>
+
+                # Redistribute OSPFv3 routes learned from external sources.
+                match_external:
+                  enabled: <bool; required>
+                  route_map: <str>
+
+                # Redistribute OSPFv3 routes learned from internal sources.
+                match_internal:
+                  enabled: <bool; required>
+                  route_map: <str>
+
+                # Redistribute OSPFv3 routes learned from external NSSA sources.
+                match_nssa_external:
+                  enabled: <bool; required>
+
+                  # NSSA External Type Number.
+                  nssa_type: <int; 1 | 2>
+                  route_map: <str>
+                route_map: <str>
+              static:
+                enabled: <bool; required>
+                route_map: <str>
+            # This key is deprecated.
+            # Support will be removed in AVD version 6.0.0.
+            # Use <samp>redistribute</samp> instead.
             redistribute_routes:
               - source_protocol: <str; "connected" | "isis" | "ospf" | "ospfv3" | "static"; required>
                 route_map: <str>

@@ -58,7 +58,7 @@ keys:
             warning: true
             removed: false
             remove_in_version: 6.0.0
-            new_key: port_channel_interfaces[].switchport.access_vlan or port_channel_interfaces[].switchport.trunk.allowed_vlan
+            new_key: switchport.access_vlan or switchport.trunk.allowed_vlan
         snmp_trap_link_change:
           type: bool
         type:
@@ -285,7 +285,7 @@ keys:
             warning: true
             removed: false
             remove_in_version: 6.0.0
-            new_key: port_channel_interfaces[].switchport.mode
+            new_key: switchport.mode
         native_vlan:
           type: int
           convert_types:
@@ -295,7 +295,7 @@ keys:
             warning: true
             removed: false
             remove_in_version: 6.0.0
-            new_key: port_channel_interfaces[].switchport.trunk.native_vlan
+            new_key: switchport.trunk.native_vlan
         native_vlan_tag:
           type: bool
           default: false
@@ -304,7 +304,7 @@ keys:
             warning: true
             removed: false
             remove_in_version: 6.0.0
-            new_key: port_channel_interfaces[].switchport.trunk.native_vlan_tag
+            new_key: switchport.trunk.native_vlan_tag
         link_tracking_groups:
           type: list
           primary_key: name
@@ -325,29 +325,19 @@ keys:
             warning: true
             removed: false
             remove_in_version: 6.0.0
-            new_key: port_channel_interfaces[].switchport.phone
+            new_key: switchport.phone
           keys:
             trunk:
               type: str
               valid_values:
                 - tagged
                 - untagged
-              deprecation:
-                warning: true
-                removed: false
-                remove_in_version: 6.0.0
-                new_key: port_channel_interfaces[].switchport.phone.trunk
             vlan:
               type: int
               convert_types:
                 - str
               min: 1
               max: 4094
-              deprecation:
-                warning: true
-                removed: false
-                remove_in_version: 6.0.0
-                new_key: port_channel_interfaces[].switchport.phone.vlan
         l2_protocol:
           type: dict
           keys:
@@ -380,7 +370,7 @@ keys:
             warning: true
             removed: false
             remove_in_version: 6.0.0
-            new_key: port_channel_interfaces[].switchport.trunk.groups
+            new_key: switchport.trunk.groups
         lacp_fallback_timeout:
           type: int
           description: Timeout in seconds.
@@ -478,7 +468,7 @@ keys:
             warning: true
             removed: false
             remove_in_version: 6.0.0
-            new_key: port_channel_interfaces[].switchport.trunk.private_vlan_secondary
+            new_key: switchport.trunk.private_vlan_secondary
         pvlan_mapping:
           type: str
           description: List of vlans as string.
@@ -488,13 +478,13 @@ keys:
             warning: true
             removed: false
             remove_in_version: 6.0.0
-            new_key: port_channel_interfaces[].switchport.pvlan_mapping
+            new_key: switchport.pvlan_mapping
         vlan_translations:
           deprecation:
             warning: true
             removed: false
             remove_in_version: 6.0.0
-            new_key: port_channel_interfaces[].switchport.vlan_translations
+            new_key: switchport.vlan_translations
           type: list
           items:
             type: dict

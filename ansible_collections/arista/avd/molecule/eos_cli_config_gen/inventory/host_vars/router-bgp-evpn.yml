@@ -70,7 +70,51 @@ router_bgp:
           action: deny
       maximum_routes_warning_limit: 2000
       maximum_routes_warning_only: true
-  redistribute_routes:
+  redistribute:
+    attached_host:
+      enabled: true
+      route_map: RM_BGP_EVPN
+    connected:
+      enabled: true
+      include_leaked: true
+    dynamic:
+      enabled: true
+      route_map: RM_BGP_EVPN
+    isis:
+      enabled: true
+      isis_level: level-2
+      include_leaked: true
+      route_map: RM_BGP_EVPN
+    ospf:
+      match_internal:
+        enabled: true
+        include_leaked: true
+        route_map: RM_BGP_EVPN
+      match_external:
+        enabled: true
+        include_leaked: true
+        route_map: RM_BGP_EVPN
+    ospfv3:
+      enabled: true
+      include_leaked: true
+      route_map: RM_BGP_EVPN
+      match_external:
+        enabled: true
+        include_leaked: true
+        route_map: RM_BGP_EVPN
+      match_nssa_external:
+        enabled: true
+        include_leaked: true
+        route_map: RM_BGP_EVPN
+    rip:
+      enabled: true
+      route_map: RM_BGP_EVPN
+    static:
+      enabled: true
+      include_leaked: true
+    user:
+      enabled: true
+      rcf: RCF_BGP_EVPN()
   address_family_evpn:
     neighbor_default:
       next_hop_self_received_evpn_routes:
@@ -163,10 +207,80 @@ router_bgp:
         send: any
     layer_2_fec_in_place_update:
       enabled: true
+  address_family_ipv4_multicast:
+    redistribute:
+      ospf:
+        enabled: true
+        route_map: RM_BGP_EVPN_IPV4M
+      ospfv3:
+        match_external:
+          enabled: true
+          route_map: RM_BGP_EVPN_IPV4M
+        match_nssa_external:
+          enabled: true
+          nssa_type: 1
+          route_map: RM_BGP_EVPN_IPV4M
+        match_internal:
+          enabled: true
+          route_map: RM_BGP_EVPN_IPV4M
   address_family_ipv4:
     peer_groups:
       - name: EVPN-OVERLAY-PEERS
         activate: false
+    redistribute:
+      attached_host:
+        enabled: true
+        route_map: RM_BGP_EVPN_IPV4
+      bgp:
+        enabled: true
+        route_map: RM_BGP_EVPN_IPV4
+      connected:
+        enabled: true
+        route_map: RM_BGP_EVPN_IPV4
+      dynamic:
+        enabled: true
+        rcf: RCF_BGP_EVPN_IPV4()
+      isis:
+        enabled: true
+        isis_level: level-1
+        include_leaked: true
+        route_map: RM_BGP_EVPN_IPV4
+      ospf:
+        enabled: true
+        include_leaked: true
+        route_map: RM_BGP_EVPN_IPV4
+        match_external:
+          enabled: true
+          include_leaked: true
+          route_map: RM_BGP_EVPN_IPV4
+        match_nssa_external:
+          enabled: true
+          include_leaked: true
+          nssa_type: 1
+          route_map: RM_BGP_EVPN_IPV4
+      ospfv3:
+        enabled: true
+        include_leaked: true
+        route_map: RM_BGP_EVPN_IPV4
+        match_external:
+          enabled: true
+          include_leaked: true
+          route_map: RM_BGP_EVPN_IPV4
+        match_nssa_external:
+          enabled: true
+          include_leaked: true
+          nssa_type: 2
+          route_map: RM_BGP_EVPN_IPV4
+      rip:
+        enabled: true
+        route_map: RM_BGP_EVPN_IPV4
+      static:
+        enabled: true
+        include_leaked: true
+        route_map: RM_BGP_EVPN_IPV4
+      user:
+        enabled: true
+        rcf: RCF_BGP_EVPN_IPV4()
   vlan_aware_bundles:
 ## Tenant_A ##
     - name: TENANT_A_PROJECT01

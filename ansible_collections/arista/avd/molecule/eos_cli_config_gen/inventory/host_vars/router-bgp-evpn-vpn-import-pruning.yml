@@ -31,7 +31,6 @@ router_bgp:
       peer_group: EVPN-OVERLAY-PEERS
     - ip_address: 192.168.255.2
       peer_group: EVPN-OVERLAY-PEERS
-  redistribute_routes:
   address_family_evpn:
     bgp:
       additional_paths:

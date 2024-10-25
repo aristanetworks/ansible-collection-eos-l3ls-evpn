@@ -27,6 +27,7 @@ monitor_sessions:
       - name: Ethernet3, Ethernet5
         direction: rx
       - name: Ethernet18
+        # This access_group is ignored as access_group is already set on session level.
         access_group:
           type: mac
           name: macACL
@@ -48,3 +49,21 @@ monitor_sessions:
           type: ip
           name: ipv4ACL
           priority: 10
+  - name: myMonitoringSession4
+    sources:
+      - name: Ethernet12
+        direction: rx
+      - name: Ethernet10-15
+        direction: rx
+      - name: Ethernet3, Ethernet5
+        direction: rx
+      - name: Ethernet18
+        access_group:
+          type: mac
+          name: macACL
+          priority: 100
+        direction: tx
+    destinations:
+      - Cpu
+      - Ethernet50
+    encapsulation_gre_metadata_tx: true

@@ -1,0 +1,105 @@
+---
+- name: Converge - cv_submit_workspace_force = false
+  hosts: SITE1_FABRIC:INACTIVE
+  connection: local
+  gather_facts: false
+  vars:
+    cv_server: www.cv-staging.corp.arista.io
+    cv_token: "{{ lookup('env', 'CVAAS_AAWG_CI') }}"
+    cv_verify_certs: true
+    cv_skip_missing_devices: true
+    eos_config_dir: "{{ playbook_dir }}/intended/configs/test_configs"
+    structured_dir: "{{ playbook_dir }}/intended/structured_configs/test_configs"
+    intended_tag_device: avd-ci-leaf1
+    intended_tags: "{{ lookup('file', structured_dir ~ '/' ~ intended_tag_device ~ '.yml')| from_yaml }}"
+
+  tasks:
+    - name: Generate random string
+      ansible.builtin.set_fact:
+        r: "{{ lookup('password', '/dev/null chars=ascii_lowercase,digits length=4') }}"
+      run_once: true
+
+    - name: Set facts
+      ansible.builtin.set_fact:
+        cv_workspace_name: avd-cv-deploy-{{ r }}
+        cv_workspace_description: sample description
+        cv_change_control_name: cc_cv_deploy-{{ r }}
+        cv_change_control_description: sample description
+        cv_register_detailed_results: true
+      run_once: true
+
+    - name: Dynamically add inactive device avd-ci-core1 to group INACTIVE
+      run_once: true
+      ansible.legacy.add_host:
+        name: avd-ci-core1
+        groups: INACTIVE
+
+    - name: Provision with cv_submit_workspace_force = false
+      run_once: true
+      delegate_to: localhost
+      block:
+        - name: Trigger errors
+          ansible.builtin.import_role:
+            name: arista.avd.cv_deploy
+          vars:
+            cv_devices: [ avd-ci-leaf1, avd-ci-core1 ]
+            cv_submit_workspace_force: false
+      rescue:
+        - name: Check CVP returns
+          run_once: true
+          ansible.builtin.assert:
+            that:
+              # errors and warnings
+              - "'Failed to submit workspace' in cv_deploy_results.errors[0]"
+
+    - name: Cleanup orphan workspace
+      run_once: true
+      ansible.legacy.uri:
+        url: https://{{ cv_server }}/api/resources/workspace/v1/WorkspaceConfig/some
+        validate_certs: yes
+        return_content: yes
+        headers:
+          Accept: "application/json"
+          Content-Type: "application/json"
+          Authorization: "Bearer {{ lookup('env', 'CVAAS_AAWG_CI') }}"
+        method: POST
+        body_format: json
+        body:
+          {
+            "values": [
+              {
+                "key": {
+                  "workspaceId": "{{ cv_deploy_results.workspace.id }}"
+                },
+                "request": "REQUEST_ABANDON",
+                "requestParams": {
+                  "requestId": "{{ r }}"
+                }
+              }
+            ]
+          }
+        force_basic_auth: yes
+        timeout: 10
+      register: cvp_abandon_workspace_result
+      until: cvp_abandon_workspace_result.status == 200
+      retries: 3
+      delay: 3
+      ignore_errors: True
+      when: cv_deploy_results.workspace.id is not none and cv_deploy_results.workspace.id | length > 0
+
+    - name: Cleanup
+      run_once: true
+      delegate_to: localhost
+      ansible.builtin.import_role:
+        name: arista.avd.cv_deploy
+      vars:
+        cv_devices: "{{ ansible_play_hosts_all }}"
+        eos_config_dir: "{{ playbook_dir }}/intended/configs/base_configs"
+        structured_dir: "{{ playbook_dir }}/intended/structured_configs/base_configs"
+        cv_submit_workspace: true
+        cv_submit_workspace_force: true
+        cv_run_change_control: true
+
+    # Clear failed state of failed hosts for next engaged playbook (no impact within running playbook)
+    - name: Reset ansible_play_hosts for next playbook (no impact within running playbook)
+      ansible.builtin.meta: clear_host_errors

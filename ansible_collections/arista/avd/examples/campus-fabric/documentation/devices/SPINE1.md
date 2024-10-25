@@ -658,10 +658,10 @@ ip route vrf MGMT 0.0.0.0/0 172.16.100.1
 router ospf 100
    router-id 172.16.1.1
    passive-interface default
-   no passive-interface Vlan4093
    no passive-interface Ethernet52/1
-   max-lsa 12000
+   no passive-interface Vlan4093
    redistribute connected
+   max-lsa 12000
 ```
 
 ## Multicast

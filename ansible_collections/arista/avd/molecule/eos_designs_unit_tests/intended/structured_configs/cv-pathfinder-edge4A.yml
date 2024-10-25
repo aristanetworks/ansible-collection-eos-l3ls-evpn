@@ -8,6 +8,10 @@ router_bgp:
       ipv4_unicast: false
   maximum_paths:
     paths: 16
+  redistribute:
+    connected:
+      enabled: true
+      route_map: RM-CONN-2-BGP
   updates:
     wait_install: true
   peer_groups:
@@ -36,9 +40,6 @@ router_bgp:
       activate: true
     - name: WAN-OVERLAY-PEERS
       activate: false
-  redistribute_routes:
-  - source_protocol: connected
-    route_map: RM-CONN-2-BGP
   address_family_evpn:
     peer_groups:
     - name: WAN-OVERLAY-PEERS
@@ -111,8 +112,9 @@ router_bgp:
         route_targets:
         - 1000:1000
     router_id: 192.168.42.8
-    redistribute_routes:
-    - source_protocol: connected
+    redistribute:
+      connected:
+        enabled: true
   - name: PROD
     rd: 192.168.42.8:142
     route_targets:
@@ -125,8 +127,9 @@ router_bgp:
         route_targets:
         - 142:142
     router_id: 192.168.42.8
-    redistribute_routes:
-    - source_protocol: connected
+    redistribute:
+      connected:
+        enabled: true
 service_routing_protocols_model: multi-agent
 ip_routing: true
 aaa_root:

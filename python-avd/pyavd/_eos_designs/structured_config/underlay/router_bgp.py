@@ -25,12 +25,6 @@ class RouterBgpMixin(UtilsMixin):
     def router_bgp(self: AvdStructuredConfigUnderlay) -> dict | None:
         """Return the structured config for router_bgp."""
         if not self.shared_utils.underlay_bgp:
-            if self.shared_utils.is_wan_router:
-                # Configure redistribute connected with or without route-map in case it the underlay is not BGP.
-                # TODO: Currently only implemented for WAN routers but should probably be
-                # implemented for anything with EVPN services in default VRF.
-                return {"redistribute_routes": self._router_bgp_redistribute_routes}
-
             return None
 
         router_bgp = {}
@@ -68,9 +62,6 @@ class RouterBgpMixin(UtilsMixin):
 
         if self.shared_utils.underlay_ipv6 is True:
             router_bgp["address_family_ipv6"] = {"peer_groups": [{"name": self.shared_utils.bgp_peer_groups["ipv4_underlay_peers"]["name"], "activate": True}]}
-
-        # Redistribute routes
-        router_bgp["redistribute_routes"] = self._router_bgp_redistribute_routes
 
         vrfs_dict = {}
 
@@ -173,27 +164,8 @@ class RouterBgpMixin(UtilsMixin):
             if neighbors:
                 router_bgp["neighbors"] = neighbors
 
-        for neighbor_info in self.shared_utils.l3_interfaces_bgp_neighbors:
-            neighbor = {
-                "ip_address": get(neighbor_info, "ip_address"),
-                "remote_as": get(neighbor_info, "remote_as"),
-                "description": get(neighbor_info, "description"),
-                "route_map_in": get(neighbor_info, "route_map_in"),
-                "route_map_out": get(neighbor_info, "route_map_out"),
-            }
-
-            router_bgp.setdefault("neighbors", []).append(strip_empties_from_dict(neighbor))
-
         if vrfs_dict:
             router_bgp["vrfs"] = list(vrfs_dict.values())
 
         # Need to keep potentially empty dict for redistribute_routes
         return strip_empties_from_dict(router_bgp, strip_values_tuple=(None, ""))
-
-    @cached_property
-    def _router_bgp_redistribute_routes(self: AvdStructuredConfigUnderlay) -> list:
-        """Return structured config for router_bgp.redistribute_routes."""
-        if self.shared_utils.overlay_routing_protocol == "none" or not self.shared_utils.underlay_filter_redistribute_connected:
-            return [{"source_protocol": "connected"}]
-
-        return [{"source_protocol": "connected", "route_map": "RM-CONN-2-BGP"}]

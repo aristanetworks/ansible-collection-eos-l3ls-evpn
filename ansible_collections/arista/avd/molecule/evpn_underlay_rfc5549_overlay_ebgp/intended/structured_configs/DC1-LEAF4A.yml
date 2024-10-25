@@ -11,6 +11,10 @@ router_bgp:
   maximum_paths:
     paths: 4
     ecmp: 4
+  redistribute:
+    connected:
+      enabled: true
+      route_map: RM-CONN-2-BGP
   updates:
     wait_install: true
   peer_groups:
@@ -69,9 +73,6 @@ router_bgp:
     remote_as: '65001'
     peer: DC1-SPINE6
     description: DC1-SPINE6_Ethernet1
-  redistribute_routes:
-  - source_protocol: connected
-    route_map: RM-CONN-2-BGP
   address_family_evpn:
     peer_groups:
     - name: EVPN-OVERLAY-PEERS
@@ -99,9 +100,10 @@ router_bgp:
         route_targets:
         - '12:12'
     router_id: 192.168.255.14
-    redistribute_routes:
-    - source_protocol: connected
-      route_map: RM-CONN-2-BGP-VRFS
+    redistribute:
+      connected:
+        enabled: true
+        route_map: RM-CONN-2-BGP-VRFS
     neighbor_interfaces:
     - name: Vlan3011
       peer_group: MLAG_PEER
@@ -119,9 +121,10 @@ router_bgp:
         route_targets:
         - '13:13'
     router_id: 192.168.255.14
-    redistribute_routes:
-    - source_protocol: connected
-      route_map: RM-CONN-2-BGP-VRFS
+    redistribute:
+      connected:
+        enabled: true
+        route_map: RM-CONN-2-BGP-VRFS
     neighbor_interfaces:
     - name: Vlan3012
       peer_group: MLAG_PEER
@@ -139,9 +142,10 @@ router_bgp:
         route_targets:
         - '10:10'
     router_id: 192.168.255.14
-    redistribute_routes:
-    - source_protocol: connected
-      route_map: RM-CONN-2-BGP-VRFS
+    redistribute:
+      connected:
+        enabled: true
+        route_map: RM-CONN-2-BGP-VRFS
     neighbor_interfaces:
     - name: Vlan3009
       peer_group: MLAG_PEER
@@ -159,9 +163,10 @@ router_bgp:
         route_targets:
         - '11:11'
     router_id: 192.168.255.14
-    redistribute_routes:
-    - source_protocol: connected
-      route_map: RM-CONN-2-BGP-VRFS
+    redistribute:
+      connected:
+        enabled: true
+        route_map: RM-CONN-2-BGP-VRFS
     neighbor_interfaces:
     - name: Vlan3010
       peer_group: MLAG_PEER
@@ -179,9 +184,10 @@ router_bgp:
         route_targets:
         - '20:20'
     router_id: 192.168.255.14
-    redistribute_routes:
-    - source_protocol: connected
-      route_map: RM-CONN-2-BGP-VRFS
+    redistribute:
+      connected:
+        enabled: true
+        route_map: RM-CONN-2-BGP-VRFS
     neighbor_interfaces:
     - name: Vlan3019
       peer_group: MLAG_PEER
@@ -199,9 +205,10 @@ router_bgp:
         route_targets:
         - '30:30'
     router_id: 192.168.255.14
-    redistribute_routes:
-    - source_protocol: connected
-      route_map: RM-CONN-2-BGP-VRFS
+    redistribute:
+      connected:
+        enabled: true
+        route_map: RM-CONN-2-BGP-VRFS
     neighbor_interfaces:
     - name: Vlan2
       peer_group: MLAG_PEER

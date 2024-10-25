@@ -21,7 +21,7 @@ class UtilsMixin:
     """
 
     @cached_property
-    def _source_interfaces(self) -> dict:
+    def _source_interfaces(self: AvdStructuredConfigBase) -> dict:
         return get(self._hostvars, "source_interfaces", default={})
 
     def _build_source_interfaces(self: AvdStructuredConfigBase, include_mgmt_interface: bool, include_inband_mgmt_interface: bool, error_context: str) -> list:
@@ -64,3 +64,15 @@ class UtilsMixin:
             source_interfaces.append(source_interface)
 
         return source_interfaces
+
+    @cached_property
+    def _router_bgp_redistribute_routes(self: AvdStructuredConfigBase) -> dict | None:
+        """Return structured config for router_bgp.redistribute."""
+        if not (self.shared_utils.underlay_bgp or self.shared_utils.is_wan_router or self.shared_utils.l3_interfaces_bgp_neighbors):
+            return None
+
+        if self.shared_utils.overlay_routing_protocol != "none" and self.shared_utils.underlay_filter_redistribute_connected:
+            # Use route-map for redistribution
+            return {"connected": {"enabled": True, "route_map": "RM-CONN-2-BGP"}}
+
+        return {"connected": {"enabled": True}}

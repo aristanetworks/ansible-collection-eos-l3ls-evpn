@@ -8,6 +8,10 @@ router_bgp:
       ipv4_unicast: false
   maximum_paths:
     paths: 16
+  redistribute:
+    connected:
+      enabled: true
+      route_map: RM-CONN-2-BGP
   updates:
     wait_install: true
   peer_groups:
@@ -39,9 +43,6 @@ router_bgp:
       activate: true
     - name: WAN-OVERLAY-PEERS
       activate: false
-  redistribute_routes:
-  - source_protocol: connected
-    route_map: RM-CONN-2-BGP
   neighbors:
   - ip_address: 172.17.0.0
     peer_group: IPv4-UNDERLAY-PEERS
@@ -79,8 +80,9 @@ router_bgp:
       - address_family: evpn
         route_targets:
         - 1000:1000
-    redistribute_routes:
-    - source_protocol: connected
+    redistribute:
+      connected:
+        enabled: true
   - name: PROD
     router_id: 192.168.43.1
     neighbors:
@@ -98,8 +100,9 @@ router_bgp:
       - address_family: evpn
         route_targets:
         - 142:142
-    redistribute_routes:
-    - source_protocol: connected
+    redistribute:
+      connected:
+        enabled: true
   - name: ATTRACTED-VRF-FROM-UPLINK
     router_id: 192.168.43.1
     neighbors:
@@ -117,8 +120,9 @@ router_bgp:
       - address_family: evpn
         route_targets:
         - 666:666
-    redistribute_routes:
-    - source_protocol: connected
+    redistribute:
+      connected:
+        enabled: true
   - name: default
     rd: 192.168.43.1:1
     route_targets:
@@ -133,8 +137,9 @@ router_bgp:
         - route-map RM-EVPN-EXPORT-VRF-DEFAULT
   - name: NOT-WAN-VRF
     router_id: 192.168.43.1
-    redistribute_routes:
-    - source_protocol: connected
+    redistribute:
+      connected:
+        enabled: true
   - name: TRANSIT
     rd: 192.168.43.1:66
     route_targets:
@@ -147,8 +152,9 @@ router_bgp:
         route_targets:
         - 66:66
     router_id: 192.168.43.1
-    redistribute_routes:
-    - source_protocol: connected
+    redistribute:
+      connected:
+        enabled: true
   address_family_evpn:
     peer_groups:
     - name: WAN-OVERLAY-PEERS

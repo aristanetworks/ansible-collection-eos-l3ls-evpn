@@ -8,6 +8,7 @@
 !
 {%     for monitor_session in monitor_sessions | arista.avd.natural_sort('name') %}
 {%         if monitor_session.access_group.type is arista.avd.defined and monitor_session.access_group.name is arista.avd.defined %}
+{%             set session_access_group = true %}
 monitor session {{ monitor_session.name }} {{ monitor_session.access_group.type }} access-group {{ monitor_session.access_group.name }}
 {%         endif %}
 {%         for source in monitor_session.sources | arista.avd.natural_sort('name') %}
@@ -15,10 +16,12 @@ monitor session {{ monitor_session.name }} {{ monitor_session.access_group.type 
 {%             if source.direction is arista.avd.defined %}
 {%                 set source_cli = source_cli ~ " " ~ source.direction %}
 {%             endif %}
-{%             if source.access_group.type is arista.avd.defined and source.access_group.name is arista.avd.defined %}
-{%                 set source_cli = source_cli ~ " " ~ source.access_group.type ~ " access-group " ~ source.access_group.name %}
-{%                 if source.access_group.priority is arista.avd.defined %}
-{%                     set source_cli = source_cli ~ " priority " ~ source.access_group.priority %}
+{%             if session_access_group is not arista.avd.defined %}
+{%                 if source.access_group.type is arista.avd.defined and source.access_group.name is arista.avd.defined %}
+{%                     set source_cli = source_cli ~ " " ~ source.access_group.type ~ " access-group " ~ source.access_group.name %}
+{%                     if source.access_group.priority is arista.avd.defined %}
+{%                         set source_cli = source_cli ~ " priority " ~ source.access_group.priority %}
+{%                     endif %}
 {%                 endif %}
 {%             endif %}
 {{ source_cli }}

@@ -11,6 +11,10 @@ router_bgp:
   maximum_paths:
     paths: 4
     ecmp: 4
+  redistribute:
+    connected:
+      enabled: true
+      route_map: RM-CONN-2-BGP
   updates:
     wait_install: true
   peer_groups:
@@ -42,9 +46,6 @@ router_bgp:
       activate: false
     - name: EVPN-OVERLAY-CORE
       activate: false
-  redistribute_routes:
-  - source_protocol: connected
-    route_map: RM-CONN-2-BGP
   neighbors:
   - ip_address: 172.31.254.192
     peer_group: UNDERLAY-PEERS
@@ -131,8 +132,9 @@ router_bgp:
         route_targets:
         - '65105:15'
     router_id: 192.168.255.15
-    redistribute_routes:
-    - source_protocol: connected
+    redistribute:
+      connected:
+        enabled: true
   - name: Tenant_A_WAN_Zone
     rd: 192.168.254.15:14
     route_targets:
@@ -153,10 +155,13 @@ router_bgp:
         route_targets:
         - 65000:123
     router_id: 192.168.255.15
-    redistribute_routes:
-    - source_protocol: connected
-    - source_protocol: static
-    - source_protocol: ospf
+    redistribute:
+      connected:
+        enabled: true
+      static:
+        enabled: true
+      ospf:
+        enabled: true
     address_family_ipv4:
       neighbors:
       - ip_address: 123.1.1.10
@@ -224,8 +229,9 @@ router_bgp:
         route_targets:
         - '65105:20'
     router_id: 192.168.255.15
-    redistribute_routes:
-    - source_protocol: connected
+    redistribute:
+      connected:
+        enabled: true
   - name: Tenant_B_WAN_Zone
     rd: 192.168.254.15:21
     route_targets:
@@ -238,8 +244,9 @@ router_bgp:
         route_targets:
         - '65105:21'
     router_id: 192.168.255.15
-    redistribute_routes:
-    - source_protocol: connected
+    redistribute:
+      connected:
+        enabled: true
   - name: Tenant_C_WAN_Zone
     rd: 192.168.254.15:31
     route_targets:
@@ -252,8 +259,9 @@ router_bgp:
         route_targets:
         - '65105:31'
     router_id: 192.168.255.15
-    redistribute_routes:
-    - source_protocol: connected
+    redistribute:
+      connected:
+        enabled: true
   vlan_aware_bundles:
   - name: Tenant_A_WAN_Zone
     rd: 192.168.254.15:14

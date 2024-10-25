@@ -206,12 +206,12 @@ router bgp 65101
    neighbor MLAG-IPv4-UNDERLAY-PEER remote-as 65101
    neighbor MLAG-IPv4-UNDERLAY-PEER next-hop-self
    neighbor MLAG-IPv4-UNDERLAY-PEER remove-private-as all replace-as
-   neighbor MLAG-IPv4-UNDERLAY-PEER remove-private-as ingress replace-as
+   neighbor MLAG-IPv4-UNDERLAY-PEER route-map RM-MLAG-PEER-IN in
+   neighbor MLAG-IPv4-UNDERLAY-PEER route-map RM-MLAG-PEER-OUT out
    neighbor MLAG-IPv4-UNDERLAY-PEER password 7 <removed>
    neighbor MLAG-IPv4-UNDERLAY-PEER send-community
    neighbor MLAG-IPv4-UNDERLAY-PEER maximum-routes 12000
-   neighbor MLAG-IPv4-UNDERLAY-PEER route-map RM-MLAG-PEER-IN in
-   neighbor MLAG-IPv4-UNDERLAY-PEER route-map RM-MLAG-PEER-OUT out
+   neighbor MLAG-IPv4-UNDERLAY-PEER remove-private-as ingress replace-as
    neighbor MULTIPLE-COMMUNITY peer group
    neighbor MULTIPLE-COMMUNITY send-community standard large
    neighbor NO-COMMUNITY peer group
@@ -224,6 +224,10 @@ router bgp 65101
    neighbor 192.168.255.1 peer group EVPN-OVERLAY-PEERS
    neighbor 192.168.255.2 peer group EVPN-OVERLAY-PEERS
    redistribute connected route-map RM-CONN-2-BGP
+   redistribute isis level-2 include leaked rcf RCF-CONN-2-BGP()
+   redistribute ospfv3 match internal include leaked route-map RM-CONN-2-BGP
+   redistribute ospfv3 match nssa-external include leaked route-map RM-CONN-2-BGP
+   redistribute dynamic rcf RCF-CONN-2-BGP()
    !
    vlan-aware-bundle B-ELAN-201
       rd 192.168.255.3:20201
@@ -253,26 +257,42 @@ router bgp 65101
       no neighbor EVPN-OVERLAY-PEERS activate
       neighbor IPv4-UNDERLAY-PEERS activate
       neighbor MLAG-IPv4-UNDERLAY-PEER activate
-      neighbor TEST_PEER_GRP next-hop address-family ipv6 originate
       neighbor TEST_PEER_GRP activate
+      neighbor TEST_PEER_GRP next-hop address-family ipv6 originate
+      redistribute isis level-1 include leaked rcf Address_Family_IPV4_ISIS()
+      redistribute ospf match internal include leaked route-map RM_BGP_EVPN_IPV4
+      redistribute ospfv3 match internal include leaked route-map RM_BGP_EVPN_IPV4
    !
    address-family ipv4 multicast
       redistribute attached-host route-map AFIPV4M_ATTACHED_HOST
       redistribute connected route-map AFIPV4M_CONNECTED
       redistribute isis level-1-2 include leaked route-map AFIPV4M_ISIS
       redistribute ospf match internal route-map AFIPV4M_OSPF_INTERNAL
+      redistribute ospfv3 route-map AFIPV4M_OSPFV3
       redistribute ospf match external route-map AFIPV4M_OSPF_EXTERNAL
       redistribute ospf match nssa-external route-map AFIPV4M_OSPF_NSSA
-      redistribute ospfv3 route-map AFIPV4M_OSPFV3
       redistribute static route-map AFIPV4M_STATIC
    !
    address-family ipv6
       redistribute bgp leaked route-map RM-REDISTRIBUTE-BGP
-      redistribute connected rcf Address_Family_IPV6_Connected()
+      redistribute connected include leaked rcf Address_Family_IPV6_Connected()
+      redistribute dynamic route-map RM-REDISTRIBUTE-DYNAMIC
+      redistribute isis level-1-2 rcf RCF_Address_Family_IPV6_ISIS()
       redistribute ospfv3 match internal include leaked route-map RM-REDISTRIBUTE-OSPF-INTERNAL
       redistribute ospfv3 match external include leaked
-      redistribute ospfv3 match nssa-external 1
+      redistribute ospfv3 match nssa-external 1 include leaked route-map RM-REDISTRIBUTE-OSPF-NSSA-EXTERNAL
       redistribute static route-map RM-IPV6-STATIC-TO-BGP
+   !
+   address-family ipv6 multicast
+      redistribute connected route-map RM-address_family_ipv6_multicast-Connected
+      redistribute isis include leaked route-map RM-address_family_ipv6_multicast-ISIS
+      redistribute ospf route-map RM-address_family_ipv6_multicast-OSPF
+      redistribute ospfv3 route-map RM-address_family_ipv6_multicast-OSPFv3
+      redistribute ospfv3 match external route-map RM-address_family_ipv6_multicast-OSPFv3-External
+      redistribute ospfv3 match nssa-external 2 route-map RM-address_family_ipv6_multicast-OSPFv3-External
+      redistribute ospf match external route-map RM-address_family_ipv6_multicast-OSPF-External
+      redistribute ospf match nssa-external 2 route-map RM-address_family_ipv6_multicast-OSPF-External
+      redistribute static route-map RM-address_family_ipv6_multicast-Static
    !
    vrf TENANT_A_PROJECT01
       rd 192.168.255.3:11
@@ -286,10 +306,10 @@ router bgp 65101
       neighbor 10.2.3.4 local-as 123 no-prepend replace-as
       neighbor 10.2.3.4 description Tenant A BGP Peer
       neighbor 10.2.3.4 ebgp-multihop 3
+      neighbor 10.2.3.4 route-map RM-10.2.3.4-SET-NEXT-HOP-OUT out
+      neighbor 10.2.3.4 default-originate route-map RM-10.2.3.4-SET-NEXT-HOP-OUT always
       neighbor 10.2.3.4 send-community
       neighbor 10.2.3.4 maximum-routes 0
-      neighbor 10.2.3.4 default-originate route-map RM-10.2.3.4-SET-NEXT-HOP-OUT always
-      neighbor 10.2.3.4 route-map RM-10.2.3.4-SET-NEXT-HOP-OUT out
       neighbor 10.255.251.1 peer group MLAG-IPv4-UNDERLAY-PEER
       network 10.0.0.0/8
       network 100.64.0.0/10
@@ -297,9 +317,9 @@ router bgp 65101
       redistribute static
       !
       address-family ipv4
+         bgp additional-paths install
          bgp missing-policy direction in action permit
          bgp missing-policy direction out action deny
-         bgp additional-paths install
          bgp additional-paths receive
          bgp additional-paths send ecmp
          neighbor 10.2.3.4 activate
@@ -325,8 +345,8 @@ router bgp 65101
       router-id 192.168.255.3
       timers bgp 5 15
       neighbor 10.255.251.1 peer group MLAG-IPv4-UNDERLAY-PEER
-      neighbor 10.255.251.1 description ABCDEFG
       neighbor 10.255.251.1 next-hop-self
+      neighbor 10.255.251.1 description ABCDEFG
       neighbor 10.255.251.1 timers 1 3
       neighbor 10.255.251.1 send-community standard
       neighbor 10.255.251.2 peer group MLAG-IPv4-UNDERLAY-PEER
@@ -334,14 +354,14 @@ router bgp 65101
       neighbor 10.255.251.2 timers 1 3
       neighbor 10.255.251.2 send-community extended
       neighbor 10.255.251.3 peer group MLAG-IPv4-UNDERLAY-PEER
-      neighbor 10.255.251.3 description ABCDEFGfgLCLCLCLC
       neighbor 10.255.251.3 next-hop-self
+      neighbor 10.255.251.3 description ABCDEFGfgLCLCLCLC
       neighbor 10.255.251.3 timers 1 3
-      neighbor 10.255.251.3 send-community large
       neighbor 10.255.251.3 default-originate always
+      neighbor 10.255.251.3 send-community large
       neighbor 10.255.251.4 peer group MLAG-IPv4-UNDERLAY-PEER
-      neighbor 10.255.251.4 description Test_Bfd
       neighbor 10.255.251.4 bfd
+      neighbor 10.255.251.4 description Test_Bfd
       redistribute connected
       redistribute static route-map RM-CONN-2-BGP
 ```

@@ -8,11 +8,12 @@ router_bgp:
       ipv4_unicast: false
   maximum_paths:
     paths: 16
+  redistribute:
+    connected:
+      enabled: true
+      route_map: RM-CONN-2-BGP
   updates:
     wait_install: true
-  redistribute_routes:
-  - source_protocol: connected
-    route_map: RM-CONN-2-BGP
   bgp_cluster_id: 192.168.31.2
   listen_ranges:
   - prefix: 192.168.130.0/24

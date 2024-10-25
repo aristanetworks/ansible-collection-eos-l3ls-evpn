@@ -464,10 +464,6 @@ servers:
             role: source
             source_settings:
               direction: rx
-              access_group:
-                type: ip
-                name: MyIpACL
-                priority: 5
           - name: MonitoringSessionServer18WithoutDest
             role: source
             source_settings:
@@ -490,10 +486,6 @@ servers:
             role: source
             source_settings:
               direction: tx
-              access_group:
-                type: mac
-                name: MyMacACL
-                priority: 5
 
   - name: server18_monitoring_session_source_phys_interface
     rack: RackC
@@ -508,10 +500,6 @@ servers:
             role: source
             source_settings:
               direction: tx
-              access_group:
-                type: mac
-                name: MyMacACL
-                priority: 5
 
   - name: server19_monitoring_session_destination_phys
     rack: RackC
@@ -643,6 +631,28 @@ servers:
           lacp_timer:
             mode: normal
             multiplier: 50
+
+  - name: server28_monitoring_session_source_settings_access_group
+    rack: RackC
+    adapters:
+      - endpoint_ports: [ Eth3, Eth4 ]
+        switch_ports: [ Ethernet43, Ethernet44 ]
+        switches: [ DC1-SVC3A, DC1-SVC3B ]
+        profile: TENANT_A
+        enabled: true
+        port_channel:
+          endpoint_port_channel: server28_monitoring_session_source_settings_access_group
+          mode: active
+          enabled: true
+        monitor_sessions:
+          - name: MonitoringSessionServer18
+            role: source
+            source_settings:
+              direction: tx
+              access_group:
+                type: ip
+                name: myIpAVL
+                priority: 5
 
 phones:
   - name: PHONE01_untagged

@@ -9,6 +9,10 @@ router_bgp:
   maximum_paths:
     paths: 4
     ecmp: 4
+  redistribute:
+    connected:
+      enabled: true
+      route_map: RM-CONN-2-BGP
   peer_groups:
   - name: MLAG-IPv4-UNDERLAY-PEER
     type: ipv4
@@ -65,9 +69,6 @@ router_bgp:
     peer: dc2-spine2
     description: dc2-spine2_Loopback0
     remote_as: '65200'
-  redistribute_routes:
-  - source_protocol: connected
-    route_map: RM-CONN-2-BGP
   address_family_evpn:
     peer_groups:
     - name: EVPN-OVERLAY-PEERS
@@ -85,9 +86,10 @@ router_bgp:
         route_targets:
         - '10:10'
     router_id: 10.255.128.18
-    redistribute_routes:
-    - source_protocol: connected
-      route_map: RM-CONN-2-BGP-VRFS
+    redistribute:
+      connected:
+        enabled: true
+        route_map: RM-CONN-2-BGP-VRFS
     neighbors:
     - ip_address: 10.255.129.124
       peer_group: MLAG-IPv4-UNDERLAY-PEER
@@ -104,9 +106,10 @@ router_bgp:
         route_targets:
         - '11:11'
     router_id: 10.255.128.18
-    redistribute_routes:
-    - source_protocol: connected
-      route_map: RM-CONN-2-BGP-VRFS
+    redistribute:
+      connected:
+        enabled: true
+        route_map: RM-CONN-2-BGP-VRFS
     neighbors:
     - ip_address: 10.255.129.124
       peer_group: MLAG-IPv4-UNDERLAY-PEER

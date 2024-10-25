@@ -318,18 +318,18 @@ vlan 4094
 interface Ethernet1
    description P2P_DC1-POD1-SPINE1_Ethernet5
    no shutdown
-   mac security profile MACSEC_PROFILE
    no switchport
    ip address 172.17.110.17/31
+   mac security profile MACSEC_PROFILE
    ptp enable
    service-profile QOS-PROFILE
 !
 interface Ethernet2
    description P2P_DC1-POD1-SPINE2_Ethernet5
    no shutdown
-   mac security profile MACSEC_PROFILE
    no switchport
    ip address 172.17.110.19/31
+   mac security profile MACSEC_PROFILE
    ptp enable
    service-profile QOS-PROFILE
 !
@@ -363,18 +363,18 @@ interface Ethernet7
 interface Ethernet11
    description P2P_DC1-POD1-SPINE1_Ethernet8
    no shutdown
-   mac security profile MACSEC_PROFILE
    no switchport
    ip address 172.17.110.21/31
+   mac security profile MACSEC_PROFILE
    ptp enable
    service-profile QOS-PROFILE
 !
 interface Ethernet12
    description P2P_DC1-POD1-SPINE2_Ethernet8
    no shutdown
-   mac security profile MACSEC_PROFILE
    no switchport
    ip address 172.17.110.23/31
+   mac security profile MACSEC_PROFILE
    ptp enable
    service-profile QOS-PROFILE
 !
@@ -890,9 +890,9 @@ ASN Notation: asplain
 !
 router bgp 65112.100
    router-id 172.16.110.5
-   maximum-paths 4 ecmp 4
    update wait-install
    no bgp default ipv4-unicast
+   maximum-paths 4 ecmp 4
    distance bgp 20 200 200
    neighbor EVPN-OVERLAY-CORE peer group
    neighbor EVPN-OVERLAY-CORE update-source Loopback0
@@ -915,18 +915,18 @@ router bgp 65112.100
    neighbor MLAG-IPv4-UNDERLAY-PEER remote-as 65112.100
    neighbor MLAG-IPv4-UNDERLAY-PEER next-hop-self
    neighbor MLAG-IPv4-UNDERLAY-PEER description DC1.POD1.LEAF2A
+   neighbor MLAG-IPv4-UNDERLAY-PEER route-map RM-MLAG-PEER-IN in
    neighbor MLAG-IPv4-UNDERLAY-PEER password 7 <removed>
    neighbor MLAG-IPv4-UNDERLAY-PEER send-community
    neighbor MLAG-IPv4-UNDERLAY-PEER maximum-routes 12000
-   neighbor MLAG-IPv4-UNDERLAY-PEER route-map RM-MLAG-PEER-IN in
    neighbor 1.1.1.1 peer group EVPN-OVERLAY-CORE
    neighbor 1.1.1.1 remote-as 1111
    neighbor 1.1.1.1 description HOSTNAME_NOT_IN_ANSIBLE
    neighbor 11.1.0.39 peer group IPv4-UNDERLAY-PEERS
    neighbor 11.1.0.39 remote-as 65211
    neighbor 11.1.0.39 local-as 65120 no-prepend replace-as
-   neighbor 11.1.0.39 description DC2-POD1-LEAF1A
    neighbor 11.1.0.39 bfd
+   neighbor 11.1.0.39 description DC2-POD1-LEAF1A
    neighbor 172.16.10.1 peer group EVPN-OVERLAY-PEERS
    neighbor 172.16.10.1 remote-as 65101
    neighbor 172.16.10.1 description DC1-RS1_Loopback0
@@ -953,8 +953,8 @@ router bgp 65112.100
    neighbor 172.17.110.22 description DC1-POD1-SPINE2_Ethernet8
    neighbor 172.20.110.2 peer group MLAG-IPv4-UNDERLAY-PEER
    neighbor 172.20.110.2 description DC1.POD1.LEAF2A_Vlan4094
-   redistribute attached-host
    redistribute connected
+   redistribute attached-host
    !
    vlan 110
       rd 172.16.110.5:99110
@@ -1019,18 +1019,18 @@ router bgp 65112.100
       neighbor EVPN-OVERLAY-CORE activate
       neighbor EVPN-OVERLAY-CORE domain remote
       neighbor EVPN-OVERLAY-PEERS activate
-      neighbor default next-hop-self received-evpn-routes route-type ip-prefix
       route import match-failure action discard
-   !
-   address-family rt-membership
-      neighbor EVPN-OVERLAY-CORE activate
-      neighbor EVPN-OVERLAY-PEERS activate
+      neighbor default next-hop-self received-evpn-routes route-type ip-prefix
    !
    address-family ipv4
       no neighbor EVPN-OVERLAY-CORE activate
       no neighbor EVPN-OVERLAY-PEERS activate
       neighbor IPv4-UNDERLAY-PEERS activate
       neighbor MLAG-IPv4-UNDERLAY-PEER activate
+   !
+   address-family rt-membership
+      neighbor EVPN-OVERLAY-CORE activate
+      neighbor EVPN-OVERLAY-PEERS activate
    !
    vrf Common_VRF
       rd 172.16.110.5:1025
