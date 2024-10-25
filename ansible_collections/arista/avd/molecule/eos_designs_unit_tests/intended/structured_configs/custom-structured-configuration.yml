@@ -1,0 +1,73 @@
+hostname: custom-structured-configuration
+is_deployed: true
+service_routing_protocols_model: multi-agent
+vlan_internal_order:
+  allocation: ascending
+  range:
+    beginning: 1006
+    ending: 1199
+aaa_root:
+  disabled: true
+config_end: true
+enable_password:
+  disabled: true
+transceiver_qsfp_default_mode_4x10: true
+ip_name_servers:
+- ip_address: 192.168.42.10
+  vrf: MGMT
+- ip_address: 192.168.42.40
+  vrf: MGMT
+- ip_address: 192.168.42.50
+  vrf: MGMT
+- ip_address: 192.168.42.1
+  vrf: VRF1
+- ip_address: 192.168.42.10
+  vrf: VRF1
+- ip_address: 192.168.42.4
+  vrf: VRF1
+- ip_address: 192.168.42.1
+  vrf: VRF2
+- ip_address: 192.168.42.40
+  vrf: VRF2
+- ip_address: 192.168.42.8
+  vrf: VRF2
+local_users:
+- name: eos-designs-admin
+  disabled: false
+  privilege: 15
+  role: network-operator
+  sha512_password: $6$rkvZergVBQ09WJte$.6wtRT8ITilT06pdXS0s5u7M.7G54B8xPPqKTPIhqyCkw6/QgqP2j4yoYAo7YKVU/S3Ra8p23kMtbdHsoBWIk.
+- name: shared-admin
+  disabled: false
+  privilege: 1
+  role: network-admin
+  sha512_password: $6$.zTjeujnuMZW7h2h$/hPDMlovWAmf9SpdTsiUiYyy6iI.prNyG9aYZV8NCp1hmeSwOhO3h5PGCIhfFrykhQj/oFXak49h8TmanME2M.
+- name: shared-operator
+  disabled: false
+  privilege: 2
+  role: network-operator
+  sha512_password: $6$rkvZergVBQ09WJte$.6wtRT8ITilT06pdXS0s5u7M.7G54B8xPPqKTPIhqyCkw6/QgqP2j4yoYAo7YKVU/S3Ra8p23kMtbdHsoBWIk.
+- name: super-shared-admin
+  disabled: false
+  privilege: 2
+  role: network-admin
+  sha512_password: $6$.zTjeujnuMZW7h2h$/hPDMlovWAmf9SpdTsiUiYyy6iI.prNyG9aYZV8NCp1hmeSwOhO3h5PGCIhfFrykhQj/oFXak49h8TmanME2M.
+- name: csc-1-operator
+  disabled: false
+  privilege: 1
+  role: network-operator
+  sha512_password: $6$rkvZergVBQ09WJte$.6wtRT8ITilT06pdXS0s5u7M.7G54B8xPPqKTPIhqyCkw6/QgqP2j4yoYAo7YKVU/S3Ra8p23kMtbdHsoBWIk.
+- name: csc-2-operator
+  disabled: false
+  privilege: 2
+  role: network-operator
+  sha512_password: $6$rkvZergVBQ09WJte$.6wtRT8ITilT06pdXS0s5u7M.7G54B8xPPqKTPIhqyCkw6/QgqP2j4yoYAo7YKVU/S3Ra8p23kMtbdHsoBWIk.
+vrfs:
+- name: MGMT
+  ip_routing: false
+management_api_http:
+  enable_vrfs:
+  - name: MGMT
+  enable_https: true
+ip_igmp_snooping:
+  globally_enabled: true

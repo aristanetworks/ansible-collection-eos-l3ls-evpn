@@ -68,17 +68,17 @@ ip name-server vrf MGMT 192.168.42.40
 # Only ip_name_servers from eos_ci_config_gen.
 # The variables will make it to the intended config
 ip_name_servers:
-  - ip_address: 8.8.8.8
+  - ip_address: 192.168.42.1
     vrf: EOS_CLI
-  - ip_address: 4.4.4.4
+  - ip_address: 192.168.42.10
     vrf: EOS_CLI
 ```
 
 will generate as intended config:
 
 ```eos
-ip name-server vrf EOS_CLI 4.4.4.4
-ip name-server vrf EOS_CLI 8.8.8.8
+ip name-server vrf EOS_CLI 192.168.42.1
+ip name-server vrf EOS_CLI 192.168.42.10
 ```
 
 #### eos_cli_config_gen variables overwritten by eos_designs variables
@@ -92,9 +92,9 @@ name_servers:
   - 192.168.42.40
 
 ip_name_servers:
-  - ip_address: 8.8.8.8
+  - ip_address: 192.168.42.1
     vrf: EOS_CLI
-  - ip_address: 4.4.4.4
+  - ip_address: 192.168.42.10
     vrf: EOS_CLI
 ```
 
@@ -105,58 +105,118 @@ ip name-server vrf MGMT 192.168.42.10
 ip name-server vrf MGMT 192.168.42.40
 ```
 
-#### eos_designs variables overwritten by custom_structured_configuration
+#### eos_designs variables extended by unique custom_structured_configuration when data model has no primary_key
 
 ```yaml
 ---
-# Both name_servers from eos_designs and leveraging the
-# custom_structured_configuration ONLY custom_struct will make it
-# except if using merge
+# Both name_servers from eos_designs and ip_name_servers from
+# custom_structured_configuration will make it to the intended config
 name_servers:
   - 192.168.42.10
   - 192.168.42.40
 
 custom_structured_configuration_ip_name_servers:
-  - ip_address: 1.1.1.1
-    vrf: CUSTOM_STRUCT
-  - ip_address: 2.2.2.2
-    vrf: CUSTOM_STRUCT
+  - ip_address: 192.168.42.1
+    vrf: EOS_CLI
+  - ip_address: 192.168.42.10
+    vrf: EOS_CLI
 ```
 
 will generate as intended config:
 
 ```eos
-ip name-server vrf CUSTOM_STRUCT 1.1.1.1
-ip name-server vrf CUSTOM_STRUCT 2.2.2.2
+ip name-server vrf EOS_CLI 192.168.42.1
+ip name-server vrf MGMT 192.168.42.10
+ip name-server vrf EOS_CLI 192.168.42.10
+ip name-server vrf MGMT 192.168.42.40
 ```
 
-*NOTE:* as described in the custom_structured_configuration section, it is possible to leverage a merge on lists in this case. This example describes the default behavior
+Due to the default `custom_structured_configuration_list_merge` behavior (`append_rp`) and the fact that `ip_name_servers`'s schema doesn't have primary key defined - resulting CLI configuration is a concatenation of the two lists.
 
-#### eos_cli_config_gen variables overwritten by eos_designs custom_structured_configuration
+#### eos_designs variables exetended and updated by custom_structured_configuration when data model has primary_key
+
+To understand default behavior in case `eos_designs` is used together with `eos_cli_config_gen` data with `primary_key` defined in data schema - let's review the following example which uses `local_users` data model supported by both `eos_designs` and `eos_cli_config_gen`:
 
 ```yaml
 ---
-# Both ip_name_servers from eos_cli_config_gen and leveraging the
-# custom_structured_configuration only custom_struct  will make it
-ip_name_servers:
-  - ip_address: 8.8.8.8
-    vrf: EOS_CLI
-  - ip_address: 4.4.4.4
-    vrf: EOS_CLI
+custom_structured_configuration_prefix:
+  - 'csc_1_'
+  - 'csc_2_'
 
-custom_structured_configuration_ip_name_servers:
-  - ip_address: 1.1.1.1
-    vrf: CUSTOM_STRUCT
-  - ip_address: 2.2.2.2
-    vrf: CUSTOM_STRUCT
+local_users:
+  - name: super-shared-admin  # Collides with both csc_1_local_users and csc_2_local_users
+    disabled: false
+    privilege: 15
+    role: network-admin
+    sha512_password: "$6$.zTjeujnuMZW7h2h$/hPDMlovWAmf9SpdTsiUiYyy6iI.prNyG9aYZV8NCp1hmeSwOhO3h5PGCIhfFrykhQj/oFXak49h8TmanME2M."
+  - name: shared-admin  # Collides with csc_1_local_users
+    disabled: false
+    privilege: 15
+    role: network-admin
+    sha512_password: "$6$.zTjeujnuMZW7h2h$/hPDMlovWAmf9SpdTsiUiYyy6iI.prNyG9aYZV8NCp1hmeSwOhO3h5PGCIhfFrykhQj/oFXak49h8TmanME2M."
+  - name: shared-operator  # Collides with csc_2_local_users
+    disabled: false
+    privilege: 15
+    role: network-operator
+    sha512_password: "$6$rkvZergVBQ09WJte$.6wtRT8ITilT06pdXS0s5u7M.7G54B8xPPqKTPIhqyCkw6/QgqP2j4yoYAo7YKVU/S3Ra8p23kMtbdHsoBWIk."
+  - name: eos-designs-admin  # Unique value
+    disabled: false
+    privilege: 15
+    role: network-operator
+    sha512_password: "$6$rkvZergVBQ09WJte$.6wtRT8ITilT06pdXS0s5u7M.7G54B8xPPqKTPIhqyCkw6/QgqP2j4yoYAo7YKVU/S3Ra8p23kMtbdHsoBWIk."
+
+csc_1_local_users:
+  - name: super-shared-admin  # Collides with both eos_designs and csc_2_local_users
+    disabled: false
+    privilege: 1
+    role: network-admin
+    sha512_password: "$6$.zTjeujnuMZW7h2h$/hPDMlovWAmf9SpdTsiUiYyy6iI.prNyG9aYZV8NCp1hmeSwOhO3h5PGCIhfFrykhQj/oFXak49h8TmanME2M."
+  - name: shared-admin  # Collides with eos_designs
+    disabled: false
+    privilege: 1
+    role: network-admin
+    sha512_password: "$6$.zTjeujnuMZW7h2h$/hPDMlovWAmf9SpdTsiUiYyy6iI.prNyG9aYZV8NCp1hmeSwOhO3h5PGCIhfFrykhQj/oFXak49h8TmanME2M."
+  - name: csc-1-operator  # Unique value
+    disabled: false
+    privilege: 1
+    role: network-operator
+    sha512_password: "$6$rkvZergVBQ09WJte$.6wtRT8ITilT06pdXS0s5u7M.7G54B8xPPqKTPIhqyCkw6/QgqP2j4yoYAo7YKVU/S3Ra8p23kMtbdHsoBWIk."
+
+csc_2_local_users:
+  - name: super-shared-admin  # Collides with both eos_designs and csc_1_local_users
+    disabled: false
+    privilege: 2
+    role: network-admin
+    sha512_password: "$6$.zTjeujnuMZW7h2h$/hPDMlovWAmf9SpdTsiUiYyy6iI.prNyG9aYZV8NCp1hmeSwOhO3h5PGCIhfFrykhQj/oFXak49h8TmanME2M."
+  - name: shared-operator  # Collides with eos_designs
+    disabled: false
+    privilege: 2
+    role: network-operator
+    sha512_password: "$6$rkvZergVBQ09WJte$.6wtRT8ITilT06pdXS0s5u7M.7G54B8xPPqKTPIhqyCkw6/QgqP2j4yoYAo7YKVU/S3Ra8p23kMtbdHsoBWIk."
+  - name: csc-2-operator  # Unique value
+    disabled: false
+    privilege: 2
+    role: network-operator
+    sha512_password: "$6$rkvZergVBQ09WJte$.6wtRT8ITilT06pdXS0s5u7M.7G54B8xPPqKTPIhqyCkw6/QgqP2j4yoYAo7YKVU/S3Ra8p23kMtbdHsoBWIk."
 ```
 
 will generate as intended config:
 
 ```eos
-ip name-server vrf CUSTOM_STRUCT 1.1.1.1
-ip name-server vrf CUSTOM_STRUCT 2.2.2.2
+username csc-1-operator privilege 1 role network-operator secret sha512 $6$rkvZergVBQ09WJte$.6wtRT8ITilT06pdXS0s5u7M.7G54B8xPPqKTPIhqyCkw6/QgqP2j4yoYAo7YKVU/S3Ra8p23kMtbdHsoBWIk.
+username csc-2-operator privilege 2 role network-operator secret sha512 $6$rkvZergVBQ09WJte$.6wtRT8ITilT06pdXS0s5u7M.7G54B8xPPqKTPIhqyCkw6/QgqP2j4yoYAo7YKVU/S3Ra8p23kMtbdHsoBWIk.
+username eos-designs-admin privilege 15 role network-operator secret sha512 $6$rkvZergVBQ09WJte$.6wtRT8ITilT06pdXS0s5u7M.7G54B8xPPqKTPIhqyCkw6/QgqP2j4yoYAo7YKVU/S3Ra8p23kMtbdHsoBWIk.
+username shared-admin privilege 1 role network-admin secret sha512 $6$.zTjeujnuMZW7h2h$/hPDMlovWAmf9SpdTsiUiYyy6iI.prNyG9aYZV8NCp1hmeSwOhO3h5PGCIhfFrykhQj/oFXak49h8TmanME2M.
+username shared-operator privilege 2 role network-operator secret sha512 $6$rkvZergVBQ09WJte$.6wtRT8ITilT06pdXS0s5u7M.7G54B8xPPqKTPIhqyCkw6/QgqP2j4yoYAo7YKVU/S3Ra8p23kMtbdHsoBWIk.
+username super-shared-admin privilege 2 role network-admin secret sha512 $6$.zTjeujnuMZW7h2h$/hPDMlovWAmf9SpdTsiUiYyy6iI.prNyG9aYZV8NCp1hmeSwOhO3h5PGCIhfFrykhQj/oFXak49h8TmanME2M.
+
 ```
+
+Important things to note:
+
+- Users `csc-1-operator`, `csc-2-operator` and `eos-designs-admin` are unique users defined in one place only. Therefore they are reflected in the intended configuration with their original values (original `eos_designs` List is extended by unique values from both `custom_structured_configuration` sources).
+- User `shared-admin` is defined by both `eos_designs` and `custom_structured_configuration` (using the prefix `csc_1_`). Since the value of the primary key (`name`) matches, the original data from `eos_designs` is updated with data from `custom_structured_configuration`, resulting in the privilege level for this user being set to 1. Same concept applies to user `shared-operator` (where `eos_designs` data is updated by `custom_structured_configuration` with prefix `csc_2_`).
+- User `super-shared-admin` is defined in all three data sources (`eos_designs` and `custom_structured_configuration` with prefixes `csc_1_` and `csc_2_`). Since the value of the primary key (`name`) matches in all 3 sources, the original data from `eos_designs` is first updated with data from `custom_structured_configuration` with prefix `csc_1_`. It is then updated again with data from `custom_structured_configuration` with prefix `csc_2_`, resulting in the privilege level for this user being set to 2.
 
 ## `structured_config` in `eos_designs` data models
 
@@ -239,7 +299,7 @@ All `structured_config` knobs honor the `list_merge` strategy set in `custom_str
 Custom EOS Structured Configuration keys can be set on any group or host_var level using the name
 of the corresponding `eos_cli_config_gen` key prefixed with content of `custom_structured_configuration_prefix`.
 The content of Custom Structured Configuration variables will be combined with the structured config generated by the eos_designs role.
-By default Lists are replaced and Dictionaries are updated. The combine is done recursively, so it is possible to update a sub-key of a variable set by
+By default Lists are extended (by unique items) or their elements are updated (if primary key matches) and Dictionaries are updated. The combine is done recursively, so it is possible to update a sub-key of a variable set by
 `eos_designs` role already.
 The List-merge strategy can be changed using `custom_structured_configuration_list_merge`. Since most data models move towards lists and
 input data is auto-converted from dicts to lists, it is more likely that `custom_structured_configuration_list_merge: replace` will
@@ -271,8 +331,8 @@ custom_structured_configuration_ethernet_interfaces:
     peer_type: my_precious
 ```
 
-In this example the contents of the `ip_name_servers` variable in the Structured Configuration will be replaced by the list `[ 10.2.3.4 ]`
-and `Ethernet4000` will be added to the `ethernet_interfaces` dictionary in the Structured Configuration.
+In this example the contents of the `ip_name_servers` variable in the Structured Configuration will be extended with the list `[ { "ip_address": "10.2.3.4", "vrf": "MGMT" } ]` if exact same element is not yet part of the `ip_name_servers` list.
+`Ethernet4000` will either be added to the `ethernet_interfaces` dictionary (if an item with `name: Ethernet4000` is not yet defined) or an existing item in the Structured Configuration will be updated.
 
 `custom_structured_configuration_prefix` allows the user to customize the prefix for Custom Structured Configuration variables.
 Default value is `custom_structured_configuration_`. Remember to include any delimiter like the last `_` in this case.
@@ -307,11 +367,11 @@ In this example `Ethernet4000` will be added to the `ethernet_interfaces` list i
 name_servers:
   - 10.10.10.10
   - 10.10.10.11
-
 custom_structured_configuration_list_merge: append
 custom_structured_configuration_prefix: [ override_ ]
-
 override_ip_name_servers:
+  - ip_address: 10.10.10.11
+    vrf: MGMT
   - ip_address: 10.10.10.12
     vrf: MGMT
 ```
@@ -326,11 +386,13 @@ ip_name_servers:
     vrf: MGMT
 ```
 
-The `override_ip_name_servers` list will be `appended` to `ip_name_servers` list resulting in:
+The `override_ip_name_servers` list will be `appended` to `ip_name_servers` list without checking for element uniqueness, resulting in:
 
 ```yaml
 ip_name_servers:
   - ip_address: 10.10.10.10
+    vrf: MGMT
+  - ip_address: 10.10.10.11
     vrf: MGMT
   - ip_address: 10.10.10.11
     vrf: MGMT

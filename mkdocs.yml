@@ -149,6 +149,7 @@ nav:
       - L2LS Fabric: examples/l2ls-fabric/README.md
       - Campus Fabric: examples/campus-fabric/README.md
       - ISIS-LDP IPVPN: examples/isis-ldp-ipvpn/README.md
+      - CV Pathfinder: examples/cv-pathfinder/README.md
   - Installation:
       - Collection Installation: docs/installation/collection-installation.md
   - Ansible Collection Roles:

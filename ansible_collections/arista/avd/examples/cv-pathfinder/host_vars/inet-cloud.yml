@@ -1,0 +1,29 @@
+---
+overlay_routing_protocol: none
+
+dhcp_servers:
+  - disabled: false
+    vrf: default
+    lease_time_ipv4:
+      days: 6
+      hours: 23
+      minutes: 59
+    subnets:
+      - subnet: 100.64.10.0/24
+        name: 10 NET
+        default_gateway: 100.64.10.1
+        ranges:
+          - start: 100.64.10.2
+            end: 100.64.10.2
+      - subnet: 100.64.11.0/24
+        name: 11 NET
+        default_gateway: 100.64.11.1
+        ranges:
+          - start: 100.64.11.2
+            end: 100.64.11.2
+      - subnet: 100.64.30.0/24
+        name: 30 NET
+        default_gateway: 100.64.30.1
+        ranges:
+          - start: 100.64.30.2
+            end: 100.64.30.2
