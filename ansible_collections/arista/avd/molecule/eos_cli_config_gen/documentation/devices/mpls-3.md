@@ -6,6 +6,7 @@
   - [Management Interfaces](#management-interfaces)
 - [MPLS](#mpls)
   - [MPLS and LDP](#mpls-and-ldp)
+  - [MPLS RSVP](#mpls-rsvp)
 
 ## Management
 
@@ -49,7 +50,16 @@ interface Management1
 | LDP Interface Disabled Default | True |
 | LDP Transport-Address Interface | - |
 
-#### MPLS and LDP Device Configuration
+### MPLS RSVP
+
+#### MPLS RSVP Summary
+
+| Setting | Value |
+| ------- | ----- |
+| Hello interval | 30 |
+| Timeout multiplier | 254 |
+
+#### MPLS Device Configuration
 
 ```eos
 !
@@ -58,4 +68,7 @@ mpls ip
 mpls ldp
    router-id 192.168.1.2
    interface disabled default
+!
+mpls rsvp
+   hello interval 30 multiplier 254
 ```

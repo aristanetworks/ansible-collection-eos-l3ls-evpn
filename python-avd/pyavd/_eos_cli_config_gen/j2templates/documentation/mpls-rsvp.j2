@@ -66,7 +66,7 @@
 {%     endif %}
 {%     if mpls.rsvp.neighbors is arista.avd.defined %}
 
-##### Neighbor
+##### RSVP Neighbor Authentication
 
 | Neighbor IP | Index | Type |
 | ----------- | ----- | ---- |
@@ -77,7 +77,7 @@
 {%     if mpls.rsvp.graceful_restart is arista.avd.defined %}
 {%         set graceful_restart = mpls.rsvp.graceful_restart %}
 
-##### Graceful restart
+##### RSVP Graceful Restart
 
 | Role | Recovery timer | Restart timer |
 | ---- | -------------- | ------------- |

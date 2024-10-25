@@ -10,10 +10,6 @@ mpls:
   rsvp:
     refresh:
       interval: 3
-      method: explicit
-    hello:
-      interval: 30
-      multiplier: 254
     authentication:
       password_indexes:
         - index: 766
@@ -22,21 +18,13 @@ mpls:
         - index: 55
           password_type: '7'
           password: 14241B062114062E142900260B1D23133B
-      active_index: 766
-      sequence_number_window: 234
-      type: md5
     fast_reroute:
-      mode: link-protection
       reversion: local
       bypass_tunnel_optimization_interval: 65535
     srlg:
       enabled: true
       strict: true
     graceful_restart:
-      role_helper:
-        enabled: true
-        grace_period_recovery: 32
-        grace_period_restart: 33
       role_speaker:
         enabled: true
         grace_period_recovery: 35

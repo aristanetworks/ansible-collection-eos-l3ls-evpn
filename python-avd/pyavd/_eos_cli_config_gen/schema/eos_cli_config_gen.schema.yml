@@ -8737,6 +8737,7 @@ keys:
               interval:
                 description: Time between hello messages.
                 type: int
+                required: true
                 convert_types:
                 - str
                 min: 1
@@ -8744,6 +8745,7 @@ keys:
               multiplier:
                 description: Number of missed hellos after which the neighbor is expired.
                 type: int
+                required: true
                 convert_types:
                 - str
                 min: 1

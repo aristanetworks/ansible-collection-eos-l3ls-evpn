@@ -6,3 +6,24 @@ mpls:
     shutdown: true
   icmp:
     ttl_exceeded_tunneling: true
+  rsvp:
+    p2mp_enabled: true
+    authentication:
+      active_index: 766
+      sequence_number_window: 234
+      type: md5
+    fast_reroute:
+      mode: link-protection
+    refresh:
+      method: explicit
+    srlg:
+      enabled: true
+    preemption_method:
+      preemption: hard
+    hitless_restart:
+      enabled: true
+    graceful_restart:
+      role_helper:
+        enabled: true
+        grace_period_recovery: 32
+        grace_period_restart: 33

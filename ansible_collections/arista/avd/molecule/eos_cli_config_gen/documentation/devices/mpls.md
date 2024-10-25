@@ -111,7 +111,54 @@ interface Loopback0
 | LDP Transport-Address Interface | Loopback0 |
 | ICMP Fragmentation-Needed Tunneling Enabled | True |
 
-#### MPLS and LDP Device Configuration
+### MPLS Interfaces
+
+| Interface | MPLS IP Enabled | LDP Enabled | IGP Sync |
+| --------- | --------------- | ----------- | -------- |
+| Ethernet1 | True | True | True |
+| Loopback0 | - | True | - |
+
+### MPLS RSVP
+
+#### MPLS RSVP Summary
+
+| Setting | Value |
+| ------- | ----- |
+| Refresh interval | 3 |
+| Authentication type | - |
+| Authentication sequence-number window | - |
+| Authentication active index | - |
+| IPv4 access-group | RSVP_access_group_ipv4 |
+| IPv6 access-group | RSVP_access_group_ipv6 |
+| SRLG strict | enabled |
+| Label local-termination | explicit-null |
+| Preemption method | soft |
+| Preemption timer | 444 |
+| MTU signaling | True |
+| Fast reroute mode | - |
+| Fast reroute reversion | local |
+| Fast reroute  bypass tunnel optimization interval | 65535 |
+| Hitless restart | Active |
+| Hitless restart recovery timer | 222 |
+| Shutdown | Active |
+
+##### RSVP Neighbor Authentication
+
+| Neighbor IP | Index | Type |
+| ----------- | ----- | ---- |
+| 1.1.1.1 | 3 | md5 |
+| 1.1.12.2 | 30 | none |
+| 1.10.1.2 | - | none |
+| 1.21.1.20 | - | md5 |
+| 10.1.1.2 | 303 | - |
+
+##### RSVP Graceful Restart
+
+| Role | Recovery timer | Restart timer |
+| ---- | -------------- | ------------- |
+| Speaker | 35 | 36 |
+
+#### MPLS Device Configuration
 
 ```eos
 !
@@ -127,13 +174,8 @@ mpls icmp fragmentation-needed tunneling
 !
 mpls rsvp
    refresh interval 3
-   refresh method explicit
-   hello interval 30 multiplier 254
-   authentication type md5
-   authentication sequence-number window 234
    authentication index 55 password 7 <removed>
    authentication index 766 password 7 <removed>
-   authentication index 766 active
    neighbor 1.1.1.1 authentication type md5
    neighbor 1.1.1.1 authentication index 3 active
    neighbor 1.1.12.2 authentication type none
@@ -143,7 +185,6 @@ mpls rsvp
    neighbor 10.1.1.2 authentication index 303 active
    ip access-group RSVP_access_group_ipv4
    ipv6 access-group RSVP_access_group_ipv6
-   fast-reroute mode link-protection
    fast-reroute reversion local
    fast-reroute bypass tunnel optimization interval 65535 seconds
    srlg strict
@@ -154,10 +195,6 @@ mpls rsvp
    hitless-restart
       timer recovery 222 seconds
    !
-   graceful-restart role helper
-      timer restart maximum 32 seconds
-      timer recovery maximum 33 seconds
-   !
    graceful-restart role speaker
       timer restart 35 seconds
       timer recovery 36 seconds
@@ -166,54 +203,3 @@ mpls rsvp
       disabled
    shutdown
 ```
-
-### MPLS Interfaces
-
-| Interface | MPLS IP Enabled | LDP Enabled | IGP Sync |
-| --------- | --------------- | ----------- | -------- |
-| Ethernet1 | True | True | True |
-| Loopback0 | - | True | - |
-
-### MPLS RSVP
-
-#### MPLS RSVP Summary
-
-| Setting | Value |
-| ------- | ----- |
-| Refresh interval | 3 |
-| Refresh method  | explicit |
-| Hello interval | 30 |
-| Timeout multiplier | 254 |
-| Authentication type | md5 |
-| Authentication sequence-number window | 234 |
-| Authentication active index | 766 |
-| IPv4 access-group | RSVP_access_group_ipv4 |
-| IPv6 access-group | RSVP_access_group_ipv6 |
-| SRLG strict | enabled |
-| Label local-termination | explicit-null |
-| Preemption method | soft |
-| Preemption timer | 444 |
-| MTU signaling | True |
-| Fast reroute mode | link-protection |
-| Fast reroute reversion | local |
-| Fast reroute  bypass tunnel optimization interval | 65535 |
-| Hitless restart | Active |
-| Hitless restart recovery timer | 222 |
-| Shutdown | Active |
-
-##### Neighbor
-
-| Neighbor IP | Index | Type |
-| ----------- | ----- | ---- |
-| 1.1.1.1 | 3 | md5 |
-| 1.1.12.2 | 30 | none |
-| 1.10.1.2 | - | none |
-| 1.21.1.20 | - | md5 |
-| 10.1.1.2 | 303 | - |
-
-##### Graceful restart
-
-| Role | Recovery timer | Restart timer |
-| ---- | -------------- | ------------- |
-| Helper | 32 | 33 |
-| Speaker | 35 | 36 |

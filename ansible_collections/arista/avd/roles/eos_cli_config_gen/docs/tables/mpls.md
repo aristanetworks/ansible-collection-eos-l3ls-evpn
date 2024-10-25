@@ -58,8 +58,8 @@
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;grace_period_recovery</samp>](## "mpls.rsvp.graceful_restart.role_speaker.grace_period_recovery") | Integer |  |  | Min: 1<br>Max: 320 |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;grace_period_restart</samp>](## "mpls.rsvp.graceful_restart.role_speaker.grace_period_restart") | Integer |  |  | Min: 1<br>Max: 320 |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;hello</samp>](## "mpls.rsvp.hello") | Dictionary |  |  |  |  |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;interval</samp>](## "mpls.rsvp.hello.interval") | Integer |  |  | Min: 1<br>Max: 60 | Time between hello messages. |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;multiplier</samp>](## "mpls.rsvp.hello.multiplier") | Integer |  |  | Min: 1<br>Max: 255 | Number of missed hellos after which the neighbor is expired. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;interval</samp>](## "mpls.rsvp.hello.interval") | Integer | Required |  | Min: 1<br>Max: 60 | Time between hello messages. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;multiplier</samp>](## "mpls.rsvp.hello.multiplier") | Integer | Required |  | Min: 1<br>Max: 255 | Number of missed hellos after which the neighbor is expired. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;hitless_restart</samp>](## "mpls.rsvp.hitless_restart") | Dictionary |  |  |  | RSVP hitless restart. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "mpls.rsvp.hitless_restart.enabled") | Boolean |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;timer_recovery</samp>](## "mpls.rsvp.hitless_restart.timer_recovery") | Integer |  |  | Min: 1<br>Max: 320 | Time stale states will be preserved after restart. |
@@ -197,10 +197,10 @@
         hello:
 
           # Time between hello messages.
-          interval: <int; 1-60>
+          interval: <int; 1-60; required>
 
           # Number of missed hellos after which the neighbor is expired.
-          multiplier: <int; 1-255>
+          multiplier: <int; 1-255; required>
 
         # RSVP hitless restart.
         hitless_restart:

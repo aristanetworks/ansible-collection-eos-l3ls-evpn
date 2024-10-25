@@ -6,6 +6,7 @@
   - [Management Interfaces](#management-interfaces)
 - [MPLS](#mpls)
   - [MPLS and LDP](#mpls-and-ldp)
+  - [MPLS RSVP](#mpls-rsvp)
 
 ## Management
 
@@ -50,7 +51,31 @@ interface Management1
 | LDP Transport-Address Interface | - |
 | ICMP TTL-Exceeded Tunneling Enabled | True |
 
-#### MPLS and LDP Device Configuration
+### MPLS RSVP
+
+#### MPLS RSVP Summary
+
+| Setting | Value |
+| ------- | ----- |
+| Refresh method  | explicit |
+| Authentication type | md5 |
+| Authentication sequence-number window | 234 |
+| Authentication active index | 766 |
+| SRLG | enabled |
+| Preemption method | hard |
+| Fast reroute mode | link-protection |
+| Fast reroute reversion | - |
+| Fast reroute  bypass tunnel optimization interval | - |
+| Hitless restart | Active |
+| Hitless restart recovery timer | - |
+
+##### RSVP Graceful Restart
+
+| Role | Recovery timer | Restart timer |
+| ---- | -------------- | ------------- |
+| Helper | 32 | 33 |
+
+#### MPLS Device Configuration
 
 ```eos
 !
@@ -60,4 +85,21 @@ mpls ldp
    shutdown
 !
 mpls icmp ttl-exceeded tunneling
+!
+mpls rsvp
+   refresh method explicit
+   authentication type md5
+   authentication sequence-number window 234
+   authentication index 766 active
+   fast-reroute mode link-protection
+   srlg
+   preemption method hard
+   !
+   hitless-restart
+   !
+   graceful-restart role helper
+      timer restart maximum 32 seconds
+      timer recovery maximum 33 seconds
+   !
+   p2mp
 ```

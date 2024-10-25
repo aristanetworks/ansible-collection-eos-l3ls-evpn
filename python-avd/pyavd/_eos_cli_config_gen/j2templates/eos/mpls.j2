@@ -46,7 +46,7 @@ mpls rsvp
    refresh method {{ mpls.rsvp.refresh.method }}
 {%         endif %}
 {%     endif %}
-{%     if mpls.rsvp.hello.interval is arista.avd.defined and mpls.rsvp.hello.multiplier is arista.avd.defined %}
+{%     if mpls.rsvp.hello is arista.avd.defined %}
    hello interval {{ mpls.rsvp.hello.interval }} multiplier {{ mpls.rsvp.hello.multiplier }}
 {%     endif %}
 {%     if mpls.rsvp.authentication is arista.avd.defined %}
@@ -58,9 +58,7 @@ mpls rsvp
    authentication sequence-number window {{ auth.sequence_number_window }}
 {%         endif %}
 {%         for password_index in auth.password_indexes | arista.avd.natural_sort('index') %}
-{%             if password_index.index is arista.avd.defined and password_index.password_type is arista.avd.defined and password_index.password is arista.avd.defined %}
    authentication index {{ password_index.index }} password {{ password_index.password_type }} {{ password_index.password | arista.avd.hide_passwords(hide_passwords) }}
-{%             endif %}
 {%         endfor %}
 {%         if auth.active_index is arista.avd.defined %}
    authentication index {{ auth.active_index }} active
