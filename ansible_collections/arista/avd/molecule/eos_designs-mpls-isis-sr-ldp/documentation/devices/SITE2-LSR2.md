@@ -473,7 +473,16 @@ router isis CUSTOM_NAME
 | LDP Interface Disabled Default | True |
 | LDP Transport-Address Interface | Loopback0 |
 
-#### MPLS and LDP Device Configuration
+### MPLS Interfaces
+
+| Interface | MPLS IP Enabled | LDP Enabled | IGP Sync |
+| --------- | --------------- | ----------- | -------- |
+| Ethernet3 | True | True | True |
+| Loopback0 | - | True | - |
+| Port-Channel12 | True | True | True |
+| Port-Channel110 | True | True | True |
+
+#### MPLS Device Configuration
 
 ```eos
 !
@@ -485,15 +494,6 @@ mpls ldp
    interface disabled default
    no shutdown
 ```
-
-### MPLS Interfaces
-
-| Interface | MPLS IP Enabled | LDP Enabled | IGP Sync |
-| --------- | --------------- | ----------- | -------- |
-| Ethernet3 | True | True | True |
-| Loopback0 | - | True | - |
-| Port-Channel12 | True | True | True |
-| Port-Channel110 | True | True | True |
 
 ## VRF Instances
 

@@ -513,7 +513,16 @@ router bfd
 | LDP Interface Disabled Default | True |
 | LDP Transport-Address Interface | Loopback0 |
 
-#### MPLS and LDP Device Configuration
+### MPLS Interfaces
+
+| Interface | MPLS IP Enabled | LDP Enabled | IGP Sync |
+| --------- | --------------- | ----------- | -------- |
+| Ethernet2 | True | True | True |
+| Ethernet3 | True | True | True |
+| Ethernet4 | True | True | True |
+| Loopback0 | - | True | - |
+
+#### MPLS Device Configuration
 
 ```eos
 !
@@ -525,15 +534,6 @@ mpls ldp
    interface disabled default
    no shutdown
 ```
-
-### MPLS Interfaces
-
-| Interface | MPLS IP Enabled | LDP Enabled | IGP Sync |
-| --------- | --------------- | ----------- | -------- |
-| Ethernet2 | True | True | True |
-| Ethernet3 | True | True | True |
-| Ethernet4 | True | True | True |
-| Loopback0 | - | True | - |
 
 ## VRF Instances
 
