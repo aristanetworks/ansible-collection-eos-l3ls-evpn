@@ -9,9 +9,9 @@ keys:
   wan_mode:
     documentation_options:
       table: wan-settings
-    description: Select if the WAN should be run using CV Pathfinder or Legacy AutoVPN only.
+    description: Select if the WAN should be run using CV Pathfinder or AutoVPN only.
     type: str
     default: cv-pathfinder
     valid_values:
-      - legacy-autovpn
+      - autovpn
       - cv-pathfinder

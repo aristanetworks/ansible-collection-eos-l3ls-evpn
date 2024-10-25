@@ -2466,7 +2466,7 @@ keys:
 
             This is used both for AutoVPN and Pathfinder designs.
 
-            That means if `wan_mode` root key is set to `legacy-autovpn` or `cv-pathfinder`.
+            That means if `wan_mode` root key is set to `autovpn` or `cv-pathfinder`.
 
             `server` indicates that the router is a route-reflector.
 
@@ -4606,12 +4606,11 @@ keys:
   wan_mode:
     documentation_options:
       table: wan-settings
-    description: Select if the WAN should be run using CV Pathfinder or Legacy AutoVPN
-      only.
+    description: Select if the WAN should be run using CV Pathfinder or AutoVPN only.
     type: str
     default: cv-pathfinder
     valid_values:
-    - legacy-autovpn
+    - autovpn
     - cv-pathfinder
   wan_path_groups:
     documentation_options:
@@ -4711,8 +4710,7 @@ keys:
               convert_types:
               - str
   wan_route_servers:
-    description: 'List of the AutoVPN RRs when using `wan_mode: legacy-autovpn`, or
-      the Pathfinders
+    description: 'List of the AutoVPN RRs when using `wan_mode: autovpn`, or the Pathfinders
 
       when using `wan_mode: cv-pathfinder`, to which the device should connect to.
 
@@ -4875,10 +4873,10 @@ keys:
               or destined to the WAN route servers.'
       policies:
         type: list
-        description: "List of virtual toplogies policies.\n\nFor Legacy AutoVPN, each
-          item in the list creates:\n  * one policy with:\n      * one `match` entry
-          per `application_virtual_topologies` item\n        they are indexed using
-          `10 * <list_index>` where `list_index` starts at `1`.\n      * one `default-match`\n
+        description: "List of virtual toplogies policies.\n\nFor AutoVPN, each item
+          in the list creates:\n  * one policy with:\n      * one `match` entry per
+          `application_virtual_topologies` item\n        they are indexed using `10
+          * <list_index>` where `list_index` starts at `1`.\n      * one `default-match`\n
           \ * one load-balance policy per `application_virtual_topologies` and one
           for the `default_virtual_topology`.\n  * if the policy is associated with
           the default VRF, a special control-plane rule is injected\n    in the policy
@@ -9077,7 +9075,7 @@ $defs:
 
               This is used both for AutoVPN and Pathfinder designs.
 
-              That means if `wan_mode` root key is set to `legacy-autovpn` or `cv-pathfinder`.
+              That means if `wan_mode` root key is set to `autovpn` or `cv-pathfinder`.
 
               `server` indicates that the router is a route-reflector.
 
