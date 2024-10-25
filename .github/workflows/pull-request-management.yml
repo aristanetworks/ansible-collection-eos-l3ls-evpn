@@ -215,6 +215,7 @@ jobs:
           - 'example-isis-ldp-ipvpn'
           - 'example-l2ls-fabric'
           - 'example-single-dc-l3ls'
+          - 'example-cv-pathfinder'
         ansible_version:
           # Testing all scenario with 2.16.x, due to bug with in 2.17.0 with and the way we test eos_designs_negative_unit_tests https://github.com/ansible/ansible/issues/83292
           - 'ansible-core>=2.16.0,<2.17.0 --upgrade'
@@ -451,7 +452,7 @@ jobs:
       - uses: actions/checkout@v4
       - name: 'Install Python & Ansible requirements'
         run: |
-          pip install pydantic>=2.3.0 "ansible-core<2.18.0" -r .github/requirements-ci.txt --upgrade
+          pip install "ansible-core<2.18.0" -r .github/requirements-ci.txt --upgrade
           ansible-galaxy collection install -r ansible_collections/arista/avd/collections.yml
       - name: Install galaxy-importer
         # Install the specific version of galaxy-importer used on galaxy.ansible.com

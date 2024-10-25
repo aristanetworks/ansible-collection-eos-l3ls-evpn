@@ -1,0 +1,17 @@
+---
+- name: Remove output folders
+  hosts: all
+  gather_facts: false
+  connection: local
+  tasks:
+    - name: Delete local folders
+      delegate_to: 127.0.0.1
+      run_once: true
+      ansible.builtin.file:
+        path: "{{ root_dir }}/{{ item }}"
+        state: absent
+      with_items:
+        - documentation
+        - intended
+        - config_backup
+        - reports

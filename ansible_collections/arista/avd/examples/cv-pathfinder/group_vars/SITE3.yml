@@ -1,0 +1,32 @@
+---
+# SITE3 variables
+
+l2leaf:
+  nodes:
+    - name: site3-leaf1
+      mgmt_ip: 192.168.17.21/24
+      id: 12
+
+wan_router:
+  defaults:
+    loopback_ipv4_pool: 192.168.255.0/24
+    vtep_loopback_ipv4_pool: 192.168.42.0/24
+    uplink_ipv4_pool: 10.0.3.0/24
+    uplink_interfaces: [Ethernet1]
+    uplink_switch_interfaces: [Ethernet1]
+    uplink_type: lan
+    bgp_as: 65000
+  nodes:
+    - name: site3-wan1
+      cv_pathfinder_region: REGION2
+      cv_pathfinder_site: SITE3
+      id: 11
+      mgmt_ip: 192.168.17.20/24
+      uplink_switches: [site3-leaf1]
+      l3_interfaces:
+        - name: Ethernet4
+          peer_interface: Ethernet8
+          dhcp_ip: 100.64.30.2
+          profile: INTERNET-WAN-INTERFACE
+          wan_carrier: REGION2-INTERNET-CORP
+          wan_circuit_id: inet-site3-wan1
