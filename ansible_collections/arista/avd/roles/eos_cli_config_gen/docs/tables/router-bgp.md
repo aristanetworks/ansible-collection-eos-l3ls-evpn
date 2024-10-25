@@ -1063,13 +1063,13 @@
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;rcf</samp>](## "router_bgp.vrfs.[].route_targets.export.[].rcf") | String |  |  |  | RCF function name with parenthesis.<br>Example: MyFunction(myarg).<br>Only applicable if `address_family` is one of `evpn`, `vpn-ipv4` or `vpn-ipv6`. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;vpn_route_filter_rcf</samp>](## "router_bgp.vrfs.[].route_targets.export.[].vpn_route_filter_rcf") | String |  |  |  | RCF function name with parenthesis for filtering VPN routes. Also requires `rcf` to be set.<br>Example: MyFunction(myarg).<br>Only applicable if `address_family` is one of `vpn-ipv4` or `vpn-ipv6`. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;router_id</samp>](## "router_bgp.vrfs.[].router_id") | String |  |  |  | in IP address format A.B.C.D. |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;maximum_paths</samp>](## "router_bgp.vrfs.[].maximum_paths") | Dictionary |  |  |  |  |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;;&nbsp;&nbsp;;&nbsp;&nbsp;paths</samp>](## "router_bgp.vrfs.[].maximum_paths.paths") | Integer | Required |  | Min: 1<br>Max: 600 |  |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;;&nbsp;&nbsp;;&nbsp;&nbsp;ecmp</samp>](## "router_bgp.vrfs.[].maximum_paths.ecmp") | Integer |  |  | Min: 1<br>Max: 600 |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;timers</samp>](## "router_bgp.vrfs.[].timers") | String |  |  |  | BGP Keepalive and Hold Timer values in seconds as string "<0-3600> <0-3600>". |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;networks</samp>](## "router_bgp.vrfs.[].networks") | List, items: Dictionary |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;prefix</samp>](## "router_bgp.vrfs.[].networks.[].prefix") | String | Required, Unique |  |  | IPv4 prefix "A.B.C.D/E" or IPv6 prefix "A:B:C:D:E:F:G:H/I". |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;route_map</samp>](## "router_bgp.vrfs.[].networks.[].route_map") | String |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;maximum_paths</samp>](## "router_bgp.vrfs.[].maximum_paths") | Dictionary |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;paths</samp>](## "router_bgp.vrfs.[].maximum_paths.paths") | Integer | Required |  | Min: 1<br>Max: 600 |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ecmp</samp>](## "router_bgp.vrfs.[].maximum_paths.ecmp") | Integer |  |  | Min: 1<br>Max: 600 |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;updates</samp>](## "router_bgp.vrfs.[].updates") | Dictionary |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;wait_for_convergence</samp>](## "router_bgp.vrfs.[].updates.wait_for_convergence") | Boolean |  |  |  | Disables FIB updates and route advertisement when the BGP instance is initiated until the BGP convergence state is reached.<br> |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;wait_install</samp>](## "router_bgp.vrfs.[].updates.wait_install") | Boolean |  |  |  | Do not advertise reachability to a prefix until that prefix has been installed in hardware.<br>This will eliminate any temporary black holes due to a BGP speaker advertising reachability to a prefix that may not yet be installed into the forwarding plane.<br> |
@@ -3782,10 +3782,6 @@
           # in IP address format A.B.C.D.
           router_id: <str>
 
-          maximum_paths:
-            paths: <int; 1-600; required>
-            ecmp: <int; 1-600>
-
           # BGP Keepalive and Hold Timer values in seconds as string "<0-3600> <0-3600>".
           timers: <str>
           networks:
@@ -3793,6 +3789,9 @@
               # IPv4 prefix "A.B.C.D/E" or IPv6 prefix "A:B:C:D:E:F:G:H/I".
             - prefix: <str; required; unique>
               route_map: <str>
+          maximum_paths:
+            paths: <int; 1-600; required>
+            ecmp: <int; 1-600>
           updates:
 
             # Disables FIB updates and route advertisement when the BGP instance is initiated until the BGP convergence state is reached.
