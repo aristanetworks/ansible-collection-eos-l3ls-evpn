@@ -22,6 +22,8 @@
 #### AAA Server Groups Device Configuration
 
 ```eos
-{%     include 'eos/aaa-server-groups.j2' %}
+{%     include 'eos/aaa-server-groups-ldap.j2' %}
+{%     include 'eos/aaa-server-groups-radius.j2' %}
+{%     include 'eos/aaa-server-groups-tacacs-plus.j2' %}
 ```
 {% endif %}

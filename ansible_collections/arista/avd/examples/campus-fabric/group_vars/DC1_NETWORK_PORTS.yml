@@ -43,9 +43,10 @@ network_ports:
     profile: PP-DOT1X
     native_vlan: 110
     structured_config:
-      phone:
-        trunk: untagged
-        vlan: 120
+      switchport:
+        phone:
+          trunk: untagged
+          vlan: 120
     dot1x:
       authentication_failure:
         action: allow
@@ -61,9 +62,10 @@ network_ports:
     profile: PP-DOT1X
     native_vlan: 210
     structured_config:
-      phone:
-        trunk: untagged
-        vlan: 220
+      switchport:
+        phone:
+          trunk: untagged
+          vlan: 220
     dot1x:
       authentication_failure:
         action: allow
@@ -79,9 +81,10 @@ network_ports:
     profile: PP-DOT1X
     native_vlan: 310
     structured_config:
-      phone:
-        trunk: untagged
-        vlan: 320
+      switchport:
+        phone:
+          trunk: untagged
+          vlan: 320
     dot1x:
       authentication_failure:
         action: allow

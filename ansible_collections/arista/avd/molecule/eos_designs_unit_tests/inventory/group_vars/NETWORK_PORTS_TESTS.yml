@@ -31,14 +31,14 @@ network_ports:
     switch_ports:
       - Ethernet1-2
     profile: pc
-    description: PCs
+    endpoint: PCs
 
   - switches:
       - network-ports-tests-2$
     switch_ports:
       - Ethernet1-2
     profile: ap_with_port_channel
-    description: AP1 with port_channel
+    endpoint: AP1 with port_channel
 
   - switches:
       - network-ports-[est]{5}[-.].*
@@ -46,7 +46,7 @@ network_ports:
       - Ethernet3-4
       - Ethernet2/1-48
     profile: pc
-    description: PCs
+    endpoint: PCs
 
   - switches:
       - network-ports-tests-2
@@ -60,13 +60,14 @@ network_ports:
       - network-ports-tests.1
     switch_ports:
       - Ethernet5-6
-    description: "N: blah"
+    description: "N: {endpoint}"
+    endpoint: blah
 
   - switches:
       - network-ports-tests.2
     switch_ports:
       - Ethernet7-10
-    description: "Checking port-channels"
+    endpoint: "Checking port-channels"
     port_channel:
       channel_id: 42
       mode: "active"

@@ -1,1 +1,4 @@
 ---
+# Generate CSV with fabric p2p link info. Here testing for RFC5549 where we have no interface IPs.
+eos_designs_documentation:
+  p2p_links_csv: true

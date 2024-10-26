@@ -56,3 +56,15 @@ keys:
             convert_types:
               - str
             description: IPv4 prefix length used for L3 point-to-point uplinks.
+      wan_ha:
+        type: dict
+        description: Allow to manipulate the IP addressing scheme for WAN HA direct subnets.
+        keys:
+          ipv4_prefix_length:
+            type: int
+            default: 31
+            min: 1
+            max: 31
+            convert_types:
+              - str
+            description: IPv4 prefix length used for point-to-point interface for direct WAN HA link.

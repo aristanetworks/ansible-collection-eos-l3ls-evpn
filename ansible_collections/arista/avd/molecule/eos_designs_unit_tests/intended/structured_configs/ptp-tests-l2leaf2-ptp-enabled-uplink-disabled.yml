@@ -51,9 +51,8 @@ ethernet_interfaces:
   peer: ptp-tests-leaf1
   peer_interface: Ethernet14
   peer_type: l3leaf
-  description: PTP-TESTS-LEAF1_Ethernet14
+  description: L2_ptp-tests-leaf1_Ethernet14
   shutdown: false
-  type: port-channel-member
   channel_group:
     id: 1
     mode: active
@@ -61,19 +60,20 @@ ethernet_interfaces:
   peer: ptp-tests-leaf2
   peer_interface: Ethernet14
   peer_type: l3leaf
-  description: PTP-TESTS-LEAF2_Ethernet14
+  description: L2_ptp-tests-leaf2_Ethernet14
   shutdown: false
-  type: port-channel-member
   channel_group:
     id: 1
     mode: active
 port_channel_interfaces:
 - name: Port-Channel1
-  description: PTP-TEST-LEAF_Po14
-  type: switched
+  description: L2_ptp-test-leaf_Port-Channel14
+  switchport:
+    enabled: true
+    mode: trunk
+    trunk:
+      allowed_vlan: '11'
   shutdown: false
-  mode: trunk
-  vlans: '11'
 vlans:
 - id: 11
   name: VLAN11

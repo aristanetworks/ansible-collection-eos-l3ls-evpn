@@ -11,6 +11,10 @@ router_bgp:
   maximum_paths:
     paths: 4
     ecmp: 4
+  redistribute:
+    connected:
+      enabled: true
+      route_map: RM-CONN-2-BGP
   updates:
     wait_install: true
   peer_groups:
@@ -33,9 +37,6 @@ router_bgp:
       activate: true
     - name: EVPN-OVERLAY-PEERS
       activate: false
-  redistribute_routes:
-  - source_protocol: connected
-    route_map: RM-CONN-2-BGP
   neighbors:
   - ip_address: 172.31.255.96
     peer_group: UNDERLAY-PEERS
@@ -60,22 +61,22 @@ router_bgp:
   - ip_address: 192.168.255.1
     peer_group: EVPN-OVERLAY-PEERS
     peer: DC1-SPINE1
-    description: DC1-SPINE1
+    description: DC1-SPINE1_Loopback0
     remote_as: '65001'
   - ip_address: 192.168.255.2
     peer_group: EVPN-OVERLAY-PEERS
     peer: DC1-SPINE2
-    description: DC1-SPINE2
+    description: DC1-SPINE2_Loopback0
     remote_as: '65001'
   - ip_address: 192.168.255.3
     peer_group: EVPN-OVERLAY-PEERS
     peer: DC1-SPINE3
-    description: DC1-SPINE3
+    description: DC1-SPINE3_Loopback0
     remote_as: '65001'
   - ip_address: 192.168.255.4
     peer_group: EVPN-OVERLAY-PEERS
     peer: DC1-SPINE4
-    description: DC1-SPINE4
+    description: DC1-SPINE4_Loopback0
     remote_as: '65001'
   address_family_evpn:
     peer_groups:
@@ -106,9 +107,11 @@ router_bgp:
         route_targets:
         - 65000:123
     router_id: 192.168.255.15
-    redistribute_routes:
-    - source_protocol: connected
-    - source_protocol: static
+    redistribute:
+      connected:
+        enabled: true
+      static:
+        enabled: true
     address_family_ipv4:
       neighbors:
       - ip_address: 123.1.1.10
@@ -169,8 +172,9 @@ router_bgp:
         route_targets:
         - '15:15'
     router_id: 192.168.255.15
-    redistribute_routes:
-    - source_protocol: connected
+    redistribute:
+      connected:
+        enabled: true
   - name: Tenant_B_OP_Zone
     rd: 192.168.255.15:20
     route_targets:
@@ -183,8 +187,9 @@ router_bgp:
         route_targets:
         - '20:20'
     router_id: 192.168.255.15
-    redistribute_routes:
-    - source_protocol: connected
+    redistribute:
+      connected:
+        enabled: true
   - name: Tenant_B_WAN_Zone
     rd: 192.168.255.15:21
     route_targets:
@@ -197,8 +202,9 @@ router_bgp:
         route_targets:
         - '21:21'
     router_id: 192.168.255.15
-    redistribute_routes:
-    - source_protocol: connected
+    redistribute:
+      connected:
+        enabled: true
   - name: Tenant_C_WAN_Zone
     rd: 192.168.255.15:31
     route_targets:
@@ -211,8 +217,9 @@ router_bgp:
         route_targets:
         - '31:31'
     router_id: 192.168.255.15
-    redistribute_routes:
-    - source_protocol: connected
+    redistribute:
+      connected:
+        enabled: true
   vlan_aware_bundles:
   - name: Tenant_A_WAN_Zone
     rd: 192.168.255.15:14
@@ -328,7 +335,7 @@ vrfs:
   ip_routing: true
 management_interfaces:
 - name: Management1
-  description: oob_management
+  description: OOB_MANAGEMENT
   shutdown: false
   vrf: MGMT
   ip_address: 192.168.200.111/24
@@ -357,7 +364,8 @@ ethernet_interfaces:
   speed: forced 100gfull
   shutdown: false
   mtu: 1500
-  type: routed
+  switchport:
+    enabled: false
   ip_address: 172.31.255.97/31
 - name: Ethernet46
   peer: DC1-SPINE2
@@ -367,7 +375,8 @@ ethernet_interfaces:
   speed: forced 100gfull
   shutdown: false
   mtu: 1500
-  type: routed
+  switchport:
+    enabled: false
   ip_address: 172.31.255.99/31
 - name: Ethernet47
   peer: DC1-SPINE3
@@ -377,7 +386,8 @@ ethernet_interfaces:
   speed: forced 100gfull
   shutdown: false
   mtu: 1500
-  type: routed
+  switchport:
+    enabled: false
   ip_address: 172.31.255.101/31
 - name: Ethernet48
   peer: DC1-SPINE4
@@ -387,7 +397,8 @@ ethernet_interfaces:
   speed: forced 100gfull
   shutdown: false
   mtu: 1500
-  type: routed
+  switchport:
+    enabled: false
   ip_address: 172.31.255.103/31
 - name: Ethernet7
   peer_type: l3_interface
@@ -395,7 +406,8 @@ ethernet_interfaces:
   mtu: 9000
   shutdown: false
   description: test
-  type: routed
+  switchport:
+    enabled: false
   vrf: Tenant_A_WAN_Zone
 - name: Ethernet8
   peer_type: l3_interface
@@ -403,7 +415,8 @@ ethernet_interfaces:
   mtu: 9000
   shutdown: false
   description: test
-  type: routed
+  switchport:
+    enabled: false
   vrf: Tenant_L3_VRF_Zone
 - name: Ethernet9
   peer_type: l3_interface
@@ -411,7 +424,8 @@ ethernet_interfaces:
   mtu: 9000
   shutdown: false
   description: test
-  type: routed
+  switchport:
+    enabled: false
   vrf: Tenant_L3_VRF_Zone
 - name: Ethernet10.100
   peer_type: l3_interface
@@ -419,8 +433,8 @@ ethernet_interfaces:
   mtu: 9000
   shutdown: false
   description: subinterface test
-  type: l3dot1q
-  encapsulation_dot1q_vlan: 100
+  encapsulation_dot1q:
+    vlan: 100
   vrf: Tenant_L3_VRF_Zone
 - name: Ethernet10.200
   peer_type: l3_interface
@@ -428,11 +442,12 @@ ethernet_interfaces:
   mtu: 9000
   shutdown: false
   description: subinterface test with vlan override
-  type: l3dot1q
-  encapsulation_dot1q_vlan: 141
+  encapsulation_dot1q:
+    vlan: 141
   vrf: Tenant_L3_VRF_Zone
 - name: Ethernet10
-  type: routed
+  switchport:
+    enabled: false
   peer_type: l3_interface
   shutdown: false
 - name: Ethernet4000

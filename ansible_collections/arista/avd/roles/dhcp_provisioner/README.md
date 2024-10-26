@@ -55,6 +55,7 @@ all:
 - **`ztp_lease_time`**: Maximum lease time before devices lose IP. Renewal is max/2 (default is 300 sec).
 - **`ztp_mac_source`**: Define which mac-address field is used for identification: interface mac-address (`interface`) or system-mac-address (`system`). Default: `system`
 - **`ztp_mode`**: Define how role works either `offline` or `online` (Default `offline`).
+- **`avd_dhcp_provisioner_provision`**: Run `arista.cvp.dhcp_configuration` in either online or offline mode (Default `true`).
 
 *Example*:
 
@@ -128,7 +129,7 @@ custom_structured_configuration_daemon_terminattr:
 
 ## Requirements
 
-Requirements are located here: [avd-requirements](../../docs/installation/collection-installation.md#additional-python-libraries-required)
+Requirements are located here: [avd-requirements](../../docs/installation/collection-installation.md#python-requirements-installation)
 
 ## License
 

@@ -6,6 +6,7 @@ from pyavd._schema.avdschema import AvdSchema
 from .bgp_peer_groups import BgpPeerGroupsMixin
 from .connected_endpoints_keys import ConnectedEndpointsKeysMixin
 from .cv_topology import CvTopology
+from .descriptions import DescriptionsMixin
 from .filtered_tenants import FilteredTenantsMixin
 from .flow_tracking import FlowTrackingMixin
 from .inband_management import InbandManagementMixin
@@ -31,6 +32,7 @@ from .wan import WanMixin
 class SharedUtils(
     BgpPeerGroupsMixin,
     ConnectedEndpointsKeysMixin,
+    DescriptionsMixin,
     FilteredTenantsMixin,
     InbandManagementMixin,
     InterfaceDescriptionsMixin,

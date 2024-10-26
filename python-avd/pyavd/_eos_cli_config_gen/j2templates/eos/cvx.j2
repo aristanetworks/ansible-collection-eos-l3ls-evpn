@@ -15,28 +15,28 @@ cvx
 {%     for peer_host in cvx.peer_hosts | arista.avd.natural_sort %}
    peer host {{ peer_host }}
 {%     endfor %}
-{%     if cvx.services is arista.avd.defined %}
-{%         if cvx.services.mcs is arista.avd.defined %}
+{%     if cvx.services.mcs is arista.avd.defined %}
+   !
    service mcs
-{%             if cvx.services.mcs.redis.password is arista.avd.defined %}
+{%         if cvx.services.mcs.redis.password is arista.avd.defined %}
       redis password {{ cvx.services.mcs.redis.password_type | arista.avd.default("7") }} {{ cvx.services.mcs.redis.password | arista.avd.hide_passwords(hide_passwords) }}
-{%             endif %}
-{%             if cvx.services.mcs.shutdown is arista.avd.defined(false) %}
-      no shutdown
-{%             elif cvx.services.mcs.shutdown is arista.avd.defined(true) %}
-      shutdown
-{%             endif %}
 {%         endif %}
-{%         if cvx.services.vxlan is arista.avd.defined %}
-   service vxlan
-{%             if cvx.services.vxlan.shutdown is arista.avd.defined(false) %}
+{%         if cvx.services.mcs.shutdown is arista.avd.defined(false) %}
       no shutdown
-{%             elif cvx.services.vxlan.shutdown is arista.avd.defined(true) %}
+{%         elif cvx.services.mcs.shutdown is arista.avd.defined(true) %}
       shutdown
-{%             endif %}
-{%             if cvx.services.vxlan.vtep_mac_learning is arista.avd.defined %}
+{%         endif %}
+{%     endif %}
+{%     if cvx.services.vxlan is arista.avd.defined %}
+   !
+   service vxlan
+{%         if cvx.services.vxlan.shutdown is arista.avd.defined(false) %}
+      no shutdown
+{%         elif cvx.services.vxlan.shutdown is arista.avd.defined(true) %}
+      shutdown
+{%         endif %}
+{%         if cvx.services.vxlan.vtep_mac_learning is arista.avd.defined %}
       vtep mac-learning {{ cvx.services.vxlan.vtep_mac_learning }}
-{%             endif %}
 {%         endif %}
 {%     endif %}
 {% endif %}

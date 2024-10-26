@@ -3,8 +3,9 @@ snmp_server:
   engine_ids:
     local: 424242424242424242
     remotes:
+      # TODO: make address as primary key
       # First one without IP should not be rendered
-      - id: 1234567890ABCDEF12
+      # - id: 1234567890ABCDEF12
       - id: 6172697374615F6970
         address: 1.1.1.1
       - id: DEADBEEFCAFE123456

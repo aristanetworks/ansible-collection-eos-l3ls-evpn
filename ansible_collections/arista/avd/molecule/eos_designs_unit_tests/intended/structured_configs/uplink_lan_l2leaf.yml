@@ -24,12 +24,14 @@ ethernet_interfaces:
   peer: uplink_lan_wan_router1
   peer_interface: Ethernet2
   peer_type: wan_router
-  description: UPLINK_LAN_WAN_ROUTER1_Ethernet2
+  description: L2_uplink_lan_wan_router1_Ethernet2
   shutdown: false
-  type: switched
-  vlans: 10,100
-  mode: trunk
-  native_vlan: 10
+  switchport:
+    enabled: true
+    mode: trunk
+    trunk:
+      allowed_vlan: 10,100
+      native_vlan: 10
   spanning_tree_portfast: edge
   flow_tracker:
     sampled: FLOW-TRACKER
@@ -37,11 +39,13 @@ ethernet_interfaces:
   peer: uplink_lan_wan_router2
   peer_interface: Ethernet2
   peer_type: wan_router
-  description: UPLINK_LAN_WAN_ROUTER2_Ethernet2
+  description: L2_uplink_lan_wan_router2_Ethernet2
   shutdown: false
-  type: switched
-  vlans: 10,100
-  mode: trunk
+  switchport:
+    enabled: true
+    mode: trunk
+    trunk:
+      allowed_vlan: 10,100
   spanning_tree_portfast: edge
   flow_tracker:
     sampled: FLOW-TRACKER

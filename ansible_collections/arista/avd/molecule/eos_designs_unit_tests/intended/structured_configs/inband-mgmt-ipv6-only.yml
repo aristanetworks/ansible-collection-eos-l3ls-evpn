@@ -26,7 +26,6 @@ ethernet_interfaces:
   peer_type: l3leaf
   description: INBAND-MGMT-PARENT-IPV6-1_Ethernet26
   shutdown: false
-  type: port-channel-member
   channel_group:
     id: 1
     mode: active
@@ -36,17 +35,18 @@ ethernet_interfaces:
   peer_type: l3leaf
   description: INBAND-MGMT-PARENT-IPV6-2_Ethernet26
   shutdown: false
-  type: port-channel-member
   channel_group:
     id: 1
     mode: active
 port_channel_interfaces:
 - name: Port-Channel1
-  description: INBAND-MGMT-PARENTS-IPV6_Po26
-  type: switched
+  description: inband-mgmt-parents-ipv6_Po26
+  switchport:
+    enabled: true
+    mode: trunk
+    trunk:
+      allowed_vlan: '106'
   shutdown: false
-  mode: trunk
-  vlans: '106'
 ip_igmp_snooping:
   globally_enabled: true
 vlans:

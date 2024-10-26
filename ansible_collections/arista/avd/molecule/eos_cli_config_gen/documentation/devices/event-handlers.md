@@ -17,20 +17,20 @@
 
 | Management Interface | Description | Type | VRF | IP Address | Gateway |
 | -------------------- | ----------- | ---- | --- | ---------- | ------- |
-| Management1 | oob_management | oob | MGMT | 10.73.255.122/24 | 10.73.255.2 |
+| Management1 | OOB_MANAGEMENT | oob | MGMT | 10.73.255.122/24 | 10.73.255.2 |
 
 ##### IPv6
 
 | Management Interface | Description | Type | VRF | IPv6 Address | IPv6 Gateway |
 | -------------------- | ----------- | ---- | --- | ------------ | ------------ |
-| Management1 | oob_management | oob | MGMT | - | - |
+| Management1 | OOB_MANAGEMENT | oob | MGMT | - | - |
 
 #### Management Interfaces Device Configuration
 
 ```eos
 !
 interface Management1
-   description oob_management
+   description OOB_MANAGEMENT
    vrf MGMT
    ip address 10.73.255.122/24
 ```
@@ -80,11 +80,11 @@ event-handler trigger-on-boot
    action increment device-health metric Metric1
 !
 event-handler trigger-on-counters
+   action log
    trigger on-counters
       poll interval 10
       condition ( Arad*.IptCrcErrCnt.delta > 100 ) and ( Arad*.UcFifoFullDrop.delta > 100 )
       granularity per-source
-   action log
 !
 event-handler trigger-on-counters2
    trigger on-counters
@@ -100,10 +100,10 @@ event-handler trigger-on-intf
 event-handler trigger-on-intf2
 !
 event-handler trigger-on-logging
+   action increment device-health metric Metric2
    trigger on-logging
       poll interval 10
       regex ab*
-   action increment device-health metric Metric2
 !
 event-handler trigger-on-logging2
    trigger on-logging

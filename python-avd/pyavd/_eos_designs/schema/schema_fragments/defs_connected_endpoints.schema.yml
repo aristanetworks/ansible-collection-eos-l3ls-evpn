@@ -12,7 +12,6 @@ $defs:
     description: |
       This should be applied to group_vars or host_vars where endpoints are connecting.
       `connected_endpoints_keys.key` is one of the keys under "connected_endpoints_keys".
-      The default keys are `servers`, `firewalls`, `routers`, `load_balancers`, and `storage_arrays`.
     items:
       type: dict
       keys:
@@ -55,8 +54,13 @@ $defs:
                   Each list item is one switchport.
                 items:
                   type: str
-                  description: Interface name.
+                  description: Port name on the endpoint.
               descriptions:
                 type: list
-                description: |
+                description: |-
                   Unique description per port. When set, takes priority over description.
+                  This can be a template using the AVD string formatter syntax: https://avd.arista.com/devel/roles/eos_designs/docs/how-to/custom-descriptions-names.html#avd-string-formatter-syntax.
+                  The available template fields are:
+                    - `endpoint_type` - the `type` from `connected_endpoints_keys` like `server`, `router` etc.
+                    - `endpoint` - The name of the connected endpoint
+                    - `endpoint_port` - The value from `endpoint_ports` for this switch port if set.

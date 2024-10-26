@@ -6,27 +6,7 @@
 {# eos - snmp server #}
 {% if snmp_server is arista.avd.defined %}
 !
-{%     if snmp_server.engine_ids.local is arista.avd.defined %}
-snmp-server engineID local {{ snmp_server.engine_ids.local }}
-{%     endif %}
-{%     if snmp_server.contact is arista.avd.defined %}
-snmp-server contact {{ snmp_server.contact }}
-{%     endif %}
-{%     if snmp_server.location is arista.avd.defined %}
-snmp-server location {{ snmp_server.location }}
-{%     endif %}
-{%     if snmp_server.engine_ids.remotes is arista.avd.defined %}
-{%         for engine_id in snmp_server.engine_ids.remotes %}
-{%             if engine_id.id is arista.avd.defined and engine_id.address is arista.avd.defined %}
-{%                 set remote_engine_ids_cli =  "snmp-server engineID remote " ~ engine_id.address %}
-{%                 if engine_id.udp_port is arista.avd.defined %}
-{%                     set remote_engine_ids_cli =  remote_engine_ids_cli ~ " udp-port " ~  engine_id.udp_port %}
-{%                 endif %}
-{%                 set remote_engine_ids_cli = remote_engine_ids_cli ~ " " ~ engine_id.id %}
-{{ remote_engine_ids_cli }}
-{%             endif %}
-{%         endfor %}
-{%     endif %}
+{# TODO IPv4/IPv6 access list config order is not correct as per EOS #}
 {%     if snmp_server.ipv4_acls is arista.avd.defined %}
 {%         for acl in snmp_server.ipv4_acls %}
 {%             set acl_cli = "snmp-server ipv4 access-list " ~ acl.name %}
@@ -45,8 +25,18 @@ snmp-server location {{ snmp_server.location }}
 {{ acl_cli }}
 {%         endfor %}
 {%     endif %}
+{%     if snmp_server.engine_ids.local is arista.avd.defined %}
+snmp-server engineID local {{ snmp_server.engine_ids.local }}
+{%     endif %}
+{%     if snmp_server.contact is arista.avd.defined %}
+snmp-server contact {{ snmp_server.contact }}
+{%     endif %}
+{%     if snmp_server.location is arista.avd.defined %}
+snmp-server location {{ snmp_server.location }}
+{%     endif %}
+{# TODO local interfaces config order is not correct as per EOS #}
 {%     if snmp_server.local_interfaces is arista.avd.defined %}
-{%         for local_interface in snmp_server.local_interfaces %}
+{%         for local_interface in snmp_server.local_interfaces | arista.avd.natural_sort('name') %}
 {%             set interface_snmp_cli = "snmp-server" %}
 {%             if local_interface.vrf is arista.avd.defined %}
 {%                 set interface_snmp_cli = interface_snmp_cli ~ " vrf " ~ local_interface.vrf %}
@@ -56,7 +46,7 @@ snmp-server location {{ snmp_server.location }}
 {%         endfor %}
 {%     endif %}
 {%     if snmp_server.views is arista.avd.defined %}
-{%         for view in snmp_server.views %}
+{%         for view in snmp_server.views | arista.avd.natural_sort('name') %}
 {%             if view.name is arista.avd.defined %}
 {%                 set view_cli = "snmp-server view " ~ view.name %}
 {%             endif %}
@@ -92,7 +82,7 @@ snmp-server location {{ snmp_server.location }}
 {%         endfor %}
 {%     endif %}
 {%     if snmp_server.groups is arista.avd.defined %}
-{%         for group in snmp_server.groups %}
+{%         for group in snmp_server.groups | arista.avd.natural_sort('name') %}
 {%             if group.name is arista.avd.defined %}
 {%                 set group_cli = "snmp-server group " ~ group.name %}
 {%             endif %}
@@ -115,7 +105,7 @@ snmp-server location {{ snmp_server.location }}
 {%         endfor %}
 {%     endif %}
 {%     if snmp_server.users is arista.avd.defined %}
-{%         for user in snmp_server.users %}
+{%         for user in snmp_server.users | arista.avd.natural_sort('name') %}
 {%             if user.name is arista.avd.defined %}
 {%                 set user_cli = "snmp-server user " ~ user.name %}
 {%             endif %}
@@ -146,8 +136,20 @@ snmp-server location {{ snmp_server.location }}
 {{ user_cli }}
 {%         endfor %}
 {%     endif %}
+{%     if snmp_server.engine_ids.remotes is arista.avd.defined %}
+{%         for engine_id in snmp_server.engine_ids.remotes | arista.avd.natural_sort('address') %}
+{%             if engine_id.id is arista.avd.defined and engine_id.address is arista.avd.defined %}
+{%                 set remote_engine_ids_cli =  "snmp-server engineID remote " ~ engine_id.address %}
+{%                 if engine_id.udp_port is arista.avd.defined %}
+{%                     set remote_engine_ids_cli =  remote_engine_ids_cli ~ " udp-port " ~  engine_id.udp_port %}
+{%                 endif %}
+{%                 set remote_engine_ids_cli = remote_engine_ids_cli ~ " " ~ engine_id.id %}
+{{ remote_engine_ids_cli }}
+{%             endif %}
+{%         endfor %}
+{%     endif %}
 {%     if snmp_server.hosts is arista.avd.defined %}
-{%         for host in snmp_server.hosts %}
+{%         for host in snmp_server.hosts | arista.avd.natural_sort('host') %}
 {%             if host.host is arista.avd.defined %}
 {%                 set host_cli = "snmp-server host " ~ host.host %}
 {%                 if host.vrf is arista.avd.defined %}

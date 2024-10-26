@@ -21,7 +21,7 @@ cvp_configlets:
     \ 1 mode active\n!\ninterface Ethernet2\n   description DC1-LEAF1B_Ethernet5\n\
     \   no shutdown\n   channel-group 1 mode active\n!\ninterface Ethernet5\n   description\
     \ server01_Eth0\n   no shutdown\n   switchport\n   switchport access vlan 110\n\
-    \   switchport mode access\n!\ninterface Management1\n   description oob_management\n\
+    \   switchport mode access\n!\ninterface Management1\n   description OOB_MANAGEMENT\n\
     \   no shutdown\n   vrf MGMT\n   ip address 10.255.0.17/24\n!\nip routing\nno\
     \ ip routing vrf MGMT\n!\nip route vrf MGMT 0.0.0.0/0 10.255.0.1\n!\nmanagement\
     \ api http-commands\n   protocol https\n   no shutdown\n   !\n   vrf MGMT\n  \

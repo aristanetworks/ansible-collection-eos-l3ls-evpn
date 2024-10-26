@@ -11,6 +11,10 @@ router_bgp:
   maximum_paths:
     paths: 4
     ecmp: 4
+  redistribute:
+    connected:
+      enabled: true
+      route_map: RM-CONN-2-BGP
   updates:
     wait_install: true
   peer_groups:
@@ -18,7 +22,7 @@ router_bgp:
     type: ipv4
     remote_as: '65111'
     next_hop_self: true
-    description: DC1_UNDEPLOYED_LEAF1A
+    description: MLAG_PEER_DC1_UNDEPLOYED_LEAF1A
     password: 15AwQNBEJ1nyF/kBEtoAGw==
     maximum_routes: 12000
     send_community: all
@@ -89,9 +93,6 @@ router_bgp:
     peer: DC1-SPINE4
     description: DC1-SPINE4
     remote_as: '65001'
-  redistribute_routes:
-  - source_protocol: connected
-    route_map: RM-CONN-2-BGP
   address_family_evpn:
     peer_groups:
     - name: EVPN-OVERLAY-PEERS
@@ -114,9 +115,9 @@ router_bgp:
         route_targets:
         - '12:12'
     router_id: 192.168.255.22
-    redistribute_routes:
-    - source_protocol: connected
-      route_map: RM-CONN-2-BGP-VRFS
+    redistribute:
+      connected:
+        enabled: true
     neighbors:
     - ip_address: 10.255.251.24
       peer_group: MLAG-PEERS
@@ -135,9 +136,9 @@ router_bgp:
         route_targets:
         - '13:13'
     router_id: 192.168.255.22
-    redistribute_routes:
-    - source_protocol: connected
-      route_map: RM-CONN-2-BGP-VRFS
+    redistribute:
+      connected:
+        enabled: true
     neighbors:
     - ip_address: 10.255.251.24
       peer_group: MLAG-PEERS
@@ -156,8 +157,10 @@ router_bgp:
         route_targets:
         - '9:9'
     router_id: 192.168.255.22
-    redistribute_routes:
-    - source_protocol: connected
+    redistribute:
+      connected:
+        enabled: true
+        route_map: RM-CONN-2-BGP-VRFS
     neighbors:
     - ip_address: 10.255.251.24
       peer_group: MLAG-PEERS
@@ -178,9 +181,9 @@ router_bgp:
         - '14:14'
         - 65000:789
     router_id: 192.168.255.22
-    redistribute_routes:
-    - source_protocol: connected
-      route_map: RM-CONN-2-BGP-VRFS
+    redistribute:
+      connected:
+        enabled: true
     neighbors:
     - ip_address: 10.255.251.24
       peer_group: MLAG-PEERS
@@ -199,9 +202,9 @@ router_bgp:
         route_targets:
         - '11:11'
     router_id: 192.168.255.22
-    redistribute_routes:
-    - source_protocol: connected
-      route_map: RM-CONN-2-BGP-VRFS
+    redistribute:
+      connected:
+        enabled: true
     neighbors:
     - ip_address: 172.31.11.24
       peer_group: MLAG-PEERS
@@ -220,8 +223,10 @@ router_bgp:
         route_targets:
         - '20:20'
     router_id: 192.168.255.22
-    redistribute_routes:
-    - source_protocol: connected
+    redistribute:
+      connected:
+        enabled: true
+        route_map: RM-CONN-2-BGP-VRFS
     neighbors:
     - ip_address: 10.255.251.24
       peer_group: MLAG-PEERS
@@ -240,8 +245,10 @@ router_bgp:
         route_targets:
         - '21:21'
     router_id: 192.168.255.22
-    redistribute_routes:
-    - source_protocol: connected
+    redistribute:
+      connected:
+        enabled: true
+        route_map: RM-CONN-2-BGP-VRFS
     neighbors:
     - ip_address: 10.255.251.24
       peer_group: MLAG-PEERS
@@ -260,8 +267,10 @@ router_bgp:
         route_targets:
         - '30:30'
     router_id: 192.168.255.22
-    redistribute_routes:
-    - source_protocol: connected
+    redistribute:
+      connected:
+        enabled: true
+        route_map: RM-CONN-2-BGP-VRFS
     neighbors:
     - ip_address: 10.255.251.24
       peer_group: MLAG-PEERS
@@ -280,8 +289,10 @@ router_bgp:
         route_targets:
         - '31:31'
     router_id: 192.168.255.22
-    redistribute_routes:
-    - source_protocol: connected
+    redistribute:
+      connected:
+        enabled: true
+        route_map: RM-CONN-2-BGP-VRFS
     neighbors:
     - ip_address: 10.255.251.24
       peer_group: MLAG-PEERS
@@ -481,7 +492,7 @@ vrfs:
   ip_routing: true
 management_interfaces:
 - name: Management42
-  description: oob_management
+  description: OOB_MANAGEMENT
   shutdown: false
   vrf: MGMT
   ip_address: 192.168.200.122/24
@@ -862,20 +873,21 @@ vlan_interfaces:
 port_channel_interfaces:
 - name: Port-Channel571
   description: MLAG_PEER_DC1_UNDEPLOYED_LEAF1A_Po571
-  type: switched
+  switchport:
+    enabled: true
+    mode: trunk
+    trunk:
+      groups:
+      - MLAG
+      - LEAF_PEER_L3
+      allowed_vlan: 1-4094
   shutdown: false
-  vlans: 1-4094
-  mode: trunk
-  trunk_groups:
-  - LEAF_PEER_L3
-  - MLAG
 ethernet_interfaces:
 - name: Ethernet57/1
   peer: DC1_UNDEPLOYED_LEAF1A
   peer_interface: Ethernet57/1
   peer_type: mlag_peer
   description: MLAG_PEER_DC1_UNDEPLOYED_LEAF1A_Ethernet57/1
-  type: port-channel-member
   shutdown: false
   channel_group:
     id: 571
@@ -886,7 +898,6 @@ ethernet_interfaces:
   peer_interface: Ethernet58/1
   peer_type: mlag_peer
   description: MLAG_PEER_DC1_UNDEPLOYED_LEAF1A_Ethernet58/1
-  type: port-channel-member
   shutdown: false
   channel_group:
     id: 571
@@ -900,7 +911,8 @@ ethernet_interfaces:
   speed: forced 100gfull
   shutdown: false
   mtu: 1500
-  type: routed
+  switchport:
+    enabled: false
   ip_address: 172.31.255.161/31
 - name: Ethernet50/1
   peer: DC1-SPINE2
@@ -910,7 +922,8 @@ ethernet_interfaces:
   speed: forced 100gfull
   shutdown: false
   mtu: 1500
-  type: routed
+  switchport:
+    enabled: false
   ip_address: 172.31.255.163/31
 - name: Ethernet51/1
   peer: DC1-SPINE3
@@ -920,7 +933,8 @@ ethernet_interfaces:
   speed: forced 100gfull
   shutdown: false
   mtu: 1500
-  type: routed
+  switchport:
+    enabled: false
   ip_address: 172.31.255.165/31
 - name: Ethernet52/1
   peer: DC1-SPINE4
@@ -930,7 +944,8 @@ ethernet_interfaces:
   speed: forced 100gfull
   shutdown: false
   mtu: 1500
-  type: routed
+  switchport:
+    enabled: false
   ip_address: 172.31.255.167/31
 mlag_configuration:
   domain_id: DC1_UNDEPLOYED_LEAF1
@@ -963,11 +978,11 @@ route_maps:
     type: permit
 loopback_interfaces:
 - name: Loopback0
-  description: EVPN_Overlay_Peering
+  description: ROUTER_ID
   shutdown: false
   ip_address: 192.168.255.22/32
 - name: Loopback1
-  description: VTEP_VXLAN_Tunnel_Source
+  description: VXLAN_TUNNEL_SOURCE
   shutdown: false
   ip_address: 192.168.254.21/32
 - name: Loopback100
@@ -986,8 +1001,6 @@ prefix_lists:
   sequence_numbers:
   - sequence: 10
     action: permit 10.255.251.24/31
-  - sequence: 20
-    action: permit 172.31.11.24/31
 router_bfd:
   multihop:
     interval: 1200

@@ -37,7 +37,7 @@ bgp_peer_groups:
 
 # RD/RT Format
 overlay_rd_type:
-  admin_subfield: overlay_loopback
+  admin_subfield: router_id
 overlay_rt_type:
   admin_subfield: 65000
 

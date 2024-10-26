@@ -210,7 +210,7 @@ class TableRowGenBase:
         restrictions = []
         valid_values = []
         if getattr(self.schema, "dynamic_valid_values", None):
-            valid_values.append(f"<value(s) of {self.schema.dynamic_valid_values}>")
+            valid_values.extend(f"<value(s) of {dynamic_valid_value}>" for dynamic_valid_value in self.schema.dynamic_valid_values)
 
         if getattr(self.schema, "valid_values", None):
             valid_values.extend(self.schema.valid_values)

@@ -1,0 +1,21 @@
+---
+type: l3leaf
+
+l3_interface_profiles:
+  - profile: PROFILE-1
+
+l3leaf:
+  nodes:
+    - name: failure-l3-interface-profile-does-not-exist
+      loopback_ipv4_pool: 192.168.42.0/24
+      vtep_loopback_ipv4_pool: 192.168.255.0/24
+      bgp_as: 65042
+      id: 1
+      l3_interfaces:
+        - name: Ethernet1
+          profile: THIS-PROFILE-DOES-NOT-EXIST
+          ip_address: 10.12.12.12/24
+
+expected_error_message: >-
+  Profile 'THIS-PROFILE-DOES-NOT-EXIST' applied under l3_interface 'Ethernet1' does
+  not exist in `l3_interface_profiles`.

@@ -10,14 +10,10 @@
 ip as-path regex-mode {{ as_path.regex_mode }}
 {%     endif %}
 {%     for as_path_access_list in as_path.access_lists | arista.avd.natural_sort('name') %}
-{%         if as_path_access_list.name is arista.avd.defined and as_path_access_list.entries is arista.avd.defined %}
+{%         if as_path_access_list.entries is arista.avd.defined %}
 {%             for as_path_access_list_entry in as_path_access_list.entries %}
 {%                 if as_path_access_list_entry.type is arista.avd.defined and as_path_access_list_entry.match is arista.avd.defined %}
-{%                     set as_path_access_list_cli = "ip as-path access-list " ~ as_path_access_list.name %}
-{%                     set as_path_access_list_cli = as_path_access_list_cli ~ " " ~ as_path_access_list_entry.type %}
-{%                     set as_path_access_list_cli = as_path_access_list_cli ~ " " ~ as_path_access_list_entry.match %}
-{%                     set as_path_access_list_cli = as_path_access_list_cli ~ " " ~ as_path_access_list_entry.origin | arista.avd.default('any') %}
-{{ as_path_access_list_cli }}
+ip as-path access-list {{ as_path_access_list.name }} {{ as_path_access_list_entry.type }} {{ as_path_access_list_entry.match }} {{ as_path_access_list_entry.origin | arista.avd.default('any') }}
 {%                 endif %}
 {%             endfor %}
 {%         endif %}

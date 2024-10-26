@@ -19,7 +19,13 @@ system control-plane
    {{ cp_mss_cli }}
 {%     endif %}
 {#     control_plane access_groups ipv4 #}
-{%     for acl_set in system.control_plane.ipv4_access_groups | arista.avd.natural_sort %}
+{%     if system.control_plane.ipv4_access_groups is arista.avd.defined %}
+{%         set with_vrf_non_default = system.control_plane.ipv4_access_groups | selectattr('vrf', 'arista.avd.defined') | rejectattr('vrf', 'equalto', 'default') | arista.avd.natural_sort | arista.avd.natural_sort('vrf') %}
+{%         set without_vrf = system.control_plane.ipv4_access_groups | rejectattr('vrf', 'arista.avd.defined') | arista.avd.natural_sort %}
+{%         set with_vrf_default = system.control_plane.ipv4_access_groups | selectattr('vrf', 'arista.avd.defined') | selectattr('vrf', 'equalto', 'default') | arista.avd.natural_sort %}
+{%         set sorted_ipv4_access_groups =  without_vrf | list + with_vrf_default | list + with_vrf_non_default | list %}
+{%     endif %}
+{%     for acl_set in sorted_ipv4_access_groups | arista.avd.default([]) %}
 {%         set cp_ipv4_access_grp = "ip access-group " ~ acl_set.acl_name %}
 {%         if acl_set.vrf is arista.avd.defined %}
 {%             set cp_ipv4_access_grp = cp_ipv4_access_grp ~ " vrf " ~ acl_set.vrf %}
@@ -28,7 +34,13 @@ system control-plane
    {{ cp_ipv4_access_grp }}
 {%     endfor %}
 {#     control_plane access_groups ipv6 #}
-{%     for acl_set in system.control_plane.ipv6_access_groups | arista.avd.natural_sort %}
+{%     if system.control_plane.ipv6_access_groups is arista.avd.defined %}
+{%         set with_vrf_non_default = system.control_plane.ipv6_access_groups | selectattr('vrf', 'arista.avd.defined') | rejectattr('vrf', 'equalto', 'default') | arista.avd.natural_sort | arista.avd.natural_sort('vrf') %}
+{%         set without_vrf = system.control_plane.ipv6_access_groups | rejectattr('vrf', 'arista.avd.defined') | arista.avd.natural_sort %}
+{%         set with_vrf_default = system.control_plane.ipv6_access_groups | selectattr('vrf', 'arista.avd.defined') | selectattr('vrf', 'equalto', 'default') | arista.avd.natural_sort %}
+{%         set sorted_ipv6_access_groups =  without_vrf | list + with_vrf_default | list + with_vrf_non_default | list %}
+{%     endif %}
+{%     for acl_set in sorted_ipv6_access_groups | arista.avd.default([]) %}
 {%         set cp_ipv6_access_grp = "ipv6 access-group " ~ acl_set.acl_name %}
 {%         if acl_set.vrf is arista.avd.defined %}
 {%             set cp_ipv6_access_grp = cp_ipv6_access_grp ~ " vrf " ~ acl_set.vrf %}

@@ -4,27 +4,23 @@
  that can be found in the LICENSE file.
 #}
 {# eos - roles #}
-{% if roles is arista.avd.defined %}
+{% for role in roles | arista.avd.natural_sort("name") %}
 !
-{%     for role in roles %}
-{%         if role.name is arista.avd.defined %}
 role {{ role.name }}
-{%             if role.sequence_numbers is arista.avd.defined %}
-{%                 for sequence in role.sequence_numbers %}
-{%                     if sequence.action is arista.avd.defined and sequence.command is arista.avd.defined %}
-{%                         set sequence_cli = "" %}
-{%                         if sequence.sequence is arista.avd.defined %}
-{%                             set sequence_cli = sequence.sequence ~ " " %}
-{%                         endif %}
-{%                         set sequence_cli = sequence_cli ~ sequence.action %}
-{%                         if sequence.mode is arista.avd.defined %}
-{%                             set sequence_cli = sequence_cli ~ " mode " ~ sequence.mode %}
-{%                         endif %}
-{%                         set sequence_cli = sequence_cli ~ " command " ~ sequence.command %}
+{%     if role.sequence_numbers is arista.avd.defined %}
+{%         for sequence in role.sequence_numbers %}
+{%             if sequence.action is arista.avd.defined and sequence.command is arista.avd.defined %}
+{%                 set sequence_cli = "" %}
+{%                 if sequence.sequence is arista.avd.defined %}
+{%                     set sequence_cli = sequence.sequence ~ " " %}
+{%                 endif %}
+{%                 set sequence_cli = sequence_cli ~ sequence.action %}
+{%                 if sequence.mode is arista.avd.defined %}
+{%                     set sequence_cli = sequence_cli ~ " mode " ~ sequence.mode %}
+{%                 endif %}
+{%                 set sequence_cli = sequence_cli ~ " command " ~ sequence.command %}
    {{ sequence_cli }}
-{%                     endif %}
-{%                 endfor %}
 {%             endif %}
-{%         endif %}
-{%     endfor %}
-{% endif %}
+{%         endfor %}
+{%     endif %}
+{% endfor %}

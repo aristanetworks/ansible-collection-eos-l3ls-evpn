@@ -32,7 +32,7 @@ node_type_keys:
       mlag_port_channel_interfaces: 'templates/interface-descriptions/mlag/port-channel-interfaces.j2'
       connected_endpoints_ethernet_interfaces: 'interface-descriptions/connected-endpoints/ethernet-interfaces.j2'
       connected_endpoints_port_channel_interfaces: 'interface-descriptions/connected-endpoints/port-channel-interfaces.j2'
-      overlay_loopback_interface: 'interface-descriptions/loopbacks/overlay-loopback.j2'
+      router_id_loopback_interface: 'interface-descriptions/loopbacks/router-id-loopback.j2'
       vtep_loopback_interface: 'interface-descriptions/loopbacks/vtep-loopback.j2'
   - key: l2leaf
     type: l2leaf

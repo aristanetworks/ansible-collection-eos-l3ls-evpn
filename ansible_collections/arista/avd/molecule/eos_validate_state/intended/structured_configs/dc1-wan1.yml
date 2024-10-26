@@ -8,6 +8,10 @@ router_bgp:
       ipv4_unicast: false
   maximum_paths:
     paths: 16
+  redistribute:
+    connected:
+      enabled: true
+      route_map: RM-CONN-2-BGP
   updates:
     wait_install: true
   peer_groups:
@@ -40,9 +44,6 @@ router_bgp:
       activate: true
     - name: WAN-OVERLAY-PEERS
       activate: false
-  redistribute_routes:
-  - source_protocol: connected
-    route_map: RM-CONN-2-BGP
   neighbors:
   - ip_address: 10.255.255.0
     peer_group: IPv4-UNDERLAY-PEERS
@@ -57,11 +58,11 @@ router_bgp:
   - ip_address: 10.255.255.10
     peer_group: WAN-OVERLAY-PEERS
     peer: dc1-leaf1a
-    description: dc1-leaf1a
+    description: dc1-leaf1a_Dps1
   - ip_address: 10.255.255.20
     peer_group: WAN-OVERLAY-PEERS
     peer: dc1-leaf1b
-    description: dc1-leaf1b
+    description: dc1-leaf1b_Dps1
   - ip_address: 10.255.1.2
     peer: dc1-wan2
     description: dc1-wan2
@@ -75,6 +76,7 @@ router_bgp:
     peer_groups:
     - name: WAN-OVERLAY-PEERS
       activate: true
+      encapsulation: path-selection
       route_map_in: RM-EVPN-SOO-IN
       route_map_out: RM-EVPN-SOO-OUT
     neighbor_default:
@@ -83,6 +85,7 @@ router_bgp:
     neighbors:
     - ip_address: 10.255.1.2
       activate: true
+      encapsulation: path-selection
   address_family_ipv4_sr_te:
     peer_groups:
     - name: WAN-OVERLAY-PEERS
@@ -101,8 +104,7 @@ router_bgp:
     bgp:
       additional_paths:
         receive: true
-        send:
-          any: true
+        send: any
   vrfs:
   - name: default
     rd: 10.255.2.1:1
@@ -148,7 +150,7 @@ vrfs:
   ip_routing: false
 management_interfaces:
 - name: Management1
-  description: oob_management
+  description: OOB_MANAGEMENT
   shutdown: false
   vrf: MGMT
   ip_address: 172.16.1.15/24
@@ -164,35 +166,39 @@ ethernet_interfaces:
   peer: dc1-leaf1a
   peer_interface: Ethernet6
   peer_type: l3leaf
-  description: P2P_LINK_TO_DC1-LEAF1A_Ethernet6
+  description: P2P_dc1-leaf1a_Ethernet6
   shutdown: false
   mtu: 1500
-  type: routed
+  switchport:
+    enabled: false
   ip_address: 10.255.255.1/31
 - name: Ethernet2
   peer: dc1-leaf1b
   peer_interface: Ethernet6
   peer_type: l3leaf
-  description: P2P_LINK_TO_DC1-LEAF1B_Ethernet6
+  description: P2P_dc1-leaf1b_Ethernet6
   shutdown: false
   mtu: 1500
-  type: routed
+  switchport:
+    enabled: false
   ip_address: 10.255.255.3/31
 - name: Ethernet3
   peer_type: l3_interface
   ip_address: 172.18.3.2/24
   shutdown: false
-  type: routed
+  switchport:
+    enabled: false
   description: mpls-sp-1_DC1-MPLS-3
 - name: Ethernet4
   peer_type: l3_interface
   ip_address: 100.64.3.2/24
   shutdown: false
-  type: routed
+  switchport:
+    enabled: false
   description: isp-1_DC1-INET-3
 loopback_interfaces:
 - name: Loopback0
-  description: Router_ID
+  description: ROUTER_ID
   shutdown: false
   ip_address: 10.255.2.1/32
 as_path:
@@ -498,7 +504,7 @@ application_traffic_recognition:
 dps_interfaces:
 - name: Dps1
   description: DPS Interface
-  mtu: 9214
+  mtu: 9194
   ip_address: 10.255.1.1/32
   flow_tracker:
     sampled: FLOW-TRACKER

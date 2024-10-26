@@ -20,7 +20,7 @@ cvp_configlets:
     Ethernet2\n   description DC1-LEAF1B_Ethernet5\n   no shutdown\n   channel-group
     1 mode active\n!\ninterface Ethernet5\n   description server01_Eth0\n   no shutdown\n
     \  switchport\n   switchport access vlan 110\n   switchport mode access\n!\ninterface
-    Management1\n   description oob_management\n   no shutdown\n   vrf MGMT\n   ip
+    Management1\n   description OOB_MANAGEMENT\n   no shutdown\n   vrf MGMT\n   ip
     address 10.255.0.17/24\n!\nip routing\nno ip routing vrf MGMT\n!\nip route vrf
     MGMT 0.0.0.0/0 10.255.0.1\n!\nmanagement api http-commands\n   protocol https\n
     \  no shutdown\n   !\n   vrf MGMT\n      no shutdown\n!\nend\n"
@@ -45,7 +45,7 @@ cvp_configlets:
     Ethernet2\n   description DC1-LEAF2B_Ethernet5\n   no shutdown\n   channel-group
     1 mode active\n!\ninterface Ethernet5\n   description server02_Eth0\n   no shutdown\n
     \  switchport\n   switchport access vlan 110\n   switchport mode access\n!\ninterface
-    Management1\n   description oob_management\n   no shutdown\n   vrf MGMT\n   ip
+    Management1\n   description OOB_MANAGEMENT\n   no shutdown\n   vrf MGMT\n   ip
     address 10.255.0.18/24\n!\nip routing\nno ip routing vrf MGMT\n!\nip route vrf
     MGMT 0.0.0.0/0 10.255.0.1\n!\nmanagement api http-commands\n   protocol https\n
     \  no shutdown\n   !\n   vrf MGMT\n      no shutdown\n!\nend\n"
@@ -100,7 +100,7 @@ cvp_configlets:
     192.168.255.3/32\n!\ninterface Loopback1\n   description VTEP_VXLAN_Tunnel_Source\n
     \  no shutdown\n   ip address 192.168.254.3/32\n!\ninterface Loopback100\n   description
     Tenant_A_OP_Zone_VTEP_DIAGNOSTICS\n   no shutdown\n   vrf Tenant_A_OP_Zone\n   ip
-    address 10.255.1.3/32\n!\ninterface Management1\n   description oob_management\n
+    address 10.255.1.3/32\n!\ninterface Management1\n   description OOB_MANAGEMENT\n
     \  no shutdown\n   vrf MGMT\n   ip address 10.255.0.13/24\n!\ninterface Vlan110\n
     \  description Tenant_A_OP_Zone_1\n   no shutdown\n   vrf Tenant_A_OP_Zone\n   ip
     address virtual 10.1.10.1/24\n!\ninterface Vlan111\n   description Tenant_A_OP_Zone_2\n
@@ -297,7 +297,7 @@ cvp_configlets:
     192.168.255.4/32\n!\ninterface Loopback1\n   description VTEP_VXLAN_Tunnel_Source\n
     \  no shutdown\n   ip address 192.168.254.3/32\n!\ninterface Loopback100\n   description
     Tenant_A_OP_Zone_VTEP_DIAGNOSTICS\n   no shutdown\n   vrf Tenant_A_OP_Zone\n   ip
-    address 10.255.1.4/32\n!\ninterface Management1\n   description oob_management\n
+    address 10.255.1.4/32\n!\ninterface Management1\n   description OOB_MANAGEMENT\n
     \  no shutdown\n   vrf MGMT\n   ip address 10.255.0.14/24\n!\ninterface Vlan110\n
     \  description Tenant_A_OP_Zone_1\n   no shutdown\n   vrf Tenant_A_OP_Zone\n   ip
     address virtual 10.1.10.1/24\n!\ninterface Vlan111\n   description Tenant_A_OP_Zone_2\n
@@ -494,7 +494,7 @@ cvp_configlets:
     192.168.255.5/32\n!\ninterface Loopback1\n   description VTEP_VXLAN_Tunnel_Source\n
     \  no shutdown\n   ip address 192.168.254.5/32\n!\ninterface Loopback100\n   description
     Tenant_A_OP_Zone_VTEP_DIAGNOSTICS\n   no shutdown\n   vrf Tenant_A_OP_Zone\n   ip
-    address 10.255.1.5/32\n!\ninterface Management1\n   description oob_management\n
+    address 10.255.1.5/32\n!\ninterface Management1\n   description OOB_MANAGEMENT\n
     \  no shutdown\n   vrf MGMT\n   ip address 10.255.0.15/24\n!\ninterface Vlan110\n
     \  description Tenant_A_OP_Zone_1\n   no shutdown\n   vrf Tenant_A_OP_Zone\n   ip
     address virtual 10.1.10.1/24\n!\ninterface Vlan111\n   description Tenant_A_OP_Zone_2\n
@@ -691,7 +691,7 @@ cvp_configlets:
     192.168.255.6/32\n!\ninterface Loopback1\n   description VTEP_VXLAN_Tunnel_Source\n
     \  no shutdown\n   ip address 192.168.254.5/32\n!\ninterface Loopback100\n   description
     Tenant_A_OP_Zone_VTEP_DIAGNOSTICS\n   no shutdown\n   vrf Tenant_A_OP_Zone\n   ip
-    address 10.255.1.6/32\n!\ninterface Management1\n   description oob_management\n
+    address 10.255.1.6/32\n!\ninterface Management1\n   description OOB_MANAGEMENT\n
     \  no shutdown\n   vrf MGMT\n   ip address 10.255.0.16/24\n!\ninterface Vlan110\n
     \  description Tenant_A_OP_Zone_1\n   no shutdown\n   vrf Tenant_A_OP_Zone\n   ip
     address virtual 10.1.10.1/24\n!\ninterface Vlan111\n   description Tenant_A_OP_Zone_2\n
@@ -857,7 +857,7 @@ cvp_configlets:
     P2P_LINK_TO_DC1-LEAF2B_Ethernet1\n   no shutdown\n   mtu 1500\n   no switchport\n
     \  ip address 172.31.255.12/31\n!\ninterface Loopback0\n   description EVPN_Overlay_Peering\n
     \  no shutdown\n   ip address 192.168.255.1/32\n!\ninterface Management1\n   description
-    oob_management\n   no shutdown\n   vrf MGMT\n   ip address 10.255.0.11/24\n!\nip
+    OOB_MANAGEMENT\n   no shutdown\n   vrf MGMT\n   ip address 10.255.0.11/24\n!\nip
     routing\nno ip routing vrf MGMT\n!\nip prefix-list PL-LOOPBACKS-EVPN-OVERLAY\n
     \  seq 10 permit 192.168.255.0/24 eq 32\n!\nip route vrf MGMT 0.0.0.0/0 10.255.0.1\n!\nroute-map
     RM-CONN-2-BGP permit 10\n   match ip address prefix-list PL-LOOPBACKS-EVPN-OVERLAY\n!\nrouter
@@ -911,7 +911,7 @@ cvp_configlets:
     P2P_LINK_TO_DC1-LEAF2B_Ethernet2\n   no shutdown\n   mtu 1500\n   no switchport\n
     \  ip address 172.31.255.14/31\n!\ninterface Loopback0\n   description EVPN_Overlay_Peering\n
     \  no shutdown\n   ip address 192.168.255.2/32\n!\ninterface Management1\n   description
-    oob_management\n   no shutdown\n   vrf MGMT\n   ip address 10.255.0.12/24\n!\nip
+    OOB_MANAGEMENT\n   no shutdown\n   vrf MGMT\n   ip address 10.255.0.12/24\n!\nip
     routing\nno ip routing vrf MGMT\n!\nip prefix-list PL-LOOPBACKS-EVPN-OVERLAY\n
     \  seq 10 permit 192.168.255.0/24 eq 32\n!\nip route vrf MGMT 0.0.0.0/0 10.255.0.1\n!\nroute-map
     RM-CONN-2-BGP permit 10\n   match ip address prefix-list PL-LOOPBACKS-EVPN-OVERLAY\n!\nrouter
@@ -966,7 +966,7 @@ cvp_configlets:
     Ethernet2\n   description DC1-LEAF1B_Ethernet5\n   no shutdown\n   channel-group
     1 mode active\n!\ninterface Ethernet5\n   description server01_Eth0\n   no shutdown\n
     \  switchport\n   switchport access vlan 110\n   switchport mode access\n!\ninterface
-    Management1\n   description oob_management\n   no shutdown\n   vrf MGMT\n   ip
+    Management1\n   description OOB_MANAGEMENT\n   no shutdown\n   vrf MGMT\n   ip
     address 10.255.0.17/24\n!\nip routing\nno ip routing vrf MGMT\n!\nip route vrf
     MGMT 0.0.0.0/0 10.255.0.1\n!\nmanagement api http-commands\n   protocol https\n
     \  no shutdown\n   !\n   vrf MGMT\n      no shutdown\n!\nend\n"

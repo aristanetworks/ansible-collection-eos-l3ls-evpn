@@ -9,6 +9,10 @@ router_bgp:
   maximum_paths:
     paths: 4
     ecmp: 4
+  redistribute:
+    connected:
+      enabled: true
+      route_map: RM-CONN-2-BGP
   updates:
     wait_install: true
   peer_groups:
@@ -29,9 +33,6 @@ router_bgp:
       activate: true
     - name: EVPN-OVERLAY-PEERS
       activate: false
-  redistribute_routes:
-  - source_protocol: connected
-    route_map: RM-CONN-2-BGP
   address_family_evpn:
     peer_groups:
     - name: EVPN-OVERLAY-PEERS
@@ -49,8 +50,9 @@ router_bgp:
         route_targets:
         - 333:444
     router_id: 10.10.0.20
-    redistribute_routes:
-    - source_protocol: connected
+    redistribute:
+      connected:
+        enabled: true
   - name: VRF2
     rd: 10.10.0.20:999
     route_targets:
@@ -63,8 +65,9 @@ router_bgp:
         route_targets:
         - 2:999
     router_id: 10.10.0.20
-    redistribute_routes:
-    - source_protocol: connected
+    redistribute:
+      connected:
+        enabled: true
   vlans:
   - id: 100
     tenant: TENANT1
@@ -110,11 +113,11 @@ management_api_http:
   enable_https: true
 loopback_interfaces:
 - name: Loopback0
-  description: EVPN_Overlay_Peering
+  description: ROUTER_ID
   shutdown: false
   ip_address: 10.10.0.20/32
 - name: Loopback1
-  description: VTEP_VXLAN_Tunnel_Source
+  description: MY_VTEP_LOOPBACK
   shutdown: false
   ip_address: 10.11.0.20/32
 prefix_lists:

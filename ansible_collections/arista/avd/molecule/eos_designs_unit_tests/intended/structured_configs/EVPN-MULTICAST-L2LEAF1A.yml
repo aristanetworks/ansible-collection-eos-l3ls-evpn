@@ -21,7 +21,7 @@ vrfs:
   ip_routing: false
 management_interfaces:
 - name: Management1
-  description: oob_management
+  description: OOB_MANAGEMENT
   shutdown: false
   vrf: MGMT
   ip_address: 192.168.200.109/24
@@ -36,9 +36,8 @@ ethernet_interfaces:
   peer: EVPN-MULTICAST-L3LEAF1A
   peer_interface: Ethernet6
   peer_type: l3leaf
-  description: EVPN-MULTICAST-L3LEAF1A_Ethernet6
+  description: L2_EVPN-MULTICAST-L3LEAF1A_Ethernet6
   shutdown: false
-  type: port-channel-member
   channel_group:
     id: 1
     mode: active
@@ -46,19 +45,20 @@ ethernet_interfaces:
   peer: EVPN-MULTICAST-L3LEAF1B
   peer_interface: Ethernet6
   peer_type: l3leaf
-  description: EVPN-MULTICAST-L3LEAF1B_Ethernet6
+  description: L2_EVPN-MULTICAST-L3LEAF1B_Ethernet6
   shutdown: false
-  type: port-channel-member
   channel_group:
     id: 1
     mode: active
 port_channel_interfaces:
 - name: Port-Channel1
-  description: EVPN_MULTICAST_L3LEAF1_Po6
-  type: switched
+  description: L2_EVPN_MULTICAST_L3LEAF1_Port-Channel6
+  switchport:
+    enabled: true
+    mode: trunk
+    trunk:
+      allowed_vlan: 1-9,110-111,130-131,136-137,140-141,150,210-211,230-231,240-241,250-252,256-257,260,310-311,330-331,550,4092
   shutdown: false
-  mode: trunk
-  vlans: 1-9,110-111,130-131,136-137,140-141,150,210-211,230-231,240-241,250-252,256-257,260,310-311,330-331,550,4092
 vlans:
 - id: 310
   name: MULTICAST_DISABLED_310

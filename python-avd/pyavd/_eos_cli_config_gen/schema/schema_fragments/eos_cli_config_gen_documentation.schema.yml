@@ -8,7 +8,13 @@ type: dict
 keys:
   eos_cli_config_gen_documentation:
     type: dict
+    documentation_options:
+      table: role-settings
     keys:
+      enable:
+        type: bool
+        description: Generate device Markdown documentation.
+        default: true
       hide_passwords:
         type: bool
         description: |

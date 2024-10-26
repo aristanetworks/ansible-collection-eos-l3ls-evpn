@@ -34,7 +34,6 @@ options:
 EXAMPLES = r"""
 # tasks file for configlet_build_config
 - name: generate intended variables
-  tags: [build, provision]
   configlet_build_config:
     configlet_dir: '/path/to/configlets/folder/'
     configlet_prefix: 'AVD_'

@@ -95,4 +95,4 @@ application_classification:
     - name: TEST
 
 expected_error_message: >-
-  Missing mandatory `id` in `wan_virtual_topologies.policies[DEFAULT-POLICY].application_virtual_topologies[TEST]` when `wan_mode` is 'cv-pathfinder
+  Missing mandatory `id` in `wan_virtual_topologies.policies[DEFAULT-POLICY].application_virtual_topologies[TEST]` when `wan_mode` is 'cv-pathfinder.

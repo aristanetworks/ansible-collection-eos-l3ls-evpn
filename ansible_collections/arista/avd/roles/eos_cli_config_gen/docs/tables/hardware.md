@@ -13,6 +13,9 @@
     | [<samp>&nbsp;&nbsp;speed_groups</samp>](## "hardware.speed_groups") | List, items: Dictionary |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;speed_group</samp>](## "hardware.speed_groups.[].speed_group") | String | Required, Unique |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;serdes</samp>](## "hardware.speed_groups.[].serdes") | String |  |  |  | Serdes speed like "10g" or "25g". |
+    | [<samp>&nbsp;&nbsp;port_groups</samp>](## "hardware.port_groups") | List, items: Dictionary |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;port_group</samp>](## "hardware.port_groups.[].port_group") | String | Required, Unique |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;select</samp>](## "hardware.port_groups.[].select") | String |  |  |  | Select Ports to activate |
 
 === "YAML"
 
@@ -25,4 +28,9 @@
 
           # Serdes speed like "10g" or "25g".
           serdes: <str>
+      port_groups:
+        - port_group: <str; required; unique>
+
+          # Select Ports to activate
+          select: <str>
     ```

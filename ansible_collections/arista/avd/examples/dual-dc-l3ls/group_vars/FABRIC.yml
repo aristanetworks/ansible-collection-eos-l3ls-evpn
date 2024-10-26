@@ -20,6 +20,11 @@ ansible_httpapi_validate_certs: false
 # Common AVD group variables
 fabric_name: FABRIC
 
+# Generate CSVs with fabric link info.
+eos_designs_documentation:
+  topology_csv: true
+  p2p_links_csv: true
+
 # Define underlay and overlay routing protocol to be used
 underlay_routing_protocol: ebgp
 overlay_routing_protocol: ebgp

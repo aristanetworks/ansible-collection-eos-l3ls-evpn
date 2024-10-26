@@ -9,6 +9,10 @@ router_bgp:
   maximum_paths:
     paths: 4
     ecmp: 4
+  redistribute:
+    connected:
+      enabled: true
+      route_map: RM-CONN-2-BGP
   updates:
     wait_install: true
   peer_groups:
@@ -29,9 +33,6 @@ router_bgp:
       activate: true
     - name: EVPN-OVERLAY-PEERS
       activate: false
-  redistribute_routes:
-  - source_protocol: connected
-    route_map: RM-CONN-2-BGP
   address_family_evpn:
     peer_groups:
     - name: EVPN-OVERLAY-PEERS
@@ -49,8 +50,9 @@ router_bgp:
         route_targets:
         - '11:11'
     router_id: 192.168.255.1
-    redistribute_routes:
-    - source_protocol: connected
+    redistribute:
+      connected:
+        enabled: true
   - name: IGMP_QUERIER_TEST_2
     rd: 192.168.255.1:21
     route_targets:
@@ -63,8 +65,9 @@ router_bgp:
         route_targets:
         - '21:21'
     router_id: 192.168.255.1
-    redistribute_routes:
-    - source_protocol: connected
+    redistribute:
+      connected:
+        enabled: true
   - name: IGMP_QUERIER_TEST_3
     rd: 192.168.255.1:41
     route_targets:
@@ -77,8 +80,9 @@ router_bgp:
         route_targets:
         - '41:41'
     router_id: 192.168.255.1
-    redistribute_routes:
-    - source_protocol: connected
+    redistribute:
+      connected:
+        enabled: true
   vlans:
   - id: 1
     tenant: Tenant_A
@@ -250,7 +254,7 @@ vrfs:
   description: IGMP_QUERIER_TEST_3
 management_interfaces:
 - name: Management1
-  description: oob_management
+  description: OOB_MANAGEMENT
   shutdown: false
   vrf: MGMT
   ip_address: 192.168.200.101/24
@@ -265,26 +269,27 @@ ethernet_interfaces:
   peer: IGMP-QUERIER-L2LEAF1A
   peer_interface: Ethernet1
   peer_type: l2leaf
-  description: IGMP-QUERIER-L2LEAF1A_Ethernet1
+  description: L2_IGMP-QUERIER-L2LEAF1A_Ethernet1
   shutdown: false
-  type: port-channel-member
   channel_group:
     id: 1
     mode: active
 port_channel_interfaces:
 - name: Port-Channel1
-  description: IGMP-QUERIER-L2LEAF1A_Po1
-  type: switched
+  description: L2_IGMP-QUERIER-L2LEAF1A_Port-Channel1
+  switchport:
+    enabled: true
+    mode: trunk
+    trunk:
+      allowed_vlan: 1-3,11-12,21-23,101-103,111-113,121-123
   shutdown: false
-  mode: trunk
-  vlans: 1-3,11-12,21-23,101-103,111-113,121-123
 loopback_interfaces:
 - name: Loopback0
-  description: EVPN_Overlay_Peering
+  description: ROUTER_ID
   shutdown: false
   ip_address: 192.168.255.1/32
 - name: Loopback1
-  description: VTEP_VXLAN_Tunnel_Source
+  description: VXLAN_TUNNEL_SOURCE
   shutdown: false
   ip_address: 192.168.254.1/32
 prefix_lists:
@@ -373,7 +378,6 @@ ip_igmp_snooping:
   - id: 3
     querier:
       enabled: false
-      address: 192.168.255.1
   - id: 101
     querier:
       enabled: true
@@ -386,7 +390,6 @@ ip_igmp_snooping:
   - id: 103
     querier:
       enabled: false
-      address: 192.168.255.1
   - id: 11
     querier:
       enabled: true
@@ -410,8 +413,6 @@ ip_igmp_snooping:
   - id: 113
     querier:
       enabled: false
-      address: 1.1.1.1
-      version: 3
   - id: 21
     querier:
       enabled: true
@@ -438,7 +439,6 @@ ip_igmp_snooping:
   - id: 123
     querier:
       enabled: false
-      address: 192.168.255.1
 ip_virtual_router_mac_address: 00:dc:00:00:00:0a
 vlan_interfaces:
 - name: Vlan1

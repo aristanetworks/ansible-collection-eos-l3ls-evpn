@@ -52,14 +52,12 @@ options:
 EXAMPLES = r"""
 ---
 - name: Set eos_designs facts
-  tags: [build, provision, facts]
   arista.avd.eos_designs_facts:
     schema_id: eos_designs
   check_mode: False
   run_once: True
 
 - name: Set eos_designs facts per device
-  tags: [build, provision, facts]
   ansible.builtin.set_fact:
     switch: "{{ avd_switch_facts[inventory_hostname].switch }}"
   delegate_to: localhost

@@ -20,7 +20,7 @@ cpes:
         ethernet_segment:
           short_esi: 0303:0202:0101
         port_channel:
-          description: EVPN-A-A-PortChannel
+          endpoint_port_channel: EVPN-A-A-PortChannel
           mode: active
           subinterfaces:
             - number: 111

@@ -9,9 +9,6 @@
 management api http-commands
 {%     if management_api_http.enable_https is arista.avd.defined(true) %}
    protocol https
-{%         if management_api_http.https_ssl_profile is arista.avd.defined %}
-   protocol https ssl profile {{ management_api_http.https_ssl_profile }}
-{%         endif %}
 {%     elif management_api_http.enable_https is arista.avd.defined(false) %}
    no protocol https
 {%     endif %}
@@ -24,6 +21,9 @@ management api http-commands
    default-services
 {%     elif management_api_http.default_services is arista.avd.defined(false) %}
    no default-services
+{%     endif %}
+{%     if management_api_http.https_ssl_profile is arista.avd.defined %}
+   protocol https ssl profile {{ management_api_http.https_ssl_profile }}
 {%     endif %}
    no shutdown
 {%     for vrf in management_api_http.enable_vrfs | arista.avd.natural_sort('name') %}

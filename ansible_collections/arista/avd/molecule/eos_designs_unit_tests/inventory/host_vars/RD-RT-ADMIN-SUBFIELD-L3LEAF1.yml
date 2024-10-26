@@ -4,7 +4,7 @@
 
 # Expected result: rd 192.168.255.1:*
 # overlay_rd_type:
-#   admin_subfield: overlay_loopback_ip
+#   admin_subfield: router_id
 
 # Expected results:
 # - vlan1: rt 10001:10001

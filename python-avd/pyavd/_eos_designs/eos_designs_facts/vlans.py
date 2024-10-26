@@ -86,7 +86,8 @@ class VlansMixin:
         for connected_endpoints_key in self.shared_utils.connected_endpoints_keys:
             connected_endpoints = get(self._hostvars, connected_endpoints_key["key"], default=[])
             for connected_endpoint in connected_endpoints:
-                for adapter in connected_endpoint.get("adapters", []):
+                for index, adapter in enumerate(connected_endpoint.get("adapters", [])):
+                    adapter["context"] = f"{connected_endpoints_key['key']}[name={connected_endpoint['name']}].adapters[{index}]"
                     adapter_settings = self.shared_utils.get_merged_adapter_settings(adapter)
                     if self.shared_utils.hostname not in adapter_settings.get("switches", []):
                         # This switch is not connected to this endpoint. Skipping.
@@ -102,7 +103,7 @@ class VlansMixin:
                         return vlans, trunk_groups
 
         network_ports = get(self._hostvars, "network_ports", default=[])
-        for network_port_item in network_ports:
+        for index, network_port_item in enumerate(network_ports):
             for switch_regex in network_port_item.get("switches", []):
                 # The match test is built on Python re.match which tests from the beginning of the string #}
                 # Since the user would not expect "DC1-LEAF1" to also match "DC-LEAF11" we will force ^ and $ around the regex
@@ -111,6 +112,7 @@ class VlansMixin:
                     # Skip entry if no match
                     continue
 
+                network_port_item["context"] = f"network_ports[{index}]"
                 adapter_settings = self.shared_utils.get_merged_adapter_settings(network_port_item)
                 adapter_vlans, adapter_trunk_groups = self._parse_adapter_settings(adapter_settings)
                 vlans.update(adapter_vlans)

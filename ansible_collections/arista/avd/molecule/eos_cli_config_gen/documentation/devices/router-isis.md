@@ -22,20 +22,20 @@
 
 | Management Interface | Description | Type | VRF | IP Address | Gateway |
 | -------------------- | ----------- | ---- | --- | ---------- | ------- |
-| Management1 | oob_management | oob | MGMT | 10.73.254.11/24 | 10.73.254.253 |
+| Management1 | OOB_MANAGEMENT | oob | MGMT | 10.73.254.11/24 | 10.73.254.253 |
 
 ##### IPv6
 
 | Management Interface | Description | Type | VRF | IPv6 Address | IPv6 Gateway |
 | -------------------- | ----------- | ---- | --- | ------------ | ------------ |
-| Management1 | oob_management | oob | MGMT | - | - |
+| Management1 | OOB_MANAGEMENT | oob | MGMT | - | - |
 
 #### Management Interfaces Device Configuration
 
 ```eos
 !
 interface Management1
-   description oob_management
+   description OOB_MANAGEMENT
    vrf MGMT
    ip address 10.73.254.11/24
 ```
@@ -213,11 +213,11 @@ interface Loopback1
 interface Loopback2
    description ISIS-SR Node-SID
    ip address 10.1.255.3/32
-   isis enable EVPN_UNDERLAY
-   isis passive
-   isis metric 50
    node-segment ipv4 index 10
    node-segment ipv6 index 1000
+   isis enable EVPN_UNDERLAY
+   isis metric 50
+   isis passive
 ```
 
 ### VLAN Interfaces
@@ -344,10 +344,10 @@ interface Vlan4094
 !
 router isis EVPN_UNDERLAY
    net 49.0001.0001.0001.0001.00
-   is-type level-2
-   redistribute bgp route-map RM-BGP
    router-id ipv4 192.168.255.3
+   is-type level-2
    log-adjacency-changes
+   redistribute bgp route-map RM-BGP
    timers local-convergence-delay 15000 protected-prefixes
    set-overload-bit on-startup wait-for-bgp
    advertise passive-only

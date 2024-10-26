@@ -38,22 +38,22 @@ router_bgp:
   - ip_address: 192.168.255.1
     peer_group: EVPN-OVERLAY-PEERS
     peer: DC1-SPINE1
-    description: DC1-SPINE1
+    description: DC1-SPINE1_Loopback0
     remote_as: '65001'
   - ip_address: 192.168.255.2
     peer_group: EVPN-OVERLAY-PEERS
     peer: DC1-SPINE2
-    description: DC1-SPINE2
+    description: DC1-SPINE2_Loopback0
     remote_as: '65001'
   - ip_address: 192.168.255.3
     peer_group: EVPN-OVERLAY-PEERS
     peer: DC1-SPINE3
-    description: DC1-SPINE3
+    description: DC1-SPINE3_Loopback0
     remote_as: '65001'
   - ip_address: 192.168.255.4
     peer_group: EVPN-OVERLAY-PEERS
     peer: DC1-SPINE4
-    description: DC1-SPINE4
+    description: DC1-SPINE4_Loopback0
     remote_as: '65001'
 static_routes:
 - vrf: MGMT
@@ -107,7 +107,7 @@ vrfs:
   ip_routing: false
 management_interfaces:
 - name: Management1
-  description: oob_management
+  description: OOB_MANAGEMENT
   shutdown: false
   vrf: MGMT
   ip_address: 192.168.200.110/24
@@ -128,44 +128,44 @@ ntp:
 vlans:
 - id: 4093
   tenant: system
-  name: LEAF_PEER_L3
+  name: MLAG_L3
   trunk_groups:
-  - LEAF_PEER_L3
+  - MLAG
 - id: 4094
   tenant: system
-  name: MLAG_PEER
+  name: MLAG
   trunk_groups:
   - MLAG
 vlan_interfaces:
 - name: Vlan4093
-  description: MLAG_PEER_L3_PEERING
+  description: MLAG_L3
   shutdown: false
   mtu: 1500
   ip_address: 10.255.251.10/31
   ospf_network_point_to_point: true
   ospf_area: 0.0.0.0
 - name: Vlan4094
-  description: MLAG_PEER
+  description: MLAG
   shutdown: false
   no_autostate: true
   mtu: 1500
   ip_address: 10.255.252.10/31
 port_channel_interfaces:
 - name: Port-Channel5
-  description: MLAG_PEER_DC1-BL1B_Po5
-  type: switched
+  description: MLAG_DC1-BL1B_Port-Channel5
+  switchport:
+    enabled: true
+    mode: trunk
+    trunk:
+      groups:
+      - MLAG
   shutdown: false
-  mode: trunk
-  trunk_groups:
-  - LEAF_PEER_L3
-  - MLAG
 ethernet_interfaces:
 - name: Ethernet5
   peer: DC1-BL1B
   peer_interface: Ethernet5
   peer_type: mlag_peer
-  description: MLAG_PEER_DC1-BL1B_Ethernet5
-  type: port-channel-member
+  description: MLAG_DC1-BL1B_Ethernet5
   shutdown: false
   channel_group:
     id: 5
@@ -174,8 +174,7 @@ ethernet_interfaces:
   peer: DC1-BL1B
   peer_interface: Ethernet6
   peer_type: mlag_peer
-  description: MLAG_PEER_DC1-BL1B_Ethernet6
-  type: port-channel-member
+  description: MLAG_DC1-BL1B_Ethernet6
   shutdown: false
   channel_group:
     id: 5
@@ -184,10 +183,11 @@ ethernet_interfaces:
   peer: DC1-SPINE1
   peer_interface: Ethernet6
   peer_type: spine
-  description: P2P_LINK_TO_DC1-SPINE1_Ethernet6
+  description: P2P_DC1-SPINE1_Ethernet6
   shutdown: false
   mtu: 1500
-  type: routed
+  switchport:
+    enabled: false
   ip_address: 172.31.255.41/31
   ospf_network_point_to_point: true
   ospf_area: 0.0.0.0
@@ -200,10 +200,11 @@ ethernet_interfaces:
   peer: DC1-SPINE2
   peer_interface: Ethernet6
   peer_type: spine
-  description: P2P_LINK_TO_DC1-SPINE2_Ethernet6
+  description: P2P_DC1-SPINE2_Ethernet6
   shutdown: false
   mtu: 1500
-  type: routed
+  switchport:
+    enabled: false
   ip_address: 172.31.255.43/31
   ospf_network_point_to_point: true
   ospf_area: 0.0.0.0
@@ -216,10 +217,11 @@ ethernet_interfaces:
   peer: DC1-SPINE3
   peer_interface: Ethernet6
   peer_type: spine
-  description: P2P_LINK_TO_DC1-SPINE3_Ethernet6
+  description: P2P_DC1-SPINE3_Ethernet6
   shutdown: false
   mtu: 1500
-  type: routed
+  switchport:
+    enabled: false
   ip_address: 172.31.255.45/31
   ospf_network_point_to_point: true
   ospf_area: 0.0.0.0
@@ -232,10 +234,11 @@ ethernet_interfaces:
   peer: DC1-SPINE4
   peer_interface: Ethernet6
   peer_type: spine
-  description: P2P_LINK_TO_DC1-SPINE4_Ethernet6
+  description: P2P_DC1-SPINE4_Ethernet6
   shutdown: false
   mtu: 1500
-  type: routed
+  switchport:
+    enabled: false
   ip_address: 172.31.255.47/31
   ospf_network_point_to_point: true
   ospf_area: 0.0.0.0
@@ -253,12 +256,12 @@ mlag_configuration:
   reload_delay_non_mlag: '330'
 loopback_interfaces:
 - name: Loopback0
-  description: EVPN_Overlay_Peering
+  description: ROUTER_ID
   shutdown: false
   ip_address: 192.168.255.10/32
   ospf_area: 0.0.0.0
 - name: Loopback1
-  description: VTEP_VXLAN_Tunnel_Source
+  description: VXLAN_TUNNEL_SOURCE
   shutdown: false
   ip_address: 192.168.254.10/32
   ospf_area: 0.0.0.0

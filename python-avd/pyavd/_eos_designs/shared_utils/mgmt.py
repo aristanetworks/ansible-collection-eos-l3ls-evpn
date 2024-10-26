@@ -6,7 +6,7 @@ from __future__ import annotations
 from functools import cached_property
 from typing import TYPE_CHECKING
 
-from pyavd._errors import AristaAvdMissingVariableError
+from pyavd._errors import AristaAvdInvalidInputsError
 from pyavd._utils import default, get
 
 if TYPE_CHECKING:
@@ -70,7 +70,7 @@ class MgmtMixin:
         if default_mgmt_method == "oob":
             if (self.mgmt_ip is None) and (self.ipv6_mgmt_ip is None):
                 msg = "'default_mgmt_method: oob' requires either 'mgmt_ip' or 'ipv6_mgmt_ip' to bet set."
-                raise AristaAvdMissingVariableError(msg)
+                raise AristaAvdInvalidInputsError(msg)
 
             return default_mgmt_method
 
@@ -78,7 +78,7 @@ class MgmtMixin:
             # Check for missing interface
             if self.inband_mgmt_interface is None:
                 msg = "'default_mgmt_method: inband' requires 'inband_mgmt_interface' to be set."
-                raise AristaAvdMissingVariableError(msg)
+                raise AristaAvdInvalidInputsError(msg)
 
             return default_mgmt_method
 

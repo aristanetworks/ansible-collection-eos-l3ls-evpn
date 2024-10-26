@@ -24,38 +24,41 @@ spanning_tree:
 vlans:
 - id: 4094
   tenant: system
-  name: MLAG_PEER
+  name: MLAG
   trunk_groups:
   - MLAG
 vlan_interfaces:
 - name: Vlan4094
-  description: MLAG_PEER
+  description: MLAG
   shutdown: false
   no_autostate: true
   mtu: 9214
   ip_address: 10.10.255.10/31
 port_channel_interfaces:
 - name: Port-Channel25
-  description: MLAG_PEER_SL-LEAF2B_Po25
-  type: switched
+  description: MLAG_SL-LEAF2B_Port-Channel25
+  switchport:
+    enabled: true
+    mode: trunk
+    trunk:
+      groups:
+      - MLAG
   shutdown: false
-  mode: trunk
-  trunk_groups:
-  - MLAG
 - name: Port-Channel41
-  description: SL-LEAF0_Po41
-  type: switched
+  description: L2_SL-LEAF0_Port-Channel41
+  switchport:
+    enabled: true
+    mode: trunk
+    trunk:
+      allowed_vlan: none
   shutdown: false
-  mode: trunk
-  vlans: none
   mlag: 41
 ethernet_interfaces:
 - name: Ethernet25
   peer: SL-LEAF2B
   peer_interface: Ethernet25
   peer_type: mlag_peer
-  description: MLAG_PEER_SL-LEAF2B_Ethernet25
-  type: port-channel-member
+  description: MLAG_SL-LEAF2B_Ethernet25
   shutdown: false
   channel_group:
     id: 25
@@ -64,8 +67,7 @@ ethernet_interfaces:
   peer: SL-LEAF2B
   peer_interface: Ethernet26
   peer_type: mlag_peer
-  description: MLAG_PEER_SL-LEAF2B_Ethernet26
-  type: port-channel-member
+  description: MLAG_SL-LEAF2B_Ethernet26
   shutdown: false
   channel_group:
     id: 25
@@ -74,9 +76,8 @@ ethernet_interfaces:
   peer: SL-LEAF0B
   peer_interface: Ethernet41
   peer_type: l2leaf
-  description: SL-LEAF0B_Ethernet41
+  description: L2_SL-LEAF0B_Ethernet41
   shutdown: false
-  type: port-channel-member
   channel_group:
     id: 41
     mode: active
@@ -84,9 +85,8 @@ ethernet_interfaces:
   peer: SL-LEAF0B
   peer_interface: Ethernet42
   peer_type: l2leaf
-  description: SL-LEAF0B_Ethernet42
+  description: L2_SL-LEAF0B_Ethernet42
   shutdown: false
-  type: port-channel-member
   channel_group:
     id: 41
     mode: active

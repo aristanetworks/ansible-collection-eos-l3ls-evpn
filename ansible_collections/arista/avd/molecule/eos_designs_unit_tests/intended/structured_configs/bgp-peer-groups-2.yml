@@ -9,6 +9,10 @@ router_bgp:
   maximum_paths:
     paths: 4
     ecmp: 4
+  redistribute:
+    connected:
+      enabled: true
+      route_map: RM-CONN-2-BGP
   updates:
     wait_install: true
   peer_groups:
@@ -58,14 +62,11 @@ router_bgp:
   - ip_address: 192.168.253.204
     peer_group: MLAG-IPv4-UNDERLAY-PEER
     peer: bgp-peer-groups-1
-    description: bgp-peer-groups-1
+    description: bgp-peer-groups-1_Vlan4094
   - ip_address: 192.168.255.111
     peer_group: EVPN-OVERLAY-PEERS
     peer: bgp-peer-groups-1
-    description: bgp-peer-groups-1
-  redistribute_routes:
-  - source_protocol: connected
-    route_map: RM-CONN-2-BGP
+    description: bgp-peer-groups-1_Loopback0
   bgp_cluster_id: 192.168.255.112
   address_family_evpn:
     peer_groups:
@@ -104,32 +105,32 @@ spanning_tree:
 vlans:
 - id: 4094
   tenant: system
-  name: MLAG_PEER
+  name: MLAG
   trunk_groups:
   - MLAG
 vlan_interfaces:
 - name: Vlan4094
-  description: MLAG_PEER
+  description: MLAG
   shutdown: false
   no_autostate: true
   mtu: 9214
   ip_address: 192.168.253.205/31
 port_channel_interfaces:
 - name: Port-Channel3
-  description: MLAG_PEER_bgp-peer-groups-1_Po3
-  type: switched
+  description: MLAG_bgp-peer-groups-1_Port-Channel3
+  switchport:
+    enabled: true
+    mode: trunk
+    trunk:
+      groups:
+      - MLAG
   shutdown: false
-  mode: trunk
-  trunk_groups:
-  - LEAF_PEER_L3
-  - MLAG
 ethernet_interfaces:
 - name: Ethernet3
   peer: bgp-peer-groups-1
   peer_interface: Ethernet3
   peer_type: mlag_peer
-  description: MLAG_PEER_bgp-peer-groups-1_Ethernet3
-  type: port-channel-member
+  description: MLAG_bgp-peer-groups-1_Ethernet3
   shutdown: false
   channel_group:
     id: 3
@@ -157,11 +158,11 @@ route_maps:
     - ip address prefix-list PL-LOOPBACKS-EVPN-OVERLAY
 loopback_interfaces:
 - name: Loopback0
-  description: MPLS_Overlay_peering
+  description: ROUTER_ID
   shutdown: false
   ip_address: 192.168.255.112/32
 - name: Loopback1
-  description: VTEP_VXLAN_Tunnel_Source
+  description: VXLAN_TUNNEL_SOURCE
   shutdown: false
   ip_address: 192.168.254.111/32
 prefix_lists:

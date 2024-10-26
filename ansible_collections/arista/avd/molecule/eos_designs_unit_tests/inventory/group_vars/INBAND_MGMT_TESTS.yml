@@ -1,4 +1,9 @@
 ---
+
+# Testing reverting to <5.0.0 description since 'inband-mgmt-subnet' exposes the uppercase peer hostname on a port-channel.
+underlay_l2_ethernet_description: "{peer!u}_{peer_interface}"
+underlay_l2_port_channel_description: "{peer_node_group_or_uppercase_peer}_Po{peer_port_channel_id}"
+
 default_node_types:
   - match_hostnames:
       - inband-mgmt-parent.*

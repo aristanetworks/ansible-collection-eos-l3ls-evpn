@@ -4,7 +4,7 @@ is_for_test: true
 ### Management Interfaces ###
 management_interfaces:
   - name: Management1
-    description: oob_management
+    description: OOB_MANAGEMENT
     vrf: MGMT
     ip_address: 10.73.255.122/24
     gateway: 10.73.255.2

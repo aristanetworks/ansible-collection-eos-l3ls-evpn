@@ -55,4 +55,4 @@ tenants:
 
 expected_error_message: >-
   Found duplicate objects with conflicting data while generating configuration for Ethernet Interfaces defined under point_to_point_services.
-  {'name': 'Ethernet6', 'type': 'routed'} conflicts with {'name': 'Ethernet6', 'type': 'port-channel-member'}.
+  {'name': 'Ethernet6', 'switchport': {'enabled': False}} conflicts with {'name': 'Ethernet6', 'switchport': None}.

@@ -7,12 +7,16 @@ system:
       - acl_name: "acl4_1"
       - acl_name: "acl4_2"
         vrf: red
+      - acl_name: "acl4_2"
+        vrf: red_1
       - acl_name: "acl4_3"
         vrf: default
     ipv6_access_groups:
       - acl_name: "acl6_1"
       - acl_name: "acl6_2"
         vrf: blue
+      - acl_name: "acl6_2"
+        vrf: blue_1
       - acl_name: "acl6_3"
         vrf: default
   l1:

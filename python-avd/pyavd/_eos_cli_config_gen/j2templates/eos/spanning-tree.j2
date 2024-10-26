@@ -6,9 +6,6 @@
 {# eos - spanning-tree #}
 {% if spanning_tree is arista.avd.defined %}
 !
-{%     if spanning_tree.root_super is arista.avd.defined(true) %}
-spanning-tree root super
-{%     endif %}
 {%     if spanning_tree.mode is arista.avd.defined() %}
 spanning-tree mode {{ spanning_tree.mode }}
 {%     endif %}
@@ -37,6 +34,9 @@ spanning-tree bpduguard rate-limit default
 {%         if spanning_tree.bpduguard_rate_limit.count is arista.avd.defined %}
 spanning-tree bpduguard rate-limit count {{ spanning_tree.bpduguard_rate_limit.count }}
 {%         endif %}
+{%     endif %}
+{%     if spanning_tree.root_super is arista.avd.defined(true) %}
+spanning-tree root super
 {%     endif %}
 {%     if spanning_tree.mode is arista.avd.defined('mstp') %}
 {%         for mst_instance in spanning_tree.mst_instances | arista.avd.natural_sort('id') %}

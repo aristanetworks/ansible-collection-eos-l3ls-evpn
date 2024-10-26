@@ -1,0 +1,23 @@
+# Copyright (c) 2023-2024 Arista Networks, Inc.
+# Use of this source code is governed by the Apache License 2.0
+# that can be found in the LICENSE file.
+# yaml-language-server: $schema=../../../_schema/avd_meta_schema.json
+# Line above is used by RedHat's YAML Schema vscode extension
+# Use Ctrl + Space to get suggestions for every field. Autocomplete will pop up after typing 2 letters.
+type: dict
+keys:
+  mlag_bgp_peer_description:
+    type: str
+    documentation_options:
+      table: fabric-settings
+    description: |-
+      Description or description template to be used on the MLAG BGP peers including those in VRFs.
+      This can be a template using the AVD string formatter syntax: https://avd.arista.com/devel/roles/eos_designs/docs/how-to/custom-descriptions-names.html#avd-string-formatter-syntax.
+      The available template fields are:
+        - `mlag_peer`: The name of the MLAG peer.
+        - `interface`: The local MLAG L3 VLAN interface.
+        - `peer_interface`: The MLAG L3 VLAN interface on the MLAG peer.
+        - `vrf`: The name of the VRF. Not available for the underlay peering.
+
+      The default description is built from the name and interface of the MLAG peer and optionally the VRF.
+    default: "{mlag_peer}_{peer_interface}"

@@ -16,20 +16,20 @@
 
 | Management Interface | Description | Type | VRF | IP Address | Gateway |
 | -------------------- | ----------- | ---- | --- | ---------- | ------- |
-| Management1 | oob_management | oob | MGMT | 10.73.255.122/24 | 10.73.255.2 |
+| Management1 | OOB_MANAGEMENT | oob | MGMT | 10.73.255.122/24 | 10.73.255.2 |
 
 ##### IPv6
 
 | Management Interface | Description | Type | VRF | IPv6 Address | IPv6 Gateway |
 | -------------------- | ----------- | ---- | --- | ------------ | ------------ |
-| Management1 | oob_management | oob | MGMT | - | - |
+| Management1 | OOB_MANAGEMENT | oob | MGMT | - | - |
 
 #### Management Interfaces Device Configuration
 
 ```eos
 !
 interface Management1
-   description oob_management
+   description OOB_MANAGEMENT
    vrf MGMT
    ip address 10.73.255.122/24
 ```
@@ -53,14 +53,6 @@ Provider eos-native is configured.
 ```eos
 !
 management api gnmi
-   transport grpc-tunnel onetarget
-      no shutdown
-      vrf management
-      tunnel ssl profile ssl_profile
-      gnmi ssl profile ssl_profile
-      destination 10.1.1.100 port 10000
-      local interface Management1 port 10001
-      target testid100
    transport grpc-tunnel multipletargets
       no shutdown
       vrf management
@@ -69,6 +61,18 @@ management api gnmi
       destination 10.1.1.100 port 10000
       local interface Management1 port 10001
       target testid1 testid2 testid3 testid4
+   !
+   transport grpc-tunnel noserialnotargets
+   !
+   transport grpc-tunnel onetarget
+      no shutdown
+      vrf management
+      tunnel ssl profile ssl_profile
+      gnmi ssl profile ssl_profile
+      destination 10.1.1.100 port 10000
+      local interface Management1 port 10001
+      target testid100
+   !
    transport grpc-tunnel serialandtargets
       no shutdown
       vrf management
@@ -77,7 +81,7 @@ management api gnmi
       destination 10.1.1.100 port 10000
       local interface Management1 port 10001
       target serial-number testid10 testid20
-   transport grpc-tunnel noserialnotargets
+   !
    transport grpc-tunnel serialonly
       target serial-number
    provider eos-native

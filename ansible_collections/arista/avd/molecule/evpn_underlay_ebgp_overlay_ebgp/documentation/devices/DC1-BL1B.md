@@ -12,6 +12,7 @@
 - [Monitoring](#monitoring)
   - [TerminAttr Daemon](#terminattr-daemon)
   - [SNMP](#snmp)
+  - [Hardware](#hardware)
 - [Hardware TCAM Profile](#hardware-tcam-profile)
   - [Hardware TCAM Device Configuration](#hardware-tcam-device-configuration)
 - [Spanning Tree](#spanning-tree)
@@ -62,20 +63,20 @@
 
 | Management Interface | Description | Type | VRF | IP Address | Gateway |
 | -------------------- | ----------- | ---- | --- | ---------- | ------- |
-| Management1 | oob_management | oob | MGMT | 192.168.200.111/24 | 192.168.200.5 |
+| Management1 | OOB_MANAGEMENT | oob | MGMT | 192.168.200.111/24 | 192.168.200.5 |
 
 ##### IPv6
 
 | Management Interface | Description | Type | VRF | IPv6 Address | IPv6 Gateway |
 | -------------------- | ----------- | ---- | --- | ------------ | ------------ |
-| Management1 | oob_management | oob | MGMT | - | - |
+| Management1 | OOB_MANAGEMENT | oob | MGMT | - | - |
 
 #### Management Interfaces Device Configuration
 
 ```eos
 !
 interface Management1
-   description oob_management
+   description OOB_MANAGEMENT
    no shutdown
    vrf MGMT
    ip address 192.168.200.111/24
@@ -181,6 +182,18 @@ snmp-server contact example@example.com
 snmp-server location DC1_FABRIC DC1-BL1B
 ```
 
+### Hardware
+
+#### Hardware Device Configuration
+
+```eos
+!
+hardware speed-group 1 serdes 10G
+hardware speed-group 2 serdes 25G
+hardware speed-group 3 serdes 25G
+hardware speed-group 4 serdes 10G
+```
+
 ## Hardware TCAM Profile
 
 TCAM profile **`vxlan-routing`** is active
@@ -211,8 +224,8 @@ STP Root Super: **True**
 
 ```eos
 !
-spanning-tree root super
 spanning-tree mode mstp
+spanning-tree root super
 spanning-tree mst 0 priority 4096
 ```
 
@@ -577,9 +590,9 @@ ip routing vrf Tenant_L3_VRF_Zone
 ```eos
 !
 ip route vrf MGMT 0.0.0.0/0 192.168.200.5
-ip route vrf Tenant_A_WAN_Zone 10.3.4.0/24 1.2.3.4
 ip route vrf Tenant_A_WAN_Zone 1.1.1.0/24 Vlan101 10.1.1.1
 ip route vrf Tenant_A_WAN_Zone 1.1.2.0/24 Vlan101 10.1.1.1 200 tag 666 name RT-TO-FAKE-DMZ
+ip route vrf Tenant_A_WAN_Zone 10.3.4.0/24 1.2.3.4
 ip route vrf Tenant_A_WAN_Zone 10.3.5.0/24 Null0
 ```
 
@@ -675,9 +688,9 @@ ASN Notation: asplain
 !
 router bgp 65105
    router-id 192.168.255.15
-   maximum-paths 4 ecmp 4
    update wait-install
    no bgp default ipv4-unicast
+   maximum-paths 4 ecmp 4
    distance bgp 20 200 200
    neighbor EVPN-OVERLAY-PEERS peer group
    neighbor EVPN-OVERLAY-PEERS update-source Loopback0
@@ -704,16 +717,16 @@ router bgp 65105
    neighbor 172.31.255.102 description DC1-SPINE4_Ethernet7
    neighbor 192.168.255.1 peer group EVPN-OVERLAY-PEERS
    neighbor 192.168.255.1 remote-as 65001
-   neighbor 192.168.255.1 description DC1-SPINE1
+   neighbor 192.168.255.1 description DC1-SPINE1_Loopback0
    neighbor 192.168.255.2 peer group EVPN-OVERLAY-PEERS
    neighbor 192.168.255.2 remote-as 65001
-   neighbor 192.168.255.2 description DC1-SPINE2
+   neighbor 192.168.255.2 description DC1-SPINE2_Loopback0
    neighbor 192.168.255.3 peer group EVPN-OVERLAY-PEERS
    neighbor 192.168.255.3 remote-as 65001
-   neighbor 192.168.255.3 description DC1-SPINE3
+   neighbor 192.168.255.3 description DC1-SPINE3_Loopback0
    neighbor 192.168.255.4 peer group EVPN-OVERLAY-PEERS
    neighbor 192.168.255.4 remote-as 65001
-   neighbor 192.168.255.4 description DC1-SPINE4
+   neighbor 192.168.255.4 description DC1-SPINE4_Loopback0
    redistribute connected route-map RM-CONN-2-BGP
    !
    vlan-aware-bundle Tenant_A_WAN_Zone
@@ -729,8 +742,8 @@ router bgp 65105
       vlan 250
    !
    address-family evpn
-      no host-flap detection
       neighbor EVPN-OVERLAY-PEERS activate
+      no host-flap detection
    !
    address-family ipv4
       no neighbor EVPN-OVERLAY-PEERS activate
@@ -747,30 +760,30 @@ router bgp 65105
       router-id 192.168.255.15
       update wait-install
       neighbor 123.1.1.10 remote-as 1234
-      neighbor 123.1.1.10 password 7 <removed>
       neighbor 123.1.1.10 local-as 123 no-prepend replace-as
+      neighbor 123.1.1.10 update-source Loopback123
       neighbor 123.1.1.10 description External IPv4 BGP peer
       neighbor 123.1.1.10 ebgp-multihop 3
+      neighbor 123.1.1.10 route-map RM-123-1-1-10-IN in
+      neighbor 123.1.1.10 route-map RM-Tenant_A_WAN_Zone-123.1.1.10-SET-NEXT-HOP-OUT out
+      neighbor 123.1.1.10 password 7 <removed>
+      neighbor 123.1.1.10 default-originate route-map RM-Tenant_A_WAN_Zone-123.1.1.10-SET-NEXT-HOP-OUT
       neighbor 123.1.1.10 send-community standard extended
       neighbor 123.1.1.10 maximum-routes 0
-      neighbor 123.1.1.10 default-originate route-map RM-Tenant_A_WAN_Zone-123.1.1.10-SET-NEXT-HOP-OUT
-      neighbor 123.1.1.10 update-source Loopback123
-      neighbor 123.1.1.10 route-map RM-Tenant_A_WAN_Zone-123.1.1.10-SET-NEXT-HOP-OUT out
-      neighbor 123.1.1.10 route-map RM-123-1-1-10-IN in
       neighbor 123.1.1.11 remote-as 1234
-      neighbor 123.1.1.11 password 7 <removed>
       neighbor 123.1.1.11 local-as 123 no-prepend replace-as
+      neighbor 123.1.1.11 update-source Loopback123
       neighbor 123.1.1.11 description External IPv4 BGP peer
       neighbor 123.1.1.11 ebgp-multihop 3
+      neighbor 123.1.1.11 route-map RM-123-1-1-11-IN in
+      neighbor 123.1.1.11 route-map RM-123-1-1-11-OUT out
+      neighbor 123.1.1.11 password 7 <removed>
+      neighbor 123.1.1.11 default-originate
       neighbor 123.1.1.11 send-community standard extended
       neighbor 123.1.1.11 maximum-routes 0
-      neighbor 123.1.1.11 default-originate
-      neighbor 123.1.1.11 update-source Loopback123
-      neighbor 123.1.1.11 route-map RM-123-1-1-11-OUT out
-      neighbor 123.1.1.11 route-map RM-123-1-1-11-IN in
       neighbor fd5a:fe45:8831:06c5::a remote-as 12345
-      neighbor fd5a:fe45:8831:06c5::a send-community
       neighbor fd5a:fe45:8831:06c5::a route-map RM-Tenant_A_WAN_Zone-fd5a:fe45:8831:06c5::a-SET-NEXT-HOP-OUT out
+      neighbor fd5a:fe45:8831:06c5::a send-community
       neighbor fd5a:fe45:8831:06c5::b remote-as 12345
       redistribute connected
       redistribute static
@@ -843,8 +856,9 @@ router bfd
 ```eos
 !
 queue-monitor length
-queue-monitor length log 5
 queue-monitor length notifying
+!
+queue-monitor length log 5
 ```
 
 ## Multicast

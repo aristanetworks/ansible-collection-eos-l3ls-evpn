@@ -51,7 +51,7 @@ management_api_http:
   enable_https: true
 loopback_interfaces:
 - name: Loopback0
-  description: MPLS_Overlay_peering
+  description: MY_OVERLAY_LOOPBACK
   shutdown: false
   ip_address: 10.42.0.102/32
   isis_enable: CORE

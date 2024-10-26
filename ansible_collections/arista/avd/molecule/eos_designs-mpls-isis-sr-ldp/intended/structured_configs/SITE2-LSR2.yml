@@ -25,7 +25,7 @@ vrfs:
   ip_routing: false
 management_interfaces:
 - name: Management1
-  description: oob_management
+  description: OOB_MANAGEMENT
   shutdown: false
   vrf: MGMT
   ip_address: 192.168.200.104/24
@@ -38,7 +38,7 @@ management_api_http:
 eos_cli: "management security\n   password encryption-key common\n"
 loopback_interfaces:
 - name: Loopback0
-  description: LSR_Router_ID
+  description: ROUTER_ID
   shutdown: false
   ip_address: 100.70.0.4/32
   ipv6_address: 2000:1234:ffff:ffff::4/128
@@ -88,8 +88,8 @@ ethernet_interfaces:
   peer: SITE1-LSR2
   peer_interface: Ethernet3
   peer_type: p
-  description: P2P_LINK_TO_SITE1-LSR2_Ethernet3
-  type: routed
+  switchport:
+    enabled: false
   shutdown: false
   mtu: 9178
   eos_cli: 'link-debounce time 1000
@@ -109,58 +109,55 @@ ethernet_interfaces:
     ldp:
       interface: true
       igp_sync: true
+  description: P2P_SITE1-LSR2_Ethernet3
   speed: forced 40gfull
 - name: Ethernet12
-  type: port-channel-member
   peer: SITE2-LER1
   peer_interface: Ethernet11
   peer_type: pe
-  description: P2P_LINK_TO_SITE2-LER1_Ethernet11
   shutdown: false
   channel_group:
     id: 12
     mode: active
+  description: P2P_SITE2-LER1_Ethernet11
   speed: forced 40gfull
 - name: Ethernet13
-  type: port-channel-member
   peer: SITE2-LER1
   peer_interface: Ethernet12
   peer_type: pe
-  description: P2P_LINK_TO_SITE2-LER1_Ethernet12
   shutdown: false
   channel_group:
     id: 12
     mode: active
+  description: P2P_SITE2-LER1_Ethernet12
   speed: forced 40gfull
 - name: Ethernet14
-  type: port-channel-member
   peer: SITE2-LER1
   peer_interface: Ethernet13
   peer_type: pe
-  description: P2P_LINK_TO_SITE2-LER1_Ethernet13
   shutdown: false
   channel_group:
     id: 110
     mode: active
+  description: P2P_SITE2-LER1_Ethernet13
   speed: forced 40gfull
 - name: Ethernet15
-  type: port-channel-member
   peer: SITE2-LER1
   peer_interface: Ethernet14
   peer_type: pe
-  description: P2P_LINK_TO_SITE2-LER1_Ethernet14
   shutdown: false
   channel_group:
     id: 110
     mode: active
+  description: P2P_SITE2-LER1_Ethernet14
   speed: forced 40gfull
 port_channel_interfaces:
 - name: Port-Channel12
   peer: SITE2-LER1
   peer_interface: Port-Channel11
   peer_type: pe
-  description: P2P_LINK_TO_SITE2-LER1_Port-Channel11
-  type: routed
+  switchport:
+    enabled: false
   shutdown: false
   mtu: 9178
   eos_cli: 'link-debounce time 1600
@@ -180,12 +177,13 @@ port_channel_interfaces:
     ldp:
       interface: true
       igp_sync: true
+  description: P2P_SITE2-LER1_Port-Channel11
 - name: Port-Channel110
   peer: SITE2-LER1
   peer_interface: Port-Channel220
   peer_type: pe
-  description: P2P_LINK_TO_SITE2-LER1_Port-Channel220
-  type: routed
+  switchport:
+    enabled: false
   shutdown: false
   mtu: 9178
   eos_cli: 'link-debounce time 1600
@@ -205,5 +203,6 @@ port_channel_interfaces:
     ldp:
       interface: true
       igp_sync: true
+  description: P2P_SITE2-LER1_Port-Channel220
 metadata:
   platform: 7280SR

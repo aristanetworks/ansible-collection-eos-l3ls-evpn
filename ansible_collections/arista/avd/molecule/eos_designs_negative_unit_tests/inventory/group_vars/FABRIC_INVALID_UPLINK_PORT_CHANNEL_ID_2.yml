@@ -19,9 +19,9 @@ l3leaf:
     - group: MLAG_PAIR
       bgp_as: 65123
       nodes:
-        - name: invalid-uplink-port-channel-id-l3leaf-1
+        - name: invalid-uplink-port-channel-id-2-l3leaf-1
           id: 1
-        - name: invalid-uplink-port-channel-id-l3leaf-2
+        - name: invalid-uplink-port-channel-id-2-l3leaf-2
           id: 2
 
 l2leaf:
@@ -29,18 +29,17 @@ l2leaf:
     mlag_peer_ipv4_pool: 10.0.2.0/24
     mlag_interfaces: [Ethernet3-4]
     uplink_interfaces: [Ethernet1-2]
-    uplink_switches: [invalid-uplink-port-channel-id-l3leaf-1, invalid-uplink-port-channel-id-l3leaf-2]
+    uplink_switches: [invalid-uplink-port-channel-id-2-l3leaf-1, invalid-uplink-port-channel-id-2-l3leaf-2]
     uplink_switch_port_channel_id: 2001 # <<<<< invalid ID
   node_groups:
     - group: MLAG_PAIR
       nodes:
-        - name: invalid-uplink-port-channel-id-l2leaf-1
+        - name: invalid-uplink-port-channel-id-2-l2leaf-1
           uplink_switch_interfaces: [Ethernet1, Ethernet1]
           id: 1
-        - name: invalid-uplink-port-channel-id-l2leaf-2
+        - name: invalid-uplink-port-channel-id-2-l2leaf-2
           uplink_switch_interfaces: [Ethernet2, Ethernet2]
           id: 2
 
 expected_error_message: >-
-  Unexpected failure during module execution: 'uplink_switch_port_channel_id' must be between 1 and 2000 for MLAG switches.
-  Got '2001' on 'invalid-uplink-port-channel-id-l2leaf-1'.
+  'uplink_switch_port_channel_id' must be between 1 and 2000 for MLAG switches. Got '2001' for host 'invalid-uplink-port-channel-id-2-l2leaf-1'.

@@ -1,0 +1,14 @@
+---
+custom_node_type_keys:
+  - key: l3leaf
+    type: l3leaf
+    connected_endpoints: true
+    default_evpn_role: client
+    mlag_support: true
+    network_services:
+      l2: true
+      l3: true
+    vtep: true
+    interface_descriptions:
+      # Testing custom template using the deprecated overlay_loopback_interface
+      overlay_loopback_interface: 'custom_templates/overlay-loopback.j2'

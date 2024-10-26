@@ -5,18 +5,15 @@
 # Common action for all states.
 # Load tasks when device_filter is string
 - name: Generate CVP information using device_filter as string.
-  tags: [always]
   ansible.builtin.include_tasks: "{{ cv_collection }}/main-filter-string.yml"
   when: "device_filter is string"
 
 # Load tasks when device_filter is list
 - name: Generate CVP information using device_filter as list.
-  tags: [always]
   ansible.builtin.include_tasks: "{{ cv_collection }}/main-filter-list.yml"
   when: "device_filter is not string"
 
 - name: "Build DEVICES and CONTAINER definition for {{ inventory_hostname }}"
-  tags: [generate, build, provision]
   ansible.builtin.template:
     src: "cvp-devices.j2"
     dest: "{{ structured_cvp_dir }}/{{ inventory_hostname }}.yml"
@@ -25,7 +22,6 @@
   run_once: true
 
 - name: "Load CVP device information for {{ inventory_hostname }}"
-  tags: [build, provision, online]
   ansible.builtin.include_vars: "{{ structured_cvp_dir }}/{{ inventory_hostname }}.yml"
   # delegate_to: localhost
 
@@ -34,7 +30,7 @@
 # If state=present launch creation/update process
 # If state=absent launch deletion process
 - name: Start creation/update process.
-  tags: [provision, online]
+  when: avd_eos_config_deploy_cvp_provision | arista.avd.default(true)
   ansible.builtin.include_tasks: "{{ cv_collection }}/{{ state }}.yml"
 
 #################################################

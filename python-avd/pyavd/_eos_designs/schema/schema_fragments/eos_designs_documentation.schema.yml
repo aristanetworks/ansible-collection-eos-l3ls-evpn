@@ -8,7 +8,7 @@ type: dict
 keys:
   eos_designs_documentation:
     documentation_options:
-      table: role-documentation-settings
+      table: role-settings
     description: |
       Control fabric documentation generation.
     type: dict
@@ -26,8 +26,8 @@ keys:
       topology_csv:
         description: Generate Topology CSV with all interfaces towards other devices.
         type: bool
-        default: true
+        default: false
       p2p_links_csv:
         description: Generate P2P links CSV with all routed point-to-point links between devices.
         type: bool
-        default: true
+        default: false

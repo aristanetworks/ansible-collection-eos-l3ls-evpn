@@ -9,6 +9,10 @@ router_bgp:
   maximum_paths:
     paths: 4
     ecmp: 4
+  redistribute:
+    connected:
+      enabled: true
+      route_map: RM-CONN-2-BGP
   updates:
     wait_install: true
   peer_groups:
@@ -30,9 +34,6 @@ router_bgp:
       activate: true
     - name: EVPN-OVERLAY-PEERS
       activate: false
-  redistribute_routes:
-  - source_protocol: connected
-    route_map: RM-CONN-2-BGP
   address_family_evpn:
     peer_groups:
     - name: EVPN-OVERLAY-PEERS
@@ -61,7 +62,7 @@ vrfs:
   ip_routing: false
 management_interfaces:
 - name: Management1
-  description: oob_management
+  description: OOB_MANAGEMENT
   shutdown: false
   vrf: MGMT
   ip_address: 192.168.0.21/24
@@ -105,7 +106,7 @@ ptp:
         sync: 14
 loopback_interfaces:
 - name: Loopback0
-  description: EVPN_Overlay_Peering
+  description: ROUTER_ID
   shutdown: false
   ip_address: 10.255.0.2/32
 prefix_lists:
@@ -130,10 +131,11 @@ ethernet_interfaces:
   peer: ptp-tests-spine1
   peer_interface: Ethernet6
   peer_type: spine
-  description: P2P_LINK_TO_ptp-tests-spine1_Ethernet6
-  type: routed
+  switchport:
+    enabled: false
   shutdown: false
   mtu: 9214
+  description: P2P_ptp-tests-spine1_Ethernet6
   ptp:
     announce:
       interval: 0
@@ -147,10 +149,11 @@ ethernet_interfaces:
   peer: ptp-tests-spine1
   peer_interface: Ethernet7
   peer_type: spine
-  description: P2P_LINK_TO_ptp-tests-spine1_Ethernet7
-  type: routed
+  switchport:
+    enabled: false
   shutdown: false
   mtu: 9214
+  description: P2P_ptp-tests-spine1_Ethernet7
   ptp:
     announce:
       interval: 0
@@ -164,10 +167,11 @@ ethernet_interfaces:
   peer: ptp-tests-spine1
   peer_interface: Ethernet8
   peer_type: spine
-  description: P2P_LINK_TO_ptp-tests-spine1_Ethernet8
-  type: routed
+  switchport:
+    enabled: false
   shutdown: false
   mtu: 9214
+  description: P2P_ptp-tests-spine1_Ethernet8
   ptp:
     announce:
       interval: 0
@@ -181,10 +185,11 @@ ethernet_interfaces:
   peer: ptp-tests-spine1
   peer_interface: Ethernet9
   peer_type: spine
-  description: P2P_LINK_TO_ptp-tests-spine1_Ethernet9
-  type: routed
+  switchport:
+    enabled: false
   shutdown: false
   mtu: 9214
+  description: P2P_ptp-tests-spine1_Ethernet9
   ptp:
     announce:
       interval: 0

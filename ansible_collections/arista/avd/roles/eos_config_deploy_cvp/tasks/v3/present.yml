@@ -3,26 +3,23 @@
 # that can be found in the LICENSE file.
 ---
 - name: "Load CVP device information for {{ inventory_hostname }}"
-  tags: [build, provision, online]
   ansible.builtin.include_vars: "{{ structured_cvp_dir }}/{{ inventory_hostname }}.yml"
 
 - name: "Create configlets on CVP {{ inventory_hostname }}."
-  tags: [provision]
   arista.cvp.cv_configlet_v3:
     configlets: "{{ cvp_vars.cvp_configlets }}"
   register: cvp_configlets_status
 
 - name: "Execute any configlet generated tasks to update configuration on {{ inventory_hostname }}"
-  tags: [apply]
   arista.cvp.cv_task_v3:
     tasks: "{{ cvp_configlets_status.taskIds }}"
   when:
     - cvp_configlets_status.taskIds is arista.avd.defined
     - cvp_configlets_status.taskIds | length > 0
     - execute_tasks | bool
+      or avd_eos_config_deploy_cvp_execute_configlet_tasks | arista.avd.default(false)
 
 - name: "Building Containers topology on {{ inventory_hostname }}"
-  tags: [provision, containers]
   arista.cvp.cv_container_v3:
     topology: "{{ cvp_containers }}"
     state: present
@@ -30,16 +27,15 @@
   register: cvp_container_results
 
 - name: "Execute pending tasks on {{ inventory_hostname }}"
-  tags: [apply]
   arista.cvp.cv_task_v3:
     tasks: "{{ cvp_container_results.taskIds }}"
   when:
     - cvp_container_results.taskIds is arista.avd.defined
     - cvp_container_results.taskIds | length > 0
     - execute_tasks | bool
+      or avd_eos_config_deploy_cvp_execute_container_tasks | arista.avd.default(false)
 
 - name: "Configure devices on {{ inventory_hostname }}"
-  tags: [provision, apply]
   arista.cvp.cv_device_v3:
     devices: "{{ cvp_devices }}"  # noqa: args[module]
     state: present
@@ -49,10 +45,10 @@
   register: cvp_devices_results
 
 - name: "Execute pending tasks on {{ inventory_hostname }}"
-  tags: [apply]
   arista.cvp.cv_task_v3:
     tasks: "{{ cvp_devices_results.taskIds }}"
   when:
     - cvp_devices_results.taskIds is arista.avd.defined
     - cvp_devices_results.taskIds | length > 0
     - execute_tasks | bool
+      or avd_eos_config_deploy_cvp_execute_device_tasks | arista.avd.default(false)

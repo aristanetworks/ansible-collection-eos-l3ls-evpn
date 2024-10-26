@@ -298,55 +298,56 @@ anta.tests.interfaces:
     - name: Ethernet3
       status: up
     result_overwrite:
-      custom_field: Interface Ethernet3 - MLAG_PEER_dc1-svc-leaf1b_Ethernet3 = 'up'
+      custom_field: Interface Ethernet3 - MLAG_dc1-svc-leaf1b_Ethernet3 = 'up'
 - VerifyInterfacesStatus:
     interfaces:
     - name: Ethernet4
       status: up
     result_overwrite:
-      custom_field: Interface Ethernet4 - MLAG_PEER_dc1-svc-leaf1b_Ethernet4 = 'up'
+      custom_field: Interface Ethernet4 - MLAG_dc1-svc-leaf1b_Ethernet4 = 'up'
 - VerifyInterfacesStatus:
     interfaces:
     - name: Ethernet1
       status: up
     result_overwrite:
-      custom_field: Interface Ethernet1 - P2P_LINK_TO_DC1-SPINE1_Ethernet5 = 'up'
+      custom_field: Interface Ethernet1 - P2P_dc1-spine1_Ethernet5 = 'up'
 - VerifyInterfacesStatus:
     interfaces:
     - name: Ethernet2
       status: up
     result_overwrite:
-      custom_field: Interface Ethernet2 - P2P_LINK_TO_DC1-SPINE2_Ethernet5 = 'up'
+      custom_field: Interface Ethernet2 - P2P_dc1-spine2_Ethernet5 = 'up'
 - VerifyInterfacesStatus:
     interfaces:
     - name: Port-Channel3
       status: up
     result_overwrite:
-      custom_field: Interface Port-Channel3 - MLAG_PEER_dc1-svc-leaf1b_Po3 = 'up'
+      custom_field: Interface Port-Channel3 - MLAG_dc1-svc-leaf1b_Port-Channel3 =
+        'up'
 - VerifyInterfacesStatus:
     interfaces:
     - name: Vlan4093
       status: up
     result_overwrite:
-      custom_field: Interface Vlan4093 - MLAG_PEER_L3_PEERING = 'up'
+      custom_field: Interface Vlan4093 - MLAG_L3 = 'up'
 - VerifyInterfacesStatus:
     interfaces:
     - name: Vlan4094
       status: up
     result_overwrite:
-      custom_field: Interface Vlan4094 - MLAG_PEER = 'up'
+      custom_field: Interface Vlan4094 - MLAG = 'up'
 - VerifyInterfacesStatus:
     interfaces:
     - name: Loopback0
       status: up
     result_overwrite:
-      custom_field: Interface Loopback0 - EVPN_Overlay_Peering = 'up'
+      custom_field: Interface Loopback0 - ROUTER_ID = 'up'
 - VerifyInterfacesStatus:
     interfaces:
     - name: Loopback1
       status: up
     result_overwrite:
-      custom_field: Interface Loopback1 - VTEP_VXLAN_Tunnel_Source = 'up'
+      custom_field: Interface Loopback1 - VXLAN_TUNNEL_SOURCE = 'up'
 - VerifyInterfacesStatus:
     interfaces:
     - name: Vxlan1

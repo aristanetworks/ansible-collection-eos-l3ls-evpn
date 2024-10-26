@@ -9,8 +9,7 @@
 ### Monitor Sessions
 
 #### Monitor Sessions Summary
-{%     for monitor_session in monitor_sessions | arista.avd.natural_sort('name') if monitor_session.name is arista.avd.defined %}
-{%         if monitor_session.sources is arista.avd.defined and monitor_session.destinations is arista.avd.defined %}
+{%     for monitor_session in monitor_sessions | arista.avd.natural_sort('name') %}
 
 ##### {{ monitor_session.name }}
 
@@ -18,39 +17,41 @@
 
 | Sources | Direction | Access Group Type | Access Group Name | Access Group Priority |
 | ------- | --------- | ----------------- | ----------------- | --------------------- |
-{%             for source in monitor_session.sources | arista.avd.natural_sort('name') if source.name is arista.avd.defined %}
-| {{ source.name }} | {{ source.direction | arista.avd.default('both') }} | {{ source.access_group.type | arista.avd.default('-') }} | {{ source.access_group.name | arista.avd.default('-') }} | {{ source.access_group.priority | arista.avd.default('-') }} |
-{%             endfor %}
+{%         for source in monitor_session.sources | arista.avd.natural_sort('name') %}
+{%             if monitor_session.access_group.type is arista.avd.defined and monitor_session.access_group.name is arista.avd.defined %}
+{%                 set access_group = "-" %}
+{%             endif %}
+| {{ source.name }} | {{ source.direction | arista.avd.default('both') }} | {{ access_group | arista.avd.default(source.access_group.type, '-') }} | {{ access_group | arista.avd.default(source.access_group.name, '-') }} | {{ source.access_group.priority | arista.avd.default('-') }} |
+{%         endfor %}
 
 ####### {{ monitor_session.name }} Destinations and Session Settings
 
 | Settings | Values |
 | -------- | ------ |
-| Destinations | {{ monitor_session.destinations | join(', ') }} |
-{%             if monitor_session.encapsulation_gre_metadata_tx is arista.avd.defined(true) %}
+| Destinations | {{ monitor_session.destinations | arista.avd.default(["-"]) | join(', ') }} |
+{%         if monitor_session.encapsulation_gre_metadata_tx is arista.avd.defined(true) %}
 | Encapsulation Gre Metadata Tx | {{ monitor_session.encapsulation_gre_metadata_tx }} |
-{%             endif %}
-{%             if monitor_session.header_remove_size is arista.avd.defined %}
+{%         endif %}
+{%         if monitor_session.header_remove_size is arista.avd.defined %}
 | Header Remove Size | {{ monitor_session.header_remove_size }} |
-{%             endif %}
-{%             if monitor_session.access_group.type is arista.avd.defined and monitor_session.access_group.name is arista.avd.defined %}
+{%         endif %}
+{%         if monitor_session.access_group.type is arista.avd.defined and monitor_session.access_group.name is arista.avd.defined %}
 | Access Group Type | {{ monitor_session.access_group.type }} |
 | Access Group Name | {{ monitor_session.access_group.name }} |
-{%             endif %}
-{%             if monitor_session.rate_limit_per_ingress_chip is arista.avd.defined %}
+{%         endif %}
+{%         if monitor_session.rate_limit_per_ingress_chip is arista.avd.defined %}
 | Rate Limit per Ingress Chip | {{ monitor_session.rate_limit_per_ingress_chip }} |
-{%             endif %}
-{%             if monitor_session.rate_limit_per_ingress_chip is arista.avd.defined %}
+{%         endif %}
+{%         if monitor_session.rate_limit_per_ingress_chip is arista.avd.defined %}
 | Rate Limit per Egress Chip | {{ monitor_session.rate_limit_per_egress_chip }} |
-{%             endif %}
-{%             if monitor_session.sample is arista.avd.defined %}
+{%         endif %}
+{%         if monitor_session.sample is arista.avd.defined %}
 | Sample | {{ monitor_session.sample }} |
-{%             endif %}
-{%             if monitor_session.truncate.enabled is arista.avd.defined(true) %}
+{%         endif %}
+{%         if monitor_session.truncate.enabled is arista.avd.defined(true) %}
 | Truncate Enabled | {{ monitor_session.truncate.enabled }} |
-{%                 if monitor_session.truncate.size is arista.avd.defined %}
+{%             if monitor_session.truncate.size is arista.avd.defined %}
 | Truncate Size | {{ monitor_session.truncate.size }} |
-{%                 endif %}
 {%             endif %}
 {%         endif %}
 {%     endfor %}

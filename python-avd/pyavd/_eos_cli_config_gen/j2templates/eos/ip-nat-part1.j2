@@ -6,13 +6,13 @@
 {# eos - ip nat part 1 (translation, kernel_buffer_size) #}
 {% if ip_nat is arista.avd.defined %}
 !
-{%     if ip_nat.translation.address_selection.any | arista.avd.default(false) %}
-ip nat translation address selection any
-{%     endif %}
 {%     if ip_nat.translation.address_selection.hash_field_source_ip | arista.avd.default(false) %}
 ip nat translation address selection hash field source-ip
 {%     endif %}
-{%     for timeout in ip_nat.translation.timeouts | arista.avd.default([]) %}
+{%     if ip_nat.translation.address_selection.any | arista.avd.default(false) %}
+ip nat translation address selection any
+{%     endif %}
+{%     for timeout in ip_nat.translation.timeouts | arista.avd.default([]) | arista.avd.natural_sort %}
 ip nat translation {{ timeout.protocol }}-timeout {{ timeout.timeout }}
 {%     endfor %}
 {%     if ip_nat.translation.max_entries.limit is arista.avd.defined %}

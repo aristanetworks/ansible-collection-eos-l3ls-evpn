@@ -12,4 +12,4 @@ keys:
     type: str
     description: |
       Management interface description.
-    default: oob_management
+    default: OOB_MANAGEMENT

@@ -48,19 +48,19 @@ router_bgp:
   - ip_address: 10.255.1.1
     peer_group: MPLS-OVERLAY-PEERS
     peer: pe1
-    description: pe1
+    description: pe1_Loopback0
   - ip_address: 10.255.1.2
     peer_group: MPLS-OVERLAY-PEERS
     peer: pe2
-    description: pe2
+    description: pe2_Loopback0
   - ip_address: 10.255.1.3
     peer_group: MPLS-OVERLAY-PEERS
     peer: pe3
-    description: pe3
+    description: pe3_Loopback0
   - ip_address: 10.255.2.1
     peer_group: RR-OVERLAY-PEERS
     peer: rr1
-    description: rr1
+    description: rr1_Loopback0
 static_routes:
 - vrf: MGMT
   destination_address_prefix: 0.0.0.0/0
@@ -94,7 +94,7 @@ vrfs:
   ip_routing: false
 management_interfaces:
 - name: Management1
-  description: oob_management
+  description: OOB_MANAGEMENT
   shutdown: false
   vrf: MGMT
   ip_address: 172.16.1.152/24
@@ -106,7 +106,7 @@ management_api_http:
   enable_https: true
 loopback_interfaces:
 - name: Loopback0
-  description: MPLS_Overlay_peering
+  description: ROUTER_ID
   shutdown: false
   ip_address: 10.255.2.2/32
   mpls:
@@ -141,8 +141,8 @@ ethernet_interfaces:
   peer: rr1
   peer_interface: Ethernet4
   peer_type: rr
-  description: P2P_LINK_TO_rr1_Ethernet4
-  type: routed
+  switchport:
+    enabled: false
   shutdown: false
   mtu: 1500
   ip_address: 10.255.3.15/31
@@ -158,12 +158,13 @@ ethernet_interfaces:
     ldp:
       interface: true
       igp_sync: true
+  description: P2P_rr1_Ethernet4
 - name: Ethernet3
   peer: p2
   peer_interface: Ethernet3
   peer_type: p
-  description: P2P_LINK_TO_p2_Ethernet3
-  type: routed
+  switchport:
+    enabled: false
   shutdown: false
   mtu: 1500
   ip_address: 10.255.3.16/31
@@ -179,12 +180,13 @@ ethernet_interfaces:
     ldp:
       interface: true
       igp_sync: true
+  description: P2P_p2_Ethernet3
 - name: Ethernet2
   peer: p4
   peer_interface: Ethernet2
   peer_type: p
-  description: P2P_LINK_TO_p4_Ethernet2
-  type: routed
+  switchport:
+    enabled: false
   shutdown: false
   mtu: 1500
   ip_address: 10.255.3.18/31
@@ -200,5 +202,6 @@ ethernet_interfaces:
     ldp:
       interface: true
       igp_sync: true
+  description: P2P_p4_Ethernet2
 metadata:
   platform: vEOS-lab

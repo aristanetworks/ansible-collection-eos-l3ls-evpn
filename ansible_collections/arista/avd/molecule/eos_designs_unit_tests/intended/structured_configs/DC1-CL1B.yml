@@ -11,6 +11,10 @@ router_bgp:
   maximum_paths:
     paths: 4
     ecmp: 4
+  redistribute:
+    connected:
+      enabled: true
+      route_map: RM-CONN-2-BGP
   updates:
     wait_install: true
   peer_groups:
@@ -18,7 +22,7 @@ router_bgp:
     type: ipv4
     remote_as: '65109'
     next_hop_self: true
-    description: DC1-CL1A
+    description: MLAG_PEER_DC1-CL1A
     password: 15AwQNBEJ1nyF/kBEtoAGw==
     maximum_routes: 12000
     send_community: all
@@ -89,9 +93,6 @@ router_bgp:
     peer: DC1-SPINE4
     description: DC1-SPINE4
     remote_as: '65001'
-  redistribute_routes:
-  - source_protocol: connected
-    route_map: RM-CONN-2-BGP
   address_family_evpn:
     peer_groups:
     - name: EVPN-OVERLAY-PEERS
@@ -254,7 +255,7 @@ vrfs:
   ip_routing: false
 management_interfaces:
 - name: Management0
-  description: oob_management
+  description: OOB_MANAGEMENT
   shutdown: false
   vrf: MGMT
   ip_address: 192.168.200.120/24
@@ -358,20 +359,21 @@ vlan_interfaces:
 port_channel_interfaces:
 - name: Port-Channel1311
   description: MLAG_PEER_DC1-CL1A_Po1311
-  type: switched
+  switchport:
+    enabled: true
+    mode: trunk
+    trunk:
+      groups:
+      - MLAG
+      - LEAF_PEER_L3
+      allowed_vlan: 1-4094
   shutdown: false
-  vlans: 1-4094
-  mode: trunk
-  trunk_groups:
-  - LEAF_PEER_L3
-  - MLAG
 ethernet_interfaces:
 - name: Ethernet1/31/1
   peer: DC1-CL1A
   peer_interface: Ethernet1/31/1
   peer_type: mlag_peer
   description: MLAG_PEER_DC1-CL1A_Ethernet1/31/1
-  type: port-channel-member
   shutdown: false
   channel_group:
     id: 1311
@@ -382,7 +384,6 @@ ethernet_interfaces:
   peer_interface: Ethernet1/32/1
   peer_type: mlag_peer
   description: MLAG_PEER_DC1-CL1A_Ethernet1/32/1
-  type: port-channel-member
   shutdown: false
   channel_group:
     id: 1311
@@ -396,7 +397,8 @@ ethernet_interfaces:
   speed: forced 100gfull
   shutdown: false
   mtu: 1500
-  type: routed
+  switchport:
+    enabled: false
   ip_address: 172.31.255.65/31
 - name: Ethernet2
   peer: DC1-SPINE2
@@ -406,7 +408,8 @@ ethernet_interfaces:
   speed: forced 100gfull
   shutdown: false
   mtu: 1500
-  type: routed
+  switchport:
+    enabled: false
   ip_address: 172.31.255.67/31
 - name: Ethernet3
   peer: DC1-SPINE3
@@ -416,7 +419,8 @@ ethernet_interfaces:
   speed: forced 100gfull
   shutdown: false
   mtu: 1500
-  type: routed
+  switchport:
+    enabled: false
   ip_address: 172.31.255.69/31
 - name: Ethernet4
   peer: DC1-SPINE4
@@ -426,7 +430,8 @@ ethernet_interfaces:
   speed: forced 100gfull
   shutdown: false
   mtu: 1500
-  type: routed
+  switchport:
+    enabled: false
   ip_address: 172.31.255.71/31
 mlag_configuration:
   domain_id: DC1_CL1
@@ -451,11 +456,11 @@ route_maps:
     - ip address prefix-list PL-LOOPBACKS-EVPN-OVERLAY
 loopback_interfaces:
 - name: Loopback0
-  description: EVPN_Overlay_Peering
+  description: ROUTER_ID
   shutdown: false
   ip_address: 192.168.255.19/32
 - name: Loopback1
-  description: VTEP_VXLAN_Tunnel_Source
+  description: VXLAN_TUNNEL_SOURCE
   shutdown: false
   ip_address: 192.168.254.18/32
 prefix_lists:

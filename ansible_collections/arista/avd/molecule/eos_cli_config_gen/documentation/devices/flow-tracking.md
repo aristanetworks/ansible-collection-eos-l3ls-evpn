@@ -21,20 +21,20 @@
 
 | Management Interface | Description | Type | VRF | IP Address | Gateway |
 | -------------------- | ----------- | ---- | --- | ---------- | ------- |
-| Management1 | oob_management | oob | MGMT | 10.73.255.122/24 | 10.73.255.2 |
+| Management1 | OOB_MANAGEMENT | oob | MGMT | 10.73.255.122/24 | 10.73.255.2 |
 
 ##### IPv6
 
 | Management Interface | Description | Type | VRF | IPv6 Address | IPv6 Gateway |
 | -------------------- | ----------- | ---- | --- | ------------ | ------------ |
-| Management1 | oob_management | oob | MGMT | - | - |
+| Management1 | OOB_MANAGEMENT | oob | MGMT | - | - |
 
 #### Management Interfaces Device Configuration
 
 ```eos
 !
 interface Management1
-   description oob_management
+   description OOB_MANAGEMENT
    vrf MGMT
    ip address 10.73.255.122/24
 ```
@@ -93,6 +93,32 @@ Software export of IPFIX data records enabled.
 
 ```eos
 !
+flow tracking hardware
+   tracker T1
+      record export on inactive timeout 3666
+      record export on interval 5666
+   !
+   tracker T2
+      exporter T2-E1
+         collector 42.42.42.42
+   !
+   tracker T3
+      exporter T3-E1
+      !
+      exporter T3-E2
+         collector 10.10.10.10 port 777
+      !
+      exporter T3-E3
+         collector this.is.my.awesome.collector.dns.name port 888
+         format ipfix version 10
+         local interface Management1
+         template interval 424242
+      !
+      exporter T3-E4
+         collector dead:beef::cafe
+   record format ipfix standard timestamps counters
+   no shutdown
+!
 flow tracking sampled
    encapsulation ipv4 ipv6 mpls
    sample 666
@@ -102,43 +128,27 @@ flow tracking sampled
       record export on inactive timeout 3666
       record export on interval 5666
       record export mpls
+   !
    tracker T2
-      exporter T2-E1
-         collector 42.42.42.42
       flow table size 614400 entries
-   tracker T3
-      exporter T3-E1
-      exporter T3-E2
-         collector 10.10.10.10 port 777
-      exporter T3-E3
-         collector this.is.my.awesome.collector.dns.name port 888
-         format ipfix version 10
-         local interface Management1
-         template interval 424242
-      exporter T3-E4
-         collector dead:beef::cafe
-      flow table size 100000 entries
-   no shutdown
-!
-flow tracking hardware
-   tracker T1
-      record export on inactive timeout 3666
-      record export on interval 5666
-   tracker T2
       exporter T2-E1
          collector 42.42.42.42
+   !
    tracker T3
+      flow table size 100000 entries
       exporter T3-E1
+      !
       exporter T3-E2
          collector 10.10.10.10 port 777
+      !
       exporter T3-E3
          collector this.is.my.awesome.collector.dns.name port 888
          format ipfix version 10
          local interface Management1
          template interval 424242
+      !
       exporter T3-E4
          collector dead:beef::cafe
-   record format ipfix standard timestamps counters
    no shutdown
 ```
 

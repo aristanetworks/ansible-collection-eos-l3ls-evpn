@@ -17,11 +17,3 @@ class-map type qos match-any {{ class_map.name }}
    match ipv6 access-group {{ class_map.ipv6.access_group }}
 {%     endif %}
 {% endfor %}
-{# PBR class-map #}
-{% for class_map in class_maps.pbr | arista.avd.natural_sort('name') %}
-!
-class-map type pbr match-any {{ class_map.name }}
-{%     if class_map.ip.access_group is arista.avd.defined %}
-   match ip access-group {{ class_map.ip.access_group }}
-{%     endif %}
-{% endfor %}

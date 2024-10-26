@@ -29,7 +29,7 @@ management_api_http:
   enable_https: true
 loopback_interfaces:
 - name: Loopback0
-  description: LSR_Router_ID
+  description: ROUTER_ID
   shutdown: false
   ip_address: 10.0.0.3/32
   ipv6_address: 2000:1234:ffff:ffff::3/128

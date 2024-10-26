@@ -17,20 +17,20 @@
 
 | Management Interface | Description | Type | VRF | IP Address | Gateway |
 | -------------------- | ----------- | ---- | --- | ---------- | ------- |
-| Management1 | oob_management | oob | MGMT | 10.73.255.122/24 | 10.73.255.2 |
+| Management1 | OOB_MANAGEMENT | oob | MGMT | 10.73.255.122/24 | 10.73.255.2 |
 
 ##### IPv6
 
 | Management Interface | Description | Type | VRF | IPv6 Address | IPv6 Gateway |
 | -------------------- | ----------- | ---- | --- | ------------ | ------------ |
-| Management1 | oob_management | oob | MGMT | - | - |
+| Management1 | OOB_MANAGEMENT | oob | MGMT | - | - |
 
 #### Management Interfaces Device Configuration
 
 ```eos
 !
 interface Management1
-   description oob_management
+   description OOB_MANAGEMENT
    vrf MGMT
    ip address 10.73.255.122/24
 ```
@@ -87,11 +87,15 @@ interface Management1
 
 ```eos
 !
+logging event storm-control discards global
+logging event storm-control discards interval 10
+!
+logging event congestion-drops interval 10
+!
+logging repeat-messages
 logging buffered 1000000 warnings
 no logging trap
 logging console errors
-logging event storm-control discards global
-logging event storm-control discards interval 10
 logging synchronous level critical
 logging host 20.20.20.7
 logging host 50.50.50.7 100 200 protocol tcp
@@ -111,7 +115,10 @@ logging format timestamp traditional year timezone
 logging format rfc5424
 logging source-interface Loopback0
 logging vrf mgt source-interface Management0
+!
 logging level AAA warnings
 logging level ACL critical
 logging level BGP 0
+!
+no logging event link-status global
 ```

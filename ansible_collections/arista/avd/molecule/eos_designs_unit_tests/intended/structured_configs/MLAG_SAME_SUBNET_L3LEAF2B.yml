@@ -9,6 +9,10 @@ router_bgp:
   maximum_paths:
     paths: 4
     ecmp: 4
+  redistribute:
+    connected:
+      enabled: true
+      route_map: RM-CONN-2-BGP
   updates:
     wait_install: true
   peer_groups:
@@ -43,10 +47,7 @@ router_bgp:
   - ip_address: 10.10.224.1
     peer_group: MLAG-IPv4-UNDERLAY-PEER
     peer: MLAG_SAME_SUBNET_L3LEAF2A
-    description: MLAG_SAME_SUBNET_L3LEAF2A
-  redistribute_routes:
-  - source_protocol: connected
-    route_map: RM-CONN-2-BGP
+    description: MLAG_SAME_SUBNET_L3LEAF2A_Vlan4093
   address_family_evpn:
     peer_groups:
     - name: EVPN-OVERLAY-PEERS
@@ -64,12 +65,14 @@ router_bgp:
         route_targets:
         - '1:1'
     router_id: 192.168.255.35
-    redistribute_routes:
-    - source_protocol: connected
+    redistribute:
+      connected:
+        enabled: true
+        route_map: RM-CONN-2-BGP-VRFS
     neighbors:
     - ip_address: 10.10.224.1
       peer_group: MLAG-IPv4-UNDERLAY-PEER
-      description: MLAG_SAME_SUBNET_L3LEAF2A
+      description: MLAG_SAME_SUBNET_L3LEAF2A_Vlan3000
     updates:
       wait_install: true
   vlans:
@@ -102,7 +105,7 @@ vrfs:
   ip_routing: true
 management_interfaces:
 - name: Management1
-  description: oob_management
+  description: OOB_MANAGEMENT
   shutdown: false
   vrf: MGMT
   ip_address: 192.168.201.119/24
@@ -117,30 +120,30 @@ spanning_tree:
 vlans:
 - id: 4093
   tenant: system
-  name: LEAF_PEER_L3
+  name: MLAG_L3
   trunk_groups:
-  - LEAF_PEER_L3
+  - MLAG
 - id: 4094
   tenant: system
-  name: MLAG_PEER
+  name: MLAG
   trunk_groups:
   - MLAG
 - id: 10
   name: VLAN10
   tenant: TEST_MLAG_SAME_SUBNET_ON_VRF
 - id: 3000
-  name: MLAG_iBGP_TEST
+  name: MLAG_L3_VRF_TEST
   trunk_groups:
-  - LEAF_PEER_L3
+  - MLAG
   tenant: TEST_MLAG_SAME_SUBNET_ON_VRF
 vlan_interfaces:
 - name: Vlan4093
-  description: MLAG_PEER_L3_PEERING
+  description: MLAG_L3
   shutdown: false
   mtu: 9214
   ip_address: 10.10.224.2/30
 - name: Vlan4094
-  description: MLAG_PEER
+  description: MLAG
   shutdown: false
   no_autostate: true
   mtu: 9214
@@ -155,26 +158,26 @@ vlan_interfaces:
   tenant: TEST_MLAG_SAME_SUBNET_ON_VRF
   type: underlay_peering
   shutdown: false
-  description: 'MLAG_PEER_L3_iBGP: vrf TEST'
+  description: MLAG_L3_VRF_TEST
   vrf: TEST
   mtu: 9214
   ip_address: 10.10.224.2/30
 port_channel_interfaces:
 - name: Port-Channel5
-  description: MLAG_PEER_MLAG_SAME_SUBNET_L3LEAF2A_Po5
-  type: switched
+  description: MLAG_MLAG_SAME_SUBNET_L3LEAF2A_Port-Channel5
+  switchport:
+    enabled: true
+    mode: trunk
+    trunk:
+      groups:
+      - MLAG
   shutdown: false
-  mode: trunk
-  trunk_groups:
-  - LEAF_PEER_L3
-  - MLAG
 ethernet_interfaces:
 - name: Ethernet5
   peer: MLAG_SAME_SUBNET_L3LEAF2A
   peer_interface: Ethernet5
   peer_type: mlag_peer
-  description: MLAG_PEER_MLAG_SAME_SUBNET_L3LEAF2A_Ethernet5
-  type: port-channel-member
+  description: MLAG_MLAG_SAME_SUBNET_L3LEAF2A_Ethernet5
   shutdown: false
   channel_group:
     id: 5
@@ -183,8 +186,7 @@ ethernet_interfaces:
   peer: MLAG_SAME_SUBNET_L3LEAF2A
   peer_interface: Ethernet6
   peer_type: mlag_peer
-  description: MLAG_PEER_MLAG_SAME_SUBNET_L3LEAF2A_Ethernet6
-  type: port-channel-member
+  description: MLAG_MLAG_SAME_SUBNET_L3LEAF2A_Ethernet6
   shutdown: false
   channel_group:
     id: 5
@@ -210,13 +212,21 @@ route_maps:
     type: permit
     match:
     - ip address prefix-list PL-LOOPBACKS-EVPN-OVERLAY
+- name: RM-CONN-2-BGP-VRFS
+  sequence_numbers:
+  - sequence: 10
+    type: deny
+    match:
+    - ip address prefix-list PL-MLAG-PEER-VRFS
+  - sequence: 20
+    type: permit
 loopback_interfaces:
 - name: Loopback0
-  description: EVPN_Overlay_Peering
+  description: ROUTER_ID
   shutdown: false
   ip_address: 192.168.255.35/32
 - name: Loopback1
-  description: VTEP_VXLAN_Tunnel_Source
+  description: VXLAN_TUNNEL_SOURCE
   shutdown: false
   ip_address: 192.168.254.34/32
 prefix_lists:
@@ -226,6 +236,10 @@ prefix_lists:
     action: permit 192.168.255.0/24 eq 32
   - sequence: 20
     action: permit 192.168.254.0/24 eq 32
+- name: PL-MLAG-PEER-VRFS
+  sequence_numbers:
+  - sequence: 10
+    action: permit 10.10.224.0/30
 router_bfd:
   multihop:
     interval: 300

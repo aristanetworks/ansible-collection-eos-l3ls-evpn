@@ -11,6 +11,9 @@ router_bgp:
   maximum_paths:
     paths: 4
     ecmp: 4
+  redistribute:
+    connected:
+      enabled: true
   updates:
     wait_install: true
   peer_groups:
@@ -34,8 +37,6 @@ router_bgp:
       activate: true
     - name: EVPN-OVERLAY-PEERS
       activate: false
-  redistribute_routes:
-  - source_protocol: connected
   neighbors:
   - ip_address: 172.16.11.0
     peer_group: IPv4-UNDERLAY-PEERS
@@ -81,36 +82,36 @@ router_bgp:
   - ip_address: 172.16.210.3
     peer_group: EVPN-OVERLAY-PEERS
     peer: DC2-POD1-LEAF1A
-    description: DC2-POD1-LEAF1A
+    description: DC2-POD1-LEAF1A_Loopback0
     remote_as: '65211'
     route_map_out: RM-EVPN-FILTER-AS65211
   - ip_address: 172.16.210.1
     peer_group: EVPN-OVERLAY-PEERS
     peer: DC2-POD1-SPINE1
-    description: DC2-POD1-SPINE1
+    description: DC2-POD1-SPINE1_Loopback0
     remote_as: '65210'
     route_map_out: RM-EVPN-FILTER-AS65210
   - ip_address: 172.16.20.1
     peer_group: EVPN-OVERLAY-PEERS
     peer: DC2-RS1
-    description: DC2-RS1
+    description: DC2-RS1_Loopback0
     remote_as: '65201'
     route_map_out: RM-EVPN-FILTER-AS65201
   - ip_address: 172.16.200.1
     peer_group: EVPN-OVERLAY-PEERS
     peer: DC2-SUPER-SPINE1
-    description: DC2-SUPER-SPINE1
+    description: DC2-SUPER-SPINE1_Loopback0
     remote_as: '65200'
     route_map_out: RM-EVPN-FILTER-AS65200
   - ip_address: 172.16.110.5
     peer_group: EVPN-OVERLAY-PEERS
     peer: DC1-POD1-LEAF2B
-    description: DC1-POD1-LEAF2B
+    description: DC1-POD1-LEAF2B_Loopback0
     remote_as: '65112.100'
   - ip_address: 172.16.110.4
     peer_group: EVPN-OVERLAY-PEERS
     peer: DC1.POD1.LEAF2A
-    description: DC1.POD1.LEAF2A
+    description: DC1.POD1.LEAF2A_Loopback0
     remote_as: '65112.100'
   address_family_evpn:
     peer_groups:
@@ -162,12 +163,13 @@ ethernet_interfaces:
   peer: DC1-SUPER-SPINE1
   peer_interface: Ethernet1
   peer_type: super-spine
-  description: P2P_LINK_TO_DC1-SUPER-SPINE1_Ethernet1
+  description: P2P_DC1-SUPER-SPINE1_Ethernet1
   shutdown: false
   service_profile: QOS-PROFILE
   mac_security:
     profile: MACSEC_PROFILE
-  type: routed
+  switchport:
+    enabled: false
   ptp:
     enable: true
   ip_address: 172.16.11.1/31
@@ -175,12 +177,13 @@ ethernet_interfaces:
   peer: DC1-SUPER-SPINE2
   peer_interface: Ethernet1
   peer_type: super-spine
-  description: P2P_LINK_TO_DC1-SUPER-SPINE2_Ethernet1
+  description: P2P_DC1-SUPER-SPINE2_Ethernet1
   shutdown: false
   service_profile: QOS-PROFILE
   mac_security:
     profile: MACSEC_PROFILE
-  type: routed
+  switchport:
+    enabled: false
   ptp:
     enable: true
   ip_address: 172.16.11.65/31
@@ -188,12 +191,13 @@ ethernet_interfaces:
   peer: DC1-POD1-LEAF1A
   peer_interface: Ethernet1
   peer_type: l3leaf
-  description: P2P_LINK_TO_DC1-POD1-LEAF1A_Ethernet1
+  description: P2P_DC1-POD1-LEAF1A_Ethernet1
   shutdown: false
   service_profile: QOS-PROFILE
   mac_security:
     profile: MACSEC_PROFILE
-  type: routed
+  switchport:
+    enabled: false
   ptp:
     enable: true
   ip_address: 172.17.110.0/31
@@ -201,12 +205,13 @@ ethernet_interfaces:
   peer: DC1.POD1.LEAF2A
   peer_interface: Ethernet1
   peer_type: l3leaf
-  description: P2P_LINK_TO_DC1.POD1.LEAF2A_Ethernet1
+  description: P2P_DC1.POD1.LEAF2A_Ethernet1
   shutdown: false
   service_profile: QOS-PROFILE
   mac_security:
     profile: MACSEC_PROFILE
-  type: routed
+  switchport:
+    enabled: false
   ptp:
     enable: true
   ip_address: 172.17.110.8/31
@@ -214,12 +219,13 @@ ethernet_interfaces:
   peer: DC1-POD1-LEAF2B
   peer_interface: Ethernet1
   peer_type: l3leaf
-  description: P2P_LINK_TO_DC1-POD1-LEAF2B_Ethernet1
+  description: P2P_DC1-POD1-LEAF2B_Ethernet1
   shutdown: false
   service_profile: QOS-PROFILE
   mac_security:
     profile: MACSEC_PROFILE
-  type: routed
+  switchport:
+    enabled: false
   ptp:
     enable: true
   ip_address: 172.17.110.16/31
@@ -227,21 +233,23 @@ ethernet_interfaces:
   peer: DC1-RS1
   peer_interface: Ethernet2
   peer_type: overlay-controller
-  description: P2P_LINK_TO_DC1-RS1_Ethernet2
+  description: P2P_DC1-RS1_Ethernet2
   shutdown: false
   service_profile: QOS-PROFILE
-  type: routed
+  switchport:
+    enabled: false
   ip_address: 172.17.10.2/31
 - name: Ethernet7
   peer: DC1.POD1.LEAF2A
   peer_interface: Ethernet11
   peer_type: l3leaf
-  description: P2P_LINK_TO_DC1.POD1.LEAF2A_Ethernet11
+  description: P2P_DC1.POD1.LEAF2A_Ethernet11
   shutdown: false
   service_profile: QOS-PROFILE
   mac_security:
     profile: MACSEC_PROFILE
-  type: routed
+  switchport:
+    enabled: false
   ptp:
     enable: true
   ip_address: 172.17.110.12/31
@@ -249,18 +257,19 @@ ethernet_interfaces:
   peer: DC1-POD1-LEAF2B
   peer_interface: Ethernet11
   peer_type: l3leaf
-  description: P2P_LINK_TO_DC1-POD1-LEAF2B_Ethernet11
+  description: P2P_DC1-POD1-LEAF2B_Ethernet11
   shutdown: false
   service_profile: QOS-PROFILE
   mac_security:
     profile: MACSEC_PROFILE
-  type: routed
+  switchport:
+    enabled: false
   ptp:
     enable: true
   ip_address: 172.17.110.20/31
 loopback_interfaces:
 - name: Loopback0
-  description: EVPN_Overlay_Peering
+  description: ROUTER_ID
   shutdown: false
   ip_address: 172.16.110.1/32
 router_bfd:

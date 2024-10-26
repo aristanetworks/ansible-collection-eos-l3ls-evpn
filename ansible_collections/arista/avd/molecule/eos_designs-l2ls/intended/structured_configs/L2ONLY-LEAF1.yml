@@ -30,9 +30,8 @@ ethernet_interfaces:
   peer: L2ONLY-SPINE1
   peer_interface: Ethernet1
   peer_type: l2spine
-  description: L2ONLY-SPINE1_Ethernet1
+  description: L2_L2ONLY-SPINE1_Ethernet1
   shutdown: false
-  type: port-channel-member
   channel_group:
     id: 1
     mode: active
@@ -40,35 +39,36 @@ ethernet_interfaces:
   peer: L2ONLY-SPINE2
   peer_interface: Ethernet1
   peer_type: l2spine
-  description: L2ONLY-SPINE2_Ethernet1
+  description: L2_L2ONLY-SPINE2_Ethernet1
   shutdown: false
-  type: port-channel-member
   channel_group:
     id: 1
     mode: active
 - name: Ethernet10
-  peer: Endpoint
   peer_type: network_port
   description: Endpoint
   shutdown: false
-  type: switched
-  mode: access
-  vlans: '100'
+  switchport:
+    enabled: true
+    mode: access
+    access_vlan: '100'
 - name: Ethernet11
-  peer: Endpoint
   peer_type: network_port
   description: Endpoint
   shutdown: false
-  type: switched
-  mode: access
-  vlans: '100'
+  switchport:
+    enabled: true
+    mode: access
+    access_vlan: '100'
 port_channel_interfaces:
 - name: Port-Channel1
-  description: L2ONLY_SPINES_Po1
-  type: switched
+  description: L2_L2ONLY_SPINES_Port-Channel1
+  switchport:
+    enabled: true
+    mode: trunk
+    trunk:
+      allowed_vlan: 100,4092
   shutdown: false
-  mode: trunk
-  vlans: 100,4092
 vlans:
 - id: 100
   name: L2VLAN_100

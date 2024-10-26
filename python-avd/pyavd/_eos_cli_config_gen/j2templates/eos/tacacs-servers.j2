@@ -6,6 +6,12 @@
 {# eos - tacacs servers #}
 {% if tacacs_servers is arista.avd.defined %}
 !
+{%     if tacacs_servers.timeout is arista.avd.defined %}
+tacacs-server timeout {{ tacacs_servers.timeout }}
+{%     endif %}
+{%     if tacacs_servers.policy_unknown_mandatory_attribute_ignore is arista.avd.defined(true) %}
+tacacs-server policy unknown-mandatory-attribute ignore
+{%     endif %}
 {%     for host in tacacs_servers.hosts %}
 {%         if host.host is arista.avd.defined %}
 {%             set host_cli = "tacacs-server host " ~ host.host %}
@@ -26,10 +32,4 @@
 {%         endif %}
 {{ host_cli }}
 {%     endfor %}
-{%     if tacacs_servers.policy_unknown_mandatory_attribute_ignore is arista.avd.defined(true) %}
-tacacs-server policy unknown-mandatory-attribute ignore
-{%     endif %}
-{%     if tacacs_servers.timeout is arista.avd.defined %}
-tacacs-server timeout {{ tacacs_servers.timeout }}
-{%     endif %}
 {% endif %}

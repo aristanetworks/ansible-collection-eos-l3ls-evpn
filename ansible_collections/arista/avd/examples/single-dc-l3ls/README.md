@@ -28,29 +28,9 @@ Ansible playbooks are included to show the following:
 
 ## Installation
 
-Requirements to use this example:
-
-- Follow the installation guide for AVD found [here](../../docs/installation/collection-installation.md).
-- Run the following playbook to copy the AVD **examples** to your current working directory, for example `ansible-avd-examples`:
-
-`ansible-playbook arista.avd.install_examples`
-
-This will show the following:
-
-```shell
- ~/ansible-avd-examples# ansible-playbook arista.avd.install_examples
-
-PLAY [Install Examples]***************************************************************************************************************************************************************************************************************************************************************
-
-TASK [Copy all examples to ~/ansible-avd-examples]*****************************************************************************************************************************************************
-changed: [localhost]
-
-PLAY RECAP
-****************************************************************************************************************************************************************************************************************************************************************************
-localhost                  : ok=1    changed=1    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
-```
-
-After the playbook has run successfully, the directory structure will look as shown below, the contents of which will be covered in later sections:
+--8<--
+examples/common/installation.md
+--8<--
 
 ```shell
 ansible-avd-examples/ (or wherever the playbook was run)
@@ -67,9 +47,6 @@ ansible-avd-examples/ (or wherever the playbook was run)
     ├── README.md
     └── switch-basic-configurations
 ```
-
-!!! info
-    If the content of any file is ***modified*** and the playbook is rerun, the file ***will not*** be overwritten. However, if any file in the example is ***deleted*** and the playbook is rerun, Ansible will re-create the file.
 
 ## Overall design overview
 
@@ -611,7 +588,7 @@ As an example, here is the configuration for `dc1-leaf1-server1`:
       mode: trunk # (7)!
       spanning_tree_portfast: edge # (8)!
       port_channel: # (9)!
-        description: PortChannel dc1-leaf1-server1
+        endpoint_port_channel: Bond1
         mode: active
 
     - endpoint_ports: [ iLO ]
@@ -630,7 +607,7 @@ As an example, here is the configuration for `dc1-leaf1-server1`:
 6. `native_vlan` specifies the native VLAN when the switch port mode is set to trunk.
 7. `mode` is set to trunk for the dual-attached server ports and access for the iLO port.
 8. `spanning_tree_portfast` defines whether the switch port should be a spanning tree edge or network port.
-9. `port_channel` defines the description and mode for the port-channel.
+9. `port_channel` defines the port-channel name on the endpoint that will be used in the port-channel description and mode for the port-channel.
 
 ## The playbooks
 

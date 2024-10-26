@@ -17,20 +17,20 @@
 
 | Management Interface | Description | Type | VRF | IP Address | Gateway |
 | -------------------- | ----------- | ---- | --- | ---------- | ------- |
-| Management1 | oob_management | oob | MGMT | 10.73.255.122/24 | 10.73.255.2 |
+| Management1 | OOB_MANAGEMENT | oob | MGMT | 10.73.255.122/24 | 10.73.255.2 |
 
 ##### IPv6
 
 | Management Interface | Description | Type | VRF | IPv6 Address | IPv6 Gateway |
 | -------------------- | ----------- | ---- | --- | ------------ | ------------ |
-| Management1 | oob_management | oob | MGMT | - | - |
+| Management1 | OOB_MANAGEMENT | oob | MGMT | - | - |
 
 #### Management Interfaces Device Configuration
 
 ```eos
 !
 interface Management1
-   description oob_management
+   description OOB_MANAGEMENT
    vrf MGMT
    ip address 10.73.255.122/24
 ```
@@ -117,6 +117,24 @@ ASN Notation: asplain
 | ADDITIONAL-PATH-PG-6 | True | default |
 | EVPN-OVERLAY-PEERS | True | vxlan |
 | MLAG-IPv4-UNDERLAY-PEER | False | default |
+| TEST-ENCAPSULATION | True | mpls |
+| TEST-ENCAPSULATION-2 | True | path-selection |
+
+##### EVPN Neighbors
+
+| Neighbor | Activate | Encapsulation |
+| -------- | -------- | ------------- |
+| 10.100.100.1 | True | default |
+| 10.100.100.2 | True | default |
+| 10.100.100.3 | True | default |
+| 10.100.100.4 | True | path-selection |
+| 10.100.100.5 | True | mpls |
+
+##### EVPN Neighbor Default Encapsulation
+
+| Neighbor Default Encapsulation | Next-hop-self Source Interface |
+| ------------------------------ | ------------------------------ |
+| path-selection | - |
 
 ##### EVPN Host Flapping Settings
 
@@ -136,8 +154,8 @@ ASN Notation: asplain
 
 | VLAN Aware Bundle | Route-Distinguisher | Both Route-Target | Import Route Target | Export Route-Target | Redistribute | VLANs |
 | ----------------- | ------------------- | ----------------- | ------------------- | ------------------- | ------------ | ----- |
-| B-ELAN-201 | 192.168.255.3:20201 | 20201:20201 | - | - | learned<br>no host-routes | 201 |
-| TENANT_A_PROJECT01 | 192.168.255.3:11 | 11:11<br>remote 2:11 | - | - | learned<br>igmp<br>no connected | 110 |
+| B-ELAN-201 | 192.168.255.3:20201 | 20201:20201 | - | - | learned<br>no host-route | 201 |
+| TENANT_A_PROJECT01 | 192.168.255.3:11 | 11:11<br>remote 2:11 | - | - | learned<br>igmp<br>no static | 110 |
 | TENANT_A_PROJECT02 | 192.168.255.3:12 | 12:12 | remote 2:12 | remote 2:12 | learned | 112 |
 
 #### Router BGP VLANs
@@ -186,12 +204,12 @@ router bgp 65101
    neighbor MLAG-IPv4-UNDERLAY-PEER peer group
    neighbor MLAG-IPv4-UNDERLAY-PEER remote-as 65101
    neighbor MLAG-IPv4-UNDERLAY-PEER next-hop-self
+   neighbor MLAG-IPv4-UNDERLAY-PEER route-map RM-MLAG-PEER-IN in
+   neighbor MLAG-IPv4-UNDERLAY-PEER route-map RM-MLAG-PEER-OUT out
    neighbor MLAG-IPv4-UNDERLAY-PEER password 7 <removed>
    neighbor MLAG-IPv4-UNDERLAY-PEER send-community
    neighbor MLAG-IPv4-UNDERLAY-PEER maximum-routes 12000 warning-limit 80 percent warning-only
    neighbor MLAG-IPv4-UNDERLAY-PEER missing-policy address-family all direction in action deny
-   neighbor MLAG-IPv4-UNDERLAY-PEER route-map RM-MLAG-PEER-IN in
-   neighbor MLAG-IPv4-UNDERLAY-PEER route-map RM-MLAG-PEER-OUT out
    neighbor 192.168.255.1 peer group EVPN-OVERLAY-PEERS
    neighbor 192.168.255.1 allowas-in 5
    neighbor 192.168.255.1 password shared-secret profile profile1 algorithm aes-128-cmac-96
@@ -200,25 +218,22 @@ router bgp 65101
    neighbor 192.168.255.3 allowas-in 5
    neighbor 192.168.255.3 maximum-routes 52000 warning-limit 2000 warning-only
    neighbor 192.168.255.3 missing-policy address-family all direction in action deny
-   !
-   vlan 2488
-      rd 145.245.21.0:1
-      route-target both 145.245.21.0:1
-      no redistribute learned
-   !
-   vlan 600
-      rd 145.245.21.0:600
-      route-target both 145.245.21.0:600
-      no redistribute learned
+   redistribute connected include leaked
+   redistribute isis level-2 include leaked route-map RM_BGP_EVPN
+   redistribute ospf match internal include leaked route-map RM_BGP_EVPN
+   redistribute ospf match external include leaked route-map RM_BGP_EVPN
+   redistribute ospfv3 include leaked route-map RM_BGP_EVPN
+   redistribute ospfv3 match external include leaked route-map RM_BGP_EVPN
+   redistribute ospfv3 match nssa-external include leaked route-map RM_BGP_EVPN
+   redistribute static include leaked
+   redistribute rip route-map RM_BGP_EVPN
+   redistribute attached-host route-map RM_BGP_EVPN
+   redistribute dynamic route-map RM_BGP_EVPN
+   redistribute user rcf RCF_BGP_EVPN()
    !
    vlan 66
       rd 145.245.21.0:66
       route-target both 145.245.21.0:66
-      no redistribute learned
-   !
-   vlan 666
-      rd 145.245.21.0:666
-      route-target both 145.245.21.0:666
       no redistribute learned
    !
    vlan 67
@@ -226,11 +241,26 @@ router bgp 65101
       route-target both 145.245.21.0:67
       no redistribute learned
    !
+   vlan 600
+      rd 145.245.21.0:600
+      route-target both 145.245.21.0:600
+      no redistribute learned
+   !
+   vlan 666
+      rd 145.245.21.0:666
+      route-target both 145.245.21.0:666
+      no redistribute learned
+   !
+   vlan 2488
+      rd 145.245.21.0:1
+      route-target both 145.245.21.0:1
+      no redistribute learned
+   !
    vlan-aware-bundle B-ELAN-201
       rd 192.168.255.3:20201
       route-target both 20201:20201
       redistribute learned
-      no redistribute host-routes
+      no redistribute host-route
       vlan 201
    !
    vlan-aware-bundle TENANT_A_PROJECT01
@@ -239,7 +269,7 @@ router bgp 65101
       route-target import export evpn domain remote 2:11
       redistribute igmp
       redistribute learned
-      no redistribute connected
+      no redistribute static
       vlan 110
    !
    vlan-aware-bundle TENANT_A_PROJECT02
@@ -252,11 +282,12 @@ router bgp 65101
       vlan 112
    !
    address-family evpn
+      route export ethernet-segment ip mass-withdraw
+      route import ethernet-segment ip mass-withdraw
       bgp additional-paths receive
       bgp additional-paths send any
       bgp next-hop-unchanged
-      host-flap detection window 10 threshold 1 expiry timeout 3 seconds
-      domain identifier 65101:0
+      neighbor default encapsulation path-selection
       neighbor ADDITIONAL-PATH-PG-1 activate
       neighbor ADDITIONAL-PATH-PG-1 additional-paths receive
       neighbor ADDITIONAL-PATH-PG-1 additional-paths send any
@@ -269,40 +300,70 @@ router bgp 65101
       neighbor ADDITIONAL-PATH-PG-5 activate
       neighbor ADDITIONAL-PATH-PG-5 additional-paths send limit 42
       neighbor ADDITIONAL-PATH-PG-6 activate
-      no neighbor ADDITIONAL-PATH-PG-6 additional-paths send any
-      neighbor EVPN-OVERLAY-PEERS default-route
+      no neighbor ADDITIONAL-PATH-PG-6 additional-paths send
       neighbor EVPN-OVERLAY-PEERS activate
-      neighbor EVPN-OVERLAY-PEERS domain remote
+      neighbor EVPN-OVERLAY-PEERS default-route
       neighbor EVPN-OVERLAY-PEERS encapsulation vxlan
+      neighbor EVPN-OVERLAY-PEERS domain remote
       no neighbor MLAG-IPv4-UNDERLAY-PEER activate
+      neighbor TEST-ENCAPSULATION activate
+      neighbor TEST-ENCAPSULATION encapsulation mpls
+      neighbor TEST-ENCAPSULATION-2 activate
+      neighbor TEST-ENCAPSULATION-2 encapsulation path-selection
       neighbor 10.100.100.1 activate
+      neighbor 10.100.100.1 additional-paths receive
       neighbor 10.100.100.1 default-route
+      neighbor 10.100.100.1 additional-paths send any
       neighbor 10.100.100.2 activate
       neighbor 10.100.100.2 default-route route-map RM_DEFAULT_ROUTE
       neighbor 10.100.100.3 activate
       neighbor 10.100.100.3 default-route rcf RCF_DEFAULT_ROUTE()
+      neighbor 10.100.100.4 activate
+      neighbor 10.100.100.4 encapsulation path-selection
+      neighbor 10.100.100.5 activate
+      neighbor 10.100.100.5 encapsulation mpls
+      domain identifier 65101:0
       next-hop resolution disabled
       neighbor default next-hop-self received-evpn-routes route-type ip-prefix inter-domain
-      route import ethernet-segment ip mass-withdraw
-      route export ethernet-segment ip mass-withdraw
+      host-flap detection window 10 threshold 1 expiry timeout 3 seconds
       layer-2 fec in-place update
       route import overlay-index gateway
    !
    address-family ipv4
       no neighbor EVPN-OVERLAY-PEERS activate
+      redistribute attached-host route-map RM_BGP_EVPN_IPV4
+      redistribute bgp leaked route-map RM_BGP_EVPN_IPV4
+      redistribute connected route-map RM_BGP_EVPN_IPV4
+      redistribute dynamic rcf RCF_BGP_EVPN_IPV4()
+      redistribute user rcf RCF_BGP_EVPN_IPV4()
+      redistribute isis level-1 include leaked route-map RM_BGP_EVPN_IPV4
+      redistribute ospf include leaked route-map RM_BGP_EVPN_IPV4
+      redistribute ospfv3 include leaked route-map RM_BGP_EVPN_IPV4
+      redistribute ospfv3 match external include leaked route-map RM_BGP_EVPN_IPV4
+      redistribute ospfv3 match nssa-external 2 include leaked route-map RM_BGP_EVPN_IPV4
+      redistribute ospf match external include leaked route-map RM_BGP_EVPN_IPV4
+      redistribute ospf match nssa-external 1 include leaked route-map RM_BGP_EVPN_IPV4
+      redistribute rip route-map RM_BGP_EVPN_IPV4
+      redistribute static include leaked route-map RM_BGP_EVPN_IPV4
+   !
+   address-family ipv4 multicast
+      redistribute ospf route-map RM_BGP_EVPN_IPV4M
+      redistribute ospfv3 match internal route-map RM_BGP_EVPN_IPV4M
+      redistribute ospfv3 match external route-map RM_BGP_EVPN_IPV4M
+      redistribute ospfv3 match nssa-external 1 route-map RM_BGP_EVPN_IPV4M
    !
    vrf TENANT_A_PROJECT01
       rd 192.168.255.3:11
-      evpn multicast
-         gateway dr election algorithm preference 10000
       default-route export evpn
       route-target import evpn 11:11
       route-target export evpn 11:11
       router-id 192.168.255.3
       neighbor 10.255.251.1 peer group MLAG-IPv4-UNDERLAY-PEER
       neighbor 10.255.251.1 maximum-routes 15000 warning-limit 50 percent
-      redistribute bgp leaked route-map RM-REDISTRIBUTE-BGP
       redistribute connected
+      redistribute bgp leaked route-map RM-REDISTRIBUTE-BGP
+      evpn multicast
+         gateway dr election algorithm preference 10000
    !
    vrf TENANT_A_PROJECT02
       rd 192.168.255.3:12
@@ -310,28 +371,28 @@ router bgp 65101
       route-target import evpn 12:12
       route-target export evpn 12:12
       router-id 192.168.255.3
-      neighbor interface Ethernet27 peer-group MLAG-IPv4-UNDERLAY-PEER remote-as 1
-      neighbor interface Ethernet28 peer-group MLAG-IPv4-UNDERLAY-PEER peer-filter SOME_FILTER
       neighbor 10.255.251.1 peer group MLAG-IPv4-UNDERLAY-PEER
       redistribute connected
+      neighbor interface Ethernet27 peer-group MLAG-IPv4-UNDERLAY-PEER remote-as 1
+      neighbor interface Ethernet28 peer-group MLAG-IPv4-UNDERLAY-PEER peer-filter SOME_FILTER
    !
    vrf TENANT_A_PROJECT03
       rd 192.168.255.3:13
-      evpn multicast
-         address-family ipv4
-            transit
       default-route export evpn always route-map TENANT_A_PROJECT03_RM_DEFAULT
       route-target import evpn 13:13
       route-target export evpn 13:13
       router-id 192.168.255.3
+      evpn multicast
+         address-family ipv4
+            transit
    !
    vrf TENANT_A_PROJECT04
       rd 192.168.255.3:14
-      evpn multicast
       default-route export evpn rcf TENANT_A_PROJECT03_RCF_DEFAULT()
       route-target import evpn 14:14
       route-target export evpn 14:14
       router-id 192.168.255.3
+      evpn multicast
    !
    address-family evpn
       evpn ethernet-segment domain all

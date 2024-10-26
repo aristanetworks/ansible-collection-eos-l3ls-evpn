@@ -1,0 +1,25 @@
+# Copyright (c) 2023-2024 Arista Networks, Inc.
+# Use of this source code is governed by the Apache License 2.0
+# that can be found in the LICENSE file.
+# yaml-language-server: $schema=../../../_schema/avd_meta_schema.json
+# Line above is used by RedHat's YAML Schema vscode extension
+# Use Ctrl + Space to get suggestions for every field. Autocomplete will pop up after typing 2 letters.
+type: dict
+keys:
+  default_connected_endpoints_port_channel_description:
+    type: str
+    documentation_options:
+      table: default-connected-endpoints-description
+    description: |-
+      Default description or description template to be used on all port-channels to connected endpoints.
+      This can be a template using the AVD string formatter syntax: https://avd.arista.com/devel/roles/eos_designs/docs/how-to/custom-descriptions-names.html#avd-string-formatter-syntax.
+      The available template fields are:
+        - `endpoint_type`: The `type` from `connected_endpoints_keys` like `server`, `router` etc.
+        - `endpoint`: The name of the connected endpoint
+        - `endpoint_port_channel`: The value of `endpoint_port_channel` if set.
+        - `port_channel_id`: The port-channel number for the switch.
+        - `adapter_description`: The adapter's description if set.
+        - `adapter_description_or_endpoint`: Helper alias of the adapter_description or endpoint.
+
+      By default the description is templated from the type, name and port-channel name of the endpoint if set.
+    default: "{endpoint_type!u}_{endpoint}{endpoint_port_channel?<_}"

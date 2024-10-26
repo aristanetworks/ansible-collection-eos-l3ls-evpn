@@ -40,20 +40,20 @@
 
 | Management Interface | Description | Type | VRF | IP Address | Gateway |
 | -------------------- | ----------- | ---- | --- | ---------- | ------- |
-| Management1 | oob_management | oob | MGMT | 192.168.200.103/24 | 192.168.200.5 |
+| Management1 | OOB_MANAGEMENT | oob | MGMT | 192.168.200.103/24 | 192.168.200.5 |
 
 ##### IPv6
 
 | Management Interface | Description | Type | VRF | IPv6 Address | IPv6 Gateway |
 | -------------------- | ----------- | ---- | --- | ------------ | ------------ |
-| Management1 | oob_management | oob | MGMT | - | - |
+| Management1 | OOB_MANAGEMENT | oob | MGMT | - | - |
 
 #### Management Interfaces Device Configuration
 
 ```eos
 !
 interface Management1
-   description oob_management
+   description OOB_MANAGEMENT
    no shutdown
    vrf MGMT
    ip address 192.168.200.103/24
@@ -136,17 +136,17 @@ vlan internal order ascending range 1006 1199
 
 | Interface | Description | Channel Group | IP Address | VRF |  MTU | Shutdown | ACL In | ACL Out |
 | --------- | ----------- | ------------- | ---------- | ----| ---- | -------- | ------ | ------- |
-| Ethernet1 | P2P_LINK_TO_SITE2-LER1_Ethernet1 | - | 100.64.48.14/31 | default | 9178 | False | - | - |
-| Ethernet3 | P2P_LINK_TO_SITE1-LSR1_Ethernet3 | - | 100.64.48.9/31 | default | 9178 | False | - | - |
-| Ethernet4 | P2P_LINK_TO_SITE2-RR1_Ethernet4 | - | 100.64.48.12/31 | default | 9178 | False | - | - |
+| Ethernet1 | P2P_SITE2-LER1_Ethernet1 | - | 100.64.48.14/31 | default | 9178 | False | - | - |
+| Ethernet3 | P2P_SITE1-LSR1_Ethernet3 | - | 100.64.48.9/31 | default | 9178 | False | - | - |
+| Ethernet4 | P2P_SITE2-RR1_Ethernet4 | - | 100.64.48.12/31 | default | 9178 | False | - | - |
 
 ##### IPv6
 
 | Interface | Description | Channel Group | IPv6 Address | VRF | MTU | Shutdown | ND RA Disabled | Managed Config Flag | IPv6 ACL In | IPv6 ACL Out |
 | --------- | ----------- | --------------| ------------ | --- | --- | -------- | -------------- | -------------------| ----------- | ------------ |
-| Ethernet1 | P2P_LINK_TO_SITE2-LER1_Ethernet1 | - | - | default | 9178 | False | - | - | - | - |
-| Ethernet3 | P2P_LINK_TO_SITE1-LSR1_Ethernet3 | - | - | default | 9178 | False | - | - | - | - |
-| Ethernet4 | P2P_LINK_TO_SITE2-RR1_Ethernet4 | - | - | default | 9178 | False | - | - | - | - |
+| Ethernet1 | P2P_SITE2-LER1_Ethernet1 | - | - | default | 9178 | False | - | - | - | - |
+| Ethernet3 | P2P_SITE1-LSR1_Ethernet3 | - | - | default | 9178 | False | - | - | - | - |
+| Ethernet4 | P2P_SITE2-RR1_Ethernet4 | - | - | default | 9178 | False | - | - | - | - |
 
 ##### ISIS
 
@@ -161,7 +161,7 @@ vlan internal order ascending range 1006 1199
 ```eos
 !
 interface Ethernet1
-   description P2P_LINK_TO_SITE2-LER1_Ethernet1
+   description P2P_SITE2-LER1_Ethernet1
    no shutdown
    mtu 9178
    speed forced 40gfull
@@ -182,7 +182,7 @@ interface Ethernet1
 
 !
 interface Ethernet3
-   description P2P_LINK_TO_SITE1-LSR1_Ethernet3
+   description P2P_SITE1-LSR1_Ethernet3
    no shutdown
    mtu 9178
    speed forced 40gfull
@@ -203,7 +203,7 @@ interface Ethernet3
 
 !
 interface Ethernet4
-   description P2P_LINK_TO_SITE2-RR1_Ethernet4
+   description P2P_SITE2-RR1_Ethernet4
    no shutdown
    mtu 9178
    speed forced 40gfull
@@ -232,13 +232,13 @@ interface Ethernet4
 
 | Interface | Description | VRF | IP Address |
 | --------- | ----------- | --- | ---------- |
-| Loopback0 | LSR_Router_ID | default | 100.70.0.3/32 |
+| Loopback0 | ROUTER_ID | default | 100.70.0.3/32 |
 
 ##### IPv6
 
 | Interface | Description | VRF | IPv6 Address |
 | --------- | ----------- | --- | ------------ |
-| Loopback0 | LSR_Router_ID | default | 2000:1234:ffff:ffff::3/128 |
+| Loopback0 | ROUTER_ID | default | 2000:1234:ffff:ffff::3/128 |
 
 ##### ISIS
 
@@ -251,15 +251,15 @@ interface Ethernet4
 ```eos
 !
 interface Loopback0
-   description LSR_Router_ID
+   description ROUTER_ID
    no shutdown
    ip address 100.70.0.3/32
    ipv6 address 2000:1234:ffff:ffff::3/128
-   isis enable CUSTOM_NAME
-   isis passive
    mpls ldp interface
    node-segment ipv4 index 303
    node-segment ipv6 index 303
+   isis enable CUSTOM_NAME
+   isis passive
 ```
 
 ## Routing
@@ -374,8 +374,8 @@ ip route vrf MGMT 0.0.0.0/0 192.168.200.5
 !
 router isis CUSTOM_NAME
    net 49.0001.1000.7000.0003.00
-   is-type level-2
    router-id ipv4 100.70.0.3
+   is-type level-2
    log-adjacency-changes
    mpls ldp sync default
    timers local-convergence-delay 15000 protected-prefixes
@@ -414,10 +414,10 @@ router isis CUSTOM_NAME
 mpls ip
 !
 mpls ldp
-   interface disabled default
    router-id 100.70.0.3
-   no shutdown
    transport-address interface Loopback0
+   interface disabled default
+   no shutdown
 ```
 
 ### MPLS Interfaces

@@ -9,6 +9,9 @@
 router pim sparse-mode
 {%     if router_pim_sparse_mode.ipv4 is arista.avd.defined %}
    ipv4
+{%         if router_pim_sparse_mode.ipv4.ssm_range is arista.avd.defined %}
+      ssm range {{ router_pim_sparse_mode.ipv4.ssm_range }}
+{%         endif %}
 {%         if router_pim_sparse_mode.ipv4.bfd is arista.avd.defined(true) %}
       bfd
 {%         endif %}
@@ -47,9 +50,6 @@ router pim sparse-mode
       {{ other_anycast_rp_addresses_cli }}
 {%             endfor %}
 {%         endfor %}
-{%         if router_pim_sparse_mode.ipv4.ssm_range is arista.avd.defined %}
-      ssm range {{ router_pim_sparse_mode.ipv4.ssm_range }}
-{%         endif %}
 {%     endif %}
 {%     for vrf in router_pim_sparse_mode.vrfs | arista.avd.natural_sort('name') %}
    !

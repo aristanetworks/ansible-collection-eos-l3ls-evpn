@@ -71,6 +71,16 @@ keys:
             Takes precedence over the root key "default_interface_mtu".
           min: 68
           max: 65535
+        p2p_uplinks_mtu:
+          type: int
+          convert_types:
+            - str
+          description: |
+            Set MTU on point to point uplink interfaces.
+            Takes precedence over the root key "p2p_uplinks_mtu".
+            <node_type>.uplink_mtu -> platform_settings.p2p_uplinks_mtu -> p2p_uplinks_mtu -> 9214.
+          min: 68
+          max: 65535
         feature_support:
           type: dict
           keys:
@@ -284,6 +294,7 @@ keys:
           interface_storm_control: false
           queue_monitor_length_notify: false
         management_interface: Management1/1
+        p2p_uplinks_mtu: 9194
       - platforms:
           - AWE-7220R
         feature_support:
@@ -293,3 +304,4 @@ keys:
           queue_monitor_length_notify: false
           poe: true
         management_interface: Management1
+        p2p_uplinks_mtu: 9194

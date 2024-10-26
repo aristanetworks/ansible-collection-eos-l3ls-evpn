@@ -8,8 +8,46 @@ router_bgp:
       ipv4_unicast: false
   maximum_paths:
     paths: 16
+  redistribute:
+    connected:
+      enabled: true
+      route_map: RM-CONN-2-BGP
+    static:
+      enabled: true
+      route_map: RM-STATIC-2-BGP
   updates:
     wait_install: true
+  neighbors:
+  - ip_address: 172.16.9.4
+    remote_as: '64520'
+    description: ATT_666_peer3_Ethernet42
+    route_map_in: RM-BGP-172.16.9.4-IN
+    route_map_out: RM-BGP-172.16.9.4-OUT
+  - ip_address: 172.16.5.4
+    remote_as: '64520'
+    description: Colt_10555
+    route_map_in: RM-BGP-172.16.5.4-IN
+    route_map_out: RM-BGP-172.16.5.4-OUT
+  - ip_address: 172.17.0.0
+    peer_group: IPv4-UNDERLAY-PEERS
+    remote_as: '65199'
+    peer: site-ha-disabled-leaf
+    description: site-ha-disabled-leaf_Ethernet1
+  - ip_address: 192.168.144.1
+    peer_group: WAN-OVERLAY-PEERS
+    peer: cv-pathfinder-pathfinder
+    description: cv-pathfinder-pathfinder_Dps1
+  address_family_ipv4:
+    neighbors:
+    - ip_address: 172.16.9.4
+      activate: true
+    - ip_address: 172.16.5.4
+      activate: true
+    peer_groups:
+    - name: IPv4-UNDERLAY-PEERS
+      activate: true
+    - name: WAN-OVERLAY-PEERS
+      activate: false
   peer_groups:
   - name: IPv4-UNDERLAY-PEERS
     type: ipv4
@@ -30,37 +68,6 @@ router_bgp:
       interval: 1000
       min_rx: 1000
       multiplier: 10
-  address_family_ipv4:
-    peer_groups:
-    - name: IPv4-UNDERLAY-PEERS
-      activate: true
-    - name: WAN-OVERLAY-PEERS
-      activate: false
-  redistribute_routes:
-  - source_protocol: connected
-    route_map: RM-CONN-2-BGP
-  - source_protocol: static
-    route_map: RM-STATIC-2-BGP
-  neighbors:
-  - ip_address: 172.17.0.0
-    peer_group: IPv4-UNDERLAY-PEERS
-    remote_as: '65199'
-    peer: site-ha-disabled-leaf
-    description: site-ha-disabled-leaf_Ethernet1
-  - ip_address: 172.16.9.4
-    remote_as: '64520'
-    description: ATT_666_peer3_Ethernet42
-    route_map_in: RM-BGP-172.16.9.4-IN
-    route_map_out: RM-BGP-172.16.9.4-OUT
-  - ip_address: 172.16.5.4
-    remote_as: '64520'
-    description: Colt_10555
-    route_map_in: RM-BGP-172.16.5.4-IN
-    route_map_out: RM-BGP-172.16.5.4-OUT
-  - ip_address: 192.168.144.1
-    peer_group: WAN-OVERLAY-PEERS
-    peer: cv-pathfinder-pathfinder
-    description: cv-pathfinder-pathfinder
   vrfs:
   - name: IT
     router_id: 192.168.42.1
@@ -79,8 +86,9 @@ router_bgp:
       - address_family: evpn
         route_targets:
         - 1000:1000
-    redistribute_routes:
-    - source_protocol: connected
+    redistribute:
+      connected:
+        enabled: true
   - name: PROD
     router_id: 192.168.42.1
     neighbors:
@@ -98,8 +106,9 @@ router_bgp:
       - address_family: evpn
         route_targets:
         - 142:142
-    redistribute_routes:
-    - source_protocol: connected
+    redistribute:
+      connected:
+        enabled: true
   - name: ATTRACTED-VRF-FROM-UPLINK
     router_id: 192.168.42.1
     neighbors:
@@ -117,8 +126,9 @@ router_bgp:
       - address_family: evpn
         route_targets:
         - 666:666
-    redistribute_routes:
-    - source_protocol: connected
+    redistribute:
+      connected:
+        enabled: true
   - name: default
     rd: 192.168.42.1:1
     route_targets:
@@ -135,6 +145,7 @@ router_bgp:
     peer_groups:
     - name: WAN-OVERLAY-PEERS
       activate: true
+      encapsulation: path-selection
       route_map_in: RM-EVPN-SOO-IN
       route_map_out: RM-EVPN-SOO-OUT
   address_family_ipv4_sr_te:
@@ -155,8 +166,7 @@ router_bgp:
     bgp:
       additional_paths:
         receive: true
-        send:
-          any: true
+        send: any
 service_routing_protocols_model: multi-agent
 ip_routing: true
 aaa_root:
@@ -183,116 +193,20 @@ management_api_http:
   enable_vrfs:
   - name: MGMT
   enable_https: true
-ethernet_interfaces:
-- name: Ethernet52
-  peer: site-ha-disabled-leaf
-  peer_interface: Ethernet1
-  peer_type: l3leaf
-  description: P2P_LINK_TO_SITE-HA-DISABLED-LEAF_Ethernet1
-  shutdown: false
-  mtu: 9214
-  type: routed
-  ip_address: 172.17.0.1/31
-- name: Ethernet52.1000
-  peer: site-ha-disabled-leaf
-  peer_interface: Ethernet1.1000
-  peer_type: l3leaf
-  vrf: IT
-  description: P2P_LINK_TO_SITE-HA-DISABLED-LEAF_Ethernet1.1000_vrf_IT
-  shutdown: false
-  type: l3dot1q
-  encapsulation_dot1q_vlan: 1000
-  mtu: 9214
-  ip_address: 172.17.0.1/31
-- name: Ethernet52.142
-  peer: site-ha-disabled-leaf
-  peer_interface: Ethernet1.142
-  peer_type: l3leaf
-  vrf: PROD
-  description: P2P_LINK_TO_SITE-HA-DISABLED-LEAF_Ethernet1.142_vrf_PROD
-  shutdown: false
-  type: l3dot1q
-  encapsulation_dot1q_vlan: 142
-  mtu: 9214
-  ip_address: 172.17.0.1/31
-- name: Ethernet52.666
-  peer: site-ha-disabled-leaf
-  peer_interface: Ethernet1.666
-  peer_type: l3leaf
-  vrf: ATTRACTED-VRF-FROM-UPLINK
-  description: P2P_LINK_TO_SITE-HA-DISABLED-LEAF_Ethernet1.666_vrf_ATTRACTED-VRF-FROM-UPLINK
-  shutdown: false
-  type: l3dot1q
-  encapsulation_dot1q_vlan: 666
-  mtu: 9214
-  ip_address: 172.17.0.1/31
-- name: Ethernet1
-  peer_type: l3_interface
-  peer: peer3
-  peer_interface: Ethernet42
-  ip_address: dhcp
-  shutdown: false
-  type: routed
-  description: ATT_666_peer3_Ethernet42
-  flow_tracker:
-    hardware: FLOW-TRACKER
-  dhcp_client_accept_default_route: true
-- name: Ethernet2
-  peer_type: l3_interface
-  ip_address: 172.15.5.5/31
-  shutdown: false
-  type: routed
-  description: Colt_10555
-  ip_nat:
-    service_profile: NAT-IE-DIRECT
-- name: Ethernet2/1
-  peer_type: l3_interface
-  ip_address: 172.15.5.6/31
-  shutdown: false
-  type: routed
-  description: Colt_10555
-  ip_nat:
-    service_profile: NAT-IE-DIRECT
-- name: Ethernet3
-  peer_type: l3_interface
-  ip_address: 172.20.20.20/31
-  shutdown: false
-  type: routed
-  description: Comcast-5G_AF830
-loopback_interfaces:
-- name: Loopback0
-  description: Router_ID
-  shutdown: false
-  ip_address: 192.168.42.1/32
 prefix_lists:
-- name: PL-LOOPBACKS-EVPN-OVERLAY
-  sequence_numbers:
-  - sequence: 10
-    action: permit 192.168.42.0/24 eq 32
 - name: ALLOW-DEFAULT
   sequence_numbers:
   - sequence: 10
     action: permit 0.0.0.0/0
+- name: PL-LOOPBACKS-EVPN-OVERLAY
+  sequence_numbers:
+  - sequence: 10
+    action: permit 192.168.42.0/24 eq 32
 - name: PL-STATIC-VRF-DEFAULT
   sequence_numbers:
   - sequence: 10
     action: permit 66.66.66.0/24
 route_maps:
-- name: RM-CONN-2-BGP
-  sequence_numbers:
-  - sequence: 10
-    type: permit
-    match:
-    - ip address prefix-list PL-LOOPBACKS-EVPN-OVERLAY
-    set:
-    - extcommunity soo 192.168.42.1:511 additive
-- name: RM-BGP-UNDERLAY-PEERS-IN
-  sequence_numbers:
-  - sequence: 40
-    type: permit
-    description: Mark prefixes originated from the LAN
-    set:
-    - extcommunity soo 192.168.42.1:511 additive
 - name: RM-BGP-172.16.9.4-IN
   sequence_numbers:
   - sequence: 10
@@ -321,6 +235,21 @@ route_maps:
     - ip address prefix-list ALLOW-DEFAULT
   - sequence: 20
     type: deny
+- name: RM-CONN-2-BGP
+  sequence_numbers:
+  - sequence: 10
+    type: permit
+    match:
+    - ip address prefix-list PL-LOOPBACKS-EVPN-OVERLAY
+    set:
+    - extcommunity soo 192.168.42.1:511 additive
+- name: RM-BGP-UNDERLAY-PEERS-IN
+  sequence_numbers:
+  - sequence: 40
+    type: permit
+    description: Mark prefixes originated from the LAN
+    set:
+    - extcommunity soo 192.168.42.1:511 additive
 - name: RM-EVPN-SOO-IN
   sequence_numbers:
   - sequence: 10
@@ -349,6 +278,92 @@ route_maps:
     - ip address prefix-list PL-STATIC-VRF-DEFAULT
     set:
     - extcommunity soo 192.168.42.1:511 additive
+ethernet_interfaces:
+- name: Ethernet52
+  peer: site-ha-disabled-leaf
+  peer_interface: Ethernet1
+  peer_type: l3leaf
+  description: P2P_site-ha-disabled-leaf_Ethernet1
+  shutdown: false
+  mtu: 9214
+  switchport:
+    enabled: false
+  ip_address: 172.17.0.1/31
+- name: Ethernet52.1000
+  peer: site-ha-disabled-leaf
+  peer_interface: Ethernet1.1000
+  peer_type: l3leaf
+  vrf: IT
+  description: P2P_site-ha-disabled-leaf_Ethernet1.1000_VRF_IT
+  shutdown: false
+  encapsulation_dot1q:
+    vlan: 1000
+  mtu: 9214
+  ip_address: 172.17.0.1/31
+- name: Ethernet52.142
+  peer: site-ha-disabled-leaf
+  peer_interface: Ethernet1.142
+  peer_type: l3leaf
+  vrf: PROD
+  description: P2P_site-ha-disabled-leaf_Ethernet1.142_VRF_PROD
+  shutdown: false
+  encapsulation_dot1q:
+    vlan: 142
+  mtu: 9214
+  ip_address: 172.17.0.1/31
+- name: Ethernet52.666
+  peer: site-ha-disabled-leaf
+  peer_interface: Ethernet1.666
+  peer_type: l3leaf
+  vrf: ATTRACTED-VRF-FROM-UPLINK
+  description: P2P_site-ha-disabled-leaf_Ethernet1.666_VRF_ATTRACTED-VRF-FROM-UPLINK
+  shutdown: false
+  encapsulation_dot1q:
+    vlan: 666
+  mtu: 9214
+  ip_address: 172.17.0.1/31
+- name: Ethernet1
+  peer_type: l3_interface
+  peer: peer3
+  peer_interface: Ethernet42
+  ip_address: dhcp
+  shutdown: false
+  switchport:
+    enabled: false
+  description: ATT_666_peer3_Ethernet42
+  flow_tracker:
+    hardware: FLOW-TRACKER
+  dhcp_client_accept_default_route: true
+- name: Ethernet2
+  peer_type: l3_interface
+  ip_address: 172.15.5.5/31
+  shutdown: false
+  switchport:
+    enabled: false
+  description: Colt_10555
+  ip_nat:
+    service_profile: NAT-IE-DIRECT
+- name: Ethernet2/1
+  peer_type: l3_interface
+  ip_address: 172.15.5.6/31
+  shutdown: false
+  switchport:
+    enabled: false
+  description: Colt_10555
+  ip_nat:
+    service_profile: NAT-IE-DIRECT
+- name: Ethernet3
+  peer_type: l3_interface
+  ip_address: 172.20.20.20/31
+  shutdown: false
+  switchport:
+    enabled: false
+  description: Comcast-5G_AF830
+loopback_interfaces:
+- name: Loopback0
+  description: ROUTER_ID
+  shutdown: false
+  ip_address: 192.168.42.1/32
 static_routes:
 - destination_address_prefix: 172.16.0.0/16
   gateway: 172.16.5.4
@@ -805,7 +820,7 @@ router_internet_exit:
 dps_interfaces:
 - name: Dps1
   description: DPS Interface
-  mtu: 9214
+  mtu: 9194
   ip_address: 192.168.142.1/32
   flow_tracker:
     hardware: FLOW-TRACKER

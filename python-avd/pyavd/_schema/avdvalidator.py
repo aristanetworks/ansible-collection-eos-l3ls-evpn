@@ -9,6 +9,8 @@ from typing import Any, Literal, NoReturn
 from pyavd._errors import AvdValidationError
 from pyavd._utils import get_all, get_all_with_path, get_indices_of_duplicate_items
 
+from .utils import get_instance_with_defaults
+
 
 class AvdValidator:
     def __init__(self, schema: dict) -> None:
@@ -109,7 +111,8 @@ class AvdValidator:
         schema_dynamic_keys = schema.get("dynamic_keys", {})
         dynamic_keys = {}
         for dynamic_key, childschema in schema_dynamic_keys.items():
-            resolved_keys = get_all(instance, dynamic_key)
+            instance_with_defaults = get_instance_with_defaults(instance, dynamic_key, schema)
+            resolved_keys = get_all(instance_with_defaults, dynamic_key)
             for resolved_key in resolved_keys:
                 dynamic_keys.setdefault(resolved_key, childschema)
 
@@ -124,7 +127,8 @@ class AvdValidator:
 
         # Run over child keys and check for required and update child schema with dynamic valid values before
         # descending into validation of child schema.
-        for key, childschema in all_keys.items():
+        for key in all_keys:
+            childschema = all_keys[key].copy()
             if instance.get(key) is None:
                 # Validation of "required" on child keys
                 if childschema.get("required"):
@@ -135,7 +139,9 @@ class AvdValidator:
 
             # Expand "dynamic_valid_values" in child schema and add to "valid_values"
             if "dynamic_valid_values" in childschema:
-                childschema.setdefault("valid_values", []).extend(get_all(instance, childschema["dynamic_valid_values"]))
+                for dynamic_valid_value in childschema["dynamic_valid_values"]:
+                    instance_with_defaults = get_instance_with_defaults(instance, dynamic_valid_value, schema)
+                    childschema.setdefault("valid_values", []).extend(get_all(instance_with_defaults, dynamic_valid_value))
 
             # Perform regular validation of the child schema.
             yield from self.validate(

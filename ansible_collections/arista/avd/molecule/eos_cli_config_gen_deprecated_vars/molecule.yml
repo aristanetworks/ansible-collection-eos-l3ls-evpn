@@ -30,9 +30,5 @@ provisioner:
       hosts: 'inventory/hosts.ini'
       host_vars: 'inventory/host_vars/'
       group_vars: 'inventory/group_vars/'
-  ansible_args:
-    # TODO: AVD 5.0.0
-    # Testing import role with tag
-    - --tags=test
 verifier:
   name: ansible

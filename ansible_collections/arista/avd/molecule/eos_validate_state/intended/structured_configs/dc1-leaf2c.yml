@@ -46,9 +46,8 @@ ethernet_interfaces:
   peer: dc1-leaf2a
   peer_interface: Ethernet8
   peer_type: l3leaf
-  description: DC1-LEAF2A_Ethernet8
+  description: L2_dc1-leaf2a_Ethernet8
   shutdown: false
-  type: port-channel-member
   channel_group:
     id: 1
     mode: active
@@ -56,9 +55,8 @@ ethernet_interfaces:
   peer: dc1-leaf2b
   peer_interface: Ethernet8
   peer_type: l3leaf
-  description: DC1-LEAF2B_Ethernet8
+  description: L2_dc1-leaf2b_Ethernet8
   shutdown: true
-  type: port-channel-member
   channel_group:
     id: 1
     mode: active
@@ -66,19 +64,22 @@ ethernet_interfaces:
   peer: dc1-leaf2-server1
   peer_interface: iLO
   peer_type: server
-  description: dc1-leaf2-server1_iLO
+  description: SERVER_dc1-leaf2-server1_iLO
   shutdown: false
-  type: switched
-  mode: access
-  vlans: '11'
+  switchport:
+    enabled: true
+    mode: access
+    access_vlan: '11'
   spanning_tree_portfast: edge
 port_channel_interfaces:
 - name: Port-Channel1
-  description: DC1_L3_LEAF2_Po8
-  type: switched
+  description: L2_DC1_L3_LEAF2_Port-Channel8
+  switchport:
+    enabled: true
+    mode: trunk
+    trunk:
+      allowed_vlan: 11-12,21-22,3401-3402,4085
   shutdown: false
-  mode: trunk
-  vlans: 11-12,21-22,3401-3402,4085
 vlans:
 - id: 11
   name: VRF10_VLAN11

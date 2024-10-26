@@ -48,7 +48,7 @@ keys:
                   name:
                     type: str
                     description: Local interface name.
-                    pattern: "^Ethernet\\d+(\/\\d+)*(\\.\\d+)?$"
+                    pattern: "^(Port-Channel|Ethernet(\\d+/)*)\\d+(\\.\\d+)?$"
                   public_address:
                     type: str
                     description: Public IP assigned by NAT.

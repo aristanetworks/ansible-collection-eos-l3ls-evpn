@@ -30,9 +30,8 @@ ethernet_interfaces:
   peer: BGP-SPINE1
   peer_interface: Ethernet1
   peer_type: l3spine
-  description: BGP-SPINE1_Ethernet1
+  description: L2_BGP-SPINE1_Ethernet1
   shutdown: false
-  type: port-channel-member
   channel_group:
     id: 1
     mode: active
@@ -40,67 +39,70 @@ ethernet_interfaces:
   peer: BGP-SPINE2
   peer_interface: Ethernet1
   peer_type: l3spine
-  description: BGP-SPINE2_Ethernet1
+  description: L2_BGP-SPINE2_Ethernet1
   shutdown: false
-  type: port-channel-member
   channel_group:
     id: 1
     mode: active
 - name: Ethernet10
-  peer: Endpoint
   peer_type: network_port
   description: Endpoint
   shutdown: false
-  type: switched
-  mode: access
-  vlans: '100'
+  switchport:
+    enabled: true
+    mode: access
+    access_vlan: '100'
 - name: Ethernet11
-  peer: Endpoint
   peer_type: network_port
   description: Endpoint
   shutdown: false
-  type: switched
-  mode: access
-  vlans: '100'
+  switchport:
+    enabled: true
+    mode: access
+    access_vlan: '100'
 - name: Ethernet12
-  peer: IP Phone
   peer_type: network_port
   description: IP Phone
   shutdown: false
-  type: switched
-  mode: trunk phone
-  native_vlan: 100
-  phone:
-    vlan: 200
-    trunk: untagged
+  switchport:
+    enabled: true
+    mode: trunk phone
+    trunk:
+      native_vlan: 100
+    phone:
+      vlan: 200
+      trunk: untagged
 - name: Ethernet13
-  peer: IP Phone
   peer_type: network_port
   description: IP Phone
   shutdown: false
-  type: switched
-  mode: trunk phone
-  native_vlan: 100
-  phone:
-    vlan: 200
-    trunk: untagged
+  switchport:
+    enabled: true
+    mode: trunk phone
+    trunk:
+      native_vlan: 100
+    phone:
+      vlan: 200
+      trunk: untagged
 - name: Ethernet14
-  peer: IP Phone with no native VLAN
   peer_type: network_port
   description: IP Phone with no native VLAN
   shutdown: false
-  type: switched
-  mode: trunk phone
-  phone:
-    vlan: 200
-    trunk: untagged
+  switchport:
+    enabled: true
+    mode: trunk phone
+    phone:
+      vlan: 200
+      trunk: untagged
 port_channel_interfaces:
 - name: Port-Channel1
-  description: BGP_SPINES_Po1
-  type: switched
+  description: L2_BGP_SPINES_Port-Channel1
+  switchport:
+    enabled: true
+    mode: trunk
+    trunk:
+      allowed_vlan: 1,100,200,4092
   shutdown: false
-  mode: trunk
-  vlans: 1,100,200,4092
 vlans:
 - id: 1
   name: SVI_1

@@ -6,17 +6,28 @@
 {# eos - lldp #}
 {% if lldp is arista.avd.defined %}
 !
-{%     if lldp.run is arista.avd.defined(false) %}
-no lldp run
-{%     endif %}
 {%     if lldp.timer is arista.avd.defined %}
 lldp timer {{ lldp.timer }}
+{%     endif %}
+{%     if lldp.holdtime is arista.avd.defined %}
+lldp hold-time {{ lldp.holdtime }}
 {%     endif %}
 {%     if lldp.timer_reinitialization is arista.avd.defined %}
 lldp timer reinitialization {{ lldp.timer_reinitialization }}
 {%     endif %}
-{%     if lldp.holdtime is arista.avd.defined %}
-lldp hold-time {{ lldp.holdtime }}
+{%     if lldp.tlvs is arista.avd.defined %}
+{%         for tlv in lldp.tlvs | arista.avd.natural_sort("name") %}
+{%             if tlv.name is arista.avd.defined and tlv.transmit is arista.avd.defined %}
+{%                 set lldp_tlv_transmit_cli = "lldp tlv transmit " ~ tlv.name %}
+{%                 if tlv.transmit is arista.avd.defined(false) %}
+{%                     set lldp_tlv_transmit_cli = "no " ~ lldp_tlv_transmit_cli %}
+{%                 endif %}
+{{ lldp_tlv_transmit_cli }}
+{%             endif %}
+{%         endfor %}
+{%     endif %}
+{%     if lldp.run is arista.avd.defined(false) %}
+no lldp run
 {%     endif %}
 {%     if lldp.management_address is arista.avd.defined %}
 lldp management-address {{ lldp.management_address }}
@@ -26,16 +37,5 @@ lldp management-address vrf {{ lldp.vrf }}
 {%     endif %}
 {%     if lldp.receive_packet_tagged_drop is arista.avd.defined(true) %}
 lldp receive packet tagged drop
-{%     endif %}
-{%     if lldp.tlvs is arista.avd.defined %}
-{%         for tlv in lldp.tlvs %}
-{%             if tlv.name is arista.avd.defined and tlv.transmit is arista.avd.defined %}
-{%                 set lldp_tlv_transmit_cli = "lldp tlv transmit " ~ tlv.name %}
-{%                 if tlv.transmit is arista.avd.defined(false) %}
-{%                     set lldp_tlv_transmit_cli = "no " ~ lldp_tlv_transmit_cli %}
-{%                 endif %}
-{{ lldp_tlv_transmit_cli }}
-{%             endif %}
-{%         endfor %}
 {%     endif %}
 {% endif %}

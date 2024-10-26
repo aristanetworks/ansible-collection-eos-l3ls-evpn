@@ -12,6 +12,10 @@
 {%     if router_adaptive_virtual_topology.topology_role is arista.avd.defined %}
 
 Topology role: {{ router_adaptive_virtual_topology.topology_role }}
+{%         if router_adaptive_virtual_topology.gateway_vxlan is arista.avd.defined(true) and router_adaptive_virtual_topology.topology_role in ["edge", "transit zone", "transit region"] %}
+
+VXLAN gateway: Enabled
+{%         endif %}
 {%     endif %}
 {%     if router_adaptive_virtual_topology.region is arista.avd.defined or router_adaptive_virtual_topology.zone is arista.avd.defined  or router_adaptive_virtual_topology.site is arista.avd.defined %}
 

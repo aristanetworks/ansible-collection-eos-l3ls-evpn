@@ -17,20 +17,20 @@
 
 | Management Interface | Description | Type | VRF | IP Address | Gateway |
 | -------------------- | ----------- | ---- | --- | ---------- | ------- |
-| Management1 | oob_management | oob | MGMT | 10.73.255.122/24 | 10.73.255.2 |
+| Management1 | OOB_MANAGEMENT | oob | MGMT | 10.73.255.122/24 | 10.73.255.2 |
 
 ##### IPv6
 
 | Management Interface | Description | Type | VRF | IPv6 Address | IPv6 Gateway |
 | -------------------- | ----------- | ---- | --- | ------------ | ------------ |
-| Management1 | oob_management | oob | MGMT | - | - |
+| Management1 | OOB_MANAGEMENT | oob | MGMT | - | - |
 
 #### Management Interfaces Device Configuration
 
 ```eos
 !
 interface Management1
-   description oob_management
+   description OOB_MANAGEMENT
    vrf MGMT
    ip address 10.73.255.122/24
 ```
@@ -87,7 +87,7 @@ ASN Notation: asplain
 
 #### Router BGP EVPN Address Family
 
-- Next-hop MPLS resolution Primary-RIB : tunnel-rib-colored system-colored-tunnel-rib
+- Next-hop MPLS resolution Primary-RIB : tunnel-rib colored system-colored-tunnel-rib
 - Next-hop MPLS resolution Secondary-RIB : tunnel-rib test-rib
 - Next-hop MPLS resolution Tertiary-RIB : system-connected
 - Layer-2 In-place FEC update tracking timeout: 100 seconds
@@ -97,6 +97,13 @@ ASN Notation: asplain
 | Peer Group | Activate | Encapsulation |
 | ---------- | -------- | ------------- |
 | EVPN-OVERLAY-PEERS | True | default |
+
+##### EVPN Neighbors
+
+| Neighbor | Activate | Encapsulation |
+| -------- | -------- | ------------- |
+| 192.168.255.3 | True | default |
+| 192.168.255.4 | False | default |
 
 ##### EVPN Neighbor Default Encapsulation
 
@@ -133,7 +140,7 @@ router bgp 65101
    address-family evpn
       bgp additional-paths send limit 10
       neighbor default encapsulation mpls next-hop-self source-interface Loopback0
-      next-hop mpls resolution ribs tunnel-rib-colored system-colored-tunnel-rib tunnel-rib test-rib system-connected
+      next-hop mpls resolution ribs tunnel-rib colored system-colored-tunnel-rib tunnel-rib test-rib system-connected
       neighbor EVPN-OVERLAY-PEERS activate
       neighbor 192.168.255.3 activate
       neighbor 192.168.255.4 rcf in Address_Family_EVPN_In()

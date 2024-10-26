@@ -16,9 +16,16 @@ $defs:
           If not specified speed will be auto.
       description:
         type: str
-        description: |
-          By default the description is built leveraging `<peer>_<peer_interface>`.
-          When set this key will override the default value on the physical ports.
+        description: |-
+          Description or description template to be used on all ports.
+          This can be a template using the AVD string formatter syntax: https://avd.arista.com/devel/roles/eos_designs/docs/how-to/custom-descriptions-names.html#avd-string-formatter-syntax.
+          The available template fields are:
+            - `endpoint_type` - the `type` from `connected_endpoints_keys` like `server`, `router` etc.
+            - `endpoint` - The name of the connected endpoint
+            - `endpoint_port` - The value from `endpoint_ports` for this switch port if set.
+
+          The default description is set by `default_connected_endpoints_description`.
+          By default the description is templated from the type, name and port of the endpoint if set.
       profile:
         type: str
         description: Port-profile name to inherit configuration.
@@ -53,13 +60,12 @@ $defs:
           - str
         description: |
           Native VLAN for a trunk port.
-          If both `native_vlan` and `native_vlan_tag`, `native_vlan_tag` takes precedence.
+          If both `native_vlan` and `native_vlan_tag` are set, `native_vlan_tag` takes precedence.
         min: 1
         max: 4094
       native_vlan_tag:
         type: bool
-        default: false
-        description: If both `native_vlan` and `native_vlan_tag`, `native_vlan_tag` takes precedence.
+        description: If both `native_vlan` and `native_vlan_tag` are set, `native_vlan_tag` takes precedence.
       phone_vlan:
         type: int
         convert_types:
@@ -137,10 +143,11 @@ $defs:
           profile:
             type: str
             default: "aes67-r16-2016"
-            valid_values:
-              - "aes67"
-              - "aes67-r16-2016"
-              - "smpte2059-2"
+            description: |-
+              Default available profiles are:
+                - "aes67"
+                - "aes67-r16-2016"
+                - "smpte2059-2"
       sflow:
         type: bool
         description: |-
@@ -319,6 +326,7 @@ $defs:
                     - "both"
                 access_group:
                   type: dict
+                  description: This can only be set when `session_settings.access_group` is not set.
                   keys:
                     type:
                       type: str
@@ -451,9 +459,24 @@ $defs:
               If no channel_id is specified, an id is generated from the first switch port in the port channel.
           description:
             type: str
-            description: |
-              By default the description is built leveraging `<peer>` name or `adapter.description` when defined.
-              When this key is defined, it will append its content to the physical port description.
+            description: |-
+              Description or description template to be used on the port-channel interface.
+              This can be a template using the AVD string formatter syntax: https://avd.arista.com/devel/roles/eos_designs/docs/how-to/custom-descriptions-names.html#avd-string-formatter-syntax.
+              The available template fields are:
+                - `endpoint_type` - the `type` from `connected_endpoints_keys` like `server`, `router` etc.
+                - `endpoint` - The name of the connected endpoint
+                - `endpoint_port_channel` - The value from `endpoint_port_channel` if set.
+                - `port_channel_id` - The port-channel number for the switch.
+                - `adapter_description` - The adapter's description if set.
+                - `adapter_description_or_endpoint` - Helper alias of the adapter_description or endpoint.
+
+              The default description is set by `default_connected_endpoints_port_channel_description`.
+              By default the description is templated from the type, name and port_channel interface of the endpoint if set.
+          endpoint_port_channel:
+            type: str
+            description: |-
+              Name of the port-channel interface on the endpoint.
+              Used for the port-channel description template with the field name `peer_interface`
           enabled:
             type: bool
             default: true

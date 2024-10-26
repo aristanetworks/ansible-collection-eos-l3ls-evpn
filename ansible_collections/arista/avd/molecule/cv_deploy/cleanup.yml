@@ -1,13 +1,12 @@
 ---
 - name: Cleanup - Configuration deployment with CVP
-  hosts: localhost
+  hosts: SITE1_FABRIC
   connection: local
   gather_facts: false
   vars:
     cv_server: www.cv-staging.corp.arista.io
     cv_token: "{{ lookup('env', 'CVAAS_AAWG_CI') }}"
-    cv_verify_certs: false
-    cv_devices: [ci-s1-leaf1, ci-s1-leaf2, ci-s1-leaf3, ci-s1-leaf4, ci-s1-spine1, ci-s1-spine2 ]
+    cv_verify_certs: true
     cv_skip_missing_devices: true
     eos_config_dir: "{{ playbook_dir }}/intended/configs/base_configs"
     structured_dir: "{{ playbook_dir }}/intended/structured_configs/base_configs"

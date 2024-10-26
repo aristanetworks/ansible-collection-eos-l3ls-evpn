@@ -25,4 +25,5 @@ l3leaf:
           id: 2
           mgmt_ip: 192.168.201.117/24
 
-expected_error_message: "Unexpected failure during module execution: MLAG same_subnet addressing requires the pool to be a /31"
+expected_error_message: >-
+  MLAG same_subnet addressing requires the pool to be a /31 for host 'mlag_same_subnet_1'.

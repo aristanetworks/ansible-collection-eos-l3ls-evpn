@@ -9,6 +9,12 @@ router_bgp:
   maximum_paths:
     paths: 4
     ecmp: 4
+  redistribute:
+    connected:
+      enabled: true
+      route_map: RM-CONN-2-BGP
+    attached_host:
+      enabled: true
   peer_groups:
   - name: MLAG-IPv4-UNDERLAY-PEER
     type: ipv4
@@ -41,7 +47,7 @@ router_bgp:
   - ip_address: 10.254.1.104
     peer_group: MLAG-IPv4-UNDERLAY-PEER
     peer: flow-tracking-tests-leaf3
-    description: flow-tracking-tests-leaf3
+    description: flow-tracking-tests-leaf3_Vlan4093
   - ip_address: 10.254.2.20
     peer_group: IPv4-UNDERLAY-PEERS
     remote_as: '65200'
@@ -55,17 +61,13 @@ router_bgp:
   - ip_address: 10.255.0.1
     peer_group: EVPN-OVERLAY-PEERS
     peer: flow-tracking-tests-spine1
-    description: flow-tracking-tests-spine1
+    description: flow-tracking-tests-spine1_Loopback0
     remote_as: '65200'
   - ip_address: 10.255.0.2
     peer_group: EVPN-OVERLAY-PEERS
     peer: flow-tracking-tests-spine2
-    description: flow-tracking-tests-spine2
+    description: flow-tracking-tests-spine2_Loopback0
     remote_as: '65200'
-  redistribute_routes:
-  - source_protocol: connected
-    route_map: RM-CONN-2-BGP
-  - source_protocol: attached-host
   address_family_evpn:
     peer_groups:
     - name: EVPN-OVERLAY-PEERS
@@ -83,12 +85,14 @@ router_bgp:
         route_targets:
         - '1:1'
     router_id: 10.254.1.6
-    redistribute_routes:
-    - source_protocol: connected
+    redistribute:
+      connected:
+        enabled: true
+        route_map: RM-CONN-2-BGP-VRFS
     neighbors:
     - ip_address: 10.254.1.104
       peer_group: MLAG-IPv4-UNDERLAY-PEER
-      description: flow-tracking-tests-leaf3
+      description: flow-tracking-tests-leaf3_Vlan3000
   vlans:
   - id: 11
     tenant: FLOW_TRACKING
@@ -129,7 +133,7 @@ vrfs:
   ip_routing: true
 management_interfaces:
 - name: Management1
-  description: oob_management
+  description: OOB_MANAGEMENT
   shutdown: false
   vrf: MGMT
   ip_address: 192.168.0.104/24
@@ -142,33 +146,33 @@ management_api_http:
 vlans:
 - id: 4093
   tenant: system
-  name: LEAF_PEER_L3
+  name: MLAG_L3
   trunk_groups:
-  - LEAF_PEER_L3
+  - MLAG
 - id: 4094
   tenant: system
-  name: MLAG_PEER
+  name: MLAG
   trunk_groups:
   - MLAG
 - id: 11
   name: VLAN11
   tenant: FLOW_TRACKING
 - id: 3000
-  name: MLAG_iBGP_VRF1
+  name: MLAG_L3_VRF_VRF1
   trunk_groups:
-  - LEAF_PEER_L3
+  - MLAG
   tenant: FLOW_TRACKING
 - id: 4092
   tenant: system
   name: INBAND_MGMT
 vlan_interfaces:
 - name: Vlan4093
-  description: MLAG_PEER_L3_PEERING
+  description: MLAG_L3
   shutdown: false
   mtu: 9214
   ip_address: 10.254.1.105/31
 - name: Vlan4094
-  description: MLAG_PEER
+  description: MLAG
   shutdown: false
   no_autostate: true
   mtu: 9214
@@ -182,7 +186,7 @@ vlan_interfaces:
   tenant: FLOW_TRACKING
   type: underlay_peering
   shutdown: false
-  description: 'MLAG_PEER_L3_iBGP: vrf VRF1'
+  description: MLAG_L3_VRF_VRF1
   vrf: VRF1
   mtu: 9214
   ip_address: 10.254.1.105/31
@@ -198,55 +202,63 @@ vlan_interfaces:
   - 10.254.254.1
 port_channel_interfaces:
 - name: Port-Channel21
-  description: MLAG_PEER_flow-tracking-tests-leaf3_Po21
-  type: switched
+  description: MLAG_flow-tracking-tests-leaf3_Port-Channel21
+  switchport:
+    enabled: true
+    mode: trunk
+    trunk:
+      groups:
+      - MLAG
   shutdown: false
-  mode: trunk
-  trunk_groups:
-  - LEAF_PEER_L3
-  - MLAG
   flow_tracker:
     hardware: FLOW-TRACKER
 - name: Port-Channel31
-  description: FLOW-TRACKING-TESTS-L2-LEAF1_Po1
-  type: switched
+  description: L2_flow-tracking-tests-l2-leaf1_Port-Channel1
+  switchport:
+    enabled: true
+    mode: trunk
+    trunk:
+      allowed_vlan: 11,4092
   shutdown: false
-  mode: trunk
-  vlans: 11,4092
   mlag: 31
 - name: Port-Channel32
-  description: FLOW-TRACKING-TESTS-L2-LEAF2_Po1
-  type: switched
+  description: L2_flow-tracking-tests-l2-leaf2_Port-Channel1
+  switchport:
+    enabled: true
+    mode: trunk
+    trunk:
+      allowed_vlan: 11,4092
   shutdown: false
-  mode: trunk
-  vlans: 11,4092
   mlag: 32
 - name: Port-Channel14
-  description: port-channel-interface-true
-  type: switched
+  description: SERVER_port-channel-interface-true
   shutdown: false
   flow_tracker:
     hardware: FLOW-TRACKER-4
-  mode: access
-  vlans: '11'
+  switchport:
+    enabled: true
+    mode: access
+    access_vlan: '11'
   spanning_tree_portfast: edge
   mlag: 14
 - name: Port-Channel15
-  description: port-channel-interface-false
-  type: switched
+  description: SERVER_port-channel-interface-false
   shutdown: false
   flow_tracker:
     hardware: FLOW-TRACKER
-  mode: access
-  vlans: '11'
+  switchport:
+    enabled: true
+    mode: access
+    access_vlan: '11'
   spanning_tree_portfast: edge
   mlag: 15
 - name: Port-Channel16
-  description: port-channel-interface-no-definition
-  type: switched
+  description: SERVER_port-channel-interface-no-definition
   shutdown: false
-  mode: access
-  vlans: '11'
+  switchport:
+    enabled: true
+    mode: access
+    access_vlan: '11'
   spanning_tree_portfast: edge
   mlag: 16
 ethernet_interfaces:
@@ -254,8 +266,7 @@ ethernet_interfaces:
   peer: flow-tracking-tests-leaf3
   peer_interface: Ethernet21
   peer_type: mlag_peer
-  description: MLAG_PEER_flow-tracking-tests-leaf3_Ethernet21
-  type: port-channel-member
+  description: MLAG_flow-tracking-tests-leaf3_Ethernet21
   shutdown: false
   channel_group:
     id: 21
@@ -264,8 +275,7 @@ ethernet_interfaces:
   peer: flow-tracking-tests-leaf3
   peer_interface: Ethernet22
   peer_type: mlag_peer
-  description: MLAG_PEER_flow-tracking-tests-leaf3_Ethernet22
-  type: port-channel-member
+  description: MLAG_flow-tracking-tests-leaf3_Ethernet22
   shutdown: false
   channel_group:
     id: 21
@@ -274,10 +284,11 @@ ethernet_interfaces:
   peer: flow-tracking-tests-spine1
   peer_interface: Ethernet7
   peer_type: spine
-  description: P2P_LINK_TO_FLOW-TRACKING-TESTS-SPINE1_Ethernet7
+  description: P2P_flow-tracking-tests-spine1_Ethernet7
   shutdown: false
   mtu: 9214
-  type: routed
+  switchport:
+    enabled: false
   flow_tracker:
     hardware: FLOW-TRACKER
   ip_address: 10.254.2.21/31
@@ -285,10 +296,11 @@ ethernet_interfaces:
   peer: flow-tracking-tests-spine2
   peer_interface: Ethernet8
   peer_type: spine
-  description: P2P_LINK_TO_FLOW-TRACKING-TESTS-SPINE2_Ethernet8
+  description: P2P_flow-tracking-tests-spine2_Ethernet8
   shutdown: false
   mtu: 9214
-  type: routed
+  switchport:
+    enabled: false
   flow_tracker:
     hardware: FLOW-TRACKER
   ip_address: 10.254.2.23/31
@@ -296,9 +308,8 @@ ethernet_interfaces:
   peer: flow-tracking-tests-l2-leaf1
   peer_interface: Ethernet2
   peer_type: l2leaf
-  description: FLOW-TRACKING-TESTS-L2-LEAF1_Ethernet2
+  description: L2_flow-tracking-tests-l2-leaf1_Ethernet2
   shutdown: false
-  type: port-channel-member
   channel_group:
     id: 31
     mode: active
@@ -306,9 +317,8 @@ ethernet_interfaces:
   peer: flow-tracking-tests-l2-leaf2
   peer_interface: Ethernet2
   peer_type: l2leaf
-  description: FLOW-TRACKING-TESTS-L2-LEAF2_Ethernet2
+  description: L2_flow-tracking-tests-l2-leaf2_Ethernet2
   shutdown: false
-  type: port-channel-member
   channel_group:
     id: 32
     mode: active
@@ -316,9 +326,8 @@ ethernet_interfaces:
   peer: port-channel-interface-true
   peer_interface: PCI2
   peer_type: server
-  description: port-channel-interface-true_PCI2
+  description: SERVER_port-channel-interface-true_PCI2
   shutdown: false
-  type: port-channel-member
   channel_group:
     id: 14
     mode: 'on'
@@ -326,9 +335,8 @@ ethernet_interfaces:
   peer: port-channel-interface-false
   peer_interface: PCI12
   peer_type: server
-  description: port-channel-interface-false_PCI12
+  description: SERVER_port-channel-interface-false_PCI12
   shutdown: false
-  type: port-channel-member
   channel_group:
     id: 15
     mode: 'on'
@@ -336,9 +344,8 @@ ethernet_interfaces:
   peer: port-channel-interface-no-definition
   peer_interface: PCI14
   peer_type: server
-  description: port-channel-interface-no-definition_PCI14
+  description: SERVER_port-channel-interface-no-definition_PCI14
   shutdown: false
-  type: port-channel-member
   channel_group:
     id: 16
     mode: 'on'
@@ -367,13 +374,21 @@ route_maps:
     type: permit
     match:
     - ip address prefix-list PL-L2LEAF-INBAND-MGMT
+- name: RM-CONN-2-BGP-VRFS
+  sequence_numbers:
+  - sequence: 10
+    type: deny
+    match:
+    - ip address prefix-list PL-MLAG-PEER-VRFS
+  - sequence: 20
+    type: permit
 loopback_interfaces:
 - name: Loopback0
-  description: EVPN_Overlay_Peering
+  description: ROUTER_ID
   shutdown: false
   ip_address: 10.254.1.6/32
 - name: Loopback1
-  description: VTEP_VXLAN_Tunnel_Source
+  description: VXLAN_TUNNEL_SOURCE
   shutdown: false
   ip_address: 10.254.11.5/32
 prefix_lists:
@@ -383,6 +398,10 @@ prefix_lists:
     action: permit 10.254.1.0/27 eq 32
   - sequence: 20
     action: permit 10.254.11.0/27 eq 32
+- name: PL-MLAG-PEER-VRFS
+  sequence_numbers:
+  - sequence: 10
+    action: permit 10.254.1.104/31
 - name: PL-L2LEAF-INBAND-MGMT
   sequence_numbers:
   - sequence: 10

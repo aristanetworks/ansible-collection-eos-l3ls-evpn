@@ -37,5 +37,5 @@ core_interfaces:
 
 expected_error_message: >-
   Found duplicate objects with conflicting data while generating configuration for Ethernet Interfaces defined under core_interfaces p2p_link.
-  {'name': 'Ethernet1', 'peer': 'peer2', 'peer_interface': 'Ethernet3', 'description': 'P2P_LINK_TO_peer2_Ethernet3', 'mtu': 9214} conflicts with
-  {'name': 'Ethernet1', 'peer': 'peer1', 'peer_interface': 'Ethernet2', 'description': 'P2P_LINK_TO_peer1_Ethernet2', 'mtu': 1500}.
+  {'name': 'Ethernet1', 'peer': 'peer2', 'peer_interface': 'Ethernet3', 'description': 'P2P_peer2_Ethernet3', 'mtu': 9214} conflicts with
+  {'name': 'Ethernet1', 'peer': 'peer1', 'peer_interface': 'Ethernet2', 'description': 'P2P_peer1_Ethernet2', 'mtu': 1500}.

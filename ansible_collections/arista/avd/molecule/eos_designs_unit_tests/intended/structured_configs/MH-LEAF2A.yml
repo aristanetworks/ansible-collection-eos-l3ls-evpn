@@ -9,6 +9,12 @@ router_bgp:
   maximum_paths:
     paths: 4
     ecmp: 4
+  redistribute:
+    connected:
+      enabled: true
+      route_map: RM-CONN-2-BGP
+    static:
+      enabled: true
   updates:
     wait_install: true
   peer_groups:
@@ -32,10 +38,6 @@ router_bgp:
       activate: true
     - name: EVPN-OVERLAY-PEERS
       activate: false
-  redistribute_routes:
-  - source_protocol: connected
-    route_map: RM-CONN-2-BGP
-  - source_protocol: static
   neighbors:
   - ip_address: 10.10.101.4
     peer_group: UNDERLAY-PEERS
@@ -81,8 +83,9 @@ router_bgp:
         route_targets:
         - '20:20'
     router_id: 192.168.255.35
-    redistribute_routes:
-    - source_protocol: connected
+    redistribute:
+      connected:
+        enabled: true
   vlan_aware_bundles:
   - name: default
     rd: 192.168.255.35:21
@@ -161,7 +164,7 @@ vrfs:
   ip_routing: true
 management_interfaces:
 - name: Management1
-  description: oob_management
+  description: OOB_MANAGEMENT
   shutdown: false
   vrf: MGMT
   ip_address: 192.168.201.106/24
@@ -201,7 +204,8 @@ ethernet_interfaces:
   description: P2P_LINK_TO_DC1-SPINE1_Ethernet21
   shutdown: false
   mtu: 1500
-  type: routed
+  switchport:
+    enabled: false
   link_tracking_groups:
   - name: Eth-conn-to-router
     direction: upstream
@@ -212,7 +216,6 @@ ethernet_interfaces:
   peer_type: l2leaf
   description: MH-L2LEAF1A_Ethernet1
   shutdown: false
-  type: port-channel-member
   channel_group:
     id: 2
     mode: active
@@ -223,26 +226,29 @@ ethernet_interfaces:
   port_profile: Tenant_X_LT
   description: ROUTER01_Eth1
   shutdown: false
-  type: switched
-  mode: access
-  vlans: '310'
+  switchport:
+    enabled: true
+    mode: access
+    access_vlan: '310'
   link_tracking_groups:
   - name: Eth-conn-to-router
     direction: downstream
 port_channel_interfaces:
 - name: Port-Channel2
   description: MH-L2LEAF1A_Po1
-  type: switched
+  switchport:
+    enabled: true
+    mode: trunk
+    trunk:
+      allowed_vlan: '310'
   shutdown: false
-  mode: trunk
-  vlans: '310'
 loopback_interfaces:
 - name: Loopback0
-  description: EVPN_Overlay_Peering
+  description: ROUTER_ID
   shutdown: false
   ip_address: 192.168.255.35/32
 - name: Loopback1
-  description: VTEP_VXLAN_Tunnel_Source
+  description: VXLAN_TUNNEL_SOURCE
   shutdown: false
   ip_address: 192.168.254.35/32
 - name: Loopback100

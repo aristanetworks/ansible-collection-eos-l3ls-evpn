@@ -25,27 +25,53 @@ link_tracking_groups:
 ip_igmp_snooping:
   globally_enabled: true
 ethernet_interfaces:
+- name: Ethernet1
+  peer: OLD_SW-1/2
+  peer_interface: Endpoint_port1
+  peer_type: server
+  description: Interface description server_OLD_SW-1/2_ENDPOINT_PORT1
+  shutdown: false
+  channel_group:
+    id: 1
+    mode: active
+- name: Ethernet2
+  peer: OLD_SW-1/2
+  peer_interface: ENDPOINT_PORT2
+  peer_type: server
+  description: Interface description server_OLD_SW-1/2_ENDPOINT_PORT2
+  shutdown: false
+  channel_group:
+    id: 1
+    mode: active
+- name: Ethernet3
+  peer: OLD_SW-1/3
+  peer_interface: ENDPOINT_PORT
+  peer_type: server
+  description: SERVER_OLD_SW-1/3_ENDPOINT_PORT
+  shutdown: false
+  channel_group:
+    id: 3
+    mode: active
 - name: Ethernet4
   peer: OLD_SW-1/4
   peer_type: server
   description: PHYSICAL_PORT_DESCRIPTION
   shutdown: false
-  type: switched
+  switchport:
+    enabled: true
 - name: Ethernet5
   peer: OLD_SW-1/5
   peer_type: server
-  description: OLD_SW-1/5
+  description: SERVER_OLD_SW-1/5
   shutdown: false
-  type: port-channel-member
   channel_group:
     id: 5
     mode: active
 - name: Ethernet6
   peer: OLD_SW-1/5
   peer_type: server
-  description: OLD_SW-1/5
+  description: SERVER_OLD_SW-1/5
   shutdown: false
-  type: port-channel-member
   channel_group:
     id: 5
     mode: active
@@ -54,7 +80,6 @@ ethernet_interfaces:
   peer_type: server
   description: PHYSICAL_PORT_DESCRIPTION
   shutdown: false
-  type: port-channel-member
   channel_group:
     id: 7
     mode: active
@@ -63,7 +88,6 @@ ethernet_interfaces:
   peer_type: server
   description: PHYSICAL_PORT_DESCRIPTION
   shutdown: false
-  type: port-channel-member
   channel_group:
     id: 7
     mode: active
@@ -72,13 +96,13 @@ ethernet_interfaces:
   peer_type: server
   description: test of var set under play vars
   shutdown: false
-  type: switched
+  switchport:
+    enabled: true
 - name: Ethernet10
   peer: OLD_SW-1/7
   peer_type: server
   description: PHYSICAL_PORT_DESCRIPTION_1
   shutdown: false
-  type: port-channel-member
   channel_group:
     id: 10
     mode: active
@@ -87,31 +111,26 @@ ethernet_interfaces:
   peer_type: server
   description: PHYSICAL_PORT_DESCRIPTION_2
   shutdown: false
-  type: port-channel-member
   channel_group:
     id: 10
     mode: active
 - name: Ethernet12
   peer: INDIVIDUAL_1
   peer_type: server
-  description: INDIVIDUAL_1
+  description: SERVER_INDIVIDUAL_1
   shutdown: false
-  type: switched
   channel_group:
     id: 12
     mode: active
-  mode: trunk
-  vlans: 1,2,3,4,5,6,7,123,234
-  native_vlan_tag: false
-  native_vlan: 123
+  switchport:
+    enabled: true
+    mode: trunk
+    trunk:
+      allowed_vlan: 1,2,3,4,5,6,7,123,234
+      native_vlan_tag: false
+      native_vlan: 123
   spanning_tree_portfast: edge
   spanning_tree_bpdufilter: 'True'
-  dot1x:
-    unauthorized:
-      access_vlan_membership_egress: true
-      native_vlan_membership_egress: true
-  poe:
-    disabled: true
   ptp:
     announce:
       interval: 0
@@ -128,24 +147,20 @@ ethernet_interfaces:
 - name: Ethernet13
   peer: INDIVIDUAL_1
   peer_type: server
-  description: INDIVIDUAL_1
+  description: SERVER_INDIVIDUAL_1
   shutdown: false
-  type: switched
   channel_group:
     id: 12
     mode: active
-  mode: trunk
-  vlans: 1,2,3,4,5,6,7,123,234
-  native_vlan_tag: false
-  native_vlan: 123
+  switchport:
+    enabled: true
+    mode: trunk
+    trunk:
+      allowed_vlan: 1,2,3,4,5,6,7,123,234
+      native_vlan_tag: false
+      native_vlan: 123
   spanning_tree_portfast: edge
   spanning_tree_bpdufilter: 'True'
-  dot1x:
-    unauthorized:
-      access_vlan_membership_egress: true
-      native_vlan_membership_egress: true
-  poe:
-    disabled: true
   ptp:
     announce:
       interval: 0
@@ -163,21 +178,23 @@ ethernet_interfaces:
   peer: DOT1X_UNAUTHORIZED
   peer_type: server
   port_profile: INDIVIDUAL_TRUNK
-  description: DOT1X_UNAUTHORIZED
+  description: SERVER_DOT1X_UNAUTHORIZED
   shutdown: false
-  type: switched
-  mode: trunk
-  vlans: 1,2,3,4,5,6,7,123,234
-  native_vlan_tag: false
-  native_vlan: 123
-  spanning_tree_portfast: edge
-  spanning_tree_bpdufilter: 'True'
   dot1x:
     unauthorized:
       access_vlan_membership_egress: true
       native_vlan_membership_egress: true
   poe:
     disabled: true
+  switchport:
+    enabled: true
+    mode: trunk
+    trunk:
+      allowed_vlan: 1,2,3,4,5,6,7,123,234
+      native_vlan_tag: false
+      native_vlan: 123
+  spanning_tree_portfast: edge
+  spanning_tree_bpdufilter: 'True'
   ptp:
     announce:
       interval: 0
@@ -194,59 +211,133 @@ ethernet_interfaces:
 - name: Ethernet15
   peer: INDIVIDUAL_2_TRUNK_PHONE
   peer_type: server
-  description: INDIVIDUAL_2_TRUNK_PHONE
+  description: SERVER_INDIVIDUAL_2_TRUNK_PHONE
   shutdown: false
-  type: switched
   channel_group:
     id: 15
     mode: active
-  mode: trunk phone
-  native_vlan: 123
-  phone:
-    vlan: 321
+  switchport:
+    enabled: true
+    mode: trunk phone
+    trunk:
+      native_vlan: 123
+    phone:
+      vlan: 321
   link_tracking_groups:
   - name: LT_GROUP1
     direction: downstream
 - name: Ethernet16
   peer: INDIVIDUAL_2_TRUNK_PHONE
   peer_type: server
-  description: INDIVIDUAL_2_TRUNK_PHONE
+  description: SERVER_INDIVIDUAL_2_TRUNK_PHONE
   shutdown: false
-  type: switched
   channel_group:
     id: 15
     mode: active
-  mode: trunk phone
-  native_vlan: 123
-  phone:
-    vlan: 321
+  switchport:
+    enabled: true
+    mode: trunk phone
+    trunk:
+      native_vlan: 123
+    phone:
+      vlan: 321
   link_tracking_groups:
   - name: LT_GROUP1
     direction: downstream
+- name: Ethernet17
+  peer: DOT1X_UNAUTHORIZED_PORT_CHANNEL
+  peer_type: server
+  port_profile: INDIVIDUAL_TRUNK
+  description: SERVER_DOT1X_UNAUTHORIZED_PORT_CHANNEL
+  shutdown: false
+  dot1x:
+    unauthorized:
+      access_vlan_membership_egress: true
+      native_vlan_membership_egress: true
+  poe:
+    disabled: true
+  channel_group:
+    id: 17
+    mode: active
+- name: Ethernet18
+  peer: DOT1X_UNAUTHORIZED_PORT_CHANNEL
+  peer_type: server
+  port_profile: INDIVIDUAL_TRUNK
+  description: SERVER_DOT1X_UNAUTHORIZED_PORT_CHANNEL
+  shutdown: false
+  dot1x:
+    unauthorized:
+      access_vlan_membership_egress: true
+      native_vlan_membership_egress: true
+  poe:
+    disabled: true
+  channel_group:
+    id: 17
+    mode: active
 port_channel_interfaces:
+- name: Port-Channel1
+  description: Port channel description server_OLD_SW-1/2_Po1_ENDPOINT_PORT_CHANNEL_INTERFACE DESCRIPTION SERVER_OLD_SW-1/2_ENDPOINT_PORT_CHANNEL
+  shutdown: false
+  switchport:
+    enabled: true
+- name: Port-Channel3
+  description: SERVER_OLD_SW-1/3_ENDPOINT_PORT_CHANNEL
+  shutdown: false
+  switchport:
+    enabled: true
 - name: Port-Channel5
-  description: OLD_SW-1/5_PORT_CHANNEL_DESCRIPTION
-  type: switched
+  description: PORT_CHANNEL_DESCRIPTION
   shutdown: false
+  switchport:
+    enabled: true
 - name: Port-Channel7
-  description: PHYSICAL_PORT_DESCRIPTION_PORT_CHANNEL_DESCRIPTION
-  type: switched
+  description: PORT_CHANNEL_DESCRIPTION
   shutdown: false
+  switchport:
+    enabled: true
 - name: Port-Channel10
-  description: OLD_SW-1/7_PORT_CHANNEL_DESCRIPTION
-  type: switched
+  description: PORT_CHANNEL_DESCRIPTION
   shutdown: false
+  switchport:
+    enabled: true
 - name: Port-Channel12
-  description: INDIVIDUAL_1_INDIVIDUAL_1
-  type: switched
+  description: SERVER_INDIVIDUAL_1_INDIVIDUAL_1
   shutdown: false
+  switchport:
+    enabled: true
   lacp_fallback_mode: individual
   lacp_fallback_timeout: 90
 - name: Port-Channel15
-  description: INDIVIDUAL_2_TRUNK_PHONE
-  type: switched
+  description: SERVER_INDIVIDUAL_2_TRUNK_PHONE
   shutdown: false
+  switchport:
+    enabled: true
   lacp_fallback_mode: individual
   lacp_fallback_timeout: 90
+- name: Port-Channel17
+  description: SERVER_DOT1X_UNAUTHORIZED_PORT_CHANNEL
+  shutdown: false
+  service_profile: MYQOS
+  ptp:
+    announce:
+      interval: 0
+      timeout: 3
+    delay_req: -3
+    sync_message:
+      interval: -3
+    transport: ipv4
+    enable: true
+    role: master
+  sflow:
+    enable: false
+  switchport:
+    enabled: true
+    mode: trunk
+    trunk:
+      allowed_vlan: 1,2,3,4,5,6,7,123,234
+      native_vlan_tag: false
+      native_vlan: 123
+  spanning_tree_portfast: edge
+  spanning_tree_bpdufilter: 'True'
 metadata:
   platform: 720XP

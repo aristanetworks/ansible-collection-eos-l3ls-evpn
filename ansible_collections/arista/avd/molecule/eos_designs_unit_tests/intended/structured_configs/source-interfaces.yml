@@ -18,7 +18,7 @@ vrfs:
 - name: INBANDMGMT
 management_interfaces:
 - name: Management1
-  description: oob_management
+  description: OOB_MANAGEMENT
   shutdown: false
   vrf: default
   ip_address: 192.168.0.2/24

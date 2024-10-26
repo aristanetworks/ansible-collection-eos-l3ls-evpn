@@ -4,9 +4,8 @@
 ---
 
 - name: Verify Requirements
-  tags: [always, avd_req]
   delegate_to: localhost
-  when: avd_requirements is not defined
+  when: avd_requirements is not defined and avd_verify_requirements | default(true)
   arista.avd.verify_requirements:
     requirements: "{{ lookup('file', requirements_path ~ '/requirements.txt').splitlines() }}"
     avd_ignore_requirements: "{{ avd_ignore_requirements | default(false) }}"
@@ -17,7 +16,6 @@
 
 # tasks file for cvp_configlet_upload
 - name: Generate intended variables
-  tags: [build, provision, apply]
   arista.avd.configlet_build_config:
     configlet_dir: "{{ configlet_directory }}"
     configlet_prefix: "{{ configlets_cvp_prefix }}"

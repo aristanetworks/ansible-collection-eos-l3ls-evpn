@@ -18,20 +18,20 @@
 
 | Management Interface | Description | Type | VRF | IP Address | Gateway |
 | -------------------- | ----------- | ---- | --- | ---------- | ------- |
-| Management1 | oob_management | oob | MGMT | 10.73.255.122/24 | 10.73.255.2 |
+| Management1 | OOB_MANAGEMENT | oob | MGMT | 10.73.255.122/24 | 10.73.255.2 |
 
 ##### IPv6
 
 | Management Interface | Description | Type | VRF | IPv6 Address | IPv6 Gateway |
 | -------------------- | ----------- | ---- | --- | ------------ | ------------ |
-| Management1 | oob_management | oob | MGMT | - | - |
+| Management1 | OOB_MANAGEMENT | oob | MGMT | - | - |
 
 #### Management Interfaces Device Configuration
 
 ```eos
 !
 interface Management1
-   description oob_management
+   description OOB_MANAGEMENT
    vrf MGMT
    ip address 10.73.255.122/24
 ```
@@ -85,11 +85,13 @@ interface Ethernet3
    switchport trunk allowed vlan 2,14
    switchport mode trunk
    switchport
+   !
    sync-e
       priority 10
 !
 interface Ethernet5
    description DC1-AGG01_Ethernet1
+   !
    sync-e
 !
 interface Ethernet6
@@ -97,6 +99,7 @@ interface Ethernet6
    mtu 1500
    no switchport
    ip address 172.31.255.15/31
+   !
    sync-e
       priority disabled
 ```

@@ -9,6 +9,7 @@
     | -------- | ---- | -------- | ------- | ------------------ | ----------- |
     | [<samp>router_adaptive_virtual_topology</samp>](## "router_adaptive_virtual_topology") | Dictionary |  |  |  |  |
     | [<samp>&nbsp;&nbsp;topology_role</samp>](## "router_adaptive_virtual_topology.topology_role") | String |  |  | Valid Values:<br>- <code>edge</code><br>- <code>pathfinder</code><br>- <code>transit region</code><br>- <code>transit zone</code> | Role name. |
+    | [<samp>&nbsp;&nbsp;gateway_vxlan</samp>](## "router_adaptive_virtual_topology.gateway_vxlan") | Boolean |  |  |  | Enables VXLAN gateway router profile.<br>Only applicable for `topology_role: edge`, `topology_role: transit region` or `topology_role: transit zone`. |
     | [<samp>&nbsp;&nbsp;region</samp>](## "router_adaptive_virtual_topology.region") | Dictionary |  |  |  | Region name and ID. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;name</samp>](## "router_adaptive_virtual_topology.region.name") | String | Required |  | Pattern: `^[A-Za-z0-9_.:{}\[\]-]+$` |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;id</samp>](## "router_adaptive_virtual_topology.region.id") | Integer | Required |  | Min: 1<br>Max: 255 |  |
@@ -22,7 +23,7 @@
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;name</samp>](## "router_adaptive_virtual_topology.profiles.[].name") | String | Required, Unique |  |  | AVT Name. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;load_balance_policy</samp>](## "router_adaptive_virtual_topology.profiles.[].load_balance_policy") | String |  |  |  | Name of the load-balance policy. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;internet_exit_policy</samp>](## "router_adaptive_virtual_topology.profiles.[].internet_exit_policy") | String |  |  |  | Name of the internet exit policy. |
-    | [<samp>&nbsp;&nbsp;policies</samp>](## "router_adaptive_virtual_topology.policies") | List, items: Dictionary |  |  |  | A sequence of application profiles mapped to some virtual topologies.<br><br>When `wan_mode` is set to `autovpn`, the rules are indexed using 10*<index> in the list. |
+    | [<samp>&nbsp;&nbsp;policies</samp>](## "router_adaptive_virtual_topology.policies") | List, items: Dictionary |  |  |  | A sequence of application profiles mapped to some virtual topologies. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;name</samp>](## "router_adaptive_virtual_topology.policies.[].name") | String | Required, Unique |  |  | Policy name. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;matches</samp>](## "router_adaptive_virtual_topology.policies.[].matches") | List, items: Dictionary |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;application_profile</samp>](## "router_adaptive_virtual_topology.policies.[].matches.[].application_profile") | String |  |  |  | Application profile name. |
@@ -43,6 +44,10 @@
 
       # Role name.
       topology_role: <str; "edge" | "pathfinder" | "transit region" | "transit zone">
+
+      # Enables VXLAN gateway router profile.
+      # Only applicable for `topology_role: edge`, `topology_role: transit region` or `topology_role: transit zone`.
+      gateway_vxlan: <bool>
 
       # Region name and ID.
       region:
@@ -70,8 +75,6 @@
           internet_exit_policy: <str>
 
       # A sequence of application profiles mapped to some virtual topologies.
-      #
-      # When `wan_mode` is set to `autovpn`, the rules are indexed using 10*<index> in the list.
       policies:
 
           # Policy name.

@@ -16,10 +16,13 @@
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;wan_ha</samp>](## "<node_type_keys.key>.defaults.wan_ha") | Dictionary |  |  |  | PREVIEW: This key is currently not supported<br><br>The key is supported only if `wan_mode` == `cv-pathfinder`.<br>AutoVPN support is still to be determined.<br><br>Maximum 2 devices supported by group for HA. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "<node_type_keys.key>.defaults.wan_ha.enabled") | Boolean |  | `True` |  | Enable / Disable auto CV-Pathfinder HA, when two nodes are defined in the same node_group. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ipsec</samp>](## "<node_type_keys.key>.defaults.wan_ha.ipsec") | Boolean |  | `True` |  | Enable / Disable IPsec over HA path-group when HA is enabled. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;mtu</samp>](## "<node_type_keys.key>.defaults.wan_ha.mtu") | Integer |  | `9194` | Min: 68<br>Max: 65535 | Set MTU on WAN HA interfaces. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ha_interfaces</samp>](## "<node_type_keys.key>.defaults.wan_ha.ha_interfaces") | List, items: String |  |  |  | Local WAN HA interfaces<br>Overwrite the default behavior which is to pick all the `uplink_interfaces`.<br>Can be used to filter uplink interfaces when there are multiple uplinks.<br>Limitations:<br>  Either all interfaces must be uplinks or all interfaces must not be uplinks.<br>  Only one interface is supported for non uplinks. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;&lt;str&gt;</samp>](## "<node_type_keys.key>.defaults.wan_ha.ha_interfaces.[]") | String |  |  | Pattern: `Ethernet[\d/]+` |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ha_ipv4_pool</samp>](## "<node_type_keys.key>.defaults.wan_ha.ha_ipv4_pool") | String |  |  | Format: ipv4_cidr | IP address pool used for WAN HA connectivity.<br>IP is derived from the node ID.<br>Not used for uplink interfaces. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;max_ha_interfaces</samp>](## "<node_type_keys.key>.defaults.wan_ha.max_ha_interfaces") | Integer |  |  |  | Number of parallel links towards HA switches.<br>Can be used to reserve IP addresses for future parallel HA links. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;port_channel_id</samp>](## "<node_type_keys.key>.defaults.wan_ha.port_channel_id") | Integer |  |  |  | Port-channel ID to use for direct HA. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;use_port_channel_for_direct_ha</samp>](## "<node_type_keys.key>.defaults.wan_ha.use_port_channel_for_direct_ha") | Boolean |  | `True` |  | Enable or disable using a port-channel interface for direct HA when there is only one interface.<br>This feature was introduced in EOS 4.33.0F. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;flow_tracking</samp>](## "<node_type_keys.key>.defaults.wan_ha.flow_tracking") | Dictionary |  |  |  | Configures flow-tracking on the HA interfaces. Overrides `fabric_flow_tracking.wan_ha_links` setting. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "<node_type_keys.key>.defaults.wan_ha.flow_tracking.enabled") | Boolean |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;name</samp>](## "<node_type_keys.key>.defaults.wan_ha.flow_tracking.name") | String |  |  |  | Flow tracker name as defined in flow_tracking_settings. |
@@ -35,10 +38,13 @@
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;wan_ha</samp>](## "<node_type_keys.key>.node_groups.[].nodes.[].wan_ha") | Dictionary |  |  |  | PREVIEW: This key is currently not supported<br><br>The key is supported only if `wan_mode` == `cv-pathfinder`.<br>AutoVPN support is still to be determined.<br><br>Maximum 2 devices supported by group for HA. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "<node_type_keys.key>.node_groups.[].nodes.[].wan_ha.enabled") | Boolean |  | `True` |  | Enable / Disable auto CV-Pathfinder HA, when two nodes are defined in the same node_group. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ipsec</samp>](## "<node_type_keys.key>.node_groups.[].nodes.[].wan_ha.ipsec") | Boolean |  | `True` |  | Enable / Disable IPsec over HA path-group when HA is enabled. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;mtu</samp>](## "<node_type_keys.key>.node_groups.[].nodes.[].wan_ha.mtu") | Integer |  | `9194` | Min: 68<br>Max: 65535 | Set MTU on WAN HA interfaces. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ha_interfaces</samp>](## "<node_type_keys.key>.node_groups.[].nodes.[].wan_ha.ha_interfaces") | List, items: String |  |  |  | Local WAN HA interfaces<br>Overwrite the default behavior which is to pick all the `uplink_interfaces`.<br>Can be used to filter uplink interfaces when there are multiple uplinks.<br>Limitations:<br>  Either all interfaces must be uplinks or all interfaces must not be uplinks.<br>  Only one interface is supported for non uplinks. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;&lt;str&gt;</samp>](## "<node_type_keys.key>.node_groups.[].nodes.[].wan_ha.ha_interfaces.[]") | String |  |  | Pattern: `Ethernet[\d/]+` |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ha_ipv4_pool</samp>](## "<node_type_keys.key>.node_groups.[].nodes.[].wan_ha.ha_ipv4_pool") | String |  |  | Format: ipv4_cidr | IP address pool used for WAN HA connectivity.<br>IP is derived from the node ID.<br>Not used for uplink interfaces. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;max_ha_interfaces</samp>](## "<node_type_keys.key>.node_groups.[].nodes.[].wan_ha.max_ha_interfaces") | Integer |  |  |  | Number of parallel links towards HA switches.<br>Can be used to reserve IP addresses for future parallel HA links. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;port_channel_id</samp>](## "<node_type_keys.key>.node_groups.[].nodes.[].wan_ha.port_channel_id") | Integer |  |  |  | Port-channel ID to use for direct HA. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;use_port_channel_for_direct_ha</samp>](## "<node_type_keys.key>.node_groups.[].nodes.[].wan_ha.use_port_channel_for_direct_ha") | Boolean |  | `True` |  | Enable or disable using a port-channel interface for direct HA when there is only one interface.<br>This feature was introduced in EOS 4.33.0F. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;flow_tracking</samp>](## "<node_type_keys.key>.node_groups.[].nodes.[].wan_ha.flow_tracking") | Dictionary |  |  |  | Configures flow-tracking on the HA interfaces. Overrides `fabric_flow_tracking.wan_ha_links` setting. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "<node_type_keys.key>.node_groups.[].nodes.[].wan_ha.flow_tracking.enabled") | Boolean |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;name</samp>](## "<node_type_keys.key>.node_groups.[].nodes.[].wan_ha.flow_tracking.name") | String |  |  |  | Flow tracker name as defined in flow_tracking_settings. |
@@ -50,10 +56,13 @@
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;wan_ha</samp>](## "<node_type_keys.key>.node_groups.[].wan_ha") | Dictionary |  |  |  | PREVIEW: This key is currently not supported<br><br>The key is supported only if `wan_mode` == `cv-pathfinder`.<br>AutoVPN support is still to be determined.<br><br>Maximum 2 devices supported by group for HA. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "<node_type_keys.key>.node_groups.[].wan_ha.enabled") | Boolean |  | `True` |  | Enable / Disable auto CV-Pathfinder HA, when two nodes are defined in the same node_group. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ipsec</samp>](## "<node_type_keys.key>.node_groups.[].wan_ha.ipsec") | Boolean |  | `True` |  | Enable / Disable IPsec over HA path-group when HA is enabled. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;mtu</samp>](## "<node_type_keys.key>.node_groups.[].wan_ha.mtu") | Integer |  | `9194` | Min: 68<br>Max: 65535 | Set MTU on WAN HA interfaces. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ha_interfaces</samp>](## "<node_type_keys.key>.node_groups.[].wan_ha.ha_interfaces") | List, items: String |  |  |  | Local WAN HA interfaces<br>Overwrite the default behavior which is to pick all the `uplink_interfaces`.<br>Can be used to filter uplink interfaces when there are multiple uplinks.<br>Limitations:<br>  Either all interfaces must be uplinks or all interfaces must not be uplinks.<br>  Only one interface is supported for non uplinks. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;&lt;str&gt;</samp>](## "<node_type_keys.key>.node_groups.[].wan_ha.ha_interfaces.[]") | String |  |  | Pattern: `Ethernet[\d/]+` |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ha_ipv4_pool</samp>](## "<node_type_keys.key>.node_groups.[].wan_ha.ha_ipv4_pool") | String |  |  | Format: ipv4_cidr | IP address pool used for WAN HA connectivity.<br>IP is derived from the node ID.<br>Not used for uplink interfaces. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;max_ha_interfaces</samp>](## "<node_type_keys.key>.node_groups.[].wan_ha.max_ha_interfaces") | Integer |  |  |  | Number of parallel links towards HA switches.<br>Can be used to reserve IP addresses for future parallel HA links. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;port_channel_id</samp>](## "<node_type_keys.key>.node_groups.[].wan_ha.port_channel_id") | Integer |  |  |  | Port-channel ID to use for direct HA. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;use_port_channel_for_direct_ha</samp>](## "<node_type_keys.key>.node_groups.[].wan_ha.use_port_channel_for_direct_ha") | Boolean |  | `True` |  | Enable or disable using a port-channel interface for direct HA when there is only one interface.<br>This feature was introduced in EOS 4.33.0F. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;flow_tracking</samp>](## "<node_type_keys.key>.node_groups.[].wan_ha.flow_tracking") | Dictionary |  |  |  | Configures flow-tracking on the HA interfaces. Overrides `fabric_flow_tracking.wan_ha_links` setting. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "<node_type_keys.key>.node_groups.[].wan_ha.flow_tracking.enabled") | Boolean |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;name</samp>](## "<node_type_keys.key>.node_groups.[].wan_ha.flow_tracking.name") | String |  |  |  | Flow tracker name as defined in flow_tracking_settings. |
@@ -67,10 +76,13 @@
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;wan_ha</samp>](## "<node_type_keys.key>.nodes.[].wan_ha") | Dictionary |  |  |  | PREVIEW: This key is currently not supported<br><br>The key is supported only if `wan_mode` == `cv-pathfinder`.<br>AutoVPN support is still to be determined.<br><br>Maximum 2 devices supported by group for HA. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "<node_type_keys.key>.nodes.[].wan_ha.enabled") | Boolean |  | `True` |  | Enable / Disable auto CV-Pathfinder HA, when two nodes are defined in the same node_group. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ipsec</samp>](## "<node_type_keys.key>.nodes.[].wan_ha.ipsec") | Boolean |  | `True` |  | Enable / Disable IPsec over HA path-group when HA is enabled. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;mtu</samp>](## "<node_type_keys.key>.nodes.[].wan_ha.mtu") | Integer |  | `9194` | Min: 68<br>Max: 65535 | Set MTU on WAN HA interfaces. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ha_interfaces</samp>](## "<node_type_keys.key>.nodes.[].wan_ha.ha_interfaces") | List, items: String |  |  |  | Local WAN HA interfaces<br>Overwrite the default behavior which is to pick all the `uplink_interfaces`.<br>Can be used to filter uplink interfaces when there are multiple uplinks.<br>Limitations:<br>  Either all interfaces must be uplinks or all interfaces must not be uplinks.<br>  Only one interface is supported for non uplinks. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;&lt;str&gt;</samp>](## "<node_type_keys.key>.nodes.[].wan_ha.ha_interfaces.[]") | String |  |  | Pattern: `Ethernet[\d/]+` |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ha_ipv4_pool</samp>](## "<node_type_keys.key>.nodes.[].wan_ha.ha_ipv4_pool") | String |  |  | Format: ipv4_cidr | IP address pool used for WAN HA connectivity.<br>IP is derived from the node ID.<br>Not used for uplink interfaces. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;max_ha_interfaces</samp>](## "<node_type_keys.key>.nodes.[].wan_ha.max_ha_interfaces") | Integer |  |  |  | Number of parallel links towards HA switches.<br>Can be used to reserve IP addresses for future parallel HA links. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;port_channel_id</samp>](## "<node_type_keys.key>.nodes.[].wan_ha.port_channel_id") | Integer |  |  |  | Port-channel ID to use for direct HA. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;use_port_channel_for_direct_ha</samp>](## "<node_type_keys.key>.nodes.[].wan_ha.use_port_channel_for_direct_ha") | Boolean |  | `True` |  | Enable or disable using a port-channel interface for direct HA when there is only one interface.<br>This feature was introduced in EOS 4.33.0F. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;flow_tracking</samp>](## "<node_type_keys.key>.nodes.[].wan_ha.flow_tracking") | Dictionary |  |  |  | Configures flow-tracking on the HA interfaces. Overrides `fabric_flow_tracking.wan_ha_links` setting. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "<node_type_keys.key>.nodes.[].wan_ha.flow_tracking.enabled") | Boolean |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;name</samp>](## "<node_type_keys.key>.nodes.[].wan_ha.flow_tracking.name") | String |  |  |  | Flow tracker name as defined in flow_tracking_settings. |
@@ -124,6 +136,9 @@
           # Enable / Disable IPsec over HA path-group when HA is enabled.
           ipsec: <bool; default=True>
 
+          # Set MTU on WAN HA interfaces.
+          mtu: <int; 68-65535; default=9194>
+
           # Local WAN HA interfaces
           # Overwrite the default behavior which is to pick all the `uplink_interfaces`.
           # Can be used to filter uplink interfaces when there are multiple uplinks.
@@ -141,6 +156,13 @@
           # Number of parallel links towards HA switches.
           # Can be used to reserve IP addresses for future parallel HA links.
           max_ha_interfaces: <int>
+
+          # Port-channel ID to use for direct HA.
+          port_channel_id: <int>
+
+          # Enable or disable using a port-channel interface for direct HA when there is only one interface.
+          # This feature was introduced in EOS 4.33.0F.
+          use_port_channel_for_direct_ha: <bool; default=True>
 
           # Configures flow-tracking on the HA interfaces. Overrides `fabric_flow_tracking.wan_ha_links` setting.
           flow_tracking:
@@ -205,6 +227,9 @@
                 # Enable / Disable IPsec over HA path-group when HA is enabled.
                 ipsec: <bool; default=True>
 
+                # Set MTU on WAN HA interfaces.
+                mtu: <int; 68-65535; default=9194>
+
                 # Local WAN HA interfaces
                 # Overwrite the default behavior which is to pick all the `uplink_interfaces`.
                 # Can be used to filter uplink interfaces when there are multiple uplinks.
@@ -222,6 +247,13 @@
                 # Number of parallel links towards HA switches.
                 # Can be used to reserve IP addresses for future parallel HA links.
                 max_ha_interfaces: <int>
+
+                # Port-channel ID to use for direct HA.
+                port_channel_id: <int>
+
+                # Enable or disable using a port-channel interface for direct HA when there is only one interface.
+                # This feature was introduced in EOS 4.33.0F.
+                use_port_channel_for_direct_ha: <bool; default=True>
 
                 # Configures flow-tracking on the HA interfaces. Overrides `fabric_flow_tracking.wan_ha_links` setting.
                 flow_tracking:
@@ -273,6 +305,9 @@
             # Enable / Disable IPsec over HA path-group when HA is enabled.
             ipsec: <bool; default=True>
 
+            # Set MTU on WAN HA interfaces.
+            mtu: <int; 68-65535; default=9194>
+
             # Local WAN HA interfaces
             # Overwrite the default behavior which is to pick all the `uplink_interfaces`.
             # Can be used to filter uplink interfaces when there are multiple uplinks.
@@ -290,6 +325,13 @@
             # Number of parallel links towards HA switches.
             # Can be used to reserve IP addresses for future parallel HA links.
             max_ha_interfaces: <int>
+
+            # Port-channel ID to use for direct HA.
+            port_channel_id: <int>
+
+            # Enable or disable using a port-channel interface for direct HA when there is only one interface.
+            # This feature was introduced in EOS 4.33.0F.
+            use_port_channel_for_direct_ha: <bool; default=True>
 
             # Configures flow-tracking on the HA interfaces. Overrides `fabric_flow_tracking.wan_ha_links` setting.
             flow_tracking:
@@ -347,6 +389,9 @@
             # Enable / Disable IPsec over HA path-group when HA is enabled.
             ipsec: <bool; default=True>
 
+            # Set MTU on WAN HA interfaces.
+            mtu: <int; 68-65535; default=9194>
+
             # Local WAN HA interfaces
             # Overwrite the default behavior which is to pick all the `uplink_interfaces`.
             # Can be used to filter uplink interfaces when there are multiple uplinks.
@@ -364,6 +409,13 @@
             # Number of parallel links towards HA switches.
             # Can be used to reserve IP addresses for future parallel HA links.
             max_ha_interfaces: <int>
+
+            # Port-channel ID to use for direct HA.
+            port_channel_id: <int>
+
+            # Enable or disable using a port-channel interface for direct HA when there is only one interface.
+            # This feature was introduced in EOS 4.33.0F.
+            use_port_channel_for_direct_ha: <bool; default=True>
 
             # Configures flow-tracking on the HA interfaces. Overrides `fabric_flow_tracking.wan_ha_links` setting.
             flow_tracking:

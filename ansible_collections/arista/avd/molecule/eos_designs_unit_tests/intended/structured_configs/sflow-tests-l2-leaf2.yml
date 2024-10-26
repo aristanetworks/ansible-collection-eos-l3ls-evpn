@@ -23,7 +23,7 @@ vrfs:
   ip_routing: false
 management_interfaces:
 - name: Management1
-  description: oob_management
+  description: OOB_MANAGEMENT
   shutdown: false
   vrf: MGMT
   ip_address: 192.168.0.202/24
@@ -38,9 +38,8 @@ ethernet_interfaces:
   peer: sflow-tests-leaf3
   peer_interface: Ethernet17
   peer_type: l3leaf
-  description: SFLOW-TESTS-LEAF3_Ethernet17
+  description: L2_sflow-tests-leaf3_Ethernet17
   shutdown: false
-  type: port-channel-member
   channel_group:
     id: 1
     mode: active
@@ -48,21 +47,22 @@ ethernet_interfaces:
   peer: sflow-tests-leaf4
   peer_interface: Ethernet17
   peer_type: l3leaf
-  description: SFLOW-TESTS-LEAF4_Ethernet17
+  description: L2_sflow-tests-leaf4_Ethernet17
   shutdown: false
-  type: port-channel-member
   channel_group:
     id: 1
     mode: active
 port_channel_interfaces:
 - name: Port-Channel1
-  description: SFLOW-TESTS-LEAF-MLAG_Po17
-  type: switched
+  description: L2_sflow-tests-leaf-mlag_Port-Channel17
+  switchport:
+    enabled: true
+    mode: trunk
+    trunk:
+      allowed_vlan: 11,4092
   shutdown: false
-  mode: trunk
   sflow:
     enable: true
-  vlans: 11,4092
 vlans:
 - id: 11
   name: VLAN11

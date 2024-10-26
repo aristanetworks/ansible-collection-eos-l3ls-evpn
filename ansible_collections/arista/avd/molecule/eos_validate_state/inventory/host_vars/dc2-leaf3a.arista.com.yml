@@ -1,6 +1,7 @@
 ---
 # Custom interface structured_config with shutdown key missing to make sure the defaults are handled properly
-# keeping test for deprecated data-models (type, mode, vlans, native_vlan) to ensure that validate_state can still generate the tests for them.
+# Keeping test for deprecated data-models to ensure that validate_state can still generate the tests for them
+# Deprecated keys: type, mode, vlans, native_vlan, native_vlan_tag, trunk_groups, phone
 custom_structured_configuration_ethernet_interfaces:
   - name: Ethernet11
     peer: dc2-leaf3-fw1
@@ -13,6 +14,38 @@ custom_structured_configuration_ethernet_interfaces:
       id: 11
       mode: active
 
+  - name: Ethernet12
+    description: Test_mode_and_vlans
+    # test for type `switched`
+    type: switched
+    mode: access
+    vlans: 100
+
+  - name: Ethernet13
+    description: Test_native_vlan_and_trunk_groups
+    type: switched
+    native_vlan: 4092
+    native_vlan_tag: true
+    mode: trunk
+    trunk_groups:
+      - MLAG
+
+  - name: Ethernet14
+    description: Test_phone
+    type: switched
+    mode: trunk phone
+    phone:
+      vlan: 20
+      trunk: tagged
+
+  - name: Ethernet15
+    description: Test_type_routed
+    type: routed
+    ip_address: 1.1.1.1/24
+    peer: dc2-leaf2b
+    peer_interface: Ethernet2
+    shutdown: false
+
 custom_structured_configuration_port_channel_interfaces:
   - name: Port-Channel11
     description: dc2-leaf3-fw1_PortChannel
@@ -23,3 +56,34 @@ custom_structured_configuration_port_channel_interfaces:
     native_vlan: 4092
     spanning_tree_portfast: edge
     mlag: 11
+
+  - name: Port-Channel12
+    description: Test_mode_and_vlans
+    # test for type `switched`
+    type: switched
+    mode: access
+    vlans: 100
+
+  - name: Port-Channel13
+    description: Test_native_vlan_and_trunk_groups
+    type: switched
+    native_vlan: 4092
+    native_vlan_tag: true
+    mode: trunk
+    trunk_groups:
+      - MLAG
+
+  - name: Port-Channel14
+    description: Test_phone
+    type: switched
+    mode: trunk phone
+    phone:
+      vlan: 20
+      trunk: tagged
+
+  - name: Port-Channel15
+    description: Test_type_routed
+    type: routed
+    ip_address: 1.1.1.1/24
+    peer: dc2-leaf2b
+    peer_interface: Ethernet2

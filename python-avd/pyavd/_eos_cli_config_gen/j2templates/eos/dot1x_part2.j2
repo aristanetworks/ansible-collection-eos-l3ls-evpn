@@ -1,0 +1,22 @@
+{#
+ Copyright (c) 2023-2024 Arista Networks, Inc.
+ Use of this source code is governed by the Apache License 2.0
+ that can be found in the LICENSE file.
+#}
+{# eos - dot1x part2 #}
+{% if dot1x.system_auth_control is arista.avd.defined(true) or dot1x.protocol_lldp_bypass is arista.avd.defined(true)
+   or dot1x.protocol_bpdu_bypass is arista.avd.defined(true) or dot1x.dynamic_authorization is arista.avd.defined(true) %}
+!
+{% endif %}
+{% if dot1x.system_auth_control is arista.avd.defined(true) %}
+dot1x system-auth-control
+{% endif %}
+{% if dot1x.protocol_lldp_bypass is arista.avd.defined(true) %}
+dot1x protocol lldp bypass
+{% endif %}
+{% if dot1x.protocol_bpdu_bypass is arista.avd.defined(true) %}
+dot1x protocol bpdu bypass
+{% endif %}
+{% if dot1x.dynamic_authorization is arista.avd.defined(true) %}
+dot1x dynamic-authorization
+{% endif %}

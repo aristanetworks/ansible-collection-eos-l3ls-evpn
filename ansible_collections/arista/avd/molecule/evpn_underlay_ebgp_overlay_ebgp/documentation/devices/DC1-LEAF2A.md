@@ -13,6 +13,7 @@
 - [Monitoring](#monitoring)
   - [TerminAttr Daemon](#terminattr-daemon)
   - [SNMP](#snmp)
+  - [Hardware](#hardware)
 - [Hardware TCAM Profile](#hardware-tcam-profile)
   - [Hardware TCAM Device Configuration](#hardware-tcam-device-configuration)
 - [Spanning Tree](#spanning-tree)
@@ -67,20 +68,20 @@
 
 | Management Interface | Description | Type | VRF | IP Address | Gateway |
 | -------------------- | ----------- | ---- | --- | ---------- | ------- |
-| Management1 | oob_management | oob | MGMT | 192.168.200.106/24 | 192.168.200.5 |
+| Management1 | OOB_MANAGEMENT | oob | MGMT | 192.168.200.106/24 | 192.168.200.5 |
 
 ##### IPv6
 
 | Management Interface | Description | Type | VRF | IPv6 Address | IPv6 Gateway |
 | -------------------- | ----------- | ---- | --- | ------------ | ------------ |
-| Management1 | oob_management | oob | MGMT | - | - |
+| Management1 | OOB_MANAGEMENT | oob | MGMT | - | - |
 
 #### Management Interfaces Device Configuration
 
 ```eos
 !
 interface Management1
-   description oob_management
+   description OOB_MANAGEMENT
    no shutdown
    vrf MGMT
    ip address 192.168.200.106/24
@@ -210,6 +211,18 @@ snmp-server contact example@example.com
 snmp-server location DC1_FABRIC rackC DC1-LEAF2A
 ```
 
+### Hardware
+
+#### Hardware Device Configuration
+
+```eos
+!
+hardware speed-group 1 serdes 10G
+hardware speed-group 2 serdes 25G
+hardware speed-group 3 serdes 25G
+hardware speed-group 4 serdes 10G
+```
+
 ## Hardware TCAM Profile
 
 TCAM profile **`vxlan-routing`** is active
@@ -240,8 +253,8 @@ STP Root Super: **True**
 
 ```eos
 !
-spanning-tree root super
 spanning-tree mode mstp
+spanning-tree root super
 spanning-tree mst 0 priority 4096
 ```
 
@@ -467,7 +480,7 @@ interface Ethernet21
 
 | Interface | Description | Mode | VLANs | Native VLAN | Trunk Group | LACP Fallback Timeout | LACP Fallback Mode | MLAG ID | EVPN ESI |
 | --------- | ----------- | ---- | ----- | ----------- | ------------| --------------------- | ------------------ | ------- | -------- |
-| Port-Channel7 | CUSTOM_DC1_L2LEAF1_Po1 | trunk | 110-111,120-124,130-131,160-162 | - | - | - | - | - | 0000:1234:0808:0707:0606 |
+| Port-Channel7 | CUSTOM_DC1-L2LEAF1A_Po1 | trunk | 110-111,120-124,130-131,160-162 | - | - | - | - | - | 0000:1234:0808:0707:0606 |
 | Port-Channel9 | CUSTOM_DC1-L2LEAF3A_Po1 | trunk | 110-111,120-124,130-131,160-162 | - | - | - | - | - | 0000:1234:0606:0707:0808 |
 | Port-Channel10 | CUSTOM_server01_MLAG_PortChanne1 | trunk | 210-211 | - | - | - | - | - | - |
 | Port-Channel11 | CUSTOM_server01_MTU_PROFILE_MLAG_PortChanne1 | access | 110 | - | - | - | - | - | - |
@@ -488,11 +501,12 @@ interface Ethernet21
 ```eos
 !
 interface Port-Channel7
-   description CUSTOM_DC1_L2LEAF1_Po1
+   description CUSTOM_DC1-L2LEAF1A_Po1
    no shutdown
-   switchport
    switchport trunk allowed vlan 110-111,120-124,130-131,160-162
    switchport mode trunk
+   switchport
+   !
    evpn ethernet-segment
       identifier 0000:1234:0808:0707:0606
       route-target import 08:08:07:07:06:06
@@ -501,9 +515,10 @@ interface Port-Channel7
 interface Port-Channel9
    description CUSTOM_DC1-L2LEAF3A_Po1
    no shutdown
-   switchport
    switchport trunk allowed vlan 110-111,120-124,130-131,160-162
    switchport mode trunk
+   switchport
+   !
    evpn ethernet-segment
       identifier 0000:1234:0606:0707:0808
       route-target import 06:06:07:07:08:08
@@ -512,16 +527,17 @@ interface Port-Channel9
 interface Port-Channel10
    description CUSTOM_server01_MLAG_PortChanne1
    no shutdown
-   switchport
    switchport trunk allowed vlan 210-211
    switchport mode trunk
+   switchport
 !
 interface Port-Channel11
    description CUSTOM_server01_MTU_PROFILE_MLAG_PortChanne1
    no shutdown
    mtu 1600
-   switchport
    switchport access vlan 110
+   switchport mode access
+   switchport
 !
 interface Port-Channel12
    description CUSTOM_server01_MTU_ADAPTOR_MLAG_PortChanne1
@@ -532,9 +548,9 @@ interface Port-Channel12
 interface Port-Channel20
    description CUSTOM_FIREWALL01_PortChanne1
    no shutdown
-   switchport
    switchport trunk allowed vlan 110-111,210-211
    switchport mode trunk
+   switchport
 ```
 
 ### Loopback Interfaces
@@ -976,9 +992,9 @@ ASN Notation: asplain
 !
 router bgp 65102
    router-id 192.168.255.10
-   maximum-paths 4 ecmp 4
    update wait-install
    no bgp default ipv4-unicast
+   maximum-paths 4 ecmp 4
    distance bgp 20 200 200
    neighbor EVPN-OVERLAY-PEERS peer group
    neighbor EVPN-OVERLAY-PEERS update-source Loopback0
@@ -1005,16 +1021,16 @@ router bgp 65102
    neighbor 172.31.255.22 description DC1-SPINE4_Ethernet2
    neighbor 192.168.255.1 peer group EVPN-OVERLAY-PEERS
    neighbor 192.168.255.1 remote-as 65001
-   neighbor 192.168.255.1 description DC1-SPINE1
+   neighbor 192.168.255.1 description DC1-SPINE1_Loopback0
    neighbor 192.168.255.2 peer group EVPN-OVERLAY-PEERS
    neighbor 192.168.255.2 remote-as 65001
-   neighbor 192.168.255.2 description DC1-SPINE2
+   neighbor 192.168.255.2 description DC1-SPINE2_Loopback0
    neighbor 192.168.255.3 peer group EVPN-OVERLAY-PEERS
    neighbor 192.168.255.3 remote-as 65001
-   neighbor 192.168.255.3 description DC1-SPINE3
+   neighbor 192.168.255.3 description DC1-SPINE3_Loopback0
    neighbor 192.168.255.4 peer group EVPN-OVERLAY-PEERS
    neighbor 192.168.255.4 remote-as 65001
-   neighbor 192.168.255.4 description DC1-SPINE4
+   neighbor 192.168.255.4 description DC1-SPINE4_Loopback0
    redistribute connected route-map RM-CONN-2-BGP
    !
    vlan-aware-bundle Tenant_A_APP_Zone
@@ -1072,8 +1088,8 @@ router bgp 65102
       vlan 310-311
    !
    address-family evpn
-      no host-flap detection
       neighbor EVPN-OVERLAY-PEERS activate
+      no host-flap detection
    !
    address-family ipv4
       no neighbor EVPN-OVERLAY-PEERS activate
@@ -1153,8 +1169,9 @@ router bfd
 ```eos
 !
 queue-monitor length
-queue-monitor length log 5
 queue-monitor length notifying
+!
+queue-monitor length log 5
 ```
 
 ## Multicast

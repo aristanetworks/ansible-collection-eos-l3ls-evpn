@@ -28,6 +28,14 @@ router_path_selection:
         - name: Ethernet1/1/3
         - name: Ethernet4.666
         - name: Ethernet2/4.666
+        - name: Port-Channel1
+          public_address: 192.168.42.43
+          stun:
+            # Test multiple stun profiles
+            server_profiles:
+              - STUN-P-1
+              - STUN-P-2
+        - name: Port-Channel4.666
       local_ips:
         # Out of order to test sorting
         - ip_address: 192.168.100.1

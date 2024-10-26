@@ -1,0 +1,24 @@
+# Copyright (c) 2023-2024 Arista Networks, Inc.
+# Use of this source code is governed by the Apache License 2.0
+# that can be found in the LICENSE file.
+# yaml-language-server: $schema=../../../_schema/avd_meta_schema.json
+# Line above is used by RedHat's YAML Schema vscode extension
+# Use Ctrl + Space to get suggestions for every field. Autocomplete will pop up after typing 2 letters.
+type: dict
+keys:
+  mlag_port_channel_description:
+    type: str
+    documentation_options:
+      table: fabric-settings
+    description: |-
+      Description or description template to be used on MLAG peer-link port-channel interfaces.
+      This can be a template using the AVD string formatter syntax: https://avd.arista.com/devel/roles/eos_designs/docs/how-to/custom-descriptions-names.html#avd-string-formatter-syntax.
+      The available template fields are:
+        - `mlag_peer`: The name of the MLAG peer.
+        - `interface`: The local MLAG port-channel interface.
+        - `peer_interface`: The port-channel interface on the MLAG peer.
+        - `mlag_port_channel_id`: The local MLAG port-channel ID.
+        - `mlag_peer_port_channel_id`: The port-channel ID on the MLAG peer.
+
+      By default the description is templated from the name and port-channel interface of the MLAG peer.
+    default: "MLAG_{mlag_peer}_{peer_interface}"

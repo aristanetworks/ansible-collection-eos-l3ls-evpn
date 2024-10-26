@@ -12,7 +12,6 @@ help: ## Display help message
 #########################################
 .PHONY: collection-build
 collection-build: ## Build arista.avd collection locally.
-	./python-avd/scripts/build-schemas.py
 	ansible-galaxy collection build --force ansible_collections/arista/avd
 
 #########################################
@@ -83,3 +82,11 @@ unit-tests: ## Run unit test cases using ansible-test. Specify `ANSIBLE_TEST_MOD
 integration-tests: ## Run integration test cases using ansible-test. Specify `ANSIBLE_TEST_MODE=<venv|docker>` (default: `venv`).
 	cd ansible_collections/arista/avd/ ; \
 	ansible-test integration --requirements --$(ANSIBLE_TEST_MODE)
+
+####################
+# Random shortcuts #
+####################
+
+.PHONY: config-diff
+config-diff: ## Run git diff comparing molecule configs with 'devel' using our special config diff ignoring reordering of config lines.
+	@GIT_EXTERNAL_DIFF=development/compare.py git diff devel --ext-diff -- **/configs/*.cfg

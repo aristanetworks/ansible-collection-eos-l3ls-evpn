@@ -26,5 +26,5 @@ servers:
 
 expected_error_message: >-
   Found duplicate objects with conflicting data while generating configuration for Ethernet Interfaces defined under connected_endpoints.
-  {'name': 'Ethernet10', 'peer_interface': 'Eth2', 'description': 'server02_Eth2', 'peer': 'server02'} conflicts with
-  {'name': 'Ethernet10', 'peer_interface': 'Eth1', 'description': 'server01_ES1_Eth1', 'peer': 'server01_ES1'}.
+  {'name': 'Ethernet10', 'peer_interface': 'Eth2', 'description': 'SERVER_server02_Eth2', 'peer': 'server02'} conflicts with
+  {'name': 'Ethernet10', 'peer_interface': 'Eth1', 'description': 'SERVER_server01_ES1_Eth1', 'peer': 'server01_ES1'}.

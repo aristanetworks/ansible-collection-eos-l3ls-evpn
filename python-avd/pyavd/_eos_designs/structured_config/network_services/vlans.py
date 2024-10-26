@@ -6,7 +6,7 @@ from __future__ import annotations
 from functools import cached_property
 from typing import TYPE_CHECKING
 
-from pyavd._utils import append_if_not_duplicate
+from pyavd._utils import AvdStringFormatter, append_if_not_duplicate
 from pyavd.j2filters import natural_sort
 
 from .utils import UtilsMixin
@@ -56,7 +56,9 @@ class VlansMixin(UtilsMixin):
 
                 vlan = {
                     "id": vlan_id,
-                    "name": f"MLAG_iBGP_{vrf['name']}",
+                    "name": AvdStringFormatter().format(
+                        self.shared_utils.mlag_peer_l3_vrf_vlan_name, mlag_peer=self.shared_utils.mlag_peer, vlan=vlan_id, vrf=vrf["name"]
+                    ),
                     "trunk_groups": [self._trunk_groups_mlag_l3_name],
                     "tenant": tenant["name"],
                 }

@@ -71,11 +71,11 @@ $defs:
           documentation_options:
             table: network-services-vrfs-settings
           type: bool
-          default: true
+          default: false
           description: |
             Redistribute the connected subnet for the MLAG iBGP peering per VRF into overlay BGP.
-            By default the iBGP peering subnet is redistributed into the overlay routing protocol per VRF.
-            Setting `redistribute_mlag_ibgp_peering_vrfs: false` under a tenant will change this default to prevent redistribution of these subnets for all VRFs in the tenant.
+            By default the iBGP peering subnet is not redistributed into the overlay routing protocol per VRF.
+            Setting `redistribute_mlag_ibgp_peering_vrfs: true` under a tenant will change this default to redistribution of these subnets for all VRFs in the tenant.
             This setting can be overridden per VRF.
         evpn_vlan_bundle:
           type: str
@@ -187,7 +187,7 @@ $defs:
             - In the evpn-l3ls design type, this enables L3 EVPN Multicast (aka OISM)'.
             - Multicast group binding for VRF is created only for Multicast traffic. BULL traffic will use ingress-replication.
             - Configures binding between VXLAN, VLAN, and multicast group IPv4 address using the following formula:
-              < l3_multicast.evpn_underlay_l3_multicast_group_ipv4_pool > + < vrf_vni - 1 > + < l3_multicast.evpn_underlay_l3_multicast_group_ipv4_pool_offset >.
+              < l3_multicast.evpn_underlay_l3_multicast_group_ipv4_pool > + < vrf_id - 1 > + < l3_multicast.evpn_underlay_l3_multicast_group_ipv4_pool_offset >.
             - The recommendation is to assign a /20 block within the 232.0.0.0/8 Source-Specific Multicast range.
             - If enabled on an SVI using the anycast default gateway feature, a diagnostic loopback (see below) MUST be configured to source IGMP traffic.
             - Enables `evpn multicast` on the router bgp VRF.
@@ -395,11 +395,11 @@ $defs:
                   Setting `enable_mlag_ibgp_peering_vrfs: false` under a VRF will change this default and/or override the tenant-wide setting.
               redistribute_mlag_ibgp_peering_vrfs:
                 type: bool
-                default: true
+                default: false
                 description: |
                   Redistribute the connected subnet for the MLAG iBGP peering per VRF into overlay BGP.
-                  By default the iBGP peering subnet is redistributed into the overlay routing protocol per VRF.
-                  Setting `redistribute_mlag_ibgp_peering_vrfs: false` under a VRF will change this default and/or override the tenant-wide setting.
+                  By default the iBGP peering subnet is not redistributed into the overlay routing protocol per VRF.
+                  Setting `redistribute_mlag_ibgp_peering_vrfs: true` under a VRF will change this default and/or override the tenant-wide setting.
               mlag_ibgp_peering_vlan:
                 type: int
                 convert_types:
@@ -425,7 +425,16 @@ $defs:
                     max: 2100
                   loopback_description:
                     type: str
-                    description: Provide a custom description for loopback interface.
+                    description: |-
+                      Provide a custom description or description template to be used on the VRF diagnostic loopback interface.
+                      This can be a template using the AVD string formatter syntax: https://avd.arista.com/devel/roles/eos_designs/docs/how-to/custom-descriptions-names.html#avd-string-formatter-syntax.
+                      The available template fields are:
+                        - `interface`: The Loopback interface name.
+                        - `vrf`: The VRF name.
+                        - `tenant`: The tenant name.
+
+                      The default description is set by `default_vrf_diag_loopback_description`.
+                      By default the description is templated from the VRF name.
                   loopback_ip_range:
                     type: str
                     description: |
@@ -513,6 +522,11 @@ $defs:
                 keys:
                   enabled:
                     type: bool
+                  evpn_underlay_l3_multicast_group:
+                    type: str
+                    description: |-
+                      IPv4 address of evpn underlay l3 multicast group.
+                      To override multicast range set using the formula < l3_multicast.evpn_underlay_l3_multicast_group_ipv4_pool > + < vrf_id - 1 > + < l3_multicast.evpn_underlay_l3_multicast_group_ipv4_pool_offset >.
                   evpn_peg:
                     type: list
                     description: For each group of nodes, allow configuration of EVPN PEG features.
@@ -709,7 +723,7 @@ $defs:
                           convert_types:
                             - int
                           description: OSPF area ID.
-                          default: "0"
+                          default: "0.0.0.0"
                         cost:
                           type: int
                           convert_types:
@@ -806,7 +820,7 @@ $defs:
                           convert_types:
                             - int
                           description: OSPF area ID.
-                          default: "0"
+                          default: "0.0.0.0"
                     raw_eos_cli:
                       type: str
                       description: |

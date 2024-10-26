@@ -35,7 +35,7 @@ vrfs:
   ip_routing: false
 management_interfaces:
 - name: Management1
-  description: oob_management
+  description: OOB_MANAGEMENT
   shutdown: false
   vrf: MGMT
   ip_address: 192.168.1.12/24
@@ -52,7 +52,7 @@ snmp_server:
 vlans:
 - id: 4094
   tenant: system
-  name: MLAG_PEER
+  name: MLAG
   trunk_groups:
   - MLAG
 - id: 110
@@ -90,7 +90,7 @@ vlans:
   name: L2LEAF_INBAND_MGMT
 vlan_interfaces:
 - name: Vlan4094
-  description: MLAG_PEER
+  description: MLAG
   shutdown: false
   no_autostate: true
   ip_address: 172.20.110.3/31
@@ -101,28 +101,31 @@ vlan_interfaces:
   type: inband_mgmt
 port_channel_interfaces:
 - name: Port-Channel3
-  description: MLAG_PEER_DC1-POD1-L2LEAF2A_Po3
-  type: switched
+  description: MLAG_DC1-POD1-L2LEAF2A_Port-Channel3
+  switchport:
+    enabled: true
+    mode: trunk
+    trunk:
+      groups:
+      - MLAG
   shutdown: false
-  mode: trunk
   service_profile: QOS-PROFILE
-  trunk_groups:
-  - MLAG
 - name: Port-Channel1
-  description: RACK2_MLAG_Po3
-  type: switched
+  description: L2_RACK2_MLAG_Port-Channel3
+  switchport:
+    enabled: true
+    mode: trunk
+    trunk:
+      allowed_vlan: 110-113,1100-1102,2500,2600-2601,4085
   shutdown: false
-  mode: trunk
   service_profile: QOS-PROFILE
-  vlans: 110-113,1100-1102,2500,2600-2601,4085
   mlag: 1
 ethernet_interfaces:
 - name: Ethernet3
   peer: DC1-POD1-L2LEAF2A
   peer_interface: Ethernet3
   peer_type: mlag_peer
-  description: MLAG_PEER_DC1-POD1-L2LEAF2A_Ethernet3
-  type: port-channel-member
+  description: MLAG_DC1-POD1-L2LEAF2A_Ethernet3
   shutdown: false
   channel_group:
     id: 3
@@ -131,8 +134,7 @@ ethernet_interfaces:
   peer: DC1-POD1-L2LEAF2A
   peer_interface: Ethernet4
   peer_type: mlag_peer
-  description: MLAG_PEER_DC1-POD1-L2LEAF2A_Ethernet4
-  type: port-channel-member
+  description: MLAG_DC1-POD1-L2LEAF2A_Ethernet4
   shutdown: false
   channel_group:
     id: 3
@@ -141,9 +143,8 @@ ethernet_interfaces:
   peer: DC1.POD1.LEAF2A
   peer_interface: Ethernet4
   peer_type: l3leaf
-  description: DC1.POD1.LEAF2A_Ethernet4
+  description: L2_DC1.POD1.LEAF2A_Ethernet4
   shutdown: false
-  type: port-channel-member
   channel_group:
     id: 1
     mode: active
@@ -151,9 +152,8 @@ ethernet_interfaces:
   peer: DC1-POD1-LEAF2B
   peer_interface: Ethernet4
   peer_type: l3leaf
-  description: DC1-POD1-LEAF2B_Ethernet4
+  description: L2_DC1-POD1-LEAF2B_Ethernet4
   shutdown: false
-  type: port-channel-member
   channel_group:
     id: 1
     mode: active

@@ -34,9 +34,6 @@ interface Vxlan1
 {%         if vlan.vni is arista.avd.defined %}
    vxlan vlan {{ vlan.id }} vni {{ vlan.vni }}
 {%         endif %}
-{%         if vlan.flood_vteps is arista.avd.defined %}
-   vxlan vlan {{ vlan.id }} flood vtep {{ vlan.flood_vteps | join(' ') }}
-{%         endif %}
 {%     endfor %}
 {%     for vrf in vxlan_config.vxlan.vrfs | arista.avd.natural_sort('name') %}
 {%         if vrf.vni is arista.avd.defined %}
@@ -59,21 +56,11 @@ interface Vxlan1
 {%     if vxlan_config.vxlan.flood_vteps is arista.avd.defined %}
    vxlan flood vtep {{ vxlan_config.vxlan.flood_vteps | join(' ') }}
 {%     endif %}
-{%     if vxlan_config.vxlan.qos.dscp_propagation_encapsulation is arista.avd.defined(true) %}
-   vxlan qos dscp propagation encapsulation
-{%     elif vxlan_config.vxlan.qos.dscp_propagation_encapsulation is arista.avd.defined(false) %}
-   no vxlan qos dscp propagation encapsulation
-{%     endif %}
-{%     if vxlan_config.vxlan.qos.ecn_propagation is arista.avd.defined(true) %}
-   vxlan qos ecn propagation
-{%     elif vxlan_config.vxlan.qos.ecn_propagation is arista.avd.defined(false) %}
-   no vxlan qos ecn propagation
-{%     endif %}
-{%     if vxlan_config.vxlan.qos.map_dscp_to_traffic_class_decapsulation is arista.avd.defined(true) %}
-   vxlan qos map dscp to traffic-class decapsulation
-{%     elif vxlan_config.vxlan.qos.map_dscp_to_traffic_class_decapsulation is arista.avd.defined(false) %}
-   no vxlan qos map dscp to traffic-class decapsulation
-{%     endif %}
+{%     for vlan in vxlan_config.vxlan.vlans | arista.avd.natural_sort('id') %}
+{%         if vlan.flood_vteps is arista.avd.defined %}
+   vxlan vlan {{ vlan.id }} flood vtep {{ vlan.flood_vteps | join(' ') }}
+{%         endif %}
+{%     endfor %}
 {%     for vlan in vxlan_config.vxlan.vlans | arista.avd.natural_sort('id') if vlan.multicast_group is arista.avd.defined %}
    vxlan vlan {{ vlan.id }} multicast group {{ vlan.multicast_group }}
 {%     endfor %}
@@ -82,6 +69,21 @@ interface Vxlan1
 {%     endfor %}
 {%     if vxlan_config.vxlan.multicast.headend_replication is arista.avd.defined(true) %}
    vxlan multicast headend-replication
+{%     endif %}
+{%     if vxlan_config.vxlan.qos.ecn_propagation is arista.avd.defined(true) %}
+   vxlan qos ecn propagation
+{%     elif vxlan_config.vxlan.qos.ecn_propagation is arista.avd.defined(false) %}
+   no vxlan qos ecn propagation
+{%     endif %}
+{%     if vxlan_config.vxlan.qos.dscp_propagation_encapsulation is arista.avd.defined(true) %}
+   vxlan qos dscp propagation encapsulation
+{%     elif vxlan_config.vxlan.qos.dscp_propagation_encapsulation is arista.avd.defined(false) %}
+   no vxlan qos dscp propagation encapsulation
+{%     endif %}
+{%     if vxlan_config.vxlan.qos.map_dscp_to_traffic_class_decapsulation is arista.avd.defined(true) %}
+   vxlan qos map dscp to traffic-class decapsulation
+{%     elif vxlan_config.vxlan.qos.map_dscp_to_traffic_class_decapsulation is arista.avd.defined(false) %}
+   no vxlan qos map dscp to traffic-class decapsulation
 {%     endif %}
 {%     if  vxlan_config.eos_cli is arista.avd.defined %}
    {{ vxlan_config.eos_cli | indent(3, false) }}

@@ -485,7 +485,7 @@ keys:
   dc_name:
     documentation_options:
       table: fabric-topology
-    description: 'POD Name is used in:
+    description: 'DC Name is used in:
 
       - Fabric Documentation (Optional, falls back to fabric_name)
 
@@ -1117,7 +1117,7 @@ keys:
     description: 'Management interface description.
 
       '
-    default: oob_management
+    default: OOB_MANAGEMENT
   mgmt_interface_vrf:
     documentation_options:
       table: management-interface-settings
@@ -2639,7 +2639,8 @@ keys:
     documentation_options:
       table: type-setting
     type: str
-    dynamic_valid_values: node_type_keys.type
+    dynamic_valid_values:
+    - node_type_keys.type
     description: 'The `type:` variable needs to be defined for each device in the
       fabric.
 

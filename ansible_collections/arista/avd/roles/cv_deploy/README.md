@@ -51,11 +51,12 @@ The API to CloudVision is using gRPC over encrypted HTTP/2.
 ## Limitations
 
 - It is not possible to authenticate with username/password. See the [instructions below](#steps-to-create-service-accounts-on-cloudvision) on how to create a service account on CloudVision.
-- Configuration deployment is based on the "Static Configuration Studio" which is still a Beta feature on CloudVision.
-  - This role is **only** supported on **CloudVision as a Service (CVaaS)** or "on-prem" **CloudVision 2024.1.0** or later.
-  - Make sure to enable "Studios - End-to-End Provisioning" under Settings, Features.
+- This role is **only** supported on **CloudVision as a Service (CVaaS)** or "on-prem" **CloudVision 2024.1.0** or later.
+  - Configuration deployment is based on the "Static Configuration Studio" which was a Beta feature on CloudVision 2024.1.0.
+    Make sure to enable "Studios - End-to-End Provisioning" under Settings, Features.
 
     ![Figure 1: Ansible Role arista.avd.cv_deploy](../../docs/_media/studios_end_to_end_provisioning.png)
+- Currently only the first of the given cv_servers is being used.
 
 ## Roadmap
 
@@ -69,6 +70,7 @@ This feature is still under development, so several planned features are not imp
 - Add automatic testing.
 - Add required CloudVision versions once the APIs are generally available.
 - Update AVD examples.
+- Handle multinode clusters by trying connecting to each one by one.
 
 ## Example
 

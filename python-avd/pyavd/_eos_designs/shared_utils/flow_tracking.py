@@ -69,6 +69,7 @@ class FlowTrackingMixin:
             "mlag_interfaces",
             "l3_interfaces",
             "dps_interfaces",
+            "direct_wan_ha_links",
         ],
     ) -> dict:
         """Return flow_tracking settings for a link, falling back to the fabric flow_tracking_settings if not defined."""

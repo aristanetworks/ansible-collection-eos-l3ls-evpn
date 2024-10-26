@@ -6,10 +6,19 @@ underlay_multicast: true # If set to "false" will raise an error.
 evpn_multicast: true
 # default_igmp_snooping_enabled: true # Default is true, if set to "false" will raise error.
 
-# Default is overlay_loopback_ip
+# Default is router_id
 # If set to same value on MLAG pairs will raise error. Trigger error with "bgp_as" or "vtep_loopback".
 # overlay_rd_type:
-#   admin_subfield: overlay_loopback_ip
+#   admin_subfield: router_id
+
+# Test for sflow on l3_interfaces from network services
+sflow_settings:
+  destinations:
+    - destination: 10.10.10.12
+      vrf: sflow_vrf
+      port: 1234
+fabric_sflow:
+  l3_interfaces: true
 
 tenants:
   - name: Tenant_A
@@ -246,6 +255,7 @@ tenants:
           loopback: 31
           loopback_ip_range: 10.255.1.0/24
         vrf_vni: 31
+        vrf_id: 66
         svis:
           # Expected results:
           #  - VRF L3_MULTICAST_ENABLED_130_131 enabled for Multicast:
@@ -365,6 +375,7 @@ tenants:
           loopback_ip_range: 10.255.41.0/24
         evpn_l3_multicast:
           enabled: true
+          evpn_underlay_l3_multicast_group: 232.0.64.2
         vrf_vni: 41
         svis:
           # Expected results:

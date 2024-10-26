@@ -21,8 +21,8 @@ servers:
         spanning_tree_portfast: edge
         # Definition of the pair of ports as port channel.
         port_channel:
-          # Description of the port channel interface.
-          description: PortChannel dc1-leaf1-server1
+          # The port-channel name on the endpoint that will be used in the port-channel description.
+          endpoint_port_channel: Bond1
           # Port channel mode for LACP.
           mode: active
 
@@ -43,7 +43,6 @@ servers:
         mode: trunk
         spanning_tree_portfast: edge
         port_channel:
-          description: PortChannel dc1-leaf2-server1
           mode: active
 
       - endpoint_ports: [ iLO ]

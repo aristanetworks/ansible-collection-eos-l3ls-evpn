@@ -9,7 +9,9 @@ keys:
   p2p_uplinks_mtu:
     documentation_options:
       table: fabric-settings
-    description: Point to Point Links MTU.
+    description: |-
+      Point to Point Links MTU.
+      Precedence: <node_type>.uplink_mtu -> platform_settings.p2p_uplinks_mtu -> p2p_uplinks_mtu -> 9214
     type: int
     convert_types:
       - str

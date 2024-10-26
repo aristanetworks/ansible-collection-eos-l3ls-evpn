@@ -41,7 +41,7 @@ vrfs:
   ip_routing: false
 management_interfaces:
 - name: Management0
-  description: oob_management
+  description: OOB_MANAGEMENT
   shutdown: false
   vrf: MGMT
   ip_address: 172.16.100.107/24
@@ -64,7 +64,7 @@ ntp:
 vlans:
 - id: 4094
   tenant: system
-  name: MLAG_PEER
+  name: MLAG
   trunk_groups:
   - MLAG
 - id: 10
@@ -75,33 +75,36 @@ vlans:
   tenant: MY_FABRIC
 vlan_interfaces:
 - name: Vlan4094
-  description: MLAG_PEER
+  description: MLAG
   shutdown: false
   no_autostate: true
   mtu: 1500
   ip_address: 192.168.0.4/31
 port_channel_interfaces:
 - name: Port-Channel47
-  description: MLAG_PEER_LEAF4_Po47
-  type: switched
+  description: MLAG_LEAF4_Port-Channel47
+  switchport:
+    enabled: true
+    mode: trunk
+    trunk:
+      groups:
+      - MLAG
   shutdown: false
-  mode: trunk
-  trunk_groups:
-  - MLAG
 - name: Port-Channel1
-  description: SPINES_Po3
-  type: switched
+  description: L2_SPINES_Port-Channel3
+  switchport:
+    enabled: true
+    mode: trunk
+    trunk:
+      allowed_vlan: 10,30
   shutdown: false
-  mode: trunk
-  vlans: 10,30
   mlag: 1
 ethernet_interfaces:
 - name: Ethernet47
   peer: LEAF4
   peer_interface: Ethernet47
   peer_type: mlag_peer
-  description: MLAG_PEER_LEAF4_Ethernet47
-  type: port-channel-member
+  description: MLAG_LEAF4_Ethernet47
   shutdown: false
   channel_group:
     id: 47
@@ -110,8 +113,7 @@ ethernet_interfaces:
   peer: LEAF4
   peer_interface: Ethernet48
   peer_type: mlag_peer
-  description: MLAG_PEER_LEAF4_Ethernet48
-  type: port-channel-member
+  description: MLAG_LEAF4_Ethernet48
   shutdown: false
   channel_group:
     id: 47
@@ -120,9 +122,8 @@ ethernet_interfaces:
   peer: SPINE1
   peer_interface: Ethernet3
   peer_type: l2spine
-  description: SPINE1_Ethernet3
+  description: L2_SPINE1_Ethernet3
   shutdown: false
-  type: port-channel-member
   channel_group:
     id: 1
     mode: active
@@ -130,9 +131,8 @@ ethernet_interfaces:
   peer: SPINE2
   peer_interface: Ethernet3
   peer_type: l2spine
-  description: SPINE2_Ethernet3
+  description: L2_SPINE2_Ethernet3
   shutdown: false
-  type: port-channel-member
   channel_group:
     id: 1
     mode: active
@@ -141,11 +141,12 @@ ethernet_interfaces:
   peer_interface: Eth1
   peer_type: server
   port_profile: PP-BLUE
-  description: HostC_Eth1
+  description: SERVER_HostC_Eth1
   shutdown: false
-  type: switched
-  mode: access
-  vlans: '10'
+  switchport:
+    enabled: true
+    mode: access
+    access_vlan: '10'
   spanning_tree_portfast: edge
 mlag_configuration:
   domain_id: RACK2

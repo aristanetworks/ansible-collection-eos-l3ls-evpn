@@ -1,0 +1,51 @@
+---
+type: l3leaf
+
+# Overriding the default profiles
+ptp_profiles:
+  - profile: my-custom-ptp-profile
+    announce:
+      interval: 4
+      timeout: 3
+    delay_req: -6
+    sync_message:
+      interval: -7
+    transport: ipv4
+
+l3_edge:
+  p2p_links:
+    - nodes: [ custom-ptp-profile, not-in-this-fabric ]
+      interfaces: [ Ethernet8, Ethernet8 ]
+      ptp:
+        enabled: true
+      include_in_underlay_protocol: false
+
+ptp_settings:
+  enabled: true
+
+tenants:
+  - name: PTP
+    mac_vrf_vni_base: 10000
+    vrfs:
+      - name: VRF1
+        vrf_vni: 1
+        svis:
+          - id: 11
+            name: VLAN11
+            enabled: true
+            nodes:
+              - node: custom-ptp-profile
+                ip_address: 172.16.11.1/24
+
+l3leaf:
+  defaults:
+    loopback_ipv4_pool: 10.10.10.0/24
+    vtep_loopback_ipv4_pool: 10.10.10.0/24
+    bgp_as: 65042
+  nodes:
+    - name: custom-ptp-profile
+      loopback_ipv4_address: 10.42.42.42/32
+      vtep_loopback_ipv4_address: 10.42.42.42/32
+      id: 12
+      ptp:
+        profile: my-custom-ptp-profile

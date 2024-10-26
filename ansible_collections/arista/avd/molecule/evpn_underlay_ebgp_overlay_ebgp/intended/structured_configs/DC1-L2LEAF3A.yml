@@ -53,7 +53,7 @@ vrfs:
   ip_routing: false
 management_interfaces:
 - name: Management1
-  description: oob_management
+  description: OOB_MANAGEMENT
   shutdown: false
   vrf: MGMT
   ip_address: 192.168.200.116/24
@@ -81,7 +81,6 @@ ethernet_interfaces:
   peer_type: l3leaf
   description: CUSTOM_DC1-LEAF2A_Ethernet9
   shutdown: false
-  type: port-channel-member
   channel_group:
     id: 1
     mode: active
@@ -91,17 +90,18 @@ ethernet_interfaces:
   peer_type: l3leaf
   description: CUSTOM_DC1-LEAF2B_Ethernet9
   shutdown: false
-  type: port-channel-member
   channel_group:
     id: 1
     mode: active
 port_channel_interfaces:
 - name: Port-Channel1
-  description: CUSTOM_DC1_LEAF2_Po9
-  type: switched
+  description: CUSTOM_DC1-LEAF2A_Po9
+  switchport:
+    enabled: true
+    mode: trunk
+    trunk:
+      allowed_vlan: 110-111,120-124,130-131,160-162
   shutdown: false
-  mode: trunk
-  vlans: 110-111,120-124,130-131,160-162
 vlans:
 - id: 130
   name: Tenant_A_APP_Zone_1

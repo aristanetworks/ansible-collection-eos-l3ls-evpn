@@ -10,10 +10,10 @@ group interface {{ interface_group.name }}
 {%     for interface in interface_group.interfaces | arista.avd.natural_sort %}
    interface {{ interface }}
 {%     endfor %}
-{%     for interface_profile in interface_group.interface_maintenance_profiles | arista.avd.natural_sort %}
-   maintenance profile interface {{ interface_profile }}
-{%     endfor %}
 {%     for bgp_profile in interface_group.bgp_maintenance_profiles | arista.avd.natural_sort %}
    maintenance profile bgp {{ bgp_profile }}
+{%     endfor %}
+{%     for interface_profile in interface_group.interface_maintenance_profiles | arista.avd.natural_sort %}
+   maintenance profile interface {{ interface_profile }}
 {%     endfor %}
 {% endfor %}

@@ -10,12 +10,12 @@ HEADING_PATTERN = re.compile(r"#+ ")
 
 
 def add_md_toc(md_input: str, skip_lines: int = 0, toc_levels: int = 3, toc_marker: str = "<!-- toc -->") -> str:
-    """Parse the input MarkDown and add a TOC between the toc_markers.
+    """Parse the input Markdown and add a TOC between the toc_markers.
 
     Parameters
     ----------
     md_input: str
-        MarkDown which will be processed
+        Markdown which will be processed
     skip_lines: int, optional
         Skip first x lines when parsing MD file
         default: 0
@@ -65,7 +65,7 @@ def add_md_toc(md_input: str, skip_lines: int = 0, toc_levels: int = 3, toc_mark
         if re.match(HEADING_PATTERN, line):
             # This is a heading.
             # First get info for this line, including building an anchor and adding this anchor to all_anchor_ids.
-            # This is important, since skipped headings will still be associated with an anchor-id during parsing of the final MarkDown file.
+            # This is important, since skipped headings will still be associated with an anchor-id during parsing of the final Markdown file.
             level, text, anchor_id = _get_line_info(line, all_anchor_ids)
 
             # Do not create a TOC line if we are skipping or at a deeper level than we want.
@@ -113,7 +113,7 @@ def _get_anchor_id(text: str, all_anchor_ids: list[str]) -> str:
     """
     Returns a unique anchor_id after adding it to 'all_anchor_ids'.
 
-    The logic here follow the auto-id generation algorithm of the MarkDown spec.
+    The logic here follow the auto-id generation algorithm of the Markdown spec.
 
     Parameters
     ----------

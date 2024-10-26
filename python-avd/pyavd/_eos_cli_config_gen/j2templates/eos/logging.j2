@@ -6,6 +6,11 @@
 {# eos - logging #}
 {% if logging is arista.avd.defined %}
 !
+{%     if logging.repeat_messages is arista.avd.defined(false) %}
+no logging repeat-messages
+{%     elif logging.repeat_messages is arista.avd.defined(true) %}
+logging repeat-messages
+{%     endif %}
 {%     if logging.buffered.level is arista.avd.defined('disabled') %}
 no logging buffered
 {%     elif logging.buffered.size is arista.avd.defined or logging.buffered.level is arista.avd.defined %}
@@ -33,12 +38,6 @@ no logging monitor
 {%     elif logging.monitor is arista.avd.defined %}
 logging monitor {{ logging.monitor }}
 {%     endif %}
-{%     if logging.event.storm_control.discards.global is arista.avd.defined(true) %}
-logging event storm-control discards global
-{%     endif %}
-{%     if logging.event.storm_control.discards.interval is arista.avd.defined %}
-logging event storm-control discards interval {{ logging.event.storm_control.discards.interval }}
-{%     endif %}
 {%     if logging.synchronous.level is arista.avd.defined('disabled') %}
 no logging synchronous
 {%     elif logging.synchronous is arista.avd.defined %}
@@ -51,8 +50,9 @@ logging synchronous level {{ logging.synchronous.level | arista.avd.default("cri
 {%                 set logging_host_cli = logging_host_cli ~ " vrf " ~ vrf.name %}
 {%             endif %}
 {%             set logging_host_cli = logging_host_cli ~ " host " ~ host.name %}
-{%             if host.ports is arista.avd.defined() %}
-{%                 set logging_host_cli = logging_host_cli ~ ' ' ~ host.ports | join(' ') %}
+{%             if host.ports is arista.avd.defined %}
+{%                 set ports = host.ports | arista.avd.natural_sort %}
+{%                 set logging_host_cli = logging_host_cli ~ ' ' ~ ports | join(' ') %}
 {%             endif %}
 {%             if host.protocol is arista.avd.defined() and host.protocol is not arista.avd.defined("udp") %}
 {%                 set logging_host_cli = logging_host_cli ~ " protocol " ~ host.protocol | lower %}
@@ -94,8 +94,18 @@ logging source-interface {{ logging.source_interface }}
 logging policy match match-list {{ match_list.name }} {{ match_list.action }}
 {%     endfor %}
 {%     for level in logging.level | arista.avd.natural_sort('facility') %}
+{%         if loop.first %}
+!
+{%         endif %}
 {%         if level.severity is arista.avd.defined %}
 logging level {{ level.facility }} {{ level.severity }}
 {%         endif %}
 {%     endfor %}
+{%     if logging.event.global_link_status is arista.avd.defined(false) %}
+!
+no logging event link-status global
+{%     elif logging.event.global_link_status is arista.avd.defined(true) %}
+!
+logging event link-status global
+{%     endif %}
 {% endif %}

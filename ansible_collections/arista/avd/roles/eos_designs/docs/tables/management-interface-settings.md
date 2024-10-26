@@ -12,7 +12,7 @@
     | [<samp>&nbsp;&nbsp;-&nbsp;&lt;str&gt;</samp>](## "mgmt_destination_networks.[]") | String |  |  |  | IPv4_address/Mask. |
     | [<samp>mgmt_gateway</samp>](## "mgmt_gateway") | String |  |  |  | OOB Management interface gateway in IPv4 format.<br>Used as next-hop for default gateway or static routes defined under 'mgmt_destination_networks'.<br> |
     | [<samp>mgmt_interface</samp>](## "mgmt_interface") | String |  | `Management1` |  | OOB Management interface. |
-    | [<samp>mgmt_interface_description</samp>](## "mgmt_interface_description") | String |  | `oob_management` |  | Management interface description.<br> |
+    | [<samp>mgmt_interface_description</samp>](## "mgmt_interface_description") | String |  | `OOB_MANAGEMENT` |  | Management interface description.<br> |
     | [<samp>mgmt_interface_vrf</samp>](## "mgmt_interface_vrf") | String |  | `MGMT` |  | OOB Management VRF. |
     | [<samp>mgmt_vrf_routing</samp>](## "mgmt_vrf_routing") | Boolean |  | `False` |  | Configure IP routing for the OOB Management VRF. |
 
@@ -44,7 +44,7 @@
     mgmt_interface: <str; default="Management1">
 
     # Management interface description.
-    mgmt_interface_description: <str; default="oob_management">
+    mgmt_interface_description: <str; default="OOB_MANAGEMENT">
 
     # OOB Management VRF.
     mgmt_interface_vrf: <str; default="MGMT">

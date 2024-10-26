@@ -33,3 +33,6 @@ keys:
       mlag_interfaces:
         description: Enable sFlow on all MLAG peer interfaces.
         type: bool
+      l3_interfaces:
+        description: Enable sFlow on all l3 interfaces.
+        type: bool

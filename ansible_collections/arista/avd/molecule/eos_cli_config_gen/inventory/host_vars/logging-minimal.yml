@@ -3,5 +3,8 @@ logging:
   console: informational
   monitor: debugging
   facility: syslog
+  repeat_messages: false
   buffered:
     size: 64000
+  event:
+    global_link_status: true

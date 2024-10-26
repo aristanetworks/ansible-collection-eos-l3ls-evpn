@@ -17,20 +17,20 @@
 
 | Management Interface | Description | Type | VRF | IP Address | Gateway |
 | -------------------- | ----------- | ---- | --- | ---------- | ------- |
-| Management1 | oob_management | oob | MGMT | 10.73.255.122/24 | 10.73.255.2 |
+| Management1 | OOB_MANAGEMENT | oob | MGMT | 10.73.255.122/24 | 10.73.255.2 |
 
 ##### IPv6
 
 | Management Interface | Description | Type | VRF | IPv6 Address | IPv6 Gateway |
 | -------------------- | ----------- | ---- | --- | ------------ | ------------ |
-| Management1 | oob_management | oob | MGMT | - | - |
+| Management1 | OOB_MANAGEMENT | oob | MGMT | - | - |
 
 #### Management Interfaces Device Configuration
 
 ```eos
 !
 interface Management1
-   description oob_management
+   description OOB_MANAGEMENT
    vrf MGMT
    ip address 10.73.255.122/24
 ```
@@ -47,15 +47,6 @@ interface Management1
 
 ```eos
 !
-ip access-list ACL_SEQUENCE_AND_COUNTERS
-   counters per-entry
-   10 remark test acl with sequence numbers
-   20 permit ip 10.0.0.0/8 any
-   30 permit tcp host 192.168.122.22 any established
-   40 permit tcp any gt 1023 host 172.16.16.16 eq 22
-   50 permit tcp any range 1000 1100 any range 10 20
-   4294967295 deny ip any any
-!
 ip access-list ACL_NO_SEQUENCE
    remark test acl without sequence numbers
    deny udp any any log
@@ -66,4 +57,14 @@ ip access-list ACL_NO_SEQUENCE
    permit ip any any nexthop-group NH_TEST
    permit vlan inner 123 0x000 ip any any
    permit vlan 234 0xFFF ip any any
+!
+ip access-list ACL_SEQUENCE_AND_COUNTERS
+   counters per-entry
+   10 remark test acl with sequence numbers
+   20 permit ip 10.0.0.0/8 any
+   30 permit tcp host 192.168.122.22 any established
+   40 permit tcp any gt 1023 host 172.16.16.16 eq 22
+   50 permit tcp any range 1000 1100 any range 10 20
+   4294967295 deny ip any any
+   permit response traffic nat
 ```

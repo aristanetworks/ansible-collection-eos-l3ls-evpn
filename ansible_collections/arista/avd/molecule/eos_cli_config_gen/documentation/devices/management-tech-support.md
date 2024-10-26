@@ -16,20 +16,20 @@
 
 | Management Interface | Description | Type | VRF | IP Address | Gateway |
 | -------------------- | ----------- | ---- | --- | ---------- | ------- |
-| Management1 | oob_management | oob | MGMT | 10.73.255.122/24 | 10.73.255.2 |
+| Management1 | OOB_MANAGEMENT | oob | MGMT | 10.73.255.122/24 | 10.73.255.2 |
 
 ##### IPv6
 
 | Management Interface | Description | Type | VRF | IPv6 Address | IPv6 Gateway |
 | -------------------- | ----------- | ---- | --- | ------------ | ------------ |
-| Management1 | oob_management | oob | MGMT | - | - |
+| Management1 | OOB_MANAGEMENT | oob | MGMT | - | - |
 
 #### Management Interfaces Device Configuration
 
 ```eos
 !
 interface Management1
-   description oob_management
+   description OOB_MANAGEMENT
    vrf MGMT
    ip address 10.73.255.122/24
 ```
@@ -64,14 +64,14 @@ interface Management1
 !
 management tech-support
    policy show tech-support
-      exclude command show platform fap ip route
-      exclude command show platform fap ipv6 route
       exclude command show ip bgp vrf all
+      exclude command show ip route vrf all detail
       exclude command show ipv6 bgp vrf all
+      exclude command show ipv6 route vrf all detail
       exclude command show kernel ip route vrf all
       exclude command show kernel ipv6 route vrf all
-      exclude command show ip route vrf all detail
-      exclude command show ipv6 route vrf all detail
+      exclude command show platform fap ip route
+      exclude command show platform fap ipv6 route
       exclude command json show version detail
       include command show version detail | grep TerminAttr
    exit

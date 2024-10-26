@@ -11,6 +11,10 @@ router_bgp:
   maximum_paths:
     paths: 4
     ecmp: 4
+  redistribute:
+    connected:
+      enabled: true
+      route_map: RM-CONN-2-BGP
   updates:
     wait_install: true
   peer_groups:
@@ -34,9 +38,6 @@ router_bgp:
       activate: true
     - name: EVPN-OVERLAY-PEERS
       activate: false
-  redistribute_routes:
-  - source_protocol: connected
-    route_map: RM-CONN-2-BGP
   neighbors:
   - ip_address: 172.31.254.3
     peer_group: UNDERLAY-PEERS
@@ -243,7 +244,7 @@ vrfs:
   ip_routing: false
 management_interfaces:
 - name: Management0
-  description: oob_management
+  description: OOB_MANAGEMENT
   shutdown: false
   vrf: MGMT
   ip_address: 192.168.200.102/24
@@ -282,7 +283,8 @@ ethernet_interfaces:
   speed: forced 100gfull
   shutdown: false
   mtu: 1500
-  type: routed
+  switchport:
+    enabled: false
   ip_address: 172.31.254.2/31
 - name: Ethernet1/3/1
   peer: DC1-LEAF2A
@@ -292,7 +294,8 @@ ethernet_interfaces:
   speed: forced 100gfull
   shutdown: false
   mtu: 1500
-  type: routed
+  switchport:
+    enabled: false
   ip_address: 172.31.254.34/31
 - name: Ethernet1/4/1
   peer: DC1-LEAF2A
@@ -302,7 +305,8 @@ ethernet_interfaces:
   speed: forced 100gfull
   shutdown: false
   mtu: 1500
-  type: routed
+  switchport:
+    enabled: false
   ip_address: 172.31.254.36/31
 - name: Ethernet1/5/1
   peer: DC1-LEAF2B
@@ -312,7 +316,8 @@ ethernet_interfaces:
   speed: forced 100gfull
   shutdown: false
   mtu: 1500
-  type: routed
+  switchport:
+    enabled: false
   ip_address: 172.31.254.66/31
 - name: Ethernet1/6/1
   peer: DC1-LEAF2B
@@ -322,7 +327,8 @@ ethernet_interfaces:
   speed: forced 100gfull
   shutdown: false
   mtu: 1500
-  type: routed
+  switchport:
+    enabled: false
   ip_address: 172.31.254.68/31
 - name: Ethernet1/7/1
   peer: DC1-SVC3A
@@ -332,7 +338,8 @@ ethernet_interfaces:
   speed: forced 100gfull
   shutdown: false
   mtu: 1500
-  type: routed
+  switchport:
+    enabled: false
   ip_address: 172.31.254.98/31
 - name: Ethernet1/9/1
   peer: DC1-SVC3B
@@ -342,7 +349,8 @@ ethernet_interfaces:
   speed: forced 100gfull
   shutdown: false
   mtu: 1500
-  type: routed
+  switchport:
+    enabled: false
   ip_address: 172.31.254.130/31
 - name: Ethernet22
   peer: DC1-BL1A
@@ -352,7 +360,8 @@ ethernet_interfaces:
   speed: forced 100gfull
   shutdown: false
   mtu: 1500
-  type: routed
+  switchport:
+    enabled: false
   ip_address: 172.31.254.162/31
 - name: Ethernet23
   peer: DC1-BL1B
@@ -362,7 +371,8 @@ ethernet_interfaces:
   speed: forced 100gfull
   shutdown: false
   mtu: 1500
-  type: routed
+  switchport:
+    enabled: false
   ip_address: 172.31.254.194/31
 - name: Ethernet24
   peer: DC1-BL2A
@@ -372,7 +382,8 @@ ethernet_interfaces:
   speed: forced 100gfull
   shutdown: false
   mtu: 1500
-  type: routed
+  switchport:
+    enabled: false
   ip_address: 172.31.254.226/31
 - name: Ethernet25
   peer: DC1-BL2B
@@ -382,7 +393,8 @@ ethernet_interfaces:
   speed: forced 100gfull
   shutdown: false
   mtu: 1500
-  type: routed
+  switchport:
+    enabled: false
   ip_address: 172.31.255.2/31
 - name: Ethernet26
   peer: DC1-CL1A
@@ -392,7 +404,8 @@ ethernet_interfaces:
   speed: forced 100gfull
   shutdown: false
   mtu: 1500
-  type: routed
+  switchport:
+    enabled: false
   ip_address: 172.31.255.34/31
 - name: Ethernet27
   peer: DC1-CL1B
@@ -402,7 +415,8 @@ ethernet_interfaces:
   speed: forced 100gfull
   shutdown: false
   mtu: 1500
-  type: routed
+  switchport:
+    enabled: false
   ip_address: 172.31.255.66/31
 - name: Ethernet28
   peer: DC1_UNDEPLOYED_LEAF1A
@@ -412,7 +426,8 @@ ethernet_interfaces:
   speed: 100g-2
   shutdown: true
   mtu: 1500
-  type: routed
+  switchport:
+    enabled: false
   ip_address: 172.31.255.130/31
 - name: Ethernet29
   peer: DC1_UNDEPLOYED_LEAF1B
@@ -422,11 +437,12 @@ ethernet_interfaces:
   speed: forced 100gfull
   shutdown: true
   mtu: 1500
-  type: routed
+  switchport:
+    enabled: false
   ip_address: 172.31.255.162/31
 loopback_interfaces:
 - name: Loopback0
-  description: EVPN_Overlay_Peering
+  description: ROUTER_ID
   shutdown: false
   ip_address: 192.168.255.2/32
 prefix_lists:

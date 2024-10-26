@@ -31,8 +31,5 @@ provisioner:
       hosts: 'inventory/hosts.yml'
       group_vars: 'inventory/group_vars/'
       host_vars: 'inventory/host_vars/'
-  ansible_args:
-    - --tags=generate,build
-    - --skip-tags=online
 verifier:
   name: ansible

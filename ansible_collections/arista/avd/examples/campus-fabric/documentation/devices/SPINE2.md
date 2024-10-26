@@ -51,20 +51,20 @@
 
 | Management Interface | Description | Type | VRF | IP Address | Gateway |
 | -------------------- | ----------- | ---- | --- | ---------- | ------- |
-| Management0 | oob_management | oob | MGMT | 172.16.100.102/24 | 172.16.100.1 |
+| Management0 | OOB_MANAGEMENT | oob | MGMT | 172.16.100.102/24 | 172.16.100.1 |
 
 ##### IPv6
 
 | Management Interface | Description | Type | VRF | IPv6 Address | IPv6 Gateway |
 | -------------------- | ----------- | ---- | --- | ------------ | ------------ |
-| Management0 | oob_management | oob | MGMT | - | - |
+| Management0 | OOB_MANAGEMENT | oob | MGMT | - | - |
 
 #### Management Interfaces Device Configuration
 
 ```eos
 !
 interface Management0
-   description oob_management
+   description OOB_MANAGEMENT
    no shutdown
    vrf MGMT
    ip address 172.16.100.102/24
@@ -255,8 +255,8 @@ vlan internal order ascending range 1006 1199
 | 310 | IDF3-Data | - |
 | 320 | IDF3-Voice | - |
 | 330 | IDF3-Guest | - |
-| 4093 | LEAF_PEER_L3 | LEAF_PEER_L3 |
-| 4094 | MLAG_PEER | MLAG |
+| 4093 | MLAG_L3 | MLAG |
+| 4094 | MLAG | MLAG |
 
 ### VLANs Device Configuration
 
@@ -293,11 +293,11 @@ vlan 330
    name IDF3-Guest
 !
 vlan 4093
-   name LEAF_PEER_L3
-   trunk group LEAF_PEER_L3
+   name MLAG_L3
+   trunk group MLAG
 !
 vlan 4094
-   name MLAG_PEER
+   name MLAG
    trunk group MLAG
 ```
 
@@ -311,12 +311,12 @@ vlan 4094
 
 | Interface | Description | Mode | VLANs | Native VLAN | Trunk Group | Channel-Group |
 | --------- | ----------- | ---- | ----- | ----------- | ----------- | ------------- |
-| Ethernet1 | LEAF1B_Ethernet51 | *trunk | *10,110,120,130 | *- | *- | 1 |
-| Ethernet49/1 | LEAF2A_Ethernet1/3 | *trunk | *10,210,220,230 | *- | *- | 491 |
-| Ethernet50/1 | LEAF3A_Ethernet97/2 | *trunk | *10,310,320,330 | *- | *- | 501 |
-| Ethernet51/1 | LEAF3B_Ethernet97/2 | *trunk | *10,310,320,330 | *- | *- | 501 |
-| Ethernet55/1 | MLAG_PEER_SPINE1_Ethernet55/1 | *trunk | *- | *- | *LEAF_PEER_L3, MLAG | 551 |
-| Ethernet56/1 | MLAG_PEER_SPINE1_Ethernet56/1 | *trunk | *- | *- | *LEAF_PEER_L3, MLAG | 551 |
+| Ethernet1 | L2_LEAF1B_Ethernet51 | *trunk | *10,110,120,130 | *- | *- | 1 |
+| Ethernet49/1 | L2_LEAF2A_Ethernet1/3 | *trunk | *10,210,220,230 | *- | *- | 491 |
+| Ethernet50/1 | L2_LEAF3A_Ethernet97/2 | *trunk | *10,310,320,330 | *- | *- | 501 |
+| Ethernet51/1 | L2_LEAF3B_Ethernet97/2 | *trunk | *10,310,320,330 | *- | *- | 501 |
+| Ethernet55/1 | MLAG_SPINE1_Ethernet55/1 | *trunk | *- | *- | *MLAG | 551 |
+| Ethernet56/1 | MLAG_SPINE1_Ethernet56/1 | *trunk | *- | *- | *MLAG | 551 |
 
 *Inherited from Port-Channel Interface
 
@@ -324,34 +324,34 @@ vlan 4094
 
 | Interface | Description | Channel Group | IP Address | VRF |  MTU | Shutdown | ACL In | ACL Out |
 | --------- | ----------- | ------------- | ---------- | ----| ---- | -------- | ------ | ------- |
-| Ethernet52/1 | P2P_LINK_TO_WAN_Ethernet1/1 | - | 10.0.0.5/31 | default | 1500 | False | - | - |
+| Ethernet52/1 | P2P_WAN_Ethernet1/1 | - | 10.0.0.5/31 | default | 1500 | False | - | - |
 
 #### Ethernet Interfaces Device Configuration
 
 ```eos
 !
 interface Ethernet1
-   description LEAF1B_Ethernet51
+   description L2_LEAF1B_Ethernet51
    no shutdown
    channel-group 1 mode active
 !
 interface Ethernet49/1
-   description LEAF2A_Ethernet1/3
+   description L2_LEAF2A_Ethernet1/3
    no shutdown
    channel-group 491 mode active
 !
 interface Ethernet50/1
-   description LEAF3A_Ethernet97/2
+   description L2_LEAF3A_Ethernet97/2
    no shutdown
    channel-group 501 mode active
 !
 interface Ethernet51/1
-   description LEAF3B_Ethernet97/2
+   description L2_LEAF3B_Ethernet97/2
    no shutdown
    channel-group 501 mode active
 !
 interface Ethernet52/1
-   description P2P_LINK_TO_WAN_Ethernet1/1
+   description P2P_WAN_Ethernet1/1
    no shutdown
    mtu 1500
    no switchport
@@ -360,12 +360,12 @@ interface Ethernet52/1
    ip ospf area 0.0.0.0
 !
 interface Ethernet55/1
-   description MLAG_PEER_SPINE1_Ethernet55/1
+   description MLAG_SPINE1_Ethernet55/1
    no shutdown
    channel-group 551 mode active
 !
 interface Ethernet56/1
-   description MLAG_PEER_SPINE1_Ethernet56/1
+   description MLAG_SPINE1_Ethernet56/1
    no shutdown
    channel-group 551 mode active
 ```
@@ -378,46 +378,45 @@ interface Ethernet56/1
 
 | Interface | Description | Mode | VLANs | Native VLAN | Trunk Group | LACP Fallback Timeout | LACP Fallback Mode | MLAG ID | EVPN ESI |
 | --------- | ----------- | ---- | ----- | ----------- | ------------| --------------------- | ------------------ | ------- | -------- |
-| Port-Channel1 | IDF1_Po51 | trunk | 10,110,120,130 | - | - | - | - | 1 | - |
-| Port-Channel491 | LEAF2A_Po11 | trunk | 10,210,220,230 | - | - | - | - | 491 | - |
-| Port-Channel501 | IDF3_AGG_Po971 | trunk | 10,310,320,330 | - | - | - | - | 501 | - |
-| Port-Channel551 | MLAG_PEER_SPINE1_Po551 | trunk | - | - | LEAF_PEER_L3, MLAG | - | - | - | - |
+| Port-Channel1 | L2_IDF1_Port-Channel51 | trunk | 10,110,120,130 | - | - | - | - | 1 | - |
+| Port-Channel491 | L2_LEAF2A_Port-Channel11 | trunk | 10,210,220,230 | - | - | - | - | 491 | - |
+| Port-Channel501 | L2_IDF3_AGG_Port-Channel971 | trunk | 10,310,320,330 | - | - | - | - | 501 | - |
+| Port-Channel551 | MLAG_SPINE1_Port-Channel551 | trunk | - | - | MLAG | - | - | - | - |
 
 #### Port-Channel Interfaces Device Configuration
 
 ```eos
 !
 interface Port-Channel1
-   description IDF1_Po51
+   description L2_IDF1_Port-Channel51
    no shutdown
-   switchport
    switchport trunk allowed vlan 10,110,120,130
    switchport mode trunk
+   switchport
    mlag 1
 !
 interface Port-Channel491
-   description LEAF2A_Po11
+   description L2_LEAF2A_Port-Channel11
    no shutdown
-   switchport
    switchport trunk allowed vlan 10,210,220,230
    switchport mode trunk
+   switchport
    mlag 491
 !
 interface Port-Channel501
-   description IDF3_AGG_Po971
+   description L2_IDF3_AGG_Port-Channel971
    no shutdown
-   switchport
    switchport trunk allowed vlan 10,310,320,330
    switchport mode trunk
+   switchport
    mlag 501
 !
 interface Port-Channel551
-   description MLAG_PEER_SPINE1_Po551
+   description MLAG_SPINE1_Port-Channel551
    no shutdown
-   switchport
    switchport mode trunk
-   switchport trunk group LEAF_PEER_L3
    switchport trunk group MLAG
+   switchport
 ```
 
 ### Loopback Interfaces
@@ -428,20 +427,20 @@ interface Port-Channel551
 
 | Interface | Description | VRF | IP Address |
 | --------- | ----------- | --- | ---------- |
-| Loopback0 | Router_ID | default | 172.16.1.2/32 |
+| Loopback0 | ROUTER_ID | default | 172.16.1.2/32 |
 
 ##### IPv6
 
 | Interface | Description | VRF | IPv6 Address |
 | --------- | ----------- | --- | ------------ |
-| Loopback0 | Router_ID | default | - |
+| Loopback0 | ROUTER_ID | default | - |
 
 #### Loopback Interfaces Device Configuration
 
 ```eos
 !
 interface Loopback0
-   description Router_ID
+   description ROUTER_ID
    no shutdown
    ip address 172.16.1.2/32
    ip ospf area 0.0.0.0
@@ -463,8 +462,8 @@ interface Loopback0
 | Vlan310 | IDF3-Data | default | - | False |
 | Vlan320 | IDF3-Voice | default | - | False |
 | Vlan330 | IDF3-Guest | default | - | False |
-| Vlan4093 | MLAG_PEER_L3_PEERING | default | 1500 | False |
-| Vlan4094 | MLAG_PEER | default | 1500 | False |
+| Vlan4093 | MLAG_L3 | default | 1500 | False |
+| Vlan4094 | MLAG | default | 1500 | False |
 
 ##### IPv4
 
@@ -550,7 +549,7 @@ interface Vlan330
    ip virtual-router address 10.3.30.1
 !
 interface Vlan4093
-   description MLAG_PEER_L3_PEERING
+   description MLAG_L3
    no shutdown
    mtu 1500
    ip address 10.1.1.1/31
@@ -558,7 +557,7 @@ interface Vlan4093
    ip ospf area 0.0.0.0
 !
 interface Vlan4094
-   description MLAG_PEER
+   description MLAG
    no shutdown
    mtu 1500
    no autostate
@@ -659,10 +658,10 @@ ip route vrf MGMT 0.0.0.0/0 172.16.100.1
 router ospf 100
    router-id 172.16.1.2
    passive-interface default
-   no passive-interface Vlan4093
    no passive-interface Ethernet52/1
-   max-lsa 12000
+   no passive-interface Vlan4093
    redistribute connected
+   max-lsa 12000
 ```
 
 ## Multicast

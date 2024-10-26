@@ -2,19 +2,16 @@
 # Use of this source code is governed by the Apache License 2.0
 # that can be found in the LICENSE file.
 - name: "Collecting facts from CVP {{ inventory_hostname }}"
-  tags: [provision, apply]
   arista.cvp.cv_facts:
   register: cvp_facts
 
 - name: "Create configlets on CVP {{ inventory_hostname }}"
-  tags: [provision, apply]
   arista.cvp.cv_configlet:
     cvp_facts: "{{ cvp_facts.ansible_facts }}"
     configlets: "{{ cvp_vars.cvp_configlets }}"
     configlet_filter: ["{{ configlets_cvp_prefix }}"]
 
 - name: "Execute pending tasks on {{ inventory_hostname }}"
-  tags: [apply]
   arista.cvp.cv_task:
     tasks: "{{ cvp_devices_results.data.tasks }}"  # noqa: args[module]
     wait: 720

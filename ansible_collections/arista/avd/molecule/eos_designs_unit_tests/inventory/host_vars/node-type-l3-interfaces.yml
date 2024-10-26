@@ -1,9 +1,10 @@
+---
 type: spine
 spine:
   nodes:
     - name: node-type-l3-interfaces
       id: 1
-      evpn_role: "none"
+      evpn_role: none
       loopback_ipv4_pool: 1.2.3.4/24
       bgp_as: 65000
       l3_interfaces:
@@ -43,3 +44,12 @@ l3_interface_profiles:
           input: TEST_POLICY
     raw_eos_cli: |
       ! TEST RAW_EOS_CLI
+
+# Test for sflow on l3_interfaces from node_type
+sflow_settings:
+  destinations:
+    - destination: 10.10.10.12
+      vrf: sflow_vrf
+      port: 1234
+fabric_sflow:
+  l3_interfaces: true

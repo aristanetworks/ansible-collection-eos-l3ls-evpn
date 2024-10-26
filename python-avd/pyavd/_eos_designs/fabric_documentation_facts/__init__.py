@@ -38,7 +38,7 @@ class FabricDocumentationFacts(AvdFacts):
 
     @cached_property
     def fabric_name(self) -> str:
-        """Fabric Name used for heading of MarkDown doc."""
+        """Fabric Name used for heading of Markdown doc."""
         return self._fabric_name
 
     @cached_property
@@ -112,7 +112,7 @@ class FabricDocumentationFacts(AvdFacts):
                 else:
                     peer_ip_address = None
 
-                routed = get(ethernet_interface, "type") == "routed"
+                routed = get(ethernet_interface, "switchport.enabled") is False
 
                 data = (
                     self.avd_switch_facts[hostname]["type"],  # type
@@ -260,9 +260,11 @@ class FabricDocumentationFacts(AvdFacts):
                         "fabric_port": ethernet_interface["name"],
                         "description": get(ethernet_interface, "description", default="-"),
                         "shutdown": default(get(ethernet_interface, "shutdown"), get(port_channel_interface, "shutdown"), "-"),
-                        "type": default(get(port_channel_interface, "type"), get(ethernet_interface, "type"), "-"),
-                        "mode": default(get(ethernet_interface, "mode"), get(port_channel_interface, "mode"), "-"),
-                        "vlans": default(get(ethernet_interface, "vlans"), get(port_channel_interface, "vlans"), "-"),
+                        "mode": default(get(ethernet_interface, "switchport.mode"), get(port_channel_interface, "switchport.mode"), "-"),
+                        "access_vlan": default(get(ethernet_interface, "switchport.access_vlan"), get(port_channel_interface, "switchport.access_vlan"), "-"),
+                        "trunk_allowed_vlan": default(
+                            get(ethernet_interface, "switchport.trunk.allowed_vlan"), get(port_channel_interface, "switchport.trunk.allowed_vlan"), "-"
+                        ),
                         "profile": default(get(ethernet_interface, "port_profile"), "-"),
                     }
                 )

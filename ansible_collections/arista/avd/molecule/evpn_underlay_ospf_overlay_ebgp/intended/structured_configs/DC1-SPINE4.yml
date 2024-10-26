@@ -35,37 +35,37 @@ router_bgp:
   - ip_address: 192.168.255.10
     peer_group: EVPN-OVERLAY-PEERS
     peer: DC1-BL1A
-    description: DC1-BL1A
+    description: DC1-BL1A_Loopback0
     remote_as: '65104'
   - ip_address: 192.168.255.11
     peer_group: EVPN-OVERLAY-PEERS
     peer: DC1-BL1B
-    description: DC1-BL1B
+    description: DC1-BL1B_Loopback0
     remote_as: '65104'
   - ip_address: 192.168.255.5
     peer_group: EVPN-OVERLAY-PEERS
     peer: DC1-LEAF1A
-    description: DC1-LEAF1A
+    description: DC1-LEAF1A_Loopback0
     remote_as: '65101'
   - ip_address: 192.168.255.6
     peer_group: EVPN-OVERLAY-PEERS
     peer: DC1-LEAF2A
-    description: DC1-LEAF2A
+    description: DC1-LEAF2A_Loopback0
     remote_as: '65102'
   - ip_address: 192.168.255.7
     peer_group: EVPN-OVERLAY-PEERS
     peer: DC1-LEAF2B
-    description: DC1-LEAF2B
+    description: DC1-LEAF2B_Loopback0
     remote_as: '65102'
   - ip_address: 192.168.255.8
     peer_group: EVPN-OVERLAY-PEERS
     peer: DC1-SVC3A
-    description: DC1-SVC3A
+    description: DC1-SVC3A_Loopback0
     remote_as: '65103'
   - ip_address: 192.168.255.9
     peer_group: EVPN-OVERLAY-PEERS
     peer: DC1-SVC3B
-    description: DC1-SVC3B
+    description: DC1-SVC3B_Loopback0
     remote_as: '65103'
 static_routes:
 - vrf: MGMT
@@ -115,7 +115,7 @@ vrfs:
   ip_routing: false
 management_interfaces:
 - name: Management1
-  description: oob_management
+  description: OOB_MANAGEMENT
   shutdown: false
   vrf: MGMT
   ip_address: 192.168.200.104/24
@@ -138,10 +138,11 @@ ethernet_interfaces:
   peer: DC1-LEAF1A
   peer_interface: Ethernet4
   peer_type: l3leaf
-  description: P2P_LINK_TO_DC1-LEAF1A_Ethernet4
+  description: P2P_DC1-LEAF1A_Ethernet4
   shutdown: false
   mtu: 1500
-  type: routed
+  switchport:
+    enabled: false
   ip_address: 172.31.255.6/31
   ospf_network_point_to_point: true
   ospf_area: 0.0.0.0
@@ -154,10 +155,11 @@ ethernet_interfaces:
   peer: DC1-LEAF2A
   peer_interface: Ethernet4
   peer_type: l3leaf
-  description: P2P_LINK_TO_DC1-LEAF2A_Ethernet4
+  description: P2P_DC1-LEAF2A_Ethernet4
   shutdown: false
   mtu: 1500
-  type: routed
+  switchport:
+    enabled: false
   ip_address: 172.31.255.14/31
   ospf_network_point_to_point: true
   ospf_area: 0.0.0.0
@@ -170,10 +172,11 @@ ethernet_interfaces:
   peer: DC1-LEAF2B
   peer_interface: Ethernet4
   peer_type: l3leaf
-  description: P2P_LINK_TO_DC1-LEAF2B_Ethernet4
+  description: P2P_DC1-LEAF2B_Ethernet4
   shutdown: false
   mtu: 1500
-  type: routed
+  switchport:
+    enabled: false
   ip_address: 172.31.255.22/31
   ospf_network_point_to_point: true
   ospf_area: 0.0.0.0
@@ -186,10 +189,11 @@ ethernet_interfaces:
   peer: DC1-SVC3A
   peer_interface: Ethernet4
   peer_type: l3leaf
-  description: P2P_LINK_TO_DC1-SVC3A_Ethernet4
+  description: P2P_DC1-SVC3A_Ethernet4
   shutdown: false
   mtu: 1500
-  type: routed
+  switchport:
+    enabled: false
   ip_address: 172.31.255.30/31
   ospf_network_point_to_point: true
   ospf_area: 0.0.0.0
@@ -202,10 +206,11 @@ ethernet_interfaces:
   peer: DC1-SVC3B
   peer_interface: Ethernet4
   peer_type: l3leaf
-  description: P2P_LINK_TO_DC1-SVC3B_Ethernet4
+  description: P2P_DC1-SVC3B_Ethernet4
   shutdown: false
   mtu: 1500
-  type: routed
+  switchport:
+    enabled: false
   ip_address: 172.31.255.38/31
   ospf_network_point_to_point: true
   ospf_area: 0.0.0.0
@@ -218,10 +223,11 @@ ethernet_interfaces:
   peer: DC1-BL1A
   peer_interface: Ethernet4
   peer_type: l3leaf
-  description: P2P_LINK_TO_DC1-BL1A_Ethernet4
+  description: P2P_DC1-BL1A_Ethernet4
   shutdown: false
   mtu: 1500
-  type: routed
+  switchport:
+    enabled: false
   ip_address: 172.31.255.46/31
   ospf_network_point_to_point: true
   ospf_area: 0.0.0.0
@@ -234,10 +240,11 @@ ethernet_interfaces:
   peer: DC1-BL1B
   peer_interface: Ethernet4
   peer_type: l3leaf
-  description: P2P_LINK_TO_DC1-BL1B_Ethernet4
+  description: P2P_DC1-BL1B_Ethernet4
   shutdown: false
   mtu: 1500
-  type: routed
+  switchport:
+    enabled: false
   ip_address: 172.31.255.54/31
   ospf_network_point_to_point: true
   ospf_area: 0.0.0.0
@@ -248,7 +255,7 @@ ethernet_interfaces:
     key: kguPGHyy/wCN0mKibi4dLRL4PmsrU4UP
 loopback_interfaces:
 - name: Loopback0
-  description: EVPN_Overlay_Peering
+  description: ROUTER_ID
   shutdown: false
   ip_address: 192.168.255.4/32
   ospf_area: 0.0.0.0

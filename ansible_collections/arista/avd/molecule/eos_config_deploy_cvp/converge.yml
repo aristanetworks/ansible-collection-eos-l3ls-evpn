@@ -31,6 +31,8 @@
         execute_tasks: false
         state: present
         cv_collection: v3
+        # Run tests without interacting with CVP.
+        avd_eos_config_deploy_cvp_provision: false
 
 - name: "Converge -- Build Cloudvision Configuration - empty filter as a string"
   hosts: CVP
@@ -52,3 +54,5 @@
         cv_collection: v3
         # overwriting the default structured_cvp_dir_name to get different files
         structured_cvp_dir_name: cvp-empty-filter
+        # Run tests without interacting with CVP.
+        avd_eos_config_deploy_cvp_provision: false

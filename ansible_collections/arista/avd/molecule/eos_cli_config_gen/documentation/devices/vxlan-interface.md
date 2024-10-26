@@ -17,20 +17,20 @@
 
 | Management Interface | Description | Type | VRF | IP Address | Gateway |
 | -------------------- | ----------- | ---- | --- | ---------- | ------- |
-| Management1 | oob_management | oob | MGMT | 10.73.255.122/24 | 10.73.255.2 |
+| Management1 | OOB_MANAGEMENT | oob | MGMT | 10.73.255.122/24 | 10.73.255.2 |
 
 ##### IPv6
 
 | Management Interface | Description | Type | VRF | IPv6 Address | IPv6 Gateway |
 | -------------------- | ----------- | ---- | --- | ------------ | ------------ |
-| Management1 | oob_management | oob | MGMT | - | - |
+| Management1 | OOB_MANAGEMENT | oob | MGMT | - | - |
 
 #### Management Interfaces Device Configuration
 
 ```eos
 !
 interface Management1
-   description oob_management
+   description OOB_MANAGEMENT
    vrf MGMT
    ip address 10.73.255.122/24
 ```
@@ -94,20 +94,20 @@ interface Vxlan1
    vxlan flood vtep learned data-plane
    vxlan vlan 110 vni 10110
    vxlan vlan 111 vni 10111
-   vxlan vlan 111 flood vtep 10.1.1.10 10.1.1.11
    vxlan vrf Tenant_A_OP_Zone vni 10
    vxlan vrf Tenant_A_WEB_Zone vni 11
    vxlan mlag source-interface Loopback1
    bfd vtep evpn interval 300 min-rx 300 multiplier 3
    bfd vtep evpn prefix-list PL-TEST
    vxlan flood vtep 10.1.0.10 10.1.0.11
-   vxlan qos dscp propagation encapsulation
-   vxlan qos ecn propagation
-   vxlan qos map dscp to traffic-class decapsulation
+   vxlan vlan 111 flood vtep 10.1.1.10 10.1.1.11
    vxlan vlan 110 multicast group 239.9.1.4
    vxlan vlan 112 multicast group 239.9.1.6
    vxlan vrf Tenant_A_OP_Zone multicast group 232.0.0.10
    vxlan multicast headend-replication
+   vxlan qos ecn propagation
+   vxlan qos dscp propagation encapsulation
+   vxlan qos map dscp to traffic-class decapsulation
    vxlan encapsulation ipv4
 
 ```

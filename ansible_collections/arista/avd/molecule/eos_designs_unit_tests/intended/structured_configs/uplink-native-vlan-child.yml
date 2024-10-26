@@ -31,19 +31,20 @@ ethernet_interfaces:
   peer: uplink-native-vlan-parent
   peer_interface: Ethernet2
   peer_type: l2leaf
-  description: UPLINK-NATIVE-VLAN-PARENT_Ethernet2
+  description: L2_uplink-native-vlan-parent_Ethernet2
   shutdown: false
-  type: port-channel-member
   channel_group:
     id: 2
     mode: active
 port_channel_interfaces:
 - name: Port-Channel2
-  description: UPLINK-NATIVE-VLAN-PARENT_Po2
-  type: switched
+  description: L2_uplink-native-vlan-parent_Port-Channel2
+  switchport:
+    enabled: true
+    mode: trunk
+    trunk:
+      native_vlan: 200
+      allowed_vlan: '100'
   shutdown: false
-  mode: trunk
-  native_vlan: 200
-  vlans: '100'
 ip_igmp_snooping:
   globally_enabled: true

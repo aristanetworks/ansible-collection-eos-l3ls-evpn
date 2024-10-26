@@ -10,6 +10,27 @@ l2leaf:
         enabled: true
 
 servers:
+  # port-channel provide physical and port-channel descriptions as templates with all fields
+  - name: OLD_SW-1/2
+    adapters:
+      - switches: [connected_endpoints, connected_endpoints]
+        switch_ports: [Ethernet1, Ethernet2]
+        endpoint_ports: [Endpoint_port1, ENDPOINT_PORT2]
+        description: "Interface description {endpoint_type}_{endpoint}{endpoint_port?<_!u}"
+        port_channel:
+          mode: "active"
+          description: "Port channel description {endpoint_type}_{endpoint}_Po{port_channel_id}_{endpoint_port_channel}_{adapter_description!u}"
+          endpoint_port_channel: ENDPOINT_PORT_CHANNEL
+  # port-channel and physical port with default descriptions - all fields
+  - name: OLD_SW-1/3
+    adapters:
+      - switches: [connected_endpoints]
+        switch_ports: [Ethernet3]
+        endpoint_ports: [ENDPOINT_PORT]
+        port_channel:
+          mode: active
+          endpoint_port_channel: ENDPOINT_PORT_CHANNEL
+
   # single port override physical port description
   - name: OLD_SW-1/4
     adapters:
@@ -33,6 +54,7 @@ servers:
         port_channel:
           mode: "active"
           description: "PORT_CHANNEL_DESCRIPTION"
+
   # Testing of play_vars in eos_designs_structured_config
   # Single port override physical port description with play_var
   - name: SERVER_WITH_PLAYVAR_DESCRIPTION
@@ -56,16 +78,16 @@ servers:
         switch_ports: [Ethernet12, Ethernet13]
         port_channel:
           mode: "active"
-          description: "INDIVIDUAL_1"
+          endpoint_port_channel: "INDIVIDUAL_1"
           lacp_fallback:
             mode: individual
             individual:
-              profile: INDIVIDUAL_TRUNK
+              profile: INDIVIDUAL_TRUNK  # Notice that poe and dot1x are _not_ inherited from the fallback profile.
   - name: DOT1X_UNAUTHORIZED
     adapters:
       - switches: [connected_endpoints]
         switch_ports: [Ethernet14]
-        profile: INDIVIDUAL_TRUNK
+        profile: INDIVIDUAL_TRUNK  # Notice that poe and dot1x _are_ inherited from the main profile.
   - name: INDIVIDUAL_2_TRUNK_PHONE
     adapters:
       - switches: [connected_endpoints, connected_endpoints]
@@ -76,6 +98,13 @@ servers:
             mode: individual
             individual:
               profile: INDIVIDUAL_TRUNK_PHONE
+  - name: DOT1X_UNAUTHORIZED_PORT_CHANNEL
+    adapters:
+      - switches: [connected_endpoints, connected_endpoints]
+        switch_ports: [Ethernet17, Ethernet18]
+        profile: INDIVIDUAL_TRUNK  # Notice that poe and dot1x _are_ inherited from the main profile and applied to the member interfaces.
+        port_channel:
+          mode: active
 port_profiles:
   - profile: INDIVIDUAL_TRUNK
     mode: trunk

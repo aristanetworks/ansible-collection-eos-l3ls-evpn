@@ -4,3 +4,14 @@
 
 wan_ha:
   lan_ha_path_group_name: CUSTOM_LAN_HA
+
+# Testing having only control_plane ipsec profile and making sure it is used for
+# HA path-group. Yes it makes for asymmetric config with 2A but this is a unit
+# test.
+wan_ipsec_profiles:
+  control_plane:
+    profile_name: ONE-PROFILE-TO-CONTROL-THEM-ALL
+    shared_key: ABCDEF1234567890
+
+# Testing vxlan encapsulation
+wan_encapsulation: vxlan

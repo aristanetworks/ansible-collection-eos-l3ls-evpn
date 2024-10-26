@@ -7,6 +7,8 @@
 type: dict
 keys:
   monitor_session_default_encapsulation_gre:
+    documentation_options:
+      table: monitor-sessions
     type: dict
     keys:
       payload:

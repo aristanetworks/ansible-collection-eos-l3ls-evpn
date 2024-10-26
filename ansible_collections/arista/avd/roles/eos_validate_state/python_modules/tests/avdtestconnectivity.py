@@ -36,7 +36,7 @@ class AvdTestP2PIPReachability(AvdTestBase):
 
         for idx, interface in enumerate(ethernet_interfaces):
             self.update_interface_shutdown(interface)
-            if not self.validate_data(data=interface, data_path=f"ethernet_interfaces.[{idx}]", required_keys=required_keys, type="routed", shutdown=False):
+            if not self.validate_data(data=interface, data_path=f"ethernet_interfaces.[{idx}]", required_keys=required_keys, shutdown=False):
                 continue
 
             if not self.is_peer_available(peer := interface["peer"]):

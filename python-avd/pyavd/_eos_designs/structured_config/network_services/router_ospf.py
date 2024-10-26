@@ -6,7 +6,7 @@ from __future__ import annotations
 from functools import cached_property
 from typing import TYPE_CHECKING
 
-from pyavd._errors import AristaAvdMissingVariableError
+from pyavd._errors import AristaAvdInvalidInputsError
 from pyavd._utils import append_if_not_duplicate, default, get
 
 from .utils import UtilsMixin
@@ -59,7 +59,7 @@ class RouterOspfMixin(UtilsMixin):
                 process_id = default(get(vrf, "ospf.process_id"), vrf.get("vrf_id"))
                 if not process_id:
                     msg = f"'ospf.process_id' or 'vrf_id' under vrf '{vrf['name']}"
-                    raise AristaAvdMissingVariableError(msg)
+                    raise AristaAvdInvalidInputsError(msg)
 
                 process = {
                     "id": process_id,

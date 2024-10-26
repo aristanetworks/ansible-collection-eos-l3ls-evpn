@@ -1,0 +1,13 @@
+{#
+ Copyright (c) 2023-2024 Arista Networks, Inc.
+ Use of this source code is governed by the Apache License 2.0
+ that can be found in the LICENSE file.
+#}
+{# PBR class-map #}
+{% for class_map in class_maps.pbr | arista.avd.natural_sort('name') %}
+!
+class-map type pbr match-any {{ class_map.name }}
+{%     if class_map.ip.access_group is arista.avd.defined %}
+   match ip access-group {{ class_map.ip.access_group }}
+{%     endif %}
+{% endfor %}

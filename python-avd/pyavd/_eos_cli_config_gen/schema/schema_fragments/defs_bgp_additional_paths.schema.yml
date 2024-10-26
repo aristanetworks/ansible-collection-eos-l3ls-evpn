@@ -1,0 +1,28 @@
+# Copyright (c) 2024 Arista Networks, Inc.
+# Use of this source code is governed by the Apache License 2.0
+# that can be found in the LICENSE file.
+type: dict
+$defs:
+  bgp_additional_paths:
+    type: dict
+    keys:
+      receive:
+        type: bool
+        description: Enable or disable reception of additional-paths.
+      send:
+        type: str
+        description: |-
+          Select an option to send multiple paths for same prefix through bgp updates.
+          any: Send any eligible path.
+          backup: Best path and installed backup path.
+          ecmp: All paths in best path ECMP group.
+          limit: Limit to n eligible paths.
+          disabled: Disable sending any paths.
+        valid_values: [ 'any', 'backup', 'ecmp', 'limit', 'disabled' ]
+      send_limit:
+        type: int
+        description: Number of paths to send through bgp updates. For this setting, `send` must be set to `limit` or `ecmp`.
+        convert_types:
+          - str
+        min: 2
+        max: 64

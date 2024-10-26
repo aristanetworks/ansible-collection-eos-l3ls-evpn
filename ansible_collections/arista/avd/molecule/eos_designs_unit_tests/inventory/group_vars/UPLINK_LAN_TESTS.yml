@@ -16,6 +16,13 @@ fabric_flow_tracking:
   downlinks:
     enabled: true
 
+# Test p2p_uplinks_mtu
+p2p_uplinks_mtu: 9214
+platform_settings:
+  - platforms: [ default ]
+    # platform settings p2p_uplinks_mtu takes precedence
+    p2p_uplinks_mtu: 9218
+
 wan_router: # dynamic_key: node_type
   defaults:
     bgp_as: 65100
@@ -62,7 +69,7 @@ tenants: # dynamic_key: network_services
             ip_address: 10.0.10.1/24
             enabled: true
             tags: [wan_router, l2leaf]
-            mtu: 9214
+            mtu: 9218
           - id: 100
             name: VLAN100
             description: "My vlan 100"

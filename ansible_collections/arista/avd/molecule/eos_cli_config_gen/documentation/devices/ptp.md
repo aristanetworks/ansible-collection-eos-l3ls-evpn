@@ -19,20 +19,20 @@
 
 | Management Interface | Description | Type | VRF | IP Address | Gateway |
 | -------------------- | ----------- | ---- | --- | ---------- | ------- |
-| Management1 | oob_management | oob | MGMT | 10.73.255.122/24 | 10.73.255.2 |
+| Management1 | OOB_MANAGEMENT | oob | MGMT | 10.73.255.122/24 | 10.73.255.2 |
 
 ##### IPv6
 
 | Management Interface | Description | Type | VRF | IPv6 Address | IPv6 Gateway |
 | -------------------- | ----------- | ---- | --- | ------------ | ------------ |
-| Management1 | oob_management | oob | MGMT | - | - |
+| Management1 | OOB_MANAGEMENT | oob | MGMT | - | - |
 
 #### Management Interfaces Device Configuration
 
 ```eos
 !
 interface Management1
-   description oob_management
+   description OOB_MANAGEMENT
    vrf MGMT
    ip address 10.73.255.122/24
 ```
@@ -52,28 +52,28 @@ PTP Profile: g8275.1
 ```eos
 !
 ptp clock-identity 11:11:11:11:11:11
-ptp source ip 1.1.2.3
+ptp domain 17
+ptp message-type event dscp 46 default
+ptp message-type general dscp 36 default
+ptp mode boundary one-step
 ptp priority1 101
 ptp priority2 102
 ptp profile g8275.1
+ptp source ip 1.1.2.3
 ptp ttl 12
-ptp domain 17
-ptp message-type general dscp 36 default
-ptp message-type event dscp 46 default
-ptp mode boundary one-step
 ptp forward-unicast
 ptp monitor threshold offset-from-master 11
 ptp monitor threshold mean-path-delay 12
-ptp monitor threshold offset-from-master 13 nanoseconds drop
 ptp monitor threshold mean-path-delay 14 nanoseconds drop
-ptp monitor threshold missing-message announce 101 intervals
-ptp monitor threshold missing-message follow-up 102 intervals
+ptp monitor threshold offset-from-master 13 nanoseconds drop
 ptp monitor threshold missing-message sync 103 intervals
+ptp monitor threshold missing-message follow-up 102 intervals
+ptp monitor threshold missing-message announce 101 intervals
 ptp monitor sequence-id
-ptp monitor threshold missing-message announce 201 sequence-ids
-ptp monitor threshold missing-message delay-resp 202 sequence-ids
-ptp monitor threshold missing-message follow-up 203 sequence-ids
 ptp monitor threshold missing-message sync 204 sequence-ids
+ptp monitor threshold missing-message follow-up 203 sequence-ids
+ptp monitor threshold missing-message delay-resp 202 sequence-ids
+ptp monitor threshold missing-message announce 201 sequence-ids
 ```
 
 ## Interfaces
@@ -107,10 +107,10 @@ interface Ethernet3
    switchport mode trunk
    switchport
    ptp enable
-   ptp sync-message interval 1
    ptp delay-mechanism e2e
-   ptp transport layer2
    ptp role dynamic
+   ptp sync-message interval 1
+   ptp transport layer2
    ptp vlan 2
 !
 interface Ethernet5
@@ -123,14 +123,14 @@ interface Ethernet6
    no switchport
    ip address 172.31.255.15/31
    ptp enable
-   ptp sync-message interval 1
-   ptp delay-mechanism e2e
    ptp announce interval 3
-   ptp transport ipv4
    ptp announce timeout 9
+   ptp delay-mechanism e2e
    ptp delay-req interval -7
    ptp profile g8275.1 destination mac-address non-forwardable
    ptp role dynamic
+   ptp sync-message interval 1
+   ptp transport ipv4
 ```
 
 ### Port-Channel Interfaces
@@ -155,10 +155,10 @@ interface Port-Channel5
    mlag 5
    ptp enable
    ptp mpass
-   ptp profile g8275.1 destination mac-address forwardable
    ptp delay-mechanism e2e
-   ptp sync-message interval 1
+   ptp profile g8275.1 destination mac-address forwardable
    ptp role dynamic
-   ptp vlan 2
+   ptp sync-message interval 1
    ptp transport layer2
+   ptp vlan 2
 ```

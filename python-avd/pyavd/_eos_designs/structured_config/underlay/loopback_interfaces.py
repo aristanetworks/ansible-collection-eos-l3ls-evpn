@@ -6,8 +6,8 @@ from __future__ import annotations
 from functools import cached_property
 from typing import TYPE_CHECKING
 
-from pyavd._errors import AristaAvdMissingVariableError
-from pyavd._utils import get
+from pyavd._errors import AristaAvdInvalidInputsError
+from pyavd._utils import default, get
 from pyavd.api.interface_descriptions import InterfaceDescriptionData
 
 from .utils import UtilsMixin
@@ -35,7 +35,11 @@ class LoopbackInterfacesMixin(UtilsMixin):
             "name": "Loopback0",
             "description": self.shared_utils.interface_descriptions.router_id_loopback_interface(
                 InterfaceDescriptionData(
-                    shared_utils=self.shared_utils, interface="Loopback0", description=get(self._hostvars, "overlay_loopback_description")
+                    shared_utils=self.shared_utils,
+                    interface="Loopback0",
+                    description=default(
+                        get(self._hostvars, "router_id_loopback_description"), get(self._hostvars, "overlay_loopback_description"), "ROUTER_ID"
+                    ),
                 ),
             ),
             "shutdown": False,
@@ -73,7 +77,11 @@ class LoopbackInterfacesMixin(UtilsMixin):
             vtep_loopback = {
                 "name": self.shared_utils.vtep_loopback,
                 "description": self.shared_utils.interface_descriptions.vtep_loopback_interface(
-                    InterfaceDescriptionData(shared_utils=self.shared_utils, interface=self.shared_utils.vtep_loopback)
+                    InterfaceDescriptionData(
+                        shared_utils=self.shared_utils,
+                        interface=self.shared_utils.vtep_loopback,
+                        description=get(self._hostvars, "vtep_loopback_description", default="VXLAN_TUNNEL_SOURCE"),
+                    )
                 ),
                 "shutdown": False,
                 "ip_address": f"{self.shared_utils.vtep_ip}/32",
@@ -102,6 +110,6 @@ class LoopbackInterfacesMixin(UtilsMixin):
     def _node_sid(self: AvdStructuredConfigUnderlay) -> str:
         if self.shared_utils.id is None:
             msg = f"'id' is not set on '{self.shared_utils.hostname}' and is required to set node SID"
-            raise AristaAvdMissingVariableError(msg)
+            raise AristaAvdInvalidInputsError(msg)
         node_sid_base = int(get(self.shared_utils.switch_data_combined, "node_sid_base", 0))
         return self.shared_utils.id + node_sid_base

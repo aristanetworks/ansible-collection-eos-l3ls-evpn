@@ -9,6 +9,10 @@ router_bgp:
   maximum_paths:
     paths: 4
     ecmp: 4
+  redistribute:
+    connected:
+      enabled: true
+      route_map: RM-CONN-2-BGP
   updates:
     wait_install: true
   peer_groups:
@@ -29,9 +33,6 @@ router_bgp:
       activate: true
     - name: EVPN-OVERLAY-PEERS
       activate: false
-  redistribute_routes:
-  - source_protocol: connected
-    route_map: RM-CONN-2-BGP
   address_family_evpn:
     peer_groups:
     - name: EVPN-OVERLAY-PEERS
@@ -49,9 +50,11 @@ router_bgp:
         route_targets:
         - '1:1'
     router_id: 192.168.255.1
-    redistribute_routes:
-    - source_protocol: connected
-    - source_protocol: ospf
+    redistribute:
+      connected:
+        enabled: true
+      ospf:
+        enabled: true
   vlan_aware_bundles:
   - name: svi_profile_tests_vrf
     rd: 192.168.255.1:1
@@ -102,11 +105,11 @@ management_api_http:
   enable_https: true
 loopback_interfaces:
 - name: Loopback0
-  description: EVPN_Overlay_Peering
+  description: ROUTER_ID
   shutdown: false
   ip_address: 192.168.255.1/32
 - name: Loopback1
-  description: VTEP_VXLAN_Tunnel_Source
+  description: VXLAN_TUNNEL_SOURCE
   shutdown: false
   ip_address: 192.168.254.1/32
 prefix_lists:
@@ -318,7 +321,7 @@ vlan_interfaces:
   shutdown: false
   ip_address_virtual: 10.5.10.1/24
   vrf: svi_profile_tests_vrf
-  ospf_area: '0'
+  ospf_area: 0.0.0.0
   ospf_network_point_to_point: false
 - name: Vlan511
   tenant: svi_profile_tests
@@ -326,7 +329,7 @@ vlan_interfaces:
   shutdown: false
   ip_address_virtual: 10.5.11.1/24
   vrf: svi_profile_tests_vrf
-  ospf_area: '0'
+  ospf_area: 0.0.0.0
   ospf_network_point_to_point: false
 - name: Vlan512
   tenant: svi_profile_tests
@@ -334,7 +337,7 @@ vlan_interfaces:
   shutdown: false
   ip_address_virtual: 10.5.12.1/24
   vrf: svi_profile_tests_vrf
-  ospf_area: '0'
+  ospf_area: 0.0.0.0
   ospf_network_point_to_point: false
 router_ospf:
   process_ids:

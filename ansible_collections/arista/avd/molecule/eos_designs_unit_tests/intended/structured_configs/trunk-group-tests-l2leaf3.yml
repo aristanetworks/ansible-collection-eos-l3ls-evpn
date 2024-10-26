@@ -28,9 +28,8 @@ ethernet_interfaces:
   peer: trunk-group-tests-l3leaf1a
   peer_interface: Ethernet5
   peer_type: l3leaf
-  description: TRUNK-GROUP-TESTS-L3LEAF1A_Ethernet5
+  description: L2_trunk-group-tests-l3leaf1a_Ethernet5
   shutdown: false
-  type: port-channel-member
   channel_group:
     id: 1
     mode: active
@@ -38,9 +37,8 @@ ethernet_interfaces:
   peer: trunk-group-tests-l3leaf1b
   peer_interface: Ethernet5
   peer_type: l3leaf
-  description: TRUNK-GROUP-TESTS-L3LEAF1B_Ethernet5
+  description: L2_trunk-group-tests-l3leaf1b_Ethernet5
   shutdown: false
-  type: port-channel-member
   channel_group:
     id: 1
     mode: active
@@ -48,21 +46,25 @@ ethernet_interfaces:
   peer: server_with_tg_200
   peer_interface: Nic2
   peer_type: server
-  description: server_with_tg_200_Nic2
+  description: SERVER_server_with_tg_200_Nic2
   shutdown: false
-  type: switched
-  mode: trunk
-  trunk_groups:
-  - TG_NOT_MATCHING_ANY_VLANS
-  - TG_200
+  switchport:
+    enabled: true
+    mode: trunk
+    trunk:
+      groups:
+      - TG_NOT_MATCHING_ANY_VLANS
+      - TG_200
 port_channel_interfaces:
 - name: Port-Channel1
-  description: TRUNK_GROUP_TESTS_L3LEAF1_Po5
-  type: switched
+  description: L2_TRUNK_GROUP_TESTS_L3LEAF1_Port-Channel5
+  switchport:
+    enabled: true
+    mode: trunk
+    trunk:
+      groups:
+      - UPLINK
   shutdown: false
-  mode: trunk
-  trunk_groups:
-  - UPLINK
 vlans:
 - id: 200
   name: svi200_with_trunk_groups

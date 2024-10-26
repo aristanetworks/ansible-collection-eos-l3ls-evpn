@@ -51,7 +51,7 @@ vrfs:
   ip_routing: false
 management_interfaces:
 - name: Management1
-  description: oob_management
+  description: OOB_MANAGEMENT
   shutdown: false
   vrf: MGMT
   ip_address: 192.168.200.113/24
@@ -72,38 +72,41 @@ ntp:
 vlans:
 - id: 4094
   tenant: system
-  name: MLAG_PEER
+  name: MLAG
   trunk_groups:
   - MLAG
 vlan_interfaces:
 - name: Vlan4094
-  description: MLAG_PEER
+  description: MLAG
   shutdown: false
   no_autostate: true
   mtu: 1500
   ip_address: 10.255.252.16/31
 port_channel_interfaces:
 - name: Port-Channel3
-  description: MLAG_PEER_DC1-L2LEAF2B_Po3
-  type: switched
+  description: MLAG_DC1-L2LEAF2B_Port-Channel3
+  switchport:
+    enabled: true
+    mode: trunk
+    trunk:
+      groups:
+      - MLAG
   shutdown: false
-  mode: trunk
-  trunk_groups:
-  - MLAG
 - name: Port-Channel1
-  description: DC1_SVC3_Po7
-  type: switched
+  description: L2_DC1_SVC3_Port-Channel7
+  switchport:
+    enabled: true
+    mode: trunk
+    trunk:
+      allowed_vlan: none
   shutdown: false
-  mode: trunk
-  vlans: none
   mlag: 1
 ethernet_interfaces:
 - name: Ethernet3
   peer: DC1-L2LEAF2B
   peer_interface: Ethernet3
   peer_type: mlag_peer
-  description: MLAG_PEER_DC1-L2LEAF2B_Ethernet3
-  type: port-channel-member
+  description: MLAG_DC1-L2LEAF2B_Ethernet3
   shutdown: false
   channel_group:
     id: 3
@@ -112,8 +115,7 @@ ethernet_interfaces:
   peer: DC1-L2LEAF2B
   peer_interface: Ethernet4
   peer_type: mlag_peer
-  description: MLAG_PEER_DC1-L2LEAF2B_Ethernet4
-  type: port-channel-member
+  description: MLAG_DC1-L2LEAF2B_Ethernet4
   shutdown: false
   channel_group:
     id: 3
@@ -122,9 +124,8 @@ ethernet_interfaces:
   peer: DC1-SVC3A
   peer_interface: Ethernet7
   peer_type: l3leaf
-  description: DC1-SVC3A_Ethernet7
+  description: L2_DC1-SVC3A_Ethernet7
   shutdown: false
-  type: port-channel-member
   channel_group:
     id: 1
     mode: active
@@ -132,9 +133,8 @@ ethernet_interfaces:
   peer: DC1-SVC3B
   peer_interface: Ethernet7
   peer_type: l3leaf
-  description: DC1-SVC3B_Ethernet7
+  description: L2_DC1-SVC3B_Ethernet7
   shutdown: false
-  type: port-channel-member
   channel_group:
     id: 1
     mode: active

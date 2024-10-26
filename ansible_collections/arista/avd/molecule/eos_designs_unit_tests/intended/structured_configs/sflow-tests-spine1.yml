@@ -9,6 +9,10 @@ router_bgp:
   maximum_paths:
     paths: 4
     ecmp: 4
+  redistribute:
+    connected:
+      enabled: true
+      route_map: RM-CONN-2-BGP
   updates:
     wait_install: true
   peer_groups:
@@ -30,9 +34,6 @@ router_bgp:
       activate: true
     - name: EVPN-OVERLAY-PEERS
       activate: false
-  redistribute_routes:
-  - source_protocol: connected
-    route_map: RM-CONN-2-BGP
   neighbors:
   - ip_address: 10.254.2.1
     peer_group: IPv4-UNDERLAY-PEERS
@@ -77,22 +78,22 @@ router_bgp:
   - ip_address: 10.254.1.1
     peer_group: EVPN-OVERLAY-PEERS
     peer: sflow-tests-leaf1
-    description: sflow-tests-leaf1
+    description: sflow-tests-leaf1_Loopback0
     remote_as: '65101'
   - ip_address: 10.254.1.2
     peer_group: EVPN-OVERLAY-PEERS
     peer: sflow-tests-leaf2
-    description: sflow-tests-leaf2
+    description: sflow-tests-leaf2_Loopback0
     remote_as: '65102'
   - ip_address: 10.254.1.5
     peer_group: EVPN-OVERLAY-PEERS
     peer: sflow-tests-leaf3
-    description: sflow-tests-leaf3
+    description: sflow-tests-leaf3_Loopback0
     remote_as: '65105'
   - ip_address: 10.254.1.6
     peer_group: EVPN-OVERLAY-PEERS
     peer: sflow-tests-leaf4
-    description: sflow-tests-leaf4
+    description: sflow-tests-leaf4_Loopback0
     remote_as: '65105'
   address_family_evpn:
     peer_groups:
@@ -122,7 +123,7 @@ vrfs:
   ip_routing: false
 management_interfaces:
 - name: Management1
-  description: oob_management
+  description: OOB_MANAGEMENT
   shutdown: false
   vrf: MGMT
   ip_address: 192.168.0.11/24
@@ -137,10 +138,11 @@ ethernet_interfaces:
   peer: sflow-tests-leaf1
   peer_interface: Ethernet1
   peer_type: l3leaf
-  description: P2P_LINK_TO_SFLOW-TESTS-LEAF1_Ethernet1
+  description: P2P_sflow-tests-leaf1_Ethernet1
   shutdown: false
   mtu: 9214
-  type: routed
+  switchport:
+    enabled: false
   sflow:
     enable: true
   ip_address: 10.254.2.0/31
@@ -148,10 +150,11 @@ ethernet_interfaces:
   peer: sflow-tests-leaf1
   peer_interface: Ethernet2
   peer_type: l3leaf
-  description: P2P_LINK_TO_SFLOW-TESTS-LEAF1_Ethernet2
+  description: P2P_sflow-tests-leaf1_Ethernet2
   shutdown: false
   mtu: 9214
-  type: routed
+  switchport:
+    enabled: false
   sflow:
     enable: true
   ip_address: 10.254.2.2/31
@@ -159,10 +162,11 @@ ethernet_interfaces:
   peer: sflow-tests-leaf2
   peer_interface: Ethernet1
   peer_type: l3leaf
-  description: P2P_LINK_TO_SFLOW-TESTS-LEAF2_Ethernet1
+  description: P2P_sflow-tests-leaf2_Ethernet1
   shutdown: false
   mtu: 9214
-  type: routed
+  switchport:
+    enabled: false
   sflow:
     enable: true
   ip_address: 10.254.2.4/31
@@ -170,10 +174,11 @@ ethernet_interfaces:
   peer: sflow-tests-leaf2
   peer_interface: Ethernet2
   peer_type: l3leaf
-  description: P2P_LINK_TO_SFLOW-TESTS-LEAF2_Ethernet2
+  description: P2P_sflow-tests-leaf2_Ethernet2
   shutdown: false
   mtu: 9214
-  type: routed
+  switchport:
+    enabled: false
   sflow:
     enable: true
   ip_address: 10.254.2.6/31
@@ -181,10 +186,11 @@ ethernet_interfaces:
   peer: sflow-tests-leaf3
   peer_interface: Ethernet1
   peer_type: l3leaf
-  description: P2P_LINK_TO_SFLOW-TESTS-LEAF3_Ethernet1
+  description: P2P_sflow-tests-leaf3_Ethernet1
   shutdown: false
   mtu: 9214
-  type: routed
+  switchport:
+    enabled: false
   sflow:
     enable: true
   ip_address: 10.254.2.16/31
@@ -192,10 +198,11 @@ ethernet_interfaces:
   peer: sflow-tests-leaf3
   peer_interface: Ethernet2
   peer_type: l3leaf
-  description: P2P_LINK_TO_SFLOW-TESTS-LEAF3_Ethernet2
+  description: P2P_sflow-tests-leaf3_Ethernet2
   shutdown: false
   mtu: 9214
-  type: routed
+  switchport:
+    enabled: false
   sflow:
     enable: true
   ip_address: 10.254.2.18/31
@@ -203,10 +210,11 @@ ethernet_interfaces:
   peer: sflow-tests-leaf4
   peer_interface: Ethernet1
   peer_type: l3leaf
-  description: P2P_LINK_TO_SFLOW-TESTS-LEAF4_Ethernet1
+  description: P2P_sflow-tests-leaf4_Ethernet1
   shutdown: false
   mtu: 9214
-  type: routed
+  switchport:
+    enabled: false
   sflow:
     enable: true
   ip_address: 10.254.2.20/31
@@ -214,10 +222,11 @@ ethernet_interfaces:
   peer: sflow-tests-leaf4
   peer_interface: Ethernet2
   peer_type: l3leaf
-  description: P2P_LINK_TO_SFLOW-TESTS-LEAF4_Ethernet2
+  description: P2P_sflow-tests-leaf4_Ethernet2
   shutdown: false
   mtu: 9214
-  type: routed
+  switchport:
+    enabled: false
   sflow:
     enable: true
   ip_address: 10.254.2.22/31
@@ -225,65 +234,71 @@ ethernet_interfaces:
   peer: sflow-tests-spine2
   peer_interface: Ethernet9
   peer_type: spine
-  description: P2P_LINK_TO_sflow-tests-spine2_Ethernet9
-  type: routed
+  switchport:
+    enabled: false
   shutdown: false
   mtu: 9214
   sflow:
     enable: true
+  description: P2P_sflow-tests-spine2_Ethernet9
 - name: Ethernet10
   peer: sflow-tests-spine2
   peer_interface: Ethernet10
   peer_type: spine
-  description: P2P_LINK_TO_sflow-tests-spine2_Ethernet10
-  type: routed
+  switchport:
+    enabled: false
   shutdown: false
   mtu: 9214
   sflow:
     enable: false
+  description: P2P_sflow-tests-spine2_Ethernet10
 - name: Ethernet11
   peer: sflow-tests-spine2
   peer_interface: Ethernet11
   peer_type: spine
-  description: P2P_LINK_TO_sflow-tests-spine2_Ethernet11
-  type: routed
+  switchport:
+    enabled: false
   shutdown: false
   mtu: 9214
   sflow:
     enable: true
+  description: P2P_sflow-tests-spine2_Ethernet11
 - name: Ethernet12
   peer: sflow-tests-spine2
   peer_interface: Ethernet12
   peer_type: spine
-  description: P2P_LINK_TO_sflow-tests-spine2_Ethernet12
-  type: routed
+  switchport:
+    enabled: false
   shutdown: false
   mtu: 9214
   sflow:
     enable: true
+  description: P2P_sflow-tests-spine2_Ethernet12
 - name: Ethernet13
   peer: sflow-tests-spine2
   peer_interface: Ethernet13
   peer_type: spine
-  description: P2P_LINK_TO_sflow-tests-spine2_Ethernet13
-  type: routed
+  switchport:
+    enabled: false
   shutdown: false
   mtu: 9214
   sflow:
     enable: false
+  description: P2P_sflow-tests-spine2_Ethernet13
 - name: Ethernet14
   peer: sflow-tests-spine2
   peer_interface: Ethernet14
   peer_type: spine
-  description: P2P_LINK_TO_sflow-tests-spine2_Ethernet14
-  type: routed
+  switchport:
+    enabled: false
   shutdown: false
   mtu: 9214
   sflow:
     enable: true
+  description: P2P_sflow-tests-spine2_Ethernet14
 loopback_interfaces:
 - name: Loopback0
-  description: EVPN_Overlay_Peering
+  description: ROUTER_ID
   shutdown: false
   ip_address: 10.255.0.1/32
 prefix_lists:

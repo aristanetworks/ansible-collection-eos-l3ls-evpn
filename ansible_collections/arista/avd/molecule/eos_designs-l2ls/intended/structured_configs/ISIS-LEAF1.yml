@@ -23,7 +23,7 @@ vrfs:
   ip_routing: false
 management_interfaces:
 - name: Management1
-  description: oob_management
+  description: OOB_MANAGEMENT
   shutdown: false
   vrf: MGMT
   ip_address: 192.168.200.105/24
@@ -38,19 +38,20 @@ ethernet_interfaces:
   peer: ISIS-SPINE1
   peer_interface: Ethernet1
   peer_type: l3spine
-  description: ISIS-SPINE1_Ethernet1
+  description: L2_ISIS-SPINE1_Ethernet1
   shutdown: false
-  type: port-channel-member
   channel_group:
     id: 1
     mode: active
 port_channel_interfaces:
 - name: Port-Channel1
-  description: ISIS-SPINE1_Po1
-  type: switched
+  description: L2_ISIS-SPINE1_Port-Channel1
+  switchport:
+    enabled: true
+    mode: trunk
+    trunk:
+      allowed_vlan: 110,4092
   shutdown: false
-  mode: trunk
-  vlans: 110,4092
 vlans:
 - id: 110
   name: SVI_110

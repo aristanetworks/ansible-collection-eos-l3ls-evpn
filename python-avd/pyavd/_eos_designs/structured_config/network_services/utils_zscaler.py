@@ -24,7 +24,7 @@ LOGGER = getLogger(__name__)
 
 class UtilsZscalerMixin:
     """
-    Mixin Class with internal functions.
+    Mixin Class with internal functions for Zscaler.
 
     Class should only be used as Mixin to a AvdStructuredConfig class.
     """
@@ -51,13 +51,13 @@ class UtilsZscalerMixin:
         TODO: Add support for cv_verify_certs
         """
         context = "The WAN Internet-exit integration with Zscaler fetches information from CloudVision"
-        cv_server = get(self._hostvars, "cv_server", required=True, org_key=f"{context} and requires 'cv_server' to be set.")
-        cv_token = get(self._hostvars, "cv_token", required=True, org_key=f"{context} and requires 'cv_server' to be set.")
+        cv_server = get(self._hostvars, "cv_server", required=True, custom_error_msg=f"{context} and requires 'cv_server' to be set.")
+        cv_token = get(self._hostvars, "cv_token", required=True, custom_error_msg=f"{context} and requires 'cv_server' to be set.")
         wan_site_location = get(
             self.shared_utils.wan_site,
             "location",
             required=True,
-            org_key=(
+            custom_error_msg=(
                 f"{context} and requires 'cv_pathfinder_regions[name={self.shared_utils.wan_region['name']}]"
                 f".sites[name={self.shared_utils.wan_site['name']}].location' to be set."
             ),

@@ -16,6 +16,9 @@
 
 | Settings | Value |
 | -------- | ----- |
+{%             if platform.trident.l3.routing_mac_address_per_vlan is arista.avd.defined(true) %}
+| Routing MAC Address per VLAN | true |
+{%             endif %}
 {%             if platform.trident.forwarding_table_partition is arista.avd.defined %}
 | Forwarding Table Partition | {{ platform.trident.forwarding_table_partition }} |
 {%             endif %}

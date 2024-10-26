@@ -232,7 +232,7 @@ $defs:
             convert_types:
               - int
             description: OSPF area ID.
-            default: "0"
+            default: "0.0.0.0"
           cost:
             type: int
             convert_types:

@@ -1,0 +1,92 @@
+---
+- name: Converge - cv_deploy with Workspace Pending
+  hosts: SITE1_FABRIC
+  connection: local
+  gather_facts: false
+  vars:
+    cv_server: www.cv-staging.corp.arista.io
+    cv_token: "{{ lookup('env', 'CVAAS_AAWG_CI') }}"
+    cv_verify_certs: true
+    cv_skip_missing_devices: true
+    eos_config_dir: "{{ playbook_dir }}/intended/configs/test_configs"
+    structured_dir: "{{ playbook_dir }}/intended/structured_configs/test_configs"
+    intended_tag_device: avd-ci-leaf1
+    intended_tags: "{{ lookup('file', structured_dir ~ '/' ~ intended_tag_device ~ '.yml')| from_yaml }}"
+
+  tasks:
+    - name: Generate random string
+      ansible.builtin.set_fact:
+        r: "{{ lookup('password', '/dev/null chars=ascii_lowercase,digits length=4') }}"
+      run_once: true
+
+    - name: Set facts
+      ansible.builtin.set_fact:
+        cv_workspace_name: avd-cv-deploy-{{ r }}
+        cv_workspace_description: sample description
+        cv_change_control_name: cc_cv_deploy-{{ r }}
+        cv_change_control_description: sample description
+        cv_register_detailed_results: true
+      run_once: true
+
+    - name: Provision with workspace "Pending"
+      run_once: true
+      delegate_to: localhost
+      ansible.builtin.import_role:
+        name: arista.avd.cv_deploy
+      vars:
+        cv_submit_workspace: false
+        cv_submit_workspace_force: true
+
+    - name: Check CVP returns
+      run_once: true
+      ansible.builtin.assert:
+        that:
+          # workspace
+          - cv_deploy_results.workspace.state == cv_deploy_results.workspace.requested_state
+
+    - name: Cleanup orphan workspace
+      run_once: true
+      ansible.legacy.uri:
+        url: https://{{ cv_server }}/api/resources/workspace/v1/WorkspaceConfig/some
+        validate_certs: yes
+        return_content: yes
+        headers:
+          Accept: "application/json"
+          Content-Type: "application/json"
+          Authorization: "Bearer {{ lookup('env', 'CVAAS_AAWG_CI') }}"
+        method: POST
+        body_format: json
+        body:
+          {
+            "values": [
+              {
+                "key": {
+                  "workspaceId": "{{ cv_deploy_results.workspace.id }}"
+                },
+                "request": "REQUEST_ABANDON",
+                "requestParams": {
+                  "requestId": "{{ r }}"
+                }
+              }
+            ]
+          }
+        force_basic_auth: yes
+        timeout: 10
+      register: cvp_abandon_workspace_result
+      until: cvp_abandon_workspace_result.status == 200
+      retries: 3
+      delay: 3
+      ignore_errors: True
+      when: cv_deploy_results.workspace.id is not none and cv_deploy_results.workspace.id | length > 0
+
+    - name: Cleanup
+      run_once: true
+      delegate_to: localhost
+      ansible.builtin.import_role:
+        name: arista.avd.cv_deploy
+      vars:
+        eos_config_dir: "{{ playbook_dir }}/intended/configs/base_configs"
+        structured_dir: "{{ playbook_dir }}/intended/structured_configs/base_configs"
+        cv_submit_workspace: true
+        cv_submit_workspace_force: true
+        cv_run_change_control: true

@@ -8,11 +8,12 @@ router_bgp:
       ipv4_unicast: false
   maximum_paths:
     paths: 16
+  redistribute:
+    connected:
+      enabled: true
+      route_map: RM-CONN-2-BGP
   updates:
     wait_install: true
-  redistribute_routes:
-  - source_protocol: connected
-    route_map: RM-CONN-2-BGP
   peer_groups:
   - name: WAN-OVERLAY-PEERS
     type: wan
@@ -30,6 +31,7 @@ router_bgp:
     peer_groups:
     - name: WAN-OVERLAY-PEERS
       activate: true
+      encapsulation: path-selection
       route_map_in: RM-EVPN-SOO-IN
       route_map_out: RM-EVPN-SOO-OUT
   address_family_ipv4:
@@ -54,8 +56,7 @@ router_bgp:
     bgp:
       additional_paths:
         receive: true
-        send:
-          any: true
+        send: any
   vrfs:
   - name: VRF1
     rd: 192.168.1.1:123
@@ -69,8 +70,9 @@ router_bgp:
         route_targets:
         - 123:123
     router_id: 192.168.1.1
-    redistribute_routes:
-    - source_protocol: connected
+    redistribute:
+      connected:
+        enabled: true
   - name: default
     rd: 192.168.1.1:1
     route_targets:
@@ -109,12 +111,13 @@ ethernet_interfaces:
   peer: uplink_lan_l2leaf
   peer_interface: Ethernet1 VLAN 10
   peer_type: l2leaf
-  description: UPLINK_LAN_L2LEAF_Ethernet1
+  description: L2_uplink_lan_l2leaf_Ethernet1
   shutdown: false
-  type: routed
+  switchport:
+    enabled: false
   vrf: VRF1
   ip_address: 10.0.10.1/24
-  mtu: 9214
+  mtu: 9218
   flow_tracker:
     hardware: FLOW-TRACKER
 - name: Ethernet2.100
@@ -123,8 +126,8 @@ ethernet_interfaces:
   peer_type: l2leaf
   description: My vlan 100
   shutdown: false
-  type: l3dot1q
-  encapsulation_dot1q_vlan: 100
+  encapsulation_dot1q:
+    vlan: 100
   vrf: VRF1
   ip_address: 10.0.100.1/24
   ipv6_address: cafe::cafe/64
@@ -137,11 +140,12 @@ ethernet_interfaces:
   peer_type: l3_interface
   ip_address: 10.9.9.9/31
   shutdown: false
-  type: routed
+  switchport:
+    enabled: false
   description: Comcast_999
 loopback_interfaces:
 - name: Loopback0
-  description: Router_ID
+  description: ROUTER_ID
   shutdown: false
   ip_address: 192.168.1.1/32
 prefix_lists:
@@ -299,7 +303,7 @@ application_traffic_recognition:
 dps_interfaces:
 - name: Dps1
   description: DPS Interface
-  mtu: 9214
+  mtu: 9194
   ip_address: 192.168.2.1/32
   flow_tracker:
     hardware: FLOW-TRACKER

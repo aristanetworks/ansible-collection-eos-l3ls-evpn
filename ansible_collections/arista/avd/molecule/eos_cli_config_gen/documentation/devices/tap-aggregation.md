@@ -17,20 +17,20 @@
 
 | Management Interface | Description | Type | VRF | IP Address | Gateway |
 | -------------------- | ----------- | ---- | --- | ---------- | ------- |
-| Management1 | oob_management | oob | MGMT | 10.73.255.122/24 | 10.73.255.2 |
+| Management1 | OOB_MANAGEMENT | oob | MGMT | 10.73.255.122/24 | 10.73.255.2 |
 
 ##### IPv6
 
 | Management Interface | Description | Type | VRF | IPv6 Address | IPv6 Gateway |
 | -------------------- | ----------- | ---- | --- | ------------ | ------------ |
-| Management1 | oob_management | oob | MGMT | - | - |
+| Management1 | OOB_MANAGEMENT | oob | MGMT | - | - |
 
 #### Management Interfaces Device Configuration
 
 ```eos
 !
 interface Management1
-   description oob_management
+   description OOB_MANAGEMENT
    vrf MGMT
    ip address 10.73.255.122/24
 ```
@@ -60,12 +60,12 @@ interface Management1
 !
 tap aggregation
    mode exclusive profile tap-aggregation-extended
-   mode exclusive no-errdisable Ethernet1/1
-   mode exclusive no-errdisable Ethetnet 42/1
-   mode exclusive no-errdisable Port-Channel200
    encapsulation dot1br strip
    encapsulation vn-tag strip
    protocol lldp trap
+   mode exclusive no-errdisable Ethernet1/1
+   mode exclusive no-errdisable Ethetnet 42/1
+   mode exclusive no-errdisable Port-Channel200
    truncation size 169
    mac timestamp header format 64-bit
    mac timestamp header eth-type 5

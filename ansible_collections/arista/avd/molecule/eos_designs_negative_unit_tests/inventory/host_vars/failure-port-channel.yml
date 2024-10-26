@@ -17,17 +17,17 @@ servers:
       - switch_ports: [Ethernet1]
         switches: [failure-port-channel]
         port_channel:
-          description: Description1
+          endpoint_port_channel: Description1
           mode: active
           channel_id: 42
       - switch_ports: [Ethernet2]
         switches: [failure-port-channel]
         port_channel:
-          description: Description2
+          endpoint_port_channel: Description2
           mode: active
           channel_id: 42
 
 expected_error_message: >-
   Found duplicate objects with conflicting data while generating configuration for Port-channel Interfaces defined under
-  connected_endpoints. {'name': 'Port-Channel42', 'description': 'server1_Description2'} conflicts with
-  {'name': 'Port-Channel42', 'description': 'server1_Description1'}.
+  connected_endpoints. {'name': 'Port-Channel42', 'description': 'SERVER_server1_Description2'} conflicts with
+  {'name': 'Port-Channel42', 'description': 'SERVER_server1_Description1'}.

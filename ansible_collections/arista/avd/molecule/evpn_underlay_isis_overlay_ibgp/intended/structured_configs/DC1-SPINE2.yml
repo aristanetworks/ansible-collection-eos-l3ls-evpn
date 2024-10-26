@@ -48,7 +48,7 @@ vrfs:
   ip_routing: false
 management_interfaces:
 - name: Management1
-  description: oob_management
+  description: OOB_MANAGEMENT
   shutdown: false
   vrf: MGMT
   ip_address: 192.168.200.102/24
@@ -71,10 +71,11 @@ ethernet_interfaces:
   peer: DC1-LEAF1A
   peer_interface: Ethernet2
   peer_type: l3leaf
-  description: P2P_LINK_TO_DC1-LEAF1A_Ethernet2
+  description: P2P_DC1-LEAF1A_Ethernet2
   shutdown: false
   mtu: 1500
-  type: routed
+  switchport:
+    enabled: false
   ip_address: 172.31.255.2/31
   isis_enable: EVPN_UNDERLAY
   isis_bfd: true
@@ -85,10 +86,11 @@ ethernet_interfaces:
   peer: DC1-LEAF2A
   peer_interface: Ethernet2
   peer_type: l3leaf
-  description: P2P_LINK_TO_DC1-LEAF2A_Ethernet2
+  description: P2P_DC1-LEAF2A_Ethernet2
   shutdown: false
   mtu: 1500
-  type: routed
+  switchport:
+    enabled: false
   ip_address: 172.31.255.10/31
   isis_enable: EVPN_UNDERLAY
   isis_bfd: true
@@ -99,10 +101,11 @@ ethernet_interfaces:
   peer: DC1-LEAF2B
   peer_interface: Ethernet2
   peer_type: l3leaf
-  description: P2P_LINK_TO_DC1-LEAF2B_Ethernet2
+  description: P2P_DC1-LEAF2B_Ethernet2
   shutdown: false
   mtu: 1500
-  type: routed
+  switchport:
+    enabled: false
   ip_address: 172.31.255.18/31
   isis_enable: EVPN_UNDERLAY
   isis_bfd: true
@@ -113,10 +116,11 @@ ethernet_interfaces:
   peer: DC1-SVC3A
   peer_interface: Ethernet2
   peer_type: l3leaf
-  description: P2P_LINK_TO_DC1-SVC3A_Ethernet2
+  description: P2P_DC1-SVC3A_Ethernet2
   shutdown: false
   mtu: 1500
-  type: routed
+  switchport:
+    enabled: false
   ip_address: 172.31.255.26/31
   isis_enable: EVPN_UNDERLAY
   isis_bfd: true
@@ -127,10 +131,11 @@ ethernet_interfaces:
   peer: DC1-SVC3B
   peer_interface: Ethernet2
   peer_type: l3leaf
-  description: P2P_LINK_TO_DC1-SVC3B_Ethernet2
+  description: P2P_DC1-SVC3B_Ethernet2
   shutdown: false
   mtu: 1500
-  type: routed
+  switchport:
+    enabled: false
   ip_address: 172.31.255.34/31
   isis_enable: EVPN_UNDERLAY
   isis_bfd: true
@@ -141,10 +146,11 @@ ethernet_interfaces:
   peer: DC1-BL1A
   peer_interface: Ethernet2
   peer_type: l3leaf
-  description: P2P_LINK_TO_DC1-BL1A_Ethernet2
+  description: P2P_DC1-BL1A_Ethernet2
   shutdown: false
   mtu: 1500
-  type: routed
+  switchport:
+    enabled: false
   ip_address: 172.31.255.42/31
   isis_enable: EVPN_UNDERLAY
   isis_bfd: true
@@ -155,10 +161,11 @@ ethernet_interfaces:
   peer: DC1-BL1B
   peer_interface: Ethernet2
   peer_type: l3leaf
-  description: P2P_LINK_TO_DC1-BL1B_Ethernet2
+  description: P2P_DC1-BL1B_Ethernet2
   shutdown: false
   mtu: 1500
-  type: routed
+  switchport:
+    enabled: false
   ip_address: 172.31.255.50/31
   isis_enable: EVPN_UNDERLAY
   isis_bfd: true
@@ -167,7 +174,7 @@ ethernet_interfaces:
   isis_circuit_type: level-2
 loopback_interfaces:
 - name: Loopback0
-  description: EVPN_Overlay_Peering
+  description: ROUTER_ID
   shutdown: false
   ip_address: 192.168.255.2/32
   isis_enable: EVPN_UNDERLAY

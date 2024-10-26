@@ -1,0 +1,32 @@
+loopback_ipv4_pool: 192.168.1.0/24
+
+type: l2leaf
+l2leaf:
+  defaults:
+  nodes:
+    - name: connected-endpoints-monitor-session-connected-endpoint-acl
+
+servers:
+  - name: INDIVIDUAL_1
+    adapters:
+      - switches: [connected-endpoints-monitor-session-connected-endpoint-acl]
+        switch_ports: [Ethernet14]
+        description: Monitor port-channel 14
+        port_channel:
+          channel_id: 14
+          mode: active
+        monitor_sessions:
+          - name: DMF
+            role: source
+            source_settings:
+              access_group:
+                type: ip
+                name: acl2
+            session_settings:
+              access_group:
+                type: ip
+                name: acl1
+
+expected_error_message: >-
+  Cannot set an ACL for both `session_settings` and `source_settings` under the monitor session 'DMF'
+  for servers[name=INDIVIDUAL_1].adapters[0].

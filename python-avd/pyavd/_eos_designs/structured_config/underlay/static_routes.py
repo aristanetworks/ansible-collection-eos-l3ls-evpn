@@ -41,7 +41,7 @@ class StaticRoutesMixin(UtilsMixin):
                 l3_interface,
                 "peer_ip",
                 required=True,
-                org_key=f"Cannot set a static_route route for interface {interface_name} because 'peer_ip' is missing",
+                custom_error_msg=f"Cannot set a static_route route for interface {interface_name} because 'peer_ip' is missing.",
             )
 
             static_routes.extend(

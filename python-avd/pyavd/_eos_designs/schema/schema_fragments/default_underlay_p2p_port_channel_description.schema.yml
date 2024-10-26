@@ -1,0 +1,25 @@
+# Copyright (c) 2023-2024 Arista Networks, Inc.
+# Use of this source code is governed by the Apache License 2.0
+# that can be found in the LICENSE file.
+# yaml-language-server: $schema=../../../_schema/avd_meta_schema.json
+# Line above is used by RedHat's YAML Schema vscode extension
+# Use Ctrl + Space to get suggestions for every field. Autocomplete will pop up after typing 2 letters.
+type: dict
+keys:
+  default_underlay_p2p_port_channel_description:
+    type: str
+    documentation_options:
+      table: fabric-settings
+    description: |-
+      The default description or description template to be used on L3 point-to-point port-channel interfaces.
+      The port-channels using this are `p2p_links` defined under `l3_edge` or `core_interfaces`.
+      This can be a template using the AVD string formatter syntax: https://avd.arista.com/devel/roles/eos_designs/docs/how-to/custom-descriptions-names.html#avd-string-formatter-syntax.
+      The available template fields are:
+        - `peer`: The name of the peer.
+        - `interface`: The local interface name.
+        - `peer_interface`: The interface on the peer.
+        - `port_channel_id`: The local port-channel ID.
+        - `peer_port_channel_id`: The ID of the port-channel on the peer.
+
+      By default the description is templated from the name and interface of the peer.
+    default: "P2P_{peer}_{peer_interface}"

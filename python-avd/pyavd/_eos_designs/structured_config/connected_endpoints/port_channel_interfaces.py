@@ -80,7 +80,7 @@ class PortChannelInterfacesMixin(UtilsMixin):
                 continue
 
             connected_endpoint = {
-                "name": network_port.get("description"),
+                "name": network_port.get("endpoint"),
                 "type": "network_port",
             }
             for ethernet_interface_name in range_expand(network_port["switch_ports"]):
@@ -116,7 +116,7 @@ class PortChannelInterfacesMixin(UtilsMixin):
 
     def _get_port_channel_interface_cfg(
         self: AvdStructuredConfigConnectedEndpoints,
-        adapter: dict,
+        adapter: dict | ChainMap,
         port_channel_interface_name: str,
         channel_group_id: int,
         connected_endpoint: dict,
@@ -124,10 +124,16 @@ class PortChannelInterfacesMixin(UtilsMixin):
         """Return structured_config for one port_channel_interface."""
         peer = connected_endpoint["name"]
         adapter_description = get(adapter, "description")
-        adapter_port_channel_description = get(adapter, "port_channel.description")
-        port_channel_type = "routed" if get(adapter, "port_channel.subinterfaces") else "switched"
+        port_channel_description = get(adapter, "port_channel.description")
         port_channel_mode = get(adapter, "port_channel.mode")
+        peer_interface = get(adapter, "port_channel.endpoint_port_channel")
         node_index = adapter["switches"].index(self.shared_utils.hostname)
+
+        # if 'descriptions' is set, it is preferred
+        if (interface_descriptions := adapter.get("descriptions")) is not None:
+            adapter_description = interface_descriptions[node_index]
+        else:
+            adapter_description = adapter.get("description")
 
         # Common port_channel_interface settings
         port_channel_interface = {
@@ -137,12 +143,13 @@ class PortChannelInterfacesMixin(UtilsMixin):
                     shared_utils=self.shared_utils,
                     interface=port_channel_interface_name,
                     peer=peer,
+                    peer_interface=peer_interface,
+                    peer_type=connected_endpoint["type"],
                     description=adapter_description,
                     port_channel_id=channel_group_id,
-                    port_channel_description=adapter_port_channel_description,
+                    port_channel_description=port_channel_description,
                 ),
             ),
-            "type": port_channel_type,
             "shutdown": not get(adapter, "port_channel.enabled", default=True),
             "mtu": adapter.get("mtu") if self.shared_utils.platform_settings_feature_support_per_interface_mtu else None,
             "service_profile": adapter.get("qos_profile"),
@@ -155,18 +162,26 @@ class PortChannelInterfacesMixin(UtilsMixin):
             "struct_cfg": get(adapter, "port_channel.structured_config"),
         }
 
-        # Only switches interfaces
-        if port_channel_type == "switched":
+        if get(adapter, "port_channel.subinterfaces"):
+            port_channel_interface.update({"switchport": {"enabled": False}})
+        else:
+            # switchport
             port_channel_interface.update(
                 {
-                    "mode": adapter.get("mode"),
+                    "switchport": {
+                        "enabled": True,
+                        "mode": adapter.get("mode"),
+                        "trunk": {
+                            "allowed_vlan": adapter.get("vlans") if adapter.get("mode") == "trunk" else None,
+                            "groups": self._get_adapter_trunk_groups(adapter, connected_endpoint),
+                            "native_vlan_tag": adapter.get("native_vlan_tag"),
+                            "native_vlan": adapter.get("native_vlan"),
+                        },
+                        "phone": self._get_adapter_phone(adapter, connected_endpoint),
+                        "access_vlan": adapter.get("vlans") if adapter.get("mode") in ["access", "dot1q-tunnel"] else None,
+                    },
                     "l2_mtu": adapter.get("l2_mtu"),
                     "l2_mru": adapter.get("l2_mru"),
-                    "vlans": adapter.get("vlans"),
-                    "trunk_groups": self._get_adapter_trunk_groups(adapter, connected_endpoint),
-                    "native_vlan_tag": adapter.get("native_vlan_tag"),
-                    "native_vlan": adapter.get("native_vlan"),
-                    "phone": self._get_adapter_phone(adapter, connected_endpoint),
                     "spanning_tree_portfast": adapter.get("spanning_tree_portfast"),
                     "spanning_tree_bpdufilter": adapter.get("spanning_tree_bpdufilter"),
                     "spanning_tree_bpduguard": adapter.get("spanning_tree_bpduguard"),
@@ -195,7 +210,7 @@ class PortChannelInterfacesMixin(UtilsMixin):
                 },
             )
 
-        return strip_null_from_data(port_channel_interface, strip_values_tuple=(None, ""))
+        return strip_null_from_data(port_channel_interface, strip_values_tuple=(None, "", {}))
 
     def _get_port_channel_subinterface_cfg(
         self: AvdStructuredConfigConnectedEndpoints,
@@ -208,16 +223,14 @@ class PortChannelInterfacesMixin(UtilsMixin):
         # Common port_channel_interface settings
         port_channel_interface = {
             "name": port_channel_subinterface_name,
-            "type": "l2dot1q",
             "vlan_id": subinterface.get("vlan_id", subinterface["number"]),
             "encapsulation_vlan": {
                 "client": {
-                    "dot1q": {
-                        "vlan": get(subinterface, "encapsulation_vlan.client_dot1q", default=subinterface["number"]),
-                    },
+                    "encapsulation": "dot1q",
+                    "vlan": get(subinterface, "encapsulation_vlan.client_dot1q", default=subinterface["number"]),
                 },
                 "network": {
-                    "client": True,
+                    "encapsulation": "client",
                 },
             },
         }

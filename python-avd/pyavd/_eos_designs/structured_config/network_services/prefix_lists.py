@@ -85,7 +85,7 @@ class PrefixListsMixin(UtilsMixin):
                     # By default the BGP peering is redistributed, so we only need the prefix-list for the false case.
                     continue
 
-                if (mlag_ip_address := self._get_vlan_interface_config_for_mlag_peering(vrf).get("ip_address")) is None:
+                if (mlag_ip_address := self._get_vlan_ip_config_for_mlag_peering(vrf).get("ip_address")) is None:
                     # No MLAG prefix for this VRF (could be RFC5549)
                     continue
 

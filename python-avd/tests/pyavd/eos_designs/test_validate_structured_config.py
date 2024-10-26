@@ -33,7 +33,7 @@ def test_validate_structured_config_with_invalid_data(hostname: str, structured_
 
     # No dict found, so we insert our own instead
     if not updated:
-        structured_config.update({"bgp_peer_groups": {"invalid_key": "some_value"}})
+        structured_config.update({"router_bgp": {"invalid_key": "some_value"}})
 
     validation_result = validate_structured_config(structured_config)
     assert validation_result.failed is True

@@ -25,6 +25,7 @@
        or tap_aggregation is arista.avd.defined
        or sflow is arista.avd.defined
        or hardware_counters is arista.avd.defined
+       or hardware is arista.avd.defined
        or vmtracer_sessions is arista.avd.defined
        or event_handlers is arista.avd.defined
        or flow_tracking is arista.avd.defined
@@ -49,8 +50,8 @@
 {%     include 'documentation/tap-aggregation.j2' %}
 {## SFlow #}
 {%     include 'documentation/sflow.j2' %}
-{## Hardware Counters #}
-{%     include 'documentation/hardware-counters.j2' %}
+{## Hardware #}
+{%     include 'documentation/hardware.j2' %}
 {## VM Tracer Sessions #}
 {%     include 'documentation/vmtracer-sessions.j2' %}
 {## Event Handler #}

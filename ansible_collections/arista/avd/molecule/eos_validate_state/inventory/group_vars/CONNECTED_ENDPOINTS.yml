@@ -53,7 +53,7 @@ servers:
         mode: trunk
         spanning_tree_portfast: edge
         port_channel:
-          description: PortChannel dc1-leaf2-server1
+          endpoint_port_channel: PortChannel dc1-leaf2-server1
           mode: active
 
       - endpoint_ports: [ iLO ]
@@ -107,7 +107,7 @@ servers:
         mode: trunk
         spanning_tree_portfast: edge
         port_channel:
-          description: PortChannel dc2-leaf2-server1
+          endpoint_port_channel: PortChannel dc2-leaf2-server1
           mode: active
 
       - endpoint_ports: [ iLO ]

@@ -10,18 +10,28 @@
 {% include 'eos/config-comment.j2' %}
 {# System Boot Configuration #}
 {% include 'eos/boot.j2' %}
+{# enable password #}
+{% include 'eos/enable-password.j2' %}
+{# aaa root #}
+{% include 'eos/aaa-root.j2' %}
+{# users #}
+{% include 'eos/local-users.j2' %}
+{# address locking #}
+{% include 'eos/address-locking.j2' %}
 {# Agents #}
 {% include 'eos/agents.j2' %}
-{# terminal settings #}
-{% include 'eos/terminal.j2' %}
-{# cli prompt #}
-{% include 'eos/prompt.j2' %}
-{# aliases #}
-{% include 'eos/aliases.j2' %}
-{# hardware counters #}
-{% include 'eos/hardware-counters.j2' %}
+{# hardware configuration #}
+{% include 'eos/hardware.j2' %}
 {# service routing configuration #}
 {% include 'eos/service-routing-configuration-bgp.j2' %}
+{# cli prompt #}
+{% include 'eos/prompt.j2' %}
+{# terminal settings #}
+{% include 'eos/terminal.j2' %}
+{# aliases #}
+{% include 'eos/aliases.j2' %}
+{# logging event storm-control #}
+{% include 'eos/logging-event-storm-control.j2' %}
 {# daemon TerminAttr #}
 {% include 'eos/daemon-terminattr.j2' %}
 {# daemons #}
@@ -32,56 +42,54 @@
 {% include 'eos/ip-dhcp-relay.j2' %}
 {# IPv6 DHCP Relay #}
 {% include 'eos/ipv6-dhcp-relay.j2' %}
-{# IP DHCP Snooping #}
-{% include 'eos/ip-dhcp-snooping.j2' %}
 {# dhcp servers #}
 {% include 'eos/dhcp-servers.j2' %}
+{# IP DHCP Snooping #}
+{% include 'eos/ip-dhcp-snooping.j2' %}
 {# switchport default #}
 {% include 'eos/switchport-default.j2' %}
 {# internal vlan allocation policy #}
 {% include 'eos/vlan-internal-order.j2' %}
-{# ip igmp snooping #}
-{% include 'eos/ip-igmp-snooping.j2' %}
+{# errdisable #}
+{% include 'eos/errdisable.j2' %}
 {# event monitor #}
 {% include 'eos/event-monitor.j2' %}
 {# flow tracking #}
 {% include 'eos/flow-tracking.j2' %}
+{# ip igmp snooping #}
+{% include 'eos/ip-igmp-snooping.j2' %}
+{# logging event congestion-drops #}
+{% include 'eos/logging-event-congestion-drops.j2' %}
 {# load-interval #}
 {% include 'eos/load-interval.j2' %}
-{# interface defaults #}
-{% include 'eos/interface-defaults.j2' %}
-{# interface profiles #}
-{% include 'eos/interface-profiles.j2' %}
 {# transceiver qsfp default mode #}
 {% include 'eos/transceiver-qsfp-default-mode.j2' %}
-{# errdisable #}
-{% include 'eos/errdisable.j2' %}
+{# interface defaults #}
+{% include 'eos/interface-defaults.j2' %}
 {# service routing protocols model #}
 {% include 'eos/service-routing-protocols-model.j2' %}
-{# queue monitor length #}
-{% include 'eos/queue-monitor-length.j2' %}
-{# monitor layer1 #}
-{% include 'eos/monitor-layer1.j2' %}
-{# lldp #}
-{% include 'eos/lldp.j2' %}
 {# l2 protocol forwarding #}
 {% include 'eos/l2-protocol-forwarding.j2' %}
 {# lacp #}
 {% include 'eos/lacp.j2' %}
+{# queue monitor length #}
+{% include 'eos/queue-monitor-length.j2' %}
+{# monitor layer1 #}
+{% include 'eos/monitor-layer1.j2' %}
+{# Link Tracking #}
+{% include 'eos/link-tracking-groups.j2' %}
+{# lldp #}
+{% include 'eos/lldp.j2' %}
 {# logging #}
 {% include 'eos/logging.j2' %}
-{# mcs client #}
-{% include 'eos/mcs-client.j2' %}
 {# match-list #}
 {% include 'eos/match-list-input.j2' %}
-{# as-paths #}
-{% include 'eos/as-path.j2' %}
-{# macsec #}
-{% include 'eos/mac-security.j2' %}
-{# IP NAT - Part 1#}
-{% include 'eos/ip-nat-part1.j2' %}
+{# mcs client #}
+{% include 'eos/mcs-client.j2' %}
 {# platform - trident#}
 {% include 'eos/platform-trident.j2' %}
+{# IP NAT - Part 1#}
+{% include 'eos/ip-nat-part1.j2' %}
 {# hostname #}
 {% include 'eos/hostname.j2' %}
 {# domain lookup #}
@@ -92,10 +100,20 @@
 {% include 'eos/dns-domain.j2' %}
 {# domain-list #}
 {% include 'eos/domain-list.j2' %}
+{# aaa server groups ldap #}
+{% include 'eos/aaa-server-groups-ldap.j2' %}
 {# Object Tracking #}
 {% include 'eos/trackers.j2' %}
+{# poe #}
+{% include 'eos/poe.j2' %}
 {# switchport port-security #}
 {% include 'eos/switchport-port-security.j2' %}
+{# ptp #}
+{% include 'eos/ptp.j2' %}
+{# qos-profiles #}
+{% include 'eos/qos-profiles.j2' %}
+{# redundancy #}
+{% include 'eos/redundancy.j2' %}
 {# router adaptive-virtual-topology #}
 {% include 'eos/router-adaptive-virtual-topology.j2' %}
 {# router internet-exit configuration #}
@@ -104,48 +122,22 @@
 {% include 'eos/router-l2-vpn.j2' %}
 {# router path-selection #}
 {% include 'eos/router-path-selection.j2' %}
-{# ntp #}
-{% include 'eos/ntp.j2' %}
-{# poe #}
-{% include 'eos/poe.j2' %}
-{# ptp #}
-{% include 'eos/ptp.j2' %}
-{# radius server #}
-{% include 'eos/radius-server.j2' %}
-{# sflow #}
-{% include 'eos/sflow.j2' %}
-{# redundancy #}
-{% include 'eos/redundancy.j2' %}
-{# qos-profiles #}
-{% include 'eos/qos-profiles.j2' %}
 {# router service-inserion #}
 {% include 'eos/router-service-insertion.j2' %}
+{# platform #}
+{% include 'eos/platform.j2' %}
+{# sflow #}
+{% include 'eos/sflow.j2' %}
 {# snmp settings #}
 {% include 'eos/snmp-server.j2' %}
-{# hardware configuration #}
-{% include 'eos/hardware.j2' %}
+{# hardware speed-groups #}
+{% include 'eos/hardware-speed-groups.j2' %}
 {# spanning-tree #}
 {% include 'eos/spanning-tree.j2' %}
 {# sync-e #}
 {% include 'eos/sync-e.j2' %}
-{# platform #}
-{% include 'eos/platform.j2' %}
 {# service unsupported-transceiver #}
 {% include 'eos/service-unsupported-transceiver.j2' %}
-{# tacacs servers #}
-{% include 'eos/tacacs-servers.j2' %}
-{# aaa #}
-{% include 'eos/aaa.j2' %}
-{# enable password #}
-{% include 'eos/enable-password.j2' %}
-{# aaa root #}
-{% include 'eos/aaa-root.j2' %}
-{# users #}
-{% include 'eos/local-users.j2' %}
-{# roles #}
-{% include 'eos/roles.j2' %}
-{# address locking #}
-{% include 'eos/address-locking.j2' %}
 {# system l1 #}
 {% include 'eos/system-l1.j2' %}
 {# Tap Aggregation #}
@@ -156,14 +148,48 @@
 {% include 'eos/vlans.j2' %}
 {# VRF Instances #}
 {% include 'eos/vrfs.j2' %}
-{# Link Tracking #}
-{% include 'eos/link-tracking-groups.j2' %}
+{# BGP Groups configuration #}
+{% include 'eos/bgp-groups.j2' %}
+{# queue monitor streaming #}
+{% include 'eos/queue-monitor-streaming.j2' %}
+{# banner #}
+{% include 'eos/banners.j2' %}
+{# management accounts #}
+{% include 'eos/management-accounts.j2' %}
+{# management api http #}
+{% include 'eos/management-api-http.j2' %}
+{# management console #}
+{% include 'eos/management-console.j2' %}
+{# management cvx #}
+{% include 'eos/management-cvx.j2' %}
+{# management defaults #}
+{% include 'eos/management-defaults.j2' %}
+{# management api gnmi #}
+{% include 'eos/management-api-gnmi.j2' %}
+{# management api models #}
+{% include 'eos/management-api-models.j2' %}
+{# management security #}
+{% include 'eos/management-security.j2' %}
+{# radius server #}
+{% include 'eos/radius-server.j2' %}
+{# aaa server groups radius #}
+{% include 'eos/aaa-server-groups-radius.j2' %}
+{# tacacs servers #}
+{% include 'eos/tacacs-servers.j2' %}
+{# aaa server groups tacacs+ #}
+{% include 'eos/aaa-server-groups-tacacs-plus.j2' %}
+{# aaa #}
+{% include 'eos/aaa.j2' %}
 {# CVX #}
 {% include 'eos/cvx.j2' %}
+{# 802.1x Global #}
+{% include 'eos/dot1x.j2' %}
 {# influxDB Telemetry #}
 {% include 'eos/monitor-telemetry-influx.j2' %}
 {# IP Security #}
 {% include 'eos/ip-security.j2' %}
+{# macsec #}
+{% include 'eos/mac-security.j2' %}
 {# Port-Channel Interfaces #}
 {% include 'eos/port-channel-interfaces.j2' %}
 {# DPS Interfaces #}
@@ -188,16 +214,18 @@
 {% include 'eos/monitor-connectivity.j2' %}
 {# MAC address-table aging #}
 {% include 'eos/mac-address-table-aging-time.j2' %}
+{# event handler #}
+{% include 'eos/event-handlers.j2' %}
+{# router segment-security #}
+{% include 'eos/router-segment-security.j2' %}
+{# Interface Groups configuration #}
+{% include 'eos/interface-groups.j2' %}
+{# interface profiles #}
+{% include 'eos/interface-profiles.j2' %}
 {# Router virtual mac address #}
 {% include 'eos/ip-virtual-router-mac-address.j2' %}
 {# Router virtual source nat #}
 {% include 'eos/virtual-source-nat-vrfs.j2' %}
-{# event handler #}
-{% include 'eos/event-handlers.j2' %}
-{# BGP Groups configuration #}
-{% include 'eos/bgp-groups.j2' %}
-{# Interface Groups configuration #}
-{% include 'eos/interface-groups.j2' %}
 {# IPv6 Extended Access-lists #}
 {% include 'eos/ipv6-access-lists.j2' %}
 {# IPv6 Standard Access-lists #}
@@ -206,10 +234,10 @@
 {% include 'eos/access-lists.j2' %}
 {# Extended Access-lists, improved data model #}
 {% include 'eos/ip-access-lists.j2' %}
+{# PBR class-map #}
+{% include 'eos/class-maps-pbr.j2' %}
 {# Standard Access-lists #}
 {% include 'eos/standard-access-lists.j2' %}
-{# MAC Access-lists #}
-{% include 'eos/mac-access-lists.j2' %}
 {# IP Routing #}
 {% include 'eos/ip-routing.j2' %}
 {# IP ICMP Redirects #}
@@ -218,25 +246,14 @@
 {% include 'eos/ip-hardware.j2' %}
 {# IP Routing VRFs #}
 {% include 'eos/ip-routing-vrfs.j2' %}
-{# IPv6 Unicast Routing #}
-{% include 'eos/ipv6-unicast-routing.j2' %}
-{# eos - IPv6 Unicast Routing VRFs #}
-{% include 'eos/ipv6-unicast-routing-vrfs.j2' %}
 {# eos - IPv6 ICMP Redirect #}
 {% include 'eos/ipv6-icmp-redirect.j2' %}
-{# eos - IPv6 Hardware #}
-{% include 'eos/ipv6-hardware.j2' %}
-{# Monitor Sessions #}
-{% include 'eos/monitor-sessions.j2' %}
-{% include 'eos/monitor-session-default-encapsulation-gre.j2' %}
-{# qos #}
-{% include 'eos/qos.j2' %}
-{# eos - priority flow control #}
-{% include 'eos/priority-flow-control.j2' %}
+{# as-paths #}
+{% include 'eos/as-path.j2' %}
+{# Community-lists, improved data model #}
+{% include 'eos/ip-community-lists.j2' %}
 {# Community-lists #}
 {% include 'eos/community-lists.j2' %}
-{# IP Community Lists #}
-{% include 'eos/ip-community-lists.j2' %}
 {# IP Extended Community Lists #}
 {% include 'eos/ip-extcommunity-lists.j2' %}
 {# IP Extended Community Lists Regexp #}
@@ -247,104 +264,101 @@
 {% include 'eos/prefix-lists.j2' %}
 {# IPv6 Prefix-lists #}
 {% include 'eos/ipv6-prefix-lists.j2' %}
+{# IPv6 Unicast Routing #}
+{% include 'eos/ipv6-unicast-routing.j2' %}
+{# eos - IPv6 Hardware #}
+{% include 'eos/ipv6-hardware.j2' %}
+{# eos - IPv6 Unicast Routing VRFs #}
+{% include 'eos/ipv6-unicast-routing-vrfs.j2' %}
+{# IPv6 Neighbors #}
+{% include 'eos/ipv6-neighbors.j2' %}
+{# MAC Access-lists #}
+{% include 'eos/mac-access-lists.j2' %}
 {# System Control-Plane#}
 {% include 'eos/system.j2' %}
 {# mac address-table notification #}
 {% include 'eos/mac-address-table-notification.j2' %}
 {# maintenance #}
 {% include 'eos/maintenance.j2' %}
+{# Monitor Sessions #}
+{% include 'eos/monitor-sessions.j2' %}
+{% include 'eos/monitor-session-default-encapsulation-gre.j2' %}
 {# mlag configuration #}
 {% include 'eos/mlag-configuration.j2' %}
-{# IPv6 Neighbors #}
-{% include 'eos/ipv6-neighbors.j2' %}
 {# Static Route #}
 {% include 'eos/static-routes.j2' %}
+{# ARP #}
+{% include 'eos/arp.j2' %}
 {# IPv6 Static Route #}
 {% include 'eos/ipv6-static-routes.j2' %}
+{# MPLS #}
+{% include 'eos/mpls.j2' %}
 {# IP NAT - Part 2#}
 {% include 'eos/ip-nat-part2.j2' %}
-{# QOS class-map #}
-{% include 'eos/class-maps.j2' %}
-{# COPP policy-map #}
-{% include 'eos/policy-maps-copp.j2' %}
+{# ip client source interfaces #}
+{% include 'eos/ip-client-source-interfaces.j2' %}
+{# ntp #}
+{% include 'eos/ntp.j2' %}
+{# Patch Panel #}
+{% include 'eos/patch-panel.j2' %}
 {# PBR policy-map #}
 {% include 'eos/policy-maps-pbr.j2' %}
 {# Monitor telemetry postcard #}
 {% include 'eos/monitor-telemetry-postcard-policy.j2' %}
+{# qos #}
+{% include 'eos/qos.j2' %}
+{# QOS class-map #}
+{% include 'eos/class-maps.j2' %}
+{# COPP policy-map #}
+{% include 'eos/policy-maps-copp.j2' %}
 {# QOS policy-map #}
 {% include 'eos/policy-maps-qos.j2' %}
-{# ARP #}
-{% include 'eos/arp.j2' %}
+{# eos - priority flow control #}
+{% include 'eos/priority-flow-control.j2' %}
+{# ip radius source interfaces #}
+{% include 'eos/ip-radius-source-interfaces.j2' %}
+{# roles #}
+{% include 'eos/roles.j2' %}
 {# route-maps #}
 {% include 'eos/route-maps.j2' %}
-{# router bfd #}
-{% include 'eos/router-bfd.j2' %}
 {# peer-filters #}
 {% include 'eos/peer-filters.j2' %}
+{# router bfd #}
+{% include 'eos/router-bfd.j2' %}
 {# router bgp configuration #}
 {% include 'eos/router-bgp.j2' %}
-{# router igmp configuration #}
-{% include 'eos/router-igmp.j2' %}
-{# router multicast configuration #}
-{% include 'eos/router-multicast.j2' %}
 {# router general configuration #}
 {% include 'eos/router-general.j2' %}
-{# router segment-security #}
-{% include 'eos/router-segment-security.j2' %}
 {# router traffic-engineering configuration #}
 {% include 'eos/router-traffic-engineering.j2' %}
+{# router igmp configuration #}
+{% include 'eos/router-igmp.j2' %}
+{# router isis configuration #}
+{% include 'eos/router-isis.j2' %}
+{# router multicast configuration #}
+{% include 'eos/router-multicast.j2' %}
 {# router ospf configuration #}
 {% include 'eos/router-ospf.j2' %}
 {# router pim sparse mode configuration #}
 {% include 'eos/router-pim-sparse-mode.j2' %}
-{# router isis configuration #}
-{% include 'eos/router-isis.j2' %}
 {# router msdp #}
 {% include 'eos/router-msdp.j2' %}
-{# MPLS #}
-{% include 'eos/mpls.j2' %}
-{# Patch Panel #}
-{% include 'eos/patch-panel.j2' %}
-{# queue monitor streaming #}
-{% include 'eos/queue-monitor-streaming.j2' %}
-{# ip tacacs+ source interfaces #}
-{% include 'eos/ip-tacacs-source-interfaces.j2' %}
-{# ip radius source interfaces #}
-{% include 'eos/ip-radius-source-interfaces.j2' %}
-{# vmtracer sessions #}
-{% include 'eos/vmtracer-sessions.j2' %}
-{# traffic policies #}
-{% include 'eos/traffic-policies.j2' %}
-{# banner #}
-{% include 'eos/banners.j2' %}
-{# ip client source interfaces #}
-{% include 'eos/ip-client-source-interfaces.j2' %}
-{# management accounts #}
-{% include 'eos/management-accounts.j2' %}
-{# management api http #}
-{% include 'eos/management-api-http.j2' %}
-{# management console #}
-{% include 'eos/management-console.j2' %}
-{# management cvx #}
-{% include 'eos/management-cvx.j2' %}
-{# management defaults #}
-{% include 'eos/management-defaults.j2' %}
-{# management api gnmi #}
-{% include 'eos/management-api-gnmi.j2' %}
-{# management api models #}
-{% include 'eos/management-api-models.j2' %}
-{# management security #}
-{% include 'eos/management-security.j2' %}
 {# stun #}
 {% include 'eos/stun.j2' %}
-{# 802.1x Global #}
-{% include 'eos/dot1x.j2' %}
+{# ip tacacs+ source interfaces #}
+{% include 'eos/ip-tacacs-source-interfaces.j2' %}
+{# traffic policies #}
+{% include 'eos/traffic-policies.j2' %}
+{# platform apply #}
+{% include 'eos/platform-apply.j2' %}
+{# vmtracer sessions #}
+{% include 'eos/vmtracer-sessions.j2' %}
+{# dot1x part2 #}
+{% include 'eos/dot1x_part2.j2' %}
 {# management ssh #}
 {% include 'eos/management-ssh.j2' %}
 {# management tech-support #}
 {% include 'eos/management-tech-support.j2' %}
-{# platform apply #}
-{% include 'eos/platform-apply.j2' %}
 {# EOS CLI #}
 {% include 'eos/eos-cli.j2' %}
 {# end #}

@@ -3,7 +3,7 @@
 # that can be found in the LICENSE file.
 ---
 - name: Create required output directories if not present
-  tags: [always]
+  when: avd_create_directories | arista.avd.default(true)
   ansible.builtin.file:
     path: "{{ item }}"
     state: directory
@@ -14,9 +14,8 @@
   run_once: true
 
 - name: Verify Requirements
-  tags: [always, avd_req]
   delegate_to: localhost
-  when: avd_requirements is not defined
+  when: avd_requirements is not defined and avd_verify_requirements | default(true)
   arista.avd.verify_requirements:
     requirements: "{{ lookup('file', requirements_path ~ '/requirements.txt').splitlines() }}"
     avd_ignore_requirements: "{{ avd_ignore_requirements | default(false) }}"
@@ -26,5 +25,4 @@
   register: avd_requirements
 
 - name: Start creation/update process.
-  tags: [always]
   ansible.builtin.include_tasks: "{{ cv_collection }}/main.yml"

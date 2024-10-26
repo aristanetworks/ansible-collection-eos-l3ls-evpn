@@ -8,6 +8,10 @@ router_bgp:
       ipv4_unicast: false
   maximum_paths:
     paths: 16
+  redistribute:
+    connected:
+      enabled: true
+      route_map: RM-CONN-2-BGP
   updates:
     wait_install: true
   peer_groups:
@@ -51,9 +55,6 @@ router_bgp:
       activate: false
     - name: WAN-RR-OVERLAY-PEERS
       activate: false
-  redistribute_routes:
-  - source_protocol: connected
-    route_map: RM-CONN-2-BGP
   bgp_cluster_id: 192.168.44.3
   listen_ranges:
   - prefix: 192.168.142.0/24
@@ -64,10 +65,12 @@ router_bgp:
     remote_as: '65000'
   address_family_evpn:
     peer_groups:
-    - name: WAN-OVERLAY-PEERS
-      activate: true
     - name: WAN-RR-OVERLAY-PEERS
       activate: true
+      encapsulation: path-selection
+    - name: WAN-OVERLAY-PEERS
+      activate: true
+      encapsulation: path-selection
     next_hop:
       resolution_disabled: true
   address_family_ipv4_sr_te:
@@ -97,17 +100,16 @@ router_bgp:
     bgp:
       additional_paths:
         receive: true
-        send:
-          any: true
+        send: any
   neighbors:
   - ip_address: 192.168.144.2
     peer_group: WAN-RR-OVERLAY-PEERS
     peer: cv-pathfinder-pathfinder1
-    description: cv-pathfinder-pathfinder1
+    description: cv-pathfinder-pathfinder1_Dps1
   - ip_address: 6.6.6.6
     peer_group: WAN-RR-OVERLAY-PEERS
     peer: cv-pathfinder-pathfinder3
-    description: cv-pathfinder-pathfinder3
+    description: cv-pathfinder-pathfinder3_Dps1
   vrfs:
   - name: default
     rd: 192.168.44.3:1
@@ -146,17 +148,19 @@ ethernet_interfaces:
   peer_type: l3_interface
   ip_address: 10.9.9.9/31
   shutdown: false
-  type: routed
+  switchport:
+    enabled: false
   description: SFR_999
 - name: Ethernet2
   peer_type: l3_interface
   ip_address: 172.19.9.9/31
   shutdown: false
-  type: routed
+  switchport:
+    enabled: false
   description: ATT-MPLS_10999
 loopback_interfaces:
 - name: Loopback0
-  description: Router_ID
+  description: ROUTER_ID
   shutdown: false
   ip_address: 192.168.44.3/32
 prefix_lists:
@@ -510,7 +514,7 @@ application_traffic_recognition:
 dps_interfaces:
 - name: Dps1
   description: DPS Interface
-  mtu: 9214
+  mtu: 9194
   ip_address: 192.168.144.3/32
   flow_tracker:
     hardware: FLOW-TRACKER
@@ -608,7 +612,11 @@ metadata:
         - name: Site404
           id: 404
           location:
-            address: Not Found
+            address: Atlantis
+        - name: Site405
+          id: 405
+          location:
+            address: El Dorado
         - name: Site422
           id: 422
           location:

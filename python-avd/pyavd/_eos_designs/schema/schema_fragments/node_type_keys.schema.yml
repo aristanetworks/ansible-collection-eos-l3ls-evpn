@@ -263,12 +263,19 @@ keys:
             connected_endpoints_port_channel_interfaces:
               type: str
               description: Path to Custom J2 template.
-            overlay_loopback_interface:
+            router_id_loopback_interface:
               type: str
               description: Path to Custom J2 template.
             vtep_loopback_interface:
               type: str
               description: Path to Custom J2 template.
+            overlay_loopback_interface:
+              type: str
+              description: Path to Custom J2 template.
+              deprecation:
+                warning: true
+                remove_in_version: 6.0.0
+                new_key: router_id_loopback_interface
         cv_tags_topology_type:
           documentation_options:
             table: cloudvision-tags

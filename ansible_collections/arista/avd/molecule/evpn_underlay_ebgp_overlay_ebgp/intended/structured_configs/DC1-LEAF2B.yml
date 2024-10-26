@@ -11,6 +11,10 @@ router_bgp:
   maximum_paths:
     paths: 4
     ecmp: 4
+  redistribute:
+    connected:
+      enabled: true
+      route_map: RM-CONN-2-BGP
   updates:
     wait_install: true
   peer_groups:
@@ -33,9 +37,6 @@ router_bgp:
       activate: true
     - name: EVPN-OVERLAY-PEERS
       activate: false
-  redistribute_routes:
-  - source_protocol: connected
-    route_map: RM-CONN-2-BGP
   neighbors:
   - ip_address: 172.31.255.32
     peer_group: UNDERLAY-PEERS
@@ -60,22 +61,22 @@ router_bgp:
   - ip_address: 192.168.255.1
     peer_group: EVPN-OVERLAY-PEERS
     peer: DC1-SPINE1
-    description: DC1-SPINE1
+    description: DC1-SPINE1_Loopback0
     remote_as: '65001'
   - ip_address: 192.168.255.2
     peer_group: EVPN-OVERLAY-PEERS
     peer: DC1-SPINE2
-    description: DC1-SPINE2
+    description: DC1-SPINE2_Loopback0
     remote_as: '65001'
   - ip_address: 192.168.255.3
     peer_group: EVPN-OVERLAY-PEERS
     peer: DC1-SPINE3
-    description: DC1-SPINE3
+    description: DC1-SPINE3_Loopback0
     remote_as: '65001'
   - ip_address: 192.168.255.4
     peer_group: EVPN-OVERLAY-PEERS
     peer: DC1-SPINE4
-    description: DC1-SPINE4
+    description: DC1-SPINE4_Loopback0
     remote_as: '65001'
   address_family_evpn:
     peer_groups:
@@ -98,8 +99,9 @@ router_bgp:
         route_targets:
         - '12:12'
     router_id: 192.168.255.11
-    redistribute_routes:
-    - source_protocol: connected
+    redistribute:
+      connected:
+        enabled: true
   - name: Tenant_A_DB_Zone
     rd: 192.168.255.11:13
     route_targets:
@@ -112,8 +114,9 @@ router_bgp:
         route_targets:
         - '13:13'
     router_id: 192.168.255.11
-    redistribute_routes:
-    - source_protocol: connected
+    redistribute:
+      connected:
+        enabled: true
   - name: Tenant_A_OP_Zone
     rd: 192.168.255.11:10
     route_targets:
@@ -126,8 +129,9 @@ router_bgp:
         route_targets:
         - '10:10'
     router_id: 192.168.255.11
-    redistribute_routes:
-    - source_protocol: connected
+    redistribute:
+      connected:
+        enabled: true
   - name: Tenant_A_WEB_Zone
     rd: 192.168.255.11:11
     route_targets:
@@ -140,8 +144,9 @@ router_bgp:
         route_targets:
         - '11:11'
     router_id: 192.168.255.11
-    redistribute_routes:
-    - source_protocol: connected
+    redistribute:
+      connected:
+        enabled: true
   - name: Tenant_B_OP_Zone
     rd: 192.168.255.11:20
     route_targets:
@@ -154,8 +159,9 @@ router_bgp:
         route_targets:
         - '20:20'
     router_id: 192.168.255.11
-    redistribute_routes:
-    - source_protocol: connected
+    redistribute:
+      connected:
+        enabled: true
   - name: Tenant_C_OP_Zone
     rd: 192.168.255.11:30
     route_targets:
@@ -168,8 +174,9 @@ router_bgp:
         route_targets:
         - '30:30'
     router_id: 192.168.255.11
-    redistribute_routes:
-    - source_protocol: connected
+    redistribute:
+      connected:
+        enabled: true
   vlan_aware_bundles:
   - name: Tenant_A_APP_Zone
     rd: 192.168.255.11:12
@@ -330,7 +337,7 @@ vrfs:
   ip_routing: true
 management_interfaces:
 - name: Management1
-  description: oob_management
+  description: OOB_MANAGEMENT
   shutdown: false
   vrf: MGMT
   ip_address: 192.168.200.107/24
@@ -366,7 +373,8 @@ ethernet_interfaces:
   speed: forced 100gfull
   shutdown: false
   mtu: 1500
-  type: routed
+  switchport:
+    enabled: false
   ip_address: 172.31.255.33/31
 - name: Ethernet2
   peer: DC1-SPINE2
@@ -376,7 +384,8 @@ ethernet_interfaces:
   speed: forced 100gfull
   shutdown: false
   mtu: 1500
-  type: routed
+  switchport:
+    enabled: false
   ip_address: 172.31.255.35/31
 - name: Ethernet3
   peer: DC1-SPINE3
@@ -386,7 +395,8 @@ ethernet_interfaces:
   speed: forced 100gfull
   shutdown: false
   mtu: 1500
-  type: routed
+  switchport:
+    enabled: false
   ip_address: 172.31.255.37/31
 - name: Ethernet4
   peer: DC1-SPINE4
@@ -396,7 +406,8 @@ ethernet_interfaces:
   speed: forced 100gfull
   shutdown: false
   mtu: 1500
-  type: routed
+  switchport:
+    enabled: false
   ip_address: 172.31.255.39/31
 - name: Ethernet7
   peer: DC1-L2LEAF1A
@@ -404,7 +415,6 @@ ethernet_interfaces:
   peer_type: l2leaf
   description: CUSTOM_DC1-L2LEAF1A_Ethernet2
   shutdown: false
-  type: port-channel-member
   channel_group:
     id: 7
     mode: active
@@ -414,7 +424,6 @@ ethernet_interfaces:
   peer_type: l2leaf
   description: CUSTOM_DC1-L2LEAF1B_Ethernet2
   shutdown: false
-  type: port-channel-member
   channel_group:
     id: 7
     mode: active
@@ -424,7 +433,6 @@ ethernet_interfaces:
   peer_type: l2leaf
   description: CUSTOM_DC1-L2LEAF3A_Ethernet2
   shutdown: false
-  type: port-channel-member
   channel_group:
     id: 9
     mode: active
@@ -435,7 +443,6 @@ ethernet_interfaces:
   port_profile: TENANT_B
   description: CUSTOM_server01_MLAG_Eth3
   shutdown: false
-  type: port-channel-member
   channel_group:
     id: 10
     mode: active
@@ -446,7 +453,6 @@ ethernet_interfaces:
   port_profile: TENANT_A_MTU
   description: CUSTOM_server01_MTU_PROFILE_MLAG_Eth5
   shutdown: false
-  type: port-channel-member
   channel_group:
     id: 11
     mode: active
@@ -456,7 +462,6 @@ ethernet_interfaces:
   peer_type: server
   description: CUSTOM_server01_MTU_ADAPTOR_MLAG_Eth7
   shutdown: false
-  type: port-channel-member
   channel_group:
     id: 12
     mode: active
@@ -466,7 +471,6 @@ ethernet_interfaces:
   peer_type: server
   description: CUSTOM_server01_MTU_ADAPTOR_MLAG_Eth9
   shutdown: false
-  type: port-channel-member
   channel_group:
     id: 12
     mode: active
@@ -477,7 +481,6 @@ ethernet_interfaces:
   port_profile: TENANT_A_B
   description: CUSTOM_FIREWALL01_E1
   shutdown: false
-  type: port-channel-member
   channel_group:
     id: 20
     mode: active
@@ -488,54 +491,65 @@ ethernet_interfaces:
   port_profile: TENANT_A
   description: CUSTOM_ROUTER01_Eth1
   shutdown: false
-  type: switched
-  mode: access
-  vlans: '110'
+  switchport:
+    enabled: true
+    mode: access
+    access_vlan: '110'
 port_channel_interfaces:
 - name: Port-Channel7
-  description: CUSTOM_DC1_L2LEAF1_Po1
-  type: switched
+  description: CUSTOM_DC1-L2LEAF1A_Po1
+  switchport:
+    enabled: true
+    mode: trunk
+    trunk:
+      allowed_vlan: 110-111,120-124,130-131,160-162
   shutdown: false
-  mode: trunk
-  vlans: 110-111,120-124,130-131,160-162
   evpn_ethernet_segment:
     identifier: 0000:1234:0808:0707:0606
     route_target: 08:08:07:07:06:06
   lacp_id: 0808.0707.0606
 - name: Port-Channel9
   description: CUSTOM_DC1-L2LEAF3A_Po1
-  type: switched
+  switchport:
+    enabled: true
+    mode: trunk
+    trunk:
+      allowed_vlan: 110-111,120-124,130-131,160-162
   shutdown: false
-  mode: trunk
-  vlans: 110-111,120-124,130-131,160-162
   evpn_ethernet_segment:
     identifier: 0000:1234:0606:0707:0808
     route_target: 06:06:07:07:08:08
   lacp_id: 0606.0707.0808
 - name: Port-Channel10
   description: CUSTOM_server01_MLAG_PortChanne1
-  type: switched
   shutdown: false
-  mode: trunk
-  vlans: 210-211
+  switchport:
+    enabled: true
+    mode: trunk
+    trunk:
+      allowed_vlan: 210-211
 - name: Port-Channel11
   description: CUSTOM_server01_MTU_PROFILE_MLAG_PortChanne1
-  type: switched
   shutdown: false
   mtu: 1600
-  mode: access
-  vlans: '110'
+  switchport:
+    enabled: true
+    mode: access
+    access_vlan: '110'
 - name: Port-Channel12
   description: CUSTOM_server01_MTU_ADAPTOR_MLAG_PortChanne1
-  type: switched
   shutdown: false
   mtu: 1601
+  switchport:
+    enabled: true
 - name: Port-Channel20
   description: CUSTOM_FIREWALL01_PortChanne1
-  type: switched
   shutdown: false
-  mode: trunk
-  vlans: 110-111,210-211
+  switchport:
+    enabled: true
+    mode: trunk
+    trunk:
+      allowed_vlan: 110-111,210-211
 loopback_interfaces:
 - name: Loopback0
   description: CUSTOM_EVPN_Overlay_Peering_L3LEAF

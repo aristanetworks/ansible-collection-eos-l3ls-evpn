@@ -372,7 +372,7 @@
       "interfaces"
     ],
     "description": "Verifies the status of the provided interfaces.",
-    "custom_field": "Interface Ethernet1 - DC1-LEAF1A_Ethernet8 = 'up'"
+    "custom_field": "Interface Ethernet1 - L2_dc1-leaf1a_Ethernet8 = 'up'"
   },
   {
     "name": "dc1-leaf1c",
@@ -381,7 +381,7 @@
       "interfaces"
     ],
     "description": "Verifies the status of the provided interfaces.",
-    "custom_field": "Interface Ethernet2 - DC1-LEAF1B_Ethernet8 = 'up'"
+    "custom_field": "Interface Ethernet2 - L2_dc1-leaf1b_Ethernet8 = 'up'"
   },
   {
     "name": "dc1-leaf1c",
@@ -390,7 +390,7 @@
       "interfaces"
     ],
     "description": "Verifies the status of the provided interfaces.",
-    "custom_field": "Interface Ethernet5 - dc1-leaf1-server1_iLO = 'up'"
+    "custom_field": "Interface Ethernet5 - SERVER_dc1-leaf1-server1_iLO = 'up'"
   },
   {
     "name": "dc1-leaf1c",
@@ -399,7 +399,7 @@
       "interfaces"
     ],
     "description": "Verifies the status of the provided interfaces.",
-    "custom_field": "Interface Port-Channel1 - DC1_L3_LEAF1_Po8 = 'up'"
+    "custom_field": "Interface Port-Channel1 - L2_DC1_L3_LEAF1_Port-Channel8 = 'up'"
   },
   {
     "name": "dc1-leaf1c",

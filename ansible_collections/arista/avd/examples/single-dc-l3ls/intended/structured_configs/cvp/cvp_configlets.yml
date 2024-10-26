@@ -38,7 +38,7 @@ cvp_configlets:
     10.255.1.3/32\n!\ninterface Loopback10\n   description VRF10_VTEP_DIAGNOSTICS\n
     \  no shutdown\n   vrf VRF10\n   ip address 10.255.10.3/32\n!\ninterface Loopback11\n
     \  description VRF11_VTEP_DIAGNOSTICS\n   no shutdown\n   vrf VRF11\n   ip address
-    10.255.11.3/32\n!\ninterface Management1\n   description oob_management\n   no
+    10.255.11.3/32\n!\ninterface Management1\n   description OOB_MANAGEMENT\n   no
     shutdown\n   vrf MGMT\n   ip address 172.16.1.101/24\n!\ninterface Vlan11\n   description
     VRF10_VLAN11\n   no shutdown\n   vrf VRF10\n   ip address virtual 10.10.11.1/24\n!\ninterface
     Vlan12\n   description VRF10_VLAN12\n   no shutdown\n   vrf VRF10\n   ip address
@@ -149,7 +149,7 @@ cvp_configlets:
     10.255.1.3/32\n!\ninterface Loopback10\n   description VRF10_VTEP_DIAGNOSTICS\n
     \  no shutdown\n   vrf VRF10\n   ip address 10.255.10.4/32\n!\ninterface Loopback11\n
     \  description VRF11_VTEP_DIAGNOSTICS\n   no shutdown\n   vrf VRF11\n   ip address
-    10.255.11.4/32\n!\ninterface Management1\n   description oob_management\n   no
+    10.255.11.4/32\n!\ninterface Management1\n   description OOB_MANAGEMENT\n   no
     shutdown\n   vrf MGMT\n   ip address 172.16.1.102/24\n!\ninterface Vlan11\n   description
     VRF10_VLAN11\n   no shutdown\n   vrf VRF10\n   ip address virtual 10.10.11.1/24\n!\ninterface
     Vlan12\n   description VRF10_VLAN12\n   no shutdown\n   vrf VRF10\n   ip address
@@ -241,7 +241,7 @@ cvp_configlets:
     shutdown\n   channel-group 1 mode active\n!\ninterface Ethernet5\n   description
     dc1-leaf1-server1_iLO\n   no shutdown\n   switchport access vlan 11\n   switchport
     mode access\n   switchport\n   spanning-tree portfast\n!\ninterface Management1\n
-    \  description oob_management\n   no shutdown\n   vrf MGMT\n   ip address 172.16.1.151/24\nno
+    \  description OOB_MANAGEMENT\n   no shutdown\n   vrf MGMT\n   ip address 172.16.1.151/24\nno
     ip routing vrf MGMT\n!\nip route vrf MGMT 0.0.0.0/0 172.16.1.1\n!\nmanagement
     api http-commands\n   protocol https\n   no shutdown\n   !\n   vrf MGMT\n      no
     shutdown\n!\nend\n"
@@ -284,7 +284,7 @@ cvp_configlets:
     10.255.1.5/32\n!\ninterface Loopback10\n   description VRF10_VTEP_DIAGNOSTICS\n
     \  no shutdown\n   vrf VRF10\n   ip address 10.255.10.5/32\n!\ninterface Loopback11\n
     \  description VRF11_VTEP_DIAGNOSTICS\n   no shutdown\n   vrf VRF11\n   ip address
-    10.255.11.5/32\n!\ninterface Management1\n   description oob_management\n   no
+    10.255.11.5/32\n!\ninterface Management1\n   description OOB_MANAGEMENT\n   no
     shutdown\n   vrf MGMT\n   ip address 172.16.1.103/24\n!\ninterface Vlan11\n   description
     VRF10_VLAN11\n   no shutdown\n   vrf VRF10\n   ip address virtual 10.10.11.1/24\n!\ninterface
     Vlan12\n   description VRF10_VLAN12\n   no shutdown\n   vrf VRF10\n   ip address
@@ -395,7 +395,7 @@ cvp_configlets:
     10.255.1.5/32\n!\ninterface Loopback10\n   description VRF10_VTEP_DIAGNOSTICS\n
     \  no shutdown\n   vrf VRF10\n   ip address 10.255.10.6/32\n!\ninterface Loopback11\n
     \  description VRF11_VTEP_DIAGNOSTICS\n   no shutdown\n   vrf VRF11\n   ip address
-    10.255.11.6/32\n!\ninterface Management1\n   description oob_management\n   no
+    10.255.11.6/32\n!\ninterface Management1\n   description OOB_MANAGEMENT\n   no
     shutdown\n   vrf MGMT\n   ip address 172.16.1.104/24\n!\ninterface Vlan11\n   description
     VRF10_VLAN11\n   no shutdown\n   vrf VRF10\n   ip address virtual 10.10.11.1/24\n!\ninterface
     Vlan12\n   description VRF10_VLAN12\n   no shutdown\n   vrf VRF10\n   ip address
@@ -487,7 +487,7 @@ cvp_configlets:
     shutdown\n   channel-group 1 mode active\n!\ninterface Ethernet5\n   description
     dc1-leaf2-server1_iLO\n   no shutdown\n   switchport access vlan 11\n   switchport
     mode access\n   switchport\n   spanning-tree portfast\n!\ninterface Management1\n
-    \  description oob_management\n   no shutdown\n   vrf MGMT\n   ip address 172.16.1.152/24\nno
+    \  description OOB_MANAGEMENT\n   no shutdown\n   vrf MGMT\n   ip address 172.16.1.152/24\nno
     ip routing vrf MGMT\n!\nip route vrf MGMT 0.0.0.0/0 172.16.1.1\n!\nmanagement
     api http-commands\n   protocol https\n   no shutdown\n   !\n   vrf MGMT\n      no
     shutdown\n!\nend\n"
@@ -509,7 +509,7 @@ cvp_configlets:
     P2P_LINK_TO_DC1-LEAF2B_Ethernet1\n   no shutdown\n   mtu 1500\n   no switchport\n
     \  ip address 10.255.255.12/31\n!\ninterface Loopback0\n   description EVPN_Overlay_Peering\n
     \  no shutdown\n   ip address 10.255.0.1/32\n!\ninterface Management1\n   description
-    oob_management\n   no shutdown\n   vrf MGMT\n   ip address 172.16.1.11/24\n!\nip
+    OOB_MANAGEMENT\n   no shutdown\n   vrf MGMT\n   ip address 172.16.1.11/24\n!\nip
     routing\nno ip routing vrf MGMT\n!\nip prefix-list PL-LOOPBACKS-EVPN-OVERLAY\n
     \  seq 10 permit 10.255.0.0/27 eq 32\n!\nip route vrf MGMT 0.0.0.0/0 172.16.1.1\n!\nroute-map
     RM-CONN-2-BGP permit 10\n   match ip address prefix-list PL-LOOPBACKS-EVPN-OVERLAY\n!\nrouter
@@ -560,7 +560,7 @@ cvp_configlets:
     P2P_LINK_TO_DC1-LEAF2B_Ethernet2\n   no shutdown\n   mtu 1500\n   no switchport\n
     \  ip address 10.255.255.14/31\n!\ninterface Loopback0\n   description EVPN_Overlay_Peering\n
     \  no shutdown\n   ip address 10.255.0.2/32\n!\ninterface Management1\n   description
-    oob_management\n   no shutdown\n   vrf MGMT\n   ip address 172.16.1.12/24\n!\nip
+    OOB_MANAGEMENT\n   no shutdown\n   vrf MGMT\n   ip address 172.16.1.12/24\n!\nip
     routing\nno ip routing vrf MGMT\n!\nip prefix-list PL-LOOPBACKS-EVPN-OVERLAY\n
     \  seq 10 permit 10.255.0.0/27 eq 32\n!\nip route vrf MGMT 0.0.0.0/0 172.16.1.1\n!\nroute-map
     RM-CONN-2-BGP permit 10\n   match ip address prefix-list PL-LOOPBACKS-EVPN-OVERLAY\n!\nrouter

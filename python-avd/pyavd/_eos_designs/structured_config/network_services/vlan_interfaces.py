@@ -6,8 +6,9 @@ from __future__ import annotations
 from functools import cached_property
 from typing import TYPE_CHECKING
 
-from pyavd._errors import AristaAvdMissingVariableError
+from pyavd._errors import AristaAvdInvalidInputsError
 from pyavd._utils import append_if_not_duplicate, default, get, strip_empties_from_dict
+from pyavd.api.interface_descriptions import InterfaceDescriptionData
 
 from .utils import UtilsMixin
 
@@ -51,7 +52,7 @@ class VlanInterfacesMixin(UtilsMixin):
                 if (vlan_id := self._mlag_ibgp_peering_vlan_vrf(vrf, tenant)) is None:
                     continue
 
-                vlan_interface = {"name": f"Vlan{vlan_id}", **self._get_vlan_interface_config_for_mlag_peering(vrf)}
+                vlan_interface = {"name": f"Vlan{vlan_id}", **self._get_vlan_interface_config_for_mlag_peering(vrf, vlan_id)}
                 append_if_not_duplicate(
                     list_of_dicts=vlan_interfaces,
                     primary_key="name",
@@ -80,7 +81,7 @@ class VlanInterfacesMixin(UtilsMixin):
             if any(vlan_interface_config.get(var) for var in variables) and self.shared_utils.virtual_router_mac_address is None:
                 quoted_vars = [f"'{var}'" for var in variables]
                 msg = f"'virtual_router_mac_address' must be set for node '{self.shared_utils.hostname}' when using {' or '.join(quoted_vars)} under 'svi'"
-                raise AristaAvdMissingVariableError(msg)
+                raise AristaAvdInvalidInputsError(msg)
 
         interface_name = f"Vlan{svi['id']}"
         vlan_interface_config = {
@@ -122,7 +123,7 @@ class VlanInterfacesMixin(UtilsMixin):
                         f"No vtep_diagnostic loopback defined on VRF '{vrf['name']}' in Tenant '{svi['tenant']}'."
                         "This is required when 'l3_multicast' is enabled on the VRF and ip_address_virtual is used on an SVI in that VRF."
                     )
-                    raise AristaAvdMissingVariableError(msg)
+                    raise AristaAvdInvalidInputsError(msg)
                 pim_config_ipv4["local_interface"] = f"Loopback{vrf_diagnostic_loopback}"
 
             if pim_config_ipv4:
@@ -152,34 +153,44 @@ class VlanInterfacesMixin(UtilsMixin):
 
         return strip_empties_from_dict(vlan_interface_config)
 
-    def _get_vlan_interface_config_for_mlag_peering(self: AvdStructuredConfigNetworkServices, vrf: dict) -> dict:
-        """
-        Build config for MLAG peering SVI for the given SVI.
-
-        Called from vlan_interfaces and prefix_lists.
-        """
+    def _get_vlan_interface_config_for_mlag_peering(self: AvdStructuredConfigNetworkServices, vrf: dict, vlan_id: int) -> dict:
+        """Build full config for MLAG peering SVI for the given VRF."""
         vlan_interface_config = {
             "tenant": vrf["tenant"],
             "type": "underlay_peering",
             "shutdown": False,
-            "description": f"MLAG_PEER_L3_iBGP: vrf {vrf['name']}",
+            "description": self.shared_utils.interface_descriptions.mlag_peer_l3_vrf_svi(
+                InterfaceDescriptionData(shared_utils=self.shared_utils, interface=f"Vlan{vlan_id}", vrf=vrf["name"], vlan=vlan_id)
+            ),
             "vrf": vrf["name"],
             "mtu": self.shared_utils.p2p_uplinks_mtu,
         }
+        vlan_interface_config.update(self._get_vlan_ip_config_for_mlag_peering(vrf))
+        return vlan_interface_config
+
+    def _get_vlan_ip_config_for_mlag_peering(self: AvdStructuredConfigNetworkServices, vrf: dict) -> dict:
+        """
+        Build IP config for MLAG peering SVI for the given VRF.
+
+        Called from _get_vlan_interface_config_for_mlag_peering and prefix_lists.
+        """
         if self.shared_utils.underlay_rfc5549 and self.shared_utils.overlay_mlag_rfc5549:
-            vlan_interface_config["ipv6_enable"] = True
-        elif (mlag_ibgp_peering_ipv4_pool := vrf.get("mlag_ibgp_peering_ipv4_pool")) is not None:
+            return {"ipv6_enable": True}
+
+        if (mlag_ibgp_peering_ipv4_pool := vrf.get("mlag_ibgp_peering_ipv4_pool")) is not None:
             if self.shared_utils.mlag_role == "primary":
-                vlan_interface_config["ip_address"] = (
-                    f"{self.shared_utils.ip_addressing.mlag_ibgp_peering_ip_primary(mlag_ibgp_peering_ipv4_pool)}/"
-                    f"{self.shared_utils.fabric_ip_addressing_mlag_ipv4_prefix_length}"
-                )
-            else:
-                vlan_interface_config["ip_address"] = (
+                return {
+                    "ip_address": (
+                        f"{self.shared_utils.ip_addressing.mlag_ibgp_peering_ip_primary(mlag_ibgp_peering_ipv4_pool)}/"
+                        f"{self.shared_utils.fabric_ip_addressing_mlag_ipv4_prefix_length}"
+                    )
+                }
+
+            return {
+                "ip_address": (
                     f"{self.shared_utils.ip_addressing.mlag_ibgp_peering_ip_secondary(mlag_ibgp_peering_ipv4_pool)}/"
                     f"{self.shared_utils.fabric_ip_addressing_mlag_ipv4_prefix_length}"
                 )
-        else:
-            vlan_interface_config["ip_address"] = f"{self.shared_utils.mlag_ibgp_ip}/{self.shared_utils.fabric_ip_addressing_mlag_ipv4_prefix_length}"
+            }
 
-        return vlan_interface_config
+        return {"ip_address": f"{self.shared_utils.mlag_ibgp_ip}/{self.shared_utils.fabric_ip_addressing_mlag_ipv4_prefix_length}"}

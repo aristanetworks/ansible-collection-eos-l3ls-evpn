@@ -94,7 +94,7 @@ vrfs:
   ip_routing: false
 management_interfaces:
 - name: Management1
-  description: oob_management
+  description: OOB_MANAGEMENT
   shutdown: false
   vrf: MGMT
   ip_address: 192.168.201.114/24
@@ -138,19 +138,20 @@ vlan_interfaces:
 port_channel_interfaces:
 - name: Port-Channel5
   description: MLAG_PEER_MLAG-OSPF-L3LEAF1B_Po5
-  type: switched
+  switchport:
+    enabled: true
+    mode: trunk
+    trunk:
+      groups:
+      - MLAG
+      - LEAF_PEER_L3
   shutdown: false
-  mode: trunk
-  trunk_groups:
-  - LEAF_PEER_L3
-  - MLAG
 ethernet_interfaces:
 - name: Ethernet5
   peer: MLAG-OSPF-L3LEAF1B
   peer_interface: Ethernet5
   peer_type: mlag_peer
   description: MLAG_PEER_MLAG-OSPF-L3LEAF1B_Ethernet5
-  type: port-channel-member
   shutdown: false
   channel_group:
     id: 5
@@ -160,7 +161,6 @@ ethernet_interfaces:
   peer_interface: Ethernet6
   peer_type: mlag_peer
   description: MLAG_PEER_MLAG-OSPF-L3LEAF1B_Ethernet6
-  type: port-channel-member
   shutdown: false
   channel_group:
     id: 5
@@ -172,7 +172,8 @@ ethernet_interfaces:
   description: P2P_LINK_TO_DC1-SPINE1_Ethernet18
   shutdown: false
   mtu: 1500
-  type: routed
+  switchport:
+    enabled: false
   ip_address: 10.10.101.7/31
   ospf_network_point_to_point: true
   ospf_area: 0.0.0.0
@@ -193,12 +194,12 @@ mlag_configuration:
   reload_delay_non_mlag: '330'
 loopback_interfaces:
 - name: Loopback0
-  description: EVPN_Overlay_Peering
+  description: ROUTER_ID
   shutdown: false
   ip_address: 192.168.255.36/32
   ospf_area: 0.0.0.0
 - name: Loopback1
-  description: VTEP_VXLAN_Tunnel_Source
+  description: VXLAN_TUNNEL_SOURCE
   shutdown: false
   ip_address: 192.168.254.36/32
   ospf_area: 0.0.0.0

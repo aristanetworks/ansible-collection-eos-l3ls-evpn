@@ -11,7 +11,9 @@ l2leaf:
           level: 25
         unknown_unicast:
           level: 25
-      native_vlan_tag: true
+      switchport:
+        trunk:
+          native_vlan_tag: true
     mlag_interfaces: [ Ethernet3, Ethernet4 ]
     mlag_peer_ipv4_pool: 10.255.252.0/24
     mlag_port_channel_structured_config:
@@ -20,7 +22,9 @@ l2leaf:
           level: 25
         unknown_unicast:
           level: 25
-      native_vlan_tag: true
+      switchport:
+        trunk:
+          native_vlan_tag: true
     spanning_tree_mode: mstp
     spanning_tree_priority: 16384
   node_groups:

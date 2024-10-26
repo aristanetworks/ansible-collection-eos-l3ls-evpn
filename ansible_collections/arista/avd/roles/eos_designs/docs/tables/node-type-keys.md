@@ -54,8 +54,9 @@
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;mlag_port_channel_interfaces</samp>](## "custom_node_type_keys.[].interface_descriptions.mlag_port_channel_interfaces") | String |  |  |  | Path to Custom J2 template. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;connected_endpoints_ethernet_interfaces</samp>](## "custom_node_type_keys.[].interface_descriptions.connected_endpoints_ethernet_interfaces") | String |  |  |  | Path to Custom J2 template. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;connected_endpoints_port_channel_interfaces</samp>](## "custom_node_type_keys.[].interface_descriptions.connected_endpoints_port_channel_interfaces") | String |  |  |  | Path to Custom J2 template. |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;overlay_loopback_interface</samp>](## "custom_node_type_keys.[].interface_descriptions.overlay_loopback_interface") | String |  |  |  | Path to Custom J2 template. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;router_id_loopback_interface</samp>](## "custom_node_type_keys.[].interface_descriptions.router_id_loopback_interface") | String |  |  |  | Path to Custom J2 template. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;vtep_loopback_interface</samp>](## "custom_node_type_keys.[].interface_descriptions.vtep_loopback_interface") | String |  |  |  | Path to Custom J2 template. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;overlay_loopback_interface</samp>](## "custom_node_type_keys.[].interface_descriptions.overlay_loopback_interface") <span style="color:red">deprecated</span> | String |  |  |  | Path to Custom J2 template.<span style="color:red">This key is deprecated. Support will be removed in AVD version 6.0.0. Use <samp>router_id_loopback_interface</samp> instead.</span> |
     | [<samp>node_type_keys</samp>](## "node_type_keys") | List, items: Dictionary |  |  |  | Define Node Type Keys, to specify the properties of each node type in the fabric.<br>This allows for complete customization of the fabric layout and functionality.<br>`node_type_keys` should be defined in top level group_var for the fabric.<br><br>The default values will be overridden if this key is defined.<br>If you need to change all the existing `node_type_keys`, it is recommended to copy the defaults and modify them.<br>If you need to add custom `node_type_keys`, create them under `custom_node_type_keys` - if named identically to default `node_type_keys` entries,<br>custom entries will replace the equivalent default entry. |
     | [<samp>&nbsp;&nbsp;-&nbsp;key</samp>](## "node_type_keys.[].key") | String | Required, Unique |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;type</samp>](## "node_type_keys.[].type") | String |  |  |  | Type value matching this node_type_key. |
@@ -103,8 +104,9 @@
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;mlag_port_channel_interfaces</samp>](## "node_type_keys.[].interface_descriptions.mlag_port_channel_interfaces") | String |  |  |  | Path to Custom J2 template. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;connected_endpoints_ethernet_interfaces</samp>](## "node_type_keys.[].interface_descriptions.connected_endpoints_ethernet_interfaces") | String |  |  |  | Path to Custom J2 template. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;connected_endpoints_port_channel_interfaces</samp>](## "node_type_keys.[].interface_descriptions.connected_endpoints_port_channel_interfaces") | String |  |  |  | Path to Custom J2 template. |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;overlay_loopback_interface</samp>](## "node_type_keys.[].interface_descriptions.overlay_loopback_interface") | String |  |  |  | Path to Custom J2 template. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;router_id_loopback_interface</samp>](## "node_type_keys.[].interface_descriptions.router_id_loopback_interface") | String |  |  |  | Path to Custom J2 template. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;vtep_loopback_interface</samp>](## "node_type_keys.[].interface_descriptions.vtep_loopback_interface") | String |  |  |  | Path to Custom J2 template. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;overlay_loopback_interface</samp>](## "node_type_keys.[].interface_descriptions.overlay_loopback_interface") <span style="color:red">deprecated</span> | String |  |  |  | Path to Custom J2 template.<span style="color:red">This key is deprecated. Support will be removed in AVD version 6.0.0. Use <samp>router_id_loopback_interface</samp> instead.</span> |
 
 === "YAML"
 
@@ -275,10 +277,16 @@
           connected_endpoints_port_channel_interfaces: <str>
 
           # Path to Custom J2 template.
-          overlay_loopback_interface: <str>
+          router_id_loopback_interface: <str>
 
           # Path to Custom J2 template.
           vtep_loopback_interface: <str>
+
+          # Path to Custom J2 template.
+          # This key is deprecated.
+          # Support will be removed in AVD version 6.0.0.
+          # Use <samp>router_id_loopback_interface</samp> instead.
+          overlay_loopback_interface: <str>
 
     # Define Node Type Keys, to specify the properties of each node type in the fabric.
     # This allows for complete customization of the fabric layout and functionality.
@@ -449,8 +457,14 @@
           connected_endpoints_port_channel_interfaces: <str>
 
           # Path to Custom J2 template.
-          overlay_loopback_interface: <str>
+          router_id_loopback_interface: <str>
 
           # Path to Custom J2 template.
           vtep_loopback_interface: <str>
+
+          # Path to Custom J2 template.
+          # This key is deprecated.
+          # Support will be removed in AVD version 6.0.0.
+          # Use <samp>router_id_loopback_interface</samp> instead.
+          overlay_loopback_interface: <str>
     ```

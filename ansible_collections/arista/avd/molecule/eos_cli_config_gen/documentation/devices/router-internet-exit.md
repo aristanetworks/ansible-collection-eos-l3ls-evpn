@@ -16,20 +16,20 @@
 
 | Management Interface | Description | Type | VRF | IP Address | Gateway |
 | -------------------- | ----------- | ---- | --- | ---------- | ------- |
-| Management1 | oob_management | oob | MGMT | 10.73.255.122/24 | 10.73.255.2 |
+| Management1 | OOB_MANAGEMENT | oob | MGMT | 10.73.255.122/24 | 10.73.255.2 |
 
 ##### IPv6
 
 | Management Interface | Description | Type | VRF | IPv6 Address | IPv6 Gateway |
 | -------------------- | ----------- | ---- | --- | ------------ | ------------ |
-| Management1 | oob_management | oob | MGMT | - | - |
+| Management1 | OOB_MANAGEMENT | oob | MGMT | - | - |
 
 #### Management Interfaces Device Configuration
 
 ```eos
 !
 interface Management1
-   description oob_management
+   description OOB_MANAGEMENT
    vrf MGMT
    ip address 10.73.255.122/24
 ```
@@ -58,31 +58,30 @@ interface Management1
 ```eos
 !
 router internet-exit
-    !
-    exit-group eg_01
-    !
-    exit-group eg_02
-        fib-default
-    !
-    exit-group eg_03
-        local connection eg_03_lo_01
-        local connection eg_03_lo_02
-        fib-default
-    !
-    exit-group eg_04
-        local connection eg_04_lo_01
-        local connection eg_04_lo_02
-        local connection eg_04_lo_03
-    !
-    policy po_01
-        exit-group po_eg_01_02
-        exit-group po_eg_01_04
-        exit-group po_eg_01_01
-        exit-group po_eg_01_03
-        exit-group system-default-exit-group
-    !
-    policy po_02
-    !
-    policy po_03
-        exit-group po_eg_03_01
+   exit-group eg_01
+   !
+   exit-group eg_02
+      fib-default
+   !
+   exit-group eg_03
+      local connection eg_03_lo_01
+      local connection eg_03_lo_02
+      fib-default
+   !
+   exit-group eg_04
+      local connection eg_04_lo_01
+      local connection eg_04_lo_02
+      local connection eg_04_lo_03
+   !
+   policy po_01
+      exit-group po_eg_01_02
+      exit-group po_eg_01_04
+      exit-group po_eg_01_01
+      exit-group po_eg_01_03
+      exit-group system-default-exit-group
+   !
+   policy po_02
+   !
+   policy po_03
+      exit-group po_eg_03_01
 ```

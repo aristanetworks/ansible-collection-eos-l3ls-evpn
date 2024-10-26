@@ -12,13 +12,11 @@ keys:
       console:
         type: str
         valid_values: ["debugging", "informational", "notifications", "warnings", "errors", "critical", "alerts", "emergencies", "disabled"]
-        description: |
-          Console logging severity level.
+        description: Console logging severity level.
       monitor:
         type: str
         valid_values: ["debugging", "informational", "notifications", "warnings", "errors", "critical", "alerts", "emergencies", "disabled"]
-        description: |
-          Monitor logging severity level.
+        description: Monitor logging severity level.
       buffered:
         type: dict
         keys:
@@ -31,21 +29,21 @@ keys:
           level:
             type: str
             valid_values: ["alerts", "critical", "debugging", "emergencies", "errors", "informational", "notifications", "warnings", "disabled"]
-            description: |
-              Buffer logging severity level.
+            description: Buffer logging severity level.
+      repeat_messages:
+        type: bool
+        description: Summarize concurrent repeat messages.
       trap:
         type: str
         valid_values: ["alerts", "critical", "debugging", "emergencies", "errors", "informational", "notifications", "system", "warnings", "disabled"]
-        description: |
-          Trap logging severity level.
+        description: Trap logging severity level.
       synchronous:
         type: dict
         keys:
           level:
             type: str
             valid_values: ["alerts", "all", "critical", "debugging", "emergencies", "errors", "informational", "notifications", "warnings", "disabled"]
-            description: |
-              Synchronous logging severity level.
+            description: Synchronous logging severity level.
             default: "critical"
       format:
         type: dict
@@ -60,12 +58,10 @@ keys:
             description: Hostname format in syslogs. For hostname _only_, remove the line. (default EOS CLI behaviour).
           sequence_numbers:
             type: bool
-            description: |
-              Add sequence numbers to log messages.
+            description: Add sequence numbers to log messages.
           rfc5424:
             type: bool
-            description: |
-              Forward logs in RFC5424 format.
+            description: Forward logs in RFC5424 format.
       facility:
         type: str
         valid_values: ["auth", "cron", "daemon", "kern", "local0", "local1", "local2", "local3", "local4",
@@ -128,6 +124,15 @@ keys:
       event:
         type: dict
         keys:
+          congestion_drops_interval:
+            type: int
+            convert_types:
+              - str
+            min: 1
+            max: 65535
+            description: Logging interval in seconds.
+          global_link_status:
+            type: bool
           storm_control:
             type: dict
             keys:

@@ -41,7 +41,7 @@ vrfs:
   ip_routing: false
 management_interfaces:
 - name: Management0
-  description: oob_management
+  description: OOB_MANAGEMENT
   shutdown: false
   vrf: MGMT
   ip_address: 172.16.100.101/24
@@ -64,7 +64,7 @@ ntp:
 vlans:
 - id: 4094
   tenant: system
-  name: MLAG_PEER
+  name: MLAG
   trunk_groups:
   - MLAG
 - id: 10
@@ -78,47 +78,54 @@ vlans:
   tenant: MY_FABRIC
 vlan_interfaces:
 - name: Vlan4094
-  description: MLAG_PEER
+  description: MLAG
   shutdown: false
   no_autostate: true
   mtu: 1500
   ip_address: 192.168.0.0/31
 port_channel_interfaces:
 - name: Port-Channel47
-  description: MLAG_PEER_SPINE2_Po47
-  type: switched
+  description: MLAG_SPINE2_Port-Channel47
+  switchport:
+    enabled: true
+    mode: trunk
+    trunk:
+      groups:
+      - MLAG
   shutdown: false
-  mode: trunk
-  trunk_groups:
-  - MLAG
 - name: Port-Channel1
-  description: RACK1_Po1
-  type: switched
+  description: L2_RACK1_Port-Channel1
+  switchport:
+    enabled: true
+    mode: trunk
+    trunk:
+      allowed_vlan: 10,20
   shutdown: false
-  mode: trunk
-  vlans: 10,20
   mlag: 1
 - name: Port-Channel3
-  description: RACK2_Po1
-  type: switched
+  description: L2_RACK2_Port-Channel1
+  switchport:
+    enabled: true
+    mode: trunk
+    trunk:
+      allowed_vlan: 10,30
   shutdown: false
-  mode: trunk
-  vlans: 10,30
   mlag: 3
 - name: Port-Channel5
-  description: FIREWALL
-  type: switched
+  description: FIREWALL_FIREWALL
   shutdown: false
-  mode: trunk
-  vlans: 10,20,30
+  switchport:
+    enabled: true
+    mode: trunk
+    trunk:
+      allowed_vlan: 10,20,30
   mlag: 5
 ethernet_interfaces:
 - name: Ethernet47
   peer: SPINE2
   peer_interface: Ethernet47
   peer_type: mlag_peer
-  description: MLAG_PEER_SPINE2_Ethernet47
-  type: port-channel-member
+  description: MLAG_SPINE2_Ethernet47
   shutdown: false
   channel_group:
     id: 47
@@ -127,8 +134,7 @@ ethernet_interfaces:
   peer: SPINE2
   peer_interface: Ethernet48
   peer_type: mlag_peer
-  description: MLAG_PEER_SPINE2_Ethernet48
-  type: port-channel-member
+  description: MLAG_SPINE2_Ethernet48
   shutdown: false
   channel_group:
     id: 47
@@ -137,9 +143,8 @@ ethernet_interfaces:
   peer: LEAF1
   peer_interface: Ethernet1
   peer_type: l2leaf
-  description: LEAF1_Ethernet1
+  description: L2_LEAF1_Ethernet1
   shutdown: false
-  type: port-channel-member
   channel_group:
     id: 1
     mode: active
@@ -147,9 +152,8 @@ ethernet_interfaces:
   peer: LEAF2
   peer_interface: Ethernet1
   peer_type: l2leaf
-  description: LEAF2_Ethernet1
+  description: L2_LEAF2_Ethernet1
   shutdown: false
-  type: port-channel-member
   channel_group:
     id: 1
     mode: active
@@ -157,9 +161,8 @@ ethernet_interfaces:
   peer: LEAF3
   peer_interface: Ethernet1
   peer_type: l2leaf
-  description: LEAF3_Ethernet1
+  description: L2_LEAF3_Ethernet1
   shutdown: false
-  type: port-channel-member
   channel_group:
     id: 3
     mode: active
@@ -167,9 +170,8 @@ ethernet_interfaces:
   peer: LEAF4
   peer_interface: Ethernet1
   peer_type: l2leaf
-  description: LEAF4_Ethernet1
+  description: L2_LEAF4_Ethernet1
   shutdown: false
-  type: port-channel-member
   channel_group:
     id: 3
     mode: active
@@ -178,9 +180,8 @@ ethernet_interfaces:
   peer_interface: Eth1
   peer_type: firewall
   port_profile: PP-FIREWALL
-  description: FIREWALL_Eth1
+  description: FIREWALL_FIREWALL_Eth1
   shutdown: false
-  type: port-channel-member
   channel_group:
     id: 5
     mode: active

@@ -33,6 +33,26 @@ keys:
             max: 300
             convert_types:
               - str
+      radius_av_pair_username_format:
+        type: dict
+        description: RADIUS AV-pair username settings.
+        keys:
+          delimiter:
+            type: str
+            description: Delimiter to use in MAC address string.
+            required: true
+            valid_values:
+              - colon
+              - hyphen
+              - none
+              - period
+          mac_string_case:
+            type: str
+            description: MAC address string in lowercase/uppercase.
+            required: true
+            valid_values:
+              - lowercase
+              - uppercase
       radius_av_pair:
         type: dict
         keys:

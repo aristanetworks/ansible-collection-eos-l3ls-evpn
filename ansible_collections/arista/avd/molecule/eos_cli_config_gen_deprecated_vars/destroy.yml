@@ -15,5 +15,3 @@
         - intended/structured_configs
         - config_backup
         - reports
-      # TODO: AVD 5.0.0
-      tags: [test]

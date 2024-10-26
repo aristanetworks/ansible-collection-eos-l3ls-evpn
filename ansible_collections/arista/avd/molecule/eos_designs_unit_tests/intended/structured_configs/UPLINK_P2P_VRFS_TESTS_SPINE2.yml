@@ -9,6 +9,9 @@ router_bgp:
   maximum_paths:
     paths: 4
     ecmp: 4
+  redistribute:
+    connected:
+      enabled: true
   updates:
     wait_install: true
   peer_groups:
@@ -20,8 +23,6 @@ router_bgp:
     peer_groups:
     - name: IPv4-UNDERLAY-PEERS
       activate: true
-  redistribute_routes:
-  - source_protocol: connected
   neighbors:
   - ip_address: 10.42.42.11
     peer_group: IPv4-UNDERLAY-PEERS
@@ -76,22 +77,23 @@ ethernet_interfaces:
   peer: UPLINK_P2P_VRFS_TESTS_LEAF1
   peer_interface: Ethernet2
   peer_type: l3leaf
-  description: P2P_LINK_TO_UPLINK_P2P_VRFS_TESTS_LEAF1_Ethernet2
+  description: P2P_UPLINK_P2P_VRFS_TESTS_LEAF1_Ethernet2
   shutdown: false
   mtu: 9214
   mac_security:
     profile: TEST
-  type: routed
+  switchport:
+    enabled: false
   ip_address: 10.42.42.10/31
 - name: Ethernet2.100
   peer: UPLINK_P2P_VRFS_TESTS_LEAF1
   peer_interface: Ethernet2.100
   peer_type: l3leaf
   vrf: IT
-  description: P2P_LINK_TO_UPLINK_P2P_VRFS_TESTS_LEAF1_Ethernet2.100_vrf_IT
+  description: P2P_UPLINK_P2P_VRFS_TESTS_LEAF1_Ethernet2.100_VRF_IT
   shutdown: false
-  type: l3dot1q
-  encapsulation_dot1q_vlan: 100
+  encapsulation_dot1q:
+    vlan: 100
   mtu: 9214
   ip_address: 10.42.42.10/31
 - name: Ethernet2.42
@@ -99,15 +101,15 @@ ethernet_interfaces:
   peer_interface: Ethernet2.42
   peer_type: l3leaf
   vrf: PROD
-  description: P2P_LINK_TO_UPLINK_P2P_VRFS_TESTS_LEAF1_Ethernet2.42_vrf_PROD
+  description: P2P_UPLINK_P2P_VRFS_TESTS_LEAF1_Ethernet2.42_VRF_PROD
   shutdown: false
-  type: l3dot1q
-  encapsulation_dot1q_vlan: 42
+  encapsulation_dot1q:
+    vlan: 42
   mtu: 9214
   ip_address: 10.42.42.10/31
 loopback_interfaces:
 - name: Loopback0
-  description: Router_ID
+  description: ROUTER_ID
   shutdown: false
   ip_address: 192.168.42.2/32
 metadata:

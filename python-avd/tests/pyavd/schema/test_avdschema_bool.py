@@ -23,7 +23,7 @@ TEST_SCHEMA = {
             "convert_types": ["int", "str"],  # Part of meta schema but not implemented in converter
             "default": True,
             "valid_values": [True],
-            "dynamic_valid_values": "valid_booleans",  # Part of meta schema but not implemented in converter
+            "dynamic_valid_values": ["valid_booleans"],  # Part of meta schema but not implemented in converter
             "required": True,
             "description": "Some boolean",
             "display_name": "Boolean",

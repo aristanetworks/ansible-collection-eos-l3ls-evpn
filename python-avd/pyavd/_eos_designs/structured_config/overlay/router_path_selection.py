@@ -45,9 +45,13 @@ class RouterPathSelectionMixin(UtilsMixin):
 
     @cached_property
     def _dp_ipsec_profile_name(self: AvdStructuredConfigOverlay) -> str:
-        """Returns the IPsec profile name to use for Data-Plane."""
-        # TODO: need to use CP one if 'wan_ipsec_profiles.data_plane' not present
-        return get(self._hostvars, "wan_ipsec_profiles.data_plane.profile_name", default="DP-PROFILE")
+        """Returns the IPsec profile name to use for Data-Plane.
+
+        If no data-plane config is present for IPsec, default to _cp_ipsec_profile_name
+        """
+        if (data_plane := get(self._hostvars, "wan_ipsec_profiles.data_plane")) is not None:
+            return get(data_plane, "profile_name", default="DP-PROFILE")
+        return self._cp_ipsec_profile_name
 
     def _get_path_groups(self: AvdStructuredConfigOverlay) -> list:
         """Generate the required path-groups locally."""
@@ -111,11 +115,16 @@ class RouterPathSelectionMixin(UtilsMixin):
         if self.shared_utils.is_cv_pathfinder_server:
             return ha_path_group
 
+        if self.shared_utils.use_port_channel_for_direct_ha is True:
+            local_interfaces = [{"name": f"Port-Channel{self.shared_utils.wan_ha_port_channel_id}"}]
+        else:
+            local_interfaces = [{"name": interface} for interface in self.shared_utils.wan_ha_interfaces]
+
         # not a pathfinder device
         ha_path_group.update(
             {
                 # This should be the LAN interface over which a DPS tunnel is built
-                "local_interfaces": [{"name": interface} for interface in self.shared_utils.wan_ha_interfaces],
+                "local_interfaces": local_interfaces,
                 "static_peers": [
                     {
                         "router_ip": self._wan_ha_peer_vtep_ip(),

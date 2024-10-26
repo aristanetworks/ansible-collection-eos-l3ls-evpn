@@ -6,8 +6,6 @@ from __future__ import annotations
 from functools import cached_property
 from typing import TYPE_CHECKING
 
-from pyavd._utils import get
-
 from .utils import UtilsMixin
 
 if TYPE_CHECKING:
@@ -143,46 +141,6 @@ class RouteMapsMixin(UtilsMixin):
                     },
                 ]
                 route_maps.append({"name": "RM-BGP-UNDERLAY-PEERS-OUT", "sequence_numbers": sequence_numbers})
-
-        for neighbor in self.shared_utils.l3_interfaces_bgp_neighbors:
-            # RM-BGP-<PEER-IP>-IN
-            if prefix_list_in := get(neighbor, "ipv4_prefix_list_in"):
-                sequence_numbers = [
-                    {
-                        "sequence": 10,
-                        "type": "permit",
-                        "match": [f"ip address prefix-list {prefix_list_in}"],
-                    },
-                ]
-                # set no advertise is set only for wan neighbors, which will also have
-                # prefix_list_in
-                if neighbor.get("set_no_advertise"):
-                    sequence_numbers[0]["set"] = ["community no-advertise additive"]
-
-                route_maps.append({"name": neighbor["route_map_in"], "sequence_numbers": sequence_numbers})
-
-            # RM-BGP-<PEER-IP>-OUT
-            if prefix_list_out := get(neighbor, "ipv4_prefix_list_out"):
-                sequence_numbers = [
-                    {
-                        "sequence": 10,
-                        "type": "permit",
-                        "match": [f"ip address prefix-list {prefix_list_out}"],
-                    },
-                    {
-                        "sequence": 20,
-                        "type": "deny",
-                    },
-                ]
-            else:
-                sequence_numbers = [
-                    {
-                        "sequence": 10,
-                        "type": "deny",
-                    },
-                ]
-
-            route_maps.append({"name": neighbor["route_map_out"], "sequence_numbers": sequence_numbers})
 
         if route_maps:
             return route_maps

@@ -3,7 +3,6 @@
 # that can be found in the LICENSE file.
 ---
 - name: "Generate intended variables"
-  tags: [always]
   arista.avd.inventory_to_container:
     # Inventory is read from memory unless 'avd_inventory_to_container_file' is set
     inventory: "{{ avd_inventory_to_container_file }}"
@@ -15,7 +14,6 @@
   register: cvp_vars
 
 - name: "Build DEVICES and CONTAINER definition for {{ inventory_hostname }}"
-  tags: [generate, build, provision]
   ansible.builtin.template:
     src: "cvp-devices-v3.j2"
     dest: "{{ structured_cvp_dir }}/{{ inventory_hostname }}.yml"
@@ -28,7 +26,7 @@
 # If state=present launch creation/update process
 # If state=absent launch deletion process
 - name: Start creation/update process.
-  tags: [provision, online]
+  when: avd_eos_config_deploy_cvp_provision | arista.avd.default(true)
   ansible.builtin.include_tasks: "{{ cv_collection }}/{{ state }}.yml"
 
 #################################################

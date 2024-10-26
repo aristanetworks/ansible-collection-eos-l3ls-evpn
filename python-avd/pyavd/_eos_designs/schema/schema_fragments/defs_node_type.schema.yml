@@ -1067,10 +1067,11 @@ $defs:
                 default: false
               profile:
                 type: str
-                valid_values:
-                  - "aes67"
-                  - "smpte2059-2"
-                  - "aes67-r16-2016"
+                description: |-
+                  Default available profiles are:
+                    - "aes67"
+                    - "aes67-r16-2016"
+                    - "smpte2059-2"
                 default: "aes67-r16-2016"
               mlag:
                 description: Configure PTP on the MLAG peer-link port-channel when PTP is enabled. By default PTP will not be configured on the MLAG peer-link port-channel.
@@ -1307,6 +1308,14 @@ $defs:
                 type: bool
                 default: true
                 description: Enable / Disable IPsec over HA path-group when HA is enabled.
+              mtu:
+                type: int
+                convert_types:
+                  - str
+                description: Set MTU on WAN HA interfaces.
+                min: 68
+                max: 65535
+                default: 9194
               ha_interfaces:
                 description: |-
                   Local WAN HA interfaces
@@ -1333,6 +1342,18 @@ $defs:
                 description: |-
                   Number of parallel links towards HA switches.
                   Can be used to reserve IP addresses for future parallel HA links.
+              port_channel_id:
+                type: int
+                convert_types:
+                  - str
+                description: |-
+                  Port-channel ID to use for direct HA.
+              use_port_channel_for_direct_ha:
+                type: bool
+                default: true
+                description: |-
+                  Enable or disable using a port-channel interface for direct HA when there is only one interface.
+                  This feature was introduced in EOS 4.33.0F.
               flow_tracking:
                 type: dict
                 $ref: "eos_designs#/$defs/flow_tracking_link"

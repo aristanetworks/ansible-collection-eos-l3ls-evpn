@@ -16,20 +16,20 @@
 
 | Management Interface | Description | Type | VRF | IP Address | Gateway |
 | -------------------- | ----------- | ---- | --- | ---------- | ------- |
-| Management1 | oob_management | oob | MGMT | 10.73.255.122/24 | 10.73.255.2 |
+| Management1 | OOB_MANAGEMENT | oob | MGMT | 10.73.255.122/24 | 10.73.255.2 |
 
 ##### IPv6
 
 | Management Interface | Description | Type | VRF | IPv6 Address | IPv6 Gateway |
 | -------------------- | ----------- | ---- | --- | ------------ | ------------ |
-| Management1 | oob_management | oob | MGMT | - | - |
+| Management1 | OOB_MANAGEMENT | oob | MGMT | - | - |
 
 #### Management Interfaces Device Configuration
 
 ```eos
 !
 interface Management1
-   description oob_management
+   description OOB_MANAGEMENT
    vrf MGMT
    ip address 10.73.255.122/24
 ```
@@ -91,6 +91,8 @@ interface Management1
 | Ethernet2/4.666 | - |  |
 | Ethernet3 | - | STUN-P-1 |
 | Ethernet4.666 | - |  |
+| Port-Channel1 | 192.168.42.43 | STUN-P-1<br>STUN-P-2 |
+| Port-Channel4.666 | - |  |
 
 ###### Local IPs
 
@@ -200,6 +202,11 @@ router path-selection
       !
       local interface Ethernet4.666
       !
+      local interface Port-Channel1 public address 192.168.42.43
+         stun server-profile STUN-P-1 STUN-P-2
+      !
+      local interface Port-Channel4.666
+      !
       local ip 192.168.1.100 public address 192.168.42.42
          stun server-profile STUN-P-1 STUN-P-2
       !
@@ -216,16 +223,16 @@ router path-selection
    load-balance policy LB-EMPTY
    !
    load-balance policy LB-P-1
-      hop count lowest
       loss-rate 17
+      hop count lowest
       path-group PG-5
       path-group PG-2 priority 42
       path-group PG-4 priority 42
       path-group PG-3 priority 666
    !
    load-balance policy LB-P-2
-      jitter 666
       latency 42
+      jitter 666
       loss-rate 42.42
       path-group PG-1 priority 1
       path-group PG-3
@@ -233,6 +240,7 @@ router path-selection
    policy DPS-P-1
       default-match
          load-balance LB-P-1
+      !
       42 application-profile AP-3
          load-balance LB-P-1
    !
@@ -242,6 +250,7 @@ router path-selection
    !
    policy DPS-P-3
       42 application-profile AP-2
+      !
       66 application-profile AP-1
          load-balance LB-P-1
    !

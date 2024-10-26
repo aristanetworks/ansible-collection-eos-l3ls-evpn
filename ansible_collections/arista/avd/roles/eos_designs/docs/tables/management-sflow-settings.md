@@ -14,6 +14,7 @@
     | [<samp>&nbsp;&nbsp;l3_edge</samp>](## "fabric_sflow.l3_edge") | Boolean |  |  |  | Enable sFlow on all p2p_links defined under l3_edge. |
     | [<samp>&nbsp;&nbsp;core_interfaces</samp>](## "fabric_sflow.core_interfaces") | Boolean |  |  |  | Enable sFlow on all p2p_links defined under core_interfaces. |
     | [<samp>&nbsp;&nbsp;mlag_interfaces</samp>](## "fabric_sflow.mlag_interfaces") | Boolean |  |  |  | Enable sFlow on all MLAG peer interfaces. |
+    | [<samp>&nbsp;&nbsp;l3_interfaces</samp>](## "fabric_sflow.l3_interfaces") | Boolean |  |  |  | Enable sFlow on all l3 interfaces. |
     | [<samp>sflow_settings</samp>](## "sflow_settings") | Dictionary |  |  |  | sFlow settings.<br>The sFlow process will only be configured if any interface is enabled for sFlow.<br>For default enabling of sFlow for various interface types across the fabric see `fabric_sflow`. |
     | [<samp>&nbsp;&nbsp;sample</samp>](## "sflow_settings.sample") | Dictionary |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;rate</samp>](## "sflow_settings.sample.rate") | Integer |  |  | Min: 1<br>Max: 4294967295 | Packet sampling rate that defines the average number of ingress packets that pass through an interface for every packet that is sampled.<br>A rate of 16384 corresponds to an average sample of one per 16384 packets. |
@@ -50,6 +51,9 @@
 
       # Enable sFlow on all MLAG peer interfaces.
       mlag_interfaces: <bool>
+
+      # Enable sFlow on all l3 interfaces.
+      l3_interfaces: <bool>
 
     # sFlow settings.
     # The sFlow process will only be configured if any interface is enabled for sFlow.

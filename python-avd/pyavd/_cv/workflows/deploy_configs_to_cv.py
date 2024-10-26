@@ -3,11 +3,8 @@
 # that can be found in the LICENSE file.
 from __future__ import annotations
 
-from asyncio import gather
 from logging import getLogger
 from typing import TYPE_CHECKING
-
-from pyavd._utils import batch
 
 if TYPE_CHECKING:
     from pyavd._cv.client import CVClient
@@ -20,7 +17,6 @@ CONFIGLET_ID_PREFIX = "avd-"
 CONFIGLET_NAME_PREFIX = "AVD_"
 CONFIGLET_CONTAINER_ID = f"{CONFIGLET_ID_PREFIX}configlets"
 STATIC_CONFIGLET_STUDIO_ID = "studio-static-configlet"
-PARALLEL_COROUTINES = 20
 
 
 async def deploy_configs_to_cv(configs: list[CVEosConfig], result: DeployToCvResult, cv_client: CVClient) -> None:
@@ -37,11 +33,11 @@ async def deploy_configs_to_cv(configs: list[CVEosConfig], result: DeployToCvRes
     if not configs:
         return
 
-    # Build TODO: with CVEosConfig objects that exist on CloudVision. Add the rest to skipped.
+    # Build todo with CVEosConfig objects that exist on CloudVision. Add the rest to skipped.
     result.skipped_configs.extend(config for config in configs if not config.device._exists_on_cv)
     LOGGER.info("deploy_configs_to_cv: %s skipped configs because the devices are missing from CloudVision.", len(result.skipped_configs))
     todo_configs = [config for config in configs if config.device._exists_on_cv]
-    LOGGER.info("deploy_configs_to_cv: %s TODO: configs.", len(todo_configs))
+    LOGGER.info("deploy_configs_to_cv: %s todo configs.", len(todo_configs))
 
     # No need to continue if we have nothing to do.
     if not todo_configs:
@@ -61,23 +57,17 @@ async def deploy_configlets_to_cv(configs: list[CVEosConfig], workspace_id: str,
 
     TODO: Fetch config checksums for existing configs and only upload what is needed.
     """
-    configlet_coroutines = []
-    for config in configs:
-        configlet_id = f"{CONFIGLET_ID_PREFIX}{config.device.serial_number}"
-        configlet_coroutines.append(
-            cv_client.set_configlet_from_file(
-                workspace_id=workspace_id,
-                configlet_id=configlet_id,
-                file=config.file,
-                display_name=config.configlet_name or f"{CONFIGLET_NAME_PREFIX}{config.device.hostname}",
-                description=f"Configuration created and uploaded by AVD for {config.device.hostname}",
-            ),
+    configlets = [
+        (
+            f"{CONFIGLET_ID_PREFIX}{config.device.serial_number}",
+            config.configlet_name or f"{CONFIGLET_NAME_PREFIX}{config.device.hostname}",
+            f"Configuration created and uploaded by AVD for {config.device.hostname}",
+            config.file,
         )
-
-    LOGGER.info("deploy_configs_to_cv: Deploying %s configlets in batches of %s.", len(configlet_coroutines), PARALLEL_COROUTINES)
-    for index, coroutines in enumerate(batch(configlet_coroutines, PARALLEL_COROUTINES), start=1):
-        LOGGER.info("deploy_configs_to_cv: Batch %s", index)
-        await gather(*coroutines)
+        for config in configs
+    ]
+    LOGGER.info("deploy_configs_to_cv: Deploying %s configlets.", len(configlets))
+    await cv_client.set_configlets_from_files(workspace_id=workspace_id, configlets=configlets)
 
 
 async def get_existing_device_container_ids_from_root_container(workspace_id: str, cv_client: CVClient) -> list[str]:
@@ -149,7 +139,7 @@ async def deploy_configlet_containers_to_cv(configs: list[CVEosConfig], workspac
         existing_device_containers = []
         existing_device_containers_by_id = {}
 
-    container_coroutines = []
+    update_device_containers = []
     update_device_container_ids = set()
     for config in configs:
         # For now we reuse configlet_id as container_id.
@@ -160,21 +150,11 @@ async def deploy_configlet_containers_to_cv(configs: list[CVEosConfig], workspac
         configlet_ids = [configlet_id]
         if existing_device_containers_by_id.get(container_id) != (display_name, description, query, configlet_ids):
             update_device_container_ids.add(container_id)
-            container_coroutines.append(
-                cv_client.set_configlet_container(
-                    workspace_id=workspace_id,
-                    container_id=container_id,
-                    display_name=display_name,
-                    description=description,
-                    query=query,
-                    configlet_ids=configlet_ids,
-                ),
-            )
+            update_device_containers.append((container_id, display_name, description, configlet_ids, query, None, None))
 
-    LOGGER.info("deploy_configs_to_cv: Deploying %s configlet assignments / containers in batches of %s.", len(container_coroutines), PARALLEL_COROUTINES)
-    for index, coroutines in enumerate(batch(container_coroutines, PARALLEL_COROUTINES), start=1):
-        LOGGER.info("deploy_configs_to_cv: Batch %s", index)
-        await gather(*coroutines)
+    if update_device_containers:
+        LOGGER.info("deploy_configs_to_cv: Deploying %s configlet assignments.", len(update_device_containers))
+        await cv_client.set_configlet_containers(workspace_id=workspace_id, containers=update_device_containers)
 
     # Update any missing update_device_container_ids on the root level container.
     if not update_device_container_ids.issubset(existing_device_containers_by_id):

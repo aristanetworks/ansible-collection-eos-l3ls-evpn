@@ -9,7 +9,7 @@ namespace: arista
 name: avd
 
 # The version of the collection. Must be compatible with semantic versioning
-version: 5.0.0-dev5
+version: 5.0.0
 # The path to the Markdown (.md) readme file. This path is relative to the root of the collection
 readme: README.md
 
@@ -36,7 +36,7 @@ tags: ['arista', 'network', 'networking', 'eos', 'avd', 'cloudvision', 'cvp']
 # L(specifiers,https://python-semanticversion.readthedocs.io/en/latest/#requirement-specification). Multiple version
 # range specifiers can be set and are separated by ','
 dependencies:
-    "arista.cvp": ">=3.10.1"
+    "arista.cvp": ">=3.11.0"
     "arista.eos": ">=7.0.0"
     "ansible.utils": ">=3.0.0"
 

@@ -87,6 +87,8 @@
 #### Logging Servers and Features Device Configuration
 
 ```eos
+{%     include 'eos/logging-event-storm-control.j2' %}
+{%     include 'eos/logging-event-congestion-drops.j2' %}
 {%     include 'eos/logging.j2' %}
 ```
 {% endif %}

@@ -1,14 +1,14 @@
 # Copyright (c) 2024 Arista Networks, Inc.
 # Use of this source code is governed by the Apache License 2.0
 # that can be found in the LICENSE file.
+from __future__ import annotations
 
-from pyavd._eos_designs.fabric_documentation_facts import FabricDocumentationFacts
+from typing import TYPE_CHECKING
 
+from pyavd.api.fabric_documentation import FabricDocumentation
 
-class FabricDocumentation:
-    fabric_documentation: str = ""
-    topology_csv: str = ""
-    p2p_links_csv: str = ""
+if TYPE_CHECKING:
+    from pyavd._eos_designs.fabric_documentation_facts import FabricDocumentationFacts
 
 
 def get_fabric_documentation(
@@ -24,14 +24,14 @@ def get_fabric_documentation(
     Build and return the AVD fabric documentation.
 
     The returned object will contain the content of the requested documentation areas:
-    - Fabric documentation as MarkDown, optionally including connected endpoints.
+    - Fabric documentation as Markdown, optionally including connected endpoints.
     - Topology CSV containing the physical interface connections for every device.
     - P2P links CSV containing the Routed point-to-point links.
 
     Args:
         avd_facts: Dictionary of avd_facts as returned from `pyavd.get_avd_facts`.
         structured_configs: Dictionary of structured configurations for all devices, keyed by hostname.
-        fabric_name: Name of the fabric. Only used for the main heading in the MarkDown documentation.
+        fabric_name: Name of the fabric. Only used for the main heading in the Markdown documentation.
         fabric_documentation: Returns fabric documentation when set to True.
         include_connected_endpoints: Includes connected endpoints in the fabric documentation when set to True.
         topology_csv: Returns topology CSV when set to True.
@@ -41,6 +41,7 @@ def get_fabric_documentation(
         FabricDocumentation object containing the requested documentation areas.
     """
     # pylint: disable=import-outside-toplevel
+    from pyavd._eos_designs.fabric_documentation_facts import FabricDocumentationFacts
     from pyavd.j2filters import add_md_toc
 
     from .constants import EOS_DESIGNS_JINJA2_PRECOMPILED_TEMPLATE_PATH

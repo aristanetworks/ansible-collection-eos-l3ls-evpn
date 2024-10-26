@@ -29,7 +29,7 @@ TEST_SCHEMA = {
             "convert_to_lower_case": True,
             "max_length": 4,
             "min_length": 2,
-            "dynamic_valid_values": "valid_strings",  # Part of meta schema but not implemented in converter
+            "dynamic_valid_values": ["valid_strings"],  # Part of meta schema but not implemented in converter
             "pattern": "[abf14t].*",
             "required": True,
             "description": "Some string",

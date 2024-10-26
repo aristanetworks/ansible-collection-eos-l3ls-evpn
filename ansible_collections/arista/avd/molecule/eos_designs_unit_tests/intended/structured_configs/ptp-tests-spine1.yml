@@ -9,6 +9,10 @@ router_bgp:
   maximum_paths:
     paths: 4
     ecmp: 4
+  redistribute:
+    connected:
+      enabled: true
+      route_map: RM-CONN-2-BGP
   updates:
     wait_install: true
   peer_groups:
@@ -30,9 +34,6 @@ router_bgp:
       activate: true
     - name: EVPN-OVERLAY-PEERS
       activate: false
-  redistribute_routes:
-  - source_protocol: connected
-    route_map: RM-CONN-2-BGP
   neighbors:
   - ip_address: 10.254.2.1
     peer_group: IPv4-UNDERLAY-PEERS
@@ -57,12 +58,12 @@ router_bgp:
   - ip_address: 10.254.1.1
     peer_group: EVPN-OVERLAY-PEERS
     peer: ptp-tests-leaf1
-    description: ptp-tests-leaf1
+    description: ptp-tests-leaf1_Loopback0
     remote_as: '65101'
   - ip_address: 10.254.1.2
     peer_group: EVPN-OVERLAY-PEERS
     peer: ptp-tests-leaf2
-    description: ptp-tests-leaf2
+    description: ptp-tests-leaf2_Loopback0
     remote_as: '65102'
   address_family_evpn:
     peer_groups:
@@ -92,7 +93,7 @@ vrfs:
   ip_routing: false
 management_interfaces:
 - name: Management1
-  description: oob_management
+  description: OOB_MANAGEMENT
   shutdown: false
   vrf: MGMT
   ip_address: 192.168.0.11/24
@@ -126,10 +127,11 @@ ethernet_interfaces:
   peer: ptp-tests-leaf1
   peer_interface: Ethernet1
   peer_type: l3leaf
-  description: P2P_LINK_TO_PTP-TESTS-LEAF1_Ethernet1
+  description: P2P_ptp-tests-leaf1_Ethernet1
   shutdown: false
   mtu: 9214
-  type: routed
+  switchport:
+    enabled: false
   ptp:
     announce:
       interval: 0
@@ -144,10 +146,11 @@ ethernet_interfaces:
   peer: ptp-tests-leaf1
   peer_interface: Ethernet2
   peer_type: l3leaf
-  description: P2P_LINK_TO_PTP-TESTS-LEAF1_Ethernet2
+  description: P2P_ptp-tests-leaf1_Ethernet2
   shutdown: false
   mtu: 9214
-  type: routed
+  switchport:
+    enabled: false
   ptp:
     announce:
       interval: 0
@@ -162,10 +165,11 @@ ethernet_interfaces:
   peer: ptp-tests-leaf2
   peer_interface: Ethernet1
   peer_type: l3leaf
-  description: P2P_LINK_TO_PTP-TESTS-LEAF2_Ethernet1
+  description: P2P_ptp-tests-leaf2_Ethernet1
   shutdown: false
   mtu: 9214
-  type: routed
+  switchport:
+    enabled: false
   ptp:
     announce:
       interval: 0
@@ -180,10 +184,11 @@ ethernet_interfaces:
   peer: ptp-tests-leaf2
   peer_interface: Ethernet2
   peer_type: l3leaf
-  description: P2P_LINK_TO_PTP-TESTS-LEAF2_Ethernet2
+  description: P2P_ptp-tests-leaf2_Ethernet2
   shutdown: false
   mtu: 9214
-  type: routed
+  switchport:
+    enabled: false
   ptp:
     announce:
       interval: 0
@@ -198,10 +203,11 @@ ethernet_interfaces:
   peer: ptp-tests-spine2
   peer_interface: Ethernet6
   peer_type: spine
-  description: P2P_LINK_TO_ptp-tests-spine2_Ethernet6
-  type: routed
+  switchport:
+    enabled: false
   shutdown: false
   mtu: 9214
+  description: P2P_ptp-tests-spine2_Ethernet6
   ptp:
     announce:
       interval: 0
@@ -215,10 +221,11 @@ ethernet_interfaces:
   peer: ptp-tests-spine2
   peer_interface: Ethernet7
   peer_type: spine
-  description: P2P_LINK_TO_ptp-tests-spine2_Ethernet7
-  type: routed
+  switchport:
+    enabled: false
   shutdown: false
   mtu: 9214
+  description: P2P_ptp-tests-spine2_Ethernet7
   ptp:
     announce:
       interval: 0
@@ -232,10 +239,11 @@ ethernet_interfaces:
   peer: ptp-tests-spine2
   peer_interface: Ethernet8
   peer_type: spine
-  description: P2P_LINK_TO_ptp-tests-spine2_Ethernet8
-  type: routed
+  switchport:
+    enabled: false
   shutdown: false
   mtu: 9214
+  description: P2P_ptp-tests-spine2_Ethernet8
   ptp:
     announce:
       interval: 0
@@ -249,10 +257,11 @@ ethernet_interfaces:
   peer: ptp-tests-spine2
   peer_interface: Ethernet9
   peer_type: spine
-  description: P2P_LINK_TO_ptp-tests-spine2_Ethernet9
-  type: routed
+  switchport:
+    enabled: false
   shutdown: false
   mtu: 9214
+  description: P2P_ptp-tests-spine2_Ethernet9
   ptp:
     announce:
       interval: 0
@@ -264,7 +273,7 @@ ethernet_interfaces:
     enable: true
 loopback_interfaces:
 - name: Loopback0
-  description: EVPN_Overlay_Peering
+  description: ROUTER_ID
   shutdown: false
   ip_address: 10.255.0.1/32
 prefix_lists:

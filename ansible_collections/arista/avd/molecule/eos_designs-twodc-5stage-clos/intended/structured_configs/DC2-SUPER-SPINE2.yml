@@ -11,6 +11,10 @@ router_bgp:
   maximum_paths:
     paths: 4
     ecmp: 4
+  redistribute:
+    connected:
+      enabled: true
+      route_map: RM-CONN-2-BGP
   updates:
     wait_install: true
   peer_groups:
@@ -22,9 +26,6 @@ router_bgp:
     peer_groups:
     - name: IPv4-UNDERLAY-PEERS
       activate: true
-  redistribute_routes:
-  - source_protocol: connected
-    route_map: RM-CONN-2-BGP
   neighbors:
   - ip_address: 172.16.21.65
     peer_group: IPv4-UNDERLAY-PEERS
@@ -71,7 +72,7 @@ vrfs:
   ip_routing: false
 management_interfaces:
 - name: Management1
-  description: oob_management
+  description: OOB_MANAGEMENT
   shutdown: false
   vrf: MGMT
   ip_address: 192.168.1.17/24
@@ -89,10 +90,11 @@ ethernet_interfaces:
   peer: DC2-POD1-SPINE1
   peer_interface: Ethernet2
   peer_type: spine
-  description: P2P_LINK_TO_DC2-POD1-SPINE1_Ethernet2
+  description: P2P_DC2-POD1-SPINE1_Ethernet2
   shutdown: false
   service_profile: QOS-PROFILE
-  type: routed
+  switchport:
+    enabled: false
   ptp:
     enable: true
   ip_address: 172.16.21.64/31
@@ -100,10 +102,11 @@ ethernet_interfaces:
   peer: DC2-POD1-SPINE2
   peer_interface: Ethernet2
   peer_type: spine
-  description: P2P_LINK_TO_DC2-POD1-SPINE2_Ethernet2
+  description: P2P_DC2-POD1-SPINE2_Ethernet2
   shutdown: false
   service_profile: QOS-PROFILE
-  type: routed
+  switchport:
+    enabled: false
   ptp:
     enable: true
   ip_address: 172.16.21.66/31
@@ -111,13 +114,14 @@ ethernet_interfaces:
   peer: DC1-SUPER-SPINE2
   peer_interface: Ethernet6
   peer_type: super-spine
-  description: P2P_LINK_TO_DC1-SUPER-SPINE2_Ethernet6
-  type: routed
+  switchport:
+    enabled: false
   shutdown: false
   ip_address: 11.1.2.3/31
+  description: P2P_DC1-SUPER-SPINE2_Ethernet6
 loopback_interfaces:
 - name: Loopback0
-  description: EVPN_Overlay_Peering
+  description: ROUTER_ID
   shutdown: false
   ip_address: 172.16.200.2/32
 prefix_lists:

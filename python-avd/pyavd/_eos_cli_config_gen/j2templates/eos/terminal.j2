@@ -6,10 +6,10 @@
 {# eos - terminal #}
 {% if terminal is arista.avd.defined %}
 !
-{%     if terminal.width is arista.avd.defined %}
-terminal width {{ terminal.width }}
-{%     endif %}
 {%     if terminal.length is arista.avd.defined %}
 terminal length {{ terminal.length }}
+{%     endif %}
+{%     if terminal.width is arista.avd.defined %}
+terminal width {{ terminal.width }}
 {%     endif %}
 {% endif %}

@@ -17,20 +17,20 @@
 
 | Management Interface | Description | Type | VRF | IP Address | Gateway |
 | -------------------- | ----------- | ---- | --- | ---------- | ------- |
-| Management1 | oob_management | oob | MGMT | 10.73.255.122/24 | 10.73.255.2 |
+| Management1 | OOB_MANAGEMENT | oob | MGMT | 10.73.255.122/24 | 10.73.255.2 |
 
 ##### IPv6
 
 | Management Interface | Description | Type | VRF | IPv6 Address | IPv6 Gateway |
 | -------------------- | ----------- | ---- | --- | ------------ | ------------ |
-| Management1 | oob_management | oob | MGMT | - | - |
+| Management1 | OOB_MANAGEMENT | oob | MGMT | - | - |
 
 #### Management Interfaces Device Configuration
 
 ```eos
 !
 interface Management1
-   description oob_management
+   description OOB_MANAGEMENT
    vrf MGMT
    ip address 10.73.255.122/24
 ```
@@ -137,7 +137,6 @@ router bgp 65103
    neighbor 2001:cafe:192:168::4 send-community
    !
    address-family vpn-ipv4
-      domain identifier 65000:0
       neighbor MPLS-IBGP-PEERS activate
       neighbor MPLS-IBGP-PEERS route-map RM-IBGP-PEER-IN4 in
       neighbor MPLS-IBGP-PEERS route-map RM-IBGP-PEER-OUT4 out
@@ -149,10 +148,10 @@ router bgp 65103
       neighbor 192.168.255.5 rcf in Address_Family_VPN_IPV4_In()
       neighbor 192.168.255.5 rcf out Address_Family_VPN_IPV4_Out()
       neighbor default encapsulation mpls next-hop-self source-interface Loopback0
+      domain identifier 65000:0
       route import match-failure action discard
    !
    address-family vpn-ipv6
-      domain identifier 65000:0
       neighbor MPLS-IBGP-PEERS activate
       neighbor MPLS-IBGP-PEERS route-map RM-IBGP-PEER-IN6 in
       neighbor MPLS-IBGP-PEERS route-map RM-IBGP-PEER-OUT6 out
@@ -164,5 +163,6 @@ router bgp 65103
       neighbor 2001:cafe:192:168::5 rcf in Address_Family_VPN_IPV6_In()
       neighbor 2001:cafe:192:168::5 rcf out Address_Family_VPN_IPV6_Out()
       neighbor default encapsulation mpls next-hop-self source-interface Loopback0
+      domain identifier 65000:0
       route import match-failure action discard
 ```

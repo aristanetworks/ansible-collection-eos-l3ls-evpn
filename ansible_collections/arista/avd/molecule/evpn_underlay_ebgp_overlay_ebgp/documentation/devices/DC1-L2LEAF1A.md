@@ -53,20 +53,20 @@
 
 | Management Interface | Description | Type | VRF | IP Address | Gateway |
 | -------------------- | ----------- | ---- | --- | ---------- | ------- |
-| Management1 | oob_management | oob | MGMT | 192.168.200.112/24 | 192.168.200.5 |
+| Management1 | OOB_MANAGEMENT | oob | MGMT | 192.168.200.112/24 | 192.168.200.5 |
 
 ##### IPv6
 
 | Management Interface | Description | Type | VRF | IPv6 Address | IPv6 Gateway |
 | -------------------- | ----------- | ---- | --- | ------------ | ------------ |
-| Management1 | oob_management | oob | MGMT | - | - |
+| Management1 | OOB_MANAGEMENT | oob | MGMT | - | - |
 
 #### Management Interfaces Device Configuration
 
 ```eos
 !
 interface Management1
-   description oob_management
+   description OOB_MANAGEMENT
    no shutdown
    vrf MGMT
    ip address 192.168.200.112/24
@@ -277,7 +277,7 @@ vlan internal order ascending range 1006 1199
 | 160 | Tenant_A_VMOTION | - |
 | 161 | Tenant_A_NFS | - |
 | 162 | Tenant_A_FTP | - |
-| 4091 | MLAG_PEER | MLAG |
+| 4091 | MLAG | MLAG |
 
 ### VLANs Device Configuration
 
@@ -320,7 +320,7 @@ vlan 162
    name Tenant_A_FTP
 !
 vlan 4091
-   name MLAG_PEER
+   name MLAG
    trunk group MLAG
 ```
 
@@ -336,8 +336,8 @@ vlan 4091
 | --------- | ----------- | ---- | ----- | ----------- | ----------- | ------------- |
 | Ethernet1 | CUSTOM_DC1-LEAF2A_Ethernet7 | *trunk | *110-111,120-124,130-131,160-162 | *- | *- | 1 |
 | Ethernet2 | CUSTOM_DC1-LEAF2B_Ethernet7 | *trunk | *110-111,120-124,130-131,160-162 | *- | *- | 1 |
-| Ethernet3 | MLAG_PEER_DC1-L2LEAF1B_Ethernet3 | *trunk | *- | *- | *MLAG | 3 |
-| Ethernet4 | MLAG_PEER_DC1-L2LEAF1B_Ethernet4 | *trunk | *- | *- | *MLAG | 3 |
+| Ethernet3 | MLAG_DC1-L2LEAF1B_Ethernet3 | *trunk | *- | *- | *MLAG | 3 |
+| Ethernet4 | MLAG_DC1-L2LEAF1B_Ethernet4 | *trunk | *- | *- | *MLAG | 3 |
 
 *Inherited from Port-Channel Interface
 
@@ -356,12 +356,12 @@ interface Ethernet2
    channel-group 1 mode active
 !
 interface Ethernet3
-   description MLAG_PEER_DC1-L2LEAF1B_Ethernet3
+   description MLAG_DC1-L2LEAF1B_Ethernet3
    no shutdown
    channel-group 3 mode active
 !
 interface Ethernet4
-   description MLAG_PEER_DC1-L2LEAF1B_Ethernet4
+   description MLAG_DC1-L2LEAF1B_Ethernet4
    no shutdown
    channel-group 3 mode active
 ```
@@ -374,27 +374,27 @@ interface Ethernet4
 
 | Interface | Description | Mode | VLANs | Native VLAN | Trunk Group | LACP Fallback Timeout | LACP Fallback Mode | MLAG ID | EVPN ESI |
 | --------- | ----------- | ---- | ----- | ----------- | ------------| --------------------- | ------------------ | ------- | -------- |
-| Port-Channel1 | CUSTOM_DC1_LEAF2_Po7 | trunk | 110-111,120-124,130-131,160-162 | - | - | - | - | 1 | - |
-| Port-Channel3 | MLAG_PEER_DC1-L2LEAF1B_Po3 | trunk | - | - | MLAG | - | - | - | - |
+| Port-Channel1 | CUSTOM_DC1-LEAF2A_Po7 | trunk | 110-111,120-124,130-131,160-162 | - | - | - | - | 1 | - |
+| Port-Channel3 | MLAG_DC1-L2LEAF1B_Port-Channel3 | trunk | - | - | MLAG | - | - | - | - |
 
 #### Port-Channel Interfaces Device Configuration
 
 ```eos
 !
 interface Port-Channel1
-   description CUSTOM_DC1_LEAF2_Po7
+   description CUSTOM_DC1-LEAF2A_Po7
    no shutdown
-   switchport
    switchport trunk allowed vlan 110-111,120-124,130-131,160-162
    switchport mode trunk
+   switchport
    mlag 1
 !
 interface Port-Channel3
-   description MLAG_PEER_DC1-L2LEAF1B_Po3
+   description MLAG_DC1-L2LEAF1B_Port-Channel3
    no shutdown
-   switchport
    switchport mode trunk
    switchport trunk group MLAG
+   switchport
 ```
 
 ### VLAN Interfaces
@@ -403,7 +403,7 @@ interface Port-Channel3
 
 | Interface | Description | VRF |  MTU | Shutdown |
 | --------- | ----------- | --- | ---- | -------- |
-| Vlan4091 | MLAG_PEER | default | 1500 | False |
+| Vlan4091 | MLAG | default | 1500 | False |
 
 ##### IPv4
 
@@ -416,7 +416,7 @@ interface Port-Channel3
 ```eos
 !
 interface Vlan4091
-   description MLAG_PEER
+   description MLAG
    no shutdown
    mtu 1500
    no autostate
@@ -486,6 +486,7 @@ ip route vrf MGMT 0.0.0.0/0 192.168.200.5
 ```eos
 !
 queue-monitor length
+!
 queue-monitor length log 5
 ```
 

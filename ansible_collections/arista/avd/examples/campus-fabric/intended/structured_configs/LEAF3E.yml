@@ -38,7 +38,7 @@ vrfs:
   ip_routing: false
 management_interfaces:
 - name: Management0
-  description: oob_management
+  description: OOB_MANAGEMENT
   shutdown: false
   vrf: MGMT
   ip_address: 172.16.100.110/24
@@ -63,9 +63,8 @@ ethernet_interfaces:
   peer: LEAF3A
   peer_interface: Ethernet98/1
   peer_type: l2leaf
-  description: LEAF3A_Ethernet98/1
+  description: L2_LEAF3A_Ethernet98/1
   shutdown: false
-  type: port-channel-member
   channel_group:
     id: 971
     mode: active
@@ -73,23 +72,16 @@ ethernet_interfaces:
   peer: LEAF3B
   peer_interface: Ethernet98/1
   peer_type: l2leaf
-  description: LEAF3B_Ethernet98/1
+  description: L2_LEAF3B_Ethernet98/1
   shutdown: false
-  type: port-channel-member
   channel_group:
     id: 971
     mode: active
 - name: Ethernet1
-  peer: IDF3 Standard Port
   peer_type: network_port
   port_profile: PP-DOT1X
   description: IDF3 Standard Port
   shutdown: false
-  type: switched
-  mode: trunk phone
-  native_vlan: 310
-  spanning_tree_portfast: edge
-  spanning_tree_bpduguard: enabled
   dot1x:
     port_control: auto
     reauthentication: true
@@ -107,20 +99,21 @@ ethernet_interfaces:
     authentication_failure:
       action: allow
       allow_vlan: 330
-  phone:
-    trunk: untagged
-    vlan: 320
+  switchport:
+    enabled: true
+    mode: trunk phone
+    trunk:
+      native_vlan: 310
+    phone:
+      trunk: untagged
+      vlan: 320
+  spanning_tree_portfast: edge
+  spanning_tree_bpduguard: enabled
 - name: Ethernet2
-  peer: IDF3 Standard Port
   peer_type: network_port
   port_profile: PP-DOT1X
   description: IDF3 Standard Port
   shutdown: false
-  type: switched
-  mode: trunk phone
-  native_vlan: 310
-  spanning_tree_portfast: edge
-  spanning_tree_bpduguard: enabled
   dot1x:
     port_control: auto
     reauthentication: true
@@ -138,20 +131,21 @@ ethernet_interfaces:
     authentication_failure:
       action: allow
       allow_vlan: 330
-  phone:
-    trunk: untagged
-    vlan: 320
+  switchport:
+    enabled: true
+    mode: trunk phone
+    trunk:
+      native_vlan: 310
+    phone:
+      trunk: untagged
+      vlan: 320
+  spanning_tree_portfast: edge
+  spanning_tree_bpduguard: enabled
 - name: Ethernet3
-  peer: IDF3 Standard Port
   peer_type: network_port
   port_profile: PP-DOT1X
   description: IDF3 Standard Port
   shutdown: false
-  type: switched
-  mode: trunk phone
-  native_vlan: 310
-  spanning_tree_portfast: edge
-  spanning_tree_bpduguard: enabled
   dot1x:
     port_control: auto
     reauthentication: true
@@ -169,20 +163,21 @@ ethernet_interfaces:
     authentication_failure:
       action: allow
       allow_vlan: 330
-  phone:
-    trunk: untagged
-    vlan: 320
+  switchport:
+    enabled: true
+    mode: trunk phone
+    trunk:
+      native_vlan: 310
+    phone:
+      trunk: untagged
+      vlan: 320
+  spanning_tree_portfast: edge
+  spanning_tree_bpduguard: enabled
 - name: Ethernet4
-  peer: IDF3 Standard Port
   peer_type: network_port
   port_profile: PP-DOT1X
   description: IDF3 Standard Port
   shutdown: false
-  type: switched
-  mode: trunk phone
-  native_vlan: 310
-  spanning_tree_portfast: edge
-  spanning_tree_bpduguard: enabled
   dot1x:
     port_control: auto
     reauthentication: true
@@ -200,20 +195,21 @@ ethernet_interfaces:
     authentication_failure:
       action: allow
       allow_vlan: 330
-  phone:
-    trunk: untagged
-    vlan: 320
+  switchport:
+    enabled: true
+    mode: trunk phone
+    trunk:
+      native_vlan: 310
+    phone:
+      trunk: untagged
+      vlan: 320
+  spanning_tree_portfast: edge
+  spanning_tree_bpduguard: enabled
 - name: Ethernet5
-  peer: IDF3 Standard Port
   peer_type: network_port
   port_profile: PP-DOT1X
   description: IDF3 Standard Port
   shutdown: false
-  type: switched
-  mode: trunk phone
-  native_vlan: 310
-  spanning_tree_portfast: edge
-  spanning_tree_bpduguard: enabled
   dot1x:
     port_control: auto
     reauthentication: true
@@ -231,20 +227,21 @@ ethernet_interfaces:
     authentication_failure:
       action: allow
       allow_vlan: 330
-  phone:
-    trunk: untagged
-    vlan: 320
+  switchport:
+    enabled: true
+    mode: trunk phone
+    trunk:
+      native_vlan: 310
+    phone:
+      trunk: untagged
+      vlan: 320
+  spanning_tree_portfast: edge
+  spanning_tree_bpduguard: enabled
 - name: Ethernet6
-  peer: IDF3 Standard Port
   peer_type: network_port
   port_profile: PP-DOT1X
   description: IDF3 Standard Port
   shutdown: false
-  type: switched
-  mode: trunk phone
-  native_vlan: 310
-  spanning_tree_portfast: edge
-  spanning_tree_bpduguard: enabled
   dot1x:
     port_control: auto
     reauthentication: true
@@ -262,20 +259,21 @@ ethernet_interfaces:
     authentication_failure:
       action: allow
       allow_vlan: 330
-  phone:
-    trunk: untagged
-    vlan: 320
+  switchport:
+    enabled: true
+    mode: trunk phone
+    trunk:
+      native_vlan: 310
+    phone:
+      trunk: untagged
+      vlan: 320
+  spanning_tree_portfast: edge
+  spanning_tree_bpduguard: enabled
 - name: Ethernet7
-  peer: IDF3 Standard Port
   peer_type: network_port
   port_profile: PP-DOT1X
   description: IDF3 Standard Port
   shutdown: false
-  type: switched
-  mode: trunk phone
-  native_vlan: 310
-  spanning_tree_portfast: edge
-  spanning_tree_bpduguard: enabled
   dot1x:
     port_control: auto
     reauthentication: true
@@ -293,20 +291,21 @@ ethernet_interfaces:
     authentication_failure:
       action: allow
       allow_vlan: 330
-  phone:
-    trunk: untagged
-    vlan: 320
+  switchport:
+    enabled: true
+    mode: trunk phone
+    trunk:
+      native_vlan: 310
+    phone:
+      trunk: untagged
+      vlan: 320
+  spanning_tree_portfast: edge
+  spanning_tree_bpduguard: enabled
 - name: Ethernet8
-  peer: IDF3 Standard Port
   peer_type: network_port
   port_profile: PP-DOT1X
   description: IDF3 Standard Port
   shutdown: false
-  type: switched
-  mode: trunk phone
-  native_vlan: 310
-  spanning_tree_portfast: edge
-  spanning_tree_bpduguard: enabled
   dot1x:
     port_control: auto
     reauthentication: true
@@ -324,20 +323,21 @@ ethernet_interfaces:
     authentication_failure:
       action: allow
       allow_vlan: 330
-  phone:
-    trunk: untagged
-    vlan: 320
+  switchport:
+    enabled: true
+    mode: trunk phone
+    trunk:
+      native_vlan: 310
+    phone:
+      trunk: untagged
+      vlan: 320
+  spanning_tree_portfast: edge
+  spanning_tree_bpduguard: enabled
 - name: Ethernet9
-  peer: IDF3 Standard Port
   peer_type: network_port
   port_profile: PP-DOT1X
   description: IDF3 Standard Port
   shutdown: false
-  type: switched
-  mode: trunk phone
-  native_vlan: 310
-  spanning_tree_portfast: edge
-  spanning_tree_bpduguard: enabled
   dot1x:
     port_control: auto
     reauthentication: true
@@ -355,20 +355,21 @@ ethernet_interfaces:
     authentication_failure:
       action: allow
       allow_vlan: 330
-  phone:
-    trunk: untagged
-    vlan: 320
+  switchport:
+    enabled: true
+    mode: trunk phone
+    trunk:
+      native_vlan: 310
+    phone:
+      trunk: untagged
+      vlan: 320
+  spanning_tree_portfast: edge
+  spanning_tree_bpduguard: enabled
 - name: Ethernet10
-  peer: IDF3 Standard Port
   peer_type: network_port
   port_profile: PP-DOT1X
   description: IDF3 Standard Port
   shutdown: false
-  type: switched
-  mode: trunk phone
-  native_vlan: 310
-  spanning_tree_portfast: edge
-  spanning_tree_bpduguard: enabled
   dot1x:
     port_control: auto
     reauthentication: true
@@ -386,20 +387,21 @@ ethernet_interfaces:
     authentication_failure:
       action: allow
       allow_vlan: 330
-  phone:
-    trunk: untagged
-    vlan: 320
+  switchport:
+    enabled: true
+    mode: trunk phone
+    trunk:
+      native_vlan: 310
+    phone:
+      trunk: untagged
+      vlan: 320
+  spanning_tree_portfast: edge
+  spanning_tree_bpduguard: enabled
 - name: Ethernet11
-  peer: IDF3 Standard Port
   peer_type: network_port
   port_profile: PP-DOT1X
   description: IDF3 Standard Port
   shutdown: false
-  type: switched
-  mode: trunk phone
-  native_vlan: 310
-  spanning_tree_portfast: edge
-  spanning_tree_bpduguard: enabled
   dot1x:
     port_control: auto
     reauthentication: true
@@ -417,20 +419,21 @@ ethernet_interfaces:
     authentication_failure:
       action: allow
       allow_vlan: 330
-  phone:
-    trunk: untagged
-    vlan: 320
+  switchport:
+    enabled: true
+    mode: trunk phone
+    trunk:
+      native_vlan: 310
+    phone:
+      trunk: untagged
+      vlan: 320
+  spanning_tree_portfast: edge
+  spanning_tree_bpduguard: enabled
 - name: Ethernet12
-  peer: IDF3 Standard Port
   peer_type: network_port
   port_profile: PP-DOT1X
   description: IDF3 Standard Port
   shutdown: false
-  type: switched
-  mode: trunk phone
-  native_vlan: 310
-  spanning_tree_portfast: edge
-  spanning_tree_bpduguard: enabled
   dot1x:
     port_control: auto
     reauthentication: true
@@ -448,20 +451,21 @@ ethernet_interfaces:
     authentication_failure:
       action: allow
       allow_vlan: 330
-  phone:
-    trunk: untagged
-    vlan: 320
+  switchport:
+    enabled: true
+    mode: trunk phone
+    trunk:
+      native_vlan: 310
+    phone:
+      trunk: untagged
+      vlan: 320
+  spanning_tree_portfast: edge
+  spanning_tree_bpduguard: enabled
 - name: Ethernet13
-  peer: IDF3 Standard Port
   peer_type: network_port
   port_profile: PP-DOT1X
   description: IDF3 Standard Port
   shutdown: false
-  type: switched
-  mode: trunk phone
-  native_vlan: 310
-  spanning_tree_portfast: edge
-  spanning_tree_bpduguard: enabled
   dot1x:
     port_control: auto
     reauthentication: true
@@ -479,20 +483,21 @@ ethernet_interfaces:
     authentication_failure:
       action: allow
       allow_vlan: 330
-  phone:
-    trunk: untagged
-    vlan: 320
+  switchport:
+    enabled: true
+    mode: trunk phone
+    trunk:
+      native_vlan: 310
+    phone:
+      trunk: untagged
+      vlan: 320
+  spanning_tree_portfast: edge
+  spanning_tree_bpduguard: enabled
 - name: Ethernet14
-  peer: IDF3 Standard Port
   peer_type: network_port
   port_profile: PP-DOT1X
   description: IDF3 Standard Port
   shutdown: false
-  type: switched
-  mode: trunk phone
-  native_vlan: 310
-  spanning_tree_portfast: edge
-  spanning_tree_bpduguard: enabled
   dot1x:
     port_control: auto
     reauthentication: true
@@ -510,20 +515,21 @@ ethernet_interfaces:
     authentication_failure:
       action: allow
       allow_vlan: 330
-  phone:
-    trunk: untagged
-    vlan: 320
+  switchport:
+    enabled: true
+    mode: trunk phone
+    trunk:
+      native_vlan: 310
+    phone:
+      trunk: untagged
+      vlan: 320
+  spanning_tree_portfast: edge
+  spanning_tree_bpduguard: enabled
 - name: Ethernet15
-  peer: IDF3 Standard Port
   peer_type: network_port
   port_profile: PP-DOT1X
   description: IDF3 Standard Port
   shutdown: false
-  type: switched
-  mode: trunk phone
-  native_vlan: 310
-  spanning_tree_portfast: edge
-  spanning_tree_bpduguard: enabled
   dot1x:
     port_control: auto
     reauthentication: true
@@ -541,20 +547,21 @@ ethernet_interfaces:
     authentication_failure:
       action: allow
       allow_vlan: 330
-  phone:
-    trunk: untagged
-    vlan: 320
+  switchport:
+    enabled: true
+    mode: trunk phone
+    trunk:
+      native_vlan: 310
+    phone:
+      trunk: untagged
+      vlan: 320
+  spanning_tree_portfast: edge
+  spanning_tree_bpduguard: enabled
 - name: Ethernet16
-  peer: IDF3 Standard Port
   peer_type: network_port
   port_profile: PP-DOT1X
   description: IDF3 Standard Port
   shutdown: false
-  type: switched
-  mode: trunk phone
-  native_vlan: 310
-  spanning_tree_portfast: edge
-  spanning_tree_bpduguard: enabled
   dot1x:
     port_control: auto
     reauthentication: true
@@ -572,20 +579,21 @@ ethernet_interfaces:
     authentication_failure:
       action: allow
       allow_vlan: 330
-  phone:
-    trunk: untagged
-    vlan: 320
+  switchport:
+    enabled: true
+    mode: trunk phone
+    trunk:
+      native_vlan: 310
+    phone:
+      trunk: untagged
+      vlan: 320
+  spanning_tree_portfast: edge
+  spanning_tree_bpduguard: enabled
 - name: Ethernet17
-  peer: IDF3 Standard Port
   peer_type: network_port
   port_profile: PP-DOT1X
   description: IDF3 Standard Port
   shutdown: false
-  type: switched
-  mode: trunk phone
-  native_vlan: 310
-  spanning_tree_portfast: edge
-  spanning_tree_bpduguard: enabled
   dot1x:
     port_control: auto
     reauthentication: true
@@ -603,20 +611,21 @@ ethernet_interfaces:
     authentication_failure:
       action: allow
       allow_vlan: 330
-  phone:
-    trunk: untagged
-    vlan: 320
+  switchport:
+    enabled: true
+    mode: trunk phone
+    trunk:
+      native_vlan: 310
+    phone:
+      trunk: untagged
+      vlan: 320
+  spanning_tree_portfast: edge
+  spanning_tree_bpduguard: enabled
 - name: Ethernet18
-  peer: IDF3 Standard Port
   peer_type: network_port
   port_profile: PP-DOT1X
   description: IDF3 Standard Port
   shutdown: false
-  type: switched
-  mode: trunk phone
-  native_vlan: 310
-  spanning_tree_portfast: edge
-  spanning_tree_bpduguard: enabled
   dot1x:
     port_control: auto
     reauthentication: true
@@ -634,20 +643,21 @@ ethernet_interfaces:
     authentication_failure:
       action: allow
       allow_vlan: 330
-  phone:
-    trunk: untagged
-    vlan: 320
+  switchport:
+    enabled: true
+    mode: trunk phone
+    trunk:
+      native_vlan: 310
+    phone:
+      trunk: untagged
+      vlan: 320
+  spanning_tree_portfast: edge
+  spanning_tree_bpduguard: enabled
 - name: Ethernet19
-  peer: IDF3 Standard Port
   peer_type: network_port
   port_profile: PP-DOT1X
   description: IDF3 Standard Port
   shutdown: false
-  type: switched
-  mode: trunk phone
-  native_vlan: 310
-  spanning_tree_portfast: edge
-  spanning_tree_bpduguard: enabled
   dot1x:
     port_control: auto
     reauthentication: true
@@ -665,20 +675,21 @@ ethernet_interfaces:
     authentication_failure:
       action: allow
       allow_vlan: 330
-  phone:
-    trunk: untagged
-    vlan: 320
+  switchport:
+    enabled: true
+    mode: trunk phone
+    trunk:
+      native_vlan: 310
+    phone:
+      trunk: untagged
+      vlan: 320
+  spanning_tree_portfast: edge
+  spanning_tree_bpduguard: enabled
 - name: Ethernet20
-  peer: IDF3 Standard Port
   peer_type: network_port
   port_profile: PP-DOT1X
   description: IDF3 Standard Port
   shutdown: false
-  type: switched
-  mode: trunk phone
-  native_vlan: 310
-  spanning_tree_portfast: edge
-  spanning_tree_bpduguard: enabled
   dot1x:
     port_control: auto
     reauthentication: true
@@ -696,20 +707,21 @@ ethernet_interfaces:
     authentication_failure:
       action: allow
       allow_vlan: 330
-  phone:
-    trunk: untagged
-    vlan: 320
+  switchport:
+    enabled: true
+    mode: trunk phone
+    trunk:
+      native_vlan: 310
+    phone:
+      trunk: untagged
+      vlan: 320
+  spanning_tree_portfast: edge
+  spanning_tree_bpduguard: enabled
 - name: Ethernet21
-  peer: IDF3 Standard Port
   peer_type: network_port
   port_profile: PP-DOT1X
   description: IDF3 Standard Port
   shutdown: false
-  type: switched
-  mode: trunk phone
-  native_vlan: 310
-  spanning_tree_portfast: edge
-  spanning_tree_bpduguard: enabled
   dot1x:
     port_control: auto
     reauthentication: true
@@ -727,20 +739,21 @@ ethernet_interfaces:
     authentication_failure:
       action: allow
       allow_vlan: 330
-  phone:
-    trunk: untagged
-    vlan: 320
+  switchport:
+    enabled: true
+    mode: trunk phone
+    trunk:
+      native_vlan: 310
+    phone:
+      trunk: untagged
+      vlan: 320
+  spanning_tree_portfast: edge
+  spanning_tree_bpduguard: enabled
 - name: Ethernet22
-  peer: IDF3 Standard Port
   peer_type: network_port
   port_profile: PP-DOT1X
   description: IDF3 Standard Port
   shutdown: false
-  type: switched
-  mode: trunk phone
-  native_vlan: 310
-  spanning_tree_portfast: edge
-  spanning_tree_bpduguard: enabled
   dot1x:
     port_control: auto
     reauthentication: true
@@ -758,20 +771,21 @@ ethernet_interfaces:
     authentication_failure:
       action: allow
       allow_vlan: 330
-  phone:
-    trunk: untagged
-    vlan: 320
+  switchport:
+    enabled: true
+    mode: trunk phone
+    trunk:
+      native_vlan: 310
+    phone:
+      trunk: untagged
+      vlan: 320
+  spanning_tree_portfast: edge
+  spanning_tree_bpduguard: enabled
 - name: Ethernet23
-  peer: IDF3 Standard Port
   peer_type: network_port
   port_profile: PP-DOT1X
   description: IDF3 Standard Port
   shutdown: false
-  type: switched
-  mode: trunk phone
-  native_vlan: 310
-  spanning_tree_portfast: edge
-  spanning_tree_bpduguard: enabled
   dot1x:
     port_control: auto
     reauthentication: true
@@ -789,20 +803,21 @@ ethernet_interfaces:
     authentication_failure:
       action: allow
       allow_vlan: 330
-  phone:
-    trunk: untagged
-    vlan: 320
+  switchport:
+    enabled: true
+    mode: trunk phone
+    trunk:
+      native_vlan: 310
+    phone:
+      trunk: untagged
+      vlan: 320
+  spanning_tree_portfast: edge
+  spanning_tree_bpduguard: enabled
 - name: Ethernet24
-  peer: IDF3 Standard Port
   peer_type: network_port
   port_profile: PP-DOT1X
   description: IDF3 Standard Port
   shutdown: false
-  type: switched
-  mode: trunk phone
-  native_vlan: 310
-  spanning_tree_portfast: edge
-  spanning_tree_bpduguard: enabled
   dot1x:
     port_control: auto
     reauthentication: true
@@ -820,20 +835,21 @@ ethernet_interfaces:
     authentication_failure:
       action: allow
       allow_vlan: 330
-  phone:
-    trunk: untagged
-    vlan: 320
+  switchport:
+    enabled: true
+    mode: trunk phone
+    trunk:
+      native_vlan: 310
+    phone:
+      trunk: untagged
+      vlan: 320
+  spanning_tree_portfast: edge
+  spanning_tree_bpduguard: enabled
 - name: Ethernet25
-  peer: IDF3 Standard Port
   peer_type: network_port
   port_profile: PP-DOT1X
   description: IDF3 Standard Port
   shutdown: false
-  type: switched
-  mode: trunk phone
-  native_vlan: 310
-  spanning_tree_portfast: edge
-  spanning_tree_bpduguard: enabled
   dot1x:
     port_control: auto
     reauthentication: true
@@ -851,20 +867,21 @@ ethernet_interfaces:
     authentication_failure:
       action: allow
       allow_vlan: 330
-  phone:
-    trunk: untagged
-    vlan: 320
+  switchport:
+    enabled: true
+    mode: trunk phone
+    trunk:
+      native_vlan: 310
+    phone:
+      trunk: untagged
+      vlan: 320
+  spanning_tree_portfast: edge
+  spanning_tree_bpduguard: enabled
 - name: Ethernet26
-  peer: IDF3 Standard Port
   peer_type: network_port
   port_profile: PP-DOT1X
   description: IDF3 Standard Port
   shutdown: false
-  type: switched
-  mode: trunk phone
-  native_vlan: 310
-  spanning_tree_portfast: edge
-  spanning_tree_bpduguard: enabled
   dot1x:
     port_control: auto
     reauthentication: true
@@ -882,20 +899,21 @@ ethernet_interfaces:
     authentication_failure:
       action: allow
       allow_vlan: 330
-  phone:
-    trunk: untagged
-    vlan: 320
+  switchport:
+    enabled: true
+    mode: trunk phone
+    trunk:
+      native_vlan: 310
+    phone:
+      trunk: untagged
+      vlan: 320
+  spanning_tree_portfast: edge
+  spanning_tree_bpduguard: enabled
 - name: Ethernet27
-  peer: IDF3 Standard Port
   peer_type: network_port
   port_profile: PP-DOT1X
   description: IDF3 Standard Port
   shutdown: false
-  type: switched
-  mode: trunk phone
-  native_vlan: 310
-  spanning_tree_portfast: edge
-  spanning_tree_bpduguard: enabled
   dot1x:
     port_control: auto
     reauthentication: true
@@ -913,20 +931,21 @@ ethernet_interfaces:
     authentication_failure:
       action: allow
       allow_vlan: 330
-  phone:
-    trunk: untagged
-    vlan: 320
+  switchport:
+    enabled: true
+    mode: trunk phone
+    trunk:
+      native_vlan: 310
+    phone:
+      trunk: untagged
+      vlan: 320
+  spanning_tree_portfast: edge
+  spanning_tree_bpduguard: enabled
 - name: Ethernet28
-  peer: IDF3 Standard Port
   peer_type: network_port
   port_profile: PP-DOT1X
   description: IDF3 Standard Port
   shutdown: false
-  type: switched
-  mode: trunk phone
-  native_vlan: 310
-  spanning_tree_portfast: edge
-  spanning_tree_bpduguard: enabled
   dot1x:
     port_control: auto
     reauthentication: true
@@ -944,20 +963,21 @@ ethernet_interfaces:
     authentication_failure:
       action: allow
       allow_vlan: 330
-  phone:
-    trunk: untagged
-    vlan: 320
+  switchport:
+    enabled: true
+    mode: trunk phone
+    trunk:
+      native_vlan: 310
+    phone:
+      trunk: untagged
+      vlan: 320
+  spanning_tree_portfast: edge
+  spanning_tree_bpduguard: enabled
 - name: Ethernet29
-  peer: IDF3 Standard Port
   peer_type: network_port
   port_profile: PP-DOT1X
   description: IDF3 Standard Port
   shutdown: false
-  type: switched
-  mode: trunk phone
-  native_vlan: 310
-  spanning_tree_portfast: edge
-  spanning_tree_bpduguard: enabled
   dot1x:
     port_control: auto
     reauthentication: true
@@ -975,20 +995,21 @@ ethernet_interfaces:
     authentication_failure:
       action: allow
       allow_vlan: 330
-  phone:
-    trunk: untagged
-    vlan: 320
+  switchport:
+    enabled: true
+    mode: trunk phone
+    trunk:
+      native_vlan: 310
+    phone:
+      trunk: untagged
+      vlan: 320
+  spanning_tree_portfast: edge
+  spanning_tree_bpduguard: enabled
 - name: Ethernet30
-  peer: IDF3 Standard Port
   peer_type: network_port
   port_profile: PP-DOT1X
   description: IDF3 Standard Port
   shutdown: false
-  type: switched
-  mode: trunk phone
-  native_vlan: 310
-  spanning_tree_portfast: edge
-  spanning_tree_bpduguard: enabled
   dot1x:
     port_control: auto
     reauthentication: true
@@ -1006,20 +1027,21 @@ ethernet_interfaces:
     authentication_failure:
       action: allow
       allow_vlan: 330
-  phone:
-    trunk: untagged
-    vlan: 320
+  switchport:
+    enabled: true
+    mode: trunk phone
+    trunk:
+      native_vlan: 310
+    phone:
+      trunk: untagged
+      vlan: 320
+  spanning_tree_portfast: edge
+  spanning_tree_bpduguard: enabled
 - name: Ethernet31
-  peer: IDF3 Standard Port
   peer_type: network_port
   port_profile: PP-DOT1X
   description: IDF3 Standard Port
   shutdown: false
-  type: switched
-  mode: trunk phone
-  native_vlan: 310
-  spanning_tree_portfast: edge
-  spanning_tree_bpduguard: enabled
   dot1x:
     port_control: auto
     reauthentication: true
@@ -1037,20 +1059,21 @@ ethernet_interfaces:
     authentication_failure:
       action: allow
       allow_vlan: 330
-  phone:
-    trunk: untagged
-    vlan: 320
+  switchport:
+    enabled: true
+    mode: trunk phone
+    trunk:
+      native_vlan: 310
+    phone:
+      trunk: untagged
+      vlan: 320
+  spanning_tree_portfast: edge
+  spanning_tree_bpduguard: enabled
 - name: Ethernet32
-  peer: IDF3 Standard Port
   peer_type: network_port
   port_profile: PP-DOT1X
   description: IDF3 Standard Port
   shutdown: false
-  type: switched
-  mode: trunk phone
-  native_vlan: 310
-  spanning_tree_portfast: edge
-  spanning_tree_bpduguard: enabled
   dot1x:
     port_control: auto
     reauthentication: true
@@ -1068,20 +1091,21 @@ ethernet_interfaces:
     authentication_failure:
       action: allow
       allow_vlan: 330
-  phone:
-    trunk: untagged
-    vlan: 320
+  switchport:
+    enabled: true
+    mode: trunk phone
+    trunk:
+      native_vlan: 310
+    phone:
+      trunk: untagged
+      vlan: 320
+  spanning_tree_portfast: edge
+  spanning_tree_bpduguard: enabled
 - name: Ethernet33
-  peer: IDF3 Standard Port
   peer_type: network_port
   port_profile: PP-DOT1X
   description: IDF3 Standard Port
   shutdown: false
-  type: switched
-  mode: trunk phone
-  native_vlan: 310
-  spanning_tree_portfast: edge
-  spanning_tree_bpduguard: enabled
   dot1x:
     port_control: auto
     reauthentication: true
@@ -1099,20 +1123,21 @@ ethernet_interfaces:
     authentication_failure:
       action: allow
       allow_vlan: 330
-  phone:
-    trunk: untagged
-    vlan: 320
+  switchport:
+    enabled: true
+    mode: trunk phone
+    trunk:
+      native_vlan: 310
+    phone:
+      trunk: untagged
+      vlan: 320
+  spanning_tree_portfast: edge
+  spanning_tree_bpduguard: enabled
 - name: Ethernet34
-  peer: IDF3 Standard Port
   peer_type: network_port
   port_profile: PP-DOT1X
   description: IDF3 Standard Port
   shutdown: false
-  type: switched
-  mode: trunk phone
-  native_vlan: 310
-  spanning_tree_portfast: edge
-  spanning_tree_bpduguard: enabled
   dot1x:
     port_control: auto
     reauthentication: true
@@ -1130,20 +1155,21 @@ ethernet_interfaces:
     authentication_failure:
       action: allow
       allow_vlan: 330
-  phone:
-    trunk: untagged
-    vlan: 320
+  switchport:
+    enabled: true
+    mode: trunk phone
+    trunk:
+      native_vlan: 310
+    phone:
+      trunk: untagged
+      vlan: 320
+  spanning_tree_portfast: edge
+  spanning_tree_bpduguard: enabled
 - name: Ethernet35
-  peer: IDF3 Standard Port
   peer_type: network_port
   port_profile: PP-DOT1X
   description: IDF3 Standard Port
   shutdown: false
-  type: switched
-  mode: trunk phone
-  native_vlan: 310
-  spanning_tree_portfast: edge
-  spanning_tree_bpduguard: enabled
   dot1x:
     port_control: auto
     reauthentication: true
@@ -1161,20 +1187,21 @@ ethernet_interfaces:
     authentication_failure:
       action: allow
       allow_vlan: 330
-  phone:
-    trunk: untagged
-    vlan: 320
+  switchport:
+    enabled: true
+    mode: trunk phone
+    trunk:
+      native_vlan: 310
+    phone:
+      trunk: untagged
+      vlan: 320
+  spanning_tree_portfast: edge
+  spanning_tree_bpduguard: enabled
 - name: Ethernet36
-  peer: IDF3 Standard Port
   peer_type: network_port
   port_profile: PP-DOT1X
   description: IDF3 Standard Port
   shutdown: false
-  type: switched
-  mode: trunk phone
-  native_vlan: 310
-  spanning_tree_portfast: edge
-  spanning_tree_bpduguard: enabled
   dot1x:
     port_control: auto
     reauthentication: true
@@ -1192,20 +1219,21 @@ ethernet_interfaces:
     authentication_failure:
       action: allow
       allow_vlan: 330
-  phone:
-    trunk: untagged
-    vlan: 320
+  switchport:
+    enabled: true
+    mode: trunk phone
+    trunk:
+      native_vlan: 310
+    phone:
+      trunk: untagged
+      vlan: 320
+  spanning_tree_portfast: edge
+  spanning_tree_bpduguard: enabled
 - name: Ethernet37
-  peer: IDF3 Standard Port
   peer_type: network_port
   port_profile: PP-DOT1X
   description: IDF3 Standard Port
   shutdown: false
-  type: switched
-  mode: trunk phone
-  native_vlan: 310
-  spanning_tree_portfast: edge
-  spanning_tree_bpduguard: enabled
   dot1x:
     port_control: auto
     reauthentication: true
@@ -1223,20 +1251,21 @@ ethernet_interfaces:
     authentication_failure:
       action: allow
       allow_vlan: 330
-  phone:
-    trunk: untagged
-    vlan: 320
+  switchport:
+    enabled: true
+    mode: trunk phone
+    trunk:
+      native_vlan: 310
+    phone:
+      trunk: untagged
+      vlan: 320
+  spanning_tree_portfast: edge
+  spanning_tree_bpduguard: enabled
 - name: Ethernet38
-  peer: IDF3 Standard Port
   peer_type: network_port
   port_profile: PP-DOT1X
   description: IDF3 Standard Port
   shutdown: false
-  type: switched
-  mode: trunk phone
-  native_vlan: 310
-  spanning_tree_portfast: edge
-  spanning_tree_bpduguard: enabled
   dot1x:
     port_control: auto
     reauthentication: true
@@ -1254,20 +1283,21 @@ ethernet_interfaces:
     authentication_failure:
       action: allow
       allow_vlan: 330
-  phone:
-    trunk: untagged
-    vlan: 320
+  switchport:
+    enabled: true
+    mode: trunk phone
+    trunk:
+      native_vlan: 310
+    phone:
+      trunk: untagged
+      vlan: 320
+  spanning_tree_portfast: edge
+  spanning_tree_bpduguard: enabled
 - name: Ethernet39
-  peer: IDF3 Standard Port
   peer_type: network_port
   port_profile: PP-DOT1X
   description: IDF3 Standard Port
   shutdown: false
-  type: switched
-  mode: trunk phone
-  native_vlan: 310
-  spanning_tree_portfast: edge
-  spanning_tree_bpduguard: enabled
   dot1x:
     port_control: auto
     reauthentication: true
@@ -1285,20 +1315,21 @@ ethernet_interfaces:
     authentication_failure:
       action: allow
       allow_vlan: 330
-  phone:
-    trunk: untagged
-    vlan: 320
+  switchport:
+    enabled: true
+    mode: trunk phone
+    trunk:
+      native_vlan: 310
+    phone:
+      trunk: untagged
+      vlan: 320
+  spanning_tree_portfast: edge
+  spanning_tree_bpduguard: enabled
 - name: Ethernet40
-  peer: IDF3 Standard Port
   peer_type: network_port
   port_profile: PP-DOT1X
   description: IDF3 Standard Port
   shutdown: false
-  type: switched
-  mode: trunk phone
-  native_vlan: 310
-  spanning_tree_portfast: edge
-  spanning_tree_bpduguard: enabled
   dot1x:
     port_control: auto
     reauthentication: true
@@ -1316,20 +1347,21 @@ ethernet_interfaces:
     authentication_failure:
       action: allow
       allow_vlan: 330
-  phone:
-    trunk: untagged
-    vlan: 320
+  switchport:
+    enabled: true
+    mode: trunk phone
+    trunk:
+      native_vlan: 310
+    phone:
+      trunk: untagged
+      vlan: 320
+  spanning_tree_portfast: edge
+  spanning_tree_bpduguard: enabled
 - name: Ethernet41
-  peer: IDF3 Standard Port
   peer_type: network_port
   port_profile: PP-DOT1X
   description: IDF3 Standard Port
   shutdown: false
-  type: switched
-  mode: trunk phone
-  native_vlan: 310
-  spanning_tree_portfast: edge
-  spanning_tree_bpduguard: enabled
   dot1x:
     port_control: auto
     reauthentication: true
@@ -1347,20 +1379,21 @@ ethernet_interfaces:
     authentication_failure:
       action: allow
       allow_vlan: 330
-  phone:
-    trunk: untagged
-    vlan: 320
+  switchport:
+    enabled: true
+    mode: trunk phone
+    trunk:
+      native_vlan: 310
+    phone:
+      trunk: untagged
+      vlan: 320
+  spanning_tree_portfast: edge
+  spanning_tree_bpduguard: enabled
 - name: Ethernet42
-  peer: IDF3 Standard Port
   peer_type: network_port
   port_profile: PP-DOT1X
   description: IDF3 Standard Port
   shutdown: false
-  type: switched
-  mode: trunk phone
-  native_vlan: 310
-  spanning_tree_portfast: edge
-  spanning_tree_bpduguard: enabled
   dot1x:
     port_control: auto
     reauthentication: true
@@ -1378,20 +1411,21 @@ ethernet_interfaces:
     authentication_failure:
       action: allow
       allow_vlan: 330
-  phone:
-    trunk: untagged
-    vlan: 320
+  switchport:
+    enabled: true
+    mode: trunk phone
+    trunk:
+      native_vlan: 310
+    phone:
+      trunk: untagged
+      vlan: 320
+  spanning_tree_portfast: edge
+  spanning_tree_bpduguard: enabled
 - name: Ethernet43
-  peer: IDF3 Standard Port
   peer_type: network_port
   port_profile: PP-DOT1X
   description: IDF3 Standard Port
   shutdown: false
-  type: switched
-  mode: trunk phone
-  native_vlan: 310
-  spanning_tree_portfast: edge
-  spanning_tree_bpduguard: enabled
   dot1x:
     port_control: auto
     reauthentication: true
@@ -1409,20 +1443,21 @@ ethernet_interfaces:
     authentication_failure:
       action: allow
       allow_vlan: 330
-  phone:
-    trunk: untagged
-    vlan: 320
+  switchport:
+    enabled: true
+    mode: trunk phone
+    trunk:
+      native_vlan: 310
+    phone:
+      trunk: untagged
+      vlan: 320
+  spanning_tree_portfast: edge
+  spanning_tree_bpduguard: enabled
 - name: Ethernet44
-  peer: IDF3 Standard Port
   peer_type: network_port
   port_profile: PP-DOT1X
   description: IDF3 Standard Port
   shutdown: false
-  type: switched
-  mode: trunk phone
-  native_vlan: 310
-  spanning_tree_portfast: edge
-  spanning_tree_bpduguard: enabled
   dot1x:
     port_control: auto
     reauthentication: true
@@ -1440,20 +1475,21 @@ ethernet_interfaces:
     authentication_failure:
       action: allow
       allow_vlan: 330
-  phone:
-    trunk: untagged
-    vlan: 320
+  switchport:
+    enabled: true
+    mode: trunk phone
+    trunk:
+      native_vlan: 310
+    phone:
+      trunk: untagged
+      vlan: 320
+  spanning_tree_portfast: edge
+  spanning_tree_bpduguard: enabled
 - name: Ethernet45
-  peer: IDF3 Standard Port
   peer_type: network_port
   port_profile: PP-DOT1X
   description: IDF3 Standard Port
   shutdown: false
-  type: switched
-  mode: trunk phone
-  native_vlan: 310
-  spanning_tree_portfast: edge
-  spanning_tree_bpduguard: enabled
   dot1x:
     port_control: auto
     reauthentication: true
@@ -1471,20 +1507,21 @@ ethernet_interfaces:
     authentication_failure:
       action: allow
       allow_vlan: 330
-  phone:
-    trunk: untagged
-    vlan: 320
+  switchport:
+    enabled: true
+    mode: trunk phone
+    trunk:
+      native_vlan: 310
+    phone:
+      trunk: untagged
+      vlan: 320
+  spanning_tree_portfast: edge
+  spanning_tree_bpduguard: enabled
 - name: Ethernet46
-  peer: IDF3 Standard Port
   peer_type: network_port
   port_profile: PP-DOT1X
   description: IDF3 Standard Port
   shutdown: false
-  type: switched
-  mode: trunk phone
-  native_vlan: 310
-  spanning_tree_portfast: edge
-  spanning_tree_bpduguard: enabled
   dot1x:
     port_control: auto
     reauthentication: true
@@ -1502,20 +1539,21 @@ ethernet_interfaces:
     authentication_failure:
       action: allow
       allow_vlan: 330
-  phone:
-    trunk: untagged
-    vlan: 320
+  switchport:
+    enabled: true
+    mode: trunk phone
+    trunk:
+      native_vlan: 310
+    phone:
+      trunk: untagged
+      vlan: 320
+  spanning_tree_portfast: edge
+  spanning_tree_bpduguard: enabled
 - name: Ethernet47
-  peer: IDF3 Standard Port
   peer_type: network_port
   port_profile: PP-DOT1X
   description: IDF3 Standard Port
   shutdown: false
-  type: switched
-  mode: trunk phone
-  native_vlan: 310
-  spanning_tree_portfast: edge
-  spanning_tree_bpduguard: enabled
   dot1x:
     port_control: auto
     reauthentication: true
@@ -1533,20 +1571,21 @@ ethernet_interfaces:
     authentication_failure:
       action: allow
       allow_vlan: 330
-  phone:
-    trunk: untagged
-    vlan: 320
+  switchport:
+    enabled: true
+    mode: trunk phone
+    trunk:
+      native_vlan: 310
+    phone:
+      trunk: untagged
+      vlan: 320
+  spanning_tree_portfast: edge
+  spanning_tree_bpduguard: enabled
 - name: Ethernet48
-  peer: IDF3 Standard Port
   peer_type: network_port
   port_profile: PP-DOT1X
   description: IDF3 Standard Port
   shutdown: false
-  type: switched
-  mode: trunk phone
-  native_vlan: 310
-  spanning_tree_portfast: edge
-  spanning_tree_bpduguard: enabled
   dot1x:
     port_control: auto
     reauthentication: true
@@ -1564,20 +1603,21 @@ ethernet_interfaces:
     authentication_failure:
       action: allow
       allow_vlan: 330
-  phone:
-    trunk: untagged
-    vlan: 320
+  switchport:
+    enabled: true
+    mode: trunk phone
+    trunk:
+      native_vlan: 310
+    phone:
+      trunk: untagged
+      vlan: 320
+  spanning_tree_portfast: edge
+  spanning_tree_bpduguard: enabled
 - name: Ethernet49
-  peer: IDF3 Standard Port
   peer_type: network_port
   port_profile: PP-DOT1X
   description: IDF3 Standard Port
   shutdown: false
-  type: switched
-  mode: trunk phone
-  native_vlan: 310
-  spanning_tree_portfast: edge
-  spanning_tree_bpduguard: enabled
   dot1x:
     port_control: auto
     reauthentication: true
@@ -1595,20 +1635,21 @@ ethernet_interfaces:
     authentication_failure:
       action: allow
       allow_vlan: 330
-  phone:
-    trunk: untagged
-    vlan: 320
+  switchport:
+    enabled: true
+    mode: trunk phone
+    trunk:
+      native_vlan: 310
+    phone:
+      trunk: untagged
+      vlan: 320
+  spanning_tree_portfast: edge
+  spanning_tree_bpduguard: enabled
 - name: Ethernet50
-  peer: IDF3 Standard Port
   peer_type: network_port
   port_profile: PP-DOT1X
   description: IDF3 Standard Port
   shutdown: false
-  type: switched
-  mode: trunk phone
-  native_vlan: 310
-  spanning_tree_portfast: edge
-  spanning_tree_bpduguard: enabled
   dot1x:
     port_control: auto
     reauthentication: true
@@ -1626,20 +1667,21 @@ ethernet_interfaces:
     authentication_failure:
       action: allow
       allow_vlan: 330
-  phone:
-    trunk: untagged
-    vlan: 320
+  switchport:
+    enabled: true
+    mode: trunk phone
+    trunk:
+      native_vlan: 310
+    phone:
+      trunk: untagged
+      vlan: 320
+  spanning_tree_portfast: edge
+  spanning_tree_bpduguard: enabled
 - name: Ethernet51
-  peer: IDF3 Standard Port
   peer_type: network_port
   port_profile: PP-DOT1X
   description: IDF3 Standard Port
   shutdown: false
-  type: switched
-  mode: trunk phone
-  native_vlan: 310
-  spanning_tree_portfast: edge
-  spanning_tree_bpduguard: enabled
   dot1x:
     port_control: auto
     reauthentication: true
@@ -1657,20 +1699,21 @@ ethernet_interfaces:
     authentication_failure:
       action: allow
       allow_vlan: 330
-  phone:
-    trunk: untagged
-    vlan: 320
+  switchport:
+    enabled: true
+    mode: trunk phone
+    trunk:
+      native_vlan: 310
+    phone:
+      trunk: untagged
+      vlan: 320
+  spanning_tree_portfast: edge
+  spanning_tree_bpduguard: enabled
 - name: Ethernet52
-  peer: IDF3 Standard Port
   peer_type: network_port
   port_profile: PP-DOT1X
   description: IDF3 Standard Port
   shutdown: false
-  type: switched
-  mode: trunk phone
-  native_vlan: 310
-  spanning_tree_portfast: edge
-  spanning_tree_bpduguard: enabled
   dot1x:
     port_control: auto
     reauthentication: true
@@ -1688,20 +1731,21 @@ ethernet_interfaces:
     authentication_failure:
       action: allow
       allow_vlan: 330
-  phone:
-    trunk: untagged
-    vlan: 320
+  switchport:
+    enabled: true
+    mode: trunk phone
+    trunk:
+      native_vlan: 310
+    phone:
+      trunk: untagged
+      vlan: 320
+  spanning_tree_portfast: edge
+  spanning_tree_bpduguard: enabled
 - name: Ethernet53
-  peer: IDF3 Standard Port
   peer_type: network_port
   port_profile: PP-DOT1X
   description: IDF3 Standard Port
   shutdown: false
-  type: switched
-  mode: trunk phone
-  native_vlan: 310
-  spanning_tree_portfast: edge
-  spanning_tree_bpduguard: enabled
   dot1x:
     port_control: auto
     reauthentication: true
@@ -1719,20 +1763,21 @@ ethernet_interfaces:
     authentication_failure:
       action: allow
       allow_vlan: 330
-  phone:
-    trunk: untagged
-    vlan: 320
+  switchport:
+    enabled: true
+    mode: trunk phone
+    trunk:
+      native_vlan: 310
+    phone:
+      trunk: untagged
+      vlan: 320
+  spanning_tree_portfast: edge
+  spanning_tree_bpduguard: enabled
 - name: Ethernet54
-  peer: IDF3 Standard Port
   peer_type: network_port
   port_profile: PP-DOT1X
   description: IDF3 Standard Port
   shutdown: false
-  type: switched
-  mode: trunk phone
-  native_vlan: 310
-  spanning_tree_portfast: edge
-  spanning_tree_bpduguard: enabled
   dot1x:
     port_control: auto
     reauthentication: true
@@ -1750,20 +1795,21 @@ ethernet_interfaces:
     authentication_failure:
       action: allow
       allow_vlan: 330
-  phone:
-    trunk: untagged
-    vlan: 320
+  switchport:
+    enabled: true
+    mode: trunk phone
+    trunk:
+      native_vlan: 310
+    phone:
+      trunk: untagged
+      vlan: 320
+  spanning_tree_portfast: edge
+  spanning_tree_bpduguard: enabled
 - name: Ethernet55
-  peer: IDF3 Standard Port
   peer_type: network_port
   port_profile: PP-DOT1X
   description: IDF3 Standard Port
   shutdown: false
-  type: switched
-  mode: trunk phone
-  native_vlan: 310
-  spanning_tree_portfast: edge
-  spanning_tree_bpduguard: enabled
   dot1x:
     port_control: auto
     reauthentication: true
@@ -1781,20 +1827,21 @@ ethernet_interfaces:
     authentication_failure:
       action: allow
       allow_vlan: 330
-  phone:
-    trunk: untagged
-    vlan: 320
+  switchport:
+    enabled: true
+    mode: trunk phone
+    trunk:
+      native_vlan: 310
+    phone:
+      trunk: untagged
+      vlan: 320
+  spanning_tree_portfast: edge
+  spanning_tree_bpduguard: enabled
 - name: Ethernet56
-  peer: IDF3 Standard Port
   peer_type: network_port
   port_profile: PP-DOT1X
   description: IDF3 Standard Port
   shutdown: false
-  type: switched
-  mode: trunk phone
-  native_vlan: 310
-  spanning_tree_portfast: edge
-  spanning_tree_bpduguard: enabled
   dot1x:
     port_control: auto
     reauthentication: true
@@ -1812,20 +1859,21 @@ ethernet_interfaces:
     authentication_failure:
       action: allow
       allow_vlan: 330
-  phone:
-    trunk: untagged
-    vlan: 320
+  switchport:
+    enabled: true
+    mode: trunk phone
+    trunk:
+      native_vlan: 310
+    phone:
+      trunk: untagged
+      vlan: 320
+  spanning_tree_portfast: edge
+  spanning_tree_bpduguard: enabled
 - name: Ethernet57
-  peer: IDF3 Standard Port
   peer_type: network_port
   port_profile: PP-DOT1X
   description: IDF3 Standard Port
   shutdown: false
-  type: switched
-  mode: trunk phone
-  native_vlan: 310
-  spanning_tree_portfast: edge
-  spanning_tree_bpduguard: enabled
   dot1x:
     port_control: auto
     reauthentication: true
@@ -1843,20 +1891,21 @@ ethernet_interfaces:
     authentication_failure:
       action: allow
       allow_vlan: 330
-  phone:
-    trunk: untagged
-    vlan: 320
+  switchport:
+    enabled: true
+    mode: trunk phone
+    trunk:
+      native_vlan: 310
+    phone:
+      trunk: untagged
+      vlan: 320
+  spanning_tree_portfast: edge
+  spanning_tree_bpduguard: enabled
 - name: Ethernet58
-  peer: IDF3 Standard Port
   peer_type: network_port
   port_profile: PP-DOT1X
   description: IDF3 Standard Port
   shutdown: false
-  type: switched
-  mode: trunk phone
-  native_vlan: 310
-  spanning_tree_portfast: edge
-  spanning_tree_bpduguard: enabled
   dot1x:
     port_control: auto
     reauthentication: true
@@ -1874,20 +1923,21 @@ ethernet_interfaces:
     authentication_failure:
       action: allow
       allow_vlan: 330
-  phone:
-    trunk: untagged
-    vlan: 320
+  switchport:
+    enabled: true
+    mode: trunk phone
+    trunk:
+      native_vlan: 310
+    phone:
+      trunk: untagged
+      vlan: 320
+  spanning_tree_portfast: edge
+  spanning_tree_bpduguard: enabled
 - name: Ethernet59
-  peer: IDF3 Standard Port
   peer_type: network_port
   port_profile: PP-DOT1X
   description: IDF3 Standard Port
   shutdown: false
-  type: switched
-  mode: trunk phone
-  native_vlan: 310
-  spanning_tree_portfast: edge
-  spanning_tree_bpduguard: enabled
   dot1x:
     port_control: auto
     reauthentication: true
@@ -1905,20 +1955,21 @@ ethernet_interfaces:
     authentication_failure:
       action: allow
       allow_vlan: 330
-  phone:
-    trunk: untagged
-    vlan: 320
+  switchport:
+    enabled: true
+    mode: trunk phone
+    trunk:
+      native_vlan: 310
+    phone:
+      trunk: untagged
+      vlan: 320
+  spanning_tree_portfast: edge
+  spanning_tree_bpduguard: enabled
 - name: Ethernet60
-  peer: IDF3 Standard Port
   peer_type: network_port
   port_profile: PP-DOT1X
   description: IDF3 Standard Port
   shutdown: false
-  type: switched
-  mode: trunk phone
-  native_vlan: 310
-  spanning_tree_portfast: edge
-  spanning_tree_bpduguard: enabled
   dot1x:
     port_control: auto
     reauthentication: true
@@ -1936,20 +1987,21 @@ ethernet_interfaces:
     authentication_failure:
       action: allow
       allow_vlan: 330
-  phone:
-    trunk: untagged
-    vlan: 320
+  switchport:
+    enabled: true
+    mode: trunk phone
+    trunk:
+      native_vlan: 310
+    phone:
+      trunk: untagged
+      vlan: 320
+  spanning_tree_portfast: edge
+  spanning_tree_bpduguard: enabled
 - name: Ethernet61
-  peer: IDF3 Standard Port
   peer_type: network_port
   port_profile: PP-DOT1X
   description: IDF3 Standard Port
   shutdown: false
-  type: switched
-  mode: trunk phone
-  native_vlan: 310
-  spanning_tree_portfast: edge
-  spanning_tree_bpduguard: enabled
   dot1x:
     port_control: auto
     reauthentication: true
@@ -1967,20 +2019,21 @@ ethernet_interfaces:
     authentication_failure:
       action: allow
       allow_vlan: 330
-  phone:
-    trunk: untagged
-    vlan: 320
+  switchport:
+    enabled: true
+    mode: trunk phone
+    trunk:
+      native_vlan: 310
+    phone:
+      trunk: untagged
+      vlan: 320
+  spanning_tree_portfast: edge
+  spanning_tree_bpduguard: enabled
 - name: Ethernet62
-  peer: IDF3 Standard Port
   peer_type: network_port
   port_profile: PP-DOT1X
   description: IDF3 Standard Port
   shutdown: false
-  type: switched
-  mode: trunk phone
-  native_vlan: 310
-  spanning_tree_portfast: edge
-  spanning_tree_bpduguard: enabled
   dot1x:
     port_control: auto
     reauthentication: true
@@ -1998,20 +2051,21 @@ ethernet_interfaces:
     authentication_failure:
       action: allow
       allow_vlan: 330
-  phone:
-    trunk: untagged
-    vlan: 320
+  switchport:
+    enabled: true
+    mode: trunk phone
+    trunk:
+      native_vlan: 310
+    phone:
+      trunk: untagged
+      vlan: 320
+  spanning_tree_portfast: edge
+  spanning_tree_bpduguard: enabled
 - name: Ethernet63
-  peer: IDF3 Standard Port
   peer_type: network_port
   port_profile: PP-DOT1X
   description: IDF3 Standard Port
   shutdown: false
-  type: switched
-  mode: trunk phone
-  native_vlan: 310
-  spanning_tree_portfast: edge
-  spanning_tree_bpduguard: enabled
   dot1x:
     port_control: auto
     reauthentication: true
@@ -2029,20 +2083,21 @@ ethernet_interfaces:
     authentication_failure:
       action: allow
       allow_vlan: 330
-  phone:
-    trunk: untagged
-    vlan: 320
+  switchport:
+    enabled: true
+    mode: trunk phone
+    trunk:
+      native_vlan: 310
+    phone:
+      trunk: untagged
+      vlan: 320
+  spanning_tree_portfast: edge
+  spanning_tree_bpduguard: enabled
 - name: Ethernet64
-  peer: IDF3 Standard Port
   peer_type: network_port
   port_profile: PP-DOT1X
   description: IDF3 Standard Port
   shutdown: false
-  type: switched
-  mode: trunk phone
-  native_vlan: 310
-  spanning_tree_portfast: edge
-  spanning_tree_bpduguard: enabled
   dot1x:
     port_control: auto
     reauthentication: true
@@ -2060,20 +2115,21 @@ ethernet_interfaces:
     authentication_failure:
       action: allow
       allow_vlan: 330
-  phone:
-    trunk: untagged
-    vlan: 320
+  switchport:
+    enabled: true
+    mode: trunk phone
+    trunk:
+      native_vlan: 310
+    phone:
+      trunk: untagged
+      vlan: 320
+  spanning_tree_portfast: edge
+  spanning_tree_bpduguard: enabled
 - name: Ethernet65
-  peer: IDF3 Standard Port
   peer_type: network_port
   port_profile: PP-DOT1X
   description: IDF3 Standard Port
   shutdown: false
-  type: switched
-  mode: trunk phone
-  native_vlan: 310
-  spanning_tree_portfast: edge
-  spanning_tree_bpduguard: enabled
   dot1x:
     port_control: auto
     reauthentication: true
@@ -2091,20 +2147,21 @@ ethernet_interfaces:
     authentication_failure:
       action: allow
       allow_vlan: 330
-  phone:
-    trunk: untagged
-    vlan: 320
+  switchport:
+    enabled: true
+    mode: trunk phone
+    trunk:
+      native_vlan: 310
+    phone:
+      trunk: untagged
+      vlan: 320
+  spanning_tree_portfast: edge
+  spanning_tree_bpduguard: enabled
 - name: Ethernet66
-  peer: IDF3 Standard Port
   peer_type: network_port
   port_profile: PP-DOT1X
   description: IDF3 Standard Port
   shutdown: false
-  type: switched
-  mode: trunk phone
-  native_vlan: 310
-  spanning_tree_portfast: edge
-  spanning_tree_bpduguard: enabled
   dot1x:
     port_control: auto
     reauthentication: true
@@ -2122,20 +2179,21 @@ ethernet_interfaces:
     authentication_failure:
       action: allow
       allow_vlan: 330
-  phone:
-    trunk: untagged
-    vlan: 320
+  switchport:
+    enabled: true
+    mode: trunk phone
+    trunk:
+      native_vlan: 310
+    phone:
+      trunk: untagged
+      vlan: 320
+  spanning_tree_portfast: edge
+  spanning_tree_bpduguard: enabled
 - name: Ethernet67
-  peer: IDF3 Standard Port
   peer_type: network_port
   port_profile: PP-DOT1X
   description: IDF3 Standard Port
   shutdown: false
-  type: switched
-  mode: trunk phone
-  native_vlan: 310
-  spanning_tree_portfast: edge
-  spanning_tree_bpduguard: enabled
   dot1x:
     port_control: auto
     reauthentication: true
@@ -2153,20 +2211,21 @@ ethernet_interfaces:
     authentication_failure:
       action: allow
       allow_vlan: 330
-  phone:
-    trunk: untagged
-    vlan: 320
+  switchport:
+    enabled: true
+    mode: trunk phone
+    trunk:
+      native_vlan: 310
+    phone:
+      trunk: untagged
+      vlan: 320
+  spanning_tree_portfast: edge
+  spanning_tree_bpduguard: enabled
 - name: Ethernet68
-  peer: IDF3 Standard Port
   peer_type: network_port
   port_profile: PP-DOT1X
   description: IDF3 Standard Port
   shutdown: false
-  type: switched
-  mode: trunk phone
-  native_vlan: 310
-  spanning_tree_portfast: edge
-  spanning_tree_bpduguard: enabled
   dot1x:
     port_control: auto
     reauthentication: true
@@ -2184,20 +2243,21 @@ ethernet_interfaces:
     authentication_failure:
       action: allow
       allow_vlan: 330
-  phone:
-    trunk: untagged
-    vlan: 320
+  switchport:
+    enabled: true
+    mode: trunk phone
+    trunk:
+      native_vlan: 310
+    phone:
+      trunk: untagged
+      vlan: 320
+  spanning_tree_portfast: edge
+  spanning_tree_bpduguard: enabled
 - name: Ethernet69
-  peer: IDF3 Standard Port
   peer_type: network_port
   port_profile: PP-DOT1X
   description: IDF3 Standard Port
   shutdown: false
-  type: switched
-  mode: trunk phone
-  native_vlan: 310
-  spanning_tree_portfast: edge
-  spanning_tree_bpduguard: enabled
   dot1x:
     port_control: auto
     reauthentication: true
@@ -2215,20 +2275,21 @@ ethernet_interfaces:
     authentication_failure:
       action: allow
       allow_vlan: 330
-  phone:
-    trunk: untagged
-    vlan: 320
+  switchport:
+    enabled: true
+    mode: trunk phone
+    trunk:
+      native_vlan: 310
+    phone:
+      trunk: untagged
+      vlan: 320
+  spanning_tree_portfast: edge
+  spanning_tree_bpduguard: enabled
 - name: Ethernet70
-  peer: IDF3 Standard Port
   peer_type: network_port
   port_profile: PP-DOT1X
   description: IDF3 Standard Port
   shutdown: false
-  type: switched
-  mode: trunk phone
-  native_vlan: 310
-  spanning_tree_portfast: edge
-  spanning_tree_bpduguard: enabled
   dot1x:
     port_control: auto
     reauthentication: true
@@ -2246,20 +2307,21 @@ ethernet_interfaces:
     authentication_failure:
       action: allow
       allow_vlan: 330
-  phone:
-    trunk: untagged
-    vlan: 320
+  switchport:
+    enabled: true
+    mode: trunk phone
+    trunk:
+      native_vlan: 310
+    phone:
+      trunk: untagged
+      vlan: 320
+  spanning_tree_portfast: edge
+  spanning_tree_bpduguard: enabled
 - name: Ethernet71
-  peer: IDF3 Standard Port
   peer_type: network_port
   port_profile: PP-DOT1X
   description: IDF3 Standard Port
   shutdown: false
-  type: switched
-  mode: trunk phone
-  native_vlan: 310
-  spanning_tree_portfast: edge
-  spanning_tree_bpduguard: enabled
   dot1x:
     port_control: auto
     reauthentication: true
@@ -2277,20 +2339,21 @@ ethernet_interfaces:
     authentication_failure:
       action: allow
       allow_vlan: 330
-  phone:
-    trunk: untagged
-    vlan: 320
+  switchport:
+    enabled: true
+    mode: trunk phone
+    trunk:
+      native_vlan: 310
+    phone:
+      trunk: untagged
+      vlan: 320
+  spanning_tree_portfast: edge
+  spanning_tree_bpduguard: enabled
 - name: Ethernet72
-  peer: IDF3 Standard Port
   peer_type: network_port
   port_profile: PP-DOT1X
   description: IDF3 Standard Port
   shutdown: false
-  type: switched
-  mode: trunk phone
-  native_vlan: 310
-  spanning_tree_portfast: edge
-  spanning_tree_bpduguard: enabled
   dot1x:
     port_control: auto
     reauthentication: true
@@ -2308,20 +2371,21 @@ ethernet_interfaces:
     authentication_failure:
       action: allow
       allow_vlan: 330
-  phone:
-    trunk: untagged
-    vlan: 320
+  switchport:
+    enabled: true
+    mode: trunk phone
+    trunk:
+      native_vlan: 310
+    phone:
+      trunk: untagged
+      vlan: 320
+  spanning_tree_portfast: edge
+  spanning_tree_bpduguard: enabled
 - name: Ethernet73
-  peer: IDF3 Standard Port
   peer_type: network_port
   port_profile: PP-DOT1X
   description: IDF3 Standard Port
   shutdown: false
-  type: switched
-  mode: trunk phone
-  native_vlan: 310
-  spanning_tree_portfast: edge
-  spanning_tree_bpduguard: enabled
   dot1x:
     port_control: auto
     reauthentication: true
@@ -2339,20 +2403,21 @@ ethernet_interfaces:
     authentication_failure:
       action: allow
       allow_vlan: 330
-  phone:
-    trunk: untagged
-    vlan: 320
+  switchport:
+    enabled: true
+    mode: trunk phone
+    trunk:
+      native_vlan: 310
+    phone:
+      trunk: untagged
+      vlan: 320
+  spanning_tree_portfast: edge
+  spanning_tree_bpduguard: enabled
 - name: Ethernet74
-  peer: IDF3 Standard Port
   peer_type: network_port
   port_profile: PP-DOT1X
   description: IDF3 Standard Port
   shutdown: false
-  type: switched
-  mode: trunk phone
-  native_vlan: 310
-  spanning_tree_portfast: edge
-  spanning_tree_bpduguard: enabled
   dot1x:
     port_control: auto
     reauthentication: true
@@ -2370,20 +2435,21 @@ ethernet_interfaces:
     authentication_failure:
       action: allow
       allow_vlan: 330
-  phone:
-    trunk: untagged
-    vlan: 320
+  switchport:
+    enabled: true
+    mode: trunk phone
+    trunk:
+      native_vlan: 310
+    phone:
+      trunk: untagged
+      vlan: 320
+  spanning_tree_portfast: edge
+  spanning_tree_bpduguard: enabled
 - name: Ethernet75
-  peer: IDF3 Standard Port
   peer_type: network_port
   port_profile: PP-DOT1X
   description: IDF3 Standard Port
   shutdown: false
-  type: switched
-  mode: trunk phone
-  native_vlan: 310
-  spanning_tree_portfast: edge
-  spanning_tree_bpduguard: enabled
   dot1x:
     port_control: auto
     reauthentication: true
@@ -2401,20 +2467,21 @@ ethernet_interfaces:
     authentication_failure:
       action: allow
       allow_vlan: 330
-  phone:
-    trunk: untagged
-    vlan: 320
+  switchport:
+    enabled: true
+    mode: trunk phone
+    trunk:
+      native_vlan: 310
+    phone:
+      trunk: untagged
+      vlan: 320
+  spanning_tree_portfast: edge
+  spanning_tree_bpduguard: enabled
 - name: Ethernet76
-  peer: IDF3 Standard Port
   peer_type: network_port
   port_profile: PP-DOT1X
   description: IDF3 Standard Port
   shutdown: false
-  type: switched
-  mode: trunk phone
-  native_vlan: 310
-  spanning_tree_portfast: edge
-  spanning_tree_bpduguard: enabled
   dot1x:
     port_control: auto
     reauthentication: true
@@ -2432,20 +2499,21 @@ ethernet_interfaces:
     authentication_failure:
       action: allow
       allow_vlan: 330
-  phone:
-    trunk: untagged
-    vlan: 320
+  switchport:
+    enabled: true
+    mode: trunk phone
+    trunk:
+      native_vlan: 310
+    phone:
+      trunk: untagged
+      vlan: 320
+  spanning_tree_portfast: edge
+  spanning_tree_bpduguard: enabled
 - name: Ethernet77
-  peer: IDF3 Standard Port
   peer_type: network_port
   port_profile: PP-DOT1X
   description: IDF3 Standard Port
   shutdown: false
-  type: switched
-  mode: trunk phone
-  native_vlan: 310
-  spanning_tree_portfast: edge
-  spanning_tree_bpduguard: enabled
   dot1x:
     port_control: auto
     reauthentication: true
@@ -2463,20 +2531,21 @@ ethernet_interfaces:
     authentication_failure:
       action: allow
       allow_vlan: 330
-  phone:
-    trunk: untagged
-    vlan: 320
+  switchport:
+    enabled: true
+    mode: trunk phone
+    trunk:
+      native_vlan: 310
+    phone:
+      trunk: untagged
+      vlan: 320
+  spanning_tree_portfast: edge
+  spanning_tree_bpduguard: enabled
 - name: Ethernet78
-  peer: IDF3 Standard Port
   peer_type: network_port
   port_profile: PP-DOT1X
   description: IDF3 Standard Port
   shutdown: false
-  type: switched
-  mode: trunk phone
-  native_vlan: 310
-  spanning_tree_portfast: edge
-  spanning_tree_bpduguard: enabled
   dot1x:
     port_control: auto
     reauthentication: true
@@ -2494,20 +2563,21 @@ ethernet_interfaces:
     authentication_failure:
       action: allow
       allow_vlan: 330
-  phone:
-    trunk: untagged
-    vlan: 320
+  switchport:
+    enabled: true
+    mode: trunk phone
+    trunk:
+      native_vlan: 310
+    phone:
+      trunk: untagged
+      vlan: 320
+  spanning_tree_portfast: edge
+  spanning_tree_bpduguard: enabled
 - name: Ethernet79
-  peer: IDF3 Standard Port
   peer_type: network_port
   port_profile: PP-DOT1X
   description: IDF3 Standard Port
   shutdown: false
-  type: switched
-  mode: trunk phone
-  native_vlan: 310
-  spanning_tree_portfast: edge
-  spanning_tree_bpduguard: enabled
   dot1x:
     port_control: auto
     reauthentication: true
@@ -2525,20 +2595,21 @@ ethernet_interfaces:
     authentication_failure:
       action: allow
       allow_vlan: 330
-  phone:
-    trunk: untagged
-    vlan: 320
+  switchport:
+    enabled: true
+    mode: trunk phone
+    trunk:
+      native_vlan: 310
+    phone:
+      trunk: untagged
+      vlan: 320
+  spanning_tree_portfast: edge
+  spanning_tree_bpduguard: enabled
 - name: Ethernet80
-  peer: IDF3 Standard Port
   peer_type: network_port
   port_profile: PP-DOT1X
   description: IDF3 Standard Port
   shutdown: false
-  type: switched
-  mode: trunk phone
-  native_vlan: 310
-  spanning_tree_portfast: edge
-  spanning_tree_bpduguard: enabled
   dot1x:
     port_control: auto
     reauthentication: true
@@ -2556,20 +2627,21 @@ ethernet_interfaces:
     authentication_failure:
       action: allow
       allow_vlan: 330
-  phone:
-    trunk: untagged
-    vlan: 320
+  switchport:
+    enabled: true
+    mode: trunk phone
+    trunk:
+      native_vlan: 310
+    phone:
+      trunk: untagged
+      vlan: 320
+  spanning_tree_portfast: edge
+  spanning_tree_bpduguard: enabled
 - name: Ethernet81
-  peer: IDF3 Standard Port
   peer_type: network_port
   port_profile: PP-DOT1X
   description: IDF3 Standard Port
   shutdown: false
-  type: switched
-  mode: trunk phone
-  native_vlan: 310
-  spanning_tree_portfast: edge
-  spanning_tree_bpduguard: enabled
   dot1x:
     port_control: auto
     reauthentication: true
@@ -2587,20 +2659,21 @@ ethernet_interfaces:
     authentication_failure:
       action: allow
       allow_vlan: 330
-  phone:
-    trunk: untagged
-    vlan: 320
+  switchport:
+    enabled: true
+    mode: trunk phone
+    trunk:
+      native_vlan: 310
+    phone:
+      trunk: untagged
+      vlan: 320
+  spanning_tree_portfast: edge
+  spanning_tree_bpduguard: enabled
 - name: Ethernet82
-  peer: IDF3 Standard Port
   peer_type: network_port
   port_profile: PP-DOT1X
   description: IDF3 Standard Port
   shutdown: false
-  type: switched
-  mode: trunk phone
-  native_vlan: 310
-  spanning_tree_portfast: edge
-  spanning_tree_bpduguard: enabled
   dot1x:
     port_control: auto
     reauthentication: true
@@ -2618,20 +2691,21 @@ ethernet_interfaces:
     authentication_failure:
       action: allow
       allow_vlan: 330
-  phone:
-    trunk: untagged
-    vlan: 320
+  switchport:
+    enabled: true
+    mode: trunk phone
+    trunk:
+      native_vlan: 310
+    phone:
+      trunk: untagged
+      vlan: 320
+  spanning_tree_portfast: edge
+  spanning_tree_bpduguard: enabled
 - name: Ethernet83
-  peer: IDF3 Standard Port
   peer_type: network_port
   port_profile: PP-DOT1X
   description: IDF3 Standard Port
   shutdown: false
-  type: switched
-  mode: trunk phone
-  native_vlan: 310
-  spanning_tree_portfast: edge
-  spanning_tree_bpduguard: enabled
   dot1x:
     port_control: auto
     reauthentication: true
@@ -2649,20 +2723,21 @@ ethernet_interfaces:
     authentication_failure:
       action: allow
       allow_vlan: 330
-  phone:
-    trunk: untagged
-    vlan: 320
+  switchport:
+    enabled: true
+    mode: trunk phone
+    trunk:
+      native_vlan: 310
+    phone:
+      trunk: untagged
+      vlan: 320
+  spanning_tree_portfast: edge
+  spanning_tree_bpduguard: enabled
 - name: Ethernet84
-  peer: IDF3 Standard Port
   peer_type: network_port
   port_profile: PP-DOT1X
   description: IDF3 Standard Port
   shutdown: false
-  type: switched
-  mode: trunk phone
-  native_vlan: 310
-  spanning_tree_portfast: edge
-  spanning_tree_bpduguard: enabled
   dot1x:
     port_control: auto
     reauthentication: true
@@ -2680,20 +2755,21 @@ ethernet_interfaces:
     authentication_failure:
       action: allow
       allow_vlan: 330
-  phone:
-    trunk: untagged
-    vlan: 320
+  switchport:
+    enabled: true
+    mode: trunk phone
+    trunk:
+      native_vlan: 310
+    phone:
+      trunk: untagged
+      vlan: 320
+  spanning_tree_portfast: edge
+  spanning_tree_bpduguard: enabled
 - name: Ethernet85
-  peer: IDF3 Standard Port
   peer_type: network_port
   port_profile: PP-DOT1X
   description: IDF3 Standard Port
   shutdown: false
-  type: switched
-  mode: trunk phone
-  native_vlan: 310
-  spanning_tree_portfast: edge
-  spanning_tree_bpduguard: enabled
   dot1x:
     port_control: auto
     reauthentication: true
@@ -2711,20 +2787,21 @@ ethernet_interfaces:
     authentication_failure:
       action: allow
       allow_vlan: 330
-  phone:
-    trunk: untagged
-    vlan: 320
+  switchport:
+    enabled: true
+    mode: trunk phone
+    trunk:
+      native_vlan: 310
+    phone:
+      trunk: untagged
+      vlan: 320
+  spanning_tree_portfast: edge
+  spanning_tree_bpduguard: enabled
 - name: Ethernet86
-  peer: IDF3 Standard Port
   peer_type: network_port
   port_profile: PP-DOT1X
   description: IDF3 Standard Port
   shutdown: false
-  type: switched
-  mode: trunk phone
-  native_vlan: 310
-  spanning_tree_portfast: edge
-  spanning_tree_bpduguard: enabled
   dot1x:
     port_control: auto
     reauthentication: true
@@ -2742,20 +2819,21 @@ ethernet_interfaces:
     authentication_failure:
       action: allow
       allow_vlan: 330
-  phone:
-    trunk: untagged
-    vlan: 320
+  switchport:
+    enabled: true
+    mode: trunk phone
+    trunk:
+      native_vlan: 310
+    phone:
+      trunk: untagged
+      vlan: 320
+  spanning_tree_portfast: edge
+  spanning_tree_bpduguard: enabled
 - name: Ethernet87
-  peer: IDF3 Standard Port
   peer_type: network_port
   port_profile: PP-DOT1X
   description: IDF3 Standard Port
   shutdown: false
-  type: switched
-  mode: trunk phone
-  native_vlan: 310
-  spanning_tree_portfast: edge
-  spanning_tree_bpduguard: enabled
   dot1x:
     port_control: auto
     reauthentication: true
@@ -2773,20 +2851,21 @@ ethernet_interfaces:
     authentication_failure:
       action: allow
       allow_vlan: 330
-  phone:
-    trunk: untagged
-    vlan: 320
+  switchport:
+    enabled: true
+    mode: trunk phone
+    trunk:
+      native_vlan: 310
+    phone:
+      trunk: untagged
+      vlan: 320
+  spanning_tree_portfast: edge
+  spanning_tree_bpduguard: enabled
 - name: Ethernet88
-  peer: IDF3 Standard Port
   peer_type: network_port
   port_profile: PP-DOT1X
   description: IDF3 Standard Port
   shutdown: false
-  type: switched
-  mode: trunk phone
-  native_vlan: 310
-  spanning_tree_portfast: edge
-  spanning_tree_bpduguard: enabled
   dot1x:
     port_control: auto
     reauthentication: true
@@ -2804,20 +2883,21 @@ ethernet_interfaces:
     authentication_failure:
       action: allow
       allow_vlan: 330
-  phone:
-    trunk: untagged
-    vlan: 320
+  switchport:
+    enabled: true
+    mode: trunk phone
+    trunk:
+      native_vlan: 310
+    phone:
+      trunk: untagged
+      vlan: 320
+  spanning_tree_portfast: edge
+  spanning_tree_bpduguard: enabled
 - name: Ethernet89
-  peer: IDF3 Standard Port
   peer_type: network_port
   port_profile: PP-DOT1X
   description: IDF3 Standard Port
   shutdown: false
-  type: switched
-  mode: trunk phone
-  native_vlan: 310
-  spanning_tree_portfast: edge
-  spanning_tree_bpduguard: enabled
   dot1x:
     port_control: auto
     reauthentication: true
@@ -2835,20 +2915,21 @@ ethernet_interfaces:
     authentication_failure:
       action: allow
       allow_vlan: 330
-  phone:
-    trunk: untagged
-    vlan: 320
+  switchport:
+    enabled: true
+    mode: trunk phone
+    trunk:
+      native_vlan: 310
+    phone:
+      trunk: untagged
+      vlan: 320
+  spanning_tree_portfast: edge
+  spanning_tree_bpduguard: enabled
 - name: Ethernet90
-  peer: IDF3 Standard Port
   peer_type: network_port
   port_profile: PP-DOT1X
   description: IDF3 Standard Port
   shutdown: false
-  type: switched
-  mode: trunk phone
-  native_vlan: 310
-  spanning_tree_portfast: edge
-  spanning_tree_bpduguard: enabled
   dot1x:
     port_control: auto
     reauthentication: true
@@ -2866,20 +2947,21 @@ ethernet_interfaces:
     authentication_failure:
       action: allow
       allow_vlan: 330
-  phone:
-    trunk: untagged
-    vlan: 320
+  switchport:
+    enabled: true
+    mode: trunk phone
+    trunk:
+      native_vlan: 310
+    phone:
+      trunk: untagged
+      vlan: 320
+  spanning_tree_portfast: edge
+  spanning_tree_bpduguard: enabled
 - name: Ethernet91
-  peer: IDF3 Standard Port
   peer_type: network_port
   port_profile: PP-DOT1X
   description: IDF3 Standard Port
   shutdown: false
-  type: switched
-  mode: trunk phone
-  native_vlan: 310
-  spanning_tree_portfast: edge
-  spanning_tree_bpduguard: enabled
   dot1x:
     port_control: auto
     reauthentication: true
@@ -2897,20 +2979,21 @@ ethernet_interfaces:
     authentication_failure:
       action: allow
       allow_vlan: 330
-  phone:
-    trunk: untagged
-    vlan: 320
+  switchport:
+    enabled: true
+    mode: trunk phone
+    trunk:
+      native_vlan: 310
+    phone:
+      trunk: untagged
+      vlan: 320
+  spanning_tree_portfast: edge
+  spanning_tree_bpduguard: enabled
 - name: Ethernet92
-  peer: IDF3 Standard Port
   peer_type: network_port
   port_profile: PP-DOT1X
   description: IDF3 Standard Port
   shutdown: false
-  type: switched
-  mode: trunk phone
-  native_vlan: 310
-  spanning_tree_portfast: edge
-  spanning_tree_bpduguard: enabled
   dot1x:
     port_control: auto
     reauthentication: true
@@ -2928,20 +3011,21 @@ ethernet_interfaces:
     authentication_failure:
       action: allow
       allow_vlan: 330
-  phone:
-    trunk: untagged
-    vlan: 320
+  switchport:
+    enabled: true
+    mode: trunk phone
+    trunk:
+      native_vlan: 310
+    phone:
+      trunk: untagged
+      vlan: 320
+  spanning_tree_portfast: edge
+  spanning_tree_bpduguard: enabled
 - name: Ethernet93
-  peer: IDF3 Standard Port
   peer_type: network_port
   port_profile: PP-DOT1X
   description: IDF3 Standard Port
   shutdown: false
-  type: switched
-  mode: trunk phone
-  native_vlan: 310
-  spanning_tree_portfast: edge
-  spanning_tree_bpduguard: enabled
   dot1x:
     port_control: auto
     reauthentication: true
@@ -2959,20 +3043,21 @@ ethernet_interfaces:
     authentication_failure:
       action: allow
       allow_vlan: 330
-  phone:
-    trunk: untagged
-    vlan: 320
+  switchport:
+    enabled: true
+    mode: trunk phone
+    trunk:
+      native_vlan: 310
+    phone:
+      trunk: untagged
+      vlan: 320
+  spanning_tree_portfast: edge
+  spanning_tree_bpduguard: enabled
 - name: Ethernet94
-  peer: IDF3 Standard Port
   peer_type: network_port
   port_profile: PP-DOT1X
   description: IDF3 Standard Port
   shutdown: false
-  type: switched
-  mode: trunk phone
-  native_vlan: 310
-  spanning_tree_portfast: edge
-  spanning_tree_bpduguard: enabled
   dot1x:
     port_control: auto
     reauthentication: true
@@ -2990,20 +3075,21 @@ ethernet_interfaces:
     authentication_failure:
       action: allow
       allow_vlan: 330
-  phone:
-    trunk: untagged
-    vlan: 320
+  switchport:
+    enabled: true
+    mode: trunk phone
+    trunk:
+      native_vlan: 310
+    phone:
+      trunk: untagged
+      vlan: 320
+  spanning_tree_portfast: edge
+  spanning_tree_bpduguard: enabled
 - name: Ethernet95
-  peer: IDF3 Standard Port
   peer_type: network_port
   port_profile: PP-DOT1X
   description: IDF3 Standard Port
   shutdown: false
-  type: switched
-  mode: trunk phone
-  native_vlan: 310
-  spanning_tree_portfast: edge
-  spanning_tree_bpduguard: enabled
   dot1x:
     port_control: auto
     reauthentication: true
@@ -3021,20 +3107,21 @@ ethernet_interfaces:
     authentication_failure:
       action: allow
       allow_vlan: 330
-  phone:
-    trunk: untagged
-    vlan: 320
+  switchport:
+    enabled: true
+    mode: trunk phone
+    trunk:
+      native_vlan: 310
+    phone:
+      trunk: untagged
+      vlan: 320
+  spanning_tree_portfast: edge
+  spanning_tree_bpduguard: enabled
 - name: Ethernet96
-  peer: IDF3 Standard Port
   peer_type: network_port
   port_profile: PP-DOT1X
   description: IDF3 Standard Port
   shutdown: false
-  type: switched
-  mode: trunk phone
-  native_vlan: 310
-  spanning_tree_portfast: edge
-  spanning_tree_bpduguard: enabled
   dot1x:
     port_control: auto
     reauthentication: true
@@ -3052,16 +3139,25 @@ ethernet_interfaces:
     authentication_failure:
       action: allow
       allow_vlan: 330
-  phone:
-    trunk: untagged
-    vlan: 320
+  switchport:
+    enabled: true
+    mode: trunk phone
+    trunk:
+      native_vlan: 310
+    phone:
+      trunk: untagged
+      vlan: 320
+  spanning_tree_portfast: edge
+  spanning_tree_bpduguard: enabled
 port_channel_interfaces:
 - name: Port-Channel971
-  description: IDF3_AGG_Po981
-  type: switched
+  description: L2_IDF3_AGG_Port-Channel981
+  switchport:
+    enabled: true
+    mode: trunk
+    trunk:
+      allowed_vlan: 10,310,320,330
   shutdown: false
-  mode: trunk
-  vlans: 10,310,320,330
 vlans:
 - id: 310
   name: IDF3-Data

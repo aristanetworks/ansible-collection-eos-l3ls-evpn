@@ -6,7 +6,7 @@ from __future__ import annotations
 from functools import cached_property
 from typing import TYPE_CHECKING
 
-from pyavd._errors import AristaAvdMissingVariableError
+from pyavd._errors import AristaAvdInvalidInputsError
 from pyavd._utils import get, get_item, replace_or_append_item
 
 if TYPE_CHECKING:
@@ -214,4 +214,4 @@ class NodeTypeKeysMixin:
 
         # Not found
         msg = f"node_type_keys.[type=={self.type}]"
-        raise AristaAvdMissingVariableError(msg)
+        raise AristaAvdInvalidInputsError(msg)

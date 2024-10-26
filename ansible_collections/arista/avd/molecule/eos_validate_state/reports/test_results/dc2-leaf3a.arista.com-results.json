@@ -132,6 +132,15 @@
       "connectivity"
     ],
     "description": "Verifies that the provided LLDP neighbors are connected properly.",
+    "custom_field": "Local: Ethernet15 - Remote: dc2-leaf2b Ethernet2"
+  },
+  {
+    "name": "dc2-leaf3a.arista.com",
+    "test": "VerifyLLDPNeighbors",
+    "categories": [
+      "connectivity"
+    ],
+    "description": "Verifies that the provided LLDP neighbors are connected properly.",
     "custom_field": "Local: Ethernet2 - Remote: dc2-spine2 Ethernet5"
   },
   {
@@ -321,6 +330,15 @@
       "connectivity"
     ],
     "description": "Test the network reachability to one or many destination IP(s).",
+    "custom_field": "Source: P2P Interface Ethernet15 (IP: 1.1.1.1) - Destination: dc2-leaf2b Ethernet2 (IP: 10.255.255.119)"
+  },
+  {
+    "name": "dc2-leaf3a.arista.com",
+    "test": "VerifyReachability",
+    "categories": [
+      "connectivity"
+    ],
+    "description": "Test the network reachability to one or many destination IP(s).",
     "custom_field": "Source: P2P Interface Ethernet2 (IP: 10.255.255.123) - Destination: dc2-spine2 Ethernet5 (IP: 10.255.255.122)"
   },
   {
@@ -453,7 +471,7 @@
       "interfaces"
     ],
     "description": "Verifies the status of the provided interfaces.",
-    "custom_field": "Interface Ethernet1 - P2P_LINK_TO_DC2-SPINE1_Ethernet5 = 'up'"
+    "custom_field": "Interface Ethernet1 - P2P_dc2-spine1_Ethernet5 = 'up'"
   },
   {
     "name": "dc2-leaf3a.arista.com",
@@ -471,7 +489,7 @@
       "interfaces"
     ],
     "description": "Verifies the status of the provided interfaces.",
-    "custom_field": "Interface Ethernet2 - P2P_LINK_TO_DC2-SPINE2_Ethernet5 = 'up'"
+    "custom_field": "Interface Ethernet12 - Test_mode_and_vlans = 'up'"
   },
   {
     "name": "dc2-leaf3a.arista.com",
@@ -480,7 +498,7 @@
       "interfaces"
     ],
     "description": "Verifies the status of the provided interfaces.",
-    "custom_field": "Interface Ethernet3 - MLAG_PEER_dc2-leaf3b.arista.com_Ethernet3 = 'up'"
+    "custom_field": "Interface Ethernet13 - Test_native_vlan_and_trunk_groups = 'up'"
   },
   {
     "name": "dc2-leaf3a.arista.com",
@@ -489,7 +507,7 @@
       "interfaces"
     ],
     "description": "Verifies the status of the provided interfaces.",
-    "custom_field": "Interface Ethernet4 - MLAG_PEER_dc2-leaf3b.arista.com_Ethernet4 = 'up'"
+    "custom_field": "Interface Ethernet14 - Test_phone = 'up'"
   },
   {
     "name": "dc2-leaf3a.arista.com",
@@ -498,7 +516,7 @@
       "interfaces"
     ],
     "description": "Verifies the status of the provided interfaces.",
-    "custom_field": "Interface Loopback0 - EVPN_Overlay_Peering = 'up'"
+    "custom_field": "Interface Ethernet15 - Test_type_routed = 'up'"
   },
   {
     "name": "dc2-leaf3a.arista.com",
@@ -507,7 +525,7 @@
       "interfaces"
     ],
     "description": "Verifies the status of the provided interfaces.",
-    "custom_field": "Interface Loopback1 - VTEP_VXLAN_Tunnel_Source = 'up'"
+    "custom_field": "Interface Ethernet2 - P2P_dc2-spine2_Ethernet5 = 'up'"
   },
   {
     "name": "dc2-leaf3a.arista.com",
@@ -516,7 +534,7 @@
       "interfaces"
     ],
     "description": "Verifies the status of the provided interfaces.",
-    "custom_field": "Interface Loopback10 - VRF10_VTEP_DIAGNOSTICS = 'up'"
+    "custom_field": "Interface Ethernet3 - MLAG_dc2-leaf3b.arista.com_Ethernet3 = 'up'"
   },
   {
     "name": "dc2-leaf3a.arista.com",
@@ -525,7 +543,43 @@
       "interfaces"
     ],
     "description": "Verifies the status of the provided interfaces.",
-    "custom_field": "Interface Loopback11 - VRF11_VTEP_DIAGNOSTICS = 'up'"
+    "custom_field": "Interface Ethernet4 - MLAG_dc2-leaf3b.arista.com_Ethernet4 = 'up'"
+  },
+  {
+    "name": "dc2-leaf3a.arista.com",
+    "test": "VerifyInterfacesStatus",
+    "categories": [
+      "interfaces"
+    ],
+    "description": "Verifies the status of the provided interfaces.",
+    "custom_field": "Interface Loopback0 - ROUTER_ID = 'up'"
+  },
+  {
+    "name": "dc2-leaf3a.arista.com",
+    "test": "VerifyInterfacesStatus",
+    "categories": [
+      "interfaces"
+    ],
+    "description": "Verifies the status of the provided interfaces.",
+    "custom_field": "Interface Loopback1 - VXLAN_TUNNEL_SOURCE = 'up'"
+  },
+  {
+    "name": "dc2-leaf3a.arista.com",
+    "test": "VerifyInterfacesStatus",
+    "categories": [
+      "interfaces"
+    ],
+    "description": "Verifies the status of the provided interfaces.",
+    "custom_field": "Interface Loopback10 - DIAG_VRF_VRF10 = 'up'"
+  },
+  {
+    "name": "dc2-leaf3a.arista.com",
+    "test": "VerifyInterfacesStatus",
+    "categories": [
+      "interfaces"
+    ],
+    "description": "Verifies the status of the provided interfaces.",
+    "custom_field": "Interface Loopback11 - DIAG_VRF_VRF11 = 'up'"
   },
   {
     "name": "dc2-leaf3a.arista.com",
@@ -543,7 +597,43 @@
       "interfaces"
     ],
     "description": "Verifies the status of the provided interfaces.",
-    "custom_field": "Interface Port-Channel3 - MLAG_PEER_dc2-leaf3b.arista.com_Po3 = 'up'"
+    "custom_field": "Interface Port-Channel12 - Test_mode_and_vlans = 'up'"
+  },
+  {
+    "name": "dc2-leaf3a.arista.com",
+    "test": "VerifyInterfacesStatus",
+    "categories": [
+      "interfaces"
+    ],
+    "description": "Verifies the status of the provided interfaces.",
+    "custom_field": "Interface Port-Channel13 - Test_native_vlan_and_trunk_groups = 'up'"
+  },
+  {
+    "name": "dc2-leaf3a.arista.com",
+    "test": "VerifyInterfacesStatus",
+    "categories": [
+      "interfaces"
+    ],
+    "description": "Verifies the status of the provided interfaces.",
+    "custom_field": "Interface Port-Channel14 - Test_phone = 'up'"
+  },
+  {
+    "name": "dc2-leaf3a.arista.com",
+    "test": "VerifyInterfacesStatus",
+    "categories": [
+      "interfaces"
+    ],
+    "description": "Verifies the status of the provided interfaces.",
+    "custom_field": "Interface Port-Channel15 - Test_type_routed = 'up'"
+  },
+  {
+    "name": "dc2-leaf3a.arista.com",
+    "test": "VerifyInterfacesStatus",
+    "categories": [
+      "interfaces"
+    ],
+    "description": "Verifies the status of the provided interfaces.",
+    "custom_field": "Interface Port-Channel3 - MLAG_dc2-leaf3b.arista.com_Port-Channel3 = 'up'"
   },
   {
     "name": "dc2-leaf3a.arista.com",
@@ -588,7 +678,7 @@
       "interfaces"
     ],
     "description": "Verifies the status of the provided interfaces.",
-    "custom_field": "Interface Vlan3009 - MLAG_PEER_L3_iBGP: vrf VRF10 = 'up'"
+    "custom_field": "Interface Vlan3009 - MLAG_L3_VRF_VRF10 = 'up'"
   },
   {
     "name": "dc2-leaf3a.arista.com",
@@ -597,7 +687,7 @@
       "interfaces"
     ],
     "description": "Verifies the status of the provided interfaces.",
-    "custom_field": "Interface Vlan3010 - MLAG_PEER_L3_iBGP: vrf VRF11 = 'up'"
+    "custom_field": "Interface Vlan3010 - MLAG_L3_VRF_VRF11 = 'up'"
   },
   {
     "name": "dc2-leaf3a.arista.com",
@@ -606,7 +696,7 @@
       "interfaces"
     ],
     "description": "Verifies the status of the provided interfaces.",
-    "custom_field": "Interface Vlan4093 - MLAG_PEER_L3_PEERING = 'up'"
+    "custom_field": "Interface Vlan4093 - MLAG_L3 = 'up'"
   },
   {
     "name": "dc2-leaf3a.arista.com",
@@ -615,7 +705,7 @@
       "interfaces"
     ],
     "description": "Verifies the status of the provided interfaces.",
-    "custom_field": "Interface Vlan4094 - MLAG_PEER = 'up'"
+    "custom_field": "Interface Vlan4094 - MLAG = 'up'"
   },
   {
     "name": "dc2-leaf3a.arista.com",
@@ -684,7 +774,7 @@
   },
   {
     "name": "dc2-leaf3a.arista.com",
-    "test": "VerifyLoggingSourceInt",
+    "test": "VerifyLoggingSourceIntf",
     "categories": [
       "logging"
     ],
@@ -696,7 +786,7 @@
     "categories": [
       "logging"
     ],
-    "description": "Verifies if logs are generated with the riate timestamp."
+    "description": "Verifies if logs are generated with the appropriate timestamp."
   },
   {
     "name": "dc2-leaf3a.arista.com",

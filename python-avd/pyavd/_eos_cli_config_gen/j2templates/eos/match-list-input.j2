@@ -5,6 +5,17 @@
 #}
 {# eos - match list input #}
 {% if match_list_input is arista.avd.defined %}
+{%     if match_list_input.string is arista.avd.defined %}
+!
+{%         for match_list in match_list_input.string | arista.avd.natural_sort('name') %}
+match-list input string {{ match_list.name }}
+{%             for sequence in match_list.sequence_numbers | arista.avd.natural_sort('sequence') %}
+{%                 if sequence.match_regex is arista.avd.defined %}
+   {{ sequence.sequence }} match regex {{ sequence.match_regex }}
+{%                 endif %}
+{%             endfor %}
+{%         endfor %}
+{%     endif %}
 {%     if match_list_input.prefix_ipv4 is arista.avd.defined %}
 !
 {%         for match_list in match_list_input.prefix_ipv4 | arista.avd.natural_sort('name') %}
@@ -20,17 +31,6 @@ match-list input prefix-ipv4 {{ match_list.name }}
 match-list input prefix-ipv6 {{ match_list.name }}
 {%             for entry in match_list.prefixes %}
    match prefix-ipv6 {{ entry }}
-{%             endfor %}
-{%         endfor %}
-{%     endif %}
-{%     if match_list_input.string is arista.avd.defined %}
-!
-{%         for match_list in match_list_input.string | arista.avd.natural_sort('name') %}
-match-list input string {{ match_list.name }}
-{%             for sequence in match_list.sequence_numbers | arista.avd.natural_sort('sequence') %}
-{%                 if sequence.match_regex is arista.avd.defined %}
-   {{ sequence.sequence }} match regex {{ sequence.match_regex }}
-{%                 endif %}
 {%             endfor %}
 {%         endfor %}
 {%     endif %}

@@ -25,7 +25,7 @@ vrfs:
   ip_routing: false
 management_interfaces:
 - name: Management1
-  description: oob_management
+  description: OOB_MANAGEMENT
   shutdown: false
   vrf: MGMT
   ip_address: 192.168.200.101/24
@@ -40,30 +40,31 @@ ethernet_interfaces:
   peer: ISIS-LEAF1
   peer_interface: Ethernet1
   peer_type: l2leaf
-  description: ISIS-LEAF1_Ethernet1
+  description: L2_ISIS-LEAF1_Ethernet1
   shutdown: false
-  type: port-channel-member
   channel_group:
     id: 1
     mode: active
 - name: Ethernet10
-  peer: Endpoint
   peer_type: network_port
   description: Endpoint
   shutdown: false
-  type: switched
-  mode: access
-  vlans: '110'
+  switchport:
+    enabled: true
+    mode: access
+    access_vlan: '110'
 port_channel_interfaces:
 - name: Port-Channel1
-  description: ISIS-LEAF1_Po1
-  type: switched
+  description: L2_ISIS-LEAF1_Port-Channel1
+  switchport:
+    enabled: true
+    mode: trunk
+    trunk:
+      allowed_vlan: 110,4092
   shutdown: false
-  mode: trunk
-  vlans: 110,4092
 loopback_interfaces:
 - name: Loopback0
-  description: Router_ID
+  description: ROUTER_ID
   shutdown: false
   ip_address: 192.168.255.1/32
   isis_enable: EVPN_UNDERLAY

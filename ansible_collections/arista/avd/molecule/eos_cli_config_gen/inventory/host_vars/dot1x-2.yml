@@ -10,3 +10,9 @@ dot1x:
   radius_av_pair:
     service_type: true
     framed_mtu: 1500
+  aaa:
+    unresponsive:
+      action:
+        traffic_allow: true
+      phone_action:
+        apply_cached_results: true

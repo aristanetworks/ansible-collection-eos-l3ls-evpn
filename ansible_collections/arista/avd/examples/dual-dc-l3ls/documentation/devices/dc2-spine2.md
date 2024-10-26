@@ -42,20 +42,20 @@
 
 | Management Interface | Description | Type | VRF | IP Address | Gateway |
 | -------------------- | ----------- | ---- | --- | ---------- | ------- |
-| Management1 | oob_management | oob | MGMT | 172.16.1.22/24 | 172.16.1.1 |
+| Management1 | OOB_MANAGEMENT | oob | MGMT | 172.16.1.22/24 | 172.16.1.1 |
 
 ##### IPv6
 
 | Management Interface | Description | Type | VRF | IPv6 Address | IPv6 Gateway |
 | -------------------- | ----------- | ---- | --- | ------------ | ------------ |
-| Management1 | oob_management | oob | MGMT | - | - |
+| Management1 | OOB_MANAGEMENT | oob | MGMT | - | - |
 
 #### Management Interfaces Device Configuration
 
 ```eos
 !
 interface Management1
-   description oob_management
+   description OOB_MANAGEMENT
    no shutdown
    vrf MGMT
    ip address 172.16.1.22/24
@@ -155,38 +155,38 @@ vlan internal order ascending range 1006 1199
 
 | Interface | Description | Channel Group | IP Address | VRF |  MTU | Shutdown | ACL In | ACL Out |
 | --------- | ----------- | ------------- | ---------- | ----| ---- | -------- | ------ | ------- |
-| Ethernet1 | P2P_LINK_TO_DC2-LEAF1A_Ethernet2 | - | 10.255.255.106/31 | default | 1500 | False | - | - |
-| Ethernet2 | P2P_LINK_TO_DC2-LEAF1B_Ethernet2 | - | 10.255.255.110/31 | default | 1500 | False | - | - |
-| Ethernet3 | P2P_LINK_TO_DC2-LEAF2A_Ethernet2 | - | 10.255.255.114/31 | default | 1500 | False | - | - |
-| Ethernet4 | P2P_LINK_TO_DC2-LEAF2B_Ethernet2 | - | 10.255.255.118/31 | default | 1500 | False | - | - |
+| Ethernet1 | P2P_dc2-leaf1a_Ethernet2 | - | 10.255.255.106/31 | default | 1500 | False | - | - |
+| Ethernet2 | P2P_dc2-leaf1b_Ethernet2 | - | 10.255.255.110/31 | default | 1500 | False | - | - |
+| Ethernet3 | P2P_dc2-leaf2a_Ethernet2 | - | 10.255.255.114/31 | default | 1500 | False | - | - |
+| Ethernet4 | P2P_dc2-leaf2b_Ethernet2 | - | 10.255.255.118/31 | default | 1500 | False | - | - |
 
 #### Ethernet Interfaces Device Configuration
 
 ```eos
 !
 interface Ethernet1
-   description P2P_LINK_TO_DC2-LEAF1A_Ethernet2
+   description P2P_dc2-leaf1a_Ethernet2
    no shutdown
    mtu 1500
    no switchport
    ip address 10.255.255.106/31
 !
 interface Ethernet2
-   description P2P_LINK_TO_DC2-LEAF1B_Ethernet2
+   description P2P_dc2-leaf1b_Ethernet2
    no shutdown
    mtu 1500
    no switchport
    ip address 10.255.255.110/31
 !
 interface Ethernet3
-   description P2P_LINK_TO_DC2-LEAF2A_Ethernet2
+   description P2P_dc2-leaf2a_Ethernet2
    no shutdown
    mtu 1500
    no switchport
    ip address 10.255.255.114/31
 !
 interface Ethernet4
-   description P2P_LINK_TO_DC2-LEAF2B_Ethernet2
+   description P2P_dc2-leaf2b_Ethernet2
    no shutdown
    mtu 1500
    no switchport
@@ -201,20 +201,20 @@ interface Ethernet4
 
 | Interface | Description | VRF | IP Address |
 | --------- | ----------- | --- | ---------- |
-| Loopback0 | EVPN_Overlay_Peering | default | 10.255.128.12/32 |
+| Loopback0 | ROUTER_ID | default | 10.255.128.12/32 |
 
 ##### IPv6
 
 | Interface | Description | VRF | IPv6 Address |
 | --------- | ----------- | --- | ------------ |
-| Loopback0 | EVPN_Overlay_Peering | default | - |
+| Loopback0 | ROUTER_ID | default | - |
 
 #### Loopback Interfaces Device Configuration
 
 ```eos
 !
 interface Loopback0
-   description EVPN_Overlay_Peering
+   description ROUTER_ID
    no shutdown
    ip address 10.255.128.12/32
 ```
@@ -335,8 +335,8 @@ ASN Notation: asplain
 !
 router bgp 65200
    router-id 10.255.128.12
-   maximum-paths 4 ecmp 4
    no bgp default ipv4-unicast
+   maximum-paths 4 ecmp 4
    neighbor EVPN-OVERLAY-PEERS peer group
    neighbor EVPN-OVERLAY-PEERS next-hop-unchanged
    neighbor EVPN-OVERLAY-PEERS update-source Loopback0
@@ -351,16 +351,16 @@ router bgp 65200
    neighbor IPv4-UNDERLAY-PEERS maximum-routes 12000
    neighbor 10.255.128.13 peer group EVPN-OVERLAY-PEERS
    neighbor 10.255.128.13 remote-as 65201
-   neighbor 10.255.128.13 description dc2-leaf1a
+   neighbor 10.255.128.13 description dc2-leaf1a_Loopback0
    neighbor 10.255.128.14 peer group EVPN-OVERLAY-PEERS
    neighbor 10.255.128.14 remote-as 65201
-   neighbor 10.255.128.14 description dc2-leaf1b
+   neighbor 10.255.128.14 description dc2-leaf1b_Loopback0
    neighbor 10.255.128.15 peer group EVPN-OVERLAY-PEERS
    neighbor 10.255.128.15 remote-as 65202
-   neighbor 10.255.128.15 description dc2-leaf2a
+   neighbor 10.255.128.15 description dc2-leaf2a_Loopback0
    neighbor 10.255.128.16 peer group EVPN-OVERLAY-PEERS
    neighbor 10.255.128.16 remote-as 65202
-   neighbor 10.255.128.16 description dc2-leaf2b
+   neighbor 10.255.128.16 description dc2-leaf2b_Loopback0
    neighbor 10.255.255.107 peer group IPv4-UNDERLAY-PEERS
    neighbor 10.255.255.107 remote-as 65201
    neighbor 10.255.255.107 description dc2-leaf1a_Ethernet2

@@ -27,7 +27,6 @@ Arguments are treated as one dict so all arguments will be set as vars.
 
 ```yaml
 - name: Remove avd_switch_facts
-  tags: [build, provision, facts, remove_avd_switch_facts]
   arista.avd.set_vars:
     avd_switch_facts: null
   run_once: true

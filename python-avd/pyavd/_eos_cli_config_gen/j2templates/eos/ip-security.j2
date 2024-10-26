@@ -8,13 +8,10 @@
 !
 ip security
 {%     for ike_policy in ip_security.ike_policies | arista.avd.natural_sort('name') %}
+{%         if not loop.first %}
    !
-   ike policy {{ ike_policy.name }}
-{%         if ike_policy.local_id_fqdn is arista.avd.defined %}
-      local-id fqdn {{ ike_policy.local_id_fqdn }}
-{%         elif ike_policy.local_id is arista.avd.defined %}
-      local-id {{ ike_policy.local_id }}
 {%         endif %}
+   ike policy {{ ike_policy.name }}
 {%         if ike_policy.ike_lifetime is arista.avd.defined %}
       ike-lifetime {{ ike_policy.ike_lifetime }}
 {%         endif %}
@@ -24,22 +21,27 @@ ip security
 {%         if ike_policy.dh_group is arista.avd.defined %}
       dh-group {{ ike_policy.dh_group }}
 {%         endif %}
+{%         if ike_policy.local_id_fqdn is arista.avd.defined %}
+      local-id fqdn {{ ike_policy.local_id_fqdn }}
+{%         elif ike_policy.local_id is arista.avd.defined %}
+      local-id {{ ike_policy.local_id }}
+{%         endif %}
 {%     endfor %}
 {%     for sa_policy in ip_security.sa_policies | arista.avd.natural_sort('name') %}
    !
    sa policy {{ sa_policy.name }}
-{%         if sa_policy.esp.integrity is arista.avd.defined %}
-{%             if sa_policy.esp.integrity == "disabled" %}
-      esp integrity null
-{%             else %}
-      esp integrity {{ sa_policy.esp.integrity }}
-{%             endif %}
-{%         endif %}
 {%         if sa_policy.esp.encryption is arista.avd.defined %}
 {%             if sa_policy.esp.encryption == "disabled" %}
       esp encryption null
 {%             else %}
       esp encryption {{ sa_policy.esp.encryption }}
+{%             endif %}
+{%         endif %}
+{%         if sa_policy.esp.integrity is arista.avd.defined %}
+{%             if sa_policy.esp.integrity == "disabled" %}
+      esp integrity null
+{%             else %}
+      esp integrity {{ sa_policy.esp.integrity }}
 {%             endif %}
 {%         endif %}
 {%         if sa_policy.sa_lifetime.value is arista.avd.defined %}

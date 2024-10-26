@@ -10,7 +10,7 @@ keys:
     documentation_options:
       table: fabric-topology
     description: |
-      POD Name is used in:
+      DC Name is used in:
       - Fabric Documentation (Optional, falls back to fabric_name)
       - SNMP Location: `snmp_settings.location` (Optional)
       - HER Overlay DC scoped flood lists: `overlay_her_flood_list_scope: dc` (Required)

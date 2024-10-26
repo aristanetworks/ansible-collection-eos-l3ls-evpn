@@ -33,8 +33,19 @@ interface {{ loopback_interface.name }}
 {%     if loopback_interface.ipv6_address is arista.avd.defined %}
    ipv6 address {{ loopback_interface.ipv6_address }}
 {%     endif %}
+{%     if loopback_interface.mpls.ldp.interface is arista.avd.defined(true) %}
+   mpls ldp interface
+{%     elif loopback_interface.mpls.ldp.interface is arista.avd.defined(false) %}
+   no mpls ldp interface
+{%     endif %}
 {%     if loopback_interface.ospf_area is arista.avd.defined %}
    ip ospf area {{ loopback_interface.ospf_area }}
+{%     endif %}
+{%     if loopback_interface.node_segment.ipv4_index is arista.avd.defined %}
+   node-segment ipv4 index {{ loopback_interface.node_segment.ipv4_index }}
+{%     endif %}
+{%     if loopback_interface.node_segment.ipv6_index is arista.avd.defined %}
+   node-segment ipv6 index {{ loopback_interface.node_segment.ipv6_index }}
 {%     endif %}
 {%     if loopback_interface.isis_enable is arista.avd.defined %}
    isis enable {{ loopback_interface.isis_enable }}
@@ -42,25 +53,14 @@ interface {{ loopback_interface.name }}
 {%     if loopback_interface.isis_bfd is arista.avd.defined %}
    isis bfd
 {%     endif %}
-{%     if loopback_interface.isis_passive is arista.avd.defined(true) %}
-   isis passive
-{%     endif %}
 {%     if loopback_interface.isis_metric is arista.avd.defined %}
    isis metric {{ loopback_interface.isis_metric }}
 {%     endif %}
+{%     if loopback_interface.isis_passive is arista.avd.defined(true) %}
+   isis passive
+{%     endif %}
 {%     if loopback_interface.isis_network_point_to_point is arista.avd.defined(true) %}
    isis network point-to-point
-{%     endif %}
-{%     if loopback_interface.mpls.ldp.interface is arista.avd.defined(true) %}
-   mpls ldp interface
-{%     elif loopback_interface.mpls.ldp.interface is arista.avd.defined(false) %}
-   no mpls ldp interface
-{%     endif %}
-{%     if loopback_interface.node_segment.ipv4_index is arista.avd.defined %}
-   node-segment ipv4 index {{ loopback_interface.node_segment.ipv4_index }}
-{%     endif %}
-{%     if loopback_interface.node_segment.ipv6_index is arista.avd.defined %}
-   node-segment ipv6 index {{ loopback_interface.node_segment.ipv6_index }}
 {%     endif %}
 {%     if loopback_interface.eos_cli is arista.avd.defined %}
    {{ loopback_interface.eos_cli | indent(3, false) }}

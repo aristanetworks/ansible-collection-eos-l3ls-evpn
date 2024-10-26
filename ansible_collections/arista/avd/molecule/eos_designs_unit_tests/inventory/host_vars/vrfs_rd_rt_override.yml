@@ -1,6 +1,9 @@
 # Testing the rd and rt override for VRFs
 type: l3leaf
 
+# Testing custom vtep loopback description
+vtep_loopback_description: MY_VTEP_LOOPBACK
+
 l3leaf:
   defaults:
     loopback_ipv4_pool: 10.10.0.0/24

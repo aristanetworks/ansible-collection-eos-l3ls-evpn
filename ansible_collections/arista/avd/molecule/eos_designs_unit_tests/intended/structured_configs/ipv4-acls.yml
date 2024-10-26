@@ -9,6 +9,10 @@ router_bgp:
   maximum_paths:
     paths: 4
     ecmp: 4
+  redistribute:
+    connected:
+      enabled: true
+      route_map: RM-CONN-2-BGP
   updates:
     wait_install: true
   peer_groups:
@@ -30,9 +34,6 @@ router_bgp:
       activate: true
     - name: EVPN-OVERLAY-PEERS
       activate: false
-  redistribute_routes:
-  - source_protocol: connected
-    route_map: RM-CONN-2-BGP
   address_family_evpn:
     peer_groups:
     - name: EVPN-OVERLAY-PEERS
@@ -64,14 +65,16 @@ ethernet_interfaces:
   peer_type: l3_interface
   ip_address: 172.16.0.2/30
   shutdown: false
-  type: routed
+  switchport:
+    enabled: false
   access_group_in: TEST-IPV4-ACL-WITH-IP-FIELDS-IN_Ethernet1
   access_group_out: TEST-IPV4-ACL-WITH-IP-FIELDS-OUT_Ethernet1
 - name: Ethernet2
   peer_type: l3_interface
   ip_address: dhcp
   shutdown: false
-  type: routed
+  switchport:
+    enabled: false
   access_group_in: TEST-IPV4-ACL-WITH-IP-FIELDS-IN_Ethernet2
   access_group_out: TEST-IPV4-ACL-WITH-IP-FIELDS-OUT_Ethernet2
   dhcp_client_accept_default_route: true
@@ -79,7 +82,8 @@ ethernet_interfaces:
   peer_type: l3_interface
   ip_address: dhcp
   shutdown: false
-  type: routed
+  switchport:
+    enabled: false
   access_group_in: TEST-IPV4-ACL-WITH-NO-FIELDS-IN
   access_group_out: TEST-IPV4-ACL-WITH-NO-FIELDS-OUT
   dhcp_client_accept_default_route: true
@@ -87,29 +91,32 @@ ethernet_interfaces:
   peer_type: l3_interface
   ip_address: 172.19.19.0/31
   shutdown: false
-  type: routed
+  switchport:
+    enabled: false
   access_group_in: TEST-IPV4-ACL-WITH-NO-FIELDS-IN
   access_group_out: TEST-IPV4-ACL-WITH-NO-FIELDS-OUT
 - name: Ethernet5/1
   peer_type: l3_interface
   ip_address: 172.20.20.0/31
   shutdown: false
-  type: routed
+  switchport:
+    enabled: false
   access_group_in: TEST-IPV4-ACL-WITH-IP-FIELDS-IN_Ethernet5_1
 - name: Ethernet6/6.6
   peer_type: l3_interface
   ip_address: 172.21.21.0/31
   shutdown: false
-  type: l3dot1q
   access_group_out: TEST-IPV4-ACL-WITH-IP-FIELDS-OUT_Ethernet6_6.6
-  encapsulation_dot1q_vlan: 6
+  encapsulation_dot1q:
+    vlan: 6
 - name: Ethernet6/6
-  type: routed
+  switchport:
+    enabled: false
   peer_type: l3_interface
   shutdown: false
 loopback_interfaces:
 - name: Loopback0
-  description: EVPN_Overlay_Peering
+  description: ROUTER_ID
   shutdown: false
   ip_address: 192.168.0.1/32
 prefix_lists:

@@ -1,0 +1,15 @@
+{#
+ Copyright (c) 2023-2024 Arista Networks, Inc.
+ Use of this source code is governed by the Apache License 2.0
+ that can be found in the LICENSE file.
+#}
+{# eos - logging even storm-control #}
+{% if logging.event.storm_control.discards.global is arista.avd.defined(true) or logging.event.storm_control.discards.interval is arista.avd.defined %}
+!
+{% endif %}
+{% if logging.event.storm_control.discards.global is arista.avd.defined(true) %}
+logging event storm-control discards global
+{% endif %}
+{% if logging.event.storm_control.discards.interval is arista.avd.defined %}
+logging event storm-control discards interval {{ logging.event.storm_control.discards.interval }}
+{% endif %}

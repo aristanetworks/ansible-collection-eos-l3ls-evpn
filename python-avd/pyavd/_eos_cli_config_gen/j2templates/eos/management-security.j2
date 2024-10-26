@@ -21,45 +21,44 @@ management security
    entropy source hardware exclusive
 {%         endif %}
 {%     endif %}
+{%     if management_security.password.minimum_length is arista.avd.defined %}
+   password minimum length {{ management_security.password.minimum_length }}
+{%     endif %}
 {%     if management_security.password.encryption_key_common is arista.avd.defined(true) %}
    password encryption-key common
 {%     endif %}
 {%     if management_security.password.encryption_reversible is arista.avd.defined() %}
    password encryption reversible {{ management_security.password.encryption_reversible }}
 {%     endif %}
-{%     if management_security.password.minimum_length is arista.avd.defined %}
-   password minimum length {{ management_security.password.minimum_length }}
-{%     endif %}
-{%     if management_security.password.policies is arista.avd.defined %}
-{%         for policy in management_security.password.policies %}
+{%     for policy in management_security.password.policies | arista.avd.natural_sort("name") %}
+   !
    password policy {{ policy.name }}
-{%             if policy.minimum is arista.avd.defined %}
-{%                 if policy.minimum.digits is arista.avd.defined %}
+{%         if policy.minimum is arista.avd.defined %}
+{%             if policy.minimum.digits is arista.avd.defined %}
       minimum digits {{ policy.minimum.digits }}
-{%                 endif %}
-{%                 if policy.minimum.length is arista.avd.defined %}
+{%             endif %}
+{%             if policy.minimum.length is arista.avd.defined %}
       minimum length {{ policy.minimum.length }}
-{%                 endif %}
-{%                 if policy.minimum.lower is arista.avd.defined %}
+{%             endif %}
+{%             if policy.minimum.lower is arista.avd.defined %}
       minimum lower {{ policy.minimum.lower }}
-{%                 endif %}
-{%                 if policy.minimum.special is arista.avd.defined %}
+{%             endif %}
+{%             if policy.minimum.special is arista.avd.defined %}
       minimum special {{ policy.minimum.special }}
-{%                 endif %}
-{%                 if policy.minimum.upper is arista.avd.defined %}
+{%             endif %}
+{%             if policy.minimum.upper is arista.avd.defined %}
       minimum upper {{ policy.minimum.upper }}
-{%                 endif %}
 {%             endif %}
-{%             if policy.maximum is arista.avd.defined %}
-{%                 if policy.maximum.repetitive is arista.avd.defined %}
+{%         endif %}
+{%         if policy.maximum is arista.avd.defined %}
+{%             if policy.maximum.repetitive is arista.avd.defined %}
       maximum repetitive {{ policy.maximum.repetitive }}
-{%                 endif %}
-{%                 if policy.maximum.sequential is arista.avd.defined %}
-      maximum sequential {{ policy.maximum.sequential }}
-{%                 endif %}
 {%             endif %}
-{%         endfor %}
-{%     endif %}
+{%             if policy.maximum.sequential is arista.avd.defined %}
+      maximum sequential {{ policy.maximum.sequential }}
+{%             endif %}
+{%         endif %}
+{%     endfor %}
 {%     for profile in management_security.shared_secret_profiles | arista.avd.natural_sort("profile") %}
    !
    session shared-secret profile {{ profile.profile }}
@@ -86,6 +85,7 @@ management security
 {%         endfor %}
 {%     endfor %}
 {%     for ssl_profile in management_security.ssl_profiles | arista.avd.natural_sort %}
+   !
    ssl profile {{ ssl_profile.name }}
 {%         if ssl_profile.tls_versions is arista.avd.defined %}
       tls versions {{ ssl_profile.tls_versions }}

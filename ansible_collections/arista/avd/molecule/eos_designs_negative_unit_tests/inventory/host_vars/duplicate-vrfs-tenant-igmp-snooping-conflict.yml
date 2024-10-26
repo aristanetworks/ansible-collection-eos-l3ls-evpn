@@ -50,4 +50,4 @@ tenants:
 expected_error_message: >-
   Found duplicate objects with conflicting data while generating configuration for IGMP snooping for SVIs in VRF 'VRF1'.
   {'id': 100, 'querier': {'enabled': True, 'address': '192.168.255.101'}} conflicts with {'id': 100, 'querier':
-  {'enabled': False, 'address': '192.168.255.101'}}.
+  {'enabled': False}}.

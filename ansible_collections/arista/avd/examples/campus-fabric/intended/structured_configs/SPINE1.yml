@@ -38,7 +38,7 @@ vrfs:
   ip_routing: false
 management_interfaces:
 - name: Management0
-  description: oob_management
+  description: OOB_MANAGEMENT
   shutdown: false
   vrf: MGMT
   ip_address: 172.16.100.101/24
@@ -61,12 +61,12 @@ ntp:
 vlans:
 - id: 4093
   tenant: system
-  name: LEAF_PEER_L3
+  name: MLAG_L3
   trunk_groups:
-  - LEAF_PEER_L3
+  - MLAG
 - id: 4094
   tenant: system
-  name: MLAG_PEER
+  name: MLAG
   trunk_groups:
   - MLAG
 - id: 110
@@ -101,14 +101,14 @@ vlans:
   name: INBAND_MGMT
 vlan_interfaces:
 - name: Vlan4093
-  description: MLAG_PEER_L3_PEERING
+  description: MLAG_L3
   shutdown: false
   mtu: 1500
   ip_address: 10.1.1.0/31
   ospf_network_point_to_point: true
   ospf_area: 0.0.0.0
 - name: Vlan4094
-  description: MLAG_PEER
+  description: MLAG
   shutdown: false
   no_autostate: true
   mtu: 1500
@@ -206,41 +206,47 @@ vlan_interfaces:
   - 10.10.10.1
 port_channel_interfaces:
 - name: Port-Channel551
-  description: MLAG_PEER_SPINE2_Po551
-  type: switched
+  description: MLAG_SPINE2_Port-Channel551
+  switchport:
+    enabled: true
+    mode: trunk
+    trunk:
+      groups:
+      - MLAG
   shutdown: false
-  mode: trunk
-  trunk_groups:
-  - LEAF_PEER_L3
-  - MLAG
 - name: Port-Channel1
-  description: IDF1_Po51
-  type: switched
+  description: L2_IDF1_Port-Channel51
+  switchport:
+    enabled: true
+    mode: trunk
+    trunk:
+      allowed_vlan: 10,110,120,130
   shutdown: false
-  mode: trunk
-  vlans: 10,110,120,130
   mlag: 1
 - name: Port-Channel491
-  description: LEAF2A_Po11
-  type: switched
+  description: L2_LEAF2A_Port-Channel11
+  switchport:
+    enabled: true
+    mode: trunk
+    trunk:
+      allowed_vlan: 10,210,220,230
   shutdown: false
-  mode: trunk
-  vlans: 10,210,220,230
   mlag: 491
 - name: Port-Channel501
-  description: IDF3_AGG_Po971
-  type: switched
+  description: L2_IDF3_AGG_Port-Channel971
+  switchport:
+    enabled: true
+    mode: trunk
+    trunk:
+      allowed_vlan: 10,310,320,330
   shutdown: false
-  mode: trunk
-  vlans: 10,310,320,330
   mlag: 501
 ethernet_interfaces:
 - name: Ethernet55/1
   peer: SPINE2
   peer_interface: Ethernet55/1
   peer_type: mlag_peer
-  description: MLAG_PEER_SPINE2_Ethernet55/1
-  type: port-channel-member
+  description: MLAG_SPINE2_Ethernet55/1
   shutdown: false
   channel_group:
     id: 551
@@ -249,8 +255,7 @@ ethernet_interfaces:
   peer: SPINE2
   peer_interface: Ethernet56/1
   peer_type: mlag_peer
-  description: MLAG_PEER_SPINE2_Ethernet56/1
-  type: port-channel-member
+  description: MLAG_SPINE2_Ethernet56/1
   shutdown: false
   channel_group:
     id: 551
@@ -259,9 +264,8 @@ ethernet_interfaces:
   peer: LEAF1A
   peer_interface: Ethernet51
   peer_type: l2leaf
-  description: LEAF1A_Ethernet51
+  description: L2_LEAF1A_Ethernet51
   shutdown: false
-  type: port-channel-member
   channel_group:
     id: 1
     mode: active
@@ -269,9 +273,8 @@ ethernet_interfaces:
   peer: LEAF2A
   peer_interface: Ethernet1/1
   peer_type: l2leaf
-  description: LEAF2A_Ethernet1/1
+  description: L2_LEAF2A_Ethernet1/1
   shutdown: false
-  type: port-channel-member
   channel_group:
     id: 491
     mode: active
@@ -279,9 +282,8 @@ ethernet_interfaces:
   peer: LEAF3A
   peer_interface: Ethernet97/1
   peer_type: l2leaf
-  description: LEAF3A_Ethernet97/1
+  description: L2_LEAF3A_Ethernet97/1
   shutdown: false
-  type: port-channel-member
   channel_group:
     id: 501
     mode: active
@@ -289,9 +291,8 @@ ethernet_interfaces:
   peer: LEAF3B
   peer_interface: Ethernet97/1
   peer_type: l2leaf
-  description: LEAF3B_Ethernet97/1
+  description: L2_LEAF3B_Ethernet97/1
   shutdown: false
-  type: port-channel-member
   channel_group:
     id: 501
     mode: active
@@ -299,13 +300,14 @@ ethernet_interfaces:
   peer: WAN
   peer_interface: Ethernet1/1
   peer_type: other
-  description: P2P_LINK_TO_WAN_Ethernet1/1
-  type: routed
+  switchport:
+    enabled: false
   shutdown: false
   mtu: 1500
   ip_address: 10.0.0.3/31
   ospf_network_point_to_point: true
   ospf_area: 0.0.0.0
+  description: P2P_WAN_Ethernet1/1
 mlag_configuration:
   domain_id: SPINES
   local_interface: Vlan4094
@@ -315,7 +317,7 @@ mlag_configuration:
   reload_delay_non_mlag: '330'
 loopback_interfaces:
 - name: Loopback0
-  description: Router_ID
+  description: ROUTER_ID
   shutdown: false
   ip_address: 172.16.1.1/32
   ospf_area: 0.0.0.0

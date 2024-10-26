@@ -24,7 +24,7 @@ spanning_tree:
 vlans:
 - id: 4094
   tenant: system
-  name: MLAG_PEER
+  name: MLAG
   trunk_groups:
   - MLAG
 - id: 101
@@ -32,7 +32,7 @@ vlans:
   name: INBAND_MGMT
 vlan_interfaces:
 - name: Vlan4094
-  description: MLAG_PEER
+  description: MLAG
   shutdown: false
   no_autostate: true
   mtu: 9214
@@ -45,149 +45,162 @@ vlan_interfaces:
   type: inband_mgmt
 port_channel_interfaces:
 - name: Port-Channel11
-  description: MLAG_PEER_inband-mgmt-mlag-a_Po11
-  type: switched
+  description: MLAG_inband-mgmt-mlag-a_Port-Channel11
+  switchport:
+    enabled: true
+    mode: trunk
+    trunk:
+      groups:
+      - MLAG
   shutdown: false
-  mode: trunk
-  trunk_groups:
-  - MLAG
   lacp_fallback_mode: individual
   lacp_fallback_timeout: 30
 - name: Port-Channel1
   description: INBAND-MGMT-PARENT_Po101
-  type: switched
+  switchport:
+    enabled: true
+    mode: trunk
+    trunk:
+      allowed_vlan: '101'
   shutdown: false
-  mode: trunk
-  vlans: '101'
   mlag: 1
 ethernet_interfaces:
 - name: Ethernet11
   peer: inband-mgmt-mlag-a
   peer_interface: Ethernet11
   peer_type: mlag_peer
-  description: MLAG_PEER_inband-mgmt-mlag-a_Ethernet11
-  type: port-channel-member
+  description: MLAG_inband-mgmt-mlag-a_Ethernet11
   shutdown: false
   channel_group:
     id: 11
     mode: active
-  mode: access
-  vlans: 101
+  switchport:
+    enabled: true
+    mode: access
+    access_vlan: 101
 - name: Ethernet12
   peer: inband-mgmt-mlag-a
   peer_interface: Ethernet12
   peer_type: mlag_peer
-  description: MLAG_PEER_inband-mgmt-mlag-a_Ethernet12
-  type: port-channel-member
+  description: MLAG_inband-mgmt-mlag-a_Ethernet12
   shutdown: false
   channel_group:
     id: 11
     mode: active
-  mode: access
-  vlans: 101
+  switchport:
+    enabled: true
+    mode: access
+    access_vlan: 101
 - name: Ethernet13
   peer: inband-mgmt-mlag-a
   peer_interface: Ethernet13
   peer_type: mlag_peer
-  description: MLAG_PEER_inband-mgmt-mlag-a_Ethernet13
-  type: port-channel-member
+  description: MLAG_inband-mgmt-mlag-a_Ethernet13
   shutdown: false
   channel_group:
     id: 11
     mode: active
-  mode: access
-  vlans: 101
+  switchport:
+    enabled: true
+    mode: access
+    access_vlan: 101
 - name: Ethernet14
   peer: inband-mgmt-mlag-a
   peer_interface: Ethernet14
   peer_type: mlag_peer
-  description: MLAG_PEER_inband-mgmt-mlag-a_Ethernet14
-  type: port-channel-member
+  description: MLAG_inband-mgmt-mlag-a_Ethernet14
   shutdown: false
   channel_group:
     id: 11
     mode: active
-  mode: access
-  vlans: 101
+  switchport:
+    enabled: true
+    mode: access
+    access_vlan: 101
 - name: Ethernet15
   peer: inband-mgmt-mlag-a
   peer_interface: Ethernet15
   peer_type: mlag_peer
-  description: MLAG_PEER_inband-mgmt-mlag-a_Ethernet15
-  type: port-channel-member
+  description: MLAG_inband-mgmt-mlag-a_Ethernet15
   shutdown: false
   channel_group:
     id: 11
     mode: active
-  mode: access
-  vlans: 101
+  switchport:
+    enabled: true
+    mode: access
+    access_vlan: 101
 - name: Ethernet16
   peer: inband-mgmt-mlag-a
   peer_interface: Ethernet16
   peer_type: mlag_peer
-  description: MLAG_PEER_inband-mgmt-mlag-a_Ethernet16
-  type: port-channel-member
+  description: MLAG_inband-mgmt-mlag-a_Ethernet16
   shutdown: false
   channel_group:
     id: 11
     mode: active
-  mode: access
-  vlans: 101
+  switchport:
+    enabled: true
+    mode: access
+    access_vlan: 101
 - name: Ethernet17
   peer: inband-mgmt-mlag-a
   peer_interface: Ethernet17
   peer_type: mlag_peer
-  description: MLAG_PEER_inband-mgmt-mlag-a_Ethernet17
-  type: port-channel-member
+  description: MLAG_inband-mgmt-mlag-a_Ethernet17
   shutdown: false
   channel_group:
     id: 11
     mode: active
-  mode: access
-  vlans: 101
+  switchport:
+    enabled: true
+    mode: access
+    access_vlan: 101
 - name: Ethernet18
   peer: inband-mgmt-mlag-a
   peer_interface: Ethernet18
   peer_type: mlag_peer
-  description: MLAG_PEER_inband-mgmt-mlag-a_Ethernet18
-  type: port-channel-member
+  description: MLAG_inband-mgmt-mlag-a_Ethernet18
   shutdown: false
   channel_group:
     id: 11
     mode: active
-  mode: access
-  vlans: 101
+  switchport:
+    enabled: true
+    mode: access
+    access_vlan: 101
 - name: Ethernet19
   peer: inband-mgmt-mlag-a
   peer_interface: Ethernet19
   peer_type: mlag_peer
-  description: MLAG_PEER_inband-mgmt-mlag-a_Ethernet19
-  type: port-channel-member
+  description: MLAG_inband-mgmt-mlag-a_Ethernet19
   shutdown: false
   channel_group:
     id: 11
     mode: active
-  mode: access
-  vlans: 101
+  switchport:
+    enabled: true
+    mode: access
+    access_vlan: 101
 - name: Ethernet20
   peer: inband-mgmt-mlag-a
   peer_interface: Ethernet20
   peer_type: mlag_peer
-  description: MLAG_PEER_inband-mgmt-mlag-a_Ethernet20
-  type: port-channel-member
+  description: MLAG_inband-mgmt-mlag-a_Ethernet20
   shutdown: false
   channel_group:
     id: 11
     mode: active
-  mode: access
-  vlans: 101
+  switchport:
+    enabled: true
+    mode: access
+    access_vlan: 101
 - name: Ethernet1
   peer: inband-mgmt-parent
   peer_interface: Ethernet102
   peer_type: l3leaf
   description: INBAND-MGMT-PARENT_Ethernet102
   shutdown: false
-  type: port-channel-member
   channel_group:
     id: 1
     mode: active
@@ -197,7 +210,6 @@ ethernet_interfaces:
   peer_type: l3leaf
   description: INBAND-MGMT-PARENT-VRF_Ethernet102
   shutdown: false
-  type: port-channel-member
   channel_group:
     id: 1
     mode: active

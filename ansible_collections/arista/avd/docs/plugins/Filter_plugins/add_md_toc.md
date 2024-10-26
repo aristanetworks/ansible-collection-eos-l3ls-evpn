@@ -42,7 +42,6 @@ The below requirements are needed on the host that executes this module.
 ---
 tasks:
 - name: Generate fabric documentation
-  tags: [build, provision, documentation]
   run_once: true
   delegate_to: localhost
   check_mode: no

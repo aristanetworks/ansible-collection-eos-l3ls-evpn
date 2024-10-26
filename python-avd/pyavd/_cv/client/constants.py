@@ -4,3 +4,5 @@
 
 DEFAULT_API_TIMEOUT = 600.0
 """Default API timeout in seconds"""
+
+CVAAS_VERSION_STRING = "CVaaS"

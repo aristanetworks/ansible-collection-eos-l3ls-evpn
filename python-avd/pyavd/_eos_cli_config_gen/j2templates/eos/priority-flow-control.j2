@@ -9,17 +9,17 @@
 {%     if priority_flow_control.all_off is arista.avd.defined(true) %}
 priority-flow-control all off
 {%     endif %}
-{%     if priority_flow_control.watchdog.action is arista.avd.defined %}
-priority-flow-control pause watchdog action {{ priority_flow_control.watchdog.action }}
-{%     endif %}
 {%     if priority_flow_control.watchdog.timeout is arista.avd.defined %}
 priority-flow-control pause watchdog default timeout {{ priority_flow_control.watchdog.timeout }}
+{%     endif %}
+{%     if priority_flow_control.watchdog.recovery_time is arista.avd.defined %}
+priority-flow-control pause watchdog default recovery-time {{ priority_flow_control.watchdog.recovery_time }}
 {%     endif %}
 {%     if priority_flow_control.watchdog.polling_interval is arista.avd.defined %}
 priority-flow-control pause watchdog default polling-interval {{ priority_flow_control.watchdog.polling_interval }}
 {%     endif %}
-{%     if priority_flow_control.watchdog.recovery_time is arista.avd.defined %}
-priority-flow-control pause watchdog default recovery-time {{ priority_flow_control.watchdog.recovery_time }}
+{%     if priority_flow_control.watchdog.action is arista.avd.defined %}
+priority-flow-control pause watchdog action {{ priority_flow_control.watchdog.action }}
 {%     endif %}
 {%     if priority_flow_control.watchdog.override_action_drop is arista.avd.defined(true) %}
 priority-flow-control pause watchdog override action drop

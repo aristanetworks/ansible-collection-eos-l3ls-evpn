@@ -9,6 +9,13 @@ router_bgp:
   maximum_paths:
     paths: 4
     ecmp: 4
+  redistribute:
+    connected:
+      enabled: true
+    static:
+      enabled: true
+    attached_host:
+      enabled: true
   updates:
     wait_install: true
   peer_groups:
@@ -34,16 +41,12 @@ router_bgp:
   - ip_address: 192.168.254.0
     peer_group: MLAG-IPv4-UNDERLAY-PEER
     peer: BGP-SPINE1
-    description: BGP-SPINE1
+    description: BGP-SPINE1_Vlan4094
   - ip_address: 192.168.253.7
     remote_as: '65000'
     peer: DUMMY-CORE
     description: DUMMY-CORE
     peer_group: IPv4-UNDERLAY-PEERS
-  redistribute_routes:
-  - source_protocol: connected
-  - source_protocol: static
-  - source_protocol: attached-host
 static_routes:
 - vrf: MGMT
   destination_address_prefix: 0.0.0.0/0
@@ -76,7 +79,7 @@ spanning_tree:
 vlans:
 - id: 4094
   tenant: system
-  name: MLAG_PEER
+  name: MLAG
   trunk_groups:
   - MLAG
 - id: 1
@@ -96,7 +99,7 @@ vlans:
   name: INBAND_MGMT
 vlan_interfaces:
 - name: Vlan4094
-  description: MLAG_PEER
+  description: MLAG
   shutdown: false
   no_autostate: true
   mtu: 9214
@@ -133,34 +136,38 @@ vlan_interfaces:
   - 172.23.254.1
 port_channel_interfaces:
 - name: Port-Channel3
-  description: MLAG_PEER_BGP-SPINE1_Po3
-  type: switched
+  description: MLAG_BGP-SPINE1_Port-Channel3
+  switchport:
+    enabled: true
+    mode: trunk
+    trunk:
+      groups:
+      - MLAG
   shutdown: false
-  mode: trunk
-  trunk_groups:
-  - LEAF_PEER_L3
-  - MLAG
 - name: Port-Channel1
-  description: BGP-LEAF1_Po1
-  type: switched
+  description: L2_BGP-LEAF1_Port-Channel1
+  switchport:
+    enabled: true
+    mode: trunk
+    trunk:
+      allowed_vlan: 1,100,200,4092
   shutdown: false
-  mode: trunk
-  vlans: 1,100,200,4092
   mlag: 1
 - name: Port-Channel2
-  description: BGP-LEAF2_Po1
-  type: switched
+  description: L2_BGP-LEAF2_Port-Channel1
+  switchport:
+    enabled: true
+    mode: trunk
+    trunk:
+      allowed_vlan: 100,4092
   shutdown: false
-  mode: trunk
-  vlans: 100,4092
   mlag: 2
 ethernet_interfaces:
 - name: Ethernet3
   peer: BGP-SPINE1
   peer_interface: Ethernet3
   peer_type: mlag_peer
-  description: MLAG_PEER_BGP-SPINE1_Ethernet3
-  type: port-channel-member
+  description: MLAG_BGP-SPINE1_Ethernet3
   shutdown: false
   channel_group:
     id: 3
@@ -169,8 +176,7 @@ ethernet_interfaces:
   peer: BGP-SPINE1
   peer_interface: Ethernet4
   peer_type: mlag_peer
-  description: MLAG_PEER_BGP-SPINE1_Ethernet4
-  type: port-channel-member
+  description: MLAG_BGP-SPINE1_Ethernet4
   shutdown: false
   channel_group:
     id: 3
@@ -179,9 +185,8 @@ ethernet_interfaces:
   peer: BGP-LEAF1
   peer_interface: Ethernet2
   peer_type: l2leaf
-  description: BGP-LEAF1_Ethernet2
+  description: L2_BGP-LEAF1_Ethernet2
   shutdown: false
-  type: port-channel-member
   channel_group:
     id: 1
     mode: active
@@ -189,9 +194,8 @@ ethernet_interfaces:
   peer: BGP-LEAF2
   peer_interface: Ethernet2
   peer_type: l2leaf
-  description: BGP-LEAF2_Ethernet2
+  description: L2_BGP-LEAF2_Ethernet2
   shutdown: false
-  type: port-channel-member
   channel_group:
     id: 2
     mode: active
@@ -199,11 +203,12 @@ ethernet_interfaces:
   peer: DUMMY-CORE
   peer_interface: Ethernet1/4
   peer_type: other
-  description: P2P_LINK_TO_DUMMY-CORE_Ethernet1/4
-  type: routed
+  switchport:
+    enabled: false
   shutdown: false
   mtu: 9214
   ip_address: 192.168.253.6/31
+  description: P2P_DUMMY-CORE_Ethernet1/4
 mlag_configuration:
   domain_id: BGP_SPINES
   local_interface: Vlan4094
@@ -221,7 +226,7 @@ route_maps:
     description: Make routes learned over MLAG Peer-link less preferred on spines to ensure optimal routing
 loopback_interfaces:
 - name: Loopback0
-  description: Router_ID
+  description: ROUTER_ID
   shutdown: false
   ip_address: 192.168.255.2/32
 ip_igmp_snooping:

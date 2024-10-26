@@ -19,20 +19,20 @@
 
 | Management Interface | Description | Type | VRF | IP Address | Gateway |
 | -------------------- | ----------- | ---- | --- | ---------- | ------- |
-| Management1 | oob_management | oob | MGMT | 10.73.255.122/24 | 10.73.255.2 |
+| Management1 | OOB_MANAGEMENT | oob | MGMT | 10.73.255.122/24 | 10.73.255.2 |
 
 ##### IPv6
 
 | Management Interface | Description | Type | VRF | IPv6 Address | IPv6 Gateway |
 | -------------------- | ----------- | ---- | --- | ------------ | ------------ |
-| Management1 | oob_management | oob | MGMT | - | - |
+| Management1 | OOB_MANAGEMENT | oob | MGMT | - | - |
 
 #### Management Interfaces Device Configuration
 
 ```eos
 !
 interface Management1
-   description oob_management
+   description OOB_MANAGEMENT
    vrf MGMT
    ip address 10.73.255.122/24
 ```
@@ -52,9 +52,11 @@ interface Management1
 | -------- | --- | ------------|
 | IPv4 | default | acl4_1 |
 | IPv4 | red | acl4_2 |
+| IPv4 | red_1 | acl4_2 |
 | IPv4 | default | acl4_3 |
 | IPv6 | default | acl6_1 |
 | IPv6 | blue | acl6_2 |
+| IPv6 | blue_1 | acl6_2 |
 | IPv6 | default | acl6_3 |
 
 #### System Control-Plane Device Configuration
@@ -64,11 +66,13 @@ interface Management1
 system control-plane
    tcp mss ceiling ipv4 1344 ipv6 1366
    ip access-group acl4_1 in
-   ip access-group acl4_2 vrf red in
    ip access-group acl4_3 vrf default in
+   ip access-group acl4_2 vrf red in
+   ip access-group acl4_2 vrf red_1 in
    ipv6 access-group acl6_1 in
-   ipv6 access-group acl6_2 vrf blue in
    ipv6 access-group acl6_3 vrf default in
+   ipv6 access-group acl6_2 vrf blue in
+   ipv6 access-group acl6_2 vrf blue_1 in
 ```
 
 ## System L1

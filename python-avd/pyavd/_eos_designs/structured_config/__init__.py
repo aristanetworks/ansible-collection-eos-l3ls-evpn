@@ -78,27 +78,18 @@ def get_structured_config(
     Returns:
         The structured_config as a dict
     """
-    structured_config = {}
-    module_vars = ChainMap(
-        structured_config,
-        vars,
-    )
-
-    # Initialize SharedUtils class to be passed to each python_module below.
-    shared_utils = SharedUtils(hostvars=module_vars, templar=templar, schema=input_schema_tools.avdschema)
-
-    # Insert dynamic keys into the input data if not set.
-    # These keys are required by the schema, but the default values are set inside shared_utils.
-    vars.setdefault("node_type_keys", shared_utils.node_type_keys)
-    vars.setdefault("connected_endpoints_keys", shared_utils.connected_endpoints_keys)
-    vars.setdefault("network_services_keys", shared_utils.network_services_keys)
-
     # Validate input data
     if validate:
         result.update(input_schema_tools.convert_and_validate_data(vars))
         if result.get("failed"):
             # Input data validation failed so return empty dict. Calling function should check result.get("failed").
             return {}
+
+    structured_config = {}
+    module_vars = ChainMap(structured_config, vars)
+
+    # Initialize SharedUtils class to be passed to each python_module below.
+    shared_utils = SharedUtils(hostvars=module_vars, templar=templar, schema=input_schema_tools.avdschema)
 
     for cls in AVD_STRUCTURED_CONFIG_CLASSES:
         eos_designs_module: AvdFacts = cls(module_vars, shared_utils)

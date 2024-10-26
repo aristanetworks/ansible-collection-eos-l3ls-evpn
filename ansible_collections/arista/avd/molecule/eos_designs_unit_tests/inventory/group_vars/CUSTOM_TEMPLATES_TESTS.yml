@@ -14,7 +14,7 @@ node_type_keys:
       mlag_port_channel_interfaces: 'custom_templates/interface_descriptions/mlag/port-channel-interfaces.j2'
       connected_endpoints_ethernet_interfaces: 'custom_templates/interface_descriptions/connected_endpoints/ethernet-interfaces.j2'
       connected_endpoints_port_channel_interfaces: 'custom_templates/interface_descriptions/connected_endpoints/port-channel-interfaces.j2'
-      overlay_loopback_interface: 'custom_templates/interface_descriptions/loopbacks/overlay-loopback.j2'
+      router_id_loopback_interface: 'custom_templates/interface_descriptions/loopbacks/router-id-loopback.j2'
       vtep_loopback_interface: 'custom_templates/interface_descriptions/loopbacks/vtep-loopback.j2'
   - key: l3leaf
     type: l3leaf
@@ -46,7 +46,7 @@ node_type_keys:
       mlag_port_channel_interfaces: 'custom_templates/interface_descriptions/mlag/port-channel-interfaces.j2'
       connected_endpoints_ethernet_interfaces: 'custom_templates/interface_descriptions/connected_endpoints/ethernet-interfaces.j2'
       connected_endpoints_port_channel_interfaces: 'custom_templates/interface_descriptions/connected_endpoints/port-channel-interfaces.j2'
-      overlay_loopback_interface: 'custom_templates/interface_descriptions/loopbacks/overlay-loopback.j2'
+      router_id_loopback_interface: 'custom_templates/interface_descriptions/loopbacks/router-id-loopback.j2'
       vtep_loopback_interface: 'custom_templates/interface_descriptions/loopbacks/vtep-loopback.j2'
   - key: l2leaf
     type: l2leaf

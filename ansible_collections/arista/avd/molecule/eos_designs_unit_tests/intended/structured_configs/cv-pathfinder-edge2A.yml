@@ -8,6 +8,10 @@ router_bgp:
       ipv4_unicast: false
   maximum_paths:
     paths: 16
+  redistribute:
+    connected:
+      enabled: true
+      route_map: RM-CONN-2-BGP
   updates:
     wait_install: true
   peer_groups:
@@ -39,9 +43,6 @@ router_bgp:
       activate: true
     - name: WAN-OVERLAY-PEERS
       activate: false
-  redistribute_routes:
-  - source_protocol: connected
-    route_map: RM-CONN-2-BGP
   neighbors:
   - ip_address: 172.17.0.4
     peer_group: IPv4-UNDERLAY-PEERS
@@ -56,7 +57,7 @@ router_bgp:
   - ip_address: 192.168.144.1
     peer_group: WAN-OVERLAY-PEERS
     peer: cv-pathfinder-pathfinder
-    description: cv-pathfinder-pathfinder
+    description: cv-pathfinder-pathfinder_Dps1
   - ip_address: 192.168.142.3
     peer: cv-pathfinder-edge2B
     description: cv-pathfinder-edge2B
@@ -88,8 +89,9 @@ router_bgp:
       - address_family: evpn
         route_targets:
         - 1000:1000
-    redistribute_routes:
-    - source_protocol: connected
+    redistribute:
+      connected:
+        enabled: true
   - name: PROD
     router_id: 192.168.42.2
     neighbors:
@@ -111,8 +113,9 @@ router_bgp:
       - address_family: evpn
         route_targets:
         - 142:142
-    redistribute_routes:
-    - source_protocol: connected
+    redistribute:
+      connected:
+        enabled: true
   - name: ATTRACTED-VRF-FROM-UPLINK
     router_id: 192.168.42.2
     neighbors:
@@ -134,8 +137,9 @@ router_bgp:
       - address_family: evpn
         route_targets:
         - 666:666
-    redistribute_routes:
-    - source_protocol: connected
+    redistribute:
+      connected:
+        enabled: true
   - name: default
     rd: 192.168.42.2:1
     route_targets:
@@ -152,6 +156,7 @@ router_bgp:
     peer_groups:
     - name: WAN-OVERLAY-PEERS
       activate: true
+      encapsulation: path-selection
       route_map_in: RM-EVPN-SOO-IN
       route_map_out: RM-EVPN-SOO-OUT
     neighbor_default:
@@ -160,6 +165,7 @@ router_bgp:
     neighbors:
     - ip_address: 192.168.142.3
       activate: true
+      encapsulation: path-selection
   address_family_ipv4_sr_te:
     peer_groups:
     - name: WAN-OVERLAY-PEERS
@@ -178,8 +184,7 @@ router_bgp:
     bgp:
       additional_paths:
         receive: true
-        send:
-          any: true
+        send: any
 service_routing_protocols_model: multi-agent
 ip_routing: true
 aaa_root:
@@ -211,20 +216,21 @@ ethernet_interfaces:
   peer: site-ha-enabled-leaf2A
   peer_interface: Ethernet1
   peer_type: l3leaf
-  description: P2P_LINK_TO_SITE-HA-ENABLED-LEAF2A_Ethernet1
+  description: P2P_site-ha-enabled-leaf2A_Ethernet1
   shutdown: false
   mtu: 9214
-  type: routed
+  switchport:
+    enabled: false
   ip_address: 172.17.0.5/31
 - name: Ethernet52.1000
   peer: site-ha-enabled-leaf2A
   peer_interface: Ethernet1.1000
   peer_type: l3leaf
   vrf: IT
-  description: P2P_LINK_TO_SITE-HA-ENABLED-LEAF2A_Ethernet1.1000_vrf_IT
+  description: P2P_site-ha-enabled-leaf2A_Ethernet1.1000_VRF_IT
   shutdown: false
-  type: l3dot1q
-  encapsulation_dot1q_vlan: 1000
+  encapsulation_dot1q:
+    vlan: 1000
   mtu: 9214
   ip_address: 172.17.0.5/31
 - name: Ethernet52.142
@@ -232,10 +238,10 @@ ethernet_interfaces:
   peer_interface: Ethernet1.142
   peer_type: l3leaf
   vrf: PROD
-  description: P2P_LINK_TO_SITE-HA-ENABLED-LEAF2A_Ethernet1.142_vrf_PROD
+  description: P2P_site-ha-enabled-leaf2A_Ethernet1.142_VRF_PROD
   shutdown: false
-  type: l3dot1q
-  encapsulation_dot1q_vlan: 142
+  encapsulation_dot1q:
+    vlan: 142
   mtu: 9214
   ip_address: 172.17.0.5/31
 - name: Ethernet52.666
@@ -243,30 +249,31 @@ ethernet_interfaces:
   peer_interface: Ethernet1.666
   peer_type: l3leaf
   vrf: ATTRACTED-VRF-FROM-UPLINK
-  description: P2P_LINK_TO_SITE-HA-ENABLED-LEAF2A_Ethernet1.666_vrf_ATTRACTED-VRF-FROM-UPLINK
+  description: P2P_site-ha-enabled-leaf2A_Ethernet1.666_VRF_ATTRACTED-VRF-FROM-UPLINK
   shutdown: false
-  type: l3dot1q
-  encapsulation_dot1q_vlan: 666
+  encapsulation_dot1q:
+    vlan: 666
   mtu: 9214
   ip_address: 172.17.0.5/31
 - name: Ethernet53
   peer: site-ha-enabled-leaf2B
   peer_interface: Ethernet1
   peer_type: l3leaf
-  description: P2P_LINK_TO_SITE-HA-ENABLED-LEAF2B_Ethernet1
+  description: P2P_site-ha-enabled-leaf2B_Ethernet1
   shutdown: false
   mtu: 9214
-  type: routed
+  switchport:
+    enabled: false
   ip_address: 172.17.0.7/31
 - name: Ethernet53.1000
   peer: site-ha-enabled-leaf2B
   peer_interface: Ethernet1.1000
   peer_type: l3leaf
   vrf: IT
-  description: P2P_LINK_TO_SITE-HA-ENABLED-LEAF2B_Ethernet1.1000_vrf_IT
+  description: P2P_site-ha-enabled-leaf2B_Ethernet1.1000_VRF_IT
   shutdown: false
-  type: l3dot1q
-  encapsulation_dot1q_vlan: 1000
+  encapsulation_dot1q:
+    vlan: 1000
   mtu: 9214
   ip_address: 172.17.0.7/31
 - name: Ethernet53.142
@@ -274,10 +281,10 @@ ethernet_interfaces:
   peer_interface: Ethernet1.142
   peer_type: l3leaf
   vrf: PROD
-  description: P2P_LINK_TO_SITE-HA-ENABLED-LEAF2B_Ethernet1.142_vrf_PROD
+  description: P2P_site-ha-enabled-leaf2B_Ethernet1.142_VRF_PROD
   shutdown: false
-  type: l3dot1q
-  encapsulation_dot1q_vlan: 142
+  encapsulation_dot1q:
+    vlan: 142
   mtu: 9214
   ip_address: 172.17.0.7/31
 - name: Ethernet53.666
@@ -285,22 +292,23 @@ ethernet_interfaces:
   peer_interface: Ethernet1.666
   peer_type: l3leaf
   vrf: ATTRACTED-VRF-FROM-UPLINK
-  description: P2P_LINK_TO_SITE-HA-ENABLED-LEAF2B_Ethernet1.666_vrf_ATTRACTED-VRF-FROM-UPLINK
+  description: P2P_site-ha-enabled-leaf2B_Ethernet1.666_VRF_ATTRACTED-VRF-FROM-UPLINK
   shutdown: false
-  type: l3dot1q
-  encapsulation_dot1q_vlan: 666
+  encapsulation_dot1q:
+    vlan: 666
   mtu: 9214
   ip_address: 172.17.0.7/31
 - name: Ethernet1
   peer_type: l3_interface
   ip_address: dhcp
   shutdown: false
-  type: routed
+  switchport:
+    enabled: false
   description: ATT_423-01
   dhcp_client_accept_default_route: true
 loopback_interfaces:
 - name: Loopback0
-  description: Router_ID
+  description: ROUTER_ID
   shutdown: false
   ip_address: 192.168.42.2/32
 as_path:
@@ -489,6 +497,8 @@ router_adaptive_virtual_topology:
     load_balance_policy: LB-PROD-AVT-POLICY-VOICE
   - name: PROD-AVT-POLICY-VIDEO
     load_balance_policy: LB-PROD-AVT-POLICY-VIDEO
+  - name: PROD-AVT-POLICY-MPLS-ONLY
+    load_balance_policy: LB-PROD-AVT-POLICY-MPLS-ONLY
   - name: PROD-AVT-POLICY-DEFAULT
     load_balance_policy: LB-PROD-AVT-POLICY-DEFAULT
   - name: DEFAULT-POLICY-DEFAULT
@@ -510,6 +520,8 @@ router_adaptive_virtual_topology:
       id: 2
     - name: PROD-AVT-POLICY-VIDEO
       id: 4
+    - name: PROD-AVT-POLICY-MPLS-ONLY
+      id: 5
     - name: PROD-AVT-POLICY-DEFAULT
       id: 1
   - name: IT
@@ -539,6 +551,8 @@ router_adaptive_virtual_topology:
       avt_profile: PROD-AVT-POLICY-VOICE
     - application_profile: VIDEO
       avt_profile: PROD-AVT-POLICY-VIDEO
+    - application_profile: MPLS-ONLY
+      avt_profile: PROD-AVT-POLICY-MPLS-ONLY
     - application_profile: default
       avt_profile: PROD-AVT-POLICY-DEFAULT
   - name: DEFAULT-AVT-POLICY
@@ -616,6 +630,9 @@ router_path_selection:
       priority: 2
     - name: LAN_HA
     loss_rate: '42.0'
+  - name: LB-PROD-AVT-POLICY-MPLS-ONLY
+    path_groups:
+    - name: LAN_HA
   - name: LB-PROD-AVT-POLICY-DEFAULT
     path_groups:
     - name: INET
@@ -648,6 +665,7 @@ application_traffic_recognition:
   - name: VOICE
     applications:
     - name: CUSTOM-VOICE-APPLICATION
+  - name: MPLS-ONLY
   - name: APP-PROFILE-CONTROL-PLANE
     applications:
     - name: APP-CONTROL-PLANE
@@ -699,7 +717,7 @@ application_traffic_recognition:
 dps_interfaces:
 - name: Dps1
   description: DPS Interface
-  mtu: 9214
+  mtu: 9194
   ip_address: 192.168.142.2/32
   flow_tracker:
     hardware: FLOW-TRACKER

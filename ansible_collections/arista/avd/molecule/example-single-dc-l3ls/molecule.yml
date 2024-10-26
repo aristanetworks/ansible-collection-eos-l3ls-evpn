@@ -27,8 +27,5 @@ provisioner:
   ansible_args:
     - --inventory
     - ${MOLECULE_SCENARIO_DIRECTORY}/../../examples/single-dc-l3ls/inventory.yml
-    # Running with tags build to avoid deploy_eapi to run.
-    - --tags
-    - build
 verifier:
   name: ansible

@@ -3,7 +3,6 @@
 # that can be found in the LICENSE file.
 ---
 - name: "Configure devices on {{ inventory_hostname }}"
-  tags: [provision, apply]
   arista.cvp.cv_device:
     devices: "{{ cvp_devices }}"
     cvp_facts: "{{ cvp_facts.ansible_facts }}"

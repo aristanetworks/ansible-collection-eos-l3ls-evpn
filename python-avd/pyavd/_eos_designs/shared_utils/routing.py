@@ -6,7 +6,7 @@ from __future__ import annotations
 from functools import cached_property
 from typing import TYPE_CHECKING
 
-from pyavd._errors import AristaAvdError, AristaAvdMissingVariableError
+from pyavd._errors import AristaAvdError, AristaAvdInvalidInputsError
 from pyavd._utils import get
 from pyavd.j2filters import range_expand
 
@@ -42,9 +42,11 @@ class RoutingMixin:
     @cached_property
     def bgp(self: SharedUtils) -> bool:
         """Boolean telling if BGP Routing should be configured."""
+        if not self.underlay_router:
+            return False
+
         return (
-            self.underlay_router
-            and self.uplink_type in ["p2p", "p2p-vrfs", "lan"]
+            self.uplink_type in ["p2p", "p2p-vrfs", "lan"]
             and (
                 self.underlay_routing_protocol == "ebgp"
                 or (
@@ -53,7 +55,7 @@ class RoutingMixin:
                 )
                 or self.bgp_in_network_services
             )
-        )
+        ) or bool(self.l3_interfaces_bgp_neighbors)
 
     @cached_property
     def router_id(self: SharedUtils) -> str | None:
@@ -103,7 +105,7 @@ class RoutingMixin:
 
                 if self.id is None:
                     msg = f"'id' is not set on '{self.hostname}' and is required when expanding 'bgp_as'"
-                    raise AristaAvdMissingVariableError(msg)
+                    raise AristaAvdInvalidInputsError(msg)
                 return bgp_as_range_expanded[self.id - 1]
             except IndexError as exc:
                 msg = f"Unable to allocate BGP AS: bgp_as range is too small ({len(bgp_as_range_expanded)}) for the id of the device"

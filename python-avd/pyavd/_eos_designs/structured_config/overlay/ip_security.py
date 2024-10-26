@@ -47,7 +47,7 @@ class IpSecurityMixin(UtilsMixin):
         return strip_null_from_data(ip_security)
 
     def _append_data_plane(self: AvdStructuredConfigOverlay, ip_security: dict, data_plane_config: dict) -> None:
-        """In place update of ip_security."""
+        """In place update of ip_security for DataPlane."""
         ike_policy_name = get(data_plane_config, "ike_policy_name", default="DP-IKE-POLICY") if self.shared_utils.wan_ha_ipsec else None
         sa_policy_name = get(data_plane_config, "sa_policy_name", default="DP-SA-POLICY")
         profile_name = get(data_plane_config, "profile_name", default="DP-PROFILE")
@@ -66,7 +66,7 @@ class IpSecurityMixin(UtilsMixin):
         """
         In place update of ip_security for control plane data.
 
-        expected to be called AFTER _append_data_plane
+        expected to be called AFTER _append_data_plane as CP is used for data-plane as well if not configured.
         """
         ike_policy_name = get(control_plane_config, "ike_policy_name", default="CP-IKE-POLICY")
         sa_policy_name = get(control_plane_config, "sa_policy_name", default="CP-SA-POLICY")
@@ -78,7 +78,7 @@ class IpSecurityMixin(UtilsMixin):
         ip_security["profiles"].append(self._profile(profile_name, ike_policy_name, sa_policy_name, key))
 
         if not ip_security.get("key_controller"):
-            # If there is not data plane IPSec profile, use the control plane one for key controller
+            # If there is no data plane IPSec profile, use the control plane one for key controller
             ip_security["key_controller"] = self._key_controller(profile_name)
 
     def _ike_policy(self: AvdStructuredConfigOverlay, name: str) -> dict | None:
@@ -126,7 +126,4 @@ class IpSecurityMixin(UtilsMixin):
 
     def _key_controller(self: AvdStructuredConfigOverlay, profile_name: str) -> dict | None:
         """Return a key_controller structure if the device is not a RR or pathfinder."""
-        if self.shared_utils.is_wan_server:
-            return None
-
-        return {"profile": profile_name}
+        return None if self.shared_utils.is_wan_server else {"profile": profile_name}

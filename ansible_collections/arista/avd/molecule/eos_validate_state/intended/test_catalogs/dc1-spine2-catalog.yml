@@ -200,43 +200,43 @@ anta.tests.interfaces:
     - name: Ethernet1
       status: up
     result_overwrite:
-      custom_field: Interface Ethernet1 - P2P_LINK_TO_DC1-LEAF1A_Ethernet2 = 'up'
+      custom_field: Interface Ethernet1 - P2P_dc1-leaf1a_Ethernet2 = 'up'
 - VerifyInterfacesStatus:
     interfaces:
     - name: Ethernet2
       status: up
     result_overwrite:
-      custom_field: Interface Ethernet2 - P2P_LINK_TO_DC1-LEAF1B_Ethernet2 = 'up'
+      custom_field: Interface Ethernet2 - P2P_dc1-leaf1b_Ethernet2 = 'up'
 - VerifyInterfacesStatus:
     interfaces:
     - name: Ethernet3
       status: up
     result_overwrite:
-      custom_field: Interface Ethernet3 - P2P_LINK_TO_DC1-LEAF2A_Ethernet2 = 'up'
+      custom_field: Interface Ethernet3 - P2P_dc1-leaf2a_Ethernet2 = 'up'
 - VerifyInterfacesStatus:
     interfaces:
     - name: Ethernet4
       status: adminDown
     result_overwrite:
-      custom_field: Interface Ethernet4 - P2P_LINK_TO_DC1-LEAF2B_Ethernet2 = 'adminDown'
+      custom_field: Interface Ethernet4 - P2P_dc1-leaf2b_Ethernet2 = 'adminDown'
 - VerifyInterfacesStatus:
     interfaces:
     - name: Ethernet5
       status: up
     result_overwrite:
-      custom_field: Interface Ethernet5 - P2P_LINK_TO_DC1-SVC-LEAF1A_Ethernet2 = 'up'
+      custom_field: Interface Ethernet5 - P2P_dc1-svc-leaf1a_Ethernet2 = 'up'
 - VerifyInterfacesStatus:
     interfaces:
     - name: Ethernet6
       status: up
     result_overwrite:
-      custom_field: Interface Ethernet6 - P2P_LINK_TO_DC1-SVC-LEAF1B_Ethernet2 = 'up'
+      custom_field: Interface Ethernet6 - P2P_dc1-svc-leaf1b_Ethernet2 = 'up'
 - VerifyInterfacesStatus:
     interfaces:
     - name: Loopback0
       status: up
     result_overwrite:
-      custom_field: Interface Loopback0 - EVPN_Overlay_Peering = 'up'
+      custom_field: Interface Loopback0 - ROUTER_ID = 'up'
 - VerifyInterfaceUtilization:
     threshold: 70.0
 - VerifyInterfaceErrors: null

@@ -43,12 +43,12 @@ This behavior can be adjusted by setting the variable described below.
 roles/eos_designs/docs/tables/role-input-validation.md
 --8<--
 
-## Documentation settings
+## Generation of facts, structured configuration and documentation
 
-The following settings can be leveraged to control documentation generation.
+The following settings can be leveraged to control generation of facts, structured configuration and fabric documentation.
 
 --8<--
-roles/eos_designs/docs/tables/role-documentation-settings.md
+roles/eos_designs/docs/tables/role-settings.md
 --8<--
 
 ## Custom Templates

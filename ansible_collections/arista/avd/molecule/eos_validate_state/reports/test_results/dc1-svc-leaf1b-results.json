@@ -453,7 +453,7 @@
       "interfaces"
     ],
     "description": "Verifies the status of the provided interfaces.",
-    "custom_field": "Interface Ethernet1 - P2P_LINK_TO_DC1-SPINE1_Ethernet6 = 'up'"
+    "custom_field": "Interface Ethernet1 - P2P_dc1-spine1_Ethernet6 = 'up'"
   },
   {
     "name": "dc1-svc-leaf1b",
@@ -462,7 +462,7 @@
       "interfaces"
     ],
     "description": "Verifies the status of the provided interfaces.",
-    "custom_field": "Interface Ethernet2 - P2P_LINK_TO_DC1-SPINE2_Ethernet6 = 'up'"
+    "custom_field": "Interface Ethernet2 - P2P_dc1-spine2_Ethernet6 = 'up'"
   },
   {
     "name": "dc1-svc-leaf1b",
@@ -471,7 +471,7 @@
       "interfaces"
     ],
     "description": "Verifies the status of the provided interfaces.",
-    "custom_field": "Interface Ethernet3 - MLAG_PEER_dc1-svc-leaf1a_Ethernet3 = 'up'"
+    "custom_field": "Interface Ethernet3 - MLAG_dc1-svc-leaf1a_Ethernet3 = 'up'"
   },
   {
     "name": "dc1-svc-leaf1b",
@@ -480,7 +480,7 @@
       "interfaces"
     ],
     "description": "Verifies the status of the provided interfaces.",
-    "custom_field": "Interface Ethernet4 - MLAG_PEER_dc1-svc-leaf1a_Ethernet4 = 'up'"
+    "custom_field": "Interface Ethernet4 - MLAG_dc1-svc-leaf1a_Ethernet4 = 'up'"
   },
   {
     "name": "dc1-svc-leaf1b",
@@ -489,7 +489,7 @@
       "interfaces"
     ],
     "description": "Verifies the status of the provided interfaces.",
-    "custom_field": "Interface Loopback0 - EVPN_Overlay_Peering = 'up'"
+    "custom_field": "Interface Loopback0 - ROUTER_ID = 'up'"
   },
   {
     "name": "dc1-svc-leaf1b",
@@ -498,7 +498,7 @@
       "interfaces"
     ],
     "description": "Verifies the status of the provided interfaces.",
-    "custom_field": "Interface Loopback1 - VTEP_VXLAN_Tunnel_Source = 'up'"
+    "custom_field": "Interface Loopback1 - VXLAN_TUNNEL_SOURCE = 'up'"
   },
   {
     "name": "dc1-svc-leaf1b",
@@ -507,7 +507,7 @@
       "interfaces"
     ],
     "description": "Verifies the status of the provided interfaces.",
-    "custom_field": "Interface Port-Channel3 - MLAG_PEER_dc1-svc-leaf1a_Po3 = 'up'"
+    "custom_field": "Interface Port-Channel3 - MLAG_dc1-svc-leaf1a_Port-Channel3 = 'up'"
   },
   {
     "name": "dc1-svc-leaf1b",
@@ -516,7 +516,7 @@
       "interfaces"
     ],
     "description": "Verifies the status of the provided interfaces.",
-    "custom_field": "Interface Vlan4093 - MLAG_PEER_L3_PEERING = 'up'"
+    "custom_field": "Interface Vlan4093 - MLAG_L3 = 'up'"
   },
   {
     "name": "dc1-svc-leaf1b",
@@ -525,7 +525,7 @@
       "interfaces"
     ],
     "description": "Verifies the status of the provided interfaces.",
-    "custom_field": "Interface Vlan4094 - MLAG_PEER = 'up'"
+    "custom_field": "Interface Vlan4094 - MLAG = 'up'"
   },
   {
     "name": "dc1-svc-leaf1b",

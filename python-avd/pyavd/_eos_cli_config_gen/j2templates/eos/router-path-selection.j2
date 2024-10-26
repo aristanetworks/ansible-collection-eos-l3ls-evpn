@@ -58,7 +58,8 @@ router path-selection
       !
       {{ local_ip_def }}
 {%             if local_ip.stun.server_profiles is arista.avd.defined %}
-         stun server-profile {{ local_ip.stun.server_profiles | join(" ") }}
+{%                 set server_profiles = local_ip.stun.server_profiles | arista.avd.natural_sort %}
+         stun server-profile {{ server_profiles | join(" ") }}
 {%             endif %}
 {%         endfor %}
 {#      peer dynamic #}
@@ -91,17 +92,17 @@ router path-selection
 {%     for load_balance_policy in router_path_selection.load_balance_policies | arista.avd.natural_sort('name') %}
    !
    load-balance policy {{ load_balance_policy.name }}
-{%         if load_balance_policy.lowest_hop_count is arista.avd.defined(true) %}
-      hop count lowest
+{%         if load_balance_policy.latency is arista.avd.defined %}
+      latency {{ load_balance_policy.latency }}
 {%         endif %}
 {%         if load_balance_policy.jitter is arista.avd.defined %}
       jitter {{ load_balance_policy.jitter }}
 {%         endif %}
-{%         if load_balance_policy.latency is arista.avd.defined %}
-      latency {{ load_balance_policy.latency }}
-{%         endif %}
 {%         if load_balance_policy.loss_rate is arista.avd.defined %}
       loss-rate {{ load_balance_policy.loss_rate }}
+{%         endif %}
+{%         if load_balance_policy.lowest_hop_count is arista.avd.defined(true) %}
+      hop count lowest
 {%         endif %}
 {%         for priority, entries in load_balance_policy.path_groups | arista.avd.default([]) | groupby("priority", default=1) %}
 {%             for entry in entries | arista.avd.natural_sort("name") %}
@@ -125,6 +126,9 @@ router path-selection
 {%         endif %}
 {%         for rule in policy.rules | arista.avd.natural_sort('id') %}
 {%             if rule.application_profile is arista.avd.defined %}
+{%                 if policy.default_match is arista.avd.defined or not loop.first %}
+      !
+{%                 endif %}
       {{ rule.id }} application-profile {{ rule.application_profile }}
 {%                 if rule.load_balance is arista.avd.defined %}
          load-balance {{ rule.load_balance }}

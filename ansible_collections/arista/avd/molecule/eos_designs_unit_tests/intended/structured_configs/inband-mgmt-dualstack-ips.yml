@@ -26,7 +26,6 @@ ethernet_interfaces:
   peer_type: l3leaf
   description: INBAND-MGMT-PARENT-DUALSTACK1_Ethernet25
   shutdown: false
-  type: port-channel-member
   channel_group:
     id: 1
     mode: active
@@ -36,17 +35,18 @@ ethernet_interfaces:
   peer_type: l3leaf
   description: INBAND-MGMT-PARENT-DUALSTACK2_Ethernet25
   shutdown: false
-  type: port-channel-member
   channel_group:
     id: 1
     mode: active
 port_channel_interfaces:
 - name: Port-Channel1
-  description: INBAND-MGMT-PARENTS-DUALSTACK_Po25
-  type: switched
+  description: inband-mgmt-parents-dualstack_Po25
+  switchport:
+    enabled: true
+    mode: trunk
+    trunk:
+      allowed_vlan: '105'
   shutdown: false
-  mode: trunk
-  vlans: '105'
 vlans:
 - id: 105
   name: INBAND_MGMT

@@ -17,20 +17,20 @@
 
 | Management Interface | Description | Type | VRF | IP Address | Gateway |
 | -------------------- | ----------- | ---- | --- | ---------- | ------- |
-| Management1 | oob_management | oob | MGMT | 10.73.255.122/24 | 10.73.255.2 |
+| Management1 | OOB_MANAGEMENT | oob | MGMT | 10.73.255.122/24 | 10.73.255.2 |
 
 ##### IPv6
 
 | Management Interface | Description | Type | VRF | IPv6 Address | IPv6 Gateway |
 | -------------------- | ----------- | ---- | --- | ------------ | ------------ |
-| Management1 | oob_management | oob | MGMT | - | - |
+| Management1 | OOB_MANAGEMENT | oob | MGMT | - | - |
 
 #### Management Interfaces Device Configuration
 
 ```eos
 !
 interface Management1
-   description oob_management
+   description OOB_MANAGEMENT
    vrf MGMT
    ip address 10.73.255.122/24
 ```
@@ -74,14 +74,14 @@ interface Tunnel1
    mtu 1500
    vrf Tunnel-VRF
    ip address 42.42.42.42/24
+   tcp mss ceiling ipv4 666 ingress
    ip access-group test-in in
    ip access-group test-out out
-   tcp mss ceiling ipv4 666 ingress
    tunnel mode ipsec
    tunnel source interface Ethernet42
    tunnel destination 6.6.6.6
-   tunnel underlay vrf Underlay-VRF
    tunnel path-mtu-discovery
+   tunnel underlay vrf Underlay-VRF
    comment
    Comment created from eos_cli under tunnel_interfaces.Tunnel1
    EOF
@@ -92,9 +92,9 @@ interface Tunnel2
    shutdown
    ipv6 enable
    ipv6 address cafe::1/64
+   tcp mss ceiling ipv6 666 egress
    ipv6 access-group test-in in
    ipv6 access-group test-out out
-   tcp mss ceiling ipv6 666 egress
    ip nat service-profile NAT-PROFILE-NO-VRF-2
    tunnel mode gre
    tunnel source interface Ethernet42

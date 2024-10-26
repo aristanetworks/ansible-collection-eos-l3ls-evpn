@@ -13,6 +13,10 @@ router_bgp:
   maximum_paths:
     paths: 4
     ecmp: 4
+  redistribute:
+    connected:
+      enabled: true
+      route_map: RM-CONN-2-BGP
   updates:
     wait_install: true
   peer_groups:
@@ -62,9 +66,6 @@ router_bgp:
       activate: false
     - name: Tenant_C_WAN_Zone_BGP_PEER_GROUP
       activate: true
-  redistribute_routes:
-  - source_protocol: connected
-    route_map: RM-CONN-2-BGP
   neighbors:
   - ip_address: 172.31.255.0
     peer_group: UNDERLAY-PEERS
@@ -167,8 +168,9 @@ router_bgp:
         route_targets:
         - 65000:123
     router_id: 192.168.255.17
-    redistribute_routes:
-    - source_protocol: connected
+    redistribute:
+      connected:
+        enabled: true
   - name: Tenant_B_OP_Zone
     rd: 192.168.255.17:20
     route_targets:
@@ -181,8 +183,9 @@ router_bgp:
         route_targets:
         - '20:20'
     router_id: 192.168.255.17
-    redistribute_routes:
-    - source_protocol: connected
+    redistribute:
+      connected:
+        enabled: true
   - name: Tenant_B_WAN_Zone
     rd: 192.168.255.17:21
     route_targets:
@@ -195,8 +198,9 @@ router_bgp:
         route_targets:
         - '21:21'
     router_id: 192.168.255.17
-    redistribute_routes:
-    - source_protocol: connected
+    redistribute:
+      connected:
+        enabled: true
   - name: Tenant_C_WAN_Zone
     rd: 192.168.255.17:31
     route_targets:
@@ -209,8 +213,9 @@ router_bgp:
         route_targets:
         - '31:31'
     router_id: 192.168.255.17
-    redistribute_routes:
-    - source_protocol: connected
+    redistribute:
+      connected:
+        enabled: true
     address_family_ipv4:
       neighbors:
       - ip_address: 1.1.1.1
@@ -332,7 +337,7 @@ vrfs:
   ip_routing: true
 management_interfaces:
 - name: Management1
-  description: oob_management
+  description: OOB_MANAGEMENT
   shutdown: false
   vrf: MGMT
   ip_address: 192.168.200.118/24
@@ -367,7 +372,8 @@ ethernet_interfaces:
   speed: forced 100gfull
   shutdown: false
   mtu: 1500
-  type: routed
+  switchport:
+    enabled: false
   ip_address: 172.31.255.1/31
 - name: Ethernet2
   peer: DC1-SPINE2
@@ -377,7 +383,8 @@ ethernet_interfaces:
   speed: forced 100gfull
   shutdown: false
   mtu: 1500
-  type: routed
+  switchport:
+    enabled: false
   ip_address: 172.31.255.3/31
 - name: Ethernet3
   peer: DC1-SPINE3
@@ -387,7 +394,8 @@ ethernet_interfaces:
   speed: forced 100gfull
   shutdown: false
   mtu: 1500
-  type: routed
+  switchport:
+    enabled: false
   ip_address: 172.31.255.5/31
 - name: Ethernet4
   peer: DC1-SPINE4
@@ -397,15 +405,16 @@ ethernet_interfaces:
   speed: forced 100gfull
   shutdown: false
   mtu: 1500
-  type: routed
+  switchport:
+    enabled: false
   ip_address: 172.31.255.7/31
 loopback_interfaces:
 - name: Loopback0
-  description: EVPN_Overlay_Peering
+  description: ROUTER_ID
   shutdown: false
   ip_address: 192.168.255.17/32
 - name: Loopback1
-  description: VTEP_VXLAN_Tunnel_Source
+  description: VXLAN_TUNNEL_SOURCE
   shutdown: false
   ip_address: 192.168.254.17/32
 prefix_lists:

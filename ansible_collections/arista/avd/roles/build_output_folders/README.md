@@ -75,7 +75,6 @@ Below is an example to use in your playbook to build output folders using defaul
   gather_facts: no
   tasks:
     - name: 'Build local folders for output'
-      tags: [build]
       ansible.builtin.import_role:
         name: arista.avd.build_output_folders
 ```

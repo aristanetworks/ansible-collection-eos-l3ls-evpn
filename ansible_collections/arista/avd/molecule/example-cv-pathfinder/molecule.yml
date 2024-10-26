@@ -1,0 +1,33 @@
+---
+scenario:
+  converge_sequence:
+    - converge
+  test_sequence:
+    - converge
+    - idempotence
+  cleanup_sequence:
+    - destroy
+dependency:
+  name: galaxy
+  enabled: false
+driver:
+  name: default
+  options:
+    managed: false
+platforms:
+  - name: dummy
+provisioner:
+  name: ansible
+  config_options:
+    defaults:
+      jinja2_extensions: jinja2.ext.loopcontrols,jinja2.ext.do,jinja2.ext.i18n
+      duplicate_dict_key: error
+  playbooks:
+    converge: '../../examples/cv-pathfinder/build.yml'
+  ansible_args:
+    - --inventory
+    - ${MOLECULE_SCENARIO_DIRECTORY}/../../examples/cv-pathfinder/inventory.yml
+    - --vault-password-file
+    - ${MOLECULE_SCENARIO_DIRECTORY}/../../examples/cv-pathfinder/.vault
+verifier:
+  name: ansible

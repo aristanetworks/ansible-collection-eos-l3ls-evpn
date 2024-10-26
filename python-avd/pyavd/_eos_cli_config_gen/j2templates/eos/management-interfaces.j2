@@ -15,14 +15,14 @@ interface {{ management_interface.name }}
 {%     elif management_interface.shutdown is arista.avd.defined(false) %}
    no shutdown
 {%     endif %}
-{%     if management_interface.speed is arista.avd.defined %}
-   speed {{ management_interface.speed }}
-{%     endif %}
 {%     if management_interface.mtu is arista.avd.defined %}
    mtu {{ management_interface.mtu }}
 {%     endif %}
 {%     if management_interface.mac_address is arista.avd.defined %}
    mac-address {{ management_interface.mac_address }}
+{%     endif %}
+{%     if management_interface.speed is arista.avd.defined %}
+   speed {{ management_interface.speed }}
 {%     endif %}
 {%     if management_interface.vrf is arista.avd.defined and management_interface.vrf != 'default' %}
    vrf {{ management_interface.vrf }}

@@ -3,9 +3,8 @@
 # that can be found in the LICENSE file.
 ---
 - name: Verify Requirements
-  tags: [always, avd_req]
   delegate_to: localhost
-  when: avd_requirements is not defined
+  when: avd_requirements is not defined and avd_verify_requirements | default(true)
   arista.avd.verify_requirements:
     requirements: "{{ lookup('file', requirements_path ~ '/requirements.txt').splitlines() }}"
     avd_ignore_requirements: "{{ avd_ignore_requirements | default(false) }}"
@@ -15,7 +14,7 @@
   register: avd_requirements
 
 - name: Create required output directories if not present
-  tags: [build, provision]
+  when: avd_create_directories | arista.avd.default(true)
   ansible.builtin.file:
     path: "{{ item }}"
     state: directory
@@ -27,7 +26,6 @@
   run_once: true
 
 - name: Set eos_designs facts
-  tags: [build, provision, facts]
   arista.avd.eos_designs_facts:
     avd_switch_facts: true
     # cprofile_file: "eos_designs_facts.prof"
@@ -36,46 +34,42 @@
   check_mode: false
   run_once: true
 
-- name: Generate YAML file with hostvars (only for debugging)
-  tags: [debug, never]
-  ansible.builtin.template:
-    src: debug/generate-debug-vars.j2
-    dest: "{{ structured_dir }}/{{ inventory_hostname }}-debug-vars.yml"
-    mode: "0o664"
-  delegate_to: localhost
-  changed_when: false
-
 - name: Generate device configuration in structured format
-  tags: [build, provision]
+  when: avd_eos_designs_structured_config | arista.avd.default(true) or avd_eos_designs_debug | arista.avd.default(false)
   arista.avd.eos_designs_structured_config:
     eos_designs_custom_templates: "{{ eos_designs_custom_templates | arista.avd.default([]) }}"
     dest: "{{ structured_dir }}/{{ inventory_hostname }}.{{ avd_structured_config_file_format }}"
     # cprofile_file: "structured-{{inventory_hostname}}.prof"
     template_output: true
     validation_mode: "{{ avd_data_validation_mode }}"
+    structured_config: "{{ avd_eos_designs_structured_config | arista.avd.default(true) }}"
+    debug_vars: "{{ avd_eos_designs_debug | arista.avd.default(false) }}"
+    debug_vars_file: "{{ structured_dir }}/{{ inventory_hostname }}-debug-vars.yml"
   delegate_to: localhost
   check_mode: false
   register: structured_config
 
 - name: Generate fabric documentation
-  tags: [build, provision, documentation]
+  when: eos_designs_documentation.enable | arista.avd.default(true)
+        or eos_designs_documentation.topology_csv | arista.avd.default(false)
+        or eos_designs_documentation.p2p_links_csv | arista.avd.default(false)
   arista.avd.eos_designs_documentation:
     structured_config_dir: "{{ structured_dir }}"
     structured_config_suffix: "{{ avd_structured_config_file_format }}"
     fabric_documentation_file: "{{ fabric_dir }}/{{ fabric_name }}-documentation.md"
-    fabric_documentation: "{{ eos_designs_documentation.enabled | arista.avd.default(true) }}"
+    fabric_documentation: "{{ eos_designs_documentation.enable | arista.avd.default(true) }}"
     include_connected_endpoints: "{{ eos_designs_documentation.connected_endpoints | arista.avd.default(false) }}"
     topology_csv_file: "{{ fabric_dir }}/{{ fabric_name }}-topology.csv"
-    topology_csv: "{{ eos_designs_documentation.topology_csv | arista.avd.default(true) }}"
+    topology_csv: "{{ eos_designs_documentation.topology_csv | arista.avd.default(false) }}"
     p2p_links_csv_file: "{{ fabric_dir }}/{{ fabric_name }}-p2p-links.csv"
-    p2p_links_csv: "{{ eos_designs_documentation.p2p_links_csv | arista.avd.default(true) }}"
+    p2p_links_csv: "{{ eos_designs_documentation.p2p_links_csv | arista.avd.default(false) }}"
     mode: "0o664"
   delegate_to: localhost
   check_mode: false
   run_once: true
 
 - name: Remove avd_switch_facts
-  tags: [build, provision, facts, remove_avd_switch_facts]
+  when: avd_eos_designs_unset_facts | arista.avd.default(true)
   arista.avd.set_vars:
     avd_switch_facts: null
     avd_overlay_peers: null

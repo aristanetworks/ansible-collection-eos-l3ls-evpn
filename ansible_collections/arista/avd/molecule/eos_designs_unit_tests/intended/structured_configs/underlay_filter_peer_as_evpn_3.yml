@@ -9,6 +9,10 @@ router_bgp:
   maximum_paths:
     paths: 4
     ecmp: 4
+  redistribute:
+    connected:
+      enabled: true
+      route_map: RM-CONN-2-BGP
   updates:
     wait_install: true
   peer_groups:
@@ -30,9 +34,6 @@ router_bgp:
       activate: true
     - name: EVPN-OVERLAY-PEERS
       activate: false
-  redistribute_routes:
-  - source_protocol: connected
-    route_map: RM-CONN-2-BGP
   neighbors:
   - ip_address: 192.168.153.3
     peer_group: IPv4-UNDERLAY-PEERS
@@ -43,7 +44,7 @@ router_bgp:
   - ip_address: 192.168.255.1
     peer_group: EVPN-OVERLAY-PEERS
     peer: underlay_filter_peer_as_evpn_1
-    description: underlay_filter_peer_as_evpn_1
+    description: underlay_filter_peer_as_evpn_1_Loopback0
     remote_as: '64512'
   address_family_evpn:
     peer_groups:
@@ -74,18 +75,19 @@ ethernet_interfaces:
   peer: underlay_filter_peer_as_evpn_1
   peer_interface: Ethernet2
   peer_type: l3leaf
-  description: P2P_LINK_TO_UNDERLAY_FILTER_PEER_AS_EVPN_1_Ethernet2
+  description: P2P_underlay_filter_peer_as_evpn_1_Ethernet2
   shutdown: false
   mtu: 9214
-  type: routed
+  switchport:
+    enabled: false
   ip_address: 192.168.153.2/31
 loopback_interfaces:
 - name: Loopback0
-  description: EVPN_Overlay_Peering
+  description: ROUTER_ID
   shutdown: false
   ip_address: 192.168.255.3/32
 - name: Loopback1
-  description: VTEP_VXLAN_Tunnel_Source
+  description: VXLAN_TUNNEL_SOURCE
   shutdown: false
   ip_address: 192.168.254.3/32
 prefix_lists:

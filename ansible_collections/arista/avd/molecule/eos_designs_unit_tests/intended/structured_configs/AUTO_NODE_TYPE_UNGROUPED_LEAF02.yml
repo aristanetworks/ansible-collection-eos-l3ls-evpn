@@ -11,6 +11,10 @@ router_bgp:
   maximum_paths:
     paths: 4
     ecmp: 4
+  redistribute:
+    connected:
+      enabled: true
+      route_map: RM-CONN-2-BGP
   updates:
     wait_install: true
   peer_groups:
@@ -31,9 +35,6 @@ router_bgp:
       activate: true
     - name: EVPN-OVERLAY-PEERS
       activate: false
-  redistribute_routes:
-  - source_protocol: connected
-    route_map: RM-CONN-2-BGP
   neighbors:
   - ip_address: 172.31.255.4
     peer_group: IPv4-UNDERLAY-PEERS
@@ -48,12 +49,12 @@ router_bgp:
   - ip_address: 192.168.255.1
     peer_group: EVPN-OVERLAY-PEERS
     peer: AUTO_NODE_TYPE_SPINE01
-    description: AUTO_NODE_TYPE_SPINE01
+    description: AUTO_NODE_TYPE_SPINE01_Loopback0
     remote_as: '65100'
   - ip_address: 192.168.255.2
     peer_group: EVPN-OVERLAY-PEERS
     peer: AUTO_NODE_TYPE_SPINE02
-    description: AUTO_NODE_TYPE_SPINE02
+    description: AUTO_NODE_TYPE_SPINE02_Loopback0
     remote_as: '65100'
   address_family_evpn:
     peer_groups:
@@ -86,7 +87,7 @@ vrfs:
   ip_routing: false
 management_interfaces:
 - name: Management1
-  description: oob_management
+  description: OOB_MANAGEMENT
   shutdown: false
   vrf: MGMT
   ip_address: 192.168.203.13/24
@@ -101,27 +102,29 @@ ethernet_interfaces:
   peer: AUTO_NODE_TYPE_SPINE01
   peer_interface: Ethernet2
   peer_type: spine
-  description: P2P_LINK_TO_AUTO_NODE_TYPE_SPINE01_Ethernet2
+  description: P2P_AUTO_NODE_TYPE_SPINE01_Ethernet2
   shutdown: false
   mtu: 9214
-  type: routed
+  switchport:
+    enabled: false
   ip_address: 172.31.255.5/31
 - name: Ethernet2
   peer: AUTO_NODE_TYPE_SPINE02
   peer_interface: Ethernet2
   peer_type: spine
-  description: P2P_LINK_TO_AUTO_NODE_TYPE_SPINE02_Ethernet2
+  description: P2P_AUTO_NODE_TYPE_SPINE02_Ethernet2
   shutdown: false
   mtu: 9214
-  type: routed
+  switchport:
+    enabled: false
   ip_address: 172.31.255.7/31
 loopback_interfaces:
 - name: Loopback0
-  description: EVPN_Overlay_Peering
+  description: ROUTER_ID
   shutdown: false
   ip_address: 192.168.255.4/32
 - name: Loopback1
-  description: VTEP_VXLAN_Tunnel_Source
+  description: VXLAN_TUNNEL_SOURCE
   shutdown: false
   ip_address: 192.168.254.4/32
 prefix_lists:

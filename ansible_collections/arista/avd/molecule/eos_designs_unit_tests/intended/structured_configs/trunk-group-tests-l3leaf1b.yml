@@ -9,6 +9,10 @@ router_bgp:
   maximum_paths:
     paths: 4
     ecmp: 4
+  redistribute:
+    connected:
+      enabled: true
+      route_map: RM-CONN-2-BGP
   updates:
     wait_install: true
   peer_groups:
@@ -43,10 +47,7 @@ router_bgp:
   - ip_address: 10.255.247.0
     peer_group: MLAG-IPv4-UNDERLAY-PEER
     peer: trunk-group-tests-l3leaf1a
-    description: trunk-group-tests-l3leaf1a
-  redistribute_routes:
-  - source_protocol: connected
-    route_map: RM-CONN-2-BGP
+    description: trunk-group-tests-l3leaf1a_Vlan4093
   address_family_evpn:
     peer_groups:
     - name: EVPN-OVERLAY-PEERS
@@ -64,12 +65,14 @@ router_bgp:
         route_targets:
         - 100:100
     router_id: 192.168.250.10
-    redistribute_routes:
-    - source_protocol: connected
+    redistribute:
+      connected:
+        enabled: true
+        route_map: RM-CONN-2-BGP-VRFS
     neighbors:
     - ip_address: 10.255.247.0
       peer_group: MLAG-IPv4-UNDERLAY-PEER
-      description: trunk-group-tests-l3leaf1a
+      description: trunk-group-tests-l3leaf1a_Vlan3099
     updates:
       wait_install: true
   - name: TG_200
@@ -84,12 +87,14 @@ router_bgp:
         route_targets:
         - 200:200
     router_id: 192.168.250.10
-    redistribute_routes:
-    - source_protocol: connected
+    redistribute:
+      connected:
+        enabled: true
+        route_map: RM-CONN-2-BGP-VRFS
     neighbors:
     - ip_address: 10.255.247.0
       peer_group: MLAG-IPv4-UNDERLAY-PEER
-      description: trunk-group-tests-l3leaf1a
+      description: trunk-group-tests-l3leaf1a_Vlan3199
     updates:
       wait_install: true
   - name: TG_300
@@ -104,12 +109,14 @@ router_bgp:
         route_targets:
         - 300:300
     router_id: 192.168.250.10
-    redistribute_routes:
-    - source_protocol: connected
+    redistribute:
+      connected:
+        enabled: true
+        route_map: RM-CONN-2-BGP-VRFS
     neighbors:
     - ip_address: 10.255.247.0
       peer_group: MLAG-IPv4-UNDERLAY-PEER
-      description: trunk-group-tests-l3leaf1a
+      description: trunk-group-tests-l3leaf1a_Vlan3299
     updates:
       wait_install: true
   vlans:
@@ -231,12 +238,12 @@ spanning_tree:
 vlans:
 - id: 4093
   tenant: system
-  name: LEAF_PEER_L3
+  name: MLAG_L3
   trunk_groups:
   - CUSTOM_LEAF_PEER_L3_TG_NAME
 - id: 4094
   tenant: system
-  name: MLAG_PEER
+  name: MLAG
   trunk_groups:
   - CUSTOM_MLAG_TG_NAME
 - id: 100
@@ -292,12 +299,12 @@ vlans:
   name: l2vlan399_without_trunk_groups
   tenant: TRUNK_GROUP_TESTS
 - id: 3099
-  name: MLAG_iBGP_TG_100
+  name: MLAG_L3_VRF_TG_100
   trunk_groups:
   - CUSTOM_LEAF_PEER_L3_TG_NAME
   tenant: TRUNK_GROUP_TESTS
 - id: 3199
-  name: MLAG_iBGP_TG_200
+  name: MLAG_L3_VRF_TG_200
   trunk_groups:
   - CUSTOM_LEAF_PEER_L3_TG_NAME
   tenant: TRUNK_GROUP_TESTS
@@ -308,7 +315,7 @@ vlans:
   - CUSTOM_MLAG_TG_NAME
   - TG_300
 - id: 3299
-  name: MLAG_iBGP_TG_300
+  name: MLAG_L3_VRF_TG_300
   trunk_groups:
   - CUSTOM_LEAF_PEER_L3_TG_NAME
   tenant: TRUNK_GROUP_TESTS
@@ -320,12 +327,12 @@ vlans:
   - TG_300
 vlan_interfaces:
 - name: Vlan4093
-  description: MLAG_PEER_L3_PEERING
+  description: MLAG_L3
   shutdown: false
   mtu: 9214
   ip_address: 10.255.247.1/31
 - name: Vlan4094
-  description: MLAG_PEER
+  description: MLAG
   shutdown: false
   no_autostate: true
   mtu: 9214
@@ -343,7 +350,7 @@ vlan_interfaces:
   tenant: TRUNK_GROUP_TESTS
   type: underlay_peering
   shutdown: false
-  description: 'MLAG_PEER_L3_iBGP: vrf TG_100'
+  description: MLAG_L3_VRF_TG_100
   vrf: TG_100
   mtu: 9214
   ip_address: 10.255.247.1/31
@@ -360,7 +367,7 @@ vlan_interfaces:
   tenant: TRUNK_GROUP_TESTS
   type: underlay_peering
   shutdown: false
-  description: 'MLAG_PEER_L3_iBGP: vrf TG_200'
+  description: MLAG_L3_VRF_TG_200
   vrf: TG_200
   mtu: 9214
   ip_address: 10.255.247.1/31
@@ -394,51 +401,58 @@ vlan_interfaces:
   tenant: TRUNK_GROUP_TESTS
   type: underlay_peering
   shutdown: false
-  description: 'MLAG_PEER_L3_iBGP: vrf TG_300'
+  description: MLAG_L3_VRF_TG_300
   vrf: TG_300
   mtu: 9214
   ip_address: 10.255.247.1/31
 port_channel_interfaces:
 - name: Port-Channel3
-  description: MLAG_PEER_trunk-group-tests-l3leaf1a_Po3
-  type: switched
+  description: MLAG_trunk-group-tests-l3leaf1a_Port-Channel3
+  switchport:
+    enabled: true
+    mode: trunk
+    trunk:
+      groups:
+      - CUSTOM_MLAG_TG_NAME
+      - CUSTOM_LEAF_PEER_L3_TG_NAME
   shutdown: false
-  mode: trunk
-  trunk_groups:
-  - CUSTOM_LEAF_PEER_L3_TG_NAME
-  - CUSTOM_MLAG_TG_NAME
 - name: Port-Channel1
-  description: TRUNK_GROUP_TESTS_L2LEAF1_Po1
-  type: switched
+  description: L2_TRUNK_GROUP_TESTS_L2LEAF1_Port-Channel1
+  switchport:
+    enabled: true
+    mode: trunk
+    trunk:
+      groups:
+      - TRUNK_GROUP_TESTS_L2LEAF1
   shutdown: false
-  mode: trunk
-  trunk_groups:
-  - TRUNK_GROUP_TESTS_L2LEAF1
   mlag: 1
 - name: Port-Channel5
-  description: TRUNK-GROUP-TESTS-L2LEAF3_Po1
-  type: switched
+  description: L2_trunk-group-tests-l2leaf3_Port-Channel1
+  switchport:
+    enabled: true
+    mode: trunk
+    trunk:
+      groups:
+      - trunk-group-tests-l2leaf3
   shutdown: false
-  mode: trunk
-  trunk_groups:
-  - trunk-group-tests-l2leaf3
   mlag: 5
 - name: Port-Channel13
-  description: server_with_tg_300_portchannel
-  type: switched
+  description: portchannel
   shutdown: false
-  mode: trunk
-  trunk_groups:
-  - TG_NOT_MATCHING_ANY_VLANS
-  - TG_300
+  switchport:
+    enabled: true
+    mode: trunk
+    trunk:
+      groups:
+      - TG_NOT_MATCHING_ANY_VLANS
+      - TG_300
   mlag: 13
 ethernet_interfaces:
 - name: Ethernet3
   peer: trunk-group-tests-l3leaf1a
   peer_interface: Ethernet3
   peer_type: mlag_peer
-  description: MLAG_PEER_trunk-group-tests-l3leaf1a_Ethernet3
-  type: port-channel-member
+  description: MLAG_trunk-group-tests-l3leaf1a_Ethernet3
   shutdown: false
   channel_group:
     id: 3
@@ -447,8 +461,7 @@ ethernet_interfaces:
   peer: trunk-group-tests-l3leaf1a
   peer_interface: Ethernet4
   peer_type: mlag_peer
-  description: MLAG_PEER_trunk-group-tests-l3leaf1a_Ethernet4
-  type: port-channel-member
+  description: MLAG_trunk-group-tests-l3leaf1a_Ethernet4
   shutdown: false
   channel_group:
     id: 3
@@ -457,9 +470,8 @@ ethernet_interfaces:
   peer: trunk-group-tests-l2leaf1a
   peer_interface: Ethernet2
   peer_type: l2leaf
-  description: TRUNK-GROUP-TESTS-L2LEAF1A_Ethernet2
+  description: L2_trunk-group-tests-l2leaf1a_Ethernet2
   shutdown: false
-  type: port-channel-member
   channel_group:
     id: 1
     mode: active
@@ -467,9 +479,8 @@ ethernet_interfaces:
   peer: trunk-group-tests-l2leaf1b
   peer_interface: Ethernet2
   peer_type: l2leaf
-  description: TRUNK-GROUP-TESTS-L2LEAF1B_Ethernet2
+  description: L2_trunk-group-tests-l2leaf1b_Ethernet2
   shutdown: false
-  type: port-channel-member
   channel_group:
     id: 1
     mode: active
@@ -477,9 +488,8 @@ ethernet_interfaces:
   peer: trunk-group-tests-l2leaf3
   peer_interface: Ethernet2
   peer_type: l2leaf
-  description: TRUNK-GROUP-TESTS-L2LEAF3_Ethernet2
+  description: L2_trunk-group-tests-l2leaf3_Ethernet2
   shutdown: false
-  type: port-channel-member
   channel_group:
     id: 5
     mode: active
@@ -487,9 +497,8 @@ ethernet_interfaces:
   peer: server_with_tg_300
   peer_interface: Nic2
   peer_type: server
-  description: server_with_tg_300_Nic2
+  description: SERVER_server_with_tg_300_Nic2
   shutdown: false
-  type: port-channel-member
   channel_group:
     id: 13
     mode: active
@@ -514,13 +523,21 @@ route_maps:
     type: permit
     match:
     - ip address prefix-list PL-LOOPBACKS-EVPN-OVERLAY
+- name: RM-CONN-2-BGP-VRFS
+  sequence_numbers:
+  - sequence: 10
+    type: deny
+    match:
+    - ip address prefix-list PL-MLAG-PEER-VRFS
+  - sequence: 20
+    type: permit
 loopback_interfaces:
 - name: Loopback0
-  description: EVPN_Overlay_Peering
+  description: ROUTER_ID
   shutdown: false
   ip_address: 192.168.250.10/32
 - name: Loopback1
-  description: VTEP_VXLAN_Tunnel_Source
+  description: VXLAN_TUNNEL_SOURCE
   shutdown: false
   ip_address: 192.168.249.9/32
 prefix_lists:
@@ -530,6 +547,10 @@ prefix_lists:
     action: permit 192.168.250.0/24 eq 32
   - sequence: 20
     action: permit 192.168.249.0/24 eq 32
+- name: PL-MLAG-PEER-VRFS
+  sequence_numbers:
+  - sequence: 10
+    action: permit 10.255.247.0/31
 router_bfd:
   multihop:
     interval: 300

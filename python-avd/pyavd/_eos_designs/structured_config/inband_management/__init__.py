@@ -7,7 +7,7 @@ from functools import cached_property
 from ipaddress import ip_network
 
 from pyavd._eos_designs.avdfacts import AvdFacts
-from pyavd._errors import AristaAvdMissingVariableError
+from pyavd._errors import AristaAvdInvalidInputsError
 from pyavd._utils import get, strip_empties_from_dict
 from pyavd.j2filters import natural_sort
 
@@ -107,7 +107,7 @@ class AvdStructuredConfigInbandManagement(AvdFacts):
 
         if self.shared_utils.virtual_router_mac_address is None:
             msg = "'virtual_router_mac_address' must be set for inband management parent."
-            raise AristaAvdMissingVariableError(msg)
+            raise AristaAvdInvalidInputsError(msg)
         return str(self.shared_utils.virtual_router_mac_address).lower()
 
     @cached_property
@@ -121,7 +121,7 @@ class AvdStructuredConfigInbandManagement(AvdFacts):
         if not self.shared_utils.underlay_bgp:
             return None
 
-        return {"redistribute_routes": [{"source_protocol": "attached-host"}]}
+        return {"redistribute": {"attached_host": {"enabled": True}}}
 
     @cached_property
     def prefix_lists(self) -> list | None:

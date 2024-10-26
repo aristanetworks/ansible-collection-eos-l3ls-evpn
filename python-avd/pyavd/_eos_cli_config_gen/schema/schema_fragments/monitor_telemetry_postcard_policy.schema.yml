@@ -7,6 +7,8 @@
 type: dict
 keys:
   monitor_telemetry_postcard_policy:
+    documentation_options:
+      table: monitor-telemetry
     type: dict
     keys:
       disabled:

@@ -80,24 +80,25 @@ router_bgp:
       attribute_map: RM-ATTRIBUTE
       match_map: RM-MATCH
       advertise_only: true
-  redistribute_routes:
-    - source_protocol: ospf
-      include_leaked: true
-    - source_protocol: ospf
-      ospf_route_type: internal
-    - source_protocol: ospf
-      ospf_route_type: external
-    - source_protocol: ospf
-      ospf_route_type: nssa-external 1
-      route_map: RM-REDISTRIBUTE-OSPF-NSSA-1
-      include_leaked: true
-    - source_protocol: bgp
+  redistribute:
+    ospf:
+      match_internal:
+        enabled: true
+      match_external:
+        enabled: true
+      match_nssa_external:
+        enabled: true
+        nssa_type: 1
+        route_map: RM-REDISTRIBUTE-OSPF-NSSA-1
+        include_leaked: true
+    bgp:
+      enabled: true
       route_map: RM-REDISTRIBUTE-BGP
-      # this should not do anything as leaked is generated when source protocol is bgp
-      include_leaked: true
-    - source_protocol: connected
+    connected:
+      enabled: true
       rcf: Router_BGP_Connected()
-    - source_protocol: static
+    static:
+      enabled: true
       rcf: Router_BGP_Static()
   address_family_ipv4:
     networks:
@@ -107,6 +108,11 @@ router_bgp:
         route_map: RM-FOO-MATCH
     bgp:
       redistribute_internal: false
+      additional_paths:
+        receive: true
+        install: true
+        send: ecmp
+        send_limit: 20
     peer_groups:
       - name: foo
         prefix_list_in: PL-BAR-v4-IN
@@ -114,31 +120,46 @@ router_bgp:
         default_originate:
           always: true
           route_map: RM-FOO-MATCH
+        additional_paths:
+          receive: true
+          send: ecmp
+          send_limit: 20
+          prefix_list: PL1
     neighbors:
       - ip_address: 192.0.2.1
         prefix_list_in: PL-FOO-v4-IN
         prefix_list_out: PL-FOO-v4-OUT
+        additional_paths:
+          receive: true
+          send: limit
+          send_limit: 20
+          prefix_list: PL1
       - ip_address: 10.2.3.8
         rcf_in: Address_Family_IPV4_In()
       - ip_address: 10.2.3.9
         rcf_out: Address_Family_IPV4_Out()
-    redistribute_routes:
-      - source_protocol: ospf
-        include_leaked: true
-        ospf_route_type: internal
-      - source_protocol: ospf
-        ospf_route_type: external
-        route_map: RM-REDISTRIBUTE-OSPF-EXTERNAL
-        include_leaked: true
-      - source_protocol: ospf
-        ospf_route_type: nssa-external
-      - source_protocol: connected
+    redistribute:
+      ospf:
+        match_internal:
+          enabled: true
+          include_leaked: true
+        match_external:
+          enabled: true
+          route_map: RM-REDISTRIBUTE-OSPF-EXTERNAL
+          include_leaked: true
+        match_nssa_external:
+          enabled: true
+      connected:
+        enabled: true
         include_leaked: true
         rcf: Address_Family_IPV4_Connected()
-      - source_protocol: bgp
-      - source_protocol: static
+      bgp:
+        enabled: true
+      static:
+        enabled: true
         rcf: Address_Family_IPV4_Static()
-      - source_protocol: dynamic
+      dynamic:
+        enabled: true
         route_map: Address_Family_IPV4_Dynamic_RM
   address_family_ipv6:
     networks:
@@ -147,35 +168,63 @@ router_bgp:
         route_map: RM-BAR-MATCH
     bgp:
       redistribute_internal: true
+      additional_paths:
+        receive: true
+        install_ecmp_primary: true
+        send: any
     peer_groups:
       - name: baz
         prefix_list_in: PL-BAR-v6-IN
         prefix_list_out: PL-BAR-v6-OUT
+        additional_paths:
+          receive: true
+          send: ecmp
+          send_limit: 20
+          prefix_list: PL2
     neighbors:
       - ip_address: 2001:db8::1
         prefix_list_in: PL-FOO-v6-IN
         prefix_list_out: PL-FOO-v6-OUT
+        additional_paths:
+          receive: true
+          send: ecmp
+          send_limit: 20
+          prefix_list: PL2
       - ip_address: 2001:db8::2
         rcf_in: Address_Family_IPV6_In()
         rcf_out: Address_Family_IPV6_Out()
-    redistribute_routes:
-      - source_protocol: ospfv3
-        include_leaked: true
-        ospf_route_type: external
-      - source_protocol: ospfv3
-        ospf_route_type: internal
-        route_map: RM-REDISTRIBUTE-OSPF-INTERNAL
-        include_leaked: true
-      - source_protocol: ospfv3
-        ospf_route_type: nssa-external 1
-      - source_protocol: static
+    redistribute:
+      ospfv3:
+        enabled: true
+        match_external:
+          enabled: true
+          include_leaked: true
+        match_internal:
+          enabled: true
+          route_map: RM-REDISTRIBUTE-OSPF-INTERNAL
+          include_leaked: true
+        match_nssa_external:
+          enabled: true
+          nssa_type: 1
+      static:
+        enabled: true
         route_map: RM-IPV6-STATIC-TO-BGP
-      - source_protocol: bgp
+      bgp:
+        enabled: true
         route_map: RM-REDISTRIBUTE-BGP
-        # this should not do anything as leaked is generated when source protocol is bgp
-        include_leaked: true
-      - source_protocol: connected
+      connected:
+        enabled: true
         rcf: Address_Family_IPV6_Connected()
+      attached_host:
+        enabled: true
+      dhcp:
+        enabled: true
+      dynamic:
+        enabled: true
+      user:
+        enabled: true
+      isis:
+        enabled: true
   neighbors:
     - ip_address: 192.0.3.1
       remote_as: 65432

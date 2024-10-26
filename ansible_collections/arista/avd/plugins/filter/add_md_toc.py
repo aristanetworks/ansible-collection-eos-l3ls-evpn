@@ -58,7 +58,6 @@ EXAMPLES = r"""
 ---
 tasks:
 - name: Generate fabric documentation
-  tags: [build, provision, documentation]
   run_once: true
   delegate_to: localhost
   check_mode: no

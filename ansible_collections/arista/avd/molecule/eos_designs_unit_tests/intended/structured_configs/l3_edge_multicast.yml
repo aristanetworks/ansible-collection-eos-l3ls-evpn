@@ -27,7 +27,7 @@ management_api_http:
   enable_https: true
 loopback_interfaces:
 - name: Loopback0
-  description: EVPN_Overlay_Peering
+  description: ROUTER_ID
   shutdown: false
   ip_address: 1.2.3.1/32
   ospf_area: 0.0.0.0
@@ -46,19 +46,20 @@ ethernet_interfaces:
   peer: peer1
   peer_interface: ethernet1
   peer_type: other
-  description: P2P_LINK_TO_peer1_ethernet1
-  type: routed
+  switchport:
+    enabled: false
   shutdown: false
   mtu: 9214
   ip_address: 192.168.0.4/31
   ospf_network_point_to_point: true
   ospf_area: 0.0.0.0
+  description: P2P_peer1_ethernet1
 - name: ethernet2
   peer: peer2
   peer_interface: ethernet2
   peer_type: other
-  description: P2P_LINK_TO_peer2_ethernet2
-  type: routed
+  switchport:
+    enabled: false
   shutdown: false
   mtu: 9214
   ip_address: 192.168.0.2/31
@@ -67,3 +68,4 @@ ethernet_interfaces:
       sparse_mode: true
   ospf_network_point_to_point: true
   ospf_area: 0.0.0.0
+  description: P2P_peer2_ethernet2

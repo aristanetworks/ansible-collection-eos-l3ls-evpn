@@ -48,7 +48,7 @@ servers:
         ethernet_segment:
           short_esi: 0001:1010:1010
         port_channel:
-          description: PortChanne1
+          endpoint_port_channel: PortChanne1
           mode: active
 
   - name: server02
@@ -71,7 +71,7 @@ servers:
         ethernet_segment:
           short_esi: auto
         port_channel:
-          description: Auto-ESI PortChannel
+          endpoint_port_channel: Auto-ESI PortChannel
           mode: active
 
   - name: server04_AUTO_ESI_Profile
@@ -82,7 +82,7 @@ servers:
         switches: [ MH-LEAF1A, MH-LEAF1B ]
         profile: Tenant_ESI_Auto
         port_channel:
-          description: Auto-ESI PortChannel from profile
+          endpoint_port_channel: Auto-ESI PortChannel from profile
           mode: active
 
   - name: server05_AUTO_ESI_Profile_Override
@@ -95,7 +95,7 @@ servers:
         ethernet_segment:
           short_esi: 010a:010a:010a
         port_channel:
-          description: Auto-ESI PortChannel overridden on server
+          endpoint_port_channel: Auto-ESI PortChannel overridden on server
           mode: active
 
   - name: server06_Single_Active_Port_Channel
@@ -107,7 +107,7 @@ servers:
         profile: Tenant_X_Trunk_Auto
         # All ethernet_segment settings from profile
         port_channel:
-          description: Single-Active ESI
+          endpoint_port_channel: Single-Active ESI
 
   - name: server07_Single_Active_Port_Channel_Manual_DF
     rack: RackA
@@ -117,7 +117,7 @@ servers:
         switches: [ MH-LEAF1A, MH-LEAF1B ]
         profile: Tenant_X_Trunk
         port_channel:
-          description: Single-Active ESI with Manual DF
+          endpoint_port_channel: Single-Active ESI with Manual DF
           mode: active
         ethernet_segment:
           short_esi: auto
@@ -168,7 +168,7 @@ servers:
         switches: [ MH-LEAF1A, MH-LEAF1B ]
         profile: Tenant_X_Trunk
         port_channel:
-          description: Single-Active ESI with Manual DF
+          endpoint_port_channel: Single-Active ESI with Manual DF
           mode: active
         ethernet_segment:
           short_esi: auto
@@ -200,7 +200,7 @@ servers:
         switches: [ MH-LEAF1A, MH-LEAF1B ]
         profile: Tenant_X_Trunk
         port_channel:
-          description: Single-Active ESI with Manual DF
+          endpoint_port_channel: Single-Active ESI with Manual DF
           mode: active
         ethernet_segment:
           short_esi: auto
@@ -237,7 +237,7 @@ routers:
         switch_ports: [ Ethernet11, Ethernet11 ]
         switches: [ MH-LEAF1A, MH-LEAF1B ]
         port_channel:
-          description: Testing L2 subinterfaces
+          endpoint_port_channel: Testing L2 subinterfaces
           mode: active
           # Port-Channel L2 Subinterfaces
           # Subinterfaces are only supported on routed port-channels, which means they cannot be configured on MLAG port-channels.

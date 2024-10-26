@@ -35,11 +35,17 @@ ip_access_lists:
         destination: any
         destination_ports_match: range
         destination_ports: [10, 20]
+      # verify issue 4423 where a protocol was missing
+      # and an entry with only the sequence number was rendered.
+      - sequence: 60
+        source: any
+        destination: any
       - sequence: 4294967295
         action: deny
         protocol: ip
         source: any
         destination: any
+    permit_response_traffic: nat
   - name: ACL_NO_SEQUENCE
     entries:
       - remark: test acl without sequence numbers

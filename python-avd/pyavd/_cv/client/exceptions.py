@@ -4,9 +4,12 @@
 from __future__ import annotations
 
 from asyncio.exceptions import TimeoutError
+from re import compile, fullmatch
 
 from grpclib.const import Status
 from grpclib.exceptions import GRPCError
+
+MSG_SIZE_EXCEEDED_REGEX = compile(r"grpc: received message larger than max \((?P<size>\d+) vs\. (?P<max>\d+)\)")
 
 
 def get_cv_client_exception(exception: Exception, cv_client_details: str | None = None) -> Exception | None:
@@ -25,6 +28,11 @@ def get_cv_client_exception(exception: Exception, cv_client_details: str | None 
             return CVResourceNotFound(cv_client_details, *exception.args)
         if status == Status.CANCELLED:
             return CVTimeoutError(cv_client_details, *exception.args)
+        if status == Status.RESOURCE_EXHAUSTED and (matches := fullmatch(MSG_SIZE_EXCEEDED_REGEX, exception.message)):
+            new_exception = CVMessageSizeExceeded(*exception.args)
+            new_exception.max_size = int(matches.group("max"))
+            new_exception.size = int(matches.group("size"))
+            return new_exception
     if isinstance(exception, TimeoutError):
         return CVTimeoutError(cv_client_details, *exception.args)
 
@@ -66,3 +74,12 @@ class CVWorkspaceStateTimeout(CVClientException):
 
 class CVChangeControlFailed(CVClientException):
     """CloudVision ChangeControl failed during execution."""
+
+
+class CVMessageSizeExceeded(CVClientException):
+    """GRPC message to CloudVision exceeded the allowed message size."""
+
+    max_size: int
+    """Maximum GRPC message size"""
+    size: int
+    """Actual GRPC message size"""

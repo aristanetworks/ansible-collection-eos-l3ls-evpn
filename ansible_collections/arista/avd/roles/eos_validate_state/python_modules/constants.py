@@ -7,6 +7,8 @@ from typing import Any
 
 from .tests import (
     AvdTestAPIHttpsSSL,
+    AvdTestAvtPath,
+    AvdTestAvtRole,
     AvdTestBGP,
     AvdTestDpsReachability,
     AvdTestHardware,
@@ -44,6 +46,8 @@ AVD_TEST_CLASSES: dict[str, dict[Any, Any]] = {
     AvdTestIPSecurity: {},
     AvdTestStun: {},
     AvdTestDpsReachability: {},
+    AvdTestAvtPath: {},
+    AvdTestAvtRole: {},
 }
 """
 A dict of all AVD eos_validate_state test classes.

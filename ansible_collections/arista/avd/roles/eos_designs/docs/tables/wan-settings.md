@@ -7,6 +7,7 @@
 
     | Variable | Type | Required | Default | Value Restrictions | Description |
     | -------- | ---- | -------- | ------- | ------------------ | ----------- |
+    | [<samp>wan_encapsulation</samp>](## "wan_encapsulation") | String |  | `path-selection` | Valid Values:<br>- <code>path-selection</code><br>- <code>vxlan</code> | Select the encapsulation to use for EVPN peerings for WAN BGP peers. |
     | [<samp>wan_ha</samp>](## "wan_ha") | Dictionary |  |  |  | PREVIEW: The `wan_ha` key is currently not supported. |
     | [<samp>&nbsp;&nbsp;lan_ha_path_group_name</samp>](## "wan_ha.lan_ha_path_group_name") | String |  | `LAN_HA` |  | When WAN HA is enabled for a site if `wan_mode: cv-pathfinder`, a default path-group is injected to form DPS tunnels over LAN.<br>This key allows to overwrite the default LAN HA path-group name. |
     | [<samp>wan_ipsec_profiles</samp>](## "wan_ipsec_profiles") | Dictionary |  |  |  | Define IPsec profiles parameters for WAN configuration. |
@@ -27,6 +28,9 @@
 === "YAML"
 
     ```yaml
+    # Select the encapsulation to use for EVPN peerings for WAN BGP peers.
+    wan_encapsulation: <str; "path-selection" | "vxlan"; default="path-selection">
+
     # PREVIEW: The `wan_ha` key is currently not supported.
     wan_ha:
 

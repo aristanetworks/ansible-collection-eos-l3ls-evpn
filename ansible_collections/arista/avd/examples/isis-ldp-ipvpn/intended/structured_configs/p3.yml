@@ -33,7 +33,7 @@ vrfs:
   ip_routing: false
 management_interfaces:
 - name: Management1
-  description: oob_management
+  description: OOB_MANAGEMENT
   shutdown: false
   vrf: MGMT
   ip_address: 172.16.1.13/24
@@ -45,7 +45,7 @@ management_api_http:
   enable_https: true
 loopback_interfaces:
 - name: Loopback0
-  description: LSR_Router_ID
+  description: ROUTER_ID
   shutdown: false
   ip_address: 10.255.0.3/32
   mpls:
@@ -75,8 +75,8 @@ ethernet_interfaces:
   peer: rr1
   peer_interface: Ethernet2
   peer_type: rr
-  description: P2P_LINK_TO_rr1_Ethernet2
-  type: routed
+  switchport:
+    enabled: false
   shutdown: false
   mtu: 1500
   ip_address: 10.255.3.13/31
@@ -92,12 +92,13 @@ ethernet_interfaces:
     ldp:
       interface: true
       igp_sync: true
+  description: P2P_rr1_Ethernet2
 - name: Ethernet4
   peer: p4
   peer_interface: Ethernet4
   peer_type: p
-  description: P2P_LINK_TO_p4_Ethernet4
-  type: routed
+  switchport:
+    enabled: false
   shutdown: false
   mtu: 1500
   ip_address: 10.255.3.20/31
@@ -113,12 +114,13 @@ ethernet_interfaces:
     ldp:
       interface: true
       igp_sync: true
+  description: P2P_p4_Ethernet4
 - name: Ethernet1
   peer: pe3
   peer_interface: Ethernet1
   peer_type: pe
-  description: P2P_LINK_TO_pe3_Ethernet1
-  type: routed
+  switchport:
+    enabled: false
   shutdown: false
   mtu: 1500
   ip_address: 10.255.3.23/31
@@ -134,5 +136,6 @@ ethernet_interfaces:
     ldp:
       interface: true
       igp_sync: true
+  description: P2P_pe3_Ethernet1
 metadata:
   platform: vEOS-lab

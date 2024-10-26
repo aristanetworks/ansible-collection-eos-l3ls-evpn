@@ -91,6 +91,7 @@ disable=
     too-few-public-methods,
     too-many-ancestors,  # inconsistent results between python 3.6 and 3.7+
     too-many-arguments,
+    too-many-positional-arguments,
     too-many-boolean-expressions,
     too-many-branches,
     too-many-function-args,

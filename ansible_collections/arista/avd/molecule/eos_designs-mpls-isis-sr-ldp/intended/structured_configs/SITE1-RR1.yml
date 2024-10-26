@@ -37,9 +37,9 @@ router_bgp:
     neighbor_default:
       encapsulation: mpls
     peer_groups:
-    - name: MPLS-OVERLAY-PEERS
-      activate: true
     - name: RR-OVERLAY-PEERS
+      activate: true
+    - name: MPLS-OVERLAY-PEERS
       activate: true
   address_family_ipv4:
     peer_groups:
@@ -63,19 +63,19 @@ router_bgp:
   - ip_address: 100.70.0.5
     peer_group: MPLS-OVERLAY-PEERS
     peer: SITE1-LER1
-    description: SITE1-LER1
+    description: SITE1-LER1_Loopback0
   - ip_address: 100.70.0.6
     peer_group: MPLS-OVERLAY-PEERS
     peer: SITE1-LER2
-    description: SITE1-LER2
+    description: SITE1-LER2_Loopback0
   - ip_address: 100.70.0.7
     peer_group: MPLS-OVERLAY-PEERS
     peer: SITE2-LER1
-    description: SITE2-LER1
+    description: SITE2-LER1_Loopback0
   - ip_address: 100.70.0.9
     peer_group: RR-OVERLAY-PEERS
     peer: SITE2-RR1
-    description: SITE2-RR1
+    description: SITE2-RR1_Loopback0
 static_routes:
 - vrf: MGMT
   destination_address_prefix: 0.0.0.0/0
@@ -101,7 +101,7 @@ vrfs:
   ip_routing: false
 management_interfaces:
 - name: Management1
-  description: oob_management
+  description: OOB_MANAGEMENT
   shutdown: false
   vrf: MGMT
   ip_address: 10.30.30.108/24
@@ -114,7 +114,7 @@ management_api_http:
 eos_cli: "management security\n   password encryption-key common\n"
 loopback_interfaces:
 - name: Loopback0
-  description: MPLS_Overlay_peering
+  description: ROUTER_ID
   shutdown: false
   ip_address: 100.70.0.8/32
   ipv6_address: 2000:1234:ffff:ffff::8/128
@@ -169,8 +169,8 @@ ethernet_interfaces:
   peer: SITE1-LSR1
   peer_interface: Ethernet4
   peer_type: p
-  description: P2P_LINK_TO_SITE1-LSR1_Ethernet4
-  type: routed
+  switchport:
+    enabled: false
   shutdown: false
   mtu: 9178
   eos_cli: 'link-debounce time 1000
@@ -190,6 +190,7 @@ ethernet_interfaces:
     ldp:
       interface: true
       igp_sync: true
+  description: P2P_SITE1-LSR1_Ethernet4
   speed: forced 40gfull
 metadata:
   platform: 7280SR3

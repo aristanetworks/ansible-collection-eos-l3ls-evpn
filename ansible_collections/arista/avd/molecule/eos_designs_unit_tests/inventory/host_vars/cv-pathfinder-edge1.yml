@@ -3,10 +3,6 @@
 # Make sure to set the cv_token var on the molecule command line like:
 # molecule converge -s eos_designs_unit_tests -- --limit cv-pathfinder-edge1 -e cv_token=$CV_TOKEN -v
 
-# serial_number: mockZscaler
-# cv_server: "www.cv-play.corp.arista.io"
-# zscaler_endpoints: null
-
 # Testing multiple pathinfders on one device
 wan_route_servers:
   - hostname: cv-pathfinder-pathfinder1

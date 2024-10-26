@@ -26,9 +26,9 @@ class WanMixin:
         Each with a list of dictionaries containing the (interface, ip_address) in the path_group.
 
         TODO: Also add the path_groups importing any of our connected path groups.
-                Need to find out if we need to resolve recursive imports.
+              Need to find out if we need to resolve recursive imports.
         """
-        if not self.shared_utils.is_wan_server:
+        if not self.shared_utils.is_wan_router:
             return None
 
         return self.shared_utils.wan_local_path_groups

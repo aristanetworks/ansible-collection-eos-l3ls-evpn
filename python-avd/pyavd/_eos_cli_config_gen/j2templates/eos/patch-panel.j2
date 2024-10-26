@@ -16,7 +16,7 @@ patch panel
 {%         endif %}
    !
 {%     endif %}
-{%     for patch in patch_panel.patches | arista.avd.default([]) %}
+{%     for patch in patch_panel.patches | arista.avd.natural_sort("name") %}
 {%         if patch.name is arista.avd.defined %}
    patch {{ patch.name }}
 {%             if patch.enabled is arista.avd.defined(false) %}

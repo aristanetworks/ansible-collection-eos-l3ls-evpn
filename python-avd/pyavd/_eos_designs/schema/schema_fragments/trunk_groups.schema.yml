@@ -26,7 +26,7 @@ keys:
         keys:
           name:
             type: str
-            default: "LEAF_PEER_L3"
+            default: "MLAG"
       uplink:
         type: dict
         description: |

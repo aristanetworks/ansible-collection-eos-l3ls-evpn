@@ -70,9 +70,11 @@ router_bgp:
       description: 'BGP Connection in passive mode'
       remote_as: 65003
       passive: true
-  redistribute_routes:
-    - source_protocol: static
-    - source_protocol: ospf
+  redistribute:
+    static:
+      enabled: true
+    ospf:
+      enabled: true
       include_leaked: true
       route_map: RM-OSPF-TO-BGP
   address_family_ipv4:
@@ -133,9 +135,11 @@ router_bgp:
         # Testing bfd false OUTSIDE a peer group that should NOT render
         - ip_address: 101.0.3.8
           bfd: false
-      redistribute_routes:
-        - source_protocol: static
-        - source_protocol: ospf
+      redistribute:
+        static:
+          enabled: true
+        ospf:
+          enabled: true
           include_leaked: true
       aggregate_addresses:
         - prefix: 193.1.0.0/16

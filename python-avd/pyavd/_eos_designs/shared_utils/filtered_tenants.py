@@ -6,7 +6,7 @@ from __future__ import annotations
 from functools import cached_property
 from typing import TYPE_CHECKING
 
-from pyavd._errors import AristaAvdError, AristaAvdMissingVariableError
+from pyavd._errors import AristaAvdError, AristaAvdInvalidInputsError
 from pyavd._utils import default, get, get_item, merge, unique
 from pyavd.j2filters import natural_sort, range_expand
 
@@ -221,6 +221,7 @@ class FilteredTenantsMixin:
                 evpn_l3_multicast_enabled = default(get(vrf, "evpn_l3_multicast.enabled"), get(tenant, "evpn_l3_multicast.enabled"))
                 if self.evpn_multicast:
                     vrf["_evpn_l3_multicast_enabled"] = evpn_l3_multicast_enabled
+                    vrf["_evpn_l3_multicast_group_ip"] = get(vrf, "evpn_l3_multicast.evpn_underlay_l3_multicast_group")
 
                     rps = []
                     for rp_entry in default(get(vrf, "pim_rp_addresses"), get(tenant, "pim_rp_addresses"), []):
@@ -229,7 +230,7 @@ class FilteredTenantsMixin:
                                 rp_entry,
                                 "rps",
                                 required=True,
-                                org_key=f"pim_rp_addresses.rps under VRF '{vrf['name']}' in Tenant '{tenant['name']}'",
+                                custom_error_msg=f"'pim_rp_addresses.rps' under VRF '{vrf['name']}' in Tenant '{tenant['name']}' is required.",
                             ):
                                 rp_address = {"address": rp_ip}
                                 if (rp_groups := get(rp_entry, "groups")) is not None:
@@ -307,10 +308,12 @@ class FilteredTenantsMixin:
         }
 
         if (svi_profile_name := filtered_svi.get("profile")) is not None:
-            svi_profile = get_item(self.svi_profiles, "profile", svi_profile_name, default={})
+            msg = f"Profile '{svi_profile_name}' applied under SVI '{filtered_svi['name']}' does not exist in `svi_profiles`."
+            svi_profile = get_item(self.svi_profiles, "profile", svi_profile_name, required=True, custom_error_msg=msg)
 
         if (svi_parent_profile_name := svi_profile.get("parent_profile")) is not None:
-            svi_parent_profile = get_item(self.svi_profiles, "profile", svi_parent_profile_name, default={})
+            msg = f"Profile '{svi_parent_profile_name}' applied under SVI Profile '{svi_profile_name}' does not exist in `svi_profiles`."
+            svi_parent_profile = get_item(self.svi_profiles, "profile", svi_parent_profile_name, required=True, custom_error_msg=msg)
 
         # deepmerge all levels of config - later vars override previous.
         # Using destructive_merge=False to avoid having references to profiles and other data.
@@ -367,7 +370,7 @@ class FilteredTenantsMixin:
         if vrf_id is None:
             if required:
                 msg = f"'vrf_id' or 'vrf_vni' for VRF '{vrf['name']} must be set."
-                raise AristaAvdMissingVariableError(msg)
+                raise AristaAvdInvalidInputsError(msg)
             return None
         return int(vrf_id)
 
@@ -376,7 +379,7 @@ class FilteredTenantsMixin:
         vrf_vni = default(vrf.get("vrf_vni"), vrf.get("vrf_id"))
         if vrf_vni is None:
             msg = f"'vrf_vni' or 'vrf_id' for VRF '{vrf['name']} must be set."
-            raise AristaAvdMissingVariableError(msg)
+            raise AristaAvdInvalidInputsError(msg)
         return int(vrf_vni)
 
     @cached_property
@@ -415,7 +418,7 @@ class FilteredTenantsMixin:
         if get(svi, "ospf.enabled") is True and get(vrf, "ospf.enabled") is True:
             svi_config.update(
                 {
-                    "ospf_area": svi["ospf"].get("area", "0"),
+                    "ospf_area": svi["ospf"].get("area", "0.0.0.0"),  # noqa: S104
                     "ospf_network_point_to_point": svi["ospf"].get("point_to_point", False),
                     "ospf_cost": svi["ospf"].get("cost"),
                 },

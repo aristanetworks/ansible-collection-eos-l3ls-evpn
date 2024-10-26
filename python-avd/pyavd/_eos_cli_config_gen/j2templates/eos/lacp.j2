@@ -6,6 +6,9 @@
 {# eos - lacp #}
 {% if lacp is arista.avd.defined %}
 !
+{%     if lacp.system_priority is arista.avd.defined %}
+lacp system-priority {{ lacp.system_priority }}
+{%     endif %}
 {%     if lacp.port_id.range.begin is arista.avd.defined and lacp.port_id.range.end is arista.avd.defined %}
 lacp port-id range {{ lacp.port_id.range.begin }} {{ lacp.port_id.range.end }}
 {%     endif %}
@@ -13,8 +16,5 @@ lacp port-id range {{ lacp.port_id.range.begin }} {{ lacp.port_id.range.end }}
 lacp rate-limit default
 {%     elif lacp.rate_limit.default is arista.avd.defined(false) %}
 no lacp rate-limit default
-{%     endif %}
-{%     if lacp.system_priority is arista.avd.defined %}
-lacp system-priority {{ lacp.system_priority }}
 {%     endif %}
 {% endif %}

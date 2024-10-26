@@ -5,11 +5,16 @@
 #}
 {# eos - management api gnmi #}
 {% if management_api_gnmi is arista.avd.defined %}
+{%     set first_line = True %}
 !
 management api gnmi
 {%     if management_api_gnmi.transport is arista.avd.defined %}
 {%         if management_api_gnmi.transport.grpc is arista.avd.defined %}
-{%             for transport in management_api_gnmi.transport.grpc %}
+{%             set first_line = False %}
+{%             for transport in management_api_gnmi.transport.grpc | arista.avd.natural_sort("name") %}
+{%                 if not loop.first %}
+   !
+{%                 endif %}
 {%                 if transport.name is arista.avd.defined %}
    transport grpc {{ transport.name }}
 {%                     if transport.ssl_profile is arista.avd.defined %}
@@ -31,7 +36,13 @@ management api gnmi
 {%             endfor %}
 {%         endif %}
 {%         if management_api_gnmi.transport.grpc_tunnels is arista.avd.defined %}
-{%             for transport in management_api_gnmi.transport.grpc_tunnels %}
+{%             if not first_line == True %}
+   !
+{%             endif %}
+{%             for transport in management_api_gnmi.transport.grpc_tunnels | arista.avd.natural_sort("name") %}
+{%                 if not loop.first %}
+   !
+{%                 endif %}
    transport grpc-tunnel {{ transport.name }}
 {%                 if transport.shutdown is arista.avd.defined(true) %}
       shutdown

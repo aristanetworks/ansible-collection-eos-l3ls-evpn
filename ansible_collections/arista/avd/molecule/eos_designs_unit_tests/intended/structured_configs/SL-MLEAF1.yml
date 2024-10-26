@@ -24,19 +24,20 @@ ethernet_interfaces:
   peer: SL-LEAF1A
   peer_interface: Ethernet28
   peer_type: l2leaf
-  description: SL-LEAF1A_Ethernet28
+  description: L2_SL-LEAF1A_Ethernet28
   shutdown: false
-  type: port-channel-member
   channel_group:
     id: 16
     mode: active
 port_channel_interfaces:
 - name: Port-Channel16
-  description: SL-LEAF1_Po28
-  type: switched
+  description: L2_SL-LEAF1_Port-Channel28
+  switchport:
+    enabled: true
+    mode: trunk
+    trunk:
+      allowed_vlan: none
   shutdown: false
-  mode: trunk
-  vlans: none
 ip_igmp_snooping:
   globally_enabled: true
 metadata:

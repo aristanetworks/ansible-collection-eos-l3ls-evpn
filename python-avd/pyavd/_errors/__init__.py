@@ -12,17 +12,24 @@ class AristaAvdError(Exception):
         path = ""
         for index, elem in enumerate(json_path):
             if isinstance(elem, int):
-                path += "[" + str(elem) + "]"
+                path += f"[{elem}]"
             else:
                 if index == 0:
                     path += elem
                     continue
-                path += "." + elem
+                path += f".{elem}"
         return path
 
 
+class AristaAvdInvalidInputsError(AristaAvdError):
+    def __init__(self, message: str) -> None:
+        super().__init__(message)
+
+
 class AristaAvdMissingVariableError(AristaAvdError):
-    pass
+    def __init__(self, variable: str | None = None) -> None:
+        self.message = f"'{variable}' is required but was not found."
+        super().__init__(self.message)
 
 
 class AvdConfigLoadError(AristaAvdError):
@@ -48,30 +55,39 @@ class AvdValidationError(AristaAvdError):
 class AvdDeprecationWarning(AristaAvdError):  # noqa: N818
     def __init__(
         self,
-        key: str,
+        key: list[str | int],
         new_key: str | None = None,
         remove_in_version: str | None = None,
         remove_after_date: str | None = None,
         url: str | None = None,
         *,
         removed: bool = False,
+        conflict: bool = False,
     ) -> None:
         messages = []
         self.path = self._json_path_to_string(key)
-
-        if removed:
-            messages.append(f"The input data model '{self.path}' was removed.")
-        else:
-            messages.append(f"The input data model '{self.path}' is deprecated.")
-
         self.version = remove_in_version
         self.date = remove_after_date
         self.removed = removed
+        self.conflict = conflict
 
-        if new_key is not None:
+        if removed:
+            messages.append(f"The input data model '{self.path}' was removed.")
+        elif conflict and new_key:
+            self.new_key_path = self._json_path_to_string(key[:-1]) + "." + new_key
+            messages.append(
+                f"The input data model '{self.path}' is deprecated and cannot be used in conjunction with the new data model '{self.new_key_path}'. "
+                "This usually happens when a data model has been updated and custom structured configuration still uses the old model."
+            )
+            if not url:
+                url = "the porting guide on https://avd.arista.com"
+        else:
+            messages.append(f"{conflict} The input data model '{self.path}' is deprecated.")
+
+        if new_key and not conflict:
             messages.append(f"Use '{new_key}' instead.")
 
-        if url is not None:
+        if url:
             messages.append(f"See {url} for details.")
 
         self.message = " ".join(messages)

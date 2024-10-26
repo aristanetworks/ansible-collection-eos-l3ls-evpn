@@ -38,6 +38,7 @@ class UtilsMixin:
 
                 filtered_adapters = []
                 for adapter_index, adapter in enumerate(connected_endpoint["adapters"]):
+                    adapter["context"] = f"{connected_endpoints_key['key']}[name={connected_endpoint['name']}].adapters[{adapter_index}]"
                     adapter_settings = self.shared_utils.get_merged_adapter_settings(adapter)
 
                     if self.shared_utils.hostname not in adapter_settings.get("switches", []):
@@ -71,7 +72,8 @@ class UtilsMixin:
     def _filtered_network_ports(self: AvdStructuredConfigConnectedEndpoints) -> list:
         """Return list of endpoints defined under "network_ports" which are connected to this switch."""
         filtered_network_ports = []
-        for network_port in get(self._hostvars, "network_ports", default=[]):
+        for index, network_port in enumerate(get(self._hostvars, "network_ports", default=[])):
+            network_port["context"] = f"network_ports[{index}]"
             network_port_settings = self.shared_utils.get_merged_adapter_settings(network_port)
             if not self._match_regexes(network_port_settings.get("switches"), self.shared_utils.hostname):
                 continue
@@ -123,7 +125,9 @@ class UtilsMixin:
     def _get_adapter_trunk_groups(self: AvdStructuredConfigConnectedEndpoints, adapter: dict, connected_endpoint: dict) -> dict | None:
         """Return trunk_groups for one adapter."""
         if self.shared_utils.enable_trunk_groups and "trunk" in adapter.get("mode", ""):
-            return get(adapter, "trunk_groups", required=True, org_key=f"'trunk_groups' for the connected_endpoint {connected_endpoint['name']}")
+            return get(
+                adapter, "trunk_groups", required=True, custom_error_msg=f"'trunk_groups' for the connected_endpoint {connected_endpoint['name']} is required."
+            )
 
         return None
 
@@ -173,7 +177,7 @@ class UtilsMixin:
                 adapter_ethernet_segment,
                 "designated_forwarder_preferences",
                 required=True,
-                org_key=f"ethernet_segment.designated_forwarder_preferences for the connected_endpoint {connected_endpoint['name']}",
+                custom_error_msg=f"ethernet_segment.designated_forwarder_preferences for the connected_endpoint {connected_endpoint['name']}.",
             )
             evpn_ethernet_segment["designated_forwarder_election"] = {
                 "algorithm": "preference",
@@ -204,7 +208,8 @@ class UtilsMixin:
 
         # Apply PTP profile config
         if (ptp_profile_name := get(adapter, "ptp.profile", default=self.shared_utils.ptp_profile_name)) is not None:
-            ptp_config.update(get_item(self.shared_utils.ptp_profiles, "profile", ptp_profile_name, default={}))
+            msg = f"PTP Profile '{ptp_profile_name}' referenced under {adapter['context']} does not exist in `ptp_profiles`."
+            ptp_config.update(get_item(self.shared_utils.ptp_profiles, "profile", ptp_profile_name, required=True, custom_error_msg=msg))
 
         ptp_config["enable"] = True
 

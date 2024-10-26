@@ -9,6 +9,12 @@ router_bgp:
   maximum_paths:
     paths: 4
     ecmp: 4
+  redistribute:
+    connected:
+      enabled: true
+      route_map: RM-CONN-2-BGP
+    attached_host:
+      enabled: true
   updates:
     wait_install: true
   peer_groups:
@@ -43,11 +49,7 @@ router_bgp:
   - ip_address: 100.64.1.5
     peer_group: MLAG-IPv4-UNDERLAY-PEER
     peer: inband-mgmt-parent-dualstack2
-    description: inband-mgmt-parent-dualstack2
-  redistribute_routes:
-  - source_protocol: connected
-    route_map: RM-CONN-2-BGP
-  - source_protocol: attached-host
+    description: inband-mgmt-parent-dualstack2_Vlan4093
   address_family_evpn:
     peer_groups:
     - name: EVPN-OVERLAY-PEERS
@@ -65,12 +67,14 @@ router_bgp:
         route_targets:
         - '1:1'
     router_id: 10.0.255.3
-    redistribute_routes:
-    - source_protocol: connected
+    redistribute:
+      connected:
+        enabled: true
+        route_map: RM-CONN-2-BGP-VRFS
     neighbors:
     - ip_address: 100.64.1.5
       peer_group: MLAG-IPv4-UNDERLAY-PEER
-      description: inband-mgmt-parent-dualstack2
+      description: inband-mgmt-parent-dualstack2_Vlan3000
     updates:
       wait_install: true
 service_routing_protocols_model: multi-agent
@@ -102,33 +106,33 @@ spanning_tree:
 vlans:
 - id: 4093
   tenant: system
-  name: LEAF_PEER_L3
+  name: MLAG_L3
   trunk_groups:
-  - LEAF_PEER_L3
+  - MLAG
 - id: 4094
   tenant: system
-  name: MLAG_PEER
+  name: MLAG
   trunk_groups:
   - MLAG
 - id: 105
   name: Inband_management_vlan_ipv6
   tenant: INBAND_MGMT_TESTS
 - id: 3000
-  name: MLAG_iBGP_INBANDMGMT
+  name: MLAG_L3_VRF_INBANDMGMT
   trunk_groups:
-  - LEAF_PEER_L3
+  - MLAG
   tenant: INBAND_MGMT_TESTS
 - id: 104
   tenant: system
   name: INBAND_MGMT
 vlan_interfaces:
 - name: Vlan4093
-  description: MLAG_PEER_L3_PEERING
+  description: MLAG_L3
   shutdown: false
   mtu: 9214
   ip_address: 100.64.1.4/31
 - name: Vlan4094
-  description: MLAG_PEER
+  description: MLAG
   shutdown: false
   no_autostate: true
   mtu: 9214
@@ -149,7 +153,7 @@ vlan_interfaces:
   tenant: INBAND_MGMT_TESTS
   type: underlay_peering
   shutdown: false
-  description: 'MLAG_PEER_L3_iBGP: vrf INBANDMGMT'
+  description: MLAG_L3_VRF_INBANDMGMT
   vrf: INBANDMGMT
   mtu: 9214
   ip_address: 100.64.1.4/31
@@ -172,28 +176,33 @@ vlan_interfaces:
   - 2a00:104::1
 port_channel_interfaces:
 - name: Port-Channel11
-  description: MLAG_PEER_inband-mgmt-parent-dualstack2_Po11
-  type: switched
+  description: MLAG_inband-mgmt-parent-dualstack2_Port-Channel11
+  switchport:
+    enabled: true
+    mode: trunk
+    trunk:
+      groups:
+      - MLAG
   shutdown: false
-  mode: trunk
-  trunk_groups:
-  - LEAF_PEER_L3
-  - MLAG
 - name: Port-Channel24
   description: INBAND-MGMT-DUALSTACK-SUBNETS_Po1
-  type: switched
+  switchport:
+    enabled: true
+    mode: trunk
+    trunk:
+      allowed_vlan: '104'
   shutdown: false
-  mode: trunk
-  vlans: '104'
   mlag: 24
   lacp_fallback_mode: individual
   lacp_fallback_timeout: 30
 - name: Port-Channel25
   description: INBAND-MGMT-DUALSTACK-IPS_Po1
-  type: switched
+  switchport:
+    enabled: true
+    mode: trunk
+    trunk:
+      allowed_vlan: '105'
   shutdown: false
-  mode: trunk
-  vlans: '105'
   mlag: 25
   lacp_fallback_mode: individual
   lacp_fallback_timeout: 30
@@ -202,8 +211,7 @@ ethernet_interfaces:
   peer: inband-mgmt-parent-dualstack2
   peer_interface: Ethernet11
   peer_type: mlag_peer
-  description: MLAG_PEER_inband-mgmt-parent-dualstack2_Ethernet11
-  type: port-channel-member
+  description: MLAG_inband-mgmt-parent-dualstack2_Ethernet11
   shutdown: false
   channel_group:
     id: 11
@@ -212,8 +220,7 @@ ethernet_interfaces:
   peer: inband-mgmt-parent-dualstack2
   peer_interface: Ethernet12
   peer_type: mlag_peer
-  description: MLAG_PEER_inband-mgmt-parent-dualstack2_Ethernet12
-  type: port-channel-member
+  description: MLAG_inband-mgmt-parent-dualstack2_Ethernet12
   shutdown: false
   channel_group:
     id: 11
@@ -222,8 +229,7 @@ ethernet_interfaces:
   peer: inband-mgmt-parent-dualstack2
   peer_interface: Ethernet13
   peer_type: mlag_peer
-  description: MLAG_PEER_inband-mgmt-parent-dualstack2_Ethernet13
-  type: port-channel-member
+  description: MLAG_inband-mgmt-parent-dualstack2_Ethernet13
   shutdown: false
   channel_group:
     id: 11
@@ -232,8 +238,7 @@ ethernet_interfaces:
   peer: inband-mgmt-parent-dualstack2
   peer_interface: Ethernet14
   peer_type: mlag_peer
-  description: MLAG_PEER_inband-mgmt-parent-dualstack2_Ethernet14
-  type: port-channel-member
+  description: MLAG_inband-mgmt-parent-dualstack2_Ethernet14
   shutdown: false
   channel_group:
     id: 11
@@ -242,8 +247,7 @@ ethernet_interfaces:
   peer: inband-mgmt-parent-dualstack2
   peer_interface: Ethernet15
   peer_type: mlag_peer
-  description: MLAG_PEER_inband-mgmt-parent-dualstack2_Ethernet15
-  type: port-channel-member
+  description: MLAG_inband-mgmt-parent-dualstack2_Ethernet15
   shutdown: false
   channel_group:
     id: 11
@@ -252,8 +256,7 @@ ethernet_interfaces:
   peer: inband-mgmt-parent-dualstack2
   peer_interface: Ethernet16
   peer_type: mlag_peer
-  description: MLAG_PEER_inband-mgmt-parent-dualstack2_Ethernet16
-  type: port-channel-member
+  description: MLAG_inband-mgmt-parent-dualstack2_Ethernet16
   shutdown: false
   channel_group:
     id: 11
@@ -262,8 +265,7 @@ ethernet_interfaces:
   peer: inband-mgmt-parent-dualstack2
   peer_interface: Ethernet17
   peer_type: mlag_peer
-  description: MLAG_PEER_inband-mgmt-parent-dualstack2_Ethernet17
-  type: port-channel-member
+  description: MLAG_inband-mgmt-parent-dualstack2_Ethernet17
   shutdown: false
   channel_group:
     id: 11
@@ -272,8 +274,7 @@ ethernet_interfaces:
   peer: inband-mgmt-parent-dualstack2
   peer_interface: Ethernet18
   peer_type: mlag_peer
-  description: MLAG_PEER_inband-mgmt-parent-dualstack2_Ethernet18
-  type: port-channel-member
+  description: MLAG_inband-mgmt-parent-dualstack2_Ethernet18
   shutdown: false
   channel_group:
     id: 11
@@ -282,8 +283,7 @@ ethernet_interfaces:
   peer: inband-mgmt-parent-dualstack2
   peer_interface: Ethernet19
   peer_type: mlag_peer
-  description: MLAG_PEER_inband-mgmt-parent-dualstack2_Ethernet19
-  type: port-channel-member
+  description: MLAG_inband-mgmt-parent-dualstack2_Ethernet19
   shutdown: false
   channel_group:
     id: 11
@@ -292,8 +292,7 @@ ethernet_interfaces:
   peer: inband-mgmt-parent-dualstack2
   peer_interface: Ethernet20
   peer_type: mlag_peer
-  description: MLAG_PEER_inband-mgmt-parent-dualstack2_Ethernet20
-  type: port-channel-member
+  description: MLAG_inband-mgmt-parent-dualstack2_Ethernet20
   shutdown: false
   channel_group:
     id: 11
@@ -304,24 +303,26 @@ ethernet_interfaces:
   peer_type: l2leaf
   description: INBAND-MGMT-DUALSTACK-SUBNETS_Ethernet1
   shutdown: false
-  type: port-channel-member
   channel_group:
     id: 24
     mode: active
-  mode: access
-  vlans: 104
+  switchport:
+    enabled: true
+    mode: access
+    access_vlan: 104
 - name: Ethernet25
   peer: inband-mgmt-dualstack-ips
   peer_interface: Ethernet1
   peer_type: l2leaf
   description: INBAND-MGMT-DUALSTACK-IPS_Ethernet1
   shutdown: false
-  type: port-channel-member
   channel_group:
     id: 25
     mode: active
-  mode: access
-  vlans: 105
+  switchport:
+    enabled: true
+    mode: access
+    access_vlan: 105
 mlag_configuration:
   domain_id: inband-mgmt-parents-dualstack
   local_interface: Vlan4094
@@ -351,13 +352,21 @@ route_maps:
     type: permit
     match:
     - ipv6 address prefix-list IPv6-PL-L2LEAF-INBAND-MGMT
+- name: RM-CONN-2-BGP-VRFS
+  sequence_numbers:
+  - sequence: 10
+    type: deny
+    match:
+    - ip address prefix-list PL-MLAG-PEER-VRFS
+  - sequence: 20
+    type: permit
 loopback_interfaces:
 - name: Loopback0
-  description: EVPN_Overlay_Peering
+  description: ROUTER_ID
   shutdown: false
   ip_address: 10.0.255.3/32
 - name: Loopback1
-  description: VTEP_VXLAN_Tunnel_Source
+  description: VXLAN_TUNNEL_SOURCE
   shutdown: false
   ip_address: 10.0.254.3/32
 prefix_lists:
@@ -367,6 +376,10 @@ prefix_lists:
     action: permit 10.0.255.0/24 eq 32
   - sequence: 20
     action: permit 10.0.254.0/24 eq 32
+- name: PL-MLAG-PEER-VRFS
+  sequence_numbers:
+  - sequence: 10
+    action: permit 100.64.1.4/31
 - name: PL-L2LEAF-INBAND-MGMT
   sequence_numbers:
   - sequence: 10

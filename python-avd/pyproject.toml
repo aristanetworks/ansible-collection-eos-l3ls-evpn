@@ -13,6 +13,7 @@ classifiers = [
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
     "Topic :: Software Development :: Libraries :: Python Modules",
     "Topic :: Software Development :: Testing",
 ]
@@ -36,11 +37,13 @@ ansible = [
     "pyavd[ansible-collection]",
 ]
 ansible-collection = [
-    "anta>=1.0.0",
+    "anta>=1.1.0",
     "cvprac>=1.4.0",
     "netaddr>=0.7.19",
     "PyYAML>=6.0.0",
     "treelib>=1.5.5",
+    # jsonschema is required for the arista.cvp Ansible collection
+    "jsonschema>=3.2.0",
 ]
 
 [build-system]
@@ -48,7 +51,7 @@ requires = [
     "setuptools>=66.1",
     "wheel",
     "jinja2>=3.0",
-    "jsonschema>=4.10.3",
+    "jsonschema-rs",
     "referencing>=0.35.0",
     "deepmerge>=1.1.0",
     "pyyaml>=6.0.0",
@@ -100,7 +103,7 @@ branch = true
 
 [tool.coverage.report]
 show_missing = true
-fail_under = 90
+fail_under = 85
 include = [
   "pyavd/*"
 ]

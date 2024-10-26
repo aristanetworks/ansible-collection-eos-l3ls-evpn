@@ -21,7 +21,7 @@ vrfs:
   ip_routing: false
 management_interfaces:
 - name: Management1
-  description: oob_management
+  description: OOB_MANAGEMENT
   shutdown: false
   vrf: MGMT
   ip_address: 192.168.200.109/24
@@ -36,19 +36,20 @@ ethernet_interfaces:
   peer: UNDERLAY-MULTICAST-L3LEAF1A
   peer_interface: Ethernet6
   peer_type: l3leaf
-  description: UNDERLAY-MULTICAST-L3LEAF1A_Ethernet6
+  description: L2_UNDERLAY-MULTICAST-L3LEAF1A_Ethernet6
   shutdown: false
-  type: port-channel-member
   channel_group:
     id: 1
     mode: active
 port_channel_interfaces:
 - name: Port-Channel1
-  description: DC1_LEAF1_Po6
-  type: switched
+  description: L2_DC1_LEAF1_Port-Channel6
+  switchport:
+    enabled: true
+    mode: trunk
+    trunk:
+      allowed_vlan: none
   shutdown: false
-  mode: trunk
-  vlans: none
 ip_igmp_snooping:
   globally_enabled: true
 metadata:

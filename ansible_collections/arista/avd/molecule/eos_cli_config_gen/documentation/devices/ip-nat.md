@@ -21,20 +21,20 @@
 
 | Management Interface | Description | Type | VRF | IP Address | Gateway |
 | -------------------- | ----------- | ---- | --- | ---------- | ------- |
-| Management1 | oob_management | oob | MGMT | 10.73.255.122/24 | 10.73.255.2 |
+| Management1 | OOB_MANAGEMENT | oob | MGMT | 10.73.255.122/24 | 10.73.255.2 |
 
 ##### IPv6
 
 | Management Interface | Description | Type | VRF | IPv6 Address | IPv6 Gateway |
 | -------------------- | ----------- | ---- | --- | ------------ | ------------ |
-| Management1 | oob_management | oob | MGMT | - | - |
+| Management1 | OOB_MANAGEMENT | oob | MGMT | - | - |
 
 #### Management Interfaces Device Configuration
 
 ```eos
 !
 interface Management1
-   description oob_management
+   description OOB_MANAGEMENT
    vrf MGMT
    ip address 10.73.255.122/24
 ```
@@ -148,10 +148,10 @@ NAT profile VRF is: TEST
 
 ```eos
 !
-ip nat translation address selection any
 ip nat translation address selection hash field source-ip
-ip nat translation udp-timeout 3600
+ip nat translation address selection any
 ip nat translation tcp-timeout 7200
+ip nat translation udp-timeout 3600
 ip nat translation max-entries 100000
 ip nat translation low-mark 50
 ip nat translation max-entries 1000 host
@@ -163,14 +163,23 @@ ip nat kernel buffer size 64
 ip nat profile NAT-PROFILE-NO-VRF-1
 !
 ip nat profile NAT-PROFILE-NO-VRF-2
+   ip nat destination static 1.0.0.1 2.0.0.1
+   ip nat destination static 1.0.0.2 22 2.0.0.2
+   ip nat destination static 1.0.0.2 23 2.0.0.3 23
+   ip nat destination static 1.0.0.4 22 2.0.0.4 23 protocol udp
+   ip nat destination static 1.0.0.7 access-list ACL21 2.0.0.7
    ip nat source static 3.0.0.1 4.0.0.1
    ip nat source static 3.0.0.2 22 4.0.0.2
    ip nat source static 3.0.0.3 22 4.0.0.3 23
    ip nat source static 3.0.0.4 22 4.0.0.4 23 protocol udp
-   ip nat source static 3.0.0.5 22 4.0.0.5 23 protocol tcp group 1
-   ip nat source static 3.0.0.6 22 4.0.0.6 23 protocol tcp group 2 comment Comment Test
    ip nat source static 3.0.0.7 access-list ACL21 4.0.0.7
    ip nat source ingress static 3.0.0.8 4.0.0.8
+   ip nat destination egress static 239.0.0.1 239.0.0.2
+   ip nat source static 3.0.0.5 22 4.0.0.5 23 protocol tcp group 1
+   ip nat destination static 1.0.0.5 22 2.0.0.5 23 protocol tcp group 1
+   ip nat source static 3.0.0.6 22 4.0.0.6 23 protocol tcp group 2 comment Comment Test
+   ip nat destination static 1.0.0.6 22 2.0.0.6 23 protocol tcp group 2 comment Comment Test
+   ip nat destination dynamic access-list ACL1 pool POOL1
    ip nat source dynamic access-list ACL11 pool POOL11
    ip nat source dynamic access-list ACL12 pool POOL11 comment POOL11 shared with ACL11/12
    ip nat source dynamic access-list ACL13 pool POOL13 priority 10
@@ -180,15 +189,6 @@ ip nat profile NAT-PROFILE-NO-VRF-2
    ip nat source dynamic access-list ACL17 overload priority 10 comment Priority_10
    ip nat source dynamic access-list ACL18 pool POOL18 address-only priority 10 comment Priority_10
    ip nat source dynamic access-list ACL19 pool POOL19 full-cone priority 10 comment Priority_10
-   ip nat destination static 1.0.0.1 2.0.0.1
-   ip nat destination static 1.0.0.2 22 2.0.0.2
-   ip nat destination static 1.0.0.2 23 2.0.0.3 23
-   ip nat destination static 1.0.0.4 22 2.0.0.4 23 protocol udp
-   ip nat destination static 1.0.0.5 22 2.0.0.5 23 protocol tcp group 1
-   ip nat destination static 1.0.0.6 22 2.0.0.6 23 protocol tcp group 2 comment Comment Test
-   ip nat destination static 1.0.0.7 access-list ACL21 2.0.0.7
-   ip nat destination egress static 239.0.0.1 239.0.0.2
-   ip nat destination dynamic access-list ACL1 pool POOL1
    ip nat destination dynamic access-list ACL2 pool POOL1 comment POOL1 shared with ACL1/2
    ip nat destination dynamic access-list ACL3 pool POOL3 priority 10
    ip nat destination dynamic access-list ACL4 pool POOL4 priority 1 comment Priority low end

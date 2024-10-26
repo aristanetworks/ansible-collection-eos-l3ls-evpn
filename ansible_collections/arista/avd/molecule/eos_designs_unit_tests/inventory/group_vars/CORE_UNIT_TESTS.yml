@@ -1,3 +1,7 @@
+# Overwriting the default description templates for core_interfaces to match the <5.0 description styling
+default_underlay_p2p_ethernet_description: "P2P_LINK_TO_{peer!u}_{peer_interface}{vrf?<_vrf_}"
+default_underlay_p2p_port_channel_description: "P2P_LINK_TO_{peer}_{peer_interface}"
+
 # Fabric node type keys
 node_type_keys:
   - key: core_router
@@ -144,6 +148,33 @@ core_interfaces:
             interfaces: [ Ethernet12, Ethernet13 ]
           - node: core-2-ospf-ldp
             interfaces: [ Ethernet12, Ethernet13 ]
+      profile: isis_bb_profile
+
+    # core Port-Channel with custom description
+    - nodes: [ core-1-isis-sr-ldp, core-2-ospf-ldp ]
+      id: 9
+      descriptions: [CUSTOM_DESCRIPTION_ON_P2P_LINK_A, CUSTOM_DESCRIPTION_ON_P2P_LINK_B]
+      port_channel:
+        description: "CUSTOM_DESCRIPTION_ON_P2P_PORT_CHANNEL_{port_channel_id}"
+        mode: active
+        nodes_child_interfaces:
+          - node: core-1-isis-sr-ldp
+            interfaces: [ Ethernet14, Ethernet15 ]
+          - node: core-2-ospf-ldp
+            interfaces: [ Ethernet14, Ethernet15 ]
+      profile: isis_bb_profile
+
+    # core Port-Channel with custom description on p2p reusing the same on port-channel
+    - nodes: [ core-1-isis-sr-ldp, core-2-ospf-ldp ]
+      id: 9
+      descriptions: [CUSTOM_DESCRIPTION_ON_P2P_LINK_A, CUSTOM_DESCRIPTION_ON_P2P_LINK_B]
+      port_channel:
+        mode: active
+        nodes_child_interfaces:
+          - node: core-1-isis-sr-ldp
+            interfaces: [ Ethernet16, Ethernet17 ]
+          - node: core-2-ospf-ldp
+            interfaces: [ Ethernet16, Ethernet17 ]
       profile: isis_bb_profile
 
     # P2P core links with underlay_multicast(pim-sparse) enabled.

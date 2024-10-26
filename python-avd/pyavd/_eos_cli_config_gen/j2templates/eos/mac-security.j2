@@ -13,8 +13,8 @@ mac security
 {%     if mac_security.fips_restrictions is arista.avd.defined(true) %}
    fips restrictions
 {%     endif %}
-   !
 {%     for profile in mac_security.profiles | arista.avd.natural_sort('name') %}
+   !
    profile {{ profile.name }}
 {%         if profile.cipher is arista.avd.defined %}
       cipher {{ profile.cipher }}

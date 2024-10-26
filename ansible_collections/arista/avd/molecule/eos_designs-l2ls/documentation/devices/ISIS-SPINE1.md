@@ -41,20 +41,20 @@
 
 | Management Interface | Description | Type | VRF | IP Address | Gateway |
 | -------------------- | ----------- | ---- | --- | ---------- | ------- |
-| Management1 | oob_management | oob | MGMT | 192.168.200.101/24 | 172.31.0.1 |
+| Management1 | OOB_MANAGEMENT | oob | MGMT | 192.168.200.101/24 | 172.31.0.1 |
 
 ##### IPv6
 
 | Management Interface | Description | Type | VRF | IPv6 Address | IPv6 Gateway |
 | -------------------- | ----------- | ---- | --- | ------------ | ------------ |
-| Management1 | oob_management | oob | MGMT | - | - |
+| Management1 | OOB_MANAGEMENT | oob | MGMT | - | - |
 
 #### Management Interfaces Device Configuration
 
 ```eos
 !
 interface Management1
-   description oob_management
+   description OOB_MANAGEMENT
    no shutdown
    vrf MGMT
    ip address 192.168.200.101/24
@@ -137,7 +137,7 @@ vlan 4092
 
 | Interface | Description | Mode | VLANs | Native VLAN | Trunk Group | Channel-Group |
 | --------- | ----------- | ---- | ----- | ----------- | ----------- | ------------- |
-| Ethernet1 | ISIS-LEAF1_Ethernet1 | *trunk | *110,4092 | *- | *- | 1 |
+| Ethernet1 | L2_ISIS-LEAF1_Ethernet1 | *trunk | *110,4092 | *- | *- | 1 |
 | Ethernet10 | Endpoint | access | 110 | - | - | - |
 
 *Inherited from Port-Channel Interface
@@ -147,7 +147,7 @@ vlan 4092
 ```eos
 !
 interface Ethernet1
-   description ISIS-LEAF1_Ethernet1
+   description L2_ISIS-LEAF1_Ethernet1
    no shutdown
    channel-group 1 mode active
 !
@@ -167,18 +167,18 @@ interface Ethernet10
 
 | Interface | Description | Mode | VLANs | Native VLAN | Trunk Group | LACP Fallback Timeout | LACP Fallback Mode | MLAG ID | EVPN ESI |
 | --------- | ----------- | ---- | ----- | ----------- | ------------| --------------------- | ------------------ | ------- | -------- |
-| Port-Channel1 | ISIS-LEAF1_Po1 | trunk | 110,4092 | - | - | - | - | - | - |
+| Port-Channel1 | L2_ISIS-LEAF1_Port-Channel1 | trunk | 110,4092 | - | - | - | - | - | - |
 
 #### Port-Channel Interfaces Device Configuration
 
 ```eos
 !
 interface Port-Channel1
-   description ISIS-LEAF1_Po1
+   description L2_ISIS-LEAF1_Port-Channel1
    no shutdown
-   switchport
    switchport trunk allowed vlan 110,4092
    switchport mode trunk
+   switchport
 ```
 
 ### Loopback Interfaces
@@ -189,13 +189,13 @@ interface Port-Channel1
 
 | Interface | Description | VRF | IP Address |
 | --------- | ----------- | --- | ---------- |
-| Loopback0 | Router_ID | default | 192.168.255.1/32 |
+| Loopback0 | ROUTER_ID | default | 192.168.255.1/32 |
 
 ##### IPv6
 
 | Interface | Description | VRF | IPv6 Address |
 | --------- | ----------- | --- | ------------ |
-| Loopback0 | Router_ID | default | - |
+| Loopback0 | ROUTER_ID | default | - |
 
 ##### ISIS
 
@@ -208,7 +208,7 @@ interface Port-Channel1
 ```eos
 !
 interface Loopback0
-   description Router_ID
+   description ROUTER_ID
    no shutdown
    ip address 192.168.255.1/32
    isis enable EVPN_UNDERLAY
@@ -312,8 +312,8 @@ no ip routing vrf MGMT
 
 ```eos
 !
-ip route vrf MGMT 0.0.0.0/0 172.31.0.1
 ip route 10.1.0.0/16 10.1.100.100
+ip route vrf MGMT 0.0.0.0/0 172.31.0.1
 ```
 
 ### Router ISIS
@@ -354,11 +354,11 @@ ip route 10.1.0.0/16 10.1.100.100
 !
 router isis EVPN_UNDERLAY
    net 49.0001.1921.6825.5001.00
+   router-id ipv4 192.168.255.1
    is-type level-2
+   log-adjacency-changes
    redistribute connected
    redistribute static
-   router-id ipv4 192.168.255.1
-   log-adjacency-changes
    !
    address-family ipv4 unicast
       maximum-paths 4

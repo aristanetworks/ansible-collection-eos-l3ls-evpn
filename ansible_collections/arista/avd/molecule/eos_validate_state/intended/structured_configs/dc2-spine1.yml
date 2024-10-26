@@ -9,6 +9,10 @@ router_bgp:
   maximum_paths:
     paths: 4
     ecmp: 4
+  redistribute:
+    connected:
+      enabled: true
+      route_map: RM-CONN-2-BGP
   peer_groups:
   - name: IPv4-UNDERLAY-PEERS
     type: ipv4
@@ -30,9 +34,6 @@ router_bgp:
       activate: true
     - name: EVPN-OVERLAY-PEERS
       activate: false
-  redistribute_routes:
-  - source_protocol: connected
-    route_map: RM-CONN-2-BGP
   neighbors:
   - ip_address: 10.255.255.105
     peer_group: IPv4-UNDERLAY-PEERS
@@ -67,32 +68,32 @@ router_bgp:
   - ip_address: 10.255.128.13
     peer_group: EVPN-OVERLAY-PEERS
     peer: dc2-leaf1a
-    description: dc2-leaf1a
+    description: dc2-leaf1a_Loopback0
     remote_as: '65201'
   - ip_address: 10.255.128.14
     peer_group: EVPN-OVERLAY-PEERS
     peer: dc2-leaf1b
-    description: dc2-leaf1b
+    description: dc2-leaf1b_Loopback0
     remote_as: '65201'
   - ip_address: 10.255.128.15
     peer_group: EVPN-OVERLAY-PEERS
     peer: dc2-leaf2a
-    description: dc2-leaf2a
+    description: dc2-leaf2a_Loopback0
     remote_as: '65202'
   - ip_address: 10.255.128.16
     peer_group: EVPN-OVERLAY-PEERS
     peer: dc2-leaf2b
-    description: dc2-leaf2b
+    description: dc2-leaf2b_Loopback0
     remote_as: '65202'
   - ip_address: 10.255.128.17
     peer_group: EVPN-OVERLAY-PEERS
     peer: dc2-leaf3a.arista.com
-    description: dc2-leaf3a.arista.com
+    description: dc2-leaf3a.arista.com_Loopback0
     remote_as: '65203'
   - ip_address: 10.255.128.18
     peer_group: EVPN-OVERLAY-PEERS
     peer: dc2-leaf3b.arista.com
-    description: dc2-leaf3b.arista.com
+    description: dc2-leaf3b.arista.com_Loopback0
     remote_as: '65203'
   address_family_evpn:
     peer_groups:
@@ -131,7 +132,7 @@ vrfs:
   ip_routing: false
 management_interfaces:
 - name: Management1
-  description: oob_management
+  description: OOB_MANAGEMENT
   shutdown: false
   vrf: MGMT
   ip_address: 172.16.1.21/24
@@ -147,59 +148,65 @@ ethernet_interfaces:
   peer: dc2-leaf1a
   peer_interface: Ethernet1
   peer_type: l3leaf
-  description: P2P_LINK_TO_DC2-LEAF1A_Ethernet1
+  description: P2P_dc2-leaf1a_Ethernet1
   shutdown: false
   mtu: 1500
-  type: routed
+  switchport:
+    enabled: false
   ip_address: 10.255.255.104/31
 - name: Ethernet2
   peer: dc2-leaf1b
   peer_interface: Ethernet1
   peer_type: l3leaf
-  description: P2P_LINK_TO_DC2-LEAF1B_Ethernet1
+  description: P2P_dc2-leaf1b_Ethernet1
   shutdown: false
   mtu: 1500
-  type: routed
+  switchport:
+    enabled: false
   ip_address: 10.255.255.108/31
 - name: Ethernet3
   peer: dc2-leaf2a
   peer_interface: Ethernet1
   peer_type: l3leaf
-  description: P2P_LINK_TO_DC2-LEAF2A_Ethernet1
+  description: P2P_dc2-leaf2a_Ethernet1
   shutdown: false
   mtu: 1500
-  type: routed
+  switchport:
+    enabled: false
   ip_address: 10.255.255.112/31
 - name: Ethernet4
   peer: dc2-leaf2b
   peer_interface: Ethernet1
   peer_type: l3leaf
-  description: P2P_LINK_TO_DC2-LEAF2B_Ethernet1
+  description: P2P_dc2-leaf2b_Ethernet1
   shutdown: false
   mtu: 1500
-  type: routed
+  switchport:
+    enabled: false
   ip_address: 10.255.255.116/31
 - name: Ethernet5
   peer: dc2-leaf3a.arista.com
   peer_interface: Ethernet1
   peer_type: l3leaf
-  description: P2P_LINK_TO_DC2-LEAF3A.ARISTA.COM_Ethernet1
+  description: P2P_dc2-leaf3a.arista.com_Ethernet1
   shutdown: false
   mtu: 1500
-  type: routed
+  switchport:
+    enabled: false
   ip_address: 10.255.255.120/31
 - name: Ethernet6
   peer: dc2-leaf3b.arista.com
   peer_interface: Ethernet1
   peer_type: l3leaf
-  description: P2P_LINK_TO_DC2-LEAF3B.ARISTA.COM_Ethernet1
+  description: P2P_dc2-leaf3b.arista.com_Ethernet1
   shutdown: false
   mtu: 1500
-  type: routed
+  switchport:
+    enabled: false
   ip_address: 10.255.255.124/31
 loopback_interfaces:
 - name: Loopback0
-  description: EVPN_Overlay_Peering
+  description: ROUTER_ID
   shutdown: false
   ip_address: 10.255.128.11/32
 prefix_lists:

@@ -9,6 +9,10 @@ router_bgp:
   maximum_paths:
     paths: 4
     ecmp: 4
+  redistribute:
+    connected:
+      enabled: true
+      route_map: RM-CONN-2-BGP
   updates:
     wait_install: true
   peer_groups:
@@ -43,7 +47,7 @@ router_bgp:
   - ip_address: 10.255.251.0
     peer_group: MLAG-IPv4-UNDERLAY-PEER
     peer: UNDERLAY-MULTICAST-L3LEAF1A
-    description: UNDERLAY-MULTICAST-L3LEAF1A
+    description: UNDERLAY-MULTICAST-L3LEAF1A_Vlan4093
   - ip_address: 172.31.255.4
     peer_group: IPv4-UNDERLAY-PEERS
     remote_as: '65001'
@@ -57,16 +61,13 @@ router_bgp:
   - ip_address: 192.168.255.1
     peer_group: EVPN-OVERLAY-PEERS
     peer: UNDERLAY-MULTICAST-SPINE1
-    description: UNDERLAY-MULTICAST-SPINE1
+    description: UNDERLAY-MULTICAST-SPINE1_Loopback0
     remote_as: '65001'
   - ip_address: 192.168.255.2
     peer_group: EVPN-OVERLAY-PEERS
     peer: UNDERLAY-MULTICAST-SPINE2
-    description: UNDERLAY-MULTICAST-SPINE2
+    description: UNDERLAY-MULTICAST-SPINE2_Loopback0
     remote_as: '65001'
-  redistribute_routes:
-  - source_protocol: connected
-    route_map: RM-CONN-2-BGP
   address_family_evpn:
     peer_groups:
     - name: EVPN-OVERLAY-PEERS
@@ -96,7 +97,7 @@ vrfs:
   ip_routing: false
 management_interfaces:
 - name: Management1
-  description: oob_management
+  description: OOB_MANAGEMENT
   shutdown: false
   vrf: MGMT
   ip_address: 192.168.200.106/24
@@ -111,17 +112,17 @@ spanning_tree:
 vlans:
 - id: 4093
   tenant: system
-  name: LEAF_PEER_L3
+  name: MLAG_L3
   trunk_groups:
-  - LEAF_PEER_L3
+  - MLAG
 - id: 4094
   tenant: system
-  name: MLAG_PEER
+  name: MLAG
   trunk_groups:
   - MLAG
 vlan_interfaces:
 - name: Vlan4093
-  description: MLAG_PEER_L3_PEERING
+  description: MLAG_L3
   shutdown: false
   mtu: 9214
   ip_address: 10.255.251.1/31
@@ -129,27 +130,27 @@ vlan_interfaces:
     ipv4:
       sparse_mode: true
 - name: Vlan4094
-  description: MLAG_PEER
+  description: MLAG
   shutdown: false
   no_autostate: true
   mtu: 9214
   ip_address: 10.255.252.1/31
 port_channel_interfaces:
 - name: Port-Channel3
-  description: MLAG_PEER_UNDERLAY-MULTICAST-L3LEAF1A_Po3
-  type: switched
+  description: MLAG_UNDERLAY-MULTICAST-L3LEAF1A_Port-Channel3
+  switchport:
+    enabled: true
+    mode: trunk
+    trunk:
+      groups:
+      - MLAG
   shutdown: false
-  mode: trunk
-  trunk_groups:
-  - LEAF_PEER_L3
-  - MLAG
 ethernet_interfaces:
 - name: Ethernet3
   peer: UNDERLAY-MULTICAST-L3LEAF1A
   peer_interface: Ethernet3
   peer_type: mlag_peer
-  description: MLAG_PEER_UNDERLAY-MULTICAST-L3LEAF1A_Ethernet3
-  type: port-channel-member
+  description: MLAG_UNDERLAY-MULTICAST-L3LEAF1A_Ethernet3
   shutdown: false
   channel_group:
     id: 3
@@ -158,8 +159,7 @@ ethernet_interfaces:
   peer: UNDERLAY-MULTICAST-L3LEAF1A
   peer_interface: Ethernet4
   peer_type: mlag_peer
-  description: MLAG_PEER_UNDERLAY-MULTICAST-L3LEAF1A_Ethernet4
-  type: port-channel-member
+  description: MLAG_UNDERLAY-MULTICAST-L3LEAF1A_Ethernet4
   shutdown: false
   channel_group:
     id: 3
@@ -168,10 +168,11 @@ ethernet_interfaces:
   peer: UNDERLAY-MULTICAST-SPINE1
   peer_interface: Ethernet2
   peer_type: spine
-  description: P2P_LINK_TO_UNDERLAY-MULTICAST-SPINE1_Ethernet2
+  description: P2P_UNDERLAY-MULTICAST-SPINE1_Ethernet2
   shutdown: false
   mtu: 9214
-  type: routed
+  switchport:
+    enabled: false
   ip_address: 172.31.255.5/31
   pim:
     ipv4:
@@ -180,10 +181,11 @@ ethernet_interfaces:
   peer: UNDERLAY-MULTICAST-SPINE2
   peer_interface: Ethernet2
   peer_type: spine
-  description: P2P_LINK_TO_UNDERLAY-MULTICAST-SPINE2_Ethernet2
+  description: P2P_UNDERLAY-MULTICAST-SPINE2_Ethernet2
   shutdown: false
   mtu: 9214
-  type: routed
+  switchport:
+    enabled: false
   ip_address: 172.31.255.7/31
 mlag_configuration:
   domain_id: DC1_LEAF1
@@ -212,11 +214,11 @@ route_maps:
     - ip address prefix-list PL-LOOPBACKS-PIM-RP
 loopback_interfaces:
 - name: Loopback0
-  description: EVPN_Overlay_Peering
+  description: ROUTER_ID
   shutdown: false
   ip_address: 192.168.255.4/32
 - name: Loopback1
-  description: VTEP_VXLAN_Tunnel_Source
+  description: VXLAN_TUNNEL_SOURCE
   shutdown: false
   ip_address: 192.168.254.3/32
 - name: Loopback4

@@ -75,7 +75,7 @@ class UtilsMixin:
                         "prefix_length": get(uplink, "prefix_length"),
                         "channel_group_id": get(uplink, "peer_channel_group_id"),
                         "peer_channel_group_id": get(uplink, "channel_group_id"),
-                        "channel_description": get(uplink, "peer_channel_description"),
+                        "peer_node_group": get(uplink, "node_group"),
                         "vlans": get(uplink, "vlans"),
                         "native_vlan": get(uplink, "native_vlan"),
                         "trunk_groups": get(uplink, "peer_trunk_groups"),
@@ -144,7 +144,6 @@ class UtilsMixin:
     def _get_l3_interface_cfg(self: AvdStructuredConfigUnderlay, l3_interface: dict) -> dict | None:
         """Returns structured_configuration for one L3 interface."""
         interface_name = get(l3_interface, "name", required=True, org_key=f"<node_type_key>...[node={self.shared_utils.hostname}].l3_interfaces[].name]")
-        iface_type = "l3dot1q" if "." in interface_name else "routed"
 
         interface_description = l3_interface.get("description")
         if not interface_description:
@@ -174,7 +173,7 @@ class UtilsMixin:
             "peer_interface": l3_interface.get("peer_interface"),
             "ip_address": ip_address,
             "shutdown": not l3_interface.get("enabled", True),
-            "type": iface_type,
+            "switchport": {"enabled": False if "." not in interface_name else None},
             "description": interface_description,
             "speed": l3_interface.get("speed"),
             "service_profile": l3_interface.get("qos_profile"),
@@ -185,8 +184,11 @@ class UtilsMixin:
             "flow_tracker": self.shared_utils.get_flow_tracker(l3_interface, "l3_interfaces"),
         }
 
-        if iface_type == "l3dot1q":
-            interface["encapsulation_dot1q_vlan"] = int(get(l3_interface, "encapsulation_dot1q_vlan", default=interface_name.split(".")[-1]))
+        if self.shared_utils.fabric_sflow_l3_interfaces is not None:
+            interface["sflow"] = {"enable": self.shared_utils.fabric_sflow_l3_interfaces}
+
+        if "." in interface_name:
+            interface["encapsulation_dot1q"] = {"vlan": int(get(l3_interface, "encapsulation_dot1q_vlan", default=interface_name.split(".")[-1]))}
 
         if ip_address == "dhcp" and l3_interface.get("dhcp_accept_default_route", True):
             interface["dhcp_client_accept_default_route"] = True
@@ -225,7 +227,7 @@ class UtilsMixin:
 
         # If we have the main interface covered, we can just exclude it from the list and return as main interface.
         # Otherwise we return an almost empty dict as the main interface since it was already covered by the calling function.
-        main_interface = get_item(interfaces, "name", link["interface"], default={"type": "routed", "mtu": self.shared_utils.p2p_uplinks_mtu})
+        main_interface = get_item(interfaces, "name", link["interface"], default={"switchport": {"enabled": False}, "mtu": self.shared_utils.p2p_uplinks_mtu})
         main_interface.pop("description", None)
 
         if (mtu := main_interface.get("mtu", 1500)) != self.shared_utils.p2p_uplinks_mtu:
@@ -253,8 +255,8 @@ class UtilsMixin:
             "peer_type": link["peer_type"],
             "description": default(svi.get("description"), svi["name"]),
             "shutdown": not (svi.get("enabled", False)),
-            "type": "routed" if is_native else "l3dot1q",
-            "encapsulation_dot1q_vlan": None if is_native else svi_id,
+            "switchport": {"enabled": False if is_native else None},
+            "encapsulation_dot1q": {"vlan": None if is_native else svi_id},
             "vrf": vrf["name"] if vrf["name"] != "default" else None,
             "ip_address": svi.get("ip_address"),
             "ipv6_address": svi.get("ipv6_address"),

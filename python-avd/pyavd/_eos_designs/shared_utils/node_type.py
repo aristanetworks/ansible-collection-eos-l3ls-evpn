@@ -7,7 +7,7 @@ from functools import cached_property
 from re import search
 from typing import TYPE_CHECKING
 
-from pyavd._errors import AristaAvdMissingVariableError
+from pyavd._errors import AristaAvdInvalidInputsError
 from pyavd._utils import get
 
 if TYPE_CHECKING:
@@ -31,7 +31,7 @@ class NodeTypeMixin:
             return self.default_node_type
 
         msg = f"'type' for host {self.hostname}"
-        raise AristaAvdMissingVariableError(msg)
+        raise AristaAvdInvalidInputsError(msg)
 
     @cached_property
     def default_node_type(self: SharedUtils) -> str | None:

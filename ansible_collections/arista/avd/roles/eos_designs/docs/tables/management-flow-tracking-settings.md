@@ -35,7 +35,7 @@
     | [<samp>&nbsp;&nbsp;direct_wan_ha_links</samp>](## "fabric_flow_tracking.direct_wan_ha_links") | Dictionary |  |  |  | Enable flow-tracking on all direct WAN HA links. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "fabric_flow_tracking.direct_wan_ha_links.enabled") | Boolean |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;name</samp>](## "fabric_flow_tracking.direct_wan_ha_links.name") | String |  |  |  | Flow tracker name as defined in flow_tracking_settings. |
-    | [<samp>flow_tracking_settings</samp>](## "flow_tracking_settings") | Dictionary |  |  |  | PREVIEW: This key is currently not supported<br><br>Define the flow tracking parameters for this topology. |
+    | [<samp>flow_tracking_settings</samp>](## "flow_tracking_settings") | Dictionary |  |  |  | Define the flow tracking parameters for this topology. |
     | [<samp>&nbsp;&nbsp;sampled</samp>](## "flow_tracking_settings.sampled") | Dictionary |  |  |  | The options relevant only for flow tracker type sampled. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;encapsulation</samp>](## "flow_tracking_settings.sampled.encapsulation") | Dictionary |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ipv4_ipv6</samp>](## "flow_tracking_settings.sampled.encapsulation.ipv4_ipv6") | Boolean |  |  |  |  |
@@ -138,8 +138,6 @@
         # Flow tracker name as defined in flow_tracking_settings.
         name: <str>
 
-    # PREVIEW: This key is currently not supported
-    #
     # Define the flow tracking parameters for this topology.
     flow_tracking_settings:
 

@@ -8,11 +8,12 @@ router_bgp:
       ipv4_unicast: false
   maximum_paths:
     paths: 16
+  redistribute:
+    connected:
+      enabled: true
+      route_map: RM-CONN-2-BGP
   updates:
     wait_install: true
-  redistribute_routes:
-  - source_protocol: connected
-    route_map: RM-CONN-2-BGP
   bgp_cluster_id: 192.168.31.2
   listen_ranges:
   - prefix: 192.168.130.0/24
@@ -48,10 +49,12 @@ router_bgp:
     route_reflector_client: true
   address_family_evpn:
     peer_groups:
-    - name: WAN-OVERLAY-PEERS
-      activate: true
     - name: WAN-RR-OVERLAY-PEERS
       activate: true
+      encapsulation: path-selection
+    - name: WAN-OVERLAY-PEERS
+      activate: true
+      encapsulation: path-selection
     next_hop:
       resolution_disabled: true
   address_family_ipv4:
@@ -69,13 +72,12 @@ router_bgp:
     bgp:
       additional_paths:
         receive: true
-        send:
-          any: true
+        send: any
   neighbors:
   - ip_address: 192.168.131.1
     peer_group: WAN-RR-OVERLAY-PEERS
     peer: autovpn-rr1
-    description: autovpn-rr1
+    description: autovpn-rr1_Dps1
   vrfs:
   - name: default
     rd: 192.168.31.2:1
@@ -114,11 +116,12 @@ ethernet_interfaces:
   peer_type: l3_interface
   ip_address: 10.8.8.8/31
   shutdown: false
-  type: routed
+  switchport:
+    enabled: false
   description: ATT_888
 loopback_interfaces:
 - name: Loopback0
-  description: Router_ID
+  description: ROUTER_ID
   shutdown: false
   ip_address: 192.168.31.2/32
 prefix_lists:
@@ -263,7 +266,7 @@ application_traffic_recognition:
 dps_interfaces:
 - name: Dps1
   description: DPS Interface
-  mtu: 9214
+  mtu: 9194
   ip_address: 192.168.131.2/32
   flow_tracker:
     hardware: FLOW-TRACKER

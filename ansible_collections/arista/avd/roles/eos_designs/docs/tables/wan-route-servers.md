@@ -7,7 +7,7 @@
 
     | Variable | Type | Required | Default | Value Restrictions | Description |
     | -------- | ---- | -------- | ------- | ------------------ | ----------- |
-    | [<samp>wan_route_servers</samp>](## "wan_route_servers") | List, items: Dictionary |  |  |  | List of the AutoVPN RRs when using `wan_mode`=`autovpn`, or the Pathfinders<br>when using `wan_mode`=`cv-pathfinder`, to which the device should connect to.<br>This is also used to establish iBGP sessions between WAN route servers.<br><br>When the route server is part of the same inventory as the WAN routers,<br>only the name is required. |
+    | [<samp>wan_route_servers</samp>](## "wan_route_servers") | List, items: Dictionary |  |  |  | List of the AutoVPN RRs when using `wan_mode: autovpn`, or the Pathfinders<br>when using `wan_mode: cv-pathfinder`, to which the device should connect to.<br>This is also used to establish iBGP sessions between WAN route servers.<br><br>When the route server is part of the same inventory as the WAN routers,<br>only the name is required. |
     | [<samp>&nbsp;&nbsp;-&nbsp;hostname</samp>](## "wan_route_servers.[].hostname") | String | Required, Unique |  |  | Route-Reflector hostname. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;vtep_ip</samp>](## "wan_route_servers.[].vtep_ip") | String |  |  |  | Route-Reflector VTEP IP Address. This is usually the IP address under `interface Dps1`. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;path_groups</samp>](## "wan_route_servers.[].path_groups") | List, items: Dictionary |  |  |  | Path-groups through which the Route Reflector/Pathfinder is reached. |
@@ -19,8 +19,8 @@
 === "YAML"
 
     ```yaml
-    # List of the AutoVPN RRs when using `wan_mode`=`autovpn`, or the Pathfinders
-    # when using `wan_mode`=`cv-pathfinder`, to which the device should connect to.
+    # List of the AutoVPN RRs when using `wan_mode: autovpn`, or the Pathfinders
+    # when using `wan_mode: cv-pathfinder`, to which the device should connect to.
     # This is also used to establish iBGP sessions between WAN route servers.
     #
     # When the route server is part of the same inventory as the WAN routers,

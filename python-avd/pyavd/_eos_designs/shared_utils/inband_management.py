@@ -7,7 +7,7 @@ from functools import cached_property
 from ipaddress import ip_network
 from typing import TYPE_CHECKING
 
-from pyavd._errors import AristaAvdError, AristaAvdMissingVariableError
+from pyavd._errors import AristaAvdError, AristaAvdInvalidInputsError
 from pyavd._utils import default, get
 
 if TYPE_CHECKING:
@@ -130,7 +130,7 @@ class InbandManagementMixin:
 
         if self.id is None:
             msg = f"'id' is not set on '{self.hostname}' and is required to set inband_mgmt_ip from inband_mgmt_subnet"
-            raise AristaAvdMissingVariableError(msg)
+            raise AristaAvdInvalidInputsError(msg)
 
         subnet = ip_network(self.inband_mgmt_subnet, strict=False)
         inband_mgmt_ip = str(subnet[3 + self.id])
@@ -154,7 +154,7 @@ class InbandManagementMixin:
 
         if self.id is None:
             msg = f"'id' is not set on '{self.hostname}' and is required to set inband_mgmt_ipv6_address from inband_mgmt_ipv6_subnet"
-            raise AristaAvdMissingVariableError(msg)
+            raise AristaAvdInvalidInputsError(msg)
 
         subnet = ip_network(self.inband_mgmt_ipv6_subnet, strict=False)
         inband_mgmt_ipv6_address = str(subnet[3 + self.id])

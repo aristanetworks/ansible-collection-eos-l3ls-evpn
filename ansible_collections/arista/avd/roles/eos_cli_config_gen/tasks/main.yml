@@ -3,9 +3,8 @@
 # that can be found in the LICENSE file.
 ---
 - name: Verify Requirements
-  tags: [always, avd_req]
   delegate_to: localhost
-  when: avd_requirements is not defined
+  when: avd_requirements is not defined and avd_verify_requirements | default(true)
   arista.avd.verify_requirements:
     requirements: "{{ lookup('file', requirements_path ~ '/requirements.txt').splitlines() }}"
     avd_ignore_requirements: "{{ avd_ignore_requirements | default(false) }}"
@@ -14,36 +13,18 @@
   run_once: true
   register: avd_requirements
 
-# For backward compatibility reasons we need to handle the case where the role
-# is imported in a playbook with a tag which would have run all the tasks.
-- name: Handle role being imported with a tag
-  tags: [never]
-  ansible.builtin.set_fact:
-    run_all_tasks: true
-  run_once: true
-
 - name: Generate eos intended configuration and device documentation
-  tags: [always]
+  when: >-
+      eos_cli_config_gen_configuration.enable | arista.avd.default(true) or
+      (eos_cli_config_gen_documentation.enable | arista.avd.default(generate_device_documentation, true))
   arista.avd.eos_cli_config_gen:
     structured_config_filename: "{{ structured_config_filename }}"
     config_filename: "{{ eos_config_dir }}/{{ inventory_hostname }}.cfg"
     documentation_filename: "{{ devices_dir }}/{{ inventory_hostname }}.md"
-    read_structured_config_from_file: "{{ structured_config is not arista.avd.defined }}"
+    read_structured_config_from_file: "{{ structured_config is not arista.avd.defined or structured_config.skipped is arista.avd.defined(true) }}"
     validation_mode: "{{ avd_data_validation_mode }}"
-    # The logic to be on par with previous tags behavior is as follow:
-    # either all tasks should be run OR the config should explicitly be generated because of a tag in [all, build, provision]
-    # AND the config generation should NOT be explicitly be skipped (Ansible precedence)
-    generate_device_config: >-
-      {{ ((run_all_tasks | default(false)) or ansible_run_tags is arista.avd.contains(['all', 'build', 'provision']))
-      and ansible_skip_tags is not arista.avd.contains(['build', 'provision']) }}
-    # The logic to be on par with previous tags behavior is as follow:
-    # either all tasks should be run OR the config should explicitly be generated because of a tag in [all, build, provision, documentation]
-    # AND the config generation should NOT be explicitly be skipped (Ansible precedence)
-    # AND generate_device_documentation must NOT be false
-    generate_device_doc: >-
-      {{ generate_device_documentation | arista.avd.default(true) and ((run_all_tasks | default(false))
-      or ansible_run_tags is arista.avd.contains(['all', 'build', 'provision', 'documentation']))
-      and ansible_skip_tags is not arista.avd.contains(['build', 'provision', 'documentation']) }}
+    generate_device_config: "{{ eos_cli_config_gen_configuration.enable | arista.avd.default(true) }}"
+    generate_device_doc: "{{ eos_cli_config_gen_documentation.enable | arista.avd.default(generate_device_documentation, true) }}"
     device_doc_toc: true
     cprofile_file: "{{ eos_cli_config_gen_cprofile_file | default(omit) }}"
   delegate_to: localhost

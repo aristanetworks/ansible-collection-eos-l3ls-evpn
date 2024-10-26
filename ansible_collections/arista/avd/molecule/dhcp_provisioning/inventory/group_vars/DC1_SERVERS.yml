@@ -22,7 +22,6 @@ servers:
         switches: [ DC1-LEAF2A, DC1-LEAF2B ]
         profile: TENANT_B
         port_channel:
-          description: PortChanne1
           mode: active
 
   - name: server02_SINGLE_NODE_TRUNK
@@ -51,5 +50,4 @@ servers:
         ethernet_segment:
           short_esi: '0303:0202:0101'
         port_channel:
-          description: PortChanne1
           mode: active

@@ -249,16 +249,16 @@
 
 ### Servers
 
-| Name | Port | Fabric Device | Fabric Port | Description | Shutdown | Type | Mode | VLANs | Profile |
-| ---- | ---- | ------------- | ------------| ----------- | -------- | ---- | ---- | ----- | ------- |
-| server-1 | Eth1 | DC1.POD1.LEAF2A | Ethernet16 | server-1_Eth1 | False | switched | access | 110 | TENANT_A |
-| server-1 | Eth3 | DC1.POD1.LEAF2A | Ethernet17 | Set using structured_config on server adapter | False | switched | access | 110 | TENANT_A |
-| server-1 | Eth5 | DC1.POD1.LEAF2A | Ethernet18 | server-1_Eth5 | False | switched | access | 110 | NESTED_TENANT_A |
-| server-1 | Eth7 | DC1.POD1.LEAF2A | Ethernet19 | server-1_Eth7 | False | switched | access | 110 | NESTED_TENANT_A |
-| server-1 | Eth2 | DC1-POD1-LEAF2B | Ethernet16 | server-1_Eth2 | False | switched | access | 110 | TENANT_A |
-| server-1 | Eth4 | DC1-POD1-LEAF2B | Ethernet17 | Set using structured_config on server adapter | False | switched | access | 110 | TENANT_A |
-| server-1 | Eth6 | DC1-POD1-LEAF2B | Ethernet18 | server-1_Eth6 | False | switched | access | 110 | NESTED_TENANT_A |
-| server-1 | Eth8 | DC1-POD1-LEAF2B | Ethernet19 | server-1_Eth8 | False | switched | access | 110 | NESTED_TENANT_A |
+| Name | Port | Fabric Device | Fabric Port | Description | Shutdown | Mode | Access VLAN | Trunk Allowed VLANs | Profile |
+| ---- | ---- | ------------- | ------------| ----------- | -------- | ---- | ----------- | ------------------- | ------- |
+| server-1 | Eth1 | DC1.POD1.LEAF2A | Ethernet16 | SERVER_server-1_Eth1 | False | access | 110 | - | TENANT_A |
+| server-1 | Eth3 | DC1.POD1.LEAF2A | Ethernet17 | Set using structured_config on server adapter | False | access | 110 | - | TENANT_A |
+| server-1 | Eth5 | DC1.POD1.LEAF2A | Ethernet18 | SERVER_server-1_Eth5 | False | access | 110 | - | NESTED_TENANT_A |
+| server-1 | Eth7 | DC1.POD1.LEAF2A | Ethernet19 | SERVER_server-1_Eth7 | False | access | 110 | - | NESTED_TENANT_A |
+| server-1 | Eth2 | DC1-POD1-LEAF2B | Ethernet16 | SERVER_server-1_Eth2 | False | access | 110 | - | TENANT_A |
+| server-1 | Eth4 | DC1-POD1-LEAF2B | Ethernet17 | Set using structured_config on server adapter | False | access | 110 | - | TENANT_A |
+| server-1 | Eth6 | DC1-POD1-LEAF2B | Ethernet18 | SERVER_server-1_Eth6 | False | access | 110 | - | NESTED_TENANT_A |
+| server-1 | Eth8 | DC1-POD1-LEAF2B | Ethernet19 | SERVER_server-1_Eth8 | False | access | 110 | - | NESTED_TENANT_A |
 
 ### Port Profiles
 

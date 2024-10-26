@@ -150,3 +150,10 @@ keys:
               vlan_mask:
                 type: str
                 description: 0x000-0xFFF VLAN mask.
+        permit_response_traffic:
+          type: str
+          valid_values:
+            - nat
+          description: |-
+            Permit response traffic automatically based on NAT translations.
+            Minimum EOS version requirement 4.32.2F.

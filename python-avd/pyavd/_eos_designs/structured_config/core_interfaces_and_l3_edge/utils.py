@@ -10,7 +10,7 @@ from ipaddress import ip_network
 from itertools import islice
 from typing import TYPE_CHECKING
 
-from pyavd._errors import AristaAvdMissingVariableError
+from pyavd._errors import AristaAvdInvalidInputsError
 from pyavd._utils import default, get, get_item, merge
 
 if TYPE_CHECKING:
@@ -173,6 +173,8 @@ class UtilsMixin:
                     "interface": f"Port-Channel{portchannel_id}",
                     "peer_interface": f"Port-Channel{peer_id}",
                     "port_channel_id": portchannel_id,
+                    "peer_port_channel_id": peer_id,
+                    "port_channel_description": get(p2p_link, "port_channel.description"),
                     "port_channel_members": [
                         {
                             "interface": interface,
@@ -191,13 +193,15 @@ class UtilsMixin:
                     "interface": p2p_link["interfaces"][index],
                     "peer_interface": p2p_link["interfaces"][peer_index],
                     "port_channel_id": None,
+                    "peer_port_channel_id": None,
+                    "port_channel_description": None,
                     "port_channel_members": [],
                 },
             )
             return data
 
         msg = f"{self.data_model}.p2p_links must have either 'interfaces' or 'port_channel' with correct members set."
-        raise AristaAvdMissingVariableError(msg)
+        raise AristaAvdInvalidInputsError(msg)
 
     def _get_common_interface_cfg(self: AvdStructuredConfigCoreInterfacesAndL3Edge, p2p_link: dict) -> dict:
         """
@@ -207,16 +211,12 @@ class UtilsMixin:
         This config will only be used on the main interface - so not port-channel members.
         """
         index = p2p_link["nodes"].index(self.shared_utils.hostname)
-        peer = p2p_link["data"]["peer"]
-        peer_interface = p2p_link["data"]["peer_interface"]
-        default_description = f"P2P_LINK_TO_{peer}_{peer_interface}"
         interface_cfg = {
             "name": p2p_link["data"]["interface"],
-            "peer": peer,
-            "peer_interface": peer_interface,
+            "peer": p2p_link["data"]["peer"],
+            "peer_interface": p2p_link["data"]["peer_interface"],
             "peer_type": p2p_link["data"]["peer_type"],
-            "description": get(p2p_link, "data.description", default=default_description),
-            "type": "routed",
+            "switchport": {"enabled": False},
             "shutdown": False,
             "mtu": p2p_link.get("mtu", self.shared_utils.p2p_uplinks_mtu) if self.shared_utils.platform_settings_feature_support_per_interface_mtu else None,
             "service_profile": p2p_link.get("qos_profile", self.shared_utils.p2p_uplinks_qos_profile),
@@ -310,19 +310,12 @@ class UtilsMixin:
         Return partial structured_config for one p2p_link.
 
         Covers config for ethernet interfaces that are port-channel members.
-
-        TODO: Change description for members to be the physical peer interface instead of port-channel
         """
-        peer = p2p_link["data"]["peer"]
-        peer_interface = member["peer_interface"]
-        default_description = f"P2P_LINK_TO_{peer}_{peer_interface}"
         return {
             "name": member["interface"],
-            "type": "port-channel-member",
-            "peer": peer,
-            "peer_interface": peer_interface,
+            "peer": p2p_link["data"]["peer"],
+            "peer_interface": member["peer_interface"],
             "peer_type": p2p_link["data"]["peer_type"],
-            "description": get(p2p_link, "data.description", default=default_description),
             "shutdown": False,
             "channel_group": {
                 "id": p2p_link["data"]["port_channel_id"],

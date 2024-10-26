@@ -21,20 +21,20 @@
 
 | Management Interface | Description | Type | VRF | IP Address | Gateway |
 | -------------------- | ----------- | ---- | --- | ---------- | ------- |
-| Management1 | oob_management | oob | MGMT | 10.73.255.122/24 | 10.73.255.2 |
+| Management1 | OOB_MANAGEMENT | oob | MGMT | 10.73.255.122/24 | 10.73.255.2 |
 
 ##### IPv6
 
 | Management Interface | Description | Type | VRF | IPv6 Address | IPv6 Gateway |
 | -------------------- | ----------- | ---- | --- | ------------ | ------------ |
-| Management1 | oob_management | oob | MGMT | - | - |
+| Management1 | OOB_MANAGEMENT | oob | MGMT | - | - |
 
 #### Management Interfaces Device Configuration
 
 ```eos
 !
 interface Management1
-   description oob_management
+   description OOB_MANAGEMENT
    vrf MGMT
    ip address 10.73.255.122/24
 ```
@@ -164,23 +164,23 @@ router bgp 65001
    graceful-restart
    neighbor OBS_WAN peer group
    neighbor OBS_WAN remote-as 65000
-   neighbor OBS_WAN as-path remote-as replace out
    neighbor OBS_WAN as-path prepend-own disabled
-   neighbor OBS_WAN description BGP Connection to OBS WAN CPE
+   neighbor OBS_WAN as-path remote-as replace out
    neighbor OBS_WAN bfd
    neighbor OBS_WAN bfd interval 2000 min-rx 2000 multiplier 3
+   neighbor OBS_WAN description BGP Connection to OBS WAN CPE
    neighbor SEDI peer group
    neighbor SEDI remote-as 65003
    neighbor SEDI update-source Loopback101
    neighbor SEDI description BGP Connection to OBS WAN CPE
    neighbor SEDI ebgp-multihop 10
-   neighbor SEDI-shut shutdown
    neighbor SEDI-shut peer group
+   neighbor SEDI-shut shutdown
    neighbor SEDI-shut description BGP Peer Shutdown
    neighbor TEST-PASSIVE peer group
    neighbor TEST-PASSIVE remote-as 65003
-   neighbor TEST-PASSIVE description BGP Connection in passive mode
    neighbor TEST-PASSIVE passive
+   neighbor TEST-PASSIVE description BGP Connection in passive mode
    neighbor WELCOME_ROUTERS peer group
    neighbor WELCOME_ROUTERS remote-as 65001
    neighbor WELCOME_ROUTERS description BGP Connection to WELCOME ROUTER 02
@@ -189,24 +189,24 @@ router bgp 65001
    !
    address-family ipv4
       neighbor OBS_WAN activate
-      neighbor SEDI route-map RM-BGP-EXPORT-DEFAULT-BLUE-C1 out
       neighbor SEDI activate
-      neighbor SEDI-shut route-map RM-BGP-EXPORT-DEFAULT-BLUE-C1 out
+      neighbor SEDI route-map RM-BGP-EXPORT-DEFAULT-BLUE-C1 out
       neighbor SEDI-shut activate
+      neighbor SEDI-shut route-map RM-BGP-EXPORT-DEFAULT-BLUE-C1 out
       neighbor WELCOME_ROUTERS activate
    !
    vrf BLUE-C1
       rd 1.0.1.1:101
       neighbor 10.1.1.0 peer group OBS_WAN
       neighbor 10.255.1.1 peer group WELCOME_ROUTERS
-      neighbor 10.255.1.1 weight 65535
       neighbor 10.255.1.1 as-path remote-as replace out
+      neighbor 10.255.1.1 weight 65535
       neighbor 10.255.1.1 route-reflector-client
       neighbor 101.0.3.1 peer group SEDI
       neighbor 101.0.3.1 weight 100
       neighbor 101.0.3.2 peer group SEDI
-      neighbor 101.0.3.2 allowas-in
       neighbor 101.0.3.2 shutdown
+      neighbor 101.0.3.2 allowas-in
       neighbor 101.0.3.3 peer group SEDI-shut
       neighbor 101.0.3.3 allowas-in 5
       neighbor 101.0.3.4 peer group TEST-PASSIVE

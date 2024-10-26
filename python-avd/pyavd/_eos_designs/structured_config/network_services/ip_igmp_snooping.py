@@ -100,18 +100,17 @@ class IpIgmpSnoopingMixin(UtilsMixin):
 
         if igmp_snooping_querier_enabled is not None:
             ip_igmp_snooping_vlan["querier"] = {"enabled": igmp_snooping_querier_enabled}
-            # TODO: The if below should be uncommented when we have settled the behavioral change
-            # if svi_igmp_snooping_querier_enabled is True:
-            address = default(igmp_snooping_querier.get("source_address"), tenant_igmp_snooping_querier.get("source_address"), self.shared_utils.router_id)
-            if address is not None:
-                ip_igmp_snooping_vlan["querier"]["address"] = address
+            if igmp_snooping_querier_enabled is True:
+                address = default(igmp_snooping_querier.get("source_address"), tenant_igmp_snooping_querier.get("source_address"), self.shared_utils.router_id)
+                if address is not None:
+                    ip_igmp_snooping_vlan["querier"]["address"] = address
 
-            version = default(
-                igmp_snooping_querier.get("version"),
-                tenant_igmp_snooping_querier.get("version"),
-            )
-            if version is not None:
-                ip_igmp_snooping_vlan["querier"]["version"] = version
+                version = default(
+                    igmp_snooping_querier.get("version"),
+                    tenant_igmp_snooping_querier.get("version"),
+                )
+                if version is not None:
+                    ip_igmp_snooping_vlan["querier"]["version"] = version
 
         # IGMP snooping fast-leave feature is enabled only when evpn_l2_multicast is enabled
         if evpn_l2_multicast_enabled is True:

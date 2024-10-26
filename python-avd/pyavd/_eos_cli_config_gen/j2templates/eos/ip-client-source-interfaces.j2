@@ -11,7 +11,7 @@
       or ip_tftp_client_source_interfaces is arista.avd.defined %}
 !
 {%     if ip_ftp_client_source_interfaces is arista.avd.defined %}
-{%         for ip_ftp_client_source_interface in ip_ftp_client_source_interfaces %}
+{%         for ip_ftp_client_source_interface in ip_ftp_client_source_interfaces | arista.avd.natural_sort %}
 {%             if ip_ftp_client_source_interface.name is arista.avd.defined %}
 {%                 set ip_ftp_client_cli = "ip ftp client source-interface " ~ ip_ftp_client_source_interface.name | capitalize %}
 {%                 if ip_ftp_client_source_interface.vrf is arista.avd.defined %}
@@ -43,7 +43,7 @@
 {%         endfor %}
 {%     endif %}
 {%     if ip_telnet_client_source_interfaces is arista.avd.defined %}
-{%         for ip_telnet_client_source_interface in ip_telnet_client_source_interfaces %}
+{%         for ip_telnet_client_source_interface in ip_telnet_client_source_interfaces | arista.avd.natural_sort %}
 {%             if ip_telnet_client_source_interface.name is arista.avd.defined %}
 {%                 set ip_telnet_client_cli = "ip telnet client source-interface " ~ ip_telnet_client_source_interface.name | capitalize %}
 {%                 if ip_telnet_client_source_interface.vrf is arista.avd.defined %}
@@ -54,7 +54,7 @@
 {%         endfor %}
 {%     endif %}
 {%     if ip_tftp_client_source_interfaces is arista.avd.defined %}
-{%         for ip_tftp_client_source_interface in ip_tftp_client_source_interfaces %}
+{%         for ip_tftp_client_source_interface in ip_tftp_client_source_interfaces | arista.avd.natural_sort %}
 {%             if ip_tftp_client_source_interface.name is arista.avd.defined %}
 {%                 set ip_tftp_client_cli = "ip tftp client source-interface " ~ ip_tftp_client_source_interface.name | capitalize %}
 {%                 if ip_tftp_client_source_interface.vrf is arista.avd.defined %}

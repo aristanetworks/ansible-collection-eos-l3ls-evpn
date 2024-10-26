@@ -5,22 +5,9 @@
 #}
 {# eos - dot1x #}
 {% if dot1x is arista.avd.defined %}
-!
-{%     if dot1x.system_auth_control is arista.avd.defined(true) %}
-dot1x system-auth-control
-{%     endif %}
-{%     if dot1x.protocol_lldp_bypass is arista.avd.defined(true) %}
-dot1x protocol lldp bypass
-{%     endif %}
-{%     if dot1x.protocol_bpdu_bypass is arista.avd.defined(true) %}
-dot1x protocol bpdu bypass
-{%     endif %}
-{%     if dot1x.dynamic_authorization is arista.avd.defined(true) %}
-dot1x dynamic-authorization
-{%     endif %}
 {%     if dot1x.mac_based_authentication is arista.avd.defined or dot1x.radius_av_pair is arista.avd.defined or
          dot1x.aaa.unresponsive is arista.avd.defined or dot1x.captive_portal is arista.avd.defined
-         or dot1x.supplicant is arista.avd.defined %}
+         or dot1x.supplicant is arista.avd.defined  or dot1x.radius_av_pair_username_format is arista.avd.defined %}
 dot1x
 {%         for profile in dot1x.supplicant.profiles | arista.avd.natural_sort("name") %}
    supplicant profile {{ profile.name }}
@@ -76,9 +63,6 @@ dot1x
 {%             if dot1x.aaa.unresponsive.eap_response is arista.avd.defined %}
    {{ aaa_config }} eap response {{ dot1x.aaa.unresponsive.eap_response }}
 {%             endif %}
-{%             if dot1x.aaa.unresponsive.recovery_action_reauthenticate is arista.avd.defined(true) %}
-   {{ aaa_config }} recovery action reauthenticate
-{%             endif %}
 {%         endif %}
 {%         if dot1x.aaa.accounting_update_interval is arista.avd.defined %}
    aaa accounting update interval {{ dot1x.aaa.accounting_update_interval }} seconds
@@ -98,6 +82,12 @@ dot1x
 {%             if dot1x.radius_av_pair.framed_mtu is arista.avd.defined %}
    radius av-pair framed-mtu {{ dot1x.radius_av_pair.framed_mtu }}
 {%             endif %}
+{%         endif %}
+{%         if dot1x.radius_av_pair_username_format.delimiter is arista.avd.defined and dot1x.radius_av_pair_username_format.mac_string_case is arista.avd.defined %}
+   mac-based-auth radius av-pair user-name delimiter {{ dot1x.radius_av_pair_username_format.delimiter }} {{ dot1x.radius_av_pair_username_format.mac_string_case }}
+{%         endif %}
+{%         if dot1x.aaa.unresponsive.recovery_action_reauthenticate is arista.avd.defined(true) %}
+   {{ aaa_config }} recovery action reauthenticate
 {%         endif %}
 {%         if dot1x.supplicant.disconnect_cached_results_timeout is arista.avd.defined %}
    supplicant disconnect cached-results timeout {{ dot1x.supplicant.disconnect_cached_results_timeout }} seconds

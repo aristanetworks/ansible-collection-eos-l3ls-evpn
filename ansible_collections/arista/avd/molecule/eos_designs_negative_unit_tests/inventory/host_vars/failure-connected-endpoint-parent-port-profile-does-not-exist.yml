@@ -1,0 +1,24 @@
+---
+type: l3leaf
+
+port_profiles:
+  - profile: PROFILE-1
+    parent_profile: THIS-PROFILE-DOES-NOT-EXIST
+
+l3leaf:
+  nodes:
+    - name: failure-connected-endpoint-parent-port-profile-does-not-exist
+      loopback_ipv4_pool: 192.168.42.0/24
+      vtep_loopback_ipv4_pool: 192.168.255.0/24
+      bgp_as: 65042
+      id: 1
+
+servers:
+  - name: TEST-ENDPOINT
+    adapters:
+      - switches: [failure-connected-endpoint-parent-port-profile-does-not-exist]
+        switch_ports: [Ethernet9]
+        profile: PROFILE-1
+
+expected_error_message: >-
+  Profile 'THIS-PROFILE-DOES-NOT-EXIST' applied under port profile 'PROFILE-1' does not exist in `port_profiles`.

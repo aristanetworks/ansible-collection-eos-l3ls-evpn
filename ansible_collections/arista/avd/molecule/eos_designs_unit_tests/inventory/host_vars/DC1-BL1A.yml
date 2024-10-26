@@ -13,8 +13,8 @@ override_ip_name_servers:
 # Testing empty key
 cvp_ingestauth_key: ""
 
-# Testing overlay loopback description override
-overlay_loopback_description: "MY_OVERLAY_LOOPBACK"
+# Testing router id loopback description override
+router_id_loopback_description: "MY_ROUTER_ID_LOOPBACK"
 
 vtep_vvtep_ip: 192.168.255.255/32
 

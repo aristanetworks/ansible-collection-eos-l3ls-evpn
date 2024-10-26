@@ -24,9 +24,8 @@ ethernet_interfaces:
   peer: UPLINK_P2P_VRFS_TESTS_LEAF1
   peer_interface: Ethernet51
   peer_type: l3leaf
-  description: UPLINK_P2P_VRFS_TESTS_LEAF1_Ethernet51
+  description: L2_UPLINK_P2P_VRFS_TESTS_LEAF1_Ethernet51
   shutdown: false
-  type: port-channel-member
   channel_group:
     id: 1
     mode: active
@@ -34,24 +33,25 @@ ethernet_interfaces:
   peer: UPLINK_P2P_VRFS_TESTS_LEAF1
   peer_interface: Ethernet52
   peer_type: l3leaf
-  description: UPLINK_P2P_VRFS_TESTS_LEAF1_Ethernet52
+  description: L2_UPLINK_P2P_VRFS_TESTS_LEAF1_Ethernet52
   shutdown: false
-  type: port-channel-member
   channel_group:
     id: 1
     mode: active
 - name: Ethernet10
   peer_type: network_port
   shutdown: false
-  type: switched
-  vlans: '66'
+  switchport:
+    enabled: true
 port_channel_interfaces:
 - name: Port-Channel1
-  description: UPLINK_P2P_VRFS_TESTS_LEAF1_Po51
-  type: switched
+  description: L2_UPLINK_P2P_VRFS_TESTS_LEAF1_Port-Channel51
+  switchport:
+    enabled: true
+    mode: trunk
+    trunk:
+      allowed_vlan: '66'
   shutdown: false
-  mode: trunk
-  vlans: '66'
 vlans:
 - id: 66
   name: TEST-L2VLAN-ATTRACTION

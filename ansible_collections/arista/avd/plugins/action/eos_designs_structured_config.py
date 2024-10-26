@@ -44,13 +44,21 @@ class ActionModule(ActionBase):
             profiler = cProfile.Profile()
             profiler.enable()
 
+        hostname = task_vars["inventory_hostname"]
+
+        if self._task.args.get("debug_vars") is True and (debug_vars_file := self._task.args.get("debug_vars_file")):
+            # Dump all hostvars to a file.
+            write_file(yaml.dump(task_vars["hostvars"][hostname], Dumper=AnsibleDumper, indent=2, sort_keys=False, width=2147483647), debug_vars_file)
+
+        if self._task.args.get("structured_config") is False:
+            # Not creating structured config
+            return result
+
         eos_designs_custom_templates = self._task.args.get("eos_designs_custom_templates", [])
         filename = str(self._task.args.get("dest", ""))
         file_mode = str(self._task.args.get("mode", "0o664"))
         template_output = self._task.args.get("template_output", False)
         validation_mode = self._task.args.get("validation_mode")
-
-        hostname = task_vars["inventory_hostname"]
 
         task_vars["switch"] = get(task_vars, f"avd_switch_facts..{hostname}..switch", separator="..", default={})
 

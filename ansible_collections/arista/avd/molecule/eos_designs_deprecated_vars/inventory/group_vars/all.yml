@@ -3,3 +3,8 @@ root_dir: '{{ playbook_dir }}'
 is_for_test: true
 
 fabric_name: EOS_DESIGNS_DEPRECATED_VARS
+
+eos_designs_documentation:
+  enable: false
+eos_cli_config_gen_documentation:
+  enable: false

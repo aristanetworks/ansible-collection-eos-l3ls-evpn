@@ -1,5 +1,7 @@
 platform:
   trident:
+    l3:
+      routing_mac_address_per_vlan: true
     forwarding_table_partition: 2
     mmu:
       active_profile: mc_example_profile

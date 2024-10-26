@@ -31,9 +31,8 @@ ethernet_interfaces:
   peer: uplink-native-vlan-grandparent
   peer_interface: Ethernet1
   peer_type: l2leaf
-  description: UPLINK-NATIVE-VLAN-GRANDPARENT_Ethernet1
+  description: L2_uplink-native-vlan-grandparent_Ethernet1
   shutdown: false
-  type: port-channel-member
   channel_group:
     id: 1
     mode: active
@@ -41,26 +40,29 @@ ethernet_interfaces:
   peer: uplink-native-vlan-child
   peer_interface: Ethernet2
   peer_type: l2leaf
-  description: UPLINK-NATIVE-VLAN-CHILD_Ethernet2
+  description: L2_uplink-native-vlan-child_Ethernet2
   shutdown: false
-  type: port-channel-member
   channel_group:
     id: 2
     mode: active
 port_channel_interfaces:
 - name: Port-Channel1
-  description: UPLINK-NATIVE-VLAN-GRANDPARENT_Po1
-  type: switched
+  description: L2_uplink-native-vlan-grandparent_Port-Channel1
+  switchport:
+    enabled: true
+    mode: trunk
+    trunk:
+      native_vlan: 100
+      allowed_vlan: '100'
   shutdown: false
-  mode: trunk
-  native_vlan: 100
-  vlans: '100'
 - name: Port-Channel2
-  description: UPLINK-NATIVE-VLAN-CHILD_Po2
-  type: switched
+  description: L2_uplink-native-vlan-child_Port-Channel2
+  switchport:
+    enabled: true
+    mode: trunk
+    trunk:
+      native_vlan: 200
+      allowed_vlan: '100'
   shutdown: false
-  mode: trunk
-  native_vlan: 200
-  vlans: '100'
 ip_igmp_snooping:
   globally_enabled: true

@@ -106,8 +106,8 @@ vlan 4092
 
 | Interface | Description | Mode | VLANs | Native VLAN | Trunk Group | Channel-Group |
 | --------- | ----------- | ---- | ----- | ----------- | ----------- | ------------- |
-| Ethernet1 | L2ONLY-SPINE1_Ethernet1 | *trunk | *100,4092 | *- | *- | 1 |
-| Ethernet2 | L2ONLY-SPINE2_Ethernet1 | *trunk | *100,4092 | *- | *- | 1 |
+| Ethernet1 | L2_L2ONLY-SPINE1_Ethernet1 | *trunk | *100,4092 | *- | *- | 1 |
+| Ethernet2 | L2_L2ONLY-SPINE2_Ethernet1 | *trunk | *100,4092 | *- | *- | 1 |
 | Ethernet10 | Endpoint | access | 100 | - | - | - |
 | Ethernet11 | Endpoint | access | 100 | - | - | - |
 
@@ -118,12 +118,12 @@ vlan 4092
 ```eos
 !
 interface Ethernet1
-   description L2ONLY-SPINE1_Ethernet1
+   description L2_L2ONLY-SPINE1_Ethernet1
    no shutdown
    channel-group 1 mode active
 !
 interface Ethernet2
-   description L2ONLY-SPINE2_Ethernet1
+   description L2_L2ONLY-SPINE2_Ethernet1
    no shutdown
    channel-group 1 mode active
 !
@@ -150,18 +150,18 @@ interface Ethernet11
 
 | Interface | Description | Mode | VLANs | Native VLAN | Trunk Group | LACP Fallback Timeout | LACP Fallback Mode | MLAG ID | EVPN ESI |
 | --------- | ----------- | ---- | ----- | ----------- | ------------| --------------------- | ------------------ | ------- | -------- |
-| Port-Channel1 | L2ONLY_SPINES_Po1 | trunk | 100,4092 | - | - | - | - | - | - |
+| Port-Channel1 | L2_L2ONLY_SPINES_Port-Channel1 | trunk | 100,4092 | - | - | - | - | - | - |
 
 #### Port-Channel Interfaces Device Configuration
 
 ```eos
 !
 interface Port-Channel1
-   description L2ONLY_SPINES_Po1
+   description L2_L2ONLY_SPINES_Port-Channel1
    no shutdown
-   switchport
    switchport trunk allowed vlan 100,4092
    switchport mode trunk
+   switchport
 ```
 
 ### VLAN Interfaces
@@ -237,8 +237,8 @@ no ip routing vrf MGMT
 
 ```eos
 !
-ip route vrf MGMT 0.0.0.0/0 172.31.0.1
 ip route 0.0.0.0/0 172.23.254.1
+ip route vrf MGMT 0.0.0.0/0 172.31.0.1
 ```
 
 ## Multicast

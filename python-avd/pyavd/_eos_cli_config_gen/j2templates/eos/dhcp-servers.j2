@@ -20,6 +20,9 @@
 {%         if dhcp_server.dns_domain_name_ipv4 is arista.avd.defined %}
    dns domain name ipv4 {{ dhcp_server.dns_domain_name_ipv4 }}
 {%         endif %}
+{%         if dhcp_server.dns_servers_ipv4 is arista.avd.defined %}
+   dns server ipv4 {{ dhcp_server.dns_servers_ipv4 | arista.avd.natural_sort | join(" ") }}
+{%         endif %}
 {%         if dhcp_server.lease_time_ipv6.days is arista.avd.defined
             and dhcp_server.lease_time_ipv6.hours is arista.avd.defined
             and dhcp_server.lease_time_ipv6.minutes is arista.avd.defined %}
@@ -27,9 +30,6 @@
 {%         endif %}
 {%         if dhcp_server.dns_domain_name_ipv6 is arista.avd.defined %}
    dns domain name ipv6 {{ dhcp_server.dns_domain_name_ipv6 }}
-{%         endif %}
-{%         if dhcp_server.dns_servers_ipv4 is arista.avd.defined %}
-   dns server ipv4 {{ dhcp_server.dns_servers_ipv4 | arista.avd.natural_sort | join(" ") }}
 {%         endif %}
 {%         if dhcp_server.dns_servers_ipv6 is arista.avd.defined %}
    dns server ipv6 {{ dhcp_server.dns_servers_ipv6 | arista.avd.natural_sort | join(" ") }}
@@ -46,17 +46,15 @@
 {%             if subnet.reservations is arista.avd.defined %}
       reservations
 {%                 for reservation in subnet.reservations | arista.avd.natural_sort("mac_address") %}
-{%                     if reservation.mac_address is arista.avd.defined %}
          mac-address {{ reservation.mac_address }}
-{%                         if reservation.ipv4_address is arista.avd.defined %}
+{%                     if reservation.ipv4_address is arista.avd.defined %}
             ipv4-address {{ reservation.ipv4_address }}
-{%                         endif %}
-{%                         if reservation.ipv6_address is arista.avd.defined %}
+{%                     endif %}
+{%                     if reservation.ipv6_address is arista.avd.defined %}
             ipv6-address {{ reservation.ipv6_address }}
-{%                         endif %}
-{%                         if reservation.hostname is arista.avd.defined %}
+{%                     endif %}
+{%                     if reservation.hostname is arista.avd.defined %}
             hostname {{ reservation.hostname }}
-{%                         endif %}
 {%                     endif %}
 {%                     if not loop.last %}
          !

@@ -1,0 +1,79 @@
+---
+ethernet_interfaces:
+  - name: Ethernet1
+    vlans: 1-2  # Conflict expected with switchport.access_vlan
+    mode: trunk  # Conflict expected with switchport.mode
+    switchport:
+      mode: access
+      access_vlan: 123
+
+port_channel_interfaces:
+  - name: Port-Channel1
+    vlans: 1-2  # Conflict expected with switchport.trunk.allowed_vlan
+    switchport:
+      trunk:
+        allowed_vlan: 123-124
+
+router_bgp:
+  redistribute_routes:
+    - source_protocol: connected  # Conflict expected with router_bgp.redistribute
+  redistribute:
+    connected:
+      enabled: true
+  address_family_ipv4:
+    redistribute_routes:
+      - source_protocol: connected  # Conflict expected with router_bgp.address_family_ipv4.redistribute
+    redistribute:
+      connected:
+        enabled: true
+  address_family_ipv4_multicast:
+    redistribute_routes:
+      - source_protocol: connected  # Conflict expected with router_bgp.address_family_ipv4_multicast.redistribute
+    redistribute:
+      connected:
+        enabled: true
+  address_family_ipv6:
+    redistribute_routes:
+      - source_protocol: connected  # Conflict expected with router_bgp.address_family_ipv6.redistribute
+    redistribute:
+      connected:
+        enabled: true
+  address_family_ipv6_multicast:
+    redistribute_routes:
+      - source_protocol: connected  # Conflict expected with router_bgp.address_family_ipv6_multicast.redistribute
+    redistribute:
+      connected:
+        enabled: true
+  vrfs:
+    - name: TEST_VRF_1
+      redistribute_routes:
+        - source_protocol: connected  # Conflict expected with router_bgp.vrfs[].redistribute
+      redistribute:
+        connected:
+          enabled: true
+      address_family_ipv4:
+        redistribute_routes:
+          - source_protocol: connected  # Conflict expected with router_bgp.vrfs[].address_family_ipv4.redistribute
+        redistribute:
+          connected:
+            enabled: true
+      address_family_ipv6:
+        redistribute_routes:
+          - source_protocol: connected  # Conflict expected with router_bgp.vrfs[].address_family_ipv6.redistribute
+        redistribute:
+          connected:
+            enabled: true
+      address_family_ipv4_multicast:
+        redistribute_routes:
+          - source_protocol: connected  # Conflict expected with router_bgp.vrfs[].address_family_ipv4_multicast.redistribute
+        redistribute:
+          connected:
+            enabled: true
+      address_family_ipv6_multicast:
+        redistribute_routes:
+          - source_protocol: connected  # Conflict expected with router_bgp.vrfs[].address_family_ipv6_multicast.redistribute
+        redistribute:
+          connected:
+            enabled: true
+
+expected_error_message: "13 errors found during schema validation of input vars."

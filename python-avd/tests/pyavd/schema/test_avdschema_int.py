@@ -26,7 +26,7 @@ TEST_SCHEMA = {
             "min": 2,
             "max": 20,
             "valid_values": [0, 11, 22],
-            "dynamic_valid_values": "valid_values",  # Part of meta schema but not implemented in converter
+            "dynamic_valid_values": ["valid_values"],  # Part of meta schema but not implemented in converter
             "required": True,
             "description": "Some integer",
             "display_name": "Integer",

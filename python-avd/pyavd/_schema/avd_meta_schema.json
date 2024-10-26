@@ -376,8 +376,11 @@
             "description": "Key is required"
         },
         "dynamic_valid_values": {
-            "type": "string",
-            "description": "Path to variable under the parent dictionary containing valid values.\nVariable path use dot-notation and variable path must be relative to the parent dictionary.\nIf an element of the variable path is a list, every list item will be unpacked.\nNote that this is building the schema from values in the _data_ being validated!"
+            "type": "array",
+            "items": {
+                "type": "string",
+                "description": "Path to variable under the parent dictionary containing valid values.\nVariable path use dot-notation and variable path must be relative to the parent dictionary.\nIf an element of the variable path is a list, every list item will be unpacked.\nNote that this is building the schema from values in the _data_ being validated!"
+            }
         },
         "$ref": {
             "type": "string",

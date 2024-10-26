@@ -25,6 +25,7 @@ _custom_key2:
 - custom_value2
 ethernet_interfaces:
 - name: Ethernet1
-  type: switched
+  switchport:
+    enabled: true
   _custom_key3:
     custom_dict3: custom_value3

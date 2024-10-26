@@ -34,7 +34,7 @@ vrfs:
   ip_routing: false
 management_interfaces:
 - name: Management1
-  description: oob_management
+  description: OOB_MANAGEMENT
   shutdown: false
   vrf: MGMT
   ip_address: 192.168.1.25/24
@@ -53,20 +53,21 @@ ethernet_interfaces:
   peer: DC2-POD1-LEAF2A
   peer_interface: Ethernet3
   peer_type: l3leaf
-  description: DC2-POD1-LEAF2A_Ethernet3
+  description: L2_DC2-POD1-LEAF2A_Ethernet3
   shutdown: false
-  type: port-channel-member
   channel_group:
     id: 1
     mode: active
 port_channel_interfaces:
 - name: Port-Channel1
-  description: DC2-POD1-LEAF2A_Po3
-  type: switched
+  description: L2_DC2-POD1-LEAF2A_Port-Channel3
+  switchport:
+    enabled: true
+    mode: trunk
+    trunk:
+      allowed_vlan: '4092'
   shutdown: false
-  mode: trunk
   service_profile: QOS-PROFILE
-  vlans: '4092'
 ip_igmp_snooping:
   globally_enabled: true
 vlans:

@@ -28,5 +28,4 @@ port_profiles:
     native_vlan: 123
 
 expected_error_message: >-
-  The 'profile' of every port-channel lacp fallback individual setting must be defined in the 'port_profiles'.
-  First occurrence seen of a missing profile is 'INDIVIDUAL_TRUNK' for the connected endpoint with the name 'INDIVIDUAL_1'.
+  Profile 'INDIVIDUAL_TRUNK' applied under 'servers[name=INDIVIDUAL_1].adapters[0].port_channel.lacp_fallback.individual' does not exist in `port_profiles`.

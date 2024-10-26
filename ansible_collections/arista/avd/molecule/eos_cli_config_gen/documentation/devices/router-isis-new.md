@@ -21,20 +21,20 @@
 
 | Management Interface | Description | Type | VRF | IP Address | Gateway |
 | -------------------- | ----------- | ---- | --- | ---------- | ------- |
-| Management1 | oob_management | oob | MGMT | 10.73.254.11/24 | 10.73.254.253 |
+| Management1 | OOB_MANAGEMENT | oob | MGMT | 10.73.254.11/24 | 10.73.254.253 |
 
 ##### IPv6
 
 | Management Interface | Description | Type | VRF | IPv6 Address | IPv6 Gateway |
 | -------------------- | ----------- | ---- | --- | ------------ | ------------ |
-| Management1 | oob_management | oob | MGMT | - | - |
+| Management1 | OOB_MANAGEMENT | oob | MGMT | - | - |
 
 #### Management Interfaces Device Configuration
 
 ```eos
 !
 interface Management1
-   description oob_management
+   description OOB_MANAGEMENT
    vrf MGMT
    ip address 10.73.254.11/24
 ```
@@ -269,6 +269,8 @@ interface Vlan4094
 ```eos
 !
 router isis EVPN_UNDERLAY
+   no log-adjacency-changes
+   mpls ldp sync default
    redistribute connected
    redistribute isis instance route-map RM-REDIS-ISIS-INSTANCE
    redistribute ospf match internal
@@ -276,8 +278,6 @@ router isis EVPN_UNDERLAY
    redistribute ospf include leaked match nssa-external route-map RM-OSPF-NSSA_EXT-TO-ISIS
    redistribute ospfv3 match external
    redistribute static include leaked route-map RM-STATIC-TO-ISIS
-   no log-adjacency-changes
-   mpls ldp sync default
    timers local-convergence-delay protected-prefixes
    set-overload-bit
    advertise passive-only

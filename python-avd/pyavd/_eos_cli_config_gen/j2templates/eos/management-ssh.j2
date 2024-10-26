@@ -8,7 +8,7 @@
 !
 management ssh
 {%     if management_ssh.access_groups is arista.avd.defined %}
-{%         for access_group in management_ssh.access_groups %}
+{%         for access_group in management_ssh.access_groups | arista.avd.natural_sort %}
 {%             set acl_cli = "ip access-group " ~ access_group.name %}
 {%             if access_group.vrf is arista.avd.defined %}
 {%                 set acl_cli = acl_cli ~ " vrf " ~ access_group.vrf  %}
@@ -18,7 +18,7 @@ management ssh
 {%         endfor %}
 {%     endif %}
 {%     if management_ssh.ipv6_access_groups is arista.avd.defined %}
-{%         for ipv6_access_group in management_ssh.ipv6_access_groups %}
+{%         for ipv6_access_group in management_ssh.ipv6_access_groups | arista.avd.natural_sort %}
 {%             set ipv6_acl_cli = "ipv6 access-group " ~ ipv6_access_group.name %}
 {%             if ipv6_access_group.vrf is arista.avd.defined %}
 {%                 set ipv6_acl_cli = ipv6_acl_cli ~ " vrf " ~ ipv6_access_group.vrf  %}
@@ -33,21 +33,6 @@ management ssh
 {%     if management_ssh.authentication.protocols is arista.avd.defined  %}
    authentication protocol {{ management_ssh.authentication.protocols | join(" ") }}
 {%     endif %}
-{%     if management_ssh.connection.limit is arista.avd.defined %}
-   connection limit {{ management_ssh.connection.limit }}
-{%     endif %}
-{%     if management_ssh.connection.per_host is arista.avd.defined %}
-   connection per-host {{ management_ssh.connection.per_host }}
-{%     endif %}
-{%     if management_ssh.authentication.empty_passwords is arista.avd.defined  %}
-   authentication empty-passwords {{ management_ssh.authentication.empty_passwords }}
-{%     endif %}
-{%     if management_ssh.client_alive.interval is arista.avd.defined %}
-   client-alive interval {{ management_ssh.client_alive.interval }}
-{%     endif %}
-{%     if management_ssh.client_alive.count_max is arista.avd.defined %}
-   client-alive count-max {{ management_ssh.client_alive.count_max }}
-{%     endif %}
 {%     if management_ssh.cipher is arista.avd.defined %}
    cipher {{ management_ssh.cipher | join(" ") }}
 {%     endif %}
@@ -60,14 +45,26 @@ management ssh
 {%     if management_ssh.hostkey.server is arista.avd.defined %}
    hostkey server {{ management_ssh.hostkey.server | join(" ") }}
 {%     endif %}
+{%     if management_ssh.connection.per_host is arista.avd.defined %}
+   connection per-host {{ management_ssh.connection.per_host }}
+{%     endif %}
 {%     if management_ssh.fips_restrictions is arista.avd.defined(true) %}
    fips restrictions
 {%     endif %}
 {%     if management_ssh.hostkey.client_strict_checking is arista.avd.defined(true) %}
    hostkey client strict-checking
 {%     endif %}
-{%     if management_ssh.hostkey.server_cert is arista.avd.defined %}
-   hostkey server cert {{ management_ssh.hostkey.server_cert }}
+{%     if management_ssh.connection.limit is arista.avd.defined %}
+   connection limit {{ management_ssh.connection.limit }}
+{%     endif %}
+{%     if management_ssh.authentication.empty_passwords is arista.avd.defined  %}
+   authentication empty-passwords {{ management_ssh.authentication.empty_passwords }}
+{%     endif %}
+{%     if management_ssh.client_alive.interval is arista.avd.defined %}
+   client-alive interval {{ management_ssh.client_alive.interval }}
+{%     endif %}
+{%     if management_ssh.client_alive.count_max is arista.avd.defined %}
+   client-alive count-max {{ management_ssh.client_alive.count_max }}
 {%     endif %}
 {%     if management_ssh.enable is arista.avd.defined(false) %}
    shutdown
@@ -76,6 +73,9 @@ management ssh
 {%     endif %}
 {%     if management_ssh.log_level is arista.avd.defined %}
    log-level {{ management_ssh.log_level }}
+{%     endif %}
+{%     if management_ssh.hostkey.server_cert is arista.avd.defined %}
+   hostkey server cert {{ management_ssh.hostkey.server_cert }}
 {%     endif %}
 {%     for vrf in management_ssh.vrfs | arista.avd.natural_sort('name') %}
    !

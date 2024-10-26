@@ -1,0 +1,21 @@
+# Copyright (c) 2023-2024 Arista Networks, Inc.
+# Use of this source code is governed by the Apache License 2.0
+# that can be found in the LICENSE file.
+# yaml-language-server: $schema=../../../_schema/avd_meta_schema.json
+# Line above is used by RedHat's YAML Schema vscode extension
+# Use Ctrl + Space to get suggestions for every field. Autocomplete will pop up after typing 2 letters.
+type: dict
+keys:
+  overlay_bgp_peer_description:
+    type: str
+    documentation_options:
+      table: overlay-settings
+    description: |-
+      Description or description template to be used on the overlay BGP peers.
+      This can be a template using the AVD string formatter syntax: https://avd.arista.com/devel/roles/eos_designs/docs/how-to/custom-descriptions-names.html#avd-string-formatter-syntax.
+      The available template fields are:
+        - `peer`: The name of the BGP peer.
+        - `peer_interface`: The interface on the BGP peer if available.
+
+      The default description is built from the name and interface of the BGP peer.
+    default: "{peer}{peer_interface?<_}"

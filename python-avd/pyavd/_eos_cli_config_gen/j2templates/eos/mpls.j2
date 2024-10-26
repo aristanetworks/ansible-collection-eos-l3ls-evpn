@@ -11,19 +11,19 @@ mpls ip
 {% if mpls.ldp is arista.avd.defined %}
 !
 mpls ldp
-{%     if mpls.ldp.interface_disabled_default is arista.avd.defined(true) %}
-   interface disabled default
-{%     endif %}
 {%     if mpls.ldp.router_id is arista.avd.defined %}
    router-id {{ mpls.ldp.router_id }}
+{%     endif %}
+{%     if mpls.ldp.transport_address_interface is arista.avd.defined %}
+   transport-address interface {{ mpls.ldp.transport_address_interface }}
+{%     endif %}
+{%     if mpls.ldp.interface_disabled_default is arista.avd.defined(true) %}
+   interface disabled default
 {%     endif %}
 {%     if mpls.ldp.shutdown is arista.avd.defined(true) %}
    shutdown
 {%     elif mpls.ldp.shutdown is arista.avd.defined(false) %}
    no shutdown
-{%     endif %}
-{%     if mpls.ldp.transport_address_interface is arista.avd.defined %}
-   transport-address interface {{ mpls.ldp.transport_address_interface }}
 {%     endif %}
 {% endif %}
 {% if mpls.icmp.fragmentation_needed_tunneling is arista.avd.defined(true) or mpls.icmp.ttl_exceeded_tunneling is arista.avd.defined(true) %}

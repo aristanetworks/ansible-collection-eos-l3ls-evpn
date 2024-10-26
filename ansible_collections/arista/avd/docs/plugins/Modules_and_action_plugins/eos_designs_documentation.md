@@ -43,12 +43,11 @@ The `arista.avd.eos_designs_documentation` module is an Ansible Action Plugin pr
 ---
 
 - name: Generate fabric documentation
-  tags: [build, provision, documentation]
   arista.avd.eos_designs_documentation:
     structured_config_dir: "{{ structured_dir }}"
     structured_config_suffix: "{{ avd_structured_config_file_format }}"
     fabric_documentation_file: "{{ fabric_dir }}/{{ fabric_name }}-documentation.md"
-    fabric_documentation: "{{ eos_designs_documentation.enabled | arista.avd.default(true) }}"
+    fabric_documentation: "{{ eos_designs_documentation.enable | arista.avd.default(true) }}"
     include_connected_endpoints: "{{ eos_designs_documentation.connected_endpoints | arista.avd.default(false) }}"
     topology_csv_file: "{{ fabric_dir }}/{{ fabric_name }}-topology.csv"
     topology_csv: "{{ eos_designs_documentation.topology_csv | arista.avd.default(true) }}"

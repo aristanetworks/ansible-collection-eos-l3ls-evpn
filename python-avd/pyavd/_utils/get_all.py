@@ -3,6 +3,7 @@
 # that can be found in the LICENSE file.
 from __future__ import annotations
 
+from collections import ChainMap
 from typing import TYPE_CHECKING, Any
 
 from pyavd._errors import AristaAvdMissingVariableError
@@ -50,7 +51,7 @@ def get_all(data: Any, path: str, required: bool = False, org_path: str | None =
 
         return output
 
-    if isinstance(data, dict):
+    if isinstance(data, (dict, ChainMap)):
         value = data.get(path_elements[0])
 
         if value is None:
@@ -96,7 +97,7 @@ def get_all_with_path(data: Any, path: str, _current_path: list[str | int] | Non
         for index, data_item in enumerate(data):
             yield from get_all_with_path(data_item, path, _current_path=[*_current_path, index])
 
-    elif isinstance(data, dict):
+    elif isinstance(data, (dict, ChainMap)):
         value = data.get(path_elements[0])
 
         if value is None:

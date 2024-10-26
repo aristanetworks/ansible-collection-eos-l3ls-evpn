@@ -6,8 +6,8 @@ from __future__ import annotations
 from functools import cached_property
 
 from pyavd._eos_designs.avdfacts import AvdFacts
-from pyavd._errors import AristaAvdMissingVariableError
-from pyavd._utils import get, strip_null_from_data
+from pyavd._errors import AristaAvdInvalidInputsError
+from pyavd._utils import get, get_item, strip_empties_from_dict, strip_null_from_data
 from pyavd.j2filters import natural_sort
 
 from .ntp import NtpMixin
@@ -78,6 +78,7 @@ class AvdStructuredConfigBase(AvdFacts, NtpMixin, SnmpServerMixin):
                 "paths": get(self._hostvars, "bgp_maximum_paths", default=default_maximum_paths),
                 "ecmp": get(self._hostvars, "bgp_ecmp", default=default_ecmp),
             },
+            "redistribute": self._router_bgp_redistribute_routes,
         }
         if get(self._hostvars, "bgp_update_wait_for_convergence", default=False) is True and platform_bgp_update_wait_for_convergence:
             router_bgp.setdefault("updates", {})["wait_for_convergence"] = True
@@ -93,6 +94,27 @@ class AvdStructuredConfigBase(AvdFacts, NtpMixin, SnmpServerMixin):
                         "restart_time": get(self._hostvars, "bgp_graceful_restart.restart_time", default=300),
                     },
                 },
+            )
+
+        l3_interfaces_neighbors = []
+        for neighbor_info in self.shared_utils.l3_interfaces_bgp_neighbors:
+            neighbor = {
+                "ip_address": neighbor_info["ip_address"],
+                "remote_as": neighbor_info["remote_as"],
+                "description": neighbor_info["description"],
+                "route_map_in": get(neighbor_info, "route_map_in"),
+                "route_map_out": get(neighbor_info, "route_map_out"),
+            }
+            l3_interfaces_neighbors.append(strip_empties_from_dict(neighbor))
+
+        if l3_interfaces_neighbors:
+            router_bgp.update(
+                {
+                    "neighbors": l3_interfaces_neighbors,
+                    "address_family_ipv4": {
+                        "neighbors": [{"ip_address": neighbor["ip_address"], "activate": True} for neighbor in l3_interfaces_neighbors],
+                    },
+                }
             )
 
         return strip_null_from_data(router_bgp)
@@ -450,7 +472,7 @@ class AvdStructuredConfigBase(AvdFacts, NtpMixin, SnmpServerMixin):
         ):
             interface_settings = {
                 "name": mgmt_interface,
-                "description": get(self._hostvars, "mgmt_interface_description", default="oob_management"),
+                "description": get(self._hostvars, "mgmt_interface_description", default="OOB_MANAGEMENT"),
                 "shutdown": False,
                 "vrf": self.shared_utils.mgmt_interface_vrf,
                 "ip_address": self.shared_utils.mgmt_ip,
@@ -511,7 +533,7 @@ class AvdStructuredConfigBase(AvdFacts, NtpMixin, SnmpServerMixin):
             # For AutoVPN Route Reflectors and Pathfinders, running on CloudEOS, setting
             # this value is required for the solution to work.
             msg = "For AutoVPN RRs and Pathfinders, 'data_plane_cpu_allocation_max' must be set"
-            raise AristaAvdMissingVariableError(msg)
+            raise AristaAvdInvalidInputsError(msg)
 
         if platform:
             return platform
@@ -573,7 +595,7 @@ class AvdStructuredConfigBase(AvdFacts, NtpMixin, SnmpServerMixin):
 
         if (switch_id := self.shared_utils.id) is None:
             msg = f"'id' is not set on '{self.shared_utils.hostname}' to set LACP port ID ranges"
-            raise AristaAvdMissingVariableError(msg)
+            raise AristaAvdInvalidInputsError(msg)
 
         node_group_length = max(len(self.shared_utils.switch_data_node_group_nodes), 1)
         port_range = int(get(lacp_port_id_range, "size", default=128))
@@ -615,7 +637,7 @@ class AvdStructuredConfigBase(AvdFacts, NtpMixin, SnmpServerMixin):
         if priority2 is None:
             if self.shared_utils.id is None:
                 msg = f"'id' must be set on '{self.shared_utils.hostname}' to set ptp priority2"
-                raise AristaAvdMissingVariableError(msg)
+                raise AristaAvdInvalidInputsError(msg)
 
             priority2 = self.shared_utils.id % 256
         default_auto_clock_identity = get(self._hostvars, "ptp_settings.auto_clock_identity", default=True)
@@ -740,6 +762,70 @@ class AvdStructuredConfigBase(AvdFacts, NtpMixin, SnmpServerMixin):
             return source_interfaces
 
         return None
+
+    @cached_property
+    def prefix_lists(self) -> list | None:
+        prefix_lists = []
+        prefix_lists_in_use = set()
+        for neighbor in self.shared_utils.l3_interfaces_bgp_neighbors:
+            if (prefix_list_in := get(neighbor, "ipv4_prefix_list_in")) and prefix_list_in not in prefix_lists_in_use:
+                pfx_list = self._get_prefix_list(prefix_list_in)
+                prefix_lists.append(pfx_list)
+                prefix_lists_in_use.add(prefix_list_in)
+
+            if (prefix_list_out := get(neighbor, "ipv4_prefix_list_out")) and prefix_list_out not in prefix_lists_in_use:
+                pfx_list = self._get_prefix_list(prefix_list_out)
+                prefix_lists.append(pfx_list)
+                prefix_lists_in_use.add(prefix_list_out)
+
+        return prefix_lists or None
+
+    def _get_prefix_list(self, name: str) -> dict:
+        return get_item(self.shared_utils.ipv4_prefix_list_catalog, "name", name, required=True, var_name=f"ipv4_prefix_list_catalog[name={name}]")
+
+    @cached_property
+    def route_maps(self) -> list | None:
+        route_maps = []
+        for neighbor in self.shared_utils.l3_interfaces_bgp_neighbors:
+            # RM-BGP-<PEER-IP>-IN
+            if prefix_list_in := get(neighbor, "ipv4_prefix_list_in"):
+                sequence_numbers = [
+                    {
+                        "sequence": 10,
+                        "type": "permit",
+                        "match": [f"ip address prefix-list {prefix_list_in}"],
+                    },
+                ]
+                # set no advertise is set only for WAN neighbors, which will also have prefix_list_in
+                if neighbor.get("set_no_advertise"):
+                    sequence_numbers[0]["set"] = ["community no-advertise additive"]
+
+                route_maps.append({"name": neighbor["route_map_in"], "sequence_numbers": sequence_numbers})
+
+            # RM-BGP-<PEER-IP>-OUT
+            if prefix_list_out := get(neighbor, "ipv4_prefix_list_out"):
+                sequence_numbers = [
+                    {
+                        "sequence": 10,
+                        "type": "permit",
+                        "match": [f"ip address prefix-list {prefix_list_out}"],
+                    },
+                    {
+                        "sequence": 20,
+                        "type": "deny",
+                    },
+                ]
+            else:
+                sequence_numbers = [
+                    {
+                        "sequence": 10,
+                        "type": "deny",
+                    },
+                ]
+
+            route_maps.append({"name": neighbor["route_map_out"], "sequence_numbers": sequence_numbers})
+
+        return route_maps or None
 
     @cached_property
     def struct_cfgs(self) -> list | None:

@@ -45,7 +45,7 @@ class CvTopology:
             self.hostvars,
             "cv_topology",
             required=True,
-            org_key="Found 'use_cv_topology:true' so 'cv_topology'",
+            custom_error_msg="Found 'use_cv_topology:true' so 'cv_topology' is required.",
         )
 
         return get_item(cv_topology, "hostname", self.hostname)
@@ -79,7 +79,7 @@ class CvTopology:
                 self.default_interfaces,
                 "uplink_interfaces",
                 required=True,
-                org_key="Found 'use_cv_topology:true' so 'default_interfaces.[].uplink_interfaces'",
+                custom_error_msg="Found 'use_cv_topology:true' so 'default_interfaces.[].uplink_interfaces' is required.",
             ),
         )
         config = {}
@@ -97,7 +97,7 @@ class CvTopology:
                 self.default_interfaces,
                 "mlag_interfaces",
                 required=True,
-                org_key="Found 'use_cv_topology:true' so 'default_interfaces.[].mlag_interfaces'",
+                custom_error_msg="Found 'use_cv_topology:true' so 'default_interfaces.[].mlag_interfaces' is required.",
             ),
         )
         for mlag_interface in default_mlag_interfaces:

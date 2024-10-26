@@ -18,7 +18,7 @@ cvp_configlets:
     shutdown\n   channel-group 2 mode active\n!\ninterface Ethernet3\n   description
     S1-SPINE2_Ethernet2\n   no shutdown\n   channel-group 2 mode active\n!\ninterface
     Ethernet6\n   description MLAG_PEER_s1-leaf2_Ethernet6\n   no shutdown\n   channel-group
-    1 mode active\n!\ninterface Management0\n   description oob_management\n   no
+    1 mode active\n!\ninterface Management0\n   description OOB_MANAGEMENT\n   no
     shutdown\n   ip address 192.168.0.12/24\n!\ninterface Vlan4094\n   description
     MLAG_PEER\n   no shutdown\n   mtu 1500\n   no autostate\n   ip address 10.1.253.4/31\n!\nmlag
     configuration\n   domain-id RACK1\n   local-interface Vlan4094\n   peer-address
@@ -44,7 +44,7 @@ cvp_configlets:
     shutdown\n   channel-group 2 mode active\n!\ninterface Ethernet3\n   description
     S1-SPINE2_Ethernet3\n   no shutdown\n   channel-group 2 mode active\n!\ninterface
     Ethernet6\n   description MLAG_PEER_s1-leaf1_Ethernet6\n   no shutdown\n   channel-group
-    1 mode active\n!\ninterface Management0\n   description oob_management\n   no
+    1 mode active\n!\ninterface Management0\n   description OOB_MANAGEMENT\n   no
     shutdown\n   ip address 192.168.0.13/24\n!\ninterface Vlan4094\n   description
     MLAG_PEER\n   no shutdown\n   mtu 1500\n   no autostate\n   ip address 10.1.253.5/31\n!\nmlag
     configuration\n   domain-id RACK1\n   local-interface Vlan4094\n   peer-address
@@ -70,7 +70,7 @@ cvp_configlets:
     shutdown\n   channel-group 2 mode active\n!\ninterface Ethernet3\n   description
     S1-SPINE2_Ethernet4\n   no shutdown\n   channel-group 2 mode active\n!\ninterface
     Ethernet6\n   description MLAG_PEER_s1-leaf4_Ethernet6\n   no shutdown\n   channel-group
-    1 mode active\n!\ninterface Management0\n   description oob_management\n   no
+    1 mode active\n!\ninterface Management0\n   description OOB_MANAGEMENT\n   no
     shutdown\n   ip address 192.168.0.14/24\n!\ninterface Vlan4094\n   description
     MLAG_PEER\n   no shutdown\n   mtu 1500\n   no autostate\n   ip address 10.1.253.8/31\n!\nmlag
     configuration\n   domain-id RACK2\n   local-interface Vlan4094\n   peer-address
@@ -96,7 +96,7 @@ cvp_configlets:
     shutdown\n   channel-group 2 mode active\n!\ninterface Ethernet3\n   description
     S1-SPINE2_Ethernet5\n   no shutdown\n   channel-group 2 mode active\n!\ninterface
     Ethernet6\n   description MLAG_PEER_s1-leaf3_Ethernet6\n   no shutdown\n   channel-group
-    1 mode active\n!\ninterface Management0\n   description oob_management\n   no
+    1 mode active\n!\ninterface Management0\n   description OOB_MANAGEMENT\n   no
     shutdown\n   ip address 192.168.0.15/24\n!\ninterface Vlan4094\n   description
     MLAG_PEER\n   no shutdown\n   mtu 1500\n   no autostate\n   ip address 10.1.253.9/31\n!\nmlag
     configuration\n   domain-id RACK2\n   local-interface Vlan4094\n   peer-address
@@ -130,7 +130,7 @@ cvp_configlets:
     Ethernet6\n   description MLAG_PEER_s1-spine2_Ethernet6\n   no shutdown\n   channel-group
     1 mode active\n!\ninterface Loopback0\n   description Router_ID\n   no shutdown\n
     \  ip address 10.1.252.1/32\n   ip ospf area 0.0.0.0\n!\ninterface Management0\n
-    \  description oob_management\n   no shutdown\n   ip address 192.168.0.10/24\n!\ninterface
+    \  description OOB_MANAGEMENT\n   no shutdown\n   ip address 192.168.0.10/24\n!\ninterface
     Vlan10\n   description Ten\n   no shutdown\n   ip address 10.10.10.2/24\n   ip
     virtual-router address 10.10.10.1\n!\ninterface Vlan20\n   description Twenty\n
     \  no shutdown\n   ip address 10.20.20.2/24\n   ip virtual-router address 10.20.20.1\n!\ninterface
@@ -171,7 +171,7 @@ cvp_configlets:
     Ethernet6\n   description MLAG_PEER_s1-spine1_Ethernet6\n   no shutdown\n   channel-group
     1 mode active\n!\ninterface Loopback0\n   description Router_ID\n   no shutdown\n
     \  ip address 10.1.252.2/32\n   ip ospf area 0.0.0.0\n!\ninterface Management0\n
-    \  description oob_management\n   no shutdown\n   ip address 192.168.0.11/24\n!\ninterface
+    \  description OOB_MANAGEMENT\n   no shutdown\n   ip address 192.168.0.11/24\n!\ninterface
     Vlan10\n   description Ten\n   no shutdown\n   ip address 10.10.10.3/24\n   ip
     virtual-router address 10.10.10.1\n!\ninterface Vlan20\n   description Twenty\n
     \  no shutdown\n   ip address 10.20.20.3/24\n   ip virtual-router address 10.20.20.1\n!\ninterface

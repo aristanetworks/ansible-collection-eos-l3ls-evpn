@@ -18,20 +18,20 @@
 
 | Management Interface | Description | Type | VRF | IP Address | Gateway |
 | -------------------- | ----------- | ---- | --- | ---------- | ------- |
-| Management1 | oob_management | oob | MGMT | 10.73.255.122/24 | 10.73.255.2 |
+| Management1 | OOB_MANAGEMENT | oob | MGMT | 10.73.255.122/24 | 10.73.255.2 |
 
 ##### IPv6
 
 | Management Interface | Description | Type | VRF | IPv6 Address | IPv6 Gateway |
 | -------------------- | ----------- | ---- | --- | ------------ | ------------ |
-| Management1 | oob_management | oob | MGMT | - | - |
+| Management1 | OOB_MANAGEMENT | oob | MGMT | - | - |
 
 #### Management Interfaces Device Configuration
 
 ```eos
 !
 interface Management1
-   description oob_management
+   description OOB_MANAGEMENT
    vrf MGMT
    ip address 10.73.255.122/24
 ```
@@ -59,13 +59,13 @@ patch panel
    connector interface recovery review delay 10 900
    connector interface patch bgp vpws remote-failure errdisable
    !
-   patch TEN_B_site2_site5_eline
-      connector 1 interface Ethernet5
-      connector 2 pseudowire bgp vpws TENANT_A pseudowire TEN_B_site2_site5_eline
-   !
    patch TEN_A_site2_site5_eline
       shutdown
       connector 1 interface Ethernet6 dot1q vlan 123
       connector 2 pseudowire ldp LDP_PW_1
+   !
+   patch TEN_B_site2_site5_eline
+      connector 1 interface Ethernet5
+      connector 2 pseudowire bgp vpws TENANT_A pseudowire TEN_B_site2_site5_eline
    !
 ```

@@ -44,20 +44,20 @@
 
 | Management Interface | Description | Type | VRF | IP Address | Gateway |
 | -------------------- | ----------- | ---- | --- | ---------- | ------- |
-| Management1 | oob_management | oob | MGMT | 192.168.200.103/24 | 192.168.200.5 |
+| Management1 | OOB_MANAGEMENT | oob | MGMT | 192.168.200.103/24 | 192.168.200.5 |
 
 ##### IPv6
 
 | Management Interface | Description | Type | VRF | IPv6 Address | IPv6 Gateway |
 | -------------------- | ----------- | ---- | --- | ------------ | ------------ |
-| Management1 | oob_management | oob | MGMT | - | - |
+| Management1 | OOB_MANAGEMENT | oob | MGMT | - | - |
 
 #### Management Interfaces Device Configuration
 
 ```eos
 !
 interface Management1
-   description oob_management
+   description OOB_MANAGEMENT
    no shutdown
    vrf MGMT
    ip address 192.168.200.103/24
@@ -216,20 +216,20 @@ vlan internal order ascending range 1006 1199
 
 | Interface | Description | Channel Group | IP Address | VRF |  MTU | Shutdown | ACL In | ACL Out |
 | --------- | ----------- | ------------- | ---------- | ----| ---- | -------- | ------ | ------- |
-| Ethernet1 | P2P_LINK_TO_DC1-LEAF1A_Ethernet3 | - | 172.31.255.4/31 | default | 1500 | False | - | - |
-| Ethernet2 | P2P_LINK_TO_DC1-LEAF2A_Ethernet3 | - | 172.31.255.12/31 | default | 1500 | False | - | - |
-| Ethernet3 | P2P_LINK_TO_DC1-LEAF2B_Ethernet3 | - | 172.31.255.20/31 | default | 1500 | False | - | - |
-| Ethernet4 | P2P_LINK_TO_DC1-SVC3A_Ethernet3 | - | 172.31.255.28/31 | default | 1500 | False | - | - |
-| Ethernet5 | P2P_LINK_TO_DC1-SVC3B_Ethernet3 | - | 172.31.255.36/31 | default | 1500 | False | - | - |
-| Ethernet6 | P2P_LINK_TO_DC1-BL1A_Ethernet3 | - | 172.31.255.44/31 | default | 1500 | False | - | - |
-| Ethernet7 | P2P_LINK_TO_DC1-BL1B_Ethernet3 | - | 172.31.255.52/31 | default | 1500 | False | - | - |
+| Ethernet1 | P2P_DC1-LEAF1A_Ethernet3 | - | 172.31.255.4/31 | default | 1500 | False | - | - |
+| Ethernet2 | P2P_DC1-LEAF2A_Ethernet3 | - | 172.31.255.12/31 | default | 1500 | False | - | - |
+| Ethernet3 | P2P_DC1-LEAF2B_Ethernet3 | - | 172.31.255.20/31 | default | 1500 | False | - | - |
+| Ethernet4 | P2P_DC1-SVC3A_Ethernet3 | - | 172.31.255.28/31 | default | 1500 | False | - | - |
+| Ethernet5 | P2P_DC1-SVC3B_Ethernet3 | - | 172.31.255.36/31 | default | 1500 | False | - | - |
+| Ethernet6 | P2P_DC1-BL1A_Ethernet3 | - | 172.31.255.44/31 | default | 1500 | False | - | - |
+| Ethernet7 | P2P_DC1-BL1B_Ethernet3 | - | 172.31.255.52/31 | default | 1500 | False | - | - |
 
 #### Ethernet Interfaces Device Configuration
 
 ```eos
 !
 interface Ethernet1
-   description P2P_LINK_TO_DC1-LEAF1A_Ethernet3
+   description P2P_DC1-LEAF1A_Ethernet3
    no shutdown
    mtu 1500
    no switchport
@@ -240,7 +240,7 @@ interface Ethernet1
    ip ospf message-digest-key 1 sha256 7 <removed>
 !
 interface Ethernet2
-   description P2P_LINK_TO_DC1-LEAF2A_Ethernet3
+   description P2P_DC1-LEAF2A_Ethernet3
    no shutdown
    mtu 1500
    no switchport
@@ -251,7 +251,7 @@ interface Ethernet2
    ip ospf message-digest-key 1 sha256 7 <removed>
 !
 interface Ethernet3
-   description P2P_LINK_TO_DC1-LEAF2B_Ethernet3
+   description P2P_DC1-LEAF2B_Ethernet3
    no shutdown
    mtu 1500
    no switchport
@@ -262,7 +262,7 @@ interface Ethernet3
    ip ospf message-digest-key 1 sha256 7 <removed>
 !
 interface Ethernet4
-   description P2P_LINK_TO_DC1-SVC3A_Ethernet3
+   description P2P_DC1-SVC3A_Ethernet3
    no shutdown
    mtu 1500
    no switchport
@@ -273,7 +273,7 @@ interface Ethernet4
    ip ospf message-digest-key 1 sha256 7 <removed>
 !
 interface Ethernet5
-   description P2P_LINK_TO_DC1-SVC3B_Ethernet3
+   description P2P_DC1-SVC3B_Ethernet3
    no shutdown
    mtu 1500
    no switchport
@@ -284,7 +284,7 @@ interface Ethernet5
    ip ospf message-digest-key 1 sha256 7 <removed>
 !
 interface Ethernet6
-   description P2P_LINK_TO_DC1-BL1A_Ethernet3
+   description P2P_DC1-BL1A_Ethernet3
    no shutdown
    mtu 1500
    no switchport
@@ -295,7 +295,7 @@ interface Ethernet6
    ip ospf message-digest-key 1 sha256 7 <removed>
 !
 interface Ethernet7
-   description P2P_LINK_TO_DC1-BL1B_Ethernet3
+   description P2P_DC1-BL1B_Ethernet3
    no shutdown
    mtu 1500
    no switchport
@@ -314,20 +314,20 @@ interface Ethernet7
 
 | Interface | Description | VRF | IP Address |
 | --------- | ----------- | --- | ---------- |
-| Loopback0 | EVPN_Overlay_Peering | default | 192.168.255.3/32 |
+| Loopback0 | ROUTER_ID | default | 192.168.255.3/32 |
 
 ##### IPv6
 
 | Interface | Description | VRF | IPv6 Address |
 | --------- | ----------- | --- | ------------ |
-| Loopback0 | EVPN_Overlay_Peering | default | - |
+| Loopback0 | ROUTER_ID | default | - |
 
 #### Loopback Interfaces Device Configuration
 
 ```eos
 !
 interface Loopback0
-   description EVPN_Overlay_Peering
+   description ROUTER_ID
    no shutdown
    ip address 192.168.255.3/32
    ip ospf area 0.0.0.0
@@ -412,6 +412,7 @@ ip route vrf MGMT 0.0.0.0/0 192.168.200.5
 !
 router ospf 101
    router-id 192.168.255.3
+   bfd default
    passive-interface default
    no passive-interface Ethernet1
    no passive-interface Ethernet2
@@ -420,7 +421,6 @@ router ospf 101
    no passive-interface Ethernet5
    no passive-interface Ethernet6
    no passive-interface Ethernet7
-   bfd default
    max-lsa 12000
 ```
 
@@ -481,9 +481,9 @@ ASN Notation: asplain
 !
 router bgp 65001
    router-id 192.168.255.3
-   maximum-paths 10 ecmp 10
    update wait-install
    no bgp default ipv4-unicast
+   maximum-paths 10 ecmp 10
    distance bgp 20 200 200
    neighbor EVPN-OVERLAY-PEERS peer group
    neighbor EVPN-OVERLAY-PEERS next-hop-unchanged
@@ -495,25 +495,25 @@ router bgp 65001
    neighbor EVPN-OVERLAY-PEERS maximum-routes 0
    neighbor 192.168.255.5 peer group EVPN-OVERLAY-PEERS
    neighbor 192.168.255.5 remote-as 65101
-   neighbor 192.168.255.5 description DC1-LEAF1A
+   neighbor 192.168.255.5 description DC1-LEAF1A_Loopback0
    neighbor 192.168.255.6 peer group EVPN-OVERLAY-PEERS
    neighbor 192.168.255.6 remote-as 65102
-   neighbor 192.168.255.6 description DC1-LEAF2A
+   neighbor 192.168.255.6 description DC1-LEAF2A_Loopback0
    neighbor 192.168.255.7 peer group EVPN-OVERLAY-PEERS
    neighbor 192.168.255.7 remote-as 65102
-   neighbor 192.168.255.7 description DC1-LEAF2B
+   neighbor 192.168.255.7 description DC1-LEAF2B_Loopback0
    neighbor 192.168.255.8 peer group EVPN-OVERLAY-PEERS
    neighbor 192.168.255.8 remote-as 65103
-   neighbor 192.168.255.8 description DC1-SVC3A
+   neighbor 192.168.255.8 description DC1-SVC3A_Loopback0
    neighbor 192.168.255.9 peer group EVPN-OVERLAY-PEERS
    neighbor 192.168.255.9 remote-as 65103
-   neighbor 192.168.255.9 description DC1-SVC3B
+   neighbor 192.168.255.9 description DC1-SVC3B_Loopback0
    neighbor 192.168.255.10 peer group EVPN-OVERLAY-PEERS
    neighbor 192.168.255.10 remote-as 65104
-   neighbor 192.168.255.10 description DC1-BL1A
+   neighbor 192.168.255.10 description DC1-BL1A_Loopback0
    neighbor 192.168.255.11 peer group EVPN-OVERLAY-PEERS
    neighbor 192.168.255.11 remote-as 65104
-   neighbor 192.168.255.11 description DC1-BL1B
+   neighbor 192.168.255.11 description DC1-BL1B_Loopback0
    !
    address-family evpn
       neighbor EVPN-OVERLAY-PEERS activate

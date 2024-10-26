@@ -11,6 +11,10 @@ router_bgp:
   maximum_paths:
     paths: 4
     ecmp: 4
+  redistribute:
+    connected:
+      enabled: true
+      route_map: RM-CONN-2-BGP
   graceful_restart:
     enabled: true
     restart_time: 500
@@ -34,9 +38,6 @@ router_bgp:
       activate: true
     - name: EVPN-OVERLAY-PEERS
       activate: false
-  redistribute_routes:
-  - source_protocol: connected
-    route_map: RM-CONN-2-BGP
   neighbors:
   - ip_address: 172.31.254.0
     peer_group: UNDERLAY-PEERS
@@ -100,8 +101,9 @@ router_bgp:
         route_targets:
         - '1234:12'
     router_id: 192.168.42.42
-    redistribute_routes:
-    - source_protocol: connected
+    redistribute:
+      connected:
+        enabled: true
   - name: Tenant_A_OP_Zone
     rd: 1.1.1.1:9
     route_targets:
@@ -114,9 +116,11 @@ router_bgp:
         route_targets:
         - '1234:9'
     router_id: 192.168.42.42
-    redistribute_routes:
-    - source_protocol: connected
-    - source_protocol: ospf
+    redistribute:
+      connected:
+        enabled: true
+      ospf:
+        enabled: true
   - name: Tenant_A_WEB_Zone
     rd: 1.1.1.1:11
     route_targets:
@@ -129,8 +133,9 @@ router_bgp:
         route_targets:
         - '1234:11'
     router_id: 192.168.42.42
-    redistribute_routes:
-    - source_protocol: connected
+    redistribute:
+      connected:
+        enabled: true
   - name: '12345678'
     rd: 1.1.1.1:41
     route_targets:
@@ -143,8 +148,9 @@ router_bgp:
         route_targets:
         - '1234:41'
     router_id: 192.168.42.42
-    redistribute_routes:
-    - source_protocol: connected
+    redistribute:
+      connected:
+        enabled: true
   vlan_aware_bundles:
   - name: Tenant_A_APP_Zone
     rd: 1.1.1.1:12
@@ -261,7 +267,7 @@ vrfs:
   ipv6_routing: true
 management_interfaces:
 - name: Management1
-  description: oob_management
+  description: OOB_MANAGEMENT
   shutdown: false
   vrf: MGMT
   ip_address: 192.168.200.105/24
@@ -294,7 +300,8 @@ ethernet_interfaces:
   speed: forced 100gfull
   shutdown: false
   mtu: 1500
-  type: routed
+  switchport:
+    enabled: false
   ip_address: 172.31.254.1/31
 - name: Ethernet28
   peer: DC1-SPINE2
@@ -304,7 +311,8 @@ ethernet_interfaces:
   speed: forced 100gfull
   shutdown: false
   mtu: 1500
-  type: routed
+  switchport:
+    enabled: false
   ip_address: 172.31.254.3/31
 - name: Ethernet29
   peer: DC1-SPINE3
@@ -314,7 +322,8 @@ ethernet_interfaces:
   speed: forced 100gfull
   shutdown: false
   mtu: 1500
-  type: routed
+  switchport:
+    enabled: false
   ip_address: 172.31.254.5/31
 - name: Ethernet30
   peer: DC1-SPINE4
@@ -324,7 +333,8 @@ ethernet_interfaces:
   speed: forced 100gfull
   shutdown: false
   mtu: 1500
-  type: routed
+  switchport:
+    enabled: false
   ip_address: 172.31.254.7/31
 - name: Ethernet6
   peer: server02_SINGLE_NODE_TRUNK
@@ -333,11 +343,13 @@ ethernet_interfaces:
   port_profile: ALL_WITH_SECURITY
   description: server02_SINGLE_NODE_TRUNK_Eth1
   shutdown: false
-  type: switched
   l2_mtu: 8000
   l2_mru: 9000
-  mode: trunk
-  vlans: 1-4094
+  switchport:
+    enabled: true
+    mode: trunk
+    trunk:
+      allowed_vlan: 1-4094
   spanning_tree_portfast: edge
   spanning_tree_bpdufilter: 'False'
   spanning_tree_bpduguard: 'False'
@@ -348,40 +360,45 @@ ethernet_interfaces:
   port_profile: TENANT_A
   description: server02_SINGLE_NODE_Eth1
   shutdown: false
-  type: switched
-  mode: access
-  vlans: '110'
+  switchport:
+    enabled: true
+    mode: access
+    access_vlan: '110'
 - name: Ethernet8
   peer: PHONE01_untagged
   peer_interface: Eth0
   peer_type: phone
   description: PHONE01_untagged_Eth0
   shutdown: false
-  type: switched
-  mode: trunk phone
-  native_vlan: 120
-  phone:
-    vlan: 113
-    trunk: untagged
+  switchport:
+    enabled: true
+    mode: trunk phone
+    trunk:
+      native_vlan: 120
+    phone:
+      vlan: 113
+      trunk: untagged
 - name: Ethernet9
   peer: PHONE02_tagged
   peer_interface: Eth0
   peer_type: phone
   description: PHONE02_tagged_Eth0
   shutdown: false
-  type: switched
-  mode: trunk phone
-  native_vlan: 120
-  phone:
-    vlan: 113
-    trunk: tagged
+  switchport:
+    enabled: true
+    mode: trunk phone
+    trunk:
+      native_vlan: 120
+    phone:
+      vlan: 113
+      trunk: tagged
 loopback_interfaces:
 - name: Loopback0
-  description: EVPN_Overlay_Peering
+  description: ROUTER_ID
   shutdown: false
   ip_address: 192.168.42.42/32
 - name: Loopback1
-  description: VTEP_VXLAN_Tunnel_Source
+  description: VXLAN_TUNNEL_SOURCE
   shutdown: false
   ip_address: 192.168.43.43/32
 - name: Loopback100
