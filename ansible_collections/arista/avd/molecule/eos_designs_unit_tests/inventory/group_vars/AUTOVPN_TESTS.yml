@@ -1,6 +1,6 @@
 ---
-# Testing legacy-autovpn
-wan_mode: legacy-autovpn
+# Testing autovpn
+wan_mode: autovpn
 # Disabling underlay for tests
 underlay_routing_protocol: none
 
@@ -16,13 +16,13 @@ wan_stun_dtls_disable: true
 
 wan_route_servers:
   # Testing having the interface configured with DHCP
-  - hostname: legacy-autovpn-rr1
+  - hostname: autovpn-rr1
     path_groups:
       - name: INET
         interfaces:
           - name: Ethernet1
             public_ip: 10.7.7.7
-  - hostname: legacy-autovpn-rr2
+  - hostname: autovpn-rr2
 
 wan_ipsec_profiles:
   control_plane:
@@ -34,10 +34,10 @@ wan_ipsec_profiles:
 default_node_types:
   - node_type: wan_rr
     match_hostnames:
-      - "legacy-autovpn-rr.*"
+      - "autovpn-rr.*"
   - node_type: wan_router
     match_hostnames:
-      - "legacy-autovpn-edge"
+      - "autovpn-edge"
 
 wan_router:
   defaults:
@@ -47,7 +47,7 @@ wan_router:
       # TODO find a way to not need this
       always_include_vrfs_in_tenants: [TenantA]
   nodes:
-    - name: legacy-autovpn-edge
+    - name: autovpn-edge
       id: 1
       l3_interfaces:
         - name: Ethernet1
@@ -66,7 +66,7 @@ wan_rr:
     vtep_loopback_ipv4_pool: 192.168.131.0/24
     data_plane_cpu_allocation_max: 2
   nodes:
-    - name: legacy-autovpn-rr1
+    - name: autovpn-rr1
       id: 1
       l3_interfaces:
         - name: Ethernet1
@@ -74,7 +74,7 @@ wan_rr:
           wan_circuit_id: 777
           ip_address: dhcp
           dhcp_accept_default_route: true
-    - name: legacy-autovpn-rr2
+    - name: autovpn-rr2
       id: 2
       l3_interfaces:
         - name: Ethernet1
