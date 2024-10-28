@@ -1,0 +1,12 @@
+---
+ip_access_lists:
+  - name: ACL_SEQUENCE_AND_COUNTERS
+    counters_per_entry: true
+    entries:
+      - sequence: 10
+        remark: test acl with sequence numbers
+      - sequence: 20
+        action: permit
+        protocol: ip
+        source: 10.0.0.0/8
+        destination: any

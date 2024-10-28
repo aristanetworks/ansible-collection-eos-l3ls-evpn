@@ -1,3 +1,4 @@
+---
 ### IP NAT ###
 ip_nat:
   kernel_buffer_size: 64
