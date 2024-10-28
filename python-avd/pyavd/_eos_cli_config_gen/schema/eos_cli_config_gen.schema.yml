@@ -1589,6 +1589,57 @@ keys:
             max: 9236
             convert_types:
             - str
+          lldp:
+            type: dict
+            keys:
+              system_name:
+                description: LLDP system name (LLDP TLV 5) av-pair.
+                type: dict
+                keys:
+                  enabled:
+                    type: bool
+                    required: true
+                  auth_only:
+                    type: bool
+              system_description:
+                description: LLDP system description (LLDP TLV 6) av-pair.
+                type: dict
+                keys:
+                  enabled:
+                    type: bool
+                    required: true
+                  auth_only:
+                    type: bool
+          dhcp:
+            type: dict
+            keys:
+              hostname:
+                description: Hostname (DHCP Option 12).
+                type: dict
+                keys:
+                  enabled:
+                    type: bool
+                    required: true
+                  auth_only:
+                    type: bool
+              parameter_request_list:
+                description: Parameters requested by host (DHCP Option 55).
+                type: dict
+                keys:
+                  enabled:
+                    type: bool
+                    required: true
+                  auth_only:
+                    type: bool
+              vendor_class_id:
+                description: Vendor class identifier (DHCP Option 60).
+                type: dict
+                keys:
+                  enabled:
+                    type: bool
+                    required: true
+                  auth_only:
+                    type: bool
       aaa:
         type: dict
         description: Configure AAA parameters.
