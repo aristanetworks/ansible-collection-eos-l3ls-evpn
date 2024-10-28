@@ -2649,13 +2649,6 @@ router bgp {{ router_bgp.as }}
 {%         if vrf.router_id is arista.avd.defined %}
       router-id {{ vrf.router_id }}
 {%         endif %}
-{%         if vrf.maximum_paths.paths is arista.avd.defined %}
-{%             set paths_cli = "maximum-paths " ~ vrf.maximum_paths.paths %}
-{%             if vrf.maximum_paths.ecmp is arista.avd.defined %}
-{%                 set paths_cli = paths_cli ~ " ecmp " ~ vrf.maximum_paths.ecmp %}
-{%             endif %}
-      {{ paths_cli }}
-{%         endif %}
 {%         if vrf.updates.wait_for_convergence is arista.avd.defined(true) %}
       update wait-for-convergence
 {%         endif %}
