@@ -119,7 +119,7 @@ keys:
             Set the default WAN role.
 
             This is used both for AutoVPN and Pathfinder designs.
-            That means if `wan_mode` root key is set to `legacy-autovpn` or `cv-pathfinder`.
+            That means if `wan_mode` root key is set to `autovpn` or `cv-pathfinder`.
             `server` indicates that the router is a route-reflector.
 
             Only supported if `overlay_routing_protocol` is set to `ibgp`.
