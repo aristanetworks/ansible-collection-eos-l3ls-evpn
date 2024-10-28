@@ -21,4 +21,3 @@ ipv6_access_lists:
         action: "deny ipv6 2001:db8:1000::/64 any"
       - sequence: 10
         action: "permit ipv6 2001:db8::/32 any"
-
