@@ -94,19 +94,23 @@ keys:
                 min: 60
                 max: 65535
                 description: Minimum remaining lifetime for LSPs (in seconds).
-          csnp_generation:
+          csnp:
             type: dict
+            description: CSN Packet timers.
             keys:
-              interval:
-                type: int
-                convert_types:
-                  - str
-                min: 1
-                max: 300
-                description: Transmit frequency (in seconds) for CSN packets.
-              p2p_disabled:
-                type: bool
-                description: Disable periodic CSN packets for P2P links.
+              generation:
+                type: dict
+                keys:
+                  interval:
+                    type: int
+                    convert_types:
+                      - str
+                    min: 1
+                    max: 300
+                    description: Transmit frequency (in seconds) for CSN packets.
+                  p2p_disabled:
+                    type: bool
+                    description: Disable periodic CSN packets for P2P links.
       set_overload_bit:
         type: dict
         keys:

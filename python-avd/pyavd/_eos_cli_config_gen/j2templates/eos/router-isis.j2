@@ -91,10 +91,10 @@ router isis {{ router_isis.instance }}
 {%         endif %}
    {{ spf_interval_cli }}
 {%     endif %}
-{%     if router_isis.timers.csnp_generation.interval is arista.avd.defined %}
-   timers csnp generation interval {{ router_isis.timers.csnp_generation.interval }} seconds
+{%     if router_isis.timers.csnp.generation.interval is arista.avd.defined %}
+   timers csnp generation interval {{ router_isis.timers.csnp.generation.interval }} seconds
 {%     endif %}
-{%     if router_isis.timers.csnp_generation.p2p_disabled is arista.avd.defined(true) %}
+{%     if router_isis.timers.csnp.generation.p2p_disabled is arista.avd.defined(true) %}
    timers csnp generation p2p disabled
 {%     endif %}
 {%     if router_isis.timers.lsp.out_delay is arista.avd.defined %}

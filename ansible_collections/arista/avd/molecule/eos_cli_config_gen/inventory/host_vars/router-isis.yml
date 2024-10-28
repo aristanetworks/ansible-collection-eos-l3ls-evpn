@@ -14,9 +14,10 @@ router_isis:
     local_convergence:
       protected_prefixes: true
       delay: 15000
-    csnp_generation:
-      interval: 10
-      p2p_disabled: true
+    csnp:
+      generation:
+        interval: 10
+        p2p_disabled: true
     lsp:
       out_delay: 20
       refresh_interval: 56

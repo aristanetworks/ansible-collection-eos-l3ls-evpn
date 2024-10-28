@@ -33,11 +33,11 @@
 {%     if router_isis.timers.local_convergence.protected_prefixes is arista.avd.defined(true) %}
 | Local Convergence Delay (ms) | {{ router_isis.timers.local_convergence.delay | arista.avd.default(10000) }} |
 {%     endif %}
-{%     if router_isis.timers.csnp_generation.interval is arista.avd.defined %}
-| CSN Packet Transmission Interval | {{ router_isis.timers.csnp_generation.interval }} seconds |
+{%     if router_isis.timers.csnp.generation.interval is arista.avd.defined %}
+| CSN Packet Transmission Interval | {{ router_isis.timers.csnp.generation.interval }} seconds |
 {%     endif %}
-{%     if router_isis.timers.csnp_generation.p2p_disabled is arista.avd.defined %}
-| CSN Packet P2P Links Disabled | {{ router_isis.timers.csnp_generation.p2p_disabled }} |
+{%     if router_isis.timers.csnp.generation.p2p_disabled is arista.avd.defined %}
+| CSN Packet P2P Links Disabled | {{ router_isis.timers.csnp.generation.p2p_disabled }} |
 {%     endif %}
 {%     if router_isis.timers.lsp.generation.interval is arista.avd.defined %}
 | LSP Generation Maximum Interval | {{ router_isis.timers.lsp.generation.interval }} seconds |
