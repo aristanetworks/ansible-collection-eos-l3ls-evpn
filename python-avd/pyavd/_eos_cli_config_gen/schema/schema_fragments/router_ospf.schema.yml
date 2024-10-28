@@ -301,6 +301,21 @@ keys:
                             - str
                           min: 1
                           max: 16777215
+            graceful_restart:
+              type: dict
+              keys:
+                enabled:
+                  type: bool
+                  required: true
+                grace_period:
+                  type: int
+                  convert_types:
+                    - str
+                  min: 1
+                  max: 1800
+                  description: Specify maximum time in seconds to wait for graceful-restart to complete.
+            graceful_restart_helper:
+              type: bool
             mpls_ldp_sync_default:
               type: bool
             eos_cli:

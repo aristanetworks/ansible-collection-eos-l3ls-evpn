@@ -104,7 +104,7 @@ The following table list the `eos_designs` top level keys used for WAN and how t
 
 | Key | Must be the same for all the WAN routers | Comment |
 | --- | ---------------------------------------- | ------- |
-| `wan_mode` | ✅ | Two possible modes, `legacy-autovpn` and `cv-pathfinder` (default). |
+| `wan_mode` | ✅ | Two possible modes, `autovpn` and `cv-pathfinder` (default). |
 | `wan_encapsulation` | ✅ | Two possible encapsulations, `vxlan` and `path-selection` (default). |
 | `wan_virtual_topologies` | ✅ | to define the Policies and the VRF to policy mappings. |
 | `wan_path_groups` | ✅ | to define the list of path-groups in the network. |
@@ -133,14 +133,14 @@ Additionally, following keys must be set for the WAN route servers for the conne
 
 AVD supports two design types for WAN:
 
-- Legacy AutoVPN
+- AutoVPN
 - CV Pathfinder
 
 By default the mode is set to `cv-pathfinder` and can be changed using:
 
 ```yaml
 ---
-wan_mode: legacy-autovpn | cv-pathfinder # default: cv-pathfinder
+wan_mode: autovpn | cv-pathfinder # default: cv-pathfinder
 ```
 
 #### WAN encapsulation
