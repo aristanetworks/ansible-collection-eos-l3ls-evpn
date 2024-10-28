@@ -84,7 +84,7 @@ keys:
         description: |-
           List of virtual toplogies policies.
 
-          For Legacy AutoVPN, each item in the list creates:
+          For AutoVPN, each item in the list creates:
             * one policy with:
                 * one `match` entry per `application_virtual_topologies` item
                   they are indexed using `10 * <list_index>` where `list_index` starts at `1`.
