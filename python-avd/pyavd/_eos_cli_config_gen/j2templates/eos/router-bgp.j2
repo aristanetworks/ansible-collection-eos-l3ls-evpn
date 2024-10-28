@@ -2655,6 +2655,7 @@ router bgp {{ router_bgp.as }}
 {%             set paths_cli = paths_cli ~ " ecmp " ~ vrf.maximum_paths.ecmp %}
 {%         endif %}
       {{ paths_cli }}
+{%    endif %}
 {%         if vrf.updates.wait_for_convergence is arista.avd.defined(true) %}
       update wait-for-convergence
 {%         endif %}
