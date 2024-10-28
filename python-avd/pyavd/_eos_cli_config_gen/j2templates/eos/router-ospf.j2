@@ -200,8 +200,20 @@ router ospf {{ process_id.id }}
    summary-address {{ summary_address.prefix }}
 {%         endif %}
 {%     endfor %}
+{%     if process_id.graceful_restart.enabled is arista.avd.defined(true) %}
+{%         set graceful_restart_cli = "graceful-restart" %}
+{%         if process_id.graceful_restart.grace_period is arista.avd.defined %}
+{%             set graceful_restart_cli = graceful_restart_cli ~ " grace-period " ~ process_id.graceful_restart.grace_period %}
+{%         endif %}
+   {{ graceful_restart_cli }}
+{%     endif %}
 {%     if process_id.mpls_ldp_sync_default is arista.avd.defined(true) %}
    mpls ldp sync default
+{%     endif %}
+{%     if process_id.graceful_restart_helper is arista.avd.defined(true) %}
+   graceful-restart-helper
+{%     elif process_id.graceful_restart_helper is arista.avd.defined(false) %}
+   no graceful-restart-helper
 {%     endif %}
 {%     if process_id.eos_cli is arista.avd.defined %}
    {{ process_id.eos_cli | indent(3, false) }}
