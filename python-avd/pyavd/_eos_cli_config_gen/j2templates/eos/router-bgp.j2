@@ -2662,6 +2662,13 @@ router bgp {{ router_bgp.as }}
 {%         if vrf.timers is arista.avd.defined %}
       timers bgp {{ vrf.timers }}
 {%         endif %}
+{%         if vrf.maximum_paths.paths is arista.avd.defined %}
+{%             set paths_cli = "maximum-paths " ~ vrf.maximum_paths.paths %}
+{%             if vrf.maximum_paths.ecmp is arista.avd.defined %}
+{%                 set paths_cli = paths_cli ~ " ecmp " ~ vrf.maximum_paths.ecmp %}
+{%             endif %}
+      {{ paths_cli }}
+{%         endif %}
 {%         if vrf.bgp.additional_paths.install is arista.avd.defined(true) %}
       bgp additional-paths install
 {%         elif vrf.bgp.additional_paths.install_ecmp_primary is arista.avd.defined(true) %}
