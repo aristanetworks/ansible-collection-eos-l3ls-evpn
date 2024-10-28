@@ -9,7 +9,7 @@
     | -------- | ---- | -------- | ------- | ------------------ | ----------- |
     | [<samp>&lt;node_type_keys.key&gt;</samp>](## "<node_type_keys.key>") | Dictionary |  |  |  |  |
     | [<samp>&nbsp;&nbsp;defaults</samp>](## "<node_type_keys.key>.defaults") | Dictionary |  |  |  | Define variables for all nodes of this type. |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;wan_role</samp>](## "<node_type_keys.key>.defaults.wan_role") | String |  |  | Valid Values:<br>- <code>client</code><br>- <code>server</code> | Override the default WAN role.<br><br>This is used both for AutoVPN and Pathfinder designs.<br>That means if `wan_mode` root key is set to `legacy-autovpn` or `cv-pathfinder`.<br>`server` indicates that the router is a route-reflector.<br><br>Only supported if `overlay_routing_protocol` is set to `ibgp`. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;wan_role</samp>](## "<node_type_keys.key>.defaults.wan_role") | String |  |  | Valid Values:<br>- <code>client</code><br>- <code>server</code> | Override the default WAN role.<br><br>This is used both for AutoVPN and Pathfinder designs.<br>That means if `wan_mode` root key is set to `autovpn` or `cv-pathfinder`.<br>`server` indicates that the router is a route-reflector.<br><br>Only supported if `overlay_routing_protocol` is set to `ibgp`. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;cv_pathfinder_transit_mode</samp>](## "<node_type_keys.key>.defaults.cv_pathfinder_transit_mode") | String |  |  | Valid Values:<br>- <code>region</code><br>- <code>zone</code> | Configure the transit mode for a WAN client for CV Pathfinder designs<br>only when the `wan_mode` root key is set to `cv_pathfinder`.<br><br>'zone' is currently not supported. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;cv_pathfinder_region</samp>](## "<node_type_keys.key>.defaults.cv_pathfinder_region") | String |  |  |  | The CV Pathfinder region name.<br>This key is required for WAN routers but optional for pathfinders.<br>The region name must be defined under 'cv_pathfinder_regions'. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;cv_pathfinder_site</samp>](## "<node_type_keys.key>.defaults.cv_pathfinder_site") | String |  |  |  | The CV Pathfinder site name.<br>This key is required for WAN routers but optional for pathfinders.<br>For WAN routers and pathfinders with `cv_pathfinder_region`, the site name must be defined for the relevant region under 'cv_pathfinder_regions'.<br>For pathfinders without `cv_pathfinder_region` set, the site must be defined under `cv_pathfinder_global_sites`. |
@@ -31,7 +31,7 @@
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;group</samp>](## "<node_type_keys.key>.node_groups.[].group") | String | Required, Unique |  |  | The Node Group Name is used for MLAG domain unless set with 'mlag_domain_id'.<br>The Node Group Name is also used for peer description on downstream switches' uplinks.<br> |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;nodes</samp>](## "<node_type_keys.key>.node_groups.[].nodes") | List, items: Dictionary |  |  |  | Define variables per node. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;name</samp>](## "<node_type_keys.key>.node_groups.[].nodes.[].name") | String | Required, Unique |  |  | The Node Name is used as "hostname". |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;wan_role</samp>](## "<node_type_keys.key>.node_groups.[].nodes.[].wan_role") | String |  |  | Valid Values:<br>- <code>client</code><br>- <code>server</code> | Override the default WAN role.<br><br>This is used both for AutoVPN and Pathfinder designs.<br>That means if `wan_mode` root key is set to `legacy-autovpn` or `cv-pathfinder`.<br>`server` indicates that the router is a route-reflector.<br><br>Only supported if `overlay_routing_protocol` is set to `ibgp`. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;wan_role</samp>](## "<node_type_keys.key>.node_groups.[].nodes.[].wan_role") | String |  |  | Valid Values:<br>- <code>client</code><br>- <code>server</code> | Override the default WAN role.<br><br>This is used both for AutoVPN and Pathfinder designs.<br>That means if `wan_mode` root key is set to `autovpn` or `cv-pathfinder`.<br>`server` indicates that the router is a route-reflector.<br><br>Only supported if `overlay_routing_protocol` is set to `ibgp`. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cv_pathfinder_transit_mode</samp>](## "<node_type_keys.key>.node_groups.[].nodes.[].cv_pathfinder_transit_mode") | String |  |  | Valid Values:<br>- <code>region</code><br>- <code>zone</code> | Configure the transit mode for a WAN client for CV Pathfinder designs<br>only when the `wan_mode` root key is set to `cv_pathfinder`.<br><br>'zone' is currently not supported. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cv_pathfinder_region</samp>](## "<node_type_keys.key>.node_groups.[].nodes.[].cv_pathfinder_region") | String |  |  |  | The CV Pathfinder region name.<br>This key is required for WAN routers but optional for pathfinders.<br>The region name must be defined under 'cv_pathfinder_regions'. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cv_pathfinder_site</samp>](## "<node_type_keys.key>.node_groups.[].nodes.[].cv_pathfinder_site") | String |  |  |  | The CV Pathfinder site name.<br>This key is required for WAN routers but optional for pathfinders.<br>For WAN routers and pathfinders with `cv_pathfinder_region`, the site name must be defined for the relevant region under 'cv_pathfinder_regions'.<br>For pathfinders without `cv_pathfinder_region` set, the site must be defined under `cv_pathfinder_global_sites`. |
@@ -49,7 +49,7 @@
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "<node_type_keys.key>.node_groups.[].nodes.[].wan_ha.flow_tracking.enabled") | Boolean |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;name</samp>](## "<node_type_keys.key>.node_groups.[].nodes.[].wan_ha.flow_tracking.name") | String |  |  |  | Flow tracker name as defined in flow_tracking_settings. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dps_mss_ipv4</samp>](## "<node_type_keys.key>.node_groups.[].nodes.[].dps_mss_ipv4") | String |  | `auto` |  | IPv4 MSS value configured under "router path-selection" on WAN Devices. |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;wan_role</samp>](## "<node_type_keys.key>.node_groups.[].wan_role") | String |  |  | Valid Values:<br>- <code>client</code><br>- <code>server</code> | Override the default WAN role.<br><br>This is used both for AutoVPN and Pathfinder designs.<br>That means if `wan_mode` root key is set to `legacy-autovpn` or `cv-pathfinder`.<br>`server` indicates that the router is a route-reflector.<br><br>Only supported if `overlay_routing_protocol` is set to `ibgp`. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;wan_role</samp>](## "<node_type_keys.key>.node_groups.[].wan_role") | String |  |  | Valid Values:<br>- <code>client</code><br>- <code>server</code> | Override the default WAN role.<br><br>This is used both for AutoVPN and Pathfinder designs.<br>That means if `wan_mode` root key is set to `autovpn` or `cv-pathfinder`.<br>`server` indicates that the router is a route-reflector.<br><br>Only supported if `overlay_routing_protocol` is set to `ibgp`. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cv_pathfinder_transit_mode</samp>](## "<node_type_keys.key>.node_groups.[].cv_pathfinder_transit_mode") | String |  |  | Valid Values:<br>- <code>region</code><br>- <code>zone</code> | Configure the transit mode for a WAN client for CV Pathfinder designs<br>only when the `wan_mode` root key is set to `cv_pathfinder`.<br><br>'zone' is currently not supported. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cv_pathfinder_region</samp>](## "<node_type_keys.key>.node_groups.[].cv_pathfinder_region") | String |  |  |  | The CV Pathfinder region name.<br>This key is required for WAN routers but optional for pathfinders.<br>The region name must be defined under 'cv_pathfinder_regions'. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cv_pathfinder_site</samp>](## "<node_type_keys.key>.node_groups.[].cv_pathfinder_site") | String |  |  |  | The CV Pathfinder site name.<br>This key is required for WAN routers but optional for pathfinders.<br>For WAN routers and pathfinders with `cv_pathfinder_region`, the site name must be defined for the relevant region under 'cv_pathfinder_regions'.<br>For pathfinders without `cv_pathfinder_region` set, the site must be defined under `cv_pathfinder_global_sites`. |
@@ -69,7 +69,7 @@
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dps_mss_ipv4</samp>](## "<node_type_keys.key>.node_groups.[].dps_mss_ipv4") | String |  | `auto` |  | IPv4 MSS value configured under "router path-selection" on WAN Devices. |
     | [<samp>&nbsp;&nbsp;nodes</samp>](## "<node_type_keys.key>.nodes") | List, items: Dictionary |  |  |  | Define variables per node. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;name</samp>](## "<node_type_keys.key>.nodes.[].name") | String | Required, Unique |  |  | The Node Name is used as "hostname". |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;wan_role</samp>](## "<node_type_keys.key>.nodes.[].wan_role") | String |  |  | Valid Values:<br>- <code>client</code><br>- <code>server</code> | Override the default WAN role.<br><br>This is used both for AutoVPN and Pathfinder designs.<br>That means if `wan_mode` root key is set to `legacy-autovpn` or `cv-pathfinder`.<br>`server` indicates that the router is a route-reflector.<br><br>Only supported if `overlay_routing_protocol` is set to `ibgp`. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;wan_role</samp>](## "<node_type_keys.key>.nodes.[].wan_role") | String |  |  | Valid Values:<br>- <code>client</code><br>- <code>server</code> | Override the default WAN role.<br><br>This is used both for AutoVPN and Pathfinder designs.<br>That means if `wan_mode` root key is set to `autovpn` or `cv-pathfinder`.<br>`server` indicates that the router is a route-reflector.<br><br>Only supported if `overlay_routing_protocol` is set to `ibgp`. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cv_pathfinder_transit_mode</samp>](## "<node_type_keys.key>.nodes.[].cv_pathfinder_transit_mode") | String |  |  | Valid Values:<br>- <code>region</code><br>- <code>zone</code> | Configure the transit mode for a WAN client for CV Pathfinder designs<br>only when the `wan_mode` root key is set to `cv_pathfinder`.<br><br>'zone' is currently not supported. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cv_pathfinder_region</samp>](## "<node_type_keys.key>.nodes.[].cv_pathfinder_region") | String |  |  |  | The CV Pathfinder region name.<br>This key is required for WAN routers but optional for pathfinders.<br>The region name must be defined under 'cv_pathfinder_regions'. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cv_pathfinder_site</samp>](## "<node_type_keys.key>.nodes.[].cv_pathfinder_site") | String |  |  |  | The CV Pathfinder site name.<br>This key is required for WAN routers but optional for pathfinders.<br>For WAN routers and pathfinders with `cv_pathfinder_region`, the site name must be defined for the relevant region under 'cv_pathfinder_regions'.<br>For pathfinders without `cv_pathfinder_region` set, the site must be defined under `cv_pathfinder_global_sites`. |
@@ -99,7 +99,7 @@
         # Override the default WAN role.
         #
         # This is used both for AutoVPN and Pathfinder designs.
-        # That means if `wan_mode` root key is set to `legacy-autovpn` or `cv-pathfinder`.
+        # That means if `wan_mode` root key is set to `autovpn` or `cv-pathfinder`.
         # `server` indicates that the router is a route-reflector.
         #
         # Only supported if `overlay_routing_protocol` is set to `ibgp`.
@@ -190,7 +190,7 @@
               # Override the default WAN role.
               #
               # This is used both for AutoVPN and Pathfinder designs.
-              # That means if `wan_mode` root key is set to `legacy-autovpn` or `cv-pathfinder`.
+              # That means if `wan_mode` root key is set to `autovpn` or `cv-pathfinder`.
               # `server` indicates that the router is a route-reflector.
               #
               # Only supported if `overlay_routing_protocol` is set to `ibgp`.
@@ -268,7 +268,7 @@
           # Override the default WAN role.
           #
           # This is used both for AutoVPN and Pathfinder designs.
-          # That means if `wan_mode` root key is set to `legacy-autovpn` or `cv-pathfinder`.
+          # That means if `wan_mode` root key is set to `autovpn` or `cv-pathfinder`.
           # `server` indicates that the router is a route-reflector.
           #
           # Only supported if `overlay_routing_protocol` is set to `ibgp`.
@@ -352,7 +352,7 @@
           # Override the default WAN role.
           #
           # This is used both for AutoVPN and Pathfinder designs.
-          # That means if `wan_mode` root key is set to `legacy-autovpn` or `cv-pathfinder`.
+          # That means if `wan_mode` root key is set to `autovpn` or `cv-pathfinder`.
           # `server` indicates that the router is a route-reflector.
           #
           # Only supported if `overlay_routing_protocol` is set to `ibgp`.

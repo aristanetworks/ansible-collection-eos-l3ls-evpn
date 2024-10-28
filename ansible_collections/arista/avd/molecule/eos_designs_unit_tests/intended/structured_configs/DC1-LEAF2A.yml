@@ -653,8 +653,6 @@ ethernet_interfaces:
   port_profile: DOT1X_PORT_PROFILE
   description: PC
   shutdown: false
-  switchport:
-    enabled: true
   dot1x:
     port_control: auto
     reauthentication: true
@@ -672,13 +670,13 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
+  switchport:
+    enabled: true
 - name: Ethernet25
   peer_type: network_port
   port_profile: DOT1X_PORT_PROFILE
   description: PC
   shutdown: false
-  switchport:
-    enabled: true
   dot1x:
     port_control: auto
     reauthentication: true
@@ -696,6 +694,8 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
+  switchport:
+    enabled: true
 - name: Ethernet10
   peer: server01_MLAG
   peer_interface: Eth2
