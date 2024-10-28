@@ -12,11 +12,6 @@ plugins:
         toc_markers.
       name: add_md_toc
       version_added: '3.2'
-    convert_dicts:
-      description: Convert a dictionary containing nested dictionaries to a list of
-        dictionaries.
-      name: convert_dicts
-      version_added: '2.0'
     decrypt:
       description: Decrypt supported EOS passwords.
       name: decrypt
@@ -30,18 +25,6 @@ plugins:
       description: Encrypt supported EOS passwords
       name: encrypt
       version_added: 3.8.0
-    generate_esi:
-      description: Transforms short_esi `0303:0202:0101` to EVPN ESI format `0000:0000:0303:0202:0101`
-      name: generate_esi
-      version_added: '1.1'
-    generate_lacp_id:
-      description: Transforms short_esi `0303:0202:0101` to LACP ID format `0303.0202.0101`
-      name: generate_lacp_id
-      version_added: '1.1'
-    generate_route_target:
-      description: Transforms short_esi `0303:0202:0101` to route-target format `03:03:02:02:01:01`
-      name: generate_route_target
-      version_added: '1.1'
     hide_passwords:
       description: Replace a value by "<removed>"
       name: hide_passwords
@@ -75,17 +58,6 @@ plugins:
   inventory: {}
   lookup: {}
   module:
-    _emit_warning:
-      description: Internal module - DO NOT USE - Emit a warning in a task.
-      name: _emit_warning
-      namespace: ''
-      version_added: 4.9.0
-    batch_template:
-      description: Render Jinja2 template on multiple items and write result to individual
-        files.
-      name: batch_template
-      namespace: ''
-      version_added: 4.0.0
     configlet_build_config:
       description: Build arista.cvp.configlet configuration.
       name: configlet_build_config
@@ -101,6 +73,11 @@ plugins:
       name: eos_cli_config_gen
       namespace: ''
       version_added: 4.9.0
+    eos_designs_documentation:
+      description: Generate AVD Fabric Documentation
+      name: eos_designs_documentation
+      namespace: ''
+      version_added: 5.0.0
     eos_designs_facts:
       description: Set eos_designs facts
       name: eos_designs_facts
@@ -131,22 +108,11 @@ plugins:
       name: set_vars
       namespace: ''
       version_added: 4.0.0
-    validate_and_template:
-      description: Validate input data according to Schema, render Jinja2 template
-        and write result to a file.
-      name: validate_and_template
-      namespace: ''
-      version_added: 3.8.0
     verify_requirements:
       description: Verify Python requirements when running AVD
       name: verify_requirements
       namespace: ''
       version_added: 4.0.0
-    yaml_templates_to_facts:
-      description: Set facts from YAML via Jinja2 templates
-      name: yaml_templates_to_facts
-      namespace: ''
-      version_added: 1.0.0
   netconf: {}
   shell: {}
   strategy: {}
@@ -165,4 +131,4 @@ plugins:
         than group_vars or host_vars
       name: global_vars
       version_added: 4.0.0
-version: 4.10.0
+version: 5.0.0
