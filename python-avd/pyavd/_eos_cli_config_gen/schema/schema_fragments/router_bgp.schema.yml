@@ -1259,7 +1259,7 @@ keys:
                   - "path-selection"
                 description: Transport encapsulation for neighbor.
               next_hop_self_source_interface:
-                description: Source interface name.
+                description: Source interface name for MPLS encapsulation. Requires `encapsulation` to be set as `mpls`.
                 type: str
               next_hop_self_received_evpn_routes:
                 type: dict
