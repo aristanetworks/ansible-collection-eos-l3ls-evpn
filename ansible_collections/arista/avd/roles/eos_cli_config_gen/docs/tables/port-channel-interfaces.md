@@ -10,6 +10,7 @@
     | [<samp>port_channel_interfaces</samp>](## "port_channel_interfaces") | List, items: Dictionary |  |  |  |  |
     | [<samp>&nbsp;&nbsp;-&nbsp;name</samp>](## "port_channel_interfaces.[].name") | String | Required, Unique |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;description</samp>](## "port_channel_interfaces.[].description") | String |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;profile</samp>](## "port_channel_interfaces.[].profile") | String |  |  |  | Interface profile. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;logging</samp>](## "port_channel_interfaces.[].logging") | Dictionary |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;event</samp>](## "port_channel_interfaces.[].logging.event") | Dictionary |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;link_status</samp>](## "port_channel_interfaces.[].logging.event.link_status") | Boolean |  |  |  |  |
@@ -330,6 +331,9 @@
     port_channel_interfaces:
       - name: <str; required; unique>
         description: <str>
+
+        # Interface profile.
+        profile: <str>
         logging:
           event:
             link_status: <bool>
