@@ -590,9 +590,9 @@ ip routing vrf Tenant_L3_VRF_Zone
 ```eos
 !
 ip route vrf MGMT 0.0.0.0/0 192.168.200.5
-ip route vrf Tenant_A_WAN_Zone 10.3.4.0/24 1.2.3.4
 ip route vrf Tenant_A_WAN_Zone 1.1.1.0/24 Vlan101 10.1.1.1
 ip route vrf Tenant_A_WAN_Zone 1.1.2.0/24 Vlan101 10.1.1.1 200 tag 666 name RT-TO-FAKE-DMZ
+ip route vrf Tenant_A_WAN_Zone 10.3.4.0/24 1.2.3.4
 ip route vrf Tenant_A_WAN_Zone 10.3.5.0/24 Null0
 ```
 

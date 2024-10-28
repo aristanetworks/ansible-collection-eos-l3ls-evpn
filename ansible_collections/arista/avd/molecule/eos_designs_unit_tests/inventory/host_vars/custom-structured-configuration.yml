@@ -1,0 +1,90 @@
+type: l2leaf
+l2leaf:
+  defaults:
+  nodes:
+    - name: custom-structured-configuration
+
+custom_structured_configuration_prefix:
+  - 'csc_1_'
+  - 'csc_2_'
+
+# DATA MODEL WITH NO PRIMARY KEY
+
+name_servers:
+  - 192.168.42.10  # Collides with csc_1_ip_name_servers
+  - 192.168.42.40  # Collides with csc_2_ip_name_servers
+  - 192.168.42.50  # Unique value
+
+csc_1_ip_name_servers:
+  - ip_address: 192.168.42.1  # Collides with csc_2_ip_name_servers
+    vrf: VRF1
+  - ip_address: 192.168.42.10  # Collides with eos_designs
+    vrf: VRF1
+  - ip_address: 192.168.42.4  # Unique value
+    vrf: VRF1
+
+csc_2_ip_name_servers:
+  - ip_address: 192.168.42.1  # Collides with csc_1_ip_name_servers
+    vrf: VRF2
+  - ip_address: 192.168.42.40  # Collides with eos_designs
+    vrf: VRF2
+  - ip_address: 192.168.42.8  # Unique value
+    vrf: VRF2
+
+# DATA MODEL WITH PRIMARY KEY
+
+local_users:
+  - name: super-shared-admin  # Collides with both csc_1_local_users and csc_2_local_users
+    disabled: false
+    privilege: 15
+    role: network-admin
+    sha512_password: "$6$.zTjeujnuMZW7h2h$/hPDMlovWAmf9SpdTsiUiYyy6iI.prNyG9aYZV8NCp1hmeSwOhO3h5PGCIhfFrykhQj/oFXak49h8TmanME2M."
+  - name: shared-admin  # Collides with csc_1_local_users
+    disabled: false
+    privilege: 15
+    role: network-admin
+    sha512_password: "$6$.zTjeujnuMZW7h2h$/hPDMlovWAmf9SpdTsiUiYyy6iI.prNyG9aYZV8NCp1hmeSwOhO3h5PGCIhfFrykhQj/oFXak49h8TmanME2M."
+  - name: shared-operator  # Collides with csc_2_local_users
+    disabled: false
+    privilege: 15
+    role: network-operator
+    sha512_password: "$6$rkvZergVBQ09WJte$.6wtRT8ITilT06pdXS0s5u7M.7G54B8xPPqKTPIhqyCkw6/QgqP2j4yoYAo7YKVU/S3Ra8p23kMtbdHsoBWIk."
+  - name: eos-designs-admin  # Unique value
+    disabled: false
+    privilege: 15
+    role: network-operator
+    sha512_password: "$6$rkvZergVBQ09WJte$.6wtRT8ITilT06pdXS0s5u7M.7G54B8xPPqKTPIhqyCkw6/QgqP2j4yoYAo7YKVU/S3Ra8p23kMtbdHsoBWIk."
+
+csc_1_local_users:
+  - name: super-shared-admin  # Collides with both eos_designs and csc_2_local_users
+    disabled: false
+    privilege: 1
+    role: network-admin
+    sha512_password: "$6$.zTjeujnuMZW7h2h$/hPDMlovWAmf9SpdTsiUiYyy6iI.prNyG9aYZV8NCp1hmeSwOhO3h5PGCIhfFrykhQj/oFXak49h8TmanME2M."
+  - name: shared-admin  # Collides with eos_designs
+    disabled: false
+    privilege: 1
+    role: network-admin
+    sha512_password: "$6$.zTjeujnuMZW7h2h$/hPDMlovWAmf9SpdTsiUiYyy6iI.prNyG9aYZV8NCp1hmeSwOhO3h5PGCIhfFrykhQj/oFXak49h8TmanME2M."
+  - name: csc-1-operator  # Unique value
+    disabled: false
+    privilege: 1
+    role: network-operator
+    sha512_password: "$6$rkvZergVBQ09WJte$.6wtRT8ITilT06pdXS0s5u7M.7G54B8xPPqKTPIhqyCkw6/QgqP2j4yoYAo7YKVU/S3Ra8p23kMtbdHsoBWIk."
+
+csc_2_local_users:
+  - name: super-shared-admin  # Collides with both eos_designs and csc_1_local_users
+    disabled: false
+    privilege: 2
+    role: network-admin
+    sha512_password: "$6$.zTjeujnuMZW7h2h$/hPDMlovWAmf9SpdTsiUiYyy6iI.prNyG9aYZV8NCp1hmeSwOhO3h5PGCIhfFrykhQj/oFXak49h8TmanME2M."
+  - name: shared-operator  # Collides with eos_designs
+    disabled: false
+    privilege: 2
+    role: network-operator
+    sha512_password: "$6$rkvZergVBQ09WJte$.6wtRT8ITilT06pdXS0s5u7M.7G54B8xPPqKTPIhqyCkw6/QgqP2j4yoYAo7YKVU/S3Ra8p23kMtbdHsoBWIk."
+  - name: csc-2-operator  # Unique value
+    disabled: false
+    privilege: 2
+    role: network-operator
+    sha512_password: "$6$rkvZergVBQ09WJte$.6wtRT8ITilT06pdXS0s5u7M.7G54B8xPPqKTPIhqyCkw6/QgqP2j4yoYAo7YKVU/S3Ra8p23kMtbdHsoBWIk."

@@ -9,24 +9,23 @@ plugin_routing:
           The internal 'arista.avd.convert_dicts' filter plugin is no longer used by AVD.
           The plugin is released as open source, so it can be copied and reused according to the license and copyright.
     hash_passphrase:
-      redirect: arista.avd.snmp_hash
       tombstone:
         removal_version: 5.0.0
-        warning_text: Use arista.avd.snmp_hash instead
+        warning_text: Use arista.avd.snmp_hash instead.
     generate_esi:
       tombstone:
         removal_version: 5.0.0
-        warning_text: Use Jinja string concatenation instead like `{{ <esi_prefix> ~ <short_esi> }}`
+        warning_text: Use Jinja string concatenation instead like `{{ <esi_prefix> ~ <short_esi> }}`.
     generate_lacp_id:
       tombstone:
         removal_version: 5.0.0
-        warning_text: Use the builtin `replace` filter instead like `{{ <short_esi> | replace(':', '.') }}`
+        warning_text: Use the builtin `replace` filter instead like `{{ <short_esi> | replace(':', '.') }}`.
     generate_route_target:
       tombstone:
         removal_version: 5.0.0
         warning_text: >-
           Use the builtin `ansible.builtin.regex_replace` filter instead like
-          `{{ <short_esi> | ansible.builtin.regex_replace('(\\d{2})(\\d{2}):(\\d{2})(\\d{2}):(\\d{2})(\\d{2})', '\\1:\\2:\\3:\\4:\\5:\\6') }}`
+          `{{ <short_esi> | ansible.builtin.regex_replace('(\\d{2})(\\d{2}):(\\d{2})(\\d{2}):(\\d{2})(\\d{2})', '\\1:\\2:\\3:\\4:\\5:\\6') }}`.
   modules:
     _emit_warning:
       tombstone:
@@ -38,7 +37,6 @@ plugin_routing:
         removal_version: 5.0.0
         warning_text: |-
           The preview module 'arista.avd.deploy_to_cv' has been released under the new name 'arista.avd.cv_workflow'.
-      redirect: arista.avd.cv_workflow
     batch_template:
       tombstone:
         removal_version: 5.0.0
@@ -68,8 +66,6 @@ plugin_routing:
         removal_version: 5.0.0
         warning_text: |-
           The preview module 'arista.avd.deploy_to_cv' has been released under the new name 'arista.avd.cv_workflow'.
-          The module will be redirected automatically until AVD version 5.0.0 after which it will be removed.
-      redirect: arista.avd.cv_workflow
     batch_template:
       tombstone:
         removal_version: 5.0.0

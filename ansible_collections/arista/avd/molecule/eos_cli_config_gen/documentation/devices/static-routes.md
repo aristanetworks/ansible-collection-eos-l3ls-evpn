@@ -58,10 +58,10 @@ interface Management1
 !
 ip route 1.1.1.0/24 Vlan101 10.1.1.1
 ip route 1.1.2.0/24 Vlan101 10.1.1.1 200 tag 666 name RT-TO-FAKE-DMZ
-ip route vrf customer01 1.2.1.0/24 Vlan202 10.1.2.1
-ip route vrf customer01 1.2.2.0/24 Vlan101 10.1.2.1 201 tag 667 name RT-TO-FAKE-DMZ
 ip route vrf APP 10.3.4.0/24 1.2.3.4
 ip route vrf APP 10.3.5.0/24 Null0
+ip route vrf customer01 1.2.1.0/24 Vlan202 10.1.2.1
+ip route vrf customer01 1.2.2.0/24 Vlan101 10.1.2.1 201 tag 667 name RT-TO-FAKE-DMZ
 ip route vrf customer01 10.3.6.0/24 Ethernet40 11.2.1.1 track bfd 100 tag 1000 name Track-BFD metric 300
 ip route vrf customer01 10.3.7.0/24 Ethernet41 100 tag 1000 name No-Track-BFD metric 300
 ```

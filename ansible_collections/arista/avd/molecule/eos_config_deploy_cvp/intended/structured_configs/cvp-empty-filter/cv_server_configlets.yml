@@ -1087,7 +1087,7 @@ cvp_configlets:
     trunk allowed vlan 110-111,120-121,130-131,140-141,150,210-211,250,310-311,350\n
     \  switchport mode trunk\n   switchport\n   mlag 7\n!\ninterface Port-Channel10\n
     \  description SERVER_server03_ESI\n   no shutdown\n   switchport trunk allowed
-    vlan 110-111,210-211\n   switchport mode trunk\n   switchport\n   evpn ethernet-segment\n
+    vlan 110-111,210-211\n   switchport mode trunk\n   switchport\n   !\n   evpn ethernet-segment\n
     \     identifier 0000:0000:0303:0202:0101\n      route-target import 03:03:02:02:01:01\n
     \  lacp system-id 0303.0202.0101\n!\ninterface Ethernet1\n   description P2P_DC1-SPINE1_Ethernet4\n
     \  no shutdown\n   mtu 1500\n   no switchport\n   ip address 172.31.255.25/31\n!\ninterface

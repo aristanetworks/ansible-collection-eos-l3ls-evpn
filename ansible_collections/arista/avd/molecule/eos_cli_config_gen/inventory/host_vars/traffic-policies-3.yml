@@ -4,4 +4,5 @@ traffic_policies:
     counter_per_interface: false
 ethernet_interfaces:
   - name: Ethernet1
-    type: routed
+    switchport:
+      enabled: false

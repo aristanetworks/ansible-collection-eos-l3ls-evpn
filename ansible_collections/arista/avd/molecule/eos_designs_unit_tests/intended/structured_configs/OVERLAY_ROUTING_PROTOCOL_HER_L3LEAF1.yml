@@ -130,7 +130,6 @@ vxlan_interface:
         - 192.168.253.3
       - id: 3901
         vni: 13901
-        flood_vteps: []
       - id: 3902
         vni: 13902
         flood_vteps:
@@ -142,7 +141,6 @@ vxlan_interface:
         - 192.168.253.3
       - id: 2901
         vni: 12901
-        flood_vteps: []
       - id: 2902
         vni: 12902
         flood_vteps:

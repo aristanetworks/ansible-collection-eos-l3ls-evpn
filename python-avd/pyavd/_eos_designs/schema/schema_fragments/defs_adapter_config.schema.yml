@@ -60,13 +60,12 @@ $defs:
           - str
         description: |
           Native VLAN for a trunk port.
-          If both `native_vlan` and `native_vlan_tag`, `native_vlan_tag` takes precedence.
+          If both `native_vlan` and `native_vlan_tag` are set, `native_vlan_tag` takes precedence.
         min: 1
         max: 4094
       native_vlan_tag:
         type: bool
-        default: false
-        description: If both `native_vlan` and `native_vlan_tag`, `native_vlan_tag` takes precedence.
+        description: If both `native_vlan` and `native_vlan_tag` are set, `native_vlan_tag` takes precedence.
       phone_vlan:
         type: int
         convert_types:
@@ -327,6 +326,7 @@ $defs:
                     - "both"
                 access_group:
                   type: dict
+                  description: This can only be set when `session_settings.access_group` is not set.
                   keys:
                     type:
                       type: str

@@ -412,8 +412,8 @@ no ip routing vrf MGMT
 
 ```eos
 !
-ip route vrf MGMT 0.0.0.0/0 172.31.0.1
 ip route 10.0.0.0/8 10.1.100.100
+ip route vrf MGMT 0.0.0.0/0 172.31.0.1
 ```
 
 ### Router BGP

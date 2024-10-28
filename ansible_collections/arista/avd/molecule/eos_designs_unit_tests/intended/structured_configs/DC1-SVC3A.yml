@@ -1098,6 +1098,14 @@ port_channel_interfaces:
   switchport:
     enabled: true
   mlag: 34
+- name: Port-Channel43
+  description: server28_monitoring_session_source_settings_access_group_server28_monitoring_session_source_settings_access_group
+  shutdown: false
+  switchport:
+    enabled: true
+    mode: access
+    access_vlan: '110'
+  mlag: 43
 ethernet_interfaces:
 - name: Ethernet53/1
   peer: DC1-SVC3B
@@ -1539,6 +1547,16 @@ ethernet_interfaces:
   lacp_timer:
     mode: normal
     multiplier: 50
+- name: Ethernet43
+  peer: server28_monitoring_session_source_settings_access_group
+  peer_interface: Eth3
+  peer_type: server
+  port_profile: TENANT_A
+  description: server28_monitoring_session_source_settings_access_group_Eth3
+  shutdown: false
+  channel_group:
+    id: 43
+    mode: active
 mlag_configuration:
   domain_id: custom_mlag_domain_id
   local_interface: Vlan4092
@@ -1686,26 +1704,22 @@ virtual_source_nat_vrfs:
 - name: Tenant_A_OP_Zone
   ip_address: 10.255.1.12
 monitor_sessions:
+- name: MonitoringSessionServer18
+  sources:
+  - name: Port-Channel43
+    direction: tx
+    access_group:
+      type: ip
+      name: myIpAVL
+      priority: 5
 - name: MonitoringSessionServer18WithDest
   sources:
   - name: Ethernet25
     direction: rx
-    access_group:
-      type: ip
-      name: MyIpACL
-      priority: 5
   - name: Port-Channel27
     direction: tx
-    access_group:
-      type: mac
-      name: MyMacACL
-      priority: 5
   - name: Ethernet28
     direction: tx
-    access_group:
-      type: mac
-      name: MyMacACL
-      priority: 5
   destinations:
   - Ethernet26
   - Ethernet40

@@ -115,7 +115,6 @@ router_bgp:
     user:
       enabled: true
       rcf: RCF_BGP_EVPN()
-  redistribute_routes:
   address_family_evpn:
     neighbor_default:
       next_hop_self_received_evpn_routes:
