@@ -33,6 +33,9 @@ router_ospf:
         inter_area: 70
       distribute_list_in:
         route_map: RM-OSPF-DIST-IN
+      graceful_restart:
+        enabled: true
+      graceful_restart_helper: true
     - id: 101
       vrf: CUSTOMER01
       passive_interface_default: true
@@ -60,6 +63,10 @@ router_ospf:
           initial: 100
           min: 200
           max: 300
+      graceful_restart:
+        enabled: true
+        grace_period: 10
+      graceful_restart_helper: false
       eos_cli: |
         area 5 not-so-stubby lsa type-7 convert type-5
 
