@@ -181,10 +181,57 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             class Default(AvdModel):
                 """Subclass of AvdModel."""
 
-                _fields: ClassVar[dict] = {"type": {"type": str}, "group": {"type": str}, "_custom_data": {"type": dict}}
-                type: Literal["start-stop", "stop-only"] | None
+                class MethodsItem(AvdModel):
+                    """Subclass of AvdModel."""
+
+                    _fields: ClassVar[dict] = {"method": {"type": str}, "group": {"type": str}, "multicast": {"type": bool}, "_custom_data": {"type": dict}}
+                    method: Literal["logging", "group"]
+                    group: str | None
+                    """Server group. This can only be set when method is set as `group`."""
+                    multicast: bool | None
+                    """
+                    Forward accounting packets to all servers in the group. This can only be set when method is set as
+                    `group`.
+                    """
+                    _custom_data: dict[str, Any]
+
+                    if TYPE_CHECKING:
+
+                        def __init__(
+                            self,
+                            *,
+                            method: Literal["logging", "group"] | UndefinedType = Undefined,
+                            group: str | None | UndefinedType = Undefined,
+                            multicast: bool | None | UndefinedType = Undefined,
+                            _custom_data: dict[str, Any] | UndefinedType = Undefined,
+                        ) -> None:
+                            """
+                            MethodsItem.
+
+
+                            Subclass of AvdModel.
+
+                            Args:
+                                method: method
+                                group: Server group. This can only be set when method is set as `group`.
+                                multicast:
+                                   Forward accounting packets to all servers in the group. This can only be set when method is set as
+                                   `group`.
+                                _custom_data: _custom_data
+
+                            """
+
+                class Methods(AvdList[MethodsItem]):
+                    """Subclass of AvdList with `MethodsItem` items."""
+
+                Methods._item_type = MethodsItem
+
+                _fields: ClassVar[dict] = {"type": {"type": str}, "group": {"type": str}, "methods": {"type": Methods}, "_custom_data": {"type": dict}}
+                type: Literal["start-stop", "stop-only"]
                 group: str | None
                 """Group Name."""
+                methods: Methods
+                """Subclass of AvdList with `MethodsItem` items."""
                 _custom_data: dict[str, Any]
 
                 if TYPE_CHECKING:
@@ -192,8 +239,9 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                     def __init__(
                         self,
                         *,
-                        type: Literal["start-stop", "stop-only"] | None | UndefinedType = Undefined,
+                        type: Literal["start-stop", "stop-only"] | UndefinedType = Undefined,
                         group: str | None | UndefinedType = Undefined,
+                        methods: Methods | UndefinedType = Undefined,
                         _custom_data: dict[str, Any] | UndefinedType = Undefined,
                     ) -> None:
                         """
@@ -205,6 +253,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                         Args:
                             type: type
                             group: Group Name.
+                            methods: Subclass of AvdList with `MethodsItem` items.
                             _custom_data: _custom_data
 
                         """

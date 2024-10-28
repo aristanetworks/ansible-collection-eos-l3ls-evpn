@@ -55,10 +55,30 @@ keys:
             keys:
               type:
                 type: str
+                required: true
                 valid_values: ["start-stop", "stop-only"]
               group:
                 description: Group Name.
                 type: str
+                deprecation:
+                  warning: true
+                  new_key: methods[].group
+                  remove_in_version: v6.0.0
+              methods:
+                type: list
+                items:
+                  type: dict
+                  keys:
+                    method:
+                      type: str
+                      required: true
+                      valid_values: ["logging", "group"]
+                    group:
+                      type: str
+                      description: Server group. This can only be set when method is set as `group`.
+                    multicast:
+                      type: bool
+                      description: Forward accounting packets to all servers in the group. This can only be set when method is set as `group`.
       commands:
         type: dict
         keys:

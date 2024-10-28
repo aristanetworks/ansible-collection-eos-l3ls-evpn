@@ -1,0 +1,6 @@
+---
+aaa_accounting:
+  dot1x:
+    default:
+      type: start-stop
+      group: group1

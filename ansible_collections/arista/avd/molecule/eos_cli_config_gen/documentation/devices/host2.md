@@ -355,12 +355,14 @@ no aaa authorization config-commands
 | ---- | -------- | ----------- | ----- | ------- |
 | Exec - Console | - | none | - | True |
 | Exec - Default | - | none | - | - |
+| Dot1x - Default | - | start-stop | logging, group1, group2 | - |
 
 #### AAA Accounting Device Configuration
 
 ```eos
 aaa accounting exec console none
 aaa accounting exec default none
+aaa accounting dot1x default start-stop logging group group1 group group2 multicast
 ```
 
 ## Management Security
