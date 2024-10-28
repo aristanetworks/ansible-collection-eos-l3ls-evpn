@@ -1,0 +1,14 @@
+---
+# deploy.yml
+- name: Deploy Configurations via CVaaS
+  hosts: WAN
+  gather_facts: false
+  tasks:
+    - name: Deploy Configurations to Devices
+      vars:
+        # Automatically execute the Change Control
+        cv_run_change_control: true
+      ansible.builtin.import_role:
+        # By default this will use ansible_host and ansible_password
+        # from the 'cloudvision' host in the inventory
+        name: arista.avd.cv_deploy

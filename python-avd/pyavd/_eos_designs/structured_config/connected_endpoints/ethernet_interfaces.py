@@ -105,8 +105,6 @@ class EthernetInterfacesMixin(UtilsMixin):
                 "spanning_tree_bpdufilter": adapter.get("spanning_tree_bpdufilter"),
                 "spanning_tree_bpduguard": adapter.get("spanning_tree_bpduguard"),
                 "storm_control": self._get_adapter_storm_control(adapter),
-                "dot1x": adapter.get("dot1x"),
-                "poe": self._get_adapter_poe(adapter),
                 "ptp": self._get_adapter_ptp(adapter),
                 "service_profile": adapter.get("qos_profile"),
                 "sflow": self._get_adapter_sflow(adapter),
@@ -166,6 +164,8 @@ class EthernetInterfacesMixin(UtilsMixin):
             "speed": adapter.get("speed"),
             "shutdown": not adapter.get("enabled", True),
             "validate_state": None if adapter.get("validate_state", True) else False,
+            "dot1x": adapter.get("dot1x"),
+            "poe": self._get_adapter_poe(adapter),
             "eos_cli": adapter.get("raw_eos_cli"),
             "struct_cfg": adapter.get("structured_config"),
         }

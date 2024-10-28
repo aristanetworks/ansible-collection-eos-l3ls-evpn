@@ -1,0 +1,172 @@
+---
+# Testing autovpn
+wan_mode: autovpn
+# Disabling underlay for tests
+underlay_routing_protocol: none
+
+bgp_as: 65000
+
+bgp_peer_groups:
+  wan_overlay_peers:
+    password: "htm4AZe9mIQOO1uiMuGgYQ=="
+    listen_range_prefixes:
+      - 192.168.130.0/24
+
+wan_stun_dtls_disable: true
+
+wan_route_servers:
+  # Testing having the interface configured with DHCP
+  - hostname: autovpn-rr1
+    path_groups:
+      - name: INET
+        interfaces:
+          - name: Ethernet1
+            public_ip: 10.7.7.7
+  - hostname: autovpn-rr2
+
+wan_ipsec_profiles:
+  control_plane:
+    ike_policy_name: AUTOVPN-IKE
+    sa_policy_name: AUTOVPN-SA
+    profile_name: AUTOVPN
+    shared_key: ABCDEF1234567890
+
+default_node_types:
+  - node_type: wan_rr
+    match_hostnames:
+      - "autovpn-rr.*"
+  - node_type: wan_router
+    match_hostnames:
+      - "autovpn-edge"
+
+wan_router:
+  defaults:
+    loopback_ipv4_pool: 192.168.30.0/24
+    vtep_loopback_ipv4_pool: 192.168.130.0/24
+    filter:
+      # TODO find a way to not need this
+      always_include_vrfs_in_tenants: [TenantA]
+  nodes:
+    - name: autovpn-edge
+      id: 1
+      l3_interfaces:
+        - name: Ethernet1
+          wan_carrier: Comcast
+          wan_circuit_id: 666
+          ip_address: dhcp
+          dhcp_accept_default_route: true
+        - name: Ethernet2
+          wan_carrier: MPLS-SP-1
+          wan_circuit_id: Cat6
+          ip_address: 10.14.14.14/31
+
+wan_rr:
+  defaults:
+    loopback_ipv4_pool: 192.168.31.0/24
+    vtep_loopback_ipv4_pool: 192.168.131.0/24
+    data_plane_cpu_allocation_max: 2
+  nodes:
+    - name: autovpn-rr1
+      id: 1
+      l3_interfaces:
+        - name: Ethernet1
+          wan_carrier: ATT
+          wan_circuit_id: 777
+          ip_address: dhcp
+          dhcp_accept_default_route: true
+    - name: autovpn-rr2
+      id: 2
+      l3_interfaces:
+        - name: Ethernet1
+          wan_carrier: ATT
+          wan_circuit_id: 888
+          ip_address: 10.8.8.8/31
+          static_routes:
+            - prefix: 0.0.0.0/0
+          peer_ip: 10.8.8.9
+
+wan_path_groups:
+  - name: MPLS
+    ipsec:
+      static_peers: false
+      dynamic_peers: false
+    id: 100
+  - name: INET
+    id: 101
+    default_preference: 42
+  - name: LTE
+    id: 102
+    # Testing this knob for AutoVPN
+    excluded_from_default_policy: true
+
+wan_carriers:
+  - name: Comcast
+    path_group: INET
+    trusted: true
+  - name: ATT
+    path_group: INET
+    trusted: true
+  - name: MPLS-SP-1
+    path_group: MPLS
+    trusted: true
+
+# SVI and L2VLAN is inserted to ensure these are *not* rendered.
+tenants:
+  - name: TenantA
+    vrfs:
+      - name: default
+        vrf_id: 1
+      - name: PROD
+        vrf_id: 42
+        svis:
+          - id: 100
+            name: VLAN100
+            ip_address_virtual: 10.0.100.1/24
+      - name: IT
+        vrf_id: 100
+        address_families: []
+    l2vlans:
+      - id: 101
+        name: VLAN101
+
+wan_virtual_topologies:
+  vrfs:
+    - name: default
+      policy: DEFAULT-AUTOVPN-POLICY
+      wan_vni: 1
+    - name: PROD
+      policy: PROD-AUTOVPN-POLICY
+      wan_vni: 42
+  policies:
+    - name: PROD-AUTOVPN-POLICY
+      default_virtual_topology:
+        path_groups:
+          - names: [INET]
+            preference: preferred
+      application_virtual_topologies:
+        - application_profile: VOICE
+          # Following should NOT be rendered for AUTOVPN
+          lowest_hop_count: true
+          path_groups:
+            - names: [INET]
+              preference: preferred
+        - application_profile: VIDEO
+          path_groups:
+            - names: [INET]
+              preference: preferred
+    - name: DEFAULT-AUTOVPN-POLICY
+      default_virtual_topology:
+        drop_unmatched: true
+      application_virtual_topologies:
+        - application_profile: IT
+          path_groups:
+            - names: [MPLS]
+              preference: preferred
+            - names: [INET]
+              preference: alternate
+
+application_classification:
+  application_profiles:
+    - name: VIDEO
+    - name: IT
+    - name: VOICE
