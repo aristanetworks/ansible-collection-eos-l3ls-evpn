@@ -1,3 +1,3 @@
 # PyAVD must follow the exact same version as the Ansible collection.
 # For development this should be installed as an editable install as specified in requirement-dev.txt
-pyavd[ansible-collection]==5.0.0
+pyavd[ansible-collection]==5.1.0.dev0
