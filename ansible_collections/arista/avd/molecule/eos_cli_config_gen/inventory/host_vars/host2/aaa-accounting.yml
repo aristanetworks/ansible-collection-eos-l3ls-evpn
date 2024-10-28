@@ -7,3 +7,13 @@ aaa_accounting:
       logging: true
     default:
       type: none
+  dot1x:
+    default:
+      type: start-stop
+      methods:
+        - method: logging
+        - method: group
+          group: group1
+        - method: group
+          group: group2
+          multicast: true

@@ -16,8 +16,14 @@ aaa_accounting:
       group: TACACS
   dot1x:
     default:
-      type: start-stop
-      group: RADIUS
+      type: stop-only
+      methods:
+        - method: logging
+        - method: group
+          group: group1
+        - method: group
+          group: group2
+          multicast: true
   commands:
     console:
       - commands: all
