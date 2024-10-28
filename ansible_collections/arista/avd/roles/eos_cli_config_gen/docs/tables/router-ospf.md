@@ -83,6 +83,10 @@
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;on_startup</samp>](## "router_ospf.process_ids.[].max_metric.router_lsa.on_startup") | String |  |  |  | "wait-for-bgp" or Integer 5-86400.<br>Example: "wait-for-bgp" Or "222"<br> |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;summary_lsa</samp>](## "router_ospf.process_ids.[].max_metric.router_lsa.summary_lsa") | Dictionary |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;override_metric</samp>](## "router_ospf.process_ids.[].max_metric.router_lsa.summary_lsa.override_metric") | Integer |  |  | Min: 1<br>Max: 16777215 |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;graceful_restart</samp>](## "router_ospf.process_ids.[].graceful_restart") | Dictionary |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "router_ospf.process_ids.[].graceful_restart.enabled") | Boolean | Required |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;grace_period</samp>](## "router_ospf.process_ids.[].graceful_restart.grace_period") | Integer |  |  | Min: 1<br>Max: 1800 | Specify maximum time in seconds to wait for graceful-restart to complete. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;graceful_restart_helper</samp>](## "router_ospf.process_ids.[].graceful_restart_helper") | Boolean |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;mpls_ldp_sync_default</samp>](## "router_ospf.process_ids.[].mpls_ldp_sync_default") | Boolean |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;eos_cli</samp>](## "router_ospf.process_ids.[].eos_cli") | String |  |  |  | Multiline EOS CLI rendered directly on the Router OSPF process ID in the final EOS configuration. |
 
@@ -212,6 +216,12 @@
               on_startup: <str>
               summary_lsa:
                 override_metric: <int; 1-16777215>
+          graceful_restart:
+            enabled: <bool; required>
+
+            # Specify maximum time in seconds to wait for graceful-restart to complete.
+            grace_period: <int; 1-1800>
+          graceful_restart_helper: <bool>
           mpls_ldp_sync_default: <bool>
 
           # Multiline EOS CLI rendered directly on the Router OSPF process ID in the final EOS configuration.

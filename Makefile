@@ -12,7 +12,6 @@ help: ## Display help message
 #########################################
 .PHONY: collection-build
 collection-build: ## Build arista.avd collection locally.
-	./python-avd/scripts/build-schemas.py
 	ansible-galaxy collection build --force ansible_collections/arista/avd
 
 #########################################

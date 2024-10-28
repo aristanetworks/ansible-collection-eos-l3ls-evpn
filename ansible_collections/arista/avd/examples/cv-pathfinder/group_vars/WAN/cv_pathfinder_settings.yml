@@ -1,0 +1,206 @@
+---
+# WAN CV Pathfinder settings
+
+# cv-pathfinder is default
+wan_mode: cv-pathfinder
+
+# WAN hierarchy
+cv_pathfinder_regions:  # (1)!
+  - name: REGION1
+    id: 1
+    sites:
+      - name: SITE1
+        id: 101
+        location: Copenhagen, Denmark
+  - name: REGION2
+    id: 2
+    sites:
+      - name: SITE2
+        id: 202
+        location: Ottawa, Canada
+      - name: SITE3
+        id: 203
+        location: Milan, Italy
+
+cv_pathfinder_global_sites:  # (2)!
+  - name: PF1-GLOBAL
+    location: Santa Clara, CA, USA
+  - name: PF2-GLOBAL
+    location: Coulomiers, France
+
+wan_route_servers: # (3)!
+  - hostname: pf1
+  - hostname: pf2
+
+# IPSec configuration
+wan_ipsec_profiles: # (4)!
+  control_plane:
+    shared_key: 045A190F1C354D
+  data_plane:
+    shared_key: 141600021F102B
+
+# DTLS for STUN is enabled by default
+# It requires certificates to be generated and distributed on the participating
+# devices. To disable it for a lab, uncomment the following line.
+# wan_stun_dtls_disable: true
+
+# Fabric Flow tracking - by default only enabled for the Dps1 interface
+fabric_flow_tracking: # (5)!
+  uplinks:
+    enabled: true
+  downlinks:
+    enabled: true
+# Overwrite the default settings
+flow_tracking_settings:
+  trackers:
+    - name: FLOW-TRACKER
+      record_export:
+        on_inactive_timeout: 70000
+        # Small export interval for example
+        on_interval: 5000
+      exporters:
+        - name: CV-TELEMETRY
+          collector:
+            host: 127.0.0.1
+          local_interface: Loopback0
+
+# Vaulting bgp_password variable as an example. It is encrypted with the
+# password in .vault
+bgp_password: !vault |
+ $ANSIBLE_VAULT;1.1;AES256
+ 33383161313537343432366430633733356331616665323132303263316531373135383439383730
+ 3539343961636531643631343561356337656439366433320a366364653135376338313731323035
+ 30633238643661626239656365613535393066666436633535636436633633303962393363343738
+ 6262343237396166620a386465373366376235356438356139323832383131366462646263303037
+ 6430
+
+# BGP settings
+bgp_peer_groups: # (6)!
+  wan_overlay_peers:
+    password: "{{ bgp_password | arista.avd.encrypt(passwd_type='bgp', key='WAN-OVERLAY-PEERS') }}"
+    listen_range_prefixes:
+      - 192.168.42.0/24
+  wan_rr_overlay_peers:
+    password: "{{ bgp_password | arista.avd.encrypt(passwd_type='bgp', key='WAN-RR-OVERLAY-PEERS') }}"
+
+# WAN path groups
+wan_carriers: # (7)!
+  - name: ACME-MPLS-INC
+    path_group: MPLS
+    trusted: true
+  - name: GLOBAL-INTERNET-LIMITED
+    path_group: INTERNET
+  - name: REGION1-INTERNET-CORP
+    path_group: INTERNET
+  - name: REGION2-INTERNET-CORP
+    path_group: INTERNET
+
+wan_path_groups: # (8)!
+  - name: MPLS
+    id: 101
+  - name: INTERNET
+    id: 102
+
+# WAN virtual topologies
+wan_virtual_topologies: # (9)!
+  vrfs:
+    - name: BLUE
+      policy: BLUE-POLICY
+      wan_vni: 100
+    - name: RED
+      policy: RED-POLICY
+      wan_vni: 101
+  policies:
+    - name: BLUE-POLICY
+      application_virtual_topologies:
+        - application_profile: VIDEO
+          id: 2
+          path_groups:
+            - names: [INTERNET]
+              preference: preferred
+            - names: [MPLS] # (10)!
+              preference: alternate
+        - application_profile: VOICE
+          id: 3
+          dscp: 46
+          lowest_hop_count: true
+          constraints:
+            jitter: 30
+            latency: 150
+            loss_rate: 1
+          path_groups:
+            - names: [MPLS]
+              preference: preferred
+            - names: [INTERNET]
+              preference: alternate
+      default_virtual_topology:
+        path_groups:
+          - names: [INTERNET, MPLS]
+            preference: preferred
+    - name: RED-POLICY
+      application_virtual_topologies:
+        - application_profile: CRITICAL-SECRET-DATA
+          id: 2
+          path_groups:
+            - names: [MPLS]
+              preference: preferred
+        - application_profile: NORMAL-DATA
+          id: 3
+          path_groups:
+            - names: [INTERNET]
+              preference: preferred
+            - names: [MPLS]
+              preference: alternate
+        - application_profile: NOT-SO-IMPORTANT-DATA
+          id: 4
+          path_groups:
+            - names: [INTERNET]
+              preference: preferred
+      default_virtual_topology:
+        # dropping unmatched traffic in VRF RED
+        drop_unmatched: true
+
+# Traffic classification
+application_classification:
+  field_sets:
+    l4_ports:
+      - name: VOICE-PORTS
+        port_values:
+          - 666-667
+      - name: VIDEO-PORTS
+        port_values:
+          - 4242-4244
+  applications:
+    ipv4_applications:
+      - name: VOICE-APP
+        protocols:
+          - tcp
+        tcp_dest_port_set_name: VOICE-PORTS
+      - name: VIDEO-APP
+        protocols:
+          - tcp
+          - udp
+        tcp_dest_port_set_name: VIDEO-PORTS
+        udp_dest_port_set_name: VIDEO-PORTS
+      - name: CRITICAL-SECRET-DATA-APP
+        dscp_ranges: [46]
+      - name: NORMAL-DATA-APP
+        dscp_ranges: [af23]
+      - name: NOT-SO-IMPORTANT-DATA-APP
+        dscp_ranges: [0]
+  application_profiles:
+    - name: VOICE
+      applications:
+        - name: VOICE-APP
+    - name: VIDEO
+      applications:
+        - name: VIDEO-APP
+    - name: CRITICAL-SECRET-DATA
+      applications:
+        - name: CRITICAL-SECRET-DATA-APP
+    - name: NORMAL-DATA
+      applications:
+        - name: NORMAL-DATA-APP
+    - name: NOT-SO-IMPORTANT-DATA
+      applications:
+        - name: NOT-SO-IMPORTANT-DATA-APP
