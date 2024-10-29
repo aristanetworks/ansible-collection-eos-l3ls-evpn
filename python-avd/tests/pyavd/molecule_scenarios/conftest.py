@@ -15,6 +15,13 @@ def get_test_id(host: MoleculeHost) -> str:
 
 
 def pytest_generate_tests(metafunc: pytest.Metafunc) -> None:
+    """
+    Generate MoleculeHost or MoleculeScenario instances for the scenarios given with pytest.mark.molecule_scenarios(<scenario>, <scenario>).
+
+    The generated objects are inserted with parametrize to generate a test case for each.
+
+    Reads/updates MOLECULE_SCENARIOS for caching.
+    """
     molecule_scenario_names = chain.from_iterable(list(mark.args) for mark in metafunc.definition.iter_markers(name="molecule_scenarios"))
     molecule_scenarios: list[MoleculeScenario] = []
     for molecule_scenario_name in molecule_scenario_names:
