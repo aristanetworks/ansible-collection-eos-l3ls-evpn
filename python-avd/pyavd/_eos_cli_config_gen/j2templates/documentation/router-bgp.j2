@@ -665,7 +665,7 @@ ASN Notation: {{ router_bgp.as_notation | arista.avd.default('asplain') }}
 | {{ segment.domain | title }} Domain: Ethernet-Segment Identifier | {{ segment.identifier }} |
 {%             endif %}
 {%             if segment.route_target_import is arista.avd.defined %}
-| {{ segment.domain | title }} Domain: Ethernet-Segment Route-Target | {{ segment.route_target_import }} |
+| {{ segment.domain | title }} Domain: Ethernet-Segment import Route-Target | {{ segment.route_target_import }} |
 {%             endif %}
 {%         endfor %}
 {%     endif %}
