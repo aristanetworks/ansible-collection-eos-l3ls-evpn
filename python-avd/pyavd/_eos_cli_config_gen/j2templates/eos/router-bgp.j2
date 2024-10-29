@@ -975,6 +975,7 @@ router bgp {{ router_bgp.as }}
       route import overlay-index gateway
 {%         endif %}
 {%         for segment in router_bgp.address_family_evpn.evpn_ethernet_segment | arista.avd.natural_sort('domain') %}
+      !
       evpn ethernet-segment domain {{ segment.domain }}
 {%             if segment.identifier is arista.avd.defined %}
          identifier {{ segment.identifier }}
