@@ -234,6 +234,7 @@ router bgp 65001
          bgp additional-paths send limit 3
    !
    vrf VRF03
+      maximum-paths 10 ecmp 10
       redistribute dynamic rcf VRF_RCF_DYNAMIC()
       !
       address-family ipv4
