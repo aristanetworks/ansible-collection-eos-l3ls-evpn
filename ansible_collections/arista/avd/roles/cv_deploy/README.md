@@ -193,7 +193,8 @@ By default the role will
 2. Push all configurations and tags.
 3. Unassign tags
 4. Build and submit the Workspace.
-5. Leave any created Change Control in `pending approval` state.
+5. Fetch and expose errors and warnings raised during the Workspace Build phase.
+6. Leave any created Change Control in `pending approval` state.
 
 !!! warning
     When deploying CloudVision Tag assignments, the builtin behavior is to unassign any other tags
@@ -211,6 +212,13 @@ cv_submit_workspace: true
 # Force Workspace submission even if some devices are not streaming.
 # If set, configurations will not be validated for non-streaming devices.
 cv_submit_workspace_force: false
+
+# Fetch and expose Workspace build warnings.
+# Suppress specific warnings based on pre-defined options or custom string(s).
+cv_workspace_build_warnings:
+  enabled: true
+  suppress_patterns: []
+  suppress_portfast: false
 
 # Approve, start and wait for the Change Control to Complete. Otherwise the Change Control will be left in "pending approval" mode.
 # Only applicable if cv_submit_workspace is true.

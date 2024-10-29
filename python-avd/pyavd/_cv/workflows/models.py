@@ -74,20 +74,129 @@ class CVPathfinderMetadata:
 
 
 @dataclass
-class CVWSBuildConfigValidationError:
-    configlet_name: str | None = None
-    """Name of the Studio-generated configlet which raised validation error(s)."""
+class CVWorkspaceBuildConfigValidationError:
+    error_code: (
+        Literal[
+            "UNSPECIFIED",
+            "DEVICE_WARNING",
+            "DEVICE_ERROR",
+            "UNREACHABLE_DEVICE",
+            "CONFIG_FILTER_ERROR",
+            "INTERNAL",
+        ]
+        | None
+    ) = None
+    """Error code of the returned error or warning."""
     error_msg: str | None = None
     """EOS-returned error message."""
     line_num: int | None = None
-    """Line number of the violating configuration line within the proposed configlet."""
+    """Line number of the violating configuration line within the configlet."""
+    configlet_name: str | None = None
+    """Name of the Studio-generated configlet which raised validation error."""
 
 
 @dataclass
-class CVWSBuildError:
+class CVWorkspaceBuildConfigValidationResult:
+    errors: list[CVWorkspaceBuildConfigValidationError] = field(default_factory=list)
+    warnings: list[CVWorkspaceBuildConfigValidationError] = field(default_factory=list)
+
+
+@dataclass
+class CVWorkspaceBuildImageValidationError:
+    sku: str | None = None
+    """Name of the SKU."""
+    error_code: (
+        Literal[
+            "UNSPECIFIED",
+            "SUPPORT_NOT_INTRODUCED",
+            "SUPPORT_REMOVED",
+            "DEVICE_UNREACHABLE",
+            "VALIDATION_FAILED",
+            "GET_PROPOSED_IMAGE_INFO_FAILED",
+            "GET_RUNNING_IMAGE_INFO_FROM_ACTIVE_SUPERVISOR_FAILED",
+            "GET_RUNNING_IMAGE_INFO_FROM_PEER_SUPERVISOR_FAILED",
+            "EOS_TA_ARCHITECTURE_INCOMPATIBLE",
+            "TA_CV_INCOMPATIBLE",
+            "EOS_CV_INCOMPATIBLE",
+            "EOS_SUPPORT_NOT_INTRODUCED",
+            "EOS_SUPPORT_REMOVED",
+            "PHYSICAL_DEVICE_EOS_INCOMPATIBLE",
+            "TA_EMBEDDEDEXT_INCOMPATIBLE",
+            "DEVICE_EOS_2GB_INCOMPATIBLE",
+            "EOS_EXTENSION_VERSION_INCOMPATIBLE",
+            "ARCH_UNSUPPORTED",  # NEW CODE ADDED IN CVP BUT NOT TRACKED BY pyavd/_cv/api/arista/imagestatus/v1/__init__.py
+        ]
+        | None
+    ) = None
+    """Error code of the returned error."""
+    error_msg: str | None = None
+    """EOS-returned error message."""
+
+
+@dataclass
+class CVWorkspaceBuildImageValidationWarning:
+    sku: str | None = None
+    """Name of the sku."""
+    warning_code: (
+        Literal[
+            "UNSPECIFIED",
+            "NOT_APPLICABLE",
+            "SKUINFO_UNAVAILABLE",
+            "DEVICE_SKU_UNAVAILABLE",
+            "SWI_UNKNOWN",
+            "TA_EOS_INCOMPATIBLE",
+            "TA_CV_INCOMPATIBLE",
+            "EOS_CV_INCOMPATIBLE",
+            "EOS_ARCH_UNKNOWN",
+            "TA_EMBEDDEDEXT_INCOMPATIBLE",
+            "ARCH_INCOMPATIBLE",
+            "EOS_END_OF_LIFE_DATE_PASSED",
+            "SUPPORT_NOT_INTRODUCED",
+            "SUPPORT_REMOVED",
+            "RUNNING_TA_BELOW_MIN_SUPPORTED_VERSION",
+            "TA_STUDIO_INCOMPATIBLE",
+            "BUGALERTS_DATA_MISSING",
+        ]
+        | None
+    ) = None
+    """Warning code of the returned warning."""
+    warning_msg: str | None = None
+    """EOS-returned warning message."""
+
+
+@dataclass
+class CVWorkspaceBuildImageValidationResult:
+    errors: list[CVWorkspaceBuildImageValidationError] = field(default_factory=list)
+    warnings: list[CVWorkspaceBuildImageValidationWarning] = field(default_factory=list)
+    image_input_error: str | None = None
+
+
+@dataclass
+class CVWorkspaceBuildStageState:
+    stage: (
+        Literal[
+            "BUILD_STAGE_UNSPECIFIED" "BUILD_STAGE_INPUT_VALIDATION",
+            "BUILD_STAGE_CONFIGLET_BUILD",
+            "BUILD_STAGE_CONFIG_VALIDATION",
+            "BUILD_STAGE_IMAGE_VALIDATION",
+        ]
+        | None
+    ) = None
+    """Stage of the build."""
+    state: Literal["UNSPECIFIED", "IN_PROGRESS", "CANCELED", "SUCCESS", "FAIL", "SKIPPED"] | None = None
+    """Execution status of the build."""
+
+
+@dataclass
+class CVWorkspaceBuildResult:
     serial_number: str | None = None
     """Serial Number of the device"""
-    config_validation: list[CVWSBuildConfigValidationError] = field(default_factory=list)
+    stages_states: List[CVWorkspaceBuildStageState] = field(default_factory=list)
+    """Stages of the Workspace build process and their final states."""
+    config_validation: CVWorkspaceBuildConfigValidationResult | None = None
+    """Configuration validation results."""
+    image_validation: CVWorkspaceBuildImageValidationResult | None = None
+    """Image validation results."""
 
 
 @dataclass
@@ -109,14 +218,20 @@ class CVWorkspace:
     """
     force: bool = False
     """ Force submit the workspace even if some devices are not actively streaming to CloudVision."""
+    build_warnings: bool = True
+    """Fetch and expose Workspace build warnings."""
+    build_warnings_suppress_patterns: list[str] = field(default_factory=list)
+    """List of the EoS CLI warning string patterns to suppress."""
+    build_warnings_suppress_portfast: bool = False
+    """Suppress Workspace build warnings related to the usage of the `portfast` feature on switchports."""
     state: Literal["pending", "built", "submitted", "build failed", "submit failed", "abandoned", "deleted"] | None = None
     """The final state of the Workspace. Do not set this manually."""
     change_control_id: str | None = None
     """Do not set this manually."""
     build_id: str | None = None
-    """last_build_id of the WS. Used to fetch build errors related to the last WS build attempt."""
-    build_errors: list[CVWSBuildError] = field(default_factory=list)
-    """Details of WS build errors"""
+    """last_build_id of the Workspace. Used to fetch build details related to the last Workspace build attempt."""
+    build_results: list[CVWorkspaceBuildResult] = field(default_factory=list)
+    """Details of Workspace build results."""
 
 
 @dataclass

@@ -12,7 +12,18 @@ from pyavd._cv.client.exceptions import CVWorkspaceBuildFailed, CVWorkspaceSubmi
 if TYPE_CHECKING:
     from pyavd._cv.client import CVClient
 
-    from .models import CVWorkspace, CVWSBuildError
+    from .models import CVWorkspace
+
+from .constants import EOS_CLI_PORTFAST_WARNING
+from .models import (
+    CVWorkspaceBuildConfigValidationError,
+    CVWorkspaceBuildConfigValidationResult,
+    CVWorkspaceBuildImageValidationError,
+    CVWorkspaceBuildImageValidationResult,
+    CVWorkspaceBuildImageValidationWarning,
+    CVWorkspaceBuildResult,
+    CVWorkspaceBuildStageState,
+)
 
 LOGGER = getLogger(__name__)
 
@@ -41,11 +52,9 @@ async def finalize_workspace_on_cv(workspace: CVWorkspace, cv_client: CVClient) 
     workspace_config = await cv_client.build_workspace(workspace_id=workspace.id)
     build_result, cv_workspace = await cv_client.wait_for_workspace_response(workspace_id=workspace.id, request_id=workspace_config.request_params.request_id)
     workspace.build_id = cv_workspace.last_build_id
+    workspace.build_results = await process_workspace_build_details(workspace=workspace, cv_client=cv_client)
     if build_result.status != ResponseStatus.SUCCESS:
         workspace.state = "build failed"
-        ws_build_errors = await process_workspace_build_errors(workspace_id=workspace.id, build_id=workspace.build_id, cv_client=cv_client)
-        if ws_build_errors:
-            workspace.build_errors = ws_build_errors
         LOGGER.info("finalize_workspace_on_cv: %s", workspace)
         msg = (
             f"Failed to build workspace {workspace.id}: {build_result}. "
@@ -93,48 +102,130 @@ async def finalize_workspace_on_cv(workspace: CVWorkspace, cv_client: CVClient) 
     return
 
 
-async def process_workspace_build_errors(
-    workspace_id: str,
-    build_id: str,
+async def process_workspace_build_details(
+    workspace: CVWorkspace,
     cv_client: CVClient,
-) -> list[CVWSBuildError]:
+) -> list[CVWorkspaceBuildResult]:
     """
     Get and parse Workspace Build Details Response.
 
-    Extract the following errors:
+    Extracts (with ability to suppress warnings based on the pre-defined use-cases or custom pattern strings):
     - Config validation errors.
-    - TODO: Image validation errors.
+    - Config validation warnings.
+    - Image validation errors.
+    - Image validation warnings.
 
     Parameters:
-        workspace_id: Unique identifier the workspace.
-        build_id: Unique identifier of the last WS build attempt.
+        workspace: Active Workspace.
         cv_client: CVClient.
 
     Returns:
-        List of CVWSBuildError objects describing observed WS build validation errors.
+        List of 'CVWorkspaceBuildResult's describing observed Workspace build validation errors and warnings per targeted device.
     """
     try:
-        ws_build_details = await cv_client.get_workspace_build_details(workspace_id=workspace_id, build_id=build_id)
+        workspace_build_details_stream_response = await cv_client.get_workspace_build_details(workspace_id=workspace.id, build_id=workspace.build_id)
 
-        ws_build_errors = [
-            {
-                "serial_number": response.value.key.device_id,
-                "config_validation": [
-                    {
-                        "error_msg": error.error_msg,
-                        "line_num": error.line_num,
-                        "configlet_name": error.configlet_name,
-                    }
-                    for error in response.value.config_validation_result.errors.values
+        if workspace.build_warnings:
+            workspace_build_warning_suppress_list = workspace.build_warnings_suppress_patterns[:]
+            if workspace.build_warnings_suppress_portfast and EOS_CLI_PORTFAST_WARNING not in workspace_build_warning_suppress_list:
+                workspace_build_warning_suppress_list.append(EOS_CLI_PORTFAST_WARNING)
+
+        workspace_build_results = [
+            CVWorkspaceBuildResult(
+                serial_number=getattr(getattr(getattr(response, "value", None), "key", None), "device_id", None),
+                stages_states=[
+                    CVWorkspaceBuildStageState(
+                        stage=stage,
+                        state=getattr(state, "name", None),
+                    )
+                    for stage, state in getattr(getattr(getattr(response, "value", None), "build_stage_state", None), "values", {}).items()
                 ],
-            }
-            async for response in ws_build_details
-            if response.value.config_validation_result.errors
+                config_validation=CVWorkspaceBuildConfigValidationResult(
+                    errors=[
+                        CVWorkspaceBuildConfigValidationError(
+                            error_code=getattr(getattr(config_validation_error, "error_code", None), "name", None),
+                            error_msg=getattr(config_validation_error, "error_msg", None),
+                            line_num=getattr(config_validation_error, "line_num", None),
+                            configlet_name=getattr(config_validation_error, "configlet_name", None),
+                        )
+                        for config_validation_error in getattr(
+                            getattr(getattr(getattr(response, "value", None), "config_validation_result", None), "errors", None), "values", []
+                        )
+                    ],
+                    warnings=[
+                        CVWorkspaceBuildConfigValidationError(
+                            error_code=getattr(getattr(config_validation_warning, "error_code", None), "name", None),
+                            error_msg=error_msg,
+                            line_num=getattr(config_validation_warning, "line_num", None),
+                            configlet_name=getattr(config_validation_warning, "configlet_name", None),
+                        )
+                        for config_validation_warning in getattr(
+                            getattr(getattr(getattr(response, "value", None), "config_validation_result", None), "warnings", None), "values", []
+                        )
+                        if (error_msg := getattr(config_validation_warning, "error_msg", None)) not in workspace_build_warning_suppress_list
+                    ]
+                    if workspace.build_warnings
+                    else [],
+                ),
+                image_validation=CVWorkspaceBuildImageValidationResult(
+                    image_input_error=getattr(getattr(getattr(response, "value", None), "image_validation_result", None), "image_input_error", None),
+                    errors=[
+                        CVWorkspaceBuildImageValidationError(
+                            sku=getattr(image_validation_error, "sku", None),
+                            error_code=getattr(getattr(image_validation_error, "error_code", None), "name", None),
+                            error_msg=getattr(image_validation_error, "error_msg", None),
+                        )
+                        for image_validation_error in getattr(
+                            getattr(getattr(getattr(response, "value", None), "image_validation_result", None), "errors", None), "values", []
+                        )
+                    ],
+                    warnings=[
+                        CVWorkspaceBuildImageValidationWarning(
+                            sku=getattr(image_validation_warning, "sku", None),
+                            warning_code=warning_code,
+                            warning_msg=warning_msg,
+                        )
+                        for image_validation_warning in getattr(
+                            getattr(getattr(getattr(response, "value", None), "image_validation_result", None), "warnings", None), "values", []
+                        )
+                        if (warning_msg := getattr(image_validation_warning, "warning_msg", None)) not in workspace_build_warning_suppress_list
+                    ]
+                    if workspace.build_warnings
+                    else [],
+                ),
+            )
+            async for response in workspace_build_details_stream_response
+            if (
+                getattr(getattr(getattr(response, "value", None), "config_validation_result", None), "errors", None)
+                or getattr(getattr(getattr(response, "value", None), "image_validation_result", None), "errors", None)
+            )
+            or (
+                workspace.build_warnings
+                and (
+                    getattr(getattr(getattr(response, "value", None), "config_validation_result", None), "warnings", None)
+                    or getattr(getattr(getattr(response, "value", None), "image_validation_result", None), "warnings", None)
+                )
+                and (
+                    not {
+                        i.error_msg
+                        for i in getattr(getattr(getattr(getattr(response, "value", None), "config_validation_result", None), "warnings", None), "values", [])
+                    }.issubset(set(workspace_build_warning_suppress_list))
+                    or not {
+                        i.warning_msg
+                        for i in getattr(getattr(getattr(getattr(response, "value", None), "image_validation_result", None), "warnings", None), "values", [])
+                    }.issubset(set(workspace_build_warning_suppress_list))
+                )
+            )
         ]
 
-    except Exception:
-        LOGGER.info("finalize_workspace_on_cv: Failed to fetch WS build errors for workspace '%s'", workspace_id)
+    except Exception as e:
+        LOGGER.info(
+            "process_workspace_build_details: Failed to fetch and process Workspace build results for workspace '%s' and it's build_id '%s'. Error: '%s'",
+            workspace.id,
+            workspace.build_id,
+            e,
+        )
         return []
 
     else:
-        return ws_build_errors
+        return workspace_build_results
