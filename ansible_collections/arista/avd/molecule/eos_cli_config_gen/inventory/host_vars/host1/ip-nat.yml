@@ -8,9 +8,9 @@ ip_nat:
       prefix_length: 16
       ranges:
         - first_ip: 10.0.0.1
-          last_ip: 10.0.255.254
+          last_ip: 10.0.0.1
         - first_ip: 10.1.0.0
-          last_ip: 10.1.255.255
+          last_ip: 10.1.0.0
           first_port: 1024
           last_port: 65535
       utilization_log_threshold: 91
@@ -23,7 +23,7 @@ ip_nat:
           first_port: 1024
           last_port: 65535
         - first_ip: 10.2.0.2
-          last_ip: 10.2.0.3
+          last_ip: 10.2.0.2
     - name: prefix_24
       prefix_length: 24
       utilization_log_threshold: 100
@@ -34,8 +34,6 @@ ip_nat:
     - name: port_only_2
       type: port-only
       ranges:
-        - first_port: 10
-          last_port: 15
         - first_ip: 10.1.0.0 # first_ip and last_ip will be ignored for port-only.
           last_ip: 10.1.255.255
           first_port: 1024

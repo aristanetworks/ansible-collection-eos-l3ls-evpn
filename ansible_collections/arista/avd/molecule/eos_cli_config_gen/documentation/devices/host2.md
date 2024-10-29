@@ -71,7 +71,7 @@ ip access-list ACL_SEQUENCE_AND_COUNTERS
 
 | Setting | Value |
 | -------- | ----- |
-| State | Enabled |
+| State | Enabled !
 | Port Range Split | Enabled |
 
 ### IP NAT Device Configuration
