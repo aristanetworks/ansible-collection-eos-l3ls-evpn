@@ -838,9 +838,9 @@ ASN Notation: asplain
 
 ##### EVPN Neighbors
 
-| Neighbor | Activate | Encapsulation |
-| -------- | -------- | ------------- |
-| 192.168.42.8 | True | path-selection |
+| Neighbor | Activate | Route-map In | Route-map Out | Encapsulation |
+| -------- | -------- | ------------ | ------------- | ------------- |
+| 192.168.42.8 | True | - | - | path-selection |
 
 ##### EVPN DCI Gateway Summary
 
