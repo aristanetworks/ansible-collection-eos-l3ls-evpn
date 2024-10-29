@@ -142,6 +142,15 @@ ethernet_interfaces:
   mtu: 9214
   switchport:
     enabled: false
+  ptp:
+    announce:
+      interval: 0
+      timeout: 3
+    delay_req: -3
+    sync_message:
+      interval: -3
+    transport: ipv4
+    enable: true
   ip_address: 10.254.2.0/31
 - name: Ethernet2
   peer: ptp-tests-leaf1
@@ -152,6 +161,15 @@ ethernet_interfaces:
   mtu: 9214
   switchport:
     enabled: false
+  ptp:
+    announce:
+      interval: 0
+      timeout: 3
+    delay_req: -3
+    sync_message:
+      interval: -3
+    transport: ipv4
+    enable: true
   ip_address: 10.254.2.2/31
 - name: Ethernet3
   peer: ptp-tests-leaf2
@@ -162,6 +180,15 @@ ethernet_interfaces:
   mtu: 9214
   switchport:
     enabled: false
+  ptp:
+    announce:
+      interval: 0
+      timeout: 3
+    delay_req: -3
+    sync_message:
+      interval: -3
+    transport: ipv4
+    enable: true
   ip_address: 10.254.2.4/31
 - name: Ethernet4
   peer: ptp-tests-leaf2
@@ -172,6 +199,15 @@ ethernet_interfaces:
   mtu: 9214
   switchport:
     enabled: false
+  ptp:
+    announce:
+      interval: 0
+      timeout: 3
+    delay_req: -3
+    sync_message:
+      interval: -3
+    transport: ipv4
+    enable: true
   ip_address: 10.254.2.6/31
 - name: Ethernet10
   peer: ptp-tests-restrict-uplinks-leaf1
@@ -182,6 +218,15 @@ ethernet_interfaces:
   mtu: 9214
   switchport:
     enabled: false
+  ptp:
+    announce:
+      interval: 0
+      timeout: 3
+    delay_req: -3
+    sync_message:
+      interval: -3
+    transport: ipv4
+    enable: true
   ip_address: 10.254.2.12/31
 - name: Ethernet6
   peer: ptp-tests-spine2

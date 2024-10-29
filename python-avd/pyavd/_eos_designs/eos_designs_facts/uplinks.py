@@ -188,7 +188,9 @@ class UplinksMixin:
 
         if self.shared_utils.uplink_ptp is not None:
             uplink["ptp"] = self.shared_utils.uplink_ptp
-        elif self.shared_utils.ptp_enabled:
+        elif self.shared_utils.ptp_enabled and (
+            (self.shared_utils.ptp_uplinks and uplink["interface"] in self.shared_utils.ptp_uplinks) or (self.shared_utils.ptp_uplinks == [])
+        ):
             uplink["ptp"] = {"enable": True}
 
         if self.shared_utils.uplink_macsec is not None:
@@ -264,7 +266,10 @@ class UplinksMixin:
 
         if self.shared_utils.uplink_ptp is not None:
             uplink["ptp"] = self.shared_utils.uplink_ptp
-        elif self.shared_utils.ptp_enabled:
+
+        elif self.shared_utils.ptp_enabled and (
+            (self.shared_utils.ptp_uplinks and uplink["interface"] in self.shared_utils.ptp_uplinks) or (self.shared_utils.ptp_uplinks == [])
+        ):
             uplink["ptp"] = {"enable": True}
 
         # Remove vlans if upstream switch does not have them #}

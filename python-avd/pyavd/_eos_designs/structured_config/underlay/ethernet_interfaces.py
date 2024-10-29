@@ -67,7 +67,7 @@ class EthernetInterfacesMixin(UtilsMixin):
                 )
 
                 # PTP
-                if get(link, "ptp.enable") is True and link["interface"] in self.shared_utils.ptp_uplinks:
+                if get(link, "ptp.enable") is True:
                     ptp_config = {}
 
                     # Apply PTP profile config if using the new ptp config style

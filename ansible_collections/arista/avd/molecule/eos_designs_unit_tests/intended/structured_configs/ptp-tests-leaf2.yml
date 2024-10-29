@@ -156,6 +156,15 @@ ethernet_interfaces:
   mtu: 9214
   switchport:
     enabled: false
+  ptp:
+    announce:
+      interval: 0
+      timeout: 3
+    delay_req: -3
+    sync_message:
+      interval: -3
+    transport: ipv4
+    enable: true
   ip_address: 10.254.2.5/31
 - name: Ethernet2
   peer: ptp-tests-spine1
@@ -166,6 +175,15 @@ ethernet_interfaces:
   mtu: 9214
   switchport:
     enabled: false
+  ptp:
+    announce:
+      interval: 0
+      timeout: 3
+    delay_req: -3
+    sync_message:
+      interval: -3
+    transport: ipv4
+    enable: true
   ip_address: 10.254.2.7/31
 - name: Ethernet11
   peer: ptp-tests-l2leaf1-ptp-disabled
