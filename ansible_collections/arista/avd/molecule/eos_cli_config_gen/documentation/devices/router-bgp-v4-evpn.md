@@ -151,11 +151,11 @@ ASN Notation: asplain
 
 ##### EVPN Peer Groups
 
-| Peer Group | Activate | Encapsulation |
-| ---------- | -------- | ------------- |
-| EVPN-OVERLAY-PEERS | True | default |
-| IPv4-UNDERLAY-PEERS | False | default |
-| MLAG-IPv4-UNDERLAY-PEER | False | default |
+| Peer Group | Activate | Route-map In | Route-map Out | Encapsulation |
+| ---------- | -------- | ------------ | ------------- | ------------- |
+| EVPN-OVERLAY-PEERS | True |  - | - | default |
+| IPv4-UNDERLAY-PEERS | False |  - | - | default |
+| MLAG-IPv4-UNDERLAY-PEER | False |  - | - | default |
 
 #### Router BGP VLAN Aware Bundles
 

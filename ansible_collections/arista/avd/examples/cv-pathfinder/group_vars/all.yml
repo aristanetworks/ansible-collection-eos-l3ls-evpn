@@ -1,0 +1,37 @@
+---
+# Ansible variables
+ansible_connection: ansible.netcommon.httpapi
+ansible_network_os: arista.eos.eos
+ansible_user: arista
+ansible_password: arista
+ansible_become: true
+ansible_become_method: enable
+ansible_httpapi_use_ssl: true
+# Should be set to true in production networks
+ansible_httpapi_validate_certs: false
+
+# fabric_name needs to be the same for all devices
+fabric_name: WAN
+
+# Disabling for virtual devices
+bgp_update_wait_install: false
+
+# define default node types based on hostnames
+default_node_types:
+  - node_type: wan_rr
+    match_hostnames:
+      - pf.*
+  - node_type: wan_router
+    match_hostnames:
+      - site.*-wan.*
+  - node_type: l2leaf
+    match_hostnames:
+      - site3-leaf.*
+  - node_type: l3leaf
+    match_hostnames:
+      - site.*-border.*
+      - site.*-leaf.*
+  # Transport routers
+  - node_type: spine
+    match_hostnames:
+      - .*-cloud
