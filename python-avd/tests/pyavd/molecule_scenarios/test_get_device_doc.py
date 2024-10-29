@@ -34,6 +34,10 @@ def test_get_device_doc(molecule_host: MoleculeHost) -> None:
     if not get(structured_config, "eos_cli_config_gen_documentation.enable", default=True):
         return
 
+    # TODO: Deprecated, remove in 6.0.0
+    if not get(structured_config, "generate_device_documentation", default=True):
+        return
+
     # run validation on structured_config to ensure it is covered
     validate_structured_config(structured_config)
 
