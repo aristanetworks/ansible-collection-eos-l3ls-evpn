@@ -100,10 +100,10 @@ ASN Notation: asplain
 
 ##### EVPN Neighbors
 
-| Neighbor | Activate | Encapsulation |
-| -------- | -------- | ------------- |
-| 192.168.255.3 | True | default |
-| 192.168.255.4 | False | mpls |
+| Neighbor | Activate | Route-map In | Route-map Out | Encapsulation |
+| -------- | -------- | ------------ | ------------- | ------------- |
+| 192.168.255.3 | True | - | - | default |
+| 192.168.255.4 | False | - | - | mpls |
 
 ##### EVPN Neighbor Default Encapsulation
 

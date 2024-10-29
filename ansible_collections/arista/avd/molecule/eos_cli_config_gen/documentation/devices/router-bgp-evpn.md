@@ -122,13 +122,13 @@ ASN Notation: asplain
 
 ##### EVPN Neighbors
 
-| Neighbor | Activate | Encapsulation |
-| -------- | -------- | ------------- |
-| 10.100.100.1 | True | default |
-| 10.100.100.2 | True | default |
-| 10.100.100.3 | True | default |
-| 10.100.100.4 | True | path-selection |
-| 10.100.100.5 | True | mpls |
+| Neighbor | Activate | Route-map In | Route-map Out | Encapsulation |
+| -------- | -------- | ------------ | ------------- | ------------- |
+| 10.100.100.1 | True | - | - | default |
+| 10.100.100.2 | True | - | - | default |
+| 10.100.100.3 | True | - | - | default |
+| 10.100.100.4 | True | RM1 | RM2 | path-selection |
+| 10.100.100.5 | True | - | - | mpls |
 
 ##### EVPN Neighbor Default Encapsulation
 
