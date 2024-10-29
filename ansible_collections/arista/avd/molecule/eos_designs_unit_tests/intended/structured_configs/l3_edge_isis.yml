@@ -54,13 +54,6 @@ ethernet_interfaces:
   description: P2P_peer1_ethernet1
   speed: forced 10000full
   ptp:
-    announce:
-      interval: 0
-      timeout: 3
-    delay_req: -3
-    sync_message:
-      interval: -3
-    transport: ipv4
     enable: true
     role: master
 - name: ethernet2

@@ -204,12 +204,7 @@ interface Ethernet6
    ip address 11.1.2.0/31
    mac security profile MACSEC_PROFILE
    ptp enable
-   ptp announce interval 0
-   ptp announce timeout 3
-   ptp delay-req interval -3
    ptp role master
-   ptp sync-message interval -3
-   ptp transport ipv4
 ```
 
 ### Loopback Interfaces

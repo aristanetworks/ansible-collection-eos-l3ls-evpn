@@ -14,6 +14,7 @@ core_interfaces:
       interfaces: [ Ethernet6, Ethernet6 ]
       ptp:
         enabled: true
+        profile: myptpprofile
       include_in_underlay_protocol: false
     - nodes: [ ptp-tests-spine1, ptp-tests-spine2 ]
       interfaces: [ Ethernet7, Ethernet7 ]

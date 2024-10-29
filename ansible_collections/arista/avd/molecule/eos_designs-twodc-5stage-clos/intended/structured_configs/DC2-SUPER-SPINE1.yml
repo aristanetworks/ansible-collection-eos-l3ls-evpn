@@ -223,13 +223,6 @@ ethernet_interfaces:
     profile: MACSEC_PROFILE
   description: P2P_DC1-SUPER-SPINE1_Ethernet6
   ptp:
-    announce:
-      interval: 0
-      timeout: 3
-    delay_req: -3
-    sync_message:
-      interval: -3
-    transport: ipv4
     enable: true
     role: master
 loopback_interfaces:
