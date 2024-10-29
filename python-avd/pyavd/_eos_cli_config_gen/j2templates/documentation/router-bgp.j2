@@ -572,20 +572,20 @@ ASN Notation: {{ router_bgp.as_notation | arista.avd.default('asplain') }}
 
 ##### EVPN Peer Groups
 
-| Peer Group | Activate | Encapsulation |
-| ---------- | -------- | ------------- |
+| Peer Group | Activate | Route-map In | Route-map Out | Encapsulation |
+| ---------- | -------- | ------------ | ------------- | ------------- |
 {%             for peer_group in router_bgp.address_family_evpn.peer_groups | arista.avd.natural_sort('name') %}
-| {{ peer_group.name }} | {{ peer_group.activate | arista.avd.default(false) }} | {{ peer_group.encapsulation | arista.avd.default("default") }} |
+| {{ peer_group.name }} | {{ peer_group.activate | arista.avd.default(false) }} |  {{ peer_group.route_map_in | arista.avd.default("-") }} | {{ peer_group.route_map_out | arista.avd.default("-") }} | {{ peer_group.encapsulation | arista.avd.default("default") }} |
 {%             endfor %}
 {%         endif %}
 {%         if router_bgp.address_family_evpn.neighbors is arista.avd.defined %}
 
 ##### EVPN Neighbors
 
-| Neighbor | Activate | Encapsulation |
-| -------- | -------- | ------------- |
+| Neighbor | Activate | Route-map In | Route-map Out | Encapsulation |
+| -------- | -------- | ------------ | ------------- | ------------- |
 {%             for neighbor in router_bgp.address_family_evpn.neighbors | arista.avd.natural_sort('ip_address') %}
-| {{ neighbor.ip_address }} | {{ neighbor.activate | arista.avd.default(false) }} | {{ neighbor.encapsulation | arista.avd.default("default") }} |
+| {{ neighbor.ip_address }} | {{ neighbor.activate | arista.avd.default(false) }} | {{ neighbor.route_map_in | arista.avd.default("-") }} | {{ neighbor.route_map_out | arista.avd.default("-") }} | {{ neighbor.encapsulation | arista.avd.default("default") }} |
 {%             endfor %}
 {%         endif %}
 {%         if router_bgp.address_family_evpn.neighbor_default.encapsulation is arista.avd.defined %}
