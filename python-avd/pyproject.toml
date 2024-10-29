@@ -31,6 +31,19 @@ dependencies = [
 homepage = "https://avd.arista.com"
 repository = "https://github.com/aristanetworks/avd"
 
+[dependency-groups]
+pytest = [
+    "ansible-core<2.18",
+    "pytest",
+    "pytest-asyncio",
+    "PyYAML>=6.0.0",
+    "pydantic>=2.3.0",
+    "referencing>=0.35.0",
+]
+coverage = [
+    "coverage[toml]",
+]
+
 [project.optional-dependencies]
 ansible = [
     "ansible-core>=2.15.0,<2.18.0",
