@@ -275,6 +275,7 @@ interface Ethernet50
 | Port-Channel131.10 | Test_encapsulation_vlan9 | - | dot1q | - | - | 14 | 11 | client inner | - | - | - | - |
 
 ##### Interface Profile for Port-channel interfaces
+
 | Interface | Description   | Interface Profile |
 | --------- | ------------- |-------------------|
 | Port-Channel132 | Test_port-channel_interface-profile | test-interface-profile |
