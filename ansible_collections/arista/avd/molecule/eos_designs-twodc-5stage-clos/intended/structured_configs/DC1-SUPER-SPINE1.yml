@@ -173,9 +173,6 @@ ethernet_interfaces:
   mac_security:
     profile: MACSEC_PROFILE
   description: P2P_DC2-SUPER-SPINE1_Ethernet4
-  ptp:
-    enable: true
-    role: master
 loopback_interfaces:
 - name: Loopback0
   description: ROUTER_ID

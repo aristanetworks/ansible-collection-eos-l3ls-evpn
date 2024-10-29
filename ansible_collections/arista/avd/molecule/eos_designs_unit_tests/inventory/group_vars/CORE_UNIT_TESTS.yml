@@ -77,6 +77,8 @@ core_interfaces:
       speed: "forced 1000full"
       mtu: 1500
       ip_pool: underlay_pool
+      ptp:
+        enabled: true
 
   p2p_links:
 

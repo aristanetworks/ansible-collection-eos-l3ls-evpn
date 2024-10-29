@@ -218,8 +218,6 @@ interface Ethernet5
    no shutdown
    no switchport
    ip address 200.200.200.201/24
-   ptp enable
-   ptp role master
 ```
 
 ### Loopback Interfaces

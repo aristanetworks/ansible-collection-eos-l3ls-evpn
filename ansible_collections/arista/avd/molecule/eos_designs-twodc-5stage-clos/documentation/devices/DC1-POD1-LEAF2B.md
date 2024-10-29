@@ -358,8 +358,6 @@ interface Ethernet7
    no shutdown
    no switchport
    ip address 11.1.0.38/31
-   ptp enable
-   ptp role master
 !
 interface Ethernet11
    description P2P_DC1-POD1-SPINE1_Ethernet8

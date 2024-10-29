@@ -203,8 +203,6 @@ interface Ethernet6
    no switchport
    ip address 11.1.2.0/31
    mac security profile MACSEC_PROFILE
-   ptp enable
-   ptp role master
 ```
 
 ### Loopback Interfaces
