@@ -420,7 +420,7 @@
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;limit</samp>](## "router_bgp.address_family_evpn.bgp_additional_paths.send.limit") | Integer |  |  | Min: 2<br>Max: 64 | Amount of paths to send. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;evpn_ethernet_segment</samp>](## "router_bgp.address_family_evpn.evpn_ethernet_segment") | List, items: Dictionary |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;domain</samp>](## "router_bgp.address_family_evpn.evpn_ethernet_segment.[].domain") | String | Required, Unique |  | Valid Values:<br>- <code>all</code><br>- <code>local</code><br>- <code>remote</code> |  |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;identifier</samp>](## "router_bgp.address_family_evpn.evpn_ethernet_segment.[].identifier") | String |  |  |  | 10 octet ethernet segment identifier. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;identifier</samp>](## "router_bgp.address_family_evpn.evpn_ethernet_segment.[].identifier") | String |  |  |  | EVPN Ethernet Segment Identifier (Type 1 format). |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;route_target_import</samp>](## "router_bgp.address_family_evpn.evpn_ethernet_segment.[].route_target_import") | String |  |  |  | Low-order 6 bytes of ES-Import Route Target. |
     | [<samp>&nbsp;&nbsp;address_family_rtc</samp>](## "router_bgp.address_family_rtc") | Dictionary |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;peer_groups</samp>](## "router_bgp.address_family_rtc.peer_groups") | List, items: Dictionary |  |  |  |  |
@@ -2424,7 +2424,7 @@
         evpn_ethernet_segment:
           - domain: <str; "all" | "local" | "remote"; required; unique>
 
-            # 10 octet ethernet segment identifier.
+            # EVPN Ethernet Segment Identifier (Type 1 format).
             identifier: <str>
 
             # Low-order 6 bytes of ES-Import Route Target.

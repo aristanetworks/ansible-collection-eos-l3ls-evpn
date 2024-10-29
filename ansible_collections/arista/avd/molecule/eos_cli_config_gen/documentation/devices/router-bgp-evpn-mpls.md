@@ -149,9 +149,11 @@ router bgp 65101
       domain identifier 1:1
       domain identifier 2:2 remote
       layer-2 fec in-place update timeout 100 seconds
+      !
       evpn ethernet-segment domain local
          identifier 0011:1111:1111:1111:1111
          route-target import 11:11:11:11:11:11
+      !
       evpn ethernet-segment domain remote
          identifier 0022:2222:2222:2222:2222
          route-target import 22:22:22:22:22:22

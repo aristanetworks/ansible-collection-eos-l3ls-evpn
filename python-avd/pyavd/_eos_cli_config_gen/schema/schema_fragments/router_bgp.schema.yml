@@ -1509,7 +1509,7 @@ keys:
                     - remote
                 identifier:
                   type: str
-                  description: 10 octet ethernet segment identifier.
+                  description: EVPN Ethernet Segment Identifier (Type 1 format).
                 route_target_import:
                   type: str
                   description: Low-order 6 bytes of ES-Import Route Target.
