@@ -572,10 +572,10 @@ ASN Notation: {{ router_bgp.as_notation | arista.avd.default('asplain') }}
 
 ##### EVPN Peer Groups
 
-| Peer Group | Activate | Encapsulation |
-| ---------- | -------- | ------------- |
+| Peer Group | Activate | Route-map In | Route-map Out | Encapsulation |
+| ---------- | -------- | ------------ | ------------- | ------------- |
 {%             for peer_group in router_bgp.address_family_evpn.peer_groups | arista.avd.natural_sort('name') %}
-| {{ peer_group.name }} | {{ peer_group.activate | arista.avd.default(false) }} | {{ peer_group.encapsulation | arista.avd.default("default") }} |
+| {{ peer_group.name }} | {{ peer_group.activate | arista.avd.default(false) }} |  {{ peer_group.route_map_in | arista.avd.default("-") }} | {{ peer_group.route_map_out | arista.avd.default("-") }} | {{ peer_group.encapsulation | arista.avd.default("default") }} |
 {%             endfor %}
 {%         endif %}
 {%         if router_bgp.address_family_evpn.neighbors is arista.avd.defined %}

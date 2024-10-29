@@ -107,18 +107,18 @@ ASN Notation: asplain
 
 ##### EVPN Peer Groups
 
-| Peer Group | Activate | Encapsulation |
-| ---------- | -------- | ------------- |
-| ADDITIONAL-PATH-PG-1 | True | default |
-| ADDITIONAL-PATH-PG-2 | True | default |
-| ADDITIONAL-PATH-PG-3 | True | default |
-| ADDITIONAL-PATH-PG-4 | True | default |
-| ADDITIONAL-PATH-PG-5 | True | default |
-| ADDITIONAL-PATH-PG-6 | True | default |
-| EVPN-OVERLAY-PEERS | True | vxlan |
-| MLAG-IPv4-UNDERLAY-PEER | False | default |
-| TEST-ENCAPSULATION | True | mpls |
-| TEST-ENCAPSULATION-2 | True | path-selection |
+| Peer Group | Activate | Route-map In | Route-map Out | Encapsulation |
+| ---------- | -------- | ------------ | ------------- | ------------- |
+| ADDITIONAL-PATH-PG-1 | True |  - | - | default |
+| ADDITIONAL-PATH-PG-2 | True |  - | - | default |
+| ADDITIONAL-PATH-PG-3 | True |  - | - | default |
+| ADDITIONAL-PATH-PG-4 | True |  - | - | default |
+| ADDITIONAL-PATH-PG-5 | True |  - | - | default |
+| ADDITIONAL-PATH-PG-6 | True |  - | - | default |
+| EVPN-OVERLAY-PEERS | True |  - | - | vxlan |
+| MLAG-IPv4-UNDERLAY-PEER | False |  - | - | default |
+| TEST-ENCAPSULATION | True |  - | - | mpls |
+| TEST-ENCAPSULATION-2 | True |  - | - | path-selection |
 
 ##### EVPN Neighbors
 
