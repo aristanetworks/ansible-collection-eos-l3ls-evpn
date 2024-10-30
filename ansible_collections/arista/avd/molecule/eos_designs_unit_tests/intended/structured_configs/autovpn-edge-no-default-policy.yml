@@ -1,4 +1,4 @@
-hostname: legacy-autovpn-edge-no-default-policy
+hostname: autovpn-edge-no-default-policy
 is_deployed: true
 router_bgp:
   as: '65000'
@@ -50,8 +50,8 @@ router_bgp:
   neighbors:
   - ip_address: 2.2.2.2
     peer_group: WAN-OVERLAY-PEERS
-    peer: legacy-autovpn-rr3
-    description: legacy-autovpn-rr3_Dps1
+    peer: autovpn-rr3
+    description: autovpn-rr3_Dps1
   vrfs:
   - name: default
     rd: 192.168.30.1:1
@@ -220,12 +220,12 @@ router_path_selection:
     - name: Ethernet1
       stun:
         server_profiles:
-        - INET-legacy-autovpn-rr3-Ethernet1
+        - INET-autovpn-rr3-Ethernet1
     dynamic_peers:
       enabled: true
     static_peers:
     - router_ip: 2.2.2.2
-      name: legacy-autovpn-rr3
+      name: autovpn-rr3
       ipv4_addresses:
       - 10.7.7.7
     ipsec_profile: AUTOVPN
@@ -257,7 +257,7 @@ router_path_selection:
 stun:
   client:
     server_profiles:
-    - name: INET-legacy-autovpn-rr3-Ethernet1
+    - name: INET-autovpn-rr3-Ethernet1
       ip_address: 10.7.7.7
       ssl_profile: STUN-DTLS
 application_traffic_recognition:
@@ -283,7 +283,7 @@ dps_interfaces:
     hardware: FLOW-TRACKER
 vxlan_interface:
   vxlan1:
-    description: legacy-autovpn-edge-no-default-policy_VTEP
+    description: autovpn-edge-no-default-policy_VTEP
     vxlan:
       udp_port: 4789
       source_interface: Dps1

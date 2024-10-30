@@ -125,6 +125,7 @@ class EthernetInterfacesMixin(UtilsMixin):
         default_channel_group_id = int("".join(re.findall(r"\d", adapter["switch_ports"][0])))
         channel_group_id = get(adapter, "port_channel.channel_id", default=default_channel_group_id)
         short_esi = self._get_short_esi(adapter, channel_group_id)
+        port_channel_mode = get(adapter, "port_channel.mode")
 
         # check lengths of lists
         nodes_length = len(adapter["switches"])
@@ -158,6 +159,7 @@ class EthernetInterfacesMixin(UtilsMixin):
                     peer_interface=peer_interface,
                     peer_type=connected_endpoint["type"],
                     description=interface_description,
+                    port_channel_id=channel_group_id if port_channel_mode is not None else None,
                 ),
             )
             or None,
@@ -171,11 +173,12 @@ class EthernetInterfacesMixin(UtilsMixin):
         }
 
         # Port-channel member
-        if (port_channel_mode := get(adapter, "port_channel.mode")) is not None:
+        if port_channel_mode is not None:
             ethernet_interface["channel_group"] = {
                 "id": channel_group_id,
                 "mode": port_channel_mode,
             }
+
             if get(adapter, "port_channel.lacp_fallback.mode") == "static":
                 ethernet_interface["lacp_port_priority"] = 8192 if node_index == 0 else 32768
 

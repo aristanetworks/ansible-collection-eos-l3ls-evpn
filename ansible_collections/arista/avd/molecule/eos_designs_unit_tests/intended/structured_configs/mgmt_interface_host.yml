@@ -100,6 +100,9 @@ vlans:
 - id: 141
   name: Tenant_A_DB_Zone_2
   tenant: Tenant_A
+- id: 122
+  name: Tenant_A_ERP_Zone_1
+  tenant: Tenant_A
 - id: 110
   name: Tenant_A_OP_Zone_1
   tenant: Tenant_A
@@ -184,9 +187,14 @@ vlans:
 - id: 413
   name: Tenant_D_v6_OP_Zone_3
   tenant: Tenant_D
+- id: 453
+  name: Tenant_D_WAN_Zone_1
+  tenant: Tenant_D
 ip_igmp_snooping:
   globally_enabled: true
   vlans:
+  - id: 122
+    enabled: false
   - id: 120
     enabled: false
 metadata:
