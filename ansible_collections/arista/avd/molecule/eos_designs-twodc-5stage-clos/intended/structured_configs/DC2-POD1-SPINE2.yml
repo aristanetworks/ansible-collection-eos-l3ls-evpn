@@ -155,6 +155,8 @@ ethernet_interfaces:
   shutdown: false
   ip_address: 200.200.200.201/24
   description: P2P_DC1-POD2-SPINE2_Ethernet4
+  ptp:
+    enable: true
 loopback_interfaces:
 - name: Loopback0
   description: ROUTER_ID

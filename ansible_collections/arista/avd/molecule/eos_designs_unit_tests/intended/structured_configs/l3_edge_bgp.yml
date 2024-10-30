@@ -109,7 +109,6 @@ ethernet_interfaces:
   speed: forced 10000full
   ptp:
     enable: true
-    role: master
   service_policy:
     qos:
       input: TEST_POLICY

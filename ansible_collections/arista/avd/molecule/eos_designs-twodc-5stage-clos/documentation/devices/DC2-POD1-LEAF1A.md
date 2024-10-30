@@ -262,6 +262,7 @@ interface Ethernet7
    no shutdown
    no switchport
    ip address 11.1.0.39/31
+   ptp enable
 ```
 
 ### Port-Channel Interfaces

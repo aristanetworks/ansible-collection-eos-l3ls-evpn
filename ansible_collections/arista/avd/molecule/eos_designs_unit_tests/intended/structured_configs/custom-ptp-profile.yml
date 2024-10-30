@@ -149,8 +149,8 @@ ethernet_interfaces:
     sync_message:
       interval: -7
     transport: ipv4
-    enable: true
     role: master
+    enable: true
 vlans:
 - id: 11
   name: VLAN11

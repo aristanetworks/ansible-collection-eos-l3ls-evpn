@@ -274,8 +274,8 @@ ethernet_interfaces:
     sync_message:
       interval: -3
     transport: ipv4
-    enable: true
     role: master
+    enable: true
 - name: Ethernet12
   peer: core-2-ospf-ldp
   peer_interface: Ethernet12

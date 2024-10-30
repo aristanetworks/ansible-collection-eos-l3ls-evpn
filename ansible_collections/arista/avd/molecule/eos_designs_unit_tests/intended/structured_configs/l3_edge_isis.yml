@@ -55,7 +55,6 @@ ethernet_interfaces:
   speed: forced 10000full
   ptp:
     enable: true
-    role: master
 - name: ethernet2
   peer: peer2
   peer_interface: ethernet2

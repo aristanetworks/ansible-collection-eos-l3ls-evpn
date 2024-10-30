@@ -214,6 +214,7 @@ interface Ethernet4
    no shutdown
    no switchport
    ip address 200.200.200.101/24
+   ptp enable
 ```
 
 ### Loopback Interfaces

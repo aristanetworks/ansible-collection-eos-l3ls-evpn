@@ -216,8 +216,8 @@ ethernet_interfaces:
     sync_message:
       interval: 2
     transport: ipv4
-    enable: true
     role: master
+    enable: true
 - name: Ethernet7
   peer: ptp-tests-spine2
   peer_interface: Ethernet7
@@ -235,8 +235,8 @@ ethernet_interfaces:
     sync_message:
       interval: -3
     transport: ipv4
-    enable: true
     role: master
+    enable: true
 - name: Ethernet8
   peer: ptp-tests-spine2
   peer_interface: Ethernet8
@@ -254,8 +254,8 @@ ethernet_interfaces:
     sync_message:
       interval: -3
     transport: ipv4
-    enable: true
     role: master
+    enable: true
 - name: Ethernet9
   peer: ptp-tests-spine2
   peer_interface: Ethernet9
@@ -273,8 +273,8 @@ ethernet_interfaces:
     sync_message:
       interval: -3
     transport: ipv4
-    enable: true
     role: master
+    enable: true
 loopback_interfaces:
 - name: Loopback0
   description: ROUTER_ID
