@@ -34,11 +34,9 @@ keys:
             type: bool
             description: Enables the MPLS tunneling of TTL exceeded ICMP replies.
       rsvp:
-        description: RSVP configuration.
         type: dict
         keys:
           refresh:
-            description: Configure neighbor state refresh.
             type: dict
             keys:
               interval:
@@ -49,13 +47,16 @@ keys:
                 min: 1
                 max: 65535
               method:
-                description: Neighbor refresh mechanism.
+                description: |-
+                  Neighbor refresh mechanism.
+                  bundled: Refresh states using message identifier lists.
+                  explicit: Send each message individually.
                 type: str
                 valid_values:
-                  - 'bundled'
-                  - 'explicit'
+                  - bundled
+                  - explicit
           authentication:
-            description: Configure cryptographic authentication.
+            description: Cryptographic authentication.
             type: dict
             keys:
               password_indexes:
@@ -72,9 +73,8 @@ keys:
                       min: 1
                       max: 4294967295
                     password_type:
-                      description: Configure authentication password type.
+                      description: Authentication password type.
                       type: str
-                      required: true
                       convert_types:
                         - int
                       valid_values:
@@ -91,9 +91,7 @@ keys:
                 convert_types:
                   - str
               sequence_number_window:
-                description: |-
-                  Index in the sequence.
-                  Size of reorder window.
+                description: Size of reorder window for index in the sequence.
                 type: int
                 convert_types:
                   - str
@@ -103,20 +101,20 @@ keys:
                 description: Authentication mechanism.
                 type: str
                 valid_values:
-                  - 'md5'
-                  - 'none'
+                  - md5
+                  - none
           neighbors:
             description: Neighbor-specific configuration.
             type: list
-            primary_key: ip
+            primary_key: ip_address
             items:
               type: dict
               keys:
-                ip:
+                ip_address:
                   description: Neighbor's interface IPv4 or IPv6 address.
                   type: str
                 authentication:
-                  description: Configure cryptographic authentication.
+                  description: Cryptographic authentication.
                   type: dict
                   required: true
                   keys:
@@ -129,36 +127,32 @@ keys:
                       description: Authentication mechanism.
                       type: str
                       valid_values:
-                        - 'md5'
-                        - 'none'
+                        - md5
+                        - none
           ip_access_group:
-            description: |-
-              IP config commands.
-              Access list name.
+            description: IP Access list name.
             type: str
           ipv6_access_group:
             description: |-
-              IPv6 config commands.
-              Access list name.
+              IPv6 access list name.
             type: str
           fast_reroute:
-            description: Configure fast reroute.
             type: dict
             keys:
               mode:
                 description: |-
                   Fast reroute mode.
-                  Protect against failure of the next link.
-                  Protect against failure of the next node.
-                  Disable fast reroute.
+                  link-protection: Protect against failure of the next link.
+                  node-protection: Protect against failure of the next node.
+                  none: Disable fast reroute.
                 type: str
                 valid_values:
-                  - 'link-protection'
-                  - 'node-protection'
-                  - 'none'
+                  - link-protection
+                  - node-protection
+                  - none
               reversion:
                 description: |-
-                  Select reversion behavior.
+                  Reversion behavior.
                   Global revertive repair.
                   Local revertive repair.
                 type: str
@@ -182,7 +176,7 @@ keys:
                 type: bool
                 required: true
               strict:
-                description: Apply strict SRLG constraint
+                description: Apply strict SRLG constraint.
                 type: bool
           label_local_termination:
             description: Local termination label to be advertised.
@@ -191,7 +185,6 @@ keys:
               - 'implicit-null'
               - 'explicit-null'
           preemption_method:
-            description: Configure preemption.
             type: dict
             keys:
               preemption:

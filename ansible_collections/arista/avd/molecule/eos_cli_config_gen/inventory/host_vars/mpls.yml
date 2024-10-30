@@ -18,6 +18,8 @@ mpls:
         - index: 55
           password_type: '7'
           password: 14241B062114062E142900260B1D23133B
+        - index: 999
+          password: simplePassword
     fast_reroute:
       reversion: local
       bypass_tunnel_optimization_interval: 65535
@@ -42,21 +44,21 @@ mpls:
       timer: 444
     shutdown: true
     neighbors:
-      - ip: 1.1.1.1
+      - ip_address: 1.1.1.1
         authentication:
           index: 3
           type: md5
-      - ip: 10.1.1.2
+      - ip_address: 10.1.1.2
         authentication:
           index: 303
-      - ip: 1.1.12.2
+      - ip_address: 1.1.12.2
         authentication:
           index: 30
           type: none
-      - ip: 1.21.1.20
+      - ip_address: 1.21.1.20
         authentication:
           type: md5
-      - ip: 1.10.1.2
+      - ip_address: 1.10.1.2
         authentication:
           type: none
 

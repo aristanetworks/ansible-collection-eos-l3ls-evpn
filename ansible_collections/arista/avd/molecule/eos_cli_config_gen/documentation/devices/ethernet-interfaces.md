@@ -1197,11 +1197,6 @@ interface Ethernet72
 | Ethernet9 | True | True | - |
 | Ethernet10 | False | False | - |
 
-#### MPLS Device Configuration
-
-```eos
-```
-
 ## Multicast
 
 ### PIM Sparse Mode

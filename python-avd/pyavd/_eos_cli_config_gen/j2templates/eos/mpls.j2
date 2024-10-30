@@ -58,18 +58,22 @@ mpls rsvp
    authentication sequence-number window {{ auth.sequence_number_window }}
 {%         endif %}
 {%         for password_index in auth.password_indexes | arista.avd.natural_sort('index') %}
+{%             if password_index.password_type is arista.avd.defined %}
    authentication index {{ password_index.index }} password {{ password_index.password_type }} {{ password_index.password | arista.avd.hide_passwords(hide_passwords) }}
+{%             else %}
+   authentication index {{ password_index.index }} password {{ password_index.password | arista.avd.hide_passwords(hide_passwords) }}
+{%             endif %}
 {%         endfor %}
 {%         if auth.active_index is arista.avd.defined %}
    authentication index {{ auth.active_index }} active
 {%         endif %}
 {%     endif %}
-{%     for neighbor in mpls.rsvp.neighbors | arista.avd.natural_sort('ip') %}
+{%     for neighbor in mpls.rsvp.neighbors | arista.avd.natural_sort('ip_address') %}
 {%         if neighbor.authentication.type is arista.avd.defined %}
-   neighbor {{ neighbor.ip }} authentication type {{ neighbor.authentication.type }}
+   neighbor {{ neighbor.ip_address }} authentication type {{ neighbor.authentication.type }}
 {%         endif %}
 {%         if neighbor.authentication.index is arista.avd.defined %}
-   neighbor {{ neighbor.ip }} authentication index {{ neighbor.authentication.index }} active
+   neighbor {{ neighbor.ip_address }} authentication index {{ neighbor.authentication.index }} active
 {%         endif %}
 {%     endfor %}
 {%     if mpls.rsvp.ip_access_group is arista.avd.defined %}

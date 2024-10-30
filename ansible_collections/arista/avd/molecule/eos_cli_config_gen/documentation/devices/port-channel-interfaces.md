@@ -887,11 +887,6 @@ interface Port-Channel132
 | Port-Channel113 | True | True | True |
 | Port-Channel114 | False | False | - |
 
-#### MPLS Device Configuration
-
-```eos
-```
-
 ## Multicast
 
 ### PIM Sparse Mode

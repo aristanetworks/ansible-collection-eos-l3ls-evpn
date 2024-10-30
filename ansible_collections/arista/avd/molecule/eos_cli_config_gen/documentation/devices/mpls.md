@@ -176,6 +176,7 @@ mpls rsvp
    refresh interval 3
    authentication index 55 password 7 <removed>
    authentication index 766 password 7 <removed>
+   authentication index 999 password <removed>
    neighbor 1.1.1.1 authentication type md5
    neighbor 1.1.1.1 authentication index 3 active
    neighbor 1.1.12.2 authentication type none

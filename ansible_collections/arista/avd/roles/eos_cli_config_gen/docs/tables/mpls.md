@@ -17,34 +17,34 @@
     | [<samp>&nbsp;&nbsp;icmp</samp>](## "mpls.icmp") | Dictionary |  |  |  | Enables the LSRs to generate ICMP reply messages and deliver them to the originating host. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;fragmentation_needed_tunneling</samp>](## "mpls.icmp.fragmentation_needed_tunneling") | Boolean |  |  |  | Enables the MPLS tunneling of MTU exceeded ICMP replies (fragmentation needed, packet too big). |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;ttl_exceeded_tunneling</samp>](## "mpls.icmp.ttl_exceeded_tunneling") | Boolean |  |  |  | Enables the MPLS tunneling of TTL exceeded ICMP replies. |
-    | [<samp>&nbsp;&nbsp;rsvp</samp>](## "mpls.rsvp") | Dictionary |  |  |  | RSVP configuration. |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;refresh</samp>](## "mpls.rsvp.refresh") | Dictionary |  |  |  | Configure neighbor state refresh. |
+    | [<samp>&nbsp;&nbsp;rsvp</samp>](## "mpls.rsvp") | Dictionary |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;refresh</samp>](## "mpls.rsvp.refresh") | Dictionary |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;interval</samp>](## "mpls.rsvp.refresh.interval") | Integer |  |  | Min: 1<br>Max: 65535 | Time between refreshes. |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;method</samp>](## "mpls.rsvp.refresh.method") | String |  |  | Valid Values:<br>- <code>bundled</code><br>- <code>explicit</code> | Neighbor refresh mechanism. |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;authentication</samp>](## "mpls.rsvp.authentication") | Dictionary |  |  |  | Configure cryptographic authentication. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;method</samp>](## "mpls.rsvp.refresh.method") | String |  |  | Valid Values:<br>- <code>bundled</code><br>- <code>explicit</code> | Neighbor refresh mechanism.<br>bundled: Refresh states using message identifier lists.<br>explicit: Send each message individually. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;authentication</samp>](## "mpls.rsvp.authentication") | Dictionary |  |  |  | Cryptographic authentication. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;password_indexes</samp>](## "mpls.rsvp.authentication.password_indexes") | List, items: Dictionary |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;index</samp>](## "mpls.rsvp.authentication.password_indexes.[].index") | Integer | Required, Unique |  | Min: 1<br>Max: 4294967295 | Password index. |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;password_type</samp>](## "mpls.rsvp.authentication.password_indexes.[].password_type") | String | Required |  | Valid Values:<br>- <code>0</code><br>- <code>7</code><br>- <code>8a</code> | Configure authentication password type. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;password_type</samp>](## "mpls.rsvp.authentication.password_indexes.[].password_type") | String |  |  | Valid Values:<br>- <code>0</code><br>- <code>7</code><br>- <code>8a</code> | Authentication password type. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;password</samp>](## "mpls.rsvp.authentication.password_indexes.[].password") | String | Required |  |  | Password string. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;active_index</samp>](## "mpls.rsvp.authentication.active_index") | Integer |  |  |  | Use index as active password. |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sequence_number_window</samp>](## "mpls.rsvp.authentication.sequence_number_window") | Integer |  |  | Min: 1<br>Max: 255 | Index in the sequence.<br>Size of reorder window. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sequence_number_window</samp>](## "mpls.rsvp.authentication.sequence_number_window") | Integer |  |  | Min: 1<br>Max: 255 | Size of reorder window for index in the sequence. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;type</samp>](## "mpls.rsvp.authentication.type") | String |  |  | Valid Values:<br>- <code>md5</code><br>- <code>none</code> | Authentication mechanism. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;neighbors</samp>](## "mpls.rsvp.neighbors") | List, items: Dictionary |  |  |  | Neighbor-specific configuration. |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;ip</samp>](## "mpls.rsvp.neighbors.[].ip") | String | Required, Unique |  |  | Neighbor's interface IPv4 or IPv6 address. |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;authentication</samp>](## "mpls.rsvp.neighbors.[].authentication") | Dictionary | Required |  |  | Configure cryptographic authentication. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;ip_address</samp>](## "mpls.rsvp.neighbors.[].ip_address") | String | Required, Unique |  |  | Neighbor's interface IPv4 or IPv6 address. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;authentication</samp>](## "mpls.rsvp.neighbors.[].authentication") | Dictionary | Required |  |  | Cryptographic authentication. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;index</samp>](## "mpls.rsvp.neighbors.[].authentication.index") | Integer |  |  | Min: 1<br>Max: 4294967295 | Password index. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;type</samp>](## "mpls.rsvp.neighbors.[].authentication.type") | String |  |  | Valid Values:<br>- <code>md5</code><br>- <code>none</code> | Authentication mechanism. |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;ip_access_group</samp>](## "mpls.rsvp.ip_access_group") | String |  |  |  | IP config commands.<br>Access list name. |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;ipv6_access_group</samp>](## "mpls.rsvp.ipv6_access_group") | String |  |  |  | IPv6 config commands.<br>Access list name. |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;fast_reroute</samp>](## "mpls.rsvp.fast_reroute") | Dictionary |  |  |  | Configure fast reroute. |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;mode</samp>](## "mpls.rsvp.fast_reroute.mode") | String |  |  | Valid Values:<br>- <code>link-protection</code><br>- <code>node-protection</code><br>- <code>none</code> | Fast reroute mode.<br>Protect against failure of the next link.<br>Protect against failure of the next node.<br>Disable fast reroute. |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;reversion</samp>](## "mpls.rsvp.fast_reroute.reversion") | String |  |  | Valid Values:<br>- <code>global</code><br>- <code>local</code> | Select reversion behavior.<br>Global revertive repair.<br>Local revertive repair. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;ip_access_group</samp>](## "mpls.rsvp.ip_access_group") | String |  |  |  | IP Access list name. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;ipv6_access_group</samp>](## "mpls.rsvp.ipv6_access_group") | String |  |  |  | IPv6 access list name. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;fast_reroute</samp>](## "mpls.rsvp.fast_reroute") | Dictionary |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;mode</samp>](## "mpls.rsvp.fast_reroute.mode") | String |  |  | Valid Values:<br>- <code>link-protection</code><br>- <code>node-protection</code><br>- <code>none</code> | Fast reroute mode.<br>link-protection: Protect against failure of the next link.<br>node-protection: Protect against failure of the next node.<br>none: Disable fast reroute. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;reversion</samp>](## "mpls.rsvp.fast_reroute.reversion") | String |  |  | Valid Values:<br>- <code>global</code><br>- <code>local</code> | Reversion behavior.<br>Global revertive repair.<br>Local revertive repair. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;bypass_tunnel_optimization_interval</samp>](## "mpls.rsvp.fast_reroute.bypass_tunnel_optimization_interval") | Integer |  |  | Min: 1<br>Max: 65535 | Fast-reroute bypass configuration.<br>Interval between each re-optimization attempt. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;srlg</samp>](## "mpls.rsvp.srlg") | Dictionary |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "mpls.rsvp.srlg.enabled") | Boolean | Required |  |  | Select SRLG behavior. |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;strict</samp>](## "mpls.rsvp.srlg.strict") | Boolean |  |  |  | Apply strict SRLG constraint |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;strict</samp>](## "mpls.rsvp.srlg.strict") | Boolean |  |  |  | Apply strict SRLG constraint. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;label_local_termination</samp>](## "mpls.rsvp.label_local_termination") | String |  |  | Valid Values:<br>- <code>implicit-null</code><br>- <code>explicit-null</code> | Local termination label to be advertised. |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;preemption_method</samp>](## "mpls.rsvp.preemption_method") | Dictionary |  |  |  | Configure preemption. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;preemption_method</samp>](## "mpls.rsvp.preemption_method") | Dictionary |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;preemption</samp>](## "mpls.rsvp.preemption_method.preemption") | String | Required |  | Valid Values:<br>- <code>hard</code><br>- <code>soft</code> |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;timer</samp>](## "mpls.rsvp.preemption_method.timer") | Integer |  |  | Min: 1<br>Max: 65535 | Timer value in units of seconds. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;mtu_signaling</samp>](## "mpls.rsvp.mtu_signaling") | Boolean |  |  |  | Enable MTU signaling. |
@@ -87,28 +87,26 @@
 
         # Enables the MPLS tunneling of TTL exceeded ICMP replies.
         ttl_exceeded_tunneling: <bool>
-
-      # RSVP configuration.
       rsvp:
-
-        # Configure neighbor state refresh.
         refresh:
 
           # Time between refreshes.
           interval: <int; 1-65535>
 
           # Neighbor refresh mechanism.
+          # bundled: Refresh states using message identifier lists.
+          # explicit: Send each message individually.
           method: <str; "bundled" | "explicit">
 
-        # Configure cryptographic authentication.
+        # Cryptographic authentication.
         authentication:
           password_indexes:
 
               # Password index.
             - index: <int; 1-4294967295; required; unique>
 
-              # Configure authentication password type.
-              password_type: <str; "0" | "7" | "8a"; required>
+              # Authentication password type.
+              password_type: <str; "0" | "7" | "8a">
 
               # Password string.
               password: <str; required>
@@ -116,8 +114,7 @@
           # Use index as active password.
           active_index: <int>
 
-          # Index in the sequence.
-          # Size of reorder window.
+          # Size of reorder window for index in the sequence.
           sequence_number_window: <int; 1-255>
 
           # Authentication mechanism.
@@ -127,9 +124,9 @@
         neighbors:
 
             # Neighbor's interface IPv4 or IPv6 address.
-          - ip: <str; required; unique>
+          - ip_address: <str; required; unique>
 
-            # Configure cryptographic authentication.
+            # Cryptographic authentication.
             authentication: # required
 
               # Password index.
@@ -138,24 +135,20 @@
               # Authentication mechanism.
               type: <str; "md5" | "none">
 
-        # IP config commands.
-        # Access list name.
+        # IP Access list name.
         ip_access_group: <str>
 
-        # IPv6 config commands.
-        # Access list name.
+        # IPv6 access list name.
         ipv6_access_group: <str>
-
-        # Configure fast reroute.
         fast_reroute:
 
           # Fast reroute mode.
-          # Protect against failure of the next link.
-          # Protect against failure of the next node.
-          # Disable fast reroute.
+          # link-protection: Protect against failure of the next link.
+          # node-protection: Protect against failure of the next node.
+          # none: Disable fast reroute.
           mode: <str; "link-protection" | "node-protection" | "none">
 
-          # Select reversion behavior.
+          # Reversion behavior.
           # Global revertive repair.
           # Local revertive repair.
           reversion: <str; "global" | "local">
@@ -168,13 +161,11 @@
           # Select SRLG behavior.
           enabled: <bool; required>
 
-          # Apply strict SRLG constraint
+          # Apply strict SRLG constraint.
           strict: <bool>
 
         # Local termination label to be advertised.
         label_local_termination: <str; "implicit-null" | "explicit-null">
-
-        # Configure preemption.
         preemption_method:
           preemption: <str; "hard" | "soft"; required>
 

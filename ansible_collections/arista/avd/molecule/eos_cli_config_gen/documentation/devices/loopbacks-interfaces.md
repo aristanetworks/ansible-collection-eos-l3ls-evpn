@@ -113,8 +113,3 @@ interface Loopback100
 | Interface | MPLS IP Enabled | LDP Enabled | IGP Sync |
 | --------- | --------------- | ----------- | -------- |
 | Loopback99 | - | True | - |
-
-#### MPLS Device Configuration
-
-```eos
-```

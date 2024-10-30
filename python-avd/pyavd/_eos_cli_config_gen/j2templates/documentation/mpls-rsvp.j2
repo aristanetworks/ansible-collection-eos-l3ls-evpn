@@ -70,8 +70,8 @@
 
 | Neighbor IP | Index | Type |
 | ----------- | ----- | ---- |
-{%         for neighbor in mpls.rsvp.neighbors | arista.avd.natural_sort('ip') %}
-| {{ neighbor.ip }} | {{ neighbor.authentication.index | arista.avd.default('-') }} | {{ neighbor.authentication.type | arista.avd.default('-') }} |
+{%         for neighbor in mpls.rsvp.neighbors | arista.avd.natural_sort('ip_address') %}
+| {{ neighbor.ip_address }} | {{ neighbor.authentication.index | arista.avd.default('-') }} | {{ neighbor.authentication.type | arista.avd.default('-') }} |
 {%         endfor %}
 {%     endif %}
 {%     if mpls.rsvp.graceful_restart is arista.avd.defined %}
