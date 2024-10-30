@@ -1,3 +1,4 @@
+---
 # test aliases
 aliases: |
   alias wr copy running-config startup-config
