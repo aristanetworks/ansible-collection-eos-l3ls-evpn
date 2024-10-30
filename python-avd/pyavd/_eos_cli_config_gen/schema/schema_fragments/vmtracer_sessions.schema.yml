@@ -24,5 +24,7 @@ keys:
           description: Type 7 Password Hash.
         autovlan_disable:
           type: bool
+        vrf:
+          type: str
         source_interface:
           type: str

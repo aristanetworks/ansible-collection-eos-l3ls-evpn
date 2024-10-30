@@ -17,6 +17,7 @@ keys:
         - `endpoint_type`: The `type` from `connected_endpoints_keys` like `server`, `router` etc.
         - `endpoint`: The name of the connected endpoint
         - `endpoint_port`: The value from `endpoint_ports` for this switch port if set.
+        - `port_channel_id`: The port-channel number for the switch.
 
       By default the description is templated from the type, name and port of the endpoint if set.
     default: "{endpoint_type!u}_{endpoint}{endpoint_port?<_}"

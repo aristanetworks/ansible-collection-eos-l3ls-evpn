@@ -1,0 +1,4 @@
+---
+## AAA Authorization
+aaa_authorization:
+  config_commands: false
