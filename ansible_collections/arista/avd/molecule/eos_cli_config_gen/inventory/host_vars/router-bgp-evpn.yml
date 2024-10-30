@@ -122,6 +122,7 @@ router_bgp:
         inter_domain: true
       encapsulation: path-selection
     domain_identifier: "65101:0"
+    domain_identifier_remote: "65101:1"
     neighbors:
       - ip_address: 10.100.100.1
         activate: true
@@ -191,6 +192,13 @@ router_bgp:
       - name: TEST-ENCAPSULATION-2
         activate: true
         encapsulation: path-selection
+    evpn_ethernet_segment:
+      - domain: remote
+        identifier: "0022:2222:2222:2222:2222"
+        route_target_import: "22:22:22:22:22:22"
+      - domain: local
+        identifier: "0011:1111:1111:1111:1111"
+        route_target_import: "11:11:11:11:11:11"
     evpn_hostflap_detection:
       enabled: true
       window: 10

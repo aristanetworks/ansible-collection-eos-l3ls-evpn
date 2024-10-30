@@ -46,8 +46,6 @@ router_bgp:
       - rib_type: "tunnel-rib"
         rib_name: "test-rib"
       - rib_type: "system-connected"
-    domain_identifier: "1:1"
-    domain_identifier_remote: "2:2"
     neighbor_default:
       encapsulation: mpls
       next_hop_self_source_interface: Loopback0
@@ -65,10 +63,3 @@ router_bgp:
     layer_2_fec_in_place_update:
       enabled: true
       timeout: 100
-    evpn_ethernet_segment:
-      - domain: remote
-        identifier: "0022:2222:2222:2222:2222"
-        route_target_import: "22:22:22:22:22:22"
-      - domain: local
-        identifier: "0011:1111:1111:1111:1111"
-        route_target_import: "11:11:11:11:11:11"
