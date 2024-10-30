@@ -107,28 +107,28 @@ ASN Notation: asplain
 
 ##### EVPN Peer Groups
 
-| Peer Group | Activate | Encapsulation |
-| ---------- | -------- | ------------- |
-| ADDITIONAL-PATH-PG-1 | True | default |
-| ADDITIONAL-PATH-PG-2 | True | default |
-| ADDITIONAL-PATH-PG-3 | True | default |
-| ADDITIONAL-PATH-PG-4 | True | default |
-| ADDITIONAL-PATH-PG-5 | True | default |
-| ADDITIONAL-PATH-PG-6 | True | default |
-| EVPN-OVERLAY-PEERS | True | vxlan |
-| MLAG-IPv4-UNDERLAY-PEER | False | default |
-| TEST-ENCAPSULATION | True | mpls |
-| TEST-ENCAPSULATION-2 | True | path-selection |
+| Peer Group | Activate | Route-map In | Route-map Out | Encapsulation |
+| ---------- | -------- | ------------ | ------------- | ------------- |
+| ADDITIONAL-PATH-PG-1 | True |  - | - | default |
+| ADDITIONAL-PATH-PG-2 | True |  - | - | default |
+| ADDITIONAL-PATH-PG-3 | True |  - | - | default |
+| ADDITIONAL-PATH-PG-4 | True |  - | - | default |
+| ADDITIONAL-PATH-PG-5 | True |  - | - | default |
+| ADDITIONAL-PATH-PG-6 | True |  - | - | default |
+| EVPN-OVERLAY-PEERS | True |  - | - | vxlan |
+| MLAG-IPv4-UNDERLAY-PEER | False |  - | - | default |
+| TEST-ENCAPSULATION | True |  - | - | mpls |
+| TEST-ENCAPSULATION-2 | True |  - | - | path-selection |
 
 ##### EVPN Neighbors
 
-| Neighbor | Activate | Encapsulation |
-| -------- | -------- | ------------- |
-| 10.100.100.1 | True | default |
-| 10.100.100.2 | True | default |
-| 10.100.100.3 | True | default |
-| 10.100.100.4 | True | path-selection |
-| 10.100.100.5 | True | mpls |
+| Neighbor | Activate | Route-map In | Route-map Out | Encapsulation |
+| -------- | -------- | ------------ | ------------- | ------------- |
+| 10.100.100.1 | True | - | - | default |
+| 10.100.100.2 | True | - | - | default |
+| 10.100.100.3 | True | - | - | default |
+| 10.100.100.4 | True | RM1 | RM2 | path-selection |
+| 10.100.100.5 | True | - | - | mpls |
 
 ##### EVPN Neighbor Default Encapsulation
 
@@ -319,6 +319,8 @@ router bgp 65101
       neighbor 10.100.100.3 activate
       neighbor 10.100.100.3 default-route rcf RCF_DEFAULT_ROUTE()
       neighbor 10.100.100.4 activate
+      neighbor 10.100.100.4 route-map RM1 in
+      neighbor 10.100.100.4 route-map RM2 out
       neighbor 10.100.100.4 encapsulation path-selection
       neighbor 10.100.100.5 activate
       neighbor 10.100.100.5 encapsulation mpls

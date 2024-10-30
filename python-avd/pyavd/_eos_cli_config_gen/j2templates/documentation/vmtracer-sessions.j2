@@ -10,15 +10,17 @@
 
 #### VM Tracer Summary
 
-| Session | URL | Username | Autovlan | Source Interface |
-| ------- | --- | -------- | -------- | ---------------- |
+| Session | URL | Username | Autovlan | VRF | Source Interface |
+| ------- | --- | -------- | -------- | --- | ---------------- |
 {%     for session in vmtracer_sessions | arista.avd.natural_sort('name') %}
 {%         set url = session.url | arista.avd.default('-') %}
+{%         set username = session.username | arista.avd.default('-') %}
 {%         if session.autovlan_disable is arista.avd.defined(true) %}
 {%             set autovlan = 'disabled' %}
 {%         endif %}
+{%         set vrf =  session.vrf | arista.avd.default('-') %}
 {%         set source_interface = session.source_interface | arista.avd.default('-') %}
-| {{ session.name }} | {{ url }} | {{ session.username | arista.avd.default('-') }} | {{ autovlan | arista.avd.default('enabled') }} | {{ source_interface }} |
+| {{ session.name }} | {{ url }} | {{ username }} | {{ autovlan | arista.avd.default('enabled') }} | {{ vrf }} | {{ source_interface }} |
 {%     endfor %}
 
 #### VM Tracer Device Configuration

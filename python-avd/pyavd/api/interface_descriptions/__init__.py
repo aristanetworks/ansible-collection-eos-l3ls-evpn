@@ -335,6 +335,7 @@ class AvdInterfaceDescriptions(AvdFacts):
                     "endpoint": data.peer,
                     "endpoint_port": data.peer_interface,
                     "endpoint_type": data.peer_type,
+                    "port_channel_id": data.port_channel_id,
                 }
             ),
         )

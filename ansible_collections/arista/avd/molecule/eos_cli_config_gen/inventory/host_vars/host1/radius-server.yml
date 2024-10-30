@@ -1,11 +1,21 @@
 ---
+## Radius Servers
 radius_server:
   attribute_32_include_in_access_req:
     hostname: true
   dynamic_authorization:
     port: 1700
     tls_ssl_profile: SSL_PROFILE
+  tls_ssl_profile: GLOBAL_RADIUS_SSL_PROFILE
   hosts:
+    - host: 10.10.10.157
+      vrf: mgt
+      key: 071B245F5A
+    - host: 10.10.10.249
+      key: 071B245F5A
+    - host: 10.10.10.158
+      vrf: default
+      key: 071B245F5A
     - host: 10.10.11.157
       vrf: mgt
       timeout: 1
@@ -47,4 +57,3 @@ radius_server:
         enabled: true
         ssl_profile: HOST_SSL_PROFILE
         port: 2083
-  tls_ssl_profile: GLOBAL_RADIUS_SSL_PROFILE

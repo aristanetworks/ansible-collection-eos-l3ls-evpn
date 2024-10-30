@@ -143,6 +143,8 @@ router_bgp:
       - ip_address: 10.100.100.4
         activate: true
         encapsulation: path-selection
+        route_map_in: RM1
+        route_map_out: RM2
       - ip_address: 10.100.100.5
         activate: true
         encapsulation: mpls
