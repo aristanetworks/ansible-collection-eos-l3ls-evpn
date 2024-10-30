@@ -145,6 +145,24 @@ router_bgp:
       description: DC1-SVC3A
     updates:
       wait_install: true
+  - name: Tenant_A_ERP_Zone
+    rd: '65103:17'
+    route_targets:
+      import:
+      - address_family: evpn
+        route_targets:
+        - '17:17'
+      export:
+      - address_family: evpn
+        route_targets:
+        - '17:17'
+    router_id: 192.168.255.13
+    neighbors:
+    - ip_address: 172.31.12.6
+      peer_group: MLAG-PEERS
+      description: DC1-SVC3A
+    updates:
+      wait_install: true
   - name: Tenant_A_OP_Zone
     rd: '65103:9'
     route_targets:
@@ -316,6 +334,14 @@ router_bgp:
     redistribute_routes:
     - learned
     vlan: 140-141
+  - name: Tenant_A_ERP_Zone
+    rd: '65103:17'
+    route_targets:
+      both:
+      - '17:17'
+    redistribute_routes:
+    - learned
+    vlan: '122'
   - name: Tenant_A_OP_Zone
     rd: '65103:9'
     route_targets:
@@ -456,6 +482,9 @@ vrfs:
 - name: Tenant_A_DB_Zone
   tenant: Tenant_A
   ip_routing: true
+- name: Tenant_A_ERP_Zone
+  tenant: Tenant_A
+  ip_routing: true
 - name: Tenant_A_OP_Zone
   tenant: Tenant_A
   ip_routing: true
@@ -534,6 +563,14 @@ vlans:
   tenant: Tenant_A
 - id: 3012
   name: MLAG_iBGP_Tenant_A_DB_Zone
+  trunk_groups:
+  - LEAF_PEER_L3
+  tenant: Tenant_A
+- id: 122
+  name: Tenant_A_ERP_Zone_1
+  tenant: Tenant_A
+- id: 3016
+  name: MLAG_iBGP_Tenant_A_ERP_Zone
   trunk_groups:
   - LEAF_PEER_L3
   tenant: Tenant_A
@@ -676,6 +713,29 @@ vlan_interfaces:
   vrf: Tenant_A_DB_Zone
   mtu: 1500
   ip_address: 10.255.251.7/31
+- name: Vlan122
+  tenant: Tenant_A
+  tags:
+  - erp3
+  description: Tenant_A_ERP_Zone_1
+  shutdown: false
+  ip_address_virtual: 10.1.30.1/24
+  ip_address_virtual_secondaries:
+  - 10.2.30.1/24
+  - 10.2.31.1/24
+  vrf: Tenant_A_ERP_Zone
+  ip_helpers:
+  - ip_helper: 1.1.1.1
+    source_interface: lo100
+    vrf: TEST
+- name: Vlan3016
+  tenant: Tenant_A
+  type: underlay_peering
+  shutdown: false
+  description: 'MLAG_PEER_L3_iBGP: vrf Tenant_A_ERP_Zone'
+  vrf: Tenant_A_ERP_Zone
+  mtu: 1500
+  ip_address: 172.31.12.7/31
 - name: Vlan110
   tenant: Tenant_A
   tags:
@@ -870,7 +930,7 @@ port_channel_interfaces:
     enabled: true
     mode: trunk
     trunk:
-      allowed_vlan: 110-112,120-121,130-131,140-141,150,160-161,210-211,250,310-311,350
+      allowed_vlan: 110-112,120-122,130-131,140-141,150,160-161,210-211,250,310-311,350
   shutdown: false
   mlag: 1007
 - name: Port-Channel14
@@ -1049,7 +1109,7 @@ port_channel_interfaces:
     access_vlan: '110'
   mlag: 42
 - name: Port-Channel1291
-  description: server22_port_channel_with_custom_id_server22_port_channel_with_custom_id
+  description: SERVER_server22_port_channel_with_custom_id_server22_port_channel_with_custom_id
   shutdown: false
   switchport:
     enabled: true
@@ -1441,7 +1501,7 @@ ethernet_interfaces:
   peer_interface: Eth2
   peer_type: server
   port_profile: TENANT_A
-  description: server22_port_channel_with_custom_id_Eth2
+  description: SERVER_server22_port_channel_with_custom_id_Po1291
   shutdown: false
   channel_group:
     id: 1291
@@ -1583,6 +1643,8 @@ ip_access_lists:
 ip_igmp_snooping:
   globally_enabled: true
   vlans:
+  - id: 122
+    enabled: false
   - id: 120
     enabled: false
 ip_virtual_router_mac_address: 00:dc:00:00:00:0a
@@ -1602,6 +1664,8 @@ vxlan_interface:
         vni: 10140
       - id: 141
         vni: 10141
+      - id: 122
+        vni: 10122
       - id: 110
         vni: 10110
       - id: 111
@@ -1635,6 +1699,8 @@ vxlan_interface:
         vni: 12
       - name: Tenant_A_DB_Zone
         vni: 13
+      - name: Tenant_A_ERP_Zone
+        vni: 17
       - name: Tenant_A_OP_Zone
         vni: 10
       - name: Tenant_A_WAN_Zone

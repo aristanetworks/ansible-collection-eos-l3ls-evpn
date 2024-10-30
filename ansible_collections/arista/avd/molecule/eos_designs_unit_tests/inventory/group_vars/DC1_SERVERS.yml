@@ -568,6 +568,8 @@ servers:
         switch_ports: [ Ethernet29, Ethernet29 ]
         switches: [ DC1-SVC3A, DC1-SVC3B ]
         profile: TENANT_A
+        # testing using port_channel_id for member interface description
+        description: "{endpoint_type!u}_{endpoint}{port_channel_id?<_Po}"
         port_channel:
           endpoint_port_channel: server22_port_channel_with_custom_id
           mode: active

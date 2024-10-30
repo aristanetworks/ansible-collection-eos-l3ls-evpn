@@ -121,3 +121,13 @@ tenant_d:
             ospf:
               area: 0.0.0.0
               enabled: true
+      - name: TENANT_D_WAN_ZONE
+        vrf_vni: 42
+        redistribute_connected: false
+        svis:
+          - id: 453
+            name: Tenant_D_WAN_Zone_1
+            tags: ['wan']
+            enabled: True
+            ipv6_address_virtuals:
+              - "10.0.10.1/24"
