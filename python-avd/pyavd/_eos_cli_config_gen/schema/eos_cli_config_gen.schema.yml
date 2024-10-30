@@ -2748,6 +2748,10 @@ keys:
               - 'on'
               - active
               - passive
+            recirculation:
+              type: bool
+              description: If set to true this will be set as a recirculation channel
+                - Ricirc-Channel<id>
         isis_enable:
           type: str
           description: ISIS instance.
@@ -11487,6 +11491,31 @@ keys:
       new_key: radius_server.hosts
       remove_in_version: v5.0.0
     type: list
+  recirculation_interfaces:
+    type: list
+    primary_key: name
+    items:
+      type: dict
+      keys:
+        name:
+          type: str
+          description: Recirculation interface name.
+        description:
+          type: str
+        shutdown:
+          type: bool
+        recirculation_features:
+          type: str
+          valid_values:
+          - vxlan
+          - telemetry inband
+          - openflow
+          - cpu-mirror
+          description: Set the feature that will use this port for recirculation.
+        eos_cli:
+          type: str
+          description: Multiline String with EOS CLI rendered directly on the Dps
+            interface in the final EOS configuration.
   redundancy:
     type: dict
     keys:

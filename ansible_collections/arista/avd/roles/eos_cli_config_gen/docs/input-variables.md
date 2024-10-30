@@ -279,6 +279,12 @@ roles/eos_cli_config_gen/docs/tables/traffic-policies.md
 
 ## Interfaces
 
+### Recirculation interfaces
+
+--8<--
+roles/eos_cli_config_gen/docs/tables/recirculation-interfaces.md
+--8<--
+
 ### DPS interfaces
 
 --8<--

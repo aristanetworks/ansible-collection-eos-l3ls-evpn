@@ -873,6 +873,7 @@ ethernet_interfaces:
     channel_group:
       id: 112
       mode: active
+      recirculation: false
     switchport:
       enabled: true
       mode: trunk

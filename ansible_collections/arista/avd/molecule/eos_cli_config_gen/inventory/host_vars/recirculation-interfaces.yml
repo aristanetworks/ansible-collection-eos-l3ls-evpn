@@ -1,0 +1,29 @@
+---
+### Recirculation Interfaces ###
+recirculation_interfaces:
+  - name: Recirc-Channel1
+    description: Test recirculation interface
+    recirculation_features: cpu-mirror
+    eos_cli: |
+      comment
+      Comment created from eos_cli under recirculation_interfaces.Recirc-Channel1
+      EOF
+
+  - name: Recirc-Channel2
+    description: Test recirculation interface with shutdown
+    shutdown: true
+    recirculation_features: vxlan
+
+# Ethernet interface used for recirculation
+ethernet_interfaces:
+  - name: Ethernet1
+    description: Recirculation channel 1
+    channel_group:
+      id: 1
+      recirculation: true
+
+  - name: Ethernet2
+    description: Recirculation channel 2
+    channel_group:
+      id: 2
+      recirculation: true

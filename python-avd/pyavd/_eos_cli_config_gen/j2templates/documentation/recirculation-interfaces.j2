@@ -1,0 +1,27 @@
+{#
+ Copyright (c) 2023-2024 Arista Networks, Inc.
+ Use of this source code is governed by the Apache License 2.0
+ that can be found in the LICENSE file.
+#}
+{# doc - recirculation interfaces #}
+{% if recirculation_interfaces is arista.avd.defined %}
+
+### Recirculation Interfaces
+
+#### Recirculation Interfaces Summary
+
+| Interface | Description | Shutdown | Recirculation Features |
+| --------- | ----------- | -------- | ---------------------- |
+{%     for recirculation_interface in recirculation_interfaces | arista.avd.natural_sort('name') %}
+{%         set description = recirculation_interface.description | arista.avd.default("-") %}
+{%         set shutdown = recirculation_interface.shutdown | arista.avd.default("-") %}
+{%         set recirculation_features = recirculation_interface.recirculation_features | arista.avd.default("-") %}
+| {{ recirculation_interface.name }} | {{ description }} | {{ shutdown }} | {{ recirculation_features }} |
+{%     endfor %}
+
+#### Recirculation Interfaces Device Configuration
+
+```eos
+{%     include 'eos/recirculation-interfaces.j2' %}
+```
+{% endif %}

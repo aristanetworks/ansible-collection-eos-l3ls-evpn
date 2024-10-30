@@ -196,6 +196,7 @@
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;channel_group</samp>](## "ethernet_interfaces.[].channel_group") | Dictionary |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;id</samp>](## "ethernet_interfaces.[].channel_group.id") | Integer |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;mode</samp>](## "ethernet_interfaces.[].channel_group.mode") | String |  |  | Valid Values:<br>- <code>on</code><br>- <code>active</code><br>- <code>passive</code> |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;recirculation</samp>](## "ethernet_interfaces.[].channel_group.recirculation") | Boolean |  |  |  | If set to true this will be set as a recirculation channel - Ricirc-Channel<id> |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;isis_enable</samp>](## "ethernet_interfaces.[].isis_enable") | String |  |  |  | ISIS instance. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;isis_bfd</samp>](## "ethernet_interfaces.[].isis_bfd") | Boolean |  |  |  | Enable BFD for ISIS. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;isis_passive</samp>](## "ethernet_interfaces.[].isis_passive") | Boolean |  |  |  |  |
@@ -897,6 +898,9 @@
         channel_group:
           id: <int>
           mode: <str; "on" | "active" | "passive">
+
+          # If set to true this will be set as a recirculation channel - Ricirc-Channel<id>
+          recirculation: <bool>
 
         # ISIS instance.
         isis_enable: <str>

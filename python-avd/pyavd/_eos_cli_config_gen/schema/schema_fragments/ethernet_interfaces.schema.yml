@@ -689,6 +689,9 @@ keys:
             mode:
               type: str
               valid_values: ["on", "active", "passive"]
+            recirculation:
+              type: bool
+              description: If set to true this will be set as a recirculation channel - Ricirc-Channel<id>
         isis_enable:
           type: str
           description: ISIS instance.

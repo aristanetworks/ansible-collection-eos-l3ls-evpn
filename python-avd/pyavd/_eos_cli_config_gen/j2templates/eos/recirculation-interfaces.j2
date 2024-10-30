@@ -1,0 +1,24 @@
+{#
+ Copyright (c) 2023-2024 Arista Networks, Inc.
+ Use of this source code is governed by the Apache License 2.0
+ that can be found in the LICENSE file.
+#}
+{# eos - recirculation interfaces #}
+{% for recirculation_interface in recirculation_interfaces | arista.avd.natural_sort('name') %}
+!
+interface {{ recirculation_interface.name }}
+{%     if recirculation_interface.description is arista.avd.defined %}
+   description {{ recirculation_interface.description }}
+{%     endif %}
+{%     if recirculation_interface.shutdown is arista.avd.defined(true) %}
+   shutdown
+{%     elif recirculation_interface.shutdown is arista.avd.defined(false) %}
+   no shutdown
+{%     endif %}
+{%     if recirculation_interface.recirculation_features is arista.avd.defined %}
+   switchport recirculation features {{ recirculation_interface.recirculation_features }}
+{%     endif %}
+{%     if  recirculation_interface.eos_cli is arista.avd.defined %}
+   {{ recirculation_interface.eos_cli | indent(3, false) }}
+{%     endif %}
+{% endfor %}

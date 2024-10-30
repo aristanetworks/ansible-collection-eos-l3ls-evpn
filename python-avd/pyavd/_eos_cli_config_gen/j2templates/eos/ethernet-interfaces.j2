@@ -500,8 +500,12 @@ interface {{ ethernet_interface.name }}
 {%         endif %}
    {{ tcp_mss_ceiling_cli }}
 {%     endif %}
-{%     if ethernet_interface.channel_group.id is arista.avd.defined and ethernet_interface.channel_group.mode is arista.avd.defined %}
+{%     if ethernet_interface.channel_group.id is arista.avd.defined %}
+{%         if ethernet_interface.channel_group.recirculation is arista.avd.defined(true) %}
+   channel-group recirculation {{ ethernet_interface.channel_group.id }}
+{%         elif ethernet_interface.channel_group.mode is arista.avd.defined %}
    channel-group {{ ethernet_interface.channel_group.id }} mode {{ ethernet_interface.channel_group.mode }}
+{%         endif %}
 {%         if ethernet_interface.lacp_timer.mode is arista.avd.defined %}
    lacp timer {{ ethernet_interface.lacp_timer.mode }}
 {%         endif %}

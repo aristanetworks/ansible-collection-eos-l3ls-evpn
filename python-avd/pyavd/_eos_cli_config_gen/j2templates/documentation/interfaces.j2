@@ -7,6 +7,7 @@
        or interface_defaults is arista.avd.defined
        or interface_profiles is arista.avd.defined
        or dps_interfaces is arista.avd.defined
+       or recirculation_interfaces is arista.avd.defined
        or ethernet_interfaces is arista.avd.defined
        or port_channel_interfaces is arista.avd.defined
        or loopback_interfaces is arista.avd.defined
@@ -21,6 +22,8 @@
 {%     include 'documentation/interface-defaults.j2' %}
 {## Interface Profiles #}
 {%     include 'documentation/interface-profiles.j2' %}
+{## Recirculation Interfaces #}
+{%     include 'documentation/recirculation-interfaces.j2' %}
 {## DPS Interfaces #}
 {%     include 'documentation/dps-interfaces.j2' %}
 {## Ethernet Interfaces #}
