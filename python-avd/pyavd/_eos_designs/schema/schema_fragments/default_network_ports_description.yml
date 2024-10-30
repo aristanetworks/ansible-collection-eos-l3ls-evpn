@@ -16,6 +16,7 @@ keys:
       The available template fields are:
         - `endpoint_type`: Always set to `network_port`.
         - `endpoint`: The value of the `endpoint` key if set.
+        - `port_channel_id`: The port-channel number for the switch.
 
       By default the description is templated from the `endpoint` key if set.
     default: "{endpoint?}"
