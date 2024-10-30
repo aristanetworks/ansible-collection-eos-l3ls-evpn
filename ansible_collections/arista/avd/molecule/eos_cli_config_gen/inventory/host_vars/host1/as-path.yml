@@ -1,3 +1,4 @@
+---
 ### as path ###
 as_path:
   regex_mode: asn
@@ -14,3 +15,6 @@ as_path:
         - type: deny
           match: "_64517$"
           origin: igp
+    - name: mylist3
+      entries:
+        - origin: igp

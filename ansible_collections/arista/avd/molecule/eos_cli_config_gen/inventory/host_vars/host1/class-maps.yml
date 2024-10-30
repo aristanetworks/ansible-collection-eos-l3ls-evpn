@@ -4,6 +4,9 @@ class_maps:
     - name: CM_REPLICATION_LD
       ip:
         access_group: ACL_REPLICATION_LD
+    - name: CM_IPv6_ACCESS_GROUP
+      ipv6:
+        access_group: ACL_REPLICATION_LD
     - name: CM_REPLICATION_LD2
       vlan: 200
     - name: CM_REPLICATION_LD3
@@ -19,3 +22,4 @@ class_maps:
     - name: CM_PBR_INCLUDE
       ip:
         access_group: ACL_PBR_INCLUDE
+    - name: CM_PBR_WITHOUT_ACCESS_GROUP

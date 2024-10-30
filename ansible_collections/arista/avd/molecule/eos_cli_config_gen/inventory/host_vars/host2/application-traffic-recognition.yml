@@ -1,0 +1,35 @@
+---
+### router_path_selection ###
+# NOTE that this leverage all possible knobs and this config is **NOT** valid on
+# an actual device
+
+application_traffic_recognition:
+  applications:
+    ipv4_applications:
+      - name: user_defined_app1
+        protocols:
+          - udp
+          - tcp
+        protocol_ranges:
+          - "25"
+        src_prefix_set_name: src_prefix_set1
+        dest_prefix_set_name: dest_prefix_set1
+        tcp_src_port_set_name: src_port_set1
+        tcp_dest_port_set_name: dest_port_set1
+        dscp_ranges:
+          - 12-19
+          - af43
+          - af41
+          - ef
+          - 1-4,6
+          - 32-33,34-35
+          - 11
+          - 56-57, 58
+          - 59-60, 61-62
+    l4_applications:
+      - name: l4-app-1
+        protocols:
+          - tcp
+          - udp
+        tcp_src_port_set_name: src_port_set1
+        tcp_dest_port_set_name: dest_port_set1
