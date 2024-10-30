@@ -1,0 +1,24 @@
+---
+## Tacacs+ Servers
+tacacs_servers:
+  timeout: 10
+  policy_unknown_mandatory_attribute_ignore: true
+  hosts:
+    - host: 10.10.10.157
+      vrf: mgt
+      key: 071B245F5A
+      single_connection: true
+    - host: 10.10.10.249
+      key: 071B245F5A
+      timeout: 23
+      single_connection: false
+    - host: 10.10.10.158
+      vrf: default
+      # Testing of play_vars in eos_cli_config_gen
+      key: "{{ tacacs_key_set_as_play_var }}"
+      key_type: 7
+    - host: 10.10.10.159
+      vrf: default
+      key: $kUVyoj7FVQ//yw9D2lbqjA==$kxxohBiofI46IX3pw18KYQ==$DOOM0l9uU4TrQt2kyA7XCKtjUA==
+      key_type: 8a
+    - host: 10.10.10.160

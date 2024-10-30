@@ -888,8 +888,9 @@ keys:
       available template fields are:\n  - `endpoint_type`: The `type` from `connected_endpoints_keys`
       like `server`, `router` etc.\n  - `endpoint`: The name of the connected endpoint\n
       \ - `endpoint_port`: The value from `endpoint_ports` for this switch port if
-      set.\n\nBy default the description is templated from the type, name and port
-      of the endpoint if set."
+      set.\n  - `port_channel_id`: The port-channel number for the switch.\n\nBy default
+      the description is templated from the type, name and port of the endpoint if
+      set."
     default: '{endpoint_type!u}_{endpoint}{endpoint_port?<_}'
   default_connected_endpoints_port_channel_description:
     type: str
@@ -1001,8 +1002,9 @@ keys:
       defined under `network_ports`.\nThis can be a template using the AVD string
       formatter syntax: https://avd.arista.com/devel/roles/eos_designs/docs/how-to/custom-descriptions-names.html#avd-string-formatter-syntax.\nThe
       available template fields are:\n  - `endpoint_type`: Always set to `network_port`.\n
-      \ - `endpoint`: The value of the `endpoint` key if set.\n\nBy default the description
-      is templated from the `endpoint` key if set."
+      \ - `endpoint`: The value of the `endpoint` key if set.\n  - `port_channel_id`:
+      The port-channel number for the switch.\n\nBy default the description is templated
+      from the `endpoint` key if set."
     default: '{endpoint?}'
   default_network_ports_port_channel_description:
     type: str
@@ -2291,9 +2293,10 @@ keys:
           description: "Description or description template to be used on all ports.\nThis
             can be a template using the AVD string formatter syntax: https://avd.arista.com/devel/roles/eos_designs/docs/how-to/custom-descriptions-names.html#avd-string-formatter-syntax.\nThe
             available template fields are:\n  - `endpoint_type` - always set to `network_port`.\n
-            \ - `endpoint` - content of the `endpoint` key if set.\n\nThe default
-            description is set by `default_network_ports_description`.\nBy default
-            the description is templated from the `endpoint` key if set."
+            \ - `endpoint` - content of the `endpoint` key if set.\n  - `port_channel_id`:
+            The port-channel number for the switch.\n\nThe default description is
+            set by `default_network_ports_description`.\nBy default the description
+            is templated from the `endpoint` key if set."
         endpoint:
           type: str
           description: Name or description of the endpoints connected to these ports.
@@ -5691,7 +5694,8 @@ $defs:
                   available template fields are:\n  - `endpoint_type` - the `type`
                   from `connected_endpoints_keys` like `server`, `router` etc.\n  -
                   `endpoint` - The name of the connected endpoint\n  - `endpoint_port`
-                  - The value from `endpoint_ports` for this switch port if set."
+                  - The value from `endpoint_ports` for this switch port if set.\n
+                  \ - `port_channel_id`: The port-channel number for the switch."
   flow_tracking_link:
     type: dict
     keys:
@@ -6888,8 +6892,13 @@ $defs:
                         type: str
               redistribute_static:
                 type: bool
-                description: Non-selectively enabling or disabling redistribute static
-                  inside the VRF.
+                description: Enable or disable the redistribution of all static routes
+                  to BGP in the VRF.
+              redistribute_connected:
+                type: bool
+                default: true
+                description: Enable or disable the redistribution of all connected
+                  routes to BGP in the VRF.
               bgp_peers:
                 documentation_options:
                   table: network-services-vrfs-bgp-settings
