@@ -17,6 +17,11 @@ keys:
           - "pathfinder"
           - "transit region"
           - "transit zone"
+      gateway_vxlan:
+        description: |-
+          Enables VXLAN gateway router profile.
+          Only applicable for `topology_role: edge`, `topology_role: transit region` or `topology_role: transit zone`.
+        type: bool
       region:
         type: dict
         description: Region name and ID.

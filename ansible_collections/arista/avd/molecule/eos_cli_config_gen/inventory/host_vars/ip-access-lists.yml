@@ -45,6 +45,7 @@ ip_access_lists:
         protocol: ip
         source: any
         destination: any
+    permit_response_traffic: nat
   - name: ACL_NO_SEQUENCE
     entries:
       - remark: test acl without sequence numbers

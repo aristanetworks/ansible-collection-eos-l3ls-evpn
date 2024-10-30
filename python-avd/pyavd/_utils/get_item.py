@@ -3,7 +3,7 @@
 # that can be found in the LICENSE file.
 from typing import Any
 
-from pyavd._errors import AristaAvdMissingVariableError
+from pyavd._errors import AristaAvdInvalidInputsError, AristaAvdMissingVariableError
 
 
 def get_item(
@@ -58,7 +58,9 @@ def get_item(
 
     if (not isinstance(list_of_dicts, list)) or list_of_dicts == [] or value is None or key is None:
         if required is True:
-            raise AristaAvdMissingVariableError(custom_error_msg or var_name)
+            if custom_error_msg:
+                raise AristaAvdInvalidInputsError(custom_error_msg)
+            raise AristaAvdMissingVariableError(var_name)
         return default
 
     for list_item in list_of_dicts:
@@ -71,5 +73,7 @@ def get_item(
 
     # No Match
     if required is True:
-        raise AristaAvdMissingVariableError(custom_error_msg or var_name)
+        if custom_error_msg:
+            raise AristaAvdInvalidInputsError(custom_error_msg)
+        raise AristaAvdMissingVariableError(var_name)
     return default

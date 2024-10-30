@@ -9,6 +9,7 @@
     | -------- | ---- | -------- | ------- | ------------------ | ----------- |
     | [<samp>router_adaptive_virtual_topology</samp>](## "router_adaptive_virtual_topology") | Dictionary |  |  |  |  |
     | [<samp>&nbsp;&nbsp;topology_role</samp>](## "router_adaptive_virtual_topology.topology_role") | String |  |  | Valid Values:<br>- <code>edge</code><br>- <code>pathfinder</code><br>- <code>transit region</code><br>- <code>transit zone</code> | Role name. |
+    | [<samp>&nbsp;&nbsp;gateway_vxlan</samp>](## "router_adaptive_virtual_topology.gateway_vxlan") | Boolean |  |  |  | Enables VXLAN gateway router profile.<br>Only applicable for `topology_role: edge`, `topology_role: transit region` or `topology_role: transit zone`. |
     | [<samp>&nbsp;&nbsp;region</samp>](## "router_adaptive_virtual_topology.region") | Dictionary |  |  |  | Region name and ID. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;name</samp>](## "router_adaptive_virtual_topology.region.name") | String | Required |  | Pattern: `^[A-Za-z0-9_.:{}\[\]-]+$` |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;id</samp>](## "router_adaptive_virtual_topology.region.id") | Integer | Required |  | Min: 1<br>Max: 255 |  |
@@ -43,6 +44,10 @@
 
       # Role name.
       topology_role: <str; "edge" | "pathfinder" | "transit region" | "transit zone">
+
+      # Enables VXLAN gateway router profile.
+      # Only applicable for `topology_role: edge`, `topology_role: transit region` or `topology_role: transit zone`.
+      gateway_vxlan: <bool>
 
       # Region name and ID.
       region:

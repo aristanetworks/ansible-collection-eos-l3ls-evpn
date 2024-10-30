@@ -9,6 +9,10 @@ router_bgp:
   maximum_paths:
     paths: 4
     ecmp: 4
+  redistribute:
+    connected:
+      enabled: true
+      route_map: RM-CONN-2-BGP
   updates:
     wait_install: true
   peer_groups:
@@ -30,9 +34,6 @@ router_bgp:
       activate: true
     - name: EVPN-OVERLAY-PEERS
       activate: false
-  redistribute_routes:
-  - source_protocol: connected
-    route_map: RM-CONN-2-BGP
   address_family_evpn:
     peer_groups:
     - name: EVPN-OVERLAY-PEERS
@@ -64,14 +65,14 @@ ethernet_interfaces:
   peer: override_uplink_type-d
   peer_interface: Ethernet1
   peer_type: spine
-  description: OVERRIDE_UPLINK_TYPE-D_Ethernet1
+  description: L2_override_uplink_type-d_Ethernet1
   shutdown: false
   channel_group:
     id: 1
     mode: active
 port_channel_interfaces:
 - name: Port-Channel1
-  description: OVERRIDE_UPLINK_TYPE-D_Po1
+  description: L2_override_uplink_type-d_Port-Channel1
   switchport:
     enabled: true
     mode: trunk

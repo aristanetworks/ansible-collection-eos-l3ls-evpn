@@ -11,6 +11,10 @@ router_bgp:
   maximum_paths:
     paths: 4
     ecmp: 4
+  redistribute:
+    connected:
+      enabled: true
+      route_map: RM-CONN-2-BGP
   updates:
     wait_install: true
   peer_groups:
@@ -34,9 +38,6 @@ router_bgp:
       activate: true
     - name: EVPN-OVERLAY-PEERS
       activate: false
-  redistribute_routes:
-  - source_protocol: connected
-    route_map: RM-CONN-2-BGP
   neighbors:
   - ip_address: 172.31.255.5
     peer_group: UNDERLAY-PEERS
@@ -76,37 +77,37 @@ router_bgp:
   - ip_address: 192.168.255.14
     peer_group: EVPN-OVERLAY-PEERS
     peer: DC1-BL1A
-    description: DC1-BL1A
+    description: DC1-BL1A_Loopback0
     remote_as: '65104'
   - ip_address: 192.168.255.15
     peer_group: EVPN-OVERLAY-PEERS
     peer: DC1-BL1B
-    description: DC1-BL1B
+    description: DC1-BL1B_Loopback0
     remote_as: '65105'
   - ip_address: 192.168.255.9
     peer_group: EVPN-OVERLAY-PEERS
     peer: DC1-LEAF1A
-    description: DC1-LEAF1A
+    description: DC1-LEAF1A_Loopback0
     remote_as: '65101'
   - ip_address: 192.168.255.10
     peer_group: EVPN-OVERLAY-PEERS
     peer: DC1-LEAF2A
-    description: DC1-LEAF2A
+    description: DC1-LEAF2A_Loopback0
     remote_as: '65102'
   - ip_address: 192.168.255.11
     peer_group: EVPN-OVERLAY-PEERS
     peer: DC1-LEAF2B
-    description: DC1-LEAF2B
+    description: DC1-LEAF2B_Loopback0
     remote_as: '65102'
   - ip_address: 192.168.255.12
     peer_group: EVPN-OVERLAY-PEERS
     peer: DC1-SVC3A
-    description: DC1-SVC3A
+    description: DC1-SVC3A_Loopback0
     remote_as: '65103'
   - ip_address: 192.168.255.13
     peer_group: EVPN-OVERLAY-PEERS
     peer: DC1-SVC3B
-    description: DC1-SVC3B
+    description: DC1-SVC3B_Loopback0
     remote_as: '65103'
   address_family_evpn:
     peer_groups:

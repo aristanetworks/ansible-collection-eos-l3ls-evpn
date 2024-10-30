@@ -40,7 +40,7 @@ ethernet_interfaces:
   peer: ISIS-LEAF1
   peer_interface: Ethernet1
   peer_type: l2leaf
-  description: ISIS-LEAF1_Ethernet1
+  description: L2_ISIS-LEAF1_Ethernet1
   shutdown: false
   channel_group:
     id: 1
@@ -55,7 +55,7 @@ ethernet_interfaces:
     access_vlan: '110'
 port_channel_interfaces:
 - name: Port-Channel1
-  description: ISIS-LEAF1_Po1
+  description: L2_ISIS-LEAF1_Port-Channel1
   switchport:
     enabled: true
     mode: trunk

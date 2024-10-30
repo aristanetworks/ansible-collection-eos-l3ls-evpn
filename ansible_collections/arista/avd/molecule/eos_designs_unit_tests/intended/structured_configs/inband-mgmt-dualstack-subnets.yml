@@ -40,7 +40,7 @@ ethernet_interfaces:
     mode: active
 port_channel_interfaces:
 - name: Port-Channel1
-  description: INBAND-MGMT-PARENTS-DUALSTACK_Po24
+  description: inband-mgmt-parents-dualstack_Po24
   switchport:
     enabled: true
     mode: trunk

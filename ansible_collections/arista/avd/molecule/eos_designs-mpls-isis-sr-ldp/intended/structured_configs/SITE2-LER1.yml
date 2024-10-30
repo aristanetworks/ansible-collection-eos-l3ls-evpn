@@ -49,11 +49,11 @@ router_bgp:
   - ip_address: 100.70.0.8
     peer_group: MPLS-OVERLAY-PEERS
     peer: SITE1-RR1
-    description: SITE1-RR1
+    description: SITE1-RR1_Loopback0
   - ip_address: 100.70.0.9
     peer_group: MPLS-OVERLAY-PEERS
     peer: SITE2-RR1
-    description: SITE2-RR1
+    description: SITE2-RR1_Loopback0
   vrfs:
   - name: TENANT_B_INTRA
     rd: 100.70.0.7:19
@@ -67,9 +67,11 @@ router_bgp:
         route_targets:
         - '65000:19'
     router_id: 100.70.0.7
-    redistribute_routes:
-    - source_protocol: connected
-    - source_protocol: static
+    redistribute:
+      connected:
+        enabled: true
+      static:
+        enabled: true
   - name: TENANT_B_WAN
     rd: 100.70.0.7:20
     route_targets:
@@ -88,9 +90,11 @@ router_bgp:
         route_targets:
         - '65000:20'
     router_id: 100.70.0.7
-    redistribute_routes:
-    - source_protocol: connected
-    - source_protocol: ospf
+    redistribute:
+      connected:
+        enabled: true
+      ospf:
+        enabled: true
     address_family_ipv4:
       neighbors:
       - ip_address: 192.168.48.3
@@ -263,7 +267,6 @@ ethernet_interfaces:
   peer: SITE2-LSR1
   peer_interface: Ethernet1
   peer_type: p
-  description: P2P_LINK_TO_SITE2-LSR1_Ethernet1
   switchport:
     enabled: false
   shutdown: false
@@ -285,64 +288,65 @@ ethernet_interfaces:
     ldp:
       interface: true
       igp_sync: true
+  description: P2P_SITE2-LSR1_Ethernet1
   speed: forced 40gfull
 - name: Ethernet11
   peer: SITE2-LSR2
   peer_interface: Ethernet12
   peer_type: p
-  description: P2P_LINK_TO_SITE2-LSR2_Ethernet12
   shutdown: false
   channel_group:
     id: 11
     mode: active
+  description: P2P_SITE2-LSR2_Ethernet12
   speed: forced 40gfull
 - name: Ethernet12
   peer: SITE2-LSR2
   peer_interface: Ethernet13
   peer_type: p
-  description: P2P_LINK_TO_SITE2-LSR2_Ethernet13
   shutdown: false
   channel_group:
     id: 11
     mode: active
+  description: P2P_SITE2-LSR2_Ethernet13
   speed: forced 40gfull
 - name: Ethernet13
   peer: SITE2-LSR2
   peer_interface: Ethernet14
   peer_type: p
-  description: P2P_LINK_TO_SITE2-LSR2_Ethernet14
   shutdown: false
   channel_group:
     id: 220
     mode: active
+  description: P2P_SITE2-LSR2_Ethernet14
   speed: forced 40gfull
 - name: Ethernet14
   peer: SITE2-LSR2
   peer_interface: Ethernet15
   peer_type: p
-  description: P2P_LINK_TO_SITE2-LSR2_Ethernet15
   shutdown: false
   channel_group:
     id: 220
     mode: active
+  description: P2P_SITE2-LSR2_Ethernet15
   speed: forced 40gfull
 - name: Ethernet6.10
   peer_type: l3_interface
   ip_address: 123.1.1.2/31
   shutdown: false
   description: TENANT_B_SITE_5_INTRA_L3VPN
-  type: l3dot1q
-  encapsulation_dot1q_vlan: 10
+  encapsulation_dot1q:
+    vlan: 10
   vrf: TENANT_B_INTRA
 - name: Ethernet6.100
   peer_type: l3_interface
   ip_address: 192.168.48.4/31
   shutdown: false
   description: TENANT_B_SITE_3_OSPF
-  type: l3dot1q
-  encapsulation_dot1q_vlan: 100
+  encapsulation_dot1q:
+    vlan: 100
   vrf: TENANT_B_WAN
-  ospf_area: '0'
+  ospf_area: 0.0.0.0
   ospf_network_point_to_point: true
   ospf_cost: 10
 - name: Ethernet6.101
@@ -350,8 +354,8 @@ ethernet_interfaces:
   ip_address: 192.168.48.2/31
   shutdown: false
   description: TENANT_B_SITE_5
-  type: l3dot1q
-  encapsulation_dot1q_vlan: 101
+  encapsulation_dot1q:
+    vlan: 101
   vrf: TENANT_B_WAN
 - name: Ethernet6
   peer_type: l3_interface
@@ -399,7 +403,6 @@ port_channel_interfaces:
   peer: SITE2-LSR2
   peer_interface: Port-Channel12
   peer_type: p
-  description: P2P_LINK_TO_SITE2-LSR2_Port-Channel12
   switchport:
     enabled: false
   shutdown: false
@@ -421,11 +424,11 @@ port_channel_interfaces:
     ldp:
       interface: true
       igp_sync: true
+  description: P2P_SITE2-LSR2_Port-Channel12
 - name: Port-Channel220
   peer: SITE2-LSR2
   peer_interface: Port-Channel110
   peer_type: p
-  description: P2P_LINK_TO_SITE2-LSR2_Port-Channel110
   switchport:
     enabled: false
   shutdown: false
@@ -447,58 +450,55 @@ port_channel_interfaces:
     ldp:
       interface: true
       igp_sync: true
+  description: P2P_SITE2-LSR2_Port-Channel110
 - name: Port-Channel4.1000
-  type: l2dot1q
   peer_type: point_to_point_service
   encapsulation_vlan:
     client:
-      dot1q:
-        vlan: 1000
+      encapsulation: dot1q
+      vlan: 1000
     network:
-      client: true
+      encapsulation: client
   shutdown: false
 - name: Port-Channel4.1001
-  type: l2dot1q
   peer_type: point_to_point_service
   encapsulation_vlan:
     client:
-      dot1q:
-        vlan: 1001
+      encapsulation: dot1q
+      vlan: 1001
     network:
-      client: true
+      encapsulation: client
   shutdown: false
 - name: Port-Channel4.1002
-  type: l2dot1q
   peer_type: point_to_point_service
   encapsulation_vlan:
     client:
-      dot1q:
-        vlan: 1002
+      encapsulation: dot1q
+      vlan: 1002
     network:
-      client: true
+      encapsulation: client
   shutdown: false
 - name: Port-Channel4.1003
-  type: l2dot1q
   peer_type: point_to_point_service
   encapsulation_vlan:
     client:
-      dot1q:
-        vlan: 1003
+      encapsulation: dot1q
+      vlan: 1003
     network:
-      client: true
+      encapsulation: client
   shutdown: false
 - name: Port-Channel4.1004
-  type: l2dot1q
   peer_type: point_to_point_service
   encapsulation_vlan:
     client:
-      dot1q:
-        vlan: 1004
+      encapsulation: dot1q
+      vlan: 1004
     network:
-      client: true
+      encapsulation: client
   shutdown: false
 - name: Port-Channel4
-  type: routed
+  switchport:
+    enabled: false
   peer_type: system
   shutdown: false
 patch_panel:

@@ -12,6 +12,9 @@ router_bgp:
   maximum_paths:
     paths: 4
     ecmp: 4
+  redistribute:
+    connected:
+      enabled: true
   updates:
     wait_install: true
   peer_groups:
@@ -24,8 +27,6 @@ router_bgp:
     peer_groups:
     - name: IPv4-UNDERLAY-PEERS
       activate: true
-  redistribute_routes:
-  - source_protocol: connected
   neighbors:
   - ip_address: 172.16.11.2
     peer_group: IPv4-UNDERLAY-PEERS
@@ -110,7 +111,7 @@ ethernet_interfaces:
   peer: DC1-SUPER-SPINE1
   peer_interface: Ethernet2
   peer_type: super-spine
-  description: P2P_LINK_TO_DC1-SUPER-SPINE1_Ethernet2
+  description: P2P_DC1-SUPER-SPINE1_Ethernet2
   shutdown: false
   service_profile: QOS-PROFILE
   mac_security:
@@ -124,7 +125,7 @@ ethernet_interfaces:
   peer: DC1-SUPER-SPINE2
   peer_interface: Ethernet2
   peer_type: super-spine
-  description: P2P_LINK_TO_DC1-SUPER-SPINE2_Ethernet2
+  description: P2P_DC1-SUPER-SPINE2_Ethernet2
   shutdown: false
   service_profile: QOS-PROFILE
   mac_security:
@@ -138,7 +139,7 @@ ethernet_interfaces:
   peer: DC1-POD1-LEAF1A
   peer_interface: Ethernet2
   peer_type: l3leaf
-  description: P2P_LINK_TO_DC1-POD1-LEAF1A_Ethernet2
+  description: P2P_DC1-POD1-LEAF1A_Ethernet2
   shutdown: false
   service_profile: QOS-PROFILE
   mac_security:
@@ -152,7 +153,7 @@ ethernet_interfaces:
   peer: DC1.POD1.LEAF2A
   peer_interface: Ethernet2
   peer_type: l3leaf
-  description: P2P_LINK_TO_DC1.POD1.LEAF2A_Ethernet2
+  description: P2P_DC1.POD1.LEAF2A_Ethernet2
   shutdown: false
   service_profile: QOS-PROFILE
   mac_security:
@@ -166,7 +167,7 @@ ethernet_interfaces:
   peer: DC1-POD1-LEAF2B
   peer_interface: Ethernet2
   peer_type: l3leaf
-  description: P2P_LINK_TO_DC1-POD1-LEAF2B_Ethernet2
+  description: P2P_DC1-POD1-LEAF2B_Ethernet2
   shutdown: false
   service_profile: QOS-PROFILE
   mac_security:
@@ -180,7 +181,7 @@ ethernet_interfaces:
   peer: DC1.POD1.LEAF2A
   peer_interface: Ethernet12
   peer_type: l3leaf
-  description: P2P_LINK_TO_DC1.POD1.LEAF2A_Ethernet12
+  description: P2P_DC1.POD1.LEAF2A_Ethernet12
   shutdown: false
   service_profile: QOS-PROFILE
   mac_security:
@@ -194,7 +195,7 @@ ethernet_interfaces:
   peer: DC1-POD1-LEAF2B
   peer_interface: Ethernet12
   peer_type: l3leaf
-  description: P2P_LINK_TO_DC1-POD1-LEAF2B_Ethernet12
+  description: P2P_DC1-POD1-LEAF2B_Ethernet12
   shutdown: false
   service_profile: QOS-PROFILE
   mac_security:

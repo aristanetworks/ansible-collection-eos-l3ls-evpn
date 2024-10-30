@@ -11,14 +11,14 @@
     | [<samp>&nbsp;&nbsp;-&nbsp;profile</samp>](## "port_profiles.[].profile") | String | Required, Unique |  |  | Port profile name. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;parent_profile</samp>](## "port_profiles.[].parent_profile") | String |  |  |  | Parent profile is optional.<br>Port_profiles can refer to another port_profile to inherit settings in up to two levels (adapter->profile->parent_profile).<br> |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;speed</samp>](## "port_profiles.[].speed") | String |  |  |  | Set adapter speed in the format `<interface_speed>` or `forced <interface_speed>` or `auto <interface_speed>`.<br>If not specified speed will be auto.<br> |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;description</samp>](## "port_profiles.[].description") | String |  |  |  | Description or description template to be used on all ports.<br>This can be a template using the format string syntax.<br>The available template fields are:<br>  - `endpoint_type` - the `type` from `connected_endpoints_keys` like `server`, `router` etc.<br>  - `endpoint` - The name of the connected endpoint<br>  - `endpoint_port` - The value from `endpoint_ports` for this switch port if set.<br><br>The default description is set by `default_connected_endpoints_description`.<br>By default the description is templated from the type, name and port of the endpoint if set. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;description</samp>](## "port_profiles.[].description") | String |  |  |  | Description or description template to be used on all ports.<br>This can be a template using the AVD string formatter syntax: https://avd.arista.com/devel/roles/eos_designs/docs/how-to/custom-descriptions-names.html#avd-string-formatter-syntax.<br>The available template fields are:<br>  - `endpoint_type` - the `type` from `connected_endpoints_keys` like `server`, `router` etc.<br>  - `endpoint` - The name of the connected endpoint<br>  - `endpoint_port` - The value from `endpoint_ports` for this switch port if set.<br><br>The default description is set by `default_connected_endpoints_description`.<br>By default the description is templated from the type, name and port of the endpoint if set. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "port_profiles.[].enabled") | Boolean |  | `True` |  | Administrative state, setting to false will set the port to 'shutdown' in the intended configuration.<br> |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;mode</samp>](## "port_profiles.[].mode") | String |  |  | Valid Values:<br>- <code>access</code><br>- <code>dot1q-tunnel</code><br>- <code>trunk</code><br>- <code>trunk phone</code> | Interface mode. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;mtu</samp>](## "port_profiles.[].mtu") | Integer |  |  | Min: 68<br>Max: 65535 |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;l2_mtu</samp>](## "port_profiles.[].l2_mtu") | Integer |  |  | Min: 68<br>Max: 65535 | "l2_mtu" should only be defined for platforms supporting the "l2 mtu" CLI.<br> |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;l2_mru</samp>](## "port_profiles.[].l2_mru") | Integer |  |  | Min: 68<br>Max: 65535 | "l2_mru" should only be defined for platforms supporting the "l2 mru" CLI.<br> |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;native_vlan</samp>](## "port_profiles.[].native_vlan") | Integer |  |  | Min: 1<br>Max: 4094 | Native VLAN for a trunk port.<br>If both `native_vlan` and `native_vlan_tag`, `native_vlan_tag` takes precedence.<br> |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;native_vlan_tag</samp>](## "port_profiles.[].native_vlan_tag") | Boolean |  | `False` |  | If both `native_vlan` and `native_vlan_tag`, `native_vlan_tag` takes precedence. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;native_vlan</samp>](## "port_profiles.[].native_vlan") | Integer |  |  | Min: 1<br>Max: 4094 | Native VLAN for a trunk port.<br>If both `native_vlan` and `native_vlan_tag` are set, `native_vlan_tag` takes precedence.<br> |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;native_vlan_tag</samp>](## "port_profiles.[].native_vlan_tag") | Boolean |  |  |  | If both `native_vlan` and `native_vlan_tag` are set, `native_vlan_tag` takes precedence. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;phone_vlan</samp>](## "port_profiles.[].phone_vlan") | Integer |  |  | Min: 1<br>Max: 4094 | Phone VLAN for a mode `trunk phone` port.<br>Requires `mode: trunk phone` to be set. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;phone_trunk_mode</samp>](## "port_profiles.[].phone_trunk_mode") | String |  |  | Valid Values:<br>- <code>tagged</code><br>- <code>untagged</code><br>- <code>tagged phone</code><br>- <code>untagged phone</code> | Specify if the phone traffic is tagged or untagged.<br>If both data and phone traffic are untagged, MAC-Based VLAN Assignment (MBVA) is used, if supported by the model of switch. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;trunk_groups</samp>](## "port_profiles.[].trunk_groups") | List, items: String |  |  |  | Required with `enable_trunk_groups: true`.<br>Trunk Groups are used for limiting VLANs on trunk ports to VLANs with the same Trunk Group.<br> |
@@ -33,7 +33,7 @@
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;ptp</samp>](## "port_profiles.[].ptp") | Dictionary |  |  |  | The global PTP profile parameters will be applied to all connected endpoints where `ptp` is manually enabled.<br>`ptp role master` is set to ensure control over the PTP topology.<br> |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "port_profiles.[].ptp.enabled") | Boolean |  | `False` |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;endpoint_role</samp>](## "port_profiles.[].ptp.endpoint_role") | String |  | `follower` | Valid Values:<br>- <code>bmca</code><br>- <code>default</code><br>- <code>follower</code> |  |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;profile</samp>](## "port_profiles.[].ptp.profile") | String |  | `aes67-r16-2016` | Valid Values:<br>- <code>aes67</code><br>- <code>aes67-r16-2016</code><br>- <code>smpte2059-2</code> |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;profile</samp>](## "port_profiles.[].ptp.profile") | String |  | `aes67-r16-2016` |  | Default available profiles are:<br>  - "aes67"<br>  - "aes67-r16-2016"<br>  - "smpte2059-2" |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;sflow</samp>](## "port_profiles.[].sflow") | Boolean |  |  |  | Configures sFlow on the interface. Overrides `fabric_sflow.endpoints` setting. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;flow_tracking</samp>](## "port_profiles.[].flow_tracking") | Dictionary |  |  |  | Configures flow-tracking on the interface. Overrides `fabric_flow_tracking.endpoints` setting. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "port_profiles.[].flow_tracking.enabled") | Boolean |  |  |  |  |
@@ -57,16 +57,41 @@
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "port_profiles.[].dot1x.mac_based_authentication.enabled") | Boolean |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;always</samp>](## "port_profiles.[].dot1x.mac_based_authentication.always") | Boolean |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;host_mode_common</samp>](## "port_profiles.[].dot1x.mac_based_authentication.host_mode_common") | Boolean |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;mac_based_access_list</samp>](## "port_profiles.[].dot1x.mac_based_access_list") | Boolean |  |  |  | Operate interface in per-mac access-list mode. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;timeout</samp>](## "port_profiles.[].dot1x.timeout") | Dictionary |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;idle_host</samp>](## "port_profiles.[].dot1x.timeout.idle_host") | Integer |  |  | Min: 10<br>Max: 65535 |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;quiet_period</samp>](## "port_profiles.[].dot1x.timeout.quiet_period") | Integer |  |  | Min: 1<br>Max: 65535 |  |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;reauth_period</samp>](## "port_profiles.[].dot1x.timeout.reauth_period") | String |  |  |  | Range 60-4294967295 or "server". |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;reauth_period</samp>](## "port_profiles.[].dot1x.timeout.reauth_period") | String |  |  |  | Value can be 60-4294967295 or 'server'. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;reauth_timeout_ignore</samp>](## "port_profiles.[].dot1x.timeout.reauth_timeout_ignore") | Boolean |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;tx_period</samp>](## "port_profiles.[].dot1x.timeout.tx_period") | Integer |  |  | Min: 1<br>Max: 65535 |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;reauthorization_request_limit</samp>](## "port_profiles.[].dot1x.reauthorization_request_limit") | Integer |  |  | Min: 1<br>Max: 10 |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;unauthorized</samp>](## "port_profiles.[].dot1x.unauthorized") | Dictionary |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;access_vlan_membership_egress</samp>](## "port_profiles.[].dot1x.unauthorized.access_vlan_membership_egress") | Boolean |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;native_vlan_membership_egress</samp>](## "port_profiles.[].dot1x.unauthorized.native_vlan_membership_egress") | Boolean |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;eapol</samp>](## "port_profiles.[].dot1x.eapol") | Dictionary |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;disabled</samp>](## "port_profiles.[].dot1x.eapol.disabled") | Boolean |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;authentication_failure_fallback_mba</samp>](## "port_profiles.[].dot1x.eapol.authentication_failure_fallback_mba") | Dictionary |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "port_profiles.[].dot1x.eapol.authentication_failure_fallback_mba.enabled") | Boolean |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;timeout</samp>](## "port_profiles.[].dot1x.eapol.authentication_failure_fallback_mba.timeout") | Integer |  |  | Min: 0<br>Max: 65535 |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;aaa</samp>](## "port_profiles.[].dot1x.aaa") | Dictionary |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;unresponsive</samp>](## "port_profiles.[].dot1x.aaa.unresponsive") | Dictionary |  |  |  | Configure AAA timeout options. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;eap_response</samp>](## "port_profiles.[].dot1x.aaa.unresponsive.eap_response") | String |  |  | Valid Values:<br>- <code>success</code><br>- <code>disabled</code> | EAP response to send. EOS default is `success`. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;action</samp>](## "port_profiles.[].dot1x.aaa.unresponsive.action") | Dictionary |  |  |  | Set action for supplicant when AAA times out. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;traffic_allow_access_list</samp>](## "port_profiles.[].dot1x.aaa.unresponsive.action.traffic_allow_access_list") | String |  |  |  | Name of standard access-list to apply when AAA times out. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;apply_cached_results</samp>](## "port_profiles.[].dot1x.aaa.unresponsive.action.apply_cached_results") | Boolean |  |  |  | Use results from a previous AAA response. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cached_results_timeout</samp>](## "port_profiles.[].dot1x.aaa.unresponsive.action.cached_results_timeout") | Dictionary |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;time_duration</samp>](## "port_profiles.[].dot1x.aaa.unresponsive.action.cached_results_timeout.time_duration") | Integer |  |  | Min: 1 | Enable caching for a specific duration -<br><1-10000>      duration in days<br><1-14400000>   duration in minutes<br><1-240000>     duration in hours<br><1-864000000>  duration in seconds |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;time_duration_unit</samp>](## "port_profiles.[].dot1x.aaa.unresponsive.action.cached_results_timeout.time_duration_unit") | String | Required |  | Valid Values:<br>- <code>days</code><br>- <code>hours</code><br>- <code>minutes</code><br>- <code>seconds</code> |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;apply_alternate</samp>](## "port_profiles.[].dot1x.aaa.unresponsive.action.apply_alternate") | Boolean |  |  |  | Apply alternate action if primary action fails.<br>eg. aaa unresponsive action apply cached-results else traffic allow |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;traffic_allow</samp>](## "port_profiles.[].dot1x.aaa.unresponsive.action.traffic_allow") | Boolean |  |  |  | Set action for supplicant traffic when AAA times out. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;traffic_allow_vlan</samp>](## "port_profiles.[].dot1x.aaa.unresponsive.action.traffic_allow_vlan") | Integer |  |  | Min: 1<br>Max: 4094 |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;phone_action</samp>](## "port_profiles.[].dot1x.aaa.unresponsive.phone_action") | Dictionary |  |  |  | Set action for supplicant when AAA times out. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;apply_cached_results</samp>](## "port_profiles.[].dot1x.aaa.unresponsive.phone_action.apply_cached_results") | Boolean |  |  |  | Use results from a previous AAA response. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cached_results_timeout</samp>](## "port_profiles.[].dot1x.aaa.unresponsive.phone_action.cached_results_timeout") | Dictionary |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;time_duration</samp>](## "port_profiles.[].dot1x.aaa.unresponsive.phone_action.cached_results_timeout.time_duration") | Integer |  |  | Min: 1 | Enable caching for a specific duration -<br><1-10000>      duration in days<br><1-14400000>   duration in minutes<br><1-240000>     duration in hours<br><1-864000000>  duration in seconds |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;time_duration_unit</samp>](## "port_profiles.[].dot1x.aaa.unresponsive.phone_action.cached_results_timeout.time_duration_unit") | String | Required |  | Valid Values:<br>- <code>days</code><br>- <code>hours</code><br>- <code>minutes</code><br>- <code>seconds</code> |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;apply_alternate</samp>](## "port_profiles.[].dot1x.aaa.unresponsive.phone_action.apply_alternate") | Boolean |  |  |  | Apply alternate action if primary action fails.<br>eg. aaa unresponsive phone action apply cached-results else traffic allow |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;traffic_allow</samp>](## "port_profiles.[].dot1x.aaa.unresponsive.phone_action.traffic_allow") | Boolean |  |  |  | Set action for supplicant traffic when AAA times out. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;poe</samp>](## "port_profiles.[].poe") | Dictionary |  |  |  | Power Over Ethernet settings applied on port. Only configured if platform supports PoE. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;disabled</samp>](## "port_profiles.[].poe.disabled") | Boolean |  | `False` |  | Disable PoE on a POE capable port. PoE is enabled on all ports that support it by default in EOS. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;priority</samp>](## "port_profiles.[].poe.priority") | String |  |  | Valid Values:<br>- <code>critical</code><br>- <code>high</code><br>- <code>medium</code><br>- <code>low</code> | Prioritize a port's power in the event that one of the switch's power supplies loses power. |
@@ -101,7 +126,7 @@
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;role</samp>](## "port_profiles.[].monitor_sessions.[].role") | String |  |  | Valid Values:<br>- <code>source</code><br>- <code>destination</code> |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;source_settings</samp>](## "port_profiles.[].monitor_sessions.[].source_settings") | Dictionary |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;direction</samp>](## "port_profiles.[].monitor_sessions.[].source_settings.direction") | String |  |  | Valid Values:<br>- <code>rx</code><br>- <code>tx</code><br>- <code>both</code> |  |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;access_group</samp>](## "port_profiles.[].monitor_sessions.[].source_settings.access_group") | Dictionary |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;access_group</samp>](## "port_profiles.[].monitor_sessions.[].source_settings.access_group") | Dictionary |  |  |  | This can only be set when `session_settings.access_group` is not set. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;type</samp>](## "port_profiles.[].monitor_sessions.[].source_settings.access_group.type") | String |  |  | Valid Values:<br>- <code>ip</code><br>- <code>ipv6</code><br>- <code>mac</code> |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;name</samp>](## "port_profiles.[].monitor_sessions.[].source_settings.access_group.name") | String |  |  |  | ACL name. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;priority</samp>](## "port_profiles.[].monitor_sessions.[].source_settings.access_group.priority") | Integer |  |  |  |  |
@@ -127,7 +152,7 @@
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;port_channel</samp>](## "port_profiles.[].port_channel") | Dictionary |  |  |  | Used for port-channel adapter. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;mode</samp>](## "port_profiles.[].port_channel.mode") | String |  |  | Valid Values:<br>- <code>active</code><br>- <code>passive</code><br>- <code>on</code> | Port-Channel Mode. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;channel_id</samp>](## "port_profiles.[].port_channel.channel_id") | Integer |  |  |  | Port-Channel ID.<br>If no channel_id is specified, an id is generated from the first switch port in the port channel.<br> |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;description</samp>](## "port_profiles.[].port_channel.description") | String |  |  |  | Description or description template to be used on the port-channel interface.<br>This can be a template using the format string syntax.<br>The available template fields are:<br>  - `endpoint_type` - the `type` from `connected_endpoints_keys` like `server`, `router` etc.<br>  - `endpoint` - The name of the connected endpoint<br>  - `endpoint_port_channel` - The value from `endpoint_port_channel` if set.<br>  - `port_channel_id` - The port-channel number for the switch.<br>  - `adapter_description` - The adapter's description if set.<br>  - `adapter_description_or_endpoint` - Helper alias of the adapter_description or endpoint.<br><br>The default description is set by `default_connected_endpoints_port_channel_description`.<br>By default the description is templated from the type, name and port_channel interface of the endpoint if set. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;description</samp>](## "port_profiles.[].port_channel.description") | String |  |  |  | Description or description template to be used on the port-channel interface.<br>This can be a template using the AVD string formatter syntax: https://avd.arista.com/devel/roles/eos_designs/docs/how-to/custom-descriptions-names.html#avd-string-formatter-syntax.<br>The available template fields are:<br>  - `endpoint_type` - the `type` from `connected_endpoints_keys` like `server`, `router` etc.<br>  - `endpoint` - The name of the connected endpoint<br>  - `endpoint_port_channel` - The value from `endpoint_port_channel` if set.<br>  - `port_channel_id` - The port-channel number for the switch.<br>  - `adapter_description` - The adapter's description if set.<br>  - `adapter_description_or_endpoint` - Helper alias of the adapter_description or endpoint.<br><br>The default description is set by `default_connected_endpoints_port_channel_description`.<br>By default the description is templated from the type, name and port_channel interface of the endpoint if set. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;endpoint_port_channel</samp>](## "port_profiles.[].port_channel.endpoint_port_channel") | String |  |  |  | Name of the port-channel interface on the endpoint.<br>Used for the port-channel description template with the field name `peer_interface` |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "port_profiles.[].port_channel.enabled") | Boolean |  | `True` |  | Port-Channel administrative state.<br>Setting to false will set port to 'shutdown' in intended configuration.<br> |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ptp_mpass</samp>](## "port_profiles.[].port_channel.ptp_mpass") | Boolean |  | `False` |  | When MPASS is enabled on an MLAG port-channel, MLAG peers coordinate to function as a single PTP logical device.<br>Arista PTP enabled devices always place PTP messages on the same physical link within the port-channel.<br>Hence, MPASS is needed only on MLAG port-channels connected to non-Arista devices. |
@@ -171,7 +196,7 @@
         speed: <str>
 
         # Description or description template to be used on all ports.
-        # This can be a template using the format string syntax.
+        # This can be a template using the AVD string formatter syntax: https://avd.arista.com/devel/roles/eos_designs/docs/how-to/custom-descriptions-names.html#avd-string-formatter-syntax.
         # The available template fields are:
         #   - `endpoint_type` - the `type` from `connected_endpoints_keys` like `server`, `router` etc.
         #   - `endpoint` - The name of the connected endpoint
@@ -195,11 +220,11 @@
         l2_mru: <int; 68-65535>
 
         # Native VLAN for a trunk port.
-        # If both `native_vlan` and `native_vlan_tag`, `native_vlan_tag` takes precedence.
+        # If both `native_vlan` and `native_vlan_tag` are set, `native_vlan_tag` takes precedence.
         native_vlan: <int; 1-4094>
 
-        # If both `native_vlan` and `native_vlan_tag`, `native_vlan_tag` takes precedence.
-        native_vlan_tag: <bool; default=False>
+        # If both `native_vlan` and `native_vlan_tag` are set, `native_vlan_tag` takes precedence.
+        native_vlan_tag: <bool>
 
         # Phone VLAN for a mode `trunk phone` port.
         # Requires `mode: trunk phone` to be set.
@@ -230,7 +255,12 @@
         ptp:
           enabled: <bool; default=False>
           endpoint_role: <str; "bmca" | "default" | "follower"; default="follower">
-          profile: <str; "aes67" | "aes67-r16-2016" | "smpte2059-2"; default="aes67-r16-2016">
+
+          # Default available profiles are:
+          #   - "aes67"
+          #   - "aes67-r16-2016"
+          #   - "smpte2059-2"
+          profile: <str; default="aes67-r16-2016">
 
         # Configures sFlow on the interface. Overrides `fabric_sflow.endpoints` setting.
         sflow: <bool>
@@ -270,11 +300,14 @@
             enabled: <bool>
             always: <bool>
             host_mode_common: <bool>
+
+          # Operate interface in per-mac access-list mode.
+          mac_based_access_list: <bool>
           timeout:
             idle_host: <int; 10-65535>
             quiet_period: <int; 1-65535>
 
-            # Range 60-4294967295 or "server".
+            # Value can be 60-4294967295 or 'server'.
             reauth_period: <str>
             reauth_timeout_ignore: <bool>
             tx_period: <int; 1-65535>
@@ -282,6 +315,66 @@
           unauthorized:
             access_vlan_membership_egress: <bool>
             native_vlan_membership_egress: <bool>
+          eapol:
+            disabled: <bool>
+            authentication_failure_fallback_mba:
+              enabled: <bool>
+              timeout: <int; 0-65535>
+          aaa:
+
+            # Configure AAA timeout options.
+            unresponsive:
+
+              # EAP response to send. EOS default is `success`.
+              eap_response: <str; "success" | "disabled">
+
+              # Set action for supplicant when AAA times out.
+              action:
+
+                # Name of standard access-list to apply when AAA times out.
+                traffic_allow_access_list: <str>
+
+                # Use results from a previous AAA response.
+                apply_cached_results: <bool>
+                cached_results_timeout:
+
+                  # Enable caching for a specific duration -
+                  # <1-10000>      duration in days
+                  # <1-14400000>   duration in minutes
+                  # <1-240000>     duration in hours
+                  # <1-864000000>  duration in seconds
+                  time_duration: <int; >=1>
+                  time_duration_unit: <str; "days" | "hours" | "minutes" | "seconds"; required>
+
+                # Apply alternate action if primary action fails.
+                # eg. aaa unresponsive action apply cached-results else traffic allow
+                apply_alternate: <bool>
+
+                # Set action for supplicant traffic when AAA times out.
+                traffic_allow: <bool>
+                traffic_allow_vlan: <int; 1-4094>
+
+              # Set action for supplicant when AAA times out.
+              phone_action:
+
+                # Use results from a previous AAA response.
+                apply_cached_results: <bool>
+                cached_results_timeout:
+
+                  # Enable caching for a specific duration -
+                  # <1-10000>      duration in days
+                  # <1-14400000>   duration in minutes
+                  # <1-240000>     duration in hours
+                  # <1-864000000>  duration in seconds
+                  time_duration: <int; >=1>
+                  time_duration_unit: <str; "days" | "hours" | "minutes" | "seconds"; required>
+
+                # Apply alternate action if primary action fails.
+                # eg. aaa unresponsive phone action apply cached-results else traffic allow
+                apply_alternate: <bool>
+
+                # Set action for supplicant traffic when AAA times out.
+                traffic_allow: <bool>
 
         # Power Over Ethernet settings applied on port. Only configured if platform supports PoE.
         poe:
@@ -366,6 +459,8 @@
             role: <str; "source" | "destination">
             source_settings:
               direction: <str; "rx" | "tx" | "both">
+
+              # This can only be set when `session_settings.access_group` is not set.
               access_group:
                 type: <str; "ip" | "ipv6" | "mac">
 
@@ -445,7 +540,7 @@
           channel_id: <int>
 
           # Description or description template to be used on the port-channel interface.
-          # This can be a template using the format string syntax.
+          # This can be a template using the AVD string formatter syntax: https://avd.arista.com/devel/roles/eos_designs/docs/how-to/custom-descriptions-names.html#avd-string-formatter-syntax.
           # The available template fields are:
           #   - `endpoint_type` - the `type` from `connected_endpoints_keys` like `server`, `router` etc.
           #   - `endpoint` - The name of the connected endpoint

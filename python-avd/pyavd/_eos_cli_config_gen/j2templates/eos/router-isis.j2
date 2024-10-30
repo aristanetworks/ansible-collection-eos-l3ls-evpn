@@ -10,8 +10,19 @@ router isis {{ router_isis.instance }}
 {%     if router_isis.net is arista.avd.defined %}
    net {{ router_isis.net }}
 {%     endif %}
+{%     if router_isis.router_id is arista.avd.defined %}
+   router-id ipv4 {{ router_isis.router_id }}
+{%     endif %}
 {%     if router_isis.is_type is arista.avd.defined %}
    is-type {{ router_isis.is_type }}
+{%     endif %}
+{%     if router_isis.log_adjacency_changes is arista.avd.defined(true) %}
+   log-adjacency-changes
+{%     elif router_isis.log_adjacency_changes is arista.avd.defined(false) %}
+   no log-adjacency-changes
+{%     endif %}
+{%     if router_isis.mpls_ldp_sync_default is arista.avd.defined(true) %}
+   mpls ldp sync default
 {%     endif %}
 {%     for redistribute_route in router_isis.redistribute_routes | arista.avd.natural_sort('source_protocol') %}
 {%         if redistribute_route.source_protocol is arista.avd.defined %}
@@ -42,17 +53,6 @@ router isis {{ router_isis.instance }}
    {{ redistribute_route_cli }}
 {%         endif %}
 {%     endfor %}
-{%     if router_isis.router_id is arista.avd.defined %}
-   router-id ipv4 {{ router_isis.router_id }}
-{%     endif %}
-{%     if router_isis.log_adjacency_changes is arista.avd.defined(true) %}
-   log-adjacency-changes
-{%     elif router_isis.log_adjacency_changes is arista.avd.defined(false) %}
-   no log-adjacency-changes
-{%     endif %}
-{%     if router_isis.mpls_ldp_sync_default is arista.avd.defined(true) %}
-   mpls ldp sync default
-{%     endif %}
 {%     if router_isis.timers.local_convergence.protected_prefixes is arista.avd.defined(true) %}
 {%         if router_isis.timers.local_convergence.delay is arista.avd.defined %}
    timers local-convergence-delay {{ router_isis.timers.local_convergence.delay }} protected-prefixes
@@ -252,11 +252,11 @@ router isis {{ router_isis.instance }}
 {%     endif %}
 {%     if router_isis.address_family_ipv6.enabled is arista.avd.defined(true) %}
    address-family ipv6 unicast
-{%         if router_isis.address_family_ipv6.maximum_paths is arista.avd.defined %}
-      maximum-paths {{ router_isis.address_family_ipv6.maximum_paths }}
-{%         endif %}
 {%         if router_isis.address_family_ipv6.bfd_all_interfaces is arista.avd.defined(true) %}
       bfd all-interfaces
+{%         endif %}
+{%         if router_isis.address_family_ipv6.maximum_paths is arista.avd.defined %}
+      maximum-paths {{ router_isis.address_family_ipv6.maximum_paths }}
 {%         endif %}
 {%         if router_isis.address_family_ipv6.fast_reroute_ti_lfa.mode is arista.avd.defined %}
 {%             set ti_lfa_cli = "fast-reroute ti-lfa mode " ~ router_isis.address_family_ipv6.fast_reroute_ti_lfa.mode %}

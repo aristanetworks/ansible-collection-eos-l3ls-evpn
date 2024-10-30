@@ -1,5 +1,6 @@
 router_adaptive_virtual_topology:
-  topology_role: transit region
+  topology_role: pathfinder
+  gateway_vxlan: true
   region:
     name: North_America
     id: 1

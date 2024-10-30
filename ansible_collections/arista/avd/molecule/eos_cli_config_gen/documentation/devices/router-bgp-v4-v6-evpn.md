@@ -123,10 +123,10 @@ ASN Notation: asplain
 
 ##### EVPN Peer Groups
 
-| Peer Group | Activate | Encapsulation |
-| ---------- | -------- | ------------- |
-| EVPN-OVERLAY | True | default |
-| RCF_TEST | False | default |
+| Peer Group | Activate | Route-map In | Route-map Out | Encapsulation |
+| ---------- | -------- | ------------ | ------------- | ------------- |
+| EVPN-OVERLAY | True |  RM-HIDE-AS-PATH | RM-HIDE-AS-PATH | default |
+| RCF_TEST | False |  - | - | default |
 
 #### Router BGP VLANs
 
@@ -141,7 +141,7 @@ ASN Notation: asplain
 
 | VRF | Route-Distinguisher | Redistribute |
 | --- | ------------------- | ------------ |
-| Tenant_A | 10.50.64.15:30001 | ospf<br>ospfv3<br>ospfv3<br>connected |
+| Tenant_A | 10.50.64.15:30001 | ospf<br>ospfv3<br>connected |
 | Tenant_B | 10.50.64.15:30002 | - |
 
 #### Router BGP Device Configuration
@@ -222,16 +222,16 @@ router bgp 65100
       redistribute learned
    !
    address-family evpn
+      neighbor EVPN-OVERLAY activate
       neighbor EVPN-OVERLAY route-map RM-HIDE-AS-PATH in
       neighbor EVPN-OVERLAY route-map RM-HIDE-AS-PATH out
-      neighbor EVPN-OVERLAY activate
       neighbor RCF_TEST rcf in Address_Family_EVPN_In()
       neighbor RCF_TEST rcf out Address_Family_EVPN_Out()
    !
    address-family ipv4
+      neighbor IPV4-UNDERLAY activate
       neighbor IPV4-UNDERLAY route-map RM-HIDE-AS-PATH in
       neighbor IPV4-UNDERLAY route-map RM-HIDE-AS-PATH out
-      neighbor IPV4-UNDERLAY activate
       neighbor IPV4-UNDERLAY-MLAG activate
       neighbor TEST_RCF rcf in Address_Family_IPV4_In()
       neighbor TEST_RCF rcf out Address_Family_IPV4_Out()
@@ -240,18 +240,32 @@ router bgp 65100
       neighbor IPV4-UNDERLAY activate
       neighbor IPV4-UNDERLAY-MLAG activate
       redistribute attached-host
+      redistribute connected
       redistribute isis rcf Router_BGP_Isis()
-      redistribute ospf match external
       redistribute ospf match internal
+      redistribute ospfv3 match internal
+      redistribute ospfv3 match external
+      redistribute ospfv3 match nssa-external 2
+      redistribute ospf match external
       redistribute ospf match nssa-external 2
    !
    address-family ipv6
+      neighbor IPV6-UNDERLAY activate
       neighbor IPV6-UNDERLAY route-map RM-HIDE-AS-PATH in
       neighbor IPV6-UNDERLAY route-map RM-HIDE-AS-PATH out
-      neighbor IPV6-UNDERLAY activate
       neighbor IPV6-UNDERLAY-MLAG activate
       neighbor TEST_RCF rcf in Address_Family_IPV6_In()
       neighbor TEST_RCF rcf out Address_Family_IPV6_Out()
+      redistribute attached-host route-map RM-Address_Family_IPV6_Attached-Host
+      redistribute bgp leaked
+      redistribute dhcp route-map RM-Address_Family_IPV6_DHCP
+      redistribute connected route-map RM-Address_Family_IPV6_Connected
+      redistribute dynamic rcf RCF_Address_Family_IPV6_Dynamic()
+      redistribute user rcf RCF_Address_Family_IPV6_User()
+      redistribute isis include leaked route-map RM-Address_Family_IPV6_ISIS
+      redistribute ospfv3 include leaked route-map RM-REDISTRIBUTE-OSPFV3
+      redistribute ospfv3 match external include leaked route-map RM-REDISTRIBUTE-OSPFV3-EXTERNAL
+      redistribute static include leaked rcf RCF_IPV6_STATIC_TO_BGP{}
    !
    vrf Tenant_A
       rd 10.50.64.15:30001
@@ -264,7 +278,7 @@ router bgp 65100
       route-target export evpn rcf RT_EXPORT_AF_RCF()
       redistribute connected
       redistribute ospf match external include leaked
-      redistribute ospfv3 match internal
+      redistribute ospfv3
       redistribute ospfv3 match nssa-external
    !
    vrf Tenant_B

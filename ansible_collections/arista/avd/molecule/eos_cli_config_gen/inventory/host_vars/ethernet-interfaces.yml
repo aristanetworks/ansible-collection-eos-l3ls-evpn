@@ -129,6 +129,12 @@ ethernet_interfaces:
       version: 2
 
   - name: Ethernet2
+    ip_address: 10.1.255.3/24
+    ip_address_secondaries:
+      - 192.168.1.1/24
+      - 10.0.0.254/24
+      - 1.1.1.3/24
+      - 1.1.1.4/24
     peer: SRV-POD03
     peer_interface: Eth1
     peer_type: server
@@ -226,6 +232,8 @@ ethernet_interfaces:
         vlans:
           - range: 1-3
             mac_address_maximum: 3
+          - range: 41,2,22
+            mac_address_maximum: 4
       vlan_translations:
         out_required: false
         direction_out:
@@ -572,44 +580,44 @@ ethernet_interfaces:
     description: TENANT_A pseudowire 1 interface
     encapsulation_vlan:
       client:
-        protocol: unmatched
+        encapsulation: unmatched
 
   - name: Ethernet26.100
     description: TENANT_A pseudowire 1 interface
     vlan_id: 10
     encapsulation_vlan:
       client:
-        protocol: dot1q
+        encapsulation: dot1q
         vlan: 100
       network:
-        protocol: client
+        encapsulation: client
 
   - name: Ethernet26.200
     description: TENANT_A pseudowire 2 interface
     encapsulation_vlan:
       client:
-        protocol: dot1q
+        encapsulation: dot1q
         vlan: 200
 
   - name: Ethernet26.300
     description: TENANT_A pseudowire 3 interface
     encapsulation_vlan:
       client:
-        protocol: dot1q
+        encapsulation: dot1q
         vlan: 300
       network:
-        protocol: dot1q
+        encapsulation: dot1q
         vlan: 400
 
   - name: Ethernet26.400
     description: TENANT_A pseudowire 3 interface
     encapsulation_vlan:
       client:
-        protocol: dot1q
+        encapsulation: dot1q
         outer_vlan: 400
         inner_vlan: 20
       network:
-        protocol: dot1q
+        encapsulation: dot1q
         outer_vlan: 401
         inner_vlan: 21
 
@@ -617,11 +625,11 @@ ethernet_interfaces:
     description: TENANT_A pseudowire 3 interface
     encapsulation_vlan:
       client:
-        protocol: dot1q
+        encapsulation: dot1q
         outer_vlan: 500
         inner_vlan: 50
       network:
-        protocol: client
+        encapsulation: client
 
   - name: Ethernet27
     switchport:
@@ -1252,22 +1260,22 @@ ethernet_interfaces:
       client:
         outer_vlan: 23
         inner_vlan: 45
-        protocol: dot1q
-        inner_protocol: dot1q
+        encapsulation: dot1q
+        inner_encapsulation: dot1q
       network:
-        protocol: dot1ad
+        encapsulation: dot1ad
         outer_vlan: 32
         inner_vlan: 54
-        inner_protocol: dot1ad
+        inner_encapsulation: dot1ad
 
   - name: Ethernet68.2
     description: Test_encapsulation_vlan2
     encapsulation_vlan:
       client:
-        protocol: dot1q
+        encapsulation: dot1q
         vlan: 10
       network:
-        protocol: dot1q
+        encapsulation: dot1q
         outer_vlan: 32
         inner_vlan: 54
 
@@ -1275,35 +1283,35 @@ ethernet_interfaces:
     description: Test_encapsulation_vlan3
     encapsulation_vlan:
       client:
-        protocol: dot1ad
+        encapsulation: dot1ad
         vlan: 12
       network:
-        protocol: dot1q
+        encapsulation: dot1q
         vlan: 25
 
   - name: Ethernet68.4
     description: Test_encapsulation_vlan4
     encapsulation_vlan:
       client:
-        protocol: dot1ad
+        encapsulation: dot1ad
         outer_vlan: 35
         inner_vlan: 60
-        inner_protocol: dot1q
+        inner_encapsulation: dot1q
       network:
-        protocol: dot1q
+        encapsulation: dot1q
         outer_vlan: 53
         inner_vlan: 6
-        inner_protocol: dot1ad
+        inner_encapsulation: dot1ad
 
   - name: Ethernet68.5
     description: Test_encapsulation_vlan5
     encapsulation_vlan:
       client:
-        protocol: dot1ad
+        encapsulation: dot1ad
         outer_vlan: 35
         inner_vlan: 60
       network:
-        protocol: dot1ad
+        encapsulation: dot1ad
         outer_vlan: 52
         inner_vlan: 62
 
@@ -1311,19 +1319,19 @@ ethernet_interfaces:
     description: Test_encapsulation_vlan6
     encapsulation_vlan:
       client:
-        protocol: dot1ad
+        encapsulation: dot1ad
         outer_vlan: 35
         inner_vlan: 60
       network:
-        protocol: client
+        encapsulation: client
 
   - name: Ethernet68.7
     description: Test_encapsulation_vlan7
     encapsulation_vlan:
       client:
-        protocol: untagged
+        encapsulation: untagged
       network:
-        protocol: dot1ad
+        encapsulation: dot1ad
         outer_vlan: 35
         inner_vlan: 60
 
@@ -1331,9 +1339,9 @@ ethernet_interfaces:
     description: Test_encapsulation_vlan8
     encapsulation_vlan:
       client:
-        protocol: untagged
+        encapsulation: untagged
       network:
-        protocol: dot1q
+        encapsulation: dot1q
         outer_vlan: 35
         inner_vlan: 60
 
@@ -1341,19 +1349,19 @@ ethernet_interfaces:
     description: Test_encapsulation_vlan9
     encapsulation_vlan:
       client:
-        protocol: untagged
+        encapsulation: untagged
       network:
-        protocol: untagged
+        encapsulation: untagged
 
   - name: Ethernet68.10
     description: Test_encapsulation_vlan9
     encapsulation_vlan:
       client:
-        protocol: dot1q
+        encapsulation: dot1q
         outer_vlan: 14
         inner_vlan: 11
       network:
-        protocol: client inner
+        encapsulation: client inner
   - name: Ethernet70
     description: dot1x_aaa_unresponsive
     shutdown: false

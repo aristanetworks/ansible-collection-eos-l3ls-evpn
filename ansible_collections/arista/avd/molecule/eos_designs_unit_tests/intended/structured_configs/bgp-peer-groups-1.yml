@@ -9,6 +9,10 @@ router_bgp:
   maximum_paths:
     paths: 4
     ecmp: 4
+  redistribute:
+    connected:
+      enabled: true
+      route_map: RM-CONN-2-BGP
   updates:
     wait_install: true
   peer_groups:
@@ -47,14 +51,11 @@ router_bgp:
   - ip_address: 192.168.253.205
     peer_group: MLAG-IPv4-UNDERLAY-PEER
     peer: bgp-peer-groups-2
-    description: bgp-peer-groups-2
+    description: bgp-peer-groups-2_Vlan4094
   - ip_address: 192.168.255.112
     peer_group: EVPN-OVERLAY-PEERS
     peer: bgp-peer-groups-2
-    description: bgp-peer-groups-2
-  redistribute_routes:
-  - source_protocol: connected
-    route_map: RM-CONN-2-BGP
+    description: bgp-peer-groups-2_Loopback0
   address_family_evpn:
     peer_groups:
     - name: EVPN-OVERLAY-PEERS
@@ -91,19 +92,19 @@ spanning_tree:
 vlans:
 - id: 4094
   tenant: system
-  name: MLAG_PEER
+  name: MLAG
   trunk_groups:
   - MLAG
 vlan_interfaces:
 - name: Vlan4094
-  description: MLAG_PEER
+  description: MLAG
   shutdown: false
   no_autostate: true
   mtu: 9214
   ip_address: 192.168.253.204/31
 port_channel_interfaces:
 - name: Port-Channel3
-  description: MLAG_PEER_bgp-peer-groups-2_Po3
+  description: MLAG_bgp-peer-groups-2_Port-Channel3
   switchport:
     enabled: true
     mode: trunk
@@ -116,7 +117,7 @@ ethernet_interfaces:
   peer: bgp-peer-groups-2
   peer_interface: Ethernet3
   peer_type: mlag_peer
-  description: MLAG_PEER_bgp-peer-groups-2_Ethernet3
+  description: MLAG_bgp-peer-groups-2_Ethernet3
   shutdown: false
   channel_group:
     id: 3

@@ -46,7 +46,6 @@ ethernet_interfaces:
   peer: peer1
   peer_interface: ethernet1
   peer_type: other
-  description: P2P_LINK_TO_peer1_ethernet1
   switchport:
     enabled: false
   shutdown: false
@@ -54,11 +53,11 @@ ethernet_interfaces:
   ip_address: 192.168.0.4/31
   ospf_network_point_to_point: true
   ospf_area: 0.0.0.0
+  description: P2P_peer1_ethernet1
 - name: ethernet2
   peer: peer2
   peer_interface: ethernet2
   peer_type: other
-  description: P2P_LINK_TO_peer2_ethernet2
   switchport:
     enabled: false
   shutdown: false
@@ -69,3 +68,4 @@ ethernet_interfaces:
       sparse_mode: true
   ospf_network_point_to_point: true
   ospf_area: 0.0.0.0
+  description: P2P_peer2_ethernet2

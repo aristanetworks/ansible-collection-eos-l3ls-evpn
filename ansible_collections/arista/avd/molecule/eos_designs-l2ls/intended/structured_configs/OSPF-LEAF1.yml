@@ -30,7 +30,7 @@ ethernet_interfaces:
   peer: OSPF-SPINE1
   peer_interface: Ethernet1
   peer_type: l3spine
-  description: OSPF-SPINE1_Ethernet1
+  description: L2_OSPF-SPINE1_Ethernet1
   shutdown: false
   channel_group:
     id: 1
@@ -39,7 +39,7 @@ ethernet_interfaces:
   peer: OSPF-SPINE2
   peer_interface: Ethernet1
   peer_type: l3spine
-  description: OSPF-SPINE2_Ethernet1
+  description: L2_OSPF-SPINE2_Ethernet1
   shutdown: false
   channel_group:
     id: 1
@@ -62,7 +62,7 @@ ethernet_interfaces:
     access_vlan: '100'
 port_channel_interfaces:
 - name: Port-Channel1
-  description: OSPF_SPINES_Po1
+  description: L2_OSPF_SPINES_Port-Channel1
   switchport:
     enabled: true
     mode: trunk

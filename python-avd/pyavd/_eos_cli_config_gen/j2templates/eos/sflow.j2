@@ -14,9 +14,6 @@
 {%         set sample_cli = sample_cli ~ sflow.sample %}
 {{ sample_cli }}
 {%     endif %}
-{%     if sflow.sample_input_subinterface is arista.avd.defined(true) %}
-sflow sample input subinterface
-{%     endif %}
 {%     if sflow.polling_interval is arista.avd.defined %}
 sflow polling-interval {{ sflow.polling_interval }}
 {%     endif %}
@@ -45,6 +42,9 @@ sflow vrf {{ vrf.name }} source {{ vrf.source }}
 sflow source-interface {{ sflow.source_interface }}
 {%     elif sflow.source is arista.avd.defined %}
 sflow source {{ sflow.source }}
+{%     endif %}
+{%     if sflow.sample_input_subinterface is arista.avd.defined(true) %}
+sflow sample input subinterface
 {%     endif %}
 {%     if sflow.sample_output_subinterface is arista.avd.defined(true) %}
 sflow sample output subinterface

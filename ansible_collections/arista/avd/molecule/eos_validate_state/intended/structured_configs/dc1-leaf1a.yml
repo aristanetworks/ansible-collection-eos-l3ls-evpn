@@ -9,6 +9,12 @@ router_bgp:
   maximum_paths:
     paths: 4
     ecmp: 4
+  redistribute:
+    connected:
+      enabled: true
+      route_map: RM-CONN-2-BGP
+    attached_host:
+      enabled: true
   peer_groups:
   - name: MLAG-IPv4-UNDERLAY-PEER
     type: ipv4
@@ -44,7 +50,7 @@ router_bgp:
   - ip_address: 10.255.1.97
     peer_group: MLAG-IPv4-UNDERLAY-PEER
     peer: dc1-leaf1b
-    description: dc1-leaf1b
+    description: dc1-leaf1b_Vlan4093
   - ip_address: 10.255.255.0
     peer_group: IPv4-UNDERLAY-PEERS
     remote_as: '65100'
@@ -68,20 +74,16 @@ router_bgp:
   - ip_address: 10.255.0.1
     peer_group: EVPN-OVERLAY-PEERS
     peer: dc1-spine1
-    description: dc1-spine1
+    description: dc1-spine1_Loopback0
     remote_as: '65100'
   - ip_address: 10.255.0.2
     peer_group: EVPN-OVERLAY-PEERS
     peer: dc1-spine2
-    description: dc1-spine2
+    description: dc1-spine2_Loopback0
     remote_as: '65100'
   - ip_address: 10.1.1.1
     description: External peer
     peer_group: EVPN-OVERLAY-PEERS
-  redistribute_routes:
-  - source_protocol: connected
-    route_map: RM-CONN-2-BGP
-  - source_protocol: attached-host
   address_family_evpn:
     peer_groups:
     - name: EVPN-OVERLAY-PEERS
@@ -99,12 +101,14 @@ router_bgp:
         route_targets:
         - '10:10'
     router_id: 10.255.0.3
-    redistribute_routes:
-    - source_protocol: connected
+    redistribute:
+      connected:
+        enabled: true
+        route_map: RM-CONN-2-BGP-VRFS
     neighbors:
     - ip_address: 10.255.1.97
       peer_group: MLAG-IPv4-UNDERLAY-PEER
-      description: dc1-leaf1b
+      description: dc1-leaf1b_Vlan3009
   - name: VRF11
     rd: 10.255.0.3:11
     route_targets:
@@ -117,12 +121,14 @@ router_bgp:
         route_targets:
         - '11:11'
     router_id: 10.255.0.3
-    redistribute_routes:
-    - source_protocol: connected
+    redistribute:
+      connected:
+        enabled: true
+        route_map: RM-CONN-2-BGP-VRFS
     neighbors:
     - ip_address: 10.255.1.97
       peer_group: MLAG-IPv4-UNDERLAY-PEER
-      description: dc1-leaf1b
+      description: dc1-leaf1b_Vlan3010
   vlans:
   - id: 11
     tenant: TENANT1
@@ -229,12 +235,12 @@ management_api_http:
 vlans:
 - id: 4093
   tenant: system
-  name: LEAF_PEER_L3
+  name: MLAG_L3
   trunk_groups:
   - MLAG
 - id: 4094
   tenant: system
-  name: MLAG_PEER
+  name: MLAG
   trunk_groups:
   - MLAG
 - id: 11
@@ -244,7 +250,7 @@ vlans:
   name: VRF10_VLAN12
   tenant: TENANT1
 - id: 3009
-  name: MLAG_iBGP_VRF10
+  name: MLAG_L3_VRF_VRF10
   trunk_groups:
   - MLAG
   tenant: TENANT1
@@ -255,7 +261,7 @@ vlans:
   name: VRF11_VLAN22
   tenant: TENANT1
 - id: 3010
-  name: MLAG_iBGP_VRF11
+  name: MLAG_L3_VRF_VRF11
   trunk_groups:
   - MLAG
   tenant: TENANT1
@@ -270,12 +276,12 @@ vlans:
   name: INBAND_MGMT
 vlan_interfaces:
 - name: Vlan4093
-  description: MLAG_PEER_L3_PEERING
+  description: MLAG_L3
   shutdown: false
   mtu: 1500
   ip_address: 10.255.1.96/31
 - name: Vlan4094
-  description: MLAG_PEER
+  description: MLAG
   shutdown: false
   no_autostate: true
   mtu: 1500
@@ -296,7 +302,7 @@ vlan_interfaces:
   tenant: TENANT1
   type: underlay_peering
   shutdown: false
-  description: 'MLAG_PEER_L3_iBGP: vrf VRF10'
+  description: MLAG_L3_VRF_VRF10
   vrf: VRF10
   mtu: 1500
   ip_address: 10.255.1.96/31
@@ -316,7 +322,7 @@ vlan_interfaces:
   tenant: TENANT1
   type: underlay_peering
   shutdown: false
-  description: 'MLAG_PEER_L3_iBGP: vrf VRF11'
+  description: MLAG_L3_VRF_VRF11
   vrf: VRF11
   mtu: 1500
   ip_address: 10.255.1.96/31
@@ -332,7 +338,7 @@ vlan_interfaces:
   - 172.21.110.1
 port_channel_interfaces:
 - name: Port-Channel3
-  description: MLAG_PEER_dc1-leaf1b_Po3
+  description: MLAG_dc1-leaf1b_Port-Channel3
   switchport:
     enabled: true
     mode: trunk
@@ -341,7 +347,7 @@ port_channel_interfaces:
       - MLAG
   shutdown: false
 - name: Port-Channel8
-  description: DC1-LEAF1C_Po1
+  description: L2_dc1-leaf1c_Port-Channel1
   switchport:
     enabled: true
     mode: trunk
@@ -365,7 +371,7 @@ ethernet_interfaces:
   peer: dc1-leaf1b
   peer_interface: Ethernet3
   peer_type: mlag_peer
-  description: MLAG_PEER_dc1-leaf1b_Ethernet3
+  description: MLAG_dc1-leaf1b_Ethernet3
   shutdown: false
   channel_group:
     id: 3
@@ -374,7 +380,7 @@ ethernet_interfaces:
   peer: dc1-leaf1b
   peer_interface: Ethernet4
   peer_type: mlag_peer
-  description: MLAG_PEER_dc1-leaf1b_Ethernet4
+  description: MLAG_dc1-leaf1b_Ethernet4
   shutdown: false
   channel_group:
     id: 3
@@ -383,7 +389,7 @@ ethernet_interfaces:
   peer: dc1-spine1
   peer_interface: Ethernet1
   peer_type: spine
-  description: P2P_LINK_TO_DC1-SPINE1_Ethernet1
+  description: P2P_dc1-spine1_Ethernet1
   shutdown: false
   mtu: 1500
   switchport:
@@ -393,7 +399,7 @@ ethernet_interfaces:
   peer: dc1-spine2
   peer_interface: Ethernet1
   peer_type: spine
-  description: P2P_LINK_TO_DC1-SPINE2_Ethernet1
+  description: P2P_dc1-spine2_Ethernet1
   shutdown: false
   mtu: 1500
   switchport:
@@ -403,7 +409,7 @@ ethernet_interfaces:
   peer: dc1-wan1
   peer_interface: Ethernet1
   peer_type: wan_router
-  description: P2P_LINK_TO_DC1-WAN1_Ethernet1
+  description: P2P_dc1-wan1_Ethernet1
   shutdown: false
   mtu: 1500
   switchport:
@@ -413,7 +419,7 @@ ethernet_interfaces:
   peer: dc1-wan2
   peer_interface: Ethernet1
   peer_type: wan_router
-  description: P2P_LINK_TO_DC1-WAN2_Ethernet1
+  description: P2P_dc1-wan2_Ethernet1
   shutdown: false
   mtu: 1500
   switchport:
@@ -423,7 +429,7 @@ ethernet_interfaces:
   peer: dc1-leaf1c
   peer_interface: Ethernet1
   peer_type: l2leaf
-  description: DC1-LEAF1C_Ethernet1
+  description: L2_dc1-leaf1c_Ethernet1
   shutdown: false
   channel_group:
     id: 8
@@ -488,6 +494,14 @@ route_maps:
     type: permit
     match:
     - ip address prefix-list PL-L2LEAF-INBAND-MGMT
+- name: RM-CONN-2-BGP-VRFS
+  sequence_numbers:
+  - sequence: 10
+    type: deny
+    match:
+    - ip address prefix-list PL-MLAG-PEER-VRFS
+  - sequence: 20
+    type: permit
 loopback_interfaces:
 - name: Loopback0
   description: ROUTER_ID
@@ -498,12 +512,12 @@ loopback_interfaces:
   shutdown: false
   ip_address: 10.255.1.3/32
 - name: Loopback10
-  description: VRF10_VTEP_DIAGNOSTICS
+  description: DIAG_VRF_VRF10
   shutdown: false
   vrf: VRF10
   ip_address: 10.255.10.3/32
 - name: Loopback11
-  description: VRF11_VTEP_DIAGNOSTICS
+  description: DIAG_VRF_VRF11
   shutdown: false
   vrf: VRF11
   ip_address: 10.255.11.3/32
@@ -514,6 +528,10 @@ prefix_lists:
     action: permit 10.255.0.0/27 eq 32
   - sequence: 20
     action: permit 10.255.1.0/27 eq 32
+- name: PL-MLAG-PEER-VRFS
+  sequence_numbers:
+  - sequence: 10
+    action: permit 10.255.1.96/31
 - name: PL-L2LEAF-INBAND-MGMT
   sequence_numbers:
   - sequence: 10

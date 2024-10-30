@@ -146,6 +146,10 @@ ASN Notation: asplain
 !
 router bgp 65101
    router-id 192.168.255.3
+   update wait-for-convergence
+   update wait-install
+   no bgp default ipv4-unicast
+   no bgp default ipv4-unicast transport ipv6
    distance bgp 20 200 200
    graceful-restart restart-time 555
    graceful-restart stalepath-time 666
@@ -153,14 +157,10 @@ router bgp 65101
    graceful-restart-helper restart-time 888
    bgp route-reflector preserve-attributes always
    maximum-paths 32 ecmp 32
-   update wait-for-convergence
-   update wait-install
-   no bgp default ipv4-unicast
-   no bgp default ipv4-unicast transport ipv6
-   bgp bestpath d-path
    bgp listen range 10.10.10.0/24 peer-group my-peer-group1 peer-filter my-peer-filter
    bgp listen range 12.10.10.0/24 peer-id include router-id peer-group my-peer-group3 remote-as 65444
    bgp listen range 13.10.10.0/24 peer-group my-peer-group4 peer-filter my-peer-filter
+   bgp bestpath d-path
    neighbor TEST peer group
    neighbor TEST ttl maximum-hops 42
    neighbor test-link-bandwidth1 peer group
@@ -174,15 +174,13 @@ router bgp 65101
    neighbor test-passive passive
    neighbor test-session-tracker peer group
    neighbor test-session-tracker session tracker ST2
-   neighbor interface Ethernet2 peer-group PG-FOO-v4 remote-as 65102
-   neighbor interface Ethernet3 peer-group PG-FOO-v4 peer-filter PF-BAR-v4
    neighbor 192.0.3.1 remote-as 65432
-   neighbor 192.0.3.1 as-path remote-as replace out
    neighbor 192.0.3.1 as-path prepend-own disabled
+   neighbor 192.0.3.1 as-path remote-as replace out
+   neighbor 192.0.3.1 passive
    neighbor 192.0.3.1 bfd
    neighbor 192.0.3.1 bfd interval 2000 min-rx 2000 multiplier 3
    neighbor 192.0.3.1 rib-in pre-policy retain
-   neighbor 192.0.3.1 passive
    neighbor 192.0.3.1 session tracker ST1
    neighbor 192.0.3.1 default-originate always
    neighbor 192.0.3.1 send-community
@@ -200,8 +198,8 @@ router bgp 65101
    neighbor 192.0.3.3 send-community standard
    neighbor 192.0.3.3 missing-policy address-family all include community-list prefix-list sub-route-map direction in action deny
    neighbor 192.0.3.4 remote-as 65435
-   neighbor 192.0.3.4 ttl maximum-hops 1
    no neighbor 192.0.3.4 rib-in pre-policy retain
+   neighbor 192.0.3.4 ttl maximum-hops 1
    neighbor 192.0.3.4 send-community large
    neighbor 192.0.3.5 remote-as 65436
    neighbor 192.0.3.5 description test_ebgp_multihop
@@ -210,14 +208,14 @@ router bgp 65101
    neighbor 192.0.3.5 maximum-routes 12000
    neighbor 192.0.3.6 remote-as 65437
    neighbor 192.0.3.6 remove-private-as
-   neighbor 192.0.3.6 remove-private-as ingress
    neighbor 192.0.3.6 description test_remove_private_as
    no neighbor 192.0.3.6 route-reflector-client
+   neighbor 192.0.3.6 remove-private-as ingress
    neighbor 192.0.3.7 remote-as 65438
    neighbor 192.0.3.7 remove-private-as all replace-as
-   neighbor 192.0.3.7 remove-private-as ingress replace-as
    neighbor 192.0.3.7 description test_remove_private_as_all
    neighbor 192.0.3.7 route-reflector-client
+   neighbor 192.0.3.7 remove-private-as ingress replace-as
    neighbor 192.0.3.8 peer group TEST
    neighbor 192.0.3.8 remote-as 65438
    neighbor 192.0.3.8 bfd
@@ -228,22 +226,30 @@ router bgp 65101
    aggregate-address 1.1.1.0/24 advertise-only
    aggregate-address 1.12.1.0/24 as-set summary-only attribute-map RM-ATTRIBUTE match-map RM-MATCH advertise-only
    aggregate-address 2.2.1.0/24
-   redistribute bgp leaked route-map RM-REDISTRIBUTE-BGP
    redistribute connected rcf Router_BGP_Connected()
-   redistribute ospf include leaked
    redistribute ospf match internal
    redistribute ospf match external
    redistribute ospf match nssa-external 1 include leaked route-map RM-REDISTRIBUTE-OSPF-NSSA-1
    redistribute static rcf Router_BGP_Static()
+   redistribute bgp leaked route-map RM-REDISTRIBUTE-BGP
+   neighbor interface Ethernet2 peer-group PG-FOO-v4 remote-as 65102
+   neighbor interface Ethernet3 peer-group PG-FOO-v4 peer-filter PF-BAR-v4
    !
    address-family ipv4
+      bgp additional-paths install
+      bgp additional-paths receive
+      bgp additional-paths send ecmp limit 20
+      neighbor foo additional-paths receive
       neighbor foo prefix-list PL-BAR-v4-IN in
       neighbor foo prefix-list PL-BAR-v4-OUT out
       neighbor foo default-originate route-map RM-FOO-MATCH always
+      neighbor foo additional-paths send ecmp limit 20 prefix-list PL1
       neighbor 10.2.3.8 rcf in Address_Family_IPV4_In()
       neighbor 10.2.3.9 rcf out Address_Family_IPV4_Out()
+      neighbor 192.0.2.1 additional-paths receive
       neighbor 192.0.2.1 prefix-list PL-FOO-v4-IN in
       neighbor 192.0.2.1 prefix-list PL-FOO-v4-OUT out
+      neighbor 192.0.2.1 additional-paths send limit 20 prefix-list PL1
       network 10.0.0.0/8
       network 172.16.0.0/12
       network 192.168.0.0/16 route-map RM-FOO-MATCH
@@ -257,19 +263,31 @@ router bgp 65101
       redistribute static rcf Address_Family_IPV4_Static()
    !
    address-family ipv6
+      bgp additional-paths install ecmp-primary
+      bgp additional-paths receive
+      bgp additional-paths send any
+      neighbor baz additional-paths receive
       neighbor baz prefix-list PL-BAR-v6-IN in
       neighbor baz prefix-list PL-BAR-v6-OUT out
+      neighbor baz additional-paths send ecmp limit 20
+      neighbor 2001:db8::1 additional-paths receive
       neighbor 2001:db8::1 prefix-list PL-FOO-v6-IN in
       neighbor 2001:db8::1 prefix-list PL-FOO-v6-OUT out
+      neighbor 2001:db8::1 additional-paths send ecmp limit 20
       neighbor 2001:db8::2 rcf in Address_Family_IPV6_In()
       neighbor 2001:db8::2 rcf out Address_Family_IPV6_Out()
       network 2001:db8:100::/40
       network 2001:db8:200::/40 route-map RM-BAR-MATCH
       bgp redistribute-internal
+      redistribute attached-host
       redistribute bgp leaked route-map RM-REDISTRIBUTE-BGP
+      redistribute dhcp
       redistribute connected rcf Address_Family_IPV6_Connected()
+      redistribute dynamic
+      redistribute user
+      redistribute isis
+      redistribute ospfv3
       redistribute ospfv3 match external include leaked
-      redistribute ospfv3 match internal include leaked route-map RM-REDISTRIBUTE-OSPF-INTERNAL
       redistribute ospfv3 match nssa-external 1
       redistribute static route-map RM-IPV6-STATIC-TO-BGP
    session tracker ST1

@@ -18,6 +18,12 @@ keys:
             type: str
             convert_types:
               - int
+          l3:
+            type: dict
+            keys:
+              routing_mac_address_per_vlan:
+                type: bool
+                description: "Enable bridging of packets with destination MAC being a Router MAC in VLANs without routing."
           mmu:
             type: dict
             description: |

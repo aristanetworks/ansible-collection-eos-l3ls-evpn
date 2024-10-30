@@ -71,11 +71,11 @@ $defs:
           documentation_options:
             table: network-services-vrfs-settings
           type: bool
-          default: true
+          default: false
           description: |
             Redistribute the connected subnet for the MLAG iBGP peering per VRF into overlay BGP.
-            By default the iBGP peering subnet is redistributed into the overlay routing protocol per VRF.
-            Setting `redistribute_mlag_ibgp_peering_vrfs: false` under a tenant will change this default to prevent redistribution of these subnets for all VRFs in the tenant.
+            By default the iBGP peering subnet is not redistributed into the overlay routing protocol per VRF.
+            Setting `redistribute_mlag_ibgp_peering_vrfs: true` under a tenant will change this default to redistribution of these subnets for all VRFs in the tenant.
             This setting can be overridden per VRF.
         evpn_vlan_bundle:
           type: str
@@ -395,11 +395,11 @@ $defs:
                   Setting `enable_mlag_ibgp_peering_vrfs: false` under a VRF will change this default and/or override the tenant-wide setting.
               redistribute_mlag_ibgp_peering_vrfs:
                 type: bool
-                default: true
+                default: false
                 description: |
                   Redistribute the connected subnet for the MLAG iBGP peering per VRF into overlay BGP.
-                  By default the iBGP peering subnet is redistributed into the overlay routing protocol per VRF.
-                  Setting `redistribute_mlag_ibgp_peering_vrfs: false` under a VRF will change this default and/or override the tenant-wide setting.
+                  By default the iBGP peering subnet is not redistributed into the overlay routing protocol per VRF.
+                  Setting `redistribute_mlag_ibgp_peering_vrfs: true` under a VRF will change this default and/or override the tenant-wide setting.
               mlag_ibgp_peering_vlan:
                 type: int
                 convert_types:
@@ -425,7 +425,16 @@ $defs:
                     max: 2100
                   loopback_description:
                     type: str
-                    description: Provide a custom description for loopback interface.
+                    description: |-
+                      Provide a custom description or description template to be used on the VRF diagnostic loopback interface.
+                      This can be a template using the AVD string formatter syntax: https://avd.arista.com/devel/roles/eos_designs/docs/how-to/custom-descriptions-names.html#avd-string-formatter-syntax.
+                      The available template fields are:
+                        - `interface`: The Loopback interface name.
+                        - `vrf`: The VRF name.
+                        - `tenant`: The tenant name.
+
+                      The default description is set by `default_vrf_diag_loopback_description`.
+                      By default the description is templated from the VRF name.
                   loopback_ip_range:
                     type: str
                     description: |
@@ -714,7 +723,7 @@ $defs:
                           convert_types:
                             - int
                           description: OSPF area ID.
-                          default: "0"
+                          default: "0.0.0.0"
                         cost:
                           type: int
                           convert_types:
@@ -811,7 +820,7 @@ $defs:
                           convert_types:
                             - int
                           description: OSPF area ID.
-                          default: "0"
+                          default: "0.0.0.0"
                     raw_eos_cli:
                       type: str
                       description: |
@@ -905,7 +914,11 @@ $defs:
                         type: str
               redistribute_static:
                 type: bool
-                description: Non-selectively enabling or disabling redistribute static inside the VRF.
+                description: Enable or disable the redistribution of all static routes to BGP in the VRF.
+              redistribute_connected:
+                type: bool
+                default: true
+                description: Enable or disable the redistribution of all connected routes to BGP in the VRF.
               bgp_peers:
                 documentation_options:
                   table: network-services-vrfs-bgp-settings

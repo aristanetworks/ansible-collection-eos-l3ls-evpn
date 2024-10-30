@@ -6,6 +6,7 @@ vmtracer_sessions:
     username: user1
     password: "encrypted_password"
     autovlan_disable: true
+    vrf: MGMT
     source_interface: Management1
   - name: session_2
     url: "https://192.168.0.10"

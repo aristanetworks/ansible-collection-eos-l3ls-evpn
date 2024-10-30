@@ -6,7 +6,7 @@ from __future__ import annotations
 from functools import cached_property
 from typing import TYPE_CHECKING
 
-from pyavd._errors import AristaAvdMissingVariableError
+from pyavd._errors import AristaAvdInvalidInputsError
 from pyavd._utils import default, get
 from pyavd.api.interface_descriptions import InterfaceDescriptionData
 
@@ -110,6 +110,6 @@ class LoopbackInterfacesMixin(UtilsMixin):
     def _node_sid(self: AvdStructuredConfigUnderlay) -> str:
         if self.shared_utils.id is None:
             msg = f"'id' is not set on '{self.shared_utils.hostname}' and is required to set node SID"
-            raise AristaAvdMissingVariableError(msg)
+            raise AristaAvdInvalidInputsError(msg)
         node_sid_base = int(get(self.shared_utils.switch_data_combined, "node_sid_base", 0))
         return self.shared_utils.id + node_sid_base

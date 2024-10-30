@@ -81,11 +81,11 @@ class PrefixListsMixin(UtilsMixin):
                 if self._mlag_ibgp_peering_vlan_vrf(vrf, tenant) is None:
                     continue
 
-                if self._mlag_ibgp_peering_redistribute(vrf, tenant):
+                if not self._exclude_mlag_ibgp_peering_from_redistribute(vrf, tenant):
                     # By default the BGP peering is redistributed, so we only need the prefix-list for the false case.
                     continue
 
-                if (mlag_ip_address := self._get_vlan_interface_config_for_mlag_peering(vrf).get("ip_address")) is None:
+                if (mlag_ip_address := self._get_vlan_ip_config_for_mlag_peering(vrf).get("ip_address")) is None:
                     # No MLAG prefix for this VRF (could be RFC5549)
                     continue
 

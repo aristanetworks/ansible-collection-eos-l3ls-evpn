@@ -9,6 +9,10 @@ router_bgp:
   maximum_paths:
     paths: 4
     ecmp: 4
+  redistribute:
+    connected:
+      enabled: true
+      route_map: RM-CONN-2-BGP
   updates:
     wait_install: true
   peer_groups:
@@ -29,9 +33,6 @@ router_bgp:
       activate: true
     - name: EVPN-OVERLAY-PEERS
       activate: false
-  redistribute_routes:
-  - source_protocol: connected
-    route_map: RM-CONN-2-BGP
   neighbors:
   - ip_address: 10.0.1.6
     peer_group: IPv4-UNDERLAY-PEERS
@@ -56,12 +57,12 @@ router_bgp:
   - ip_address: 192.168.0.10
     peer_group: EVPN-OVERLAY-PEERS
     peer: downlink-pools-spine1
-    description: downlink-pools-spine1
+    description: downlink-pools-spine1_Loopback0
     remote_as: '65000'
   - ip_address: 192.168.0.20
     peer_group: EVPN-OVERLAY-PEERS
     peer: downlink-pools-spine2
-    description: downlink-pools-spine2
+    description: downlink-pools-spine2_Loopback0
     remote_as: '65000'
   address_family_evpn:
     peer_groups:
@@ -92,7 +93,7 @@ ethernet_interfaces:
   peer: downlink-pools-spine1
   peer_interface: Ethernet6
   peer_type: spine
-  description: P2P_LINK_TO_DOWNLINK-POOLS-SPINE1_Ethernet6
+  description: P2P_downlink-pools-spine1_Ethernet6
   shutdown: false
   mtu: 9214
   switchport:
@@ -102,7 +103,7 @@ ethernet_interfaces:
   peer: downlink-pools-spine2
   peer_interface: Ethernet6
   peer_type: spine
-  description: P2P_LINK_TO_DOWNLINK-POOLS-SPINE2_Ethernet6
+  description: P2P_downlink-pools-spine2_Ethernet6
   shutdown: false
   mtu: 9214
   switchport:
@@ -112,7 +113,7 @@ ethernet_interfaces:
   peer: downlink-pools-spine1
   peer_interface: Ethernet16
   peer_type: spine
-  description: P2P_LINK_TO_DOWNLINK-POOLS-SPINE1_Ethernet16
+  description: P2P_downlink-pools-spine1_Ethernet16
   shutdown: false
   mtu: 9214
   switchport:
@@ -122,7 +123,7 @@ ethernet_interfaces:
   peer: downlink-pools-spine2
   peer_interface: Ethernet16
   peer_type: spine
-  description: P2P_LINK_TO_DOWNLINK-POOLS-SPINE2_Ethernet16
+  description: P2P_downlink-pools-spine2_Ethernet16
   shutdown: false
   mtu: 9214
   switchport:

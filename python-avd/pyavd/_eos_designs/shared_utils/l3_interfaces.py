@@ -6,7 +6,7 @@ from __future__ import annotations
 from functools import cached_property
 from typing import TYPE_CHECKING
 
-from pyavd._errors import AristaAvdMissingVariableError
+from pyavd._errors import AristaAvdInvalidInputsError
 from pyavd._utils import get, get_item, merge
 from pyavd.api.interface_descriptions import InterfaceDescriptionData
 
@@ -37,7 +37,8 @@ class L3InterfacesMixin:
             # Nothing to do
             return l3_interface
 
-        profile = get_item(self.l3_interface_profiles, "profile", l3_interface["profile"], default={})
+        msg = f"Profile '{l3_interface['profile']}' applied under l3_interface '{l3_interface['name']}' does not exist in `l3_interface_profiles`."
+        profile = get_item(self.l3_interface_profiles, "profile", l3_interface["profile"], required=True, custom_error_msg=msg)
         merged_dict: dict = merge(profile, l3_interface, list_merge="replace", destructive_merge=False)
         merged_dict.pop("profile", None)
         return merged_dict
@@ -52,7 +53,7 @@ class L3InterfacesMixin:
         if not (l3_interfaces := get(self.switch_data_combined, "l3_interfaces")):
             return []
 
-        # Apply l3_interfaces._profile if set. Silently ignoring missing profile.
+        # Apply l3_interfaces._profile if set.
         if self.l3_interface_profiles:
             l3_interfaces = [self.apply_l3_interfaces_profile(l3_interface) for l3_interface in l3_interfaces]
 
@@ -70,14 +71,14 @@ class L3InterfacesMixin:
             peer_as = get(bgp, "peer_as")
             if peer_as is None:
                 msg = f"'l3_interfaces[{interface['name']}].bgp.peer_as' needs to be set to enable BGP."
-                raise AristaAvdMissingVariableError(msg)
+                raise AristaAvdInvalidInputsError(msg)
 
             is_intf_wan = get(interface, "wan_carrier") is not None
 
             prefix_list_in = get(bgp, "ipv4_prefix_list_in")
             if prefix_list_in is None and is_intf_wan:
                 msg = f"BGP is enabled but 'bgp.ipv4_prefix_list_in' is not configured for l3_interfaces[{interface['name']}]"
-                raise AristaAvdMissingVariableError(msg)
+                raise AristaAvdInvalidInputsError(msg)
 
             description = interface.get("description")
             if not description:

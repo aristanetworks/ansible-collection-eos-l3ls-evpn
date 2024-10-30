@@ -129,41 +129,41 @@ interface Management1
 
 ```eos
 !
-snmp-server engineID local 424242424242424242
-snmp-server contact DC1_OPS
-snmp-server location DC1
-snmp-server engineID remote 1.1.1.1 6172697374615F6970
-snmp-server engineID remote 2.2.2.2 udp-port 1337 DEADBEEFCAFE123456
 snmp-server ipv4 access-list SNMP-MGMT vrf MGMT
 snmp-server ipv4 access-list onur
 snmp-server ipv6 access-list SNMP-MGMT vrf MGMT
 snmp-server ipv6 access-list onur_v6
-snmp-server vrf MGMT local-interface Management1
+snmp-server engineID local 424242424242424242
+snmp-server contact DC1_OPS
+snmp-server location DC1
 snmp-server local-interface Loopback0
 snmp-server vrf Tenant_A_APP_Zone local-interface Loopback12
-snmp-server view VW-WRITE iso included
+snmp-server vrf MGMT local-interface Management1
 snmp-server view VW-READ iso included
+snmp-server view VW-WRITE iso included
 snmp-server community <removed> ro onur
 snmp-server community <removed> view VW-READ rw ipv6 SNMP-MGMT SNMP-MGMT
 snmp-server community <removed> ro
 snmp-server group GRP-READ-ONLY v3 priv read v3read
 snmp-server group GRP-READ-WRITE v3 auth read v3read write v3write
-snmp-server user USER-READ-NO-AUTH-NO-PRIV GRP-READ-ONLY v3
-snmp-server user USER-READ-AUTH-NO-PRIV GRP-READ-ONLY v3 auth sha <removed>
-snmp-server user USER-READ-AUTH-PRIV GRP-READ-ONLY v3 auth sha <removed> priv aes <removed>
-snmp-server user USER-READ-NO-AUTH-NO-PRIV-LOC GRP-READ-ONLY v3
-snmp-server user USER-READ-AUTH-NO-PRIV-LOC GRP-READ-ONLY v3 localized 424242424242424242 auth sha <removed>
-snmp-server user USER-READ-AUTH-PRIV-LOC GRP-READ-ONLY v3 localized 424242424242424242 auth sha <removed> priv aes <removed>
-snmp-server user USER-WRITE GRP-READ-WRITE v3 auth sha <removed> priv aes <removed>
+snmp-server user REMOTE-USER-IP-LOCALIZED GRP-REMOTE remote 42.42.42.42 v3 localized DEADBEEFCAFE123456 auth sha <removed>
 snmp-server user REMOTE-USER-IP-ONLY GRP-REMOTE remote 42.42.42.42 v3
 snmp-server user REMOTE-USER-IP-PORT GRP-REMOTE remote 42.42.42.42 udp-port 666 v3
-snmp-server user REMOTE-USER-IP-LOCALIZED GRP-REMOTE remote 42.42.42.42 v3 localized DEADBEEFCAFE123456 auth sha <removed>
-snmp-server host 10.6.75.121 vrf MGMT version 1 <removed>
-snmp-server host 10.6.75.121 vrf MGMT version 2c <removed>
-snmp-server host 10.6.75.122 vrf MGMT version 2c <removed>
+snmp-server user USER-READ-AUTH-NO-PRIV GRP-READ-ONLY v3 auth sha <removed>
+snmp-server user USER-READ-AUTH-NO-PRIV-LOC GRP-READ-ONLY v3 localized 424242424242424242 auth sha <removed>
+snmp-server user USER-READ-AUTH-PRIV GRP-READ-ONLY v3 auth sha <removed> priv aes <removed>
+snmp-server user USER-READ-AUTH-PRIV-LOC GRP-READ-ONLY v3 localized 424242424242424242 auth sha <removed> priv aes <removed>
+snmp-server user USER-READ-NO-AUTH-NO-PRIV GRP-READ-ONLY v3
+snmp-server user USER-READ-NO-AUTH-NO-PRIV-LOC GRP-READ-ONLY v3
+snmp-server user USER-WRITE GRP-READ-WRITE v3 auth sha <removed> priv aes <removed>
+snmp-server engineID remote 1.1.1.1 6172697374615F6970
+snmp-server engineID remote 2.2.2.2 udp-port 1337 DEADBEEFCAFE123456
 snmp-server host 10.6.75.99 vrf MGMT version 3 auth USER-READ-AUTH-NO-PRIV
 snmp-server host 10.6.75.99 vrf MGMT version 3 auth USER-WRITE
 snmp-server host 10.6.75.100 vrf MGMT version 3 priv USER-READ-AUTH-PRIV
+snmp-server host 10.6.75.121 vrf MGMT version 1 <removed>
+snmp-server host 10.6.75.121 vrf MGMT version 2c <removed>
+snmp-server host 10.6.75.122 vrf MGMT version 2c <removed>
 snmp-server enable traps
 no snmp-server vrf default
 snmp-server vrf MGMT

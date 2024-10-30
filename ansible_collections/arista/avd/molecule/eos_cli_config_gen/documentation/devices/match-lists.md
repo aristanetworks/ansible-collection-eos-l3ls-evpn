@@ -64,14 +64,14 @@ interface Management1
 
 ```eos
 !
+match-list input string molecule
+   10 match regex ^.*MOLECULE.*$
+   20 match regex ^.*TESTING.*$
+!
 match-list input prefix-ipv4 molecule_v4
    match prefix-ipv4 10.10.10.0/24
    match prefix-ipv4 10.10.20.0/24
 !
 match-list input prefix-ipv6 molecule_v6
    match prefix-ipv6 2001:0DB8::/32
-!
-match-list input string molecule
-   10 match regex ^.*MOLECULE.*$
-   20 match regex ^.*TESTING.*$
 ```

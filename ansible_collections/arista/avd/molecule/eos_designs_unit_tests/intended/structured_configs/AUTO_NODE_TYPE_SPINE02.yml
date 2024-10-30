@@ -11,6 +11,10 @@ router_bgp:
   maximum_paths:
     paths: 4
     ecmp: 4
+  redistribute:
+    connected:
+      enabled: true
+      route_map: RM-CONN-2-BGP
   updates:
     wait_install: true
   peer_groups:
@@ -32,9 +36,6 @@ router_bgp:
       activate: true
     - name: EVPN-OVERLAY-PEERS
       activate: false
-  redistribute_routes:
-  - source_protocol: connected
-    route_map: RM-CONN-2-BGP
   neighbors:
   - ip_address: 172.31.255.3
     peer_group: IPv4-UNDERLAY-PEERS
@@ -49,12 +50,12 @@ router_bgp:
   - ip_address: 192.168.255.3
     peer_group: EVPN-OVERLAY-PEERS
     peer: AUTO_NODE_TYPE_LEAF01
-    description: AUTO_NODE_TYPE_LEAF01
+    description: AUTO_NODE_TYPE_LEAF01_Loopback0
     remote_as: '65101'
   - ip_address: 192.168.255.4
     peer_group: EVPN-OVERLAY-PEERS
     peer: AUTO_NODE_TYPE_UNGROUPED_LEAF02
-    description: AUTO_NODE_TYPE_UNGROUPED_LEAF02
+    description: AUTO_NODE_TYPE_UNGROUPED_LEAF02_Loopback0
     remote_as: '65102'
   address_family_evpn:
     peer_groups:
@@ -99,7 +100,7 @@ ethernet_interfaces:
   peer: AUTO_NODE_TYPE_LEAF01
   peer_interface: Ethernet2
   peer_type: l3leaf
-  description: P2P_LINK_TO_AUTO_NODE_TYPE_LEAF01_Ethernet2
+  description: P2P_AUTO_NODE_TYPE_LEAF01_Ethernet2
   shutdown: false
   mtu: 9214
   switchport:
@@ -109,7 +110,7 @@ ethernet_interfaces:
   peer: AUTO_NODE_TYPE_UNGROUPED_LEAF02
   peer_interface: Ethernet2
   peer_type: l3leaf
-  description: P2P_LINK_TO_AUTO_NODE_TYPE_UNGROUPED_LEAF02_Ethernet2
+  description: P2P_AUTO_NODE_TYPE_UNGROUPED_LEAF02_Ethernet2
   shutdown: false
   mtu: 9214
   switchport:

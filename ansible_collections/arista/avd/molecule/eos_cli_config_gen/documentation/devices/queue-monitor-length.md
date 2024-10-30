@@ -49,9 +49,10 @@ interface Management1
 ```eos
 !
 queue-monitor length
-queue-monitor length default thresholds 100 10
-queue-monitor length log 100
 queue-monitor length notifying
 queue-monitor length tx-latency
+queue-monitor length default thresholds 100 10
 queue-monitor length cpu thresholds 200000 100000
+!
+queue-monitor length log 100
 ```

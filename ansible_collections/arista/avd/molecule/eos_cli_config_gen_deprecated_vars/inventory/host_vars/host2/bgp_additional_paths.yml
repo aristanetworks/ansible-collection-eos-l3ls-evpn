@@ -1,0 +1,8 @@
+router_bgp:
+  as: 65101
+  router_id: 192.168.255.3
+  address_family_evpn:
+    bgp_additional_paths:
+      receive: true
+      send:
+        any: true

@@ -12,40 +12,36 @@
 
 #### IPv4 Field Sets
 
-| Field Set Name | Values |
-| -------------- | ------ |
-{%             for field_set_ipv4 in traffic_policies.field_sets.ipv4 %}
-{%                 if field_set_ipv4 | length > 1 %}
-{%                     set value = field_set_ipv4.prefixes | join('<br/>') %}
-{%                 else %}
-{%                     set value = field_set_ipv4[0].prefixes %}
+| Field Set Name | IPv4 Prefixes |
+| -------------- | ------------- |
+{%             for field_set_ipv4 in traffic_policies.field_sets.ipv4 | arista.avd.natural_sort('name') %}
+{%                 if field_set_ipv4.prefixes is arista.avd.defined %}
+{%                     set value = field_set_ipv4.prefixes | arista.avd.natural_sort | join('<br/>') %}
 {%                 endif %}
-| {{ field_set_ipv4.name }} | {{ value }} |
+| {{ field_set_ipv4.name }} | {{ value | arista.avd.default("-") }} |
 {%             endfor %}
 {%         endif %}
 {%         if traffic_policies.field_sets.ipv6 is arista.avd.defined %}
 
 #### IPv6 Field Sets
 
-| Field Set Name | Values |
-| -------------- | ------ |
-{%             for field_set_ipv6 in traffic_policies.field_sets.ipv6 %}
-{%                 if field_set_ipv6 | length > 1 %}
-{%                     set value = field_set_ipv6.prefixes | join('<br/>') %}
-{%                 else %}
-{%                     set value = field_set_ipv6[0].prefixes %}
+| Field Set Name | IPv6 Prefixes |
+| -------------- | ------------- |
+{%             for field_set_ipv6 in traffic_policies.field_sets.ipv6 | arista.avd.natural_sort('name') %}
+{%                 if field_set_ipv6.prefixes is arista.avd.defined %}
+{%                     set value = field_set_ipv6.prefixes | arista.avd.natural_sort | join('<br/>') %}
 {%                 endif %}
-| {{ field_set_ipv6.name }} | {{ value }} |
+| {{ field_set_ipv6.name }} | {{ value | arista.avd.default("-") }} |
 {%             endfor %}
 {%         endif %}
 {%         if traffic_policies.field_sets.ports is arista.avd.defined %}
 
 #### L4 Port Field Sets
 
-| Field Set Name | Values |
-| -------------- | ------ |
-{%             for field_set_port in traffic_policies.field_sets.ports %}
-| {{ field_set_port.name }} | {{ field_set_port.port_range }}|
+| Field Set Name | L4 Ports |
+| -------------- | -------- |
+{%             for field_set_port in traffic_policies.field_sets.ports | arista.avd.natural_sort('name') %}
+| {{ field_set_port.name }} | {{ field_set_port.port_range | arista.avd.default("-") }} |
 {%             endfor %}
 {%         endif %}
 {%     endif %}
@@ -55,10 +51,10 @@
 {%         for policy in traffic_policies.policies | arista.avd.natural_sort('name') %}
 
 ##### {{ policy.name }}
-
 {%             if policy.matches is arista.avd.defined %}
-| Match set | Type | Sources | Destinations | Protocol | Source Port(s) | Destination port(s) | Action |
-| --------- | ---- | ------- | ------------ | -------- | -------------- | ------------------- | ------ |
+
+| Match set | Type | Sources | Destinations | Protocol | Source Port(s) | Source Field(s) | Destination port(s) | Destination Field(s) | Action |
+| --------- | ---- | ------- | ------------ | -------- | -------------- | --------------- | ------------------- | -------------------- | ------ |
 {%                 for match in policy.matches | arista.avd.natural_sort('name') %}
 {%                     set row = namespace() %}
 {%                     set row.match_set = match.name %}
@@ -66,55 +62,53 @@
 {#                     -- Source Prefix #}
 {%                     set row.src_net = "" %}
 {%                     if match.source.prefix_lists is arista.avd.defined %}
-{%                         set row.src_net = match.source.prefix_lists | join('<br/>') %}
+{%                         set row.src_net = match.source.prefix_lists | arista.avd.natural_sort | join('<br/>') %}
 {%                     elif match.source.prefixes is arista.avd.defined %}
-{%                         set row.src_net = match.source.prefixes | join('<br/>') %}
+{%                         set row.src_net = match.source.prefixes | arista.avd.natural_sort | join('<br/>') %}
 {%                     else %}
-{%                         set row.src_net = "ANY" %}
+{%                         set row.src_net = "any" %}
 {%                     endif %}
 {#                     -- Destination Prefix #}
 {%                     set row.dst_net = "" %}
 {%                     if match.destination.prefix_lists is arista.avd.defined %}
-{%                         set row.dst_net = match.destination.prefix_lists | join('<br/>') %}
+{%                         set row.dst_net = match.destination.prefix_lists | arista.avd.natural_sort | join('<br/>') %}
 {%                     elif match.destination.prefixes is arista.avd.defined %}
-{%                         set row.dst_net = match.destination.prefixes | join('<br/>') %}
+{%                         set row.dst_net = match.destination.prefixes | arista.avd.natural_sort | join('<br/>') %}
 {%                     else %}
-{%                         set row.dst_net = "ANY" %}
+{%                         set row.dst_net = "any" %}
 {%                     endif %}
 {#                     -- Protocol #}
 {%                     set row.protocols = "" %}
+{%                     set row.src_port = [] %}
+{%                     set row.dst_port = [] %}
+{%                     set row.src_field = [] %}
+{%                     set row.dst_field = [] %}
 {%                     if match.protocols is arista.avd.defined %}
 {%                         set row.protocols = match.protocols | map(attribute='protocol') | join('<br/>') %}
+{#                         -- Source/Destination Port #}
+{%                         for protocol in match.protocols %}
+{%                             if protocol.protocol | lower in ['tcp','udp'] %}
+{%                                 do row.src_port.append(protocol.src_port | arista.avd.default("any")) %}
+{%                                 do row.src_field.append(protocol.src_field | arista.avd.default("-")) %}
+{%                                 do row.dst_port.append(protocol.dst_port | arista.avd.default("any")) %}
+{%                                 do row.dst_field.append(protocol.dst_field | arista.avd.default("-")) %}
+{%                             else %}
+{%                                 do row.src_port.append("-") %}
+{%                                 do row.src_field.append("-") %}
+{%                                 do row.dst_port.append("-") %}
+{%                                 do row.dst_field.append("-") %}
+{%                             endif %}
+{%                         endfor %}
+{%                         set row.src_port = row.src_port | join('<br/>') %}
+{%                         set row.dst_port = row.dst_port | join('<br/>') %}
+{%                         set row.src_field = row.src_field | join('<br/>') %}
+{%                         set row.dst_field = row.dst_field | join('<br/>') %}
 {%                     else %}
-{%                         set row.protocols = "ANY" %}
-{%                     endif %}
-{#                     -- Source Port #}
-{%                     set row.src_port = "" %}
-{%                     if match.protocols is arista.avd.defined %}
-{%                         for protocol in match.protocols %}
-{%                             if protocol.src_field is arista.avd.defined %}
-{%                                 set row.src_port = protocol.src_field %}
-{%                             elif protocol.src_port is arista.avd.defined %}
-{%                                 set row.src_port = protocol.src_port %}
-{%                             endif %}
-{%                         endfor %}
-{%                         if row.src_port == "" %}
-{%                             set row.src_port = "ANY" %}
-{%                         endif %}
-{%                     endif %}
-{#                     -- Destination Port #}
-{%                     set row.dst_port = "" %}
-{%                     if match.protocols is arista.avd.defined %}
-{%                         for protocol in match.protocols %}
-{%                             if protocol.dst_field is arista.avd.defined %}
-{%                                 set row.dst_port = protocol.dst_field %}
-{%                             elif protocol.dst_port is arista.avd.defined %}
-{%                                 set row.dst_port = protocol.dst_port %}
-{%                             endif %}
-{%                         endfor %}
-{%                         if row.dst_port == "" %}
-{%                             set row.dst_port = "ANY" %}
-{%                         endif %}
+{%                         set row.protocols = "-" %}
+{%                         set row.src_port = "-" %}
+{%                         set row.src_field = "-" %}
+{%                         set row.dst_port = "-" %}
+{%                         set row.dst_field = "-" %}
 {%                     endif %}
 {#                     -- Action management #}
 {%                     set row.actions = [] %}
@@ -140,7 +134,7 @@
 {%                         do row.actions.append("default action: PASS") %}
 {%                     endif %}
 {# -- Table rendering #}
-| {{ row.match_set }} | {{ row.type }} | {{ row.src_net }} | {{ row.dst_net }} | {{ row.protocols }} | {{ row.src_port }} | {{ row.dst_port }} | {{ row.actions | join('<br/>') }} |
+| {{ row.match_set }} | {{ row.type }} | {{ row.src_net }} | {{ row.dst_net }} | {{ row.protocols }} | {{ row.src_port }} | {{ row.src_field }} | {{ row.dst_port }} | {{ row.dst_field }} | {{ row.actions | join('<br/>') }} |
 {%                 endfor %}
 {%             endif %}
 {%         endfor %}

@@ -36,11 +36,11 @@ router_bgp:
   - ip_address: 192.168.255.1
     peer_group: OVERLAY-PEERS
     peer: DC1-SPINE1
-    description: DC1-SPINE1
+    description: DC1-SPINE1_Loopback0
   - ip_address: 192.168.255.4
     peer_group: OVERLAY-PEERS
     peer: DC1-SPINE4
-    description: DC1-SPINE4
+    description: DC1-SPINE4_Loopback0
 static_routes:
 - vrf: MGMT
   destination_address_prefix: 0.0.0.0/0
@@ -115,7 +115,7 @@ ethernet_interfaces:
   peer: DC1-SPINE1
   peer_interface: Ethernet1
   peer_type: spine
-  description: P2P_LINK_TO_DC1-SPINE1_Ethernet1
+  description: P2P_DC1-SPINE1_Ethernet1
   shutdown: false
   mtu: 1500
   switchport:
@@ -130,7 +130,7 @@ ethernet_interfaces:
   peer: DC1-SPINE2
   peer_interface: Ethernet1
   peer_type: spine
-  description: P2P_LINK_TO_DC1-SPINE2_Ethernet1
+  description: P2P_DC1-SPINE2_Ethernet1
   shutdown: false
   mtu: 1500
   switchport:
@@ -145,7 +145,7 @@ ethernet_interfaces:
   peer: DC1-SPINE3
   peer_interface: Ethernet1
   peer_type: spine
-  description: P2P_LINK_TO_DC1-SPINE3_Ethernet1
+  description: P2P_DC1-SPINE3_Ethernet1
   shutdown: false
   mtu: 1500
   switchport:
@@ -160,7 +160,7 @@ ethernet_interfaces:
   peer: DC1-SPINE4
   peer_interface: Ethernet1
   peer_type: spine
-  description: P2P_LINK_TO_DC1-SPINE4_Ethernet1
+  description: P2P_DC1-SPINE4_Ethernet1
   shutdown: false
   mtu: 1500
   switchport:

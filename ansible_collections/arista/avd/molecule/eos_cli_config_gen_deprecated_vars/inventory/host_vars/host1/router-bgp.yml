@@ -1,0 +1,169 @@
+router_bgp:
+  as: 65101
+  router_id: 192.168.255.3
+  redistribute_routes:
+    - source_protocol: ospf
+      include_leaked: true
+    - source_protocol: ospf
+      ospf_route_type: internal
+    - source_protocol: ospf
+      ospf_route_type: external
+    - source_protocol: ospf
+      ospf_route_type: nssa-external 1
+      route_map: RM-REDISTRIBUTE-OSPF-NSSA-1
+      include_leaked: true
+    - source_protocol: bgp
+      route_map: RM-REDISTRIBUTE-BGP
+      # this should not do anything as leaked is generated when source protocol is bgp
+      include_leaked: true
+    - source_protocol: connected
+      rcf: Router_BGP_Connected()
+    - source_protocol: static
+      rcf: Router_BGP_Static()
+  address_family_ipv4:
+    redistribute_routes:
+      - source_protocol: ospf
+        include_leaked: true
+        ospf_route_type: internal
+      - source_protocol: ospf
+        ospf_route_type: external
+        route_map: RM-REDISTRIBUTE-OSPF-EXTERNAL
+        include_leaked: true
+      - source_protocol: ospf
+        ospf_route_type: nssa-external
+      - source_protocol: connected
+        include_leaked: true
+        rcf: Address_Family_IPV4_Connected()
+      - source_protocol: bgp
+      - source_protocol: static
+        rcf: Address_Family_IPV4_Static()
+      - source_protocol: dynamic
+        route_map: Address_Family_IPV4_Dynamic_RM
+  address_family_ipv6_multicast:
+    redistribute_routes:
+      - source_protocol: ospfv3
+        ospf_route_type: external
+      - source_protocol: ospf
+        ospf_route_type: internal
+      - source_protocol: ospfv3
+        ospf_route_type: nssa-external 2
+      - source_protocol: isis
+        rcf: Router_BGP_Isis()
+  address_family_ipv4_multicast:
+    redistribute_routes:
+      - source_protocol: ospf
+        ospf_route_type: external
+      - source_protocol: ospf
+        ospf_route_type: internal
+      - source_protocol: ospf
+        ospf_route_type: nssa-external 2
+      - source_protocol: attached-host
+      - source_protocol: isis
+        rcf: Router_BGP_Isis()
+        include_leaked: true
+      - source_protocol: ospfv3
+        ospf_route_type: external
+      - source_protocol: connected
+        rcf: VRF_AFIPV4MULTI_RCF_CONNECTED()
+      - source_protocol: static
+        route_map: VRF_AFIPV4MULTI_RM_STATIC
+  address_family_ipv6:
+    redistribute_routes:
+      - source_protocol: ospfv3
+        include_leaked: true
+        ospf_route_type: external
+      - source_protocol: ospfv3
+        ospf_route_type: internal
+        route_map: RM-REDISTRIBUTE-OSPF-INTERNAL
+        include_leaked: true
+      - source_protocol: ospfv3
+        ospf_route_type: nssa-external 1
+      - source_protocol: static
+        route_map: RM-IPV6-STATIC-TO-BGP
+      - source_protocol: bgp
+        route_map: RM-REDISTRIBUTE-BGP
+        # this should not do anything as leaked is generated when source protocol is bgp
+        include_leaked: true
+      - source_protocol: connected
+        rcf: Address_Family_IPV6_Connected()
+  vrfs:
+    - name: TENANT_A_PROJECT01
+      redistribute_routes:
+        - source_protocol: connected
+        - source_protocol: static
+          rcf: Router_BGP_Static()
+        - source_protocol: isis
+          route_map: Router_BGP_Isis
+        - source_protocol: bgp
+          route_map: RM-REDISTRIBUTE-BGP
+          # this should not do anything as leaked is generated when source protocol is bgp
+          include_leaked: true
+      address_family_ipv4:
+        redistribute_routes:
+          - source_protocol: connected
+            rcf: VRF_AFIPV4_RCF_CONNECTED()
+          - source_protocol: static
+            route_map: VRF_AFIPV4_RM_STATIC
+          - source_protocol: ospf
+            ospf_route_type: external
+          - source_protocol: ospfv3
+            ospf_route_type: internal
+          - source_protocol: ospf
+            ospf_route_type: nssa-external 1
+    - name: TENANT_A_PROJECT02
+      redistribute_routes:
+        - source_protocol: connected
+        - source_protocol: isis
+      address_family_ipv6:
+        redistribute_routes:
+          - source_protocol: ospfv3
+            ospf_route_type: external
+          - source_protocol: ospfv3
+            include_leaked: true
+            ospf_route_type: internal
+          - source_protocol: ospfv3
+            ospf_route_type: nssa-external
+          - source_protocol: connected
+            rcf: VRF_AFIPV6_RCF_CONNECTED()
+          - source_protocol: static
+            route_map: VRF_AFIPV6_RM_STATIC
+          - source_protocol: isis
+            include_leaked: true
+    - name: Tenant_A
+      redistribute_routes:
+        - source_protocol: ospf
+          include_leaked: true
+          ospf_route_type: external
+        - source_protocol: ospfv3
+          ospf_route_type: internal
+        - source_protocol: ospfv3
+          ospf_route_type: nssa-external
+        - source_protocol: connected
+    - name: VRF03
+      redistribute_routes:
+        - source_protocol: dynamic
+          rcf: VRF_RCF_DYNAMIC()
+      address_family_ipv4_multicast:
+        redistribute_routes:
+          - source_protocol: ospfv3
+            ospf_route_type: external
+          - source_protocol: ospf
+            ospf_route_type: internal
+          - source_protocol: ospf
+            ospf_route_type: nssa-external 2
+          - source_protocol: connected
+            rcf: VRF_AFIPV4MULTI_RCF_CONNECTED()
+          - source_protocol: static
+            route_map: VRF_AFIPV4MULTI_RM_STATIC
+      address_family_ipv6_multicast:
+        redistribute_routes:
+          - source_protocol: ospf
+            ospf_route_type: external
+          - source_protocol: ospfv3
+            ospf_route_type: internal
+          - source_protocol: ospf
+            ospf_route_type: nssa-external
+          - source_protocol: connected
+            rcf: VRF_AFIPV6MULTI_RCF_CONNECTED()
+          - source_protocol: static
+            route_map: VRF_AFIPV6MULTI_RM_STATIC

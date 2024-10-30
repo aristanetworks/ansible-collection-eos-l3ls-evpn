@@ -24,14 +24,14 @@ ethernet_interfaces:
   peer: uplink-native-vlan-parent
   peer_interface: Ethernet1
   peer_type: l2leaf
-  description: UPLINK-NATIVE-VLAN-PARENT_Ethernet1
+  description: L2_uplink-native-vlan-parent_Ethernet1
   shutdown: false
   channel_group:
     id: 1
     mode: active
 port_channel_interfaces:
 - name: Port-Channel1
-  description: UPLINK-NATIVE-VLAN-PARENT_Po1
+  description: L2_uplink-native-vlan-parent_Port-Channel1
   switchport:
     enabled: true
     mode: trunk

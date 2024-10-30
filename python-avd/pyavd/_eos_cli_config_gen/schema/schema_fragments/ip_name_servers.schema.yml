@@ -13,6 +13,7 @@ keys:
       keys:
         ip_address:
           type: str
+          required: true
           description: IPv4 or IPv6 address for DNS server.
         vrf:
           description: VRF Name.

@@ -9,6 +9,10 @@ router_bgp:
   maximum_paths:
     paths: 4
     ecmp: 4
+  redistribute:
+    connected:
+      enabled: true
+      route_map: RM-CONN-2-BGP
   updates:
     wait_install: true
   peer_groups:
@@ -29,9 +33,6 @@ router_bgp:
       activate: true
     - name: EVPN-OVERLAY-PEERS
       activate: false
-  redistribute_routes:
-  - source_protocol: connected
-    route_map: RM-CONN-2-BGP
   neighbors:
   - ip_address: 172.17.0.1
     peer_group: IPv4-UNDERLAY-PEERS
@@ -65,8 +66,9 @@ router_bgp:
       - address_family: evpn
         route_targets:
         - 1000:1000
-    redistribute_routes:
-    - source_protocol: connected
+    redistribute:
+      connected:
+        enabled: true
   - name: PROD
     router_id: 192.168.45.1
     neighbors:
@@ -88,8 +90,9 @@ router_bgp:
       - address_family: evpn
         route_targets:
         - 142:142
-    redistribute_routes:
-    - source_protocol: connected
+    redistribute:
+      connected:
+        enabled: true
   - name: ATTRACTED-VRF-FROM-UPLINK
     router_id: 192.168.45.1
     neighbors:
@@ -111,8 +114,9 @@ router_bgp:
       - address_family: evpn
         route_targets:
         - 666:666
-    redistribute_routes:
-    - source_protocol: connected
+    redistribute:
+      connected:
+        enabled: true
   - name: default
     rd: 192.168.45.1:1
     route_targets:
@@ -187,7 +191,7 @@ ethernet_interfaces:
   peer: cv-pathfinder-transit1A
   peer_interface: Ethernet52
   peer_type: wan_router
-  description: P2P_LINK_TO_CV-PATHFINDER-TRANSIT1A_Ethernet52
+  description: P2P_cv-pathfinder-transit1A_Ethernet52
   shutdown: false
   mtu: 9214
   switchport:
@@ -198,10 +202,10 @@ ethernet_interfaces:
   peer_interface: Ethernet52.1000
   peer_type: wan_router
   vrf: IT
-  description: P2P_LINK_TO_CV-PATHFINDER-TRANSIT1A_Ethernet52.1000_vrf_IT
+  description: P2P_cv-pathfinder-transit1A_Ethernet52.1000_VRF_IT
   shutdown: false
-  type: l3dot1q
-  encapsulation_dot1q_vlan: 1000
+  encapsulation_dot1q:
+    vlan: 1000
   mtu: 9214
   ip_address: 172.17.0.0/31
 - name: Ethernet1.142
@@ -209,10 +213,10 @@ ethernet_interfaces:
   peer_interface: Ethernet52.142
   peer_type: wan_router
   vrf: PROD
-  description: P2P_LINK_TO_CV-PATHFINDER-TRANSIT1A_Ethernet52.142_vrf_PROD
+  description: P2P_cv-pathfinder-transit1A_Ethernet52.142_VRF_PROD
   shutdown: false
-  type: l3dot1q
-  encapsulation_dot1q_vlan: 142
+  encapsulation_dot1q:
+    vlan: 142
   mtu: 9214
   ip_address: 172.17.0.0/31
 - name: Ethernet1.666
@@ -220,17 +224,17 @@ ethernet_interfaces:
   peer_interface: Ethernet52.666
   peer_type: wan_router
   vrf: ATTRACTED-VRF-FROM-UPLINK
-  description: P2P_LINK_TO_CV-PATHFINDER-TRANSIT1A_Ethernet52.666_vrf_ATTRACTED-VRF-FROM-UPLINK
+  description: P2P_cv-pathfinder-transit1A_Ethernet52.666_VRF_ATTRACTED-VRF-FROM-UPLINK
   shutdown: false
-  type: l3dot1q
-  encapsulation_dot1q_vlan: 666
+  encapsulation_dot1q:
+    vlan: 666
   mtu: 9214
   ip_address: 172.17.0.0/31
 - name: Ethernet2
   peer: cv-pathfinder-transit1B
   peer_interface: Ethernet52
   peer_type: wan_router
-  description: P2P_LINK_TO_CV-PATHFINDER-TRANSIT1B_Ethernet52
+  description: P2P_cv-pathfinder-transit1B_Ethernet52
   shutdown: false
   mtu: 9214
   switchport:
@@ -241,10 +245,10 @@ ethernet_interfaces:
   peer_interface: Ethernet52.1000
   peer_type: wan_router
   vrf: IT
-  description: P2P_LINK_TO_CV-PATHFINDER-TRANSIT1B_Ethernet52.1000_vrf_IT
+  description: P2P_cv-pathfinder-transit1B_Ethernet52.1000_VRF_IT
   shutdown: false
-  type: l3dot1q
-  encapsulation_dot1q_vlan: 1000
+  encapsulation_dot1q:
+    vlan: 1000
   mtu: 9214
   ip_address: 172.17.0.2/31
 - name: Ethernet2.142
@@ -252,10 +256,10 @@ ethernet_interfaces:
   peer_interface: Ethernet52.142
   peer_type: wan_router
   vrf: PROD
-  description: P2P_LINK_TO_CV-PATHFINDER-TRANSIT1B_Ethernet52.142_vrf_PROD
+  description: P2P_cv-pathfinder-transit1B_Ethernet52.142_VRF_PROD
   shutdown: false
-  type: l3dot1q
-  encapsulation_dot1q_vlan: 142
+  encapsulation_dot1q:
+    vlan: 142
   mtu: 9214
   ip_address: 172.17.0.2/31
 - name: Ethernet2.666
@@ -263,10 +267,10 @@ ethernet_interfaces:
   peer_interface: Ethernet52.666
   peer_type: wan_router
   vrf: ATTRACTED-VRF-FROM-UPLINK
-  description: P2P_LINK_TO_CV-PATHFINDER-TRANSIT1B_Ethernet52.666_vrf_ATTRACTED-VRF-FROM-UPLINK
+  description: P2P_cv-pathfinder-transit1B_Ethernet52.666_VRF_ATTRACTED-VRF-FROM-UPLINK
   shutdown: false
-  type: l3dot1q
-  encapsulation_dot1q_vlan: 666
+  encapsulation_dot1q:
+    vlan: 666
   mtu: 9214
   ip_address: 172.17.0.2/31
 loopback_interfaces:

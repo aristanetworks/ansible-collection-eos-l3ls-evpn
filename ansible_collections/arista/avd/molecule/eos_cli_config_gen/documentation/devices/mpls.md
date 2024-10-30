@@ -117,10 +117,10 @@ interface Loopback0
 mpls ip
 !
 mpls ldp
-   interface disabled default
    router-id 192.168.1.1
-   no shutdown
    transport-address interface Loopback0
+   interface disabled default
+   no shutdown
 !
 mpls icmp fragmentation-needed tunneling
 ```

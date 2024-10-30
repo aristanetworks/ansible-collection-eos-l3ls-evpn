@@ -9,6 +9,12 @@ router_bgp:
   maximum_paths:
     paths: 4
     ecmp: 4
+  redistribute:
+    connected:
+      enabled: true
+      route_map: RM-CONN-2-BGP
+    static:
+      enabled: true
   updates:
     wait_install: true
   peer_groups:
@@ -32,10 +38,6 @@ router_bgp:
       activate: true
     - name: EVPN-OVERLAY-PEERS
       activate: false
-  redistribute_routes:
-  - source_protocol: connected
-    route_map: RM-CONN-2-BGP
-  - source_protocol: static
   neighbors:
   - ip_address: 10.10.101.4
     peer_group: UNDERLAY-PEERS
@@ -81,8 +83,9 @@ router_bgp:
         route_targets:
         - '20:20'
     router_id: 192.168.255.35
-    redistribute_routes:
-    - source_protocol: connected
+    redistribute:
+      connected:
+        enabled: true
   vlan_aware_bundles:
   - name: default
     rd: 192.168.255.35:21

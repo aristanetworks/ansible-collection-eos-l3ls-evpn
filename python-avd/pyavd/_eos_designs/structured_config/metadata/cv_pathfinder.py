@@ -99,7 +99,7 @@ class CvPathfinderMixin:
             self._hostvars,
             "cv_pathfinder_regions",
             required=True,
-            org_key="'cv_pathfinder_regions' key must be set when 'wan_mode' is 'cv-pathfinder'.",
+            custom_error_msg="'cv_pathfinder_regions' key must be set when 'wan_mode' is 'cv-pathfinder'.",
         )
         return [
             {

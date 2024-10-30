@@ -187,16 +187,16 @@ vlan 2020
 
 | Interface | Description | Channel Group | IP Address | VRF |  MTU | Shutdown | ACL In | ACL Out |
 | --------- | ----------- | ------------- | ---------- | ----| ---- | -------- | ------ | ------- |
-| Ethernet1 | P2P_LINK_TO_SITE1-LSR2_Ethernet1 | - | 100.64.48.2/31 | default | 9214 | False | - | - |
-| Ethernet2 | P2P_LINK_TO_SITE1-LER1_Ethernet2 | - | 100.64.48.5/31 | default | 9178 | False | - | - |
+| Ethernet1 | P2P_SITE1-LSR2_Ethernet1 | - | 100.64.48.2/31 | default | 9214 | False | - | - |
+| Ethernet2 | P2P_SITE1-LER1_Ethernet2 | - | 100.64.48.5/31 | default | 9178 | False | - | - |
 | Ethernet5.100 | TENANT_B_SITE_3 | - | 192.168.48.0/31 | TENANT_B_WAN | - | False | - | - |
 
 ##### IPv6
 
 | Interface | Description | Channel Group | IPv6 Address | VRF | MTU | Shutdown | ND RA Disabled | Managed Config Flag | IPv6 ACL In | IPv6 ACL Out |
 | --------- | ----------- | --------------| ------------ | --- | --- | -------- | -------------- | -------------------| ----------- | ------------ |
-| Ethernet1 | P2P_LINK_TO_SITE1-LSR2_Ethernet1 | - | - | default | 9214 | False | - | - | - | - |
-| Ethernet2 | P2P_LINK_TO_SITE1-LER1_Ethernet2 | - | - | default | 9178 | False | - | - | - | - |
+| Ethernet1 | P2P_SITE1-LSR2_Ethernet1 | - | - | default | 9214 | False | - | - | - | - |
+| Ethernet2 | P2P_SITE1-LER1_Ethernet2 | - | - | default | 9178 | False | - | - | - | - |
 
 ##### ISIS
 
@@ -210,7 +210,7 @@ vlan 2020
 ```eos
 !
 interface Ethernet1
-   description P2P_LINK_TO_SITE1-LSR2_Ethernet1
+   description P2P_SITE1-LSR2_Ethernet1
    no shutdown
    mtu 9214
    speed forced 100gfull
@@ -231,7 +231,7 @@ interface Ethernet1
 
 !
 interface Ethernet2
-   description P2P_LINK_TO_SITE1-LER1_Ethernet2
+   description P2P_SITE1-LER1_Ethernet2
    no shutdown
    mtu 9178
    speed forced 10000full
@@ -287,7 +287,7 @@ interface Ethernet8
 
 ##### Flexible Encapsulation Interfaces
 
-| Interface | Description | Vlan ID | Client Protocol | Client Inner Protocol | Client VLAN | Client Outer VLAN Tag | Client Inner VLAN Tag | Network Protocol | Network Inner Protocol | Network VLAN | Network Outer VLAN Tag | Network Inner VLAN Tag |
+| Interface | Description | Vlan ID | Client Encapsulation | Client Inner Encapsulation | Client VLAN | Client Outer VLAN Tag | Client Inner VLAN Tag | Network Encapsulation | Network Inner Encapsulation | Network VLAN | Network Outer VLAN Tag | Network Inner VLAN Tag |
 | --------- | ----------- | ------- | --------------- | --------------------- | ----------- | --------------------- | --------------------- | ---------------- | ---------------------- | ------------ | ---------------------- | ---------------------- |
 | Port-Channel3.1000 | - | - | dot1q | - | 1000 | - | - | client | - | - | - | - |
 | Port-Channel3.1001 | - | - | dot1q | - | 1001 | - | - | client | - | - | - | - |
@@ -313,6 +313,7 @@ interface Ethernet8
 interface Port-Channel3
    no shutdown
    no switchport
+   !
    evpn ethernet-segment
       identifier 0000:0000:0102:0000:0034
       route-target import 01:02:00:00:00:34
@@ -320,26 +321,31 @@ interface Port-Channel3
 !
 interface Port-Channel3.1000
    no shutdown
+   !
    encapsulation vlan
       client dot1q 1000 network client
 !
 interface Port-Channel3.1001
    no shutdown
+   !
    encapsulation vlan
       client dot1q 1001 network client
 !
 interface Port-Channel3.1002
    no shutdown
+   !
    encapsulation vlan
       client dot1q 1002 network client
 !
 interface Port-Channel3.1003
    no shutdown
+   !
    encapsulation vlan
       client dot1q 1003 network client
 !
 interface Port-Channel3.1004
    no shutdown
+   !
    encapsulation vlan
       client dot1q 1004 network client
 !
@@ -350,16 +356,19 @@ interface Port-Channel8
 !
 interface Port-Channel8.111
    vlan id 111
+   !
    encapsulation vlan
       client dot1q 111 network client
 !
 interface Port-Channel8.222
    vlan id 222
+   !
    encapsulation vlan
       client dot1q 222 network client
 !
 interface Port-Channel8.333
    vlan id 434
+   !
    encapsulation vlan
       client dot1q 333 network client
 ```
@@ -556,8 +565,8 @@ ip route vrf MGMT 0.0.0.0/0 192.168.200.5
 !
 router isis CORE
    net 49.0001.1000.7000.0006.00
-   is-type level-1-2
    router-id ipv4 100.70.0.6
+   is-type level-1-2
    log-adjacency-changes
    mpls ldp sync default
    timers local-convergence-delay 15000 protected-prefixes
@@ -619,9 +628,9 @@ ASN Notation: asplain
 
 ##### EVPN Peer Groups
 
-| Peer Group | Activate | Encapsulation |
-| ---------- | -------- | ------------- |
-| MPLS-OVERLAY-PEERS | True | default |
+| Peer Group | Activate | Route-map In | Route-map Out | Encapsulation |
+| ---------- | -------- | ------------ | ------------- | ------------- |
+| MPLS-OVERLAY-PEERS | True |  - | - | default |
 
 ##### EVPN Neighbor Default Encapsulation
 
@@ -676,9 +685,9 @@ ASN Notation: asplain
 !
 router bgp 65000
    router-id 100.70.0.6
-   maximum-paths 4 ecmp 4
    update wait-install
    no bgp default ipv4-unicast
+   maximum-paths 4 ecmp 4
    distance bgp 20 200 200
    neighbor MPLS-OVERLAY-PEERS peer group
    neighbor MPLS-OVERLAY-PEERS remote-as 65000
@@ -688,13 +697,13 @@ router bgp 65000
    neighbor MPLS-OVERLAY-PEERS send-community
    neighbor MPLS-OVERLAY-PEERS maximum-routes 0
    neighbor 100.70.0.5 peer group MPLS-OVERLAY-PEERS
-   neighbor 100.70.0.5 description SITE1-LER1
+   neighbor 100.70.0.5 description SITE1-LER1_Loopback0
    neighbor 100.70.0.7 peer group MPLS-OVERLAY-PEERS
-   neighbor 100.70.0.7 description SITE2-LER1
+   neighbor 100.70.0.7 description SITE2-LER1_Loopback0
    neighbor 100.70.0.8 peer group MPLS-OVERLAY-PEERS
-   neighbor 100.70.0.8 description SITE1-RR1
+   neighbor 100.70.0.8 description SITE1-RR1_Loopback0
    neighbor 100.70.0.9 peer group MPLS-OVERLAY-PEERS
-   neighbor 100.70.0.9 description SITE2-RR1
+   neighbor 100.70.0.9 description SITE2-RR1_Loopback0
    !
    vlan 10
       rd 100.70.0.6:10010
@@ -761,8 +770,8 @@ router bgp 65000
       router-id 100.70.0.6
       update wait-install
       neighbor 192.168.48.1 remote-as 65201
-      neighbor 192.168.48.1 password 7 <removed>
       neighbor 192.168.48.1 description TENANT_B_CPE_SITE3
+      neighbor 192.168.48.1 password 7 <removed>
       redistribute connected
       !
       address-family ipv4
@@ -808,10 +817,10 @@ router bfd
 mpls ip
 !
 mpls ldp
-   interface disabled default
    router-id 100.70.0.6
-   no shutdown
    transport-address interface Loopback0
+   interface disabled default
+   no shutdown
 ```
 
 ### MPLS Interfaces

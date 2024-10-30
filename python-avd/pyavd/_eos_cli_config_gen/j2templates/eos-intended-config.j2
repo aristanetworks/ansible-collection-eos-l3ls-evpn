@@ -20,12 +20,10 @@
 {% include 'eos/address-locking.j2' %}
 {# Agents #}
 {% include 'eos/agents.j2' %}
-{# hardware counters #}
-{% include 'eos/hardware-counters.j2' %}
+{# hardware configuration #}
+{% include 'eos/hardware.j2' %}
 {# service routing configuration #}
 {% include 'eos/service-routing-configuration-bgp.j2' %}
-{# management api http #}
-{% include 'eos/management-api-http.j2' %}
 {# cli prompt #}
 {% include 'eos/prompt.j2' %}
 {# terminal settings #}
@@ -64,8 +62,6 @@
 {% include 'eos/logging-event-congestion-drops.j2' %}
 {# load-interval #}
 {% include 'eos/load-interval.j2' %}
-{# hardware configuration #}
-{% include 'eos/hardware.j2' %}
 {# transceiver qsfp default mode #}
 {% include 'eos/transceiver-qsfp-default-mode.j2' %}
 {# interface defaults #}
@@ -134,6 +130,8 @@
 {% include 'eos/sflow.j2' %}
 {# snmp settings #}
 {% include 'eos/snmp-server.j2' %}
+{# hardware speed-groups #}
+{% include 'eos/hardware-speed-groups.j2' %}
 {# spanning-tree #}
 {% include 'eos/spanning-tree.j2' %}
 {# sync-e #}
@@ -158,6 +156,8 @@
 {% include 'eos/banners.j2' %}
 {# management accounts #}
 {% include 'eos/management-accounts.j2' %}
+{# management api http #}
+{% include 'eos/management-api-http.j2' %}
 {# management console #}
 {% include 'eos/management-console.j2' %}
 {# management cvx #}

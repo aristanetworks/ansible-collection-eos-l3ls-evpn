@@ -9,6 +9,10 @@ router_bgp:
   maximum_paths:
     paths: 4
     ecmp: 4
+  redistribute:
+    connected:
+      enabled: true
+      route_map: RM-CONN-2-BGP
   updates:
     wait_install: true
   peer_groups:
@@ -43,15 +47,12 @@ router_bgp:
   - ip_address: 10.10.224.3
     peer_group: MLAG-IPv4-UNDERLAY-PEER
     peer: MLAG_ODD_ID_L3LEAF1B
-    description: MLAG_ODD_ID_L3LEAF1B
+    description: MLAG_ODD_ID_L3LEAF1B_Vlan4093
   - ip_address: 10.254.255.250
     peer_group: IPv4-UNDERLAY-PEERS
     remote_as: '65123'
     peer: P2P-UPLINKS-IPV4-PREFIX-LENGTH
     description: P2P-UPLINKS-IPV4-PREFIX-LENGTH_Ethernet1
-  redistribute_routes:
-  - source_protocol: connected
-    route_map: RM-CONN-2-BGP
   address_family_evpn:
     peer_groups:
     - name: EVPN-OVERLAY-PEERS
@@ -89,29 +90,29 @@ spanning_tree:
 vlans:
 - id: 4093
   tenant: system
-  name: LEAF_PEER_L3
+  name: MLAG_L3
   trunk_groups:
   - MLAG
 - id: 4094
   tenant: system
-  name: MLAG_PEER
+  name: MLAG
   trunk_groups:
   - MLAG
 vlan_interfaces:
 - name: Vlan4093
-  description: MLAG_PEER_L3_PEERING
+  description: MLAG_L3
   shutdown: false
   mtu: 9214
   ip_address: 10.10.224.2/31
 - name: Vlan4094
-  description: MLAG_PEER
+  description: MLAG
   shutdown: false
   no_autostate: true
   mtu: 9214
   ip_address: 10.10.255.2/31
 port_channel_interfaces:
 - name: Port-Channel5
-  description: MLAG_PEER_MLAG_ODD_ID_L3LEAF1B_Po5
+  description: MLAG_MLAG_ODD_ID_L3LEAF1B_Port-Channel5
   switchport:
     enabled: true
     mode: trunk
@@ -124,7 +125,7 @@ ethernet_interfaces:
   peer: MLAG_ODD_ID_L3LEAF1B
   peer_interface: Ethernet5
   peer_type: mlag_peer
-  description: MLAG_PEER_MLAG_ODD_ID_L3LEAF1B_Ethernet5
+  description: MLAG_MLAG_ODD_ID_L3LEAF1B_Ethernet5
   shutdown: false
   channel_group:
     id: 5
@@ -133,7 +134,7 @@ ethernet_interfaces:
   peer: MLAG_ODD_ID_L3LEAF1B
   peer_interface: Ethernet6
   peer_type: mlag_peer
-  description: MLAG_PEER_MLAG_ODD_ID_L3LEAF1B_Ethernet6
+  description: MLAG_MLAG_ODD_ID_L3LEAF1B_Ethernet6
   shutdown: false
   channel_group:
     id: 5
@@ -142,7 +143,7 @@ ethernet_interfaces:
   peer: P2P-UPLINKS-IPV4-PREFIX-LENGTH
   peer_interface: Ethernet1
   peer_type: overlay-controller
-  description: P2P_LINK_TO_P2P-UPLINKS-IPV4-PREFIX-LENGTH_Ethernet1
+  description: P2P_P2P-UPLINKS-IPV4-PREFIX-LENGTH_Ethernet1
   shutdown: false
   mtu: 9214
   switchport:

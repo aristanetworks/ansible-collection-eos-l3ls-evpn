@@ -48,6 +48,63 @@ anta.tests.aaa:
     - exec
     - commands
     - dot1x
+anta.tests.avt:
+- VerifyAVTSpecificPath:
+    avt_paths:
+    - avt_name: DEFAULT-POLICY-CONTROL-PLANE
+      destination: 10.255.1.1
+      next_hop: 10.255.1.1
+      vrf: default
+    result_overwrite:
+      custom_field: 'AVT profile: DEFAULT-POLICY-CONTROL-PLANE, VRF: default, Destination
+        IPv4 Address: 10.255.1.1, Nexthop VTEP: 10.255.1.1'
+- VerifyAVTSpecificPath:
+    avt_paths:
+    - avt_name: DEFAULT-POLICY-CONTROL-PLANE
+      destination: 10.255.255.10
+      next_hop: 10.255.255.10
+      vrf: default
+    result_overwrite:
+      custom_field: 'AVT profile: DEFAULT-POLICY-CONTROL-PLANE, VRF: default, Destination
+        IPv4 Address: 10.255.255.10, Nexthop VTEP: 10.255.255.10'
+- VerifyAVTSpecificPath:
+    avt_paths:
+    - avt_name: DEFAULT-POLICY-CONTROL-PLANE
+      destination: 10.255.255.20
+      next_hop: 10.255.255.20
+      vrf: default
+    result_overwrite:
+      custom_field: 'AVT profile: DEFAULT-POLICY-CONTROL-PLANE, VRF: default, Destination
+        IPv4 Address: 10.255.255.20, Nexthop VTEP: 10.255.255.20'
+- VerifyAVTSpecificPath:
+    avt_paths:
+    - avt_name: DEFAULT-POLICY-DEFAULT
+      destination: 10.255.1.1
+      next_hop: 10.255.1.1
+      vrf: default
+    result_overwrite:
+      custom_field: 'AVT profile: DEFAULT-POLICY-DEFAULT, VRF: default, Destination
+        IPv4 Address: 10.255.1.1, Nexthop VTEP: 10.255.1.1'
+- VerifyAVTSpecificPath:
+    avt_paths:
+    - avt_name: DEFAULT-POLICY-DEFAULT
+      destination: 10.255.255.10
+      next_hop: 10.255.255.10
+      vrf: default
+    result_overwrite:
+      custom_field: 'AVT profile: DEFAULT-POLICY-DEFAULT, VRF: default, Destination
+        IPv4 Address: 10.255.255.10, Nexthop VTEP: 10.255.255.10'
+- VerifyAVTSpecificPath:
+    avt_paths:
+    - avt_name: DEFAULT-POLICY-DEFAULT
+      destination: 10.255.255.20
+      next_hop: 10.255.255.20
+      vrf: default
+    result_overwrite:
+      custom_field: 'AVT profile: DEFAULT-POLICY-DEFAULT, VRF: default, Destination
+        IPv4 Address: 10.255.255.20, Nexthop VTEP: 10.255.255.20'
+- VerifyAVTRole:
+    role: edge
 anta.tests.configuration:
 - VerifyZeroTouch: null
 - VerifyRunningConfigDiffs: null
@@ -149,13 +206,13 @@ anta.tests.interfaces:
     - name: Ethernet1
       status: up
     result_overwrite:
-      custom_field: Interface Ethernet1 - P2P_LINK_TO_DC1-LEAF1A_Ethernet7 = 'up'
+      custom_field: Interface Ethernet1 - P2P_dc1-leaf1a_Ethernet7 = 'up'
 - VerifyInterfacesStatus:
     interfaces:
     - name: Ethernet2
       status: up
     result_overwrite:
-      custom_field: Interface Ethernet2 - P2P_LINK_TO_DC1-LEAF1B_Ethernet7 = 'up'
+      custom_field: Interface Ethernet2 - P2P_dc1-leaf1b_Ethernet7 = 'up'
 - VerifyInterfacesStatus:
     interfaces:
     - name: Ethernet3

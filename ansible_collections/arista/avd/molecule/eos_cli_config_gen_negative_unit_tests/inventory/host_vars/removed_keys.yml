@@ -1,0 +1,4 @@
+---
+radius_servers: ["server1"]  # Removed key
+
+expected_error_message: "1 errors found during schema validation of input vars."

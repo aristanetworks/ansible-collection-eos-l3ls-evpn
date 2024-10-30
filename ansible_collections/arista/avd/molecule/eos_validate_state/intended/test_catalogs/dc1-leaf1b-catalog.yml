@@ -337,43 +337,43 @@ anta.tests.interfaces:
     - name: Ethernet3
       status: up
     result_overwrite:
-      custom_field: Interface Ethernet3 - MLAG_PEER_dc1-leaf1a_Ethernet3 = 'up'
+      custom_field: Interface Ethernet3 - MLAG_dc1-leaf1a_Ethernet3 = 'up'
 - VerifyInterfacesStatus:
     interfaces:
     - name: Ethernet4
       status: up
     result_overwrite:
-      custom_field: Interface Ethernet4 - MLAG_PEER_dc1-leaf1a_Ethernet4 = 'up'
+      custom_field: Interface Ethernet4 - MLAG_dc1-leaf1a_Ethernet4 = 'up'
 - VerifyInterfacesStatus:
     interfaces:
     - name: Ethernet1
       status: up
     result_overwrite:
-      custom_field: Interface Ethernet1 - P2P_LINK_TO_DC1-SPINE1_Ethernet2 = 'up'
+      custom_field: Interface Ethernet1 - P2P_dc1-spine1_Ethernet2 = 'up'
 - VerifyInterfacesStatus:
     interfaces:
     - name: Ethernet2
       status: up
     result_overwrite:
-      custom_field: Interface Ethernet2 - P2P_LINK_TO_DC1-SPINE2_Ethernet2 = 'up'
+      custom_field: Interface Ethernet2 - P2P_dc1-spine2_Ethernet2 = 'up'
 - VerifyInterfacesStatus:
     interfaces:
     - name: Ethernet6
       status: up
     result_overwrite:
-      custom_field: Interface Ethernet6 - P2P_LINK_TO_DC1-WAN1_Ethernet2 = 'up'
+      custom_field: Interface Ethernet6 - P2P_dc1-wan1_Ethernet2 = 'up'
 - VerifyInterfacesStatus:
     interfaces:
     - name: Ethernet7
       status: up
     result_overwrite:
-      custom_field: Interface Ethernet7 - P2P_LINK_TO_DC1-WAN2_Ethernet2 = 'up'
+      custom_field: Interface Ethernet7 - P2P_dc1-wan2_Ethernet2 = 'up'
 - VerifyInterfacesStatus:
     interfaces:
     - name: Ethernet8
       status: up
     result_overwrite:
-      custom_field: Interface Ethernet8 - DC1-LEAF1C_Ethernet2 = 'up'
+      custom_field: Interface Ethernet8 - L2_dc1-leaf1c_Ethernet2 = 'up'
 - VerifyInterfacesStatus:
     interfaces:
     - name: Ethernet5
@@ -385,13 +385,13 @@ anta.tests.interfaces:
     - name: Port-Channel3
       status: up
     result_overwrite:
-      custom_field: Interface Port-Channel3 - MLAG_PEER_dc1-leaf1a_Po3 = 'up'
+      custom_field: Interface Port-Channel3 - MLAG_dc1-leaf1a_Port-Channel3 = 'up'
 - VerifyInterfacesStatus:
     interfaces:
     - name: Port-Channel8
       status: up
     result_overwrite:
-      custom_field: Interface Port-Channel8 - DC1-LEAF1C_Po1 = 'up'
+      custom_field: Interface Port-Channel8 - L2_dc1-leaf1c_Port-Channel1 = 'up'
 - VerifyInterfacesStatus:
     interfaces:
     - name: Port-Channel5
@@ -403,13 +403,13 @@ anta.tests.interfaces:
     - name: Vlan4093
       status: up
     result_overwrite:
-      custom_field: Interface Vlan4093 - MLAG_PEER_L3_PEERING = 'up'
+      custom_field: Interface Vlan4093 - MLAG_L3 = 'up'
 - VerifyInterfacesStatus:
     interfaces:
     - name: Vlan4094
       status: up
     result_overwrite:
-      custom_field: Interface Vlan4094 - MLAG_PEER = 'up'
+      custom_field: Interface Vlan4094 - MLAG = 'up'
 - VerifyInterfacesStatus:
     interfaces:
     - name: Vlan11
@@ -427,7 +427,7 @@ anta.tests.interfaces:
     - name: Vlan3009
       status: up
     result_overwrite:
-      custom_field: 'Interface Vlan3009 - MLAG_PEER_L3_iBGP: vrf VRF10 = ''up'''
+      custom_field: Interface Vlan3009 - MLAG_L3_VRF_VRF10 = 'up'
 - VerifyInterfacesStatus:
     interfaces:
     - name: Vlan21
@@ -445,7 +445,7 @@ anta.tests.interfaces:
     - name: Vlan3010
       status: up
     result_overwrite:
-      custom_field: 'Interface Vlan3010 - MLAG_PEER_L3_iBGP: vrf VRF11 = ''up'''
+      custom_field: Interface Vlan3010 - MLAG_L3_VRF_VRF11 = 'up'
 - VerifyInterfacesStatus:
     interfaces:
     - name: Vlan4085
@@ -469,13 +469,13 @@ anta.tests.interfaces:
     - name: Loopback10
       status: up
     result_overwrite:
-      custom_field: Interface Loopback10 - VRF10_VTEP_DIAGNOSTICS = 'up'
+      custom_field: Interface Loopback10 - DIAG_VRF_VRF10 = 'up'
 - VerifyInterfacesStatus:
     interfaces:
     - name: Loopback11
       status: up
     result_overwrite:
-      custom_field: Interface Loopback11 - VRF11_VTEP_DIAGNOSTICS = 'up'
+      custom_field: Interface Loopback11 - DIAG_VRF_VRF11 = 'up'
 - VerifyInterfacesStatus:
     interfaces:
     - name: Vxlan1

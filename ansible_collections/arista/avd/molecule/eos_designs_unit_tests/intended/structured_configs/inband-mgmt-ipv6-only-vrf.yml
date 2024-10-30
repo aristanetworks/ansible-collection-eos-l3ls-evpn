@@ -40,7 +40,7 @@ ethernet_interfaces:
     mode: active
 port_channel_interfaces:
 - name: Port-Channel1
-  description: INBAND-MGMT-PARENTS-IPV6_Po27
+  description: inband-mgmt-parents-ipv6_Po27
   switchport:
     enabled: true
     mode: trunk

@@ -9,6 +9,10 @@ router_bgp:
   maximum_paths:
     paths: 4
     ecmp: 4
+  redistribute:
+    connected:
+      enabled: true
+      route_map: RM-CONN-2-BGP
   peer_groups:
   - name: IPv4-UNDERLAY-PEERS
     type: ipv4
@@ -30,9 +34,6 @@ router_bgp:
       activate: true
     - name: EVPN-OVERLAY-PEERS
       activate: false
-  redistribute_routes:
-  - source_protocol: connected
-    route_map: RM-CONN-2-BGP
   neighbors:
   - ip_address: 10.255.255.107
     peer_group: IPv4-UNDERLAY-PEERS
@@ -57,22 +58,22 @@ router_bgp:
   - ip_address: 10.255.128.13
     peer_group: EVPN-OVERLAY-PEERS
     peer: dc2-leaf1a
-    description: dc2-leaf1a
+    description: dc2-leaf1a_Loopback0
     remote_as: '65201'
   - ip_address: 10.255.128.14
     peer_group: EVPN-OVERLAY-PEERS
     peer: dc2-leaf1b
-    description: dc2-leaf1b
+    description: dc2-leaf1b_Loopback0
     remote_as: '65201'
   - ip_address: 10.255.128.15
     peer_group: EVPN-OVERLAY-PEERS
     peer: dc2-leaf2a
-    description: dc2-leaf2a
+    description: dc2-leaf2a_Loopback0
     remote_as: '65202'
   - ip_address: 10.255.128.16
     peer_group: EVPN-OVERLAY-PEERS
     peer: dc2-leaf2b
-    description: dc2-leaf2b
+    description: dc2-leaf2b_Loopback0
     remote_as: '65202'
   address_family_evpn:
     peer_groups:
@@ -126,7 +127,7 @@ ethernet_interfaces:
   peer: dc2-leaf1a
   peer_interface: Ethernet2
   peer_type: l3leaf
-  description: P2P_LINK_TO_DC2-LEAF1A_Ethernet2
+  description: P2P_dc2-leaf1a_Ethernet2
   shutdown: false
   mtu: 1500
   switchport:
@@ -136,7 +137,7 @@ ethernet_interfaces:
   peer: dc2-leaf1b
   peer_interface: Ethernet2
   peer_type: l3leaf
-  description: P2P_LINK_TO_DC2-LEAF1B_Ethernet2
+  description: P2P_dc2-leaf1b_Ethernet2
   shutdown: false
   mtu: 1500
   switchport:
@@ -146,7 +147,7 @@ ethernet_interfaces:
   peer: dc2-leaf2a
   peer_interface: Ethernet2
   peer_type: l3leaf
-  description: P2P_LINK_TO_DC2-LEAF2A_Ethernet2
+  description: P2P_dc2-leaf2a_Ethernet2
   shutdown: false
   mtu: 1500
   switchport:
@@ -156,7 +157,7 @@ ethernet_interfaces:
   peer: dc2-leaf2b
   peer_interface: Ethernet2
   peer_type: l3leaf
-  description: P2P_LINK_TO_DC2-LEAF2B_Ethernet2
+  description: P2P_dc2-leaf2b_Ethernet2
   shutdown: false
   mtu: 1500
   switchport:

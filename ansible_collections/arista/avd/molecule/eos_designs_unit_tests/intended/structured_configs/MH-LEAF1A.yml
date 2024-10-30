@@ -9,6 +9,10 @@ router_bgp:
   maximum_paths:
     paths: 4
     ecmp: 4
+  redistribute:
+    connected:
+      enabled: true
+      route_map: RM-CONN-2-BGP
   updates:
     wait_install: true
   peer_groups:
@@ -31,9 +35,6 @@ router_bgp:
       activate: true
     - name: EVPN-OVERLAY-PEERS
       activate: false
-  redistribute_routes:
-  - source_protocol: connected
-    route_map: RM-CONN-2-BGP
   neighbors:
   - ip_address: 10.10.101.0
     peer_group: UNDERLAY-PEERS
@@ -67,8 +68,9 @@ router_bgp:
         route_targets:
         - '20:20'
     router_id: 192.168.255.33
-    redistribute_routes:
-    - source_protocol: connected
+    redistribute:
+      connected:
+        enabled: true
   vlan_aware_bundles:
   - name: Tenant_X_OP_Zone
     rd: 192.168.255.33:20
@@ -556,50 +558,46 @@ port_channel_interfaces:
   switchport:
     enabled: false
 - name: Port-Channel11.101
-  type: l2dot1q
   vlan_id: 101
   encapsulation_vlan:
     client:
-      dot1q:
-        vlan: 101
+      encapsulation: dot1q
+      vlan: 101
     network:
-      client: true
+      encapsulation: client
   evpn_ethernet_segment:
     identifier: 0000:0000:0000:0000:0101
     route_target: 00:00:00:00:01:01
 - name: Port-Channel11.102
-  type: l2dot1q
   vlan_id: 1102
   encapsulation_vlan:
     client:
-      dot1q:
-        vlan: 2102
+      encapsulation: dot1q
+      vlan: 2102
     network:
-      client: true
+      encapsulation: client
   evpn_ethernet_segment:
     identifier: 0000:0000:0000:0000:0102
     route_target: 00:00:00:00:01:02
 - name: Port-Channel11.103
-  type: l2dot1q
   vlan_id: 1103
   encapsulation_vlan:
     client:
-      dot1q:
-        vlan: 2103
+      encapsulation: dot1q
+      vlan: 2103
     network:
-      client: true
+      encapsulation: client
   evpn_ethernet_segment:
     identifier: 0000:0000:c2c9:c85a:ed92
     route_target: c2:c9:c8:5a:ed:92
 - name: Port-Channel11.104
-  type: l2dot1q
   vlan_id: 1104
   encapsulation_vlan:
     client:
-      dot1q:
-        vlan: 2104
+      encapsulation: dot1q
+      vlan: 2104
     network:
-      client: true
+      encapsulation: client
   evpn_ethernet_segment:
     identifier: 0000:0000:5c8e:1f50:9fc4
     route_target: 5c:8e:1f:50:9f:c4

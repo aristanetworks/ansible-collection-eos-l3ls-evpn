@@ -186,8 +186,8 @@ vlan internal order ascending range 1006 1199
 
 | Interface | Description | Channel Group | IP Address | VRF |  MTU | Shutdown | ACL In | ACL Out |
 | --------- | ----------- | ------------- | ---------- | ----| ---- | -------- | ------ | ------- |
-| Ethernet1 | P2P_LINK_TO_p2_Ethernet1 | - | 10.255.3.4/31 | default | 1500 | False | - | - |
-| Ethernet2 | P2P_LINK_TO_p1_Ethernet2 | - | 10.255.3.6/31 | default | 1500 | False | - | - |
+| Ethernet1 | P2P_p2_Ethernet1 | - | 10.255.3.4/31 | default | 1500 | False | - | - |
+| Ethernet2 | P2P_p1_Ethernet2 | - | 10.255.3.6/31 | default | 1500 | False | - | - |
 | Ethernet4.10 | C1_L3_SERVICE | - | 10.0.1.2/29 | C1_VRF1 | - | False | - | - |
 | Ethernet4.20 | C2_L3_SERVICE | - | 10.1.1.2/29 | C2_VRF1 | - | False | - | - |
 
@@ -203,7 +203,7 @@ vlan internal order ascending range 1006 1199
 ```eos
 !
 interface Ethernet1
-   description P2P_LINK_TO_p2_Ethernet1
+   description P2P_p2_Ethernet1
    no shutdown
    mtu 1500
    no switchport
@@ -220,7 +220,7 @@ interface Ethernet1
    isis authentication key 7 <removed>
 !
 interface Ethernet2
-   description P2P_LINK_TO_p1_Ethernet2
+   description P2P_p1_Ethernet2
    no shutdown
    mtu 1500
    no switchport
@@ -246,7 +246,7 @@ interface Ethernet4.10
    encapsulation dot1q vlan 10
    vrf C1_VRF1
    ip address 10.0.1.2/29
-   ip ospf area 0
+   ip ospf area 0.0.0.0
 !
 interface Ethernet4.20
    description C2_L3_SERVICE
@@ -380,7 +380,7 @@ ip route vrf MGMT 0.0.0.0/0 172.16.1.1
 
 | Interface | Area | Cost | Point To Point |
 | -------- | -------- | -------- | -------- |
-| Ethernet4.10 | 0 | - | False |
+| Ethernet4.10 | 0.0.0.0 | - | False |
 
 #### Router OSPF Device Configuration
 
@@ -427,8 +427,8 @@ router ospf 10 vrf C1_VRF1
 !
 router isis CORE
    net 49.0001.0102.5500.1002.00
-   is-type level-2
    router-id ipv4 10.255.1.2
+   is-type level-2
    log-adjacency-changes
    mpls ldp sync default
    !
@@ -495,9 +495,9 @@ ASN Notation: asplain
 !
 router bgp 65001
    router-id 10.255.1.2
+   no bgp default ipv4-unicast
    distance bgp 20 200 200
    maximum-paths 4 ecmp 4
-   no bgp default ipv4-unicast
    neighbor MPLS-OVERLAY-PEERS peer group
    neighbor MPLS-OVERLAY-PEERS remote-as 65001
    neighbor MPLS-OVERLAY-PEERS update-source Loopback0
@@ -506,9 +506,9 @@ router bgp 65001
    neighbor MPLS-OVERLAY-PEERS send-community
    neighbor MPLS-OVERLAY-PEERS maximum-routes 0
    neighbor 10.255.2.1 peer group MPLS-OVERLAY-PEERS
-   neighbor 10.255.2.1 description rr1
+   neighbor 10.255.2.1 description rr1_Loopback0
    neighbor 10.255.2.2 peer group MPLS-OVERLAY-PEERS
-   neighbor 10.255.2.2 description rr2
+   neighbor 10.255.2.2 description rr2_Loopback0
    !
    address-family ipv4
       no neighbor MPLS-OVERLAY-PEERS activate
@@ -579,10 +579,10 @@ router bfd
 mpls ip
 !
 mpls ldp
-   interface disabled default
    router-id 10.255.1.2
-   no shutdown
    transport-address interface Loopback0
+   interface disabled default
+   no shutdown
 ```
 
 ### MPLS Interfaces

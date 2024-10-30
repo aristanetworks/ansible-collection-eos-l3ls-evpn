@@ -10,10 +10,9 @@ keys:
     type: str
     documentation_options:
       table: default-connected-endpoints-description
-    # TODO: Insert link to format string syntax article.
     description: |-
       Default description or description template to be used on all port-channels to connected endpoints.
-      This can be a template using the format string syntax.
+      This can be a template using the AVD string formatter syntax: https://avd.arista.com/devel/roles/eos_designs/docs/how-to/custom-descriptions-names.html#avd-string-formatter-syntax.
       The available template fields are:
         - `endpoint_type`: The `type` from `connected_endpoints_keys` like `server`, `router` etc.
         - `endpoint`: The name of the connected endpoint

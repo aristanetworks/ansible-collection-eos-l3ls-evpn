@@ -29,64 +29,53 @@ router_bgp:
     bgp:
       additional_paths:
         receive: true
-        send:
-          # Need to choose what to test here or create multiple hosts...
-          # any: true
-          # backup: true
-          # ecmp: true
-          ecmp_limit: 42
-          # limit: 42
+        send: ecmp
+        send_limit: 42
     peer_groups:
       - name: PATH-SELECTION-PG-1
         activate: true
         additional_paths:
           receive: true
-          send:
-            any: true
+          send: any
       - name: PATH-SELECTION-PG-2
         activate: true
         additional_paths:
-          send:
-            backup: true
+          send: backup
       - name: PATH-SELECTION-PG-3
         activate: true
         additional_paths:
-          send:
-            ecmp: true
+          send: ecmp
       - name: PATH-SELECTION-PG-4
         activate: true
         additional_paths:
-          send:
-            ecmp_limit: 42
+          send: ecmp
+          send_limit: 42
       - name: PATH-SELECTION-PG-5
         activate: true
         additional_paths:
-          send:
-            limit: 42
+          send: limit
+          send_limit: 42
     neighbors:
       - ip_address: 172.31.255.0
         activate: true
         additional_paths:
           receive: true
-          send:
-            any: true
+          send: any
       - ip_address: 172.31.255.1
         activate: true
         additional_paths:
-          send:
-            backup: true
+          send: backup
       - ip_address: 172.31.255.2
         activate: true
         additional_paths:
-          send:
-            ecmp: true
+          send: ecmp
       - ip_address: 172.31.255.3
         activate: true
         additional_paths:
-          send:
-            ecmp_limit: 42
+          send: ecmp
+          send_limit: 42
       - ip_address: 172.31.255.4
         activate: true
         additional_paths:
-          send:
-            limit: 42
+          send: limit
+          send_limit: 42

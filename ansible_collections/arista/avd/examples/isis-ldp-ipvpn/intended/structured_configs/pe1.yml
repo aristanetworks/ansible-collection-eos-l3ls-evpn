@@ -36,11 +36,11 @@ router_bgp:
   - ip_address: 10.255.2.1
     peer_group: MPLS-OVERLAY-PEERS
     peer: rr1
-    description: rr1
+    description: rr1_Loopback0
   - ip_address: 10.255.2.2
     peer_group: MPLS-OVERLAY-PEERS
     peer: rr2
-    description: rr2
+    description: rr2_Loopback0
   vrfs:
   - name: C1_VRF1
     rd: 10.255.1.1:10
@@ -54,9 +54,11 @@ router_bgp:
         route_targets:
         - '10:10'
     router_id: 10.255.1.1
-    redistribute_routes:
-    - source_protocol: connected
-    - source_protocol: ospf
+    redistribute:
+      connected:
+        enabled: true
+      ospf:
+        enabled: true
   - name: C2_VRF1
     rd: 10.255.1.1:20
     route_targets:
@@ -69,8 +71,9 @@ router_bgp:
         route_targets:
         - '20:20'
     router_id: 10.255.1.1
-    redistribute_routes:
-    - source_protocol: connected
+    redistribute:
+      connected:
+        enabled: true
     address_family_ipv4:
       neighbors:
       - ip_address: 10.1.1.3
@@ -167,7 +170,6 @@ ethernet_interfaces:
   peer: p1
   peer_interface: Ethernet1
   peer_type: p
-  description: P2P_LINK_TO_p1_Ethernet1
   switchport:
     enabled: false
   shutdown: false
@@ -185,11 +187,11 @@ ethernet_interfaces:
     ldp:
       interface: true
       igp_sync: true
+  description: P2P_p1_Ethernet1
 - name: Ethernet2
   peer: p2
   peer_interface: Ethernet2
   peer_type: p
-  description: P2P_LINK_TO_p2_Ethernet2
   switchport:
     enabled: false
   shutdown: false
@@ -207,23 +209,24 @@ ethernet_interfaces:
     ldp:
       interface: true
       igp_sync: true
+  description: P2P_p2_Ethernet2
 - name: Ethernet3.10
   peer_type: l3_interface
   ip_address: 10.0.1.1/29
   shutdown: false
   description: C1_L3_SERVICE
-  type: l3dot1q
-  encapsulation_dot1q_vlan: 10
+  encapsulation_dot1q:
+    vlan: 10
   vrf: C1_VRF1
-  ospf_area: '0'
+  ospf_area: 0.0.0.0
   ospf_network_point_to_point: false
 - name: Ethernet3.20
   peer_type: l3_interface
   ip_address: 10.1.1.1/29
   shutdown: false
   description: C2_L3_SERVICE
-  type: l3dot1q
-  encapsulation_dot1q_vlan: 20
+  encapsulation_dot1q:
+    vlan: 20
   vrf: C2_VRF1
 - name: Ethernet3
   switchport:

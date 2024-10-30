@@ -6,7 +6,7 @@ from __future__ import annotations
 from functools import cached_property
 from typing import TYPE_CHECKING
 
-from pyavd._errors import AristaAvdMissingVariableError
+from pyavd._errors import AristaAvdInvalidInputsError
 from pyavd._utils import get_ip_from_ip_prefix
 
 from .utils import UtilsMixin
@@ -36,7 +36,7 @@ class RouterBgpMixin(UtilsMixin):
 
             if p2p_link["data"]["bgp_as"] is None or p2p_link["data"]["peer_bgp_as"] is None:
                 msg = f"{self.data_model}.p2p_links.[].as or {self.data_model}.p2p_links_profiles.[].as"
-                raise AristaAvdMissingVariableError(msg)
+                raise AristaAvdInvalidInputsError(msg)
 
             neighbor = {
                 "remote_as": p2p_link["data"]["peer_bgp_as"],
@@ -53,7 +53,7 @@ class RouterBgpMixin(UtilsMixin):
             # Regular BGP Neighbors
             if p2p_link["data"]["ip"] is None or p2p_link["data"]["peer_ip"] is None:
                 msg = f"{self.data_model}.p2p_links.[].ip, .subnet or .ip_pool"
-                raise AristaAvdMissingVariableError(msg)
+                raise AristaAvdInvalidInputsError(msg)
 
             neighbor["bfd"] = p2p_link.get("bfd")
             if p2p_link["data"]["bgp_as"] != self.shared_utils.bgp_as:

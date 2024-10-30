@@ -447,9 +447,9 @@ ASN Notation: asplain
 
 ##### EVPN Peer Groups
 
-| Peer Group | Activate | Encapsulation |
-| ---------- | -------- | ------------- |
-| EVPN-OVERLAY-PEERS | True | default |
+| Peer Group | Activate | Route-map In | Route-map Out | Encapsulation |
+| ---------- | -------- | ------------ | ------------- | ------------- |
+| EVPN-OVERLAY-PEERS | True |  - | - | default |
 
 #### Router BGP Device Configuration
 
@@ -457,9 +457,9 @@ ASN Notation: asplain
 !
 router bgp 65001
    router-id 192.168.255.2
-   maximum-paths 4 ecmp 4
    update wait-install
    no bgp default ipv4-unicast
+   maximum-paths 4 ecmp 4
    distance bgp 20 200 200
    neighbor EVPN-OVERLAY-PEERS peer group
    neighbor EVPN-OVERLAY-PEERS next-hop-unchanged
@@ -496,25 +496,25 @@ router bgp 65001
    neighbor 172.31.255.99 description DC1-BL1B_Ethernet46
    neighbor 192.168.255.9 peer group EVPN-OVERLAY-PEERS
    neighbor 192.168.255.9 remote-as 65101
-   neighbor 192.168.255.9 description DC1-LEAF1A
+   neighbor 192.168.255.9 description DC1-LEAF1A_Loopback0
    neighbor 192.168.255.10 peer group EVPN-OVERLAY-PEERS
    neighbor 192.168.255.10 remote-as 65102
-   neighbor 192.168.255.10 description DC1-LEAF2A
+   neighbor 192.168.255.10 description DC1-LEAF2A_Loopback0
    neighbor 192.168.255.11 peer group EVPN-OVERLAY-PEERS
    neighbor 192.168.255.11 remote-as 65102
-   neighbor 192.168.255.11 description DC1-LEAF2B
+   neighbor 192.168.255.11 description DC1-LEAF2B_Loopback0
    neighbor 192.168.255.12 peer group EVPN-OVERLAY-PEERS
    neighbor 192.168.255.12 remote-as 65103
-   neighbor 192.168.255.12 description DC1-SVC3A
+   neighbor 192.168.255.12 description DC1-SVC3A_Loopback0
    neighbor 192.168.255.13 peer group EVPN-OVERLAY-PEERS
    neighbor 192.168.255.13 remote-as 65103
-   neighbor 192.168.255.13 description DC1-SVC3B
+   neighbor 192.168.255.13 description DC1-SVC3B_Loopback0
    neighbor 192.168.255.14 peer group EVPN-OVERLAY-PEERS
    neighbor 192.168.255.14 remote-as 65104
-   neighbor 192.168.255.14 description DC1-BL1A
+   neighbor 192.168.255.14 description DC1-BL1A_Loopback0
    neighbor 192.168.255.15 peer group EVPN-OVERLAY-PEERS
    neighbor 192.168.255.15 remote-as 65105
-   neighbor 192.168.255.15 description DC1-BL1B
+   neighbor 192.168.255.15 description DC1-BL1B_Loopback0
    redistribute connected route-map RM-CONN-2-BGP
    !
    address-family evpn
@@ -556,6 +556,7 @@ router bfd
 ```eos
 !
 queue-monitor length
+!
 queue-monitor length log 5
 ```
 

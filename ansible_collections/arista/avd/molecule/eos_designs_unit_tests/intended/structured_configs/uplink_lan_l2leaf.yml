@@ -24,7 +24,7 @@ ethernet_interfaces:
   peer: uplink_lan_wan_router1
   peer_interface: Ethernet2
   peer_type: wan_router
-  description: UPLINK_LAN_WAN_ROUTER1_Ethernet2
+  description: L2_uplink_lan_wan_router1_Ethernet2
   shutdown: false
   switchport:
     enabled: true
@@ -39,7 +39,7 @@ ethernet_interfaces:
   peer: uplink_lan_wan_router2
   peer_interface: Ethernet2
   peer_type: wan_router
-  description: UPLINK_LAN_WAN_ROUTER2_Ethernet2
+  description: L2_uplink_lan_wan_router2_Ethernet2
   shutdown: false
   switchport:
     enabled: true

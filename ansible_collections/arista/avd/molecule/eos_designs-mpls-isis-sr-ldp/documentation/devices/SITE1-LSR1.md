@@ -136,17 +136,17 @@ vlan internal order ascending range 1006 1199
 
 | Interface | Description | Channel Group | IP Address | VRF |  MTU | Shutdown | ACL In | ACL Out |
 | --------- | ----------- | ------------- | ---------- | ----| ---- | -------- | ------ | ------- |
-| Ethernet1 | P2P_LINK_TO_SITE1-LER1_Ethernet1 | - | 100.64.48.1/31 | default | 9178 | False | - | - |
-| Ethernet3 | P2P_LINK_TO_SITE2-LSR1_Ethernet3 | - | 100.64.48.8/31 | default | 9178 | False | - | - |
-| Ethernet4 | P2P_LINK_TO_SITE1-RR1_Ethernet4 | - | 100.64.48.6/31 | default | 9178 | False | - | - |
+| Ethernet1 | P2P_SITE1-LER1_Ethernet1 | - | 100.64.48.1/31 | default | 9178 | False | - | - |
+| Ethernet3 | P2P_SITE2-LSR1_Ethernet3 | - | 100.64.48.8/31 | default | 9178 | False | - | - |
+| Ethernet4 | P2P_SITE1-RR1_Ethernet4 | - | 100.64.48.6/31 | default | 9178 | False | - | - |
 
 ##### IPv6
 
 | Interface | Description | Channel Group | IPv6 Address | VRF | MTU | Shutdown | ND RA Disabled | Managed Config Flag | IPv6 ACL In | IPv6 ACL Out |
 | --------- | ----------- | --------------| ------------ | --- | --- | -------- | -------------- | -------------------| ----------- | ------------ |
-| Ethernet1 | P2P_LINK_TO_SITE1-LER1_Ethernet1 | - | - | default | 9178 | False | - | - | - | - |
-| Ethernet3 | P2P_LINK_TO_SITE2-LSR1_Ethernet3 | - | - | default | 9178 | False | - | - | - | - |
-| Ethernet4 | P2P_LINK_TO_SITE1-RR1_Ethernet4 | - | - | default | 9178 | False | - | - | - | - |
+| Ethernet1 | P2P_SITE1-LER1_Ethernet1 | - | - | default | 9178 | False | - | - | - | - |
+| Ethernet3 | P2P_SITE2-LSR1_Ethernet3 | - | - | default | 9178 | False | - | - | - | - |
+| Ethernet4 | P2P_SITE1-RR1_Ethernet4 | - | - | default | 9178 | False | - | - | - | - |
 
 ##### ISIS
 
@@ -161,7 +161,7 @@ vlan internal order ascending range 1006 1199
 ```eos
 !
 interface Ethernet1
-   description P2P_LINK_TO_SITE1-LER1_Ethernet1
+   description P2P_SITE1-LER1_Ethernet1
    no shutdown
    mtu 9178
    speed forced 40gfull
@@ -182,7 +182,7 @@ interface Ethernet1
 
 !
 interface Ethernet3
-   description P2P_LINK_TO_SITE2-LSR1_Ethernet3
+   description P2P_SITE2-LSR1_Ethernet3
    no shutdown
    mtu 9178
    speed forced 40gfull
@@ -203,7 +203,7 @@ interface Ethernet3
 
 !
 interface Ethernet4
-   description P2P_LINK_TO_SITE1-RR1_Ethernet4
+   description P2P_SITE1-RR1_Ethernet4
    no shutdown
    mtu 9178
    speed forced 40gfull
@@ -374,8 +374,8 @@ ip route vrf MGMT 0.0.0.0/0 192.168.200.5
 !
 router isis CORE
    net 49.0001.1000.7000.0001.00
-   is-type level-2
    router-id ipv4 100.70.0.1
+   is-type level-2
    log-adjacency-changes
    mpls ldp sync default
    timers local-convergence-delay 15000 protected-prefixes
@@ -414,10 +414,10 @@ router isis CORE
 mpls ip
 !
 mpls ldp
-   interface disabled default
    router-id 100.70.0.1
-   no shutdown
    transport-address interface Loopback0
+   interface disabled default
+   no shutdown
 ```
 
 ### MPLS Interfaces

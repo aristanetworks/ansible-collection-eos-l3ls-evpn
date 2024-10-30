@@ -6,7 +6,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Any
 
 from pyavd._errors import AvdDeprecationWarning
-from pyavd._utils import get_all
+from pyavd._utils import get, get_all
 
 from .utils import get_instance_with_defaults
 
@@ -43,7 +43,7 @@ class AvdDataConverter:
             "deprecation": self.deprecation,
         }
 
-    def convert_data(self, data: Any, schema: dict | None = None, path: list[str] | None = None) -> Generator:
+    def convert_data(self, data: Any, schema: dict | None = None, path: list[str | int] | None = None, parent_dict: dict | None = None) -> Generator:
         """
         Perform in-place conversion of data according to the provided schema.
 
@@ -60,9 +60,9 @@ class AvdDataConverter:
                 continue
 
             # Converters will do inplace update of data. Any returns will be yielded conversion messages.
-            yield from converter(schema[key], data, schema, path)
+            yield from converter(schema[key], data, schema, path, parent_dict)
 
-    def convert_keys(self, keys: dict, data: dict, _schema: dict, path: list[str]) -> Generator:
+    def convert_keys(self, keys: dict, data: dict, _schema: dict, path: list[str | int], _parent_dict: dict | None) -> Generator:
         """This function performs conversion on each key with the relevant subschema."""
         if not isinstance(data, dict):
             return
@@ -80,9 +80,9 @@ class AvdDataConverter:
             if childschema.get("convert_to_lower_case") and isinstance(data[key], str):
                 data[key] = data[key].lower()
 
-            yield from self.convert_data(data[key], childschema, [*path, key])
+            yield from self.convert_data(data[key], childschema, [*path, key], data)
 
-    def convert_dynamic_keys(self, dynamic_keys: dict, data: dict, schema: dict, path: list[str]) -> Generator:
+    def convert_dynamic_keys(self, dynamic_keys: dict, data: dict, schema: dict, path: list[str | int], parent_dict: dict | None) -> Generator:
         """
         This function resolves "dynamic_keys" by looking in the actual data.
 
@@ -100,9 +100,9 @@ class AvdDataConverter:
                 keys.setdefault(resolved_key, childschema)
 
         # Reuse convert_keys to perform the actual conversion on the resolved dynamic keys
-        yield from self.convert_keys(keys, data, schema, path)
+        yield from self.convert_keys(keys, data, schema, path, parent_dict)
 
-    def convert_items(self, items: dict, data: list, _schema: dict, path: list[str]) -> Generator:
+    def convert_items(self, items: dict, data: list, _schema: dict, path: list[str | int], parent_dict: dict | None) -> Generator:
         """This function performs conversion on each item with the items subschema."""
         if not isinstance(data, list):
             return
@@ -117,9 +117,9 @@ class AvdDataConverter:
                 data[index] = item.lower()
 
             # Dive in to child items/schema
-            yield from self.convert_data(item, items, [*path, index])
+            yield from self.convert_data(item, items, [*path, index], parent_dict)
 
-    def convert_types(self, convert_types: list, data: dict | list, index: str | int, schema: dict, _path: list[str]) -> None:
+    def convert_types(self, convert_types: list, data: dict | list, index: str | int, schema: dict, _path: list[str | int]) -> None:
         """
         This function performs type conversion if necessary on a single data instance.
 
@@ -156,7 +156,9 @@ class AvdDataConverter:
                     # TODO: Log message
                     return
 
-    def deprecation(self, deprecation: dict, _data: Any, _schema: dict, path: list) -> Generator[AvdDeprecationWarning, None, None]:
+    def deprecation(
+        self, deprecation: dict, _data: Any, _schema: dict, path: list[str | int], parent_dict: dict | None
+    ) -> Generator[AvdDeprecationWarning, None, None]:
         """
         deprecation.
 
@@ -173,11 +175,31 @@ class AvdDataConverter:
         if not deprecation.get("warning", True):
             return
 
-        yield AvdDeprecationWarning(
+        new_key = deprecation.get("new_key")
+        removed = deprecation.get("removed", False)
+
+        # If new_key set, we can check for collision where both new and old key are set.
+        # If we have a space in the new_key, we will skip the check and just produce the deprecation warning with new_key.
+        # New key is assumed to be relative to the parent dict.
+        conflict = False
+        if not removed and new_key and parent_dict is not None:
+            for one_new_key in new_key.split(" or "):
+                if " " in one_new_key:
+                    continue
+                if get(parent_dict, one_new_key) is not None:
+                    conflict = True
+                    # Overriding new_key to direct the error message to the relevant key in case the original new_key contained multiple keys.
+                    new_key = one_new_key
+                    break
+
+        deprecation_warning = AvdDeprecationWarning(
             key=path,
-            new_key=deprecation.get("new_key"),
+            new_key=new_key,
             remove_in_version=deprecation.get("remove_in_version"),
             remove_after_date=deprecation.get("remove_after_date"),
             url=deprecation.get("url"),
-            removed=deprecation.get("removed", False),
+            removed=removed,
+            conflict=conflict,
         )
+
+        yield deprecation_warning

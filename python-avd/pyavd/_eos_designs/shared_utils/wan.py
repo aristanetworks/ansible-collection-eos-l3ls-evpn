@@ -4,10 +4,11 @@
 from __future__ import annotations
 
 from functools import cached_property
+from re import findall
 from typing import TYPE_CHECKING, Literal
 
-from pyavd._errors import AristaAvdError, AristaAvdMissingVariableError
-from pyavd._utils import default, get, get_ip_from_ip_prefix, get_ip_from_pool, get_item, strip_empties_from_dict
+from pyavd._errors import AristaAvdError, AristaAvdInvalidInputsError
+from pyavd._utils import default, get, get_ip_from_ip_prefix, get_item, strip_empties_from_dict
 from pyavd.j2filters import natural_sort
 
 if TYPE_CHECKING:
@@ -252,7 +253,7 @@ class WanMixin:
             self.switch_data_combined,
             "cv_pathfinder_site",
             required=self.is_cv_pathfinder_client,
-            org_key="A node variable 'cv_pathfinder_site' must be defined when 'wan_role' is 'client' and 'wan_mode' is 'cv-pathfinder'",
+            custom_error_msg="A node variable 'cv_pathfinder_site' must be defined when 'wan_role' is 'client' and 'wan_mode' is 'cv-pathfinder'.",
         )
         if node_defined_site is None:
             return None
@@ -264,7 +265,9 @@ class WanMixin:
                 f"The 'cv_pathfinder_site '{node_defined_site}' defined at the node level could not be found under the 'cv_pathfinder_global_sites' list"
             )
         else:
-            sites = get(self.wan_region, "sites", required=True, org_key=f"The CV Pathfinder region '{self.wan_region['name']}' is missing a list of sites")
+            sites = get(
+                self.wan_region, "sites", required=True, custom_error_msg=f"The CV Pathfinder region '{self.wan_region['name']}' is missing a list of sites."
+            )
             site_not_found_error_msg = (
                 (
                     f"The 'cv_pathfinder_site '{node_defined_site}' defined at the node level could not be found under the 'sites' list for the region"
@@ -291,7 +294,7 @@ class WanMixin:
             self.switch_data_combined,
             "cv_pathfinder_region",
             required=self.is_cv_pathfinder_client,
-            org_key="A node variable 'cv_pathfinder_region' must be defined when 'wan_role' is 'client' and 'wan_mode' is 'cv-pathfinder'",
+            custom_error_msg="A node variable 'cv_pathfinder_region' must be defined when 'wan_role' is 'client' and 'wan_mode' is 'cv-pathfinder'.",
         )
         if node_defined_region is None:
             return None
@@ -300,7 +303,7 @@ class WanMixin:
             self.hostvars,
             "cv_pathfinder_regions",
             required=True,
-            org_key="'cv_pathfinder_regions' key must be set when 'wan_mode' is 'cv-pathfinder'.",
+            custom_error_msg="'cv_pathfinder_regions' key must be set when 'wan_mode' is 'cv-pathfinder'.",
         )
 
         return get_item(
@@ -360,18 +363,13 @@ class WanMixin:
                         f"'vtep_ip' is missing for peering with {wan_rs}, either set it in under 'wan_route_servers' or something is wrong with the peer"
                         " facts."
                     )
-                    raise AristaAvdMissingVariableError(
-                        msg,
-                    )
+                    raise AristaAvdInvalidInputsError(msg)
                 if wan_path_groups is None:
                     msg = (
                         f"'wan_path_groups' is missing for peering with {wan_rs}, either set it in under 'wan_route_servers'"
                         " or something is wrong with the peer facts."
                     )
-                    raise AristaAvdMissingVariableError(
-                        msg,
-                    )
-
+                    raise AristaAvdInvalidInputsError(msg)
             else:
                 # Retrieve the values from the dictionary, making them required if the peer_facts were not found
                 vtep_ip = get(wan_rs_dict, "vtep_ip", required=True)
@@ -379,7 +377,7 @@ class WanMixin:
                     wan_rs_dict,
                     "path_groups",
                     required=True,
-                    org_key=(
+                    custom_error_msg=(
                         f"'path_groups' is missing for peering with {wan_rs} which was not found in the inventory, either set it in under 'wan_route_servers'"
                         " or check your inventory."
                     ),
@@ -515,16 +513,21 @@ class WanMixin:
 
     @cached_property
     def use_uplinks_for_wan_ha(self: SharedUtils) -> bool:
-        """Return true or false."""
+        """
+        Indicates whether the device is using its uplinks for WAN HA or direct HA.
+
+        Returns:
+            bool: True if uplinks are used for HA, False otherwise
+
+        Raises:
+            AristaAvdError: when the list of configured interfaces is a mix of uplinks and none uplinks.
+        """
         interfaces = set(self.configured_wan_ha_interfaces)
         uplink_interfaces = set(self.vrf_default_uplink_interfaces)
 
         if interfaces.issubset(uplink_interfaces):
             return True
         if not interfaces.intersection(uplink_interfaces):
-            if len(interfaces) > 1:
-                msg = "AVD does not support multiple HA interfaces when not using uplinks."
-                raise AristaAvdError(msg)
             return False
         msg = "Either all `wan_ha.ha_interfaces` must be uplink interfaces or all of them must not be uplinks."
         raise AristaAvdError(msg)
@@ -543,32 +546,58 @@ class WanMixin:
         return natural_sort(set(self.configured_wan_ha_interfaces), "name")
 
     @cached_property
+    def wan_ha_port_channel_id(self: SharedUtils) -> int:
+        """
+        Port-channel ID to use for direct WAN HA port-channel.
+
+        If not provided, computed from the list of configured members.
+        """
+        return get(self.switch_data_combined, "wan_ha.port_channel_id", default=int("".join(findall(r"\d", self.wan_ha_interfaces[0]))))
+
+    @cached_property
+    def use_port_channel_for_direct_ha(self: SharedUtils) -> bool:
+        """
+        Indicate if port-channel should be used for direct HA.
+
+        Returns:
+            bool: False is use_uplinks_for_wan_ha is True
+                  True if strictly there is more than one configured wan_ha.interfaces
+                  otherwise the value of `wan_ha.use_port_channel_for_direct_ha` which defaults to True.
+        """
+        if self.use_uplinks_for_wan_ha:
+            return False
+
+        interfaces = set(self.configured_wan_ha_interfaces)
+
+        return len(interfaces) > 1 or get(self.switch_data_combined, "wan_ha.use_port_channel_for_direct_ha", True)
+
+    @cached_property
     def wan_ha_peer_ip_addresses(self: SharedUtils) -> list:
         """
         Read the IP addresses/prefix length from HA peer uplinks.
 
         Used also to generate the prefix list of the PEER HA prefixes.
         """
-        interfaces = set(self.configured_wan_ha_interfaces)
         ip_addresses = []
         if self.use_uplinks_for_wan_ha:
             peer_facts = self.get_peer_facts(self.wan_ha_peer, required=True)
             vrf_default_peer_uplinks = [uplink for uplink in get(peer_facts, "uplinks", required=True) if get(uplink, "vrf") is None]
+            interfaces = set(self.configured_wan_ha_interfaces)
             for uplink in vrf_default_peer_uplinks:
                 if not interfaces or uplink["interface"] in interfaces:
                     ip_address = get(
                         uplink,
                         "ip_address",
                         required=True,
-                        org_key=(
-                            f"The uplink interface {uplink['interface']} used as WAN LAN HA on the remote peer {self.wan_ha_peer} does not have an IP address",
+                        custom_error_msg=(
+                            f"The uplink interface {uplink['interface']} used as WAN LAN HA on the remote peer {self.wan_ha_peer} does not have an IP address.",
                         ),
                     )
                     prefix_length = uplink["prefix_length"]
                     ip_addresses.append(f"{ip_address}/{prefix_length}")
         else:
             # Only one supported HA interface today when not using uplinks
-            ip_addresses.append(self.get_wan_ha_ip_address(local=False))
+            ip_addresses.append(self.ip_addressing.wan_ha_peer_ip())
         return ip_addresses
 
     @cached_property
@@ -578,51 +607,35 @@ class WanMixin:
 
         Used to generate the prefix list.
         """
-        interfaces = set(self.configured_wan_ha_interfaces)
         ip_addresses = []
 
         if self.use_uplinks_for_wan_ha:
+            interfaces = set(self.configured_wan_ha_interfaces)
             for uplink in self.vrf_default_uplinks:
                 if not interfaces or uplink["interface"] in interfaces:
                     ip_address = get(
                         uplink,
                         "ip_address",
                         required=True,
-                        org_key=f"The uplink interface {uplink['interface']} used as WAN LAN HA does not have an IP address",
+                        custom_error_msg=f"The uplink interface {uplink['interface']} used as WAN LAN HA does not have an IP address.",
                     )
                     # We can use [] notation here because if there is an ip_address, there should be a prefix_length
                     prefix_length = uplink["prefix_length"]
                     ip_addresses.append(f"{ip_address}/{prefix_length}")
         else:
             # Only one supported HA interface today when not using uplinks
-            ip_addresses.append(self.get_wan_ha_ip_address(local=True))
+            ip_addresses.append(self.ip_addressing.wan_ha_ip())
         return ip_addresses
 
-    def get_wan_ha_ip_address(self: SharedUtils, local: bool) -> str | None:
-        """
-        Render ipv4 address for wan_ha_ip_address using dynamically loaded python module.
-
-        local: When true, request the first IP address else request the remote peer IP.
-        TODO: Move this to ip_addressing module to allow for custom logic.
-        """
-        wan_ha_ipv4_pool = get(
+    @cached_property
+    def wan_ha_ipv4_pool(self: SharedUtils) -> str:
+        """Return the configured wan_ha.ha_ipv4_pool."""
+        return get(
             self.switch_data_combined,
             "wan_ha.ha_ipv4_pool",
             required=True,
-            org_key="Missing `wan_ha.ha_ipv4_pool` node settings to allocate an IP address to defined HA interface",
+            custom_error_msg="Missing `wan_ha.ha_ipv4_pool` node settings to allocate an IP address to defined HA interface.",
         )
-
-        first_ip_address = get_ip_from_pool(wan_ha_ipv4_pool, 31, 0, 0)
-        second_ip_address = get_ip_from_pool(wan_ha_ipv4_pool, 31, 0, 1)
-
-        if self.is_first_ha_peer:
-            local_ip, remote_ip = first_ip_address, second_ip_address
-        else:
-            local_ip, remote_ip = second_ip_address, first_ip_address
-
-        ip_address = local_ip if local else remote_ip
-
-        return f"{ip_address}/31"
 
     def generate_lb_policy_name(self: SharedUtils, name: str) -> str:
         """Returns LB-{name}."""
@@ -630,7 +643,12 @@ class WanMixin:
 
     @cached_property
     def wan_stun_dtls_profile_name(self: SharedUtils) -> str | None:
+        """Return the DTLS profile name to use for STUN for WAN."""
         if not self.is_wan_router or get(self.hostvars, "wan_stun_dtls_disable") is True:
             return None
 
         return get(self.hostvars, "wan_stun_dtls_profile_name", default="STUN-DTLS")
+
+    @cached_property
+    def wan_encapsulation(self: SharedUtils) -> str:
+        return get(self.hostvars, "wan_encapsulation", default="path-selection")

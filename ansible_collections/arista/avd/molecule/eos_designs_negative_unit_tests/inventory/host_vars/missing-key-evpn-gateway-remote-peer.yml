@@ -1,0 +1,23 @@
+---
+type: l3leaf
+
+l3leaf:
+  defaults:
+    loopback_ipv4_pool: 192.168.255.0/24
+    loopback_ipv4_offset: 8
+    vtep_loopback_ipv4_pool: 192.168.254.0/24
+    bgp_as: 65101
+  nodes:
+    - name: missing-key-evpn-gateway-remote-peer
+      id: 1
+      bgp_as: 65104
+      mgmt_ip: 192.168.200.110/24
+      evpn_gateway:
+        remote_peers:
+          # Missing bgp_as
+          - hostname: not-in-the-inventory
+            ip_address: 192.168.42.42
+
+expected_error_message: >-
+  The EVPN Gateway remote peer 'not-in-the-inventory' is missing either a `bpg_as`
+  or an `ip_address`.

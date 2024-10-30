@@ -6,7 +6,7 @@ from __future__ import annotations
 from functools import cached_property
 from typing import TYPE_CHECKING, Literal
 
-from pyavd._errors import AristaAvdError, AristaAvdMissingVariableError
+from pyavd._errors import AristaAvdError, AristaAvdInvalidInputsError
 from pyavd._utils import get, get_all, get_ip_from_ip_prefix, get_item
 from pyavd._utils.password_utils.password import simple_7_encrypt
 from pyavd.j2filters import natural_sort, range_expand
@@ -37,7 +37,7 @@ class UtilsWanMixin:
                         vrf,
                         "wan_vni",
                         required=True,
-                        org_key=f"Required `wan_vni` is missing for VRF {vrf_name} under `wan_virtual_topologies.vrfs`.",
+                        custom_error_msg=f"Required `wan_vni` is missing for VRF {vrf_name} under `wan_virtual_topologies.vrfs`.",
                     ),
                 }
 
@@ -172,10 +172,10 @@ class UtilsWanMixin:
                 application_virtual_topology,
                 "id",
                 required=self.shared_utils.is_cv_pathfinder_router,
-                org_key=(
+                custom_error_msg=(
                     f"Missing mandatory `id` in "
                     f"`wan_virtual_topologies.policies[{policy['name']}].application_virtual_topologies[{application_profile}]` "
-                    "when `wan_mode` is 'cv-pathfinder"
+                    "when `wan_mode` is 'cv-pathfinder."
                 ),
             )
 
@@ -195,7 +195,7 @@ class UtilsWanMixin:
             policy,
             "default_virtual_topology",
             required=True,
-            org_key=f"wan_virtual_topologies.policies[{policy['profile_prefix']}].default_virtual_toplogy",
+            custom_error_msg=f"wan_virtual_topologies.policies[{policy['profile_prefix']}].default_virtual_toplogy.",
         )
         # Separating default_match as it is used differently
         default_match = None
@@ -211,7 +211,7 @@ class UtilsWanMixin:
                 default_virtual_topology,
                 "path_groups",
                 required=True,
-                org_key=f"Either 'drop_unmatched' or 'path_groups' must be set under '{context_path}'.",
+                custom_error_msg=f"Either 'drop_unmatched' or 'path_groups' must be set under '{context_path}'.",
             )
             load_balance_policy_name = self.shared_utils.generate_lb_policy_name(name)
             load_balance_policy = self._generate_wan_load_balance_policy(load_balance_policy_name, default_virtual_topology, context_path)
@@ -698,9 +698,7 @@ class UtilsWanMixin:
                     f"{wan_interface['name']} peer_ip needs to be set. When using wan interface "
                     "for direct type internet exit, peer_ip is used for nexthop, and connectivity monitoring."
                 )
-                raise AristaAvdMissingVariableError(
-                    msg,
-                )
+                raise AristaAvdInvalidInputsError(msg)
 
             # wan interface ip will be used for acl, hence raise error if ip is not available
             if (ip_address := wan_interface.get("ip_address")) == "dhcp" and not (ip_address := wan_interface.get("dhcp_ip")):
@@ -708,9 +706,7 @@ class UtilsWanMixin:
                     f"{wan_interface['name']} 'dhcp_ip' needs to be set. When using WAN interface for 'direct' type Internet exit, "
                     "'dhcp_ip' is used in the NAT ACL."
                 )
-                raise AristaAvdMissingVariableError(
-                    msg,
-                )
+                raise AristaAvdInvalidInputsError(msg)
 
             sanitized_interface_name = self.shared_utils.sanitize_interface_name(wan_interface["name"])
             connections.append(
@@ -752,7 +748,7 @@ class UtilsWanMixin:
                     wan_interface,
                     "peer_ip",
                     required=True,
-                    org_key=f"The configured internet-exit policy requires `peer_ip` configured under the WAN Interface {wan_interface['name']}",
+                    custom_error_msg=f"The configured internet-exit policy requires `peer_ip` configured under the WAN Interface {wan_interface['name']}.",
                 ),
                 # Accepting SonarLint issue: The URL is just for verifying connectivity. No data is passed.
                 "monitor_url": f"http://gateway.{cloud_name}.net/vpntest",  # NOSONAR
@@ -764,9 +760,7 @@ class UtilsWanMixin:
                     f"{wan_interface['name']}.cv_pathfinder_internet_exit.policies[{internet_exit_policy['name']}]."
                     "tunnel_interface_numbers needs to be set, when using wan interface for zscaler type internet exit."
                 )
-                raise AristaAvdMissingVariableError(
-                    msg,
-                )
+                raise AristaAvdInvalidInputsError(msg)
 
             tunnel_id_range = range_expand(tunnel_interface_numbers)
 

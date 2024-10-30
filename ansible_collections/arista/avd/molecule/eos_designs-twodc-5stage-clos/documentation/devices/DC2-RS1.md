@@ -173,22 +173,22 @@ vlan internal order ascending range 1006 1199
 
 | Interface | Description | Channel Group | IP Address | VRF |  MTU | Shutdown | ACL In | ACL Out |
 | --------- | ----------- | ------------- | ---------- | ----| ---- | -------- | ------ | ------- |
-| Ethernet1 | P2P_LINK_TO_DC2-SUPER-SPINE1_Ethernet3 | - | 172.17.20.1/31 | default | - | False | - | - |
-| Ethernet2 | P2P_LINK_TO_DC2-SUPER-SPINE1_Ethernet6 | - | 172.17.20.3/31 | default | - | False | - | - |
+| Ethernet1 | P2P_DC2-SUPER-SPINE1_Ethernet3 | - | 172.17.20.1/31 | default | - | False | - | - |
+| Ethernet2 | P2P_DC2-SUPER-SPINE1_Ethernet6 | - | 172.17.20.3/31 | default | - | False | - | - |
 
 #### Ethernet Interfaces Device Configuration
 
 ```eos
 !
 interface Ethernet1
-   description P2P_LINK_TO_DC2-SUPER-SPINE1_Ethernet3
+   description P2P_DC2-SUPER-SPINE1_Ethernet3
    no shutdown
    no switchport
    ip address 172.17.20.1/31
    service-profile QOS-PROFILE
 !
 interface Ethernet2
-   description P2P_LINK_TO_DC2-SUPER-SPINE1_Ethernet6
+   description P2P_DC2-SUPER-SPINE1_Ethernet6
    no shutdown
    no switchport
    ip address 172.17.20.3/31
@@ -327,9 +327,9 @@ ASN Notation: asplain
 
 ##### EVPN Peer Groups
 
-| Peer Group | Activate | Encapsulation |
-| ---------- | -------- | ------------- |
-| EVPN-OVERLAY-PEERS | True | default |
+| Peer Group | Activate | Route-map In | Route-map Out | Encapsulation |
+| ---------- | -------- | ------------ | ------------- | ------------- |
+| EVPN-OVERLAY-PEERS | True |  - | - | default |
 
 #### Router BGP Device Configuration
 
@@ -337,9 +337,9 @@ ASN Notation: asplain
 !
 router bgp 65201
    router-id 172.16.20.1
-   maximum-paths 4 ecmp 4
    update wait-install
    no bgp default ipv4-unicast
+   maximum-paths 4 ecmp 4
    distance bgp 20 200 200
    neighbor EVPN-OVERLAY-PEERS peer group
    neighbor EVPN-OVERLAY-PEERS next-hop-unchanged
@@ -353,16 +353,16 @@ router bgp 65201
    neighbor IPv4-UNDERLAY-PEERS maximum-routes 12000
    neighbor 172.16.10.1 peer group EVPN-OVERLAY-PEERS
    neighbor 172.16.10.1 remote-as 65101
-   neighbor 172.16.10.1 description DC1-RS1
+   neighbor 172.16.10.1 description DC1-RS1_Loopback0
    neighbor 172.16.10.2 peer group EVPN-OVERLAY-PEERS
    neighbor 172.16.10.2 remote-as 65102
-   neighbor 172.16.10.2 description DC1-RS2
+   neighbor 172.16.10.2 description DC1-RS2_Loopback0
    neighbor 172.16.110.1 peer group EVPN-OVERLAY-PEERS
    neighbor 172.16.110.1 remote-as 65110.100
-   neighbor 172.16.110.1 description DC1-POD1-SPINE1
+   neighbor 172.16.110.1 description DC1-POD1-SPINE1_Loopback0
    neighbor 172.16.110.3 peer group EVPN-OVERLAY-PEERS
    neighbor 172.16.110.3 remote-as 65111.100
-   neighbor 172.16.110.3 description DC1-POD1-LEAF1A
+   neighbor 172.16.110.3 description DC1-POD1-LEAF1A_Loopback0
    neighbor 172.17.20.0 peer group IPv4-UNDERLAY-PEERS
    neighbor 172.17.20.0 remote-as 65200
    neighbor 172.17.20.0 description DC2-SUPER-SPINE1_Ethernet3
@@ -374,13 +374,13 @@ router bgp 65201
    address-family evpn
       neighbor EVPN-OVERLAY-PEERS activate
    !
-   address-family rt-membership
-      neighbor EVPN-OVERLAY-PEERS activate
-      neighbor EVPN-OVERLAY-PEERS default-route-target only
-   !
    address-family ipv4
       no neighbor EVPN-OVERLAY-PEERS activate
       neighbor IPv4-UNDERLAY-PEERS activate
+   !
+   address-family rt-membership
+      neighbor EVPN-OVERLAY-PEERS activate
+      neighbor EVPN-OVERLAY-PEERS default-route-target only
 ```
 
 ## BFD

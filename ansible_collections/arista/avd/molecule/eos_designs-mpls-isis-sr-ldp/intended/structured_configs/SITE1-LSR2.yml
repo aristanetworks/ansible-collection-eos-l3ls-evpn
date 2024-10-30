@@ -88,7 +88,6 @@ ethernet_interfaces:
   peer: SITE1-LER2
   peer_interface: Ethernet1
   peer_type: pe
-  description: P2P_LINK_TO_SITE1-LER2_Ethernet1
   switchport:
     enabled: false
   shutdown: false
@@ -110,12 +109,12 @@ ethernet_interfaces:
     ldp:
       interface: true
       igp_sync: true
+  description: P2P_SITE1-LER2_Ethernet1
   speed: forced 100gfull
 - name: Ethernet3
   peer: SITE2-LSR2
   peer_interface: Ethernet3
   peer_type: p
-  description: P2P_LINK_TO_SITE2-LSR2_Ethernet3
   switchport:
     enabled: false
   shutdown: false
@@ -137,6 +136,7 @@ ethernet_interfaces:
     ldp:
       interface: true
       igp_sync: true
+  description: P2P_SITE2-LSR2_Ethernet3
   speed: forced 40gfull
 metadata:
   platform: 7280SR

@@ -498,7 +498,7 @@
       "interfaces"
     ],
     "description": "Verifies the status of the provided interfaces.",
-    "custom_field": "Interface Ethernet1 - P2P_LINK_TO_DC2-SPINE1_Ethernet3 = 'up'"
+    "custom_field": "Interface Ethernet1 - P2P_dc2-spine1_Ethernet3 = 'up'"
   },
   {
     "name": "dc2-leaf2a",
@@ -507,7 +507,7 @@
       "interfaces"
     ],
     "description": "Verifies the status of the provided interfaces.",
-    "custom_field": "Interface Ethernet2 - P2P_LINK_TO_DC2-SPINE2_Ethernet3 = 'up'"
+    "custom_field": "Interface Ethernet2 - P2P_dc2-spine2_Ethernet3 = 'up'"
   },
   {
     "name": "dc2-leaf2a",
@@ -516,7 +516,7 @@
       "interfaces"
     ],
     "description": "Verifies the status of the provided interfaces.",
-    "custom_field": "Interface Ethernet3 - MLAG_PEER_dc2-leaf2b_Ethernet3 = 'up'"
+    "custom_field": "Interface Ethernet3 - MLAG_dc2-leaf2b_Ethernet3 = 'up'"
   },
   {
     "name": "dc2-leaf2a",
@@ -525,7 +525,7 @@
       "interfaces"
     ],
     "description": "Verifies the status of the provided interfaces.",
-    "custom_field": "Interface Ethernet4 - MLAG_PEER_dc2-leaf2b_Ethernet4 = 'up'"
+    "custom_field": "Interface Ethernet4 - MLAG_dc2-leaf2b_Ethernet4 = 'up'"
   },
   {
     "name": "dc2-leaf2a",
@@ -543,7 +543,7 @@
       "interfaces"
     ],
     "description": "Verifies the status of the provided interfaces.",
-    "custom_field": "Interface Ethernet6 - P2P_LINK_TO_dc1-leaf2a_Ethernet6 = 'up'"
+    "custom_field": "Interface Ethernet6 - P2P_dc1-leaf2a_Ethernet6 = 'up'"
   },
   {
     "name": "dc2-leaf2a",
@@ -552,7 +552,7 @@
       "interfaces"
     ],
     "description": "Verifies the status of the provided interfaces.",
-    "custom_field": "Interface Ethernet8 - DC2-LEAF2C_Ethernet1 = 'up'"
+    "custom_field": "Interface Ethernet8 - L2_dc2-leaf2c_Ethernet1 = 'up'"
   },
   {
     "name": "dc2-leaf2a",
@@ -579,7 +579,7 @@
       "interfaces"
     ],
     "description": "Verifies the status of the provided interfaces.",
-    "custom_field": "Interface Loopback10 - VRF10_VTEP_DIAGNOSTICS = 'up'"
+    "custom_field": "Interface Loopback10 - DIAG_VRF_VRF10 = 'up'"
   },
   {
     "name": "dc2-leaf2a",
@@ -588,7 +588,7 @@
       "interfaces"
     ],
     "description": "Verifies the status of the provided interfaces.",
-    "custom_field": "Interface Loopback11 - VRF11_VTEP_DIAGNOSTICS = 'up'"
+    "custom_field": "Interface Loopback11 - DIAG_VRF_VRF11 = 'up'"
   },
   {
     "name": "dc2-leaf2a",
@@ -597,7 +597,7 @@
       "interfaces"
     ],
     "description": "Verifies the status of the provided interfaces.",
-    "custom_field": "Interface Port-Channel3 - MLAG_PEER_dc2-leaf2b_Po3 = 'up'"
+    "custom_field": "Interface Port-Channel3 - MLAG_dc2-leaf2b_Port-Channel3 = 'up'"
   },
   {
     "name": "dc2-leaf2a",
@@ -615,7 +615,7 @@
       "interfaces"
     ],
     "description": "Verifies the status of the provided interfaces.",
-    "custom_field": "Interface Port-Channel8 - DC2-LEAF2C_Po1 = 'up'"
+    "custom_field": "Interface Port-Channel8 - L2_dc2-leaf2c_Port-Channel1 = 'up'"
   },
   {
     "name": "dc2-leaf2a",
@@ -660,7 +660,7 @@
       "interfaces"
     ],
     "description": "Verifies the status of the provided interfaces.",
-    "custom_field": "Interface Vlan3009 - MLAG_PEER_L3_iBGP: vrf VRF10 = 'up'"
+    "custom_field": "Interface Vlan3009 - MLAG_L3_VRF_VRF10 = 'up'"
   },
   {
     "name": "dc2-leaf2a",
@@ -669,7 +669,7 @@
       "interfaces"
     ],
     "description": "Verifies the status of the provided interfaces.",
-    "custom_field": "Interface Vlan3010 - MLAG_PEER_L3_iBGP: vrf VRF11 = 'up'"
+    "custom_field": "Interface Vlan3010 - MLAG_L3_VRF_VRF11 = 'up'"
   },
   {
     "name": "dc2-leaf2a",
@@ -678,7 +678,7 @@
       "interfaces"
     ],
     "description": "Verifies the status of the provided interfaces.",
-    "custom_field": "Interface Vlan4093 - MLAG_PEER_L3_PEERING = 'up'"
+    "custom_field": "Interface Vlan4093 - MLAG_L3 = 'up'"
   },
   {
     "name": "dc2-leaf2a",
@@ -687,7 +687,7 @@
       "interfaces"
     ],
     "description": "Verifies the status of the provided interfaces.",
-    "custom_field": "Interface Vlan4094 - MLAG_PEER = 'up'"
+    "custom_field": "Interface Vlan4094 - MLAG = 'up'"
   },
   {
     "name": "dc2-leaf2a",
@@ -756,7 +756,7 @@
   },
   {
     "name": "dc2-leaf2a",
-    "test": "VerifyLoggingSourceInt",
+    "test": "VerifyLoggingSourceIntf",
     "categories": [
       "logging"
     ],
@@ -768,7 +768,7 @@
     "categories": [
       "logging"
     ],
-    "description": "Verifies if logs are generated with the riate timestamp."
+    "description": "Verifies if logs are generated with the appropriate timestamp."
   },
   {
     "name": "dc2-leaf2a",

@@ -96,14 +96,14 @@ management security
 ```eos
 !
 interface Ethernet1
-   mac security profile A1
    no switchport
    ip address 1.1.1.1/24
+   mac security profile A1
 !
 interface Ethernet3
    description DC1-AGG01_Ethernet1
-   mac security profile A1
    channel-group 3 mode active
+   mac security profile A1
 ```
 
 ### Port-Channel Interfaces

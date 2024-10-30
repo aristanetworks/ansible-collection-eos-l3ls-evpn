@@ -251,8 +251,8 @@ vlan 3402
 
 | Interface | Description | Mode | VLANs | Native VLAN | Trunk Group | Channel-Group |
 | --------- | ----------- | ---- | ----- | ----------- | ----------- | ------------- |
-| Ethernet1 | DC1-LEAF2A_Ethernet8 | *trunk | *11-12,21-22,3401-3402 | *- | *- | 1 |
-| Ethernet2 | DC1-LEAF2B_Ethernet8 | *trunk | *11-12,21-22,3401-3402 | *- | *- | 1 |
+| Ethernet1 | L2_dc1-leaf2a_Ethernet8 | *trunk | *11-12,21-22,3401-3402 | *- | *- | 1 |
+| Ethernet2 | L2_dc1-leaf2b_Ethernet8 | *trunk | *11-12,21-22,3401-3402 | *- | *- | 1 |
 | Ethernet5 | SERVER_dc1-leaf2-server1_iLO | access | 11 | - | - | - |
 
 *Inherited from Port-Channel Interface
@@ -262,12 +262,12 @@ vlan 3402
 ```eos
 !
 interface Ethernet1
-   description DC1-LEAF2A_Ethernet8
+   description L2_dc1-leaf2a_Ethernet8
    no shutdown
    channel-group 1 mode active
 !
 interface Ethernet2
-   description DC1-LEAF2B_Ethernet8
+   description L2_dc1-leaf2b_Ethernet8
    no shutdown
    channel-group 1 mode active
 !
@@ -288,14 +288,14 @@ interface Ethernet5
 
 | Interface | Description | Mode | VLANs | Native VLAN | Trunk Group | LACP Fallback Timeout | LACP Fallback Mode | MLAG ID | EVPN ESI |
 | --------- | ----------- | ---- | ----- | ----------- | ------------| --------------------- | ------------------ | ------- | -------- |
-| Port-Channel1 | DC1_L3_LEAF2_Po8 | trunk | 11-12,21-22,3401-3402 | - | - | - | - | - | - |
+| Port-Channel1 | L2_DC1_L3_LEAF2_Port-Channel8 | trunk | 11-12,21-22,3401-3402 | - | - | - | - | - | - |
 
 #### Port-Channel Interfaces Device Configuration
 
 ```eos
 !
 interface Port-Channel1
-   description DC1_L3_LEAF2_Po8
+   description L2_DC1_L3_LEAF2_Port-Channel8
    no shutdown
    switchport trunk allowed vlan 11-12,21-22,3401-3402
    switchport mode trunk

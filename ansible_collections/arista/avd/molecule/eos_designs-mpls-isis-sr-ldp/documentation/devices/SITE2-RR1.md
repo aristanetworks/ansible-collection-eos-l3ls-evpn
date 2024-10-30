@@ -139,13 +139,13 @@ vlan internal order ascending range 1006 1199
 
 | Interface | Description | Channel Group | IP Address | VRF |  MTU | Shutdown | ACL In | ACL Out |
 | --------- | ----------- | ------------- | ---------- | ----| ---- | -------- | ------ | ------- |
-| Ethernet4 | P2P_LINK_TO_SITE2-LSR1_Ethernet4 | - | 100.64.48.13/31 | default | 9178 | False | - | - |
+| Ethernet4 | P2P_SITE2-LSR1_Ethernet4 | - | 100.64.48.13/31 | default | 9178 | False | - | - |
 
 ##### IPv6
 
 | Interface | Description | Channel Group | IPv6 Address | VRF | MTU | Shutdown | ND RA Disabled | Managed Config Flag | IPv6 ACL In | IPv6 ACL Out |
 | --------- | ----------- | --------------| ------------ | --- | --- | -------- | -------------- | -------------------| ----------- | ------------ |
-| Ethernet4 | P2P_LINK_TO_SITE2-LSR1_Ethernet4 | - | - | default | 9178 | False | - | - | - | - |
+| Ethernet4 | P2P_SITE2-LSR1_Ethernet4 | - | - | default | 9178 | False | - | - | - | - |
 
 ##### ISIS
 
@@ -158,7 +158,7 @@ vlan internal order ascending range 1006 1199
 ```eos
 !
 interface Ethernet4
-   description P2P_LINK_TO_SITE2-LSR1_Ethernet4
+   description P2P_SITE2-LSR1_Ethernet4
    no shutdown
    mtu 9178
    speed forced 40gfull
@@ -327,8 +327,8 @@ ip route vrf MGMT 0.0.0.0/0 192.168.200.5
 !
 router isis CORE
    net 49.0001.1000.7000.0009.00
-   is-type level-1-2
    router-id ipv4 100.70.0.9
+   is-type level-1-2
    log-adjacency-changes
    mpls ldp sync default
    timers local-convergence-delay 15000 protected-prefixes
@@ -406,10 +406,10 @@ ASN Notation: asplain
 
 ##### EVPN Peer Groups
 
-| Peer Group | Activate | Encapsulation |
-| ---------- | -------- | ------------- |
-| MPLS-OVERLAY-PEERS | True | default |
-| RR-OVERLAY-PEERS | True | default |
+| Peer Group | Activate | Route-map In | Route-map Out | Encapsulation |
+| ---------- | -------- | ------------ | ------------- | ------------- |
+| MPLS-OVERLAY-PEERS | True |  - | - | default |
+| RR-OVERLAY-PEERS | True |  - | - | default |
 
 ##### EVPN Neighbor Default Encapsulation
 
@@ -441,17 +441,17 @@ ASN Notation: asplain
 !
 router bgp 65000
    router-id 100.70.0.9
-   maximum-paths 4 ecmp 4
    update wait-install
    no bgp default ipv4-unicast
    bgp cluster-id 1.1.1.1
+   maximum-paths 4 ecmp 4
    distance bgp 20 200 200
    bgp route-reflector preserve-attributes always
    neighbor MPLS-OVERLAY-PEERS peer group
    neighbor MPLS-OVERLAY-PEERS remote-as 65000
    neighbor MPLS-OVERLAY-PEERS update-source Loopback0
-   neighbor MPLS-OVERLAY-PEERS route-reflector-client
    neighbor MPLS-OVERLAY-PEERS bfd
+   neighbor MPLS-OVERLAY-PEERS route-reflector-client
    neighbor MPLS-OVERLAY-PEERS password 7 <removed>
    neighbor MPLS-OVERLAY-PEERS send-community
    neighbor MPLS-OVERLAY-PEERS maximum-routes 0
@@ -463,13 +463,13 @@ router bgp 65000
    neighbor RR-OVERLAY-PEERS send-community
    neighbor RR-OVERLAY-PEERS maximum-routes 0
    neighbor 100.70.0.5 peer group MPLS-OVERLAY-PEERS
-   neighbor 100.70.0.5 description SITE1-LER1
+   neighbor 100.70.0.5 description SITE1-LER1_Loopback0
    neighbor 100.70.0.6 peer group MPLS-OVERLAY-PEERS
-   neighbor 100.70.0.6 description SITE1-LER2
+   neighbor 100.70.0.6 description SITE1-LER2_Loopback0
    neighbor 100.70.0.7 peer group MPLS-OVERLAY-PEERS
-   neighbor 100.70.0.7 description SITE2-LER1
+   neighbor 100.70.0.7 description SITE2-LER1_Loopback0
    neighbor 100.70.0.8 peer group RR-OVERLAY-PEERS
-   neighbor 100.70.0.8 description SITE1-RR1
+   neighbor 100.70.0.8 description SITE1-RR1_Loopback0
    !
    address-family evpn
       neighbor default encapsulation mpls
@@ -528,10 +528,10 @@ router bfd
 mpls ip
 !
 mpls ldp
-   interface disabled default
    router-id 100.70.0.9
-   no shutdown
    transport-address interface Loopback0
+   interface disabled default
+   no shutdown
 ```
 
 ### MPLS Interfaces

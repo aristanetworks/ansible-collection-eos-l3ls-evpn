@@ -28,9 +28,8 @@ def validate_structured_config(structured_config: dict) -> ValidationResult:
 
     eos_cli_config_gen_schema_tools = EosCliConfigGenAvdSchemaTools()
     # Inplace conversion of data
-    deprecation_warnings = eos_cli_config_gen_schema_tools.convert_data(structured_config)
+    validation_result = eos_cli_config_gen_schema_tools.convert_data(structured_config)
 
     # Validate input data
-    validation_result = eos_cli_config_gen_schema_tools.validate_data(structured_config)
-    validation_result.deprecation_warnings.extend(deprecation_warnings)
+    validation_result.merge(eos_cli_config_gen_schema_tools.validate_data(structured_config))
     return validation_result

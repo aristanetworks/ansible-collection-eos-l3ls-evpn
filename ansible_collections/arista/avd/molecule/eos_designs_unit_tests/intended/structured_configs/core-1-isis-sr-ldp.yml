@@ -79,7 +79,6 @@ ethernet_interfaces:
   peer: core-2-ospf-ldp
   peer_interface: Ethernet1
   peer_type: core_router
-  description: P2P_LINK_TO_core-2-ospf-ldp_Ethernet1
   switchport:
     enabled: false
   shutdown: false
@@ -98,12 +97,12 @@ ethernet_interfaces:
     ldp:
       interface: true
       igp_sync: true
+  description: P2P_LINK_TO_CORE-2-OSPF-LDP_Ethernet1
   speed: forced 1000full
 - name: Ethernet2
   peer: core-2-ospf-ldp
   peer_interface: Ethernet2
   peer_type: core_router
-  description: P2P_LINK_TO_core-2-ospf-ldp_Ethernet2
   switchport:
     enabled: false
   shutdown: false
@@ -120,12 +119,12 @@ ethernet_interfaces:
     ldp:
       interface: true
       igp_sync: true
+  description: P2P_LINK_TO_CORE-2-OSPF-LDP_Ethernet2
   speed: 100full
 - name: Ethernet3
   peer: core-2-ospf-ldp
   peer_interface: Ethernet3
   peer_type: core_router
-  description: P2P_LINK_TO_core-2-ospf-ldp_Ethernet3
   switchport:
     enabled: false
   shutdown: false
@@ -144,12 +143,12 @@ ethernet_interfaces:
     ldp:
       interface: true
       igp_sync: true
+  description: P2P_LINK_TO_CORE-2-OSPF-LDP_Ethernet3
   speed: forced 1000full
 - name: Ethernet4
   peer: core-2-ospf-ldp
   peer_interface: Ethernet4
   peer_type: core_router
-  description: P2P_LINK_TO_core-2-ospf-ldp_Ethernet4
   switchport:
     enabled: false
   shutdown: false
@@ -163,12 +162,12 @@ ethernet_interfaces:
   isis_circuit_type: level-2
   isis_authentication_mode: md5
   isis_authentication_key: $1c$sTNAlR6rKSw=
+  description: P2P_LINK_TO_CORE-2-OSPF-LDP_Ethernet4
   speed: forced 1000full
 - name: Ethernet5
   peer: core-2-ospf-ldp
   peer_interface: Ethernet5
   peer_type: core_router
-  description: P2P_LINK_TO_core-2-ospf-ldp_Ethernet5
   switchport:
     enabled: false
   shutdown: false
@@ -184,12 +183,12 @@ ethernet_interfaces:
   isis_authentication_key: $1c$sTNAlR6rKSw=
   mpls:
     ip: true
+  description: P2P_LINK_TO_CORE-2-OSPF-LDP_Ethernet5
   speed: forced 1000full
 - name: Ethernet6
   peer: core-2-ospf-ldp
   peer_interface: Ethernet6
   peer_type: core_router
-  description: Custom description on core-1-isis-sr-ldp eth6
   switchport:
     enabled: false
   shutdown: false
@@ -209,12 +208,12 @@ ethernet_interfaces:
     ldp:
       interface: true
       igp_sync: true
+  description: Custom description on core-1-isis-sr-ldp eth6
   speed: 100full
 - name: Ethernet10
   peer: core-2-ospf-ldp
   peer_interface: Ethernet10
   peer_type: core_router
-  description: P2P_LINK_TO_core-2-ospf-ldp_Ethernet10
   switchport:
     enabled: false
   shutdown: false
@@ -230,32 +229,72 @@ ethernet_interfaces:
     ldp:
       interface: true
       igp_sync: true
+  description: P2P_LINK_TO_CORE-2-OSPF-LDP_Ethernet10
   speed: forced 1000full
 - name: Ethernet12
   peer: core-2-ospf-ldp
   peer_interface: Ethernet12
   peer_type: core_router
-  description: P2P_LINK_TO_core-2-ospf-ldp_Ethernet12
   shutdown: false
   channel_group:
     id: 12
     mode: active
+  description: P2P_LINK_TO_CORE-2-OSPF-LDP_Ethernet12
   speed: forced 1000full
 - name: Ethernet13
   peer: core-2-ospf-ldp
   peer_interface: Ethernet13
   peer_type: core_router
-  description: P2P_LINK_TO_core-2-ospf-ldp_Ethernet13
   shutdown: false
   channel_group:
     id: 12
     mode: active
+  description: P2P_LINK_TO_CORE-2-OSPF-LDP_Ethernet13
+  speed: forced 1000full
+- name: Ethernet14
+  peer: core-2-ospf-ldp
+  peer_interface: Ethernet14
+  peer_type: core_router
+  shutdown: false
+  channel_group:
+    id: 14
+    mode: active
+  description: CUSTOM_DESCRIPTION_ON_P2P_LINK_A
+  speed: forced 1000full
+- name: Ethernet15
+  peer: core-2-ospf-ldp
+  peer_interface: Ethernet15
+  peer_type: core_router
+  shutdown: false
+  channel_group:
+    id: 14
+    mode: active
+  description: CUSTOM_DESCRIPTION_ON_P2P_LINK_A
+  speed: forced 1000full
+- name: Ethernet16
+  peer: core-2-ospf-ldp
+  peer_interface: Ethernet16
+  peer_type: core_router
+  shutdown: false
+  channel_group:
+    id: 16
+    mode: active
+  description: CUSTOM_DESCRIPTION_ON_P2P_LINK_A
+  speed: forced 1000full
+- name: Ethernet17
+  peer: core-2-ospf-ldp
+  peer_interface: Ethernet17
+  peer_type: core_router
+  shutdown: false
+  channel_group:
+    id: 16
+    mode: active
+  description: CUSTOM_DESCRIPTION_ON_P2P_LINK_A
   speed: forced 1000full
 - name: ethernet21
   peer: peer2
   peer_interface: ethernet21
   peer_type: other
-  description: P2P_LINK_TO_peer2_ethernet21
   switchport:
     enabled: false
   shutdown: false
@@ -266,11 +305,11 @@ ethernet_interfaces:
   isis_network_point_to_point: true
   isis_hello_padding: true
   isis_circuit_type: level-2
+  description: P2P_LINK_TO_PEER2_ethernet21
 - name: ethernet22
   peer: peer3
   peer_interface: ethernet22
   peer_type: other
-  description: P2P_LINK_TO_peer3_ethernet22
   switchport:
     enabled: false
   shutdown: false
@@ -278,11 +317,11 @@ ethernet_interfaces:
   ip_address: 172.16.0.0/31
   mpls:
     ip: true
+  description: P2P_LINK_TO_PEER3_ethernet22
 - name: ethernet23
   peer: peer4
   peer_interface: ethernet23
   peer_type: other
-  description: P2P_LINK_TO_peer4_ethernet23
   switchport:
     enabled: false
   shutdown: false
@@ -290,11 +329,11 @@ ethernet_interfaces:
   ip_address: 172.16.0.2/31
   mpls:
     ip: true
+  description: P2P_LINK_TO_PEER4_ethernet23
 - name: ethernet24
   peer: peer5
   peer_interface: ethernet22
   peer_type: other
-  description: P2P_LINK_TO_peer5_ethernet22
   switchport:
     enabled: false
   shutdown: false
@@ -302,11 +341,11 @@ ethernet_interfaces:
   ip_address: 172.16.1.1/29
   mpls:
     ip: true
+  description: P2P_LINK_TO_PEER5_ethernet22
 - name: ethernet25
   peer: peer6
   peer_interface: ethernet23
   peer_type: other
-  description: P2P_LINK_TO_peer6_ethernet23
   switchport:
     enabled: false
   shutdown: false
@@ -314,12 +353,12 @@ ethernet_interfaces:
   ip_address: 172.16.1.9/29
   mpls:
     ip: true
+  description: P2P_LINK_TO_PEER6_ethernet23
 port_channel_interfaces:
 - name: Port-Channel12
   peer: core-2-ospf-ldp
   peer_interface: Port-Channel12
   peer_type: core_router
-  description: P2P_LINK_TO_core-2-ospf-ldp_Port-Channel12
   switchport:
     enabled: false
   shutdown: false
@@ -338,3 +377,50 @@ port_channel_interfaces:
     ldp:
       interface: true
       igp_sync: true
+  description: P2P_LINK_TO_core-2-ospf-ldp_Port-Channel12
+- name: Port-Channel14
+  peer: core-2-ospf-ldp
+  peer_interface: Port-Channel14
+  peer_type: core_router
+  switchport:
+    enabled: false
+  shutdown: false
+  mtu: 1500
+  ip_address: 100.64.48.16/31
+  ipv6_enable: true
+  isis_enable: CORE
+  isis_metric: 60
+  isis_network_point_to_point: true
+  isis_hello_padding: false
+  isis_circuit_type: level-2
+  isis_authentication_mode: md5
+  isis_authentication_key: $1c$sTNAlR6rKSw=
+  mpls:
+    ip: true
+    ldp:
+      interface: true
+      igp_sync: true
+  description: CUSTOM_DESCRIPTION_ON_P2P_PORT_CHANNEL_14
+- name: Port-Channel16
+  peer: core-2-ospf-ldp
+  peer_interface: Port-Channel16
+  peer_type: core_router
+  switchport:
+    enabled: false
+  shutdown: false
+  mtu: 1500
+  ip_address: 100.64.48.16/31
+  ipv6_enable: true
+  isis_enable: CORE
+  isis_metric: 60
+  isis_network_point_to_point: true
+  isis_hello_padding: false
+  isis_circuit_type: level-2
+  isis_authentication_mode: md5
+  isis_authentication_key: $1c$sTNAlR6rKSw=
+  mpls:
+    ip: true
+    ldp:
+      interface: true
+      igp_sync: true
+  description: CUSTOM_DESCRIPTION_ON_P2P_LINK_A

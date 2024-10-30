@@ -6,17 +6,22 @@ traffic_policies:
     ports:
       - name: SERVICE-DEMO
         port_range: "10,20,80,440-450"
+      - name: SERVICE-DEMO2
     ipv4:
-      - name: DEMO-01
-        prefixes:
-          - 10.0.0.0/8
-          - 192.168.0.0/16
       - name: DEMO-02
         prefixes:
           - 172.16.0.0/12
           - 224.0.0.0/8
+      - name: DEMO-01
+        prefixes:
+          - 10.0.0.0/8
+          - 192.168.0.0/16
+      - name: DEMO-03
   policies:
     - name: BLUE-C1-POLICY
+      default_actions:
+        ipv4:
+          drop: true
       matches:
         - name: BLUE-C1-POLICY-01
           type: ipv4
@@ -30,6 +35,10 @@ traffic_policies:
           protocols:
             - protocol: tcp
               src_port: "1,10-20"
+            - protocol: udp
+              src_field: SERVICE-DEMO
+              flags:
+                - established
           ttl: "10, 20-30"
           actions:
             traffic_class: 5
@@ -75,6 +84,7 @@ traffic_policies:
           protocols:
             - protocol: tcp
               src_port: "22"
+              dst_port: "80"
               flags:
                 - established
             - protocol: icmp
@@ -89,10 +99,49 @@ traffic_policies:
             prefix_lists:
               - DEMO-01
           protocols:
-            - protocol: tcp
+            - protocol: bgp
           fragment:
           actions:
             traffic_class: 5
+        - name: BLUE-C1-POLICY-06
+          type: ipv4
+          protocols:
+            - protocol: neighbors
+            - protocol: udp
+              dst_port: "1,10-20"
+              src_port: "22"
+            - protocol: tcp
+              src_port: "22"
+              flags:
+                - established
+              icmp_type:
+                - echo
+                - echo-reply
+            - protocol: icmp
+          actions:
+            log: false
+        - name: BLUE-C1-POLICY-07
+          type: ipv4
+          destination:
+            prefixes:
+              - 10.0.0.0/8
+              - 192.168.0.0/16
+        - name: BLUE-C1-POLICY-08
+          type: ipv4
+          destination:
+            prefixes:
+              - 10.0.0.0/8
+              - 192.168.0.0/16
+            prefix_lists:
+              - DEMO-01
+          protocols:
+            - protocol: udp
+              dst_port: "1,10-20"
+              flags:
+                - established
+            - protocol: tcp
+              dst_field: SERVICE-DEMO-DST
+              src_field: SERVICE-DEMO-SRC
     - name: BLUE-C2-POLICY
       default_actions:
         ipv4:
@@ -133,8 +182,34 @@ traffic_policies:
             - protocol: tcp
           actions:
             drop: true
-            log: true
-
+    - name: BLUE-C3-POLICY
+      default_actions:
+        ipv4:
+          count: test
+          traffic_class: 10
+          dscp: 11
+    - name: BLUE-C4-POLICY
+      default_actions:
+        ipv6:
+          count: test
+          traffic_class: 10
+          dscp: 11
+    - name: BLUE-C6-POLICY
+      default_actions:
+        ipv6:
+          drop: true
+    - name: BLUE-C5-POLICY
+      default_actions:
+        ipv6:
+          drop: true
+          log: true
+    - name: BLUE-C7-POLICY
+      matches:
+        - name: BLUE-C7-POLICY-01
+          type: ipv4
+          protocols:
+            - protocol: neighbors
+              enforce_gtsm: true
 ethernet_interfaces:
   - name: Ethernet1
     switchport:

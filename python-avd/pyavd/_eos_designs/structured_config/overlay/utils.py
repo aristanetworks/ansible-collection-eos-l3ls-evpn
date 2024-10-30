@@ -6,7 +6,8 @@ from __future__ import annotations
 from functools import cached_property
 from typing import TYPE_CHECKING
 
-from pyavd._utils import get
+from pyavd._errors import AristaAvdError
+from pyavd._utils import get, strip_empties_from_dict
 from pyavd.j2filters import natural_sort
 
 if TYPE_CHECKING:
@@ -40,24 +41,30 @@ class UtilsMixin:
         evpn_gateway_remote_peers_list = get(self.shared_utils.switch_data_combined, "evpn_gateway.remote_peers", default=[])
 
         for gw_remote_peer_dict in natural_sort(evpn_gateway_remote_peers_list, sort_key="hostname"):
-            # These remote gw can be outside of the inventory
+            # These remote gateways can be outside of the inventory or in the inventory
             gw_remote_peer = gw_remote_peer_dict["hostname"]
-            peer_facts = self.shared_utils.get_peer_facts(gw_remote_peer, required=False)
 
-            if peer_facts is not None:
-                # Found a matching server in inventory
-                self._append_peer(evpn_gateway_remote_peers, gw_remote_peer, peer_facts)
-
-            else:
-                # Server not found in inventory, adding manually
-                # TODO: - what if the values are None - this is not handled by the template today
-                bgp_as = str(_as) if (_as := gw_remote_peer_dict.get("bgp_as")) else None
-                ip_address = gw_remote_peer_dict.get("ip_address")
-
-                evpn_gateway_remote_peers[gw_remote_peer] = {
-                    "bgp_as": bgp_as,
-                    "ip_address": ip_address,
+            gw_info = strip_empties_from_dict(
+                {
+                    "bgp_as": str(_as) if (_as := gw_remote_peer_dict.get("bgp_as")) else None,
+                    "ip_address": gw_remote_peer_dict.get("ip_address"),
+                    # Not adding the "overlay_peering_interface" since we do not know it for this device. Only used for description.
                 }
+            )
+
+            peer_facts = self.shared_utils.get_peer_facts(gw_remote_peer, required=False)
+            if peer_facts is None:
+                # No matching host found in the inventory for this remote gateway
+                evpn_gateway_remote_peers[gw_remote_peer] = gw_info
+            else:
+                # Found a matching name for this remote gateway in the inventory
+                self._append_peer(evpn_gateway_remote_peers, gw_remote_peer, peer_facts)
+                # Apply potential override if present in the input variables
+                evpn_gateway_remote_peers[gw_remote_peer].update(strip_empties_from_dict(gw_info))
+
+            if any(key not in evpn_gateway_remote_peers[gw_remote_peer] for key in ["bgp_as", "ip_address"]):
+                msg = f"The EVPN Gateway remote peer '{gw_remote_peer}' is missing either a `bpg_as` or an `ip_address`."
+                raise AristaAvdError(msg)
 
         return evpn_gateway_remote_peers
 
@@ -139,6 +146,7 @@ class UtilsMixin:
             ipvpn_gateway_remote_peers[ipvpn_gw_peer_dict["hostname"]] = {
                 "bgp_as": str(bgp_as) if bgp_as is not None else None,
                 "ip_address": ipvpn_gw_peer_dict["ip_address"],
+                # Not adding the "overlay_peering_interface" since we do not know it for this device. Only used for description.
             }
 
         return ipvpn_gateway_remote_peers
@@ -242,6 +250,7 @@ class UtilsMixin:
             peer_name: {
                 "bgp_as": bgp_as,
                 "ip_address": overlay.peering_address,
+                "overlay_peering_interface": "Loopback0"
             }
         }.
         """
@@ -252,8 +261,9 @@ class UtilsMixin:
                 peer_facts,
                 "overlay.peering_address",
                 required=True,
-                org_key=f"switch.overlay.peering_address for {peer_name}",
+                custom_error_msg=f"switch.overlay.peering_address for {peer_name} is required.",
             ),
+            "overlay_peering_interface": "Loopback0",
         }
 
     @cached_property

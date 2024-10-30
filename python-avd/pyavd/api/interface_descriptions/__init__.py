@@ -6,7 +6,6 @@
 from __future__ import annotations
 
 from collections import ChainMap
-from functools import cached_property
 from typing import TYPE_CHECKING, Any
 
 from pyavd._eos_designs.avdfacts import AvdFacts
@@ -47,6 +46,7 @@ class AvdInterfaceDescriptions(AvdFacts):
 
         Available data:
             - link_type
+            - description
             - peer
             - peer_interface
             - mpls_overlay_role
@@ -67,18 +67,27 @@ class AvdInterfaceDescriptions(AvdFacts):
                 },
             )
 
-        # TODO: should we keep this upper - or use it consistently everywhere
-        link_peer = str(data.peer or "").upper()
-
-        if data.link_type == "underlay_p2p":
-            desc = f"P2P_LINK_TO_{link_peer}_{data.peer_interface}"
+        if data.description is not None:
+            description = data.description
+        elif data.link_type in ("underlay_p2p", "l3_edge", "core_interfaces"):
+            description = self.shared_utils.default_underlay_p2p_ethernet_description
         elif data.link_type == "underlay_l2":
-            desc = f"{link_peer}_{data.peer_interface}"
+            description = self.shared_utils.underlay_l2_ethernet_description
         else:
             elems = [data.wan_carrier, data.wan_circuit_id, data.peer, data.peer_interface]
-            desc = "_".join([elem for elem in elems if elem])
+            description = "_".join([elem for elem in elems if elem])
+            return f"{description}_vrf_{data.vrf}" if data.vrf is not None else description
 
-        return f"{desc}_vrf_{data.vrf}" if data.vrf is not None else desc
+        return AvdStringFormatter().format(
+            description,
+            **strip_null_from_data(
+                {
+                    "peer": data.peer,
+                    "peer_interface": data.peer_interface,
+                    "vrf": data.vrf,
+                }
+            ),
+        )
 
     def underlay_port_channel_interface(self, data: InterfaceDescriptionData) -> str:
         """
@@ -88,7 +97,9 @@ class AvdInterfaceDescriptions(AvdFacts):
 
         Available data:
             - peer
+            - peer_interface
             - peer_channel_group_id
+            - peer_node_group
             - port_channel_id
             - port_channel_description
             - mpls_overlay_role
@@ -104,28 +115,47 @@ class AvdInterfaceDescriptions(AvdFacts):
                     "channel_group_id": data.port_channel_id,
                     "peer_channel_group_id": data.peer_channel_group_id,
                     "channel_description": data.port_channel_description,
+                    "peer_node_group": data.peer_node_group,
                 },
             )
 
         if data.port_channel_description is not None:
-            data.port_channel_description = str(data.port_channel_description).upper()
-            return f"{data.port_channel_description}_Po{data.peer_channel_group_id}"
+            description = data.port_channel_description
+        elif data.link_type in ("l3_edge", "core_interfaces"):
+            description = self.shared_utils.default_underlay_p2p_port_channel_description
+        else:
+            # This is for L2 port-channels
+            description = self.shared_utils.underlay_l2_port_channel_description
 
-        data.peer = str(data.peer).upper()
-        return f"{data.peer}_Po{data.peer_channel_group_id}"
+        return AvdStringFormatter().format(
+            description,
+            **strip_null_from_data(
+                {
+                    "peer": data.peer,
+                    "interface": data.interface,
+                    "peer_interface": data.peer_interface,
+                    "port_channel_id": data.port_channel_id,
+                    "peer_port_channel_id": data.peer_channel_group_id,
+                    "peer_node_group": data.peer_node_group,
+                    "peer_node_group_or_peer": data.peer_node_group or data.peer,
+                    "peer_node_group_or_uppercase_peer": data.peer_node_group or str(data.peer or "").upper() or None,
+                }
+            ),
+        )
 
     def mlag_ethernet_interface(self, data: InterfaceDescriptionData) -> str:
         """
         Build an MLAG Ethernet interface description.
 
         If a jinja template is configured, use it.
-        If not default to MLAG_PEER_<PEER>_<PEER_INTERFACE>
+        If not, use the default template as a format string template.
 
         Available data:
             - interface
             - peer_interface
             - mlag_peer
-            - peer_interface
+            - mlag_port_channel_id
+            - mlag_peer_port_channel_id
             - mpls_overlay_role
             - mpls_lsr
             - overlay_routing_protocol
@@ -138,19 +168,32 @@ class AvdInterfaceDescriptions(AvdFacts):
                 mlag_peer=data.mlag_peer,
             )
 
-        return f"MLAG_PEER_{data.mlag_peer}_{data.peer_interface}"
+        return AvdStringFormatter().format(
+            self.shared_utils.mlag_member_description,
+            **strip_null_from_data(
+                {
+                    "mlag_peer": data.mlag_peer,
+                    "interface": data.interface,
+                    "peer_interface": data.peer_interface,
+                    "mlag_port_channel_id": data.mlag_port_channel_id,
+                    "mlag_peer_port_channel_id": data.mlag_peer_port_channel_id,
+                }
+            ),
+        )
 
     def mlag_port_channel_interface(self, data: InterfaceDescriptionData) -> str:
         """
         Build an MLAG Port-Channel interface description.
 
         If a jinja template is configured, use it.
-        If not, use MLAG_PEER_<PEER>_Po<MLAG_PORT_CHANNEL_ID>
+        If not, use the default template as a format string template.
 
         Available data:
             - interface
+            - peer_interface
             - mlag_peer
             - mlag_port_channel_id
+            - mlag_peer_port_channel_id
             - mpls_overlay_role
             - mpls_lsr
             - overlay_routing_protocol
@@ -164,7 +207,92 @@ class AvdInterfaceDescriptions(AvdFacts):
                 mlag_port_channel_id=data.mlag_port_channel_id,
             )
 
-        return f"MLAG_PEER_{data.mlag_peer}_Po{data.mlag_port_channel_id}"
+        return AvdStringFormatter().format(
+            self.shared_utils.mlag_port_channel_description,
+            **strip_null_from_data(
+                {
+                    "mlag_peer": data.mlag_peer,
+                    "interface": data.interface,
+                    "peer_interface": data.peer_interface,
+                    "mlag_port_channel_id": data.mlag_port_channel_id,
+                    "mlag_peer_port_channel_id": data.mlag_peer_port_channel_id,
+                }
+            ),
+        )
+
+    def mlag_peer_svi(self, data: InterfaceDescriptionData) -> str:
+        """
+        Build an MLAG Peering SVI description.
+
+        Available data:
+            - interface
+            - mlag_peer
+            - mlag_peer_vlan
+            - mpls_overlay_role
+            - mpls_lsr
+            - overlay_routing_protocol
+            - type.
+        """
+        return AvdStringFormatter().format(
+            self.shared_utils.mlag_peer_svi_description,
+            **strip_null_from_data(
+                {
+                    "mlag_peer": data.mlag_peer,
+                    "interface": data.interface,
+                    "mlag_peer_vlan": data.mlag_peer_vlan,
+                }
+            ),
+        )
+
+    def mlag_peer_l3_svi(self, data: InterfaceDescriptionData) -> str:
+        """
+        Build an MLAG Peering SVI description.
+
+        Available data:
+            - interface
+            - mlag_peer
+            - mlag_peer_l3_vlan
+            - mpls_overlay_role
+            - mpls_lsr
+            - overlay_routing_protocol
+            - type.
+        """
+        return AvdStringFormatter().format(
+            self.shared_utils.mlag_peer_l3_svi_description,
+            **strip_null_from_data(
+                {
+                    "mlag_peer": data.mlag_peer,
+                    "interface": data.interface,
+                    "mlag_peer_l3_vlan": data.mlag_peer_l3_vlan,
+                }
+            ),
+        )
+
+    def mlag_peer_l3_vrf_svi(self, data: InterfaceDescriptionData) -> str:
+        """
+        Build an MLAG Peering SVI description.
+
+        Available data:
+            - interface
+            - vlan
+            - vrf
+            - mlag_peer
+            - mpls_overlay_role
+            - mpls_lsr
+            - overlay_routing_protocol
+            - type.
+        """
+        return AvdStringFormatter().format(
+            self.shared_utils.mlag_peer_l3_vrf_svi_description,
+            **strip_null_from_data(
+                {
+                    "mlag_peer": data.mlag_peer,
+                    "interface": data.interface,
+                    "vlan": data.vlan,
+                    "vrf": data.vrf,
+                }
+            ),
+        )
 
     def connected_endpoints_ethernet_interface(self, data: InterfaceDescriptionData) -> str:
         """
@@ -207,6 +335,7 @@ class AvdInterfaceDescriptions(AvdFacts):
                     "endpoint": data.peer,
                     "endpoint_port": data.peer_interface,
                     "endpoint_type": data.peer_type,
+                    "port_channel_id": data.port_channel_id,
                 }
             ),
         )
@@ -312,6 +441,36 @@ class AvdInterfaceDescriptions(AvdFacts):
 
         return data.description
 
+    def wan_ha_ethernet_interface(self, data: InterfaceDescriptionData) -> str:
+        """
+        Build WAN HA ethernet interface description.
+
+        Available data:
+            - interface
+            - peer
+            - peer_interface
+            - mpls_overlay_role
+            - mpls_lsr
+            - overlay_routing_protocol
+            - type
+        """
+        return f"WAN_HA_{data.peer}_{data.peer_interface}"
+
+    def wan_ha_port_channel_interface(self, data: InterfaceDescriptionData) -> str:
+        """
+        Build WAN HA port-channel interface description.
+
+        Available data:
+            - interface
+            - peer
+            - peer_interface
+            - mpls_overlay_role
+            - mpls_lsr
+            - overlay_routing_protocol
+            - type
+        """
+        return f"WAN_HA_{data.peer}_{data.peer_interface}"
+
 
 class InterfaceDescriptionData:
     """
@@ -339,12 +498,16 @@ class InterfaceDescriptionData:
     """Interface of peer"""
     peer_channel_group_id: int | None
     """Port channel ID of peer"""
+    peer_node_group: str | None
+    """Node group of peer"""
     peer_type: str | None
     """Type of peer"""
     port_channel_id: int | None
     """Port channel ID"""
     port_channel_description: str | None
     """Set description for port-channel"""
+    vlan: int | None
+    """VLAN ID"""
     vrf: str | None
     """Interface VRF"""
     wan_carrier: str | None
@@ -361,9 +524,11 @@ class InterfaceDescriptionData:
         peer: str | None = None,
         peer_interface: str | None = None,
         peer_channel_group_id: int | None = None,
+        peer_node_group: str | None = None,
         peer_type: str | None = None,
         port_channel_id: int | None = None,
         port_channel_description: str | None = None,
+        vlan: int | None = None,
         vrf: str | None = None,
         wan_carrier: str | None = None,
         wan_circuit_id: str | None = None,
@@ -375,37 +540,51 @@ class InterfaceDescriptionData:
         self.peer = peer
         self.peer_interface = peer_interface
         self.peer_channel_group_id = peer_channel_group_id
+        self.peer_node_group = peer_node_group
         self.peer_type = peer_type
         self.port_channel_id = port_channel_id
         self.port_channel_description = port_channel_description
+        self.vlan = vlan
         self.vrf = vrf
         self.wan_carrier = wan_carrier
         self.wan_circuit_id = wan_circuit_id
 
-    @cached_property
-    def mpls_overlay_role(self) -> str:
+    @property
+    def mpls_overlay_role(self) -> str | None:
         return self._shared_utils.mpls_overlay_role
 
-    @cached_property
+    @property
     def overlay_routing_protocol(self) -> str:
         return self._shared_utils.overlay_routing_protocol
 
-    @cached_property
+    @property
     def mlag_interfaces(self) -> list:
         return self._shared_utils.mlag_interfaces
 
-    @cached_property
+    @property
     def mlag_peer(self) -> str:
         return self._shared_utils.mlag_peer
 
-    @cached_property
-    def mlag_port_channel_id(self) -> str:
+    @property
+    def mlag_port_channel_id(self) -> int:
         return self._shared_utils.mlag_port_channel_id
 
-    @cached_property
-    def mpls_lsr(self) -> str:
+    @property
+    def mlag_peer_port_channel_id(self) -> int:
+        return self._shared_utils.mlag_peer_port_channel_id
+
+    @property
+    def mlag_peer_vlan(self) -> int:
+        return self._shared_utils.mlag_peer_vlan
+
+    @property
+    def mlag_peer_l3_vlan(self) -> int | None:
+        return self._shared_utils.mlag_peer_l3_vlan
+
+    @property
+    def mpls_lsr(self) -> bool:
         return self._shared_utils.mpls_lsr
 
-    @cached_property
+    @property
     def type(self) -> str:
         return self._shared_utils.type

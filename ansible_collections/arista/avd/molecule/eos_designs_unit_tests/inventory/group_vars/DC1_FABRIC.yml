@@ -139,7 +139,7 @@ l3leaf:
       mlag_domain_id: custom_mlag_domain_id
       filter:
         tenants: [ Tenant_A, Tenant_B, Tenant_C ]
-        tags: [ opzone, web, app, db, vmotion, nfs, wan ]
+        tags: [ opzone, web, app, db, vmotion, nfs, wan, erp3 ]
       nodes:
         - name: DC1-SVC3A
           id: 4
@@ -179,7 +179,11 @@ l3leaf:
           uplink_switch_interfaces: [ Ethernet22, Ethernet22, Ethernet22, Ethernet22 ]
           evpn_gateway:
             remote_peers:
-              - hostname: "DC1-BL2A"
+              - hostname: DC1-BL2A
+                # Testing below that the override is working
+              - hostname: DC1-BL2B
+                ip_address: 192.168.42.42  # Should be 192.168.255.17
+                bgp_as: 65042  # Should be 65107
             evpn_l2:
               enabled: true
             evpn_l3:
@@ -193,10 +197,10 @@ l3leaf:
           uplink_switch_interfaces: [ Ethernet23, Ethernet23, Ethernet23, Ethernet23 ]
           evpn_gateway:
             remote_peers:
-              - hostname: "MY_EVPN_GW1_USER_DEFINED"
+              - hostname: MY_EVPN_GW1_USER_DEFINED
                 ip_address: 1.1.1.1
                 bgp_as: 65555
-              - hostname: "MY_EVPN_GW2_USER_DEFINED"
+              - hostname: MY_EVPN_GW2_USER_DEFINED
                 ip_address: 2.2.2.2
                 bgp_as: 65555
             evpn_l2:

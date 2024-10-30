@@ -36,14 +36,14 @@ ethernet_interfaces:
   peer: UNDERLAY-MULTICAST-L3LEAF1A
   peer_interface: Ethernet6
   peer_type: l3leaf
-  description: UNDERLAY-MULTICAST-L3LEAF1A_Ethernet6
+  description: L2_UNDERLAY-MULTICAST-L3LEAF1A_Ethernet6
   shutdown: false
   channel_group:
     id: 1
     mode: active
 port_channel_interfaces:
 - name: Port-Channel1
-  description: DC1_LEAF1_Po6
+  description: L2_DC1_LEAF1_Port-Channel6
   switchport:
     enabled: true
     mode: trunk

@@ -213,13 +213,13 @@ vlan internal order ascending range 1006 1199
 
 | Interface | Description | Channel Group | IP Address | VRF |  MTU | Shutdown | ACL In | ACL Out |
 | --------- | ----------- | ------------- | ---------- | ----| ---- | -------- | ------ | ------- |
-| Ethernet1 | P2P_LINK_TO_DC1-LEAF1A_Ethernet3 | - | 172.31.255.4/31 | default | 1500 | False | - | - |
-| Ethernet2 | P2P_LINK_TO_DC1-LEAF2A_Ethernet3 | - | 172.31.255.12/31 | default | 1500 | False | - | - |
-| Ethernet3 | P2P_LINK_TO_DC1-LEAF2B_Ethernet3 | - | 172.31.255.20/31 | default | 1500 | False | - | - |
-| Ethernet4 | P2P_LINK_TO_DC1-SVC3A_Ethernet3 | - | 172.31.255.28/31 | default | 1500 | False | - | - |
-| Ethernet5 | P2P_LINK_TO_DC1-SVC3B_Ethernet3 | - | 172.31.255.36/31 | default | 1500 | False | - | - |
-| Ethernet6 | P2P_LINK_TO_DC1-BL1A_Ethernet3 | - | 172.31.255.44/31 | default | 1500 | False | - | - |
-| Ethernet7 | P2P_LINK_TO_DC1-BL1B_Ethernet3 | - | 172.31.255.52/31 | default | 1500 | False | - | - |
+| Ethernet1 | P2P_DC1-LEAF1A_Ethernet3 | - | 172.31.255.4/31 | default | 1500 | False | - | - |
+| Ethernet2 | P2P_DC1-LEAF2A_Ethernet3 | - | 172.31.255.12/31 | default | 1500 | False | - | - |
+| Ethernet3 | P2P_DC1-LEAF2B_Ethernet3 | - | 172.31.255.20/31 | default | 1500 | False | - | - |
+| Ethernet4 | P2P_DC1-SVC3A_Ethernet3 | - | 172.31.255.28/31 | default | 1500 | False | - | - |
+| Ethernet5 | P2P_DC1-SVC3B_Ethernet3 | - | 172.31.255.36/31 | default | 1500 | False | - | - |
+| Ethernet6 | P2P_DC1-BL1A_Ethernet3 | - | 172.31.255.44/31 | default | 1500 | False | - | - |
+| Ethernet7 | P2P_DC1-BL1B_Ethernet3 | - | 172.31.255.52/31 | default | 1500 | False | - | - |
 
 ##### ISIS
 
@@ -238,7 +238,7 @@ vlan internal order ascending range 1006 1199
 ```eos
 !
 interface Ethernet1
-   description P2P_LINK_TO_DC1-LEAF1A_Ethernet3
+   description P2P_DC1-LEAF1A_Ethernet3
    no shutdown
    mtu 1500
    no switchport
@@ -250,7 +250,7 @@ interface Ethernet1
    isis network point-to-point
 !
 interface Ethernet2
-   description P2P_LINK_TO_DC1-LEAF2A_Ethernet3
+   description P2P_DC1-LEAF2A_Ethernet3
    no shutdown
    mtu 1500
    no switchport
@@ -262,7 +262,7 @@ interface Ethernet2
    isis network point-to-point
 !
 interface Ethernet3
-   description P2P_LINK_TO_DC1-LEAF2B_Ethernet3
+   description P2P_DC1-LEAF2B_Ethernet3
    no shutdown
    mtu 1500
    no switchport
@@ -274,7 +274,7 @@ interface Ethernet3
    isis network point-to-point
 !
 interface Ethernet4
-   description P2P_LINK_TO_DC1-SVC3A_Ethernet3
+   description P2P_DC1-SVC3A_Ethernet3
    no shutdown
    mtu 1500
    no switchport
@@ -286,7 +286,7 @@ interface Ethernet4
    isis network point-to-point
 !
 interface Ethernet5
-   description P2P_LINK_TO_DC1-SVC3B_Ethernet3
+   description P2P_DC1-SVC3B_Ethernet3
    no shutdown
    mtu 1500
    no switchport
@@ -298,7 +298,7 @@ interface Ethernet5
    isis network point-to-point
 !
 interface Ethernet6
-   description P2P_LINK_TO_DC1-BL1A_Ethernet3
+   description P2P_DC1-BL1A_Ethernet3
    no shutdown
    mtu 1500
    no switchport
@@ -310,7 +310,7 @@ interface Ethernet6
    isis network point-to-point
 !
 interface Ethernet7
-   description P2P_LINK_TO_DC1-BL1B_Ethernet3
+   description P2P_DC1-BL1B_Ethernet3
    no shutdown
    mtu 1500
    no switchport
@@ -446,8 +446,8 @@ ip route vrf MGMT 0.0.0.0/0 192.168.200.5
 !
 router isis EVPN_UNDERLAY
    net 49.0001.1921.6825.5003.00
-   is-type level-2
    router-id ipv4 192.168.255.3
+   is-type level-2
    log-adjacency-changes
    !
    address-family ipv4 unicast

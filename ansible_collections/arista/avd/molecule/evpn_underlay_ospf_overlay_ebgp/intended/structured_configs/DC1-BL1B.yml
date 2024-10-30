@@ -38,22 +38,22 @@ router_bgp:
   - ip_address: 192.168.255.1
     peer_group: EVPN-OVERLAY-PEERS
     peer: DC1-SPINE1
-    description: DC1-SPINE1
+    description: DC1-SPINE1_Loopback0
     remote_as: '65001'
   - ip_address: 192.168.255.2
     peer_group: EVPN-OVERLAY-PEERS
     peer: DC1-SPINE2
-    description: DC1-SPINE2
+    description: DC1-SPINE2_Loopback0
     remote_as: '65001'
   - ip_address: 192.168.255.3
     peer_group: EVPN-OVERLAY-PEERS
     peer: DC1-SPINE3
-    description: DC1-SPINE3
+    description: DC1-SPINE3_Loopback0
     remote_as: '65001'
   - ip_address: 192.168.255.4
     peer_group: EVPN-OVERLAY-PEERS
     peer: DC1-SPINE4
-    description: DC1-SPINE4
+    description: DC1-SPINE4_Loopback0
     remote_as: '65001'
 static_routes:
 - vrf: MGMT
@@ -128,31 +128,31 @@ ntp:
 vlans:
 - id: 4093
   tenant: system
-  name: LEAF_PEER_L3
+  name: MLAG_L3
   trunk_groups:
   - MLAG
 - id: 4094
   tenant: system
-  name: MLAG_PEER
+  name: MLAG
   trunk_groups:
   - MLAG
 vlan_interfaces:
 - name: Vlan4093
-  description: MLAG_PEER_L3_PEERING
+  description: MLAG_L3
   shutdown: false
   mtu: 1500
   ip_address: 10.255.251.11/31
   ospf_network_point_to_point: true
   ospf_area: 0.0.0.0
 - name: Vlan4094
-  description: MLAG_PEER
+  description: MLAG
   shutdown: false
   no_autostate: true
   mtu: 1500
   ip_address: 10.255.252.11/31
 port_channel_interfaces:
 - name: Port-Channel5
-  description: MLAG_PEER_DC1-BL1A_Po5
+  description: MLAG_DC1-BL1A_Port-Channel5
   switchport:
     enabled: true
     mode: trunk
@@ -165,7 +165,7 @@ ethernet_interfaces:
   peer: DC1-BL1A
   peer_interface: Ethernet5
   peer_type: mlag_peer
-  description: MLAG_PEER_DC1-BL1A_Ethernet5
+  description: MLAG_DC1-BL1A_Ethernet5
   shutdown: false
   channel_group:
     id: 5
@@ -174,7 +174,7 @@ ethernet_interfaces:
   peer: DC1-BL1A
   peer_interface: Ethernet6
   peer_type: mlag_peer
-  description: MLAG_PEER_DC1-BL1A_Ethernet6
+  description: MLAG_DC1-BL1A_Ethernet6
   shutdown: false
   channel_group:
     id: 5
@@ -183,7 +183,7 @@ ethernet_interfaces:
   peer: DC1-SPINE1
   peer_interface: Ethernet7
   peer_type: spine
-  description: P2P_LINK_TO_DC1-SPINE1_Ethernet7
+  description: P2P_DC1-SPINE1_Ethernet7
   shutdown: false
   mtu: 1500
   switchport:
@@ -200,7 +200,7 @@ ethernet_interfaces:
   peer: DC1-SPINE2
   peer_interface: Ethernet7
   peer_type: spine
-  description: P2P_LINK_TO_DC1-SPINE2_Ethernet7
+  description: P2P_DC1-SPINE2_Ethernet7
   shutdown: false
   mtu: 1500
   switchport:
@@ -217,7 +217,7 @@ ethernet_interfaces:
   peer: DC1-SPINE3
   peer_interface: Ethernet7
   peer_type: spine
-  description: P2P_LINK_TO_DC1-SPINE3_Ethernet7
+  description: P2P_DC1-SPINE3_Ethernet7
   shutdown: false
   mtu: 1500
   switchport:
@@ -234,7 +234,7 @@ ethernet_interfaces:
   peer: DC1-SPINE4
   peer_interface: Ethernet7
   peer_type: spine
-  description: P2P_LINK_TO_DC1-SPINE4_Ethernet7
+  description: P2P_DC1-SPINE4_Ethernet7
   shutdown: false
   mtu: 1500
   switchport:

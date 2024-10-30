@@ -30,7 +30,7 @@ ethernet_interfaces:
   peer: BGP-SPINE1
   peer_interface: Ethernet2
   peer_type: l3spine
-  description: BGP-SPINE1_Ethernet2
+  description: L2_BGP-SPINE1_Ethernet2
   shutdown: false
   channel_group:
     id: 1
@@ -39,7 +39,7 @@ ethernet_interfaces:
   peer: BGP-SPINE2
   peer_interface: Ethernet2
   peer_type: l3spine
-  description: BGP-SPINE2_Ethernet2
+  description: L2_BGP-SPINE2_Ethernet2
   shutdown: false
   channel_group:
     id: 1
@@ -62,7 +62,7 @@ ethernet_interfaces:
     access_vlan: '100'
 port_channel_interfaces:
 - name: Port-Channel1
-  description: BGP_SPINES_Po2
+  description: L2_BGP_SPINES_Port-Channel2
   switchport:
     enabled: true
     mode: trunk

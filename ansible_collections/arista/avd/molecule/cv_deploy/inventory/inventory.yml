@@ -8,14 +8,14 @@ SITE1:
       children:
         SITE1_SPINES:
           hosts:
-            s1-spine1:
-            s1-spine2:
+            avd-ci-spine1:
+            avd-ci-spine2:
         SITE1_LEAFS:
           hosts:
-            s1-leaf1:
-            s1-leaf2:
-            s1-leaf3:
-            s1-leaf4:
+            avd-ci-leaf1:
+            avd-ci-leaf2:
+            avd-ci-leaf3:
+            avd-ci-leaf4:
     SITE1_FABRIC_SERVICES:
       children:
         SITE1_SPINES:

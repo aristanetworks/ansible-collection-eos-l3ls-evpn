@@ -26,7 +26,7 @@
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;name</samp>](## "traffic_policies.policies.[].name") | String | Required, Unique |  |  | Traffic Policy Name. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;matches</samp>](## "traffic_policies.policies.[].matches") | List, items: Dictionary |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;name</samp>](## "traffic_policies.policies.[].matches.[].name") | String | Required, Unique |  |  | Traffic Policy Item. |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;type</samp>](## "traffic_policies.policies.[].matches.[].type") | String |  |  | Valid Values:<br>- <code>ipv4</code><br>- <code>ipv6</code> |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;type</samp>](## "traffic_policies.policies.[].matches.[].type") | String | Required |  | Valid Values:<br>- <code>ipv4</code><br>- <code>ipv6</code> |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;source</samp>](## "traffic_policies.policies.[].matches.[].source") | Dictionary |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;prefixes</samp>](## "traffic_policies.policies.[].matches.[].source.prefixes") | List, items: String |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;&lt;str&gt;</samp>](## "traffic_policies.policies.[].matches.[].source.prefixes.[]") | String |  |  |  | IP address or prefix. |
@@ -50,6 +50,7 @@
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;&lt;str&gt;</samp>](## "traffic_policies.policies.[].matches.[].protocols.[].flags.[]") | String |  |  | Valid Values:<br>- <code>established</code><br>- <code>initial</code> |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;icmp_type</samp>](## "traffic_policies.policies.[].matches.[].protocols.[].icmp_type") | List, items: String |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;&lt;str&gt;</samp>](## "traffic_policies.policies.[].matches.[].protocols.[].icmp_type.[]") | String |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enforce_gtsm</samp>](## "traffic_policies.policies.[].matches.[].protocols.[].enforce_gtsm") | Boolean |  |  |  | Enforce the GTSM for BGP speakers. Only supported when protocol is set to 'neighbors'. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;actions</samp>](## "traffic_policies.policies.[].matches.[].actions") | Dictionary |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dscp</samp>](## "traffic_policies.policies.[].matches.[].actions.dscp") | Integer |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;traffic_class</samp>](## "traffic_policies.policies.[].matches.[].actions.traffic_class") | Integer |  |  |  | Traffic class ID. |
@@ -108,7 +109,7 @@
 
               # Traffic Policy Item.
             - name: <str; required; unique>
-              type: <str; "ipv4" | "ipv6">
+              type: <str; "ipv4" | "ipv6"; required>
               source:
                 prefixes:
 
@@ -155,6 +156,9 @@
                     - <str; "established" | "initial">
                   icmp_type:
                     - <str>
+
+                  # Enforce the GTSM for BGP speakers. Only supported when protocol is set to 'neighbors'.
+                  enforce_gtsm: <bool>
               actions:
                 dscp: <int>
 

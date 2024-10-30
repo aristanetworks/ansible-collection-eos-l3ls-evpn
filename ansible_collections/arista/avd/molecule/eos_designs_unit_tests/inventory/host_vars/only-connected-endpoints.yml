@@ -1,0 +1,52 @@
+---
+# Minimum config to only generate connected endpoints
+node_type_keys:
+  - key: device
+    type: device
+    connected_endpoints: true
+    underlay_router: false
+    uplink_type: port-channel
+
+type: device
+device:
+  defaults:
+    structured_config:
+      # hostname: null # Hostname is kept to avoid pyavd tests from failing. Uncomment this if you are trying to build connected-endpoints only configs.
+      is_deployed: null
+      service_routing_protocols_model: null
+      vlan_internal_order: null
+      aaa_root: null
+      config_end: null
+      enable_password: null
+      transceiver_qsfp_default_mode_4x10: null
+      spanning_tree: null
+      vrfs: null
+      management_api_http: null
+
+port_profiles:
+  - profile: MY_PROFILE
+    vlans: 1-100
+    mode: trunk
+    native_vlan: 1000
+    enabled: true
+
+servers: # dynamic_key: connected_endpoints
+  - name: TEST_SERVER_01
+    adapters:
+      - switches: [only-connected-endpoints]
+        switch_ports: [Ethernet12]
+        endpoint_ports: [Nic1]
+        profile: MY_PROFILE
+
+      - switches: [only-connected-endpoints, only-connected-endpoints]
+        switch_ports: [Ethernet1, Ethernet2]
+        endpoint_ports: [Nic1, Nic2]
+        profile: MY_PROFILE
+        port_channel:
+          mode: active
+
+network_ports:
+  - switches: ["only-connected-endpoints(-something-showing-this-supports-regex)?"]
+    switch_ports: [Ethernet20-29]
+    endpoint: Network Port
+    profile: MY_PROFILE

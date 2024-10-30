@@ -5,7 +5,7 @@ from __future__ import annotations
 
 import importlib
 
-from pyavd._errors import AristaAvdError, AristaAvdMissingVariableError
+from pyavd._errors import AristaAvdError
 
 
 def load_python_class(module_path: str, class_name: str, parent_class: type | None = None) -> type:
@@ -37,10 +37,10 @@ def load_python_class(module_path: str, class_name: str, parent_class: type | No
     """
     if not module_path:
         msg = "Cannot load a python class without the module_path set."
-        raise AristaAvdMissingVariableError(msg)
+        raise AristaAvdInvalidInputsError(msg)
     if not class_name:
         msg = "Cannot load a python class without the class_name set."
-        raise AristaAvdMissingVariableError(msg)
+        raise AristaAvdInvalidInputsError(msg)
 
     try:
         cls = getattr(importlib.import_module(module_path), class_name)

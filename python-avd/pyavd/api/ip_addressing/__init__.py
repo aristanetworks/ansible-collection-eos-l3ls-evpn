@@ -331,3 +331,27 @@ class AvdIpAddressing(AvdFacts, UtilsMixin):
         """Return IP address to be used for EVPN underlay L2 multicast group."""
         offset = vlan_id - 1 + underlay_l2_multicast_group_ipv4_pool_offset
         return get_ip_from_pool(underlay_l2_multicast_group_ipv4_pool, 32, offset, 0)
+
+    def wan_ha_ip(self) -> str:
+        """Return the WAN HA local IP address."""
+        wan_ha_ipv4_pool = self.shared_utils.wan_ha_ipv4_pool
+        prefixlen = self.shared_utils.fabric_ip_addressing_wan_ha_ipv4_prefix_length
+
+        if self.shared_utils.is_first_ha_peer:
+            ip_address = get_ip_from_pool(wan_ha_ipv4_pool, prefixlen, 0, 0)
+        else:
+            ip_address = get_ip_from_pool(wan_ha_ipv4_pool, prefixlen, 0, 1)
+
+        return f"{ip_address}/{prefixlen}"
+
+    def wan_ha_peer_ip(self) -> str:
+        """Return the WAN HA peer IP."""
+        wan_ha_ipv4_pool = self.shared_utils.wan_ha_ipv4_pool
+        prefixlen = self.shared_utils.fabric_ip_addressing_wan_ha_ipv4_prefix_length
+
+        if self.shared_utils.is_first_ha_peer:
+            ip_address = get_ip_from_pool(wan_ha_ipv4_pool, prefixlen, 0, 1)
+        else:
+            ip_address = get_ip_from_pool(wan_ha_ipv4_pool, prefixlen, 0, 0)
+
+        return f"{ip_address}/{prefixlen}"

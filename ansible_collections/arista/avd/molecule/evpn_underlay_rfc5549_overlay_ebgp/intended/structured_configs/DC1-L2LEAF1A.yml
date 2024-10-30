@@ -73,7 +73,7 @@ ethernet_interfaces:
   peer: DC1-LEAF2A
   peer_interface: Ethernet7
   peer_type: l3leaf
-  description: DC1-LEAF2A_Ethernet7
+  description: L2_DC1-LEAF2A_Ethernet7
   shutdown: false
   channel_group:
     id: 1
@@ -82,14 +82,14 @@ ethernet_interfaces:
   peer: DC1-LEAF2B
   peer_interface: Ethernet7
   peer_type: l3leaf
-  description: DC1-LEAF2B_Ethernet7
+  description: L2_DC1-LEAF2B_Ethernet7
   shutdown: false
   channel_group:
     id: 1
     mode: active
 port_channel_interfaces:
 - name: Port-Channel1
-  description: DC1_LEAF2_Po7
+  description: L2_DC1_LEAF2_Port-Channel7
   switchport:
     enabled: true
     mode: trunk

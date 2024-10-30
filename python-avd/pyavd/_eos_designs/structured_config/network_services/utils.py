@@ -7,7 +7,7 @@ import ipaddress
 from functools import cached_property
 from typing import TYPE_CHECKING
 
-from pyavd._errors import AristaAvdError, AristaAvdMissingVariableError
+from pyavd._errors import AristaAvdError, AristaAvdInvalidInputsError
 from pyavd._utils import default, get, get_item
 from pyavd.j2filters import natural_sort
 
@@ -157,22 +157,21 @@ class UtilsMixin(UtilsWanMixin, UtilsZscalerMixin):
             vrf_id = vrf.get("vrf_id", vrf.get("vrf_vni"))
             if vrf_id is None:
                 msg = f"Unable to assign MLAG VRF Peering VLAN for vrf {vrf['name']}.Set either 'mlag_ibgp_peering_vlan' or 'vrf_id' or 'vrf_vni' on the VRF"
-                raise AristaAvdMissingVariableError(
-                    msg,
-                )
+                raise AristaAvdInvalidInputsError(msg)
             vlan_id = base_vlan + int(vrf_id) - 1
 
         return vlan_id
 
-    def _mlag_ibgp_peering_redistribute(self: AvdStructuredConfigNetworkServices, vrf: dict, tenant: dict) -> bool:
+    def _exclude_mlag_ibgp_peering_from_redistribute(self: AvdStructuredConfigNetworkServices, vrf: dict, tenant: dict) -> bool | None:
         """
-        Returns True if MLAG IBGP Peering subnet should be redistributed for the given vrf/tenant.
-
-        False otherwise.
+        Returns True if redistribute_connected is True and MLAG IBGP Peering subnet should be _excluded_ from redistribution for the given vrf/tenant.
 
         Does _not_ include checks if the peering is enabled at all, so that should be checked first.
         """
-        return default(vrf.get("redistribute_mlag_ibgp_peering_vrfs"), tenant.get("redistribute_mlag_ibgp_peering_vrfs"), True) is True  # noqa: FBT003
+        if get(vrf, "redistribute_connected", True) is True:
+            return default(vrf.get("redistribute_mlag_ibgp_peering_vrfs"), tenant.get("redistribute_mlag_ibgp_peering_vrfs"), False) is False  # noqa: FBT003
+
+        return None
 
     @cached_property
     def _configure_bgp_mlag_peer_group(self: AvdStructuredConfigNetworkServices) -> bool:

@@ -5,7 +5,7 @@
 - [Management](#management)
   - [Management Interfaces](#management-interfaces)
 - [Monitoring](#monitoring)
-  - [Hardware Counters](#hardware-counters)
+  - [Hardware](#hardware)
 
 ## Management
 
@@ -37,11 +37,13 @@ interface Management1
 
 ## Monitoring
 
-### Hardware Counters
+### Hardware
 
-#### Hardware Counters Summary
+#### Hardware Counters
 
-##### Hardware Counter Features
+##### Hardware Counters Summary
+
+###### Hardware Counter Features
 
 **NOTE:** Not all options (columns) in the table below are compatible with every available feature, it is the user responsibility to configure valid options for each feature.
 
@@ -56,7 +58,7 @@ interface Management1
 | route | - | ipv6 | - | - | 2001:db8:cafe::/64 | - |
 | segment-security | in | - | - | - | - | - |
 
-#### Hardware Counters Device Configuration
+#### Hardware Device Configuration
 
 ```eos
 !

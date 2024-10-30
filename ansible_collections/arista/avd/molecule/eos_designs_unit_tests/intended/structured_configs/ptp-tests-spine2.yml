@@ -9,6 +9,10 @@ router_bgp:
   maximum_paths:
     paths: 4
     ecmp: 4
+  redistribute:
+    connected:
+      enabled: true
+      route_map: RM-CONN-2-BGP
   updates:
     wait_install: true
   peer_groups:
@@ -30,9 +34,6 @@ router_bgp:
       activate: true
     - name: EVPN-OVERLAY-PEERS
       activate: false
-  redistribute_routes:
-  - source_protocol: connected
-    route_map: RM-CONN-2-BGP
   address_family_evpn:
     peer_groups:
     - name: EVPN-OVERLAY-PEERS
@@ -130,11 +131,11 @@ ethernet_interfaces:
   peer: ptp-tests-spine1
   peer_interface: Ethernet6
   peer_type: spine
-  description: P2P_LINK_TO_ptp-tests-spine1_Ethernet6
   switchport:
     enabled: false
   shutdown: false
   mtu: 9214
+  description: P2P_ptp-tests-spine1_Ethernet6
   ptp:
     announce:
       interval: 0
@@ -148,11 +149,11 @@ ethernet_interfaces:
   peer: ptp-tests-spine1
   peer_interface: Ethernet7
   peer_type: spine
-  description: P2P_LINK_TO_ptp-tests-spine1_Ethernet7
   switchport:
     enabled: false
   shutdown: false
   mtu: 9214
+  description: P2P_ptp-tests-spine1_Ethernet7
   ptp:
     announce:
       interval: 0
@@ -166,11 +167,11 @@ ethernet_interfaces:
   peer: ptp-tests-spine1
   peer_interface: Ethernet8
   peer_type: spine
-  description: P2P_LINK_TO_ptp-tests-spine1_Ethernet8
   switchport:
     enabled: false
   shutdown: false
   mtu: 9214
+  description: P2P_ptp-tests-spine1_Ethernet8
   ptp:
     announce:
       interval: 0
@@ -184,11 +185,11 @@ ethernet_interfaces:
   peer: ptp-tests-spine1
   peer_interface: Ethernet9
   peer_type: spine
-  description: P2P_LINK_TO_ptp-tests-spine1_Ethernet9
   switchport:
     enabled: false
   shutdown: false
   mtu: 9214
+  description: P2P_ptp-tests-spine1_Ethernet9
   ptp:
     announce:
       interval: 0

@@ -134,7 +134,7 @@ vlan 4092
 
 | Interface | Description | Mode | VLANs | Native VLAN | Trunk Group | Channel-Group |
 | --------- | ----------- | ---- | ----- | ----------- | ----------- | ------------- |
-| Ethernet1 | ISIS-SPINE1_Ethernet1 | *trunk | *110,4092 | *- | *- | 1 |
+| Ethernet1 | L2_ISIS-SPINE1_Ethernet1 | *trunk | *110,4092 | *- | *- | 1 |
 
 *Inherited from Port-Channel Interface
 
@@ -143,7 +143,7 @@ vlan 4092
 ```eos
 !
 interface Ethernet1
-   description ISIS-SPINE1_Ethernet1
+   description L2_ISIS-SPINE1_Ethernet1
    no shutdown
    channel-group 1 mode active
 ```
@@ -156,14 +156,14 @@ interface Ethernet1
 
 | Interface | Description | Mode | VLANs | Native VLAN | Trunk Group | LACP Fallback Timeout | LACP Fallback Mode | MLAG ID | EVPN ESI |
 | --------- | ----------- | ---- | ----- | ----------- | ------------| --------------------- | ------------------ | ------- | -------- |
-| Port-Channel1 | ISIS-SPINE1_Po1 | trunk | 110,4092 | - | - | - | - | - | - |
+| Port-Channel1 | L2_ISIS-SPINE1_Port-Channel1 | trunk | 110,4092 | - | - | - | - | - | - |
 
 #### Port-Channel Interfaces Device Configuration
 
 ```eos
 !
 interface Port-Channel1
-   description ISIS-SPINE1_Po1
+   description L2_ISIS-SPINE1_Port-Channel1
    no shutdown
    switchport trunk allowed vlan 110,4092
    switchport mode trunk
@@ -243,8 +243,8 @@ no ip routing vrf MGMT
 
 ```eos
 !
-ip route vrf MGMT 0.0.0.0/0 172.31.0.1
 ip route 0.0.0.0/0 172.23.254.1
+ip route vrf MGMT 0.0.0.0/0 172.31.0.1
 ```
 
 ## Multicast

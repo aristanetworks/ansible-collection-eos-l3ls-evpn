@@ -17,7 +17,6 @@ port_profiles:
     vlans: "210-211"
 
   - profile: ALL_WITH_SECURITY
-    parent_profile: NON_EXISTING_PROFILE # Test that pointing to a nonexisting profile won't break templates.
     mode: trunk
     vlans: "1-4094"
     spanning_tree_bpdufilter: true

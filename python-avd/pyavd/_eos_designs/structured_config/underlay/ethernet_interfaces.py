@@ -219,8 +219,7 @@ class EthernetInterfacesMixin(UtilsMixin):
                         # subinterface name
                         "description": description,
                         "shutdown": self.shared_utils.shutdown_interfaces_towards_undeployed_peers and not link["peer_is_deployed"],
-                        "type": "l3dot1q",
-                        "encapsulation_dot1q_vlan": subinterface["encapsulation_dot1q_vlan"],
+                        "encapsulation_dot1q": {"vlan": subinterface["encapsulation_dot1q_vlan"]},
                         "ipv6_enable": subinterface.get("ipv6_enable"),
                         "sflow": link.get("sflow"),
                         "flow_tracker": link.get("flow_tracker"),
@@ -286,35 +285,75 @@ class EthernetInterfacesMixin(UtilsMixin):
                     context_keys=["name", "peer", "peer_interface"],
                 )
 
-        # WAN HA interfaces for direct connection
-        if self.shared_utils.use_uplinks_for_wan_ha is False:
-            direct_wan_ha_links_flow_tracker = get(
-                self.shared_utils.switch_data_combined,
-                "wan_ha.flow_tracker",
-                default=self.shared_utils.get_flow_tracker(None, "direct_wan_ha_links"),
+        # WAN HA interface(s) for direct connection
+        for wan_ha_interface in self._get_direct_ha_ethernet_interfaces():
+            append_if_not_duplicate(
+                list_of_dicts=ethernet_interfaces,
+                primary_key="name",
+                new_dict=wan_ha_interface,
+                context=f"L3 Interfaces defined under {self.shared_utils.node_type_key_data['key']} wan_ha.ha_interfaces",
+                context_keys=["name", "peer", "peer_interface"],
             )
-            for index, interface in enumerate(get(self.shared_utils.switch_data_combined, "wan_ha.ha_interfaces", required=True)):
-                ha_interface = {
-                    "name": interface,
-                    "switchport": {"enabled": False},
-                    "peer_type": "l3_interface",
-                    "peer": self.shared_utils.wan_ha_peer,
-                    "shutdown": False,
-                    "description": "DIRECT LAN HA LINK",
-                    "ip_address": self.shared_utils.wan_ha_ip_addresses[index],
-                    "flow_tracker": direct_wan_ha_links_flow_tracker,
-                    "mtu": self.shared_utils.configured_wan_ha_mtu,
-                }
-
-                append_if_not_duplicate(
-                    list_of_dicts=ethernet_interfaces,
-                    primary_key="name",
-                    new_dict=ha_interface,
-                    context=f"L3 Interfaces defined under {self.shared_utils.node_type_key_data['key']} wan_ha_interfaces",
-                    context_keys=["name", "peer", "peer_interface"],
-                )
 
         if ethernet_interfaces:
             return ethernet_interfaces
 
         return None
+
+    def _get_direct_ha_ethernet_interfaces(self: AvdStructuredConfigUnderlay) -> list:
+        """
+        Return a list of ethernet interfaces to be configured for WAN direct HA.
+
+        Caters for the scenarii where either a port-channel is used or a single l3_interface.
+        """
+        if self.shared_utils.use_uplinks_for_wan_ha:
+            return []
+
+        direct_wan_ha_interfaces = []
+
+        direct_wan_ha_links_flow_tracker = self.shared_utils.get_flow_tracker(get(self.shared_utils.switch_data_combined, "wan_ha"), "direct_wan_ha_links")
+
+        for index, interface in enumerate(get(self.shared_utils.switch_data_combined, "wan_ha.ha_interfaces", required=True)):
+            description = self.shared_utils.interface_descriptions.wan_ha_ethernet_interface(
+                InterfaceDescriptionData(
+                    shared_utils=self.shared_utils,
+                    interface=interface,
+                    peer=self.shared_utils.wan_ha_peer,
+                    peer_interface=interface,
+                ),
+            )
+            if self.shared_utils.use_port_channel_for_direct_ha:
+                direct_wan_ha_interfaces.append(
+                    {
+                        "name": interface,
+                        "peer_type": "wan_ha_peer",
+                        "peer_interface": interface,
+                        "peer": self.shared_utils.wan_ha_peer,
+                        "description": description,
+                        "shutdown": False,
+                        "channel_group": {
+                            "id": self.shared_utils.wan_ha_port_channel_id,
+                            "mode": "active",
+                        },
+                        # TODO: do we need speed?
+                        # TODO: do we need mtu
+                        "mtu": self.shared_utils.configured_wan_ha_mtu,
+                    }
+                )
+            else:
+                # Using direct l3 interface
+                direct_wan_ha_interfaces.append(
+                    {
+                        "name": interface,
+                        "switchport": {"enabled": False},
+                        "peer_type": "l3_interface",
+                        "peer": self.shared_utils.wan_ha_peer,
+                        "shutdown": False,
+                        "description": description,
+                        "ip_address": self.shared_utils.wan_ha_ip_addresses[index],
+                        "flow_tracker": direct_wan_ha_links_flow_tracker,
+                        "mtu": self.shared_utils.configured_wan_ha_mtu,
+                    }
+                )
+
+        return direct_wan_ha_interfaces

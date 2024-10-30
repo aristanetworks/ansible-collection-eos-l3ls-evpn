@@ -1067,10 +1067,11 @@ $defs:
                 default: false
               profile:
                 type: str
-                valid_values:
-                  - "aes67"
-                  - "smpte2059-2"
-                  - "aes67-r16-2016"
+                description: |-
+                  Default available profiles are:
+                    - "aes67"
+                    - "aes67-r16-2016"
+                    - "smpte2059-2"
                 default: "aes67-r16-2016"
               mlag:
                 description: Configure PTP on the MLAG peer-link port-channel when PTP is enabled. By default PTP will not be configured on the MLAG peer-link port-channel.
@@ -1253,7 +1254,7 @@ $defs:
               Override the default WAN role.
 
               This is used both for AutoVPN and Pathfinder designs.
-              That means if `wan_mode` root key is set to `legacy-autovpn` or `cv-pathfinder`.
+              That means if `wan_mode` root key is set to `autovpn` or `cv-pathfinder`.
               `server` indicates that the router is a route-reflector.
 
               Only supported if `overlay_routing_protocol` is set to `ibgp`.
@@ -1341,6 +1342,18 @@ $defs:
                 description: |-
                   Number of parallel links towards HA switches.
                   Can be used to reserve IP addresses for future parallel HA links.
+              port_channel_id:
+                type: int
+                convert_types:
+                  - str
+                description: |-
+                  Port-channel ID to use for direct HA.
+              use_port_channel_for_direct_ha:
+                type: bool
+                default: true
+                description: |-
+                  Enable or disable using a port-channel interface for direct HA when there is only one interface.
+                  This feature was introduced in EOS 4.33.0F.
               flow_tracking:
                 type: dict
                 $ref: "eos_designs#/$defs/flow_tracking_link"

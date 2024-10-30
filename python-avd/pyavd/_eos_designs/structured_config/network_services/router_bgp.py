@@ -9,8 +9,8 @@ from itertools import groupby as itertools_groupby
 from re import fullmatch as re_fullmatch
 from typing import TYPE_CHECKING
 
-from pyavd._errors import AristaAvdMissingVariableError
-from pyavd._utils import append_if_not_duplicate, default, get, get_item, merge, strip_empties_from_dict
+from pyavd._errors import AristaAvdInvalidInputsError
+from pyavd._utils import AvdStringFormatter, append_if_not_duplicate, default, get, get_item, merge, strip_empties_from_dict
 from pyavd.j2filters import list_compress, natural_sort
 
 from .utils import UtilsMixin
@@ -50,7 +50,7 @@ class RouterBgpMixin(UtilsMixin):
                 {
                     "vlans": self._router_bgp_vlans(tenant_svis_l2vlans_dict),
                     "vlan_aware_bundles": self._router_bgp_vlan_aware_bundles(tenant_svis_l2vlans_dict),
-                    "redistribute_routes": self._router_bgp_redistribute_routes,
+                    "redistribute": self._router_bgp_redistribute_routes,
                     "vpws": self._router_bgp_vpws,
                 }
             ),
@@ -165,31 +165,37 @@ class RouterBgpMixin(UtilsMixin):
                     # The called function in-place updates the bgp_vrf dict.
                     self._update_router_bgp_vrf_evpn_or_mpls_cfg(bgp_vrf, vrf, vrf_address_families)
 
+                bgp_vrf_redistribute_connected = get(vrf, "redistribute_connected", default=True)
                 if vrf_name != "default":
                     # Non-default VRF
-                    bgp_vrf |= {
-                        "router_id": self.shared_utils.router_id,
-                        "redistribute_routes": [{"source_protocol": "connected"}],
-                    }
+                    bgp_vrf["router_id"] = self.shared_utils.router_id
+                    if bgp_vrf_redistribute_connected is True:
+                        bgp_vrf["redistribute"] = {"connected": {"enabled": True}}
                     # Redistribution of static routes for VRF default are handled elsewhere
                     # since there is a choice between redistributing to underlay or overlay.
                     if (bgp_vrf_redistribute_static := vrf.get("redistribute_static")) is True or (
                         vrf["static_routes"] and bgp_vrf_redistribute_static is not False
                     ):
-                        bgp_vrf.setdefault("redistribute_routes", []).append({"source_protocol": "static"})
+                        bgp_vrf["redistribute"].update({"static": {"enabled": True}})
 
-                elif bgp_vrf:
-                    # VRF default with RD/RT and eos_cli/struct_cfg which should go under the vrf default context.
-                    # Any peers added later will be put directly under router_bgp
-                    append_if_not_duplicate(
-                        list_of_dicts=router_bgp["vrfs"],
-                        primary_key="name",
-                        new_dict={"name": vrf_name, **bgp_vrf},
-                        context="BGP VRFs defined under network services",
-                        context_keys=["name"],
-                    )
-                    # Resetting bgp_vrf so we only add global keys if there are any neighbors for VRF default
-                    bgp_vrf = {}
+                else:
+                    # VRF default
+                    if bgp_vrf:
+                        # RD/RT and/or eos_cli/struct_cfg which should go under the vrf default context.
+                        # Any peers added later will be put directly under router_bgp
+                        append_if_not_duplicate(
+                            list_of_dicts=router_bgp["vrfs"],
+                            primary_key="name",
+                            new_dict={"name": vrf_name, **bgp_vrf},
+                            context="BGP VRFs defined under network services",
+                            context_keys=["name"],
+                        )
+                        # Resetting bgp_vrf so we only add global keys if there are any neighbors for VRF default
+                        bgp_vrf = {}
+
+                    if self.shared_utils.underlay_routing_protocol == "none":
+                        # We need to add redistribute connected for the default VRF when underlay_routing_protocol is "none"
+                        bgp_vrf["redistribute"] = {"connected": {"enabled": True}}
 
                 # MLAG IBGP Peering VLANs per VRF
                 # Will only be configured for VRF default if underlay_routing_protocol == "none".
@@ -244,7 +250,7 @@ class RouterBgpMixin(UtilsMixin):
                     and vrf.get("redistribute_ospf") is not False
                     and self.shared_utils.hostname in get(vrf, "ospf.nodes", default=[self.shared_utils.hostname])
                 ):
-                    bgp_vrf.setdefault("redistribute_routes", []).append({"source_protocol": "ospf"})
+                    bgp_vrf.setdefault("redistribute", {}).update({"ospf": {"enabled": True}})
 
                 if bgp_vrf.get("neighbors"):
                     platform_bgp_update_wait_install = get(self.shared_utils.platform_settings, "feature_support.bgp_update_wait_install", default=True) is True
@@ -273,9 +279,7 @@ class RouterBgpMixin(UtilsMixin):
     def _update_router_bgp_vrf_evpn_or_mpls_cfg(self: AvdStructuredConfigNetworkServices, bgp_vrf: dict, vrf: dict, vrf_address_families: list) -> None:
         """In-place update EVPN/MPLS part of structured config for *one* VRF under router_bgp.vrfs."""
         vrf_name = vrf["name"]
-
         bgp_vrf["rd"] = self.get_vrf_rd(vrf)
-
         vrf_rt = self.get_vrf_rt(vrf)
         route_targets = {"import": [], "export": []}
 
@@ -317,17 +321,22 @@ class RouterBgpMixin(UtilsMixin):
 
     def _update_router_bgp_vrf_mlag_neighbor_cfg(self: AvdStructuredConfigNetworkServices, bgp_vrf: dict, vrf: dict, tenant: dict, vlan_id: int) -> None:
         """In-place update MLAG neighbor part of structured config for *one* VRF under router_bgp.vrfs."""
-        if not self._mlag_ibgp_peering_redistribute(vrf, tenant):
-            bgp_vrf["redistribute_routes"][0]["route_map"] = "RM-CONN-2-BGP-VRFS"
+        if self._exclude_mlag_ibgp_peering_from_redistribute(vrf, tenant):
+            bgp_vrf["redistribute"]["connected"] = {"enabled": True, "route_map": "RM-CONN-2-BGP-VRFS"}
 
+        interface_name = f"Vlan{vlan_id}"
         if self.shared_utils.underlay_rfc5549 and self.shared_utils.overlay_mlag_rfc5549:
-            interface_name = f"Vlan{vlan_id}"
             bgp_vrf.setdefault("neighbor_interfaces", []).append(
                 {
                     "name": interface_name,
                     "peer_group": self.shared_utils.bgp_peer_groups["mlag_ipv4_underlay_peer"]["name"],
                     "remote_as": self.shared_utils.bgp_as,
-                    "description": self.shared_utils.mlag_peer,
+                    "description": AvdStringFormatter().format(
+                        self.shared_utils.mlag_bgp_peer_description,
+                        mlag_peer=self.shared_utils.mlag_peer,
+                        interface=interface_name,
+                        peer_interface=interface_name,
+                    ),
                 },
             )
         else:
@@ -342,7 +351,12 @@ class RouterBgpMixin(UtilsMixin):
                 {
                     "ip_address": ip_address,
                     "peer_group": self.shared_utils.bgp_peer_groups["mlag_ipv4_underlay_peer"]["name"],
-                    "description": self.shared_utils.mlag_peer,
+                    "description": AvdStringFormatter().format(
+                        self.shared_utils.mlag_bgp_peer_description,
+                        **strip_empties_from_dict(
+                            {"mlag_peer": self.shared_utils.mlag_peer, "interface": interface_name, "peer_interface": interface_name, "vrf": vrf["name"]}
+                        ),
+                    ),
                 },
             )
             if self.shared_utils.underlay_rfc5549:
@@ -350,9 +364,7 @@ class RouterBgpMixin(UtilsMixin):
                     {
                         "ip_address": ip_address,
                         "next_hop": {
-                            "address_family_ipv6": {
-                                "enabled": False,
-                            },
+                            "address_family_ipv6": {"enabled": False},
                         },
                     },
                 )
@@ -441,7 +453,6 @@ class RouterBgpMixin(UtilsMixin):
                             context_keys=["id", "tenant"],
                             ignore_keys={"tenant"},
                         )
-
         return vlans or None
 
     def _router_bgp_vlans_vlan(self: AvdStructuredConfigNetworkServices, vlan: dict, tenant: dict, vrf: dict) -> dict | None:
@@ -484,11 +495,11 @@ class RouterBgpMixin(UtilsMixin):
         return {key: value for key, value in bgp_vlan.items() if value is not None}
 
     @cached_property
-    def _evpn_vlan_bundles(self) -> list:
+    def _evpn_vlan_bundles(self: AvdStructuredConfigNetworkServices) -> list:
         return get(self._hostvars, "evpn_vlan_bundles", default=[])
 
     @cached_property
-    def _evpn_vlan_aware_bundles(self) -> bool:
+    def _evpn_vlan_aware_bundles(self: AvdStructuredConfigNetworkServices) -> bool:
         return get(self._hostvars, "evpn_vlan_aware_bundles", default=False)
 
     def _get_vlan_aware_bundle_name_tuple_for_l2vlans(self: AvdStructuredConfigNetworkServices, vlan: dict) -> tuple[str, bool] | None:
@@ -515,9 +526,7 @@ class RouterBgpMixin(UtilsMixin):
                 "The 'evpn_vlan_bundle' of the svis/l2vlans must be defined in the common 'evpn_vlan_bundles' setting. First occurrence seen for svi/l2vlan"
                 f" {vlan['id']} in Tenant '{vlan['tenant']}' and evpn_vlan_bundle '{vlan['evpn_vlan_bundle']}'."
             )
-            raise AristaAvdMissingVariableError(
-                msg,
-            )
+            raise AristaAvdInvalidInputsError(msg)
         return evpn_vlan_bundle
 
     def _get_svi_l2vlan_bundle(self: AvdStructuredConfigNetworkServices, evpn_vlan_bundle: dict, tenant: dict, vlans: list) -> dict | None:
@@ -639,13 +648,7 @@ class RouterBgpMixin(UtilsMixin):
         )
 
     def _router_bgp_vlan_aware_bundle(
-        self: AvdStructuredConfigNetworkServices,
-        name: str,
-        vlans: list,
-        rd: str,
-        rt: str,
-        evpn_l2_multi_domain: bool,
-        tenant: dict,
+        self: AvdStructuredConfigNetworkServices, name: str, vlans: list, rd: str, rt: str, evpn_l2_multi_domain: bool, tenant: dict
     ) -> dict | None:
         """
         Return structured config for one vlan-aware-bundle.
@@ -701,9 +704,7 @@ class RouterBgpMixin(UtilsMixin):
                 "'rt_override' or 'vni_override' or 'mac_vrf_id_base' or 'mac_vrf_vni_base' must be set. "
                 f"Unable to set EVPN RD/RT for vlan {vlan['id']} in Tenant '{vlan['tenant']}'"
             )
-            raise AristaAvdMissingVariableError(
-                msg,
-            )
+            raise AristaAvdInvalidInputsError(msg)
         return mac_vrf_id_base + int(vlan["id"])
 
     def get_vlan_mac_vrf_vni(self: AvdStructuredConfigNetworkServices, vlan: dict, tenant: dict) -> int:
@@ -713,9 +714,7 @@ class RouterBgpMixin(UtilsMixin):
                 "'rt_override' or 'vni_override' or 'mac_vrf_id_base' or 'mac_vrf_vni_base' must be set. "
                 f"Unable to set EVPN RD/RT for vlan {vlan['id']} in Tenant '{vlan['tenant']}'"
             )
-            raise AristaAvdMissingVariableError(
-                msg,
-            )
+            raise AristaAvdInvalidInputsError(msg)
         return mac_vrf_vni_base + int(vlan["id"])
 
     def get_vlan_rd(self: AvdStructuredConfigNetworkServices, vlan: dict, tenant: dict) -> str:
@@ -864,9 +863,9 @@ class RouterBgpMixin(UtilsMixin):
         return f"{admin_subfield}:{bundle_number}"
 
     @cached_property
-    def _router_bgp_redistribute_routes(self: AvdStructuredConfigNetworkServices) -> list | None:
+    def _router_bgp_redistribute_routes(self: AvdStructuredConfigNetworkServices) -> dict | None:
         """
-        Return structured config for router_bgp.redistribute_routes.
+        Return structured config for router_bgp.redistribute.
 
         Add redistribute static to default if either "redistribute_in_overlay" is set or
         "redistribute_in_underlay" and underlay protocol is BGP.
@@ -880,10 +879,10 @@ class RouterBgpMixin(UtilsMixin):
         if self.shared_utils.wan_role:
             # For WAN routers we only wish to redistribute static routes defined under the tenants to BGP.
             if self._vrf_default_ipv4_static_routes["redistribute_in_overlay"]:
-                return [{"source_protocol": "static", "route_map": "RM-STATIC-2-BGP"}]
+                return {"static": {"enabled": True, "route_map": "RM-STATIC-2-BGP"}}
             return None
 
-        return [{"source_protocol": "static"}]
+        return {"static": {"enabled": True}}
 
     @cached_property
     def _router_bgp_vpws(self: AvdStructuredConfigNetworkServices) -> list[dict] | None:
@@ -934,7 +933,7 @@ class RouterBgpMixin(UtilsMixin):
                         )
 
             if pseudowires:
-                rt_base = get(tenant, "pseudowire_rt_base", required=True, org_key=f"'pseudowire_rt_base' under Tenant '{tenant['name']}")
+                rt_base = get(tenant, "pseudowire_rt_base", required=True, custom_error_msg=f"'pseudowire_rt_base' under Tenant '{tenant['name']} is required.")
                 rd = f"{self.shared_utils.overlay_rd_type_admin_subfield}:{rt_base}"
                 rt = f"{self._rt_admin_subfield or rt_base}:{rt_base}"
                 vpws.append(
@@ -964,7 +963,7 @@ class RouterBgpMixin(UtilsMixin):
             "type": "ipv4",
             "remote_as": self.shared_utils.bgp_as,
             "next_hop_self": True,
-            "description": self.shared_utils.mlag_peer,
+            "description": AvdStringFormatter().format(self.shared_utils.mlag_bgp_peer_group_description, mlag_peer=self.shared_utils.mlag_peer),
             "password": self.shared_utils.bgp_peer_groups["mlag_ipv4_underlay_peer"]["password"],
             "maximum_routes": 12000,
             "send_community": "all",

@@ -34,19 +34,19 @@ management_api_http:
 vlans:
 - id: 4094
   tenant: system
-  name: MLAG_PEER
+  name: MLAG
   trunk_groups:
   - MLAG
 vlan_interfaces:
 - name: Vlan4094
-  description: MLAG_PEER
+  description: MLAG
   shutdown: false
   no_autostate: true
   mtu: 9214
   ip_address: 10.10.10.1/31
 port_channel_interfaces:
 - name: Port-Channel10
-  description: MLAG_PEER_bgp-from-network-services-1_Po10
+  description: MLAG_bgp-from-network-services-1_Port-Channel10
   switchport:
     enabled: true
     mode: trunk
@@ -59,7 +59,7 @@ ethernet_interfaces:
   peer: bgp-from-network-services-1
   peer_interface: Ethernet10
   peer_type: mlag_peer
-  description: MLAG_PEER_bgp-from-network-services-1_Ethernet10
+  description: MLAG_bgp-from-network-services-1_Ethernet10
   shutdown: false
   channel_group:
     id: 10

@@ -11,6 +11,10 @@ router_bgp:
   maximum_paths:
     paths: 4
     ecmp: 4
+  redistribute:
+    connected:
+      enabled: true
+      route_map: RM-CONN-2-BGP
   updates:
     wait_install: true
   peer_groups:
@@ -18,7 +22,7 @@ router_bgp:
     type: ipv4
     remote_as: '65108'
     next_hop_self: true
-    description: DC1-CL1B
+    description: MLAG_PEER_DC1-CL1B
     password: 15AwQNBEJ1nyF/kBEtoAGw==
     maximum_routes: 12000
     send_community: all
@@ -88,9 +92,6 @@ router_bgp:
     peer: DC1-SPINE4
     description: DC1-SPINE4
     remote_as: '65001'
-  redistribute_routes:
-  - source_protocol: connected
-    route_map: RM-CONN-2-BGP
   address_family_evpn:
     peer_groups:
     - name: EVPN-OVERLAY-PEERS

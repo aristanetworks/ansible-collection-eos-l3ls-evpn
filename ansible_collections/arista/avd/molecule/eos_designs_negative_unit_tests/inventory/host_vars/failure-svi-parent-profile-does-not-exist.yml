@@ -1,0 +1,27 @@
+---
+type: l3leaf
+
+svi_profiles:
+  - profile: PROFILE-1
+
+l3leaf:
+  nodes:
+    - name: failure-svi-parent-profile-does-not-exist
+      loopback_ipv4_pool: 192.168.42.0/24
+      vtep_loopback_ipv4_pool: 192.168.255.0/24
+      bgp_as: 65042
+      id: 1
+
+tenants:
+  - name: TENANT-1
+    vrfs:
+      - name: VRF-1
+        svis:
+          - name: TEST-SVI
+            id: 42
+            profile: THIS-PROFILE-DOES-NOT-EXIST
+            nodes:
+              - node: failure-svi-parent-profile-does-not-exist
+
+expected_error_message: >-
+  Profile 'THIS-PROFILE-DOES-NOT-EXIST' applied under SVI 'TEST-SVI' does not exist in `svi_profiles`.

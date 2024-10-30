@@ -11,6 +11,10 @@ router_bgp:
   maximum_paths:
     paths: 4
     ecmp: 4
+  redistribute:
+    connected:
+      enabled: true
+      route_map: RM-CONN-2-BGP
   updates:
     wait_install: true
   peer_groups:
@@ -37,9 +41,6 @@ router_bgp:
           originate: true
     - name: EVPN-OVERLAY-PEERS
       activate: false
-  redistribute_routes:
-  - source_protocol: connected
-    route_map: RM-CONN-2-BGP
   neighbor_interfaces:
   - name: Ethernet1
     peer_group: UNDERLAY_PEERS
@@ -83,22 +84,22 @@ router_bgp:
   - ip_address: 192.168.255.1
     peer_group: EVPN-OVERLAY-PEERS
     peer: DC1-SPINE1
-    description: DC1-SPINE1
+    description: DC1-SPINE1_Loopback0
     remote_as: '65001'
   - ip_address: 192.168.255.2
     peer_group: EVPN-OVERLAY-PEERS
     peer: DC1-SPINE2
-    description: DC1-SPINE2
+    description: DC1-SPINE2_Loopback0
     remote_as: '65001'
   - ip_address: 192.168.255.3
     peer_group: EVPN-OVERLAY-PEERS
     peer: DC1-SPINE3
-    description: DC1-SPINE3
+    description: DC1-SPINE3_Loopback0
     remote_as: '65001'
   - ip_address: 192.168.255.4
     peer_group: EVPN-OVERLAY-PEERS
     peer: DC1-SPINE4
-    description: DC1-SPINE4
+    description: DC1-SPINE4_Loopback0
     remote_as: '65001'
   - ip_address: 10.23.23.2
     remote_as: '64900'
@@ -118,9 +119,11 @@ router_bgp:
         route_targets:
         - '14:14'
     router_id: 192.168.255.10
-    redistribute_routes:
-    - source_protocol: connected
-    - source_protocol: static
+    redistribute:
+      connected:
+        enabled: true
+      static:
+        enabled: true
     address_family_ipv4:
       neighbors:
       - ip_address: 123.1.1.10
@@ -163,8 +166,9 @@ router_bgp:
         route_targets:
         - '21:21'
     router_id: 192.168.255.10
-    redistribute_routes:
-    - source_protocol: connected
+    redistribute:
+      connected:
+        enabled: true
   - name: Tenant_C_WAN_Zone
     rd: 192.168.255.10:31
     route_targets:
@@ -177,8 +181,9 @@ router_bgp:
         route_targets:
         - '31:31'
     router_id: 192.168.255.10
-    redistribute_routes:
-    - source_protocol: connected
+    redistribute:
+      connected:
+        enabled: true
   vlan_aware_bundles:
   - name: Tenant_A_WAN_Zone
     rd: 192.168.255.10:14
@@ -297,7 +302,7 @@ ethernet_interfaces:
   peer: DC1-SPINE1
   peer_interface: Ethernet6
   peer_type: spine
-  description: P2P_LINK_TO_DC1-SPINE1_Ethernet6
+  description: P2P_DC1-SPINE1_Ethernet6
   shutdown: false
   mtu: 1500
   switchport:
@@ -307,7 +312,7 @@ ethernet_interfaces:
   peer: DC1-SPINE2
   peer_interface: Ethernet6
   peer_type: spine
-  description: P2P_LINK_TO_DC1-SPINE2_Ethernet6
+  description: P2P_DC1-SPINE2_Ethernet6
   shutdown: false
   mtu: 1500
   switchport:
@@ -317,7 +322,7 @@ ethernet_interfaces:
   peer: DC1-SPINE3
   peer_interface: Ethernet6
   peer_type: spine
-  description: P2P_LINK_TO_DC1-SPINE3_Ethernet6
+  description: P2P_DC1-SPINE3_Ethernet6
   shutdown: false
   mtu: 1500
   switchport:
@@ -327,7 +332,7 @@ ethernet_interfaces:
   peer: DC1-SPINE4
   peer_interface: Ethernet6
   peer_type: spine
-  description: P2P_LINK_TO_DC1-SPINE4_Ethernet6
+  description: P2P_DC1-SPINE4_Ethernet6
   shutdown: false
   mtu: 1500
   switchport:
@@ -337,32 +342,32 @@ ethernet_interfaces:
   peer: DC1-BL1B
   peer_interface: Ethernet9
   peer_type: l3leaf
-  description: P2P_LINK_TO_DC1-BL1B_Ethernet9
   switchport:
     enabled: false
   shutdown: false
   mtu: 1500
   ipv6_enable: true
+  description: P2P_DC1-BL1B_Ethernet9
 - name: Ethernet10
   peer: DC1-BL1B
   peer_interface: Ethernet10
   peer_type: l3leaf
-  description: P2P_LINK_TO_DC1-BL1B_Ethernet10
   switchport:
     enabled: false
   shutdown: false
   mtu: 1500
   ipv6_enable: true
+  description: P2P_DC1-BL1B_Ethernet10
 - name: Ethernet11
   peer: outside-r1
   peer_interface: other1
   peer_type: other
-  description: P2P_LINK_TO_outside-r1_other1
   switchport:
     enabled: false
   shutdown: false
   mtu: 1500
   ip_address: 10.23.23.1/30
+  description: P2P_outside-r1_other1
 - name: Ethernet4000
   description: My test
   ip_address: 10.1.2.3/12

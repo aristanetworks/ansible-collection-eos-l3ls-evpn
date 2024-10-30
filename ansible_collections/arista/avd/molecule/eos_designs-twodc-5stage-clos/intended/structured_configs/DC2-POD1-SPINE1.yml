@@ -11,6 +11,10 @@ router_bgp:
   maximum_paths:
     paths: 4
     ecmp: 4
+  redistribute:
+    connected:
+      enabled: true
+      route_map: RM-CONN-2-BGP
   updates:
     wait_install: true
   peer_groups:
@@ -32,9 +36,6 @@ router_bgp:
       activate: true
     - name: EVPN-OVERLAY-PEERS
       activate: false
-  redistribute_routes:
-  - source_protocol: connected
-    route_map: RM-CONN-2-BGP
   neighbors:
   - ip_address: 172.16.21.0
     peer_group: IPv4-UNDERLAY-PEERS
@@ -59,22 +60,22 @@ router_bgp:
   - ip_address: 172.16.110.3
     peer_group: EVPN-OVERLAY-PEERS
     peer: DC1-POD1-LEAF1A
-    description: DC1-POD1-LEAF1A
+    description: DC1-POD1-LEAF1A_Loopback0
     remote_as: '65111.100'
   - ip_address: 172.16.110.1
     peer_group: EVPN-OVERLAY-PEERS
     peer: DC1-POD1-SPINE1
-    description: DC1-POD1-SPINE1
+    description: DC1-POD1-SPINE1_Loopback0
     remote_as: '65110.100'
   - ip_address: 172.16.10.1
     peer_group: EVPN-OVERLAY-PEERS
     peer: DC1-RS1
-    description: DC1-RS1
+    description: DC1-RS1_Loopback0
     remote_as: '65101'
   - ip_address: 172.16.10.2
     peer_group: EVPN-OVERLAY-PEERS
     peer: DC1-RS2
-    description: DC1-RS2
+    description: DC1-RS2_Loopback0
     remote_as: '65102'
   - ip_address: 11.1.1.18
     remote_as: '65120'
@@ -140,7 +141,7 @@ ethernet_interfaces:
   peer: DC2-SUPER-SPINE1
   peer_interface: Ethernet1
   peer_type: super-spine
-  description: P2P_LINK_TO_DC2-SUPER-SPINE1_Ethernet1
+  description: P2P_DC2-SUPER-SPINE1_Ethernet1
   shutdown: false
   service_profile: QOS-PROFILE
   switchport:
@@ -152,7 +153,7 @@ ethernet_interfaces:
   peer: DC2-SUPER-SPINE2
   peer_interface: Ethernet1
   peer_type: super-spine
-  description: P2P_LINK_TO_DC2-SUPER-SPINE2_Ethernet1
+  description: P2P_DC2-SUPER-SPINE2_Ethernet1
   shutdown: false
   service_profile: QOS-PROFILE
   switchport:
@@ -164,7 +165,7 @@ ethernet_interfaces:
   peer: DC2-POD1-LEAF1A
   peer_interface: Ethernet1
   peer_type: l3leaf
-  description: P2P_LINK_TO_DC2-POD1-LEAF1A_Ethernet1
+  description: P2P_DC2-POD1-LEAF1A_Ethernet1
   shutdown: false
   service_profile: QOS-PROFILE
   switchport:
@@ -176,7 +177,7 @@ ethernet_interfaces:
   peer: DC2-POD1-LEAF2A
   peer_interface: Ethernet1
   peer_type: l3leaf
-  description: P2P_LINK_TO_DC2-POD1-LEAF2A_Ethernet1
+  description: P2P_DC2-POD1-LEAF2A_Ethernet1
   shutdown: false
   service_profile: QOS-PROFILE
   switchport:
@@ -188,11 +189,11 @@ ethernet_interfaces:
   peer: DC1-POD2-SPINE1
   peer_interface: Ethernet5
   peer_type: spine
-  description: P2P_LINK_TO_DC1-POD2-SPINE1_Ethernet5
   switchport:
     enabled: false
   shutdown: false
   ip_address: 11.1.1.19/31
+  description: P2P_DC1-POD2-SPINE1_Ethernet5
 loopback_interfaces:
 - name: Loopback0
   description: ROUTER_ID

@@ -25,4 +25,5 @@ l3leaf:
           id: 3
           mgmt_ip: 192.168.201.117/24
 
-expected_error_message: "Unexpected failure during module execution: MLAG compact addressing mode requires all MLAG pairs to have a single odd and even ID"
+expected_error_message: >-
+  MLAG compact addressing mode requires all MLAG pairs to have a single odd and even ID for host 'mlag_odd_id_oddodd1'.

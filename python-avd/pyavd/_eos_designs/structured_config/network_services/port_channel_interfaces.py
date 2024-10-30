@@ -59,7 +59,7 @@ class PortChannelInterfacesMixin(UtilsMixin):
                         # This is a subinterface so we need to ensure that the parent is created
                         parent_interface = {
                             "name": interface_name,
-                            "type": "routed",
+                            "switchport": {"enabled": False},
                             "peer_type": "system",
                             "shutdown": False,
                         }
@@ -82,16 +82,14 @@ class PortChannelInterfacesMixin(UtilsMixin):
 
                             port_channel_interface = {
                                 "name": subif_name,
-                                "type": "l2dot1q",
                                 "peer_type": "point_to_point_service",
                                 "encapsulation_vlan": {
                                     "client": {
-                                        "dot1q": {
-                                            "vlan": subif["number"],
-                                        },
+                                        "encapsulation": "dot1q",
+                                        "vlan": subif["number"],
                                     },
                                     "network": {
-                                        "client": True,
+                                        "encapsulation": "client",
                                     },
                                 },
                                 "shutdown": False,
@@ -108,7 +106,7 @@ class PortChannelInterfacesMixin(UtilsMixin):
                     else:
                         interface = {
                             "name": interface_name,
-                            "type": "routed",
+                            "switchport": {"enabled": False},
                             "peer_type": "point_to_point_service",
                             "shutdown": False,
                         }

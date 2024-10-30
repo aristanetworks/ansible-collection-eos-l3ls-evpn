@@ -9,6 +9,10 @@ router_bgp:
   maximum_paths:
     paths: 4
     ecmp: 4
+  redistribute:
+    connected:
+      enabled: true
+      route_map: RM-CONN-2-BGP
   updates:
     wait_install: true
   peer_groups:
@@ -29,9 +33,6 @@ router_bgp:
       activate: true
     - name: EVPN-OVERLAY-PEERS
       activate: false
-  redistribute_routes:
-  - source_protocol: connected
-    route_map: RM-CONN-2-BGP
   neighbors:
   - ip_address: 10.0.1.0
     peer_group: IPv4-UNDERLAY-PEERS
@@ -46,7 +47,7 @@ router_bgp:
   - ip_address: 192.168.0.10
     peer_group: EVPN-OVERLAY-PEERS
     peer: downlink-pools-spine1
-    description: downlink-pools-spine1
+    description: downlink-pools-spine1_Loopback0
     remote_as: '65000'
   address_family_evpn:
     peer_groups:
@@ -77,7 +78,7 @@ ethernet_interfaces:
   peer: downlink-pools-spine1
   peer_interface: Ethernet3
   peer_type: spine
-  description: P2P_LINK_TO_DOWNLINK-POOLS-SPINE1_Ethernet3
+  description: P2P_downlink-pools-spine1_Ethernet3
   shutdown: false
   mtu: 9214
   switchport:
@@ -87,7 +88,7 @@ ethernet_interfaces:
   peer: downlink-pools-spine1
   peer_interface: Ethernet4
   peer_type: spine
-  description: P2P_LINK_TO_DOWNLINK-POOLS-SPINE1_Ethernet4
+  description: P2P_downlink-pools-spine1_Ethernet4
   shutdown: false
   mtu: 9214
   switchport:

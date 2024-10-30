@@ -98,7 +98,6 @@ sFlow hardware accelerated Sample Rate: 1024
 ```eos
 !
 sflow sample dangerous 1000
-sflow sample input subinterface
 sflow polling-interval 10
 sflow vrf AAA destination 10.6.75.62 123
 sflow vrf AAA destination 10.6.75.63 333
@@ -114,6 +113,7 @@ sflow vrf MGMT source-interface Ethernet3
 sflow destination 10.6.75.61
 sflow destination 10.6.75.62 123
 sflow source-interface Management0
+sflow sample input subinterface
 sflow sample output subinterface
 sflow extension bgp
 sflow extension router

@@ -37,13 +37,13 @@ keys:
             type: str
         description:
           type: str
-          # TODO: Insert link to format string syntax article.
           description: |-
             Description or description template to be used on all ports.
-            This can be a template using the format string syntax.
+            This can be a template using the AVD string formatter syntax: https://avd.arista.com/devel/roles/eos_designs/docs/how-to/custom-descriptions-names.html#avd-string-formatter-syntax.
             The available template fields are:
               - `endpoint_type` - always set to `network_port`.
               - `endpoint` - content of the `endpoint` key if set.
+              - `port_channel_id`: The port-channel number for the switch.
 
             The default description is set by `default_network_ports_description`.
             By default the description is templated from the `endpoint` key if set.

@@ -9,6 +9,10 @@ router_bgp:
   maximum_paths:
     paths: 4
     ecmp: 4
+  redistribute:
+    connected:
+      enabled: true
+      route_map: RM-CONN-2-BGP
   updates:
     wait_install: true
   peer_groups:
@@ -30,9 +34,6 @@ router_bgp:
       activate: true
     - name: EVPN-OVERLAY-PEERS
       activate: false
-  redistribute_routes:
-  - source_protocol: connected
-    route_map: RM-CONN-2-BGP
   address_family_evpn:
     peer_groups:
     - name: EVPN-OVERLAY-PEERS
@@ -105,9 +106,9 @@ ethernet_interfaces:
   peer_type: l3_interface
   ip_address: 172.21.21.0/31
   shutdown: false
-  type: l3dot1q
   access_group_out: TEST-IPV4-ACL-WITH-IP-FIELDS-OUT_Ethernet6_6.6
-  encapsulation_dot1q_vlan: 6
+  encapsulation_dot1q:
+    vlan: 6
 - name: Ethernet6/6
   switchport:
     enabled: false

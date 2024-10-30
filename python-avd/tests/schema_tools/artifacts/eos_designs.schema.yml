@@ -485,7 +485,7 @@ keys:
   dc_name:
     documentation_options:
       table: fabric-topology
-    description: 'POD Name is used in:
+    description: 'DC Name is used in:
 
       - Fabric Documentation (Optional, falls back to fabric_name)
 

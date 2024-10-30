@@ -66,10 +66,12 @@ router_bgp:
       remote_as: 1
       shutdown: false
       description: TEST
-  redistribute_routes:
-    - source_protocol: connected
+  redistribute:
+    connected:
+      enabled: true
       route_map: RM-CONN-2-BGP
-    - source_protocol: static
+    static:
+      enabled: true
       route_map: RM-STATIC-2-BGP
   address_family_evpn:
     peer_groups:
@@ -97,16 +99,30 @@ router_bgp:
         activate: true
       - name: IPV4-UNDERLAY-MLAG
         activate: true
-    redistribute_routes:
-      - source_protocol: ospf
-        ospf_route_type: external
-      - source_protocol: ospf
-        ospf_route_type: internal
-      - source_protocol: ospf
-        ospf_route_type: nssa-external 2
-      - source_protocol: attached-host
-      - source_protocol: isis
+    redistribute:
+      ospf:
+        match_external:
+          enabled: true
+        match_internal:
+          enabled: true
+        match_nssa_external:
+          enabled: true
+          nssa_type: 2
+      attached_host:
+        enabled: true
+      isis:
+        enabled: true
         rcf: Router_BGP_Isis()
+      connected:
+        enabled: true
+      ospfv3:
+        match_external:
+          enabled: true
+        match_internal:
+          enabled: true
+        match_nssa_external:
+          enabled: true
+          nssa_type: 2
   address_family_ipv6:
     peer_groups:
       - name: IPV6-UNDERLAY
@@ -118,6 +134,40 @@ router_bgp:
       - name: TEST_RCF
         rcf_in: Address_Family_IPV6_In()
         rcf_out: Address_Family_IPV6_Out()
+    redistribute:
+      ospfv3:
+        enabled: true
+        match_external:
+          enabled: true
+          include_leaked: true
+          route_map: RM-REDISTRIBUTE-OSPFV3-EXTERNAL
+        include_leaked: true
+        route_map: RM-REDISTRIBUTE-OSPFV3
+      static:
+        enabled: true
+        include_leaked: true
+        rcf: RCF_IPV6_STATIC_TO_BGP{}
+      bgp:
+        enabled: true
+      connected:
+        enabled: true
+        route_map: RM-Address_Family_IPV6_Connected
+      attached_host:
+        enabled: true
+        route_map: RM-Address_Family_IPV6_Attached-Host
+      dhcp:
+        enabled: true
+        route_map: RM-Address_Family_IPV6_DHCP
+      dynamic:
+        enabled: true
+        rcf: RCF_Address_Family_IPV6_Dynamic()
+      user:
+        enabled: true
+        rcf: RCF_Address_Family_IPV6_User()
+      isis:
+        enabled: true
+        include_leaked: true
+        route_map: RM-Address_Family_IPV6_ISIS
   vlans:
     - id: 24
       rd: "10.50.64.15:10024"
@@ -167,15 +217,19 @@ router_bgp:
             route_targets:
               - "1:30001"
             rcf: RT_EXPORT_AF_RCF()
-      redistribute_routes:
-        - source_protocol: ospf
-          include_leaked: true
-          ospf_route_type: external
-        - source_protocol: ospfv3
-          ospf_route_type: internal
-        - source_protocol: ospfv3
-          ospf_route_type: nssa-external
-        - source_protocol: connected
+      redistribute:
+        ospf:
+          match_external:
+            enabled: true
+            include_leaked: true
+        ospfv3:
+          enabled: true
+          match_internal:
+            enabled: true
+          match_nssa_external:
+            enabled: true
+        connected:
+          enabled: true
     - name: Tenant_B
       rd: "10.50.64.15:30002"
       route_targets:

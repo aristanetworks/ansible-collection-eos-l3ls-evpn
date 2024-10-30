@@ -71,7 +71,7 @@ ethernet_interfaces:
   peer: DC1-LEAF1A
   peer_interface: Ethernet2
   peer_type: l3leaf
-  description: P2P_LINK_TO_DC1-LEAF1A_Ethernet2
+  description: P2P_DC1-LEAF1A_Ethernet2
   shutdown: false
   mtu: 1500
   switchport:
@@ -86,7 +86,7 @@ ethernet_interfaces:
   peer: DC1-LEAF2A
   peer_interface: Ethernet2
   peer_type: l3leaf
-  description: P2P_LINK_TO_DC1-LEAF2A_Ethernet2
+  description: P2P_DC1-LEAF2A_Ethernet2
   shutdown: false
   mtu: 1500
   switchport:
@@ -101,7 +101,7 @@ ethernet_interfaces:
   peer: DC1-LEAF2B
   peer_interface: Ethernet2
   peer_type: l3leaf
-  description: P2P_LINK_TO_DC1-LEAF2B_Ethernet2
+  description: P2P_DC1-LEAF2B_Ethernet2
   shutdown: false
   mtu: 1500
   switchport:
@@ -116,7 +116,7 @@ ethernet_interfaces:
   peer: DC1-SVC3A
   peer_interface: Ethernet2
   peer_type: l3leaf
-  description: P2P_LINK_TO_DC1-SVC3A_Ethernet2
+  description: P2P_DC1-SVC3A_Ethernet2
   shutdown: false
   mtu: 1500
   switchport:
@@ -131,7 +131,7 @@ ethernet_interfaces:
   peer: DC1-SVC3B
   peer_interface: Ethernet2
   peer_type: l3leaf
-  description: P2P_LINK_TO_DC1-SVC3B_Ethernet2
+  description: P2P_DC1-SVC3B_Ethernet2
   shutdown: false
   mtu: 1500
   switchport:
@@ -146,7 +146,7 @@ ethernet_interfaces:
   peer: DC1-BL1A
   peer_interface: Ethernet2
   peer_type: l3leaf
-  description: P2P_LINK_TO_DC1-BL1A_Ethernet2
+  description: P2P_DC1-BL1A_Ethernet2
   shutdown: false
   mtu: 1500
   switchport:
@@ -161,7 +161,7 @@ ethernet_interfaces:
   peer: DC1-BL1B
   peer_interface: Ethernet2
   peer_type: l3leaf
-  description: P2P_LINK_TO_DC1-BL1B_Ethernet2
+  description: P2P_DC1-BL1B_Ethernet2
   shutdown: false
   mtu: 1500
   switchport:

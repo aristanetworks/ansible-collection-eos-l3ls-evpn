@@ -7,7 +7,7 @@ from functools import cached_property
 from re import findall
 from typing import TYPE_CHECKING, Any
 
-from pyavd._errors import AristaAvdError, AristaAvdMissingVariableError
+from pyavd._errors import AristaAvdError, AristaAvdInvalidInputsError
 from pyavd._utils import default, get, get_ip_from_ip_prefix
 from pyavd.j2filters import range_expand
 
@@ -168,12 +168,12 @@ class MlagMixin:
         if self.mlag_role == "primary":
             if self.id is None:
                 msg = f"'id' is not set on '{self.hostname}' and is required to compute MLAG ids"
-                raise AristaAvdMissingVariableError(msg)
+                raise AristaAvdInvalidInputsError(msg)
             return {"primary": self.id, "secondary": self.mlag_peer_id}
         if self.mlag_role == "secondary":
             if self.id is None:
                 msg = f"'id' is not set on '{self.hostname}' and is required to compute MLAG ids"
-                raise AristaAvdMissingVariableError(msg)
+                raise AristaAvdInvalidInputsError(msg)
             return {"primary": self.mlag_peer_id, "secondary": self.id}
         return None
 
@@ -181,9 +181,17 @@ class MlagMixin:
     def mlag_port_channel_id(self: SharedUtils) -> int:
         if not self.mlag_interfaces:
             msg = f"'mlag_interfaces' not set on '{self.hostname}."
-            raise AristaAvdMissingVariableError(msg)
+            raise AristaAvdInvalidInputsError(msg)
         default_mlag_port_channel_id = int("".join(findall(r"\d", self.mlag_interfaces[0])))
         return get(self.switch_data_combined, "mlag_port_channel_id", default_mlag_port_channel_id)
+
+    @cached_property
+    def mlag_peer_port_channel_id(self: SharedUtils) -> int:
+        return get(self.mlag_peer_facts, "mlag_port_channel_id", default=self.mlag_port_channel_id)
+
+    @cached_property
+    def mlag_peer_interfaces(self: SharedUtils) -> list:
+        return get(self.mlag_peer_facts, "mlag_interfaces", default=self.mlag_interfaces)
 
     @cached_property
     def mlag_peer_vlan_structured_config(self: SharedUtils) -> dict | None:

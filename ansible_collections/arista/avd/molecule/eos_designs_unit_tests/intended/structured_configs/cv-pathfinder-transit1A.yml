@@ -8,6 +8,10 @@ router_bgp:
       ipv4_unicast: false
   maximum_paths:
     paths: 16
+  redistribute:
+    connected:
+      enabled: true
+      route_map: RM-CONN-2-BGP
   updates:
     wait_install: true
   peer_groups:
@@ -39,9 +43,6 @@ router_bgp:
       activate: true
     - name: WAN-OVERLAY-PEERS
       activate: false
-  redistribute_routes:
-  - source_protocol: connected
-    route_map: RM-CONN-2-BGP
   neighbors:
   - ip_address: 172.17.0.0
     peer_group: IPv4-UNDERLAY-PEERS
@@ -51,7 +52,7 @@ router_bgp:
   - ip_address: 192.168.144.1
     peer_group: WAN-OVERLAY-PEERS
     peer: cv-pathfinder-pathfinder
-    description: cv-pathfinder-pathfinder
+    description: cv-pathfinder-pathfinder_Dps1
   - ip_address: 192.168.143.2
     peer: cv-pathfinder-transit1B
     description: cv-pathfinder-transit1B
@@ -79,8 +80,9 @@ router_bgp:
       - address_family: evpn
         route_targets:
         - 1000:1000
-    redistribute_routes:
-    - source_protocol: connected
+    redistribute:
+      connected:
+        enabled: true
   - name: PROD
     router_id: 192.168.43.1
     neighbors:
@@ -98,8 +100,9 @@ router_bgp:
       - address_family: evpn
         route_targets:
         - 142:142
-    redistribute_routes:
-    - source_protocol: connected
+    redistribute:
+      connected:
+        enabled: true
   - name: ATTRACTED-VRF-FROM-UPLINK
     router_id: 192.168.43.1
     neighbors:
@@ -117,8 +120,9 @@ router_bgp:
       - address_family: evpn
         route_targets:
         - 666:666
-    redistribute_routes:
-    - source_protocol: connected
+    redistribute:
+      connected:
+        enabled: true
   - name: default
     rd: 192.168.43.1:1
     route_targets:
@@ -133,8 +137,9 @@ router_bgp:
         - route-map RM-EVPN-EXPORT-VRF-DEFAULT
   - name: NOT-WAN-VRF
     router_id: 192.168.43.1
-    redistribute_routes:
-    - source_protocol: connected
+    redistribute:
+      connected:
+        enabled: true
   - name: TRANSIT
     rd: 192.168.43.1:66
     route_targets:
@@ -147,12 +152,14 @@ router_bgp:
         route_targets:
         - 66:66
     router_id: 192.168.43.1
-    redistribute_routes:
-    - source_protocol: connected
+    redistribute:
+      connected:
+        enabled: true
   address_family_evpn:
     peer_groups:
     - name: WAN-OVERLAY-PEERS
       activate: true
+      encapsulation: path-selection
       route_map_in: RM-EVPN-SOO-IN
       route_map_out: RM-EVPN-SOO-OUT
     neighbor_default:
@@ -161,6 +168,7 @@ router_bgp:
     neighbors:
     - ip_address: 192.168.143.2
       activate: true
+      encapsulation: path-selection
   address_family_ipv4_sr_te:
     peer_groups:
     - name: WAN-OVERLAY-PEERS
@@ -179,8 +187,7 @@ router_bgp:
     bgp:
       additional_paths:
         receive: true
-        send:
-          any: true
+        send: any
 service_routing_protocols_model: multi-agent
 ip_routing: true
 aaa_root:
@@ -218,7 +225,7 @@ ethernet_interfaces:
   peer: site-ha-enabled-leaf1
   peer_interface: Ethernet1
   peer_type: l3leaf
-  description: P2P_LINK_TO_SITE-HA-ENABLED-LEAF1_Ethernet1
+  description: P2P_site-ha-enabled-leaf1_Ethernet1
   shutdown: false
   mtu: 9214
   switchport:
@@ -229,10 +236,10 @@ ethernet_interfaces:
   peer_interface: Ethernet1.1000
   peer_type: l3leaf
   vrf: IT
-  description: P2P_LINK_TO_SITE-HA-ENABLED-LEAF1_Ethernet1.1000_vrf_IT
+  description: P2P_site-ha-enabled-leaf1_Ethernet1.1000_VRF_IT
   shutdown: false
-  type: l3dot1q
-  encapsulation_dot1q_vlan: 1000
+  encapsulation_dot1q:
+    vlan: 1000
   mtu: 9214
   ip_address: 172.17.0.1/31
 - name: Ethernet52.142
@@ -240,10 +247,10 @@ ethernet_interfaces:
   peer_interface: Ethernet1.142
   peer_type: l3leaf
   vrf: PROD
-  description: P2P_LINK_TO_SITE-HA-ENABLED-LEAF1_Ethernet1.142_vrf_PROD
+  description: P2P_site-ha-enabled-leaf1_Ethernet1.142_VRF_PROD
   shutdown: false
-  type: l3dot1q
-  encapsulation_dot1q_vlan: 142
+  encapsulation_dot1q:
+    vlan: 142
   mtu: 9214
   ip_address: 172.17.0.1/31
 - name: Ethernet52.666
@@ -251,27 +258,27 @@ ethernet_interfaces:
   peer_interface: Ethernet1.666
   peer_type: l3leaf
   vrf: ATTRACTED-VRF-FROM-UPLINK
-  description: P2P_LINK_TO_SITE-HA-ENABLED-LEAF1_Ethernet1.666_vrf_ATTRACTED-VRF-FROM-UPLINK
+  description: P2P_site-ha-enabled-leaf1_Ethernet1.666_VRF_ATTRACTED-VRF-FROM-UPLINK
   shutdown: false
-  type: l3dot1q
-  encapsulation_dot1q_vlan: 666
+  encapsulation_dot1q:
+    vlan: 666
   mtu: 9214
   ip_address: 172.17.0.1/31
 - name: Ethernet1.42
   peer_type: l3_interface
   ip_address: dhcp
   shutdown: false
-  type: l3dot1q
   description: Comcast
-  encapsulation_dot1q_vlan: 42
+  encapsulation_dot1q:
+    vlan: 42
   dhcp_client_accept_default_route: true
 - name: Ethernet2.42
   peer_type: l3_interface
   ip_address: 172.16.6.6/31
   shutdown: false
-  type: l3dot1q
   description: Colt_10666
-  encapsulation_dot1q_vlan: 666
+  encapsulation_dot1q:
+    vlan: 666
   ip_nat:
     service_profile: NAT-IE-DIRECT
 - name: Ethernet1

@@ -195,39 +195,37 @@ anta.tests.interfaces:
     - name: Ethernet1
       status: up
     result_overwrite:
-      custom_field: Interface Ethernet1 - P2P_LINK_TO_DC2-LEAF1A_Ethernet2 = 'up'
+      custom_field: Interface Ethernet1 - P2P_dc2-leaf1a_Ethernet2 = 'up'
 - VerifyInterfacesStatus:
     interfaces:
     - name: Ethernet2
       status: up
     result_overwrite:
-      custom_field: Interface Ethernet2 - P2P_LINK_TO_DC2-LEAF1B_Ethernet2 = 'up'
+      custom_field: Interface Ethernet2 - P2P_dc2-leaf1b_Ethernet2 = 'up'
 - VerifyInterfacesStatus:
     interfaces:
     - name: Ethernet3
       status: up
     result_overwrite:
-      custom_field: Interface Ethernet3 - P2P_LINK_TO_DC2-LEAF2A_Ethernet2 = 'up'
+      custom_field: Interface Ethernet3 - P2P_dc2-leaf2a_Ethernet2 = 'up'
 - VerifyInterfacesStatus:
     interfaces:
     - name: Ethernet4
       status: up
     result_overwrite:
-      custom_field: Interface Ethernet4 - P2P_LINK_TO_DC2-LEAF2B_Ethernet2 = 'up'
+      custom_field: Interface Ethernet4 - P2P_dc2-leaf2b_Ethernet2 = 'up'
 - VerifyInterfacesStatus:
     interfaces:
     - name: Ethernet5
       status: up
     result_overwrite:
-      custom_field: Interface Ethernet5 - P2P_LINK_TO_DC2-LEAF3A.ARISTA.COM_Ethernet2
-        = 'up'
+      custom_field: Interface Ethernet5 - P2P_dc2-leaf3a.arista.com_Ethernet2 = 'up'
 - VerifyInterfacesStatus:
     interfaces:
     - name: Ethernet6
       status: up
     result_overwrite:
-      custom_field: Interface Ethernet6 - P2P_LINK_TO_DC2-LEAF3B.ARISTA.COM_Ethernet2
-        = 'up'
+      custom_field: Interface Ethernet6 - P2P_dc2-leaf3b.arista.com_Ethernet2 = 'up'
 - VerifyInterfacesStatus:
     interfaces:
     - name: Loopback0

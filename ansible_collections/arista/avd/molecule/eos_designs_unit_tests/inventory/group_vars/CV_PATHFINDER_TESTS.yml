@@ -24,7 +24,10 @@ cv_pathfinder_regions:
     sites:
       - name: Site404
         id: 404
-        location: Not Found
+        location: Atlantis
+      - name: Site405
+        id: 405
+        location: El Dorado
       - name: Site422
         id: 422
         location: Somewhere
@@ -58,6 +61,10 @@ bgp_peer_groups:
     listen_range_prefixes:
       - 192.168.142.0/24
       - 192.168.143.0/24
+
+fabric_ip_addressing:
+  wan_ha:
+    ipv4_prefix_length: 24
 
 wan_stun_dtls_profile_name: profileA
 
@@ -288,6 +295,8 @@ wan_router:
               ip_address: 172.16.6.6/31
 
     # SITE_HA_ENABLED_DIRECT_HA
+    # One interface disable usage of port-channel
+    # test flow-tracking on ethernet interface for direct HA
     - group: Site404
       cv_pathfinder_region: AVD_Land_West
       cv_pathfinder_site: Site404
@@ -297,6 +306,10 @@ wan_router:
         # Test wan_ha mtu
         mtu: 9100
         ha_ipv4_pool: 10.10.10.0/24
+        # Check flow tracking on ethernet interface
+        flow_tracking:
+          enabled: true
+        use_port_channel_for_direct_ha: false
       nodes:
         - name: cv-pathfinder-edge3A
           id: 6
@@ -313,6 +326,41 @@ wan_router:
               wan_carrier: Colt
               wan_circuit_id: 10423
               ip_address: 172.15.6.6/31
+
+    # SITE_HA_ENABLED_DIRECT_HA
+    # Multiple interfaces in port-channel for direct HA
+    # test changing port-channel ID
+    - group: SITE_DIRECT_HA_PORT_CHANNEL
+      cv_pathfinder_transit_mode: region
+      cv_pathfinder_region: AVD_Land_West
+      cv_pathfinder_site: Site405
+      # Disable HA IPsec
+      wan_ha:
+        enabled: true # TODO AVD4.8.0: Remove once WAN HA is GA.
+        ipsec: false
+        ha_interfaces: [Ethernet42, Ethernet43]
+        ha_ipv4_pool: 10.10.10.0/24
+        # Check flow tracking on port-channel
+        flow_tracking:
+          enabled: true
+        # Testing overwriting port-channel ID
+        port_channel_id: 666
+      nodes:
+        - name: cv-pathfinder-edge4A
+          id: 8
+          l3_interfaces:
+            - name: Ethernet1.42
+              wan_carrier: Comcast
+              dhcp_accept_default_route: true
+              ip_address: dhcp
+        - name: cv-pathfinder-edge4B
+          cv_pathfinder_region: AVD_Land_West
+          id: 9
+          l3_interfaces:
+            - name: Ethernet1.42
+              wan_carrier: Comcast
+              dhcp_accept_default_route: true
+              ip_address: dhcp
 
 # Fake DC1
 l3leaf:

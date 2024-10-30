@@ -1,0 +1,118 @@
+---
+# SITE2 variables
+# Use eBGP as underlay routing protocol on SITE2, the default is 'none' for WAN routers.
+underlay_routing_protocol: ebgp
+
+ipv4_prefix_list_catalog:
+  - name: ALLOW-DEFAULT
+    sequence_numbers:
+      - sequence: 10
+        action: permit 0.0.0.0/0
+
+# Internet ACL
+ipv4_acls:
+  - name: ACL-INTERNET-IN
+    entries:
+      - sequence: 1
+        remark: "Not for PRODUCTION: This ACL is built this way because the lab has an out-of-band interface"
+      - sequence: 10
+        # IPSec traffic from anywhere
+        action: permit
+        protocol: udp
+        source: any
+        destination: interface_ip
+        destination_ports_match: eq
+        destination_ports: [isakmp, non500-isakmp]
+      - sequence: 20
+        # Permit BGP
+        action: permit
+        protocol: tcp
+        source: any
+        destination: interface_ip
+        destination_ports_match: eq
+        destination_ports: [bgp]
+      - sequence: 30
+        # Troubleshooting
+        action: permit
+        protocol: icmp
+        source: any
+        destination: interface_ip
+      - action: deny
+        protocol: ip
+        source: any
+        destination: any
+
+l3leaf:
+  defaults:
+    loopback_ipv4_pool: 192.168.255.0/24
+    vtep_loopback_ipv4_pool: 192.168.42.0/24
+    filter:
+      always_include_vrfs_in_tenants: [all]
+    mlag_interfaces: [Ethernet5, Ethernet6]
+    mlag_peer_l3_ipv4_pool: 10.255.251.0/24
+    mlag_peer_ipv4_pool: 10.255.252.0/24
+  node_groups:
+    - group: SITE2
+      bgp_as: 65102
+      nodes:
+        - name: site2-leaf1
+          id: 9
+          mgmt_ip: 192.168.17.18/24
+        - name: site2-leaf2
+          id: 10
+          mgmt_ip: 192.168.17.19/24
+
+wan_router:
+  defaults:
+    loopback_ipv4_pool: 192.168.255.0/24
+    vtep_loopback_ipv4_pool: 192.168.42.0/24
+    filter:
+      always_include_vrfs_in_tenants: [all]
+    uplink_type: p2p-vrfs
+    uplink_interfaces: [Ethernet1]
+    uplink_switch_interfaces: [Ethernet3]
+    uplink_ipv4_pool: 10.0.2.0/24
+    bgp_as: 65000
+  node_groups:
+    - group: SITE2
+      cv_pathfinder_region: REGION2
+      cv_pathfinder_site: SITE2
+      # Making this site a transit site
+      cv_pathfinder_transit_mode: region
+      wan_ha:
+        enabled: true
+        # Direct HA
+        ha_interfaces: [Ethernet5]
+        ha_ipv4_pool: 10.42.0.0/24
+        use_port_channel_for_direct_ha: false
+        # Use this knob to disable IPSec on WAN HA tunnel(s)
+        # ipsec: false
+      nodes:
+        - name: site2-wan1
+          id: 7
+          mgmt_ip: 192.168.17.16/24
+          uplink_switches: [site2-leaf1]
+          l3_interfaces:
+            - name: Ethernet3
+              profile: MPLS-WAN-INTERFACE
+              peer_interface: Ethernet7
+              peer_ip: 172.18.20.1
+              ip_address: 172.18.20.2/24
+              wan_carrier: ACME-MPLS-INC
+              wan_circuit_id: mpls-site2-wan1
+        - name: site2-wan2
+          id: 8
+          mgmt_ip: 192.168.17.17/24
+          uplink_switches: [site2-leaf2]
+          l3_interfaces:
+            - name: Ethernet4
+              peer_interface: Ethernet7
+              peer_ip: 100.64.21.1
+              ip_address: 100.64.21.2/24
+              profile: INTERNET-WAN-INTERFACE
+              wan_carrier: REGION2-INTERNET-CORP
+              wan_circuit_id: inet-site2-wan2
+              # Configure a BGP peering with the Service Provider.
+              bgp:
+                peer_as: 65666
+                ipv4_prefix_list_in: ALLOW-DEFAULT

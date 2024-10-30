@@ -9,8 +9,21 @@
 {%     if ptp.clock_identity is arista.avd.defined %}
 ptp clock-identity {{ ptp.clock_identity }}
 {%     endif %}
-{%     if ptp.source.ip is arista.avd.defined %}
-ptp source ip {{ ptp.source.ip }}
+{%     if ptp.domain is arista.avd.defined %}
+ptp domain {{ ptp.domain }}
+{%     endif %}
+{%     if ptp.message_type.event.dscp is arista.avd.defined %}
+ptp message-type event dscp {{ ptp.message_type.event.dscp }} default
+{%     endif %}
+{%     if ptp.message_type.general.dscp is arista.avd.defined %}
+ptp message-type general dscp {{ ptp.message_type.general.dscp }} default
+{%     endif %}
+{%     if ptp.mode is arista.avd.defined %}
+{%         if ptp.mode_one_step is arista.avd.defined(true) and ptp.mode in ["boundary", "e2etransparent"] %}
+ptp mode {{ ptp.mode }} one-step
+{%         else %}
+ptp mode {{ ptp.mode }}
+{%         endif %}
 {%     endif %}
 {%     if ptp.priority1 is arista.avd.defined %}
 ptp priority1 {{ ptp.priority1 }}
@@ -21,24 +34,11 @@ ptp priority2 {{ ptp.priority2 }}
 {%     if ptp.profile is arista.avd.defined %}
 ptp profile {{ ptp.profile }}
 {%     endif %}
+{%     if ptp.source.ip is arista.avd.defined %}
+ptp source ip {{ ptp.source.ip }}
+{%     endif %}
 {%     if ptp.ttl is arista.avd.defined %}
 ptp ttl {{ ptp.ttl }}
-{%     endif %}
-{%     if ptp.domain is arista.avd.defined %}
-ptp domain {{ ptp.domain }}
-{%     endif %}
-{%     if ptp.message_type.general.dscp is arista.avd.defined %}
-ptp message-type general dscp {{ ptp.message_type.general.dscp }} default
-{%     endif %}
-{%     if ptp.message_type.event.dscp is arista.avd.defined %}
-ptp message-type event dscp {{ ptp.message_type.event.dscp }} default
-{%     endif %}
-{%     if ptp.mode is arista.avd.defined %}
-{%         if ptp.mode_one_step is arista.avd.defined(true) and ptp.mode in ["boundary", "e2etransparent"] %}
-ptp mode {{ ptp.mode }} one-step
-{%         else %}
-ptp mode {{ ptp.mode }}
-{%         endif %}
 {%     endif %}
 {%     if ptp.forward_unicast is arista.avd.defined(true) %}
 ptp forward-unicast
@@ -52,38 +52,38 @@ ptp monitor threshold offset-from-master {{ ptp.monitor.threshold.offset_from_ma
 {%         if ptp.monitor.threshold.mean_path_delay is arista.avd.defined %}
 ptp monitor threshold mean-path-delay {{ ptp.monitor.threshold.mean_path_delay }}
 {%         endif %}
-{%         if ptp.monitor.threshold.drop.offset_from_master is arista.avd.defined %}
-ptp monitor threshold offset-from-master {{ ptp.monitor.threshold.drop.offset_from_master }} nanoseconds drop
-{%         endif %}
 {%         if ptp.monitor.threshold.drop.mean_path_delay is arista.avd.defined %}
 ptp monitor threshold mean-path-delay {{ ptp.monitor.threshold.drop.mean_path_delay }} nanoseconds drop
 {%         endif %}
+{%         if ptp.monitor.threshold.drop.offset_from_master is arista.avd.defined %}
+ptp monitor threshold offset-from-master {{ ptp.monitor.threshold.drop.offset_from_master }} nanoseconds drop
+{%         endif %}
 {%         if ptp.monitor.missing_message.intervals is arista.avd.defined %}
-{%             if ptp.monitor.missing_message.intervals.announce is arista.avd.defined %}
-ptp monitor threshold missing-message announce {{ ptp.monitor.missing_message.intervals.announce }} intervals
+{%             if ptp.monitor.missing_message.intervals.sync is arista.avd.defined %}
+ptp monitor threshold missing-message sync {{ ptp.monitor.missing_message.intervals.sync }} intervals
 {%             endif %}
 {%             if ptp.monitor.missing_message.intervals.follow_up is arista.avd.defined %}
 ptp monitor threshold missing-message follow-up {{ ptp.monitor.missing_message.intervals.follow_up }} intervals
 {%             endif %}
-{%             if ptp.monitor.missing_message.intervals.sync is arista.avd.defined %}
-ptp monitor threshold missing-message sync {{ ptp.monitor.missing_message.intervals.sync }} intervals
+{%             if ptp.monitor.missing_message.intervals.announce is arista.avd.defined %}
+ptp monitor threshold missing-message announce {{ ptp.monitor.missing_message.intervals.announce }} intervals
 {%             endif %}
 {%         endif %}
 {%         if ptp.monitor.missing_message.sequence_ids.enabled is arista.avd.defined(false) %}
 no ptp monitor sequence-id
 {%         elif ptp.monitor.missing_message.sequence_ids.enabled is arista.avd.defined(true) %}
 ptp monitor sequence-id
-{%             if ptp.monitor.missing_message.sequence_ids.announce is arista.avd.defined %}
-ptp monitor threshold missing-message announce {{ ptp.monitor.missing_message.sequence_ids.announce }} sequence-ids
-{%             endif %}
-{%             if ptp.monitor.missing_message.sequence_ids.delay_resp is arista.avd.defined %}
-ptp monitor threshold missing-message delay-resp {{ ptp.monitor.missing_message.sequence_ids.delay_resp }} sequence-ids
+{%             if ptp.monitor.missing_message.sequence_ids.sync is arista.avd.defined %}
+ptp monitor threshold missing-message sync {{ ptp.monitor.missing_message.sequence_ids.sync }} sequence-ids
 {%             endif %}
 {%             if ptp.monitor.missing_message.sequence_ids.follow_up is arista.avd.defined %}
 ptp monitor threshold missing-message follow-up {{ ptp.monitor.missing_message.sequence_ids.follow_up }} sequence-ids
 {%             endif %}
-{%             if ptp.monitor.missing_message.sequence_ids.sync is arista.avd.defined %}
-ptp monitor threshold missing-message sync {{ ptp.monitor.missing_message.sequence_ids.sync }} sequence-ids
+{%             if ptp.monitor.missing_message.sequence_ids.delay_resp is arista.avd.defined %}
+ptp monitor threshold missing-message delay-resp {{ ptp.monitor.missing_message.sequence_ids.delay_resp }} sequence-ids
+{%             endif %}
+{%             if ptp.monitor.missing_message.sequence_ids.announce is arista.avd.defined %}
+ptp monitor threshold missing-message announce {{ ptp.monitor.missing_message.sequence_ids.announce }} sequence-ids
 {%             endif %}
 {%         endif %}
 {%     endif %}

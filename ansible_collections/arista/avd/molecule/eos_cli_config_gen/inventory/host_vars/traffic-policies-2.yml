@@ -1,0 +1,12 @@
+### Traffic Policies to cover IPv6 field and none policy case
+traffic_policies:
+  field_sets:
+    ipv6:
+      - name: IPv6-DEMO-1
+        prefixes:
+          - 11:22:33:44:55:66:77:88
+      - name: IPv6-DEMO-2
+port_channel_interfaces:
+  - name: Port-Channel2
+    switchport:
+      enabled: false

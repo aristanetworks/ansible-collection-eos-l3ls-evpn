@@ -9,6 +9,10 @@ router_bgp:
   maximum_paths:
     paths: 4
     ecmp: 4
+  redistribute:
+    connected:
+      enabled: true
+      route_map: RM-CONN-2-BGP
   updates:
     wait_install: true
   peer_groups:
@@ -29,9 +33,6 @@ router_bgp:
       activate: true
     - name: EVPN-OVERLAY-PEERS
       activate: false
-  redistribute_routes:
-  - source_protocol: connected
-    route_map: RM-CONN-2-BGP
   neighbors:
   - ip_address: 172.31.255.24
     peer_group: IPv4-UNDERLAY-PEERS
@@ -56,8 +57,9 @@ router_bgp:
       - address_family: evpn
         route_targets:
         - '1:1'
-    redistribute_routes:
-    - source_protocol: connected
+    redistribute:
+      connected:
+        enabled: true
   address_family_evpn:
     peer_groups:
     - name: EVPN-OVERLAY-PEERS
@@ -116,8 +118,8 @@ ethernet_interfaces:
   vrf: TEST_VRF
   description: TEST_CUSTOM_PREFIX_P2P_LINK_TO_CUSTOM-PYTHON_MODULES-L3LEAF1A_Ethernet3.1 VRF TEST_VRF
   shutdown: false
-  type: l3dot1q
-  encapsulation_dot1q_vlan: 1
+  encapsulation_dot1q:
+    vlan: 1
   mtu: 9214
   ip_address: 172.16.0.25/31
 loopback_interfaces:

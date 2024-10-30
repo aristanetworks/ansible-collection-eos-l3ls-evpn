@@ -37,6 +37,7 @@
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;vlan_inner</samp>](## "ipv4_acls.[].entries.[].vlan_inner") | Boolean |  | `False` |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;vlan_mask</samp>](## "ipv4_acls.[].entries.[].vlan_mask") | String |  |  |  | 0x000-0xFFF VLAN mask. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;counters_per_entry</samp>](## "ipv4_acls.[].counters_per_entry") | Boolean |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;permit_response_traffic</samp>](## "ipv4_acls.[].permit_response_traffic") | String |  |  | Valid Values:<br>- <code>nat</code> | Permit response traffic automatically based on NAT translations.<br>Minimum EOS version requirement 4.32.2F. |
 
 === "YAML"
 
@@ -127,4 +128,8 @@
             # 0x000-0xFFF VLAN mask.
             vlan_mask: <str>
         counters_per_entry: <bool>
+
+        # Permit response traffic automatically based on NAT translations.
+        # Minimum EOS version requirement 4.32.2F.
+        permit_response_traffic: <str; "nat">
     ```

@@ -49,22 +49,22 @@ router_bgp:
   - ip_address: 192.168.255.1
     peer_group: EVPN-OVERLAY-PEERS
     peer: DC1-SPINE1
-    description: DC1-SPINE1
+    description: DC1-SPINE1_Loopback0
     remote_as: '65001'
   - ip_address: 192.168.255.2
     peer_group: EVPN-OVERLAY-PEERS
     peer: DC1-SPINE2
-    description: DC1-SPINE2
+    description: DC1-SPINE2_Loopback0
     remote_as: '65001'
   - ip_address: 192.168.255.3
     peer_group: EVPN-OVERLAY-PEERS
     peer: DC1-SPINE3
-    description: DC1-SPINE3
+    description: DC1-SPINE3_Loopback0
     remote_as: '65001'
   - ip_address: 192.168.255.4
     peer_group: EVPN-OVERLAY-PEERS
     peer: DC1-SPINE4
-    description: DC1-SPINE4
+    description: DC1-SPINE4_Loopback0
     remote_as: '65001'
   vrfs:
   - name: Tenant_B_OP_Zone
@@ -79,12 +79,14 @@ router_bgp:
         route_targets:
         - '20:20'
     router_id: 192.168.255.9
-    redistribute_routes:
-    - source_protocol: connected
+    redistribute:
+      connected:
+        enabled: true
+        route_map: RM-CONN-2-BGP-VRFS
     neighbors:
     - ip_address: 10.255.252.6
       peer_group: MLAG-IPv4-UNDERLAY-PEER
-      description: DC1-SVC3A
+      description: DC1-SVC3A_Vlan3019
     updates:
       wait_install: true
   vlan_aware_bundles:
@@ -172,20 +174,20 @@ ntp:
 vlans:
 - id: 4094
   tenant: system
-  name: MLAG_PEER
+  name: MLAG
   trunk_groups:
   - MLAG
 - id: 210
   name: Tenant_B_OP_Zone_1
   tenant: Tenant_A
 - id: 3019
-  name: MLAG_iBGP_Tenant_B_OP_Zone
+  name: MLAG_L3_VRF_Tenant_B_OP_Zone
   trunk_groups:
   - MLAG
   tenant: Tenant_A
 vlan_interfaces:
 - name: Vlan4094
-  description: MLAG_PEER
+  description: MLAG
   shutdown: false
   no_autostate: true
   mtu: 1500
@@ -204,13 +206,13 @@ vlan_interfaces:
   tenant: Tenant_A
   type: underlay_peering
   shutdown: false
-  description: 'MLAG_PEER_L3_iBGP: vrf Tenant_B_OP_Zone'
+  description: MLAG_L3_VRF_Tenant_B_OP_Zone
   vrf: Tenant_B_OP_Zone
   mtu: 1500
   ip_address: 10.255.252.7/31
 port_channel_interfaces:
 - name: Port-Channel5
-  description: MLAG_PEER_DC1-SVC3A_Po5
+  description: MLAG_DC1-SVC3A_Port-Channel5
   switchport:
     enabled: true
     mode: trunk
@@ -219,7 +221,7 @@ port_channel_interfaces:
       - MLAG
   shutdown: false
 - name: Port-Channel7
-  description: DC1_L2LEAF2_Po1
+  description: L2_DC1_L2LEAF2_Port-Channel1
   switchport:
     enabled: true
     mode: trunk
@@ -232,7 +234,7 @@ ethernet_interfaces:
   peer: DC1-SVC3A
   peer_interface: Ethernet5
   peer_type: mlag_peer
-  description: MLAG_PEER_DC1-SVC3A_Ethernet5
+  description: MLAG_DC1-SVC3A_Ethernet5
   shutdown: false
   channel_group:
     id: 5
@@ -241,7 +243,7 @@ ethernet_interfaces:
   peer: DC1-SVC3A
   peer_interface: Ethernet6
   peer_type: mlag_peer
-  description: MLAG_PEER_DC1-SVC3A_Ethernet6
+  description: MLAG_DC1-SVC3A_Ethernet6
   shutdown: false
   channel_group:
     id: 5
@@ -250,7 +252,7 @@ ethernet_interfaces:
   peer: DC1-SPINE1
   peer_interface: Ethernet5
   peer_type: spine
-  description: P2P_LINK_TO_DC1-SPINE1_Ethernet5
+  description: P2P_DC1-SPINE1_Ethernet5
   shutdown: false
   mtu: 1500
   switchport:
@@ -267,7 +269,7 @@ ethernet_interfaces:
   peer: DC1-SPINE2
   peer_interface: Ethernet5
   peer_type: spine
-  description: P2P_LINK_TO_DC1-SPINE2_Ethernet5
+  description: P2P_DC1-SPINE2_Ethernet5
   shutdown: false
   mtu: 1500
   switchport:
@@ -284,7 +286,7 @@ ethernet_interfaces:
   peer: DC1-SPINE3
   peer_interface: Ethernet5
   peer_type: spine
-  description: P2P_LINK_TO_DC1-SPINE3_Ethernet5
+  description: P2P_DC1-SPINE3_Ethernet5
   shutdown: false
   mtu: 1500
   switchport:
@@ -301,7 +303,7 @@ ethernet_interfaces:
   peer: DC1-SPINE4
   peer_interface: Ethernet5
   peer_type: spine
-  description: P2P_LINK_TO_DC1-SPINE4_Ethernet5
+  description: P2P_DC1-SPINE4_Ethernet5
   shutdown: false
   mtu: 1500
   switchport:
@@ -318,7 +320,7 @@ ethernet_interfaces:
   peer: DC1-L2LEAF2A
   peer_interface: Ethernet2
   peer_type: l2leaf
-  description: DC1-L2LEAF2A_Ethernet2
+  description: L2_DC1-L2LEAF2A_Ethernet2
   shutdown: false
   channel_group:
     id: 7
@@ -327,7 +329,7 @@ ethernet_interfaces:
   peer: DC1-L2LEAF2B
   peer_interface: Ethernet2
   peer_type: l2leaf
-  description: DC1-L2LEAF2B_Ethernet2
+  description: L2_DC1-L2LEAF2B_Ethernet2
   shutdown: false
   channel_group:
     id: 7
@@ -379,6 +381,19 @@ route_maps:
     set:
     - origin incomplete
     description: Make routes learned over MLAG Peer-link less preferred on spines to ensure optimal routing
+- name: RM-CONN-2-BGP-VRFS
+  sequence_numbers:
+  - sequence: 10
+    type: deny
+    match:
+    - ip address prefix-list PL-MLAG-PEER-VRFS
+  - sequence: 20
+    type: permit
+prefix_lists:
+- name: PL-MLAG-PEER-VRFS
+  sequence_numbers:
+  - sequence: 10
+    action: permit 10.255.252.6/31
 vxlan_interface:
   vxlan1:
     description: DC1-SVC3B_VTEP

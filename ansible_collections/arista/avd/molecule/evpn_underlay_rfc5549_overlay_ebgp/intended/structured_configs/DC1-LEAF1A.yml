@@ -11,6 +11,10 @@ router_bgp:
   maximum_paths:
     paths: 4
     ecmp: 4
+  redistribute:
+    connected:
+      enabled: true
+      route_map: RM-CONN-2-BGP
   updates:
     wait_install: true
   peer_groups:
@@ -37,9 +41,6 @@ router_bgp:
           originate: true
     - name: EVPN-OVERLAY-PEERS
       activate: false
-  redistribute_routes:
-  - source_protocol: connected
-    route_map: RM-CONN-2-BGP
   neighbor_interfaces:
   - name: Ethernet1
     peer_group: UNDERLAY_PEERS
@@ -73,22 +74,22 @@ router_bgp:
   - ip_address: 192.168.255.1
     peer_group: EVPN-OVERLAY-PEERS
     peer: DC1-SPINE1
-    description: DC1-SPINE1
+    description: DC1-SPINE1_Loopback0
     remote_as: '65001'
   - ip_address: 192.168.255.2
     peer_group: EVPN-OVERLAY-PEERS
     peer: DC1-SPINE2
-    description: DC1-SPINE2
+    description: DC1-SPINE2_Loopback0
     remote_as: '65001'
   - ip_address: 192.168.255.3
     peer_group: EVPN-OVERLAY-PEERS
     peer: DC1-SPINE3
-    description: DC1-SPINE3
+    description: DC1-SPINE3_Loopback0
     remote_as: '65001'
   - ip_address: 192.168.255.4
     peer_group: EVPN-OVERLAY-PEERS
     peer: DC1-SPINE4
-    description: DC1-SPINE4
+    description: DC1-SPINE4_Loopback0
     remote_as: '65001'
   vrfs:
   - name: Tenant_A_APP_Zone
@@ -103,8 +104,9 @@ router_bgp:
         route_targets:
         - '12:12'
     router_id: 192.168.255.5
-    redistribute_routes:
-    - source_protocol: connected
+    redistribute:
+      connected:
+        enabled: true
   - name: Tenant_A_WEB_Zone
     rd: 192.168.255.5:11
     route_targets:
@@ -117,8 +119,9 @@ router_bgp:
         route_targets:
         - '11:11'
     router_id: 192.168.255.5
-    redistribute_routes:
-    - source_protocol: connected
+    redistribute:
+      connected:
+        enabled: true
   vlan_aware_bundles:
   - name: Tenant_A_APP_Zone
     rd: 192.168.255.5:12
@@ -223,7 +226,7 @@ ethernet_interfaces:
   peer: DC1-SPINE1
   peer_interface: Ethernet1
   peer_type: spine
-  description: P2P_LINK_TO_DC1-SPINE1_Ethernet1
+  description: P2P_DC1-SPINE1_Ethernet1
   shutdown: false
   mtu: 1500
   switchport:
@@ -233,7 +236,7 @@ ethernet_interfaces:
   peer: DC1-SPINE2
   peer_interface: Ethernet1
   peer_type: spine
-  description: P2P_LINK_TO_DC1-SPINE2_Ethernet1
+  description: P2P_DC1-SPINE2_Ethernet1
   shutdown: false
   mtu: 1500
   switchport:
@@ -243,7 +246,7 @@ ethernet_interfaces:
   peer: DC1-SPINE3
   peer_interface: Ethernet1
   peer_type: spine
-  description: P2P_LINK_TO_DC1-SPINE3_Ethernet1
+  description: P2P_DC1-SPINE3_Ethernet1
   shutdown: false
   mtu: 1500
   switchport:
@@ -253,7 +256,7 @@ ethernet_interfaces:
   peer: DC1-SPINE4
   peer_interface: Ethernet1
   peer_type: spine
-  description: P2P_LINK_TO_DC1-SPINE4_Ethernet1
+  description: P2P_DC1-SPINE4_Ethernet1
   shutdown: false
   mtu: 1500
   switchport:

@@ -115,11 +115,16 @@ class RouterPathSelectionMixin(UtilsMixin):
         if self.shared_utils.is_cv_pathfinder_server:
             return ha_path_group
 
+        if self.shared_utils.use_port_channel_for_direct_ha is True:
+            local_interfaces = [{"name": f"Port-Channel{self.shared_utils.wan_ha_port_channel_id}"}]
+        else:
+            local_interfaces = [{"name": interface} for interface in self.shared_utils.wan_ha_interfaces]
+
         # not a pathfinder device
         ha_path_group.update(
             {
                 # This should be the LAN interface over which a DPS tunnel is built
-                "local_interfaces": [{"name": interface} for interface in self.shared_utils.wan_ha_interfaces],
+                "local_interfaces": local_interfaces,
                 "static_peers": [
                     {
                         "router_ip": self._wan_ha_peer_vtep_ip(),

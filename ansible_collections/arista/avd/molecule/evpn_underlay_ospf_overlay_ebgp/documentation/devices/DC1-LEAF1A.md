@@ -227,17 +227,17 @@ vlan internal order ascending range 1006 1199
 
 | Interface | Description | Channel Group | IP Address | VRF |  MTU | Shutdown | ACL In | ACL Out |
 | --------- | ----------- | ------------- | ---------- | ----| ---- | -------- | ------ | ------- |
-| Ethernet1 | P2P_LINK_TO_DC1-SPINE1_Ethernet1 | - | 172.31.255.1/31 | default | 1500 | False | - | - |
-| Ethernet2 | P2P_LINK_TO_DC1-SPINE2_Ethernet1 | - | 172.31.255.3/31 | default | 1500 | False | - | - |
-| Ethernet3 | P2P_LINK_TO_DC1-SPINE3_Ethernet1 | - | 172.31.255.5/31 | default | 1500 | False | - | - |
-| Ethernet4 | P2P_LINK_TO_DC1-SPINE4_Ethernet1 | - | 172.31.255.7/31 | default | 1500 | False | - | - |
+| Ethernet1 | P2P_DC1-SPINE1_Ethernet1 | - | 172.31.255.1/31 | default | 1500 | False | - | - |
+| Ethernet2 | P2P_DC1-SPINE2_Ethernet1 | - | 172.31.255.3/31 | default | 1500 | False | - | - |
+| Ethernet3 | P2P_DC1-SPINE3_Ethernet1 | - | 172.31.255.5/31 | default | 1500 | False | - | - |
+| Ethernet4 | P2P_DC1-SPINE4_Ethernet1 | - | 172.31.255.7/31 | default | 1500 | False | - | - |
 
 #### Ethernet Interfaces Device Configuration
 
 ```eos
 !
 interface Ethernet1
-   description P2P_LINK_TO_DC1-SPINE1_Ethernet1
+   description P2P_DC1-SPINE1_Ethernet1
    no shutdown
    mtu 1500
    no switchport
@@ -248,7 +248,7 @@ interface Ethernet1
    ip ospf message-digest-key 1 sha256 7 <removed>
 !
 interface Ethernet2
-   description P2P_LINK_TO_DC1-SPINE2_Ethernet1
+   description P2P_DC1-SPINE2_Ethernet1
    no shutdown
    mtu 1500
    no switchport
@@ -259,7 +259,7 @@ interface Ethernet2
    ip ospf message-digest-key 1 sha256 7 <removed>
 !
 interface Ethernet3
-   description P2P_LINK_TO_DC1-SPINE3_Ethernet1
+   description P2P_DC1-SPINE3_Ethernet1
    no shutdown
    mtu 1500
    no switchport
@@ -270,7 +270,7 @@ interface Ethernet3
    ip ospf message-digest-key 1 sha256 7 <removed>
 !
 interface Ethernet4
-   description P2P_LINK_TO_DC1-SPINE4_Ethernet1
+   description P2P_DC1-SPINE4_Ethernet1
    no shutdown
    mtu 1500
    no switchport
@@ -425,12 +425,12 @@ ip route vrf MGMT 0.0.0.0/0 192.168.200.5
 !
 router ospf 101
    router-id 192.168.255.5
+   bfd default
    passive-interface default
    no passive-interface Ethernet1
    no passive-interface Ethernet2
    no passive-interface Ethernet3
    no passive-interface Ethernet4
-   bfd default
    max-lsa 12000
 ```
 
@@ -477,9 +477,9 @@ ASN Notation: asplain
 
 ##### EVPN Peer Groups
 
-| Peer Group | Activate | Encapsulation |
-| ---------- | -------- | ------------- |
-| EVPN-OVERLAY-PEERS | True | default |
+| Peer Group | Activate | Route-map In | Route-map Out | Encapsulation |
+| ---------- | -------- | ------------ | ------------- | ------------- |
+| EVPN-OVERLAY-PEERS | True |  - | - | default |
 
 ##### EVPN Host Flapping Settings
 
@@ -493,9 +493,9 @@ ASN Notation: asplain
 !
 router bgp 65101
    router-id 192.168.255.5
-   maximum-paths 10 ecmp 10
    update wait-install
    no bgp default ipv4-unicast
+   maximum-paths 10 ecmp 10
    distance bgp 20 200 200
    neighbor EVPN-OVERLAY-PEERS peer group
    neighbor EVPN-OVERLAY-PEERS update-source Loopback0
@@ -506,20 +506,20 @@ router bgp 65101
    neighbor EVPN-OVERLAY-PEERS maximum-routes 0
    neighbor 192.168.255.1 peer group EVPN-OVERLAY-PEERS
    neighbor 192.168.255.1 remote-as 65001
-   neighbor 192.168.255.1 description DC1-SPINE1
+   neighbor 192.168.255.1 description DC1-SPINE1_Loopback0
    neighbor 192.168.255.2 peer group EVPN-OVERLAY-PEERS
    neighbor 192.168.255.2 remote-as 65001
-   neighbor 192.168.255.2 description DC1-SPINE2
+   neighbor 192.168.255.2 description DC1-SPINE2_Loopback0
    neighbor 192.168.255.3 peer group EVPN-OVERLAY-PEERS
    neighbor 192.168.255.3 remote-as 65001
-   neighbor 192.168.255.3 description DC1-SPINE3
+   neighbor 192.168.255.3 description DC1-SPINE3_Loopback0
    neighbor 192.168.255.4 peer group EVPN-OVERLAY-PEERS
    neighbor 192.168.255.4 remote-as 65001
-   neighbor 192.168.255.4 description DC1-SPINE4
+   neighbor 192.168.255.4 description DC1-SPINE4_Loopback0
    !
    address-family evpn
-      host-flap detection window 180 threshold 30
       neighbor EVPN-OVERLAY-PEERS activate
+      host-flap detection window 180 threshold 30
    !
    address-family ipv4
       no neighbor EVPN-OVERLAY-PEERS activate

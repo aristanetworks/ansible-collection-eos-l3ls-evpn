@@ -88,7 +88,6 @@ ethernet_interfaces:
   peer: SITE1-LSR2
   peer_interface: Ethernet3
   peer_type: p
-  description: P2P_LINK_TO_SITE1-LSR2_Ethernet3
   switchport:
     enabled: false
   shutdown: false
@@ -110,53 +109,53 @@ ethernet_interfaces:
     ldp:
       interface: true
       igp_sync: true
+  description: P2P_SITE1-LSR2_Ethernet3
   speed: forced 40gfull
 - name: Ethernet12
   peer: SITE2-LER1
   peer_interface: Ethernet11
   peer_type: pe
-  description: P2P_LINK_TO_SITE2-LER1_Ethernet11
   shutdown: false
   channel_group:
     id: 12
     mode: active
+  description: P2P_SITE2-LER1_Ethernet11
   speed: forced 40gfull
 - name: Ethernet13
   peer: SITE2-LER1
   peer_interface: Ethernet12
   peer_type: pe
-  description: P2P_LINK_TO_SITE2-LER1_Ethernet12
   shutdown: false
   channel_group:
     id: 12
     mode: active
+  description: P2P_SITE2-LER1_Ethernet12
   speed: forced 40gfull
 - name: Ethernet14
   peer: SITE2-LER1
   peer_interface: Ethernet13
   peer_type: pe
-  description: P2P_LINK_TO_SITE2-LER1_Ethernet13
   shutdown: false
   channel_group:
     id: 110
     mode: active
+  description: P2P_SITE2-LER1_Ethernet13
   speed: forced 40gfull
 - name: Ethernet15
   peer: SITE2-LER1
   peer_interface: Ethernet14
   peer_type: pe
-  description: P2P_LINK_TO_SITE2-LER1_Ethernet14
   shutdown: false
   channel_group:
     id: 110
     mode: active
+  description: P2P_SITE2-LER1_Ethernet14
   speed: forced 40gfull
 port_channel_interfaces:
 - name: Port-Channel12
   peer: SITE2-LER1
   peer_interface: Port-Channel11
   peer_type: pe
-  description: P2P_LINK_TO_SITE2-LER1_Port-Channel11
   switchport:
     enabled: false
   shutdown: false
@@ -178,11 +177,11 @@ port_channel_interfaces:
     ldp:
       interface: true
       igp_sync: true
+  description: P2P_SITE2-LER1_Port-Channel11
 - name: Port-Channel110
   peer: SITE2-LER1
   peer_interface: Port-Channel220
   peer_type: pe
-  description: P2P_LINK_TO_SITE2-LER1_Port-Channel220
   switchport:
     enabled: false
   shutdown: false
@@ -204,5 +203,6 @@ port_channel_interfaces:
     ldp:
       interface: true
       igp_sync: true
+  description: P2P_SITE2-LER1_Port-Channel220
 metadata:
   platform: 7280SR

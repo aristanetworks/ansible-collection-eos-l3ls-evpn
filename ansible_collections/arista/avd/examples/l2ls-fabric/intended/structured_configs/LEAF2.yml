@@ -64,7 +64,7 @@ ntp:
 vlans:
 - id: 4094
   tenant: system
-  name: MLAG_PEER
+  name: MLAG
   trunk_groups:
   - MLAG
 - id: 10
@@ -75,14 +75,14 @@ vlans:
   tenant: MY_FABRIC
 vlan_interfaces:
 - name: Vlan4094
-  description: MLAG_PEER
+  description: MLAG
   shutdown: false
   no_autostate: true
   mtu: 1500
   ip_address: 192.168.0.1/31
 port_channel_interfaces:
 - name: Port-Channel47
-  description: MLAG_PEER_LEAF1_Po47
+  description: MLAG_LEAF1_Port-Channel47
   switchport:
     enabled: true
     mode: trunk
@@ -91,7 +91,7 @@ port_channel_interfaces:
       - MLAG
   shutdown: false
 - name: Port-Channel1
-  description: SPINES_Po1
+  description: L2_SPINES_Port-Channel1
   switchport:
     enabled: true
     mode: trunk
@@ -104,7 +104,7 @@ ethernet_interfaces:
   peer: LEAF1
   peer_interface: Ethernet47
   peer_type: mlag_peer
-  description: MLAG_PEER_LEAF1_Ethernet47
+  description: MLAG_LEAF1_Ethernet47
   shutdown: false
   channel_group:
     id: 47
@@ -113,7 +113,7 @@ ethernet_interfaces:
   peer: LEAF1
   peer_interface: Ethernet48
   peer_type: mlag_peer
-  description: MLAG_PEER_LEAF1_Ethernet48
+  description: MLAG_LEAF1_Ethernet48
   shutdown: false
   channel_group:
     id: 47
@@ -122,7 +122,7 @@ ethernet_interfaces:
   peer: SPINE1
   peer_interface: Ethernet2
   peer_type: l2spine
-  description: SPINE1_Ethernet2
+  description: L2_SPINE1_Ethernet2
   shutdown: false
   channel_group:
     id: 1
@@ -131,7 +131,7 @@ ethernet_interfaces:
   peer: SPINE2
   peer_interface: Ethernet2
   peer_type: l2spine
-  description: SPINE2_Ethernet2
+  description: L2_SPINE2_Ethernet2
   shutdown: false
   channel_group:
     id: 1

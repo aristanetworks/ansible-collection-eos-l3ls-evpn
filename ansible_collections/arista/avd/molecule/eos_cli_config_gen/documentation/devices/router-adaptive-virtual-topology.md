@@ -41,7 +41,7 @@ interface Management1
 
 #### Router Adaptive Virtual Topology Summary
 
-Topology role: transit region
+Topology role: pathfinder
 
 | Hierarchy | Name | ID |
 | --------- | ---- | -- |
@@ -94,7 +94,7 @@ Topology role: transit region
 ```eos
 !
 router adaptive-virtual-topology
-   topology role transit region
+   topology role pathfinder
    region North_America id 1
    zone Canada id 2
    site Ottawa id 99

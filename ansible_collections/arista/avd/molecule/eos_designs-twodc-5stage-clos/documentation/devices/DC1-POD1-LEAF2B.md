@@ -236,7 +236,7 @@ vlan internal order ascending range 1006 1199
 | 2600 | web-l2-vlan-2 | - |
 | 2601 | l2vlan_with_no_vxlan | - |
 | 4085 | L2LEAF_INBAND_MGMT | - |
-| 4094 | MLAG_PEER | MLAG |
+| 4094 | MLAG | MLAG |
 
 ### VLANs Device Configuration
 
@@ -276,7 +276,7 @@ vlan 4085
    name L2LEAF_INBAND_MGMT
 !
 vlan 4094
-   name MLAG_PEER
+   name MLAG
    trunk group MLAG
 ```
 
@@ -290,10 +290,10 @@ vlan 4094
 
 | Interface | Description | Mode | VLANs | Native VLAN | Trunk Group | Channel-Group |
 | --------- | ----------- | ---- | ----- | ----------- | ----------- | ------------- |
-| Ethernet3 | DC1-POD1-L2LEAF2A_Ethernet2 | *trunk | *110-113,1100-1102,2500,2600-2601,4085 | *- | *- | 3 |
-| Ethernet4 | DC1-POD1-L2LEAF2B_Ethernet2 | *trunk | *110-113,1100-1102,2500,2600-2601,4085 | *- | *- | 3 |
-| Ethernet5 | MLAG_PEER_DC1.POD1.LEAF2A_Ethernet5 | *trunk | *- | *- | *MLAG | 5 |
-| Ethernet6 | MLAG_PEER_DC1.POD1.LEAF2A_Ethernet6 | *trunk | *- | *- | *MLAG | 5 |
+| Ethernet3 | L2_DC1-POD1-L2LEAF2A_Ethernet2 | *trunk | *110-113,1100-1102,2500,2600-2601,4085 | *- | *- | 3 |
+| Ethernet4 | L2_DC1-POD1-L2LEAF2B_Ethernet2 | *trunk | *110-113,1100-1102,2500,2600-2601,4085 | *- | *- | 3 |
+| Ethernet5 | MLAG_DC1.POD1.LEAF2A_Ethernet5 | *trunk | *- | *- | *MLAG | 5 |
+| Ethernet6 | MLAG_DC1.POD1.LEAF2A_Ethernet6 | *trunk | *- | *- | *MLAG | 5 |
 | Ethernet16 | SERVER_server-1_Eth2 | *access | *110 | *- | *- | 16 |
 | Ethernet17 | Set using structured_config on server adapter | *access | *110 | *- | *- | 17 |
 | Ethernet18 | SERVER_server-1_Eth6 | *access | *110 | *- | *- | 18 |
@@ -305,76 +305,76 @@ vlan 4094
 
 | Interface | Description | Channel Group | IP Address | VRF |  MTU | Shutdown | ACL In | ACL Out |
 | --------- | ----------- | ------------- | ---------- | ----| ---- | -------- | ------ | ------- |
-| Ethernet1 | P2P_LINK_TO_DC1-POD1-SPINE1_Ethernet5 | - | 172.17.110.17/31 | default | - | False | - | - |
-| Ethernet2 | P2P_LINK_TO_DC1-POD1-SPINE2_Ethernet5 | - | 172.17.110.19/31 | default | - | False | - | - |
-| Ethernet7 | P2P_LINK_TO_DC2-POD1-LEAF1A_Ethernet7 | - | 11.1.0.38/31 | default | - | False | - | - |
-| Ethernet11 | P2P_LINK_TO_DC1-POD1-SPINE1_Ethernet8 | - | 172.17.110.21/31 | default | - | False | - | - |
-| Ethernet12 | P2P_LINK_TO_DC1-POD1-SPINE2_Ethernet8 | - | 172.17.110.23/31 | default | - | False | - | - |
+| Ethernet1 | P2P_DC1-POD1-SPINE1_Ethernet5 | - | 172.17.110.17/31 | default | - | False | - | - |
+| Ethernet2 | P2P_DC1-POD1-SPINE2_Ethernet5 | - | 172.17.110.19/31 | default | - | False | - | - |
+| Ethernet7 | P2P_DC2-POD1-LEAF1A_Ethernet7 | - | 11.1.0.38/31 | default | - | False | - | - |
+| Ethernet11 | P2P_DC1-POD1-SPINE1_Ethernet8 | - | 172.17.110.21/31 | default | - | False | - | - |
+| Ethernet12 | P2P_DC1-POD1-SPINE2_Ethernet8 | - | 172.17.110.23/31 | default | - | False | - | - |
 
 #### Ethernet Interfaces Device Configuration
 
 ```eos
 !
 interface Ethernet1
-   description P2P_LINK_TO_DC1-POD1-SPINE1_Ethernet5
+   description P2P_DC1-POD1-SPINE1_Ethernet5
    no shutdown
-   mac security profile MACSEC_PROFILE
    no switchport
    ip address 172.17.110.17/31
+   mac security profile MACSEC_PROFILE
    ptp enable
    service-profile QOS-PROFILE
 !
 interface Ethernet2
-   description P2P_LINK_TO_DC1-POD1-SPINE2_Ethernet5
+   description P2P_DC1-POD1-SPINE2_Ethernet5
    no shutdown
-   mac security profile MACSEC_PROFILE
    no switchport
    ip address 172.17.110.19/31
+   mac security profile MACSEC_PROFILE
    ptp enable
    service-profile QOS-PROFILE
 !
 interface Ethernet3
-   description DC1-POD1-L2LEAF2A_Ethernet2
+   description L2_DC1-POD1-L2LEAF2A_Ethernet2
    no shutdown
    channel-group 3 mode active
 !
 interface Ethernet4
-   description DC1-POD1-L2LEAF2B_Ethernet2
+   description L2_DC1-POD1-L2LEAF2B_Ethernet2
    no shutdown
    channel-group 3 mode active
 !
 interface Ethernet5
-   description MLAG_PEER_DC1.POD1.LEAF2A_Ethernet5
+   description MLAG_DC1.POD1.LEAF2A_Ethernet5
    no shutdown
    channel-group 5 mode active
 !
 interface Ethernet6
-   description MLAG_PEER_DC1.POD1.LEAF2A_Ethernet6
+   description MLAG_DC1.POD1.LEAF2A_Ethernet6
    no shutdown
    channel-group 5 mode active
 !
 interface Ethernet7
-   description P2P_LINK_TO_DC2-POD1-LEAF1A_Ethernet7
+   description P2P_DC2-POD1-LEAF1A_Ethernet7
    no shutdown
    no switchport
    ip address 11.1.0.38/31
    ptp enable
 !
 interface Ethernet11
-   description P2P_LINK_TO_DC1-POD1-SPINE1_Ethernet8
+   description P2P_DC1-POD1-SPINE1_Ethernet8
    no shutdown
-   mac security profile MACSEC_PROFILE
    no switchport
    ip address 172.17.110.21/31
+   mac security profile MACSEC_PROFILE
    ptp enable
    service-profile QOS-PROFILE
 !
 interface Ethernet12
-   description P2P_LINK_TO_DC1-POD1-SPINE2_Ethernet8
+   description P2P_DC1-POD1-SPINE2_Ethernet8
    no shutdown
-   mac security profile MACSEC_PROFILE
    no switchport
    ip address 172.17.110.23/31
+   mac security profile MACSEC_PROFILE
    ptp enable
    service-profile QOS-PROFILE
 !
@@ -423,8 +423,8 @@ interface Ethernet19
 
 | Interface | Description | Mode | VLANs | Native VLAN | Trunk Group | LACP Fallback Timeout | LACP Fallback Mode | MLAG ID | EVPN ESI |
 | --------- | ----------- | ---- | ----- | ----------- | ------------| --------------------- | ------------------ | ------- | -------- |
-| Port-Channel3 | RACK2_MLAG_Po1 | trunk | 110-113,1100-1102,2500,2600-2601,4085 | - | - | - | - | 3 | - |
-| Port-Channel5 | MLAG_PEER_DC1.POD1.LEAF2A_Po5 | trunk | - | - | MLAG | - | - | - | - |
+| Port-Channel3 | L2_RACK2_MLAG_Port-Channel1 | trunk | 110-113,1100-1102,2500,2600-2601,4085 | - | - | - | - | 3 | - |
+| Port-Channel5 | MLAG_DC1.POD1.LEAF2A_Port-Channel5 | trunk | - | - | MLAG | - | - | - | - |
 | Port-Channel16 | PortChannel | access | 110 | - | - | - | - | 16 | - |
 | Port-Channel17 | Set using structured_config on server adapter port-channel | access | 110 | - | - | - | - | 17 | - |
 | Port-Channel18 | PortChannel | access | 110 | - | - | - | - | 18 | - |
@@ -435,7 +435,7 @@ interface Ethernet19
 ```eos
 !
 interface Port-Channel3
-   description RACK2_MLAG_Po1
+   description L2_RACK2_MLAG_Port-Channel1
    no shutdown
    switchport trunk allowed vlan 110-113,1100-1102,2500,2600-2601,4085
    switchport mode trunk
@@ -444,7 +444,7 @@ interface Port-Channel3
    service-profile QOS-PROFILE
 !
 interface Port-Channel5
-   description MLAG_PEER_DC1.POD1.LEAF2A_Po5
+   description MLAG_DC1.POD1.LEAF2A_Port-Channel5
    no shutdown
    switchport mode trunk
    switchport trunk group MLAG
@@ -506,9 +506,9 @@ interface Port-Channel19
 | --------- | ----------- | --- | ---------- |
 | Loopback0 | ROUTER_ID | default | 172.16.110.5/32 |
 | Loopback1 | VXLAN_TUNNEL_SOURCE | default | 172.18.110.4/32 |
-| Loopback100 | vrf_with_loopbacks_from_overlapping_pool_VTEP_DIAGNOSTICS | vrf_with_loopbacks_from_overlapping_pool | 10.100.0.5/32 |
-| Loopback101 | vrf_with_loopbacks_from_pod_pools_VTEP_DIAGNOSTICS | vrf_with_loopbacks_from_pod_pools | 10.101.101.5/32 |
-| Loopback102 | vrf_with_loopbacks_dc1_pod1_only_VTEP_DIAGNOSTICS | vrf_with_loopbacks_dc1_pod1_only | 10.102.101.5/32 |
+| Loopback100 | DIAG_VRF_vrf_with_loopbacks_from_overlapping_pool | vrf_with_loopbacks_from_overlapping_pool | 10.100.0.5/32 |
+| Loopback101 | DIAG_VRF_vrf_with_loopbacks_from_pod_pools | vrf_with_loopbacks_from_pod_pools | 10.101.101.5/32 |
+| Loopback102 | DIAG_VRF_vrf_with_loopbacks_dc1_pod1_only | vrf_with_loopbacks_dc1_pod1_only | 10.102.101.5/32 |
 
 ##### IPv6
 
@@ -516,9 +516,9 @@ interface Port-Channel19
 | --------- | ----------- | --- | ------------ |
 | Loopback0 | ROUTER_ID | default | - |
 | Loopback1 | VXLAN_TUNNEL_SOURCE | default | - |
-| Loopback100 | vrf_with_loopbacks_from_overlapping_pool_VTEP_DIAGNOSTICS | vrf_with_loopbacks_from_overlapping_pool | - |
-| Loopback101 | vrf_with_loopbacks_from_pod_pools_VTEP_DIAGNOSTICS | vrf_with_loopbacks_from_pod_pools | - |
-| Loopback102 | vrf_with_loopbacks_dc1_pod1_only_VTEP_DIAGNOSTICS | vrf_with_loopbacks_dc1_pod1_only | - |
+| Loopback100 | DIAG_VRF_vrf_with_loopbacks_from_overlapping_pool | vrf_with_loopbacks_from_overlapping_pool | - |
+| Loopback101 | DIAG_VRF_vrf_with_loopbacks_from_pod_pools | vrf_with_loopbacks_from_pod_pools | - |
+| Loopback102 | DIAG_VRF_vrf_with_loopbacks_dc1_pod1_only | vrf_with_loopbacks_dc1_pod1_only | - |
 
 #### Loopback Interfaces Device Configuration
 
@@ -535,19 +535,19 @@ interface Loopback1
    ip address 172.18.110.4/32
 !
 interface Loopback100
-   description vrf_with_loopbacks_from_overlapping_pool_VTEP_DIAGNOSTICS
+   description DIAG_VRF_vrf_with_loopbacks_from_overlapping_pool
    no shutdown
    vrf vrf_with_loopbacks_from_overlapping_pool
    ip address 10.100.0.5/32
 !
 interface Loopback101
-   description vrf_with_loopbacks_from_pod_pools_VTEP_DIAGNOSTICS
+   description DIAG_VRF_vrf_with_loopbacks_from_pod_pools
    no shutdown
    vrf vrf_with_loopbacks_from_pod_pools
    ip address 10.101.101.5/32
 !
 interface Loopback102
-   description vrf_with_loopbacks_dc1_pod1_only_VTEP_DIAGNOSTICS
+   description DIAG_VRF_vrf_with_loopbacks_dc1_pod1_only
    no shutdown
    vrf vrf_with_loopbacks_dc1_pod1_only
    ip address 10.102.101.5/32
@@ -567,7 +567,7 @@ interface Loopback102
 | Vlan1101 | test_svi | vrf_with_loopbacks_from_pod_pools | - | False |
 | Vlan1102 | test_svi | vrf_with_loopbacks_dc1_pod1_only | - | False |
 | Vlan4085 | L2LEAF_INBAND_MGMT | default | - | False |
-| Vlan4094 | MLAG_PEER | default | - | False |
+| Vlan4094 | MLAG | default | - | False |
 
 ##### IPv4
 
@@ -641,7 +641,7 @@ interface Vlan4085
    ip virtual-router address 172.21.110.1
 !
 interface Vlan4094
-   description MLAG_PEER
+   description MLAG
    no shutdown
    no autostate
    ip address 172.20.110.3/31
@@ -853,10 +853,10 @@ ASN Notation: asplain
 
 ##### EVPN Peer Groups
 
-| Peer Group | Activate | Encapsulation |
-| ---------- | -------- | ------------- |
-| EVPN-OVERLAY-CORE | True | default |
-| EVPN-OVERLAY-PEERS | True | default |
+| Peer Group | Activate | Route-map In | Route-map Out | Encapsulation |
+| ---------- | -------- | ------------ | ------------- | ------------- |
+| EVPN-OVERLAY-CORE | True |  - | - | default |
+| EVPN-OVERLAY-PEERS | True |  - | - | default |
 
 ##### EVPN DCI Gateway Summary
 
@@ -890,9 +890,9 @@ ASN Notation: asplain
 !
 router bgp 65112.100
    router-id 172.16.110.5
-   maximum-paths 4 ecmp 4
    update wait-install
    no bgp default ipv4-unicast
+   maximum-paths 4 ecmp 4
    distance bgp 20 200 200
    neighbor EVPN-OVERLAY-CORE peer group
    neighbor EVPN-OVERLAY-CORE update-source Loopback0
@@ -915,29 +915,29 @@ router bgp 65112.100
    neighbor MLAG-IPv4-UNDERLAY-PEER remote-as 65112.100
    neighbor MLAG-IPv4-UNDERLAY-PEER next-hop-self
    neighbor MLAG-IPv4-UNDERLAY-PEER description DC1.POD1.LEAF2A
+   neighbor MLAG-IPv4-UNDERLAY-PEER route-map RM-MLAG-PEER-IN in
    neighbor MLAG-IPv4-UNDERLAY-PEER password 7 <removed>
    neighbor MLAG-IPv4-UNDERLAY-PEER send-community
    neighbor MLAG-IPv4-UNDERLAY-PEER maximum-routes 12000
-   neighbor MLAG-IPv4-UNDERLAY-PEER route-map RM-MLAG-PEER-IN in
    neighbor 1.1.1.1 peer group EVPN-OVERLAY-CORE
    neighbor 1.1.1.1 remote-as 1111
    neighbor 1.1.1.1 description HOSTNAME_NOT_IN_ANSIBLE
    neighbor 11.1.0.39 peer group IPv4-UNDERLAY-PEERS
    neighbor 11.1.0.39 remote-as 65211
    neighbor 11.1.0.39 local-as 65120 no-prepend replace-as
-   neighbor 11.1.0.39 description DC2-POD1-LEAF1A
    neighbor 11.1.0.39 bfd
+   neighbor 11.1.0.39 description DC2-POD1-LEAF1A
    neighbor 172.16.10.1 peer group EVPN-OVERLAY-PEERS
    neighbor 172.16.10.1 remote-as 65101
-   neighbor 172.16.10.1 description DC1-RS1
+   neighbor 172.16.10.1 description DC1-RS1_Loopback0
    neighbor 172.16.10.1 route-map RM-EVPN-FILTER-AS65101 out
    neighbor 172.16.110.1 peer group EVPN-OVERLAY-PEERS
    neighbor 172.16.110.1 remote-as 65110.100
-   neighbor 172.16.110.1 description DC1-POD1-SPINE1
+   neighbor 172.16.110.1 description DC1-POD1-SPINE1_Loopback0
    neighbor 172.16.110.1 route-map RM-EVPN-FILTER-AS65110.100 out
    neighbor 172.16.110.3 peer group EVPN-OVERLAY-PEERS
    neighbor 172.16.110.3 remote-as 65111.100
-   neighbor 172.16.110.3 description DC1-POD1-LEAF1A
+   neighbor 172.16.110.3 description DC1-POD1-LEAF1A_Loopback0
    neighbor 172.16.110.3 route-map RM-EVPN-FILTER-AS65111.100 out
    neighbor 172.17.110.16 peer group IPv4-UNDERLAY-PEERS
    neighbor 172.17.110.16 remote-as 65110.100
@@ -952,9 +952,9 @@ router bgp 65112.100
    neighbor 172.17.110.22 remote-as 65110.100
    neighbor 172.17.110.22 description DC1-POD1-SPINE2_Ethernet8
    neighbor 172.20.110.2 peer group MLAG-IPv4-UNDERLAY-PEER
-   neighbor 172.20.110.2 description DC1.POD1.LEAF2A
-   redistribute attached-host
+   neighbor 172.20.110.2 description DC1.POD1.LEAF2A_Vlan4094
    redistribute connected
+   redistribute attached-host
    !
    vlan 110
       rd 172.16.110.5:99110
@@ -1019,18 +1019,18 @@ router bgp 65112.100
       neighbor EVPN-OVERLAY-CORE activate
       neighbor EVPN-OVERLAY-CORE domain remote
       neighbor EVPN-OVERLAY-PEERS activate
-      neighbor default next-hop-self received-evpn-routes route-type ip-prefix
       route import match-failure action discard
-   !
-   address-family rt-membership
-      neighbor EVPN-OVERLAY-CORE activate
-      neighbor EVPN-OVERLAY-PEERS activate
+      neighbor default next-hop-self received-evpn-routes route-type ip-prefix
    !
    address-family ipv4
       no neighbor EVPN-OVERLAY-CORE activate
       no neighbor EVPN-OVERLAY-PEERS activate
       neighbor IPv4-UNDERLAY-PEERS activate
       neighbor MLAG-IPv4-UNDERLAY-PEER activate
+   !
+   address-family rt-membership
+      neighbor EVPN-OVERLAY-CORE activate
+      neighbor EVPN-OVERLAY-PEERS activate
    !
    vrf Common_VRF
       rd 172.16.110.5:1025

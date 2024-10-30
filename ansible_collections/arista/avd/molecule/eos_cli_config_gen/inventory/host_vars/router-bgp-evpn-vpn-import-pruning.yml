@@ -31,11 +31,11 @@ router_bgp:
       peer_group: EVPN-OVERLAY-PEERS
     - ip_address: 192.168.255.2
       peer_group: EVPN-OVERLAY-PEERS
-  redistribute_routes:
   address_family_evpn:
-    bgp_additional_paths:
-      send:
-        ecmp_limit: 20
+    bgp:
+      additional_paths:
+        send: ecmp
+        send_limit: 20
     domain_identifier: "65101:0"
     peer_groups:
       - name: EVPN-OVERLAY-PEERS
@@ -103,11 +103,14 @@ router_bgp:
           rib_in_pre_policy_retain:
             enabled: true
             all: false
-      redistribute_routes:
-        - source_protocol: connected
-        - source_protocol: static
+      redistribute:
+        connected:
+          enabled: true
+        static:
+          enabled: true
           rcf: Router_BGP_Static()
-        - source_protocol: isis
+        isis:
+          enabled: true
           route_map: Router_BGP_Isis
     - name: TENANT_A_PROJECT02
       router_id: 192.168.255.3
@@ -124,5 +127,6 @@ router_bgp:
       neighbors:
         - ip_address: 10.255.251.1
           peer_group: MLAG-IPv4-UNDERLAY-PEER
-      redistribute_routes:
-        - source_protocol: connected
+      redistribute:
+        connected:
+          enabled: true

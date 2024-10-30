@@ -36,14 +36,14 @@ ethernet_interfaces:
   peer: IGMP-QUERIER-L3LEAF1A
   peer_interface: Ethernet1
   peer_type: l3leaf
-  description: IGMP-QUERIER-L3LEAF1A_Ethernet1
+  description: L2_IGMP-QUERIER-L3LEAF1A_Ethernet1
   shutdown: false
   channel_group:
     id: 1
     mode: active
 port_channel_interfaces:
 - name: Port-Channel1
-  description: IGMP-QUERIER-L3LEAF1A_Po1
+  description: L2_IGMP-QUERIER-L3LEAF1A_Port-Channel1
   switchport:
     enabled: true
     mode: trunk

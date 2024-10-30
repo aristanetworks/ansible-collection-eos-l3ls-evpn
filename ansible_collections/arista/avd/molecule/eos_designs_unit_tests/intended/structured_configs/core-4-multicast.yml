@@ -9,6 +9,10 @@ router_bgp:
   maximum_paths:
     paths: 4
     ecmp: 4
+  redistribute:
+    connected:
+      enabled: true
+      route_map: RM-CONN-2-BGP
   updates:
     wait_install: true
   peer_groups:
@@ -24,9 +28,6 @@ router_bgp:
     peer_groups:
     - name: IPv4-UNDERLAY-PEERS
       activate: true
-  redistribute_routes:
-  - source_protocol: connected
-    route_map: RM-CONN-2-BGP
   neighbors:
   - ip_address: 100.64.48.19
     remote_as: '65002'
@@ -108,7 +109,6 @@ ethernet_interfaces:
   peer: peer1
   peer_interface: Ethernet1
   peer_type: other
-  description: P2P_LINK_TO_peer1_Ethernet1
   switchport:
     enabled: false
   shutdown: false
@@ -119,11 +119,11 @@ ethernet_interfaces:
       sparse_mode: true
   mpls:
     ip: true
+  description: P2P_LINK_TO_PEER1_Ethernet1
 - name: Ethernet2
   peer: peer2
   peer_interface: Ethernet2
   peer_type: other
-  description: P2P_LINK_TO_peer2_Ethernet2
   switchport:
     enabled: false
   shutdown: false
@@ -131,11 +131,11 @@ ethernet_interfaces:
   ip_address: 100.64.48.20/31
   mpls:
     ip: true
+  description: P2P_LINK_TO_PEER2_Ethernet2
 - name: Ethernet3
   peer: peer3
   peer_interface: Ethernet3
   peer_type: other
-  description: P2P_LINK_TO_peer3_Ethernet3
   switchport:
     enabled: false
   shutdown: false
@@ -143,3 +143,4 @@ ethernet_interfaces:
   ip_address: 100.64.48.22/31
   mpls:
     ip: true
+  description: P2P_LINK_TO_PEER3_Ethernet3

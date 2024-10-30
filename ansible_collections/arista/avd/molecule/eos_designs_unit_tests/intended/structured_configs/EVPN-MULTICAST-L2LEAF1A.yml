@@ -36,7 +36,7 @@ ethernet_interfaces:
   peer: EVPN-MULTICAST-L3LEAF1A
   peer_interface: Ethernet6
   peer_type: l3leaf
-  description: EVPN-MULTICAST-L3LEAF1A_Ethernet6
+  description: L2_EVPN-MULTICAST-L3LEAF1A_Ethernet6
   shutdown: false
   channel_group:
     id: 1
@@ -45,14 +45,14 @@ ethernet_interfaces:
   peer: EVPN-MULTICAST-L3LEAF1B
   peer_interface: Ethernet6
   peer_type: l3leaf
-  description: EVPN-MULTICAST-L3LEAF1B_Ethernet6
+  description: L2_EVPN-MULTICAST-L3LEAF1B_Ethernet6
   shutdown: false
   channel_group:
     id: 1
     mode: active
 port_channel_interfaces:
 - name: Port-Channel1
-  description: EVPN_MULTICAST_L3LEAF1_Po6
+  description: L2_EVPN_MULTICAST_L3LEAF1_Port-Channel6
   switchport:
     enabled: true
     mode: trunk

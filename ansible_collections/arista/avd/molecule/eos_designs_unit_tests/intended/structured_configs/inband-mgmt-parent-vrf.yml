@@ -9,6 +9,10 @@ router_bgp:
   maximum_paths:
     paths: 4
     ecmp: 4
+  redistribute:
+    connected:
+      enabled: true
+      route_map: RM-CONN-2-BGP
   updates:
     wait_install: true
   peer_groups:
@@ -29,9 +33,6 @@ router_bgp:
       activate: true
     - name: EVPN-OVERLAY-PEERS
       activate: false
-  redistribute_routes:
-  - source_protocol: connected
-    route_map: RM-CONN-2-BGP
   address_family_evpn:
     peer_groups:
     - name: EVPN-OVERLAY-PEERS
@@ -49,8 +50,9 @@ router_bgp:
         route_targets:
         - '1:1'
     router_id: 10.0.255.2
-    redistribute_routes:
-    - source_protocol: connected
+    redistribute:
+      connected:
+        enabled: true
 service_routing_protocols_model: multi-agent
 ip_routing: true
 vlan_internal_order:
@@ -166,7 +168,7 @@ port_channel_interfaces:
       allowed_vlan: '103'
   shutdown: false
 - name: Port-Channel101
-  description: INBAND-MGMT-MLAG-TEST_Po1
+  description: inband-mgmt-mlag-test_Po1
   switchport:
     enabled: true
     mode: trunk

@@ -95,7 +95,7 @@ ethernet_interfaces:
     mode: active
 port_channel_interfaces:
 - name: Port-Channel1
-  description: CUSTOM_DC1_LEAF2_Po9
+  description: CUSTOM_DC1-LEAF2A_Po9
   switchport:
     enabled: true
     mode: trunk

@@ -28,7 +28,7 @@ ethernet_interfaces:
   peer: trunk-group-tests-l3leaf1a
   peer_interface: Ethernet5
   peer_type: l3leaf
-  description: TRUNK-GROUP-TESTS-L3LEAF1A_Ethernet5
+  description: L2_trunk-group-tests-l3leaf1a_Ethernet5
   shutdown: false
   channel_group:
     id: 1
@@ -37,7 +37,7 @@ ethernet_interfaces:
   peer: trunk-group-tests-l3leaf1b
   peer_interface: Ethernet5
   peer_type: l3leaf
-  description: TRUNK-GROUP-TESTS-L3LEAF1B_Ethernet5
+  description: L2_trunk-group-tests-l3leaf1b_Ethernet5
   shutdown: false
   channel_group:
     id: 1
@@ -57,7 +57,7 @@ ethernet_interfaces:
       - TG_200
 port_channel_interfaces:
 - name: Port-Channel1
-  description: TRUNK_GROUP_TESTS_L3LEAF1_Po5
+  description: L2_TRUNK_GROUP_TESTS_L3LEAF1_Port-Channel5
   switchport:
     enabled: true
     mode: trunk

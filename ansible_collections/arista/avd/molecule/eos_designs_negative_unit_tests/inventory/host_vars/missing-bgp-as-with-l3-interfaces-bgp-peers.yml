@@ -1,0 +1,21 @@
+---
+fabric_name: MISSING_BGP_AS_WITH_L3_INTERFACES_BGP_PEERS
+underlay_routing_protocol: none
+type: spine
+
+spine:
+  nodes:
+    - name: missing-bgp-as-with-l3-interfaces-bgp-peers
+      id: 1
+      evpn_role: none
+      loopback_ipv4_pool: 1.2.3.4/24
+      l3_interfaces:
+        - name: Ethernet1
+          ip_address: 10.42.42.52/24
+          description: CONFIGURING_BGP_PEER_WITHOUT_LOCAL_BGP_AS
+          peer_ip: 10.42.42.42
+          bgp:
+            peer_as: 65042
+
+expected_error_message: >-
+  'bgp_as' is required but was not found for host 'missing-bgp-as-with-l3-interfaces-bgp-peers'.

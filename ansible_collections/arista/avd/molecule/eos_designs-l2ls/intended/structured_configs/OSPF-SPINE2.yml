@@ -32,7 +32,7 @@ spanning_tree:
 vlans:
 - id: 4094
   tenant: system
-  name: MLAG_PEER
+  name: MLAG
   trunk_groups:
   - MLAG
 - id: 100
@@ -43,7 +43,7 @@ vlans:
   name: INBAND_MGMT
 vlan_interfaces:
 - name: Vlan4094
-  description: MLAG_PEER
+  description: MLAG
   shutdown: false
   no_autostate: true
   mtu: 9214
@@ -67,7 +67,7 @@ vlan_interfaces:
   - 172.23.254.1
 port_channel_interfaces:
 - name: Port-Channel3
-  description: MLAG_PEER_OSPF-SPINE1_Po3
+  description: MLAG_OSPF-SPINE1_Port-Channel3
   switchport:
     enabled: true
     mode: trunk
@@ -76,7 +76,7 @@ port_channel_interfaces:
       - MLAG
   shutdown: false
 - name: Port-Channel1
-  description: OSPF-LEAF1_Po1
+  description: L2_OSPF-LEAF1_Port-Channel1
   switchport:
     enabled: true
     mode: trunk
@@ -85,7 +85,7 @@ port_channel_interfaces:
   shutdown: false
   mlag: 1
 - name: Port-Channel2
-  description: OSPF-LEAF2_Po1
+  description: L2_OSPF-LEAF2_Port-Channel1
   switchport:
     enabled: true
     mode: trunk
@@ -98,7 +98,7 @@ ethernet_interfaces:
   peer: OSPF-SPINE1
   peer_interface: Ethernet3
   peer_type: mlag_peer
-  description: MLAG_PEER_OSPF-SPINE1_Ethernet3
+  description: MLAG_OSPF-SPINE1_Ethernet3
   shutdown: false
   channel_group:
     id: 3
@@ -107,7 +107,7 @@ ethernet_interfaces:
   peer: OSPF-SPINE1
   peer_interface: Ethernet4
   peer_type: mlag_peer
-  description: MLAG_PEER_OSPF-SPINE1_Ethernet4
+  description: MLAG_OSPF-SPINE1_Ethernet4
   shutdown: false
   channel_group:
     id: 3
@@ -116,7 +116,7 @@ ethernet_interfaces:
   peer: OSPF-LEAF1
   peer_interface: Ethernet2
   peer_type: l2leaf
-  description: OSPF-LEAF1_Ethernet2
+  description: L2_OSPF-LEAF1_Ethernet2
   shutdown: false
   channel_group:
     id: 1
@@ -125,7 +125,7 @@ ethernet_interfaces:
   peer: OSPF-LEAF2
   peer_interface: Ethernet2
   peer_type: l2leaf
-  description: OSPF-LEAF2_Ethernet2
+  description: L2_OSPF-LEAF2_Ethernet2
   shutdown: false
   channel_group:
     id: 2
@@ -134,7 +134,6 @@ ethernet_interfaces:
   peer: DUMMY-CORE
   peer_interface: Ethernet1/2
   peer_type: other
-  description: P2P_LINK_TO_DUMMY-CORE_Ethernet1/2
   switchport:
     enabled: false
   shutdown: false
@@ -142,6 +141,7 @@ ethernet_interfaces:
   ip_address: 192.168.253.2/31
   ospf_network_point_to_point: true
   ospf_area: 0.0.0.0
+  description: P2P_DUMMY-CORE_Ethernet1/2
 mlag_configuration:
   domain_id: OSPF_SPINES
   local_interface: Vlan4094

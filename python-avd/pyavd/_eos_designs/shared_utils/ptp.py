@@ -11,39 +11,6 @@ from pyavd._utils import get, get_item
 if TYPE_CHECKING:
     from . import SharedUtils
 
-DEFAULT_PTP_PROFILES = [
-    {
-        "profile": "aes67-r16-2016",
-        "announce": {
-            "interval": 0,
-            "timeout": 3,
-        },
-        "delay_req": -3,
-        "sync_message": {"interval": -3},
-        "transport": "ipv4",
-    },
-    {
-        "profile": "smpte2059-2",
-        "announce": {
-            "interval": -2,
-            "timeout": 3,
-        },
-        "delay_req": -4,
-        "sync_message": {"interval": -4},
-        "transport": "ipv4",
-    },
-    {
-        "profile": "aes67",
-        "announce": {
-            "interval": 2,
-            "timeout": 3,
-        },
-        "delay_req": 0,
-        "sync_message": {"interval": 0},
-        "transport": "ipv4",
-    },
-]
-
 
 class PtpMixin:
     """
@@ -65,13 +32,15 @@ class PtpMixin:
     @cached_property
     def ptp_profile_name(self: SharedUtils) -> str:
         default_ptp_profile = get(self.hostvars, "ptp_settings.profile", default="aes67-r16-2016")
-        return get(self.switch_data_combined, "ptp.profile", default_ptp_profile)
+        return get(self.switch_data_combined, "ptp.profile", default=default_ptp_profile)
 
     @cached_property
     def ptp_profile(self: SharedUtils) -> dict:
-        return get_item(self.ptp_profiles, "profile", self.ptp_profile_name, default={})
+        msg = f"PTP Profile '{self.ptp_profile_name}' referenced under `ptp.profile` node variables does not exist in `ptp_profiles`."
+        return get_item(self.ptp_profiles, "profile", self.ptp_profile_name, required=True, custom_error_msg=msg)
 
     @cached_property
     def ptp_profiles(self: SharedUtils) -> list:
         """Return ptp_profiles."""
-        return get(self.hostvars, "ptp_profiles", default=DEFAULT_PTP_PROFILES)
+        default_ptp_profiles = self.schema.get_default_value(["ptp_profiles"])
+        return get(self.hostvars, "ptp_profiles", default=default_ptp_profiles)

@@ -11,6 +11,10 @@ router_bgp:
   maximum_paths:
     paths: 4
     ecmp: 4
+  redistribute:
+    connected:
+      enabled: true
+      route_map: RM-CONN-2-BGP
   updates:
     wait_install: true
   peer_groups:
@@ -22,9 +26,6 @@ router_bgp:
     peer_groups:
     - name: IPv4-UNDERLAY-PEERS
       activate: true
-  redistribute_routes:
-  - source_protocol: connected
-    route_map: RM-CONN-2-BGP
   neighbors:
   - ip_address: 172.16.21.65
     peer_group: IPv4-UNDERLAY-PEERS
@@ -89,7 +90,7 @@ ethernet_interfaces:
   peer: DC2-POD1-SPINE1
   peer_interface: Ethernet2
   peer_type: spine
-  description: P2P_LINK_TO_DC2-POD1-SPINE1_Ethernet2
+  description: P2P_DC2-POD1-SPINE1_Ethernet2
   shutdown: false
   service_profile: QOS-PROFILE
   switchport:
@@ -101,7 +102,7 @@ ethernet_interfaces:
   peer: DC2-POD1-SPINE2
   peer_interface: Ethernet2
   peer_type: spine
-  description: P2P_LINK_TO_DC2-POD1-SPINE2_Ethernet2
+  description: P2P_DC2-POD1-SPINE2_Ethernet2
   shutdown: false
   service_profile: QOS-PROFILE
   switchport:
@@ -113,11 +114,11 @@ ethernet_interfaces:
   peer: DC1-SUPER-SPINE2
   peer_interface: Ethernet6
   peer_type: super-spine
-  description: P2P_LINK_TO_DC1-SUPER-SPINE2_Ethernet6
   switchport:
     enabled: false
   shutdown: false
   ip_address: 11.1.2.3/31
+  description: P2P_DC1-SUPER-SPINE2_Ethernet6
 loopback_interfaces:
 - name: Loopback0
   description: ROUTER_ID

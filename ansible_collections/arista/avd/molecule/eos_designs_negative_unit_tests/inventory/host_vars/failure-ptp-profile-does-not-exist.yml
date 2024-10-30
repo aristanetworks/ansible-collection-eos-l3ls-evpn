@@ -1,0 +1,31 @@
+---
+type: l3leaf
+
+ptp_profiles:
+  - profile: PROFILE-1
+
+l3leaf:
+  defaults:
+    loopback_ipv4_pool: 10.254.1.0/27
+    vtep_loopback_ipv4_pool: 10.254.11.0/27
+  nodes:
+    - name: failure-ptp-profile-does-not-exist
+      id: 1
+      bgp_as: 65101
+      mgmt_ip: 192.168.0.101/24
+      ptp:
+        enabled: true
+        # The profile is applied on uplink or l3edge
+        profile: THIS-PROFILE-DOES-NOT-EXIST
+
+l3_edge:
+  p2p_links:
+    - nodes: [failure-ptp-profile-does-not-exist, not-in-fabric]
+      interfaces: [Ethernet10, Ethernet11]
+      ip: [192.168.0.2/31, 192.168.0.3/31]
+      ptp:
+        enabled: true
+
+expected_error_message: >-
+  PTP Profile 'THIS-PROFILE-DOES-NOT-EXIST' referenced under `ptp.profile` node variables
+  does not exist in `ptp_profiles`.

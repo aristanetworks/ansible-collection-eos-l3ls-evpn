@@ -33,7 +33,7 @@ ethernet_interfaces:
   peer: ptp-tests-leaf1
   peer_interface: Ethernet11
   peer_type: l3leaf
-  description: PTP-TESTS-LEAF1_Ethernet11
+  description: L2_ptp-tests-leaf1_Ethernet11
   shutdown: false
   channel_group:
     id: 1
@@ -42,14 +42,14 @@ ethernet_interfaces:
   peer: ptp-tests-leaf2
   peer_interface: Ethernet11
   peer_type: l3leaf
-  description: PTP-TESTS-LEAF2_Ethernet11
+  description: L2_ptp-tests-leaf2_Ethernet11
   shutdown: false
   channel_group:
     id: 1
     mode: active
 port_channel_interfaces:
 - name: Port-Channel1
-  description: PTP-TEST-LEAF_Po11
+  description: L2_ptp-test-leaf_Port-Channel11
   switchport:
     enabled: true
     mode: trunk

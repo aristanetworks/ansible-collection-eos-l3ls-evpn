@@ -238,6 +238,8 @@ keys:
         ipv6_dhcp_relay_destinations:
           type: list
           primary_key: address
+          # TODO: Allow duplicate primary keys, as we can have the same address for different VRFs.
+          # allow_duplicate_primary_key: True
           items:
             type: dict
             keys:

@@ -11,6 +11,10 @@ router_bgp:
   maximum_paths:
     paths: 4
     ecmp: 4
+  redistribute:
+    connected:
+      enabled: true
+      route_map: RM-CONN-2-BGP
   updates:
     wait_install: true
   peer_groups:
@@ -42,9 +46,6 @@ router_bgp:
     peer_groups:
     - name: UNDERLAY_PEERS
       activate: true
-  redistribute_routes:
-  - source_protocol: connected
-    route_map: RM-CONN-2-BGP
   neighbor_interfaces:
   - name: Ethernet1
     peer_group: UNDERLAY_PEERS
@@ -74,12 +75,12 @@ router_bgp:
   - ip_address: 2001:1::c
     peer_group: EVPN-OVERLAY-PEERS
     peer: DC1-LEAF3A
-    description: DC1-LEAF3A
+    description: DC1-LEAF3A_Loopback0
     remote_as: '65106'
   - ip_address: 2001:1::d
     peer_group: EVPN-OVERLAY-PEERS
     peer: DC1-LEAF3B
-    description: DC1-LEAF3B
+    description: DC1-LEAF3B_Loopback0
     remote_as: '65106'
 static_routes:
 - vrf: MGMT
@@ -153,7 +154,7 @@ ethernet_interfaces:
   peer: DC1-LEAF3A
   peer_interface: Ethernet1
   peer_type: l3leaf
-  description: P2P_LINK_TO_DC1-LEAF3A_Ethernet1
+  description: P2P_DC1-LEAF3A_Ethernet1
   shutdown: false
   mtu: 1500
   switchport:
@@ -163,7 +164,7 @@ ethernet_interfaces:
   peer: DC1-LEAF3B
   peer_interface: Ethernet1
   peer_type: l3leaf
-  description: P2P_LINK_TO_DC1-LEAF3B_Ethernet1
+  description: P2P_DC1-LEAF3B_Ethernet1
   shutdown: false
   mtu: 1500
   switchport:
@@ -173,7 +174,7 @@ ethernet_interfaces:
   peer: DC1-LEAF3A
   peer_interface: Ethernet2
   peer_type: l3leaf
-  description: P2P_LINK_TO_DC1-LEAF3A_Ethernet2
+  description: P2P_DC1-LEAF3A_Ethernet2
   shutdown: false
   mtu: 1500
   switchport:
@@ -183,7 +184,7 @@ ethernet_interfaces:
   peer: DC1-LEAF3B
   peer_interface: Ethernet2
   peer_type: l3leaf
-  description: P2P_LINK_TO_DC1-LEAF3B_Ethernet2
+  description: P2P_DC1-LEAF3B_Ethernet2
   shutdown: false
   mtu: 1500
   switchport:

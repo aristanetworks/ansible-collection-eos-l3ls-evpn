@@ -49,19 +49,19 @@ router_bgp:
   - ip_address: 100.70.0.8
     peer_group: MPLS-OVERLAY-PEERS
     peer: SITE1-RR1
-    description: SITE1-RR1
+    description: SITE1-RR1_Loopback0
   - ip_address: 100.70.0.9
     peer_group: MPLS-OVERLAY-PEERS
     peer: SITE2-RR1
-    description: SITE2-RR1
+    description: SITE2-RR1_Loopback0
   - ip_address: 100.70.0.5
     peer_group: MPLS-OVERLAY-PEERS
     peer: SITE1-LER1
-    description: SITE1-LER1
+    description: SITE1-LER1_Loopback0
   - ip_address: 100.70.0.7
     peer_group: MPLS-OVERLAY-PEERS
     peer: SITE2-LER1
-    description: SITE2-LER1
+    description: SITE2-LER1_Loopback0
   vrfs:
   - name: TENANT_B_INTRA
     rd: 100.70.0.6:19
@@ -75,8 +75,9 @@ router_bgp:
         route_targets:
         - '65000:19'
     router_id: 100.70.0.6
-    redistribute_routes:
-    - source_protocol: connected
+    redistribute:
+      connected:
+        enabled: true
   - name: TENANT_B_WAN
     rd: 100.70.0.6:20
     route_targets:
@@ -95,8 +96,9 @@ router_bgp:
         route_targets:
         - '65000:20'
     router_id: 100.70.0.6
-    redistribute_routes:
-    - source_protocol: connected
+    redistribute:
+      connected:
+        enabled: true
     address_family_ipv4:
       neighbors:
       - ip_address: 192.168.48.1
@@ -256,7 +258,6 @@ ethernet_interfaces:
   peer: SITE1-LSR2
   peer_interface: Ethernet1
   peer_type: p
-  description: P2P_LINK_TO_SITE1-LSR2_Ethernet1
   switchport:
     enabled: false
   shutdown: false
@@ -278,12 +279,12 @@ ethernet_interfaces:
     ldp:
       interface: true
       igp_sync: true
+  description: P2P_SITE1-LSR2_Ethernet1
   speed: forced 100gfull
 - name: Ethernet2
   peer: SITE1-LER1
   peer_interface: Ethernet2
   peer_type: pe
-  description: P2P_LINK_TO_SITE1-LER1_Ethernet2
   switchport:
     enabled: false
   shutdown: false
@@ -305,14 +306,15 @@ ethernet_interfaces:
     ldp:
       interface: true
       igp_sync: true
+  description: P2P_SITE1-LER1_Ethernet2
   speed: forced 10000full
 - name: Ethernet5.100
   peer_type: l3_interface
   ip_address: 192.168.48.0/31
   shutdown: false
   description: TENANT_B_SITE_3
-  type: l3dot1q
-  encapsulation_dot1q_vlan: 100
+  encapsulation_dot1q:
+    vlan: 100
   vrf: TENANT_B_WAN
 - name: Ethernet3
   peer_type: point_to_point_service
@@ -411,57 +413,53 @@ vlan_interfaces:
   vrf: TENANT_B_INTRA
 port_channel_interfaces:
 - name: Port-Channel3.1000
-  type: l2dot1q
   peer_type: point_to_point_service
   encapsulation_vlan:
     client:
-      dot1q:
-        vlan: 1000
+      encapsulation: dot1q
+      vlan: 1000
     network:
-      client: true
+      encapsulation: client
   shutdown: false
 - name: Port-Channel3.1001
-  type: l2dot1q
   peer_type: point_to_point_service
   encapsulation_vlan:
     client:
-      dot1q:
-        vlan: 1001
+      encapsulation: dot1q
+      vlan: 1001
     network:
-      client: true
+      encapsulation: client
   shutdown: false
 - name: Port-Channel3.1002
-  type: l2dot1q
   peer_type: point_to_point_service
   encapsulation_vlan:
     client:
-      dot1q:
-        vlan: 1002
+      encapsulation: dot1q
+      vlan: 1002
     network:
-      client: true
+      encapsulation: client
   shutdown: false
 - name: Port-Channel3.1003
-  type: l2dot1q
   peer_type: point_to_point_service
   encapsulation_vlan:
     client:
-      dot1q:
-        vlan: 1003
+      encapsulation: dot1q
+      vlan: 1003
     network:
-      client: true
+      encapsulation: client
   shutdown: false
 - name: Port-Channel3.1004
-  type: l2dot1q
   peer_type: point_to_point_service
   encapsulation_vlan:
     client:
-      dot1q:
-        vlan: 1004
+      encapsulation: dot1q
+      vlan: 1004
     network:
-      client: true
+      encapsulation: client
   shutdown: false
 - name: Port-Channel3
-  type: routed
+  switchport:
+    enabled: false
   peer_type: system
   shutdown: false
   evpn_ethernet_segment:
@@ -474,31 +472,28 @@ port_channel_interfaces:
   switchport:
     enabled: false
 - name: Port-Channel8.111
-  type: l2dot1q
   vlan_id: 111
   encapsulation_vlan:
     client:
-      dot1q:
-        vlan: 111
+      encapsulation: dot1q
+      vlan: 111
     network:
-      client: true
+      encapsulation: client
 - name: Port-Channel8.222
-  type: l2dot1q
   vlan_id: 222
   encapsulation_vlan:
     client:
-      dot1q:
-        vlan: 222
+      encapsulation: dot1q
+      vlan: 222
     network:
-      client: true
+      encapsulation: client
 - name: Port-Channel8.333
-  type: l2dot1q
   vlan_id: 434
   encapsulation_vlan:
     client:
-      dot1q:
-        vlan: 333
+      encapsulation: dot1q
+      vlan: 333
     network:
-      client: true
+      encapsulation: client
 metadata:
   platform: 7280SR3

@@ -38,7 +38,7 @@ ethernet_interfaces:
   peer: flow-tracking-tests-leaf3
   peer_interface: Ethernet31
   peer_type: l3leaf
-  description: FLOW-TRACKING-TESTS-LEAF3_Ethernet31
+  description: L2_flow-tracking-tests-leaf3_Ethernet31
   shutdown: false
   channel_group:
     id: 1
@@ -47,14 +47,14 @@ ethernet_interfaces:
   peer: flow-tracking-tests-leaf4
   peer_interface: Ethernet31
   peer_type: l3leaf
-  description: FLOW-TRACKING-TESTS-LEAF4_Ethernet31
+  description: L2_flow-tracking-tests-leaf4_Ethernet31
   shutdown: false
   channel_group:
     id: 1
     mode: active
 port_channel_interfaces:
 - name: Port-Channel1
-  description: FLOW-TRACKING-TESTS-LEAF-MLAG_Po31
+  description: L2_flow-tracking-tests-leaf-mlag_Port-Channel31
   switchport:
     enabled: true
     mode: trunk

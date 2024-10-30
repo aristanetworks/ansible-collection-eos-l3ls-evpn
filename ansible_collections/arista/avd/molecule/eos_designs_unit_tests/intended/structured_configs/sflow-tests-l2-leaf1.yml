@@ -38,7 +38,7 @@ ethernet_interfaces:
   peer: sflow-tests-leaf3
   peer_interface: Ethernet16
   peer_type: l3leaf
-  description: SFLOW-TESTS-LEAF3_Ethernet16
+  description: L2_sflow-tests-leaf3_Ethernet16
   shutdown: false
   channel_group:
     id: 1
@@ -47,14 +47,14 @@ ethernet_interfaces:
   peer: sflow-tests-leaf4
   peer_interface: Ethernet16
   peer_type: l3leaf
-  description: SFLOW-TESTS-LEAF4_Ethernet16
+  description: L2_sflow-tests-leaf4_Ethernet16
   shutdown: false
   channel_group:
     id: 1
     mode: active
 port_channel_interfaces:
 - name: Port-Channel1
-  description: SFLOW-TESTS-LEAF-MLAG_Po16
+  description: L2_sflow-tests-leaf-mlag_Port-Channel16
   switchport:
     enabled: true
     mode: trunk

@@ -53,7 +53,7 @@ interface Management1
 ```eos
 !
 interface Vxlan1
-   no vxlan qos dscp propagation encapsulation
    no vxlan qos ecn propagation
+   no vxlan qos dscp propagation encapsulation
    no vxlan qos map dscp to traffic-class decapsulation
 ```

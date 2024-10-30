@@ -12,3 +12,6 @@ wan_ipsec_profiles:
   control_plane:
     profile_name: ONE-PROFILE-TO-CONTROL-THEM-ALL
     shared_key: ABCDEF1234567890
+
+# Testing vxlan encapsulation
+wan_encapsulation: vxlan

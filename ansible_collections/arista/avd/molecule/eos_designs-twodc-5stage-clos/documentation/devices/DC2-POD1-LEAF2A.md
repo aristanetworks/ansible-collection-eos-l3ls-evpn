@@ -196,7 +196,7 @@ vlan 4092
 
 | Interface | Description | Mode | VLANs | Native VLAN | Trunk Group | Channel-Group |
 | --------- | ----------- | ---- | ----- | ----------- | ----------- | ------------- |
-| Ethernet3 | DC2-POD1-L2LEAF2A_Ethernet1 | *trunk | *4092 | *- | *- | 3 |
+| Ethernet3 | L2_DC2-POD1-L2LEAF2A_Ethernet1 | *trunk | *4092 | *- | *- | 3 |
 
 *Inherited from Port-Channel Interface
 
@@ -204,15 +204,15 @@ vlan 4092
 
 | Interface | Description | Channel Group | IP Address | VRF |  MTU | Shutdown | ACL In | ACL Out |
 | --------- | ----------- | ------------- | ---------- | ----| ---- | -------- | ------ | ------- |
-| Ethernet1 | P2P_LINK_TO_DC2-POD1-SPINE1_Ethernet4 | - | 172.17.210.5/31 | default | - | False | - | - |
-| Ethernet2 | P2P_LINK_TO_DC2-POD1-SPINE2_Ethernet4 | - | 172.17.210.7/31 | default | - | False | - | - |
+| Ethernet1 | P2P_DC2-POD1-SPINE1_Ethernet4 | - | 172.17.210.5/31 | default | - | False | - | - |
+| Ethernet2 | P2P_DC2-POD1-SPINE2_Ethernet4 | - | 172.17.210.7/31 | default | - | False | - | - |
 
 #### Ethernet Interfaces Device Configuration
 
 ```eos
 !
 interface Ethernet1
-   description P2P_LINK_TO_DC2-POD1-SPINE1_Ethernet4
+   description P2P_DC2-POD1-SPINE1_Ethernet4
    no shutdown
    no switchport
    ip address 172.17.210.5/31
@@ -220,7 +220,7 @@ interface Ethernet1
    service-profile QOS-PROFILE
 !
 interface Ethernet2
-   description P2P_LINK_TO_DC2-POD1-SPINE2_Ethernet4
+   description P2P_DC2-POD1-SPINE2_Ethernet4
    no shutdown
    no switchport
    ip address 172.17.210.7/31
@@ -228,7 +228,7 @@ interface Ethernet2
    service-profile QOS-PROFILE
 !
 interface Ethernet3
-   description DC2-POD1-L2LEAF2A_Ethernet1
+   description L2_DC2-POD1-L2LEAF2A_Ethernet1
    no shutdown
    channel-group 3 mode active
 ```
@@ -241,14 +241,14 @@ interface Ethernet3
 
 | Interface | Description | Mode | VLANs | Native VLAN | Trunk Group | LACP Fallback Timeout | LACP Fallback Mode | MLAG ID | EVPN ESI |
 | --------- | ----------- | ---- | ----- | ----------- | ------------| --------------------- | ------------------ | ------- | -------- |
-| Port-Channel3 | DC2-POD1-L2LEAF2A_Po1 | trunk | 4092 | - | - | - | - | - | - |
+| Port-Channel3 | L2_DC2-POD1-L2LEAF2A_Port-Channel1 | trunk | 4092 | - | - | - | - | - | - |
 
 #### Port-Channel Interfaces Device Configuration
 
 ```eos
 !
 interface Port-Channel3
-   description DC2-POD1-L2LEAF2A_Po1
+   description L2_DC2-POD1-L2LEAF2A_Port-Channel1
    no shutdown
    switchport trunk allowed vlan 4092
    switchport mode trunk
@@ -449,9 +449,9 @@ ASN Notation: asplain
 
 ##### EVPN Peer Groups
 
-| Peer Group | Activate | Encapsulation |
-| ---------- | -------- | ------------- |
-| EVPN-OVERLAY-PEERS | True | default |
+| Peer Group | Activate | Route-map In | Route-map Out | Encapsulation |
+| ---------- | -------- | ------------ | ------------- | ------------- |
+| EVPN-OVERLAY-PEERS | True |  - | - | default |
 
 #### Router BGP Device Configuration
 
@@ -459,9 +459,9 @@ ASN Notation: asplain
 !
 router bgp 65212
    router-id 172.16.210.4
-   maximum-paths 4 ecmp 4
    update wait-install
    no bgp default ipv4-unicast
+   maximum-paths 4 ecmp 4
    distance bgp 20 200 200
    neighbor EVPN-OVERLAY-PEERS peer group
    neighbor EVPN-OVERLAY-PEERS update-source Loopback0
@@ -474,25 +474,25 @@ router bgp 65212
    neighbor IPv4-UNDERLAY-PEERS maximum-routes 12000
    neighbor 172.16.210.3 peer group EVPN-OVERLAY-PEERS
    neighbor 172.16.210.3 remote-as 65211
-   neighbor 172.16.210.3 description DC2-POD1-LEAF1A
+   neighbor 172.16.210.3 description DC2-POD1-LEAF1A_Loopback0
    neighbor 172.17.210.4 peer group IPv4-UNDERLAY-PEERS
    neighbor 172.17.210.4 remote-as 65210
    neighbor 172.17.210.4 description DC2-POD1-SPINE1_Ethernet4
    neighbor 172.17.210.6 peer group IPv4-UNDERLAY-PEERS
    neighbor 172.17.210.6 remote-as 65210
    neighbor 172.17.210.6 description DC2-POD1-SPINE2_Ethernet4
-   redistribute attached-host
    redistribute connected route-map RM-CONN-2-BGP
+   redistribute attached-host
    !
    address-family evpn
-      neighbor EVPN-OVERLAY-PEERS activate
-   !
-   address-family rt-membership
       neighbor EVPN-OVERLAY-PEERS activate
    !
    address-family ipv4
       no neighbor EVPN-OVERLAY-PEERS activate
       neighbor IPv4-UNDERLAY-PEERS activate
+   !
+   address-family rt-membership
+      neighbor EVPN-OVERLAY-PEERS activate
 ```
 
 ## BFD

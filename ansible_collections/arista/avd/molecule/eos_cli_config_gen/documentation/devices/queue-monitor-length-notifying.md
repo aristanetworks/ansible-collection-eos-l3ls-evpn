@@ -49,6 +49,6 @@ interface Management1
 ```eos
 !
 queue-monitor length
-queue-monitor length default threshold 100
 no queue-monitor length notifying
+queue-monitor length default threshold 100
 ```

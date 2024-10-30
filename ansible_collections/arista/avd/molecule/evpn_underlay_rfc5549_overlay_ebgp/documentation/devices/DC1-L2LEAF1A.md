@@ -261,8 +261,8 @@ vlan 161
 
 | Interface | Description | Mode | VLANs | Native VLAN | Trunk Group | Channel-Group |
 | --------- | ----------- | ---- | ----- | ----------- | ----------- | ------------- |
-| Ethernet1 | DC1-LEAF2A_Ethernet7 | *trunk | *110-111,120-121,130-131,160-161 | *- | *- | 1 |
-| Ethernet2 | DC1-LEAF2B_Ethernet7 | *trunk | *110-111,120-121,130-131,160-161 | *- | *- | 1 |
+| Ethernet1 | L2_DC1-LEAF2A_Ethernet7 | *trunk | *110-111,120-121,130-131,160-161 | *- | *- | 1 |
+| Ethernet2 | L2_DC1-LEAF2B_Ethernet7 | *trunk | *110-111,120-121,130-131,160-161 | *- | *- | 1 |
 
 *Inherited from Port-Channel Interface
 
@@ -271,12 +271,12 @@ vlan 161
 ```eos
 !
 interface Ethernet1
-   description DC1-LEAF2A_Ethernet7
+   description L2_DC1-LEAF2A_Ethernet7
    no shutdown
    channel-group 1 mode active
 !
 interface Ethernet2
-   description DC1-LEAF2B_Ethernet7
+   description L2_DC1-LEAF2B_Ethernet7
    no shutdown
    channel-group 1 mode active
 ```
@@ -289,14 +289,14 @@ interface Ethernet2
 
 | Interface | Description | Mode | VLANs | Native VLAN | Trunk Group | LACP Fallback Timeout | LACP Fallback Mode | MLAG ID | EVPN ESI |
 | --------- | ----------- | ---- | ----- | ----------- | ------------| --------------------- | ------------------ | ------- | -------- |
-| Port-Channel1 | DC1_LEAF2_Po7 | trunk | 110-111,120-121,130-131,160-161 | - | - | - | - | - | - |
+| Port-Channel1 | L2_DC1_LEAF2_Port-Channel7 | trunk | 110-111,120-121,130-131,160-161 | - | - | - | - | - | - |
 
 #### Port-Channel Interfaces Device Configuration
 
 ```eos
 !
 interface Port-Channel1
-   description DC1_LEAF2_Po7
+   description L2_DC1_LEAF2_Port-Channel7
    no shutdown
    switchport trunk allowed vlan 110-111,120-121,130-131,160-161
    switchport mode trunk

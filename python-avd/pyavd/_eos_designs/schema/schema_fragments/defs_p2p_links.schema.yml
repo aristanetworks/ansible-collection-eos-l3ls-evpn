@@ -66,9 +66,19 @@ $defs:
             description: The values can be like ["node_a_as", "node_b_as"].
         descriptions:
           type: list
-          description: Interface description.
+          description: Interface descriptions.
           items:
             type: str
+            description: |-
+              Description or description template to be used on the ethernet interface.
+              This can be a template using the AVD string formatter syntax: https://avd.arista.com/devel/roles/eos_designs/docs/how-to/custom-descriptions-names.html#avd-string-formatter-syntax.
+              The available template fields are:
+                - `peer`: The name of the peer.
+                - `interface`: The local interface name.
+                - `peer_interface`: The interface on the peer.
+
+              The default description is set by `default_underlay_p2p_ethernet_description`.
+              By default the description is templated from the name and interface of the peer.
         include_in_underlay_protocol:
           type: bool
           default: true
@@ -138,6 +148,20 @@ $defs:
           description: Port-channel parameters.
           type: dict
           keys:
+            description:
+              type: str
+              description: |-
+                Description or description template to be used on the port-channel interface.
+                This can be a template using the AVD string formatter syntax: https://avd.arista.com/devel/roles/eos_designs/docs/how-to/custom-descriptions-names.html#avd-string-formatter-syntax.
+                The available template fields are:
+                  - `peer`: The name of the peer.
+                  - `interface`: The local port-channel interface name.
+                  - `peer_interface`: The port-channel interface on the peer.
+                  - `port_channel_id`: The local port-channel ID.
+                  - `peer_port_channel_id`: The ID of the port-channel on the peer.
+
+                Falls back to the description on the `p2p_link` if set. Otherwise default description is set by `default_underlay_p2p_port_channel_description`.
+                By default the description is templated from the name and port_channel interface of the peer.
             mode:
               type: str
               default: active

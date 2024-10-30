@@ -2,7 +2,7 @@ tenant_a:
   - name: Tenant_A
     mac_vrf_vni_base: 10000
     mac_vrf_id_base: 20000
-    redistribute_mlag_ibgp_peering_vrfs: false
+    redistribute_mlag_ibgp_peering_vrfs: true
     vrfs:
       - name: Tenant_A_OP_Zone
         description: "Tenant_A_OP_Zone"
@@ -11,7 +11,7 @@ tenant_a:
         vtep_diagnostic:
           loopback: 100
           loopback_ip_range: 10.255.1.0/24
-        redistribute_mlag_ibgp_peering_vrfs: true
+        redistribute_mlag_ibgp_peering_vrfs: false
         svis:
           # SVI as string
           - id: '110'
@@ -45,6 +45,7 @@ tenant_a:
             enabled: True
             ospf:
               enabled: true
+              # Keeping to make sure using '0' still works
               area: 0
               authentication: message-digest
               point_to_point: true
@@ -74,6 +75,19 @@ tenant_a:
             name: Tenant_A_WEBZone_2
             tags: ['web']
             profile: GENERIC_FULL
+      - name: Tenant_A_ERP_Zone
+        vrf_vni: 17
+        redistribute_connected: false
+        mlag_ibgp_peering_ipv4_pool: 172.31.12.0/24
+        svis:
+          - id: 122
+            name: Tenant_A_ERP_Zone_1
+            tags: ['erp3']
+            profile: WITH_DHCP_AND_SNOOPING
+            ip_address_virtual: 10.1.30.1/24
+            ip_address_virtual_secondaries:
+              - 10.2.30.1/24
+              - 10.2.31.1/24
       - name: Tenant_A_APP_Zone
         vrf_vni: 12
         svis:
@@ -133,7 +147,6 @@ tenant_a:
             description: "test"
             ospf:
               enabled: true
-              area: 0
               cost: 100
               authentication: message-digest
               point_to_point: true
@@ -284,7 +297,6 @@ tenant_a:
             ospf:
               enabled: true
               point_to_point: true
-              area: 0
         loopbacks:
           - loopback: 123
             ip_address: 10.1.53.0/32

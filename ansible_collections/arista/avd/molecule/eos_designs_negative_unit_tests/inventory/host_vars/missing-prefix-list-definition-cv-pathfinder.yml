@@ -85,4 +85,5 @@ wan_carriers:
     path_group: INET
     trusted: true
 
-expected_error_message: "ipv4_prefix_list_catalog[name=PL1]"
+expected_error_message: >-
+  'ipv4_prefix_list_catalog[name=PL1]' is required but was not found.

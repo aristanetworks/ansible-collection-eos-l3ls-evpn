@@ -7,7 +7,7 @@ from copy import deepcopy
 from functools import cached_property
 from typing import TYPE_CHECKING, Any
 
-from pyavd._errors import AristaAvdError, AristaAvdMissingVariableError
+from pyavd._errors import AristaAvdError, AristaAvdInvalidInputsError
 from pyavd._utils import default, get
 from pyavd.j2filters import natural_sort, range_expand
 
@@ -136,7 +136,7 @@ class MiscMixin:
 
         if self.id is None:
             msg = f"'id' is not set on '{self.hostname}'"
-            raise AristaAvdMissingVariableError(msg)
+            raise AristaAvdInvalidInputsError(msg)
 
         uplink_switch_interfaces = []
         uplink_switch_counter = {}
@@ -322,6 +322,10 @@ class MiscMixin:
     @cached_property
     def fabric_ip_addressing_p2p_uplinks_ipv4_prefix_length(self: SharedUtils) -> int:
         return get(self.hostvars, "fabric_ip_addressing.p2p_uplinks.ipv4_prefix_length", default=31)
+
+    @cached_property
+    def fabric_ip_addressing_wan_ha_ipv4_prefix_length(self: SharedUtils) -> int:
+        return get(self.hostvars, "fabric_ip_addressing.wan_ha.ipv4_prefix_length", default=31)
 
     @cached_property
     def fabric_sflow_uplinks(self: SharedUtils) -> bool | None:

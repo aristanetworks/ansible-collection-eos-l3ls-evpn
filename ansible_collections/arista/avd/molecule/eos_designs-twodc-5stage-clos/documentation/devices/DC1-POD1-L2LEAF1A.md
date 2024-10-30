@@ -161,7 +161,7 @@ vlan 4085
 
 | Interface | Description | Mode | VLANs | Native VLAN | Trunk Group | Channel-Group |
 | --------- | ----------- | ---- | ----- | ----------- | ----------- | ------------- |
-| Ethernet1 | DC1-POD1-LEAF1A_Ethernet3 | *trunk | *4085 | *- | *- | 1 |
+| Ethernet1 | L2_DC1-POD1-LEAF1A_Ethernet3 | *trunk | *4085 | *- | *- | 1 |
 
 *Inherited from Port-Channel Interface
 
@@ -170,7 +170,7 @@ vlan 4085
 ```eos
 !
 interface Ethernet1
-   description DC1-POD1-LEAF1A_Ethernet3
+   description L2_DC1-POD1-LEAF1A_Ethernet3
    no shutdown
    channel-group 1 mode active
 ```
@@ -183,14 +183,14 @@ interface Ethernet1
 
 | Interface | Description | Mode | VLANs | Native VLAN | Trunk Group | LACP Fallback Timeout | LACP Fallback Mode | MLAG ID | EVPN ESI |
 | --------- | ----------- | ---- | ----- | ----------- | ------------| --------------------- | ------------------ | ------- | -------- |
-| Port-Channel1 | DC1-POD1-LEAF1A_Po3 | trunk | 4085 | - | - | - | - | - | - |
+| Port-Channel1 | L2_DC1-POD1-LEAF1A_Port-Channel3 | trunk | 4085 | - | - | - | - | - | - |
 
 #### Port-Channel Interfaces Device Configuration
 
 ```eos
 !
 interface Port-Channel1
-   description DC1-POD1-LEAF1A_Po3
+   description L2_DC1-POD1-LEAF1A_Port-Channel3
    no shutdown
    switchport trunk allowed vlan 4085
    switchport mode trunk
@@ -270,8 +270,8 @@ no ip routing vrf MGMT
 
 ```eos
 !
-ip route vrf MGMT 0.0.0.0/0 192.168.1.254
 ip route 0.0.0.0/0 172.21.110.1
+ip route vrf MGMT 0.0.0.0/0 192.168.1.254
 ```
 
 ## Multicast

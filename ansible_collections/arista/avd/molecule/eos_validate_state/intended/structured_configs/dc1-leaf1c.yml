@@ -46,7 +46,7 @@ ethernet_interfaces:
   peer: dc1-leaf1a
   peer_interface: Ethernet8
   peer_type: l3leaf
-  description: DC1-LEAF1A_Ethernet8
+  description: L2_dc1-leaf1a_Ethernet8
   shutdown: false
   channel_group:
     id: 1
@@ -55,7 +55,7 @@ ethernet_interfaces:
   peer: dc1-leaf1b
   peer_interface: Ethernet8
   peer_type: l3leaf
-  description: DC1-LEAF1B_Ethernet8
+  description: L2_dc1-leaf1b_Ethernet8
   shutdown: false
   channel_group:
     id: 1
@@ -73,7 +73,7 @@ ethernet_interfaces:
   spanning_tree_portfast: edge
 port_channel_interfaces:
 - name: Port-Channel1
-  description: DC1_L3_LEAF1_Po8
+  description: L2_DC1_L3_LEAF1_Port-Channel8
   switchport:
     enabled: true
     mode: trunk

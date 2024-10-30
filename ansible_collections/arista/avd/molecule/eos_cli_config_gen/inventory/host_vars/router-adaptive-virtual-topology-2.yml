@@ -1,0 +1,5 @@
+---
+# Testing gateway VXLAN feature
+router_adaptive_virtual_topology:
+  topology_role: edge
+  gateway_vxlan: true

@@ -7,6 +7,14 @@
 {% if queue_monitor_length.enabled is arista.avd.defined(true) %}
 !
 queue-monitor length
+{%     if queue_monitor_length.notifying is arista.avd.defined(true) %}
+queue-monitor length notifying
+{%     elif queue_monitor_length.notifying is arista.avd.defined(false) %}
+no queue-monitor length notifying
+{%     endif %}
+{%     if queue_monitor_length.tx_latency is arista.avd.defined(true) %}
+queue-monitor length tx-latency
+{%     endif %}
 {%     if queue_monitor_length.default_thresholds.high is arista.avd.defined %}
 {%         set default_thresholds_cli = "queue-monitor length default threshold" %}
 {%         if queue_monitor_length.default_thresholds.low is arista.avd.defined %}
@@ -16,22 +24,15 @@ queue-monitor length
 {%         endif %}
 {{ default_thresholds_cli }}
 {%     endif %}
-{%     if queue_monitor_length.log is arista.avd.defined %}
-queue-monitor length log {{ queue_monitor_length.log }}
-{%     endif %}
-{%     if queue_monitor_length.notifying is arista.avd.defined(true) %}
-queue-monitor length notifying
-{%     elif queue_monitor_length.notifying is arista.avd.defined(false) %}
-no queue-monitor length notifying
-{%     endif %}
-{%     if queue_monitor_length.tx_latency is arista.avd.defined(true) %}
-queue-monitor length tx-latency
-{%     endif %}
 {%     if queue_monitor_length.cpu.thresholds.high is arista.avd.defined %}
 {%         if queue_monitor_length.cpu.thresholds.low is arista.avd.defined %}
 queue-monitor length cpu thresholds {{ queue_monitor_length.cpu.thresholds.high }} {{ queue_monitor_length.cpu.thresholds.low }}
 {%         else %}
 queue-monitor length cpu threshold {{ queue_monitor_length.cpu.thresholds.high }}
 {%         endif %}
+{%     endif %}
+{%     if queue_monitor_length.log is arista.avd.defined %}
+!
+queue-monitor length log {{ queue_monitor_length.log }}
 {%     endif %}
 {% endif %}

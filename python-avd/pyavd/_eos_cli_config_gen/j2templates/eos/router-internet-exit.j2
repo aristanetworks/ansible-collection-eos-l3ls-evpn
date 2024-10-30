@@ -8,23 +8,30 @@
 !
 router internet-exit
 {%     for exit_group in router_internet_exit.exit_groups | arista.avd.natural_sort('name') %}
-    !
-    exit-group {{ exit_group.name }}
+   exit-group {{ exit_group.name }}
 {%         for local_connection in exit_group.local_connections | arista.avd.natural_sort('name') %}
-        local connection {{ local_connection.name }}
+      local connection {{ local_connection.name }}
 {%         endfor %}
 {%         if exit_group.fib_default is arista.avd.defined(true) %}
-        fib-default
+      fib-default
+{%         endif %}
+{%         if not loop.last %}
+   !
 {%         endif %}
 {%     endfor %}
+{%     if router_internet_exit.policies is arista.avd.defined %}
+   !
+{%     endif %}
 {%     for policy in router_internet_exit.policies | arista.avd.natural_sort('name') %}
-    !
-    policy {{ policy.name }}
+   policy {{ policy.name }}
 {# Order of exit-groups MUST be preserved #}
 {%         for exit_group in policy.exit_groups | arista.avd.default([]) %}
 {%             if exit_group.name is arista.avd.defined %}
-        exit-group {{ exit_group.name }}
+      exit-group {{ exit_group.name }}
 {%             endif %}
 {%         endfor %}
+{%         if not loop.last %}
+   !
+{%         endif %}
 {%     endfor %}
 {% endif %}

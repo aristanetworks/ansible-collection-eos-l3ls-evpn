@@ -8,6 +8,10 @@ router_bgp:
       ipv4_unicast: false
   maximum_paths:
     paths: 16
+  redistribute:
+    connected:
+      enabled: true
+      route_map: RM-CONN-2-BGP
   updates:
     wait_install: true
   peer_groups:
@@ -51,9 +55,6 @@ router_bgp:
       activate: false
     - name: WAN-RR-OVERLAY-PEERS
       activate: false
-  redistribute_routes:
-  - source_protocol: connected
-    route_map: RM-CONN-2-BGP
   bgp_cluster_id: 192.168.44.2
   listen_ranges:
   - prefix: 192.168.142.0/24
@@ -64,10 +65,12 @@ router_bgp:
     remote_as: '65000'
   address_family_evpn:
     peer_groups:
-    - name: WAN-OVERLAY-PEERS
-      activate: true
     - name: WAN-RR-OVERLAY-PEERS
       activate: true
+      encapsulation: path-selection
+    - name: WAN-OVERLAY-PEERS
+      activate: true
+      encapsulation: path-selection
     next_hop:
       resolution_disabled: true
   address_family_ipv4_sr_te:
@@ -97,17 +100,16 @@ router_bgp:
     bgp:
       additional_paths:
         receive: true
-        send:
-          any: true
+        send: any
   neighbors:
   - ip_address: 192.168.144.3
     peer_group: WAN-RR-OVERLAY-PEERS
     peer: cv-pathfinder-pathfinder2
-    description: cv-pathfinder-pathfinder2
+    description: cv-pathfinder-pathfinder2_Dps1
   - ip_address: 6.6.6.6
     peer_group: WAN-RR-OVERLAY-PEERS
     peer: cv-pathfinder-pathfinder3
-    description: cv-pathfinder-pathfinder3
+    description: cv-pathfinder-pathfinder3_Dps1
   vrfs:
   - name: default
     rd: 192.168.44.2:1
@@ -589,7 +591,11 @@ metadata:
         - name: Site404
           id: 404
           location:
-            address: Not Found
+            address: Atlantis
+        - name: Site405
+          id: 405
+          location:
+            address: El Dorado
         - name: Site422
           id: 422
           location:

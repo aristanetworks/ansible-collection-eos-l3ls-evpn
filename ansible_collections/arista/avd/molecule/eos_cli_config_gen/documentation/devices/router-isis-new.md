@@ -269,6 +269,8 @@ interface Vlan4094
 ```eos
 !
 router isis EVPN_UNDERLAY
+   no log-adjacency-changes
+   mpls ldp sync default
    redistribute connected
    redistribute isis instance route-map RM-REDIS-ISIS-INSTANCE
    redistribute ospf match internal
@@ -276,8 +278,6 @@ router isis EVPN_UNDERLAY
    redistribute ospf include leaked match nssa-external route-map RM-OSPF-NSSA_EXT-TO-ISIS
    redistribute ospfv3 match external
    redistribute static include leaked route-map RM-STATIC-TO-ISIS
-   no log-adjacency-changes
-   mpls ldp sync default
    timers local-convergence-delay protected-prefixes
    set-overload-bit
    advertise passive-only

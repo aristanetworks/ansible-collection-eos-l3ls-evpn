@@ -28,7 +28,7 @@ spanning_tree:
 vlans:
 - id: 4094
   tenant: system
-  name: MLAG_PEER
+  name: MLAG
   trunk_groups:
   - MLAG
 - id: 100
@@ -42,14 +42,14 @@ vlans:
   tenant: TEST
 vlan_interfaces:
 - name: Vlan4094
-  description: MLAG_PEER
+  description: MLAG
   shutdown: false
   no_autostate: true
   mtu: 9214
   ip_address: 10.255.252.0/31
 port_channel_interfaces:
 - name: Port-Channel101
-  description: MLAG_PEER_network-ports-tests-2_Po101
+  description: MLAG_network-ports-tests-2_Port-Channel101
   switchport:
     enabled: true
     mode: trunk
@@ -62,7 +62,7 @@ ethernet_interfaces:
   peer: network-ports-tests-2
   peer_interface: Ethernet10/1
   peer_type: mlag_peer
-  description: MLAG_PEER_network-ports-tests-2_Ethernet10/1
+  description: MLAG_network-ports-tests-2_Ethernet10/1
   shutdown: false
   channel_group:
     id: 101

@@ -62,7 +62,7 @@ keys:
             warning: true
             removed: false
             remove_in_version: 6.0.0
-            new_key: ethernet_interfaces[].switchport.access_vlan or ethernet_interfaces[].switchport.trunk.allowed_vlan
+            new_key: switchport.access_vlan or switchport.trunk.allowed_vlan
         native_vlan:
           type: int
           convert_types:
@@ -71,7 +71,7 @@ keys:
             warning: true
             removed: false
             remove_in_version: 6.0.0
-            new_key: ethernet_interfaces[].switchport.trunk.native_vlan
+            new_key: switchport.trunk.native_vlan
         native_vlan_tag:
           type: bool
           description: If setting both native_vlan and native_vlan_tag, native_vlan_tag takes precedence.
@@ -79,7 +79,7 @@ keys:
             warning: true
             removed: false
             remove_in_version: 6.0.0
-            new_key: ethernet_interfaces[].switchport.trunk.native_vlan_tag
+            new_key: switchport.trunk.native_vlan_tag
         mode:
           type: str
           valid_values: ["access", "dot1q-tunnel", "trunk", "trunk phone"]
@@ -87,34 +87,24 @@ keys:
             warning: true
             removed: false
             remove_in_version: 6.0.0
-            new_key: ethernet_interfaces[].switchport.mode
+            new_key: switchport.mode
         phone:
           deprecation:
             warning: true
             removed: false
             remove_in_version: 6.0.0
-            new_key: ethernet_interfaces[].switchport.phone
+            new_key: switchport.phone
           type: dict
           keys:
             trunk:
               type: str
               valid_values: ["tagged", "tagged phone", "untagged", "untagged phone"]
-              deprecation:
-                warning: true
-                removed: false
-                remove_in_version: 6.0.0
-                new_key: ethernet_interfaces[].switchport.phone.trunk
             vlan:
               type: int
               min: 1
               max: 4094
               convert_types:
                 - str
-              deprecation:
-                warning: true
-                removed: false
-                remove_in_version: 6.0.0
-                new_key: ethernet_interfaces[].switchport.phone.vlan
         l2_protocol:
           type: dict
           keys:
@@ -134,7 +124,7 @@ keys:
             warning: true
             removed: false
             remove_in_version: 6.0.0
-            new_key: ethernet_interfaces[].switchport.trunk.groups
+            new_key: switchport.trunk.groups
         type:
           type: str
           deprecation:
@@ -261,7 +251,7 @@ keys:
         encapsulation_dot1q:
           # TODO: AVD 6.0 below warning should be removed when the `ethernet_interfaces[].type` key is removed in AVD 6.0
           description: |-
-            Warning: `encapsulation_dot1q` should not be combined with `ethernet_interfaces[].type == l3dot1q/l2dot1q`.
+            Warning: `encapsulation_dot1q` should not be combined with `ethernet_interfaces[].type: l3dot1q` or `ethernet_interfaces[].type: l2dot1q`.
           type: dict
           keys:
             vlan:
@@ -284,7 +274,7 @@ keys:
           # TODO: AVD 6.0 below warning should be removed when the `ethernet_interfaces[].type` key is removed in AVD 6.0
           description: |-
             This setting can only be applied to sub-interfaces on EOS.
-            Warning: `encapsulation_vlan` should not be combined with `ethernet_interfaces[].type == l3dot1q/l2dot1q`.
+            Warning: `encapsulation_vlan` should not be combined with `ethernet_interfaces[].type: l3dot1q` or `ethernet_interfaces[].type: l2dot1q`.
           keys:
             client:
               type: dict
@@ -319,8 +309,8 @@ keys:
                   deprecation:
                     warning: true
                     remove_in_version: 6.0.0
-                # TODO: AVD6.0 the `protocol` key should be made required once the deprecated keys are removed in AVD6.0
-                protocol:
+                # TODO: AVD6.0 the `encapsulation` key should be made required once the deprecated keys are removed in AVD6.0
+                encapsulation:
                   type: str
                   valid_values:
                     - dot1q
@@ -333,22 +323,25 @@ keys:
                     - str
                   min: 1
                   max: 4094
-                  description: Client VLAN ID. Not applicable for `protocol==untagged/unmatched`.
+                  description: |-
+                    Client VLAN ID. Not applicable for `encapsulation: untagged` or `encapsulation: unmatched`.
                 outer_vlan:
                   type: int
                   convert_types:
                     - str
                   min: 1
                   max: 4094
-                  description: Client Outer VLAN ID. Not applicable for `protocol==untagged/unmatched`.
+                  description: |-
+                    Client Outer VLAN ID. Not applicable for `encapsulation: untagged` or `encapsulation: unmatched`.
                 inner_vlan:
                   type: int
                   convert_types:
                     - str
                   min: 1
                   max: 4094
-                  description: Client Inner VLAN ID. Not applicable for `protocol==untagged/unmatched`.
-                inner_protocol:
+                  description: |-
+                    Client Inner VLAN ID. Not applicable for `encapsulation: untagged` or `encapsulation: unmatched`.
+                inner_encapsulation:
                   type: str
                   valid_values:
                     - dot1q
@@ -389,8 +382,8 @@ keys:
                   deprecation:
                     warning: true
                     remove_in_version: 6.0.0
-                # TODO: AVD6.0 the `protocol` key should be made required once the deprecated keys are removed in AVD6.0
-                protocol:
+                # TODO: AVD6.0 the `encapsulation` key should be made required once the deprecated keys are removed in AVD6.0
+                encapsulation:
                   description: |-
                     `untagged` (no encapsulation) is applicable for `untagged` client only.
                     `client` and `client inner` (retain client encapsulation) is not applicable for `untagged` client.
@@ -407,22 +400,25 @@ keys:
                     - str
                   min: 1
                   max: 4094
-                  description: Network VLAN ID. Not applicable for `protocol==untagged/client`.
+                  description: |-
+                    Network VLAN ID. Not applicable for `encapsulation: untagged` or `encapsulation: client`.
                 outer_vlan:
                   type: int
                   convert_types:
                     - str
                   min: 1
                   max: 4094
-                  description: Network outer VLAN ID. Not applicable for `protocol==untagged/client`.
+                  description: |-
+                    Network outer VLAN ID. Not applicable for `encapsulation: untagged` or `encapsulation: client`.
                 inner_vlan:
                   type: int
                   convert_types:
                     - str
                   min: 1
                   max: 4094
-                  description: Network inner VLAN ID. Not applicable for `protocol==untagged/client`.
-                inner_protocol:
+                  description: |-
+                    Network inner VLAN ID.  Not applicable for `encapsulation: untagged` or `encapsulation: client`.
+                inner_encapsulation:
                   type: str
                   valid_values:
                     - dot1q
@@ -932,7 +928,7 @@ keys:
             warning: true
             removed: false
             remove_in_version: 6.0.0
-            new_key: ethernet_interfaces[].switchport.trunk.private_vlan_secondary
+            new_key: switchport.trunk.private_vlan_secondary
         pvlan_mapping:
           type: str
           convert_types:
@@ -942,13 +938,13 @@ keys:
             warning: true
             removed: false
             remove_in_version: 6.0.0
-            new_key: ethernet_interfaces[].switchport.pvlan_mapping
+            new_key: switchport.pvlan_mapping
         vlan_translations:
           deprecation:
             warning: true
             removed: false
             remove_in_version: 6.0.0
-            new_key: ethernet_interfaces[].switchport.vlan_translations
+            new_key: switchport.vlan_translations
           type: list
           items:
             type: dict
@@ -969,6 +965,7 @@ keys:
                 default: "both"
         dot1x:
           type: dict
+          description: 802.1x
           keys:
             port_control:
               type: str
@@ -1923,6 +1920,7 @@ keys:
                             - 1-10
                       mac_address_maximum:
                         type: int
+                        required: true
                         convert_types:
                           - str
         eos_cli:

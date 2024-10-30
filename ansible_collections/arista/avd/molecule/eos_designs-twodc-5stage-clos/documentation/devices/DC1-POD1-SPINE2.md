@@ -168,78 +168,78 @@ vlan internal order ascending range 1006 1199
 
 | Interface | Description | Channel Group | IP Address | VRF |  MTU | Shutdown | ACL In | ACL Out |
 | --------- | ----------- | ------------- | ---------- | ----| ---- | -------- | ------ | ------- |
-| Ethernet1 | P2P_LINK_TO_DC1-SUPER-SPINE1_Ethernet2 | - | 172.16.11.3/31 | default | - | False | - | - |
-| Ethernet2 | P2P_LINK_TO_DC1-SUPER-SPINE2_Ethernet2 | - | 172.16.11.67/31 | default | - | False | - | - |
-| Ethernet3 | P2P_LINK_TO_DC1-POD1-LEAF1A_Ethernet2 | - | 172.17.110.2/31 | default | - | False | - | - |
-| Ethernet4 | P2P_LINK_TO_DC1.POD1.LEAF2A_Ethernet2 | - | 172.17.110.10/31 | default | - | False | - | - |
-| Ethernet5 | P2P_LINK_TO_DC1-POD1-LEAF2B_Ethernet2 | - | 172.17.110.18/31 | default | - | False | - | - |
-| Ethernet7 | P2P_LINK_TO_DC1.POD1.LEAF2A_Ethernet12 | - | 172.17.110.14/31 | default | - | False | - | - |
-| Ethernet8 | P2P_LINK_TO_DC1-POD1-LEAF2B_Ethernet12 | - | 172.17.110.22/31 | default | - | False | - | - |
+| Ethernet1 | P2P_DC1-SUPER-SPINE1_Ethernet2 | - | 172.16.11.3/31 | default | - | False | - | - |
+| Ethernet2 | P2P_DC1-SUPER-SPINE2_Ethernet2 | - | 172.16.11.67/31 | default | - | False | - | - |
+| Ethernet3 | P2P_DC1-POD1-LEAF1A_Ethernet2 | - | 172.17.110.2/31 | default | - | False | - | - |
+| Ethernet4 | P2P_DC1.POD1.LEAF2A_Ethernet2 | - | 172.17.110.10/31 | default | - | False | - | - |
+| Ethernet5 | P2P_DC1-POD1-LEAF2B_Ethernet2 | - | 172.17.110.18/31 | default | - | False | - | - |
+| Ethernet7 | P2P_DC1.POD1.LEAF2A_Ethernet12 | - | 172.17.110.14/31 | default | - | False | - | - |
+| Ethernet8 | P2P_DC1-POD1-LEAF2B_Ethernet12 | - | 172.17.110.22/31 | default | - | False | - | - |
 
 #### Ethernet Interfaces Device Configuration
 
 ```eos
 !
 interface Ethernet1
-   description P2P_LINK_TO_DC1-SUPER-SPINE1_Ethernet2
+   description P2P_DC1-SUPER-SPINE1_Ethernet2
    no shutdown
-   mac security profile MACSEC_PROFILE
    no switchport
    ip address 172.16.11.3/31
+   mac security profile MACSEC_PROFILE
    ptp enable
    service-profile QOS-PROFILE
 !
 interface Ethernet2
-   description P2P_LINK_TO_DC1-SUPER-SPINE2_Ethernet2
+   description P2P_DC1-SUPER-SPINE2_Ethernet2
    no shutdown
-   mac security profile MACSEC_PROFILE
    no switchport
    ip address 172.16.11.67/31
+   mac security profile MACSEC_PROFILE
    ptp enable
    service-profile QOS-PROFILE
 !
 interface Ethernet3
-   description P2P_LINK_TO_DC1-POD1-LEAF1A_Ethernet2
+   description P2P_DC1-POD1-LEAF1A_Ethernet2
    no shutdown
-   mac security profile MACSEC_PROFILE
    no switchport
    ip address 172.17.110.2/31
+   mac security profile MACSEC_PROFILE
    ptp enable
    service-profile QOS-PROFILE
 !
 interface Ethernet4
-   description P2P_LINK_TO_DC1.POD1.LEAF2A_Ethernet2
+   description P2P_DC1.POD1.LEAF2A_Ethernet2
    no shutdown
-   mac security profile MACSEC_PROFILE
    no switchport
    ip address 172.17.110.10/31
+   mac security profile MACSEC_PROFILE
    ptp enable
    service-profile QOS-PROFILE
 !
 interface Ethernet5
-   description P2P_LINK_TO_DC1-POD1-LEAF2B_Ethernet2
+   description P2P_DC1-POD1-LEAF2B_Ethernet2
    no shutdown
-   mac security profile MACSEC_PROFILE
    no switchport
    ip address 172.17.110.18/31
+   mac security profile MACSEC_PROFILE
    ptp enable
    service-profile QOS-PROFILE
 !
 interface Ethernet7
-   description P2P_LINK_TO_DC1.POD1.LEAF2A_Ethernet12
+   description P2P_DC1.POD1.LEAF2A_Ethernet12
    no shutdown
-   mac security profile MACSEC_PROFILE
    no switchport
    ip address 172.17.110.14/31
+   mac security profile MACSEC_PROFILE
    ptp enable
    service-profile QOS-PROFILE
 !
 interface Ethernet8
-   description P2P_LINK_TO_DC1-POD1-LEAF2B_Ethernet12
+   description P2P_DC1-POD1-LEAF2B_Ethernet12
    no shutdown
-   mac security profile MACSEC_PROFILE
    no switchport
    ip address 172.17.110.22/31
+   mac security profile MACSEC_PROFILE
    ptp enable
    service-profile QOS-PROFILE
 ```
@@ -367,9 +367,9 @@ ASN Notation: asplain
 !
 router bgp 65110.100
    router-id 172.16.110.2
-   maximum-paths 4 ecmp 4
    update wait-install
    no bgp default ipv4-unicast
+   maximum-paths 4 ecmp 4
    distance bgp 20 200 200
    neighbor IPv4-UNDERLAY-PEERS peer group
    neighbor IPv4-UNDERLAY-PEERS password 7 <removed>

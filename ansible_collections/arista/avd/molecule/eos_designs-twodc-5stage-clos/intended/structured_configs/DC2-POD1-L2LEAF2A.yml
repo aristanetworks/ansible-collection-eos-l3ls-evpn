@@ -53,14 +53,14 @@ ethernet_interfaces:
   peer: DC2-POD1-LEAF2A
   peer_interface: Ethernet3
   peer_type: l3leaf
-  description: DC2-POD1-LEAF2A_Ethernet3
+  description: L2_DC2-POD1-LEAF2A_Ethernet3
   shutdown: false
   channel_group:
     id: 1
     mode: active
 port_channel_interfaces:
 - name: Port-Channel1
-  description: DC2-POD1-LEAF2A_Po3
+  description: L2_DC2-POD1-LEAF2A_Port-Channel3
   switchport:
     enabled: true
     mode: trunk

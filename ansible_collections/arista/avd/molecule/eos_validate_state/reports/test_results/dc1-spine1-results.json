@@ -443,7 +443,7 @@
       "interfaces"
     ],
     "description": "Verifies the status of the provided interfaces.",
-    "custom_field": "Interface Ethernet1 - P2P_LINK_TO_DC1-LEAF1A_Ethernet1 = 'up'"
+    "custom_field": "Interface Ethernet1 - P2P_dc1-leaf1a_Ethernet1 = 'up'"
   },
   {
     "name": "dc1-spine1",
@@ -452,7 +452,7 @@
       "interfaces"
     ],
     "description": "Verifies the status of the provided interfaces.",
-    "custom_field": "Interface Ethernet2 - P2P_LINK_TO_DC1-LEAF1B_Ethernet1 = 'up'"
+    "custom_field": "Interface Ethernet2 - P2P_dc1-leaf1b_Ethernet1 = 'up'"
   },
   {
     "name": "dc1-spine1",
@@ -461,7 +461,7 @@
       "interfaces"
     ],
     "description": "Verifies the status of the provided interfaces.",
-    "custom_field": "Interface Ethernet3 - P2P_LINK_TO_DC1-LEAF2A_Ethernet1 = 'up'"
+    "custom_field": "Interface Ethernet3 - P2P_dc1-leaf2a_Ethernet1 = 'up'"
   },
   {
     "name": "dc1-spine1",
@@ -470,7 +470,7 @@
       "interfaces"
     ],
     "description": "Verifies the status of the provided interfaces.",
-    "custom_field": "Interface Ethernet4 - P2P_LINK_TO_DC1-LEAF2B_Ethernet1 = 'adminDown'"
+    "custom_field": "Interface Ethernet4 - P2P_dc1-leaf2b_Ethernet1 = 'adminDown'"
   },
   {
     "name": "dc1-spine1",
@@ -479,7 +479,7 @@
       "interfaces"
     ],
     "description": "Verifies the status of the provided interfaces.",
-    "custom_field": "Interface Ethernet5 - P2P_LINK_TO_DC1-SVC-LEAF1A_Ethernet1 = 'up'"
+    "custom_field": "Interface Ethernet5 - P2P_dc1-svc-leaf1a_Ethernet1 = 'up'"
   },
   {
     "name": "dc1-spine1",
@@ -488,7 +488,7 @@
       "interfaces"
     ],
     "description": "Verifies the status of the provided interfaces.",
-    "custom_field": "Interface Ethernet6 - P2P_LINK_TO_DC1-SVC-LEAF1B_Ethernet1 = 'up'"
+    "custom_field": "Interface Ethernet6 - P2P_dc1-svc-leaf1b_Ethernet1 = 'up'"
   },
   {
     "name": "dc1-spine1",
