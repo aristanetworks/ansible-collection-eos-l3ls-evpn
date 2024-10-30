@@ -75,13 +75,11 @@ dot1x
    mac based authentication hold period {{ dot1x.mac_based_authentication.hold_period }} seconds
 {%             endif %}
 {%         endif %}
-{%         if dot1x.radius_av_pair is arista.avd.defined %}
-{%             if dot1x.radius_av_pair.service_type is arista.avd.defined(true) %}
+{%         if dot1x.radius_av_pair.service_type is arista.avd.defined(true) %}
    radius av-pair service-type
-{%             endif %}
-{%             if dot1x.radius_av_pair.framed_mtu is arista.avd.defined %}
+{%         endif %}
+{%         if dot1x.radius_av_pair.framed_mtu is arista.avd.defined %}
    radius av-pair framed-mtu {{ dot1x.radius_av_pair.framed_mtu }}
-{%             endif %}
 {%         endif %}
 {%         if dot1x.radius_av_pair_username_format.delimiter is arista.avd.defined and dot1x.radius_av_pair_username_format.mac_string_case is arista.avd.defined %}
    mac-based-auth radius av-pair user-name delimiter {{ dot1x.radius_av_pair_username_format.delimiter }} {{ dot1x.radius_av_pair_username_format.mac_string_case }}
@@ -106,6 +104,45 @@ dot1x
 {%             endif %}
 {%             if dot1x.captive_portal.start_limit_infinite is arista.avd.defined(true) %}
    captive-portal start limit infinite
+{%             endif %}
+{%         endif %}
+{%         if dot1x.radius_av_pair.lldp is arista.avd.defined %}
+{%             if dot1x.radius_av_pair.lldp.system_name.enabled is arista.avd.defined(true) %}
+{%                 set av_pair_lldp = "radius av-pair lldp system-name" %}
+{%                 if dot1x.radius_av_pair.lldp.system_name.auth_only is arista.avd.defined(true) %}
+{%                     set av_pair_lldp = av_pair_lldp ~ " auth-only" %}
+{%                 endif %}
+   {{ av_pair_lldp }}
+{%             endif %}
+{%             if dot1x.radius_av_pair.lldp.system_description.enabled is arista.avd.defined(true) %}
+{%                 set av_pair_lldp = "radius av-pair lldp system-description" %}
+{%                 if dot1x.radius_av_pair.lldp.system_description.auth_only is arista.avd.defined(true) %}
+{%                     set av_pair_lldp = av_pair_lldp ~ " auth-only" %}
+{%                 endif %}
+   {{ av_pair_lldp }}
+{%             endif %}
+{%         endif %}
+{%         if dot1x.radius_av_pair.dhcp is arista.avd.defined %}
+{%             if dot1x.radius_av_pair.dhcp.hostname.enabled is arista.avd.defined(true) %}
+{%                 set av_pair_dhcp = "radius av-pair dhcp hostname" %}
+{%                 if dot1x.radius_av_pair.dhcp.hostname.auth_only is arista.avd.defined(true) %}
+{%                     set av_pair_dhcp = av_pair_dhcp ~ " auth-only" %}
+{%                 endif %}
+   {{ av_pair_dhcp }}
+{%             endif %}
+{%             if dot1x.radius_av_pair.dhcp.parameter_request_list.enabled is arista.avd.defined(true) %}
+{%                 set av_pair_dhcp = "radius av-pair dhcp parameter-request-list" %}
+{%                 if dot1x.radius_av_pair.dhcp.parameter_request_list.auth_only is arista.avd.defined(true) %}
+{%                     set av_pair_dhcp = av_pair_dhcp ~ " auth-only" %}
+{%                 endif %}
+   {{ av_pair_dhcp }}
+{%             endif %}
+{%             if dot1x.radius_av_pair.dhcp.vendor_class_id.enabled is arista.avd.defined(true) %}
+{%                 set av_pair_dhcp = "radius av-pair dhcp vendor-class-id" %}
+{%                 if dot1x.radius_av_pair.dhcp.vendor_class_id.auth_only is arista.avd.defined(true) %}
+{%                     set av_pair_dhcp = av_pair_dhcp ~ " auth-only" %}
+{%                 endif %}
+   {{ av_pair_dhcp }}
 {%             endif %}
 {%         endif %}
 {%         if dot1x.supplicant.logging is arista.avd.defined(true) %}

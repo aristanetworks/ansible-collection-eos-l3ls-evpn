@@ -251,7 +251,9 @@ router ospf 100
    max-lsa 12000
    maximum-paths 10
    default-information originate
+   graceful-restart
    mpls ldp sync default
+   graceful-restart-helper
 !
 router ospf 101 vrf CUSTOMER01
    router-id 1.0.1.1
@@ -265,6 +267,8 @@ router ospf 101 vrf CUSTOMER01
    summary-address 20.0.0.0/8 tag 10
    summary-address 30.0.0.0/8 attribute-map RM-OSPF_SUMMARY
    summary-address 40.0.0.0/8 not-advertise
+   graceful-restart grace-period 10
+   no graceful-restart-helper
    area 5 not-so-stubby lsa type-7 convert type-5
 
 !

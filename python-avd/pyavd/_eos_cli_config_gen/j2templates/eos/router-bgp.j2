@@ -896,6 +896,12 @@ router bgp {{ router_bgp.as }}
 {%             if neighbor.additional_paths.receive is arista.avd.defined(true) %}
       neighbor {{ neighbor.ip_address }} additional-paths receive
 {%             endif %}
+{%             if neighbor.route_map_in is arista.avd.defined %}
+      neighbor {{ neighbor.ip_address }} route-map {{ neighbor.route_map_in }} in
+{%             endif %}
+{%             if neighbor.route_map_out is arista.avd.defined %}
+      neighbor {{ neighbor.ip_address }} route-map {{ neighbor.route_map_out }} out
+{%             endif %}
 {%             if neighbor.rcf_in is arista.avd.defined %}
       neighbor {{ neighbor.ip_address }} rcf in {{ neighbor.rcf_in }}
 {%             endif %}
@@ -924,8 +930,12 @@ router bgp {{ router_bgp.as }}
       neighbor {{ neighbor.ip_address }} additional-paths send {{ neighbor.additional_paths.send }}
 {%                 endif %}
 {%             endif %}
-{%             if neighbor.encapsulation is arista.avd.defined %}
-      neighbor {{ neighbor.ip_address }} encapsulation {{ neighbor.encapsulation }}
+{%             if neighbor.encapsulation is arista.avd.defined  %}
+{%                 set encapsulation_cli =  "neighbor " ~ neighbor.ip_address ~ " encapsulation " ~ neighbor.encapsulation %}
+{%                 if neighbor.encapsulation == "mpls" and neighbor.next_hop_self_source_interface is arista.avd.defined %}
+{%                     set encapsulation_cli = encapsulation_cli ~ " next-hop-self source-interface " ~ neighbor.next_hop_self_source_interface %}
+{%                 endif %}
+      {{ encapsulation_cli }}
 {%             endif %}
 {%         endfor %}
 {%         if router_bgp.address_family_evpn.domain_identifier is arista.avd.defined %}
@@ -2657,6 +2667,13 @@ router bgp {{ router_bgp.as }}
 {%         endif %}
 {%         if vrf.timers is arista.avd.defined %}
       timers bgp {{ vrf.timers }}
+{%         endif %}
+{%         if vrf.maximum_paths.paths is arista.avd.defined %}
+{%             set paths_cli = "maximum-paths " ~ vrf.maximum_paths.paths %}
+{%             if vrf.maximum_paths.ecmp is arista.avd.defined %}
+{%                 set paths_cli = paths_cli ~ " ecmp " ~ vrf.maximum_paths.ecmp %}
+{%             endif %}
+      {{ paths_cli }}
 {%         endif %}
 {%         if vrf.bgp.additional_paths.install is arista.avd.defined(true) %}
       bgp additional-paths install

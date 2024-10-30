@@ -1,5 +1,5 @@
 ---
-### Radius Server
+## Radius Server
 radius_server:
   attribute_32_include_in_access_req:
     format: myformat
