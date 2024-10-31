@@ -2,7 +2,7 @@
 site_name: Arista AVD
 site_author: Arista Ansible Team
 site_description: Arista Validated Designs documentation
-copyright: Copyright &copy; 2019 - 2023 Arista Networks
+copyright: Copyright &copy; 2019 - 2025 Arista Networks
 strict: true
 exclude_docs: |
   /README.md
@@ -121,7 +121,7 @@ markdown_extensions:
   - pymdownx.smartsymbols:
       fractions: false
   - pymdownx.snippets:
-      base_path: 'ansible_collections/arista/avd/'
+      base_path: "ansible_collections/arista/avd/"
   - pymdownx.superfences:
       custom_fences:
         - name: mermaid
