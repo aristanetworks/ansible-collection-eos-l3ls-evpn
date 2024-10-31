@@ -50,6 +50,7 @@ interface Management1
 | IKE-1 | 24 | aes256 | 20 | 192.168.100.1 | - |
 | IKE-2 | - | - | - | - | - |
 | IKE-3 | - | - | - | - | sha512 |
+| IKE-4 | - | - | - | - | md5 |
 | IKE-FQDN | - | - | - | fqdn.local | - |
 | IKE-UFQDN | - | - | - | my.awesome@fqdn.local | - |
 
@@ -95,6 +96,9 @@ ip security
    !
    ike policy IKE-3
       integrity sha512
+   !
+   ike policy IKE-4
+      integrity md5
    !
    ike policy IKE-FQDN
       local-id fqdn fqdn.local

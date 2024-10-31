@@ -16,6 +16,8 @@ ip_security:
       local_id: 192.168.42.42
     - name: IKE-3
       integrity: sha512
+    - name: IKE-4
+      integrity: md5
   sa_policies:
     # Testing sorting
     - name: SA-7
