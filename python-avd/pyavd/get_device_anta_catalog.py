@@ -18,6 +18,7 @@ def get_device_anta_catalog(
     hostname: str,
     fabric_data: FabricData,
     custom_test_specs: list[TestSpec] | None = None,
+    run_tests: set[str] | None = None,
     skip_tests: set[str] | None = None,
     *,
     logger: logging.Logger | None = None,
@@ -26,7 +27,7 @@ def get_device_anta_catalog(
 
     By default, the ANTA catalog will be generated from all tests specified in the PyAVD test index,
     loaded from the `pyavd._anta.utils.test_loader` module. The user can optionally provide a list of
-    custom TestSpec to be added to the default PyAVD test index and a set of test names to skip.
+    custom TestSpec to be added to the default PyAVD test index and a set of test names to skip or run.
 
     When creating test definitions for the catalog, PyAVD will use the FabricData instance containing
     the structured configurations of all devices in the fabric. Test definitions can be omitted from
@@ -43,8 +44,10 @@ def get_device_anta_catalog(
         The instance must be created using the `get_fabric_data` function of this module.
     custom_test_specs : list[TestSpec]
         Optional user-defined list of TestSpec to be added to the default PyAVD test index.
+    run_tests : set[str]
+        Optional set of test names to run from the default PyAVD test index.
     skip_tests : set[str]
-        Optional set of test names to skip from the default PyAVD test index.
+        Optional set of test names to skip from the default PyAVD test index. Takes precedence over `run_tests`.
     logger : logging.Logger
         Optional logger to use for logging messages. If not provided, the `pyavd` logger will be used.
 
@@ -58,14 +61,28 @@ def get_device_anta_catalog(
     from ._anta.utils import ConfigManager, create_catalog
     from ._anta.utils.index import PYAVD_TEST_INDEX
 
+    # Normalize inputs
     custom_test_specs = custom_test_specs or []
     skip_tests = skip_tests or set()
+    run_tests = run_tests or set()
 
     # Create the device-specific ConfigManager used to generate the inputs for the tests
     config_manager = ConfigManager(hostname, fabric_data)
 
-    # Filter out skipped tests and add custom test specs
-    filtered_test_specs = [test for test in PYAVD_TEST_INDEX if test.test_class.name not in skip_tests]
+    # Filter test specs based on skip_tests and run_tests
+    filtered_test_specs = []
+
+    for test in PYAVD_TEST_INDEX:
+        # Skip tests explicitly mentioned in skip_tests
+        if test.test_class.name in skip_tests:
+            continue
+        # If run_tests is specified, only include tests in that set
+        if run_tests and test.test_class.name not in run_tests:
+            continue
+
+        filtered_test_specs.append(test)
+
+    # Add custom test specs, avoiding duplicates
     filtered_test_specs.extend([test for test in custom_test_specs if test not in filtered_test_specs])
 
     return create_catalog(config_manager, filtered_test_specs, logger=logger)

@@ -6,7 +6,6 @@ from __future__ import annotations
 import json
 import logging
 from asyncio import run
-from collections import defaultdict
 from pathlib import Path
 from typing import TYPE_CHECKING, Any
 
@@ -39,32 +38,30 @@ LOGGING_LEVELS = ["DEBUG", "INFO", "ERROR", "WARNING", "CRITICAL"]
 ANSIBLE_HTTPAPI_CONNECTION_DOC = "https://docs.ansible.com/ansible/latest/collections/ansible/netcommon/httpapi_connection.html"
 
 ARGUMENT_SPEC = {
-    "structured_config_dir": {"type": "str", "required": True},
-    "structured_config_suffix": {"type": "str", "default": "yml", "choices": ["yml", "yaml", "json"]},
     "device_list": {"type": "list", "elements": "str", "required": True},
-    "custom_anta_catalogs": {
+    "anta_catalogs": {
         "type": "dict",
+        "required": True,
         "options": {
-            "directory": {"type": "str", "required": True},
-            "overwrite_default": {"type": "bool", "default": False},
-        },
-    },
-    "skip_tests": {
-        "type": "dict",
-        "options": {
-            "all_devices": {
-                "type": "list",
-                "elements": "str",
-            },
-            "per_device": {
-                "type": "list",
-                "elements": "dict",
+            "intended_catalog": {"type": "bool", "default": True},
+            "intended_catalog_dir": {"type": "str"},
+            "intended_catalog_filters": {
+                "type": "dict",
                 "options": {
-                    "device": {"type": "str", "required": True},
-                    "tests": {"type": "list", "elements": "str", "required": True},
+                    "run_tests": {"type": "dict", "values": {"type": "list", "elements": "str"}},
+                    "skip_tests": {"type": "dict", "values": {"type": "list", "elements": "str"}},
                 },
             },
+            "structured_config_dir": {"type": "str"},
+            "structured_config_suffix": {"type": "str", "default": "yml", "choices": ["yml", "yaml", "json"]},
+            "user_catalog": {"type": "bool", "default": False},
+            "user_catalog_dir": {"type": "str"},
         },
+        "required_one_of": [["intended_catalog", "user_catalog"]],
+        "required_if": [
+            ["intended_catalog", True, ["structured_config_dir", "structured_config_suffix"]],
+            ["user_catalog", True, ["user_catalog_dir"]],
+        ],
     },
     "anta_logging": {
         "type": "dict",
@@ -73,11 +70,30 @@ ARGUMENT_SPEC = {
             "log_file": {"type": "str"},
         },
     },
-    "anta_global_settings": {
+    "anta_runner_settings": {
         "type": "dict",
         "options": {
             "timeout": {"type": "float", "default": 30.0},
             "disable_cache": {"type": "bool", "default": False},
+            "tags": {"type": "list", "elements": "str"},
+        },
+    },
+    "report": {
+        "type": "dict",
+        "options": {
+            "test_results_dir": {"type": "str"},
+            "csv_output": {"type": "str"},
+            "md_output": {"type": "str"},
+            "filters": {
+                "type": "dict",
+                "options": {
+                    "hide_statuses": {
+                        "type": "list",
+                        "elements": "str",
+                        "choices": ["success", "failure", "error", "skipped"],
+                    },
+                },
+            },
         },
     },
 }
@@ -111,6 +127,11 @@ class ActionModule(ActionBase):
         # Converting to json and back to remove any AnsibeUnsafe types
         validated_args = json.loads(json.dumps(validated_args))
 
+        # Check if both intended and user catalogs are disabled
+        if not get(validated_args, "anta_catalogs.intended_catalog") and not get(validated_args, "anta_catalogs.user_catalog"):
+            msg = "Both intended and user catalogs are disabled. At least one catalog must be enabled."
+            raise AnsibleActionFail(msg)
+
         # Launch the run_anta coroutine to run everything
         return run(self.run_anta(validated_args, hostvars, result))
 
@@ -134,22 +155,17 @@ class ActionModule(ActionBase):
         log_level = get(validated_args, "anta_logging.log_level")
         setup_logging(level=log_level, file=log_file)
 
-        # Build the connection settings for each device using Ansible hostvars
-        device_list = get(validated_args, "device_list")
-        global_settings = get(validated_args, "anta_global_settings")
-        connection_settings = self.build_connection_settings(device_list, hostvars, global_settings)
-
         # Build the required ANTA objects
         result_manager, inventory, catalog = self.build_objects(
-            device_list=device_list,
-            connection_settings=connection_settings,
-            structured_config_dir=get(validated_args, "structured_config_dir"),
-            structured_config_suffix=get(validated_args, "structured_config_suffix"),
-            custom_anta_catalogs=get(validated_args, "custom_anta_catalogs"),
-            skip_tests=get(validated_args, "skip_tests"),
+            hostvars=hostvars,
+            device_list=get(validated_args, "device_list"),
+            anta_catalogs=get(validated_args, "anta_catalogs"),
+            anta_runner_settings=get(validated_args, "anta_runner_settings"),
         )
 
-        await anta_runner(result_manager, inventory, catalog)
+        tags = set(get(validated_args, "anta_runner_settings.tags", default=[])) or None
+
+        await anta_runner(result_manager, inventory, catalog, tags=tags)
 
         # TODO: Do something useful with the results (reporting, etc.)
         LOGGER.info("ANTA run completed; total tests: %s", len(result_manager.results))
@@ -159,168 +175,164 @@ class ActionModule(ActionBase):
 
     def build_objects(
         self,
+        hostvars: Mapping,
         device_list: list[str],
-        connection_settings: dict,
-        structured_config_dir: str,
-        structured_config_suffix: str,
-        custom_anta_catalogs: dict | None,
-        skip_tests: dict | None,
+        anta_catalogs: dict,
+        anta_runner_settings: dict,
     ) -> tuple[ResultManager, AntaInventory, AntaCatalog]:
         """Build the objects required to run the ANTA.
 
         Parameters
         ----------
-            device_list: The list of device names.
-            connection_settings: The connection settings for each device to create the `AsyncEOSDevice` objects.
-            structured_config_dir: The directory where the structured configurations are stored.
-            structured_config_suffix: The suffix of the structured configuration files (yml, yaml, json).
-            custom_anta_catalogs: Optional custom ANTA catalogs input dictionary containing the directory and overwrite flag.
-            skip_tests: Optional skip_tests input dictionary containing tests to skip for all devices and per device.
+            hostvars: The Ansible hostvars object containing all variables of each device.
+            device_list: The list of device names to run the ANTA tests on.
+            anta_catalogs: The ANTA catalogs settings for the run.
+            anta_runner_settings: The ANTA runner settings.
 
         Returns:
         -------
             tuple: A tuple containing the ResultManager, AntaInventory, and AntaCatalog ANTA objects.
 
-        # NOTE: Tests from custom catalogs tagged by the device name will be honored, i.e. they will run only on the device with the same name
-        # TODO: Other tags will be ignored since we don't have a way (yet) to add these tags to the devices in the Ansible inventory
+        # NOTE: Tests from user-defined catalogs tagged by the device name will be honored, i.e. they will run only on the device with the same name
+        # NOTE: Other tags will also be honored and will be used in conjunction with the Ansible `anta_tags` variable for each device
+        # NOTE: `skip_tests` and `run_tests` are used to filter tests from the intended catalog only
         """
         # Initialize the ANTA objects
         final_inventory = AntaInventory()
         final_catalog = AntaCatalog()
         result_manager = ResultManager()
 
-        # Determine if we're overwriting the default catalog
-        overwrite_default_catalog = custom_anta_catalogs and custom_anta_catalogs["overwrite_default"]
+        # Load the user-defined ANTA catalogs if enabled
+        if get(anta_catalogs, "user_catalog") is True:
+            user_catalog = self.load_anta_catalogs(anta_catalogs["user_catalog_dir"])
+            final_catalog = AntaCatalog.merge_catalogs([final_catalog, user_catalog])
 
-        # Load custom ANTA catalogs if provided
-        if custom_anta_catalogs:
-            final_catalog = final_catalog.merge(self.load_custom_anta_catalogs(custom_anta_catalogs["directory"]))
+        # If the intended catalog is enabled, load the structured configurations and get the fabric data
+        if get(anta_catalogs, "intended_catalog") is True:
+            structured_configs = self.load_structured_configs(device_list, anta_catalogs["structured_config_dir"], anta_catalogs["structured_config_suffix"])
+            fabric_data = get_fabric_data(structured_configs, logger=LOGGER)
 
-        # Only process default catalog data if not overwriting the default catalog
-        if not overwrite_default_catalog:
-            parsed_skip_tests = self.parse_skip_tests(device_list, skip_tests) if skip_tests else {}
-            structured_configs = self.load_structured_configs(device_list, structured_config_dir, structured_config_suffix)
-        else:
-            LOGGER.info("Overwriting the default catalog with custom catalogs")
-            parsed_skip_tests = {}
-            structured_configs = {}
+        for device in device_list:
+            # Build the ANTA device object and add it to the ANTA inventory
+            if anta_device := self.build_anta_device(device, hostvars, anta_runner_settings):
+                final_inventory.add_device(anta_device)
 
-        # Create the fabric data from the structured configs. Will be empty and not used if overwriting the default catalog
-        fabric_data = get_fabric_data(structured_configs, logger=LOGGER)
+            # Load the intended catalog for that device if enabled
+            if get(anta_catalogs, "intended_catalog") is True:
+                run_tests = set(
+                    get(anta_catalogs, "intended_catalog_filters.run_tests.__all__", default=[])
+                    + get(anta_catalogs, f"intended_catalog_filters..run_tests..{device}", default=[], separator="..")
+                )
+                skip_tests = set(
+                    get(anta_catalogs, "intended_catalog_filters.skip_tests.__all__", default=[])
+                    + get(anta_catalogs, f"intended_catalog_filters..skip_tests..{device}", default=[], separator="..")
+                )
+                device_catalog = get_device_anta_catalog(device, fabric_data, run_tests=run_tests, skip_tests=skip_tests, logger=LOGGER)
 
-        # Update the ANTA inventory and catalog for each device
-        for device, settings in connection_settings.items():
-            anta_device = AsyncEOSDevice(name=device, **settings)
-            final_inventory.add_device(anta_device)
+                # Dump the device catalog to the provided directory if provided
+                if (catalog_dir := get(anta_catalogs, "intended_catalog_dir")) is not None:
+                    self.dump_anta_catalog(device, device_catalog, catalog_dir)
 
-            # Skip adding the device catalog if the default catalog should be overwritten
-            if not overwrite_default_catalog:
-                device_skip_tests = get(parsed_skip_tests, device)
-                device_catalog = get_device_anta_catalog(device, fabric_data, skip_tests=device_skip_tests, logger=LOGGER)
-                final_catalog = final_catalog.merge(device_catalog)
+                final_catalog = AntaCatalog.merge_catalogs([final_catalog, device_catalog])
 
         return result_manager, final_inventory, final_catalog
 
-    def build_connection_settings(self, device_list: list[str], hostvars: Mapping, global_settings: dict) -> dict:
-        """Build the connection settings for each device using the Ansible hostvars.
+    def build_anta_device(self, device: str, hostvars: Mapping, anta_runner_settings: dict) -> AsyncEOSDevice | None:
+        """Build the ANTA device object for a device using the provided Ansible hostvars.
 
         Parameters
         ----------
-            device_list: The list of device names.
+            device: The name of the device.
             hostvars: The Ansible hostvars object containing all variables of each device.
-            global_settings: The global settings dictionary from the plugin arguments.
+            anta_runner_settings: The ANTA runner settings.
 
         Returns:
         -------
-            dict: A dictionary with device names as keys and connection settings as values to create the `AsyncEOSDevice` objects.
+            The ANTA device object for the device or None if the device is not found in the hostvars or missing required connection settings.
         """
-        connection_settings = {}
-
-        # Required settings to create the ANTA device object
+        # Required settings to create the AsyncEOSDevice object
         required_settings = ["host", "username", "password"]
 
-        for device in device_list:
-            if device not in hostvars:
-                LOGGER.warning("Device %s not found in Ansible inventory. Skipping device", device)
-                continue
+        if device not in hostvars:
+            LOGGER.warning("Device '%s' not found in Ansible inventory. Skipping device.", device)
+            return None
 
-            device_vars = hostvars[device]
-            device_connection_settings = {
-                "host": get(device_vars, "ansible_host", default=get(device_vars, "inventory_hostname")),
-                "username": get(device_vars, "ansible_user"),
-                "password": default(
-                    get(device_vars, "ansible_password"), get(device_vars, "ansible_httpapi_pass"), get(device_vars, "ansible_httpapi_password")
-                ),
-                "enable": get(device_vars, "ansible_become", default=False),
-                "enable_password": get(device_vars, "ansible_become_password"),
-                "port": get(device_vars, "ansible_httpapi_port", default=(80 if get(device_vars, "ansible_httpapi_use_ssl", default=False) is False else 443)),
-                "timeout": get(global_settings, "timeout"),
-                "disable_cache": get(global_settings, "disable_cache"),
-            }
+        device_vars = hostvars[device]
+        device_settings = {
+            "name": device,
+            "host": get(device_vars, "ansible_host", default=get(device_vars, "inventory_hostname")),
+            "username": get(device_vars, "ansible_user"),
+            "password": default(get(device_vars, "ansible_password"), get(device_vars, "ansible_httpapi_pass"), get(device_vars, "ansible_httpapi_password")),
+            "enable": get(device_vars, "ansible_become", default=False),
+            "enable_password": get(device_vars, "ansible_become_password"),
+            "port": get(device_vars, "ansible_httpapi_port", default=(80 if get(device_vars, "ansible_httpapi_use_ssl", default=False) is False else 443)),
+            "timeout": get(anta_runner_settings, "timeout"),
+            "disable_cache": get(anta_runner_settings, "disable_cache"),
+            "tags": set(get(device_vars, "anta_tags", default=[])),
+        }
 
-            # Make sure we found all required connection settings. Other settings have defaults in the ANTA device object
-            if any(value is None for key, value in device_connection_settings.items() if key in required_settings):
-                msg = (
-                    f"Device {device} is missing required connection settings. Skipping device. "
-                    f"Please make sure all required connection variables are defined in the Ansible inventory, "
-                    f"following the Ansible HTTPAPI connection plugin settings: {ANSIBLE_HTTPAPI_CONNECTION_DOC}"
-                )
-                LOGGER.warning(msg)
-                continue
+        # Make sure we found all required connection settings. Other settings have defaults in the ANTA device object
+        if any(value is None for key, value in device_settings.items() if key in required_settings):
+            msg = (
+                f"Device '{device}' is missing required connection settings. Skipping device. "
+                f"Please make sure all required connection variables are defined in the Ansible inventory, "
+                f"following the Ansible HTTPAPI connection plugin settings: {ANSIBLE_HTTPAPI_CONNECTION_DOC}"
+            )
+            LOGGER.warning(msg)
+            return None
 
-            connection_settings[device] = device_connection_settings
+        return AsyncEOSDevice(**device_settings)
 
-        return connection_settings
-
-    def parse_skip_tests(self, device_list: list[str], skip_tests: dict) -> dict:
-        """Parse the skip_tests input dictionary.
+    def dump_anta_catalog(self, device: str, catalog: AntaCatalog, catalog_dir: str) -> None:
+        """Dump the ANTA catalog for a device to the provided directory.
 
         Parameters
         ----------
-            device_list: The list of device names.
-            skip_tests: The skip_tests input dictionary from the plugin arguments.
-
-        Returns:
-        -------
-            dict: A dictionary with device names as keys and the tests to skip as values.
+            device: The name of the device.
+            catalog: The ANTA catalog of the device.
+            catalog_dir: The directory where the ANTA catalogs should be saved.
         """
-        parsed_skip_tests = defaultdict(set)
+        catalog_path = Path(catalog_dir) / f"{device}.yml"
+        catalog_dump = catalog.dump()
 
-        # Handle tests to skip for all devices
-        skip_for_all = set(get(skip_tests, "all_devices", default=[]))
-        for device in device_list:
-            parsed_skip_tests[device].update(skip_for_all)
+        with catalog_path.open(mode="w", encoding="UTF-8") as stream:
+            stream.write(catalog_dump.yaml())
 
-        # Handle device-specific tests to skip
-        for item in get(skip_tests, "per_device", default=[]):
-            device = item["device"]
-            if device in device_list:
-                parsed_skip_tests[device].update(item["tests"])
+    def load_anta_catalogs(self, catalog_dir: str) -> AntaCatalog:
+        """Load ANTA catalogs from the provided directory.
 
-        return dict(parsed_skip_tests)
-
-    def load_custom_anta_catalogs(self, custom_anta_catalogs_dir: str) -> AntaCatalog:
-        """Load custom ANTA catalogs from the provided directory.
-
-        Supports YAML files only.
+        Supported file formats are YAML and JSON.
 
         Parameters
         ----------
-            custom_anta_catalogs_dir: The directory where the custom ANTA catalogs are stored.
+            catalog_dir: The directory where the ANTA catalogs are stored.
 
         Returns:
         -------
-            AntaCatalog: Instance of the merged custom ANTA catalogs.
+            AntaCatalog: Instance of the merged ANTA catalogs.
         """
-        custom_catalog = AntaCatalog()
-        for path_obj in Path(custom_anta_catalogs_dir).iterdir():
-            if path_obj.is_file() and path_obj.suffix.lower() in {".yml", ".yaml"}:
-                # Error handling is done in ANTA
-                LOGGER.info("Loading custom ANTA catalog from %s", path_obj)
-                catalog = AntaCatalog.parse(path_obj)
-                custom_catalog = custom_catalog.merge(catalog)
+        supported_formats = {".yml": "yaml", ".yaml": "yaml", ".json": "json"}
+        catalogs = []
 
-        return custom_catalog
+        for path_obj in Path(catalog_dir).iterdir():
+            # Skip directories and non-files
+            if not path_obj.is_file():
+                continue
+
+            file_format = supported_formats.get(path_obj.suffix.lower())
+            if not file_format:
+                LOGGER.warning("Unsupported file format for ANTA catalog: %s. Skipping file.", path_obj)
+                continue
+
+            LOGGER.info("Loading custom ANTA catalog from %s", path_obj)
+            catalog = AntaCatalog.parse(path_obj, file_format)
+            catalogs.append(catalog)
+
+        if not catalogs:
+            LOGGER.warning("No valid ANTA catalog files found in directory: %s", catalog_dir)
+            return AntaCatalog()
+
+        return AntaCatalog.merge_catalogs(catalogs)
 
     def load_structured_configs(self, device_list: list[str], structured_config_dir: str, structured_config_suffix: str) -> dict:
         """Load the structured configurations for the devices in the provided list from the given directory.
@@ -340,22 +352,22 @@ class ActionModule(ActionBase):
             try:
                 structured_config = self.load_device_structured_config(device, structured_config_dir, structured_config_suffix)
             except FileNotFoundError:
-                LOGGER.warning("Structured configuration file for device %s not found. Skipping device", device)
+                LOGGER.warning("Structured configuration file for device '%s' not found. Skipping device.", device)
                 continue
             except (OSError, yaml.YAMLError, json.JSONDecodeError) as exc:
-                LOGGER.warning("Error loading structured configuration for device %s: %s. Skipping device", device, str(exc))
+                LOGGER.warning("Error loading structured configuration for device '%s': %s. Skipping device", device, exc)
                 continue
 
             # Skip devices that are not deployed
-            if structured_config.get("is_deployed", True) is False:
-                LOGGER.info("Device %s `is_deployed` key is set to False. Skipping device", device)
+            if not structured_config.get("is_deployed", True):
+                LOGGER.info("Device '%s' is marked as not deployed (is_deployed: false). Skipping device.", device)
                 continue
 
             structured_configs[device] = structured_config
 
         return structured_configs
 
-    def load_device_structured_config(self, device: str, structured_config_dir: str, structured_config_suffix: str) -> dict:
+    def load_device_structured_config(self, device: str, structured_config_dir: str, structured_config_suffix: str) -> dict[str, Any]:
         """Load the structured configuration for a device from the provided directory.
 
         Parameters
@@ -368,9 +380,10 @@ class ActionModule(ActionBase):
         -------
             dict: The structured configuration for the device.
         """
-        config_path = Path(structured_config_dir, f"{device}.{structured_config_suffix}")
+        config_path = Path(structured_config_dir) / f"{device}.{structured_config_suffix}"
+
         with config_path.open(mode="r", encoding="UTF-8") as stream:
-            if structured_config_suffix in {"yml", "yaml"}:
+            if structured_config_suffix in ("yml", "yaml"):
                 return yaml.load(stream, Loader=yaml.CSafeLoader)
             return json.load(stream)
 

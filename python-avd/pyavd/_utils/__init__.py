@@ -13,7 +13,7 @@ from .get_ip_from_ip_prefix import get_ip_from_ip_prefix
 from .get_ip_from_pool import get_ip_from_pool
 from .get_item import get_item
 from .groupby import groupby
-from .load_python_class import load_classes, load_python_class
+from .load_python_class import load_python_class
 from .merge import merge
 from .replace_or_append_item import replace_or_append_item
 from .short_esi_to_route_target import short_esi_to_route_target
@@ -38,7 +38,6 @@ __all__ = [
     "get",
     "get_v2",
     "groupby",
-    "load_classes",
     "load_python_class",
     "merge",
     "replace_or_append_item",

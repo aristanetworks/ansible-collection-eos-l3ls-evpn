@@ -51,6 +51,7 @@ class VerifyBGPSpecificPeersInputFactory:
                     continue
                 peers.append(ip)
 
-            inputs.append(test.Input.BgpAfi(afi=bgp_mapping["afi"], safi=bgp_mapping["safi"], peers=peers))
+            if peers:
+                inputs.append(test.Input.BgpAfi(afi=bgp_mapping["afi"], safi=bgp_mapping["safi"], peers=peers))
 
         return test.Input(address_families=inputs) if inputs else None
