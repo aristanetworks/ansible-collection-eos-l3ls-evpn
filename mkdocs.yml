@@ -121,7 +121,7 @@ markdown_extensions:
   - pymdownx.smartsymbols:
       fractions: false
   - pymdownx.snippets:
-      base_path: "ansible_collections/arista/avd/"
+      base_path: 'ansible_collections/arista/avd/'
   - pymdownx.superfences:
       custom_fences:
         - name: mermaid
