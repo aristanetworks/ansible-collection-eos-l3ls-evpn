@@ -17,7 +17,19 @@ if TYPE_CHECKING:
 
 
 class VerifyInterfacesStatusInputFactory:
-    """Input factory class for the VerifyInterfacesStatus test."""
+    """Input factory class for the VerifyInterfacesStatus test.
+
+    This factory creates test inputs for interface status verification.
+
+    It collects interfaces that should be monitored for:
+      - These configured interface types: Ethernet, Port-Channel, VLAN, Loopback, DPS
+      - Vxlan1 interface on VTEP devices
+
+    The factory ensures:
+      - Interface shutdown state is properly considered ('adminDown' vs 'up')
+      - Only interfaces marked for validation (`validate_state: true`) are included
+      - Interface collection is skipped if no interfaces are found
+    """
 
     @classmethod
     def create(cls, test: type[VerifyInterfacesStatus], manager: ConfigManager, logger: TestLoggerAdapter) -> VerifyInterfacesStatus.Input | None:
@@ -26,16 +38,18 @@ class VerifyInterfacesStatusInputFactory:
 
         for interface_model in INTERFACE_MODELS:
             if (interfaces := get(manager.structured_config, interface_model)) is None:
-                logger.info(LogMessage.NO_DATA_MODEL, entity=interface_model)
+                logger.debug(LogMessage.NO_DATA_MODEL, entity=interface_model)
                 continue
 
             for interface in interfaces:
                 manager.update_interface_shutdown(interface)
 
+                # Skip interfaces that have `validate_state: false`
                 if not manager.to_be_validated(interface):
-                    logger.info(LogMessage.SKIP_INTERFACE, entity=interface["name"])
+                    logger.debug(LogMessage.SKIP_INTERFACE, entity=interface["name"])
                     continue
 
+                # Find the interface status per the shutdown state
                 status = "adminDown" if interface["shutdown"] else "up"
 
                 inputs.append(

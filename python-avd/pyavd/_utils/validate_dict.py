@@ -3,6 +3,8 @@
 # that can be found in the LICENSE file.
 from __future__ import annotations
 
+from .get import get
+
 
 def validate_dict(input_dict: dict, required_keys: list[str] | None = None, required_key_values: dict | None = None) -> tuple[bool, str]:
     """Validate that a dictionary has the required keys and values.
@@ -11,7 +13,7 @@ def validate_dict(input_dict: dict, required_keys: list[str] | None = None, requ
     ----
         input_dict (dict): The dictionary to validate.
         required_keys (list[str]): A list of keys that must be present in the dictionary.
-        required_key_values (dict): A dictionary of key-value pairs that must be present in the dictionary.
+        required_key_values (dict): A dictionary of key-value pairs that must be present in the dictionary. Support dot-notation keys.
 
     Returns:
     -------
@@ -26,20 +28,20 @@ def validate_dict(input_dict: dict, required_keys: list[str] | None = None, requ
     missing_keys = []
     invalid_values = []
 
-    missing_keys = [key for key in required_keys if key not in input_dict if required_keys]
+    missing_keys = [exp_key for exp_key in required_keys if exp_key not in input_dict if required_keys]
 
     if required_key_values:
-        for key, value in required_key_values.items():
-            if key not in input_dict:
-                missing_keys.append(key)
-            elif input_dict[key] != value:
-                invalid_values.append(f"{key} != {value}")
+        for exp_key, exp_value in required_key_values.items():
+            if (act_value := get(input_dict, exp_key)) is None:
+                missing_keys.append(exp_key)
+            elif act_value != exp_value:
+                invalid_values.append(f"{exp_key} != {exp_value}")
 
     issues = ""
     if missing_keys:
-        issues += f"Missing keys: {', '.join(missing_keys)}; "
+        issues += f"Unavailable keys: {', '.join(missing_keys)}; "
     if invalid_values:
-        issues += f"Invalid values: {', '.join(invalid_values)}"
+        issues += f"Ineligible values: {', '.join(invalid_values)}"
 
     # Remove trailing semicolon and space if present
     if issues.endswith("; "):

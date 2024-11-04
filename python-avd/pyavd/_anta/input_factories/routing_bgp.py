@@ -17,7 +17,22 @@ if TYPE_CHECKING:
 
 
 class VerifyBGPSpecificPeersInputFactory:
-    """Input factory class for the VerifyBGPSpecificPeers test."""
+    """Input factory class for the VerifyBGPSpecificPeers test.
+
+    This factory creates test inputs for BGP address families peer verification.
+
+    It collects BGP peers that should be established for:
+      - These configured address families: EVPN, IPv4/IPv6 Unicast, Path-Selection, Link-State, SR-TE
+      - Both peer group and direct neighbor configurations
+
+    The factory ensures:
+      - Only explicitly activated peers and peer groups are tested
+      - Only peers that are available (`is_deployed: true`) are included
+      - External BGP peers (not configured by AVD) without 'peer' key are still honored and included
+      - Peer collection is skipped for address families with no peers
+
+    TODO: Add support for BGP VRFs
+    """
 
     @classmethod
     def create(cls, test: type[VerifyBGPSpecificPeers], manager: ConfigManager, logger: TestLoggerAdapter) -> VerifyBGPSpecificPeers.Input | None:
@@ -42,12 +57,12 @@ class VerifyBGPSpecificPeersInputFactory:
                 if neighbor.get("peer_group") in filtered_peer_groups or neighbor["ip_address"] in filtered_neighbors
             ]
 
-            # Create input for each peer
+            # Gather all available peers for the address family
             peers = []
             for ip, peer in all_neighbors:
                 # Check peer availability if the 'peer' key exists. Otherwise, still include the test for potential BGP external peers
                 if peer is not None and not manager.is_peer_available(peer):
-                    logger.info(LogMessage.UNAVAILABLE_PEER, entity=f"{ip} ({bgp_mapping['description']})", peer=peer)
+                    logger.debug(LogMessage.UNAVAILABLE_PEER, entity=f"{ip} ({bgp_mapping['description']})", peer=peer)
                     continue
                 peers.append(ip)
 

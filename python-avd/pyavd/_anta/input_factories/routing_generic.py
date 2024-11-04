@@ -14,19 +14,27 @@ if TYPE_CHECKING:
 
 
 class VerifyRoutingTableEntryInputFactory:
-    """Input factory class for the VerifyRoutingTableEntry test."""
+    """Input factory class for the VerifyRoutingTableEntry test.
+
+    This factory creates test inputs specifically for VTEPs while excluding WAN VTEPs.
+
+    It collects routes that should be present in the routing table for:
+      - Loopback0 IPs of all fabric nodes
+      - VXLAN source interface IPs of other VTEPs
+
+    The factory ensures:
+      - Tests only run on VTEP devices (presence of `vxlan_interface`), excluding WAN VTEPs (DPS interface)
+      - Duplicate IP addresses are filtered out (e.g., in MLAG VTEP scenarios)
+      - Only routes for available peers (`is_deployed: true`) are included
+      - Route collection is skipped if no routes are found
+    """
 
     @classmethod
     def create(cls, test: type[VerifyRoutingTableEntry], manager: ConfigManager, logger: TestLoggerAdapter) -> VerifyRoutingTableEntry.Input | None:
         """Create Input for the VerifyRoutingTableEntry test."""
-        # Skip the test if the device is not a VTEP
-        if not manager.is_vtep():
-            logger.info(LogMessage.NOT_VTEP)
-            return None
-
-        # TODO: For now, we exclude WAN VTEPs from testing
-        if manager.is_wan_vtep():
-            logger.info(LogMessage.WAN_VTEP)
+        # Skip the test if the device is not a VTEP or is a WAN VTEP
+        if not manager.is_vtep() or manager.is_wan_vtep():
+            logger.debug(LogMessage.NOT_VTEP)
             return None
 
         # Using a set to avoid duplicate tests for the same IP address (e.g. MLAG VTEPs)
@@ -35,9 +43,10 @@ class VerifyRoutingTableEntryInputFactory:
         # Here we use the combined_mapping (Loopback0 IP + VXLAN source interface IP) to get all routes to check
         for peer, ips in manager.fabric_data.combined_mapping.items():
             if not manager.is_peer_available(peer):
-                logger.info(LogMessage.UNAVAILABLE_PEER, entity=str(ips), peer=peer)
+                entity = ", ".join([str(ip) for ip in ips])
+                logger.debug(LogMessage.UNAVAILABLE_PEER, entity=entity, peer=peer)
                 continue
 
             processed_ips.update(ips)
 
-        return test.Input(routes=list(processed_ips)) if processed_ips else None
+        return test.Input(routes=list(processed_ips), collect="all") if processed_ips else None

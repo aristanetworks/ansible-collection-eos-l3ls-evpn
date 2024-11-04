@@ -110,7 +110,7 @@ class ActionModule(ActionBase):
         del tmp  # tmp no longer has any effect
 
         if not HAS_PYAVD:
-            msg = f"The {PLUGIN_NAME} plugin requires the 'pyavd' Python library. Got import error"
+            msg = f"The {PLUGIN_NAME} plugin requires the 'pyavd' Python library. Got import error."
             raise AnsibleActionFail(msg)
 
         # Setup module logging
@@ -194,7 +194,7 @@ class ActionModule(ActionBase):
             tuple: A tuple containing the ResultManager, AntaInventory, and AntaCatalog ANTA objects.
 
         # NOTE: Tests from user-defined catalogs tagged by the device name will be honored, i.e. they will run only on the device with the same name
-        # NOTE: Other tags will also be honored and will be used in conjunction with the Ansible `anta_tags` variable for each device
+        # NOTE: Other tags will also be honored and will be used in conjunction with the `metadata.anta_tags` variable of each device
         # NOTE: `skip_tests` and `run_tests` are used to filter tests from the intended catalog only
         """
         # Initialize the ANTA objects
@@ -207,7 +207,7 @@ class ActionModule(ActionBase):
             user_catalog = self.load_anta_catalogs(anta_catalogs["user_catalog_dir"])
             final_catalog = AntaCatalog.merge_catalogs([final_catalog, user_catalog])
 
-        # If the intended catalog is enabled, load the structured configurations and get the fabric data
+        # If the intended catalog is enabled, load the structured configurations and build the fabric data
         if get(anta_catalogs, "intended_catalog") is True:
             structured_configs = self.load_structured_configs(device_list, anta_catalogs["structured_config_dir"], anta_catalogs["structured_config_suffix"])
             fabric_data = get_fabric_data(structured_configs, logger=LOGGER)
@@ -356,11 +356,6 @@ class ActionModule(ActionBase):
                 continue
             except (OSError, yaml.YAMLError, json.JSONDecodeError) as exc:
                 LOGGER.warning("Error loading structured configuration for device '%s': %s. Skipping device", device, exc)
-                continue
-
-            # Skip devices that are not deployed
-            if not structured_config.get("is_deployed", True):
-                LOGGER.info("Device '%s' is marked as not deployed (is_deployed: false). Skipping device.", device)
                 continue
 
             structured_configs[device] = structured_config

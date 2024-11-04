@@ -66,7 +66,7 @@ class FabricData:
             self.loopback0_mapping[device] = ip_obj
             self.combined_mapping[device].append(ip_obj)
         else:
-            self.logger.warning("<%s>: Loopback0 or IP missing. Some tests will be skipped.", device)
+            self.logger.debug("<%s>: Not added to Loopback0 mapping. Loopback0 or its IP is missing.", device)
 
     def _process_vtep(self, device: str, structured_config: dict) -> None:
         """Process the vtep mapping.
@@ -79,9 +79,9 @@ class FabricData:
             structured_config: The structured configuration of the device.
         """
         loopback_interfaces = get(structured_config, "loopback_interfaces", default=[])
-        vtep_interface = get(structured_config, "vxlan_interface.Vxlan1.vxlan.source_interface")
+        vtep_interface = get(structured_config, "vxlan_interface.vxlan1.vxlan.source_interface")
 
-        # NOTE: For now we exclude WAN VTEPs from the vtep_mapping
+        # TODO: For now we exclude WAN VTEPs from the vtep_mapping
         if vtep_interface is not None and "Dps" not in vtep_interface:
             if (loopback_interface := get_item(loopback_interfaces, "name", vtep_interface)) is not None and (
                 loopback_ip := get(loopback_interface, "ip_address")
@@ -90,6 +90,6 @@ class FabricData:
                 self.vtep_mapping[device] = ip_obj
                 self.combined_mapping[device].append(ip_obj)
             else:
-                self.logger.warning("<%s>: VTEP source %s or IP missing. Some VTEP tests will be skipped.", device, vtep_interface)
+                self.logger.debug("<%s>: Not added to VTEP mapping. VTEP source %s or its IP is missing.", device, vtep_interface)
         else:
-            self.logger.info("<%s>: Not in VTEP mapping. Not a VTEP or is WAN VTEP.", device)
+            self.logger.debug("<%s>: Not added to VTEP mapping. Not a VTEP or is a WAN VTEP.", device)

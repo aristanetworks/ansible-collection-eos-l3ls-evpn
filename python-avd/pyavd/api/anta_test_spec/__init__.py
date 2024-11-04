@@ -55,7 +55,7 @@ class TestSpec(BaseModel):
         # Skip the test if the conditional keys are not present in the structured config
         if self.conditional_keys and not manager.verify_keys(self.conditional_keys):
             keys = StructuredConfigKey.to_string_list(self.conditional_keys)
-            logger.info(LogMessage.NO_DATA_MODEL, entity=", ".join(keys))
+            logger.debug(LogMessage.NO_DATA_MODEL, entity=", ".join(keys))
             return None
 
         # AntaTestDefinition takes `inputs=None` if the test does not require input
@@ -69,7 +69,7 @@ class TestSpec(BaseModel):
                 if field_value is not None:
                     rendered_inputs[input_field] = field_value
                 else:
-                    logger.info(LogMessage.NO_DATA_MODEL, entity=structured_config_key.value)
+                    logger.debug(LogMessage.NO_DATA_MODEL, entity=structured_config_key.value)
                     return None
             inputs = self.test_class.Input(**rendered_inputs)
 
@@ -77,7 +77,7 @@ class TestSpec(BaseModel):
         elif self.input_factory:
             inputs = self.input_factory.create(self.test_class, manager, logger)
             if inputs is None:
-                logger.warning(LogMessage.NO_INPUTS)
+                logger.debug(LogMessage.NO_INPUTS)
                 return None
 
         return AntaTestDefinition(test=self.test_class, inputs=inputs)

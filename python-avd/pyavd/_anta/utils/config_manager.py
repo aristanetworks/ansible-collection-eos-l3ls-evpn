@@ -107,16 +107,16 @@ class ConfigManager:
         -------
             bool: True if the device is a WAN VTEP, False otherwise.
         """
-        return "Dps" in get(self.structured_config, "vxlan_interface.Vxlan1.vxlan.source_interface")
+        return self.is_vtep() and "Dps" in get(self.structured_config, "vxlan_interface.vxlan1.vxlan.source_interface")
 
     def is_vtep(self) -> bool:
-        """Check if the device is a VTEP by looking at the presence of a VXLAN source interface.
+        """Check if the device is a VTEP by looking at the presence of a VXLAN interface.
 
         Returns:
         -------
             bool: True if the device is a VTEP, False otherwise.
         """
-        return bool(get(self.structured_config, "vxlan_interface.Vxlan1.vxlan.source_interface"))
+        return get(self.structured_config, "vxlan_interface") is not None
 
     @staticmethod
     def to_be_validated(interface: dict) -> bool:

@@ -14,7 +14,16 @@ if TYPE_CHECKING:
 
 
 class VerifyEnvironmentPowerInputFactory:
-    """Input factory class for the VerifyEnvironmentPower test."""
+    """Input factory class for the VerifyEnvironmentPower test.
+
+    This factory creates test inputs for power supply status verification.
+
+    It collects accepted power supply states:
+      - Default accepted state is `ok`
+      - Additional states can be defined in `accepted_pwr_supply_states`
+
+    TODO: `accepted_pwr_supply_states` is not yet implemented in the AVD structured config schema.
+    """
 
     @classmethod
     def create(cls, test: type[VerifyEnvironmentPower], manager: ConfigManager, logger: TestLoggerAdapter) -> VerifyEnvironmentPower.Input:
@@ -27,7 +36,16 @@ class VerifyEnvironmentPowerInputFactory:
 
 
 class VerifyEnvironmentCoolingInputFactory:
-    """Input factory class for the VerifyEnvironmentCooling test."""
+    """Input factory class for the VerifyEnvironmentCooling test.
+
+    This factory creates test inputs for cooling system status verification.
+
+    It collects accepted fan states:
+      - Default accepted state is `ok`
+      - Additional states can be defined in `accepted_fan_states`
+
+    TODO: `accepted_fan_states` is not yet implemented in the AVD structured config schema.
+    """
 
     @classmethod
     def create(cls, test: type[VerifyEnvironmentCooling], manager: ConfigManager, logger: TestLoggerAdapter) -> VerifyEnvironmentCooling.Input:
@@ -40,7 +58,17 @@ class VerifyEnvironmentCoolingInputFactory:
 
 
 class VerifyTransceiversManufacturersInputFactory:
-    """Input factory class for the VerifyTransceiversManufacturers test."""
+    """Input factory class for the VerifyTransceiversManufacturers test.
+
+    This factory creates test inputs for transceiver manufacturer verification.
+
+    It collects accepted manufacturer names:
+      - Default accepted manufacturers are `Arista Networks` and `Arastra, Inc.`
+      - Additional manufacturers can be defined in `accepted_xcvr_manufacturers`
+      - `Not Present` state is always included
+
+    TODO: `accepted_xcvr_manufacturers` is not yet implemented in the AVD structured config schema.
+    """
 
     @classmethod
     def create(cls, test: type[VerifyTransceiversManufacturers], manager: ConfigManager, logger: TestLoggerAdapter) -> VerifyTransceiversManufacturers.Input:

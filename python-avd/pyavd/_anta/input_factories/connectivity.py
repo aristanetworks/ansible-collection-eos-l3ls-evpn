@@ -17,7 +17,19 @@ if TYPE_CHECKING:
 
 
 class VerifyLLDPNeighborsInputFactory:
-    """Input factory class for the VerifyLLDPNeighbors test."""
+    """Input factory class for the VerifyLLDPNeighbors test.
+
+    This factory creates test inputs for LLDP neighbor verification.
+
+    It collects expected LLDP neighbors for:
+      - All non-shutdown Ethernet interfaces (excluding subinterfaces)
+      - Only interfaces with `peer` & `peer_interface` configuration
+
+    The factory ensures:
+      - Only available peers (`is_deployed: true`) are included
+      - DNS domain is appended to peer name when available (`dns_domain`)
+      - Neighbor collection is skipped if no valid neighbors are found
+    """
 
     @classmethod
     def create(cls, test: type[VerifyLLDPNeighbors], manager: ConfigManager, logger: TestLoggerAdapter) -> VerifyLLDPNeighbors.Input | None:
@@ -29,21 +41,23 @@ class VerifyLLDPNeighborsInputFactory:
         required_key_values = {"shutdown": False}
 
         for interface in ethernet_interfaces:
+            # Skip subinterfaces
             if manager.is_subinterface(interface):
-                logger.info(LogMessage.SUBINTERFACE, entity=interface["name"])
+                logger.debug(LogMessage.SUBINTERFACE, entity=interface["name"])
                 continue
 
             manager.update_interface_shutdown(interface)
 
             is_valid, issues = validate_dict(interface, required_keys, required_key_values)
             if not is_valid:
-                logger.info(LogMessage.INVALID_DATA, entity=interface["name"], issues=issues)
+                logger.debug(LogMessage.INELIGIBLE_DATA, entity=interface["name"], issues=issues)
                 continue
 
             if not manager.is_peer_available(peer := interface["peer"]):
-                logger.info(LogMessage.UNAVAILABLE_PEER, entity=interface["name"], peer=peer)
+                logger.debug(LogMessage.UNAVAILABLE_PEER, entity=interface["name"], peer=peer)
                 continue
 
+            # Append the DNS domain if available
             if (dns_domain := get(manager.fabric_data.structured_configs[peer], "dns_domain")) is not None:
                 peer = f"{peer}.{dns_domain}"
 
@@ -59,7 +73,27 @@ class VerifyLLDPNeighborsInputFactory:
 
 
 class VerifyReachabilityInputFactory:
-    """Input factory class for the VerifyReachability test."""
+    """Input factory class for the VerifyReachability test.
+
+    This factory creates test inputs for IP reachability verification.
+
+    It collects source and destination pairs for:
+      - Inband management SVIs to all fabric Loopback0s
+      - VTEP Loopback0s to all fabric Loopback0s
+      - P2P links between directly connected Ethernet interfaces
+
+    TODO: Add WAN VTEPs support - DPS to DPS reachability
+    TODO: Should we add support for VTEP diagnostics?
+    TODO: Should we add VTEP VXLAN source interface to VTEP source interface reachability? Usually Loopback1
+
+    The factory ensures:
+      - Only non-shutdown interfaces (`shutdown: false`) with valid `ip_address` configuration are used as sources
+      - Only available peers (`is_deployed: true`) are used as destinations
+      - SVIs must be type `inband_mgmt` to be considered as sources
+      - P2P interfaces must be routed (`switchport.enabled: false`) and have valid `peer` & `peer_interface` configuration
+      - VTEP Loopback0 testing is on VTEP devices (presence of `vxlan_interface`) only, excluding WAN VTEPs (DPS interface)
+      - Reachability collection is skipped if no valid pairs are found
+    """
 
     @classmethod
     def create(cls, test: type[VerifyReachability], manager: ConfigManager, logger: TestLoggerAdapter) -> VerifyReachability.Input | None:
@@ -72,7 +106,7 @@ class VerifyReachabilityInputFactory:
         hosts = []
         for dst_node, dst_ip in manager.fabric_data.loopback0_mapping.items():
             if not manager.is_peer_available(dst_node):
-                logger.info(LogMessage.UNAVAILABLE_PEER, entity=f"Destination {dst_ip}", peer=dst_node)
+                logger.debug(LogMessage.UNAVAILABLE_PEER, entity=f"Destination {dst_ip}", peer=dst_node)
                 continue
 
             hosts.extend([test.Input.Host(**source_vrf, destination=dst_ip, repeat=1) for source_vrf in inband_mgmt_svis + vtep_loopback0s])
@@ -89,24 +123,24 @@ class VerifyReachabilityInputFactory:
 
         hosts = []
         required_keys = ["peer", "peer_interface", "ip_address"]
-        required_key_values = {"type": "routed", "shutdown": False}
+        required_key_values = {"switchport.enabled": False, "shutdown": False}
 
         for interface in ethernet_interfaces:
             manager.update_interface_shutdown(interface)
 
             is_valid, issues = validate_dict(interface, required_keys, required_key_values)
             if not is_valid:
-                logger.info(LogMessage.INVALID_DATA, entity=interface["name"], issues=issues)
+                logger.debug(LogMessage.INELIGIBLE_DATA, entity=interface["name"], issues=issues)
                 continue
 
             if not manager.is_peer_available(peer := interface["peer"]):
-                logger.info(LogMessage.UNAVAILABLE_PEER, entity=interface["name"], peer=peer)
+                logger.debug(LogMessage.UNAVAILABLE_PEER, entity=interface["name"], peer=peer)
                 continue
 
             if (
                 peer_interface_ip := manager.get_interface_ip(interface_model="ethernet_interfaces", interface_name=interface["peer_interface"], device=peer)
             ) is None:
-                logger.info(LogMessage.UNAVAILABLE_PEER_IP, entity=interface["name"], peer=peer, peer_interface=interface["peer_interface"])
+                logger.debug(LogMessage.UNAVAILABLE_PEER_IP, entity=interface["name"], peer=peer, peer_interface=interface["peer_interface"])
                 continue
 
             hosts.append(
@@ -119,7 +153,7 @@ class VerifyReachabilityInputFactory:
             )
 
         if not hosts:
-            logger.info(LogMessage.NO_SOURCES, entity="P2P")
+            logger.debug(LogMessage.NO_SOURCES, entity="P2P")
 
         return hosts
 
@@ -137,7 +171,7 @@ class VerifyReachabilityInputFactory:
 
             is_valid, issues = validate_dict(svi, required_keys, required_key_values)
             if not is_valid:
-                logger.info(LogMessage.INVALID_DATA, entity=svi["name"], issues=issues)
+                logger.debug(LogMessage.INELIGIBLE_DATA, entity=svi["name"], issues=issues)
                 continue
 
             vrf = get(svi, "vrf", default="default")
@@ -145,7 +179,7 @@ class VerifyReachabilityInputFactory:
             svis.append({"source": ip_interface(svi["ip_address"]).ip, "vrf": vrf})
 
         if not svis:
-            logger.info(LogMessage.NO_SOURCES, entity="inband management SVI")
+            logger.debug(LogMessage.NO_SOURCES, entity="inband management SVI")
 
         return svis
 
@@ -154,17 +188,16 @@ class VerifyReachabilityInputFactory:
         """Generate the source IPs and VRFs from loopback0 interfaces of VTEPs for the VerifyReachability test."""
         vtep_loopback0s = []
 
-        # TODO: Improve the VTEP logic
-        if not manager.is_vtep():
-            logger.info(LogMessage.NOT_VTEP)
-        elif manager.is_wan_vtep():
-            logger.info(LogMessage.WAN_VTEP)
-        elif (loopback0_ip := manager.get_interface_ip(interface_model="loopback_interfaces", interface_name="Loopback0")) is None:
-            logger.info(LogMessage.UNAVAILABLE_IP, entity="Loopback0")
+        if not manager.is_vtep() or manager.is_wan_vtep():
+            logger.debug(LogMessage.NOT_VTEP)
+            return vtep_loopback0s
+
+        if (loopback0_ip := manager.get_interface_ip(interface_model="loopback_interfaces", interface_name="Loopback0")) is None:
+            logger.debug(LogMessage.UNAVAILABLE_IP, entity="Loopback0")
         else:
             vtep_loopback0s.append({"source": ip_interface(loopback0_ip).ip, "vrf": "default"})
 
         if not vtep_loopback0s:
-            logger.info(LogMessage.NO_SOURCES, entity="Loopback0")
+            logger.debug(LogMessage.NO_SOURCES, entity="Loopback0")
 
         return vtep_loopback0s
