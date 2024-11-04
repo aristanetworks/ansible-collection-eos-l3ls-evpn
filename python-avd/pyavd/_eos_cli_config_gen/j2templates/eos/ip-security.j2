@@ -12,6 +12,9 @@ ip security
    !
 {%         endif %}
    ike policy {{ ike_policy.name }}
+{%         if ike_policy.integrity is arista.avd.defined %}
+      integrity {{ ike_policy.integrity }}
+{%         endif %}
 {%         if ike_policy.ike_lifetime is arista.avd.defined %}
       ike-lifetime {{ ike_policy.ike_lifetime }}
 {%         endif %}
