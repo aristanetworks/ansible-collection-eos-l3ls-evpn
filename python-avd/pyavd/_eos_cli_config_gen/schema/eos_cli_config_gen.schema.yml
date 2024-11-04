@@ -13118,6 +13118,8 @@ keys:
         keys:
           domain_identifier:
             type: str
+          domain_identifier_remote:
+            type: str
           neighbor_default:
             type: dict
             keys:
@@ -13331,6 +13333,24 @@ keys:
                 - str
                 min: 0
                 max: 300
+          evpn_ethernet_segment:
+            type: list
+            primary_key: domain
+            items:
+              type: dict
+              keys:
+                domain:
+                  type: str
+                  valid_values:
+                  - all
+                  - local
+                  - remote
+                identifier:
+                  type: str
+                  description: EVPN Ethernet Segment Identifier (Type 1 format).
+                route_target_import:
+                  type: str
+                  description: Low-order 6 bytes of ES-Import Route Target.
           bgp_additional_paths:
             type: dict
             deprecation:
