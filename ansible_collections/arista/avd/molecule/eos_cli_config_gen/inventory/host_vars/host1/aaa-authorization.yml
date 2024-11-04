@@ -1,0 +1,23 @@
+---
+## AAA Authorization
+aaa_authorization:
+  policy:
+    local_default_role: network-admin
+  exec:
+    default: group TACACS local
+  config_commands: true
+  serial_console: true
+  dynamic:
+    dot1x_additional_groups:
+      - radius
+      - RADIUS1
+  commands:
+    all_default: group TACACS
+    privilege:
+      - level: "10,15"
+        default: "group tacacs+ local"
+      - level: "5"
+        default: "group radius"
+      # To handle the not define cases
+      - level: "6"
+      - default: "group radius"
