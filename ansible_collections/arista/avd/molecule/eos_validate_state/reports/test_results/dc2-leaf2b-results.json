@@ -720,7 +720,7 @@
   },
   {
     "name": "dc2-leaf2b",
-    "test": "VerifyLoggingSourceIntf",
+    "test": "VerifyLoggingSourceInt",
     "categories": [
       "logging"
     ],
@@ -732,7 +732,7 @@
     "categories": [
       "logging"
     ],
-    "description": "Verifies if logs are generated with the appropriate timestamp."
+    "description": "Verifies if logs are generated with the riate timestamp."
   },
   {
     "name": "dc2-leaf2b",

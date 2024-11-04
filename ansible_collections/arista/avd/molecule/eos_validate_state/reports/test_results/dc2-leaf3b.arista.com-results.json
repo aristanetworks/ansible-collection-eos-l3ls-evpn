@@ -684,7 +684,7 @@
   },
   {
     "name": "dc2-leaf3b.arista.com",
-    "test": "VerifyLoggingSourceIntf",
+    "test": "VerifyLoggingSourceInt",
     "categories": [
       "logging"
     ],
@@ -696,7 +696,7 @@
     "categories": [
       "logging"
     ],
-    "description": "Verifies if logs are generated with the appropriate timestamp."
+    "description": "Verifies if logs are generated with the riate timestamp."
   },
   {
     "name": "dc2-leaf3b.arista.com",
