@@ -45,7 +45,7 @@ interface Management1
 | -------- | ----- |
 | Instance | EVPN_UNDERLAY |
 
-#### Router ISIS Timers
+#### ISIS Route Timers
 
 | Settings | Value |
 | -------- | ----- |

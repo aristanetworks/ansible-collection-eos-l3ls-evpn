@@ -204,7 +204,7 @@ interface Vlan4094
 | Graceful-restart t2 Level-2 | 20 |
 | Graceful-restart Restart-hold-time | 10 |
 
-#### Router ISIS Timers
+#### ISIS Route Timers
 
 | Settings | Value |
 | -------- | ----- |

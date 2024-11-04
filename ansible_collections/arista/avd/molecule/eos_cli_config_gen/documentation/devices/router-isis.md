@@ -285,7 +285,7 @@ interface Vlan4094
 | SR MPLS Enabled | False |
 | SPF Interval | 250 seconds |
 
-#### Router ISIS Timers
+#### ISIS Route Timers
 
 | Settings | Value |
 | -------- | ----- |
