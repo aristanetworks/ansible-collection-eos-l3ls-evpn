@@ -194,9 +194,6 @@ interface Vlan4094
 | Instance | EVPN_UNDERLAY |
 | Log Adjacency Changes | False |
 | MPLS LDP Sync Default | True |
-| Local Convergence Delay (ms) | 10000 |
-| LSP Generation Maximum Interval | 30 seconds |
-| LSP Generation Initial Wait-time | 40 milliseconds |
 | Advertise Passive-only | True |
 | SR MPLS Enabled | True |
 | SPF Interval | 250 seconds |
@@ -206,6 +203,14 @@ interface Vlan4094
 | Graceful-restart t2 Level-1 | 10 |
 | Graceful-restart t2 Level-2 | 20 |
 | Graceful-restart Restart-hold-time | 10 |
+
+#### Router ISIS Timers
+
+| Settings | Value |
+| -------- | ----- |
+| Local Convergence Delay (ms) | 10000 |
+| LSP Generation Maximum Interval | 30 seconds |
+| LSP Generation Initial Wait-time | 40 milliseconds |
 
 #### ISIS Route Redistribution
 

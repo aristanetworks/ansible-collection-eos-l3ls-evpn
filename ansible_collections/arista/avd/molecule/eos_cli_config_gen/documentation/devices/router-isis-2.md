@@ -44,6 +44,11 @@ interface Management1
 | Settings | Value |
 | -------- | ----- |
 | Instance | EVPN_UNDERLAY |
+
+#### Router ISIS Timers
+
+| Settings | Value |
+| -------- | ----- |
 | LSP Generation Maximum Interval | 30 seconds |
 
 #### ISIS Interfaces Summary
