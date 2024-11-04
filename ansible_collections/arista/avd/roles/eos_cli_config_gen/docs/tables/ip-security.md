@@ -15,6 +15,7 @@
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ike_lifetime</samp>](## "ip_security.ike_policies.[].ike_lifetime") | Integer |  |  | Min: 1<br>Max: 24 | IKE lifetime in hours. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;encryption</samp>](## "ip_security.ike_policies.[].encryption") | String |  |  | Valid Values:<br>- <code>3des</code><br>- <code>aes128</code><br>- <code>aes256</code> | IKE encryption algorithm. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dh_group</samp>](## "ip_security.ike_policies.[].dh_group") | Integer |  |  | Valid Values:<br>- <code>1</code><br>- <code>2</code><br>- <code>5</code><br>- <code>14</code><br>- <code>15</code><br>- <code>16</code><br>- <code>17</code><br>- <code>20</code><br>- <code>21</code><br>- <code>24</code> | Diffie-Hellman group for the key exchange. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;integrity</samp>](## "ip_security.ike_policies.[].integrity") | String |  |  | Valid Values:<br>- <code>md5</code><br>- <code>sha1</code><br>- <code>sha256</code><br>- <code>sha384</code><br>- <code>sha512</code> | Integrity algorithm. |
     | [<samp>&nbsp;&nbsp;sa_policies</samp>](## "ip_security.sa_policies") | List, items: Dictionary |  |  |  | Security Association policies. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;name</samp>](## "ip_security.sa_policies.[].name") | String | Required, Unique |  |  | Name of the SA policy. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sa_lifetime</samp>](## "ip_security.sa_policies.[].sa_lifetime") | Dictionary |  |  |  |  |
@@ -68,6 +69,9 @@
 
           # Diffie-Hellman group for the key exchange.
           dh_group: <int; 1 | 2 | 5 | 14 | 15 | 16 | 17 | 20 | 21 | 24>
+
+          # Integrity algorithm.
+          integrity: <str; "md5" | "sha1" | "sha256" | "sha384" | "sha512">
 
       # Security Association policies.
       sa_policies:
