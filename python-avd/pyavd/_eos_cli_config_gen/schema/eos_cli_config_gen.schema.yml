@@ -11415,6 +11415,13 @@ keys:
             type: str
             description: Specify the format of the NAS-Identifier. If 'hostname' is
               set, this is ignored.
+      deadtime:
+        description: Time to skip a non-responsive server in minutes.
+        type: int
+        convert_types:
+        - str
+        min: 1
+        max: 1000
       dynamic_authorization:
         type: dict
         keys:
@@ -11428,13 +11435,6 @@ keys:
           tls_ssl_profile:
             type: str
             description: Name of TLS profile.
-      deadtime:
-        description: Time to skip a non-responsive server in minutes.
-        type: int
-        convert_types:
-        - str
-        min: 1
-        max: 1000
       hosts:
         type: list
         primary_key: host

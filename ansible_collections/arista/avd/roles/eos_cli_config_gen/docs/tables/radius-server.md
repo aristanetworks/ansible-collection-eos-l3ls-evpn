@@ -11,10 +11,10 @@
     | [<samp>&nbsp;&nbsp;attribute_32_include_in_access_req</samp>](## "radius_server.attribute_32_include_in_access_req") | Dictionary |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;hostname</samp>](## "radius_server.attribute_32_include_in_access_req.hostname") | Boolean |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;format</samp>](## "radius_server.attribute_32_include_in_access_req.format") | String |  |  |  | Specify the format of the NAS-Identifier. If 'hostname' is set, this is ignored. |
+    | [<samp>&nbsp;&nbsp;deadtime</samp>](## "radius_server.deadtime") | Integer |  |  | Min: 1<br>Max: 1000 | Time to skip a non-responsive server in minutes. |
     | [<samp>&nbsp;&nbsp;dynamic_authorization</samp>](## "radius_server.dynamic_authorization") | Dictionary |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;port</samp>](## "radius_server.dynamic_authorization.port") | Integer |  |  | Min: 0<br>Max: 65535 | TCP Port. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;tls_ssl_profile</samp>](## "radius_server.dynamic_authorization.tls_ssl_profile") | String |  |  |  | Name of TLS profile. |
-    | [<samp>&nbsp;&nbsp;deadtime</samp>](## "radius_server.deadtime") | Integer |  |  | Min: 1<br>Max: 1000 | Time to skip a non-responsive server in minutes. |
     | [<samp>&nbsp;&nbsp;hosts</samp>](## "radius_server.hosts") | List, items: Dictionary |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;host</samp>](## "radius_server.hosts.[].host") | String | Required, Unique |  |  | Host IP address or name. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;vrf</samp>](## "radius_server.hosts.[].vrf") | String |  |  |  |  |
@@ -37,6 +37,9 @@
 
         # Specify the format of the NAS-Identifier. If 'hostname' is set, this is ignored.
         format: <str>
+
+      # Time to skip a non-responsive server in minutes.
+      deadtime: <int; 1-1000>
       dynamic_authorization:
 
         # TCP Port.
@@ -44,9 +47,6 @@
 
         # Name of TLS profile.
         tls_ssl_profile: <str>
-
-      # Time to skip a non-responsive server in minutes.
-      deadtime: <int; 1-1000>
       hosts:
 
           # Host IP address or name.
