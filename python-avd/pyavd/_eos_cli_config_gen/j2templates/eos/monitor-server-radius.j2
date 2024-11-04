@@ -19,7 +19,10 @@ monitor server radius
 {%     if monitor_server_radius.probe.method is arista.avd.defined("status-server") %}
    probe method status-server
 {%     elif monitor_server_radius.probe.method is arista.avd.defined("access-request") %}
-{%         set access_request = monitor_server_radius.probe.access_request %}
-   probe method access-request username {{ access_request.username }} password {{ access_request.password_type }} {{ access_request.password }}
+{%         if monitor_server_radius.probe.access_request.username is arista.avd.defined and
+              monitor_server_radius.probe.access_request.password is arista.avd.defined %}
+{%             set access_request = monitor_server_radius.probe.access_request %}
+   probe method access-request username {{ access_request.username }} password {{ access_request.password_type | arista.avd.default("7") }} {{ access_request.password }}
+{%         endif %}
 {%     endif %}
 {% endif %}
