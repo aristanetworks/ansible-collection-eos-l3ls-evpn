@@ -3,7 +3,9 @@ ip_security:
   ike_policies:
     # Testing sorting
     - name: IKE-2
+      integrity: sha512
     - name: IKE-1
+      integrity: md5
       local_id: 192.168.100.1
       ike_lifetime: 24
       encryption: aes256
@@ -14,10 +16,6 @@ ip_security:
       local_id_fqdn: my.awesome@fqdn.local
       # local_id won't be rendered as local_id_fqdn takes precedence
       local_id: 192.168.42.42
-    - name: IKE-3
-      integrity: sha512
-    - name: IKE-4
-      integrity: md5
   sa_policies:
     # Testing sorting
     - name: SA-7

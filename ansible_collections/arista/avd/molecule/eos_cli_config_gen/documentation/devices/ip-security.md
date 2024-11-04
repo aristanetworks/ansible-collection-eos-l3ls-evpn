@@ -47,10 +47,8 @@ interface Management1
 
 | Policy name | IKE lifetime | Encryption | DH group | Local ID | Integrity |
 | ----------- | ------------ | ---------- | -------- | -------- | --------- |
-| IKE-1 | 24 | aes256 | 20 | 192.168.100.1 | - |
-| IKE-2 | - | - | - | - | - |
-| IKE-3 | - | - | - | - | sha512 |
-| IKE-4 | - | - | - | - | md5 |
+| IKE-1 | 24 | aes256 | 20 | 192.168.100.1 | md5 |
+| IKE-2 | - | - | - | - | sha512 |
 | IKE-FQDN | - | - | - | fqdn.local | - |
 | IKE-UFQDN | - | - | - | my.awesome@fqdn.local | - |
 
@@ -87,18 +85,14 @@ interface Management1
 !
 ip security
    ike policy IKE-1
+      integrity md5
       ike-lifetime 24
       encryption aes256
       dh-group 20
       local-id 192.168.100.1
    !
    ike policy IKE-2
-   !
-   ike policy IKE-3
       integrity sha512
-   !
-   ike policy IKE-4
-      integrity md5
    !
    ike policy IKE-FQDN
       local-id fqdn fqdn.local
