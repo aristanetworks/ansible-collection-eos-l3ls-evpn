@@ -3,6 +3,7 @@
 # that can be found in the LICENSE file.
 from __future__ import annotations
 
+import logging
 from pathlib import Path
 from typing import TYPE_CHECKING
 
@@ -13,6 +14,8 @@ from .constants import JINJA2_EXTENSIONS, RUNNING_FROM_SRC
 if TYPE_CHECKING:
     import os
     from collections.abc import Sequence
+
+LOGGER = logging.getLogger(__name__)
 
 
 class Undefined(StrictUndefined):
@@ -126,7 +129,7 @@ class Templar:
         self.environment.loader = ExtensionFileSystemLoader(searchpaths)
         self.environment.compile_templates(
             zip=None,
-            log_function=print,
+            log_function=LOGGER.debug,
             target=precompiled_templates_path,
             ignore_errors=False,
         )

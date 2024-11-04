@@ -327,10 +327,10 @@ spanning-tree mode none
 
 ### IKE policies
 
-| Policy name | IKE lifetime | Encryption | DH group | Local ID |
-| ----------- | ------------ | ---------- | -------- | -------- |
-| CP-IKE-POLICY | - | - | - | 192.168.42.4 |
-| DP-IKE-POLICY | - | - | - | 192.168.42.4 |
+| Policy name | IKE lifetime | Encryption | DH group | Local ID | Integrity |
+| ----------- | ------------ | ---------- | -------- | -------- | --------- |
+| CP-IKE-POLICY | - | - | - | 192.168.42.4 | - |
+| DP-IKE-POLICY | - | - | - | 192.168.42.4 | - |
 
 ### Security Association policies
 
