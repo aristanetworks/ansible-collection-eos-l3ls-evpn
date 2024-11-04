@@ -43,25 +43,20 @@ ARGUMENT_SPEC = {
         "type": "dict",
         "required": True,
         "options": {
-            "intended_catalog": {"type": "bool", "default": True},
-            "intended_catalog_dir": {"type": "str"},
-            "intended_catalog_filters": {
-                "type": "dict",
+            "avd_catalog_dir": {"type": "str"},
+            "avd_catalog_filters": {
+                "type": "list",
+                "elements": "dict",
                 "options": {
-                    "run_tests": {"type": "dict", "values": {"type": "list", "elements": "str"}},
-                    "skip_tests": {"type": "dict", "values": {"type": "list", "elements": "str"}},
+                    "device_list": {"type": "list", "elements": "str"},
+                    "run_tests": {"type": "list", "elements": "str"},
+                    "skip_tests": {"type": "list", "elements": "str"},
                 },
             },
             "structured_config_dir": {"type": "str"},
             "structured_config_suffix": {"type": "str", "default": "yml", "choices": ["yml", "yaml", "json"]},
-            "user_catalog": {"type": "bool", "default": False},
             "user_catalog_dir": {"type": "str"},
         },
-        "required_one_of": [["intended_catalog", "user_catalog"]],
-        "required_if": [
-            ["intended_catalog", True, ["structured_config_dir", "structured_config_suffix"]],
-            ["user_catalog", True, ["user_catalog_dir"]],
-        ],
     },
     "anta_logging": {
         "type": "dict",
@@ -127,11 +122,6 @@ class ActionModule(ActionBase):
         # Converting to json and back to remove any AnsibeUnsafe types
         validated_args = json.loads(json.dumps(validated_args))
 
-        # Check if both intended and user catalogs are disabled
-        if not get(validated_args, "anta_catalogs.intended_catalog") and not get(validated_args, "anta_catalogs.user_catalog"):
-            msg = "Both intended and user catalogs are disabled. At least one catalog must be enabled."
-            raise AnsibleActionFail(msg)
-
         # Launch the run_anta coroutine to run everything
         return run(self.run_anta(validated_args, hostvars, result))
 
@@ -195,47 +185,69 @@ class ActionModule(ActionBase):
 
         # NOTE: Tests from user-defined catalogs tagged by the device name will be honored, i.e. they will run only on the device with the same name
         # NOTE: Other tags will also be honored and will be used in conjunction with the `metadata.anta_tags` variable of each device
-        # NOTE: `skip_tests` and `run_tests` are used to filter tests from the intended catalog only
+        # NOTE: `skip_tests` and `run_tests` are used to filter tests from the AVD catalog only
         """
         # Initialize the ANTA objects
         final_inventory = AntaInventory()
         final_catalog = AntaCatalog()
         result_manager = ResultManager()
 
-        # Load the user-defined ANTA catalogs if enabled
-        if get(anta_catalogs, "user_catalog") is True:
-            user_catalog = self.load_anta_catalogs(anta_catalogs["user_catalog_dir"])
+        # Load the user-defined ANTA catalogs if a directory path is provided
+        user_catalog_dir = get(anta_catalogs, "avd_catalog_dir")
+        if user_catalog_dir is not None:
+            user_catalog = self.load_anta_catalogs(user_catalog_dir)
             final_catalog = AntaCatalog.merge_catalogs([final_catalog, user_catalog])
 
-        # If the intended catalog is enabled, load the structured configurations and build the fabric data
-        if get(anta_catalogs, "intended_catalog") is True:
-            structured_configs = self.load_structured_configs(device_list, anta_catalogs["structured_config_dir"], anta_catalogs["structured_config_suffix"])
+        # Load the structured configs if a directory path is provided and build the fabric data
+        structured_config_dir = get(anta_catalogs, "structured_config_dir")
+        if structured_config_dir is not None:
+            structured_configs = self.load_structured_configs(device_list, structured_config_dir, anta_catalogs["structured_config_suffix"])
             fabric_data = get_fabric_data(structured_configs, logger=LOGGER)
 
         for device in device_list:
             # Build the ANTA device object and add it to the ANTA inventory
-            if anta_device := self.build_anta_device(device, hostvars, anta_runner_settings):
+            anta_device = self.build_anta_device(device, hostvars, anta_runner_settings)
+            if anta_device:
                 final_inventory.add_device(anta_device)
 
-            # Load the intended catalog for that device if enabled
-            if get(anta_catalogs, "intended_catalog") is True:
-                run_tests = set(
-                    get(anta_catalogs, "intended_catalog_filters.run_tests.__all__", default=[])
-                    + get(anta_catalogs, f"intended_catalog_filters..run_tests..{device}", default=[], separator="..")
-                )
-                skip_tests = set(
-                    get(anta_catalogs, "intended_catalog_filters.skip_tests.__all__", default=[])
-                    + get(anta_catalogs, f"intended_catalog_filters..skip_tests..{device}", default=[], separator="..")
-                )
+            # Load the AVD catalog for that device if structured configs are provided
+            if structured_config_dir is not None:
+                run_tests, skip_tests = self.get_test_filters_for_device(device, anta_catalogs)
                 device_catalog = get_device_anta_catalog(device, fabric_data, run_tests=run_tests, skip_tests=skip_tests, logger=LOGGER)
 
                 # Dump the device catalog to the provided directory if provided
-                if (catalog_dir := get(anta_catalogs, "intended_catalog_dir")) is not None:
+                catalog_dir = get(anta_catalogs, "user_catalog_dir")
+                if catalog_dir is not None:
                     self.dump_anta_catalog(device, device_catalog, catalog_dir)
 
                 final_catalog = AntaCatalog.merge_catalogs([final_catalog, device_catalog])
 
         return result_manager, final_inventory, final_catalog
+
+    def get_test_filters_for_device(self, device: str, anta_catalogs: dict) -> tuple[set[str], set[str]]:
+        """Get the test filters for a device from the ANTA catalogs settings.
+
+        Parameters
+        ----------
+            device: The name of the device.
+            anta_catalogs: The ANTA catalogs settings for the run.
+
+        Returns:
+        -------
+            tuple: A tuple containing the `run_tests` and `skip_tests` filters for the device.
+        """
+        run_tests = set()
+        skip_tests = set()
+
+        catalog_filters = get(anta_catalogs, "avd_catalog_filters", default=[])
+
+        for filter_config in catalog_filters:
+            device_list = get(filter_config, "device_list", default=[])
+            if device in device_list:
+                run_tests.update(get(filter_config, "run_tests", default=[]))
+                skip_tests.update(get(filter_config, "skip_tests", default=[]))
+
+        return run_tests or None, skip_tests or None
 
     def build_anta_device(self, device: str, hostvars: Mapping, anta_runner_settings: dict) -> AsyncEOSDevice | None:
         """Build the ANTA device object for a device using the provided Ansible hostvars.
@@ -324,7 +336,7 @@ class ActionModule(ActionBase):
                 LOGGER.warning("Unsupported file format for ANTA catalog: %s. Skipping file.", path_obj)
                 continue
 
-            LOGGER.info("Loading custom ANTA catalog from %s", path_obj)
+            LOGGER.info("Loading ANTA catalog from %s", path_obj)
             catalog = AntaCatalog.parse(path_obj, file_format)
             catalogs.append(catalog)
 

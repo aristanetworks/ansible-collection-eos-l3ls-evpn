@@ -29,6 +29,8 @@ class VerifyLLDPNeighborsInputFactory:
       - Only available peers (`is_deployed: true`) are included
       - DNS domain is appended to peer name when available (`dns_domain`)
       - Neighbor collection is skipped if no valid neighbors are found
+
+    TODO: Add support for `validate_state: false` configuration.
     """
 
     @classmethod
@@ -82,10 +84,7 @@ class VerifyReachabilityInputFactory:
       - VTEP Loopback0s to all fabric Loopback0s
       - P2P links between directly connected Ethernet interfaces
 
-    TODO: Add WAN VTEPs support - DPS to DPS reachability
-    TODO: Should we add support for VTEP diagnostics?
-    TODO: Should we add VTEP VXLAN source interface to VTEP source interface reachability? Usually Loopback1
-
+    TODO: Add WAN VTEPs support - DPS to DPS reachability.
     The factory ensures:
       - Only non-shutdown interfaces (`shutdown: false`) with valid `ip_address` configuration are used as sources
       - Only available peers (`is_deployed: true`) are used as destinations
