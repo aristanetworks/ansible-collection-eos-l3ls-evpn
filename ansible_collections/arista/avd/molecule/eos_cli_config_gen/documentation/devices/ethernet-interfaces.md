@@ -1041,6 +1041,7 @@ interface Ethernet63
 interface Ethernet64
    description DHCP server interface
    no switchport
+   mac timestamp replace-fcs
    ip address 192.168.42.42/24
    dhcp server ipv4
    dhcp server ipv6
@@ -1086,6 +1087,7 @@ interface Ethernet67
    description Custom_Transceiver_Frequency
    no shutdown
    switchport
+   mac timestamp before-fcs
    transceiver frequency 190050.000
 !
 interface Ethernet67.1
