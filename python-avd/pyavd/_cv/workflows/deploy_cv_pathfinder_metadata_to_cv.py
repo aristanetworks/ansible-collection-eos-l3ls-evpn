@@ -7,6 +7,7 @@ from copy import deepcopy
 from logging import getLogger
 from typing import TYPE_CHECKING
 
+from pyavd._cv.client.async_decorators import time_async
 from pyavd._cv.client.exceptions import CVResourceNotFound
 from pyavd._utils import get, get_v2
 from pyavd._utils.password_utils.password import simple_7_decrypt
@@ -242,6 +243,7 @@ def upsert_edge(metadata: dict, device: CVDevice, studio_inputs: dict, studio_sc
     return warnings
 
 
+@time_async
 async def deploy_cv_pathfinder_metadata_to_cv(cv_pathfinder_metadata: list[CVPathfinderMetadata], result: DeployToCvResult, cv_client: CVClient) -> None:
     """
     Deploy given CV Pathfinder metadata.

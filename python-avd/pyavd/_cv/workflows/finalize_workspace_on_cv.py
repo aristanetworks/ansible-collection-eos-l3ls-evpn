@@ -7,12 +7,13 @@ from logging import getLogger
 from typing import TYPE_CHECKING
 
 from pyavd._cv.api.arista.workspace.v1 import ResponseStatus, WorkspaceState
+from pyavd._cv.client.async_decorators import time_async
 from pyavd._cv.client.exceptions import CVWorkspaceBuildFailed, CVWorkspaceSubmitFailed
 
 if TYPE_CHECKING:
     from pyavd._cv.client import CVClient
 
-    from .models import CVWorkspace
+    from .models import CVDevice, CVWorkspace
 
 from .constants import EOS_CLI_PORTFAST_WARNING
 from .models import (
@@ -37,7 +38,7 @@ WORKSPACE_STATE_TO_FINAL_STATE_MAP = {
 }
 
 
-async def finalize_workspace_on_cv(workspace: CVWorkspace, cv_client: CVClient) -> None:
+async def finalize_workspace_on_cv(workspace: CVWorkspace, cv_client: CVClient, devices: list[CVDevice]) -> None:
     """
     Finalize a Workspace from the given result.CVWorkspace object.
 
@@ -49,10 +50,17 @@ async def finalize_workspace_on_cv(workspace: CVWorkspace, cv_client: CVClient) 
     if workspace.requested_state in (workspace.state, "pending"):
         return
 
-    workspace_config = await cv_client.build_workspace(workspace_id=workspace.id)
-    build_result, cv_workspace = await cv_client.wait_for_workspace_response(workspace_id=workspace.id, request_id=workspace_config.request_params.request_id)
+    workspace_config, workspace_build_time = await cv_client.build_workspace(workspace_id=workspace.id)
+    workspace_build_response, workspace_build_response_time = await cv_client.wait_for_workspace_response(
+        workspace_id=workspace.id, request_id=workspace_config.request_params.request_id
+    )
+    build_result, cv_workspace = workspace_build_response
+    del workspace_build_response
+    workspace.processing_time.build_workspace = workspace_build_time + workspace_build_response_time
     workspace.build_id = cv_workspace.last_build_id
-    workspace.build_results = await process_workspace_build_details(workspace=workspace, cv_client=cv_client)
+    workspace.build_results, workspace.processing_time.fetch_build_details = await process_workspace_build_details(
+        workspace=workspace, cv_client=cv_client, devices=devices
+    )
     if build_result.status != ResponseStatus.SUCCESS:
         workspace.state = "build failed"
         LOGGER.info("finalize_workspace_on_cv: %s", workspace)
@@ -69,11 +77,14 @@ async def finalize_workspace_on_cv(workspace: CVWorkspace, cv_client: CVClient) 
 
     # We can only submit if the build was successful
     if workspace.requested_state == "submitted" and workspace.state == "built":
-        workspace_config = await cv_client.submit_workspace(workspace_id=workspace.id, force=workspace.force)
-        submit_result, cv_workspace = await cv_client.wait_for_workspace_response(
+        workspace_config, workspace_submit_time = await cv_client.submit_workspace(workspace_id=workspace.id, force=workspace.force)
+        workspace_submit_response, workspace_submit_response_time = await cv_client.wait_for_workspace_response(
             workspace_id=workspace.id,
             request_id=workspace_config.request_params.request_id,
         )
+        submit_result, cv_workspace = workspace_submit_response
+        del workspace_submit_response
+        workspace.processing_time.submit_workspace = workspace_submit_time + workspace_submit_response_time
         if submit_result.status != ResponseStatus.SUCCESS:
             workspace.state = "submit failed"
             LOGGER.info("finalize_workspace_on_cv: %s", workspace)
@@ -102,9 +113,11 @@ async def finalize_workspace_on_cv(workspace: CVWorkspace, cv_client: CVClient) 
     return
 
 
+@time_async
 async def process_workspace_build_details(
     workspace: CVWorkspace,
     cv_client: CVClient,
+    devices: list[CVDevice],
 ) -> list[CVWorkspaceBuildResult]:
     """
     Get and parse Workspace Build Details Response.
@@ -118,6 +131,7 @@ async def process_workspace_build_details(
     Parameters:
         workspace: Active Workspace.
         cv_client: CVClient.
+        devices: List of CVDevice objects representing existing CV devices.
 
     Returns:
         List of 'CVWorkspaceBuildResult's describing observed Workspace build validation errors and warnings per targeted device.
@@ -132,7 +146,9 @@ async def process_workspace_build_details(
 
         workspace_build_results = [
             CVWorkspaceBuildResult(
-                serial_number=getattr(getattr(getattr(response, "value", None), "key", None), "device_id", None),
+                device=next((device for device in devices if device.serial_number == device_id), None)
+                if (device_id := getattr(getattr(getattr(response, "value", None), "key", None), "device_id", None)) is not None
+                else None,
                 stages_states=[
                     CVWorkspaceBuildStageState(
                         stage=stage,

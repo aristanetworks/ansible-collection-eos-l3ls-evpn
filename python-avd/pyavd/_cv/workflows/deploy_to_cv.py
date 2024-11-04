@@ -25,6 +25,7 @@ from .models import (
     CVStudioInputs,
     CVTimeOuts,
     CVWorkspace,
+    CVWorkspaceProcessingTime,
     DeployToCvResult,
 )
 from .verify_devices_on_cv import verify_devices_on_cv
@@ -132,11 +133,13 @@ async def deploy_to_cv(
             await create_workspace_on_cv(workspace=result.workspace, cv_client=cv_client)
 
             try:
+                workspace.processing_time = CVWorkspaceProcessingTime()
+                existing_devices: list[CVDevice]
                 # Verify devices exist and update CVDevice objects with _exists_on_cv.
                 # Depending on skip_missing_devices we will raise or skip missing devices.
                 # Since verify_devices will silently return if _exists_on_cv is already set,
                 # we can just send all the items even if we have duplicate device objects.
-                await verify_devices_on_cv(
+                existing_devices, workspace.processing_time.validate_devices = await verify_devices_on_cv(
                     devices=(
                         [tag.device for tag in device_tags if tag.device is not None]
                         + [tag.device for tag in interface_tags if tag.device is not None]
@@ -149,7 +152,7 @@ async def deploy_to_cv(
                 )
 
                 # Deploy device tags
-                await deploy_tags_to_cv(
+                _, workspace.processing_time.stage_device_tags = await deploy_tags_to_cv(
                     tags=device_tags,
                     workspace=result.workspace,
                     strict=strict_tags,
@@ -160,7 +163,7 @@ async def deploy_to_cv(
                 )
 
                 # Deploy interface tags
-                await deploy_tags_to_cv(
+                _, workspace.processing_time.stage_interface_tags = await deploy_tags_to_cv(
                     tags=interface_tags,
                     workspace=result.workspace,
                     strict=strict_tags,
@@ -171,21 +174,21 @@ async def deploy_to_cv(
                 )
 
                 # Deploy configs
-                await deploy_configs_to_cv(
+                _, workspace.processing_time.stage_configs = await deploy_configs_to_cv(
                     configs=configs,
                     result=result,
                     cv_client=cv_client,
                 )
 
                 # Deploy Studio Inputs
-                await deploy_studio_inputs_to_cv(
+                _, workspace.processing_time.stage_studio_inputs = await deploy_studio_inputs_to_cv(
                     studio_inputs=studio_inputs,
                     result=result,
                     cv_client=cv_client,
                 )
 
                 # Deploy CV Pathfinder metadata
-                await deploy_cv_pathfinder_metadata_to_cv(
+                _, workspace.processing_time.stage_pathfinder = await deploy_cv_pathfinder_metadata_to_cv(
                     cv_pathfinder_metadata=cv_pathfinder_metadata,
                     result=result,
                     cv_client=cv_client,
@@ -201,7 +204,7 @@ async def deploy_to_cv(
                 result.workspace.state = "abandoned"
                 return result
 
-            await finalize_workspace_on_cv(workspace=result.workspace, cv_client=cv_client)
+            await finalize_workspace_on_cv(workspace=result.workspace, cv_client=cv_client, devices=existing_devices)
 
             # Create/update CVChangeControl object with ID created by workspace.
             if result.workspace.change_control_id is not None:

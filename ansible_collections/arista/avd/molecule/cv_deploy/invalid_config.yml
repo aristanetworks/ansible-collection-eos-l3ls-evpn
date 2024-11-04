@@ -1,5 +1,5 @@
 ---
-- name: "{{ test_id | upper }} Converge - cv_deploy with Workspace Abandon"
+- name: "{{ test_id | upper }} Converge - cv_deploy with invalid Designed Config"
   hosts: SITE1_FABRIC
   connection: local
   gather_facts: false
