@@ -8,9 +8,9 @@ ip_nat:
       prefix_length: 16
       ranges:
         - first_ip: 10.0.0.1
-          last_ip: 10.0.0.1
+          last_ip: 10.0.255.254
         - first_ip: 10.1.0.0
-          last_ip: 10.1.0.0
+          last_ip: 10.1.255.255
           first_port: 1024
           last_port: 65535
       utilization_log_threshold: 91
