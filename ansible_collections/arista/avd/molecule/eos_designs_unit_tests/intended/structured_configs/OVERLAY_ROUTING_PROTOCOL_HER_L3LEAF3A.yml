@@ -2,7 +2,6 @@ hostname: OVERLAY_ROUTING_PROTOCOL_HER_L3LEAF3A
 is_deployed: true
 router_bgp:
   as: '65003'
-  router_id: 192.168.254.3
   bgp:
     default:
       ipv4_unicast: false
@@ -13,6 +12,7 @@ router_bgp:
     connected:
       enabled: true
       route_map: RM-CONN-2-BGP
+  router_id: 192.168.254.3
   updates:
     wait_install: true
   peer_groups:

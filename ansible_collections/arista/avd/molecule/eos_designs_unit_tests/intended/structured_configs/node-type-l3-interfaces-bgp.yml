@@ -2,7 +2,6 @@ hostname: node-type-l3-interfaces-bgp
 is_deployed: true
 router_bgp:
   as: '65000'
-  router_id: 192.168.255.1
   bgp:
     default:
       ipv4_unicast: false
@@ -12,6 +11,7 @@ router_bgp:
   redistribute:
     connected:
       enabled: true
+  router_id: 192.168.255.1
   updates:
     wait_install: true
   neighbors:

@@ -2,7 +2,6 @@ hostname: cv-pathfinder-edge1
 is_deployed: true
 router_bgp:
   as: '65000'
-  router_id: 192.168.42.2
   bgp:
     default:
       ipv4_unicast: false
@@ -12,6 +11,7 @@ router_bgp:
     connected:
       enabled: true
       route_map: RM-CONN-2-BGP
+  router_id: 192.168.42.2
   updates:
     wait_install: true
   neighbors:

@@ -2,7 +2,6 @@ hostname: evpn_services_l2_only_false
 is_deployed: true
 router_bgp:
   as: '101'
-  router_id: 192.168.255.109
   bgp:
     default:
       ipv4_unicast: false
@@ -15,6 +14,7 @@ router_bgp:
       route_map: RM-CONN-2-BGP
     ospf:
       enabled: true
+  router_id: 192.168.255.109
   updates:
     wait_install: true
   peer_groups:
@@ -993,9 +993,9 @@ vlan_interfaces:
   vrf: TENANT_D_WAN_ZONE
 router_ospf:
   process_ids:
-  - id: 123
+  - router_id: 192.168.255.109
+    id: 123
     passive_interface_default: true
-    router_id: 192.168.255.109
     no_passive_interfaces:
     - Vlan1234
     redistribute:

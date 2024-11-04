@@ -3648,6 +3648,16 @@ keys:
         valid_values:
         - sso
         - rpr
+  router_general_settings:
+    type: dict
+    keys:
+      router_id:
+        type: dict
+        keys:
+          ipv4:
+            type: str
+          ipv6:
+            type: str
   router_id_loopback_description:
     documentation_options:
       table: overlay-settings
@@ -4535,6 +4545,11 @@ keys:
     description: 'Generate AVD configurations directly from a given CloudVision topology.
 
       See `cv_topology` for details.'
+  use_router_general_for_router_id:
+    type: bool
+    description: This setting allows to use `router_id` set under `router_general_settings`
+      as BGP router-id.
+    default: false
   vtep_loopback_description:
     documentation_options:
       table: overlay-settings

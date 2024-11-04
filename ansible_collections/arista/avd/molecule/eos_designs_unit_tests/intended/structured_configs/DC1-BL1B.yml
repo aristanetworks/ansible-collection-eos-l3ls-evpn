@@ -2,7 +2,6 @@ hostname: DC1-BL1B
 is_deployed: true
 router_bgp:
   as: '65105'
-  router_id: 192.168.255.15
   bgp_defaults:
   - distance bgp 20 200 200
   bgp:
@@ -15,6 +14,7 @@ router_bgp:
     connected:
       enabled: true
       route_map: RM-CONN-2-BGP
+  router_id: 192.168.255.15
   updates:
     wait_install: true
   peer_groups:
@@ -689,10 +689,10 @@ vlan_interfaces:
   vrf: TENANT_D_WAN_ZONE
 router_ospf:
   process_ids:
-  - id: 14
+  - router_id: 192.168.255.15
+    id: 14
     vrf: Tenant_A_WAN_Zone
     passive_interface_default: true
-    router_id: 192.168.255.15
     no_passive_interfaces:
     - Vlan150
     max_lsa: 15000

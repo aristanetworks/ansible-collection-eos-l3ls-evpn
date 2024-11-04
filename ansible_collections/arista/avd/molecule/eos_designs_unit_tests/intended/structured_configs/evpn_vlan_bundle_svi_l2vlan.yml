@@ -2,7 +2,6 @@ hostname: evpn_vlan_bundle_svi_l2vlan
 is_deployed: true
 router_bgp:
   as: '65101'
-  router_id: 10.10.0.3
   bgp:
     default:
       ipv4_unicast: false
@@ -13,6 +12,7 @@ router_bgp:
     connected:
       enabled: true
       route_map: RM-CONN-2-BGP
+  router_id: 10.10.0.3
   updates:
     wait_install: true
   peer_groups:

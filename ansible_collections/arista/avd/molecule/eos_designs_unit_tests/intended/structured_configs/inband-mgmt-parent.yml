@@ -2,7 +2,6 @@ hostname: inband-mgmt-parent
 is_deployed: true
 router_bgp:
   as: '65000'
-  router_id: 10.0.255.1
   bgp:
     default:
       ipv4_unicast: false
@@ -15,6 +14,7 @@ router_bgp:
       route_map: RM-CONN-2-BGP
     attached_host:
       enabled: true
+  router_id: 10.0.255.1
   updates:
     wait_install: true
   peer_groups:

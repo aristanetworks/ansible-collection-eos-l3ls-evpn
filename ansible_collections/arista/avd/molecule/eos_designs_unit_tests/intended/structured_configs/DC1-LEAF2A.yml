@@ -2,7 +2,6 @@ hostname: DC1-LEAF2A
 is_deployed: true
 router_bgp:
   as: '65102'
-  router_id: 192.168.255.10
   bgp_defaults:
   - distance bgp 20 200 200
   bgp:
@@ -15,6 +14,7 @@ router_bgp:
     connected:
       enabled: true
       route_map: RM-CONN-2-BGP
+  router_id: 192.168.255.10
   updates:
     wait_for_convergence: true
     wait_install: true
@@ -1223,10 +1223,10 @@ ipv6_static_routes:
   vrf: Tenant_D_OP_Zone
 router_ospf:
   process_ids:
-  - id: 16
+  - router_id: 192.168.255.10
+    id: 16
     vrf: Tenant_A_OSPF
     passive_interface_default: true
-    router_id: 192.168.255.10
     no_passive_interfaces:
     - Ethernet22
     - Ethernet23

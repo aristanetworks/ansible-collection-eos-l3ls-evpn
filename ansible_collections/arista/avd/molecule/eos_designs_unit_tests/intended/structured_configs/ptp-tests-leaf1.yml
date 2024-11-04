@@ -2,7 +2,6 @@ hostname: ptp-tests-leaf1
 is_deployed: true
 router_bgp:
   as: '65101'
-  router_id: 10.254.1.1
   bgp:
     default:
       ipv4_unicast: false
@@ -13,6 +12,7 @@ router_bgp:
     connected:
       enabled: true
       route_map: RM-CONN-2-BGP
+  router_id: 10.254.1.1
   peer_groups:
   - name: MLAG-IPv4-UNDERLAY-PEER
     type: ipv4

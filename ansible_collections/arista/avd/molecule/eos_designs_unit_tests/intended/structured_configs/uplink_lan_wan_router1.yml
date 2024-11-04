@@ -2,7 +2,6 @@ hostname: uplink_lan_wan_router1
 is_deployed: true
 router_bgp:
   as: '65100'
-  router_id: 192.168.1.1
   bgp:
     default:
       ipv4_unicast: false
@@ -12,6 +11,7 @@ router_bgp:
     connected:
       enabled: true
       route_map: RM-CONN-2-BGP
+  router_id: 192.168.1.1
   updates:
     wait_install: true
   peer_groups:
