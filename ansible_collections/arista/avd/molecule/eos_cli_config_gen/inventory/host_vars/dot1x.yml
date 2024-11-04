@@ -10,6 +10,23 @@ dot1x:
   radius_av_pair:
     service_type: true
     framed_mtu: 1500
+    lldp:
+      system_name:
+        enabled: true
+        auth_only: true
+      system_description:
+        enabled: true
+        auth_only: true
+    dhcp:
+      hostname:
+        enabled: true
+        auth_only: true
+      parameter_request_list:
+        enabled: true
+        auth_only: true
+      vendor_class_id:
+        enabled: true
+        auth_only: true
   aaa:
     unresponsive:
       eap_response: success

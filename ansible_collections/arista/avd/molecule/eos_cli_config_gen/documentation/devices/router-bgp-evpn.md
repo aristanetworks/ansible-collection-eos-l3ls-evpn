@@ -107,28 +107,28 @@ ASN Notation: asplain
 
 ##### EVPN Peer Groups
 
-| Peer Group | Activate | Encapsulation |
-| ---------- | -------- | ------------- |
-| ADDITIONAL-PATH-PG-1 | True | default |
-| ADDITIONAL-PATH-PG-2 | True | default |
-| ADDITIONAL-PATH-PG-3 | True | default |
-| ADDITIONAL-PATH-PG-4 | True | default |
-| ADDITIONAL-PATH-PG-5 | True | default |
-| ADDITIONAL-PATH-PG-6 | True | default |
-| EVPN-OVERLAY-PEERS | True | vxlan |
-| MLAG-IPv4-UNDERLAY-PEER | False | default |
-| TEST-ENCAPSULATION | True | mpls |
-| TEST-ENCAPSULATION-2 | True | path-selection |
+| Peer Group | Activate | Route-map In | Route-map Out | Encapsulation |
+| ---------- | -------- | ------------ | ------------- | ------------- |
+| ADDITIONAL-PATH-PG-1 | True |  - | - | default |
+| ADDITIONAL-PATH-PG-2 | True |  - | - | default |
+| ADDITIONAL-PATH-PG-3 | True |  - | - | default |
+| ADDITIONAL-PATH-PG-4 | True |  - | - | default |
+| ADDITIONAL-PATH-PG-5 | True |  - | - | default |
+| ADDITIONAL-PATH-PG-6 | True |  - | - | default |
+| EVPN-OVERLAY-PEERS | True |  - | - | vxlan |
+| MLAG-IPv4-UNDERLAY-PEER | False |  - | - | default |
+| TEST-ENCAPSULATION | True |  - | - | mpls |
+| TEST-ENCAPSULATION-2 | True |  - | - | path-selection |
 
 ##### EVPN Neighbors
 
-| Neighbor | Activate | Encapsulation |
-| -------- | -------- | ------------- |
-| 10.100.100.1 | True | default |
-| 10.100.100.2 | True | default |
-| 10.100.100.3 | True | default |
-| 10.100.100.4 | True | path-selection |
-| 10.100.100.5 | True | mpls |
+| Neighbor | Activate | Route-map In | Route-map Out | Encapsulation |
+| -------- | -------- | ------------ | ------------- | ------------- |
+| 10.100.100.1 | True | - | - | default |
+| 10.100.100.2 | True | - | - | default |
+| 10.100.100.3 | True | - | - | default |
+| 10.100.100.4 | True | RM1 | RM2 | path-selection |
+| 10.100.100.5 | True | - | - | mpls |
 
 ##### EVPN Neighbor Default Encapsulation
 
@@ -146,9 +146,15 @@ ASN Notation: asplain
 
 | Settings | Value |
 | -------- | ----- |
+| Local Domain | 65101:0 |
+| Remote Domain | 65101:1 |
 | Remote Domain Peer Groups | EVPN-OVERLAY-PEERS |
 | L3 Gateway Configured | True |
 | L3 Gateway Inter-domain | True |
+| Local Domain: Ethernet-Segment Identifier | 0011:1111:1111:1111:1111 |
+| Local Domain: Ethernet-Segment import Route-Target | 11:11:11:11:11:11 |
+| Remote Domain: Ethernet-Segment Identifier | 0022:2222:2222:2222:2222 |
+| Remote Domain: Ethernet-Segment import Route-Target | 22:22:22:22:22:22 |
 
 #### Router BGP VLAN Aware Bundles
 
@@ -319,15 +325,26 @@ router bgp 65101
       neighbor 10.100.100.3 activate
       neighbor 10.100.100.3 default-route rcf RCF_DEFAULT_ROUTE()
       neighbor 10.100.100.4 activate
+      neighbor 10.100.100.4 route-map RM1 in
+      neighbor 10.100.100.4 route-map RM2 out
       neighbor 10.100.100.4 encapsulation path-selection
       neighbor 10.100.100.5 activate
       neighbor 10.100.100.5 encapsulation mpls
       domain identifier 65101:0
+      domain identifier 65101:1 remote
       next-hop resolution disabled
       neighbor default next-hop-self received-evpn-routes route-type ip-prefix inter-domain
       host-flap detection window 10 threshold 1 expiry timeout 3 seconds
       layer-2 fec in-place update
       route import overlay-index gateway
+      !
+      evpn ethernet-segment domain local
+         identifier 0011:1111:1111:1111:1111
+         route-target import 11:11:11:11:11:11
+      !
+      evpn ethernet-segment domain remote
+         identifier 0022:2222:2222:2222:2222
+         route-target import 22:22:22:22:22:22
    !
    address-family ipv4
       no neighbor EVPN-OVERLAY-PEERS activate
