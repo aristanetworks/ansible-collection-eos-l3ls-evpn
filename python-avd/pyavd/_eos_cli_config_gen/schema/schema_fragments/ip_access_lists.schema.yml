@@ -66,6 +66,7 @@ keys:
                 default: "eq"
               source_ports:
                 type: list
+                min_length: 1
                 items:
                   type: str
                   convert_types:
@@ -88,6 +89,7 @@ keys:
                 default: "eq"
               destination_ports:
                 type: list
+                min_length: 1
                 items:
                   type: str
                   convert_types:

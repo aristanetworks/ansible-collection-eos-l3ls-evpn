@@ -493,6 +493,7 @@ keys:
                   description: L4 port field-set name.
                 port_values:
                   type: list
+                  min_length: 1
                   items:
                     type: str
                     convert_types:
@@ -512,6 +513,7 @@ keys:
                   description: IPv4 prefix field-set name.
                 prefix_values:
                   type: list
+                  min_length: 1
                   items:
                     type: str
                     description: IP prefix (ex 1.2.3.0/24).
@@ -4772,6 +4774,7 @@ keys:
                 default: eq
               source_ports:
                 type: list
+                min_length: 1
                 items:
                   type: str
                   convert_types:
@@ -4795,6 +4798,7 @@ keys:
                 default: eq
               destination_ports:
                 type: list
+                min_length: 1
                 items:
                   type: str
                   convert_types:
@@ -8403,22 +8407,23 @@ keys:
                           - udp
                         source_ports:
                           type: list
+                          min_length: 1
                           description: "A list of port numbers or port range or port
                             name. Combination of port numbers or range and port name
                             is not supported on EOS. The port numbers should be in
-                            range of 0-65535.\ne.g.\n  [ \"12\", \"14-20\" ]\n  [
-                            \"www\" ]"
+                            range of 0-65535.\ne.g.\n  [\"12\", \"14-20\"]\n  [\"www\"]"
                           items:
                             type: str
                             convert_types:
                             - int
                         destination_ports:
                           type: list
+                          min_length: 1
                           description: "A list of port numbers or port range or port
                             name. Combination of port numbers or range and port name
                             is not supported on EOS. The port numbers should be in
-                            range of 0-65535.\ne.g.\n  [ \"12\", \"14-20\", \"80\"
-                            ]\n  [ \"https\" ]"
+                            range of 0-65535.\ne.g.\n  [\"12\", \"14-20\", \"80\"]\n
+                            \ [\"https\"]"
                           items:
                             type: str
                             convert_types:
