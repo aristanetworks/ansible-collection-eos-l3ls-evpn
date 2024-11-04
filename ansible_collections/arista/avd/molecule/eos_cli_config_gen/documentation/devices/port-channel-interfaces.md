@@ -331,7 +331,7 @@ interface Ethernet50
 | --------- | ---------- | --------- |
 | Port-Channel5 | EVPN_MH_ES1 | downstream |
 | Port-Channel5 | EVPN_MH_ES3 | downstream |
-| Port-Channel5 | EVPN_MH_ES4 | downstream |
+| Port-Channel5 | EVPN_MH_ES3, EVPN_MH_ES4 | downstream |
 | Port-Channel15 | EVPN_MH_ES2 | upstream |
 
 ##### IPv4

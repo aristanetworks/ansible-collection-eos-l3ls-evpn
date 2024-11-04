@@ -222,7 +222,7 @@ sFlow is disabled.
 | --------- | ---------- | --------- |
 | Ethernet1 | EVPN_MH_ES1 | upstream |
 | Ethernet1 | EVPN_MH_ES3 | upstream |
-| Ethernet1 | EVPN_MH_ES4 | upstream |
+| Ethernet1 | EVPN_MH_ES3, EVPN_MH_ES4 | upstream |
 | Ethernet3 | EVPN_MH_ES2 | downstream |
 
 ##### Phone Interfaces
