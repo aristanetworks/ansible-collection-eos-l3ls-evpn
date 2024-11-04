@@ -1,0 +1,19 @@
+---
+### BGP Groups ###
+bgp_groups:
+  - name: foo
+    neighbors:
+      - fe80::1
+      - 169.254.1.1
+    bgp_maintenance_profiles:
+      - uplink-neighbors
+      - ixp
+
+  - name: bar
+    neighbors:
+      - peer-group-baz
+    bgp_maintenance_profiles:
+      - downlink-neighbors
+    vrf: red
+  - name: without-neighbors-key
+    vrf: red

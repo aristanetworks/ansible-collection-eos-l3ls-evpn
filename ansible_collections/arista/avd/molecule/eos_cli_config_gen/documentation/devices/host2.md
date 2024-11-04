@@ -13,6 +13,8 @@
 - [Management Security](#management-security)
   - [Management Security Summary](#management-security-summary)
   - [Management Security Device Configuration](#management-security-device-configuration)
+- [Monitoring](#monitoring)
+  - [Flow Tracking](#flow-tracking)
 
 ## Management
 
@@ -129,4 +131,38 @@ aaa accounting exec default none
 !
 management security
    password encryption reversible aes-256-gcm
+```
+
+## Monitoring
+
+### Flow Tracking
+
+#### Flow Tracking Sampled
+
+| Sample Size | Minimum Sample Size | Hardware Offload for IPv4 | Hardware Offload for IPv6 | Encapsulations |
+| ----------- | ------------------- | ------------------------- | ------------------------- | -------------- |
+| 666 | default | enabled | enabled | - |
+
+##### Trackers Summary
+
+| Tracker Name | Record Export On Inactive Timeout | Record Export On Interval | MPLS | Number of Exporters | Applied On | Table Size |
+| ------------ | --------------------------------- | ------------------------- | ---- | ------------------- | ---------- | ---------- |
+| T21 | 3666 | 5666 | True | 0 |  | - |
+
+##### Exporters Summary
+
+| Tracker Name | Exporter Name | Collector IP/Host | Collector Port | Local Interface |
+| ------------ | ------------- | ----------------- | -------------- | --------------- |
+
+#### Flow Tracking Device Configuration
+
+```eos
+!
+flow tracking sampled
+   sample 666
+   hardware offload ipv4 ipv6
+   tracker T21
+      record export on inactive timeout 3666
+      record export on interval 5666
+      record export mpls
 ```

@@ -91,6 +91,12 @@ flow_tracking:
           - name: T3-E4
             collector:
               host: dead:beef::cafe
+      - name: T4
+        record_export:
+          on_inactive_timeout: 3666
+          on_interval: 5666
+          mpls: true
+        table_size: 100
     shutdown: false
     record:
       format_ipfix_standard_timestamps_counters: true
