@@ -75,7 +75,7 @@ repos:
 
   - repo: https://github.com/astral-sh/ruff-pre-commit
     # Ruff version.
-    rev: v0.6.9
+    rev: v0.7.1
     hooks:
       # Run the linter.
       - id: ruff
@@ -202,7 +202,7 @@ repos:
         language: python
         files: python-avd/pyavd/[a-z_]+/schema
         pass_filenames: false
-        additional_dependencies: ['deepmerge>=1.1.0', 'PyYAML>=6.0.0', 'pydantic>=2.3.0', 'jsonschema>=4.10.3', 'referencing>=0.35.0']
+        additional_dependencies: ['deepmerge>=1.1.0', 'PyYAML>=6.0.0', 'pydantic>=2.3.0', 'jsonschema-rs', 'referencing>=0.35.0']
 
       - id: templates
         name: Precompile Jinja2 templates

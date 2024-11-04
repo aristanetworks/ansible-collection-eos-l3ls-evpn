@@ -1,0 +1,46 @@
+---
+## AAA Accounting
+aaa_accounting:
+  exec:
+    console:
+      type: start-stop
+      group: TACACS
+      logging: true
+    default:
+      type: start-stop
+      group: TACACS
+      logging: true
+  system:
+    default:
+      type: start-stop
+      group: TACACS
+  dot1x:
+    default:
+      type: start-stop
+      group: RADIUS
+  commands:
+    console:
+      - commands: all
+        type: start-stop
+        group: TACACS
+        logging: true
+      - commands: 0
+        type: start-stop
+        logging: true
+      - commands: 1
+        type: start-stop
+        logging: false
+        group: TACACS1
+    default:
+      - commands: all
+        type: start-stop
+        group: TACACS
+        logging: true
+      - commands: 0
+        type: start-stop
+        logging: true
+        # To handle the missing case
+      - commands: 1
+        type: start-stop
+        logging: false
+        group: TACACS

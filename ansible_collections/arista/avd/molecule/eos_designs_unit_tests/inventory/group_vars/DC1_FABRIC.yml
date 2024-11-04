@@ -139,7 +139,7 @@ l3leaf:
       mlag_domain_id: custom_mlag_domain_id
       filter:
         tenants: [ Tenant_A, Tenant_B, Tenant_C ]
-        tags: [ opzone, web, app, db, vmotion, nfs, wan ]
+        tags: [ opzone, web, app, db, vmotion, nfs, wan, erp3 ]
       nodes:
         - name: DC1-SVC3A
           id: 4

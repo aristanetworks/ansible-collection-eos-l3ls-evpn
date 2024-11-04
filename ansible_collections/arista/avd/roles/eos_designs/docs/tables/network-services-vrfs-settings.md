@@ -57,7 +57,8 @@
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;interface</samp>](## "<network_services_keys.name>.[].vrfs.[].ipv6_static_routes.[].interface") | String |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;nodes</samp>](## "<network_services_keys.name>.[].vrfs.[].ipv6_static_routes.[].nodes") | List, items: String |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;&lt;str&gt;</samp>](## "<network_services_keys.name>.[].vrfs.[].ipv6_static_routes.[].nodes.[]") | String |  |  |  |  |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;redistribute_static</samp>](## "<network_services_keys.name>.[].vrfs.[].redistribute_static") | Boolean |  |  |  | Non-selectively enabling or disabling redistribute static inside the VRF. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;redistribute_static</samp>](## "<network_services_keys.name>.[].vrfs.[].redistribute_static") | Boolean |  |  |  | Enable or disable the redistribution of all static routes to BGP in the VRF. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;redistribute_connected</samp>](## "<network_services_keys.name>.[].vrfs.[].redistribute_connected") | Boolean |  | `True` |  | Enable or disable the redistribution of all connected routes to BGP in the VRF. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;bgp</samp>](## "<network_services_keys.name>.[].vrfs.[].bgp") | Dictionary |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "<network_services_keys.name>.[].vrfs.[].bgp.enabled") | Boolean |  |  |  | Force (no) configuration of BGP for the VRF.<br>If not set, BGP will be configured when needed according to the following rules:<br>- If the VRF is part of an overlay (`evpn` or `mpls`), BGP will be configured for it.<br>- If any BGP peers are configured under the VRF, BGP will be configured for it. This is useful for L2LS designs with VRFs.<br>- If uplink type is `p2p-vrfs` *and* the vrf is included in the uplink VRFs, BGP will be configured for it. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;raw_eos_cli</samp>](## "<network_services_keys.name>.[].vrfs.[].bgp.raw_eos_cli") | String |  |  |  | EOS CLI rendered directly on the Router BGP, VRF definition in the final EOS configuration.<br> |
@@ -247,8 +248,11 @@
                 nodes:
                   - <str>
 
-            # Non-selectively enabling or disabling redistribute static inside the VRF.
+            # Enable or disable the redistribution of all static routes to BGP in the VRF.
             redistribute_static: <bool>
+
+            # Enable or disable the redistribution of all connected routes to BGP in the VRF.
+            redistribute_connected: <bool; default=True>
             bgp:
 
               # Force (no) configuration of BGP for the VRF.

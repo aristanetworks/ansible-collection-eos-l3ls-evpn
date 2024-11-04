@@ -75,6 +75,19 @@ tenant_a:
             name: Tenant_A_WEBZone_2
             tags: ['web']
             profile: GENERIC_FULL
+      - name: Tenant_A_ERP_Zone
+        vrf_vni: 17
+        redistribute_connected: false
+        mlag_ibgp_peering_ipv4_pool: 172.31.12.0/24
+        svis:
+          - id: 122
+            name: Tenant_A_ERP_Zone_1
+            tags: ['erp3']
+            profile: WITH_DHCP_AND_SNOOPING
+            ip_address_virtual: 10.1.30.1/24
+            ip_address_virtual_secondaries:
+              - 10.2.30.1/24
+              - 10.2.31.1/24
       - name: Tenant_A_APP_Zone
         vrf_vni: 12
         svis:

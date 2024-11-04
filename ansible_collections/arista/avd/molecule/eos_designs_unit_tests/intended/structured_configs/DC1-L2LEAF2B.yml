@@ -102,6 +102,9 @@ vlans:
 - id: 141
   name: Tenant_A_DB_Zone_2
   tenant: Tenant_A
+- id: 122
+  name: Tenant_A_ERP_Zone_1
+  tenant: Tenant_A
 - id: 110
   name: Tenant_A_OP_Zone_1
   tenant: Tenant_A
@@ -167,7 +170,7 @@ port_channel_interfaces:
     enabled: true
     mode: trunk
     trunk:
-      allowed_vlan: 110-112,120-121,130-131,140-141,150,160-161,210-211,250,310-311,350
+      allowed_vlan: 110-112,120-122,130-131,140-141,150,160-161,210-211,250,310-311,350
   shutdown: false
   mlag: 1001
 ethernet_interfaces:
@@ -223,6 +226,8 @@ mlag_configuration:
 ip_igmp_snooping:
   globally_enabled: true
   vlans:
+  - id: 122
+    enabled: false
   - id: 120
     enabled: false
 metadata:

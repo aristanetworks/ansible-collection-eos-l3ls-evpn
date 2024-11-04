@@ -1,0 +1,84 @@
+---
+# SITE1 variables
+# Use eBGP as underlay routing protocol on SITE1, the default is 'none' for WAN routers.
+underlay_routing_protocol: ebgp
+
+l3leaf:
+  defaults:
+    loopback_ipv4_pool: 192.168.255.0/24
+    vtep_loopback_ipv4_pool: 192.168.42.0/24
+    filter:
+      always_include_vrfs_in_tenants: [all]
+    mlag_interfaces: [Ethernet5, Ethernet6]
+    mlag_peer_l3_ipv4_pool: 10.255.251.0/24
+    mlag_peer_ipv4_pool: 10.255.252.0/24
+  node_groups:
+    - group: SITE1
+      bgp_as: 65101
+      nodes:
+        - name: site1-border1
+          mgmt_ip: 192.168.17.14/24
+          id: 5
+        - name: site1-border2
+          mgmt_ip: 192.168.17.15/24
+          id: 6
+
+wan_router:
+  defaults:
+    loopback_ipv4_pool: 192.168.255.0/24
+    vtep_loopback_ipv4_pool: 192.168.42.0/24
+    uplink_ipv4_pool: 10.0.1.0/24
+    filter:
+      always_include_vrfs_in_tenants: [all]
+    uplink_interfaces: [Ethernet1, Ethernet2]
+    uplink_switches: [site1-border1, site1-border2]
+    uplink_type: p2p-vrfs # (1)!
+    bgp_as: 65000
+  node_groups:
+    - group: SITE1
+      cv_pathfinder_region: REGION1
+      cv_pathfinder_site: SITE1
+      # Making this site a transit site
+      cv_pathfinder_transit_mode: region # (2)!
+      wan_ha:
+        enabled: true
+        # Use this knob to disable IPSec on WAN HA tunnel(s)
+        # ipsec: false
+      nodes:
+        - name: site1-wan1
+          id: 3
+          mgmt_ip: 192.168.17.12/24
+          uplink_switch_interfaces: [Ethernet3, Ethernet3]
+          l3_interfaces:
+            - name: Ethernet3
+              profile: MPLS-WAN-INTERFACE
+              peer_interface: Ethernet5
+              peer_ip: 172.18.10.1
+              ip_address: 172.18.10.2/24
+              wan_carrier: ACME-MPLS-INC
+              wan_circuit_id: mpls-site1-wan1
+            - name: Ethernet4
+              peer_interface: Ethernet5
+              peer_ip: 100.64.10.1
+              ip_address: 100.64.10.2/24
+              profile: INTERNET-WAN-INTERFACE
+              wan_carrier: REGION1-INTERNET-CORP
+              wan_circuit_id: inet-site1-wan1
+        - name: site1-wan2
+          id: 4
+          mgmt_ip: 192.168.17.13/24
+          uplink_switch_interfaces: [Ethernet4, Ethernet4]
+          l3_interfaces:
+            - name: Ethernet3
+              profile: MPLS-WAN-INTERFACE
+              peer_interface: Ethernet6
+              peer_ip: 172.18.11.1
+              ip_address: 172.18.11.2/24
+              wan_carrier: ACME-MPLS-INC
+              wan_circuit_id: mpls-site1-wan2
+            - name: Ethernet4
+              peer_interface: Ethernet6
+              dhcp_ip: 100.64.11.2
+              profile: INTERNET-WAN-INTERFACE
+              wan_carrier: REGION1-INTERNET-CORP
+              wan_circuit_id: inet-site1-wan2
