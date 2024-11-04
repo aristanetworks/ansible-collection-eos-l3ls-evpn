@@ -53,6 +53,7 @@ keys:
                   description: L4 port field-set name.
                 port_values:
                   type: list
+                  min_length: 1
                   items:
                     type: str
                     convert_types:
@@ -72,6 +73,7 @@ keys:
                   description: IPv4 prefix field-set name.
                 prefix_values:
                   type: list
+                  min_length: 1
                   items:
                     type: str
                     description: IP prefix (ex 1.2.3.0/24).

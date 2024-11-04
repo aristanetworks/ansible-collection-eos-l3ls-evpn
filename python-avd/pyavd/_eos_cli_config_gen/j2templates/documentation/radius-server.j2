@@ -7,6 +7,10 @@
 {% if radius_server is arista.avd.defined %}
 
 ### RADIUS Server
+{%     if radius_server.deadtime is arista.avd.defined %}
+
+- Time to skip a non-responsive server is {{ radius_server.deadtime }} minutes
+{%     endif %}
 {%     if radius_server.attribute_32_include_in_access_req is arista.avd.defined %}
 {%         set doc_line = "- Attribute 32 is included in access requests" %}
 {%         if radius_server.attribute_32_include_in_access_req.hostname is arista.avd.defined(true) %}

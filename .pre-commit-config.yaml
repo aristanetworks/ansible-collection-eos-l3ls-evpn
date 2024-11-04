@@ -198,11 +198,11 @@ repos:
 
       - id: schemas
         name: Build AVD schemas and documentation.
-        entry: sh -c 'exec python-avd/scripts/build-schemas.py'
+        entry: sh -c 'exec python-avd/scripts/build_schemas.py'
         language: python
         files: python-avd/pyavd/[a-z_]+/schema
         pass_filenames: false
-        additional_dependencies: ['deepmerge>=1.1.0', 'PyYAML>=6.0.0', 'pydantic>=2.3.0', 'jsonschema-rs', 'referencing>=0.35.0']
+        additional_dependencies: ['deepmerge>=1.1.0', 'PyYAML>=6.0.0', 'pydantic>=2.3.0', 'jsonschema-rs>=0.24', 'referencing>=0.35.0']
 
       - id: templates
         name: Precompile Jinja2 templates
