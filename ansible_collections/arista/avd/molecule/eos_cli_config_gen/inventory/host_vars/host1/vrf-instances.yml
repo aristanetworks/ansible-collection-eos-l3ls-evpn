@@ -1,3 +1,4 @@
+---
 ### VRFs ###
 
 vrfs:
@@ -9,3 +10,6 @@ vrfs:
   - name: TENANT_A_PROJECT02
     tenant: Tenant_A
     ip_routing: true
+  - name: BLAH
+  - name: defauls
+  - name: defaulu

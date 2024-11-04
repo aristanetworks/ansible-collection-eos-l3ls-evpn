@@ -34,11 +34,16 @@
 - [Interfaces](#interfaces)
   - [DPS Interfaces](#dps-interfaces)
 - [Routing](#routing)
+  - [IP Routing](#ip-routing)
+  - [IPv6 Routing](#ipv6-routing)
   - [ARP](#arp)
 - [Filters](#filters)
   - [AS Path Lists](#as-path-lists)
 - [802.1X Port Security](#8021x-port-security)
   - [802.1X Summary](#8021x-summary)
+- [VRF Instances](#vrf-instances)
+  - [VRF Instances Summary](#vrf-instances-summary)
+  - [VRF Instances Device Configuration](#vrf-instances-device-configuration)
 - [Application Traffic Recognition](#application-traffic-recognition)
   - [Applications](#applications)
   - [Application Profiles](#application-profiles)
@@ -663,6 +668,42 @@ interface Dps1
 
 ## Routing
 
+### IP Routing
+
+#### IP Routing Summary
+
+| VRF | Routing Enabled |
+| --- | --------------- |
+| default | False |
+| BLAH | - |
+| defauls | - |
+| defaulu | - |
+| MGMT | False |
+| TENANT_A_PROJECT01 | True |
+| TENANT_A_PROJECT02 | True |
+
+#### IP Routing Device Configuration
+
+```eos
+no ip routing vrf MGMT
+ip routing vrf TENANT_A_PROJECT01
+ip routing vrf TENANT_A_PROJECT02
+```
+
+### IPv6 Routing
+
+#### IPv6 Routing Summary
+
+| VRF | Routing Enabled |
+| --- | --------------- |
+| default | False |
+| BLAH | false |
+| defauls | false |
+| defaulu | false |
+| MGMT | false |
+| TENANT_A_PROJECT01 | false |
+| TENANT_A_PROJECT02 | false |
+
 ### ARP
 
 ARP cache persistency is enabled. The refresh-delay is 700 seconds after reboot.
@@ -763,6 +804,36 @@ ip as-path access-list mylist2 deny _64517$ igp
 | Profile1 | tls | user_id1 | PF1 |
 | Profile2 | - | user_id2 | - |
 | Profile3 | - | - | PF2 |
+
+## VRF Instances
+
+### VRF Instances Summary
+
+| VRF Name | IP Routing |
+| -------- | ---------- |
+| BLAH | disabled |
+| defauls | disabled |
+| defaulu | disabled |
+| MGMT | disabled |
+| TENANT_A_PROJECT01 | enabled |
+| TENANT_A_PROJECT02 | enabled |
+
+### VRF Instances Device Configuration
+
+```eos
+!
+vrf instance BLAH
+!
+vrf instance defauls
+!
+vrf instance defaulu
+!
+vrf instance MGMT
+!
+vrf instance TENANT_A_PROJECT01
+!
+vrf instance TENANT_A_PROJECT02
+```
 
 ## Application Traffic Recognition
 

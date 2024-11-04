@@ -8,7 +8,7 @@ cvx:
   services:
     mcs:
       redis:
-        password: 070E334ddD1D18
+        password: 01150F165E1C07032D
         password_type: 7
       shutdown: false
     vxlan:
