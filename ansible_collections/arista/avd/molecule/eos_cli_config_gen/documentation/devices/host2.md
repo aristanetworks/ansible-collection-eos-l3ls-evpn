@@ -15,6 +15,15 @@
   - [Management Security Device Configuration](#management-security-device-configuration)
 - [Monitoring](#monitoring)
   - [Flow Tracking](#flow-tracking)
+- [Multicast](#multicast)
+  - [IP IGMP Snooping](#ip-igmp-snooping)
+- [IP DHCP Relay](#ip-dhcp-relay)
+  - [IP DHCP Relay Summary](#ip-dhcp-relay-summary)
+  - [IP DHCP Relay Device Configuration](#ip-dhcp-relay-device-configuration)
+- [IP DHCP Snooping](#ip-dhcp-snooping)
+  - [IP DHCP Snooping Device Configuration](#ip-dhcp-snooping-device-configuration)
+- [Errdisable](#errdisable)
+  - [Errdisable Summary](#errdisable-summary)
 
 ## Management
 
@@ -165,4 +174,61 @@ flow tracking sampled
       record export on inactive timeout 3666
       record export on interval 5666
       record export mpls
+```
+
+## Multicast
+
+### IP IGMP Snooping
+
+#### IP IGMP Snooping Summary
+
+| IGMP Snooping | Fast Leave | Interface Restart Query | Proxy | Restart Query Interval | Robustness Variable |
+| ------------- | ---------- | ----------------------- | ----- | ---------------------- | ------------------- |
+| Enabled | False | - | False | - | - |
+
+| Querier Enabled | IP Address | Query Interval | Max Response Time | Last Member Query Interval | Last Member Query Count | Startup Query Interval | Startup Query Count | Version |
+| --------------- | ---------- | -------------- | ----------------- | -------------------------- | ----------------------- | ---------------------- | ------------------- | ------- |
+| False | - | - | - | - | - | - | - | - |
+
+#### IP IGMP Snooping Device Configuration
+
+```eos
+!
+no ip igmp snooping fast-leave
+no ip igmp snooping querier
+```
+
+## IP DHCP Relay
+
+### IP DHCP Relay Summary
+
+IP DHCP Relay Option 82 is enabled.
+
+### IP DHCP Relay Device Configuration
+
+```eos
+!
+ip dhcp relay information option
+```
+
+## IP DHCP Snooping
+
+IP DHCP Snooping is enabled
+
+### IP DHCP Snooping Device Configuration
+
+```eos
+!
+ip dhcp snooping
+```
+
+## Errdisable
+
+### Errdisable Summary
+
+
+
+```eos
+!
+errdisable recovery interval 300
 ```

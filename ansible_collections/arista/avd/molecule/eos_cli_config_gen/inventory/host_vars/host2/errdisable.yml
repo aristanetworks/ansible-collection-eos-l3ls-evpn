@@ -1,0 +1,6 @@
+---
+### Errdisable ###
+
+errdisable:
+  recovery:
+    interval: 300

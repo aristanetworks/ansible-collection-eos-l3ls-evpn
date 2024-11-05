@@ -95,8 +95,27 @@ event_handlers:
     trigger: on-intf
     trigger_on_intf:
       interface: Ethernet3
+  - name: trigger-on-intf4
+    trigger: on-intf
+    trigger_on_intf:
+      interface: Ethernet4
+      ip: true
+  - name: trigger-on-intf5
+    trigger: on-intf
+    trigger_on_intf:
+      interface: Ethernet5
+      ipv6: true
+  - name: trigger-on-intf6
+    trigger: on-intf
+    trigger_on_intf:
+      interface: Ethernet6
+      operstatus: true
   - name: trigger-vm-tracer
     trigger: "vm-tracer vm"
     actions:
       bash_command: echo "vm-tracer vm"
+  - name: trigger-vm-tracer2
+    trigger: "vm-tracer vm"
+    actions:
+      bash_command: echo "vm-tracer vm"\nEOF
   - name: without-trigger-key
