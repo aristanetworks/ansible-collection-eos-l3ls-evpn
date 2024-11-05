@@ -303,13 +303,7 @@ interface {{ ethernet_interface.name }}
    l2-protocol encapsulation dot1q vlan {{ ethernet_interface.l2_protocol.encapsulation_dot1q_vlan }}
 {%     endif %}
 {%     if ethernet_interface.mac_timestamp is arista.avd.defined %}
-{%         if ethernet_interface.mac_timestamp == "header" %}
-   mac timestamp header
-{%         elif ethernet_interface.mac_timestamp == "before-fcs" %}
-   mac timestamp before-fcs
-{%         elif ethernet_interface.mac_timestamp == "replace-fcs" %}
-   mac timestamp replace-fcs
-{%         endif %}
+   mac timestamp {{ ethernet_interface.mac_timestamp }}
 {%     endif %}
 {%     if ethernet_interface.evpn_ethernet_segment is arista.avd.defined %}
    !

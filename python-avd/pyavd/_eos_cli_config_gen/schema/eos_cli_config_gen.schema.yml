@@ -2146,11 +2146,11 @@ keys:
           - before-fcs
           - replace-fcs
           - header
-          description: 'header: Insert timestamp in ethernet header. Supports on platforms
-            like 7500E/R and 7280E/R.
+          description: 'header: Insert timestamp in ethernet header. Supported on
+            platforms like 7500E/R and 7280E/R.
 
-            before-fcs: Insert timestamp before fcs field. Support on platforms like
-            7150.
+            before-fcs: Insert timestamp before fcs field. Supported on platforms
+            like 7150.
 
             replace-fcs: Replace fcs field with timestamp.'
         trunk_groups:
