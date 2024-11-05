@@ -137,6 +137,7 @@ zscaler_endpoints:
     city: Fremont, CA
     datacenter: FMT1
     country: United States
+    region: us-west1
     latitude: 37
     longitude: -121
     ip_address: 10.37.121.1 # Not the correct address
