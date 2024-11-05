@@ -289,7 +289,7 @@ interface Vlan4094
 
 | Settings | Value |
 | -------- | ----- |
-| Local Convergence Delay (ms) | 15000 |
+| Local Convergence Delay | 15000 milliseconds |
 | CSN Packet Transmission Interval | 10 seconds |
 | CSN Packet P2P Links Disabled | True |
 | LSP Generation Maximum Interval | 30 seconds |

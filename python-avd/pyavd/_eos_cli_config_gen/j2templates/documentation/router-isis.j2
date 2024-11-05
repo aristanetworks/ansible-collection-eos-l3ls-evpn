@@ -66,7 +66,7 @@
 | Settings | Value |
 | -------- | ----- |
 {%         if router_isis.timers.local_convergence.protected_prefixes is arista.avd.defined(true) %}
-| Local Convergence Delay (ms) | {{ router_isis.timers.local_convergence.delay | arista.avd.default(10000) }} |
+| Local Convergence Delay | {{ router_isis.timers.local_convergence.delay | arista.avd.default(10000) }} milliseconds |
 {%         endif %}
 {%         if router_isis.timers.csnp.generation.interval is arista.avd.defined %}
 | CSN Packet Transmission Interval | {{ router_isis.timers.csnp.generation.interval }} seconds |

@@ -208,7 +208,7 @@ interface Vlan4094
 
 | Settings | Value |
 | -------- | ----- |
-| Local Convergence Delay (ms) | 10000 |
+| Local Convergence Delay | 10000 milliseconds |
 | LSP Generation Maximum Interval | 30 seconds |
 | LSP Generation Initial Wait-time | 40 milliseconds |
 
