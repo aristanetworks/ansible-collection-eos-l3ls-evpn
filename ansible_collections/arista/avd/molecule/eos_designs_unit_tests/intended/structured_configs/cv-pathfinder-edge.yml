@@ -926,10 +926,34 @@ metadata:
       tunnels:
       - name: Tunnel100
         preference: Preferred
+        endpoint:
+          city: Fremont, CA
+          datacenter: FMT1
+          country: United States
+          region: us-west1
+          latitude: '37'
+          longitude: '-121'
+          ip_address: 10.37.121.1
       - name: Tunnel101
         preference: Alternate
+        endpoint:
+          city: Washington, DC
+          datacenter: WAS1
+          country: United States
+          region: us-east1
+          latitude: '39'
+          longitude: '-77'
+          ip_address: 10.39.77.1
       - name: Tunnel102
         preference: Alternate
+        endpoint:
+          city: Frankfurt
+          datacenter: FRA4
+          country: Germany
+          region: eu-west1
+          latitude: '50'
+          longitude: '9'
+          ip_address: 10.50.9.1
     role: edge
     ssl_profile: profileA
     vtep_ip: 192.168.142.1

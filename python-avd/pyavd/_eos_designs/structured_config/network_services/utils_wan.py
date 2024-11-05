@@ -792,6 +792,7 @@ class UtilsWanMixin:
                         "exit_group": f"{policy_name}_{suffix}",
                         "preference": zscaler_endpoint_key,
                         "suffix": suffix,
+                        "endpoint": zscaler_endpoint,
                     },
                 )
 
