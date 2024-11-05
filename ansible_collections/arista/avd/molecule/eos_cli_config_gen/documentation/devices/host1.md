@@ -100,6 +100,8 @@ tacacs-server host 10.10.10.160
 
 ### RADIUS Server
 
+- Time to skip a non-responsive server is 10 minutes
+
 - Attribute 32 is included in access requests using hostname
 
 - Global RADIUS TLS SSL profile is GLOBAL_RADIUS_SSL_PROFILE
@@ -128,6 +130,7 @@ tacacs-server host 10.10.10.160
 
 ```eos
 !
+radius-server deadtime 10
 radius-server attribute 32 include-in-access-req hostname
 radius-server dynamic-authorization port 1700
 radius-server tls ssl-profile GLOBAL_RADIUS_SSL_PROFILE

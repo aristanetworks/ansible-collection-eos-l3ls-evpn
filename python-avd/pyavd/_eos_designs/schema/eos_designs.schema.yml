@@ -4986,6 +4986,9 @@ keys:
           country:
             type: str
             required: true
+          region:
+            type: str
+            required: true
           latitude:
             type: str
             convert_types:

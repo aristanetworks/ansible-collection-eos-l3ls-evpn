@@ -16,11 +16,11 @@
     | [<samp>&nbsp;&nbsp;field_sets</samp>](## "application_traffic_recognition.field_sets") | Dictionary |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;l4_ports</samp>](## "application_traffic_recognition.field_sets.l4_ports") | List, items: Dictionary |  |  |  | L4 port field-set. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;name</samp>](## "application_traffic_recognition.field_sets.l4_ports.[].name") | String | Required, Unique |  |  | L4 port field-set name. |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;port_values</samp>](## "application_traffic_recognition.field_sets.l4_ports.[].port_values") | List, items: String |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;port_values</samp>](## "application_traffic_recognition.field_sets.l4_ports.[].port_values") | List, items: String |  |  | Min Length: 1 |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;&lt;str&gt;</samp>](## "application_traffic_recognition.field_sets.l4_ports.[].port_values.[]") | String |  |  |  | Port values or range of port values.<br>Port values are between 0 and 65535. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;ipv4_prefixes</samp>](## "application_traffic_recognition.field_sets.ipv4_prefixes") | List, items: Dictionary |  |  |  | IPv4 prefix field set. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;name</samp>](## "application_traffic_recognition.field_sets.ipv4_prefixes.[].name") | String | Required, Unique |  |  | IPv4 prefix field-set name. |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;prefix_values</samp>](## "application_traffic_recognition.field_sets.ipv4_prefixes.[].prefix_values") | List, items: String |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;prefix_values</samp>](## "application_traffic_recognition.field_sets.ipv4_prefixes.[].prefix_values") | List, items: String |  |  | Min Length: 1 |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;&lt;str&gt;</samp>](## "application_traffic_recognition.field_sets.ipv4_prefixes.[].prefix_values.[]") | String |  |  |  | IP prefix (ex 1.2.3.0/24). |
     | [<samp>&nbsp;&nbsp;applications</samp>](## "application_traffic_recognition.applications") | Dictionary |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;ipv4_applications</samp>](## "application_traffic_recognition.applications.ipv4_applications") | List, items: Dictionary |  |  |  | List of user defined IPv4 applications. The name should be unique over all defined applications (ipv4 and l4). |
@@ -88,7 +88,7 @@
 
             # L4 port field-set name.
           - name: <str; required; unique>
-            port_values:
+            port_values: # >=1 items
 
                 # Port values or range of port values.
                 # Port values are between 0 and 65535.
@@ -99,7 +99,7 @@
 
             # IPv4 prefix field-set name.
           - name: <str; required; unique>
-            prefix_values:
+            prefix_values: # >=1 items
 
                 # IP prefix (ex 1.2.3.0/24).
               - <str>
