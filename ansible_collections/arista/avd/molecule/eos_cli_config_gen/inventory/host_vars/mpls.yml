@@ -48,12 +48,20 @@ mpls:
         authentication:
           index: 3
           type: md5
+      - ipv6_address: 2::11.22.33.44
+        authentication:
+          index: 3133
+          type: none
       - ip_address: 10.1.1.2
         authentication:
           index: 303
       - ip_address: 1.1.12.2
         authentication:
           index: 30
+          type: none
+      - ipv6_address: 2001::db8
+        authentication:
+          index: 31
           type: none
       - ip_address: 1.21.1.20
         authentication:

@@ -68,14 +68,24 @@ mpls rsvp
    authentication index {{ auth.active_index }} active
 {%         endif %}
 {%     endif %}
-{%     for neighbor in mpls.rsvp.neighbors | arista.avd.natural_sort('ip_address') %}
-{%         if neighbor.authentication.type is arista.avd.defined %}
-   neighbor {{ neighbor.ip_address }} authentication type {{ neighbor.authentication.type }}
-{%         endif %}
-{%         if neighbor.authentication.index is arista.avd.defined %}
-   neighbor {{ neighbor.ip_address }} authentication index {{ neighbor.authentication.index }} active
-{%         endif %}
-{%     endfor %}
+{%     if mpls.rsvp.neighbors is arista.avd.defined %}
+{%         set with_neighbor_ipv4_address = mpls.rsvp.neighbors | selectattr('ip_address', 'arista.avd.defined') | arista.avd.natural_sort('ip_address') %}
+{%         set with_neighbor_ipv6_address = mpls.rsvp.neighbors | selectattr('ipv6_address', 'arista.avd.defined') | arista.avd.natural_sort('ipv6_address') %}
+{%         set sorted_ip_addresses =  with_neighbor_ipv4_address | list + with_neighbor_ipv6_address | list %}
+{%         for neighbor in sorted_ip_addresses %}
+{%             if neighbor.ip_address is arista.avd.defined %}
+{%                 set ipaddress = neighbor.ip_address %}
+{%             elif neighbor.ipv6_address is arista.avd.defined %}
+{%                 set ipaddress = neighbor.ipv6_address %}
+{%             endif %}
+{%             if neighbor.authentication.type is arista.avd.defined %}
+   neighbor {{ ipaddress }} authentication type {{ neighbor.authentication.type }}
+{%             endif %}
+{%             if neighbor.authentication.index is arista.avd.defined %}
+   neighbor {{ ipaddress }} authentication index {{ neighbor.authentication.index }} active
+{%             endif %}
+{%         endfor %}
+{%     endif %}
 {%     if mpls.rsvp.ip_access_group is arista.avd.defined %}
    ip access-group {{ mpls.rsvp.ip_access_group }}
 {%     endif %}

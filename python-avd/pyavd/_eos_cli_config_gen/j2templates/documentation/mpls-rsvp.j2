@@ -70,8 +70,15 @@
 
 | Neighbor IP | Index | Type |
 | ----------- | ----- | ---- |
-{%         for neighbor in mpls.rsvp.neighbors | arista.avd.natural_sort('ip_address') %}
+{%         set with_neighbor_ipv4_address = mpls.rsvp.neighbors | selectattr('ip_address', 'arista.avd.defined') | arista.avd.natural_sort('ip_address') %}
+{%         set with_neighbor_ipv6_address = mpls.rsvp.neighbors | selectattr('ipv6_address', 'arista.avd.defined') | arista.avd.natural_sort('ipv6_address') %}
+{%         set sorted_ip_addresses =  with_neighbor_ipv4_address | list + with_neighbor_ipv6_address | list %}
+{%         for neighbor in sorted_ip_addresses %}
+{%             if neighbor.ip_address is arista.avd.defined %}
 | {{ neighbor.ip_address }} | {{ neighbor.authentication.index | arista.avd.default('-') }} | {{ neighbor.authentication.type | arista.avd.default('-') }} |
+{%             elif neighbor.ipv6_address is arista.avd.defined %}
+| {{ neighbor.ipv6_address }} | {{ neighbor.authentication.index | arista.avd.default('-') }} | {{ neighbor.authentication.type | arista.avd.default('-') }} |
+{%             endif %}
 {%         endfor %}
 {%     endif %}
 {%     if mpls.rsvp.graceful_restart is arista.avd.defined %}

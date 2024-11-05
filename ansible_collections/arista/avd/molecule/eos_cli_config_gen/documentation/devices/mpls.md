@@ -151,6 +151,8 @@ interface Loopback0
 | 1.10.1.2 | - | none |
 | 1.21.1.20 | - | md5 |
 | 10.1.1.2 | 303 | - |
+| 2::11.22.33.44 | 3133 | none |
+| 2001::db8 | 31 | none |
 
 ##### RSVP Graceful Restart
 
@@ -184,6 +186,10 @@ mpls rsvp
    neighbor 1.10.1.2 authentication type none
    neighbor 1.21.1.20 authentication type md5
    neighbor 10.1.1.2 authentication index 303 active
+   neighbor 2::11.22.33.44 authentication type none
+   neighbor 2::11.22.33.44 authentication index 3133 active
+   neighbor 2001::db8 authentication type none
+   neighbor 2001::db8 authentication index 31 active
    ip access-group RSVP_access_group_ipv4
    ipv6 access-group RSVP_access_group_ipv6
    fast-reroute reversion local

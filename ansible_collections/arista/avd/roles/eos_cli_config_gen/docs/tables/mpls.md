@@ -30,7 +30,8 @@
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sequence_number_window</samp>](## "mpls.rsvp.authentication.sequence_number_window") | Integer |  |  | Min: 1<br>Max: 255 | Size of reorder window for index in the sequence. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;type</samp>](## "mpls.rsvp.authentication.type") | String |  |  | Valid Values:<br>- <code>md5</code><br>- <code>none</code> | Authentication mechanism. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;neighbors</samp>](## "mpls.rsvp.neighbors") | List, items: Dictionary |  |  |  | Neighbor-specific configuration. |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;ip_address</samp>](## "mpls.rsvp.neighbors.[].ip_address") | String | Required, Unique |  |  | Neighbor's interface IPv4 or IPv6 address. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;ip_address</samp>](## "mpls.rsvp.neighbors.[].ip_address") | String |  |  |  | Neighbor's interface IPv4 address. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ipv6_address</samp>](## "mpls.rsvp.neighbors.[].ipv6_address") | String |  |  |  | Neighbor's interface IPv6 address. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;authentication</samp>](## "mpls.rsvp.neighbors.[].authentication") | Dictionary | Required |  |  | Cryptographic authentication. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;index</samp>](## "mpls.rsvp.neighbors.[].authentication.index") | Integer |  |  | Min: 1<br>Max: 4294967295 | Password index. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;type</samp>](## "mpls.rsvp.neighbors.[].authentication.type") | String |  |  | Valid Values:<br>- <code>md5</code><br>- <code>none</code> | Authentication mechanism. |
@@ -123,8 +124,11 @@
         # Neighbor-specific configuration.
         neighbors:
 
-            # Neighbor's interface IPv4 or IPv6 address.
-          - ip_address: <str; required; unique>
+            # Neighbor's interface IPv4 address.
+          - ip_address: <str>
+
+            # Neighbor's interface IPv6 address.
+            ipv6_address: <str>
 
             # Cryptographic authentication.
             authentication: # required
