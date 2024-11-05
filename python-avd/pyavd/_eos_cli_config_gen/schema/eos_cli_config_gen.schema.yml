@@ -493,6 +493,7 @@ keys:
                   description: L4 port field-set name.
                 port_values:
                   type: list
+                  min_length: 1
                   items:
                     type: str
                     convert_types:
@@ -512,6 +513,7 @@ keys:
                   description: IPv4 prefix field-set name.
                 prefix_values:
                   type: list
+                  min_length: 1
                   items:
                     type: str
                     description: IP prefix (ex 1.2.3.0/24).
@@ -3070,6 +3072,7 @@ keys:
                 default: both
         dot1x:
           type: dict
+          description: 802.1x
           keys:
             port_control:
               type: str
@@ -4771,6 +4774,7 @@ keys:
                 default: eq
               source_ports:
                 type: list
+                min_length: 1
                 items:
                   type: str
                   convert_types:
@@ -4794,6 +4798,7 @@ keys:
                 default: eq
               destination_ports:
                 type: list
+                min_length: 1
                 items:
                   type: str
                   convert_types:
@@ -5508,6 +5513,15 @@ keys:
               - 21
               - 24
               description: Diffie-Hellman group for the key exchange.
+            integrity:
+              type: str
+              valid_values:
+              - md5
+              - sha1
+              - sha256
+              - sha384
+              - sha512
+              description: Integrity algorithm.
       sa_policies:
         type: list
         description: Security Association policies.
@@ -7823,6 +7837,37 @@ keys:
                       preference:
                         type: str
                         required: true
+                      endpoint:
+                        type: dict
+                        required: true
+                        keys:
+                          ip_address:
+                            type: str
+                            required: true
+                          datacenter:
+                            type: str
+                            required: true
+                          city:
+                            type: str
+                            required: true
+                          country:
+                            type: str
+                            required: true
+                          region:
+                            type: str
+                            required: true
+                          latitude:
+                            type: str
+                            convert_types:
+                            - float
+                            - int
+                            required: true
+                          longitude:
+                            type: str
+                            convert_types:
+                            - float
+                            - int
+                            required: true
           applications:
             type: dict
             keys:
@@ -8402,22 +8447,23 @@ keys:
                           - udp
                         source_ports:
                           type: list
+                          min_length: 1
                           description: "A list of port numbers or port range or port
                             name. Combination of port numbers or range and port name
                             is not supported on EOS. The port numbers should be in
-                            range of 0-65535.\ne.g.\n  [ \"12\", \"14-20\" ]\n  [
-                            \"www\" ]"
+                            range of 0-65535.\ne.g.\n  [\"12\", \"14-20\"]\n  [\"www\"]"
                           items:
                             type: str
                             convert_types:
                             - int
                         destination_ports:
                           type: list
+                          min_length: 1
                           description: "A list of port numbers or port range or port
                             name. Combination of port numbers or range and port name
                             is not supported on EOS. The port numbers should be in
-                            range of 0-65535.\ne.g.\n  [ \"12\", \"14-20\", \"80\"
-                            ]\n  [ \"https\" ]"
+                            range of 0-65535.\ne.g.\n  [\"12\", \"14-20\", \"80\"]\n
+                            \ [\"https\"]"
                           items:
                             type: str
                             convert_types:
@@ -11417,6 +11463,13 @@ keys:
             type: str
             description: Specify the format of the NAS-Identifier. If 'hostname' is
               set, this is ignored.
+      deadtime:
+        description: Time to skip a non-responsive server in minutes.
+        type: int
+        convert_types:
+        - str
+        min: 1
+        max: 1000
       dynamic_authorization:
         type: dict
         keys:
@@ -13120,6 +13173,8 @@ keys:
         keys:
           domain_identifier:
             type: str
+          domain_identifier_remote:
+            type: str
           neighbor_default:
             type: dict
             keys:
@@ -13173,6 +13228,12 @@ keys:
                   type: str
                 activate:
                   type: bool
+                route_map_in:
+                  type: str
+                  description: Inbound route-map name.
+                route_map_out:
+                  type: str
+                  description: Outbound route-map name.
                 rcf_in:
                   type: str
                   description: 'Inbound RCF function name with parenthesis.
@@ -13327,6 +13388,24 @@ keys:
                 - str
                 min: 0
                 max: 300
+          evpn_ethernet_segment:
+            type: list
+            primary_key: domain
+            items:
+              type: dict
+              keys:
+                domain:
+                  type: str
+                  valid_values:
+                  - all
+                  - local
+                  - remote
+                identifier:
+                  type: str
+                  description: EVPN Ethernet Segment Identifier (Type 1 format).
+                route_target_import:
+                  type: str
+                  description: Low-order 6 bytes of ES-Import Route Target.
           bgp_additional_paths:
             type: dict
             deprecation:

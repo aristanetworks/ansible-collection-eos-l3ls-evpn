@@ -80,11 +80,23 @@ pip3 install -r ansible_collections/arista/avd/requirements-dev.txt -r ansible_c
     You may be required to set `ansible_python_interpreter` in your Ansible inventory.
     For more information consult with the [Ansible documentation](https://docs.ansible.com/ansible/latest/reference_appendices/python_3_support.html#using-python-3-on-the-managed-machines-with-commands-and-playbooks).
 
+## Running from source
+
+Ansible-AVD is able to detect when it is running from source, and will prepend the Python Path with the path to the PyAVD source. This ensures that running Ansible-AVD from source will also use PyAVD from the same source.
+
+The modification of the Python Path is logged as a warning in the Ansible output.
+
+TODO: Add picture.
+
+When running from source, the `verify_requirements` action will check if any schema fragment or templates has changed locally and if so, will recompile on the fly either or both as
+required for `eos_cli_config_gen` and `eos_designs`, allowing a seamless development workflow while using Ansible.
+When using pyavd, it is required to run pre-commit to achieve the same.
+
 ## Pre-commit
 
 - [pre-commit](https://github.com/aristanetworks/avd/blob/devel/.pre-commit-config.yaml) can run standard hooks on every commit to automatically point out issues in code such as missing semicolons, trailing whitespace, and debug statements.
 - Pointing these issues out before code review allows a code reviewer to focus on the architecture of a change while not wasting time with trivial style nitpicks.
-- Additionally, the AVD project leverages pre-commit hooks to build and update the AVD schemas and documentation artifacts.
+- Additionally, the AVD project leverages pre-commit hooks to build and update the AVD schemas, templates and documentation artifacts.
 
 ### Install pre-commit hook
 

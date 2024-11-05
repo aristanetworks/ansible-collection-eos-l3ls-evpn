@@ -327,10 +327,10 @@ spanning-tree mode none
 
 ### IKE policies
 
-| Policy name | IKE lifetime | Encryption | DH group | Local ID |
-| ----------- | ------------ | ---------- | -------- | -------- |
-| CP-IKE-POLICY | - | - | - | 192.168.42.4 |
-| DP-IKE-POLICY | - | - | - | 192.168.42.4 |
+| Policy name | IKE lifetime | Encryption | DH group | Local ID | Integrity |
+| ----------- | ------------ | ---------- | -------- | -------- | --------- |
+| CP-IKE-POLICY | - | - | - | 192.168.42.4 | - |
+| DP-IKE-POLICY | - | - | - | 192.168.42.4 | - |
 
 ### Security Association policies
 
@@ -872,15 +872,15 @@ ASN Notation: asplain
 
 ##### EVPN Peer Groups
 
-| Peer Group | Activate | Encapsulation |
-| ---------- | -------- | ------------- |
-| WAN-OVERLAY-PEERS | True | path-selection |
+| Peer Group | Activate | Route-map In | Route-map Out | Encapsulation |
+| ---------- | -------- | ------------ | ------------- | ------------- |
+| WAN-OVERLAY-PEERS | True |  RM-EVPN-SOO-IN | RM-EVPN-SOO-OUT | path-selection |
 
 ##### EVPN Neighbors
 
-| Neighbor | Activate | Encapsulation |
-| -------- | -------- | ------------- |
-| 192.168.42.3 | True | path-selection |
+| Neighbor | Activate | Route-map In | Route-map Out | Encapsulation |
+| -------- | -------- | ------------ | ------------- | ------------- |
+| 192.168.42.3 | True | - | - | path-selection |
 
 ##### EVPN DCI Gateway Summary
 

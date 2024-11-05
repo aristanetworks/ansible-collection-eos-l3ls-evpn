@@ -13,6 +13,7 @@
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;datacenter</samp>](## "zscaler_endpoints.primary.datacenter") | String | Required |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;city</samp>](## "zscaler_endpoints.primary.city") | String | Required |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;country</samp>](## "zscaler_endpoints.primary.country") | String | Required |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;region</samp>](## "zscaler_endpoints.primary.region") | String | Required |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;latitude</samp>](## "zscaler_endpoints.primary.latitude") | String | Required |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;longitude</samp>](## "zscaler_endpoints.primary.longitude") | String | Required |  |  |  |
     | [<samp>&nbsp;&nbsp;secondary</samp>](## "zscaler_endpoints.secondary") | Dictionary |  |  |  |  |
@@ -20,6 +21,7 @@
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;datacenter</samp>](## "zscaler_endpoints.secondary.datacenter") | String | Required |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;city</samp>](## "zscaler_endpoints.secondary.city") | String | Required |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;country</samp>](## "zscaler_endpoints.secondary.country") | String | Required |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;region</samp>](## "zscaler_endpoints.secondary.region") | String | Required |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;latitude</samp>](## "zscaler_endpoints.secondary.latitude") | String | Required |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;longitude</samp>](## "zscaler_endpoints.secondary.longitude") | String | Required |  |  |  |
     | [<samp>&nbsp;&nbsp;tertiary</samp>](## "zscaler_endpoints.tertiary") | Dictionary |  |  |  |  |
@@ -27,6 +29,7 @@
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;datacenter</samp>](## "zscaler_endpoints.tertiary.datacenter") | String | Required |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;city</samp>](## "zscaler_endpoints.tertiary.city") | String | Required |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;country</samp>](## "zscaler_endpoints.tertiary.country") | String | Required |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;region</samp>](## "zscaler_endpoints.tertiary.region") | String | Required |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;latitude</samp>](## "zscaler_endpoints.tertiary.latitude") | String | Required |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;longitude</samp>](## "zscaler_endpoints.tertiary.longitude") | String | Required |  |  |  |
     | [<samp>&nbsp;&nbsp;cloud_name</samp>](## "zscaler_endpoints.cloud_name") | String | Required |  |  | The name of the Zscaler cloud the CloudVision cluster is integrated with like 'zscaler1' or 'zscalerbeta'. |
@@ -49,6 +52,7 @@
         datacenter: <str; required>
         city: <str; required>
         country: <str; required>
+        region: <str; required>
         latitude: <str; required>
         longitude: <str; required>
       secondary:
@@ -56,6 +60,7 @@
         datacenter: <str; required>
         city: <str; required>
         country: <str; required>
+        region: <str; required>
         latitude: <str; required>
         longitude: <str; required>
       tertiary:
@@ -63,6 +68,7 @@
         datacenter: <str; required>
         city: <str; required>
         country: <str; required>
+        region: <str; required>
         latitude: <str; required>
         longitude: <str; required>
 

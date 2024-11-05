@@ -328,9 +328,9 @@ spanning-tree mode none
 
 ### IKE policies
 
-| Policy name | IKE lifetime | Encryption | DH group | Local ID |
-| ----------- | ------------ | ---------- | -------- | -------- |
-| CP-IKE-POLICY | - | - | - | 192.168.42.2 |
+| Policy name | IKE lifetime | Encryption | DH group | Local ID | Integrity |
+| ----------- | ------------ | ---------- | -------- | -------- | --------- |
+| CP-IKE-POLICY | - | - | - | 192.168.42.2 | - |
 
 ### Security Association policies
 
@@ -773,10 +773,10 @@ ASN Notation: asplain
 
 ##### EVPN Peer Groups
 
-| Peer Group | Activate | Encapsulation |
-| ---------- | -------- | ------------- |
-| WAN-OVERLAY-PEERS | True | path-selection |
-| WAN-RR-OVERLAY-PEERS | True | path-selection |
+| Peer Group | Activate | Route-map In | Route-map Out | Encapsulation |
+| ---------- | -------- | ------------ | ------------- | ------------- |
+| WAN-OVERLAY-PEERS | True |  - | - | path-selection |
+| WAN-RR-OVERLAY-PEERS | True |  - | - | path-selection |
 
 #### Router BGP IPv4 SR-TE Address Family
 

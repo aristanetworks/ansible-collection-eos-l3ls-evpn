@@ -48,3 +48,7 @@ ansible_collections/arista/avd/tests/.mypy_cache/
 
 # Temporary files creating during CI workflow
 /tmp-requirements-minimum.txt
+
+# Hash files created when running pyavd from source
+python-avd/pyavd/*/j2templates/.hash
+python-avd/pyavd/*/schema/schema_fragments/.hash
