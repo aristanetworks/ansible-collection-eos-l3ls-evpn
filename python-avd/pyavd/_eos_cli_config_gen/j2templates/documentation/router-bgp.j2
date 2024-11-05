@@ -645,6 +645,12 @@ ASN Notation: {{ router_bgp.as_notation | arista.avd.default('asplain') }}
 
 | Settings | Value |
 | -------- | ----- |
+{%         if router_bgp.address_family_evpn.domain_identifier is arista.avd.defined %}
+| Local Domain | {{ router_bgp.address_family_evpn.domain_identifier }} |
+{%         endif %}
+{%         if router_bgp.address_family_evpn.domain_identifier_remote is arista.avd.defined %}
+| Remote Domain | {{ router_bgp.address_family_evpn.domain_identifier_remote }} |
+{%         endif %}
 {%         if evpn_gw_config.peer_groups | length > 0 %}
 | Remote Domain Peer Groups | {{ evpn_gw_config.peer_groups | join(", ") }} |
 {%         endif %}
@@ -654,6 +660,14 @@ ASN Notation: {{ router_bgp.as_notation | arista.avd.default('asplain') }}
 {%         if router_bgp.address_family_evpn.neighbor_default.next_hop_self_received_evpn_routes.inter_domain is arista.avd.defined(true) %}
 | L3 Gateway Inter-domain | True |
 {%         endif %}
+{%         for segment in router_bgp.address_family_evpn.evpn_ethernet_segment | arista.avd.natural_sort('domain') %}
+{%             if segment.identifier is arista.avd.defined %}
+| {{ segment.domain | title }} Domain: Ethernet-Segment Identifier | {{ segment.identifier }} |
+{%             endif %}
+{%             if segment.route_target_import is arista.avd.defined %}
+| {{ segment.domain | title }} Domain: Ethernet-Segment import Route-Target | {{ segment.route_target_import }} |
+{%             endif %}
+{%         endfor %}
 {%     endif %}
 {%     if router_bgp.address_family_ipv4_labeled_unicast is arista.avd.defined %}
 

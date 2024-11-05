@@ -6,6 +6,9 @@
 {# eos - radius server #}
 {% if radius_server is arista.avd.defined %}
 !
+{%     if radius_server.deadtime is arista.avd.defined %}
+radius-server deadtime {{ radius_server.deadtime }}
+{%     endif %}
 {%     if radius_server.attribute_32_include_in_access_req is arista.avd.defined %}
 {%         set attribute_32_include_in_access_cli = "radius-server attribute 32 include-in-access-req" %}
 {%         if radius_server.attribute_32_include_in_access_req.hostname is arista.avd.defined (true) %}

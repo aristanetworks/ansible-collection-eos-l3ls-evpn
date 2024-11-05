@@ -1,6 +1,7 @@
 ---
 ## Radius Servers
 radius_server:
+  deadtime: 10
   attribute_32_include_in_access_req:
     hostname: true
   dynamic_authorization:

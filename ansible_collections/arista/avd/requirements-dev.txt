@@ -11,7 +11,7 @@ codespell>=2.2.6
 deepmerge>=1.1.0
 docker>=7.1.0
 identify>=1.4.20
-jsonschema-rs
+jsonschema-rs>=0.24
 molecule>=6.0
 molecule-plugins[docker]>=23.4.0
 pydantic>=2.3.0

@@ -3,7 +3,9 @@ ip_security:
   ike_policies:
     # Testing sorting
     - name: IKE-2
+      integrity: sha512
     - name: IKE-1
+      integrity: md5
       local_id: 192.168.100.1
       ike_lifetime: 24
       encryption: aes256
