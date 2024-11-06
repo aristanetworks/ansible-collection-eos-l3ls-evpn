@@ -89,6 +89,9 @@ class AvdDeprecationWarning(AristaAvdError):  # noqa: N818
         self.message = " ".join(messages)
         super().__init__(self.message)
 
+    def to_validation_error(self) -> AvdValidationError:
+        return AvdValidationError(self.message, self.path.split("."))
+
 
 class AristaAvdDuplicateDataError(AristaAvdError):
     def __init__(self, context: str, context_item_a: str, context_item_b: str) -> None:
