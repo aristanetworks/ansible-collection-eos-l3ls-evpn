@@ -432,7 +432,7 @@
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;version</samp>](## "ethernet_interfaces.[].vrrp_ids.[].ipv4.version") | Integer |  |  | Valid Values:<br>- <code>2</code><br>- <code>3</code> |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ipv6</samp>](## "ethernet_interfaces.[].vrrp_ids.[].ipv6") | Dictionary |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;address</samp>](## "ethernet_interfaces.[].vrrp_ids.[].ipv6.address") | String | Required |  |  | Virtual IPv6 address. |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;validate_state</samp>](## "ethernet_interfaces.[].validate_state") | Boolean |  |  |  | Set to false to disable interface validation by the `eos_validate_state` role. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;validate_state</samp>](## "ethernet_interfaces.[].validate_state") | Boolean |  |  |  | Set to false to disable interface state and LLDP topology validation performed by the `eos_validate_state` role. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;switchport</samp>](## "ethernet_interfaces.[].switchport") | Dictionary |  |  |  | This should not be combined with `ethernet_interfaces[].type = switched/routed`. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "ethernet_interfaces.[].switchport.enabled") | Boolean |  |  |  | Warning: This should not be combined with `ethernet_interfaces[].type = routed`. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;mode</samp>](## "ethernet_interfaces.[].switchport.mode") | String |  |  | Valid Values:<br>- <code>access</code><br>- <code>dot1q-tunnel</code><br>- <code>trunk</code><br>- <code>trunk phone</code> | Warning: This should not be combined with `ethernet_interfaces[].mode`. |
@@ -1356,7 +1356,7 @@
               # Virtual IPv6 address.
               address: <str; required>
 
-        # Set to false to disable interface validation by the `eos_validate_state` role.
+        # Set to false to disable interface state and LLDP topology validation performed by the `eos_validate_state` role.
         validate_state: <bool>
 
         # This should not be combined with `ethernet_interfaces[].type = switched/routed`.
