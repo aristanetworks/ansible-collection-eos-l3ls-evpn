@@ -409,6 +409,7 @@ $defs:
               - level-1-2
               - level-1
               - level-2
+            description: Overrides `isis_default_is_type`.
           node_sid_base:
             documentation_options:
               table: node-type-isis-configuration

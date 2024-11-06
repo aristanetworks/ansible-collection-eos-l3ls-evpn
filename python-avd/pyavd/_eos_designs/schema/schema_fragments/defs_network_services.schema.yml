@@ -396,13 +396,13 @@ $defs:
                 description: |
                   MLAG iBGP peering per VRF.
                   By default an iBGP peering is configured per VRF between MLAG peers on separate VLANs.
-                  Setting `enable_mlag_ibgp_peering_vrfs: false` under a VRF will change this default and/or override the tenant-wide setting.
+                  Setting `enable_mlag_ibgp_peering_vrfs: false` under a VRF overrides the tenant-wide setting.
               redistribute_mlag_ibgp_peering_vrfs:
                 type: bool
                 description: |
                   Redistribute the connected subnet for the MLAG iBGP peering per VRF into overlay BGP.
                   By default the iBGP peering subnet is not redistributed into the overlay routing protocol per VRF.
-                  Setting `redistribute_mlag_ibgp_peering_vrfs` under a VRF will change this default and/or override the tenant-wide setting.
+                  Setting `redistribute_mlag_ibgp_peering_vrfs` under a VRF overrides the tenant-wide setting.
               mlag_ibgp_peering_vlan:
                 type: int
                 convert_types:
