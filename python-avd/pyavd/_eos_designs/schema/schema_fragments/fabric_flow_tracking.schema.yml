@@ -18,36 +18,47 @@ keys:
       uplinks:
         description: Enable flow-tracking on all fabric uplinks.
         type: dict
-        $ref: eos_designs#/$defs/flow_tracking_link
+        keys:
+          enabled:
+            type: bool
+            default: false
+          name:
+            type: str
+            description: Flow tracker name as defined in flow_tracking_settings.
+            default: FLOW-TRACKER
       downlinks:
         description: Enable flow-tracking on all fabric downlinks.
         type: dict
-        $ref: eos_designs#/$defs/flow_tracking_link
+        $ref: eos_designs#/keys/fabric_flow_tracking/keys/uplinks
       endpoints:
         description: Enable flow-tracking on all endpoints ports.
         type: dict
-        $ref: eos_designs#/$defs/flow_tracking_link
+        $ref: eos_designs#/keys/fabric_flow_tracking/keys/uplinks
       l3_edge:
         description: Enable flow-tracking on all p2p_links defined under l3_edge.
         type: dict
-        $ref: eos_designs#/$defs/flow_tracking_link
+        $ref: eos_designs#/keys/fabric_flow_tracking/keys/uplinks
       core_interfaces:
         description: Enable flow-tracking on all p2p_links defined under core_interfaces.
         type: dict
-        $ref: eos_designs#/$defs/flow_tracking_link
+        $ref: eos_designs#/keys/fabric_flow_tracking/keys/uplinks
       mlag_interfaces:
         description: Enable flow-tracking on all MLAG peer interfaces.
         type: dict
-        $ref: eos_designs#/$defs/flow_tracking_link
+        $ref: eos_designs#/keys/fabric_flow_tracking/keys/uplinks
       l3_interfaces:
         description: Enable flow-tracking on all node.l3_interfaces and network-services tenants.vrfs.l3_interfaces.
         type: dict
-        $ref: eos_designs#/$defs/flow_tracking_link
+        $ref: eos_designs#/keys/fabric_flow_tracking/keys/uplinks
       dps_interfaces:
         description: Enable flow-tracking on all dps_interfaces.
         type: dict
-        $ref: eos_designs#/$defs/flow_tracking_link
+        $ref: eos_designs#/keys/fabric_flow_tracking/keys/uplinks
+        keys:
+          enabled:
+            type: bool
+            default: true
       direct_wan_ha_links:
         description: Enable flow-tracking on all direct WAN HA links.
         type: dict
-        $ref: eos_designs#/$defs/flow_tracking_link
+        $ref: eos_designs#/keys/fabric_flow_tracking/keys/uplinks
