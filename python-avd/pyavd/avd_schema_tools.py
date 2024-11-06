@@ -64,7 +64,7 @@ class AvdSchemaTools:
             # Store but continue for deprecations
             if isinstance(exception, AvdDeprecationWarning):
                 if exception.removed or exception.conflict:
-                    result.validation_errors.append(exception.to_validation_error())
+                    result.validation_errors.append(exception._as_validation_error())
                     result.failed = True
                     continue
 

@@ -89,7 +89,7 @@ class AvdDeprecationWarning(AristaAvdError):  # noqa: N818
         self.message = " ".join(messages)
         super().__init__(self.message)
 
-    def to_validation_error(self) -> AvdValidationError:
+    def _as_validation_error(self) -> AvdValidationError:
         """Converting AvdDeprecationWarning to AvdValidationError."""
         return AvdValidationError(self.message, self.path.split("."))
 
