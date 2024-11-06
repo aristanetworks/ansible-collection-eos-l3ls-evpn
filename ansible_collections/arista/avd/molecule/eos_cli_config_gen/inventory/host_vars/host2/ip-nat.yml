@@ -1,20 +1,6 @@
 ---
 ### IP NAT ###
 ip_nat:
-  kernel_buffer_size: 64
-  pools:
-    - name: prefix_32
-      type: ip-port
-      prefix_length: 32
-      ranges:
-        - first_port: 1024
-          last_port: 65535
-    - name: prefix_21
-      prefix_length: 21
-    - name: port-only2
-      type: port-only
-      ranges:
-        - first_port: 10
   synchronization:
     shutdown: false
     port_range:
