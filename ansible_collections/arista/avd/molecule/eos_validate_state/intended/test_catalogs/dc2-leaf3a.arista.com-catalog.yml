@@ -55,13 +55,6 @@ anta.tests.connectivity:
 - VerifyLLDPNeighbors:
     neighbors:
     - neighbor_device: dc2-leaf3b.arista.com
-      neighbor_port: Ethernet3
-      port: Ethernet3
-    result_overwrite:
-      custom_field: 'Local: Ethernet3 - Remote: dc2-leaf3b.arista.com Ethernet3'
-- VerifyLLDPNeighbors:
-    neighbors:
-    - neighbor_device: dc2-leaf3b.arista.com
       neighbor_port: Ethernet4
       port: Ethernet4
     result_overwrite:
@@ -309,12 +302,6 @@ anta.tests.hardware:
     - ok
 - VerifyAdverseDrops: null
 anta.tests.interfaces:
-- VerifyInterfacesStatus:
-    interfaces:
-    - name: Ethernet3
-      status: up
-    result_overwrite:
-      custom_field: Interface Ethernet3 - MLAG_dc2-leaf3b.arista.com_Ethernet3 = 'up'
 - VerifyInterfacesStatus:
     interfaces:
     - name: Ethernet4
