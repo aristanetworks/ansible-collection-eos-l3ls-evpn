@@ -56,5 +56,5 @@ monitor server radius
    service dot1x
    probe interval 100 seconds
    probe threshold failure 100
-   probe method access-request username arista password 7 141600021F102B
+   probe method access-request username arista password 7 <removed>
 ```
