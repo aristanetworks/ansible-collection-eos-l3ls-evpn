@@ -362,6 +362,7 @@ ethernet_interfaces:
   channel_group:
     id: 3
     mode: active
+  validate_state: false
 - name: Ethernet4
   peer: dc2-leaf3b.arista.com
   peer_interface: Ethernet4

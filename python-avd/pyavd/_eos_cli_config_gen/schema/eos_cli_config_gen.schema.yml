@@ -3740,8 +3740,8 @@ keys:
                     description: Virtual IPv6 address.
         validate_state:
           type: bool
-          description: Set to false to disable interface validation by the `eos_validate_state`
-            role.
+          description: Set to false to disable interface state and LLDP topology validation
+            performed by the `eos_validate_state` role.
         validate_lldp:
           type: bool
           description: Set to false to disable the LLDP topology validation performed
@@ -9163,6 +9163,9 @@ keys:
           type: str
         description:
           type: str
+        profile:
+          type: str
+          description: Interface profile.
         logging:
           type: dict
           keys:
@@ -10542,8 +10545,8 @@ keys:
                         - str
         validate_state:
           type: bool
-          description: Set to false to disable interface validation by the `eos_validate_state`
-            role.
+          description: Set to false to disable interface state and LLDP topology validation
+            performed by the `eos_validate_state` role.
         validate_lldp:
           type: bool
           description: Set to false to disable the LLDP topology validation performed
