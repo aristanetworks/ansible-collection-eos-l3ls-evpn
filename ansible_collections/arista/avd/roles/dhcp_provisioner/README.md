@@ -129,7 +129,7 @@ custom_structured_configuration_daemon_terminattr:
 
 ## Requirements
 
-Requirements are located here: [avd-requirements](../../docs/installation/collection-installation.md#additional-python-libraries-required)
+Requirements are located here: [avd-requirements](../../docs/installation/collection-installation.md#python-requirements-installation)
 
 ## License
 

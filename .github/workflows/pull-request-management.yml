@@ -98,6 +98,7 @@ jobs:
           - "3.10"
           - "3.11"
           - "3.12"
+          - "3.13"
     steps:
       - name: 'Set environment variables'
         run: |
@@ -358,6 +359,7 @@ jobs:
             3.10
             3.11
             3.12
+          # 3.13 - Still waiting for support in ansible-test
       - name: 'Install Python requirements'
         run: |
           pip install "ansible-core<2.18.0" -r .github/requirements-ci.txt --upgrade
@@ -402,6 +404,7 @@ jobs:
         with:
           python-version: |
             3.12
+          # 3.13 - Still waiting for support in ansible-test
       - name: 'Install Python requirements'
         run: |
           pip install "ansible-core<2.18.0" -r .github/requirements-ci.txt --upgrade
@@ -426,6 +429,7 @@ jobs:
             3.10
             3.11
             3.12
+            3.13
       - name: 'Install Python & Ansible requirements'
         run: |
           pip install -r ansible_collections/arista/avd/requirements-dev.txt -r ansible_collections/arista/avd/requirements.txt --upgrade
@@ -482,7 +486,7 @@ jobs:
       needs.file-changes.outputs.pyavd == 'true'
     strategy:
       matrix:
-        python: ["3.10", "3.11", "3.12"]
+        python: ["3.10", "3.11", "3.12", "3.13"]
     steps:
       - name: 'Set environment variables'
         run: |

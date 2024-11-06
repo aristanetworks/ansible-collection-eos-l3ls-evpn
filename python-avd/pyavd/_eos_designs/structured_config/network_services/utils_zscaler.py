@@ -108,6 +108,7 @@ class UtilsZscalerMixin:
                     "datacenter": vpn_endpoint.datacenter,
                     "city": location.city,
                     "country": location.country,
+                    "region": location.region,
                     "latitude": location.latitude,
                     "longitude": location.longitude,
                 }

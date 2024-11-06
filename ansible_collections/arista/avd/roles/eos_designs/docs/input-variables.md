@@ -732,6 +732,7 @@ The following underlay routing protocols are supported:
 \** For use with design type "l2ls" or other designs where there is no requirement for a routing protocol for underlay and/or overlay on l3 devices.
 
 ??? note "Details on `enable_trunk_groups`"
+    <a id="details-on-enable_trunk_groups"></a>
     Enabling the use of trunk groups will change the behavior of several components in AVD.
 
     Changes:

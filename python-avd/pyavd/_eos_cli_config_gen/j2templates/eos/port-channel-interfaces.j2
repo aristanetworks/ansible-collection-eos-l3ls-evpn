@@ -7,6 +7,9 @@
 {% for port_channel_interface in port_channel_interfaces | arista.avd.natural_sort('name') %}
 !
 interface {{ port_channel_interface.name }}
+{%     if port_channel_interface.profile is arista.avd.defined %}
+   profile {{ port_channel_interface.profile }}
+{%     endif %}
 {%     if port_channel_interface.traffic_policy.input is arista.avd.defined %}
    traffic-policy input {{ port_channel_interface.traffic_policy.input }}
 {%     endif %}

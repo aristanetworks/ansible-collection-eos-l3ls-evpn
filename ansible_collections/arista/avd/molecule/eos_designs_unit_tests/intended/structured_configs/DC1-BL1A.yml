@@ -262,6 +262,18 @@ router_bgp:
     redistribute:
       connected:
         enabled: true
+  - name: TENANT_D_WAN_ZONE
+    rd: 192.168.254.14:42
+    route_targets:
+      import:
+      - address_family: evpn
+        route_targets:
+        - '65104:42'
+      export:
+      - address_family: evpn
+        route_targets:
+        - '65104:42'
+    router_id: 192.168.255.14
   vlan_aware_bundles:
   - name: Tenant_A_WAN_Zone
     rd: 192.168.254.14:14
@@ -293,6 +305,20 @@ router_bgp:
     redistribute_routes:
     - learned
     vlan: '350'
+  - name: TENANT_D_WAN_ZONE
+    rd: 192.168.254.14:42
+    route_targets:
+      both:
+      - '65104:42'
+      import_export_evpn_domains:
+      - domain: remote
+        route_target: '65104:42'
+    redistribute_routes:
+    - learned
+    vlan: '453'
+    rd_evpn_domain:
+      domain: remote
+      rd: 192.168.254.14:42
 static_routes:
 - vrf: MGMT
   destination_address_prefix: 0.0.0.0/0
@@ -395,6 +421,10 @@ vrfs:
 - name: Tenant_C_WAN_Zone
   tenant: Tenant_C
   ip_routing: true
+- name: TENANT_D_WAN_ZONE
+  tenant: Tenant_D
+  ip_routing: true
+  ipv6_routing: true
 management_interfaces:
 - name: Management99
   description: OOB_MANAGEMENT
@@ -614,6 +644,9 @@ vlans:
 - id: 350
   name: Tenant_C_WAN_Zone_1
   tenant: Tenant_C
+- id: 453
+  name: Tenant_D_WAN_Zone_1
+  tenant: Tenant_D
 ip_access_lists:
 - name: TEST-IPV4-ACL-WITH-IP-FIELDS-IN_Ethernet12
   entries:
@@ -676,6 +709,16 @@ vlan_interfaces:
   shutdown: false
   ip_address_virtual: 10.3.50.1/24
   vrf: Tenant_C_WAN_Zone
+- name: Vlan453
+  tenant: Tenant_D
+  tags:
+  - wan
+  description: Tenant_D_WAN_Zone_1
+  shutdown: false
+  ipv6_enable: true
+  ipv6_address_virtuals:
+  - 10.0.10.1/24
+  vrf: TENANT_D_WAN_ZONE
 router_ospf:
   process_ids:
   - id: 14
@@ -705,6 +748,8 @@ vxlan_interface:
         vni: 20250
       - id: 350
         vni: 30350
+      - id: 453
+        vni: 40453
       vrfs:
       - name: Tenant_A_L3_VRF_Zone
         vni: 15
@@ -716,6 +761,8 @@ vxlan_interface:
         vni: 21
       - name: Tenant_C_WAN_Zone
         vni: 31
+      - name: TENANT_D_WAN_ZONE
+        vni: 42
 metadata:
   platform: 7280R
   cv_tags:

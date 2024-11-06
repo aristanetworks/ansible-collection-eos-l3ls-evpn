@@ -45,12 +45,12 @@ interface Management1
 
 ### IKE policies
 
-| Policy name | IKE lifetime | Encryption | DH group | Local ID |
-| ----------- | ------------ | ---------- | -------- | -------- |
-| IKE-1 | 24 | aes256 | 20 | 192.168.100.1 |
-| IKE-2 | - | - | - | - |
-| IKE-FQDN | - | - | - | fqdn.local |
-| IKE-UFQDN | - | - | - | my.awesome@fqdn.local |
+| Policy name | IKE lifetime | Encryption | DH group | Local ID | Integrity |
+| ----------- | ------------ | ---------- | -------- | -------- | --------- |
+| IKE-1 | 24 | aes256 | 20 | 192.168.100.1 | md5 |
+| IKE-2 | - | - | - | - | sha512 |
+| IKE-FQDN | - | - | - | fqdn.local | - |
+| IKE-UFQDN | - | - | - | my.awesome@fqdn.local | - |
 
 ### Security Association policies
 
@@ -85,12 +85,14 @@ interface Management1
 !
 ip security
    ike policy IKE-1
+      integrity md5
       ike-lifetime 24
       encryption aes256
       dh-group 20
       local-id 192.168.100.1
    !
    ike policy IKE-2
+      integrity sha512
    !
    ike policy IKE-FQDN
       local-id fqdn fqdn.local

@@ -17,6 +17,13 @@ keys:
           format:
             type: str
             description: Specify the format of the NAS-Identifier. If 'hostname' is set, this is ignored.
+      deadtime:
+        description: Time to skip a non-responsive server in minutes.
+        type: int
+        convert_types:
+          - str
+        min: 1
+        max: 1000
       dynamic_authorization:
         type: dict
         keys:
