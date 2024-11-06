@@ -864,6 +864,10 @@ interface Port-Channel131.10
    !
    encapsulation vlan
       client dot1q outer 14 inner 11 network client inner
+!
+interface Port-Channel132
+   profile test-interface-profile
+   description Test_port-channel_interface-profile
 ```
 
 ## BFD

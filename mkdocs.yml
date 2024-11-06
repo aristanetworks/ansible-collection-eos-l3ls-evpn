@@ -85,6 +85,8 @@ plugins:
         - docs/*/4.x.x.md
         - roles/*/docs/tables/*
       regex:
+        # Exclude examples common md snippets
+        - '^examples\/common/.*'
         # Exclude all examples but single-dc-l3ls which is referenced in getting getting-started
         - '^examples\/((?!single-dc-l3ls).*)\/documentation\/.*'
         # Exclude all single-dc-l3ls files not referenced in getting getting-started

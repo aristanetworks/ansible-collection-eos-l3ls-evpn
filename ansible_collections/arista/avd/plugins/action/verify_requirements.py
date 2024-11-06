@@ -16,6 +16,8 @@ from ansible.module_utils.compat.importlib import import_module
 from ansible.plugins.action import ActionBase, display
 from ansible.utils.collection_loader._collection_finder import _get_collection_metadata
 
+from ansible_collections.arista.avd.plugins import PYTHON_AVD_PATH, RUNNING_FROM_SOURCE
+
 try:
     # Relying on packaging installed by ansible
     from packaging.requirements import InvalidRequirement, Requirement
@@ -24,6 +26,16 @@ try:
     HAS_PACKAGING = True
 except ImportError:
     HAS_PACKAGING = False
+
+try:
+    from ansible_collections.arista.avd.plugins.plugin_utils.utils.init_logging import init_pyavd_logging
+
+    HAS_INIT_PYAVD_LOGGING = True
+except ImportError:
+    HAS_INIT_PYAVD_LOGGING = False
+
+if HAS_INIT_PYAVD_LOGGING:
+    init_pyavd_logging()
 
 MIN_PYTHON_SUPPORTED_VERSION = (3, 10)
 DEPRECATE_MIN_PYTHON_SUPPORTED_VERSION = False
@@ -84,7 +96,7 @@ def _validate_python_requirements(requirements: list, info: dict) -> bool:
     """
     valid = True
 
-    requirements_dict = {
+    requirements_dict: dict[str, Any] = {
         "not_found": {},
         "valid": {},
         "mismatched": {},
@@ -100,6 +112,14 @@ def _validate_python_requirements(requirements: list, info: dict) -> bool:
             msg = f"Wrong format for requirement {raw_req}"
             raise AnsibleActionFail(msg) from exc
 
+        if RUNNING_FROM_SOURCE and req.name == "pyavd":
+            display.vvv("AVD is running from source, *not* checking pyavd version.", "Verify Requirements")
+            requirements_dict["valid"][req.name] = {
+                "installed": "running from source",
+                "required_version": str(req.specifier) if len(req.specifier) > 0 else None,
+            }
+            continue
+
         try:
             installed_version = version(req.name)
             display.vvv(f"Found {req.name} {installed_version} installed!", "Verify Requirements")
@@ -110,7 +130,7 @@ def _validate_python_requirements(requirements: list, info: dict) -> bool:
             detected_versions = [dist.version for dist in potential_dists]
             valid_versions = [version for version in detected_versions if req.specifier.contains(version)]
             if len(detected_versions) > 1:
-                display.v(f"Found {req.name} {detected_versions} metadata - this could mean legacy dist-info files are present in your site-packages folder")
+                display.v(f"Found {req.name} {detected_versions} metadata - this could mean legacy dist-info files are present in your site-packages folder.")
         except PackageNotFoundError:
             requirements_dict["not_found"][req.name] = {
                 "installed": None,
@@ -155,6 +175,7 @@ def _validate_python_requirements(requirements: list, info: dict) -> bool:
                 "valid_versions": None,
                 "required_version": str(req.specifier) if len(req.specifier) > 0 else None,
             }
+            display.error(f"Python library '{req.name}' version running {installed_version} - requirement is {req!s}", wrap_text=False)
         else:
             display.error(f"Python library '{req.name}' version running {installed_version} - requirement is {req!s}", wrap_text=False)
             requirements_dict["mismatched"][req.name] = {
@@ -226,7 +247,7 @@ def _validate_ansible_collections(running_collection_name: str, info: dict) -> b
         # no requirements
         return True
 
-    requirements_dict = {
+    requirements_dict: dict[str, Any] = {
         "not_found": {},
         "valid": {},
         "mismatched": {},
@@ -324,6 +345,19 @@ def _get_running_collection_version(running_collection_name: str, result: dict) 
     }
 
 
+def check_running_from_source() -> None:
+    """Check if running from sources, if so recompile schemas and templates as needed."""
+    if not RUNNING_FROM_SOURCE:
+        return
+
+    # if running from source, path to pyavd and schema_tools has already been prepended to Python Path
+    from schema_tools.check_schemas import check_schemas
+    from schema_tools.compile_templates import check_templates
+
+    check_schemas()
+    check_templates()
+
+
 class ActionModule(ActionBase):
     def run(self, tmp: Any = None, task_vars: dict | None = None) -> dict:
         if task_vars is None:
@@ -355,14 +389,18 @@ class ActionModule(ActionBase):
         result["failed"] = False
 
         error_message = "Set 'avd_ignore_requirements=True' to ignore validation error(s)."
-        info = {
+        info: dict[str, Any] = {
             "ansible": {},
             "python": {},
         }
 
         _get_running_collection_version(running_collection_name, info["ansible"])
 
+        check_running_from_source()
+
         display.display(f"AVD version {info['ansible']['collection']['version']}", color=C.COLOR_OK)
+        if RUNNING_FROM_SOURCE:
+            display.display(f"AVD is running from source using PyAVD at '{PYTHON_AVD_PATH}'", color=C.COLOR_OK)
         if display.verbosity < 1:
             display.display("Use -v for details.")
 

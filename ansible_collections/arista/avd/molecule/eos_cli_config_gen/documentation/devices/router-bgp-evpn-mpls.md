@@ -94,16 +94,16 @@ ASN Notation: asplain
 
 ##### EVPN Peer Groups
 
-| Peer Group | Activate | Encapsulation |
-| ---------- | -------- | ------------- |
-| EVPN-OVERLAY-PEERS | True | default |
+| Peer Group | Activate | Route-map In | Route-map Out | Encapsulation |
+| ---------- | -------- | ------------ | ------------- | ------------- |
+| EVPN-OVERLAY-PEERS | True |  - | - | default |
 
 ##### EVPN Neighbors
 
-| Neighbor | Activate | Encapsulation |
-| -------- | -------- | ------------- |
-| 192.168.255.3 | True | default |
-| 192.168.255.4 | False | default |
+| Neighbor | Activate | Route-map In | Route-map Out | Encapsulation |
+| -------- | -------- | ------------ | ------------- | ------------- |
+| 192.168.255.3 | True | - | - | default |
+| 192.168.255.4 | False | - | - | mpls |
 
 ##### EVPN Neighbor Default Encapsulation
 
@@ -145,5 +145,6 @@ router bgp 65101
       neighbor 192.168.255.3 activate
       neighbor 192.168.255.4 rcf in Address_Family_EVPN_In()
       neighbor 192.168.255.4 rcf out Address_Family_EVPN_Out()
+      neighbor 192.168.255.4 encapsulation mpls next-hop-self source-interface Ethernet1
       layer-2 fec in-place update timeout 100 seconds
 ```
