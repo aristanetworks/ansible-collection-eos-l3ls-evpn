@@ -1581,6 +1581,9 @@ keys:
         validate_state:
           type: bool
           description: Set to false to disable interface validation by the `eos_validate_state` role.
+        validate_lldp:
+          type: bool
+          description: Set to false to disable the LLDP topology validation performed by the `eos_validate_state` role.
         switchport:
           type: dict
           description: This should not be combined with `ethernet_interfaces[].type = switched/routed`.
