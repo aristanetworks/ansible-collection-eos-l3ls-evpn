@@ -3740,8 +3740,8 @@ keys:
                     description: Virtual IPv6 address.
         validate_state:
           type: bool
-          description: Set to false to disable interface validation by the `eos_validate_state`
-            role.
+          description: Set to false to disable interface state and LLDP topology validation
+            performed by the `eos_validate_state` role.
         switchport:
           type: dict
           description: This should not be combined with `ethernet_interfaces[].type
@@ -7837,6 +7837,37 @@ keys:
                       preference:
                         type: str
                         required: true
+                      endpoint:
+                        type: dict
+                        required: true
+                        keys:
+                          ip_address:
+                            type: str
+                            required: true
+                          datacenter:
+                            type: str
+                            required: true
+                          city:
+                            type: str
+                            required: true
+                          country:
+                            type: str
+                            required: true
+                          region:
+                            type: str
+                            required: true
+                          latitude:
+                            type: str
+                            convert_types:
+                            - float
+                            - int
+                            required: true
+                          longitude:
+                            type: str
+                            convert_types:
+                            - float
+                            - int
+                            required: true
           applications:
             type: dict
             keys:
@@ -9128,6 +9159,9 @@ keys:
           type: str
         description:
           type: str
+        profile:
+          type: str
+          description: Interface profile.
         logging:
           type: dict
           keys:
@@ -10507,8 +10541,8 @@ keys:
                         - str
         validate_state:
           type: bool
-          description: Set to false to disable interface validation by the `eos_validate_state`
-            role.
+          description: Set to false to disable interface state and LLDP topology validation
+            performed by the `eos_validate_state` role.
         eos_cli:
           type: str
           description: Multiline EOS CLI rendered directly on the port-channel interface
