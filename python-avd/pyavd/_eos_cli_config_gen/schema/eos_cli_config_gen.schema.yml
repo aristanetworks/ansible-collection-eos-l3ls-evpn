@@ -9159,6 +9159,9 @@ keys:
           type: str
         description:
           type: str
+        profile:
+          type: str
+          description: Interface profile.
         logging:
           type: dict
           keys:
