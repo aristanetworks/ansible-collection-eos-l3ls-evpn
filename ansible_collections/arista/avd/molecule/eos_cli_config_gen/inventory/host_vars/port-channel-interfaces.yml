@@ -755,6 +755,10 @@ port_channel_interfaces:
         encapsulation: client inner
 
   - name: Port-Channel132
+    description: Test_port-channel_interface-profile
+    profile: test-interface-profile
+
+  - name: Port-Channel133
     description: Test_switchport_tap_tool
     switchport:
       tap:

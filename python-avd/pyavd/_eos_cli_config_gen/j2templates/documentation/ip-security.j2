@@ -15,10 +15,10 @@
 
 ### IKE policies
 
-| Policy name | IKE lifetime | Encryption | DH group | Local ID |
-| ----------- | ------------ | ---------- | -------- | -------- |
+| Policy name | IKE lifetime | Encryption | DH group | Local ID | Integrity |
+| ----------- | ------------ | ---------- | -------- | -------- | --------- |
 {%         for ike_policy in ip_security.ike_policies | arista.avd.natural_sort('name') %}
-| {{ ike_policy.name }} | {{ ike_policy.ike_lifetime | arista.avd.default("-") }} | {{ ike_policy.encryption | arista.avd.default("-") }} | {{ ike_policy.dh_group | arista.avd.default("-") }} | {{ ike_policy.local_id_fqdn | arista.avd.default(ike_policy.local_id, "-") }} |
+| {{ ike_policy.name }} | {{ ike_policy.ike_lifetime | arista.avd.default("-") }} | {{ ike_policy.encryption | arista.avd.default("-") }} | {{ ike_policy.dh_group | arista.avd.default("-") }} | {{ ike_policy.local_id_fqdn | arista.avd.default(ike_policy.local_id, "-") }} | {{ ike_policy.integrity | arista.avd.default("-") }} |
 {%         endfor %}
 {%     endif %}
 {%     if ip_security.sa_policies is arista.avd.defined %}

@@ -30,7 +30,7 @@ publish: ## Publish pyavd package to PyPI (build first)
 
 .PHONY: compile-schemas
 compile-schemas:
-	$(SCRIPTS_DIR)/build-schemas.py
+	$(SCRIPTS_DIR)/build_schemas.py
 
 .PHONY: compile-templates
 compile-templates:

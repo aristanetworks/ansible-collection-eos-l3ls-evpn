@@ -965,6 +965,7 @@ keys:
                 default: "both"
         dot1x:
           type: dict
+          description: 802.1x
           keys:
             port_control:
               type: str

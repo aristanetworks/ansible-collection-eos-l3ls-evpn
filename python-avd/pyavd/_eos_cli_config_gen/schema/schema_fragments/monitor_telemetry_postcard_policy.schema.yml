@@ -31,9 +31,9 @@ keys:
               version:
                 type: int
                 description: Postcard version.
-                valid_values: [ 1, 2 ]
+                valid_values: [1, 2]
                 convert_types:
-                - str
+                  - str
           sample:
             type: dict
             description: Sampling parameters.
@@ -42,8 +42,8 @@ keys:
                 type: int
                 description: Sampling rate. `rate` is preferred when both `rate` and `tcp_udp_checksum` are defined.
                 convert_types:
-                - str
-                valid_values: [ 16384, 32768, 65536 ]
+                  - str
+                valid_values: [16384, 32768, 65536]
               tcp_udp_checksum:
                 type: dict
                 description: TCP/UDP parameters.
@@ -54,7 +54,7 @@ keys:
                     min: 0
                     max: 65535
                     convert_types:
-                    - str
+                      - str
                   mask:
                     type: str
                     description: 16 bit hexadecimal mask for TCP/UDP or IP ID with atmost 2 unset bits.
@@ -69,7 +69,7 @@ keys:
             min: 1
             max: 31
             convert_types:
-            - str
+              - str
       profiles:
         type: list
         description: Postcard telemetry profiles.
@@ -102,7 +102,7 @@ keys:
                     type: str
                     description: IP address version.
                     required: true
-                    valid_values: [ ipv4, ipv6 ]
+                    valid_values: [ipv4, ipv6]
                   destination_prefix:
                     type: str
                     description: |-
@@ -121,26 +121,28 @@ keys:
                       keys:
                         protocol:
                           type: str
-                          valid_values: [ tcp, udp ]
+                          valid_values: [tcp, udp]
                         source_ports:
                           type: list
+                          min_length: 1
                           description: |-
                             A list of port numbers or port range or port name. Combination of port numbers or range and port name is not supported on EOS. The port numbers should be in range of 0-65535.
                             e.g.
-                              [ "12", "14-20" ]
-                              [ "www" ]
+                              ["12", "14-20"]
+                              ["www"]
                           items:
                             type: str
                             convert_types:
-                            - int
+                              - int
                         destination_ports:
                           type: list
+                          min_length: 1
                           description: |-
                             A list of port numbers or port range or port name. Combination of port numbers or range and port name is not supported on EOS. The port numbers should be in range of 0-65535.
                             e.g.
-                              [ "12", "14-20", "80" ]
-                              [ "https" ]
+                              ["12", "14-20", "80"]
+                              ["https"]
                           items:
                             type: str
                             convert_types:
-                            - int
+                              - int

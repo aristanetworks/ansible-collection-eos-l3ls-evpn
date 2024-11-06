@@ -7,10 +7,10 @@ import logging
 from logging import Filter, Handler
 from typing import TYPE_CHECKING
 
+from ansible.utils.display import Display
+
 if TYPE_CHECKING:
     from logging import LogRecord
-
-    from ansible.utils.display import Display
 
 
 class PythonToAnsibleHandler(Handler):
@@ -25,20 +25,27 @@ class PythonToAnsibleHandler(Handler):
     * send DEBUG logs to display.vvv which can be visualized when running a playbook with `-vvv`
     """
 
-    def __init__(self, result: dict, display: Display) -> None:
+    def __init__(self, result: dict | None, display: Display | None = None) -> None:
         super().__init__()
-        self.display = display
+        # If no display object was given, retrieve the Singleton
+        self.display = display or Display()
         self.result = result
 
     def emit(self, record: LogRecord) -> None:
         """Custom emit function that reads the message level."""
         message = self._format_msg(record)
         if record.levelno in [logging.CRITICAL, logging.ERROR]:
-            self.result.setdefault("stderr_lines", []).append(message)
-            self.result["stderr"] = self.result.setdefault("stderr", "") + f"{message!s}\n"
-            self.result["failed"] = True
+            if self.result is not None:
+                self.result.setdefault("stderr_lines", []).append(message)
+                self.result["stderr"] = self.result.setdefault("stderr", "") + f"{message!s}\n"
+                self.result["failed"] = True
+            else:
+                self.display.error(str(message))
         elif record.levelno in [logging.WARNING, logging.WARNING]:
-            self.result.setdefault("warnings", []).append(message)
+            if self.result is not None:
+                self.result.setdefault("warnings", []).append(message)
+            else:
+                self.display.warning(str(message))
         elif record.levelno == logging.INFO:
             self.display.v(str(message))
         elif record.levelno == logging.DEBUG:
