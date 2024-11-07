@@ -1,11 +1,11 @@
-# router-isis-2
+# host4_inline_jinja
 
 ## Table of Contents
 
 - [Management](#management)
   - [Management Interfaces](#management-interfaces)
-- [Routing](#routing)
-  - [Router ISIS](#router-isis)
+- [Authentication](#authentication)
+  - [TACACS Servers](#tacacs-servers)
 
 ## Management
 
@@ -35,35 +35,19 @@ interface Management1
    ip address 10.73.255.122/24
 ```
 
-## Routing
+## Authentication
 
-### Router ISIS
+### TACACS Servers
 
-#### Router ISIS Summary
+#### TACACS Servers
 
-| Settings | Value |
-| -------- | ----- |
-| Instance | EVPN_UNDERLAY |
+| VRF | TACACS Servers | Single-Connection | Timeout |
+| --- | -------------- | ----------------- | ------- |
+| default | 10.10.10.158 | False | - |
 
-#### ISIS Route Timers
-
-| Settings | Value |
-| -------- | ----- |
-| LSP Generation Maximum Interval | 30 seconds |
-
-#### ISIS Interfaces Summary
-
-| Interface | ISIS Instance | ISIS Metric | Interface Mode |
-| --------- | ------------- | ----------- | -------------- |
-
-#### Router ISIS Device Configuration
+#### TACACS Servers Device Configuration
 
 ```eos
 !
-router isis EVPN_UNDERLAY
-   set-overload-bit
-   set-overload-bit on-startup 55
-   timers lsp generation 30
-   authentication mode sha key-id 4 rx-disabled
-   !
+tacacs-server host 10.10.10.158 key 7 <removed>
 ```
