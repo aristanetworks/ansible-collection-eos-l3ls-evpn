@@ -405,8 +405,6 @@ ip dhcp snooping
 
 ### Errdisable Summary
 
-
-
 ```eos
 !
 errdisable recovery interval 300
