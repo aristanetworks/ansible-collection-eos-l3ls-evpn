@@ -1,0 +1,25 @@
+---
+class_maps:
+  qos:
+    - name: CM_REPLICATION_LD
+      ip:
+        access_group: ACL_REPLICATION_LD
+    - name: CM_IPv6_ACCESS_GROUP
+      ipv6:
+        access_group: ACL_REPLICATION_LD
+    - name: CM_REPLICATION_LD2
+      vlan: 200
+    - name: CM_REPLICATION_LD3
+      cos: 3
+    - name: VLAN_RANGE
+      vlan: 200-400
+    - name: COS_RANGE
+      vlan: 1-3
+  pbr:
+    - name: CM_PBR_EXCLUDE
+      ip:
+        access_group: ACL_PBR_EXCLUDE
+    - name: CM_PBR_INCLUDE
+      ip:
+        access_group: ACL_PBR_INCLUDE
+    - name: CM_PBR_WITHOUT_ACCESS_GROUP
