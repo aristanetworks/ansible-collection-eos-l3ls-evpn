@@ -76,7 +76,7 @@ When you update a template in `eos_cli_config_gen`, you should report a test cas
 
 1. Create or update a file related to updated section under `inventory/host_vars`
 
-2. If the section is new, update the inventory file ([hosts.ini](eos_cli_config_gen/inventory/hosts.ini)) to add a new host. The host SHALL be the name of your section and also the `<filename>.yml` in your `host_vars`
+2. If the section is new, update the inventory file ([hosts.yml](eos_cli_config_gen/inventory/hosts.yml)) to add a new host. The host SHALL be the name of your section and also the `<filename>.yml` in your `host_vars`
 
 3. Run molecule scenario to generate artifacts:
 

@@ -14,8 +14,7 @@ tacacs_servers:
       single_connection: false
     - host: 10.10.10.158
       vrf: default
-      # Testing of play_vars in eos_cli_config_gen
-      key: "{{ tacacs_key_set_as_play_var }}"
+      key: 071B245F5A
       key_type: 7
     - host: 10.10.10.159
       vrf: default

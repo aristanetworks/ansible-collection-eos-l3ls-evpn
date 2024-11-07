@@ -11,7 +11,6 @@ __pycache__/
 /python-avd/build/
 /python-avd/dist/
 /python-avd/vendor/
-/python-avd/tests/pyavd/artifacts/
 /python-avd/pyavd.egg-info/
 /python-avd/.tox/
 /python-avd/.coverage
@@ -48,3 +47,7 @@ ansible_collections/arista/avd/tests/.mypy_cache/
 
 # Temporary files creating during CI workflow
 /tmp-requirements-minimum.txt
+
+# Hash files created when running pyavd from source
+python-avd/pyavd/*/j2templates/.hash
+python-avd/pyavd/*/schema/schema_fragments/.hash
