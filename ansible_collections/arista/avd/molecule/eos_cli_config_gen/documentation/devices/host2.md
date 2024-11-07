@@ -39,8 +39,6 @@
   - [IP DHCP Relay Device Configuration](#ip-dhcp-relay-device-configuration)
 - [IP DHCP Snooping](#ip-dhcp-snooping)
   - [IP DHCP Snooping Device Configuration](#ip-dhcp-snooping-device-configuration)
-- [Errdisable](#errdisable)
-  - [Errdisable Summary](#errdisable-summary)
 
 ## Management
 
@@ -363,13 +361,4 @@ IP DHCP Snooping is enabled
 ```eos
 !
 ip dhcp snooping
-```
-
-## Errdisable
-
-### Errdisable Summary
-
-```eos
-!
-errdisable recovery interval 300
 ```
