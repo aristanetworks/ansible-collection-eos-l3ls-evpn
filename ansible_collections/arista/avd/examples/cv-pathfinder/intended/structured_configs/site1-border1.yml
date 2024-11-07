@@ -33,6 +33,7 @@ router_bgp:
     send_community: all
     maximum_routes: 0
     ebgp_multihop: 3
+    next_hop_unchanged: true
   address_family_ipv4:
     peer_groups:
     - name: MLAG-IPv4-UNDERLAY-PEER
@@ -56,6 +57,16 @@ router_bgp:
     remote_as: '65000'
     peer: site1-wan2
     description: site1-wan2_Ethernet1
+  - ip_address: 192.168.255.3
+    peer_group: EVPN-OVERLAY-PEERS
+    peer: site1-wan1
+    description: site1-wan1_Loopback0
+    remote_as: '65000'
+  - ip_address: 192.168.255.4
+    peer_group: EVPN-OVERLAY-PEERS
+    peer: site1-wan2
+    description: site1-wan2_Loopback0
+    remote_as: '65000'
   vrfs:
   - name: BLUE
     router_id: 192.168.255.5

@@ -13,5 +13,9 @@
     // "true" is required to exit "postStartCommand" without entering ZSH.
     // the script must be executed ONLY if Ansible is not installed
     "postStartCommand": "/bin/entrypoint.sh true",
-    "remoteUser": "avd"
+    "remoteUser": "avd",
+    "mounts": [
+        "source=${localEnv:HOME}/.ssh,target=/home/avd/.ssh,type=bind,consistency=cached",
+        "source=${localEnv:HOME}/essence,target=/home/avd/essence,type=bind,consistency=cached"
+    ]
 }

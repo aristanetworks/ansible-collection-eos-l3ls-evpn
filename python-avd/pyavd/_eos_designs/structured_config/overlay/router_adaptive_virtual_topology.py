@@ -30,7 +30,7 @@ class RouterAdaptiveVirtualTopologyMixin(UtilsMixin):
             return {"topology_role": "pathfinder"}
 
         # Edge or Transit
-        return {
+        avt = {
             "topology_role": self.shared_utils.cv_pathfinder_role,
             "region": {
                 "name": self.shared_utils.wan_region["name"],
@@ -42,3 +42,7 @@ class RouterAdaptiveVirtualTopologyMixin(UtilsMixin):
                 "id": self.shared_utils.wan_site["id"],
             },
         }
+        if self.shared_utils.evpn_gateway_vxlan_l3:
+            avt["gateway_vxlan"] = True
+
+        return avt

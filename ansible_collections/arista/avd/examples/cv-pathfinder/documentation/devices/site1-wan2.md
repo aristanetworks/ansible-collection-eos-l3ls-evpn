@@ -863,6 +863,7 @@ ASN Notation: asplain
 | 192.168.42.1 | Inherited from peer group WAN-OVERLAY-PEERS | default | - | Inherited from peer group WAN-OVERLAY-PEERS | Inherited from peer group WAN-OVERLAY-PEERS | - | Inherited from peer group WAN-OVERLAY-PEERS(interval: 1000, min_rx: 1000, multiplier: 10) | - | - | - | Inherited from peer group WAN-OVERLAY-PEERS |
 | 192.168.42.2 | Inherited from peer group WAN-OVERLAY-PEERS | default | - | Inherited from peer group WAN-OVERLAY-PEERS | Inherited from peer group WAN-OVERLAY-PEERS | - | Inherited from peer group WAN-OVERLAY-PEERS(interval: 1000, min_rx: 1000, multiplier: 10) | - | - | - | Inherited from peer group WAN-OVERLAY-PEERS |
 | 192.168.42.3 | 65000 | default | - | all | - | - | - | - | True | - | - |
+| 192.168.255.5 | - | default | - | - | - | - | - | - | - | - | - |
 | 10.0.1.12 | 65101 | BLUE | - | Inherited from peer group IPv4-UNDERLAY-PEERS | Inherited from peer group IPv4-UNDERLAY-PEERS | Inherited from peer group IPv4-UNDERLAY-PEERS | - | - | - | - | - |
 | 10.0.1.14 | 65101 | BLUE | - | Inherited from peer group IPv4-UNDERLAY-PEERS | Inherited from peer group IPv4-UNDERLAY-PEERS | Inherited from peer group IPv4-UNDERLAY-PEERS | - | - | - | - | - |
 | 10.0.1.12 | 65101 | RED | - | Inherited from peer group IPv4-UNDERLAY-PEERS | Inherited from peer group IPv4-UNDERLAY-PEERS | Inherited from peer group IPv4-UNDERLAY-PEERS | - | - | - | - | - |
@@ -966,6 +967,8 @@ router bgp 65000
    neighbor 192.168.42.3 route-map RM-WAN-HA-PEER-IN in
    neighbor 192.168.42.3 route-map RM-WAN-HA-PEER-OUT out
    neighbor 192.168.42.3 send-community
+   neighbor 192.168.255.5 peer group EVPN-OVERLAY-PEERS
+   neighbor 192.168.255.5 description site1-border1_Loopback0
    redistribute connected route-map RM-CONN-2-BGP
    !
    address-family evpn

@@ -228,7 +228,7 @@ class RouterBgpMixin(UtilsMixin):
             else:
                 overlay_peer_group = {"name": self._get_peer_group_name("evpn_overlay_peers"), "activate": True}
 
-        if self.shared_utils.overlay_routing_protocol == "ebgp":
+        if self.shared_utils.overlay_routing_protocol == "ebgp" or self.shared_utils.is_cv_pathfinder_gateway_vxlan:
             if self.shared_utils.evpn_gateway_vxlan_l2 is True or self.shared_utils.evpn_gateway_vxlan_l3 is True:
                 peer_groups.append(
                     {

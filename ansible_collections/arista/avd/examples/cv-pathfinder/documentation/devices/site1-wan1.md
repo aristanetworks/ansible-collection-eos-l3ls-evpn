@@ -639,6 +639,8 @@ ip route vrf MGMT 0.0.0.0/0 192.168.17.1
 
 Topology role: transit region
 
+VXLAN gateway: Enabled
+
 | Hierarchy | Name | ID |
 | --------- | ---- | -- |
 | Region | REGION1 | 1 |
@@ -725,7 +727,7 @@ Topology role: transit region
 ```eos
 !
 router adaptive-virtual-topology
-   topology role transit region
+   topology role transit region gateway vxlan
    region REGION1 id 1
    zone REGION1-ZONE id 1
    site SITE1 id 101
@@ -862,6 +864,7 @@ ASN Notation: asplain
 | 192.168.42.1 | Inherited from peer group WAN-OVERLAY-PEERS | default | - | Inherited from peer group WAN-OVERLAY-PEERS | Inherited from peer group WAN-OVERLAY-PEERS | - | Inherited from peer group WAN-OVERLAY-PEERS(interval: 1000, min_rx: 1000, multiplier: 10) | - | - | - | Inherited from peer group WAN-OVERLAY-PEERS |
 | 192.168.42.2 | Inherited from peer group WAN-OVERLAY-PEERS | default | - | Inherited from peer group WAN-OVERLAY-PEERS | Inherited from peer group WAN-OVERLAY-PEERS | - | Inherited from peer group WAN-OVERLAY-PEERS(interval: 1000, min_rx: 1000, multiplier: 10) | - | - | - | Inherited from peer group WAN-OVERLAY-PEERS |
 | 192.168.42.4 | 65000 | default | - | all | - | - | - | - | True | - | - |
+| 192.168.255.5 | - | default | - | - | - | - | - | - | - | - | - |
 | 10.0.1.8 | 65101 | BLUE | - | Inherited from peer group IPv4-UNDERLAY-PEERS | Inherited from peer group IPv4-UNDERLAY-PEERS | Inherited from peer group IPv4-UNDERLAY-PEERS | - | - | - | - | - |
 | 10.0.1.10 | 65101 | BLUE | - | Inherited from peer group IPv4-UNDERLAY-PEERS | Inherited from peer group IPv4-UNDERLAY-PEERS | Inherited from peer group IPv4-UNDERLAY-PEERS | - | - | - | - | - |
 | 10.0.1.8 | 65101 | RED | - | Inherited from peer group IPv4-UNDERLAY-PEERS | Inherited from peer group IPv4-UNDERLAY-PEERS | Inherited from peer group IPv4-UNDERLAY-PEERS | - | - | - | - | - |
@@ -965,6 +968,8 @@ router bgp 65000
    neighbor 192.168.42.4 route-map RM-WAN-HA-PEER-IN in
    neighbor 192.168.42.4 route-map RM-WAN-HA-PEER-OUT out
    neighbor 192.168.42.4 send-community
+   neighbor 192.168.255.5 peer group EVPN-OVERLAY-PEERS
+   neighbor 192.168.255.5 description site1-border1_Loopback0
    redistribute connected route-map RM-CONN-2-BGP
    !
    address-family evpn

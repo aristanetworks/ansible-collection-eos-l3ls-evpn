@@ -17,6 +17,7 @@ l3leaf:
       bgp_as: 65101
       nodes:
         - name: site1-border1
+          evpn_role: server
           mgmt_ip: 192.168.17.14/24
           id: 5
         - name: site1-border2
@@ -49,6 +50,11 @@ wan_router:
           id: 3
           mgmt_ip: 192.168.17.12/24
           uplink_switch_interfaces: [Ethernet3, Ethernet3]
+          evpn_route_servers: [site1-border1]
+          evpn_gateway:
+            evpn_l3:
+              enabled: true
+              inter_domain: true
           l3_interfaces:
             - name: Ethernet3
               profile: MPLS-WAN-INTERFACE
