@@ -29,16 +29,22 @@ class RouterIsisMixin(UtilsMixin):
             return None
 
         router_isis = {}
+
+        router_isis.update(
+            {
+            "instance": self.shared_utils.isis_instance_name,
+            "log_adjacency_changes": True,
+            "net": self._isis_net,
+            }
+        )
+
         if self.shared_utils.use_router_general_for_router_id is False:
             router_isis["router_id"] = self.shared_utils.router_id
 
         router_isis.update(
             {
-                "instance": self.shared_utils.isis_instance_name,
-                "log_adjacency_changes": True,
-                "net": self._isis_net,
-                "is_type": self._is_type,
-                "address_family_ipv4": {"enabled": True, "maximum_paths": get(self._hostvars, "isis_maximum_paths", default=4)},
+            "is_type": self._is_type,
+            "address_family_ipv4": {"enabled": True, "maximum_paths": get(self._hostvars, "isis_maximum_paths", default=4)},
             }
         )
 

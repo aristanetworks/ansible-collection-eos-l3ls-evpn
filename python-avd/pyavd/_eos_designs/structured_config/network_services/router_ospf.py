@@ -62,17 +62,22 @@ class RouterOspfMixin(UtilsMixin):
                     raise AristaAvdInvalidInputsError(msg)
 
                 process = {}
+
+                process.update(
+                    {
+                    "id": process_id,
+                    "vrf": vrf["name"] if vrf["name"] != "default" else None,
+                    "passive_interface_default": True,
+                    }
+                )
                 if self.shared_utils.use_router_general_for_router_id is False:
                     process["router_id"] = default(get(vrf, "ospf.router_id"), self.shared_utils.router_id)
 
                 process.update(
                     {
-                        "id": process_id,
-                        "vrf": vrf["name"] if vrf["name"] != "default" else None,
-                        "passive_interface_default": True,
-                        "no_passive_interfaces": ospf_interfaces,
-                        "bfd_enable": get(vrf, "ospf.bfd"),
-                        "max_lsa": get(vrf, "ospf.max_lsa"),
+                    "no_passive_interfaces": ospf_interfaces,
+                    "bfd_enable": get(vrf, "ospf.bfd"),
+                    "max_lsa": get(vrf, "ospf.max_lsa"),
                     }
                 )
 

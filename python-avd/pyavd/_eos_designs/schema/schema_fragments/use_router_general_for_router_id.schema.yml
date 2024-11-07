@@ -8,5 +8,5 @@ type: dict
 keys:
   use_router_general_for_router_id:
     type: bool
-    description: This setting allows to use `router_id` set under `router_general_settings` as BGP router-id.
+    description: Use `router general` to set router ID for all routing protocols and VRFs.
     default: false

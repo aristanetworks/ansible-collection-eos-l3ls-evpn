@@ -1223,10 +1223,10 @@ ipv6_static_routes:
   vrf: Tenant_D_OP_Zone
 router_ospf:
   process_ids:
-  - router_id: 192.168.255.10
-    id: 16
+  - id: 16
     vrf: Tenant_A_OSPF
     passive_interface_default: true
+    router_id: 192.168.255.10
     no_passive_interfaces:
     - Ethernet22
     - Ethernet23

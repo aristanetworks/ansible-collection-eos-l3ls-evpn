@@ -30,10 +30,10 @@ loopback_interfaces:
   isis_enable: EVPN_UNDERLAY
   isis_passive: true
 router_isis:
-  router_id: 1.2.3.1
   instance: EVPN_UNDERLAY
   log_adjacency_changes: true
   net: 49.0001.0010.0200.3001.00
+  router_id: 1.2.3.1
   is_type: level-2
   address_family_ipv4:
     enabled: true

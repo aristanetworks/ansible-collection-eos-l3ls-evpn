@@ -86,10 +86,10 @@ loopback_interfaces:
   node_segment:
     ipv4_index: 206
 router_isis:
-  router_id: 192.168.255.114
   instance: CORE
   log_adjacency_changes: true
   net: 49.0001.1921.6825.5114.00
+  router_id: 192.168.255.114
   is_type: level-1-2
   address_family_ipv4:
     enabled: true

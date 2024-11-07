@@ -566,10 +566,10 @@ vlan_interfaces:
   vrf: '12345678'
 router_ospf:
   process_ids:
-  - router_id: 192.168.42.42
-    id: 9
+  - id: 9
     vrf: Tenant_A_OP_Zone
     passive_interface_default: true
+    router_id: 192.168.42.42
     no_passive_interfaces:
     - Vlan113
     redistribute:

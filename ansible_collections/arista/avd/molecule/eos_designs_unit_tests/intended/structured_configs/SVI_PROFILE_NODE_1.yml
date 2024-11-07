@@ -469,10 +469,10 @@ vlan_interfaces:
   ospf_network_point_to_point: false
 router_ospf:
   process_ids:
-  - router_id: 192.168.255.1
-    id: 1
+  - id: 1
     vrf: svi_profile_tests_vrf
     passive_interface_default: true
+    router_id: 192.168.255.1
     no_passive_interfaces:
     - Vlan510
     - Vlan511

@@ -993,9 +993,9 @@ vlan_interfaces:
   vrf: TENANT_D_WAN_ZONE
 router_ospf:
   process_ids:
-  - router_id: 192.168.255.109
-    id: 123
+  - id: 123
     passive_interface_default: true
+    router_id: 192.168.255.109
     no_passive_interfaces:
     - Vlan1234
     redistribute:

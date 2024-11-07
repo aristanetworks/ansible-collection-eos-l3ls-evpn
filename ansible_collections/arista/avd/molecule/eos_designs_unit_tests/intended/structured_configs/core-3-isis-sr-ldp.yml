@@ -42,10 +42,10 @@ loopback_interfaces:
     ipv4_index: 203
     ipv6_index: 203
 router_isis:
-  router_id: 10.0.0.3
   instance: CORE
   log_adjacency_changes: true
   net: 49.0001.0100.0000.0003.00
+  router_id: 10.0.0.3
   is_type: level-2
   address_family_ipv4:
     enabled: true

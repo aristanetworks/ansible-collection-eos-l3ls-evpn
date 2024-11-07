@@ -60,10 +60,10 @@ loopback_interfaces:
   node_segment:
     ipv4_index: 199
 router_isis:
-  router_id: 172.28.4.99
   instance: CORE
   log_adjacency_changes: true
   net: 49.0001.0000.0001.0099.00
+  router_id: 172.28.4.99
   is_type: level-2
   address_family_ipv4:
     enabled: true
