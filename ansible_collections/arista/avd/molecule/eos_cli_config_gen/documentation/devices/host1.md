@@ -44,6 +44,9 @@
 - [VRF Instances](#vrf-instances)
   - [VRF Instances Summary](#vrf-instances-summary)
   - [VRF Instances Device Configuration](#vrf-instances-device-configuration)
+- [Virtual Source NAT](#virtual-source-nat)
+  - [Virtual Source NAT Summary](#virtual-source-nat-summary)
+  - [Virtual Source NAT Configuration](#virtual-source-nat-configuration)
 - [Application Traffic Recognition](#application-traffic-recognition)
   - [Applications](#applications)
   - [Application Profiles](#application-profiles)
@@ -836,6 +839,28 @@ vrf instance MGMT
 vrf instance TENANT_A_PROJECT01
 !
 vrf instance TENANT_A_PROJECT02
+```
+
+## Virtual Source NAT
+
+### Virtual Source NAT Summary
+
+| Source NAT VRF | Source NAT IPv4 Address | Source NAT IPv6 Address |
+| -------------- | ----------------------- | ----------------------- |
+| TEST_01 | 1.1.1.1 | - |
+| TEST_02 | 1.1.1.2 | - |
+| TEST_03 | - | 2001:db8:85a3::8a2e:370:7334 |
+| TEST_04 | 1.1.1.3 | 2001:db8:85a3::8a2e:370:7335 |
+
+### Virtual Source NAT Configuration
+
+```eos
+!
+ip address virtual source-nat vrf TEST_01 address 1.1.1.1
+ip address virtual source-nat vrf TEST_02 address 1.1.1.2
+ip address virtual source-nat vrf TEST_04 address 1.1.1.3
+ipv6 address virtual source-nat vrf TEST_03 address 2001:db8:85a3::8a2e:370:7334
+ipv6 address virtual source-nat vrf TEST_04 address 2001:db8:85a3::8a2e:370:7335
 ```
 
 ## Application Traffic Recognition
