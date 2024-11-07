@@ -1,0 +1,20 @@
+---
+### as path ###
+as_path:
+  regex_mode: asn
+  access_lists:
+    - name: mylist1
+      entries:
+        - type: permit
+          match: "^(64512|645115)"
+          origin: egp
+        - type: deny
+          match: "(64513|64515)$"
+    - name: mylist2
+      entries:
+        - type: deny
+          match: "_64517$"
+          origin: igp
+    - name: mylist3
+      entries:
+        - origin: igp

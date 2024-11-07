@@ -1,0 +1,10 @@
+---
+### CVX ###
+# Test for cvx.shutdown: true, cvx.services.mcs.shutdown: true, cvx.services.mcs.shutdown: true
+cvx:
+  shutdown: true
+  services:
+    mcs:
+      shutdown: true
+    vxlan:
+      shutdown: true

@@ -226,6 +226,10 @@ class AvdTestLLDPTopology(AvdTestBase):
         required_keys = ["name", "peer", "peer_interface"]
 
         for idx, interface in enumerate(ethernet_interfaces):
+            if interface.get("validate_state", True) is False:
+                LOGGER.info("Interface '%s' variable 'validate_state' is set to False. %s is skipped.", interface["name"], self.__class__.__name__)
+                continue
+
             if self.is_subinterface(interface):
                 LOGGER.info("Interface '%s' is a subinterface. %s is skipped.", interface["name"], self.__class__.__name__)
                 continue
