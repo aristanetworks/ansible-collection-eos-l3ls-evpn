@@ -27,10 +27,7 @@ class AvdStructuredConfigInbandManagement(AvdFacts):
         if self.shared_utils.configure_inband_mgmt or self.shared_utils.configure_inband_mgmt_ipv6:
             return [{"id": self.shared_utils.inband_mgmt_vlan, **vlan_cfg}]
 
-        if self.shared_utils.inband_management_parent_vlans:
-            return [{"id": svi, **vlan_cfg} for svi in self.shared_utils.inband_management_parent_vlans]
-
-        return None
+        return [{"id": svi, **vlan_cfg} for svi in self.shared_utils.inband_management_parent_vlans]
 
     @cached_property
     def vlan_interfaces(self) -> list | None:
@@ -43,9 +40,7 @@ class AvdStructuredConfigInbandManagement(AvdFacts):
         if self.shared_utils.configure_inband_mgmt or self.shared_utils.configure_inband_mgmt_ipv6:
             return [self.get_local_inband_mgmt_interface_cfg()]
 
-        if self.shared_utils.inband_management_parent_vlans:
-            return [self.get_parent_svi_cfg(vlan, subnet["ipv4"], subnet["ipv6"]) for vlan, subnet in self.shared_utils.inband_management_parent_vlans.items()]
-        return None
+        return [self.get_parent_svi_cfg(vlan, subnet["ipv4"], subnet["ipv6"]) for vlan, subnet in self.shared_utils.inband_management_parent_vlans.items()]
 
     @cached_property
     def _inband_mgmt_ipv6_parent(self) -> bool:
