@@ -1178,9 +1178,9 @@ ip extcommunity-list TEST2 deny 65001:65001
 
 | List Name | Type | Regular Expression |
 | --------- | ---- | ------------------ |
-| TEST1 | permit | 65[0-9]{3}:[0-9]+ |
-| TEST1 | deny | .* |
-| TEST2 | deny | 6500[0-1]:650[0-9][0-9] |
+| TEST1 | permit | `65[0-9]{3}:[0-9]+` |
+| TEST1 | deny | `.*` |
+| TEST2 | deny | `6500[0-1]:650[0-9][0-9]` |
 
 #### IP Extended Community RegExp Lists Device Configuration
 
