@@ -2140,6 +2140,19 @@ keys:
             forwarding_profile:
               type: str
               description: L2 protocol forwarding profile.
+        mac_timestamp:
+          type: str
+          valid_values:
+          - before-fcs
+          - replace-fcs
+          - header
+          description: 'header: Insert timestamp in ethernet header. Supported on
+            platforms like 7500E/R and 7280E/R.
+
+            before-fcs: Insert timestamp before fcs field. Supported on platforms
+            like 7150.
+
+            replace-fcs: Replace fcs field with timestamp.'
         trunk_groups:
           type: list
           items:
