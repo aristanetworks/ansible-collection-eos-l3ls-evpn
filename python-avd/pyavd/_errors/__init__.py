@@ -78,7 +78,7 @@ class AvdDeprecationWarning(AristaAvdError):  # noqa: N818
             if not url:
                 url = "the porting guide on https://avd.arista.com"
         else:
-            messages.append(f"{conflict} The input data model '{self.path}' is deprecated.")
+            messages.append(f"The input data model '{self.path}' is deprecated.")
 
         if new_key and not conflict:
             messages.append(f"Use '{new_key}' instead.")
