@@ -50,19 +50,19 @@ interface Management1
 
 | Protocol | VRF | Access-list | Ingress-default |
 | -------- | --- | ------------| --------------- |
-| IPv4 | default | acl4_1 | - |
-| IPv4 | red | acl4_2 | - |
-| IPv4 | red_1 | acl4_2 | - |
-| IPv4 | default | acl4_3 | - |
-| IPv4 | red_2 | acl4_4 | True |
+| IPv4 | default | acl4_1 | False |
+| IPv4 | - | acl4_2 | True |
+| IPv4 | default | acl4_3 | False |
+| IPv4 | red_2 | acl4_4 | False |
+| IPv4 | red_5 | acl4_4 | False |
 | IPv4 | red_3 | acl4_5 | False |
-| IPv4 | red_4 | ingress | - |
-| IPv6 | default | acl6_1 | - |
-| IPv6 | blue | acl6_2 | - |
-| IPv6 | blue_1 | acl6_2 | - |
-| IPv6 | default | acl6_3 | - |
-| IPv6 | default | acl6_4 | True |
-| IPv6 | blue_2 | ingress | - |
+| IPv4 | red_4 | ingress | False |
+| IPv6 | default | acl6_1 | False |
+| IPv6 | blue | acl6_2 | False |
+| IPv6 | blue_1 | acl6_2 | False |
+| IPv6 | default | acl6_3 | False |
+| IPv6 | - | acl6_4 | True |
+| IPv6 | blue_2 | ingress | False |
 
 #### System Control-Plane Device Configuration
 
@@ -70,19 +70,17 @@ interface Management1
 !
 system control-plane
    tcp mss ceiling ipv4 1344 ipv6 1366
-   ip access-group acl4_1 in
-   ip access-group acl4_2 vrf red in
-   ip access-group acl4_2 vrf red_1 in
-   ip access-group acl4_3 vrf default in
-   ip access-group ingress default acl4_4
+   ip access-group ingress default acl4_2
+   ip access-group acl4_3 in
+   ip access-group acl4_4 vrf red_2 in
    ip access-group acl4_5 vrf red_3 in
    ip access-group ingress vrf red_4 in
-   ipv6 access-group acl6_1 in
-   ipv6 access-group acl6_2 vrf blue in
-   ipv6 access-group acl6_2 vrf blue_1 in
-   ipv6 access-group acl6_3 vrf default in
-   ipv6 access-group ingress default acl6_4
-   ipv6 access-group ingress vrf blue_2 in
+   ip access-group acl4_4 vrf red_5 in
+   ip access-group ingress default acl6_4
+   ip access-group acl6_3 in
+   ip access-group acl6_2 vrf blue in
+   ip access-group acl6_2 vrf blue_1 in
+   ip access-group ingress vrf blue_2 in
 ```
 
 ## System L1

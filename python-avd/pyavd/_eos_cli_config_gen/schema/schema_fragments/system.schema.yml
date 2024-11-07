@@ -26,6 +26,7 @@ keys:
             type: list
             unique_keys:
               - vrf
+              - ingress_default
             items:
               type: dict
               keys:
@@ -47,6 +48,7 @@ keys:
             type: list
             unique_keys:
               - vrf
+              - ingress_default
             items:
               type: dict
               keys:

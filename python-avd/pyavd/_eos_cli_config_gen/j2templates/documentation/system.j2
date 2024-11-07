@@ -28,11 +28,13 @@
 | -------- | --- | ------------| --------------- |
 {#         IPv4 Access-groups #}
 {%         for acl_set in system.control_plane.ipv4_access_groups | arista.avd.natural_sort %}
-| IPv4 | {{ acl_set.vrf | arista.avd.default('default') }} | {{ acl_set.acl_name }} | {{ acl_set.ingress_default | arista.avd.default('-') }} |
+{%             set vrf = '-' if acl_set.ingress_default is arista.avd.defined(true) else acl_set.vrf | arista.avd.default('default') %}
+| IPv4 | {{ vrf }} | {{ acl_set.acl_name }} | {{ acl_set.ingress_default | arista.avd.default('False') }} |
 {%         endfor %}
 {#         IPv6 Access-groups #}
 {%         for acl_set in system.control_plane.ipv6_access_groups | arista.avd.natural_sort %}
-| IPv6 | {{ acl_set.vrf | arista.avd.default('default') }} | {{ acl_set.acl_name }} | {{ acl_set.ingress_default | arista.avd.default('-') }} |
+{%             set vrf = '-' if acl_set.ingress_default is arista.avd.defined(true) else acl_set.vrf | arista.avd.default('default') %}
+| IPv6 | {{ vrf }} | {{ acl_set.acl_name }} | {{ acl_set.ingress_default | arista.avd.default('False') }} |
 {%         endfor %}
 {%     endif %}
 
