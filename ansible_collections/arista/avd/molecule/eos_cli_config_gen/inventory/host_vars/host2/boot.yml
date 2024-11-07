@@ -1,0 +1,5 @@
+---
+### System Boot Configuration
+boot:
+  secret:
+    hash_algorithm: md5
