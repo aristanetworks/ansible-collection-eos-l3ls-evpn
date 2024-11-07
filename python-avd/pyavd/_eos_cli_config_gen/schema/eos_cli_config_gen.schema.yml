@@ -8585,12 +8585,14 @@ keys:
           neighbors:
             description: Neighbor-specific configuration.
             type: list
-            primary_key: ip_address
             items:
               type: dict
               keys:
                 ip_address:
-                  description: Neighbor's interface IPv4 or IPv6 address.
+                  description: Neighbor's interface IPv4 address.
+                  type: str
+                ipv6_address:
+                  description: Neighbor's interface IPv6 address.
                   type: str
                 authentication:
                   description: Cryptographic authentication.

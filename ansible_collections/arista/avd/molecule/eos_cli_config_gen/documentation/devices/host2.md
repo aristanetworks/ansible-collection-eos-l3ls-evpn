@@ -25,6 +25,9 @@
   - [DPS Interfaces](#dps-interfaces)
 - [Routing](#routing)
   - [ARP](#arp)
+- [MPLS](#mpls)
+  - [MPLS and LDP](#mpls-and-ldp)
+  - [MPLS RSVP](#mpls-rsvp)
 - [Multicast](#multicast)
   - [IP IGMP Snooping](#ip-igmp-snooping)
 - [Filters](#filters)
@@ -249,6 +252,74 @@ ARP cache persistency is enabled.
 ```eos
 !
 arp persistent
+```
+
+## MPLS
+
+### MPLS and LDP
+
+#### MPLS and LDP Summary
+
+| Setting | Value |
+| -------- | ---- |
+| MPLS IP Enabled | True |
+| LDP Enabled | False |
+| LDP Router ID | - |
+| LDP Interface Disabled Default | False |
+| LDP Transport-Address Interface | - |
+| ICMP TTL-Exceeded Tunneling Enabled | True |
+
+### MPLS RSVP
+
+#### MPLS RSVP Summary
+
+| Setting | Value |
+| ------- | ----- |
+| Refresh method  | explicit |
+| Authentication type | md5 |
+| Authentication sequence-number window | 234 |
+| Authentication active index | 766 |
+| SRLG | enabled |
+| Preemption method | hard |
+| Fast reroute mode | link-protection |
+| Fast reroute reversion | - |
+| Fast reroute  bypass tunnel optimization interval | - |
+| Hitless restart | Active |
+| Hitless restart recovery timer | - |
+
+##### RSVP Graceful Restart
+
+| Role | Recovery timer | Restart timer |
+| ---- | -------------- | ------------- |
+| Helper | 32 | 33 |
+
+#### MPLS Device Configuration
+
+```eos
+!
+mpls ip
+!
+mpls ldp
+   shutdown
+!
+mpls icmp ttl-exceeded tunneling
+!
+mpls rsvp
+   refresh method explicit
+   authentication type md5
+   authentication sequence-number window 234
+   authentication index 766 active
+   fast-reroute mode link-protection
+   srlg
+   preemption method hard
+   !
+   hitless-restart
+   !
+   graceful-restart role helper
+      timer restart maximum 32 seconds
+      timer recovery maximum 33 seconds
+   !
+   p2mp
 ```
 
 ## Multicast
