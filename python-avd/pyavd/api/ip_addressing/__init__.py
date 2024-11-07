@@ -222,7 +222,6 @@ class AvdIpAddressing(AvdFacts, UtilsMixin):
         Default pool is "loopback_ipv4_pool"
         Default offset from pool is `id + loopback_ipv4_offset`
         """
-
         if self._loopback_ipv4_address:
             return self._loopback_ipv4_address
 
@@ -244,7 +243,6 @@ class AvdIpAddressing(AvdFacts, UtilsMixin):
         Default pool is "loopback_ipv6_pool"
         Default offset from pool is `id + loopback_ipv6_offset`
         """
-
         if template_path := self.shared_utils.ip_addressing_templates.get("ipv6_router_id"):
             return self._template(
                 template_path,

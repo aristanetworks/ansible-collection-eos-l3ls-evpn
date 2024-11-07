@@ -34,12 +34,12 @@ class RouterIsisMixin(UtilsMixin):
 
         router_isis.update(
             {
-            "instance": self.shared_utils.isis_instance_name,
-            "log_adjacency_changes": True,
-            "net": self._isis_net,
-            "is_type": self._is_type,
-            "address_family_ipv4": {"enabled": True, "maximum_paths": get(self._hostvars, "isis_maximum_paths", default=4)},
-        }
+                "instance": self.shared_utils.isis_instance_name,
+                "log_adjacency_changes": True,
+                "net": self._isis_net,
+                "is_type": self._is_type,
+                "address_family_ipv4": {"enabled": True, "maximum_paths": get(self._hostvars, "isis_maximum_paths", default=4)},
+            }
         )
 
         if self.shared_utils.underlay_ldp is True:

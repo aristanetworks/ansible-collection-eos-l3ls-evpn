@@ -67,13 +67,13 @@ class RouterOspfMixin(UtilsMixin):
 
                 process.update(
                     {
-                    "id": process_id,
-                    "vrf": vrf["name"] if vrf["name"] != "default" else None,
-                    "passive_interface_default": True,
-                    "no_passive_interfaces": ospf_interfaces,
-                    "bfd_enable": get(vrf, "ospf.bfd"),
-                    "max_lsa": get(vrf, "ospf.max_lsa"),
-                }
+                        "id": process_id,
+                        "vrf": vrf["name"] if vrf["name"] != "default" else None,
+                        "passive_interface_default": True,
+                        "no_passive_interfaces": ospf_interfaces,
+                        "bfd_enable": get(vrf, "ospf.bfd"),
+                        "max_lsa": get(vrf, "ospf.max_lsa"),
+                    }
                 )
 
                 process_redistribute = {}

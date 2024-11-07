@@ -11,8 +11,9 @@ from pyavd._utils import get, get_item, strip_empties_from_dict, strip_null_from
 from pyavd.j2filters import natural_sort
 
 from .ntp import NtpMixin
-from .snmp_server import SnmpServerMixin
 from .router_general import RouterGeneralMixin
+from .snmp_server import SnmpServerMixin
+
 
 class AvdStructuredConfigBase(AvdFacts, NtpMixin, SnmpServerMixin, RouterGeneralMixin):
     """
