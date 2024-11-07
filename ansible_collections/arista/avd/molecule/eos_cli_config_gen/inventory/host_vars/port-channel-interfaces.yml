@@ -736,6 +736,10 @@ port_channel_interfaces:
       network:
         encapsulation: client inner
 
+  - name: Port-Channel132
+    description: Test_port-channel_interface-profile
+    profile: test-interface-profile
+
 # Children interfaces
 ethernet_interfaces:
   - name: Ethernet5

@@ -45,6 +45,9 @@ custom_structured_configuration_ethernet_interfaces:
     peer: dc2-leaf2b
     peer_interface: Ethernet2
     shutdown: false
+    # Test to skip the VerifyLLDPNeighbors testcase
+  - name: Ethernet3
+    validate_state: false
 
 custom_structured_configuration_port_channel_interfaces:
   - name: Port-Channel11
