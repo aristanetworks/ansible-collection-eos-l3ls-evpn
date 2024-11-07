@@ -2,13 +2,13 @@ hostname: isis-system-id-format-using-node-id
 is_deployed: true
 router_bgp:
   as: '65000'
+  router_id: 172.28.4.99
   bgp:
     default:
       ipv4_unicast: false
   maximum_paths:
     paths: 4
     ecmp: 4
-  router_id: 172.28.4.99
   updates:
     wait_install: true
   peer_groups:

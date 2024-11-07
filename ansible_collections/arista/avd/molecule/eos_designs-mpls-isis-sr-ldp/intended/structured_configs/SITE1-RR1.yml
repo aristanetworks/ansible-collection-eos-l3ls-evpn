@@ -156,9 +156,9 @@ mpls:
   ip: true
   ldp:
     interface_disabled_default: true
-    router_id: 100.70.0.8
     shutdown: false
     transport_address_interface: Loopback0
+    router_id: 100.70.0.8
 router_bfd:
   multihop:
     interval: 300

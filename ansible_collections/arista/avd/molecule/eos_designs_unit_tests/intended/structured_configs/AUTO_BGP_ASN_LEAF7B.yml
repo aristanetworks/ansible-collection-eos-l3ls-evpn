@@ -2,6 +2,7 @@ hostname: AUTO_BGP_ASN_LEAF7B
 is_deployed: true
 router_bgp:
   as: '65222.0'
+  router_id: 192.168.255.14
   bgp_defaults:
   - distance bgp 20 200 200
   bgp:
@@ -14,7 +15,6 @@ router_bgp:
     connected:
       enabled: true
       route_map: RM-CONN-2-BGP
-  router_id: 192.168.255.14
   updates:
     wait_install: true
   peer_groups:

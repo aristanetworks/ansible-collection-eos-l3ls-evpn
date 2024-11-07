@@ -2,6 +2,7 @@ hostname: UNDERLAY_FILTER_PEER_AS_L3LEAF1
 is_deployed: true
 router_bgp:
   as: '65001'
+  router_id: 192.168.255.3
   bgp:
     default:
       ipv4_unicast: false
@@ -11,7 +12,6 @@ router_bgp:
   redistribute:
     connected:
       enabled: true
-  router_id: 192.168.255.3
   updates:
     wait_install: true
   peer_groups:

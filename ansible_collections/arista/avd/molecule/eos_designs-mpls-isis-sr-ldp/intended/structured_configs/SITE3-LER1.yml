@@ -83,9 +83,9 @@ mpls:
   ip: true
   ldp:
     interface_disabled_default: true
-    router_id: 100.70.0.10
     shutdown: false
     transport_address_interface: Loopback0
+    router_id: 100.70.0.10
 ip_igmp_snooping:
   globally_enabled: true
 ip_virtual_router_mac_address: 00:1c:73:00:dc:00

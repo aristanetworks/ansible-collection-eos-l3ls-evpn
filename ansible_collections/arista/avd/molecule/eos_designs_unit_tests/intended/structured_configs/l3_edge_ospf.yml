@@ -30,9 +30,9 @@ loopback_interfaces:
   ospf_area: 0.0.0.0
 router_ospf:
   process_ids:
-  - router_id: 1.2.3.1
-    id: 100
+  - id: 100
     passive_interface_default: true
+    router_id: 1.2.3.1
     max_lsa: 12000
     no_passive_interfaces:
     - ethernet2

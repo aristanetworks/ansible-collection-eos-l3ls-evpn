@@ -2,6 +2,7 @@ hostname: sflow-tests-leaf2
 is_deployed: true
 router_bgp:
   as: '65102'
+  router_id: 10.254.1.2
   bgp:
     default:
       ipv4_unicast: false
@@ -12,7 +13,6 @@ router_bgp:
     connected:
       enabled: true
       route_map: RM-CONN-2-BGP
-  router_id: 10.254.1.2
   peer_groups:
   - name: IPv4-UNDERLAY-PEERS
     type: ipv4

@@ -2,6 +2,7 @@ hostname: bgp-options
 is_deployed: true
 router_bgp:
   as: '65000'
+  router_id: 10.10.10.1
   distance:
     external_routes: 20
     internal_routes: 200
@@ -16,7 +17,6 @@ router_bgp:
     connected:
       enabled: true
       route_map: RM-CONN-2-BGP
-  router_id: 10.10.10.1
   updates:
     wait_install: true
   peer_groups:

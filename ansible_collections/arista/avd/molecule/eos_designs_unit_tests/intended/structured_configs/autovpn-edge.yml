@@ -2,6 +2,7 @@ hostname: autovpn-edge
 is_deployed: true
 router_bgp:
   as: '65000'
+  router_id: 192.168.30.1
   bgp:
     default:
       ipv4_unicast: false
@@ -11,7 +12,6 @@ router_bgp:
     connected:
       enabled: true
       route_map: RM-CONN-2-BGP
-  router_id: 192.168.30.1
   updates:
     wait_install: true
   peer_groups:

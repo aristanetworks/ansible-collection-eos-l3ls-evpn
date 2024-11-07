@@ -2,6 +2,7 @@ hostname: MH-LEAF2A
 is_deployed: true
 router_bgp:
   as: '65153'
+  router_id: 192.168.255.35
   bgp:
     default:
       ipv4_unicast: false
@@ -14,7 +15,6 @@ router_bgp:
       route_map: RM-CONN-2-BGP
     static:
       enabled: true
-  router_id: 192.168.255.35
   updates:
     wait_install: true
   peer_groups:

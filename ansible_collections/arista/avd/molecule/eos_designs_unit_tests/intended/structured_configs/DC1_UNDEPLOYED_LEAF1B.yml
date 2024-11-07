@@ -2,6 +2,7 @@ hostname: DC1_UNDEPLOYED_LEAF1B
 is_deployed: false
 router_bgp:
   as: '65111'
+  router_id: 192.168.255.22
   bgp_defaults:
   - distance bgp 20 200 200
   bgp:
@@ -14,7 +15,6 @@ router_bgp:
     connected:
       enabled: true
       route_map: RM-CONN-2-BGP
-  router_id: 192.168.255.22
   updates:
     wait_install: true
   peer_groups:

@@ -2,6 +2,7 @@ hostname: bgp-peer-groups-3
 is_deployed: true
 router_bgp:
   as: '65001'
+  router_id: 192.168.255.114
   bgp:
     default:
       ipv4_unicast: false
@@ -10,7 +11,6 @@ router_bgp:
   maximum_paths:
     paths: 4
     ecmp: 4
-  router_id: 192.168.255.114
   updates:
     wait_install: true
   peer_groups:

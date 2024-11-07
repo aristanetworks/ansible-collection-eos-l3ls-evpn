@@ -7,7 +7,7 @@ from typing import Any
 
 from pyavd._eos_designs.avdfacts import AvdFacts
 from pyavd._errors import AristaAvdError
-from pyavd._utils import get, get_ip_from_pool
+from pyavd._utils import get_ip_from_pool
 
 from .utils import UtilsMixin
 

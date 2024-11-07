@@ -67,22 +67,27 @@ class AvdStructuredConfigBase(AvdFacts, NtpMixin, SnmpServerMixin, RouterGeneral
 
         router_bgp = {
             "as": self.shared_utils.bgp_as,
-            "distance": get(self._hostvars, "bgp_distance"),
-            "bgp_defaults": get(self.shared_utils.switch_data_combined, "bgp_defaults"),
-            "bgp": {
-                "default": {
-                    "ipv4_unicast": get(self._hostvars, "bgp_default_ipv4_unicast", default=False),
-                },
-            },
-            "maximum_paths": {
-                "paths": get(self._hostvars, "bgp_maximum_paths", default=default_maximum_paths),
-                "ecmp": get(self._hostvars, "bgp_ecmp", default=default_ecmp),
-            },
-            "redistribute": self._router_bgp_redistribute_routes,
         }
 
         if self.shared_utils.use_router_general_for_router_id is False:
             router_bgp["router_id"] = self.shared_utils.router_id
+
+        router_bgp.update(
+            {
+                "distance": get(self._hostvars, "bgp_distance"),
+                "bgp_defaults": get(self.shared_utils.switch_data_combined, "bgp_defaults"),
+                "bgp": {
+                    "default": {
+                        "ipv4_unicast": get(self._hostvars, "bgp_default_ipv4_unicast", default=False),
+                    },
+                },
+                "maximum_paths": {
+                    "paths": get(self._hostvars, "bgp_maximum_paths", default=default_maximum_paths),
+                    "ecmp": get(self._hostvars, "bgp_ecmp", default=default_ecmp),
+                },
+                "redistribute": self._router_bgp_redistribute_routes,
+            }
+        )
 
         if get(self._hostvars, "bgp_update_wait_for_convergence", default=False) is True and platform_bgp_update_wait_for_convergence:
             router_bgp.setdefault("updates", {})["wait_for_convergence"] = True

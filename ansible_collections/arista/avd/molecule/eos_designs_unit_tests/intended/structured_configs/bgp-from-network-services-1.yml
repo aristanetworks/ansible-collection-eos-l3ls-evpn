@@ -2,13 +2,13 @@ hostname: bgp-from-network-services-1
 is_deployed: true
 router_bgp:
   as: '65001'
+  router_id: 192.0.255.1
   bgp:
     default:
       ipv4_unicast: false
   maximum_paths:
     paths: 4
     ecmp: 4
-  router_id: 192.0.255.1
   updates:
     wait_install: true
   peer_groups:

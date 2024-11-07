@@ -2,13 +2,13 @@ hostname: MLAG-OSPF-L3LEAF1B
 is_deployed: true
 router_bgp:
   as: '65161'
+  router_id: 192.168.255.37
   bgp:
     default:
       ipv4_unicast: false
   maximum_paths:
     paths: 4
     ecmp: 4
-  router_id: 192.168.255.37
   updates:
     wait_install: true
   peer_groups:
@@ -205,9 +205,9 @@ loopback_interfaces:
   ospf_area: 0.0.0.0
 router_ospf:
   process_ids:
-  - router_id: 192.168.255.37
-    id: 100
+  - id: 100
     passive_interface_default: true
+    router_id: 192.168.255.37
     max_lsa: 12000
     no_passive_interfaces:
     - Ethernet1
