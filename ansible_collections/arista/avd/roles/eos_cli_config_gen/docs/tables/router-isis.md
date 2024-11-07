@@ -18,6 +18,18 @@
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;local_convergence</samp>](## "router_isis.timers.local_convergence") | Dictionary |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;protected_prefixes</samp>](## "router_isis.timers.local_convergence.protected_prefixes") | Boolean |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;delay</samp>](## "router_isis.timers.local_convergence.delay") | Integer |  | `10000` |  | Delay in milliseconds. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;lsp</samp>](## "router_isis.timers.lsp") | Dictionary |  |  |  | Link State Packet timers. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;generation</samp>](## "router_isis.timers.lsp.generation") | Dictionary |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;interval</samp>](## "router_isis.timers.lsp.generation.interval") | Integer | Required |  | Min: 1<br>Max: 300 | Maximum interval (in seconds) between generating two LSPs. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;initial_wait_time</samp>](## "router_isis.timers.lsp.generation.initial_wait_time") | Integer |  |  | Min: 1<br>Max: 300000 | Initial wait time (in milliseconds) before generating LSPs. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;wait_time</samp>](## "router_isis.timers.lsp.generation.wait_time") | Integer |  |  | Min: 1<br>Max: 300000 | Wait time (in milliseconds) between generating the first and second LSPs. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;out_delay</samp>](## "router_isis.timers.lsp.out_delay") | Integer |  |  | Min: 1<br>Max: 65000 | Transmit delay (in milliseconds) for link state packets. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;refresh_interval</samp>](## "router_isis.timers.lsp.refresh_interval") | Integer |  |  | Min: 30<br>Max: 65535 | Interval (in seconds) between two LSP refreshes. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;min_remaining_lifetime</samp>](## "router_isis.timers.lsp.min_remaining_lifetime") | Integer |  |  | Min: 60<br>Max: 65535 | Minimum remaining lifetime for LSPs (in seconds). |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;csnp</samp>](## "router_isis.timers.csnp") | Dictionary |  |  |  | CSN Packet timers. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;generation</samp>](## "router_isis.timers.csnp.generation") | Dictionary |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;interval</samp>](## "router_isis.timers.csnp.generation.interval") | Integer |  |  | Min: 1<br>Max: 300 | Transmit frequency (in seconds) for CSN packets. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;p2p_disabled</samp>](## "router_isis.timers.csnp.generation.p2p_disabled") | Boolean |  |  |  | Disable periodic CSN packets for P2P links. |
     | [<samp>&nbsp;&nbsp;set_overload_bit</samp>](## "router_isis.set_overload_bit") | Dictionary |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "router_isis.set_overload_bit.enabled") | Boolean |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;on_startup</samp>](## "router_isis.set_overload_bit.on_startup") | Dictionary |  |  |  |  |
@@ -147,6 +159,38 @@
 
           # Delay in milliseconds.
           delay: <int; default=10000>
+
+        # Link State Packet timers.
+        lsp:
+          generation:
+
+            # Maximum interval (in seconds) between generating two LSPs.
+            interval: <int; 1-300; required>
+
+            # Initial wait time (in milliseconds) before generating LSPs.
+            initial_wait_time: <int; 1-300000>
+
+            # Wait time (in milliseconds) between generating the first and second LSPs.
+            wait_time: <int; 1-300000>
+
+          # Transmit delay (in milliseconds) for link state packets.
+          out_delay: <int; 1-65000>
+
+          # Interval (in seconds) between two LSP refreshes.
+          refresh_interval: <int; 30-65535>
+
+          # Minimum remaining lifetime for LSPs (in seconds).
+          min_remaining_lifetime: <int; 60-65535>
+
+        # CSN Packet timers.
+        csnp:
+          generation:
+
+            # Transmit frequency (in seconds) for CSN packets.
+            interval: <int; 1-300>
+
+            # Disable periodic CSN packets for P2P links.
+            p2p_disabled: <bool>
       set_overload_bit:
         enabled: <bool>
         on_startup:

@@ -1,0 +1,16 @@
+---
+### CVX ###
+cvx:
+  shutdown: false
+  peer_hosts:
+  - 1.1.1.1
+  - 2.2.2.2
+  services:
+    mcs:
+      redis:
+        password: 01150F165E1C07032D
+        password_type: 7
+      shutdown: false
+    vxlan:
+      shutdown: false
+      vtep_mac_learning: "control-plane"
