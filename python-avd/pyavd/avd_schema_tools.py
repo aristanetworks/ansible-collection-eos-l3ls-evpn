@@ -51,7 +51,7 @@ class AvdSchemaTools:
             ValidationResult object with any validation errors or deprecation warnings.
         """
         # pylint: disable=import-outside-toplevel
-        from ._errors import AvdDeprecationWarning, AvdValidationError
+        from ._errors import AvdDeprecationWarning
         from .validation_result import ValidationResult
 
         # pylint: enable=import-outside-toplevel
@@ -64,7 +64,7 @@ class AvdSchemaTools:
             # Store but continue for deprecations
             if isinstance(exception, AvdDeprecationWarning):
                 if exception.removed or exception.conflict:
-                    result.validation_errors.append(AvdValidationError(exception.message))
+                    result.validation_errors.append(exception._as_validation_error())
                     result.failed = True
                     continue
 

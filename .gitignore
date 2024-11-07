@@ -11,7 +11,6 @@ __pycache__/
 /python-avd/build/
 /python-avd/dist/
 /python-avd/vendor/
-/python-avd/tests/pyavd/artifacts/
 /python-avd/pyavd.egg-info/
 /python-avd/.tox/
 /python-avd/.coverage

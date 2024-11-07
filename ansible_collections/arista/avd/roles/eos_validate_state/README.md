@@ -73,7 +73,7 @@ Figure 1 below provides a visualization of the role's inputs, outputs, and tasks
   - VerifyNTP: Validate NTP status.
 
 - AvdTestInterfacesState
-  - VerifyInterfacesStatus: Validate interfaces status.
+  - VerifyInterfacesStatus: Validate interfaces status. To skip tests for specific interfaces, set validate_state to False.
     - Ethernet interfaces
     - Port-channel interfaces
     - Vlan interfaces
@@ -94,7 +94,7 @@ Figure 1 below provides a visualization of the role's inputs, outputs, and tasks
   - VerifyReachability: Validate DPS reachability between devices.
 
 - AvdTestLLDPTopology
-  - VerifyLLDPNeighbors: Validate LLDP topology.
+  - VerifyLLDPNeighbors: Validate LLDP topology. To skip tests for specific Ethernet interfaces, set validate_state to False.
 
 - AvdTestMLAG
   - VerifyMlagStatus: Validate MLAG status.

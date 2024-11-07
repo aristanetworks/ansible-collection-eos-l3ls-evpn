@@ -302,6 +302,9 @@ interface {{ ethernet_interface.name }}
 {%     if ethernet_interface.l2_protocol.encapsulation_dot1q_vlan is arista.avd.defined %}
    l2-protocol encapsulation dot1q vlan {{ ethernet_interface.l2_protocol.encapsulation_dot1q_vlan }}
 {%     endif %}
+{%     if ethernet_interface.mac_timestamp is arista.avd.defined %}
+   mac timestamp {{ ethernet_interface.mac_timestamp }}
+{%     endif %}
 {%     if ethernet_interface.evpn_ethernet_segment is arista.avd.defined %}
    !
    evpn ethernet-segment

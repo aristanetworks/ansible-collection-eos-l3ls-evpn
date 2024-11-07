@@ -1146,6 +1146,7 @@ ethernet_interfaces:
     ip_address: 192.168.42.42/24
     dhcp_server_ipv4: true
     dhcp_server_ipv6: true
+    mac_timestamp: replace-fcs
 
   - name: Ethernet69
     switchport:
@@ -1163,6 +1164,7 @@ ethernet_interfaces:
     ipv6_enable: true
     ipv6_address: 2001:db8::2/64
     ipv6_address_link_local: fe80::2/64
+    mac_timestamp: header
     vrrp_ids:
       - id: 1
         priority_level: 105
@@ -1236,6 +1238,7 @@ ethernet_interfaces:
     shutdown: false
     transceiver:
       frequency: 190050
+    mac_timestamp: before-fcs
 
   - name: Ethernet67.1
     description: Test_encapsulation_dot1q
