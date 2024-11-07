@@ -18,6 +18,7 @@ keys:
               type:
                 type: str
                 valid_values: ["none", "start-stop", "stop-only"]
+                required: true
               group:
                 description: Group Name.
                 type: str
@@ -29,6 +30,7 @@ keys:
               type:
                 type: str
                 valid_values: ["none", "start-stop", "stop-only"]
+                required: true
               group:
                 description: Group Name.
                 type: str
@@ -43,6 +45,7 @@ keys:
               type:
                 type: str
                 valid_values: ["none", "start-stop", "stop-only"]
+                required: true
               group:
                 description: Group Name.
                 type: str
@@ -55,6 +58,7 @@ keys:
               type:
                 type: str
                 valid_values: ["start-stop", "stop-only"]
+                required: true
               group:
                 description: Group Name.
                 type: str
@@ -63,17 +67,20 @@ keys:
         keys:
           console:
             type: list
+            unique_keys:
+              - commands
             items:
               type: dict
               keys:
                 commands:
                   type: str
                   convert_types:
-                  - int
+                    - int
                   description: Privilege level 'all' or 0-15.
                 type:
                   type: str
                   valid_values: ["none", "start-stop", "stop-only"]
+                  required: true
                 group:
                   description: Group Name.
                   type: str
@@ -81,17 +88,20 @@ keys:
                   type: bool
           default:
             type: list
+            unique_keys:
+              - commands
             items:
               type: dict
               keys:
                 commands:
                   type: str
                   convert_types:
-                  - int
+                    - int
                   description: Privilege level 'all' or 0-15.
                 type:
                   type: str
                   valid_values: ["none", "start-stop", "stop-only"]
+                  required: true
                 group:
                   description: Group Name.
                   type: str

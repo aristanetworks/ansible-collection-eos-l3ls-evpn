@@ -31,16 +31,13 @@ aaa_accounting:
         type: start-stop
         logging: false
         group: TACACS1
-      # It should not include logging into command
+      # As type is none hence logging will not render in config as per actual EOS
       - commands: 2
         type: none
         logging: true
-      # It should not generate the command
+      # If type is start-stop or stop-only then logging should be true or group should be defined to render the config
       - commands: 3
         type: start-stop
-        logging: false
-      # It should not generate the command
-      - commands: 4
         logging: false
     default:
       - commands: all
@@ -55,11 +52,11 @@ aaa_accounting:
         type: start-stop
         logging: false
         group: TACACS
-      # It should not include logging into command
+      # As type is none hence logging will not render in config as per actual EOS
       - commands: 2
         type: none
         logging: true
-      # It should not generate the command
+      # If type is start-stop or stop-only then logging should be true or group should be defined to render the config
       - commands: 3
         type: start-stop
         logging: false
