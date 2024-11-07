@@ -1,4 +1,4 @@
-# host2
+# host-2
 
 ## Table of Contents
 

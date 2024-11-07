@@ -1,8 +1,0 @@
----
-### Access-Lists ###
-access_lists:
-  - name: ACL-02
-    permit_response_traffic: nat
-    sequence_numbers:
-      - sequence: 20
-        action: "permit ip 10.0.0.0/8 any"
