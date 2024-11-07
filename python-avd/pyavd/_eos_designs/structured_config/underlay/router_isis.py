@@ -32,9 +32,9 @@ class RouterIsisMixin(UtilsMixin):
 
         router_isis.update(
             {
-            "instance": self.shared_utils.isis_instance_name,
-            "log_adjacency_changes": True,
-            "net": self._isis_net,
+                "instance": self.shared_utils.isis_instance_name,
+                "log_adjacency_changes": True,
+                "net": self._isis_net,
             }
         )
 
@@ -43,8 +43,8 @@ class RouterIsisMixin(UtilsMixin):
 
         router_isis.update(
             {
-            "is_type": self._is_type,
-            "address_family_ipv4": {"enabled": True, "maximum_paths": get(self._hostvars, "isis_maximum_paths", default=4)},
+                "is_type": self._is_type,
+                "address_family_ipv4": {"enabled": True, "maximum_paths": get(self._hostvars, "isis_maximum_paths", default=4)},
             }
         )
 
