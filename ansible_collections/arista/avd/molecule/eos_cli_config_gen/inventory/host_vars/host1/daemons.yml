@@ -1,0 +1,8 @@
+---
+daemons:
+  - name: ocprometheus
+    exec: "/usr/bin/ocprometheus -config /usr/bin/ocprometheus.yml -addr localhost:6042"
+    enabled: true
+  - name: random
+    exec: "/usr/bin/random"
+    enabled: false

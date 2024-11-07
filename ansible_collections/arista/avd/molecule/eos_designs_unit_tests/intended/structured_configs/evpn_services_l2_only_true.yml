@@ -61,6 +61,14 @@ router_bgp:
     redistribute_routes:
     - learned
     vlan: 140-141
+  - name: Tenant_A_ERP_Zone
+    rd: 192.168.255.109:17
+    route_targets:
+      both:
+      - '17:17'
+    redistribute_routes:
+    - learned
+    vlan: '122'
   - name: Tenant_A_OP_Zone
     rd: 192.168.255.109:9
     route_targets:
@@ -177,6 +185,14 @@ router_bgp:
     redistribute_routes:
     - learned
     vlan: 410-413
+  - name: TENANT_D_WAN_ZONE
+    rd: 192.168.255.109:42
+    route_targets:
+      both:
+      - '42:42'
+    redistribute_routes:
+    - learned
+    vlan: '453'
 static_routes:
 - vrf: MGMT
   destination_address_prefix: 0.0.0.0/0
@@ -300,6 +316,9 @@ vlans:
 - id: 141
   name: Tenant_A_DB_Zone_2
   tenant: Tenant_A
+- id: 122
+  name: Tenant_A_ERP_Zone_1
+  tenant: Tenant_A
 - id: 110
   name: Tenant_A_OP_Zone_1
   tenant: Tenant_A
@@ -384,9 +403,14 @@ vlans:
 - id: 413
   name: Tenant_D_v6_OP_Zone_3
   tenant: Tenant_D
+- id: 453
+  name: Tenant_D_WAN_Zone_1
+  tenant: Tenant_D
 ip_igmp_snooping:
   globally_enabled: true
   vlans:
+  - id: 122
+    enabled: false
   - id: 120
     enabled: false
 vxlan_interface:
@@ -406,6 +430,8 @@ vxlan_interface:
         vni: 10140
       - id: 141
         vni: 10141
+      - id: 122
+        vni: 10122
       - id: 110
         vni: 10110
       - id: 111
@@ -462,3 +488,5 @@ vxlan_interface:
         vni: 40412
       - id: 413
         vni: 40413
+      - id: 453
+        vni: 40453

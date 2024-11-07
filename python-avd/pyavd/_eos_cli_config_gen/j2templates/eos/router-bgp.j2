@@ -941,6 +941,9 @@ router bgp {{ router_bgp.as }}
 {%         if router_bgp.address_family_evpn.domain_identifier is arista.avd.defined %}
       domain identifier {{ router_bgp.address_family_evpn.domain_identifier }}
 {%         endif %}
+{%         if router_bgp.address_family_evpn.domain_identifier_remote is arista.avd.defined %}
+      domain identifier {{ router_bgp.address_family_evpn.domain_identifier_remote }} remote
+{%         endif %}
 {%         if router_bgp.address_family_evpn.next_hop.resolution_disabled is arista.avd.defined(true) %}
       next-hop resolution disabled
 {%         endif %}
@@ -981,6 +984,16 @@ router bgp {{ router_bgp.as }}
 {%         if router_bgp.address_family_evpn.route.import_overlay_index_gateway is arista.avd.defined(true) %}
       route import overlay-index gateway
 {%         endif %}
+{%         for segment in router_bgp.address_family_evpn.evpn_ethernet_segment | arista.avd.natural_sort('domain') %}
+      !
+      evpn ethernet-segment domain {{ segment.domain }}
+{%             if segment.identifier is arista.avd.defined %}
+         identifier {{ segment.identifier }}
+{%             endif %}
+{%             if segment.route_target_import is arista.avd.defined %}
+         route-target import {{ segment.route_target_import }}
+{%             endif %}
+{%         endfor %}
 {%     endif %}
 {# address family flow-spec ipv4 activation #}
 {%     if router_bgp.address_family_flow_spec_ipv4 is arista.avd.defined %}

@@ -1,9 +1,0 @@
-### Local Users ###
-local_users:
-  - name: admin
-    disabled: true
-  - name: shell
-    shell: /sbin/nologin
-    no_password: true
-    ssh_key: SSH_KEY
-    secondary_ssh_key: SECONDARY_SSH_KEY
