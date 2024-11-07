@@ -320,7 +320,7 @@
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;vlans</samp>](## "port_channel_interfaces.[].switchport.port_security.vlans") | List, items: Dictionary |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;range</samp>](## "port_channel_interfaces.[].switchport.port_security.vlans.[].range") | String | Required, Unique |  |  | VLAN ID or range(s) of VLAN IDs, <1-4094>.<br>Example:<br>  - 3<br>  - 1,3<br>  - 1-10<br> |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;mac_address_maximum</samp>](## "port_channel_interfaces.[].switchport.port_security.vlans.[].mac_address_maximum") | Integer |  |  |  |  |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;validate_state</samp>](## "port_channel_interfaces.[].validate_state") | Boolean |  |  |  | Set to false to disable interface validation by the `eos_validate_state` role. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;validate_state</samp>](## "port_channel_interfaces.[].validate_state") | Boolean |  |  |  | Set to false to disable interface state and LLDP topology validation performed by the `eos_validate_state` role. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;eos_cli</samp>](## "port_channel_interfaces.[].eos_cli") | String |  |  |  | Multiline EOS CLI rendered directly on the port-channel interface in the final EOS configuration. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;esi</samp>](## "port_channel_interfaces.[].esi") <span style="color:red">removed</span> | String |  |  |  | EVPN Ethernet Segment Identifier (Type 1 format).<br><span style="color:red">This key was removed. Support was removed in AVD version 5.0.0. Use <samp>evpn_ethernet_segment.identifier</samp> instead.</span> |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;rt</samp>](## "port_channel_interfaces.[].rt") <span style="color:red">removed</span> | String |  |  |  | EVPN Route Target for ESI with format xx:xx:xx:xx:xx:xx.<br><span style="color:red">This key was removed. Support was removed in AVD version 5.0.0. Use <samp>evpn_ethernet_segment.route_target</samp> instead.</span> |
@@ -1029,7 +1029,7 @@
               - range: <str; required; unique>
                 mac_address_maximum: <int>
 
-        # Set to false to disable interface validation by the `eos_validate_state` role.
+        # Set to false to disable interface state and LLDP topology validation performed by the `eos_validate_state` role.
         validate_state: <bool>
 
         # Multiline EOS CLI rendered directly on the port-channel interface in the final EOS configuration.

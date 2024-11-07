@@ -91,6 +91,31 @@ router isis {{ router_isis.instance }}
 {%         endif %}
    {{ spf_interval_cli }}
 {%     endif %}
+{%     if router_isis.timers.csnp.generation.interval is arista.avd.defined %}
+   timers csnp generation interval {{ router_isis.timers.csnp.generation.interval }} seconds
+{%     endif %}
+{%     if router_isis.timers.csnp.generation.p2p_disabled is arista.avd.defined(true) %}
+   timers csnp generation p2p disabled
+{%     endif %}
+{%     if router_isis.timers.lsp.out_delay is arista.avd.defined %}
+   timers lsp out-delay {{ router_isis.timers.lsp.out_delay }}
+{%     endif %}
+{%     if router_isis.timers.lsp.refresh_interval is arista.avd.defined %}
+   timers lsp refresh {{ router_isis.timers.lsp.refresh_interval }}
+{%     endif %}
+{%     if router_isis.timers.lsp.generation.interval is arista.avd.defined %}
+{%         set timers_lsp_generation =  "timers lsp generation " ~ router_isis.timers.lsp.generation.interval %}
+{%         if router_isis.timers.lsp.generation.initial_wait_time is arista.avd.defined %}
+{%             set timers_lsp_generation = timers_lsp_generation ~ " " ~ router_isis.timers.lsp.generation.initial_wait_time %}
+{%             if router_isis.timers.lsp.generation.wait_time is arista.avd.defined %}
+{%                 set timers_lsp_generation = timers_lsp_generation ~ " " ~ router_isis.timers.lsp.generation.wait_time %}
+{%             endif %}
+{%         endif %}
+   {{ timers_lsp_generation }}
+{%     endif %}
+{%     if router_isis.timers.lsp.min_remaining_lifetime is arista.avd.defined %}
+   timers lsp min-remaining-lifetime {{ router_isis.timers.lsp.min_remaining_lifetime }}
+{%     endif %}
 {%     if router_isis.authentication.both.mode is arista.avd.defined
           and (router_isis.authentication.both.mode in ["md5", "text"]
                or (router_isis.authentication.both.mode == "sha" and router_isis.authentication.both.sha.key_id is arista.avd.defined)
