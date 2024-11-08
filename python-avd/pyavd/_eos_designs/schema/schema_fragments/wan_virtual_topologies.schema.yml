@@ -82,7 +82,7 @@ keys:
       policies:
         type: list
         description: |-
-          List of virtual toplogies policies.
+          List of virtual topologies policies.
 
           For AutoVPN, each item in the list creates:
             * one policy with:

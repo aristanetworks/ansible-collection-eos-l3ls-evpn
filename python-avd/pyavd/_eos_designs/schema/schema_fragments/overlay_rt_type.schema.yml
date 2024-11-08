@@ -54,7 +54,6 @@ keys:
           - Integer between <0-4294967295>.
 
           'vrf_admin_subfield' takes precedence for VRF RDs if set. Otherwise the 'admin_subfield' value will be used.
-        default: vrf_id
       vlan_assigned_number_subfield:
         type: str
         valid_values:

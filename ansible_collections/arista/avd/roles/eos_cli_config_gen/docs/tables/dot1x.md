@@ -62,7 +62,7 @@
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "dot1x.captive_portal.enabled") | Boolean | Required |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;url</samp>](## "dot1x.captive_portal.url") | String |  |  |  | Supported URL type:<br>  - http: http://<hostname>[:<port>]<br>  - https: https://<hostname>[:<port>] |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;ssl_profile</samp>](## "dot1x.captive_portal.ssl_profile") | String |  |  |  |  |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;start_limit_infinite</samp>](## "dot1x.captive_portal.start_limit_infinite") | Boolean |  |  |  | Set captive-portal start limit to infinte. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;start_limit_infinite</samp>](## "dot1x.captive_portal.start_limit_infinite") | Boolean |  |  |  | Set captive-portal start limit to infinite. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;access_list_ipv4</samp>](## "dot1x.captive_portal.access_list_ipv4") | String |  |  |  | Standard access-list name. |
     | [<samp>&nbsp;&nbsp;supplicant</samp>](## "dot1x.supplicant") | Dictionary |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;profiles</samp>](## "dot1x.supplicant.profiles") | List, items: Dictionary |  |  |  | Dot1x supplicant profiles. |
@@ -194,7 +194,7 @@
         url: <str>
         ssl_profile: <str>
 
-        # Set captive-portal start limit to infinte.
+        # Set captive-portal start limit to infinite.
         start_limit_infinite: <bool>
 
         # Standard access-list name.
