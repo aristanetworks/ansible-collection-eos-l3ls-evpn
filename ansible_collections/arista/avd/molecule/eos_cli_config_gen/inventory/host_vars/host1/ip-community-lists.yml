@@ -1,3 +1,4 @@
+---
 ### IP community lists ###
 ip_community_lists:
   - name: IP_CL_TEST1
