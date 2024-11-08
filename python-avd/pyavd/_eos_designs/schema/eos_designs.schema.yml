@@ -1088,7 +1088,7 @@ keys:
       warning: true
       removed: false
       remove_in_version: 6.0.0
-      url: https://avd.arista.com/stable/docs/release-notes/5.x.x.html#deprecation_of_design.type
+      url: https://avd.arista.com/5.x/docs/porting-guides/5.x.x.html#deprecation-of-designtype
     type: dict
     keys:
       type:
@@ -2348,7 +2348,7 @@ keys:
       warning: true
       removed: true
       remove_in_version: 5.0.0
-      url: https://avd.arista.com/devel/porting-guides/5.x.x.html#new-improved-logic-for-bgp-configuration-of-network-services-vrfs
+      url: https://avd.arista.com/5.x/docs/porting-guides/5.x.x.html#bgp-is-now-configured-for-network-services-vrfs-even-if-evpn-is-not-part-of-the-address-families
   custom_node_type_keys:
     $ref: eos_designs#/keys/node_type_keys
     default: null
