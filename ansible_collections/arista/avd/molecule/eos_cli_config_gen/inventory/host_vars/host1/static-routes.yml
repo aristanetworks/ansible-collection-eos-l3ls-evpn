@@ -4,25 +4,25 @@
 static_routes:
   - vrf: default
     destination_address_prefix: 1.1.1.0/24
-    interface: vlan101
+    interface: vlan1001
     gateway: 10.1.1.1
 
   - vrf: default
     destination_address_prefix: 1.1.2.0/24
-    interface: vlan101
+    interface: vlan1001
     gateway: 10.1.1.1
     distance: 200
     tag: 666
     name: RT-TO-FAKE-DMZ
 
-  - vrf: customer01
+  - vrf: TENANT_A_PROJECT01
     destination_address_prefix: 1.2.1.0/24
     interface: vlan202
     gateway: 10.1.2.1
 
-  - vrf: customer01
+  - vrf: TENANT_A_PROJECT01
     destination_address_prefix: 1.2.2.0/24
-    interface: vlan101
+    interface: vlan1001
     gateway: 10.1.2.1
     distance: 201
     tag: 667
@@ -30,13 +30,13 @@ static_routes:
 
   - destination_address_prefix: 10.3.4.0/24
     gateway: 1.2.3.4
-    vrf: APP
+    vrf: TENANT_A_PROJECT02
 
   - destination_address_prefix: 10.3.5.0/24
-    vrf: APP
+    vrf: TENANT_A_PROJECT02
     interface: Null0
 
-  - vrf: customer01
+  - vrf: TENANT_A_PROJECT01
     destination_address_prefix: 10.3.6.0/24
     interface: Ethernet40
     gateway: 11.2.1.1
@@ -46,7 +46,7 @@ static_routes:
     distance: 100
     metric: 300
 
-  - vrf: customer01
+  - vrf: TENANT_A_PROJECT01
     destination_address_prefix: 10.3.7.0/24
     interface: Ethernet41
     # Negative test case - Tacking should not be enabled

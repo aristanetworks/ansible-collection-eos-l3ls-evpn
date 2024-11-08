@@ -6,4 +6,3 @@ lacp:
       end: 128
   rate_limit:
     default: false
-  system_priority: 0

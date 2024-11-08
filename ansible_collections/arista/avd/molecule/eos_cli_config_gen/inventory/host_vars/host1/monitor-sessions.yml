@@ -8,7 +8,7 @@ monitor_sessions:
           type: ip
           name: ipv4ACL
           priority: 10
-      - name: Ethernet0
+      - name: Ethernet1
         access_group:
           type: ipv6
           name: ipv6ACL

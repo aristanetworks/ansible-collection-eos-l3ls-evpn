@@ -68,4 +68,4 @@ policy_maps:
         shape: 2000
         bandwidth: 2000
         rate_unit: pps
-      - name: copp-system-aaa
+      - name: copp-system-rsvp

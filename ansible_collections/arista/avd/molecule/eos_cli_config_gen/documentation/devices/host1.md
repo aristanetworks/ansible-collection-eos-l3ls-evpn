@@ -1163,7 +1163,7 @@ mcs client
 
 | Sources | Direction | Access Group Type | Access Group Name | Access Group Priority |
 | ------- | --------- | ----------------- | ----------------- | --------------------- |
-| Ethernet0 | both | ipv6 | ipv6ACL | - |
+| Ethernet1 | both | ipv6 | ipv6ACL | - |
 | Ethernet5 | both | ip | ipv4ACL | 10 |
 
 ####### myMonitoringSession1 Destinations and Session Settings
@@ -1238,7 +1238,7 @@ mcs client
 
 ```eos
 !
-monitor session myMonitoringSession1 source Ethernet0 ipv6 access-group ipv6ACL
+monitor session myMonitoringSession1 source Ethernet1 ipv6 access-group ipv6ACL
 monitor session myMonitoringSession1 source Ethernet5 both ip access-group ipv4ACL priority 10
 monitor session myMonitoringSession1 destination Ethernet48
 monitor session myMonitoringSession1 truncate
@@ -1408,7 +1408,7 @@ no sflow hardware acceleration module Linecard3
 vmtracer session session_1
    url https://192.168.0.10
    username user1
-   password 7 encrypted_password
+   password 7 0011D0516421B120A25735E080A16001D1617
    autovlan disable
    vrf MGMT
    source-interface Management1
@@ -1416,7 +1416,7 @@ vmtracer session session_1
 vmtracer session session_2
    url https://192.168.0.10
    username user1
-   password 7 encrypted_password
+   password 7 0011D0516421B120A25735E080A16001D1617
 ```
 
 ### Object Tracking
@@ -1717,13 +1717,12 @@ mlag configuration
 
 | Port-id range | Rate-limit default | System-priority |
 | ------------- | ------------------ | --------------- |
-| 1 - 128 | False | 0 |
+| 1 - 128 | False | - |
 
 ### LACP Device Configuration
 
 ```eos
 !
-lacp system-priority 0
 lacp port-id range 1 128
 no lacp rate-limit default
 ```
@@ -2302,27 +2301,27 @@ ip routing vrf TENANT_A_PROJECT02
 
 | VRF | Destination Prefix | Next Hop IP | Exit interface | Administrative Distance | Tag | Route Name | Metric |
 | --- | ------------------ | ----------- | -------------- | ----------------------- | --- | ---------- | ------ |
-| default | 1.1.1.0/24 | 10.1.1.1 | vlan101 | 1 | - | - | - |
-| default | 1.1.2.0/24 | 10.1.1.1 | vlan101 | 200 | 666 | RT-TO-FAKE-DMZ | - |
-| customer01 | 1.2.1.0/24 | 10.1.2.1 | vlan202 | 1 | - | - | - |
-| customer01 | 1.2.2.0/24 | 10.1.2.1 | vlan101 | 201 | 667 | RT-TO-FAKE-DMZ | - |
-| APP | 10.3.4.0/24 | 1.2.3.4 | - | 1 | - | - | - |
-| APP | 10.3.5.0/24 | - | Null0 | 1 | - | - | - |
-| customer01 | 10.3.6.0/24 | 11.2.1.1 (tracked with BFD) | Ethernet40 | 100 | 1000 | Track-BFD | 300 |
-| customer01 | 10.3.7.0/24 | - | Ethernet41 | 100 | 1000 | No-Track-BFD | 300 |
+| default | 1.1.1.0/24 | 10.1.1.1 | vlan1001 | 1 | - | - | - |
+| default | 1.1.2.0/24 | 10.1.1.1 | vlan1001 | 200 | 666 | RT-TO-FAKE-DMZ | - |
+| TENANT_A_PROJECT01 | 1.2.1.0/24 | 10.1.2.1 | vlan202 | 1 | - | - | - |
+| TENANT_A_PROJECT01 | 1.2.2.0/24 | 10.1.2.1 | vlan1001 | 201 | 667 | RT-TO-FAKE-DMZ | - |
+| TENANT_A_PROJECT02 | 10.3.4.0/24 | 1.2.3.4 | - | 1 | - | - | - |
+| TENANT_A_PROJECT02 | 10.3.5.0/24 | - | Null0 | 1 | - | - | - |
+| TENANT_A_PROJECT01 | 10.3.6.0/24 | 11.2.1.1 (tracked with BFD) | Ethernet40 | 100 | 1000 | Track-BFD | 300 |
+| TENANT_A_PROJECT01 | 10.3.7.0/24 | - | Ethernet41 | 100 | 1000 | No-Track-BFD | 300 |
 
 #### Static Routes Device Configuration
 
 ```eos
 !
-ip route 1.1.1.0/24 Vlan101 10.1.1.1
-ip route 1.1.2.0/24 Vlan101 10.1.1.1 200 tag 666 name RT-TO-FAKE-DMZ
-ip route vrf APP 10.3.4.0/24 1.2.3.4
-ip route vrf APP 10.3.5.0/24 Null0
-ip route vrf customer01 1.2.1.0/24 Vlan202 10.1.2.1
-ip route vrf customer01 1.2.2.0/24 Vlan101 10.1.2.1 201 tag 667 name RT-TO-FAKE-DMZ
-ip route vrf customer01 10.3.6.0/24 Ethernet40 11.2.1.1 track bfd 100 tag 1000 name Track-BFD metric 300
-ip route vrf customer01 10.3.7.0/24 Ethernet41 100 tag 1000 name No-Track-BFD metric 300
+ip route 1.1.1.0/24 Vlan1001 10.1.1.1
+ip route 1.1.2.0/24 Vlan1001 10.1.1.1 200 tag 666 name RT-TO-FAKE-DMZ
+ip route vrf TENANT_A_PROJECT01 1.2.1.0/24 Vlan202 10.1.2.1
+ip route vrf TENANT_A_PROJECT01 1.2.2.0/24 Vlan1001 10.1.2.1 201 tag 667 name RT-TO-FAKE-DMZ
+ip route vrf TENANT_A_PROJECT01 10.3.6.0/24 Ethernet40 11.2.1.1 track bfd 100 tag 1000 name Track-BFD metric 300
+ip route vrf TENANT_A_PROJECT01 10.3.7.0/24 Ethernet41 100 tag 1000 name No-Track-BFD metric 300
+ip route vrf TENANT_A_PROJECT02 10.3.4.0/24 1.2.3.4
+ip route vrf TENANT_A_PROJECT02 10.3.5.0/24 Null0
 ```
 
 ### IPv6 Static Routes
@@ -2331,25 +2330,25 @@ ip route vrf customer01 10.3.7.0/24 Ethernet41 100 tag 1000 name No-Track-BFD me
 
 | VRF | Destination Prefix | Next Hop IP             | Exit interface      | Administrative Distance       | Tag               | Route Name                    | Metric         |
 | --- | ------------------ | ----------------------- | ------------------- | ----------------------------- | ----------------- | ----------------------------- | -------------- |
-| default | 2a01:cb04:4e6:d300::/64 | 2a01:cb04:4e6:d100::1 | vlan101 | 1 | - | - | - |
-| default | 2a01:cb04:4e6:d400::/64 | 2a01:cb04:4e6:d100::1 | vlan101 | 200 | 666 | RT-TO-FAKE-DMZ | - |
-| default | 2a01:cb04:4e6:d400::/64 | 2a01:cb04:4e6:d100::1 | vlan101 | 200 | 666 | RT-TO-FAKE-DB-ZONE | 100 |
-| customer01 | 2a01:cb04:4e6:a300::/64 | 2a01:cb04:4e6:100::1 | vlan101 | 1 | - | - | - |
-| customer01 | 2a01:cb04:4e6:a400::/64 | 2a01:cb04:4e6:100::1 | vlan101 | 201 | 667 | RT-TO-FAKE-DMZ | - |
-| customer01 | 2b01:cb04:4e6:a400::/64 | 2a01:cb04:4e6:102::1 (tracked with BFD) | vlan102 | 201 | 102 | Track-BFD | 100 |
-| customer01 | 2c01:cb04:4e6:a400::/64 | - | vlan102 | 201 | 102 | No-Track-BFD | - |
+| default | 2a01:cb04:4e6:d300::/64 | 2a01:cb04:4e6:d100::1 | vlan1001 | 1 | - | - | - |
+| default | 2a01:cb04:4e6:d400::/64 | 2a01:cb04:4e6:d100::1 | vlan1001 | 200 | 666 | RT-TO-FAKE-DMZ | - |
+| default | 2a01:cb04:4e6:d400::/64 | 2a01:cb04:4e6:d100::1 | vlan1001 | 200 | 666 | RT-TO-FAKE-DB-ZONE | 100 |
+| TENANT_A_PROJECT01 | 2a01:cb04:4e6:a300::/64 | 2a01:cb04:4e6:100::1 | vlan1001 | 1 | - | - | - |
+| TENANT_A_PROJECT01 | 2a01:cb04:4e6:a400::/64 | 2a01:cb04:4e6:100::1 | vlan1001 | 201 | 667 | RT-TO-FAKE-DMZ | - |
+| TENANT_A_PROJECT01 | 2b01:cb04:4e6:a400::/64 | 2a01:cb04:4e6:102::1 (tracked with BFD) | vlan102 | 201 | 102 | Track-BFD | 100 |
+| TENANT_A_PROJECT01 | 2c01:cb04:4e6:a400::/64 | - | vlan102 | 201 | 102 | No-Track-BFD | - |
 
 #### Static Routes Device Configuration
 
 ```eos
 !
-ipv6 route 2a01:cb04:4e6:d300::/64 Vlan101 2a01:cb04:4e6:d100::1
-ipv6 route 2a01:cb04:4e6:d400::/64 Vlan101 2a01:cb04:4e6:d100::1 200 tag 666 name RT-TO-FAKE-DMZ
-ipv6 route 2a01:cb04:4e6:d400::/64 Vlan101 2a01:cb04:4e6:d100::1 200 tag 666 name RT-TO-FAKE-DB-ZONE metric 100
-ipv6 route vrf customer01 2a01:cb04:4e6:a300::/64 Vlan101 2a01:cb04:4e6:100::1
-ipv6 route vrf customer01 2a01:cb04:4e6:a400::/64 Vlan101 2a01:cb04:4e6:100::1 201 tag 667 name RT-TO-FAKE-DMZ
-ipv6 route vrf customer01 2b01:cb04:4e6:a400::/64 Vlan102 2a01:cb04:4e6:102::1 track bfd 201 tag 102 name Track-BFD metric 100
-ipv6 route vrf customer01 2c01:cb04:4e6:a400::/64 Vlan102 201 tag 102 name No-Track-BFD
+ipv6 route 2a01:cb04:4e6:d300::/64 Vlan1001 2a01:cb04:4e6:d100::1
+ipv6 route 2a01:cb04:4e6:d400::/64 Vlan1001 2a01:cb04:4e6:d100::1 200 tag 666 name RT-TO-FAKE-DMZ
+ipv6 route 2a01:cb04:4e6:d400::/64 Vlan1001 2a01:cb04:4e6:d100::1 200 tag 666 name RT-TO-FAKE-DB-ZONE metric 100
+ipv6 route vrf TENANT_A_PROJECT01 2a01:cb04:4e6:a300::/64 Vlan1001 2a01:cb04:4e6:100::1
+ipv6 route vrf TENANT_A_PROJECT01 2a01:cb04:4e6:a400::/64 Vlan1001 2a01:cb04:4e6:100::1 201 tag 667 name RT-TO-FAKE-DMZ
+ipv6 route vrf TENANT_A_PROJECT01 2b01:cb04:4e6:a400::/64 Vlan102 2a01:cb04:4e6:102::1 track bfd 201 tag 102 name Track-BFD metric 100
+ipv6 route vrf TENANT_A_PROJECT01 2c01:cb04:4e6:a400::/64 Vlan102 201 tag 102 name No-Track-BFD
 ```
 
 ### IPv6 Neighbors
@@ -4062,9 +4061,9 @@ policy-map type quality-of-service PM_REPLICATION_LD3
 
 | Class | Shape | Bandwidth | Rate Unit |
 | ----- | ----- | --------- | --------- |
-| copp-system-aaa | - | - | - |
 | copp-system-cvx | 2000 | 2000 | pps |
 | copp-system-OspfIsis | 1000 | 1000 | kbps |
+| copp-system-rsvp | - | - | - |
 
 #### COPP Policy Maps Device Configuration
 
@@ -4079,7 +4078,7 @@ policy-map type copp copp-system-policy
       shape pps 2000
       bandwidth pps 2000
    !
-   class copp-system-aaa
+   class copp-system-rsvp
 ```
 
 ## InfluxDB Telemetry

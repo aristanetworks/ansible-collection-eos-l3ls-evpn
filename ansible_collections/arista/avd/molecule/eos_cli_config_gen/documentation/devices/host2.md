@@ -26,6 +26,9 @@
 - [Monitor Connectivity](#monitor-connectivity)
   - [Global Configuration](#global-configuration)
   - [Monitor Connectivity Device Configuration](#monitor-connectivity-device-configuration)
+- [LACP](#lacp)
+  - [LACP Summary](#lacp-summary)
+  - [LACP Device Configuration](#lacp-device-configuration)
 - [Interfaces](#interfaces)
   - [DPS Interfaces](#dps-interfaces)
   - [VXLAN Interface](#vxlan-interface)
@@ -308,6 +311,21 @@ monitor connectivity
    shutdown
    interface set HOST_SET2 Loopback2-4, Loopback10-12
    local-interfaces HOST_SET2 default
+```
+
+## LACP
+
+### LACP Summary
+
+| Port-id range | Rate-limit default | System-priority |
+| ------------- | ------------------ | --------------- |
+| - | - | 0 |
+
+### LACP Device Configuration
+
+```eos
+!
+lacp system-priority 0
 ```
 
 ## Interfaces
