@@ -739,4 +739,3 @@ port_channel_interfaces:
   - name: Port-Channel132
     description: Test_port-channel_interface-profile
     profile: test-interface-profile
-
