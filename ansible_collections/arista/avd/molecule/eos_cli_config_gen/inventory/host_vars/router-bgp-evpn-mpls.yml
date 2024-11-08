@@ -2,7 +2,8 @@ router_bgp:
   as: 65101
   router_id: 192.168.255.3
   # test for send_community
-  send_community: standard extended large
+  neighbor_default:
+    send_community: standard extended large
   bgp_defaults:
     - no bgp default ipv4-unicast
     - distance bgp 20 200 200

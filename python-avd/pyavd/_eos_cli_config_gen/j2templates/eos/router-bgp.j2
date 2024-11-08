@@ -115,10 +115,10 @@ router bgp {{ router_bgp.as }}
 {%     if router_bgp.bgp.bestpath.d_path is arista.avd.defined(true) %}
    bgp bestpath d-path
 {%     endif %}
-{%     if router_bgp.send_community is arista.avd.defined('all') %}
+{%     if router_bgp.neighbor_default.send_community is arista.avd.defined('all') %}
    neighbor default send-community
-{%     elif router_bgp.send_community is arista.avd.defined %}
-   neighbor default send-community {{ router_bgp.send_community }}
+{%     elif router_bgp.neighbor_default.send_community is arista.avd.defined %}
+   neighbor default send-community {{ router_bgp.neighbor_default.send_community }}
 {%     endif %}
 {%     for peer_group in router_bgp.peer_groups | arista.avd.natural_sort('name') %}
    neighbor {{ peer_group.name }} peer group

@@ -48,7 +48,8 @@ router_bgp:
       peer_group: my-peer-group4
       peer_filter: my-peer-filter
       remote_as: 65444
-  send_community: standard
+  neighbor_default:
+    send_community: standard
   peer_groups:
     - name: test-link-bandwidth1
       link_bandwidth:
