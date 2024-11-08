@@ -1,0 +1,9 @@
+---
+lacp:
+  port_id:
+    range:
+      begin: 1
+      end: 128
+  rate_limit:
+    default: false
+  system_priority: 0

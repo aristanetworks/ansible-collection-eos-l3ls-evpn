@@ -1,0 +1,6 @@
+---
+#### router bfd ####
+
+router_bfd:
+  session_snapshot_interval: 8
+  session_snapshot_interval_dangerous: true
