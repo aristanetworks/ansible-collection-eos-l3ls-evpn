@@ -2866,8 +2866,8 @@ interface Port-Channel132
 
 | Interface | VRRP-ID | Priority | Advertisement Interval | Preempt | Tracked Object Name(s) | Tracked Object Action(s) | IPv4 Virtual IP | IPv4 VRRP Version | IPv6 Virtual IP |
 | --------- | ------- | -------- | ---------------------- | --------| ---------------------- | ------------------------ | --------------- | ----------------- | --------------- |
-| Vlan333 | 1 | 105 | 2 | Enabled | ID1-TrackedObjectDecrement, ID1-TrackedObjectShutdown | Decrement 5, Shutdown | 192.0.2.1 | 2 | - |
-| Vlan333 | 2 | - | - | Enabled | ID2-TrackedObjectDecrement, ID2-TrackedObjectShutdown | Decrement 10, Shutdown | - | 2 | 2001:db8:333::1 |
+| Vlan333 | 1 | 105 | 2 | Enabled | ID1TrackedObjectDecrement, ID1TrackedObjectShutdown | Decrement 5, Shutdown | 192.0.2.1 | 2 | - |
+| Vlan333 | 2 | - | - | Enabled | ID2TrackedObjectDecrement, ID2TrackedObjectShutdown | Decrement 10, Shutdown | - | 2 | 2001:db8:333::1 |
 | Vlan333 | 3 | - | - | Disabled | - | - | 100.64.0.1 | 3 | - |
 | Vlan667 | 1 | 105 | 2 | Enabled | - | - | 192.0.2.1 | 2 | - |
 | Vlan667 | 2 | - | - | Enabled | - | - | - | 2 | 2001:db8:667::1 |
@@ -3129,11 +3129,11 @@ interface Vlan333
    vrrp 1 advertisement interval 2
    vrrp 1 preempt delay minimum 30 reload 800
    vrrp 1 ipv4 192.0.2.1
-   vrrp 1 tracked-object ID1-TrackedObjectDecrement decrement 5
-   vrrp 1 tracked-object ID1-TrackedObjectShutdown shutdown
+   vrrp 1 tracked-object ID1TrackedObjectDecrement decrement 5
+   vrrp 1 tracked-object ID1TrackedObjectShutdown shutdown
    vrrp 2 ipv6 2001:db8:333::1
-   vrrp 2 tracked-object ID2-TrackedObjectDecrement decrement 10
-   vrrp 2 tracked-object ID2-TrackedObjectShutdown shutdown
+   vrrp 2 tracked-object ID2TrackedObjectDecrement decrement 10
+   vrrp 2 tracked-object ID2TrackedObjectShutdown shutdown
    no vrrp 3 preempt
    vrrp 3 timers delay reload 900
    vrrp 3 ipv4 100.64.0.1
