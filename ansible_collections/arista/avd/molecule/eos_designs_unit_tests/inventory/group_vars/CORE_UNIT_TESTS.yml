@@ -71,6 +71,7 @@ core_interfaces:
       ipv6_enable: true
       isis_authentication_mode: md5
       isis_authentication_key: $1c$sTNAlR6rKSw=
+      isis_network_type: point-to-point
 
     - name: ospf_bb_profile
       speed: "forced 1000full"
@@ -96,6 +97,7 @@ core_interfaces:
       isis_hello_padding: true
       isis_circuit_type: level-1
       isis_metric: 60
+      isis_network_type: broadcast
       qos_profile: test_qos_profile
 
     # Normal link with profile

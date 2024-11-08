@@ -301,7 +301,6 @@ keys:
             new_key: switchport.trunk.native_vlan
         native_vlan_tag:
           type: bool
-          default: false
           description: If setting both native_vlan and native_vlan_tag, native_vlan_tag takes precedence.
           deprecation:
             warning: true
@@ -376,10 +375,9 @@ keys:
             new_key: switchport.trunk.groups
         lacp_fallback_timeout:
           type: int
-          description: Timeout in seconds.
+          description: Timeout in seconds. EOS default is 90 seconds.
           convert_types:
             - str
-          default: 90
           min: 0
           max: 300
         lacp_fallback_mode:

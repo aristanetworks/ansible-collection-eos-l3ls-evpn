@@ -62,6 +62,7 @@ $defs:
           documentation_options:
             table: network-services-vrfs-settings
           type: bool
+          default: True
           description: |
             MLAG iBGP peering per VRF.
             By default an iBGP peering is configured per VRF between MLAG peers on separate VLANs.
@@ -166,6 +167,7 @@ $defs:
               description: IPv4_address/Mask.
             underlay_l2_multicast_group_ipv4_pool_offset:
               type: int
+              default: 0
               convert_types:
                 - str
             fast_leave:
@@ -206,6 +208,7 @@ $defs:
               required: true
             evpn_underlay_l3_multicast_group_ipv4_pool_offset:
               type: int
+              default: 0
               convert_types:
                 - str
             evpn_peg:
@@ -276,13 +279,13 @@ $defs:
               description: Default IP address of Loopback0.
             version:
               type: int
+              description: IGMP Version (By default EOS uses IGMP version 2 for IGMP querier).
               convert_types:
                 - str
               valid_values:
                 - 1
                 - 2
                 - 3
-              default: 2
         evpn_l2_multi_domain:
           type: bool
           default: true
@@ -310,6 +313,7 @@ $defs:
                   - int
               address_families:
                 type: list
+                default: ["evpn"]
                 items:
                   type: str
                   valid_values:
@@ -392,14 +396,13 @@ $defs:
                 description: |
                   MLAG iBGP peering per VRF.
                   By default an iBGP peering is configured per VRF between MLAG peers on separate VLANs.
-                  Setting `enable_mlag_ibgp_peering_vrfs: false` under a VRF will change this default and/or override the tenant-wide setting.
+                  Setting `enable_mlag_ibgp_peering_vrfs: false` under a VRF overrides the tenant-wide setting.
               redistribute_mlag_ibgp_peering_vrfs:
                 type: bool
-                default: false
                 description: |
                   Redistribute the connected subnet for the MLAG iBGP peering per VRF into overlay BGP.
                   By default the iBGP peering subnet is not redistributed into the overlay routing protocol per VRF.
-                  Setting `redistribute_mlag_ibgp_peering_vrfs: true` under a VRF will change this default and/or override the tenant-wide setting.
+                  Setting `redistribute_mlag_ibgp_peering_vrfs` under a VRF overrides the tenant-wide setting.
               mlag_ibgp_peering_vlan:
                 type: int
                 convert_types:
@@ -445,7 +448,8 @@ $defs:
                     type: list
                     description: |
                       For inventories with multiple PODs a loopback range can be set per POD to avoid overlaps.
-                      This only takes effect when loopback_ip_range is not defined, ptional (loopback is not created unless loopback_ip_range or loopback_ip_pools are set).
+                      This only takes effect when loopback_ip_range is not defined, optional (loopback is not created unless loopback_ip_range or loopback_ip_pools are set).
+                    primary_key: pod
                     items:
                       type: dict
                       keys:
@@ -1209,6 +1213,7 @@ $defs:
                   Tags leveraged for networks services filtering.
                   Tags are matched against filter.tags defined under node type settings.
                   Tags are also matched against the node_group name under node type settings.
+                default: ['all']
                 items:
                   type: str
                   default: all
@@ -1251,8 +1256,7 @@ $defs:
                 documentation_options:
                   table: network-services-multicast-settings
                 type: bool
-                default: true
-                description: Activate or deactivate IGMP snooping.
+                description: Enable or disable IGMP snooping (Enabled by default on EOS).
               igmp_snooping_querier:
                 documentation_options:
                   table: network-services-multicast-settings
@@ -1271,13 +1275,13 @@ $defs:
                       If not set, IP address of "Loopback0" will be used.
                   version:
                     type: int
+                    description: IGMP Version (By default EOS uses IGMP version 2 for IGMP querier).
                     convert_types:
                       - str
                     valid_values:
                       - 1
                       - 2
                       - 3
-                    default: 2
                   fast_leave:
                     type: bool
                     description: Enable IGMP snooping fast-leave feature.
