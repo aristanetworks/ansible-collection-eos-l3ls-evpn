@@ -879,12 +879,7 @@ interface Dps1
 | Ethernet5 | Molecule Routing | - | 220 | - | - | - |
 | Ethernet6 | SRV-POD02_Eth1 | trunk | 110-111,210-211 | - | - | - |
 | Ethernet7 | Molecule L2 | - | - | - | - | - |
-| Ethernet10/1 | LAG Member | *access | *110 | *- | *- | 101 |
-| Ethernet10/2 | LAG Member | *trunk | *110-112 | *- | *- | 102 |
-| Ethernet10/3 | LAG Member | *trunk | *110-112 | *- | *- | 103 |
-| Ethernet10/4 | LAG Member LACP fallback | *trunk | *112 | *- | *- | 104 |
 | Ethernet11 | interface_in_mode_access_accepting_tagged_LACP | access | 200 | - | - | - |
-| Ethernet11/2 | LAG Member LACP fallback LLDP ZTP VLAN | *trunk | *112 | *- | *- | 112 |
 | Ethernet12 | interface_with_dot1q_tunnel | dot1q-tunnel | 300 | - | - | - |
 | Ethernet13 | interface_in_mode_access_with_voice | trunk phone | - | 100 | - | - |
 | Ethernet14 | SRV-POD02_Eth1 | trunk | 110-111,210-211 | - | - | - |
@@ -932,13 +927,18 @@ interface Dps1
 | Ethernet67 | Custom_Transceiver_Frequency | - | - | - | - | - |
 | Ethernet68 | Custom_Transceiver_Frequency | - | - | - | - | - |
 | Ethernet69 | IP NAT service-profile | - | - | - | - | - |
-| Ethernet103 | MLAG_PEER_DC1-LEAF1B_Ethernet3 | *trunk | *2-4094 | *- | *LEAF_PEER_L3, MLAG | 3 |
-| Ethernet104 | MLAG_PEER_DC1-LEAF1B_Ethernet4 | *trunk | *2-4094 | *- | *LEAF_PEER_L3, MLAG | 3 |
-| Ethernet105 | DC1-AGG01_Ethernet1 | *trunk | *110,201 | *- | *- | 5 |
-| Ethernet115 | DC1-AGG03_Ethernet1 | *trunk | *110,201 | *- | *- | 15 |
-| Ethernet116 | DC1-AGG04_Ethernet1 | *trunk | *110,201 | *10 | *- | 16 |
-| Ethernet118 | LAG Member | *access | *110 | *- | *- | 109 |
-| Ethernet150 | SRV-POD03_Eth1 | *trunk | *110,201 | *- | *- | 5 |
+| Ethernet73 | DC1-AGG01_Ethernet1 | *trunk | *110,201 | *- | *- | 5 |
+| Ethernet74 | MLAG_PEER_DC1-LEAF1B_Ethernet3 | *trunk | *2-4094 | *- | *LEAF_PEER_L3, MLAG | 3 |
+| Ethernet75 | MLAG_PEER_DC1-LEAF1B_Ethernet4 | *trunk | *2-4094 | *- | *LEAF_PEER_L3, MLAG | 3 |
+| Ethernet76 | SRV-POD03_Eth1 | *trunk | *110,201 | *- | *- | 5 |
+| Ethernet78 | DC1-AGG03_Ethernet1 | *trunk | *110,201 | *- | *- | 15 |
+| Ethernet79 | DC1-AGG04_Ethernet1 | *trunk | *110,201 | *10 | *- | 16 |
+| Ethernet80/1 | LAG Member | *access | *110 | *- | *- | 101 |
+| Ethernet80/2 | LAG Member | *trunk | *110-112 | *- | *- | 102 |
+| Ethernet80/3 | LAG Member | *trunk | *110-112 | *- | *- | 103 |
+| Ethernet80/4 | LAG Member LACP fallback | *trunk | *112 | *- | *- | 104 |
+| Ethernet81 | LAG Member | *access | *110 | *- | *- | 109 |
+| Ethernet81/2 | LAG Member LACP fallback LLDP ZTP VLAN | *trunk | *112 | *- | *- | 112 |
 
 *Inherited from Port-Channel Interface
 
@@ -1013,7 +1013,7 @@ interface Dps1
 | Ethernet7 | - | 100gbase-ar4 |
 | Ethernet67 | 190050.000 | - |
 | Ethernet68 | 190080.000 ghz | 100gbase-ar4 |
-| Ethernet105 | - | 100gbase-ar4 |
+| Ethernet73 | - | 100gbase-ar4 |
 
 ##### Link Tracking Groups
 
@@ -1060,7 +1060,7 @@ interface Dps1
 | Ethernet64 | DHCP server interface | - | 192.168.42.42/24 | default | - | - | - | - |
 | Ethernet65 | Multiple VRIDs | - | 192.0.2.2/25 | default | - | False | - | - |
 | Ethernet66 | Multiple VRIDs and tracking | - | 192.0.2.2/25 | default | - | False | - | - |
-| Ethernet117 | LAG Member | 17 | *192.0.2.3/31 | **default | **- | **- | **- | **- |
+| Ethernet80 | LAG Member | 17 | *192.0.2.3/31 | **default | **- | **- | **- | **- |
 
 *Inherited from Port-Channel Interface
 
@@ -1147,7 +1147,7 @@ interface Dps1
 | Interface | Channel Group | ISIS Instance | ISIS BFD | ISIS Metric | Mode | ISIS Circuit Type | Hello Padding | Authentication Mode |
 | --------- | ------------- | ------------- | -------- | ----------- | ---- | ----------------- | ------------- | ------------------- |
 | Ethernet5 | - | ISIS_TEST | True | 99 | point-to-point | level-2 | False | md5 |
-| Ethernet10/10 | 110 | *ISIS_TEST | True | *99 | *point-to-point | *level-2 | *True | *text |
+| Ethernet81/10 | 110 | *ISIS_TEST | True | *99 | *point-to-point | *level-2 | *True | *text |
 
 *Inherited from Port-Channel Interface
 
@@ -1176,9 +1176,9 @@ interface Dps1
 
 | Interface | Enabled |
 | --------- | ------- |
-| Ethernet11/1 | fire-code<br>reed-solomon |
 | Ethernet23 | fire-code<br>reed-solomon |
 | Ethernet24 | Disabled |
+| Ethernet81/1 | fire-code<br>reed-solomon |
 
 #### Priority Flow Control
 
@@ -1432,51 +1432,12 @@ interface Ethernet10
    no mpls ldp interface
    no mpls ip
 !
-interface Ethernet10/1
-   description LAG Member
-   channel-group 101 mode active
-!
-interface Ethernet10/2
-   description LAG Member
-   channel-group 102 mode active
-!
-interface Ethernet10/3
-   description LAG Member
-   channel-group 103 mode active
-!
-interface Ethernet10/4
-   description LAG Member LACP fallback
-   switchport trunk allowed vlan 100
-   switchport mode trunk
-   switchport
-   channel-group 104 mode active
-   spanning-tree portfast
-!
-interface Ethernet10/10
-   description isis_port_channel_member
-   channel-group 110 mode active
-!
 interface Ethernet11
    description interface_in_mode_access_accepting_tagged_LACP
    switchport access vlan 200
    switchport mode access
    switchport
    l2-protocol encapsulation dot1q vlan 200
-!
-interface Ethernet11/1
-   description LAG Member with error_correction
-   error-correction encoding fire-code
-   error-correction encoding reed-solomon
-   channel-group 111 mode active
-!
-interface Ethernet11/2
-   description LAG Member LACP fallback LLDP ZTP VLAN
-   switchport trunk allowed vlan 112
-   switchport mode trunk
-   switchport
-   channel-group 112 mode active
-   lldp tlv transmit ztp vlan 112
-   spanning-tree portfast
 !
 interface Ethernet12
    description interface_with_dot1q_tunnel
@@ -2026,47 +1987,86 @@ interface Ethernet72
    dot1x aaa unresponsive eap response success
    dot1x mac based access-list
 !
-interface Ethernet103
-   description MLAG_PEER_DC1-LEAF1B_Ethernet3
-   channel-group 3 mode active
-!
-interface Ethernet104
-   description MLAG_PEER_DC1-LEAF1B_Ethernet4
-   channel-group 3 mode active
-!
-interface Ethernet105
+interface Ethernet73
    description DC1-AGG01_Ethernet1
    channel-group 5 mode active
    transceiver media override 100gbase-ar4
 !
-interface Ethernet108
+interface Ethernet74
+   description MLAG_PEER_DC1-LEAF1B_Ethernet3
+   channel-group 3 mode active
+!
+interface Ethernet75
+   description MLAG_PEER_DC1-LEAF1B_Ethernet4
+   channel-group 3 mode active
+!
+interface Ethernet76
+   description SRV-POD03_Eth1
+   channel-group 5 mode active
+   no lldp transmit
+   no lldp receive
+!
+interface Ethernet77
    description MLAG_PEER_DC1-LEAF1B_Ethernet8
    channel-group 8 mode active
 !
-interface Ethernet115
+interface Ethernet78
    description DC1-AGG03_Ethernet1
    channel-group 15 mode active
    lacp timer fast
    lacp timer multiplier 30
 !
-interface Ethernet116
+interface Ethernet79
    description DC1-AGG04_Ethernet1
    channel-group 16 mode active
    lacp timer normal
 !
-interface Ethernet117
+interface Ethernet80
    description LAG Member
    channel-group 17 mode active
 !
-interface Ethernet118
+interface Ethernet80/1
+   description LAG Member
+   channel-group 101 mode active
+!
+interface Ethernet80/2
+   description LAG Member
+   channel-group 102 mode active
+!
+interface Ethernet80/3
+   description LAG Member
+   channel-group 103 mode active
+!
+interface Ethernet80/4
+   description LAG Member LACP fallback
+   switchport trunk allowed vlan 100
+   switchport mode trunk
+   switchport
+   channel-group 104 mode active
+   spanning-tree portfast
+!
+interface Ethernet81
    description LAG Member
    channel-group 109 mode active
 !
-interface Ethernet150
-   description SRV-POD03_Eth1
-   channel-group 5 mode active
-   no lldp transmit
-   no lldp receive
+interface Ethernet81/1
+   description LAG Member with error_correction
+   error-correction encoding fire-code
+   error-correction encoding reed-solomon
+   channel-group 111 mode active
+!
+interface Ethernet81/2
+   description LAG Member LACP fallback LLDP ZTP VLAN
+   switchport trunk allowed vlan 112
+   switchport mode trunk
+   switchport
+   channel-group 112 mode active
+   lldp tlv transmit ztp vlan 112
+   spanning-tree portfast
+!
+interface Ethernet81/10
+   description isis_port_channel_member
+   channel-group 110 mode active
 ```
 
 ### Port-Channel Interfaces

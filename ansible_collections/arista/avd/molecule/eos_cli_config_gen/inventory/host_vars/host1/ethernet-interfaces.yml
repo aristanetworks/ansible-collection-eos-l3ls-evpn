@@ -1411,7 +1411,7 @@ ethernet_interfaces:
             traffic_allow_access_list: acl1
       mac_based_access_list: true
 
-  - name: Ethernet105
+  - name: Ethernet73
     peer: DC1-AGG01
     peer_interface: Ethernet1
     peer_type: l2leaf
@@ -1423,7 +1423,7 @@ ethernet_interfaces:
       media:
         override: 100gbase-ar4
 
-  - name: Ethernet103
+  - name: Ethernet74
     peer: DC1-LEAF1B
     peer_interface: Ethernet3
     peer_type: mlag_peer
@@ -1432,7 +1432,7 @@ ethernet_interfaces:
       id: 3
       mode: active
 
-  - name: Ethernet104
+  - name: Ethernet75
     peer: DC1-LEAF1B
     peer_interface: Ethernet4
     peer_type: mlag_peer
@@ -1441,7 +1441,7 @@ ethernet_interfaces:
       id: 3
       mode: active
 
-  - name: Ethernet150
+  - name: Ethernet76
     peer: SRV-POD03
     peer_interface: Eth1
     peer_type: server
@@ -1453,7 +1453,7 @@ ethernet_interfaces:
       receive: false
       transmit: false
 
-  - name: Ethernet108
+  - name: Ethernet77
     peer: DC1-LEAF1B
     peer_interface: Ethernet4
     description: MLAG_PEER_DC1-LEAF1B_Ethernet8
@@ -1461,7 +1461,7 @@ ethernet_interfaces:
       id: 8
       mode: active
 
-  - name: Ethernet115
+  - name: Ethernet78
     peer: DC1-AGG03
     peer_interface: Ethernet1
     peer_type: l2leaf
@@ -1473,7 +1473,7 @@ ethernet_interfaces:
       mode: fast
       multiplier: 30
 
-  - name: Ethernet116
+  - name: Ethernet79
     peer: DC1-AGG04
     peer_interface: Ethernet1
     peer_type: l2leaf
@@ -1484,31 +1484,31 @@ ethernet_interfaces:
     lacp_timer:
       mode: normal
 
-  - name: Ethernet117
+  - name: Ethernet80
     description: LAG Member
     channel_group:
       id: 17
       mode: active
 
-  - name: Ethernet10/1
+  - name: Ethernet80/1
     description: LAG Member
     channel_group:
       id: 101
       mode: active
 
-  - name: Ethernet10/2
+  - name: Ethernet80/2
     description: LAG Member
     channel_group:
       id: 102
       mode: active
 
-  - name: Ethernet10/3
+  - name: Ethernet80/3
     description: LAG Member
     channel_group:
       id: 103
       mode: active
 
-  - name: Ethernet10/4
+  - name: Ethernet80/4
     description: LAG Member LACP fallback
     channel_group:
       id: 104
@@ -1520,19 +1520,19 @@ ethernet_interfaces:
         allowed_vlan: 100
     spanning_tree_portfast: edge
 
-  - name: Ethernet118
+  - name: Ethernet81
     description: LAG Member
     channel_group:
       id: 109
       mode: active
 
-  - name: Ethernet10/10
+  - name: Ethernet81/10
     description: isis_port_channel_member
     channel_group:
       id: 110
       mode: active
 
-  - name: Ethernet11/1
+  - name: Ethernet81/1
     description: LAG Member with error_correction
     error_correction_encoding:
       fire_code: true
@@ -1541,7 +1541,7 @@ ethernet_interfaces:
       id: 111
       mode: active
 
-  - name: Ethernet11/2
+  - name: Ethernet81/2
     description: LAG Member LACP fallback LLDP ZTP VLAN
     channel_group:
       id: 112
