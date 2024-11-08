@@ -76,8 +76,8 @@
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;multiplier</samp>](## "bgp_peer_groups.wan_rr_overlay_peers.bfd_timers.multiplier") | Integer | Required | `10` | Min: 3<br>Max: 50 |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;ttl_maximum_hops</samp>](## "bgp_peer_groups.wan_rr_overlay_peers.ttl_maximum_hops") | Integer |  | `1` |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;structured_config</samp>](## "bgp_peer_groups.wan_rr_overlay_peers.structured_config") | Dictionary |  |  |  | Custom structured config added under router_bgp.peer_groups.[name=<name>] for eos_cli_config_gen. |
-    | [<samp>bgp_update_wait_install</samp>](## "bgp_update_wait_install") | Boolean |  |  |  | Do not advertise reachability to a prefix until that prefix has been installed in hardware.<br>This will eliminate any temporary black holes due to a BGP speaker advertising reachability to a prefix that may not yet be installed into the forwarding plane.<br> |
-    | [<samp>bgp_update_wait_for_convergence</samp>](## "bgp_update_wait_for_convergence") | Boolean |  |  |  | Disables FIB updates and route advertisement when the BGP instance is initiated until the BGP convergence state is reached.<br> |
+    | [<samp>bgp_update_wait_install</samp>](## "bgp_update_wait_install") | Boolean |  | `True` |  | Do not advertise reachability to a prefix until that prefix has been installed in hardware.<br>This will eliminate any temporary black holes due to a BGP speaker advertising reachability to a prefix that may not yet be installed into the forwarding plane.<br> |
+    | [<samp>bgp_update_wait_for_convergence</samp>](## "bgp_update_wait_for_convergence") | Boolean |  | `False` |  | Disables FIB updates and route advertisement when the BGP instance is initiated until the BGP convergence state is reached.<br> |
 
 === "YAML"
 
@@ -260,8 +260,8 @@
 
     # Do not advertise reachability to a prefix until that prefix has been installed in hardware.
     # This will eliminate any temporary black holes due to a BGP speaker advertising reachability to a prefix that may not yet be installed into the forwarding plane.
-    bgp_update_wait_install: <bool>
+    bgp_update_wait_install: <bool; default=True>
 
     # Disables FIB updates and route advertisement when the BGP instance is initiated until the BGP convergence state is reached.
-    bgp_update_wait_for_convergence: <bool>
+    bgp_update_wait_for_convergence: <bool; default=False>
     ```

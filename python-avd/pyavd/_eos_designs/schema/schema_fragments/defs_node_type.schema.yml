@@ -169,7 +169,11 @@ $defs:
             documentation_options:
               table: node-type-uplink-configuration
             type: str
-            $ref: "eos_designs#/keys/node_type_keys/items/keys/uplink_type"
+            valid_values:
+              - p2p
+              - port-channel
+              - p2p-vrfs
+              - lan
             description: |-
               Override the default `uplink_type` set at the `node_type_key` level.
               `uplink_type` must be "p2p" if `vtep` or `underlay_router` is true for the `node_type_key` definition.
@@ -405,7 +409,7 @@ $defs:
               - level-1-2
               - level-1
               - level-2
-            default: level-2
+            description: Overrides `isis_default_is_type`.
           node_sid_base:
             documentation_options:
               table: node-type-isis-configuration
@@ -595,7 +599,6 @@ $defs:
               table: node-type-evpn-services-configuration
             description: Activate or deactivate IGMP snooping on device level.
             type: bool
-            default: true
           evpn_gateway:
             documentation_options:
               table: node-type-evpn-multi-domain-gateway-configuration
@@ -612,6 +615,7 @@ $defs:
                   If the hostname can be found in the inventory, ip_address and BGP ASN will be automatically populated. Manual override takes precedence.
                   If the peer's hostname can not be found in the inventory, ip_address and bgp_as must be defined.
                 type: list
+                primary_key: hostname
                 items:
                   type: dict
                   keys:
@@ -684,7 +688,6 @@ $defs:
                 type: str
                 convert_types:
                   - int
-                default: none
               address_families:
                 description: IPVPN address families to enable for remote peers.
                 type: list
@@ -693,13 +696,13 @@ $defs:
                 default: [vpn-ipv4]
               remote_peers:
                 type: list
+                primary_key: hostname
                 items:
                   type: dict
                   keys:
                     hostname:
                       description: Hostname of remote IPVPN Peer.
                       type: str
-                      required: true
                     ip_address:
                       description: Peering IP of remote IPVPN Peer.
                       type: str
@@ -981,7 +984,7 @@ $defs:
               Name configured on the Inband Management VLAN.
               This setting is only applied on the devices where it is set, it does not automatically affect any parent/child devices configuration, so it must be set on each applicable node/node-group/node-type as needed.
             type: str
-            default: Inband Management
+            default: INBAND_MGMT
           inband_mgmt_vrf:
             documentation_options:
               table: node-type-inband-management-configuration
@@ -1064,7 +1067,6 @@ $defs:
             keys:
               enabled:
                 type: bool
-                default: false
               profile:
                 type: str
                 description: |-
@@ -1072,7 +1074,6 @@ $defs:
                     - "aes67"
                     - "aes67-r16-2016"
                     - "smpte2059-2"
-                default: "aes67-r16-2016"
               mlag:
                 description: Configure PTP on the MLAG peer-link port-channel when PTP is enabled. By default PTP will not be configured on the MLAG peer-link port-channel.
                 type: bool
@@ -1102,12 +1103,12 @@ $defs:
                   default -> (node_id modulus 256).
               auto_clock_identity:
                 type: bool
-                default: true
                 description: |
                   If you prefer to have PTP clock identity be the system MAC-address of the switch, which is the default EOS behaviour, simply disable the automatic PTP clock identity.
                   default -> (clock_identity_prefix = 00:1C:73 (default)) + (PTP priority 1 as HEX) + ":00:" + (PTP priority 2 as HEX).
               clock_identity_prefix:
                 type: str
+                default: "00:1C:73"
                 description: |
                   PTP clock idetentiy 3-byte prefix. i.e. "01:02:03".
                   By default the 3-byte prefix is "00:1C:73".
@@ -1302,7 +1303,6 @@ $defs:
             keys:
               enabled:
                 type: bool
-                default: true
                 description: Enable / Disable auto CV-Pathfinder HA, when two nodes are defined in the same node_group.
               ipsec:
                 type: bool

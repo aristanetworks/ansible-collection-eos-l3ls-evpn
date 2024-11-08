@@ -43,7 +43,7 @@ keys:
               description: |-
                 "Salt" used for auto generation of encryption keys for IPsec tunnels to Zscaler.
                 The keys will be generated as a hash of `salt_<hostname>_<policy_name>`.
-                Since this salt can be used to deduct the encryption key, it is recommeneded to use vault.
+                Since this salt can be used to deduct the encryption key, it is recommended to use vault.
             domain_name:
               type: str
               required: true

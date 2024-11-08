@@ -52,7 +52,7 @@
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;vlan_id</samp>](## "port_channel_interfaces.[].vlan_id") | Integer |  |  | Min: 1<br>Max: 4094 | This setting can only be applied to sub-interfaces on EOS.<br>Warning: `vlan_id` should not be combined with `ethernet_interfaces[].type == l2dot1q`. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;mode</samp>](## "port_channel_interfaces.[].mode") <span style="color:red">deprecated</span> | String |  |  | Valid Values:<br>- <code>access</code><br>- <code>dot1q-tunnel</code><br>- <code>trunk</code><br>- <code>trunk phone</code> | <span style="color:red">This key is deprecated. Support will be removed in AVD version 6.0.0. Use <samp>switchport.mode</samp> instead.</span> |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;native_vlan</samp>](## "port_channel_interfaces.[].native_vlan") <span style="color:red">deprecated</span> | Integer |  |  |  | If setting both native_vlan and native_vlan_tag, native_vlan_tag takes precedence.<span style="color:red">This key is deprecated. Support will be removed in AVD version 6.0.0. Use <samp>switchport.trunk.native_vlan</samp> instead.</span> |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;native_vlan_tag</samp>](## "port_channel_interfaces.[].native_vlan_tag") <span style="color:red">deprecated</span> | Boolean |  | `False` |  | If setting both native_vlan and native_vlan_tag, native_vlan_tag takes precedence.<span style="color:red">This key is deprecated. Support will be removed in AVD version 6.0.0. Use <samp>switchport.trunk.native_vlan_tag</samp> instead.</span> |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;native_vlan_tag</samp>](## "port_channel_interfaces.[].native_vlan_tag") <span style="color:red">deprecated</span> | Boolean |  |  |  | If setting both native_vlan and native_vlan_tag, native_vlan_tag takes precedence.<span style="color:red">This key is deprecated. Support will be removed in AVD version 6.0.0. Use <samp>switchport.trunk.native_vlan_tag</samp> instead.</span> |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;link_tracking_groups</samp>](## "port_channel_interfaces.[].link_tracking_groups") | List, items: Dictionary |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;name</samp>](## "port_channel_interfaces.[].link_tracking_groups.[].name") | String | Required, Unique |  |  | Group name. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;direction</samp>](## "port_channel_interfaces.[].link_tracking_groups.[].direction") | String |  |  | Valid Values:<br>- <code>upstream</code><br>- <code>downstream</code> |  |
@@ -66,7 +66,7 @@
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;mlag</samp>](## "port_channel_interfaces.[].mlag") | Integer |  |  | Min: 1<br>Max: 2000 | MLAG ID. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;trunk_groups</samp>](## "port_channel_interfaces.[].trunk_groups") <span style="color:red">deprecated</span> | List, items: String |  |  |  | <span style="color:red">This key is deprecated. Support will be removed in AVD version 6.0.0. Use <samp>switchport.trunk.groups</samp> instead.</span> |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;&lt;str&gt;</samp>](## "port_channel_interfaces.[].trunk_groups.[]") | String |  |  |  |  |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;lacp_fallback_timeout</samp>](## "port_channel_interfaces.[].lacp_fallback_timeout") | Integer |  | `90` | Min: 0<br>Max: 300 | Timeout in seconds. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;lacp_fallback_timeout</samp>](## "port_channel_interfaces.[].lacp_fallback_timeout") | Integer |  |  | Min: 0<br>Max: 300 | Timeout in seconds. EOS default is 90 seconds. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;lacp_fallback_mode</samp>](## "port_channel_interfaces.[].lacp_fallback_mode") | String |  |  | Valid Values:<br>- <code>individual</code><br>- <code>static</code> |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;qos</samp>](## "port_channel_interfaces.[].qos") | Dictionary |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;trust</samp>](## "port_channel_interfaces.[].qos.trust") | String |  |  | Valid Values:<br>- <code>dscp</code><br>- <code>cos</code><br>- <code>disabled</code> |  |
@@ -463,7 +463,7 @@
         # This key is deprecated.
         # Support will be removed in AVD version 6.0.0.
         # Use <samp>switchport.trunk.native_vlan_tag</samp> instead.
-        native_vlan_tag: <bool; default=False>
+        native_vlan_tag: <bool>
         link_tracking_groups:
 
             # Group name.
@@ -492,8 +492,8 @@
         trunk_groups:
           - <str>
 
-        # Timeout in seconds.
-        lacp_fallback_timeout: <int; 0-300; default=90>
+        # Timeout in seconds. EOS default is 90 seconds.
+        lacp_fallback_timeout: <int; 0-300>
         lacp_fallback_mode: <str; "individual" | "static">
         qos:
           trust: <str; "dscp" | "cos" | "disabled">

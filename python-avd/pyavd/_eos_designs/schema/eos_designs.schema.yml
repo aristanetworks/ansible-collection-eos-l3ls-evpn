@@ -455,11 +455,13 @@ keys:
     documentation_options:
       table: bgp-settings
     type: bool
+    default: true
     $ref: eos_cli_config_gen#/keys/router_bgp/keys/updates/keys/wait_install
   bgp_update_wait_for_convergence:
     documentation_options:
       table: bgp-settings
     type: bool
+    default: false
     $ref: eos_cli_config_gen#/keys/router_bgp/keys/updates/keys/wait_for_convergence
   connected_endpoints_keys:
     documentation_options:
@@ -637,7 +639,7 @@ keys:
 
                 The keys will be generated as a hash of `salt_<hostname>_<policy_name>`.
 
-                Since this salt can be used to deduct the encryption key, it is recommeneded
+                Since this salt can be used to deduct the encryption key, it is recommended
                 to use vault.'
             domain_name:
               type: str
@@ -1379,11 +1381,11 @@ keys:
   fabric_evpn_encapsulation:
     documentation_options:
       table: evpn-settings
-    description: Should be set to mpls for evpn-mpls scenario.
+    description: Should be set to mpls for evpn-mpls scenario. This overrides the
+      evpn_encapsulation setting under node_type_keys.
     valid_values:
     - vxlan
     - mpls
-    default: vxlan
     type: str
   fabric_flow_tracking:
     documentation_options:
@@ -1399,40 +1401,51 @@ keys:
       uplinks:
         description: Enable flow-tracking on all fabric uplinks.
         type: dict
-        $ref: eos_designs#/$defs/flow_tracking_link
+        keys:
+          enabled:
+            type: bool
+            default: false
+          name:
+            type: str
+            description: Flow tracker name as defined in flow_tracking_settings.
+            default: FLOW-TRACKER
       downlinks:
         description: Enable flow-tracking on all fabric downlinks.
         type: dict
-        $ref: eos_designs#/$defs/flow_tracking_link
+        $ref: eos_designs#/keys/fabric_flow_tracking/keys/uplinks
       endpoints:
         description: Enable flow-tracking on all endpoints ports.
         type: dict
-        $ref: eos_designs#/$defs/flow_tracking_link
+        $ref: eos_designs#/keys/fabric_flow_tracking/keys/uplinks
       l3_edge:
         description: Enable flow-tracking on all p2p_links defined under l3_edge.
         type: dict
-        $ref: eos_designs#/$defs/flow_tracking_link
+        $ref: eos_designs#/keys/fabric_flow_tracking/keys/uplinks
       core_interfaces:
         description: Enable flow-tracking on all p2p_links defined under core_interfaces.
         type: dict
-        $ref: eos_designs#/$defs/flow_tracking_link
+        $ref: eos_designs#/keys/fabric_flow_tracking/keys/uplinks
       mlag_interfaces:
         description: Enable flow-tracking on all MLAG peer interfaces.
         type: dict
-        $ref: eos_designs#/$defs/flow_tracking_link
+        $ref: eos_designs#/keys/fabric_flow_tracking/keys/uplinks
       l3_interfaces:
         description: Enable flow-tracking on all node.l3_interfaces and network-services
           tenants.vrfs.l3_interfaces.
         type: dict
-        $ref: eos_designs#/$defs/flow_tracking_link
+        $ref: eos_designs#/keys/fabric_flow_tracking/keys/uplinks
       dps_interfaces:
         description: Enable flow-tracking on all dps_interfaces.
         type: dict
-        $ref: eos_designs#/$defs/flow_tracking_link
+        $ref: eos_designs#/keys/fabric_flow_tracking/keys/uplinks
+        keys:
+          enabled:
+            type: bool
+            default: true
       direct_wan_ha_links:
         description: Enable flow-tracking on all direct WAN HA links.
         type: dict
-        $ref: eos_designs#/$defs/flow_tracking_link
+        $ref: eos_designs#/keys/fabric_flow_tracking/keys/uplinks
   fabric_ip_addressing:
     type: dict
     keys:
@@ -1443,17 +1456,17 @@ keys:
             type: str
             default: first_id
             description: "This variable defines the Multi-chassis Link Aggregation
-              (MLAG) algorithm used.\nEach MLAG link will have a /31* subnet with
+              (MLAG) algorithm used.\nEach MLAG link will have a /31\xB9 subnet with
               each subnet allocated from the relevant MLAG pool via a calculated offset.\nThe
               offset is calculated using one of the following algorithms:\n  - first_id:
               `(mlag_primary_id - 1) * 2` where `mlag_primary_id` is the ID of the
               first node defined under the node_group.\n    This allocation method
-              will skip every other /31* subnet making it less space efficient than
-              `odd_id`.\n  - odd_id: `(odd_id - 1) / 2`. Requires the node_group to
-              have a node with an odd ID and a node with an even ID.\n  - same_subnet:
+              will skip every other /31\xB9 subnet making it less space efficient
+              than `odd_id`.\n  - odd_id: `(odd_id - 1) / 2`. Requires the node_group
+              to have a node with an odd ID and a node with an even ID.\n  - same_subnet:
               the offset will always be zero.\n    This allocation method will cause
-              every MLAG link to be addressed with the same /31* subnet.\n\\* - The
-              prefix length is configurable with a default of /31."
+              every MLAG link to be addressed with the same /31\xB9 subnet.\n\xB9
+              The prefix length is configurable with a default of /31."
             valid_values:
             - first_id
             - odd_id
@@ -1962,6 +1975,7 @@ keys:
       table: isis-settings
     description: Number of path to configure in ECMP for ISIS.
     type: int
+    default: 4
     convert_types:
     - str
   isis_system_id_format:
@@ -2440,6 +2454,8 @@ keys:
             '
         default_overlay_address_families:
           type: list
+          default:
+          - evpn
           items:
             type: str
             convert_to_lower_case: true
@@ -2452,6 +2468,7 @@ keys:
             '
         default_evpn_encapsulation:
           type: str
+          default: vxlan
           convert_to_lower_case: true
           valid_values:
           - mpls
@@ -2567,6 +2584,7 @@ keys:
               description: Custom Python Module to import for IP addressing.
             python_class_name:
               type: str
+              default: AvdIpAddressing
               description: Name of Custom Python Class to import for IP addressing.
             router_id:
               type: str
@@ -2618,6 +2636,7 @@ keys:
               description: Custom Python Module to import for interface descriptions.
             python_class_name:
               type: str
+              default: AvdInterfaceDescriptions
               description: Name of Custom Python Class to import for interface descriptions.
             underlay_ethernet_interfaces:
               type: str
@@ -2875,9 +2894,10 @@ keys:
           '
         default: router_id
       admin_subfield_offset:
-        type: str
+        type: int
+        default: 0
         convert_types:
-        - int
+        - str
         description: 'Offset can only be used if admin_subfield is an integer between
           <0-4294967295> or ''switch_id''.
 
@@ -2914,14 +2934,18 @@ keys:
 
           '
       vrf_admin_subfield_offset:
-        type: str
+        type: int
         convert_types:
-        - int
+        - str
         description: 'Offset can only be used if ''vrf_admin_subfield'' is an integer
           between <0-4294967295> or ''switch_id''.
 
           Total value of ''vrf_admin_subfield'' + ''vrf_admin_subfield_offset'' must
           be <= 4294967295.
+
+
+          ''vrf_admin_subfield_offset'' takes precedence for VRF RDs if set. Otherwise
+          the ''admin_subfield_offset'' value will be used.
 
           '
       vlan_assigned_number_subfield:
@@ -2948,13 +2972,15 @@ keys:
   overlay_routing_protocol:
     documentation_options:
       table: overlay-settings
-    description: "- The following overlay routing protocols are supported:\n  - eBGP:
-      Configures fabric with eBGP, default for l3ls-evpn design.\n  - iBGP: Configured
+    description: "- The following overlay routing protocols are supported:\n  - ebgp:
+      Configures fabric with eBGP, default for l3ls-evpn design.\n  - ibgp: Configured
       fabric with iBGP, only supported with OSPF or ISIS variants in underlay, default
-      for mpls design.\n  - CVX: Configures fabric to leverage CloudVision eXchange
-      as the overlay controller.\n  - HER: Configures fabric with Head-End Replication,
+      for mpls design.\n  - cvx: Configures fabric to leverage CloudVision eXchange
+      as the overlay controller.\n  - her: Configures fabric with Head-End Replication,
       configures static VXLAN flood-lists instead of using a dynamic overlay protocol.\n
-      \ - none: No overlay configuration will be generated, default for l2ls design.\n"
+      \ - none: No overlay configuration will be generated, default for l2ls design.\n\n
+      \ If not set, the default_overlay_routing_protocol defined under the node_type_keys
+      will be used (default is \"ebgp\").\n"
     type: str
     valid_values:
     - ebgp
@@ -2962,7 +2988,6 @@ keys:
     - cvx
     - her
     - none
-    default: ebgp
     convert_to_lower_case: true
   overlay_routing_protocol_address_family:
     documentation_options:
@@ -3068,7 +3093,6 @@ keys:
           ''admin_subfield'' value will be used.
 
           '
-        default: vrf_id
       vlan_assigned_number_subfield:
         type: str
         valid_values:
@@ -3592,6 +3616,7 @@ keys:
           \ - \"smpte2059-2\""
       domain:
         type: int
+        default: 127
         $ref: eos_cli_config_gen#/keys/ptp/keys/domain
       auto_clock_identity:
         type: bool
@@ -3950,6 +3975,7 @@ keys:
         keys:
           mgmt_interface:
             type: bool
+            default: false
             description: 'Configure an IP Domain Lookup source-interface with the
               interface set by `mgmt_interface` for the VRF set by `mgmt_interface_vrf`.
 
@@ -3958,6 +3984,7 @@ keys:
               var.'
           inband_mgmt_interface:
             type: bool
+            default: false
             description: 'Configure an IP Domain Lookup source-interface with the
               interface set by `inband_mgmt_interface` for the VRF set by `inband_mgmt_vrf`.
 
@@ -3969,6 +3996,7 @@ keys:
         keys:
           mgmt_interface:
             type: bool
+            default: false
             description: 'Configure an IP HTTP Client source-interface with the interface
               set by `mgmt_interface` for the VRF set by `mgmt_interface_vrf`.
 
@@ -3977,6 +4005,7 @@ keys:
               var.'
           inband_mgmt_interface:
             type: bool
+            default: false
             description: 'Configure an IP HTTP Client source-interface with the interface
               set by `inband_mgmt_interface` for the VRF set by `inband_mgmt_vrf`.
 
@@ -3988,6 +4017,7 @@ keys:
         keys:
           mgmt_interface:
             type: bool
+            default: false
             description: 'Configure an IP Radius source-interface with the interface
               set by `mgmt_interface` for the VRF set by `mgmt_interface_vrf`.
 
@@ -3996,6 +4026,7 @@ keys:
               var.'
           inband_mgmt_interface:
             type: bool
+            default: false
             description: 'Configure an IP Radius source-interface with the interface
               set by `inband_mgmt_interface` for the VRF set by `inband_mgmt_vrf`.
 
@@ -4007,6 +4038,7 @@ keys:
         keys:
           mgmt_interface:
             type: bool
+            default: false
             description: 'Configure a SNMP local-interface with the interface set
               by `mgmt_interface` for the VRF set by `mgmt_interface_vrf`.
 
@@ -4015,6 +4047,7 @@ keys:
               var.'
           inband_mgmt_interface:
             type: bool
+            default: false
             description: 'Configure a SNMP local-interface with the interface set
               by `inband_mgmt_interface` for the VRF set by `inband_mgmt_vrf`.
 
@@ -4026,6 +4059,7 @@ keys:
         keys:
           mgmt_interface:
             type: bool
+            default: false
             description: 'Configure an IP SSH Client source-interface with the interface
               set by `mgmt_interface` for the VRF set by `mgmt_interface_vrf`.
 
@@ -4034,6 +4068,7 @@ keys:
               var.'
           inband_mgmt_interface:
             type: bool
+            default: false
             description: 'Configure an IP SSH Client source-interface with the interface
               set by `inband_mgmt_interface` for the VRF set by `inband_mgmt_vrf`.
 
@@ -4045,6 +4080,7 @@ keys:
         keys:
           mgmt_interface:
             type: bool
+            default: false
             description: 'Configure an IP Tacacs source-interface with the interface
               set by `mgmt_interface` for the VRF set by `mgmt_interface_vrf`.
 
@@ -4053,6 +4089,7 @@ keys:
               var.'
           inband_mgmt_interface:
             type: bool
+            default: false
             description: 'Configure an IP Tacacs source-interface with the interface
               set by `inband_mgmt_interface` for the VRF set by `inband_mgmt_vrf`.
 
@@ -4876,7 +4913,7 @@ keys:
               or destined to the WAN route servers.'
       policies:
         type: list
-        description: "List of virtual toplogies policies.\n\nFor AutoVPN, each item
+        description: "List of virtual topologies policies.\n\nFor AutoVPN, each item
           in the list creates:\n  * one policy with:\n      * one `match` entry per
           `application_virtual_topologies` item\n        they are indexed using `10
           * <list_index>` where `list_index` starts at `1`.\n      * one `default-match`\n
@@ -5037,6 +5074,7 @@ dynamic_keys:
   custom_node_type_keys.key:
     $ref: eos_designs#/$defs/node_type
     type: dict
+    display_name: Custom Node Types
     documentation_options:
       hide_keys: true
   network_services_keys.name:
@@ -5048,6 +5086,7 @@ dynamic_keys:
   node_type_keys.key:
     $ref: eos_designs#/$defs/node_type
     type: dict
+    display_name: Node Types
     documentation_options:
       table: node-type-structure
 $defs:
@@ -5844,6 +5883,7 @@ $defs:
           documentation_options:
             table: network-services-vrfs-settings
           type: bool
+          default: true
           description: 'MLAG iBGP peering per VRF.
 
             By default an iBGP peering is configured per VRF between MLAG peers on
@@ -5975,6 +6015,7 @@ $defs:
               description: IPv4_address/Mask.
             underlay_l2_multicast_group_ipv4_pool_offset:
               type: int
+              default: 0
               convert_types:
               - str
             fast_leave:
@@ -6026,6 +6067,7 @@ $defs:
               required: true
             evpn_underlay_l3_multicast_group_ipv4_pool_offset:
               type: int
+              default: 0
               convert_types:
               - str
             evpn_peg:
@@ -6116,13 +6158,14 @@ $defs:
               description: Default IP address of Loopback0.
             version:
               type: int
+              description: IGMP Version (By default EOS uses IGMP version 2 for IGMP
+                querier).
               convert_types:
               - str
               valid_values:
               - 1
               - 2
               - 3
-              default: 2
         evpn_l2_multi_domain:
           type: bool
           default: true
@@ -6163,6 +6206,8 @@ $defs:
                 - int
               address_families:
                 type: list
+                default:
+                - evpn
                 items:
                   type: str
                   valid_values:
@@ -6267,21 +6312,20 @@ $defs:
                   By default an iBGP peering is configured per VRF between MLAG peers
                   on separate VLANs.
 
-                  Setting `enable_mlag_ibgp_peering_vrfs: false` under a VRF will
-                  change this default and/or override the tenant-wide setting.
+                  Setting `enable_mlag_ibgp_peering_vrfs: false` under a VRF overrides
+                  the tenant-wide setting.
 
                   '
               redistribute_mlag_ibgp_peering_vrfs:
                 type: bool
-                default: false
                 description: 'Redistribute the connected subnet for the MLAG iBGP
                   peering per VRF into overlay BGP.
 
                   By default the iBGP peering subnet is not redistributed into the
                   overlay routing protocol per VRF.
 
-                  Setting `redistribute_mlag_ibgp_peering_vrfs: true` under a VRF
-                  will change this default and/or override the tenant-wide setting.
+                  Setting `redistribute_mlag_ibgp_peering_vrfs` under a VRF overrides
+                  the tenant-wide setting.
 
                   '
               mlag_ibgp_peering_vlan:
@@ -6342,10 +6386,11 @@ $defs:
                       can be set per POD to avoid overlaps.
 
                       This only takes effect when loopback_ip_range is not defined,
-                      ptional (loopback is not created unless loopback_ip_range or
+                      optional (loopback is not created unless loopback_ip_range or
                       loopback_ip_pools are set).
 
                       '
+                    primary_key: pod
                     items:
                       type: dict
                       keys:
@@ -7250,6 +7295,8 @@ $defs:
                   settings.
 
                   '
+                default:
+                - all
                 items:
                   type: str
                   default: all
@@ -7308,8 +7355,8 @@ $defs:
                 documentation_options:
                   table: network-services-multicast-settings
                 type: bool
-                default: true
-                description: Activate or deactivate IGMP snooping.
+                description: Enable or disable IGMP snooping (Enabled by default on
+                  EOS).
               igmp_snooping_querier:
                 documentation_options:
                   table: network-services-multicast-settings
@@ -7335,13 +7382,14 @@ $defs:
                       '
                   version:
                     type: int
+                    description: IGMP Version (By default EOS uses IGMP version 2
+                      for IGMP querier).
                     convert_types:
                     - str
                     valid_values:
                     - 1
                     - 2
                     - 3
-                    default: 2
                   fast_leave:
                     type: bool
                     description: Enable IGMP snooping fast-leave feature.
@@ -7643,7 +7691,11 @@ $defs:
             documentation_options:
               table: node-type-uplink-configuration
             type: str
-            $ref: eos_designs#/keys/node_type_keys/items/keys/uplink_type
+            valid_values:
+            - p2p
+            - port-channel
+            - p2p-vrfs
+            - lan
             description: 'Override the default `uplink_type` set at the `node_type_key`
               level.
 
@@ -7944,7 +7996,7 @@ $defs:
             - level-1-2
             - level-1
             - level-2
-            default: level-2
+            description: Overrides `isis_default_is_type`.
           node_sid_base:
             documentation_options:
               table: node-type-isis-configuration
@@ -8173,7 +8225,6 @@ $defs:
               table: node-type-evpn-services-configuration
             description: Activate or deactivate IGMP snooping on device level.
             type: bool
-            default: true
           evpn_gateway:
             documentation_options:
               table: node-type-evpn-multi-domain-gateway-configuration
@@ -8202,6 +8253,7 @@ $defs:
 
                   '
                 type: list
+                primary_key: hostname
                 items:
                   type: dict
                   keys:
@@ -8285,7 +8337,6 @@ $defs:
                 type: str
                 convert_types:
                 - int
-                default: none
               address_families:
                 description: IPVPN address families to enable for remote peers.
                 type: list
@@ -8295,13 +8346,13 @@ $defs:
                 - vpn-ipv4
               remote_peers:
                 type: list
+                primary_key: hostname
                 items:
                   type: dict
                   keys:
                     hostname:
                       description: Hostname of remote IPVPN Peer.
                       type: str
-                      required: true
                     ip_address:
                       description: Peering IP of remote IPVPN Peer.
                       type: str
@@ -8693,7 +8744,7 @@ $defs:
               not automatically affect any parent/child devices configuration, so
               it must be set on each applicable node/node-group/node-type as needed.'
             type: str
-            default: Inband Management
+            default: INBAND_MGMT
           inband_mgmt_vrf:
             documentation_options:
               table: node-type-inband-management-configuration
@@ -8787,12 +8838,10 @@ $defs:
             keys:
               enabled:
                 type: bool
-                default: false
               profile:
                 type: str
                 description: "Default available profiles are:\n  - \"aes67\"\n  -
                   \"aes67-r16-2016\"\n  - \"smpte2059-2\""
-                default: aes67-r16-2016
               mlag:
                 description: Configure PTP on the MLAG peer-link port-channel when
                   PTP is enabled. By default PTP will not be configured on the MLAG
@@ -8826,7 +8875,6 @@ $defs:
                   '
               auto_clock_identity:
                 type: bool
-                default: true
                 description: 'If you prefer to have PTP clock identity be the system
                   MAC-address of the switch, which is the default EOS behaviour, simply
                   disable the automatic PTP clock identity.
@@ -8837,6 +8885,7 @@ $defs:
                   '
               clock_identity_prefix:
                 type: str
+                default: 00:1C:73
                 description: 'PTP clock idetentiy 3-byte prefix. i.e. "01:02:03".
 
                   By default the 3-byte prefix is "00:1C:73".
@@ -9053,7 +9102,6 @@ $defs:
             keys:
               enabled:
                 type: bool
-                default: true
                 description: Enable / Disable auto CV-Pathfinder HA, when two nodes
                   are defined in the same node_group.
               ipsec:
@@ -9503,7 +9551,7 @@ $defs:
           description: Add this interface to underlay routing protocol.
         isis_hello_padding:
           type: bool
-          default: false
+          default: true
         isis_metric:
           type: int
           convert_types:
@@ -9522,6 +9570,12 @@ $defs:
         isis_authentication_key:
           type: str
           description: Type-7 encrypted password.
+        isis_network_type:
+          type: str
+          default: point-to-point
+          valid_values:
+          - point-to-point
+          - broadcast
         mpls_ip:
           type: bool
           description: MPLS parameters. Default value is true if switch.mpls_lsr is
@@ -9537,7 +9591,6 @@ $defs:
           description: MTU for this P2P link. Default value same as p2p_uplinks_mtu.
         bfd:
           type: bool
-          default: false
           description: Enable BFD (only considered for BGP).
         ptp:
           description: PTP parameters.
@@ -9858,7 +9911,7 @@ $defs:
         documentation_options:
           table: network-services-multicast-settings
         type: bool
-        description: Enable IGMP Snooping (Enabled by default on EOS).
+        description: Enable or disable IGMP snooping (Enabled by default on EOS).
       igmp_snooping_querier:
         documentation_options:
           table: network-services-multicast-settings
@@ -9915,7 +9968,7 @@ $defs:
             type: bool
           point_to_point:
             type: bool
-            default: true
+            default: false
           area:
             type: str
             convert_types:
