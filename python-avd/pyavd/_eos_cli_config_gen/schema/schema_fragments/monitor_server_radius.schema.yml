@@ -19,7 +19,7 @@ keys:
         keys:
           interval:
             type: int
-            description: Server probe period in seconds.
+            description: Server probe interval in seconds.
             convert_types:
               - str
             min: 1
@@ -46,7 +46,6 @@ keys:
                 required: true
               password:
                 type: str
-                description: Type 7 password.
                 required: true
               password_type:
                 type: str

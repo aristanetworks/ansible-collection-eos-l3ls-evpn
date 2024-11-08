@@ -198,6 +198,9 @@
 - [InfluxDB Telemetry](#influxdb-telemetry)
   - [InfluxDB Telemetry Summary](#influxdb-telemetry-summary)
   - [InfluxDB Telemetry Device Configuration](#influxdb-telemetry-device-configuration)
+- [Monitor Server Radius Summary](#monitor-server-radius-summary)
+  - [Server Probe Settings](#server-probe-settings)
+  - [Monitor Server Radius Device Configuration](#monitor-server-radius-device-configuration)
 - [STUN](#stun)
   - [STUN Client](#stun-client)
   - [STUN Server](#stun-server)
@@ -7552,6 +7555,29 @@ monitor telemetry influx
    tag global tag1 value1
    tag global tag2 value2
    source group standard disabled
+```
+
+## Monitor Server Radius Summary
+
+Monitor servers are used for 802.1x authentication.
+
+### Server Probe Settings
+
+| Setting | Value |
+| ------- | ----- |
+| Probe interval | 100 |
+| Threshold failure | 100 |
+| Probe method | access-request |
+
+### Monitor Server Radius Device Configuration
+
+```eos
+!
+monitor server radius
+   service dot1x
+   probe interval 100 seconds
+   probe threshold failure 100
+   probe method access-request username arista password 7 <removed>
 ```
 
 ## STUN

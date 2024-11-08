@@ -8189,11 +8189,19 @@ keys:
         keys:
           interval:
             type: int
-            description: Server probe period in seconds.
+            description: Server probe interval in seconds.
             convert_types:
             - str
             min: 1
             max: 1000
+          threshold_failure:
+            type: int
+            description: Number of consecutive failed probes before a server is marked
+              as dead.
+            convert_types:
+            - str
+            min: 1
+            max: 255
           method:
             type: str
             description: Method used to probe the server. `status-server` is the EOS
