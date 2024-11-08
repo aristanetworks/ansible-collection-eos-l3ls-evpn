@@ -124,6 +124,7 @@ keys:
                   description: Application name.
       application_profiles:
         type: list
+        primary_key: name
         description: Group of applications.
         items:
           type: dict

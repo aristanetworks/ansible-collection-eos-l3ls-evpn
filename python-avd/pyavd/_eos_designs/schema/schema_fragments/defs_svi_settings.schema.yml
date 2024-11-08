@@ -174,7 +174,7 @@ $defs:
         documentation_options:
           table: network-services-multicast-settings
         type: bool
-        description: Enable IGMP Snooping (Enabled by default on EOS).
+        description: Enable or disable IGMP snooping (Enabled by default on EOS).
       igmp_snooping_querier:
         documentation_options:
           table: network-services-multicast-settings
@@ -226,7 +226,7 @@ $defs:
             type: bool
           point_to_point:
             type: bool
-            default: true
+            default: false
           area:
             type: str
             convert_types:

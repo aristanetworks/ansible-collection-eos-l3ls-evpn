@@ -11,11 +11,13 @@ keys:
       table: overlay-settings
     description: |
       - The following overlay routing protocols are supported:
-        - eBGP: Configures fabric with eBGP, default for l3ls-evpn design.
-        - iBGP: Configured fabric with iBGP, only supported with OSPF or ISIS variants in underlay, default for mpls design.
-        - CVX: Configures fabric to leverage CloudVision eXchange as the overlay controller.
-        - HER: Configures fabric with Head-End Replication, configures static VXLAN flood-lists instead of using a dynamic overlay protocol.
+        - ebgp: Configures fabric with eBGP, default for l3ls-evpn design.
+        - ibgp: Configured fabric with iBGP, only supported with OSPF or ISIS variants in underlay, default for mpls design.
+        - cvx: Configures fabric to leverage CloudVision eXchange as the overlay controller.
+        - her: Configures fabric with Head-End Replication, configures static VXLAN flood-lists instead of using a dynamic overlay protocol.
         - none: No overlay configuration will be generated, default for l2ls design.
+
+        If not set, the default_overlay_routing_protocol defined under the node_type_keys will be used (default is "ebgp").
     type: str
     valid_values:
       - "ebgp"
@@ -23,5 +25,4 @@ keys:
       - "cvx"
       - "her"
       - "none"
-    default: "ebgp"
     convert_to_lower_case: true
