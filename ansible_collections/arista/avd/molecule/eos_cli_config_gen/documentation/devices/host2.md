@@ -25,6 +25,8 @@
   - [DPS Interfaces](#dps-interfaces)
 - [Routing](#routing)
   - [ARP](#arp)
+- [Multicast](#multicast)
+  - [IP IGMP Snooping](#ip-igmp-snooping)
 - [Filters](#filters)
   - [AS Path Lists](#as-path-lists)
 - [802.1X Port Security](#8021x-port-security)
@@ -32,6 +34,11 @@
 - [Application Traffic Recognition](#application-traffic-recognition)
   - [Applications](#applications)
   - [Router Application-Traffic-Recognition Device Configuration](#router-application-traffic-recognition-device-configuration)
+- [IP DHCP Relay](#ip-dhcp-relay)
+  - [IP DHCP Relay Summary](#ip-dhcp-relay-summary)
+  - [IP DHCP Relay Device Configuration](#ip-dhcp-relay-device-configuration)
+- [IP DHCP Snooping](#ip-dhcp-snooping)
+  - [IP DHCP Snooping Device Configuration](#ip-dhcp-snooping-device-configuration)
 
 ## Management
 
@@ -244,6 +251,28 @@ ARP cache persistency is enabled.
 arp persistent
 ```
 
+## Multicast
+
+### IP IGMP Snooping
+
+#### IP IGMP Snooping Summary
+
+| IGMP Snooping | Fast Leave | Interface Restart Query | Proxy | Restart Query Interval | Robustness Variable |
+| ------------- | ---------- | ----------------------- | ----- | ---------------------- | ------------------- |
+| Enabled | False | - | False | - | - |
+
+| Querier Enabled | IP Address | Query Interval | Max Response Time | Last Member Query Interval | Last Member Query Count | Startup Query Interval | Startup Query Count | Version |
+| --------------- | ---------- | -------------- | ----------------- | -------------------------- | ----------------------- | ---------------------- | ------------------- | ------- |
+| False | - | - | - | - | - | - | - | - |
+
+#### IP IGMP Snooping Device Configuration
+
+```eos
+!
+no ip igmp snooping fast-leave
+no ip igmp snooping querier
+```
+
 ## Filters
 
 ### AS Path Lists
@@ -308,4 +337,28 @@ application traffic recognition
    application l4 l4-app-1
       protocol tcp source port field-set src_port_set1 destination port field-set dest_port_set1
       protocol udp
+```
+
+## IP DHCP Relay
+
+### IP DHCP Relay Summary
+
+IP DHCP Relay Option 82 is enabled.
+
+### IP DHCP Relay Device Configuration
+
+```eos
+!
+ip dhcp relay information option
+```
+
+## IP DHCP Snooping
+
+IP DHCP Snooping is enabled
+
+### IP DHCP Snooping Device Configuration
+
+```eos
+!
+ip dhcp snooping
 ```

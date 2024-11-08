@@ -1,3 +1,4 @@
+---
 ### Errdisable ###
 
 errdisable:
@@ -10,6 +11,7 @@ errdisable:
       - xcvr-misconfigured
       - xcvr-overheat
       - xcvr-power-unsupported
+      - acl
   recovery:
     causes:
       - bpduguard
@@ -27,4 +29,5 @@ errdisable:
       - xcvr-overheat
       - xcvr-power-unsupported
       - xcvr-unsupported
+      - arp-inspection
     interval: 300

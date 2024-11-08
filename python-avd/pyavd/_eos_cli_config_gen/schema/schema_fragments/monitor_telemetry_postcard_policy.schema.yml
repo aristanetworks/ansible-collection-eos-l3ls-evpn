@@ -57,7 +57,7 @@ keys:
                       - str
                   mask:
                     type: str
-                    description: 16 bit hexadecimal mask for TCP/UDP or IP ID with atmost 2 unset bits.
+                    description: 16 bit hexadecimal mask for TCP/UDP or IP ID with at most 2 unset bits.
       marker_vxlan:
         type: dict
         keys:
