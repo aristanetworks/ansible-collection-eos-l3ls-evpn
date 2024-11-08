@@ -16,4 +16,4 @@ keys:
       warning: true
       removed: true
       remove_in_version: 5.0.0
-      url: https://avd.arista.com/stable/docs/porting-guides/5.x.x.html#bgp-is-now-configured-for-network-services-vrfs-even-if-evpn-is-not-part-of-the-address-families
+      url: https://avd.arista.com/5.x/docs/porting-guides/5.x.x.html#bgp-is-now-configured-for-network-services-vrfs-even-if-evpn-is-not-part-of-the-address-families
