@@ -9,7 +9,6 @@ keys:
   fabric_evpn_encapsulation:
     documentation_options:
       table: evpn-settings
-    description: Should be set to mpls for evpn-mpls scenario.
+    description: Should be set to mpls for evpn-mpls scenario. This overrides the evpn_encapsulation setting under node_type_keys.
     valid_values: ["vxlan", "mpls"]
-    default: "vxlan"
     type: str

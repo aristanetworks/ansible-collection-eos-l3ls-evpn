@@ -31,6 +31,19 @@ dependencies = [
 homepage = "https://avd.arista.com"
 repository = "https://github.com/aristanetworks/avd"
 
+[dependency-groups]
+pytest = [
+    "ansible-core<2.18",
+    "pytest",
+    "pytest-asyncio",
+    "PyYAML>=6.0.0",
+    "pydantic>=2.3.0",
+    "referencing>=0.35.0",
+]
+coverage = [
+    "coverage[toml]",
+]
+
 [project.optional-dependencies]
 ansible = [
     "ansible-core>=2.15.0,<2.18.0",
@@ -140,3 +153,9 @@ exclude_also = [
 # Extend the `pyproject.toml` file in the parent directory...
 # Should not be needed, but the ruff vscode extension does not seem to respect the ruff behavior of ignoring files without tool.ruff
 extend = "../pyproject.toml"
+
+[tool.pytest.ini_options]
+markers = [
+    "molecule_scenarios: Create test case fixtures 'molecule_host' or 'molecule_scenario' for the given molecule scenarios.",
+]
+asyncio_default_fixture_loop_scope = "function"

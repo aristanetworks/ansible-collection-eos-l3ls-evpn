@@ -1,0 +1,44 @@
+---
+### IGMP Snooping Enabled
+
+ip_igmp_snooping:
+  globally_enabled: true
+  robustness_variable: 2
+  restart_query_interval: 30
+  interface_restart_query: 500
+  fast_leave: true
+  querier:
+    enabled: true
+    address: 10.10.10.1
+    query_interval: 40
+    max_response_time: 10
+    last_member_query_interval: 5
+    last_member_query_count: 2
+    startup_query_interval: 20
+    startup_query_count: 2
+    version: 3
+  proxy: true
+  vlans:
+    - id: 23
+      enabled: true
+      querier:
+        enabled: true
+        address: 10.10.23.1
+        query_interval: 40
+        max_response_time: 10
+        last_member_query_interval: 5
+        last_member_query_count: 2
+        startup_query_interval: 20
+        startup_query_count: 2
+        version: 3
+      max_groups: 20
+      fast_leave: true
+      proxy: true
+    - id: 24
+      enabled: true
+    - id: 25
+      enabled: false
+      # Settings documented even if not enabled
+      fast_leave: false
+      proxy: false
+    - id: 26
