@@ -1,4 +1,4 @@
-hostname: fabric_numbering_id
+hostname: fabric_numbering_node_id
 is_deployed: true
 router_bgp:
   as: '65001'

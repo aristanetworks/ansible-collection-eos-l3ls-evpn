@@ -37,7 +37,7 @@ def get_pool(hostvars: dict, assignments: list[dict] | None = None) -> dict:
 
 
 def get_data(pools: list[dict] | None = None) -> dict:
-    return {"id_pools": pools or []}
+    return {"node_id_pools": pools or []}
 
 
 BASIC_DATA = get_data([get_pool(TESTHOST1, [get_assignment(TESTHOST1, 1)])])
