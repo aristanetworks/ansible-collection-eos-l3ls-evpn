@@ -20,7 +20,7 @@
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;l2_mru</samp>](## "port_channel_interfaces.[].l2_mru") | Integer |  |  | Min: 68<br>Max: 65535 | "l2_mru" should only be defined for platforms supporting the "l2 mru" CLI.<br> |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;vlans</samp>](## "port_channel_interfaces.[].vlans") <span style="color:red">deprecated</span> | String |  |  |  | List of switchport vlans as string.<br>For a trunk port this would be a range like "1-200,300".<br>For an access port this would be a single vlan "123".<br><span style="color:red">This key is deprecated. Support will be removed in AVD version 6.0.0. Use <samp>switchport.access_vlan or switchport.trunk.allowed_vlan</samp> instead.</span> |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;snmp_trap_link_change</samp>](## "port_channel_interfaces.[].snmp_trap_link_change") | Boolean |  |  |  |  |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;type</samp>](## "port_channel_interfaces.[].type") <span style="color:red">deprecated</span> | String |  |  | Valid Values:<br>- <code>routed</code><br>- <code>switched</code><br>- <code>l3dot1q</code><br>- <code>l2dot1q</code> | l3dot1q and l2dot1q are used for sub-interfaces. The parent interface should be defined as routed.<br>Interface will not be listed in device documentation, unless "type" is set.<br><span style="color:red">This key is deprecated. Support will be removed in AVD version 6.0.0. See [here](https://avd.arista.com/stable/docs/release-notes/5.x.x.html#removal-of-type-key-dependency-for-rendering-ethernetport-channel-interfaces-configuration-and-documentation) for details.</span> |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;type</samp>](## "port_channel_interfaces.[].type") <span style="color:red">deprecated</span> | String |  |  | Valid Values:<br>- <code>routed</code><br>- <code>switched</code><br>- <code>l3dot1q</code><br>- <code>l2dot1q</code> | l3dot1q and l2dot1q are used for sub-interfaces. The parent interface should be defined as routed.<br>Interface will not be listed in device documentation, unless "type" is set.<br><span style="color:red">This key is deprecated. Support will be removed in AVD version 6.0.0. See [here](https://avd.arista.com/5.x/docs/porting-guides/5.x.x.html#removal-of-type-key-dependency-for-rendering-ethernetport-channel-interfaces-configuration-and-documentation) for details.</span> |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;encapsulation_dot1q_vlan</samp>](## "port_channel_interfaces.[].encapsulation_dot1q_vlan") <span style="color:red">deprecated</span> | Integer |  |  |  | VLAN tag to configure on sub-interface.<span style="color:red">This key is deprecated. Support will be removed in AVD version 6.0.0. Use <samp>encapsulation_dot1q.vlan</samp> instead.</span> |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;encapsulation_dot1q</samp>](## "port_channel_interfaces.[].encapsulation_dot1q") | Dictionary |  |  |  | Warning: `encapsulation_dot1q` should not be combined with `ethernet_interfaces[].type: l3dot1q` or `ethernet_interfaces[].type: l2dot1q`. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;vlan</samp>](## "port_channel_interfaces.[].encapsulation_dot1q.vlan") | Integer | Required |  | Min: 1<br>Max: 4094 | VLAD ID. |
@@ -56,6 +56,10 @@
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;link_tracking_groups</samp>](## "port_channel_interfaces.[].link_tracking_groups") | List, items: Dictionary |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;name</samp>](## "port_channel_interfaces.[].link_tracking_groups.[].name") | String | Required, Unique |  |  | Group name. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;direction</samp>](## "port_channel_interfaces.[].link_tracking_groups.[].direction") | String |  |  | Valid Values:<br>- <code>upstream</code><br>- <code>downstream</code> |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;link_tracking</samp>](## "port_channel_interfaces.[].link_tracking") | Dictionary |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;direction</samp>](## "port_channel_interfaces.[].link_tracking.direction") | String |  |  | Valid Values:<br>- <code>upstream</code><br>- <code>downstream</code> |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;groups</samp>](## "port_channel_interfaces.[].link_tracking.groups") | List, items: String |  |  |  | Link state group(s) an interface belongs to. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;&lt;str&gt;</samp>](## "port_channel_interfaces.[].link_tracking.groups.[]") | String |  |  |  | Group names. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;phone</samp>](## "port_channel_interfaces.[].phone") <span style="color:red">deprecated</span> | Dictionary |  |  |  | <span style="color:red">This key is deprecated. Support will be removed in AVD version 6.0.0. Use <samp>switchport.phone</samp> instead.</span> |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;trunk</samp>](## "port_channel_interfaces.[].phone.trunk") | String |  |  | Valid Values:<br>- <code>tagged</code><br>- <code>untagged</code> |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;vlan</samp>](## "port_channel_interfaces.[].phone.vlan") | Integer |  |  | Min: 1<br>Max: 4094 |  |
@@ -361,7 +365,7 @@
         # Interface will not be listed in device documentation, unless "type" is set.
         # This key is deprecated.
         # Support will be removed in AVD version 6.0.0.
-        # See [here](https://avd.arista.com/stable/docs/release-notes/5.x.x.html#removal-of-type-key-dependency-for-rendering-ethernetport-channel-interfaces-configuration-and-documentation) for details.
+        # See [here](https://avd.arista.com/5.x/docs/porting-guides/5.x.x.html#removal-of-type-key-dependency-for-rendering-ethernetport-channel-interfaces-configuration-and-documentation) for details.
         type: <str; "routed" | "switched" | "l3dot1q" | "l2dot1q">
 
         # VLAN tag to configure on sub-interface.
@@ -469,6 +473,14 @@
             # Group name.
           - name: <str; required; unique>
             direction: <str; "upstream" | "downstream">
+        link_tracking:
+          direction: <str; "upstream" | "downstream">
+
+          # Link state group(s) an interface belongs to.
+          groups:
+
+              # Group names.
+            - <str>
         # This key is deprecated.
         # Support will be removed in AVD version 6.0.0.
         # Use <samp>switchport.phone</samp> instead.

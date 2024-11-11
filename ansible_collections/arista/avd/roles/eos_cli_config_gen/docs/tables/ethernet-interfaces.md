@@ -29,7 +29,7 @@
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;mac_timestamp</samp>](## "ethernet_interfaces.[].mac_timestamp") | String |  |  | Valid Values:<br>- <code>before-fcs</code><br>- <code>replace-fcs</code><br>- <code>header</code> | header: Insert timestamp in ethernet header. Supported on platforms like 7500E/R and 7280E/R.<br>before-fcs: Insert timestamp before fcs field. Supported on platforms like 7150.<br>replace-fcs: Replace fcs field with timestamp. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;trunk_groups</samp>](## "ethernet_interfaces.[].trunk_groups") <span style="color:red">deprecated</span> | List, items: String |  |  |  | <span style="color:red">This key is deprecated. Support will be removed in AVD version 6.0.0. Use <samp>switchport.trunk.groups</samp> instead.</span> |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;&lt;str&gt;</samp>](## "ethernet_interfaces.[].trunk_groups.[]") | String |  |  |  |  |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;type</samp>](## "ethernet_interfaces.[].type") <span style="color:red">deprecated</span> | String |  |  | Valid Values:<br>- <code>routed</code><br>- <code>switched</code><br>- <code>l3dot1q</code><br>- <code>l2dot1q</code><br>- <code>port-channel-member</code> | l3dot1q and l2dot1q are used for sub-interfaces. The parent interface should be defined as routed.<br>The `type = switched/routed` should not be combined with `switchport`.<br><span style="color:red">This key is deprecated. Support will be removed in AVD version 6.0.0. See [here](https://avd.arista.com/stable/docs/release-notes/5.x.x.html#removal-of-type-key-dependency-for-rendering-ethernetport-channel-interfaces-configuration-and-documentation) for details.</span> |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;type</samp>](## "ethernet_interfaces.[].type") <span style="color:red">deprecated</span> | String |  |  | Valid Values:<br>- <code>routed</code><br>- <code>switched</code><br>- <code>l3dot1q</code><br>- <code>l2dot1q</code><br>- <code>port-channel-member</code> | l3dot1q and l2dot1q are used for sub-interfaces. The parent interface should be defined as routed.<br>The `type = switched/routed` should not be combined with `switchport`.<br><span style="color:red">This key is deprecated. Support will be removed in AVD version 6.0.0. See [here](https://avd.arista.com/5.x/docs/porting-guides/5.x.x.html#removal-of-type-key-dependency-for-rendering-ethernetport-channel-interfaces-configuration-and-documentation) for details.</span> |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;snmp_trap_link_change</samp>](## "ethernet_interfaces.[].snmp_trap_link_change") | Boolean |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;address_locking</samp>](## "ethernet_interfaces.[].address_locking") | Dictionary |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ipv4</samp>](## "ethernet_interfaces.[].address_locking.ipv4") | Boolean |  |  |  | Enable address locking for IPv4. |
@@ -47,6 +47,10 @@
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;link_tracking_groups</samp>](## "ethernet_interfaces.[].link_tracking_groups") | List, items: Dictionary |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;name</samp>](## "ethernet_interfaces.[].link_tracking_groups.[].name") | String | Required, Unique |  |  | Group name. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;direction</samp>](## "ethernet_interfaces.[].link_tracking_groups.[].direction") | String |  |  | Valid Values:<br>- <code>upstream</code><br>- <code>downstream</code> |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;link_tracking</samp>](## "ethernet_interfaces.[].link_tracking") | Dictionary |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;direction</samp>](## "ethernet_interfaces.[].link_tracking.direction") | String |  |  | Valid Values:<br>- <code>upstream</code><br>- <code>downstream</code> |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;groups</samp>](## "ethernet_interfaces.[].link_tracking.groups") | List, items: String |  |  |  | Link state group(s) an interface belongs to. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;&lt;str&gt;</samp>](## "ethernet_interfaces.[].link_tracking.groups.[]") | String |  |  |  | Group names. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;evpn_ethernet_segment</samp>](## "ethernet_interfaces.[].evpn_ethernet_segment") | Dictionary |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;identifier</samp>](## "ethernet_interfaces.[].evpn_ethernet_segment.identifier") | String |  |  |  | EVPN Ethernet Segment Identifier (Type 1 format). |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;redundancy</samp>](## "ethernet_interfaces.[].evpn_ethernet_segment.redundancy") | String |  |  | Valid Values:<br>- <code>all-active</code><br>- <code>single-active</code> |  |
@@ -566,7 +570,7 @@
         # The `type = switched/routed` should not be combined with `switchport`.
         # This key is deprecated.
         # Support will be removed in AVD version 6.0.0.
-        # See [here](https://avd.arista.com/stable/docs/release-notes/5.x.x.html#removal-of-type-key-dependency-for-rendering-ethernetport-channel-interfaces-configuration-and-documentation) for details.
+        # See [here](https://avd.arista.com/5.x/docs/porting-guides/5.x.x.html#removal-of-type-key-dependency-for-rendering-ethernetport-channel-interfaces-configuration-and-documentation) for details.
         type: <str; "routed" | "switched" | "l3dot1q" | "l2dot1q" | "port-channel-member">
         snmp_trap_link_change: <bool>
         address_locking:
@@ -597,6 +601,14 @@
             # Group name.
           - name: <str; required; unique>
             direction: <str; "upstream" | "downstream">
+        link_tracking:
+          direction: <str; "upstream" | "downstream">
+
+          # Link state group(s) an interface belongs to.
+          groups:
+
+              # Group names.
+            - <str>
         evpn_ethernet_segment:
 
           # EVPN Ethernet Segment Identifier (Type 1 format).

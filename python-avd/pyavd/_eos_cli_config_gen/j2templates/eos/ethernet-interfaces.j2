@@ -907,6 +907,11 @@ interface {{ ethernet_interface.name }}
    link tracking group {{ link_tracking_group.name }} {{ link_tracking_group.direction }}
 {%         endif %}
 {%     endfor %}
+{%     if ethernet_interface.link_tracking.direction is arista.avd.defined and ethernet_interface.link_tracking.groups is arista.avd.defined %}
+{%         for group_name in ethernet_interface.link_tracking.groups %}
+   link tracking group {{ group_name }} {{ ethernet_interface.link_tracking.direction }}
+{%         endfor %}
+{%     endif %}
 {%     if ethernet_interface.vmtracer is arista.avd.defined(true) %}
    vmtracer vmware-esx
 {%     endif %}

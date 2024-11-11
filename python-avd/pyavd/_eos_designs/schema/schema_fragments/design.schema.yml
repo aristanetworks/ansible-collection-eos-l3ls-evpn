@@ -13,7 +13,7 @@ keys:
       warning: true
       removed: false
       remove_in_version: 6.0.0
-      url: https://avd.arista.com/stable/docs/release-notes/5.x.x.html#deprecation_of_design.type
+      url: https://avd.arista.com/5.x/docs/porting-guides/5.x.x.html#deprecation-of-designtype
     type: dict
     keys:
       type:
