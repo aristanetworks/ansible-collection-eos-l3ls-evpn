@@ -7,6 +7,7 @@ from functools import cached_property
 from typing import TYPE_CHECKING
 
 from .utils import UtilsMixin
+from pyavd._utils import strip_empties_from_dict
 
 if TYPE_CHECKING:
     from . import AvdStructuredConfigUnderlay
@@ -26,7 +27,8 @@ class MplsMixin(UtilsMixin):
             return None
 
         if self.shared_utils.underlay_ldp is True:
-            return {
+            return strip_empties_from_dict(
+                {
                 "ip": True,
                 "ldp": {
                     "interface_disabled_default": True,
@@ -35,5 +37,6 @@ class MplsMixin(UtilsMixin):
                     "transport_address_interface": "Loopback0",
                 },
             }
+            )
 
         return {"ip": True}

@@ -8,6 +8,7 @@ from typing import TYPE_CHECKING
 
 from pyavd._errors import AristaAvdInvalidInputsError
 from pyavd._utils import get
+from pyavd._utils import strip_empties_from_dict
 
 from .utils import UtilsMixin
 
@@ -76,7 +77,7 @@ class RouterIsisMixin(UtilsMixin):
                     router_isis["address_family_ipv6"]["fast_reroute_ti_lfa"] = {"mode": "node-protection"}
             router_isis["segment_routing_mpls"] = {"router_id": self.shared_utils.router_id, "enabled": True}
 
-        return router_isis
+        return strip_empties_from_dict(router_isis)
 
     @cached_property
     def _isis_net(self: AvdStructuredConfigUnderlay) -> str | None:

@@ -7,6 +7,7 @@ from functools import cached_property
 from typing import TYPE_CHECKING
 
 from .utils import UtilsMixin
+from pyavd._utils import strip_empties_from_dict
 
 if TYPE_CHECKING:
     from . import AvdStructuredConfigBase
@@ -22,10 +23,13 @@ class RouterGeneralMixin(UtilsMixin):
     @cached_property
     def router_general(self: AvdStructuredConfigBase) -> dict | None:
         if self.shared_utils.use_router_general_for_router_id is True:
-            return {
+            return strip_empties_from_dict(
+                {
                 "router_id": {
                     "ipv4": self.shared_utils.router_id,
                     "ipv6": self.shared_utils.ipv6_router_id,
                 }
             }
+            )
+
         return None
