@@ -1,0 +1,54 @@
+---
+### Routing - Traffic Engineering ###
+router_traffic_engineering:
+  # enabled is not enforced in AVD 4.x but will be in 5.x
+  enabled: true
+  router_id:
+    ipv4: 10.0.0.1
+    ipv6: 2001:beef:cafe::1
+  segment_routing:
+    colored_tunnel_rib: true
+    policy_endpoints:
+      - address: 1.2.3.4
+        colors:
+          - value: 70810
+            binding_sid: 970810
+            description: "SRTE POLICY FOR 1.2.3.4 COLOR 70810"
+            name: "SRTE-1.2.3.4-70810"
+            sbfd_remote_discriminator: 155.2.1.1
+            path_group:
+              - preference: 180
+                explicit_null: "ipv4 ipv6"
+                segment_list:
+                  - label_stack: "900002 900003 900005 900006"
+                    index: 200
+          - value: 80810
+            description: "SRTE POLICY FOR 1.2.3.4 COLOR 80810"
+            name: "SRTE-1.2.3.4-80810"
+            path_group:
+              - preference: 100
+                explicit_null: "none"
+                segment_list:
+                  - label_stack: "900002 900008 900007 900006"
+                    index: 100
+                    weight: 20
+      - address: 5.6.7.8
+        colors:
+          - value: 20320
+            binding_sid: 978320
+            sbfd_remote_discriminator: 2600599809
+            path_group:
+              - preference: 80
+                explicit_null: "ipv4"
+                segment_list:
+                  - label_stack: "900002 900003 900005 900006"
+                    index: 300
+                    weight: 120
+                  - label_stack: "900002 900004 900007 900006"
+                    index: 400
+                    weight: 220
+              - preference: 120
+                explicit_null: "ipv6"
+                segment_list:
+                  - label_stack: "900002 900008 900009 900006"
+                  - label_stack: "900002 900010 900011 900012"

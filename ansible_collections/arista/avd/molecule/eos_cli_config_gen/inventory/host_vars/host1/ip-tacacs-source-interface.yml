@@ -1,0 +1,10 @@
+---
+### IP TACACS source interface ###
+
+ip_tacacs_source_interfaces:
+  - vrf: default
+    name: loopback1
+  - vrf: TEST1
+    name: lo3
+  - vrf:
+    name: loopback10
