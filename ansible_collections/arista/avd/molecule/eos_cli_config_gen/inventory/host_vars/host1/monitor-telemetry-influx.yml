@@ -1,0 +1,30 @@
+---
+monitor_telemetry_influx:
+  vrf: test
+  destinations:
+    - name: test
+      database: test
+      data_retention_policy: test
+      url: https://influx_test.localhost
+      username: test
+      password: <password>
+    - name: test1
+      database: test1
+      data_retention_policy: test1
+      url: https://influx_test1.localhost
+      username: test1
+      password: 131112011F5D
+      password_type: "7"
+  source_group_standard_disabled: true
+  source_sockets:
+    - name: socket1
+      connection_limit: 100
+      url: unix:///var/run/example2.sock
+    - name: socket2
+      connection_limit: 22222
+      url: unix:///var/run/example3.sock
+  tags:
+    - name: tag1
+      value: value1
+    - name: tag2
+      value: value2
