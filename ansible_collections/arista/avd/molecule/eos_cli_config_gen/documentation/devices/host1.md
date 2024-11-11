@@ -1,4 +1,4 @@
-# host1
+# hostname-set-via-hostname-var
 
 ## Table of Contents
 
@@ -31,13 +31,20 @@
   - [System Boot Device Configuration](#system-boot-device-configuration)
 - [Monitoring](#monitoring)
   - [Custom daemons](#custom-daemons)
+  - [Event Handler](#event-handler)
 - [Interfaces](#interfaces)
+  - [Interface Profiles](#interface-profiles)
   - [DPS Interfaces](#dps-interfaces)
 - [Routing](#routing)
   - [IP Routing](#ip-routing)
   - [IPv6 Routing](#ipv6-routing)
   - [ARP](#arp)
+- [Multicast](#multicast)
+  - [IP IGMP Snooping](#ip-igmp-snooping)
 - [Filters](#filters)
+  - [IP Community-lists](#ip-community-lists)
+  - [IP Extended Community Lists](#ip-extended-community-lists)
+  - [IP Extended Community RegExp Lists](#ip-extended-community-regexp-lists)
   - [AS Path Lists](#as-path-lists)
 - [802.1X Port Security](#8021x-port-security)
   - [802.1X Summary](#8021x-summary)
@@ -50,8 +57,18 @@
   - [Categories](#categories)
   - [Field Sets](#field-sets)
   - [Router Application-Traffic-Recognition Device Configuration](#router-application-traffic-recognition-device-configuration)
+- [IP DHCP Relay](#ip-dhcp-relay)
+  - [IP DHCP Relay Summary](#ip-dhcp-relay-summary)
+  - [IP DHCP Relay Device Configuration](#ip-dhcp-relay-device-configuration)
+- [IP DHCP Snooping](#ip-dhcp-snooping)
+  - [IP DHCP Snooping Device Configuration](#ip-dhcp-snooping-device-configuration)
+- [Errdisable](#errdisable)
+  - [Errdisable Summary](#errdisable-summary)
 - [Quality Of Service](#quality-of-service)
   - [QOS Class Maps](#qos-class-maps)
+- [Maintenance Mode](#maintenance-mode)
+  - [BGP Groups](#bgp-groups)
+  - [Interface Groups](#interface-groups)
 
 ## Management
 
@@ -644,7 +661,147 @@ daemon random
    shutdown
 ```
 
+### Event Handler
+
+#### Event Handler Summary
+
+| Handler | Actions | Trigger | Trigger Config |
+| ------- | ------- | ------- | -------------- |
+| CONFIG_VERSIONING | bash <code>FN=/mnt/flash/startup-config; LFN="`ls -1 $FN.*-* \| tail -n 1`"; if [ -z "$LFN" -o -n "`diff -I 'last modified' $FN $LFN`" ]; then cp $FN $FN.`date +%Y%m%d-%H%M%S`; ls -1r $FN.*-* \| tail -n +11 \| xargs -I % rm %; fi</code> | on-startup-config | - |
+| trigger-on-boot | bash <code>if [ 15 -gt 10 ]\nthen\n  echo "a is greater than 10"\nfi</code><br>increment device health metric Metric1 | on-boot | - |
+| trigger-on-counters | log | on-counters | poll interval 10<br>condition ( Arad*.IptCrcErrCnt.delta > 100 ) and ( Arad*.UcFifoFullDrop.delta > 100 )<br>granularity per-source |
+| trigger-on-counters2 | - | on-counters | condition ( Arad*.IptCrcErrCnt.delta > 100 ) and ( Arad*.UcFifoFullDrop.delta > 100 )<br>granularity per-source |
+| trigger-on-counters3 | - | on-counters | - |
+| trigger-on-intf | - | on-intf | trigger on-intf Ethernet4 operstatus ip ip6 |
+| trigger-on-intf2 | - | on-intf | - |
+| trigger-on-intf3 | - | on-intf | - |
+| trigger-on-intf4 | - | on-intf | trigger on-intf Ethernet4 ip |
+| trigger-on-intf5 | - | on-intf | trigger on-intf Ethernet5 ip6 |
+| trigger-on-intf6 | - | on-intf | trigger on-intf Ethernet6 operstatus |
+| trigger-on-logging | increment device health metric Metric2 | on-logging | poll interval 10<br>regex ab* |
+| trigger-on-logging2 | - | on-logging | regex ab* |
+| trigger-on-logging3 | - | on-logging | - |
+| trigger-on-maintenance1 | - | on-maintenance | trigger on-maintenance enter interface Management3 after stage linkdown |
+| trigger-on-maintenance2 | bash <code>echo "on-maintenance"</code> | on-maintenance | trigger on-maintenance exit unit unit1 before stage bgp |
+| trigger-on-maintenance3 | bash <code>echo "on-maintenance"</code> | on-maintenance | trigger on-maintenance enter bgp 10.0.0.2 vrf vrf1 all |
+| trigger-on-maintenance4 | - | on-maintenance | - |
+| trigger-on-maintenance5 | - | on-maintenance | - |
+| trigger-vm-tracer | bash <code>echo "vm-tracer vm"</code> | vm-tracer vm | - |
+| trigger-vm-tracer2 | bash <code>echo "vm-tracer vm"\nEOF</code> | vm-tracer vm | - |
+| without-trigger-key | - | - | - |
+
+#### Event Handler Device Configuration
+
+```eos
+!
+event-handler CONFIG_VERSIONING
+   trigger on-startup-config
+   action bash FN=/mnt/flash/startup-config; LFN="`ls -1 $FN.*-* | tail -n 1`"; if [ -z "$LFN" -o -n "`diff -I 'last modified' $FN $LFN`" ]; then cp $FN $FN.`date +%Y%m%d-%H%M%S`; ls -1r $FN.*-* | tail -n +11 | xargs -I % rm %; fi
+   delay 0
+!
+event-handler trigger-on-boot
+   trigger on-boot
+   action bash
+      if [ 15 -gt 10 ]
+      then
+        echo "a is greater than 10"
+      fi
+      EOF
+   action log
+   action increment device-health metric Metric1
+!
+event-handler trigger-on-counters
+   action log
+   trigger on-counters
+      poll interval 10
+      condition ( Arad*.IptCrcErrCnt.delta > 100 ) and ( Arad*.UcFifoFullDrop.delta > 100 )
+      granularity per-source
+!
+event-handler trigger-on-counters2
+   trigger on-counters
+      condition ( Arad*.IptCrcErrCnt.delta > 100 ) and ( Arad*.UcFifoFullDrop.delta > 100 )
+      granularity per-source
+!
+event-handler trigger-on-counters3
+   trigger on-counters
+!
+event-handler trigger-on-intf
+   trigger on-intf Ethernet4 operstatus ip ip6
+!
+event-handler trigger-on-intf2
+!
+event-handler trigger-on-intf3
+!
+event-handler trigger-on-intf4
+   trigger on-intf Ethernet4 ip
+!
+event-handler trigger-on-intf5
+   trigger on-intf Ethernet5 ip6
+!
+event-handler trigger-on-intf6
+   trigger on-intf Ethernet6 operstatus
+!
+event-handler trigger-on-logging
+   action increment device-health metric Metric2
+   trigger on-logging
+      poll interval 10
+      regex ab*
+!
+event-handler trigger-on-logging2
+   trigger on-logging
+      regex ab*
+!
+event-handler trigger-on-logging3
+   trigger on-logging
+!
+event-handler trigger-on-maintenance1
+   trigger on-maintenance enter interface Management3 after stage linkdown
+!
+event-handler trigger-on-maintenance2
+   trigger on-maintenance exit unit unit1 before stage bgp
+   action bash echo "on-maintenance"
+!
+event-handler trigger-on-maintenance3
+   trigger on-maintenance enter bgp 10.0.0.2 vrf vrf1 all
+   action bash echo "on-maintenance"
+!
+event-handler trigger-on-maintenance4
+!
+event-handler trigger-on-maintenance5
+!
+event-handler trigger-vm-tracer
+   trigger vm-tracer vm
+   action bash echo "vm-tracer vm"
+!
+event-handler trigger-vm-tracer2
+   trigger vm-tracer vm
+   action bash echo "vm-tracer vm"\nEOF
+!
+event-handler without-trigger-key
+```
+
 ## Interfaces
+
+### Interface Profiles
+
+#### Interface Profiles Summary
+
+- TEST-PROFILE-1
+- TEST-PROFILE-2
+
+#### Interface Profiles Device Configuration
+
+```eos
+!
+interface profile TEST-PROFILE-1
+   command description Molecule
+   command no switchport
+   command no lldp transmit
+!
+interface profile TEST-PROFILE-2
+   command mtu 9214
+   command ptp enable
+```
 
 ### DPS Interfaces
 
@@ -738,7 +895,137 @@ arp 43.42.42.42 DEAD.BEEF.CAFE arpa
 arp vrf defaulu 42.42.42.42 DEAD.BEEF.CAFE arpa
 ```
 
+## Multicast
+
+### IP IGMP Snooping
+
+#### IP IGMP Snooping Summary
+
+| IGMP Snooping | Fast Leave | Interface Restart Query | Proxy | Restart Query Interval | Robustness Variable |
+| ------------- | ---------- | ----------------------- | ----- | ---------------------- | ------------------- |
+| Enabled | True | 500 | True | 30 | 2 |
+
+| Querier Enabled | IP Address | Query Interval | Max Response Time | Last Member Query Interval | Last Member Query Count | Startup Query Interval | Startup Query Count | Version |
+| --------------- | ---------- | -------------- | ----------------- | -------------------------- | ----------------------- | ---------------------- | ------------------- | ------- |
+| True | 10.10.10.1 | 40 | 10 | 5 | 2 | 20 | 2 | 3 |
+
+##### IP IGMP Snooping Vlan Summary
+
+| Vlan | IGMP Snooping | Fast Leave | Max Groups | Proxy |
+| ---- | ------------- | ---------- | ---------- | ----- |
+| 23 | True | True | 20 | True |
+| 24 | True | - | - | - |
+| 25 | False | False | - | False |
+| 26 | - | - | - | - |
+
+| Vlan | Querier Enabled | IP Address | Query Interval | Max Response Time | Last Member Query Interval | Last Member Query Count | Startup Query Interval | Startup Query Count | Version |
+| ---- | --------------- | ---------- | -------------- | ----------------- | -------------------------- | ----------------------- | ---------------------- | ------------------- | ------- |
+| 23 | True | 10.10.23.1 | 40 | 10 | 5 | 2 | 20 | 2 | 3 |
+
+#### IP IGMP Snooping Device Configuration
+
+```eos
+!
+ip igmp snooping robustness-variable 2
+ip igmp snooping restart query-interval 30
+ip igmp snooping interface-restart-query 500
+ip igmp snooping fast-leave
+ip igmp snooping vlan 23
+ip igmp snooping vlan 23 querier
+ip igmp snooping vlan 23 querier address 10.10.23.1
+ip igmp snooping vlan 23 querier query-interval 40
+ip igmp snooping vlan 23 querier max-response-time 10
+ip igmp snooping vlan 23 querier last-member-query-interval 5
+ip igmp snooping vlan 23 querier last-member-query-count 2
+ip igmp snooping vlan 23 querier startup-query-interval 20
+ip igmp snooping vlan 23 querier startup-query-count 2
+ip igmp snooping vlan 23 querier version 3
+ip igmp snooping vlan 23 max-groups 20
+ip igmp snooping vlan 23 fast-leave
+ip igmp snooping vlan 24
+no ip igmp snooping vlan 25
+no ip igmp snooping vlan 25 fast-leave
+ip igmp snooping querier
+ip igmp snooping querier address 10.10.10.1
+ip igmp snooping querier query-interval 40
+ip igmp snooping querier max-response-time 10
+ip igmp snooping querier last-member-query-interval 5
+ip igmp snooping querier last-member-query-count 2
+ip igmp snooping querier startup-query-interval 20
+ip igmp snooping querier startup-query-count 2
+ip igmp snooping querier version 3
+!
+ip igmp snooping proxy
+ip igmp snooping vlan 23 proxy
+no ip igmp snooping vlan 25 proxy
+```
+
 ## Filters
+
+### IP Community-lists
+
+#### IP Community-lists Summary
+
+| Name | Action | Communities / Regexp |
+| ---- | ------ | -------------------- |
+| IP_CL_TEST1 | permit | 1001:1001, 1002:1002 |
+| IP_CL_TEST1 | deny | 1010:1010 |
+| IP_CL_TEST1 | permit | 20:* |
+| IP_CL_TEST2 | deny | 1003:1003 |
+| IP_RE_TEST1 | permit | ^$ |
+| IP_RE_TEST2 | deny | ^100 |
+
+#### IP Community-lists Device Configuration
+
+```eos
+!
+ip community-list IP_CL_TEST1 permit 1001:1001 1002:1002
+ip community-list IP_CL_TEST1 deny 1010:1010
+ip community-list regexp IP_CL_TEST1 permit 20:*
+ip community-list IP_CL_TEST2 deny 1003:1003
+ip community-list regexp IP_RE_TEST1 permit ^$
+ip community-list regexp IP_RE_TEST2 deny ^100
+```
+
+### IP Extended Community Lists
+
+#### IP Extended Community Lists Summary
+
+| List Name | Type | Extended Communities |
+| --------- | ---- | -------------------- |
+| TEST1 | permit | 65000:65000 |
+| TEST1 | deny | 65002:65002 |
+| TEST2 | deny | 65001:65001 |
+
+#### IP Extended Community Lists Device Configuration
+
+```eos
+!
+ip extcommunity-list TEST1 permit 65000:65000
+ip extcommunity-list TEST1 deny 65002:65002
+!
+ip extcommunity-list TEST2 deny 65001:65001
+```
+
+### IP Extended Community RegExp Lists
+
+#### IP Extended Community RegExp Lists Summary
+
+| List Name | Type | Regular Expression |
+| --------- | ---- | ------------------ |
+| TEST1 | permit | `65[0-9]{3}:[0-9]+` |
+| TEST1 | deny | `.*` |
+| TEST2 | deny | `6500[0-1]:650[0-9][0-9]` |
+
+#### IP Extended Community RegExp Lists Device Configuration
+
+```eos
+!
+ip extcommunity-list regexp TEST1 permit 65[0-9]{3}:[0-9]+
+ip extcommunity-list regexp TEST1 deny .*
+!
+ip extcommunity-list regexp TEST2 deny 6500[0-1]:650[0-9][0-9]
+```
 
 ### AS Path Lists
 
@@ -1012,6 +1299,112 @@ application traffic recognition
       5700-5800, 6500-6600
 ```
 
+## IP DHCP Relay
+
+### IP DHCP Relay Summary
+
+IP DHCP Relay Option 82 is enabled.
+
+DhcpRelay Agent is in always-on mode.
+
+Forwarding requests with secondary IP addresses in the "giaddr" field is allowed.
+
+### IP DHCP Relay Device Configuration
+
+```eos
+!
+ip dhcp relay information option
+ip dhcp relay always-on
+ip dhcp relay all-subnets default
+```
+
+## IP DHCP Snooping
+
+IP DHCP Snooping is enabled
+
+IP DHCP Snooping Bridging is enabled
+
+IP DHCP Snooping Insertion of Option 82 is enabled
+
+IP DHCP Snooping Circuit-ID Suboption: 10
+
+IP DHCP Snooping Circuit-ID Format: %h:%p
+
+IP DHCP Snooping enabled VLAN: 10,20,500,1000-2000
+
+### IP DHCP Snooping Device Configuration
+
+```eos
+!
+ip dhcp snooping bridging
+ip dhcp snooping information option
+ip dhcp snooping information option circuit-id type 10 format %h:%p
+ip dhcp snooping vlan 10,20,500,1000-2000
+```
+
+## Errdisable
+
+### Errdisable Summary
+
+|  Detect Cause | Enabled |
+| ------------- | ------- |
+| acl | True |
+| arp-inspection | True |
+| dot1x | True |
+| link-change | True |
+| tapagg | True |
+| xcvr-misconfigured | True |
+| xcvr-overheat | True |
+| xcvr-power-unsupported | True |
+
+|  Detect Cause | Enabled | Interval |
+| ------------- | ------- | -------- |
+| arp-inspection | True | 300 |
+| bpduguard | True | 300 |
+| dot1x | True | 300 |
+| hitless-reload-down | True | 300 |
+| lacp-rate-limit | True | 300 |
+| link-flap | True | 300 |
+| no-internal-vlan | True | 300 |
+| portchannelguard | True | 300 |
+| portsec | True | 300 |
+| speed-misconfigured | True | 300 |
+| tapagg | True | 300 |
+| uplink-failure-detection | True | 300 |
+| xcvr-misconfigured | True | 300 |
+| xcvr-overheat | True | 300 |
+| xcvr-power-unsupported | True | 300 |
+| xcvr-unsupported | True | 300 |
+
+```eos
+!
+errdisable detect cause acl
+errdisable detect cause arp-inspection
+errdisable detect cause dot1x
+errdisable detect cause link-change
+errdisable detect cause tapagg
+errdisable detect cause xcvr-misconfigured
+errdisable detect cause xcvr-overheat
+errdisable detect cause xcvr-power-unsupported
+errdisable recovery cause arp-inspection
+errdisable recovery cause bpduguard
+errdisable recovery cause dot1x
+errdisable recovery cause hitless-reload-down
+errdisable recovery cause lacp-rate-limit
+errdisable recovery cause link-flap
+errdisable recovery cause no-internal-vlan
+errdisable recovery cause portchannelguard
+errdisable recovery cause portsec
+errdisable recovery cause speed-misconfigured
+errdisable recovery cause tapagg
+errdisable recovery cause uplink-failure-detection
+errdisable recovery cause xcvr-misconfigured
+errdisable recovery cause xcvr-overheat
+errdisable recovery cause xcvr-power-unsupported
+errdisable recovery cause xcvr-unsupported
+errdisable recovery interval 300
+```
+
 ## Quality Of Service
 
 ### QOS Class Maps
@@ -1056,4 +1449,65 @@ class-map type pbr match-any CM_PBR_INCLUDE
    match ip access-group ACL_PBR_INCLUDE
 !
 class-map type pbr match-any CM_PBR_WITHOUT_ACCESS_GROUP
+```
+
+## Maintenance Mode
+
+### BGP Groups
+
+#### BGP Groups Summary
+
+| BGP group | VRF Name | Neighbors | BGP maintenance profiles |
+| --------- | -------- | --------- | ------------------------ |
+| bar | red | peer-group-baz | downlink-neighbors |
+| foo | - | 169.254.1.1<br>fe80::1 | ixp<br>uplink-neighbors |
+| without-neighbors-key | red | - | Default |
+
+#### BGP Groups Device Configuration
+
+```eos
+!
+group bgp bar
+   vrf red
+   neighbor peer-group-baz
+   maintenance profile bgp downlink-neighbors
+!
+group bgp foo
+   neighbor 169.254.1.1
+   neighbor fe80::1
+   maintenance profile bgp ixp
+   maintenance profile bgp uplink-neighbors
+!
+group bgp without-neighbors-key
+   vrf red
+```
+
+### Interface Groups
+
+#### Interface Groups Summary
+
+| Interface Group | Interfaces | Interface maintenance profile | BGP maintenance profiles |
+| --------------- | ---------- | ----------------------------- | ------------------------ |
+| QSFP_Interface_Group | Ethernet1,5 | uplink-interfaces | Default |
+| QSFP_Interface_Group1 | Ethernet1,5 | Default | Default |
+| SFP_Interface_Group | Ethernet10-20<br>Ethernet30-48 | downlink-interfaces<br>ix-interfaces | downlink-neighbors<br>local-ix |
+
+#### Interface Groups Device Configuration
+
+```eos
+!
+group interface QSFP_Interface_Group
+   interface Ethernet1,5
+   maintenance profile interface uplink-interfaces
+!
+group interface QSFP_Interface_Group1
+   interface Ethernet1,5
+!
+group interface SFP_Interface_Group
+   interface Ethernet10-20
+   interface Ethernet30-48
+   maintenance profile bgp downlink-neighbors
+   maintenance profile bgp local-ix
+   maintenance profile interface downlink-interfaces
+   maintenance profile interface ix-interfaces
 ```
