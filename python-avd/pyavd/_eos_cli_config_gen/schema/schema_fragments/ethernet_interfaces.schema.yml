@@ -195,6 +195,18 @@ keys:
               direction:
                 type: str
                 valid_values: ["upstream", "downstream"]
+        link_tracking:
+          type: dict
+          keys:
+            direction:
+              type: str
+              valid_values: ["upstream", "downstream"]
+            groups:
+              type: list
+              description: Link state group(s) an interface belongs to.
+              items:
+                type: str
+                description: Group names.
         evpn_ethernet_segment:
           type: dict
           keys:

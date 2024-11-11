@@ -6,6 +6,9 @@ port_channel_interfaces:
     link_tracking_groups:
       - name: EVPN_MH_ES1
         direction: downstream
+    link_tracking:
+      direction: downstream
+      groups: [EVPN_MH_ES3, EVPN_MH_ES4]
     switchport:
       enabled: true
       mode: trunk
