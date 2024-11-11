@@ -578,9 +578,9 @@ vlan_interfaces:
         ipv4:
           address: 192.0.2.1
         tracked_object:
-          - name: ID1-TrackedObjectDecrement
+          - name: ID1TrackedObjectDecrement
             decrement: 5
-          - name: ID1-TrackedObjectShutdown
+          - name: ID1TrackedObjectShutdown
             shutdown: true
       - id: 2
         preempt:
@@ -589,9 +589,9 @@ vlan_interfaces:
         ipv6:
           address: 2001:db8:333::1
         tracked_object:
-          - name: ID2-TrackedObjectDecrement
+          - name: ID2TrackedObjectDecrement
             decrement: 10
-          - name: ID2-TrackedObjectShutdown
+          - name: ID2TrackedObjectShutdown
             shutdown: true
       - id: 3
         timers:
