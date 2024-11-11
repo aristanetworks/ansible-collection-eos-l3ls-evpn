@@ -399,7 +399,7 @@ router_bgp:
           send: backup
         default_route:
           enabled: true
-          rcf: DEFAULT_ROUTE_RM
+          route_map: DEFAULT_ROUTE_RM
       - name: ADDITIONAL-PATH-PG-3
         activate: true
         additional_paths:
@@ -461,7 +461,6 @@ router_bgp:
     bgp:
       redistribute_internal: false
       additional_paths:
-        install_ecmp_primary: true
         receive: true
         install: true
         send: ecmp
@@ -471,6 +470,8 @@ router_bgp:
         activate: true
         route_map_in: RM-HIDE-AS-PATH
         route_map_out: RM-HIDE-AS-PATH
+        additional_paths:
+          send: disabled
       - name: TEST_RCF
         rcf_in: Address_Family_IPV4_In()
         rcf_out: Address_Family_IPV4_Out()
@@ -531,10 +532,20 @@ router_bgp:
           prefix_list: PL1
       - ip_address: 10.2.3.8
         rcf_in: Address_Family_IPV4_In()
+        additional_paths:
+          send: disabled
       - ip_address: 10.2.3.9
         rcf_out: Address_Family_IPV4_Out()
+        additional_paths:
+          send: ecmp
+          send_limit: 4
+        default_originate:
+          always: true
+          route_map: Address_Family_IPV4
       - ip_address: 192.168.66.21
         activate: false
+        additional_paths:
+          send: any
     redistribute:
       attached_host:
         enabled: true
@@ -732,6 +743,8 @@ router_bgp:
         direction_in:
           action: deny
           include_community_list: true
+          include_prefix_list: true
+          include_sub_route_map: true
       next_hop_unchanged: true
     next_hop_resolution_ribs:
       - rib_type: "tunnel-rib-colored"
@@ -739,6 +752,10 @@ router_bgp:
         rib_name: "test-rib"
       - rib_type: "system-connected"
     label_local_termination: implicit-null
+    lfib_entry_installation_skipped: true
+    next_hops:
+      - ip_address: 192,51.100.1
+        lfib_backup_ip_forwarding: true
     networks:
       - prefix: 203.0.113.0/25
         route_map: RM-TEST
@@ -753,19 +770,75 @@ router_bgp:
         additional_paths:
           receive: true
           send: ecmp
+        maximum_advertised_routes: 120000
+        maximum_advertised_routes_warning_limit: 1000
+        next_hop_self: true
         graceful_restart: true
         maximum_advertised_routes: 0
         rcf_in: RCF_TEST(ARGS)
+        rcf_out: RCF_TEST_OUT()
+        next_hop_self_v4_mapped_v6_source_interface: Ethernet1
       - ip_address: 198.51.100.2
+        graceful_restart: true
         aigp_session: true
         multi_path: true
+        missing_policy:
+          direction_in:
+            action: deny
+            include_community_list: true
+            include_prefix_list: true
+            include_sub_route_map: true
+        additional_paths:
+          send: any
+        next_hop_self_source_interface: Ethernet2
         graceful_restart_helper:
           stale_route_map: RM_STALE
         next_hop_unchanged: true
+        route_map_in: RM_IN_TEST
         route_map_out: RM_OUT_TEST
+      - ip_address: 192.168.66.22
+        additional_paths:
+          send: disabled
+      - ip_address: 192.168.66.21
+        additional_paths:
+          send: limit
+          send_limit: 11
     peer_groups:
       - name: PG-BGP-LU
         activate: true
+        route_map_in: RM_BGP_LU_IN
+        route_map_out: RM_BGP_LU_OUT
+        additional_paths:
+          send: ecmp
+          send_limit: 10
+        next_hop_unchanged: true
+        maximum_advertised_routes: 120000
+        missing_policy:
+          direction_in:
+            action: deny
+            include_community_list: true
+            include_prefix_list: true
+            include_sub_route_map: true
+        aigp_session: true
+        multi_path: true
+      - name: PG-BGP-LU1
+        rcf_in: RCF_BGP_LU_IN
+        rcf_out: RCF_BGP_LU_OUT
+        next_hop_self: true
+        additional_paths:
+          receive: true
+          send: disabled
+        graceful_restart: true
+        graceful_restart_helper:
+          stale_route_map: RM_BGP_LU_TEST
+      - name: PG-BGP-LU2
+        additional_paths:
+          send: any
+        next_hop_self_v4_mapped_v6_source_interface: Ethernet1
+      - name: PG-BGP-LU3
+        additional_paths:
+          send: limit
+        next_hop_self_source_interface: Ethernet2
   address_family_link_state:
     bgp:
       missing_policy:

@@ -330,6 +330,8 @@ router bgp 65101
       host-flap detection expiry timeout 20 seconds
    !
    address-family ipv4
+      bgp additional-paths install ecmp-primary
+      no bgp additional-paths send
       redistribute bgp leaked route-map RM_BGP_EVPN_IPV4
       redistribute connected route-map RM_BGP_EVPN_IPV4
       redistribute dynamic rcf RCF_BGP_EVPN_IPV4()

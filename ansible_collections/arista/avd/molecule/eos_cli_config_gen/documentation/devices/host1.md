@@ -3778,20 +3778,26 @@ ASN Notation: asdot
 | -------- | ----- |
 | Update wait-for-convergence | Enabled |
 | Next-hop Unchanged | True |
+| LFIB entry installation skipped | True |
 | Label local-termination | implicit-null |
 
 ##### IPv4 BGP-LU Peer-groups
 
 | Peer-group | Activate | Route-map In | Route-map Out | RCF In | RCF Out |
 | ---------- | -------- | ------------ | ------------- | ------ | ------- |
-| PG-BGP-LU | True | - | - | - | - |
+| PG-BGP-LU | True | RM_BGP_LU_IN | RM_BGP_LU_OUT | - | - |
+| PG-BGP-LU1 | False | - | - | RCF_BGP_LU_IN | RCF_BGP_LU_OUT |
+| PG-BGP-LU2 | False | - | - | - | - |
+| PG-BGP-LU3 | False | - | - | - | - |
 
 ##### IPv4 BGP-LU Neighbors
 
 | Neighbor | Activate | Route-map In | Route-map Out | RCF In | RCF Out |
 | -------- | -------- | ------------ | ------------- | ------ | ------- |
-| 198.51.100.1 | True | - | - | RCF_TEST(ARGS) | - |
-| 198.51.100.2 | False | - | RM_OUT_TEST | - | - |
+| 192.168.66.21 | False | - | - | - | - |
+| 192.168.66.22 | False | - | - | - | - |
+| 198.51.100.1 | True | - | - | RCF_TEST(ARGS) | RCF_TEST_OUT() |
+| 198.51.100.2 | False | RM_IN_TEST | RM_OUT_TEST | - | - |
 
 #### Router BGP IPv4 SR-TE Address Family
 
@@ -4321,7 +4327,7 @@ router bgp 65101
       neighbor ADDITIONAL-PATH-PG-1 default-route rcf DEFAULT_ROUTE_RCF()
       neighbor ADDITIONAL-PATH-PG-1 additional-paths send any
       neighbor ADDITIONAL-PATH-PG-2 activate
-      neighbor ADDITIONAL-PATH-PG-2 default-route rcf DEFAULT_ROUTE_RM
+      neighbor ADDITIONAL-PATH-PG-2 default-route route-map DEFAULT_ROUTE_RM
       neighbor ADDITIONAL-PATH-PG-2 additional-paths send backup
       neighbor ADDITIONAL-PATH-PG-3 activate
       neighbor ADDITIONAL-PATH-PG-3 additional-paths send ecmp
@@ -4412,6 +4418,7 @@ router bgp 65101
       neighbor IPV4-UNDERLAY activate
       neighbor IPV4-UNDERLAY route-map RM-HIDE-AS-PATH in
       neighbor IPV4-UNDERLAY route-map RM-HIDE-AS-PATH out
+      no neighbor IPV4-UNDERLAY additional-paths send
       neighbor IPv4-UNDERLAY-PEERS activate
       neighbor MLAG-IPv4-UNDERLAY-PEER activate
       neighbor OBS_WAN activate
@@ -4427,7 +4434,10 @@ router bgp 65101
       neighbor WELCOME_ROUTERS activate
       neighbor WELCOME_ROUTERS additional-paths send any
       neighbor 10.2.3.8 rcf in Address_Family_IPV4_In()
+      no neighbor 10.2.3.8 additional-paths send
       neighbor 10.2.3.9 rcf out Address_Family_IPV4_Out()
+      neighbor 10.2.3.9 default-originate route-map Address_Family_IPV4 always
+      neighbor 10.2.3.9 additional-paths send ecmp limit 4
       neighbor 192.0.2.1 additional-paths receive
       neighbor 192.0.2.1 route-map Address_Family_IPV4_In in
       neighbor 192.0.2.1 route-map Address_Family_IPV4_Out out
@@ -4435,6 +4445,7 @@ router bgp 65101
       neighbor 192.0.2.1 prefix-list PL-FOO-v4-OUT out
       neighbor 192.0.2.1 additional-paths send limit 20 prefix-list PL1
       no neighbor 192.168.66.21 activate
+      neighbor 192.168.66.21 additional-paths send any
       network 10.0.0.0/8
       network 172.16.0.0/12
       network 192.168.0.0/16 route-map RM-FOO-MATCH
@@ -4456,26 +4467,61 @@ router bgp 65101
    !
    address-family ipv4 labeled-unicast
       update wait-for-convergence
-      bgp missing-policy include community-list direction in action deny
+      bgp missing-policy include community-list prefix-list sub-route-map direction in action deny
       bgp additional-paths receive
       bgp additional-paths send ecmp limit 20
       bgp next-hop-unchanged
       next-hop resolution ribs tunnel-rib colored system-colored-tunnel-rib tunnel-rib test-rib system-connected
       neighbor PG-BGP-LU activate
+      neighbor PG-BGP-LU route-map RM_BGP_LU_IN in
+      neighbor PG-BGP-LU route-map RM_BGP_LU_OUT out
+      neighbor PG-BGP-LU additional-paths send ecmp limit 10
+      neighbor PG-BGP-LU next-hop-unchanged
+      neighbor PG-BGP-LU maximum-advertised-routes 120000
+      neighbor PG-BGP-LU missing-policy include community-list prefix-list sub-route-map direction in action deny
+      neighbor PG-BGP-LU aigp-session
+      neighbor PG-BGP-LU multi-path
+      no neighbor PG-BGP-LU1 activate
+      neighbor PG-BGP-LU1 additional-paths receive
+      neighbor PG-BGP-LU1 graceful-restart
+      neighbor PG-BGP-LU1 graceful-restart-helper stale-route route-map RM_BGP_LU_TEST
+      neighbor PG-BGP-LU1 rcf in RCF_BGP_LU_IN
+      neighbor PG-BGP-LU1 rcf out RCF_BGP_LU_OUT
+      no neighbor PG-BGP-LU1 additional-paths send
+      neighbor PG-BGP-LU1 next-hop-self
+      no neighbor PG-BGP-LU2 activate
+      neighbor PG-BGP-LU2 additional-paths send any
+      neighbor PG-BGP-LU2 next-hop-self v4-mapped-v6 source-interface Ethernet1
+      no neighbor PG-BGP-LU3 activate
+      neighbor PG-BGP-LU3 next-hop-self source-interface Ethernet2
+      no neighbor 192.168.66.21 activate
+      neighbor 192.168.66.21 additional-paths send limit 11
+      no neighbor 192.168.66.22 activate
+      no neighbor 192.168.66.22 additional-paths send
       neighbor 198.51.100.1 activate
       neighbor 198.51.100.1 additional-paths receive
       neighbor 198.51.100.1 graceful-restart
       neighbor 198.51.100.1 rcf in RCF_TEST(ARGS)
+      neighbor 198.51.100.1 rcf out RCF_TEST_OUT()
       neighbor 198.51.100.1 additional-paths send ecmp
-      neighbor 198.51.100.1 maximum-advertised-routes 0
+      neighbor 198.51.100.1 next-hop-self
+      neighbor 198.51.100.1 next-hop-self v4-mapped-v6 source-interface Ethernet1
+      neighbor 198.51.100.1 maximum-advertised-routes 0 warning-limit 1000
       no neighbor 198.51.100.2 activate
+      neighbor 198.51.100.2 graceful-restart
       neighbor 198.51.100.2 graceful-restart-helper stale-route route-map RM_STALE
+      neighbor 198.51.100.2 route-map RM_IN_TEST in
       neighbor 198.51.100.2 route-map RM_OUT_TEST out
+      neighbor 198.51.100.2 additional-paths send any
       neighbor 198.51.100.2 next-hop-unchanged
+      neighbor 198.51.100.2 next-hop-self source-interface Ethernet2
+      neighbor 198.51.100.2 missing-policy  include community-list prefix-list sub-route-map direction in action deny
       neighbor 198.51.100.2 aigp-session
       neighbor 198.51.100.2 multi-path
       network 203.0.113.0/25 route-map RM-TEST
       network 203.0.113.128/25
+      next-hop 192,51.100.1 originate lfib-backup ip-forwarding
+      lfib entry installation skipped
       label local-termination implicit-null
       tunnel source-protocol isis segment-routing
       tunnel source-protocol ldp rcf TEST(ARGS)

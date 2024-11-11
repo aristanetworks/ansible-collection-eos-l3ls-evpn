@@ -63,6 +63,10 @@ router_bgp:
       - name: MLAG-IPv4-UNDERLAY-PEER
         activate: false
   address_family_ipv4:
+    bgp:
+      additional_paths:
+        install_ecmp_primary: true
+        send: disabled
     redistribute:
       bgp:
         enabled: true
