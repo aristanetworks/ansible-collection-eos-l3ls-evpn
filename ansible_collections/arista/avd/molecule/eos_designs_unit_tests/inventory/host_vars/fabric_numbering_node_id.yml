@@ -7,5 +7,5 @@ spine:
     # id: 1 will be set by pool_manager
 
 fabric_numbering:
-  id:
+  node_id:
     algorithm: pool_manager

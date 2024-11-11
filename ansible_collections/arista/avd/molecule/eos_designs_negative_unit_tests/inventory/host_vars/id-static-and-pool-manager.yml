@@ -3,7 +3,7 @@ fabric_name: FABRIC_ID_STATIC_AND_POOL_MANAGER
 type: l2leaf
 
 fabric_numbering:
-  id:
+  node_id:
     algorithm: pool_manager
 
 l2leaf:

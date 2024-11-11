@@ -4,7 +4,7 @@ id_pools:
 - dc_name: null
   fabric_name: EOS_DESIGNS_UNIT_TESTS
   id_assignments:
-  - hostname: fabric_numbering_id
+  - hostname: fabric_numbering_node_id
     id: 1
   pod_name: null
   type: spine
