@@ -117,6 +117,7 @@ ASN Notation: asplain
 !
 router bgp 65101
    router-id 192.168.255.3
+   timers bgp min-hold-time 5 send-failure hold-time 65
    no bgp default ipv4-unicast
    distance bgp 20 200 200
    graceful-restart restart-time 300

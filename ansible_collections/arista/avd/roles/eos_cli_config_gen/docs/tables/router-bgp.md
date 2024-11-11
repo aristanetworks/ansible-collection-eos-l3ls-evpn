@@ -11,7 +11,12 @@
     | [<samp>&nbsp;&nbsp;as</samp>](## "router_bgp.as") | String |  |  |  | BGP AS <1-4294967295> or AS number in asdot notation "<1-65535>.<0-65535>".<br>For asdot notation in YAML inputs, the value must be put in quotes, to prevent it from being interpreted as a float number. |
     | [<samp>&nbsp;&nbsp;as_notation</samp>](## "router_bgp.as_notation") | String |  |  | Valid Values:<br>- <code>asdot</code><br>- <code>asplain</code> | BGP AS can be deplayed in the asplain <1-4294967295> or asdot notation "<1-65535>.<0-65535>". This flag indicates which mode is preferred - asplain is the default. |
     | [<samp>&nbsp;&nbsp;router_id</samp>](## "router_bgp.router_id") | String |  |  |  | In IP address format A.B.C.D. |
-    | [<samp>&nbsp;&nbsp;timers</samp>](## "router_bgp.timers") | String |  |  |  | BGP Keepalive and Hold Timer values in seconds as string "<0-3600> <0-3600>".<br>Example - "5 15". |
+    | [<samp>&nbsp;&nbsp;timers</samp>](## "router_bgp.timers") | Dictionary |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;keepalive_time</samp>](## "router_bgp.timers.keepalive_time") | Integer |  |  | Min: 0<br>Max: 3600 | Time between BGP keepalive messages in seconds. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;hold_time</samp>](## "router_bgp.timers.hold_time") | Integer |  |  | Min: 3<br>Max: 7200 | Hold time in seconds. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;hold_forever</samp>](## "router_bgp.timers.hold_forever") | Boolean |  |  |  | Don't send keep-alives. keepalive_time should be `0` with hold_forever `true`. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;min_hold_time</samp>](## "router_bgp.timers.min_hold_time") | Integer |  |  | Min: 3<br>Max: 7200 | Neighbor's minimum hold time constraint in seconds. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;send_failure_hold_time</samp>](## "router_bgp.timers.send_failure_hold_time") | Integer |  |  | Min: 60<br>Max: 65335 | Send failure hold time in seconds. |
     | [<samp>&nbsp;&nbsp;distance</samp>](## "router_bgp.distance") | Dictionary |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;external_routes</samp>](## "router_bgp.distance.external_routes") | Integer | Required |  | Min: 1<br>Max: 255 |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;internal_routes</samp>](## "router_bgp.distance.internal_routes") | Integer | Required |  | Min: 1<br>Max: 255 |  |
@@ -1585,10 +1590,22 @@
 
       # In IP address format A.B.C.D.
       router_id: <str>
+      timers:
 
-      # BGP Keepalive and Hold Timer values in seconds as string "<0-3600> <0-3600>".
-      # Example - "5 15".
-      timers: <str>
+        # Time between BGP keepalive messages in seconds.
+        keepalive_time: <int; 0-3600>
+
+        # Hold time in seconds.
+        hold_time: <int; 3-7200>
+
+        # Don't send keep-alives. keepalive_time should be `0` with hold_forever `true`.
+        hold_forever: <bool>
+
+        # Neighbor's minimum hold time constraint in seconds.
+        min_hold_time: <int; 3-7200>
+
+        # Send failure hold time in seconds.
+        send_failure_hold_time: <int; 60-65335>
       distance:
         external_routes: <int; 1-255; required>
         internal_routes: <int; 1-255; required>

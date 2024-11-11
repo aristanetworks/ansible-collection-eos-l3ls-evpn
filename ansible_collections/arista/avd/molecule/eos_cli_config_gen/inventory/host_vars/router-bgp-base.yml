@@ -4,7 +4,9 @@ router_bgp:
   updates:
     wait_for_convergence: true
     wait_install: true
-  timers: "5 35"
+  timers:
+    keepalive_time: 10
+    hold_time: 15
   distance:
     external_routes: 20
     internal_routes: 200
