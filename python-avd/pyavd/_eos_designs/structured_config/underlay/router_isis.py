@@ -7,8 +7,7 @@ from functools import cached_property
 from typing import TYPE_CHECKING
 
 from pyavd._errors import AristaAvdInvalidInputsError
-from pyavd._utils import get
-from pyavd._utils import strip_empties_from_dict
+from pyavd._utils import get, strip_empties_from_dict
 
 from .utils import UtilsMixin
 

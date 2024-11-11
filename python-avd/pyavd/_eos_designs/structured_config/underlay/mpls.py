@@ -6,8 +6,9 @@ from __future__ import annotations
 from functools import cached_property
 from typing import TYPE_CHECKING
 
-from .utils import UtilsMixin
 from pyavd._utils import strip_empties_from_dict
+
+from .utils import UtilsMixin
 
 if TYPE_CHECKING:
     from . import AvdStructuredConfigUnderlay
@@ -29,14 +30,14 @@ class MplsMixin(UtilsMixin):
         if self.shared_utils.underlay_ldp is True:
             return strip_empties_from_dict(
                 {
-                "ip": True,
-                "ldp": {
-                    "interface_disabled_default": True,
-                    "router_id": self.shared_utils.router_id if self.shared_utils.use_router_general_for_router_id is False else None,
-                    "shutdown": False,
-                    "transport_address_interface": "Loopback0",
-                },
-            }
+                    "ip": True,
+                    "ldp": {
+                        "interface_disabled_default": True,
+                        "router_id": self.shared_utils.router_id if self.shared_utils.use_router_general_for_router_id is False else None,
+                        "shutdown": False,
+                        "transport_address_interface": "Loopback0",
+                    },
+                }
             )
 
         return {"ip": True}
