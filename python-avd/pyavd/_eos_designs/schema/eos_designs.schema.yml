@@ -1551,7 +1551,10 @@ keys:
             description: 'Path to file to use for storing ID pool data when using
               "pool_manager" as algorithm.
 
-              By default the path is "intended/data/<fabric_name>-ids.yml".
+              This can be an absolute path or a path relative to current working directory.
+
+
+              By default the path is "<root_dir>/intended/data/<fabric_name>-ids.yml".
 
 
               Note: Since the pool manager will remove stale entries after every run,
