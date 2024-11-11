@@ -9,6 +9,7 @@ from typing import TYPE_CHECKING, Any
 
 from pyavd._errors import AristaAvdError, AristaAvdInvalidInputsError
 from pyavd._utils import default, get
+from pyavd.api.pool_manager import PoolManager
 from pyavd.j2filters import natural_sort, range_expand
 
 if TYPE_CHECKING:
@@ -41,6 +42,39 @@ class MiscMixin:
 
     @cached_property
     def id(self: SharedUtils) -> int | None:
+        """
+        Node ID.
+
+        Will be sourced from different places depending on the context.
+
+        If running under eos_designs_structured_config:
+            Use 'self.hostvars.switch.id' or None
+
+        If running under eos_designs_facts and pool manager is activated:
+            Use pool manager
+
+        If running under eos_designs_facts and pool manager is _not_ activated:
+            Use 'self.switch_data_combined.id' which is the ID defined in the node type config or None.
+        """
+        # Check if we are running from eos_designs_structured_config ("switch" is a dict)
+        if isinstance(switch := get(self.hostvars, f"avd_switch_facts..{self.hostname}..switch", separator=".."), dict):
+            # Return value of 'self.hostvars.switch.id' or None
+            return switch.get("id")
+
+        # We are running from eos_designs_facts.
+        # Check if pool manager is activated.
+        if get(self.hostvars, "fabric_numbering.node_id.algorithm") == "pool_manager":
+            if not isinstance(self.pool_manager, PoolManager):
+                msg = "'fabric_numbering.id.algorithm' is set to 'pool_manager' but no PoolManager instance is available."
+                raise AristaAvdError(msg)
+
+            if (node_id := get(self.switch_data_combined, "id")) is not None:
+                msg = "When 'fabric_numbering.id.algorithm' is set to 'pool_manager', 'id' must not be set under node settings. " f"Got 'id: {node_id}'."
+                raise AristaAvdError(msg)
+
+            return self.pool_manager.get_id(self)
+
+        # Pool manager is not activated. Return 'id' from node settings or None.
         return get(self.switch_data_combined, "id")
 
     @cached_property

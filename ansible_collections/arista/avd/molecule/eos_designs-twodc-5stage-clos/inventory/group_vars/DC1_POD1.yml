@@ -24,14 +24,14 @@ spine:
   nodes:
     # Spine also working as EVPN RS
     - name: DC1-POD1-SPINE1
-      id: 1
+      # id: 1 Using pool manager for ID
       # mgmt_ip: 192.168.1.5/24 Test without management IP
       evpn_role: server
       uplink_switch_interfaces: ["Ethernet1", "Ethernet1"]
       evpn_route_servers:
         [DC2-RS1, DC2-SUPER-SPINE1, DC2-POD1-SPINE1, DC2-POD1-LEAF1A]
     - name: DC1-POD1-SPINE2
-      id: 2
+      # id: 2 Using pool manager for ID
       evpn_role: none
       mgmt_ip: 192.168.1.6/24
       uplink_switch_interfaces: ["Ethernet2", "Ethernet2"]
@@ -78,7 +78,7 @@ l3leaf:
           description Loopback created from raw_eos_cli under node-group RACK1_SINGLE
       nodes:
         - name: DC1-POD1-LEAF1A
-          id: 1
+          # id: 1 Using pool manager for ID
           # mgmt_ip: 192.168.1.7/24 Test without management IP
           uplink_switch_interfaces: ["Ethernet3", "Ethernet3"]
           raw_eos_cli: |
@@ -107,7 +107,7 @@ l3leaf:
           structured_config:
             domain_list:
               - structured-config.set.on.node
-          id: 2
+          # id: 2 Using pool manager for ID
           # mgmt_ip: 192.168.1.8/16 Test without management IP
           # uplink_switch_interfaces: [Ethernet4, Ethernet4, Ethernet7, Ethernet7] Test with "use_cv_topology"
           evpn_gateway:
@@ -119,7 +119,7 @@ l3leaf:
               enabled: true
               inter_domain: true
         - name: DC1-POD1-LEAF2B
-          id: 3
+          # id: 3 Using pool manager for ID
           mgmt_ip: 192.168.1.9/16
           # uplink_switch_interfaces: [Ethernet5, Ethernet5, Ethernet8, Ethernet8] Test with "use_cv_topology"
           evpn_gateway:
@@ -152,7 +152,7 @@ l2leaf:
       mlag: false
       nodes:
         - name: DC1-POD1-L2LEAF1A
-          id: 1
+          # id: 1 Using pool manager for ID
           # mgmt_ip: 192.168.1.10/24 Test without management IP
           uplink_switch_interfaces: ["Ethernet3"]
     - group: RACK2_MLAG
@@ -167,11 +167,11 @@ l2leaf:
           description Loopback created from raw_eos_cli under l2leaf node-group RACK2_MLAG
       nodes:
         - name: DC1-POD1-L2LEAF2A
-          id: 2
+          # id: 2 Using pool manager for ID
           # mgmt_ip: 192.168.1.11/24 Test without management IP
           uplink_switch_interfaces: ["Ethernet3", "Ethernet3"]
         - name: DC1-POD1-L2LEAF2B
-          id: 3
+          # id: 3 Using pool manager for ID
           mgmt_ip: 192.168.1.12/24
           uplink_switch_interfaces: ["Ethernet4", "Ethernet4"]
           raw_eos_cli: |

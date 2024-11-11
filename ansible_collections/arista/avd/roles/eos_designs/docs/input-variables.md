@@ -130,6 +130,52 @@ roles/eos_designs/docs/tables/fabric-topology.md
 roles/eos_designs/docs/tables/fabric-ip-addressing.md
 --8<--
 
+## Fabric Numbering
+
+Fabric Numbering controls how various numbers are derived across the fabric.
+
+### Node ID Algorithm
+
+IDs will be automatically assigned according to the configured algorithm.
+
+- `static` will use the statically set IDs under [node setting](#node-type-common-configuration).
+- `pool_manager` will activate the pool manager for ID pools.
+
+!!! note
+    It is not allowed to override `pool_manager` with a static ID for the same device, since that could lead to allocation conflicts.
+
+--8<--
+roles/eos_designs/docs/tables/fabric-numbering.md
+--8<--
+
+#### Details on `pool_manager` for Node IDs
+
+When using `pool_manager` for node IDs the pools are dynamically built and matched on the following device variables:
+
+- `fabric_name`
+- `dc_name`
+- `pod_name`
+- `type`
+
+Each pool will assign the first available ID starting from 1.
+
+It is important to make sure the combination of these variables is unique for each intended pool of devices.
+
+!!! warning
+    This means changing any of these fields may renumber the nodes, and in turn lead to renumbering of IP addresses etc.!
+
+Stale entries will be reclaimed from each pool automatically after every run.
+A stale entry is an entry that was not accessed during the run.
+
+!!! note
+    Since stale entries are only reclaimed *after* every run, it is not possible to reuse an ID when removing and adding a new device
+    as part of the same execution of AVD.
+
+    To reuse a freed ID, first remove the old device and run AVD. Then add the new device and rerun AVD.
+
+!!! tip
+    It is possible to override the automatic assignments by the pool manager by editing the data files manually. Just make sure to have a backup or use source control like Git and rerun AVD after changing the file.
+
 ## Node Type Variables
 
 The following tables provide information on the default node types that are pre-defined in `eos_designs`.

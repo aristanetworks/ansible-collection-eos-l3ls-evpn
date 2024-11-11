@@ -10,12 +10,12 @@ super_spine:
     bgp_defaults: ['distance bgp 20 200 200']
   nodes:
     - name: DC2-SUPER-SPINE1
-      id: 1
+      # id: 1 Using pool manager for ID
       mgmt_ip: 192.168.1.16/24
       evpn_role: server
       evpn_route_servers: [ DC1-RS1, DC1-SUPER-SPINE1, DC1-POD1-SPINE1, DC1-POD1-LEAF1A ]
     - name: DC2-SUPER-SPINE2
-      id: 2
+      # id: 2 Using pool manager for ID
       mgmt_ip: 192.168.1.17/24
       evpn_role: none
 
@@ -34,13 +34,13 @@ overlay_controller:
     bgp_as: 65201
   nodes:
     - name: DC2-RS1
-      id: 1
+      # id: 1 Using pool manager for ID
       mgmt_ip: 192.168.1.18/24
       uplink_switch_interfaces: ['Ethernet3', 'Ethernet6']
       uplink_interfaces: ['Ethernet1', 'Ethernet2']
       evpn_role: server
     - name: DC2-RS2
-      id: 2
+      # id: 2 Using pool manager for ID
       mgmt_ip: 192.168.1.19/24
       uplink_switch_interfaces: ['Ethernet5', 'Ethernet7']
       uplink_interfaces: ['Ethernet1', 'Ethernet2']

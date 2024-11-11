@@ -1,7 +1,9 @@
 # Copyright (c) 2023-2024 Arista Networks, Inc.
 # Use of this source code is governed by the Apache License 2.0
 # that can be found in the LICENSE file.
-from pyavd._schema.avdschema import AvdSchema
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
 
 from .bgp_peer_groups import BgpPeerGroupsMixin
 from .connected_endpoints_keys import ConnectedEndpointsKeysMixin
@@ -27,6 +29,10 @@ from .switch_data import SwitchDataMixin
 from .underlay import UnderlayMixin
 from .utils import UtilsMixin
 from .wan import WanMixin
+
+if TYPE_CHECKING:
+    from pyavd._schema.avdschema import AvdSchema
+    from pyavd.api.pool_manager import PoolManager
 
 
 class SharedUtils(
@@ -69,7 +75,8 @@ class SharedUtils(
     The class cannot be overridden.
     """
 
-    def __init__(self, hostvars: dict, templar: object, schema: AvdSchema) -> None:
+    def __init__(self, hostvars: dict, templar: object, schema: AvdSchema, pool_manager: PoolManager | None = None) -> None:
         self.hostvars = hostvars
         self.templar = templar
         self.schema = schema
+        self.pool_manager = pool_manager

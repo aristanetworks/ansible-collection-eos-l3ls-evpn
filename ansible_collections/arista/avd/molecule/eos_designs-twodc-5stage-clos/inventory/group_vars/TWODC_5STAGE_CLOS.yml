@@ -11,6 +11,12 @@ mgmt_destination_networks:
 
 p2p_uplinks_qos_profile: QOS-PROFILE
 
+fabric_numbering:
+  id:
+    algorithm: pool_manager
+    # Testing with a custom file for storing id pool data
+    pools_file: "molecule/eos_designs-twodc-5stage-clos/intended/data/test-ids.yml"
+
 local_users:
   - name: admin
     privilege: 15
