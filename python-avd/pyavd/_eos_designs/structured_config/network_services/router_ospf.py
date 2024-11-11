@@ -72,7 +72,7 @@ class RouterOspfMixin(UtilsMixin):
 
                 if ospf_router_id := get(vrf, "ospf.router_id"):
                     process["router_id"] = ospf_router_id
-                elif self.shared_utils.use_router_general_for_router_id is False:
+                elif not self.shared_utils.use_router_general_for_router_id:
                     process["router_id"] = self.shared_utils.router_id
 
                 process_redistribute = {}

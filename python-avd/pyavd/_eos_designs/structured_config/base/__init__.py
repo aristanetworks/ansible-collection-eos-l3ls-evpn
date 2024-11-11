@@ -67,7 +67,7 @@ class AvdStructuredConfigBase(AvdFacts, NtpMixin, SnmpServerMixin, RouterGeneral
 
         router_bgp = {
             "as": self.shared_utils.bgp_as,
-            "router_id": self.shared_utils.router_id if self.shared_utils.use_router_general_for_router_id is False else None,
+            "router_id": self.shared_utils.router_id if not self.shared_utils.use_router_general_for_router_id else None,
             "distance": get(self._hostvars, "bgp_distance"),
             "bgp_defaults": get(self.shared_utils.switch_data_combined, "bgp_defaults"),
             "bgp": {
