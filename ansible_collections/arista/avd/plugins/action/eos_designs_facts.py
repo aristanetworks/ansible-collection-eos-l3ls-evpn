@@ -23,7 +23,7 @@ try:
     from pyavd._errors import AristaAvdError
     from pyavd.api.pool_manager import PoolManager
 except ImportError as e:
-    EosDesignsFacts = SharedUtils = RaiseOnUse(
+    EosDesignsFacts = SharedUtils = PoolManager = RaiseOnUse(
         AnsibleActionFail(
             f"The '{PLUGIN_NAME}' plugin requires the 'pyavd' Python library. Got import error",
             orig_exc=e,
