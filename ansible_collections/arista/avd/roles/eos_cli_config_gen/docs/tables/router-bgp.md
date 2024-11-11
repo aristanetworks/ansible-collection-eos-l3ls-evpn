@@ -13,8 +13,8 @@
     | [<samp>&nbsp;&nbsp;router_id</samp>](## "router_bgp.router_id") | String |  |  |  | In IP address format A.B.C.D. |
     | [<samp>&nbsp;&nbsp;timers</samp>](## "router_bgp.timers") | Dictionary |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;keepalive_time</samp>](## "router_bgp.timers.keepalive_time") | Integer |  |  | Min: 0<br>Max: 3600 | Time between BGP keepalive messages in seconds. |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;hold_time</samp>](## "router_bgp.timers.hold_time") | Integer |  |  | Min: 3<br>Max: 7200 | Hold time in seconds. |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;hold_forever</samp>](## "router_bgp.timers.hold_forever") | Boolean |  |  |  | Don't send keep-alives. keepalive_time should be `0` with hold_forever `true`. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;hold_time</samp>](## "router_bgp.timers.hold_time") | Integer |  |  | Min: 3<br>Max: 7200 | Hold time in seconds. Must be defined along with keepalive_time. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;hold_forever</samp>](## "router_bgp.timers.hold_forever") | Boolean |  |  |  | Don't send keep-alives. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;min_hold_time</samp>](## "router_bgp.timers.min_hold_time") | Integer |  |  | Min: 3<br>Max: 7200 | Neighbor's minimum hold time constraint in seconds. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;send_failure_hold_time</samp>](## "router_bgp.timers.send_failure_hold_time") | Integer |  |  | Min: 60<br>Max: 65335 | Send failure hold time in seconds. |
     | [<samp>&nbsp;&nbsp;distance</samp>](## "router_bgp.distance") | Dictionary |  |  |  |  |
@@ -1595,10 +1595,10 @@
         # Time between BGP keepalive messages in seconds.
         keepalive_time: <int; 0-3600>
 
-        # Hold time in seconds.
+        # Hold time in seconds. Must be defined along with keepalive_time.
         hold_time: <int; 3-7200>
 
-        # Don't send keep-alives. keepalive_time should be `0` with hold_forever `true`.
+        # Don't send keep-alives.
         hold_forever: <bool>
 
         # Neighbor's minimum hold time constraint in seconds.
