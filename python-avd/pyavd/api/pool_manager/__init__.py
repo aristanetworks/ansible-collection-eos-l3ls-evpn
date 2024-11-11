@@ -29,12 +29,17 @@ class PoolManager:
     and given to shared_utils for each device.
     """
 
+    _output_dir: Path
+    _read_only: bool
+    _id_files: set[Path]
+    _changed_id_files: set[Path]
     _data_cache: dict[str, dict]
 
-    def __init__(self, output_dir: str) -> None:
-        self.output_dir = Path(output_dir)
-        self.id_files: set[Path] = set()
-        self.changed_id_files: set[Path] = set()
+    def __init__(self, output_dir: Path, read_only: bool = False) -> None:
+        self._output_dir = output_dir
+        self._read_only = read_only
+        self._id_files = set()
+        self._changed_id_files = set()
         self._data_cache = {}
 
     def _remove_stale_assignments(self) -> None:
@@ -48,20 +53,20 @@ class PoolManager:
 
         Note: This method is called from save_updated_pools and should _not_ be called manually.
         """
-        for id_file in self.id_files:
+        for id_file in self._id_files:
             id_data = self.id_pool_data(id_file)
-            for id_pool in id_data["id_pools"]:
+            for id_pool in id_data["node_id_pools"]:
                 # Remove id_assignments that were not accesses using "last_accessed".
                 len_before_removing_stale_entries = len(id_pool["id_assignments"])
                 id_pool["id_assignments"] = [id_assignment for id_assignment in id_pool["id_assignments"] if id_assignment.pop("accessed", False)]
                 if len_before_removing_stale_entries != len(id_pool["id_assignments"]):
-                    self.changed_id_files.add(id_file)
+                    self._changed_id_files.add(id_file)
 
             # Remove pools if there are no assignments left.
-            id_pools_count = len(id_data["id_pools"])
-            id_data["id_pools"] = [id_pool for id_pool in id_data["id_pools"] if id_pool["id_assignments"]]
-            if id_pools_count != len(id_data["id_pools"]):
-                self.changed_id_files.add(id_file)
+            id_pools_count = len(id_data["node_id_pools"])
+            id_data["node_id_pools"] = [id_pool for id_pool in id_data["node_id_pools"] if id_pool["id_assignments"]]
+            if id_pools_count != len(id_data["node_id_pools"]):
+                self._changed_id_files.add(id_file)
 
     def save_updated_pools(self, dumper_cls: type = CSafeDumper) -> bool:
         """
@@ -71,22 +76,26 @@ class PoolManager:
 
         Data is sorted to ensure a consistent layout.
         """
+        if self._read_only:
+            msg = "Unable to save updated pools when the PoolManager is marked as read-only."
+            raise RuntimeError(msg)
+
         self._remove_stale_assignments()
-        any_changes = bool(self.changed_id_files)
-        for id_file in self.changed_id_files:
+        any_changes = bool(self._changed_id_files)
+        for id_file in self._changed_id_files:
             id_data = self.id_pool_data(id_file)
-            for id_pool in id_data["id_pools"]:
+            for id_pool in id_data["node_id_pools"]:
                 # Sort id_assignments on "id".
                 id_pool["id_assignments"] = natural_sort(id_pool["id_assignments"], "id")
 
-            id_data["id_pools"] = natural_sort(id_data["id_pools"], "type")
-            id_data["id_pools"] = natural_sort(id_data["id_pools"], "pod_name")
-            id_data["id_pools"] = natural_sort(id_data["id_pools"], "dc_name")
-            id_data["id_pools"] = natural_sort(id_data["id_pools"], "fabric_name")
+            id_data["node_id_pools"] = natural_sort(id_data["node_id_pools"], "type")
+            id_data["node_id_pools"] = natural_sort(id_data["node_id_pools"], "pod_name")
+            id_data["node_id_pools"] = natural_sort(id_data["node_id_pools"], "dc_name")
+            id_data["node_id_pools"] = natural_sort(id_data["node_id_pools"], "fabric_name")
             id_file.write_text(FILE_HEADER + dump(id_data, Dumper=dumper_cls), encoding="UTF-8")
         self._data_cache = {}
-        self.changed_id_files = set()
-        self.id_files = set()
+        self._changed_id_files.clear()
+        self._id_files = set()
         return any_changes
 
     def id_pool_data(self, id_file: Path) -> dict:
@@ -110,14 +119,14 @@ class PoolManager:
             id_file.touch(mode=0o664)
 
         # Read from file or assign an empty data model.
-        id_data = load(id_file.read_text(encoding="UTF-8"), Loader=CSafeLoader) or {"id_pools": []}
+        id_data = load(id_file.read_text(encoding="UTF-8"), Loader=CSafeLoader) or {}
 
-        if not isinstance(id_data, dict) or not isinstance(id_data.get("id_pools"), list):
-            msg = f"Invalid ID pool manager data when reading {id_file}. Expecting {'id_pools': []}"
+        if not isinstance(id_data, dict):
+            msg = f"Invalid ID pool manager data when reading {id_file}. Expecting a valid YAML file."
             raise AristaAvdError(msg)
 
         # Add the path to the list of all id_files. Used later for finding stale entries.
-        self.id_files.add(id_file)
+        self._id_files.add(id_file)
 
         # Insert into the cache.
         self._data_cache[str(id_file)] = id_data
@@ -145,12 +154,12 @@ class PoolManager:
             Node ID
         """
         fabric_name = shared_utils.fabric_name
-        default_id_file = f"{self.output_dir}/data/{fabric_name}-ids.yml"
+        default_id_file = f"{self._output_dir}/data/{fabric_name}-ids.yml"
         id_file = Path(get(shared_utils.hostvars, "fabric_numbering.node_id.pools_file", default=default_id_file))
         id_data = self.id_pool_data(id_file)
 
         id_pool = None
-        for id_data_id_pool in id_data["id_pools"]:
+        for id_data_id_pool in id_data["node_id_pools"]:
             if (
                 id_data_id_pool.get("fabric_name") == fabric_name
                 and id_data_id_pool.get("dc_name") == shared_utils.dc_name
@@ -161,6 +170,13 @@ class PoolManager:
                 break
 
         if not id_pool:
+            if self._read_only:
+                msg = (
+                    f"PoolManager is marked as read-only and could not find a matching pool for {{'fabric_name': {fabric_name}, "
+                    f"'dc_name': {shared_utils.dc_name}, 'pod_name': {shared_utils.pod_name}, 'type': {shared_utils.type}}}."
+                )
+                raise KeyError(msg)
+
             # Create a new dict, add to the list of pools.
             id_pool = {
                 "fabric_name": fabric_name,
@@ -169,12 +185,19 @@ class PoolManager:
                 "type": shared_utils.type,
                 "id_assignments": [],
             }
-            id_data["id_pools"].append(id_pool)
+            id_data["node_id_pools"].append(id_pool)
 
         if id_assignment := get_item(id_pool["id_assignments"], "hostname", shared_utils.hostname):
             # Found an ID, so return quickly.
             id_assignment["accessed"] = True
             return id_assignment["id"]
+
+        if self._read_only:
+            msg = (
+                f"PoolManager is marked as read-only and could not find a matching assignment for {{'fabric_name': {fabric_name}, "
+                f"'dc_name': {shared_utils.dc_name}, 'pod_name': {shared_utils.pod_name}, 'type': {shared_utils.type}, 'hostname': {shared_utils.hostname}}}."
+            )
+            raise KeyError(msg)
 
         existing_ids = {x.get("id") for x in id_pool["id_assignments"]}
         available_ids = set(range(1, len(existing_ids) + 2)) - existing_ids
@@ -187,5 +210,5 @@ class PoolManager:
         id_pool["id_assignments"].append(id_assignment)
 
         # Since we assigned a new ID, we have to mark the id pool as changed to have it saved once the build is done.
-        self.changed_id_files.add(id_file)
+        self._changed_id_files.add(id_file)
         return first_available_id
