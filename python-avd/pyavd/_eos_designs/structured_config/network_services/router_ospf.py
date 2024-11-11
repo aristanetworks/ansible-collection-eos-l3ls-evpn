@@ -68,18 +68,18 @@ class RouterOspfMixin(UtilsMixin):
                         "id": process_id,
                         "vrf": vrf["name"] if vrf["name"] != "default" else None,
                         "passive_interface_default": True,
-                    }
-                )
-                if self.shared_utils.use_router_general_for_router_id is False:
-                    process["router_id"] = default(get(vrf, "ospf.router_id"), self.shared_utils.router_id)
-
-                process.update(
-                    {
                         "no_passive_interfaces": ospf_interfaces,
                         "bfd_enable": get(vrf, "ospf.bfd"),
                         "max_lsa": get(vrf, "ospf.max_lsa"),
                     }
                 )
+
+                if get(vrf, "ospf.router_id"):
+                    process["router_id"] = get(vrf, "ospf.router_id")
+                elif self.shared_utils.use_router_general_for_router_id is False:
+                    process["router_id"] = self.shared_utils.router_id
+                elif self.shared_utils.use_router_general_for_router_id is True:
+                    process["router_id"] = None
 
                 process_redistribute = {}
 

@@ -26,16 +26,14 @@ class MplsMixin(UtilsMixin):
             return None
 
         if self.shared_utils.underlay_ldp is True:
-            mpls_config = {
+            return {
                 "ip": True,
                 "ldp": {
                     "interface_disabled_default": True,
+                    "router_id": self.shared_utils.router_id if self.shared_utils.use_router_general_for_router_id is False else None,
                     "shutdown": False,
                     "transport_address_interface": "Loopback0",
                 },
             }
-            if self.shared_utils.use_router_general_for_router_id is False:
-                mpls_config["ldp"]["router_id"] = self.shared_utils.router_id
 
-            return mpls_config
         return {"ip": True}

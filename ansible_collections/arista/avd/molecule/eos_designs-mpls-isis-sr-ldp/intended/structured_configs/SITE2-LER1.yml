@@ -254,9 +254,9 @@ mpls:
   ip: true
   ldp:
     interface_disabled_default: true
+    router_id: 100.70.0.7
     shutdown: false
     transport_address_interface: Loopback0
-    router_id: 100.70.0.7
 router_bfd:
   multihop:
     interval: 300
@@ -583,10 +583,10 @@ router_ospf:
   - id: 99
     vrf: TENANT_B_WAN
     passive_interface_default: true
-    router_id: 192.168.48.4
     no_passive_interfaces:
     - Ethernet6.100
     max_lsa: 10000
+    router_id: 192.168.48.4
     redistribute:
       bgp:
         enabled: true

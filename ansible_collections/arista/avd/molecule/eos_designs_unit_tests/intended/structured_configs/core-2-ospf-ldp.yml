@@ -62,6 +62,7 @@ mpls:
   ip: true
   ldp:
     interface_disabled_default: true
+    router_id: null
     shutdown: false
     transport_address_interface: Loopback0
 ethernet_interfaces:

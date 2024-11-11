@@ -49,6 +49,7 @@ router_isis:
   instance: CORE
   log_adjacency_changes: true
   net: 49.0001.0100.0000.0001.00
+  router_id: null
   is_type: level-2
   address_family_ipv4:
     enabled: true
@@ -74,6 +75,7 @@ mpls:
   ip: true
   ldp:
     interface_disabled_default: true
+    router_id: null
     shutdown: false
     transport_address_interface: Loopback0
 ethernet_interfaces:

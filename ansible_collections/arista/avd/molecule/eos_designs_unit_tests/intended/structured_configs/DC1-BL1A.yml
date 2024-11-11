@@ -724,11 +724,11 @@ router_ospf:
   - id: 14
     vrf: Tenant_A_WAN_Zone
     passive_interface_default: true
-    router_id: 192.168.255.14
     no_passive_interfaces:
     - Ethernet7
     - Vlan150
     max_lsa: 15000
+    router_id: 192.168.255.14
     redistribute:
       bgp:
         enabled: true
