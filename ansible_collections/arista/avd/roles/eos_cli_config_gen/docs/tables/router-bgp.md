@@ -54,7 +54,7 @@
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;peer_filter</samp>](## "router_bgp.listen_ranges.[].peer_filter") | String |  |  |  | Peer-filter name.<br>note: `peer_filter` or `remote_as` is required but mutually exclusive.<br>If both are defined, `peer_filter` takes precedence<br> |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;remote_as</samp>](## "router_bgp.listen_ranges.[].remote_as") | String |  |  |  | BGP AS <1-4294967295> or AS number in asdot notation "<1-65535>.<0-65535>".<br>For asdot notation in YAML inputs, the value must be put in quotes, to prevent it from being interpreted as a float number. |
     | [<samp>&nbsp;&nbsp;neighbor_default</samp>](## "router_bgp.neighbor_default") | Dictionary |  |  |  |  |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;send_community</samp>](## "router_bgp.neighbor_default.send_community") | String |  |  |  | `all` or a combination of `standard`, `extended` and `large`. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;send_community</samp>](## "router_bgp.neighbor_default.send_community") | String |  |  | Valid Values:<br>- <code>all</code><br>- <code>large</code><br>- <code>extended</code><br>- <code>standard</code><br>- <code>extended large</code><br>- <code>standard large</code><br>- <code>standard extended</code><br>- <code>standard extended large</code> |  |
     | [<samp>&nbsp;&nbsp;peer_groups</samp>](## "router_bgp.peer_groups") | List, items: Dictionary |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;name</samp>](## "router_bgp.peer_groups.[].name") | String | Required, Unique |  |  | Peer-group name. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;type</samp>](## "router_bgp.peer_groups.[].type") | String |  |  |  | Key only used for documentation or validation purposes. |
@@ -1683,9 +1683,7 @@
           # For asdot notation in YAML inputs, the value must be put in quotes, to prevent it from being interpreted as a float number.
           remote_as: <str>
       neighbor_default:
-
-        # `all` or a combination of `standard`, `extended` and `large`.
-        send_community: <str>
+        send_community: <str; "all" | "large" | "extended" | "standard" | "extended large" | "standard large" | "standard extended" | "standard extended large">
       peer_groups:
 
           # Peer-group name.

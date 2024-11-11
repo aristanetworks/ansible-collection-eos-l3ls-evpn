@@ -12122,7 +12122,15 @@ keys:
         keys:
           send_community:
             type: str
-            description: '`all` or a combination of `standard`, `extended` and `large`.'
+            valid_values:
+            - all
+            - large
+            - extended
+            - standard
+            - extended large
+            - standard large
+            - standard extended
+            - standard extended large
       peer_groups:
         type: list
         primary_key: name
