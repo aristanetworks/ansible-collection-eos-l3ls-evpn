@@ -20,10 +20,8 @@ tacacs-server policy unknown-mandatory-attribute ignore
 {%             if host.single_connection is arista.avd.defined(true) %}
 {%                 set host_cli = host_cli ~ " single-connection" %}
 {%             endif %}
-{%             if host.vrf is arista.avd.defined %}
-{%                 if host.vrf != 'default' %}
-{%                     set host_cli = host_cli ~ " vrf " ~ host.vrf %}
-{%                 endif %}
+{%             if host.vrf is arista.avd.defined and host.vrf != 'default' %}
+{%                 set host_cli = host_cli ~ " vrf " ~ host.vrf %}
 {%             endif %}
 {%             if host.timeout is arista.avd.defined %}
 {%                 set host_cli = host_cli ~ " timeout " ~ host.timeout %}
