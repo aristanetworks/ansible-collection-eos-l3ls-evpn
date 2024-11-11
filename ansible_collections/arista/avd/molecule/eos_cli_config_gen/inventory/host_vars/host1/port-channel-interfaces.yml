@@ -333,7 +333,6 @@ port_channel_interfaces:
       port_security:
         violation:
           mode: protect
-
     # Test isis auth l1l2 md5
     isis_enable: "EVPN_UNDERLAY"
     isis_authentication:
@@ -366,7 +365,12 @@ port_channel_interfaces:
         enabled: true
         rfc_7130: true
     spanning_tree_guard: root
-
+    isis_authentication:
+      level_2:
+        key_type: 0
+        key: password
+        mode: text
+        rx_disabled: true
   - name: Port-Channel20
     description: Po_in_mode_access_accepting_tagged_LACP_frames
     switchport:

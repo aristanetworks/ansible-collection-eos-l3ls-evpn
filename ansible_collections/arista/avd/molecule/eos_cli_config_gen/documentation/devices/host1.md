@@ -2239,6 +2239,7 @@ interface Ethernet81/10
 | --------- | ------------- | -------- | ----------- | ---- | ----------------- | ------------- | ------------------------ |
 | Port-Channel3 | EVPN_UNDERLAY | - | - | - | - | - | sha |
 | Port-Channel8 | EVPN_UNDERLAY | - | - | - | - | - | Level-1: md5<br>Level-2: md5 |
+| Port-Channel9 | - | - | - | - | - | - | Level-2: text |
 | Port-Channel10 | EVPN_UNDERLAY | - | - | - | - | - | sha |
 | Port-Channel12 | EVPN_UNDERLAY | - | - | - | - | - | Level-1: sha |
 | Port-Channel13 | - | - | - | - | - | - | - |
@@ -2320,6 +2321,8 @@ interface Port-Channel9
    bfd echo
    bfd neighbor 10.1.2.4
    bfd per-link rfc-7130
+   isis authentication mode text rx-disabled level-2
+   isis authentication key 0 <removed> level-2
    spanning-tree guard root
 !
 interface Port-Channel10

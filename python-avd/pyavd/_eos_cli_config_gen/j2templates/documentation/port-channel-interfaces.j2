@@ -396,7 +396,7 @@
 {%                     elif port_channel_interface.isis_authentication.level_1.mode is arista.avd.defined %}
 {%                         set isis_authentication_mode = "Level-1: " ~ port_channel_interface.isis_authentication.level_1.mode %}
 {%                     elif port_channel_interface.isis_authentication.level_2.mode is arista.avd.defined %}
-{%                         set isis_authentication_mode = "Level-1: " ~ port_channel_interface.isis_authentication.level_1.mode %}
+{%                         set isis_authentication_mode = "Level-2: " ~ port_channel_interface.isis_authentication.level_2.mode %}
 {%                     endif %}
 {%                 endif %}
 {%             elif port_channel_interface.isis_authentication_mode is arista.avd.defined %}
