@@ -28,18 +28,14 @@ class RouterIsisMixin(UtilsMixin):
         if self.shared_utils.underlay_isis is not True:
             return None
 
-        router_isis = {}
-
-        router_isis.update(
-            {
-                "instance": self.shared_utils.isis_instance_name,
-                "log_adjacency_changes": True,
-                "net": self._isis_net,
-                "router_id": self.shared_utils.router_id if self.shared_utils.use_router_general_for_router_id is False else None,
-                "is_type": self._is_type,
-                "address_family_ipv4": {"enabled": True, "maximum_paths": get(self._hostvars, "isis_maximum_paths", default=4)},
-            }
-        )
+        router_isis = {
+            "instance": self.shared_utils.isis_instance_name,
+            "log_adjacency_changes": True,
+            "net": self._isis_net,
+            "router_id": self.shared_utils.router_id if self.shared_utils.use_router_general_for_router_id is False else None,
+            "is_type": self._is_type,
+            "address_family_ipv4": {"enabled": True, "maximum_paths": get(self._hostvars, "isis_maximum_paths", default=4)},
+        }
 
         if self.shared_utils.underlay_ldp is True:
             router_isis["mpls_ldp_sync_default"] = True

@@ -23,7 +23,7 @@ class RouterGeneralMixin(UtilsMixin):
 
     @cached_property
     def router_general(self: AvdStructuredConfigBase) -> dict | None:
-        if self.shared_utils.use_router_general_for_router_id is True:
+        if self.shared_utils.use_router_general_for_router_id:
             return strip_empties_from_dict(
                 {
                     "router_id": {

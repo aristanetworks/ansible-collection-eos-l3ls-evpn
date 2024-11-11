@@ -37,18 +37,14 @@ class RouterOspfMixin(UtilsMixin):
             mlag_l3_vlan = default(self.shared_utils.mlag_peer_l3_vlan, self.shared_utils.mlag_peer_vlan)
             no_passive_interfaces.append(f"Vlan{mlag_l3_vlan}")
 
-        process = {}
-
-        process.update(
-            {
-                "id": process_id,
-                "passive_interface_default": True,
-                "router_id": self.shared_utils.router_id if self.shared_utils.use_router_general_for_router_id is False else None,
-                "max_lsa": get(self._hostvars, "underlay_ospf_max_lsa", default=12000),
-                "no_passive_interfaces": no_passive_interfaces,
-                "bfd_enable": get(self._hostvars, "underlay_ospf_bfd_enable", default=False),
-            }
-        )
+        process = {
+            "id": process_id,
+            "passive_interface_default": True,
+            "router_id": self.shared_utils.router_id if self.shared_utils.use_router_general_for_router_id is False else None,
+            "max_lsa": get(self._hostvars, "underlay_ospf_max_lsa", default=12000),
+            "no_passive_interfaces": no_passive_interfaces,
+            "bfd_enable": get(self._hostvars, "underlay_ospf_bfd_enable", default=False),
+        }
 
         if self.shared_utils.overlay_routing_protocol == "none":
             process["redistribute"] = {
