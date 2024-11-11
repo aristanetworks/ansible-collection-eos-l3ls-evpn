@@ -184,14 +184,6 @@ loopback_interfaces:
     isis_enable: EVPN_UNDERLAY
     isis_passive: true
 
-### Management Interfaces ###
-management_interfaces:
-  - name: Management1
-    description: OOB_MANAGEMENT
-    vrf: MGMT
-    ip_address: 10.73.254.11/24
-    gateway: 10.73.254.253
-
 ### VLAN Interfaces ###
 vlan_interfaces:
   - name: Vlan4093

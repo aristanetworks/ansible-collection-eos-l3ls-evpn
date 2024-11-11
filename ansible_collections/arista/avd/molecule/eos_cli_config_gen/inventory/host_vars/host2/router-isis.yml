@@ -163,14 +163,6 @@ loopback_interfaces:
       ipv4_index: 10
       ipv6_index: 1000
 
-### Management Interfaces ###
-management_interfaces:
-  - name: Management1
-    description: OOB_MANAGEMENT
-    vrf: MGMT
-    ip_address: 10.73.254.11/24
-    gateway: 10.73.254.253
-
 ### VLAN Interfaces ###
 vlan_interfaces:
   - name: Vlan4093

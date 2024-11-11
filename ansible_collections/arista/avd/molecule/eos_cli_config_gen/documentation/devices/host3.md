@@ -7,6 +7,7 @@
 - [Monitoring](#monitoring)
   - [TerminAttr Daemon](#terminattr-daemon)
 - [Routing](#routing)
+  - [Router ISIS](#router-isis)
   - [Router BGP](#router-bgp)
   - [Traffic Policies information](#traffic-policies-information)
 
@@ -58,6 +59,42 @@ daemon TerminAttr
 ```
 
 ## Routing
+
+### Router ISIS
+
+#### Router ISIS Summary
+
+| Settings | Value |
+| -------- | ----- |
+| Instance | EVPN_UNDERLAY |
+| MPLS LDP Sync Default | True |
+| SPF Interval | 250 seconds |
+| SPF Interval Wait Time| 30 milliseconds |
+
+#### ISIS Interfaces Summary
+
+| Interface | ISIS Instance | ISIS Metric | Interface Mode |
+| --------- | ------------- | ----------- | -------------- |
+
+#### Prefix Segments
+
+| Prefix Segment | Index |
+| -------------- | ----- |
+
+#### Router ISIS Device Configuration
+
+```eos
+!
+router isis EVPN_UNDERLAY
+   mpls ldp sync default
+   set-overload-bit
+   set-overload-bit on-startup wait-for-bgp timeout 10
+   spf-interval 250 30
+   authentication mode shared-secret profile test1 algorithm md5 rx-disabled
+   authentication key 0 password
+   !
+   segment-routing mpls
+```
 
 ### Router BGP
 
