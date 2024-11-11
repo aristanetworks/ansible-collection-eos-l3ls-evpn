@@ -201,7 +201,7 @@ def test_avdpoolmanager_pool(hostvars_list: list[dict], expected_ids: list[int],
 
         mocked_open.assert_called_once_with(mode="r", encoding="UTF-8", errors=None)
 
-        assert pool_manager.save_updated_pools() is None
+        assert pool_manager.save_updated_pools() is expected_write
 
         if expected_write:
             mocked_open.assert_called_with(mode="w", encoding="UTF-8", errors=None, newline=None)
