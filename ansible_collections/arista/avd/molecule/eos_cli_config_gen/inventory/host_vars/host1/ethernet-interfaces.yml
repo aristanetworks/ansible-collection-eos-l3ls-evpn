@@ -14,6 +14,9 @@ ethernet_interfaces:
     link_tracking_groups:
       - name: EVPN_MH_ES1
         direction: upstream
+    link_tracking:
+      direction: upstream
+      groups: [EVPN_MH_ES3, EVPN_MH_ES4]
     priority_flow_control:
       enabled: true
       priorities:

@@ -1020,6 +1020,7 @@ interface Dps1
 | Interface | Group Name | Direction |
 | --------- | ---------- | --------- |
 | Ethernet1 | EVPN_MH_ES1 | upstream |
+| Ethernet1 | EVPN_MH_ES3, EVPN_MH_ES4 | upstream |
 | Ethernet3 | EVPN_MH_ES2 | downstream |
 
 ##### Phone Interfaces
@@ -1253,6 +1254,8 @@ interface Ethernet1
    switchport backup initial-mac-move-delay 10
    switchport backup dest-macaddr 01:00:00:00:00:00
    link tracking group EVPN_MH_ES1 upstream
+   link tracking group EVPN_MH_ES3 upstream
+   link tracking group EVPN_MH_ES4 upstream
    comment
    Comment created from eos_cli under ethernet_interfaces.Ethernet1
    EOF
@@ -2190,6 +2193,7 @@ interface Ethernet81/10
 | Interface | Group Name | Direction |
 | --------- | ---------- | --------- |
 | Port-Channel5 | EVPN_MH_ES1 | downstream |
+| Port-Channel5 | EVPN_MH_ES3, EVPN_MH_ES4 | downstream |
 | Port-Channel15 | EVPN_MH_ES2 | upstream |
 
 ##### IPv4
@@ -2275,6 +2279,8 @@ interface Port-Channel5
    storm-control multicast level 1
    storm-control unknown-unicast level 1
    link tracking group EVPN_MH_ES1 downstream
+   link tracking group EVPN_MH_ES3 downstream
+   link tracking group EVPN_MH_ES4 downstream
    comment
    Comment created from eos_cli under port_channel_interfaces.Port-Channel5
    EOF
