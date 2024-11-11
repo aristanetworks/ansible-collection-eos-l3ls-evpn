@@ -286,7 +286,6 @@
 | Interface | Group Name | Direction |
 | --------- | ---------- | --------- |
 {%         for link_tracking_interface in link_tracking_interfaces | arista.avd.natural_sort('name') %}
-{%             set link_tracking_group_name = [] %}
 {%             for link_tracking_group in link_tracking_interface.link_tracking_groups | arista.avd.natural_sort('name') %}
 {%                 if link_tracking_group.name is arista.avd.defined and link_tracking_group.direction is arista.avd.defined %}
 | {{ link_tracking_interface.name }} | {{ link_tracking_group.name }} | {{ link_tracking_group.direction }} |
