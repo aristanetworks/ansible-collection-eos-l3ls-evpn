@@ -12,7 +12,7 @@
     | [<samp>isis_default_circuit_type</samp>](## "isis_default_circuit_type") | String |  | `level-2` | Valid Values:<br>- <code>level-1-2</code><br>- <code>level-1</code><br>- <code>level-2</code> | These fabric level parameters can be used with core_interfaces running ISIS, and may be overridden on link profile or link level.<br> |
     | [<samp>isis_default_is_type</samp>](## "isis_default_is_type") | String |  | `level-2` | Valid Values:<br>- <code>level-1-2</code><br>- <code>level-1</code><br>- <code>level-2</code> |  |
     | [<samp>isis_default_metric</samp>](## "isis_default_metric") | Integer |  | `50` |  | These fabric level parameters can be used with core_interfaces running ISIS, and may be overridden at link profile or link level.<br> |
-    | [<samp>isis_maximum_paths</samp>](## "isis_maximum_paths") | Integer |  |  |  | Number of path to configure in ECMP for ISIS. |
+    | [<samp>isis_maximum_paths</samp>](## "isis_maximum_paths") | Integer |  | `4` |  | Number of path to configure in ECMP for ISIS. |
     | [<samp>isis_system_id_format</samp>](## "isis_system_id_format") | String |  | `underlay_loopback` | Valid Values:<br>- <code>node_id</code><br>- <code>underlay_loopback</code> | Configures source for the system-id within the ISIS net id.<br>If this key is set to `node_id`, the fields `id` and `isis_system_id_prefix` configured under the node attributes are used to generate the system-id.<br>If `underlay_loopback` is selected then all node `isis_system_id_prefix` settings will be ignored and the loopback address will be used to generate the system-id. |
     | [<samp>isis_ti_lfa</samp>](## "isis_ti_lfa") | Dictionary |  |  |  |  |
     | [<samp>&nbsp;&nbsp;enabled</samp>](## "isis_ti_lfa.enabled") | Boolean |  | `False` |  |  |
@@ -35,7 +35,7 @@
     isis_default_metric: <int; default=50>
 
     # Number of path to configure in ECMP for ISIS.
-    isis_maximum_paths: <int>
+    isis_maximum_paths: <int; default=4>
 
     # Configures source for the system-id within the ISIS net id.
     # If this key is set to `node_id`, the fields `id` and `isis_system_id_prefix` configured under the node attributes are used to generate the system-id.

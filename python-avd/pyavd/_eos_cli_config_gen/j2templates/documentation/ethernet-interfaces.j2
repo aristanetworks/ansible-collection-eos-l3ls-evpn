@@ -334,6 +334,9 @@
 | {{ link_tracking_interface.name }} | {{ link_tracking_group.name }} | {{ link_tracking_group.direction }} |
 {%                 endif %}
 {%             endfor %}
+{%             if link_tracking_interface.link_tracking.direction is arista.avd.defined and link_tracking_interface.link_tracking.groups is arista.avd.defined %}
+| {{ link_tracking_interface.name }} | {{ link_tracking_interface.link_tracking.groups | join(', ') }} | {{ link_tracking_interface.link_tracking.direction }} |
+{%             endif %}
 {%         endfor %}
 {%     endif %}
 {# Phone Interfaces #}

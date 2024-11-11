@@ -17,6 +17,7 @@ event_handlers:
           echo "a is greater than 10"
         fi
       increment_device_health_metric: Metric1
+      log: true
   - name: trigger-on-maintenance1
     trigger: on-maintenance
     trigger_on_maintenance:
@@ -90,7 +91,31 @@ event_handlers:
       operstatus: true
   - name: trigger-on-intf2
     trigger: on-intf
+  - name: trigger-on-intf3
+    trigger: on-intf
+    trigger_on_intf:
+      interface: Ethernet3
+  - name: trigger-on-intf4
+    trigger: on-intf
+    trigger_on_intf:
+      interface: Ethernet4
+      ip: true
+  - name: trigger-on-intf5
+    trigger: on-intf
+    trigger_on_intf:
+      interface: Ethernet5
+      ipv6: true
+  - name: trigger-on-intf6
+    trigger: on-intf
+    trigger_on_intf:
+      interface: Ethernet6
+      operstatus: true
   - name: trigger-vm-tracer
     trigger: "vm-tracer vm"
     actions:
       bash_command: echo "vm-tracer vm"
+  - name: trigger-vm-tracer2
+    trigger: "vm-tracer vm"
+    actions:
+      bash_command: echo "vm-tracer vm"\nEOF
+  - name: without-trigger-key

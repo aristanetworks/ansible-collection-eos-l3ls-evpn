@@ -1,3 +1,4 @@
+---
 ### IGMP Snooping Enabled
 
 ip_igmp_snooping:
@@ -40,3 +41,4 @@ ip_igmp_snooping:
       # Settings documented even if not enabled
       fast_leave: false
       proxy: false
+    - id: 26
