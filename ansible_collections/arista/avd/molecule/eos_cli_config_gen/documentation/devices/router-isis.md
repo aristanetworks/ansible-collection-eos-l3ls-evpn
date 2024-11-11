@@ -281,10 +281,23 @@ interface Vlan4094
 | Type | level-2 |
 | Router-ID | 192.168.255.3 |
 | Log Adjacency Changes | True |
-| Local Convergence Delay (ms) | 15000 |
 | Advertise Passive-only | True |
 | SR MPLS Enabled | False |
 | SPF Interval | 250 seconds |
+
+#### ISIS Route Timers
+
+| Settings | Value |
+| -------- | ----- |
+| Local Convergence Delay | 15000 milliseconds |
+| CSN Packet Transmission Interval | 10 seconds |
+| CSN Packet P2P Links Disabled | True |
+| LSP Generation Maximum Interval | 30 seconds |
+| LSP Generation Initial Wait-time | 40 milliseconds |
+| LSP Generation Wait-time | 50 milliseconds |
+| LSP Out-delay | 20 milliseconds |
+| LSP Refresh Interval | 56 seconds |
+| LSP Minimum Remaining Lifetime | 78 seconds |
 
 #### ISIS Route Redistribution
 
@@ -352,6 +365,12 @@ router isis EVPN_UNDERLAY
    set-overload-bit on-startup wait-for-bgp
    advertise passive-only
    spf-interval 250
+   timers csnp generation interval 10 seconds
+   timers csnp generation p2p disabled
+   timers lsp out-delay 20
+   timers lsp refresh 56
+   timers lsp generation 30 40 50
+   timers lsp min-remaining-lifetime 78
    authentication mode sha key-id 5 rx-disabled level-1
    authentication mode shared-secret profile test2 algorithm md5 rx-disabled level-2
    authentication key 0 password

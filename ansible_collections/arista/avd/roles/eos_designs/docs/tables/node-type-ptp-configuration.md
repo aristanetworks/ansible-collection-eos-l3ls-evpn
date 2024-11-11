@@ -10,14 +10,14 @@
     | [<samp>&lt;node_type_keys.key&gt;</samp>](## "<node_type_keys.key>") | Dictionary |  |  |  |  |
     | [<samp>&nbsp;&nbsp;defaults</samp>](## "<node_type_keys.key>.defaults") | Dictionary |  |  |  | Define variables for all nodes of this type. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;ptp</samp>](## "<node_type_keys.key>.defaults.ptp") | Dictionary |  |  |  |  |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "<node_type_keys.key>.defaults.ptp.enabled") | Boolean |  | `False` |  |  |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;profile</samp>](## "<node_type_keys.key>.defaults.ptp.profile") | String |  | `aes67-r16-2016` |  | Default available profiles are:<br>  - "aes67"<br>  - "aes67-r16-2016"<br>  - "smpte2059-2" |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "<node_type_keys.key>.defaults.ptp.enabled") | Boolean |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;profile</samp>](## "<node_type_keys.key>.defaults.ptp.profile") | String |  |  |  | Default available profiles are:<br>  - "aes67"<br>  - "aes67-r16-2016"<br>  - "smpte2059-2" |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;mlag</samp>](## "<node_type_keys.key>.defaults.ptp.mlag") | Boolean |  | `False` |  | Configure PTP on the MLAG peer-link port-channel when PTP is enabled. By default PTP will not be configured on the MLAG peer-link port-channel. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;domain</samp>](## "<node_type_keys.key>.defaults.ptp.domain") | Integer |  | `127` | Min: 0<br>Max: 255 |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;priority1</samp>](## "<node_type_keys.key>.defaults.ptp.priority1") | Integer |  |  | Min: 0<br>Max: 255 | default -> automatically set based on node_type.<br> |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;priority2</samp>](## "<node_type_keys.key>.defaults.ptp.priority2") | Integer |  |  | Min: 0<br>Max: 255 | default -> (node_id modulus 256).<br> |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;auto_clock_identity</samp>](## "<node_type_keys.key>.defaults.ptp.auto_clock_identity") | Boolean |  | `True` |  | If you prefer to have PTP clock identity be the system MAC-address of the switch, which is the default EOS behaviour, simply disable the automatic PTP clock identity.<br>default -> (clock_identity_prefix = 00:1C:73 (default)) + (PTP priority 1 as HEX) + ":00:" + (PTP priority 2 as HEX).<br> |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;clock_identity_prefix</samp>](## "<node_type_keys.key>.defaults.ptp.clock_identity_prefix") | String |  |  |  | PTP clock idetentiy 3-byte prefix. i.e. "01:02:03".<br>By default the 3-byte prefix is "00:1C:73".<br>This can be overridden if auto_clock_identity is set to true (which is the default).<br> |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;auto_clock_identity</samp>](## "<node_type_keys.key>.defaults.ptp.auto_clock_identity") | Boolean |  |  |  | If you prefer to have PTP clock identity be the system MAC-address of the switch, which is the default EOS behaviour, simply disable the automatic PTP clock identity.<br>default -> (clock_identity_prefix = 00:1C:73 (default)) + (PTP priority 1 as HEX) + ":00:" + (PTP priority 2 as HEX).<br> |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;clock_identity_prefix</samp>](## "<node_type_keys.key>.defaults.ptp.clock_identity_prefix") | String |  | `00:1C:73` |  | PTP clock idetentiy 3-byte prefix. i.e. "01:02:03".<br>By default the 3-byte prefix is "00:1C:73".<br>This can be overridden if auto_clock_identity is set to true (which is the default).<br> |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;clock_identity</samp>](## "<node_type_keys.key>.defaults.ptp.clock_identity") | String |  |  |  | Set PTP clock identity manually. 6-byte value i.e. "01:02:03:04:05:06".<br> |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;source_ip</samp>](## "<node_type_keys.key>.defaults.ptp.source_ip") | String |  |  |  | By default in EOS, PTP packets are sourced with an IP address from the routed port or from the relevant SVI, which is the recommended behaviour.<br>This can be set manually if required, for example, to a value of "10.1.2.3".<br> |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;mode</samp>](## "<node_type_keys.key>.defaults.ptp.mode") | String |  | `boundary` | Valid Values:<br>- <code>boundary</code> |  |
@@ -51,14 +51,14 @@
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;nodes</samp>](## "<node_type_keys.key>.node_groups.[].nodes") | List, items: Dictionary |  |  |  | Define variables per node. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;name</samp>](## "<node_type_keys.key>.node_groups.[].nodes.[].name") | String | Required, Unique |  |  | The Node Name is used as "hostname". |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ptp</samp>](## "<node_type_keys.key>.node_groups.[].nodes.[].ptp") | Dictionary |  |  |  |  |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "<node_type_keys.key>.node_groups.[].nodes.[].ptp.enabled") | Boolean |  | `False` |  |  |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;profile</samp>](## "<node_type_keys.key>.node_groups.[].nodes.[].ptp.profile") | String |  | `aes67-r16-2016` |  | Default available profiles are:<br>  - "aes67"<br>  - "aes67-r16-2016"<br>  - "smpte2059-2" |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "<node_type_keys.key>.node_groups.[].nodes.[].ptp.enabled") | Boolean |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;profile</samp>](## "<node_type_keys.key>.node_groups.[].nodes.[].ptp.profile") | String |  |  |  | Default available profiles are:<br>  - "aes67"<br>  - "aes67-r16-2016"<br>  - "smpte2059-2" |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;mlag</samp>](## "<node_type_keys.key>.node_groups.[].nodes.[].ptp.mlag") | Boolean |  | `False` |  | Configure PTP on the MLAG peer-link port-channel when PTP is enabled. By default PTP will not be configured on the MLAG peer-link port-channel. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;domain</samp>](## "<node_type_keys.key>.node_groups.[].nodes.[].ptp.domain") | Integer |  | `127` | Min: 0<br>Max: 255 |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;priority1</samp>](## "<node_type_keys.key>.node_groups.[].nodes.[].ptp.priority1") | Integer |  |  | Min: 0<br>Max: 255 | default -> automatically set based on node_type.<br> |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;priority2</samp>](## "<node_type_keys.key>.node_groups.[].nodes.[].ptp.priority2") | Integer |  |  | Min: 0<br>Max: 255 | default -> (node_id modulus 256).<br> |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;auto_clock_identity</samp>](## "<node_type_keys.key>.node_groups.[].nodes.[].ptp.auto_clock_identity") | Boolean |  | `True` |  | If you prefer to have PTP clock identity be the system MAC-address of the switch, which is the default EOS behaviour, simply disable the automatic PTP clock identity.<br>default -> (clock_identity_prefix = 00:1C:73 (default)) + (PTP priority 1 as HEX) + ":00:" + (PTP priority 2 as HEX).<br> |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;clock_identity_prefix</samp>](## "<node_type_keys.key>.node_groups.[].nodes.[].ptp.clock_identity_prefix") | String |  |  |  | PTP clock idetentiy 3-byte prefix. i.e. "01:02:03".<br>By default the 3-byte prefix is "00:1C:73".<br>This can be overridden if auto_clock_identity is set to true (which is the default).<br> |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;auto_clock_identity</samp>](## "<node_type_keys.key>.node_groups.[].nodes.[].ptp.auto_clock_identity") | Boolean |  |  |  | If you prefer to have PTP clock identity be the system MAC-address of the switch, which is the default EOS behaviour, simply disable the automatic PTP clock identity.<br>default -> (clock_identity_prefix = 00:1C:73 (default)) + (PTP priority 1 as HEX) + ":00:" + (PTP priority 2 as HEX).<br> |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;clock_identity_prefix</samp>](## "<node_type_keys.key>.node_groups.[].nodes.[].ptp.clock_identity_prefix") | String |  | `00:1C:73` |  | PTP clock idetentiy 3-byte prefix. i.e. "01:02:03".<br>By default the 3-byte prefix is "00:1C:73".<br>This can be overridden if auto_clock_identity is set to true (which is the default).<br> |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;clock_identity</samp>](## "<node_type_keys.key>.node_groups.[].nodes.[].ptp.clock_identity") | String |  |  |  | Set PTP clock identity manually. 6-byte value i.e. "01:02:03:04:05:06".<br> |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;source_ip</samp>](## "<node_type_keys.key>.node_groups.[].nodes.[].ptp.source_ip") | String |  |  |  | By default in EOS, PTP packets are sourced with an IP address from the routed port or from the relevant SVI, which is the recommended behaviour.<br>This can be set manually if required, for example, to a value of "10.1.2.3".<br> |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;mode</samp>](## "<node_type_keys.key>.node_groups.[].nodes.[].ptp.mode") | String |  | `boundary` | Valid Values:<br>- <code>boundary</code> |  |
@@ -88,14 +88,14 @@
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;follow_up</samp>](## "<node_type_keys.key>.node_groups.[].nodes.[].ptp.monitor.missing_message.sequence_ids.follow_up") | Integer |  | `3` | Min: 2<br>Max: 255 |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sync</samp>](## "<node_type_keys.key>.node_groups.[].nodes.[].ptp.monitor.missing_message.sequence_ids.sync") | Integer |  | `3` | Min: 2<br>Max: 255 |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ptp</samp>](## "<node_type_keys.key>.node_groups.[].ptp") | Dictionary |  |  |  |  |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "<node_type_keys.key>.node_groups.[].ptp.enabled") | Boolean |  | `False` |  |  |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;profile</samp>](## "<node_type_keys.key>.node_groups.[].ptp.profile") | String |  | `aes67-r16-2016` |  | Default available profiles are:<br>  - "aes67"<br>  - "aes67-r16-2016"<br>  - "smpte2059-2" |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "<node_type_keys.key>.node_groups.[].ptp.enabled") | Boolean |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;profile</samp>](## "<node_type_keys.key>.node_groups.[].ptp.profile") | String |  |  |  | Default available profiles are:<br>  - "aes67"<br>  - "aes67-r16-2016"<br>  - "smpte2059-2" |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;mlag</samp>](## "<node_type_keys.key>.node_groups.[].ptp.mlag") | Boolean |  | `False` |  | Configure PTP on the MLAG peer-link port-channel when PTP is enabled. By default PTP will not be configured on the MLAG peer-link port-channel. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;domain</samp>](## "<node_type_keys.key>.node_groups.[].ptp.domain") | Integer |  | `127` | Min: 0<br>Max: 255 |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;priority1</samp>](## "<node_type_keys.key>.node_groups.[].ptp.priority1") | Integer |  |  | Min: 0<br>Max: 255 | default -> automatically set based on node_type.<br> |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;priority2</samp>](## "<node_type_keys.key>.node_groups.[].ptp.priority2") | Integer |  |  | Min: 0<br>Max: 255 | default -> (node_id modulus 256).<br> |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;auto_clock_identity</samp>](## "<node_type_keys.key>.node_groups.[].ptp.auto_clock_identity") | Boolean |  | `True` |  | If you prefer to have PTP clock identity be the system MAC-address of the switch, which is the default EOS behaviour, simply disable the automatic PTP clock identity.<br>default -> (clock_identity_prefix = 00:1C:73 (default)) + (PTP priority 1 as HEX) + ":00:" + (PTP priority 2 as HEX).<br> |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;clock_identity_prefix</samp>](## "<node_type_keys.key>.node_groups.[].ptp.clock_identity_prefix") | String |  |  |  | PTP clock idetentiy 3-byte prefix. i.e. "01:02:03".<br>By default the 3-byte prefix is "00:1C:73".<br>This can be overridden if auto_clock_identity is set to true (which is the default).<br> |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;auto_clock_identity</samp>](## "<node_type_keys.key>.node_groups.[].ptp.auto_clock_identity") | Boolean |  |  |  | If you prefer to have PTP clock identity be the system MAC-address of the switch, which is the default EOS behaviour, simply disable the automatic PTP clock identity.<br>default -> (clock_identity_prefix = 00:1C:73 (default)) + (PTP priority 1 as HEX) + ":00:" + (PTP priority 2 as HEX).<br> |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;clock_identity_prefix</samp>](## "<node_type_keys.key>.node_groups.[].ptp.clock_identity_prefix") | String |  | `00:1C:73` |  | PTP clock idetentiy 3-byte prefix. i.e. "01:02:03".<br>By default the 3-byte prefix is "00:1C:73".<br>This can be overridden if auto_clock_identity is set to true (which is the default).<br> |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;clock_identity</samp>](## "<node_type_keys.key>.node_groups.[].ptp.clock_identity") | String |  |  |  | Set PTP clock identity manually. 6-byte value i.e. "01:02:03:04:05:06".<br> |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;source_ip</samp>](## "<node_type_keys.key>.node_groups.[].ptp.source_ip") | String |  |  |  | By default in EOS, PTP packets are sourced with an IP address from the routed port or from the relevant SVI, which is the recommended behaviour.<br>This can be set manually if required, for example, to a value of "10.1.2.3".<br> |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;mode</samp>](## "<node_type_keys.key>.node_groups.[].ptp.mode") | String |  | `boundary` | Valid Values:<br>- <code>boundary</code> |  |
@@ -127,14 +127,14 @@
     | [<samp>&nbsp;&nbsp;nodes</samp>](## "<node_type_keys.key>.nodes") | List, items: Dictionary |  |  |  | Define variables per node. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;name</samp>](## "<node_type_keys.key>.nodes.[].name") | String | Required, Unique |  |  | The Node Name is used as "hostname". |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ptp</samp>](## "<node_type_keys.key>.nodes.[].ptp") | Dictionary |  |  |  |  |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "<node_type_keys.key>.nodes.[].ptp.enabled") | Boolean |  | `False` |  |  |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;profile</samp>](## "<node_type_keys.key>.nodes.[].ptp.profile") | String |  | `aes67-r16-2016` |  | Default available profiles are:<br>  - "aes67"<br>  - "aes67-r16-2016"<br>  - "smpte2059-2" |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "<node_type_keys.key>.nodes.[].ptp.enabled") | Boolean |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;profile</samp>](## "<node_type_keys.key>.nodes.[].ptp.profile") | String |  |  |  | Default available profiles are:<br>  - "aes67"<br>  - "aes67-r16-2016"<br>  - "smpte2059-2" |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;mlag</samp>](## "<node_type_keys.key>.nodes.[].ptp.mlag") | Boolean |  | `False` |  | Configure PTP on the MLAG peer-link port-channel when PTP is enabled. By default PTP will not be configured on the MLAG peer-link port-channel. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;domain</samp>](## "<node_type_keys.key>.nodes.[].ptp.domain") | Integer |  | `127` | Min: 0<br>Max: 255 |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;priority1</samp>](## "<node_type_keys.key>.nodes.[].ptp.priority1") | Integer |  |  | Min: 0<br>Max: 255 | default -> automatically set based on node_type.<br> |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;priority2</samp>](## "<node_type_keys.key>.nodes.[].ptp.priority2") | Integer |  |  | Min: 0<br>Max: 255 | default -> (node_id modulus 256).<br> |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;auto_clock_identity</samp>](## "<node_type_keys.key>.nodes.[].ptp.auto_clock_identity") | Boolean |  | `True` |  | If you prefer to have PTP clock identity be the system MAC-address of the switch, which is the default EOS behaviour, simply disable the automatic PTP clock identity.<br>default -> (clock_identity_prefix = 00:1C:73 (default)) + (PTP priority 1 as HEX) + ":00:" + (PTP priority 2 as HEX).<br> |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;clock_identity_prefix</samp>](## "<node_type_keys.key>.nodes.[].ptp.clock_identity_prefix") | String |  |  |  | PTP clock idetentiy 3-byte prefix. i.e. "01:02:03".<br>By default the 3-byte prefix is "00:1C:73".<br>This can be overridden if auto_clock_identity is set to true (which is the default).<br> |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;auto_clock_identity</samp>](## "<node_type_keys.key>.nodes.[].ptp.auto_clock_identity") | Boolean |  |  |  | If you prefer to have PTP clock identity be the system MAC-address of the switch, which is the default EOS behaviour, simply disable the automatic PTP clock identity.<br>default -> (clock_identity_prefix = 00:1C:73 (default)) + (PTP priority 1 as HEX) + ":00:" + (PTP priority 2 as HEX).<br> |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;clock_identity_prefix</samp>](## "<node_type_keys.key>.nodes.[].ptp.clock_identity_prefix") | String |  | `00:1C:73` |  | PTP clock idetentiy 3-byte prefix. i.e. "01:02:03".<br>By default the 3-byte prefix is "00:1C:73".<br>This can be overridden if auto_clock_identity is set to true (which is the default).<br> |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;clock_identity</samp>](## "<node_type_keys.key>.nodes.[].ptp.clock_identity") | String |  |  |  | Set PTP clock identity manually. 6-byte value i.e. "01:02:03:04:05:06".<br> |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;source_ip</samp>](## "<node_type_keys.key>.nodes.[].ptp.source_ip") | String |  |  |  | By default in EOS, PTP packets are sourced with an IP address from the routed port or from the relevant SVI, which is the recommended behaviour.<br>This can be set manually if required, for example, to a value of "10.1.2.3".<br> |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;mode</samp>](## "<node_type_keys.key>.nodes.[].ptp.mode") | String |  | `boundary` | Valid Values:<br>- <code>boundary</code> |  |
@@ -172,13 +172,13 @@
       # Define variables for all nodes of this type.
       defaults:
         ptp:
-          enabled: <bool; default=False>
+          enabled: <bool>
 
           # Default available profiles are:
           #   - "aes67"
           #   - "aes67-r16-2016"
           #   - "smpte2059-2"
-          profile: <str; default="aes67-r16-2016">
+          profile: <str>
 
           # Configure PTP on the MLAG peer-link port-channel when PTP is enabled. By default PTP will not be configured on the MLAG peer-link port-channel.
           mlag: <bool; default=False>
@@ -192,12 +192,12 @@
 
           # If you prefer to have PTP clock identity be the system MAC-address of the switch, which is the default EOS behaviour, simply disable the automatic PTP clock identity.
           # default -> (clock_identity_prefix = 00:1C:73 (default)) + (PTP priority 1 as HEX) + ":00:" + (PTP priority 2 as HEX).
-          auto_clock_identity: <bool; default=True>
+          auto_clock_identity: <bool>
 
           # PTP clock idetentiy 3-byte prefix. i.e. "01:02:03".
           # By default the 3-byte prefix is "00:1C:73".
           # This can be overridden if auto_clock_identity is set to true (which is the default).
-          clock_identity_prefix: <str>
+          clock_identity_prefix: <str; default="00:1C:73">
 
           # Set PTP clock identity manually. 6-byte value i.e. "01:02:03:04:05:06".
           clock_identity: <str>
@@ -247,13 +247,13 @@
               # The Node Name is used as "hostname".
             - name: <str; required; unique>
               ptp:
-                enabled: <bool; default=False>
+                enabled: <bool>
 
                 # Default available profiles are:
                 #   - "aes67"
                 #   - "aes67-r16-2016"
                 #   - "smpte2059-2"
-                profile: <str; default="aes67-r16-2016">
+                profile: <str>
 
                 # Configure PTP on the MLAG peer-link port-channel when PTP is enabled. By default PTP will not be configured on the MLAG peer-link port-channel.
                 mlag: <bool; default=False>
@@ -267,12 +267,12 @@
 
                 # If you prefer to have PTP clock identity be the system MAC-address of the switch, which is the default EOS behaviour, simply disable the automatic PTP clock identity.
                 # default -> (clock_identity_prefix = 00:1C:73 (default)) + (PTP priority 1 as HEX) + ":00:" + (PTP priority 2 as HEX).
-                auto_clock_identity: <bool; default=True>
+                auto_clock_identity: <bool>
 
                 # PTP clock idetentiy 3-byte prefix. i.e. "01:02:03".
                 # By default the 3-byte prefix is "00:1C:73".
                 # This can be overridden if auto_clock_identity is set to true (which is the default).
-                clock_identity_prefix: <str>
+                clock_identity_prefix: <str; default="00:1C:73">
 
                 # Set PTP clock identity manually. 6-byte value i.e. "01:02:03:04:05:06".
                 clock_identity: <str>
@@ -309,13 +309,13 @@
                       follow_up: <int; 2-255; default=3>
                       sync: <int; 2-255; default=3>
           ptp:
-            enabled: <bool; default=False>
+            enabled: <bool>
 
             # Default available profiles are:
             #   - "aes67"
             #   - "aes67-r16-2016"
             #   - "smpte2059-2"
-            profile: <str; default="aes67-r16-2016">
+            profile: <str>
 
             # Configure PTP on the MLAG peer-link port-channel when PTP is enabled. By default PTP will not be configured on the MLAG peer-link port-channel.
             mlag: <bool; default=False>
@@ -329,12 +329,12 @@
 
             # If you prefer to have PTP clock identity be the system MAC-address of the switch, which is the default EOS behaviour, simply disable the automatic PTP clock identity.
             # default -> (clock_identity_prefix = 00:1C:73 (default)) + (PTP priority 1 as HEX) + ":00:" + (PTP priority 2 as HEX).
-            auto_clock_identity: <bool; default=True>
+            auto_clock_identity: <bool>
 
             # PTP clock idetentiy 3-byte prefix. i.e. "01:02:03".
             # By default the 3-byte prefix is "00:1C:73".
             # This can be overridden if auto_clock_identity is set to true (which is the default).
-            clock_identity_prefix: <str>
+            clock_identity_prefix: <str; default="00:1C:73">
 
             # Set PTP clock identity manually. 6-byte value i.e. "01:02:03:04:05:06".
             clock_identity: <str>
@@ -377,13 +377,13 @@
           # The Node Name is used as "hostname".
         - name: <str; required; unique>
           ptp:
-            enabled: <bool; default=False>
+            enabled: <bool>
 
             # Default available profiles are:
             #   - "aes67"
             #   - "aes67-r16-2016"
             #   - "smpte2059-2"
-            profile: <str; default="aes67-r16-2016">
+            profile: <str>
 
             # Configure PTP on the MLAG peer-link port-channel when PTP is enabled. By default PTP will not be configured on the MLAG peer-link port-channel.
             mlag: <bool; default=False>
@@ -397,12 +397,12 @@
 
             # If you prefer to have PTP clock identity be the system MAC-address of the switch, which is the default EOS behaviour, simply disable the automatic PTP clock identity.
             # default -> (clock_identity_prefix = 00:1C:73 (default)) + (PTP priority 1 as HEX) + ":00:" + (PTP priority 2 as HEX).
-            auto_clock_identity: <bool; default=True>
+            auto_clock_identity: <bool>
 
             # PTP clock idetentiy 3-byte prefix. i.e. "01:02:03".
             # By default the 3-byte prefix is "00:1C:73".
             # This can be overridden if auto_clock_identity is set to true (which is the default).
-            clock_identity_prefix: <str>
+            clock_identity_prefix: <str; default="00:1C:73">
 
             # Set PTP clock identity manually. 6-byte value i.e. "01:02:03:04:05:06".
             clock_identity: <str>

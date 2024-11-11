@@ -569,6 +569,7 @@ keys:
                   description: Application name.
       application_profiles:
         type: list
+        primary_key: name
         description: Group of applications.
         items:
           type: dict
@@ -1771,7 +1772,7 @@ keys:
             type: str
           start_limit_infinite:
             type: bool
-            description: Set captive-portal start limit to infinte.
+            description: Set captive-portal start limit to infinite.
           access_list_ipv4:
             type: str
             description: Standard access-list name.
@@ -2140,6 +2141,19 @@ keys:
             forwarding_profile:
               type: str
               description: L2 protocol forwarding profile.
+        mac_timestamp:
+          type: str
+          valid_values:
+          - before-fcs
+          - replace-fcs
+          - header
+          description: 'header: Insert timestamp in ethernet header. Supported on
+            platforms like 7500E/R and 7280E/R.
+
+            before-fcs: Insert timestamp before fcs field. Supported on platforms
+            like 7150.
+
+            replace-fcs: Replace fcs field with timestamp.'
         trunk_groups:
           type: list
           items:
@@ -2154,7 +2168,7 @@ keys:
           deprecation:
             warning: true
             remove_in_version: 6.0.0
-            url: https://avd.arista.com/stable/docs/release-notes/5.x.x.html#removal-of-type-key-dependency-for-rendering-ethernetport-channel-interfaces-configuration-and-documentation
+            url: https://avd.arista.com/5.x/docs/porting-guides/5.x.x.html#removal-of-type-key-dependency-for-rendering-ethernetport-channel-interfaces-configuration-and-documentation
           valid_values:
           - routed
           - switched
@@ -4507,7 +4521,7 @@ keys:
     deprecation:
       warning: true
       remove_in_version: 6.0.0
-      url: https://avd.arista.com/devel/docs/porting-guides/5.x.x.html#default-eos-configuration-is-no-longer-automatically-generated
+      url: https://avd.arista.com/5.x/docs/porting-guides/5.x.x.html#default-eos-configuration-is-no-longer-automatically-generated
   generate_device_documentation:
     type: bool
     documentation_options:
@@ -6401,7 +6415,7 @@ keys:
               type: str
               convert_types:
               - int
-              description: 'Severity of facility. Below are the supported severites.
+              description: 'Severity of facility. Below are the supported severities.
 
                 emergencies    System is unusable                (severity=0)
 
@@ -8389,7 +8403,7 @@ keys:
                   mask:
                     type: str
                     description: 16 bit hexadecimal mask for TCP/UDP or IP ID with
-                      atmost 2 unset bits.
+                      at most 2 unset bits.
       marker_vxlan:
         type: dict
         keys:
@@ -9235,7 +9249,7 @@ keys:
           deprecation:
             warning: true
             remove_in_version: 6.0.0
-            url: https://avd.arista.com/stable/docs/release-notes/5.x.x.html#removal-of-type-key-dependency-for-rendering-ethernetport-channel-interfaces-configuration-and-documentation
+            url: https://avd.arista.com/5.x/docs/porting-guides/5.x.x.html#removal-of-type-key-dependency-for-rendering-ethernetport-channel-interfaces-configuration-and-documentation
           valid_values:
           - routed
           - switched
@@ -9474,7 +9488,6 @@ keys:
             new_key: switchport.trunk.native_vlan
         native_vlan_tag:
           type: bool
-          default: false
           description: If setting both native_vlan and native_vlan_tag, native_vlan_tag
             takes precedence.
           deprecation:
@@ -9550,10 +9563,9 @@ keys:
             new_key: switchport.trunk.groups
         lacp_fallback_timeout:
           type: int
-          description: Timeout in seconds.
+          description: Timeout in seconds. EOS default is 90 seconds.
           convert_types:
           - str
-          default: 90
           min: 0
           max: 300
         lacp_fallback_mode:
@@ -17899,6 +17911,76 @@ keys:
                 - str
                 default: 10000
                 description: Delay in milliseconds.
+          lsp:
+            description: Link State Packet timers.
+            type: dict
+            keys:
+              generation:
+                type: dict
+                keys:
+                  interval:
+                    type: int
+                    convert_types:
+                    - str
+                    min: 1
+                    max: 300
+                    required: true
+                    description: Maximum interval (in seconds) between generating
+                      two LSPs.
+                  initial_wait_time:
+                    type: int
+                    convert_types:
+                    - str
+                    min: 1
+                    max: 300000
+                    description: Initial wait time (in milliseconds) before generating
+                      LSPs.
+                  wait_time:
+                    type: int
+                    convert_types:
+                    - str
+                    min: 1
+                    max: 300000
+                    description: Wait time (in milliseconds) between generating the
+                      first and second LSPs.
+              out_delay:
+                type: int
+                convert_types:
+                - str
+                min: 1
+                max: 65000
+                description: Transmit delay (in milliseconds) for link state packets.
+              refresh_interval:
+                type: int
+                convert_types:
+                - str
+                min: 30
+                max: 65535
+                description: Interval (in seconds) between two LSP refreshes.
+              min_remaining_lifetime:
+                type: int
+                convert_types:
+                - str
+                min: 60
+                max: 65535
+                description: Minimum remaining lifetime for LSPs (in seconds).
+          csnp:
+            type: dict
+            description: CSN Packet timers.
+            keys:
+              generation:
+                type: dict
+                keys:
+                  interval:
+                    type: int
+                    convert_types:
+                    - str
+                    min: 1
+                    max: 300
+                    description: Transmit frequency (in seconds) for CSN packets.
+                  p2p_disabled:
+                    type: bool
+                    description: Disable periodic CSN packets for P2P links.
       set_overload_bit:
         type: dict
         keys:

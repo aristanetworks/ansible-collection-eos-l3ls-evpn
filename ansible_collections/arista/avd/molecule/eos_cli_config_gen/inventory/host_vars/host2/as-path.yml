@@ -1,0 +1,5 @@
+---
+### as path ###
+as_path:
+  access_lists:
+    - name: mylist_withou_entries

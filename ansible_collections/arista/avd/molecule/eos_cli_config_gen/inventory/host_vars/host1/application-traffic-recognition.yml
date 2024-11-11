@@ -1,0 +1,147 @@
+---
+### router_path_selection ###
+# NOTE that this leverage all possible knobs and this config is **NOT** valid on
+# an actual device
+
+application_traffic_recognition:
+  categories:
+    - name: category1
+      applications:
+        - name: aim
+          service: chat
+        - name: aim
+          service: audio-video
+        - name: anydesk
+    - name: best-effort
+      applications:
+        - name: aimini
+          service: peer-to-peer
+        - name: apple_update
+          service: software-update
+    - name: empty
+  field_sets:
+    l4_ports:
+      - name: src_port_set1
+        port_values:
+          - 2400-2500
+          - 2900-3000
+      - name: dest_port_set1
+        port_values:
+          - 2300-2350
+      - name: src_port_set2
+        port_values:
+          - 6500-6600
+          - 5700-5800
+      - name: dest_port_set2
+        port_values:
+          - 3300-3350
+      - name: ordering-test
+        port_values:
+          - 666
+          - 101-103
+          - 650
+      - name: empty-l4-ports
+    ipv4_prefixes:
+      - name: src_prefix_set1
+        prefix_values:
+          - 1.2.3.0/24
+          - 1.2.5.0/24
+      - name: dest_prefix_set1
+        prefix_values:
+          - 2.3.4.0/24
+      - name: src_prefix_set2
+        prefix_values:
+          - 3.3.3.0/24
+          - 2.2.2.0/24
+      - name: dest_prefix_set2
+        prefix_values:
+          - 4.4.4.0/24
+      - name: order-test
+        prefix_values:
+          - 192.168.42.0/24
+          - 6.6.6.6/32
+          - 192.168.43.0/24
+      - name: empty-ipv4-prefixes
+  applications:
+    ipv4_applications:
+      - name: empty-application
+      - name: empty-protocols
+        protocol_ranges:
+          - "21"
+      - name: user_defined_app2
+        protocols:
+          - pim
+          - icmp
+          - tcp
+        protocol_ranges:
+          - "21"
+          - "7-11"
+        src_prefix_set_name: src_prefix_set2
+        dest_prefix_set_name: dest_prefix_set2
+        dscp_ranges:
+          - ef
+          - 1-42
+          - cs1
+      - name: user_defined_app1
+        protocols:
+          - udp
+          - tcp
+        protocol_ranges:
+          - "25"
+        udp_src_port_set_name: src_port_set2
+        udp_dest_port_set_name: dest_port_set2
+        src_prefix_set_name: src_prefix_set1
+        dest_prefix_set_name: dest_prefix_set1
+        tcp_src_port_set_name: src_port_set1
+        tcp_dest_port_set_name: dest_port_set1
+        dscp_ranges:
+          - 12-19
+          - af43
+          - af41
+          - ef
+          - 1-4,6
+          - 32-33,34-35
+          - 11
+          - 56-57, 58
+          - 59-60, 61-62
+    l4_applications:
+      - name: l4-app-1
+        protocols:
+          - tcp
+          - udp
+        tcp_src_port_set_name: src_port_set1
+        tcp_dest_port_set_name: dest_port_set1
+        udp_src_port_set_name: src_port_set1
+        udp_dest_port_set_name: dest_port_set1
+      - name: l4-app-2
+        protocols:
+          - tcp
+        protocol_ranges:
+          - "27"
+          - "41-44"
+  application_profiles:
+    - name: app_profile_2
+      applications:
+        - name: user_defined_app2
+        - name: aim
+          service: audio-video
+      categories:
+        - name: category1
+          service: chat
+      application_transports:
+        - https
+        - quic
+    - name: app_profile_1
+      applications:
+        - name: user_defined_app1
+        - name: aim
+          service: chat
+        - name: aim
+          service: audio-video
+      application_transports:
+        - udp
+        - http
+      categories:
+        - name: best-effort
+        - name: category1
+          service: audio-video

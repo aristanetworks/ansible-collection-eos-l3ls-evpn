@@ -93,6 +93,7 @@ keys:
             Acting role in overlay control plane.
         default_overlay_address_families:
           type: list
+          default: ["evpn"]
           items:
             type: str
             convert_to_lower_case: true
@@ -104,6 +105,7 @@ keys:
             Set the default overlay address families.
         default_evpn_encapsulation:
           type: str
+          default: vxlan
           convert_to_lower_case: true
           valid_values:
             - "mpls"
@@ -196,6 +198,7 @@ keys:
               description: Custom Python Module to import for IP addressing.
             python_class_name:
               type: str
+              default: AvdIpAddressing
               description: Name of Custom Python Class to import for IP addressing.
             router_id:
               type: str
@@ -244,6 +247,7 @@ keys:
               description: Custom Python Module to import for interface descriptions.
             python_class_name:
               type: str
+              default: AvdInterfaceDescriptions
               description: Name of Custom Python Class to import for interface descriptions.
             underlay_ethernet_interfaces:
               type: str

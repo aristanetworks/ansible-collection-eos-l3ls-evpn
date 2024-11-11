@@ -111,7 +111,7 @@ ethernet_interfaces:
   ip_address: 100.123.123.2/31
   isis_enable: CORE
   isis_metric: 60
-  isis_network_point_to_point: true
+  isis_network_point_to_point: false
   isis_hello_padding: true
   isis_circuit_type: level-1
   mpls:

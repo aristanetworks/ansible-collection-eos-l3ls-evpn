@@ -53,6 +53,8 @@ router_bgp:
     redistribute:
       connected:
         enabled: true
+      attached_host:
+        enabled: true
 service_routing_protocols_model: multi-agent
 ip_routing: true
 vlan_internal_order:
