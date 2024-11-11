@@ -196,7 +196,7 @@ keys:
           send_community:
             type: str
             valid_values:
-              - all 
+              - all
               - large
               - extended
               - standard
