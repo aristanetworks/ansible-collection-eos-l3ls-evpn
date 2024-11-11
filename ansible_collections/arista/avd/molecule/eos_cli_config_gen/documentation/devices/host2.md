@@ -25,6 +25,7 @@
   - [DPS Interfaces](#dps-interfaces)
 - [Routing](#routing)
   - [ARP](#arp)
+  - [Router BGP](#router-bgp)
 - [Multicast](#multicast)
   - [IP IGMP Snooping](#ip-igmp-snooping)
 - [Filters](#filters)
@@ -249,6 +250,115 @@ ARP cache persistency is enabled.
 ```eos
 !
 arp persistent
+```
+
+### Router BGP
+
+ASN Notation: asplain
+
+#### Router BGP Summary
+
+| BGP AS | Router ID |
+| ------ | --------- |
+| 65101 | - |
+
+| BGP Tuning |
+| ---------- |
+| graceful-restart |
+| no graceful-restart-helper |
+| no bgp additional-paths receive |
+| no bgp additional-paths send |
+| no bgp default ipv4-unicast |
+| no bgp default ipv4-unicast transport ipv6 |
+| bgp route-reflector preserve-attributes |
+
+#### Router BGP EVPN Address Family
+
+##### EVPN Peer Groups
+
+| Peer Group | Activate | Route-map In | Route-map Out | Encapsulation |
+| ---------- | -------- | ------------ | ------------- | ------------- |
+| EVPN-OVERLAY-PEERS | True |  - | - | default |
+| MLAG-IPv4-UNDERLAY-PEER | False |  - | - | default |
+
+##### EVPN Neighbor Default Encapsulation
+
+| Neighbor Default Encapsulation | Next-hop-self Source Interface |
+| ------------------------------ | ------------------------------ |
+| path-selection | - |
+
+##### EVPN Host Flapping Settings
+
+| State | Window | Threshold | Expiry Timeout |
+| ----- | ------ | --------- | -------------- |
+| Enabled | - | - | 20 Seconds |
+
+##### EVPN DCI Gateway Summary
+
+| Settings | Value |
+| -------- | ----- |
+| L3 Gateway Configured | True |
+| L3 Gateway Inter-domain | True |
+
+#### Router BGP Device Configuration
+
+```eos
+!
+router bgp 65101
+   no bgp default ipv4-unicast
+   no bgp default ipv4-unicast transport ipv6
+   graceful-restart
+   no graceful-restart-helper
+   bgp route-reflector preserve-attributes
+   no bgp additional-paths receive
+   no bgp additional-paths send
+   bgp redistribute-internal
+   redistribute connected include leaked route-map RM-CONN-2-BGP
+   redistribute isis level-2 include leaked rcf RCF-CONN-2-BGP()
+   redistribute ospf match internal include leaked route-map RM_BGP_EVPN
+   redistribute ospf match external include leaked route-map RM_BGP_EVPN
+   redistribute ospfv3 match internal include leaked route-map RM-CONN-2-BGP
+   redistribute static route-map RM-STATIC-2-BGP
+   redistribute dynamic rcf RCF-CONN-2-BGP()
+   !
+   address-family evpn
+      no bgp additional-paths send
+      neighbor default encapsulation path-selection
+      neighbor EVPN-OVERLAY-PEERS activate
+      no neighbor MLAG-IPv4-UNDERLAY-PEER activate
+      neighbor default next-hop-self received-evpn-routes route-type ip-prefix inter-domain
+      host-flap detection expiry timeout 20 seconds
+   !
+   address-family ipv4
+      redistribute bgp leaked route-map RM_BGP_EVPN_IPV4
+      redistribute connected route-map RM_BGP_EVPN_IPV4
+      redistribute dynamic rcf RCF_BGP_EVPN_IPV4()
+      redistribute isis level-1 include leaked rcf Address_Family_IPV4_ISIS()
+      redistribute ospf include leaked route-map RM_BGP_EVPN_IPV4
+      redistribute ospfv3 match internal include leaked route-map RM_BGP_EVPN_IPV4
+      redistribute ospf match external include leaked route-map RM_BGP_EVPN_IPV4
+      redistribute ospf match nssa-external 1 include leaked route-map RM_BGP_EVPN_IPV4
+      redistribute static include leaked route-map RM_BGP_EVPN_IPV4
+   !
+   address-family ipv4 multicast
+      redistribute ospfv3 route-map AFIPV4M_OSPFV3
+      redistribute ospf match external route-map AFIPV4M_OSPF_EXTERNAL
+   !
+   address-family ipv6
+      redistribute attached-host route-map RM-Address_Family_IPV6_Attached-Host
+      redistribute dhcp route-map RM-Address_Family_IPV6_DHCP
+      redistribute connected route-map RM-Address_Family_IPV6_Connected
+      redistribute dynamic rcf RCF_Address_Family_IPV6_Dynamic()
+      redistribute user rcf RCF_Address_Family_IPV6_User()
+      redistribute isis include leaked route-map RM-Address_Family_IPV6_ISIS
+      redistribute ospfv3 match internal include leaked route-map RM-REDISTRIBUTE-OSPF-INTERNAL
+      redistribute ospfv3 match external include leaked
+      redistribute ospfv3 match nssa-external 1 include leaked route-map RM-REDISTRIBUTE-OSPF-NSSA-EXTERNAL
+      redistribute static include leaked rcf RCF_IPV6_STATIC_TO_BGP{}
+   !
+   address-family ipv6 multicast
+      redistribute isis rcf Router_BGP_Isis()
+      redistribute ospf match internal
 ```
 
 ## Multicast

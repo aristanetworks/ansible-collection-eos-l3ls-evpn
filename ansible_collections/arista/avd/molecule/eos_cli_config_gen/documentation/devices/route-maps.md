@@ -47,6 +47,18 @@ interface Management1
 | -------- | ---- | ----- | --- | ------------- | -------- |
 | 10 | permit | - | ip next-hop 10.2.3.4 | - | - |
 
+##### RM-BGP-AGG-APPLY-SET
+
+| Sequence | Type | Match | Set | Sub-Route-Map | Continue |
+| -------- | ---- | ----- | --- | ------------- | -------- |
+| 10 | permit | - | local-preference 50 | - | - |
+
+##### RM-BGP-EXPORT-DEFAULT-BLUE-C1
+
+| Sequence | Type | Match | Set | Sub-Route-Map | Continue |
+| -------- | ---- | ----- | --- | ------------- | -------- |
+| 10 | permit | ip address prefix-list PL-BGP-DEFAULT-BLUE-C1 | - | - | - |
+
 ##### RM-CONN-BL-BGP
 
 | Sequence | Type | Match | Set | Sub-Route-Map | Continue |
@@ -88,6 +100,14 @@ interface Management1
 !
 route-map RM-10.2.3.4-SET-NEXT-HOP-OUT permit 10
    set ip next-hop 10.2.3.4
+!
+route-map RM-BGP-AGG-APPLY-SET permit 10
+   description RM for BGP AGG Set
+   set local-preference 50
+!
+route-map RM-BGP-EXPORT-DEFAULT-BLUE-C1 permit 10
+   description RM for BGP default route in BLUE-C1
+   match ip address prefix-list PL-BGP-DEFAULT-BLUE-C1
 !
 route-map RM-CONN-BL-BGP deny 10
    match ip address prefix-list PL-MLAG
