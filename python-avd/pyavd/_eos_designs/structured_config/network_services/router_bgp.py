@@ -178,6 +178,9 @@ class RouterBgpMixin(UtilsMixin):
                     ):
                         bgp_vrf["redistribute"].update({"static": {"enabled": True}})
 
+                    if self.shared_utils.inband_mgmt_vrf == vrf_name and self.shared_utils.inband_management_parent_vlans:
+                        bgp_vrf["redistribute"].update({"attached_host": {"enabled": True}})
+
                 else:
                     # VRF default
                     if bgp_vrf:

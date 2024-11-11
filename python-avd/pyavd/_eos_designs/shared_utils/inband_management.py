@@ -9,6 +9,7 @@ from typing import TYPE_CHECKING
 
 from pyavd._errors import AristaAvdError, AristaAvdInvalidInputsError
 from pyavd._utils import default, get
+from pyavd.j2filters import natural_sort
 
 if TYPE_CHECKING:
     from . import SharedUtils
@@ -187,3 +188,32 @@ class InbandManagementMixin:
     @cached_property
     def inband_ztp_lacp_fallback_delay(self: SharedUtils) -> int | None:
         return default(get(self.switch_data_combined, "inband_ztp_lacp_fallback_delay"), 30)
+
+    @cached_property
+    def inband_management_parent_vlans(self: SharedUtils) -> dict:
+        if not self.underlay_router:
+            return {}
+
+        svis = {}
+        subnets = []
+        ipv6_subnets = []
+        peers = natural_sort(get(self.hostvars, f"avd_topology_peers..{self.hostname}", separator="..", default=[]))
+        for peer in peers:
+            peer_facts = self.get_peer_facts(peer, required=True)
+            if (vlan := peer_facts.get("inband_mgmt_vlan")) is None:
+                continue
+
+            subnet = peer_facts.get("inband_mgmt_subnet")
+            ipv6_subnet = peer_facts.get("inband_mgmt_ipv6_subnet")
+            if vlan not in svis:
+                svis[vlan] = {"ipv4": None, "ipv6": None}
+
+            if subnet not in subnets:
+                subnets.append(subnet)
+                svis[vlan]["ipv4"] = subnet
+
+            if ipv6_subnet not in ipv6_subnets:
+                ipv6_subnets.append(ipv6_subnet)
+                svis[vlan]["ipv6"] = ipv6_subnet
+
+        return svis

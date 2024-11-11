@@ -15,7 +15,7 @@
 {%     for ip_extcommunity_list in ip_extcommunity_lists_regexp | arista.avd.natural_sort('name') %}
 {%         for entry in ip_extcommunity_list.entries | arista.avd.default([]) %}
 {%             if entry.type is arista.avd.defined and entry.regexp is arista.avd.defined %}
-| {{ ip_extcommunity_list.name }} | {{ entry.type }} | {{ entry.regexp }} |
+| {{ ip_extcommunity_list.name }} | {{ entry.type }} | `{{ entry.regexp }}` |
 {%             endif %}
 {%         endfor %}
 {%     endfor %}

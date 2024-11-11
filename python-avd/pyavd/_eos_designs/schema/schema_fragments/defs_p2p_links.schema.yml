@@ -85,7 +85,7 @@ $defs:
           description: Add this interface to underlay routing protocol.
         isis_hello_padding:
           type: bool
-          default: false
+          default: true
         isis_metric:
           type: int
           convert_types:
@@ -104,6 +104,12 @@ $defs:
         isis_authentication_key:
           type: str
           description: Type-7 encrypted password.
+        isis_network_type:
+          type: str
+          default: point-to-point
+          valid_values:
+            - point-to-point
+            - broadcast
         mpls_ip:
           type: bool
           description: MPLS parameters. Default value is true if switch.mpls_lsr is true.
@@ -117,7 +123,6 @@ $defs:
           description: MTU for this P2P link. Default value same as p2p_uplinks_mtu.
         bfd:
           type: bool
-          default: false
           description: Enable BFD (only considered for BGP).
         ptp:
           description: PTP parameters.
