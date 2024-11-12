@@ -995,9 +995,9 @@ router_ospf:
   process_ids:
   - id: 123
     passive_interface_default: true
-    router_id: 192.168.255.109
     no_passive_interfaces:
     - Vlan1234
+    router_id: 192.168.255.109
     redistribute:
       bgp:
         enabled: true

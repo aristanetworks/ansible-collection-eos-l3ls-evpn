@@ -1,0 +1,33 @@
+---
+### NTP tests (Tested with default VRF here. Tested with Management VRF in "dns-ntp")
+ntp:
+  local_interface:
+    name: lo1
+    vrf: default
+  servers:
+    - name: 2.2.2.55
+    - name: 10.1.1.1
+    - name: ie.pool.ntp.org
+      iburst: true
+      burst: false
+      key: 1
+    - name: 10.1.1.2
+      preferred: true
+    - name: 20.20.20.1
+      key: 2
+    - name: 1.2.3.4
+      local_interface: lo0
+  authenticate: true
+  authentication_keys:
+    - id: 1
+      hash_algorithm: "md5"
+      key: "7 044F0E151B"
+    - id: 2
+      hash_algorithm: "md5"
+      key: "044F0E151B"
+      key_type: 7
+    - id: 3
+      hash_algorithm: "sha1"
+      key: "$BYk2Sjahe+D9T7uDgIItSA==$JTw5JOAPcYEo0O2hsvsxFQ==$C7wmpXOo"
+      key_type: 8a
+  trusted_keys: "1-3"

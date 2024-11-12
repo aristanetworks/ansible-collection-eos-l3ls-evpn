@@ -1,0 +1,9 @@
+---
+### IPv6 DHCP Relay ###
+
+ipv6_dhcp_relay:
+  always_on: true
+  all_subnets: true
+  option:
+    link_layer_address: true
+    remote_id_format: "%m:%i"

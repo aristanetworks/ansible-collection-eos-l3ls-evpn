@@ -230,6 +230,10 @@ class AvdTestLLDPTopology(AvdTestBase):
                 LOGGER.info("Interface '%s' variable 'validate_state' is set to False. %s is skipped.", interface["name"], self.__class__.__name__)
                 continue
 
+            if interface.get("validate_lldp", True) is False:
+                LOGGER.info("Interface '%s' variable 'validate_lldp' is set to False. %s is skipped.", interface["name"], self.__class__.__name__)
+                continue
+
             if self.is_subinterface(interface):
                 LOGGER.info("Interface '%s' is a subinterface. %s is skipped.", interface["name"], self.__class__.__name__)
                 continue

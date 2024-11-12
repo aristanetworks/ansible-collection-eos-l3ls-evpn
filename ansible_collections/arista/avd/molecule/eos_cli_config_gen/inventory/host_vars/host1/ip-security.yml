@@ -1,0 +1,82 @@
+---
+### IP Security ###
+ip_security:
+  ike_policies:
+    # Testing sorting
+    - name: IKE-2
+      integrity: sha512
+    - name: IKE-1
+      integrity: md5
+      local_id: 192.168.100.1
+      ike_lifetime: 24
+      encryption: aes256
+      dh_group: 20
+    - name: IKE-FQDN
+      local_id_fqdn: fqdn.local
+    - name: IKE-UFQDN
+      local_id_fqdn: my.awesome@fqdn.local
+      # local_id won't be rendered as local_id_fqdn takes precedence
+      local_id: 192.168.42.42
+  sa_policies:
+    # Testing sorting
+    - name: SA-7
+    - name: SA-1
+      esp:
+        encryption: aes128
+      pfs_dh_group: 14
+    - name: SA-2
+      esp:
+        encryption: aes128
+      sa_lifetime:
+        value: 42
+        unit: gigabytes
+      pfs_dh_group: 14
+    - name: SA-3
+      esp:
+        integrity: disabled
+        encryption: disabled
+      sa_lifetime:
+        value: 8
+        # default unit is hours
+      pfs_dh_group: 17
+    - name: SA-4
+      esp:
+        integrity: md5
+        encryption: 3des
+    - name: SA-5
+      esp:
+        integrity: sha512
+    - name: SA-6
+      esp:
+        integrity: sha384
+  profiles:
+    # testing sorting
+    - name: Profile-4
+    - name: Profile-1
+      ike_policy: IKE-1
+      sa_policy: SA-1
+      connection: start
+      # Need real one
+      shared_key: 12312312313213AA
+      dpd:
+        interval: 42
+        time: 666
+        action: clear
+      mode: transport
+    - name: Profile-2
+      sa_policy: SA-2
+      connection: start
+      # Need real one
+      shared_key: 1231231231321AA
+      flow_parallelization_encapsulation_udp: false
+      mode: tunnel
+    - name: Profile-3
+      sa_policy: SA-3
+      connection: start
+      # Need real one
+      shared_key: 1231231231321AA
+      flow_parallelization_encapsulation_udp: true
+      mode: tunnel
+  key_controller:
+    profile: Profile-1
+  hardware_encryption_disabled: true
