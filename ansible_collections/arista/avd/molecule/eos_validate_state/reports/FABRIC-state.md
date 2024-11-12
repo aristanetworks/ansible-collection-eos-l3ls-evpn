@@ -13,7 +13,7 @@
 
 | Total Tests | Total Tests Passed | Total Tests Failed | Total Tests Skipped |
 | ----------- | ------------------ | ------------------ | ------------------- |
-| 2678 | 0 | 0 | 0 |
+| 2677 | 0 | 0 | 0 |
 
 ### Summary Totals Device Under Test
 
@@ -36,7 +36,7 @@
 | dc2-leaf2a | 167 | 0 | 0 | 0 | - | - |
 | dc2-leaf2b | 163 | 0 | 0 | 0 | - | - |
 | dc2-leaf2c | 72 | 0 | 0 | 0 | - | - |
-| dc2-leaf3a.arista.com | 167 | 0 | 0 | 0 | - | - |
+| dc2-leaf3a.arista.com | 166 | 0 | 0 | 0 | - | - |
 | dc2-leaf3b.arista.com | 159 | 0 | 0 | 0 | - | - |
 | dc2-spine1 | 98 | 0 | 0 | 0 | - | - |
 | dc2-spine2 | 98 | 0 | 0 | 0 | - | - |
@@ -50,7 +50,7 @@
 | BFD | 6 | 0 | 0 | 0 |
 | BGP | 131 | 0 | 0 | 0 |
 | Configuration | 42 | 0 | 0 | 0 |
-| Connectivity | 368 | 0 | 0 | 0 |
+| Connectivity | 367 | 0 | 0 | 0 |
 | Field Notices | 42 | 0 | 0 | 0 |
 | Greent | 42 | 0 | 0 | 0 |
 | Hardware | 231 | 0 | 0 | 0 |
@@ -2255,508 +2255,507 @@
 | 2171 | dc2-leaf3a.arista.com | Connectivity | VerifyLLDPNeighbors | Verifies that the provided LLDP neighbors are connected properly. | Local: Ethernet1 - Remote: dc2-spine1 Ethernet5 | NOT RUN | - |
 | 2172 | dc2-leaf3a.arista.com | Connectivity | VerifyLLDPNeighbors | Verifies that the provided LLDP neighbors are connected properly. | Local: Ethernet15 - Remote: dc2-leaf2b Ethernet2 | NOT RUN | - |
 | 2173 | dc2-leaf3a.arista.com | Connectivity | VerifyLLDPNeighbors | Verifies that the provided LLDP neighbors are connected properly. | Local: Ethernet2 - Remote: dc2-spine2 Ethernet5 | NOT RUN | - |
-| 2174 | dc2-leaf3a.arista.com | Connectivity | VerifyLLDPNeighbors | Verifies that the provided LLDP neighbors are connected properly. | Local: Ethernet4 - Remote: dc2-leaf3b.arista.com Ethernet4 | NOT RUN | - |
-| 2175 | dc2-leaf3a.arista.com | Connectivity | VerifyReachability | Test the network reachability to one or many destination IP(s). | Source: Loopback0 (IP: 10.255.128.17) - Destination: dc1-leaf1a Loopback0 (IP: 10.255.0.3) | NOT RUN | - |
-| 2176 | dc2-leaf3a.arista.com | Connectivity | VerifyReachability | Test the network reachability to one or many destination IP(s). | Source: Loopback0 (IP: 10.255.128.17) - Destination: dc1-leaf1b Loopback0 (IP: 10.255.0.4) | NOT RUN | - |
-| 2177 | dc2-leaf3a.arista.com | Connectivity | VerifyReachability | Test the network reachability to one or many destination IP(s). | Source: Loopback0 (IP: 10.255.128.17) - Destination: dc1-leaf2a Loopback0 (IP: 10.255.0.5) | NOT RUN | - |
-| 2178 | dc2-leaf3a.arista.com | Connectivity | VerifyReachability | Test the network reachability to one or many destination IP(s). | Source: Loopback0 (IP: 10.255.128.17) - Destination: dc1-spine1 Loopback0 (IP: 10.255.0.1) | NOT RUN | - |
-| 2179 | dc2-leaf3a.arista.com | Connectivity | VerifyReachability | Test the network reachability to one or many destination IP(s). | Source: Loopback0 (IP: 10.255.128.17) - Destination: dc1-spine2 Loopback0 (IP: 10.255.0.2) | NOT RUN | - |
-| 2180 | dc2-leaf3a.arista.com | Connectivity | VerifyReachability | Test the network reachability to one or many destination IP(s). | Source: Loopback0 (IP: 10.255.128.17) - Destination: dc1-svc-leaf1a Loopback0 (IP: 10.33.0.5) | NOT RUN | - |
-| 2181 | dc2-leaf3a.arista.com | Connectivity | VerifyReachability | Test the network reachability to one or many destination IP(s). | Source: Loopback0 (IP: 10.255.128.17) - Destination: dc1-svc-leaf1b Loopback0 (IP: 10.33.0.6) | NOT RUN | - |
-| 2182 | dc2-leaf3a.arista.com | Connectivity | VerifyReachability | Test the network reachability to one or many destination IP(s). | Source: Loopback0 (IP: 10.255.128.17) - Destination: dc1-wan1 Loopback0 (IP: 10.255.2.1) | NOT RUN | - |
-| 2183 | dc2-leaf3a.arista.com | Connectivity | VerifyReachability | Test the network reachability to one or many destination IP(s). | Source: Loopback0 (IP: 10.255.128.17) - Destination: dc1-wan2 Loopback0 (IP: 10.255.2.2) | NOT RUN | - |
-| 2184 | dc2-leaf3a.arista.com | Connectivity | VerifyReachability | Test the network reachability to one or many destination IP(s). | Source: Loopback0 (IP: 10.255.128.17) - Destination: dc2-leaf1a Loopback0 (IP: 10.255.128.13) | NOT RUN | - |
-| 2185 | dc2-leaf3a.arista.com | Connectivity | VerifyReachability | Test the network reachability to one or many destination IP(s). | Source: Loopback0 (IP: 10.255.128.17) - Destination: dc2-leaf1b Loopback0 (IP: 10.255.128.14) | NOT RUN | - |
-| 2186 | dc2-leaf3a.arista.com | Connectivity | VerifyReachability | Test the network reachability to one or many destination IP(s). | Source: Loopback0 (IP: 10.255.128.17) - Destination: dc2-leaf2a Loopback0 (IP: 10.255.128.15) | NOT RUN | - |
-| 2187 | dc2-leaf3a.arista.com | Connectivity | VerifyReachability | Test the network reachability to one or many destination IP(s). | Source: Loopback0 (IP: 10.255.128.17) - Destination: dc2-leaf2b Loopback0 (IP: 10.255.128.16) | NOT RUN | - |
-| 2188 | dc2-leaf3a.arista.com | Connectivity | VerifyReachability | Test the network reachability to one or many destination IP(s). | Source: Loopback0 (IP: 10.255.128.17) - Destination: dc2-leaf3a.arista.com Loopback0 (IP: 10.255.128.17) | NOT RUN | - |
-| 2189 | dc2-leaf3a.arista.com | Connectivity | VerifyReachability | Test the network reachability to one or many destination IP(s). | Source: Loopback0 (IP: 10.255.128.17) - Destination: dc2-leaf3b.arista.com Loopback0 (IP: 10.255.128.18) | NOT RUN | - |
-| 2190 | dc2-leaf3a.arista.com | Connectivity | VerifyReachability | Test the network reachability to one or many destination IP(s). | Source: Loopback0 (IP: 10.255.128.17) - Destination: dc2-spine1 Loopback0 (IP: 10.255.128.11) | NOT RUN | - |
-| 2191 | dc2-leaf3a.arista.com | Connectivity | VerifyReachability | Test the network reachability to one or many destination IP(s). | Source: Loopback0 (IP: 10.255.128.17) - Destination: dc2-spine2 Loopback0 (IP: 10.255.128.12) | NOT RUN | - |
-| 2192 | dc2-leaf3a.arista.com | Connectivity | VerifyReachability | Test the network reachability to one or many destination IP(s). | Source: P2P Interface Ethernet1 (IP: 10.255.255.121) - Destination: dc2-spine1 Ethernet5 (IP: 10.255.255.120) | NOT RUN | - |
-| 2193 | dc2-leaf3a.arista.com | Connectivity | VerifyReachability | Test the network reachability to one or many destination IP(s). | Source: P2P Interface Ethernet15 (IP: 1.1.1.1) - Destination: dc2-leaf2b Ethernet2 (IP: 10.255.255.119) | NOT RUN | - |
-| 2194 | dc2-leaf3a.arista.com | Connectivity | VerifyReachability | Test the network reachability to one or many destination IP(s). | Source: P2P Interface Ethernet2 (IP: 10.255.255.123) - Destination: dc2-spine2 Ethernet5 (IP: 10.255.255.122) | NOT RUN | - |
-| 2195 | dc2-leaf3a.arista.com | Field Notices | VerifyFieldNotice44Resolution | Verifies that the device is using the correct Aboot version per FN0044. | - | NOT RUN | - |
-| 2196 | dc2-leaf3a.arista.com | Field Notices | VerifyFieldNotice72Resolution | Verifies if the device is exposed to FN0072, and if the issue has been mitigated. | - | NOT RUN | - |
-| 2197 | dc2-leaf3a.arista.com | Greent | VerifyGreenT | Verifies if a GreenT policy is created. | - | NOT RUN | - |
-| 2198 | dc2-leaf3a.arista.com | Greent | VerifyGreenTCounters | Verifies if the GreenT counters are incremented. | - | NOT RUN | - |
-| 2199 | dc2-leaf3a.arista.com | Hardware | VerifyAdverseDrops | Verifies there are no adverse drops on DCS-7280 and DCS-7500 family switches. | - | NOT RUN | - |
-| 2200 | dc2-leaf3a.arista.com | Hardware | VerifyEnvironmentCooling | Verifies the status of power supply fans and all fan trays. | - | NOT RUN | - |
-| 2201 | dc2-leaf3a.arista.com | Hardware | VerifyEnvironmentCooling | Verifies the status of power supply fans and all fan trays. | Accepted States: 'ok' | NOT RUN | - |
-| 2202 | dc2-leaf3a.arista.com | Hardware | VerifyEnvironmentPower | Verifies the power supplies status. | - | NOT RUN | - |
-| 2203 | dc2-leaf3a.arista.com | Hardware | VerifyEnvironmentPower | Verifies the power supplies status. | Accepted States: 'ok' | NOT RUN | - |
-| 2204 | dc2-leaf3a.arista.com | Hardware | VerifyEnvironmentSystemCooling | Verifies the system cooling status. | - | NOT RUN | - |
+| 2174 | dc2-leaf3a.arista.com | Connectivity | VerifyReachability | Test the network reachability to one or many destination IP(s). | Source: Loopback0 (IP: 10.255.128.17) - Destination: dc1-leaf1a Loopback0 (IP: 10.255.0.3) | NOT RUN | - |
+| 2175 | dc2-leaf3a.arista.com | Connectivity | VerifyReachability | Test the network reachability to one or many destination IP(s). | Source: Loopback0 (IP: 10.255.128.17) - Destination: dc1-leaf1b Loopback0 (IP: 10.255.0.4) | NOT RUN | - |
+| 2176 | dc2-leaf3a.arista.com | Connectivity | VerifyReachability | Test the network reachability to one or many destination IP(s). | Source: Loopback0 (IP: 10.255.128.17) - Destination: dc1-leaf2a Loopback0 (IP: 10.255.0.5) | NOT RUN | - |
+| 2177 | dc2-leaf3a.arista.com | Connectivity | VerifyReachability | Test the network reachability to one or many destination IP(s). | Source: Loopback0 (IP: 10.255.128.17) - Destination: dc1-spine1 Loopback0 (IP: 10.255.0.1) | NOT RUN | - |
+| 2178 | dc2-leaf3a.arista.com | Connectivity | VerifyReachability | Test the network reachability to one or many destination IP(s). | Source: Loopback0 (IP: 10.255.128.17) - Destination: dc1-spine2 Loopback0 (IP: 10.255.0.2) | NOT RUN | - |
+| 2179 | dc2-leaf3a.arista.com | Connectivity | VerifyReachability | Test the network reachability to one or many destination IP(s). | Source: Loopback0 (IP: 10.255.128.17) - Destination: dc1-svc-leaf1a Loopback0 (IP: 10.33.0.5) | NOT RUN | - |
+| 2180 | dc2-leaf3a.arista.com | Connectivity | VerifyReachability | Test the network reachability to one or many destination IP(s). | Source: Loopback0 (IP: 10.255.128.17) - Destination: dc1-svc-leaf1b Loopback0 (IP: 10.33.0.6) | NOT RUN | - |
+| 2181 | dc2-leaf3a.arista.com | Connectivity | VerifyReachability | Test the network reachability to one or many destination IP(s). | Source: Loopback0 (IP: 10.255.128.17) - Destination: dc1-wan1 Loopback0 (IP: 10.255.2.1) | NOT RUN | - |
+| 2182 | dc2-leaf3a.arista.com | Connectivity | VerifyReachability | Test the network reachability to one or many destination IP(s). | Source: Loopback0 (IP: 10.255.128.17) - Destination: dc1-wan2 Loopback0 (IP: 10.255.2.2) | NOT RUN | - |
+| 2183 | dc2-leaf3a.arista.com | Connectivity | VerifyReachability | Test the network reachability to one or many destination IP(s). | Source: Loopback0 (IP: 10.255.128.17) - Destination: dc2-leaf1a Loopback0 (IP: 10.255.128.13) | NOT RUN | - |
+| 2184 | dc2-leaf3a.arista.com | Connectivity | VerifyReachability | Test the network reachability to one or many destination IP(s). | Source: Loopback0 (IP: 10.255.128.17) - Destination: dc2-leaf1b Loopback0 (IP: 10.255.128.14) | NOT RUN | - |
+| 2185 | dc2-leaf3a.arista.com | Connectivity | VerifyReachability | Test the network reachability to one or many destination IP(s). | Source: Loopback0 (IP: 10.255.128.17) - Destination: dc2-leaf2a Loopback0 (IP: 10.255.128.15) | NOT RUN | - |
+| 2186 | dc2-leaf3a.arista.com | Connectivity | VerifyReachability | Test the network reachability to one or many destination IP(s). | Source: Loopback0 (IP: 10.255.128.17) - Destination: dc2-leaf2b Loopback0 (IP: 10.255.128.16) | NOT RUN | - |
+| 2187 | dc2-leaf3a.arista.com | Connectivity | VerifyReachability | Test the network reachability to one or many destination IP(s). | Source: Loopback0 (IP: 10.255.128.17) - Destination: dc2-leaf3a.arista.com Loopback0 (IP: 10.255.128.17) | NOT RUN | - |
+| 2188 | dc2-leaf3a.arista.com | Connectivity | VerifyReachability | Test the network reachability to one or many destination IP(s). | Source: Loopback0 (IP: 10.255.128.17) - Destination: dc2-leaf3b.arista.com Loopback0 (IP: 10.255.128.18) | NOT RUN | - |
+| 2189 | dc2-leaf3a.arista.com | Connectivity | VerifyReachability | Test the network reachability to one or many destination IP(s). | Source: Loopback0 (IP: 10.255.128.17) - Destination: dc2-spine1 Loopback0 (IP: 10.255.128.11) | NOT RUN | - |
+| 2190 | dc2-leaf3a.arista.com | Connectivity | VerifyReachability | Test the network reachability to one or many destination IP(s). | Source: Loopback0 (IP: 10.255.128.17) - Destination: dc2-spine2 Loopback0 (IP: 10.255.128.12) | NOT RUN | - |
+| 2191 | dc2-leaf3a.arista.com | Connectivity | VerifyReachability | Test the network reachability to one or many destination IP(s). | Source: P2P Interface Ethernet1 (IP: 10.255.255.121) - Destination: dc2-spine1 Ethernet5 (IP: 10.255.255.120) | NOT RUN | - |
+| 2192 | dc2-leaf3a.arista.com | Connectivity | VerifyReachability | Test the network reachability to one or many destination IP(s). | Source: P2P Interface Ethernet15 (IP: 1.1.1.1) - Destination: dc2-leaf2b Ethernet2 (IP: 10.255.255.119) | NOT RUN | - |
+| 2193 | dc2-leaf3a.arista.com | Connectivity | VerifyReachability | Test the network reachability to one or many destination IP(s). | Source: P2P Interface Ethernet2 (IP: 10.255.255.123) - Destination: dc2-spine2 Ethernet5 (IP: 10.255.255.122) | NOT RUN | - |
+| 2194 | dc2-leaf3a.arista.com | Field Notices | VerifyFieldNotice44Resolution | Verifies that the device is using the correct Aboot version per FN0044. | - | NOT RUN | - |
+| 2195 | dc2-leaf3a.arista.com | Field Notices | VerifyFieldNotice72Resolution | Verifies if the device is exposed to FN0072, and if the issue has been mitigated. | - | NOT RUN | - |
+| 2196 | dc2-leaf3a.arista.com | Greent | VerifyGreenT | Verifies if a GreenT policy is created. | - | NOT RUN | - |
+| 2197 | dc2-leaf3a.arista.com | Greent | VerifyGreenTCounters | Verifies if the GreenT counters are incremented. | - | NOT RUN | - |
+| 2198 | dc2-leaf3a.arista.com | Hardware | VerifyAdverseDrops | Verifies there are no adverse drops on DCS-7280 and DCS-7500 family switches. | - | NOT RUN | - |
+| 2199 | dc2-leaf3a.arista.com | Hardware | VerifyEnvironmentCooling | Verifies the status of power supply fans and all fan trays. | - | NOT RUN | - |
+| 2200 | dc2-leaf3a.arista.com | Hardware | VerifyEnvironmentCooling | Verifies the status of power supply fans and all fan trays. | Accepted States: 'ok' | NOT RUN | - |
+| 2201 | dc2-leaf3a.arista.com | Hardware | VerifyEnvironmentPower | Verifies the power supplies status. | - | NOT RUN | - |
+| 2202 | dc2-leaf3a.arista.com | Hardware | VerifyEnvironmentPower | Verifies the power supplies status. | Accepted States: 'ok' | NOT RUN | - |
+| 2203 | dc2-leaf3a.arista.com | Hardware | VerifyEnvironmentSystemCooling | Verifies the system cooling status. | - | NOT RUN | - |
+| 2204 | dc2-leaf3a.arista.com | Hardware | VerifyTemperature | Verifies the device temperature. | - | NOT RUN | - |
 | 2205 | dc2-leaf3a.arista.com | Hardware | VerifyTemperature | Verifies the device temperature. | - | NOT RUN | - |
-| 2206 | dc2-leaf3a.arista.com | Hardware | VerifyTemperature | Verifies the device temperature. | - | NOT RUN | - |
-| 2207 | dc2-leaf3a.arista.com | Hardware | VerifyTransceiversManufacturers | Verifies if all transceivers come from approved manufacturers. | - | NOT RUN | - |
-| 2208 | dc2-leaf3a.arista.com | Hardware | VerifyTransceiversManufacturers | Verifies if all transceivers come from approved manufacturers. | Accepted Manufacturers: 'Arista Networks', 'Arastra, Inc.', 'Not Present' | NOT RUN | - |
-| 2209 | dc2-leaf3a.arista.com | Hardware | VerifyTransceiversTemperature | Verifies the transceivers temperature. | - | NOT RUN | - |
-| 2210 | dc2-leaf3a.arista.com | Interfaces | VerifyInterfacesStatus | Verifies the status of the provided interfaces. | Interface Ethernet1 - P2P_dc2-spine1_Ethernet5 = 'up' | NOT RUN | - |
-| 2211 | dc2-leaf3a.arista.com | Interfaces | VerifyInterfacesStatus | Verifies the status of the provided interfaces. | Interface Ethernet11 - dc2-leaf3-fw1_e1 = 'up' | NOT RUN | - |
-| 2212 | dc2-leaf3a.arista.com | Interfaces | VerifyInterfacesStatus | Verifies the status of the provided interfaces. | Interface Ethernet12 - Test_mode_and_vlans = 'up' | NOT RUN | - |
-| 2213 | dc2-leaf3a.arista.com | Interfaces | VerifyInterfacesStatus | Verifies the status of the provided interfaces. | Interface Ethernet13 - Test_native_vlan_and_trunk_groups = 'up' | NOT RUN | - |
-| 2214 | dc2-leaf3a.arista.com | Interfaces | VerifyInterfacesStatus | Verifies the status of the provided interfaces. | Interface Ethernet14 - Test_phone = 'up' | NOT RUN | - |
-| 2215 | dc2-leaf3a.arista.com | Interfaces | VerifyInterfacesStatus | Verifies the status of the provided interfaces. | Interface Ethernet15 - Test_type_routed = 'up' | NOT RUN | - |
-| 2216 | dc2-leaf3a.arista.com | Interfaces | VerifyInterfacesStatus | Verifies the status of the provided interfaces. | Interface Ethernet2 - P2P_dc2-spine2_Ethernet5 = 'up' | NOT RUN | - |
-| 2217 | dc2-leaf3a.arista.com | Interfaces | VerifyInterfacesStatus | Verifies the status of the provided interfaces. | Interface Ethernet4 - MLAG_dc2-leaf3b.arista.com_Ethernet4 = 'up' | NOT RUN | - |
-| 2218 | dc2-leaf3a.arista.com | Interfaces | VerifyInterfacesStatus | Verifies the status of the provided interfaces. | Interface Loopback0 - ROUTER_ID = 'up' | NOT RUN | - |
-| 2219 | dc2-leaf3a.arista.com | Interfaces | VerifyInterfacesStatus | Verifies the status of the provided interfaces. | Interface Loopback1 - VXLAN_TUNNEL_SOURCE = 'up' | NOT RUN | - |
-| 2220 | dc2-leaf3a.arista.com | Interfaces | VerifyInterfacesStatus | Verifies the status of the provided interfaces. | Interface Loopback10 - DIAG_VRF_VRF10 = 'up' | NOT RUN | - |
-| 2221 | dc2-leaf3a.arista.com | Interfaces | VerifyInterfacesStatus | Verifies the status of the provided interfaces. | Interface Loopback11 - DIAG_VRF_VRF11 = 'up' | NOT RUN | - |
-| 2222 | dc2-leaf3a.arista.com | Interfaces | VerifyInterfacesStatus | Verifies the status of the provided interfaces. | Interface Port-Channel11 - dc2-leaf3-fw1_PortChannel = 'up' | NOT RUN | - |
-| 2223 | dc2-leaf3a.arista.com | Interfaces | VerifyInterfacesStatus | Verifies the status of the provided interfaces. | Interface Port-Channel12 - Test_mode_and_vlans = 'up' | NOT RUN | - |
-| 2224 | dc2-leaf3a.arista.com | Interfaces | VerifyInterfacesStatus | Verifies the status of the provided interfaces. | Interface Port-Channel13 - Test_native_vlan_and_trunk_groups = 'up' | NOT RUN | - |
-| 2225 | dc2-leaf3a.arista.com | Interfaces | VerifyInterfacesStatus | Verifies the status of the provided interfaces. | Interface Port-Channel14 - Test_phone = 'up' | NOT RUN | - |
-| 2226 | dc2-leaf3a.arista.com | Interfaces | VerifyInterfacesStatus | Verifies the status of the provided interfaces. | Interface Port-Channel15 - Test_type_routed = 'up' | NOT RUN | - |
-| 2227 | dc2-leaf3a.arista.com | Interfaces | VerifyInterfacesStatus | Verifies the status of the provided interfaces. | Interface Port-Channel3 - MLAG_dc2-leaf3b.arista.com_Port-Channel3 = 'up' | NOT RUN | - |
-| 2228 | dc2-leaf3a.arista.com | Interfaces | VerifyInterfacesStatus | Verifies the status of the provided interfaces. | Interface Vlan11 - VRF10_VLAN11 = 'up' | NOT RUN | - |
-| 2229 | dc2-leaf3a.arista.com | Interfaces | VerifyInterfacesStatus | Verifies the status of the provided interfaces. | Interface Vlan12 - VRF10_VLAN12 = 'up' | NOT RUN | - |
-| 2230 | dc2-leaf3a.arista.com | Interfaces | VerifyInterfacesStatus | Verifies the status of the provided interfaces. | Interface Vlan21 - VRF11_VLAN21 = 'up' | NOT RUN | - |
-| 2231 | dc2-leaf3a.arista.com | Interfaces | VerifyInterfacesStatus | Verifies the status of the provided interfaces. | Interface Vlan22 - VRF11_VLAN22 = 'up' | NOT RUN | - |
-| 2232 | dc2-leaf3a.arista.com | Interfaces | VerifyInterfacesStatus | Verifies the status of the provided interfaces. | Interface Vlan3009 - MLAG_L3_VRF_VRF10 = 'up' | NOT RUN | - |
-| 2233 | dc2-leaf3a.arista.com | Interfaces | VerifyInterfacesStatus | Verifies the status of the provided interfaces. | Interface Vlan3010 - MLAG_L3_VRF_VRF11 = 'up' | NOT RUN | - |
-| 2234 | dc2-leaf3a.arista.com | Interfaces | VerifyInterfacesStatus | Verifies the status of the provided interfaces. | Interface Vlan4093 - MLAG_L3 = 'up' | NOT RUN | - |
-| 2235 | dc2-leaf3a.arista.com | Interfaces | VerifyInterfacesStatus | Verifies the status of the provided interfaces. | Interface Vlan4094 - MLAG = 'up' | NOT RUN | - |
-| 2236 | dc2-leaf3a.arista.com | Interfaces | VerifyInterfacesStatus | Verifies the status of the provided interfaces. | Interface Vxlan1 = 'up' | NOT RUN | - |
-| 2237 | dc2-leaf3a.arista.com | LANZ | VerifyLANZ | Verifies if LANZ is enabled. | - | NOT RUN | - |
-| 2238 | dc2-leaf3a.arista.com | Logging | VerifyLoggingAccounting | Verifies if AAA accounting logs are generated. | - | NOT RUN | - |
-| 2239 | dc2-leaf3a.arista.com | Logging | VerifyLoggingErrors | Verifies there are no syslog messages with a severity of ERRORS or higher. | - | NOT RUN | - |
-| 2240 | dc2-leaf3a.arista.com | Logging | VerifyLoggingHostname | Verifies if logs are generated with the device FQDN. | - | NOT RUN | - |
-| 2241 | dc2-leaf3a.arista.com | Logging | VerifyLoggingHosts | Verifies logging hosts (syslog servers) for a specified VRF. | - | NOT RUN | - |
-| 2242 | dc2-leaf3a.arista.com | Logging | VerifyLoggingLogsGeneration | Verifies if logs are generated. | - | NOT RUN | - |
-| 2243 | dc2-leaf3a.arista.com | Logging | VerifyLoggingPersistent | Verifies if logging persistent is enabled and logs are saved in flash. | - | NOT RUN | - |
-| 2244 | dc2-leaf3a.arista.com | Logging | VerifyLoggingSourceIntf | Verifies logging source-interface for a specified VRF. | - | NOT RUN | - |
-| 2245 | dc2-leaf3a.arista.com | Logging | VerifyLoggingTimestamp | Verifies if logs are generated with the appropriate timestamp. | - | NOT RUN | - |
-| 2246 | dc2-leaf3a.arista.com | MLAG | VerifyMlagConfigSanity | Verifies there are no MLAG config-sanity inconsistencies. | - | NOT RUN | - |
-| 2247 | dc2-leaf3a.arista.com | MLAG | VerifyMlagDualPrimary | Verifies the MLAG dual-primary detection parameters. | - | NOT RUN | - |
-| 2248 | dc2-leaf3a.arista.com | MLAG | VerifyMlagInterfaces | Verifies there are no inactive or active-partial MLAG ports. | - | NOT RUN | - |
-| 2249 | dc2-leaf3a.arista.com | MLAG | VerifyMlagReloadDelay | Verifies the MLAG reload-delay parameters. | - | NOT RUN | - |
+| 2206 | dc2-leaf3a.arista.com | Hardware | VerifyTransceiversManufacturers | Verifies if all transceivers come from approved manufacturers. | - | NOT RUN | - |
+| 2207 | dc2-leaf3a.arista.com | Hardware | VerifyTransceiversManufacturers | Verifies if all transceivers come from approved manufacturers. | Accepted Manufacturers: 'Arista Networks', 'Arastra, Inc.', 'Not Present' | NOT RUN | - |
+| 2208 | dc2-leaf3a.arista.com | Hardware | VerifyTransceiversTemperature | Verifies the transceivers temperature. | - | NOT RUN | - |
+| 2209 | dc2-leaf3a.arista.com | Interfaces | VerifyInterfacesStatus | Verifies the status of the provided interfaces. | Interface Ethernet1 - P2P_dc2-spine1_Ethernet5 = 'up' | NOT RUN | - |
+| 2210 | dc2-leaf3a.arista.com | Interfaces | VerifyInterfacesStatus | Verifies the status of the provided interfaces. | Interface Ethernet11 - dc2-leaf3-fw1_e1 = 'up' | NOT RUN | - |
+| 2211 | dc2-leaf3a.arista.com | Interfaces | VerifyInterfacesStatus | Verifies the status of the provided interfaces. | Interface Ethernet12 - Test_mode_and_vlans = 'up' | NOT RUN | - |
+| 2212 | dc2-leaf3a.arista.com | Interfaces | VerifyInterfacesStatus | Verifies the status of the provided interfaces. | Interface Ethernet13 - Test_native_vlan_and_trunk_groups = 'up' | NOT RUN | - |
+| 2213 | dc2-leaf3a.arista.com | Interfaces | VerifyInterfacesStatus | Verifies the status of the provided interfaces. | Interface Ethernet14 - Test_phone = 'up' | NOT RUN | - |
+| 2214 | dc2-leaf3a.arista.com | Interfaces | VerifyInterfacesStatus | Verifies the status of the provided interfaces. | Interface Ethernet15 - Test_type_routed = 'up' | NOT RUN | - |
+| 2215 | dc2-leaf3a.arista.com | Interfaces | VerifyInterfacesStatus | Verifies the status of the provided interfaces. | Interface Ethernet2 - P2P_dc2-spine2_Ethernet5 = 'up' | NOT RUN | - |
+| 2216 | dc2-leaf3a.arista.com | Interfaces | VerifyInterfacesStatus | Verifies the status of the provided interfaces. | Interface Ethernet4 - MLAG_dc2-leaf3b.arista.com_Ethernet4 = 'up' | NOT RUN | - |
+| 2217 | dc2-leaf3a.arista.com | Interfaces | VerifyInterfacesStatus | Verifies the status of the provided interfaces. | Interface Loopback0 - ROUTER_ID = 'up' | NOT RUN | - |
+| 2218 | dc2-leaf3a.arista.com | Interfaces | VerifyInterfacesStatus | Verifies the status of the provided interfaces. | Interface Loopback1 - VXLAN_TUNNEL_SOURCE = 'up' | NOT RUN | - |
+| 2219 | dc2-leaf3a.arista.com | Interfaces | VerifyInterfacesStatus | Verifies the status of the provided interfaces. | Interface Loopback10 - DIAG_VRF_VRF10 = 'up' | NOT RUN | - |
+| 2220 | dc2-leaf3a.arista.com | Interfaces | VerifyInterfacesStatus | Verifies the status of the provided interfaces. | Interface Loopback11 - DIAG_VRF_VRF11 = 'up' | NOT RUN | - |
+| 2221 | dc2-leaf3a.arista.com | Interfaces | VerifyInterfacesStatus | Verifies the status of the provided interfaces. | Interface Port-Channel11 - dc2-leaf3-fw1_PortChannel = 'up' | NOT RUN | - |
+| 2222 | dc2-leaf3a.arista.com | Interfaces | VerifyInterfacesStatus | Verifies the status of the provided interfaces. | Interface Port-Channel12 - Test_mode_and_vlans = 'up' | NOT RUN | - |
+| 2223 | dc2-leaf3a.arista.com | Interfaces | VerifyInterfacesStatus | Verifies the status of the provided interfaces. | Interface Port-Channel13 - Test_native_vlan_and_trunk_groups = 'up' | NOT RUN | - |
+| 2224 | dc2-leaf3a.arista.com | Interfaces | VerifyInterfacesStatus | Verifies the status of the provided interfaces. | Interface Port-Channel14 - Test_phone = 'up' | NOT RUN | - |
+| 2225 | dc2-leaf3a.arista.com | Interfaces | VerifyInterfacesStatus | Verifies the status of the provided interfaces. | Interface Port-Channel15 - Test_type_routed = 'up' | NOT RUN | - |
+| 2226 | dc2-leaf3a.arista.com | Interfaces | VerifyInterfacesStatus | Verifies the status of the provided interfaces. | Interface Port-Channel3 - MLAG_dc2-leaf3b.arista.com_Port-Channel3 = 'up' | NOT RUN | - |
+| 2227 | dc2-leaf3a.arista.com | Interfaces | VerifyInterfacesStatus | Verifies the status of the provided interfaces. | Interface Vlan11 - VRF10_VLAN11 = 'up' | NOT RUN | - |
+| 2228 | dc2-leaf3a.arista.com | Interfaces | VerifyInterfacesStatus | Verifies the status of the provided interfaces. | Interface Vlan12 - VRF10_VLAN12 = 'up' | NOT RUN | - |
+| 2229 | dc2-leaf3a.arista.com | Interfaces | VerifyInterfacesStatus | Verifies the status of the provided interfaces. | Interface Vlan21 - VRF11_VLAN21 = 'up' | NOT RUN | - |
+| 2230 | dc2-leaf3a.arista.com | Interfaces | VerifyInterfacesStatus | Verifies the status of the provided interfaces. | Interface Vlan22 - VRF11_VLAN22 = 'up' | NOT RUN | - |
+| 2231 | dc2-leaf3a.arista.com | Interfaces | VerifyInterfacesStatus | Verifies the status of the provided interfaces. | Interface Vlan3009 - MLAG_L3_VRF_VRF10 = 'up' | NOT RUN | - |
+| 2232 | dc2-leaf3a.arista.com | Interfaces | VerifyInterfacesStatus | Verifies the status of the provided interfaces. | Interface Vlan3010 - MLAG_L3_VRF_VRF11 = 'up' | NOT RUN | - |
+| 2233 | dc2-leaf3a.arista.com | Interfaces | VerifyInterfacesStatus | Verifies the status of the provided interfaces. | Interface Vlan4093 - MLAG_L3 = 'up' | NOT RUN | - |
+| 2234 | dc2-leaf3a.arista.com | Interfaces | VerifyInterfacesStatus | Verifies the status of the provided interfaces. | Interface Vlan4094 - MLAG = 'up' | NOT RUN | - |
+| 2235 | dc2-leaf3a.arista.com | Interfaces | VerifyInterfacesStatus | Verifies the status of the provided interfaces. | Interface Vxlan1 = 'up' | NOT RUN | - |
+| 2236 | dc2-leaf3a.arista.com | LANZ | VerifyLANZ | Verifies if LANZ is enabled. | - | NOT RUN | - |
+| 2237 | dc2-leaf3a.arista.com | Logging | VerifyLoggingAccounting | Verifies if AAA accounting logs are generated. | - | NOT RUN | - |
+| 2238 | dc2-leaf3a.arista.com | Logging | VerifyLoggingErrors | Verifies there are no syslog messages with a severity of ERRORS or higher. | - | NOT RUN | - |
+| 2239 | dc2-leaf3a.arista.com | Logging | VerifyLoggingHostname | Verifies if logs are generated with the device FQDN. | - | NOT RUN | - |
+| 2240 | dc2-leaf3a.arista.com | Logging | VerifyLoggingHosts | Verifies logging hosts (syslog servers) for a specified VRF. | - | NOT RUN | - |
+| 2241 | dc2-leaf3a.arista.com | Logging | VerifyLoggingLogsGeneration | Verifies if logs are generated. | - | NOT RUN | - |
+| 2242 | dc2-leaf3a.arista.com | Logging | VerifyLoggingPersistent | Verifies if logging persistent is enabled and logs are saved in flash. | - | NOT RUN | - |
+| 2243 | dc2-leaf3a.arista.com | Logging | VerifyLoggingSourceIntf | Verifies logging source-interface for a specified VRF. | - | NOT RUN | - |
+| 2244 | dc2-leaf3a.arista.com | Logging | VerifyLoggingTimestamp | Verifies if logs are generated with the appropriate timestamp. | - | NOT RUN | - |
+| 2245 | dc2-leaf3a.arista.com | MLAG | VerifyMlagConfigSanity | Verifies there are no MLAG config-sanity inconsistencies. | - | NOT RUN | - |
+| 2246 | dc2-leaf3a.arista.com | MLAG | VerifyMlagDualPrimary | Verifies the MLAG dual-primary detection parameters. | - | NOT RUN | - |
+| 2247 | dc2-leaf3a.arista.com | MLAG | VerifyMlagInterfaces | Verifies there are no inactive or active-partial MLAG ports. | - | NOT RUN | - |
+| 2248 | dc2-leaf3a.arista.com | MLAG | VerifyMlagReloadDelay | Verifies the MLAG reload-delay parameters. | - | NOT RUN | - |
+| 2249 | dc2-leaf3a.arista.com | MLAG | VerifyMlagStatus | Verifies the health status of the MLAG configuration. | - | NOT RUN | - |
 | 2250 | dc2-leaf3a.arista.com | MLAG | VerifyMlagStatus | Verifies the health status of the MLAG configuration. | - | NOT RUN | - |
-| 2251 | dc2-leaf3a.arista.com | MLAG | VerifyMlagStatus | Verifies the health status of the MLAG configuration. | - | NOT RUN | - |
-| 2252 | dc2-leaf3a.arista.com | Multicast | VerifyIGMPSnoopingGlobal | Verifies the IGMP snooping global configuration. | - | NOT RUN | - |
-| 2253 | dc2-leaf3a.arista.com | Multicast | VerifyIGMPSnoopingVlans | Verifies the IGMP snooping status for the provided VLANs. | - | NOT RUN | - |
-| 2254 | dc2-leaf3a.arista.com | PTP | VerifyPtpGMStatus | Verifies that the device is locked to a valid PTP Grandmaster. | - | NOT RUN | - |
-| 2255 | dc2-leaf3a.arista.com | PTP | VerifyPtpLockStatus | Verifies that the device was locked to the upstream PTP GM in the last minute. | - | NOT RUN | - |
-| 2256 | dc2-leaf3a.arista.com | PTP | VerifyPtpModeStatus | Verifies that the device is configured as a PTP Boundary Clock. | - | NOT RUN | - |
-| 2257 | dc2-leaf3a.arista.com | PTP | VerifyPtpOffset | Verifies that the PTP timing offset is within +/- 1000ns from the master clock. | - | NOT RUN | - |
-| 2258 | dc2-leaf3a.arista.com | PTP | VerifyPtpPortModeStatus | Verifies the PTP interfaces state. | - | NOT RUN | - |
-| 2259 | dc2-leaf3a.arista.com | Routing | VerifyRoutingProtocolModel | Verifies the configured routing protocol model. | Routing protocol model: multi-agent | NOT RUN | - |
-| 2260 | dc2-leaf3a.arista.com | Routing | VerifyRoutingTableEntry | Verifies that the provided routes are present in the routing table of a specified VRF. | Route: 10.255.0.1 - Peer: dc1-spine1 | NOT RUN | - |
-| 2261 | dc2-leaf3a.arista.com | Routing | VerifyRoutingTableEntry | Verifies that the provided routes are present in the routing table of a specified VRF. | Route: 10.255.0.2 - Peer: dc1-spine2 | NOT RUN | - |
-| 2262 | dc2-leaf3a.arista.com | Routing | VerifyRoutingTableEntry | Verifies that the provided routes are present in the routing table of a specified VRF. | Route: 10.255.0.3 - Peer: dc1-leaf1a | NOT RUN | - |
-| 2263 | dc2-leaf3a.arista.com | Routing | VerifyRoutingTableEntry | Verifies that the provided routes are present in the routing table of a specified VRF. | Route: 10.255.0.4 - Peer: dc1-leaf1b | NOT RUN | - |
-| 2264 | dc2-leaf3a.arista.com | Routing | VerifyRoutingTableEntry | Verifies that the provided routes are present in the routing table of a specified VRF. | Route: 10.255.0.5 - Peer: dc1-leaf2a | NOT RUN | - |
-| 2265 | dc2-leaf3a.arista.com | Routing | VerifyRoutingTableEntry | Verifies that the provided routes are present in the routing table of a specified VRF. | Route: 10.255.1.3 - Peer: dc1-leaf1a | NOT RUN | - |
-| 2266 | dc2-leaf3a.arista.com | Routing | VerifyRoutingTableEntry | Verifies that the provided routes are present in the routing table of a specified VRF. | Route: 10.255.1.5 - Peer: dc1-leaf2a | NOT RUN | - |
-| 2267 | dc2-leaf3a.arista.com | Routing | VerifyRoutingTableEntry | Verifies that the provided routes are present in the routing table of a specified VRF. | Route: 10.255.128.11 - Peer: dc2-spine1 | NOT RUN | - |
-| 2268 | dc2-leaf3a.arista.com | Routing | VerifyRoutingTableEntry | Verifies that the provided routes are present in the routing table of a specified VRF. | Route: 10.255.128.12 - Peer: dc2-spine2 | NOT RUN | - |
-| 2269 | dc2-leaf3a.arista.com | Routing | VerifyRoutingTableEntry | Verifies that the provided routes are present in the routing table of a specified VRF. | Route: 10.255.128.13 - Peer: dc2-leaf1a | NOT RUN | - |
-| 2270 | dc2-leaf3a.arista.com | Routing | VerifyRoutingTableEntry | Verifies that the provided routes are present in the routing table of a specified VRF. | Route: 10.255.128.14 - Peer: dc2-leaf1b | NOT RUN | - |
-| 2271 | dc2-leaf3a.arista.com | Routing | VerifyRoutingTableEntry | Verifies that the provided routes are present in the routing table of a specified VRF. | Route: 10.255.128.15 - Peer: dc2-leaf2a | NOT RUN | - |
-| 2272 | dc2-leaf3a.arista.com | Routing | VerifyRoutingTableEntry | Verifies that the provided routes are present in the routing table of a specified VRF. | Route: 10.255.128.16 - Peer: dc2-leaf2b | NOT RUN | - |
-| 2273 | dc2-leaf3a.arista.com | Routing | VerifyRoutingTableEntry | Verifies that the provided routes are present in the routing table of a specified VRF. | Route: 10.255.128.17 - Peer: dc2-leaf3a.arista.com | NOT RUN | - |
-| 2274 | dc2-leaf3a.arista.com | Routing | VerifyRoutingTableEntry | Verifies that the provided routes are present in the routing table of a specified VRF. | Route: 10.255.128.18 - Peer: dc2-leaf3b.arista.com | NOT RUN | - |
-| 2275 | dc2-leaf3a.arista.com | Routing | VerifyRoutingTableEntry | Verifies that the provided routes are present in the routing table of a specified VRF. | Route: 10.255.129.13 - Peer: dc2-leaf1a | NOT RUN | - |
-| 2276 | dc2-leaf3a.arista.com | Routing | VerifyRoutingTableEntry | Verifies that the provided routes are present in the routing table of a specified VRF. | Route: 10.255.129.15 - Peer: dc2-leaf2a | NOT RUN | - |
-| 2277 | dc2-leaf3a.arista.com | Routing | VerifyRoutingTableEntry | Verifies that the provided routes are present in the routing table of a specified VRF. | Route: 10.255.129.17 - Peer: dc2-leaf3a.arista.com | NOT RUN | - |
-| 2278 | dc2-leaf3a.arista.com | Routing | VerifyRoutingTableEntry | Verifies that the provided routes are present in the routing table of a specified VRF. | Route: 10.255.2.1 - Peer: dc1-wan1 | NOT RUN | - |
-| 2279 | dc2-leaf3a.arista.com | Routing | VerifyRoutingTableEntry | Verifies that the provided routes are present in the routing table of a specified VRF. | Route: 10.255.2.2 - Peer: dc1-wan2 | NOT RUN | - |
-| 2280 | dc2-leaf3a.arista.com | Routing | VerifyRoutingTableEntry | Verifies that the provided routes are present in the routing table of a specified VRF. | Route: 10.33.0.5 - Peer: dc1-svc-leaf1a | NOT RUN | - |
-| 2281 | dc2-leaf3a.arista.com | Routing | VerifyRoutingTableEntry | Verifies that the provided routes are present in the routing table of a specified VRF. | Route: 10.33.0.6 - Peer: dc1-svc-leaf1b | NOT RUN | - |
-| 2282 | dc2-leaf3a.arista.com | Routing | VerifyRoutingTableEntry | Verifies that the provided routes are present in the routing table of a specified VRF. | Route: 10.33.1.5 - Peer: dc1-svc-leaf1a | NOT RUN | - |
-| 2283 | dc2-leaf3a.arista.com | Security | VerifyAPIHttpsSSL | Verifies if the eAPI has a valid SSL profile. | - | NOT RUN | - |
-| 2284 | dc2-leaf3a.arista.com | Security | VerifyAPIHttpsSSL | Verifies if the eAPI has a valid SSL profile. | eAPI HTTPS SSL Profile: eAPI_SSL_Profile | NOT RUN | - |
-| 2285 | dc2-leaf3a.arista.com | Security | VerifyAPIHttpStatus | Verifies if eAPI HTTP server is disabled globally. | - | NOT RUN | - |
-| 2286 | dc2-leaf3a.arista.com | Security | VerifyAPIIPv4Acl | Verifies if eAPI has the right number IPv4 ACL(s) configured for a specified VRF. | - | NOT RUN | - |
-| 2287 | dc2-leaf3a.arista.com | Security | VerifyAPIIPv6Acl | Verifies if eAPI has the right number IPv6 ACL(s) configured for a specified VRF. | - | NOT RUN | - |
-| 2288 | dc2-leaf3a.arista.com | Security | VerifyAPISSLCertificate | Verifies the eAPI SSL certificate expiry, common subject name, encryption algorithm and key size. | - | NOT RUN | - |
-| 2289 | dc2-leaf3a.arista.com | Security | VerifyBannerLogin | Verifies the login banner of a device. | - | NOT RUN | - |
-| 2290 | dc2-leaf3a.arista.com | Security | VerifyBannerMotd | Verifies the motd banner of a device. | - | NOT RUN | - |
-| 2291 | dc2-leaf3a.arista.com | Security | VerifyIPSecConnHealth | Verifies all IPv4 security connections. | - | NOT RUN | - |
-| 2292 | dc2-leaf3a.arista.com | Security | VerifyIPv4ACL | Verifies the configuration of IPv4 ACLs. | - | NOT RUN | - |
-| 2293 | dc2-leaf3a.arista.com | Security | VerifySpecificIPSecConn | Verifies IPv4 security connections for a peer. | - | NOT RUN | - |
-| 2294 | dc2-leaf3a.arista.com | Security | VerifySSHIPv4Acl | Verifies if the SSHD agent has IPv4 ACL(s) configured. | - | NOT RUN | - |
-| 2295 | dc2-leaf3a.arista.com | Security | VerifySSHIPv6Acl | Verifies if the SSHD agent has IPv6 ACL(s) configured. | - | NOT RUN | - |
-| 2296 | dc2-leaf3a.arista.com | Security | VerifySSHStatus | Verifies if the SSHD agent is disabled in the default VRF. | - | NOT RUN | - |
-| 2297 | dc2-leaf3a.arista.com | Security | VerifyTelnetStatus | Verifies if Telnet is disabled in the default VRF. | - | NOT RUN | - |
-| 2298 | dc2-leaf3a.arista.com | Services | VerifyDNSLookup | Verifies the DNS name to IP address resolution. | - | NOT RUN | - |
-| 2299 | dc2-leaf3a.arista.com | Services | VerifyDNSServers | Verifies if the DNS servers are correctly configured. | - | NOT RUN | - |
-| 2300 | dc2-leaf3a.arista.com | Services | VerifyErrdisableRecovery | Verifies the errdisable recovery reason, status, and interval. | - | NOT RUN | - |
-| 2301 | dc2-leaf3a.arista.com | Services | VerifyHostname | Verifies the hostname of a device. | - | NOT RUN | - |
-| 2302 | dc2-leaf3a.arista.com | SNMP | VerifySnmpIPv4Acl | Verifies if the SNMP agent has IPv4 ACL(s) configured. | - | NOT RUN | - |
-| 2303 | dc2-leaf3a.arista.com | SNMP | VerifySnmpIPv6Acl | Verifies if the SNMP agent has IPv6 ACL(s) configured. | - | NOT RUN | - |
-| 2304 | dc2-leaf3a.arista.com | SNMP | VerifySnmpStatus | Verifies if the SNMP agent is enabled. | - | NOT RUN | - |
-| 2305 | dc2-leaf3a.arista.com | Software | VerifyEOSVersion | Verifies the EOS version of the device. | - | NOT RUN | - |
-| 2306 | dc2-leaf3a.arista.com | Software | VerifyTerminAttrVersion | Verifies the TerminAttr version of the device. | - | NOT RUN | - |
-| 2307 | dc2-leaf3a.arista.com | STP | VerifySTPBlockedPorts | Verifies there is no STP blocked ports. | - | NOT RUN | - |
-| 2308 | dc2-leaf3a.arista.com | STP | VerifySTPCounters | Verifies there is no errors in STP BPDU packets. | - | NOT RUN | - |
-| 2309 | dc2-leaf3a.arista.com | STP | VerifySTPForwardingPorts | Verifies that all interfaces are forwarding for a provided list of VLAN(s). | - | NOT RUN | - |
-| 2310 | dc2-leaf3a.arista.com | STP | VerifySTPMode | Verifies the configured STP mode for a provided list of VLAN(s). | - | NOT RUN | - |
-| 2311 | dc2-leaf3a.arista.com | STP | VerifySTPRootPriority | Verifies the STP root priority for a provided list of VLAN or MST instance ID(s). | - | NOT RUN | - |
-| 2312 | dc2-leaf3a.arista.com | STUN | VerifyStunClient | Verifies the STUN client is configured with the specified IPv4 source address and port. Validate the public IP and port if provided. | - | NOT RUN | - |
-| 2313 | dc2-leaf3a.arista.com | System | VerifyAgentLogs | Verifies there are no agent crash reports. | - | NOT RUN | - |
-| 2314 | dc2-leaf3a.arista.com | System | VerifyCoredump | Verifies there are no core dump files. | - | NOT RUN | - |
-| 2315 | dc2-leaf3a.arista.com | System | VerifyCPUUtilization | Verifies whether the CPU utilization is below 75%. | - | NOT RUN | - |
-| 2316 | dc2-leaf3a.arista.com | System | VerifyFileSystemUtilization | Verifies that no partition is utilizing more than 75% of its disk space. | - | NOT RUN | - |
-| 2317 | dc2-leaf3a.arista.com | System | VerifyMemoryUtilization | Verifies whether the memory utilization is below 75%. | - | NOT RUN | - |
+| 2251 | dc2-leaf3a.arista.com | Multicast | VerifyIGMPSnoopingGlobal | Verifies the IGMP snooping global configuration. | - | NOT RUN | - |
+| 2252 | dc2-leaf3a.arista.com | Multicast | VerifyIGMPSnoopingVlans | Verifies the IGMP snooping status for the provided VLANs. | - | NOT RUN | - |
+| 2253 | dc2-leaf3a.arista.com | PTP | VerifyPtpGMStatus | Verifies that the device is locked to a valid PTP Grandmaster. | - | NOT RUN | - |
+| 2254 | dc2-leaf3a.arista.com | PTP | VerifyPtpLockStatus | Verifies that the device was locked to the upstream PTP GM in the last minute. | - | NOT RUN | - |
+| 2255 | dc2-leaf3a.arista.com | PTP | VerifyPtpModeStatus | Verifies that the device is configured as a PTP Boundary Clock. | - | NOT RUN | - |
+| 2256 | dc2-leaf3a.arista.com | PTP | VerifyPtpOffset | Verifies that the PTP timing offset is within +/- 1000ns from the master clock. | - | NOT RUN | - |
+| 2257 | dc2-leaf3a.arista.com | PTP | VerifyPtpPortModeStatus | Verifies the PTP interfaces state. | - | NOT RUN | - |
+| 2258 | dc2-leaf3a.arista.com | Routing | VerifyRoutingProtocolModel | Verifies the configured routing protocol model. | Routing protocol model: multi-agent | NOT RUN | - |
+| 2259 | dc2-leaf3a.arista.com | Routing | VerifyRoutingTableEntry | Verifies that the provided routes are present in the routing table of a specified VRF. | Route: 10.255.0.1 - Peer: dc1-spine1 | NOT RUN | - |
+| 2260 | dc2-leaf3a.arista.com | Routing | VerifyRoutingTableEntry | Verifies that the provided routes are present in the routing table of a specified VRF. | Route: 10.255.0.2 - Peer: dc1-spine2 | NOT RUN | - |
+| 2261 | dc2-leaf3a.arista.com | Routing | VerifyRoutingTableEntry | Verifies that the provided routes are present in the routing table of a specified VRF. | Route: 10.255.0.3 - Peer: dc1-leaf1a | NOT RUN | - |
+| 2262 | dc2-leaf3a.arista.com | Routing | VerifyRoutingTableEntry | Verifies that the provided routes are present in the routing table of a specified VRF. | Route: 10.255.0.4 - Peer: dc1-leaf1b | NOT RUN | - |
+| 2263 | dc2-leaf3a.arista.com | Routing | VerifyRoutingTableEntry | Verifies that the provided routes are present in the routing table of a specified VRF. | Route: 10.255.0.5 - Peer: dc1-leaf2a | NOT RUN | - |
+| 2264 | dc2-leaf3a.arista.com | Routing | VerifyRoutingTableEntry | Verifies that the provided routes are present in the routing table of a specified VRF. | Route: 10.255.1.3 - Peer: dc1-leaf1a | NOT RUN | - |
+| 2265 | dc2-leaf3a.arista.com | Routing | VerifyRoutingTableEntry | Verifies that the provided routes are present in the routing table of a specified VRF. | Route: 10.255.1.5 - Peer: dc1-leaf2a | NOT RUN | - |
+| 2266 | dc2-leaf3a.arista.com | Routing | VerifyRoutingTableEntry | Verifies that the provided routes are present in the routing table of a specified VRF. | Route: 10.255.128.11 - Peer: dc2-spine1 | NOT RUN | - |
+| 2267 | dc2-leaf3a.arista.com | Routing | VerifyRoutingTableEntry | Verifies that the provided routes are present in the routing table of a specified VRF. | Route: 10.255.128.12 - Peer: dc2-spine2 | NOT RUN | - |
+| 2268 | dc2-leaf3a.arista.com | Routing | VerifyRoutingTableEntry | Verifies that the provided routes are present in the routing table of a specified VRF. | Route: 10.255.128.13 - Peer: dc2-leaf1a | NOT RUN | - |
+| 2269 | dc2-leaf3a.arista.com | Routing | VerifyRoutingTableEntry | Verifies that the provided routes are present in the routing table of a specified VRF. | Route: 10.255.128.14 - Peer: dc2-leaf1b | NOT RUN | - |
+| 2270 | dc2-leaf3a.arista.com | Routing | VerifyRoutingTableEntry | Verifies that the provided routes are present in the routing table of a specified VRF. | Route: 10.255.128.15 - Peer: dc2-leaf2a | NOT RUN | - |
+| 2271 | dc2-leaf3a.arista.com | Routing | VerifyRoutingTableEntry | Verifies that the provided routes are present in the routing table of a specified VRF. | Route: 10.255.128.16 - Peer: dc2-leaf2b | NOT RUN | - |
+| 2272 | dc2-leaf3a.arista.com | Routing | VerifyRoutingTableEntry | Verifies that the provided routes are present in the routing table of a specified VRF. | Route: 10.255.128.17 - Peer: dc2-leaf3a.arista.com | NOT RUN | - |
+| 2273 | dc2-leaf3a.arista.com | Routing | VerifyRoutingTableEntry | Verifies that the provided routes are present in the routing table of a specified VRF. | Route: 10.255.128.18 - Peer: dc2-leaf3b.arista.com | NOT RUN | - |
+| 2274 | dc2-leaf3a.arista.com | Routing | VerifyRoutingTableEntry | Verifies that the provided routes are present in the routing table of a specified VRF. | Route: 10.255.129.13 - Peer: dc2-leaf1a | NOT RUN | - |
+| 2275 | dc2-leaf3a.arista.com | Routing | VerifyRoutingTableEntry | Verifies that the provided routes are present in the routing table of a specified VRF. | Route: 10.255.129.15 - Peer: dc2-leaf2a | NOT RUN | - |
+| 2276 | dc2-leaf3a.arista.com | Routing | VerifyRoutingTableEntry | Verifies that the provided routes are present in the routing table of a specified VRF. | Route: 10.255.129.17 - Peer: dc2-leaf3a.arista.com | NOT RUN | - |
+| 2277 | dc2-leaf3a.arista.com | Routing | VerifyRoutingTableEntry | Verifies that the provided routes are present in the routing table of a specified VRF. | Route: 10.255.2.1 - Peer: dc1-wan1 | NOT RUN | - |
+| 2278 | dc2-leaf3a.arista.com | Routing | VerifyRoutingTableEntry | Verifies that the provided routes are present in the routing table of a specified VRF. | Route: 10.255.2.2 - Peer: dc1-wan2 | NOT RUN | - |
+| 2279 | dc2-leaf3a.arista.com | Routing | VerifyRoutingTableEntry | Verifies that the provided routes are present in the routing table of a specified VRF. | Route: 10.33.0.5 - Peer: dc1-svc-leaf1a | NOT RUN | - |
+| 2280 | dc2-leaf3a.arista.com | Routing | VerifyRoutingTableEntry | Verifies that the provided routes are present in the routing table of a specified VRF. | Route: 10.33.0.6 - Peer: dc1-svc-leaf1b | NOT RUN | - |
+| 2281 | dc2-leaf3a.arista.com | Routing | VerifyRoutingTableEntry | Verifies that the provided routes are present in the routing table of a specified VRF. | Route: 10.33.1.5 - Peer: dc1-svc-leaf1a | NOT RUN | - |
+| 2282 | dc2-leaf3a.arista.com | Security | VerifyAPIHttpsSSL | Verifies if the eAPI has a valid SSL profile. | - | NOT RUN | - |
+| 2283 | dc2-leaf3a.arista.com | Security | VerifyAPIHttpsSSL | Verifies if the eAPI has a valid SSL profile. | eAPI HTTPS SSL Profile: eAPI_SSL_Profile | NOT RUN | - |
+| 2284 | dc2-leaf3a.arista.com | Security | VerifyAPIHttpStatus | Verifies if eAPI HTTP server is disabled globally. | - | NOT RUN | - |
+| 2285 | dc2-leaf3a.arista.com | Security | VerifyAPIIPv4Acl | Verifies if eAPI has the right number IPv4 ACL(s) configured for a specified VRF. | - | NOT RUN | - |
+| 2286 | dc2-leaf3a.arista.com | Security | VerifyAPIIPv6Acl | Verifies if eAPI has the right number IPv6 ACL(s) configured for a specified VRF. | - | NOT RUN | - |
+| 2287 | dc2-leaf3a.arista.com | Security | VerifyAPISSLCertificate | Verifies the eAPI SSL certificate expiry, common subject name, encryption algorithm and key size. | - | NOT RUN | - |
+| 2288 | dc2-leaf3a.arista.com | Security | VerifyBannerLogin | Verifies the login banner of a device. | - | NOT RUN | - |
+| 2289 | dc2-leaf3a.arista.com | Security | VerifyBannerMotd | Verifies the motd banner of a device. | - | NOT RUN | - |
+| 2290 | dc2-leaf3a.arista.com | Security | VerifyIPSecConnHealth | Verifies all IPv4 security connections. | - | NOT RUN | - |
+| 2291 | dc2-leaf3a.arista.com | Security | VerifyIPv4ACL | Verifies the configuration of IPv4 ACLs. | - | NOT RUN | - |
+| 2292 | dc2-leaf3a.arista.com | Security | VerifySpecificIPSecConn | Verifies IPv4 security connections for a peer. | - | NOT RUN | - |
+| 2293 | dc2-leaf3a.arista.com | Security | VerifySSHIPv4Acl | Verifies if the SSHD agent has IPv4 ACL(s) configured. | - | NOT RUN | - |
+| 2294 | dc2-leaf3a.arista.com | Security | VerifySSHIPv6Acl | Verifies if the SSHD agent has IPv6 ACL(s) configured. | - | NOT RUN | - |
+| 2295 | dc2-leaf3a.arista.com | Security | VerifySSHStatus | Verifies if the SSHD agent is disabled in the default VRF. | - | NOT RUN | - |
+| 2296 | dc2-leaf3a.arista.com | Security | VerifyTelnetStatus | Verifies if Telnet is disabled in the default VRF. | - | NOT RUN | - |
+| 2297 | dc2-leaf3a.arista.com | Services | VerifyDNSLookup | Verifies the DNS name to IP address resolution. | - | NOT RUN | - |
+| 2298 | dc2-leaf3a.arista.com | Services | VerifyDNSServers | Verifies if the DNS servers are correctly configured. | - | NOT RUN | - |
+| 2299 | dc2-leaf3a.arista.com | Services | VerifyErrdisableRecovery | Verifies the errdisable recovery reason, status, and interval. | - | NOT RUN | - |
+| 2300 | dc2-leaf3a.arista.com | Services | VerifyHostname | Verifies the hostname of a device. | - | NOT RUN | - |
+| 2301 | dc2-leaf3a.arista.com | SNMP | VerifySnmpIPv4Acl | Verifies if the SNMP agent has IPv4 ACL(s) configured. | - | NOT RUN | - |
+| 2302 | dc2-leaf3a.arista.com | SNMP | VerifySnmpIPv6Acl | Verifies if the SNMP agent has IPv6 ACL(s) configured. | - | NOT RUN | - |
+| 2303 | dc2-leaf3a.arista.com | SNMP | VerifySnmpStatus | Verifies if the SNMP agent is enabled. | - | NOT RUN | - |
+| 2304 | dc2-leaf3a.arista.com | Software | VerifyEOSVersion | Verifies the EOS version of the device. | - | NOT RUN | - |
+| 2305 | dc2-leaf3a.arista.com | Software | VerifyTerminAttrVersion | Verifies the TerminAttr version of the device. | - | NOT RUN | - |
+| 2306 | dc2-leaf3a.arista.com | STP | VerifySTPBlockedPorts | Verifies there is no STP blocked ports. | - | NOT RUN | - |
+| 2307 | dc2-leaf3a.arista.com | STP | VerifySTPCounters | Verifies there is no errors in STP BPDU packets. | - | NOT RUN | - |
+| 2308 | dc2-leaf3a.arista.com | STP | VerifySTPForwardingPorts | Verifies that all interfaces are forwarding for a provided list of VLAN(s). | - | NOT RUN | - |
+| 2309 | dc2-leaf3a.arista.com | STP | VerifySTPMode | Verifies the configured STP mode for a provided list of VLAN(s). | - | NOT RUN | - |
+| 2310 | dc2-leaf3a.arista.com | STP | VerifySTPRootPriority | Verifies the STP root priority for a provided list of VLAN or MST instance ID(s). | - | NOT RUN | - |
+| 2311 | dc2-leaf3a.arista.com | STUN | VerifyStunClient | Verifies the STUN client is configured with the specified IPv4 source address and port. Validate the public IP and port if provided. | - | NOT RUN | - |
+| 2312 | dc2-leaf3a.arista.com | System | VerifyAgentLogs | Verifies there are no agent crash reports. | - | NOT RUN | - |
+| 2313 | dc2-leaf3a.arista.com | System | VerifyCoredump | Verifies there are no core dump files. | - | NOT RUN | - |
+| 2314 | dc2-leaf3a.arista.com | System | VerifyCPUUtilization | Verifies whether the CPU utilization is below 75%. | - | NOT RUN | - |
+| 2315 | dc2-leaf3a.arista.com | System | VerifyFileSystemUtilization | Verifies that no partition is utilizing more than 75% of its disk space. | - | NOT RUN | - |
+| 2316 | dc2-leaf3a.arista.com | System | VerifyMemoryUtilization | Verifies whether the memory utilization is below 75%. | - | NOT RUN | - |
+| 2317 | dc2-leaf3a.arista.com | System | VerifyNTP | Verifies if NTP is synchronised. | - | NOT RUN | - |
 | 2318 | dc2-leaf3a.arista.com | System | VerifyNTP | Verifies if NTP is synchronised. | - | NOT RUN | - |
-| 2319 | dc2-leaf3a.arista.com | System | VerifyNTP | Verifies if NTP is synchronised. | - | NOT RUN | - |
+| 2319 | dc2-leaf3a.arista.com | System | VerifyReloadCause | Verifies the last reload cause of the device. | - | NOT RUN | - |
 | 2320 | dc2-leaf3a.arista.com | System | VerifyReloadCause | Verifies the last reload cause of the device. | - | NOT RUN | - |
-| 2321 | dc2-leaf3a.arista.com | System | VerifyReloadCause | Verifies the last reload cause of the device. | - | NOT RUN | - |
-| 2322 | dc2-leaf3a.arista.com | System | VerifyUptime | Verifies the device uptime. | - | NOT RUN | - |
-| 2323 | dc2-leaf3a.arista.com | VLAN | VerifyVlanInternalPolicy | Verifies the VLAN internal allocation policy and the range of VLANs. | - | NOT RUN | - |
-| 2324 | dc2-leaf3b.arista.com | AAA | VerifyAcctConsoleMethods | Verifies the AAA accounting console method lists for different accounting types (system, exec, commands, dot1x). | - | NOT RUN | - |
-| 2325 | dc2-leaf3b.arista.com | AAA | VerifyAcctDefaultMethods | Verifies the AAA accounting default method lists for different accounting types (system, exec, commands, dot1x). | - | NOT RUN | - |
-| 2326 | dc2-leaf3b.arista.com | AAA | VerifyAuthenMethods | Verifies the AAA authentication method lists for different authentication types (login, enable, dot1x). | - | NOT RUN | - |
-| 2327 | dc2-leaf3b.arista.com | AAA | VerifyAuthzMethods | Verifies the AAA authorization method lists for different authorization types (commands, exec). | - | NOT RUN | - |
-| 2328 | dc2-leaf3b.arista.com | AAA | VerifyTacacsServerGroups | Verifies if the provided TACACS server group(s) are configured. | - | NOT RUN | - |
-| 2329 | dc2-leaf3b.arista.com | AAA | VerifyTacacsServers | Verifies TACACS servers are configured for a specified VRF. | - | NOT RUN | - |
-| 2330 | dc2-leaf3b.arista.com | AAA | VerifyTacacsSourceIntf | Verifies TACACS source-interface for a specified VRF. | - | NOT RUN | - |
-| 2331 | dc2-leaf3b.arista.com | BGP | VerifyBGPSpecificPeers | Verifies the health of specific BGP peer(s). | BGP EVPN Peer: dc2-spine1 (IP: 10.255.128.11) | NOT RUN | - |
-| 2332 | dc2-leaf3b.arista.com | BGP | VerifyBGPSpecificPeers | Verifies the health of specific BGP peer(s). | BGP EVPN Peer: dc2-spine2 (IP: 10.255.128.12) | NOT RUN | - |
-| 2333 | dc2-leaf3b.arista.com | BGP | VerifyBGPSpecificPeers | Verifies the health of specific BGP peer(s). | BGP IPv4 Unicast Peer: dc2-leaf3a.arista.com (IP: 10.255.129.124) | NOT RUN | - |
-| 2334 | dc2-leaf3b.arista.com | BGP | VerifyBGPSpecificPeers | Verifies the health of specific BGP peer(s). | BGP IPv4 Unicast Peer: dc2-spine1 (IP: 10.255.255.124) | NOT RUN | - |
-| 2335 | dc2-leaf3b.arista.com | BGP | VerifyBGPSpecificPeers | Verifies the health of specific BGP peer(s). | BGP IPv4 Unicast Peer: dc2-spine2 (IP: 10.255.255.126) | NOT RUN | - |
-| 2336 | dc2-leaf3b.arista.com | Configuration | VerifyRunningConfigDiffs | Verifies there is no difference between the running-config and the startup-config | - | NOT RUN | - |
-| 2337 | dc2-leaf3b.arista.com | Configuration | VerifyZeroTouch | Verifies ZeroTouch is disabled | - | NOT RUN | - |
-| 2338 | dc2-leaf3b.arista.com | Connectivity | VerifyLLDPNeighbors | Verifies that the provided LLDP neighbors are connected properly. | Local: Ethernet1 - Remote: dc2-spine1 Ethernet6 | NOT RUN | - |
-| 2339 | dc2-leaf3b.arista.com | Connectivity | VerifyLLDPNeighbors | Verifies that the provided LLDP neighbors are connected properly. | Local: Ethernet2 - Remote: dc2-spine2 Ethernet6 | NOT RUN | - |
-| 2340 | dc2-leaf3b.arista.com | Connectivity | VerifyLLDPNeighbors | Verifies that the provided LLDP neighbors are connected properly. | Local: Ethernet3 - Remote: dc2-leaf3a.arista.com Ethernet3 | NOT RUN | - |
-| 2341 | dc2-leaf3b.arista.com | Connectivity | VerifyLLDPNeighbors | Verifies that the provided LLDP neighbors are connected properly. | Local: Ethernet4 - Remote: dc2-leaf3a.arista.com Ethernet4 | NOT RUN | - |
-| 2342 | dc2-leaf3b.arista.com | Connectivity | VerifyReachability | Test the network reachability to one or many destination IP(s). | Source: Loopback0 (IP: 10.255.128.18) - Destination: dc1-leaf1a Loopback0 (IP: 10.255.0.3) | NOT RUN | - |
-| 2343 | dc2-leaf3b.arista.com | Connectivity | VerifyReachability | Test the network reachability to one or many destination IP(s). | Source: Loopback0 (IP: 10.255.128.18) - Destination: dc1-leaf1b Loopback0 (IP: 10.255.0.4) | NOT RUN | - |
-| 2344 | dc2-leaf3b.arista.com | Connectivity | VerifyReachability | Test the network reachability to one or many destination IP(s). | Source: Loopback0 (IP: 10.255.128.18) - Destination: dc1-leaf2a Loopback0 (IP: 10.255.0.5) | NOT RUN | - |
-| 2345 | dc2-leaf3b.arista.com | Connectivity | VerifyReachability | Test the network reachability to one or many destination IP(s). | Source: Loopback0 (IP: 10.255.128.18) - Destination: dc1-spine1 Loopback0 (IP: 10.255.0.1) | NOT RUN | - |
-| 2346 | dc2-leaf3b.arista.com | Connectivity | VerifyReachability | Test the network reachability to one or many destination IP(s). | Source: Loopback0 (IP: 10.255.128.18) - Destination: dc1-spine2 Loopback0 (IP: 10.255.0.2) | NOT RUN | - |
-| 2347 | dc2-leaf3b.arista.com | Connectivity | VerifyReachability | Test the network reachability to one or many destination IP(s). | Source: Loopback0 (IP: 10.255.128.18) - Destination: dc1-svc-leaf1a Loopback0 (IP: 10.33.0.5) | NOT RUN | - |
-| 2348 | dc2-leaf3b.arista.com | Connectivity | VerifyReachability | Test the network reachability to one or many destination IP(s). | Source: Loopback0 (IP: 10.255.128.18) - Destination: dc1-svc-leaf1b Loopback0 (IP: 10.33.0.6) | NOT RUN | - |
-| 2349 | dc2-leaf3b.arista.com | Connectivity | VerifyReachability | Test the network reachability to one or many destination IP(s). | Source: Loopback0 (IP: 10.255.128.18) - Destination: dc1-wan1 Loopback0 (IP: 10.255.2.1) | NOT RUN | - |
-| 2350 | dc2-leaf3b.arista.com | Connectivity | VerifyReachability | Test the network reachability to one or many destination IP(s). | Source: Loopback0 (IP: 10.255.128.18) - Destination: dc1-wan2 Loopback0 (IP: 10.255.2.2) | NOT RUN | - |
-| 2351 | dc2-leaf3b.arista.com | Connectivity | VerifyReachability | Test the network reachability to one or many destination IP(s). | Source: Loopback0 (IP: 10.255.128.18) - Destination: dc2-leaf1a Loopback0 (IP: 10.255.128.13) | NOT RUN | - |
-| 2352 | dc2-leaf3b.arista.com | Connectivity | VerifyReachability | Test the network reachability to one or many destination IP(s). | Source: Loopback0 (IP: 10.255.128.18) - Destination: dc2-leaf1b Loopback0 (IP: 10.255.128.14) | NOT RUN | - |
-| 2353 | dc2-leaf3b.arista.com | Connectivity | VerifyReachability | Test the network reachability to one or many destination IP(s). | Source: Loopback0 (IP: 10.255.128.18) - Destination: dc2-leaf2a Loopback0 (IP: 10.255.128.15) | NOT RUN | - |
-| 2354 | dc2-leaf3b.arista.com | Connectivity | VerifyReachability | Test the network reachability to one or many destination IP(s). | Source: Loopback0 (IP: 10.255.128.18) - Destination: dc2-leaf2b Loopback0 (IP: 10.255.128.16) | NOT RUN | - |
-| 2355 | dc2-leaf3b.arista.com | Connectivity | VerifyReachability | Test the network reachability to one or many destination IP(s). | Source: Loopback0 (IP: 10.255.128.18) - Destination: dc2-leaf3a.arista.com Loopback0 (IP: 10.255.128.17) | NOT RUN | - |
-| 2356 | dc2-leaf3b.arista.com | Connectivity | VerifyReachability | Test the network reachability to one or many destination IP(s). | Source: Loopback0 (IP: 10.255.128.18) - Destination: dc2-leaf3b.arista.com Loopback0 (IP: 10.255.128.18) | NOT RUN | - |
-| 2357 | dc2-leaf3b.arista.com | Connectivity | VerifyReachability | Test the network reachability to one or many destination IP(s). | Source: Loopback0 (IP: 10.255.128.18) - Destination: dc2-spine1 Loopback0 (IP: 10.255.128.11) | NOT RUN | - |
-| 2358 | dc2-leaf3b.arista.com | Connectivity | VerifyReachability | Test the network reachability to one or many destination IP(s). | Source: Loopback0 (IP: 10.255.128.18) - Destination: dc2-spine2 Loopback0 (IP: 10.255.128.12) | NOT RUN | - |
-| 2359 | dc2-leaf3b.arista.com | Connectivity | VerifyReachability | Test the network reachability to one or many destination IP(s). | Source: P2P Interface Ethernet1 (IP: 10.255.255.125) - Destination: dc2-spine1 Ethernet6 (IP: 10.255.255.124) | NOT RUN | - |
-| 2360 | dc2-leaf3b.arista.com | Connectivity | VerifyReachability | Test the network reachability to one or many destination IP(s). | Source: P2P Interface Ethernet2 (IP: 10.255.255.127) - Destination: dc2-spine2 Ethernet6 (IP: 10.255.255.126) | NOT RUN | - |
-| 2361 | dc2-leaf3b.arista.com | Field Notices | VerifyFieldNotice44Resolution | Verifies that the device is using the correct Aboot version per FN0044. | - | NOT RUN | - |
-| 2362 | dc2-leaf3b.arista.com | Field Notices | VerifyFieldNotice72Resolution | Verifies if the device is exposed to FN0072, and if the issue has been mitigated. | - | NOT RUN | - |
-| 2363 | dc2-leaf3b.arista.com | Greent | VerifyGreenT | Verifies if a GreenT policy is created. | - | NOT RUN | - |
-| 2364 | dc2-leaf3b.arista.com | Greent | VerifyGreenTCounters | Verifies if the GreenT counters are incremented. | - | NOT RUN | - |
-| 2365 | dc2-leaf3b.arista.com | Hardware | VerifyAdverseDrops | Verifies there are no adverse drops on DCS-7280 and DCS-7500 family switches. | - | NOT RUN | - |
-| 2366 | dc2-leaf3b.arista.com | Hardware | VerifyEnvironmentCooling | Verifies the status of power supply fans and all fan trays. | - | NOT RUN | - |
-| 2367 | dc2-leaf3b.arista.com | Hardware | VerifyEnvironmentCooling | Verifies the status of power supply fans and all fan trays. | Accepted States: 'ok' | NOT RUN | - |
-| 2368 | dc2-leaf3b.arista.com | Hardware | VerifyEnvironmentPower | Verifies the power supplies status. | - | NOT RUN | - |
-| 2369 | dc2-leaf3b.arista.com | Hardware | VerifyEnvironmentPower | Verifies the power supplies status. | Accepted States: 'ok' | NOT RUN | - |
-| 2370 | dc2-leaf3b.arista.com | Hardware | VerifyEnvironmentSystemCooling | Verifies the system cooling status. | - | NOT RUN | - |
+| 2321 | dc2-leaf3a.arista.com | System | VerifyUptime | Verifies the device uptime. | - | NOT RUN | - |
+| 2322 | dc2-leaf3a.arista.com | VLAN | VerifyVlanInternalPolicy | Verifies the VLAN internal allocation policy and the range of VLANs. | - | NOT RUN | - |
+| 2323 | dc2-leaf3b.arista.com | AAA | VerifyAcctConsoleMethods | Verifies the AAA accounting console method lists for different accounting types (system, exec, commands, dot1x). | - | NOT RUN | - |
+| 2324 | dc2-leaf3b.arista.com | AAA | VerifyAcctDefaultMethods | Verifies the AAA accounting default method lists for different accounting types (system, exec, commands, dot1x). | - | NOT RUN | - |
+| 2325 | dc2-leaf3b.arista.com | AAA | VerifyAuthenMethods | Verifies the AAA authentication method lists for different authentication types (login, enable, dot1x). | - | NOT RUN | - |
+| 2326 | dc2-leaf3b.arista.com | AAA | VerifyAuthzMethods | Verifies the AAA authorization method lists for different authorization types (commands, exec). | - | NOT RUN | - |
+| 2327 | dc2-leaf3b.arista.com | AAA | VerifyTacacsServerGroups | Verifies if the provided TACACS server group(s) are configured. | - | NOT RUN | - |
+| 2328 | dc2-leaf3b.arista.com | AAA | VerifyTacacsServers | Verifies TACACS servers are configured for a specified VRF. | - | NOT RUN | - |
+| 2329 | dc2-leaf3b.arista.com | AAA | VerifyTacacsSourceIntf | Verifies TACACS source-interface for a specified VRF. | - | NOT RUN | - |
+| 2330 | dc2-leaf3b.arista.com | BGP | VerifyBGPSpecificPeers | Verifies the health of specific BGP peer(s). | BGP EVPN Peer: dc2-spine1 (IP: 10.255.128.11) | NOT RUN | - |
+| 2331 | dc2-leaf3b.arista.com | BGP | VerifyBGPSpecificPeers | Verifies the health of specific BGP peer(s). | BGP EVPN Peer: dc2-spine2 (IP: 10.255.128.12) | NOT RUN | - |
+| 2332 | dc2-leaf3b.arista.com | BGP | VerifyBGPSpecificPeers | Verifies the health of specific BGP peer(s). | BGP IPv4 Unicast Peer: dc2-leaf3a.arista.com (IP: 10.255.129.124) | NOT RUN | - |
+| 2333 | dc2-leaf3b.arista.com | BGP | VerifyBGPSpecificPeers | Verifies the health of specific BGP peer(s). | BGP IPv4 Unicast Peer: dc2-spine1 (IP: 10.255.255.124) | NOT RUN | - |
+| 2334 | dc2-leaf3b.arista.com | BGP | VerifyBGPSpecificPeers | Verifies the health of specific BGP peer(s). | BGP IPv4 Unicast Peer: dc2-spine2 (IP: 10.255.255.126) | NOT RUN | - |
+| 2335 | dc2-leaf3b.arista.com | Configuration | VerifyRunningConfigDiffs | Verifies there is no difference between the running-config and the startup-config | - | NOT RUN | - |
+| 2336 | dc2-leaf3b.arista.com | Configuration | VerifyZeroTouch | Verifies ZeroTouch is disabled | - | NOT RUN | - |
+| 2337 | dc2-leaf3b.arista.com | Connectivity | VerifyLLDPNeighbors | Verifies that the provided LLDP neighbors are connected properly. | Local: Ethernet1 - Remote: dc2-spine1 Ethernet6 | NOT RUN | - |
+| 2338 | dc2-leaf3b.arista.com | Connectivity | VerifyLLDPNeighbors | Verifies that the provided LLDP neighbors are connected properly. | Local: Ethernet2 - Remote: dc2-spine2 Ethernet6 | NOT RUN | - |
+| 2339 | dc2-leaf3b.arista.com | Connectivity | VerifyLLDPNeighbors | Verifies that the provided LLDP neighbors are connected properly. | Local: Ethernet3 - Remote: dc2-leaf3a.arista.com Ethernet3 | NOT RUN | - |
+| 2340 | dc2-leaf3b.arista.com | Connectivity | VerifyLLDPNeighbors | Verifies that the provided LLDP neighbors are connected properly. | Local: Ethernet4 - Remote: dc2-leaf3a.arista.com Ethernet4 | NOT RUN | - |
+| 2341 | dc2-leaf3b.arista.com | Connectivity | VerifyReachability | Test the network reachability to one or many destination IP(s). | Source: Loopback0 (IP: 10.255.128.18) - Destination: dc1-leaf1a Loopback0 (IP: 10.255.0.3) | NOT RUN | - |
+| 2342 | dc2-leaf3b.arista.com | Connectivity | VerifyReachability | Test the network reachability to one or many destination IP(s). | Source: Loopback0 (IP: 10.255.128.18) - Destination: dc1-leaf1b Loopback0 (IP: 10.255.0.4) | NOT RUN | - |
+| 2343 | dc2-leaf3b.arista.com | Connectivity | VerifyReachability | Test the network reachability to one or many destination IP(s). | Source: Loopback0 (IP: 10.255.128.18) - Destination: dc1-leaf2a Loopback0 (IP: 10.255.0.5) | NOT RUN | - |
+| 2344 | dc2-leaf3b.arista.com | Connectivity | VerifyReachability | Test the network reachability to one or many destination IP(s). | Source: Loopback0 (IP: 10.255.128.18) - Destination: dc1-spine1 Loopback0 (IP: 10.255.0.1) | NOT RUN | - |
+| 2345 | dc2-leaf3b.arista.com | Connectivity | VerifyReachability | Test the network reachability to one or many destination IP(s). | Source: Loopback0 (IP: 10.255.128.18) - Destination: dc1-spine2 Loopback0 (IP: 10.255.0.2) | NOT RUN | - |
+| 2346 | dc2-leaf3b.arista.com | Connectivity | VerifyReachability | Test the network reachability to one or many destination IP(s). | Source: Loopback0 (IP: 10.255.128.18) - Destination: dc1-svc-leaf1a Loopback0 (IP: 10.33.0.5) | NOT RUN | - |
+| 2347 | dc2-leaf3b.arista.com | Connectivity | VerifyReachability | Test the network reachability to one or many destination IP(s). | Source: Loopback0 (IP: 10.255.128.18) - Destination: dc1-svc-leaf1b Loopback0 (IP: 10.33.0.6) | NOT RUN | - |
+| 2348 | dc2-leaf3b.arista.com | Connectivity | VerifyReachability | Test the network reachability to one or many destination IP(s). | Source: Loopback0 (IP: 10.255.128.18) - Destination: dc1-wan1 Loopback0 (IP: 10.255.2.1) | NOT RUN | - |
+| 2349 | dc2-leaf3b.arista.com | Connectivity | VerifyReachability | Test the network reachability to one or many destination IP(s). | Source: Loopback0 (IP: 10.255.128.18) - Destination: dc1-wan2 Loopback0 (IP: 10.255.2.2) | NOT RUN | - |
+| 2350 | dc2-leaf3b.arista.com | Connectivity | VerifyReachability | Test the network reachability to one or many destination IP(s). | Source: Loopback0 (IP: 10.255.128.18) - Destination: dc2-leaf1a Loopback0 (IP: 10.255.128.13) | NOT RUN | - |
+| 2351 | dc2-leaf3b.arista.com | Connectivity | VerifyReachability | Test the network reachability to one or many destination IP(s). | Source: Loopback0 (IP: 10.255.128.18) - Destination: dc2-leaf1b Loopback0 (IP: 10.255.128.14) | NOT RUN | - |
+| 2352 | dc2-leaf3b.arista.com | Connectivity | VerifyReachability | Test the network reachability to one or many destination IP(s). | Source: Loopback0 (IP: 10.255.128.18) - Destination: dc2-leaf2a Loopback0 (IP: 10.255.128.15) | NOT RUN | - |
+| 2353 | dc2-leaf3b.arista.com | Connectivity | VerifyReachability | Test the network reachability to one or many destination IP(s). | Source: Loopback0 (IP: 10.255.128.18) - Destination: dc2-leaf2b Loopback0 (IP: 10.255.128.16) | NOT RUN | - |
+| 2354 | dc2-leaf3b.arista.com | Connectivity | VerifyReachability | Test the network reachability to one or many destination IP(s). | Source: Loopback0 (IP: 10.255.128.18) - Destination: dc2-leaf3a.arista.com Loopback0 (IP: 10.255.128.17) | NOT RUN | - |
+| 2355 | dc2-leaf3b.arista.com | Connectivity | VerifyReachability | Test the network reachability to one or many destination IP(s). | Source: Loopback0 (IP: 10.255.128.18) - Destination: dc2-leaf3b.arista.com Loopback0 (IP: 10.255.128.18) | NOT RUN | - |
+| 2356 | dc2-leaf3b.arista.com | Connectivity | VerifyReachability | Test the network reachability to one or many destination IP(s). | Source: Loopback0 (IP: 10.255.128.18) - Destination: dc2-spine1 Loopback0 (IP: 10.255.128.11) | NOT RUN | - |
+| 2357 | dc2-leaf3b.arista.com | Connectivity | VerifyReachability | Test the network reachability to one or many destination IP(s). | Source: Loopback0 (IP: 10.255.128.18) - Destination: dc2-spine2 Loopback0 (IP: 10.255.128.12) | NOT RUN | - |
+| 2358 | dc2-leaf3b.arista.com | Connectivity | VerifyReachability | Test the network reachability to one or many destination IP(s). | Source: P2P Interface Ethernet1 (IP: 10.255.255.125) - Destination: dc2-spine1 Ethernet6 (IP: 10.255.255.124) | NOT RUN | - |
+| 2359 | dc2-leaf3b.arista.com | Connectivity | VerifyReachability | Test the network reachability to one or many destination IP(s). | Source: P2P Interface Ethernet2 (IP: 10.255.255.127) - Destination: dc2-spine2 Ethernet6 (IP: 10.255.255.126) | NOT RUN | - |
+| 2360 | dc2-leaf3b.arista.com | Field Notices | VerifyFieldNotice44Resolution | Verifies that the device is using the correct Aboot version per FN0044. | - | NOT RUN | - |
+| 2361 | dc2-leaf3b.arista.com | Field Notices | VerifyFieldNotice72Resolution | Verifies if the device is exposed to FN0072, and if the issue has been mitigated. | - | NOT RUN | - |
+| 2362 | dc2-leaf3b.arista.com | Greent | VerifyGreenT | Verifies if a GreenT policy is created. | - | NOT RUN | - |
+| 2363 | dc2-leaf3b.arista.com | Greent | VerifyGreenTCounters | Verifies if the GreenT counters are incremented. | - | NOT RUN | - |
+| 2364 | dc2-leaf3b.arista.com | Hardware | VerifyAdverseDrops | Verifies there are no adverse drops on DCS-7280 and DCS-7500 family switches. | - | NOT RUN | - |
+| 2365 | dc2-leaf3b.arista.com | Hardware | VerifyEnvironmentCooling | Verifies the status of power supply fans and all fan trays. | - | NOT RUN | - |
+| 2366 | dc2-leaf3b.arista.com | Hardware | VerifyEnvironmentCooling | Verifies the status of power supply fans and all fan trays. | Accepted States: 'ok' | NOT RUN | - |
+| 2367 | dc2-leaf3b.arista.com | Hardware | VerifyEnvironmentPower | Verifies the power supplies status. | - | NOT RUN | - |
+| 2368 | dc2-leaf3b.arista.com | Hardware | VerifyEnvironmentPower | Verifies the power supplies status. | Accepted States: 'ok' | NOT RUN | - |
+| 2369 | dc2-leaf3b.arista.com | Hardware | VerifyEnvironmentSystemCooling | Verifies the system cooling status. | - | NOT RUN | - |
+| 2370 | dc2-leaf3b.arista.com | Hardware | VerifyTemperature | Verifies the device temperature. | - | NOT RUN | - |
 | 2371 | dc2-leaf3b.arista.com | Hardware | VerifyTemperature | Verifies the device temperature. | - | NOT RUN | - |
-| 2372 | dc2-leaf3b.arista.com | Hardware | VerifyTemperature | Verifies the device temperature. | - | NOT RUN | - |
-| 2373 | dc2-leaf3b.arista.com | Hardware | VerifyTransceiversManufacturers | Verifies if all transceivers come from approved manufacturers. | - | NOT RUN | - |
-| 2374 | dc2-leaf3b.arista.com | Hardware | VerifyTransceiversManufacturers | Verifies if all transceivers come from approved manufacturers. | Accepted Manufacturers: 'Arista Networks', 'Arastra, Inc.', 'Not Present' | NOT RUN | - |
-| 2375 | dc2-leaf3b.arista.com | Hardware | VerifyTransceiversTemperature | Verifies the transceivers temperature. | - | NOT RUN | - |
-| 2376 | dc2-leaf3b.arista.com | Interfaces | VerifyInterfacesStatus | Verifies the status of the provided interfaces. | Interface Ethernet1 - P2P_dc2-spine1_Ethernet6 = 'up' | NOT RUN | - |
-| 2377 | dc2-leaf3b.arista.com | Interfaces | VerifyInterfacesStatus | Verifies the status of the provided interfaces. | Interface Ethernet11 - dc2-leaf3-fw1_e1 = 'adminDown' | NOT RUN | - |
-| 2378 | dc2-leaf3b.arista.com | Interfaces | VerifyInterfacesStatus | Verifies the status of the provided interfaces. | Interface Ethernet2 - P2P_dc2-spine2_Ethernet6 = 'up' | NOT RUN | - |
-| 2379 | dc2-leaf3b.arista.com | Interfaces | VerifyInterfacesStatus | Verifies the status of the provided interfaces. | Interface Ethernet3 - MLAG_dc2-leaf3a.arista.com_Ethernet3 = 'up' | NOT RUN | - |
-| 2380 | dc2-leaf3b.arista.com | Interfaces | VerifyInterfacesStatus | Verifies the status of the provided interfaces. | Interface Ethernet4 - MLAG_dc2-leaf3a.arista.com_Ethernet4 = 'up' | NOT RUN | - |
-| 2381 | dc2-leaf3b.arista.com | Interfaces | VerifyInterfacesStatus | Verifies the status of the provided interfaces. | Interface Loopback0 - ROUTER_ID = 'up' | NOT RUN | - |
-| 2382 | dc2-leaf3b.arista.com | Interfaces | VerifyInterfacesStatus | Verifies the status of the provided interfaces. | Interface Loopback1 - VXLAN_TUNNEL_SOURCE = 'up' | NOT RUN | - |
-| 2383 | dc2-leaf3b.arista.com | Interfaces | VerifyInterfacesStatus | Verifies the status of the provided interfaces. | Interface Loopback10 - DIAG_VRF_VRF10 = 'up' | NOT RUN | - |
-| 2384 | dc2-leaf3b.arista.com | Interfaces | VerifyInterfacesStatus | Verifies the status of the provided interfaces. | Interface Loopback11 - DIAG_VRF_VRF11 = 'up' | NOT RUN | - |
-| 2385 | dc2-leaf3b.arista.com | Interfaces | VerifyInterfacesStatus | Verifies the status of the provided interfaces. | Interface Port-Channel11 - dc2-leaf3-fw1_PortChannel = 'up' | NOT RUN | - |
-| 2386 | dc2-leaf3b.arista.com | Interfaces | VerifyInterfacesStatus | Verifies the status of the provided interfaces. | Interface Port-Channel3 - MLAG_dc2-leaf3a.arista.com_Port-Channel3 = 'up' | NOT RUN | - |
-| 2387 | dc2-leaf3b.arista.com | Interfaces | VerifyInterfacesStatus | Verifies the status of the provided interfaces. | Interface Vlan11 - VRF10_VLAN11 = 'up' | NOT RUN | - |
-| 2388 | dc2-leaf3b.arista.com | Interfaces | VerifyInterfacesStatus | Verifies the status of the provided interfaces. | Interface Vlan12 - VRF10_VLAN12 = 'up' | NOT RUN | - |
-| 2389 | dc2-leaf3b.arista.com | Interfaces | VerifyInterfacesStatus | Verifies the status of the provided interfaces. | Interface Vlan21 - VRF11_VLAN21 = 'up' | NOT RUN | - |
-| 2390 | dc2-leaf3b.arista.com | Interfaces | VerifyInterfacesStatus | Verifies the status of the provided interfaces. | Interface Vlan22 - VRF11_VLAN22 = 'up' | NOT RUN | - |
-| 2391 | dc2-leaf3b.arista.com | Interfaces | VerifyInterfacesStatus | Verifies the status of the provided interfaces. | Interface Vlan3009 - MLAG_L3_VRF_VRF10 = 'up' | NOT RUN | - |
-| 2392 | dc2-leaf3b.arista.com | Interfaces | VerifyInterfacesStatus | Verifies the status of the provided interfaces. | Interface Vlan3010 - MLAG_L3_VRF_VRF11 = 'up' | NOT RUN | - |
-| 2393 | dc2-leaf3b.arista.com | Interfaces | VerifyInterfacesStatus | Verifies the status of the provided interfaces. | Interface Vlan4093 - MLAG_L3 = 'up' | NOT RUN | - |
-| 2394 | dc2-leaf3b.arista.com | Interfaces | VerifyInterfacesStatus | Verifies the status of the provided interfaces. | Interface Vlan4094 - MLAG = 'up' | NOT RUN | - |
-| 2395 | dc2-leaf3b.arista.com | Interfaces | VerifyInterfacesStatus | Verifies the status of the provided interfaces. | Interface Vxlan1 = 'up' | NOT RUN | - |
-| 2396 | dc2-leaf3b.arista.com | LANZ | VerifyLANZ | Verifies if LANZ is enabled. | - | NOT RUN | - |
-| 2397 | dc2-leaf3b.arista.com | Logging | VerifyLoggingAccounting | Verifies if AAA accounting logs are generated. | - | NOT RUN | - |
-| 2398 | dc2-leaf3b.arista.com | Logging | VerifyLoggingErrors | Verifies there are no syslog messages with a severity of ERRORS or higher. | - | NOT RUN | - |
-| 2399 | dc2-leaf3b.arista.com | Logging | VerifyLoggingHostname | Verifies if logs are generated with the device FQDN. | - | NOT RUN | - |
-| 2400 | dc2-leaf3b.arista.com | Logging | VerifyLoggingHosts | Verifies logging hosts (syslog servers) for a specified VRF. | - | NOT RUN | - |
-| 2401 | dc2-leaf3b.arista.com | Logging | VerifyLoggingLogsGeneration | Verifies if logs are generated. | - | NOT RUN | - |
-| 2402 | dc2-leaf3b.arista.com | Logging | VerifyLoggingPersistent | Verifies if logging persistent is enabled and logs are saved in flash. | - | NOT RUN | - |
-| 2403 | dc2-leaf3b.arista.com | Logging | VerifyLoggingSourceIntf | Verifies logging source-interface for a specified VRF. | - | NOT RUN | - |
-| 2404 | dc2-leaf3b.arista.com | Logging | VerifyLoggingTimestamp | Verifies if logs are generated with the appropriate timestamp. | - | NOT RUN | - |
-| 2405 | dc2-leaf3b.arista.com | MLAG | VerifyMlagConfigSanity | Verifies there are no MLAG config-sanity inconsistencies. | - | NOT RUN | - |
-| 2406 | dc2-leaf3b.arista.com | MLAG | VerifyMlagDualPrimary | Verifies the MLAG dual-primary detection parameters. | - | NOT RUN | - |
-| 2407 | dc2-leaf3b.arista.com | MLAG | VerifyMlagInterfaces | Verifies there are no inactive or active-partial MLAG ports. | - | NOT RUN | - |
-| 2408 | dc2-leaf3b.arista.com | MLAG | VerifyMlagReloadDelay | Verifies the MLAG reload-delay parameters. | - | NOT RUN | - |
+| 2372 | dc2-leaf3b.arista.com | Hardware | VerifyTransceiversManufacturers | Verifies if all transceivers come from approved manufacturers. | - | NOT RUN | - |
+| 2373 | dc2-leaf3b.arista.com | Hardware | VerifyTransceiversManufacturers | Verifies if all transceivers come from approved manufacturers. | Accepted Manufacturers: 'Arista Networks', 'Arastra, Inc.', 'Not Present' | NOT RUN | - |
+| 2374 | dc2-leaf3b.arista.com | Hardware | VerifyTransceiversTemperature | Verifies the transceivers temperature. | - | NOT RUN | - |
+| 2375 | dc2-leaf3b.arista.com | Interfaces | VerifyInterfacesStatus | Verifies the status of the provided interfaces. | Interface Ethernet1 - P2P_dc2-spine1_Ethernet6 = 'up' | NOT RUN | - |
+| 2376 | dc2-leaf3b.arista.com | Interfaces | VerifyInterfacesStatus | Verifies the status of the provided interfaces. | Interface Ethernet11 - dc2-leaf3-fw1_e1 = 'adminDown' | NOT RUN | - |
+| 2377 | dc2-leaf3b.arista.com | Interfaces | VerifyInterfacesStatus | Verifies the status of the provided interfaces. | Interface Ethernet2 - P2P_dc2-spine2_Ethernet6 = 'up' | NOT RUN | - |
+| 2378 | dc2-leaf3b.arista.com | Interfaces | VerifyInterfacesStatus | Verifies the status of the provided interfaces. | Interface Ethernet3 - MLAG_dc2-leaf3a.arista.com_Ethernet3 = 'up' | NOT RUN | - |
+| 2379 | dc2-leaf3b.arista.com | Interfaces | VerifyInterfacesStatus | Verifies the status of the provided interfaces. | Interface Ethernet4 - MLAG_dc2-leaf3a.arista.com_Ethernet4 = 'up' | NOT RUN | - |
+| 2380 | dc2-leaf3b.arista.com | Interfaces | VerifyInterfacesStatus | Verifies the status of the provided interfaces. | Interface Loopback0 - ROUTER_ID = 'up' | NOT RUN | - |
+| 2381 | dc2-leaf3b.arista.com | Interfaces | VerifyInterfacesStatus | Verifies the status of the provided interfaces. | Interface Loopback1 - VXLAN_TUNNEL_SOURCE = 'up' | NOT RUN | - |
+| 2382 | dc2-leaf3b.arista.com | Interfaces | VerifyInterfacesStatus | Verifies the status of the provided interfaces. | Interface Loopback10 - DIAG_VRF_VRF10 = 'up' | NOT RUN | - |
+| 2383 | dc2-leaf3b.arista.com | Interfaces | VerifyInterfacesStatus | Verifies the status of the provided interfaces. | Interface Loopback11 - DIAG_VRF_VRF11 = 'up' | NOT RUN | - |
+| 2384 | dc2-leaf3b.arista.com | Interfaces | VerifyInterfacesStatus | Verifies the status of the provided interfaces. | Interface Port-Channel11 - dc2-leaf3-fw1_PortChannel = 'up' | NOT RUN | - |
+| 2385 | dc2-leaf3b.arista.com | Interfaces | VerifyInterfacesStatus | Verifies the status of the provided interfaces. | Interface Port-Channel3 - MLAG_dc2-leaf3a.arista.com_Port-Channel3 = 'up' | NOT RUN | - |
+| 2386 | dc2-leaf3b.arista.com | Interfaces | VerifyInterfacesStatus | Verifies the status of the provided interfaces. | Interface Vlan11 - VRF10_VLAN11 = 'up' | NOT RUN | - |
+| 2387 | dc2-leaf3b.arista.com | Interfaces | VerifyInterfacesStatus | Verifies the status of the provided interfaces. | Interface Vlan12 - VRF10_VLAN12 = 'up' | NOT RUN | - |
+| 2388 | dc2-leaf3b.arista.com | Interfaces | VerifyInterfacesStatus | Verifies the status of the provided interfaces. | Interface Vlan21 - VRF11_VLAN21 = 'up' | NOT RUN | - |
+| 2389 | dc2-leaf3b.arista.com | Interfaces | VerifyInterfacesStatus | Verifies the status of the provided interfaces. | Interface Vlan22 - VRF11_VLAN22 = 'up' | NOT RUN | - |
+| 2390 | dc2-leaf3b.arista.com | Interfaces | VerifyInterfacesStatus | Verifies the status of the provided interfaces. | Interface Vlan3009 - MLAG_L3_VRF_VRF10 = 'up' | NOT RUN | - |
+| 2391 | dc2-leaf3b.arista.com | Interfaces | VerifyInterfacesStatus | Verifies the status of the provided interfaces. | Interface Vlan3010 - MLAG_L3_VRF_VRF11 = 'up' | NOT RUN | - |
+| 2392 | dc2-leaf3b.arista.com | Interfaces | VerifyInterfacesStatus | Verifies the status of the provided interfaces. | Interface Vlan4093 - MLAG_L3 = 'up' | NOT RUN | - |
+| 2393 | dc2-leaf3b.arista.com | Interfaces | VerifyInterfacesStatus | Verifies the status of the provided interfaces. | Interface Vlan4094 - MLAG = 'up' | NOT RUN | - |
+| 2394 | dc2-leaf3b.arista.com | Interfaces | VerifyInterfacesStatus | Verifies the status of the provided interfaces. | Interface Vxlan1 = 'up' | NOT RUN | - |
+| 2395 | dc2-leaf3b.arista.com | LANZ | VerifyLANZ | Verifies if LANZ is enabled. | - | NOT RUN | - |
+| 2396 | dc2-leaf3b.arista.com | Logging | VerifyLoggingAccounting | Verifies if AAA accounting logs are generated. | - | NOT RUN | - |
+| 2397 | dc2-leaf3b.arista.com | Logging | VerifyLoggingErrors | Verifies there are no syslog messages with a severity of ERRORS or higher. | - | NOT RUN | - |
+| 2398 | dc2-leaf3b.arista.com | Logging | VerifyLoggingHostname | Verifies if logs are generated with the device FQDN. | - | NOT RUN | - |
+| 2399 | dc2-leaf3b.arista.com | Logging | VerifyLoggingHosts | Verifies logging hosts (syslog servers) for a specified VRF. | - | NOT RUN | - |
+| 2400 | dc2-leaf3b.arista.com | Logging | VerifyLoggingLogsGeneration | Verifies if logs are generated. | - | NOT RUN | - |
+| 2401 | dc2-leaf3b.arista.com | Logging | VerifyLoggingPersistent | Verifies if logging persistent is enabled and logs are saved in flash. | - | NOT RUN | - |
+| 2402 | dc2-leaf3b.arista.com | Logging | VerifyLoggingSourceIntf | Verifies logging source-interface for a specified VRF. | - | NOT RUN | - |
+| 2403 | dc2-leaf3b.arista.com | Logging | VerifyLoggingTimestamp | Verifies if logs are generated with the appropriate timestamp. | - | NOT RUN | - |
+| 2404 | dc2-leaf3b.arista.com | MLAG | VerifyMlagConfigSanity | Verifies there are no MLAG config-sanity inconsistencies. | - | NOT RUN | - |
+| 2405 | dc2-leaf3b.arista.com | MLAG | VerifyMlagDualPrimary | Verifies the MLAG dual-primary detection parameters. | - | NOT RUN | - |
+| 2406 | dc2-leaf3b.arista.com | MLAG | VerifyMlagInterfaces | Verifies there are no inactive or active-partial MLAG ports. | - | NOT RUN | - |
+| 2407 | dc2-leaf3b.arista.com | MLAG | VerifyMlagReloadDelay | Verifies the MLAG reload-delay parameters. | - | NOT RUN | - |
+| 2408 | dc2-leaf3b.arista.com | MLAG | VerifyMlagStatus | Verifies the health status of the MLAG configuration. | - | NOT RUN | - |
 | 2409 | dc2-leaf3b.arista.com | MLAG | VerifyMlagStatus | Verifies the health status of the MLAG configuration. | - | NOT RUN | - |
-| 2410 | dc2-leaf3b.arista.com | MLAG | VerifyMlagStatus | Verifies the health status of the MLAG configuration. | - | NOT RUN | - |
-| 2411 | dc2-leaf3b.arista.com | Multicast | VerifyIGMPSnoopingGlobal | Verifies the IGMP snooping global configuration. | - | NOT RUN | - |
-| 2412 | dc2-leaf3b.arista.com | Multicast | VerifyIGMPSnoopingVlans | Verifies the IGMP snooping status for the provided VLANs. | - | NOT RUN | - |
-| 2413 | dc2-leaf3b.arista.com | PTP | VerifyPtpGMStatus | Verifies that the device is locked to a valid PTP Grandmaster. | - | NOT RUN | - |
-| 2414 | dc2-leaf3b.arista.com | PTP | VerifyPtpLockStatus | Verifies that the device was locked to the upstream PTP GM in the last minute. | - | NOT RUN | - |
-| 2415 | dc2-leaf3b.arista.com | PTP | VerifyPtpModeStatus | Verifies that the device is configured as a PTP Boundary Clock. | - | NOT RUN | - |
-| 2416 | dc2-leaf3b.arista.com | PTP | VerifyPtpOffset | Verifies that the PTP timing offset is within +/- 1000ns from the master clock. | - | NOT RUN | - |
-| 2417 | dc2-leaf3b.arista.com | PTP | VerifyPtpPortModeStatus | Verifies the PTP interfaces state. | - | NOT RUN | - |
-| 2418 | dc2-leaf3b.arista.com | Routing | VerifyRoutingProtocolModel | Verifies the configured routing protocol model. | Routing protocol model: multi-agent | NOT RUN | - |
-| 2419 | dc2-leaf3b.arista.com | Routing | VerifyRoutingTableEntry | Verifies that the provided routes are present in the routing table of a specified VRF. | Route: 10.255.0.1 - Peer: dc1-spine1 | NOT RUN | - |
-| 2420 | dc2-leaf3b.arista.com | Routing | VerifyRoutingTableEntry | Verifies that the provided routes are present in the routing table of a specified VRF. | Route: 10.255.0.2 - Peer: dc1-spine2 | NOT RUN | - |
-| 2421 | dc2-leaf3b.arista.com | Routing | VerifyRoutingTableEntry | Verifies that the provided routes are present in the routing table of a specified VRF. | Route: 10.255.0.3 - Peer: dc1-leaf1a | NOT RUN | - |
-| 2422 | dc2-leaf3b.arista.com | Routing | VerifyRoutingTableEntry | Verifies that the provided routes are present in the routing table of a specified VRF. | Route: 10.255.0.4 - Peer: dc1-leaf1b | NOT RUN | - |
-| 2423 | dc2-leaf3b.arista.com | Routing | VerifyRoutingTableEntry | Verifies that the provided routes are present in the routing table of a specified VRF. | Route: 10.255.0.5 - Peer: dc1-leaf2a | NOT RUN | - |
-| 2424 | dc2-leaf3b.arista.com | Routing | VerifyRoutingTableEntry | Verifies that the provided routes are present in the routing table of a specified VRF. | Route: 10.255.1.3 - Peer: dc1-leaf1a | NOT RUN | - |
-| 2425 | dc2-leaf3b.arista.com | Routing | VerifyRoutingTableEntry | Verifies that the provided routes are present in the routing table of a specified VRF. | Route: 10.255.1.5 - Peer: dc1-leaf2a | NOT RUN | - |
-| 2426 | dc2-leaf3b.arista.com | Routing | VerifyRoutingTableEntry | Verifies that the provided routes are present in the routing table of a specified VRF. | Route: 10.255.128.11 - Peer: dc2-spine1 | NOT RUN | - |
-| 2427 | dc2-leaf3b.arista.com | Routing | VerifyRoutingTableEntry | Verifies that the provided routes are present in the routing table of a specified VRF. | Route: 10.255.128.12 - Peer: dc2-spine2 | NOT RUN | - |
-| 2428 | dc2-leaf3b.arista.com | Routing | VerifyRoutingTableEntry | Verifies that the provided routes are present in the routing table of a specified VRF. | Route: 10.255.128.13 - Peer: dc2-leaf1a | NOT RUN | - |
-| 2429 | dc2-leaf3b.arista.com | Routing | VerifyRoutingTableEntry | Verifies that the provided routes are present in the routing table of a specified VRF. | Route: 10.255.128.14 - Peer: dc2-leaf1b | NOT RUN | - |
-| 2430 | dc2-leaf3b.arista.com | Routing | VerifyRoutingTableEntry | Verifies that the provided routes are present in the routing table of a specified VRF. | Route: 10.255.128.15 - Peer: dc2-leaf2a | NOT RUN | - |
-| 2431 | dc2-leaf3b.arista.com | Routing | VerifyRoutingTableEntry | Verifies that the provided routes are present in the routing table of a specified VRF. | Route: 10.255.128.16 - Peer: dc2-leaf2b | NOT RUN | - |
-| 2432 | dc2-leaf3b.arista.com | Routing | VerifyRoutingTableEntry | Verifies that the provided routes are present in the routing table of a specified VRF. | Route: 10.255.128.17 - Peer: dc2-leaf3a.arista.com | NOT RUN | - |
-| 2433 | dc2-leaf3b.arista.com | Routing | VerifyRoutingTableEntry | Verifies that the provided routes are present in the routing table of a specified VRF. | Route: 10.255.128.18 - Peer: dc2-leaf3b.arista.com | NOT RUN | - |
-| 2434 | dc2-leaf3b.arista.com | Routing | VerifyRoutingTableEntry | Verifies that the provided routes are present in the routing table of a specified VRF. | Route: 10.255.129.13 - Peer: dc2-leaf1a | NOT RUN | - |
-| 2435 | dc2-leaf3b.arista.com | Routing | VerifyRoutingTableEntry | Verifies that the provided routes are present in the routing table of a specified VRF. | Route: 10.255.129.15 - Peer: dc2-leaf2a | NOT RUN | - |
-| 2436 | dc2-leaf3b.arista.com | Routing | VerifyRoutingTableEntry | Verifies that the provided routes are present in the routing table of a specified VRF. | Route: 10.255.129.17 - Peer: dc2-leaf3a.arista.com | NOT RUN | - |
-| 2437 | dc2-leaf3b.arista.com | Routing | VerifyRoutingTableEntry | Verifies that the provided routes are present in the routing table of a specified VRF. | Route: 10.255.2.1 - Peer: dc1-wan1 | NOT RUN | - |
-| 2438 | dc2-leaf3b.arista.com | Routing | VerifyRoutingTableEntry | Verifies that the provided routes are present in the routing table of a specified VRF. | Route: 10.255.2.2 - Peer: dc1-wan2 | NOT RUN | - |
-| 2439 | dc2-leaf3b.arista.com | Routing | VerifyRoutingTableEntry | Verifies that the provided routes are present in the routing table of a specified VRF. | Route: 10.33.0.5 - Peer: dc1-svc-leaf1a | NOT RUN | - |
-| 2440 | dc2-leaf3b.arista.com | Routing | VerifyRoutingTableEntry | Verifies that the provided routes are present in the routing table of a specified VRF. | Route: 10.33.0.6 - Peer: dc1-svc-leaf1b | NOT RUN | - |
-| 2441 | dc2-leaf3b.arista.com | Routing | VerifyRoutingTableEntry | Verifies that the provided routes are present in the routing table of a specified VRF. | Route: 10.33.1.5 - Peer: dc1-svc-leaf1a | NOT RUN | - |
-| 2442 | dc2-leaf3b.arista.com | Security | VerifyAPIHttpsSSL | Verifies if the eAPI has a valid SSL profile. | - | NOT RUN | - |
-| 2443 | dc2-leaf3b.arista.com | Security | VerifyAPIHttpsSSL | Verifies if the eAPI has a valid SSL profile. | eAPI HTTPS SSL Profile: eAPI_SSL_Profile | NOT RUN | - |
-| 2444 | dc2-leaf3b.arista.com | Security | VerifyAPIHttpStatus | Verifies if eAPI HTTP server is disabled globally. | - | NOT RUN | - |
-| 2445 | dc2-leaf3b.arista.com | Security | VerifyAPIIPv4Acl | Verifies if eAPI has the right number IPv4 ACL(s) configured for a specified VRF. | - | NOT RUN | - |
-| 2446 | dc2-leaf3b.arista.com | Security | VerifyAPIIPv6Acl | Verifies if eAPI has the right number IPv6 ACL(s) configured for a specified VRF. | - | NOT RUN | - |
-| 2447 | dc2-leaf3b.arista.com | Security | VerifyAPISSLCertificate | Verifies the eAPI SSL certificate expiry, common subject name, encryption algorithm and key size. | - | NOT RUN | - |
-| 2448 | dc2-leaf3b.arista.com | Security | VerifyBannerLogin | Verifies the login banner of a device. | - | NOT RUN | - |
-| 2449 | dc2-leaf3b.arista.com | Security | VerifyBannerMotd | Verifies the motd banner of a device. | - | NOT RUN | - |
-| 2450 | dc2-leaf3b.arista.com | Security | VerifyIPSecConnHealth | Verifies all IPv4 security connections. | - | NOT RUN | - |
-| 2451 | dc2-leaf3b.arista.com | Security | VerifyIPv4ACL | Verifies the configuration of IPv4 ACLs. | - | NOT RUN | - |
-| 2452 | dc2-leaf3b.arista.com | Security | VerifySpecificIPSecConn | Verifies IPv4 security connections for a peer. | - | NOT RUN | - |
-| 2453 | dc2-leaf3b.arista.com | Security | VerifySSHIPv4Acl | Verifies if the SSHD agent has IPv4 ACL(s) configured. | - | NOT RUN | - |
-| 2454 | dc2-leaf3b.arista.com | Security | VerifySSHIPv6Acl | Verifies if the SSHD agent has IPv6 ACL(s) configured. | - | NOT RUN | - |
-| 2455 | dc2-leaf3b.arista.com | Security | VerifySSHStatus | Verifies if the SSHD agent is disabled in the default VRF. | - | NOT RUN | - |
-| 2456 | dc2-leaf3b.arista.com | Security | VerifyTelnetStatus | Verifies if Telnet is disabled in the default VRF. | - | NOT RUN | - |
-| 2457 | dc2-leaf3b.arista.com | Services | VerifyDNSLookup | Verifies the DNS name to IP address resolution. | - | NOT RUN | - |
-| 2458 | dc2-leaf3b.arista.com | Services | VerifyDNSServers | Verifies if the DNS servers are correctly configured. | - | NOT RUN | - |
-| 2459 | dc2-leaf3b.arista.com | Services | VerifyErrdisableRecovery | Verifies the errdisable recovery reason, status, and interval. | - | NOT RUN | - |
-| 2460 | dc2-leaf3b.arista.com | Services | VerifyHostname | Verifies the hostname of a device. | - | NOT RUN | - |
-| 2461 | dc2-leaf3b.arista.com | SNMP | VerifySnmpIPv4Acl | Verifies if the SNMP agent has IPv4 ACL(s) configured. | - | NOT RUN | - |
-| 2462 | dc2-leaf3b.arista.com | SNMP | VerifySnmpIPv6Acl | Verifies if the SNMP agent has IPv6 ACL(s) configured. | - | NOT RUN | - |
-| 2463 | dc2-leaf3b.arista.com | SNMP | VerifySnmpStatus | Verifies if the SNMP agent is enabled. | - | NOT RUN | - |
-| 2464 | dc2-leaf3b.arista.com | Software | VerifyEOSVersion | Verifies the EOS version of the device. | - | NOT RUN | - |
-| 2465 | dc2-leaf3b.arista.com | Software | VerifyTerminAttrVersion | Verifies the TerminAttr version of the device. | - | NOT RUN | - |
-| 2466 | dc2-leaf3b.arista.com | STP | VerifySTPBlockedPorts | Verifies there is no STP blocked ports. | - | NOT RUN | - |
-| 2467 | dc2-leaf3b.arista.com | STP | VerifySTPCounters | Verifies there is no errors in STP BPDU packets. | - | NOT RUN | - |
-| 2468 | dc2-leaf3b.arista.com | STP | VerifySTPForwardingPorts | Verifies that all interfaces are forwarding for a provided list of VLAN(s). | - | NOT RUN | - |
-| 2469 | dc2-leaf3b.arista.com | STP | VerifySTPMode | Verifies the configured STP mode for a provided list of VLAN(s). | - | NOT RUN | - |
-| 2470 | dc2-leaf3b.arista.com | STP | VerifySTPRootPriority | Verifies the STP root priority for a provided list of VLAN or MST instance ID(s). | - | NOT RUN | - |
-| 2471 | dc2-leaf3b.arista.com | STUN | VerifyStunClient | Verifies the STUN client is configured with the specified IPv4 source address and port. Validate the public IP and port if provided. | - | NOT RUN | - |
-| 2472 | dc2-leaf3b.arista.com | System | VerifyAgentLogs | Verifies there are no agent crash reports. | - | NOT RUN | - |
-| 2473 | dc2-leaf3b.arista.com | System | VerifyCoredump | Verifies there are no core dump files. | - | NOT RUN | - |
-| 2474 | dc2-leaf3b.arista.com | System | VerifyCPUUtilization | Verifies whether the CPU utilization is below 75%. | - | NOT RUN | - |
-| 2475 | dc2-leaf3b.arista.com | System | VerifyFileSystemUtilization | Verifies that no partition is utilizing more than 75% of its disk space. | - | NOT RUN | - |
-| 2476 | dc2-leaf3b.arista.com | System | VerifyMemoryUtilization | Verifies whether the memory utilization is below 75%. | - | NOT RUN | - |
+| 2410 | dc2-leaf3b.arista.com | Multicast | VerifyIGMPSnoopingGlobal | Verifies the IGMP snooping global configuration. | - | NOT RUN | - |
+| 2411 | dc2-leaf3b.arista.com | Multicast | VerifyIGMPSnoopingVlans | Verifies the IGMP snooping status for the provided VLANs. | - | NOT RUN | - |
+| 2412 | dc2-leaf3b.arista.com | PTP | VerifyPtpGMStatus | Verifies that the device is locked to a valid PTP Grandmaster. | - | NOT RUN | - |
+| 2413 | dc2-leaf3b.arista.com | PTP | VerifyPtpLockStatus | Verifies that the device was locked to the upstream PTP GM in the last minute. | - | NOT RUN | - |
+| 2414 | dc2-leaf3b.arista.com | PTP | VerifyPtpModeStatus | Verifies that the device is configured as a PTP Boundary Clock. | - | NOT RUN | - |
+| 2415 | dc2-leaf3b.arista.com | PTP | VerifyPtpOffset | Verifies that the PTP timing offset is within +/- 1000ns from the master clock. | - | NOT RUN | - |
+| 2416 | dc2-leaf3b.arista.com | PTP | VerifyPtpPortModeStatus | Verifies the PTP interfaces state. | - | NOT RUN | - |
+| 2417 | dc2-leaf3b.arista.com | Routing | VerifyRoutingProtocolModel | Verifies the configured routing protocol model. | Routing protocol model: multi-agent | NOT RUN | - |
+| 2418 | dc2-leaf3b.arista.com | Routing | VerifyRoutingTableEntry | Verifies that the provided routes are present in the routing table of a specified VRF. | Route: 10.255.0.1 - Peer: dc1-spine1 | NOT RUN | - |
+| 2419 | dc2-leaf3b.arista.com | Routing | VerifyRoutingTableEntry | Verifies that the provided routes are present in the routing table of a specified VRF. | Route: 10.255.0.2 - Peer: dc1-spine2 | NOT RUN | - |
+| 2420 | dc2-leaf3b.arista.com | Routing | VerifyRoutingTableEntry | Verifies that the provided routes are present in the routing table of a specified VRF. | Route: 10.255.0.3 - Peer: dc1-leaf1a | NOT RUN | - |
+| 2421 | dc2-leaf3b.arista.com | Routing | VerifyRoutingTableEntry | Verifies that the provided routes are present in the routing table of a specified VRF. | Route: 10.255.0.4 - Peer: dc1-leaf1b | NOT RUN | - |
+| 2422 | dc2-leaf3b.arista.com | Routing | VerifyRoutingTableEntry | Verifies that the provided routes are present in the routing table of a specified VRF. | Route: 10.255.0.5 - Peer: dc1-leaf2a | NOT RUN | - |
+| 2423 | dc2-leaf3b.arista.com | Routing | VerifyRoutingTableEntry | Verifies that the provided routes are present in the routing table of a specified VRF. | Route: 10.255.1.3 - Peer: dc1-leaf1a | NOT RUN | - |
+| 2424 | dc2-leaf3b.arista.com | Routing | VerifyRoutingTableEntry | Verifies that the provided routes are present in the routing table of a specified VRF. | Route: 10.255.1.5 - Peer: dc1-leaf2a | NOT RUN | - |
+| 2425 | dc2-leaf3b.arista.com | Routing | VerifyRoutingTableEntry | Verifies that the provided routes are present in the routing table of a specified VRF. | Route: 10.255.128.11 - Peer: dc2-spine1 | NOT RUN | - |
+| 2426 | dc2-leaf3b.arista.com | Routing | VerifyRoutingTableEntry | Verifies that the provided routes are present in the routing table of a specified VRF. | Route: 10.255.128.12 - Peer: dc2-spine2 | NOT RUN | - |
+| 2427 | dc2-leaf3b.arista.com | Routing | VerifyRoutingTableEntry | Verifies that the provided routes are present in the routing table of a specified VRF. | Route: 10.255.128.13 - Peer: dc2-leaf1a | NOT RUN | - |
+| 2428 | dc2-leaf3b.arista.com | Routing | VerifyRoutingTableEntry | Verifies that the provided routes are present in the routing table of a specified VRF. | Route: 10.255.128.14 - Peer: dc2-leaf1b | NOT RUN | - |
+| 2429 | dc2-leaf3b.arista.com | Routing | VerifyRoutingTableEntry | Verifies that the provided routes are present in the routing table of a specified VRF. | Route: 10.255.128.15 - Peer: dc2-leaf2a | NOT RUN | - |
+| 2430 | dc2-leaf3b.arista.com | Routing | VerifyRoutingTableEntry | Verifies that the provided routes are present in the routing table of a specified VRF. | Route: 10.255.128.16 - Peer: dc2-leaf2b | NOT RUN | - |
+| 2431 | dc2-leaf3b.arista.com | Routing | VerifyRoutingTableEntry | Verifies that the provided routes are present in the routing table of a specified VRF. | Route: 10.255.128.17 - Peer: dc2-leaf3a.arista.com | NOT RUN | - |
+| 2432 | dc2-leaf3b.arista.com | Routing | VerifyRoutingTableEntry | Verifies that the provided routes are present in the routing table of a specified VRF. | Route: 10.255.128.18 - Peer: dc2-leaf3b.arista.com | NOT RUN | - |
+| 2433 | dc2-leaf3b.arista.com | Routing | VerifyRoutingTableEntry | Verifies that the provided routes are present in the routing table of a specified VRF. | Route: 10.255.129.13 - Peer: dc2-leaf1a | NOT RUN | - |
+| 2434 | dc2-leaf3b.arista.com | Routing | VerifyRoutingTableEntry | Verifies that the provided routes are present in the routing table of a specified VRF. | Route: 10.255.129.15 - Peer: dc2-leaf2a | NOT RUN | - |
+| 2435 | dc2-leaf3b.arista.com | Routing | VerifyRoutingTableEntry | Verifies that the provided routes are present in the routing table of a specified VRF. | Route: 10.255.129.17 - Peer: dc2-leaf3a.arista.com | NOT RUN | - |
+| 2436 | dc2-leaf3b.arista.com | Routing | VerifyRoutingTableEntry | Verifies that the provided routes are present in the routing table of a specified VRF. | Route: 10.255.2.1 - Peer: dc1-wan1 | NOT RUN | - |
+| 2437 | dc2-leaf3b.arista.com | Routing | VerifyRoutingTableEntry | Verifies that the provided routes are present in the routing table of a specified VRF. | Route: 10.255.2.2 - Peer: dc1-wan2 | NOT RUN | - |
+| 2438 | dc2-leaf3b.arista.com | Routing | VerifyRoutingTableEntry | Verifies that the provided routes are present in the routing table of a specified VRF. | Route: 10.33.0.5 - Peer: dc1-svc-leaf1a | NOT RUN | - |
+| 2439 | dc2-leaf3b.arista.com | Routing | VerifyRoutingTableEntry | Verifies that the provided routes are present in the routing table of a specified VRF. | Route: 10.33.0.6 - Peer: dc1-svc-leaf1b | NOT RUN | - |
+| 2440 | dc2-leaf3b.arista.com | Routing | VerifyRoutingTableEntry | Verifies that the provided routes are present in the routing table of a specified VRF. | Route: 10.33.1.5 - Peer: dc1-svc-leaf1a | NOT RUN | - |
+| 2441 | dc2-leaf3b.arista.com | Security | VerifyAPIHttpsSSL | Verifies if the eAPI has a valid SSL profile. | - | NOT RUN | - |
+| 2442 | dc2-leaf3b.arista.com | Security | VerifyAPIHttpsSSL | Verifies if the eAPI has a valid SSL profile. | eAPI HTTPS SSL Profile: eAPI_SSL_Profile | NOT RUN | - |
+| 2443 | dc2-leaf3b.arista.com | Security | VerifyAPIHttpStatus | Verifies if eAPI HTTP server is disabled globally. | - | NOT RUN | - |
+| 2444 | dc2-leaf3b.arista.com | Security | VerifyAPIIPv4Acl | Verifies if eAPI has the right number IPv4 ACL(s) configured for a specified VRF. | - | NOT RUN | - |
+| 2445 | dc2-leaf3b.arista.com | Security | VerifyAPIIPv6Acl | Verifies if eAPI has the right number IPv6 ACL(s) configured for a specified VRF. | - | NOT RUN | - |
+| 2446 | dc2-leaf3b.arista.com | Security | VerifyAPISSLCertificate | Verifies the eAPI SSL certificate expiry, common subject name, encryption algorithm and key size. | - | NOT RUN | - |
+| 2447 | dc2-leaf3b.arista.com | Security | VerifyBannerLogin | Verifies the login banner of a device. | - | NOT RUN | - |
+| 2448 | dc2-leaf3b.arista.com | Security | VerifyBannerMotd | Verifies the motd banner of a device. | - | NOT RUN | - |
+| 2449 | dc2-leaf3b.arista.com | Security | VerifyIPSecConnHealth | Verifies all IPv4 security connections. | - | NOT RUN | - |
+| 2450 | dc2-leaf3b.arista.com | Security | VerifyIPv4ACL | Verifies the configuration of IPv4 ACLs. | - | NOT RUN | - |
+| 2451 | dc2-leaf3b.arista.com | Security | VerifySpecificIPSecConn | Verifies IPv4 security connections for a peer. | - | NOT RUN | - |
+| 2452 | dc2-leaf3b.arista.com | Security | VerifySSHIPv4Acl | Verifies if the SSHD agent has IPv4 ACL(s) configured. | - | NOT RUN | - |
+| 2453 | dc2-leaf3b.arista.com | Security | VerifySSHIPv6Acl | Verifies if the SSHD agent has IPv6 ACL(s) configured. | - | NOT RUN | - |
+| 2454 | dc2-leaf3b.arista.com | Security | VerifySSHStatus | Verifies if the SSHD agent is disabled in the default VRF. | - | NOT RUN | - |
+| 2455 | dc2-leaf3b.arista.com | Security | VerifyTelnetStatus | Verifies if Telnet is disabled in the default VRF. | - | NOT RUN | - |
+| 2456 | dc2-leaf3b.arista.com | Services | VerifyDNSLookup | Verifies the DNS name to IP address resolution. | - | NOT RUN | - |
+| 2457 | dc2-leaf3b.arista.com | Services | VerifyDNSServers | Verifies if the DNS servers are correctly configured. | - | NOT RUN | - |
+| 2458 | dc2-leaf3b.arista.com | Services | VerifyErrdisableRecovery | Verifies the errdisable recovery reason, status, and interval. | - | NOT RUN | - |
+| 2459 | dc2-leaf3b.arista.com | Services | VerifyHostname | Verifies the hostname of a device. | - | NOT RUN | - |
+| 2460 | dc2-leaf3b.arista.com | SNMP | VerifySnmpIPv4Acl | Verifies if the SNMP agent has IPv4 ACL(s) configured. | - | NOT RUN | - |
+| 2461 | dc2-leaf3b.arista.com | SNMP | VerifySnmpIPv6Acl | Verifies if the SNMP agent has IPv6 ACL(s) configured. | - | NOT RUN | - |
+| 2462 | dc2-leaf3b.arista.com | SNMP | VerifySnmpStatus | Verifies if the SNMP agent is enabled. | - | NOT RUN | - |
+| 2463 | dc2-leaf3b.arista.com | Software | VerifyEOSVersion | Verifies the EOS version of the device. | - | NOT RUN | - |
+| 2464 | dc2-leaf3b.arista.com | Software | VerifyTerminAttrVersion | Verifies the TerminAttr version of the device. | - | NOT RUN | - |
+| 2465 | dc2-leaf3b.arista.com | STP | VerifySTPBlockedPorts | Verifies there is no STP blocked ports. | - | NOT RUN | - |
+| 2466 | dc2-leaf3b.arista.com | STP | VerifySTPCounters | Verifies there is no errors in STP BPDU packets. | - | NOT RUN | - |
+| 2467 | dc2-leaf3b.arista.com | STP | VerifySTPForwardingPorts | Verifies that all interfaces are forwarding for a provided list of VLAN(s). | - | NOT RUN | - |
+| 2468 | dc2-leaf3b.arista.com | STP | VerifySTPMode | Verifies the configured STP mode for a provided list of VLAN(s). | - | NOT RUN | - |
+| 2469 | dc2-leaf3b.arista.com | STP | VerifySTPRootPriority | Verifies the STP root priority for a provided list of VLAN or MST instance ID(s). | - | NOT RUN | - |
+| 2470 | dc2-leaf3b.arista.com | STUN | VerifyStunClient | Verifies the STUN client is configured with the specified IPv4 source address and port. Validate the public IP and port if provided. | - | NOT RUN | - |
+| 2471 | dc2-leaf3b.arista.com | System | VerifyAgentLogs | Verifies there are no agent crash reports. | - | NOT RUN | - |
+| 2472 | dc2-leaf3b.arista.com | System | VerifyCoredump | Verifies there are no core dump files. | - | NOT RUN | - |
+| 2473 | dc2-leaf3b.arista.com | System | VerifyCPUUtilization | Verifies whether the CPU utilization is below 75%. | - | NOT RUN | - |
+| 2474 | dc2-leaf3b.arista.com | System | VerifyFileSystemUtilization | Verifies that no partition is utilizing more than 75% of its disk space. | - | NOT RUN | - |
+| 2475 | dc2-leaf3b.arista.com | System | VerifyMemoryUtilization | Verifies whether the memory utilization is below 75%. | - | NOT RUN | - |
+| 2476 | dc2-leaf3b.arista.com | System | VerifyNTP | Verifies if NTP is synchronised. | - | NOT RUN | - |
 | 2477 | dc2-leaf3b.arista.com | System | VerifyNTP | Verifies if NTP is synchronised. | - | NOT RUN | - |
-| 2478 | dc2-leaf3b.arista.com | System | VerifyNTP | Verifies if NTP is synchronised. | - | NOT RUN | - |
+| 2478 | dc2-leaf3b.arista.com | System | VerifyReloadCause | Verifies the last reload cause of the device. | - | NOT RUN | - |
 | 2479 | dc2-leaf3b.arista.com | System | VerifyReloadCause | Verifies the last reload cause of the device. | - | NOT RUN | - |
-| 2480 | dc2-leaf3b.arista.com | System | VerifyReloadCause | Verifies the last reload cause of the device. | - | NOT RUN | - |
-| 2481 | dc2-leaf3b.arista.com | System | VerifyUptime | Verifies the device uptime. | - | NOT RUN | - |
-| 2482 | dc2-leaf3b.arista.com | VLAN | VerifyVlanInternalPolicy | Verifies the VLAN internal allocation policy and the range of VLANs. | - | NOT RUN | - |
-| 2483 | dc2-spine1 | AAA | VerifyAcctConsoleMethods | Verifies the AAA accounting console method lists for different accounting types (system, exec, commands, dot1x). | - | NOT RUN | - |
-| 2484 | dc2-spine1 | AAA | VerifyAcctDefaultMethods | Verifies the AAA accounting default method lists for different accounting types (system, exec, commands, dot1x). | - | NOT RUN | - |
-| 2485 | dc2-spine1 | AAA | VerifyAuthenMethods | Verifies the AAA authentication method lists for different authentication types (login, enable, dot1x). | - | NOT RUN | - |
-| 2486 | dc2-spine1 | AAA | VerifyAuthzMethods | Verifies the AAA authorization method lists for different authorization types (commands, exec). | - | NOT RUN | - |
-| 2487 | dc2-spine1 | AAA | VerifyTacacsServerGroups | Verifies if the provided TACACS server group(s) are configured. | - | NOT RUN | - |
-| 2488 | dc2-spine1 | AAA | VerifyTacacsServers | Verifies TACACS servers are configured for a specified VRF. | - | NOT RUN | - |
-| 2489 | dc2-spine1 | AAA | VerifyTacacsSourceIntf | Verifies TACACS source-interface for a specified VRF. | - | NOT RUN | - |
-| 2490 | dc2-spine1 | BGP | VerifyBGPSpecificPeers | Verifies the health of specific BGP peer(s). | BGP EVPN Peer: dc2-leaf1a (IP: 10.255.128.13) | NOT RUN | - |
-| 2491 | dc2-spine1 | BGP | VerifyBGPSpecificPeers | Verifies the health of specific BGP peer(s). | BGP EVPN Peer: dc2-leaf1b (IP: 10.255.128.14) | NOT RUN | - |
-| 2492 | dc2-spine1 | BGP | VerifyBGPSpecificPeers | Verifies the health of specific BGP peer(s). | BGP EVPN Peer: dc2-leaf2a (IP: 10.255.128.15) | NOT RUN | - |
-| 2493 | dc2-spine1 | BGP | VerifyBGPSpecificPeers | Verifies the health of specific BGP peer(s). | BGP EVPN Peer: dc2-leaf2b (IP: 10.255.128.16) | NOT RUN | - |
-| 2494 | dc2-spine1 | BGP | VerifyBGPSpecificPeers | Verifies the health of specific BGP peer(s). | BGP EVPN Peer: dc2-leaf3a.arista.com (IP: 10.255.128.17) | NOT RUN | - |
-| 2495 | dc2-spine1 | BGP | VerifyBGPSpecificPeers | Verifies the health of specific BGP peer(s). | BGP EVPN Peer: dc2-leaf3b.arista.com (IP: 10.255.128.18) | NOT RUN | - |
-| 2496 | dc2-spine1 | BGP | VerifyBGPSpecificPeers | Verifies the health of specific BGP peer(s). | BGP IPv4 Unicast Peer: dc2-leaf1a (IP: 10.255.255.105) | NOT RUN | - |
-| 2497 | dc2-spine1 | BGP | VerifyBGPSpecificPeers | Verifies the health of specific BGP peer(s). | BGP IPv4 Unicast Peer: dc2-leaf1b (IP: 10.255.255.109) | NOT RUN | - |
-| 2498 | dc2-spine1 | BGP | VerifyBGPSpecificPeers | Verifies the health of specific BGP peer(s). | BGP IPv4 Unicast Peer: dc2-leaf2a (IP: 10.255.255.113) | NOT RUN | - |
-| 2499 | dc2-spine1 | BGP | VerifyBGPSpecificPeers | Verifies the health of specific BGP peer(s). | BGP IPv4 Unicast Peer: dc2-leaf2b (IP: 10.255.255.117) | NOT RUN | - |
-| 2500 | dc2-spine1 | BGP | VerifyBGPSpecificPeers | Verifies the health of specific BGP peer(s). | BGP IPv4 Unicast Peer: dc2-leaf3a.arista.com (IP: 10.255.255.121) | NOT RUN | - |
-| 2501 | dc2-spine1 | BGP | VerifyBGPSpecificPeers | Verifies the health of specific BGP peer(s). | BGP IPv4 Unicast Peer: dc2-leaf3b.arista.com (IP: 10.255.255.125) | NOT RUN | - |
-| 2502 | dc2-spine1 | Configuration | VerifyRunningConfigDiffs | Verifies there is no difference between the running-config and the startup-config | - | NOT RUN | - |
-| 2503 | dc2-spine1 | Configuration | VerifyZeroTouch | Verifies ZeroTouch is disabled | - | NOT RUN | - |
-| 2504 | dc2-spine1 | Connectivity | VerifyLLDPNeighbors | Verifies that the provided LLDP neighbors are connected properly. | Local: Ethernet1 - Remote: dc2-leaf1a Ethernet1 | NOT RUN | - |
-| 2505 | dc2-spine1 | Connectivity | VerifyLLDPNeighbors | Verifies that the provided LLDP neighbors are connected properly. | Local: Ethernet2 - Remote: dc2-leaf1b Ethernet1 | NOT RUN | - |
-| 2506 | dc2-spine1 | Connectivity | VerifyLLDPNeighbors | Verifies that the provided LLDP neighbors are connected properly. | Local: Ethernet3 - Remote: dc2-leaf2a Ethernet1 | NOT RUN | - |
-| 2507 | dc2-spine1 | Connectivity | VerifyLLDPNeighbors | Verifies that the provided LLDP neighbors are connected properly. | Local: Ethernet4 - Remote: dc2-leaf2b Ethernet1 | NOT RUN | - |
-| 2508 | dc2-spine1 | Connectivity | VerifyLLDPNeighbors | Verifies that the provided LLDP neighbors are connected properly. | Local: Ethernet5 - Remote: dc2-leaf3a.arista.com Ethernet1 | NOT RUN | - |
-| 2509 | dc2-spine1 | Connectivity | VerifyLLDPNeighbors | Verifies that the provided LLDP neighbors are connected properly. | Local: Ethernet6 - Remote: dc2-leaf3b.arista.com Ethernet1 | NOT RUN | - |
-| 2510 | dc2-spine1 | Connectivity | VerifyReachability | Test the network reachability to one or many destination IP(s). | Source: P2P Interface Ethernet1 (IP: 10.255.255.104) - Destination: dc2-leaf1a Ethernet1 (IP: 10.255.255.105) | NOT RUN | - |
-| 2511 | dc2-spine1 | Connectivity | VerifyReachability | Test the network reachability to one or many destination IP(s). | Source: P2P Interface Ethernet2 (IP: 10.255.255.108) - Destination: dc2-leaf1b Ethernet1 (IP: 10.255.255.109) | NOT RUN | - |
-| 2512 | dc2-spine1 | Connectivity | VerifyReachability | Test the network reachability to one or many destination IP(s). | Source: P2P Interface Ethernet3 (IP: 10.255.255.112) - Destination: dc2-leaf2a Ethernet1 (IP: 10.255.255.113) | NOT RUN | - |
-| 2513 | dc2-spine1 | Connectivity | VerifyReachability | Test the network reachability to one or many destination IP(s). | Source: P2P Interface Ethernet4 (IP: 10.255.255.116) - Destination: dc2-leaf2b Ethernet1 (IP: 10.255.255.117) | NOT RUN | - |
-| 2514 | dc2-spine1 | Connectivity | VerifyReachability | Test the network reachability to one or many destination IP(s). | Source: P2P Interface Ethernet5 (IP: 10.255.255.120) - Destination: dc2-leaf3a.arista.com Ethernet1 (IP: 10.255.255.121) | NOT RUN | - |
-| 2515 | dc2-spine1 | Connectivity | VerifyReachability | Test the network reachability to one or many destination IP(s). | Source: P2P Interface Ethernet6 (IP: 10.255.255.124) - Destination: dc2-leaf3b.arista.com Ethernet1 (IP: 10.255.255.125) | NOT RUN | - |
-| 2516 | dc2-spine1 | Field Notices | VerifyFieldNotice44Resolution | Verifies that the device is using the correct Aboot version per FN0044. | - | NOT RUN | - |
-| 2517 | dc2-spine1 | Field Notices | VerifyFieldNotice72Resolution | Verifies if the device is exposed to FN0072, and if the issue has been mitigated. | - | NOT RUN | - |
-| 2518 | dc2-spine1 | Greent | VerifyGreenT | Verifies if a GreenT policy is created. | - | NOT RUN | - |
-| 2519 | dc2-spine1 | Greent | VerifyGreenTCounters | Verifies if the GreenT counters are incremented. | - | NOT RUN | - |
-| 2520 | dc2-spine1 | Hardware | VerifyAdverseDrops | Verifies there are no adverse drops on DCS-7280 and DCS-7500 family switches. | - | NOT RUN | - |
-| 2521 | dc2-spine1 | Hardware | VerifyEnvironmentCooling | Verifies the status of power supply fans and all fan trays. | - | NOT RUN | - |
-| 2522 | dc2-spine1 | Hardware | VerifyEnvironmentCooling | Verifies the status of power supply fans and all fan trays. | Accepted States: 'ok' | NOT RUN | - |
-| 2523 | dc2-spine1 | Hardware | VerifyEnvironmentPower | Verifies the power supplies status. | - | NOT RUN | - |
-| 2524 | dc2-spine1 | Hardware | VerifyEnvironmentPower | Verifies the power supplies status. | Accepted States: 'ok' | NOT RUN | - |
-| 2525 | dc2-spine1 | Hardware | VerifyEnvironmentSystemCooling | Verifies the system cooling status. | - | NOT RUN | - |
+| 2480 | dc2-leaf3b.arista.com | System | VerifyUptime | Verifies the device uptime. | - | NOT RUN | - |
+| 2481 | dc2-leaf3b.arista.com | VLAN | VerifyVlanInternalPolicy | Verifies the VLAN internal allocation policy and the range of VLANs. | - | NOT RUN | - |
+| 2482 | dc2-spine1 | AAA | VerifyAcctConsoleMethods | Verifies the AAA accounting console method lists for different accounting types (system, exec, commands, dot1x). | - | NOT RUN | - |
+| 2483 | dc2-spine1 | AAA | VerifyAcctDefaultMethods | Verifies the AAA accounting default method lists for different accounting types (system, exec, commands, dot1x). | - | NOT RUN | - |
+| 2484 | dc2-spine1 | AAA | VerifyAuthenMethods | Verifies the AAA authentication method lists for different authentication types (login, enable, dot1x). | - | NOT RUN | - |
+| 2485 | dc2-spine1 | AAA | VerifyAuthzMethods | Verifies the AAA authorization method lists for different authorization types (commands, exec). | - | NOT RUN | - |
+| 2486 | dc2-spine1 | AAA | VerifyTacacsServerGroups | Verifies if the provided TACACS server group(s) are configured. | - | NOT RUN | - |
+| 2487 | dc2-spine1 | AAA | VerifyTacacsServers | Verifies TACACS servers are configured for a specified VRF. | - | NOT RUN | - |
+| 2488 | dc2-spine1 | AAA | VerifyTacacsSourceIntf | Verifies TACACS source-interface for a specified VRF. | - | NOT RUN | - |
+| 2489 | dc2-spine1 | BGP | VerifyBGPSpecificPeers | Verifies the health of specific BGP peer(s). | BGP EVPN Peer: dc2-leaf1a (IP: 10.255.128.13) | NOT RUN | - |
+| 2490 | dc2-spine1 | BGP | VerifyBGPSpecificPeers | Verifies the health of specific BGP peer(s). | BGP EVPN Peer: dc2-leaf1b (IP: 10.255.128.14) | NOT RUN | - |
+| 2491 | dc2-spine1 | BGP | VerifyBGPSpecificPeers | Verifies the health of specific BGP peer(s). | BGP EVPN Peer: dc2-leaf2a (IP: 10.255.128.15) | NOT RUN | - |
+| 2492 | dc2-spine1 | BGP | VerifyBGPSpecificPeers | Verifies the health of specific BGP peer(s). | BGP EVPN Peer: dc2-leaf2b (IP: 10.255.128.16) | NOT RUN | - |
+| 2493 | dc2-spine1 | BGP | VerifyBGPSpecificPeers | Verifies the health of specific BGP peer(s). | BGP EVPN Peer: dc2-leaf3a.arista.com (IP: 10.255.128.17) | NOT RUN | - |
+| 2494 | dc2-spine1 | BGP | VerifyBGPSpecificPeers | Verifies the health of specific BGP peer(s). | BGP EVPN Peer: dc2-leaf3b.arista.com (IP: 10.255.128.18) | NOT RUN | - |
+| 2495 | dc2-spine1 | BGP | VerifyBGPSpecificPeers | Verifies the health of specific BGP peer(s). | BGP IPv4 Unicast Peer: dc2-leaf1a (IP: 10.255.255.105) | NOT RUN | - |
+| 2496 | dc2-spine1 | BGP | VerifyBGPSpecificPeers | Verifies the health of specific BGP peer(s). | BGP IPv4 Unicast Peer: dc2-leaf1b (IP: 10.255.255.109) | NOT RUN | - |
+| 2497 | dc2-spine1 | BGP | VerifyBGPSpecificPeers | Verifies the health of specific BGP peer(s). | BGP IPv4 Unicast Peer: dc2-leaf2a (IP: 10.255.255.113) | NOT RUN | - |
+| 2498 | dc2-spine1 | BGP | VerifyBGPSpecificPeers | Verifies the health of specific BGP peer(s). | BGP IPv4 Unicast Peer: dc2-leaf2b (IP: 10.255.255.117) | NOT RUN | - |
+| 2499 | dc2-spine1 | BGP | VerifyBGPSpecificPeers | Verifies the health of specific BGP peer(s). | BGP IPv4 Unicast Peer: dc2-leaf3a.arista.com (IP: 10.255.255.121) | NOT RUN | - |
+| 2500 | dc2-spine1 | BGP | VerifyBGPSpecificPeers | Verifies the health of specific BGP peer(s). | BGP IPv4 Unicast Peer: dc2-leaf3b.arista.com (IP: 10.255.255.125) | NOT RUN | - |
+| 2501 | dc2-spine1 | Configuration | VerifyRunningConfigDiffs | Verifies there is no difference between the running-config and the startup-config | - | NOT RUN | - |
+| 2502 | dc2-spine1 | Configuration | VerifyZeroTouch | Verifies ZeroTouch is disabled | - | NOT RUN | - |
+| 2503 | dc2-spine1 | Connectivity | VerifyLLDPNeighbors | Verifies that the provided LLDP neighbors are connected properly. | Local: Ethernet1 - Remote: dc2-leaf1a Ethernet1 | NOT RUN | - |
+| 2504 | dc2-spine1 | Connectivity | VerifyLLDPNeighbors | Verifies that the provided LLDP neighbors are connected properly. | Local: Ethernet2 - Remote: dc2-leaf1b Ethernet1 | NOT RUN | - |
+| 2505 | dc2-spine1 | Connectivity | VerifyLLDPNeighbors | Verifies that the provided LLDP neighbors are connected properly. | Local: Ethernet3 - Remote: dc2-leaf2a Ethernet1 | NOT RUN | - |
+| 2506 | dc2-spine1 | Connectivity | VerifyLLDPNeighbors | Verifies that the provided LLDP neighbors are connected properly. | Local: Ethernet4 - Remote: dc2-leaf2b Ethernet1 | NOT RUN | - |
+| 2507 | dc2-spine1 | Connectivity | VerifyLLDPNeighbors | Verifies that the provided LLDP neighbors are connected properly. | Local: Ethernet5 - Remote: dc2-leaf3a.arista.com Ethernet1 | NOT RUN | - |
+| 2508 | dc2-spine1 | Connectivity | VerifyLLDPNeighbors | Verifies that the provided LLDP neighbors are connected properly. | Local: Ethernet6 - Remote: dc2-leaf3b.arista.com Ethernet1 | NOT RUN | - |
+| 2509 | dc2-spine1 | Connectivity | VerifyReachability | Test the network reachability to one or many destination IP(s). | Source: P2P Interface Ethernet1 (IP: 10.255.255.104) - Destination: dc2-leaf1a Ethernet1 (IP: 10.255.255.105) | NOT RUN | - |
+| 2510 | dc2-spine1 | Connectivity | VerifyReachability | Test the network reachability to one or many destination IP(s). | Source: P2P Interface Ethernet2 (IP: 10.255.255.108) - Destination: dc2-leaf1b Ethernet1 (IP: 10.255.255.109) | NOT RUN | - |
+| 2511 | dc2-spine1 | Connectivity | VerifyReachability | Test the network reachability to one or many destination IP(s). | Source: P2P Interface Ethernet3 (IP: 10.255.255.112) - Destination: dc2-leaf2a Ethernet1 (IP: 10.255.255.113) | NOT RUN | - |
+| 2512 | dc2-spine1 | Connectivity | VerifyReachability | Test the network reachability to one or many destination IP(s). | Source: P2P Interface Ethernet4 (IP: 10.255.255.116) - Destination: dc2-leaf2b Ethernet1 (IP: 10.255.255.117) | NOT RUN | - |
+| 2513 | dc2-spine1 | Connectivity | VerifyReachability | Test the network reachability to one or many destination IP(s). | Source: P2P Interface Ethernet5 (IP: 10.255.255.120) - Destination: dc2-leaf3a.arista.com Ethernet1 (IP: 10.255.255.121) | NOT RUN | - |
+| 2514 | dc2-spine1 | Connectivity | VerifyReachability | Test the network reachability to one or many destination IP(s). | Source: P2P Interface Ethernet6 (IP: 10.255.255.124) - Destination: dc2-leaf3b.arista.com Ethernet1 (IP: 10.255.255.125) | NOT RUN | - |
+| 2515 | dc2-spine1 | Field Notices | VerifyFieldNotice44Resolution | Verifies that the device is using the correct Aboot version per FN0044. | - | NOT RUN | - |
+| 2516 | dc2-spine1 | Field Notices | VerifyFieldNotice72Resolution | Verifies if the device is exposed to FN0072, and if the issue has been mitigated. | - | NOT RUN | - |
+| 2517 | dc2-spine1 | Greent | VerifyGreenT | Verifies if a GreenT policy is created. | - | NOT RUN | - |
+| 2518 | dc2-spine1 | Greent | VerifyGreenTCounters | Verifies if the GreenT counters are incremented. | - | NOT RUN | - |
+| 2519 | dc2-spine1 | Hardware | VerifyAdverseDrops | Verifies there are no adverse drops on DCS-7280 and DCS-7500 family switches. | - | NOT RUN | - |
+| 2520 | dc2-spine1 | Hardware | VerifyEnvironmentCooling | Verifies the status of power supply fans and all fan trays. | - | NOT RUN | - |
+| 2521 | dc2-spine1 | Hardware | VerifyEnvironmentCooling | Verifies the status of power supply fans and all fan trays. | Accepted States: 'ok' | NOT RUN | - |
+| 2522 | dc2-spine1 | Hardware | VerifyEnvironmentPower | Verifies the power supplies status. | - | NOT RUN | - |
+| 2523 | dc2-spine1 | Hardware | VerifyEnvironmentPower | Verifies the power supplies status. | Accepted States: 'ok' | NOT RUN | - |
+| 2524 | dc2-spine1 | Hardware | VerifyEnvironmentSystemCooling | Verifies the system cooling status. | - | NOT RUN | - |
+| 2525 | dc2-spine1 | Hardware | VerifyTemperature | Verifies the device temperature. | - | NOT RUN | - |
 | 2526 | dc2-spine1 | Hardware | VerifyTemperature | Verifies the device temperature. | - | NOT RUN | - |
-| 2527 | dc2-spine1 | Hardware | VerifyTemperature | Verifies the device temperature. | - | NOT RUN | - |
-| 2528 | dc2-spine1 | Hardware | VerifyTransceiversManufacturers | Verifies if all transceivers come from approved manufacturers. | - | NOT RUN | - |
-| 2529 | dc2-spine1 | Hardware | VerifyTransceiversManufacturers | Verifies if all transceivers come from approved manufacturers. | Accepted Manufacturers: 'Arista Networks', 'Arastra, Inc.', 'Not Present' | NOT RUN | - |
-| 2530 | dc2-spine1 | Hardware | VerifyTransceiversTemperature | Verifies the transceivers temperature. | - | NOT RUN | - |
-| 2531 | dc2-spine1 | Interfaces | VerifyInterfacesStatus | Verifies the status of the provided interfaces. | Interface Ethernet1 - P2P_dc2-leaf1a_Ethernet1 = 'up' | NOT RUN | - |
-| 2532 | dc2-spine1 | Interfaces | VerifyInterfacesStatus | Verifies the status of the provided interfaces. | Interface Ethernet2 - P2P_dc2-leaf1b_Ethernet1 = 'up' | NOT RUN | - |
-| 2533 | dc2-spine1 | Interfaces | VerifyInterfacesStatus | Verifies the status of the provided interfaces. | Interface Ethernet3 - P2P_dc2-leaf2a_Ethernet1 = 'up' | NOT RUN | - |
-| 2534 | dc2-spine1 | Interfaces | VerifyInterfacesStatus | Verifies the status of the provided interfaces. | Interface Ethernet4 - P2P_dc2-leaf2b_Ethernet1 = 'up' | NOT RUN | - |
-| 2535 | dc2-spine1 | Interfaces | VerifyInterfacesStatus | Verifies the status of the provided interfaces. | Interface Ethernet5 - P2P_dc2-leaf3a.arista.com_Ethernet1 = 'up' | NOT RUN | - |
-| 2536 | dc2-spine1 | Interfaces | VerifyInterfacesStatus | Verifies the status of the provided interfaces. | Interface Ethernet6 - P2P_dc2-leaf3b.arista.com_Ethernet1 = 'up' | NOT RUN | - |
-| 2537 | dc2-spine1 | Interfaces | VerifyInterfacesStatus | Verifies the status of the provided interfaces. | Interface Loopback0 - ROUTER_ID = 'up' | NOT RUN | - |
-| 2538 | dc2-spine1 | LANZ | VerifyLANZ | Verifies if LANZ is enabled. | - | NOT RUN | - |
-| 2539 | dc2-spine1 | PTP | VerifyPtpGMStatus | Verifies that the device is locked to a valid PTP Grandmaster. | - | NOT RUN | - |
-| 2540 | dc2-spine1 | PTP | VerifyPtpLockStatus | Verifies that the device was locked to the upstream PTP GM in the last minute. | - | NOT RUN | - |
-| 2541 | dc2-spine1 | PTP | VerifyPtpModeStatus | Verifies that the device is configured as a PTP Boundary Clock. | - | NOT RUN | - |
-| 2542 | dc2-spine1 | PTP | VerifyPtpOffset | Verifies that the PTP timing offset is within +/- 1000ns from the master clock. | - | NOT RUN | - |
-| 2543 | dc2-spine1 | PTP | VerifyPtpPortModeStatus | Verifies the PTP interfaces state. | - | NOT RUN | - |
-| 2544 | dc2-spine1 | Routing | VerifyRoutingProtocolModel | Verifies the configured routing protocol model. | Routing protocol model: multi-agent | NOT RUN | - |
-| 2545 | dc2-spine1 | Security | VerifyAPIHttpsSSL | Verifies if the eAPI has a valid SSL profile. | - | NOT RUN | - |
-| 2546 | dc2-spine1 | Security | VerifyAPIHttpsSSL | Verifies if the eAPI has a valid SSL profile. | eAPI HTTPS SSL Profile: eAPI_SSL_Profile | NOT RUN | - |
-| 2547 | dc2-spine1 | Security | VerifyAPIHttpStatus | Verifies if eAPI HTTP server is disabled globally. | - | NOT RUN | - |
-| 2548 | dc2-spine1 | Security | VerifyAPIIPv4Acl | Verifies if eAPI has the right number IPv4 ACL(s) configured for a specified VRF. | - | NOT RUN | - |
-| 2549 | dc2-spine1 | Security | VerifyAPIIPv6Acl | Verifies if eAPI has the right number IPv6 ACL(s) configured for a specified VRF. | - | NOT RUN | - |
-| 2550 | dc2-spine1 | Security | VerifyAPISSLCertificate | Verifies the eAPI SSL certificate expiry, common subject name, encryption algorithm and key size. | - | NOT RUN | - |
-| 2551 | dc2-spine1 | Security | VerifyBannerLogin | Verifies the login banner of a device. | - | NOT RUN | - |
-| 2552 | dc2-spine1 | Security | VerifyBannerMotd | Verifies the motd banner of a device. | - | NOT RUN | - |
-| 2553 | dc2-spine1 | Security | VerifyIPSecConnHealth | Verifies all IPv4 security connections. | - | NOT RUN | - |
-| 2554 | dc2-spine1 | Security | VerifyIPv4ACL | Verifies the configuration of IPv4 ACLs. | - | NOT RUN | - |
-| 2555 | dc2-spine1 | Security | VerifySpecificIPSecConn | Verifies IPv4 security connections for a peer. | - | NOT RUN | - |
-| 2556 | dc2-spine1 | Security | VerifySSHIPv4Acl | Verifies if the SSHD agent has IPv4 ACL(s) configured. | - | NOT RUN | - |
-| 2557 | dc2-spine1 | Security | VerifySSHIPv6Acl | Verifies if the SSHD agent has IPv6 ACL(s) configured. | - | NOT RUN | - |
-| 2558 | dc2-spine1 | Security | VerifySSHStatus | Verifies if the SSHD agent is disabled in the default VRF. | - | NOT RUN | - |
-| 2559 | dc2-spine1 | Security | VerifyTelnetStatus | Verifies if Telnet is disabled in the default VRF. | - | NOT RUN | - |
-| 2560 | dc2-spine1 | Services | VerifyDNSLookup | Verifies the DNS name to IP address resolution. | - | NOT RUN | - |
-| 2561 | dc2-spine1 | Services | VerifyDNSServers | Verifies if the DNS servers are correctly configured. | - | NOT RUN | - |
-| 2562 | dc2-spine1 | Services | VerifyErrdisableRecovery | Verifies the errdisable recovery reason, status, and interval. | - | NOT RUN | - |
-| 2563 | dc2-spine1 | Services | VerifyHostname | Verifies the hostname of a device. | - | NOT RUN | - |
-| 2564 | dc2-spine1 | SNMP | VerifySnmpIPv4Acl | Verifies if the SNMP agent has IPv4 ACL(s) configured. | - | NOT RUN | - |
-| 2565 | dc2-spine1 | SNMP | VerifySnmpIPv6Acl | Verifies if the SNMP agent has IPv6 ACL(s) configured. | - | NOT RUN | - |
-| 2566 | dc2-spine1 | SNMP | VerifySnmpStatus | Verifies if the SNMP agent is enabled. | - | NOT RUN | - |
-| 2567 | dc2-spine1 | Software | VerifyEOSVersion | Verifies the EOS version of the device. | - | NOT RUN | - |
-| 2568 | dc2-spine1 | Software | VerifyTerminAttrVersion | Verifies the TerminAttr version of the device. | - | NOT RUN | - |
-| 2569 | dc2-spine1 | STUN | VerifyStunClient | Verifies the STUN client is configured with the specified IPv4 source address and port. Validate the public IP and port if provided. | - | NOT RUN | - |
-| 2570 | dc2-spine1 | System | VerifyAgentLogs | Verifies there are no agent crash reports. | - | NOT RUN | - |
-| 2571 | dc2-spine1 | System | VerifyCoredump | Verifies there are no core dump files. | - | NOT RUN | - |
-| 2572 | dc2-spine1 | System | VerifyCPUUtilization | Verifies whether the CPU utilization is below 75%. | - | NOT RUN | - |
-| 2573 | dc2-spine1 | System | VerifyFileSystemUtilization | Verifies that no partition is utilizing more than 75% of its disk space. | - | NOT RUN | - |
-| 2574 | dc2-spine1 | System | VerifyMemoryUtilization | Verifies whether the memory utilization is below 75%. | - | NOT RUN | - |
+| 2527 | dc2-spine1 | Hardware | VerifyTransceiversManufacturers | Verifies if all transceivers come from approved manufacturers. | - | NOT RUN | - |
+| 2528 | dc2-spine1 | Hardware | VerifyTransceiversManufacturers | Verifies if all transceivers come from approved manufacturers. | Accepted Manufacturers: 'Arista Networks', 'Arastra, Inc.', 'Not Present' | NOT RUN | - |
+| 2529 | dc2-spine1 | Hardware | VerifyTransceiversTemperature | Verifies the transceivers temperature. | - | NOT RUN | - |
+| 2530 | dc2-spine1 | Interfaces | VerifyInterfacesStatus | Verifies the status of the provided interfaces. | Interface Ethernet1 - P2P_dc2-leaf1a_Ethernet1 = 'up' | NOT RUN | - |
+| 2531 | dc2-spine1 | Interfaces | VerifyInterfacesStatus | Verifies the status of the provided interfaces. | Interface Ethernet2 - P2P_dc2-leaf1b_Ethernet1 = 'up' | NOT RUN | - |
+| 2532 | dc2-spine1 | Interfaces | VerifyInterfacesStatus | Verifies the status of the provided interfaces. | Interface Ethernet3 - P2P_dc2-leaf2a_Ethernet1 = 'up' | NOT RUN | - |
+| 2533 | dc2-spine1 | Interfaces | VerifyInterfacesStatus | Verifies the status of the provided interfaces. | Interface Ethernet4 - P2P_dc2-leaf2b_Ethernet1 = 'up' | NOT RUN | - |
+| 2534 | dc2-spine1 | Interfaces | VerifyInterfacesStatus | Verifies the status of the provided interfaces. | Interface Ethernet5 - P2P_dc2-leaf3a.arista.com_Ethernet1 = 'up' | NOT RUN | - |
+| 2535 | dc2-spine1 | Interfaces | VerifyInterfacesStatus | Verifies the status of the provided interfaces. | Interface Ethernet6 - P2P_dc2-leaf3b.arista.com_Ethernet1 = 'up' | NOT RUN | - |
+| 2536 | dc2-spine1 | Interfaces | VerifyInterfacesStatus | Verifies the status of the provided interfaces. | Interface Loopback0 - ROUTER_ID = 'up' | NOT RUN | - |
+| 2537 | dc2-spine1 | LANZ | VerifyLANZ | Verifies if LANZ is enabled. | - | NOT RUN | - |
+| 2538 | dc2-spine1 | PTP | VerifyPtpGMStatus | Verifies that the device is locked to a valid PTP Grandmaster. | - | NOT RUN | - |
+| 2539 | dc2-spine1 | PTP | VerifyPtpLockStatus | Verifies that the device was locked to the upstream PTP GM in the last minute. | - | NOT RUN | - |
+| 2540 | dc2-spine1 | PTP | VerifyPtpModeStatus | Verifies that the device is configured as a PTP Boundary Clock. | - | NOT RUN | - |
+| 2541 | dc2-spine1 | PTP | VerifyPtpOffset | Verifies that the PTP timing offset is within +/- 1000ns from the master clock. | - | NOT RUN | - |
+| 2542 | dc2-spine1 | PTP | VerifyPtpPortModeStatus | Verifies the PTP interfaces state. | - | NOT RUN | - |
+| 2543 | dc2-spine1 | Routing | VerifyRoutingProtocolModel | Verifies the configured routing protocol model. | Routing protocol model: multi-agent | NOT RUN | - |
+| 2544 | dc2-spine1 | Security | VerifyAPIHttpsSSL | Verifies if the eAPI has a valid SSL profile. | - | NOT RUN | - |
+| 2545 | dc2-spine1 | Security | VerifyAPIHttpsSSL | Verifies if the eAPI has a valid SSL profile. | eAPI HTTPS SSL Profile: eAPI_SSL_Profile | NOT RUN | - |
+| 2546 | dc2-spine1 | Security | VerifyAPIHttpStatus | Verifies if eAPI HTTP server is disabled globally. | - | NOT RUN | - |
+| 2547 | dc2-spine1 | Security | VerifyAPIIPv4Acl | Verifies if eAPI has the right number IPv4 ACL(s) configured for a specified VRF. | - | NOT RUN | - |
+| 2548 | dc2-spine1 | Security | VerifyAPIIPv6Acl | Verifies if eAPI has the right number IPv6 ACL(s) configured for a specified VRF. | - | NOT RUN | - |
+| 2549 | dc2-spine1 | Security | VerifyAPISSLCertificate | Verifies the eAPI SSL certificate expiry, common subject name, encryption algorithm and key size. | - | NOT RUN | - |
+| 2550 | dc2-spine1 | Security | VerifyBannerLogin | Verifies the login banner of a device. | - | NOT RUN | - |
+| 2551 | dc2-spine1 | Security | VerifyBannerMotd | Verifies the motd banner of a device. | - | NOT RUN | - |
+| 2552 | dc2-spine1 | Security | VerifyIPSecConnHealth | Verifies all IPv4 security connections. | - | NOT RUN | - |
+| 2553 | dc2-spine1 | Security | VerifyIPv4ACL | Verifies the configuration of IPv4 ACLs. | - | NOT RUN | - |
+| 2554 | dc2-spine1 | Security | VerifySpecificIPSecConn | Verifies IPv4 security connections for a peer. | - | NOT RUN | - |
+| 2555 | dc2-spine1 | Security | VerifySSHIPv4Acl | Verifies if the SSHD agent has IPv4 ACL(s) configured. | - | NOT RUN | - |
+| 2556 | dc2-spine1 | Security | VerifySSHIPv6Acl | Verifies if the SSHD agent has IPv6 ACL(s) configured. | - | NOT RUN | - |
+| 2557 | dc2-spine1 | Security | VerifySSHStatus | Verifies if the SSHD agent is disabled in the default VRF. | - | NOT RUN | - |
+| 2558 | dc2-spine1 | Security | VerifyTelnetStatus | Verifies if Telnet is disabled in the default VRF. | - | NOT RUN | - |
+| 2559 | dc2-spine1 | Services | VerifyDNSLookup | Verifies the DNS name to IP address resolution. | - | NOT RUN | - |
+| 2560 | dc2-spine1 | Services | VerifyDNSServers | Verifies if the DNS servers are correctly configured. | - | NOT RUN | - |
+| 2561 | dc2-spine1 | Services | VerifyErrdisableRecovery | Verifies the errdisable recovery reason, status, and interval. | - | NOT RUN | - |
+| 2562 | dc2-spine1 | Services | VerifyHostname | Verifies the hostname of a device. | - | NOT RUN | - |
+| 2563 | dc2-spine1 | SNMP | VerifySnmpIPv4Acl | Verifies if the SNMP agent has IPv4 ACL(s) configured. | - | NOT RUN | - |
+| 2564 | dc2-spine1 | SNMP | VerifySnmpIPv6Acl | Verifies if the SNMP agent has IPv6 ACL(s) configured. | - | NOT RUN | - |
+| 2565 | dc2-spine1 | SNMP | VerifySnmpStatus | Verifies if the SNMP agent is enabled. | - | NOT RUN | - |
+| 2566 | dc2-spine1 | Software | VerifyEOSVersion | Verifies the EOS version of the device. | - | NOT RUN | - |
+| 2567 | dc2-spine1 | Software | VerifyTerminAttrVersion | Verifies the TerminAttr version of the device. | - | NOT RUN | - |
+| 2568 | dc2-spine1 | STUN | VerifyStunClient | Verifies the STUN client is configured with the specified IPv4 source address and port. Validate the public IP and port if provided. | - | NOT RUN | - |
+| 2569 | dc2-spine1 | System | VerifyAgentLogs | Verifies there are no agent crash reports. | - | NOT RUN | - |
+| 2570 | dc2-spine1 | System | VerifyCoredump | Verifies there are no core dump files. | - | NOT RUN | - |
+| 2571 | dc2-spine1 | System | VerifyCPUUtilization | Verifies whether the CPU utilization is below 75%. | - | NOT RUN | - |
+| 2572 | dc2-spine1 | System | VerifyFileSystemUtilization | Verifies that no partition is utilizing more than 75% of its disk space. | - | NOT RUN | - |
+| 2573 | dc2-spine1 | System | VerifyMemoryUtilization | Verifies whether the memory utilization is below 75%. | - | NOT RUN | - |
+| 2574 | dc2-spine1 | System | VerifyNTP | Verifies if NTP is synchronised. | - | NOT RUN | - |
 | 2575 | dc2-spine1 | System | VerifyNTP | Verifies if NTP is synchronised. | - | NOT RUN | - |
-| 2576 | dc2-spine1 | System | VerifyNTP | Verifies if NTP is synchronised. | - | NOT RUN | - |
+| 2576 | dc2-spine1 | System | VerifyReloadCause | Verifies the last reload cause of the device. | - | NOT RUN | - |
 | 2577 | dc2-spine1 | System | VerifyReloadCause | Verifies the last reload cause of the device. | - | NOT RUN | - |
-| 2578 | dc2-spine1 | System | VerifyReloadCause | Verifies the last reload cause of the device. | - | NOT RUN | - |
-| 2579 | dc2-spine1 | System | VerifyUptime | Verifies the device uptime. | - | NOT RUN | - |
-| 2580 | dc2-spine1 | VLAN | VerifyVlanInternalPolicy | Verifies the VLAN internal allocation policy and the range of VLANs. | - | NOT RUN | - |
-| 2581 | dc2-spine2 | AAA | VerifyAcctConsoleMethods | Verifies the AAA accounting console method lists for different accounting types (system, exec, commands, dot1x). | - | NOT RUN | - |
-| 2582 | dc2-spine2 | AAA | VerifyAcctDefaultMethods | Verifies the AAA accounting default method lists for different accounting types (system, exec, commands, dot1x). | - | NOT RUN | - |
-| 2583 | dc2-spine2 | AAA | VerifyAuthenMethods | Verifies the AAA authentication method lists for different authentication types (login, enable, dot1x). | - | NOT RUN | - |
-| 2584 | dc2-spine2 | AAA | VerifyAuthzMethods | Verifies the AAA authorization method lists for different authorization types (commands, exec). | - | NOT RUN | - |
-| 2585 | dc2-spine2 | AAA | VerifyTacacsServerGroups | Verifies if the provided TACACS server group(s) are configured. | - | NOT RUN | - |
-| 2586 | dc2-spine2 | AAA | VerifyTacacsServers | Verifies TACACS servers are configured for a specified VRF. | - | NOT RUN | - |
-| 2587 | dc2-spine2 | AAA | VerifyTacacsSourceIntf | Verifies TACACS source-interface for a specified VRF. | - | NOT RUN | - |
-| 2588 | dc2-spine2 | BGP | VerifyBGPSpecificPeers | Verifies the health of specific BGP peer(s). | BGP EVPN Peer: dc2-leaf1a (IP: 10.255.128.13) | NOT RUN | - |
-| 2589 | dc2-spine2 | BGP | VerifyBGPSpecificPeers | Verifies the health of specific BGP peer(s). | BGP EVPN Peer: dc2-leaf1b (IP: 10.255.128.14) | NOT RUN | - |
-| 2590 | dc2-spine2 | BGP | VerifyBGPSpecificPeers | Verifies the health of specific BGP peer(s). | BGP EVPN Peer: dc2-leaf2a (IP: 10.255.128.15) | NOT RUN | - |
-| 2591 | dc2-spine2 | BGP | VerifyBGPSpecificPeers | Verifies the health of specific BGP peer(s). | BGP EVPN Peer: dc2-leaf2b (IP: 10.255.128.16) | NOT RUN | - |
-| 2592 | dc2-spine2 | BGP | VerifyBGPSpecificPeers | Verifies the health of specific BGP peer(s). | BGP EVPN Peer: dc2-leaf3a.arista.com (IP: 10.255.128.17) | NOT RUN | - |
-| 2593 | dc2-spine2 | BGP | VerifyBGPSpecificPeers | Verifies the health of specific BGP peer(s). | BGP EVPN Peer: dc2-leaf3b.arista.com (IP: 10.255.128.18) | NOT RUN | - |
-| 2594 | dc2-spine2 | BGP | VerifyBGPSpecificPeers | Verifies the health of specific BGP peer(s). | BGP IPv4 Unicast Peer: dc2-leaf1a (IP: 10.255.255.107) | NOT RUN | - |
-| 2595 | dc2-spine2 | BGP | VerifyBGPSpecificPeers | Verifies the health of specific BGP peer(s). | BGP IPv4 Unicast Peer: dc2-leaf1b (IP: 10.255.255.111) | NOT RUN | - |
-| 2596 | dc2-spine2 | BGP | VerifyBGPSpecificPeers | Verifies the health of specific BGP peer(s). | BGP IPv4 Unicast Peer: dc2-leaf2a (IP: 10.255.255.115) | NOT RUN | - |
-| 2597 | dc2-spine2 | BGP | VerifyBGPSpecificPeers | Verifies the health of specific BGP peer(s). | BGP IPv4 Unicast Peer: dc2-leaf2b (IP: 10.255.255.119) | NOT RUN | - |
-| 2598 | dc2-spine2 | BGP | VerifyBGPSpecificPeers | Verifies the health of specific BGP peer(s). | BGP IPv4 Unicast Peer: dc2-leaf3a.arista.com (IP: 10.255.255.123) | NOT RUN | - |
-| 2599 | dc2-spine2 | BGP | VerifyBGPSpecificPeers | Verifies the health of specific BGP peer(s). | BGP IPv4 Unicast Peer: dc2-leaf3b.arista.com (IP: 10.255.255.127) | NOT RUN | - |
-| 2600 | dc2-spine2 | Configuration | VerifyRunningConfigDiffs | Verifies there is no difference between the running-config and the startup-config | - | NOT RUN | - |
-| 2601 | dc2-spine2 | Configuration | VerifyZeroTouch | Verifies ZeroTouch is disabled | - | NOT RUN | - |
-| 2602 | dc2-spine2 | Connectivity | VerifyLLDPNeighbors | Verifies that the provided LLDP neighbors are connected properly. | Local: Ethernet1 - Remote: dc2-leaf1a Ethernet2 | NOT RUN | - |
-| 2603 | dc2-spine2 | Connectivity | VerifyLLDPNeighbors | Verifies that the provided LLDP neighbors are connected properly. | Local: Ethernet2 - Remote: dc2-leaf1b Ethernet2 | NOT RUN | - |
-| 2604 | dc2-spine2 | Connectivity | VerifyLLDPNeighbors | Verifies that the provided LLDP neighbors are connected properly. | Local: Ethernet3 - Remote: dc2-leaf2a Ethernet2 | NOT RUN | - |
-| 2605 | dc2-spine2 | Connectivity | VerifyLLDPNeighbors | Verifies that the provided LLDP neighbors are connected properly. | Local: Ethernet4 - Remote: dc2-leaf2b Ethernet2 | NOT RUN | - |
-| 2606 | dc2-spine2 | Connectivity | VerifyLLDPNeighbors | Verifies that the provided LLDP neighbors are connected properly. | Local: Ethernet5 - Remote: dc2-leaf3a.arista.com Ethernet2 | NOT RUN | - |
-| 2607 | dc2-spine2 | Connectivity | VerifyLLDPNeighbors | Verifies that the provided LLDP neighbors are connected properly. | Local: Ethernet6 - Remote: dc2-leaf3b.arista.com Ethernet2 | NOT RUN | - |
-| 2608 | dc2-spine2 | Connectivity | VerifyReachability | Test the network reachability to one or many destination IP(s). | Source: P2P Interface Ethernet1 (IP: 10.255.255.106) - Destination: dc2-leaf1a Ethernet2 (IP: 10.255.255.107) | NOT RUN | - |
-| 2609 | dc2-spine2 | Connectivity | VerifyReachability | Test the network reachability to one or many destination IP(s). | Source: P2P Interface Ethernet2 (IP: 10.255.255.110) - Destination: dc2-leaf1b Ethernet2 (IP: 10.255.255.111) | NOT RUN | - |
-| 2610 | dc2-spine2 | Connectivity | VerifyReachability | Test the network reachability to one or many destination IP(s). | Source: P2P Interface Ethernet3 (IP: 10.255.255.114) - Destination: dc2-leaf2a Ethernet2 (IP: 10.255.255.115) | NOT RUN | - |
-| 2611 | dc2-spine2 | Connectivity | VerifyReachability | Test the network reachability to one or many destination IP(s). | Source: P2P Interface Ethernet4 (IP: 10.255.255.118) - Destination: dc2-leaf2b Ethernet2 (IP: 10.255.255.119) | NOT RUN | - |
-| 2612 | dc2-spine2 | Connectivity | VerifyReachability | Test the network reachability to one or many destination IP(s). | Source: P2P Interface Ethernet5 (IP: 10.255.255.122) - Destination: dc2-leaf3a.arista.com Ethernet2 (IP: 10.255.255.123) | NOT RUN | - |
-| 2613 | dc2-spine2 | Connectivity | VerifyReachability | Test the network reachability to one or many destination IP(s). | Source: P2P Interface Ethernet6 (IP: 10.255.255.126) - Destination: dc2-leaf3b.arista.com Ethernet2 (IP: 10.255.255.127) | NOT RUN | - |
-| 2614 | dc2-spine2 | Field Notices | VerifyFieldNotice44Resolution | Verifies that the device is using the correct Aboot version per FN0044. | - | NOT RUN | - |
-| 2615 | dc2-spine2 | Field Notices | VerifyFieldNotice72Resolution | Verifies if the device is exposed to FN0072, and if the issue has been mitigated. | - | NOT RUN | - |
-| 2616 | dc2-spine2 | Greent | VerifyGreenT | Verifies if a GreenT policy is created. | - | NOT RUN | - |
-| 2617 | dc2-spine2 | Greent | VerifyGreenTCounters | Verifies if the GreenT counters are incremented. | - | NOT RUN | - |
-| 2618 | dc2-spine2 | Hardware | VerifyAdverseDrops | Verifies there are no adverse drops on DCS-7280 and DCS-7500 family switches. | - | NOT RUN | - |
-| 2619 | dc2-spine2 | Hardware | VerifyEnvironmentCooling | Verifies the status of power supply fans and all fan trays. | - | NOT RUN | - |
-| 2620 | dc2-spine2 | Hardware | VerifyEnvironmentCooling | Verifies the status of power supply fans and all fan trays. | Accepted States: 'ok' | NOT RUN | - |
-| 2621 | dc2-spine2 | Hardware | VerifyEnvironmentPower | Verifies the power supplies status. | - | NOT RUN | - |
-| 2622 | dc2-spine2 | Hardware | VerifyEnvironmentPower | Verifies the power supplies status. | Accepted States: 'ok' | NOT RUN | - |
-| 2623 | dc2-spine2 | Hardware | VerifyEnvironmentSystemCooling | Verifies the system cooling status. | - | NOT RUN | - |
+| 2578 | dc2-spine1 | System | VerifyUptime | Verifies the device uptime. | - | NOT RUN | - |
+| 2579 | dc2-spine1 | VLAN | VerifyVlanInternalPolicy | Verifies the VLAN internal allocation policy and the range of VLANs. | - | NOT RUN | - |
+| 2580 | dc2-spine2 | AAA | VerifyAcctConsoleMethods | Verifies the AAA accounting console method lists for different accounting types (system, exec, commands, dot1x). | - | NOT RUN | - |
+| 2581 | dc2-spine2 | AAA | VerifyAcctDefaultMethods | Verifies the AAA accounting default method lists for different accounting types (system, exec, commands, dot1x). | - | NOT RUN | - |
+| 2582 | dc2-spine2 | AAA | VerifyAuthenMethods | Verifies the AAA authentication method lists for different authentication types (login, enable, dot1x). | - | NOT RUN | - |
+| 2583 | dc2-spine2 | AAA | VerifyAuthzMethods | Verifies the AAA authorization method lists for different authorization types (commands, exec). | - | NOT RUN | - |
+| 2584 | dc2-spine2 | AAA | VerifyTacacsServerGroups | Verifies if the provided TACACS server group(s) are configured. | - | NOT RUN | - |
+| 2585 | dc2-spine2 | AAA | VerifyTacacsServers | Verifies TACACS servers are configured for a specified VRF. | - | NOT RUN | - |
+| 2586 | dc2-spine2 | AAA | VerifyTacacsSourceIntf | Verifies TACACS source-interface for a specified VRF. | - | NOT RUN | - |
+| 2587 | dc2-spine2 | BGP | VerifyBGPSpecificPeers | Verifies the health of specific BGP peer(s). | BGP EVPN Peer: dc2-leaf1a (IP: 10.255.128.13) | NOT RUN | - |
+| 2588 | dc2-spine2 | BGP | VerifyBGPSpecificPeers | Verifies the health of specific BGP peer(s). | BGP EVPN Peer: dc2-leaf1b (IP: 10.255.128.14) | NOT RUN | - |
+| 2589 | dc2-spine2 | BGP | VerifyBGPSpecificPeers | Verifies the health of specific BGP peer(s). | BGP EVPN Peer: dc2-leaf2a (IP: 10.255.128.15) | NOT RUN | - |
+| 2590 | dc2-spine2 | BGP | VerifyBGPSpecificPeers | Verifies the health of specific BGP peer(s). | BGP EVPN Peer: dc2-leaf2b (IP: 10.255.128.16) | NOT RUN | - |
+| 2591 | dc2-spine2 | BGP | VerifyBGPSpecificPeers | Verifies the health of specific BGP peer(s). | BGP EVPN Peer: dc2-leaf3a.arista.com (IP: 10.255.128.17) | NOT RUN | - |
+| 2592 | dc2-spine2 | BGP | VerifyBGPSpecificPeers | Verifies the health of specific BGP peer(s). | BGP EVPN Peer: dc2-leaf3b.arista.com (IP: 10.255.128.18) | NOT RUN | - |
+| 2593 | dc2-spine2 | BGP | VerifyBGPSpecificPeers | Verifies the health of specific BGP peer(s). | BGP IPv4 Unicast Peer: dc2-leaf1a (IP: 10.255.255.107) | NOT RUN | - |
+| 2594 | dc2-spine2 | BGP | VerifyBGPSpecificPeers | Verifies the health of specific BGP peer(s). | BGP IPv4 Unicast Peer: dc2-leaf1b (IP: 10.255.255.111) | NOT RUN | - |
+| 2595 | dc2-spine2 | BGP | VerifyBGPSpecificPeers | Verifies the health of specific BGP peer(s). | BGP IPv4 Unicast Peer: dc2-leaf2a (IP: 10.255.255.115) | NOT RUN | - |
+| 2596 | dc2-spine2 | BGP | VerifyBGPSpecificPeers | Verifies the health of specific BGP peer(s). | BGP IPv4 Unicast Peer: dc2-leaf2b (IP: 10.255.255.119) | NOT RUN | - |
+| 2597 | dc2-spine2 | BGP | VerifyBGPSpecificPeers | Verifies the health of specific BGP peer(s). | BGP IPv4 Unicast Peer: dc2-leaf3a.arista.com (IP: 10.255.255.123) | NOT RUN | - |
+| 2598 | dc2-spine2 | BGP | VerifyBGPSpecificPeers | Verifies the health of specific BGP peer(s). | BGP IPv4 Unicast Peer: dc2-leaf3b.arista.com (IP: 10.255.255.127) | NOT RUN | - |
+| 2599 | dc2-spine2 | Configuration | VerifyRunningConfigDiffs | Verifies there is no difference between the running-config and the startup-config | - | NOT RUN | - |
+| 2600 | dc2-spine2 | Configuration | VerifyZeroTouch | Verifies ZeroTouch is disabled | - | NOT RUN | - |
+| 2601 | dc2-spine2 | Connectivity | VerifyLLDPNeighbors | Verifies that the provided LLDP neighbors are connected properly. | Local: Ethernet1 - Remote: dc2-leaf1a Ethernet2 | NOT RUN | - |
+| 2602 | dc2-spine2 | Connectivity | VerifyLLDPNeighbors | Verifies that the provided LLDP neighbors are connected properly. | Local: Ethernet2 - Remote: dc2-leaf1b Ethernet2 | NOT RUN | - |
+| 2603 | dc2-spine2 | Connectivity | VerifyLLDPNeighbors | Verifies that the provided LLDP neighbors are connected properly. | Local: Ethernet3 - Remote: dc2-leaf2a Ethernet2 | NOT RUN | - |
+| 2604 | dc2-spine2 | Connectivity | VerifyLLDPNeighbors | Verifies that the provided LLDP neighbors are connected properly. | Local: Ethernet4 - Remote: dc2-leaf2b Ethernet2 | NOT RUN | - |
+| 2605 | dc2-spine2 | Connectivity | VerifyLLDPNeighbors | Verifies that the provided LLDP neighbors are connected properly. | Local: Ethernet5 - Remote: dc2-leaf3a.arista.com Ethernet2 | NOT RUN | - |
+| 2606 | dc2-spine2 | Connectivity | VerifyLLDPNeighbors | Verifies that the provided LLDP neighbors are connected properly. | Local: Ethernet6 - Remote: dc2-leaf3b.arista.com Ethernet2 | NOT RUN | - |
+| 2607 | dc2-spine2 | Connectivity | VerifyReachability | Test the network reachability to one or many destination IP(s). | Source: P2P Interface Ethernet1 (IP: 10.255.255.106) - Destination: dc2-leaf1a Ethernet2 (IP: 10.255.255.107) | NOT RUN | - |
+| 2608 | dc2-spine2 | Connectivity | VerifyReachability | Test the network reachability to one or many destination IP(s). | Source: P2P Interface Ethernet2 (IP: 10.255.255.110) - Destination: dc2-leaf1b Ethernet2 (IP: 10.255.255.111) | NOT RUN | - |
+| 2609 | dc2-spine2 | Connectivity | VerifyReachability | Test the network reachability to one or many destination IP(s). | Source: P2P Interface Ethernet3 (IP: 10.255.255.114) - Destination: dc2-leaf2a Ethernet2 (IP: 10.255.255.115) | NOT RUN | - |
+| 2610 | dc2-spine2 | Connectivity | VerifyReachability | Test the network reachability to one or many destination IP(s). | Source: P2P Interface Ethernet4 (IP: 10.255.255.118) - Destination: dc2-leaf2b Ethernet2 (IP: 10.255.255.119) | NOT RUN | - |
+| 2611 | dc2-spine2 | Connectivity | VerifyReachability | Test the network reachability to one or many destination IP(s). | Source: P2P Interface Ethernet5 (IP: 10.255.255.122) - Destination: dc2-leaf3a.arista.com Ethernet2 (IP: 10.255.255.123) | NOT RUN | - |
+| 2612 | dc2-spine2 | Connectivity | VerifyReachability | Test the network reachability to one or many destination IP(s). | Source: P2P Interface Ethernet6 (IP: 10.255.255.126) - Destination: dc2-leaf3b.arista.com Ethernet2 (IP: 10.255.255.127) | NOT RUN | - |
+| 2613 | dc2-spine2 | Field Notices | VerifyFieldNotice44Resolution | Verifies that the device is using the correct Aboot version per FN0044. | - | NOT RUN | - |
+| 2614 | dc2-spine2 | Field Notices | VerifyFieldNotice72Resolution | Verifies if the device is exposed to FN0072, and if the issue has been mitigated. | - | NOT RUN | - |
+| 2615 | dc2-spine2 | Greent | VerifyGreenT | Verifies if a GreenT policy is created. | - | NOT RUN | - |
+| 2616 | dc2-spine2 | Greent | VerifyGreenTCounters | Verifies if the GreenT counters are incremented. | - | NOT RUN | - |
+| 2617 | dc2-spine2 | Hardware | VerifyAdverseDrops | Verifies there are no adverse drops on DCS-7280 and DCS-7500 family switches. | - | NOT RUN | - |
+| 2618 | dc2-spine2 | Hardware | VerifyEnvironmentCooling | Verifies the status of power supply fans and all fan trays. | - | NOT RUN | - |
+| 2619 | dc2-spine2 | Hardware | VerifyEnvironmentCooling | Verifies the status of power supply fans and all fan trays. | Accepted States: 'ok' | NOT RUN | - |
+| 2620 | dc2-spine2 | Hardware | VerifyEnvironmentPower | Verifies the power supplies status. | - | NOT RUN | - |
+| 2621 | dc2-spine2 | Hardware | VerifyEnvironmentPower | Verifies the power supplies status. | Accepted States: 'ok' | NOT RUN | - |
+| 2622 | dc2-spine2 | Hardware | VerifyEnvironmentSystemCooling | Verifies the system cooling status. | - | NOT RUN | - |
+| 2623 | dc2-spine2 | Hardware | VerifyTemperature | Verifies the device temperature. | - | NOT RUN | - |
 | 2624 | dc2-spine2 | Hardware | VerifyTemperature | Verifies the device temperature. | - | NOT RUN | - |
-| 2625 | dc2-spine2 | Hardware | VerifyTemperature | Verifies the device temperature. | - | NOT RUN | - |
-| 2626 | dc2-spine2 | Hardware | VerifyTransceiversManufacturers | Verifies if all transceivers come from approved manufacturers. | - | NOT RUN | - |
-| 2627 | dc2-spine2 | Hardware | VerifyTransceiversManufacturers | Verifies if all transceivers come from approved manufacturers. | Accepted Manufacturers: 'Arista Networks', 'Arastra, Inc.', 'Not Present' | NOT RUN | - |
-| 2628 | dc2-spine2 | Hardware | VerifyTransceiversTemperature | Verifies the transceivers temperature. | - | NOT RUN | - |
-| 2629 | dc2-spine2 | Interfaces | VerifyInterfacesStatus | Verifies the status of the provided interfaces. | Interface Ethernet1 - P2P_dc2-leaf1a_Ethernet2 = 'up' | NOT RUN | - |
-| 2630 | dc2-spine2 | Interfaces | VerifyInterfacesStatus | Verifies the status of the provided interfaces. | Interface Ethernet2 - P2P_dc2-leaf1b_Ethernet2 = 'up' | NOT RUN | - |
-| 2631 | dc2-spine2 | Interfaces | VerifyInterfacesStatus | Verifies the status of the provided interfaces. | Interface Ethernet3 - P2P_dc2-leaf2a_Ethernet2 = 'up' | NOT RUN | - |
-| 2632 | dc2-spine2 | Interfaces | VerifyInterfacesStatus | Verifies the status of the provided interfaces. | Interface Ethernet4 - P2P_dc2-leaf2b_Ethernet2 = 'up' | NOT RUN | - |
-| 2633 | dc2-spine2 | Interfaces | VerifyInterfacesStatus | Verifies the status of the provided interfaces. | Interface Ethernet5 - P2P_dc2-leaf3a.arista.com_Ethernet2 = 'up' | NOT RUN | - |
-| 2634 | dc2-spine2 | Interfaces | VerifyInterfacesStatus | Verifies the status of the provided interfaces. | Interface Ethernet6 - P2P_dc2-leaf3b.arista.com_Ethernet2 = 'up' | NOT RUN | - |
-| 2635 | dc2-spine2 | Interfaces | VerifyInterfacesStatus | Verifies the status of the provided interfaces. | Interface Loopback0 - ROUTER_ID = 'up' | NOT RUN | - |
-| 2636 | dc2-spine2 | LANZ | VerifyLANZ | Verifies if LANZ is enabled. | - | NOT RUN | - |
-| 2637 | dc2-spine2 | PTP | VerifyPtpGMStatus | Verifies that the device is locked to a valid PTP Grandmaster. | - | NOT RUN | - |
-| 2638 | dc2-spine2 | PTP | VerifyPtpLockStatus | Verifies that the device was locked to the upstream PTP GM in the last minute. | - | NOT RUN | - |
-| 2639 | dc2-spine2 | PTP | VerifyPtpModeStatus | Verifies that the device is configured as a PTP Boundary Clock. | - | NOT RUN | - |
-| 2640 | dc2-spine2 | PTP | VerifyPtpOffset | Verifies that the PTP timing offset is within +/- 1000ns from the master clock. | - | NOT RUN | - |
-| 2641 | dc2-spine2 | PTP | VerifyPtpPortModeStatus | Verifies the PTP interfaces state. | - | NOT RUN | - |
-| 2642 | dc2-spine2 | Routing | VerifyRoutingProtocolModel | Verifies the configured routing protocol model. | Routing protocol model: multi-agent | NOT RUN | - |
-| 2643 | dc2-spine2 | Security | VerifyAPIHttpsSSL | Verifies if the eAPI has a valid SSL profile. | - | NOT RUN | - |
-| 2644 | dc2-spine2 | Security | VerifyAPIHttpsSSL | Verifies if the eAPI has a valid SSL profile. | eAPI HTTPS SSL Profile: eAPI_SSL_Profile | NOT RUN | - |
-| 2645 | dc2-spine2 | Security | VerifyAPIHttpStatus | Verifies if eAPI HTTP server is disabled globally. | - | NOT RUN | - |
-| 2646 | dc2-spine2 | Security | VerifyAPIIPv4Acl | Verifies if eAPI has the right number IPv4 ACL(s) configured for a specified VRF. | - | NOT RUN | - |
-| 2647 | dc2-spine2 | Security | VerifyAPIIPv6Acl | Verifies if eAPI has the right number IPv6 ACL(s) configured for a specified VRF. | - | NOT RUN | - |
-| 2648 | dc2-spine2 | Security | VerifyAPISSLCertificate | Verifies the eAPI SSL certificate expiry, common subject name, encryption algorithm and key size. | - | NOT RUN | - |
-| 2649 | dc2-spine2 | Security | VerifyBannerLogin | Verifies the login banner of a device. | - | NOT RUN | - |
-| 2650 | dc2-spine2 | Security | VerifyBannerMotd | Verifies the motd banner of a device. | - | NOT RUN | - |
-| 2651 | dc2-spine2 | Security | VerifyIPSecConnHealth | Verifies all IPv4 security connections. | - | NOT RUN | - |
-| 2652 | dc2-spine2 | Security | VerifyIPv4ACL | Verifies the configuration of IPv4 ACLs. | - | NOT RUN | - |
-| 2653 | dc2-spine2 | Security | VerifySpecificIPSecConn | Verifies IPv4 security connections for a peer. | - | NOT RUN | - |
-| 2654 | dc2-spine2 | Security | VerifySSHIPv4Acl | Verifies if the SSHD agent has IPv4 ACL(s) configured. | - | NOT RUN | - |
-| 2655 | dc2-spine2 | Security | VerifySSHIPv6Acl | Verifies if the SSHD agent has IPv6 ACL(s) configured. | - | NOT RUN | - |
-| 2656 | dc2-spine2 | Security | VerifySSHStatus | Verifies if the SSHD agent is disabled in the default VRF. | - | NOT RUN | - |
-| 2657 | dc2-spine2 | Security | VerifyTelnetStatus | Verifies if Telnet is disabled in the default VRF. | - | NOT RUN | - |
-| 2658 | dc2-spine2 | Services | VerifyDNSLookup | Verifies the DNS name to IP address resolution. | - | NOT RUN | - |
-| 2659 | dc2-spine2 | Services | VerifyDNSServers | Verifies if the DNS servers are correctly configured. | - | NOT RUN | - |
-| 2660 | dc2-spine2 | Services | VerifyErrdisableRecovery | Verifies the errdisable recovery reason, status, and interval. | - | NOT RUN | - |
-| 2661 | dc2-spine2 | Services | VerifyHostname | Verifies the hostname of a device. | - | NOT RUN | - |
-| 2662 | dc2-spine2 | SNMP | VerifySnmpIPv4Acl | Verifies if the SNMP agent has IPv4 ACL(s) configured. | - | NOT RUN | - |
-| 2663 | dc2-spine2 | SNMP | VerifySnmpIPv6Acl | Verifies if the SNMP agent has IPv6 ACL(s) configured. | - | NOT RUN | - |
-| 2664 | dc2-spine2 | SNMP | VerifySnmpStatus | Verifies if the SNMP agent is enabled. | - | NOT RUN | - |
-| 2665 | dc2-spine2 | Software | VerifyEOSVersion | Verifies the EOS version of the device. | - | NOT RUN | - |
-| 2666 | dc2-spine2 | Software | VerifyTerminAttrVersion | Verifies the TerminAttr version of the device. | - | NOT RUN | - |
-| 2667 | dc2-spine2 | STUN | VerifyStunClient | Verifies the STUN client is configured with the specified IPv4 source address and port. Validate the public IP and port if provided. | - | NOT RUN | - |
-| 2668 | dc2-spine2 | System | VerifyAgentLogs | Verifies there are no agent crash reports. | - | NOT RUN | - |
-| 2669 | dc2-spine2 | System | VerifyCoredump | Verifies there are no core dump files. | - | NOT RUN | - |
-| 2670 | dc2-spine2 | System | VerifyCPUUtilization | Verifies whether the CPU utilization is below 75%. | - | NOT RUN | - |
-| 2671 | dc2-spine2 | System | VerifyFileSystemUtilization | Verifies that no partition is utilizing more than 75% of its disk space. | - | NOT RUN | - |
-| 2672 | dc2-spine2 | System | VerifyMemoryUtilization | Verifies whether the memory utilization is below 75%. | - | NOT RUN | - |
+| 2625 | dc2-spine2 | Hardware | VerifyTransceiversManufacturers | Verifies if all transceivers come from approved manufacturers. | - | NOT RUN | - |
+| 2626 | dc2-spine2 | Hardware | VerifyTransceiversManufacturers | Verifies if all transceivers come from approved manufacturers. | Accepted Manufacturers: 'Arista Networks', 'Arastra, Inc.', 'Not Present' | NOT RUN | - |
+| 2627 | dc2-spine2 | Hardware | VerifyTransceiversTemperature | Verifies the transceivers temperature. | - | NOT RUN | - |
+| 2628 | dc2-spine2 | Interfaces | VerifyInterfacesStatus | Verifies the status of the provided interfaces. | Interface Ethernet1 - P2P_dc2-leaf1a_Ethernet2 = 'up' | NOT RUN | - |
+| 2629 | dc2-spine2 | Interfaces | VerifyInterfacesStatus | Verifies the status of the provided interfaces. | Interface Ethernet2 - P2P_dc2-leaf1b_Ethernet2 = 'up' | NOT RUN | - |
+| 2630 | dc2-spine2 | Interfaces | VerifyInterfacesStatus | Verifies the status of the provided interfaces. | Interface Ethernet3 - P2P_dc2-leaf2a_Ethernet2 = 'up' | NOT RUN | - |
+| 2631 | dc2-spine2 | Interfaces | VerifyInterfacesStatus | Verifies the status of the provided interfaces. | Interface Ethernet4 - P2P_dc2-leaf2b_Ethernet2 = 'up' | NOT RUN | - |
+| 2632 | dc2-spine2 | Interfaces | VerifyInterfacesStatus | Verifies the status of the provided interfaces. | Interface Ethernet5 - P2P_dc2-leaf3a.arista.com_Ethernet2 = 'up' | NOT RUN | - |
+| 2633 | dc2-spine2 | Interfaces | VerifyInterfacesStatus | Verifies the status of the provided interfaces. | Interface Ethernet6 - P2P_dc2-leaf3b.arista.com_Ethernet2 = 'up' | NOT RUN | - |
+| 2634 | dc2-spine2 | Interfaces | VerifyInterfacesStatus | Verifies the status of the provided interfaces. | Interface Loopback0 - ROUTER_ID = 'up' | NOT RUN | - |
+| 2635 | dc2-spine2 | LANZ | VerifyLANZ | Verifies if LANZ is enabled. | - | NOT RUN | - |
+| 2636 | dc2-spine2 | PTP | VerifyPtpGMStatus | Verifies that the device is locked to a valid PTP Grandmaster. | - | NOT RUN | - |
+| 2637 | dc2-spine2 | PTP | VerifyPtpLockStatus | Verifies that the device was locked to the upstream PTP GM in the last minute. | - | NOT RUN | - |
+| 2638 | dc2-spine2 | PTP | VerifyPtpModeStatus | Verifies that the device is configured as a PTP Boundary Clock. | - | NOT RUN | - |
+| 2639 | dc2-spine2 | PTP | VerifyPtpOffset | Verifies that the PTP timing offset is within +/- 1000ns from the master clock. | - | NOT RUN | - |
+| 2640 | dc2-spine2 | PTP | VerifyPtpPortModeStatus | Verifies the PTP interfaces state. | - | NOT RUN | - |
+| 2641 | dc2-spine2 | Routing | VerifyRoutingProtocolModel | Verifies the configured routing protocol model. | Routing protocol model: multi-agent | NOT RUN | - |
+| 2642 | dc2-spine2 | Security | VerifyAPIHttpsSSL | Verifies if the eAPI has a valid SSL profile. | - | NOT RUN | - |
+| 2643 | dc2-spine2 | Security | VerifyAPIHttpsSSL | Verifies if the eAPI has a valid SSL profile. | eAPI HTTPS SSL Profile: eAPI_SSL_Profile | NOT RUN | - |
+| 2644 | dc2-spine2 | Security | VerifyAPIHttpStatus | Verifies if eAPI HTTP server is disabled globally. | - | NOT RUN | - |
+| 2645 | dc2-spine2 | Security | VerifyAPIIPv4Acl | Verifies if eAPI has the right number IPv4 ACL(s) configured for a specified VRF. | - | NOT RUN | - |
+| 2646 | dc2-spine2 | Security | VerifyAPIIPv6Acl | Verifies if eAPI has the right number IPv6 ACL(s) configured for a specified VRF. | - | NOT RUN | - |
+| 2647 | dc2-spine2 | Security | VerifyAPISSLCertificate | Verifies the eAPI SSL certificate expiry, common subject name, encryption algorithm and key size. | - | NOT RUN | - |
+| 2648 | dc2-spine2 | Security | VerifyBannerLogin | Verifies the login banner of a device. | - | NOT RUN | - |
+| 2649 | dc2-spine2 | Security | VerifyBannerMotd | Verifies the motd banner of a device. | - | NOT RUN | - |
+| 2650 | dc2-spine2 | Security | VerifyIPSecConnHealth | Verifies all IPv4 security connections. | - | NOT RUN | - |
+| 2651 | dc2-spine2 | Security | VerifyIPv4ACL | Verifies the configuration of IPv4 ACLs. | - | NOT RUN | - |
+| 2652 | dc2-spine2 | Security | VerifySpecificIPSecConn | Verifies IPv4 security connections for a peer. | - | NOT RUN | - |
+| 2653 | dc2-spine2 | Security | VerifySSHIPv4Acl | Verifies if the SSHD agent has IPv4 ACL(s) configured. | - | NOT RUN | - |
+| 2654 | dc2-spine2 | Security | VerifySSHIPv6Acl | Verifies if the SSHD agent has IPv6 ACL(s) configured. | - | NOT RUN | - |
+| 2655 | dc2-spine2 | Security | VerifySSHStatus | Verifies if the SSHD agent is disabled in the default VRF. | - | NOT RUN | - |
+| 2656 | dc2-spine2 | Security | VerifyTelnetStatus | Verifies if Telnet is disabled in the default VRF. | - | NOT RUN | - |
+| 2657 | dc2-spine2 | Services | VerifyDNSLookup | Verifies the DNS name to IP address resolution. | - | NOT RUN | - |
+| 2658 | dc2-spine2 | Services | VerifyDNSServers | Verifies if the DNS servers are correctly configured. | - | NOT RUN | - |
+| 2659 | dc2-spine2 | Services | VerifyErrdisableRecovery | Verifies the errdisable recovery reason, status, and interval. | - | NOT RUN | - |
+| 2660 | dc2-spine2 | Services | VerifyHostname | Verifies the hostname of a device. | - | NOT RUN | - |
+| 2661 | dc2-spine2 | SNMP | VerifySnmpIPv4Acl | Verifies if the SNMP agent has IPv4 ACL(s) configured. | - | NOT RUN | - |
+| 2662 | dc2-spine2 | SNMP | VerifySnmpIPv6Acl | Verifies if the SNMP agent has IPv6 ACL(s) configured. | - | NOT RUN | - |
+| 2663 | dc2-spine2 | SNMP | VerifySnmpStatus | Verifies if the SNMP agent is enabled. | - | NOT RUN | - |
+| 2664 | dc2-spine2 | Software | VerifyEOSVersion | Verifies the EOS version of the device. | - | NOT RUN | - |
+| 2665 | dc2-spine2 | Software | VerifyTerminAttrVersion | Verifies the TerminAttr version of the device. | - | NOT RUN | - |
+| 2666 | dc2-spine2 | STUN | VerifyStunClient | Verifies the STUN client is configured with the specified IPv4 source address and port. Validate the public IP and port if provided. | - | NOT RUN | - |
+| 2667 | dc2-spine2 | System | VerifyAgentLogs | Verifies there are no agent crash reports. | - | NOT RUN | - |
+| 2668 | dc2-spine2 | System | VerifyCoredump | Verifies there are no core dump files. | - | NOT RUN | - |
+| 2669 | dc2-spine2 | System | VerifyCPUUtilization | Verifies whether the CPU utilization is below 75%. | - | NOT RUN | - |
+| 2670 | dc2-spine2 | System | VerifyFileSystemUtilization | Verifies that no partition is utilizing more than 75% of its disk space. | - | NOT RUN | - |
+| 2671 | dc2-spine2 | System | VerifyMemoryUtilization | Verifies whether the memory utilization is below 75%. | - | NOT RUN | - |
+| 2672 | dc2-spine2 | System | VerifyNTP | Verifies if NTP is synchronised. | - | NOT RUN | - |
 | 2673 | dc2-spine2 | System | VerifyNTP | Verifies if NTP is synchronised. | - | NOT RUN | - |
-| 2674 | dc2-spine2 | System | VerifyNTP | Verifies if NTP is synchronised. | - | NOT RUN | - |
+| 2674 | dc2-spine2 | System | VerifyReloadCause | Verifies the last reload cause of the device. | - | NOT RUN | - |
 | 2675 | dc2-spine2 | System | VerifyReloadCause | Verifies the last reload cause of the device. | - | NOT RUN | - |
-| 2676 | dc2-spine2 | System | VerifyReloadCause | Verifies the last reload cause of the device. | - | NOT RUN | - |
-| 2677 | dc2-spine2 | System | VerifyUptime | Verifies the device uptime. | - | NOT RUN | - |
-| 2678 | dc2-spine2 | VLAN | VerifyVlanInternalPolicy | Verifies the VLAN internal allocation policy and the range of VLANs. | - | NOT RUN | - |
+| 2676 | dc2-spine2 | System | VerifyUptime | Verifies the device uptime. | - | NOT RUN | - |
+| 2677 | dc2-spine2 | VLAN | VerifyVlanInternalPolicy | Verifies the VLAN internal allocation policy and the range of VLANs. | - | NOT RUN | - |

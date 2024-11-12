@@ -5654,6 +5654,10 @@ $defs:
         type: bool
         description: Set to false to disable interface state and LLDP topology validation
           performed by the `eos_validate_state` role.
+      validate_lldp:
+        type: bool
+        description: Set to false to disable the LLDP topology validation performed
+          by the `eos_validate_state` role.
       raw_eos_cli:
         type: str
         description: EOS CLI rendered directly on the ethernet interface in the final
