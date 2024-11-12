@@ -1,0 +1,103 @@
+---
+### Management Security ###
+management_security:
+  entropy_sources:
+    hardware: true
+    haveged: true
+    cpu_jitter: true
+    hardware_exclusive: true
+  password:
+    minimum_length: 17
+    encryption_key_common: true
+    encryption_reversible: aes-256-gcm
+    policies:
+      - name: AVD_POLICY
+        minimum:
+          digits: 1
+          length: 2
+          lower: 3
+          special: 4
+          upper: 5
+        maximum:
+          repetitive: 6
+          sequential: 7
+  ssl_profiles:
+    - name: tls-versions-profile
+      tls_versions: "1.0 1.1"
+    - name: cipher-list-profile
+      cipher_list: ECDHE-RSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-SHA384
+    - name: certificate-profile
+      certificate:
+        file: eAPI.crt
+        key: eAPI.key
+      certificate_revocation_lists:
+        - intermediate.crl
+        - ca.crl
+    - name: tls-single-version-profile-as-string
+      tls_versions: "1.1"
+    - name: tls-single-version-profile-as-float
+      tls_versions: 1.0
+    - name: test1-trust-cert
+      trust_certificate:
+        certificates:
+          - test-trust1.crt
+          - test-trust2.crt
+        requirement:
+          basic_constraint_ca: true
+        policy_expiry_date_ignore: true
+    - name: test1-chain-cert
+      chain_certificate:
+        certificates:
+          - test-chain-cert1.crt
+          - test-chain-cert2.crt
+        requirement:
+          basic_constraint_ca: true
+    - name: test2-trust-cert
+      trust_certificate:
+        requirement:
+          hostname_fqdn: true
+        system: true
+    - name: test2-chain-cert
+      chain_certificate:
+        requirement:
+          include_root_ca: true
+  shared_secret_profiles:
+    - profile: profile0
+      secrets:
+        - name: Secret1
+          secret: $1c$mNvaIXPetcQ3hy7oUnTU3w==
+          receive_lifetime:
+            start_date_time: 12/20/2024 10:00:00
+            end_date_time: 12/20/2025 10:00:00
+          transmit_lifetime:
+            infinite: true
+          local_time: true
+        - name: Secret2
+          secret: $1c$mNvaIXPetcSA2UnFwIaxwA==
+          secret_type: "7"
+          receive_lifetime:
+            infinite: true
+          transmit_lifetime:
+            infinite: true
+    - profile: profile1
+      secrets:
+        - name: Secret3
+          secret: $Ra3am9YZlbg5d65txucxTg==$DMoPxa9Wu5elK39pofFgaw==$zgEBfv+w/AIr1FnW
+          secret_type: "8a"
+          receive_lifetime:
+            start_date_time: "2024-12-20 10:00:00"
+            end_date_time: "2025-12-20 10:00:00"
+          transmit_lifetime:
+            start_date_time: "12/20/2024 10:00:00"
+            end_date_time: "12/10/2025 10:00:00"
+    - profile: profile2
+      secrets:
+        - name: Secret4
+          secret: name1_secret
+          secret_type: "0"
+          receive_lifetime:
+            start_date_time: "2024-12-20 10:00:00"
+            end_date_time: "2025-12-20 10:00:00"
+          transmit_lifetime:
+            start_date_time: "2024-12-20 10:00:00"
+            end_date_time: "2025-12-20 10:00:00"

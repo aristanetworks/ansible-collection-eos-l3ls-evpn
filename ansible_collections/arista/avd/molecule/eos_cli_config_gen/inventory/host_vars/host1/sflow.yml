@@ -1,0 +1,63 @@
+---
+### Sflow ###
+sflow:
+  vrfs:
+    - name: MGMT
+      destinations:
+        - destination: 10.6.75.62
+          port: 123
+        - destination: 10.6.75.63
+          port: 333
+        - destination: 10.6.75.59
+      source_interface: Ethernet3
+    - name: AAA
+      destinations:
+        - destination: 10.6.75.62
+          port: 123
+        - destination: 10.6.75.63
+          port: 333
+      source_interface: Ethernet2
+    - name: BBB
+      destinations:
+        - destination: 10.6.75.62
+      source: 1.1.1.1
+    - name: CCC
+      destinations:
+        - destination: 10.6.75.62
+      source_interface: Management1
+      source: 1.1.1.1
+  destinations:
+    - destination: 10.6.75.62
+      port: 123
+    - destination: 10.6.75.61
+  source_interface: Management0
+  sample: 1000
+  sample_input_subinterface: true
+  sample_output_subinterface: true
+  dangerous: true
+  polling_interval: 10
+  extensions:
+    - name: bgp
+      enabled: true
+    - name: router
+      enabled: true
+    - name: switch
+      enabled: false
+    - name: tunnel
+      enabled: false
+  run: true
+  interface:
+    disable:
+      default: true
+    egress:
+      enable_default: true
+      unmodified: true
+  hardware_acceleration:
+    enabled: true
+    sample: 1024
+    modules:
+      - name: Linecard1
+      - name: Linecard2
+        enabled: true
+      - name: Linecard3
+        enabled: false

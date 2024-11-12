@@ -1,0 +1,10 @@
+---
+### IP RADIUSsource interface ###
+
+ip_radius_source_interfaces:
+  - vrf: default
+    name: loopback1
+  - vrf: MGMT
+    name: Ma1
+  - vrf:
+    name: loopback10
