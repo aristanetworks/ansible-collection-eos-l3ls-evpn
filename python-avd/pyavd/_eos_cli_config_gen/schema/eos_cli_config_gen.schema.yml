@@ -8601,7 +8601,6 @@ keys:
                 - md5
                 - none
           neighbors:
-            description: Neighbor-specific configuration.
             type: list
             items:
               type: dict
@@ -8629,7 +8628,7 @@ keys:
                       - md5
                       - none
           ip_access_group:
-            description: IP Access list name.
+            description: IPv4 Access list name.
             type: str
           ipv6_access_group:
             description: IPv6 access list name.
@@ -8778,11 +8777,7 @@ keys:
                 max: 320
           p2mp_enabled:
             type: bool
-            description: 'P2MP configuration.
-
-              To disable P2MP make `p2mp_enabled` false.'
           shutdown:
-            description: Select SRLG behavior.
             type: bool
   name_server:
     documentation_options:
