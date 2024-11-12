@@ -72,7 +72,7 @@ class MiscMixin:
                 msg = "When 'fabric_numbering.id.algorithm' is set to 'pool_manager', 'id' must not be set under node settings. " f"Got 'id: {node_id}'."
                 raise AristaAvdError(msg)
 
-            return self.pool_manager.get_id(self)
+            return self.pool_manager.get_assignment_value("node_id_pools", self)
 
         # Pool manager is not activated. Return 'id' from node settings or None.
         return get(self.switch_data_combined, "id")

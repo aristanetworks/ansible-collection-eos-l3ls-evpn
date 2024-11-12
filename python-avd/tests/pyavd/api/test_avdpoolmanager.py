@@ -23,16 +23,13 @@ TESTHOST4 = {"inventory_hostname": "testhost4", "fabric_name": "pool_manager_tes
 
 
 def get_assignment(hostvars: dict, node_id: int) -> dict:
-    return {"hostname": hostvars["inventory_hostname"], "id": node_id}
+    return {"key": f"('{hostvars['inventory_hostname']}',)", "value": node_id}
 
 
 def get_pool(hostvars: dict, assignments: list[dict] | None = None) -> dict:
     return {
-        "fabric_name": hostvars.get("fabric_name"),
-        "dc_name": hostvars.get("dc_name"),
-        "pod_name": hostvars.get("pod_name"),
-        "type": hostvars.get("type"),
-        "id_assignments": assignments or [],
+        "pool_key": str((hostvars.get("fabric_name"), hostvars.get("dc_name"), hostvars.get("pod_name"), hostvars.get("type"))),
+        "assignments": assignments or [],
     }
 
 
@@ -139,7 +136,7 @@ def get_file_content(data: dict) -> str:
             [TESTHOST1, TESTHOST3],
             [1, 1],
             get_data([get_pool(TESTHOST3, [get_assignment(TESTHOST3, 1)])]),
-            get_data([get_pool(TESTHOST1, [get_assignment(TESTHOST1, 1)]), get_pool(TESTHOST3, [get_assignment(TESTHOST3, 1)])]),
+            get_data([get_pool(TESTHOST3, [get_assignment(TESTHOST3, 1)]), get_pool(TESTHOST1, [get_assignment(TESTHOST1, 1)])]),
             id="add_pool_with_testhost1_keep_pool_with_testhost3",
         ),
         pytest.param(
@@ -153,8 +150,8 @@ def get_file_content(data: dict) -> str:
             get_data(
                 [
                     get_pool(TESTHOST4, [get_assignment(TESTHOST4, 1)]),
-                    get_pool(TESTHOST1, [get_assignment(TESTHOST2, 1), get_assignment(TESTHOST1, 2)]),
                     get_pool(TESTHOST3, [get_assignment(TESTHOST3, 1)]),
+                    get_pool(TESTHOST1, [get_assignment(TESTHOST2, 1), get_assignment(TESTHOST1, 2)]),
                 ]
             ),
             id="no_file_add_three_pools_and_four_hosts",
@@ -185,27 +182,28 @@ def test_avdpoolmanager_pool(hostvars_list: list[dict], expected_ids: list[int],
         mocked_file_write: mock.MagicMock = mocked_open.return_value.write
 
         # Initialize pool_manager and feed to shared_utils.
-        pool_manager = PoolManager(DUMMYDIR)
+        pool_manager = PoolManager(Path(DUMMYDIR))
 
         for index, hostvars in enumerate(hostvars_list):
             shared_utils = SharedUtils(hostvars=hostvars, templar=object(), schema=schema)
             # Get the id of the host from hostvars. If not, a new data set will be created.
-            assert pool_manager.get_id(shared_utils) == expected_ids[index]
+            assert pool_manager.get_assignment_value("node_id_pools", shared_utils) == expected_ids[index]
 
         mocked_exists.assert_called_once()
+        if file_exists:
+            mocked_open.assert_called_once_with(mode="r", encoding=mock.ANY, errors=None)
+
+        assert pool_manager.save_updated_pools() is expected_write
+
         if not file_exists:
             # If the mocked file does not exists check that it was created together with the parent dir.
             mocked_mkdir: mock.MagicMock = mocked_parent.return_value.mkdir
             mocked_mkdir.assert_called_once_with(exist_ok=True, mode=509, parents=True)
             mocked_touch.assert_called_once()
 
-        mocked_open.assert_called_once_with(mode="r", encoding="UTF-8", errors=None)
-
-        assert pool_manager.save_updated_pools() is expected_write
-
         if expected_write:
-            mocked_open.assert_called_with(mode="w", encoding="UTF-8", errors=None, newline=None)
+            mocked_open.assert_called_with(mode="w", encoding=mock.ANY, errors=None, newline=None)
             mocked_file_write.assert_called_once_with(get_file_content(expected_data))
         else:
-            mocked_open.assert_called_with(mode="r", encoding="UTF-8", errors=None)
+            mocked_open.assert_called_with(mode="r", encoding=mock.ANY, errors=None)
             mocked_file_write.assert_not_called()

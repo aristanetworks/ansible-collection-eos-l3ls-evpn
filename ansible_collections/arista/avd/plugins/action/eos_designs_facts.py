@@ -5,6 +5,7 @@
 
 import cProfile
 import pstats
+from pathlib import Path
 from typing import Any
 
 from ansible.errors import AnsibleActionFail
@@ -69,7 +70,7 @@ class ActionModule(ActionBase):
         # Get updated templar instance to be passed along to our simplified "templater"
         self.templar = get_templar(self, task_vars)
 
-        pool_manager = PoolManager(output_dir)
+        pool_manager = PoolManager(Path(output_dir))
 
         avd_switch_facts_instances = self.create_avd_switch_facts_instances(fabric_hosts, hostvars, result, pool_manager)
         if result.get("failed"):

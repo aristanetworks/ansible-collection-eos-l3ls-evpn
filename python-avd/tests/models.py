@@ -109,7 +109,7 @@ class MoleculeScenario:
                 # Ignore members of the group IGNORE_IN_PYTEST from Molecule scenarios.
                 continue
             self.hosts.append(MoleculeHost(name=host.name, ansible_host=host, scenario=self))
-        self.pool_manager = PoolManager(str(self.path / "intended"))
+        self.pool_manager = PoolManager(self.path / "intended")
 
     @cached_property
     def avd_facts(self) -> dict:
