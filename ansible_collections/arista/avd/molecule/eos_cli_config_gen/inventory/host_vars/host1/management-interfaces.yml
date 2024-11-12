@@ -1,4 +1,4 @@
-### Management Interfaces ###
+---
 management_interfaces:
   - name: Management1
     description: OOB_MANAGEMENT

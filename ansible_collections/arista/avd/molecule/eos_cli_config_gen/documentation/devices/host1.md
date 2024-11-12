@@ -12,6 +12,12 @@
   - [Management SSH](#management-ssh)
   - [Management Tech-Support](#management-tech-support)
   - [IP Client Source Interfaces](#ip-client-source-interfaces)
+  - [Management Accounts](#management-accounts)
+  - [Management API gNMI](#management-api-gnmi)
+  - [Management CVX Summary](#management-cvx-summary)
+  - [Management Console](#management-console)
+  - [Management API HTTP](#management-api-http)
+  - [Management API Models](#management-api-models)
 - [CVX](#cvx)
   - [CVX Services](#cvx-services)
   - [CVX Device Configuration](#cvx-device-configuration)
@@ -19,6 +25,7 @@
   - [Local Users](#local-users)
   - [Roles](#roles)
   - [Enable Password](#enable-password)
+  - [Management defaults](#management-defaults)
   - [TACACS Servers](#tacacs-servers)
   - [IP TACACS Source Interfaces](#ip-tacacs-source-interfaces)
   - [RADIUS Server](#radius-server)
@@ -251,22 +258,45 @@ agent KernelFib environment KERNELFIB_PROGRAM_ALL_ECMP=true
 
 | Management Interface | Description | Type | VRF | IP Address | Gateway |
 | -------------------- | ----------- | ---- | --- | ---------- | ------- |
+| Management0 | - | oob | default | 10.0.0.0 | - |
 | Management1 | OOB_MANAGEMENT | oob | MGMT | 10.73.255.122/24 | 10.73.255.2 |
+| Management42 | - | oob | default | - | - |
+| Vlan123 | inband_management | inband | default | 10.73.0.123/24 | 10.73.0.1 |
 
 ##### IPv6
 
 | Management Interface | Description | Type | VRF | IPv6 Address | IPv6 Gateway |
 | -------------------- | ----------- | ---- | --- | ------------ | ------------ |
+| Management0 | - | oob | default | - | - |
 | Management1 | OOB_MANAGEMENT | oob | MGMT | - | - |
+| Management42 | - | oob | default | - | - |
+| Vlan123 | inband_management | inband | default | - | - |
 
 #### Management Interfaces Device Configuration
 
 ```eos
 !
+interface Management0
+   mac-address 00:1c:73:00:00:aa
+   ip address 10.0.0.0
+!
 interface Management1
    description OOB_MANAGEMENT
    vrf MGMT
    ip address 10.73.255.122/24
+!
+interface Management42
+   shutdown
+   speed forced 1000full
+   no lldp transmit
+   no lldp receive
+   lldp tlv transmit ztp vlan 666
+!
+interface Vlan123
+   description inband_management
+   mtu 1500
+   ip address 10.73.0.123/24
+   ip virtual-router address 10.73.0.1
 ```
 
 ### IP Domain-list
@@ -538,6 +568,207 @@ ip tftp client source-interface Loopback0 vrf default
 ip tftp client source-interface Management0 vrf MGMT
  ```
 
+### Management Accounts
+
+#### Password Policy
+
+The password policy set for management accounts is: AVD_POLICY
+
+#### Management Accounts Device Configuration
+
+```eos
+!
+management accounts
+   password policy AVD_POLICY
+```
+
+### Management API gNMI
+
+#### Management API gNMI Summary
+
+| Transport | SSL Profile | VRF | Notification Timestamp | ACL | Port |
+| --------- | ----------- | --- | ---------------------- | --- | ---- |
+| MGMT | gnmi | MGMT | send-time | acl1 | 6030 |
+| mytransport | - | - | send-time | acl1 | 6032 |
+
+| Transport | Destination | Destination Port | gNMI SSL Profile | Tunnel SSL Profile | VRF | Local Interface | Local Port | Target ID |
+| --------- | ----------- | ---------------- | ---------------- | ------------------ | --- | --------------- | ---------- | --------- |
+| onetarget | 10.1.1.100 | 10000 | ssl_profile | ssl_profile | management | Management1 | 10001 | testid100 |
+| multipletargets | 10.1.1.100 | 10000 | ssl_profile | ssl_profile | management | Management1 | 10001 | testid1 testid2 testid3 testid4 |
+| serialandtargets | 10.1.1.100 | 10000 | ssl_profile | ssl_profile | management | Management1 | 10001 | Serial-Number testid10 testid20 |
+| noserialnotargets | - | - | - | - | - | - | - |  |
+| serialonly | - | - | - | - | - | - | - | Serial-Number |
+
+Provider eos-native is configured.
+
+#### Management API gNMI Device Configuration
+
+```eos
+!
+management api gnmi
+   transport grpc MGMT
+      ssl profile gnmi
+      vrf MGMT
+      ip access-group acl1
+      notification timestamp send-time
+   !
+   transport grpc mytransport
+      port 6032
+      ip access-group acl1
+      notification timestamp send-time
+   !
+   transport grpc-tunnel multipletargets
+      no shutdown
+      vrf management
+      tunnel ssl profile ssl_profile
+      gnmi ssl profile ssl_profile
+      destination 10.1.1.100 port 10000
+      local interface Management1 port 10001
+      target testid1 testid2 testid3 testid4
+   !
+   transport grpc-tunnel noserialnotargets
+   !
+   transport grpc-tunnel onetarget
+      shutdown
+      vrf management
+      tunnel ssl profile ssl_profile
+      gnmi ssl profile ssl_profile
+      destination 10.1.1.100 port 10000
+      local interface Management1 port 10001
+      target testid100
+   !
+   transport grpc-tunnel serialandtargets
+      no shutdown
+      vrf management
+      tunnel ssl profile ssl_profile
+      gnmi ssl profile ssl_profile
+      destination 10.1.1.100 port 10000
+      local interface Management1 port 10001
+      target serial-number testid10 testid20
+   !
+   transport grpc-tunnel serialonly
+      target serial-number
+   provider eos-native
+```
+
+### Management CVX Summary
+
+| Shutdown | CVX Servers |
+| -------- | ----------- |
+| False | 10.90.224.188, 10.90.224.189, leaf1.atd.lab |
+
+#### Management CVX Source Interface
+
+| Interface | VRF |
+| --------- | --- |
+| Loopback0 | MGMT |
+
+#### Management CVX Device Configuration
+
+```eos
+!
+management cvx
+   no shutdown
+   server host 10.90.224.188
+   server host 10.90.224.189
+   server host leaf1.atd.lab
+   source-interface Loopback0
+   vrf MGMT
+```
+
+### Management Console
+
+#### Management Console Timeout
+
+Management Console Timeout is set to **15** minutes.
+
+#### Management Console Device Configuration
+
+```eos
+!
+management console
+   idle-timeout 15
+```
+
+### Management API HTTP
+
+#### Management API HTTP Summary
+
+| HTTP | HTTPS | Default Services |
+| ---- | ----- | ---------------- |
+| False | True | True |
+
+Management HTTPS is using the SSL profile SSL_PROFILE
+
+#### Management API VRF Access
+
+| VRF Name | IPv4 ACL | IPv6 ACL |
+| -------- | -------- | -------- |
+| default | ACL-API | ACL-API6 |
+| MGMT | ACL-API | - |
+
+HTTPS certificate and private key are configured.
+
+#### Management API HTTP Device Configuration
+
+```eos
+!
+management api http-commands
+   protocol https
+   no protocol http
+   default-services
+   protocol https ssl profile SSL_PROFILE
+   no shutdown
+   !
+   vrf default
+      no shutdown
+      ip access-group ACL-API
+      ipv6 access-group ACL-API6
+   !
+   vrf MGMT
+      no shutdown
+      ip access-group ACL-API
+   protocol https certificate
+<cert_string>
+EOF
+<private_key>
+EOF
+```
+
+### Management API Models
+
+#### Management API Models Summary
+
+| Provider | Path | Disabled |
+| -------- | ---- | ------- |
+| smash | flexCounters | False |
+| smash | forwarding/srte/status/fec | False |
+| smash | routing6/status | False |
+| smash | routing/bgp/export/allPeerAdjRibIn | False |
+| smash | routing/status | True |
+| smash | tunnel/tunnelFib/entry | False |
+| sysdb | /Sysdb/sys/logging/config/vrfLoggingHost/mgmt | True |
+| sysdb | cell/1/agent | True |
+
+#### Management API Models Device Configuration
+
+```eos
+!
+management api models
+   !
+   provider smash
+      path flexCounters
+      path forwarding/srte/status/fec
+      path routing6/status
+      path routing/bgp/export/allPeerAdjRibIn
+      path routing/status disabled
+      path tunnel/tunnelFib/entry
+   !
+   provider sysdb
+      path /Sysdb/sys/logging/config/vrfLoggingHost/mgmt disabled
+      path cell/1/agent disabled
+```
+
 ## CVX
 
 | Peer Hosts |
@@ -631,6 +862,18 @@ sha512 encrypted enable password is configured
 !
 enable password sha512 <removed>
 !
+```
+
+### Management defaults
+
+Default secret hash is set to md5
+
+#### Management defaults Device Configuration
+
+```eos
+!
+management defaults
+  secret hash md5
 ```
 
 ### TACACS Servers

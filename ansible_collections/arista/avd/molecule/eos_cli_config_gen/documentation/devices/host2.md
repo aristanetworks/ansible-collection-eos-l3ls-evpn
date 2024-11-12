@@ -5,6 +5,8 @@
 - [Management](#management)
   - [Management Interfaces](#management-interfaces)
   - [Management SSH](#management-ssh)
+  - [Management CVX Summary](#management-cvx-summary)
+  - [Management API HTTP](#management-api-http)
 - [CVX](#cvx)
   - [CVX Device Configuration](#cvx-device-configuration)
 - [Authentication](#authentication)
@@ -143,6 +145,39 @@ management ssh
    !
    vrf mgt
       no shutdown
+```
+
+### Management CVX Summary
+
+| Shutdown | CVX Servers |
+| -------- | ----------- |
+| True | - |
+
+#### Management CVX Device Configuration
+
+```eos
+!
+management cvx
+   shutdown
+```
+
+### Management API HTTP
+
+#### Management API HTTP Summary
+
+| HTTP | HTTPS | Default Services |
+| ---- | ----- | ---------------- |
+| True | False | False |
+
+#### Management API HTTP Device Configuration
+
+```eos
+!
+management api http-commands
+   no protocol https
+   protocol http
+   no default-services
+   no shutdown
 ```
 
 ## CVX
