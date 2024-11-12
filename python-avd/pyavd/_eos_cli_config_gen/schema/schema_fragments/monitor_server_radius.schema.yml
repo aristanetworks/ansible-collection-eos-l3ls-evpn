@@ -35,18 +35,17 @@ keys:
             type: str
             description: Method used to probe the server. `status-server` is the EOS default method.
             valid_values:
-              - "status-server"
-              - "access-request"
+              - status-server
+              - access-request
           access_request:
             type: dict
             description: This can only be set when `method` is `access_request`.
             keys:
               username:
                 type: str
-                required: true
               password:
                 type: str
-                required: true
+                description: Encrypted password using the `password_type`.
               password_type:
                 type: str
                 convert_types:

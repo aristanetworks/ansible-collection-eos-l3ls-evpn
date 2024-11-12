@@ -6,14 +6,14 @@
 {# doc - monitor server radius #}
 {% if monitor_server_radius is arista.avd.defined %}
 
-## Monitor Server Radius Summary
+### Monitor Server Radius Summary
 {%     if monitor_server_radius.service_dot1x is arista.avd.defined(true) %}
 
 Monitor servers are used for 802.1x authentication.
 {%     endif %}
 {%     if monitor_server_radius.probe is arista.avd.defined %}
 
-### Server Probe Settings
+#### Server Probe Settings
 
 | Setting | Value |
 | ------- | ----- |
@@ -28,7 +28,7 @@ Monitor servers are used for 802.1x authentication.
 {%         endif %}
 {%     endif %}
 
-### Monitor Server Radius Device Configuration
+#### Monitor Server Radius Device Configuration
 
 ```eos
 {%     include 'eos/monitor-server-radius.j2' %}

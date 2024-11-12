@@ -8215,10 +8215,9 @@ keys:
             keys:
               username:
                 type: str
-                required: true
               password:
                 type: str
-                required: true
+                description: Encrypted password using the `password_type`.
               password_type:
                 type: str
                 convert_types:

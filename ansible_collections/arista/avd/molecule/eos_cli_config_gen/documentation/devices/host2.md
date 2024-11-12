@@ -58,9 +58,6 @@
   - [IP DHCP Snooping Device Configuration](#ip-dhcp-snooping-device-configuration)
 - [IP NAT](#ip-nat)
   - [IP NAT Device Configuration](#ip-nat-device-configuration)
-- [Monitor Server Radius Summary](#monitor-server-radius-summary)
-  - [Server Probe Settings](#server-probe-settings)
-  - [Monitor Server Radius Device Configuration](#monitor-server-radius-device-configuration)
 
 ## Management
 
@@ -596,20 +593,4 @@ ip dhcp snooping
 !
 !
 ip nat synchronization
-```
-
-## Monitor Server Radius Summary
-
-### Server Probe Settings
-
-| Setting | Value |
-| ------- | ----- |
-| Probe method | status-server |
-
-### Monitor Server Radius Device Configuration
-
-```eos
-!
-monitor server radius
-   probe method status-server
 ```
