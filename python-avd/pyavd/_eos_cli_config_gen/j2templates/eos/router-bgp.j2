@@ -30,9 +30,7 @@ router bgp {{ router_bgp.as }}
    no bgp default ipv4-unicast transport ipv6
 {%     endif %}
 {%     if router_bgp.timers is arista.avd.defined %}
-{%         if router_bgp.timers.hold_forever is arista.avd.defined(true) %}
-{%             set timers_bgp_cli = "timers bgp 0 0" %}
-{%         elif router_bgp.timers.keepalive_time is arista.avd.defined and router_bgp.timers.hold_time is arista.avd.defined %}
+{%         if router_bgp.timers.keepalive_time is arista.avd.defined and router_bgp.timers.hold_time is arista.avd.defined %}
 {%             set timers_bgp_cli = "timers bgp " ~ router_bgp.timers.keepalive_time ~ " " ~ router_bgp.timers.hold_time %}
 {%         elif router_bgp.timers.min_hold_time is arista.avd.defined or router_bgp.timers.send_failure_hold_time is arista.avd.defined %}
 {%             set timers_bgp_cli = "timers bgp" %}

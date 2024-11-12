@@ -11941,15 +11941,14 @@ keys:
             min: 0
             max: 3600
           hold_time:
-            description: Hold time in seconds. Must be defined along with keepalive_time.
+            description: 'Hold time in seconds. Must be defined along with keepalive_time.
+
+              The valid values are 3-7200 or 0 if both values are 0.'
             type: int
             convert_types:
             - str
-            min: 3
+            min: 0
             max: 7200
-          hold_forever:
-            type: bool
-            description: Don't send keep-alives.
           min_hold_time:
             description: Neighbor's minimum hold time constraint in seconds.
             type: int
