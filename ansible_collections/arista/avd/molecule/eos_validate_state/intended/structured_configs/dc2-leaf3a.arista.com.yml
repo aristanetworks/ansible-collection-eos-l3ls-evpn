@@ -372,6 +372,7 @@ ethernet_interfaces:
   channel_group:
     id: 3
     mode: active
+  validate_lldp: false
 - name: Ethernet1
   peer: dc2-spine1
   peer_interface: Ethernet5
