@@ -7,8 +7,7 @@ from functools import cached_property
 from ipaddress import ip_network
 from typing import TYPE_CHECKING
 
-from pyavd._errors import AristaAvdError, AristaAvdInvalidInputsError
-from pyavd._errors import AristaAvdMissingVariableError
+from pyavd._errors import AristaAvdInvalidInputsError
 from pyavd._utils import default, get
 from pyavd.j2filters import natural_sort
 

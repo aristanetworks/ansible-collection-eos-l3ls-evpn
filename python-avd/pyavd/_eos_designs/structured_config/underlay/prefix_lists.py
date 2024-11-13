@@ -8,7 +8,7 @@ from functools import cached_property
 from ipaddress import ip_network
 from typing import TYPE_CHECKING
 
-from pyavd._utils import get, get_item
+from pyavd._utils import get
 
 from .utils import UtilsMixin
 
