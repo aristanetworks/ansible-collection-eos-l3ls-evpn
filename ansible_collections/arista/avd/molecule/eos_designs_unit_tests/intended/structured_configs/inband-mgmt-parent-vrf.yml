@@ -33,9 +33,6 @@ router_bgp:
       activate: true
     - name: EVPN-OVERLAY-PEERS
       activate: false
-  redistribute_routes:
-  - source_protocol: connected
-    route_map: RM-CONN-2-BGP
   neighbors:
   - ip_address: 172.16.255.2
     peer_group: IPv4-UNDERLAY-PEERS
@@ -45,7 +42,7 @@ router_bgp:
   - ip_address: 10.0.254.1
     peer_group: EVPN-OVERLAY-PEERS
     peer: inband-mgmt-spine1-ztp
-    description: inband-mgmt-spine1-ztp
+    description: inband-mgmt-spine1-ztp_Loopback0
     remote_as: '64999'
   address_family_evpn:
     peer_groups:
@@ -122,10 +119,11 @@ ethernet_interfaces:
   peer: inband-mgmt-spine1-ztp
   peer_interface: Ethernet2
   peer_type: spine
-  description: P2P_LINK_TO_INBAND-MGMT-SPINE1-ZTP_Ethernet2
+  description: P2P_inband-mgmt-spine1-ztp_Ethernet2
   shutdown: false
   mtu: 9214
-  type: routed
+  switchport:
+    enabled: false
   ip_address: 172.16.255.3/31
 - name: Ethernet21
   peer: inband-mgmt-subnet

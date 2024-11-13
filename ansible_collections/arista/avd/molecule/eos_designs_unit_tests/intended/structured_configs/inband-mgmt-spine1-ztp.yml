@@ -9,6 +9,10 @@ router_bgp:
   maximum_paths:
     paths: 4
     ecmp: 4
+  redistribute:
+    connected:
+      enabled: true
+      route_map: RM-CONN-2-BGP
   updates:
     wait_install: true
   peer_groups:
@@ -30,9 +34,6 @@ router_bgp:
       activate: true
     - name: EVPN-OVERLAY-PEERS
       activate: false
-  redistribute_routes:
-  - source_protocol: connected
-    route_map: RM-CONN-2-BGP
   neighbors:
   - ip_address: 172.16.255.1
     peer_group: IPv4-UNDERLAY-PEERS
@@ -47,12 +48,12 @@ router_bgp:
   - ip_address: 10.0.255.1
     peer_group: EVPN-OVERLAY-PEERS
     peer: inband-mgmt-parent
-    description: inband-mgmt-parent
+    description: inband-mgmt-parent_Loopback0
     remote_as: '65000'
   - ip_address: 10.0.255.2
     peer_group: EVPN-OVERLAY-PEERS
     peer: inband-mgmt-parent-vrf
-    description: inband-mgmt-parent-vrf
+    description: inband-mgmt-parent-vrf_Loopback0
     remote_as: '65001'
   address_family_evpn:
     peer_groups:
@@ -110,20 +111,22 @@ ethernet_interfaces:
   peer: inband-mgmt-parent
   peer_interface: Ethernet1
   peer_type: l3leaf
-  description: P2P_LINK_TO_INBAND-MGMT-PARENT_Ethernet1
+  description: P2P_inband-mgmt-parent_Ethernet1
   shutdown: false
   mtu: 9214
-  type: routed
+  switchport:
+    enabled: false
   ip_address: 172.16.255.0/31
   dhcp_server_ipv4: true
 - name: Ethernet2
   peer: inband-mgmt-parent-vrf
   peer_interface: Ethernet1
   peer_type: l3leaf
-  description: P2P_LINK_TO_INBAND-MGMT-PARENT-VRF_Ethernet1
+  description: P2P_inband-mgmt-parent-vrf_Ethernet1
   shutdown: false
   mtu: 9214
-  type: routed
+  switchport:
+    enabled: false
   ip_address: 172.16.255.2/31
   dhcp_server_ipv4: true
 loopback_interfaces:
