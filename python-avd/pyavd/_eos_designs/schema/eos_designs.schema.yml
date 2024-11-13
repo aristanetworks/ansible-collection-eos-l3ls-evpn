@@ -4535,6 +4535,11 @@ keys:
     description: 'Generate AVD configurations directly from a given CloudVision topology.
 
       See `cv_topology` for details.'
+  use_router_general_for_router_id:
+    type: bool
+    description: Use `router general` to set router ID for all routing protocols and
+      VRFs.
+    default: false
   vtep_loopback_description:
     documentation_options:
       table: overlay-settings
@@ -5654,6 +5659,10 @@ $defs:
         type: bool
         description: Set to false to disable interface state and LLDP topology validation
           performed by the `eos_validate_state` role.
+      validate_lldp:
+        type: bool
+        description: Set to false to disable the LLDP topology validation performed
+          by the `eos_validate_state` role.
       raw_eos_cli:
         type: str
         description: EOS CLI rendered directly on the ethernet interface in the final

@@ -3,6 +3,7 @@ system:
     tcp_mss:
       ipv4: 1344
       ipv6: 1366
+    ipv4_access_group_ingress_default: ingress_ipv4_acl
     ipv4_access_groups:
       - acl_name: "acl4_1"
       - acl_name: "acl4_2"
@@ -11,6 +12,7 @@ system:
         vrf: red_1
       - acl_name: "acl4_3"
         vrf: default
+    ipv6_access_group_ingress_default: ingress_ipv6_acl
     ipv6_access_groups:
       - acl_name: "acl6_1"
       - acl_name: "acl6_2"

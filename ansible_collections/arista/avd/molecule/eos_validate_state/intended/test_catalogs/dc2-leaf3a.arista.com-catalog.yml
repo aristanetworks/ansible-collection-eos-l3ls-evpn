@@ -54,13 +54,6 @@ anta.tests.configuration:
 anta.tests.connectivity:
 - VerifyLLDPNeighbors:
     neighbors:
-    - neighbor_device: dc2-leaf3b.arista.com
-      neighbor_port: Ethernet4
-      port: Ethernet4
-    result_overwrite:
-      custom_field: 'Local: Ethernet4 - Remote: dc2-leaf3b.arista.com Ethernet4'
-- VerifyLLDPNeighbors:
-    neighbors:
     - neighbor_device: dc2-spine1
       neighbor_port: Ethernet5
       port: Ethernet1
