@@ -527,17 +527,27 @@ queue-monitor length default threshold 100
 
 | IGMP Snooping | Fast Leave | Interface Restart Query | Proxy | Restart Query Interval | Robustness Variable |
 | ------------- | ---------- | ----------------------- | ----- | ---------------------- | ------------------- |
-| Enabled | False | - | False | - | - |
+| Disabled | False | - | False | - | - |
 
 | Querier Enabled | IP Address | Query Interval | Max Response Time | Last Member Query Interval | Last Member Query Count | Startup Query Interval | Startup Query Count | Version |
 | --------------- | ---------- | -------------- | ----------------- | -------------------------- | ----------------------- | ---------------------- | ------------------- | ------- |
 | False | - | - | - | - | - | - | - | - |
 
+##### IP IGMP Snooping Vlan Summary
+
+| Vlan | IGMP Snooping | Fast Leave | Max Groups | Proxy |
+| ---- | ------------- | ---------- | ---------- | ----- |
+| 20 | False | - | - | - |
+| 30 | False | - | - | - |
+
 #### IP IGMP Snooping Device Configuration
 
 ```eos
 !
+no ip igmp snooping
 no ip igmp snooping fast-leave
+no ip igmp snooping vlan 20
+no ip igmp snooping vlan 30
 no ip igmp snooping querier
 ```
 

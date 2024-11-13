@@ -1,0 +1,8 @@
+### IP SSH Client Source Interface ###
+
+ip_ssh_client_source_interfaces:
+  - vrf: default
+    name: Loopback0
+  - vrf: MGMT
+    name: manaGement0
+  - name: ethernet10

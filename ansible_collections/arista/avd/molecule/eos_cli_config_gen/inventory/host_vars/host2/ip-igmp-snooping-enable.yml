@@ -1,8 +1,0 @@
----
-### IGMP Snooping Enabled
-
-ip_igmp_snooping:
-  fast_leave: false
-  querier:
-    enabled: false
-  proxy: false
