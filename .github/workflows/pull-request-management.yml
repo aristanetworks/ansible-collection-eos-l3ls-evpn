@@ -11,6 +11,7 @@ env:
   # Set -vvv is ACTIONS_STEP_DEBUG is set
   # Apparently it is set in secrets when running with debug
   ANSIBLE_VERBOSITY: ${{ secrets.ACTIONS_STEP_DEBUG && 3 || 0 }}
+  AVD_NEVER_RUN_FROM_SOURCE: 1
 
 jobs:
   file-changes:
@@ -111,7 +112,7 @@ jobs:
           python-version: ${{ matrix.python_version }}
       - name: 'Install Python requirements'
         run: |
-          pip install -r ansible_collections/arista/avd/requirements-dev.txt  -r ansible_collections/arista/avd/requirements.txt --upgrade
+          pip install -r .github/requirements-ci.txt -r ansible_collections/arista/avd/requirements-dev.txt --upgrade
 
   # ----------------------------------- #
   # EOS CLI CONFIG GEN MOLECULE
@@ -432,7 +433,7 @@ jobs:
             3.13
       - name: 'Install Python & Ansible requirements'
         run: |
-          pip install -r ansible_collections/arista/avd/requirements-dev.txt -r ansible_collections/arista/avd/requirements.txt --upgrade
+          pip install -r .github/requirements-ci.txt -r ansible_collections/arista/avd/requirements-dev.txt --upgrade
           ansible-galaxy collection install -r ansible_collections/arista/avd/collections.yml
       - name: 'Run ansible-test integration test cases'
         run: |
