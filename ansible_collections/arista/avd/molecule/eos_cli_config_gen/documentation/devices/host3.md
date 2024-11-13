@@ -45,14 +45,21 @@ ASN Notation: asplain
 
 | BGP AS | Router ID |
 | ------ | --------- |
-| 65101 | 192.168.255.3 |
+| 65101.0001 | 192.168.255.3 |
+
+| BGP Tuning |
+| ---------- |
+| graceful-restart-helper long-lived |
+| bgp additional-paths send limit 5 |
 
 #### Router BGP Device Configuration
 
 ```eos
 !
-router bgp 65101
+router bgp 65101.0001
    router-id 192.168.255.3
+   graceful-restart-helper long-lived
+   bgp additional-paths send limit 5
    redistribute ospf include leaked route-map RM-OSPF-TO-BGP
    redistribute static
    !

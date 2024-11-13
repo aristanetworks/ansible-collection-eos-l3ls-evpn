@@ -1,6 +1,13 @@
 router_bgp:
-  as: 65101
+  as: "65101.0001"
   router_id: 192.168.255.3
+  graceful_restart_helper:
+    enabled: true
+    long_lived: true
+  bgp:
+    additional_paths:
+      send: limit
+      send_limit: 5
   redistribute:
     static:
       enabled: true

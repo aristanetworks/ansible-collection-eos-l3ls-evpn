@@ -333,7 +333,7 @@ router_bgp:
     neighbor_default:
       encapsulation: mpls
       next_hop_self_source_interface: Loopback0
-    neighbors:  
+    neighbors:
       - ip_address: 10.100.100.1
         activate: true
         default_route:
@@ -444,7 +444,7 @@ router_bgp:
       import_match_failure_action: discard
       import_ethernet_segment_ip_mass_withdraw: true
       export_ethernet_segment_ip_mass_withdraw: true
-      import_overlay_index_gateway: true      
+      import_overlay_index_gateway: true
     evpn_ethernet_segment:
       - domain: remote
         identifier: "0022:2222:2222:2222:2222"
@@ -611,11 +611,18 @@ router_bgp:
     peer_groups:
       - name: IPV6-UNDERLAY
         activate: true
+        additional_paths:
+          send: any
         route_map_in: RM-HIDE-AS-PATH
         route_map_out: RM-HIDE-AS-PATH
       - name: IPV6-UNDERLAY-MLAG
         activate: true
+        additional_paths:
+          send: disabled
       - name: TEST_RCF
+        additional_paths:
+          send: limit
+          send_limit: 11
         rcf_in: Address_Family_IPV6_In()
         rcf_out: Address_Family_IPV6_Out()
       - name: baz
@@ -632,14 +639,27 @@ router_bgp:
       - ip_address: 2001:db8::1
         prefix_list_in: PL-FOO-v6-IN
         prefix_list_out: PL-FOO-v6-OUT
+        route_map_in: Address_Family_IPV6_In
+        route_map_out: Address_Family_IPV6_Out
         additional_paths:
           receive: true
           send: ecmp
           send_limit: 20
           prefix_list: PL2
       - ip_address: 2001:db8::2
+        activate: true
+        additional_paths:
+          send: any
         rcf_in: Address_Family_IPV6_In()
         rcf_out: Address_Family_IPV6_Out()
+      - ip_address: 2001:db8::21
+        activate: false
+        additional_paths:
+          send: disabled
+      - ip_address: 2001:db8::22
+        additional_paths:
+          send: limit
+          send_limit: 5
     redistribute:
       ospfv3:
         enabled: true
@@ -683,8 +703,12 @@ router_bgp:
     neighbors:
       - ip_address: 10.1.1.1
         activate: true
+        route_map_in: IPV4-MULTICAST-RM-IN
+        route_map_out: IPV4-MULTICAST-RM-OUT
         additional_paths:
           receive: true
+      - ip_address: 10.1.1.2
+        activate: false
     peer_groups:
       - name: FOOBAR
         activate: true
@@ -692,8 +716,12 @@ router_bgp:
           receive: true
       - name: IPV4-UNDERLAY
         activate: true
+        route_map_in: IPV4-MULTICAST-RM-IN
+        route_map_out: IPV4-MULTICAST-RM-OUT
       - name: IPV4-UNDERLAY-MLAG
         activate: true
+      - name: IPV4-MULTICAST-INACTIVE
+        activate: false
     redistribute:
       attached_host:
         enabled: true
@@ -731,6 +759,7 @@ router_bgp:
         route_map: AFIPV4M_STATIC
   address_family_ipv4_labeled_unicast:
     update_wait_for_convergence: true
+    graceful_restart: true
     aigp_session:
       ebgp: true
       confederation: true
@@ -770,11 +799,11 @@ router_bgp:
         additional_paths:
           receive: true
           send: ecmp
+          send_limit: 11
         maximum_advertised_routes: 120000
         maximum_advertised_routes_warning_limit: 1000
         next_hop_self: true
         graceful_restart: true
-        maximum_advertised_routes: 0
         rcf_in: RCF_TEST(ARGS)
         rcf_out: RCF_TEST_OUT()
         next_hop_self_v4_mapped_v6_source_interface: Ethernet1
@@ -813,6 +842,7 @@ router_bgp:
           send_limit: 10
         next_hop_unchanged: true
         maximum_advertised_routes: 120000
+        maximum_advertised_routes_warning_limit: 1000
         missing_policy:
           direction_in:
             action: deny
@@ -876,7 +906,7 @@ router_bgp:
         activate: true
         additional_paths:
           receive: true
-          send: any
+          send: disabled
       - name: PATH-SELECTION-PG-2
         activate: true
         additional_paths:
@@ -891,7 +921,7 @@ router_bgp:
           send: ecmp
           send_limit: 42
       - name: PATH-SELECTION-PG-5
-        activate: true
+        activate: false
         additional_paths:
           send: limit
           send_limit: 42
@@ -904,7 +934,7 @@ router_bgp:
       - ip_address: 172.31.255.1
         activate: true
         additional_paths:
-          send: backup
+          send: disabled
       - ip_address: 172.31.255.2
         activate: true
         additional_paths:
@@ -915,7 +945,7 @@ router_bgp:
           send: ecmp
           send_limit: 42
       - ip_address: 172.31.255.4
-        activate: true
+        activate: false
         additional_paths:
           send: limit
           send_limit: 42
@@ -929,12 +959,23 @@ router_bgp:
         default_route_target:
           only: true
           encoding_origin_as_omit:
+      - name: RTC-INACTIVE-PEERS
+        activate: false
   address_family_ipv6_multicast:
+    networks:
+      - prefix: aa::1/126
+        route_map: IPv6_MULTICAST_RM
     bgp:
+      missing_policy:
+        direction_in_action: permit
+        direction_out_action: permit
       additional_paths:
         receive: true
     neighbors:
       - ip_address: aa::1
+        activate: true
+        route_map_in: IPv6_MULTICAST_RM_IN
+        route_map_out: IPv6_MULTICAST_RM_OUT
         additional_paths:
           receive: true
     peer_groups:
@@ -942,11 +983,14 @@ router_bgp:
         activate: false
         additional_paths:
           receive: true
+      - name: FOOBAR1
+        activate: true
     redistribute:
       connected:
         enabled: true
         route_map: RM-address_family_ipv6_multicast-Connected
       isis:
+        isis_level: level-1
         enabled: true
         include_leaked: true
         route_map: RM-address_family_ipv6_multicast-ISIS
@@ -979,22 +1023,30 @@ router_bgp:
         activate: true
         route_map_in: RM-SR-TE-PEER-IN4
         route_map_out: RM-SR-TE-PEER-OUT4
+      - name: SR-TE-PG-2
+        activate: false
     neighbors:
       - ip_address: 192.168.42.42
         activate: true
         route_map_in: RM-SR-TE-PEER-IN4
         route_map_out: RM-SR-TE-PEER-OUT4
+      - ip_address: 192.168.42.43
+        activate: false
   address_family_ipv6_sr_te:
     peer_groups:
       - name: SR-TE-PG-2
         activate: true
         route_map_in: RM-SR-TE-PEER-IN6
         route_map_out: RM-SR-TE-PEER-OUT6
+      - name: SR-TE-PG-3
+        activate: false
     neighbors:
       - ip_address: 2001:db8::dead:beef:cafe
         activate: true
         route_map_in: RM-SR-TE-PEER-IN6
         route_map_out: RM-SR-TE-PEER-OUT6
+      - ip_address: 2002:db8::dead:beef:cafe
+        activate: false
   address_family_vpn_ipv4:
     domain_identifier: "65000:0"
     route:
@@ -1002,17 +1054,31 @@ router_bgp:
     peer_groups:
       - name: MPLS-IBGP-PEERS
         activate: true
+        default_route:
+          enabled: true
+          route_map: RM-IBGP-PEER-IN4
         route_map_in: RM-IBGP-PEER-IN4
         route_map_out: RM-IBGP-PEER-OUT4
       - name: Test_RCF
+        activate: false
         rcf_in: Address_Family_VPN_IPV4_In()
         rcf_out: Address_Family_VPN_IPV4_Out()
+        default_route:
+          enabled: true
+          rcf: Address_Family_VPN_IPV4_In()
     neighbors:
       - ip_address: 192.168.255.4
         activate: true
+        default_route:
+          enabled: true
+          route_map: RM-NEIGHBOR-PEER-IN4
         route_map_in: RM-NEIGHBOR-PEER-IN4
         route_map_out: RM-NEIGHBOR-PEER-OUT4
       - ip_address: 192.168.255.5
+        activate: false
+        default_route:
+          enabled: true
+          rcf: Address_Family_VPN_IPV4_In()
         rcf_in: Address_Family_VPN_IPV4_In()
         rcf_out: Address_Family_VPN_IPV4_Out()
     neighbor_default_encapsulation_mpls_next_hop_self:
@@ -1024,17 +1090,31 @@ router_bgp:
     peer_groups:
       - name: MPLS-IBGP-PEERS
         activate: true
+        default_route:
+          enabled: true
+          route_map: RM-IBGP-PEER-OUT6
         route_map_in: RM-IBGP-PEER-IN6
         route_map_out: RM-IBGP-PEER-OUT6
       - name: Test_RCF
+        activate: false
+        default_route:
+          enabled: true
+          rcf: Address_Family_VPN_IPV6_Out()
         rcf_in: Address_Family_VPN_IPV6_In()
         rcf_out: Address_Family_VPN_IPV6_Out()
     neighbors:
       - ip_address: 2001:cafe:192:168::4
         activate: true
+        default_route:
+          enabled: true
+          route_map: RM-NEIGHBOR-PEER-IN6
         route_map_in: RM-NEIGHBOR-PEER-IN6
         route_map_out: RM-NEIGHBOR-PEER-OUT6
       - ip_address: 2001:cafe:192:168::5
+        activate: false
+        default_route:
+          enabled: true
+          rcf: Address_Family_VPN_IPV6_In()
         rcf_in: Address_Family_VPN_IPV6_In()
         rcf_out: Address_Family_VPN_IPV6_Out()
     neighbor_default_encapsulation_mpls_next_hop_self:
@@ -1151,11 +1231,16 @@ router_bgp:
       allowas_in:
         enabled: true
         times: 5
+      rib_in_pre_policy_retain:
+        enabled: true
+        all: true
       shared_secret:
         profile: profile1
         hash_algorithm: aes-128-cmac-96
     - ip_address: 192.168.255.21
       peer_group: EVPN-OVERLAY-PEERS
+      rib_in_pre_policy_retain:
+        enabled: false
       missing_policy:
         direction_out:
           action: deny-in-out
@@ -1749,12 +1834,17 @@ router_bgp:
           route_map: RM_VRF_HOST
 
     - name: VRF03
+      bgp:
+        additional_paths:
+          send: ecmp
+          send_limit: 4
       maximum_paths:
         paths: 10
         ecmp: 10
       address_family_ipv4:
         bgp:
           additional_paths:
+            install_ecmp_primary: true
             send: ecmp
       redistribute:
         dynamic:
@@ -1762,9 +1852,15 @@ router_bgp:
           rcf: VRF_RCF_DYNAMIC()
     - name: BLUE-C1
       rd: 1.0.1.1:101
+      bgp:
+        additional_paths:
+          send: disabled
       neighbors:
         - ip_address: 10.1.1.0
           peer_group: OBS_WAN
+          as_path:
+            prepend_own_disabled: true
+          route_reflector_client: false
         - ip_address: 10.255.1.1
           peer_group: WELCOME_ROUTERS
           route_reflector_client: true
@@ -1808,6 +1904,7 @@ router_bgp:
       redistribute:
         static:
           enabled: true
+          rcf: VRF-STATIC-RCF()
         ospf:
           enabled: true
           include_leaked: true
@@ -1817,11 +1914,12 @@ router_bgp:
           summary_only: true
           attribute_map: RM-BGP-AGG-APPLY-SET
           advertise_only: false
+          match_map: VRF-MATCH-MAP
         - prefix: 0.0.0.0/0
           as_set: true
           summary_only: true
           attribute_map: RM-BGP-AGG-APPLY-SET
-          advertise_only: false
+          advertise_only: true
       eos_cli: |
         comment
         Comment created from eos_cli under router_bgp.vrfs.BLUE-C1
@@ -1831,6 +1929,8 @@ router_bgp:
       neighbors:
         - ip_address: 10.1.1.0
           peer_group: OBS_WAN
+          remove_private_as:
+            enabled: false
       address_family_ipv4:
         neighbors:
           - ip_address: 10.1.1.0
@@ -1864,6 +1964,8 @@ router_bgp:
       neighbors:
         - ip_address: 10.1.1.0
           peer_group: OBS_WAN
+          remove_private_as_ingress:
+            enabled: false
 ## Tenant_A ##
     - name: Tenant_A
       rd: "10.50.64.15:30001"
@@ -1879,11 +1981,22 @@ router_bgp:
             rcf: RT_IMPORT_AF_RCF()
             route_map: RT_IMPORT_AF_RM
             vpn_route_filter_rcf: RT_IMPORT_AF_RCF_FILTER()
+          - address_family: vpn-ipv6
+            route_targets:
+              - "1:30011"
+            rcf: RT_IMPORT_AF_RCF()
+            route_map: RT_IMPORT_AF_RM
         export:
           - address_family: evpn
             route_targets:
               - "1:30001"
             rcf: RT_EXPORT_AF_RCF()
+          - address_family: vpn-ipv6
+            route_targets:
+              - "1:30011"
+            rcf: RT_IMPORT_AF_RCF()
+            route_map: RT_IMPORT_AF_RM
+            vpn_route_filter_rcf: RT_IMPORT_AF_RCF_FILTER()
       redistribute:
         ospf:
           match_external:
@@ -1915,8 +2028,11 @@ router_bgp:
       updates:
         wait_for_convergence: true
         wait_install: true
+      bgp:
+        redistribute_internal: true
       networks:
         - prefix: 10.0.0.0/8
+          route_map: VRF-RM
         - prefix: 100.64.0.0/10
       route_targets:
         import:
@@ -1930,6 +2046,9 @@ router_bgp:
       neighbors:
         - ip_address: 10.255.251.1
           peer_group: MLAG-IPv4-UNDERLAY-PEER
+          remove_private_as_ingress:
+            enabled: true
+            replace_as: true
         - ip_address: 10.2.3.4
           remote_as: 1234
           local_as: 123
@@ -1937,9 +2056,12 @@ router_bgp:
           remove_private_as:
             enabled: true
             all: true
+            replace_as: true
           ebgp_multihop: 3
           send_community: all
           maximum_routes: 0
+          maximum_routes_warning_limit: 100
+          maximum_routes_warning_only: true
           default_originate:
             always: true
             route_map: RM-10.2.3.4-SET-NEXT-HOP-OUT

@@ -300,6 +300,15 @@ ASN Notation: asplain
 | L3 Gateway Configured | True |
 | L3 Gateway Inter-domain | True |
 
+#### Router BGP IPv4 Labeled Unicast
+
+##### General Settings
+
+| Settings | Value |
+| -------- | ----- |
+
+#### Router BGP Path-Selection Address Family
+
 #### Router BGP Device Configuration
 
 ```eos
@@ -332,6 +341,7 @@ router bgp 65101
    address-family ipv4
       bgp additional-paths install ecmp-primary
       no bgp additional-paths send
+      bgp redistribute-internal
       redistribute bgp leaked route-map RM_BGP_EVPN_IPV4
       redistribute connected route-map RM_BGP_EVPN_IPV4
       redistribute dynamic rcf RCF_BGP_EVPN_IPV4()
@@ -342,11 +352,17 @@ router bgp 65101
       redistribute ospf match nssa-external 1 include leaked route-map RM_BGP_EVPN_IPV4
       redistribute static include leaked route-map RM_BGP_EVPN_IPV4
    !
+   address-family ipv4 labeled-unicast
+      bgp additional-paths send any
+   !
    address-family ipv4 multicast
       redistribute ospfv3 route-map AFIPV4M_OSPFV3
       redistribute ospf match external route-map AFIPV4M_OSPF_EXTERNAL
    !
    address-family ipv6
+      bgp additional-paths install
+      bgp additional-paths send ecmp limit 8
+      no bgp redistribute-internal
       redistribute attached-host route-map RM-Address_Family_IPV6_Attached-Host
       redistribute dhcp route-map RM-Address_Family_IPV6_DHCP
       redistribute connected route-map RM-Address_Family_IPV6_Connected
@@ -360,7 +376,11 @@ router bgp 65101
    !
    address-family ipv6 multicast
       redistribute isis rcf Router_BGP_Isis()
-      redistribute ospf match internal
+      redistribute ospf match internal route-map RM-address_family_ipv6_multicast-OSPF
+      redistribute ospfv3 match internal route-map RM-address_family_ipv6_multicast-OSPFv3
+   !
+   address-family path-selection
+      no bgp additional-paths send
 ```
 
 ## Multicast

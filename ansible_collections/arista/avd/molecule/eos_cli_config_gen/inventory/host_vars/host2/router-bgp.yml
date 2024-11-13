@@ -14,7 +14,6 @@ router_bgp:
     enabled: true
   graceful_restart_helper:
     enabled: false
-    long_lived: true
   redistribute:
     dynamic:
       enabled: true
@@ -64,6 +63,7 @@ router_bgp:
         activate: false
   address_family_ipv4:
     bgp:
+      redistribute_internal: true
       additional_paths:
         install_ecmp_primary: true
         send: disabled
@@ -105,6 +105,12 @@ router_bgp:
         include_leaked: true
         route_map: RM_BGP_EVPN_IPV4
   address_family_ipv6:
+    bgp:
+      redistribute_internal: false
+      additional_paths:
+        install: true
+        send: ecmp
+        send_limit: 8
     redistribute:
       attached_host:
         enabled: true
@@ -156,6 +162,19 @@ router_bgp:
       ospf:
         match_internal:
           enabled: true
+          route_map:  RM-address_family_ipv6_multicast-OSPF
       isis:
         enabled: true
         rcf: Router_BGP_Isis()
+      ospfv3:
+        match_internal:
+          enabled: true
+          route_map:  RM-address_family_ipv6_multicast-OSPFv3
+  address_family_ipv4_labeled_unicast:
+    bgp:
+      additional_paths:
+        send: any
+  address_family_path_selection:
+    bgp:
+      additional_paths:
+        send: disabled
