@@ -1,0 +1,67 @@
+---
+### 802.1x Global ###
+dot1x:
+  system_auth_control: true
+  protocol_lldp_bypass: true
+  dynamic_authorization: true
+  mac_based_authentication:
+    delay: 300
+    hold_period: 300
+  radius_av_pair:
+    service_type: true
+    framed_mtu: 1500
+    lldp:
+      system_name:
+        enabled: true
+        auth_only: true
+      system_description:
+        enabled: true
+        auth_only: true
+    dhcp:
+      hostname:
+        enabled: true
+        auth_only: true
+      parameter_request_list:
+        enabled: true
+        auth_only: true
+      vendor_class_id:
+        enabled: true
+        auth_only: true
+  aaa:
+    unresponsive:
+      eap_response: success
+      action:
+        traffic_allow_vlan: 10
+      phone_action:
+        apply_cached_results: true
+        cached_results_timeout:
+          time_duration: 10
+          time_duration_unit: hours
+        traffic_allow: true
+        apply_alternate: true
+      recovery_action_reauthenticate: true
+    accounting_update_interval: 6
+  radius_av_pair_username_format:
+    delimiter: colon
+    mac_string_case: lowercase
+  captive_portal:
+    enabled: true
+    url: http://portal-nacm08/captiveredirect/
+    ssl_profile: Profile1
+    start_limit_infinite: true
+    access_list_ipv4: ACL
+  supplicant:
+    profiles:
+      - name: Profile1
+        eap_method: tls
+        identity: user_id1
+        passphrase_type: 0
+        passphrase: 1048080A02
+        ssl_profile: PF1
+      - name: Profile2
+        identity: user_id2
+        passphrase: 1048080A01
+      - name: Profile3
+        ssl_profile: PF2
+    logging: true
+    disconnect_cached_results_timeout: 79

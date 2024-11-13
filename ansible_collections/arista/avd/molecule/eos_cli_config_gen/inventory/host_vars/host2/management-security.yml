@@ -1,0 +1,5 @@
+---
+## Management Security
+management_security:
+  password:
+    encryption_reversible: aes-256-gcm

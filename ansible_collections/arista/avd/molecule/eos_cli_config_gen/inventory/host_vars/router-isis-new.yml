@@ -17,6 +17,10 @@ router_isis:
   timers:
     local_convergence:
       protected_prefixes: true
+    lsp:
+      generation:
+        interval: 30
+        initial_wait_time: 40
   advertise:
     passive_only: true
   redistribute_routes:

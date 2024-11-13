@@ -9,5 +9,6 @@ dynamic_keys:
   "custom_node_type_keys.key":
     $ref: "eos_designs#/$defs/node_type"
     type: dict
+    display_name: Custom Node Types
     documentation_options:
       hide_keys: true

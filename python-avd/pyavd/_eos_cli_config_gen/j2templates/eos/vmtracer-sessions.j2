@@ -19,6 +19,9 @@ vmtracer session {{ session.name }}
 {%     if session.autovlan_disable is arista.avd.defined(true) %}
    autovlan disable
 {%     endif %}
+{%     if session.vrf is arista.avd.defined %}
+   vrf {{ session.vrf }}
+{%     endif %}
 {%     if session.source_interface is arista.avd.defined %}
    source-interface {{ session.source_interface }}
 {%     endif %}

@@ -1226,10 +1226,10 @@ router_ospf:
   - id: 16
     vrf: Tenant_A_OSPF
     passive_interface_default: true
-    router_id: 192.168.255.10
     no_passive_interfaces:
     - Ethernet22
     - Ethernet23
+    router_id: 192.168.255.10
     redistribute:
       bgp:
         enabled: true

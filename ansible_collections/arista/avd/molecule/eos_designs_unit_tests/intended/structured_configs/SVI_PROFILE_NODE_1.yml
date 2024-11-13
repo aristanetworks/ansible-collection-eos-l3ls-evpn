@@ -472,12 +472,12 @@ router_ospf:
   - id: 1
     vrf: svi_profile_tests_vrf
     passive_interface_default: true
-    router_id: 192.168.255.1
     no_passive_interfaces:
     - Vlan510
     - Vlan511
     - Vlan512
     max_lsa: 15000
+    router_id: 192.168.255.1
     redistribute:
       bgp:
         enabled: true

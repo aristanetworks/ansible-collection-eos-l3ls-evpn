@@ -1,0 +1,13 @@
+---
+### Interface profiles
+
+interface_profiles:
+  - name: TEST-PROFILE-1
+    commands:
+      - description Molecule
+      - no switchport
+      - no lldp transmit
+  - name: TEST-PROFILE-2
+    commands:
+      - mtu 9214
+      - ptp enable

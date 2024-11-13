@@ -1,0 +1,11 @@
+---
+### DPS interface ###
+
+dps_interfaces:
+  - name: Dps1
+    description: Test DPS Interface
+    shutdown: false
+    mtu: 666
+    ip_address: 192.168.42.42/24
+    flow_tracker:
+      sampled: FT-S

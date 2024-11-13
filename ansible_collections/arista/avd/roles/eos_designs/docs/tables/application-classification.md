@@ -16,11 +16,11 @@
     | [<samp>&nbsp;&nbsp;field_sets</samp>](## "application_classification.field_sets") | Dictionary |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;l4_ports</samp>](## "application_classification.field_sets.l4_ports") | List, items: Dictionary |  |  |  | L4 port field-set. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;name</samp>](## "application_classification.field_sets.l4_ports.[].name") | String | Required, Unique |  |  | L4 port field-set name. |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;port_values</samp>](## "application_classification.field_sets.l4_ports.[].port_values") | List, items: String |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;port_values</samp>](## "application_classification.field_sets.l4_ports.[].port_values") | List, items: String |  |  | Min Length: 1 |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;&lt;str&gt;</samp>](## "application_classification.field_sets.l4_ports.[].port_values.[]") | String |  |  |  | Port values or range of port values.<br>Port values are between 0 and 65535. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;ipv4_prefixes</samp>](## "application_classification.field_sets.ipv4_prefixes") | List, items: Dictionary |  |  |  | IPv4 prefix field set. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;name</samp>](## "application_classification.field_sets.ipv4_prefixes.[].name") | String | Required, Unique |  |  | IPv4 prefix field-set name. |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;prefix_values</samp>](## "application_classification.field_sets.ipv4_prefixes.[].prefix_values") | List, items: String |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;prefix_values</samp>](## "application_classification.field_sets.ipv4_prefixes.[].prefix_values") | List, items: String |  |  | Min Length: 1 |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;&lt;str&gt;</samp>](## "application_classification.field_sets.ipv4_prefixes.[].prefix_values.[]") | String |  |  |  | IP prefix (ex 1.2.3.0/24). |
     | [<samp>&nbsp;&nbsp;applications</samp>](## "application_classification.applications") | Dictionary |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;ipv4_applications</samp>](## "application_classification.applications.ipv4_applications") | List, items: Dictionary |  |  |  | List of user defined IPv4 applications. The name should be unique over all defined applications (ipv4 and l4). |
@@ -48,7 +48,7 @@
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;udp_dest_port_set_name</samp>](## "application_classification.applications.l4_applications.[].udp_dest_port_set_name") | String |  |  |  | Name of field set for UDP destination ports.<br>When the `protocols` list contain both `tcp` and `udp`, this key value<br>must be the same as `tcp_dest_port_set_name`. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;tcp_dest_port_set_name</samp>](## "application_classification.applications.l4_applications.[].tcp_dest_port_set_name") | String |  |  |  | Name of field set for TCP destination ports.<br>When the `protocols` list contain both `tcp` and `udp`, this key value<br>must be the same as `udp_dest_port_set_name`. |
     | [<samp>&nbsp;&nbsp;application_profiles</samp>](## "application_classification.application_profiles") | List, items: Dictionary |  |  |  | Group of applications. |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;name</samp>](## "application_classification.application_profiles.[].name") | String |  |  |  | Application Profile name. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;name</samp>](## "application_classification.application_profiles.[].name") | String | Required, Unique |  |  | Application Profile name. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;applications</samp>](## "application_classification.application_profiles.[].applications") | List, items: Dictionary |  |  |  | List of applications part of the application profile. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;name</samp>](## "application_classification.application_profiles.[].applications.[].name") | String |  |  |  | Application Name. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;service</samp>](## "application_classification.application_profiles.[].applications.[].service") | String |  |  | Valid Values:<br>- <code>audio-video</code><br>- <code>chat</code><br>- <code>default</code><br>- <code>file-transfer</code><br>- <code>networking-protocols</code><br>- <code>peer-to-peer</code><br>- <code>software-update</code> | Service Name.<br>Specific service to target for this application.<br>If no service is specified, all supported services of the application are matched.<br>Not all valid values are valid for all applications, check on EOS CLI. |
@@ -88,7 +88,7 @@
 
             # L4 port field-set name.
           - name: <str; required; unique>
-            port_values:
+            port_values: # >=1 items
 
                 # Port values or range of port values.
                 # Port values are between 0 and 65535.
@@ -99,7 +99,7 @@
 
             # IPv4 prefix field-set name.
           - name: <str; required; unique>
-            prefix_values:
+            prefix_values: # >=1 items
 
                 # IP prefix (ex 1.2.3.0/24).
               - <str>
@@ -206,7 +206,7 @@
       application_profiles:
 
           # Application Profile name.
-        - name: <str>
+        - name: <str; required; unique>
 
           # List of applications part of the application profile.
           applications:

@@ -569,9 +569,9 @@ router_ospf:
   - id: 9
     vrf: Tenant_A_OP_Zone
     passive_interface_default: true
-    router_id: 192.168.42.42
     no_passive_interfaces:
     - Vlan113
+    router_id: 192.168.42.42
     redistribute:
       bgp:
         enabled: true

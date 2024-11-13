@@ -1,0 +1,9 @@
+---
+## Tacacs+ Servers
+tacacs_servers:
+  hosts:
+    - host: 10.10.10.158
+      vrf: default
+      # Testing of play_vars in eos_cli_config_gen
+      key: "{{ tacacs_key_set_as_play_var }}"
+      key_type: 7

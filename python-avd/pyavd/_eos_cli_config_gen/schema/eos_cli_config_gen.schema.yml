@@ -493,6 +493,7 @@ keys:
                   description: L4 port field-set name.
                 port_values:
                   type: list
+                  min_length: 1
                   items:
                     type: str
                     convert_types:
@@ -512,6 +513,7 @@ keys:
                   description: IPv4 prefix field-set name.
                 prefix_values:
                   type: list
+                  min_length: 1
                   items:
                     type: str
                     description: IP prefix (ex 1.2.3.0/24).
@@ -567,6 +569,7 @@ keys:
                   description: Application name.
       application_profiles:
         type: list
+        primary_key: name
         description: Group of applications.
         items:
           type: dict
@@ -1589,6 +1592,57 @@ keys:
             max: 9236
             convert_types:
             - str
+          lldp:
+            type: dict
+            keys:
+              system_name:
+                description: LLDP system name (LLDP TLV 5) av-pair.
+                type: dict
+                keys:
+                  enabled:
+                    type: bool
+                    required: true
+                  auth_only:
+                    type: bool
+              system_description:
+                description: LLDP system description (LLDP TLV 6) av-pair.
+                type: dict
+                keys:
+                  enabled:
+                    type: bool
+                    required: true
+                  auth_only:
+                    type: bool
+          dhcp:
+            type: dict
+            keys:
+              hostname:
+                description: Hostname (DHCP Option 12).
+                type: dict
+                keys:
+                  enabled:
+                    type: bool
+                    required: true
+                  auth_only:
+                    type: bool
+              parameter_request_list:
+                description: Parameters requested by host (DHCP Option 55).
+                type: dict
+                keys:
+                  enabled:
+                    type: bool
+                    required: true
+                  auth_only:
+                    type: bool
+              vendor_class_id:
+                description: Vendor class identifier (DHCP Option 60).
+                type: dict
+                keys:
+                  enabled:
+                    type: bool
+                    required: true
+                  auth_only:
+                    type: bool
       aaa:
         type: dict
         description: Configure AAA parameters.
@@ -1718,7 +1772,7 @@ keys:
             type: str
           start_limit_infinite:
             type: bool
-            description: Set captive-portal start limit to infinte.
+            description: Set captive-portal start limit to infinite.
           access_list_ipv4:
             type: str
             description: Standard access-list name.
@@ -2087,6 +2141,19 @@ keys:
             forwarding_profile:
               type: str
               description: L2 protocol forwarding profile.
+        mac_timestamp:
+          type: str
+          valid_values:
+          - before-fcs
+          - replace-fcs
+          - header
+          description: 'header: Insert timestamp in ethernet header. Supported on
+            platforms like 7500E/R and 7280E/R.
+
+            before-fcs: Insert timestamp before fcs field. Supported on platforms
+            like 7150.
+
+            replace-fcs: Replace fcs field with timestamp.'
         trunk_groups:
           type: list
           items:
@@ -2101,7 +2168,7 @@ keys:
           deprecation:
             warning: true
             remove_in_version: 6.0.0
-            url: https://avd.arista.com/stable/docs/release-notes/5.x.x.html#removal-of-type-key-dependency-for-rendering-ethernetport-channel-interfaces-configuration-and-documentation
+            url: https://avd.arista.com/5.x/docs/porting-guides/5.x.x.html#removal-of-type-key-dependency-for-rendering-ethernetport-channel-interfaces-configuration-and-documentation
           valid_values:
           - routed
           - switched
@@ -2172,6 +2239,20 @@ keys:
                 valid_values:
                 - upstream
                 - downstream
+        link_tracking:
+          type: dict
+          keys:
+            direction:
+              type: str
+              valid_values:
+              - upstream
+              - downstream
+            groups:
+              type: list
+              description: Link state group(s) an interface belongs to.
+              items:
+                type: str
+                description: Group names.
         evpn_ethernet_segment:
           type: dict
           keys:
@@ -3019,6 +3100,7 @@ keys:
                 default: both
         dot1x:
           type: dict
+          description: 802.1x
           keys:
             port_control:
               type: str
@@ -3686,8 +3768,12 @@ keys:
                     description: Virtual IPv6 address.
         validate_state:
           type: bool
-          description: Set to false to disable interface validation by the `eos_validate_state`
-            role.
+          description: Set to false to disable interface state and LLDP topology validation
+            performed by the `eos_validate_state` role.
+        validate_lldp:
+          type: bool
+          description: Set to false to disable the LLDP topology validation performed
+            by the `eos_validate_state` role.
         switchport:
           type: dict
           description: This should not be combined with `ethernet_interfaces[].type
@@ -4438,7 +4524,7 @@ keys:
     deprecation:
       warning: true
       remove_in_version: 6.0.0
-      url: https://avd.arista.com/devel/docs/porting-guides/5.x.x.html#default-eos-configuration-is-no-longer-automatically-generated
+      url: https://avd.arista.com/5.x/docs/porting-guides/5.x.x.html#default-eos-configuration-is-no-longer-automatically-generated
   generate_device_documentation:
     type: bool
     documentation_options:
@@ -4720,6 +4806,7 @@ keys:
                 default: eq
               source_ports:
                 type: list
+                min_length: 1
                 items:
                   type: str
                   convert_types:
@@ -4743,6 +4830,7 @@ keys:
                 default: eq
               destination_ports:
                 type: list
+                min_length: 1
                 items:
                   type: str
                   convert_types:
@@ -5457,6 +5545,15 @@ keys:
               - 21
               - 24
               description: Diffie-Hellman group for the key exchange.
+            integrity:
+              type: str
+              valid_values:
+              - md5
+              - sha1
+              - sha256
+              - sha384
+              - sha512
+              description: Integrity algorithm.
       sa_policies:
         type: list
         description: Security Association policies.
@@ -6321,7 +6418,7 @@ keys:
               type: str
               convert_types:
               - int
-              description: 'Severity of facility. Below are the supported severites.
+              description: 'Severity of facility. Below are the supported severities.
 
                 emergencies    System is unusable                (severity=0)
 
@@ -7772,6 +7869,37 @@ keys:
                       preference:
                         type: str
                         required: true
+                      endpoint:
+                        type: dict
+                        required: true
+                        keys:
+                          ip_address:
+                            type: str
+                            required: true
+                          datacenter:
+                            type: str
+                            required: true
+                          city:
+                            type: str
+                            required: true
+                          country:
+                            type: str
+                            required: true
+                          region:
+                            type: str
+                            required: true
+                          latitude:
+                            type: str
+                            convert_types:
+                            - float
+                            - int
+                            required: true
+                          longitude:
+                            type: str
+                            convert_types:
+                            - float
+                            - int
+                            required: true
           applications:
             type: dict
             keys:
@@ -8278,7 +8406,7 @@ keys:
                   mask:
                     type: str
                     description: 16 bit hexadecimal mask for TCP/UDP or IP ID with
-                      atmost 2 unset bits.
+                      at most 2 unset bits.
       marker_vxlan:
         type: dict
         keys:
@@ -8351,22 +8479,23 @@ keys:
                           - udp
                         source_ports:
                           type: list
+                          min_length: 1
                           description: "A list of port numbers or port range or port
                             name. Combination of port numbers or range and port name
                             is not supported on EOS. The port numbers should be in
-                            range of 0-65535.\ne.g.\n  [ \"12\", \"14-20\" ]\n  [
-                            \"www\" ]"
+                            range of 0-65535.\ne.g.\n  [\"12\", \"14-20\"]\n  [\"www\"]"
                           items:
                             type: str
                             convert_types:
                             - int
                         destination_ports:
                           type: list
+                          min_length: 1
                           description: "A list of port numbers or port range or port
                             name. Combination of port numbers or range and port name
                             is not supported on EOS. The port numbers should be in
-                            range of 0-65535.\ne.g.\n  [ \"12\", \"14-20\", \"80\"
-                            ]\n  [ \"https\" ]"
+                            range of 0-65535.\ne.g.\n  [\"12\", \"14-20\", \"80\"]\n
+                            \ [\"https\"]"
                           items:
                             type: str
                             convert_types:
@@ -9062,6 +9191,9 @@ keys:
           type: str
         description:
           type: str
+        profile:
+          type: str
+          description: Interface profile.
         logging:
           type: dict
           keys:
@@ -9120,7 +9252,7 @@ keys:
           deprecation:
             warning: true
             remove_in_version: 6.0.0
-            url: https://avd.arista.com/stable/docs/release-notes/5.x.x.html#removal-of-type-key-dependency-for-rendering-ethernetport-channel-interfaces-configuration-and-documentation
+            url: https://avd.arista.com/5.x/docs/porting-guides/5.x.x.html#removal-of-type-key-dependency-for-rendering-ethernetport-channel-interfaces-configuration-and-documentation
           valid_values:
           - routed
           - switched
@@ -9359,7 +9491,6 @@ keys:
             new_key: switchport.trunk.native_vlan
         native_vlan_tag:
           type: bool
-          default: false
           description: If setting both native_vlan and native_vlan_tag, native_vlan_tag
             takes precedence.
           deprecation:
@@ -9381,6 +9512,20 @@ keys:
                 valid_values:
                 - upstream
                 - downstream
+        link_tracking:
+          type: dict
+          keys:
+            direction:
+              type: str
+              valid_values:
+              - upstream
+              - downstream
+            groups:
+              type: list
+              description: Link state group(s) an interface belongs to.
+              items:
+                type: str
+                description: Group names.
         phone:
           type: dict
           deprecation:
@@ -9435,10 +9580,9 @@ keys:
             new_key: switchport.trunk.groups
         lacp_fallback_timeout:
           type: int
-          description: Timeout in seconds.
+          description: Timeout in seconds. EOS default is 90 seconds.
           convert_types:
           - str
-          default: 90
           min: 0
           max: 300
         lacp_fallback_mode:
@@ -10441,8 +10585,12 @@ keys:
                         - str
         validate_state:
           type: bool
-          description: Set to false to disable interface validation by the `eos_validate_state`
-            role.
+          description: Set to false to disable interface state and LLDP topology validation
+            performed by the `eos_validate_state` role.
+        validate_lldp:
+          type: bool
+          description: Set to false to disable the LLDP topology validation performed
+            by the `eos_validate_state` role.
         eos_cli:
           type: str
           description: Multiline EOS CLI rendered directly on the port-channel interface
@@ -11363,6 +11511,13 @@ keys:
             type: str
             description: Specify the format of the NAS-Identifier. If 'hostname' is
               set, this is ignored.
+      deadtime:
+        description: Time to skip a non-responsive server in minutes.
+        type: int
+        convert_types:
+        - str
+        min: 1
+        max: 1000
       dynamic_authorization:
         type: dict
         keys:
@@ -13066,6 +13221,8 @@ keys:
         keys:
           domain_identifier:
             type: str
+          domain_identifier_remote:
+            type: str
           neighbor_default:
             type: dict
             keys:
@@ -13077,7 +13234,8 @@ keys:
                 - path-selection
                 description: Transport encapsulation for neighbor.
               next_hop_self_source_interface:
-                description: Source interface name.
+                description: Source interface name for MPLS encapsulation. Requires
+                  `encapsulation` to be set as `mpls`.
                 type: str
               next_hop_self_received_evpn_routes:
                 type: dict
@@ -13118,6 +13276,12 @@ keys:
                   type: str
                 activate:
                   type: bool
+                route_map_in:
+                  type: str
+                  description: Inbound route-map name.
+                route_map_out:
+                  type: str
+                  description: Outbound route-map name.
                 rcf_in:
                   type: str
                   description: 'Inbound RCF function name with parenthesis.
@@ -13150,6 +13314,10 @@ keys:
                   - mpls
                   - path-selection
                   description: Transport encapsulation for the neighbor.
+                next_hop_self_source_interface:
+                  type: str
+                  description: Source interface name for MPLS encapsulation. Requires
+                    `encapsulation` to be set as `mpls`.
           peer_groups:
             type: list
             primary_key: name
@@ -13268,6 +13436,24 @@ keys:
                 - str
                 min: 0
                 max: 300
+          evpn_ethernet_segment:
+            type: list
+            primary_key: domain
+            items:
+              type: dict
+              keys:
+                domain:
+                  type: str
+                  valid_values:
+                  - all
+                  - local
+                  - remote
+                identifier:
+                  type: str
+                  description: EVPN Ethernet Segment Identifier (Type 1 format).
+                route_target_import:
+                  type: str
+                  description: Low-order 6 bytes of ES-Import Route Target.
           bgp_additional_paths:
             type: dict
             deprecation:
@@ -15644,6 +15830,22 @@ keys:
                     description: IPv4 prefix "A.B.C.D/E" or IPv6 prefix "A:B:C:D:E:F:G:H/I".
                   route_map:
                     type: str
+            maximum_paths:
+              type: dict
+              keys:
+                paths:
+                  type: int
+                  required: true
+                  convert_types:
+                  - str
+                  min: 1
+                  max: 600
+                ecmp:
+                  type: int
+                  convert_types:
+                  - str
+                  min: 1
+                  max: 600
             updates:
               type: dict
               keys:
@@ -17730,6 +17932,76 @@ keys:
                 - str
                 default: 10000
                 description: Delay in milliseconds.
+          lsp:
+            description: Link State Packet timers.
+            type: dict
+            keys:
+              generation:
+                type: dict
+                keys:
+                  interval:
+                    type: int
+                    convert_types:
+                    - str
+                    min: 1
+                    max: 300
+                    required: true
+                    description: Maximum interval (in seconds) between generating
+                      two LSPs.
+                  initial_wait_time:
+                    type: int
+                    convert_types:
+                    - str
+                    min: 1
+                    max: 300000
+                    description: Initial wait time (in milliseconds) before generating
+                      LSPs.
+                  wait_time:
+                    type: int
+                    convert_types:
+                    - str
+                    min: 1
+                    max: 300000
+                    description: Wait time (in milliseconds) between generating the
+                      first and second LSPs.
+              out_delay:
+                type: int
+                convert_types:
+                - str
+                min: 1
+                max: 65000
+                description: Transmit delay (in milliseconds) for link state packets.
+              refresh_interval:
+                type: int
+                convert_types:
+                - str
+                min: 30
+                max: 65535
+                description: Interval (in seconds) between two LSP refreshes.
+              min_remaining_lifetime:
+                type: int
+                convert_types:
+                - str
+                min: 60
+                max: 65535
+                description: Minimum remaining lifetime for LSPs (in seconds).
+          csnp:
+            type: dict
+            description: CSN Packet timers.
+            keys:
+              generation:
+                type: dict
+                keys:
+                  interval:
+                    type: int
+                    convert_types:
+                    - str
+                    min: 1
+                    max: 300
+                    description: Transmit frequency (in seconds) for CSN packets.
+                  p2p_disabled:
+                    type: bool
+                    description: Disable periodic CSN packets for P2P links.
       set_overload_bit:
         type: dict
         keys:
@@ -18717,6 +18989,22 @@ keys:
                           - str
                           min: 1
                           max: 16777215
+            graceful_restart:
+              type: dict
+              keys:
+                enabled:
+                  type: bool
+                  required: true
+                grace_period:
+                  type: int
+                  convert_types:
+                  - str
+                  min: 1
+                  max: 1800
+                  description: Specify maximum time in seconds to wait for graceful-restart
+                    to complete.
+            graceful_restart_helper:
+              type: bool
             mpls_ldp_sync_default:
               type: bool
             eos_cli:
@@ -20148,6 +20436,9 @@ keys:
               ipv6:
                 type: int
                 description: Segment size.
+          ipv4_access_group_ingress_default:
+            type: str
+            description: ACL name to be used as the default CP ACL for all VRFs.
           ipv4_access_groups:
             type: list
             unique_keys:
@@ -20162,6 +20453,9 @@ keys:
                   type: str
                   convert_types:
                   - int
+          ipv6_access_group_ingress_default:
+            type: str
+            description: ACL name to be used as the default CP ACL for all VRFs.
           ipv6_access_groups:
             type: list
             unique_keys:
@@ -21462,6 +21756,8 @@ keys:
           description: Type 7 Password Hash.
         autovlan_disable:
           type: bool
+        vrf:
+          type: str
         source_interface:
           type: str
   vrfs:

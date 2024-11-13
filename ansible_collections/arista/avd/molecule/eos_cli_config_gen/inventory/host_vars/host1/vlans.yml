@@ -1,0 +1,33 @@
+---
+### VLANs ###
+vlans:
+  - id: 110
+    tenant: Tenant_A
+    name: PR01-DMZ
+  - id: 111
+    tenant: Tenant_A
+    name: PRIVATE_VLAN_COMMUNITY
+    private_vlan:
+      type: community
+      primary_vlan: 110
+  - id: 112
+    tenant: Tenant_A
+    name: PRIVATE_VLAN_ISOLATED
+    private_vlan:
+      type: isolated
+      primary_vlan: 110
+  - id: 3010
+    tenant: Tenant_A
+    name: MLAG_iBGP_TENANT_A_PROJECT01
+    trunk_groups:
+      - LEAF_PEER_L3
+  - id: 3011
+    name: MLAG_iBGP_TENANT_A_PROJECT02
+    state: active
+    trunk_groups:
+      - MY_TRUNK_GROUP
+  - id: 3012
+    name: MLAG_iBGP_TENANT_A_PROJECT03
+    state: suspend
+    trunk_groups:
+      - MY_TRUNK_GROUP

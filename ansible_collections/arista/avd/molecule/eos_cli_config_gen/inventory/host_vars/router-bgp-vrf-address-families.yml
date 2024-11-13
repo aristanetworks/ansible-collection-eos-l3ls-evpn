@@ -411,6 +411,9 @@ router_bgp:
           route_map: RM_VRF_HOST
 
     - name: VRF03
+      maximum_paths:
+        paths: 10
+        ecmp: 10
       address_family_ipv4:
         bgp:
           additional_paths:

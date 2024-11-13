@@ -628,9 +628,14 @@ router ospf 99 vrf TENANT_B_WAN
 | Router-ID | 100.70.0.7 |
 | Log Adjacency Changes | True |
 | MPLS LDP Sync Default | True |
-| Local Convergence Delay (ms) | 15000 |
 | Advertise Passive-only | True |
 | SR MPLS Enabled | True |
+
+#### ISIS Route Timers
+
+| Settings | Value |
+| -------- | ----- |
+| Local Convergence Delay | 15000 milliseconds |
 
 #### ISIS Interfaces Summary
 
@@ -728,9 +733,9 @@ ASN Notation: asplain
 
 ##### EVPN Peer Groups
 
-| Peer Group | Activate | Encapsulation |
-| ---------- | -------- | ------------- |
-| MPLS-OVERLAY-PEERS | True | default |
+| Peer Group | Activate | Route-map In | Route-map Out | Encapsulation |
+| ---------- | -------- | ------------ | ------------- | ------------- |
+| MPLS-OVERLAY-PEERS | True |  - | - | default |
 
 ##### EVPN Neighbor Default Encapsulation
 
