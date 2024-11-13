@@ -71,18 +71,6 @@ class PrefixListsMixin(UtilsMixin):
             if sequence_numbers:
                 prefix_lists.append({"name": "PL-WAN-HA-PEER-PREFIXES", "sequence_numbers": sequence_numbers})
 
-        prefix_lists_in_use = set()
-        for neighbor in self.shared_utils.l3_interfaces_bgp_neighbors:
-            if (prefix_list_in := get(neighbor, "ipv4_prefix_list_in")) and prefix_list_in not in prefix_lists_in_use:
-                pfx_list = self._get_prefix_list(prefix_list_in)
-                prefix_lists.append(pfx_list)
-                prefix_lists_in_use.add(prefix_list_in)
-
-            if (prefix_list_out := get(neighbor, "ipv4_prefix_list_out")) and prefix_list_out not in prefix_lists_in_use:
-                pfx_list = self._get_prefix_list(prefix_list_out)
-                prefix_lists.append(pfx_list)
-                prefix_lists_in_use.add(prefix_list_out)
-
         # P2P-LINKS needed for L3 inband ZTP
         p2p_links_sequence_numbers = []
         sequence_number = 0
