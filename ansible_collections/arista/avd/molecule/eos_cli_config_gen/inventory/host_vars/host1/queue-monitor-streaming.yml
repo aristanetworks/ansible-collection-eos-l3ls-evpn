@@ -1,0 +1,7 @@
+---
+queue_monitor_streaming:
+  enable: true
+  ip_access_group: ACL-QMS
+  ipv6_access_group: ACLv6-QMS
+  max_connections: 5
+  vrf: test

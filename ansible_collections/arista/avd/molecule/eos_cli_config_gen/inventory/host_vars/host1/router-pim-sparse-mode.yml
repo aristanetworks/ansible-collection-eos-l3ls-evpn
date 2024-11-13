@@ -1,0 +1,57 @@
+---
+#### Router pim sparse mode ####
+
+router_pim_sparse_mode:
+  ipv4:
+    bfd: true
+    rp_addresses:
+      - address: 10.238.1.161
+        groups:
+          - 239.12.12.12/32
+          - 239.12.12.13/32
+          - 239.12.12.14/32
+          - 239.12.12.16/32
+          - 239.12.12.20/32
+          - 239.12.12.21/32
+        access_lists:
+          - RP_ACL
+          - RP_ACL2
+        priority: 20
+      - address: 10.238.1.161
+        groups:
+          - 239.12.12.17/32
+        access_lists:
+          - RP_ACL3
+    anycast_rps:
+      - address: 10.38.1.161
+        other_anycast_rp_addresses:
+          - address: 10.50.64.16
+            register_count: 15
+    ssm_range: standard
+  vrfs:
+    - name: MCAST_VRF1
+      ipv4:
+        bfd: true
+        rp_addresses:
+          - address: 10.238.2.161
+            groups:
+              - 239.12.22.12/32
+              - 239.12.22.13/32
+              - 239.12.22.14/32
+    - name: MCAST_VRF2_ALL_GROUPS
+      ipv4:
+        rp_addresses:
+          - address: 10.238.3.161
+            hashmask: 30
+    - name: Test_RP_ACL
+      ipv4:
+        rp_addresses:
+          - address: 10.238.4.161
+            access_lists:
+              - RP_ACL
+          - address: 10.238.4.161
+            access_lists:
+              - RP_ACL2
+            priority: 20
+            hashmask: 30
+            override: True
