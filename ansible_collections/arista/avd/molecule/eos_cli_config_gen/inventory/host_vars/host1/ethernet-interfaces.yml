@@ -755,6 +755,12 @@ ethernet_interfaces:
     error_correction_encoding:
       fire_code: true
       reed_solomon: true
+    isis_authentication:
+      level_2:
+        mode: shared-secret
+        shared_secret:
+          profile: profile2
+          algorithm: sha-1
 
   - name: Ethernet24
     switchport:

@@ -2457,6 +2457,7 @@ interface Dps1
 | Ethernet20 | - | - | - | - | - | - | - | Level-1: shared-secret<br>Level-2: md5 |
 | Ethernet21 | - | - | - | - | - | - | - | Level-1: md5 |
 | Ethernet22 | - | - | - | - | - | - | - | Level-2: sha |
+| Ethernet23 | - | - | - | - | - | - | - | Level-2: shared-secret |
 | Ethernet81/10 | 110 | *ISIS_TEST | True | *99 | *point-to-point | *level-2 | *True | *text |
 
 *Inherited from Port-Channel Interface
@@ -2873,6 +2874,7 @@ interface Ethernet23
    error-correction encoding fire-code
    error-correction encoding reed-solomon
    switchport
+   isis authentication mode shared-secret profile profile2 algorithm sha-1 level-2
 !
 interface Ethernet24
    description Disable error-correction encoding
