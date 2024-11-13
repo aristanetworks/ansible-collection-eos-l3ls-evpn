@@ -134,8 +134,7 @@ keys:
             description: IPv4 Access list name.
             type: str
           ipv6_access_group:
-            description: |-
-              IPv6 access list name.
+            description: IPv6 access list name.
             type: str
           fast_reroute:
             type: dict

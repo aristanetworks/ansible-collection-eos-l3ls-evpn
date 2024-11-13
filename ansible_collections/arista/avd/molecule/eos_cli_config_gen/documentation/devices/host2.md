@@ -42,6 +42,7 @@
 - [MPLS](#mpls)
   - [MPLS and LDP](#mpls-and-ldp)
   - [MPLS RSVP](#mpls-rsvp)
+  - [MPLS Device Configuration](#mpls-device-configuration)
 - [Queue Monitor](#queue-monitor)
   - [Queue Monitor Length](#queue-monitor-length)
   - [Queue Monitor Configuration](#queue-monitor-configuration)
@@ -496,7 +497,7 @@ router bfd
 | ---- | -------------- | ------------- |
 | Helper | 32 | 33 |
 
-#### MPLS Device Configuration
+### MPLS Device Configuration
 
 ```eos
 !

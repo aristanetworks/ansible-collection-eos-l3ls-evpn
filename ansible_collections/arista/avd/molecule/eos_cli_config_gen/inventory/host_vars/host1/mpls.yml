@@ -70,21 +70,3 @@ mpls:
       - ip_address: 1.10.1.2
         authentication:
           type: none
-
-ethernet_interfaces:
-  - name: Ethernet1
-    switchport:
-      enabled: false
-    ip_address: 192.168.100.1/31
-    mpls:
-      ip: true
-      ldp:
-        interface: true
-        igp_sync: true
-
-loopback_interfaces:
-  - name: Loopback0
-    ip_address: 192.168.1.1/32
-    mpls:
-      ldp:
-        interface: true

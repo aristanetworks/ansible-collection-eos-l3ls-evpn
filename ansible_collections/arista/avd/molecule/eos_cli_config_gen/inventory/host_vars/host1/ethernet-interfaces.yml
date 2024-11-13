@@ -130,6 +130,11 @@ ethernet_interfaces:
         - name: ACL1
         - name: ACL2
       version: 2
+    mpls:
+      ip: true
+      ldp:
+        interface: true
+        igp_sync: true
 
   - name: Ethernet2
     ip_address: 10.1.255.3/24

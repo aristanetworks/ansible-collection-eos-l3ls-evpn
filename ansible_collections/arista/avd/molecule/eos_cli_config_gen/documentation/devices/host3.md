@@ -7,6 +7,7 @@
 - [MPLS](#mpls)
   - [MPLS and LDP](#mpls-and-ldp)
   - [MPLS RSVP](#mpls-rsvp)
+  - [MPLS Device Configuration](#mpls-device-configuration)
 
 ## Management
 
@@ -59,7 +60,7 @@ interface Management1
 | Hello interval | 30 |
 | Timeout multiplier | 254 |
 
-#### MPLS Device Configuration
+### MPLS Device Configuration
 
 ```eos
 !
