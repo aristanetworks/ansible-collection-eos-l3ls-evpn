@@ -2,7 +2,6 @@ hostname: DC1-SPINE4
 is_deployed: true
 router_bgp:
   as: '65001'
-  router_id: 192.168.255.4
   bgp_defaults:
   - distance bgp 20 200 200
   bgp:
@@ -264,6 +263,9 @@ ntp:
 snmp_server:
   contact: example@example.com
   location: EOS_DESIGNS_UNIT_TESTS DC1-SPINE4
+router_general:
+  router_id:
+    ipv4: 192.168.255.4
 ethernet_interfaces:
 - name: Ethernet1/1
   peer: DC1-LEAF1A

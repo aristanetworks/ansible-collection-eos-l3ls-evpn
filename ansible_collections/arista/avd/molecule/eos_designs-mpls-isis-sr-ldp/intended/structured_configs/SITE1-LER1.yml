@@ -470,10 +470,10 @@ router_ospf:
   - id: 19
     vrf: TENANT_B_INTRA
     passive_interface_default: true
-    router_id: 10.123.1.0
     no_passive_interfaces:
     - Ethernet6.10
     max_lsa: 10000
+    router_id: 10.123.1.0
     redistribute:
       bgp:
         enabled: true

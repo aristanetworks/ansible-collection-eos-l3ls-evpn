@@ -8,6 +8,7 @@
   - [IP Domain-list](#ip-domain-list)
   - [Clock Settings](#clock-settings)
   - [NTP](#ntp)
+  - [System Control-Plane](#system-control-plane)
   - [Management SSH](#management-ssh)
   - [Management Tech-Support](#management-tech-support)
 - [CVX](#cvx)
@@ -153,6 +154,9 @@
 - [Virtual Source NAT](#virtual-source-nat)
   - [Virtual Source NAT Summary](#virtual-source-nat-summary)
   - [Virtual Source NAT Configuration](#virtual-source-nat-configuration)
+- [System L1](#system-l1)
+  - [Unsupported Interface Configurations](#unsupported-interface-configurations)
+  - [System L1 Device Configuration](#system-l1-device-configuration)
 - [Application Traffic Recognition](#application-traffic-recognition)
   - [Applications](#applications)
   - [Application Profiles](#application-profiles)
@@ -329,6 +333,48 @@ ntp server 10.1.1.1
 ntp server 10.1.1.2 prefer
 ntp server 20.20.20.1 key <removed>
 ntp server ie.pool.ntp.org iburst key <removed>
+```
+
+### System Control-Plane
+
+#### TCP MSS Ceiling
+
+| Protocol | Segment Size |
+| -------- | -------------|
+| IPv4 | 1344 |
+| IPv6 | 1366 |
+
+#### Control-Plane Access-Groups
+
+| Protocol | VRF | Access-list |
+| -------- | --- | ------------|
+| IPv4 Ingress default | All | ingress_ipv4_acl |
+| IPv4 | default | acl4_1 |
+| IPv4 | red | acl4_2 |
+| IPv4 | red_1 | acl4_2 |
+| IPv4 | default | acl4_3 |
+| IPv6 Ingress default | All | ingress_ipv6_acl |
+| IPv6 | default | acl6_1 |
+| IPv6 | blue | acl6_2 |
+| IPv6 | blue_1 | acl6_2 |
+| IPv6 | default | acl6_3 |
+
+#### System Control-Plane Device Configuration
+
+```eos
+!
+system control-plane
+   tcp mss ceiling ipv4 1344 ipv6 1366
+   ip access-group ingress default ingress_ipv4_acl
+   ip access-group acl4_1 in
+   ip access-group acl4_3 vrf default in
+   ip access-group acl4_2 vrf red in
+   ip access-group acl4_2 vrf red_1 in
+   ipv6 access-group ingress default ingress_ipv6_acl
+   ipv6 access-group acl6_1 in
+   ipv6 access-group acl6_3 vrf default in
+   ipv6 access-group acl6_2 vrf blue in
+   ipv6 access-group acl6_2 vrf blue_1 in
 ```
 
 ### Management SSH
@@ -6121,6 +6167,24 @@ ip address virtual source-nat vrf TEST_02 address 1.1.1.2
 ip address virtual source-nat vrf TEST_04 address 1.1.1.3
 ipv6 address virtual source-nat vrf TEST_03 address 2001:db8:85a3::8a2e:370:7334
 ipv6 address virtual source-nat vrf TEST_04 address 2001:db8:85a3::8a2e:370:7335
+```
+
+## System L1
+
+### Unsupported Interface Configurations
+
+| Unsupported Configuration | action |
+| ---------------- | -------|
+| Speed | warn |
+| Error correction | error |
+
+### System L1 Device Configuration
+
+```eos
+!
+system l1
+   unsupported speed action warn
+   unsupported error-correction action error
 ```
 
 ## Application Traffic Recognition
