@@ -1,0 +1,15 @@
+---
+### vmtracer sessions ###
+
+vmtracer_sessions:
+  - name: session_1
+    url: "https://192.168.0.10"
+    username: user1
+    password: 0011D0516421B120A25735E080A16001D1617
+    autovlan_disable: true
+    vrf: MGMT
+    source_interface: Management1
+  - name: session_2
+    url: "https://192.168.0.10"
+    username: user1
+    password: 0011D0516421B120A25735E080A16001D1617

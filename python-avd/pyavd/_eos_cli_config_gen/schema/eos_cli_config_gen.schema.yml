@@ -2239,6 +2239,20 @@ keys:
                 valid_values:
                 - upstream
                 - downstream
+        link_tracking:
+          type: dict
+          keys:
+            direction:
+              type: str
+              valid_values:
+              - upstream
+              - downstream
+            groups:
+              type: list
+              description: Link state group(s) an interface belongs to.
+              items:
+                type: str
+                description: Group names.
         evpn_ethernet_segment:
           type: dict
           keys:
@@ -3771,6 +3785,10 @@ keys:
           type: bool
           description: Set to false to disable interface state and LLDP topology validation
             performed by the `eos_validate_state` role.
+        validate_lldp:
+          type: bool
+          description: Set to false to disable the LLDP topology validation performed
+            by the `eos_validate_state` role.
         switchport:
           type: dict
           description: This should not be combined with `ethernet_interfaces[].type
@@ -9509,6 +9527,20 @@ keys:
                 valid_values:
                 - upstream
                 - downstream
+        link_tracking:
+          type: dict
+          keys:
+            direction:
+              type: str
+              valid_values:
+              - upstream
+              - downstream
+            groups:
+              type: list
+              description: Link state group(s) an interface belongs to.
+              items:
+                type: str
+                description: Group names.
         phone:
           type: dict
           deprecation:
@@ -10570,6 +10602,10 @@ keys:
           type: bool
           description: Set to false to disable interface state and LLDP topology validation
             performed by the `eos_validate_state` role.
+        validate_lldp:
+          type: bool
+          description: Set to false to disable the LLDP topology validation performed
+            by the `eos_validate_state` role.
         eos_cli:
           type: str
           description: Multiline EOS CLI rendered directly on the port-channel interface

@@ -1,0 +1,141 @@
+---
+### router_path_selection ###
+# NOTE that this leverage all possible knobs and this config is **NOT** valid on
+# an actual device
+
+router_path_selection:
+  peer_dynamic_source: stun
+  path_groups:
+    # Out of order to test sorting
+    - name: PG-2
+      id: 42
+      ipsec_profile: IPSEC-P-1
+      flow_assignment: lan
+      local_interfaces:
+        # Out of order to test sorting
+        - name: Ethernet3
+          stun:
+            server_profiles:
+              - STUN-P-1
+        # Test public address
+        - name: Ethernet2
+          public_address: 192.168.42.42
+          stun:
+            # Test multiple stun profiles
+            server_profiles:
+              - STUN-P-1
+              - STUN-P-2
+        - name: Ethernet1/1
+        - name: Ethernet1/1/3
+        - name: Ethernet4.666
+        - name: Ethernet2/4.666
+        - name: Port-Channel1
+          public_address: 192.168.42.43
+          stun:
+            # Test multiple stun profiles
+            server_profiles:
+              - STUN-P-1
+              - STUN-P-2
+        - name: Port-Channel4.666
+      local_ips:
+        # Out of order to test sorting
+        - ip_address: 192.168.100.1
+          stun:
+            server_profiles:
+              - STUN-P-1
+        # Test public address
+        - ip_address: 192.168.1.100
+          public_address: 192.168.42.42
+          stun:
+            # Test multiple stun profiles
+            server_profiles:
+              - STUN-P-1
+              - STUN-P-2
+      dynamic_peers:
+        enabled: true
+        ipsec: false
+      keepalive:
+        auto: true
+    - name: PG-1
+      id: 666
+      dynamic_peers:
+        enabled: true
+        ip_local: true
+        ipsec: true
+      keepalive:
+        interval: 200
+        failure_threshold: 3
+      static_peers:
+        # Out of order to test sorting
+        - router_ip: 172.16.42.42
+          name: TEST-STATIC-PEER-WITH-NAME
+          ipv4_addresses:
+            - 192.168.42.42
+            - 192.168.1.42
+        - router_ip: 172.16.2.42
+          ipv4_addresses:
+            - 192.168.2.42
+        # No ipv4 address
+        - router_ip: 172.16.1.42
+    - name: PG-3
+      id: 888
+    # path group with no id
+    - name: PG-4
+  load_balance_policies:
+    # Out of order to test sorting
+    - name: LB-P-2
+      latency: 42
+      jitter: 666
+      loss_rate: "42.42"
+      path_groups:
+        # checking priority 1 comes first
+        - name: PG-3
+        - name: PG-1
+          priority: 1
+    - name: LB-P-1
+      lowest_hop_count: true
+      loss_rate: 17
+      path_groups:
+        # checking priority 1 comes first
+        - name: PG-5
+        - name: PG-3
+          priority: 666
+        # Checking ordering for same priority
+        - name: PG-4
+          priority: 42
+        - name: PG-2
+          priority: 42
+    - name: LB-EMPTY
+  policies:
+    # Out of order to test sorting
+    - name: DPS-P-2
+      default_match:
+        load_balance: LB-P-2
+    - name: DPS-P-1
+      default_match:
+        load_balance: LB-P-1
+      rules:
+        - id: 42
+          application_profile: AP-3
+          load_balance: LB-P-1
+    - name: DPS-P-3
+      # testing default match without load_balance - not rendering as seen as null
+      default_match:
+      # Out of order to test sorting
+      rules:
+        - id: 66
+          application_profile: AP-1
+          load_balance: LB-P-1
+        # testing rule without load_balance
+        - id: 42
+          application_profile: AP-2
+  vrfs:
+    # Out of order to test sorting
+    - name: VRF-2
+      path_selection_policy: DPS-P-2
+    - name: VRF-1
+      path_selection_policy: DPS-P-1
+    # testing VRF without path_selection_policy
+    - name: VRF-3
+  tcp_mss_ceiling:
+    ipv4_segment_size: 200

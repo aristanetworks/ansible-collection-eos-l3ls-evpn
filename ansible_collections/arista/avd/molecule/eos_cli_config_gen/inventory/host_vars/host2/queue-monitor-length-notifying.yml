@@ -1,0 +1,8 @@
+---
+queue_monitor_length:
+  enabled: true
+  # test the negative case
+  notifying: false
+  # test with only the high threshold set
+  default_thresholds:
+    high: 100

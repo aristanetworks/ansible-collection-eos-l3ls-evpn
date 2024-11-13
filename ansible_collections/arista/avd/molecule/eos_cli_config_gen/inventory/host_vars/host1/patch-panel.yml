@@ -1,0 +1,29 @@
+---
+patch_panel:
+  connector:
+    interface:
+      patch:
+        bgp_vpws_remote_failure_errdisable: true
+      recovery:
+        review_delay:
+          min: 10
+          max: 900
+  patches:
+  - name: TEN_B_site2_site5_eline
+    connectors:
+    - id: 1
+      type: interface
+      endpoint: Ethernet5
+    - id: 2
+      type: pseudowire
+      endpoint: bgp vpws TENANT_A pseudowire TEN_B_site2_site5_eline
+
+  - name: TEN_A_site2_site5_eline
+    enabled: false
+    connectors:
+    - id: 1
+      type: interface
+      endpoint: Ethernet6 dot1q vlan 123
+    - id: 2
+      type: pseudowire
+      endpoint: ldp LDP_PW_1
