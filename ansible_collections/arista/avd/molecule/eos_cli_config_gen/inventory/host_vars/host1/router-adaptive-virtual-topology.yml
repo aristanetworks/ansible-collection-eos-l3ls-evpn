@@ -1,0 +1,52 @@
+---
+router_adaptive_virtual_topology:
+  topology_role: pathfinder
+  gateway_vxlan: true
+  region:
+    name: North_America
+    id: 1
+  zone:
+    name: Canada
+    id: 2
+  site:
+    name: Ottawa
+    id: 99
+  profiles:
+    # Out of order to test sorting
+    - name: voice
+      load_balance_policy: voice-lb
+    - name: video
+      internet_exit_policy: video-ie
+    - name: office365
+    - name: scavenger
+      load_balance_policy: scavenger-lb
+      internet_exit_policy: scavenger-ie
+  policies:
+    - name: production
+      matches:
+        - application_profile: videoApps
+        - application_profile: criticalApps
+          avt_profile: crit
+          traffic_class: 7
+          dscp: 45
+        - application_profile: audioApps
+          avt_profile: audio
+          traffic_class: 6
+        - application_profile: mfgApp
+          avt_profile: crit
+          dscp: 54
+        - application_profile: hrApp
+          avt_profile: hr
+  vrfs:
+  # Out of order to test sorting
+    - name: red
+      policy: production
+      profiles:
+        - name: voice
+          id: 2
+        - name: video
+          id: 1
+    - name: blue
+      profiles:
+        - name: video
+          id: 1

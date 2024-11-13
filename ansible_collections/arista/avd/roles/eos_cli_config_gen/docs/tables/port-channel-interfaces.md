@@ -371,6 +371,7 @@
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dot1q_remove_outer_vlan_tag</samp>](## "port_channel_interfaces.[].switchport.tool.dot1q_remove_outer_vlan_tag") | String |  |  |  | Indices of vlan tags to be removed.<br>Range: 1-2 |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dzgre_preserve</samp>](## "port_channel_interfaces.[].switchport.tool.dzgre_preserve") | Boolean |  |  |  | Preserve the DzGRE header. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;validate_state</samp>](## "port_channel_interfaces.[].validate_state") | Boolean |  |  |  | Set to false to disable interface state and LLDP topology validation performed by the `eos_validate_state` role. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;validate_lldp</samp>](## "port_channel_interfaces.[].validate_lldp") | Boolean |  |  |  | Set to false to disable the LLDP topology validation performed by the `eos_validate_state` role. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;eos_cli</samp>](## "port_channel_interfaces.[].eos_cli") | String |  |  |  | Multiline EOS CLI rendered directly on the port-channel interface in the final EOS configuration. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;esi</samp>](## "port_channel_interfaces.[].esi") <span style="color:red">removed</span> | String |  |  |  | EVPN Ethernet Segment Identifier (Type 1 format).<br><span style="color:red">This key was removed. Support was removed in AVD version 5.0.0. Use <samp>evpn_ethernet_segment.identifier</samp> instead.</span> |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;rt</samp>](## "port_channel_interfaces.[].rt") <span style="color:red">removed</span> | String |  |  |  | EVPN Route Target for ESI with format xx:xx:xx:xx:xx:xx.<br><span style="color:red">This key was removed. Support was removed in AVD version 5.0.0. Use <samp>evpn_ethernet_segment.route_target</samp> instead.</span> |
@@ -1201,6 +1202,9 @@
 
         # Set to false to disable interface state and LLDP topology validation performed by the `eos_validate_state` role.
         validate_state: <bool>
+
+        # Set to false to disable the LLDP topology validation performed by the `eos_validate_state` role.
+        validate_lldp: <bool>
 
         # Multiline EOS CLI rendered directly on the port-channel interface in the final EOS configuration.
         eos_cli: <str>

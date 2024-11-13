@@ -1,0 +1,14 @@
+---
+### peer-filters ###
+
+peer_filters:
+  - name: PF1
+    sequence_numbers:
+      - sequence: 10
+        match: "as-range 1-2 result reject"
+      - sequence: 20
+        match: "as-range 1-100 result accept"
+  - name: PF2
+    sequence_numbers:
+      - sequence: 30
+        match: "as-range 65000 result accept"

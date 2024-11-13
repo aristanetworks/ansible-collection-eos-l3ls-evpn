@@ -49,6 +49,10 @@ custom_structured_configuration_ethernet_interfaces:
   - name: Ethernet3
     validate_state: false
 
+    # Test to skip the VerifyLLDPNeighbors testcase via `validate_lldp` key
+  - name: Ethernet4
+    validate_lldp: false
+
 custom_structured_configuration_port_channel_interfaces:
   - name: Port-Channel11
     description: dc2-leaf3-fw1_PortChannel

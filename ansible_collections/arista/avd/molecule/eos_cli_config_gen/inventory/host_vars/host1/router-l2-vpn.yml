@@ -1,0 +1,13 @@
+---
+### router_l2_vpn ###
+
+router_l2_vpn:
+  nd_rs_flooding_disabled: true
+  virtual_router_nd_ra_flooding_disabled: true
+  arp_proxy:
+    prefix_list: "pl-router-l2-vpn"
+  arp_learning_bridged: true
+  arp_selective_install: true
+  nd_proxy:
+    prefix_list: "pl-router-l2-vpn"
+  nd_learning_bridged: true

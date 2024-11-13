@@ -145,15 +145,6 @@
   },
   {
     "name": "dc2-leaf3a.arista.com",
-    "test": "VerifyLLDPNeighbors",
-    "categories": [
-      "connectivity"
-    ],
-    "description": "Verifies that the provided LLDP neighbors are connected properly.",
-    "custom_field": "Local: Ethernet4 - Remote: dc2-leaf3b.arista.com Ethernet4"
-  },
-  {
-    "name": "dc2-leaf3a.arista.com",
     "test": "VerifyReachability",
     "categories": [
       "connectivity"
