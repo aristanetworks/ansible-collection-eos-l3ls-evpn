@@ -1,0 +1,71 @@
+---
+policy_maps:
+  qos:
+    - name: PM_REPLICATION_LD
+      classes:
+        - name: CM_REPLICATION_LD
+          set:
+            dscp: af11
+            traffic_class: 2
+            drop_precedence: 1
+          police:
+            rate: 10
+            rate_unit: kbps
+            rate_burst_size: 260
+            rate_burst_size_unit: kbytes
+            higher_rate: 30
+            higher_rate_unit: kbps
+            higher_rate_burst_size: 270
+            higher_rate_burst_size_unit: kbytes
+            action:
+              type: drop-precedence
+        - name: CM_REPLICATION_LD_2
+          set:
+            dscp: af11
+            traffic_class: 2
+    - name: PM_REPLICATION_LD2
+      classes:
+        - name: CM_REPLICATION_LD
+          set:
+            dscp: af11
+            cos: 4
+          police:
+            rate: 30
+            rate_unit: kbps
+            rate_burst_size: 280
+            higher_rate: 1
+            higher_rate_unit: mbps
+            higher_rate_burst_size: 270
+            action:
+              type: dscp
+              dscp_value: af11
+    - name: PM_REPLICATION_LD3
+      classes:
+        - name: CM_REPLICATION_LD
+          set:
+            dscp: af11
+            cos: 6
+          police:
+            rate: 10000
+            rate_burst_size: 260
+            rate_burst_size_unit: kbytes
+  pbr:
+    - name: PM_PBR_BREAKOUT
+      classes:
+        - name: CM_PBR_EXCLUDE
+        - name: CM_PBR_INCLUDE
+          set:
+            nexthop:
+              ip_address: 192.168.4.2
+              recursive: true
+  copp_system_policy:
+    classes:
+      - name: copp-system-OspfIsis
+        shape: 1000
+        bandwidth: 1000
+        rate_unit: kbps
+      - name: copp-system-cvx
+        shape: 2000
+        bandwidth: 2000
+        rate_unit: pps
+      - name: copp-system-rsvp

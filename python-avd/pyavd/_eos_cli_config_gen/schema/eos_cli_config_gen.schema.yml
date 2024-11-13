@@ -569,6 +569,7 @@ keys:
                   description: Application name.
       application_profiles:
         type: list
+        primary_key: name
         description: Group of applications.
         items:
           type: dict
@@ -1771,7 +1772,7 @@ keys:
             type: str
           start_limit_infinite:
             type: bool
-            description: Set captive-portal start limit to infinte.
+            description: Set captive-portal start limit to infinite.
           access_list_ipv4:
             type: str
             description: Standard access-list name.
@@ -2167,7 +2168,7 @@ keys:
           deprecation:
             warning: true
             remove_in_version: 6.0.0
-            url: https://avd.arista.com/stable/docs/release-notes/5.x.x.html#removal-of-type-key-dependency-for-rendering-ethernetport-channel-interfaces-configuration-and-documentation
+            url: https://avd.arista.com/5.x/docs/porting-guides/5.x.x.html#removal-of-type-key-dependency-for-rendering-ethernetport-channel-interfaces-configuration-and-documentation
           valid_values:
           - routed
           - switched
@@ -2238,6 +2239,20 @@ keys:
                 valid_values:
                 - upstream
                 - downstream
+        link_tracking:
+          type: dict
+          keys:
+            direction:
+              type: str
+              valid_values:
+              - upstream
+              - downstream
+            groups:
+              type: list
+              description: Link state group(s) an interface belongs to.
+              items:
+                type: str
+                description: Group names.
         evpn_ethernet_segment:
           type: dict
           keys:
@@ -3755,6 +3770,10 @@ keys:
           type: bool
           description: Set to false to disable interface state and LLDP topology validation
             performed by the `eos_validate_state` role.
+        validate_lldp:
+          type: bool
+          description: Set to false to disable the LLDP topology validation performed
+            by the `eos_validate_state` role.
         switchport:
           type: dict
           description: This should not be combined with `ethernet_interfaces[].type
@@ -4505,7 +4524,7 @@ keys:
     deprecation:
       warning: true
       remove_in_version: 6.0.0
-      url: https://avd.arista.com/devel/docs/porting-guides/5.x.x.html#default-eos-configuration-is-no-longer-automatically-generated
+      url: https://avd.arista.com/5.x/docs/porting-guides/5.x.x.html#default-eos-configuration-is-no-longer-automatically-generated
   generate_device_documentation:
     type: bool
     documentation_options:
@@ -6399,7 +6418,7 @@ keys:
               type: str
               convert_types:
               - int
-              description: 'Severity of facility. Below are the supported severites.
+              description: 'Severity of facility. Below are the supported severities.
 
                 emergencies    System is unusable                (severity=0)
 
@@ -8387,7 +8406,7 @@ keys:
                   mask:
                     type: str
                     description: 16 bit hexadecimal mask for TCP/UDP or IP ID with
-                      atmost 2 unset bits.
+                      at most 2 unset bits.
       marker_vxlan:
         type: dict
         keys:
@@ -9233,7 +9252,7 @@ keys:
           deprecation:
             warning: true
             remove_in_version: 6.0.0
-            url: https://avd.arista.com/stable/docs/release-notes/5.x.x.html#removal-of-type-key-dependency-for-rendering-ethernetport-channel-interfaces-configuration-and-documentation
+            url: https://avd.arista.com/5.x/docs/porting-guides/5.x.x.html#removal-of-type-key-dependency-for-rendering-ethernetport-channel-interfaces-configuration-and-documentation
           valid_values:
           - routed
           - switched
@@ -9472,7 +9491,6 @@ keys:
             new_key: switchport.trunk.native_vlan
         native_vlan_tag:
           type: bool
-          default: false
           description: If setting both native_vlan and native_vlan_tag, native_vlan_tag
             takes precedence.
           deprecation:
@@ -9494,6 +9512,20 @@ keys:
                 valid_values:
                 - upstream
                 - downstream
+        link_tracking:
+          type: dict
+          keys:
+            direction:
+              type: str
+              valid_values:
+              - upstream
+              - downstream
+            groups:
+              type: list
+              description: Link state group(s) an interface belongs to.
+              items:
+                type: str
+                description: Group names.
         phone:
           type: dict
           deprecation:
@@ -9548,10 +9580,9 @@ keys:
             new_key: switchport.trunk.groups
         lacp_fallback_timeout:
           type: int
-          description: Timeout in seconds.
+          description: Timeout in seconds. EOS default is 90 seconds.
           convert_types:
           - str
-          default: 90
           min: 0
           max: 300
         lacp_fallback_mode:
@@ -10556,6 +10587,10 @@ keys:
           type: bool
           description: Set to false to disable interface state and LLDP topology validation
             performed by the `eos_validate_state` role.
+        validate_lldp:
+          type: bool
+          description: Set to false to disable the LLDP topology validation performed
+            by the `eos_validate_state` role.
         eos_cli:
           type: str
           description: Multiline EOS CLI rendered directly on the port-channel interface

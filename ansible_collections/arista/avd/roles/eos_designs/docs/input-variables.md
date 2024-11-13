@@ -722,14 +722,14 @@ The following underlay routing protocols are supported:
 - EBGP (default for l3ls-evpn)
 - OSPF.
 - ISIS.
-- ISIS-SR*.
-- ISIS-LDP*.
-- ISIS-SR-LDP*.
-- OSPF-LDP*.
-- none**.
+- ISIS-SR¹.
+- ISIS-LDP¹.
+- ISIS-SR-LDP¹.
+- OSPF-LDP¹.
+- none².
 
-\* Only supported with core_interfaces data model.<br />
-\** For use with design type "l2ls" or other designs where there is no requirement for a routing protocol for underlay and/or overlay on l3 devices.
+¹ Only supported with core_interfaces data model.<br />
+² For use with design type "l2ls" or other designs where there is no requirement for a routing protocol for underlay and/or overlay on l3 devices.
 
 ??? note "Details on `enable_trunk_groups`"
     <a id="details-on-enable_trunk_groups"></a>
@@ -815,12 +815,12 @@ The following overlay routing protocols are supported:
 
 - EBGP (default for l3ls-evpn)
 - IBGP (only with OSPF or ISIS variants in underlay)
-- none*
-- HER (Head-End Replication)**
+- none¹
+- HER (Head-End Replication)²
 - CVX (CloudVision eXchange)
 
-\* For use with design type "l2ls" or other designs where there is no requirement for a routing protocol for underlay and/or overlay on l3 devices.<br />
-\** By setting `overlay_routing_protocol:HER`, `eos_designs` will configure static VXLAN flood-lists instead of using a dynamic overlay protocol.
+¹ For use with design type "l2ls" or other designs where there is no requirement for a routing protocol for underlay and/or overlay on l3 devices.<br />
+² By setting `overlay_routing_protocol:HER`, `eos_designs` will configure static VXLAN flood-lists instead of using a dynamic overlay protocol.
 
 --8<--
 roles/eos_designs/docs/tables/overlay-settings.md

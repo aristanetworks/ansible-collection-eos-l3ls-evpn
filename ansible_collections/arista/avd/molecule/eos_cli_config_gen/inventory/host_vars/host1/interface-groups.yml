@@ -1,0 +1,24 @@
+---
+###  Interface Groups ###
+
+interface_groups:
+  - name: SFP_Interface_Group
+    interfaces:
+      - Ethernet10-20
+      - Ethernet30-48
+    bgp_maintenance_profiles:
+      - downlink-neighbors
+      - local-ix
+    interface_maintenance_profiles:
+      - downlink-interfaces
+      - ix-interfaces
+
+  - name: QSFP_Interface_Group
+    interfaces:
+      - Ethernet1,5
+    interface_maintenance_profiles:
+      - uplink-interfaces
+
+  - name: QSFP_Interface_Group1
+    interfaces:
+      - Ethernet1,5

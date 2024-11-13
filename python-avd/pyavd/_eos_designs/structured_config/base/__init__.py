@@ -11,10 +11,11 @@ from pyavd._utils import get, get_item, strip_empties_from_dict, strip_null_from
 from pyavd.j2filters import natural_sort
 
 from .ntp import NtpMixin
+from .router_general import RouterGeneralMixin
 from .snmp_server import SnmpServerMixin
 
 
-class AvdStructuredConfigBase(AvdFacts, NtpMixin, SnmpServerMixin):
+class AvdStructuredConfigBase(AvdFacts, NtpMixin, SnmpServerMixin, RouterGeneralMixin):
     """
     The AvdStructuredConfig Class is imported by "get_structured_config" to render parts of the structured config.
 
@@ -66,7 +67,7 @@ class AvdStructuredConfigBase(AvdFacts, NtpMixin, SnmpServerMixin):
 
         router_bgp = {
             "as": self.shared_utils.bgp_as,
-            "router_id": self.shared_utils.router_id,
+            "router_id": self.shared_utils.router_id if not self.shared_utils.use_router_general_for_router_id else None,
             "distance": get(self._hostvars, "bgp_distance"),
             "bgp_defaults": get(self.shared_utils.switch_data_combined, "bgp_defaults"),
             "bgp": {
@@ -80,6 +81,7 @@ class AvdStructuredConfigBase(AvdFacts, NtpMixin, SnmpServerMixin):
             },
             "redistribute": self._router_bgp_redistribute_routes,
         }
+
         if get(self._hostvars, "bgp_update_wait_for_convergence", default=False) is True and platform_bgp_update_wait_for_convergence:
             router_bgp.setdefault("updates", {})["wait_for_convergence"] = True
 
