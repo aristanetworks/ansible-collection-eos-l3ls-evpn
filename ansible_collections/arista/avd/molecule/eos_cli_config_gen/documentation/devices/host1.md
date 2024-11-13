@@ -346,11 +346,11 @@ ntp server ie.pool.ntp.org iburst key <removed>
 | Protocol | VRF | Access-list |
 | -------- | --- | ------------|
 | IPv4 Ingress default | All | ingress_ipv4_acl |
-| IPv6 Ingress default | All | ingress_ipv6_acl |
 | IPv4 | default | acl4_1 |
 | IPv4 | red | acl4_2 |
 | IPv4 | red_1 | acl4_2 |
 | IPv4 | default | acl4_3 |
+| IPv6 Ingress default | All | ingress_ipv6_acl |
 | IPv6 | default | acl6_1 |
 | IPv6 | blue | acl6_2 |
 | IPv6 | blue_1 | acl6_2 |
