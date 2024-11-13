@@ -1,0 +1,12 @@
+plugins/modules/configlet_build_config.py validate-modules:missing-gplv3-license
+plugins/modules/eos_designs_documentation.py validate-modules:missing-gplv3-license
+plugins/modules/eos_designs_facts.py validate-modules:missing-gplv3-license
+plugins/modules/eos_designs_structured_config.py validate-modules:missing-gplv3-license
+plugins/modules/inventory_to_container.py validate-modules:missing-gplv3-license
+plugins/modules/set_vars.py validate-modules:missing-gplv3-license
+plugins/modules/verify_requirements.py validate-modules:missing-gplv3-license
+plugins/vars/global_vars.py validate-modules:missing-gplv3-license
+plugins/modules/eos_validate_state_runner.py validate-modules:missing-gplv3-license
+plugins/modules/eos_validate_state_reports.py validate-modules:missing-gplv3-license
+plugins/modules/cv_workflow.py validate-modules:missing-gplv3-license
+plugins/modules/eos_cli_config_gen.py validate-modules:missing-gplv3-license
