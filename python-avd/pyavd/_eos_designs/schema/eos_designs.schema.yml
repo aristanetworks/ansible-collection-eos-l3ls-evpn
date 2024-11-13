@@ -7844,6 +7844,7 @@ $defs:
             documentation_options:
               table: node-type-uplink-configuration
             type: int
+            default: 1
             convert_types:
             - str
             description: 'Number of parallel links towards uplink switches.

@@ -29,17 +29,14 @@ class MlagMixin:
 
     @cached_property
     def mlag(self: SharedUtils) -> bool:
-        return self.node_type_key_data.mlag_support and self.node_config.mlag and len(self.node_group_config.nodes) == 2
+        return self.node_type_key_data.mlag_support and self.node_config.mlag and self.node_group_is_primary_and_peer_hostname is not None
 
     @cached_property
     def group(self: SharedUtils) -> str | None:
-        """
-        Group set to "node_group" name or None.
-
-        Note that since we cheat in node_group_config and return an empty class if there is no group,
-        we cannot trust the type hint suggesting that group is always set.
-        """
-        return self.node_group_config.group or None
+        """Group set to "node_group" name or None."""
+        if self.node_group_config is not None:
+            return self.node_group_config.group
+        return None
 
     @cached_property
     def mlag_interfaces(self: SharedUtils) -> list:
@@ -68,17 +65,32 @@ class MlagMixin:
 
     @cached_property
     def mlag_role(self: SharedUtils) -> Literal["primary", "secondary"] | None:
-        if self.mlag:
-            return "secondary" if bool(list(self.node_group_config.nodes.keys()).index(self.hostname)) else "primary"
+        if self.mlag and self.node_group_is_primary_and_peer_hostname is not None:
+            return "primary" if self.node_group_is_primary_and_peer_hostname[0] else "secondary"
 
         return None
 
     @cached_property
+    def node_group_is_primary_and_peer_hostname(self: SharedUtils) -> tuple[bool, str] | None:
+        """
+        Node group position and peer used for MLAG and WAN HA.
+
+        Returns None if the device is not in a node_group with exactly two devices.
+        Returns True, <peer> if this device is the first one in the node_group.
+        Returns False, <peer> if this device is the second one in the node_group.
+        """
+        if self.node_group_config is None or len(self.node_group_config.nodes) != 2:
+            return None
+
+        nodes = list(self.node_group_config.nodes.keys())
+        index = nodes.index(self.hostname)
+        peer_index = not index  # (0->1 and 1>0)
+        return index == 0, nodes[peer_index]
+
+    @cached_property
     def mlag_peer(self: SharedUtils) -> str:
-        if self.mlag_role == "primary":
-            return list(self.node_group_config.nodes.keys())[1]
-        if self.mlag_role == "secondary":
-            return list(self.node_group_config.nodes.keys())[0]  # noqa: RUF015
+        if self.node_group_is_primary_and_peer_hostname is not None:
+            return self.node_group_is_primary_and_peer_hostname[1]
         msg = "Unable to find MLAG peer within same node group"
         raise AristaAvdError(msg)
 

@@ -67,7 +67,7 @@ class UtilsMixin:
 
     @cached_property
     def _max_parallel_uplinks(self: AvdIpAddressing) -> int:
-        return self.shared_utils.max_parallel_uplinks
+        return self.shared_utils.node_config.max_parallel_uplinks
 
     @cached_property
     def _loopback_ipv4_address(self: AvdIpAddressing) -> str | None:

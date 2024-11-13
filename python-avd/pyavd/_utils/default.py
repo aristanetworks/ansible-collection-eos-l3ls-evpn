@@ -14,7 +14,7 @@ if TYPE_CHECKING:
     T = TypeVar("T")
 
 
-def default(*values: Unpack[tuple[Unpack[tuple[T | None]], T]]) -> T:
+def default(*values: Unpack[tuple[Unpack[tuple[T | None, ...]], T]]) -> T:
     """
     Accepts any number of arguments. Return the first value which is not None.
 

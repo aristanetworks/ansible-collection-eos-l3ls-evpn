@@ -27,7 +27,7 @@
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;uplink_switch_interface_speed</samp>](## "<node_type_keys.key>.defaults.uplink_switch_interface_speed") | String |  |  |  | Set point-to-Point interface speed for the uplink switch interface only.<br>Speed should be set in the format `<interface_speed>` or `forced <interface_speed>` or `auto <interface_speed>`.<br> |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;uplink_mtu</samp>](## "<node_type_keys.key>.defaults.uplink_mtu") | Integer |  |  | Min: 68<br>Max: 65535 | Point-to-Point uplinks MTU in bytes. This setting overrides the `p2p_uplinks_mtu` setting. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;max_uplink_switches</samp>](## "<node_type_keys.key>.defaults.max_uplink_switches") | Integer |  |  |  | Maximum number of uplink switches.<br>Changing this value may change IP Addressing on uplinks.<br>Can be used to reserve IP space for future expansions.<br> |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;max_parallel_uplinks</samp>](## "<node_type_keys.key>.defaults.max_parallel_uplinks") | Integer |  |  |  | Number of parallel links towards uplink switches.<br>Changing this value may change interface naming on uplinks (and corresponding downlinks).<br>Can be used to reserve interfaces for future parallel uplinks.<br> |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;max_parallel_uplinks</samp>](## "<node_type_keys.key>.defaults.max_parallel_uplinks") | Integer |  | `1` |  | Number of parallel links towards uplink switches.<br>Changing this value may change interface naming on uplinks (and corresponding downlinks).<br>Can be used to reserve interfaces for future parallel uplinks.<br> |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;uplink_bfd</samp>](## "<node_type_keys.key>.defaults.uplink_bfd") | Boolean |  | `False` |  | Enable bfd on uplink interfaces. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;uplink_native_vlan</samp>](## "<node_type_keys.key>.defaults.uplink_native_vlan") | Integer |  |  | Min: 1<br>Max: 4094 | Only applicable to switches with layer-2 port-channel uplinks.<br>A suspended (disabled) vlan will be created in both ends of the link unless the vlan is defined under network services.<br>By default the uplink will not have a native_vlan configured, so EOS defaults to vlan 1.<br> |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;uplink_ptp</samp>](## "<node_type_keys.key>.defaults.uplink_ptp") | Dictionary |  |  |  | Enable PTP on all infrastructure links. |
@@ -64,7 +64,7 @@
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;uplink_switch_interface_speed</samp>](## "<node_type_keys.key>.node_groups.[].nodes.[].uplink_switch_interface_speed") | String |  |  |  | Set point-to-Point interface speed for the uplink switch interface only.<br>Speed should be set in the format `<interface_speed>` or `forced <interface_speed>` or `auto <interface_speed>`.<br> |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;uplink_mtu</samp>](## "<node_type_keys.key>.node_groups.[].nodes.[].uplink_mtu") | Integer |  |  | Min: 68<br>Max: 65535 | Point-to-Point uplinks MTU in bytes. This setting overrides the `p2p_uplinks_mtu` setting. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;max_uplink_switches</samp>](## "<node_type_keys.key>.node_groups.[].nodes.[].max_uplink_switches") | Integer |  |  |  | Maximum number of uplink switches.<br>Changing this value may change IP Addressing on uplinks.<br>Can be used to reserve IP space for future expansions.<br> |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;max_parallel_uplinks</samp>](## "<node_type_keys.key>.node_groups.[].nodes.[].max_parallel_uplinks") | Integer |  |  |  | Number of parallel links towards uplink switches.<br>Changing this value may change interface naming on uplinks (and corresponding downlinks).<br>Can be used to reserve interfaces for future parallel uplinks.<br> |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;max_parallel_uplinks</samp>](## "<node_type_keys.key>.node_groups.[].nodes.[].max_parallel_uplinks") | Integer |  | `1` |  | Number of parallel links towards uplink switches.<br>Changing this value may change interface naming on uplinks (and corresponding downlinks).<br>Can be used to reserve interfaces for future parallel uplinks.<br> |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;uplink_bfd</samp>](## "<node_type_keys.key>.node_groups.[].nodes.[].uplink_bfd") | Boolean |  | `False` |  | Enable bfd on uplink interfaces. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;uplink_native_vlan</samp>](## "<node_type_keys.key>.node_groups.[].nodes.[].uplink_native_vlan") | Integer |  |  | Min: 1<br>Max: 4094 | Only applicable to switches with layer-2 port-channel uplinks.<br>A suspended (disabled) vlan will be created in both ends of the link unless the vlan is defined under network services.<br>By default the uplink will not have a native_vlan configured, so EOS defaults to vlan 1.<br> |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;uplink_ptp</samp>](## "<node_type_keys.key>.node_groups.[].nodes.[].uplink_ptp") | Dictionary |  |  |  | Enable PTP on all infrastructure links. |
@@ -93,7 +93,7 @@
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;uplink_switch_interface_speed</samp>](## "<node_type_keys.key>.node_groups.[].uplink_switch_interface_speed") | String |  |  |  | Set point-to-Point interface speed for the uplink switch interface only.<br>Speed should be set in the format `<interface_speed>` or `forced <interface_speed>` or `auto <interface_speed>`.<br> |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;uplink_mtu</samp>](## "<node_type_keys.key>.node_groups.[].uplink_mtu") | Integer |  |  | Min: 68<br>Max: 65535 | Point-to-Point uplinks MTU in bytes. This setting overrides the `p2p_uplinks_mtu` setting. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;max_uplink_switches</samp>](## "<node_type_keys.key>.node_groups.[].max_uplink_switches") | Integer |  |  |  | Maximum number of uplink switches.<br>Changing this value may change IP Addressing on uplinks.<br>Can be used to reserve IP space for future expansions.<br> |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;max_parallel_uplinks</samp>](## "<node_type_keys.key>.node_groups.[].max_parallel_uplinks") | Integer |  |  |  | Number of parallel links towards uplink switches.<br>Changing this value may change interface naming on uplinks (and corresponding downlinks).<br>Can be used to reserve interfaces for future parallel uplinks.<br> |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;max_parallel_uplinks</samp>](## "<node_type_keys.key>.node_groups.[].max_parallel_uplinks") | Integer |  | `1` |  | Number of parallel links towards uplink switches.<br>Changing this value may change interface naming on uplinks (and corresponding downlinks).<br>Can be used to reserve interfaces for future parallel uplinks.<br> |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;uplink_bfd</samp>](## "<node_type_keys.key>.node_groups.[].uplink_bfd") | Boolean |  | `False` |  | Enable bfd on uplink interfaces. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;uplink_native_vlan</samp>](## "<node_type_keys.key>.node_groups.[].uplink_native_vlan") | Integer |  |  | Min: 1<br>Max: 4094 | Only applicable to switches with layer-2 port-channel uplinks.<br>A suspended (disabled) vlan will be created in both ends of the link unless the vlan is defined under network services.<br>By default the uplink will not have a native_vlan configured, so EOS defaults to vlan 1.<br> |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;uplink_ptp</samp>](## "<node_type_keys.key>.node_groups.[].uplink_ptp") | Dictionary |  |  |  | Enable PTP on all infrastructure links. |
@@ -128,7 +128,7 @@
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;uplink_switch_interface_speed</samp>](## "<node_type_keys.key>.nodes.[].uplink_switch_interface_speed") | String |  |  |  | Set point-to-Point interface speed for the uplink switch interface only.<br>Speed should be set in the format `<interface_speed>` or `forced <interface_speed>` or `auto <interface_speed>`.<br> |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;uplink_mtu</samp>](## "<node_type_keys.key>.nodes.[].uplink_mtu") | Integer |  |  | Min: 68<br>Max: 65535 | Point-to-Point uplinks MTU in bytes. This setting overrides the `p2p_uplinks_mtu` setting. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;max_uplink_switches</samp>](## "<node_type_keys.key>.nodes.[].max_uplink_switches") | Integer |  |  |  | Maximum number of uplink switches.<br>Changing this value may change IP Addressing on uplinks.<br>Can be used to reserve IP space for future expansions.<br> |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;max_parallel_uplinks</samp>](## "<node_type_keys.key>.nodes.[].max_parallel_uplinks") | Integer |  |  |  | Number of parallel links towards uplink switches.<br>Changing this value may change interface naming on uplinks (and corresponding downlinks).<br>Can be used to reserve interfaces for future parallel uplinks.<br> |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;max_parallel_uplinks</samp>](## "<node_type_keys.key>.nodes.[].max_parallel_uplinks") | Integer |  | `1` |  | Number of parallel links towards uplink switches.<br>Changing this value may change interface naming on uplinks (and corresponding downlinks).<br>Can be used to reserve interfaces for future parallel uplinks.<br> |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;uplink_bfd</samp>](## "<node_type_keys.key>.nodes.[].uplink_bfd") | Boolean |  | `False` |  | Enable bfd on uplink interfaces. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;uplink_native_vlan</samp>](## "<node_type_keys.key>.nodes.[].uplink_native_vlan") | Integer |  |  | Min: 1<br>Max: 4094 | Only applicable to switches with layer-2 port-channel uplinks.<br>A suspended (disabled) vlan will be created in both ends of the link unless the vlan is defined under network services.<br>By default the uplink will not have a native_vlan configured, so EOS defaults to vlan 1.<br> |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;uplink_ptp</samp>](## "<node_type_keys.key>.nodes.[].uplink_ptp") | Dictionary |  |  |  | Enable PTP on all infrastructure links. |
@@ -209,7 +209,7 @@
         # Number of parallel links towards uplink switches.
         # Changing this value may change interface naming on uplinks (and corresponding downlinks).
         # Can be used to reserve interfaces for future parallel uplinks.
-        max_parallel_uplinks: <int>
+        max_parallel_uplinks: <int; default=1>
 
         # Enable bfd on uplink interfaces.
         uplink_bfd: <bool; default=False>
@@ -345,7 +345,7 @@
               # Number of parallel links towards uplink switches.
               # Changing this value may change interface naming on uplinks (and corresponding downlinks).
               # Can be used to reserve interfaces for future parallel uplinks.
-              max_parallel_uplinks: <int>
+              max_parallel_uplinks: <int; default=1>
 
               # Enable bfd on uplink interfaces.
               uplink_bfd: <bool; default=False>
@@ -458,7 +458,7 @@
           # Number of parallel links towards uplink switches.
           # Changing this value may change interface naming on uplinks (and corresponding downlinks).
           # Can be used to reserve interfaces for future parallel uplinks.
-          max_parallel_uplinks: <int>
+          max_parallel_uplinks: <int; default=1>
 
           # Enable bfd on uplink interfaces.
           uplink_bfd: <bool; default=False>
@@ -587,7 +587,7 @@
           # Number of parallel links towards uplink switches.
           # Changing this value may change interface naming on uplinks (and corresponding downlinks).
           # Can be used to reserve interfaces for future parallel uplinks.
-          max_parallel_uplinks: <int>
+          max_parallel_uplinks: <int; default=1>
 
           # Enable bfd on uplink interfaces.
           uplink_bfd: <bool; default=False>

@@ -118,9 +118,9 @@ class AvdModel(AvdBase):
         if name not in self._fields:
             raise AttributeError("'" + self.__class__.__name__ + "' object has no attribute '" + name + "'")
 
-        new_default_value = self._get_field_default_value(name)
-        setattr(self, name, new_default_value)
-        return new_default_value
+        default_value = self._get_field_default_value(name)
+        setattr(self, name, default_value)
+        return default_value
 
     def _get_defined_attr(self, name: str) -> Any | Undefined:
         """

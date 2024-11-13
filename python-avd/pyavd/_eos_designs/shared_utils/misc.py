@@ -49,8 +49,7 @@ class MiscMixin:
 
     @cached_property
     def igmp_snooping_enabled(self: SharedUtils) -> bool:
-        default_igmp_snooping_enabled = self.inputs.default_igmp_snooping_enabled
-        return default(self.node_config.igmp_snooping_enabled, default_igmp_snooping_enabled)
+        return default(self.node_config.igmp_snooping_enabled, self.inputs.default_igmp_snooping_enabled)
 
     @cached_property
     def only_local_vlan_trunk_groups(self: SharedUtils) -> bool:
@@ -102,7 +101,7 @@ class MiscMixin:
             # Add uplink_switch_interface based on this switch's ID (-1 for 0-based) * max_parallel_uplinks + index_of_parallel_uplinks.
             # For max_parallel_uplinks: 2 this would assign downlink interfaces like this:
             # spine1 downlink-interface mapping: [ leaf-id1, leaf-id1, leaf-id2, leaf-id2, leaf-id3, leaf-id3, ... ]
-            downlink_index = (self.id - 1) * self.max_parallel_uplinks + index_of_parallel_uplinks
+            downlink_index = (self.id - 1) * self.node_config.max_parallel_uplinks + index_of_parallel_uplinks
             if len(uplink_switch_facts._default_downlink_interfaces) > downlink_index:
                 uplink_switch_interfaces.append(uplink_switch_facts._default_downlink_interfaces[downlink_index])
             else:
@@ -126,11 +125,6 @@ class MiscMixin:
             Host variable var serial_number.
         """
         return default(self.node_config.serial_number, self.inputs.serial_number)
-
-    @cached_property
-    def max_parallel_uplinks(self: SharedUtils) -> int:
-        """Exposed in avd_switch_facts."""
-        return default(self.node_config.max_parallel_uplinks, 1)
 
     @cached_property
     def max_uplink_switches(self: SharedUtils) -> int:

@@ -412,7 +412,7 @@ class WanMixin:
     @cached_property
     def wan_ha(self: SharedUtils) -> bool:
         """Only trigger HA if 2 cv_pathfinder clients are in the same group and wan_ha.enabled is true."""
-        if not (self.is_cv_pathfinder_client and len(self.node_group_config.nodes) == 2):
+        if not self.is_cv_pathfinder_client or self.node_group_is_primary_and_peer_hostname is None:
             return False
 
         if self.node_config.wan_ha.enabled is None:
@@ -436,7 +436,7 @@ class WanMixin:
 
         This should be called only from functions which have checked that HA is enabled.
         """
-        return next(iter(self.node_group_config.nodes.keys())) == self.hostname
+        return self.node_group_is_primary_and_peer_hostname is not None and self.node_group_is_primary_and_peer_hostname[0]
 
     @cached_property
     def wan_ha_peer(self: SharedUtils) -> str | None:
@@ -444,11 +444,9 @@ class WanMixin:
         if not self.wan_ha:
             return None
 
-        keys = list(self.node_group_config.nodes.keys())
-        if self.is_first_ha_peer:
-            return keys[1]
-        if keys.index(self.hostname) == 1:
-            return keys[0]
+        if self.node_group_is_primary_and_peer_hostname is not None:
+            return self.node_group_is_primary_and_peer_hostname[1]
+
         msg = "Unable to find WAN HA peer within same node group"
         raise AristaAvdError(msg)
 

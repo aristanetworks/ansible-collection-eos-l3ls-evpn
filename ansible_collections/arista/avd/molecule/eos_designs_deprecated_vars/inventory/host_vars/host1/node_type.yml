@@ -17,3 +17,4 @@ l3leaf:
       nodes:
         - name: host1
           id: 5
+          mgmt_ip: 192.168.0.103/24

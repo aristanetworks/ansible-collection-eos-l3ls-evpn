@@ -237,7 +237,7 @@ class UtilsMixin:
     ) -> dict | None:
         """Return poe settings for one adapter."""
         if self.shared_utils.platform_settings.feature_support.poe:
-            return adapter.poe._as_dict()
+            return adapter.poe._as_dict() or None
 
         return None
 

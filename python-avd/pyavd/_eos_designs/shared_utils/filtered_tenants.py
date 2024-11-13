@@ -352,7 +352,7 @@ class FilteredTenantsMixin:
     def get_vrf_id(vrf: EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem.VrfsItem, required: bool = True) -> int | None:
         vrf_id = default(vrf.vrf_id, vrf.vrf_vni)
         if vrf_id is None and required:
-            msg = f"'vrf_id' or 'vrf_vni' for VRF '{vrf.name} must be set."
+            msg = f"'vrf_id' or 'vrf_vni' for VRF '{vrf.name}' must be set."
             raise AristaAvdInvalidInputsError(msg)
         return vrf_id
 
@@ -360,7 +360,7 @@ class FilteredTenantsMixin:
     def get_vrf_vni(vrf: EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem.VrfsItem) -> int:
         vrf_vni = default(vrf.vrf_vni, vrf.vrf_id)
         if vrf_vni is None:
-            msg = f"'vrf_vni' or 'vrf_id' for VRF '{vrf.name} must be set."
+            msg = f"'vrf_vni' or 'vrf_id' for VRF '{vrf.name}' must be set."
             raise AristaAvdInvalidInputsError(msg)
         return vrf_vni
 

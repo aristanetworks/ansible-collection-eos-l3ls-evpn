@@ -18847,7 +18847,7 @@ class EosDesigns(EosDesignsRootModel):
                         "uplink_switch_interface_speed": {"type": str},
                         "uplink_mtu": {"type": int},
                         "max_uplink_switches": {"type": int},
-                        "max_parallel_uplinks": {"type": int},
+                        "max_parallel_uplinks": {"type": int, "default": 1},
                         "uplink_bfd": {"type": bool, "default": False},
                         "uplink_native_vlan": {"type": int},
                         "uplink_ptp": {"type": UplinkPtp},
@@ -19047,13 +19047,15 @@ class EosDesigns(EosDesignsRootModel):
                     Can be
                     used to reserve IP space for future expansions.
                     """
-                    max_parallel_uplinks: int | None
+                    max_parallel_uplinks: int
                     """
                     Number of parallel links towards uplink switches.
                     Changing this value may change interface naming on
                     uplinks (and corresponding downlinks).
                     Can be used to reserve interfaces for future parallel
                     uplinks.
+
+                    Default value: `1`
                     """
                     uplink_bfd: bool
                     """
@@ -19658,7 +19660,7 @@ class EosDesigns(EosDesignsRootModel):
                         uplink_switch_interface_speed: str | None | UndefinedType = Undefined,
                         uplink_mtu: int | None | UndefinedType = Undefined,
                         max_uplink_switches: int | None | UndefinedType = Undefined,
-                        max_parallel_uplinks: int | None | UndefinedType = Undefined,
+                        max_parallel_uplinks: int | UndefinedType = Undefined,
                         uplink_bfd: bool | UndefinedType = Undefined,
                         uplink_native_vlan: int | None | UndefinedType = Undefined,
                         uplink_ptp: UplinkPtp | UndefinedType = Undefined,
@@ -21964,7 +21966,7 @@ class EosDesigns(EosDesignsRootModel):
                             "uplink_switch_interface_speed": {"type": str},
                             "uplink_mtu": {"type": int},
                             "max_uplink_switches": {"type": int},
-                            "max_parallel_uplinks": {"type": int},
+                            "max_parallel_uplinks": {"type": int, "default": 1},
                             "uplink_bfd": {"type": bool, "default": False},
                             "uplink_native_vlan": {"type": int},
                             "uplink_ptp": {"type": UplinkPtp},
@@ -22171,13 +22173,15 @@ class EosDesigns(EosDesignsRootModel):
                         Can be
                         used to reserve IP space for future expansions.
                         """
-                        max_parallel_uplinks: int | None
+                        max_parallel_uplinks: int
                         """
                         Number of parallel links towards uplink switches.
                         Changing this value may change interface naming on
                         uplinks (and corresponding downlinks).
                         Can be used to reserve interfaces for future parallel
                         uplinks.
+
+                        Default value: `1`
                         """
                         uplink_bfd: bool
                         """
@@ -22784,7 +22788,7 @@ class EosDesigns(EosDesignsRootModel):
                             uplink_switch_interface_speed: str | None | UndefinedType = Undefined,
                             uplink_mtu: int | None | UndefinedType = Undefined,
                             max_uplink_switches: int | None | UndefinedType = Undefined,
-                            max_parallel_uplinks: int | None | UndefinedType = Undefined,
+                            max_parallel_uplinks: int | UndefinedType = Undefined,
                             uplink_bfd: bool | UndefinedType = Undefined,
                             uplink_native_vlan: int | None | UndefinedType = Undefined,
                             uplink_ptp: UplinkPtp | UndefinedType = Undefined,
@@ -25052,7 +25056,7 @@ class EosDesigns(EosDesignsRootModel):
                         "uplink_switch_interface_speed": {"type": str},
                         "uplink_mtu": {"type": int},
                         "max_uplink_switches": {"type": int},
-                        "max_parallel_uplinks": {"type": int},
+                        "max_parallel_uplinks": {"type": int, "default": 1},
                         "uplink_bfd": {"type": bool, "default": False},
                         "uplink_native_vlan": {"type": int},
                         "uplink_ptp": {"type": UplinkPtp},
@@ -25260,13 +25264,15 @@ class EosDesigns(EosDesignsRootModel):
                     Can be
                     used to reserve IP space for future expansions.
                     """
-                    max_parallel_uplinks: int | None
+                    max_parallel_uplinks: int
                     """
                     Number of parallel links towards uplink switches.
                     Changing this value may change interface naming on
                     uplinks (and corresponding downlinks).
                     Can be used to reserve interfaces for future parallel
                     uplinks.
+
+                    Default value: `1`
                     """
                     uplink_bfd: bool
                     """
@@ -25873,7 +25879,7 @@ class EosDesigns(EosDesignsRootModel):
                         uplink_switch_interface_speed: str | None | UndefinedType = Undefined,
                         uplink_mtu: int | None | UndefinedType = Undefined,
                         max_uplink_switches: int | None | UndefinedType = Undefined,
-                        max_parallel_uplinks: int | None | UndefinedType = Undefined,
+                        max_parallel_uplinks: int | UndefinedType = Undefined,
                         uplink_bfd: bool | UndefinedType = Undefined,
                         uplink_native_vlan: int | None | UndefinedType = Undefined,
                         uplink_ptp: UplinkPtp | UndefinedType = Undefined,
@@ -28184,7 +28190,7 @@ class EosDesigns(EosDesignsRootModel):
                         "uplink_switch_interface_speed": {"type": str},
                         "uplink_mtu": {"type": int},
                         "max_uplink_switches": {"type": int},
-                        "max_parallel_uplinks": {"type": int},
+                        "max_parallel_uplinks": {"type": int, "default": 1},
                         "uplink_bfd": {"type": bool, "default": False},
                         "uplink_native_vlan": {"type": int},
                         "uplink_ptp": {"type": UplinkPtp},
@@ -28391,13 +28397,15 @@ class EosDesigns(EosDesignsRootModel):
                     Can be
                     used to reserve IP space for future expansions.
                     """
-                    max_parallel_uplinks: int | None
+                    max_parallel_uplinks: int
                     """
                     Number of parallel links towards uplink switches.
                     Changing this value may change interface naming on
                     uplinks (and corresponding downlinks).
                     Can be used to reserve interfaces for future parallel
                     uplinks.
+
+                    Default value: `1`
                     """
                     uplink_bfd: bool
                     """
@@ -29004,7 +29012,7 @@ class EosDesigns(EosDesignsRootModel):
                         uplink_switch_interface_speed: str | None | UndefinedType = Undefined,
                         uplink_mtu: int | None | UndefinedType = Undefined,
                         max_uplink_switches: int | None | UndefinedType = Undefined,
-                        max_parallel_uplinks: int | None | UndefinedType = Undefined,
+                        max_parallel_uplinks: int | UndefinedType = Undefined,
                         uplink_bfd: bool | UndefinedType = Undefined,
                         uplink_native_vlan: int | None | UndefinedType = Undefined,
                         uplink_ptp: UplinkPtp | UndefinedType = Undefined,
@@ -37160,7 +37168,7 @@ class EosDesigns(EosDesignsRootModel):
                         "uplink_switch_interface_speed": {"type": str},
                         "uplink_mtu": {"type": int},
                         "max_uplink_switches": {"type": int},
-                        "max_parallel_uplinks": {"type": int},
+                        "max_parallel_uplinks": {"type": int, "default": 1},
                         "uplink_bfd": {"type": bool, "default": False},
                         "uplink_native_vlan": {"type": int},
                         "uplink_ptp": {"type": UplinkPtp},
@@ -37360,13 +37368,15 @@ class EosDesigns(EosDesignsRootModel):
                     Can be
                     used to reserve IP space for future expansions.
                     """
-                    max_parallel_uplinks: int | None
+                    max_parallel_uplinks: int
                     """
                     Number of parallel links towards uplink switches.
                     Changing this value may change interface naming on
                     uplinks (and corresponding downlinks).
                     Can be used to reserve interfaces for future parallel
                     uplinks.
+
+                    Default value: `1`
                     """
                     uplink_bfd: bool
                     """
@@ -37971,7 +37981,7 @@ class EosDesigns(EosDesignsRootModel):
                         uplink_switch_interface_speed: str | None | UndefinedType = Undefined,
                         uplink_mtu: int | None | UndefinedType = Undefined,
                         max_uplink_switches: int | None | UndefinedType = Undefined,
-                        max_parallel_uplinks: int | None | UndefinedType = Undefined,
+                        max_parallel_uplinks: int | UndefinedType = Undefined,
                         uplink_bfd: bool | UndefinedType = Undefined,
                         uplink_native_vlan: int | None | UndefinedType = Undefined,
                         uplink_ptp: UplinkPtp | UndefinedType = Undefined,
@@ -40277,7 +40287,7 @@ class EosDesigns(EosDesignsRootModel):
                             "uplink_switch_interface_speed": {"type": str},
                             "uplink_mtu": {"type": int},
                             "max_uplink_switches": {"type": int},
-                            "max_parallel_uplinks": {"type": int},
+                            "max_parallel_uplinks": {"type": int, "default": 1},
                             "uplink_bfd": {"type": bool, "default": False},
                             "uplink_native_vlan": {"type": int},
                             "uplink_ptp": {"type": UplinkPtp},
@@ -40484,13 +40494,15 @@ class EosDesigns(EosDesignsRootModel):
                         Can be
                         used to reserve IP space for future expansions.
                         """
-                        max_parallel_uplinks: int | None
+                        max_parallel_uplinks: int
                         """
                         Number of parallel links towards uplink switches.
                         Changing this value may change interface naming on
                         uplinks (and corresponding downlinks).
                         Can be used to reserve interfaces for future parallel
                         uplinks.
+
+                        Default value: `1`
                         """
                         uplink_bfd: bool
                         """
@@ -41097,7 +41109,7 @@ class EosDesigns(EosDesignsRootModel):
                             uplink_switch_interface_speed: str | None | UndefinedType = Undefined,
                             uplink_mtu: int | None | UndefinedType = Undefined,
                             max_uplink_switches: int | None | UndefinedType = Undefined,
-                            max_parallel_uplinks: int | None | UndefinedType = Undefined,
+                            max_parallel_uplinks: int | UndefinedType = Undefined,
                             uplink_bfd: bool | UndefinedType = Undefined,
                             uplink_native_vlan: int | None | UndefinedType = Undefined,
                             uplink_ptp: UplinkPtp | UndefinedType = Undefined,
@@ -43365,7 +43377,7 @@ class EosDesigns(EosDesignsRootModel):
                         "uplink_switch_interface_speed": {"type": str},
                         "uplink_mtu": {"type": int},
                         "max_uplink_switches": {"type": int},
-                        "max_parallel_uplinks": {"type": int},
+                        "max_parallel_uplinks": {"type": int, "default": 1},
                         "uplink_bfd": {"type": bool, "default": False},
                         "uplink_native_vlan": {"type": int},
                         "uplink_ptp": {"type": UplinkPtp},
@@ -43573,13 +43585,15 @@ class EosDesigns(EosDesignsRootModel):
                     Can be
                     used to reserve IP space for future expansions.
                     """
-                    max_parallel_uplinks: int | None
+                    max_parallel_uplinks: int
                     """
                     Number of parallel links towards uplink switches.
                     Changing this value may change interface naming on
                     uplinks (and corresponding downlinks).
                     Can be used to reserve interfaces for future parallel
                     uplinks.
+
+                    Default value: `1`
                     """
                     uplink_bfd: bool
                     """
@@ -44186,7 +44200,7 @@ class EosDesigns(EosDesignsRootModel):
                         uplink_switch_interface_speed: str | None | UndefinedType = Undefined,
                         uplink_mtu: int | None | UndefinedType = Undefined,
                         max_uplink_switches: int | None | UndefinedType = Undefined,
-                        max_parallel_uplinks: int | None | UndefinedType = Undefined,
+                        max_parallel_uplinks: int | UndefinedType = Undefined,
                         uplink_bfd: bool | UndefinedType = Undefined,
                         uplink_native_vlan: int | None | UndefinedType = Undefined,
                         uplink_ptp: UplinkPtp | UndefinedType = Undefined,
@@ -46497,7 +46511,7 @@ class EosDesigns(EosDesignsRootModel):
                         "uplink_switch_interface_speed": {"type": str},
                         "uplink_mtu": {"type": int},
                         "max_uplink_switches": {"type": int},
-                        "max_parallel_uplinks": {"type": int},
+                        "max_parallel_uplinks": {"type": int, "default": 1},
                         "uplink_bfd": {"type": bool, "default": False},
                         "uplink_native_vlan": {"type": int},
                         "uplink_ptp": {"type": UplinkPtp},
@@ -46704,13 +46718,15 @@ class EosDesigns(EosDesignsRootModel):
                     Can be
                     used to reserve IP space for future expansions.
                     """
-                    max_parallel_uplinks: int | None
+                    max_parallel_uplinks: int
                     """
                     Number of parallel links towards uplink switches.
                     Changing this value may change interface naming on
                     uplinks (and corresponding downlinks).
                     Can be used to reserve interfaces for future parallel
                     uplinks.
+
+                    Default value: `1`
                     """
                     uplink_bfd: bool
                     """
@@ -47317,7 +47333,7 @@ class EosDesigns(EosDesignsRootModel):
                         uplink_switch_interface_speed: str | None | UndefinedType = Undefined,
                         uplink_mtu: int | None | UndefinedType = Undefined,
                         max_uplink_switches: int | None | UndefinedType = Undefined,
-                        max_parallel_uplinks: int | None | UndefinedType = Undefined,
+                        max_parallel_uplinks: int | UndefinedType = Undefined,
                         uplink_bfd: bool | UndefinedType = Undefined,
                         uplink_native_vlan: int | None | UndefinedType = Undefined,
                         uplink_ptp: UplinkPtp | UndefinedType = Undefined,

@@ -25,6 +25,11 @@ class NodeConfigMixin:
     def node_type_config(
         self: SharedUtils,
     ) -> EosDesigns._DynamicKeys.DynamicNodeTypesItem.NodeTypes:
+        """
+        The object representing the `<node_type_key like l3leaf, spine etc>:` containing the `defaults`, `nodes`, `node_groups` etc.
+
+        The relevant dynamic key is found in self.inputs._dynamic_keys which is populated by the _from_dict() loader on the EosDesigns class.
+        """
         node_type_key = self.node_type_key_data.key
 
         if node_type_key in self.inputs._dynamic_keys.custom_node_types:
@@ -39,12 +44,17 @@ class NodeConfigMixin:
     @cached_property
     def node_group_config(
         self: SharedUtils,
-    ) -> EosDesigns._DynamicKeys.DynamicNodeTypesItem.NodeTypes.NodeGroupsItem:
+    ) -> EosDesigns._DynamicKeys.DynamicNodeTypesItem.NodeTypes.NodeGroupsItem | None:
+        """
+        The object representing the `<node_type_key like l3leaf, spine etc>.node_groups[]` where this node is found.
+
+        Used by MLAG and WAN HA logic to find out who our MLAG / WAN HA peer is.
+        """
         for node_group in self.node_type_config.node_groups:
             if self.hostname in node_group.nodes:
                 return node_group
 
-        return EosDesigns._DynamicKeys.DynamicNodeTypesItem.NodeTypes.NodeGroupsItem()
+        return None
 
     @cached_property
     def node_config(

@@ -582,7 +582,7 @@ class AvdStructuredConfigBase(AvdFacts, NtpMixin, SnmpServerMixin, RouterGeneral
             msg = f"'id' is not set on '{self.shared_utils.hostname}' to set LACP port ID ranges"
             raise AristaAvdInvalidInputsError(msg)
 
-        node_group_length = max(len(self.shared_utils.node_group_config.nodes), 1)
+        node_group_length = max(len(self.shared_utils.node_group_config.nodes), 1) if self.shared_utils.node_group_config is not None else 1
 
         begin = 1 + (((switch_id - 1) % node_group_length) * lacp_port_id_range.size) + lacp_port_id_range.offset
         end = (((switch_id - 1) % node_group_length + 1) * lacp_port_id_range.size) + lacp_port_id_range.offset

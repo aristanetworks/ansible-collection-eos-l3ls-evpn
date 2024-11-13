@@ -26,7 +26,7 @@ class UplinksMixin:
     @cached_property
     def max_parallel_uplinks(self: EosDesignsFacts) -> int:
         """Exposed in avd_switch_facts."""
-        return self.shared_utils.max_parallel_uplinks
+        return self.shared_utils.node_config.max_parallel_uplinks
 
     @cached_property
     def max_uplink_switches(self: EosDesignsFacts) -> int:

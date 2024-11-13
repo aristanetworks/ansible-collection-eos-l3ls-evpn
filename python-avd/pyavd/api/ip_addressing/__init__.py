@@ -313,7 +313,7 @@ class AvdIpAddressing(AvdFacts, UtilsMixin):
 
         Used for "vtep_diagnostic.loopback".
         """
-        offset = self.shared_utils.id + self.shared_utils.loopback_ipv6_offset
+        offset = self.shared_utils.id + self.shared_utils.node_config.loopback_ipv6_offset
         return get_ip_from_pool(pool, 128, offset, 0)
 
     def evpn_underlay_l3_multicast_group(
