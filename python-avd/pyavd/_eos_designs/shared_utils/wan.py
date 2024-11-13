@@ -191,7 +191,6 @@ class WanMixin:
                 if public_ip := path_group.interfaces[interface.name].public_ip:
                     return public_ip
 
-        # TODO: Evaluate if this should be moved above the wan_route_servers check. It would change precedence order and is a breaking change.
         if interface.public_ip:
             return interface.public_ip
 

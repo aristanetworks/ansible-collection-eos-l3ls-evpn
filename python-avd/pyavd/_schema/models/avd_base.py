@@ -11,7 +11,7 @@ if TYPE_CHECKING:
 
 
 class AvdBase:
-    _is_avd_class: bool = True
+    """Base class used for schema-based data classes holding data loaded from AVD inputs."""
 
     def __eq__(self, other: object) -> bool:
         """Compare two instances of AvdBase by comparing their repr."""

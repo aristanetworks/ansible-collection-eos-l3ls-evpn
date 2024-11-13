@@ -6,6 +6,8 @@ from __future__ import annotations
 from collections.abc import Mapping, Sequence
 from typing import TYPE_CHECKING, Any, TypeVar
 
+from pyavd._schema.models.avd_base import AvdBase
+
 from .constants import ACCEPTED_COERCION_MAP
 
 if TYPE_CHECKING:
@@ -55,7 +57,7 @@ def coerce_type(value: Any, target_type: type[T], list_items_type: type[TT] | No
 
     If coercion cannot be done, the original value will be returned. The calling function should catch the wrong type if necessary.
     """
-    if value is None and (target_type is list or hasattr(target_type, "_is_avd_class")):
+    if value is None and (target_type is list or issubclass(target_type, AvdBase)):
         # None values are sometimes used to overwrite inherited profiles.
         # This ensures we still follow the type hint of the class.
         return nullifiy_class(target_type)()
@@ -84,7 +86,7 @@ def coerce_type(value: Any, target_type: type[T], list_items_type: type[TT] | No
         return target_type._from_dict(value)
 
     # Identify subclass of AvdIndexedList without importing AvdIndexedList (circular import)
-    elif hasattr(target_type, "_is_avd_collection") and isinstance(value, Sequence):
+    elif hasattr(target_type, "_is_avd_indexed_list") and isinstance(value, Sequence):
         return target_type._from_list(value)
 
     # Giving up and just returning the original value.

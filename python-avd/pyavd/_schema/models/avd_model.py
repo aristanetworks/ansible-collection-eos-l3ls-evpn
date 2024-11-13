@@ -4,10 +4,11 @@
 from __future__ import annotations
 
 from collections.abc import Mapping
+from copy import deepcopy
 from typing import TYPE_CHECKING, Any, ClassVar, Literal
 
 from pyavd._schema.coerce_type import coerce_type
-from pyavd._utils import Undefined
+from pyavd._utils import Undefined, UndefinedType
 
 from .avd_base import AvdBase
 from .avd_indexed_list import AvdIndexedList
@@ -19,10 +20,19 @@ if TYPE_CHECKING:
 
 
 class AvdModel(AvdBase):
+    """Base class used for schema-based data classes holding dictionaries loaded from AVD inputs."""
+
     _is_avd_model = True
+    """Attribute checked in coerce_type and other tooling where importing the class is not possible because of circular imports."""
     _allow_other_keys: bool = False
+    """Attribute telling if this class should fail or ignore unknown keys found during loading in _from_dict()."""
     _fields: ClassVar[dict[str, dict]]
+    """
+    Metadata serving as a shortcut for knowing the expected type of each field and default value.
+    This is used instead of inspecting the type-hints to improve performance significantly.
+    """
     _required_fields: ClassVar[tuple[str, ...]]
+    """Metadata telling which fields are required. Currently not used."""
     _field_to_key_map: ClassVar[dict[str, str]]
     """Map of field name to original dict key. Used when fields have the field_ prefix to get the original key."""
     _key_to_field_map: ClassVar[dict[str, str]]
@@ -122,7 +132,7 @@ class AvdModel(AvdBase):
         setattr(self, name, default_value)
         return default_value
 
-    def _get_defined_attr(self, name: str) -> Any | Undefined:
+    def _get_defined_attr(self, name: str) -> Any | UndefinedType:
         """
         Get attribute or Undefined.
 
@@ -150,13 +160,13 @@ class AvdModel(AvdBase):
         The check ignores the default values and is performed recursively on any nested models.
         """
         return any(
-            # First item going through the checks below will trigger the any.
-            True
+            # False if item is Undefined
+            (value := self._get_defined_attr(field)) is not Undefined
+            and
+            # False if it is AVD class with a falsy value
+            # True otherwise
+            not (isinstance(value, AvdBase) and not value)
             for field in self._fields
-            # Skipping item if Undefined
-            if (value := self._get_defined_attr(field)) is not Undefined
-            # Skipping value if it is not an AVD class or if it _is_ an AVD class with a falsy value
-            and not (hasattr(value, "_is_avd_class") and not value)
         )
 
     def _as_dict(self, include_default_values: bool = False) -> dict:
@@ -205,7 +215,7 @@ class AvdModel(AvdBase):
         """
         Behave like dict.get() to get a field value only if set.
 
-        This will not insert a default values and will return the default value (or None) if not set.
+        If the field balue is not set, this will not insert a default schema values but will instead return the given 'default' value (or None).
         """
         if (value := self._get_defined_attr(name)) is Undefined:
             return default
@@ -227,15 +237,22 @@ class AvdModel(AvdBase):
             setattr(self, field, new_value)
 
     def _deepmerge(self, other: Self, list_merge: Literal["append", "replace"] = "append") -> None:
-        """Update instance by deepmerging the other instance in."""
+        """
+        Update instance by deepmerging the other instance in.
+
+        Args:
+            other: The other instance of the same type to merge on this instance.
+            list_merge: Merge strategy used on any nested lists.
+                - "append" will first try to deep merge on the primary key, and if not found it will append the new item.
+                - "replace" will replace the full list.
+        """
         cls = type(self)
         if not isinstance(other, cls):
             msg = f"Unable to merge type '{type(other)}' into '{cls}'"
             raise TypeError(msg)
 
-        copy_of_other = other._deepcopy()
         for field, field_info in cls._fields.items():
-            if (new_value := copy_of_other._get_defined_attr(field)) is Undefined:
+            if (new_value := other._get_defined_attr(field)) is Undefined:
                 continue
             old_value = self._get_defined_attr(field)
             if old_value == new_value:
@@ -243,13 +260,13 @@ class AvdModel(AvdBase):
 
             if not isinstance(old_value, type(new_value)):
                 # Different type so we can just replace
-                setattr(self, field, new_value)
+                setattr(self, field, deepcopy(new_value))
                 continue
 
             # Merge new value
             field_type = field_info["type"]
             if field_type is list and list_merge == "append":
-                setattr(self, field, old_value + new_value)
+                setattr(self, field, old_value + deepcopy(new_value))
             elif issubclass(field_type, (AvdModel, AvdIndexedList)) and isinstance(old_value, field_type):
                 # Merge in to the existing object
                 old_value._deepmerge(new_value, list_merge=list_merge)
@@ -257,8 +274,16 @@ class AvdModel(AvdBase):
                 setattr(self, field, new_value)
 
     def _deepmerged(self, other: Self, list_merge: Literal["append", "replace"] = "append") -> Self:
-        """Return new instance with the result of the deepmerge of "other" on this instance."""
-        new_instance = self._deepcopy()
+        """
+        Return new instance with the result of the deepmerge of "other" on this instance.
+
+        Args:
+            other: The other instance of the same type to merge on this instance.
+            list_merge: Merge strategy used on any nested lists.
+                - "append" will first try to deep merge on the primary key, and if not found it will append the new item.
+                - "replace" will replace the full list.
+        """
+        new_instance = deepcopy(self)
         new_instance._deepmerge(other=other, list_merge=list_merge)
         return new_instance
 
@@ -269,14 +294,13 @@ class AvdModel(AvdBase):
             msg = f"Unable to inherit from type '{type(other)}' into '{cls}'"
             raise TypeError(msg)
 
-        copy_of_other = other._deepcopy()
         for field in cls._fields:
             if self._get_defined_attr(field) is not Undefined:
                 continue
-            if (new_value := copy_of_other._get_defined_attr(field)) is Undefined:
+            if (new_value := other._get_defined_attr(field)) is Undefined:
                 continue
 
-            setattr(self, field, new_value)
+            setattr(self, field, deepcopy(new_value))
 
     def _deepinherit(self, other: Self) -> None:
         """Update instance by recursively inheriting unset fields from other instance. Lists are not merged."""
@@ -285,9 +309,8 @@ class AvdModel(AvdBase):
             msg = f"Unable to inherit from type '{type(other)}' into '{cls}'"
             raise TypeError(msg)
 
-        copy_of_other = other._deepcopy()
         for field, field_info in cls._fields.items():
-            if (new_value := copy_of_other._get_defined_attr(field)) is Undefined:
+            if (new_value := other._get_defined_attr(field)) is Undefined:
                 continue
             old_value = self._get_defined_attr(field)
             if old_value == new_value:
@@ -301,11 +324,11 @@ class AvdModel(AvdBase):
 
             # Inherit the field only if the old value is Undefined, otherwise ignore.
             if old_value is Undefined:
-                setattr(self, field, new_value)
+                setattr(self, field, deepcopy(new_value))
 
     def _deepinherited(self, other: Self) -> Self:
         """Return new instance with the result of recursively inheriting unset fields from other instance. Lists are not merged."""
-        new_instance = self._deepcopy()
+        new_instance = deepcopy(self)
         new_instance._deepinherit(other=other)
         return new_instance
 

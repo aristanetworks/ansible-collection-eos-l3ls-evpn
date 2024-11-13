@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import re
 from collections.abc import Iterable, Iterator, Sequence
+from copy import deepcopy
 from types import NoneType
 from typing import TYPE_CHECKING, ClassVar, Generic, Literal
 
@@ -24,13 +25,27 @@ NATURAL_SORT_PATTERN = re.compile(r"(\d+)")
 
 
 class AvdIndexedList(Sequence[T_AvdModel], Generic[T_PrimaryKey, T_AvdModel], AvdBase):
-    _is_avd_collection = True
+    """
+    Base class used for schema-based data classes holding lists-of-dictionaries-with-primary-key loaded from AVD inputs.
+
+    Other lists are *not* using this model.
+    """
+
+    _is_avd_indexed_list = True
+    """Attribute checked in coerce_type and other tooling where importing the class is not possible because of circular imports."""
     _item_type: ClassVar[type[AvdModel]]
+    """Type of items. This is used instead of inspecting the type-hints to improve performance significantly."""
     _primary_key: ClassVar[str]
+    """The name of the primary key to be used in the items."""
     _items: dict[T_PrimaryKey, T_AvdModel]
+    """
+    Internal attribute holding the actual data. Using a dict keyed by the primary key value of each item to improve performance
+    significantly when searching for a specific item.
+    """
 
     @classmethod
     def _from_list(cls, data: Sequence) -> Self:
+        """Returns a new instance loaded with the data from the given list."""
         if not isinstance(data, Sequence):
             msg = f"Expecting 'data' as a 'Sequence' when loading data into '{cls.__name__}'. Got '{type(data)}"
             raise TypeError(msg)
@@ -49,6 +64,12 @@ class AvdIndexedList(Sequence[T_AvdModel], Generic[T_PrimaryKey, T_AvdModel], Av
         return cls(cls_items)
 
     def __init__(self, items: Iterable[T_AvdModel] | UndefinedType = Undefined) -> None:
+        """
+        AvdIndexedList subclass.
+
+        Args:
+            items: Iterable holding items of the correct type to be loaded into the indexed list.
+        """
         if isinstance(items, UndefinedType):
             self._items = {}
         else:
@@ -102,7 +123,7 @@ class AvdIndexedList(Sequence[T_AvdModel], Generic[T_PrimaryKey, T_AvdModel], Av
         return [item._as_dict(include_default_values=include_default_values) for item in self._items.values()]
 
     def _natural_sorted(self, ignore_case: bool = True) -> Self:
-        """Returns an iterator yielding the items natural sorted by primary key."""
+        """Return new instance where the items are natural sorted by primary key."""
 
         def convert(text: str) -> int | str:
             if text.isdigit():
@@ -117,47 +138,60 @@ class AvdIndexedList(Sequence[T_AvdModel], Generic[T_PrimaryKey, T_AvdModel], Av
         return cls(sorted(self.values(), key=key))
 
     def _deepmerge(self, other: Self, list_merge: Literal["append", "replace"] = "append") -> None:
-        """Update instance by deepmerging the other instance in."""
+        """
+        Update instance by deepmerging the other instance in.
+
+        Args:
+            other: The other instance of the same type to merge into this instance.
+            list_merge: Merge strategy used on this and any nested lists.
+                - "append" will first try to deep merge on the primary key, and if not found it will append the new item.
+                - "replace" will replace the full list.
+        """
         cls = type(self)
         if not isinstance(other, cls):
             msg = f"Unable to merge type '{type(other)}' into '{cls}'"
             raise TypeError(msg)
 
-        copy_of_other = other._deepcopy()
-
         if list_merge == "replace":
-            self._items = copy_of_other._items
+            self._items = deepcopy(other._items)
             return
 
-        for primary_key, new_item in copy_of_other.items():
+        for primary_key, new_item in other.items():
             old_value = self.get(primary_key)
             if old_value is Undefined or not isinstance(old_value, type(new_item)):
                 # New item or different type so we can just replace
-                self[primary_key] = new_item
+                self[primary_key] = deepcopy(new_item)
                 continue
 
             # Existing item of same type, so deepmerge.
             self[primary_key]._deepmerge(new_item, list_merge=list_merge)
 
     def _deepmerged(self, other: Self, list_merge: Literal["append", "replace"] = "append") -> Self:
-        """Return new instance with the result of the deepmerge of "other" on this instance."""
-        new_instance = self._deepcopy()
+        """
+        Return new instance with the result of the deepmerge of "other" on this instance.
+
+        Args:
+            other: The other instance of the same type to merge on this instance.
+            list_merge: Merge strategy used on any nested lists.
+                - "append" will first try to deep merge on the primary key, and if not found it will append the new item.
+                - "replace" will replace the full list.
+        """
+        new_instance = deepcopy(self)
         new_instance._deepmerge(other=other, list_merge=list_merge)
         return new_instance
 
     def _deepinherit(self, other: Self) -> None:
-        """Update instance by recursively inheriting items from other instance."""
+        """Update instance by recursively inheriting from other instance for all existing items. New items are *not* added."""
         cls = type(self)
         if not isinstance(other, cls):
             msg = f"Unable to inherit from type '{type(other)}' into '{cls}'"
             raise TypeError(msg)
 
-        copy_of_other = other._deepcopy()
-        for primary_key, new_item in copy_of_other.items():
+        for primary_key, new_item in other.items():
             old_value = self.get(primary_key)
             if old_value is Undefined:
                 # New item so we can just append
-                self[primary_key] = new_item
+                self[primary_key] = deepcopy(new_item)
                 continue
 
             # Existing item, so deepinherit.
