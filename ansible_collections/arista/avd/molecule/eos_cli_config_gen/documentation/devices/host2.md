@@ -23,6 +23,8 @@
   - [DHCP Relay Device Configuration](#dhcp-relay-device-configuration)
 - [System Boot Settings](#system-boot-settings)
   - [System Boot Device Configuration](#system-boot-device-configuration)
+- [Monitoring](#monitoring)
+  - [Monitor Server Radius Summary](#monitor-server-radius-summary)
 - [Monitor Connectivity](#monitor-connectivity)
   - [Global Configuration](#global-configuration)
   - [Monitor Connectivity Device Configuration](#monitor-connectivity-device-configuration)
@@ -293,6 +295,24 @@ dhcp relay
 
 ```eos
 !
+```
+
+## Monitoring
+
+### Monitor Server Radius Summary
+
+#### Server Probe Settings
+
+| Setting | Value |
+| ------- | ----- |
+| Probe method | status-server |
+
+#### Monitor Server Radius Device Configuration
+
+```eos
+!
+monitor server radius
+   probe method status-server
 ```
 
 ## Monitor Connectivity
