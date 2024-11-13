@@ -4535,6 +4535,11 @@ keys:
     description: 'Generate AVD configurations directly from a given CloudVision topology.
 
       See `cv_topology` for details.'
+  use_router_general_for_router_id:
+    type: bool
+    description: Use `router general` to set router ID for all routing protocols and
+      VRFs.
+    default: false
   vtep_loopback_description:
     documentation_options:
       table: overlay-settings
