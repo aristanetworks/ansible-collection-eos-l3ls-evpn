@@ -5360,6 +5360,10 @@ policy-map type pbr PM_PBR_BREAKOUT
 
 ### Router BFD
 
+| BFD Tuning |
+| ---------- |
+| Slow-Timer 5000 |
+
 #### Router BFD Singlehop Summary
 
 | Interval | Minimum RX | Multiplier |
@@ -5385,6 +5389,7 @@ policy-map type pbr PM_PBR_BREAKOUT
 router bfd
    interval 900 min-rx 900 multiplier 50 default
    multihop interval 300 min-rx 300 multiplier 3
+   slow-timer 5000
    local-address 192.168.255.1
    session stats snapshot interval 51
    !
