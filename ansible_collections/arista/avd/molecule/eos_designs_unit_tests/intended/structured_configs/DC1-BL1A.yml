@@ -2,7 +2,6 @@ hostname: DC1-BL1A
 is_deployed: true
 router_bgp:
   as: '65104'
-  router_id: 192.168.255.14
   bgp_defaults:
   - distance bgp 20 200 200
   bgp:
@@ -131,7 +130,6 @@ router_bgp:
       - address_family: evpn
         route_targets:
         - '65104:15'
-    router_id: 192.168.255.14
     redistribute:
       connected:
         enabled: true
@@ -154,7 +152,6 @@ router_bgp:
       - address_family: vpn-ipv4
         route_targets:
         - 65000:123
-    router_id: 192.168.255.14
     redistribute:
       connected:
         enabled: true
@@ -228,7 +225,6 @@ router_bgp:
       - address_family: evpn
         route_targets:
         - '65104:20'
-    router_id: 192.168.255.14
     redistribute:
       connected:
         enabled: true
@@ -243,7 +239,6 @@ router_bgp:
       - address_family: evpn
         route_targets:
         - '65104:21'
-    router_id: 192.168.255.14
     redistribute:
       connected:
         enabled: true
@@ -258,7 +253,6 @@ router_bgp:
       - address_family: evpn
         route_targets:
         - '65104:31'
-    router_id: 192.168.255.14
     redistribute:
       connected:
         enabled: true
@@ -273,7 +267,6 @@ router_bgp:
       - address_family: evpn
         route_targets:
         - '65104:42'
-    router_id: 192.168.255.14
   vlan_aware_bundles:
   - name: Tenant_A_WAN_Zone
     rd: 192.168.254.14:14
@@ -452,6 +445,9 @@ ntp: null
 snmp_server:
   contact: example@example.com
   location: EOS_DESIGNS_UNIT_TESTS DC1-BL1A
+router_general:
+  router_id:
+    ipv4: 192.168.255.14
 ethernet_interfaces:
 - name: Ethernet1
   peer: DC1-SPINE1
@@ -724,7 +720,6 @@ router_ospf:
   - id: 14
     vrf: Tenant_A_WAN_Zone
     passive_interface_default: true
-    router_id: 192.168.255.14
     no_passive_interfaces:
     - Ethernet7
     - Vlan150

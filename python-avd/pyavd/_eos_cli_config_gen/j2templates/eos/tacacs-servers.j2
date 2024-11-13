@@ -12,24 +12,24 @@ tacacs-server timeout {{ tacacs_servers.timeout }}
 {%     if tacacs_servers.policy_unknown_mandatory_attribute_ignore is arista.avd.defined(true) %}
 tacacs-server policy unknown-mandatory-attribute ignore
 {%     endif %}
-{%     for host in tacacs_servers.hosts %}
-{%         if host.host is arista.avd.defined %}
-{%             set host_cli = "tacacs-server host " ~ host.host %}
-{%         endif %}
-{%         if host.single_connection is arista.avd.defined(true) %}
-{%             set host_cli = host_cli ~ " single-connection" %}
-{%         endif %}
-{%         if host.vrf is arista.avd.defined %}
-{%             if host.vrf != 'default' %}
+{%     if tacacs_servers.hosts is arista.avd.defined %}
+{%         for host in tacacs_servers.hosts %}
+{%             if host.host is arista.avd.defined %}
+{%                 set host_cli = "tacacs-server host " ~ host.host %}
+{%             endif %}
+{%             if host.single_connection is arista.avd.defined(true) %}
+{%                 set host_cli = host_cli ~ " single-connection" %}
+{%             endif %}
+{%             if host.vrf is arista.avd.defined and host.vrf != 'default' %}
 {%                 set host_cli = host_cli ~ " vrf " ~ host.vrf %}
 {%             endif %}
-{%         endif %}
-{%         if host.timeout is arista.avd.defined %}
-{%             set host_cli = host_cli ~ " timeout " ~ host.timeout %}
-{%         endif %}
-{%         if host.key is arista.avd.defined %}
-{%             set host_cli = host_cli ~ " key " ~ host.key_type | arista.avd.default('7') ~ ' ' ~ host.key | arista.avd.hide_passwords(hide_passwords) %}
-{%         endif %}
+{%             if host.timeout is arista.avd.defined %}
+{%                 set host_cli = host_cli ~ " timeout " ~ host.timeout %}
+{%             endif %}
+{%             if host.key is arista.avd.defined %}
+{%                 set host_cli = host_cli ~ " key " ~ host.key_type | arista.avd.default('7') ~ ' ' ~ host.key | arista.avd.hide_passwords(hide_passwords) %}
+{%             endif %}
 {{ host_cli }}
-{%     endfor %}
+{%         endfor %}
+{%     endif %}
 {% endif %}
