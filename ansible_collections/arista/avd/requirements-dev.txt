@@ -22,7 +22,7 @@ pylint>=3.2.6
 pre-commit>=3.2.0
 pre-commit-hooks>=3.3.0
 referencing>=0.35.0
-ruff==0.5.6
+ruff==0.7.3
 tox
 treelib>=1.5.5
 twine

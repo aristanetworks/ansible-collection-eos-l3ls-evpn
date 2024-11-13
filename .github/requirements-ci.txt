@@ -1,7 +1,3 @@
 # Installing PyAVD from source.
 # The package path below is relative to the repo root and will only work if the pip install is executed from there.
-./python-avd
-# The -r path is relative to this file.
--r ../ansible_collections/arista/avd/requirements.txt
-# Needed for molecule
-jsonschema-rs>=0.24
+./python-avd[ansible-collection]
