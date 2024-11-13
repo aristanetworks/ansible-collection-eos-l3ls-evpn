@@ -1,3 +1,4 @@
+---
 ### IP NAT ###
 ip_nat:
   kernel_buffer_size: 64
@@ -22,7 +23,13 @@ ip_nat:
           first_port: 1024
           last_port: 65535
         - first_ip: 10.2.0.2
-          last_ip: 10.2.0.3
+          last_ip: 10.2.0.2
+    - name: prefix_32_without_ip
+      type: ip-port
+      prefix_length: 32
+      ranges:
+        - first_port: 1024
+          last_port: 65535
     - name: prefix_24
       prefix_length: 24
       utilization_log_threshold: 100
@@ -33,8 +40,6 @@ ip_nat:
     - name: port_only_2
       type: port-only
       ranges:
-        - first_port: 10
-          last_port: 15
         - first_ip: 10.1.0.0 # first_ip and last_ip will be ignored for port-only.
           last_ip: 10.1.255.255
           first_port: 1024
