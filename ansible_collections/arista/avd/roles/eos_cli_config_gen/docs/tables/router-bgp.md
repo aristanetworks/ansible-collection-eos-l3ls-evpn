@@ -12,10 +12,10 @@
     | [<samp>&nbsp;&nbsp;as_notation</samp>](## "router_bgp.as_notation") | String |  |  | Valid Values:<br>- <code>asdot</code><br>- <code>asplain</code> | BGP AS can be deplayed in the asplain <1-4294967295> or asdot notation "<1-65535>.<0-65535>". This flag indicates which mode is preferred - asplain is the default. |
     | [<samp>&nbsp;&nbsp;router_id</samp>](## "router_bgp.router_id") | String |  |  |  | In IP address format A.B.C.D. |
     | [<samp>&nbsp;&nbsp;timers</samp>](## "router_bgp.timers") | Dictionary |  |  |  |  |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;keepalive_time</samp>](## "router_bgp.timers.keepalive_time") | Integer |  |  | Min: 0<br>Max: 3600 | Time between BGP keepalive messages in seconds. |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;hold_time</samp>](## "router_bgp.timers.hold_time") | Integer |  |  | Min: 0<br>Max: 7200 | Hold time in seconds. Must be defined along with keepalive_time.<br>The valid values are 3-7200 or 0 if both values are 0. |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;min_hold_time</samp>](## "router_bgp.timers.min_hold_time") | Integer |  |  | Min: 3<br>Max: 7200 | Neighbor's minimum hold time constraint in seconds. |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;send_failure_hold_time</samp>](## "router_bgp.timers.send_failure_hold_time") | Integer |  |  | Min: 60<br>Max: 65335 | Send failure hold time in seconds. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;keepalive_time</samp>](## "router_bgp.timers.keepalive_time") | Integer |  |  | Min: 0<br>Max: 3600 | Time between BGP keepalive messages in seconds.<br>`keepalive_time` should be lesser than `hold_time`. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;hold_time</samp>](## "router_bgp.timers.hold_time") | Integer |  |  | Min: 0<br>Max: 7200 | Hold time in seconds. Must be defined along with `keepalive_time`.<br>The valid values are 3-7200 or 0 if both values are 0. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;min_hold_time</samp>](## "router_bgp.timers.min_hold_time") | Integer |  |  | Min: 3<br>Max: 7200 | Neighbor's minimum hold time constraint in seconds.<br>`min_hold_time` should be less than `hold_time`. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;send_failure_hold_time</samp>](## "router_bgp.timers.send_failure_hold_time") | Integer |  |  | Min: 60<br>Max: 65535 | Send failure hold time in seconds. |
     | [<samp>&nbsp;&nbsp;distance</samp>](## "router_bgp.distance") | Dictionary |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;external_routes</samp>](## "router_bgp.distance.external_routes") | Integer | Required |  | Min: 1<br>Max: 255 |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;internal_routes</samp>](## "router_bgp.distance.internal_routes") | Integer | Required |  | Min: 1<br>Max: 255 |  |
@@ -1592,17 +1592,19 @@
       timers:
 
         # Time between BGP keepalive messages in seconds.
+        # `keepalive_time` should be lesser than `hold_time`.
         keepalive_time: <int; 0-3600>
 
-        # Hold time in seconds. Must be defined along with keepalive_time.
+        # Hold time in seconds. Must be defined along with `keepalive_time`.
         # The valid values are 3-7200 or 0 if both values are 0.
         hold_time: <int; 0-7200>
 
         # Neighbor's minimum hold time constraint in seconds.
+        # `min_hold_time` should be less than `hold_time`.
         min_hold_time: <int; 3-7200>
 
         # Send failure hold time in seconds.
-        send_failure_hold_time: <int; 60-65335>
+        send_failure_hold_time: <int; 60-65535>
       distance:
         external_routes: <int; 1-255; required>
         internal_routes: <int; 1-255; required>

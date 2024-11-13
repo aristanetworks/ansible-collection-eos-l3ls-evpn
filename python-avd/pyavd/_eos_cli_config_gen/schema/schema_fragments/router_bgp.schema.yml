@@ -31,7 +31,9 @@ keys:
         type: dict
         keys:
           keepalive_time:
-            description: Time between BGP keepalive messages in seconds.
+            description: |-
+              Time between BGP keepalive messages in seconds.
+              `keepalive_time` should be lesser than `hold_time`.
             type: int
             convert_types:
               - str
@@ -39,7 +41,7 @@ keys:
             max: 3600
           hold_time:
             description: |-
-              Hold time in seconds. Must be defined along with keepalive_time.
+              Hold time in seconds. Must be defined along with `keepalive_time`.
               The valid values are 3-7200 or 0 if both values are 0.
             type: int
             convert_types:
@@ -47,7 +49,9 @@ keys:
             min: 0
             max: 7200
           min_hold_time:
-            description: Neighbor's minimum hold time constraint in seconds.
+            description: |-
+              Neighbor's minimum hold time constraint in seconds.
+              `min_hold_time` should be less than `hold_time`.
             type: int
             convert_types:
               - str
@@ -59,7 +63,7 @@ keys:
             convert_types:
               - str
             min: 60
-            max: 65335
+            max: 65535
       distance:
         type: dict
         keys:
