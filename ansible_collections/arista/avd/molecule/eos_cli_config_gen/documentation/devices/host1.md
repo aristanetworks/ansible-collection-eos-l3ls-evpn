@@ -5348,6 +5348,7 @@ policy-map type pbr PM_PBR_BREAKOUT
 ```eos
 !
 router bfd
+   slow-timer 5000
    interval 900 min-rx 900 multiplier 50 default
    multihop interval 300 min-rx 300 multiplier 3
    local-address 192.168.255.1

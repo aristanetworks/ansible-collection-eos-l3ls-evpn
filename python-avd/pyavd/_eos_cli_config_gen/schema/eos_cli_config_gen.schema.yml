@@ -11907,6 +11907,11 @@ keys:
               local_discriminator:
                 type: str
                 description: IPv4 address or 32 bit integer.
+      slow_timer:
+        description: Rate in milliseconds.
+        type: int
+        min: 2000
+        max: 60000
   router_bgp:
     type: dict
     keys:
