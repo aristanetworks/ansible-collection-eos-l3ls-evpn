@@ -209,6 +209,19 @@ vlan_interfaces:
           algorithm: sha-256
         rx_disabled: true
 
+  - name: Vlan4092
+    description: MLAG_PEER
+    ip_address: 10.255.252.0/31
+    no_autostate: true
+    mtu: 1500
+
+  - name: Vlan4093
+    description: MLAG_PEER_L3_PEERING
+    ip_address: 10.255.251.0/31
+    isis_enable: EVPN_UNDERLAY
+    isis_metric: 50
+    isis_network_point_to_point: true
+
 # MCAST Configuration
 
   - name: Vlan4094
@@ -432,6 +445,17 @@ vlan_interfaces:
     ipv6_virtual_router_addresses:
       - 1b11:3a00:22b0:16::15
       - 1b11:3a00:22b0:16::14
+
+  - name: Vlan26
+    ospf_network_point_to_point: true
+    ospf_area: 0.0.0.24
+    ospf_cost: 99
+    ospf_authentication: message-digest
+    ospf_message_digest_keys:
+      - id: 55
+        hash_algorithm: md5
+        key: "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+
   - name: Vlan1002
     description: SVI Description
     shutdown: false
@@ -528,6 +552,14 @@ vlan_interfaces:
         source_route_export:
           enabled: true
           administrative_distance: 20
+
+  - name: Vlan111
+    tenant: Tenant_A
+    tags: ['DC1']
+    description: PR01-DEMO
+    shutdown: false
+    vrf: TENANT_A_PROJECT01
+    ip_address_virtual: 10.1.10.254/24
 
 # VRRP
   - name: Vlan667
