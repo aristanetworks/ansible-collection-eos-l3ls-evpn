@@ -56,6 +56,8 @@
   - [IP DHCP Relay Device Configuration](#ip-dhcp-relay-device-configuration)
 - [IP DHCP Snooping](#ip-dhcp-snooping)
   - [IP DHCP Snooping Device Configuration](#ip-dhcp-snooping-device-configuration)
+- [IP NAT](#ip-nat)
+  - [IP NAT Device Configuration](#ip-nat-device-configuration)
 
 ## Management
 
@@ -581,4 +583,14 @@ IP DHCP Snooping is enabled
 ```eos
 !
 ip dhcp snooping
+```
+
+## IP NAT
+
+### IP NAT Device Configuration
+
+```eos
+!
+!
+ip nat synchronization
 ```
