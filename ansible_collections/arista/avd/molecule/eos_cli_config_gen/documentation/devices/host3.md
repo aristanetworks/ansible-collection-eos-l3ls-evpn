@@ -6,6 +6,9 @@
   - [Management Interfaces](#management-interfaces)
 - [Monitoring](#monitoring)
   - [TerminAttr Daemon](#terminattr-daemon)
+- [Spanning Tree](#spanning-tree)
+  - [Spanning Tree Summary](#spanning-tree-summary)
+  - [Spanning Tree Device Configuration](#spanning-tree-device-configuration)
 - [Routing](#routing)
   - [Router ISIS](#router-isis)
   - [Router BGP](#router-bgp)
@@ -56,6 +59,54 @@ interface Management1
 daemon TerminAttr
    exec /usr/bin/TerminAttr -cvaddr=apiserver.arista.io:443 -cvauth=token-secure,/tmp/cv-onboarding-token -cvvrf=mgt -smashexcludes=ale,flexCounter,hardware,kni,pulse,strata -ingestexclude=/Sysdb/cell/1/agent,/Sysdb/cell/2/agent -taillogs
    no shutdown
+```
+
+## Spanning Tree
+
+### Spanning Tree Summary
+
+STP mode: **mstp**
+
+#### MSTP Instance and Priority
+
+| Instance(s) | Priority |
+| -------- | -------- |
+| 0 | 4096 |
+| 100-200 | 8192 |
+
+#### MST Configuration
+
+| Variable | Value |
+| -------- | -------- |
+| Name | test |
+| Revision | 5 |
+| Instance 2 | VLAN(s) 15,16,17,18 |
+| Instance 3 | VLAN(s) 15 |
+| Instance 4 | VLAN(s) 200-300 |
+
+#### Global Spanning-Tree Settings
+
+- Spanning Tree disabled for VLANs: **105,202,505-506**
+- Global BPDU Guard for Edge ports is enabled.
+- MST PSVT Border is enabled.
+
+### Spanning Tree Device Configuration
+
+```eos
+!
+spanning-tree mode mstp
+no spanning-tree vlan-id 105,202,505-506
+spanning-tree mst pvst border
+spanning-tree edge-port bpduguard default
+spanning-tree mst 0 priority 4096
+spanning-tree mst 100-200 priority 8192
+!
+spanning-tree mst configuration
+   name test
+   revision 5
+   instance 2 vlan 15,16,17,18
+   instance 3 vlan 15
+   instance 4 vlan 200-300
 ```
 
 ## Routing

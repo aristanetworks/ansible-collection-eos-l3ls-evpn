@@ -29,6 +29,7 @@
 - [Monitoring](#monitoring)
   - [TerminAttr Daemon](#terminattr-daemon)
   - [Logging](#logging)
+  - [SNMP](#snmp)
   - [Flow Tracking](#flow-tracking)
   - [Monitor Server Radius Summary](#monitor-server-radius-summary)
 - [Monitor Connectivity](#monitor-connectivity)
@@ -37,6 +38,9 @@
 - [LACP](#lacp)
   - [LACP Summary](#lacp-summary)
   - [LACP Device Configuration](#lacp-device-configuration)
+- [Spanning Tree](#spanning-tree)
+  - [Spanning Tree Summary](#spanning-tree-summary)
+  - [Spanning Tree Device Configuration](#spanning-tree-device-configuration)
 - [Interfaces](#interfaces)
   - [Switchport Default](#switchport-default)
   - [DPS Interfaces](#dps-interfaces)
@@ -416,6 +420,21 @@ logging facility syslog
 logging event link-status global
 ```
 
+### SNMP
+
+#### SNMP Configuration Summary
+
+| Contact | Location | SNMP Traps | State |
+| ------- | -------- | ---------- | ----- |
+| - | - | All | Disabled |
+
+#### SNMP Device Configuration
+
+```eos
+!
+no snmp-server enable traps
+```
+
 ### Flow Tracking
 
 #### Flow Tracking Sampled
@@ -504,6 +523,24 @@ monitor connectivity
 ```eos
 !
 lacp system-priority 0
+```
+
+## Spanning Tree
+
+### Spanning Tree Summary
+
+STP mode: **rstp**
+
+#### Global Spanning-Tree Settings
+
+- Global RSTP priority: 8192
+
+### Spanning Tree Device Configuration
+
+```eos
+!
+spanning-tree mode rstp
+spanning-tree priority 8192
 ```
 
 ## Interfaces

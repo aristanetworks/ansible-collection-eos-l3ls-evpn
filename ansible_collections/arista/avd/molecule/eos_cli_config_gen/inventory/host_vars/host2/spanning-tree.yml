@@ -1,3 +1,4 @@
+---
 ### Spanning-Tree (Rapid-PVST settings)
 spanning_tree:
   mode: rstp

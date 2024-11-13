@@ -1,4 +1,4 @@
-### Snmp Settings ####
+---
 snmp_server:
   engine_ids:
     local: 424242424242424242
@@ -143,6 +143,19 @@ snmp_server:
           authentication_level: priv
   traps:
     enable: true
+    snmp_traps:
+      - name: bridge
+      - name: bridge arista-mac-age
+        enabled: false
+      - name: mpls
+      - name: bgp
+      - name: bgp arista-backward-transition
+        enabled: false
+      - name: lldp
+      - name: msdp backward-transition
+      - name: msdp established
+      - name: snmp link-down
+      - name: snmpConfigManEvent
   vrfs:
     - name: default
       enable: false
