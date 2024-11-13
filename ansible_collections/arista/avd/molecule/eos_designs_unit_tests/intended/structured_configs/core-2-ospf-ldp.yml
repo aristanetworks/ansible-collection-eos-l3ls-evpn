@@ -27,6 +27,10 @@ management_api_http:
   enable_vrfs:
   - name: MGMT
   enable_https: true
+router_general:
+  router_id:
+    ipv4: 10.0.0.2
+    ipv6: 2000:1234:ffff:ffff::2
 loopback_interfaces:
 - name: Loopback0
   description: ROUTER_ID
@@ -41,7 +45,6 @@ router_ospf:
   process_ids:
   - id: 101
     passive_interface_default: true
-    router_id: 10.0.0.2
     max_lsa: 12000
     no_passive_interfaces:
     - Ethernet1
@@ -59,7 +62,6 @@ mpls:
   ip: true
   ldp:
     interface_disabled_default: true
-    router_id: 10.0.0.2
     shutdown: false
     transport_address_interface: Loopback0
 ethernet_interfaces:

@@ -345,17 +345,33 @@ def _get_running_collection_version(running_collection_name: str, result: dict) 
     }
 
 
-def check_running_from_source() -> None:
-    """Check if running from sources, if so recompile schemas and templates as needed."""
+def check_running_from_source() -> bool:
+    """
+    Check if running from sources, if so recompile schemas and templates as needed.
+
+    Returns:
+    --------
+    bool:
+        True if schemas or templates were recompiled, False otherwise.
+    """
     if not RUNNING_FROM_SOURCE:
-        return
+        return False
 
     # if running from source, path to pyavd and schema_tools has already been prepended to Python Path
-    from schema_tools.check_schemas import check_schemas
-    from schema_tools.compile_templates import check_templates
+    from schema_tools.check_schemas import check_schemas, rebuild_schemas
+    from schema_tools.compile_templates import check_templates, recompile_templates
 
-    check_schemas()
-    check_templates()
+    if schemas_recompiled := check_schemas():
+        display.display("Schemas have changed, rebuilding...", color=C.COLOR_CHANGED)
+        rebuild_schemas()
+        display.display("Done.", color=C.COLOR_CHANGED)
+
+    if templates_recompiled := check_templates():
+        display.display("Templates have changed, recompiling...", color=C.COLOR_CHANGED)
+        recompile_templates()
+        display.display("Done.", color=C.COLOR_CHANGED)
+
+    return schemas_recompiled or templates_recompiled
 
 
 class ActionModule(ActionBase):
@@ -396,7 +412,8 @@ class ActionModule(ActionBase):
 
         _get_running_collection_version(running_collection_name, info["ansible"])
 
-        check_running_from_source()
+        if check_running_from_source():
+            result["changed"] = True
 
         display.display(f"AVD version {info['ansible']['collection']['version']}", color=C.COLOR_OK)
         if RUNNING_FROM_SOURCE:

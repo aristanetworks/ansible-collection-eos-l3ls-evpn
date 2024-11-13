@@ -22,6 +22,9 @@ keys:
               ipv6:
                 type: int
                 description: Segment size.
+          ipv4_access_group_ingress_default:
+            type: str
+            description: ACL name to be used as the default CP ACL for all VRFs.
           ipv4_access_groups:
             type: list
             unique_keys:
@@ -36,6 +39,9 @@ keys:
                   type: str
                   convert_types:
                     - int
+          ipv6_access_group_ingress_default:
+            type: str
+            description: ACL name to be used as the default CP ACL for all VRFs.
           ipv6_access_groups:
             type: list
             unique_keys:

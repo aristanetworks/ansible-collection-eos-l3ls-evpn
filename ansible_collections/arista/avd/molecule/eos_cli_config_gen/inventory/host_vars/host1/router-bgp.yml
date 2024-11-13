@@ -783,7 +783,7 @@ router_bgp:
     label_local_termination: implicit-null
     lfib_entry_installation_skipped: true
     next_hops:
-      - ip_address: 192,51.100.1
+      - ip_address: 192.51.100.1
         lfib_backup_ip_forwarding: true
     networks:
       - prefix: 203.0.113.0/25
@@ -804,7 +804,7 @@ router_bgp:
         maximum_advertised_routes_warning_limit: 1000
         next_hop_self: true
         graceful_restart: true
-        rcf_in: RCF_TEST(ARGS)
+        rcf_in: RCF_TEST()
         rcf_out: RCF_TEST_OUT()
         next_hop_self_v4_mapped_v6_source_interface: Ethernet1
       - ip_address: 198.51.100.2
@@ -852,8 +852,8 @@ router_bgp:
         aigp_session: true
         multi_path: true
       - name: PG-BGP-LU1
-        rcf_in: RCF_BGP_LU_IN
-        rcf_out: RCF_BGP_LU_OUT
+        rcf_in: RCF_BGP_LU_IN()
+        rcf_out: RCF_BGP_LU_OUT()
         next_hop_self: true
         additional_paths:
           receive: true
@@ -1904,7 +1904,7 @@ router_bgp:
       redistribute:
         static:
           enabled: true
-          rcf: VRF-STATIC-RCF()
+          rcf: VRF_STATIC_RCF()
         ospf:
           enabled: true
           include_leaked: true

@@ -3770,6 +3770,10 @@ keys:
           type: bool
           description: Set to false to disable interface state and LLDP topology validation
             performed by the `eos_validate_state` role.
+        validate_lldp:
+          type: bool
+          description: Set to false to disable the LLDP topology validation performed
+            by the `eos_validate_state` role.
         switchport:
           type: dict
           description: This should not be combined with `ethernet_interfaces[].type
@@ -8172,6 +8176,57 @@ keys:
             type: bool
             description: Some platforms support only the `logging transceiver` command.
               `enabled` key configures this command.
+  monitor_server_radius:
+    type: dict
+    description: Settings to monitor radius servers.
+    keys:
+      service_dot1x:
+        type: bool
+        description: Monitor servers used for 802.1X authentication.
+      probe:
+        type: dict
+        description: Settings for probe sent to the server.
+        keys:
+          interval:
+            type: int
+            description: Server probe interval in seconds.
+            convert_types:
+            - str
+            min: 1
+            max: 1000
+          threshold_failure:
+            type: int
+            description: Number of consecutive failed probes before a server is marked
+              as dead.
+            convert_types:
+            - str
+            min: 1
+            max: 255
+          method:
+            type: str
+            description: Method used to probe the server. `status-server` is the EOS
+              default method.
+            valid_values:
+            - status-server
+            - access-request
+          access_request:
+            type: dict
+            description: This can only be set when `method` is `access_request`.
+            keys:
+              username:
+                type: str
+              password:
+                type: str
+                description: Encrypted password using the `password_type`.
+              password_type:
+                type: str
+                convert_types:
+                - int
+                valid_values:
+                - '0'
+                - '7'
+                - 8a
+                default: '7'
   monitor_session_default_encapsulation_gre:
     documentation_options:
       table: monitor-sessions
@@ -10583,6 +10638,10 @@ keys:
           type: bool
           description: Set to false to disable interface state and LLDP topology validation
             performed by the `eos_validate_state` role.
+        validate_lldp:
+          type: bool
+          description: Set to false to disable the LLDP topology validation performed
+            by the `eos_validate_state` role.
         eos_cli:
           type: str
           description: Multiline EOS CLI rendered directly on the port-channel interface
@@ -11899,6 +11958,13 @@ keys:
               local_discriminator:
                 type: str
                 description: IPv4 address or 32 bit integer.
+      slow_timer:
+        description: Rate in milliseconds.
+        type: int
+        convert_types:
+        - str
+        min: 2000
+        max: 60000
   router_bgp:
     type: dict
     keys:
@@ -20428,6 +20494,9 @@ keys:
               ipv6:
                 type: int
                 description: Segment size.
+          ipv4_access_group_ingress_default:
+            type: str
+            description: ACL name to be used as the default CP ACL for all VRFs.
           ipv4_access_groups:
             type: list
             unique_keys:
@@ -20442,6 +20511,9 @@ keys:
                   type: str
                   convert_types:
                   - int
+          ipv6_access_group_ingress_default:
+            type: str
+            description: ACL name to be used as the default CP ACL for all VRFs.
           ipv6_access_groups:
             type: list
             unique_keys:

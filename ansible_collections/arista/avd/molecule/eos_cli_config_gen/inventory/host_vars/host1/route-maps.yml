@@ -1,0 +1,80 @@
+---
+### Route-maps ###
+route_maps:
+  - name: RM-BGP-AGG-APPLY-SET
+    sequence_numbers:
+      - sequence: 10
+        type: permit
+        description: RM for BGP AGG Set
+        set:
+          - "local-preference 50"
+  - name: RM-BGP-EXPORT-DEFAULT-BLUE-C1
+    sequence_numbers:
+      - sequence: 10
+        type: permit
+        description: RM for BGP default route in BLUE-C1
+        match:
+          - ip address prefix-list PL-BGP-DEFAULT-BLUE-C1
+  - name: RM-CONN-BL-BGP
+    sequence_numbers:
+      - sequence: 10
+        type: deny
+        match:
+          - ip address prefix-list PL-MLAG
+      - sequence: 20
+        type: permit
+        description: sub-route-map test
+        sub_route_map: RM-HIDE-ASPATH-IN
+        match:
+          - ip address prefix-list PL-SUBRM
+      - sequence: 30
+        type: permit
+        continue:
+          enabled: true
+          sequence_number: 40
+        match:
+          - ip address prefix-list PL-CONTINUE
+      - sequence: 40
+        type: permit
+        continue:
+          enabled: true
+        match:
+          - ip address prefix-list PL-CONTINUE
+      - sequence: 50
+        type: permit
+  - name: RM-STATIC-2-BGP
+    sequence_numbers:
+      - sequence: 10
+        description: tag for static routes
+        type: permit
+        set:
+          - tag 65100
+  - name: RM-HIDE-ASPATH-IN
+    sequence_numbers:
+      - sequence: 10
+        type: permit
+        set:
+          - as-path match all replacement auto
+          - community 65000:1 additive
+  - name: RM-HIDE-ASPATH-OUT
+    sequence_numbers:
+      - sequence: 10
+        type: deny
+        match:
+          - community LIST-COM
+      - sequence: 20
+        type: permit
+        set:
+          - as-path match all replacement auto
+  - name: RM-MLAG-PEER-IN
+    sequence_numbers:
+      - sequence: 10
+        type: permit
+        set:
+          - "origin incomplete"
+  - name: RM-10.2.3.4-SET-NEXT-HOP-OUT
+    sequence_numbers:
+      - sequence: 10
+        type: permit
+        set:
+          - ip next-hop 10.2.3.4

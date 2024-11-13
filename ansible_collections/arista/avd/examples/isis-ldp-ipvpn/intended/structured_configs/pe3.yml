@@ -236,9 +236,9 @@ router_ospf:
   - id: 10
     vrf: C1_VRF1
     passive_interface_default: true
-    router_id: 10.255.1.3
     no_passive_interfaces:
     - Ethernet2
+    router_id: 10.255.1.3
     redistribute:
       bgp:
         enabled: true

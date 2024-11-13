@@ -1,0 +1,4 @@
+---
+### prompt
+
+prompt: !unsafe "%H__%D{%H:%M:%S}%v%P"

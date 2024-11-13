@@ -1,0 +1,216 @@
+---
+### IP NAT ###
+ip_nat:
+  kernel_buffer_size: 64
+  pools:
+    - name: prefix_16
+      type: ip-port
+      prefix_length: 16
+      ranges:
+        - first_ip: 10.0.0.1
+          last_ip: 10.0.255.254
+        - first_ip: 10.1.0.0
+          last_ip: 10.1.255.255
+          first_port: 1024
+          last_port: 65535
+      utilization_log_threshold: 91
+    - name: prefix_32
+      type: ip-port
+      prefix_length: 32
+      ranges:
+        - first_ip: 10.2.0.1
+          last_ip: 10.2.0.1
+          first_port: 1024
+          last_port: 65535
+        - first_ip: 10.2.0.2
+          last_ip: 10.2.0.2
+    - name: prefix_32_without_ip
+      type: ip-port
+      prefix_length: 32
+      ranges:
+        - first_port: 1024
+          last_port: 65535
+    - name: prefix_24
+      prefix_length: 24
+      utilization_log_threshold: 100
+    - name: prefix_21
+      prefix_length: 21
+    - name: port_only_1
+      type: port-only
+    - name: port_only_2
+      type: port-only
+      ranges:
+        - first_ip: 10.1.0.0 # first_ip and last_ip will be ignored for port-only.
+          last_ip: 10.1.255.255
+          first_port: 1024
+          last_port: 65535
+  synchronization:
+    description: 'test sync config'
+    expiry_interval: 60
+    local_interface: Ethernet1
+    peer_address: 1.1.1.1
+    port_range:
+      first_port: 1024
+      last_port: 65535
+      split_disabled: true
+    shutdown: true
+  translation:
+    address_selection:
+      any: true
+      hash_field_source_ip: true
+    counters: true
+    low_mark:
+      percentage: 50
+      host_percentage: 50
+    max_entries:
+      limit: 100000
+      host_limit: 1000
+      ip_limits:
+        - ip: 10.0.0.1
+          limit: 100
+        - ip: 10.0.0.2
+          limit: 200
+    timeouts:
+      - protocol: udp
+        timeout: 3600
+      - protocol: tcp
+        timeout: 7200
+  profiles:
+    - name: NAT-PROFILE-NO-VRF-2
+      destination:
+        dynamic:
+          - access_list: ACL1
+            pool_name: POOL1
+          - access_list: ACL2
+            pool_name: POOL1
+            comment: POOL1 shared with ACL1/2
+          - access_list: ACL3
+            pool_name: POOL3
+            priority: 10
+          - access_list: ACL4
+            pool_name: POOL4
+            comment: Priority low end
+            priority: 1
+          - access_list: ACL6
+            pool_name: POOL6
+            comment: Priority default
+            priority: 0
+          - access_list: ACL5
+            pool_name: POOL5
+            comment: Priority high end
+            priority: 4294967295
+        static:
+          - original_ip: 1.0.0.1
+            translated_ip: 2.0.0.1
+          - original_ip: 1.0.0.2
+            translated_ip: 2.0.0.2
+            original_port: 22
+          - original_ip: 1.0.0.2
+            translated_ip: 2.0.0.3
+            original_port: 23
+            translated_port: 23
+          - original_ip: 1.0.0.4
+            translated_ip: 2.0.0.4
+            original_port: 22
+            translated_port: 23
+            protocol: udp
+          - original_ip: 1.0.0.5
+            translated_ip: 2.0.0.5
+            original_port: 22
+            translated_port: 23
+            protocol: tcp
+            group: 1
+          - original_ip: 1.0.0.6
+            translated_ip: 2.0.0.6
+            original_port: 22
+            translated_port: 23
+            protocol: tcp
+            group: 2
+            priority: 5
+            comment: 'Comment Test'
+          - original_ip: 1.0.0.7
+            translated_ip: 2.0.0.7
+            access_list: ACL21
+          - original_ip: 239.0.0.1
+            translated_ip: 239.0.0.2
+            direction: egress
+      source:
+        dynamic:
+          - access_list: ACL11
+            pool_name: POOL11
+            nat_type: pool
+          - access_list: ACL12
+            pool_name: POOL11
+            comment: POOL11 shared with ACL11/12
+            nat_type: pool
+          - access_list: ACL13
+            pool_name: POOL13
+            priority: 10
+            nat_type: pool
+          - access_list: ACL14
+            pool_name: POOL14
+            comment: Priority low end
+            priority: 1
+            nat_type: pool
+          - access_list: ACL16
+            pool_name: POOL16
+            comment: Priority default
+            priority: 0
+            nat_type: pool
+          - access_list: ACL15
+            pool_name: POOL15
+            comment: Priority high end
+            priority: 4294967295
+            nat_type: pool
+          - access_list: ACL17
+            comment: Priority_10
+            priority: 10
+            nat_type: overload
+          - access_list: ACL18
+            pool_name: POOL18
+            comment: Priority_10
+            priority: 10
+            nat_type: pool-address-only
+          - access_list: ACL19
+            pool_name: POOL19
+            comment: Priority_10
+            priority: 10
+            nat_type: pool-full-cone
+        static:
+          - original_ip: 3.0.0.1
+            translated_ip: 4.0.0.1
+          - original_ip: 3.0.0.2
+            translated_ip: 4.0.0.2
+            original_port: 22
+          - original_ip: 3.0.0.3
+            translated_ip: 4.0.0.3
+            original_port: 22
+            translated_port: 23
+          - original_ip: 3.0.0.4
+            translated_ip: 4.0.0.4
+            original_port: 22
+            translated_port: 23
+            protocol: udp
+          - original_ip: 3.0.0.5
+            translated_ip: 4.0.0.5
+            original_port: 22
+            translated_port: 23
+            protocol: tcp
+            group: 1
+          - original_ip: 3.0.0.6
+            translated_ip: 4.0.0.6
+            original_port: 22
+            translated_port: 23
+            protocol: tcp
+            group: 2
+            priority: 5
+            comment: 'Comment Test'
+          - original_ip: 3.0.0.7
+            translated_ip: 4.0.0.7
+            access_list: ACL21
+          - original_ip: 3.0.0.8
+            translated_ip: 4.0.0.8
+            direction: ingress
+    - name: NAT-PROFILE-NO-VRF-1
+    - name: NAT-PROFILE-TEST-VRF
+      vrf: TEST

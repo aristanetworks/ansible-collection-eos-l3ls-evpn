@@ -1,0 +1,9 @@
+---
+### interface default partial knobs
+
+switchport_default:
+  mode: access
+  phone:
+    cos: 0
+    trunk: tagged
+    vlan: 69
