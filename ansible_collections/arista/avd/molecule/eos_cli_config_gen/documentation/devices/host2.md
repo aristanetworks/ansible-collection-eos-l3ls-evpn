@@ -24,6 +24,7 @@
 - [System Boot Settings](#system-boot-settings)
   - [System Boot Device Configuration](#system-boot-device-configuration)
 - [Monitoring](#monitoring)
+  - [Logging](#logging)
   - [Monitor Server Radius Summary](#monitor-server-radius-summary)
 - [Monitor Connectivity](#monitor-connectivity)
   - [Global Configuration](#global-configuration)
@@ -298,6 +299,31 @@ dhcp relay
 ```
 
 ## Monitoring
+
+### Logging
+
+#### Logging Servers and Features Summary
+
+| Type | Level |
+| -----| ----- |
+| Console | informational |
+| Monitor | debugging |
+| Buffer | - |
+
+**Syslog facility value:** syslog
+
+#### Logging Servers and Features Device Configuration
+
+```eos
+!
+no logging repeat-messages
+logging buffered 64000
+logging console informational
+logging monitor debugging
+logging facility syslog
+!
+logging event link-status global
+```
 
 ### Monitor Server Radius Summary
 
