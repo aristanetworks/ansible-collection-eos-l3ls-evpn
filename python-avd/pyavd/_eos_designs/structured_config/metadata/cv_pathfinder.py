@@ -6,7 +6,7 @@ from __future__ import annotations
 from functools import cached_property
 from typing import TYPE_CHECKING
 
-from pyavd._errors import AristaAvdError
+from pyavd._errors import AristaAvdError, AristaAvdInvalidInputsError
 from pyavd._utils import get, get_all, get_item, strip_empties_from_list
 
 if TYPE_CHECKING:
@@ -32,15 +32,18 @@ class CvPathfinderMixin:
         if not self.shared_utils.is_cv_pathfinder_router:
             return None
 
+        region_name = self.shared_utils.wan_region.name if self.shared_utils.wan_region is not None else None
+        site_name = self.shared_utils.wan_site.name if self.shared_utils.wan_site is not None else None
+
         # Pathfinder
         if self.shared_utils.is_cv_pathfinder_server:
             return {
                 "role": self.shared_utils.cv_pathfinder_role,
                 "ssl_profile": self.shared_utils.wan_stun_dtls_profile_name,
                 "vtep_ip": self.shared_utils.vtep_ip,
-                "region": get(self.shared_utils.wan_region or {}, "name"),
-                "site": get(self.shared_utils.wan_site or {}, "name"),
-                "address": get(self.shared_utils.wan_site or {}, "location"),
+                "region": region_name,
+                "site": site_name,
+                "address": self.shared_utils.wan_site.location if self.shared_utils.wan_site is not None else None,
                 "interfaces": self._metadata_interfaces(),
                 "pathgroups": self._metadata_pathgroups(),
                 "regions": self._metadata_regions(),
@@ -52,9 +55,9 @@ class CvPathfinderMixin:
             "role": self.shared_utils.cv_pathfinder_role,
             "ssl_profile": self.shared_utils.wan_stun_dtls_profile_name,
             "vtep_ip": self.shared_utils.vtep_ip,
-            "region": self.shared_utils.wan_region["name"],
+            "region": region_name,
             "zone": self.shared_utils.wan_zone["name"],
-            "site": self.shared_utils.wan_site["name"],
+            "site": site_name,
             "interfaces": self._metadata_interfaces(),
             "pathfinders": self._metadata_pathfinder_vtep_ips(),
         }
@@ -75,54 +78,47 @@ class CvPathfinderMixin:
     def _metadata_pathgroups(self: AvdStructuredConfigMetadata) -> list:
         return [
             {
-                "name": pathgroup["name"],
+                "name": pathgroup.name,
                 "carriers": [
                     {
-                        "name": carrier["name"],
+                        "name": carrier.name,
                     }
-                    for carrier in self.shared_utils.wan_carriers
-                    if carrier["path_group"] == pathgroup["name"]
+                    for carrier in self.inputs.wan_carriers
+                    if carrier.path_group == pathgroup.name
                 ],
                 "imported_carriers": [
                     {
-                        "name": carrier["name"],
+                        "name": carrier.name,
                     }
-                    for carrier in self.shared_utils.wan_carriers
-                    if carrier["path_group"] in [imported_pathgroup["remote"] for imported_pathgroup in pathgroup.get("import_path_groups", [])]
+                    for carrier in self.inputs.wan_carriers
+                    if carrier.path_group in [imported_pathgroup.remote for imported_pathgroup in pathgroup.import_path_groups]
                 ],
             }
-            for pathgroup in self.shared_utils.wan_path_groups
+            for pathgroup in self.inputs.wan_path_groups
         ]
 
     def _metadata_regions(self: AvdStructuredConfigMetadata) -> list:
-        regions = get(
-            self._hostvars,
-            "cv_pathfinder_regions",
-            required=True,
-            custom_error_msg="'cv_pathfinder_regions' key must be set when 'wan_mode' is 'cv-pathfinder'.",
-        )
+        if not self.inputs.cv_pathfinder_regions:
+            msg = "'cv_pathfinder_regions' key must be set when 'wan_mode' is 'cv-pathfinder'."
+            raise AristaAvdInvalidInputsError(msg)
+
+        regions = self.inputs.cv_pathfinder_regions
         return [
             {
-                "name": region["name"],
-                "id": region["id"],
+                "name": region.name,
+                "id": region.id,
                 "zones": [
                     {
                         # TODO: Once we give configurable zones this should be updated
-                        "name": f"{region['name']}-ZONE",
+                        "name": f"{region.name}-ZONE",
                         "id": 1,
                         "sites": [
                             {
-                                "name": site["name"],
-                                "id": site["id"],
-                                "location": (
-                                    {
-                                        "address": site.get("location"),
-                                    }
-                                    if site.get("location")
-                                    else None
-                                ),
+                                "name": site.name,
+                                "id": site.id,
+                                "location": ({"address": site.location} if site.location else None),
                             }
-                            for site in region["sites"]
+                            for site in region.sites
                         ],
                     },
                 ],
@@ -133,9 +129,9 @@ class CvPathfinderMixin:
     def _metadata_pathfinder_vtep_ips(self: AvdStructuredConfigMetadata) -> list:
         return [
             {
-                "vtep_ip": wan_route_server["vtep_ip"],
+                "vtep_ip": wan_route_server.vtep_ip,
             }
-            for wan_route_server in self.shared_utils.filtered_wan_route_servers.values()
+            for wan_route_server in self.shared_utils.filtered_wan_route_servers
         ]
 
     def _metadata_vrfs(self: AvdStructuredConfigMetadata) -> list:
@@ -154,7 +150,7 @@ class CvPathfinderMixin:
                 if not any(
                     path_group.get("priority", 1) == 1
                     for path_group in lb_policy["path_groups"]
-                    if path_group["name"] != self.shared_utils.wan_ha_path_group_name
+                    if path_group["name"] != self.inputs.wan_ha.lan_ha_path_group_name
                 ):
                     msg = (
                         "At least one path-group must be configured with preference '1' or 'preferred' for "
@@ -211,10 +207,10 @@ class CvPathfinderMixin:
 
         Used to find VNI for each VRF used in cv_pathfinder.
         """
-        return get(self._hostvars, "wan_virtual_topologies.vrfs", default=[])
+        return self.inputs.wan_virtual_topologies.vrfs
 
     def _get_vni_for_vrf_name(self: AvdStructuredConfigMetadata, vrf_name: str) -> int:
-        if (vrf := get_item(self._wan_virtual_topologies_vrfs, "name", vrf_name)) is None or (wan_vni := vrf.get("wan_vni")) is None:
+        if vrf_name not in self.inputs.wan_virtual_topologies.vrfs or (wan_vni := self.inputs.wan_virtual_topologies.vrfs[vrf_name].wan_vni) is None:
             if vrf_name == "default":
                 return 1
 

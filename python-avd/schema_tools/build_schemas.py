@@ -2,6 +2,7 @@
 # Use of this source code is governed by the Apache License 2.0
 # that can be found in the LICENSE file.
 import logging
+import subprocess
 from pathlib import Path
 from textwrap import indent
 
@@ -10,7 +11,8 @@ from yaml import CSafeDumper, CSafeLoader
 from yaml import dump as yaml_dump
 from yaml import load as yaml_load
 
-from .constants import DOCS_PATHS, LICENSE_HEADER, SCHEMA_FRAGMENTS_PATHS, SCHEMA_PATHS
+from .constants import DOCS_PATHS, LICENSE_HEADER, PYTHON_CLASS_PATHS, SCHEMA_FRAGMENTS_PATHS, SCHEMA_PATHS
+from .generate_classes.src_generators import FileSrc
 from .generate_docs.mdtabsgen import get_md_tabs
 from .metaschema.meta_schema_model import AristaAvdSchema
 from .store import create_store
@@ -66,6 +68,7 @@ def validate_schemas(schema_store: dict) -> None:
 
 def build_schema_tables(schema_store: dict) -> None:
     """Build schema tables."""
+    LOGGER.info("Rebuilding schema documentation tables...")
     for schema_name in SCHEMA_PATHS:
         if schema_name not in SCHEMA_FRAGMENTS_PATHS:
             continue
@@ -86,11 +89,33 @@ def build_schema_tables(schema_store: dict) -> None:
             file.unlink()
 
 
+def build_schema_classes() -> None:
+    """Build Python Classes from schema."""
+    LOGGER.info("Rebuilding schema Python Classes...")
+    # We use a special schema store since we only wish to resolve a subset of the $defs. This is to have more reuse of the generated classes
+    raw_yaml_schema_store = create_store(load_from_yaml=True)
+    for schema_name, python_class_path in PYTHON_CLASS_PATHS.items():
+        if schema_name not in raw_yaml_schema_store:
+            msg = f"Invalid schema name '{schema_name}'"
+            raise KeyError(msg)
+
+        schema = AristaAvdSchema(_resolve_schema=schema_name, **raw_yaml_schema_store[schema_name])
+        LOGGER.info("Building Python Classes from schema: %s", schema_name)
+        schemasrc = schema._generate_class_src(class_name=schema_name)
+        src_file_contents = FileSrc(classes=[schemasrc.cls])
+        with python_class_path.open(mode="w", encoding="UTF-8") as file:
+            file.write(str(src_file_contents))
+
+        LOGGER.info("Running 'ruff' for Python class file: %s", python_class_path)
+        subprocess.run(["ruff", "check", "--fix", str(python_class_path)], check=False)  # noqa: S603, S607
+        subprocess.run(["ruff", "format", str(python_class_path)], check=False)  # noqa: S603, S607
+
+
 def build_schemas() -> None:
     """Combines the schema fragments, and rebuild the pickled schemas."""
     combine_schemas()
     LOGGER.info("Rebuilding pickled schemas")
     schema_store = create_store(force_rebuild=True)
     validate_schemas(schema_store)
-    LOGGER.info("Rebuilding schemas documentation tables...")
     build_schema_tables(schema_store)
+    build_schema_classes()

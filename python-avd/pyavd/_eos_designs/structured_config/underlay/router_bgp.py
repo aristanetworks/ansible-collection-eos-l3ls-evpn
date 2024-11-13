@@ -30,13 +30,13 @@ class RouterBgpMixin(UtilsMixin):
         router_bgp = {}
 
         peer_group = {
-            "name": self.shared_utils.bgp_peer_groups["ipv4_underlay_peers"]["name"],
+            "name": self.inputs.bgp_peer_groups.ipv4_underlay_peers.name,
             "type": "ipv4",
-            "password": self.shared_utils.bgp_peer_groups["ipv4_underlay_peers"]["password"],
-            "bfd": self.shared_utils.bgp_peer_groups["ipv4_underlay_peers"]["bfd"],
+            "password": self.inputs.bgp_peer_groups.ipv4_underlay_peers.password,
+            "bfd": self.inputs.bgp_peer_groups.ipv4_underlay_peers.bfd or None,
             "maximum_routes": 12000,
             "send_community": "all",
-            "struct_cfg": self.shared_utils.bgp_peer_groups["ipv4_underlay_peers"]["structured_config"],
+            "struct_cfg": self.inputs.bgp_peer_groups.ipv4_underlay_peers.structured_config._as_dict() or None,
         }
 
         if self.shared_utils.overlay_routing_protocol == "ibgp" and self.shared_utils.is_cv_pathfinder_router:
@@ -53,20 +53,20 @@ class RouterBgpMixin(UtilsMixin):
         # TODO: - see if it makes sense to extract logic in method
         address_family_ipv4_peer_group = {"activate": True}
 
-        if self.shared_utils.underlay_rfc5549 is True:
+        if self.inputs.underlay_rfc5549 is True:
             address_family_ipv4_peer_group["next_hop"] = {"address_family_ipv6": {"enabled": True, "originate": True}}
 
         router_bgp["address_family_ipv4"] = {
-            "peer_groups": [{"name": self.shared_utils.bgp_peer_groups["ipv4_underlay_peers"]["name"], **address_family_ipv4_peer_group}],
+            "peer_groups": [{"name": self.inputs.bgp_peer_groups.ipv4_underlay_peers.name, **address_family_ipv4_peer_group}],
         }
 
         if self.shared_utils.underlay_ipv6 is True:
-            router_bgp["address_family_ipv6"] = {"peer_groups": [{"name": self.shared_utils.bgp_peer_groups["ipv4_underlay_peers"]["name"], "activate": True}]}
+            router_bgp["address_family_ipv6"] = {"peer_groups": [{"name": self.inputs.bgp_peer_groups.ipv4_underlay_peers.name, "activate": True}]}
 
         vrfs_dict = {}
 
         # Neighbor Interfaces and VRF Neighbor Interfaces
-        if self.shared_utils.underlay_rfc5549 is True:
+        if self.inputs.underlay_rfc5549 is True:
             neighbor_interfaces = []
             for link in self._underlay_links:
                 if link["type"] != "underlay_p2p":
@@ -75,7 +75,7 @@ class RouterBgpMixin(UtilsMixin):
                 neighbor_interfaces.append(
                     {
                         "name": link["interface"],
-                        "peer_group": self.shared_utils.bgp_peer_groups["ipv4_underlay_peers"]["name"],
+                        "peer_group": self.inputs.bgp_peer_groups.ipv4_underlay_peers.name,
                         "remote_as": link["peer_bgp_as"],
                         "peer": link["peer"],
                         "description": "_".join([link["peer"], link["peer_interface"]]),
@@ -95,7 +95,7 @@ class RouterBgpMixin(UtilsMixin):
                         vrfs_dict[subinterface["vrf"]]["neighbor_interfaces"].append(
                             {
                                 "name": subinterface["interface"],
-                                "peer_group": self.shared_utils.bgp_peer_groups["ipv4_underlay_peers"]["name"],
+                                "peer_group": self.inputs.bgp_peer_groups.ipv4_underlay_peers.name,
                                 "remote_as": link["peer_bgp_as"],
                                 # TODO: - implement some centralized way to generate these descriptions
                                 "description": f"{'_'.join([link['peer'], subinterface['peer_interface']])}_vrf_{subinterface['vrf']}",
@@ -114,17 +114,17 @@ class RouterBgpMixin(UtilsMixin):
 
                 neighbor = {
                     "ip_address": link["peer_ip_address"],
-                    "peer_group": self.shared_utils.bgp_peer_groups["ipv4_underlay_peers"]["name"],
+                    "peer_group": self.inputs.bgp_peer_groups.ipv4_underlay_peers.name,
                     "remote_as": get(link, "peer_bgp_as"),
                     "peer": link["peer"],
                     "description": "_".join([link["peer"], link["peer_interface"]]),
                     "bfd": get(link, "bfd"),
                 }
 
-                if self.shared_utils.shutdown_bgp_towards_undeployed_peers is True and link["peer_is_deployed"] is False:
+                if self.inputs.shutdown_bgp_towards_undeployed_peers and link["peer_is_deployed"] is False:
                     neighbor["shutdown"] = True
 
-                if self.shared_utils.underlay_filter_peer_as is True:
+                if self.inputs.underlay_filter_peer_as:
                     neighbor["route_map_out"] = f"RM-BGP-AS{link['peer_bgp_as']}-OUT"
 
                 append_if_not_duplicate(
@@ -139,7 +139,7 @@ class RouterBgpMixin(UtilsMixin):
                     for subinterface in link["subinterfaces"]:
                         neighbor = {
                             "ip_address": subinterface["peer_ip_address"],
-                            "peer_group": self.shared_utils.bgp_peer_groups["ipv4_underlay_peers"]["name"],
+                            "peer_group": self.inputs.bgp_peer_groups.ipv4_underlay_peers.name,
                             "remote_as": get(link, "peer_bgp_as"),
                             "description": f"{'_'.join([link['peer'], subinterface['peer_interface']])}_vrf_{subinterface['vrf']}",
                             "bfd": get(link, "bfd"),

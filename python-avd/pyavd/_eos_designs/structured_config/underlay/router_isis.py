@@ -7,7 +7,7 @@ from functools import cached_property
 from typing import TYPE_CHECKING
 
 from pyavd._errors import AristaAvdInvalidInputsError
-from pyavd._utils import get, strip_empties_from_dict
+from pyavd._utils import default, strip_empties_from_dict
 
 from .utils import UtilsMixin
 
@@ -32,23 +32,23 @@ class RouterIsisMixin(UtilsMixin):
             "instance": self.shared_utils.isis_instance_name,
             "log_adjacency_changes": True,
             "net": self._isis_net,
-            "router_id": self.shared_utils.router_id if not self.shared_utils.use_router_general_for_router_id else None,
+            "router_id": self.shared_utils.router_id if not self.inputs.use_router_general_for_router_id else None,
             "is_type": self._is_type,
-            "address_family_ipv4": {"enabled": True, "maximum_paths": get(self._hostvars, "isis_maximum_paths", default=4)},
+            "address_family_ipv4": {"enabled": True, "maximum_paths": self.inputs.isis_maximum_paths},
         }
 
         if self.shared_utils.underlay_ldp is True:
             router_isis["mpls_ldp_sync_default"] = True
 
         # TI-LFA
-        if get(self._hostvars, "isis_ti_lfa.enabled") is True:
+        if self.inputs.isis_ti_lfa.enabled:
             router_isis["timers"] = {
                 "local_convergence": {
-                    "delay": get(self._hostvars, "isis_ti_lfa.local_convergence_delay", default="10000"),
+                    "delay": self.inputs.isis_ti_lfa.local_convergence_delay,
                     "protected_prefixes": True,
                 },
             }
-        ti_lfa_protection = get(self._hostvars, "isis_ti_lfa.protection")
+        ti_lfa_protection = self.inputs.isis_ti_lfa.protection
         if ti_lfa_protection == "link":
             router_isis["address_family_ipv4"]["fast_reroute_ti_lfa"] = {"mode": "link-protection"}
         elif ti_lfa_protection == "node":
@@ -59,13 +59,11 @@ class RouterIsisMixin(UtilsMixin):
             router_isis["redistribute_routes"] = [{"source_protocol": "connected"}]
 
         if self.shared_utils.underlay_sr is True:
-            router_isis["advertise"] = {
-                "passive_only": get(self._hostvars, "isis_advertise_passive_only", default=False),
-            }
+            router_isis["advertise"] = {"passive_only": self.inputs.isis_advertise_passive_only}
             # TODO: - enabling IPv6 only in SR cases as per existing behavior
             # but this could probably be taken out
             if self.shared_utils.underlay_ipv6 is True:
-                router_isis["address_family_ipv6"] = {"enabled": True, "maximum_paths": get(self._hostvars, "isis_maximum_paths", default=4)}
+                router_isis["address_family_ipv6"] = {"enabled": True, "maximum_paths": self.inputs.isis_maximum_paths}
                 if ti_lfa_protection == "link":
                     router_isis["address_family_ipv6"]["fast_reroute_ti_lfa"] = {"mode": "link-protection"}
                 elif ti_lfa_protection == "node":
@@ -76,8 +74,8 @@ class RouterIsisMixin(UtilsMixin):
 
     @cached_property
     def _isis_net(self: AvdStructuredConfigUnderlay) -> str | None:
-        if get(self._hostvars, "isis_system_id_format") == "node_id":
-            isis_system_id_prefix = get(self.shared_utils.switch_data_combined, "isis_system_id_prefix")
+        if self.inputs.isis_system_id_format == "node_id":
+            isis_system_id_prefix = self.shared_utils.node_config.isis_system_id_prefix
             if self.shared_utils.underlay_isis is True and isis_system_id_prefix is None:
                 msg = (
                     f"'isis_system_id_prefix' is required when 'isis_system_id_format' is set to 'node_id'."
@@ -92,15 +90,15 @@ class RouterIsisMixin(UtilsMixin):
         else:
             system_id = self.ipv4_to_isis_system_id(self.shared_utils.router_id)
 
-        isis_area_id = get(self._hostvars, "isis_area_id", default="49.0001")
+        isis_area_id = self.inputs.isis_area_id
         return f"{isis_area_id}.{system_id}.00"
 
     @cached_property
     def _is_type(self: AvdStructuredConfigUnderlay) -> str:
-        default_is_type = get(self._hostvars, "isis_default_is_type", default="level-2")
-        is_type = str(get(self.shared_utils.switch_data_combined, "is_type", default=default_is_type)).lower()
+        default_is_type = self.inputs.isis_default_is_type
+        is_type = default(self.shared_utils.node_config.is_type, default_is_type)
         if is_type not in ["level-1", "level-2", "level-1-2"]:
-            is_type = "level-2"
+            is_type = default_is_type
         return is_type
 
     @staticmethod

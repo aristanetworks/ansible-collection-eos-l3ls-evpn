@@ -2,7 +2,14 @@
 # Black has been replaced with Ruff.
 # This section should be removed later, but kept here to avoid IDE extensions from messing up the code.
 line-length = 160
-force-exclude = '''python-avd/pyavd/_cv/api/.*'''
+
+force-exclude = '''
+/(
+python-avd/pyavd/_cv/api/\.\*
+| python-avd/pyavd/_eos_designs/_schema/__init__\.py
+| python-avd/pyavd/_eos_cli_config_gen/_schema/__init__\.py
+)/
+'''
 
 [tool.isort]
 # Isort has been replaced with Ruff.
@@ -77,6 +84,25 @@ convention = "google"
 ]
 "python-avd/pyavd/_cv/client/*.py" = [
   "B904",  # Within an `except` clause, raise exceptions with `raise - TODO: Improve code
+]
+"python-avd/pyavd/_eos_cli_config_gen/schema/__init__.py" = [
+  "A002",    # Argument is shadowing a Python builtin - OK since these are data classes
+  "PLR0913", # Too many arguments in function definition - OK since these are data classes
+  "N803",    # Argument name should be lowercase - OK since we still have a few deprecated upper case models
+  "N815",    # Variable in class scope should not be mixedCase - OK since we still have a few deprecated upper case models
+  "E501",    # Line too long - OK since we may have some very long vars or deeply nested with a long one-line description.
+  "S107",    # Possible hardcoded password assigned to function default - False positive.
+  "F811",    # Redefinition of unused `Vxlan1` from line 45778 - TODO FIX
+]
+"python-avd/pyavd/_eos_designs/schema/__init__.py" = [
+  "A002",    # Argument is shadowing a Python builtin - OK since these are data classes
+  "PLR0913", # Too many arguments in function definition - OK since these are data classes
+  "N803",    # Argument name should be lowercase - OK since we still have a few deprecated upper case models
+  "E501",    # Line too long - OK since we may have some very long vars or deeply nested with a long one-line description.
+  "S107",    # Possible hardcoded password assigned to function default - False positive.
+  "S104",    # Possible binding to all interfaces - False positive.
+  "B006",    # Do not use mutable data structures for argument defaults - TODO FIX
+  "RUF012",  # Mutable class attributes should be annotated with `typing.ClassVar` - TODO FIX
 ]
 "python-avd/tests/**/*" = [
   "S101",  # Accept 'assert' in pytest.

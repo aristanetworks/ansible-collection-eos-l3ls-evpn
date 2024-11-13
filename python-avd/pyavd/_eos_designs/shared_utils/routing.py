@@ -6,8 +6,7 @@ from __future__ import annotations
 from functools import cached_property
 from typing import TYPE_CHECKING
 
-from pyavd._errors import AristaAvdError, AristaAvdInvalidInputsError
-from pyavd._utils import get
+from pyavd._errors import AristaAvdError, AristaAvdInvalidInputsError, AristaAvdMissingVariableError
 from pyavd.j2filters import range_expand
 
 if TYPE_CHECKING:
@@ -24,19 +23,19 @@ class RoutingMixin:
 
     @cached_property
     def underlay_routing_protocol(self: SharedUtils) -> str:
-        default_underlay_routing_protocol = get(self.node_type_key_data, "default_underlay_routing_protocol", default="ebgp")
-        return str(get(self.hostvars, "underlay_routing_protocol", default=default_underlay_routing_protocol)).lower()
+        default_underlay_routing_protocol = self.node_type_key_data.default_underlay_routing_protocol
+        return (self.inputs.underlay_routing_protocol or default_underlay_routing_protocol).lower()
 
     @cached_property
     def overlay_routing_protocol(self: SharedUtils) -> str:
-        default_overlay_routing_protocol = get(self.node_type_key_data, "default_overlay_routing_protocol", default="ebgp")
-        return str(get(self.hostvars, "overlay_routing_protocol", default=default_overlay_routing_protocol)).lower()
+        default_overlay_routing_protocol = self.node_type_key_data.default_overlay_routing_protocol
+        return (self.inputs.overlay_routing_protocol or default_overlay_routing_protocol).lower()
 
     @cached_property
     def overlay_address_families(self: SharedUtils) -> list:
         if self.overlay_routing_protocol in ["ebgp", "ibgp"]:
-            default_overlay_address_families = get(self.node_type_key_data, "default_overlay_address_families", ["evpn"])
-            return get(self.switch_data_combined, "overlay_address_families", default=default_overlay_address_families)
+            default_overlay_address_families = self.node_type_key_data.default_overlay_address_families
+            return self.node_config.overlay_address_families or default_overlay_address_families
         return []
 
     @cached_property
@@ -75,7 +74,7 @@ class RoutingMixin:
     def isis_instance_name(self: SharedUtils) -> str | None:
         if self.underlay_router and self.underlay_routing_protocol in ["isis", "isis-ldp", "isis-sr", "isis-sr-ldp"]:
             default_isis_instance_name = "CORE" if self.mpls_lsr else "EVPN_UNDERLAY"
-            return get(self.hostvars, "underlay_isis_instance_name", default=default_isis_instance_name)
+            return self.inputs.underlay_isis_instance_name or default_isis_instance_name
         return None
 
     @cached_property
@@ -93,14 +92,18 @@ class RoutingMixin:
          - Lower level definitions override higher level definitions as is standard with AVD.
         """
         if self.bgp:
-            if get(self.hostvars, "bgp_as") is not None:
-                return str(get(self.hostvars, "bgp_as"))
+            if self.inputs.bgp_as:
+                return self.inputs.bgp_as
 
-            bgp_as_range_expanded = range_expand(str(get(self.switch_data_combined, "bgp_as", required=True)))
+            if self.node_config.bgp_as is None:
+                msg = "bgp_as"
+                raise AristaAvdMissingVariableError(msg)
+
+            bgp_as_range_expanded = range_expand(self.node_config.bgp_as)
             try:
                 if len(bgp_as_range_expanded) == 1:
                     return bgp_as_range_expanded[0]
-                if self.mlag:
+                if self.mlag_switch_ids:
                     return bgp_as_range_expanded[self.mlag_switch_ids["primary"] - 1]
 
                 if self.id is None:
@@ -111,7 +114,3 @@ class RoutingMixin:
                 msg = f"Unable to allocate BGP AS: bgp_as range is too small ({len(bgp_as_range_expanded)}) for the id of the device"
                 raise AristaAvdError(msg) from exc
         return None
-
-    @cached_property
-    def always_configure_ip_routing(self: SharedUtils) -> bool:
-        return get(self.switch_data_combined, "always_configure_ip_routing")

@@ -31,6 +31,7 @@ ethernet_interfaces:
   peer_type: server
   description: Interface description server_OLD_SW-1/2_ENDPOINT_PORT1
   shutdown: false
+  poe: {}
   channel_group:
     id: 1
     mode: active
@@ -40,6 +41,7 @@ ethernet_interfaces:
   peer_type: server
   description: Interface description server_OLD_SW-1/2_ENDPOINT_PORT2
   shutdown: false
+  poe: {}
   channel_group:
     id: 1
     mode: active
@@ -49,6 +51,7 @@ ethernet_interfaces:
   peer_type: server
   description: SERVER_OLD_SW-1/3_ENDPOINT_PORT
   shutdown: false
+  poe: {}
   channel_group:
     id: 3
     mode: active
@@ -64,6 +67,7 @@ ethernet_interfaces:
   peer_type: server
   description: SERVER_OLD_SW-1/5
   shutdown: false
+  poe: {}
   channel_group:
     id: 5
     mode: active
@@ -72,6 +76,7 @@ ethernet_interfaces:
   peer_type: server
   description: SERVER_OLD_SW-1/5
   shutdown: false
+  poe: {}
   channel_group:
     id: 5
     mode: active
@@ -80,6 +85,7 @@ ethernet_interfaces:
   peer_type: server
   description: PHYSICAL_PORT_DESCRIPTION
   shutdown: false
+  poe: {}
   channel_group:
     id: 7
     mode: active
@@ -88,6 +94,7 @@ ethernet_interfaces:
   peer_type: server
   description: PHYSICAL_PORT_DESCRIPTION
   shutdown: false
+  poe: {}
   channel_group:
     id: 7
     mode: active
@@ -103,6 +110,7 @@ ethernet_interfaces:
   peer_type: server
   description: PHYSICAL_PORT_DESCRIPTION_1
   shutdown: false
+  poe: {}
   channel_group:
     id: 10
     mode: active
@@ -111,6 +119,7 @@ ethernet_interfaces:
   peer_type: server
   description: PHYSICAL_PORT_DESCRIPTION_2
   shutdown: false
+  poe: {}
   channel_group:
     id: 10
     mode: active

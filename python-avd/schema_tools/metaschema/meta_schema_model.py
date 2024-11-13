@@ -10,6 +10,7 @@ from typing import TYPE_CHECKING, Annotated, Any, ClassVar, Literal
 
 from pydantic import BaseModel, ConfigDict, Field, constr
 
+from schema_tools.generate_classes.class_src_gen import SrcGenBase, SrcGenBool, SrcGenDict, SrcGenInt, SrcGenList, SrcGenRootDict, SrcGenStr
 from schema_tools.generate_docs.tablerowgen import TableRow, TableRowGenBase, TableRowGenBool, TableRowGenDict, TableRowGenInt, TableRowGenList, TableRowGenStr
 from schema_tools.generate_docs.yamllinegen import YamlLine, YamlLineGenBase, YamlLineGenBool, YamlLineGenDict, YamlLineGenInt, YamlLineGenList, YamlLineGenStr
 
@@ -17,6 +18,8 @@ from .resolvemodel import merge_schema_from_ref
 
 if TYPE_CHECKING:
     from collections.abc import Generator
+
+    from schema_tools.generate_classes.src_generators import SrcData
 
 """
 This module provides Pydantic models (classes) representing the meta-schema of the AVD Schema.
@@ -104,6 +107,8 @@ class AvdSchemaBaseModel(BaseModel, ABC):
     # Type of schema docs generators to use for this schema field.
     _table_row_generator: type[TableRowGenBase]
     _yaml_line_generator: type[YamlLineGenBase]
+    # Type of pydantic source generator to use for this schema field.
+    _pydantic_src_generator: type[SrcGenBase]
 
     # Internal attributes used by schema docs generators
     _key: str | None = None
@@ -122,23 +127,21 @@ class AvdSchemaBaseModel(BaseModel, ABC):
     """
 
     # Signal to __init__ if the $ref in the schema should be resolved before initializing the pydantic model.
-    _resolve_schema: ClassVar[bool] = True
+    _resolve_schema: ClassVar[str | bool] = True
 
-    def __init__(self, resolve_schema: bool | None = None, **data: dict) -> None:
+    def __init__(self, _resolve_schema: str | bool | None = None, **data: Any) -> None:
         """
-        Overrides BaseModel.__init__.
-
-        Takes a kwarg "resolve_schema" which controls if all subclasses of AvdSchemaBaseModel should expand any $ref in the input schema.
+        Takes a kwarg "resolve_schema" which controls if $refs are resolved, and if a string, only the given schema will be resolved.
 
         The $ref expansion _only_ covers this field.
         Any $ref on child fields are expanded as they are initialized by Pydantic since they are based on this base class.
         """
         # Setting the resolve_schema attribute on the class, so all sub-classes will inherit this automatically.
-        if resolve_schema is not None:
-            AvdSchemaBaseModel._resolve_schema = resolve_schema
+        if _resolve_schema is not None:
+            AvdSchemaBaseModel._resolve_schema = _resolve_schema
 
         if self._resolve_schema:
-            data = merge_schema_from_ref(data)
+            data = merge_schema_from_ref(data, resolve_schema=self._resolve_schema)
 
         super().__init__(**data)
 
@@ -214,6 +217,15 @@ class AvdSchemaBaseModel(BaseModel, ABC):
         # Using the Type of yaml line generator set in the subclass attribute _yaml_line_generator
         yield from self._yaml_line_generator().generate_yaml_lines(schema=self, target_table=target_table)
 
+    def _generate_class_src(self, class_name: str | None = None) -> SrcData:
+        """
+        Returns one instance of "Src" to be used for generating pydantic models of the schemas.
+
+        The function is called recursively inside the SrcGen classes for parsing children.
+        """
+        # Using the Type of yaml line generator set in the subclass attribute _yaml_line_generator
+        return self._pydantic_src_generator().generate_class_src(schema=self, class_name=class_name)
+
 
 class AvdSchemaInt(AvdSchemaBaseModel):
     """
@@ -253,6 +265,8 @@ class AvdSchemaInt(AvdSchemaBaseModel):
     # Type of schema docs generators to use for this schema field.
     _table_row_generator = TableRowGenInt
     _yaml_line_generator = YamlLineGenInt
+    # Type of pydantic source generator to use for this schema field.
+    _pydantic_src_generator = SrcGenInt
 
 
 class AvdSchemaBool(AvdSchemaBaseModel):
@@ -288,6 +302,8 @@ class AvdSchemaBool(AvdSchemaBaseModel):
     # Type of schema docs generators to use for this schema field.
     _table_row_generator = TableRowGenBool
     _yaml_line_generator = YamlLineGenBool
+    # Type of pydantic source generator to use for this schema field.
+    _pydantic_src_generator = SrcGenBool
 
 
 class AvdSchemaStr(AvdSchemaBaseModel):
@@ -350,6 +366,8 @@ class AvdSchemaStr(AvdSchemaBaseModel):
     # Type of schema docs generators to use for this schema field.
     _table_row_generator = TableRowGenStr
     _yaml_line_generator = YamlLineGenStr
+    # Type of pydantic source generator to use for this schema field.
+    _pydantic_src_generator = SrcGenStr
 
 
 class AvdSchemaList(AvdSchemaBaseModel):
@@ -404,6 +422,8 @@ class AvdSchemaList(AvdSchemaBaseModel):
     # Type of schema docs generators to use for this schema field.
     _table_row_generator = TableRowGenList
     _yaml_line_generator = YamlLineGenList
+    # Type of pydantic source generator to use for this schema field.
+    _pydantic_src_generator = SrcGenList
 
     @cached_property
     def _descendant_tables(self) -> set[str]:
@@ -508,6 +528,8 @@ class AvdSchemaDict(AvdSchemaBaseModel):
     # Type of schema docs generators to use for this schema field.
     _table_row_generator = TableRowGenDict
     _yaml_line_generator = YamlLineGenDict
+    # Type of pydantic source generator to use for this schema field.
+    _pydantic_src_generator = SrcGenDict
 
     @cached_property
     def _descendant_tables(self) -> set[str]:
@@ -559,6 +581,9 @@ class AristaAvdSchema(AvdSchemaDict):
 
     This is the schema root dict class providing specific fields and overrides of AvdSchemaDict.
     """
+
+    # Type of pydantic source generator to use for this schema field.
+    _pydantic_src_generator = SrcGenRootDict
 
     # Internal attributes used by schema docs generators
     @cached_property

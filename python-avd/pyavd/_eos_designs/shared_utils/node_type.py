@@ -8,7 +8,7 @@ from re import search
 from typing import TYPE_CHECKING
 
 from pyavd._errors import AristaAvdInvalidInputsError
-from pyavd._utils import get
+from pyavd._utils import default
 
 if TYPE_CHECKING:
     from . import SharedUtils
@@ -25,7 +25,7 @@ class NodeTypeMixin:
     @cached_property
     def type(self: SharedUtils) -> str:
         """Type fact set based on type variable."""
-        if (node_type := get(self.hostvars, "type")) is not None:
+        if (node_type := self.inputs.type) is not None:
             return node_type
         if self.default_node_type:
             return self.default_node_type
@@ -36,19 +36,12 @@ class NodeTypeMixin:
     @cached_property
     def default_node_type(self: SharedUtils) -> str | None:
         """default_node_type set based on hostname, returning first node type matching a regex in default_node_types."""
-        default_node_types = get(self.hostvars, "default_node_types", default=[])
-
-        for default_node_type in default_node_types:
-            for hostname_regex in default_node_type["match_hostnames"]:
+        for default_node_type in self.inputs.default_node_types:
+            for hostname_regex in default_node_type.match_hostnames:
                 if search(f"^{hostname_regex}$", self.hostname):
-                    return default_node_type["node_type"]
+                    return default_node_type.node_type
 
         return None
-
-    @cached_property
-    def cvp_tag_topology_hint_type(self: SharedUtils) -> str:
-        """topology_tag_type set based on node_type_keys.<node_type_key>.cvp_tags.topology_hint_type."""
-        return get(self.node_type_key_data, "cvp_tags.topology_hint_type", default="endpoint")
 
     @cached_property
     def connected_endpoints(self: SharedUtils) -> bool:
@@ -58,7 +51,7 @@ class NodeTypeMixin:
         connected_endpoints set based on
         node_type_keys.<node_type_key>.connected_endpoints.
         """
-        return get(self.node_type_key_data, "connected_endpoints", default=False)
+        return self.node_type_key_data.connected_endpoints
 
     @cached_property
     def underlay_router(self: SharedUtils) -> bool:
@@ -68,7 +61,7 @@ class NodeTypeMixin:
         underlay_router set based on
         node_type_keys.<node_type_key>.underlay_router.
         """
-        return get(self.node_type_key_data, "underlay_router", default=True)
+        return self.node_type_key_data.underlay_router
 
     @cached_property
     def uplink_type(self: SharedUtils) -> str:
@@ -77,8 +70,8 @@ class NodeTypeMixin:
 
         uplink_type set based on <node_type_key>.nodes.[].uplink_type and node_type_keys.<node_type_key>.uplink_type.
         """
-        default_uplink_type = get(self.node_type_key_data, "uplink_type", default="p2p")
-        return get(self.switch_data_combined, "uplink_type", default=default_uplink_type)
+        default_uplink_type = self.node_type_key_data.uplink_type
+        return default(self.node_config.uplink_type, default_uplink_type)
 
     @cached_property
     def network_services_l1(self: SharedUtils) -> bool:
@@ -87,7 +80,7 @@ class NodeTypeMixin:
 
         network_services_l1 set based on node_type_keys.<node_type_key>.network_services.l1.
         """
-        return get(self.node_type_key_data, "network_services.l1", default=False)
+        return self.node_type_key_data.network_services.l1
 
     @cached_property
     def network_services_l2(self: SharedUtils) -> bool:
@@ -96,7 +89,7 @@ class NodeTypeMixin:
 
         network_services_l2 set based on node_type_keys.<node_type_key>.network_services.l2.
         """
-        return get(self.node_type_key_data, "network_services.l2", default=False)
+        return self.node_type_key_data.network_services.l2
 
     @cached_property
     def network_services_l3(self: SharedUtils) -> bool:
@@ -107,9 +100,9 @@ class NodeTypeMixin:
         and <node_type_key>.<defaults | node_groups.<> | nodes.<> >.evpn_services_l2_only.
         """
         # network_services_l3 override based on evpn_services_l2_only
-        if self.vtep is True and get(self.switch_data_combined, "evpn_services_l2_only") is True:
+        if self.vtep and self.node_config.evpn_services_l2_only:
             return False
-        return get(self.node_type_key_data, "network_services.l3", default=False)
+        return self.node_type_key_data.network_services.l3
 
     @cached_property
     def network_services_l2_as_subint(self: SharedUtils) -> bool:
@@ -134,7 +127,7 @@ class NodeTypeMixin:
         mpls_lsr set based on
         node_type_keys.<node_type_key>.mpls_lsr.
         """
-        return get(self.node_type_key_data, "mpls_lsr", default=False)
+        return self.node_type_key_data.mpls_lsr
 
     @cached_property
     def vtep(self: SharedUtils) -> bool:
@@ -145,5 +138,5 @@ class NodeTypeMixin:
         <node_type_key>.nodes.[].vtep and
         node_type_keys.<node_type_key>.vtep.
         """
-        default_vtep = get(self.node_type_key_data, "vtep")
-        return get(self.switch_data_combined, "vtep", default=default_vtep) is True
+        default_vtep = self.node_type_key_data.vtep
+        return default(self.node_config.vtep, default_vtep)

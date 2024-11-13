@@ -36,22 +36,6 @@ class UtilsMixin:
         return self.shared_utils.mlag_switch_ids["secondary"]
 
     @cached_property
-    def _fabric_ipaddress_mlag_algorithm(self: AvdIpAddressing) -> str:
-        return self.shared_utils.fabric_ip_addressing_mlag_algorithm
-
-    @cached_property
-    def _fabric_ip_addressing_mlag_ipv4_prefix_length(self: AvdIpAddressing) -> int:
-        return self.shared_utils.fabric_ip_addressing_mlag_ipv4_prefix_length
-
-    @cached_property
-    def _fabric_ip_addressing_mlag_ipv6_prefix_length(self: AvdIpAddressing) -> int:
-        return self.shared_utils.fabric_ip_addressing_mlag_ipv6_prefix_length
-
-    @cached_property
-    def _fabric_ip_addressing_p2p_uplinks_ipv4_prefix_length(self: AvdIpAddressing) -> int:
-        return self.shared_utils.fabric_ip_addressing_p2p_uplinks_ipv4_prefix_length
-
-    @cached_property
     def _mlag_peer_ipv4_pool(self: AvdIpAddressing) -> str:
         return self.shared_utils.mlag_peer_ipv4_pool
 
@@ -65,10 +49,10 @@ class UtilsMixin:
 
     @cached_property
     def _uplink_ipv4_pool(self: AvdIpAddressing) -> str:
-        if self.shared_utils.uplink_ipv4_pool is None:
+        if self.shared_utils.node_config.uplink_ipv4_pool is None:
             msg = "'uplink_ipv4_pool' is required to calculate uplink IP addresses."
             raise AristaAvdInvalidInputsError(msg)
-        return self.shared_utils.uplink_ipv4_pool
+        return self.shared_utils.node_config.uplink_ipv4_pool
 
     @cached_property
     def _id(self: AvdIpAddressing) -> int:
@@ -86,8 +70,8 @@ class UtilsMixin:
         return self.shared_utils.max_parallel_uplinks
 
     @cached_property
-    def _loopback_ipv4_address(self: AvdIpAddressing) -> str:
-        return self.shared_utils.loopback_ipv4_address
+    def _loopback_ipv4_address(self: AvdIpAddressing) -> str | None:
+        return self.shared_utils.node_config.loopback_ipv4_address
 
     @cached_property
     def _loopback_ipv4_pool(self: AvdIpAddressing) -> str:
@@ -95,7 +79,7 @@ class UtilsMixin:
 
     @cached_property
     def _loopback_ipv4_offset(self: AvdIpAddressing) -> int:
-        return self.shared_utils.loopback_ipv4_offset
+        return self.shared_utils.node_config.loopback_ipv4_offset
 
     @cached_property
     def _loopback_ipv6_pool(self: AvdIpAddressing) -> str:
@@ -103,11 +87,11 @@ class UtilsMixin:
 
     @cached_property
     def _loopback_ipv6_offset(self: AvdIpAddressing) -> int:
-        return self.shared_utils.loopback_ipv6_offset
+        return self.shared_utils.node_config.loopback_ipv6_offset
 
     @cached_property
-    def _vtep_loopback_ipv4_address(self: AvdIpAddressing) -> str:
-        return self.shared_utils.vtep_loopback_ipv4_address
+    def _vtep_loopback_ipv4_address(self: AvdIpAddressing) -> str | None:
+        return self.shared_utils.node_config.vtep_loopback_ipv4_address
 
     @cached_property
     def _vtep_loopback_ipv4_pool(self: AvdIpAddressing) -> str:
@@ -172,7 +156,7 @@ class UtilsMixin:
 
         One and only one of these pools are required to be set, otherwise an error will be thrown
         """
-        uplink_pool = self.shared_utils.uplink_ipv4_pool
+        uplink_pool = self.shared_utils.node_config.uplink_ipv4_pool
         if uplink_pool is not None:
             uplink_offset = ((self._id - 1) * self._max_uplink_switches * self._max_parallel_uplinks) + uplink_switch_index
 

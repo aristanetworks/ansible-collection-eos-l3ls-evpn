@@ -7,11 +7,13 @@ from functools import cached_property
 from re import findall
 from typing import TYPE_CHECKING, Any
 
-from pyavd._errors import AristaAvdError, AristaAvdInvalidInputsError
+from pyavd._errors import AristaAvdError, AristaAvdInvalidInputsError, AristaAvdMissingVariableError
 from pyavd._utils import default, get, get_ip_from_ip_prefix
 from pyavd.j2filters import range_expand
 
 if TYPE_CHECKING:
+    from typing import Literal
+
     from pyavd._eos_designs.eos_designs_facts import EosDesignsFacts
 
     from . import SharedUtils
@@ -27,73 +29,56 @@ class MlagMixin:
 
     @cached_property
     def mlag(self: SharedUtils) -> bool:
-        return (
-            get(self.node_type_key_data, "mlag_support", default=False) is True
-            and get(self.switch_data_combined, "mlag", default=True) is True
-            and len(self.switch_data_node_group_nodes) == 2
-        )
+        return self.node_type_key_data.mlag_support and self.node_config.mlag and len(self.node_group_config.nodes) == 2
 
     @cached_property
     def group(self: SharedUtils) -> str | None:
-        """Group set to "node_group" name or None."""
-        return get(self.switch_data, "group")
+        """
+        Group set to "node_group" name or None.
 
-    @cached_property
-    def mlag_ibgp_origin_incomplete(self: SharedUtils) -> bool:
-        return get(self.switch_data_combined, "mlag_ibgp_origin_incomplete", default=True)
-
-    @cached_property
-    def mlag_peer_vlan(self: SharedUtils) -> int:
-        return get(self.switch_data_combined, "mlag_peer_vlan", default=4094)
+        Note that since we cheat in node_group_config and return an empty class if there is no group,
+        we cannot trust the type hint suggesting that group is always set.
+        """
+        return self.node_group_config.group or None
 
     @cached_property
     def mlag_interfaces(self: SharedUtils) -> list:
-        return range_expand(
-            default(
-                get(self.switch_data_combined, "mlag_interfaces"),
-                get(self.cv_topology_config, "mlag_interfaces"),
-                get(self.default_interfaces, "mlag_interfaces"),
-                [],
-            ),
-        )
-
-    @cached_property
-    def mlag_interfaces_speed(self: SharedUtils) -> str | None:
-        return get(self.switch_data_combined, "mlag_interfaces_speed")
-
-    @cached_property
-    def mlag_peer_address_family(self: SharedUtils) -> str:
-        return get(self.switch_data_combined, "mlag_peer_address_family", default="ipv4")
+        return range_expand(self.node_config.mlag_interfaces or get(self.cv_topology_config, "mlag_interfaces") or self.default_interfaces.mlag_interfaces)
 
     @cached_property
     def mlag_peer_ipv4_pool(self: SharedUtils) -> str:
-        return get(self.switch_data_combined, "mlag_peer_ipv4_pool", required=True)
+        if not self.node_config.mlag_peer_ipv4_pool:
+            msg = "mlag_peer_ipv4_pool"
+            raise AristaAvdMissingVariableError(msg)
+        return self.node_config.mlag_peer_ipv4_pool
 
     @cached_property
     def mlag_peer_ipv6_pool(self: SharedUtils) -> str:
-        return get(self.switch_data_combined, "mlag_peer_ipv6_pool", required=True)
+        if not self.node_config.mlag_peer_ipv6_pool:
+            msg = "mlag_peer_ipv6_pool"
+            raise AristaAvdMissingVariableError(msg)
+        return self.node_config.mlag_peer_ipv6_pool
 
     @cached_property
     def mlag_peer_l3_ipv4_pool(self: SharedUtils) -> str:
-        return get(self.switch_data_combined, "mlag_peer_l3_ipv4_pool", required=True)
+        if not self.node_config.mlag_peer_l3_ipv4_pool:
+            msg = "mlag_peer_l3_ipv4_pool"
+            raise AristaAvdMissingVariableError(msg)
+        return self.node_config.mlag_peer_l3_ipv4_pool
 
     @cached_property
-    def mlag_role(self: SharedUtils) -> str | None:
+    def mlag_role(self: SharedUtils) -> Literal["primary", "secondary"] | None:
         if self.mlag:
-            if self.switch_data_node_group_nodes[0]["name"] == self.hostname:
-                return "primary"
-            if self.switch_data_node_group_nodes[1]["name"] == self.hostname:
-                return "secondary"
-            msg = "Unable to detect MLAG role"
-            raise AristaAvdError(msg)
+            return "secondary" if bool(list(self.node_group_config.nodes.keys()).index(self.hostname)) else "primary"
+
         return None
 
     @cached_property
     def mlag_peer(self: SharedUtils) -> str:
         if self.mlag_role == "primary":
-            return self.switch_data_node_group_nodes[1]["name"]
+            return list(self.node_group_config.nodes.keys())[1]
         if self.mlag_role == "secondary":
-            return self.switch_data_node_group_nodes[0]["name"]
+            return list(self.node_group_config.nodes.keys())[0]  # noqa: RUF015
         msg = "Unable to find MLAG peer within same node group"
         raise AristaAvdError(msg)
 
@@ -104,8 +89,8 @@ class MlagMixin:
     @cached_property
     def mlag_peer_l3_vlan(self: SharedUtils) -> int | None:
         if self.mlag_l3:
-            mlag_peer_vlan = self.mlag_peer_vlan
-            mlag_peer_l3_vlan = get(self.switch_data_combined, "mlag_peer_l3_vlan", default=4093)
+            mlag_peer_vlan = self.node_config.mlag_peer_vlan
+            mlag_peer_l3_vlan = self.node_config.mlag_peer_l3_vlan
             if mlag_peer_l3_vlan not in [None, False, mlag_peer_vlan]:
                 return mlag_peer_l3_vlan
         return None
@@ -183,7 +168,7 @@ class MlagMixin:
             msg = f"'mlag_interfaces' not set on '{self.hostname}."
             raise AristaAvdInvalidInputsError(msg)
         default_mlag_port_channel_id = int("".join(findall(r"\d", self.mlag_interfaces[0])))
-        return get(self.switch_data_combined, "mlag_port_channel_id", default_mlag_port_channel_id)
+        return default(self.node_config.mlag_port_channel_id, default_mlag_port_channel_id)
 
     @cached_property
     def mlag_peer_port_channel_id(self: SharedUtils) -> int:
@@ -192,10 +177,6 @@ class MlagMixin:
     @cached_property
     def mlag_peer_interfaces(self: SharedUtils) -> list:
         return get(self.mlag_peer_facts, "mlag_interfaces", default=self.mlag_interfaces)
-
-    @cached_property
-    def mlag_peer_vlan_structured_config(self: SharedUtils) -> dict | None:
-        return get(self.switch_data_combined, "mlag_peer_vlan_structured_config")
 
     @cached_property
     def mlag_ibgp_ip(self: SharedUtils) -> str:
@@ -210,7 +191,3 @@ class MlagMixin:
             return self.mlag_peer_l3_ip
 
         return self.mlag_peer_ip
-
-    @cached_property
-    def mlag_ibgp_peering_vrfs_base_vlan(self: SharedUtils) -> int:
-        return int(get(self.hostvars, "mlag_ibgp_peering_vrfs.base_vlan", default=3000))

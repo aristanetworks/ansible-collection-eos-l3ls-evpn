@@ -58,11 +58,11 @@ def natural_sort(iterable: list | dict | str | None, sort_key: str | None = None
                 msg = f"Missing key '{sort_key}' in item to sort {key}."
                 raise KeyError(msg)
             return [convert(c, ignore_case) for c in re.split(pattern, str(key.get(sort_key, key)))]
-        if sort_key is not None and isinstance(key, Namespace):
+        if sort_key is not None and (isinstance(key, Namespace) or hasattr(key, "_is_avd_model")):
             if strict and not hasattr(key, sort_key):
                 msg = f"Missing attribute '{sort_key}' in item to sort {key}."
                 raise AttributeError(msg)
-            return [convert(c, ignore_case) for c in re.split(pattern, getattr(key, sort_key))]
+            return [convert(c, ignore_case) for c in re.split(pattern, str(getattr(key, sort_key)))]
         return [convert(c, ignore_case) for c in re.split(pattern, str(key))]
 
     return sorted(iterable, key=alphanum_key)

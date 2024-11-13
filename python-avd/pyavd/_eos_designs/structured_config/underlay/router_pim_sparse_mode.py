@@ -6,7 +6,7 @@ from __future__ import annotations
 from functools import cached_property
 from typing import TYPE_CHECKING
 
-from pyavd._utils import get, get_item
+from pyavd._utils import get
 
 from .utils import UtilsMixin
 
@@ -28,37 +28,37 @@ class RouterPimSparseModeMixin(UtilsMixin):
 
         Used for to configure multicast RPs for the underlay
         """
-        if self.shared_utils.underlay_multicast_rps is None:
+        if not self.shared_utils.underlay_multicast or not self.inputs.underlay_multicast_rps:
             return None
 
         rp_addresses = []
         anycast_rps = []
-        for rp_entry in self.shared_utils.underlay_multicast_rps:
-            rp_address = {"address": rp_entry["rp"]}
-            if rp_entry.get("groups") is not None:
-                if (acl := rp_entry.get("access_list_name")) is not None:
-                    rp_address["access_lists"] = [acl]
+        for rp_entry in self.inputs.underlay_multicast_rps:
+            rp_address = {"address": rp_entry.rp}
+            if rp_entry.groups:
+                if rp_entry.access_list_name:
+                    rp_address["access_lists"] = [rp_entry.access_list_name]
                 else:
-                    rp_address["groups"] = rp_entry["groups"]
+                    rp_address["groups"] = rp_entry.groups
 
             rp_addresses.append(rp_address)
 
-            if (nodes := get(rp_entry, "nodes")) is None or len(nodes) < 2:
+            if len(rp_entry.nodes) < 2:
                 continue
 
-            if get_item(nodes, "name", self.shared_utils.hostname) is None:
+            if self.shared_utils.hostname not in rp_entry.nodes:
                 continue
 
-            if self.shared_utils.underlay_multicast_anycast_rp_mode == "pim":
+            if self.inputs.underlay_multicast_anycast_rp.mode == "pim":
                 # Anycast-RP using PIM (default)
                 anycast_rps.append(
                     {
-                        "address": rp_entry["rp"],
+                        "address": rp_entry.rp,
                         "other_anycast_rp_addresses": [
                             {
-                                "address": get(self.shared_utils.get_peer_facts(node["name"]), "router_id", required=True),
+                                "address": get(self.shared_utils.get_peer_facts(node.name), "router_id", required=True),
                             }
-                            for node in nodes
+                            for node in rp_entry.nodes
                         ],
                     },
                 )

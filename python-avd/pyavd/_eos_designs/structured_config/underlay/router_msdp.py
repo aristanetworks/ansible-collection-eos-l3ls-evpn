@@ -6,7 +6,7 @@ from __future__ import annotations
 from functools import cached_property
 from typing import TYPE_CHECKING
 
-from pyavd._utils import get, get_item
+from pyavd._utils import get
 from pyavd.j2filters import natural_sort
 
 from .utils import UtilsMixin
@@ -29,25 +29,25 @@ class RouterMsdpMixin(UtilsMixin):
 
         Used for to configure multicast anycast RPs for the underlay
         """
-        if self.shared_utils.underlay_multicast_rps is None:
+        if not self.shared_utils.underlay_multicast or not self.inputs.underlay_multicast_rps:
             return None
 
-        if self.shared_utils.underlay_multicast_anycast_rp_mode != "msdp":
+        if self.inputs.underlay_multicast_anycast_rp.mode != "msdp":
             return None
 
         peers = set()
-        for rp_entry in self.shared_utils.underlay_multicast_rps:
-            if (nodes := get(rp_entry, "nodes")) is None or len(nodes) < 2:
+        for rp_entry in self.inputs.underlay_multicast_rps:
+            if len(rp_entry.nodes) < 2:
                 continue
 
-            if (node_entry := get_item(nodes, "name", self.shared_utils.hostname)) is None:
+            if self.shared_utils.hostname not in rp_entry.nodes:
                 continue
 
             # Anycast-RP using MSDP
-            for node in nodes:
-                if node == node_entry:
+            for node in rp_entry.nodes:
+                if node.name == self.shared_utils.hostname:
                     continue
-                peers.add(node["name"])
+                peers.add(node.name)
 
         if not peers:
             return None

@@ -8,7 +8,7 @@ from functools import cached_property
 from typing import TYPE_CHECKING
 
 from pyavd._errors import AristaAvdError
-from pyavd._utils import append_if_not_duplicate, get
+from pyavd._utils import append_if_not_duplicate
 from pyavd.j2filters import list_compress, natural_sort, range_expand
 
 if TYPE_CHECKING:
@@ -45,7 +45,7 @@ class UplinksMixin:
 
         For MLAG primary validate that the port-channel id falls within 1-2000 since we also use this ID as MLAG ID.
         """
-        uplink_port_channel_id = get(self.shared_utils.switch_data_combined, "uplink_port_channel_id")
+        uplink_port_channel_id = self.shared_utils.node_config.uplink_port_channel_id
 
         if self.shared_utils.mlag_role == "secondary":
             # MLAG Secondary
@@ -84,7 +84,7 @@ class UplinksMixin:
         If the *uplink_switch* is in MLAG,  validate that the port-channel id falls within 1-2000
         since we also use this ID as MLAG ID on the *uplink switch*.
         """
-        uplink_switch_port_channel_id = get(self.shared_utils.switch_data_combined, "uplink_switch_port_channel_id")
+        uplink_switch_port_channel_id = self.shared_utils.node_config.uplink_switch_port_channel_id
 
         if self.shared_utils.mlag_role == "secondary":
             # MLAG Secondary
@@ -180,34 +180,34 @@ class UplinksMixin:
         if self.shared_utils.uplink_interface_speed is not None:
             uplink["speed"] = self.shared_utils.uplink_interface_speed
 
-        if self.shared_utils.uplink_bfd:
+        if self.shared_utils.node_config.uplink_bfd:
             uplink["bfd"] = True
 
         if self.shared_utils.uplink_switch_interface_speed is not None:
             uplink["peer_speed"] = self.shared_utils.uplink_switch_interface_speed
 
-        if self.shared_utils.uplink_ptp is not None:
-            uplink["ptp"] = self.shared_utils.uplink_ptp
+        if self.shared_utils.node_config.uplink_ptp:
+            uplink["ptp"] = {"enable": self.shared_utils.node_config.uplink_ptp.enable}
         elif self.shared_utils.ptp_enabled:
             uplink["ptp"] = {"enable": True}
 
-        if self.shared_utils.uplink_macsec is not None:
-            uplink["mac_security"] = self.shared_utils.uplink_macsec
+        if self.shared_utils.node_config.uplink_macsec.profile:
+            uplink["mac_security"] = {"profile": self.shared_utils.node_config.uplink_macsec.profile}
 
         if self.shared_utils.underlay_multicast is True and uplink_switch_facts.shared_utils.underlay_multicast is True:
             uplink["underlay_multicast"] = True
 
-        if self.shared_utils.underlay_rfc5549:
+        if self.inputs.underlay_rfc5549:
             uplink["ipv6_enable"] = True
         else:
-            uplink["prefix_length"] = self.shared_utils.fabric_ip_addressing_p2p_uplinks_ipv4_prefix_length
+            uplink["prefix_length"] = self.inputs.fabric_ip_addressing.p2p_uplinks.ipv4_prefix_length
             uplink["ip_address"] = self.shared_utils.ip_addressing.p2p_uplinks_ip(uplink_index)
             uplink["peer_ip_address"] = self.shared_utils.ip_addressing.p2p_uplinks_peer_ip(uplink_index)
 
         if self.shared_utils.link_tracking_groups is not None:
             uplink["link_tracking_groups"] = [{"name": lt_group["name"], "direction": "upstream"} for lt_group in self.shared_utils.link_tracking_groups]
-        if self.shared_utils.uplink_structured_config is not None:
-            uplink["structured_config"] = self.shared_utils.uplink_structured_config
+        if self.shared_utils.node_config.uplink_structured_config is not None:
+            uplink["structured_config"] = self.shared_utils.node_config.uplink_structured_config
 
         return uplink
 
@@ -262,13 +262,13 @@ class UplinksMixin:
         if self.shared_utils.uplink_switch_interface_speed is not None:
             uplink["peer_speed"] = self.shared_utils.uplink_switch_interface_speed
 
-        if self.shared_utils.uplink_ptp is not None:
-            uplink["ptp"] = self.shared_utils.uplink_ptp
+        if self.shared_utils.node_config.uplink_ptp:
+            uplink["ptp"] = {"enable": self.shared_utils.node_config.uplink_ptp.enable}
         elif self.shared_utils.ptp_enabled:
             uplink["ptp"] = {"enable": True}
 
         # Remove vlans if upstream switch does not have them #}
-        if self.shared_utils.enable_trunk_groups:
+        if self.inputs.enable_trunk_groups:
             uplink["trunk_groups"] = ["UPLINK"]
             if self.shared_utils.mlag is True:
                 uplink["peer_trunk_groups"] = [self.shared_utils.group]
@@ -280,11 +280,11 @@ class UplinksMixin:
 
         if self.shared_utils.configure_inband_mgmt or self.shared_utils.configure_inband_mgmt_ipv6:
             # Always add inband_mgmt_vlan even if the uplink switch does not have this vlan defined
-            uplink_vlans.add(self.shared_utils.inband_mgmt_vlan)
+            uplink_vlans.add(self.shared_utils.node_config.inband_mgmt_vlan)
 
         uplink["vlans"] = list_compress(list(uplink_vlans)) if uplink_vlans else "none"
 
-        if uplink_native_vlan := get(self.shared_utils.switch_data_combined, "uplink_native_vlan"):
+        if uplink_native_vlan := self.shared_utils.node_config.uplink_native_vlan:
             uplink["native_vlan"] = uplink_native_vlan
 
         if self._short_esi is not None:
@@ -297,8 +297,8 @@ class UplinksMixin:
             # This child device does not support VLANs, so we tell the peer to enable portfast
             uplink["peer_spanning_tree_portfast"] = "edge"
 
-        if self.shared_utils.uplink_structured_config is not None:
-            uplink["structured_config"] = self.shared_utils.uplink_structured_config
+        if self.shared_utils.node_config.uplink_structured_config is not None:
+            uplink["structured_config"] = self.shared_utils.node_config.uplink_structured_config
 
         return uplink
 
@@ -310,31 +310,31 @@ class UplinksMixin:
         uplink = self._get_p2p_uplink(uplink_index, uplink_interface, uplink_switch, uplink_switch_interface)
         uplink["subinterfaces"] = []
         for tenant in self.shared_utils.filtered_tenants:
-            for vrf in tenant["vrfs"]:
+            for vrf in tenant.vrfs:
                 # Only keep VRFs present on the uplink switch as well.
                 # Also skip VRF default since it is covered on the parent interface.
                 # ok to use like this because this is only ever called inside EosDesignsFacts
                 uplink_switch_vrfs = uplink_switch_facts.shared_utils.vrfs
-                if vrf["name"] == "default" or vrf["name"] not in uplink_switch_vrfs:
+                if vrf.name == "default" or vrf.name not in uplink_switch_vrfs:
                     continue
 
                 vrf_id = self.shared_utils.get_vrf_id(vrf)
                 subinterface = {
                     "interface": f"{uplink_interface}.{vrf_id}",
                     "peer_interface": f"{uplink_switch_interface}.{vrf_id}",
-                    "vrf": vrf["name"],
+                    "vrf": vrf.name,
                     "encapsulation_dot1q_vlan": vrf_id,
                 }
 
-                if self.shared_utils.underlay_rfc5549:
+                if self.inputs.underlay_rfc5549:
                     subinterface["ipv6_enable"] = True
                 else:
-                    subinterface["prefix_length"] = self.shared_utils.fabric_ip_addressing_p2p_uplinks_ipv4_prefix_length
-                    subinterface["ip_address"] = self.shared_utils.ip_addressing.p2p_vrfs_uplinks_ip(uplink_index, vrf["name"])
-                    subinterface["peer_ip_address"] = self.shared_utils.ip_addressing.p2p_vrfs_uplinks_peer_ip(uplink_index, vrf["name"])
+                    subinterface["prefix_length"] = self.inputs.fabric_ip_addressing.p2p_uplinks.ipv4_prefix_length
+                    subinterface["ip_address"] = self.shared_utils.ip_addressing.p2p_vrfs_uplinks_ip(uplink_index, vrf.name)
+                    subinterface["peer_ip_address"] = self.shared_utils.ip_addressing.p2p_vrfs_uplinks_peer_ip(uplink_index, vrf.name)
 
-                if self.shared_utils.uplink_structured_config is not None:
-                    subinterface["structured_config"] = self.shared_utils.uplink_structured_config
+                if self.shared_utils.node_config.uplink_structured_config is not None:
+                    subinterface["structured_config"] = self.shared_utils.node_config.uplink_structured_config
 
                 append_if_not_duplicate(
                     uplink["subinterfaces"],
@@ -369,7 +369,7 @@ class UplinksMixin:
 
         Parsed by downstream switches during eos_designs_facts phase.
         """
-        return range_expand(get(self.shared_utils.default_interfaces, "downlink_interfaces", default=[]))
+        return range_expand(self.shared_utils.default_interfaces.downlink_interfaces)
 
     @cached_property
     def uplink_switch_vrfs(self: EosDesignsFacts) -> list[str] | None:

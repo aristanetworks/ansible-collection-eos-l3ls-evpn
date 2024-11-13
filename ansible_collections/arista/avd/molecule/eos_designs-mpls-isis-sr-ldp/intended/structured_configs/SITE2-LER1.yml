@@ -101,9 +101,9 @@ router_bgp:
         activate: true
     neighbors:
     - ip_address: 192.168.48.3
+      remote_as: '65202'
       description: TENANT_B_CPE_SITE5
       password: OajzUG59/YF0NkgvOQyRnQ==
-      remote_as: '65202'
     updates:
       wait_install: true
   vlans:
