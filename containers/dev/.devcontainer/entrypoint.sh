@@ -14,9 +14,9 @@ if [ -z "$(command -v ansible)" ]; then
     pip install "pyavd[ansible] @ ${PYAVD_INSTALL_LOCATION}"
     ansible-galaxy collection install --force ${AVD_INSTALL_PATH}
   # otherwise install requirements and collection from container workspace
-  elif [ -f ${CONTAINER_WSF_AVD_PATH}/requirements.txt ] && [ -f ${CONTAINER_WSF_AVD_PATH}/requirements-dev.txt ] ; then
+  elif [ -f ${CONTAINER_WORKSPACE}/python-avd/pyproject.toml ] && [ -f ${CONTAINER_WSF_AVD_PATH}/requirements-dev.txt ] ; then
     # use editable install for requirements
-    pip install -r ${CONTAINER_WSF_AVD_PATH}/requirements-dev.txt -r ${CONTAINER_WSF_AVD_PATH}/requirements.txt
+    pip install -e ${CONTAINER_WORKSPACE}/python-avd[ansible-collection] --config-settings editable_mode=compat -r ${CONTAINER_WSF_AVD_PATH}/requirements-dev.txt
     ansible-galaxy collection install --force ${CONTAINER_WSF_AVD_PATH}
   fi
 
