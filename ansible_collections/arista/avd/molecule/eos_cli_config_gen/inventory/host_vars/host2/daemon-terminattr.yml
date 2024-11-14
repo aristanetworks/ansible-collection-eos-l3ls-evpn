@@ -1,4 +1,4 @@
-### Daemon TerminAttr
+---
 daemon_terminattr:
   clusters:
     - name: DC1
@@ -15,10 +15,16 @@ daemon_terminattr:
       cvaddrs:
         - 10.30.30.1:9910
       cvauth:
-        method: "certs"
-        cert_file: "/persist/secure/ssl/terminattr/DC2/certs/client.crt"
-        key_file: "/persist/secure/ssl/terminattr/DC2/keys/client.key"
-        ca_file: "/persist/secure/ssl/terminattr/DC2/certs/ca.crt"
+        method: "key"
+        key: "arista"
+      cvvrf: mgt
+      cvsourceintf: Vlan500
+    - name: DC3
+      cvaddrs:
+        - 10.40.40.1:9910
+      cvauth:
+        method: "token"
+        token_file: "/tmp/tokenDC2"
       cvvrf: mgt
       cvsourceintf: Vlan500
   smashexcludes: "ale,flexCounter,hardware,kni,pulse,strata"

@@ -67,6 +67,7 @@
   - [Boot Secret Summary](#boot-secret-summary)
   - [System Boot Device Configuration](#system-boot-device-configuration)
 - [Monitoring](#monitoring)
+  - [TerminAttr Daemon](#terminattr-daemon)
   - [Custom daemons](#custom-daemons)
   - [Logging](#logging)
   - [MCS Client Summary](#mcs-client-summary)
@@ -1768,6 +1769,23 @@ boot secret 5 <removed>
 ```
 
 ## Monitoring
+
+### TerminAttr Daemon
+
+#### TerminAttr Daemon Summary
+
+| CV Compression | CloudVision Servers | VRF | Authentication | Smash Excludes | Ingest Exclude | Bypass AAA |
+| -------------- | ------------------- | --- | -------------- | -------------- | -------------- | ---------- |
+| gzip | 10.10.10.8:9910,10.10.10.9:9910,10.10.10.10:9910 | mgt | key,magickey | ale,flexCounter,hardware,kni,pulse,strata | /Sysdb/cell/1/agent,/Sysdb/cell/2/agent | True |
+
+#### TerminAttr Daemon Device Configuration
+
+```eos
+!
+daemon TerminAttr
+   exec /usr/bin/TerminAttr -cvaddr=10.10.10.8:9910,10.10.10.9:9910,10.10.10.10:9910 -cvauth=key,<removed> -cvvrf=mgt -cvgnmi -disableaaa -cvproxy=http://arista:arista@10.10.10.1:3128 -grpcaddr=mgmt/0.0.0.0:6042 -grpcreadonly -smashexcludes=ale,flexCounter,hardware,kni,pulse,strata -ingestexclude=/Sysdb/cell/1/agent,/Sysdb/cell/2/agent -taillogs=/var/log/messages,/var/log/agents/ -cvconfig -cvsourceintf=Vlan100
+   no shutdown
+```
 
 ### Custom daemons
 

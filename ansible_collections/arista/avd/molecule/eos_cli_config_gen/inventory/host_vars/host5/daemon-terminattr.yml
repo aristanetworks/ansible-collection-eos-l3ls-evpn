@@ -1,13 +1,12 @@
-### Daemon TerminAttr
+---
 daemon_terminattr:
   cvaddrs:
-    - 10.10.10.8:9910
-    - 10.10.10.9:9910
-    - 10.10.10.10:9910
-  cvvrf: mgt
+    - 192.0.2.1:9910
+    - 192.0.2.2:9910
+    - 192.0.2.3:9910
   cvauth:
-    method: "key"
-    key: ""
+    method: "token"
+    token_file: "/tmp/token"
+  cvvrf: mgt
   smashexcludes: "ale,flexCounter,hardware,kni,pulse,strata"
   ingestexclude: "/Sysdb/cell/1/agent,/Sysdb/cell/2/agent"
-  disable_aaa: true

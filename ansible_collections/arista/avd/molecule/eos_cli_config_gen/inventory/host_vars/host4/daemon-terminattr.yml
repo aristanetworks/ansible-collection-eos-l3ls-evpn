@@ -1,4 +1,4 @@
-### Daemon TerminAttr
+---
 daemon_terminattr:
   cvaddrs:
     - 10.10.10.8:9910
@@ -12,3 +12,4 @@ daemon_terminattr:
   cvvrf: mgt
   smashexcludes: "ale,flexCounter,hardware,kni,pulse,strata"
   ingestexclude: "/Sysdb/cell/1/agent,/Sysdb/cell/2/agent"
+  disable_aaa: true

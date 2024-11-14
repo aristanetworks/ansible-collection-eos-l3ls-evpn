@@ -1,3 +1,4 @@
+---
 daemon_terminattr:
   cvaddrs:
     - apiserver.arista.io:443
