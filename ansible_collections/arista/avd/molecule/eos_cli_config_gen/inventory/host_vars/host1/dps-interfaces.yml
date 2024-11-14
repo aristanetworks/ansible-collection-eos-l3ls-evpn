@@ -8,8 +8,8 @@ dps_interfaces:
     mtu: 666
     ip_address: 192.168.42.42/24
     flow_tracker:
-      hardware: FT-HW
-      sampled: FT-S
+      hardware: T3
+      sampled: T2
     # Cannot test all combination of tcp_mss_ceiling with only one Dps interface
     # available
     tcp_mss_ceiling:

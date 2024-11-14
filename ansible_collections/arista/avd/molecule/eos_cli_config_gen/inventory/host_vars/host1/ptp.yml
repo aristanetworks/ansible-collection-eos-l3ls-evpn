@@ -1,0 +1,38 @@
+---
+### ptp
+ptp:
+  clock_identity: "11:11:11:11:11:11"
+  source:
+    ip: 1.1.2.3
+  priority1: 101
+  priority2: 102
+  ttl: 12
+  domain: 17
+  message_type:
+    general:
+      dscp: 36
+    event:
+      dscp: 46
+  mode: boundary
+  mode_one_step: true
+  forward_unicast: true
+  profile: "g8275.1"
+  monitor:
+    # enabled: true (default)
+    threshold:
+      offset_from_master: 11
+      mean_path_delay: 12
+      drop:
+        offset_from_master: 13
+        mean_path_delay: 14
+    missing_message:
+      intervals:
+        announce: 101
+        follow_up: 102
+        sync: 103
+      sequence_ids:
+        enabled: true
+        announce: 201
+        delay_resp: 202
+        follow_up: 203
+        sync: 204

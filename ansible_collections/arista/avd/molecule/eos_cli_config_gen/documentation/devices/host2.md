@@ -24,6 +24,7 @@
 - [System Boot Settings](#system-boot-settings)
   - [System Boot Device Configuration](#system-boot-device-configuration)
 - [Monitoring](#monitoring)
+  - [Flow Tracking](#flow-tracking)
   - [Monitor Server Radius Summary](#monitor-server-radius-summary)
 - [Monitor Connectivity](#monitor-connectivity)
   - [Global Configuration](#global-configuration)
@@ -32,10 +33,12 @@
   - [LACP Summary](#lacp-summary)
   - [LACP Device Configuration](#lacp-device-configuration)
 - [Interfaces](#interfaces)
+  - [Switchport Default](#switchport-default)
   - [DPS Interfaces](#dps-interfaces)
   - [VXLAN Interface](#vxlan-interface)
 - [Routing](#routing)
   - [Service Routing Protocols Model](#service-routing-protocols-model)
+  - [IP Routing](#ip-routing)
   - [ARP](#arp)
   - [Router Adaptive Virtual Topology](#router-adaptive-virtual-topology)
   - [PBR Policy Maps](#pbr-policy-maps)
@@ -60,6 +63,7 @@
   - [IP DHCP Snooping Device Configuration](#ip-dhcp-snooping-device-configuration)
 - [IP NAT](#ip-nat)
   - [IP NAT Device Configuration](#ip-nat-device-configuration)
+  - [Traffic Policies information](#traffic-policies-information)
 
 ## Management
 
@@ -299,6 +303,38 @@ dhcp relay
 
 ## Monitoring
 
+### Flow Tracking
+
+#### Flow Tracking Sampled
+
+| Sample Size | Minimum Sample Size | Hardware Offload for IPv4 | Hardware Offload for IPv6 | Encapsulations |
+| ----------- | ------------------- | ------------------------- | ------------------------- | -------------- |
+| 666 | default | enabled | enabled | - |
+
+##### Trackers Summary
+
+| Tracker Name | Record Export On Inactive Timeout | Record Export On Interval | MPLS | Number of Exporters | Applied On | Table Size |
+| ------------ | --------------------------------- | ------------------------- | ---- | ------------------- | ---------- | ---------- |
+| T21 | 3666 | 5666 | True | 0 |  | - |
+
+##### Exporters Summary
+
+| Tracker Name | Exporter Name | Collector IP/Host | Collector Port | Local Interface |
+| ------------ | ------------- | ----------------- | -------------- | --------------- |
+
+#### Flow Tracking Device Configuration
+
+```eos
+!
+flow tracking sampled
+   sample 666
+   hardware offload ipv4 ipv6
+   tracker T21
+      record export on inactive timeout 3666
+      record export on interval 5666
+      record export mpls
+```
+
 ### Monitor Server Radius Summary
 
 #### Server Probe Settings
@@ -359,6 +395,19 @@ lacp system-priority 0
 
 ## Interfaces
 
+### Switchport Default
+
+#### Switchport Defaults Summary
+
+- Default Switchport Mode: routed
+
+#### Switchport Default Device Configuration
+
+```eos
+!
+switchport default mode routed
+```
+
 ### DPS Interfaces
 
 #### DPS Interfaces Summary
@@ -409,6 +458,22 @@ Single agent routing protocol model enabled
 ```eos
 !
 service routing protocols model ribd
+```
+
+### IP Routing
+
+#### IP Routing Summary
+
+| VRF | Routing Enabled |
+| --- | --------------- |
+| default | False |
+
+#### IP Routing Device Configuration
+
+```eos
+!
+no ip routing
+no ip icmp redirect
 ```
 
 ### ARP
@@ -613,4 +678,24 @@ ip dhcp snooping
 !
 !
 ip nat synchronization
+```
+
+### Traffic Policies information
+
+#### IPv6 Field Sets
+
+| Field Set Name | IPv6 Prefixes |
+| -------------- | ------------- |
+| IPv6-DEMO-1 | 11:22:33:44:55:66:77:88 |
+| IPv6-DEMO-2 | - |
+
+#### Traffic Policies Device Configuration
+
+```eos
+!
+traffic-policies
+   field-set ipv6 prefix IPv6-DEMO-1
+      11:22:33:44:55:66:77:88
+   !
+   field-set ipv6 prefix IPv6-DEMO-2
 ```

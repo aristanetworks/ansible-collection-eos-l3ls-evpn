@@ -22,6 +22,11 @@ management_security:
           repetitive: 6
           sequential: 7
   ssl_profiles:
+    - name: SSL_PROFILE
+      tls_versions: 1.1 1.2
+      certificate:
+        file: SSL_CERT
+        key: SSL_KEY
     - name: tls-versions-profile
       tls_versions: "1.0 1.1"
     - name: cipher-list-profile
