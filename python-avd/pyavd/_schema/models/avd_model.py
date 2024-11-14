@@ -94,15 +94,6 @@ class AvdModel(AvdBase):
             raise AttributeError("'" + cls.__name__ + "' object has no attribute '" + name + "'")
         field_info = cls._fields[name]
         field_type: type = field_info["type"]
-        if field_type is list:
-            if (default_value_or_function := field_info.get("default")) is None:
-                return []
-            if isinstance(default_value_or_function, list):
-                # Create a new list
-                return default_value_or_function.copy()
-
-            # Callable default value.
-            return default_value_or_function(field_info["items"])
 
         if issubclass(field_type, AvdBase) or field_type is dict:
             return default_function(field_type) if (default_function := field_info.get("default")) else field_type()
@@ -248,9 +239,7 @@ class AvdModel(AvdBase):
 
             # Merge new value
             field_type = field_info["type"]
-            if field_type is list and list_merge == "append":
-                setattr(self, field, old_value + deepcopy(new_value))
-            elif issubclass(field_type, AvdBase) and isinstance(old_value, field_type):
+            if issubclass(field_type, AvdBase) and isinstance(old_value, field_type):
                 # Merge in to the existing object
                 old_value._deepmerge(new_value, list_merge=list_merge)
             else:

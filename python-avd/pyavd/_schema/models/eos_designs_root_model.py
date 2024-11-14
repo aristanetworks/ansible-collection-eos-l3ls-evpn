@@ -12,6 +12,7 @@ from pyavd._schema.store import create_store
 from pyavd._schema.utils import get_instance_with_defaults
 from pyavd._utils import get_all
 
+from .avd_list import AvdList
 from .avd_model import AvdModel
 
 if TYPE_CHECKING:
@@ -49,7 +50,7 @@ class EosDesignsRootModel(AvdModel):
 
         root_data = {"_dynamic_keys": cls._get_dynamic_keys(data)}
         if load_custom_structured_config:
-            root_data["_custom_structured_configurations"] = list(cls._get_csc_items(data))
+            root_data["_custom_structured_configurations"] = cls._CustomStructuredConfigurations(cls._get_csc_items(data))
 
         return super()._from_dict(ChainMap(root_data, data), keep_extra_keys=keep_extra_keys)
 
@@ -60,8 +61,8 @@ class EosDesignsRootModel(AvdModel):
 
         Find any keys starting with any prefix defined under "custom_structured_configuration_prefix".
         """
-        prefixes = data.get("custom_structured_configuration_prefix", cls._fields["custom_structured_configuration_prefix"]["default"])
-        if not isinstance(prefixes, list):
+        prefixes = data.get("custom_structured_configuration_prefix", cls._get_field_default_value("custom_structured_configuration_prefix"))
+        if not isinstance(prefixes, (list, AvdList)):
             # Invalid prefix format.
             return
 
