@@ -256,6 +256,7 @@ loopback_interfaces:
   shutdown: false
   vrf: Tenant_X_OP_Zone
   ip_address: 10.255.1.35/32
+  ipv6_address: 2001:db8:1::3/128
 prefix_lists:
 - name: PL-LOOPBACKS-EVPN-OVERLAY
   sequence_numbers:
@@ -354,5 +355,6 @@ vxlan_interface:
 virtual_source_nat_vrfs:
 - name: Tenant_X_OP_Zone
   ip_address: 10.255.1.35
+  ipv6_address: 2001:db8:1::3
 metadata:
   platform: vEOS-LAB

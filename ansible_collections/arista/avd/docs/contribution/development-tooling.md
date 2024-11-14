@@ -56,7 +56,7 @@ Developing with your local Python environment requires you to configure and inst
 Recommended steps with Python virtual environment:
 
 1. Create and activate a Python virtual environment.
-2. Install Python requirements located in the AVD repository: [requirements-dev.txt](https://github.com/aristanetworks/avd/blob/devel/ansible_collections/arista/avd/requirements-dev.txt) and [requirements.txt](https://github.com/aristanetworks/avd/blob/devel/ansible_collections/arista/avd/requirements.txt).
+2. Install Python requirements located in the AVD repository: [requirements-dev.txt](https://github.com/aristanetworks/avd/blob/devel/ansible_collections/arista/avd/requirements-dev.txt).
 
 !!! note
     Ensure the virtual environment is located outside of the AVD project directory.
@@ -72,7 +72,7 @@ source avd-venv/bin/activate
 # The installation _must_ be performed from the root of the cloned avd repository.
 cd avd
 # Requirements files are located in `ansible_collections/arista/avd` of the avd repository.
-pip3 install -r ansible_collections/arista/avd/requirements-dev.txt -r ansible_collections/arista/avd/requirements.txt --upgrade
+pip3 install -r ansible_collections/arista/avd/requirements-dev.txt --upgrade
 ```
 
 !!! note

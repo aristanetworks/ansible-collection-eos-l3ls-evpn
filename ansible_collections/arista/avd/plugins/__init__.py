@@ -4,11 +4,12 @@
 from __future__ import annotations
 
 from contextlib import suppress
+from os import environ
 from pathlib import Path
 
 PYTHON_AVD_PATH = Path(__file__).parents[4] / "python-avd"
 RUNNING_FROM_SOURCE_PATH = PYTHON_AVD_PATH / "pyavd/running_from_src.txt"
-RUNNING_FROM_SOURCE = RUNNING_FROM_SOURCE_PATH.exists()
+RUNNING_FROM_SOURCE = RUNNING_FROM_SOURCE_PATH.exists() and not environ.get("AVD_NEVER_RUN_FROM_SOURCE")
 
 if RUNNING_FROM_SOURCE:
     import sys

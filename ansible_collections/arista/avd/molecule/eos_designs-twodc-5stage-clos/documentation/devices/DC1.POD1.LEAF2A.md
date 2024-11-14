@@ -492,7 +492,7 @@ interface Port-Channel19
 | Loopback0 | ROUTER_ID | default | - |
 | Loopback1 | VXLAN_TUNNEL_SOURCE | default | - |
 | Loopback100 | DIAG_VRF_vrf_with_loopbacks_from_overlapping_pool | vrf_with_loopbacks_from_overlapping_pool | - |
-| Loopback101 | DIAG_VRF_vrf_with_loopbacks_from_pod_pools | vrf_with_loopbacks_from_pod_pools | - |
+| Loopback101 | DIAG_VRF_vrf_with_loopbacks_from_pod_pools | vrf_with_loopbacks_from_pod_pools | 2001:db8:1::2/128 |
 | Loopback102 | DIAG_VRF_vrf_with_loopbacks_dc1_pod1_only | vrf_with_loopbacks_dc1_pod1_only | - |
 
 #### Loopback Interfaces Device Configuration
@@ -520,6 +520,7 @@ interface Loopback101
    no shutdown
    vrf vrf_with_loopbacks_from_pod_pools
    ip address 10.101.101.4/32
+   ipv6 address 2001:db8:1::2/128
 !
 interface Loopback102
    description DIAG_VRF_vrf_with_loopbacks_dc1_pod1_only
@@ -1151,11 +1152,11 @@ vrf instance vrf_with_loopbacks_from_pod_pools
 
 ### Virtual Source NAT Summary
 
-| Source NAT VRF | Source NAT IP Address |
-| -------------- | --------------------- |
-| vrf_with_loopbacks_dc1_pod1_only | 10.102.101.4 |
-| vrf_with_loopbacks_from_overlapping_pool | 10.100.0.4 |
-| vrf_with_loopbacks_from_pod_pools | 10.101.101.4 |
+| Source NAT VRF | Source NAT IPv4 Address | Source NAT IPv6 Address |
+| -------------- | ----------------------- | ----------------------- |
+| vrf_with_loopbacks_dc1_pod1_only | 10.102.101.4 | - |
+| vrf_with_loopbacks_from_overlapping_pool | 10.100.0.4 | - |
+| vrf_with_loopbacks_from_pod_pools | 10.101.101.4 | 2001:db8:1::2 |
 
 ### Virtual Source NAT Configuration
 
@@ -1164,6 +1165,7 @@ vrf instance vrf_with_loopbacks_from_pod_pools
 ip address virtual source-nat vrf vrf_with_loopbacks_dc1_pod1_only address 10.102.101.4
 ip address virtual source-nat vrf vrf_with_loopbacks_from_overlapping_pool address 10.100.0.4
 ip address virtual source-nat vrf vrf_with_loopbacks_from_pod_pools address 10.101.101.4
+ipv6 address virtual source-nat vrf vrf_with_loopbacks_from_pod_pools address 2001:db8:1::2
 ```
 
 ## EOS CLI Device Configuration
