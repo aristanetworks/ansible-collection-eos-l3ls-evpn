@@ -30,6 +30,7 @@
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;reflector</samp>](## "router_bfd.sbfd.reflector") | Dictionary |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;min_rx</samp>](## "router_bfd.sbfd.reflector.min_rx") | Integer |  |  |  | Rate in milliseconds. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;local_discriminator</samp>](## "router_bfd.sbfd.reflector.local_discriminator") | String |  |  |  | IPv4 address or 32 bit integer. |
+    | [<samp>&nbsp;&nbsp;slow_timer</samp>](## "router_bfd.slow_timer") | Integer |  |  | Min: 2000<br>Max: 60000 | Rate in milliseconds. |
 
 === "YAML"
 
@@ -80,4 +81,7 @@
 
           # IPv4 address or 32 bit integer.
           local_discriminator: <str>
+
+      # Rate in milliseconds.
+      slow_timer: <int; 2000-60000>
     ```

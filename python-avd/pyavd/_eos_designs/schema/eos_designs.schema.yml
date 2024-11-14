@@ -6382,11 +6382,22 @@ $defs:
                     type: str
                     description: 'IPv4_address/Mask.
 
-                      Loopback ip range, a unique ip is derived from this ranged and
-                      assignedto each l3 leaf based on it''s unique id.
+                      Loopback IPv4 range, a unique ip is derived from this range
+                      and assigned to each l3 leaf based on it''s unique id.
 
-                      Loopback is not created unless loopback_ip_range or loopback_ip_pools
-                      are set.
+                      Loopback is not created unless `loopback_ip_range`, `loopback_ipv6_range`
+                      or `loopback_ip_pools` are set.
+
+                      '
+                  loopback_ipv6_range:
+                    type: str
+                    description: 'IPv6_address/Mask.
+
+                      Loopback IPv6 range, a unique IPv6 address is derived from this
+                      range and assigned to each L3 leaf based on it''s unique ID.
+
+                      Loopback is not created unless `loopback_ip_range`, `loopback_ipv6_range`
+                      or `loopback_ip_pools` are set.
 
                       '
                   loopback_ip_pools:
@@ -6394,9 +6405,11 @@ $defs:
                     description: 'For inventories with multiple PODs a loopback range
                       can be set per POD to avoid overlaps.
 
-                      This only takes effect when loopback_ip_range is not defined,
-                      optional (loopback is not created unless loopback_ip_range or
-                      loopback_ip_pools are set).
+                      `loopback_ip_range` takes precedence for IPv4 and `loopback_ipv6_range`
+                      takes precedence for IPV6.
+
+                      Loopback is not created unless `loopback_ip_range`, `loopback_ipv6_range`
+                      or `loopback_ip_pools` are set.
 
                       '
                     primary_key: pod
@@ -6409,6 +6422,9 @@ $defs:
                         ipv4_pool:
                           type: str
                           description: IPv4_address/Mask.
+                        ipv6_pool:
+                          type: str
+                          description: IPv6_address/Mask.
               ospf:
                 documentation_options:
                   table: network-services-vrfs-ospf-settings

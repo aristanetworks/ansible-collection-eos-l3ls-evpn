@@ -1,0 +1,4 @@
+---
+monitor_server_radius:
+  probe:
+    method: status-server

@@ -58,6 +58,7 @@
   - [Event Handler](#event-handler)
   - [Object Tracking](#object-tracking)
   - [Monitor Telemetry Postcard Policy](#monitor-telemetry-postcard-policy)
+  - [Monitor Server Radius Summary](#monitor-server-radius-summary)
 - [Monitor Connectivity](#monitor-connectivity)
   - [Global Configuration](#global-configuration)
   - [VRF Configuration](#vrf-configuration)
@@ -156,6 +157,9 @@
 - [VRF Instances](#vrf-instances)
   - [VRF Instances Summary](#vrf-instances-summary)
   - [VRF Instances Device Configuration](#vrf-instances-device-configuration)
+- [Virtual Source NAT](#virtual-source-nat)
+  - [Virtual Source NAT Summary](#virtual-source-nat-summary)
+  - [Virtual Source NAT Configuration](#virtual-source-nat-configuration)
 - [System L1](#system-l1)
   - [Unsupported Interface Configurations](#unsupported-interface-configurations)
   - [System L1 Device Configuration](#system-l1-device-configuration)
@@ -1719,6 +1723,29 @@ monitor telemetry postcard policy
    !
    profile profile2
       ingress sample policy samplepo2
+```
+
+### Monitor Server Radius Summary
+
+Monitor servers are used for 802.1x authentication.
+
+#### Server Probe Settings
+
+| Setting | Value |
+| ------- | ----- |
+| Probe interval | 100 |
+| Threshold failure | 100 |
+| Probe method | access-request |
+
+#### Monitor Server Radius Device Configuration
+
+```eos
+!
+monitor server radius
+   service dot1x
+   probe interval 100 seconds
+   probe threshold failure 100
+   probe method access-request username arista password 7 <removed>
 ```
 
 ## Monitor Connectivity
@@ -5336,6 +5363,10 @@ policy-map type pbr PM_PBR_BREAKOUT
 
 ### Router BFD
 
+| BFD Tuning |
+| ---------- |
+| Slow-Timer 5000 |
+
 #### Router BFD Singlehop Summary
 
 | Interval | Minimum RX | Multiplier |
@@ -5361,6 +5392,7 @@ policy-map type pbr PM_PBR_BREAKOUT
 router bfd
    interval 900 min-rx 900 multiplier 50 default
    multihop interval 300 min-rx 300 multiplier 3
+   slow-timer 5000
    local-address 192.168.255.1
    session stats snapshot interval 51
    !
@@ -6430,6 +6462,28 @@ vrf instance MGMT
 vrf instance TENANT_A_PROJECT01
 !
 vrf instance TENANT_A_PROJECT02
+```
+
+## Virtual Source NAT
+
+### Virtual Source NAT Summary
+
+| Source NAT VRF | Source NAT IPv4 Address | Source NAT IPv6 Address |
+| -------------- | ----------------------- | ----------------------- |
+| TEST_01 | 1.1.1.1 | - |
+| TEST_02 | 1.1.1.2 | - |
+| TEST_03 | - | 2001:db8:85a3::8a2e:370:7334 |
+| TEST_04 | 1.1.1.3 | 2001:db8:85a3::8a2e:370:7335 |
+
+### Virtual Source NAT Configuration
+
+```eos
+!
+ip address virtual source-nat vrf TEST_01 address 1.1.1.1
+ip address virtual source-nat vrf TEST_02 address 1.1.1.2
+ip address virtual source-nat vrf TEST_04 address 1.1.1.3
+ipv6 address virtual source-nat vrf TEST_03 address 2001:db8:85a3::8a2e:370:7334
+ipv6 address virtual source-nat vrf TEST_04 address 2001:db8:85a3::8a2e:370:7335
 ```
 
 ## System L1

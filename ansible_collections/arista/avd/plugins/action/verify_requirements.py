@@ -4,7 +4,7 @@
 
 import json
 import sys
-from importlib.metadata import Distribution, PackageNotFoundError, version
+from importlib.metadata import Distribution, PackageNotFoundError, metadata, version
 from pathlib import Path
 from subprocess import PIPE, Popen
 from typing import Any
@@ -111,6 +111,12 @@ def _validate_python_requirements(requirements: list, info: dict) -> bool:
         except InvalidRequirement as exc:
             msg = f"Wrong format for requirement {raw_req}"
             raise AnsibleActionFail(msg) from exc
+
+        if req.extras:
+            for subreq_name in metadata(req.name).get_all("Requires-Dist"):
+                subreq = Requirement(subreq_name)
+                if subreq.marker:
+                    requirements.extend(subreq_name for marker in subreq.marker._markers if str(marker[0]) == "extra" and str(marker[2]) in req.extras)
 
         if RUNNING_FROM_SOURCE and req.name == "pyavd":
             display.vvv("AVD is running from source, *not* checking pyavd version.", "Verify Requirements")
