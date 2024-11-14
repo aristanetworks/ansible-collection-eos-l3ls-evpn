@@ -40,10 +40,10 @@ interface Management1
 
 ### Virtual Source NAT Summary
 
-| Source NAT VRF | Source NAT IP Address |
-| -------------- | --------------------- |
-| TEST_01 | 1.1.1.1 |
-| TEST_02 | 1.1.1.2 |
+| Source NAT VRF | Source NAT IPv4 Address | Source NAT IPv6 Address |
+| -------------- | ----------------------- | ----------------------- |
+| TEST_01 | 1.1.1.1 | - |
+| TEST_02 | 1.1.1.2 | - |
 
 ### Virtual Source NAT Configuration
 

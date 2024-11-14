@@ -1151,11 +1151,11 @@ vrf instance vrf_with_loopbacks_from_pod_pools
 
 ### Virtual Source NAT Summary
 
-| Source NAT VRF | Source NAT IP Address |
-| -------------- | --------------------- |
-| vrf_with_loopbacks_dc1_pod1_only | 10.102.101.4 |
-| vrf_with_loopbacks_from_overlapping_pool | 10.100.0.4 |
-| vrf_with_loopbacks_from_pod_pools | 10.101.101.4 |
+| Source NAT VRF | Source NAT IPv4 Address | Source NAT IPv6 Address |
+| -------------- | ----------------------- | ----------------------- |
+| vrf_with_loopbacks_dc1_pod1_only | 10.102.101.4 | - |
+| vrf_with_loopbacks_from_overlapping_pool | 10.100.0.4 | - |
+| vrf_with_loopbacks_from_pod_pools | 10.101.101.4 | - |
 
 ### Virtual Source NAT Configuration
 

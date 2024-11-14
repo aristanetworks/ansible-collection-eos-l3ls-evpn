@@ -328,13 +328,7 @@ router isis CORE
 | LDP Interface Disabled Default | True |
 | LDP Transport-Address Interface | Loopback0 |
 
-### MPLS Interfaces
-
-| Interface | MPLS IP Enabled | LDP Enabled | IGP Sync |
-| --------- | --------------- | ----------- | -------- |
-| Loopback0 | - | True | - |
-
-#### MPLS Device Configuration
+#### MPLS and LDP Device Configuration
 
 ```eos
 !
@@ -346,6 +340,12 @@ mpls ldp
    interface disabled default
    no shutdown
 ```
+
+### MPLS Interfaces
+
+| Interface | MPLS IP Enabled | LDP Enabled | IGP Sync |
+| --------- | --------------- | ----------- | -------- |
+| Loopback0 | - | True | - |
 
 ## Multicast
 
