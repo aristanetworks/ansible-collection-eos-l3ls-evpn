@@ -381,6 +381,7 @@ loopback_interfaces:
   shutdown: false
   vrf: Tenant_X_OP_Zone
   ip_address: 10.255.1.33/32
+  ipv6_address: 2001:db8:1::1/128
 prefix_lists:
 - name: PL-LOOPBACKS-EVPN-OVERLAY
   sequence_numbers:
@@ -431,6 +432,7 @@ vxlan_interface:
 virtual_source_nat_vrfs:
 - name: Tenant_X_OP_Zone
   ip_address: 10.255.1.33
+  ipv6_address: 2001:db8:1::1
 port_channel_interfaces:
 - name: Port-Channel10
   description: server01_ES1_PortChanne1

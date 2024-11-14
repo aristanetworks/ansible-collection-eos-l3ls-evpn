@@ -23,6 +23,8 @@
   - [DHCP Relay Device Configuration](#dhcp-relay-device-configuration)
 - [System Boot Settings](#system-boot-settings)
   - [System Boot Device Configuration](#system-boot-device-configuration)
+- [Monitoring](#monitoring)
+  - [Monitor Server Radius Summary](#monitor-server-radius-summary)
 - [Monitor Connectivity](#monitor-connectivity)
   - [Global Configuration](#global-configuration)
   - [Monitor Connectivity Device Configuration](#monitor-connectivity-device-configuration)
@@ -60,6 +62,8 @@
   - [IP DHCP Relay Device Configuration](#ip-dhcp-relay-device-configuration)
 - [IP DHCP Snooping](#ip-dhcp-snooping)
   - [IP DHCP Snooping Device Configuration](#ip-dhcp-snooping-device-configuration)
+- [IP NAT](#ip-nat)
+  - [IP NAT Device Configuration](#ip-nat-device-configuration)
 
 ## Management
 
@@ -295,6 +299,24 @@ dhcp relay
 
 ```eos
 !
+```
+
+## Monitoring
+
+### Monitor Server Radius Summary
+
+#### Server Probe Settings
+
+| Setting | Value |
+| ------- | ----- |
+| Probe method | status-server |
+
+#### Monitor Server Radius Device Configuration
+
+```eos
+!
+monitor server radius
+   probe method status-server
 ```
 
 ## Monitor Connectivity
@@ -653,4 +675,14 @@ IP DHCP Snooping is enabled
 ```eos
 !
 ip dhcp snooping
+```
+
+## IP NAT
+
+### IP NAT Device Configuration
+
+```eos
+!
+!
+ip nat synchronization
 ```
