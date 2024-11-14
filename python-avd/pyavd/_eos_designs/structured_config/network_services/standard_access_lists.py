@@ -35,28 +35,27 @@ class StandardAccessListsMixin(UtilsMixin):
         for tenant in self.shared_utils.filtered_tenants:
             for vrf in tenant.vrfs:
                 for rp_entry in vrf.pim_rp_addresses or tenant.pim_rp_addresses:
-                    if not rp_entry.nodes or self.shared_utils.hostname in rp_entry.nodes:
-                        if not rp_entry.groups or not rp_entry.access_list_name:
-                            continue
+                    if rp_entry.nodes or self.shared_utils.hostname not in rp_entry.nodes or not rp_entry.groups or not rp_entry.access_list_name:
+                        continue
 
-                        standard_access_list = {
-                            "name": rp_entry.access_list_name,
-                            "sequence_numbers": [
-                                {
-                                    "sequence": (index) * 10,
-                                    "action": f"permit {group}",
-                                }
-                                for index, group in enumerate(rp_entry.groups, 1)
-                            ],
-                        }
+                    standard_access_list = {
+                        "name": rp_entry.access_list_name,
+                        "sequence_numbers": [
+                            {
+                                "sequence": (index) * 10,
+                                "action": f"permit {group}",
+                            }
+                            for index, group in enumerate(rp_entry.groups, 1)
+                        ],
+                    }
 
-                        append_if_not_duplicate(
-                            list_of_dicts=standard_access_lists,
-                            primary_key="name",
-                            new_dict=standard_access_list,
-                            context="PIM RP Address ACL for VRFs",
-                            context_keys=["name"],
-                        )
+                    append_if_not_duplicate(
+                        list_of_dicts=standard_access_lists,
+                        primary_key="name",
+                        new_dict=standard_access_list,
+                        context="PIM RP Address ACL for VRFs",
+                        context_keys=["name"],
+                    )
 
         if standard_access_lists:
             return standard_access_lists

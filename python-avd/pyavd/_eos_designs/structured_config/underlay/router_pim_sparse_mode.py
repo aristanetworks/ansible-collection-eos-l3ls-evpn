@@ -43,25 +43,21 @@ class RouterPimSparseModeMixin(UtilsMixin):
 
             rp_addresses.append(rp_address)
 
-            if len(rp_entry.nodes) < 2:
+            if len(rp_entry.nodes) < 2 or self.shared_utils.hostname not in rp_entry.nodes or self.inputs.underlay_multicast_anycast_rp.mode != "pim":
                 continue
 
-            if self.shared_utils.hostname not in rp_entry.nodes:
-                continue
-
-            if self.inputs.underlay_multicast_anycast_rp.mode == "pim":
-                # Anycast-RP using PIM (default)
-                anycast_rps.append(
-                    {
-                        "address": rp_entry.rp,
-                        "other_anycast_rp_addresses": [
-                            {
-                                "address": get(self.shared_utils.get_peer_facts(node.name), "router_id", required=True),
-                            }
-                            for node in rp_entry.nodes
-                        ],
-                    },
-                )
+            # Anycast-RP using PIM (default)
+            anycast_rps.append(
+                {
+                    "address": rp_entry.rp,
+                    "other_anycast_rp_addresses": [
+                        {
+                            "address": get(self.shared_utils.get_peer_facts(node.name), "router_id", required=True),
+                        }
+                        for node in rp_entry.nodes
+                    ],
+                },
+            )
 
         if rp_addresses:
             router_pim_sparse_mode = {

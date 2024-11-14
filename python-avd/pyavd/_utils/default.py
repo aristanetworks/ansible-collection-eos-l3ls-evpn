@@ -25,8 +25,6 @@ def default(*values: Unpack[tuple[Unpack[tuple[T | None, ...]], T]]) -> T:
         final_value: Final value to test
 
     Returns:
-    -------
-    any
         First value which is not None
     """
     for value in values:

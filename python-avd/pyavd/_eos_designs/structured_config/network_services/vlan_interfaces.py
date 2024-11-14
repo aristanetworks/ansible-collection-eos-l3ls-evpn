@@ -187,18 +187,18 @@ class VlanInterfacesMixin(UtilsMixin):
         if self.inputs.underlay_rfc5549 and self.inputs.overlay_mlag_rfc5549:
             return {"ipv6_enable": True}
 
-        if (mlag_ibgp_peering_ipv4_pool := vrf.mlag_ibgp_peering_ipv4_pool) is not None:
+        if vrf.mlag_ibgp_peering_ipv4_pool:
             if self.shared_utils.mlag_role == "primary":
                 return {
                     "ip_address": (
-                        f"{self.shared_utils.ip_addressing.mlag_ibgp_peering_ip_primary(mlag_ibgp_peering_ipv4_pool)}/"
+                        f"{self.shared_utils.ip_addressing.mlag_ibgp_peering_ip_primary(vrf.mlag_ibgp_peering_ipv4_pool)}/"
                         f"{self.inputs.fabric_ip_addressing.mlag.ipv4_prefix_length}"
                     )
                 }
 
             return {
                 "ip_address": (
-                    f"{self.shared_utils.ip_addressing.mlag_ibgp_peering_ip_secondary(mlag_ibgp_peering_ipv4_pool)}/"
+                    f"{self.shared_utils.ip_addressing.mlag_ibgp_peering_ip_secondary(vrf.mlag_ibgp_peering_ipv4_pool)}/"
                     f"{self.inputs.fabric_ip_addressing.mlag.ipv4_prefix_length}"
                 )
             }

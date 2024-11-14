@@ -44,6 +44,7 @@ class PatchPanelMixin(UtilsMixin):
                         channel_group_id = "".join(re.findall(r"\d", interface))
                         interface = f"Port-Channel{channel_group_id}"
 
+                    # TODO: refactor this by inverting if and else condition and using continue at the end of the if
                     if point_to_point_service.subinterfaces:
                         for subif in point_to_point_service.subinterfaces:
                             patch = {

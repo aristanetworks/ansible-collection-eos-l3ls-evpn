@@ -36,10 +36,7 @@ class UtilsZscalerMixin:
 
         Should only be called for CV Pathfinder Client devices.
         """
-        if self.inputs.zscaler_endpoints:
-            return self.inputs.zscaler_endpoints
-
-        return asyncio.run(self._generate_zscaler_endpoints())
+        return self.inputs.zscaler_endpoints or asyncio.run(self._generate_zscaler_endpoints())
 
     async def _generate_zscaler_endpoints(self: AvdStructuredConfigNetworkServices) -> EosDesigns.ZscalerEndpoints:
         """
@@ -58,9 +55,9 @@ class UtilsZscalerMixin:
             raise AristaAvdInvalidInputsError(msg)
 
         if self.shared_utils.wan_site is None or not self.shared_utils.wan_site.location:
-            region_index = f"name={self.shared_utils.wan_region.name}" if self.shared_utils.wan_region is not None else ""
-            site_index = f"name={self.shared_utils.wan_site.name}" if self.shared_utils.wan_site is not None else ""
-            msg = f"{context} and requires 'cv_pathfinder_regions[{region_index}]" f".sites[{site_index}].location' to be set."
+            region_key = f"name={self.shared_utils.wan_region.name}" if self.shared_utils.wan_region is not None else ""
+            site_key = f"name={self.shared_utils.wan_site.name}" if self.shared_utils.wan_site is not None else ""
+            msg = f"{context} and requires 'cv_pathfinder_regions[{region_key}]" f".sites[{site_key}].location' to be set."
             raise AristaAvdInvalidInputsError(msg)
 
         wan_site_location = self.shared_utils.wan_site.location

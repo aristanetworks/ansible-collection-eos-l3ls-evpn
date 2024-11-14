@@ -6,7 +6,7 @@ from __future__ import annotations
 from functools import cached_property
 from typing import TYPE_CHECKING
 
-from pyavd._errors import AristaAvdError
+from pyavd._errors import AristaAvdError, AristaAvdMissingVariableError
 from pyavd._utils import default, get, get_ip_from_ip_prefix, get_item, strip_empties_from_dict
 from pyavd.api.interface_descriptions import InterfaceDescriptionData
 from pyavd.j2filters import natural_sort, range_expand
@@ -164,6 +164,10 @@ class UtilsMixin:
             )
 
         # TODO: catch if ip_address is not valid or not dhcp
+        if not l3_interface.ip_address:
+            msg = f"{self.shared_utils.node_type_key_data.key}.nodes[name={self.shared_utils.hostname}].l3_interfaces[name={l3_interface.name}].ip_address"
+            raise AristaAvdMissingVariableError(msg)
+
         interface = {
             "name": l3_interface.name,
             "peer_type": "l3_interface",

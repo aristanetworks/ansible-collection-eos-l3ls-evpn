@@ -71,23 +71,6 @@ class MlagMixin:
         return None
 
     @cached_property
-    def node_group_is_primary_and_peer_hostname(self: SharedUtils) -> tuple[bool, str] | None:
-        """
-        Node group position and peer used for MLAG and WAN HA.
-
-        Returns None if the device is not in a node_group with exactly two devices.
-        Returns True, <peer> if this device is the first one in the node_group.
-        Returns False, <peer> if this device is the second one in the node_group.
-        """
-        if self.node_group_config is None or len(self.node_group_config.nodes) != 2:
-            return None
-
-        nodes = list(self.node_group_config.nodes.keys())
-        index = nodes.index(self.hostname)
-        peer_index = not index  # (0->1 and 1>0)
-        return index == 0, nodes[peer_index]
-
-    @cached_property
     def mlag_peer(self: SharedUtils) -> str:
         if self.node_group_is_primary_and_peer_hostname is not None:
             return self.node_group_is_primary_and_peer_hostname[1]

@@ -37,17 +37,11 @@ class RouterMsdpMixin(UtilsMixin):
 
         peers = set()
         for rp_entry in self.inputs.underlay_multicast_rps:
-            if len(rp_entry.nodes) < 2:
-                continue
-
-            if self.shared_utils.hostname not in rp_entry.nodes:
+            if len(rp_entry.nodes) < 2 or self.shared_utils.hostname not in rp_entry.nodes:
                 continue
 
             # Anycast-RP using MSDP
-            for node in rp_entry.nodes:
-                if node.name == self.shared_utils.hostname:
-                    continue
-                peers.add(node.name)
+            peers.update(node.name for node in rp_entry.nodes if node.name == self.shared_utils.hostname)
 
         if not peers:
             return None

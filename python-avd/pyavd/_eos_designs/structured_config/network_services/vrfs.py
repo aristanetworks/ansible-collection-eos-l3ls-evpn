@@ -81,11 +81,4 @@ class VrfsMixin(UtilsMixin):
 
         Expects a VRF definition coming from filtered_tenants, where all keys have been set and filtered
         """
-        for svi in vrf.svis:
-            if svi.ipv6_address_virtuals:
-                return True
-
-            if svi.ipv6_address:
-                return True
-
-        return False
+        return any(svi.ipv6_address or svi.ipv6_address_virtuals for svi in vrf.svis)

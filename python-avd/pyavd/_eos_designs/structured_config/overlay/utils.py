@@ -157,14 +157,10 @@ class UtilsMixin:
 
     @cached_property
     def _mpls_mesh_pe(self: AvdStructuredConfigOverlay) -> dict:
-        if self.shared_utils.overlay_mpls is not True:
-            return {}
-
-        if not self.inputs.bgp_mesh_pes:
+        if not self.shared_utils.overlay_mpls or not self.inputs.bgp_mesh_pes:
             return {}
 
         mpls_mesh_pe = {}
-
         for fabric_switch in self.shared_utils.all_fabric_devices:
             if self._mpls_route_reflectors is not None and fabric_switch in self._mpls_route_reflectors:
                 continue

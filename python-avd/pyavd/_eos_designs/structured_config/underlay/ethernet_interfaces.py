@@ -348,7 +348,6 @@ class EthernetInterfacesMixin(UtilsMixin):
                             "mode": "active",
                         },
                         # TODO: do we need speed?
-                        # TODO: do we need mtu
                         "mtu": self.shared_utils.node_config.wan_ha.mtu,
                     }
                 )
