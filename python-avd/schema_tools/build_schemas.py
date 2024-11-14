@@ -13,6 +13,7 @@ from yaml import load as yaml_load
 
 from .constants import DOCS_PATHS, LICENSE_HEADER, PYTHON_CLASS_PATHS, SCHEMA_FRAGMENTS_PATHS, SCHEMA_PATHS
 from .generate_classes.src_generators import FileSrc
+from .generate_classes.utils import generate_class_name
 from .generate_docs.mdtabsgen import get_md_tabs
 from .metaschema.meta_schema_model import AristaAvdSchema
 from .store import create_store
@@ -101,7 +102,7 @@ def build_schema_classes() -> None:
 
         schema = AristaAvdSchema(_resolve_schema=schema_name, **raw_yaml_schema_store[schema_name])
         LOGGER.info("Building Python Classes from schema: %s", schema_name)
-        schemasrc = schema._generate_class_src(class_name=schema_name)
+        schemasrc = schema._generate_class_src(class_name=generate_class_name(schema_name))
         src_file_contents = FileSrc(classes=[schemasrc.cls])
         with python_class_path.open(mode="w", encoding="UTF-8") as file:
             file.write(str(src_file_contents))

@@ -67,17 +67,17 @@ class MiscMixin:
         return default(self.node_config.system_mac_address, self.inputs.system_mac_address)
 
     @cached_property
-    def uplink_switches(self: SharedUtils) -> list:
-        return self.node_config.uplink_switches or get(self.cv_topology_config, "uplink_switches") or []
+    def uplink_switches(self: SharedUtils) -> list[str]:
+        return self.node_config.uplink_switches._as_list() or get(self.cv_topology_config, "uplink_switches") or []
 
     @cached_property
-    def uplink_interfaces(self: SharedUtils) -> list:
+    def uplink_interfaces(self: SharedUtils) -> list[str]:
         return range_expand(
             self.node_config.uplink_interfaces or get(self.cv_topology_config, "uplink_interfaces") or self.default_interfaces.uplink_interfaces,
         )
 
     @cached_property
-    def uplink_switch_interfaces(self: SharedUtils) -> list:
+    def uplink_switch_interfaces(self: SharedUtils) -> list[str]:
         uplink_switch_interfaces = self.node_config.uplink_switch_interfaces or get(self.cv_topology_config, "uplink_switch_interfaces") or []
         if uplink_switch_interfaces:
             return range_expand(uplink_switch_interfaces)

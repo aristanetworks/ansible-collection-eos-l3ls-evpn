@@ -22,9 +22,9 @@ if TYPE_CHECKING:
 class AvdModel(AvdBase):
     """Base class used for schema-based data classes holding dictionaries loaded from AVD inputs."""
 
-    _is_avd_model = True
+    _is_avd_model: ClassVar[bool] = True
     """Attribute checked in coerce_type and other tooling where importing the class is not possible because of circular imports."""
-    _allow_other_keys: bool = False
+    _allow_other_keys: ClassVar[bool] = False
     """Attribute telling if this class should fail or ignore unknown keys found during loading in _from_dict()."""
     _fields: ClassVar[dict[str, dict]]
     """
@@ -65,17 +65,7 @@ class AvdModel(AvdBase):
                 msg = f"Invalid key '{key}'. Not available on '{cls.__name__}'."
                 raise KeyError(msg)
 
-            field_info = cls._fields[field]
-            field_type = field_info["type"]
-
-            value = coerce_type(data[key], field_type, list_items_type=field_info.get("items"))
-
-            # Raise for wrong type ignoring None values - we expect the validation to have sorted out required fields.
-            if value is not None and not isinstance(value, field_type):
-                msg = f"Invalid type '{type(value)}. Expected '{field_type}'. Value '{value}"
-                raise TypeError(msg)
-
-            cls_args[field] = value
+            cls_args[field] = coerce_type(data[key], cls._fields[field]["type"])
 
         return cls(**cls_args)
 
@@ -192,24 +182,17 @@ class AvdModel(AvdBase):
             # Removing field_ prefix if needed.
             key = self._field_to_key_map.get(field, field)
 
-            if issubclass(field_info["type"], AvdModel) and isinstance(value, AvdModel):
-                value = value._as_dict(include_default_values=include_default_values)
-                if value == {}:  # Keeping None values for nullified dicts.
+            if issubclass(field_info["type"], AvdBase) and isinstance(value, AvdBase):
+                value = value._dump(include_default_values=include_default_values)
+                if not value and value is not None:  # Removing empty dict/list but keeping None values for nullified data.
                     continue
-            elif issubclass(field_info["type"], AvdIndexedList) and isinstance(value, AvdIndexedList):
-                value = value._as_list(include_default_values=include_default_values)
-                if value == []:  # Keeping None values for nullified list.
-                    continue
-
-            elif field_info["type"] is list and isinstance(value, list):
-                if issubclass(field_info["items"], AvdModel):
-                    value = [item._as_dict(include_default_values=include_default_values) for item in value if isinstance(item, AvdModel)]
-                elif issubclass(field_info["items"], AvdIndexedList):
-                    value = [item._as_list(include_default_values=include_default_values) for item in value if isinstance(item, AvdIndexedList)]
 
             as_dict[key] = value
 
         return as_dict
+
+    def _dump(self, include_default_values: bool = False) -> dict:
+        return self._as_dict(include_default_values=include_default_values)
 
     def _get(self, name: str, default: Any = None) -> Any:
         """
@@ -243,7 +226,7 @@ class AvdModel(AvdBase):
         Args:
             other: The other instance of the same type to merge on this instance.
             list_merge: Merge strategy used on any nested lists.
-                - "append" will first try to deep merge on the primary key, and if not found it will append the new item.
+                - "append" will first try to deep merge on the primary key, and if not found it will append non-existing items.
                 - "replace" will replace the full list.
         """
         cls = type(self)
@@ -267,25 +250,11 @@ class AvdModel(AvdBase):
             field_type = field_info["type"]
             if field_type is list and list_merge == "append":
                 setattr(self, field, old_value + deepcopy(new_value))
-            elif issubclass(field_type, (AvdModel, AvdIndexedList)) and isinstance(old_value, field_type):
+            elif issubclass(field_type, AvdBase) and isinstance(old_value, field_type):
                 # Merge in to the existing object
                 old_value._deepmerge(new_value, list_merge=list_merge)
             else:
                 setattr(self, field, new_value)
-
-    def _deepmerged(self, other: Self, list_merge: Literal["append", "replace"] = "append") -> Self:
-        """
-        Return new instance with the result of the deepmerge of "other" on this instance.
-
-        Args:
-            other: The other instance of the same type to merge on this instance.
-            list_merge: Merge strategy used on any nested lists.
-                - "append" will first try to deep merge on the primary key, and if not found it will append the new item.
-                - "replace" will replace the full list.
-        """
-        new_instance = deepcopy(self)
-        new_instance._deepmerge(other=other, list_merge=list_merge)
-        return new_instance
 
     def _inherit(self, other: Self) -> None:
         """Update unset fields on this instance with fields from other instance. No merging."""
@@ -316,7 +285,7 @@ class AvdModel(AvdBase):
             if old_value == new_value:
                 continue
 
-            # Merge new value if it is a class.
+            # Merge new value if it is a class with inheritance support.
             field_type = field_info["type"]
             if issubclass(field_type, (AvdModel, AvdIndexedList)) and isinstance(old_value, field_type):
                 # Inherit into the existing object.
@@ -356,17 +325,7 @@ class AvdModel(AvdBase):
                 msg = f"Unable to cast '{cls}' as type '{new_type}' since the field '{field}' is missing from the new class. "
                 raise TypeError(msg)
             if field_info != new_type._fields[field]:
-                if field_info["type"] is list and issubclass(field_info["items"], (AvdModel, AvdIndexedList)) and isinstance(value, list):
-                    # TODO: Consider using the TypeError we raise below to ensure we know the outer type.
-                    # TODO: with suppress(TypeError):
-                    new_args[field] = [
-                        item._cast_as(new_type._fields[field]["items"], ignore_extra_keys=ignore_extra_keys)
-                        for item in value
-                        if isinstance(item, (AvdModel, AvdIndexedList))
-                    ]
-                    continue
-
-                if issubclass(field_info["type"], (AvdModel, AvdIndexedList)) and isinstance(value, (AvdModel, AvdIndexedList)):
+                if issubclass(field_info["type"], (AvdBase)) and isinstance(value, (AvdBase)):
                     # TODO: Consider using the TypeError we raise below to ensure we know the outer type.
                     # TODO: with suppress(TypeError):
                     new_args[field] = value._cast_as(new_type._fields[field]["type"], ignore_extra_keys=ignore_extra_keys)

@@ -331,7 +331,7 @@ class UtilsWanMixin:
         return "DEFAULT-POLICY"
 
     @cached_property
-    def _default_policy_path_group_names(self: AvdStructuredConfigNetworkServices) -> list:
+    def _default_policy_path_group_names(self: AvdStructuredConfigNetworkServices) -> list[str]:
         """
         Return a list of path group names for the default policy.
 
@@ -360,7 +360,15 @@ class UtilsWanMixin:
         return EosDesigns.WanVirtualTopologies.PoliciesItem(
             name=self._default_wan_policy_name,
             default_virtual_topology=EosDesigns.WanVirtualTopologies.PoliciesItem.DefaultVirtualTopology(
-                path_groups=[EosDesigns.WanVirtualTopologies.PoliciesItem.DefaultVirtualTopology.PathGroupsItem(names=self._default_policy_path_group_names)]
+                path_groups=EosDesigns.WanVirtualTopologies.PoliciesItem.DefaultVirtualTopology.PathGroups(
+                    [
+                        EosDesigns.WanVirtualTopologies.PoliciesItem.DefaultVirtualTopology.PathGroupsItem(
+                            names=EosDesigns.WanVirtualTopologies.PoliciesItem.DefaultVirtualTopology.PathGroupsItem.Names(
+                                self._default_policy_path_group_names
+                            )
+                        )
+                    ]
+                )
             ),
         )
 
@@ -387,7 +395,13 @@ class UtilsWanMixin:
             # Filter only the path-groups connected to pathfinder
             path_groups = [path_group for path_group in path_groups if path_group in self._local_path_groups_connected_to_pathfinder]
         return EosDesigns.WanVirtualTopologies.ControlPlaneVirtualTopology(
-            path_groups=[EosDesigns.WanVirtualTopologies.ControlPlaneVirtualTopology.PathGroupsItem(names=path_groups)]
+            path_groups=EosDesigns.WanVirtualTopologies.ControlPlaneVirtualTopology.PathGroups(
+                [
+                    EosDesigns.WanVirtualTopologies.ControlPlaneVirtualTopology.PathGroupsItem(
+                        names=EosDesigns.WanVirtualTopologies.ControlPlaneVirtualTopology.PathGroupsItem.Names(path_groups)
+                    )
+                ]
+            )
         )
 
     @cached_property

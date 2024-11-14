@@ -49,7 +49,7 @@ def test_generate_class_src(schema_name: str) -> None:
     schema = AristaAvdSchema(_resolve_schema=schema_name, **STORE[schema_name])
     output_file = Path(__file__).parent.joinpath(f"artifacts/{schema_name}.py")
     print(f"Building pydantic from schema {schema_name}")  # noqa: T201
-    schemasrc = schema._generate_class_src(class_name=schema_name)
+    schemasrc = schema._generate_class_src(class_name=generate_class_name(schema_name))
     src_file_contents = FileSrc(classes=[schemasrc.cls])
     with output_file.open(mode="w", encoding="UTF-8") as file:
         file.write(str(src_file_contents))

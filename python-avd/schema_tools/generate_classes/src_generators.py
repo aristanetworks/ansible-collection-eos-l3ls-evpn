@@ -13,6 +13,7 @@ SRC_HEADER = indent(LICENSE_HEADER + "\n\n", "# ")
 
 BASE_IMPORTS = """\
 from pyavd._schema.models.avd_indexed_list import AvdIndexedList
+from pyavd._schema.models.avd_list import AvdList
 from pyavd._schema.models.avd_model import AvdModel
 from pyavd._utils import Undefined, UndefinedType
 """
@@ -146,7 +147,7 @@ class ModelSrc:
     """
 
     name: str
-    classes: list[ModelSrc | CollectionSrc]
+    classes: list[ModelSrc | ListSrc]
     fields: list[FieldSrc]
     class_vars: list[ClassVarSrc] | None = None
     imports: set[str] | None = None
@@ -292,7 +293,7 @@ class ModelSrc:
 
 
 @dataclass
-class CollectionSrc:
+class ListSrc:
     """
     Dataclass containing the elements to generate Python source code for this class.
 
@@ -320,11 +321,11 @@ class CollectionSrc:
         if class_vars := self._render_class_vars():
             classsrc += f"{class_vars}\n"
 
+        if not (self.description or class_vars):
+            classsrc += "    pass\n"
+
         if self.item_type:
             classsrc += f"\n{self.name}._item_type = {self.item_type}\n"
-
-        if not (self.description or class_vars or self.item_type):
-            classsrc += "    pass\n"
 
         return classsrc
 
@@ -353,14 +354,14 @@ class SrcData:
     field should be set on all instances except for the root model
     """
 
-    cls: ModelSrc | None = None
+    cls: ModelSrc | ListSrc | None = None
     """
-    cls is a full Model for a 'dict' field.
+    cls is a full model for a 'dict' field or the main class for a 'list' field.
     """
 
-    collection: CollectionSrc | None = None
+    item_classes: list[ModelSrc | ListSrc] | None = None
     """
-    collection is a list of Models using a model field as primary key.
+    item_classes is a list of Models uses as items in lists. If there are multiple classes here it is because the first one is also a list.
     """
 
 

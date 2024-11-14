@@ -6,7 +6,6 @@ from __future__ import annotations
 import re
 from collections.abc import Iterable, Iterator, Sequence
 from copy import deepcopy
-from types import NoneType
 from typing import TYPE_CHECKING, ClassVar, Generic, Literal
 
 from pyavd._schema.coerce_type import coerce_type
@@ -31,7 +30,7 @@ class AvdIndexedList(Sequence[T_AvdModel], Generic[T_PrimaryKey, T_AvdModel], Av
     Other lists are *not* using this model.
     """
 
-    _is_avd_indexed_list = True
+    _is_avd_indexed_list: ClassVar[bool] = True
     """Attribute checked in coerce_type and other tooling where importing the class is not possible because of circular imports."""
     _item_type: ClassVar[type[AvdModel]]
     """Type of items. This is used instead of inspecting the type-hints to improve performance significantly."""
@@ -50,17 +49,7 @@ class AvdIndexedList(Sequence[T_AvdModel], Generic[T_PrimaryKey, T_AvdModel], Av
             msg = f"Expecting 'data' as a 'Sequence' when loading data into '{cls.__name__}'. Got '{type(data)}"
             raise TypeError(msg)
 
-        item_type = cls._item_type
-        cls_items = []
-        for item in data:
-            value = coerce_type(item, item_type)
-
-            # Raise for wrong type ignoring None values - we expect the validation to have sorted out required fields.
-            if not isinstance(value, (item_type, NoneType)):
-                msg = f"Invalid type '{type(value)}. Expected '{item_type}'. Value '{value}"
-                raise TypeError(msg)
-
-            cls_items.append(value)
+        cls_items = [coerce_type(item, cls._item_type) for item in data]
         return cls(cls_items)
 
     def __init__(self, items: Iterable[T_AvdModel] | UndefinedType = Undefined) -> None:
@@ -122,6 +111,9 @@ class AvdIndexedList(Sequence[T_AvdModel], Generic[T_PrimaryKey, T_AvdModel], Av
         """Returns a list with all the data from this model and any nested models."""
         return [item._as_dict(include_default_values=include_default_values) for item in self._items.values()]
 
+    def _dump(self, include_default_values: bool = False) -> list[dict]:
+        return self._as_list(include_default_values=include_default_values)
+
     def _natural_sorted(self, ignore_case: bool = True) -> Self:
         """Return new instance where the items are natural sorted by primary key."""
 
@@ -144,7 +136,7 @@ class AvdIndexedList(Sequence[T_AvdModel], Generic[T_PrimaryKey, T_AvdModel], Av
         Args:
             other: The other instance of the same type to merge into this instance.
             list_merge: Merge strategy used on this and any nested lists.
-                - "append" will first try to deep merge on the primary key, and if not found it will append the new item.
+                - "append" will first try to deep merge on the primary key, and if not found it will append non-existing items.
                 - "replace" will replace the full list.
         """
         cls = type(self)
@@ -165,20 +157,6 @@ class AvdIndexedList(Sequence[T_AvdModel], Generic[T_PrimaryKey, T_AvdModel], Av
 
             # Existing item of same type, so deepmerge.
             self[primary_key]._deepmerge(new_item, list_merge=list_merge)
-
-    def _deepmerged(self, other: Self, list_merge: Literal["append", "replace"] = "append") -> Self:
-        """
-        Return new instance with the result of the deepmerge of "other" on this instance.
-
-        Args:
-            other: The other instance of the same type to merge on this instance.
-            list_merge: Merge strategy used on any nested lists.
-                - "append" will first try to deep merge on the primary key, and if not found it will append the new item.
-                - "replace" will replace the full list.
-        """
-        new_instance = deepcopy(self)
-        new_instance._deepmerge(other=other, list_merge=list_merge)
-        return new_instance
 
     def _deepinherit(self, other: Self) -> None:
         """Update instance by recursively inheriting from other instance for all existing items. New items are *not* added."""

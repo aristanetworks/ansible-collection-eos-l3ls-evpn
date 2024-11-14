@@ -113,7 +113,7 @@ class VlanInterfacesMixin(UtilsMixin):
         # Only set Anycast GW if VARP is not set
         if vlan_interface_config.get("ip_virtual_router_addresses") is None:
             vlan_interface_config["ip_address_virtual"] = svi.ip_address_virtual
-            vlan_interface_config["ip_address_virtual_secondaries"] = svi.ip_address_virtual_secondaries
+            vlan_interface_config["ip_address_virtual_secondaries"] = svi.ip_address_virtual_secondaries._as_list() or None
             _check_virtual_router_mac_address(vlan_interface_config, ["ip_address_virtual", "ip_address_virtual_secondaries"])
 
         pim_config_ipv4 = {}
@@ -137,7 +137,7 @@ class VlanInterfacesMixin(UtilsMixin):
 
         # Only set VARPv6 if ipv6_address is set or ipv6_enable is set to true
         if vlan_interface_config["ipv6_address"] is not None or vlan_interface_config["ipv6_enable"]:
-            vlan_interface_config["ipv6_virtual_router_addresses"] = svi.ipv6_virtual_router_addresses
+            vlan_interface_config["ipv6_virtual_router_addresses"] = svi.ipv6_virtual_router_addresses._as_list() or None
             _check_virtual_router_mac_address(vlan_interface_config, ["ipv6_virtual_router_addresses"])
 
         # Only set Anycast v6 GW if VARPv6 is not set

@@ -65,10 +65,10 @@ class CvTopology:
         Returns dict with keys derived from cv topology (or empty dict).
 
         {
-            uplink_interfaces: <list>
-            uplink_switches: <list>
-            uplink_switch_interfaces: <list>
-            mlag_interfaces: <list>
+            uplink_interfaces: list[str]
+            uplink_switches: list[str]
+            uplink_switch_interfaces: list[str]
+            mlag_interfaces: list[str]
             mlag_peer: <str>
             mgmt_interface: <str>
         }
