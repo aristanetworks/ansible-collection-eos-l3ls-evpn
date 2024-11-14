@@ -134,4 +134,3 @@ router_isis:
           algorithm: sha-1
           key_type: 0
           key: password2
-
