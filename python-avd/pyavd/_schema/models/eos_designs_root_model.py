@@ -22,9 +22,24 @@ SKIP_KEYS = ["custom_structured_configuration_list_merge", "custom_structured_co
 
 class EosDesignsRootModel(AvdModel):
     @classmethod
-    def _from_dict(cls: type[EosDesigns], data: Mapping, keep_extra_keys: bool = False) -> EosDesigns:
+    def _from_dict(cls: type[EosDesigns], data: Mapping, keep_extra_keys: bool = False, load_custom_structured_config: bool = True) -> EosDesigns:
         """
         Returns a new instance loaded with the data from the given dict.
+
+        The EosDesignsRootModel is special because it will also load "dynamic keys" like `node_type_keys` and `network_services_keys` and
+        `connected_endpoints_keys`. Those models will be parsed and all mentioned keys will be searched for in the input and loaded into the
+        corresponding model under `_dynamic_keys`.
+
+        Furthermore the EosDesignsRootModel will also load `custom_structured_configuration_prefix` and search for any keys prefixed with those. Found keys
+        will be loaded into the `_custom_structured_configurations` model.
+
+        Args:
+            data: A mapping containing the EosDesigns input data to be loaded.
+            keep_extra_keys: Store all unknown keys in the _custom_data dict and include it again in the output of _to_dict().
+                By default only keys starting with _ will be stored in _custom_data. This will change the behavior to store _all_ keys.
+            load_custom_structured_config: Some custom structured config contains inline Jinja templates relying on variables produced by EosDesignsFacts.
+                To avoid such templates breaking the type checks, we can skip loading custom_structured_configuration during the facts phase by setting this
+                to False.
 
         TODO: AVD6.0.0 remove the keep_extra_keys option so we no longer support custom keys without _ in structured config
         """
@@ -32,9 +47,10 @@ class EosDesignsRootModel(AvdModel):
             msg = f"Expecting 'data' as a 'Mapping' when loading data into '{cls.__name__}'. Got '{type(data)}"
             raise TypeError(msg)
 
-        root_data = {}
-        root_data["_custom_structured_configurations"] = list(cls._get_csc_items(data))
-        root_data["_dynamic_keys"] = cls._get_dynamic_keys(data)
+        root_data = {"_dynamic_keys": cls._get_dynamic_keys(data)}
+        if load_custom_structured_config:
+            root_data["_custom_structured_configurations"] = list(cls._get_csc_items(data))
+
         return super()._from_dict(ChainMap(root_data, data), keep_extra_keys=keep_extra_keys)
 
     @classmethod

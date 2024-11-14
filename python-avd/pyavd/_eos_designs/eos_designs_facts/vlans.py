@@ -76,9 +76,9 @@ class VlansMixin:
         """
         Return list of vlans and list of trunk groups used by connected_endpoints on this switch.
 
-        Also includes the inband_mgmt_vlan
+        Also includes the inband_mgmt_vlan.
         """
-        if not self.shared_utils.any_network_services:
+        if not (self.shared_utils.any_network_services and self.shared_utils.connected_endpoints):
             return set(), set()
 
         vlans = set()

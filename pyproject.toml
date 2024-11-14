@@ -87,8 +87,6 @@ convention = "google"
   "E501",    # Line too long - OK since we may have some very long vars or deeply nested with a long one-line description.
   "S107",    # Possible hardcoded password assigned to function default - False positive.
   "S104",    # Possible binding to all interfaces - False positive.
-  "B006",    # Do not use mutable data structures for argument defaults - TODO FIX
-  "RUF012",  # Mutable class attributes should be annotated with `typing.ClassVar` - TODO FIX
 ]
 "python-avd/tests/**/*" = [
   "S101",  # Accept 'assert' in pytest.

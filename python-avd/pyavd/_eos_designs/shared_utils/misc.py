@@ -197,10 +197,10 @@ class MiscMixin:
             err_context = f"ipv4_acls[name={name}].entries[{index}]"
             if not entry.source:
                 msg = f"{err_context}.source"
-                raise AristaAvdMissingVariableError
+                raise AristaAvdMissingVariableError(msg)
             if not entry.destination:
                 msg = f"{err_context}.destination"
-                raise AristaAvdMissingVariableError
+                raise AristaAvdMissingVariableError(msg)
 
             entry.source = self._get_ipv4_acl_field_with_substitution(entry.source, ip_replacements, f"{err_context}.source", interface_name)
             entry.destination = self._get_ipv4_acl_field_with_substitution(entry.destination, ip_replacements, f"{err_context}.destination", interface_name)

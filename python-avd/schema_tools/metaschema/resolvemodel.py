@@ -37,7 +37,7 @@ def merge_schema_from_ref(schema: dict, resolve_schema: bool | str | None = None
         raise ValueError(msg)
 
     pure_ref_schema = (
-        {"type", "$ref", "description", "documentation_options"}.issuperset(schema.keys())
+        {"type", "$ref", "description", "documentation_options", "deprecation"}.issuperset(schema.keys())
         and isinstance(resolve_schema, str)
         and not schema["$ref"].startswith(f"{resolve_schema}#")
     )

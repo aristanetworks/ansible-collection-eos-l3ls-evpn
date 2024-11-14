@@ -160,13 +160,8 @@ class ActionModule(ActionBase):
             # This is used to access EosDesignsFacts objects of other switches during rendering of one switch.
             host_hostvars["avd_switch_facts"] = avd_switch_facts
 
-            # Workaround to ignore invalid custom_structured_configuration which may contain inline jinja relying on output of avd_facts (like switch.id)
-            # This will effectively skip loading custom_structured_configuration in this phase.
-            # TODO: Add a knob for inline jinja support, so we can skip madness like this.
-            host_hostvars["custom_structured_configuration_prefix"] = ["avd__overriding__csc__prefixes__do__not__rely__on__this"]
-
             # Load input vars into the EosDesigns data class.
-            inputs = EosDesigns._from_dict(host_hostvars)
+            inputs = EosDesigns._from_dict(host_hostvars, load_custom_structured_config=False)
 
             # Initialize SharedUtils class to be passed to EosDesignsFacts below.
             shared_utils = SharedUtils(hostvars=host_hostvars, inputs=inputs, templar=self.templar, schema=avdschematools.avdschema)

@@ -86,13 +86,13 @@ class AvdIndexedList(Sequence[T_AvdModel], Generic[T_PrimaryKey, T_AvdModel], Av
         return bool(self._items)
 
     def __len__(self) -> int:
-        return self._items.__len__()
+        return len(self._items)
 
     def __contains__(self, key: T_PrimaryKey) -> bool:
-        return self._items.__contains__(key)
+        return key in self._items
 
     def __iter__(self) -> Iterator[T_AvdModel]:
-        return self._items.values().__iter__()
+        return iter(self._items.values())
 
     def __getitem__(self, key: T_PrimaryKey) -> T_AvdModel:
         return self._items[key]
