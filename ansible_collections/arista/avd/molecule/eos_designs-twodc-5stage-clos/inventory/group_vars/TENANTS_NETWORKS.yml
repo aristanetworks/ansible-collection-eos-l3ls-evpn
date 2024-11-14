@@ -114,10 +114,13 @@ tenants:
           loopback_ip_pools:
             - pod: DC1_POD1
               ipv4_pool: 10.101.101.0/24
+              ipv6_pool: 2001:db8:1::/48
             - pod: DC1_POD2
               ipv4_pool: 10.101.102.0/24
             - pod: DC2_POD1
               ipv4_pool: 10.101.201.0/24
+            - pod: DC2_POD2
+              ipv6_pool: 2001:db8:2::/48
         svis:
           - id: 1101
             name: test_svi

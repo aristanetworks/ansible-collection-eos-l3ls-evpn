@@ -81,26 +81,29 @@ class LoopbackInterfacesMixin(UtilsMixin):
         if (loopback := get(vrf, "vtep_diagnostic.loopback")) is None:
             return None
 
-        if (loopback_ipv4_pool := get(vrf, "vtep_diagnostic.loopback_ip_range")) is None:
-            if (pod_name := self.shared_utils.pod_name) is None:
-                # Skip this vrf since we have no loopback_ip_range and pod_name
-                return None
+        pod_name = self.shared_utils.pod_name
+        loopback_ip_pools = get(vrf, "vtep_diagnostic.loopback_ip_pools")
+        if ((loopback_ipv4_pool := get(vrf, "vtep_diagnostic.loopback_ip_range")) is None) and pod_name and loopback_ip_pools:
+            loopback_ipv4_pool = get_item(loopback_ip_pools, "pod", pod_name, default={}).get("ipv4_pool")
 
-            if (loopback_ip_pools := get(vrf, "vtep_diagnostic.loopback_ip_pools")) is None:
-                # Skip this vrf since we have no pools either
-                return None
+        if ((loopback_ipv6_pool := get(vrf, "vtep_diagnostic.loopback_ipv6_range")) is None) and pod_name and loopback_ip_pools:
+            loopback_ipv6_pool = get_item(loopback_ip_pools, "pod", pod_name, default={}).get("ipv6_pool")
 
-            if (loopback_ipv4_pool := get_item(loopback_ip_pools, "pod", pod_name, default={}).get("ipv4_pool")) is None:
-                # Skip this vrf since we cannot find our pod_name in the pools or the pool is missing the ipv4_pool
-                return None
+        if not loopback_ipv4_pool and not loopback_ipv6_pool:
+            return None
 
-        # If we ended up here, it means we have a loopback_ipv4_pool set
         interface_name = f"Loopback{loopback}"
         description_template = get(vrf, "vtep_diagnostic.loopback_description", default=self.shared_utils.default_vrf_diag_loopback_description)
-        return {
+        vtep_diagnostic_loopback_for_vrf = {
             "name": interface_name,
             "description": AvdStringFormatter().format(description_template, interface=interface_name, vrf=vrf["name"], tenant=vrf["tenant"]),
             "shutdown": False,
             "vrf": vrf["name"],
-            "ip_address": f"{self.shared_utils.ip_addressing.vrf_loopback_ip(loopback_ipv4_pool)}/32",
         }
+
+        if loopback_ipv4_pool:
+            vtep_diagnostic_loopback_for_vrf["ip_address"] = f"{self.shared_utils.ip_addressing.vrf_loopback_ip(loopback_ipv4_pool)}/32"
+        if loopback_ipv6_pool:
+            vtep_diagnostic_loopback_for_vrf["ipv6_address"] = f"{self.shared_utils.ip_addressing.vrf_loopback_ipv6(loopback_ipv6_pool)}/128"
+
+        return vtep_diagnostic_loopback_for_vrf

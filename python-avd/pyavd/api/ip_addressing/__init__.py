@@ -311,6 +311,17 @@ class AvdIpAddressing(AvdFacts, UtilsMixin):
         offset = self.shared_utils.id + self.shared_utils.loopback_ipv4_offset
         return get_ip_from_pool(pool, 32, offset, 0)
 
+    def vrf_loopback_ipv6(self, pool: str) -> str:
+        """
+        Return IPv6 address for a Loopback interface based on the given pool.
+
+        Default offset from pool is `id + loopback_ipv6_offset`.
+
+        Used for "vtep_diagnostic.loopback".
+        """
+        offset = self.shared_utils.id + self.shared_utils.loopback_ipv6_offset
+        return get_ip_from_pool(pool, 128, offset, 0)
+
     def evpn_underlay_l3_multicast_group(
         self,
         underlay_l3_multicast_group_ipv4_pool: str,

@@ -752,6 +752,7 @@ loopback_interfaces:
   shutdown: false
   vrf: vrf_with_loopbacks_from_pod_pools
   ip_address: 10.101.101.4/32
+  ipv6_address: 2001:db8:1::2/128
 router_bfd:
   multihop:
     interval: 300
@@ -794,6 +795,7 @@ virtual_source_nat_vrfs:
   ip_address: 10.100.0.4
 - name: vrf_with_loopbacks_from_pod_pools
   ip_address: 10.101.101.4
+  ipv6_address: 2001:db8:1::2
 metadata:
   platform: vEOS-LAB
 domain_list:

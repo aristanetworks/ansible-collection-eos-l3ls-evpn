@@ -1,0 +1,11 @@
+---
+monitor_server_radius:
+  service_dot1x: true
+  probe:
+    interval: 100
+    threshold_failure: 100
+    method: access-request
+    access_request:
+      username: arista
+      password: 141600021F102B
+      password_type: 7

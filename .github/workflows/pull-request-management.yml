@@ -11,6 +11,7 @@ env:
   # Set -vvv is ACTIONS_STEP_DEBUG is set
   # Apparently it is set in secrets when running with debug
   ANSIBLE_VERBOSITY: ${{ secrets.ACTIONS_STEP_DEBUG && 3 || 0 }}
+  AVD_NEVER_RUN_FROM_SOURCE: 1
 
 jobs:
   file-changes:
@@ -111,7 +112,7 @@ jobs:
           python-version: ${{ matrix.python_version }}
       - name: 'Install Python requirements'
         run: |
-          pip install -r ansible_collections/arista/avd/requirements-dev.txt  -r ansible_collections/arista/avd/requirements.txt --upgrade
+          pip install -r .github/requirements-ci.txt -r ansible_collections/arista/avd/requirements-dev.txt --upgrade
 
   # ----------------------------------- #
   # EOS CLI CONFIG GEN MOLECULE
@@ -127,7 +128,7 @@ jobs:
           - 'eos_cli_config_gen_deprecated_vars'
           - 'eos_cli_config_gen_negative_unit_tests'
         ansible_version:
-          - 'ansible-core<2.18.0 --upgrade'
+          - 'ansible-core<2.19.0 --upgrade'
         # Also test minimum ansible version for one scenario.
         include:
           - avd_scenario: 'eos_cli_config_gen'
@@ -166,7 +167,7 @@ jobs:
       fail-fast: true
       matrix:
         avd_scenario: ['dhcp_configuration', 'dhcp_provisioning']
-        ansible_version: ['ansible-core<2.18.0 --upgrade']
+        ansible_version: ['ansible-core<2.19.0 --upgrade']
     needs: [ file-changes ]
     if: needs.file-changes.outputs.dhcp == 'true'
     steps:
@@ -233,6 +234,9 @@ jobs:
           - avd_scenario: 'eos_designs_unit_tests'
             ansible_version: 'ansible-core<2.18.0 --upgrade'
             pip_requirements: '.github/requirements-ci.txt'
+          - avd_scenario: 'eos_designs_unit_tests'
+            ansible_version: 'ansible-core<2.19.0 --upgrade'
+            pip_requirements: '.github/requirements-ci.txt'
     needs: [ file-changes ]
     if: needs.file-changes.outputs.eos_design == 'true' || needs.file-changes.outputs.config_gen == 'true'
     steps:
@@ -274,7 +278,7 @@ jobs:
         avd_scenario:
           - 'eos_config_deploy_cvp'
         ansible_version:
-          - 'ansible-core<2.18.0 --upgrade'
+          - 'ansible-core<2.19.0 --upgrade'
         include:
           - avd_scenario: 'eos_config_deploy_cvp'
             ansible_version: 'ansible-core==2.15.0'
@@ -314,7 +318,7 @@ jobs:
         avd_scenario:
           - 'eos_validate_state'
         ansible_version:
-          - 'ansible-core<2.18.0 --upgrade'
+          - 'ansible-core<2.19.0 --upgrade'
         include:
           - avd_scenario: 'eos_validate_state'
             ansible_version: 'ansible-core==2.15.0'
@@ -362,7 +366,7 @@ jobs:
           # 3.13 - Still waiting for support in ansible-test
       - name: 'Install Python requirements'
         run: |
-          pip install "ansible-core<2.18.0" -r .github/requirements-ci.txt --upgrade
+          pip install "ansible-core<2.19.0" -r .github/requirements-ci.txt --upgrade
       - name: 'Run ansible-test sanity'
         run: |
           cd ansible_collections/arista/avd/
@@ -384,7 +388,7 @@ jobs:
             3.10
       - name: 'Install Python requirements'
         run: |
-          pip install mock pytest pytest-mock pytest-xdist pyyaml "ansible-core<2.18.0" -r .github/requirements-ci.txt --upgrade
+          pip install mock pytest pytest-mock pytest-xdist pyyaml "ansible-core<2.19.0" -r .github/requirements-ci.txt --upgrade
       - name: 'Run ansible-test units test cases'
         run: |
           cd ansible_collections/arista/avd/
@@ -407,7 +411,7 @@ jobs:
           # 3.13 - Still waiting for support in ansible-test
       - name: 'Install Python requirements'
         run: |
-          pip install "ansible-core<2.18.0" -r .github/requirements-ci.txt --upgrade
+          pip install "ansible-core<2.19.0" -r .github/requirements-ci.txt --upgrade
       - name: 'Run ansible-test integration test cases'
         run: |
           cd ansible_collections/arista/avd/
@@ -432,7 +436,7 @@ jobs:
             3.13
       - name: 'Install Python & Ansible requirements'
         run: |
-          pip install -r ansible_collections/arista/avd/requirements-dev.txt -r ansible_collections/arista/avd/requirements.txt --upgrade
+          pip install -r .github/requirements-ci.txt -r ansible_collections/arista/avd/requirements-dev.txt --upgrade
           ansible-galaxy collection install -r ansible_collections/arista/avd/collections.yml
       - name: 'Run ansible-test integration test cases'
         run: |
@@ -456,7 +460,7 @@ jobs:
       - uses: actions/checkout@v4
       - name: 'Install Python & Ansible requirements'
         run: |
-          pip install "ansible-core<2.18.0" -r .github/requirements-ci.txt --upgrade
+          pip install "ansible-core<2.19.0" -r .github/requirements-ci.txt --upgrade
           ansible-galaxy collection install -r ansible_collections/arista/avd/collections.yml
       - name: Install galaxy-importer
         # Install the specific version of galaxy-importer used on galaxy.ansible.com
