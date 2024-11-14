@@ -4,7 +4,7 @@
 from __future__ import annotations
 
 import re
-from collections.abc import Iterable, Iterator, Mapping, Sequence
+from collections.abc import Callable, Iterable, Iterator, Mapping, Sequence
 from copy import deepcopy
 from typing import TYPE_CHECKING, Any, ClassVar, Generic, Literal
 
@@ -109,7 +109,7 @@ class AvdList(Sequence[T_ItemType], Generic[T_ItemType], AvdBase):
         return self._as_list(include_default_values=include_default_values)
 
     def _natural_sorted(self, sort_key: str | None = None, ignore_case: bool = True) -> Self:
-        """Return new instance where the items are natural sorted by primary key."""
+        """Return new instance where the items are natural sorted by the given sort key or by the item itself."""
 
         def convert(text: str) -> int | str:
             if text.isdigit():
@@ -128,6 +128,10 @@ class AvdList(Sequence[T_ItemType], Generic[T_ItemType], AvdBase):
 
         cls = type(self)
         return cls(sorted(self._items, key=key))
+
+    def _filtered(self, function: Callable[[T_ItemType], bool]) -> Self:
+        cls = type(self)
+        return cls(filter(function, self._items))
 
     def _deepmerge(self, other: Self, list_merge: Literal["append", "replace"] = "append") -> None:
         """

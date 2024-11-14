@@ -76,7 +76,7 @@ class IpAccesslistsMixin(UtilsMixin):
             }
         return None
 
-    def _acl_internet_exit_user_defined(self: AvdStructuredConfigNetworkServices, internet_exit_policy_type: Literal["zscaler", "direct"]) -> dict | None:
+    def _acl_internet_exit_user_defined(self: AvdStructuredConfigNetworkServices, internet_exit_policy_type: Literal["zscaler", "direct"]) -> list[dict] | None:
         acl_name = self.get_internet_exit_nat_acl_name(internet_exit_policy_type)
         if acl_name not in self.inputs.ipv4_acls:
             # TODO: Evaluate if we should continue so we raise when there is no ACL.
@@ -93,7 +93,7 @@ class IpAccesslistsMixin(UtilsMixin):
         msg = f"ipv4_acls[name={acl_name}] field substitution is not supported for internet exit access lists"
         raise AristaAvdError(msg)
 
-    def _acl_internet_exit(self: AvdStructuredConfigNetworkServices, internet_exit_policy_type: Literal["zscaler", "direct"]) -> dict | None:
+    def _acl_internet_exit(self: AvdStructuredConfigNetworkServices, internet_exit_policy_type: Literal["zscaler", "direct"]) -> list[dict] | None:
         acls = self._acl_internet_exit_user_defined(internet_exit_policy_type)
         if acls:
             return acls

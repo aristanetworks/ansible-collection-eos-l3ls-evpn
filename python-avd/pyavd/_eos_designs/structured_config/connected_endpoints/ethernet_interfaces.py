@@ -51,8 +51,12 @@ class EthernetInterfacesMixin(UtilsMixin):
             network_port_as_adapter._context = network_port._context
             for ethernet_interface_name in range_expand(network_port.switch_ports):
                 # Override switches and switch_ports to only render for a single interface
-                network_port_as_adapter.switch_ports = [ethernet_interface_name]
-                network_port_as_adapter.switches = [self.shared_utils.hostname]
+                network_port_as_adapter.switch_ports = EosDesigns._DynamicKeys.DynamicConnectedEndpointsItem.ConnectedEndpointsItem.AdaptersItem.SwitchPorts(
+                    [ethernet_interface_name]
+                )
+                network_port_as_adapter.switches = EosDesigns._DynamicKeys.DynamicConnectedEndpointsItem.ConnectedEndpointsItem.AdaptersItem.Switches(
+                    [self.shared_utils.hostname]
+                )
                 ethernet_interface = self._get_ethernet_interface_cfg(network_port_as_adapter, 0, connected_endpoint)
                 replace_or_append_item(ethernet_interfaces, "name", ethernet_interface)
 

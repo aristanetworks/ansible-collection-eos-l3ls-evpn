@@ -32,10 +32,10 @@ class RoutingMixin:
         return (self.inputs.overlay_routing_protocol or default_overlay_routing_protocol).lower()
 
     @cached_property
-    def overlay_address_families(self: SharedUtils) -> list:
+    def overlay_address_families(self: SharedUtils) -> list[str]:
         if self.overlay_routing_protocol in ["ebgp", "ibgp"]:
             default_overlay_address_families = self.node_type_key_data.default_overlay_address_families
-            return self.node_config.overlay_address_families or default_overlay_address_families
+            return self.node_config.overlay_address_families._as_list() or default_overlay_address_families._as_list()
         return []
 
     @cached_property

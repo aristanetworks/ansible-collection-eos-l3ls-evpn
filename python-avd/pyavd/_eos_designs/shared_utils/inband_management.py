@@ -25,11 +25,11 @@ class InbandManagementMixin:
 
     @cached_property
     def configure_inband_mgmt(self: SharedUtils) -> bool:
-        return self.uplink_type == "port-channel" and self.inband_mgmt_ip
+        return bool(self.uplink_type == "port-channel" and self.inband_mgmt_ip)
 
     @cached_property
     def configure_inband_mgmt_ipv6(self: SharedUtils) -> bool:
-        return self.uplink_type == "port-channel" and self.inband_mgmt_ipv6_address
+        return bool(self.uplink_type == "port-channel" and self.inband_mgmt_ipv6_address)
 
     @cached_property
     def configure_parent_for_inband_mgmt(self: SharedUtils) -> bool:

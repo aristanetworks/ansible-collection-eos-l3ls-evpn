@@ -14,6 +14,8 @@ from pyavd.j2filters import natural_sort
 from .utils import UtilsMixin
 
 if TYPE_CHECKING:
+    from pyavd._eos_designs.schema import EosDesigns
+
     from . import AvdStructuredConfigOverlay
 
 
@@ -642,10 +644,12 @@ class RouterBgpMixin(UtilsMixin):
 
         return None
 
-    def _ip_in_listen_ranges(self: AvdStructuredConfigOverlay, source_ip: str, listen_range_prefixes: list) -> bool:
+    def _ip_in_listen_ranges(
+        self: AvdStructuredConfigOverlay, source_ip: str, listen_range_prefixes: EosDesigns.BgpPeerGroups.WanOverlayPeers.ListenRangePrefixes
+    ) -> bool:
         """Check if our source IP is in any of the listen range prefixes."""
-        source_ip = ipaddress.ip_address(source_ip)
-        return any(source_ip in ipaddress.ip_network(prefix) for prefix in listen_range_prefixes)
+        ip = ipaddress.ip_address(source_ip)
+        return any(ip in ipaddress.ip_network(prefix) for prefix in listen_range_prefixes)
 
     def _bgp_overlay_dpath(self: AvdStructuredConfigOverlay) -> dict | None:
         if self.shared_utils.overlay_dpath is True:

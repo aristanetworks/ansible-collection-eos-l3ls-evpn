@@ -55,7 +55,7 @@ class WanMixin:
         return self.wan_role == "client"
 
     @cached_property
-    def wan_listen_ranges(self: SharedUtils) -> list[str]:
+    def wan_listen_ranges(self: SharedUtils) -> EosDesigns.BgpPeerGroups.WanOverlayPeers.ListenRangePrefixes:
         if not self.inputs.bgp_peer_groups.wan_overlay_peers.listen_range_prefixes:
             msg = "bgp_peer_groups.wan_overlay_peers.listen_range_prefixes"
             raise AristaAvdMissingVariableError(msg)
@@ -538,7 +538,7 @@ class WanMixin:
                         "ip_address",
                         required=True,
                         custom_error_msg=(
-                            f"The uplink interface {uplink['interface']} used as WAN LAN HA on the remote peer {self.wan_ha_peer} does not have an IP address.",
+                            f"The uplink interface {uplink['interface']} used as WAN LAN HA on the remote peer {self.wan_ha_peer} does not have an IP address."
                         ),
                     )
                     prefix_length = uplink["prefix_length"]

@@ -87,8 +87,12 @@ class PortChannelInterfacesMixin(UtilsMixin):
                 # The blank extra switch is only inserted to work around port_channel validations
                 # This also means that port-channels defined with network_ports data model will be single-port per switch.
                 # Caveat: "short_esi: auto" and "designated_forwarder_algorithm: auto" will not work correctly.
-                network_port_as_adapter.switch_ports = [ethernet_interface_name, ""]
-                network_port_as_adapter.switches = [self.shared_utils.hostname, ""]
+                network_port_as_adapter.switch_ports = EosDesigns._DynamicKeys.DynamicConnectedEndpointsItem.ConnectedEndpointsItem.AdaptersItem.SwitchPorts(
+                    [ethernet_interface_name, ""]
+                )
+                network_port_as_adapter.switches = EosDesigns._DynamicKeys.DynamicConnectedEndpointsItem.ConnectedEndpointsItem.AdaptersItem.Switches(
+                    [self.shared_utils.hostname, ""]
+                )
 
                 default_channel_group_id = int("".join(re.findall(r"\d", ethernet_interface_name)))
                 channel_group_id = network_port_as_adapter.port_channel.channel_id or default_channel_group_id

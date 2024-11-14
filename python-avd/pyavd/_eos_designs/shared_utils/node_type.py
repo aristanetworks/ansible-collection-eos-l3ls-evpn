@@ -117,7 +117,7 @@ class NodeTypeMixin:
     @cached_property
     def any_network_services(self: SharedUtils) -> bool:
         """Returns True if either L1, L2 or L3 network_services are enabled."""
-        return self.network_services_l1 is True or self.network_services_l2 is True or self.network_services_l3 is True
+        return self.network_services_l1 or self.network_services_l2 or self.network_services_l3
 
     @cached_property
     def mpls_lsr(self: SharedUtils) -> bool:
@@ -138,5 +138,4 @@ class NodeTypeMixin:
         <node_type_key>.nodes.[].vtep and
         node_type_keys.<node_type_key>.vtep.
         """
-        default_vtep = self.node_type_key_data.vtep
-        return default(self.node_config.vtep, default_vtep)
+        return default(self.node_config.vtep, self.node_type_key_data.vtep)

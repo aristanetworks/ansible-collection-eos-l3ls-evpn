@@ -80,25 +80,18 @@ class FilteredTenantsMixin:
 
     def filtered_l2vlans(
         self: SharedUtils, tenant: EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem
-    ) -> list[EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem.L2vlansItem]:
+    ) -> EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem.L2vlans:
         """
         Return sorted and filtered l2vlan list from given tenant.
 
         Filtering based on l2vlan tags.
         """
-        if not self.network_services_l2:
-            return []
+        if not self.network_services_l2 or not tenant.l2vlans:
+            EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem.L2vlans()
 
-        if not tenant.l2vlans:
-            return []
-
-        sorted_l2vlans: list[EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem.L2vlansItem] = natural_sort(tenant.l2vlans, "id")
-        filtered_l2vlans = [
-            # Copy all l2vlans
-            l2vlan._deepcopy()
-            for l2vlan in sorted_l2vlans
-            if self.is_accepted_vlan(l2vlan) and ("all" in self.filter_tags or set(l2vlan.tags).intersection(self.filter_tags))
-        ]
+        filtered_l2vlans = tenant.l2vlans._filtered(
+            lambda l2vlan: self.is_accepted_vlan(l2vlan) and bool("all" in self.filter_tags or set(l2vlan.tags).intersection(self.filter_tags))
+        )
         # Set tenant on all l2vlans TODO: avoid this.
         for l2vlan in filtered_l2vlans:
             l2vlan._tenant = tenant.name
@@ -107,7 +100,7 @@ class FilteredTenantsMixin:
             for l2vlan in filtered_l2vlans:
                 l2vlan.evpn_vlan_bundle = l2vlan.evpn_vlan_bundle or tenant.evpn_vlan_bundle
 
-        return filtered_l2vlans
+        return filtered_l2vlans._natural_sorted(sort_key="id")
 
     def is_accepted_vlan(
         self: SharedUtils,
@@ -207,19 +200,14 @@ class FilteredTenantsMixin:
             # Copying original_vrf
             vrf._tenant = tenant.name
 
-            bgp_peers: list[EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem.VrfsItem.BgpPeersItem] = natural_sort(
-                vrf.bgp_peers, "ip_address"
-            )
-            vrf.bgp_peers = [bgp_peer for bgp_peer in bgp_peers if self.hostname in bgp_peer.nodes]
-            vrf.static_routes = [route for route in vrf.static_routes if not route.nodes or self.hostname in route.nodes]
-            vrf.ipv6_static_routes = [route for route in vrf.ipv6_static_routes if not route.nodes or self.hostname in route.nodes]
+            vrf.bgp_peers = vrf.bgp_peers._filtered(lambda bgp_peer: self.hostname in bgp_peer.nodes)._natural_sorted(sort_key="ip_address")
+            vrf.static_routes = vrf.static_routes._filtered(lambda route: not route.nodes or self.hostname in route.nodes)
+            vrf.ipv6_static_routes = vrf.ipv6_static_routes._filtered(lambda route: not route.nodes or self.hostname in route.nodes)
             vrf.svis = self.filtered_svis(vrf)
-            vrf.l3_interfaces = [
-                l3_interface
-                for l3_interface in vrf.l3_interfaces
-                if (self.hostname in l3_interface.nodes and l3_interface.ip_addresses and l3_interface.interfaces)
-            ]
-            vrf.loopbacks = [loopback for loopback in vrf.loopbacks if loopback.node == self.hostname]
+            vrf.l3_interfaces = vrf.l3_interfaces._filtered(
+                lambda l3_interface: bool(self.hostname in l3_interface.nodes and l3_interface.ip_addresses and l3_interface.interfaces)
+            )
+            vrf.loopbacks = vrf.loopbacks._filtered(lambda loopback: loopback.node == self.hostname)
 
             if self.vtep is True:
                 evpn_l3_multicast_enabled = default(vrf.evpn_l3_multicast.enabled, tenant.evpn_l3_multicast.enabled)
@@ -253,11 +241,9 @@ class FilteredTenantsMixin:
                                 vrf._evpn_l3_multicast_evpn_peg_transit = evpn_peg.transit
                                 break
 
-            vrf.additional_route_targets = [
-                rt
-                for rt in vrf.additional_route_targets
-                if ((not rt.nodes or self.hostname in rt.nodes) and rt.address_family and rt.route_target and rt.type in ["import", "export"])
-            ]
+            vrf.additional_route_targets = vrf.additional_route_targets._filtered(
+                lambda rt: bool((not rt.nodes or self.hostname in rt.nodes) and rt.address_family and rt.route_target and rt.type in ["import", "export"])
+            )
 
             if vrf.svis or vrf.l3_interfaces or vrf.loopbacks or self.is_forced_vrf(vrf, tenant.name):
                 filtered_vrfs.append(vrf)
@@ -316,7 +302,7 @@ class FilteredTenantsMixin:
 
     def filtered_svis(
         self: SharedUtils, vrf: EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem.VrfsItem
-    ) -> list[EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem.VrfsItem.SvisItem]:
+    ) -> EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem.VrfsItem.Svis:
         """
         Return sorted and filtered svi list from given tenant vrf.
 
@@ -324,22 +310,21 @@ class FilteredTenantsMixin:
         filtered that on tags and trunk_groups.
         """
         if not (self.network_services_l2 or self.network_services_l2_as_subint):
-            return []
+            return EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem.VrfsItem.Svis()
 
-        svis: list[EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem.VrfsItem.SvisItem] = natural_sort(vrf.svis, "id")
-        svis = [svi for svi in svis if self.is_accepted_vlan(svi)]
+        svis = vrf.svis._filtered(self.is_accepted_vlan)
 
         # Handle svi_profile inheritance
-        svis = [self.get_merged_svi_config(svi) for svi in svis]
+        svis = EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem.VrfsItem.Svis([self.get_merged_svi_config(svi) for svi in svis])
 
         # Perform filtering on tags after merge of profiles, to support tags being set inside profiles.
-        svis = [svi for svi in svis if "all" in self.filter_tags or set(svi.tags).intersection(self.filter_tags)]
+        svis = svis._filtered(lambda svi: "all" in self.filter_tags or bool(set(svi.tags).intersection(self.filter_tags)))
 
         # Set tenant key on all SVIs
         for svi in svis:
             svi._tenant = vrf._tenant
 
-        return svis
+        return svis._natural_sorted(sort_key="id")
 
     @cached_property
     def endpoint_vlans(self: SharedUtils) -> list:
@@ -374,12 +359,7 @@ class FilteredTenantsMixin:
         if not self.network_services_l3:
             return []
 
-        vrfs = set()
-        for tenant in self.filtered_tenants:
-            for vrf in tenant.vrfs:
-                vrfs.add(vrf.name)
-
-        return natural_sort(vrfs)
+        return natural_sort({vrf.name for tenant in self.filtered_tenants for vrf in tenant.vrfs})
 
     @staticmethod
     def get_additional_svi_config(

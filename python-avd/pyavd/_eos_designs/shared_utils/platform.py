@@ -29,12 +29,13 @@ class PlatformMixin:
     @cached_property
     def platform_settings(self: SharedUtils) -> EosDesigns.PlatformSettingsItem | EosDesigns.CustomPlatformSettingsItem:
         # First look for a matching platform setting specifying our platform
-        for platform_setting in self.inputs.custom_platform_settings:
-            if self.platform in platform_setting.platforms:
-                return platform_setting
-        for platform_setting in self.inputs.platform_settings:
-            if self.platform in platform_setting.platforms:
-                return platform_setting
+        if self.platform is not None:
+            for platform_setting in self.inputs.custom_platform_settings:
+                if self.platform in platform_setting.platforms:
+                    return platform_setting
+            for platform_setting in self.inputs.platform_settings:
+                if self.platform in platform_setting.platforms:
+                    return platform_setting
 
         # If not found, then look for a default platform setting
         for platform_setting in self.inputs.custom_platform_settings:

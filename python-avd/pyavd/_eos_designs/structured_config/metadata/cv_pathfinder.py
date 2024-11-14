@@ -3,7 +3,6 @@
 # that can be found in the LICENSE file.
 from __future__ import annotations
 
-from functools import cached_property
 from typing import TYPE_CHECKING
 
 from pyavd._errors import AristaAvdError, AristaAvdInvalidInputsError
@@ -199,15 +198,6 @@ class CvPathfinderMixin:
                 for avt_policy in [get_item(avt_policies, "name", vrf["policy"], required=True)]
             ],
         )
-
-    @cached_property
-    def _wan_virtual_topologies_vrfs(self: AvdStructuredConfigMetadata) -> list[dict]:
-        """
-        Unfiltered list of VRFs found under wan_virtual_topologies.
-
-        Used to find VNI for each VRF used in cv_pathfinder.
-        """
-        return self.inputs.wan_virtual_topologies.vrfs
 
     def _get_vni_for_vrf_name(self: AvdStructuredConfigMetadata, vrf_name: str) -> int:
         if vrf_name not in self.inputs.wan_virtual_topologies.vrfs or (wan_vni := self.inputs.wan_virtual_topologies.vrfs[vrf_name].wan_vni) is None:
