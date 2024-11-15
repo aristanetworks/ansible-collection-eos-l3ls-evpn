@@ -20,16 +20,24 @@
 | IPv6 | {{ system.control_plane.tcp_mss.ipv6 }} |
 {%         endif %}
 {%     endif %}
-{%     if system.control_plane.ipv4_access_groups is arista.avd.defined or system.control_plane.ipv6_access_groups is arista.avd.defined %}
+{%     if system.control_plane.ipv4_access_groups is arista.avd.defined or system.control_plane.ipv6_access_groups is arista.avd.defined or system.control_plane.ipv4_access_group_ingress_default is arista.avd.defined or system.control_plane.ipv6_access_group_ingress_default is arista.avd.defined %}
 
 #### Control-Plane Access-Groups
 
 | Protocol | VRF | Access-list |
 | -------- | --- | ------------|
+{#         IPv4 Access-groups Ingress Default #}
+{%         if system.control_plane.ipv4_access_group_ingress_default is arista.avd.defined %}
+| IPv4 Ingress default | All | {{ system.control_plane.ipv4_access_group_ingress_default }} |
+{%         endif %}
 {#         IPv4 Access-groups #}
 {%         for acl_set in system.control_plane.ipv4_access_groups | arista.avd.natural_sort %}
 | IPv4 | {{ acl_set.vrf | arista.avd.default('default') }} | {{ acl_set.acl_name }} |
 {%         endfor %}
+{#         IPv6 Access-groups Ingress Default #}
+{%         if system.control_plane.ipv6_access_group_ingress_default is arista.avd.defined %}
+| IPv6 Ingress default | All | {{ system.control_plane.ipv6_access_group_ingress_default }} |
+{%         endif %}
 {#         IPv6 Access-groups #}
 {%         for acl_set in system.control_plane.ipv6_access_groups | arista.avd.natural_sort %}
 | IPv6 | {{ acl_set.vrf | arista.avd.default('default') }} | {{ acl_set.acl_name }} |

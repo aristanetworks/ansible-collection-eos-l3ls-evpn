@@ -1,3 +1,4 @@
+---
 # eos - extended access-lists - improved data model, ip-access-lists.j2
 ip_access_lists_max_entries: 10000
 ip_access_lists:
@@ -98,3 +99,9 @@ ip_access_lists:
         protocol: ip
         source: any
         destination: any
+      - action: permit
+        protocol: icmp
+        source: any
+        destination: any
+  - name: ACL_WITHOUT_ENTRIES
+    counters_per_entry: false

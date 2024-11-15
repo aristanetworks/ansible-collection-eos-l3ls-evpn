@@ -913,10 +913,10 @@ vrf instance VRF11
 
 ### Virtual Source NAT Summary
 
-| Source NAT VRF | Source NAT IP Address |
-| -------------- | --------------------- |
-| VRF10 | 10.255.10.13 |
-| VRF11 | 10.255.11.13 |
+| Source NAT VRF | Source NAT IPv4 Address | Source NAT IPv6 Address |
+| -------------- | ----------------------- | ----------------------- |
+| VRF10 | 10.255.10.13 | - |
+| VRF11 | 10.255.11.13 | - |
 
 ### Virtual Source NAT Configuration
 
