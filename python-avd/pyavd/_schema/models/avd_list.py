@@ -28,8 +28,6 @@ class AvdList(Sequence[T_ItemType], Generic[T_ItemType], AvdBase):
     Other lists are *not* using this model.
     """
 
-    _is_avd_list: ClassVar[bool] = True
-    """Attribute checked in coerce_type and other tooling where importing the class is not possible because of circular imports."""
     _item_type: ClassVar[type]
     """Type of items. This is used instead of inspecting the type-hints to improve performance significantly."""
     _items: list[T_ItemType]
@@ -37,6 +35,11 @@ class AvdList(Sequence[T_ItemType], Generic[T_ItemType], AvdBase):
     Internal attribute holding the actual data. Using a dict keyed by the primary key value of each item to improve performance
     significantly when searching for a specific item.
     """
+
+    @classmethod
+    def _load(cls, data: Sequence) -> Self:
+        """Returns a new instance loaded with the data from the given list."""
+        return cls._from_list(data)
 
     @classmethod
     def _from_list(cls, data: Sequence) -> Self:

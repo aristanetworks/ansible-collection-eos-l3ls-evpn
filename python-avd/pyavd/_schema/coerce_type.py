@@ -3,8 +3,7 @@
 # that can be found in the LICENSE file.
 from __future__ import annotations
 
-from collections.abc import Mapping, Sequence
-from typing import TYPE_CHECKING, Any, TypeVar
+from typing import TYPE_CHECKING, Any, NoReturn, TypeVar
 
 from pyavd._schema.models.avd_base import AvdBase
 
@@ -16,7 +15,6 @@ if TYPE_CHECKING:
     from pyavd._schema.models.type_vars import T_AvdBase
 
     T = TypeVar("T")
-    TT = TypeVar("TT")
 
 
 def nullifiy_class(cls: type[T_AvdBase]) -> type:
@@ -70,22 +68,26 @@ def coerce_type(value: Any, target_type: type[T]) -> T | None:
     elif target_type in ACCEPTED_COERCION_MAP and isinstance(value, ACCEPTED_COERCION_MAP[target_type]):
         try:
             return target_type(value)
-        except ValueError as e:
-            msg = f"Invalid type '{type(value)}. Expected '{target_type}'. Value '{value}"
-            raise TypeError(msg) from e
+        except ValueError as exception:
+            raise_coerce_error(value, target_type, exception)
 
     # Identify subclass of AvdModel without importing AvdModel (circular import)
-    elif hasattr(target_type, "_is_avd_model") and isinstance(value, Mapping):
-        return target_type._from_dict(value)
-
-    # Identify subclass of AvdIndexedList without importing AvdIndexedList (circular import)
-    elif (hasattr(target_type, "_is_avd_indexed_list") or hasattr(target_type, "_is_avd_list")) and isinstance(value, Sequence):
-        return target_type._from_list(value)
+    elif issubclass(target_type, AvdBase):
+        try:
+            return target_type._load(data=value)
+        except TypeError as exception:
+            raise_coerce_error(value, target_type, exception)
 
     else:
-        # Not possible to coerce value.
-        msg = f"Invalid type '{type(value)}. Expected '{target_type}'. Value '{value}"
-        raise TypeError(msg)
+        raise_coerce_error(value, target_type)
 
     # All the pass brings us here to return the original value.
     return value
+
+
+def raise_coerce_error(value: Any, target_type: type, exception: Exception | None = None) -> NoReturn:
+    # Not possible to coerce value.
+    msg = f"Invalid type '{type(value)}'. Unable to coerce to type '{target_type}' for the value: {value}"
+    if exception is not None:
+        raise TypeError(msg) from exception
+    raise TypeError(msg)

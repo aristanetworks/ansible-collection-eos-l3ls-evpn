@@ -22,8 +22,6 @@ if TYPE_CHECKING:
 class AvdModel(AvdBase):
     """Base class used for schema-based data classes holding dictionaries loaded from AVD inputs."""
 
-    _is_avd_model: ClassVar[bool] = True
-    """Attribute checked in coerce_type and other tooling where importing the class is not possible because of circular imports."""
     _allow_other_keys: ClassVar[bool] = False
     """Attribute telling if this class should fail or ignore unknown keys found during loading in _from_dict()."""
     _fields: ClassVar[dict[str, dict]]
@@ -37,6 +35,11 @@ class AvdModel(AvdBase):
     """Map of field name to original dict key. Used when fields have the field_ prefix to get the original key."""
     _key_to_field_map: ClassVar[dict[str, str]]
     """Map of dict key to field name. Used when the key is names with a reserved keyword or mixed case. E.g. `Vxlan1` or `as`."""
+
+    @classmethod
+    def _load(cls, data: Mapping) -> Self:
+        """Returns a new instance loaded with the data from the given dict."""
+        return cls._from_dict(data)
 
     @classmethod
     def _from_dict(cls: type[T_AvdModel], data: Mapping, keep_extra_keys: bool = False) -> T_AvdModel:

@@ -8,6 +8,8 @@ from copy import deepcopy
 from typing import TYPE_CHECKING, Literal
 
 if TYPE_CHECKING:
+    from collections.abc import Mapping, Sequence
+
     from typing_extensions import Self
 
     from .type_vars import T_AvdBase
@@ -25,6 +27,11 @@ class AvdBase(ABC):
     def _deepcopy(self) -> Self:
         """Return a copy including all nested models."""
         return deepcopy(self)
+
+    @classmethod
+    @abstractmethod
+    def _load(cls, data: Sequence | Mapping) -> Self:
+        """Returns a new instance loaded with the given data."""
 
     @abstractmethod
     def _dump(self, include_default_values: bool = False) -> dict | list:
