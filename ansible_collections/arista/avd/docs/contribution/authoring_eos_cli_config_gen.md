@@ -32,7 +32,7 @@ Add the schema for new feature as per EOS CLI to the appropriate schema fragment
 
 Edit the appropriate Jinja2 templates in `pyavd/_eos_cli_config_gen/j2templates/eos` and `pyavd/_eos_cli_config_gen/j2templates/documentation` to generate the desired configuration and documentation.
 
-Add new template if adding a top-level feature, also modify the `pyavd/_eos_cli_config_gen/j2templates/eos-device-documentation.j2` and `pyavd/_eos_cli_config_gen/j2templateseos-intended-config.j2` to add these new templates, trying to respect the order in the EOS CLI.
+Add new template if adding a top-level feature, also modify the `pyavd/_eos_cli_config_gen/j2templates/eos-device-documentation.j2` and `pyavd/_eos_cli_config_gen/j2templates/eos-intended-config.j2` to add these new templates, trying to respect the order in the EOS CLI.
 
 #### Jinja2 Templates Guidelines
 
@@ -42,12 +42,11 @@ Add new template if adding a top-level feature, also modify the `pyavd/_eos_cli_
 4. **Defined Checks:** 
 - Avoid `arista.avd.defined` check for parent keys when directly checking for child keys.
 - No need to add `arista.avd.defined` check When using `arista.avd.default()` filter.
-5. **Password Security:** Do not display passwords or password types in documentation template; use
-`arista.avd.hide_passwords` filter.
-6. **Config Order:** Ensure the order of configuration matches EOS CLI.
+5. **Password Security:** Avoid displaying passwords in the documentation template and use the `arista.avd.hide_passwords` filter to hide it.
+6. **Config Order:** Ensure the order and indentation of configuration matches EOS CLI.
 7. **Exclamation Marks:** Place exclamation marks `!` correctly as per the EOS running-config.
 8. Along with EOS config template, update the documentation template as well (if required).
-9. Implement only those commands whoes output is seen on EOS device running-config.
+9. Implement only commands visible in running-config of the EOS device.
 
 ### Build Schemas and Documentation
 
@@ -64,6 +63,11 @@ When marking any key as "deprecated," move the related tests to the `eos_cli_con
 
 Run `molecule converge -s eos_cli_config_gen` from the path `ansible_collections/arista/avd/` to execute the molecule tests locally and generate the new expected configuration and documentation for newly added test-cases.
 
+### Update Documentation
+
+If the proposed feature requires any changes to the documentation, make sure to update it accordingly.
+If there are any breaking changes introduced, document them in the porting guide.
+
 ### Run Pre-commit Checks
 
 Run all pre-commit checks `pre-commit run --all` to ensure that all files added or modified are correctly following the coding standards and formatting rules.
@@ -73,3 +77,18 @@ Running these checks also ensures that the changes pass CI checks.
 
 Before pushing the changes to GitHub, carefully review all modifications.
 Confirm that all new features work as intended and that existing features are unaffected. Once satisfied, proceed to push the changes to the repository.
+
+## Checklist to review an eos_cli_config_gen PR
+
+1. Check that all the CI checks are passing.
+2. If the PR addresses an issue raised in the repository, confirm that the issue is fully resolved by the PR.
+3. Refer to the Arista documentation for a deeper understanding of the proposed feature.
+4. Verify that the schema adheres to EOS CLI standards and all relevant guidelines mentioned above.
+5. Ensure that Jinja2 templates follow all the guidelines mentioned above.
+6. Check that the template generates valid configuration and documentation, maintaining the same configuration order and indentation as EOS CLI.
+7. Check out the PR in a local IDE and run all tests to ensure functionality.
+8. Test the generated configuration through EAPI or CVP in the ATD lab.
+9. If providing code suggestions, test them locally to ensure that your proposals work as intended.
+10. Check that the molecule tests are added for the new feature.
+11. If any keys are marked as deprecated, ensure that the associated tests are moved to the `eos_cli_config_gen_deprecated_vars` scenario.
+12. If the proposed feature requires any changes to the documentation, ensure that it is updated accordingly.
