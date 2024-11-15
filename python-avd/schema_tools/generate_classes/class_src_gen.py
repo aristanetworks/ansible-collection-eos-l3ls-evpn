@@ -262,7 +262,9 @@ class SrcGenDict(SrcGenBase):
     schema: AvdSchemaDict
 
     def get_type(self) -> str:
-        return self.get_class_name()
+        if self.get_class() is not None:
+            return self.get_class_name()
+        return "dict"
 
     def get_class(self) -> ModelSrc | None:
         """Returns ModelSrc for the given schema to be used for the class definition in the parent object."""
