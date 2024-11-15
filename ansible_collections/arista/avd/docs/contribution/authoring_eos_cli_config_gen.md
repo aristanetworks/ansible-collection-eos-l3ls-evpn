@@ -14,6 +14,8 @@ This document outlines the steps and checklist for contributing to the `eos_cli_
 
 Add the schema for new feature as per EOS CLI to the appropriate schema fragments file in the `pyavd/_eos_cli_config_gen/schema/schema_fragments` directory or create a new schema file if adding a top-level feature.
 
+Please refer to the schema documentation for details on the various keys in the schema: [Schema Documentation](https://avd.arista.com/5.0/docs/contribution/input-variable-validation.html#schema-details).
+
 #### Schema Guidelines
 
 1. **Primary Key Placement:** For list-type data-models, place primary keys at the top, for readability.
@@ -22,7 +24,7 @@ Add the schema for new feature as per EOS CLI to the appropriate schema fragment
 - Use plural for keys that represent multiple elements (e.g., sample_policies).
 3. **Descriptions:** 
 - Only add descriptions to the keys when they provide additional context beyond the key name.
-- Refer Arista docs for description content.
+- Refer Arista documentation for description content.
 - Ensure all descriptions end with punctuation.
 - Highlight the key names in description, like - `<key_name>`.
 4. **Type Conversion:** Add `convert_types: [str]` for `type: int` keys.
@@ -30,23 +32,26 @@ Add the schema for new feature as per EOS CLI to the appropriate schema fragment
 
 ### Creating Jinja2 Templates
 
-Edit the appropriate Jinja2 templates in `pyavd/_eos_cli_config_gen/j2templates/eos` and `pyavd/_eos_cli_config_gen/j2templates/documentation` to generate the desired configuration and documentation.
+Edit the appropriate jinja2 templates in `pyavd/_eos_cli_config_gen/j2templates/eos` and `pyavd/_eos_cli_config_gen/j2templates/documentation` to generate the desired configuration and documentation.
 
-Add new template if adding a top-level feature, also modify the `pyavd/_eos_cli_config_gen/j2templates/eos-device-documentation.j2` and `pyavd/_eos_cli_config_gen/j2templates/eos-intended-config.j2` to add these new templates, trying to respect the order in the EOS CLI.
+Add new jinja2 template if adding a top-level feature, also modify the `pyavd/_eos_cli_config_gen/j2templates/eos-intended-config.j2` and `pyavd/_eos_cli_config_gen/j2templates/eos-device-documentation.j2` to add these new templates, trying to respect the order in the EOS CLI.
 
 #### Jinja2 Templates Guidelines
 
 1. **Code Indentation:** Keep less indented code to improve readability.
 2. **Variable Naming:** Use meaningful variable names.
+3. **Use AVD filters:** Use AVD filters for code optimization - [AVD Filters](https://avd.arista.com/5.0/docs/plugins/Filter_plugins/add_md_toc.html).
 3. **Natural Sorting:** Use `arista.avd.natural_sort` for sorting the `for loops` after checking on EOS CLI.
 4. **Defined Checks:** 
 - Avoid `arista.avd.defined` check for parent keys when directly checking for child keys.
-- No need to add `arista.avd.defined` check When using `arista.avd.default()` filter.
+- Avoid `arista.avd.defined` check for primary and required keys.
+- Avoid`arista.avd.defined` check when using `arista.avd.default()` and `arista.avd.natural_sort` filters.
 5. **Password Security:** Avoid displaying passwords in the documentation template and use the `arista.avd.hide_passwords` filter to hide it.
 6. **Config Order:** Ensure the order and indentation of configuration matches EOS CLI.
 7. **Exclamation Marks:** Place exclamation marks `!` correctly as per the EOS running-config.
 8. Along with EOS config template, update the documentation template as well (if required).
 9. Implement only commands visible in running-config of the EOS device.
+10. Validate the template using j2lint tool, run `pre-commit run j2lint --all`.
 
 ### Build Schemas and Documentation
 
@@ -63,6 +68,8 @@ When marking any key as "deprecated," move the related tests to the `eos_cli_con
 
 Run `molecule converge -s eos_cli_config_gen` from the path `ansible_collections/arista/avd/` to execute the molecule tests locally and generate the new expected configuration and documentation for newly added test-cases.
 
+Check the PyAVD test coverage report by running `tox -e coverage,report` and work on improving the coverage where possible.
+
 ### Update Documentation
 
 If the proposed feature requires any changes to the documentation, make sure to update it accordingly.
@@ -75,7 +82,7 @@ Running these checks also ensures that the changes pass CI checks.
 
 ### Self Review The Changes
 
-Before pushing the changes to GitHub, carefully review all modifications.
+Before pushing the changes to GitHub, carefully review all the modifications.
 Confirm that all new features work as intended and that existing features are unaffected. Once satisfied, proceed to push the changes to the repository.
 
 ## Checklist to review an eos_cli_config_gen PR
@@ -83,7 +90,8 @@ Confirm that all new features work as intended and that existing features are un
 1. Check that all the CI checks are passing.
 2. If the PR addresses an issue raised in the repository, confirm that the issue is fully resolved by the PR.
 3. Refer to the Arista documentation for a deeper understanding of the proposed feature.
-4. Verify that the schema adheres to EOS CLI standards and all relevant guidelines mentioned above.
+4. Verify that the schema adheres to EOS CLI and all relevant guidelines mentioned above.
+5. Ensure that the min/max values are specified in the schema if they are defined in the EOS CLI.
 5. Ensure that Jinja2 templates follow all the guidelines mentioned above.
 6. Check that the template generates valid configuration and documentation, maintaining the same configuration order and indentation as EOS CLI.
 7. Check out the PR in a local IDE and run all tests to ensure functionality.
@@ -92,3 +100,4 @@ Confirm that all new features work as intended and that existing features are un
 10. Check that the molecule tests are added for the new feature.
 11. If any keys are marked as deprecated, ensure that the associated tests are moved to the `eos_cli_config_gen_deprecated_vars` scenario.
 12. If the proposed feature requires any changes to the documentation, ensure that it is updated accordingly.
+13. Approve the PR if everything looks good.
