@@ -123,12 +123,14 @@ class UtilsMixin:
         self: AvdStructuredConfigConnectedEndpoints,
         adapter: EosDesigns._DynamicKeys.DynamicConnectedEndpointsItem.ConnectedEndpointsItem.AdaptersItem,
         connected_endpoint: EosDesigns._DynamicKeys.DynamicConnectedEndpointsItem.ConnectedEndpointsItem,
-    ) -> dict | None:
+    ) -> list | None:
         """Return trunk_groups for one adapter."""
         if self.inputs.enable_trunk_groups and "trunk" in (adapter.mode or ""):
-            return get_v2(
-                adapter, "trunk_groups", required=True, custom_error_msg=f"'trunk_groups' for the connected_endpoint {connected_endpoint.name} is required."
-            )
+            if adapter._get("trunk_groups") is None:
+                msg = f"'trunk_groups' for the connected_endpoint {connected_endpoint.name} is required."
+                raise AristaAvdInvalidInputsError(msg)
+
+            return adapter.trunk_groups._as_list()
 
         return None
 

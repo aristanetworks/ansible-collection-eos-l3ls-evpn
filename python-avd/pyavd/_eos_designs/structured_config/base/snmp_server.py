@@ -57,14 +57,14 @@ class SnmpServerMixin(UtilsMixin):
                 "contact": snmp_settings.contact,
                 "location": self._snmp_location(snmp_settings),
                 "users": self._snmp_users(snmp_settings, engine_ids),
-                "hosts": [host._as_dict() for host in self._snmp_hosts(snmp_settings)] or None,
+                "hosts": self._snmp_hosts(snmp_settings)._as_list() or None,
                 "vrfs": self._snmp_vrfs(snmp_settings)._as_list() or None,
                 "local_interfaces": self._snmp_local_interfaces(source_interfaces_inputs),
                 "communities": snmp_settings.communities._as_list() or None,
-                "ipv4_acls": [acl._as_dict() for acl in snmp_settings.ipv4_acls] or None,
-                "ipv6_acls": [acl._as_dict() for acl in snmp_settings.ipv6_acls] or None,
-                "views": [view._as_dict() for view in snmp_settings.views] or None,
-                "groups": [group._as_dict() for group in snmp_settings.groups] or None,
+                "ipv4_acls": snmp_settings.ipv4_acls._as_list() or None,
+                "ipv6_acls": snmp_settings.ipv6_acls._as_list() or None,
+                "views": snmp_settings.views._as_list() or None,
+                "groups": snmp_settings.groups._as_list() or None,
                 "traps": snmp_settings.traps._as_dict() if snmp_settings.traps.enable else None,
             },
         )
@@ -159,18 +159,15 @@ class SnmpServerMixin(UtilsMixin):
 
         return snmp_users or None
 
-    def _snmp_hosts(self: AvdStructuredConfigBase, snmp_settings: EosDesigns.SnmpSettings) -> list[EosCliConfigGen.SnmpServer.HostsItem]:
+    def _snmp_hosts(self: AvdStructuredConfigBase, snmp_settings: EosDesigns.SnmpSettings) -> EosCliConfigGen.SnmpServer.Hosts:
         """
         Return hosts if "snmp_settings.hosts" is set.
 
-        Otherwise return None.
-
         Hosts may have management VRFs dynamically set.
         """
+        snmp_hosts = EosCliConfigGen.SnmpServer.Hosts()
         if not (hosts := snmp_settings.hosts):
-            return []
-
-        snmp_hosts = []
+            return snmp_hosts
 
         has_mgmt_ip = (self.shared_utils.node_config.mgmt_ip is not None) or (self.shared_utils.node_config.ipv6_mgmt_ip is not None)
 

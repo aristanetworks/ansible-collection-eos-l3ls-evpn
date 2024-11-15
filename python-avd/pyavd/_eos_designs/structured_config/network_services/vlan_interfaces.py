@@ -93,7 +93,7 @@ class VlanInterfacesMixin(UtilsMixin):
         vlan_interface_config = {
             "name": interface_name,
             "tenant": svi._tenant,
-            "tags": svi._get_defined_attr("tags") or None,  # Historic behavior is to not output the default ["all"]
+            "tags": list(svi._get("tags", [])) or None,  # Historic behavior is to not output the default ["all"]
             "description": default(svi.description, svi.name),
             "shutdown": not default(svi.enabled, False),  # noqa: FBT003
             "ip_address": svi.ip_address,
@@ -107,7 +107,7 @@ class VlanInterfacesMixin(UtilsMixin):
         }
         # Only set VARP if ip_address is set
         if vlan_interface_config["ip_address"] is not None:
-            vlan_interface_config["ip_virtual_router_addresses"] = svi.ip_virtual_router_addresses or None
+            vlan_interface_config["ip_virtual_router_addresses"] = svi.ip_virtual_router_addresses._as_list() or None
             _check_virtual_router_mac_address(vlan_interface_config, ["ip_virtual_router_addresses"])
 
         # Only set Anycast GW if VARP is not set
@@ -143,7 +143,7 @@ class VlanInterfacesMixin(UtilsMixin):
         # Only set Anycast v6 GW if VARPv6 is not set
         if vlan_interface_config.get("ipv6_virtual_router_addresses") is None:
             if svi.ipv6_address_virtuals:
-                vlan_interface_config["ipv6_address_virtuals"] = svi.ipv6_address_virtuals
+                vlan_interface_config["ipv6_address_virtuals"] = svi.ipv6_address_virtuals._as_list()
 
             _check_virtual_router_mac_address(vlan_interface_config, ["ipv6_address_virtuals"])
 

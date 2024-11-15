@@ -39,7 +39,7 @@ class RouterPimSparseModeMixin(UtilsMixin):
                 if rp_entry.access_list_name:
                     rp_address["access_lists"] = [rp_entry.access_list_name]
                 else:
-                    rp_address["groups"] = rp_entry.groups
+                    rp_address["groups"] = rp_entry.groups._as_list()
 
             rp_addresses.append(rp_address)
 

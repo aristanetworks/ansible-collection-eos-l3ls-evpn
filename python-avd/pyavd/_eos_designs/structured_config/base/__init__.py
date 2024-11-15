@@ -71,7 +71,7 @@ class AvdStructuredConfigBase(AvdFacts, NtpMixin, SnmpServerMixin, RouterGeneral
             "as": self.shared_utils.bgp_as,
             "router_id": self.shared_utils.router_id if not self.inputs.use_router_general_for_router_id else None,
             "distance": self.inputs.bgp_distance._as_dict() or None,
-            "bgp_defaults": self.shared_utils.node_config.bgp_defaults or None,
+            "bgp_defaults": self.shared_utils.node_config.bgp_defaults._as_list() or None,
             "bgp": {
                 "default": {
                     "ipv4_unicast": self.inputs.bgp_default_ipv4_unicast,
