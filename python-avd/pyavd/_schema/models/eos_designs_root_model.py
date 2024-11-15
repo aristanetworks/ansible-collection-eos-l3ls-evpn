@@ -93,7 +93,7 @@ class EosDesignsRootModel(AvdModel):
         Here we parse "_dynamic_key_maps" and for entry  find all values for the dynamic_keys_path (ex "node_type_keys.key") in the input data
         to identify all dynamic keys (ex "l3leaf", "spine" ...)
         """
-        schema = create_store()["eos_designs"]
+        schema = create_store(load_from_yaml=False)["eos_designs"]
 
         dynamic_keys_dict = {}
 
