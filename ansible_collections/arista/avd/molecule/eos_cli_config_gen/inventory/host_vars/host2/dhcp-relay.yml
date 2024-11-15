@@ -1,0 +1,5 @@
+---
+dhcp_relay:
+  servers:
+    - dhcp-relay-server2
+    - dhcp-relay-server1

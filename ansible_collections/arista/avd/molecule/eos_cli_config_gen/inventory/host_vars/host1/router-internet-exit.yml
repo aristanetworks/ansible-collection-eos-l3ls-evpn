@@ -1,0 +1,30 @@
+---
+router_internet_exit:
+  policies:
+    - name: po_03
+      exit_groups:
+        - name: po_eg_03_01
+    - name: po_02
+    - name: po_01
+      # Making sure these exit groups are not being reordered
+      # as the order matters inside the policy
+      exit_groups:
+        - name: po_eg_01_02
+        - name: po_eg_01_04
+        - name: po_eg_01_01
+        - name: po_eg_01_03
+        - name: system-default-exit-group
+  exit_groups:
+    - name: eg_03
+      fib_default: true
+      local_connections:
+        - name: eg_03_lo_01
+        - name: eg_03_lo_02
+    - name: eg_01
+    - name: eg_04
+      local_connections:
+        - name: eg_04_lo_01
+        - name: eg_04_lo_02
+        - name: eg_04_lo_03
+    - name: eg_02
+      fib_default: true

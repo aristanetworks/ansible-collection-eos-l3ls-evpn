@@ -27,7 +27,7 @@ provisioner:
       gathering: explicit
   inventory:
     links:
-      hosts: 'inventory/hosts.ini'
+      hosts: 'inventory/hosts.yml'
       host_vars: 'inventory/host_vars/'
       group_vars: 'inventory/group_vars/'
 verifier:

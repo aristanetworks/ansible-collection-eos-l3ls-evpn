@@ -2,6 +2,8 @@
 # If the device is set to "is_deployed: false" at the host_vars level, then do not shutdown interfaces towards undeployed peers.
 shutdown_interfaces_towards_undeployed_peers: false
 
+use_router_general_for_router_id: true
+
 # If the device is set to "is_deployed: false" at the host_vars level, then do not shutdown bgp towards undeployed peers.
 shutdown_bgp_towards_undeployed_peers: false
 

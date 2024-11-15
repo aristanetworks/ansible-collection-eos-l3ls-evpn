@@ -1,0 +1,57 @@
+---
+#### ipv6 static routes ####
+
+ipv6_static_routes:
+  - vrf: default
+    destination_address_prefix: 2a01:cb04:4e6:d300::/64
+    interface: vlan1001
+    gateway: 2a01:cb04:4e6:d100::1
+
+  - vrf: default
+    destination_address_prefix: 2a01:cb04:4e6:d400::/64
+    interface: vlan1001
+    gateway: 2a01:cb04:4e6:d100::1
+    distance: 200
+    tag: 666
+    name: RT-TO-FAKE-DMZ
+
+  - vrf: default
+    destination_address_prefix: 2a01:cb04:4e6:d400::/64
+    interface: vlan1001
+    gateway: 2a01:cb04:4e6:d100::1
+    distance: 200
+    tag: 666
+    metric: 100
+    name: RT-TO-FAKE-DB-ZONE
+
+  - vrf: TENANT_A_PROJECT01
+    destination_address_prefix: 2a01:cb04:4e6:a300::/64
+    interface: vlan1001
+    gateway: 2a01:cb04:4e6:100::1
+
+  - vrf: TENANT_A_PROJECT01
+    destination_address_prefix: 2a01:cb04:4e6:a400::/64
+    interface: vlan1001
+    gateway: 2a01:cb04:4e6:100::1
+    distance: 201
+    tag: 667
+    name: RT-TO-FAKE-DMZ
+
+  - vrf: TENANT_A_PROJECT01
+    destination_address_prefix: 2b01:cb04:4e6:a400::/64
+    interface: vlan102
+    gateway: 2a01:cb04:4e6:102::1
+    track_bfd: true
+    distance: 201
+    tag: 102
+    metric: 100
+    name: Track-BFD
+
+  - vrf: TENANT_A_PROJECT01
+    destination_address_prefix: 2c01:cb04:4e6:a400::/64
+    interface: vlan102
+    # Negative test case - Tacking should not be enabled
+    track_bfd: true
+    distance: 201
+    tag: 102
+    name: No-Track-BFD

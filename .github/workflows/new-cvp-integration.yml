@@ -6,6 +6,13 @@ on: workflow_dispatch
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.head_ref }}
+
+env:
+  # Set -vvv is ACTIONS_STEP_DEBUG is set
+  # Apparently it is set in secrets when running with debug
+  ANSIBLE_VERBOSITY: ${{ secrets.ACTIONS_STEP_DEBUG && 3 || 0 }}
+  AVD_NEVER_RUN_FROM_SOURCE: 1
+
 jobs:
   # ----------------------------------------------- #
   # CV INTEGRATION MOLECULE TEST FOR CV_WORKFLOW    #

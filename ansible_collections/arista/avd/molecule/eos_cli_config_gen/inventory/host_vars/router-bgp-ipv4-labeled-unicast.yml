@@ -1,5 +1,10 @@
 router_bgp:
   as: 65101
+  timers:
+    keepalive_time: 4
+    hold_time: 6
+    min_hold_time: 5
+    send_failure_hold_time: 67
   address_family_ipv4_labeled_unicast:
     update_wait_for_convergence: true
     aigp_session:

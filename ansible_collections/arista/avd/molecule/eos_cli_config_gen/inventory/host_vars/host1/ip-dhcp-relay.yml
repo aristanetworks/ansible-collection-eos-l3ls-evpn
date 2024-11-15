@@ -1,0 +1,7 @@
+---
+### IP DHCP Relay ###
+
+ip_dhcp_relay:
+  information_option: true
+  always_on: true
+  all_subnets: true

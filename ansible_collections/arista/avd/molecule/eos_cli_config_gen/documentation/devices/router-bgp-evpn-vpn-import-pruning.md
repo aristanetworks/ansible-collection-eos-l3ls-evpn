@@ -94,10 +94,10 @@ ASN Notation: asplain
 
 ##### EVPN Peer Groups
 
-| Peer Group | Activate | Encapsulation |
-| ---------- | -------- | ------------- |
-| EVPN-OVERLAY-PEERS | True | default |
-| MLAG-IPv4-UNDERLAY-PEER | False | default |
+| Peer Group | Activate | Route-map In | Route-map Out | Encapsulation |
+| ---------- | -------- | ------------ | ------------- | ------------- |
+| EVPN-OVERLAY-PEERS | True |  - | - | default |
+| MLAG-IPv4-UNDERLAY-PEER | False |  - | - | default |
 
 ##### EVPN Host Flapping Settings
 
@@ -126,11 +126,13 @@ ASN Notation: asplain
 !
 router bgp 65101
    router-id 192.168.255.3
+   timers bgp 0 0
    no bgp default ipv4-unicast
    distance bgp 20 200 200
    graceful-restart restart-time 300
    graceful-restart
    maximum-paths 2 ecmp 2
+   neighbor default send-community
    neighbor EVPN-OVERLAY-PEERS peer group
    neighbor EVPN-OVERLAY-PEERS remote-as 65001
    neighbor EVPN-OVERLAY-PEERS update-source Loopback0

@@ -1,2 +1,4 @@
 ---
 underlay_routing_protocol: isis-sr-ldp
+# Use router id from router general configuration
+use_router_general_for_router_id: true

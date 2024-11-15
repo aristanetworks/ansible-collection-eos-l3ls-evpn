@@ -12,9 +12,11 @@
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;tcp_mss</samp>](## "system.control_plane.tcp_mss") | Dictionary |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ipv4</samp>](## "system.control_plane.tcp_mss.ipv4") | Integer |  |  |  | Segment size. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ipv6</samp>](## "system.control_plane.tcp_mss.ipv6") | Integer |  |  |  | Segment size. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;ipv4_access_group_ingress_default</samp>](## "system.control_plane.ipv4_access_group_ingress_default") | String |  |  |  | ACL name to be used as the default CP ACL for all VRFs. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;ipv4_access_groups</samp>](## "system.control_plane.ipv4_access_groups") | List, items: Dictionary |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;acl_name</samp>](## "system.control_plane.ipv4_access_groups.[].acl_name") | String | Required |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;vrf</samp>](## "system.control_plane.ipv4_access_groups.[].vrf") | String |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;ipv6_access_group_ingress_default</samp>](## "system.control_plane.ipv6_access_group_ingress_default") | String |  |  |  | ACL name to be used as the default CP ACL for all VRFs. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;ipv6_access_groups</samp>](## "system.control_plane.ipv6_access_groups") | List, items: Dictionary |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;acl_name</samp>](## "system.control_plane.ipv6_access_groups.[].acl_name") | String | Required |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;vrf</samp>](## "system.control_plane.ipv6_access_groups.[].vrf") | String |  |  |  |  |
@@ -34,9 +36,15 @@
 
           # Segment size.
           ipv6: <int>
+
+        # ACL name to be used as the default CP ACL for all VRFs.
+        ipv4_access_group_ingress_default: <str>
         ipv4_access_groups:
           - acl_name: <str; required>
             vrf: <str>
+
+        # ACL name to be used as the default CP ACL for all VRFs.
+        ipv6_access_group_ingress_default: <str>
         ipv6_access_groups:
           - acl_name: <str; required>
             vrf: <str>

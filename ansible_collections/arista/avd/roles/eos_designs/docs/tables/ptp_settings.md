@@ -20,7 +20,7 @@
     | [<samp>ptp_settings</samp>](## "ptp_settings") | Dictionary |  |  |  | Common PTP settings. |
     | [<samp>&nbsp;&nbsp;enabled</samp>](## "ptp_settings.enabled") | Boolean |  |  |  |  |
     | [<samp>&nbsp;&nbsp;profile</samp>](## "ptp_settings.profile") | String |  | `aes67-r16-2016` |  | Default available profiles are:<br>  - "aes67"<br>  - "aes67-r16-2016"<br>  - "smpte2059-2" |
-    | [<samp>&nbsp;&nbsp;domain</samp>](## "ptp_settings.domain") | Integer |  |  | Min: 0<br>Max: 255 |  |
+    | [<samp>&nbsp;&nbsp;domain</samp>](## "ptp_settings.domain") | Integer |  | `127` | Min: 0<br>Max: 255 |  |
     | [<samp>&nbsp;&nbsp;auto_clock_identity</samp>](## "ptp_settings.auto_clock_identity") | Boolean |  | `True` |  |  |
 
 === "YAML"
@@ -51,7 +51,7 @@
       #   - "aes67-r16-2016"
       #   - "smpte2059-2"
       profile: <str; default="aes67-r16-2016">
-      domain: <int; 0-255>
+      domain: <int; 0-255; default=127>
       auto_clock_identity: <bool; default=True>
     ```
 

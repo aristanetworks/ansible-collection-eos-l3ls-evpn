@@ -22,7 +22,8 @@ from .workspace import WorkspaceMixin
 
 if TYPE_CHECKING:
     from types import TracebackType
-    from typing import Self
+
+    from typing_extensions import Self
 
 
 class CVClient(

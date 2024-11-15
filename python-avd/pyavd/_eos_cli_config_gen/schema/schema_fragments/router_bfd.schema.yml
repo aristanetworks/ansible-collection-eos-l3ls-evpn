@@ -81,3 +81,10 @@ keys:
               local_discriminator:
                 type: str
                 description: IPv4 address or 32 bit integer.
+      slow_timer:
+        description: Rate in milliseconds.
+        type: int
+        convert_types:
+          - str
+        min: 2000
+        max: 60000

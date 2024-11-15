@@ -24,6 +24,7 @@ keys:
             - "smpte2059-2"
       domain:
         type: int
+        default: 127
         $ref: "eos_cli_config_gen#/keys/ptp/keys/domain"
       auto_clock_identity:
         type: bool

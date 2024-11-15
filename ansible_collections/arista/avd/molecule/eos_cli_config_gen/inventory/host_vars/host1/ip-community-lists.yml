@@ -1,0 +1,23 @@
+---
+### IP community lists ###
+ip_community_lists:
+  - name: IP_CL_TEST1
+    entries:
+      - action: permit
+        communities: ["1001:1001", "1002:1002"]
+      - action: deny
+        communities: ["1010:1010"]
+      - action: permit
+        regexp: 20:*
+  - name: IP_CL_TEST2
+    entries:
+      - action: deny
+        communities: ["1003:1003"]
+  - name: IP_RE_TEST1
+    entries:
+      - action: permit
+        regexp: ^$
+  - name: IP_RE_TEST2
+    entries:
+      - action: deny
+        regexp: ^100

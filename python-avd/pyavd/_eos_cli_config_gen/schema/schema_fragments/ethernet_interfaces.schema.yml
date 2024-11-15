@@ -116,6 +116,13 @@ keys:
             forwarding_profile:
               type: str
               description: L2 protocol forwarding profile.
+        mac_timestamp:
+          type: str
+          valid_values: ["before-fcs", "replace-fcs", "header"]
+          description: |-
+            header: Insert timestamp in ethernet header. Supported on platforms like 7500E/R and 7280E/R.
+            before-fcs: Insert timestamp before fcs field. Supported on platforms like 7150.
+            replace-fcs: Replace fcs field with timestamp.
         trunk_groups:
           type: list
           items:
@@ -130,7 +137,7 @@ keys:
           deprecation:
             warning: true
             remove_in_version: 6.0.0
-            url: https://avd.arista.com/stable/docs/release-notes/5.x.x.html#removal-of-type-key-dependency-for-rendering-ethernetport-channel-interfaces-configuration-and-documentation
+            url: https://avd.arista.com/5.x/docs/porting-guides/5.x.x.html#removal-of-type-key-dependency-for-rendering-ethernetport-channel-interfaces-configuration-and-documentation
           valid_values: ["routed", "switched", "l3dot1q", "l2dot1q", "port-channel-member"]
           description: |
             l3dot1q and l2dot1q are used for sub-interfaces. The parent interface should be defined as routed.
@@ -188,6 +195,18 @@ keys:
               direction:
                 type: str
                 valid_values: ["upstream", "downstream"]
+        link_tracking:
+          type: dict
+          keys:
+            direction:
+              type: str
+              valid_values: ["upstream", "downstream"]
+            groups:
+              type: list
+              description: Link state group(s) an interface belongs to.
+              items:
+                type: str
+                description: Group names.
         evpn_ethernet_segment:
           type: dict
           keys:
@@ -710,10 +729,23 @@ keys:
           type: bool
         isis_authentication_mode:
           type: str
+          deprecation:
+            warning: true
+            remove_in_version: v6.0.0
+            new_key: isis_authentication.both.mode or isis_authentication.level_1.mode or isis_authentication.level_2.mode
           valid_values: ["text", "md5"]
         isis_authentication_key:
           type: str
+          deprecation:
+            warning: true
+            remove_in_version: v6.0.0
+            new_key: isis_authentication.both.key or isis_authentication.level_1.key or isis_authentication.level_2.key
           description: Type-7 encrypted password.
+        isis_authentication:
+          type: dict
+          description: This key should not be mixed with ethernet_interfaces[].isis_authentication_mode or ethernet_interfaces[].isis_authentication_key.
+          # TODO: AVD 6.0 Update the description
+          $ref: "eos_cli_config_gen#/keys/router_isis/keys/authentication"
         poe:
           type: dict
           keys:
@@ -965,6 +997,7 @@ keys:
                 default: "both"
         dot1x:
           type: dict
+          description: 802.1x
           keys:
             port_control:
               type: str
@@ -1579,7 +1612,10 @@ keys:
                     description: Virtual IPv6 address.
         validate_state:
           type: bool
-          description: Set to false to disable interface validation by the `eos_validate_state` role.
+          description: Set to false to disable interface state and LLDP topology validation performed by the `eos_validate_state` role.
+        validate_lldp:
+          type: bool
+          description: Set to false to disable the LLDP topology validation performed by the `eos_validate_state` role.
         switchport:
           type: dict
           description: This should not be combined with `ethernet_interfaces[].type = switched/routed`.
