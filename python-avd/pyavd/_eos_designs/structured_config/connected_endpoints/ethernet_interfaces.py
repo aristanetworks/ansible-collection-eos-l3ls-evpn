@@ -149,7 +149,7 @@ class EthernetInterfacesMixin(UtilsMixin):
         if len(adapter.switch_ports) != nodes_length or (adapter.descriptions and len(adapter.descriptions) != nodes_length):
             msg = (
                 f"Length of lists 'switches', 'switch_ports', and 'descriptions' (if used) must match for adapter. Check configuration for {peer}, adapter"
-                f" switch_ports {adapter.switch_ports}."
+                f" switch_ports {adapter.switch_ports._as_list()}."
             )
             raise AristaAvdError(
                 msg,

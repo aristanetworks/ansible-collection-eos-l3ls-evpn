@@ -41,7 +41,7 @@ class RouterMsdpMixin(UtilsMixin):
                 continue
 
             # Anycast-RP using MSDP
-            peers.update(node.name for node in rp_entry.nodes if node.name == self.shared_utils.hostname)
+            peers.update(node.name for node in rp_entry.nodes if node.name != self.shared_utils.hostname)
 
         if not peers:
             return None
