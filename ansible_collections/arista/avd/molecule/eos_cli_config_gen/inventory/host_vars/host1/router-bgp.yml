@@ -459,7 +459,6 @@ router_bgp:
       - prefix: 192.168.0.0/16
         route_map: RM-FOO-MATCH
     bgp:
-      redistribute_internal: false
       additional_paths:
         receive: true
         install: true
@@ -759,7 +758,6 @@ router_bgp:
         route_map: AFIPV4M_STATIC
   address_family_ipv4_labeled_unicast:
     update_wait_for_convergence: true
-    graceful_restart: true
     aigp_session:
       ebgp: true
       confederation: true
@@ -792,7 +790,7 @@ router_bgp:
     tunnel_source_protocols:
       - protocol: isis segment-routing
       - protocol: ldp
-        rcf: TEST(ARGS)
+        rcf: TEST
     neighbors:
       - ip_address: 198.51.100.1
         activate: true
@@ -803,12 +801,10 @@ router_bgp:
         maximum_advertised_routes: 120000
         maximum_advertised_routes_warning_limit: 1000
         next_hop_self: true
-        graceful_restart: true
         rcf_in: RCF_TEST()
         rcf_out: RCF_TEST_OUT()
         next_hop_self_v4_mapped_v6_source_interface: Ethernet1
       - ip_address: 198.51.100.2
-        graceful_restart: true
         aigp_session: true
         multi_path: true
         missing_policy:
@@ -858,7 +854,6 @@ router_bgp:
         additional_paths:
           receive: true
           send: disabled
-        graceful_restart: true
         graceful_restart_helper:
           stale_route_map: RM_BGP_LU_TEST
       - name: PG-BGP-LU2
@@ -1216,7 +1211,7 @@ router_bgp:
     - ip_address: 192.168.255.11
     - ip_address: 172.31.255.0
       peer_group: IPv4-UNDERLAY-PEERS
-      password: "test1234"
+      password: 071B245F5A584B5643
       remove_private_as:
         enabled: false
       remove_private_as_ingress:
@@ -1530,7 +1525,6 @@ router_bgp:
           enabled: true
           route_map: RM_VRF_ATTACHED-HOST
       bgp:
-        redistribute_internal: false
         additional_paths:
           receive: true
           send: any
@@ -1545,7 +1539,6 @@ router_bgp:
             receive: true
             send: ecmp
             send_limit: 4
-          redistribute_internal: false
         neighbors:
           - ip_address: 1.2.3.4
             activate: true
@@ -1622,7 +1615,6 @@ router_bgp:
             install: true
             receive: true
             send: any
-          redistribute_internal: false
         neighbors:
           - ip_address: aa::1
             activate: true
@@ -2039,10 +2031,12 @@ router_bgp:
           - address_family: evpn
             route_targets:
               - "11:11"
+            rcf: RT_IMPORT_AF_RCF()
         export:
           - address_family: evpn
             route_targets:
               - "11:11"
+            rcf: RT_EXPORT_AF_RCF()
       neighbors:
         - ip_address: 10.255.251.1
           peer_group: MLAG-IPv4-UNDERLAY-PEER
@@ -2078,7 +2072,7 @@ router_bgp:
         neighbors:
           - ip_address: 10.2.3.4
             activate: true
-            route_map_out: RM-10.2.3.4-SET-NEXT-HOP-OUT
+            route_map_out: RM-IPv4-10.2.3.4-SET-NEXT-HOP-OUT
           - ip_address: 10.2.3.5
             activate: true
             route_map_in: RM-10.2.3.5-SET-NEXT-HOP-IN

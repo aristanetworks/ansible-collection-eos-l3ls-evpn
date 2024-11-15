@@ -17,7 +17,7 @@ router_bgp:
   redistribute:
     dynamic:
       enabled: true
-      rcf: RCF-CONN-2-BGP()
+      rcf: RCF_CONN_2_BGP()
     connected:
       enabled: true
       include_leaked: true
@@ -26,7 +26,7 @@ router_bgp:
       enabled: true
       isis_level: level-2
       include_leaked: true
-      rcf: RCF-CONN-2-BGP()
+      rcf: RCF_CONN_2_BGP()
     ospfv3:
       match_internal:
         enabled: true
@@ -121,7 +121,7 @@ router_bgp:
       static:
         enabled: true
         include_leaked: true
-        rcf: RCF_IPV6_STATIC_TO_BGP{}
+        rcf: RCF_IPV6_STATIC_TO_BGP()
       dynamic:
         enabled: true
         rcf: RCF_Address_Family_IPV6_Dynamic()

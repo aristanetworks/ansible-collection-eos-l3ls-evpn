@@ -158,6 +158,9 @@
 - [VRF Instances](#vrf-instances)
   - [VRF Instances Summary](#vrf-instances-summary)
   - [VRF Instances Device Configuration](#vrf-instances-device-configuration)
+- [Virtual Source NAT](#virtual-source-nat)
+  - [Virtual Source NAT Summary](#virtual-source-nat-summary)
+  - [Virtual Source NAT Configuration](#virtual-source-nat-configuration)
 - [System L1](#system-l1)
   - [Unsupported Interface Configurations](#unsupported-interface-configurations)
   - [System L1 Device Configuration](#system-l1-device-configuration)
@@ -2521,9 +2524,25 @@ interface Dps1
 
 ##### ISIS
 
-| Interface | Channel Group | ISIS Instance | ISIS BFD | ISIS Metric | Mode | ISIS Circuit Type | Hello Padding | Authentication Mode |
-| --------- | ------------- | ------------- | -------- | ----------- | ---- | ----------------- | ------------- | ------------------- |
-| Ethernet5 | - | ISIS_TEST | True | 99 | point-to-point | level-2 | False | md5 |
+| Interface | Channel Group | ISIS Instance | ISIS BFD | ISIS Metric | Mode | ISIS Circuit Type | Hello Padding | ISIS Authentication Mode |
+| --------- | ------------- | ------------- | -------- | ----------- | ---- | ----------------- | ------------- | ------------------------ |
+| Ethernet5 | - | ISIS_TEST | True | 99 | point-to-point | level-2 | False | - |
+| Ethernet8 | - | - | - | - | - | - | - | md5 |
+| Ethernet8.101 | - | - | - | - | - | - | - | md5 |
+| Ethernet9 | - | - | - | - | - | - | - | sha |
+| Ethernet10 | - | - | - | - | - | - | - | sha |
+| Ethernet11 | - | - | - | - | - | - | - | shared-secret |
+| Ethernet12 | - | - | - | - | - | - | - | shared-secret |
+| Ethernet13 | - | - | - | - | - | - | - | Level-1: md5<br>Level-2: text |
+| Ethernet14 | - | - | - | - | - | - | - | Level-1: md5<br>Level-2: sha |
+| Ethernet15 | - | - | - | - | - | - | - | Level-1: shared-secret<br>Level-2: shared-secret |
+| Ethernet16 | - | - | - | - | - | - | - | Level-1: shared-secret<br>Level-2: shared-secret |
+| Ethernet17 | - | - | - | - | - | - | - | Level-1: sha<br>Level-2: sha |
+| Ethernet18 | - | - | - | - | - | - | - | Level-1: sha<br>Level-2: sha |
+| Ethernet20 | - | - | - | - | - | - | - | Level-1: shared-secret<br>Level-2: md5 |
+| Ethernet21 | - | - | - | - | - | - | - | Level-1: md5 |
+| Ethernet22 | - | - | - | - | - | - | - | Level-2: sha |
+| Ethernet23 | - | - | - | - | - | - | - | Level-2: shared-secret |
 | Ethernet81/10 | 110 | *ISIS_TEST | True | *99 | *point-to-point | *level-2 | *True | *text |
 
 *Inherited from Port-Channel Interface
@@ -2739,8 +2758,6 @@ interface Ethernet5
    isis metric 99
    no isis hello padding
    isis network point-to-point
-   isis authentication mode md5
-   isis authentication key 7 <removed>
    spanning-tree guard loop
 !
 interface Ethernet6
@@ -2787,6 +2804,8 @@ interface Ethernet8
    no switchport
    no lldp transmit
    no lldp receive
+   isis authentication mode md5 rx-disabled
+   isis authentication key 0 <removed>
 !
 interface Ethernet8.101
    description to WAN-ISP-01 Ethernet2.101 - VRF-C1
@@ -2794,6 +2813,8 @@ interface Ethernet8.101
    ip address 172.31.128.1/31
    ipv6 enable
    ipv6 address 2002:ABDC::1/64
+   isis authentication mode md5
+   isis authentication key 0 <removed>
 !
 interface Ethernet9
    description interface_with_mpls_enabled
@@ -2803,6 +2824,8 @@ interface Ethernet9
    multicast ipv4 boundary ACL_MULTICAST out
    multicast ipv6 static
    mpls ip
+   isis authentication mode sha key-id 2 rx-disabled
+   isis authentication key 0 <removed>
 !
 interface Ethernet10
    description interface_with_mpls_disabled
@@ -2810,6 +2833,8 @@ interface Ethernet10
    ip address 172.31.128.10/31
    no mpls ldp interface
    no mpls ip
+   isis authentication mode sha key-id 2
+   isis authentication key 0 <removed>
 !
 interface Ethernet11
    description interface_in_mode_access_accepting_tagged_LACP
@@ -2817,12 +2842,14 @@ interface Ethernet11
    switchport mode access
    switchport
    l2-protocol encapsulation dot1q vlan 200
+   isis authentication mode shared-secret profile profile1 algorithm sha-1 rx-disabled
 !
 interface Ethernet12
    description interface_with_dot1q_tunnel
    switchport access vlan 300
    switchport mode dot1q-tunnel
    switchport
+   isis authentication mode shared-secret profile profile1 algorithm sha-1
 !
 interface Ethernet13
    description interface_in_mode_access_with_voice
@@ -2833,6 +2860,10 @@ interface Ethernet13
    switchport phone trunk untagged
    switchport mode trunk phone
    switchport
+   isis authentication mode md5 rx-disabled level-1
+   isis authentication mode text rx-disabled level-2
+   isis authentication key 0 <removed> level-1
+   isis authentication key 0 <removed> level-2
    no logging event storm-control discards
    no logging event spanning-tree
 !
@@ -2842,6 +2873,10 @@ interface Ethernet14
    switchport trunk allowed vlan 110-111,210-211
    switchport mode trunk
    switchport
+   isis authentication mode md5 level-1
+   isis authentication mode sha key-id 10 level-2
+   isis authentication key 0 <removed> level-1
+   isis authentication key 0 <removed> level-2
 !
 interface Ethernet15
    description PVLAN Promiscuous Access - only one secondary
@@ -2849,6 +2884,8 @@ interface Ethernet15
    switchport mode access
    switchport
    switchport pvlan mapping 111
+   isis authentication mode shared-secret profile profile1 algorithm sha-256 level-1
+   isis authentication mode shared-secret profile profile2 algorithm sha-1 level-2
 !
 interface Ethernet16
    description PVLAN Promiscuous Trunk - vlan translation out
@@ -2857,6 +2894,8 @@ interface Ethernet16
    switchport mode trunk
    switchport
    switchport vlan translation out 111-112 110
+   isis authentication mode shared-secret profile profile1 algorithm sha-256 rx-disabled level-1
+   isis authentication mode shared-secret profile profile2 algorithm sha-1 rx-disabled level-2
 !
 interface Ethernet17
    description PVLAN Secondary Trunk
@@ -2864,6 +2903,8 @@ interface Ethernet17
    switchport mode trunk
    switchport
    switchport trunk private-vlan secondary
+   isis authentication mode sha key-id 5 rx-disabled level-1
+   isis authentication mode sha key-id 10 rx-disabled level-2
 !
 interface Ethernet18
    description PBR Description
@@ -2871,6 +2912,8 @@ interface Ethernet18
    no switchport
    ip address 192.0.2.1/31
    service-policy type pbr input MyLANServicePolicy
+   isis authentication mode sha key-id 5 level-1
+   isis authentication mode sha key-id 10 level-2
 !
 interface Ethernet19
    description Switched port with no LLDP rx/tx
@@ -2880,29 +2923,43 @@ interface Ethernet19
    no lldp transmit
    no lldp receive
    lldp tlv transmit ztp vlan 666
+   isis authentication key-id 2 algorithm sha-512 key 0 <removed>
+   isis authentication key-id 3 algorithm sha-512 rfc-5310 key 0 <removed>
+   isis authentication key-id 1 algorithm sha-1 key 0 <removed> level-1
+   isis authentication key-id 4 algorithm sha-1 rfc-5310 key 0 <removed> level-1
+   isis authentication key-id 1 algorithm sha-1 key 0 <removed> level-2
+   isis authentication key-id 5 algorithm sha-1 rfc-5310 key 0 <removed> level-2
 !
 interface Ethernet20
    description Port patched through patch-panel to pseudowire
    no switchport
    no lldp transmit
    no lldp receive
+   isis authentication mode shared-secret profile profile1 algorithm sha-256 level-1
+   isis authentication mode md5 level-2
+   isis authentication key 0 <removed> level-2
 !
 interface Ethernet21
    description 200MBit/s shape
    switchport
    no qos trust
    shape rate 200000 kbps
+   isis authentication mode md5 rx-disabled level-1
+   isis authentication key 0 <removed> level-1
 !
 interface Ethernet22
    description 10% shape
    switchport
    shape rate 10 percent
+   isis authentication mode sha key-id 100 level-2
+   isis authentication key 0 <removed> level-2
 !
 interface Ethernet23
    description Error-correction encoding
    error-correction encoding fire-code
    error-correction encoding reed-solomon
    switchport
+   isis authentication mode shared-secret profile profile2 algorithm sha-1 level-2
 !
 interface Ethernet24
    description Disable error-correction encoding
@@ -5792,7 +5849,6 @@ ASN Notation: asdot
 | Next-hop Unchanged | True |
 | LFIB entry installation skipped | True |
 | Label local-termination | implicit-null |
-| Graceful-restart | Enabled |
 
 ##### IPv4 BGP-LU Peer-groups
 
@@ -6468,7 +6524,6 @@ router bgp 65101
       network 10.0.0.0/8
       network 172.16.0.0/12
       network 192.168.0.0/16 route-map RM-FOO-MATCH
-      no bgp redistribute-internal
       redistribute attached-host route-map RM_BGP_EVPN_IPV4
       redistribute bgp leaked
       redistribute connected include leaked rcf Address_Family_IPV4_Connected()
@@ -6502,7 +6557,6 @@ router bgp 65101
       neighbor PG-BGP-LU multi-path
       no neighbor PG-BGP-LU1 activate
       neighbor PG-BGP-LU1 additional-paths receive
-      neighbor PG-BGP-LU1 graceful-restart
       neighbor PG-BGP-LU1 graceful-restart-helper stale-route route-map RM_BGP_LU_TEST
       neighbor PG-BGP-LU1 rcf in RCF_BGP_LU_IN()
       neighbor PG-BGP-LU1 rcf out RCF_BGP_LU_OUT()
@@ -6519,7 +6573,6 @@ router bgp 65101
       no neighbor 192.168.66.22 additional-paths send
       neighbor 198.51.100.1 activate
       neighbor 198.51.100.1 additional-paths receive
-      neighbor 198.51.100.1 graceful-restart
       neighbor 198.51.100.1 rcf in RCF_TEST()
       neighbor 198.51.100.1 rcf out RCF_TEST_OUT()
       neighbor 198.51.100.1 additional-paths send ecmp limit 11
@@ -6527,7 +6580,6 @@ router bgp 65101
       neighbor 198.51.100.1 next-hop-self v4-mapped-v6 source-interface Ethernet1
       neighbor 198.51.100.1 maximum-advertised-routes 120000 warning-limit 1000
       no neighbor 198.51.100.2 activate
-      neighbor 198.51.100.2 graceful-restart
       neighbor 198.51.100.2 graceful-restart-helper stale-route route-map RM_STALE
       neighbor 198.51.100.2 route-map RM_IN_TEST in
       neighbor 198.51.100.2 route-map RM_OUT_TEST out
@@ -6542,9 +6594,8 @@ router bgp 65101
       next-hop 192.51.100.1 originate lfib-backup ip-forwarding
       lfib entry installation skipped
       label local-termination implicit-null
-      graceful-restart
       tunnel source-protocol isis segment-routing
-      tunnel source-protocol ldp rcf TEST(ARGS)
+      tunnel source-protocol ldp rcf TEST
       aigp-session confederation
       aigp-session ebgp
    !
@@ -6821,7 +6872,9 @@ router bgp 65101
    vrf TENANT_A_PROJECT01
       rd 192.168.255.3:11
       route-target import evpn 11:11
+      route-target import evpn rcf RT_IMPORT_AF_RCF()
       route-target export evpn 11:11
+      route-target export evpn rcf RT_EXPORT_AF_RCF()
       router-id 192.168.255.3
       update wait-for-convergence
       update wait-install
@@ -6849,7 +6902,7 @@ router bgp 65101
          bgp additional-paths receive
          bgp additional-paths send ecmp
          neighbor 10.2.3.4 activate
-         neighbor 10.2.3.4 route-map RM-10.2.3.4-SET-NEXT-HOP-OUT out
+         neighbor 10.2.3.4 route-map RM-IPv4-10.2.3.4-SET-NEXT-HOP-OUT out
          neighbor 10.2.3.5 activate
          neighbor 10.2.3.5 route-map RM-10.2.3.5-SET-NEXT-HOP-IN in
          neighbor 10.2.3.6 next-hop address-family ipv6
@@ -6919,7 +6972,6 @@ router bgp 65101
       bgp additional-paths install
       bgp additional-paths receive
       bgp additional-paths send any
-      no bgp redistribute-internal
       redistribute connected include leaked rcf RCF_VRF_CONNECTED()
       redistribute isis level-2 rcf RCF_VRF_ISIS()
       redistribute ospf match internal include leaked route-map RM_VRF_OSPF
@@ -6954,7 +7006,6 @@ router bgp 65101
          neighbor 1.2.3.4 route-map BAR out
          neighbor 1.2.3.4 additional-paths send any
          network 2.3.4.0/24 route-map BARFOO
-         no bgp redistribute-internal
          redistribute attached-host route-map VRF_AFIPV4_RM_HOST
          redistribute bgp leaked route-map VRF_AFIPV4_RM_BGP
          redistribute connected include leaked rcf VRF_AFIPV4_RCF_CONNECTED_1()
@@ -7004,7 +7055,6 @@ router bgp 65101
          neighbor aa::2 rcf in VRF_AFIPV6_RCF_IN()
          neighbor aa::2 rcf out VRF_AFIPV6_RCF_OUT()
          network aa::/64
-         no bgp redistribute-internal
          redistribute connected rcf VRF_AFIPV6_RCF_CONNECTED()
          redistribute isis include leaked
          redistribute ospfv3 match internal include leaked
@@ -8224,6 +8274,28 @@ vrf instance MGMT
 vrf instance TENANT_A_PROJECT01
 !
 vrf instance TENANT_A_PROJECT02
+```
+
+## Virtual Source NAT
+
+### Virtual Source NAT Summary
+
+| Source NAT VRF | Source NAT IPv4 Address | Source NAT IPv6 Address |
+| -------------- | ----------------------- | ----------------------- |
+| TEST_01 | 1.1.1.1 | - |
+| TEST_02 | 1.1.1.2 | - |
+| TEST_03 | - | 2001:db8:85a3::8a2e:370:7334 |
+| TEST_04 | 1.1.1.3 | 2001:db8:85a3::8a2e:370:7335 |
+
+### Virtual Source NAT Configuration
+
+```eos
+!
+ip address virtual source-nat vrf TEST_01 address 1.1.1.1
+ip address virtual source-nat vrf TEST_02 address 1.1.1.2
+ip address virtual source-nat vrf TEST_04 address 1.1.1.3
+ipv6 address virtual source-nat vrf TEST_03 address 2001:db8:85a3::8a2e:370:7334
+ipv6 address virtual source-nat vrf TEST_04 address 2001:db8:85a3::8a2e:370:7335
 ```
 
 ## System L1
