@@ -1,3 +1,0 @@
-# dummy
-
-## Table of Contents
