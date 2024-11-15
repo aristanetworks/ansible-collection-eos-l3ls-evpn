@@ -4,6 +4,9 @@ router_bgp:
   updates:
     wait_for_convergence: true
     wait_install: true
+  timers:
+    keepalive_time: 10
+    hold_time: 15
   distance:
     external_routes: 20
     internal_routes: 200
@@ -47,6 +50,8 @@ router_bgp:
       peer_group: my-peer-group4
       peer_filter: my-peer-filter
       remote_as: 65444
+  neighbor_default:
+    send_community: standard
   peer_groups:
     - name: test-link-bandwidth1
       link_bandwidth:

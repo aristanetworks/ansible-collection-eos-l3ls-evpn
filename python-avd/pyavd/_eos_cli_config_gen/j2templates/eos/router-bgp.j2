@@ -29,6 +29,21 @@ router bgp {{ router_bgp.as }}
 {%     elif router_bgp.bgp.default.ipv4_unicast_transport_ipv6 is arista.avd.defined(false) %}
    no bgp default ipv4-unicast transport ipv6
 {%     endif %}
+{%     if router_bgp.timers is arista.avd.defined %}
+{%         set timers_bgp_cli = "timers bgp" %}
+{%         if router_bgp.timers.keepalive_time is arista.avd.defined and router_bgp.timers.hold_time is arista.avd.defined %}
+{%             set timers_bgp_cli = timers_bgp_cli ~ " " ~ router_bgp.timers.keepalive_time ~ " " ~ router_bgp.timers.hold_time %}
+{%         endif %}
+{%         if router_bgp.timers.min_hold_time is arista.avd.defined or router_bgp.timers.send_failure_hold_time is arista.avd.defined %}
+{%             if router_bgp.timers.min_hold_time is arista.avd.defined %}
+{%                 set timers_bgp_cli = timers_bgp_cli ~ " min-hold-time " ~ router_bgp.timers.min_hold_time %}
+{%             endif %}
+{%             if router_bgp.timers.send_failure_hold_time is arista.avd.defined %}
+{%                 set timers_bgp_cli = timers_bgp_cli ~ " send-failure hold-time " ~ router_bgp.timers.send_failure_hold_time %}
+{%             endif %}
+{%         endif %}
+   {{ timers_bgp_cli }}
+{%     endif %}
 {%     if router_bgp.distance.external_routes is arista.avd.defined %}
 {%         set distance_cli = "distance bgp " ~ router_bgp.distance.external_routes %}
 {%         if router_bgp.distance.internal_routes is arista.avd.defined and router_bgp.distance.local_routes is arista.avd.defined %}
@@ -111,6 +126,11 @@ router bgp {{ router_bgp.as }}
 {%     endif %}
 {%     if router_bgp.bgp.bestpath.d_path is arista.avd.defined(true) %}
    bgp bestpath d-path
+{%     endif %}
+{%     if router_bgp.neighbor_default.send_community is arista.avd.defined('all') %}
+   neighbor default send-community
+{%     elif router_bgp.neighbor_default.send_community is arista.avd.defined %}
+   neighbor default send-community {{ router_bgp.neighbor_default.send_community }}
 {%     endif %}
 {%     for peer_group in router_bgp.peer_groups | arista.avd.natural_sort('name') %}
    neighbor {{ peer_group.name }} peer group

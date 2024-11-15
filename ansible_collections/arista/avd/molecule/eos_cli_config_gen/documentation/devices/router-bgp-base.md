@@ -150,6 +150,7 @@ router bgp 65101
    update wait-install
    no bgp default ipv4-unicast
    no bgp default ipv4-unicast transport ipv6
+   timers bgp 10 15
    distance bgp 20 200 200
    graceful-restart restart-time 555
    graceful-restart stalepath-time 666
@@ -161,6 +162,7 @@ router bgp 65101
    bgp listen range 12.10.10.0/24 peer-id include router-id peer-group my-peer-group3 remote-as 65444
    bgp listen range 13.10.10.0/24 peer-group my-peer-group4 peer-filter my-peer-filter
    bgp bestpath d-path
+   neighbor default send-community standard
    neighbor TEST peer group
    neighbor TEST ttl maximum-hops 42
    neighbor test-link-bandwidth1 peer group
