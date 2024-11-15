@@ -73,7 +73,7 @@ class DhcpServerMixin(UtilsMixin):
 
     @cached_property
     def _ntp_servers(self) -> list | None:
-        """Returns the list of name servers."""
+        """Returns the list of NTP servers."""
         ntp_servers_settings = get(self._hostvars, "ntp_settings.servers")
         if not ntp_servers_settings:
             return None
