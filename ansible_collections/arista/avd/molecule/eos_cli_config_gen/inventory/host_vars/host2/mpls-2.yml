@@ -26,5 +26,5 @@ mpls:
     graceful_restart:
       role_helper:
         enabled: true
-        grace_period_recovery: 32
-        grace_period_restart: 33
+        timer_recovery: 32
+        timer_restart: 33

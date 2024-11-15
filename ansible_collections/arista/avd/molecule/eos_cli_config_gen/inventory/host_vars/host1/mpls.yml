@@ -30,8 +30,8 @@ mpls:
     graceful_restart:
       role_speaker:
         enabled: true
-        grace_period_recovery: 35
-        grace_period_restart: 36
+        timer_recovery: 35
+        timer_restart: 36
     hitless_restart:
       enabled: true
       timer_recovery: 222

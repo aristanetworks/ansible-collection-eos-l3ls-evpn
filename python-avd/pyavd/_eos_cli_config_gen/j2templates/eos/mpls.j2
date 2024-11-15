@@ -72,7 +72,7 @@ mpls rsvp
 {%         set with_neighbor_ipv4_address = mpls.rsvp.neighbors | selectattr('ip_address', 'arista.avd.defined') | arista.avd.natural_sort('ip_address') %}
 {%         set with_neighbor_ipv6_address = mpls.rsvp.neighbors | selectattr('ipv6_address', 'arista.avd.defined') | arista.avd.natural_sort('ipv6_address') %}
 {%         set sorted_ip_addresses =  with_neighbor_ipv4_address | list + with_neighbor_ipv6_address | list %}
-{%         for neighbor in sorted_ip_addresses %}
+{%         for neighbor in sorted_ip_addresses | arista.avd.default([]) %}
 {%             if neighbor.ip_address is arista.avd.defined %}
 {%                 set ipaddress = neighbor.ip_address %}
 {%             elif neighbor.ipv6_address is arista.avd.defined %}
@@ -136,21 +136,21 @@ mpls rsvp
 {%         if graceful_restart.role_helper.enabled is arista.avd.defined(true) %}
    !
    graceful-restart role helper
-{%             if graceful_restart.role_helper.grace_period_recovery is arista.avd.defined %}
-      timer restart maximum {{ graceful_restart.role_helper.grace_period_recovery }} seconds
+{%             if graceful_restart.role_helper.timer_recovery is arista.avd.defined %}
+      timer restart maximum {{ graceful_restart.role_helper.timer_recovery }} seconds
 {%             endif %}
-{%             if graceful_restart.role_helper.grace_period_restart is arista.avd.defined %}
-      timer recovery maximum {{ graceful_restart.role_helper.grace_period_restart }} seconds
+{%             if graceful_restart.role_helper.timer_restart is arista.avd.defined %}
+      timer recovery maximum {{ graceful_restart.role_helper.timer_restart }} seconds
 {%             endif %}
 {%         endif %}
 {%         if graceful_restart.role_speaker.enabled is arista.avd.defined(true) %}
    !
    graceful-restart role speaker
-{%             if graceful_restart.role_speaker.grace_period_recovery is arista.avd.defined %}
-      timer restart {{ graceful_restart.role_speaker.grace_period_recovery }} seconds
+{%             if graceful_restart.role_speaker.timer_recovery is arista.avd.defined %}
+      timer restart {{ graceful_restart.role_speaker.timer_recovery }} seconds
 {%             endif %}
-{%             if graceful_restart.role_speaker.grace_period_restart is arista.avd.defined %}
-      timer recovery {{ graceful_restart.role_speaker.grace_period_restart }} seconds
+{%             if graceful_restart.role_speaker.timer_restart is arista.avd.defined %}
+      timer recovery {{ graceful_restart.role_speaker.timer_restart }} seconds
 {%             endif %}
 {%         endif %}
 {%     endif %}
@@ -164,5 +164,7 @@ mpls rsvp
 {%     endif %}
 {%     if mpls.rsvp.shutdown is arista.avd.defined(true) %}
    shutdown
+{%     elif mpls.rsvp.shutdown is arista.avd.defined(false) %}
+   no shutdown
 {%     endif %}
 {% endif %}

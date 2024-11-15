@@ -40,7 +40,7 @@
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;fast_reroute</samp>](## "mpls.rsvp.fast_reroute") | Dictionary |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;mode</samp>](## "mpls.rsvp.fast_reroute.mode") | String |  |  | Valid Values:<br>- <code>link-protection</code><br>- <code>node-protection</code><br>- <code>none</code> | Fast reroute mode.<br>link-protection: Protect against failure of the next link.<br>node-protection: Protect against failure of the next node.<br>none: Disable fast reroute. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;reversion</samp>](## "mpls.rsvp.fast_reroute.reversion") | String |  |  | Valid Values:<br>- <code>global</code><br>- <code>local</code> | Reversion behavior.<br>Global revertive repair.<br>Local revertive repair. |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;bypass_tunnel_optimization_interval</samp>](## "mpls.rsvp.fast_reroute.bypass_tunnel_optimization_interval") | Integer |  |  | Min: 1<br>Max: 65535 | Fast-reroute bypass configuration.<br>Interval between each re-optimization attempt. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;bypass_tunnel_optimization_interval</samp>](## "mpls.rsvp.fast_reroute.bypass_tunnel_optimization_interval") | Integer |  |  | Min: 1<br>Max: 65535 | Fast-reroute bypass configuration.<br>Interval between each re-optimization attempt in seconds. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;srlg</samp>](## "mpls.rsvp.srlg") | Dictionary |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "mpls.rsvp.srlg.enabled") | Boolean | Required |  |  | Select SRLG behavior. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;strict</samp>](## "mpls.rsvp.srlg.strict") | Boolean |  |  |  | Apply strict SRLG constraint. |
@@ -52,20 +52,20 @@
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;graceful_restart</samp>](## "mpls.rsvp.graceful_restart") | Dictionary |  |  |  | RSVP graceful restart. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;role_helper</samp>](## "mpls.rsvp.graceful_restart.role_helper") | Dictionary |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "mpls.rsvp.graceful_restart.role_helper.enabled") | Boolean | Required |  |  |  |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;grace_period_recovery</samp>](## "mpls.rsvp.graceful_restart.role_helper.grace_period_recovery") | Integer |  |  | Min: 1<br>Max: 320 |  |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;grace_period_restart</samp>](## "mpls.rsvp.graceful_restart.role_helper.grace_period_restart") | Integer |  |  | Min: 1<br>Max: 320 |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;timer_recovery</samp>](## "mpls.rsvp.graceful_restart.role_helper.timer_recovery") | Integer |  |  | Min: 1<br>Max: 320 | Maximum recovery timer value in seconds. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;timer_restart</samp>](## "mpls.rsvp.graceful_restart.role_helper.timer_restart") | Integer |  |  | Min: 1<br>Max: 320 | Maximum restart timer value in seconds. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;role_speaker</samp>](## "mpls.rsvp.graceful_restart.role_speaker") | Dictionary |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "mpls.rsvp.graceful_restart.role_speaker.enabled") | Boolean | Required |  |  |  |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;grace_period_recovery</samp>](## "mpls.rsvp.graceful_restart.role_speaker.grace_period_recovery") | Integer |  |  | Min: 1<br>Max: 320 |  |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;grace_period_restart</samp>](## "mpls.rsvp.graceful_restart.role_speaker.grace_period_restart") | Integer |  |  | Min: 1<br>Max: 320 |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;timer_recovery</samp>](## "mpls.rsvp.graceful_restart.role_speaker.timer_recovery") | Integer |  |  | Min: 1<br>Max: 320 | Maximum recovery timer value in seconds. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;timer_restart</samp>](## "mpls.rsvp.graceful_restart.role_speaker.timer_restart") | Integer |  |  | Min: 1<br>Max: 320 | Maximum restart timer value in seconds. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;hello</samp>](## "mpls.rsvp.hello") | Dictionary |  |  |  |  |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;interval</samp>](## "mpls.rsvp.hello.interval") | Integer | Required |  | Min: 1<br>Max: 60 | Time between hello messages. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;interval</samp>](## "mpls.rsvp.hello.interval") | Integer | Required |  | Min: 1<br>Max: 60 | Time between hello messages in seconds. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;multiplier</samp>](## "mpls.rsvp.hello.multiplier") | Integer | Required |  | Min: 1<br>Max: 255 | Number of missed hellos after which the neighbor is expired. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;hitless_restart</samp>](## "mpls.rsvp.hitless_restart") | Dictionary |  |  |  | RSVP hitless restart. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "mpls.rsvp.hitless_restart.enabled") | Boolean |  |  |  |  |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;timer_recovery</samp>](## "mpls.rsvp.hitless_restart.timer_recovery") | Integer |  |  | Min: 1<br>Max: 320 | Time stale states will be preserved after restart. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;timer_recovery</samp>](## "mpls.rsvp.hitless_restart.timer_recovery") | Integer |  |  | Min: 1<br>Max: 320 | Time stale states will be preserved after restart.<br>Value in seconds. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;p2mp_enabled</samp>](## "mpls.rsvp.p2mp_enabled") | Boolean |  |  |  |  |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;shutdown</samp>](## "mpls.rsvp.shutdown") | Boolean |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;shutdown</samp>](## "mpls.rsvp.shutdown") | Boolean |  |  |  | Make `shutdown` key false for `no shutdown` cli. |
 
 === "YAML"
 
@@ -156,7 +156,7 @@
           reversion: <str; "global" | "local">
 
           # Fast-reroute bypass configuration.
-          # Interval between each re-optimization attempt.
+          # Interval between each re-optimization attempt in seconds.
           bypass_tunnel_optimization_interval: <int; 1-65535>
         srlg:
 
@@ -181,15 +181,23 @@
         graceful_restart:
           role_helper:
             enabled: <bool; required>
-            grace_period_recovery: <int; 1-320>
-            grace_period_restart: <int; 1-320>
+
+            # Maximum recovery timer value in seconds.
+            timer_recovery: <int; 1-320>
+
+            # Maximum restart timer value in seconds.
+            timer_restart: <int; 1-320>
           role_speaker:
             enabled: <bool; required>
-            grace_period_recovery: <int; 1-320>
-            grace_period_restart: <int; 1-320>
+
+            # Maximum recovery timer value in seconds.
+            timer_recovery: <int; 1-320>
+
+            # Maximum restart timer value in seconds.
+            timer_restart: <int; 1-320>
         hello:
 
-          # Time between hello messages.
+          # Time between hello messages in seconds.
           interval: <int; 1-60; required>
 
           # Number of missed hellos after which the neighbor is expired.
@@ -200,7 +208,10 @@
           enabled: <bool>
 
           # Time stale states will be preserved after restart.
+          # Value in seconds.
           timer_recovery: <int; 1-320>
         p2mp_enabled: <bool>
+
+        # Make `shutdown` key false for `no shutdown` cli.
         shutdown: <bool>
     ```

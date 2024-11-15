@@ -162,7 +162,7 @@ keys:
               bypass_tunnel_optimization_interval:
                 description: |-
                   Fast-reroute bypass configuration.
-                  Interval between each re-optimization attempt.
+                  Interval between each re-optimization attempt in seconds.
                 type: int
                 convert_types:
                   - str
@@ -213,41 +213,45 @@ keys:
                   enabled:
                     type: bool
                     required: true
-                  grace_period_recovery:
+                  timer_recovery:
                     type: int
                     convert_types:
                       - str
                     min: 1
                     max: 320
-                  grace_period_restart:
+                    description: Maximum recovery timer value in seconds.
+                  timer_restart:
                     type: int
                     convert_types:
                       - str
                     min: 1
                     max: 320
+                    description: Maximum restart timer value in seconds.
               role_speaker:
                 type: dict
                 keys:
                   enabled:
                     type: bool
                     required: true
-                  grace_period_recovery:
+                  timer_recovery:
                     type: int
                     convert_types:
                       - str
                     min: 1
                     max: 320
-                  grace_period_restart:
+                    description: Maximum recovery timer value in seconds.
+                  timer_restart:
                     type: int
                     convert_types:
                       - str
                     min: 1
                     max: 320
+                    description: Maximum restart timer value in seconds.
           hello:
             type: dict
             keys:
               interval:
-                description: Time between hello messages.
+                description: Time between hello messages in seconds.
                 type: int
                 required: true
                 convert_types:
@@ -269,7 +273,9 @@ keys:
               enabled:
                 type: bool
               timer_recovery:
-                description: Time stale states will be preserved after restart.
+                description: |-
+                  Time stale states will be preserved after restart.
+                  Value in seconds.
                 type: int
                 convert_types:
                   - str
@@ -279,3 +285,4 @@ keys:
             type: bool
           shutdown:
             type: bool
+            description: Make `shutdown` key false for `no shutdown` cli.

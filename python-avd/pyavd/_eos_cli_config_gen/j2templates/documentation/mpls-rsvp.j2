@@ -63,6 +63,8 @@
 {%     endif %}
 {%     if mpls.rsvp.shutdown is arista.avd.defined(true) %}
 | Shutdown | Active |
+{%     elif mpls.rsvp.shutdown is arista.avd.defined(false) %}
+| No shutdown | Active |
 {%     endif %}
 {%     if mpls.rsvp.neighbors is arista.avd.defined %}
 
@@ -89,10 +91,10 @@
 | Role | Recovery timer | Restart timer |
 | ---- | -------------- | ------------- |
 {%         if graceful_restart.role_helper.enabled is arista.avd.defined(true) %}
-| Helper | {{ graceful_restart.role_helper.grace_period_recovery | arista.avd.default('-') }} | {{ graceful_restart.role_helper.grace_period_restart | arista.avd.default('-') }} |
+| Helper | {{ graceful_restart.role_helper.timer_recovery | arista.avd.default('-') }} | {{ graceful_restart.role_helper.timer_restart | arista.avd.default('-') }} |
 {%         endif %}
 {%         if graceful_restart.role_speaker.enabled is arista.avd.defined(true) %}
-| Speaker | {{ graceful_restart.role_speaker.grace_period_recovery | arista.avd.default('-') }} | {{ graceful_restart.role_speaker.grace_period_restart | arista.avd.default('-') }} |
+| Speaker | {{ graceful_restart.role_speaker.timer_recovery | arista.avd.default('-') }} | {{ graceful_restart.role_speaker.timer_restart | arista.avd.default('-') }} |
 {%         endif %}
 {%     endif %}
 {% endif %}
