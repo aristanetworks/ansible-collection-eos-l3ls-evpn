@@ -134,9 +134,10 @@ $defs:
               description: Enable PTP.
             role:
               type: str
-              default: "bmca"
+              description: AVD and EOS default is `dynamic`.
+              default: "dynamic"
               valid_values:
-                - "bmca"
+                - "dynamic"
                 - "master"
             profile:
               type: str
