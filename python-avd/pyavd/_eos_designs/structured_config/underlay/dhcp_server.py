@@ -72,7 +72,7 @@ class DhcpServerMixin(UtilsMixin):
         return dns_servers
 
     @cached_property
-    def _ntp_servers(self) -> list | None:
+    def _ntp_servers(self) -> dict | None:
         """Returns the list of NTP servers."""
         ntp_servers_settings = get(self._hostvars, "ntp_settings.servers")
         if not ntp_servers_settings:
@@ -93,7 +93,7 @@ class DhcpServerMixin(UtilsMixin):
         return None
 
     @cached_property
-    def dhcp_servers(self) -> dict | None:
+    def dhcp_servers(self) -> list | None:
         """Return structured config for dhcp_server."""
         dhcp_servers = []
         # Set subnets for DHCP server
