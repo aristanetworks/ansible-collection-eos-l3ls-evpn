@@ -112,3 +112,9 @@ ethernet_interfaces:
     channel_group:
       id: 16
       mode: active
+
+  - name: Ethernet12
+    description: isis_authentication_mode and isis_authentication_key deprecated
+    isis_enable: ISIS_TEST
+    isis_authentication_mode: md5
+    isis_authentication_key: "asfddja23452"

@@ -2523,13 +2523,30 @@ interface Dps1
 
 ##### ISIS
 
-| Interface | Channel Group | ISIS Instance | ISIS BFD | ISIS Metric | Mode | ISIS Circuit Type | Hello Padding | Authentication Mode |
-| --------- | ------------- | ------------- | -------- | ----------- | ---- | ----------------- | ------------- | ------------------- |
-| Ethernet5 | - | ISIS_TEST | True | 99 | point-to-point | level-2 | False | md5 |
-| Ethernet74 | 3 | *EVPN_UNDERLAY | - | *- | *- | *- | *- | *- |
-| Ethernet75 | 3 | *EVPN_UNDERLAY | - | *- | *- | *- | *- | *- |
-| Ethernet77 | 8 | *EVPN_UNDERLAY | - | *- | *- | *- | *- | *- |
-| Ethernet79 | 16 | *EVPN_UNDERLAY | - | *- | *- | *- | *- | *- |
+| Interface | Channel Group | ISIS Instance | ISIS BFD | ISIS Metric | Mode | ISIS Circuit Type | Hello Padding | ISIS Authentication Mode |
+| --------- | ------------- | ------------- | -------- | ----------- | ---- | ----------------- | ------------- | ------------------------ |
+| Ethernet5 | - | ISIS_TEST | True | 99 | point-to-point | level-2 | False | - |
+| Ethernet8 | - | - | - | - | - | - | - | md5 |
+| Ethernet8.101 | - | - | - | - | - | - | - | md5 |
+| Ethernet9 | - | - | - | - | - | - | - | sha |
+| Ethernet10 | - | - | - | - | - | - | - | sha |
+| Ethernet11 | - | - | - | - | - | - | - | shared-secret |
+| Ethernet12 | - | - | - | - | - | - | - | shared-secret |
+| Ethernet13 | - | - | - | - | - | - | - | Level-1: md5<br>Level-2: text |
+| Ethernet14 | - | - | - | - | - | - | - | Level-1: md5<br>Level-2: sha |
+| Ethernet15 | - | - | - | - | - | - | - | Level-1: shared-secret<br>Level-2: shared-secret |
+| Ethernet16 | - | - | - | - | - | - | - | Level-1: shared-secret<br>Level-2: shared-secret |
+| Ethernet17 | - | - | - | - | - | - | - | Level-1: sha<br>Level-2: sha |
+| Ethernet18 | - | - | - | - | - | - | - | Level-1: sha<br>Level-2: sha |
+| Ethernet20 | - | - | - | - | - | - | - | Level-1: shared-secret<br>Level-2: md5 |
+| Ethernet21 | - | - | - | - | - | - | - | Level-1: md5 |
+| Ethernet22 | - | - | - | - | - | - | - | Level-2: sha |
+| Ethernet23 | - | - | - | - | - | - | - | Level-2: shared-secret |
+| Ethernet74 | 3 | *EVPN_UNDERLAY | - | *- | *- | *- | *- | *sha |
+| Ethernet75 | 3 | *EVPN_UNDERLAY | - | *- | *- | *- | *- | *sha |
+| Ethernet77 | 8 | *EVPN_UNDERLAY | - | *- | *- | *- | *- | *Level-1: md5<br>Level-2: md5 |
+| Ethernet78 | 15 | *- | - | *- | *- | *- | *- | *md5 |
+| Ethernet79 | 16 | *EVPN_UNDERLAY | - | *- | *- | *- | *- | *md5 |
 | Ethernet81/10 | 110 | *ISIS_TEST | True | *99 | *point-to-point | *level-2 | *True | *- |
 
 *Inherited from Port-Channel Interface
@@ -2745,8 +2762,6 @@ interface Ethernet5
    isis metric 99
    no isis hello padding
    isis network point-to-point
-   isis authentication mode md5
-   isis authentication key 7 <removed>
    spanning-tree guard loop
 !
 interface Ethernet6
@@ -2793,6 +2808,8 @@ interface Ethernet8
    no switchport
    no lldp transmit
    no lldp receive
+   isis authentication mode md5 rx-disabled
+   isis authentication key 0 <removed>
 !
 interface Ethernet8.101
    description to WAN-ISP-01 Ethernet2.101 - VRF-C1
@@ -2800,6 +2817,8 @@ interface Ethernet8.101
    ip address 172.31.128.1/31
    ipv6 enable
    ipv6 address 2002:ABDC::1/64
+   isis authentication mode md5
+   isis authentication key 0 <removed>
 !
 interface Ethernet9
    description interface_with_mpls_enabled
@@ -2809,6 +2828,8 @@ interface Ethernet9
    multicast ipv4 boundary ACL_MULTICAST out
    multicast ipv6 static
    mpls ip
+   isis authentication mode sha key-id 2 rx-disabled
+   isis authentication key 0 <removed>
 !
 interface Ethernet10
    description interface_with_mpls_disabled
@@ -2816,6 +2837,8 @@ interface Ethernet10
    ip address 172.31.128.10/31
    no mpls ldp interface
    no mpls ip
+   isis authentication mode sha key-id 2
+   isis authentication key 0 <removed>
 !
 interface Ethernet11
    description interface_in_mode_access_accepting_tagged_LACP
@@ -2823,12 +2846,14 @@ interface Ethernet11
    switchport mode access
    switchport
    l2-protocol encapsulation dot1q vlan 200
+   isis authentication mode shared-secret profile profile1 algorithm sha-1 rx-disabled
 !
 interface Ethernet12
    description interface_with_dot1q_tunnel
    switchport access vlan 300
    switchport mode dot1q-tunnel
    switchport
+   isis authentication mode shared-secret profile profile1 algorithm sha-1
 !
 interface Ethernet13
    description interface_in_mode_access_with_voice
@@ -2839,6 +2864,10 @@ interface Ethernet13
    switchport phone trunk untagged
    switchport mode trunk phone
    switchport
+   isis authentication mode md5 rx-disabled level-1
+   isis authentication mode text rx-disabled level-2
+   isis authentication key 0 <removed> level-1
+   isis authentication key 0 <removed> level-2
    no logging event storm-control discards
    no logging event spanning-tree
 !
@@ -2848,6 +2877,10 @@ interface Ethernet14
    switchport trunk allowed vlan 110-111,210-211
    switchport mode trunk
    switchport
+   isis authentication mode md5 level-1
+   isis authentication mode sha key-id 10 level-2
+   isis authentication key 0 <removed> level-1
+   isis authentication key 0 <removed> level-2
 !
 interface Ethernet15
    description PVLAN Promiscuous Access - only one secondary
@@ -2855,6 +2888,8 @@ interface Ethernet15
    switchport mode access
    switchport
    switchport pvlan mapping 111
+   isis authentication mode shared-secret profile profile1 algorithm sha-256 level-1
+   isis authentication mode shared-secret profile profile2 algorithm sha-1 level-2
 !
 interface Ethernet16
    description PVLAN Promiscuous Trunk - vlan translation out
@@ -2863,6 +2898,8 @@ interface Ethernet16
    switchport mode trunk
    switchport
    switchport vlan translation out 111-112 110
+   isis authentication mode shared-secret profile profile1 algorithm sha-256 rx-disabled level-1
+   isis authentication mode shared-secret profile profile2 algorithm sha-1 rx-disabled level-2
 !
 interface Ethernet17
    description PVLAN Secondary Trunk
@@ -2870,6 +2907,8 @@ interface Ethernet17
    switchport mode trunk
    switchport
    switchport trunk private-vlan secondary
+   isis authentication mode sha key-id 5 rx-disabled level-1
+   isis authentication mode sha key-id 10 rx-disabled level-2
 !
 interface Ethernet18
    description PBR Description
@@ -2877,6 +2916,8 @@ interface Ethernet18
    no switchport
    ip address 192.0.2.1/31
    service-policy type pbr input MyLANServicePolicy
+   isis authentication mode sha key-id 5 level-1
+   isis authentication mode sha key-id 10 level-2
 !
 interface Ethernet19
    description Switched port with no LLDP rx/tx
@@ -2886,29 +2927,43 @@ interface Ethernet19
    no lldp transmit
    no lldp receive
    lldp tlv transmit ztp vlan 666
+   isis authentication key-id 2 algorithm sha-512 key 0 <removed>
+   isis authentication key-id 3 algorithm sha-512 rfc-5310 key 0 <removed>
+   isis authentication key-id 1 algorithm sha-1 key 0 <removed> level-1
+   isis authentication key-id 4 algorithm sha-1 rfc-5310 key 0 <removed> level-1
+   isis authentication key-id 1 algorithm sha-1 key 0 <removed> level-2
+   isis authentication key-id 5 algorithm sha-1 rfc-5310 key 0 <removed> level-2
 !
 interface Ethernet20
    description Port patched through patch-panel to pseudowire
    no switchport
    no lldp transmit
    no lldp receive
+   isis authentication mode shared-secret profile profile1 algorithm sha-256 level-1
+   isis authentication mode md5 level-2
+   isis authentication key 0 <removed> level-2
 !
 interface Ethernet21
    description 200MBit/s shape
    switchport
    no qos trust
    shape rate 200000 kbps
+   isis authentication mode md5 rx-disabled level-1
+   isis authentication key 0 <removed> level-1
 !
 interface Ethernet22
    description 10% shape
    switchport
    shape rate 10 percent
+   isis authentication mode sha key-id 100 level-2
+   isis authentication key 0 <removed> level-2
 !
 interface Ethernet23
    description Error-correction encoding
    error-correction encoding fire-code
    error-correction encoding reed-solomon
    switchport
+   isis authentication mode shared-secret profile profile2 algorithm sha-1 level-2
 !
 interface Ethernet24
    description Disable error-correction encoding
