@@ -2,6 +2,8 @@ router_bgp:
   as: "65101.0001"
   as_notation: asdot
   router_id: 192.168.255.3
+  timers:
+    send_failure_hold_time: 65
   peer_groups:
     - name: PG-1
       remote_as: "65001.0002"
