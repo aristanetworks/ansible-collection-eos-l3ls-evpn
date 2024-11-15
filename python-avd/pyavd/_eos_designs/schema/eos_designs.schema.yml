@@ -455,11 +455,13 @@ keys:
     documentation_options:
       table: bgp-settings
     type: bool
+    default: true
     $ref: eos_cli_config_gen#/keys/router_bgp/keys/updates/keys/wait_install
   bgp_update_wait_for_convergence:
     documentation_options:
       table: bgp-settings
     type: bool
+    default: false
     $ref: eos_cli_config_gen#/keys/router_bgp/keys/updates/keys/wait_for_convergence
   connected_endpoints_keys:
     documentation_options:
@@ -637,7 +639,7 @@ keys:
 
                 The keys will be generated as a hash of `salt_<hostname>_<policy_name>`.
 
-                Since this salt can be used to deduct the encryption key, it is recommeneded
+                Since this salt can be used to deduct the encryption key, it is recommended
                 to use vault.'
             domain_name:
               type: str
@@ -868,7 +870,7 @@ keys:
   dc_name:
     documentation_options:
       table: fabric-topology
-    description: 'POD Name is used in:
+    description: 'DC Name is used in:
 
       - Fabric Documentation (Optional, falls back to fabric_name)
 
@@ -883,19 +885,22 @@ keys:
     documentation_options:
       table: default-connected-endpoints-description
     description: "Default description or description template to be used on all ports
-      to connected endpoints.\nThis can be a template using the format string syntax.\nThe
+      to connected endpoints.\nThis can be a template using the AVD string formatter
+      syntax: https://avd.arista.com/devel/roles/eos_designs/docs/how-to/custom-descriptions-names.html#avd-string-formatter-syntax.\nThe
       available template fields are:\n  - `endpoint_type`: The `type` from `connected_endpoints_keys`
       like `server`, `router` etc.\n  - `endpoint`: The name of the connected endpoint\n
       \ - `endpoint_port`: The value from `endpoint_ports` for this switch port if
-      set.\n\nBy default the description is templated from the type, name and port
-      of the endpoint if set."
+      set.\n  - `port_channel_id`: The port-channel number for the switch.\n\nBy default
+      the description is templated from the type, name and port of the endpoint if
+      set."
     default: '{endpoint_type!u}_{endpoint}{endpoint_port?<_}'
   default_connected_endpoints_port_channel_description:
     type: str
     documentation_options:
       table: default-connected-endpoints-description
     description: "Default description or description template to be used on all port-channels
-      to connected endpoints.\nThis can be a template using the format string syntax.\nThe
+      to connected endpoints.\nThis can be a template using the AVD string formatter
+      syntax: https://avd.arista.com/devel/roles/eos_designs/docs/how-to/custom-descriptions-names.html#avd-string-formatter-syntax.\nThe
       available template fields are:\n  - `endpoint_type`: The `type` from `connected_endpoints_keys`
       like `server`, `router` etc.\n  - `endpoint`: The name of the connected endpoint\n
       \ - `endpoint_port_channel`: The value of `endpoint_port_channel` if set.\n
@@ -996,24 +1001,27 @@ keys:
     documentation_options:
       table: default-network-ports-description
     description: "Default description or description template to be used on all ports
-      defined under `network_ports`.\nThis can be a template using the format string
-      syntax.\nThe available template fields are:\n  - `endpoint_type`: Always set
-      to `network_port`.\n  - `endpoint`: The value of the `endpoint` key if set.\n\nBy
-      default the description is templated from the `endpoint` key if set."
+      defined under `network_ports`.\nThis can be a template using the AVD string
+      formatter syntax: https://avd.arista.com/devel/roles/eos_designs/docs/how-to/custom-descriptions-names.html#avd-string-formatter-syntax.\nThe
+      available template fields are:\n  - `endpoint_type`: Always set to `network_port`.\n
+      \ - `endpoint`: The value of the `endpoint` key if set.\n  - `port_channel_id`:
+      The port-channel number for the switch.\n\nBy default the description is templated
+      from the `endpoint` key if set."
     default: '{endpoint?}'
   default_network_ports_port_channel_description:
     type: str
     documentation_options:
       table: default-network-ports-description
     description: "Default description or description template to be used on all port-channels
-      defined under `network_ports`.\nThis can be a template using the format string
-      syntax.\nThe available template fields are:\n  - `endpoint_type`: Always set
-      to `network_port`.\n  - `endpoint`: The value of the `endpoint` key if set.\n
-      \ - `endpoint_port_channel`: The value of `endpoint_port_channel` if set.\n
-      \ - `port_channel_id`: The port-channel number for the switch.\n  - `adapter_description`:
-      The adapter's description if set.\n  - `adapter_description_or_endpoint`: Helper
-      alias of the adapter_description or endpoint.\n\nBy default the description
-      is templated from the `endpoint` key if set."
+      defined under `network_ports`.\nThis can be a template using the AVD string
+      formatter syntax: https://avd.arista.com/devel/roles/eos_designs/docs/how-to/custom-descriptions-names.html#avd-string-formatter-syntax.\nThe
+      available template fields are:\n  - `endpoint_type`: Always set to `network_port`.\n
+      \ - `endpoint`: The value of the `endpoint` key if set.\n  - `endpoint_port_channel`:
+      The value of `endpoint_port_channel` if set.\n  - `port_channel_id`: The port-channel
+      number for the switch.\n  - `adapter_description`: The adapter's description
+      if set.\n  - `adapter_description_or_endpoint`: Helper alias of the adapter_description
+      or endpoint.\n\nBy default the description is templated from the `endpoint`
+      key if set."
     default: '{endpoint?}{endpoint_port_channel?<_}'
   default_node_types:
     type: list
@@ -1042,11 +1050,11 @@ keys:
     description: "The default description or description template to be used on L3
       point-to-point ethernet interfaces.\nThe interfaces using this are the routed
       uplinks and `p2p_links` defined under `l3_edge` or `core_interfaces`.\nThis
-      can be a template using the format string syntax.\nThe available template fields
-      are:\n  - `peer`: The name of the peer.\n  - `interface`: The local interface
-      name.\n  - `peer_interface`: The interface on the peer.\n  - `vrf`: The name
-      of the VRF if set (Only applicable for `uplink_type: p2p-vrfs`).\n\nBy default
-      the description is templated from the name and interface of the peer."
+      can be a template using the AVD string formatter syntax: https://avd.arista.com/devel/roles/eos_designs/docs/how-to/custom-descriptions-names.html#avd-string-formatter-syntax.\nThe
+      available template fields are:\n  - `peer`: The name of the peer.\n  - `interface`:
+      The local interface name.\n  - `peer_interface`: The interface on the peer.\n
+      \ - `vrf`: The name of the VRF if set (Only applicable for `uplink_type: p2p-vrfs`).\n\nBy
+      default the description is templated from the name and interface of the peer."
     default: P2P_{peer}_{peer_interface}{vrf?<_VRF_}
   default_underlay_p2p_port_channel_description:
     type: str
@@ -1055,21 +1063,23 @@ keys:
     description: "The default description or description template to be used on L3
       point-to-point port-channel interfaces.\nThe port-channels using this are `p2p_links`
       defined under `l3_edge` or `core_interfaces`.\nThis can be a template using
-      the format string syntax.\nThe available template fields are:\n  - `peer`: The
-      name of the peer.\n  - `interface`: The local interface name.\n  - `peer_interface`:
-      The interface on the peer.\n  - `port_channel_id`: The local port-channel ID.\n
-      \ - `peer_port_channel_id`: The ID of the port-channel on the peer.\n\nBy default
-      the description is templated from the name and interface of the peer."
+      the AVD string formatter syntax: https://avd.arista.com/devel/roles/eos_designs/docs/how-to/custom-descriptions-names.html#avd-string-formatter-syntax.\nThe
+      available template fields are:\n  - `peer`: The name of the peer.\n  - `interface`:
+      The local interface name.\n  - `peer_interface`: The interface on the peer.\n
+      \ - `port_channel_id`: The local port-channel ID.\n  - `peer_port_channel_id`:
+      The ID of the port-channel on the peer.\n\nBy default the description is templated
+      from the name and interface of the peer."
     default: P2P_{peer}_{peer_interface}
   default_vrf_diag_loopback_description:
     type: str
     documentation_options:
       table: fabric-settings
     description: "The default description or description template to be used on VRF
-      diagnostic loopback interfaces.\nThis can be a template using the format string
-      syntax.\nThe available template fields are:\n  - `interface`: The Loopback interface
-      name.\n  - `vrf`: The VRF name.\n  - `tenant`: The tenant name.\n\nBy default
-      the description is templated from the VRF name."
+      diagnostic loopback interfaces.\nThis can be a template using the AVD string
+      formatter syntax: https://avd.arista.com/devel/roles/eos_designs/docs/how-to/custom-descriptions-names.html#avd-string-formatter-syntax.\nThe
+      available template fields are:\n  - `interface`: The Loopback interface name.\n
+      \ - `vrf`: The VRF name.\n  - `tenant`: The tenant name.\n\nBy default the description
+      is templated from the VRF name."
     default: DIAG_VRF_{vrf}
   design:
     documentation_options:
@@ -1078,7 +1088,7 @@ keys:
       warning: true
       removed: false
       remove_in_version: 6.0.0
-      url: https://avd.arista.com/stable/docs/release-notes/5.x.x.html#deprecation_of_design.type
+      url: https://avd.arista.com/5.x/docs/porting-guides/5.x.x.html#deprecation-of-designtype
     type: dict
     keys:
       type:
@@ -1371,11 +1381,11 @@ keys:
   fabric_evpn_encapsulation:
     documentation_options:
       table: evpn-settings
-    description: Should be set to mpls for evpn-mpls scenario.
+    description: Should be set to mpls for evpn-mpls scenario. This overrides the
+      evpn_encapsulation setting under node_type_keys.
     valid_values:
     - vxlan
     - mpls
-    default: vxlan
     type: str
   fabric_flow_tracking:
     documentation_options:
@@ -1391,40 +1401,51 @@ keys:
       uplinks:
         description: Enable flow-tracking on all fabric uplinks.
         type: dict
-        $ref: eos_designs#/$defs/flow_tracking_link
+        keys:
+          enabled:
+            type: bool
+            default: false
+          name:
+            type: str
+            description: Flow tracker name as defined in flow_tracking_settings.
+            default: FLOW-TRACKER
       downlinks:
         description: Enable flow-tracking on all fabric downlinks.
         type: dict
-        $ref: eos_designs#/$defs/flow_tracking_link
+        $ref: eos_designs#/keys/fabric_flow_tracking/keys/uplinks
       endpoints:
         description: Enable flow-tracking on all endpoints ports.
         type: dict
-        $ref: eos_designs#/$defs/flow_tracking_link
+        $ref: eos_designs#/keys/fabric_flow_tracking/keys/uplinks
       l3_edge:
         description: Enable flow-tracking on all p2p_links defined under l3_edge.
         type: dict
-        $ref: eos_designs#/$defs/flow_tracking_link
+        $ref: eos_designs#/keys/fabric_flow_tracking/keys/uplinks
       core_interfaces:
         description: Enable flow-tracking on all p2p_links defined under core_interfaces.
         type: dict
-        $ref: eos_designs#/$defs/flow_tracking_link
+        $ref: eos_designs#/keys/fabric_flow_tracking/keys/uplinks
       mlag_interfaces:
         description: Enable flow-tracking on all MLAG peer interfaces.
         type: dict
-        $ref: eos_designs#/$defs/flow_tracking_link
+        $ref: eos_designs#/keys/fabric_flow_tracking/keys/uplinks
       l3_interfaces:
         description: Enable flow-tracking on all node.l3_interfaces and network-services
           tenants.vrfs.l3_interfaces.
         type: dict
-        $ref: eos_designs#/$defs/flow_tracking_link
+        $ref: eos_designs#/keys/fabric_flow_tracking/keys/uplinks
       dps_interfaces:
         description: Enable flow-tracking on all dps_interfaces.
         type: dict
-        $ref: eos_designs#/$defs/flow_tracking_link
+        $ref: eos_designs#/keys/fabric_flow_tracking/keys/uplinks
+        keys:
+          enabled:
+            type: bool
+            default: true
       direct_wan_ha_links:
         description: Enable flow-tracking on all direct WAN HA links.
         type: dict
-        $ref: eos_designs#/$defs/flow_tracking_link
+        $ref: eos_designs#/keys/fabric_flow_tracking/keys/uplinks
   fabric_ip_addressing:
     type: dict
     keys:
@@ -1435,17 +1456,17 @@ keys:
             type: str
             default: first_id
             description: "This variable defines the Multi-chassis Link Aggregation
-              (MLAG) algorithm used.\nEach MLAG link will have a /31* subnet with
+              (MLAG) algorithm used.\nEach MLAG link will have a /31\xB9 subnet with
               each subnet allocated from the relevant MLAG pool via a calculated offset.\nThe
               offset is calculated using one of the following algorithms:\n  - first_id:
               `(mlag_primary_id - 1) * 2` where `mlag_primary_id` is the ID of the
               first node defined under the node_group.\n    This allocation method
-              will skip every other /31* subnet making it less space efficient than
-              `odd_id`.\n  - odd_id: `(odd_id - 1) / 2`. Requires the node_group to
-              have a node with an odd ID and a node with an even ID.\n  - same_subnet:
+              will skip every other /31\xB9 subnet making it less space efficient
+              than `odd_id`.\n  - odd_id: `(odd_id - 1) / 2`. Requires the node_group
+              to have a node with an odd ID and a node with an even ID.\n  - same_subnet:
               the offset will always be zero.\n    This allocation method will cause
-              every MLAG link to be addressed with the same /31* subnet.\n\\* - The
-              prefix length is configurable with a default of /31."
+              every MLAG link to be addressed with the same /31\xB9 subnet.\n\xB9
+              The prefix length is configurable with a default of /31."
             valid_values:
             - first_id
             - odd_id
@@ -1962,6 +1983,7 @@ keys:
       table: isis-settings
     description: Number of path to configure in ECMP for ISIS.
     type: int
+    default: 4
     convert_types:
     - str
   isis_system_id_format:
@@ -2116,7 +2138,8 @@ keys:
     documentation_options:
       table: fabric-settings
     description: "Description or description template to be used on the MLAG BGP peers
-      including those in VRFs.\nThis can be a template using the format string syntax.\nThe
+      including those in VRFs.\nThis can be a template using the AVD string formatter
+      syntax: https://avd.arista.com/devel/roles/eos_designs/docs/how-to/custom-descriptions-names.html#avd-string-formatter-syntax.\nThe
       available template fields are:\n  - `mlag_peer`: The name of the MLAG peer.\n
       \ - `interface`: The local MLAG L3 VLAN interface.\n  - `peer_interface`: The
       MLAG L3 VLAN interface on the MLAG peer.\n  - `vrf`: The name of the VRF. Not
@@ -2128,9 +2151,9 @@ keys:
     documentation_options:
       table: fabric-settings
     description: "Description or description template to be used on the MLAG BGP peer-group.\nThis
-      can be a template using the format string syntax.\nThe available template fields
-      are:\n  - `mlag_peer`: The name of the MLAG peer.\n\nThe default description
-      is the name of the MLAG peers."
+      can be a template using the AVD string formatter syntax: https://avd.arista.com/devel/roles/eos_designs/docs/how-to/custom-descriptions-names.html#avd-string-formatter-syntax.\nThe
+      available template fields are:\n  - `mlag_peer`: The name of the MLAG peer.\n\nThe
+      default description is the name of the MLAG peers."
     default: '{mlag_peer}'
   mlag_ibgp_peering_vrfs:
     documentation_options:
@@ -2162,7 +2185,8 @@ keys:
     documentation_options:
       table: fabric-settings
     description: "Description or description template to be used on MLAG peer-link
-      ethernet interfaces.\nThis can be a template using the format string syntax.\nThe
+      ethernet interfaces.\nThis can be a template using the AVD string formatter
+      syntax: https://avd.arista.com/devel/roles/eos_designs/docs/how-to/custom-descriptions-names.html#avd-string-formatter-syntax.\nThe
       available template fields are:\n  - `mlag_peer`: The name of the MLAG peer.\n
       \ - `interface`: The local MLAG port-channel interface.\n  - `peer_interface`:
       The port-channel interface on the MLAG peer.\n  - `mlag_port_channel_id`: The
@@ -2185,64 +2209,69 @@ keys:
     documentation_options:
       table: fabric-settings
     description: "Description or description template to be used on MLAG L3 peering
-      SVI (Interface Vlan4093 by default).\nThis can be a template using the format
-      string syntax.\nThe available template fields are:\n  - `mlag_peer`: The name
-      of the MLAG peer.\n  - `interface`: The MLAG L3 peering SVI name.\n  - `mlag_peer_l3_vlan`:
-      The MLAG L3 peering VLAN ID."
+      SVI (Interface Vlan4093 by default).\nThis can be a template using the AVD string
+      formatter syntax: https://avd.arista.com/devel/roles/eos_designs/docs/how-to/custom-descriptions-names.html#avd-string-formatter-syntax.\nThe
+      available template fields are:\n  - `mlag_peer`: The name of the MLAG peer.\n
+      \ - `interface`: The MLAG L3 peering SVI name.\n  - `mlag_peer_l3_vlan`: The
+      MLAG L3 peering VLAN ID."
     default: MLAG_L3
   mlag_peer_l3_vlan_name:
     type: str
     documentation_options:
       table: fabric-settings
     description: "Name or name template to be used on MLAG L3 VLAN (VLAN 4093 by default).\nThis
-      can be a template using the format string syntax.\nThe available template fields
-      are:\n  - `mlag_peer`: The name of the MLAG peer.\n  - `mlag_peer_l3_vlan`:
-      The MLAG L3 peering VLAN ID."
+      can be a template using the AVD string formatter syntax: https://avd.arista.com/devel/roles/eos_designs/docs/how-to/custom-descriptions-names.html#avd-string-formatter-syntax.\nThe
+      available template fields are:\n  - `mlag_peer`: The name of the MLAG peer.\n
+      \ - `mlag_peer_l3_vlan`: The MLAG L3 peering VLAN ID."
     default: MLAG_L3
   mlag_peer_l3_vrf_svi_description:
     type: str
     documentation_options:
       table: fabric-settings
     description: "Description or description template to be used on MLAG L3 peering
-      SVI for VRFs.\nThis can be a template using the format string syntax.\nThe available
-      template fields are:\n  - `mlag_peer`: The name of the MLAG peer.\n  - `interface`:
-      The MLAG L3 VRF peering SVI name.\n  - `vlan`: The MLAG L3 VRF peering VLAN
-      ID.\n  - `vrf`: The VRF name."
+      SVI for VRFs.\nThis can be a template using the AVD string formatter syntax:
+      https://avd.arista.com/devel/roles/eos_designs/docs/how-to/custom-descriptions-names.html#avd-string-formatter-syntax.\nThe
+      available template fields are:\n  - `mlag_peer`: The name of the MLAG peer.\n
+      \ - `interface`: The MLAG L3 VRF peering SVI name.\n  - `vlan`: The MLAG L3
+      VRF peering VLAN ID.\n  - `vrf`: The VRF name."
     default: MLAG_L3_VRF_{vrf}
   mlag_peer_l3_vrf_vlan_name:
     type: str
     documentation_options:
       table: fabric-settings
     description: "Name or name template to be used on MLAG L3 peering VLAN for VRFs.\nThis
-      can be a template using the format string syntax.\nThe available template fields
-      are:\n  - `mlag_peer`: The name of the MLAG peer.\n  - `vlan`: The MLAG L3 VRF
-      peering VLAN ID.\n  - `vrf`: The VRF name."
+      can be a template using the AVD string formatter syntax: https://avd.arista.com/devel/roles/eos_designs/docs/how-to/custom-descriptions-names.html#avd-string-formatter-syntax.\nThe
+      available template fields are:\n  - `mlag_peer`: The name of the MLAG peer.\n
+      \ - `vlan`: The MLAG L3 VRF peering VLAN ID.\n  - `vrf`: The VRF name."
     default: MLAG_L3_VRF_{vrf}
   mlag_peer_svi_description:
     type: str
     documentation_options:
       table: fabric-settings
     description: "Description or description template to be used on MLAG peering SVI
-      (Interface Vlan4094 by default).\nThis can be a template using the format string
-      syntax.\nThe available template fields are:\n  - `mlag_peer`: The name of the
-      MLAG peer.\n  - `interface`: The MLAG peering SVI name.\n  - `mlag_peer_vlan`:
-      The MLAG peering VLAN ID."
+      (Interface Vlan4094 by default).\nThis can be a template using the AVD string
+      formatter syntax: https://avd.arista.com/devel/roles/eos_designs/docs/how-to/custom-descriptions-names.html#avd-string-formatter-syntax.\nThe
+      available template fields are:\n  - `mlag_peer`: The name of the MLAG peer.\n
+      \ - `interface`: The MLAG peering SVI name.\n  - `mlag_peer_vlan`: The MLAG
+      peering VLAN ID."
     default: MLAG
   mlag_peer_vlan_name:
     type: str
     documentation_options:
       table: fabric-settings
     description: "Name or name template to be used on MLAG peering VLAN (VLAN 4094
-      by default).\nThis can be a template using the format string syntax.\nThe available
-      template fields are:\n  - `mlag_peer`: The name of the MLAG peer.\n  - `mlag_peer_vlan`:
-      The MLAG peering VLAN ID."
+      by default).\nThis can be a template using the AVD string formatter syntax:
+      https://avd.arista.com/devel/roles/eos_designs/docs/how-to/custom-descriptions-names.html#avd-string-formatter-syntax.\nThe
+      available template fields are:\n  - `mlag_peer`: The name of the MLAG peer.\n
+      \ - `mlag_peer_vlan`: The MLAG peering VLAN ID."
     default: MLAG
   mlag_port_channel_description:
     type: str
     documentation_options:
       table: fabric-settings
     description: "Description or description template to be used on MLAG peer-link
-      port-channel interfaces.\nThis can be a template using the format string syntax.\nThe
+      port-channel interfaces.\nThis can be a template using the AVD string formatter
+      syntax: https://avd.arista.com/devel/roles/eos_designs/docs/how-to/custom-descriptions-names.html#avd-string-formatter-syntax.\nThe
       available template fields are:\n  - `mlag_peer`: The name of the MLAG peer.\n
       \ - `interface`: The local MLAG port-channel interface.\n  - `peer_interface`:
       The port-channel interface on the MLAG peer.\n  - `mlag_port_channel_id`: The
@@ -2284,10 +2313,11 @@ keys:
         description:
           type: str
           description: "Description or description template to be used on all ports.\nThis
-            can be a template using the format string syntax.\nThe available template
-            fields are:\n  - `endpoint_type` - always set to `network_port`.\n  -
-            `endpoint` - content of the `endpoint` key if set.\n\nThe default description
-            is set by `default_network_ports_description`.\nBy default the description
+            can be a template using the AVD string formatter syntax: https://avd.arista.com/devel/roles/eos_designs/docs/how-to/custom-descriptions-names.html#avd-string-formatter-syntax.\nThe
+            available template fields are:\n  - `endpoint_type` - always set to `network_port`.\n
+            \ - `endpoint` - content of the `endpoint` key if set.\n  - `port_channel_id`:
+            The port-channel number for the switch.\n\nThe default description is
+            set by `default_network_ports_description`.\nBy default the description
             is templated from the `endpoint` key if set."
         endpoint:
           type: str
@@ -2326,7 +2356,7 @@ keys:
       warning: true
       removed: true
       remove_in_version: 5.0.0
-      url: https://avd.arista.com/devel/porting-guides/5.x.x.html#new-improved-logic-for-bgp-configuration-of-network-services-vrfs
+      url: https://avd.arista.com/5.x/docs/porting-guides/5.x.x.html#bgp-is-now-configured-for-network-services-vrfs-even-if-evpn-is-not-part-of-the-address-families
   custom_node_type_keys:
     $ref: eos_designs#/keys/node_type_keys
     default: null
@@ -2432,6 +2462,8 @@ keys:
             '
         default_overlay_address_families:
           type: list
+          default:
+          - evpn
           items:
             type: str
             convert_to_lower_case: true
@@ -2444,6 +2476,7 @@ keys:
             '
         default_evpn_encapsulation:
           type: str
+          default: vxlan
           convert_to_lower_case: true
           valid_values:
           - mpls
@@ -2461,7 +2494,7 @@ keys:
 
             This is used both for AutoVPN and Pathfinder designs.
 
-            That means if `wan_mode` root key is set to `legacy-autovpn` or `cv-pathfinder`.
+            That means if `wan_mode` root key is set to `autovpn` or `cv-pathfinder`.
 
             `server` indicates that the router is a route-reflector.
 
@@ -2559,6 +2592,7 @@ keys:
               description: Custom Python Module to import for IP addressing.
             python_class_name:
               type: str
+              default: AvdIpAddressing
               description: Name of Custom Python Class to import for IP addressing.
             router_id:
               type: str
@@ -2610,6 +2644,7 @@ keys:
               description: Custom Python Module to import for interface descriptions.
             python_class_name:
               type: str
+              default: AvdInterfaceDescriptions
               description: Name of Custom Python Class to import for interface descriptions.
             underlay_ethernet_interfaces:
               type: str
@@ -2730,8 +2765,8 @@ keys:
     documentation_options:
       table: overlay-settings
     description: "Description or description template to be used on the overlay BGP
-      peers.\nThis can be a template using the format string syntax.\nThe available
-      template fields are:\n  - `peer`: The name of the BGP peer.\n  - `peer_interface`:
+      peers.\nThis can be a template using the AVD string formatter syntax: https://avd.arista.com/devel/roles/eos_designs/docs/how-to/custom-descriptions-names.html#avd-string-formatter-syntax.\nThe
+      available template fields are:\n  - `peer`: The name of the BGP peer.\n  - `peer_interface`:
       The interface on the BGP peer if available.\n\nThe default description is built
       from the name and interface of the BGP peer."
     default: '{peer}{peer_interface?<_}'
@@ -2867,9 +2902,10 @@ keys:
           '
         default: router_id
       admin_subfield_offset:
-        type: str
+        type: int
+        default: 0
         convert_types:
-        - int
+        - str
         description: 'Offset can only be used if admin_subfield is an integer between
           <0-4294967295> or ''switch_id''.
 
@@ -2906,14 +2942,18 @@ keys:
 
           '
       vrf_admin_subfield_offset:
-        type: str
+        type: int
         convert_types:
-        - int
+        - str
         description: 'Offset can only be used if ''vrf_admin_subfield'' is an integer
           between <0-4294967295> or ''switch_id''.
 
           Total value of ''vrf_admin_subfield'' + ''vrf_admin_subfield_offset'' must
           be <= 4294967295.
+
+
+          ''vrf_admin_subfield_offset'' takes precedence for VRF RDs if set. Otherwise
+          the ''admin_subfield_offset'' value will be used.
 
           '
       vlan_assigned_number_subfield:
@@ -2940,13 +2980,15 @@ keys:
   overlay_routing_protocol:
     documentation_options:
       table: overlay-settings
-    description: "- The following overlay routing protocols are supported:\n  - eBGP:
-      Configures fabric with eBGP, default for l3ls-evpn design.\n  - iBGP: Configured
+    description: "- The following overlay routing protocols are supported:\n  - ebgp:
+      Configures fabric with eBGP, default for l3ls-evpn design.\n  - ibgp: Configured
       fabric with iBGP, only supported with OSPF or ISIS variants in underlay, default
-      for mpls design.\n  - CVX: Configures fabric to leverage CloudVision eXchange
-      as the overlay controller.\n  - HER: Configures fabric with Head-End Replication,
+      for mpls design.\n  - cvx: Configures fabric to leverage CloudVision eXchange
+      as the overlay controller.\n  - her: Configures fabric with Head-End Replication,
       configures static VXLAN flood-lists instead of using a dynamic overlay protocol.\n
-      \ - none: No overlay configuration will be generated, default for l2ls design.\n"
+      \ - none: No overlay configuration will be generated, default for l2ls design.\n\n
+      \ If not set, the default_overlay_routing_protocol defined under the node_type_keys
+      will be used (default is \"ebgp\").\n"
     type: str
     valid_values:
     - ebgp
@@ -2954,7 +2996,6 @@ keys:
     - cvx
     - her
     - none
-    default: ebgp
     convert_to_lower_case: true
   overlay_routing_protocol_address_family:
     documentation_options:
@@ -3060,7 +3101,6 @@ keys:
           ''admin_subfield'' value will be used.
 
           '
-        default: vrf_id
       vlan_assigned_number_subfield:
         type: str
         valid_values:
@@ -3584,6 +3624,7 @@ keys:
           \ - \"smpte2059-2\""
       domain:
         type: int
+        default: 127
         $ref: eos_cli_config_gen#/keys/ptp/keys/domain
       auto_clock_identity:
         type: bool
@@ -3942,6 +3983,7 @@ keys:
         keys:
           mgmt_interface:
             type: bool
+            default: false
             description: 'Configure an IP Domain Lookup source-interface with the
               interface set by `mgmt_interface` for the VRF set by `mgmt_interface_vrf`.
 
@@ -3950,6 +3992,7 @@ keys:
               var.'
           inband_mgmt_interface:
             type: bool
+            default: false
             description: 'Configure an IP Domain Lookup source-interface with the
               interface set by `inband_mgmt_interface` for the VRF set by `inband_mgmt_vrf`.
 
@@ -3961,6 +4004,7 @@ keys:
         keys:
           mgmt_interface:
             type: bool
+            default: false
             description: 'Configure an IP HTTP Client source-interface with the interface
               set by `mgmt_interface` for the VRF set by `mgmt_interface_vrf`.
 
@@ -3969,6 +4013,7 @@ keys:
               var.'
           inband_mgmt_interface:
             type: bool
+            default: false
             description: 'Configure an IP HTTP Client source-interface with the interface
               set by `inband_mgmt_interface` for the VRF set by `inband_mgmt_vrf`.
 
@@ -3980,6 +4025,7 @@ keys:
         keys:
           mgmt_interface:
             type: bool
+            default: false
             description: 'Configure an IP Radius source-interface with the interface
               set by `mgmt_interface` for the VRF set by `mgmt_interface_vrf`.
 
@@ -3988,6 +4034,7 @@ keys:
               var.'
           inband_mgmt_interface:
             type: bool
+            default: false
             description: 'Configure an IP Radius source-interface with the interface
               set by `inband_mgmt_interface` for the VRF set by `inband_mgmt_vrf`.
 
@@ -3999,6 +4046,7 @@ keys:
         keys:
           mgmt_interface:
             type: bool
+            default: false
             description: 'Configure a SNMP local-interface with the interface set
               by `mgmt_interface` for the VRF set by `mgmt_interface_vrf`.
 
@@ -4007,6 +4055,7 @@ keys:
               var.'
           inband_mgmt_interface:
             type: bool
+            default: false
             description: 'Configure a SNMP local-interface with the interface set
               by `inband_mgmt_interface` for the VRF set by `inband_mgmt_vrf`.
 
@@ -4018,6 +4067,7 @@ keys:
         keys:
           mgmt_interface:
             type: bool
+            default: false
             description: 'Configure an IP SSH Client source-interface with the interface
               set by `mgmt_interface` for the VRF set by `mgmt_interface_vrf`.
 
@@ -4026,6 +4076,7 @@ keys:
               var.'
           inband_mgmt_interface:
             type: bool
+            default: false
             description: 'Configure an IP SSH Client source-interface with the interface
               set by `inband_mgmt_interface` for the VRF set by `inband_mgmt_vrf`.
 
@@ -4037,6 +4088,7 @@ keys:
         keys:
           mgmt_interface:
             type: bool
+            default: false
             description: 'Configure an IP Tacacs source-interface with the interface
               set by `mgmt_interface` for the VRF set by `mgmt_interface_vrf`.
 
@@ -4045,6 +4097,7 @@ keys:
               var.'
           inband_mgmt_interface:
             type: bool
+            default: false
             description: 'Configure an IP Tacacs source-interface with the interface
               set by `inband_mgmt_interface` for the VRF set by `inband_mgmt_vrf`.
 
@@ -4252,9 +4305,9 @@ keys:
       table: fabric-settings
     description: "The description or description template to be used on L2 ethernet
       interfaces.\nThe interfaces using this are the member interfaces of port-channel
-      uplinks.\nThis can be a template using the format string syntax.\nThe available
-      template fields are:\n  - `peer`: The name of the peer.\n  - `interface`: The
-      local interface name.\n  - `peer_interface`: The interface on the peer.\n\nBy
+      uplinks.\nThis can be a template using the AVD string formatter syntax: https://avd.arista.com/devel/roles/eos_designs/docs/how-to/custom-descriptions-names.html#avd-string-formatter-syntax.\nThe
+      available template fields are:\n  - `peer`: The name of the peer.\n  - `interface`:
+      The local interface name.\n  - `peer_interface`: The interface on the peer.\n\nBy
       default the description is templated from the hostname and interface of the
       peer."
     default: L2_{peer}_{peer_interface}
@@ -4264,13 +4317,13 @@ keys:
       table: fabric-settings
     description: "The description or description template to be used on L2 port-channel
       interfaces.\nThe interfaces using this are port-channel uplinks.\nThis can be
-      a template using the format string syntax.\nThe available template fields are:\n
-      \ - `peer`: The name of the peer.\n  - `interface`: The local interface name.\n
-      \ - `peer_interface`: The interface on the peer.\n  - `port_channel_id`: The
-      local port-channel ID.\n  - `peer_port_channel_id`: The ID of the port-channel
-      on the peer.\n  - `peer_node_group`: The node group of the peer if the peer
-      is an MLAG member or running EVPN A/A.\n  - `peer_node_group_or_peer`: Helper
-      alias of the peer_node_group or peer.\n  - `peer_node_group_or_uppercase_peer`:
+      a template using the AVD string formatter syntax: https://avd.arista.com/devel/roles/eos_designs/docs/how-to/custom-descriptions-names.html#avd-string-formatter-syntax.\nThe
+      available template fields are:\n  - `peer`: The name of the peer.\n  - `interface`:
+      The local interface name.\n  - `peer_interface`: The interface on the peer.\n
+      \ - `port_channel_id`: The local port-channel ID.\n  - `peer_port_channel_id`:
+      The ID of the port-channel on the peer.\n  - `peer_node_group`: The node group
+      of the peer if the peer is an MLAG member or running EVPN A/A.\n  - `peer_node_group_or_peer`:
+      Helper alias of the peer_node_group or peer.\n  - `peer_node_group_or_uppercase_peer`:
       Helper alias of the peer_node_group or peer hostname in uppercase.\n\nBy default
       the description is templated from the peer's node group (for MLAG or EVPN A/A)
       or hostname and port-channel interface of the peer."
@@ -4502,6 +4555,11 @@ keys:
     description: 'Generate AVD configurations directly from a given CloudVision topology.
 
       See `cv_topology` for details.'
+  use_router_general_for_router_id:
+    type: bool
+    description: Use `router general` to set router ID for all routing protocols and
+      VRFs.
+    default: false
   vtep_loopback_description:
     documentation_options:
       table: overlay-settings
@@ -4613,12 +4671,11 @@ keys:
   wan_mode:
     documentation_options:
       table: wan-settings
-    description: Select if the WAN should be run using CV Pathfinder or Legacy AutoVPN
-      only.
+    description: Select if the WAN should be run using CV Pathfinder or AutoVPN only.
     type: str
     default: cv-pathfinder
     valid_values:
-    - legacy-autovpn
+    - autovpn
     - cv-pathfinder
   wan_path_groups:
     documentation_options:
@@ -4718,8 +4775,7 @@ keys:
               convert_types:
               - str
   wan_route_servers:
-    description: 'List of the AutoVPN RRs when using `wan_mode: legacy-autovpn`, or
-      the Pathfinders
+    description: 'List of the AutoVPN RRs when using `wan_mode: autovpn`, or the Pathfinders
 
       when using `wan_mode: cv-pathfinder`, to which the device should connect to.
 
@@ -4882,10 +4938,10 @@ keys:
               or destined to the WAN route servers.'
       policies:
         type: list
-        description: "List of virtual toplogies policies.\n\nFor Legacy AutoVPN, each
-          item in the list creates:\n  * one policy with:\n      * one `match` entry
-          per `application_virtual_topologies` item\n        they are indexed using
-          `10 * <list_index>` where `list_index` starts at `1`.\n      * one `default-match`\n
+        description: "List of virtual topologies policies.\n\nFor AutoVPN, each item
+          in the list creates:\n  * one policy with:\n      * one `match` entry per
+          `application_virtual_topologies` item\n        they are indexed using `10
+          * <list_index>` where `list_index` starts at `1`.\n      * one `default-match`\n
           \ * one load-balance policy per `application_virtual_topologies` and one
           for the `default_virtual_topology`.\n  * if the policy is associated with
           the default VRF, a special control-plane rule is injected\n    in the policy
@@ -4992,6 +5048,9 @@ keys:
           country:
             type: str
             required: true
+          region:
+            type: str
+            required: true
           latitude:
             type: str
             convert_types:
@@ -5040,6 +5099,7 @@ dynamic_keys:
   custom_node_type_keys.key:
     $ref: eos_designs#/$defs/node_type
     type: dict
+    display_name: Custom Node Types
     documentation_options:
       hide_keys: true
   network_services_keys.name:
@@ -5051,6 +5111,7 @@ dynamic_keys:
   node_type_keys.key:
     $ref: eos_designs#/$defs/node_type
     type: dict
+    display_name: Node Types
     documentation_options:
       table: node-type-structure
 $defs:
@@ -5068,8 +5129,8 @@ $defs:
       description:
         type: str
         description: "Description or description template to be used on all ports.\nThis
-          can be a template using the format string syntax.\nThe available template
-          fields are:\n  - `endpoint_type` - the `type` from `connected_endpoints_keys`
+          can be a template using the AVD string formatter syntax: https://avd.arista.com/devel/roles/eos_designs/docs/how-to/custom-descriptions-names.html#avd-string-formatter-syntax.\nThe
+          available template fields are:\n  - `endpoint_type` - the `type` from `connected_endpoints_keys`
           like `server`, `router` etc.\n  - `endpoint` - The name of the connected
           endpoint\n  - `endpoint_port` - The value from `endpoint_ports` for this
           switch port if set.\n\nThe default description is set by `default_connected_endpoints_description`.\nBy
@@ -5111,15 +5172,15 @@ $defs:
         - str
         description: 'Native VLAN for a trunk port.
 
-          If both `native_vlan` and `native_vlan_tag`, `native_vlan_tag` takes precedence.
+          If both `native_vlan` and `native_vlan_tag` are set, `native_vlan_tag` takes
+          precedence.
 
           '
         min: 1
         max: 4094
       native_vlan_tag:
         type: bool
-        default: false
-        description: If both `native_vlan` and `native_vlan_tag`, `native_vlan_tag`
+        description: If both `native_vlan` and `native_vlan_tag` are set, `native_vlan_tag`
           takes precedence.
       phone_vlan:
         type: int
@@ -5256,99 +5317,7 @@ $defs:
               '
       dot1x:
         type: dict
-        description: 802.1x
-        keys:
-          port_control:
-            type: str
-            valid_values:
-            - auto
-            - force-authorized
-            - force-unauthorized
-          port_control_force_authorized_phone:
-            type: bool
-          reauthentication:
-            type: bool
-          pae:
-            type: dict
-            keys:
-              mode:
-                type: str
-                valid_values:
-                - authenticator
-          authentication_failure:
-            type: dict
-            keys:
-              action:
-                type: str
-                valid_values:
-                - allow
-                - drop
-              allow_vlan:
-                type: int
-                convert_types:
-                - str
-                min: 1
-                max: 4094
-          host_mode:
-            type: dict
-            keys:
-              mode:
-                type: str
-                valid_values:
-                - multi-host
-                - single-host
-              multi_host_authenticated:
-                type: bool
-          mac_based_authentication:
-            type: dict
-            keys:
-              enabled:
-                type: bool
-              always:
-                type: bool
-              host_mode_common:
-                type: bool
-          timeout:
-            type: dict
-            keys:
-              idle_host:
-                type: int
-                convert_types:
-                - str
-                min: 10
-                max: 65535
-              quiet_period:
-                type: int
-                convert_types:
-                - str
-                min: 1
-                max: 65535
-              reauth_period:
-                type: str
-                convert_types:
-                - int
-                description: Range 60-4294967295 or "server".
-              reauth_timeout_ignore:
-                type: bool
-              tx_period:
-                type: int
-                convert_types:
-                - str
-                min: 1
-                max: 65535
-          reauthorization_request_limit:
-            type: int
-            convert_types:
-            - str
-            min: 1
-            max: 10
-          unauthorized:
-            type: dict
-            keys:
-              access_vlan_membership_egress:
-                type: bool
-              native_vlan_membership_egress:
-                type: bool
+        $ref: eos_cli_config_gen#/keys/ethernet_interfaces/items/keys/dot1x
       poe:
         $ref: eos_cli_config_gen#/keys/ethernet_interfaces/items/keys/poe
         type: dict
@@ -5410,6 +5379,8 @@ $defs:
                   - both
                 access_group:
                   type: dict
+                  description: This can only be set when `session_settings.access_group`
+                    is not set.
                   keys:
                     type:
                       type: str
@@ -5550,7 +5521,8 @@ $defs:
           description:
             type: str
             description: "Description or description template to be used on the port-channel
-              interface.\nThis can be a template using the format string syntax.\nThe
+              interface.\nThis can be a template using the AVD string formatter syntax:
+              https://avd.arista.com/devel/roles/eos_designs/docs/how-to/custom-descriptions-names.html#avd-string-formatter-syntax.\nThe
               available template fields are:\n  - `endpoint_type` - the `type` from
               `connected_endpoints_keys` like `server`, `router` etc.\n  - `endpoint`
               - The name of the connected endpoint\n  - `endpoint_port_channel` -
@@ -5705,8 +5677,12 @@ $defs:
               new_key: ethernet_segment.short_esi
       validate_state:
         type: bool
-        description: Set to false to disable interface validation by the `eos_validate_state`
-          role.
+        description: Set to false to disable interface state and LLDP topology validation
+          performed by the `eos_validate_state` role.
+      validate_lldp:
+        type: bool
+        description: Set to false to disable the LLDP topology validation performed
+          by the `eos_validate_state` role.
       raw_eos_cli:
         type: str
         description: EOS CLI rendered directly on the ethernet interface in the final
@@ -5784,11 +5760,13 @@ $defs:
               descriptions:
                 type: list
                 description: "Unique description per port. When set, takes priority
-                  over description.\nThis can be a template using the format string
-                  syntax.\nThe available template fields are:\n  - `endpoint_type`
-                  - the `type` from `connected_endpoints_keys` like `server`, `router`
-                  etc.\n  - `endpoint` - The name of the connected endpoint\n  - `endpoint_port`
-                  - The value from `endpoint_ports` for this switch port if set."
+                  over description.\nThis can be a template using the AVD string formatter
+                  syntax: https://avd.arista.com/devel/roles/eos_designs/docs/how-to/custom-descriptions-names.html#avd-string-formatter-syntax.\nThe
+                  available template fields are:\n  - `endpoint_type` - the `type`
+                  from `connected_endpoints_keys` like `server`, `router` etc.\n  -
+                  `endpoint` - The name of the connected endpoint\n  - `endpoint_port`
+                  - The value from `endpoint_ports` for this switch port if set.\n
+                  \ - `port_channel_id`: The port-channel number for the switch."
   flow_tracking_link:
     type: dict
     keys:
@@ -5934,6 +5912,7 @@ $defs:
           documentation_options:
             table: network-services-vrfs-settings
           type: bool
+          default: true
           description: 'MLAG iBGP peering per VRF.
 
             By default an iBGP peering is configured per VRF between MLAG peers on
@@ -6065,6 +6044,7 @@ $defs:
               description: IPv4_address/Mask.
             underlay_l2_multicast_group_ipv4_pool_offset:
               type: int
+              default: 0
               convert_types:
               - str
             fast_leave:
@@ -6116,6 +6096,7 @@ $defs:
               required: true
             evpn_underlay_l3_multicast_group_ipv4_pool_offset:
               type: int
+              default: 0
               convert_types:
               - str
             evpn_peg:
@@ -6206,13 +6187,14 @@ $defs:
               description: Default IP address of Loopback0.
             version:
               type: int
+              description: IGMP Version (By default EOS uses IGMP version 2 for IGMP
+                querier).
               convert_types:
               - str
               valid_values:
               - 1
               - 2
               - 3
-              default: 2
         evpn_l2_multi_domain:
           type: bool
           default: true
@@ -6253,6 +6235,8 @@ $defs:
                 - int
               address_families:
                 type: list
+                default:
+                - evpn
                 items:
                   type: str
                   valid_values:
@@ -6357,21 +6341,20 @@ $defs:
                   By default an iBGP peering is configured per VRF between MLAG peers
                   on separate VLANs.
 
-                  Setting `enable_mlag_ibgp_peering_vrfs: false` under a VRF will
-                  change this default and/or override the tenant-wide setting.
+                  Setting `enable_mlag_ibgp_peering_vrfs: false` under a VRF overrides
+                  the tenant-wide setting.
 
                   '
               redistribute_mlag_ibgp_peering_vrfs:
                 type: bool
-                default: false
                 description: 'Redistribute the connected subnet for the MLAG iBGP
                   peering per VRF into overlay BGP.
 
                   By default the iBGP peering subnet is not redistributed into the
                   overlay routing protocol per VRF.
 
-                  Setting `redistribute_mlag_ibgp_peering_vrfs: true` under a VRF
-                  will change this default and/or override the tenant-wide setting.
+                  Setting `redistribute_mlag_ibgp_peering_vrfs` under a VRF overrides
+                  the tenant-wide setting.
 
                   '
               mlag_ibgp_peering_vlan:
@@ -6410,20 +6393,31 @@ $defs:
                     type: str
                     description: "Provide a custom description or description template
                       to be used on the VRF diagnostic loopback interface.\nThis can
-                      be a template using the format string syntax.\nThe available
-                      template fields are:\n  - `interface`: The Loopback interface
-                      name.\n  - `vrf`: The VRF name.\n  - `tenant`: The tenant name.\n\nThe
-                      default description is set by `default_vrf_diag_loopback_description`.\nBy
+                      be a template using the AVD string formatter syntax: https://avd.arista.com/devel/roles/eos_designs/docs/how-to/custom-descriptions-names.html#avd-string-formatter-syntax.\nThe
+                      available template fields are:\n  - `interface`: The Loopback
+                      interface name.\n  - `vrf`: The VRF name.\n  - `tenant`: The
+                      tenant name.\n\nThe default description is set by `default_vrf_diag_loopback_description`.\nBy
                       default the description is templated from the VRF name."
                   loopback_ip_range:
                     type: str
                     description: 'IPv4_address/Mask.
 
-                      Loopback ip range, a unique ip is derived from this ranged and
-                      assignedto each l3 leaf based on it''s unique id.
+                      Loopback IPv4 range, a unique ip is derived from this range
+                      and assigned to each l3 leaf based on it''s unique id.
 
-                      Loopback is not created unless loopback_ip_range or loopback_ip_pools
-                      are set.
+                      Loopback is not created unless `loopback_ip_range`, `loopback_ipv6_range`
+                      or `loopback_ip_pools` are set.
+
+                      '
+                  loopback_ipv6_range:
+                    type: str
+                    description: 'IPv6_address/Mask.
+
+                      Loopback IPv6 range, a unique IPv6 address is derived from this
+                      range and assigned to each L3 leaf based on it''s unique ID.
+
+                      Loopback is not created unless `loopback_ip_range`, `loopback_ipv6_range`
+                      or `loopback_ip_pools` are set.
 
                       '
                   loopback_ip_pools:
@@ -6431,11 +6425,14 @@ $defs:
                     description: 'For inventories with multiple PODs a loopback range
                       can be set per POD to avoid overlaps.
 
-                      This only takes effect when loopback_ip_range is not defined,
-                      ptional (loopback is not created unless loopback_ip_range or
-                      loopback_ip_pools are set).
+                      `loopback_ip_range` takes precedence for IPv4 and `loopback_ipv6_range`
+                      takes precedence for IPV6.
+
+                      Loopback is not created unless `loopback_ip_range`, `loopback_ipv6_range`
+                      or `loopback_ip_pools` are set.
 
                       '
+                    primary_key: pod
                     items:
                       type: dict
                       keys:
@@ -6445,6 +6442,9 @@ $defs:
                         ipv4_pool:
                           type: str
                           description: IPv4_address/Mask.
+                        ipv6_pool:
+                          type: str
+                          description: IPv6_address/Mask.
               ospf:
                 documentation_options:
                   table: network-services-vrfs-ospf-settings
@@ -6985,8 +6985,13 @@ $defs:
                         type: str
               redistribute_static:
                 type: bool
-                description: Non-selectively enabling or disabling redistribute static
-                  inside the VRF.
+                description: Enable or disable the redistribution of all static routes
+                  to BGP in the VRF.
+              redistribute_connected:
+                type: bool
+                default: true
+                description: Enable or disable the redistribution of all connected
+                  routes to BGP in the VRF. Note this is not applicable to VRF `default`.
               bgp_peers:
                 documentation_options:
                   table: network-services-vrfs-bgp-settings
@@ -7335,6 +7340,8 @@ $defs:
                   settings.
 
                   '
+                default:
+                - all
                 items:
                   type: str
                   default: all
@@ -7393,8 +7400,8 @@ $defs:
                 documentation_options:
                   table: network-services-multicast-settings
                 type: bool
-                default: true
-                description: Activate or deactivate IGMP snooping.
+                description: Enable or disable IGMP snooping (Enabled by default on
+                  EOS).
               igmp_snooping_querier:
                 documentation_options:
                   table: network-services-multicast-settings
@@ -7420,13 +7427,14 @@ $defs:
                       '
                   version:
                     type: int
+                    description: IGMP Version (By default EOS uses IGMP version 2
+                      for IGMP querier).
                     convert_types:
                     - str
                     valid_values:
                     - 1
                     - 2
                     - 3
-                    default: 2
                   fast_leave:
                     type: bool
                     description: Enable IGMP snooping fast-leave feature.
@@ -7728,7 +7736,11 @@ $defs:
             documentation_options:
               table: node-type-uplink-configuration
             type: str
-            $ref: eos_designs#/keys/node_type_keys/items/keys/uplink_type
+            valid_values:
+            - p2p
+            - port-channel
+            - p2p-vrfs
+            - lan
             description: 'Override the default `uplink_type` set at the `node_type_key`
               level.
 
@@ -8035,7 +8047,7 @@ $defs:
             - level-1-2
             - level-1
             - level-2
-            default: level-2
+            description: Overrides `isis_default_is_type`.
           node_sid_base:
             documentation_options:
               table: node-type-isis-configuration
@@ -8296,7 +8308,6 @@ $defs:
               table: node-type-evpn-services-configuration
             description: Activate or deactivate IGMP snooping on device level.
             type: bool
-            default: true
           evpn_gateway:
             documentation_options:
               table: node-type-evpn-multi-domain-gateway-configuration
@@ -8325,6 +8336,7 @@ $defs:
 
                   '
                 type: list
+                primary_key: hostname
                 items:
                   type: dict
                   keys:
@@ -8408,7 +8420,6 @@ $defs:
                 type: str
                 convert_types:
                 - int
-                default: none
               address_families:
                 description: IPVPN address families to enable for remote peers.
                 type: list
@@ -8418,13 +8429,13 @@ $defs:
                 - vpn-ipv4
               remote_peers:
                 type: list
+                primary_key: hostname
                 items:
                   type: dict
                   keys:
                     hostname:
                       description: Hostname of remote IPVPN Peer.
                       type: str
-                      required: true
                     ip_address:
                       description: Peering IP of remote IPVPN Peer.
                       type: str
@@ -8828,7 +8839,7 @@ $defs:
               not automatically affect any parent/child devices configuration, so
               it must be set on each applicable node/node-group/node-type as needed.'
             type: str
-            default: Inband Management
+            default: INBAND_MGMT
           inband_mgmt_vrf:
             documentation_options:
               table: node-type-inband-management-configuration
@@ -8922,12 +8933,10 @@ $defs:
             keys:
               enabled:
                 type: bool
-                default: false
               profile:
                 type: str
                 description: "Default available profiles are:\n  - \"aes67\"\n  -
                   \"aes67-r16-2016\"\n  - \"smpte2059-2\""
-                default: aes67-r16-2016
               mlag:
                 description: Configure PTP on the MLAG peer-link port-channel when
                   PTP is enabled. By default PTP will not be configured on the MLAG
@@ -8961,7 +8970,6 @@ $defs:
                   '
               auto_clock_identity:
                 type: bool
-                default: true
                 description: 'If you prefer to have PTP clock identity be the system
                   MAC-address of the switch, which is the default EOS behaviour, simply
                   disable the automatic PTP clock identity.
@@ -8972,6 +8980,7 @@ $defs:
                   '
               clock_identity_prefix:
                 type: str
+                default: 00:1C:73
                 description: 'PTP clock idetentiy 3-byte prefix. i.e. "01:02:03".
 
                   By default the 3-byte prefix is "00:1C:73".
@@ -9130,7 +9139,7 @@ $defs:
 
               This is used both for AutoVPN and Pathfinder designs.
 
-              That means if `wan_mode` root key is set to `legacy-autovpn` or `cv-pathfinder`.
+              That means if `wan_mode` root key is set to `autovpn` or `cv-pathfinder`.
 
               `server` indicates that the router is a route-reflector.
 
@@ -9188,7 +9197,6 @@ $defs:
             keys:
               enabled:
                 type: bool
-                default: true
                 description: Enable / Disable auto CV-Pathfinder HA, when two nodes
                   are defined in the same node_group.
               ipsec:
@@ -9625,7 +9633,8 @@ $defs:
           items:
             type: str
             description: "Description or description template to be used on the ethernet
-              interface.\nThis can be a template using the format string syntax.\nThe
+              interface.\nThis can be a template using the AVD string formatter syntax:
+              https://avd.arista.com/devel/roles/eos_designs/docs/how-to/custom-descriptions-names.html#avd-string-formatter-syntax.\nThe
               available template fields are:\n  - `peer`: The name of the peer.\n
               \ - `interface`: The local interface name.\n  - `peer_interface`: The
               interface on the peer.\n\nThe default description is set by `default_underlay_p2p_ethernet_description`.\nBy
@@ -9637,7 +9646,7 @@ $defs:
           description: Add this interface to underlay routing protocol.
         isis_hello_padding:
           type: bool
-          default: false
+          default: true
         isis_metric:
           type: int
           convert_types:
@@ -9656,6 +9665,12 @@ $defs:
         isis_authentication_key:
           type: str
           description: Type-7 encrypted password.
+        isis_network_type:
+          type: str
+          default: point-to-point
+          valid_values:
+          - point-to-point
+          - broadcast
         mpls_ip:
           type: bool
           description: MPLS parameters. Default value is true if switch.mpls_lsr is
@@ -9671,7 +9686,6 @@ $defs:
           description: MTU for this P2P link. Default value same as p2p_uplinks_mtu.
         bfd:
           type: bool
-          default: false
           description: Enable BFD (only considered for BGP).
         ptp:
           description: PTP parameters.
@@ -9706,15 +9720,16 @@ $defs:
             description:
               type: str
               description: "Description or description template to be used on the
-                port-channel interface.\nThis can be a template using the format string
-                syntax.\nThe available template fields are:\n  - `peer`: The name
-                of the peer.\n  - `interface`: The local port-channel interface name.\n
-                \ - `peer_interface`: The port-channel interface on the peer.\n  -
-                `port_channel_id`: The local port-channel ID.\n  - `peer_port_channel_id`:
-                The ID of the port-channel on the peer.\n\nFalls back to the description
-                on the `p2p_link` if set. Otherwise default description is set by
-                `default_underlay_p2p_port_channel_description`.\nBy default the description
-                is templated from the name and port_channel interface of the peer."
+                port-channel interface.\nThis can be a template using the AVD string
+                formatter syntax: https://avd.arista.com/devel/roles/eos_designs/docs/how-to/custom-descriptions-names.html#avd-string-formatter-syntax.\nThe
+                available template fields are:\n  - `peer`: The name of the peer.\n
+                \ - `interface`: The local port-channel interface name.\n  - `peer_interface`:
+                The port-channel interface on the peer.\n  - `port_channel_id`: The
+                local port-channel ID.\n  - `peer_port_channel_id`: The ID of the
+                port-channel on the peer.\n\nFalls back to the description on the
+                `p2p_link` if set. Otherwise default description is set by `default_underlay_p2p_port_channel_description`.\nBy
+                default the description is templated from the name and port_channel
+                interface of the peer."
             mode:
               type: str
               default: active
@@ -9991,7 +10006,7 @@ $defs:
         documentation_options:
           table: network-services-multicast-settings
         type: bool
-        description: Enable IGMP Snooping (Enabled by default on EOS).
+        description: Enable or disable IGMP snooping (Enabled by default on EOS).
       igmp_snooping_querier:
         documentation_options:
           table: network-services-multicast-settings
@@ -10048,7 +10063,7 @@ $defs:
             type: bool
           point_to_point:
             type: bool
-            default: true
+            default: false
           area:
             type: str
             convert_types:
