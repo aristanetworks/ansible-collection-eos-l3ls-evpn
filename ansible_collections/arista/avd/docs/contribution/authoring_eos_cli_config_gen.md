@@ -10,6 +10,10 @@ This document outlines the steps and checklist for contributing to the `eos_cli_
 
 ## Steps to add a new feature to eos_cli_config_gen role
 
+### Prepare development environment
+
+Follow the [Development Tooling Guide](https://avd.arista.com/5.0/docs/contribution/development-tooling.html).
+
 ### Schema creation
 
 Add the schema for new feature as per EOS CLI to the appropriate schema fragments file in the `pyavd/_eos_cli_config_gen/schema/schema_fragments` directory or create a new schema file if adding a top-level feature.
