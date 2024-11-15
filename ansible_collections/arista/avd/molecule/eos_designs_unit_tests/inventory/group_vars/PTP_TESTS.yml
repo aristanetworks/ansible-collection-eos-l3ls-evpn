@@ -61,20 +61,20 @@ tenants:
                 ip_address: 172.17.11.1/24
 
 port_profiles:
-  - profile: PTP-profile-BMCA
+  - profile: PTP-profile-dynamic
     vlans: 11
     mode: access
     ptp:
       enabled: true
-      endpoint_role: bmca
+      endpoint_role: dynamic
 
 servers:
-  - name: bmca-endpoint
+  - name: dynamic-endpoint
     adapters:
       - endpoint_ports: [ eth1 ]
         switch_ports: [ Ethernet13 ]
         switches: [ ptp-tests-leaf1 ]
-        profile: PTP-profile-BMCA
+        profile: PTP-profile-dynamic
 
   - name: video-endpoint
     adapters:
