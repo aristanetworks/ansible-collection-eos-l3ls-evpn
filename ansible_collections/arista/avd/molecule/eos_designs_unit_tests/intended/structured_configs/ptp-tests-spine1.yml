@@ -216,7 +216,6 @@ ethernet_interfaces:
     sync_message:
       interval: 2
     transport: ipv4
-    role: dynamic
     enable: true
 - name: Ethernet7
   peer: ptp-tests-spine2
@@ -235,7 +234,6 @@ ethernet_interfaces:
     sync_message:
       interval: -3
     transport: ipv4
-    role: dynamic
     enable: true
 - name: Ethernet8
   peer: ptp-tests-spine2
@@ -254,7 +252,6 @@ ethernet_interfaces:
     sync_message:
       interval: -3
     transport: ipv4
-    role: dynamic
     enable: true
 - name: Ethernet9
   peer: ptp-tests-spine2
@@ -273,7 +270,6 @@ ethernet_interfaces:
     sync_message:
       interval: -3
     transport: ipv4
-    role: dynamic
     enable: true
 loopback_interfaces:
 - name: Loopback0

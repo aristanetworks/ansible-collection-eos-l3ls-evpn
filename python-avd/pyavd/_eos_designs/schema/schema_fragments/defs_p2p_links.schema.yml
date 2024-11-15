@@ -134,8 +134,7 @@ $defs:
               description: Enable PTP.
             role:
               type: str
-              description: AVD and EOS default is `dynamic`.
-              default: "dynamic"
+              description: EOS default is `dynamic`.
               valid_values:
                 - "dynamic"
                 - "master"

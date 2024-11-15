@@ -149,7 +149,6 @@ ethernet_interfaces:
     sync_message:
       interval: -7
     transport: ipv4
-    role: dynamic
     enable: true
 vlans:
 - id: 11
