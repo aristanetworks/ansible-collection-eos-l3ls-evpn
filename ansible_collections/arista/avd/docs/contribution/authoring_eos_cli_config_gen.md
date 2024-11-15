@@ -19,14 +19,18 @@ Please refer to the schema documentation for details on the various keys in the 
 #### Schema Guidelines
 
 1. **Primary Key Placement:** For list-type data-models, place primary keys at the top, for readability.
-2. **Key Naming:** 
+2. **Key Naming:**
+
 - Follow EOS CLI for key names, when creating new schema keys.
 - Use plural for keys that represent multiple elements (e.g., sample_policies).
-3. **Descriptions:** 
+
+3. **Descriptions:**
+
 - Only add descriptions to the keys when they provide additional context beyond the key name.
 - Refer Arista documentation for description content.
 - Ensure all descriptions end with punctuation.
 - Highlight the key names in description, like - `<key_name>`.
+
 4. **Type Conversion:** Add `convert_types: [str]` for `type: int` keys.
 5. **Defaults:** Avoid using `defaults` in eos_cli_config_gen.
 
@@ -42,10 +46,12 @@ Add new jinja2 template if adding a top-level feature, also modify the `pyavd/_e
 2. **Variable Naming:** Use meaningful variable names.
 3. **Use AVD filters:** Use AVD filters for code optimization - [AVD Filters](https://avd.arista.com/5.0/docs/plugins/Filter_plugins/add_md_toc.html).
 3. **Natural Sorting:** Use `arista.avd.natural_sort` for sorting the `for loops` after checking on EOS CLI.
-4. **Defined Checks:** 
+4. **Defined Checks:**
+
 - Avoid `arista.avd.defined` check for parent keys when directly checking for child keys.
 - Avoid `arista.avd.defined` check for primary and required keys.
 - Avoid`arista.avd.defined` check when using `arista.avd.default()` and `arista.avd.natural_sort` filters.
+
 5. **Password Security:** Avoid displaying passwords in the documentation template and use the `arista.avd.hide_passwords` filter to hide it.
 6. **Config Order:** Ensure the order and indentation of configuration matches EOS CLI.
 7. **Exclamation Marks:** Place exclamation marks `!` correctly as per the EOS running-config.
@@ -55,7 +61,7 @@ Add new jinja2 template if adding a top-level feature, also modify the `pyavd/_e
 
 ### Build Schemas and Documentation
 
-Run `pre-commit run schemas --all` to re-generate the eos_cli_config_gen schema with any modifications. This command should be executed every time the schema is changed, even if only a description is updated. 
+Run `pre-commit run schemas --all` to re-generate the eos_cli_config_gen schema with any modifications. This command should be executed every time the schema is changed, even if only a description is updated.
 It also updates the documentation with new options.
 
 ### Add Molecule Tests
