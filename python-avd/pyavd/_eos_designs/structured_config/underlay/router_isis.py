@@ -48,11 +48,8 @@ class RouterIsisMixin(UtilsMixin):
                     "protected_prefixes": True,
                 },
             }
-        ti_lfa_protection = self.inputs.isis_ti_lfa.protection
-        if ti_lfa_protection == "link":
-            router_isis["address_family_ipv4"]["fast_reroute_ti_lfa"] = {"mode": "link-protection"}
-        elif ti_lfa_protection == "node":
-            router_isis["address_family_ipv4"]["fast_reroute_ti_lfa"] = {"mode": "node-protection"}
+        if self.inputs.isis_ti_lfa.protection:
+            router_isis["address_family_ipv4"]["fast_reroute_ti_lfa"] = {"mode": f"{self.inputs.isis_ti_lfa.protection}-protection"}
 
         # Overlay protocol
         if self.shared_utils.overlay_routing_protocol == "none":
@@ -64,10 +61,8 @@ class RouterIsisMixin(UtilsMixin):
             # but this could probably be taken out
             if self.shared_utils.underlay_ipv6 is True:
                 router_isis["address_family_ipv6"] = {"enabled": True, "maximum_paths": self.inputs.isis_maximum_paths}
-                if ti_lfa_protection == "link":
-                    router_isis["address_family_ipv6"]["fast_reroute_ti_lfa"] = {"mode": "link-protection"}
-                elif ti_lfa_protection == "node":
-                    router_isis["address_family_ipv6"]["fast_reroute_ti_lfa"] = {"mode": "node-protection"}
+                if self.inputs.isis_ti_lfa.protection:
+                    router_isis["address_family_ipv6"]["fast_reroute_ti_lfa"] = {"mode": f"{self.inputs.isis_ti_lfa.protection}-protection"}
             router_isis["segment_routing_mpls"] = {"router_id": self.shared_utils.router_id, "enabled": True}
 
         return strip_empties_from_dict(router_isis)

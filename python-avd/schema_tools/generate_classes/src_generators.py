@@ -30,6 +30,7 @@ class FieldSrc:
     """
 
     name: str
+    field_type: str
     type_hints: list[FieldTypeHintSrc]
     key: str | None = None
     description: str | None = None
@@ -55,8 +56,7 @@ class FieldSrc:
         """
         # Build union of multiple type hints
         type_hints = " | ".join(str(type_hint) for type_hint in self.type_hints)
-        field_type = self.type_hints[0].field_type
-        if self.optional and not self.default_value and "None" not in self.type_hints and field_type in ("str", "int", "bool", "float"):
+        if self.optional and not self.default_value and "None" not in self.type_hints and self.field_type in ("str", "int", "bool", "float"):
             type_hints += " | None"
 
         return f"{self.name}: {type_hints}"
@@ -85,15 +85,7 @@ class FieldSrc:
 
         Used for _fields classvar
         """
-        field_type = self.type_hints[0].field_type
-        if field_type.startswith("dict"):
-            field_type = "dict"
-
-        dict_fields_src = [f'"type": {field_type}']
-        if field_type == "list":
-            items_type = self.type_hints[0].list_item_type
-            dict_fields_src.append(f'"items": {items_type}')
-
+        dict_fields_src = [f'"type": {self.field_type}']
         if self.default_value:
             dict_fields_src.append(f'"default": {self.default_value}')
 

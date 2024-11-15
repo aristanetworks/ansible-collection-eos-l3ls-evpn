@@ -2,7 +2,7 @@
 # Use of this source code is governed by the Apache License 2.0
 # that can be found in the LICENSE file.
 
-from typing import Any, ClassVar
+from typing import Any, ClassVar, Literal
 
 from pyavd._schema.models.avd_indexed_list import AvdIndexedList
 from pyavd._schema.models.avd_list import AvdList
@@ -27,7 +27,7 @@ class EosCliConfigGen(AvdRootModel):
                 _required_fields: ClassVar[tuple] = ("_custom_data",)
                 _field_to_key_map: ClassVar[dict] = {}
                 _key_to_field_map: ClassVar[dict] = {}
-                type: str | None
+                type: Literal["none", "start-stop", "stop-only"] | None
                 group: str | None
                 """Group Name."""
                 logging: bool | None
@@ -36,7 +36,7 @@ class EosCliConfigGen(AvdRootModel):
                 def __init__(
                     self,
                     *,
-                    type: str | None | UndefinedType = Undefined,
+                    type: Literal["none", "start-stop", "stop-only"] | None | UndefinedType = Undefined,
                     group: str | None | UndefinedType = Undefined,
                     logging: bool | None | UndefinedType = Undefined,
                     _custom_data: dict[str, Any] | UndefinedType = Undefined,
@@ -66,7 +66,7 @@ class EosCliConfigGen(AvdRootModel):
                 _required_fields: ClassVar[tuple] = ("_custom_data",)
                 _field_to_key_map: ClassVar[dict] = {}
                 _key_to_field_map: ClassVar[dict] = {}
-                type: str | None
+                type: Literal["none", "start-stop", "stop-only"] | None
                 group: str | None
                 """Group Name."""
                 logging: bool | None
@@ -75,7 +75,7 @@ class EosCliConfigGen(AvdRootModel):
                 def __init__(
                     self,
                     *,
-                    type: str | None | UndefinedType = Undefined,
+                    type: Literal["none", "start-stop", "stop-only"] | None | UndefinedType = Undefined,
                     group: str | None | UndefinedType = Undefined,
                     logging: bool | None | UndefinedType = Undefined,
                     _custom_data: dict[str, Any] | UndefinedType = Undefined,
@@ -142,7 +142,7 @@ class EosCliConfigGen(AvdRootModel):
                 _required_fields: ClassVar[tuple] = ("_custom_data",)
                 _field_to_key_map: ClassVar[dict] = {}
                 _key_to_field_map: ClassVar[dict] = {}
-                type: str | None
+                type: Literal["none", "start-stop", "stop-only"] | None
                 group: str | None
                 """Group Name."""
                 _custom_data: dict[str, Any]
@@ -150,7 +150,7 @@ class EosCliConfigGen(AvdRootModel):
                 def __init__(
                     self,
                     *,
-                    type: str | None | UndefinedType = Undefined,
+                    type: Literal["none", "start-stop", "stop-only"] | None | UndefinedType = Undefined,
                     group: str | None | UndefinedType = Undefined,
                     _custom_data: dict[str, Any] | UndefinedType = Undefined,
                 ) -> None:
@@ -206,7 +206,7 @@ class EosCliConfigGen(AvdRootModel):
                 _required_fields: ClassVar[tuple] = ("_custom_data",)
                 _field_to_key_map: ClassVar[dict] = {}
                 _key_to_field_map: ClassVar[dict] = {}
-                type: str | None
+                type: Literal["start-stop", "stop-only"] | None
                 group: str | None
                 """Group Name."""
                 _custom_data: dict[str, Any]
@@ -214,7 +214,7 @@ class EosCliConfigGen(AvdRootModel):
                 def __init__(
                     self,
                     *,
-                    type: str | None | UndefinedType = Undefined,
+                    type: Literal["start-stop", "stop-only"] | None | UndefinedType = Undefined,
                     group: str | None | UndefinedType = Undefined,
                     _custom_data: dict[str, Any] | UndefinedType = Undefined,
                 ) -> None:
@@ -278,7 +278,7 @@ class EosCliConfigGen(AvdRootModel):
                 _key_to_field_map: ClassVar[dict] = {}
                 commands: str | None
                 """Privilege level 'all' or 0-15."""
-                type: str | None
+                type: Literal["none", "start-stop", "stop-only"] | None
                 group: str | None
                 """Group Name."""
                 logging: bool | None
@@ -288,7 +288,7 @@ class EosCliConfigGen(AvdRootModel):
                     self,
                     *,
                     commands: str | None | UndefinedType = Undefined,
-                    type: str | None | UndefinedType = Undefined,
+                    type: Literal["none", "start-stop", "stop-only"] | None | UndefinedType = Undefined,
                     group: str | None | UndefinedType = Undefined,
                     logging: bool | None | UndefinedType = Undefined,
                     _custom_data: dict[str, Any] | UndefinedType = Undefined,
@@ -332,7 +332,7 @@ class EosCliConfigGen(AvdRootModel):
                 _key_to_field_map: ClassVar[dict] = {}
                 commands: str | None
                 """Privilege level 'all' or 0-15."""
-                type: str | None
+                type: Literal["none", "start-stop", "stop-only"] | None
                 group: str | None
                 """Group Name."""
                 logging: bool | None
@@ -342,7 +342,7 @@ class EosCliConfigGen(AvdRootModel):
                     self,
                     *,
                     commands: str | None | UndefinedType = Undefined,
-                    type: str | None | UndefinedType = Undefined,
+                    type: Literal["none", "start-stop", "stop-only"] | None | UndefinedType = Undefined,
                     group: str | None | UndefinedType = Undefined,
                     logging: bool | None | UndefinedType = Undefined,
                     _custom_data: dict[str, Any] | UndefinedType = Undefined,
@@ -1143,7 +1143,7 @@ class EosCliConfigGen(AvdRootModel):
         _key_to_field_map: ClassVar[dict] = {}
         name: str
         """Group name."""
-        type: str | None
+        type: Literal["tacacs+", "radius", "ldap"] | None
         servers: Servers
         """Subclass of AvdList with `ServersItem` items."""
         _custom_data: dict[str, Any]
@@ -1152,7 +1152,7 @@ class EosCliConfigGen(AvdRootModel):
             self,
             *,
             name: str | UndefinedType = Undefined,
-            type: str | None | UndefinedType = Undefined,
+            type: Literal["tacacs+", "radius", "ldap"] | None | UndefinedType = Undefined,
             servers: Servers | UndefinedType = Undefined,
             _custom_data: dict[str, Any] | UndefinedType = Undefined,
         ) -> None:
@@ -1246,7 +1246,7 @@ class EosCliConfigGen(AvdRootModel):
         name: str
         """Access-list Name."""
         counters_per_entry: bool | None
-        permit_response_traffic: str | None
+        permit_response_traffic: Literal["nat"] | None
         """
         Permit response traffic automatically based on NAT translations.
         Minimum EOS version requirement
@@ -1261,7 +1261,7 @@ class EosCliConfigGen(AvdRootModel):
             *,
             name: str | UndefinedType = Undefined,
             counters_per_entry: bool | None | UndefinedType = Undefined,
-            permit_response_traffic: str | None | UndefinedType = Undefined,
+            permit_response_traffic: Literal["nat"] | None | UndefinedType = Undefined,
             sequence_numbers: SequenceNumbers | UndefinedType = Undefined,
             _custom_data: dict[str, Any] | UndefinedType = Undefined,
         ) -> None:
@@ -1537,7 +1537,7 @@ class EosCliConfigGen(AvdRootModel):
                 _key_to_field_map: ClassVar[dict] = {}
                 name: str | None
                 """Application name."""
-                service: str | None
+                service: Literal["audio-video", "chat", "default", "file-transfer", "networking-protocols", "peer-to-peer", "software-update"] | None
                 """
                 Service Name.
                 Specific service to target for this application.
@@ -1552,7 +1552,9 @@ class EosCliConfigGen(AvdRootModel):
                     self,
                     *,
                     name: str | None | UndefinedType = Undefined,
-                    service: str | None | UndefinedType = Undefined,
+                    service: Literal["audio-video", "chat", "default", "file-transfer", "networking-protocols", "peer-to-peer", "software-update"]
+                    | None
+                    | UndefinedType = Undefined,
                     _custom_data: dict[str, Any] | UndefinedType = Undefined,
                 ) -> None:
                     """
@@ -2214,7 +2216,7 @@ class EosCliConfigGen(AvdRootModel):
                 _key_to_field_map: ClassVar[dict] = {}
                 name: str | None
                 """Application Name."""
-                service: str | None
+                service: Literal["audio-video", "chat", "default", "file-transfer", "networking-protocols", "peer-to-peer", "software-update"] | None
                 """
                 Service Name.
                 Specific service to target for this application.
@@ -2229,7 +2231,9 @@ class EosCliConfigGen(AvdRootModel):
                     self,
                     *,
                     name: str | None | UndefinedType = Undefined,
-                    service: str | None | UndefinedType = Undefined,
+                    service: Literal["audio-video", "chat", "default", "file-transfer", "networking-protocols", "peer-to-peer", "software-update"]
+                    | None
+                    | UndefinedType = Undefined,
                     _custom_data: dict[str, Any] | UndefinedType = Undefined,
                 ) -> None:
                     """
@@ -2274,7 +2278,7 @@ class EosCliConfigGen(AvdRootModel):
                 _key_to_field_map: ClassVar[dict] = {}
                 name: str | None
                 """Name of a category."""
-                service: str | None
+                service: Literal["audio-video", "chat", "default", "file-transfer", "networking-protocols", "peer-to-peer", "software-update"] | None
                 """
                 Service Name.
                 Specific service to target for this application.
@@ -2289,7 +2293,9 @@ class EosCliConfigGen(AvdRootModel):
                     self,
                     *,
                     name: str | None | UndefinedType = Undefined,
-                    service: str | None | UndefinedType = Undefined,
+                    service: Literal["audio-video", "chat", "default", "file-transfer", "networking-protocols", "peer-to-peer", "software-update"]
+                    | None
+                    | UndefinedType = Undefined,
                     _custom_data: dict[str, Any] | UndefinedType = Undefined,
                 ) -> None:
                     """
@@ -2646,19 +2652,19 @@ class EosCliConfigGen(AvdRootModel):
                 _required_fields: ClassVar[tuple] = ("_custom_data",)
                 _field_to_key_map: ClassVar[dict] = {}
                 _key_to_field_map: ClassVar[dict] = {}
-                type: str | None
+                type: Literal["permit", "deny"] | None
                 match: str | None
                 """Regex To Match."""
-                origin: str
+                origin: Literal["any", "egp", "igp", "incomplete"]
                 """Default value: `"any"`"""
                 _custom_data: dict[str, Any]
 
                 def __init__(
                     self,
                     *,
-                    type: str | None | UndefinedType = Undefined,
+                    type: Literal["permit", "deny"] | None | UndefinedType = Undefined,
                     match: str | None | UndefinedType = Undefined,
-                    origin: str | UndefinedType = Undefined,
+                    origin: Literal["any", "egp", "igp", "incomplete"] | UndefinedType = Undefined,
                     _custom_data: dict[str, Any] | UndefinedType = Undefined,
                 ) -> None:
                     """
@@ -2729,7 +2735,7 @@ class EosCliConfigGen(AvdRootModel):
         _required_fields: ClassVar[tuple] = ("_custom_data",)
         _field_to_key_map: ClassVar[dict] = {}
         _key_to_field_map: ClassVar[dict] = {}
-        regex_mode: str | None
+        regex_mode: Literal["asn", "string"] | None
         access_lists: AccessLists
         """Subclass of AvdIndexedList with `AccessListsItem` items. Primary key is `name` (`str`)."""
         _custom_data: dict[str, Any]
@@ -2737,7 +2743,7 @@ class EosCliConfigGen(AvdRootModel):
         def __init__(
             self,
             *,
-            regex_mode: str | None | UndefinedType = Undefined,
+            regex_mode: Literal["asn", "string"] | None | UndefinedType = Undefined,
             access_lists: AccessLists | UndefinedType = Undefined,
             _custom_data: dict[str, Any] | UndefinedType = Undefined,
         ) -> None:
@@ -2872,7 +2878,7 @@ class EosCliConfigGen(AvdRootModel):
             _required_fields: ClassVar[tuple] = ("_custom_data",)
             _field_to_key_map: ClassVar[dict] = {}
             _key_to_field_map: ClassVar[dict] = {}
-            hash_algorithm: str
+            hash_algorithm: Literal["md5", "sha512"]
             """Default value: `"sha512"`"""
             key: str | None
             """Hashed Password."""
@@ -2881,7 +2887,7 @@ class EosCliConfigGen(AvdRootModel):
             def __init__(
                 self,
                 *,
-                hash_algorithm: str | UndefinedType = Undefined,
+                hash_algorithm: Literal["md5", "sha512"] | UndefinedType = Undefined,
                 key: str | None | UndefinedType = Undefined,
                 _custom_data: dict[str, Any] | UndefinedType = Undefined,
             ) -> None:
@@ -3247,7 +3253,7 @@ class EosCliConfigGen(AvdRootModel):
                     _key_to_field_map: ClassVar[dict] = {}
                     password: str | None
                     """Hashed password using the password_type."""
-                    password_type: str
+                    password_type: Literal["0", "7", "8a"]
                     """Default value: `"7"`"""
                     _custom_data: dict[str, Any]
 
@@ -3255,7 +3261,7 @@ class EosCliConfigGen(AvdRootModel):
                         self,
                         *,
                         password: str | None | UndefinedType = Undefined,
-                        password_type: str | UndefinedType = Undefined,
+                        password_type: Literal["0", "7", "8a"] | UndefinedType = Undefined,
                         _custom_data: dict[str, Any] | UndefinedType = Undefined,
                     ) -> None:
                         """
@@ -3316,14 +3322,14 @@ class EosCliConfigGen(AvdRootModel):
                 _field_to_key_map: ClassVar[dict] = {}
                 _key_to_field_map: ClassVar[dict] = {}
                 shutdown: bool | None
-                vtep_mac_learning: str | None
+                vtep_mac_learning: Literal["control-plane", "data-plane"] | None
                 _custom_data: dict[str, Any]
 
                 def __init__(
                     self,
                     *,
                     shutdown: bool | None | UndefinedType = Undefined,
-                    vtep_mac_learning: str | None | UndefinedType = Undefined,
+                    vtep_mac_learning: Literal["control-plane", "data-plane"] | None | UndefinedType = Undefined,
                     _custom_data: dict[str, Any] | UndefinedType = Undefined,
                 ) -> None:
                     """
@@ -3457,7 +3463,7 @@ class EosCliConfigGen(AvdRootModel):
                 _required_fields: ClassVar[tuple] = ("_custom_data",)
                 _field_to_key_map: ClassVar[dict] = {}
                 _key_to_field_map: ClassVar[dict] = {}
-                method: str | None
+                method: Literal["token", "token-secure", "key", "certs"] | None
                 key: str | None
                 token_file: str | None
                 """
@@ -3484,7 +3490,7 @@ class EosCliConfigGen(AvdRootModel):
                 def __init__(
                     self,
                     *,
-                    method: str | None | UndefinedType = Undefined,
+                    method: Literal["token", "token-secure", "key", "certs"] | None | UndefinedType = Undefined,
                     key: str | None | UndefinedType = Undefined,
                     token_file: str | None | UndefinedType = Undefined,
                     cert_file: str | None | UndefinedType = Undefined,
@@ -3653,7 +3659,7 @@ class EosCliConfigGen(AvdRootModel):
             _required_fields: ClassVar[tuple] = ("_custom_data",)
             _field_to_key_map: ClassVar[dict] = {}
             _key_to_field_map: ClassVar[dict] = {}
-            method: str | None
+            method: Literal["token", "token-secure", "key", "certs"] | None
             key: str | None
             token_file: str | None
             """
@@ -3680,7 +3686,7 @@ class EosCliConfigGen(AvdRootModel):
             def __init__(
                 self,
                 *,
-                method: str | None | UndefinedType = Undefined,
+                method: Literal["token", "token-secure", "key", "certs"] | None | UndefinedType = Undefined,
                 key: str | None | UndefinedType = Undefined,
                 token_file: str | None | UndefinedType = Undefined,
                 cert_file: str | None | UndefinedType = Undefined,
@@ -4701,17 +4707,17 @@ class EosCliConfigGen(AvdRootModel):
             _required_fields: ClassVar[tuple] = ("delimiter", "mac_string_case", "_custom_data")
             _field_to_key_map: ClassVar[dict] = {}
             _key_to_field_map: ClassVar[dict] = {}
-            delimiter: str
+            delimiter: Literal["colon", "hyphen", "none", "period"]
             """Delimiter to use in MAC address string."""
-            mac_string_case: str
+            mac_string_case: Literal["lowercase", "uppercase"]
             """MAC address string in lowercase/uppercase."""
             _custom_data: dict[str, Any]
 
             def __init__(
                 self,
                 *,
-                delimiter: str | UndefinedType = Undefined,
-                mac_string_case: str | UndefinedType = Undefined,
+                delimiter: Literal["colon", "hyphen", "none", "period"] | UndefinedType = Undefined,
+                mac_string_case: Literal["lowercase", "uppercase"] | UndefinedType = Undefined,
                 _custom_data: dict[str, Any] | UndefinedType = Undefined,
             ) -> None:
                 """
@@ -5102,14 +5108,14 @@ class EosCliConfigGen(AvdRootModel):
                         <1-240000>     duration in hours
                         <1-864000000>  duration in seconds
                         """
-                        time_duration_unit: str
+                        time_duration_unit: Literal["days", "hours", "minutes", "seconds"]
                         _custom_data: dict[str, Any]
 
                         def __init__(
                             self,
                             *,
                             time_duration: int | None | UndefinedType = Undefined,
-                            time_duration_unit: str | UndefinedType = Undefined,
+                            time_duration_unit: Literal["days", "hours", "minutes", "seconds"] | UndefinedType = Undefined,
                             _custom_data: dict[str, Any] | UndefinedType = Undefined,
                         ) -> None:
                             """
@@ -5213,14 +5219,14 @@ class EosCliConfigGen(AvdRootModel):
                         <1-240000>     duration in hours
                         <1-864000000>  duration in seconds
                         """
-                        time_duration_unit: str
+                        time_duration_unit: Literal["days", "hours", "minutes", "seconds"]
                         _custom_data: dict[str, Any]
 
                         def __init__(
                             self,
                             *,
                             time_duration: int | None | UndefinedType = Undefined,
-                            time_duration_unit: str | UndefinedType = Undefined,
+                            time_duration_unit: Literal["days", "hours", "minutes", "seconds"] | UndefinedType = Undefined,
                             _custom_data: dict[str, Any] | UndefinedType = Undefined,
                         ) -> None:
                             """
@@ -5311,7 +5317,7 @@ class EosCliConfigGen(AvdRootModel):
                 _required_fields: ClassVar[tuple] = ("_custom_data",)
                 _field_to_key_map: ClassVar[dict] = {}
                 _key_to_field_map: ClassVar[dict] = {}
-                eap_response: str | None
+                eap_response: Literal["success", "disabled"] | None
                 """EAP response to send."""
                 action: Action
                 """
@@ -5331,7 +5337,7 @@ class EosCliConfigGen(AvdRootModel):
                 def __init__(
                     self,
                     *,
-                    eap_response: str | None | UndefinedType = Undefined,
+                    eap_response: Literal["success", "disabled"] | None | UndefinedType = Undefined,
                     action: Action | UndefinedType = Undefined,
                     phone_action: PhoneAction | UndefinedType = Undefined,
                     recovery_action_reauthenticate: bool | None | UndefinedType = Undefined,
@@ -5483,7 +5489,7 @@ class EosCliConfigGen(AvdRootModel):
                 _field_to_key_map: ClassVar[dict] = {}
                 _key_to_field_map: ClassVar[dict] = {}
                 name: str
-                eap_method: str | None
+                eap_method: Literal["fast", "tls"] | None
                 """
                 Extensible Authentication Protocol method:
                   - EAP Flexible Authentication via Secure Tunneling.
@@ -5492,7 +5498,7 @@ class EosCliConfigGen(AvdRootModel):
                 """
                 identity: str | None
                 """User identity."""
-                passphrase_type: str
+                passphrase_type: Literal["0", "7", "8a"]
                 """Default value: `"7"`"""
                 passphrase: str | None
                 """Extensible Authentication Protocol password."""
@@ -5503,9 +5509,9 @@ class EosCliConfigGen(AvdRootModel):
                     self,
                     *,
                     name: str | UndefinedType = Undefined,
-                    eap_method: str | None | UndefinedType = Undefined,
+                    eap_method: Literal["fast", "tls"] | None | UndefinedType = Undefined,
                     identity: str | None | UndefinedType = Undefined,
-                    passphrase_type: str | UndefinedType = Undefined,
+                    passphrase_type: Literal["0", "7", "8a"] | UndefinedType = Undefined,
                     passphrase: str | None | UndefinedType = Undefined,
                     ssl_profile: str | None | UndefinedType = Undefined,
                     _custom_data: dict[str, Any] | UndefinedType = Undefined,
@@ -5742,7 +5748,7 @@ class EosCliConfigGen(AvdRootModel):
             """Segment Size for IPv4."""
             ipv6: int | None
             """Segment Size for IPv6."""
-            direction: str | None
+            direction: Literal["ingress", "egress"] | None
             """Optional direction ('ingress', 'egress')  for tcp mss ceiling."""
             _custom_data: dict[str, Any]
 
@@ -5751,7 +5757,7 @@ class EosCliConfigGen(AvdRootModel):
                 *,
                 ipv4: int | None | UndefinedType = Undefined,
                 ipv6: int | None | UndefinedType = Undefined,
-                direction: str | None | UndefinedType = Undefined,
+                direction: Literal["ingress", "egress"] | None | UndefinedType = Undefined,
                 _custom_data: dict[str, Any] | UndefinedType = Undefined,
             ) -> None:
                 """
@@ -5786,7 +5792,7 @@ class EosCliConfigGen(AvdRootModel):
         _required_fields: ClassVar[tuple] = ("name", "_custom_data")
         _field_to_key_map: ClassVar[dict] = {}
         _key_to_field_map: ClassVar[dict] = {}
-        name: str
+        name: Literal["Dps1"]
         """"Dps1" is currently the only supported interface."""
         description: str | None
         shutdown: bool | None
@@ -5805,7 +5811,7 @@ class EosCliConfigGen(AvdRootModel):
         def __init__(
             self,
             *,
-            name: str | UndefinedType = Undefined,
+            name: Literal["Dps1"] | UndefinedType = Undefined,
             description: str | None | UndefinedType = Undefined,
             shutdown: bool | None | UndefinedType = Undefined,
             mtu: int | None | UndefinedType = Undefined,
@@ -5937,7 +5943,7 @@ class EosCliConfigGen(AvdRootModel):
         _key_to_field_map: ClassVar[dict] = {}
         disabled: bool | None
         """Set to `true` to configure `no enable password` which is the EOS default."""
-        hash_algorithm: str | None
+        hash_algorithm: Literal["md5", "sha512"] | None
         key: str | None
         """
         Must be the hash of the password using the specified algorithm.
@@ -5950,7 +5956,7 @@ class EosCliConfigGen(AvdRootModel):
             self,
             *,
             disabled: bool | None | UndefinedType = Undefined,
-            hash_algorithm: str | None | UndefinedType = Undefined,
+            hash_algorithm: Literal["md5", "sha512"] | None | UndefinedType = Undefined,
             key: str | None | UndefinedType = Undefined,
             _custom_data: dict[str, Any] | UndefinedType = Undefined,
         ) -> None:
@@ -6201,14 +6207,14 @@ class EosCliConfigGen(AvdRootModel):
             _required_fields: ClassVar[tuple] = ("_custom_data",)
             _field_to_key_map: ClassVar[dict] = {}
             _key_to_field_map: ClassVar[dict] = {}
-            trunk: str | None
+            trunk: Literal["tagged", "tagged phone", "untagged", "untagged phone"] | None
             vlan: int | None
             _custom_data: dict[str, Any]
 
             def __init__(
                 self,
                 *,
-                trunk: str | None | UndefinedType = Undefined,
+                trunk: Literal["tagged", "tagged phone", "untagged", "untagged phone"] | None | UndefinedType = Undefined,
                 vlan: int | None | UndefinedType = Undefined,
                 _custom_data: dict[str, Any] | UndefinedType = Undefined,
             ) -> None:
@@ -6315,10 +6321,12 @@ class EosCliConfigGen(AvdRootModel):
             _required_fields: ClassVar[tuple] = ("_custom_data",)
             _field_to_key_map: ClassVar[dict] = {}
             _key_to_field_map: ClassVar[dict] = {}
-            received: str | None
+            received: Literal["desired", "on", "off"] | None
             _custom_data: dict[str, Any]
 
-            def __init__(self, *, received: str | None | UndefinedType = Undefined, _custom_data: dict[str, Any] | UndefinedType = Undefined) -> None:
+            def __init__(
+                self, *, received: Literal["desired", "on", "off"] | None | UndefinedType = Undefined, _custom_data: dict[str, Any] | UndefinedType = Undefined
+            ) -> None:
                 """
                 Flowcontrol.
 
@@ -6425,14 +6433,14 @@ class EosCliConfigGen(AvdRootModel):
             _key_to_field_map: ClassVar[dict] = {}
             name: str
             """Group name."""
-            direction: str | None
+            direction: Literal["upstream", "downstream"] | None
             _custom_data: dict[str, Any]
 
             def __init__(
                 self,
                 *,
                 name: str | UndefinedType = Undefined,
-                direction: str | None | UndefinedType = Undefined,
+                direction: Literal["upstream", "downstream"] | None | UndefinedType = Undefined,
                 _custom_data: dict[str, Any] | UndefinedType = Undefined,
             ) -> None:
                 """
@@ -6471,7 +6479,7 @@ class EosCliConfigGen(AvdRootModel):
             _required_fields: ClassVar[tuple] = ("_custom_data",)
             _field_to_key_map: ClassVar[dict] = {}
             _key_to_field_map: ClassVar[dict] = {}
-            direction: str | None
+            direction: Literal["upstream", "downstream"] | None
             groups: Groups
             """
             Link state group(s) an interface belongs to.
@@ -6483,7 +6491,7 @@ class EosCliConfigGen(AvdRootModel):
             def __init__(
                 self,
                 *,
-                direction: str | None | UndefinedType = Undefined,
+                direction: Literal["upstream", "downstream"] | None | UndefinedType = Undefined,
                 groups: Groups | UndefinedType = Undefined,
                 _custom_data: dict[str, Any] | UndefinedType = Undefined,
             ) -> None:
@@ -6525,7 +6533,7 @@ class EosCliConfigGen(AvdRootModel):
                 _required_fields: ClassVar[tuple] = ("_custom_data",)
                 _field_to_key_map: ClassVar[dict] = {}
                 _key_to_field_map: ClassVar[dict] = {}
-                algorithm: str | None
+                algorithm: Literal["modulus", "preference"] | None
                 preference_value: int | None
                 """Preference_value is only used when "algorithm" is "preference"."""
                 dont_preempt: bool | None
@@ -6538,7 +6546,7 @@ class EosCliConfigGen(AvdRootModel):
                 def __init__(
                     self,
                     *,
-                    algorithm: str | None | UndefinedType = Undefined,
+                    algorithm: Literal["modulus", "preference"] | None | UndefinedType = Undefined,
                     preference_value: int | None | UndefinedType = Undefined,
                     dont_preempt: bool | None | UndefinedType = Undefined,
                     hold_time: int | None | UndefinedType = Undefined,
@@ -6615,7 +6623,7 @@ class EosCliConfigGen(AvdRootModel):
             _key_to_field_map: ClassVar[dict] = {}
             identifier: str | None
             """EVPN Ethernet Segment Identifier (Type 1 format)."""
-            redundancy: str | None
+            redundancy: Literal["all-active", "single-active"] | None
             designated_forwarder_election: DesignatedForwarderElection
             """Subclass of AvdModel."""
             mpls: Mpls
@@ -6628,7 +6636,7 @@ class EosCliConfigGen(AvdRootModel):
                 self,
                 *,
                 identifier: str | None | UndefinedType = Undefined,
-                redundancy: str | None | UndefinedType = Undefined,
+                redundancy: Literal["all-active", "single-active"] | None | UndefinedType = Undefined,
                 designated_forwarder_election: DesignatedForwarderElection | UndefinedType = Undefined,
                 mpls: Mpls | UndefinedType = Undefined,
                 route_target: str | None | UndefinedType = Undefined,
@@ -6754,14 +6762,14 @@ class EosCliConfigGen(AvdRootModel):
                 dot1q: Dot1q
                 """Subclass of AvdModel."""
                 unmatched: bool | None
-                encapsulation: str | None
+                encapsulation: Literal["dot1q", "dot1ad", "unmatched", "untagged"] | None
                 vlan: int | None
                 """Client VLAN ID. Not applicable for `encapsulation: untagged` or `encapsulation: unmatched`."""
                 outer_vlan: int | None
                 """Client Outer VLAN ID. Not applicable for `encapsulation: untagged` or `encapsulation: unmatched`."""
                 inner_vlan: int | None
                 """Client Inner VLAN ID. Not applicable for `encapsulation: untagged` or `encapsulation: unmatched`."""
-                inner_encapsulation: str | None
+                inner_encapsulation: Literal["dot1q", "dot1ad"] | None
                 _custom_data: dict[str, Any]
 
                 def __init__(
@@ -6769,11 +6777,11 @@ class EosCliConfigGen(AvdRootModel):
                     *,
                     dot1q: Dot1q | UndefinedType = Undefined,
                     unmatched: bool | None | UndefinedType = Undefined,
-                    encapsulation: str | None | UndefinedType = Undefined,
+                    encapsulation: Literal["dot1q", "dot1ad", "unmatched", "untagged"] | None | UndefinedType = Undefined,
                     vlan: int | None | UndefinedType = Undefined,
                     outer_vlan: int | None | UndefinedType = Undefined,
                     inner_vlan: int | None | UndefinedType = Undefined,
-                    inner_encapsulation: str | None | UndefinedType = Undefined,
+                    inner_encapsulation: Literal["dot1q", "dot1ad"] | None | UndefinedType = Undefined,
                     _custom_data: dict[str, Any] | UndefinedType = Undefined,
                 ) -> None:
                     """
@@ -6858,7 +6866,7 @@ class EosCliConfigGen(AvdRootModel):
                 dot1q: Dot1q
                 """Subclass of AvdModel."""
                 client: bool | None
-                encapsulation: str | None
+                encapsulation: Literal["dot1q", "dot1ad", "client", "client inner", "untagged"] | None
                 """
                 `untagged` (no encapsulation) is applicable for `untagged` client only.
                 `client` and `client inner`
@@ -6870,7 +6878,7 @@ class EosCliConfigGen(AvdRootModel):
                 """Network outer VLAN ID. Not applicable for `encapsulation: untagged` or `encapsulation: client`."""
                 inner_vlan: int | None
                 """Network inner VLAN ID.  Not applicable for `encapsulation: untagged` or `encapsulation: client`."""
-                inner_encapsulation: str | None
+                inner_encapsulation: Literal["dot1q", "dot1ad"] | None
                 _custom_data: dict[str, Any]
 
                 def __init__(
@@ -6878,11 +6886,11 @@ class EosCliConfigGen(AvdRootModel):
                     *,
                     dot1q: Dot1q | UndefinedType = Undefined,
                     client: bool | None | UndefinedType = Undefined,
-                    encapsulation: str | None | UndefinedType = Undefined,
+                    encapsulation: Literal["dot1q", "dot1ad", "client", "client inner", "untagged"] | None | UndefinedType = Undefined,
                     vlan: int | None | UndefinedType = Undefined,
                     outer_vlan: int | None | UndefinedType = Undefined,
                     inner_vlan: int | None | UndefinedType = Undefined,
-                    inner_encapsulation: str | None | UndefinedType = Undefined,
+                    inner_encapsulation: Literal["dot1q", "dot1ad"] | None | UndefinedType = Undefined,
                     _custom_data: dict[str, Any] | UndefinedType = Undefined,
                 ) -> None:
                     """
@@ -7087,7 +7095,7 @@ class EosCliConfigGen(AvdRootModel):
                     access_list: str | None
                     """'access_list' and 'group' are mutual exclusive."""
                     comment: str | None
-                    direction: str | None
+                    direction: Literal["egress", "ingress"] | None
                     """
                     Egress or ingress can be the default. This depends on source/destination, EOS version, and hardware
                     platform.
@@ -7101,7 +7109,7 @@ class EosCliConfigGen(AvdRootModel):
                     original_port: int | None
                     """TCP/UDP port. The combination of `original_ip` and `original_port` must be unique."""
                     priority: int | None
-                    protocol: str | None
+                    protocol: Literal["udp", "tcp"] | None
                     translated_ip: str
                     """IPv4 address."""
                     translated_port: int | None
@@ -7113,12 +7121,12 @@ class EosCliConfigGen(AvdRootModel):
                         *,
                         access_list: str | None | UndefinedType = Undefined,
                         comment: str | None | UndefinedType = Undefined,
-                        direction: str | None | UndefinedType = Undefined,
+                        direction: Literal["egress", "ingress"] | None | UndefinedType = Undefined,
                         group: int | None | UndefinedType = Undefined,
                         original_ip: str | None | UndefinedType = Undefined,
                         original_port: int | None | UndefinedType = Undefined,
                         priority: int | None | UndefinedType = Undefined,
-                        protocol: str | None | UndefinedType = Undefined,
+                        protocol: Literal["udp", "tcp"] | None | UndefinedType = Undefined,
                         translated_ip: str | UndefinedType = Undefined,
                         translated_port: int | None | UndefinedType = Undefined,
                         _custom_data: dict[str, Any] | UndefinedType = Undefined,
@@ -7210,7 +7218,7 @@ class EosCliConfigGen(AvdRootModel):
                     _key_to_field_map: ClassVar[dict] = {}
                     access_list: str
                     comment: str | None
-                    nat_type: str
+                    nat_type: Literal["overload", "pool", "pool-address-only", "pool-full-cone"]
                     pool_name: str | None
                     """
                     required if 'nat_type' is pool, pool-address-only or pool-full-cone.
@@ -7225,7 +7233,7 @@ class EosCliConfigGen(AvdRootModel):
                         *,
                         access_list: str | UndefinedType = Undefined,
                         comment: str | None | UndefinedType = Undefined,
-                        nat_type: str | UndefinedType = Undefined,
+                        nat_type: Literal["overload", "pool", "pool-address-only", "pool-full-cone"] | UndefinedType = Undefined,
                         pool_name: str | None | UndefinedType = Undefined,
                         priority: int | None | UndefinedType = Undefined,
                         _custom_data: dict[str, Any] | UndefinedType = Undefined,
@@ -7282,7 +7290,7 @@ class EosCliConfigGen(AvdRootModel):
                     access_list: str | None
                     """'access_list' and 'group' are mutual exclusive."""
                     comment: str | None
-                    direction: str | None
+                    direction: Literal["egress", "ingress"] | None
                     """
                     Egress or ingress can be the default. This depends on source/destination, EOS version, and hardware
                     platform.
@@ -7296,7 +7304,7 @@ class EosCliConfigGen(AvdRootModel):
                     original_port: int | None
                     """TCP/UDP port. The combination of `original_ip` and `original_port` must be unique."""
                     priority: int | None
-                    protocol: str | None
+                    protocol: Literal["udp", "tcp"] | None
                     translated_ip: str
                     """IPv4 address."""
                     translated_port: int | None
@@ -7308,12 +7316,12 @@ class EosCliConfigGen(AvdRootModel):
                         *,
                         access_list: str | None | UndefinedType = Undefined,
                         comment: str | None | UndefinedType = Undefined,
-                        direction: str | None | UndefinedType = Undefined,
+                        direction: Literal["egress", "ingress"] | None | UndefinedType = Undefined,
                         group: int | None | UndefinedType = Undefined,
                         original_ip: str | None | UndefinedType = Undefined,
                         original_port: int | None | UndefinedType = Undefined,
                         priority: int | None | UndefinedType = Undefined,
-                        protocol: str | None | UndefinedType = Undefined,
+                        protocol: Literal["udp", "tcp"] | None | UndefinedType = Undefined,
                         translated_ip: str | UndefinedType = Undefined,
                         translated_port: int | None | UndefinedType = Undefined,
                         _custom_data: dict[str, Any] | UndefinedType = Undefined,
@@ -7741,7 +7749,7 @@ class EosCliConfigGen(AvdRootModel):
             _field_to_key_map: ClassVar[dict] = {}
             _key_to_field_map: ClassVar[dict] = {}
             id: int
-            hash_algorithm: str | None
+            hash_algorithm: Literal["md5", "sha1", "sha256", "sha384", "sha512"] | None
             key: str | None
             """Encrypted password - only type 7 supported."""
             _custom_data: dict[str, Any]
@@ -7750,7 +7758,7 @@ class EosCliConfigGen(AvdRootModel):
                 self,
                 *,
                 id: int | UndefinedType = Undefined,
-                hash_algorithm: str | None | UndefinedType = Undefined,
+                hash_algorithm: Literal["md5", "sha1", "sha256", "sha384", "sha512"] | None | UndefinedType = Undefined,
                 key: str | None | UndefinedType = Undefined,
                 _custom_data: dict[str, Any] | UndefinedType = Undefined,
             ) -> None:
@@ -7943,7 +7951,7 @@ class EosCliConfigGen(AvdRootModel):
             _key_to_field_map: ClassVar[dict] = {}
             ipv4_segment_size: int | None
             ipv6_segment_size: int | None
-            direction: str | None
+            direction: Literal["egress", "ingress"] | None
             _custom_data: dict[str, Any]
 
             def __init__(
@@ -7951,7 +7959,7 @@ class EosCliConfigGen(AvdRootModel):
                 *,
                 ipv4_segment_size: int | None | UndefinedType = Undefined,
                 ipv6_segment_size: int | None | UndefinedType = Undefined,
-                direction: str | None | UndefinedType = Undefined,
+                direction: Literal["egress", "ingress"] | None | UndefinedType = Undefined,
                 _custom_data: dict[str, Any] | UndefinedType = Undefined,
             ) -> None:
                 """
@@ -7980,14 +7988,14 @@ class EosCliConfigGen(AvdRootModel):
             _field_to_key_map: ClassVar[dict] = {}
             _key_to_field_map: ClassVar[dict] = {}
             id: int | None
-            mode: str | None
+            mode: Literal["on", "active", "passive"] | None
             _custom_data: dict[str, Any]
 
             def __init__(
                 self,
                 *,
                 id: int | None | UndefinedType = Undefined,
-                mode: str | None | UndefinedType = Undefined,
+                mode: Literal["on", "active", "passive"] | None | UndefinedType = Undefined,
                 _custom_data: dict[str, Any] | UndefinedType = Undefined,
             ) -> None:
                 """
@@ -8029,8 +8037,8 @@ class EosCliConfigGen(AvdRootModel):
                     _key_to_field_map: ClassVar[dict] = {}
                     id: int
                     """Configure authentication key-id."""
-                    algorithm: str
-                    key_type: str
+                    algorithm: Literal["sha-1", "sha-224", "sha-256", "sha-384", "sha-512"]
+                    key_type: Literal["0", "7", "8a"]
                     """Configure authentication key type."""
                     key: str
                     """Password string."""
@@ -8042,8 +8050,8 @@ class EosCliConfigGen(AvdRootModel):
                         self,
                         *,
                         id: int | UndefinedType = Undefined,
-                        algorithm: str | UndefinedType = Undefined,
-                        key_type: str | UndefinedType = Undefined,
+                        algorithm: Literal["sha-1", "sha-224", "sha-256", "sha-384", "sha-512"] | UndefinedType = Undefined,
+                        key_type: Literal["0", "7", "8a"] | UndefinedType = Undefined,
                         key: str | UndefinedType = Undefined,
                         rfc_5310: bool | None | UndefinedType = Undefined,
                         _custom_data: dict[str, Any] | UndefinedType = Undefined,
@@ -8110,14 +8118,14 @@ class EosCliConfigGen(AvdRootModel):
                     _field_to_key_map: ClassVar[dict] = {}
                     _key_to_field_map: ClassVar[dict] = {}
                     profile: str
-                    algorithm: str
+                    algorithm: Literal["md5", "sha-1", "sha-224", "sha-256", "sha-384", "sha-512"]
                     _custom_data: dict[str, Any]
 
                     def __init__(
                         self,
                         *,
                         profile: str | UndefinedType = Undefined,
-                        algorithm: str | UndefinedType = Undefined,
+                        algorithm: Literal["md5", "sha-1", "sha-224", "sha-256", "sha-384", "sha-512"] | UndefinedType = Undefined,
                         _custom_data: dict[str, Any] | UndefinedType = Undefined,
                     ) -> None:
                         """
@@ -8150,13 +8158,13 @@ class EosCliConfigGen(AvdRootModel):
                 _required_fields: ClassVar[tuple] = ("_custom_data",)
                 _field_to_key_map: ClassVar[dict] = {}
                 _key_to_field_map: ClassVar[dict] = {}
-                key_type: str | None
+                key_type: Literal["0", "7", "8a"] | None
                 """Configure authentication key type."""
                 key: str | None
                 """Password string. `key_type` is required for this setting."""
                 key_ids: KeyIds
                 """Subclass of AvdIndexedList with `KeyIdsItem` items. Primary key is `id` (`int`)."""
-                mode: str | None
+                mode: Literal["md5", "sha", "text", "shared-secret"] | None
                 """Authentication mode."""
                 sha: Sha
                 """
@@ -8177,10 +8185,10 @@ class EosCliConfigGen(AvdRootModel):
                 def __init__(
                     self,
                     *,
-                    key_type: str | None | UndefinedType = Undefined,
+                    key_type: Literal["0", "7", "8a"] | None | UndefinedType = Undefined,
                     key: str | None | UndefinedType = Undefined,
                     key_ids: KeyIds | UndefinedType = Undefined,
-                    mode: str | None | UndefinedType = Undefined,
+                    mode: Literal["md5", "sha", "text", "shared-secret"] | None | UndefinedType = Undefined,
                     sha: Sha | UndefinedType = Undefined,
                     shared_secret: SharedSecret | UndefinedType = Undefined,
                     rx_disabled: bool | None | UndefinedType = Undefined,
@@ -8233,8 +8241,8 @@ class EosCliConfigGen(AvdRootModel):
                     _key_to_field_map: ClassVar[dict] = {}
                     id: int
                     """Configure authentication key-id."""
-                    algorithm: str
-                    key_type: str
+                    algorithm: Literal["sha-1", "sha-224", "sha-256", "sha-384", "sha-512"]
+                    key_type: Literal["0", "7", "8a"]
                     """Configure authentication key type."""
                     key: str
                     """Password string."""
@@ -8246,8 +8254,8 @@ class EosCliConfigGen(AvdRootModel):
                         self,
                         *,
                         id: int | UndefinedType = Undefined,
-                        algorithm: str | UndefinedType = Undefined,
-                        key_type: str | UndefinedType = Undefined,
+                        algorithm: Literal["sha-1", "sha-224", "sha-256", "sha-384", "sha-512"] | UndefinedType = Undefined,
+                        key_type: Literal["0", "7", "8a"] | UndefinedType = Undefined,
                         key: str | UndefinedType = Undefined,
                         rfc_5310: bool | None | UndefinedType = Undefined,
                         _custom_data: dict[str, Any] | UndefinedType = Undefined,
@@ -8314,14 +8322,14 @@ class EosCliConfigGen(AvdRootModel):
                     _field_to_key_map: ClassVar[dict] = {}
                     _key_to_field_map: ClassVar[dict] = {}
                     profile: str
-                    algorithm: str
+                    algorithm: Literal["md5", "sha-1", "sha-224", "sha-256", "sha-384", "sha-512"]
                     _custom_data: dict[str, Any]
 
                     def __init__(
                         self,
                         *,
                         profile: str | UndefinedType = Undefined,
-                        algorithm: str | UndefinedType = Undefined,
+                        algorithm: Literal["md5", "sha-1", "sha-224", "sha-256", "sha-384", "sha-512"] | UndefinedType = Undefined,
                         _custom_data: dict[str, Any] | UndefinedType = Undefined,
                     ) -> None:
                         """
@@ -8354,13 +8362,13 @@ class EosCliConfigGen(AvdRootModel):
                 _required_fields: ClassVar[tuple] = ("_custom_data",)
                 _field_to_key_map: ClassVar[dict] = {}
                 _key_to_field_map: ClassVar[dict] = {}
-                key_type: str | None
+                key_type: Literal["0", "7", "8a"] | None
                 """Configure authentication key type."""
                 key: str | None
                 """Password string. `key_type` is required for this setting."""
                 key_ids: KeyIds
                 """Subclass of AvdIndexedList with `KeyIdsItem` items. Primary key is `id` (`int`)."""
-                mode: str | None
+                mode: Literal["md5", "sha", "text", "shared-secret"] | None
                 """Authentication mode."""
                 sha: Sha
                 """
@@ -8381,10 +8389,10 @@ class EosCliConfigGen(AvdRootModel):
                 def __init__(
                     self,
                     *,
-                    key_type: str | None | UndefinedType = Undefined,
+                    key_type: Literal["0", "7", "8a"] | None | UndefinedType = Undefined,
                     key: str | None | UndefinedType = Undefined,
                     key_ids: KeyIds | UndefinedType = Undefined,
-                    mode: str | None | UndefinedType = Undefined,
+                    mode: Literal["md5", "sha", "text", "shared-secret"] | None | UndefinedType = Undefined,
                     sha: Sha | UndefinedType = Undefined,
                     shared_secret: SharedSecret | UndefinedType = Undefined,
                     rx_disabled: bool | None | UndefinedType = Undefined,
@@ -8437,8 +8445,8 @@ class EosCliConfigGen(AvdRootModel):
                     _key_to_field_map: ClassVar[dict] = {}
                     id: int
                     """Configure authentication key-id."""
-                    algorithm: str
-                    key_type: str
+                    algorithm: Literal["sha-1", "sha-224", "sha-256", "sha-384", "sha-512"]
+                    key_type: Literal["0", "7", "8a"]
                     """Configure authentication key type."""
                     key: str
                     """Password string."""
@@ -8450,8 +8458,8 @@ class EosCliConfigGen(AvdRootModel):
                         self,
                         *,
                         id: int | UndefinedType = Undefined,
-                        algorithm: str | UndefinedType = Undefined,
-                        key_type: str | UndefinedType = Undefined,
+                        algorithm: Literal["sha-1", "sha-224", "sha-256", "sha-384", "sha-512"] | UndefinedType = Undefined,
+                        key_type: Literal["0", "7", "8a"] | UndefinedType = Undefined,
                         key: str | UndefinedType = Undefined,
                         rfc_5310: bool | None | UndefinedType = Undefined,
                         _custom_data: dict[str, Any] | UndefinedType = Undefined,
@@ -8518,14 +8526,14 @@ class EosCliConfigGen(AvdRootModel):
                     _field_to_key_map: ClassVar[dict] = {}
                     _key_to_field_map: ClassVar[dict] = {}
                     profile: str
-                    algorithm: str
+                    algorithm: Literal["md5", "sha-1", "sha-224", "sha-256", "sha-384", "sha-512"]
                     _custom_data: dict[str, Any]
 
                     def __init__(
                         self,
                         *,
                         profile: str | UndefinedType = Undefined,
-                        algorithm: str | UndefinedType = Undefined,
+                        algorithm: Literal["md5", "sha-1", "sha-224", "sha-256", "sha-384", "sha-512"] | UndefinedType = Undefined,
                         _custom_data: dict[str, Any] | UndefinedType = Undefined,
                     ) -> None:
                         """
@@ -8558,13 +8566,13 @@ class EosCliConfigGen(AvdRootModel):
                 _required_fields: ClassVar[tuple] = ("_custom_data",)
                 _field_to_key_map: ClassVar[dict] = {}
                 _key_to_field_map: ClassVar[dict] = {}
-                key_type: str | None
+                key_type: Literal["0", "7", "8a"] | None
                 """Configure authentication key type."""
                 key: str | None
                 """Password string. `key_type` is required for this setting."""
                 key_ids: KeyIds
                 """Subclass of AvdIndexedList with `KeyIdsItem` items. Primary key is `id` (`int`)."""
-                mode: str | None
+                mode: Literal["md5", "sha", "text", "shared-secret"] | None
                 """Authentication mode."""
                 sha: Sha
                 """
@@ -8585,10 +8593,10 @@ class EosCliConfigGen(AvdRootModel):
                 def __init__(
                     self,
                     *,
-                    key_type: str | None | UndefinedType = Undefined,
+                    key_type: Literal["0", "7", "8a"] | None | UndefinedType = Undefined,
                     key: str | None | UndefinedType = Undefined,
                     key_ids: KeyIds | UndefinedType = Undefined,
-                    mode: str | None | UndefinedType = Undefined,
+                    mode: Literal["md5", "sha", "text", "shared-secret"] | None | UndefinedType = Undefined,
                     sha: Sha | UndefinedType = Undefined,
                     shared_secret: SharedSecret | UndefinedType = Undefined,
                     rx_disabled: bool | None | UndefinedType = Undefined,
@@ -8689,11 +8697,16 @@ class EosCliConfigGen(AvdRootModel):
                 _required_fields: ClassVar[tuple] = ("_custom_data",)
                 _field_to_key_map: ClassVar[dict] = {}
                 _key_to_field_map: ClassVar[dict] = {}
-                action: str | None
+                action: Literal["maintain", "power-off"] | None
                 """PoE action for interface."""
                 _custom_data: dict[str, Any]
 
-                def __init__(self, *, action: str | None | UndefinedType = Undefined, _custom_data: dict[str, Any] | UndefinedType = Undefined) -> None:
+                def __init__(
+                    self,
+                    *,
+                    action: Literal["maintain", "power-off"] | None | UndefinedType = Undefined,
+                    _custom_data: dict[str, Any] | UndefinedType = Undefined,
+                ) -> None:
                     """
                     Reboot.
 
@@ -8717,7 +8730,7 @@ class EosCliConfigGen(AvdRootModel):
                 _required_fields: ClassVar[tuple] = ("_custom_data",)
                 _field_to_key_map: ClassVar[dict] = {}
                 _key_to_field_map: ClassVar[dict] = {}
-                action: str | None
+                action: Literal["maintain", "power-off"] | None
                 """PoE action for interface."""
                 power_off_delay: int | None
                 """
@@ -8729,7 +8742,7 @@ class EosCliConfigGen(AvdRootModel):
                 def __init__(
                     self,
                     *,
-                    action: str | None | UndefinedType = Undefined,
+                    action: Literal["maintain", "power-off"] | None | UndefinedType = Undefined,
                     power_off_delay: int | None | UndefinedType = Undefined,
                     _custom_data: dict[str, Any] | UndefinedType = Undefined,
                 ) -> None:
@@ -8759,11 +8772,16 @@ class EosCliConfigGen(AvdRootModel):
                 _required_fields: ClassVar[tuple] = ("_custom_data",)
                 _field_to_key_map: ClassVar[dict] = {}
                 _key_to_field_map: ClassVar[dict] = {}
-                action: str | None
+                action: Literal["maintain", "power-off"] | None
                 """PoE action for interface."""
                 _custom_data: dict[str, Any]
 
-                def __init__(self, *, action: str | None | UndefinedType = Undefined, _custom_data: dict[str, Any] | UndefinedType = Undefined) -> None:
+                def __init__(
+                    self,
+                    *,
+                    action: Literal["maintain", "power-off"] | None | UndefinedType = Undefined,
+                    _custom_data: dict[str, Any] | UndefinedType = Undefined,
+                ) -> None:
                     """
                     Shutdown.
 
@@ -8839,7 +8857,7 @@ class EosCliConfigGen(AvdRootModel):
 
             Default value: `False`
             """
-            priority: str | None
+            priority: Literal["critical", "high", "medium", "low"] | None
             """Prioritize a port's power in the event that one of the switch's power supplies loses power."""
             reboot: Reboot
             """
@@ -8883,7 +8901,7 @@ class EosCliConfigGen(AvdRootModel):
                 self,
                 *,
                 disabled: bool | UndefinedType = Undefined,
-                priority: str | None | UndefinedType = Undefined,
+                priority: Literal["critical", "high", "medium", "low"] | None | UndefinedType = Undefined,
                 reboot: Reboot | UndefinedType = Undefined,
                 link_down: LinkDown | UndefinedType = Undefined,
                 shutdown: Shutdown | UndefinedType = Undefined,
@@ -8981,11 +8999,14 @@ class EosCliConfigGen(AvdRootModel):
                     _required_fields: ClassVar[tuple] = ("_custom_data",)
                     _field_to_key_map: ClassVar[dict] = {}
                     _key_to_field_map: ClassVar[dict] = {}
-                    destination_mac_address: str | None
+                    destination_mac_address: Literal["forwardable", "non-forwardable"] | None
                     _custom_data: dict[str, Any]
 
                     def __init__(
-                        self, *, destination_mac_address: str | None | UndefinedType = Undefined, _custom_data: dict[str, Any] | UndefinedType = Undefined
+                        self,
+                        *,
+                        destination_mac_address: Literal["forwardable", "non-forwardable"] | None | UndefinedType = Undefined,
+                        _custom_data: dict[str, Any] | UndefinedType = Undefined,
                     ) -> None:
                         """
                         G82751.
@@ -9074,15 +9095,15 @@ class EosCliConfigGen(AvdRootModel):
             announce: Announce
             """Subclass of AvdModel."""
             delay_req: int | None
-            delay_mechanism: str | None
+            delay_mechanism: Literal["e2e", "p2p"] | None
             profile: Profile
             """Subclass of AvdModel."""
             sync_message: SyncMessage
             """Subclass of AvdModel."""
-            role: str | None
+            role: Literal["master", "dynamic"] | None
             vlan: str | None
             """VLAN can be 'all' or list of vlans as string."""
-            transport: str | None
+            transport: Literal["ipv4", "ipv6", "layer2"] | None
             _custom_data: dict[str, Any]
 
             def __init__(
@@ -9091,12 +9112,12 @@ class EosCliConfigGen(AvdRootModel):
                 enable: bool | None | UndefinedType = Undefined,
                 announce: Announce | UndefinedType = Undefined,
                 delay_req: int | None | UndefinedType = Undefined,
-                delay_mechanism: str | None | UndefinedType = Undefined,
+                delay_mechanism: Literal["e2e", "p2p"] | None | UndefinedType = Undefined,
                 profile: Profile | UndefinedType = Undefined,
                 sync_message: SyncMessage | UndefinedType = Undefined,
-                role: str | None | UndefinedType = Undefined,
+                role: Literal["master", "dynamic"] | None | UndefinedType = Undefined,
                 vlan: str | None | UndefinedType = Undefined,
-                transport: str | None | UndefinedType = Undefined,
+                transport: Literal["ipv4", "ipv6", "layer2"] | None | UndefinedType = Undefined,
                 _custom_data: dict[str, Any] | UndefinedType = Undefined,
             ) -> None:
                 """
@@ -9135,7 +9156,7 @@ class EosCliConfigGen(AvdRootModel):
                 _key_to_field_map: ClassVar[dict] = {}
                 level: str | None
                 """Configure maximum storm-control level."""
-                unit: str
+                unit: Literal["percent", "pps"]
                 """
                 Optional field and is hardware dependent.
 
@@ -9147,7 +9168,7 @@ class EosCliConfigGen(AvdRootModel):
                     self,
                     *,
                     level: str | None | UndefinedType = Undefined,
-                    unit: str | UndefinedType = Undefined,
+                    unit: Literal["percent", "pps"] | UndefinedType = Undefined,
                     _custom_data: dict[str, Any] | UndefinedType = Undefined,
                 ) -> None:
                     """
@@ -9176,7 +9197,7 @@ class EosCliConfigGen(AvdRootModel):
                 _key_to_field_map: ClassVar[dict] = {}
                 level: str | None
                 """Configure maximum storm-control level."""
-                unit: str
+                unit: Literal["percent", "pps"]
                 """
                 Optional field and is hardware dependent.
 
@@ -9188,7 +9209,7 @@ class EosCliConfigGen(AvdRootModel):
                     self,
                     *,
                     level: str | None | UndefinedType = Undefined,
-                    unit: str | UndefinedType = Undefined,
+                    unit: Literal["percent", "pps"] | UndefinedType = Undefined,
                     _custom_data: dict[str, Any] | UndefinedType = Undefined,
                 ) -> None:
                     """
@@ -9217,7 +9238,7 @@ class EosCliConfigGen(AvdRootModel):
                 _key_to_field_map: ClassVar[dict] = {}
                 level: str | None
                 """Configure maximum storm-control level."""
-                unit: str
+                unit: Literal["percent", "pps"]
                 """
                 Optional field and is hardware dependent.
 
@@ -9229,7 +9250,7 @@ class EosCliConfigGen(AvdRootModel):
                     self,
                     *,
                     level: str | None | UndefinedType = Undefined,
-                    unit: str | UndefinedType = Undefined,
+                    unit: Literal["percent", "pps"] | UndefinedType = Undefined,
                     _custom_data: dict[str, Any] | UndefinedType = Undefined,
                 ) -> None:
                     """
@@ -9258,7 +9279,7 @@ class EosCliConfigGen(AvdRootModel):
                 _key_to_field_map: ClassVar[dict] = {}
                 level: str | None
                 """Configure maximum storm-control level."""
-                unit: str
+                unit: Literal["percent", "pps"]
                 """
                 Optional field and is hardware dependent.
 
@@ -9270,7 +9291,7 @@ class EosCliConfigGen(AvdRootModel):
                     self,
                     *,
                     level: str | None | UndefinedType = Undefined,
-                    unit: str | UndefinedType = Undefined,
+                    unit: Literal["percent", "pps"] | UndefinedType = Undefined,
                     _custom_data: dict[str, Any] | UndefinedType = Undefined,
                 ) -> None:
                     """
@@ -9469,7 +9490,7 @@ class EosCliConfigGen(AvdRootModel):
             """List of vlans as string (only one vlan if direction is "both")."""
             to: int | None
             """VLAN ID."""
-            direction: str
+            direction: Literal["in", "out", "both"]
             """Default value: `"both"`"""
             _custom_data: dict[str, Any]
 
@@ -9478,7 +9499,7 @@ class EosCliConfigGen(AvdRootModel):
                 *,
                 field_from: str | None | UndefinedType = Undefined,
                 to: int | None | UndefinedType = Undefined,
-                direction: str | UndefinedType = Undefined,
+                direction: Literal["in", "out", "both"] | UndefinedType = Undefined,
                 _custom_data: dict[str, Any] | UndefinedType = Undefined,
             ) -> None:
                 """
@@ -9514,10 +9535,12 @@ class EosCliConfigGen(AvdRootModel):
                 _required_fields: ClassVar[tuple] = ("_custom_data",)
                 _field_to_key_map: ClassVar[dict] = {}
                 _key_to_field_map: ClassVar[dict] = {}
-                mode: str | None
+                mode: Literal["authenticator"] | None
                 _custom_data: dict[str, Any]
 
-                def __init__(self, *, mode: str | None | UndefinedType = Undefined, _custom_data: dict[str, Any] | UndefinedType = Undefined) -> None:
+                def __init__(
+                    self, *, mode: Literal["authenticator"] | None | UndefinedType = Undefined, _custom_data: dict[str, Any] | UndefinedType = Undefined
+                ) -> None:
                     """
                     Pae.
 
@@ -9541,14 +9564,14 @@ class EosCliConfigGen(AvdRootModel):
                 _required_fields: ClassVar[tuple] = ("_custom_data",)
                 _field_to_key_map: ClassVar[dict] = {}
                 _key_to_field_map: ClassVar[dict] = {}
-                action: str | None
+                action: Literal["allow", "drop"] | None
                 allow_vlan: int | None
                 _custom_data: dict[str, Any]
 
                 def __init__(
                     self,
                     *,
-                    action: str | None | UndefinedType = Undefined,
+                    action: Literal["allow", "drop"] | None | UndefinedType = Undefined,
                     allow_vlan: int | None | UndefinedType = Undefined,
                     _custom_data: dict[str, Any] | UndefinedType = Undefined,
                 ) -> None:
@@ -9576,14 +9599,14 @@ class EosCliConfigGen(AvdRootModel):
                 _required_fields: ClassVar[tuple] = ("_custom_data",)
                 _field_to_key_map: ClassVar[dict] = {}
                 _key_to_field_map: ClassVar[dict] = {}
-                mode: str | None
+                mode: Literal["multi-host", "single-host"] | None
                 multi_host_authenticated: bool | None
                 _custom_data: dict[str, Any]
 
                 def __init__(
                     self,
                     *,
-                    mode: str | None | UndefinedType = Undefined,
+                    mode: Literal["multi-host", "single-host"] | None | UndefinedType = Undefined,
                     multi_host_authenticated: bool | None | UndefinedType = Undefined,
                     _custom_data: dict[str, Any] | UndefinedType = Undefined,
                 ) -> None:
@@ -9838,14 +9861,14 @@ class EosCliConfigGen(AvdRootModel):
                             <1-240000>     duration in hours
                             <1-864000000>  duration in seconds
                             """
-                            time_duration_unit: str
+                            time_duration_unit: Literal["days", "hours", "minutes", "seconds"]
                             _custom_data: dict[str, Any]
 
                             def __init__(
                                 self,
                                 *,
                                 time_duration: int | None | UndefinedType = Undefined,
-                                time_duration_unit: str | UndefinedType = Undefined,
+                                time_duration_unit: Literal["days", "hours", "minutes", "seconds"] | UndefinedType = Undefined,
                                 _custom_data: dict[str, Any] | UndefinedType = Undefined,
                             ) -> None:
                                 """
@@ -9954,14 +9977,14 @@ class EosCliConfigGen(AvdRootModel):
                             <1-240000>     duration in hours
                             <1-864000000>  duration in seconds
                             """
-                            time_duration_unit: str
+                            time_duration_unit: Literal["days", "hours", "minutes", "seconds"]
                             _custom_data: dict[str, Any]
 
                             def __init__(
                                 self,
                                 *,
                                 time_duration: int | None | UndefinedType = Undefined,
-                                time_duration_unit: str | UndefinedType = Undefined,
+                                time_duration_unit: Literal["days", "hours", "minutes", "seconds"] | UndefinedType = Undefined,
                                 _custom_data: dict[str, Any] | UndefinedType = Undefined,
                             ) -> None:
                                 """
@@ -10051,7 +10074,7 @@ class EosCliConfigGen(AvdRootModel):
                     _required_fields: ClassVar[tuple] = ("_custom_data",)
                     _field_to_key_map: ClassVar[dict] = {}
                     _key_to_field_map: ClassVar[dict] = {}
-                    eap_response: str | None
+                    eap_response: Literal["success", "disabled"] | None
                     """EAP response to send. EOS default is `success`."""
                     action: Action
                     """
@@ -10070,7 +10093,7 @@ class EosCliConfigGen(AvdRootModel):
                     def __init__(
                         self,
                         *,
-                        eap_response: str | None | UndefinedType = Undefined,
+                        eap_response: Literal["success", "disabled"] | None | UndefinedType = Undefined,
                         action: Action | UndefinedType = Undefined,
                         phone_action: PhoneAction | UndefinedType = Undefined,
                         _custom_data: dict[str, Any] | UndefinedType = Undefined,
@@ -10150,7 +10173,7 @@ class EosCliConfigGen(AvdRootModel):
             _required_fields: ClassVar[tuple] = ("_custom_data",)
             _field_to_key_map: ClassVar[dict] = {}
             _key_to_field_map: ClassVar[dict] = {}
-            port_control: str | None
+            port_control: Literal["auto", "force-authorized", "force-unauthorized"] | None
             port_control_force_authorized_phone: bool | None
             reauthentication: bool | None
             pae: Pae
@@ -10177,7 +10200,7 @@ class EosCliConfigGen(AvdRootModel):
             def __init__(
                 self,
                 *,
-                port_control: str | None | UndefinedType = Undefined,
+                port_control: Literal["auto", "force-authorized", "force-unauthorized"] | None | UndefinedType = Undefined,
                 port_control_force_authorized_phone: bool | None | UndefinedType = Undefined,
                 reauthentication: bool | None | UndefinedType = Undefined,
                 pae: Pae | UndefinedType = Undefined,
@@ -10270,7 +10293,7 @@ class EosCliConfigGen(AvdRootModel):
             _required_fields: ClassVar[tuple] = ("_custom_data",)
             _field_to_key_map: ClassVar[dict] = {}
             _key_to_field_map: ClassVar[dict] = {}
-            trust: str | None
+            trust: Literal["dscp", "cos", "disabled"] | None
             dscp: int | None
             """DSCP value."""
             cos: int | None
@@ -10280,7 +10303,7 @@ class EosCliConfigGen(AvdRootModel):
             def __init__(
                 self,
                 *,
-                trust: str | None | UndefinedType = Undefined,
+                trust: Literal["dscp", "cos", "disabled"] | None | UndefinedType = Undefined,
                 dscp: int | None | UndefinedType = Undefined,
                 cos: int | None | UndefinedType = Undefined,
                 _custom_data: dict[str, Any] | UndefinedType = Undefined,
@@ -10597,14 +10620,14 @@ class EosCliConfigGen(AvdRootModel):
             _required_fields: ClassVar[tuple] = ("_custom_data",)
             _field_to_key_map: ClassVar[dict] = {}
             _key_to_field_map: ClassVar[dict] = {}
-            mode: str | None
+            mode: Literal["fast", "normal"] | None
             multiplier: int | None
             _custom_data: dict[str, Any]
 
             def __init__(
                 self,
                 *,
-                mode: str | None | UndefinedType = Undefined,
+                mode: Literal["fast", "normal"] | None | UndefinedType = Undefined,
                 multiplier: int | None | UndefinedType = Undefined,
                 _custom_data: dict[str, Any] | UndefinedType = Undefined,
             ) -> None:
@@ -10662,7 +10685,7 @@ class EosCliConfigGen(AvdRootModel):
             _key_to_field_map: ClassVar[dict] = {}
             frequency: str | None
             """Transceiver Laser Frequency in GHz (min 190000, max 200000)."""
-            frequency_unit: str | None
+            frequency_unit: Literal["ghz"] | None
             """Unit of Transceiver Laser Frequency."""
             media: Media
             """Subclass of AvdModel."""
@@ -10672,7 +10695,7 @@ class EosCliConfigGen(AvdRootModel):
                 self,
                 *,
                 frequency: str | None | UndefinedType = Undefined,
-                frequency_unit: str | None | UndefinedType = Undefined,
+                frequency_unit: Literal["ghz"] | None | UndefinedType = Undefined,
                 media: Media | UndefinedType = Undefined,
                 _custom_data: dict[str, Any] | UndefinedType = Undefined,
             ) -> None:
@@ -11126,7 +11149,7 @@ class EosCliConfigGen(AvdRootModel):
                         _required_fields: ClassVar[tuple] = ("units", "min", "max", "_custom_data")
                         _field_to_key_map: ClassVar[dict] = {}
                         _key_to_field_map: ClassVar[dict] = {}
-                        units: str
+                        units: Literal["segments", "bytes", "kbytes", "mbytes", "milliseconds"]
                         """Indicate the units to be used for the threshold values."""
                         min: int
                         """Set the random-detect ECN minimum-threshold."""
@@ -11141,7 +11164,7 @@ class EosCliConfigGen(AvdRootModel):
                         def __init__(
                             self,
                             *,
-                            units: str | UndefinedType = Undefined,
+                            units: Literal["segments", "bytes", "kbytes", "mbytes", "milliseconds"] | UndefinedType = Undefined,
                             min: int | UndefinedType = Undefined,
                             max: int | UndefinedType = Undefined,
                             max_probability: int | None | UndefinedType = Undefined,
@@ -11298,7 +11321,7 @@ class EosCliConfigGen(AvdRootModel):
                         _required_fields: ClassVar[tuple] = ("units", "max", "max_probability", "_custom_data")
                         _field_to_key_map: ClassVar[dict] = {}
                         _key_to_field_map: ClassVar[dict] = {}
-                        units: str
+                        units: Literal["segments", "bytes", "kbytes", "mbytes", "milliseconds"]
                         """Indicate the units to be used for the threshold values."""
                         min: int | None
                         """Set the random-detect ECN minimum-threshold."""
@@ -11313,7 +11336,7 @@ class EosCliConfigGen(AvdRootModel):
                         def __init__(
                             self,
                             *,
-                            units: str | UndefinedType = Undefined,
+                            units: Literal["segments", "bytes", "kbytes", "mbytes", "milliseconds"] | UndefinedType = Undefined,
                             min: int | None | UndefinedType = Undefined,
                             max: int | UndefinedType = Undefined,
                             max_probability: int | UndefinedType = Undefined,
@@ -11663,14 +11686,14 @@ class EosCliConfigGen(AvdRootModel):
                 _key_to_field_map: ClassVar[dict] = {}
                 address: str
                 """Virtual IPv4 address."""
-                version: int | None
+                version: Literal[2, 3] | None
                 _custom_data: dict[str, Any]
 
                 def __init__(
                     self,
                     *,
                     address: str | UndefinedType = Undefined,
-                    version: int | None | UndefinedType = Undefined,
+                    version: Literal[2, 3] | None | UndefinedType = Undefined,
                     _custom_data: dict[str, Any] | UndefinedType = Undefined,
                 ) -> None:
                     """
@@ -11905,7 +11928,7 @@ class EosCliConfigGen(AvdRootModel):
                 _key_to_field_map: ClassVar[dict] = {}
                 vlan: int | None
                 """Warning: This should not be combined with `ethernet_interfaces[].phone.vlan`."""
-                trunk: str | None
+                trunk: Literal["tagged", "tagged phone", "untagged", "untagged phone"] | None
                 """Warning: This should not be combined with `ethernet_interfaces[].phone.trunk`."""
                 _custom_data: dict[str, Any]
 
@@ -11913,7 +11936,7 @@ class EosCliConfigGen(AvdRootModel):
                     self,
                     *,
                     vlan: int | None | UndefinedType = Undefined,
-                    trunk: str | None | UndefinedType = Undefined,
+                    trunk: Literal["tagged", "tagged phone", "untagged", "untagged phone"] | None | UndefinedType = Undefined,
                     _custom_data: dict[str, Any] | UndefinedType = Undefined,
                 ) -> None:
                     """
@@ -11942,7 +11965,7 @@ class EosCliConfigGen(AvdRootModel):
                 _key_to_field_map: ClassVar[dict] = {}
                 ethertype: int | None
                 """Ethertype/TPID (Tag Protocol IDentifier) for VLAN tagged frames."""
-                vlan_tag: str | None
+                vlan_tag: Literal["disallowed", "required"] | None
                 """Allow/disallow VLAN tagged frames."""
                 _custom_data: dict[str, Any]
 
@@ -11950,7 +11973,7 @@ class EosCliConfigGen(AvdRootModel):
                     self,
                     *,
                     ethertype: int | None | UndefinedType = Undefined,
-                    vlan_tag: str | None | UndefinedType = Undefined,
+                    vlan_tag: Literal["disallowed", "required"] | None | UndefinedType = Undefined,
                     _custom_data: dict[str, Any] | UndefinedType = Undefined,
                 ) -> None:
                     """
@@ -12379,7 +12402,7 @@ class EosCliConfigGen(AvdRootModel):
                     _required_fields: ClassVar[tuple] = ("_custom_data",)
                     _field_to_key_map: ClassVar[dict] = {}
                     _key_to_field_map: ClassVar[dict] = {}
-                    mode: str | None
+                    mode: Literal["shutdown", "protect"] | None
                     """Configure port security mode."""
                     protect_log: bool | None
                     """Log new addresses seen after limit is reached in protect mode."""
@@ -12388,7 +12411,7 @@ class EosCliConfigGen(AvdRootModel):
                     def __init__(
                         self,
                         *,
-                        mode: str | None | UndefinedType = Undefined,
+                        mode: Literal["shutdown", "protect"] | None | UndefinedType = Undefined,
                         protect_log: bool | None | UndefinedType = Undefined,
                         _custom_data: dict[str, Any] | UndefinedType = Undefined,
                     ) -> None:
@@ -12550,7 +12573,7 @@ class EosCliConfigGen(AvdRootModel):
             _key_to_field_map: ClassVar[dict] = {}
             enabled: bool | None
             """Warning: This should not be combined with `ethernet_interfaces[].type = routed`."""
-            mode: str | None
+            mode: Literal["access", "dot1q-tunnel", "trunk", "trunk phone"] | None
             """Warning: This should not be combined with `ethernet_interfaces[].mode`."""
             access_vlan: int | None
             """
@@ -12574,7 +12597,7 @@ class EosCliConfigGen(AvdRootModel):
             """
             dot1q: Dot1q
             """Subclass of AvdModel."""
-            source_interface: str | None
+            source_interface: Literal["tx", "tx multicast"] | None
             """
             tx: Allow bridged traffic to go out of the source interface.
             tx multicast: Allow multicast traffic
@@ -12605,13 +12628,13 @@ class EosCliConfigGen(AvdRootModel):
                 self,
                 *,
                 enabled: bool | None | UndefinedType = Undefined,
-                mode: str | None | UndefinedType = Undefined,
+                mode: Literal["access", "dot1q-tunnel", "trunk", "trunk phone"] | None | UndefinedType = Undefined,
                 access_vlan: int | None | UndefinedType = Undefined,
                 trunk: Trunk | UndefinedType = Undefined,
                 phone: Phone | UndefinedType = Undefined,
                 pvlan_mapping: str | None | UndefinedType = Undefined,
                 dot1q: Dot1q | UndefinedType = Undefined,
-                source_interface: str | None | UndefinedType = Undefined,
+                source_interface: Literal["tx", "tx multicast"] | None | UndefinedType = Undefined,
                 vlan_translations: VlanTranslations | UndefinedType = Undefined,
                 vlan_forwarding_accept_all: bool | None | UndefinedType = Undefined,
                 backup_link: BackupLink | UndefinedType = Undefined,
@@ -12812,12 +12835,12 @@ class EosCliConfigGen(AvdRootModel):
         native_vlan: int | None
         native_vlan_tag: bool | None
         """If setting both native_vlan and native_vlan_tag, native_vlan_tag takes precedence."""
-        mode: str | None
+        mode: Literal["access", "dot1q-tunnel", "trunk", "trunk phone"] | None
         phone: Phone
         """Subclass of AvdModel."""
         l2_protocol: L2Protocol
         """Subclass of AvdModel."""
-        mac_timestamp: str | None
+        mac_timestamp: Literal["before-fcs", "replace-fcs", "header"] | None
         """
         header: Insert timestamp in ethernet header. Supported on platforms like 7500E/R and 7280E/R.
         before-fcs: Insert timestamp before fcs field. Supported on platforms like 7150.
@@ -12826,7 +12849,7 @@ class EosCliConfigGen(AvdRootModel):
         """
         trunk_groups: TrunkGroups
         """Subclass of AvdList with `str` items."""
-        type: str | None
+        type: Literal["routed", "switched", "l3dot1q", "l2dot1q", "port-channel-member"] | None
         """
         l3dot1q and l2dot1q are used for sub-interfaces. The parent interface should be defined as routed.
         The `type = switched/routed` should not be combined with `switchport`.
@@ -12874,7 +12897,7 @@ class EosCliConfigGen(AvdRootModel):
         """IPv4 address/mask or "dhcp"."""
         ip_address_secondaries: IpAddressSecondaries
         """Subclass of AvdList with `str` items."""
-        ip_verify_unicast_source_reachable_via: str | None
+        ip_verify_unicast_source_reachable_via: Literal["any", "rx"] | None
         dhcp_client_accept_default_route: bool | None
         """Install default-route obtained via DHCP."""
         dhcp_server_ipv4: bool | None
@@ -12920,7 +12943,7 @@ class EosCliConfigGen(AvdRootModel):
         ospf_network_point_to_point: bool | None
         ospf_area: str | None
         ospf_cost: int | None
-        ospf_authentication: str | None
+        ospf_authentication: Literal["none", "simple", "message-digest"] | None
         ospf_authentication_key: str | None
         """Encrypted password - only type 7 supported."""
         ospf_message_digest_keys: OspfMessageDigestKeys
@@ -12947,9 +12970,9 @@ class EosCliConfigGen(AvdRootModel):
         isis_passive: bool | None
         isis_metric: int | None
         isis_network_point_to_point: bool | None
-        isis_circuit_type: str | None
+        isis_circuit_type: Literal["level-1-2", "level-1", "level-2"] | None
         isis_hello_padding: bool | None
-        isis_authentication_mode: str | None
+        isis_authentication_mode: Literal["text", "md5"] | None
         isis_authentication_key: str | None
         """Type-7 encrypted password."""
         isis_authentication: IsisAuthentication
@@ -12988,10 +13011,10 @@ class EosCliConfigGen(AvdRootModel):
         """Subclass of AvdModel."""
         qos: Qos
         """Subclass of AvdModel."""
-        spanning_tree_bpdufilter: str | None
-        spanning_tree_bpduguard: str | None
-        spanning_tree_guard: str | None
-        spanning_tree_portfast: str | None
+        spanning_tree_bpdufilter: Literal["enabled", "disabled", "True", "False", "true", "false"] | None
+        spanning_tree_bpduguard: Literal["enabled", "disabled", "True", "False", "true", "false"] | None
+        spanning_tree_guard: Literal["loop", "root", "disabled"] | None
+        spanning_tree_portfast: Literal["edge", "network"] | None
         vmtracer: bool | None
         priority_flow_control: PriorityFlowControl
         """Subclass of AvdModel."""
@@ -13067,12 +13090,12 @@ class EosCliConfigGen(AvdRootModel):
             vlans: str | None | UndefinedType = Undefined,
             native_vlan: int | None | UndefinedType = Undefined,
             native_vlan_tag: bool | None | UndefinedType = Undefined,
-            mode: str | None | UndefinedType = Undefined,
+            mode: Literal["access", "dot1q-tunnel", "trunk", "trunk phone"] | None | UndefinedType = Undefined,
             phone: Phone | UndefinedType = Undefined,
             l2_protocol: L2Protocol | UndefinedType = Undefined,
-            mac_timestamp: str | None | UndefinedType = Undefined,
+            mac_timestamp: Literal["before-fcs", "replace-fcs", "header"] | None | UndefinedType = Undefined,
             trunk_groups: TrunkGroups | UndefinedType = Undefined,
-            type: str | None | UndefinedType = Undefined,
+            type: Literal["routed", "switched", "l3dot1q", "l2dot1q", "port-channel-member"] | None | UndefinedType = Undefined,
             snmp_trap_link_change: bool | None | UndefinedType = Undefined,
             address_locking: AddressLocking | UndefinedType = Undefined,
             flowcontrol: Flowcontrol | UndefinedType = Undefined,
@@ -13088,7 +13111,7 @@ class EosCliConfigGen(AvdRootModel):
             vlan_id: int | None | UndefinedType = Undefined,
             ip_address: str | None | UndefinedType = Undefined,
             ip_address_secondaries: IpAddressSecondaries | UndefinedType = Undefined,
-            ip_verify_unicast_source_reachable_via: str | None | UndefinedType = Undefined,
+            ip_verify_unicast_source_reachable_via: Literal["any", "rx"] | None | UndefinedType = Undefined,
             dhcp_client_accept_default_route: bool | None | UndefinedType = Undefined,
             dhcp_server_ipv4: bool | None | UndefinedType = Undefined,
             dhcp_server_ipv6: bool | None | UndefinedType = Undefined,
@@ -13111,7 +13134,7 @@ class EosCliConfigGen(AvdRootModel):
             ospf_network_point_to_point: bool | None | UndefinedType = Undefined,
             ospf_area: str | None | UndefinedType = Undefined,
             ospf_cost: int | None | UndefinedType = Undefined,
-            ospf_authentication: str | None | UndefinedType = Undefined,
+            ospf_authentication: Literal["none", "simple", "message-digest"] | None | UndefinedType = Undefined,
             ospf_authentication_key: str | None | UndefinedType = Undefined,
             ospf_message_digest_keys: OspfMessageDigestKeys | UndefinedType = Undefined,
             pim: Pim | UndefinedType = Undefined,
@@ -13123,9 +13146,9 @@ class EosCliConfigGen(AvdRootModel):
             isis_passive: bool | None | UndefinedType = Undefined,
             isis_metric: int | None | UndefinedType = Undefined,
             isis_network_point_to_point: bool | None | UndefinedType = Undefined,
-            isis_circuit_type: str | None | UndefinedType = Undefined,
+            isis_circuit_type: Literal["level-1-2", "level-1", "level-2"] | None | UndefinedType = Undefined,
             isis_hello_padding: bool | None | UndefinedType = Undefined,
-            isis_authentication_mode: str | None | UndefinedType = Undefined,
+            isis_authentication_mode: Literal["text", "md5"] | None | UndefinedType = Undefined,
             isis_authentication_key: str | None | UndefinedType = Undefined,
             isis_authentication: IsisAuthentication | UndefinedType = Undefined,
             poe: Poe | UndefinedType = Undefined,
@@ -13141,10 +13164,10 @@ class EosCliConfigGen(AvdRootModel):
             service_profile: str | None | UndefinedType = Undefined,
             shape: Shape | UndefinedType = Undefined,
             qos: Qos | UndefinedType = Undefined,
-            spanning_tree_bpdufilter: str | None | UndefinedType = Undefined,
-            spanning_tree_bpduguard: str | None | UndefinedType = Undefined,
-            spanning_tree_guard: str | None | UndefinedType = Undefined,
-            spanning_tree_portfast: str | None | UndefinedType = Undefined,
+            spanning_tree_bpdufilter: Literal["enabled", "disabled", "True", "False", "true", "false"] | None | UndefinedType = Undefined,
+            spanning_tree_bpduguard: Literal["enabled", "disabled", "True", "False", "true", "false"] | None | UndefinedType = Undefined,
+            spanning_tree_guard: Literal["loop", "root", "disabled"] | None | UndefinedType = Undefined,
+            spanning_tree_portfast: Literal["edge", "network"] | None | UndefinedType = Undefined,
             vmtracer: bool | None | UndefinedType = Undefined,
             priority_flow_control: PriorityFlowControl | UndefinedType = Undefined,
             bfd: Bfd | UndefinedType = Undefined,
@@ -13580,16 +13603,16 @@ class EosCliConfigGen(AvdRootModel):
             _required_fields: ClassVar[tuple] = ("operation", "action", "_custom_data")
             _field_to_key_map: ClassVar[dict] = {}
             _key_to_field_map: ClassVar[dict] = {}
-            operation: str
+            operation: Literal["enter", "exit"]
             bgp_peer: str | None
             """
             Ipv4/Ipv6 address or peer group name.
             Trigger condition occurs on maintenance operation of specified
             BGP peer.
             """
-            action: str
+            action: Literal["after", "before", "all", "begin", "end"]
             """Action for maintenance operation."""
-            stage: str | None
+            stage: Literal["bgp", "linkdown", "mlag", "ratemon"] | None
             """Action is triggered after/before specified stage."""
             vrf: str | None
             """VRF name. VRF can be defined for "bgp_peer" only."""
@@ -13602,10 +13625,10 @@ class EosCliConfigGen(AvdRootModel):
             def __init__(
                 self,
                 *,
-                operation: str | UndefinedType = Undefined,
+                operation: Literal["enter", "exit"] | UndefinedType = Undefined,
                 bgp_peer: str | None | UndefinedType = Undefined,
-                action: str | UndefinedType = Undefined,
-                stage: str | None | UndefinedType = Undefined,
+                action: Literal["after", "before", "all", "begin", "end"] | UndefinedType = Undefined,
+                stage: Literal["bgp", "linkdown", "mlag", "ratemon"] | None | UndefinedType = Undefined,
                 vrf: str | None | UndefinedType = Undefined,
                 interface: str | None | UndefinedType = Undefined,
                 unit: str | None | UndefinedType = Undefined,
@@ -13660,7 +13683,7 @@ class EosCliConfigGen(AvdRootModel):
         """
         delay: int | None
         """Event-handler delay in seconds."""
-        trigger: str | None
+        trigger: Literal["on-boot", "on-counters", "on-intf", "on-logging", "on-maintenance", "on-startup-config", "vm-tracer vm"] | None
         """Configure event trigger condition."""
         trigger_on_counters: TriggerOnCounters
         """Subclass of AvdModel."""
@@ -13694,7 +13717,9 @@ class EosCliConfigGen(AvdRootModel):
             name: str | UndefinedType = Undefined,
             actions: Actions | UndefinedType = Undefined,
             delay: int | None | UndefinedType = Undefined,
-            trigger: str | None | UndefinedType = Undefined,
+            trigger: Literal["on-boot", "on-counters", "on-intf", "on-logging", "on-maintenance", "on-startup-config", "vm-tracer vm"]
+            | None
+            | UndefinedType = Undefined,
             trigger_on_counters: TriggerOnCounters | UndefinedType = Undefined,
             trigger_on_logging: TriggerOnLogging | UndefinedType = Undefined,
             trigger_on_intf: TriggerOnIntf | UndefinedType = Undefined,
@@ -14479,10 +14504,15 @@ class EosCliConfigGen(AvdRootModel):
             _required_fields: ClassVar[tuple] = ("_custom_data",)
             _field_to_key_map: ClassVar[dict] = {}
             _key_to_field_map: ClassVar[dict] = {}
-            mechanism: str | None
+            mechanism: Literal["algomatch", "none", "tcam"] | None
             _custom_data: dict[str, Any]
 
-            def __init__(self, *, mechanism: str | None | UndefinedType = Undefined, _custom_data: dict[str, Any] | UndefinedType = Undefined) -> None:
+            def __init__(
+                self,
+                *,
+                mechanism: Literal["algomatch", "none", "tcam"] | None | UndefinedType = Undefined,
+                _custom_data: dict[str, Any] | UndefinedType = Undefined,
+            ) -> None:
                 """
                 AccessList.
 
@@ -14647,15 +14677,46 @@ class EosCliConfigGen(AvdRootModel):
             _required_fields: ClassVar[tuple] = ("name", "_custom_data")
             _field_to_key_map: ClassVar[dict] = {}
             _key_to_field_map: ClassVar[dict] = {}
-            name: str
-            direction: str | None
+            name: Literal[
+                "acl",
+                "decap-group",
+                "directflow",
+                "ecn",
+                "flow-spec",
+                "gre tunnel interface",
+                "ip",
+                "mpls interface",
+                "mpls lfib",
+                "mpls tunnel",
+                "multicast",
+                "nexthop",
+                "pbr",
+                "pdp",
+                "policing interface",
+                "qos",
+                "qos dual-rate-policer",
+                "route",
+                "routed-port",
+                "segment-security",
+                "subinterface",
+                "tapagg",
+                "traffic-class",
+                "traffic-policy",
+                "vlan",
+                "vlan-interface",
+                "vni decap",
+                "vni encap",
+                "vtep decap",
+                "vtep encap",
+            ]
+            direction: Literal["in", "out", "cpu"] | None
             """
             Most features support only 'in' and 'out'. Some like traffic-policy support 'cpu'.
             Some features DO
             NOT have any direction.
             This validation IS NOT made by the schemas.
             """
-            address_type: str | None
+            address_type: Literal["ipv4", "ipv6", "mac"] | None
             """
             Supported only for the following features:
             - acl: [ipv4, ipv6, mac] if direction is 'out'
@@ -14684,9 +14745,41 @@ class EosCliConfigGen(AvdRootModel):
             def __init__(
                 self,
                 *,
-                name: str | UndefinedType = Undefined,
-                direction: str | None | UndefinedType = Undefined,
-                address_type: str | None | UndefinedType = Undefined,
+                name: Literal[
+                    "acl",
+                    "decap-group",
+                    "directflow",
+                    "ecn",
+                    "flow-spec",
+                    "gre tunnel interface",
+                    "ip",
+                    "mpls interface",
+                    "mpls lfib",
+                    "mpls tunnel",
+                    "multicast",
+                    "nexthop",
+                    "pbr",
+                    "pdp",
+                    "policing interface",
+                    "qos",
+                    "qos dual-rate-policer",
+                    "route",
+                    "routed-port",
+                    "segment-security",
+                    "subinterface",
+                    "tapagg",
+                    "traffic-class",
+                    "traffic-policy",
+                    "vlan",
+                    "vlan-interface",
+                    "vni decap",
+                    "vni encap",
+                    "vtep decap",
+                    "vtep encap",
+                ]
+                | UndefinedType = Undefined,
+                direction: Literal["in", "out", "cpu"] | None | UndefinedType = Undefined,
+                address_type: Literal["ipv4", "ipv6", "mac"] | None | UndefinedType = Undefined,
                 layer3: bool | None | UndefinedType = Undefined,
                 vrf: str | None | UndefinedType = Undefined,
                 prefix: str | None | UndefinedType = Undefined,
@@ -15104,7 +15197,7 @@ class EosCliConfigGen(AvdRootModel):
             Comment up to 100 characters.
             If remark is defined, other keys in the ACL entry will be ignored.
             """
-            action: str | None
+            action: Literal["permit", "deny"] | None
             """
             ACL action.
             Required except for remarks.
@@ -15120,7 +15213,7 @@ class EosCliConfigGen(AvdRootModel):
             "<ip>" without a mask means host.
             Required except for remarks.
             """
-            source_ports_match: str
+            source_ports_match: Literal["eq", "gt", "lt", "neq", "range"]
             """Default value: `"eq"`"""
             source_ports: SourcePorts
             """Subclass of AvdList with `str` items."""
@@ -15130,7 +15223,7 @@ class EosCliConfigGen(AvdRootModel):
             "<ip>" without a mask means host.
             Required except for remarks.
             """
-            destination_ports_match: str
+            destination_ports_match: Literal["eq", "gt", "lt", "neq", "range"]
             """Default value: `"eq"`"""
             destination_ports: DestinationPorts
             """Subclass of AvdList with `str` items."""
@@ -15142,7 +15235,7 @@ class EosCliConfigGen(AvdRootModel):
             """Log matches against this rule."""
             ttl: int | None
             """TTL value."""
-            ttl_match: str
+            ttl_match: Literal["eq", "gt", "lt", "neq"]
             """Default value: `"eq"`"""
             icmp_type: str | None
             """Message type name/number for ICMP packets."""
@@ -15166,19 +15259,19 @@ class EosCliConfigGen(AvdRootModel):
                 *,
                 sequence: int | None | UndefinedType = Undefined,
                 remark: str | None | UndefinedType = Undefined,
-                action: str | None | UndefinedType = Undefined,
+                action: Literal["permit", "deny"] | None | UndefinedType = Undefined,
                 protocol: str | None | UndefinedType = Undefined,
                 source: str | None | UndefinedType = Undefined,
-                source_ports_match: str | UndefinedType = Undefined,
+                source_ports_match: Literal["eq", "gt", "lt", "neq", "range"] | UndefinedType = Undefined,
                 source_ports: SourcePorts | UndefinedType = Undefined,
                 destination: str | None | UndefinedType = Undefined,
-                destination_ports_match: str | UndefinedType = Undefined,
+                destination_ports_match: Literal["eq", "gt", "lt", "neq", "range"] | UndefinedType = Undefined,
                 destination_ports: DestinationPorts | UndefinedType = Undefined,
                 tcp_flags: TcpFlags | UndefinedType = Undefined,
                 fragments: bool | None | UndefinedType = Undefined,
                 log: bool | None | UndefinedType = Undefined,
                 ttl: int | None | UndefinedType = Undefined,
-                ttl_match: str | UndefinedType = Undefined,
+                ttl_match: Literal["eq", "gt", "lt", "neq"] | UndefinedType = Undefined,
                 icmp_type: str | None | UndefinedType = Undefined,
                 icmp_code: str | None | UndefinedType = Undefined,
                 nexthop_group: str | None | UndefinedType = Undefined,
@@ -15263,7 +15356,7 @@ class EosCliConfigGen(AvdRootModel):
 
         Subclass of AvdList with `EntriesItem` items.
         """
-        permit_response_traffic: str | None
+        permit_response_traffic: Literal["nat"] | None
         """
         Permit response traffic automatically based on NAT translations.
         Minimum EOS version requirement
@@ -15277,7 +15370,7 @@ class EosCliConfigGen(AvdRootModel):
             name: str | UndefinedType = Undefined,
             counters_per_entry: bool | None | UndefinedType = Undefined,
             entries: Entries | UndefinedType = Undefined,
-            permit_response_traffic: str | None | UndefinedType = Undefined,
+            permit_response_traffic: Literal["nat"] | None | UndefinedType = Undefined,
             _custom_data: dict[str, Any] | UndefinedType = Undefined,
         ) -> None:
             """
@@ -15327,7 +15420,7 @@ class EosCliConfigGen(AvdRootModel):
             _required_fields: ClassVar[tuple] = ("action", "_custom_data")
             _field_to_key_map: ClassVar[dict] = {}
             _key_to_field_map: ClassVar[dict] = {}
-            action: str
+            action: Literal["permit", "deny"]
             communities: Communities
             """
             If defined, a standard community-list will be configured.
@@ -15352,7 +15445,7 @@ class EosCliConfigGen(AvdRootModel):
             def __init__(
                 self,
                 *,
-                action: str | UndefinedType = Undefined,
+                action: Literal["permit", "deny"] | UndefinedType = Undefined,
                 communities: Communities | UndefinedType = Undefined,
                 regexp: str | None | UndefinedType = Undefined,
                 _custom_data: dict[str, Any] | UndefinedType = Undefined,
@@ -15499,7 +15592,7 @@ class EosCliConfigGen(AvdRootModel):
             """Enable insertion of option-82 in DHCP request packets."""
             circuit_id_type: str | None
             """"none" or <0 - 255>."""
-            circuit_id_format: str | None
+            circuit_id_format: Literal["%h:%p", "%p:%v"] | None
             """
             Required if `circuit_id_type` is set.
             - "%h:%p" Hostname and interface name
@@ -15513,7 +15606,7 @@ class EosCliConfigGen(AvdRootModel):
                 *,
                 enabled: bool | None | UndefinedType = Undefined,
                 circuit_id_type: str | None | UndefinedType = Undefined,
-                circuit_id_format: str | None | UndefinedType = Undefined,
+                circuit_id_format: Literal["%h:%p", "%p:%v"] | None | UndefinedType = Undefined,
                 _custom_data: dict[str, Any] | UndefinedType = Undefined,
             ) -> None:
                 """
@@ -15674,7 +15767,7 @@ class EosCliConfigGen(AvdRootModel):
             _required_fields: ClassVar[tuple] = ("type", "extcommunities", "_custom_data")
             _field_to_key_map: ClassVar[dict] = {}
             _key_to_field_map: ClassVar[dict] = {}
-            type: str
+            type: Literal["permit", "deny"]
             extcommunities: str
             """
             Communities as string.
@@ -15685,7 +15778,7 @@ class EosCliConfigGen(AvdRootModel):
             def __init__(
                 self,
                 *,
-                type: str | UndefinedType = Undefined,
+                type: Literal["permit", "deny"] | UndefinedType = Undefined,
                 extcommunities: str | UndefinedType = Undefined,
                 _custom_data: dict[str, Any] | UndefinedType = Undefined,
             ) -> None:
@@ -15764,7 +15857,7 @@ class EosCliConfigGen(AvdRootModel):
             _required_fields: ClassVar[tuple] = ("type", "regexp", "_custom_data")
             _field_to_key_map: ClassVar[dict] = {}
             _key_to_field_map: ClassVar[dict] = {}
-            type: str
+            type: Literal["permit", "deny"]
             regexp: str
             """Regular Expression."""
             _custom_data: dict[str, Any]
@@ -15772,7 +15865,7 @@ class EosCliConfigGen(AvdRootModel):
             def __init__(
                 self,
                 *,
-                type: str | UndefinedType = Undefined,
+                type: Literal["permit", "deny"] | UndefinedType = Undefined,
                 regexp: str | UndefinedType = Undefined,
                 _custom_data: dict[str, Any] | UndefinedType = Undefined,
             ) -> None:
@@ -15900,10 +15993,15 @@ class EosCliConfigGen(AvdRootModel):
                     _required_fields: ClassVar[tuple] = ("_custom_data",)
                     _field_to_key_map: ClassVar[dict] = {}
                     _key_to_field_map: ClassVar[dict] = {}
-                    profile: str | None
+                    profile: Literal["internet", "urpf-internet"] | None
                     _custom_data: dict[str, Any]
 
-                    def __init__(self, *, profile: str | None | UndefinedType = Undefined, _custom_data: dict[str, Any] | UndefinedType = Undefined) -> None:
+                    def __init__(
+                        self,
+                        *,
+                        profile: Literal["internet", "urpf-internet"] | None | UndefinedType = Undefined,
+                        _custom_data: dict[str, Any] | UndefinedType = Undefined,
+                    ) -> None:
                         """
                         Prefixes.
 
@@ -16441,7 +16539,7 @@ class EosCliConfigGen(AvdRootModel):
                     access_list: str | None
                     """'access_list' and 'group' are mutual exclusive."""
                     comment: str | None
-                    direction: str | None
+                    direction: Literal["egress", "ingress"] | None
                     """
                     Egress or ingress can be the default. This depends on source/destination, EOS version, and hardware
                     platform.
@@ -16455,7 +16553,7 @@ class EosCliConfigGen(AvdRootModel):
                     original_port: int | None
                     """TCP/UDP port. The combination of `original_ip` and `original_port` must be unique."""
                     priority: int | None
-                    protocol: str | None
+                    protocol: Literal["udp", "tcp"] | None
                     translated_ip: str
                     """IPv4 address."""
                     translated_port: int | None
@@ -16467,12 +16565,12 @@ class EosCliConfigGen(AvdRootModel):
                         *,
                         access_list: str | None | UndefinedType = Undefined,
                         comment: str | None | UndefinedType = Undefined,
-                        direction: str | None | UndefinedType = Undefined,
+                        direction: Literal["egress", "ingress"] | None | UndefinedType = Undefined,
                         group: int | None | UndefinedType = Undefined,
                         original_ip: str | None | UndefinedType = Undefined,
                         original_port: int | None | UndefinedType = Undefined,
                         priority: int | None | UndefinedType = Undefined,
-                        protocol: str | None | UndefinedType = Undefined,
+                        protocol: Literal["udp", "tcp"] | None | UndefinedType = Undefined,
                         translated_ip: str | UndefinedType = Undefined,
                         translated_port: int | None | UndefinedType = Undefined,
                         _custom_data: dict[str, Any] | UndefinedType = Undefined,
@@ -16564,7 +16662,7 @@ class EosCliConfigGen(AvdRootModel):
                     _key_to_field_map: ClassVar[dict] = {}
                     access_list: str
                     comment: str | None
-                    nat_type: str
+                    nat_type: Literal["overload", "pool", "pool-address-only", "pool-full-cone"]
                     pool_name: str | None
                     """
                     required if 'nat_type' is pool, pool-address-only or pool-full-cone.
@@ -16579,7 +16677,7 @@ class EosCliConfigGen(AvdRootModel):
                         *,
                         access_list: str | UndefinedType = Undefined,
                         comment: str | None | UndefinedType = Undefined,
-                        nat_type: str | UndefinedType = Undefined,
+                        nat_type: Literal["overload", "pool", "pool-address-only", "pool-full-cone"] | UndefinedType = Undefined,
                         pool_name: str | None | UndefinedType = Undefined,
                         priority: int | None | UndefinedType = Undefined,
                         _custom_data: dict[str, Any] | UndefinedType = Undefined,
@@ -16636,7 +16734,7 @@ class EosCliConfigGen(AvdRootModel):
                     access_list: str | None
                     """'access_list' and 'group' are mutual exclusive."""
                     comment: str | None
-                    direction: str | None
+                    direction: Literal["egress", "ingress"] | None
                     """
                     Egress or ingress can be the default. This depends on source/destination, EOS version, and hardware
                     platform.
@@ -16650,7 +16748,7 @@ class EosCliConfigGen(AvdRootModel):
                     original_port: int | None
                     """TCP/UDP port. The combination of `original_ip` and `original_port` must be unique."""
                     priority: int | None
-                    protocol: str | None
+                    protocol: Literal["udp", "tcp"] | None
                     translated_ip: str
                     """IPv4 address."""
                     translated_port: int | None
@@ -16662,12 +16760,12 @@ class EosCliConfigGen(AvdRootModel):
                         *,
                         access_list: str | None | UndefinedType = Undefined,
                         comment: str | None | UndefinedType = Undefined,
-                        direction: str | None | UndefinedType = Undefined,
+                        direction: Literal["egress", "ingress"] | None | UndefinedType = Undefined,
                         group: int | None | UndefinedType = Undefined,
                         original_ip: str | None | UndefinedType = Undefined,
                         original_port: int | None | UndefinedType = Undefined,
                         priority: int | None | UndefinedType = Undefined,
-                        protocol: str | None | UndefinedType = Undefined,
+                        protocol: Literal["udp", "tcp"] | None | UndefinedType = Undefined,
                         translated_ip: str | UndefinedType = Undefined,
                         translated_port: int | None | UndefinedType = Undefined,
                         _custom_data: dict[str, Any] | UndefinedType = Undefined,
@@ -16883,7 +16981,7 @@ class EosCliConfigGen(AvdRootModel):
             _field_to_key_map: ClassVar[dict] = {}
             _key_to_field_map: ClassVar[dict] = {}
             name: str
-            type: str
+            type: Literal["ip-port", "port-only"]
             """Default value: `"ip-port"`"""
             prefix_length: int | None
             """It is only used and required when `type` is `ip-port`."""
@@ -16896,7 +16994,7 @@ class EosCliConfigGen(AvdRootModel):
                 self,
                 *,
                 name: str | UndefinedType = Undefined,
-                type: str | UndefinedType = Undefined,
+                type: Literal["ip-port", "port-only"] | UndefinedType = Undefined,
                 prefix_length: int | None | UndefinedType = Undefined,
                 ranges: Ranges | UndefinedType = Undefined,
                 utilization_log_threshold: int | None | UndefinedType = Undefined,
@@ -17196,7 +17294,7 @@ class EosCliConfigGen(AvdRootModel):
                 _required_fields: ClassVar[tuple] = ("protocol", "timeout", "_custom_data")
                 _field_to_key_map: ClassVar[dict] = {}
                 _key_to_field_map: ClassVar[dict] = {}
-                protocol: str
+                protocol: Literal["tcp", "udp"]
                 timeout: int
                 """In seconds."""
                 _custom_data: dict[str, Any]
@@ -17204,7 +17302,7 @@ class EosCliConfigGen(AvdRootModel):
                 def __init__(
                     self,
                     *,
-                    protocol: str | UndefinedType = Undefined,
+                    protocol: Literal["tcp", "udp"] | UndefinedType = Undefined,
                     timeout: int | UndefinedType = Undefined,
                     _custom_data: dict[str, Any] | UndefinedType = Undefined,
                 ) -> None:
@@ -17415,11 +17513,11 @@ class EosCliConfigGen(AvdRootModel):
             """
             ike_lifetime: int | None
             """IKE lifetime in hours."""
-            encryption: str | None
+            encryption: Literal["3des", "aes128", "aes256"] | None
             """IKE encryption algorithm."""
-            dh_group: int | None
+            dh_group: Literal[1, 2, 5, 14, 15, 16, 17, 20, 21, 24] | None
             """Diffie-Hellman group for the key exchange."""
-            integrity: str | None
+            integrity: Literal["md5", "sha1", "sha256", "sha384", "sha512"] | None
             """Integrity algorithm."""
             _custom_data: dict[str, Any]
 
@@ -17430,9 +17528,9 @@ class EosCliConfigGen(AvdRootModel):
                 local_id: str | None | UndefinedType = Undefined,
                 local_id_fqdn: str | None | UndefinedType = Undefined,
                 ike_lifetime: int | None | UndefinedType = Undefined,
-                encryption: str | None | UndefinedType = Undefined,
-                dh_group: int | None | UndefinedType = Undefined,
-                integrity: str | None | UndefinedType = Undefined,
+                encryption: Literal["3des", "aes128", "aes256"] | None | UndefinedType = Undefined,
+                dh_group: Literal[1, 2, 5, 14, 15, 16, 17, 20, 21, 24] | None | UndefinedType = Undefined,
+                integrity: Literal["md5", "sha1", "sha256", "sha384", "sha512"] | None | UndefinedType = Undefined,
                 _custom_data: dict[str, Any] | UndefinedType = Undefined,
             ) -> None:
                 """
@@ -17491,7 +17589,7 @@ class EosCliConfigGen(AvdRootModel):
                 <1-6000>     Byte limit in GB ( 1024 MB )
                 <1-6144000>  Byte limit in MB ( 1024 KB )
                 """
-                unit: str
+                unit: Literal["gigabytes", "hours", "megabytes", "thousand-packets"]
                 """Default value: `"hours"`"""
                 _custom_data: dict[str, Any]
 
@@ -17499,7 +17597,7 @@ class EosCliConfigGen(AvdRootModel):
                     self,
                     *,
                     value: int | None | UndefinedType = Undefined,
-                    unit: str | UndefinedType = Undefined,
+                    unit: Literal["gigabytes", "hours", "megabytes", "thousand-packets"] | UndefinedType = Undefined,
                     _custom_data: dict[str, Any] | UndefinedType = Undefined,
                 ) -> None:
                     """
@@ -17533,15 +17631,17 @@ class EosCliConfigGen(AvdRootModel):
                 _required_fields: ClassVar[tuple] = ("_custom_data",)
                 _field_to_key_map: ClassVar[dict] = {}
                 _key_to_field_map: ClassVar[dict] = {}
-                integrity: str | None
-                encryption: str | None
+                integrity: Literal["disabled", "sha1", "sha256", "sha384", "sha512", "md5"] | None
+                encryption: Literal["disabled", "aes128", "aes128gcm128", "aes128gcm64", "aes256", "aes256gcm128", "3des"] | None
                 _custom_data: dict[str, Any]
 
                 def __init__(
                     self,
                     *,
-                    integrity: str | None | UndefinedType = Undefined,
-                    encryption: str | None | UndefinedType = Undefined,
+                    integrity: Literal["disabled", "sha1", "sha256", "sha384", "sha512", "md5"] | None | UndefinedType = Undefined,
+                    encryption: Literal["disabled", "aes128", "aes128gcm128", "aes128gcm64", "aes256", "aes256gcm128", "3des"]
+                    | None
+                    | UndefinedType = Undefined,
                     _custom_data: dict[str, Any] | UndefinedType = Undefined,
                 ) -> None:
                     """
@@ -17577,7 +17677,7 @@ class EosCliConfigGen(AvdRootModel):
             """Subclass of AvdModel."""
             esp: Esp
             """Subclass of AvdModel."""
-            pfs_dh_group: int | None
+            pfs_dh_group: Literal[1, 2, 5, 14, 15, 16, 17, 20, 21, 24] | None
             _custom_data: dict[str, Any]
 
             def __init__(
@@ -17586,7 +17686,7 @@ class EosCliConfigGen(AvdRootModel):
                 name: str | UndefinedType = Undefined,
                 sa_lifetime: SaLifetime | UndefinedType = Undefined,
                 esp: Esp | UndefinedType = Undefined,
-                pfs_dh_group: int | None | UndefinedType = Undefined,
+                pfs_dh_group: Literal[1, 2, 5, 14, 15, 16, 17, 20, 21, 24] | None | UndefinedType = Undefined,
                 _custom_data: dict[str, Any] | UndefinedType = Undefined,
             ) -> None:
                 """
@@ -17629,7 +17729,7 @@ class EosCliConfigGen(AvdRootModel):
                 """Interval (in seconds) between keep-alive messages."""
                 time: int
                 """Time (in seconds) after which the action is applied."""
-                action: str
+                action: Literal["clear", "hold", "restart"]
                 """
                 Action to apply.
 
@@ -17645,7 +17745,7 @@ class EosCliConfigGen(AvdRootModel):
                     *,
                     interval: int | UndefinedType = Undefined,
                     time: int | UndefinedType = Undefined,
-                    action: str | UndefinedType = Undefined,
+                    action: Literal["clear", "hold", "restart"] | UndefinedType = Undefined,
                     _custom_data: dict[str, Any] | UndefinedType = Undefined,
                 ) -> None:
                     """
@@ -17692,7 +17792,7 @@ class EosCliConfigGen(AvdRootModel):
             """Name of the IKE policy to use in this profile."""
             sa_policy: str | None
             """Name of the Security Association to use in this profile."""
-            connection: str | None
+            connection: Literal["add", "start", "route"] | None
             """IPsec connection (Initiator/Responder/Dynamic)."""
             shared_key: str | None
             """Encrypted password - only type 7 supported."""
@@ -17702,7 +17802,7 @@ class EosCliConfigGen(AvdRootModel):
 
             Subclass of AvdModel.
             """
-            mode: str | None
+            mode: Literal["transport", "tunnel"] | None
             """Ipsec mode type."""
             flow_parallelization_encapsulation_udp: bool | None
             """
@@ -17718,10 +17818,10 @@ class EosCliConfigGen(AvdRootModel):
                 name: str | UndefinedType = Undefined,
                 ike_policy: str | None | UndefinedType = Undefined,
                 sa_policy: str | None | UndefinedType = Undefined,
-                connection: str | None | UndefinedType = Undefined,
+                connection: Literal["add", "start", "route"] | None | UndefinedType = Undefined,
                 shared_key: str | None | UndefinedType = Undefined,
                 dpd: Dpd | UndefinedType = Undefined,
-                mode: str | None | UndefinedType = Undefined,
+                mode: Literal["transport", "tunnel"] | None | UndefinedType = Undefined,
                 flow_parallelization_encapsulation_udp: bool | None | UndefinedType = Undefined,
                 _custom_data: dict[str, Any] | UndefinedType = Undefined,
             ) -> None:
@@ -18156,7 +18256,7 @@ class EosCliConfigGen(AvdRootModel):
             _key_to_field_map: ClassVar[dict] = {}
             link_layer_address: bool | None
             """Add Option 79 (Link Layer Address Option)."""
-            remote_id_format: str | None
+            remote_id_format: Literal["%m:%i", "%m:%p"] | None
             """
             Add RemoteID option 37 in format MAC address and interface ID (`%m:%i`) or MAC address and interface
             name (`%m:%p`).
@@ -18167,7 +18267,7 @@ class EosCliConfigGen(AvdRootModel):
                 self,
                 *,
                 link_layer_address: bool | None | UndefinedType = Undefined,
-                remote_id_format: str | None | UndefinedType = Undefined,
+                remote_id_format: Literal["%m:%i", "%m:%p"] | None | UndefinedType = Undefined,
                 _custom_data: dict[str, Any] | UndefinedType = Undefined,
             ) -> None:
                 """
@@ -18778,7 +18878,7 @@ class EosCliConfigGen(AvdRootModel):
                 _required_fields: ClassVar[tuple] = ("name", "_custom_data")
                 _field_to_key_map: ClassVar[dict] = {}
                 _key_to_field_map: ClassVar[dict] = {}
-                name: str
+                name: Literal["bfd per-link rfc-7130", "e-lmi", "isis", "lacp", "lldp", "macsec", "pause", "stp"]
                 forward: bool | None
                 tagged_forward: bool | None
                 untagged_forward: bool | None
@@ -18787,7 +18887,7 @@ class EosCliConfigGen(AvdRootModel):
                 def __init__(
                     self,
                     *,
-                    name: str | UndefinedType = Undefined,
+                    name: Literal["bfd per-link rfc-7130", "e-lmi", "isis", "lacp", "lldp", "macsec", "pause", "stp"] | UndefinedType = Undefined,
                     forward: bool | None | UndefinedType = Undefined,
                     tagged_forward: bool | None | UndefinedType = Undefined,
                     untagged_forward: bool | None | UndefinedType = Undefined,
@@ -19094,14 +19194,39 @@ class EosCliConfigGen(AvdRootModel):
             _required_fields: ClassVar[tuple] = ("name", "_custom_data")
             _field_to_key_map: ClassVar[dict] = {}
             _key_to_field_map: ClassVar[dict] = {}
-            name: str
+            name: Literal[
+                "link-aggregation",
+                "management-address",
+                "max-frame-size",
+                "med",
+                "port-description",
+                "port-vlan",
+                "power-via-mdi",
+                "system-capabilities",
+                "system-description",
+                "system-name",
+                "vlan-name",
+            ]
             transmit: bool | None
             _custom_data: dict[str, Any]
 
             def __init__(
                 self,
                 *,
-                name: str | UndefinedType = Undefined,
+                name: Literal[
+                    "link-aggregation",
+                    "management-address",
+                    "max-frame-size",
+                    "med",
+                    "port-description",
+                    "port-vlan",
+                    "power-via-mdi",
+                    "system-capabilities",
+                    "system-description",
+                    "system-name",
+                    "vlan-name",
+                ]
+                | UndefinedType = Undefined,
                 transmit: bool | None | UndefinedType = Undefined,
                 _custom_data: dict[str, Any] | UndefinedType = Undefined,
             ) -> None:
@@ -19261,7 +19386,7 @@ class EosCliConfigGen(AvdRootModel):
         """
         ssh_key: str | None
         secondary_ssh_key: str | None
-        shell: str | None
+        shell: Literal["/bin/bash", "/bin/sh", "/sbin/nologin"] | None
         """Specify shell for the user."""
         _custom_data: dict[str, Any]
 
@@ -19276,7 +19401,7 @@ class EosCliConfigGen(AvdRootModel):
             no_password: bool | None | UndefinedType = Undefined,
             ssh_key: str | None | UndefinedType = Undefined,
             secondary_ssh_key: str | None | UndefinedType = Undefined,
-            shell: str | None | UndefinedType = Undefined,
+            shell: Literal["/bin/bash", "/bin/sh", "/sbin/nologin"] | None | UndefinedType = Undefined,
             _custom_data: dict[str, Any] | UndefinedType = Undefined,
         ) -> None:
             """
@@ -19329,7 +19454,7 @@ class EosCliConfigGen(AvdRootModel):
             _field_to_key_map: ClassVar[dict] = {}
             _key_to_field_map: ClassVar[dict] = {}
             size: int | None
-            level: str | None
+            level: Literal["alerts", "critical", "debugging", "emergencies", "errors", "informational", "notifications", "warnings", "disabled"] | None
             """Buffer logging severity level."""
             _custom_data: dict[str, Any]
 
@@ -19337,7 +19462,9 @@ class EosCliConfigGen(AvdRootModel):
                 self,
                 *,
                 size: int | None | UndefinedType = Undefined,
-                level: str | None | UndefinedType = Undefined,
+                level: Literal["alerts", "critical", "debugging", "emergencies", "errors", "informational", "notifications", "warnings", "disabled"]
+                | None
+                | UndefinedType = Undefined,
                 _custom_data: dict[str, Any] | UndefinedType = Undefined,
             ) -> None:
                 """
@@ -19364,7 +19491,7 @@ class EosCliConfigGen(AvdRootModel):
             _required_fields: ClassVar[tuple] = ("_custom_data",)
             _field_to_key_map: ClassVar[dict] = {}
             _key_to_field_map: ClassVar[dict] = {}
-            level: str
+            level: Literal["alerts", "all", "critical", "debugging", "emergencies", "errors", "informational", "notifications", "warnings", "disabled"]
             """
             Synchronous logging severity level.
 
@@ -19372,7 +19499,13 @@ class EosCliConfigGen(AvdRootModel):
             """
             _custom_data: dict[str, Any]
 
-            def __init__(self, *, level: str | UndefinedType = Undefined, _custom_data: dict[str, Any] | UndefinedType = Undefined) -> None:
+            def __init__(
+                self,
+                *,
+                level: Literal["alerts", "all", "critical", "debugging", "emergencies", "errors", "informational", "notifications", "warnings", "disabled"]
+                | UndefinedType = Undefined,
+                _custom_data: dict[str, Any] | UndefinedType = Undefined,
+            ) -> None:
                 """
                 Synchronous.
 
@@ -19402,9 +19535,12 @@ class EosCliConfigGen(AvdRootModel):
             _required_fields: ClassVar[tuple] = ("_custom_data",)
             _field_to_key_map: ClassVar[dict] = {}
             _key_to_field_map: ClassVar[dict] = {}
-            timestamp: str | None
+            timestamp: (
+                Literal["high-resolution", "traditional", "traditional timezone", "traditional year", "traditional timezone year", "traditional year timezone"]
+                | None
+            )
             """Timestamp format."""
-            hostname: str | None
+            hostname: Literal["fqdn", "ipv4"] | None
             """Hostname format in syslogs. For hostname _only_, remove the line. (default EOS CLI behaviour)."""
             sequence_numbers: bool | None
             """Add sequence numbers to log messages."""
@@ -19415,8 +19551,12 @@ class EosCliConfigGen(AvdRootModel):
             def __init__(
                 self,
                 *,
-                timestamp: str | None | UndefinedType = Undefined,
-                hostname: str | None | UndefinedType = Undefined,
+                timestamp: Literal[
+                    "high-resolution", "traditional", "traditional timezone", "traditional year", "traditional timezone year", "traditional year timezone"
+                ]
+                | None
+                | UndefinedType = Undefined,
+                hostname: Literal["fqdn", "ipv4"] | None | UndefinedType = Undefined,
                 sequence_numbers: bool | None | UndefinedType = Undefined,
                 rfc5424: bool | None | UndefinedType = Undefined,
                 _custom_data: dict[str, Any] | UndefinedType = Undefined,
@@ -19462,7 +19602,7 @@ class EosCliConfigGen(AvdRootModel):
                 _key_to_field_map: ClassVar[dict] = {}
                 name: str
                 """Syslog server name."""
-                protocol: str
+                protocol: Literal["tcp", "udp"]
                 """Default value: `"udp"`"""
                 ports: Ports
                 """Subclass of AvdList with `int` items."""
@@ -19472,7 +19612,7 @@ class EosCliConfigGen(AvdRootModel):
                     self,
                     *,
                     name: str | UndefinedType = Undefined,
-                    protocol: str | UndefinedType = Undefined,
+                    protocol: Literal["tcp", "udp"] | UndefinedType = Undefined,
                     ports: Ports | UndefinedType = Undefined,
                     _custom_data: dict[str, Any] | UndefinedType = Undefined,
                 ) -> None:
@@ -19561,14 +19701,14 @@ class EosCliConfigGen(AvdRootModel):
                     _key_to_field_map: ClassVar[dict] = {}
                     name: str
                     """Match list."""
-                    action: str | None
+                    action: Literal["discard"] | None
                     _custom_data: dict[str, Any]
 
                     def __init__(
                         self,
                         *,
                         name: str | UndefinedType = Undefined,
-                        action: str | None | UndefinedType = Undefined,
+                        action: Literal["discard"] | None | UndefinedType = Undefined,
                         _custom_data: dict[str, Any] | UndefinedType = Undefined,
                     ) -> None:
                         """
@@ -19762,7 +19902,27 @@ class EosCliConfigGen(AvdRootModel):
             _field_to_key_map: ClassVar[dict] = {}
             _key_to_field_map: ClassVar[dict] = {}
             facility: str
-            severity: str | None
+            severity: (
+                Literal[
+                    "alerts",
+                    "critical",
+                    "debugging",
+                    "emergencies",
+                    "errors",
+                    "informational",
+                    "notifications",
+                    "warnings",
+                    "0",
+                    "1",
+                    "2",
+                    "3",
+                    "4",
+                    "5",
+                    "6",
+                    "7",
+                ]
+                | None
+            )
             """
             Severity of facility. Below are the supported severities.
             emergencies    System is unusable
@@ -19785,7 +19945,26 @@ class EosCliConfigGen(AvdRootModel):
                 self,
                 *,
                 facility: str | UndefinedType = Undefined,
-                severity: str | None | UndefinedType = Undefined,
+                severity: Literal[
+                    "alerts",
+                    "critical",
+                    "debugging",
+                    "emergencies",
+                    "errors",
+                    "informational",
+                    "notifications",
+                    "warnings",
+                    "0",
+                    "1",
+                    "2",
+                    "3",
+                    "4",
+                    "5",
+                    "6",
+                    "7",
+                ]
+                | None
+                | UndefinedType = Undefined,
                 _custom_data: dict[str, Any] | UndefinedType = Undefined,
             ) -> None:
                 """
@@ -19845,21 +20024,49 @@ class EosCliConfigGen(AvdRootModel):
         _required_fields: ClassVar[tuple] = ("_custom_data",)
         _field_to_key_map: ClassVar[dict] = {}
         _key_to_field_map: ClassVar[dict] = {}
-        console: str | None
+        console: Literal["debugging", "informational", "notifications", "warnings", "errors", "critical", "alerts", "emergencies", "disabled"] | None
         """Console logging severity level."""
-        monitor: str | None
+        monitor: Literal["debugging", "informational", "notifications", "warnings", "errors", "critical", "alerts", "emergencies", "disabled"] | None
         """Monitor logging severity level."""
         buffered: Buffered
         """Subclass of AvdModel."""
         repeat_messages: bool | None
         """Summarize concurrent repeat messages."""
-        trap: str | None
+        trap: Literal["alerts", "critical", "debugging", "emergencies", "errors", "informational", "notifications", "system", "warnings", "disabled"] | None
         """Trap logging severity level."""
         synchronous: Synchronous
         """Subclass of AvdModel."""
         format: Format
         """Subclass of AvdModel."""
-        facility: str | None
+        facility: (
+            Literal[
+                "auth",
+                "cron",
+                "daemon",
+                "kern",
+                "local0",
+                "local1",
+                "local2",
+                "local3",
+                "local4",
+                "local5",
+                "local6",
+                "local7",
+                "lpr",
+                "mail",
+                "news",
+                "sys9",
+                "sys10",
+                "sys11",
+                "sys12",
+                "sys13",
+                "sys14",
+                "syslog",
+                "user",
+                "uucp",
+            ]
+            | None
+        )
         source_interface: str | None
         """Source Interface Name."""
         vrfs: Vrfs
@@ -19880,14 +20087,47 @@ class EosCliConfigGen(AvdRootModel):
         def __init__(
             self,
             *,
-            console: str | None | UndefinedType = Undefined,
-            monitor: str | None | UndefinedType = Undefined,
+            console: Literal["debugging", "informational", "notifications", "warnings", "errors", "critical", "alerts", "emergencies", "disabled"]
+            | None
+            | UndefinedType = Undefined,
+            monitor: Literal["debugging", "informational", "notifications", "warnings", "errors", "critical", "alerts", "emergencies", "disabled"]
+            | None
+            | UndefinedType = Undefined,
             buffered: Buffered | UndefinedType = Undefined,
             repeat_messages: bool | None | UndefinedType = Undefined,
-            trap: str | None | UndefinedType = Undefined,
+            trap: Literal["alerts", "critical", "debugging", "emergencies", "errors", "informational", "notifications", "system", "warnings", "disabled"]
+            | None
+            | UndefinedType = Undefined,
             synchronous: Synchronous | UndefinedType = Undefined,
             format: Format | UndefinedType = Undefined,
-            facility: str | None | UndefinedType = Undefined,
+            facility: Literal[
+                "auth",
+                "cron",
+                "daemon",
+                "kern",
+                "local0",
+                "local1",
+                "local2",
+                "local3",
+                "local4",
+                "local5",
+                "local6",
+                "local7",
+                "lpr",
+                "mail",
+                "news",
+                "sys9",
+                "sys10",
+                "sys11",
+                "sys12",
+                "sys13",
+                "sys14",
+                "syslog",
+                "user",
+                "uucp",
+            ]
+            | None
+            | UndefinedType = Undefined,
             source_interface: str | None | UndefinedType = Undefined,
             vrfs: Vrfs | UndefinedType = Undefined,
             policy: Policy | UndefinedType = Undefined,
@@ -20499,10 +20739,12 @@ class EosCliConfigGen(AvdRootModel):
                     _required_fields: ClassVar[tuple] = ("mode", "_custom_data")
                     _field_to_key_map: ClassVar[dict] = {}
                     _key_to_field_map: ClassVar[dict] = {}
-                    mode: str
+                    mode: Literal["encrypt", "bypass"]
                     _custom_data: dict[str, Any]
 
-                    def __init__(self, *, mode: str | UndefinedType = Undefined, _custom_data: dict[str, Any] | UndefinedType = Undefined) -> None:
+                    def __init__(
+                        self, *, mode: Literal["encrypt", "bypass"] | UndefinedType = Undefined, _custom_data: dict[str, Any] | UndefinedType = Undefined
+                    ) -> None:
                         """
                         EthernetFlowControl.
 
@@ -20526,10 +20768,15 @@ class EosCliConfigGen(AvdRootModel):
                     _required_fields: ClassVar[tuple] = ("mode", "_custom_data")
                     _field_to_key_map: ClassVar[dict] = {}
                     _key_to_field_map: ClassVar[dict] = {}
-                    mode: str
+                    mode: Literal["bypass", "bypass unauthorized"]
                     _custom_data: dict[str, Any]
 
-                    def __init__(self, *, mode: str | UndefinedType = Undefined, _custom_data: dict[str, Any] | UndefinedType = Undefined) -> None:
+                    def __init__(
+                        self,
+                        *,
+                        mode: Literal["bypass", "bypass unauthorized"] | UndefinedType = Undefined,
+                        _custom_data: dict[str, Any] | UndefinedType = Undefined,
+                    ) -> None:
                         """
                         Lldp.
 
@@ -20587,7 +20834,7 @@ class EosCliConfigGen(AvdRootModel):
                 _required_fields: ClassVar[tuple] = ("action", "_custom_data")
                 _field_to_key_map: ClassVar[dict] = {}
                 _key_to_field_map: ClassVar[dict] = {}
-                action: str
+                action: Literal["allow", "drop"]
                 """Allow/drop the transmit/receive of unprotected traffic."""
                 allow_active_sak: bool | None
                 """Allow transmit/receive of encrypted traffic using operational SAK and block otherwise."""
@@ -20596,7 +20843,7 @@ class EosCliConfigGen(AvdRootModel):
                 def __init__(
                     self,
                     *,
-                    action: str | UndefinedType = Undefined,
+                    action: Literal["allow", "drop"] | UndefinedType = Undefined,
                     allow_active_sak: bool | None | UndefinedType = Undefined,
                     _custom_data: dict[str, Any] | UndefinedType = Undefined,
                 ) -> None:
@@ -20632,7 +20879,7 @@ class EosCliConfigGen(AvdRootModel):
             _key_to_field_map: ClassVar[dict] = {}
             name: str
             """Profile-Name."""
-            cipher: str | None
+            cipher: Literal["aes128-gcm", "aes128-gcm-xpn", "aes256-gcm", "aes256-gcm-xpn"] | None
             connection_keys: ConnectionKeys
             """Subclass of AvdIndexedList with `ConnectionKeysItem` items. Primary key is `id` (`str`)."""
             mka: Mka
@@ -20648,7 +20895,7 @@ class EosCliConfigGen(AvdRootModel):
                 self,
                 *,
                 name: str | UndefinedType = Undefined,
-                cipher: str | None | UndefinedType = Undefined,
+                cipher: Literal["aes128-gcm", "aes128-gcm-xpn", "aes256-gcm", "aes256-gcm-xpn"] | None | UndefinedType = Undefined,
                 connection_keys: ConnectionKeys | UndefinedType = Undefined,
                 mka: Mka | UndefinedType = Undefined,
                 sci: bool | None | UndefinedType = Undefined,
@@ -21242,7 +21489,7 @@ class EosCliConfigGen(AvdRootModel):
                 """SSL profile name."""
                 vrf: str | None
                 """VRF name is optional."""
-                notification_timestamp: str | None
+                notification_timestamp: Literal["send-time", "last-change-time"] | None
                 """
                 Per the gNMI specification, the default timestamp field of a notification message is set to be
                 the
@@ -21269,7 +21516,7 @@ class EosCliConfigGen(AvdRootModel):
                     name: str | UndefinedType = Undefined,
                     ssl_profile: str | None | UndefinedType = Undefined,
                     vrf: str | None | UndefinedType = Undefined,
-                    notification_timestamp: str | None | UndefinedType = Undefined,
+                    notification_timestamp: Literal["send-time", "last-change-time"] | None | UndefinedType = Undefined,
                     ip_access_group: str | None | UndefinedType = Undefined,
                     port: int | None | UndefinedType = Undefined,
                     _custom_data: dict[str, Any] | UndefinedType = Undefined,
@@ -21779,7 +22026,7 @@ class EosCliConfigGen(AvdRootModel):
             _required_fields: ClassVar[tuple] = ("_custom_data",)
             _field_to_key_map: ClassVar[dict] = {}
             _key_to_field_map: ClassVar[dict] = {}
-            name: str | None
+            name: Literal["sysdb", "smash"] | None
             paths: Paths
             """Subclass of AvdList with `PathsItem` items."""
             _custom_data: dict[str, Any]
@@ -21787,7 +22034,7 @@ class EosCliConfigGen(AvdRootModel):
             def __init__(
                 self,
                 *,
-                name: str | None | UndefinedType = Undefined,
+                name: Literal["sysdb", "smash"] | None | UndefinedType = Undefined,
                 paths: Paths | UndefinedType = Undefined,
                 _custom_data: dict[str, Any] | UndefinedType = Undefined,
             ) -> None:
@@ -21930,10 +22177,12 @@ class EosCliConfigGen(AvdRootModel):
             _required_fields: ClassVar[tuple] = ("_custom_data",)
             _field_to_key_map: ClassVar[dict] = {}
             _key_to_field_map: ClassVar[dict] = {}
-            hash: str | None
+            hash: Literal["md5", "sha512"] | None
             _custom_data: dict[str, Any]
 
-            def __init__(self, *, hash: str | None | UndefinedType = Undefined, _custom_data: dict[str, Any] | UndefinedType = Undefined) -> None:
+            def __init__(
+                self, *, hash: Literal["md5", "sha512"] | None | UndefinedType = Undefined, _custom_data: dict[str, Any] | UndefinedType = Undefined
+            ) -> None:
                 """
                 Secret.
 
@@ -22055,7 +22304,7 @@ class EosCliConfigGen(AvdRootModel):
         ipv6_enable: bool | None
         ipv6_address: str | None
         """IPv6_address/Mask."""
-        type: str
+        type: Literal["oob", "inband"]
         """
         For documentation purposes only.
 
@@ -22085,7 +22334,7 @@ class EosCliConfigGen(AvdRootModel):
             ip_address: str | None | UndefinedType = Undefined,
             ipv6_enable: bool | None | UndefinedType = Undefined,
             ipv6_address: str | None | UndefinedType = Undefined,
-            type: str | UndefinedType = Undefined,
+            type: Literal["oob", "inband"] | UndefinedType = Undefined,
             gateway: str | None | UndefinedType = Undefined,
             ipv6_gateway: str | None | UndefinedType = Undefined,
             mac_address: str | None | UndefinedType = Undefined,
@@ -22872,7 +23121,7 @@ class EosCliConfigGen(AvdRootModel):
                 _key_to_field_map: ClassVar[dict] = {}
                 name: str
                 secret: str
-                secret_type: str
+                secret_type: Literal["0", "7", "8a"]
                 """Default value: `"7"`"""
                 receive_lifetime: ReceiveLifetime
                 """Subclass of AvdModel."""
@@ -22887,7 +23136,7 @@ class EosCliConfigGen(AvdRootModel):
                     *,
                     name: str | UndefinedType = Undefined,
                     secret: str | UndefinedType = Undefined,
-                    secret_type: str | UndefinedType = Undefined,
+                    secret_type: Literal["0", "7", "8a"] | UndefinedType = Undefined,
                     receive_lifetime: ReceiveLifetime | UndefinedType = Undefined,
                     transmit_lifetime: TransmitLifetime | UndefinedType = Undefined,
                     local_time: bool | None | UndefinedType = Undefined,
@@ -23031,7 +23280,7 @@ class EosCliConfigGen(AvdRootModel):
             _required_fields: ClassVar[tuple] = ("_custom_data",)
             _field_to_key_map: ClassVar[dict] = {}
             _key_to_field_map: ClassVar[dict] = {}
-            empty_passwords: str | None
+            empty_passwords: Literal["auto", "deny", "permit"] | None
             """Permit or deny empty passwords for SSH authentication."""
             protocols: Protocols
             """
@@ -23044,7 +23293,7 @@ class EosCliConfigGen(AvdRootModel):
             def __init__(
                 self,
                 *,
-                empty_passwords: str | None | UndefinedType = Undefined,
+                empty_passwords: Literal["auto", "deny", "permit"] | None | UndefinedType = Undefined,
                 protocols: Protocols | UndefinedType = Undefined,
                 _custom_data: dict[str, Any] | UndefinedType = Undefined,
             ) -> None:
@@ -23482,7 +23731,7 @@ class EosCliConfigGen(AvdRootModel):
                 _key_to_field_map: ClassVar[dict] = {}
                 command: str | None
                 """Command to exclude from tech-support."""
-                type: str
+                type: Literal["text", "json"]
                 """
                 The supported values for type are platform dependent.
 
@@ -23494,7 +23743,7 @@ class EosCliConfigGen(AvdRootModel):
                     self,
                     *,
                     command: str | None | UndefinedType = Undefined,
-                    type: str | UndefinedType = Undefined,
+                    type: Literal["text", "json"] | UndefinedType = Undefined,
                     _custom_data: dict[str, Any] | UndefinedType = Undefined,
                 ) -> None:
                     """
@@ -26066,7 +26315,7 @@ class EosCliConfigGen(AvdRootModel):
                 username: str | None
                 password: str | None
                 """Encrypted password using the `password_type`."""
-                password_type: str
+                password_type: Literal["0", "7", "8a"]
                 """Default value: `"7"`"""
                 _custom_data: dict[str, Any]
 
@@ -26075,7 +26324,7 @@ class EosCliConfigGen(AvdRootModel):
                     *,
                     username: str | None | UndefinedType = Undefined,
                     password: str | None | UndefinedType = Undefined,
-                    password_type: str | UndefinedType = Undefined,
+                    password_type: Literal["0", "7", "8a"] | UndefinedType = Undefined,
                     _custom_data: dict[str, Any] | UndefinedType = Undefined,
                 ) -> None:
                     """
@@ -26110,7 +26359,7 @@ class EosCliConfigGen(AvdRootModel):
             """Server probe interval in seconds."""
             threshold_failure: int | None
             """Number of consecutive failed probes before a server is marked as dead."""
-            method: str | None
+            method: Literal["status-server", "access-request"] | None
             """Method used to probe the server. `status-server` is the EOS default method."""
             access_request: AccessRequest
             """
@@ -26125,7 +26374,7 @@ class EosCliConfigGen(AvdRootModel):
                 *,
                 interval: int | None | UndefinedType = Undefined,
                 threshold_failure: int | None | UndefinedType = Undefined,
-                method: str | None | UndefinedType = Undefined,
+                method: Literal["status-server", "access-request"] | None | UndefinedType = Undefined,
                 access_request: AccessRequest | UndefinedType = Undefined,
                 _custom_data: dict[str, Any] | UndefinedType = Undefined,
             ) -> None:
@@ -26199,11 +26448,16 @@ class EosCliConfigGen(AvdRootModel):
         _required_fields: ClassVar[tuple] = ("_custom_data",)
         _field_to_key_map: ClassVar[dict] = {}
         _key_to_field_map: ClassVar[dict] = {}
-        payload: str | None
+        payload: Literal["full-packet", "inner-packet"] | None
         """Mirroring GRE payload type configuration commands."""
         _custom_data: dict[str, Any]
 
-        def __init__(self, *, payload: str | None | UndefinedType = Undefined, _custom_data: dict[str, Any] | UndefinedType = Undefined) -> None:
+        def __init__(
+            self,
+            *,
+            payload: Literal["full-packet", "inner-packet"] | None | UndefinedType = Undefined,
+            _custom_data: dict[str, Any] | UndefinedType = Undefined,
+        ) -> None:
             """
             MonitorSessionDefaultEncapsulationGre.
 
@@ -26233,7 +26487,7 @@ class EosCliConfigGen(AvdRootModel):
                 _required_fields: ClassVar[tuple] = ("_custom_data",)
                 _field_to_key_map: ClassVar[dict] = {}
                 _key_to_field_map: ClassVar[dict] = {}
-                type: str | None
+                type: Literal["ip", "ipv6", "mac"] | None
                 name: str | None
                 """ACL Name."""
                 priority: int | None
@@ -26242,7 +26496,7 @@ class EosCliConfigGen(AvdRootModel):
                 def __init__(
                     self,
                     *,
-                    type: str | None | UndefinedType = Undefined,
+                    type: Literal["ip", "ipv6", "mac"] | None | UndefinedType = Undefined,
                     name: str | None | UndefinedType = Undefined,
                     priority: int | None | UndefinedType = Undefined,
                     _custom_data: dict[str, Any] | UndefinedType = Undefined,
@@ -26271,7 +26525,7 @@ class EosCliConfigGen(AvdRootModel):
             _key_to_field_map: ClassVar[dict] = {}
             name: str | None
             """Interface name, range or comma separated list."""
-            direction: str | None
+            direction: Literal["rx", "tx", "both"] | None
             access_group: AccessGroup
             """Subclass of AvdModel."""
             _custom_data: dict[str, Any]
@@ -26280,7 +26534,7 @@ class EosCliConfigGen(AvdRootModel):
                 self,
                 *,
                 name: str | None | UndefinedType = Undefined,
-                direction: str | None | UndefinedType = Undefined,
+                direction: Literal["rx", "tx", "both"] | None | UndefinedType = Undefined,
                 access_group: AccessGroup | UndefinedType = Undefined,
                 _custom_data: dict[str, Any] | UndefinedType = Undefined,
             ) -> None:
@@ -26319,7 +26573,7 @@ class EosCliConfigGen(AvdRootModel):
             _required_fields: ClassVar[tuple] = ("_custom_data",)
             _field_to_key_map: ClassVar[dict] = {}
             _key_to_field_map: ClassVar[dict] = {}
-            type: str | None
+            type: Literal["ip", "ipv6", "mac"] | None
             name: str | None
             """ACL Name."""
             _custom_data: dict[str, Any]
@@ -26327,7 +26581,7 @@ class EosCliConfigGen(AvdRootModel):
             def __init__(
                 self,
                 *,
-                type: str | None | UndefinedType = Undefined,
+                type: Literal["ip", "ipv6", "mac"] | None | UndefinedType = Undefined,
                 name: str | None | UndefinedType = Undefined,
                 _custom_data: dict[str, Any] | UndefinedType = Undefined,
             ) -> None:
@@ -26515,7 +26769,7 @@ class EosCliConfigGen(AvdRootModel):
             """It only accepts http(s), udp and unix domain destination URL."""
             username: str | None
             password: str | None
-            password_type: str
+            password_type: Literal["0", "7", "8a"]
             """Default value: `"7"`"""
             _custom_data: dict[str, Any]
 
@@ -26528,7 +26782,7 @@ class EosCliConfigGen(AvdRootModel):
                 url: str | None | UndefinedType = Undefined,
                 username: str | None | UndefinedType = Undefined,
                 password: str | None | UndefinedType = Undefined,
-                password_type: str | UndefinedType = Undefined,
+                password_type: Literal["0", "7", "8a"] | UndefinedType = Undefined,
                 _custom_data: dict[str, Any] | UndefinedType = Undefined,
             ) -> None:
                 """
@@ -26734,7 +26988,7 @@ class EosCliConfigGen(AvdRootModel):
                 """Source IP address of GRE tunnel."""
                 destination: str | None
                 """Destination IP address of GRE tunnel."""
-                version: int | None
+                version: Literal[1, 2] | None
                 """Postcard version."""
                 _custom_data: dict[str, Any]
 
@@ -26743,7 +26997,7 @@ class EosCliConfigGen(AvdRootModel):
                     *,
                     source: str | None | UndefinedType = Undefined,
                     destination: str | None | UndefinedType = Undefined,
-                    version: int | None | UndefinedType = Undefined,
+                    version: Literal[1, 2] | None | UndefinedType = Undefined,
                     _custom_data: dict[str, Any] | UndefinedType = Undefined,
                 ) -> None:
                     """
@@ -26808,7 +27062,7 @@ class EosCliConfigGen(AvdRootModel):
                 _required_fields: ClassVar[tuple] = ("_custom_data",)
                 _field_to_key_map: ClassVar[dict] = {}
                 _key_to_field_map: ClassVar[dict] = {}
-                rate: int | None
+                rate: Literal[16384, 32768, 65536] | None
                 """Sampling rate. `rate` is preferred when both `rate` and `tcp_udp_checksum` are defined."""
                 tcp_udp_checksum: TcpUdpChecksum
                 """
@@ -26821,7 +27075,7 @@ class EosCliConfigGen(AvdRootModel):
                 def __init__(
                     self,
                     *,
-                    rate: int | None | UndefinedType = Undefined,
+                    rate: Literal[16384, 32768, 65536] | None | UndefinedType = Undefined,
                     tcp_udp_checksum: TcpUdpChecksum | UndefinedType = Undefined,
                     _custom_data: dict[str, Any] | UndefinedType = Undefined,
                 ) -> None:
@@ -27000,7 +27254,7 @@ class EosCliConfigGen(AvdRootModel):
                     _required_fields: ClassVar[tuple] = ("protocol", "_custom_data")
                     _field_to_key_map: ClassVar[dict] = {}
                     _key_to_field_map: ClassVar[dict] = {}
-                    protocol: str
+                    protocol: Literal["tcp", "udp"]
                     source_ports: SourcePorts
                     """
                     A list of port numbers or port range or port name. Combination of port numbers or range and port
@@ -27027,7 +27281,7 @@ class EosCliConfigGen(AvdRootModel):
                     def __init__(
                         self,
                         *,
-                        protocol: str | UndefinedType = Undefined,
+                        protocol: Literal["tcp", "udp"] | UndefinedType = Undefined,
                         source_ports: SourcePorts | UndefinedType = Undefined,
                         destination_ports: DestinationPorts | UndefinedType = Undefined,
                         _custom_data: dict[str, Any] | UndefinedType = Undefined,
@@ -27084,7 +27338,7 @@ class EosCliConfigGen(AvdRootModel):
                 _field_to_key_map: ClassVar[dict] = {}
                 _key_to_field_map: ClassVar[dict] = {}
                 name: str
-                type: str
+                type: Literal["ipv4", "ipv6"]
                 """IP address version."""
                 destination_prefix: str | None
                 """
@@ -27104,7 +27358,7 @@ class EosCliConfigGen(AvdRootModel):
                     self,
                     *,
                     name: str | UndefinedType = Undefined,
-                    type: str | UndefinedType = Undefined,
+                    type: Literal["ipv4", "ipv6"] | UndefinedType = Undefined,
                     destination_prefix: str | None | UndefinedType = Undefined,
                     source_prefix: str | None | UndefinedType = Undefined,
                     protocols: Protocols | UndefinedType = Undefined,
@@ -27521,19 +27775,19 @@ class EosCliConfigGen(AvdRootModel):
             _key_to_field_map: ClassVar[dict] = {}
             id: int
             """Key identifier."""
-            hash_algorithm: str | None
+            hash_algorithm: Literal["md5", "sha1"] | None
             key: str | None
             """Obfuscated key."""
-            key_type: str | None
+            key_type: Literal["0", "7", "8a"] | None
             _custom_data: dict[str, Any]
 
             def __init__(
                 self,
                 *,
                 id: int | UndefinedType = Undefined,
-                hash_algorithm: str | None | UndefinedType = Undefined,
+                hash_algorithm: Literal["md5", "sha1"] | None | UndefinedType = Undefined,
                 key: str | None | UndefinedType = Undefined,
-                key_type: str | None | UndefinedType = Undefined,
+                key_type: Literal["0", "7", "8a"] | None | UndefinedType = Undefined,
                 _custom_data: dict[str, Any] | UndefinedType = Undefined,
             ) -> None:
                 """
@@ -27796,7 +28050,7 @@ class EosCliConfigGen(AvdRootModel):
                 _field_to_key_map: ClassVar[dict] = {}
                 _key_to_field_map: ClassVar[dict] = {}
                 id: str
-                type: str
+                type: Literal["interface", "pseudowire"]
                 endpoint: str
                 """
                 String with relevant endpoint depending on type.
@@ -27813,7 +28067,7 @@ class EosCliConfigGen(AvdRootModel):
                     self,
                     *,
                     id: str | UndefinedType = Undefined,
-                    type: str | UndefinedType = Undefined,
+                    type: Literal["interface", "pseudowire"] | UndefinedType = Undefined,
                     endpoint: str | UndefinedType = Undefined,
                     _custom_data: dict[str, Any] | UndefinedType = Undefined,
                 ) -> None:
@@ -28076,7 +28330,7 @@ class EosCliConfigGen(AvdRootModel):
                             _required_fields: ClassVar[tuple] = ("precedence", "threshold", "_custom_data")
                             _field_to_key_map: ClassVar[dict] = {}
                             _key_to_field_map: ClassVar[dict] = {}
-                            precedence: int
+                            precedence: Literal[1, 2]
                             threshold: str
                             """
                             Drop Threshold. This value may also be fractions.
@@ -28087,7 +28341,7 @@ class EosCliConfigGen(AvdRootModel):
                             def __init__(
                                 self,
                                 *,
-                                precedence: int | UndefinedType = Undefined,
+                                precedence: Literal[1, 2] | UndefinedType = Undefined,
                                 threshold: str | UndefinedType = Undefined,
                                 _custom_data: dict[str, Any] | UndefinedType = Undefined,
                             ) -> None:
@@ -28122,7 +28376,7 @@ class EosCliConfigGen(AvdRootModel):
                         _field_to_key_map: ClassVar[dict] = {}
                         _key_to_field_map: ClassVar[dict] = {}
                         id: int
-                        unit: str | None
+                        unit: Literal["bytes", "cells"] | None
                         """Unit to be used for the reservation value. If not specified, default is bytes."""
                         reserved: int | None
                         """
@@ -28139,7 +28393,7 @@ class EosCliConfigGen(AvdRootModel):
                             self,
                             *,
                             id: int | UndefinedType = Undefined,
-                            unit: str | None | UndefinedType = Undefined,
+                            unit: Literal["bytes", "cells"] | None | UndefinedType = Undefined,
                             reserved: int | None | UndefinedType = Undefined,
                             threshold: str | None | UndefinedType = Undefined,
                             drop: Drop | UndefinedType = Undefined,
@@ -28184,7 +28438,7 @@ class EosCliConfigGen(AvdRootModel):
                             _required_fields: ClassVar[tuple] = ("precedence", "threshold", "_custom_data")
                             _field_to_key_map: ClassVar[dict] = {}
                             _key_to_field_map: ClassVar[dict] = {}
-                            precedence: int
+                            precedence: Literal[1, 2]
                             threshold: str
                             """
                             Drop Threshold. This value may also be fractions.
@@ -28195,7 +28449,7 @@ class EosCliConfigGen(AvdRootModel):
                             def __init__(
                                 self,
                                 *,
-                                precedence: int | UndefinedType = Undefined,
+                                precedence: Literal[1, 2] | UndefinedType = Undefined,
                                 threshold: str | UndefinedType = Undefined,
                                 _custom_data: dict[str, Any] | UndefinedType = Undefined,
                             ) -> None:
@@ -28230,7 +28484,7 @@ class EosCliConfigGen(AvdRootModel):
                         _field_to_key_map: ClassVar[dict] = {}
                         _key_to_field_map: ClassVar[dict] = {}
                         id: int
-                        unit: str | None
+                        unit: Literal["bytes", "cells"] | None
                         """Unit to be used for the reservation value. If not specified, default is bytes."""
                         reserved: int | None
                         """
@@ -28247,7 +28501,7 @@ class EosCliConfigGen(AvdRootModel):
                             self,
                             *,
                             id: int | UndefinedType = Undefined,
-                            unit: str | None | UndefinedType = Undefined,
+                            unit: Literal["bytes", "cells"] | None | UndefinedType = Undefined,
                             reserved: int | None | UndefinedType = Undefined,
                             threshold: str | None | UndefinedType = Undefined,
                             drop: Drop | UndefinedType = Undefined,
@@ -28496,10 +28750,12 @@ class EosCliConfigGen(AvdRootModel):
                 _required_fields: ClassVar[tuple] = ("_custom_data",)
                 _field_to_key_map: ClassVar[dict] = {}
                 _key_to_field_map: ClassVar[dict] = {}
-                default: str | None
+                default: Literal["ingress", "egress"] | None
                 _custom_data: dict[str, Any]
 
-                def __init__(self, *, default: str | None | UndefinedType = Undefined, _custom_data: dict[str, Any] | UndefinedType = Undefined) -> None:
+                def __init__(
+                    self, *, default: Literal["ingress", "egress"] | None | UndefinedType = Undefined, _custom_data: dict[str, Any] | UndefinedType = Undefined
+                ) -> None:
                     """
                     MulticastReplication.
 
@@ -28534,7 +28790,7 @@ class EosCliConfigGen(AvdRootModel):
             forwarding_mode: str | None
             multicast_replication: MulticastReplication
             """Subclass of AvdModel."""
-            mdb_profile: str | None
+            mdb_profile: Literal["balanced", "balanced-xl", "l3", "l3-xl", "l3-xxl", "l3-xxxl"] | None
             """Sand platforms MDB Profile configuration. Note: l3-xxxl does not support MLAG."""
             _custom_data: dict[str, Any]
 
@@ -28545,7 +28801,7 @@ class EosCliConfigGen(AvdRootModel):
                 lag: Lag | UndefinedType = Undefined,
                 forwarding_mode: str | None | UndefinedType = Undefined,
                 multicast_replication: MulticastReplication | UndefinedType = Undefined,
-                mdb_profile: str | None | UndefinedType = Undefined,
+                mdb_profile: Literal["balanced", "balanced-xl", "l3", "l3-xl", "l3-xxl", "l3-xxxl"] | None | UndefinedType = Undefined,
                 _custom_data: dict[str, Any] | UndefinedType = Undefined,
             ) -> None:
                 """
@@ -28660,11 +28916,13 @@ class EosCliConfigGen(AvdRootModel):
             _required_fields: ClassVar[tuple] = ("_custom_data",)
             _field_to_key_map: ClassVar[dict] = {}
             _key_to_field_map: ClassVar[dict] = {}
-            action: str | None
+            action: Literal["power-off", "maintain"] | None
             """PoE action for interface. By default in EOS, reboot action is set to power-off."""
             _custom_data: dict[str, Any]
 
-            def __init__(self, *, action: str | None | UndefinedType = Undefined, _custom_data: dict[str, Any] | UndefinedType = Undefined) -> None:
+            def __init__(
+                self, *, action: Literal["power-off", "maintain"] | None | UndefinedType = Undefined, _custom_data: dict[str, Any] | UndefinedType = Undefined
+            ) -> None:
                 """
                 Reboot.
 
@@ -28688,11 +28946,13 @@ class EosCliConfigGen(AvdRootModel):
             _required_fields: ClassVar[tuple] = ("_custom_data",)
             _field_to_key_map: ClassVar[dict] = {}
             _key_to_field_map: ClassVar[dict] = {}
-            action: str | None
+            action: Literal["power-off", "maintain"] | None
             """PoE action for interface. By default in EOS, interface shutdown action is set to maintain."""
             _custom_data: dict[str, Any]
 
-            def __init__(self, *, action: str | None | UndefinedType = Undefined, _custom_data: dict[str, Any] | UndefinedType = Undefined) -> None:
+            def __init__(
+                self, *, action: Literal["power-off", "maintain"] | None | UndefinedType = Undefined, _custom_data: dict[str, Any] | UndefinedType = Undefined
+            ) -> None:
                 """
                 InterfaceShutdown.
 
@@ -28999,7 +29259,7 @@ class EosCliConfigGen(AvdRootModel):
                         _required_fields: ClassVar[tuple] = ("_custom_data",)
                         _field_to_key_map: ClassVar[dict] = {}
                         _key_to_field_map: ClassVar[dict] = {}
-                        type: str | None
+                        type: Literal["dscp", "drop-precedence"] | None
                         """Set action for policed traffic."""
                         dscp_value: str | None
                         """Set when action.type is set to "dscp"."""
@@ -29008,7 +29268,7 @@ class EosCliConfigGen(AvdRootModel):
                         def __init__(
                             self,
                             *,
-                            type: str | None | UndefinedType = Undefined,
+                            type: Literal["dscp", "drop-precedence"] | None | UndefinedType = Undefined,
                             dscp_value: str | None | UndefinedType = Undefined,
                             _custom_data: dict[str, Any] | UndefinedType = Undefined,
                         ) -> None:
@@ -29049,11 +29309,11 @@ class EosCliConfigGen(AvdRootModel):
                     Specify rate.
                     Range in kbps <8-200000000>.
                     """
-                    rate_unit: str
+                    rate_unit: Literal["bps", "kbps", "mbps", "pps"]
                     """Default value: `"bps"`"""
                     rate_burst_size: int | None
                     """Range in bytes <256-128000000>."""
-                    rate_burst_size_unit: str
+                    rate_burst_size_unit: Literal["bytes", "kbytes", "mbytes", "packets"]
                     """Default value: `"bytes"`"""
                     action: Action
                     """Subclass of AvdModel."""
@@ -29062,11 +29322,11 @@ class EosCliConfigGen(AvdRootModel):
                     Specify higher rate.
                     Range in kbps <lower_rate in kbps + 8 - lower_rate in kbps + 200000000>.
                     """
-                    higher_rate_unit: str
+                    higher_rate_unit: Literal["bps", "kbps", "mbps", "pps"]
                     """Default value: `"bps"`"""
                     higher_rate_burst_size: int | None
                     """Range in bytes <256-128000000>."""
-                    higher_rate_burst_size_unit: str
+                    higher_rate_burst_size_unit: Literal["bytes", "kbytes", "mbytes", "packets"]
                     """Default value: `"bytes"`"""
                     _custom_data: dict[str, Any]
 
@@ -29074,14 +29334,14 @@ class EosCliConfigGen(AvdRootModel):
                         self,
                         *,
                         rate: int | None | UndefinedType = Undefined,
-                        rate_unit: str | UndefinedType = Undefined,
+                        rate_unit: Literal["bps", "kbps", "mbps", "pps"] | UndefinedType = Undefined,
                         rate_burst_size: int | None | UndefinedType = Undefined,
-                        rate_burst_size_unit: str | UndefinedType = Undefined,
+                        rate_burst_size_unit: Literal["bytes", "kbytes", "mbytes", "packets"] | UndefinedType = Undefined,
                         action: Action | UndefinedType = Undefined,
                         higher_rate: int | None | UndefinedType = Undefined,
-                        higher_rate_unit: str | UndefinedType = Undefined,
+                        higher_rate_unit: Literal["bps", "kbps", "mbps", "pps"] | UndefinedType = Undefined,
                         higher_rate_burst_size: int | None | UndefinedType = Undefined,
-                        higher_rate_burst_size_unit: str | UndefinedType = Undefined,
+                        higher_rate_burst_size_unit: Literal["bytes", "kbytes", "mbytes", "packets"] | UndefinedType = Undefined,
                         _custom_data: dict[str, Any] | UndefinedType = Undefined,
                     ) -> None:
                         """
@@ -29219,7 +29479,7 @@ class EosCliConfigGen(AvdRootModel):
                 """Maximum rate limit."""
                 bandwidth: int | None
                 """Minimum bandwidth."""
-                rate_unit: str | None
+                rate_unit: Literal["pps", "kbps"] | None
                 """The `rate_unit` must be defined for `shape` and `bandwidth`."""
                 _custom_data: dict[str, Any]
 
@@ -29229,7 +29489,7 @@ class EosCliConfigGen(AvdRootModel):
                     name: str | UndefinedType = Undefined,
                     shape: int | None | UndefinedType = Undefined,
                     bandwidth: int | None | UndefinedType = Undefined,
-                    rate_unit: str | None | UndefinedType = Undefined,
+                    rate_unit: Literal["pps", "kbps"] | None | UndefinedType = Undefined,
                     _custom_data: dict[str, Any] | UndefinedType = Undefined,
                 ) -> None:
                     """
@@ -29509,14 +29769,14 @@ class EosCliConfigGen(AvdRootModel):
                 dot1q: Dot1q
                 """Subclass of AvdModel."""
                 unmatched: bool | None
-                encapsulation: str | None
+                encapsulation: Literal["dot1q", "dot1ad", "unmatched", "untagged"] | None
                 vlan: int | None
                 """Client VLAN ID. Not applicable for `encapsulation: untagged` or `encapsulation: unmatched`."""
                 outer_vlan: int | None
                 """Client Outer VLAN ID. Not applicable for `encapsulation: untagged` or `encapsulation: unmatched`."""
                 inner_vlan: int | None
                 """Client Inner VLAN ID. Not applicable for `encapsulation: untagged` or `encapsulation: unmatched`."""
-                inner_encapsulation: str | None
+                inner_encapsulation: Literal["dot1q", "dot1ad"] | None
                 _custom_data: dict[str, Any]
 
                 def __init__(
@@ -29524,11 +29784,11 @@ class EosCliConfigGen(AvdRootModel):
                     *,
                     dot1q: Dot1q | UndefinedType = Undefined,
                     unmatched: bool | None | UndefinedType = Undefined,
-                    encapsulation: str | None | UndefinedType = Undefined,
+                    encapsulation: Literal["dot1q", "dot1ad", "unmatched", "untagged"] | None | UndefinedType = Undefined,
                     vlan: int | None | UndefinedType = Undefined,
                     outer_vlan: int | None | UndefinedType = Undefined,
                     inner_vlan: int | None | UndefinedType = Undefined,
-                    inner_encapsulation: str | None | UndefinedType = Undefined,
+                    inner_encapsulation: Literal["dot1q", "dot1ad"] | None | UndefinedType = Undefined,
                     _custom_data: dict[str, Any] | UndefinedType = Undefined,
                 ) -> None:
                     """
@@ -29613,7 +29873,7 @@ class EosCliConfigGen(AvdRootModel):
                 dot1q: Dot1q
                 """Subclass of AvdModel."""
                 client: bool | None
-                encapsulation: str | None
+                encapsulation: Literal["dot1q", "dot1ad", "client", "client inner", "untagged"] | None
                 """
                 `untagged` (no encapsulation) is applicable for `untagged` client only.
                 `client` and `client inner`
@@ -29625,7 +29885,7 @@ class EosCliConfigGen(AvdRootModel):
                 """Network outer VLAN ID. Not applicable for `encapsulation: untagged` or `encapsulation: client`."""
                 inner_vlan: int | None
                 """Network inner VLAN ID. Not applicable for `encapsulation: untagged` or `encapsulation: client`."""
-                inner_encapsulation: str | None
+                inner_encapsulation: Literal["dot1q", "dot1ad"] | None
                 _custom_data: dict[str, Any]
 
                 def __init__(
@@ -29633,11 +29893,11 @@ class EosCliConfigGen(AvdRootModel):
                     *,
                     dot1q: Dot1q | UndefinedType = Undefined,
                     client: bool | None | UndefinedType = Undefined,
-                    encapsulation: str | None | UndefinedType = Undefined,
+                    encapsulation: Literal["dot1q", "dot1ad", "client", "client inner", "untagged"] | None | UndefinedType = Undefined,
                     vlan: int | None | UndefinedType = Undefined,
                     outer_vlan: int | None | UndefinedType = Undefined,
                     inner_vlan: int | None | UndefinedType = Undefined,
-                    inner_encapsulation: str | None | UndefinedType = Undefined,
+                    inner_encapsulation: Literal["dot1q", "dot1ad"] | None | UndefinedType = Undefined,
                     _custom_data: dict[str, Any] | UndefinedType = Undefined,
                 ) -> None:
                     """
@@ -29717,14 +29977,14 @@ class EosCliConfigGen(AvdRootModel):
             _key_to_field_map: ClassVar[dict] = {}
             name: str
             """Group name."""
-            direction: str | None
+            direction: Literal["upstream", "downstream"] | None
             _custom_data: dict[str, Any]
 
             def __init__(
                 self,
                 *,
                 name: str | UndefinedType = Undefined,
-                direction: str | None | UndefinedType = Undefined,
+                direction: Literal["upstream", "downstream"] | None | UndefinedType = Undefined,
                 _custom_data: dict[str, Any] | UndefinedType = Undefined,
             ) -> None:
                 """
@@ -29763,7 +30023,7 @@ class EosCliConfigGen(AvdRootModel):
             _required_fields: ClassVar[tuple] = ("_custom_data",)
             _field_to_key_map: ClassVar[dict] = {}
             _key_to_field_map: ClassVar[dict] = {}
-            direction: str | None
+            direction: Literal["upstream", "downstream"] | None
             groups: Groups
             """
             Link state group(s) an interface belongs to.
@@ -29775,7 +30035,7 @@ class EosCliConfigGen(AvdRootModel):
             def __init__(
                 self,
                 *,
-                direction: str | None | UndefinedType = Undefined,
+                direction: Literal["upstream", "downstream"] | None | UndefinedType = Undefined,
                 groups: Groups | UndefinedType = Undefined,
                 _custom_data: dict[str, Any] | UndefinedType = Undefined,
             ) -> None:
@@ -29806,14 +30066,14 @@ class EosCliConfigGen(AvdRootModel):
             _required_fields: ClassVar[tuple] = ("_custom_data",)
             _field_to_key_map: ClassVar[dict] = {}
             _key_to_field_map: ClassVar[dict] = {}
-            trunk: str | None
+            trunk: Literal["tagged", "untagged"] | None
             vlan: int | None
             _custom_data: dict[str, Any]
 
             def __init__(
                 self,
                 *,
-                trunk: str | None | UndefinedType = Undefined,
+                trunk: Literal["tagged", "untagged"] | None | UndefinedType = Undefined,
                 vlan: int | None | UndefinedType = Undefined,
                 _custom_data: dict[str, Any] | UndefinedType = Undefined,
             ) -> None:
@@ -29883,7 +30143,7 @@ class EosCliConfigGen(AvdRootModel):
             _required_fields: ClassVar[tuple] = ("_custom_data",)
             _field_to_key_map: ClassVar[dict] = {}
             _key_to_field_map: ClassVar[dict] = {}
-            trust: str | None
+            trust: Literal["dscp", "cos", "disabled"] | None
             dscp: int | None
             """DSCP value."""
             cos: int | None
@@ -29893,7 +30153,7 @@ class EosCliConfigGen(AvdRootModel):
             def __init__(
                 self,
                 *,
-                trust: str | None | UndefinedType = Undefined,
+                trust: Literal["dscp", "cos", "disabled"] | None | UndefinedType = Undefined,
                 dscp: int | None | UndefinedType = Undefined,
                 cos: int | None | UndefinedType = Undefined,
                 _custom_data: dict[str, Any] | UndefinedType = Undefined,
@@ -30191,7 +30451,7 @@ class EosCliConfigGen(AvdRootModel):
             """List of vlans as string (only one vlan if direction is "both")."""
             to: int | None
             """VLAN ID."""
-            direction: str
+            direction: Literal["in", "out", "both"]
             """Default value: `"both"`"""
             _custom_data: dict[str, Any]
 
@@ -30200,7 +30460,7 @@ class EosCliConfigGen(AvdRootModel):
                 *,
                 field_from: str | None | UndefinedType = Undefined,
                 to: int | None | UndefinedType = Undefined,
-                direction: str | UndefinedType = Undefined,
+                direction: Literal["in", "out", "both"] | UndefinedType = Undefined,
                 _custom_data: dict[str, Any] | UndefinedType = Undefined,
             ) -> None:
                 """
@@ -30281,7 +30541,7 @@ class EosCliConfigGen(AvdRootModel):
                 _key_to_field_map: ClassVar[dict] = {}
                 level: str | None
                 """Configure maximum storm-control level."""
-                unit: str
+                unit: Literal["percent", "pps"]
                 """
                 Optional field and is hardware dependent.
 
@@ -30293,7 +30553,7 @@ class EosCliConfigGen(AvdRootModel):
                     self,
                     *,
                     level: str | None | UndefinedType = Undefined,
-                    unit: str | UndefinedType = Undefined,
+                    unit: Literal["percent", "pps"] | UndefinedType = Undefined,
                     _custom_data: dict[str, Any] | UndefinedType = Undefined,
                 ) -> None:
                     """
@@ -30322,7 +30582,7 @@ class EosCliConfigGen(AvdRootModel):
                 _key_to_field_map: ClassVar[dict] = {}
                 level: str | None
                 """Configure maximum storm-control level."""
-                unit: str
+                unit: Literal["percent", "pps"]
                 """
                 Optional field and is hardware dependent.
 
@@ -30334,7 +30594,7 @@ class EosCliConfigGen(AvdRootModel):
                     self,
                     *,
                     level: str | None | UndefinedType = Undefined,
-                    unit: str | UndefinedType = Undefined,
+                    unit: Literal["percent", "pps"] | UndefinedType = Undefined,
                     _custom_data: dict[str, Any] | UndefinedType = Undefined,
                 ) -> None:
                     """
@@ -30363,7 +30623,7 @@ class EosCliConfigGen(AvdRootModel):
                 _key_to_field_map: ClassVar[dict] = {}
                 level: str | None
                 """Configure maximum storm-control level."""
-                unit: str
+                unit: Literal["percent", "pps"]
                 """
                 Optional field and is hardware dependent.
 
@@ -30375,7 +30635,7 @@ class EosCliConfigGen(AvdRootModel):
                     self,
                     *,
                     level: str | None | UndefinedType = Undefined,
-                    unit: str | UndefinedType = Undefined,
+                    unit: Literal["percent", "pps"] | UndefinedType = Undefined,
                     _custom_data: dict[str, Any] | UndefinedType = Undefined,
                 ) -> None:
                     """
@@ -30404,7 +30664,7 @@ class EosCliConfigGen(AvdRootModel):
                 _key_to_field_map: ClassVar[dict] = {}
                 level: str | None
                 """Configure maximum storm-control level."""
-                unit: str
+                unit: Literal["percent", "pps"]
                 """
                 Optional field and is hardware dependent.
 
@@ -30416,7 +30676,7 @@ class EosCliConfigGen(AvdRootModel):
                     self,
                     *,
                     level: str | None | UndefinedType = Undefined,
-                    unit: str | UndefinedType = Undefined,
+                    unit: Literal["percent", "pps"] | UndefinedType = Undefined,
                     _custom_data: dict[str, Any] | UndefinedType = Undefined,
                 ) -> None:
                     """
@@ -30506,8 +30766,8 @@ class EosCliConfigGen(AvdRootModel):
                     _key_to_field_map: ClassVar[dict] = {}
                     id: int
                     """Configure authentication key-id."""
-                    algorithm: str
-                    key_type: str
+                    algorithm: Literal["sha-1", "sha-224", "sha-256", "sha-384", "sha-512"]
+                    key_type: Literal["0", "7", "8a"]
                     """Configure authentication key type."""
                     key: str
                     """Password string."""
@@ -30519,8 +30779,8 @@ class EosCliConfigGen(AvdRootModel):
                         self,
                         *,
                         id: int | UndefinedType = Undefined,
-                        algorithm: str | UndefinedType = Undefined,
-                        key_type: str | UndefinedType = Undefined,
+                        algorithm: Literal["sha-1", "sha-224", "sha-256", "sha-384", "sha-512"] | UndefinedType = Undefined,
+                        key_type: Literal["0", "7", "8a"] | UndefinedType = Undefined,
                         key: str | UndefinedType = Undefined,
                         rfc_5310: bool | None | UndefinedType = Undefined,
                         _custom_data: dict[str, Any] | UndefinedType = Undefined,
@@ -30587,14 +30847,14 @@ class EosCliConfigGen(AvdRootModel):
                     _field_to_key_map: ClassVar[dict] = {}
                     _key_to_field_map: ClassVar[dict] = {}
                     profile: str
-                    algorithm: str
+                    algorithm: Literal["md5", "sha-1", "sha-224", "sha-256", "sha-384", "sha-512"]
                     _custom_data: dict[str, Any]
 
                     def __init__(
                         self,
                         *,
                         profile: str | UndefinedType = Undefined,
-                        algorithm: str | UndefinedType = Undefined,
+                        algorithm: Literal["md5", "sha-1", "sha-224", "sha-256", "sha-384", "sha-512"] | UndefinedType = Undefined,
                         _custom_data: dict[str, Any] | UndefinedType = Undefined,
                     ) -> None:
                         """
@@ -30627,13 +30887,13 @@ class EosCliConfigGen(AvdRootModel):
                 _required_fields: ClassVar[tuple] = ("_custom_data",)
                 _field_to_key_map: ClassVar[dict] = {}
                 _key_to_field_map: ClassVar[dict] = {}
-                key_type: str | None
+                key_type: Literal["0", "7", "8a"] | None
                 """Configure authentication key type."""
                 key: str | None
                 """Password string. `key_type` is required for this setting."""
                 key_ids: KeyIds
                 """Subclass of AvdIndexedList with `KeyIdsItem` items. Primary key is `id` (`int`)."""
-                mode: str | None
+                mode: Literal["md5", "sha", "text", "shared-secret"] | None
                 """Authentication mode."""
                 sha: Sha
                 """
@@ -30654,10 +30914,10 @@ class EosCliConfigGen(AvdRootModel):
                 def __init__(
                     self,
                     *,
-                    key_type: str | None | UndefinedType = Undefined,
+                    key_type: Literal["0", "7", "8a"] | None | UndefinedType = Undefined,
                     key: str | None | UndefinedType = Undefined,
                     key_ids: KeyIds | UndefinedType = Undefined,
-                    mode: str | None | UndefinedType = Undefined,
+                    mode: Literal["md5", "sha", "text", "shared-secret"] | None | UndefinedType = Undefined,
                     sha: Sha | UndefinedType = Undefined,
                     shared_secret: SharedSecret | UndefinedType = Undefined,
                     rx_disabled: bool | None | UndefinedType = Undefined,
@@ -30710,8 +30970,8 @@ class EosCliConfigGen(AvdRootModel):
                     _key_to_field_map: ClassVar[dict] = {}
                     id: int
                     """Configure authentication key-id."""
-                    algorithm: str
-                    key_type: str
+                    algorithm: Literal["sha-1", "sha-224", "sha-256", "sha-384", "sha-512"]
+                    key_type: Literal["0", "7", "8a"]
                     """Configure authentication key type."""
                     key: str
                     """Password string."""
@@ -30723,8 +30983,8 @@ class EosCliConfigGen(AvdRootModel):
                         self,
                         *,
                         id: int | UndefinedType = Undefined,
-                        algorithm: str | UndefinedType = Undefined,
-                        key_type: str | UndefinedType = Undefined,
+                        algorithm: Literal["sha-1", "sha-224", "sha-256", "sha-384", "sha-512"] | UndefinedType = Undefined,
+                        key_type: Literal["0", "7", "8a"] | UndefinedType = Undefined,
                         key: str | UndefinedType = Undefined,
                         rfc_5310: bool | None | UndefinedType = Undefined,
                         _custom_data: dict[str, Any] | UndefinedType = Undefined,
@@ -30791,14 +31051,14 @@ class EosCliConfigGen(AvdRootModel):
                     _field_to_key_map: ClassVar[dict] = {}
                     _key_to_field_map: ClassVar[dict] = {}
                     profile: str
-                    algorithm: str
+                    algorithm: Literal["md5", "sha-1", "sha-224", "sha-256", "sha-384", "sha-512"]
                     _custom_data: dict[str, Any]
 
                     def __init__(
                         self,
                         *,
                         profile: str | UndefinedType = Undefined,
-                        algorithm: str | UndefinedType = Undefined,
+                        algorithm: Literal["md5", "sha-1", "sha-224", "sha-256", "sha-384", "sha-512"] | UndefinedType = Undefined,
                         _custom_data: dict[str, Any] | UndefinedType = Undefined,
                     ) -> None:
                         """
@@ -30831,13 +31091,13 @@ class EosCliConfigGen(AvdRootModel):
                 _required_fields: ClassVar[tuple] = ("_custom_data",)
                 _field_to_key_map: ClassVar[dict] = {}
                 _key_to_field_map: ClassVar[dict] = {}
-                key_type: str | None
+                key_type: Literal["0", "7", "8a"] | None
                 """Configure authentication key type."""
                 key: str | None
                 """Password string. `key_type` is required for this setting."""
                 key_ids: KeyIds
                 """Subclass of AvdIndexedList with `KeyIdsItem` items. Primary key is `id` (`int`)."""
-                mode: str | None
+                mode: Literal["md5", "sha", "text", "shared-secret"] | None
                 """Authentication mode."""
                 sha: Sha
                 """
@@ -30858,10 +31118,10 @@ class EosCliConfigGen(AvdRootModel):
                 def __init__(
                     self,
                     *,
-                    key_type: str | None | UndefinedType = Undefined,
+                    key_type: Literal["0", "7", "8a"] | None | UndefinedType = Undefined,
                     key: str | None | UndefinedType = Undefined,
                     key_ids: KeyIds | UndefinedType = Undefined,
-                    mode: str | None | UndefinedType = Undefined,
+                    mode: Literal["md5", "sha", "text", "shared-secret"] | None | UndefinedType = Undefined,
                     sha: Sha | UndefinedType = Undefined,
                     shared_secret: SharedSecret | UndefinedType = Undefined,
                     rx_disabled: bool | None | UndefinedType = Undefined,
@@ -30914,8 +31174,8 @@ class EosCliConfigGen(AvdRootModel):
                     _key_to_field_map: ClassVar[dict] = {}
                     id: int
                     """Configure authentication key-id."""
-                    algorithm: str
-                    key_type: str
+                    algorithm: Literal["sha-1", "sha-224", "sha-256", "sha-384", "sha-512"]
+                    key_type: Literal["0", "7", "8a"]
                     """Configure authentication key type."""
                     key: str
                     """Password string."""
@@ -30927,8 +31187,8 @@ class EosCliConfigGen(AvdRootModel):
                         self,
                         *,
                         id: int | UndefinedType = Undefined,
-                        algorithm: str | UndefinedType = Undefined,
-                        key_type: str | UndefinedType = Undefined,
+                        algorithm: Literal["sha-1", "sha-224", "sha-256", "sha-384", "sha-512"] | UndefinedType = Undefined,
+                        key_type: Literal["0", "7", "8a"] | UndefinedType = Undefined,
                         key: str | UndefinedType = Undefined,
                         rfc_5310: bool | None | UndefinedType = Undefined,
                         _custom_data: dict[str, Any] | UndefinedType = Undefined,
@@ -30995,14 +31255,14 @@ class EosCliConfigGen(AvdRootModel):
                     _field_to_key_map: ClassVar[dict] = {}
                     _key_to_field_map: ClassVar[dict] = {}
                     profile: str
-                    algorithm: str
+                    algorithm: Literal["md5", "sha-1", "sha-224", "sha-256", "sha-384", "sha-512"]
                     _custom_data: dict[str, Any]
 
                     def __init__(
                         self,
                         *,
                         profile: str | UndefinedType = Undefined,
-                        algorithm: str | UndefinedType = Undefined,
+                        algorithm: Literal["md5", "sha-1", "sha-224", "sha-256", "sha-384", "sha-512"] | UndefinedType = Undefined,
                         _custom_data: dict[str, Any] | UndefinedType = Undefined,
                     ) -> None:
                         """
@@ -31035,13 +31295,13 @@ class EosCliConfigGen(AvdRootModel):
                 _required_fields: ClassVar[tuple] = ("_custom_data",)
                 _field_to_key_map: ClassVar[dict] = {}
                 _key_to_field_map: ClassVar[dict] = {}
-                key_type: str | None
+                key_type: Literal["0", "7", "8a"] | None
                 """Configure authentication key type."""
                 key: str | None
                 """Password string. `key_type` is required for this setting."""
                 key_ids: KeyIds
                 """Subclass of AvdIndexedList with `KeyIdsItem` items. Primary key is `id` (`int`)."""
-                mode: str | None
+                mode: Literal["md5", "sha", "text", "shared-secret"] | None
                 """Authentication mode."""
                 sha: Sha
                 """
@@ -31062,10 +31322,10 @@ class EosCliConfigGen(AvdRootModel):
                 def __init__(
                     self,
                     *,
-                    key_type: str | None | UndefinedType = Undefined,
+                    key_type: Literal["0", "7", "8a"] | None | UndefinedType = Undefined,
                     key: str | None | UndefinedType = Undefined,
                     key_ids: KeyIds | UndefinedType = Undefined,
-                    mode: str | None | UndefinedType = Undefined,
+                    mode: Literal["md5", "sha", "text", "shared-secret"] | None | UndefinedType = Undefined,
                     sha: Sha | UndefinedType = Undefined,
                     shared_secret: SharedSecret | UndefinedType = Undefined,
                     rx_disabled: bool | None | UndefinedType = Undefined,
@@ -31211,7 +31471,7 @@ class EosCliConfigGen(AvdRootModel):
                 _required_fields: ClassVar[tuple] = ("_custom_data",)
                 _field_to_key_map: ClassVar[dict] = {}
                 _key_to_field_map: ClassVar[dict] = {}
-                algorithm: str | None
+                algorithm: Literal["modulus", "preference"] | None
                 preference_value: int | None
                 """Preference_value is only used when "algorithm" is "preference"."""
                 dont_preempt: bool
@@ -31228,7 +31488,7 @@ class EosCliConfigGen(AvdRootModel):
                 def __init__(
                     self,
                     *,
-                    algorithm: str | None | UndefinedType = Undefined,
+                    algorithm: Literal["modulus", "preference"] | None | UndefinedType = Undefined,
                     preference_value: int | None | UndefinedType = Undefined,
                     dont_preempt: bool | UndefinedType = Undefined,
                     hold_time: int | None | UndefinedType = Undefined,
@@ -31305,7 +31565,7 @@ class EosCliConfigGen(AvdRootModel):
             _key_to_field_map: ClassVar[dict] = {}
             identifier: str | None
             """EVPN Ethernet Segment Identifier (Type 1 format)."""
-            redundancy: str | None
+            redundancy: Literal["all-active", "single-active"] | None
             designated_forwarder_election: DesignatedForwarderElection
             """Subclass of AvdModel."""
             mpls: Mpls
@@ -31318,7 +31578,7 @@ class EosCliConfigGen(AvdRootModel):
                 self,
                 *,
                 identifier: str | None | UndefinedType = Undefined,
-                redundancy: str | None | UndefinedType = Undefined,
+                redundancy: Literal["all-active", "single-active"] | None | UndefinedType = Undefined,
                 designated_forwarder_election: DesignatedForwarderElection | UndefinedType = Undefined,
                 mpls: Mpls | UndefinedType = Undefined,
                 route_target: str | None | UndefinedType = Undefined,
@@ -31392,11 +31652,14 @@ class EosCliConfigGen(AvdRootModel):
                     _required_fields: ClassVar[tuple] = ("_custom_data",)
                     _field_to_key_map: ClassVar[dict] = {}
                     _key_to_field_map: ClassVar[dict] = {}
-                    destination_mac_address: str | None
+                    destination_mac_address: Literal["forwardable", "non-forwardable"] | None
                     _custom_data: dict[str, Any]
 
                     def __init__(
-                        self, *, destination_mac_address: str | None | UndefinedType = Undefined, _custom_data: dict[str, Any] | UndefinedType = Undefined
+                        self,
+                        *,
+                        destination_mac_address: Literal["forwardable", "non-forwardable"] | None | UndefinedType = Undefined,
+                        _custom_data: dict[str, Any] | UndefinedType = Undefined,
                     ) -> None:
                         """
                         G82751.
@@ -31486,15 +31749,15 @@ class EosCliConfigGen(AvdRootModel):
             announce: Announce
             """Subclass of AvdModel."""
             delay_req: int | None
-            delay_mechanism: str | None
+            delay_mechanism: Literal["e2e", "p2p"] | None
             profile: Profile
             """Subclass of AvdModel."""
             sync_message: SyncMessage
             """Subclass of AvdModel."""
-            role: str | None
+            role: Literal["master", "dynamic"] | None
             vlan: str | None
             """VLAN can be 'all' or list of vlans as string."""
-            transport: str | None
+            transport: Literal["ipv4", "ipv6", "layer2"] | None
             mpass: bool | None
             """
             When MPASS is enabled on an MLAG port-channel, MLAG peers coordinate to function as a single PTP
@@ -31512,12 +31775,12 @@ class EosCliConfigGen(AvdRootModel):
                 enable: bool | None | UndefinedType = Undefined,
                 announce: Announce | UndefinedType = Undefined,
                 delay_req: int | None | UndefinedType = Undefined,
-                delay_mechanism: str | None | UndefinedType = Undefined,
+                delay_mechanism: Literal["e2e", "p2p"] | None | UndefinedType = Undefined,
                 profile: Profile | UndefinedType = Undefined,
                 sync_message: SyncMessage | UndefinedType = Undefined,
-                role: str | None | UndefinedType = Undefined,
+                role: Literal["master", "dynamic"] | None | UndefinedType = Undefined,
                 vlan: str | None | UndefinedType = Undefined,
-                transport: str | None | UndefinedType = Undefined,
+                transport: Literal["ipv4", "ipv6", "layer2"] | None | UndefinedType = Undefined,
                 mpass: bool | None | UndefinedType = Undefined,
                 _custom_data: dict[str, Any] | UndefinedType = Undefined,
             ) -> None:
@@ -31634,7 +31897,7 @@ class EosCliConfigGen(AvdRootModel):
                     access_list: str | None
                     """'access_list' and 'group' are mutual exclusive."""
                     comment: str | None
-                    direction: str | None
+                    direction: Literal["egress", "ingress"] | None
                     """
                     Egress or ingress can be the default. This depends on source/destination, EOS version, and hardware
                     platform.
@@ -31648,7 +31911,7 @@ class EosCliConfigGen(AvdRootModel):
                     original_port: int | None
                     """TCP/UDP port. The combination of `original_ip` and `original_port` must be unique."""
                     priority: int | None
-                    protocol: str | None
+                    protocol: Literal["udp", "tcp"] | None
                     translated_ip: str
                     """IPv4 address."""
                     translated_port: int | None
@@ -31660,12 +31923,12 @@ class EosCliConfigGen(AvdRootModel):
                         *,
                         access_list: str | None | UndefinedType = Undefined,
                         comment: str | None | UndefinedType = Undefined,
-                        direction: str | None | UndefinedType = Undefined,
+                        direction: Literal["egress", "ingress"] | None | UndefinedType = Undefined,
                         group: int | None | UndefinedType = Undefined,
                         original_ip: str | None | UndefinedType = Undefined,
                         original_port: int | None | UndefinedType = Undefined,
                         priority: int | None | UndefinedType = Undefined,
-                        protocol: str | None | UndefinedType = Undefined,
+                        protocol: Literal["udp", "tcp"] | None | UndefinedType = Undefined,
                         translated_ip: str | UndefinedType = Undefined,
                         translated_port: int | None | UndefinedType = Undefined,
                         _custom_data: dict[str, Any] | UndefinedType = Undefined,
@@ -31757,7 +32020,7 @@ class EosCliConfigGen(AvdRootModel):
                     _key_to_field_map: ClassVar[dict] = {}
                     access_list: str
                     comment: str | None
-                    nat_type: str
+                    nat_type: Literal["overload", "pool", "pool-address-only", "pool-full-cone"]
                     pool_name: str | None
                     """
                     required if 'nat_type' is pool, pool-address-only or pool-full-cone.
@@ -31772,7 +32035,7 @@ class EosCliConfigGen(AvdRootModel):
                         *,
                         access_list: str | UndefinedType = Undefined,
                         comment: str | None | UndefinedType = Undefined,
-                        nat_type: str | UndefinedType = Undefined,
+                        nat_type: Literal["overload", "pool", "pool-address-only", "pool-full-cone"] | UndefinedType = Undefined,
                         pool_name: str | None | UndefinedType = Undefined,
                         priority: int | None | UndefinedType = Undefined,
                         _custom_data: dict[str, Any] | UndefinedType = Undefined,
@@ -31829,7 +32092,7 @@ class EosCliConfigGen(AvdRootModel):
                     access_list: str | None
                     """'access_list' and 'group' are mutual exclusive."""
                     comment: str | None
-                    direction: str | None
+                    direction: Literal["egress", "ingress"] | None
                     """
                     Egress or ingress can be the default. This depends on source/destination, EOS version, and hardware
                     platform.
@@ -31843,7 +32106,7 @@ class EosCliConfigGen(AvdRootModel):
                     original_port: int | None
                     """TCP/UDP port. The combination of `original_ip` and `original_port` must be unique."""
                     priority: int | None
-                    protocol: str | None
+                    protocol: Literal["udp", "tcp"] | None
                     translated_ip: str
                     """IPv4 address."""
                     translated_port: int | None
@@ -31855,12 +32118,12 @@ class EosCliConfigGen(AvdRootModel):
                         *,
                         access_list: str | None | UndefinedType = Undefined,
                         comment: str | None | UndefinedType = Undefined,
-                        direction: str | None | UndefinedType = Undefined,
+                        direction: Literal["egress", "ingress"] | None | UndefinedType = Undefined,
                         group: int | None | UndefinedType = Undefined,
                         original_ip: str | None | UndefinedType = Undefined,
                         original_port: int | None | UndefinedType = Undefined,
                         priority: int | None | UndefinedType = Undefined,
-                        protocol: str | None | UndefinedType = Undefined,
+                        protocol: Literal["udp", "tcp"] | None | UndefinedType = Undefined,
                         translated_ip: str | UndefinedType = Undefined,
                         translated_port: int | None | UndefinedType = Undefined,
                         _custom_data: dict[str, Any] | UndefinedType = Undefined,
@@ -32154,7 +32417,7 @@ class EosCliConfigGen(AvdRootModel):
             _field_to_key_map: ClassVar[dict] = {}
             _key_to_field_map: ClassVar[dict] = {}
             id: int
-            hash_algorithm: str | None
+            hash_algorithm: Literal["md5", "sha1", "sha256", "sha384", "sha512"] | None
             key: str | None
             """Encrypted password."""
             _custom_data: dict[str, Any]
@@ -32163,7 +32426,7 @@ class EosCliConfigGen(AvdRootModel):
                 self,
                 *,
                 id: int | UndefinedType = Undefined,
-                hash_algorithm: str | None | UndefinedType = Undefined,
+                hash_algorithm: Literal["md5", "sha1", "sha256", "sha384", "sha512"] | None | UndefinedType = Undefined,
                 key: str | None | UndefinedType = Undefined,
                 _custom_data: dict[str, Any] | UndefinedType = Undefined,
             ) -> None:
@@ -32672,7 +32935,7 @@ class EosCliConfigGen(AvdRootModel):
                 _key_to_field_map: ClassVar[dict] = {}
                 vlan: int | None
                 """Warning: This should not be combined with `port_channel_interfaces[].phone.vlan`."""
-                trunk: str | None
+                trunk: Literal["tagged", "tagged phone", "untagged", "untagged phone"] | None
                 """Warning: This should not be combined with `port_channel_interfaces[].phone.trunk`"""
                 _custom_data: dict[str, Any]
 
@@ -32680,7 +32943,7 @@ class EosCliConfigGen(AvdRootModel):
                     self,
                     *,
                     vlan: int | None | UndefinedType = Undefined,
-                    trunk: str | None | UndefinedType = Undefined,
+                    trunk: Literal["tagged", "tagged phone", "untagged", "untagged phone"] | None | UndefinedType = Undefined,
                     _custom_data: dict[str, Any] | UndefinedType = Undefined,
                 ) -> None:
                     """
@@ -32709,14 +32972,14 @@ class EosCliConfigGen(AvdRootModel):
                 _key_to_field_map: ClassVar[dict] = {}
                 ethertype: int | None
                 """Ethertype/TPID (Tag Protocol IDentifier) for VLAN tagged frames."""
-                vlan_tag: str | None
+                vlan_tag: Literal["disallowed", "required"] | None
                 _custom_data: dict[str, Any]
 
                 def __init__(
                     self,
                     *,
                     ethertype: int | None | UndefinedType = Undefined,
-                    vlan_tag: str | None | UndefinedType = Undefined,
+                    vlan_tag: Literal["disallowed", "required"] | None | UndefinedType = Undefined,
                     _custom_data: dict[str, Any] | UndefinedType = Undefined,
                 ) -> None:
                     """
@@ -33145,7 +33408,7 @@ class EosCliConfigGen(AvdRootModel):
                     _required_fields: ClassVar[tuple] = ("_custom_data",)
                     _field_to_key_map: ClassVar[dict] = {}
                     _key_to_field_map: ClassVar[dict] = {}
-                    mode: str | None
+                    mode: Literal["shutdown", "protect"] | None
                     """Configure port security mode."""
                     protect_log: bool | None
                     """Log new addresses seen after limit is reached in protect mode."""
@@ -33154,7 +33417,7 @@ class EosCliConfigGen(AvdRootModel):
                     def __init__(
                         self,
                         *,
-                        mode: str | None | UndefinedType = Undefined,
+                        mode: Literal["shutdown", "protect"] | None | UndefinedType = Undefined,
                         protect_log: bool | None | UndefinedType = Undefined,
                         _custom_data: dict[str, Any] | UndefinedType = Undefined,
                     ) -> None:
@@ -33316,7 +33579,7 @@ class EosCliConfigGen(AvdRootModel):
             _key_to_field_map: ClassVar[dict] = {}
             enabled: bool | None
             """Warning: This should not be combined with `port_channel_interfaces[].type = routed`."""
-            mode: str | None
+            mode: Literal["access", "dot1q-tunnel", "trunk", "trunk phone"] | None
             """Warning: This should not be combined with `port_channel_interfaces[].mode`"""
             access_vlan: int | None
             """
@@ -33336,7 +33599,7 @@ class EosCliConfigGen(AvdRootModel):
             """
             dot1q: Dot1q
             """Subclass of AvdModel."""
-            source_interface: str | None
+            source_interface: Literal["tx", "tx multicast"] | None
             """
             tx: Allow bridged traffic to go out of the source interface.
             tx multicast: Allow multicast traffic
@@ -33367,13 +33630,13 @@ class EosCliConfigGen(AvdRootModel):
                 self,
                 *,
                 enabled: bool | None | UndefinedType = Undefined,
-                mode: str | None | UndefinedType = Undefined,
+                mode: Literal["access", "dot1q-tunnel", "trunk", "trunk phone"] | None | UndefinedType = Undefined,
                 access_vlan: int | None | UndefinedType = Undefined,
                 trunk: Trunk | UndefinedType = Undefined,
                 phone: Phone | UndefinedType = Undefined,
                 pvlan_mapping: str | None | UndefinedType = Undefined,
                 dot1q: Dot1q | UndefinedType = Undefined,
-                source_interface: str | None | UndefinedType = Undefined,
+                source_interface: Literal["tx", "tx multicast"] | None | UndefinedType = Undefined,
                 vlan_translations: VlanTranslations | UndefinedType = Undefined,
                 vlan_forwarding_accept_all: bool | None | UndefinedType = Undefined,
                 backup_link: BackupLink | UndefinedType = Undefined,
@@ -33541,7 +33804,7 @@ class EosCliConfigGen(AvdRootModel):
         access port this would be a single vlan "123".
         """
         snmp_trap_link_change: bool | None
-        type: str | None
+        type: Literal["routed", "switched", "l3dot1q", "l2dot1q"] | None
         """
         l3dot1q and l2dot1q are used for sub-interfaces. The parent interface should be defined as routed.
         Interface will not be listed in device documentation, unless "type" is set.
@@ -33570,7 +33833,7 @@ class EosCliConfigGen(AvdRootModel):
         Warning: `vlan_id` should not be combined
         with `ethernet_interfaces[].type == l2dot1q`.
         """
-        mode: str | None
+        mode: Literal["access", "dot1q-tunnel", "trunk", "trunk phone"] | None
         native_vlan: int | None
         """If setting both native_vlan and native_vlan_tag, native_vlan_tag takes precedence."""
         native_vlan_tag: bool | None
@@ -33590,7 +33853,7 @@ class EosCliConfigGen(AvdRootModel):
         """Subclass of AvdList with `str` items."""
         lacp_fallback_timeout: int | None
         """Timeout in seconds. EOS default is 90 seconds."""
-        lacp_fallback_mode: str | None
+        lacp_fallback_mode: Literal["individual", "static"] | None
         qos: Qos
         """Subclass of AvdModel."""
         bfd: Bfd
@@ -33616,9 +33879,9 @@ class EosCliConfigGen(AvdRootModel):
         isis_passive: bool | None
         isis_metric: int | None
         isis_network_point_to_point: bool | None
-        isis_circuit_type: str | None
+        isis_circuit_type: Literal["level-1-2", "level-1", "level-2"] | None
         isis_hello_padding: bool | None
-        isis_authentication_mode: str | None
+        isis_authentication_mode: Literal["text", "md5"] | None
         isis_authentication_key: str | None
         """Type-7 encrypted password."""
         isis_authentication: IsisAuthentication
@@ -33634,16 +33897,16 @@ class EosCliConfigGen(AvdRootModel):
         """Subclass of AvdModel."""
         lacp_id: str | None
         """LACP ID with format xxxx.xxxx.xxxx."""
-        spanning_tree_bpdufilter: str | None
-        spanning_tree_bpduguard: str | None
-        spanning_tree_guard: str | None
-        spanning_tree_portfast: str | None
+        spanning_tree_bpdufilter: Literal["enabled", "disabled", "True", "False", "true", "false"] | None
+        spanning_tree_bpduguard: Literal["enabled", "disabled", "True", "False", "true", "false"] | None
+        spanning_tree_guard: Literal["loop", "root", "disabled"] | None
+        spanning_tree_portfast: Literal["edge", "network"] | None
         vmtracer: bool | None
         ptp: Ptp
         """Subclass of AvdModel."""
         ip_address: str | None
         """IPv4 address/mask."""
-        ip_verify_unicast_source_reachable_via: str | None
+        ip_verify_unicast_source_reachable_via: Literal["any", "rx"] | None
         ip_nat: IpNat
         """Subclass of AvdModel."""
         ipv6_enable: bool | None
@@ -33674,7 +33937,7 @@ class EosCliConfigGen(AvdRootModel):
         ospf_network_point_to_point: bool | None
         ospf_area: str | None
         ospf_cost: int | None
-        ospf_authentication: str | None
+        ospf_authentication: Literal["none", "simple", "message-digest"] | None
         ospf_authentication_key: str | None
         """Encrypted password."""
         ospf_message_digest_keys: OspfMessageDigestKeys
@@ -33718,13 +33981,13 @@ class EosCliConfigGen(AvdRootModel):
             l2_mru: int | None | UndefinedType = Undefined,
             vlans: str | None | UndefinedType = Undefined,
             snmp_trap_link_change: bool | None | UndefinedType = Undefined,
-            type: str | None | UndefinedType = Undefined,
+            type: Literal["routed", "switched", "l3dot1q", "l2dot1q"] | None | UndefinedType = Undefined,
             encapsulation_dot1q_vlan: int | None | UndefinedType = Undefined,
             encapsulation_dot1q: EncapsulationDot1q | UndefinedType = Undefined,
             vrf: str | None | UndefinedType = Undefined,
             encapsulation_vlan: EncapsulationVlan | UndefinedType = Undefined,
             vlan_id: int | None | UndefinedType = Undefined,
-            mode: str | None | UndefinedType = Undefined,
+            mode: Literal["access", "dot1q-tunnel", "trunk", "trunk phone"] | None | UndefinedType = Undefined,
             native_vlan: int | None | UndefinedType = Undefined,
             native_vlan_tag: bool | None | UndefinedType = Undefined,
             link_tracking_groups: LinkTrackingGroups | UndefinedType = Undefined,
@@ -33735,7 +33998,7 @@ class EosCliConfigGen(AvdRootModel):
             mlag: int | None | UndefinedType = Undefined,
             trunk_groups: TrunkGroups | UndefinedType = Undefined,
             lacp_fallback_timeout: int | None | UndefinedType = Undefined,
-            lacp_fallback_mode: str | None | UndefinedType = Undefined,
+            lacp_fallback_mode: Literal["individual", "static"] | None | UndefinedType = Undefined,
             qos: Qos | UndefinedType = Undefined,
             bfd: Bfd | UndefinedType = Undefined,
             service_policy: ServicePolicy | UndefinedType = Undefined,
@@ -33751,22 +34014,22 @@ class EosCliConfigGen(AvdRootModel):
             isis_passive: bool | None | UndefinedType = Undefined,
             isis_metric: int | None | UndefinedType = Undefined,
             isis_network_point_to_point: bool | None | UndefinedType = Undefined,
-            isis_circuit_type: str | None | UndefinedType = Undefined,
+            isis_circuit_type: Literal["level-1-2", "level-1", "level-2"] | None | UndefinedType = Undefined,
             isis_hello_padding: bool | None | UndefinedType = Undefined,
-            isis_authentication_mode: str | None | UndefinedType = Undefined,
+            isis_authentication_mode: Literal["text", "md5"] | None | UndefinedType = Undefined,
             isis_authentication_key: str | None | UndefinedType = Undefined,
             isis_authentication: IsisAuthentication | UndefinedType = Undefined,
             traffic_policy: TrafficPolicy | UndefinedType = Undefined,
             evpn_ethernet_segment: EvpnEthernetSegment | UndefinedType = Undefined,
             lacp_id: str | None | UndefinedType = Undefined,
-            spanning_tree_bpdufilter: str | None | UndefinedType = Undefined,
-            spanning_tree_bpduguard: str | None | UndefinedType = Undefined,
-            spanning_tree_guard: str | None | UndefinedType = Undefined,
-            spanning_tree_portfast: str | None | UndefinedType = Undefined,
+            spanning_tree_bpdufilter: Literal["enabled", "disabled", "True", "False", "true", "false"] | None | UndefinedType = Undefined,
+            spanning_tree_bpduguard: Literal["enabled", "disabled", "True", "False", "true", "false"] | None | UndefinedType = Undefined,
+            spanning_tree_guard: Literal["loop", "root", "disabled"] | None | UndefinedType = Undefined,
+            spanning_tree_portfast: Literal["edge", "network"] | None | UndefinedType = Undefined,
             vmtracer: bool | None | UndefinedType = Undefined,
             ptp: Ptp | UndefinedType = Undefined,
             ip_address: str | None | UndefinedType = Undefined,
-            ip_verify_unicast_source_reachable_via: str | None | UndefinedType = Undefined,
+            ip_verify_unicast_source_reachable_via: Literal["any", "rx"] | None | UndefinedType = Undefined,
             ip_nat: IpNat | UndefinedType = Undefined,
             ipv6_enable: bool | None | UndefinedType = Undefined,
             ipv6_address: str | None | UndefinedType = Undefined,
@@ -33785,7 +34048,7 @@ class EosCliConfigGen(AvdRootModel):
             ospf_network_point_to_point: bool | None | UndefinedType = Undefined,
             ospf_area: str | None | UndefinedType = Undefined,
             ospf_cost: int | None | UndefinedType = Undefined,
-            ospf_authentication: str | None | UndefinedType = Undefined,
+            ospf_authentication: Literal["none", "simple", "message-digest"] | None | UndefinedType = Undefined,
             ospf_authentication_key: str | None | UndefinedType = Undefined,
             ospf_message_digest_keys: OspfMessageDigestKeys | UndefinedType = Undefined,
             flow_tracker: FlowTracker | UndefinedType = Undefined,
@@ -34046,7 +34309,7 @@ class EosCliConfigGen(AvdRootModel):
             _required_fields: ClassVar[tuple] = ("_custom_data",)
             _field_to_key_map: ClassVar[dict] = {}
             _key_to_field_map: ClassVar[dict] = {}
-            action: str | None
+            action: Literal["drop", "no-drop"] | None
             """Action on stuck queue."""
             timeout: str | None
             """
@@ -34078,7 +34341,7 @@ class EosCliConfigGen(AvdRootModel):
             def __init__(
                 self,
                 *,
-                action: str | None | UndefinedType = Undefined,
+                action: Literal["drop", "no-drop"] | None | UndefinedType = Undefined,
                 timeout: str | None | UndefinedType = Undefined,
                 polling_interval: str | None | UndefinedType = Undefined,
                 recovery_time: str | None | UndefinedType = Undefined,
@@ -34544,8 +34807,8 @@ class EosCliConfigGen(AvdRootModel):
         _required_fields: ClassVar[tuple] = ("_custom_data",)
         _field_to_key_map: ClassVar[dict] = {}
         _key_to_field_map: ClassVar[dict] = {}
-        mode: str | None
-        profile: str | None
+        mode: Literal["boundary", "disabled", "e2etransparent", "gptp", "ordinarymaster", "p2ptransparent"] | None
+        profile: Literal["g8275.1", "g8275.2"] | None
         mode_one_step: bool | None
         forward_unicast: bool | None
         clock_identity: str | None
@@ -34565,8 +34828,8 @@ class EosCliConfigGen(AvdRootModel):
         def __init__(
             self,
             *,
-            mode: str | None | UndefinedType = Undefined,
-            profile: str | None | UndefinedType = Undefined,
+            mode: Literal["boundary", "disabled", "e2etransparent", "gptp", "ordinarymaster", "p2ptransparent"] | None | UndefinedType = Undefined,
+            profile: Literal["g8275.1", "g8275.2"] | None | UndefinedType = Undefined,
             mode_one_step: bool | None | UndefinedType = Undefined,
             forward_unicast: bool | None | UndefinedType = Undefined,
             clock_identity: str | None | UndefinedType = Undefined,
@@ -34984,7 +35247,7 @@ class EosCliConfigGen(AvdRootModel):
                         _required_fields: ClassVar[tuple] = ("units", "min", "max", "_custom_data")
                         _field_to_key_map: ClassVar[dict] = {}
                         _key_to_field_map: ClassVar[dict] = {}
-                        units: str
+                        units: Literal["segments", "bytes", "kbytes", "mbytes", "milliseconds"]
                         """
                         Units to be used for the threshold values.
                         This should be one of segments, byte, kbytes, mbytes.
@@ -35002,7 +35265,7 @@ class EosCliConfigGen(AvdRootModel):
                         def __init__(
                             self,
                             *,
-                            units: str | UndefinedType = Undefined,
+                            units: Literal["segments", "bytes", "kbytes", "mbytes", "milliseconds"] | UndefinedType = Undefined,
                             min: int | UndefinedType = Undefined,
                             max: int | UndefinedType = Undefined,
                             max_probability: int | None | UndefinedType = Undefined,
@@ -35083,7 +35346,7 @@ class EosCliConfigGen(AvdRootModel):
                         _required_fields: ClassVar[tuple] = ("units", "min", "max", "drop_probability", "_custom_data")
                         _field_to_key_map: ClassVar[dict] = {}
                         _key_to_field_map: ClassVar[dict] = {}
-                        units: str
+                        units: Literal["segments", "bytes", "kbytes", "mbytes", "microseconds", "milliseconds"]
                         """Units to be used for the threshold values."""
                         drop_precedence: int | None
                         """Specify Drop Precedence value."""
@@ -35100,7 +35363,7 @@ class EosCliConfigGen(AvdRootModel):
                         def __init__(
                             self,
                             *,
-                            units: str | UndefinedType = Undefined,
+                            units: Literal["segments", "bytes", "kbytes", "mbytes", "microseconds", "milliseconds"] | UndefinedType = Undefined,
                             drop_precedence: int | None | UndefinedType = Undefined,
                             min: int | UndefinedType = Undefined,
                             max: int | UndefinedType = Undefined,
@@ -35219,7 +35482,7 @@ class EosCliConfigGen(AvdRootModel):
             """TX-Queue ID."""
             bandwidth_percent: int | None
             bandwidth_guaranteed_percent: int | None
-            priority: str | None
+            priority: Literal["priority strict", "no priority"] | None
             shape: Shape
             """Subclass of AvdModel."""
             comment: str | None
@@ -35234,7 +35497,7 @@ class EosCliConfigGen(AvdRootModel):
                 id: int | UndefinedType = Undefined,
                 bandwidth_percent: int | None | UndefinedType = Undefined,
                 bandwidth_guaranteed_percent: int | None | UndefinedType = Undefined,
-                priority: str | None | UndefinedType = Undefined,
+                priority: Literal["priority strict", "no priority"] | None | UndefinedType = Undefined,
                 shape: Shape | UndefinedType = Undefined,
                 comment: str | None | UndefinedType = Undefined,
                 random_detect: RandomDetect | UndefinedType = Undefined,
@@ -35325,7 +35588,7 @@ class EosCliConfigGen(AvdRootModel):
                         _required_fields: ClassVar[tuple] = ("units", "min", "max", "_custom_data")
                         _field_to_key_map: ClassVar[dict] = {}
                         _key_to_field_map: ClassVar[dict] = {}
-                        units: str
+                        units: Literal["segments", "bytes", "kbytes", "mbytes", "milliseconds"]
                         """Unit to be used for the threshold values."""
                         min: int
                         """Random-detect ECN minimum-threshold."""
@@ -35340,7 +35603,7 @@ class EosCliConfigGen(AvdRootModel):
                         def __init__(
                             self,
                             *,
-                            units: str | UndefinedType = Undefined,
+                            units: Literal["segments", "bytes", "kbytes", "mbytes", "milliseconds"] | UndefinedType = Undefined,
                             min: int | UndefinedType = Undefined,
                             max: int | UndefinedType = Undefined,
                             max_probability: int | None | UndefinedType = Undefined,
@@ -35419,7 +35682,7 @@ class EosCliConfigGen(AvdRootModel):
                         _required_fields: ClassVar[tuple] = ("units", "min", "max", "drop_probability", "_custom_data")
                         _field_to_key_map: ClassVar[dict] = {}
                         _key_to_field_map: ClassVar[dict] = {}
-                        units: str
+                        units: Literal["segments", "bytes", "kbytes", "mbytes", "microseconds", "milliseconds"]
                         """Units to be used for the threshold values."""
                         drop_precedence: int | None
                         """Specify Drop Precedence value."""
@@ -35436,7 +35699,7 @@ class EosCliConfigGen(AvdRootModel):
                         def __init__(
                             self,
                             *,
-                            units: str | UndefinedType = Undefined,
+                            units: Literal["segments", "bytes", "kbytes", "mbytes", "microseconds", "milliseconds"] | UndefinedType = Undefined,
                             drop_precedence: int | None | UndefinedType = Undefined,
                             min: int | UndefinedType = Undefined,
                             max: int | UndefinedType = Undefined,
@@ -35555,7 +35818,7 @@ class EosCliConfigGen(AvdRootModel):
             """UC TX queue ID."""
             bandwidth_percent: int | None
             bandwidth_guaranteed_percent: int | None
-            priority: str | None
+            priority: Literal["priority strict", "no priority"] | None
             shape: Shape
             """Subclass of AvdModel."""
             comment: str | None
@@ -35570,7 +35833,7 @@ class EosCliConfigGen(AvdRootModel):
                 id: int | UndefinedType = Undefined,
                 bandwidth_percent: int | None | UndefinedType = Undefined,
                 bandwidth_guaranteed_percent: int | None | UndefinedType = Undefined,
-                priority: str | None | UndefinedType = Undefined,
+                priority: Literal["priority strict", "no priority"] | None | UndefinedType = Undefined,
                 shape: Shape | UndefinedType = Undefined,
                 comment: str | None | UndefinedType = Undefined,
                 random_detect: RandomDetect | UndefinedType = Undefined,
@@ -35657,7 +35920,7 @@ class EosCliConfigGen(AvdRootModel):
             """MC TX queue ID."""
             bandwidth_percent: int | None
             bandwidth_guaranteed_percent: int | None
-            priority: str | None
+            priority: Literal["priority strict", "no priority"] | None
             shape: Shape
             """Subclass of AvdModel."""
             comment: str | None
@@ -35670,7 +35933,7 @@ class EosCliConfigGen(AvdRootModel):
                 id: int | UndefinedType = Undefined,
                 bandwidth_percent: int | None | UndefinedType = Undefined,
                 bandwidth_guaranteed_percent: int | None | UndefinedType = Undefined,
-                priority: str | None | UndefinedType = Undefined,
+                priority: Literal["priority strict", "no priority"] | None | UndefinedType = Undefined,
                 shape: Shape | UndefinedType = Undefined,
                 comment: str | None | UndefinedType = Undefined,
                 _custom_data: dict[str, Any] | UndefinedType = Undefined,
@@ -35808,7 +36071,7 @@ class EosCliConfigGen(AvdRootModel):
                 _key_to_field_map: ClassVar[dict] = {}
                 enabled: bool
                 """Enable the watchdog on stuck transmit queues."""
-                action: str | None
+                action: Literal["drop", "notify-only"] | None
                 """
                 Override the default error-disable action to either drop
                 traffic on the stuck queue or notify-only
@@ -35827,7 +36090,7 @@ class EosCliConfigGen(AvdRootModel):
                     self,
                     *,
                     enabled: bool | UndefinedType = Undefined,
-                    action: str | None | UndefinedType = Undefined,
+                    action: Literal["drop", "notify-only"] | None | UndefinedType = Undefined,
                     timer: Timer | UndefinedType = Undefined,
                     _custom_data: dict[str, Any] | UndefinedType = Undefined,
                 ) -> None:
@@ -35981,7 +36244,7 @@ class EosCliConfigGen(AvdRootModel):
         _key_to_field_map: ClassVar[dict] = {}
         name: str
         """Profile-Name."""
-        trust: str | None
+        trust: Literal["cos", "dscp", "disabled"] | None
         cos: int | None
         dscp: int | None
         shape: Shape
@@ -36007,7 +36270,7 @@ class EosCliConfigGen(AvdRootModel):
             self,
             *,
             name: str | UndefinedType = Undefined,
-            trust: str | None | UndefinedType = Undefined,
+            trust: Literal["cos", "dscp", "disabled"] | None | UndefinedType = Undefined,
             cos: int | None | UndefinedType = Undefined,
             dscp: int | None | UndefinedType = Undefined,
             shape: Shape | UndefinedType = Undefined,
@@ -36565,7 +36828,7 @@ class EosCliConfigGen(AvdRootModel):
             _key_to_field_map: ClassVar[dict] = {}
             sequence: int | None
             """Sequence number."""
-            action: str | None
+            action: Literal["permit", "deny"] | None
             mode: str | None
             """"config", "config-all", "exec" or mode key as string."""
             command: str | None
@@ -36576,7 +36839,7 @@ class EosCliConfigGen(AvdRootModel):
                 self,
                 *,
                 sequence: int | None | UndefinedType = Undefined,
-                action: str | None | UndefinedType = Undefined,
+                action: Literal["permit", "deny"] | None | UndefinedType = Undefined,
                 mode: str | None | UndefinedType = Undefined,
                 command: str | None | UndefinedType = Undefined,
                 _custom_data: dict[str, Any] | UndefinedType = Undefined,
@@ -36712,7 +36975,7 @@ class EosCliConfigGen(AvdRootModel):
             _key_to_field_map: ClassVar[dict] = {"continue": "field_continue"}
             sequence: int
             """Sequence ID."""
-            type: str
+            type: Literal["permit", "deny"]
             description: str | None
             match: Match
             """
@@ -36736,7 +36999,7 @@ class EosCliConfigGen(AvdRootModel):
                 self,
                 *,
                 sequence: int | UndefinedType = Undefined,
-                type: str | UndefinedType = Undefined,
+                type: Literal["permit", "deny"] | UndefinedType = Undefined,
                 description: str | None | UndefinedType = Undefined,
                 match: Match | UndefinedType = Undefined,
                 set: Set | UndefinedType = Undefined,
@@ -37184,7 +37447,7 @@ class EosCliConfigGen(AvdRootModel):
         _required_fields: ClassVar[tuple] = ("_custom_data",)
         _field_to_key_map: ClassVar[dict] = {}
         _key_to_field_map: ClassVar[dict] = {}
-        topology_role: str | None
+        topology_role: Literal["edge", "pathfinder", "transit region", "transit zone"] | None
         """Role name."""
         gateway_vxlan: bool | None
         """
@@ -37226,7 +37489,7 @@ class EosCliConfigGen(AvdRootModel):
         def __init__(
             self,
             *,
-            topology_role: str | None | UndefinedType = Undefined,
+            topology_role: Literal["edge", "pathfinder", "transit region", "transit zone"] | None | UndefinedType = Undefined,
             gateway_vxlan: bool | None | UndefinedType = Undefined,
             region: Region | UndefinedType = Undefined,
             zone: Zone | UndefinedType = Undefined,
@@ -37975,7 +38238,7 @@ class EosCliConfigGen(AvdRootModel):
                 _key_to_field_map: ClassVar[dict] = {}
                 receive: bool | None
                 """Enable or disable reception of additional-paths."""
-                send: str | None
+                send: Literal["any", "backup", "ecmp", "limit", "disabled"] | None
                 """
                 Select an option to send multiple paths for same prefix through bgp updates.
                 any: Send any eligible
@@ -37997,7 +38260,7 @@ class EosCliConfigGen(AvdRootModel):
                     self,
                     *,
                     receive: bool | None | UndefinedType = Undefined,
-                    send: str | None | UndefinedType = Undefined,
+                    send: Literal["any", "backup", "ecmp", "limit", "disabled"] | None | UndefinedType = Undefined,
                     send_limit: int | None | UndefinedType = Undefined,
                     _custom_data: dict[str, Any] | UndefinedType = Undefined,
                 ) -> None:
@@ -38168,10 +38431,21 @@ class EosCliConfigGen(AvdRootModel):
             _required_fields: ClassVar[tuple] = ("_custom_data",)
             _field_to_key_map: ClassVar[dict] = {}
             _key_to_field_map: ClassVar[dict] = {}
-            send_community: str | None
+            send_community: (
+                Literal["all", "large", "extended", "standard", "extended large", "standard large", "standard extended", "standard extended large"] | None
+            )
             _custom_data: dict[str, Any]
 
-            def __init__(self, *, send_community: str | None | UndefinedType = Undefined, _custom_data: dict[str, Any] | UndefinedType = Undefined) -> None:
+            def __init__(
+                self,
+                *,
+                send_community: Literal[
+                    "all", "large", "extended", "standard", "extended large", "standard large", "standard extended", "standard extended large"
+                ]
+                | None
+                | UndefinedType = Undefined,
+                _custom_data: dict[str, Any] | UndefinedType = Undefined,
+            ) -> None:
                 """
                 NeighborDefault.
 
@@ -38396,7 +38670,7 @@ class EosCliConfigGen(AvdRootModel):
                     _required_fields: ClassVar[tuple] = ("action", "_custom_data")
                     _field_to_key_map: ClassVar[dict] = {}
                     _key_to_field_map: ClassVar[dict] = {}
-                    action: str
+                    action: Literal["deny", "permit", "deny-in-out"]
                     """Missing policy action."""
                     include_community_list: bool | None
                     """Include community-list references in missing policy decision."""
@@ -38409,7 +38683,7 @@ class EosCliConfigGen(AvdRootModel):
                     def __init__(
                         self,
                         *,
-                        action: str | UndefinedType = Undefined,
+                        action: Literal["deny", "permit", "deny-in-out"] | UndefinedType = Undefined,
                         include_community_list: bool | None | UndefinedType = Undefined,
                         include_prefix_list: bool | None | UndefinedType = Undefined,
                         include_sub_route_map: bool | None | UndefinedType = Undefined,
@@ -38447,7 +38721,7 @@ class EosCliConfigGen(AvdRootModel):
                     _required_fields: ClassVar[tuple] = ("action", "_custom_data")
                     _field_to_key_map: ClassVar[dict] = {}
                     _key_to_field_map: ClassVar[dict] = {}
-                    action: str
+                    action: Literal["deny", "permit", "deny-in-out"]
                     """Missing policy action."""
                     include_community_list: bool | None
                     """Include community-list references in missing policy decision."""
@@ -38460,7 +38734,7 @@ class EosCliConfigGen(AvdRootModel):
                     def __init__(
                         self,
                         *,
-                        action: str | UndefinedType = Undefined,
+                        action: Literal["deny", "permit", "deny-in-out"] | UndefinedType = Undefined,
                         include_community_list: bool | None | UndefinedType = Undefined,
                         include_prefix_list: bool | None | UndefinedType = Undefined,
                         include_sub_route_map: bool | None | UndefinedType = Undefined,
@@ -38649,7 +38923,7 @@ class EosCliConfigGen(AvdRootModel):
                 _key_to_field_map: ClassVar[dict] = {}
                 profile: str
                 """Name of profile defined under `management_security`."""
-                hash_algorithm: str
+                hash_algorithm: Literal["aes-128-cmac-96", "hmac-sha-256", "hmac-sha1-96"]
                 """Note: Algorithm hmac-sha-256 requires EOS version 4.31.1F and above."""
                 _custom_data: dict[str, Any]
 
@@ -38657,7 +38931,7 @@ class EosCliConfigGen(AvdRootModel):
                     self,
                     *,
                     profile: str | UndefinedType = Undefined,
-                    hash_algorithm: str | UndefinedType = Undefined,
+                    hash_algorithm: Literal["aes-128-cmac-96", "hmac-sha-256", "hmac-sha1-96"] | UndefinedType = Undefined,
                     _custom_data: dict[str, Any] | UndefinedType = Undefined,
                 ) -> None:
                     """
@@ -39059,7 +39333,7 @@ class EosCliConfigGen(AvdRootModel):
                     _required_fields: ClassVar[tuple] = ("action", "_custom_data")
                     _field_to_key_map: ClassVar[dict] = {}
                     _key_to_field_map: ClassVar[dict] = {}
-                    action: str
+                    action: Literal["deny", "permit", "deny-in-out"]
                     """Missing policy action."""
                     include_community_list: bool | None
                     """Include community-list references in missing policy decision."""
@@ -39072,7 +39346,7 @@ class EosCliConfigGen(AvdRootModel):
                     def __init__(
                         self,
                         *,
-                        action: str | UndefinedType = Undefined,
+                        action: Literal["deny", "permit", "deny-in-out"] | UndefinedType = Undefined,
                         include_community_list: bool | None | UndefinedType = Undefined,
                         include_prefix_list: bool | None | UndefinedType = Undefined,
                         include_sub_route_map: bool | None | UndefinedType = Undefined,
@@ -39110,7 +39384,7 @@ class EosCliConfigGen(AvdRootModel):
                     _required_fields: ClassVar[tuple] = ("action", "_custom_data")
                     _field_to_key_map: ClassVar[dict] = {}
                     _key_to_field_map: ClassVar[dict] = {}
-                    action: str
+                    action: Literal["deny", "permit", "deny-in-out"]
                     """Missing policy action."""
                     include_community_list: bool | None
                     """Include community-list references in missing policy decision."""
@@ -39123,7 +39397,7 @@ class EosCliConfigGen(AvdRootModel):
                     def __init__(
                         self,
                         *,
-                        action: str | UndefinedType = Undefined,
+                        action: Literal["deny", "permit", "deny-in-out"] | UndefinedType = Undefined,
                         include_community_list: bool | None | UndefinedType = Undefined,
                         include_prefix_list: bool | None | UndefinedType = Undefined,
                         include_sub_route_map: bool | None | UndefinedType = Undefined,
@@ -39385,7 +39659,7 @@ class EosCliConfigGen(AvdRootModel):
                 _key_to_field_map: ClassVar[dict] = {}
                 profile: str
                 """Name of profile defined under `management_security`."""
-                hash_algorithm: str
+                hash_algorithm: Literal["aes-128-cmac-96", "hmac-sha-256", "hmac-sha1-96"]
                 """Note: Algorithm hmac-sha-256 requires EOS version 4.31.1F and above."""
                 _custom_data: dict[str, Any]
 
@@ -39393,7 +39667,7 @@ class EosCliConfigGen(AvdRootModel):
                     self,
                     *,
                     profile: str | UndefinedType = Undefined,
-                    hash_algorithm: str | UndefinedType = Undefined,
+                    hash_algorithm: Literal["aes-128-cmac-96", "hmac-sha-256", "hmac-sha1-96"] | UndefinedType = Undefined,
                     _custom_data: dict[str, Any] | UndefinedType = Undefined,
                 ) -> None:
                     """
@@ -39995,7 +40269,7 @@ class EosCliConfigGen(AvdRootModel):
                 _field_to_key_map: ClassVar[dict] = {}
                 _key_to_field_map: ClassVar[dict] = {}
                 enabled: bool
-                isis_level: str | None
+                isis_level: Literal["level-1", "level-2", "level-1-2"] | None
                 """Redistribute IS-IS route level."""
                 route_map: str | None
                 rcf: str | None
@@ -40013,7 +40287,7 @@ class EosCliConfigGen(AvdRootModel):
                     self,
                     *,
                     enabled: bool | UndefinedType = Undefined,
-                    isis_level: str | None | UndefinedType = Undefined,
+                    isis_level: Literal["level-1", "level-2", "level-1-2"] | None | UndefinedType = Undefined,
                     route_map: str | None | UndefinedType = Undefined,
                     rcf: str | None | UndefinedType = Undefined,
                     include_leaked: bool | None | UndefinedType = Undefined,
@@ -40148,7 +40422,7 @@ class EosCliConfigGen(AvdRootModel):
                     _field_to_key_map: ClassVar[dict] = {}
                     _key_to_field_map: ClassVar[dict] = {}
                     enabled: bool
-                    nssa_type: int | None
+                    nssa_type: Literal[1, 2] | None
                     """NSSA External Type Number."""
                     route_map: str | None
                     include_leaked: bool | None
@@ -40159,7 +40433,7 @@ class EosCliConfigGen(AvdRootModel):
                         self,
                         *,
                         enabled: bool | UndefinedType = Undefined,
-                        nssa_type: int | None | UndefinedType = Undefined,
+                        nssa_type: Literal[1, 2] | None | UndefinedType = Undefined,
                         route_map: str | None | UndefinedType = Undefined,
                         include_leaked: bool | None | UndefinedType = Undefined,
                         _custom_data: dict[str, Any] | UndefinedType = Undefined,
@@ -40366,7 +40640,7 @@ class EosCliConfigGen(AvdRootModel):
                     _field_to_key_map: ClassVar[dict] = {}
                     _key_to_field_map: ClassVar[dict] = {}
                     enabled: bool
-                    nssa_type: int | None
+                    nssa_type: Literal[1, 2] | None
                     """NSSA External Type Number."""
                     route_map: str | None
                     include_leaked: bool | None
@@ -40377,7 +40651,7 @@ class EosCliConfigGen(AvdRootModel):
                         self,
                         *,
                         enabled: bool | UndefinedType = Undefined,
-                        nssa_type: int | None | UndefinedType = Undefined,
+                        nssa_type: Literal[1, 2] | None | UndefinedType = Undefined,
                         route_map: str | None | UndefinedType = Undefined,
                         include_leaked: bool | None | UndefinedType = Undefined,
                         _custom_data: dict[str, Any] | UndefinedType = Undefined,
@@ -40709,7 +40983,7 @@ class EosCliConfigGen(AvdRootModel):
             _required_fields: ClassVar[tuple] = ("source_protocol", "_custom_data")
             _field_to_key_map: ClassVar[dict] = {}
             _key_to_field_map: ClassVar[dict] = {}
-            source_protocol: str
+            source_protocol: Literal["attached-host", "bgp", "connected", "dynamic", "isis", "ospf", "ospfv3", "rip", "static", "user"]
             route_map: str | None
             rcf: str | None
             """
@@ -40721,7 +40995,7 @@ class EosCliConfigGen(AvdRootModel):
             `static`, `isis`, `user`, `dynamic`.
             """
             include_leaked: bool | None
-            ospf_route_type: str | None
+            ospf_route_type: Literal["external", "internal", "nssa-external", "nssa-external 1", "nssa-external 2"] | None
             """
             Routes learned by the OSPF protocol.
             The `ospf_route_type` is valid for source_protocols 'ospf' and
@@ -40732,11 +41006,12 @@ class EosCliConfigGen(AvdRootModel):
             def __init__(
                 self,
                 *,
-                source_protocol: str | UndefinedType = Undefined,
+                source_protocol: Literal["attached-host", "bgp", "connected", "dynamic", "isis", "ospf", "ospfv3", "rip", "static", "user"]
+                | UndefinedType = Undefined,
                 route_map: str | None | UndefinedType = Undefined,
                 rcf: str | None | UndefinedType = Undefined,
                 include_leaked: bool | None | UndefinedType = Undefined,
-                ospf_route_type: str | None | UndefinedType = Undefined,
+                ospf_route_type: Literal["external", "internal", "nssa-external", "nssa-external 1", "nssa-external 2"] | None | UndefinedType = Undefined,
                 _custom_data: dict[str, Any] | UndefinedType = Undefined,
             ) -> None:
                 """
@@ -40783,7 +41058,7 @@ class EosCliConfigGen(AvdRootModel):
                 _required_fields: ClassVar[tuple] = ("_custom_data",)
                 _field_to_key_map: ClassVar[dict] = {}
                 _key_to_field_map: ClassVar[dict] = {}
-                domain: str | None
+                domain: Literal["remote", "all"] | None
                 rd: str | None
                 """Route distinguisher."""
                 _custom_data: dict[str, Any]
@@ -40791,7 +41066,7 @@ class EosCliConfigGen(AvdRootModel):
                 def __init__(
                     self,
                     *,
-                    domain: str | None | UndefinedType = Undefined,
+                    domain: Literal["remote", "all"] | None | UndefinedType = Undefined,
                     rd: str | None | UndefinedType = Undefined,
                     _custom_data: dict[str, Any] | UndefinedType = Undefined,
                 ) -> None:
@@ -40837,14 +41112,14 @@ class EosCliConfigGen(AvdRootModel):
                     _required_fields: ClassVar[tuple] = ("_custom_data",)
                     _field_to_key_map: ClassVar[dict] = {}
                     _key_to_field_map: ClassVar[dict] = {}
-                    domain: str | None
+                    domain: Literal["remote", "all"] | None
                     route_target: str | None
                     _custom_data: dict[str, Any]
 
                     def __init__(
                         self,
                         *,
-                        domain: str | None | UndefinedType = Undefined,
+                        domain: Literal["remote", "all"] | None | UndefinedType = Undefined,
                         route_target: str | None | UndefinedType = Undefined,
                         _custom_data: dict[str, Any] | UndefinedType = Undefined,
                     ) -> None:
@@ -40877,14 +41152,14 @@ class EosCliConfigGen(AvdRootModel):
                     _required_fields: ClassVar[tuple] = ("_custom_data",)
                     _field_to_key_map: ClassVar[dict] = {}
                     _key_to_field_map: ClassVar[dict] = {}
-                    domain: str | None
+                    domain: Literal["remote", "all"] | None
                     route_target: str | None
                     _custom_data: dict[str, Any]
 
                     def __init__(
                         self,
                         *,
-                        domain: str | None | UndefinedType = Undefined,
+                        domain: Literal["remote", "all"] | None | UndefinedType = Undefined,
                         route_target: str | None | UndefinedType = Undefined,
                         _custom_data: dict[str, Any] | UndefinedType = Undefined,
                     ) -> None:
@@ -40917,14 +41192,14 @@ class EosCliConfigGen(AvdRootModel):
                     _required_fields: ClassVar[tuple] = ("_custom_data",)
                     _field_to_key_map: ClassVar[dict] = {}
                     _key_to_field_map: ClassVar[dict] = {}
-                    domain: str | None
+                    domain: Literal["remote", "all"] | None
                     route_target: str | None
                     _custom_data: dict[str, Any]
 
                     def __init__(
                         self,
                         *,
-                        domain: str | None | UndefinedType = Undefined,
+                        domain: Literal["remote", "all"] | None | UndefinedType = Undefined,
                         route_target: str | None | UndefinedType = Undefined,
                         _custom_data: dict[str, Any] | UndefinedType = Undefined,
                     ) -> None:
@@ -41118,7 +41393,7 @@ class EosCliConfigGen(AvdRootModel):
                 _required_fields: ClassVar[tuple] = ("_custom_data",)
                 _field_to_key_map: ClassVar[dict] = {}
                 _key_to_field_map: ClassVar[dict] = {}
-                domain: str | None
+                domain: Literal["remote", "all"] | None
                 rd: str | None
                 """Route distinguisher."""
                 _custom_data: dict[str, Any]
@@ -41126,7 +41401,7 @@ class EosCliConfigGen(AvdRootModel):
                 def __init__(
                     self,
                     *,
-                    domain: str | None | UndefinedType = Undefined,
+                    domain: Literal["remote", "all"] | None | UndefinedType = Undefined,
                     rd: str | None | UndefinedType = Undefined,
                     _custom_data: dict[str, Any] | UndefinedType = Undefined,
                 ) -> None:
@@ -41172,14 +41447,14 @@ class EosCliConfigGen(AvdRootModel):
                     _required_fields: ClassVar[tuple] = ("_custom_data",)
                     _field_to_key_map: ClassVar[dict] = {}
                     _key_to_field_map: ClassVar[dict] = {}
-                    domain: str | None
+                    domain: Literal["remote", "all"] | None
                     route_target: str | None
                     _custom_data: dict[str, Any]
 
                     def __init__(
                         self,
                         *,
-                        domain: str | None | UndefinedType = Undefined,
+                        domain: Literal["remote", "all"] | None | UndefinedType = Undefined,
                         route_target: str | None | UndefinedType = Undefined,
                         _custom_data: dict[str, Any] | UndefinedType = Undefined,
                     ) -> None:
@@ -41212,14 +41487,14 @@ class EosCliConfigGen(AvdRootModel):
                     _required_fields: ClassVar[tuple] = ("_custom_data",)
                     _field_to_key_map: ClassVar[dict] = {}
                     _key_to_field_map: ClassVar[dict] = {}
-                    domain: str | None
+                    domain: Literal["remote", "all"] | None
                     route_target: str | None
                     _custom_data: dict[str, Any]
 
                     def __init__(
                         self,
                         *,
-                        domain: str | None | UndefinedType = Undefined,
+                        domain: Literal["remote", "all"] | None | UndefinedType = Undefined,
                         route_target: str | None | UndefinedType = Undefined,
                         _custom_data: dict[str, Any] | UndefinedType = Undefined,
                     ) -> None:
@@ -41252,14 +41527,14 @@ class EosCliConfigGen(AvdRootModel):
                     _required_fields: ClassVar[tuple] = ("_custom_data",)
                     _field_to_key_map: ClassVar[dict] = {}
                     _key_to_field_map: ClassVar[dict] = {}
-                    domain: str | None
+                    domain: Literal["remote", "all"] | None
                     route_target: str | None
                     _custom_data: dict[str, Any]
 
                     def __init__(
                         self,
                         *,
-                        domain: str | None | UndefinedType = Undefined,
+                        domain: Literal["remote", "all"] | None | UndefinedType = Undefined,
                         route_target: str | None | UndefinedType = Undefined,
                         _custom_data: dict[str, Any] | UndefinedType = Undefined,
                     ) -> None:
@@ -41628,7 +41903,7 @@ class EosCliConfigGen(AvdRootModel):
                 _required_fields: ClassVar[tuple] = ("_custom_data",)
                 _field_to_key_map: ClassVar[dict] = {}
                 _key_to_field_map: ClassVar[dict] = {}
-                encapsulation: str | None
+                encapsulation: Literal["vxlan", "mpls", "path-selection"] | None
                 """Transport encapsulation for neighbor."""
                 next_hop_self_source_interface: str | None
                 """Source interface name for MPLS encapsulation. Requires `encapsulation` to be set as `mpls`."""
@@ -41639,7 +41914,7 @@ class EosCliConfigGen(AvdRootModel):
                 def __init__(
                     self,
                     *,
-                    encapsulation: str | None | UndefinedType = Undefined,
+                    encapsulation: Literal["vxlan", "mpls", "path-selection"] | None | UndefinedType = Undefined,
                     next_hop_self_source_interface: str | None | UndefinedType = Undefined,
                     next_hop_self_received_evpn_routes: NextHopSelfReceivedEvpnRoutes | UndefinedType = Undefined,
                     _custom_data: dict[str, Any] | UndefinedType = Undefined,
@@ -41669,7 +41944,7 @@ class EosCliConfigGen(AvdRootModel):
                 _required_fields: ClassVar[tuple] = ("rib_type", "_custom_data")
                 _field_to_key_map: ClassVar[dict] = {}
                 _key_to_field_map: ClassVar[dict] = {}
-                rib_type: str
+                rib_type: Literal["system-connected", "tunnel-rib-colored", "tunnel-rib"]
                 """Type of RIB. For 'tunnel-rib', use 'rib_name' to specify the name of the Tunnel-RIB to use."""
                 rib_name: str | None
                 """The name of the tunnel-rib to use when using 'tunnel-rib' type."""
@@ -41678,7 +41953,7 @@ class EosCliConfigGen(AvdRootModel):
                 def __init__(
                     self,
                     *,
-                    rib_type: str | UndefinedType = Undefined,
+                    rib_type: Literal["system-connected", "tunnel-rib-colored", "tunnel-rib"] | UndefinedType = Undefined,
                     rib_name: str | None | UndefinedType = Undefined,
                     _custom_data: dict[str, Any] | UndefinedType = Undefined,
                 ) -> None:
@@ -41760,7 +42035,7 @@ class EosCliConfigGen(AvdRootModel):
                     _key_to_field_map: ClassVar[dict] = {}
                     receive: bool | None
                     """Enable or disable reception of additional-paths."""
-                    send: str | None
+                    send: Literal["any", "backup", "ecmp", "limit", "disabled"] | None
                     """
                     Select an option to send multiple paths for same prefix through bgp updates.
                     any: Send any eligible
@@ -41782,7 +42057,7 @@ class EosCliConfigGen(AvdRootModel):
                         self,
                         *,
                         receive: bool | None | UndefinedType = Undefined,
-                        send: str | None | UndefinedType = Undefined,
+                        send: Literal["any", "backup", "ecmp", "limit", "disabled"] | None | UndefinedType = Undefined,
                         send_limit: int | None | UndefinedType = Undefined,
                         _custom_data: dict[str, Any] | UndefinedType = Undefined,
                     ) -> None:
@@ -41850,7 +42125,7 @@ class EosCliConfigGen(AvdRootModel):
                 """Subclass of AvdModel."""
                 additional_paths: AdditionalPaths
                 """Subclass of AvdModel."""
-                encapsulation: str | None
+                encapsulation: Literal["vxlan", "mpls", "path-selection"] | None
                 """Transport encapsulation for the neighbor."""
                 next_hop_self_source_interface: str | None
                 """Source interface name for MPLS encapsulation. Requires `encapsulation` to be set as `mpls`."""
@@ -41867,7 +42142,7 @@ class EosCliConfigGen(AvdRootModel):
                     rcf_out: str | None | UndefinedType = Undefined,
                     default_route: DefaultRoute | UndefinedType = Undefined,
                     additional_paths: AdditionalPaths | UndefinedType = Undefined,
-                    encapsulation: str | None | UndefinedType = Undefined,
+                    encapsulation: Literal["vxlan", "mpls", "path-selection"] | None | UndefinedType = Undefined,
                     next_hop_self_source_interface: str | None | UndefinedType = Undefined,
                     _custom_data: dict[str, Any] | UndefinedType = Undefined,
                 ) -> None:
@@ -41963,7 +42238,7 @@ class EosCliConfigGen(AvdRootModel):
                     _key_to_field_map: ClassVar[dict] = {}
                     receive: bool | None
                     """Enable or disable reception of additional-paths."""
-                    send: str | None
+                    send: Literal["any", "backup", "ecmp", "limit", "disabled"] | None
                     """
                     Select an option to send multiple paths for same prefix through bgp updates.
                     any: Send any eligible
@@ -41985,7 +42260,7 @@ class EosCliConfigGen(AvdRootModel):
                         self,
                         *,
                         receive: bool | None | UndefinedType = Undefined,
-                        send: str | None | UndefinedType = Undefined,
+                        send: Literal["any", "backup", "ecmp", "limit", "disabled"] | None | UndefinedType = Undefined,
                         send_limit: int | None | UndefinedType = Undefined,
                         _custom_data: dict[str, Any] | UndefinedType = Undefined,
                     ) -> None:
@@ -42053,7 +42328,7 @@ class EosCliConfigGen(AvdRootModel):
                 default_route: DefaultRoute
                 """Subclass of AvdModel."""
                 domain_remote: bool | None
-                encapsulation: str | None
+                encapsulation: Literal["vxlan", "mpls", "path-selection"] | None
                 """Transport encapsulation for the peer-group."""
                 additional_paths: AdditionalPaths
                 """Subclass of AvdModel."""
@@ -42070,7 +42345,7 @@ class EosCliConfigGen(AvdRootModel):
                     rcf_out: str | None | UndefinedType = Undefined,
                     default_route: DefaultRoute | UndefinedType = Undefined,
                     domain_remote: bool | None | UndefinedType = Undefined,
-                    encapsulation: str | None | UndefinedType = Undefined,
+                    encapsulation: Literal["vxlan", "mpls", "path-selection"] | None | UndefinedType = Undefined,
                     additional_paths: AdditionalPaths | UndefinedType = Undefined,
                     _custom_data: dict[str, Any] | UndefinedType = Undefined,
                 ) -> None:
@@ -42202,7 +42477,7 @@ class EosCliConfigGen(AvdRootModel):
                 _required_fields: ClassVar[tuple] = ("_custom_data",)
                 _field_to_key_map: ClassVar[dict] = {}
                 _key_to_field_map: ClassVar[dict] = {}
-                import_match_failure_action: str | None
+                import_match_failure_action: Literal["discard"] | None
                 import_ethernet_segment_ip_mass_withdraw: bool | None
                 import_overlay_index_gateway: bool | None
                 export_ethernet_segment_ip_mass_withdraw: bool | None
@@ -42211,7 +42486,7 @@ class EosCliConfigGen(AvdRootModel):
                 def __init__(
                     self,
                     *,
-                    import_match_failure_action: str | None | UndefinedType = Undefined,
+                    import_match_failure_action: Literal["discard"] | None | UndefinedType = Undefined,
                     import_ethernet_segment_ip_mass_withdraw: bool | None | UndefinedType = Undefined,
                     import_overlay_index_gateway: bool | None | UndefinedType = Undefined,
                     export_ethernet_segment_ip_mass_withdraw: bool | None | UndefinedType = Undefined,
@@ -42248,7 +42523,7 @@ class EosCliConfigGen(AvdRootModel):
                     _key_to_field_map: ClassVar[dict] = {}
                     receive: bool | None
                     """Enable or disable reception of additional-paths."""
-                    send: str | None
+                    send: Literal["any", "backup", "ecmp", "limit", "disabled"] | None
                     """
                     Select an option to send multiple paths for same prefix through bgp updates.
                     any: Send any eligible
@@ -42270,7 +42545,7 @@ class EosCliConfigGen(AvdRootModel):
                         self,
                         *,
                         receive: bool | None | UndefinedType = Undefined,
-                        send: str | None | UndefinedType = Undefined,
+                        send: Literal["any", "backup", "ecmp", "limit", "disabled"] | None | UndefinedType = Undefined,
                         send_limit: int | None | UndefinedType = Undefined,
                         _custom_data: dict[str, Any] | UndefinedType = Undefined,
                     ) -> None:
@@ -42377,7 +42652,7 @@ class EosCliConfigGen(AvdRootModel):
                 _required_fields: ClassVar[tuple] = ("domain", "_custom_data")
                 _field_to_key_map: ClassVar[dict] = {}
                 _key_to_field_map: ClassVar[dict] = {}
-                domain: str
+                domain: Literal["all", "local", "remote"]
                 identifier: str | None
                 """EVPN Ethernet Segment Identifier (Type 1 format)."""
                 route_target_import: str | None
@@ -42387,7 +42662,7 @@ class EosCliConfigGen(AvdRootModel):
                 def __init__(
                     self,
                     *,
-                    domain: str | UndefinedType = Undefined,
+                    domain: Literal["all", "local", "remote"] | UndefinedType = Undefined,
                     identifier: str | None | UndefinedType = Undefined,
                     route_target_import: str | None | UndefinedType = Undefined,
                     _custom_data: dict[str, Any] | UndefinedType = Undefined,
@@ -42820,7 +43095,7 @@ class EosCliConfigGen(AvdRootModel):
                     """Allow additional path with ECMP primary path."""
                     receive: bool | None
                     """Enable or disable reception of additional-paths."""
-                    send: str | None
+                    send: Literal["any", "backup", "ecmp", "limit", "disabled"] | None
                     """
                     Select an option to send multiple paths for same prefix through bgp updates.
                     any: Send any eligible
@@ -42844,7 +43119,7 @@ class EosCliConfigGen(AvdRootModel):
                         install: bool | None | UndefinedType = Undefined,
                         install_ecmp_primary: bool | None | UndefinedType = Undefined,
                         receive: bool | None | UndefinedType = Undefined,
-                        send: str | None | UndefinedType = Undefined,
+                        send: Literal["any", "backup", "ecmp", "limit", "disabled"] | None | UndefinedType = Undefined,
                         send_limit: int | None | UndefinedType = Undefined,
                         _custom_data: dict[str, Any] | UndefinedType = Undefined,
                     ) -> None:
@@ -42972,7 +43247,7 @@ class EosCliConfigGen(AvdRootModel):
                     """Apply the configurations only to the routes matching the prefix list."""
                     receive: bool | None
                     """Enable or disable reception of additional-paths."""
-                    send: str | None
+                    send: Literal["any", "backup", "ecmp", "limit", "disabled"] | None
                     """
                     Select an option to send multiple paths for same prefix through bgp updates.
                     any: Send any eligible
@@ -42995,7 +43270,7 @@ class EosCliConfigGen(AvdRootModel):
                         *,
                         prefix_list: str | None | UndefinedType = Undefined,
                         receive: bool | None | UndefinedType = Undefined,
-                        send: str | None | UndefinedType = Undefined,
+                        send: Literal["any", "backup", "ecmp", "limit", "disabled"] | None | UndefinedType = Undefined,
                         send_limit: int | None | UndefinedType = Undefined,
                         _custom_data: dict[str, Any] | UndefinedType = Undefined,
                     ) -> None:
@@ -43247,7 +43522,7 @@ class EosCliConfigGen(AvdRootModel):
                     """Apply the configurations only to the routes matching the prefix list."""
                     receive: bool | None
                     """Enable or disable reception of additional-paths."""
-                    send: str | None
+                    send: Literal["any", "backup", "ecmp", "limit", "disabled"] | None
                     """
                     Select an option to send multiple paths for same prefix through bgp updates.
                     any: Send any eligible
@@ -43270,7 +43545,7 @@ class EosCliConfigGen(AvdRootModel):
                         *,
                         prefix_list: str | None | UndefinedType = Undefined,
                         receive: bool | None | UndefinedType = Undefined,
-                        send: str | None | UndefinedType = Undefined,
+                        send: Literal["any", "backup", "ecmp", "limit", "disabled"] | None | UndefinedType = Undefined,
                         send_limit: int | None | UndefinedType = Undefined,
                         _custom_data: dict[str, Any] | UndefinedType = Undefined,
                     ) -> None:
@@ -43590,7 +43865,7 @@ class EosCliConfigGen(AvdRootModel):
                     _field_to_key_map: ClassVar[dict] = {}
                     _key_to_field_map: ClassVar[dict] = {}
                     enabled: bool
-                    isis_level: str | None
+                    isis_level: Literal["level-1", "level-2", "level-1-2"] | None
                     """Redistribute IS-IS route level."""
                     route_map: str | None
                     rcf: str | None
@@ -43608,7 +43883,7 @@ class EosCliConfigGen(AvdRootModel):
                         self,
                         *,
                         enabled: bool | UndefinedType = Undefined,
-                        isis_level: str | None | UndefinedType = Undefined,
+                        isis_level: Literal["level-1", "level-2", "level-1-2"] | None | UndefinedType = Undefined,
                         route_map: str | None | UndefinedType = Undefined,
                         rcf: str | None | UndefinedType = Undefined,
                         include_leaked: bool | None | UndefinedType = Undefined,
@@ -43743,7 +44018,7 @@ class EosCliConfigGen(AvdRootModel):
                         _field_to_key_map: ClassVar[dict] = {}
                         _key_to_field_map: ClassVar[dict] = {}
                         enabled: bool
-                        nssa_type: int | None
+                        nssa_type: Literal[1, 2] | None
                         """NSSA External Type Number."""
                         route_map: str | None
                         include_leaked: bool | None
@@ -43754,7 +44029,7 @@ class EosCliConfigGen(AvdRootModel):
                             self,
                             *,
                             enabled: bool | UndefinedType = Undefined,
-                            nssa_type: int | None | UndefinedType = Undefined,
+                            nssa_type: Literal[1, 2] | None | UndefinedType = Undefined,
                             route_map: str | None | UndefinedType = Undefined,
                             include_leaked: bool | None | UndefinedType = Undefined,
                             _custom_data: dict[str, Any] | UndefinedType = Undefined,
@@ -43961,7 +44236,7 @@ class EosCliConfigGen(AvdRootModel):
                         _field_to_key_map: ClassVar[dict] = {}
                         _key_to_field_map: ClassVar[dict] = {}
                         enabled: bool
-                        nssa_type: int | None
+                        nssa_type: Literal[1, 2] | None
                         """NSSA External Type Number."""
                         route_map: str | None
                         include_leaked: bool | None
@@ -43972,7 +44247,7 @@ class EosCliConfigGen(AvdRootModel):
                             self,
                             *,
                             enabled: bool | UndefinedType = Undefined,
-                            nssa_type: int | None | UndefinedType = Undefined,
+                            nssa_type: Literal[1, 2] | None | UndefinedType = Undefined,
                             route_map: str | None | UndefinedType = Undefined,
                             include_leaked: bool | None | UndefinedType = Undefined,
                             _custom_data: dict[str, Any] | UndefinedType = Undefined,
@@ -44304,7 +44579,7 @@ class EosCliConfigGen(AvdRootModel):
                 _required_fields: ClassVar[tuple] = ("source_protocol", "_custom_data")
                 _field_to_key_map: ClassVar[dict] = {}
                 _key_to_field_map: ClassVar[dict] = {}
-                source_protocol: str
+                source_protocol: Literal["attached-host", "bgp", "connected", "dynamic", "isis", "ospf", "ospfv3", "rip", "static", "user"]
                 route_map: str | None
                 include_leaked: bool | None
                 """Only applicable if `source_protocol` is one of `connected`, `static`, `isis`, `ospf`, `ospfv3`."""
@@ -44317,7 +44592,7 @@ class EosCliConfigGen(AvdRootModel):
                 Only applicable if `source_protocol` is one of `connected`,
                 `static`, `isis`, `user`, `dynamic`.
                 """
-                ospf_route_type: str | None
+                ospf_route_type: Literal["external", "internal", "nssa-external", "nssa-external 1", "nssa-external 2"] | None
                 """
                 Routes learned by the OSPF protocol.
                 The `ospf_route_type` is valid for source_protocols 'ospf' and
@@ -44328,11 +44603,12 @@ class EosCliConfigGen(AvdRootModel):
                 def __init__(
                     self,
                     *,
-                    source_protocol: str | UndefinedType = Undefined,
+                    source_protocol: Literal["attached-host", "bgp", "connected", "dynamic", "isis", "ospf", "ospfv3", "rip", "static", "user"]
+                    | UndefinedType = Undefined,
                     route_map: str | None | UndefinedType = Undefined,
                     include_leaked: bool | None | UndefinedType = Undefined,
                     rcf: str | None | UndefinedType = Undefined,
-                    ospf_route_type: str | None | UndefinedType = Undefined,
+                    ospf_route_type: Literal["external", "internal", "nssa-external", "nssa-external 1", "nssa-external 2"] | None | UndefinedType = Undefined,
                     _custom_data: dict[str, Any] | UndefinedType = Undefined,
                 ) -> None:
                     """
@@ -44487,7 +44763,7 @@ class EosCliConfigGen(AvdRootModel):
                     _key_to_field_map: ClassVar[dict] = {}
                     receive: bool | None
                     """Enable or disable reception of additional-paths."""
-                    send: str | None
+                    send: Literal["any", "backup", "ecmp", "limit", "disabled"] | None
                     """
                     Select an option to send multiple paths for same prefix through bgp updates.
                     any: Send any eligible
@@ -44509,7 +44785,7 @@ class EosCliConfigGen(AvdRootModel):
                         self,
                         *,
                         receive: bool | None | UndefinedType = Undefined,
-                        send: str | None | UndefinedType = Undefined,
+                        send: Literal["any", "backup", "ecmp", "limit", "disabled"] | None | UndefinedType = Undefined,
                         send_limit: int | None | UndefinedType = Undefined,
                         _custom_data: dict[str, Any] | UndefinedType = Undefined,
                     ) -> None:
@@ -44557,7 +44833,7 @@ class EosCliConfigGen(AvdRootModel):
                         _required_fields: ClassVar[tuple] = ("action", "_custom_data")
                         _field_to_key_map: ClassVar[dict] = {}
                         _key_to_field_map: ClassVar[dict] = {}
-                        action: str
+                        action: Literal["deny", "permit", "deny-in-out"]
                         """Missing policy action."""
                         include_community_list: bool | None
                         """Include community-list references in missing policy decision."""
@@ -44570,7 +44846,7 @@ class EosCliConfigGen(AvdRootModel):
                         def __init__(
                             self,
                             *,
-                            action: str | UndefinedType = Undefined,
+                            action: Literal["deny", "permit", "deny-in-out"] | UndefinedType = Undefined,
                             include_community_list: bool | None | UndefinedType = Undefined,
                             include_prefix_list: bool | None | UndefinedType = Undefined,
                             include_sub_route_map: bool | None | UndefinedType = Undefined,
@@ -44608,7 +44884,7 @@ class EosCliConfigGen(AvdRootModel):
                         _required_fields: ClassVar[tuple] = ("action", "_custom_data")
                         _field_to_key_map: ClassVar[dict] = {}
                         _key_to_field_map: ClassVar[dict] = {}
-                        action: str
+                        action: Literal["deny", "permit", "deny-in-out"]
                         """Missing policy action."""
                         include_community_list: bool | None
                         """Include community-list references in missing policy decision."""
@@ -44621,7 +44897,7 @@ class EosCliConfigGen(AvdRootModel):
                         def __init__(
                             self,
                             *,
-                            action: str | UndefinedType = Undefined,
+                            action: Literal["deny", "permit", "deny-in-out"] | UndefinedType = Undefined,
                             include_community_list: bool | None | UndefinedType = Undefined,
                             include_prefix_list: bool | None | UndefinedType = Undefined,
                             include_sub_route_map: bool | None | UndefinedType = Undefined,
@@ -44782,7 +45058,7 @@ class EosCliConfigGen(AvdRootModel):
                     _key_to_field_map: ClassVar[dict] = {}
                     receive: bool | None
                     """Enable or disable reception of additional-paths."""
-                    send: str | None
+                    send: Literal["any", "backup", "ecmp", "limit", "disabled"] | None
                     """
                     Select an option to send multiple paths for same prefix through bgp updates.
                     any: Send any eligible
@@ -44804,7 +45080,7 @@ class EosCliConfigGen(AvdRootModel):
                         self,
                         *,
                         receive: bool | None | UndefinedType = Undefined,
-                        send: str | None | UndefinedType = Undefined,
+                        send: Literal["any", "backup", "ecmp", "limit", "disabled"] | None | UndefinedType = Undefined,
                         send_limit: int | None | UndefinedType = Undefined,
                         _custom_data: dict[str, Any] | UndefinedType = Undefined,
                     ) -> None:
@@ -44881,7 +45157,7 @@ class EosCliConfigGen(AvdRootModel):
                         _required_fields: ClassVar[tuple] = ("action", "_custom_data")
                         _field_to_key_map: ClassVar[dict] = {}
                         _key_to_field_map: ClassVar[dict] = {}
-                        action: str
+                        action: Literal["deny", "permit", "deny-in-out"]
                         """Missing policy action."""
                         include_community_list: bool | None
                         """Include community-list references in missing policy decision."""
@@ -44894,7 +45170,7 @@ class EosCliConfigGen(AvdRootModel):
                         def __init__(
                             self,
                             *,
-                            action: str | UndefinedType = Undefined,
+                            action: Literal["deny", "permit", "deny-in-out"] | UndefinedType = Undefined,
                             include_community_list: bool | None | UndefinedType = Undefined,
                             include_prefix_list: bool | None | UndefinedType = Undefined,
                             include_sub_route_map: bool | None | UndefinedType = Undefined,
@@ -44932,7 +45208,7 @@ class EosCliConfigGen(AvdRootModel):
                         _required_fields: ClassVar[tuple] = ("action", "_custom_data")
                         _field_to_key_map: ClassVar[dict] = {}
                         _key_to_field_map: ClassVar[dict] = {}
-                        action: str
+                        action: Literal["deny", "permit", "deny-in-out"]
                         """Missing policy action."""
                         include_community_list: bool | None
                         """Include community-list references in missing policy decision."""
@@ -44945,7 +45221,7 @@ class EosCliConfigGen(AvdRootModel):
                         def __init__(
                             self,
                             *,
-                            action: str | UndefinedType = Undefined,
+                            action: Literal["deny", "permit", "deny-in-out"] | UndefinedType = Undefined,
                             include_community_list: bool | None | UndefinedType = Undefined,
                             include_prefix_list: bool | None | UndefinedType = Undefined,
                             include_sub_route_map: bool | None | UndefinedType = Undefined,
@@ -45173,7 +45449,7 @@ class EosCliConfigGen(AvdRootModel):
                     _key_to_field_map: ClassVar[dict] = {}
                     receive: bool | None
                     """Enable or disable reception of additional-paths."""
-                    send: str | None
+                    send: Literal["any", "backup", "ecmp", "limit", "disabled"] | None
                     """
                     Select an option to send multiple paths for same prefix through bgp updates.
                     any: Send any eligible
@@ -45195,7 +45471,7 @@ class EosCliConfigGen(AvdRootModel):
                         self,
                         *,
                         receive: bool | None | UndefinedType = Undefined,
-                        send: str | None | UndefinedType = Undefined,
+                        send: Literal["any", "backup", "ecmp", "limit", "disabled"] | None | UndefinedType = Undefined,
                         send_limit: int | None | UndefinedType = Undefined,
                         _custom_data: dict[str, Any] | UndefinedType = Undefined,
                     ) -> None:
@@ -45272,7 +45548,7 @@ class EosCliConfigGen(AvdRootModel):
                         _required_fields: ClassVar[tuple] = ("action", "_custom_data")
                         _field_to_key_map: ClassVar[dict] = {}
                         _key_to_field_map: ClassVar[dict] = {}
-                        action: str
+                        action: Literal["deny", "permit", "deny-in-out"]
                         """Missing policy action."""
                         include_community_list: bool | None
                         """Include community-list references in missing policy decision."""
@@ -45285,7 +45561,7 @@ class EosCliConfigGen(AvdRootModel):
                         def __init__(
                             self,
                             *,
-                            action: str | UndefinedType = Undefined,
+                            action: Literal["deny", "permit", "deny-in-out"] | UndefinedType = Undefined,
                             include_community_list: bool | None | UndefinedType = Undefined,
                             include_prefix_list: bool | None | UndefinedType = Undefined,
                             include_sub_route_map: bool | None | UndefinedType = Undefined,
@@ -45323,7 +45599,7 @@ class EosCliConfigGen(AvdRootModel):
                         _required_fields: ClassVar[tuple] = ("action", "_custom_data")
                         _field_to_key_map: ClassVar[dict] = {}
                         _key_to_field_map: ClassVar[dict] = {}
-                        action: str
+                        action: Literal["deny", "permit", "deny-in-out"]
                         """Missing policy action."""
                         include_community_list: bool | None
                         """Include community-list references in missing policy decision."""
@@ -45336,7 +45612,7 @@ class EosCliConfigGen(AvdRootModel):
                         def __init__(
                             self,
                             *,
-                            action: str | UndefinedType = Undefined,
+                            action: Literal["deny", "permit", "deny-in-out"] | UndefinedType = Undefined,
                             include_community_list: bool | None | UndefinedType = Undefined,
                             include_prefix_list: bool | None | UndefinedType = Undefined,
                             include_sub_route_map: bool | None | UndefinedType = Undefined,
@@ -45644,7 +45920,7 @@ class EosCliConfigGen(AvdRootModel):
                 _required_fields: ClassVar[tuple] = ("rib_type", "_custom_data")
                 _field_to_key_map: ClassVar[dict] = {}
                 _key_to_field_map: ClassVar[dict] = {}
-                rib_type: str
+                rib_type: Literal["system-connected", "tunnel-rib-colored", "tunnel-rib"]
                 """Type of RIB. For 'tunnel-rib', use 'rib_name' to specify the name of the Tunnel-RIB to use."""
                 rib_name: str | None
                 """The name of the tunnel-rib to use when using 'tunnel-rib' type."""
@@ -45653,7 +45929,7 @@ class EosCliConfigGen(AvdRootModel):
                 def __init__(
                     self,
                     *,
-                    rib_type: str | UndefinedType = Undefined,
+                    rib_type: Literal["system-connected", "tunnel-rib-colored", "tunnel-rib"] | UndefinedType = Undefined,
                     rib_name: str | None | UndefinedType = Undefined,
                     _custom_data: dict[str, Any] | UndefinedType = Undefined,
                 ) -> None:
@@ -45686,7 +45962,7 @@ class EosCliConfigGen(AvdRootModel):
                 _required_fields: ClassVar[tuple] = ("protocol", "_custom_data")
                 _field_to_key_map: ClassVar[dict] = {}
                 _key_to_field_map: ClassVar[dict] = {}
-                protocol: str
+                protocol: Literal["isis segment-routing", "ldp"]
                 rcf: str | None
                 """
                 Optional RCF function name with parenthesis.
@@ -45697,7 +45973,7 @@ class EosCliConfigGen(AvdRootModel):
                 def __init__(
                     self,
                     *,
-                    protocol: str | UndefinedType = Undefined,
+                    protocol: Literal["isis segment-routing", "ldp"] | UndefinedType = Undefined,
                     rcf: str | None | UndefinedType = Undefined,
                     _custom_data: dict[str, Any] | UndefinedType = Undefined,
                 ) -> None:
@@ -45754,7 +46030,7 @@ class EosCliConfigGen(AvdRootModel):
             bgp: Bgp
             """Subclass of AvdModel."""
             graceful_restart: bool | None
-            label_local_termination: str | None
+            label_local_termination: Literal["explicit-null", "implicit-null"] | None
             lfib_entry_installation_skipped: bool | None
             """Skip LFIB entry installation and next hop self route advertisements."""
             neighbor_default: NeighborDefault
@@ -45789,7 +46065,7 @@ class EosCliConfigGen(AvdRootModel):
                 aigp_session: AigpSession | UndefinedType = Undefined,
                 bgp: Bgp | UndefinedType = Undefined,
                 graceful_restart: bool | None | UndefinedType = Undefined,
-                label_local_termination: str | None | UndefinedType = Undefined,
+                label_local_termination: Literal["explicit-null", "implicit-null"] | None | UndefinedType = Undefined,
                 lfib_entry_installation_skipped: bool | None | UndefinedType = Undefined,
                 neighbor_default: NeighborDefault | UndefinedType = Undefined,
                 peer_groups: PeerGroups | UndefinedType = Undefined,
@@ -46160,7 +46436,7 @@ class EosCliConfigGen(AvdRootModel):
                     _field_to_key_map: ClassVar[dict] = {}
                     _key_to_field_map: ClassVar[dict] = {}
                     enabled: bool
-                    isis_level: str | None
+                    isis_level: Literal["level-1", "level-2", "level-1-2"] | None
                     """Redistribute IS-IS route level."""
                     route_map: str | None
                     rcf: str | None
@@ -46178,7 +46454,7 @@ class EosCliConfigGen(AvdRootModel):
                         self,
                         *,
                         enabled: bool | UndefinedType = Undefined,
-                        isis_level: str | None | UndefinedType = Undefined,
+                        isis_level: Literal["level-1", "level-2", "level-1-2"] | None | UndefinedType = Undefined,
                         route_map: str | None | UndefinedType = Undefined,
                         rcf: str | None | UndefinedType = Undefined,
                         include_leaked: bool | None | UndefinedType = Undefined,
@@ -46294,7 +46570,7 @@ class EosCliConfigGen(AvdRootModel):
                         _field_to_key_map: ClassVar[dict] = {}
                         _key_to_field_map: ClassVar[dict] = {}
                         enabled: bool
-                        nssa_type: int | None
+                        nssa_type: Literal[1, 2] | None
                         """NSSA External Type Number."""
                         route_map: str | None
                         _custom_data: dict[str, Any]
@@ -46303,7 +46579,7 @@ class EosCliConfigGen(AvdRootModel):
                             self,
                             *,
                             enabled: bool | UndefinedType = Undefined,
-                            nssa_type: int | None | UndefinedType = Undefined,
+                            nssa_type: Literal[1, 2] | None | UndefinedType = Undefined,
                             route_map: str | None | UndefinedType = Undefined,
                             _custom_data: dict[str, Any] | UndefinedType = Undefined,
                         ) -> None:
@@ -46484,7 +46760,7 @@ class EosCliConfigGen(AvdRootModel):
                         _field_to_key_map: ClassVar[dict] = {}
                         _key_to_field_map: ClassVar[dict] = {}
                         enabled: bool
-                        nssa_type: int | None
+                        nssa_type: Literal[1, 2] | None
                         """NSSA External Type Number."""
                         route_map: str | None
                         _custom_data: dict[str, Any]
@@ -46493,7 +46769,7 @@ class EosCliConfigGen(AvdRootModel):
                             self,
                             *,
                             enabled: bool | UndefinedType = Undefined,
-                            nssa_type: int | None | UndefinedType = Undefined,
+                            nssa_type: Literal[1, 2] | None | UndefinedType = Undefined,
                             route_map: str | None | UndefinedType = Undefined,
                             _custom_data: dict[str, Any] | UndefinedType = Undefined,
                         ) -> None:
@@ -46707,7 +46983,7 @@ class EosCliConfigGen(AvdRootModel):
                 exclusive. `route_map` takes precedence.
                 Only applicable if `source_protocol` is `isis`.
                 """
-                ospf_route_type: str | None
+                ospf_route_type: Literal["external", "internal", "nssa-external", "nssa-external 1", "nssa-external 2"] | None
                 """
                 Routes learned by the OSPF protocol.
                 The `ospf_route_type` is valid for source_protocols 'ospf' and
@@ -46722,7 +46998,7 @@ class EosCliConfigGen(AvdRootModel):
                     route_map: str | None | UndefinedType = Undefined,
                     include_leaked: bool | None | UndefinedType = Undefined,
                     rcf: str | None | UndefinedType = Undefined,
-                    ospf_route_type: str | None | UndefinedType = Undefined,
+                    ospf_route_type: Literal["external", "internal", "nssa-external", "nssa-external 1", "nssa-external 2"] | None | UndefinedType = Undefined,
                     _custom_data: dict[str, Any] | UndefinedType = Undefined,
                 ) -> None:
                     """
@@ -47038,7 +47314,7 @@ class EosCliConfigGen(AvdRootModel):
                     """Allow additional path with ECMP primary path."""
                     receive: bool | None
                     """Enable or disable reception of additional-paths."""
-                    send: str | None
+                    send: Literal["any", "backup", "ecmp", "limit", "disabled"] | None
                     """
                     Select an option to send multiple paths for same prefix through bgp updates.
                     any: Send any eligible
@@ -47062,7 +47338,7 @@ class EosCliConfigGen(AvdRootModel):
                         install: bool | None | UndefinedType = Undefined,
                         install_ecmp_primary: bool | None | UndefinedType = Undefined,
                         receive: bool | None | UndefinedType = Undefined,
-                        send: str | None | UndefinedType = Undefined,
+                        send: Literal["any", "backup", "ecmp", "limit", "disabled"] | None | UndefinedType = Undefined,
                         send_limit: int | None | UndefinedType = Undefined,
                         _custom_data: dict[str, Any] | UndefinedType = Undefined,
                     ) -> None:
@@ -47154,7 +47430,7 @@ class EosCliConfigGen(AvdRootModel):
                     """Apply the configurations only to the routes matching the prefix list."""
                     receive: bool | None
                     """Enable or disable reception of additional-paths."""
-                    send: str | None
+                    send: Literal["any", "backup", "ecmp", "limit", "disabled"] | None
                     """
                     Select an option to send multiple paths for same prefix through bgp updates.
                     any: Send any eligible
@@ -47177,7 +47453,7 @@ class EosCliConfigGen(AvdRootModel):
                         *,
                         prefix_list: str | None | UndefinedType = Undefined,
                         receive: bool | None | UndefinedType = Undefined,
-                        send: str | None | UndefinedType = Undefined,
+                        send: Literal["any", "backup", "ecmp", "limit", "disabled"] | None | UndefinedType = Undefined,
                         send_limit: int | None | UndefinedType = Undefined,
                         _custom_data: dict[str, Any] | UndefinedType = Undefined,
                     ) -> None:
@@ -47319,7 +47595,7 @@ class EosCliConfigGen(AvdRootModel):
                     """Apply the configurations only to the routes matching the prefix list."""
                     receive: bool | None
                     """Enable or disable reception of additional-paths."""
-                    send: str | None
+                    send: Literal["any", "backup", "ecmp", "limit", "disabled"] | None
                     """
                     Select an option to send multiple paths for same prefix through bgp updates.
                     any: Send any eligible
@@ -47342,7 +47618,7 @@ class EosCliConfigGen(AvdRootModel):
                         *,
                         prefix_list: str | None | UndefinedType = Undefined,
                         receive: bool | None | UndefinedType = Undefined,
-                        send: str | None | UndefinedType = Undefined,
+                        send: Literal["any", "backup", "ecmp", "limit", "disabled"] | None | UndefinedType = Undefined,
                         send_limit: int | None | UndefinedType = Undefined,
                         _custom_data: dict[str, Any] | UndefinedType = Undefined,
                     ) -> None:
@@ -47692,7 +47968,7 @@ class EosCliConfigGen(AvdRootModel):
                     _field_to_key_map: ClassVar[dict] = {}
                     _key_to_field_map: ClassVar[dict] = {}
                     enabled: bool
-                    isis_level: str | None
+                    isis_level: Literal["level-1", "level-2", "level-1-2"] | None
                     """Redistribute IS-IS route level."""
                     route_map: str | None
                     rcf: str | None
@@ -47710,7 +47986,7 @@ class EosCliConfigGen(AvdRootModel):
                         self,
                         *,
                         enabled: bool | UndefinedType = Undefined,
-                        isis_level: str | None | UndefinedType = Undefined,
+                        isis_level: Literal["level-1", "level-2", "level-1-2"] | None | UndefinedType = Undefined,
                         route_map: str | None | UndefinedType = Undefined,
                         rcf: str | None | UndefinedType = Undefined,
                         include_leaked: bool | None | UndefinedType = Undefined,
@@ -47845,7 +48121,7 @@ class EosCliConfigGen(AvdRootModel):
                         _field_to_key_map: ClassVar[dict] = {}
                         _key_to_field_map: ClassVar[dict] = {}
                         enabled: bool
-                        nssa_type: int | None
+                        nssa_type: Literal[1, 2] | None
                         """NSSA External Type Number."""
                         route_map: str | None
                         include_leaked: bool | None
@@ -47856,7 +48132,7 @@ class EosCliConfigGen(AvdRootModel):
                             self,
                             *,
                             enabled: bool | UndefinedType = Undefined,
-                            nssa_type: int | None | UndefinedType = Undefined,
+                            nssa_type: Literal[1, 2] | None | UndefinedType = Undefined,
                             route_map: str | None | UndefinedType = Undefined,
                             include_leaked: bool | None | UndefinedType = Undefined,
                             _custom_data: dict[str, Any] | UndefinedType = Undefined,
@@ -48160,7 +48436,7 @@ class EosCliConfigGen(AvdRootModel):
                 Only used if `source_protocol` is one of `connected`,
                 `static`, `isis`, `user`, `dynamic`.
                 """
-                ospf_route_type: str | None
+                ospf_route_type: Literal["external", "internal", "nssa-external", "nssa-external 1", "nssa-external 2"] | None
                 """
                 Routes learned by the OSPF protocol.
                 The `ospf_route_type` is valid for source_protocols 'ospfv3'.
@@ -48174,7 +48450,7 @@ class EosCliConfigGen(AvdRootModel):
                     route_map: str | None | UndefinedType = Undefined,
                     include_leaked: bool | None | UndefinedType = Undefined,
                     rcf: str | None | UndefinedType = Undefined,
-                    ospf_route_type: str | None | UndefinedType = Undefined,
+                    ospf_route_type: Literal["external", "internal", "nssa-external", "nssa-external 1", "nssa-external 2"] | None | UndefinedType = Undefined,
                     _custom_data: dict[str, Any] | UndefinedType = Undefined,
                 ) -> None:
                     """
@@ -48288,15 +48564,15 @@ class EosCliConfigGen(AvdRootModel):
                     _required_fields: ClassVar[tuple] = ("_custom_data",)
                     _field_to_key_map: ClassVar[dict] = {}
                     _key_to_field_map: ClassVar[dict] = {}
-                    direction_in_action: str | None
-                    direction_out_action: str | None
+                    direction_in_action: Literal["deny", "deny-in-out", "permit"] | None
+                    direction_out_action: Literal["deny", "deny-in-out", "permit"] | None
                     _custom_data: dict[str, Any]
 
                     def __init__(
                         self,
                         *,
-                        direction_in_action: str | None | UndefinedType = Undefined,
-                        direction_out_action: str | None | UndefinedType = Undefined,
+                        direction_in_action: Literal["deny", "deny-in-out", "permit"] | None | UndefinedType = Undefined,
+                        direction_out_action: Literal["deny", "deny-in-out", "permit"] | None | UndefinedType = Undefined,
                         _custom_data: dict[str, Any] | UndefinedType = Undefined,
                     ) -> None:
                         """
@@ -48644,7 +48920,7 @@ class EosCliConfigGen(AvdRootModel):
                     _field_to_key_map: ClassVar[dict] = {}
                     _key_to_field_map: ClassVar[dict] = {}
                     enabled: bool
-                    isis_level: str | None
+                    isis_level: Literal["level-1", "level-2", "level-1-2"] | None
                     """Redistribute IS-IS route level."""
                     route_map: str | None
                     rcf: str | None
@@ -48662,7 +48938,7 @@ class EosCliConfigGen(AvdRootModel):
                         self,
                         *,
                         enabled: bool | UndefinedType = Undefined,
-                        isis_level: str | None | UndefinedType = Undefined,
+                        isis_level: Literal["level-1", "level-2", "level-1-2"] | None | UndefinedType = Undefined,
                         route_map: str | None | UndefinedType = Undefined,
                         rcf: str | None | UndefinedType = Undefined,
                         include_leaked: bool | None | UndefinedType = Undefined,
@@ -48778,7 +49054,7 @@ class EosCliConfigGen(AvdRootModel):
                         _field_to_key_map: ClassVar[dict] = {}
                         _key_to_field_map: ClassVar[dict] = {}
                         enabled: bool
-                        nssa_type: int | None
+                        nssa_type: Literal[1, 2] | None
                         """NSSA External Type Number."""
                         route_map: str | None
                         _custom_data: dict[str, Any]
@@ -48787,7 +49063,7 @@ class EosCliConfigGen(AvdRootModel):
                             self,
                             *,
                             enabled: bool | UndefinedType = Undefined,
-                            nssa_type: int | None | UndefinedType = Undefined,
+                            nssa_type: Literal[1, 2] | None | UndefinedType = Undefined,
                             route_map: str | None | UndefinedType = Undefined,
                             _custom_data: dict[str, Any] | UndefinedType = Undefined,
                         ) -> None:
@@ -48968,7 +49244,7 @@ class EosCliConfigGen(AvdRootModel):
                         _field_to_key_map: ClassVar[dict] = {}
                         _key_to_field_map: ClassVar[dict] = {}
                         enabled: bool
-                        nssa_type: int | None
+                        nssa_type: Literal[1, 2] | None
                         """NSSA External Type Number."""
                         route_map: str | None
                         _custom_data: dict[str, Any]
@@ -48977,7 +49253,7 @@ class EosCliConfigGen(AvdRootModel):
                             self,
                             *,
                             enabled: bool | UndefinedType = Undefined,
-                            nssa_type: int | None | UndefinedType = Undefined,
+                            nssa_type: Literal[1, 2] | None | UndefinedType = Undefined,
                             route_map: str | None | UndefinedType = Undefined,
                             _custom_data: dict[str, Any] | UndefinedType = Undefined,
                         ) -> None:
@@ -49174,7 +49450,7 @@ class EosCliConfigGen(AvdRootModel):
                 _required_fields: ClassVar[tuple] = ("source_protocol", "_custom_data")
                 _field_to_key_map: ClassVar[dict] = {}
                 _key_to_field_map: ClassVar[dict] = {}
-                source_protocol: str
+                source_protocol: Literal["connected", "isis", "ospf", "ospfv3", "static"]
                 include_leaked: bool | None
                 """Only applicable if `source_protocol` is `isis`."""
                 route_map: str | None
@@ -49186,7 +49462,7 @@ class EosCliConfigGen(AvdRootModel):
                 exclusive. `route_map` takes precedence.
                 Only applicable if `source_protocol` is `isis`.
                 """
-                ospf_route_type: str | None
+                ospf_route_type: Literal["external", "internal", "nssa-external", "nssa-external 1", "nssa-external 2"] | None
                 """
                 Routes learned by the OSPF protocol.
                 The `ospf_route_type` is valid for source_protocols 'ospf' and
@@ -49197,11 +49473,11 @@ class EosCliConfigGen(AvdRootModel):
                 def __init__(
                     self,
                     *,
-                    source_protocol: str | UndefinedType = Undefined,
+                    source_protocol: Literal["connected", "isis", "ospf", "ospfv3", "static"] | UndefinedType = Undefined,
                     include_leaked: bool | None | UndefinedType = Undefined,
                     route_map: str | None | UndefinedType = Undefined,
                     rcf: str | None | UndefinedType = Undefined,
-                    ospf_route_type: str | None | UndefinedType = Undefined,
+                    ospf_route_type: Literal["external", "internal", "nssa-external", "nssa-external 1", "nssa-external 2"] | None | UndefinedType = Undefined,
                     _custom_data: dict[str, Any] | UndefinedType = Undefined,
                 ) -> None:
                     """
@@ -49465,15 +49741,15 @@ class EosCliConfigGen(AvdRootModel):
                     _required_fields: ClassVar[tuple] = ("_custom_data",)
                     _field_to_key_map: ClassVar[dict] = {}
                     _key_to_field_map: ClassVar[dict] = {}
-                    direction_in_action: str | None
-                    direction_out_action: str | None
+                    direction_in_action: Literal["deny", "deny-in-out", "permit"] | None
+                    direction_out_action: Literal["deny", "deny-in-out", "permit"] | None
                     _custom_data: dict[str, Any]
 
                     def __init__(
                         self,
                         *,
-                        direction_in_action: str | None | UndefinedType = Undefined,
-                        direction_out_action: str | None | UndefinedType = Undefined,
+                        direction_in_action: Literal["deny", "deny-in-out", "permit"] | None | UndefinedType = Undefined,
+                        direction_out_action: Literal["deny", "deny-in-out", "permit"] | None | UndefinedType = Undefined,
                         _custom_data: dict[str, Any] | UndefinedType = Undefined,
                     ) -> None:
                         """
@@ -49530,15 +49806,15 @@ class EosCliConfigGen(AvdRootModel):
                     _required_fields: ClassVar[tuple] = ("_custom_data",)
                     _field_to_key_map: ClassVar[dict] = {}
                     _key_to_field_map: ClassVar[dict] = {}
-                    direction_in_action: str | None
-                    direction_out_action: str | None
+                    direction_in_action: Literal["deny", "deny-in-out", "permit"] | None
+                    direction_out_action: Literal["deny", "deny-in-out", "permit"] | None
                     _custom_data: dict[str, Any]
 
                     def __init__(
                         self,
                         *,
-                        direction_in_action: str | None | UndefinedType = Undefined,
-                        direction_out_action: str | None | UndefinedType = Undefined,
+                        direction_in_action: Literal["deny", "deny-in-out", "permit"] | None | UndefinedType = Undefined,
+                        direction_out_action: Literal["deny", "deny-in-out", "permit"] | None | UndefinedType = Undefined,
                         _custom_data: dict[str, Any] | UndefinedType = Undefined,
                     ) -> None:
                         """
@@ -49617,15 +49893,15 @@ class EosCliConfigGen(AvdRootModel):
                     _required_fields: ClassVar[tuple] = ("_custom_data",)
                     _field_to_key_map: ClassVar[dict] = {}
                     _key_to_field_map: ClassVar[dict] = {}
-                    direction_in_action: str | None
-                    direction_out_action: str | None
+                    direction_in_action: Literal["deny", "deny-in-out", "permit"] | None
+                    direction_out_action: Literal["deny", "deny-in-out", "permit"] | None
                     _custom_data: dict[str, Any]
 
                     def __init__(
                         self,
                         *,
-                        direction_in_action: str | None | UndefinedType = Undefined,
-                        direction_out_action: str | None | UndefinedType = Undefined,
+                        direction_in_action: Literal["deny", "deny-in-out", "permit"] | None | UndefinedType = Undefined,
+                        direction_out_action: Literal["deny", "deny-in-out", "permit"] | None | UndefinedType = Undefined,
                         _custom_data: dict[str, Any] | UndefinedType = Undefined,
                     ) -> None:
                         """
@@ -49825,15 +50101,15 @@ class EosCliConfigGen(AvdRootModel):
                     _required_fields: ClassVar[tuple] = ("_custom_data",)
                     _field_to_key_map: ClassVar[dict] = {}
                     _key_to_field_map: ClassVar[dict] = {}
-                    direction_in_action: str | None
-                    direction_out_action: str | None
+                    direction_in_action: Literal["deny", "deny-in-out", "permit"] | None
+                    direction_out_action: Literal["deny", "deny-in-out", "permit"] | None
                     _custom_data: dict[str, Any]
 
                     def __init__(
                         self,
                         *,
-                        direction_in_action: str | None | UndefinedType = Undefined,
-                        direction_out_action: str | None | UndefinedType = Undefined,
+                        direction_in_action: Literal["deny", "deny-in-out", "permit"] | None | UndefinedType = Undefined,
+                        direction_out_action: Literal["deny", "deny-in-out", "permit"] | None | UndefinedType = Undefined,
                         _custom_data: dict[str, Any] | UndefinedType = Undefined,
                     ) -> None:
                         """
@@ -50021,15 +50297,15 @@ class EosCliConfigGen(AvdRootModel):
                     _required_fields: ClassVar[tuple] = ("_custom_data",)
                     _field_to_key_map: ClassVar[dict] = {}
                     _key_to_field_map: ClassVar[dict] = {}
-                    direction_in_action: str | None
-                    direction_out_action: str | None
+                    direction_in_action: Literal["deny", "deny-in-out", "permit"] | None
+                    direction_out_action: Literal["deny", "deny-in-out", "permit"] | None
                     _custom_data: dict[str, Any]
 
                     def __init__(
                         self,
                         *,
-                        direction_in_action: str | None | UndefinedType = Undefined,
-                        direction_out_action: str | None | UndefinedType = Undefined,
+                        direction_in_action: Literal["deny", "deny-in-out", "permit"] | None | UndefinedType = Undefined,
+                        direction_out_action: Literal["deny", "deny-in-out", "permit"] | None | UndefinedType = Undefined,
                         _custom_data: dict[str, Any] | UndefinedType = Undefined,
                     ) -> None:
                         """
@@ -50219,7 +50495,7 @@ class EosCliConfigGen(AvdRootModel):
                     _key_to_field_map: ClassVar[dict] = {}
                     receive: bool | None
                     """Enable or disable reception of additional-paths."""
-                    send: str | None
+                    send: Literal["any", "backup", "ecmp", "limit", "disabled"] | None
                     """
                     Select an option to send multiple paths for same prefix through bgp updates.
                     any: Send any eligible
@@ -50241,7 +50517,7 @@ class EosCliConfigGen(AvdRootModel):
                         self,
                         *,
                         receive: bool | None | UndefinedType = Undefined,
-                        send: str | None | UndefinedType = Undefined,
+                        send: Literal["any", "backup", "ecmp", "limit", "disabled"] | None | UndefinedType = Undefined,
                         send_limit: int | None | UndefinedType = Undefined,
                         _custom_data: dict[str, Any] | UndefinedType = Undefined,
                     ) -> None:
@@ -50312,7 +50588,7 @@ class EosCliConfigGen(AvdRootModel):
                     _key_to_field_map: ClassVar[dict] = {}
                     receive: bool | None
                     """Enable or disable reception of additional-paths."""
-                    send: str | None
+                    send: Literal["any", "backup", "ecmp", "limit", "disabled"] | None
                     """
                     Select an option to send multiple paths for same prefix through bgp updates.
                     any: Send any eligible
@@ -50334,7 +50610,7 @@ class EosCliConfigGen(AvdRootModel):
                         self,
                         *,
                         receive: bool | None | UndefinedType = Undefined,
-                        send: str | None | UndefinedType = Undefined,
+                        send: Literal["any", "backup", "ecmp", "limit", "disabled"] | None | UndefinedType = Undefined,
                         send_limit: int | None | UndefinedType = Undefined,
                         _custom_data: dict[str, Any] | UndefinedType = Undefined,
                     ) -> None:
@@ -50426,7 +50702,7 @@ class EosCliConfigGen(AvdRootModel):
                     _key_to_field_map: ClassVar[dict] = {}
                     receive: bool | None
                     """Enable or disable reception of additional-paths."""
-                    send: str | None
+                    send: Literal["any", "backup", "ecmp", "limit", "disabled"] | None
                     """
                     Select an option to send multiple paths for same prefix through bgp updates.
                     any: Send any eligible
@@ -50448,7 +50724,7 @@ class EosCliConfigGen(AvdRootModel):
                         self,
                         *,
                         receive: bool | None | UndefinedType = Undefined,
-                        send: str | None | UndefinedType = Undefined,
+                        send: Literal["any", "backup", "ecmp", "limit", "disabled"] | None | UndefinedType = Undefined,
                         send_limit: int | None | UndefinedType = Undefined,
                         _custom_data: dict[str, Any] | UndefinedType = Undefined,
                     ) -> None:
@@ -50708,11 +50984,14 @@ class EosCliConfigGen(AvdRootModel):
                 _required_fields: ClassVar[tuple] = ("_custom_data",)
                 _field_to_key_map: ClassVar[dict] = {}
                 _key_to_field_map: ClassVar[dict] = {}
-                import_match_failure_action: str | None
+                import_match_failure_action: Literal["discard"] | None
                 _custom_data: dict[str, Any]
 
                 def __init__(
-                    self, *, import_match_failure_action: str | None | UndefinedType = Undefined, _custom_data: dict[str, Any] | UndefinedType = Undefined
+                    self,
+                    *,
+                    import_match_failure_action: Literal["discard"] | None | UndefinedType = Undefined,
+                    _custom_data: dict[str, Any] | UndefinedType = Undefined,
                 ) -> None:
                     """
                     Route.
@@ -51072,11 +51351,14 @@ class EosCliConfigGen(AvdRootModel):
                 _required_fields: ClassVar[tuple] = ("_custom_data",)
                 _field_to_key_map: ClassVar[dict] = {}
                 _key_to_field_map: ClassVar[dict] = {}
-                import_match_failure_action: str | None
+                import_match_failure_action: Literal["discard"] | None
                 _custom_data: dict[str, Any]
 
                 def __init__(
-                    self, *, import_match_failure_action: str | None | UndefinedType = Undefined, _custom_data: dict[str, Any] | UndefinedType = Undefined
+                    self,
+                    *,
+                    import_match_failure_action: Literal["discard"] | None | UndefinedType = Undefined,
+                    _custom_data: dict[str, Any] | UndefinedType = Undefined,
                 ) -> None:
                     """
                     Route.
@@ -51326,7 +51608,7 @@ class EosCliConfigGen(AvdRootModel):
                     """Allow additional path with ECMP primary path."""
                     receive: bool | None
                     """Enable or disable reception of additional-paths."""
-                    send: str | None
+                    send: Literal["any", "backup", "ecmp", "limit", "disabled"] | None
                     """
                     Select an option to send multiple paths for same prefix through bgp updates.
                     any: Send any eligible
@@ -51350,7 +51632,7 @@ class EosCliConfigGen(AvdRootModel):
                         install: bool | None | UndefinedType = Undefined,
                         install_ecmp_primary: bool | None | UndefinedType = Undefined,
                         receive: bool | None | UndefinedType = Undefined,
-                        send: str | None | UndefinedType = Undefined,
+                        send: Literal["any", "backup", "ecmp", "limit", "disabled"] | None | UndefinedType = Undefined,
                         send_limit: int | None | UndefinedType = Undefined,
                         _custom_data: dict[str, Any] | UndefinedType = Undefined,
                     ) -> None:
@@ -51485,7 +51767,7 @@ class EosCliConfigGen(AvdRootModel):
                 _required_fields: ClassVar[tuple] = ("algorithm", "_custom_data")
                 _field_to_key_map: ClassVar[dict] = {}
                 _key_to_field_map: ClassVar[dict] = {}
-                algorithm: str
+                algorithm: Literal["hrw", "modulus", "preference"]
                 """
                 DR election algorithms:
                   hrw: Default selection based on highest random weight.
@@ -51501,7 +51783,7 @@ class EosCliConfigGen(AvdRootModel):
                 def __init__(
                     self,
                     *,
-                    algorithm: str | UndefinedType = Undefined,
+                    algorithm: Literal["hrw", "modulus", "preference"] | UndefinedType = Undefined,
                     preference_value: int | None | UndefinedType = Undefined,
                     _custom_data: dict[str, Any] | UndefinedType = Undefined,
                 ) -> None:
@@ -51541,7 +51823,7 @@ class EosCliConfigGen(AvdRootModel):
                 _required_fields: ClassVar[tuple] = ("address_family", "_custom_data")
                 _field_to_key_map: ClassVar[dict] = {}
                 _key_to_field_map: ClassVar[dict] = {}
-                address_family: str
+                address_family: Literal["evpn", "vpn-ipv4", "vpn-ipv6"]
                 always: bool | None
                 route_map: str | None
                 rcf: str | None
@@ -51554,7 +51836,7 @@ class EosCliConfigGen(AvdRootModel):
                 def __init__(
                     self,
                     *,
-                    address_family: str | UndefinedType = Undefined,
+                    address_family: Literal["evpn", "vpn-ipv4", "vpn-ipv6"] | UndefinedType = Undefined,
                     always: bool | None | UndefinedType = Undefined,
                     route_map: str | None | UndefinedType = Undefined,
                     rcf: str | None | UndefinedType = Undefined,
@@ -52277,7 +52559,7 @@ class EosCliConfigGen(AvdRootModel):
                     _key_to_field_map: ClassVar[dict] = {}
                     receive: bool | None
                     """Enable or disable reception of additional-paths."""
-                    send: str | None
+                    send: Literal["any", "backup", "ecmp", "limit", "disabled"] | None
                     """
                     Select an option to send multiple paths for same prefix through bgp updates.
                     any: Send any eligible
@@ -52299,7 +52581,7 @@ class EosCliConfigGen(AvdRootModel):
                         self,
                         *,
                         receive: bool | None | UndefinedType = Undefined,
-                        send: str | None | UndefinedType = Undefined,
+                        send: Literal["any", "backup", "ecmp", "limit", "disabled"] | None | UndefinedType = Undefined,
                         send_limit: int | None | UndefinedType = Undefined,
                         _custom_data: dict[str, Any] | UndefinedType = Undefined,
                     ) -> None:
@@ -52811,7 +53093,7 @@ class EosCliConfigGen(AvdRootModel):
                     _field_to_key_map: ClassVar[dict] = {}
                     _key_to_field_map: ClassVar[dict] = {}
                     enabled: bool
-                    isis_level: str | None
+                    isis_level: Literal["level-1", "level-2", "level-1-2"] | None
                     """Redistribute IS-IS route level."""
                     route_map: str | None
                     rcf: str | None
@@ -52829,7 +53111,7 @@ class EosCliConfigGen(AvdRootModel):
                         self,
                         *,
                         enabled: bool | UndefinedType = Undefined,
-                        isis_level: str | None | UndefinedType = Undefined,
+                        isis_level: Literal["level-1", "level-2", "level-1-2"] | None | UndefinedType = Undefined,
                         route_map: str | None | UndefinedType = Undefined,
                         rcf: str | None | UndefinedType = Undefined,
                         include_leaked: bool | None | UndefinedType = Undefined,
@@ -52964,7 +53246,7 @@ class EosCliConfigGen(AvdRootModel):
                         _field_to_key_map: ClassVar[dict] = {}
                         _key_to_field_map: ClassVar[dict] = {}
                         enabled: bool
-                        nssa_type: int | None
+                        nssa_type: Literal[1, 2] | None
                         """NSSA External Type Number."""
                         route_map: str | None
                         include_leaked: bool | None
@@ -52975,7 +53257,7 @@ class EosCliConfigGen(AvdRootModel):
                             self,
                             *,
                             enabled: bool | UndefinedType = Undefined,
-                            nssa_type: int | None | UndefinedType = Undefined,
+                            nssa_type: Literal[1, 2] | None | UndefinedType = Undefined,
                             route_map: str | None | UndefinedType = Undefined,
                             include_leaked: bool | None | UndefinedType = Undefined,
                             _custom_data: dict[str, Any] | UndefinedType = Undefined,
@@ -53182,7 +53464,7 @@ class EosCliConfigGen(AvdRootModel):
                         _field_to_key_map: ClassVar[dict] = {}
                         _key_to_field_map: ClassVar[dict] = {}
                         enabled: bool
-                        nssa_type: int | None
+                        nssa_type: Literal[1, 2] | None
                         """NSSA External Type Number."""
                         route_map: str | None
                         include_leaked: bool | None
@@ -53193,7 +53475,7 @@ class EosCliConfigGen(AvdRootModel):
                             self,
                             *,
                             enabled: bool | UndefinedType = Undefined,
-                            nssa_type: int | None | UndefinedType = Undefined,
+                            nssa_type: Literal[1, 2] | None | UndefinedType = Undefined,
                             route_map: str | None | UndefinedType = Undefined,
                             include_leaked: bool | None | UndefinedType = Undefined,
                             _custom_data: dict[str, Any] | UndefinedType = Undefined,
@@ -53537,7 +53819,7 @@ class EosCliConfigGen(AvdRootModel):
                 Only applicable if `source_protocol` is one of `connected`,
                 `dynamic`, `isis`, `static` and `user`.
                 """
-                ospf_route_type: str | None
+                ospf_route_type: Literal["external", "internal", "nssa-external", "nssa-external 1", "nssa-external 2"] | None
                 """
                 Routes learned by the OSPF protocol.
                 The `ospf_route_type` is valid for source_protocols 'ospf' and
@@ -53552,7 +53834,7 @@ class EosCliConfigGen(AvdRootModel):
                     route_map: str | None | UndefinedType = Undefined,
                     include_leaked: bool | None | UndefinedType = Undefined,
                     rcf: str | None | UndefinedType = Undefined,
-                    ospf_route_type: str | None | UndefinedType = Undefined,
+                    ospf_route_type: Literal["external", "internal", "nssa-external", "nssa-external 1", "nssa-external 2"] | None | UndefinedType = Undefined,
                     _custom_data: dict[str, Any] | UndefinedType = Undefined,
                 ) -> None:
                     """
@@ -53665,15 +53947,15 @@ class EosCliConfigGen(AvdRootModel):
                         _required_fields: ClassVar[tuple] = ("_custom_data",)
                         _field_to_key_map: ClassVar[dict] = {}
                         _key_to_field_map: ClassVar[dict] = {}
-                        direction_in_action: str | None
-                        direction_out_action: str | None
+                        direction_in_action: Literal["deny", "deny-in-out", "permit"] | None
+                        direction_out_action: Literal["deny", "deny-in-out", "permit"] | None
                         _custom_data: dict[str, Any]
 
                         def __init__(
                             self,
                             *,
-                            direction_in_action: str | None | UndefinedType = Undefined,
-                            direction_out_action: str | None | UndefinedType = Undefined,
+                            direction_in_action: Literal["deny", "deny-in-out", "permit"] | None | UndefinedType = Undefined,
+                            direction_out_action: Literal["deny", "deny-in-out", "permit"] | None | UndefinedType = Undefined,
                             _custom_data: dict[str, Any] | UndefinedType = Undefined,
                         ) -> None:
                             """
@@ -53713,7 +53995,7 @@ class EosCliConfigGen(AvdRootModel):
                         """Allow additional path with ECMP primary path."""
                         receive: bool | None
                         """Enable or disable reception of additional-paths."""
-                        send: str | None
+                        send: Literal["any", "backup", "ecmp", "limit", "disabled"] | None
                         """
                         Select an option to send multiple paths for same prefix through bgp updates.
                         any: Send any eligible
@@ -53737,7 +54019,7 @@ class EosCliConfigGen(AvdRootModel):
                             install: bool | None | UndefinedType = Undefined,
                             install_ecmp_primary: bool | None | UndefinedType = Undefined,
                             receive: bool | None | UndefinedType = Undefined,
-                            send: str | None | UndefinedType = Undefined,
+                            send: Literal["any", "backup", "ecmp", "limit", "disabled"] | None | UndefinedType = Undefined,
                             send_limit: int | None | UndefinedType = Undefined,
                             _custom_data: dict[str, Any] | UndefinedType = Undefined,
                         ) -> None:
@@ -53899,7 +54181,7 @@ class EosCliConfigGen(AvdRootModel):
                         _key_to_field_map: ClassVar[dict] = {}
                         receive: bool | None
                         """Enable or disable reception of additional-paths."""
-                        send: str | None
+                        send: Literal["any", "backup", "ecmp", "limit", "disabled"] | None
                         """
                         Select an option to send multiple paths for same prefix through bgp updates.
                         any: Send any eligible
@@ -53921,7 +54203,7 @@ class EosCliConfigGen(AvdRootModel):
                             self,
                             *,
                             receive: bool | None | UndefinedType = Undefined,
-                            send: str | None | UndefinedType = Undefined,
+                            send: Literal["any", "backup", "ecmp", "limit", "disabled"] | None | UndefinedType = Undefined,
                             send_limit: int | None | UndefinedType = Undefined,
                             _custom_data: dict[str, Any] | UndefinedType = Undefined,
                         ) -> None:
@@ -54283,7 +54565,7 @@ class EosCliConfigGen(AvdRootModel):
                         _field_to_key_map: ClassVar[dict] = {}
                         _key_to_field_map: ClassVar[dict] = {}
                         enabled: bool
-                        isis_level: str | None
+                        isis_level: Literal["level-1", "level-2", "level-1-2"] | None
                         """Redistribute IS-IS route level."""
                         route_map: str | None
                         rcf: str | None
@@ -54301,7 +54583,7 @@ class EosCliConfigGen(AvdRootModel):
                             self,
                             *,
                             enabled: bool | UndefinedType = Undefined,
-                            isis_level: str | None | UndefinedType = Undefined,
+                            isis_level: Literal["level-1", "level-2", "level-1-2"] | None | UndefinedType = Undefined,
                             route_map: str | None | UndefinedType = Undefined,
                             rcf: str | None | UndefinedType = Undefined,
                             include_leaked: bool | None | UndefinedType = Undefined,
@@ -54436,7 +54718,7 @@ class EosCliConfigGen(AvdRootModel):
                             _field_to_key_map: ClassVar[dict] = {}
                             _key_to_field_map: ClassVar[dict] = {}
                             enabled: bool
-                            nssa_type: int | None
+                            nssa_type: Literal[1, 2] | None
                             """NSSA External Type Number."""
                             route_map: str | None
                             include_leaked: bool | None
@@ -54447,7 +54729,7 @@ class EosCliConfigGen(AvdRootModel):
                                 self,
                                 *,
                                 enabled: bool | UndefinedType = Undefined,
-                                nssa_type: int | None | UndefinedType = Undefined,
+                                nssa_type: Literal[1, 2] | None | UndefinedType = Undefined,
                                 route_map: str | None | UndefinedType = Undefined,
                                 include_leaked: bool | None | UndefinedType = Undefined,
                                 _custom_data: dict[str, Any] | UndefinedType = Undefined,
@@ -54654,7 +54936,7 @@ class EosCliConfigGen(AvdRootModel):
                             _field_to_key_map: ClassVar[dict] = {}
                             _key_to_field_map: ClassVar[dict] = {}
                             enabled: bool
-                            nssa_type: int | None
+                            nssa_type: Literal[1, 2] | None
                             """NSSA External Type Number."""
                             route_map: str | None
                             include_leaked: bool | None
@@ -54665,7 +54947,7 @@ class EosCliConfigGen(AvdRootModel):
                                 self,
                                 *,
                                 enabled: bool | UndefinedType = Undefined,
-                                nssa_type: int | None | UndefinedType = Undefined,
+                                nssa_type: Literal[1, 2] | None | UndefinedType = Undefined,
                                 route_map: str | None | UndefinedType = Undefined,
                                 include_leaked: bool | None | UndefinedType = Undefined,
                                 _custom_data: dict[str, Any] | UndefinedType = Undefined,
@@ -54997,7 +55279,7 @@ class EosCliConfigGen(AvdRootModel):
                     _required_fields: ClassVar[tuple] = ("source_protocol", "_custom_data")
                     _field_to_key_map: ClassVar[dict] = {}
                     _key_to_field_map: ClassVar[dict] = {}
-                    source_protocol: str
+                    source_protocol: Literal["attached-host", "bgp", "connected", "dynamic", "isis", "ospf", "ospfv3", "rip", "static", "user"]
                     route_map: str | None
                     include_leaked: bool | None
                     rcf: str | None
@@ -55009,7 +55291,7 @@ class EosCliConfigGen(AvdRootModel):
                     Only applicable if `source_protocol` is one of `connected`,
                     `dynamic`, `isis`, `static` and `user`.
                     """
-                    ospf_route_type: str | None
+                    ospf_route_type: Literal["external", "internal", "nssa-external", "nssa-external 1", "nssa-external 2"] | None
                     """
                     Routes learned by the OSPF protocol.
                     The `ospf_route_type` is valid for source_protocols 'ospf' and
@@ -55020,11 +55302,14 @@ class EosCliConfigGen(AvdRootModel):
                     def __init__(
                         self,
                         *,
-                        source_protocol: str | UndefinedType = Undefined,
+                        source_protocol: Literal["attached-host", "bgp", "connected", "dynamic", "isis", "ospf", "ospfv3", "rip", "static", "user"]
+                        | UndefinedType = Undefined,
                         route_map: str | None | UndefinedType = Undefined,
                         include_leaked: bool | None | UndefinedType = Undefined,
                         rcf: str | None | UndefinedType = Undefined,
-                        ospf_route_type: str | None | UndefinedType = Undefined,
+                        ospf_route_type: Literal["external", "internal", "nssa-external", "nssa-external 1", "nssa-external 2"]
+                        | None
+                        | UndefinedType = Undefined,
                         _custom_data: dict[str, Any] | UndefinedType = Undefined,
                     ) -> None:
                         """
@@ -55134,15 +55419,15 @@ class EosCliConfigGen(AvdRootModel):
                         _required_fields: ClassVar[tuple] = ("_custom_data",)
                         _field_to_key_map: ClassVar[dict] = {}
                         _key_to_field_map: ClassVar[dict] = {}
-                        direction_in_action: str | None
-                        direction_out_action: str | None
+                        direction_in_action: Literal["deny", "deny-in-out", "permit"] | None
+                        direction_out_action: Literal["deny", "deny-in-out", "permit"] | None
                         _custom_data: dict[str, Any]
 
                         def __init__(
                             self,
                             *,
-                            direction_in_action: str | None | UndefinedType = Undefined,
-                            direction_out_action: str | None | UndefinedType = Undefined,
+                            direction_in_action: Literal["deny", "deny-in-out", "permit"] | None | UndefinedType = Undefined,
+                            direction_out_action: Literal["deny", "deny-in-out", "permit"] | None | UndefinedType = Undefined,
                             _custom_data: dict[str, Any] | UndefinedType = Undefined,
                         ) -> None:
                             """
@@ -55182,7 +55467,7 @@ class EosCliConfigGen(AvdRootModel):
                         """Allow additional path with ECMP primary path."""
                         receive: bool | None
                         """Enable or disable reception of additional-paths."""
-                        send: str | None
+                        send: Literal["any", "backup", "ecmp", "limit", "disabled"] | None
                         """
                         Select an option to send multiple paths for same prefix through bgp updates.
                         any: Send any eligible
@@ -55206,7 +55491,7 @@ class EosCliConfigGen(AvdRootModel):
                             install: bool | None | UndefinedType = Undefined,
                             install_ecmp_primary: bool | None | UndefinedType = Undefined,
                             receive: bool | None | UndefinedType = Undefined,
-                            send: str | None | UndefinedType = Undefined,
+                            send: Literal["any", "backup", "ecmp", "limit", "disabled"] | None | UndefinedType = Undefined,
                             send_limit: int | None | UndefinedType = Undefined,
                             _custom_data: dict[str, Any] | UndefinedType = Undefined,
                         ) -> None:
@@ -55300,7 +55585,7 @@ class EosCliConfigGen(AvdRootModel):
                         _key_to_field_map: ClassVar[dict] = {}
                         receive: bool | None
                         """Enable or disable reception of additional-paths."""
-                        send: str | None
+                        send: Literal["any", "backup", "ecmp", "limit", "disabled"] | None
                         """
                         Select an option to send multiple paths for same prefix through bgp updates.
                         any: Send any eligible
@@ -55322,7 +55607,7 @@ class EosCliConfigGen(AvdRootModel):
                             self,
                             *,
                             receive: bool | None | UndefinedType = Undefined,
-                            send: str | None | UndefinedType = Undefined,
+                            send: Literal["any", "backup", "ecmp", "limit", "disabled"] | None | UndefinedType = Undefined,
                             send_limit: int | None | UndefinedType = Undefined,
                             _custom_data: dict[str, Any] | UndefinedType = Undefined,
                         ) -> None:
@@ -55714,7 +55999,7 @@ class EosCliConfigGen(AvdRootModel):
                         _field_to_key_map: ClassVar[dict] = {}
                         _key_to_field_map: ClassVar[dict] = {}
                         enabled: bool
-                        isis_level: str | None
+                        isis_level: Literal["level-1", "level-2", "level-1-2"] | None
                         """Redistribute IS-IS route level."""
                         route_map: str | None
                         rcf: str | None
@@ -55732,7 +56017,7 @@ class EosCliConfigGen(AvdRootModel):
                             self,
                             *,
                             enabled: bool | UndefinedType = Undefined,
-                            isis_level: str | None | UndefinedType = Undefined,
+                            isis_level: Literal["level-1", "level-2", "level-1-2"] | None | UndefinedType = Undefined,
                             route_map: str | None | UndefinedType = Undefined,
                             rcf: str | None | UndefinedType = Undefined,
                             include_leaked: bool | None | UndefinedType = Undefined,
@@ -55867,7 +56152,7 @@ class EosCliConfigGen(AvdRootModel):
                             _field_to_key_map: ClassVar[dict] = {}
                             _key_to_field_map: ClassVar[dict] = {}
                             enabled: bool
-                            nssa_type: int | None
+                            nssa_type: Literal[1, 2] | None
                             """NSSA External Type Number."""
                             route_map: str | None
                             include_leaked: bool | None
@@ -55878,7 +56163,7 @@ class EosCliConfigGen(AvdRootModel):
                                 self,
                                 *,
                                 enabled: bool | UndefinedType = Undefined,
-                                nssa_type: int | None | UndefinedType = Undefined,
+                                nssa_type: Literal[1, 2] | None | UndefinedType = Undefined,
                                 route_map: str | None | UndefinedType = Undefined,
                                 include_leaked: bool | None | UndefinedType = Undefined,
                                 _custom_data: dict[str, Any] | UndefinedType = Undefined,
@@ -56170,7 +56455,7 @@ class EosCliConfigGen(AvdRootModel):
                     _required_fields: ClassVar[tuple] = ("source_protocol", "_custom_data")
                     _field_to_key_map: ClassVar[dict] = {}
                     _key_to_field_map: ClassVar[dict] = {}
-                    source_protocol: str
+                    source_protocol: Literal["attached-host", "bgp", "connected", "dhcp", "dynamic", "isis", "ospfv3", "static", "user"]
                     route_map: str | None
                     include_leaked: bool | None
                     rcf: str | None
@@ -56182,7 +56467,7 @@ class EosCliConfigGen(AvdRootModel):
                     Only applicable if `source_protocol` is one of `connected`,
                     `dynamic`, `isis`, `static` and `user`.
                     """
-                    ospf_route_type: str | None
+                    ospf_route_type: Literal["external", "internal", "nssa-external", "nssa-external 1", "nssa-external 2"] | None
                     """
                     Routes learned by the OSPF protocol.
                     The `ospf_route_type` is valid for source_protocols 'ospfv3'.
@@ -56192,11 +56477,14 @@ class EosCliConfigGen(AvdRootModel):
                     def __init__(
                         self,
                         *,
-                        source_protocol: str | UndefinedType = Undefined,
+                        source_protocol: Literal["attached-host", "bgp", "connected", "dhcp", "dynamic", "isis", "ospfv3", "static", "user"]
+                        | UndefinedType = Undefined,
                         route_map: str | None | UndefinedType = Undefined,
                         include_leaked: bool | None | UndefinedType = Undefined,
                         rcf: str | None | UndefinedType = Undefined,
-                        ospf_route_type: str | None | UndefinedType = Undefined,
+                        ospf_route_type: Literal["external", "internal", "nssa-external", "nssa-external 1", "nssa-external 2"]
+                        | None
+                        | UndefinedType = Undefined,
                         _custom_data: dict[str, Any] | UndefinedType = Undefined,
                     ) -> None:
                         """
@@ -56305,15 +56593,15 @@ class EosCliConfigGen(AvdRootModel):
                         _required_fields: ClassVar[tuple] = ("_custom_data",)
                         _field_to_key_map: ClassVar[dict] = {}
                         _key_to_field_map: ClassVar[dict] = {}
-                        direction_in_action: str | None
-                        direction_out_action: str | None
+                        direction_in_action: Literal["deny", "deny-in-out", "permit"] | None
+                        direction_out_action: Literal["deny", "deny-in-out", "permit"] | None
                         _custom_data: dict[str, Any]
 
                         def __init__(
                             self,
                             *,
-                            direction_in_action: str | None | UndefinedType = Undefined,
-                            direction_out_action: str | None | UndefinedType = Undefined,
+                            direction_in_action: Literal["deny", "deny-in-out", "permit"] | None | UndefinedType = Undefined,
+                            direction_out_action: Literal["deny", "deny-in-out", "permit"] | None | UndefinedType = Undefined,
                             _custom_data: dict[str, Any] | UndefinedType = Undefined,
                         ) -> None:
                             """
@@ -56621,7 +56909,7 @@ class EosCliConfigGen(AvdRootModel):
                         _field_to_key_map: ClassVar[dict] = {}
                         _key_to_field_map: ClassVar[dict] = {}
                         enabled: bool
-                        isis_level: str | None
+                        isis_level: Literal["level-1", "level-2", "level-1-2"] | None
                         """Redistribute IS-IS route level."""
                         route_map: str | None
                         rcf: str | None
@@ -56639,7 +56927,7 @@ class EosCliConfigGen(AvdRootModel):
                             self,
                             *,
                             enabled: bool | UndefinedType = Undefined,
-                            isis_level: str | None | UndefinedType = Undefined,
+                            isis_level: Literal["level-1", "level-2", "level-1-2"] | None | UndefinedType = Undefined,
                             route_map: str | None | UndefinedType = Undefined,
                             rcf: str | None | UndefinedType = Undefined,
                             include_leaked: bool | None | UndefinedType = Undefined,
@@ -56755,7 +57043,7 @@ class EosCliConfigGen(AvdRootModel):
                             _field_to_key_map: ClassVar[dict] = {}
                             _key_to_field_map: ClassVar[dict] = {}
                             enabled: bool
-                            nssa_type: int | None
+                            nssa_type: Literal[1, 2] | None
                             """NSSA External Type Number."""
                             route_map: str | None
                             _custom_data: dict[str, Any]
@@ -56764,7 +57052,7 @@ class EosCliConfigGen(AvdRootModel):
                                 self,
                                 *,
                                 enabled: bool | UndefinedType = Undefined,
-                                nssa_type: int | None | UndefinedType = Undefined,
+                                nssa_type: Literal[1, 2] | None | UndefinedType = Undefined,
                                 route_map: str | None | UndefinedType = Undefined,
                                 _custom_data: dict[str, Any] | UndefinedType = Undefined,
                             ) -> None:
@@ -56964,7 +57252,7 @@ class EosCliConfigGen(AvdRootModel):
                             _field_to_key_map: ClassVar[dict] = {}
                             _key_to_field_map: ClassVar[dict] = {}
                             enabled: bool
-                            nssa_type: int | None
+                            nssa_type: Literal[1, 2] | None
                             """NSSA External Type Number."""
                             route_map: str | None
                             include_leaked: bool | None
@@ -56975,7 +57263,7 @@ class EosCliConfigGen(AvdRootModel):
                                 self,
                                 *,
                                 enabled: bool | UndefinedType = Undefined,
-                                nssa_type: int | None | UndefinedType = Undefined,
+                                nssa_type: Literal[1, 2] | None | UndefinedType = Undefined,
                                 route_map: str | None | UndefinedType = Undefined,
                                 include_leaked: bool | None | UndefinedType = Undefined,
                                 _custom_data: dict[str, Any] | UndefinedType = Undefined,
@@ -57184,7 +57472,7 @@ class EosCliConfigGen(AvdRootModel):
                     _required_fields: ClassVar[tuple] = ("source_protocol", "_custom_data")
                     _field_to_key_map: ClassVar[dict] = {}
                     _key_to_field_map: ClassVar[dict] = {}
-                    source_protocol: str
+                    source_protocol: Literal["attached-host", "connected", "isis", "ospf", "ospfv3", "static"]
                     route_map: str | None
                     include_leaked: bool | None
                     """Only applicable if `source_protocol` is `isis`."""
@@ -57196,7 +57484,7 @@ class EosCliConfigGen(AvdRootModel):
                     exclusive. `route_map` takes precedence.
                     Only applicable if `source_protocol` is `isis`.
                     """
-                    ospf_route_type: str | None
+                    ospf_route_type: Literal["external", "internal", "nssa-external", "nssa-external 1", "nssa-external 2"] | None
                     """
                     Routes learned by the OSPF protocol.
                     The `ospf_route_type` is valid for source_protocols 'ospf' and
@@ -57207,11 +57495,13 @@ class EosCliConfigGen(AvdRootModel):
                     def __init__(
                         self,
                         *,
-                        source_protocol: str | UndefinedType = Undefined,
+                        source_protocol: Literal["attached-host", "connected", "isis", "ospf", "ospfv3", "static"] | UndefinedType = Undefined,
                         route_map: str | None | UndefinedType = Undefined,
                         include_leaked: bool | None | UndefinedType = Undefined,
                         rcf: str | None | UndefinedType = Undefined,
-                        ospf_route_type: str | None | UndefinedType = Undefined,
+                        ospf_route_type: Literal["external", "internal", "nssa-external", "nssa-external 1", "nssa-external 2"]
+                        | None
+                        | UndefinedType = Undefined,
                         _custom_data: dict[str, Any] | UndefinedType = Undefined,
                     ) -> None:
                         """
@@ -57320,15 +57610,15 @@ class EosCliConfigGen(AvdRootModel):
                         _required_fields: ClassVar[tuple] = ("_custom_data",)
                         _field_to_key_map: ClassVar[dict] = {}
                         _key_to_field_map: ClassVar[dict] = {}
-                        direction_in_action: str | None
-                        direction_out_action: str | None
+                        direction_in_action: Literal["deny", "deny-in-out", "permit"] | None
+                        direction_out_action: Literal["deny", "deny-in-out", "permit"] | None
                         _custom_data: dict[str, Any]
 
                         def __init__(
                             self,
                             *,
-                            direction_in_action: str | None | UndefinedType = Undefined,
-                            direction_out_action: str | None | UndefinedType = Undefined,
+                            direction_in_action: Literal["deny", "deny-in-out", "permit"] | None | UndefinedType = Undefined,
+                            direction_out_action: Literal["deny", "deny-in-out", "permit"] | None | UndefinedType = Undefined,
                             _custom_data: dict[str, Any] | UndefinedType = Undefined,
                         ) -> None:
                             """
@@ -57601,7 +57891,7 @@ class EosCliConfigGen(AvdRootModel):
                         _field_to_key_map: ClassVar[dict] = {}
                         _key_to_field_map: ClassVar[dict] = {}
                         enabled: bool
-                        isis_level: str | None
+                        isis_level: Literal["level-1", "level-2", "level-1-2"] | None
                         """Redistribute IS-IS route level."""
                         route_map: str | None
                         rcf: str | None
@@ -57619,7 +57909,7 @@ class EosCliConfigGen(AvdRootModel):
                             self,
                             *,
                             enabled: bool | UndefinedType = Undefined,
-                            isis_level: str | None | UndefinedType = Undefined,
+                            isis_level: Literal["level-1", "level-2", "level-1-2"] | None | UndefinedType = Undefined,
                             route_map: str | None | UndefinedType = Undefined,
                             rcf: str | None | UndefinedType = Undefined,
                             include_leaked: bool | None | UndefinedType = Undefined,
@@ -57735,7 +58025,7 @@ class EosCliConfigGen(AvdRootModel):
                             _field_to_key_map: ClassVar[dict] = {}
                             _key_to_field_map: ClassVar[dict] = {}
                             enabled: bool
-                            nssa_type: int | None
+                            nssa_type: Literal[1, 2] | None
                             """NSSA External Type Number."""
                             route_map: str | None
                             _custom_data: dict[str, Any]
@@ -57744,7 +58034,7 @@ class EosCliConfigGen(AvdRootModel):
                                 self,
                                 *,
                                 enabled: bool | UndefinedType = Undefined,
-                                nssa_type: int | None | UndefinedType = Undefined,
+                                nssa_type: Literal[1, 2] | None | UndefinedType = Undefined,
                                 route_map: str | None | UndefinedType = Undefined,
                                 _custom_data: dict[str, Any] | UndefinedType = Undefined,
                             ) -> None:
@@ -57925,7 +58215,7 @@ class EosCliConfigGen(AvdRootModel):
                             _field_to_key_map: ClassVar[dict] = {}
                             _key_to_field_map: ClassVar[dict] = {}
                             enabled: bool
-                            nssa_type: int | None
+                            nssa_type: Literal[1, 2] | None
                             """NSSA External Type Number."""
                             route_map: str | None
                             _custom_data: dict[str, Any]
@@ -57934,7 +58224,7 @@ class EosCliConfigGen(AvdRootModel):
                                 self,
                                 *,
                                 enabled: bool | UndefinedType = Undefined,
-                                nssa_type: int | None | UndefinedType = Undefined,
+                                nssa_type: Literal[1, 2] | None | UndefinedType = Undefined,
                                 route_map: str | None | UndefinedType = Undefined,
                                 _custom_data: dict[str, Any] | UndefinedType = Undefined,
                             ) -> None:
@@ -58131,7 +58421,7 @@ class EosCliConfigGen(AvdRootModel):
                     _required_fields: ClassVar[tuple] = ("source_protocol", "_custom_data")
                     _field_to_key_map: ClassVar[dict] = {}
                     _key_to_field_map: ClassVar[dict] = {}
-                    source_protocol: str
+                    source_protocol: Literal["connected", "isis", "ospf", "ospfv3", "static"]
                     route_map: str | None
                     include_leaked: bool | None
                     """Only applicable if `source_protocol` is `isis`."""
@@ -58143,7 +58433,7 @@ class EosCliConfigGen(AvdRootModel):
                     exclusive. `route_map` takes precedence.
                     Only applicable if `source_protocol` is `isis`.
                     """
-                    ospf_route_type: str | None
+                    ospf_route_type: Literal["external", "internal", "nssa-external", "nssa-external 1", "nssa-external 2"] | None
                     """
                     Routes learned by the OSPF protocol.
                     The `ospf_route_type` is valid for source_protocols 'ospf' and
@@ -58154,11 +58444,13 @@ class EosCliConfigGen(AvdRootModel):
                     def __init__(
                         self,
                         *,
-                        source_protocol: str | UndefinedType = Undefined,
+                        source_protocol: Literal["connected", "isis", "ospf", "ospfv3", "static"] | UndefinedType = Undefined,
                         route_map: str | None | UndefinedType = Undefined,
                         include_leaked: bool | None | UndefinedType = Undefined,
                         rcf: str | None | UndefinedType = Undefined,
-                        ospf_route_type: str | None | UndefinedType = Undefined,
+                        ospf_route_type: Literal["external", "internal", "nssa-external", "nssa-external 1", "nssa-external 2"]
+                        | None
+                        | UndefinedType = Undefined,
                         _custom_data: dict[str, Any] | UndefinedType = Undefined,
                     ) -> None:
                         """
@@ -58267,15 +58559,15 @@ class EosCliConfigGen(AvdRootModel):
                         _required_fields: ClassVar[tuple] = ("_custom_data",)
                         _field_to_key_map: ClassVar[dict] = {}
                         _key_to_field_map: ClassVar[dict] = {}
-                        direction_in_action: str | None
-                        direction_out_action: str | None
+                        direction_in_action: Literal["deny", "deny-in-out", "permit"] | None
+                        direction_out_action: Literal["deny", "deny-in-out", "permit"] | None
                         _custom_data: dict[str, Any]
 
                         def __init__(
                             self,
                             *,
-                            direction_in_action: str | None | UndefinedType = Undefined,
-                            direction_out_action: str | None | UndefinedType = Undefined,
+                            direction_in_action: Literal["deny", "deny-in-out", "permit"] | None | UndefinedType = Undefined,
+                            direction_out_action: Literal["deny", "deny-in-out", "permit"] | None | UndefinedType = Undefined,
                             _custom_data: dict[str, Any] | UndefinedType = Undefined,
                         ) -> None:
                             """
@@ -58411,15 +58703,15 @@ class EosCliConfigGen(AvdRootModel):
                         _required_fields: ClassVar[tuple] = ("_custom_data",)
                         _field_to_key_map: ClassVar[dict] = {}
                         _key_to_field_map: ClassVar[dict] = {}
-                        direction_in_action: str | None
-                        direction_out_action: str | None
+                        direction_in_action: Literal["deny", "deny-in-out", "permit"] | None
+                        direction_out_action: Literal["deny", "deny-in-out", "permit"] | None
                         _custom_data: dict[str, Any]
 
                         def __init__(
                             self,
                             *,
-                            direction_in_action: str | None | UndefinedType = Undefined,
-                            direction_out_action: str | None | UndefinedType = Undefined,
+                            direction_in_action: Literal["deny", "deny-in-out", "permit"] | None | UndefinedType = Undefined,
+                            direction_out_action: Literal["deny", "deny-in-out", "permit"] | None | UndefinedType = Undefined,
                             _custom_data: dict[str, Any] | UndefinedType = Undefined,
                         ) -> None:
                             """
@@ -58843,7 +59135,7 @@ class EosCliConfigGen(AvdRootModel):
         YAML inputs, the value must be put in quotes, to prevent it from being interpreted as a float
         number.
         """
-        as_notation: str | None
+        as_notation: Literal["asdot", "asplain"] | None
         """
         BGP AS can be deplayed in the asplain <1-4294967295> or asdot notation "<1-65535>.<0-65535>". This
         flag indicates which mode is preferred - asplain is the default.
@@ -58946,7 +59238,7 @@ class EosCliConfigGen(AvdRootModel):
             self,
             *,
             field_as: str | None | UndefinedType = Undefined,
-            as_notation: str | None | UndefinedType = Undefined,
+            as_notation: Literal["asdot", "asplain"] | None | UndefinedType = Undefined,
             router_id: str | None | UndefinedType = Undefined,
             timers: Timers | UndefinedType = Undefined,
             distance: Distance | UndefinedType = Undefined,
@@ -59418,7 +59710,7 @@ class EosCliConfigGen(AvdRootModel):
             _key_to_field_map: ClassVar[dict] = {}
             name: str
             """VRF name."""
-            host_proxy_match_mroute: str | None
+            host_proxy_match_mroute: Literal["all", "iif"] | None
             """
             Specify conditions for sending IGMP joins for host-proxy.
             'iif' will enable igmp host-proxy to work
@@ -59431,7 +59723,7 @@ class EosCliConfigGen(AvdRootModel):
                 self,
                 *,
                 name: str | UndefinedType = Undefined,
-                host_proxy_match_mroute: str | None | UndefinedType = Undefined,
+                host_proxy_match_mroute: Literal["all", "iif"] | None | UndefinedType = Undefined,
                 _custom_data: dict[str, Any] | UndefinedType = Undefined,
             ) -> None:
                 """
@@ -59471,7 +59763,7 @@ class EosCliConfigGen(AvdRootModel):
         _required_fields: ClassVar[tuple] = ("_custom_data",)
         _field_to_key_map: ClassVar[dict] = {}
         _key_to_field_map: ClassVar[dict] = {}
-        host_proxy_match_mroute: str | None
+        host_proxy_match_mroute: Literal["all", "iif"] | None
         """
         Specify conditions for sending IGMP joins for host-proxy.
         'iif' will enable igmp host-proxy to work
@@ -59492,7 +59784,7 @@ class EosCliConfigGen(AvdRootModel):
         def __init__(
             self,
             *,
-            host_proxy_match_mroute: str | None | UndefinedType = Undefined,
+            host_proxy_match_mroute: Literal["all", "iif"] | None | UndefinedType = Undefined,
             ssm_aware: bool | None | UndefinedType = Undefined,
             vrfs: Vrfs | UndefinedType = Undefined,
             _custom_data: dict[str, Any] | UndefinedType = Undefined,
@@ -60163,8 +60455,8 @@ class EosCliConfigGen(AvdRootModel):
                     _key_to_field_map: ClassVar[dict] = {}
                     id: int
                     """Configure authentication key-id."""
-                    algorithm: str
-                    key_type: str
+                    algorithm: Literal["sha-1", "sha-224", "sha-256", "sha-384", "sha-512"]
+                    key_type: Literal["0", "7", "8a"]
                     """Configure authentication key type."""
                     key: str
                     """Password string."""
@@ -60176,8 +60468,8 @@ class EosCliConfigGen(AvdRootModel):
                         self,
                         *,
                         id: int | UndefinedType = Undefined,
-                        algorithm: str | UndefinedType = Undefined,
-                        key_type: str | UndefinedType = Undefined,
+                        algorithm: Literal["sha-1", "sha-224", "sha-256", "sha-384", "sha-512"] | UndefinedType = Undefined,
+                        key_type: Literal["0", "7", "8a"] | UndefinedType = Undefined,
                         key: str | UndefinedType = Undefined,
                         rfc_5310: bool | None | UndefinedType = Undefined,
                         _custom_data: dict[str, Any] | UndefinedType = Undefined,
@@ -60244,14 +60536,14 @@ class EosCliConfigGen(AvdRootModel):
                     _field_to_key_map: ClassVar[dict] = {}
                     _key_to_field_map: ClassVar[dict] = {}
                     profile: str
-                    algorithm: str
+                    algorithm: Literal["md5", "sha-1", "sha-224", "sha-256", "sha-384", "sha-512"]
                     _custom_data: dict[str, Any]
 
                     def __init__(
                         self,
                         *,
                         profile: str | UndefinedType = Undefined,
-                        algorithm: str | UndefinedType = Undefined,
+                        algorithm: Literal["md5", "sha-1", "sha-224", "sha-256", "sha-384", "sha-512"] | UndefinedType = Undefined,
                         _custom_data: dict[str, Any] | UndefinedType = Undefined,
                     ) -> None:
                         """
@@ -60284,13 +60576,13 @@ class EosCliConfigGen(AvdRootModel):
                 _required_fields: ClassVar[tuple] = ("_custom_data",)
                 _field_to_key_map: ClassVar[dict] = {}
                 _key_to_field_map: ClassVar[dict] = {}
-                key_type: str | None
+                key_type: Literal["0", "7", "8a"] | None
                 """Configure authentication key type."""
                 key: str | None
                 """Password string. `key_type` is required for this setting."""
                 key_ids: KeyIds
                 """Subclass of AvdIndexedList with `KeyIdsItem` items. Primary key is `id` (`int`)."""
-                mode: str | None
+                mode: Literal["md5", "sha", "text", "shared-secret"] | None
                 """Authentication mode."""
                 sha: Sha
                 """
@@ -60311,10 +60603,10 @@ class EosCliConfigGen(AvdRootModel):
                 def __init__(
                     self,
                     *,
-                    key_type: str | None | UndefinedType = Undefined,
+                    key_type: Literal["0", "7", "8a"] | None | UndefinedType = Undefined,
                     key: str | None | UndefinedType = Undefined,
                     key_ids: KeyIds | UndefinedType = Undefined,
-                    mode: str | None | UndefinedType = Undefined,
+                    mode: Literal["md5", "sha", "text", "shared-secret"] | None | UndefinedType = Undefined,
                     sha: Sha | UndefinedType = Undefined,
                     shared_secret: SharedSecret | UndefinedType = Undefined,
                     rx_disabled: bool | None | UndefinedType = Undefined,
@@ -60367,8 +60659,8 @@ class EosCliConfigGen(AvdRootModel):
                     _key_to_field_map: ClassVar[dict] = {}
                     id: int
                     """Configure authentication key-id."""
-                    algorithm: str
-                    key_type: str
+                    algorithm: Literal["sha-1", "sha-224", "sha-256", "sha-384", "sha-512"]
+                    key_type: Literal["0", "7", "8a"]
                     """Configure authentication key type."""
                     key: str
                     """Password string."""
@@ -60380,8 +60672,8 @@ class EosCliConfigGen(AvdRootModel):
                         self,
                         *,
                         id: int | UndefinedType = Undefined,
-                        algorithm: str | UndefinedType = Undefined,
-                        key_type: str | UndefinedType = Undefined,
+                        algorithm: Literal["sha-1", "sha-224", "sha-256", "sha-384", "sha-512"] | UndefinedType = Undefined,
+                        key_type: Literal["0", "7", "8a"] | UndefinedType = Undefined,
                         key: str | UndefinedType = Undefined,
                         rfc_5310: bool | None | UndefinedType = Undefined,
                         _custom_data: dict[str, Any] | UndefinedType = Undefined,
@@ -60448,14 +60740,14 @@ class EosCliConfigGen(AvdRootModel):
                     _field_to_key_map: ClassVar[dict] = {}
                     _key_to_field_map: ClassVar[dict] = {}
                     profile: str
-                    algorithm: str
+                    algorithm: Literal["md5", "sha-1", "sha-224", "sha-256", "sha-384", "sha-512"]
                     _custom_data: dict[str, Any]
 
                     def __init__(
                         self,
                         *,
                         profile: str | UndefinedType = Undefined,
-                        algorithm: str | UndefinedType = Undefined,
+                        algorithm: Literal["md5", "sha-1", "sha-224", "sha-256", "sha-384", "sha-512"] | UndefinedType = Undefined,
                         _custom_data: dict[str, Any] | UndefinedType = Undefined,
                     ) -> None:
                         """
@@ -60488,13 +60780,13 @@ class EosCliConfigGen(AvdRootModel):
                 _required_fields: ClassVar[tuple] = ("_custom_data",)
                 _field_to_key_map: ClassVar[dict] = {}
                 _key_to_field_map: ClassVar[dict] = {}
-                key_type: str | None
+                key_type: Literal["0", "7", "8a"] | None
                 """Configure authentication key type."""
                 key: str | None
                 """Password string. `key_type` is required for this setting."""
                 key_ids: KeyIds
                 """Subclass of AvdIndexedList with `KeyIdsItem` items. Primary key is `id` (`int`)."""
-                mode: str | None
+                mode: Literal["md5", "sha", "text", "shared-secret"] | None
                 """Authentication mode."""
                 sha: Sha
                 """
@@ -60515,10 +60807,10 @@ class EosCliConfigGen(AvdRootModel):
                 def __init__(
                     self,
                     *,
-                    key_type: str | None | UndefinedType = Undefined,
+                    key_type: Literal["0", "7", "8a"] | None | UndefinedType = Undefined,
                     key: str | None | UndefinedType = Undefined,
                     key_ids: KeyIds | UndefinedType = Undefined,
-                    mode: str | None | UndefinedType = Undefined,
+                    mode: Literal["md5", "sha", "text", "shared-secret"] | None | UndefinedType = Undefined,
                     sha: Sha | UndefinedType = Undefined,
                     shared_secret: SharedSecret | UndefinedType = Undefined,
                     rx_disabled: bool | None | UndefinedType = Undefined,
@@ -60571,8 +60863,8 @@ class EosCliConfigGen(AvdRootModel):
                     _key_to_field_map: ClassVar[dict] = {}
                     id: int
                     """Configure authentication key-id."""
-                    algorithm: str
-                    key_type: str
+                    algorithm: Literal["sha-1", "sha-224", "sha-256", "sha-384", "sha-512"]
+                    key_type: Literal["0", "7", "8a"]
                     """Configure authentication key type."""
                     key: str
                     """Password string."""
@@ -60584,8 +60876,8 @@ class EosCliConfigGen(AvdRootModel):
                         self,
                         *,
                         id: int | UndefinedType = Undefined,
-                        algorithm: str | UndefinedType = Undefined,
-                        key_type: str | UndefinedType = Undefined,
+                        algorithm: Literal["sha-1", "sha-224", "sha-256", "sha-384", "sha-512"] | UndefinedType = Undefined,
+                        key_type: Literal["0", "7", "8a"] | UndefinedType = Undefined,
                         key: str | UndefinedType = Undefined,
                         rfc_5310: bool | None | UndefinedType = Undefined,
                         _custom_data: dict[str, Any] | UndefinedType = Undefined,
@@ -60652,14 +60944,14 @@ class EosCliConfigGen(AvdRootModel):
                     _field_to_key_map: ClassVar[dict] = {}
                     _key_to_field_map: ClassVar[dict] = {}
                     profile: str
-                    algorithm: str
+                    algorithm: Literal["md5", "sha-1", "sha-224", "sha-256", "sha-384", "sha-512"]
                     _custom_data: dict[str, Any]
 
                     def __init__(
                         self,
                         *,
                         profile: str | UndefinedType = Undefined,
-                        algorithm: str | UndefinedType = Undefined,
+                        algorithm: Literal["md5", "sha-1", "sha-224", "sha-256", "sha-384", "sha-512"] | UndefinedType = Undefined,
                         _custom_data: dict[str, Any] | UndefinedType = Undefined,
                     ) -> None:
                         """
@@ -60692,13 +60984,13 @@ class EosCliConfigGen(AvdRootModel):
                 _required_fields: ClassVar[tuple] = ("_custom_data",)
                 _field_to_key_map: ClassVar[dict] = {}
                 _key_to_field_map: ClassVar[dict] = {}
-                key_type: str | None
+                key_type: Literal["0", "7", "8a"] | None
                 """Configure authentication key type."""
                 key: str | None
                 """Password string. `key_type` is required for this setting."""
                 key_ids: KeyIds
                 """Subclass of AvdIndexedList with `KeyIdsItem` items. Primary key is `id` (`int`)."""
-                mode: str | None
+                mode: Literal["md5", "sha", "text", "shared-secret"] | None
                 """Authentication mode."""
                 sha: Sha
                 """
@@ -60719,10 +61011,10 @@ class EosCliConfigGen(AvdRootModel):
                 def __init__(
                     self,
                     *,
-                    key_type: str | None | UndefinedType = Undefined,
+                    key_type: Literal["0", "7", "8a"] | None | UndefinedType = Undefined,
                     key: str | None | UndefinedType = Undefined,
                     key_ids: KeyIds | UndefinedType = Undefined,
-                    mode: str | None | UndefinedType = Undefined,
+                    mode: Literal["md5", "sha", "text", "shared-secret"] | None | UndefinedType = Undefined,
                     sha: Sha | UndefinedType = Undefined,
                     shared_secret: SharedSecret | UndefinedType = Undefined,
                     rx_disabled: bool | None | UndefinedType = Undefined,
@@ -60853,21 +61145,21 @@ class EosCliConfigGen(AvdRootModel):
             _required_fields: ClassVar[tuple] = ("source_protocol", "_custom_data")
             _field_to_key_map: ClassVar[dict] = {}
             _key_to_field_map: ClassVar[dict] = {}
-            source_protocol: str
+            source_protocol: Literal["bgp", "connected", "isis", "ospf", "ospfv3", "static"]
             route_map: str | None
             """Route-map name."""
             include_leaked: bool | None
-            ospf_route_type: str | None
+            ospf_route_type: Literal["external", "internal", "nssa-external"] | None
             """ospf_route_type is required with source_protocols 'ospf' and 'ospfv3'."""
             _custom_data: dict[str, Any]
 
             def __init__(
                 self,
                 *,
-                source_protocol: str | UndefinedType = Undefined,
+                source_protocol: Literal["bgp", "connected", "isis", "ospf", "ospfv3", "static"] | UndefinedType = Undefined,
                 route_map: str | None | UndefinedType = Undefined,
                 include_leaked: bool | None | UndefinedType = Undefined,
-                ospf_route_type: str | None | UndefinedType = Undefined,
+                ospf_route_type: Literal["external", "internal", "nssa-external"] | None | UndefinedType = Undefined,
                 _custom_data: dict[str, Any] | UndefinedType = Undefined,
             ) -> None:
                 """
@@ -60939,8 +61231,8 @@ class EosCliConfigGen(AvdRootModel):
                 _required_fields: ClassVar[tuple] = ("_custom_data",)
                 _field_to_key_map: ClassVar[dict] = {}
                 _key_to_field_map: ClassVar[dict] = {}
-                mode: str | None
-                level: str | None
+                mode: Literal["link-protection", "node-protection"] | None
+                level: Literal["level-1", "level-2"] | None
                 srlg: Srlg
                 """
                 Shared Risk Link Group.
@@ -60952,8 +61244,8 @@ class EosCliConfigGen(AvdRootModel):
                 def __init__(
                     self,
                     *,
-                    mode: str | None | UndefinedType = Undefined,
-                    level: str | None | UndefinedType = Undefined,
+                    mode: Literal["link-protection", "node-protection"] | None | UndefinedType = Undefined,
+                    level: Literal["level-1", "level-2"] | None | UndefinedType = Undefined,
                     srlg: Srlg | UndefinedType = Undefined,
                     _custom_data: dict[str, Any] | UndefinedType = Undefined,
                 ) -> None:
@@ -61110,8 +61402,8 @@ class EosCliConfigGen(AvdRootModel):
                 _required_fields: ClassVar[tuple] = ("_custom_data",)
                 _field_to_key_map: ClassVar[dict] = {}
                 _key_to_field_map: ClassVar[dict] = {}
-                mode: str | None
-                level: str | None
+                mode: Literal["link-protection", "node-protection"] | None
+                level: Literal["level-1", "level-2"] | None
                 """Optional, default is to protect all levels."""
                 srlg: Srlg
                 """
@@ -61124,8 +61416,8 @@ class EosCliConfigGen(AvdRootModel):
                 def __init__(
                     self,
                     *,
-                    mode: str | None | UndefinedType = Undefined,
-                    level: str | None | UndefinedType = Undefined,
+                    mode: Literal["link-protection", "node-protection"] | None | UndefinedType = Undefined,
+                    level: Literal["level-1", "level-2"] | None | UndefinedType = Undefined,
                     srlg: Srlg | UndefinedType = Undefined,
                     _custom_data: dict[str, Any] | UndefinedType = Undefined,
                 ) -> None:
@@ -61300,7 +61592,7 @@ class EosCliConfigGen(AvdRootModel):
             Range in
             milliseconds: <1-300000>
             """
-            interval_unit: str | None
+            interval_unit: Literal["seconds", "milliseconds"] | None
             """If interval unit is not defined EOS takes `seconds` by default."""
             wait_interval: int | None
             """Initial wait interval for SPF in milliseconds."""
@@ -61312,7 +61604,7 @@ class EosCliConfigGen(AvdRootModel):
                 self,
                 *,
                 interval: int | None | UndefinedType = Undefined,
-                interval_unit: str | None | UndefinedType = Undefined,
+                interval_unit: Literal["seconds", "milliseconds"] | None | UndefinedType = Undefined,
                 wait_interval: int | None | UndefinedType = Undefined,
                 hold_interval: int | None | UndefinedType = Undefined,
                 _custom_data: dict[str, Any] | UndefinedType = Undefined,
@@ -61446,7 +61738,7 @@ class EosCliConfigGen(AvdRootModel):
         """CLNS Address like "49.0001.0001.0000.0001.00"."""
         router_id: str | None
         """IPv4 Address."""
-        is_type: str | None
+        is_type: Literal["level-1", "level-1-2", "level-2"] | None
         log_adjacency_changes: bool | None
         mpls_ldp_sync_default: bool | None
         timers: Timers
@@ -61479,7 +61771,7 @@ class EosCliConfigGen(AvdRootModel):
             instance: str | UndefinedType = Undefined,
             net: str | None | UndefinedType = Undefined,
             router_id: str | None | UndefinedType = Undefined,
-            is_type: str | None | UndefinedType = Undefined,
+            is_type: Literal["level-1", "level-1-2", "level-2"] | None | UndefinedType = Undefined,
             log_adjacency_changes: bool | None | UndefinedType = Undefined,
             mpls_ldp_sync_default: bool | None | UndefinedType = Undefined,
             timers: Timers | UndefinedType = Undefined,
@@ -62487,8 +62779,8 @@ class EosCliConfigGen(AvdRootModel):
             counters: Counters
             """Subclass of AvdModel."""
             routing: bool | None
-            multipath: str | None
-            software_forwarding: str | None
+            multipath: Literal["none", "deterministic", "deterministic color", "deterministic router-id"] | None
+            software_forwarding: Literal["kernel", "sfe"] | None
             rpf: Rpf
             """Subclass of AvdModel."""
             _custom_data: dict[str, Any]
@@ -62499,8 +62791,8 @@ class EosCliConfigGen(AvdRootModel):
                 activity_polling_interval: int | None | UndefinedType = Undefined,
                 counters: Counters | UndefinedType = Undefined,
                 routing: bool | None | UndefinedType = Undefined,
-                multipath: str | None | UndefinedType = Undefined,
-                software_forwarding: str | None | UndefinedType = Undefined,
+                multipath: Literal["none", "deterministic", "deterministic color", "deterministic router-id"] | None | UndefinedType = Undefined,
+                software_forwarding: Literal["kernel", "sfe"] | None | UndefinedType = Undefined,
                 rpf: Rpf | UndefinedType = Undefined,
                 _custom_data: dict[str, Any] | UndefinedType = Undefined,
             ) -> None:
@@ -62943,7 +63235,7 @@ class EosCliConfigGen(AvdRootModel):
                 always: bool | None
                 metric: int | None
                 """Metric for default route."""
-                metric_type: int | None
+                metric_type: Literal[1, 2] | None
                 """OSPF metric type for default route."""
                 _custom_data: dict[str, Any]
 
@@ -62952,7 +63244,7 @@ class EosCliConfigGen(AvdRootModel):
                     *,
                     always: bool | None | UndefinedType = Undefined,
                     metric: int | None | UndefinedType = Undefined,
-                    metric_type: int | None | UndefinedType = Undefined,
+                    metric_type: Literal[1, 2] | None | UndefinedType = Undefined,
                     _custom_data: dict[str, Any] | UndefinedType = Undefined,
                 ) -> None:
                     """
@@ -63255,7 +63547,7 @@ class EosCliConfigGen(AvdRootModel):
                     _key_to_field_map: ClassVar[dict] = {}
                     metric: int | None
                     """Metric for default route."""
-                    metric_type: int | None
+                    metric_type: Literal[1, 2] | None
                     """OSPF metric type for default route."""
                     _custom_data: dict[str, Any]
 
@@ -63263,7 +63555,7 @@ class EosCliConfigGen(AvdRootModel):
                         self,
                         *,
                         metric: int | None | UndefinedType = Undefined,
-                        metric_type: int | None | UndefinedType = Undefined,
+                        metric_type: Literal[1, 2] | None | UndefinedType = Undefined,
                         _custom_data: dict[str, Any] | UndefinedType = Undefined,
                     ) -> None:
                         """
@@ -63298,7 +63590,7 @@ class EosCliConfigGen(AvdRootModel):
                 id: str
                 filter: Filter
                 """Subclass of AvdModel."""
-                type: str
+                type: Literal["normal", "stub", "nssa"]
                 """Default value: `"normal"`"""
                 no_summary: bool | None
                 nssa_only: bool | None
@@ -63311,7 +63603,7 @@ class EosCliConfigGen(AvdRootModel):
                     *,
                     id: str | UndefinedType = Undefined,
                     filter: Filter | UndefinedType = Undefined,
-                    type: str | UndefinedType = Undefined,
+                    type: Literal["normal", "stub", "nssa"] | UndefinedType = Undefined,
                     no_summary: bool | None | UndefinedType = Undefined,
                     nssa_only: bool | None | UndefinedType = Undefined,
                     default_information_originate: DefaultInformationOriginate | UndefinedType = Undefined,
@@ -64056,7 +64348,7 @@ class EosCliConfigGen(AvdRootModel):
             """Path group ID."""
             ipsec_profile: str | None
             """IPSec profile for the path group."""
-            flow_assignment: str | None
+            flow_assignment: Literal["lan"] | None
             """Flow assignment `lan` can not be configured in a path group with dynamic peers."""
             local_interfaces: LocalInterfaces
             """Subclass of AvdIndexedList with `LocalInterfacesItem` items. Primary key is `name` (`str`)."""
@@ -64081,7 +64373,7 @@ class EosCliConfigGen(AvdRootModel):
                 name: str | UndefinedType = Undefined,
                 id: int | None | UndefinedType = Undefined,
                 ipsec_profile: str | None | UndefinedType = Undefined,
-                flow_assignment: str | None | UndefinedType = Undefined,
+                flow_assignment: Literal["lan"] | None | UndefinedType = Undefined,
                 local_interfaces: LocalInterfaces | UndefinedType = Undefined,
                 local_ips: LocalIps | UndefinedType = Undefined,
                 dynamic_peers: DynamicPeers | UndefinedType = Undefined,
@@ -64443,7 +64735,7 @@ class EosCliConfigGen(AvdRootModel):
             and multi-hop path
             MTU towards a remote VTEP (minus 40bytes to account for IP + TCP header).
             """
-            direction: str
+            direction: Literal["ingress"]
             """
             Enforce on packets through DPS tunnel for a specific direction.
             Only 'ingress' direction is
@@ -64457,7 +64749,7 @@ class EosCliConfigGen(AvdRootModel):
                 self,
                 *,
                 ipv4_segment_size: str | None | UndefinedType = Undefined,
-                direction: str | UndefinedType = Undefined,
+                direction: Literal["ingress"] | UndefinedType = Undefined,
                 _custom_data: dict[str, Any] | UndefinedType = Undefined,
             ) -> None:
                 """
@@ -64498,7 +64790,7 @@ class EosCliConfigGen(AvdRootModel):
         _required_fields: ClassVar[tuple] = ("_custom_data",)
         _field_to_key_map: ClassVar[dict] = {}
         _key_to_field_map: ClassVar[dict] = {}
-        peer_dynamic_source: str | None
+        peer_dynamic_source: Literal["stun"] | None
         """Source of dynamic peer discovery."""
         path_groups: PathGroups
         """Subclass of AvdIndexedList with `PathGroupsItem` items. Primary key is `name` (`str`)."""
@@ -64515,7 +64807,7 @@ class EosCliConfigGen(AvdRootModel):
         def __init__(
             self,
             *,
-            peer_dynamic_source: str | None | UndefinedType = Undefined,
+            peer_dynamic_source: Literal["stun"] | None | UndefinedType = Undefined,
             path_groups: PathGroups | UndefinedType = Undefined,
             load_balance_policies: LoadBalancePolicies | UndefinedType = Undefined,
             policies: Policies | UndefinedType = Undefined,
@@ -64975,7 +65267,7 @@ class EosCliConfigGen(AvdRootModel):
                 """Sequence ID."""
                 application: str
                 """The name of the application."""
-                action: str
+                action: Literal["forward", "drop", "redirect"]
                 """
                 The action to take - note that platform support for the redirect action is limited. The "redirect"
                 action also requires the 'next_hop' to be configured.
@@ -64997,7 +65289,7 @@ class EosCliConfigGen(AvdRootModel):
                     *,
                     sequence: int | UndefinedType = Undefined,
                     application: str | UndefinedType = Undefined,
-                    action: str | UndefinedType = Undefined,
+                    action: Literal["forward", "drop", "redirect"] | UndefinedType = Undefined,
                     log: bool | None | UndefinedType = Undefined,
                     stateless: bool | UndefinedType = Undefined,
                     next_hop: str | None | UndefinedType = Undefined,
@@ -65100,7 +65392,7 @@ class EosCliConfigGen(AvdRootModel):
                         _required_fields: ClassVar[tuple] = ("address_family", "_custom_data")
                         _field_to_key_map: ClassVar[dict] = {}
                         _key_to_field_map: ClassVar[dict] = {}
-                        address_family: str
+                        address_family: Literal["ipv4", "ipv6"]
                         """Indicate which address-family the match list belongs to e.g. ipv4 or ipv6."""
                         covered_prefix_list: str | None
                         """
@@ -65117,7 +65409,7 @@ class EosCliConfigGen(AvdRootModel):
                         def __init__(
                             self,
                             *,
-                            address_family: str | UndefinedType = Undefined,
+                            address_family: Literal["ipv4", "ipv6"] | UndefinedType = Undefined,
                             covered_prefix_list: str | None | UndefinedType = Undefined,
                             prefix: str | None | UndefinedType = Undefined,
                             _custom_data: dict[str, Any] | UndefinedType = Undefined,
@@ -65719,7 +66011,7 @@ class EosCliConfigGen(AvdRootModel):
                         _field_to_key_map: ClassVar[dict] = {}
                         _key_to_field_map: ClassVar[dict] = {}
                         preference: int | None
-                        explicit_null: str | None
+                        explicit_null: Literal["ipv4", "ipv6", "ipv4 ipv6", "none"] | None
                         segment_list: SegmentList
                         """Subclass of AvdList with `SegmentListItem` items."""
                         _custom_data: dict[str, Any]
@@ -65728,7 +66020,7 @@ class EosCliConfigGen(AvdRootModel):
                             self,
                             *,
                             preference: int | None | UndefinedType = Undefined,
-                            explicit_null: str | None | UndefinedType = Undefined,
+                            explicit_null: Literal["ipv4", "ipv6", "ipv4 ipv6", "none"] | None | UndefinedType = Undefined,
                             segment_list: SegmentList | UndefinedType = Undefined,
                             _custom_data: dict[str, Any] | UndefinedType = Undefined,
                         ) -> None:
@@ -66631,7 +66923,7 @@ class EosCliConfigGen(AvdRootModel):
             _key_to_field_map: ClassVar[dict] = {}
             name: str
             """Community name."""
-            access: str | None
+            access: Literal["ro", "rw"] | None
             access_list_ipv4: AccessListIpv4
             """Subclass of AvdModel."""
             access_list_ipv6: AccessListIpv6
@@ -66643,7 +66935,7 @@ class EosCliConfigGen(AvdRootModel):
                 self,
                 *,
                 name: str | UndefinedType = Undefined,
-                access: str | None | UndefinedType = Undefined,
+                access: Literal["ro", "rw"] | None | UndefinedType = Undefined,
                 access_list_ipv4: AccessListIpv4 | UndefinedType = Undefined,
                 access_list_ipv6: AccessListIpv6 | UndefinedType = Undefined,
                 view: str | None | UndefinedType = Undefined,
@@ -66862,8 +67154,8 @@ class EosCliConfigGen(AvdRootModel):
             _key_to_field_map: ClassVar[dict] = {}
             name: str | None
             """Group name."""
-            version: str | None
-            authentication: str | None
+            version: Literal["v1", "v2c", "v3"] | None
+            authentication: Literal["auth", "noauth", "priv"] | None
             read: str | None
             """Read view."""
             write: str | None
@@ -66876,8 +67168,8 @@ class EosCliConfigGen(AvdRootModel):
                 self,
                 *,
                 name: str | None | UndefinedType = Undefined,
-                version: str | None | UndefinedType = Undefined,
-                authentication: str | None | UndefinedType = Undefined,
+                version: Literal["v1", "v2c", "v3"] | None | UndefinedType = Undefined,
+                authentication: Literal["auth", "noauth", "priv"] | None | UndefinedType = Undefined,
                 read: str | None | UndefinedType = Undefined,
                 write: str | None | UndefinedType = Undefined,
                 notify: str | None | UndefinedType = Undefined,
@@ -66939,7 +67231,7 @@ class EosCliConfigGen(AvdRootModel):
             """
             udp_port: int | None
             """udp_port will not be used if no remote_address is configured."""
-            version: str | None
+            version: Literal["v1", "v2c", "v3"] | None
             localized: str | None
             """Engine ID in hexadecimal for localizing auth and/or priv."""
             auth: str | None
@@ -66959,7 +67251,7 @@ class EosCliConfigGen(AvdRootModel):
                 group: str | None | UndefinedType = Undefined,
                 remote_address: str | None | UndefinedType = Undefined,
                 udp_port: int | None | UndefinedType = Undefined,
-                version: str | None | UndefinedType = Undefined,
+                version: Literal["v1", "v2c", "v3"] | None | UndefinedType = Undefined,
                 localized: str | None | UndefinedType = Undefined,
                 auth: str | None | UndefinedType = Undefined,
                 auth_passphrase: str | None | UndefinedType = Undefined,
@@ -67010,14 +67302,14 @@ class EosCliConfigGen(AvdRootModel):
                 _field_to_key_map: ClassVar[dict] = {}
                 _key_to_field_map: ClassVar[dict] = {}
                 username: str | None
-                authentication_level: str | None
+                authentication_level: Literal["auth", "noauth", "priv"] | None
                 _custom_data: dict[str, Any]
 
                 def __init__(
                     self,
                     *,
                     username: str | None | UndefinedType = Undefined,
-                    authentication_level: str | None | UndefinedType = Undefined,
+                    authentication_level: Literal["auth", "noauth", "priv"] | None | UndefinedType = Undefined,
                     _custom_data: dict[str, Any] | UndefinedType = Undefined,
                 ) -> None:
                     """
@@ -67056,7 +67348,7 @@ class EosCliConfigGen(AvdRootModel):
             host: str | None
             """Host IP address or name."""
             vrf: str | None
-            version: str | None
+            version: Literal["1", "2c", "3"] | None
             community: str | None
             """Community name."""
             users: Users
@@ -67068,7 +67360,7 @@ class EosCliConfigGen(AvdRootModel):
                 *,
                 host: str | None | UndefinedType = Undefined,
                 vrf: str | None | UndefinedType = Undefined,
-                version: str | None | UndefinedType = Undefined,
+                version: Literal["1", "2c", "3"] | None | UndefinedType = Undefined,
                 community: str | None | UndefinedType = Undefined,
                 users: Users | UndefinedType = Undefined,
                 _custom_data: dict[str, Any] | UndefinedType = Undefined,
@@ -67639,7 +67931,7 @@ class EosCliConfigGen(AvdRootModel):
         root_super: bool | None
         edge_port: EdgePort
         """Subclass of AvdModel."""
-        mode: str | None
+        mode: Literal["mstp", "rstp", "rapid-pvst", "none"] | None
         bpduguard_rate_limit: BpduguardRateLimit
         """Subclass of AvdModel."""
         rstp_priority: int | None
@@ -67661,7 +67953,7 @@ class EosCliConfigGen(AvdRootModel):
             *,
             root_super: bool | None | UndefinedType = Undefined,
             edge_port: EdgePort | UndefinedType = Undefined,
-            mode: str | None | UndefinedType = Undefined,
+            mode: Literal["mstp", "rstp", "rapid-pvst", "none"] | None | UndefinedType = Undefined,
             bpduguard_rate_limit: BpduguardRateLimit | UndefinedType = Undefined,
             rstp_priority: int | None | UndefinedType = Undefined,
             mst: Mst | UndefinedType = Undefined,
@@ -68140,7 +68432,7 @@ class EosCliConfigGen(AvdRootModel):
             _field_to_key_map: ClassVar[dict] = {}
             _key_to_field_map: ClassVar[dict] = {}
             cos: int | None
-            trunk: str | None
+            trunk: Literal["tagged", "untagged"] | None
             vlan: int | None
             """VLAN ID."""
             _custom_data: dict[str, Any]
@@ -68149,7 +68441,7 @@ class EosCliConfigGen(AvdRootModel):
                 self,
                 *,
                 cos: int | None | UndefinedType = Undefined,
-                trunk: str | None | UndefinedType = Undefined,
+                trunk: Literal["tagged", "untagged"] | None | UndefinedType = Undefined,
                 vlan: int | None | UndefinedType = Undefined,
                 _custom_data: dict[str, Any] | UndefinedType = Undefined,
             ) -> None:
@@ -68175,7 +68467,7 @@ class EosCliConfigGen(AvdRootModel):
         _required_fields: ClassVar[tuple] = ("_custom_data",)
         _field_to_key_map: ClassVar[dict] = {}
         _key_to_field_map: ClassVar[dict] = {}
-        mode: str | None
+        mode: Literal["routed", "access"] | None
         phone: Phone
         """Subclass of AvdModel."""
         _custom_data: dict[str, Any]
@@ -68183,7 +68475,7 @@ class EosCliConfigGen(AvdRootModel):
         def __init__(
             self,
             *,
-            mode: str | None | UndefinedType = Undefined,
+            mode: Literal["routed", "access"] | None | UndefinedType = Undefined,
             phone: Phone | UndefinedType = Undefined,
             _custom_data: dict[str, Any] | UndefinedType = Undefined,
         ) -> None:
@@ -68497,15 +68789,15 @@ class EosCliConfigGen(AvdRootModel):
             _required_fields: ClassVar[tuple] = ("_custom_data",)
             _field_to_key_map: ClassVar[dict] = {}
             _key_to_field_map: ClassVar[dict] = {}
-            unsupported_speed_action: str | None
-            unsupported_error_correction_action: str | None
+            unsupported_speed_action: Literal["error", "warn"] | None
+            unsupported_error_correction_action: Literal["error", "warn"] | None
             _custom_data: dict[str, Any]
 
             def __init__(
                 self,
                 *,
-                unsupported_speed_action: str | None | UndefinedType = Undefined,
-                unsupported_error_correction_action: str | None | UndefinedType = Undefined,
+                unsupported_speed_action: Literal["error", "warn"] | None | UndefinedType = Undefined,
+                unsupported_error_correction_action: Literal["error", "warn"] | None | UndefinedType = Undefined,
                 _custom_data: dict[str, Any] | UndefinedType = Undefined,
             ) -> None:
                 """
@@ -68582,7 +68874,7 @@ class EosCliConfigGen(AvdRootModel):
             vrf: str | None
             key: str | None
             """Encrypted key."""
-            key_type: str
+            key_type: Literal["0", "7", "8a"]
             """Default value: `"7"`"""
             single_connection: bool | None
             timeout: int | None
@@ -68595,7 +68887,7 @@ class EosCliConfigGen(AvdRootModel):
                 host: str | None | UndefinedType = Undefined,
                 vrf: str | None | UndefinedType = Undefined,
                 key: str | None | UndefinedType = Undefined,
-                key_type: str | UndefinedType = Undefined,
+                key_type: Literal["0", "7", "8a"] | UndefinedType = Undefined,
                 single_connection: bool | None | UndefinedType = Undefined,
                 timeout: int | None | UndefinedType = Undefined,
                 _custom_data: dict[str, Any] | UndefinedType = Undefined,
@@ -68762,7 +69054,7 @@ class EosCliConfigGen(AvdRootModel):
                     _required_fields: ClassVar[tuple] = ("_custom_data",)
                     _field_to_key_map: ClassVar[dict] = {}
                     _key_to_field_map: ClassVar[dict] = {}
-                    format: str | None
+                    format: Literal["48-bit", "64-bit"] | None
                     eth_type: int | None
                     """EtherType."""
                     _custom_data: dict[str, Any]
@@ -68770,7 +69062,7 @@ class EosCliConfigGen(AvdRootModel):
                     def __init__(
                         self,
                         *,
-                        format: str | None | UndefinedType = Undefined,
+                        format: Literal["48-bit", "64-bit"] | None | UndefinedType = Undefined,
                         eth_type: int | None | UndefinedType = Undefined,
                         _custom_data: dict[str, Any] | UndefinedType = Undefined,
                     ) -> None:
@@ -68846,7 +69138,7 @@ class EosCliConfigGen(AvdRootModel):
             mac.fcs_append and mac.fcs_error are mutually exclusive. If both are defined, mac.fcs_append takes
             precedence.
             """
-            fcs_error: str | None
+            fcs_error: Literal["correct", "discard", "pass-through"] | None
             _custom_data: dict[str, Any]
 
             def __init__(
@@ -68854,7 +69146,7 @@ class EosCliConfigGen(AvdRootModel):
                 *,
                 timestamp: Timestamp | UndefinedType = Undefined,
                 fcs_append: bool | None | UndefinedType = Undefined,
-                fcs_error: str | None | UndefinedType = Undefined,
+                fcs_error: Literal["correct", "discard", "pass-through"] | None | UndefinedType = Undefined,
                 _custom_data: dict[str, Any] | UndefinedType = Undefined,
             ) -> None:
                 """
@@ -69640,7 +69932,7 @@ class EosCliConfigGen(AvdRootModel):
                 _key_to_field_map: ClassVar[dict] = {}
                 name: str
                 """Traffic Policy Item."""
-                type: str
+                type: Literal["ipv4", "ipv6"]
                 source: Source
                 """Subclass of AvdModel."""
                 destination: Destination
@@ -69666,7 +69958,7 @@ class EosCliConfigGen(AvdRootModel):
                     self,
                     *,
                     name: str | UndefinedType = Undefined,
-                    type: str | UndefinedType = Undefined,
+                    type: Literal["ipv4", "ipv6"] | UndefinedType = Undefined,
                     source: Source | UndefinedType = Undefined,
                     destination: Destination | UndefinedType = Undefined,
                     ttl: str | None | UndefinedType = Undefined,
@@ -69963,7 +70255,7 @@ class EosCliConfigGen(AvdRootModel):
             """Segment Size for IPv4."""
             ipv6: int | None
             """Segment Size for IPv6."""
-            direction: str | None
+            direction: Literal["ingress", "egress"] | None
             """Optional direction ('ingress', 'egress')  for tcp mss ceiling."""
             _custom_data: dict[str, Any]
 
@@ -69972,7 +70264,7 @@ class EosCliConfigGen(AvdRootModel):
                 *,
                 ipv4: int | None | UndefinedType = Undefined,
                 ipv6: int | None | UndefinedType = Undefined,
-                direction: str | None | UndefinedType = Undefined,
+                direction: Literal["ingress", "egress"] | None | UndefinedType = Undefined,
                 _custom_data: dict[str, Any] | UndefinedType = Undefined,
             ) -> None:
                 """
@@ -70044,7 +70336,7 @@ class EosCliConfigGen(AvdRootModel):
         """IPv6 ACL Name for egress."""
         tcp_mss_ceiling: TcpMssCeiling
         """Subclass of AvdModel."""
-        tunnel_mode: str | None
+        tunnel_mode: Literal["gre", "ipsec"] | None
         """
         Tunnel encapsulation method.
         `gre`: Generic route encapsulation protocol,
@@ -70088,7 +70380,7 @@ class EosCliConfigGen(AvdRootModel):
             ipv6_access_group_in: str | None | UndefinedType = Undefined,
             ipv6_access_group_out: str | None | UndefinedType = Undefined,
             tcp_mss_ceiling: TcpMssCeiling | UndefinedType = Undefined,
-            tunnel_mode: str | None | UndefinedType = Undefined,
+            tunnel_mode: Literal["gre", "ipsec"] | None | UndefinedType = Undefined,
             source_interface: str | None | UndefinedType = Undefined,
             destination: str | None | UndefinedType = Undefined,
             path_mtu_discovery: bool | None | UndefinedType = Undefined,
@@ -70631,7 +70923,7 @@ class EosCliConfigGen(AvdRootModel):
                     access_list: str | None
                     """'access_list' and 'group' are mutual exclusive."""
                     comment: str | None
-                    direction: str | None
+                    direction: Literal["egress", "ingress"] | None
                     """
                     Egress or ingress can be the default. This depends on source/destination, EOS version, and hardware
                     platform.
@@ -70645,7 +70937,7 @@ class EosCliConfigGen(AvdRootModel):
                     original_port: int | None
                     """TCP/UDP port. The combination of `original_ip` and `original_port` must be unique."""
                     priority: int | None
-                    protocol: str | None
+                    protocol: Literal["udp", "tcp"] | None
                     translated_ip: str
                     """IPv4 address."""
                     translated_port: int | None
@@ -70657,12 +70949,12 @@ class EosCliConfigGen(AvdRootModel):
                         *,
                         access_list: str | None | UndefinedType = Undefined,
                         comment: str | None | UndefinedType = Undefined,
-                        direction: str | None | UndefinedType = Undefined,
+                        direction: Literal["egress", "ingress"] | None | UndefinedType = Undefined,
                         group: int | None | UndefinedType = Undefined,
                         original_ip: str | None | UndefinedType = Undefined,
                         original_port: int | None | UndefinedType = Undefined,
                         priority: int | None | UndefinedType = Undefined,
-                        protocol: str | None | UndefinedType = Undefined,
+                        protocol: Literal["udp", "tcp"] | None | UndefinedType = Undefined,
                         translated_ip: str | UndefinedType = Undefined,
                         translated_port: int | None | UndefinedType = Undefined,
                         _custom_data: dict[str, Any] | UndefinedType = Undefined,
@@ -70754,7 +71046,7 @@ class EosCliConfigGen(AvdRootModel):
                     _key_to_field_map: ClassVar[dict] = {}
                     access_list: str
                     comment: str | None
-                    nat_type: str
+                    nat_type: Literal["overload", "pool", "pool-address-only", "pool-full-cone"]
                     pool_name: str | None
                     """
                     required if 'nat_type' is pool, pool-address-only or pool-full-cone.
@@ -70769,7 +71061,7 @@ class EosCliConfigGen(AvdRootModel):
                         *,
                         access_list: str | UndefinedType = Undefined,
                         comment: str | None | UndefinedType = Undefined,
-                        nat_type: str | UndefinedType = Undefined,
+                        nat_type: Literal["overload", "pool", "pool-address-only", "pool-full-cone"] | UndefinedType = Undefined,
                         pool_name: str | None | UndefinedType = Undefined,
                         priority: int | None | UndefinedType = Undefined,
                         _custom_data: dict[str, Any] | UndefinedType = Undefined,
@@ -70826,7 +71118,7 @@ class EosCliConfigGen(AvdRootModel):
                     access_list: str | None
                     """'access_list' and 'group' are mutual exclusive."""
                     comment: str | None
-                    direction: str | None
+                    direction: Literal["egress", "ingress"] | None
                     """
                     Egress or ingress can be the default. This depends on source/destination, EOS version, and hardware
                     platform.
@@ -70840,7 +71132,7 @@ class EosCliConfigGen(AvdRootModel):
                     original_port: int | None
                     """TCP/UDP port. The combination of `original_ip` and `original_port` must be unique."""
                     priority: int | None
-                    protocol: str | None
+                    protocol: Literal["udp", "tcp"] | None
                     translated_ip: str
                     """IPv4 address."""
                     translated_port: int | None
@@ -70852,12 +71144,12 @@ class EosCliConfigGen(AvdRootModel):
                         *,
                         access_list: str | None | UndefinedType = Undefined,
                         comment: str | None | UndefinedType = Undefined,
-                        direction: str | None | UndefinedType = Undefined,
+                        direction: Literal["egress", "ingress"] | None | UndefinedType = Undefined,
                         group: int | None | UndefinedType = Undefined,
                         original_ip: str | None | UndefinedType = Undefined,
                         original_port: int | None | UndefinedType = Undefined,
                         priority: int | None | UndefinedType = Undefined,
-                        protocol: str | None | UndefinedType = Undefined,
+                        protocol: Literal["udp", "tcp"] | None | UndefinedType = Undefined,
                         translated_ip: str | UndefinedType = Undefined,
                         translated_port: int | None | UndefinedType = Undefined,
                         _custom_data: dict[str, Any] | UndefinedType = Undefined,
@@ -71443,7 +71735,7 @@ class EosCliConfigGen(AvdRootModel):
             _field_to_key_map: ClassVar[dict] = {}
             _key_to_field_map: ClassVar[dict] = {}
             id: int
-            hash_algorithm: str | None
+            hash_algorithm: Literal["md5", "sha1", "sha256", "sha384", "sha512"] | None
             key: str | None
             """Encrypted password."""
             _custom_data: dict[str, Any]
@@ -71452,7 +71744,7 @@ class EosCliConfigGen(AvdRootModel):
                 self,
                 *,
                 id: int | UndefinedType = Undefined,
-                hash_algorithm: str | None | UndefinedType = Undefined,
+                hash_algorithm: Literal["md5", "sha1", "sha256", "sha384", "sha512"] | None | UndefinedType = Undefined,
                 key: str | None | UndefinedType = Undefined,
                 _custom_data: dict[str, Any] | UndefinedType = Undefined,
             ) -> None:
@@ -71630,8 +71922,8 @@ class EosCliConfigGen(AvdRootModel):
                     _key_to_field_map: ClassVar[dict] = {}
                     id: int
                     """Configure authentication key-id."""
-                    algorithm: str
-                    key_type: str
+                    algorithm: Literal["sha-1", "sha-224", "sha-256", "sha-384", "sha-512"]
+                    key_type: Literal["0", "7", "8a"]
                     """Configure authentication key type."""
                     key: str
                     """Password string."""
@@ -71643,8 +71935,8 @@ class EosCliConfigGen(AvdRootModel):
                         self,
                         *,
                         id: int | UndefinedType = Undefined,
-                        algorithm: str | UndefinedType = Undefined,
-                        key_type: str | UndefinedType = Undefined,
+                        algorithm: Literal["sha-1", "sha-224", "sha-256", "sha-384", "sha-512"] | UndefinedType = Undefined,
+                        key_type: Literal["0", "7", "8a"] | UndefinedType = Undefined,
                         key: str | UndefinedType = Undefined,
                         rfc_5310: bool | None | UndefinedType = Undefined,
                         _custom_data: dict[str, Any] | UndefinedType = Undefined,
@@ -71711,14 +72003,14 @@ class EosCliConfigGen(AvdRootModel):
                     _field_to_key_map: ClassVar[dict] = {}
                     _key_to_field_map: ClassVar[dict] = {}
                     profile: str
-                    algorithm: str
+                    algorithm: Literal["md5", "sha-1", "sha-224", "sha-256", "sha-384", "sha-512"]
                     _custom_data: dict[str, Any]
 
                     def __init__(
                         self,
                         *,
                         profile: str | UndefinedType = Undefined,
-                        algorithm: str | UndefinedType = Undefined,
+                        algorithm: Literal["md5", "sha-1", "sha-224", "sha-256", "sha-384", "sha-512"] | UndefinedType = Undefined,
                         _custom_data: dict[str, Any] | UndefinedType = Undefined,
                     ) -> None:
                         """
@@ -71751,13 +72043,13 @@ class EosCliConfigGen(AvdRootModel):
                 _required_fields: ClassVar[tuple] = ("_custom_data",)
                 _field_to_key_map: ClassVar[dict] = {}
                 _key_to_field_map: ClassVar[dict] = {}
-                key_type: str | None
+                key_type: Literal["0", "7", "8a"] | None
                 """Configure authentication key type."""
                 key: str | None
                 """Password string. `key_type` is required for this setting."""
                 key_ids: KeyIds
                 """Subclass of AvdIndexedList with `KeyIdsItem` items. Primary key is `id` (`int`)."""
-                mode: str | None
+                mode: Literal["md5", "sha", "text", "shared-secret"] | None
                 """Authentication mode."""
                 sha: Sha
                 """
@@ -71778,10 +72070,10 @@ class EosCliConfigGen(AvdRootModel):
                 def __init__(
                     self,
                     *,
-                    key_type: str | None | UndefinedType = Undefined,
+                    key_type: Literal["0", "7", "8a"] | None | UndefinedType = Undefined,
                     key: str | None | UndefinedType = Undefined,
                     key_ids: KeyIds | UndefinedType = Undefined,
-                    mode: str | None | UndefinedType = Undefined,
+                    mode: Literal["md5", "sha", "text", "shared-secret"] | None | UndefinedType = Undefined,
                     sha: Sha | UndefinedType = Undefined,
                     shared_secret: SharedSecret | UndefinedType = Undefined,
                     rx_disabled: bool | None | UndefinedType = Undefined,
@@ -71834,8 +72126,8 @@ class EosCliConfigGen(AvdRootModel):
                     _key_to_field_map: ClassVar[dict] = {}
                     id: int
                     """Configure authentication key-id."""
-                    algorithm: str
-                    key_type: str
+                    algorithm: Literal["sha-1", "sha-224", "sha-256", "sha-384", "sha-512"]
+                    key_type: Literal["0", "7", "8a"]
                     """Configure authentication key type."""
                     key: str
                     """Password string."""
@@ -71847,8 +72139,8 @@ class EosCliConfigGen(AvdRootModel):
                         self,
                         *,
                         id: int | UndefinedType = Undefined,
-                        algorithm: str | UndefinedType = Undefined,
-                        key_type: str | UndefinedType = Undefined,
+                        algorithm: Literal["sha-1", "sha-224", "sha-256", "sha-384", "sha-512"] | UndefinedType = Undefined,
+                        key_type: Literal["0", "7", "8a"] | UndefinedType = Undefined,
                         key: str | UndefinedType = Undefined,
                         rfc_5310: bool | None | UndefinedType = Undefined,
                         _custom_data: dict[str, Any] | UndefinedType = Undefined,
@@ -71915,14 +72207,14 @@ class EosCliConfigGen(AvdRootModel):
                     _field_to_key_map: ClassVar[dict] = {}
                     _key_to_field_map: ClassVar[dict] = {}
                     profile: str
-                    algorithm: str
+                    algorithm: Literal["md5", "sha-1", "sha-224", "sha-256", "sha-384", "sha-512"]
                     _custom_data: dict[str, Any]
 
                     def __init__(
                         self,
                         *,
                         profile: str | UndefinedType = Undefined,
-                        algorithm: str | UndefinedType = Undefined,
+                        algorithm: Literal["md5", "sha-1", "sha-224", "sha-256", "sha-384", "sha-512"] | UndefinedType = Undefined,
                         _custom_data: dict[str, Any] | UndefinedType = Undefined,
                     ) -> None:
                         """
@@ -71955,13 +72247,13 @@ class EosCliConfigGen(AvdRootModel):
                 _required_fields: ClassVar[tuple] = ("_custom_data",)
                 _field_to_key_map: ClassVar[dict] = {}
                 _key_to_field_map: ClassVar[dict] = {}
-                key_type: str | None
+                key_type: Literal["0", "7", "8a"] | None
                 """Configure authentication key type."""
                 key: str | None
                 """Password string. `key_type` is required for this setting."""
                 key_ids: KeyIds
                 """Subclass of AvdIndexedList with `KeyIdsItem` items. Primary key is `id` (`int`)."""
-                mode: str | None
+                mode: Literal["md5", "sha", "text", "shared-secret"] | None
                 """Authentication mode."""
                 sha: Sha
                 """
@@ -71982,10 +72274,10 @@ class EosCliConfigGen(AvdRootModel):
                 def __init__(
                     self,
                     *,
-                    key_type: str | None | UndefinedType = Undefined,
+                    key_type: Literal["0", "7", "8a"] | None | UndefinedType = Undefined,
                     key: str | None | UndefinedType = Undefined,
                     key_ids: KeyIds | UndefinedType = Undefined,
-                    mode: str | None | UndefinedType = Undefined,
+                    mode: Literal["md5", "sha", "text", "shared-secret"] | None | UndefinedType = Undefined,
                     sha: Sha | UndefinedType = Undefined,
                     shared_secret: SharedSecret | UndefinedType = Undefined,
                     rx_disabled: bool | None | UndefinedType = Undefined,
@@ -72038,8 +72330,8 @@ class EosCliConfigGen(AvdRootModel):
                     _key_to_field_map: ClassVar[dict] = {}
                     id: int
                     """Configure authentication key-id."""
-                    algorithm: str
-                    key_type: str
+                    algorithm: Literal["sha-1", "sha-224", "sha-256", "sha-384", "sha-512"]
+                    key_type: Literal["0", "7", "8a"]
                     """Configure authentication key type."""
                     key: str
                     """Password string."""
@@ -72051,8 +72343,8 @@ class EosCliConfigGen(AvdRootModel):
                         self,
                         *,
                         id: int | UndefinedType = Undefined,
-                        algorithm: str | UndefinedType = Undefined,
-                        key_type: str | UndefinedType = Undefined,
+                        algorithm: Literal["sha-1", "sha-224", "sha-256", "sha-384", "sha-512"] | UndefinedType = Undefined,
+                        key_type: Literal["0", "7", "8a"] | UndefinedType = Undefined,
                         key: str | UndefinedType = Undefined,
                         rfc_5310: bool | None | UndefinedType = Undefined,
                         _custom_data: dict[str, Any] | UndefinedType = Undefined,
@@ -72119,14 +72411,14 @@ class EosCliConfigGen(AvdRootModel):
                     _field_to_key_map: ClassVar[dict] = {}
                     _key_to_field_map: ClassVar[dict] = {}
                     profile: str
-                    algorithm: str
+                    algorithm: Literal["md5", "sha-1", "sha-224", "sha-256", "sha-384", "sha-512"]
                     _custom_data: dict[str, Any]
 
                     def __init__(
                         self,
                         *,
                         profile: str | UndefinedType = Undefined,
-                        algorithm: str | UndefinedType = Undefined,
+                        algorithm: Literal["md5", "sha-1", "sha-224", "sha-256", "sha-384", "sha-512"] | UndefinedType = Undefined,
                         _custom_data: dict[str, Any] | UndefinedType = Undefined,
                     ) -> None:
                         """
@@ -72159,13 +72451,13 @@ class EosCliConfigGen(AvdRootModel):
                 _required_fields: ClassVar[tuple] = ("_custom_data",)
                 _field_to_key_map: ClassVar[dict] = {}
                 _key_to_field_map: ClassVar[dict] = {}
-                key_type: str | None
+                key_type: Literal["0", "7", "8a"] | None
                 """Configure authentication key type."""
                 key: str | None
                 """Password string. `key_type` is required for this setting."""
                 key_ids: KeyIds
                 """Subclass of AvdIndexedList with `KeyIdsItem` items. Primary key is `id` (`int`)."""
-                mode: str | None
+                mode: Literal["md5", "sha", "text", "shared-secret"] | None
                 """Authentication mode."""
                 sha: Sha
                 """
@@ -72186,10 +72478,10 @@ class EosCliConfigGen(AvdRootModel):
                 def __init__(
                     self,
                     *,
-                    key_type: str | None | UndefinedType = Undefined,
+                    key_type: Literal["0", "7", "8a"] | None | UndefinedType = Undefined,
                     key: str | None | UndefinedType = Undefined,
                     key_ids: KeyIds | UndefinedType = Undefined,
-                    mode: str | None | UndefinedType = Undefined,
+                    mode: Literal["md5", "sha", "text", "shared-secret"] | None | UndefinedType = Undefined,
                     sha: Sha | UndefinedType = Undefined,
                     shared_secret: SharedSecret | UndefinedType = Undefined,
                     rx_disabled: bool | None | UndefinedType = Undefined,
@@ -72496,14 +72788,14 @@ class EosCliConfigGen(AvdRootModel):
                 _key_to_field_map: ClassVar[dict] = {}
                 address: str
                 """Virtual IPv4 address."""
-                version: int | None
+                version: Literal[2, 3] | None
                 _custom_data: dict[str, Any]
 
                 def __init__(
                     self,
                     *,
                     address: str | UndefinedType = Undefined,
-                    version: int | None | UndefinedType = Undefined,
+                    version: Literal[2, 3] | None | UndefinedType = Undefined,
                     _custom_data: dict[str, Any] | UndefinedType = Undefined,
                 ) -> None:
                     """
@@ -72907,7 +73199,7 @@ class EosCliConfigGen(AvdRootModel):
         """IPv4_address/Mask."""
         ip_address_virtual_secondaries: IpAddressVirtualSecondaries
         """Subclass of AvdList with `str` items."""
-        ip_verify_unicast_source_reachable_via: str | None
+        ip_verify_unicast_source_reachable_via: Literal["any", "rx"] | None
         ip_igmp: bool | None
         ip_igmp_version: int | None
         ip_igmp_host_proxy: IpIgmpHostProxy
@@ -72974,7 +73266,7 @@ class EosCliConfigGen(AvdRootModel):
         ospf_network_point_to_point: bool | None
         ospf_area: str | None
         ospf_cost: int | None
-        ospf_authentication: str | None
+        ospf_authentication: Literal["none", "simple", "message-digest"] | None
         ospf_authentication_key: str | None
         """Encrypted password used for simple authentication."""
         ospf_message_digest_keys: OspfMessageDigestKeys
@@ -73047,7 +73339,7 @@ class EosCliConfigGen(AvdRootModel):
             ip_virtual_router_addresses: IpVirtualRouterAddresses | UndefinedType = Undefined,
             ip_address_virtual: str | None | UndefinedType = Undefined,
             ip_address_virtual_secondaries: IpAddressVirtualSecondaries | UndefinedType = Undefined,
-            ip_verify_unicast_source_reachable_via: str | None | UndefinedType = Undefined,
+            ip_verify_unicast_source_reachable_via: Literal["any", "rx"] | None | UndefinedType = Undefined,
             ip_igmp: bool | None | UndefinedType = Undefined,
             ip_igmp_version: int | None | UndefinedType = Undefined,
             ip_igmp_host_proxy: IpIgmpHostProxy | UndefinedType = Undefined,
@@ -73074,7 +73366,7 @@ class EosCliConfigGen(AvdRootModel):
             ospf_network_point_to_point: bool | None | UndefinedType = Undefined,
             ospf_area: str | None | UndefinedType = Undefined,
             ospf_cost: int | None | UndefinedType = Undefined,
-            ospf_authentication: str | None | UndefinedType = Undefined,
+            ospf_authentication: Literal["none", "simple", "message-digest"] | None | UndefinedType = Undefined,
             ospf_authentication_key: str | None | UndefinedType = Undefined,
             ospf_message_digest_keys: OspfMessageDigestKeys | UndefinedType = Undefined,
             pim: Pim | UndefinedType = Undefined,
@@ -73257,7 +73549,7 @@ class EosCliConfigGen(AvdRootModel):
         _required_fields: ClassVar[tuple] = ("allocation", "range", "_custom_data")
         _field_to_key_map: ClassVar[dict] = {}
         _key_to_field_map: ClassVar[dict] = {}
-        allocation: str
+        allocation: Literal["ascending", "descending"]
         range: Range
         """Subclass of AvdModel."""
         _custom_data: dict[str, Any]
@@ -73265,7 +73557,7 @@ class EosCliConfigGen(AvdRootModel):
         def __init__(
             self,
             *,
-            allocation: str | UndefinedType = Undefined,
+            allocation: Literal["ascending", "descending"] | UndefinedType = Undefined,
             range: Range | UndefinedType = Undefined,
             _custom_data: dict[str, Any] | UndefinedType = Undefined,
         ) -> None:
@@ -73301,7 +73593,7 @@ class EosCliConfigGen(AvdRootModel):
             _required_fields: ClassVar[tuple] = ("_custom_data",)
             _field_to_key_map: ClassVar[dict] = {}
             _key_to_field_map: ClassVar[dict] = {}
-            type: str | None
+            type: Literal["community", "isolated"] | None
             primary_vlan: int | None
             """Primary VLAN ID."""
             _custom_data: dict[str, Any]
@@ -73309,7 +73601,7 @@ class EosCliConfigGen(AvdRootModel):
             def __init__(
                 self,
                 *,
-                type: str | None | UndefinedType = Undefined,
+                type: Literal["community", "isolated"] | None | UndefinedType = Undefined,
                 primary_vlan: int | None | UndefinedType = Undefined,
                 _custom_data: dict[str, Any] | UndefinedType = Undefined,
             ) -> None:
@@ -73346,7 +73638,7 @@ class EosCliConfigGen(AvdRootModel):
         """VLAN ID."""
         name: str | None
         """VLAN Name."""
-        state: str | None
+        state: Literal["active", "suspend"] | None
         trunk_groups: TrunkGroups
         """Subclass of AvdList with `str` items."""
         private_vlan: PrivateVlan
@@ -73360,7 +73652,7 @@ class EosCliConfigGen(AvdRootModel):
             *,
             id: int | UndefinedType = Undefined,
             name: str | None | UndefinedType = Undefined,
-            state: str | None | UndefinedType = Undefined,
+            state: Literal["active", "suspend"] | None | UndefinedType = Undefined,
             trunk_groups: TrunkGroups | UndefinedType = Undefined,
             private_vlan: PrivateVlan | UndefinedType = Undefined,
             tenant: str | None | UndefinedType = Undefined,
@@ -74632,7 +74924,7 @@ class EosCliConfigGen(AvdRootModel):
     """Subclass of AvdModel."""
     as_path: AsPath
     """Subclass of AvdModel."""
-    avd_data_validation_mode: str
+    avd_data_validation_mode: Literal["error", "warning"]
     """
     Validation Mode for AVD input data validation.
     Input data validation will validate the input
@@ -75064,7 +75356,7 @@ class EosCliConfigGen(AvdRootModel):
     """Subclass of AvdModel."""
     service_routing_configuration_bgp: ServiceRoutingConfigurationBgp
     """Subclass of AvdModel."""
-    service_routing_protocols_model: str | None
+    service_routing_protocols_model: Literal["multi-agent", "ribd"] | None
     service_unsupported_transceiver: ServiceUnsupportedTransceiver
     """Subclass of AvdModel."""
     sflow: Sflow
@@ -75154,7 +75446,7 @@ class EosCliConfigGen(AvdRootModel):
         application_traffic_recognition: ApplicationTrafficRecognition | UndefinedType = Undefined,
         arp: Arp | UndefinedType = Undefined,
         as_path: AsPath | UndefinedType = Undefined,
-        avd_data_validation_mode: str | UndefinedType = Undefined,
+        avd_data_validation_mode: Literal["error", "warning"] | UndefinedType = Undefined,
         banners: Banners | UndefinedType = Undefined,
         bgp_groups: BgpGroups | UndefinedType = Undefined,
         boot: Boot | UndefinedType = Undefined,
@@ -75296,7 +75588,7 @@ class EosCliConfigGen(AvdRootModel):
         router_service_insertion: RouterServiceInsertion | UndefinedType = Undefined,
         router_traffic_engineering: RouterTrafficEngineering | UndefinedType = Undefined,
         service_routing_configuration_bgp: ServiceRoutingConfigurationBgp | UndefinedType = Undefined,
-        service_routing_protocols_model: str | None | UndefinedType = Undefined,
+        service_routing_protocols_model: Literal["multi-agent", "ribd"] | None | UndefinedType = Undefined,
         service_unsupported_transceiver: ServiceUnsupportedTransceiver | UndefinedType = Undefined,
         sflow: Sflow | UndefinedType = Undefined,
         snmp_server: SnmpServer | UndefinedType = Undefined,

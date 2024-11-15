@@ -42,11 +42,15 @@ class SrcGenBase:
         return FieldSrc(
             name=self.get_field_name(),
             key=self.get_key(),
+            field_type=self.get_type(),
             type_hints=self.get_type_hints(),
             optional=not (bool(self.schema.required) or self.schema._is_primary_key),
             default_value=self.get_default(),
             description=self.get_description(),
         )
+
+    def get_type(self) -> str:
+        return self.schema.type
 
     def get_description(self) -> str | None:
         return self.schema.description
@@ -104,6 +108,15 @@ class SrcGenInt(SrcGenBase):
 
     schema: AvdSchemaInt
 
+    def get_type_hints(self) -> list[FieldTypeHintSrc]:
+        """Returns a list of FieldTypeHintSrc representing the type hints for this schema."""
+        field_type = cls.name if (cls := self.get_class()) else self.schema.type
+
+        if self.schema.valid_values is None:
+            return [FieldTypeHintSrc(field_type=field_type)]
+
+        return [FieldTypeHintSrc(field_type=f"Literal[{', '.join(map(str, self.schema.valid_values))}]")]
+
 
 class SrcGenBool(SrcGenBase):
     """Provides the method "generate_class_src" used to build source code for Python classes representing the schema."""
@@ -122,11 +135,26 @@ class SrcGenStr(SrcGenBase):
             return f'"{self.schema.default}"'
         return None
 
+    def get_type_hints(self) -> list[FieldTypeHintSrc]:
+        """Returns a list of FieldTypeHintSrc representing the type hints for this schema."""
+        field_type = cls.name if (cls := self.get_class()) else self.schema.type
+
+        if self.schema.valid_values is None:
+            return [FieldTypeHintSrc(field_type=field_type)]
+
+        def quote(string: str) -> str:
+            return f'"{string}"'
+
+        return [FieldTypeHintSrc(field_type=f"Literal[{', '.join(map(quote, self.schema.valid_values))}]")]
+
 
 class SrcGenList(SrcGenBase):
     """Provides the method "generate_class_src" used to build source code for Python classes representing the schema."""
 
     schema: AvdSchemaList
+
+    def get_type(self) -> str:
+        return self.get_class_name()
 
     def generate_class_src(self, schema: AvdSchemaList, class_name: str | None = None) -> SrcData:
         """
@@ -233,6 +261,9 @@ class SrcGenDict(SrcGenBase):
 
     schema: AvdSchemaDict
 
+    def get_type(self) -> str:
+        return self.get_class_name()
+
     def get_class(self) -> ModelSrc | None:
         """Returns ModelSrc for the given schema to be used for the class definition in the parent object."""
         if not self.schema.keys:
@@ -289,6 +320,7 @@ class SrcGenDict(SrcGenBase):
             fields.append(
                 FieldSrc(
                     name="_custom_data",
+                    field_type="dict",
                     optional=False,
                     type_hints=[FieldTypeHintSrc(field_type="dict[str, Any]")],
                 )
@@ -355,12 +387,14 @@ class SrcGenRootDict(SrcGenDict):
                     fields=[
                         FieldSrc(
                             name="key",
+                            field_type="str",
                             type_hints=[FieldTypeHintSrc(field_type="str")],
                             description="Complete key including prefix",
                             optional=False,
                         ),
                         FieldSrc(
                             name="value",
+                            field_type="EosCliConfigGen",
                             type_hints=[FieldTypeHintSrc(field_type="EosCliConfigGen")],
                             description="Structured config including the suffix part of the key.",
                             optional=False,
@@ -378,6 +412,7 @@ class SrcGenRootDict(SrcGenDict):
         fields.append(
             FieldSrc(
                 name="_custom_structured_configurations",
+                field_type="_CustomStructuredConfigurations",
                 type_hints=[FieldTypeHintSrc(field_type="_CustomStructuredConfigurations")],
             )
         )
@@ -417,6 +452,7 @@ class SrcGenRootDict(SrcGenDict):
                             fields=[
                                 FieldSrc(
                                     name="key",
+                                    field_type="str",
                                     type_hints=[FieldTypeHintSrc(field_type="str")],
                                     description="Key used as dynamic key",
                                     optional=False,
@@ -435,6 +471,7 @@ class SrcGenRootDict(SrcGenDict):
                 dyn_fields.append(
                     FieldSrc(
                         name=dynamic_key_type,
+                        field_type=dynamic_key_model_name,
                         optional=False,
                         type_hints=[FieldTypeHintSrc(field_type=dynamic_key_model_name)],
                         description=f"Collection of dynamic '{dynamic_key_type}'.",
@@ -461,6 +498,7 @@ class SrcGenRootDict(SrcGenDict):
             fields.append(
                 FieldSrc(
                     name="_dynamic_keys",
+                    field_type="_DynamicKeys",
                     optional=False,
                     type_hints=[FieldTypeHintSrc(field_type="_DynamicKeys")],
                     description="Dynamic keys",
