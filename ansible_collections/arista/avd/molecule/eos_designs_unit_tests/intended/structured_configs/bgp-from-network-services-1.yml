@@ -24,9 +24,10 @@ router_bgp:
     maximum_routes: 12000
     send_community: all
     route_map_in: RM-MLAG-PEER-IN
-  redistribute_routes:
-  - source_protocol: connected
-    route_map: RM-CONN-2-BGP-VRFS
+  redistribute:
+    connected:
+      enabled: true
+      route_map: RM-CONN-2-BGP-VRFS
   neighbors:
   - ip_address: 10.10.20.1
     peer_group: MLAG-IPv4-UNDERLAY-PEER

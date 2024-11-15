@@ -30,9 +30,6 @@
 {%     if router_isis.mpls_ldp_sync_default is arista.avd.defined(true) %}
 | MPLS LDP Sync Default | {{ router_isis.mpls_ldp_sync_default }} |
 {%     endif %}
-{%     if router_isis.timers.local_convergence.protected_prefixes is arista.avd.defined(true) %}
-| Local Convergence Delay (ms) | {{ router_isis.timers.local_convergence.delay | arista.avd.default(10000) }} |
-{%     endif %}
 {%     if router_isis.advertise.passive_only is arista.avd.defined(true) %}
 | Advertise Passive-only | {{ router_isis.advertise.passive_only }} |
 {%     endif %}
@@ -60,6 +57,40 @@
 {%         endif %}
 {%         if router_isis.graceful_restart.restart_hold_time is arista.avd.defined %}
 | Graceful-restart Restart-hold-time | {{ router_isis.graceful_restart.restart_hold_time }} |
+{%         endif %}
+{%     endif %}
+{%     if router_isis.timers is arista.avd.defined %}
+
+#### ISIS Route Timers
+
+| Settings | Value |
+| -------- | ----- |
+{%         if router_isis.timers.local_convergence.protected_prefixes is arista.avd.defined(true) %}
+| Local Convergence Delay | {{ router_isis.timers.local_convergence.delay | arista.avd.default(10000) }} milliseconds |
+{%         endif %}
+{%         if router_isis.timers.csnp.generation.interval is arista.avd.defined %}
+| CSN Packet Transmission Interval | {{ router_isis.timers.csnp.generation.interval }} seconds |
+{%         endif %}
+{%         if router_isis.timers.csnp.generation.p2p_disabled is arista.avd.defined %}
+| CSN Packet P2P Links Disabled | {{ router_isis.timers.csnp.generation.p2p_disabled }} |
+{%         endif %}
+{%         if router_isis.timers.lsp.generation.interval is arista.avd.defined %}
+| LSP Generation Maximum Interval | {{ router_isis.timers.lsp.generation.interval }} seconds |
+{%         endif %}
+{%         if router_isis.timers.lsp.generation.initial_wait_time is arista.avd.defined %}
+| LSP Generation Initial Wait-time | {{ router_isis.timers.lsp.generation.initial_wait_time }} milliseconds |
+{%         endif %}
+{%         if router_isis.timers.lsp.generation.wait_time is arista.avd.defined %}
+| LSP Generation Wait-time | {{ router_isis.timers.lsp.generation.wait_time }} milliseconds |
+{%         endif %}
+{%         if router_isis.timers.lsp.out_delay is arista.avd.defined %}
+| LSP Out-delay | {{ router_isis.timers.lsp.out_delay }} milliseconds |
+{%         endif %}
+{%         if router_isis.timers.lsp.refresh_interval is arista.avd.defined %}
+| LSP Refresh Interval | {{ router_isis.timers.lsp.refresh_interval }} seconds |
+{%         endif %}
+{%         if router_isis.timers.lsp.min_remaining_lifetime is arista.avd.defined %}
+| LSP Minimum Remaining Lifetime | {{ router_isis.timers.lsp.min_remaining_lifetime }} seconds |
 {%         endif %}
 {%     endif %}
 {%     if router_isis.redistribute_routes is arista.avd.defined %}

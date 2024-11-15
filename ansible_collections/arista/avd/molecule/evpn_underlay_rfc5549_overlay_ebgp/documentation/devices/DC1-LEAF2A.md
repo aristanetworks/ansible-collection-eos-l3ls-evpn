@@ -991,9 +991,9 @@ ASN Notation: asplain
 
 ##### EVPN Peer Groups
 
-| Peer Group | Activate | Encapsulation |
-| ---------- | -------- | ------------- |
-| EVPN-OVERLAY-PEERS | True | default |
+| Peer Group | Activate | Route-map In | Route-map Out | Encapsulation |
+| ---------- | -------- | ------------ | ------------- | ------------- |
+| EVPN-OVERLAY-PEERS | True |  - | - | default |
 
 ##### EVPN Host Flapping Settings
 
@@ -1031,9 +1031,9 @@ ASN Notation: asplain
 !
 router bgp 65102
    router-id 192.168.255.6
-   maximum-paths 4 ecmp 4
    update wait-install
    no bgp default ipv4-unicast
+   maximum-paths 4 ecmp 4
    distance bgp 20 200 200
    neighbor EVPN-OVERLAY-PEERS peer group
    neighbor EVPN-OVERLAY-PEERS update-source Loopback0
@@ -1046,19 +1046,14 @@ router bgp 65102
    neighbor MLAG_PEER remote-as 65102
    neighbor MLAG_PEER next-hop-self
    neighbor MLAG_PEER description DC1-LEAF2B
+   neighbor MLAG_PEER route-map RM-MLAG-PEER-IN in
    neighbor MLAG_PEER password 7 <removed>
    neighbor MLAG_PEER send-community
    neighbor MLAG_PEER maximum-routes 12000
-   neighbor MLAG_PEER route-map RM-MLAG-PEER-IN in
    neighbor UNDERLAY_PEERS peer group
    neighbor UNDERLAY_PEERS password 7 <removed>
    neighbor UNDERLAY_PEERS send-community
    neighbor UNDERLAY_PEERS maximum-routes 12000
-   neighbor interface Ethernet1 peer-group UNDERLAY_PEERS remote-as 65001
-   neighbor interface Ethernet2 peer-group UNDERLAY_PEERS remote-as 65001
-   neighbor interface Ethernet3 peer-group UNDERLAY_PEERS remote-as 65001
-   neighbor interface Ethernet4 peer-group UNDERLAY_PEERS remote-as 65001
-   neighbor interface Vlan4093 peer-group MLAG_PEER remote-as 65102
    neighbor 192.168.255.1 peer group EVPN-OVERLAY-PEERS
    neighbor 192.168.255.1 remote-as 65001
    neighbor 192.168.255.1 description DC1-SPINE1_Loopback0
@@ -1072,6 +1067,11 @@ router bgp 65102
    neighbor 192.168.255.4 remote-as 65001
    neighbor 192.168.255.4 description DC1-SPINE4_Loopback0
    redistribute connected route-map RM-CONN-2-BGP
+   neighbor interface Ethernet1 peer-group UNDERLAY_PEERS remote-as 65001
+   neighbor interface Ethernet2 peer-group UNDERLAY_PEERS remote-as 65001
+   neighbor interface Ethernet3 peer-group UNDERLAY_PEERS remote-as 65001
+   neighbor interface Ethernet4 peer-group UNDERLAY_PEERS remote-as 65001
+   neighbor interface Vlan4093 peer-group MLAG_PEER remote-as 65102
    !
    vlan-aware-bundle Tenant_A_APP_Zone
       rd 192.168.255.6:12
@@ -1122,15 +1122,15 @@ router bgp 65102
       vlan 310-311
    !
    address-family evpn
-      host-flap detection window 20 threshold 30
       neighbor EVPN-OVERLAY-PEERS activate
+      host-flap detection window 20 threshold 30
    !
    address-family ipv4
       no neighbor EVPN-OVERLAY-PEERS activate
-      neighbor MLAG_PEER next-hop address-family ipv6 originate
       neighbor MLAG_PEER activate
-      neighbor UNDERLAY_PEERS next-hop address-family ipv6 originate
+      neighbor MLAG_PEER next-hop address-family ipv6 originate
       neighbor UNDERLAY_PEERS activate
+      neighbor UNDERLAY_PEERS next-hop address-family ipv6 originate
    !
    vrf Tenant_A_APP_Zone
       rd 192.168.255.6:12
@@ -1360,9 +1360,9 @@ vrf instance Tenant_C_OP_Zone
 
 ### Virtual Source NAT Summary
 
-| Source NAT VRF | Source NAT IP Address |
-| -------------- | --------------------- |
-| Tenant_A_OP_Zone | 10.255.1.6 |
+| Source NAT VRF | Source NAT IPv4 Address | Source NAT IPv6 Address |
+| -------------- | ----------------------- | ----------------------- |
+| Tenant_A_OP_Zone | 10.255.1.6 | - |
 
 ### Virtual Source NAT Configuration
 

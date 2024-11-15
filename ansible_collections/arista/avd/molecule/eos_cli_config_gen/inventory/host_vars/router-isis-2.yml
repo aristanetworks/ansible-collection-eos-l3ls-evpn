@@ -4,6 +4,10 @@ router_isis:
     enabled: true
     on_startup:
       delay: 55
+  timers:
+    lsp:
+      generation:
+        interval: 30
   authentication:
     both:
       key_type: 0

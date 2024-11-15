@@ -1,0 +1,7 @@
+---
+dhcp_relay:
+  servers:
+    - dhcp-relay-server2
+    - dhcp-relay-server1
+  tunnel_requests_disabled: true
+  mlag_peerlink_requests_disabled: true

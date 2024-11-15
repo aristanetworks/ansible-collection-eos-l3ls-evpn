@@ -85,11 +85,13 @@ interface Ethernet3
    switchport trunk allowed vlan 2,14
    switchport mode trunk
    switchport
+   !
    sync-e
       priority 10
 !
 interface Ethernet5
    description DC1-AGG01_Ethernet1
+   !
    sync-e
 !
 interface Ethernet6
@@ -97,6 +99,7 @@ interface Ethernet6
    mtu 1500
    no switchport
    ip address 172.31.255.15/31
+   !
    sync-e
       priority disabled
 ```

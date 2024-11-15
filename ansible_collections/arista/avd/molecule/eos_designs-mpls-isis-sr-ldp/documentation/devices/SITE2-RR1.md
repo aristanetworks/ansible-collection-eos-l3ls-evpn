@@ -288,9 +288,14 @@ ip route vrf MGMT 0.0.0.0/0 192.168.200.5
 | Router-ID | 100.70.0.9 |
 | Log Adjacency Changes | True |
 | MPLS LDP Sync Default | True |
-| Local Convergence Delay (ms) | 15000 |
 | Advertise Passive-only | True |
 | SR MPLS Enabled | True |
+
+#### ISIS Route Timers
+
+| Settings | Value |
+| -------- | ----- |
+| Local Convergence Delay | 15000 milliseconds |
 
 #### ISIS Interfaces Summary
 
@@ -406,10 +411,10 @@ ASN Notation: asplain
 
 ##### EVPN Peer Groups
 
-| Peer Group | Activate | Encapsulation |
-| ---------- | -------- | ------------- |
-| MPLS-OVERLAY-PEERS | True | default |
-| RR-OVERLAY-PEERS | True | default |
+| Peer Group | Activate | Route-map In | Route-map Out | Encapsulation |
+| ---------- | -------- | ------------ | ------------- | ------------- |
+| MPLS-OVERLAY-PEERS | True |  - | - | default |
+| RR-OVERLAY-PEERS | True |  - | - | default |
 
 ##### EVPN Neighbor Default Encapsulation
 
@@ -441,17 +446,17 @@ ASN Notation: asplain
 !
 router bgp 65000
    router-id 100.70.0.9
-   maximum-paths 4 ecmp 4
    update wait-install
    no bgp default ipv4-unicast
    bgp cluster-id 1.1.1.1
+   maximum-paths 4 ecmp 4
    distance bgp 20 200 200
    bgp route-reflector preserve-attributes always
    neighbor MPLS-OVERLAY-PEERS peer group
    neighbor MPLS-OVERLAY-PEERS remote-as 65000
    neighbor MPLS-OVERLAY-PEERS update-source Loopback0
-   neighbor MPLS-OVERLAY-PEERS route-reflector-client
    neighbor MPLS-OVERLAY-PEERS bfd
+   neighbor MPLS-OVERLAY-PEERS route-reflector-client
    neighbor MPLS-OVERLAY-PEERS password 7 <removed>
    neighbor MPLS-OVERLAY-PEERS send-community
    neighbor MPLS-OVERLAY-PEERS maximum-routes 0

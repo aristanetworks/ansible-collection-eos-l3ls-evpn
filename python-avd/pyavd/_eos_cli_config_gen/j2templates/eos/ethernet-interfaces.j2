@@ -11,6 +11,12 @@ interface {{ ethernet_interface.name }}
 {%     if ethernet_interface.profile is arista.avd.defined %}
    profile {{ ethernet_interface.profile }}
 {%     endif %}
+{%     if ethernet_interface.traffic_policy.input is arista.avd.defined %}
+   traffic-policy input {{ ethernet_interface.traffic_policy.input }}
+{%     endif %}
+{%     if ethernet_interface.traffic_policy.output is arista.avd.defined %}
+   traffic-policy output {{ ethernet_interface.traffic_policy.output }}
+{%     endif %}
 {%     if ethernet_interface.description is arista.avd.defined %}
    description {{ ethernet_interface.description }}
 {%     endif %}
@@ -25,33 +31,19 @@ interface {{ ethernet_interface.name }}
 {%     if ethernet_interface.mtu is arista.avd.defined %}
    mtu {{ ethernet_interface.mtu }}
 {%     endif %}
-{%     if ethernet_interface.logging.event is arista.avd.defined %}
-{%         if ethernet_interface.logging.event.link_status is arista.avd.defined(true) %}
+{%     if ethernet_interface.logging.event.link_status is arista.avd.defined(true) %}
    logging event link-status
-{%         elif ethernet_interface.logging.event.link_status is arista.avd.defined(false) %}
+{%     elif ethernet_interface.logging.event.link_status is arista.avd.defined(false) %}
    no logging event link-status
-{%         endif %}
-{%         if ethernet_interface.logging.event.congestion_drops is arista.avd.defined(true) %}
-   logging event congestion-drops
-{%         elif ethernet_interface.logging.event.congestion_drops is arista.avd.defined(false) %}
-   no logging event congestion-drops
-{%         endif %}
-{%         if ethernet_interface.logging.event.spanning_tree is arista.avd.defined(true) %}
-   logging event spanning-tree
-{%         elif ethernet_interface.logging.event.spanning_tree is arista.avd.defined(false) %}
-   no logging event spanning-tree
-{%         endif %}
-{%         if ethernet_interface.logging.event.storm_control_discards is arista.avd.defined(true) %}
-   logging event storm-control discards
-{%         elif ethernet_interface.logging.event.storm_control_discards is arista.avd.defined(false) %}
-   no logging event storm-control discards
-{%         endif %}
+{%     endif %}
+{%     if ethernet_interface.bgp.session_tracker is arista.avd.defined %}
+   bgp session tracker {{ ethernet_interface.bgp.session_tracker }}
+{%     endif %}
+{%     if ethernet_interface.l2_protocol.forwarding_profile is arista.avd.defined %}
+   l2-protocol forwarding profile {{ ethernet_interface.l2_protocol.forwarding_profile }}
 {%     endif %}
 {%     if ethernet_interface.flowcontrol.received is arista.avd.defined %}
    flowcontrol receive {{ ethernet_interface.flowcontrol.received }}
-{%     endif %}
-{%     if ethernet_interface.speed is arista.avd.defined %}
-   speed {{ ethernet_interface.speed }}
 {%     endif %}
 {%     if ethernet_interface.l2_mtu is arista.avd.defined %}
    l2 mtu {{ ethernet_interface.l2_mtu }}
@@ -59,11 +51,13 @@ interface {{ ethernet_interface.name }}
 {%     if ethernet_interface.l2_mru is arista.avd.defined %}
    l2 mru {{ ethernet_interface.l2_mru }}
 {%     endif %}
-{%     if ethernet_interface.bgp.session_tracker is arista.avd.defined %}
-   bgp session tracker {{ ethernet_interface.bgp.session_tracker }}
+{%     if ethernet_interface.logging.event.congestion_drops is arista.avd.defined(true) %}
+   logging event congestion-drops
+{%     elif ethernet_interface.logging.event.congestion_drops is arista.avd.defined(false) %}
+   no logging event congestion-drops
 {%     endif %}
-{%     if ethernet_interface.mac_security.profile is arista.avd.defined %}
-   mac security profile {{ ethernet_interface.mac_security.profile }}
+{%     if ethernet_interface.speed is arista.avd.defined %}
+   speed {{ ethernet_interface.speed }}
 {%     endif %}
 {%     if ethernet_interface.error_correction_encoding.enabled is arista.avd.defined(false) %}
    no error-correction encoding
@@ -84,6 +78,9 @@ interface {{ ethernet_interface.name }}
    switchport access vlan {{ ethernet_interface.vlans }}
 {%         endif %}
 {%     endif %}
+{%     if ethernet_interface.switchport.access_vlan is arista.avd.defined %}
+   switchport access vlan {{ ethernet_interface.switchport.access_vlan }}
+{%     endif %}
 {%     if ethernet_interface.mode is arista.avd.defined and ethernet_interface.mode in ['trunk', 'trunk phone'] %}
 {%         if ethernet_interface.native_vlan_tag is arista.avd.defined(true) %}
    switchport trunk native vlan tag
@@ -97,26 +94,50 @@ interface {{ ethernet_interface.name }}
 {%     if ethernet_interface.phone.trunk is arista.avd.defined %}
    switchport phone trunk {{ ethernet_interface.phone.trunk }}
 {%     endif %}
-{%     for vlan_translation in ethernet_interface.vlan_translations | arista.avd.natural_sort %}
-{%         if vlan_translation.from is arista.avd.defined and vlan_translation.to is arista.avd.defined %}
-{%             set vlan_translation_cli = 'switchport vlan translation' %}
-{%             if vlan_translation.direction | arista.avd.default in ['in', 'out'] %}
-{%                 set vlan_translation_cli = vlan_translation_cli ~ ' ' ~ vlan_translation.direction %}
-{%             endif %}
-{%             set vlan_translation_cli = vlan_translation_cli ~ ' ' ~ vlan_translation.from %}
-{%             set vlan_translation_cli = vlan_translation_cli ~ ' ' ~ vlan_translation.to %}
-   {{ vlan_translation_cli }}
-{%         endif %}
-{%     endfor %}
+{%     if ethernet_interface.switchport.trunk.native_vlan_tag is arista.avd.defined(true) %}
+   switchport trunk native vlan tag
+{%     elif ethernet_interface.switchport.trunk.native_vlan is arista.avd.defined %}
+   switchport trunk native vlan {{ ethernet_interface.switchport.trunk.native_vlan }}
+{%     endif %}
+{%     if ethernet_interface.switchport.phone.vlan is arista.avd.defined %}
+   switchport phone vlan {{ ethernet_interface.switchport.phone.vlan }}
+{%     endif %}
+{%     if ethernet_interface.switchport.phone.trunk is arista.avd.defined %}
+   switchport phone trunk {{ ethernet_interface.switchport.phone.trunk }}
+{%     endif %}
+{%     if ethernet_interface.switchport.vlan_translations.in_required is arista.avd.defined(true) %}
+   switchport vlan translation in required
+{%     endif %}
+{%     if ethernet_interface.switchport.vlan_translations.out_required is arista.avd.defined(true) %}
+   switchport vlan translation out required
+{%     endif %}
+{%     if ethernet_interface.switchport.dot1q.vlan_tag is arista.avd.defined %}
+   switchport dot1q vlan tag {{ ethernet_interface.switchport.dot1q.vlan_tag }}
+{%     endif %}
 {%     if ethernet_interface.mode is arista.avd.defined('trunk') %}
 {%         if ethernet_interface.vlans is arista.avd.defined %}
    switchport trunk allowed vlan {{ ethernet_interface.vlans }}
 {%         endif %}
 {%     endif %}
+{%     if ethernet_interface.switchport.trunk.allowed_vlan is arista.avd.defined %}
+   switchport trunk allowed vlan {{ ethernet_interface.switchport.trunk.allowed_vlan }}
+{%     endif %}
 {%     if ethernet_interface.mode is arista.avd.defined %}
    switchport mode {{ ethernet_interface.mode }}
 {%     endif %}
+{%     if ethernet_interface.switchport.mode is arista.avd.defined %}
+   switchport mode {{ ethernet_interface.switchport.mode }}
+{%     endif %}
+{%     if ethernet_interface.switchport.dot1q.ethertype is arista.avd.defined %}
+   switchport dot1q ethertype {{ ethernet_interface.switchport.dot1q.ethertype }}
+{%     endif %}
+{%     if ethernet_interface.switchport.vlan_forwarding_accept_all is arista.avd.defined(true) %}
+   switchport vlan forwarding accept all
+{%     endif %}
 {%     for trunk_group in ethernet_interface.trunk_groups | arista.avd.natural_sort %}
+   switchport trunk group {{ trunk_group }}
+{%     endfor %}
+{%     for trunk_group in ethernet_interface.switchport.trunk.groups | arista.avd.natural_sort %}
    switchport trunk group {{ trunk_group }}
 {%     endfor %}
 {%     if ethernet_interface.type is arista.avd.defined('routed') %}
@@ -152,16 +173,10 @@ interface {{ ethernet_interface.name }}
 {%     elif ethernet_interface.type is arista.avd.defined('switched') %}
    switchport
 {%     endif %}
-{%     if ethernet_interface.trunk_private_vlan_secondary is arista.avd.defined(true) %}
-   switchport trunk private-vlan secondary
-{%     elif ethernet_interface.trunk_private_vlan_secondary is arista.avd.defined(false) %}
-   no switchport trunk private-vlan secondary
-{%     endif %}
-{%     if ethernet_interface.pvlan_mapping is arista.avd.defined %}
-   switchport pvlan mapping {{ ethernet_interface.pvlan_mapping }}
-{%     endif %}
-{%     if ethernet_interface.vlan_id is arista.avd.defined and ethernet_interface.type | arista.avd.default != 'l2dot1q' %}
-   vlan id {{ ethernet_interface.vlan_id }}
+{%     if ethernet_interface.switchport.enabled is arista.avd.defined(true) %}
+   switchport
+{%     elif ethernet_interface.switchport.enabled is arista.avd.defined(false) %}
+   no switchport
 {%     endif %}
 {%     if ethernet_interface.encapsulation_dot1q.vlan is arista.avd.defined %}
 {%         set encapsulation_dot1q_cli = 'encapsulation dot1q vlan ' ~ ethernet_interface.encapsulation_dot1q.vlan %}
@@ -169,7 +184,11 @@ interface {{ ethernet_interface.name }}
 {%             set encapsulation_dot1q_cli = encapsulation_dot1q_cli ~ ' inner ' ~ ethernet_interface.encapsulation_dot1q.inner_vlan %}
 {%         endif %}
    {{ encapsulation_dot1q_cli }}
-{%     elif ethernet_interface.encapsulation_vlan.client.encapsulation is arista.avd.defined %}
+{%     endif %}
+{%     if ethernet_interface.vlan_id is arista.avd.defined and ethernet_interface.type | arista.avd.default != 'l2dot1q' %}
+   vlan id {{ ethernet_interface.vlan_id }}
+{%     endif %}
+{%     if ethernet_interface.encapsulation_vlan.client.encapsulation is arista.avd.defined and ethernet_interface.encapsulation_dot1q.vlan is not arista.avd.defined %}
 {%         set client_encapsulation = ethernet_interface.encapsulation_vlan.client.encapsulation %}
 {%         set network_flag = False %}
 {%         if client_encapsulation in ['dot1q', 'dot1ad'] %}
@@ -212,52 +231,20 @@ interface {{ ethernet_interface.name }}
       {{ encapsulation_cli }}
 {%         endif %}
 {%     endif %}
-{%     if ethernet_interface.switchport.access_vlan is arista.avd.defined %}
-   switchport access vlan {{ ethernet_interface.switchport.access_vlan }}
-{%     endif %}
-{%     if ethernet_interface.switchport.trunk.native_vlan_tag is arista.avd.defined(true) %}
-   switchport trunk native vlan tag
-{%     elif ethernet_interface.switchport.trunk.native_vlan is arista.avd.defined %}
-   switchport trunk native vlan {{ ethernet_interface.switchport.trunk.native_vlan }}
-{%     endif %}
-{%     if ethernet_interface.switchport.phone.vlan is arista.avd.defined %}
-   switchport phone vlan {{ ethernet_interface.switchport.phone.vlan }}
-{%     endif %}
-{%     if ethernet_interface.switchport.phone.trunk is arista.avd.defined %}
-   switchport phone trunk {{ ethernet_interface.switchport.phone.trunk }}
-{%     endif %}
-{%     if ethernet_interface.switchport.vlan_translations.in_required is arista.avd.defined(true) %}
-   switchport vlan translation in required
-{%     endif %}
-{%     if ethernet_interface.switchport.vlan_translations.out_required is arista.avd.defined(true) %}
-   switchport vlan translation out required
-{%     endif %}
-{%     if ethernet_interface.switchport.dot1q.vlan_tag is arista.avd.defined %}
-   switchport dot1q vlan tag {{ ethernet_interface.switchport.dot1q.vlan_tag }}
-{%     endif %}
-{%     if ethernet_interface.switchport.trunk.allowed_vlan is arista.avd.defined %}
-   switchport trunk allowed vlan {{ ethernet_interface.switchport.trunk.allowed_vlan }}
-{%     endif %}
-{%     if ethernet_interface.switchport.mode is arista.avd.defined %}
-   switchport mode {{ ethernet_interface.switchport.mode }}
-{%     endif %}
-{%     if ethernet_interface.switchport.dot1q.ethertype is arista.avd.defined %}
-   switchport dot1q ethertype {{ ethernet_interface.switchport.dot1q.ethertype }}
-{%     endif %}
-{%     if ethernet_interface.switchport.vlan_forwarding_accept_all is arista.avd.defined(true) %}
-   switchport vlan forwarding accept all
-{%     endif %}
-{%     for trunk_group in ethernet_interface.switchport.trunk.groups | arista.avd.natural_sort %}
-   switchport trunk group {{ trunk_group }}
-{%     endfor %}
-{%     if ethernet_interface.switchport.enabled is arista.avd.defined(true) %}
-   switchport
-{%     elif ethernet_interface.switchport.enabled is arista.avd.defined(false) %}
-   no switchport
-{%     endif %}
 {%     if ethernet_interface.switchport.source_interface is arista.avd.defined %}
    switchport source-interface {{ ethernet_interface.switchport.source_interface }}
 {%     endif %}
+{%     for vlan_translation in ethernet_interface.vlan_translations | arista.avd.natural_sort %}
+{%         if vlan_translation.from is arista.avd.defined and vlan_translation.to is arista.avd.defined %}
+{%             set vlan_translation_cli = 'switchport vlan translation' %}
+{%             if vlan_translation.direction | arista.avd.default in ['in', 'out'] %}
+{%                 set vlan_translation_cli = vlan_translation_cli ~ ' ' ~ vlan_translation.direction %}
+{%             endif %}
+{%             set vlan_translation_cli = vlan_translation_cli ~ ' ' ~ vlan_translation.from %}
+{%             set vlan_translation_cli = vlan_translation_cli ~ ' ' ~ vlan_translation.to %}
+   {{ vlan_translation_cli }}
+{%         endif %}
+{%     endfor %}
 {%     for vlan_translation in ethernet_interface.switchport.vlan_translations.direction_both | arista.avd.natural_sort('from') %}
 {%         set vlan_translation_both_cli = 'switchport vlan translation ' ~ vlan_translation.from %}
 {%         if vlan_translation.dot1q_tunnel is arista.avd.defined(true) %}
@@ -298,8 +285,16 @@ interface {{ ethernet_interface.name }}
 {%             endif %}
 {%         endfor %}
 {%     endif %}
+{%     if ethernet_interface.trunk_private_vlan_secondary is arista.avd.defined(true) %}
+   switchport trunk private-vlan secondary
+{%     elif ethernet_interface.trunk_private_vlan_secondary is arista.avd.defined(false) %}
+   no switchport trunk private-vlan secondary
+{%     endif %}
 {%     if ethernet_interface.switchport.trunk.private_vlan_secondary is arista.avd.defined(true) %}
    switchport trunk private-vlan secondary
+{%     endif %}
+{%     if ethernet_interface.pvlan_mapping is arista.avd.defined %}
+   switchport pvlan mapping {{ ethernet_interface.pvlan_mapping }}
 {%     endif %}
 {%     if ethernet_interface.switchport.pvlan_mapping is arista.avd.defined %}
    switchport pvlan mapping {{ ethernet_interface.switchport.pvlan_mapping }}
@@ -307,16 +302,11 @@ interface {{ ethernet_interface.name }}
 {%     if ethernet_interface.l2_protocol.encapsulation_dot1q_vlan is arista.avd.defined %}
    l2-protocol encapsulation dot1q vlan {{ ethernet_interface.l2_protocol.encapsulation_dot1q_vlan }}
 {%     endif %}
-{%     if ethernet_interface.l2_protocol.forwarding_profile is arista.avd.defined %}
-   l2-protocol forwarding profile {{ ethernet_interface.l2_protocol.forwarding_profile }}
-{%     endif %}
-{%     if ethernet_interface.flow_tracker.hardware is arista.avd.defined %}
-   flow tracker hardware {{ ethernet_interface.flow_tracker.hardware }}
-{%     endif %}
-{%     if ethernet_interface.flow_tracker.sampled is arista.avd.defined %}
-   flow tracker sampled {{ ethernet_interface.flow_tracker.sampled }}
+{%     if ethernet_interface.mac_timestamp is arista.avd.defined %}
+   mac timestamp {{ ethernet_interface.mac_timestamp }}
 {%     endif %}
 {%     if ethernet_interface.evpn_ethernet_segment is arista.avd.defined %}
+   !
    evpn ethernet-segment
 {%         if ethernet_interface.evpn_ethernet_segment.identifier is arista.avd.defined %}
       identifier {{ ethernet_interface.evpn_ethernet_segment.identifier }}
@@ -356,6 +346,631 @@ interface {{ ethernet_interface.name }}
 {%         if ethernet_interface.evpn_ethernet_segment.route_target is arista.avd.defined %}
       route-target import {{ ethernet_interface.evpn_ethernet_segment.route_target }}
 {%         endif %}
+{%     endif %}
+{%     if ethernet_interface.flow_tracker.hardware is arista.avd.defined %}
+   flow tracker hardware {{ ethernet_interface.flow_tracker.hardware }}
+{%     endif %}
+{%     if ethernet_interface.flow_tracker.sampled is arista.avd.defined %}
+   flow tracker sampled {{ ethernet_interface.flow_tracker.sampled }}
+{%     endif %}
+{%     if ethernet_interface.snmp_trap_link_change is arista.avd.defined(false) %}
+   no snmp trap link-change
+{%     elif ethernet_interface.snmp_trap_link_change is arista.avd.defined(true) %}
+   snmp trap link-change
+{%     endif %}
+{%     if ethernet_interface.address_locking.ipv4 is arista.avd.defined(true) or ethernet_interface.address_locking.ipv6 is arista.avd.defined(true) %}
+{%         set address_locking_cli = "address locking" %}
+{%         if ethernet_interface.address_locking.ipv4 is arista.avd.defined(true) %}
+{%             set address_locking_cli = address_locking_cli + " ipv4" %}
+{%         endif %}
+{%         if ethernet_interface.address_locking.ipv6 is arista.avd.defined(true) %}
+{%             set address_locking_cli = address_locking_cli + " ipv6" %}
+{%         endif %}
+   {{ address_locking_cli }}
+{%     endif %}
+{%     if ethernet_interface.vrf is arista.avd.defined %}
+   vrf {{ ethernet_interface.vrf }}
+{%     endif %}
+{%     if ethernet_interface.ip_proxy_arp is arista.avd.defined(true) %}
+   ip proxy-arp
+{%     endif %}
+{%     if ethernet_interface.ip_address is arista.avd.defined %}
+   ip address {{ ethernet_interface.ip_address }}
+{%         for ip_address_secondary in ethernet_interface.ip_address_secondaries | arista.avd.natural_sort %}
+   ip address {{ ip_address_secondary }} secondary
+{%         endfor %}
+{%     endif %}
+{%     if ethernet_interface.ip_address is arista.avd.defined("dhcp") and ethernet_interface.dhcp_client_accept_default_route is arista.avd.defined(true) %}
+   dhcp client accept default-route
+{%     endif %}
+{%     if ethernet_interface.ip_verify_unicast_source_reachable_via is arista.avd.defined %}
+   ip verify unicast source reachable-via {{ ethernet_interface.ip_verify_unicast_source_reachable_via }}
+{%     endif %}
+{%     if ethernet_interface.bfd.interval is arista.avd.defined and
+          ethernet_interface.bfd.min_rx is arista.avd.defined and
+          ethernet_interface.bfd.multiplier is arista.avd.defined %}
+   bfd interval {{ ethernet_interface.bfd.interval }} min-rx {{ ethernet_interface.bfd.min_rx }} multiplier {{ ethernet_interface.bfd.multiplier }}
+{%     endif %}
+{%     if ethernet_interface.bfd.echo is arista.avd.defined(true) %}
+   bfd echo
+{%     elif ethernet_interface.bfd.echo is arista.avd.defined(false) %}
+   no bfd echo
+{%     endif %}
+{%     for ip_helper in ethernet_interface.ip_helpers | arista.avd.natural_sort('ip_helper') %}
+{%         set ip_helper_cli = "ip helper-address " ~ ip_helper.ip_helper %}
+{%         if ip_helper.vrf is arista.avd.defined %}
+{%             set ip_helper_cli = ip_helper_cli ~ " vrf " ~ ip_helper.vrf %}
+{%         endif %}
+{%         if ip_helper.source_interface is arista.avd.defined %}
+{%             set ip_helper_cli = ip_helper_cli ~ " source-interface " ~ ip_helper.source_interface %}
+{%         endif %}
+   {{ ip_helper_cli }}
+{%     endfor %}
+{%     for destination in ethernet_interface.ipv6_dhcp_relay_destinations | arista.avd.natural_sort('address') %}
+{%         set destination_cli = "ipv6 dhcp relay destination " ~ destination.address %}
+{%         if destination.vrf is arista.avd.defined %}
+{%             set destination_cli = destination_cli ~ " vrf " ~ destination.vrf %}
+{%         endif %}
+{%         if destination.local_interface is arista.avd.defined %}
+{%             set destination_cli = destination_cli ~ " local-interface " ~ destination.local_interface %}
+{%         elif destination.source_address is arista.avd.defined %}
+{%             set destination_cli = destination_cli ~ " source-address " ~ destination.source_address %}
+{%         endif %}
+{%         if destination.link_address is arista.avd.defined %}
+{%             set destination_cli = destination_cli ~ " link-address " ~ destination.link_address %}
+{%         endif %}
+   {{ destination_cli }}
+{%     endfor %}
+{%     if ethernet_interface.dhcp_server_ipv4 is arista.avd.defined(true) %}
+   dhcp server ipv4
+{%     endif %}
+{%     if ethernet_interface.dhcp_server_ipv6 is arista.avd.defined(true) %}
+   dhcp server ipv6
+{%     endif %}
+{%     if ethernet_interface.ip_igmp_host_proxy.enabled is arista.avd.defined(true) %}
+{%         set host_proxy_cli =  "ip igmp host-proxy" %}
+   {{ host_proxy_cli }}
+{%         if ethernet_interface.ip_igmp_host_proxy.groups is arista.avd.defined %}
+{%             for proxy_group in ethernet_interface.ip_igmp_host_proxy.groups %}
+{%                 if proxy_group.exclude is arista.avd.defined or proxy_group.include is arista.avd.defined %}
+{%                     if proxy_group.include is arista.avd.defined %}
+{%                         for include_source in proxy_group.include %}
+   {{ host_proxy_cli }} {{ proxy_group.group }} include {{ include_source.source }}
+{%                         endfor %}
+{%                     endif %}
+{%                     if proxy_group.exclude is arista.avd.defined %}
+{%                         for exclude_source in proxy_group.exclude %}
+   {{ host_proxy_cli }} {{ proxy_group.group }} exclude {{ exclude_source.source }}
+{%                         endfor %}
+{%                     endif %}
+{%                 elif proxy_group.group is arista.avd.defined %}
+   {{ host_proxy_cli }} {{ proxy_group.group }}
+{%                 endif %}
+{%             endfor %}
+{%         endif %}
+{%         if ethernet_interface.ip_igmp_host_proxy.access_lists is arista.avd.defined %}
+{%             for access_list in ethernet_interface.ip_igmp_host_proxy.access_lists %}
+   {{ host_proxy_cli }} access-list {{ access_list.name }}
+{%             endfor %}
+{%         endif %}
+{%         if ethernet_interface.ip_igmp_host_proxy.report_interval is arista.avd.defined %}
+   {{ host_proxy_cli }} report-interval {{ ethernet_interface.ip_igmp_host_proxy.report_interval }}
+{%         endif %}
+{%         if ethernet_interface.ip_igmp_host_proxy.version is arista.avd.defined %}
+   {{ host_proxy_cli }} version {{ ethernet_interface.ip_igmp_host_proxy.version }}
+{%         endif %}
+{%     endif %}
+{%     if ethernet_interface.ipv6_enable is arista.avd.defined(true) %}
+   ipv6 enable
+{%     endif %}
+{%     if ethernet_interface.ipv6_address is arista.avd.defined %}
+   ipv6 address {{ ethernet_interface.ipv6_address }}
+{%     endif %}
+{%     if ethernet_interface.ipv6_address_link_local is arista.avd.defined %}
+   ipv6 address {{ ethernet_interface.ipv6_address_link_local }} link-local
+{%     endif %}
+{%     if ethernet_interface.ipv6_nd_ra_disabled is arista.avd.defined(true) %}
+   ipv6 nd ra disabled
+{%     endif %}
+{%     if ethernet_interface.ipv6_nd_managed_config_flag is arista.avd.defined(true) %}
+   ipv6 nd managed-config-flag
+{%     endif %}
+{%     if ethernet_interface.ipv6_nd_prefixes is arista.avd.defined %}
+{%         for prefix in ethernet_interface.ipv6_nd_prefixes %}
+{%             set ipv6_nd_prefix_cli = "ipv6 nd prefix " ~ prefix.ipv6_prefix %}
+{%             if prefix.valid_lifetime is arista.avd.defined %}
+{%                 set ipv6_nd_prefix_cli = ipv6_nd_prefix_cli ~ " " ~ prefix.valid_lifetime %}
+{%                 if prefix.preferred_lifetime is arista.avd.defined %}
+{%                     set ipv6_nd_prefix_cli = ipv6_nd_prefix_cli ~ " " ~ prefix.preferred_lifetime %}
+{%                 endif %}
+{%             endif %}
+{%             if prefix.no_autoconfig_flag is arista.avd.defined(true) %}
+{%                 set ipv6_nd_prefix_cli = ipv6_nd_prefix_cli ~ " no-autoconfig" %}
+{%             endif %}
+   {{ ipv6_nd_prefix_cli }}
+{%         endfor %}
+{%     endif %}
+{%     if ethernet_interface.tcp_mss_ceiling.ipv4_segment_size is arista.avd.defined or ethernet_interface.tcp_mss_ceiling.ipv6_segment_size is arista.avd.defined %}
+{%         set tcp_mss_ceiling_cli = "tcp mss ceiling" %}
+{%         if ethernet_interface.tcp_mss_ceiling.ipv4_segment_size is arista.avd.defined %}
+{%             set tcp_mss_ceiling_cli = tcp_mss_ceiling_cli ~ " ipv4 " ~ ethernet_interface.tcp_mss_ceiling.ipv4_segment_size %}
+{%         endif %}
+{%         if ethernet_interface.tcp_mss_ceiling.ipv6_segment_size is arista.avd.defined %}
+{%             set tcp_mss_ceiling_cli = tcp_mss_ceiling_cli ~ " ipv6 " ~ ethernet_interface.tcp_mss_ceiling.ipv6_segment_size %}
+{%         endif %}
+{%         if ethernet_interface.tcp_mss_ceiling.direction is arista.avd.defined %}
+{%             set tcp_mss_ceiling_cli = tcp_mss_ceiling_cli ~ " " ~ ethernet_interface.tcp_mss_ceiling.direction %}
+{%         endif %}
+   {{ tcp_mss_ceiling_cli }}
+{%     endif %}
+{%     if ethernet_interface.channel_group.id is arista.avd.defined and ethernet_interface.channel_group.mode is arista.avd.defined %}
+   channel-group {{ ethernet_interface.channel_group.id }} mode {{ ethernet_interface.channel_group.mode }}
+{%         if ethernet_interface.lacp_timer.mode is arista.avd.defined %}
+   lacp timer {{ ethernet_interface.lacp_timer.mode }}
+{%         endif %}
+{%         if ethernet_interface.lacp_timer.multiplier is arista.avd.defined %}
+   lacp timer multiplier {{ ethernet_interface.lacp_timer.multiplier }}
+{%         endif %}
+{%         if ethernet_interface.lacp_port_priority is arista.avd.defined %}
+   lacp port-priority {{ ethernet_interface.lacp_port_priority }}
+{%         endif %}
+{%     endif %}
+{%     if ethernet_interface.access_group_in is arista.avd.defined %}
+   ip access-group {{ ethernet_interface.access_group_in }} in
+{%     endif %}
+{%     if ethernet_interface.access_group_out is arista.avd.defined %}
+   ip access-group {{ ethernet_interface.access_group_out }} out
+{%     endif %}
+{%     if ethernet_interface.ipv6_access_group_in is arista.avd.defined %}
+   ipv6 access-group {{ ethernet_interface.ipv6_access_group_in }} in
+{%     endif %}
+{%     if ethernet_interface.ipv6_access_group_out is arista.avd.defined %}
+   ipv6 access-group {{ ethernet_interface.ipv6_access_group_out }} out
+{%     endif %}
+{%     if ethernet_interface.mac_access_group_in is arista.avd.defined %}
+   mac access-group {{ ethernet_interface.mac_access_group_in }} in
+{%     endif %}
+{%     if ethernet_interface.mac_access_group_out is arista.avd.defined %}
+   mac access-group {{ ethernet_interface.mac_access_group_out }} out
+{%     endif %}
+{%     if ethernet_interface.mpls.ldp.igp_sync is arista.avd.defined(true) %}
+   mpls ldp igp sync
+{%     endif %}
+{%     if ethernet_interface.mpls.ldp.interface is arista.avd.defined(true) %}
+   mpls ldp interface
+{%     elif ethernet_interface.mpls.ldp.interface is arista.avd.defined(false) %}
+   no mpls ldp interface
+{%     endif %}
+{%     if ethernet_interface.lldp.transmit is arista.avd.defined(false) %}
+   no lldp transmit
+{%     endif %}
+{%     if ethernet_interface.lldp.receive is arista.avd.defined(false) %}
+   no lldp receive
+{%     endif %}
+{%     if ethernet_interface.lldp.ztp_vlan is arista.avd.defined %}
+   lldp tlv transmit ztp vlan {{ ethernet_interface.lldp.ztp_vlan }}
+{%     endif %}
+{%     if ethernet_interface.mac_security.profile is arista.avd.defined %}
+   mac security profile {{ ethernet_interface.mac_security.profile }}
+{%     endif %}
+{%     if ethernet_interface.multicast is arista.avd.defined %}
+{%         if ethernet_interface.multicast.ipv4.boundaries is arista.avd.defined %}
+{%             for boundary in ethernet_interface.multicast.ipv4.boundaries %}
+{%                 set boundary_cli = "multicast ipv4 boundary " ~ boundary.boundary %}
+{%                 if boundary.out is arista.avd.defined(true) %}
+{%                     set boundary_cli = boundary_cli ~ " out" %}
+{%                 endif %}
+   {{ boundary_cli }}
+{%             endfor %}
+{%         endif %}
+{%         if ethernet_interface.multicast.ipv6.boundaries is arista.avd.defined %}
+{%             for boundary in ethernet_interface.multicast.ipv6.boundaries %}
+   multicast ipv6 boundary {{ boundary.boundary }} out
+{%             endfor %}
+{%         endif %}
+{%         if ethernet_interface.multicast.ipv4.static is arista.avd.defined(true) %}
+   multicast ipv4 static
+{%         endif %}
+{%         if ethernet_interface.multicast.ipv6.static is arista.avd.defined(true) %}
+   multicast ipv6 static
+{%         endif %}
+{%     endif %}
+{%     if ethernet_interface.mpls.ip is arista.avd.defined(true) %}
+   mpls ip
+{%     elif ethernet_interface.mpls.ip is arista.avd.defined(false) %}
+   no mpls ip
+{%     endif %}
+{%     if ethernet_interface.ip_nat is arista.avd.defined %}
+{%         set interface_ip_nat = ethernet_interface.ip_nat %}
+{%         include 'eos/interface-ip-nat.j2' %}
+{%         if ethernet_interface.ip_nat.service_profile is arista.avd.defined %}
+   ip nat service-profile {{ ethernet_interface.ip_nat.service_profile }}
+{%         endif %}
+{%     endif %}
+{%     if ethernet_interface.ospf_cost is arista.avd.defined %}
+   ip ospf cost {{ ethernet_interface.ospf_cost }}
+{%     endif %}
+{%     if ethernet_interface.ospf_network_point_to_point is arista.avd.defined(true) %}
+   ip ospf network point-to-point
+{%     endif %}
+{%     if ethernet_interface.ospf_authentication is arista.avd.defined('simple') %}
+   ip ospf authentication
+{%     elif ethernet_interface.ospf_authentication is arista.avd.defined('message-digest') %}
+   ip ospf authentication message-digest
+{%     endif %}
+{%     if ethernet_interface.ospf_authentication_key is arista.avd.defined %}
+   ip ospf authentication-key 7 {{ ethernet_interface.ospf_authentication_key | arista.avd.hide_passwords(hide_passwords) }}
+{%     endif %}
+{%     if ethernet_interface.ospf_area is arista.avd.defined %}
+   ip ospf area {{ ethernet_interface.ospf_area }}
+{%     endif %}
+{%     for ospf_message_digest_key in ethernet_interface.ospf_message_digest_keys | arista.avd.natural_sort('id') %}
+{%         if ospf_message_digest_key.hash_algorithm is arista.avd.defined and ospf_message_digest_key.key is arista.avd.defined %}
+   ip ospf message-digest-key {{ ospf_message_digest_key.id }} {{ ospf_message_digest_key.hash_algorithm }} 7 {{ ospf_message_digest_key.key | arista.avd.hide_passwords(hide_passwords) }}
+{%         endif %}
+{%     endfor %}
+{%     if ethernet_interface.service_policy.pbr.input is arista.avd.defined %}
+   service-policy type pbr input {{ ethernet_interface.service_policy.pbr.input }}
+{%     endif %}
+{%     if ethernet_interface.pim.ipv4.sparse_mode is arista.avd.defined(true) %}
+   pim ipv4 sparse-mode
+{%     endif %}
+{%     if ethernet_interface.pim.ipv4.bidirectional is arista.avd.defined(true) %}
+   pim ipv4 bidirectional
+{%     endif %}
+{%     if ethernet_interface.pim.ipv4.border_router is arista.avd.defined(true) %}
+   pim ipv4 border-router
+{%     endif %}
+{%     if ethernet_interface.pim.ipv4.hello.interval is arista.avd.defined %}
+   pim ipv4 hello interval {{ ethernet_interface.pim.ipv4.hello.interval }}
+{%     endif %}
+{%     if ethernet_interface.pim.ipv4.hello.count is arista.avd.defined %}
+   pim ipv4 hello count {{ ethernet_interface.pim.ipv4.hello.count }}
+{%     endif %}
+{%     if ethernet_interface.pim.ipv4.dr_priority is arista.avd.defined %}
+   pim ipv4 dr-priority {{ ethernet_interface.pim.ipv4.dr_priority }}
+{%     endif %}
+{%     if ethernet_interface.pim.ipv4.bfd is arista.avd.defined(true) %}
+   pim ipv4 bfd
+{%     endif %}
+{%     if ethernet_interface.poe.priority is arista.avd.defined %}
+   poe priority {{ ethernet_interface.poe.priority }}
+{%     endif %}
+{%     if ethernet_interface.poe.reboot.action is arista.avd.defined %}
+   poe reboot action {{ ethernet_interface.poe.reboot.action }}
+{%     endif %}
+{%     if ethernet_interface.poe.link_down.action is arista.avd.defined %}
+{%         set poe_link_down_action_cli = 'poe link down action ' ~ ethernet_interface.poe.link_down.action %}
+{%         if ethernet_interface.poe.link_down.power_off_delay is arista.avd.defined and ethernet_interface.poe.link_down.action == 'power-off' %}
+{%             set poe_link_down_action_cli = poe_link_down_action_cli ~ ' ' ~ ethernet_interface.poe.link_down.power_off_delay ~ ' seconds' %}
+{%         endif %}
+   {{ poe_link_down_action_cli }}
+{%     endif %}
+{%     if ethernet_interface.poe.shutdown.action is arista.avd.defined %}
+   poe shutdown action {{ ethernet_interface.poe.shutdown.action }}
+{%     endif %}
+{%     if ethernet_interface.poe.disabled is arista.avd.defined(true) %}
+   poe disabled
+{%     endif %}
+{%     if ethernet_interface.poe.limit is arista.avd.defined %}
+{%         if ethernet_interface.poe.limit.class is arista.avd.defined %}
+{%             set poe_limit_cli = 'poe limit ' ~ POE_CLASS_MAP[ethernet_interface.poe.limit.class] ~ ' watts' %}
+{%         elif ethernet_interface.poe.limit.watts is arista.avd.defined %}
+{%             set poe_limit_cli = 'poe limit ' ~ "%.2f" | format(ethernet_interface.poe.limit.watts | float) ~ ' watts' %}
+{%         endif %}
+{%         if poe_limit_cli is arista.avd.defined and ethernet_interface.poe.limit.fixed is arista.avd.defined(true) %}
+{%             set poe_limit_cli = poe_limit_cli ~ ' fixed' %}
+{%         endif %}
+   {{ poe_limit_cli }}
+{%     endif %}
+{%     if ethernet_interface.poe.negotiation_lldp is arista.avd.defined(false) %}
+   poe negotiation lldp disabled
+{%     endif %}
+{%     if ethernet_interface.poe.legacy_detect is arista.avd.defined(true) %}
+   poe legacy detect
+{%     endif %}
+{%     if ethernet_interface.switchport.port_security is arista.avd.defined %}
+{%         if ethernet_interface.switchport.port_security.enabled is arista.avd.defined(true) or ethernet_interface.switchport.port_security.violation.mode is arista.avd.defined('shutdown') %}
+   switchport port-security
+{%         elif ethernet_interface.switchport.port_security.violation.mode is arista.avd.defined('protect') %}
+{%             if ethernet_interface.switchport.port_security.violation.protect_log is arista.avd.defined(true) %}
+   switchport port-security violation protect log
+{%             else %}
+   switchport port-security violation protect
+{%             endif %}
+{%         endif %}
+{%         if ethernet_interface.switchport.port_security.mac_address_maximum.disabled is arista.avd.defined(true) %}
+   switchport port-security mac-address maximum disabled
+{%         elif ethernet_interface.switchport.port_security.mac_address_maximum.disabled is arista.avd.defined(false) %}
+   no switchport port-security mac-address maximum disabled
+{%         elif ethernet_interface.switchport.port_security.mac_address_maximum.limit is arista.avd.defined %}
+   switchport port-security mac-address maximum {{ ethernet_interface.switchport.port_security.mac_address_maximum.limit }}
+{%         endif %}
+{%         if ethernet_interface.switchport.port_security.violation.mode is not arista.avd.defined('protect')  %}
+{%             if ethernet_interface.switchport.port_security.vlans is arista.avd.defined %}
+{%                 set sorted_vlans_cli = [] %}
+{%                 for vlan in ethernet_interface.switchport.port_security.vlans %}
+{%                     if vlan.range is arista.avd.defined and vlan.mac_address_maximum is arista.avd.defined %}
+{%                         for id in vlan.range | arista.avd.range_expand %}
+{%                             set port_sec_cli =  "switchport port-security vlan " ~ id ~ " mac-address maximum " ~ vlan.mac_address_maximum %}
+{%                             do sorted_vlans_cli.append(port_sec_cli) %}
+{%                         endfor %}
+{%                     endif %}
+{%                 endfor %}
+{%                 for vlan_cli in sorted_vlans_cli | arista.avd.natural_sort %}
+   {{ vlan_cli }}
+{%                 endfor %}
+{%             endif %}
+{%             if ethernet_interface.switchport.port_security.vlan_default_mac_address_maximum is arista.avd.defined %}
+   switchport port-security vlan default mac-address maximum {{ ethernet_interface.switchport.port_security.vlan_default_mac_address_maximum }}
+{%             endif %}
+{%         endif %}
+{%     endif %}
+{%     if ethernet_interface.ptp.enable is arista.avd.defined(true) %}
+   ptp enable
+{%     endif %}
+{%     if ethernet_interface.ptp.announce.interval is arista.avd.defined %}
+   ptp announce interval {{ ethernet_interface.ptp.announce.interval }}
+{%     endif %}
+{%     if ethernet_interface.ptp.announce.timeout is arista.avd.defined %}
+   ptp announce timeout {{ ethernet_interface.ptp.announce.timeout }}
+{%     endif %}
+{%     if ethernet_interface.ptp.delay_mechanism is arista.avd.defined %}
+   ptp delay-mechanism {{ ethernet_interface.ptp.delay_mechanism }}
+{%     endif %}
+{%     if ethernet_interface.ptp.delay_req is arista.avd.defined %}
+   ptp delay-req interval {{ ethernet_interface.ptp.delay_req }}
+{%     endif %}
+{%     if ethernet_interface.ptp.profile.g8275_1.destination_mac_address is arista.avd.defined %}
+   ptp profile g8275.1 destination mac-address {{ ethernet_interface.ptp.profile.g8275_1.destination_mac_address }}
+{%     endif %}
+{%     if ethernet_interface.ptp.role is arista.avd.defined %}
+   ptp role {{ ethernet_interface.ptp.role }}
+{%     endif %}
+{%     if ethernet_interface.ptp.sync_message.interval is arista.avd.defined %}
+   ptp sync-message interval {{ ethernet_interface.ptp.sync_message.interval }}
+{%     endif %}
+{%     if ethernet_interface.ptp.transport is arista.avd.defined %}
+   ptp transport {{ ethernet_interface.ptp.transport }}
+{%     endif %}
+{%     if ethernet_interface.ptp.vlan is arista.avd.defined %}
+   ptp vlan {{ ethernet_interface.ptp.vlan }}
+{%     endif %}
+{%     if ethernet_interface.service_policy.qos.input is arista.avd.defined %}
+   service-policy type qos input {{ ethernet_interface.service_policy.qos.input }}
+{%     endif %}
+{%     if ethernet_interface.service_profile is arista.avd.defined %}
+   service-profile {{ ethernet_interface.service_profile }}
+{%     endif %}
+{%     if ethernet_interface.qos.trust is arista.avd.defined %}
+{%         if ethernet_interface.qos.trust == 'disabled' %}
+   no qos trust
+{%         else %}
+   qos trust {{ ethernet_interface.qos.trust }}
+{%         endif %}
+{%     endif %}
+{%     if ethernet_interface.qos.cos is arista.avd.defined %}
+   qos cos {{ ethernet_interface.qos.cos }}
+{%     endif %}
+{%     if ethernet_interface.qos.dscp is arista.avd.defined %}
+   qos dscp {{ ethernet_interface.qos.dscp }}
+{%     endif %}
+{%     if ethernet_interface.shape.rate is arista.avd.defined %}
+   shape rate {{ ethernet_interface.shape.rate }}
+{%     endif %}
+{%     if ethernet_interface.priority_flow_control.enabled is arista.avd.defined(true) %}
+   priority-flow-control on
+{%     elif ethernet_interface.priority_flow_control.enabled is arista.avd.defined(false) %}
+   no priority-flow-control
+{%     endif %}
+{%     for priority_block in ethernet_interface.priority_flow_control.priorities | arista.avd.natural_sort %}
+{%         if priority_block.priority is arista.avd.defined %}
+{%             if priority_block.no_drop is arista.avd.defined(true) %}
+   priority-flow-control priority {{ priority_block.priority }} no-drop
+{%             elif priority_block.no_drop is arista.avd.defined(false) %}
+   priority-flow-control priority {{ priority_block.priority }} drop
+{%             endif %}
+{%         endif %}
+{%     endfor %}
+{%     for tx_queue in ethernet_interface.tx_queues | arista.avd.natural_sort('id') %}
+{%         include 'eos/ethernet-interface-tx-queues.j2' %}
+{%     endfor %}
+{%     for uc_tx_queue in ethernet_interface.uc_tx_queues | arista.avd.natural_sort('id') %}
+{%         include 'eos/ethernet-interface-uc-tx-queues.j2' %}
+{%     endfor %}
+{%     if ethernet_interface.sflow is arista.avd.defined %}
+{%         if ethernet_interface.sflow.enable is arista.avd.defined(true) %}
+   sflow enable
+{%         elif ethernet_interface.sflow.enable is arista.avd.defined(false) %}
+   no sflow enable
+{%         endif %}
+{%         if ethernet_interface.sflow.egress.enable is arista.avd.defined(true) %}
+   sflow egress enable
+{%         elif ethernet_interface.sflow.egress.enable is arista.avd.defined(false) %}
+   no sflow egress enable
+{%         endif %}
+{%         if ethernet_interface.sflow.egress.unmodified_enable is arista.avd.defined(true) %}
+   sflow egress unmodified enable
+{%         elif ethernet_interface.sflow.egress.unmodified_enable is arista.avd.defined(false) %}
+   no sflow egress unmodified enable
+{%         endif %}
+{%     endif %}
+{%     if ethernet_interface.isis_enable is arista.avd.defined %}
+   isis enable {{ ethernet_interface.isis_enable }}
+{%     endif %}
+{%     if ethernet_interface.isis_bfd is arista.avd.defined(true) %}
+   isis bfd
+{%     endif %}
+{%     if ethernet_interface.isis_circuit_type is arista.avd.defined %}
+   isis circuit-type {{ ethernet_interface.isis_circuit_type }}
+{%     endif %}
+{%     if ethernet_interface.isis_metric is arista.avd.defined %}
+   isis metric {{ ethernet_interface.isis_metric }}
+{%     endif %}
+{%     if ethernet_interface.isis_passive is arista.avd.defined(true) %}
+   isis passive
+{%     endif %}
+{%     if ethernet_interface.isis_hello_padding is arista.avd.defined(false) %}
+   no isis hello padding
+{%     elif ethernet_interface.isis_hello_padding is arista.avd.defined(true) %}
+   isis hello padding
+{%     endif %}
+{%     if ethernet_interface.isis_network_point_to_point is arista.avd.defined(true) %}
+   isis network point-to-point
+{%     endif %}
+{%     if ethernet_interface.isis_authentication_mode is arista.avd.defined and
+          ethernet_interface.isis_authentication_mode in ["text", "md5"] %}
+   isis authentication mode {{ ethernet_interface.isis_authentication_mode }}
+{%     endif %}
+{%     if ethernet_interface.isis_authentication_key is arista.avd.defined %}
+   isis authentication key 7 {{ ethernet_interface.isis_authentication_key | arista.avd.hide_passwords(hide_passwords) }}
+{%     endif %}
+{%     for section in ethernet_interface.storm_control | arista.avd.natural_sort %}
+{%         if ethernet_interface.storm_control[section].level is arista.avd.defined and section != "all" %}
+{%             if ethernet_interface.storm_control[section].unit is arista.avd.defined('pps') %}
+   storm-control {{ section | replace("_", "-") }} level pps {{ ethernet_interface.storm_control[section].level }}
+{%             else %}
+   storm-control {{ section | replace("_", "-") }} level {{ ethernet_interface.storm_control[section].level }}
+{%             endif %}
+{%         endif %}
+{%     endfor %}
+{%     if ethernet_interface.storm_control.all.level is arista.avd.defined %}
+{%         if ethernet_interface.storm_control.all.unit is arista.avd.defined('pps') %}
+   storm-control all level pps {{ ethernet_interface.storm_control.all.level }}
+{%         else %}
+   storm-control all level {{ ethernet_interface.storm_control.all.level }}
+{%         endif %}
+{%     endif %}
+{%     if ethernet_interface.logging.event.storm_control_discards is arista.avd.defined(true) %}
+   logging event storm-control discards
+{%     elif ethernet_interface.logging.event.storm_control_discards is arista.avd.defined(false) %}
+   no logging event storm-control discards
+{%     endif %}
+{%     if ethernet_interface.spanning_tree_portfast is arista.avd.defined('edge') %}
+   spanning-tree portfast
+{%     elif ethernet_interface.spanning_tree_portfast is arista.avd.defined('network') %}
+   spanning-tree portfast network
+{%     endif %}
+{%     if ethernet_interface.spanning_tree_bpduguard is arista.avd.defined and ethernet_interface.spanning_tree_bpduguard in [True, "True", "enabled"] %}
+   spanning-tree bpduguard enable
+{%     elif ethernet_interface.spanning_tree_bpduguard is arista.avd.defined("disabled") %}
+   spanning-tree bpduguard disable
+{%     endif %}
+{%     if ethernet_interface.spanning_tree_bpdufilter is arista.avd.defined and ethernet_interface.spanning_tree_bpdufilter in [True, "True", "enabled"] %}
+   spanning-tree bpdufilter enable
+{%     elif ethernet_interface.spanning_tree_bpdufilter is arista.avd.defined("disabled") %}
+   spanning-tree bpdufilter disable
+{%     endif %}
+{%     if ethernet_interface.spanning_tree_guard is arista.avd.defined %}
+{%         if ethernet_interface.spanning_tree_guard == 'disabled' %}
+   spanning-tree guard none
+{%         else %}
+   spanning-tree guard {{ ethernet_interface.spanning_tree_guard }}
+{%         endif %}
+{%     endif %}
+{%     if ethernet_interface.logging.event.spanning_tree is arista.avd.defined(true) %}
+   logging event spanning-tree
+{%     elif ethernet_interface.logging.event.spanning_tree is arista.avd.defined(false) %}
+   no logging event spanning-tree
+{%     endif %}
+{%     if ethernet_interface.switchport.backup_link.interface is arista.avd.defined %}
+{%         set backup_link_cli = "switchport backup-link " ~ ethernet_interface.switchport.backup_link.interface %}
+{%         if ethernet_interface.switchport.backup_link.prefer_vlan is arista.avd.defined %}
+{%             set backup_link_cli = backup_link_cli ~ " prefer vlan " ~ ethernet_interface.switchport.backup_link.prefer_vlan %}
+{%         endif %}
+   {{ backup_link_cli }}
+{%         if ethernet_interface.switchport.backup.preemption_delay is arista.avd.defined %}
+   switchport backup preemption-delay {{ ethernet_interface.switchport.backup.preemption_delay }}
+{%         endif %}
+{%         if ethernet_interface.switchport.backup.mac_move_burst is arista.avd.defined %}
+   switchport backup mac-move-burst {{ ethernet_interface.switchport.backup.mac_move_burst }}
+{%         endif %}
+{%         if ethernet_interface.switchport.backup.mac_move_burst_interval is arista.avd.defined %}
+   switchport backup mac-move-burst-interval {{ ethernet_interface.switchport.backup.mac_move_burst_interval }}
+{%         endif %}
+{%         if ethernet_interface.switchport.backup.initial_mac_move_delay is arista.avd.defined %}
+   switchport backup initial-mac-move-delay {{ ethernet_interface.switchport.backup.initial_mac_move_delay }}
+{%         endif %}
+{%         if ethernet_interface.switchport.backup.dest_macaddr is arista.avd.defined %}
+   switchport backup dest-macaddr {{ ethernet_interface.switchport.backup.dest_macaddr }}
+{%         endif %}
+{%     endif %}
+{%     if ethernet_interface.sync_e.enable is arista.avd.defined(true) %}
+   !
+   sync-e
+{%         if ethernet_interface.sync_e.priority is arista.avd.defined %}
+      priority {{ ethernet_interface.sync_e.priority }}
+{%         endif %}
+{%     endif %}
+{%     for link_tracking_group in ethernet_interface.link_tracking_groups | arista.avd.natural_sort %}
+{%         if link_tracking_group.name is arista.avd.defined and link_tracking_group.direction is arista.avd.defined %}
+   link tracking group {{ link_tracking_group.name }} {{ link_tracking_group.direction }}
+{%         endif %}
+{%     endfor %}
+{%     if ethernet_interface.link_tracking.direction is arista.avd.defined and ethernet_interface.link_tracking.groups is arista.avd.defined %}
+{%         for group_name in ethernet_interface.link_tracking.groups %}
+   link tracking group {{ group_name }} {{ ethernet_interface.link_tracking.direction }}
+{%         endfor %}
+{%     endif %}
+{%     if ethernet_interface.vmtracer is arista.avd.defined(true) %}
+   vmtracer vmware-esx
+{%     endif %}
+{%     if ethernet_interface.vrrp_ids is arista.avd.defined %}
+{%         for vrid in ethernet_interface.vrrp_ids | arista.avd.natural_sort('id') if vrid.id is arista.avd.defined %}
+{%             if vrid.priority_level is arista.avd.defined %}
+   vrrp {{ vrid.id }} priority-level {{ vrid.priority_level }}
+{%             endif %}
+{%             if vrid.advertisement.interval is arista.avd.defined %}
+   vrrp {{ vrid.id }} advertisement interval {{ vrid.advertisement.interval }}
+{%             endif %}
+{%             if vrid.preempt.enabled is arista.avd.defined(true) and (
+                  vrid.preempt.delay.minimum is arista.avd.defined or
+                  vrid.preempt.delay.reload is arista.avd.defined) %}
+{%                 set delay_cli = 'vrrp ' ~ vrid.id ~ ' preempt delay' %}
+{%                 if vrid.preempt.delay.minimum is arista.avd.defined %}
+{%                     set delay_cli = delay_cli ~ ' minimum ' ~ vrid.preempt.delay.minimum %}
+{%                 endif %}
+{%                 if vrid.preempt.delay.reload is arista.avd.defined %}
+{%                     set delay_cli = delay_cli ~ ' reload ' ~ vrid.preempt.delay.reload %}
+{%                 endif %}
+   {{ delay_cli }}
+{%             elif vrid.preempt.enabled is arista.avd.defined(false) %}
+   no vrrp {{ vrid.id }} preempt
+{%             endif %}
+{%             if vrid.timers.delay.reload is arista.avd.defined %}
+   vrrp {{ vrid.id }} timers delay reload {{ vrid.timers.delay.reload }}
+{%             endif %}
+{%             if vrid.ipv4.address is arista.avd.defined %}
+   vrrp {{ vrid.id }} ipv4 {{ vrid.ipv4.address }}
+{%             endif %}
+{%             if vrid.ipv4.version is arista.avd.defined %}
+   vrrp {{ vrid.id }} ipv4 version {{ vrid.ipv4.version }}
+{%             endif %}
+{%             if vrid.ipv6.address is arista.avd.defined %}
+   vrrp {{ vrid.id }} ipv6 {{ vrid.ipv6.address }}
+{%             endif %}
+{%             for tracked_obj in vrid.tracked_object | arista.avd.natural_sort('name') %}
+{%                 if tracked_obj.name is arista.avd.defined %}
+{%                     set tracked_obj_cli = "vrrp " ~ vrid.id ~ " tracked-object " ~ tracked_obj.name %}
+{%                     if tracked_obj.decrement is arista.avd.defined %}
+{%                         set tracked_obj_cli = tracked_obj_cli ~ " decrement " ~ tracked_obj.decrement %}
+{%                     elif tracked_obj.shutdown is arista.avd.defined(true) %}
+{%                         set tracked_obj_cli = tracked_obj_cli ~ " shutdown" %}
+{%                     endif %}
+   {{ tracked_obj_cli }}
+{%                 endif %}
+{%             endfor %}
+{%         endfor %}
+{%     endif %}
+{%     if ethernet_interface.transceiver.media.override is arista.avd.defined %}
+   transceiver media override {{ ethernet_interface.transceiver.media.override }}
+{%     endif %}
+{%     if ethernet_interface.transceiver.frequency is arista.avd.defined %}
+{%         set frequency_cli = 'transceiver frequency ' ~ "%.3f" | format(ethernet_interface.transceiver.frequency | float) %}
+{%         if ethernet_interface.transceiver.frequency_unit is arista.avd.defined %}
+{%             set frequency_cli = frequency_cli ~ ' ' ~ ethernet_interface.transceiver.frequency_unit %}
+{%         endif %}
+   {{ frequency_cli }}
 {%     endif %}
 {%     if ethernet_interface.dot1x is arista.avd.defined %}
 {%         if ethernet_interface.dot1x.pae.mode is arista.avd.defined %}
@@ -444,6 +1059,9 @@ interface {{ ethernet_interface.name }}
    {{ host_mode_cli }}
 {%             endif %}
 {%         endif %}
+{%         if ethernet_interface.dot1x.eapol.disabled is arista.avd.defined(true) %}
+   dot1x eapol disabled
+{%         endif %}
 {%         if ethernet_interface.dot1x.mac_based_access_list is arista.avd.defined(true) %}
    dot1x mac based access-list
 {%         endif %}
@@ -487,612 +1105,12 @@ interface {{ ethernet_interface.name }}
 {%         if ethernet_interface.dot1x.unauthorized.native_vlan_membership_egress is arista.avd.defined(true) %}
    dot1x unauthorized native vlan membership egress
 {%         endif %}
-{%         if ethernet_interface.dot1x.eapol is arista.avd.defined %}
-{%             if ethernet_interface.dot1x.eapol.disabled is arista.avd.defined(true) %}
-   dot1x eapol disabled
-{%             elif ethernet_interface.dot1x.eapol.authentication_failure_fallback_mba.enabled is arista.avd.defined(true) %}
-{%                 set auth_failure_fallback_mba = "dot1x eapol authentication failure fallback mba" %}
-{%                 if ethernet_interface.dot1x.eapol.authentication_failure_fallback_mba.timeout is arista.avd.defined %}
-{%                     set auth_failure_fallback_mba = auth_failure_fallback_mba ~ " timeout " ~ ethernet_interface.dot1x.eapol.authentication_failure_fallback_mba.timeout %}
-{%                 endif %}
+{%         if ethernet_interface.dot1x.eapol.authentication_failure_fallback_mba.enabled is arista.avd.defined(true) %}
+{%             set auth_failure_fallback_mba = "dot1x eapol authentication failure fallback mba" %}
+{%             if ethernet_interface.dot1x.eapol.authentication_failure_fallback_mba.timeout is arista.avd.defined %}
+{%                 set auth_failure_fallback_mba = auth_failure_fallback_mba ~ " timeout " ~ ethernet_interface.dot1x.eapol.authentication_failure_fallback_mba.timeout %}
+{%             endif %}
    {{ auth_failure_fallback_mba }}
-{%             endif %}
-{%         endif %}
-{%     endif %}
-{%     if ethernet_interface.snmp_trap_link_change is arista.avd.defined(false) %}
-   no snmp trap link-change
-{%     elif ethernet_interface.snmp_trap_link_change is arista.avd.defined(true) %}
-   snmp trap link-change
-{%     endif %}
-{%     if ethernet_interface.address_locking.ipv4 is arista.avd.defined(true) or ethernet_interface.address_locking.ipv6 is arista.avd.defined(true) %}
-{%         set address_locking_cli = "address locking" %}
-{%         if ethernet_interface.address_locking.ipv4 is arista.avd.defined(true) %}
-{%             set address_locking_cli = address_locking_cli + " ipv4" %}
-{%         endif %}
-{%         if ethernet_interface.address_locking.ipv6 is arista.avd.defined(true) %}
-{%             set address_locking_cli = address_locking_cli + " ipv6" %}
-{%         endif %}
-   {{ address_locking_cli }}
-{%     endif %}
-{%     if ethernet_interface.vrf is arista.avd.defined %}
-   vrf {{ ethernet_interface.vrf }}
-{%     endif %}
-{%     if ethernet_interface.ip_proxy_arp is arista.avd.defined(true) %}
-   ip proxy-arp
-{%     endif %}
-{%     if ethernet_interface.ip_address is arista.avd.defined %}
-   ip address {{ ethernet_interface.ip_address }}
-{%         if ethernet_interface.ip_address_secondaries is arista.avd.defined %}
-{%             for ip_address_secondary in ethernet_interface.ip_address_secondaries %}
-   ip address {{ ip_address_secondary }} secondary
-{%             endfor %}
-{%         endif %}
-{%         for ip_helper in ethernet_interface.ip_helpers | arista.avd.natural_sort('ip_helper') %}
-{%             set ip_helper_cli = "ip helper-address " ~ ip_helper.ip_helper %}
-{%             if ip_helper.vrf is arista.avd.defined %}
-{%                 set ip_helper_cli = ip_helper_cli ~ " vrf " ~ ip_helper.vrf %}
-{%             endif %}
-{%             if ip_helper.source_interface is arista.avd.defined %}
-{%                 set ip_helper_cli = ip_helper_cli ~ " source-interface " ~ ip_helper.source_interface %}
-{%             endif %}
-   {{ ip_helper_cli }}
-{%         endfor %}
-{%     endif %}
-{%     if ethernet_interface.switchport.backup_link.interface is arista.avd.defined %}
-{%         set backup_link_cli = "switchport backup-link " ~ ethernet_interface.switchport.backup_link.interface %}
-{%         if ethernet_interface.switchport.backup_link.prefer_vlan is arista.avd.defined %}
-{%             set backup_link_cli = backup_link_cli ~ " prefer vlan " ~ ethernet_interface.switchport.backup_link.prefer_vlan %}
-{%         endif %}
-   {{ backup_link_cli }}
-{%         if ethernet_interface.switchport.backup.preemption_delay is arista.avd.defined %}
-   switchport backup preemption-delay {{ ethernet_interface.switchport.backup.preemption_delay }}
-{%         endif %}
-{%         if ethernet_interface.switchport.backup.mac_move_burst is arista.avd.defined %}
-   switchport backup mac-move-burst {{ ethernet_interface.switchport.backup.mac_move_burst }}
-{%         endif %}
-{%         if ethernet_interface.switchport.backup.mac_move_burst_interval is arista.avd.defined %}
-   switchport backup mac-move-burst-interval {{ ethernet_interface.switchport.backup.mac_move_burst_interval }}
-{%         endif %}
-{%         if ethernet_interface.switchport.backup.initial_mac_move_delay is arista.avd.defined %}
-   switchport backup initial-mac-move-delay {{ ethernet_interface.switchport.backup.initial_mac_move_delay }}
-{%         endif %}
-{%         if ethernet_interface.switchport.backup.dest_macaddr is arista.avd.defined %}
-   switchport backup dest-macaddr {{ ethernet_interface.switchport.backup.dest_macaddr }}
-{%         endif %}
-{%     endif %}
-{%     if ethernet_interface.ip_address is arista.avd.defined("dhcp") and ethernet_interface.dhcp_client_accept_default_route is arista.avd.defined(true) %}
-   dhcp client accept default-route
-{%     endif %}
-{%     if ethernet_interface.ip_verify_unicast_source_reachable_via is arista.avd.defined %}
-   ip verify unicast source reachable-via {{ ethernet_interface.ip_verify_unicast_source_reachable_via }}
-{%     endif %}
-{%     if ethernet_interface.bfd.interval is arista.avd.defined and
-          ethernet_interface.bfd.min_rx is arista.avd.defined and
-          ethernet_interface.bfd.multiplier is arista.avd.defined %}
-   bfd interval {{ ethernet_interface.bfd.interval }} min-rx {{ ethernet_interface.bfd.min_rx }} multiplier {{ ethernet_interface.bfd.multiplier }}
-{%     endif %}
-{%     if ethernet_interface.bfd.echo is arista.avd.defined(true) %}
-   bfd echo
-{%     elif ethernet_interface.bfd.echo is arista.avd.defined(false) %}
-   no bfd echo
-{%     endif %}
-{%     if ethernet_interface.dhcp_server_ipv4 is arista.avd.defined(true) %}
-   dhcp server ipv4
-{%     endif %}
-{%     if ethernet_interface.dhcp_server_ipv6 is arista.avd.defined(true) %}
-   dhcp server ipv6
-{%     endif %}
-{%     if ethernet_interface.ip_igmp_host_proxy.enabled is arista.avd.defined(true) %}
-{%         set host_proxy_cli =  "ip igmp host-proxy" %}
-   {{ host_proxy_cli }}
-{%         if ethernet_interface.ip_igmp_host_proxy.groups is arista.avd.defined %}
-{%             for proxy_group in ethernet_interface.ip_igmp_host_proxy.groups %}
-{%                 if proxy_group.exclude is arista.avd.defined or proxy_group.include is arista.avd.defined %}
-{%                     if proxy_group.include is arista.avd.defined %}
-{%                         for include_source in proxy_group.include %}
-   {{ host_proxy_cli }} {{ proxy_group.group }} include {{ include_source.source }}
-{%                         endfor %}
-{%                     endif %}
-{%                     if proxy_group.exclude is arista.avd.defined %}
-{%                         for exclude_source in proxy_group.exclude %}
-   {{ host_proxy_cli }} {{ proxy_group.group }} exclude {{ exclude_source.source }}
-{%                         endfor %}
-{%                     endif %}
-{%                 elif proxy_group.group is arista.avd.defined %}
-   {{ host_proxy_cli }} {{ proxy_group.group }}
-{%                 endif %}
-{%             endfor %}
-{%         endif %}
-{%         if ethernet_interface.ip_igmp_host_proxy.access_lists is arista.avd.defined %}
-{%             for access_list in ethernet_interface.ip_igmp_host_proxy.access_lists %}
-   {{ host_proxy_cli }} access-list {{ access_list.name }}
-{%             endfor %}
-{%         endif %}
-{%         if ethernet_interface.ip_igmp_host_proxy.report_interval is arista.avd.defined %}
-   {{ host_proxy_cli }} report-interval {{ ethernet_interface.ip_igmp_host_proxy.report_interval }}
-{%         endif %}
-{%         if ethernet_interface.ip_igmp_host_proxy.version is arista.avd.defined %}
-   {{ host_proxy_cli }} version {{ ethernet_interface.ip_igmp_host_proxy.version }}
-{%         endif %}
-{%     endif %}
-{%     if ethernet_interface.ipv6_enable is arista.avd.defined(true) %}
-   ipv6 enable
-{%     endif %}
-{%     if ethernet_interface.ipv6_address is arista.avd.defined %}
-   ipv6 address {{ ethernet_interface.ipv6_address }}
-{%     endif %}
-{%     if ethernet_interface.ipv6_address_link_local is arista.avd.defined %}
-   ipv6 address {{ ethernet_interface.ipv6_address_link_local }} link-local
-{%     endif %}
-{%     if ethernet_interface.ipv6_nd_ra_disabled is arista.avd.defined(true) %}
-   ipv6 nd ra disabled
-{%     endif %}
-{%     if ethernet_interface.ipv6_nd_managed_config_flag is arista.avd.defined(true) %}
-   ipv6 nd managed-config-flag
-{%     endif %}
-{%     if ethernet_interface.ipv6_nd_prefixes is arista.avd.defined %}
-{%         for prefix in ethernet_interface.ipv6_nd_prefixes %}
-{%             set ipv6_nd_prefix_cli = "ipv6 nd prefix " ~ prefix.ipv6_prefix %}
-{%             if prefix.valid_lifetime is arista.avd.defined %}
-{%                 set ipv6_nd_prefix_cli = ipv6_nd_prefix_cli ~ " " ~ prefix.valid_lifetime %}
-{%                 if prefix.preferred_lifetime is arista.avd.defined %}
-{%                     set ipv6_nd_prefix_cli = ipv6_nd_prefix_cli ~ " " ~ prefix.preferred_lifetime %}
-{%                 endif %}
-{%             endif %}
-{%             if prefix.no_autoconfig_flag is arista.avd.defined(true) %}
-{%                 set ipv6_nd_prefix_cli = ipv6_nd_prefix_cli ~ " no-autoconfig" %}
-{%             endif %}
-   {{ ipv6_nd_prefix_cli }}
-{%         endfor %}
-{%     endif %}
-{%     for destination in ethernet_interface.ipv6_dhcp_relay_destinations | arista.avd.natural_sort('address') %}
-{%         set destination_cli = "ipv6 dhcp relay destination " ~ destination.address %}
-{%         if destination.vrf is arista.avd.defined %}
-{%             set destination_cli = destination_cli ~ " vrf " ~ destination.vrf %}
-{%         endif %}
-{%         if destination.local_interface is arista.avd.defined %}
-{%             set destination_cli = destination_cli ~ " local-interface " ~ destination.local_interface %}
-{%         elif destination.source_address is arista.avd.defined %}
-{%             set destination_cli = destination_cli ~ " source-address " ~ destination.source_address %}
-{%         endif %}
-{%         if destination.link_address is arista.avd.defined %}
-{%             set destination_cli = destination_cli ~ " link-address " ~ destination.link_address %}
-{%         endif %}
-   {{ destination_cli }}
-{%     endfor %}
-{%     if ethernet_interface.tcp_mss_ceiling.ipv4_segment_size is arista.avd.defined or ethernet_interface.tcp_mss_ceiling.ipv6_segment_size is arista.avd.defined %}
-{%         set tcp_mss_ceiling_cli = "tcp mss ceiling" %}
-{%         if ethernet_interface.tcp_mss_ceiling.ipv4_segment_size is arista.avd.defined %}
-{%             set tcp_mss_ceiling_cli = tcp_mss_ceiling_cli ~ " ipv4 " ~ ethernet_interface.tcp_mss_ceiling.ipv4_segment_size %}
-{%         endif %}
-{%         if ethernet_interface.tcp_mss_ceiling.ipv6_segment_size is arista.avd.defined %}
-{%             set tcp_mss_ceiling_cli = tcp_mss_ceiling_cli ~ " ipv6 " ~ ethernet_interface.tcp_mss_ceiling.ipv6_segment_size %}
-{%         endif %}
-{%         if ethernet_interface.tcp_mss_ceiling.direction is arista.avd.defined %}
-{%             set tcp_mss_ceiling_cli = tcp_mss_ceiling_cli ~ " " ~ ethernet_interface.tcp_mss_ceiling.direction %}
-{%         endif %}
-   {{ tcp_mss_ceiling_cli }}
-{%     endif %}
-{%     if ethernet_interface.channel_group.id is arista.avd.defined and ethernet_interface.channel_group.mode is arista.avd.defined %}
-   channel-group {{ ethernet_interface.channel_group.id }} mode {{ ethernet_interface.channel_group.mode }}
-{%         if ethernet_interface.lacp_timer.mode is arista.avd.defined %}
-   lacp timer {{ ethernet_interface.lacp_timer.mode }}
-{%         endif %}
-{%         if ethernet_interface.lacp_timer.multiplier is arista.avd.defined %}
-   lacp timer multiplier {{ ethernet_interface.lacp_timer.multiplier }}
-{%         endif %}
-{%         if ethernet_interface.lacp_port_priority is arista.avd.defined %}
-   lacp port-priority {{ ethernet_interface.lacp_port_priority }}
-{%         endif %}
-{%     endif %}
-{%     if ethernet_interface.lldp.transmit is arista.avd.defined(false) %}
-   no lldp transmit
-{%     endif %}
-{%     if ethernet_interface.lldp.receive is arista.avd.defined(false) %}
-   no lldp receive
-{%     endif %}
-{%     if ethernet_interface.lldp.ztp_vlan is arista.avd.defined %}
-   lldp tlv transmit ztp vlan {{ ethernet_interface.lldp.ztp_vlan }}
-{%     endif %}
-{%     if ethernet_interface.mpls.ldp.igp_sync is arista.avd.defined(true) %}
-   mpls ldp igp sync
-{%     endif %}
-{%     if ethernet_interface.mpls.ldp.interface is arista.avd.defined(true) %}
-   mpls ldp interface
-{%     elif ethernet_interface.mpls.ldp.interface is arista.avd.defined(false) %}
-   no mpls ldp interface
-{%     endif %}
-{%     if ethernet_interface.access_group_in is arista.avd.defined %}
-   ip access-group {{ ethernet_interface.access_group_in }} in
-{%     endif %}
-{%     if ethernet_interface.access_group_out is arista.avd.defined %}
-   ip access-group {{ ethernet_interface.access_group_out }} out
-{%     endif %}
-{%     if ethernet_interface.ipv6_access_group_in is arista.avd.defined %}
-   ipv6 access-group {{ ethernet_interface.ipv6_access_group_in }} in
-{%     endif %}
-{%     if ethernet_interface.ipv6_access_group_out is arista.avd.defined %}
-   ipv6 access-group {{ ethernet_interface.ipv6_access_group_out }} out
-{%     endif %}
-{%     if ethernet_interface.mac_access_group_in is arista.avd.defined %}
-   mac access-group {{ ethernet_interface.mac_access_group_in }} in
-{%     endif %}
-{%     if ethernet_interface.mac_access_group_out is arista.avd.defined %}
-   mac access-group {{ ethernet_interface.mac_access_group_out }} out
-{%     endif %}
-{%     if ethernet_interface.multicast is arista.avd.defined %}
-{%         if ethernet_interface.multicast.ipv4.boundaries is arista.avd.defined %}
-{%             for boundary in ethernet_interface.multicast.ipv4.boundaries %}
-{%                 set boundary_cli = "multicast ipv4 boundary " ~ boundary.boundary %}
-{%                 if boundary.out is arista.avd.defined(true) %}
-{%                     set boundary_cli = boundary_cli ~ " out" %}
-{%                 endif %}
-   {{ boundary_cli }}
-{%             endfor %}
-{%         endif %}
-{%         if ethernet_interface.multicast.ipv6.boundaries is arista.avd.defined %}
-{%             for boundary in ethernet_interface.multicast.ipv6.boundaries %}
-   multicast ipv6 boundary {{ boundary.boundary }} out
-{%             endfor %}
-{%         endif %}
-{%         if ethernet_interface.multicast.ipv4.static is arista.avd.defined(true) %}
-   multicast ipv4 static
-{%         endif %}
-{%         if ethernet_interface.multicast.ipv6.static is arista.avd.defined(true) %}
-   multicast ipv6 static
-{%         endif %}
-{%     endif %}
-{%     if ethernet_interface.mpls.ip is arista.avd.defined(true) %}
-   mpls ip
-{%     elif ethernet_interface.mpls.ip is arista.avd.defined(false) %}
-   no mpls ip
-{%     endif %}
-{%     if ethernet_interface.ip_nat is arista.avd.defined %}
-{%         set interface_ip_nat = ethernet_interface.ip_nat %}
-{%         include 'eos/interface-ip-nat.j2' %}
-{%         if ethernet_interface.ip_nat.service_profile is arista.avd.defined %}
-   ip nat service-profile {{ ethernet_interface.ip_nat.service_profile }}
-{%         endif %}
-{%     endif %}
-{%     if ethernet_interface.ospf_cost is arista.avd.defined %}
-   ip ospf cost {{ ethernet_interface.ospf_cost }}
-{%     endif %}
-{%     if ethernet_interface.ospf_network_point_to_point is arista.avd.defined(true) %}
-   ip ospf network point-to-point
-{%     endif %}
-{%     if ethernet_interface.ospf_authentication is arista.avd.defined('simple') %}
-   ip ospf authentication
-{%     elif ethernet_interface.ospf_authentication is arista.avd.defined('message-digest') %}
-   ip ospf authentication message-digest
-{%     endif %}
-{%     if ethernet_interface.ospf_authentication_key is arista.avd.defined %}
-   ip ospf authentication-key 7 {{ ethernet_interface.ospf_authentication_key | arista.avd.hide_passwords(hide_passwords) }}
-{%     endif %}
-{%     if ethernet_interface.ospf_area is arista.avd.defined %}
-   ip ospf area {{ ethernet_interface.ospf_area }}
-{%     endif %}
-{%     for ospf_message_digest_key in ethernet_interface.ospf_message_digest_keys | arista.avd.natural_sort('id') %}
-{%         if ospf_message_digest_key.hash_algorithm is arista.avd.defined and ospf_message_digest_key.key is arista.avd.defined %}
-   ip ospf message-digest-key {{ ospf_message_digest_key.id }} {{ ospf_message_digest_key.hash_algorithm }} 7 {{ ospf_message_digest_key.key | arista.avd.hide_passwords(hide_passwords) }}
-{%         endif %}
-{%     endfor %}
-{%     if ethernet_interface.pim.ipv4.sparse_mode is arista.avd.defined(true) %}
-   pim ipv4 sparse-mode
-{%     endif %}
-{%     if ethernet_interface.pim.ipv4.bidirectional is arista.avd.defined(true) %}
-   pim ipv4 bidirectional
-{%     endif %}
-{%     if ethernet_interface.pim.ipv4.border_router is arista.avd.defined(true) %}
-   pim ipv4 border-router
-{%     endif %}
-{%     if ethernet_interface.pim.ipv4.hello.interval is arista.avd.defined %}
-   pim ipv4 hello interval {{ ethernet_interface.pim.ipv4.hello.interval }}
-{%     endif %}
-{%     if ethernet_interface.pim.ipv4.hello.count is arista.avd.defined %}
-   pim ipv4 hello count {{ ethernet_interface.pim.ipv4.hello.count }}
-{%     endif %}
-{%     if ethernet_interface.pim.ipv4.dr_priority is arista.avd.defined %}
-   pim ipv4 dr-priority {{ ethernet_interface.pim.ipv4.dr_priority }}
-{%     endif %}
-{%     if ethernet_interface.pim.ipv4.bfd is arista.avd.defined(true) %}
-   pim ipv4 bfd
-{%     endif %}
-{%     if ethernet_interface.poe.priority is arista.avd.defined %}
-   poe priority {{ ethernet_interface.poe.priority }}
-{%     endif %}
-{%     if ethernet_interface.poe.reboot.action is arista.avd.defined %}
-   poe reboot action {{ ethernet_interface.poe.reboot.action }}
-{%     endif %}
-{%     if ethernet_interface.poe.link_down.action is arista.avd.defined %}
-{%         set poe_link_down_action_cli = 'poe link down action ' ~ ethernet_interface.poe.link_down.action %}
-{%         if ethernet_interface.poe.link_down.power_off_delay is arista.avd.defined and ethernet_interface.poe.link_down.action == 'power-off' %}
-{%             set poe_link_down_action_cli = poe_link_down_action_cli ~ ' ' ~ ethernet_interface.poe.link_down.power_off_delay ~ ' seconds' %}
-{%         endif %}
-   {{ poe_link_down_action_cli }}
-{%     endif %}
-{%     if ethernet_interface.poe.shutdown.action is arista.avd.defined %}
-   poe shutdown action {{ ethernet_interface.poe.shutdown.action }}
-{%     endif %}
-{%     if ethernet_interface.poe.disabled is arista.avd.defined(true) %}
-   poe disabled
-{%     endif %}
-{%     if ethernet_interface.poe.limit is arista.avd.defined %}
-{%         if ethernet_interface.poe.limit.class is arista.avd.defined %}
-{%             set poe_limit_cli = 'poe limit ' ~ POE_CLASS_MAP[ethernet_interface.poe.limit.class] ~ ' watts' %}
-{%         elif ethernet_interface.poe.limit.watts is arista.avd.defined %}
-{%             set poe_limit_cli = 'poe limit ' ~ "%.2f" | format(ethernet_interface.poe.limit.watts | float) ~ ' watts' %}
-{%         endif %}
-{%         if poe_limit_cli is arista.avd.defined and ethernet_interface.poe.limit.fixed is arista.avd.defined(true) %}
-{%             set poe_limit_cli = poe_limit_cli ~ ' fixed' %}
-{%         endif %}
-   {{ poe_limit_cli }}
-{%     endif %}
-{%     if ethernet_interface.poe.negotiation_lldp is arista.avd.defined(false) %}
-   poe negotiation lldp disabled
-{%     endif %}
-{%     if ethernet_interface.poe.legacy_detect is arista.avd.defined(true) %}
-   poe legacy detect
-{%     endif %}
-{%     if ethernet_interface.switchport.port_security is arista.avd.defined %}
-{%         if ethernet_interface.switchport.port_security.enabled is arista.avd.defined(true) or ethernet_interface.switchport.port_security.violation.mode is arista.avd.defined('shutdown') %}
-   switchport port-security
-{%         elif ethernet_interface.switchport.port_security.violation.mode is arista.avd.defined('protect') %}
-{%             if ethernet_interface.switchport.port_security.violation.protect_log is arista.avd.defined(true) %}
-   switchport port-security violation protect log
-{%             else %}
-   switchport port-security violation protect
-{%             endif %}
-{%         endif %}
-{%         if ethernet_interface.switchport.port_security.mac_address_maximum.disabled is arista.avd.defined(true) %}
-   switchport port-security mac-address maximum disabled
-{%         elif ethernet_interface.switchport.port_security.mac_address_maximum.disabled is arista.avd.defined(false) %}
-   no switchport port-security mac-address maximum disabled
-{%         elif ethernet_interface.switchport.port_security.mac_address_maximum.limit is arista.avd.defined %}
-   switchport port-security mac-address maximum {{ ethernet_interface.switchport.port_security.mac_address_maximum.limit }}
-{%         endif %}
-{%         if ethernet_interface.switchport.port_security.violation.mode is not arista.avd.defined('protect')  %}
-{%             if ethernet_interface.switchport.port_security.vlans is arista.avd.defined %}
-{%                 for vlan in ethernet_interface.switchport.port_security.vlans %}
-{%                     if vlan.range is arista.avd.defined and vlan.mac_address_maximum is arista.avd.defined %}
-{%                         for id in vlan.range | arista.avd.range_expand %}
-   switchport port-security vlan {{ id }} mac-address maximum {{ vlan.mac_address_maximum }}
-{%                         endfor %}
-{%                     endif %}
-{%                 endfor %}
-{%             endif %}
-{%             if ethernet_interface.switchport.port_security.vlan_default_mac_address_maximum is arista.avd.defined %}
-   switchport port-security vlan default mac-address maximum {{ ethernet_interface.switchport.port_security.vlan_default_mac_address_maximum }}
-{%             endif %}
-{%         endif %}
-{%     endif %}
-{%     if ethernet_interface.qos.trust is arista.avd.defined %}
-{%         if ethernet_interface.qos.trust == 'disabled' %}
-   no qos trust
-{%         else %}
-   qos trust {{ ethernet_interface.qos.trust }}
-{%         endif %}
-{%     endif %}
-{%     if ethernet_interface.qos.cos is arista.avd.defined %}
-   qos cos {{ ethernet_interface.qos.cos }}
-{%     endif %}
-{%     if ethernet_interface.qos.dscp is arista.avd.defined %}
-   qos dscp {{ ethernet_interface.qos.dscp }}
-{%     endif %}
-{%     if ethernet_interface.shape.rate is arista.avd.defined %}
-   shape rate {{ ethernet_interface.shape.rate }}
-{%     endif %}
-{%     if ethernet_interface.priority_flow_control.enabled is arista.avd.defined(true) %}
-   priority-flow-control on
-{%     elif ethernet_interface.priority_flow_control.enabled is arista.avd.defined(false) %}
-   no priority-flow-control
-{%     endif %}
-{%     for priority_block in ethernet_interface.priority_flow_control.priorities | arista.avd.natural_sort %}
-{%         if priority_block.priority is arista.avd.defined %}
-{%             if priority_block.no_drop is arista.avd.defined(true) %}
-   priority-flow-control priority {{ priority_block.priority }} no-drop
-{%             elif priority_block.no_drop is arista.avd.defined(false) %}
-   priority-flow-control priority {{ priority_block.priority }} drop
-{%             endif %}
-{%         endif %}
-{%     endfor %}
-{%     for section in ethernet_interface.storm_control | arista.avd.natural_sort %}
-{%         if ethernet_interface.storm_control[section].level is arista.avd.defined %}
-{%             if ethernet_interface.storm_control[section].unit is arista.avd.defined('pps') %}
-   storm-control {{ section | replace("_", "-") }} level pps {{ ethernet_interface.storm_control[section].level }}
-{%             else %}
-   storm-control {{ section | replace("_", "-") }} level {{ ethernet_interface.storm_control[section].level }}
-{%             endif %}
-{%         endif %}
-{%     endfor %}
-{%     if ethernet_interface.ptp.enable is arista.avd.defined(true) %}
-   ptp enable
-{%     endif %}
-{%     if ethernet_interface.ptp.sync_message.interval is arista.avd.defined %}
-   ptp sync-message interval {{ ethernet_interface.ptp.sync_message.interval }}
-{%     endif %}
-{%     if ethernet_interface.ptp.delay_mechanism is arista.avd.defined %}
-   ptp delay-mechanism {{ ethernet_interface.ptp.delay_mechanism }}
-{%     endif %}
-{%     if ethernet_interface.ptp.announce.interval is arista.avd.defined %}
-   ptp announce interval {{ ethernet_interface.ptp.announce.interval }}
-{%     endif %}
-{%     if ethernet_interface.ptp.transport is arista.avd.defined %}
-   ptp transport {{ ethernet_interface.ptp.transport }}
-{%     endif %}
-{%     if ethernet_interface.ptp.announce.timeout is arista.avd.defined %}
-   ptp announce timeout {{ ethernet_interface.ptp.announce.timeout }}
-{%     endif %}
-{%     if ethernet_interface.ptp.delay_req is arista.avd.defined %}
-   ptp delay-req interval {{ ethernet_interface.ptp.delay_req }}
-{%     endif %}
-{%     if ethernet_interface.ptp.profile.g8275_1.destination_mac_address is arista.avd.defined %}
-   ptp profile g8275.1 destination mac-address {{ ethernet_interface.ptp.profile.g8275_1.destination_mac_address }}
-{%     endif %}
-{%     if ethernet_interface.ptp.role is arista.avd.defined %}
-   ptp role {{ ethernet_interface.ptp.role }}
-{%     endif %}
-{%     if ethernet_interface.ptp.vlan is arista.avd.defined %}
-   ptp vlan {{ ethernet_interface.ptp.vlan }}
-{%     endif %}
-{%     if ethernet_interface.service_policy.pbr.input is arista.avd.defined %}
-   service-policy type pbr input {{ ethernet_interface.service_policy.pbr.input }}
-{%     endif %}
-{%     if ethernet_interface.service_policy.qos.input is arista.avd.defined %}
-   service-policy type qos input {{ ethernet_interface.service_policy.qos.input }}
-{%     endif %}
-{%     if ethernet_interface.service_profile is arista.avd.defined %}
-   service-profile {{ ethernet_interface.service_profile }}
-{%     endif %}
-{%     if ethernet_interface.isis_enable is arista.avd.defined %}
-   isis enable {{ ethernet_interface.isis_enable }}
-{%     endif %}
-{%     if ethernet_interface.isis_bfd is arista.avd.defined(true) %}
-   isis bfd
-{%     endif %}
-{%     if ethernet_interface.isis_circuit_type is arista.avd.defined %}
-   isis circuit-type {{ ethernet_interface.isis_circuit_type }}
-{%     endif %}
-{%     if ethernet_interface.isis_metric is arista.avd.defined %}
-   isis metric {{ ethernet_interface.isis_metric }}
-{%     endif %}
-{%     if ethernet_interface.isis_passive is arista.avd.defined(true) %}
-   isis passive
-{%     endif %}
-{%     if ethernet_interface.isis_hello_padding is arista.avd.defined(false) %}
-   no isis hello padding
-{%     elif ethernet_interface.isis_hello_padding is arista.avd.defined(true) %}
-   isis hello padding
-{%     endif %}
-{%     if ethernet_interface.isis_network_point_to_point is arista.avd.defined(true) %}
-   isis network point-to-point
-{%     endif %}
-{%     if ethernet_interface.isis_authentication_mode is arista.avd.defined and
-          ethernet_interface.isis_authentication_mode in ["text", "md5"] %}
-   isis authentication mode {{ ethernet_interface.isis_authentication_mode }}
-{%     endif %}
-{%     if ethernet_interface.isis_authentication_key is arista.avd.defined %}
-   isis authentication key 7 {{ ethernet_interface.isis_authentication_key | arista.avd.hide_passwords(hide_passwords) }}
-{%     endif %}
-{%     if ethernet_interface.spanning_tree_portfast is arista.avd.defined('edge') %}
-   spanning-tree portfast
-{%     elif ethernet_interface.spanning_tree_portfast is arista.avd.defined('network') %}
-   spanning-tree portfast network
-{%     endif %}
-{%     if ethernet_interface.spanning_tree_bpduguard is arista.avd.defined and ethernet_interface.spanning_tree_bpduguard in [True, "True", "enabled"] %}
-   spanning-tree bpduguard enable
-{%     elif ethernet_interface.spanning_tree_bpduguard is arista.avd.defined("disabled") %}
-   spanning-tree bpduguard disable
-{%     endif %}
-{%     if ethernet_interface.spanning_tree_bpdufilter is arista.avd.defined and ethernet_interface.spanning_tree_bpdufilter in [True, "True", "enabled"] %}
-   spanning-tree bpdufilter enable
-{%     elif ethernet_interface.spanning_tree_bpdufilter is arista.avd.defined("disabled") %}
-   spanning-tree bpdufilter disable
-{%     endif %}
-{%     if ethernet_interface.spanning_tree_guard is arista.avd.defined %}
-{%         if ethernet_interface.spanning_tree_guard == 'disabled' %}
-   spanning-tree guard none
-{%         else %}
-   spanning-tree guard {{ ethernet_interface.spanning_tree_guard }}
-{%         endif %}
-{%     endif %}
-{%     if ethernet_interface.sflow is arista.avd.defined %}
-{%         if ethernet_interface.sflow.enable is arista.avd.defined(true) %}
-   sflow enable
-{%         elif ethernet_interface.sflow.enable is arista.avd.defined(false) %}
-   no sflow enable
-{%         endif %}
-{%         if ethernet_interface.sflow.egress.enable is arista.avd.defined(true) %}
-   sflow egress enable
-{%         elif ethernet_interface.sflow.egress.enable is arista.avd.defined(false) %}
-   no sflow egress enable
-{%         endif %}
-{%         if ethernet_interface.sflow.egress.unmodified_enable is arista.avd.defined(true) %}
-   sflow egress unmodified enable
-{%         elif ethernet_interface.sflow.egress.unmodified_enable is arista.avd.defined(false) %}
-   no sflow egress unmodified enable
-{%         endif %}
-{%     endif %}
-{%     if ethernet_interface.vmtracer is arista.avd.defined(true) %}
-   vmtracer vmware-esx
-{%     endif %}
-{%     if ethernet_interface.transceiver.media.override is arista.avd.defined %}
-   transceiver media override {{ ethernet_interface.transceiver.media.override }}
-{%     endif %}
-{%     if ethernet_interface.transceiver.frequency is arista.avd.defined %}
-{%         set frequency_cli = 'transceiver frequency ' ~ "%.3f" | format(ethernet_interface.transceiver.frequency | float) %}
-{%         if ethernet_interface.transceiver.frequency_unit is arista.avd.defined %}
-{%             set frequency_cli = frequency_cli ~ ' ' ~ ethernet_interface.transceiver.frequency_unit %}
-{%         endif %}
-   {{ frequency_cli }}
-{%     endif %}
-{%     for link_tracking_group in ethernet_interface.link_tracking_groups | arista.avd.natural_sort %}
-{%         if link_tracking_group.name is arista.avd.defined and link_tracking_group.direction is arista.avd.defined %}
-   link tracking group {{ link_tracking_group.name }} {{ link_tracking_group.direction }}
-{%         endif %}
-{%     endfor %}
-{%     if ethernet_interface.traffic_policy.input is arista.avd.defined %}
-   traffic-policy input {{ ethernet_interface.traffic_policy.input }}
-{%     endif %}
-{%     if ethernet_interface.traffic_policy.output is arista.avd.defined %}
-   traffic-policy output {{ ethernet_interface.traffic_policy.output }}
-{%     endif %}
-{%     for tx_queue in ethernet_interface.tx_queues | arista.avd.natural_sort('id') %}
-{%         include 'eos/ethernet-interface-tx-queues.j2' %}
-{%     endfor %}
-{%     for uc_tx_queue in ethernet_interface.uc_tx_queues | arista.avd.natural_sort('id') %}
-{%         include 'eos/ethernet-interface-uc-tx-queues.j2' %}
-{%     endfor %}
-{%     if ethernet_interface.vrrp_ids is arista.avd.defined %}
-{%         for vrid in ethernet_interface.vrrp_ids | arista.avd.natural_sort('id') if vrid.id is arista.avd.defined %}
-{%             if vrid.priority_level is arista.avd.defined %}
-   vrrp {{ vrid.id }} priority-level {{ vrid.priority_level }}
-{%             endif %}
-{%             if vrid.advertisement.interval is arista.avd.defined %}
-   vrrp {{ vrid.id }} advertisement interval {{ vrid.advertisement.interval }}
-{%             endif %}
-{%             if vrid.preempt.enabled is arista.avd.defined(true) and (
-                  vrid.preempt.delay.minimum is arista.avd.defined or
-                  vrid.preempt.delay.reload is arista.avd.defined) %}
-{%                 set delay_cli = 'vrrp ' ~ vrid.id ~ ' preempt delay' %}
-{%                 if vrid.preempt.delay.minimum is arista.avd.defined %}
-{%                     set delay_cli = delay_cli ~ ' minimum ' ~ vrid.preempt.delay.minimum %}
-{%                 endif %}
-{%                 if vrid.preempt.delay.reload is arista.avd.defined %}
-{%                     set delay_cli = delay_cli ~ ' reload ' ~ vrid.preempt.delay.reload %}
-{%                 endif %}
-   {{ delay_cli }}
-{%             elif vrid.preempt.enabled is arista.avd.defined(false) %}
-   no vrrp {{ vrid.id }} preempt
-{%             endif %}
-{%             if vrid.timers.delay.reload is arista.avd.defined %}
-   vrrp {{ vrid.id }} timers delay reload {{ vrid.timers.delay.reload }}
-{%             endif %}
-{%             if vrid.ipv4.address is arista.avd.defined %}
-   vrrp {{ vrid.id }} ipv4 {{ vrid.ipv4.address }}
-{%             endif %}
-{%             if vrid.ipv4.version is arista.avd.defined %}
-   vrrp {{ vrid.id }} ipv4 version {{ vrid.ipv4.version }}
-{%             endif %}
-{%             if vrid.ipv6.address is arista.avd.defined %}
-   vrrp {{ vrid.id }} ipv6 {{ vrid.ipv6.address }}
-{%             endif %}
-{%             for tracked_obj in vrid.tracked_object | arista.avd.natural_sort('name') %}
-{%                 if tracked_obj.name is arista.avd.defined %}
-{%                     set tracked_obj_cli = "vrrp " ~ vrid.id ~ " tracked-object " ~ tracked_obj.name %}
-{%                     if tracked_obj.decrement is arista.avd.defined %}
-{%                         set tracked_obj_cli = tracked_obj_cli ~ " decrement " ~ tracked_obj.decrement %}
-{%                     elif tracked_obj.shutdown is arista.avd.defined(true) %}
-{%                         set tracked_obj_cli = tracked_obj_cli ~ " shutdown" %}
-{%                     endif %}
-   {{ tracked_obj_cli }}
-{%                 endif %}
-{%             endfor %}
-{%         endfor %}
-{%     endif %}
-{%     if ethernet_interface.sync_e.enable is arista.avd.defined(true) %}
-   sync-e
-{%         if ethernet_interface.sync_e.priority is arista.avd.defined %}
-      priority {{ ethernet_interface.sync_e.priority }}
 {%         endif %}
 {%     endif %}
 {%     if ethernet_interface.eos_cli is arista.avd.defined %}

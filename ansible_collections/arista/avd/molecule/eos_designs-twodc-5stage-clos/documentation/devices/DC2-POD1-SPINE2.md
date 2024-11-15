@@ -342,9 +342,9 @@ ASN Notation: asplain
 !
 router bgp 65210
    router-id 172.16.210.2
-   maximum-paths 4 ecmp 4
    update wait-install
    no bgp default ipv4-unicast
+   maximum-paths 4 ecmp 4
    distance bgp 20 200 200
    neighbor IPv4-UNDERLAY-PEERS peer group
    neighbor IPv4-UNDERLAY-PEERS send-community
@@ -363,8 +363,8 @@ router bgp 65210
    neighbor 172.17.210.7 description DC2-POD1-LEAF2A_Ethernet2
    neighbor 200.200.200.101 peer group IPv4-UNDERLAY-PEERS
    neighbor 200.200.200.101 remote-as 65112
-   neighbor 200.200.200.101 description DC1-POD2-SPINE2
    no neighbor 200.200.200.101 bfd
+   neighbor 200.200.200.101 description DC1-POD2-SPINE2
    redistribute connected route-map RM-CONN-2-BGP
    !
    address-family ipv4

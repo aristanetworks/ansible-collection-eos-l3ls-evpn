@@ -8,6 +8,10 @@ router_bgp:
       ipv4_unicast: false
   maximum_paths:
     paths: 16
+  redistribute:
+    connected:
+      enabled: true
+      route_map: RM-CONN-2-BGP
   updates:
     wait_install: true
   peer_groups:
@@ -36,9 +40,6 @@ router_bgp:
       activate: true
     - name: WAN-OVERLAY-PEERS
       activate: false
-  redistribute_routes:
-  - source_protocol: connected
-    route_map: RM-CONN-2-BGP
   bgp_cluster_id: 192.168.44.1
   listen_ranges:
   - prefix: 192.168.142.0/24

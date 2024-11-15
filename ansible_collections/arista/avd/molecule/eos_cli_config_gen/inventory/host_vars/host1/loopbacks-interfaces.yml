@@ -1,0 +1,38 @@
+---
+loopback_interfaces:
+  - name: Loopback0
+    description: EVPN_Overlay_Peering
+    ip_address: 192.168.255.3/32
+    eos_cli: |
+      comment
+      Comment created from eos_cli under loopback_interfaces.Loopback0
+      EOF
+
+  - name: Loopback1
+    description: VTEP_VXLAN_Tunnel_Source
+    ip_address: 192.168.254.3/32
+
+  - name: Loopback100
+    description: TENANT_A_PROJECT02_VTEP_DIAGNOSTICS
+    vrf: TENANT_A_PROJECT02
+    ip_address: 10.1.255.3/32
+
+  - name: Loopback99
+    description: TENANT_A_PROJECT02_VTEP_DIAGNOSTICS
+    vrf: TENANT_A_PROJECT02
+    ip_address: 10.1.255.3/32
+    shutdown: false
+    ip_proxy_arp: true
+    ip_address_secondaries:
+      - 192.168.1.1/32
+      - 10.0.0.254/32
+    ipv6_enable: true
+    ipv6_address: 2002::CAFE/64
+    isis_enable: ISIS_TEST
+    isis_bfd: true
+    isis_passive: true
+    isis_metric: 100
+    isis_network_point_to_point: true
+    mpls:
+      ldp:
+        interface: true

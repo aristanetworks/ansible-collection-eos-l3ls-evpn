@@ -24,7 +24,10 @@ Arista Validated Designs (AVD) is an extensible data model that defines Arista's
 
 ## Reference designs
 
-- [L3LS VXLAN-EVPN, L2LS, and MPLS](roles/eos_designs/README.md)
+- [L3LS VXLAN-EVPN](roles/eos_designs/README.md#layer-3-leaf-spine-with-vxlan-evpn)
+- [L2LS](roles/eos_designs/README.md#layer-2-leaf-spine)
+- [MPLS](roles/eos_designs/README.md#mpls-core-with-mpls-evpn-vpn-ipv4-vpn-ipv6)
+- [WAN AutoVPN/CV Pathfinder](roles/eos_designs/README.md#wan-autovpn-cv-pathfinder)
 
 ## AVD Ansible Collection
 

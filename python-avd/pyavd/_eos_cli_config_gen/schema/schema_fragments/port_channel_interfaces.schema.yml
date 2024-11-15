@@ -16,6 +16,9 @@ keys:
           type: str
         description:
           type: str
+        profile:
+          type: str
+          description: Interface profile.
         logging:
           type: dict
           keys:
@@ -66,7 +69,7 @@ keys:
           deprecation:
             warning: true
             remove_in_version: 6.0.0
-            url: https://avd.arista.com/stable/docs/release-notes/5.x.x.html#removal-of-type-key-dependency-for-rendering-ethernetport-channel-interfaces-configuration-and-documentation
+            url: https://avd.arista.com/5.x/docs/porting-guides/5.x.x.html#removal-of-type-key-dependency-for-rendering-ethernetport-channel-interfaces-configuration-and-documentation
           valid_values:
             - routed
             - switched
@@ -298,7 +301,6 @@ keys:
             new_key: switchport.trunk.native_vlan
         native_vlan_tag:
           type: bool
-          default: false
           description: If setting both native_vlan and native_vlan_tag, native_vlan_tag takes precedence.
           deprecation:
             warning: true
@@ -319,6 +321,18 @@ keys:
                 valid_values:
                   - upstream
                   - downstream
+        link_tracking:
+          type: dict
+          keys:
+            direction:
+              type: str
+              valid_values: ["upstream", "downstream"]
+            groups:
+              type: list
+              description: Link state group(s) an interface belongs to.
+              items:
+                type: str
+                description: Group names.
         phone:
           type: dict
           deprecation:
@@ -373,10 +387,9 @@ keys:
             new_key: switchport.trunk.groups
         lacp_fallback_timeout:
           type: int
-          description: Timeout in seconds.
+          description: Timeout in seconds. EOS default is 90 seconds.
           convert_types:
             - str
-          default: 90
           min: 0
           max: 300
         lacp_fallback_mode:
@@ -1343,7 +1356,10 @@ keys:
                           - str
         validate_state:
           type: bool
-          description: Set to false to disable interface validation by the `eos_validate_state` role.
+          description: Set to false to disable interface state and LLDP topology validation performed by the `eos_validate_state` role.
+        validate_lldp:
+          type: bool
+          description: Set to false to disable the LLDP topology validation performed by the `eos_validate_state` role.
         eos_cli:
           type: str
           description: Multiline EOS CLI rendered directly on the port-channel interface in the final EOS configuration.

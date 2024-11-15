@@ -11,6 +11,10 @@ router_bgp:
   maximum_paths:
     paths: 4
     ecmp: 4
+  redistribute:
+    connected:
+      enabled: true
+      route_map: RM-CONN-2-BGP
   updates:
     wait_install: true
   peer_groups:
@@ -89,9 +93,6 @@ router_bgp:
     peer: DC1-SPINE4
     description: DC1-SPINE4
     remote_as: '65001'
-  redistribute_routes:
-  - source_protocol: connected
-    route_map: RM-CONN-2-BGP
   address_family_evpn:
     peer_groups:
     - name: EVPN-OVERLAY-PEERS
@@ -114,8 +115,9 @@ router_bgp:
         route_targets:
         - '12:12'
     router_id: 192.168.255.12
-    redistribute_routes:
-    - source_protocol: connected
+    redistribute:
+      connected:
+        enabled: true
     neighbors:
     - ip_address: 10.255.251.7
       peer_group: MLAG-PEERS
@@ -134,10 +136,29 @@ router_bgp:
         route_targets:
         - '13:13'
     router_id: 192.168.255.12
-    redistribute_routes:
-    - source_protocol: connected
+    redistribute:
+      connected:
+        enabled: true
     neighbors:
     - ip_address: 10.255.251.7
+      peer_group: MLAG-PEERS
+      description: DC1-SVC3B
+    updates:
+      wait_install: true
+  - name: Tenant_A_ERP_Zone
+    rd: '65103:17'
+    route_targets:
+      import:
+      - address_family: evpn
+        route_targets:
+        - '17:17'
+      export:
+      - address_family: evpn
+        route_targets:
+        - '17:17'
+    router_id: 192.168.255.12
+    neighbors:
+    - ip_address: 172.31.12.7
       peer_group: MLAG-PEERS
       description: DC1-SVC3B
     updates:
@@ -154,9 +175,10 @@ router_bgp:
         route_targets:
         - '9:9'
     router_id: 192.168.255.12
-    redistribute_routes:
-    - source_protocol: connected
-      route_map: RM-CONN-2-BGP-VRFS
+    redistribute:
+      connected:
+        enabled: true
+        route_map: RM-CONN-2-BGP-VRFS
     neighbors:
     - ip_address: 10.255.251.7
       peer_group: MLAG-PEERS
@@ -177,8 +199,9 @@ router_bgp:
         - '14:14'
         - 65000:789
     router_id: 192.168.255.12
-    redistribute_routes:
-    - source_protocol: connected
+    redistribute:
+      connected:
+        enabled: true
     neighbors:
     - ip_address: 10.255.251.7
       peer_group: MLAG-PEERS
@@ -197,8 +220,9 @@ router_bgp:
         route_targets:
         - '11:11'
     router_id: 192.168.255.12
-    redistribute_routes:
-    - source_protocol: connected
+    redistribute:
+      connected:
+        enabled: true
     neighbors:
     - ip_address: 172.31.11.7
       peer_group: MLAG-PEERS
@@ -217,9 +241,10 @@ router_bgp:
         route_targets:
         - '20:20'
     router_id: 192.168.255.12
-    redistribute_routes:
-    - source_protocol: connected
-      route_map: RM-CONN-2-BGP-VRFS
+    redistribute:
+      connected:
+        enabled: true
+        route_map: RM-CONN-2-BGP-VRFS
     neighbors:
     - ip_address: 10.255.251.7
       peer_group: MLAG-PEERS
@@ -238,9 +263,10 @@ router_bgp:
         route_targets:
         - '21:21'
     router_id: 192.168.255.12
-    redistribute_routes:
-    - source_protocol: connected
-      route_map: RM-CONN-2-BGP-VRFS
+    redistribute:
+      connected:
+        enabled: true
+        route_map: RM-CONN-2-BGP-VRFS
     neighbors:
     - ip_address: 10.255.251.7
       peer_group: MLAG-PEERS
@@ -259,9 +285,10 @@ router_bgp:
         route_targets:
         - '30:30'
     router_id: 192.168.255.12
-    redistribute_routes:
-    - source_protocol: connected
-      route_map: RM-CONN-2-BGP-VRFS
+    redistribute:
+      connected:
+        enabled: true
+        route_map: RM-CONN-2-BGP-VRFS
     neighbors:
     - ip_address: 10.255.251.7
       peer_group: MLAG-PEERS
@@ -280,9 +307,10 @@ router_bgp:
         route_targets:
         - '31:31'
     router_id: 192.168.255.12
-    redistribute_routes:
-    - source_protocol: connected
-      route_map: RM-CONN-2-BGP-VRFS
+    redistribute:
+      connected:
+        enabled: true
+        route_map: RM-CONN-2-BGP-VRFS
     neighbors:
     - ip_address: 10.255.251.7
       peer_group: MLAG-PEERS
@@ -306,6 +334,14 @@ router_bgp:
     redistribute_routes:
     - learned
     vlan: 140-141
+  - name: Tenant_A_ERP_Zone
+    rd: '65103:17'
+    route_targets:
+      both:
+      - '17:17'
+    redistribute_routes:
+    - learned
+    vlan: '122'
   - name: Tenant_A_OP_Zone
     rd: '65103:9'
     route_targets:
@@ -446,6 +482,9 @@ vrfs:
 - name: Tenant_A_DB_Zone
   tenant: Tenant_A
   ip_routing: true
+- name: Tenant_A_ERP_Zone
+  tenant: Tenant_A
+  ip_routing: true
 - name: Tenant_A_OP_Zone
   tenant: Tenant_A
   ip_routing: true
@@ -524,6 +563,14 @@ vlans:
   tenant: Tenant_A
 - id: 3012
   name: MLAG_iBGP_Tenant_A_DB_Zone
+  trunk_groups:
+  - LEAF_PEER_L3
+  tenant: Tenant_A
+- id: 122
+  name: Tenant_A_ERP_Zone_1
+  tenant: Tenant_A
+- id: 3016
+  name: MLAG_iBGP_Tenant_A_ERP_Zone
   trunk_groups:
   - LEAF_PEER_L3
   tenant: Tenant_A
@@ -666,6 +713,29 @@ vlan_interfaces:
   vrf: Tenant_A_DB_Zone
   mtu: 1500
   ip_address: 10.255.251.6/31
+- name: Vlan122
+  tenant: Tenant_A
+  tags:
+  - erp3
+  description: Tenant_A_ERP_Zone_1
+  shutdown: false
+  ip_address_virtual: 10.1.30.1/24
+  ip_address_virtual_secondaries:
+  - 10.2.30.1/24
+  - 10.2.31.1/24
+  vrf: Tenant_A_ERP_Zone
+  ip_helpers:
+  - ip_helper: 1.1.1.1
+    source_interface: lo100
+    vrf: TEST
+- name: Vlan3016
+  tenant: Tenant_A
+  type: underlay_peering
+  shutdown: false
+  description: 'MLAG_PEER_L3_iBGP: vrf Tenant_A_ERP_Zone'
+  vrf: Tenant_A_ERP_Zone
+  mtu: 1500
+  ip_address: 172.31.12.6/31
 - name: Vlan110
   tenant: Tenant_A
   tags:
@@ -860,7 +930,7 @@ port_channel_interfaces:
     enabled: true
     mode: trunk
     trunk:
-      allowed_vlan: 110-112,120-121,130-131,140-141,150,160-161,210-211,250,310-311,350
+      allowed_vlan: 110-112,120-122,130-131,140-141,150,160-161,210-211,250,310-311,350
   shutdown: false
   mlag: 1007
 - name: Port-Channel10
@@ -1051,7 +1121,7 @@ port_channel_interfaces:
     access_vlan: '110'
   mlag: 42
 - name: Port-Channel1291
-  description: server22_port_channel_with_custom_id_server22_port_channel_with_custom_id
+  description: SERVER_server22_port_channel_with_custom_id_server22_port_channel_with_custom_id
   shutdown: false
   switchport:
     enabled: true
@@ -1088,6 +1158,14 @@ port_channel_interfaces:
   switchport:
     enabled: true
   mlag: 34
+- name: Port-Channel43
+  description: server28_monitoring_session_source_settings_access_group_server28_monitoring_session_source_settings_access_group
+  shutdown: false
+  switchport:
+    enabled: true
+    mode: access
+    access_vlan: '110'
+  mlag: 43
 ethernet_interfaces:
 - name: Ethernet53/1
   peer: DC1-SVC3B
@@ -1464,7 +1542,7 @@ ethernet_interfaces:
   peer_interface: Eth1
   peer_type: server
   port_profile: TENANT_A
-  description: server22_port_channel_with_custom_id_Eth1
+  description: SERVER_server22_port_channel_with_custom_id_Po1291
   shutdown: false
   channel_group:
     id: 1291
@@ -1529,6 +1607,16 @@ ethernet_interfaces:
   lacp_timer:
     mode: normal
     multiplier: 50
+- name: Ethernet43
+  peer: server28_monitoring_session_source_settings_access_group
+  peer_interface: Eth3
+  peer_type: server
+  port_profile: TENANT_A
+  description: server28_monitoring_session_source_settings_access_group_Eth3
+  shutdown: false
+  channel_group:
+    id: 43
+    mode: active
 mlag_configuration:
   domain_id: custom_mlag_domain_id
   local_interface: Vlan4092
@@ -1606,6 +1694,8 @@ ip_access_lists:
 ip_igmp_snooping:
   globally_enabled: true
   vlans:
+  - id: 122
+    enabled: false
   - id: 120
     enabled: false
 ip_virtual_router_mac_address: 00:dc:00:00:00:0a
@@ -1625,6 +1715,8 @@ vxlan_interface:
         vni: 10140
       - id: 141
         vni: 10141
+      - id: 122
+        vni: 10122
       - id: 110
         vni: 10110
       - id: 111
@@ -1658,6 +1750,8 @@ vxlan_interface:
         vni: 12
       - name: Tenant_A_DB_Zone
         vni: 13
+      - name: Tenant_A_ERP_Zone
+        vni: 17
       - name: Tenant_A_OP_Zone
         vni: 10
       - name: Tenant_A_WAN_Zone
@@ -1676,26 +1770,22 @@ virtual_source_nat_vrfs:
 - name: Tenant_A_OP_Zone
   ip_address: 10.255.1.12
 monitor_sessions:
+- name: MonitoringSessionServer18
+  sources:
+  - name: Port-Channel43
+    direction: tx
+    access_group:
+      type: ip
+      name: myIpAVL
+      priority: 5
 - name: MonitoringSessionServer18WithDest
   sources:
   - name: Ethernet25
     direction: rx
-    access_group:
-      type: ip
-      name: MyIpACL
-      priority: 5
   - name: Port-Channel27
     direction: tx
-    access_group:
-      type: mac
-      name: MyMacACL
-      priority: 5
   - name: Ethernet28
     direction: tx
-    access_group:
-      type: mac
-      name: MyMacACL
-      priority: 5
   destinations:
   - Ethernet26
   - Ethernet40

@@ -11,6 +11,10 @@ router_bgp:
   maximum_paths:
     paths: 4
     ecmp: 4
+  redistribute:
+    connected:
+      enabled: true
+      route_map: RM-CONN-2-BGP
   graceful_restart:
     enabled: true
     restart_time: 500
@@ -34,9 +38,6 @@ router_bgp:
       activate: true
     - name: EVPN-OVERLAY-PEERS
       activate: false
-  redistribute_routes:
-  - source_protocol: connected
-    route_map: RM-CONN-2-BGP
   neighbors:
   - ip_address: 172.31.254.0
     peer_group: UNDERLAY-PEERS
@@ -100,8 +101,9 @@ router_bgp:
         route_targets:
         - '1234:12'
     router_id: 192.168.42.42
-    redistribute_routes:
-    - source_protocol: connected
+    redistribute:
+      connected:
+        enabled: true
   - name: Tenant_A_OP_Zone
     rd: 1.1.1.1:9
     route_targets:
@@ -114,9 +116,11 @@ router_bgp:
         route_targets:
         - '1234:9'
     router_id: 192.168.42.42
-    redistribute_routes:
-    - source_protocol: connected
-    - source_protocol: ospf
+    redistribute:
+      connected:
+        enabled: true
+      ospf:
+        enabled: true
   - name: Tenant_A_WEB_Zone
     rd: 1.1.1.1:11
     route_targets:
@@ -129,8 +133,9 @@ router_bgp:
         route_targets:
         - '1234:11'
     router_id: 192.168.42.42
-    redistribute_routes:
-    - source_protocol: connected
+    redistribute:
+      connected:
+        enabled: true
   - name: '12345678'
     rd: 1.1.1.1:41
     route_targets:
@@ -143,8 +148,9 @@ router_bgp:
         route_targets:
         - '1234:41'
     router_id: 192.168.42.42
-    redistribute_routes:
-    - source_protocol: connected
+    redistribute:
+      connected:
+        enabled: true
   vlan_aware_bundles:
   - name: Tenant_A_APP_Zone
     rd: 1.1.1.1:12
@@ -563,9 +569,9 @@ router_ospf:
   - id: 9
     vrf: Tenant_A_OP_Zone
     passive_interface_default: true
-    router_id: 192.168.42.42
     no_passive_interfaces:
     - Vlan113
+    router_id: 192.168.42.42
     redistribute:
       bgp:
         enabled: true

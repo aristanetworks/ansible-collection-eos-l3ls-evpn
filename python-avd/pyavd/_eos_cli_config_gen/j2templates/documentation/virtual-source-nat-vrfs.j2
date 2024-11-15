@@ -10,10 +10,10 @@
 
 ### Virtual Source NAT Summary
 
-| Source NAT VRF | Source NAT IP Address |
-| -------------- | --------------------- |
+| Source NAT VRF | Source NAT IPv4 Address | Source NAT IPv6 Address |
+| -------------- | ----------------------- | ----------------------- |
 {%     for vrf in virtual_source_nat_vrfs | arista.avd.natural_sort('name') %}
-| {{ vrf.name }} | {{ vrf.ip_address }} |
+| {{ vrf.name }} | {{ vrf.ip_address | arista.avd.default("-") }} | {{ vrf.ipv6_address | arista.avd.default("-") }} |
 {%     endfor %}
 
 ### Virtual Source NAT Configuration

@@ -1,0 +1,15 @@
+---
+### VRFs ###
+
+vrfs:
+  - name: MGMT
+    ip_routing: False
+  - name: TENANT_A_PROJECT01
+    tenant: Tenant_A
+    ip_routing: true
+  - name: TENANT_A_PROJECT02
+    tenant: Tenant_A
+    ip_routing: true
+  - name: BLAH
+  - name: defauls
+  - name: defaulu

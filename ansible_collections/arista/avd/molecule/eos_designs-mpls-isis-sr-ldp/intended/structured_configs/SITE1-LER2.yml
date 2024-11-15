@@ -75,8 +75,9 @@ router_bgp:
         route_targets:
         - '65000:19'
     router_id: 100.70.0.6
-    redistribute_routes:
-    - source_protocol: connected
+    redistribute:
+      connected:
+        enabled: true
   - name: TENANT_B_WAN
     rd: 100.70.0.6:20
     route_targets:
@@ -95,8 +96,9 @@ router_bgp:
         route_targets:
         - '65000:20'
     router_id: 100.70.0.6
-    redistribute_routes:
-    - source_protocol: connected
+    redistribute:
+      connected:
+        enabled: true
     address_family_ipv4:
       neighbors:
       - ip_address: 192.168.48.1

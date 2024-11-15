@@ -683,10 +683,10 @@ ASN Notation: asplain
 
 ##### EVPN Peer Groups
 
-| Peer Group | Activate | Encapsulation |
-| ---------- | -------- | ------------- |
-| EVPN-OVERLAY-CORE | True | default |
-| EVPN-OVERLAY-PEERS | True | default |
+| Peer Group | Activate | Route-map In | Route-map Out | Encapsulation |
+| ---------- | -------- | ------------ | ------------- | ------------- |
+| EVPN-OVERLAY-CORE | True |  - | - | default |
+| EVPN-OVERLAY-PEERS | True |  - | - | default |
 
 ##### EVPN DCI Gateway Summary
 
@@ -720,8 +720,8 @@ ASN Notation: asplain
 !
 router bgp 65102
    router-id 10.255.0.5
-   maximum-paths 4 ecmp 4
    no bgp default ipv4-unicast
+   maximum-paths 4 ecmp 4
    neighbor EVPN-OVERLAY-CORE peer group
    neighbor EVPN-OVERLAY-CORE update-source Loopback0
    neighbor EVPN-OVERLAY-CORE bfd
@@ -743,10 +743,10 @@ router bgp 65102
    neighbor MLAG-IPv4-UNDERLAY-PEER remote-as 65102
    neighbor MLAG-IPv4-UNDERLAY-PEER next-hop-self
    neighbor MLAG-IPv4-UNDERLAY-PEER description dc1-leaf2b
+   neighbor MLAG-IPv4-UNDERLAY-PEER route-map RM-MLAG-PEER-IN in
    neighbor MLAG-IPv4-UNDERLAY-PEER password 7 <removed>
    neighbor MLAG-IPv4-UNDERLAY-PEER send-community
    neighbor MLAG-IPv4-UNDERLAY-PEER maximum-routes 12000
-   neighbor MLAG-IPv4-UNDERLAY-PEER route-map RM-MLAG-PEER-IN in
    neighbor 10.255.0.1 peer group EVPN-OVERLAY-PEERS
    neighbor 10.255.0.1 remote-as 65100
    neighbor 10.255.0.1 description dc1-spine1_Loopback0
@@ -971,10 +971,10 @@ vrf instance VRF11
 
 ### Virtual Source NAT Summary
 
-| Source NAT VRF | Source NAT IP Address |
-| -------------- | --------------------- |
-| VRF10 | 10.255.10.5 |
-| VRF11 | 10.255.11.5 |
+| Source NAT VRF | Source NAT IPv4 Address | Source NAT IPv6 Address |
+| -------------- | ----------------------- | ----------------------- |
+| VRF10 | 10.255.10.5 | - |
+| VRF11 | 10.255.11.5 | - |
 
 ### Virtual Source NAT Configuration
 

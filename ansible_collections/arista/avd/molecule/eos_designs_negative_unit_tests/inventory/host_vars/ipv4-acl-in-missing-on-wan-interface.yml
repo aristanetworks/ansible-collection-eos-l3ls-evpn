@@ -1,6 +1,6 @@
 ---
 type: wan_router
-wan_mode: legacy-autovpn
+wan_mode: autovpn
 wan_router:
   nodes:
     - bgp_as: 65000

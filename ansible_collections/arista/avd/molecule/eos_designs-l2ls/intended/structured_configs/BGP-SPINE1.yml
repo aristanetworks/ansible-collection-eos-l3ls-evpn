@@ -9,6 +9,11 @@ router_bgp:
   maximum_paths:
     paths: 4
     ecmp: 4
+  redistribute:
+    connected:
+      enabled: true
+    attached_host:
+      enabled: true
   updates:
     wait_install: true
   peer_groups:
@@ -40,9 +45,6 @@ router_bgp:
     peer: DUMMY-CORE
     description: DUMMY-CORE
     peer_group: IPv4-UNDERLAY-PEERS
-  redistribute_routes:
-  - source_protocol: connected
-  - source_protocol: attached-host
 static_routes:
 - vrf: MGMT
   destination_address_prefix: 0.0.0.0/0

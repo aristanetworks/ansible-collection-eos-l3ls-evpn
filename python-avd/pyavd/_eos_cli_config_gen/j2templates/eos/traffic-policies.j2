@@ -132,15 +132,15 @@ traffic-policies
 {%                         endif %}
 {%                     endfor %}
 {%                 endif %}
-{#                 -- TTL MANAGEMENT -- #}
-{%                 if match.ttl is arista.avd.defined %}
-         ttl {{ match.ttl }}
-{%                 endif %}
 {#                 -- FRAGMENT MANAGEMENT -- #}
 {%                 if match.fragment.offset is arista.avd.defined %}
          fragment offset {{ match.fragment.offset }}
 {%                 elif match.fragment is defined %}
          fragment
+{%                 endif %}
+{#                 -- TTL MANAGEMENT -- #}
+{%                 if match.ttl is arista.avd.defined %}
+         ttl {{ match.ttl }}
 {%                 endif %}
 {#       -- ACTIONS SECTION -- #}
 {%                 if match.actions.count is arista.avd.defined or match.actions.traffic_class is arista.avd.defined or match.actions.dscp is arista.avd.defined or match.actions.drop is arista.avd.defined(true)  %}

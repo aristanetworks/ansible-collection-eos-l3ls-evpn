@@ -1,0 +1,25 @@
+---
+# test arp
+arp:
+  persistent:
+    enabled: true
+    refresh_delay: 700
+  aging:
+    timeout_default: 300
+  static_entries:
+    - ipv4_address: 42.42.42.42
+      vrf: BLAH
+      mac_address: DEAD.BEEF.CAFE
+    - ipv4_address: 42.42.42.42
+      vrf: defauls
+      mac_address: DEAD.BEEF.CAFE
+    # default VRF - testing sorting on ipv4 addresses and MAC addresses
+    - ipv4_address: 43.42.42.42
+      mac_address: DEAD.BEEF.CAFE
+    - ipv4_address: 42.42.42.42
+      mac_address: DEAD.BEEF.CAFE
+    - ipv4_address: 41.42.42.42
+      mac_address: DEAD.BEEF.CAFE
+    - ipv4_address: 42.42.42.42
+      vrf: defaulu
+      mac_address: DEAD.BEEF.CAFE

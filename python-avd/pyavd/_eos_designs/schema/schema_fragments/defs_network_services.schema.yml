@@ -62,6 +62,7 @@ $defs:
           documentation_options:
             table: network-services-vrfs-settings
           type: bool
+          default: True
           description: |
             MLAG iBGP peering per VRF.
             By default an iBGP peering is configured per VRF between MLAG peers on separate VLANs.
@@ -166,6 +167,7 @@ $defs:
               description: IPv4_address/Mask.
             underlay_l2_multicast_group_ipv4_pool_offset:
               type: int
+              default: 0
               convert_types:
                 - str
             fast_leave:
@@ -206,6 +208,7 @@ $defs:
               required: true
             evpn_underlay_l3_multicast_group_ipv4_pool_offset:
               type: int
+              default: 0
               convert_types:
                 - str
             evpn_peg:
@@ -276,13 +279,13 @@ $defs:
               description: Default IP address of Loopback0.
             version:
               type: int
+              description: IGMP Version (By default EOS uses IGMP version 2 for IGMP querier).
               convert_types:
                 - str
               valid_values:
                 - 1
                 - 2
                 - 3
-              default: 2
         evpn_l2_multi_domain:
           type: bool
           default: true
@@ -310,6 +313,7 @@ $defs:
                   - int
               address_families:
                 type: list
+                default: ["evpn"]
                 items:
                   type: str
                   valid_values:
@@ -392,14 +396,13 @@ $defs:
                 description: |
                   MLAG iBGP peering per VRF.
                   By default an iBGP peering is configured per VRF between MLAG peers on separate VLANs.
-                  Setting `enable_mlag_ibgp_peering_vrfs: false` under a VRF will change this default and/or override the tenant-wide setting.
+                  Setting `enable_mlag_ibgp_peering_vrfs: false` under a VRF overrides the tenant-wide setting.
               redistribute_mlag_ibgp_peering_vrfs:
                 type: bool
-                default: false
                 description: |
                   Redistribute the connected subnet for the MLAG iBGP peering per VRF into overlay BGP.
                   By default the iBGP peering subnet is not redistributed into the overlay routing protocol per VRF.
-                  Setting `redistribute_mlag_ibgp_peering_vrfs: true` under a VRF will change this default and/or override the tenant-wide setting.
+                  Setting `redistribute_mlag_ibgp_peering_vrfs` under a VRF overrides the tenant-wide setting.
               mlag_ibgp_peering_vlan:
                 type: int
                 convert_types:
@@ -425,10 +428,9 @@ $defs:
                     max: 2100
                   loopback_description:
                     type: str
-                    # TODO: Insert link to format string syntax article.
                     description: |-
                       Provide a custom description or description template to be used on the VRF diagnostic loopback interface.
-                      This can be a template using the format string syntax.
+                      This can be a template using the AVD string formatter syntax: https://avd.arista.com/devel/roles/eos_designs/docs/how-to/custom-descriptions-names.html#avd-string-formatter-syntax.
                       The available template fields are:
                         - `interface`: The Loopback interface name.
                         - `vrf`: The VRF name.
@@ -440,13 +442,21 @@ $defs:
                     type: str
                     description: |
                       IPv4_address/Mask.
-                      Loopback ip range, a unique ip is derived from this ranged and assignedto each l3 leaf based on it's unique id.
-                      Loopback is not created unless loopback_ip_range or loopback_ip_pools are set.
+                      Loopback IPv4 range, a unique ip is derived from this range and assigned to each l3 leaf based on it's unique id.
+                      Loopback is not created unless `loopback_ip_range`, `loopback_ipv6_range` or `loopback_ip_pools` are set.
+                  loopback_ipv6_range:
+                    type: str
+                    description: |
+                      IPv6_address/Mask.
+                      Loopback IPv6 range, a unique IPv6 address is derived from this range and assigned to each L3 leaf based on it's unique ID.
+                      Loopback is not created unless `loopback_ip_range`, `loopback_ipv6_range` or `loopback_ip_pools` are set.
                   loopback_ip_pools:
                     type: list
                     description: |
                       For inventories with multiple PODs a loopback range can be set per POD to avoid overlaps.
-                      This only takes effect when loopback_ip_range is not defined, ptional (loopback is not created unless loopback_ip_range or loopback_ip_pools are set).
+                      `loopback_ip_range` takes precedence for IPv4 and `loopback_ipv6_range` takes precedence for IPV6.
+                      Loopback is not created unless `loopback_ip_range`, `loopback_ipv6_range` or `loopback_ip_pools` are set.
+                    primary_key: pod
                     items:
                       type: dict
                       keys:
@@ -456,6 +466,9 @@ $defs:
                         ipv4_pool:
                           type: str
                           description: IPv4_address/Mask.
+                        ipv6_pool:
+                          type: str
+                          description: IPv6_address/Mask.
               ospf:
                 documentation_options:
                   table: network-services-vrfs-ospf-settings
@@ -915,7 +928,11 @@ $defs:
                         type: str
               redistribute_static:
                 type: bool
-                description: Non-selectively enabling or disabling redistribute static inside the VRF.
+                description: Enable or disable the redistribution of all static routes to BGP in the VRF.
+              redistribute_connected:
+                type: bool
+                default: true
+                description: Enable or disable the redistribution of all connected routes to BGP in the VRF. Note this is not applicable to VRF `default`.
               bgp_peers:
                 documentation_options:
                   table: network-services-vrfs-bgp-settings
@@ -1206,6 +1223,7 @@ $defs:
                   Tags leveraged for networks services filtering.
                   Tags are matched against filter.tags defined under node type settings.
                   Tags are also matched against the node_group name under node type settings.
+                default: ['all']
                 items:
                   type: str
                   default: all
@@ -1248,8 +1266,7 @@ $defs:
                 documentation_options:
                   table: network-services-multicast-settings
                 type: bool
-                default: true
-                description: Activate or deactivate IGMP snooping.
+                description: Enable or disable IGMP snooping (Enabled by default on EOS).
               igmp_snooping_querier:
                 documentation_options:
                   table: network-services-multicast-settings
@@ -1268,13 +1285,13 @@ $defs:
                       If not set, IP address of "Loopback0" will be used.
                   version:
                     type: int
+                    description: IGMP Version (By default EOS uses IGMP version 2 for IGMP querier).
                     convert_types:
                       - str
                     valid_values:
                       - 1
                       - 2
                       - 3
-                    default: 2
                   fast_leave:
                     type: bool
                     description: Enable IGMP snooping fast-leave feature.

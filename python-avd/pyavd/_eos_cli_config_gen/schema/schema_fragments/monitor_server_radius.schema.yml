@@ -1,0 +1,54 @@
+# Copyright (c) 2023-2024 Arista Networks, Inc.
+# Use of this source code is governed by the Apache License 2.0
+# that can be found in the LICENSE file.
+# yaml-language-server: $schema=../../../_schema/avd_meta_schema.json
+# Line above is used by RedHat's YAML Schema vscode extension
+# Use Ctrl + Space to get suggestions for every field. Autocomplete will pop up after typing 2 letters.
+type: dict
+keys:
+  monitor_server_radius:
+    type: dict
+    description: Settings to monitor radius servers.
+    keys:
+      service_dot1x:
+        type: bool
+        description: Monitor servers used for 802.1X authentication.
+      probe:
+        type: dict
+        description: Settings for probe sent to the server.
+        keys:
+          interval:
+            type: int
+            description: Server probe interval in seconds.
+            convert_types:
+              - str
+            min: 1
+            max: 1000
+          threshold_failure:
+            type: int
+            description: Number of consecutive failed probes before a server is marked as dead.
+            convert_types:
+              - str
+            min: 1
+            max: 255
+          method:
+            type: str
+            description: Method used to probe the server. `status-server` is the EOS default method.
+            valid_values:
+              - status-server
+              - access-request
+          access_request:
+            type: dict
+            description: This can only be set when `method` is `access_request`.
+            keys:
+              username:
+                type: str
+              password:
+                type: str
+                description: Encrypted password using the `password_type`.
+              password_type:
+                type: str
+                convert_types:
+                  - int
+                valid_values: ["0", "7", "8a"]
+                default: "7"

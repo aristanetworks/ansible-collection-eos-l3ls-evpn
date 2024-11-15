@@ -8,11 +8,12 @@ router_bgp:
       ipv4_unicast: false
   maximum_paths:
     paths: 16
+  redistribute:
+    connected:
+      enabled: true
+      route_map: RM-CONN-2-BGP
   updates:
     wait_install: true
-  redistribute_routes:
-  - source_protocol: connected
-    route_map: RM-CONN-2-BGP
   peer_groups:
   - name: WAN-OVERLAY-PEERS
     type: wan
@@ -69,8 +70,9 @@ router_bgp:
         route_targets:
         - 123:123
     router_id: 192.168.1.1
-    redistribute_routes:
-    - source_protocol: connected
+    redistribute:
+      connected:
+        enabled: true
   - name: default
     rd: 192.168.1.1:1
     route_targets:

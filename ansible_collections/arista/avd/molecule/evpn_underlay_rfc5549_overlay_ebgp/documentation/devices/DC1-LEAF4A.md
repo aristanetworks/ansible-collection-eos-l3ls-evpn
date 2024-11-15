@@ -909,9 +909,9 @@ ASN Notation: asplain
 
 ##### EVPN Peer Groups
 
-| Peer Group | Activate | Encapsulation |
-| ---------- | -------- | ------------- |
-| EVPN-OVERLAY-PEERS | True | default |
+| Peer Group | Activate | Route-map In | Route-map Out | Encapsulation |
+| ---------- | -------- | ------------ | ------------- | ------------- |
+| EVPN-OVERLAY-PEERS | True |  - | - | default |
 
 ##### EVPN Host Flapping Settings
 
@@ -949,9 +949,9 @@ ASN Notation: asplain
 !
 router bgp 65107
    router-id 192.168.255.14
-   maximum-paths 4 ecmp 4
    update wait-install
    no bgp default ipv4-unicast
+   maximum-paths 4 ecmp 4
    distance bgp 20 200 200
    neighbor EVPN-OVERLAY-PEERS peer group
    neighbor EVPN-OVERLAY-PEERS update-source Loopback0
@@ -964,20 +964,20 @@ router bgp 65107
    neighbor MLAG_PEER remote-as 65107
    neighbor MLAG_PEER next-hop-self
    neighbor MLAG_PEER description DC1-LEAF4B
+   neighbor MLAG_PEER route-map RM-MLAG-PEER-IN in
    neighbor MLAG_PEER password 7 <removed>
    neighbor MLAG_PEER send-community
    neighbor MLAG_PEER maximum-routes 12000
-   neighbor MLAG_PEER route-map RM-MLAG-PEER-IN in
    neighbor UNDERLAY_PEERS peer group
    neighbor UNDERLAY_PEERS password 7 <removed>
    neighbor UNDERLAY_PEERS send-community
    neighbor UNDERLAY_PEERS maximum-routes 12000
-   neighbor interface Ethernet1 peer-group UNDERLAY_PEERS remote-as 65001
-   neighbor interface Vlan4093 peer-group MLAG_PEER remote-as 65107
    neighbor 192.168.255.6 peer group EVPN-OVERLAY-PEERS
    neighbor 192.168.255.6 remote-as 65001
    neighbor 192.168.255.6 description DC1-SPINE6_Loopback0
    redistribute connected route-map RM-CONN-2-BGP
+   neighbor interface Ethernet1 peer-group UNDERLAY_PEERS remote-as 65001
+   neighbor interface Vlan4093 peer-group MLAG_PEER remote-as 65107
    !
    vlan-aware-bundle Tenant_A_APP_Zone
       rd 192.168.255.14:12
@@ -1028,15 +1028,15 @@ router bgp 65107
       vlan 310-311
    !
    address-family evpn
-      host-flap detection window 20 threshold 30
       neighbor EVPN-OVERLAY-PEERS activate
+      host-flap detection window 20 threshold 30
    !
    address-family ipv4
       no neighbor EVPN-OVERLAY-PEERS activate
-      neighbor MLAG_PEER next-hop address-family ipv6 originate
       neighbor MLAG_PEER activate
-      neighbor UNDERLAY_PEERS next-hop address-family ipv6 originate
+      neighbor MLAG_PEER next-hop address-family ipv6 originate
       neighbor UNDERLAY_PEERS activate
+      neighbor UNDERLAY_PEERS next-hop address-family ipv6 originate
    !
    address-family ipv6
       neighbor MLAG_PEER activate
@@ -1047,48 +1047,48 @@ router bgp 65107
       route-target import evpn 12:12
       route-target export evpn 12:12
       router-id 192.168.255.14
-      neighbor interface Vlan3011 peer-group MLAG_PEER remote-as 65107
       redistribute connected route-map RM-CONN-2-BGP-VRFS
+      neighbor interface Vlan3011 peer-group MLAG_PEER remote-as 65107
    !
    vrf Tenant_A_DB_Zone
       rd 192.168.255.14:13
       route-target import evpn 13:13
       route-target export evpn 13:13
       router-id 192.168.255.14
-      neighbor interface Vlan3012 peer-group MLAG_PEER remote-as 65107
       redistribute connected route-map RM-CONN-2-BGP-VRFS
+      neighbor interface Vlan3012 peer-group MLAG_PEER remote-as 65107
    !
    vrf Tenant_A_OP_Zone
       rd 192.168.255.14:10
       route-target import evpn 10:10
       route-target export evpn 10:10
       router-id 192.168.255.14
-      neighbor interface Vlan3009 peer-group MLAG_PEER remote-as 65107
       redistribute connected route-map RM-CONN-2-BGP-VRFS
+      neighbor interface Vlan3009 peer-group MLAG_PEER remote-as 65107
    !
    vrf Tenant_A_WEB_Zone
       rd 192.168.255.14:11
       route-target import evpn 11:11
       route-target export evpn 11:11
       router-id 192.168.255.14
-      neighbor interface Vlan3010 peer-group MLAG_PEER remote-as 65107
       redistribute connected route-map RM-CONN-2-BGP-VRFS
+      neighbor interface Vlan3010 peer-group MLAG_PEER remote-as 65107
    !
    vrf Tenant_B_OP_Zone
       rd 192.168.255.14:20
       route-target import evpn 20:20
       route-target export evpn 20:20
       router-id 192.168.255.14
-      neighbor interface Vlan3019 peer-group MLAG_PEER remote-as 65107
       redistribute connected route-map RM-CONN-2-BGP-VRFS
+      neighbor interface Vlan3019 peer-group MLAG_PEER remote-as 65107
    !
    vrf Tenant_C_OP_Zone
       rd 192.168.255.14:30
       route-target import evpn 30:30
       route-target export evpn 30:30
       router-id 192.168.255.14
-      neighbor interface Vlan2 peer-group MLAG_PEER remote-as 65107
       redistribute connected route-map RM-CONN-2-BGP-VRFS
+      neighbor interface Vlan2 peer-group MLAG_PEER remote-as 65107
 ```
 
 ## BFD
@@ -1241,9 +1241,9 @@ vrf instance Tenant_C_OP_Zone
 
 ### Virtual Source NAT Summary
 
-| Source NAT VRF | Source NAT IP Address |
-| -------------- | --------------------- |
-| Tenant_A_OP_Zone | 10.255.1.14 |
+| Source NAT VRF | Source NAT IPv4 Address | Source NAT IPv6 Address |
+| -------------- | ----------------------- | ----------------------- |
+| Tenant_A_OP_Zone | 10.255.1.14 | - |
 
 ### Virtual Source NAT Configuration
 

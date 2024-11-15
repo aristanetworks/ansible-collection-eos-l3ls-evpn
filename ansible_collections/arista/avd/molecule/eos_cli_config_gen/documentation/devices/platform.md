@@ -44,6 +44,7 @@ interface Management1
 
 | Settings | Value |
 | -------- | ----- |
+| Routing MAC Address per VLAN | true |
 | Forwarding Table Partition | 2 |
 | MMU Applied Profile | mc_example_profile |
 
@@ -96,13 +97,14 @@ interface Management1
 
 ```eos
 !
+platform trident l3 routing mac-address per-vlan
 platform trident forwarding-table partition 2
+platform sand forwarding mode arad
+platform sand lag mode 512x32
+platform sand lag hardware-only
 platform sand qos map traffic-class 0 to network-qos 0
 platform sand qos map traffic-class 1 to network-qos 7
 platform sand qos map traffic-class 2 to network-qos 15
-platform sand lag hardware-only
-platform sand lag mode 512x32
-platform sand forwarding mode arad
 platform sand multicast replication default ingress
 platform sand mdb profile l3-xxl
 platform sfe data-plane cpu allocation maximum 42

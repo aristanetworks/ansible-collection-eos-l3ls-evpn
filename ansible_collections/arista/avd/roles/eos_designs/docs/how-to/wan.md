@@ -17,8 +17,8 @@ title: Ansible Collection Role eos_designs - WAN
 
 ???+ warning "About PREVIEW keys in the schema"
 
-    Some of the WAN functionality is still in PREVIEW. When this is the case it is indicated as such in the documentation.
-    For these PREVIEW features, Everything is subject to change, is not supported and may not be complete.
+    Some of the WAN functionality is still in preview. When this is the case it is indicated as such in the documentation.
+    For these preview features, Everything is subject to change, is not supported and may not be complete.
 
     If you have any questions, please leverage the GitHub [discussions board](https://github.com/aristanetworks/avd/discussions)
 
@@ -45,14 +45,13 @@ Please familiarize yourself with the Arista WAN terminology before proceeding:
     role, as CloudVision relies on metadata sent by AVD for visualization and to
     generate and deliver certificates for STUN to devices.
 
-### Features in PREVIEW
+### Features in preview
 
-- WAN HA is in PREVIEW
-
+- WAN HA is in preview
   - While HA is in preview, it is required to either enable or disable HA if exactly two WAN routers are in one node group.
   - For HA, the considered interfaces are only the `uplink_interfaces` in VRF default or the interfaces defined under `wan_ha.ha_interfaces` node settings. This key can be used either to select only some `uplink_interfaces` available for establishing the HA tunnel OR to select one interface that is not an `uplink_interfaces`, for instance for direct HA connectivity.
   - HA for AutoVPN is not supported
-- Internet-exit for Zscaler is in PREVIEW
+- Internet-exit for Zscaler is in preview
 - `eos_validate_state` is being enriched to support new tests for WAN designs.
 
 ### Known limitations
@@ -73,7 +72,6 @@ Please familiarize yourself with the Arista WAN terminology before proceeding:
 - WAN Internet exit for other type than Zscaler
 - `import path-group` functionality
 - Indirect connectivity to pathfinder
-- BGP peerings on WAN L3 interfaces and associated route filtering.
 - Extra STUN server for a given path-group not connected to pathfinder
 - Auto generation of Path-group IDs and other IDs.
 - Proper OSPF-BGP redistribution in VRF default.
@@ -106,7 +104,7 @@ The following table list the `eos_designs` top level keys used for WAN and how t
 
 | Key | Must be the same for all the WAN routers | Comment |
 | --- | ---------------------------------------- | ------- |
-| `wan_mode` | ✅ | Two possible modes, `legacy-autovpn` and `cv-pathfinder` (default). |
+| `wan_mode` | ✅ | Two possible modes, `autovpn` and `cv-pathfinder` (default). |
 | `wan_encapsulation` | ✅ | Two possible encapsulations, `vxlan` and `path-selection` (default). |
 | `wan_virtual_topologies` | ✅ | to define the Policies and the VRF to policy mappings. |
 | `wan_path_groups` | ✅ | to define the list of path-groups in the network. |
@@ -135,14 +133,14 @@ Additionally, following keys must be set for the WAN route servers for the conne
 
 AVD supports two design types for WAN:
 
-- Legacy AutoVPN
+- AutoVPN
 - CV Pathfinder
 
 By default the mode is set to `cv-pathfinder` and can be changed using:
 
 ```yaml
 ---
-wan_mode: legacy-autovpn | cv-pathfinder # default: cv-pathfinder
+wan_mode: autovpn | cv-pathfinder # default: cv-pathfinder
 ```
 
 #### WAN encapsulation
@@ -397,15 +395,25 @@ wan_router:
             static_routes:
               - prefix: 172.16.0.0/16
             connected_to_pathfinder: False
+            # Configure BGP peering with peer
+            bgp:
+              peer_as: 65042
+              ipv4_prefix_list_in: ALLOW-DEFAULT  # (4)!
           # This is NOT a WAN interface
           - name: Ethernet3
             ip_address: 172.20.20.20/31
+
+ipv4_prefix_list_catalog:
+  - name: ALLOW-DEFAULT
+    sequence_numbers:
+      - sequence: 10
 ```
 
 1. `peer` and `peer_interface` are optionals and used for description.
 2. `wan_circuit_id` is optional and used for description.
 3. Configure IPv4 ACLs in and out for the L3 interface. The access lists must
     be defined under `ipv4_acls` top level key.
+4. For BGP peering for WAN interfaces, the `ipv4_prefix_list_in` is mandatory for security reaasons. It is defined in the `ipv4_prefix_list_catalog`.
 
 ### WAN policies
 

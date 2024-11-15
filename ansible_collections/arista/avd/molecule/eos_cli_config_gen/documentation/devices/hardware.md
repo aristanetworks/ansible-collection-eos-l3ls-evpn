@@ -4,6 +4,8 @@
 
 - [Management](#management)
   - [Management Interfaces](#management-interfaces)
+- [Monitoring](#monitoring)
+  - [Hardware](#hardware-1)
 
 ## Management
 
@@ -31,4 +33,22 @@ interface Management1
    description OOB_MANAGEMENT
    vrf MGMT
    ip address 10.73.255.122/24
+```
+
+## Monitoring
+
+### Hardware
+
+#### Hardware Device Configuration
+
+```eos
+!
+hardware port-group 1 select Et32/1-4
+hardware port-group 2 select Et32/1,Et32/3,Et34
+!
+hardware access-list mechanism tcam
+!
+hardware speed-group 1 serdes 10g
+hardware speed-group 2 serdes 25g
+hardware speed-group 3/1 serdes 25g
 ```

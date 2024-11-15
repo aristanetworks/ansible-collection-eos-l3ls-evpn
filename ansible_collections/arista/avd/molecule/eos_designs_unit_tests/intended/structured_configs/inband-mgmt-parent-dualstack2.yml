@@ -9,6 +9,12 @@ router_bgp:
   maximum_paths:
     paths: 4
     ecmp: 4
+  redistribute:
+    connected:
+      enabled: true
+      route_map: RM-CONN-2-BGP
+    attached_host:
+      enabled: true
   updates:
     wait_install: true
   peer_groups:
@@ -44,10 +50,6 @@ router_bgp:
     peer_group: MLAG-IPv4-UNDERLAY-PEER
     peer: inband-mgmt-parent-dualstack1
     description: inband-mgmt-parent-dualstack1_Vlan4093
-  redistribute_routes:
-  - source_protocol: connected
-    route_map: RM-CONN-2-BGP
-  - source_protocol: attached-host
   address_family_evpn:
     peer_groups:
     - name: EVPN-OVERLAY-PEERS
@@ -65,9 +67,10 @@ router_bgp:
         route_targets:
         - '1:1'
     router_id: 10.0.255.4
-    redistribute_routes:
-    - source_protocol: connected
-      route_map: RM-CONN-2-BGP-VRFS
+    redistribute:
+      connected:
+        enabled: true
+        route_map: RM-CONN-2-BGP-VRFS
     neighbors:
     - ip_address: 100.64.1.4
       peer_group: MLAG-IPv4-UNDERLAY-PEER

@@ -444,15 +444,15 @@ ASN Notation: asplain
 !
 router bgp 65001
    router-id 10.255.2.2
-   distance bgp 20 200 200
-   maximum-paths 4 ecmp 4
    no bgp default ipv4-unicast
+   distance bgp 20 200 200
    bgp cluster-id 10.255.2.2
+   maximum-paths 4 ecmp 4
    neighbor MPLS-OVERLAY-PEERS peer group
    neighbor MPLS-OVERLAY-PEERS remote-as 65001
    neighbor MPLS-OVERLAY-PEERS update-source Loopback0
-   neighbor MPLS-OVERLAY-PEERS route-reflector-client
    neighbor MPLS-OVERLAY-PEERS bfd
+   neighbor MPLS-OVERLAY-PEERS route-reflector-client
    neighbor MPLS-OVERLAY-PEERS password 7 <removed>
    neighbor MPLS-OVERLAY-PEERS send-community
    neighbor MPLS-OVERLAY-PEERS maximum-routes 0

@@ -145,24 +145,6 @@
   },
   {
     "name": "dc2-leaf3a.arista.com",
-    "test": "VerifyLLDPNeighbors",
-    "categories": [
-      "connectivity"
-    ],
-    "description": "Verifies that the provided LLDP neighbors are connected properly.",
-    "custom_field": "Local: Ethernet3 - Remote: dc2-leaf3b.arista.com Ethernet3"
-  },
-  {
-    "name": "dc2-leaf3a.arista.com",
-    "test": "VerifyLLDPNeighbors",
-    "categories": [
-      "connectivity"
-    ],
-    "description": "Verifies that the provided LLDP neighbors are connected properly.",
-    "custom_field": "Local: Ethernet4 - Remote: dc2-leaf3b.arista.com Ethernet4"
-  },
-  {
-    "name": "dc2-leaf3a.arista.com",
     "test": "VerifyReachability",
     "categories": [
       "connectivity"
@@ -534,15 +516,6 @@
       "interfaces"
     ],
     "description": "Verifies the status of the provided interfaces.",
-    "custom_field": "Interface Ethernet3 - MLAG_dc2-leaf3b.arista.com_Ethernet3 = 'up'"
-  },
-  {
-    "name": "dc2-leaf3a.arista.com",
-    "test": "VerifyInterfacesStatus",
-    "categories": [
-      "interfaces"
-    ],
-    "description": "Verifies the status of the provided interfaces.",
     "custom_field": "Interface Ethernet4 - MLAG_dc2-leaf3b.arista.com_Ethernet4 = 'up'"
   },
   {
@@ -774,7 +747,7 @@
   },
   {
     "name": "dc2-leaf3a.arista.com",
-    "test": "VerifyLoggingSourceInt",
+    "test": "VerifyLoggingSourceIntf",
     "categories": [
       "logging"
     ],
@@ -786,7 +759,7 @@
     "categories": [
       "logging"
     ],
-    "description": "Verifies if logs are generated with the riate timestamp."
+    "description": "Verifies if logs are generated with the appropriate timestamp."
   },
   {
     "name": "dc2-leaf3a.arista.com",

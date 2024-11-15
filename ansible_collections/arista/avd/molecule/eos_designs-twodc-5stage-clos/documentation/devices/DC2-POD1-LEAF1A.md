@@ -529,9 +529,9 @@ ASN Notation: asplain
 
 ##### EVPN Peer Groups
 
-| Peer Group | Activate | Encapsulation |
-| ---------- | -------- | ------------- |
-| EVPN-OVERLAY-PEERS | True | default |
+| Peer Group | Activate | Route-map In | Route-map Out | Encapsulation |
+| ---------- | -------- | ------------ | ------------- | ------------- |
+| EVPN-OVERLAY-PEERS | True |  - | - | default |
 
 #### Router BGP VRFs
 
@@ -548,9 +548,9 @@ ASN Notation: asplain
 !
 router bgp 65211
    router-id 172.16.210.3
-   maximum-paths 4 ecmp 4
    update wait-install
    no bgp default ipv4-unicast
+   maximum-paths 4 ecmp 4
    distance bgp 20 200 200
    neighbor EVPN-OVERLAY-PEERS peer group
    neighbor EVPN-OVERLAY-PEERS next-hop-unchanged
@@ -564,8 +564,8 @@ router bgp 65211
    neighbor IPv4-UNDERLAY-PEERS maximum-routes 12000
    neighbor 11.1.0.38 peer group IPv4-UNDERLAY-PEERS
    neighbor 11.1.0.38 remote-as 65120
-   neighbor 11.1.0.38 description DC1-POD1-LEAF2B
    neighbor 11.1.0.38 bfd
+   neighbor 11.1.0.38 description DC1-POD1-LEAF2B
    neighbor 100.100.100.101 peer group IPv4-UNDERLAY-PEERS
    neighbor 100.100.100.101 remote-as 65112.100
    neighbor 100.100.100.101 description DC1.POD1.LEAF2A
@@ -590,19 +590,19 @@ router bgp 65211
    neighbor 172.17.210.2 peer group IPv4-UNDERLAY-PEERS
    neighbor 172.17.210.2 remote-as 65210
    neighbor 172.17.210.2 description DC2-POD1-SPINE2_Ethernet3
-   redistribute attached-host
    redistribute connected route-map RM-CONN-2-BGP
+   redistribute attached-host
    !
    address-family evpn
       neighbor EVPN-OVERLAY-PEERS activate
    !
-   address-family rt-membership
-      neighbor EVPN-OVERLAY-PEERS activate
-      neighbor EVPN-OVERLAY-PEERS default-route-target only
-   !
    address-family ipv4
       no neighbor EVPN-OVERLAY-PEERS activate
       neighbor IPv4-UNDERLAY-PEERS activate
+   !
+   address-family rt-membership
+      neighbor EVPN-OVERLAY-PEERS activate
+      neighbor EVPN-OVERLAY-PEERS default-route-target only
    !
    vrf Common_VRF
       rd 172.16.210.3:1025
@@ -755,10 +755,10 @@ vrf instance vrf_with_loopbacks_from_pod_pools
 
 ### Virtual Source NAT Summary
 
-| Source NAT VRF | Source NAT IP Address |
-| -------------- | --------------------- |
-| vrf_with_loopbacks_from_overlapping_pool | 10.100.0.3 |
-| vrf_with_loopbacks_from_pod_pools | 10.101.201.3 |
+| Source NAT VRF | Source NAT IPv4 Address | Source NAT IPv6 Address |
+| -------------- | ----------------------- | ----------------------- |
+| vrf_with_loopbacks_from_overlapping_pool | 10.100.0.3 | - |
+| vrf_with_loopbacks_from_pod_pools | 10.101.201.3 | - |
 
 ### Virtual Source NAT Configuration
 

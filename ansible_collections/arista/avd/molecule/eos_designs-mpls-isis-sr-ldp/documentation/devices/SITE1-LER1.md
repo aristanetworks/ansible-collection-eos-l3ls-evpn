@@ -319,6 +319,7 @@ interface Ethernet8
 interface Port-Channel3
    no shutdown
    no switchport
+   !
    evpn ethernet-segment
       identifier 0000:0000:0102:0000:0034
       route-target import 01:02:00:00:00:34
@@ -326,26 +327,31 @@ interface Port-Channel3
 !
 interface Port-Channel3.1000
    no shutdown
+   !
    encapsulation vlan
       client dot1q 1000 network client
 !
 interface Port-Channel3.1001
    no shutdown
+   !
    encapsulation vlan
       client dot1q 1001 network client
 !
 interface Port-Channel3.1002
    no shutdown
+   !
    encapsulation vlan
       client dot1q 1002 network client
 !
 interface Port-Channel3.1003
    no shutdown
+   !
    encapsulation vlan
       client dot1q 1003 network client
 !
 interface Port-Channel3.1004
    no shutdown
+   !
    encapsulation vlan
       client dot1q 1004 network client
 !
@@ -356,16 +362,19 @@ interface Port-Channel8
 !
 interface Port-Channel8.111
    vlan id 111
+   !
    encapsulation vlan
       client dot1q 111 network client
 !
 interface Port-Channel8.222
    vlan id 222
+   !
    encapsulation vlan
       client dot1q 222 network client
 !
 interface Port-Channel8.333
    vlan id 434
+   !
    encapsulation vlan
       client dot1q 333 network client
 ```
@@ -535,8 +544,8 @@ router ospf 19 vrf TENANT_B_INTRA
    router-id 10.123.1.0
    passive-interface default
    no passive-interface Ethernet6.10
-   max-lsa 10000
    redistribute bgp
+   max-lsa 10000
 ```
 
 ### Router ISIS
@@ -551,9 +560,14 @@ router ospf 19 vrf TENANT_B_INTRA
 | Router-ID | 100.70.0.5 |
 | Log Adjacency Changes | True |
 | MPLS LDP Sync Default | True |
-| Local Convergence Delay (ms) | 15000 |
 | Advertise Passive-only | True |
 | SR MPLS Enabled | True |
+
+#### ISIS Route Timers
+
+| Settings | Value |
+| -------- | ----- |
+| Local Convergence Delay | 15000 milliseconds |
 
 #### ISIS Interfaces Summary
 
@@ -651,9 +665,9 @@ ASN Notation: asplain
 
 ##### EVPN Peer Groups
 
-| Peer Group | Activate | Encapsulation |
-| ---------- | -------- | ------------- |
-| MPLS-OVERLAY-PEERS | True | default |
+| Peer Group | Activate | Route-map In | Route-map Out | Encapsulation |
+| ---------- | -------- | ------------ | ------------- | ------------- |
+| MPLS-OVERLAY-PEERS | True |  - | - | default |
 
 ##### EVPN Neighbor Default Encapsulation
 
@@ -692,9 +706,9 @@ ASN Notation: asplain
 !
 router bgp 65000
    router-id 100.70.0.5
-   maximum-paths 4 ecmp 4
    update wait-install
    no bgp default ipv4-unicast
+   maximum-paths 4 ecmp 4
    distance bgp 20 200 200
    neighbor MPLS-OVERLAY-PEERS peer group
    neighbor MPLS-OVERLAY-PEERS remote-as 65000

@@ -54,9 +54,11 @@ router_bgp:
         route_targets:
         - '10:10'
     router_id: 10.255.1.3
-    redistribute_routes:
-    - source_protocol: connected
-    - source_protocol: ospf
+    redistribute:
+      connected:
+        enabled: true
+      ospf:
+        enabled: true
   - name: C2_VRF1
     rd: 10.255.1.3:20
     route_targets:
@@ -69,8 +71,9 @@ router_bgp:
         route_targets:
         - '20:20'
     router_id: 10.255.1.3
-    redistribute_routes:
-    - source_protocol: connected
+    redistribute:
+      connected:
+        enabled: true
     address_family_ipv4:
       neighbors:
       - ip_address: 10.1.1.10
@@ -233,9 +236,9 @@ router_ospf:
   - id: 10
     vrf: C1_VRF1
     passive_interface_default: true
-    router_id: 10.255.1.3
     no_passive_interfaces:
     - Ethernet2
+    router_id: 10.255.1.3
     redistribute:
       bgp:
         enabled: true

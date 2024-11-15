@@ -449,9 +449,9 @@ ASN Notation: asplain
 
 ##### EVPN Peer Groups
 
-| Peer Group | Activate | Encapsulation |
-| ---------- | -------- | ------------- |
-| EVPN-OVERLAY-PEERS | True | default |
+| Peer Group | Activate | Route-map In | Route-map Out | Encapsulation |
+| ---------- | -------- | ------------ | ------------- | ------------- |
+| EVPN-OVERLAY-PEERS | True |  - | - | default |
 
 #### Router BGP Device Configuration
 
@@ -459,9 +459,9 @@ ASN Notation: asplain
 !
 router bgp 65212
    router-id 172.16.210.4
-   maximum-paths 4 ecmp 4
    update wait-install
    no bgp default ipv4-unicast
+   maximum-paths 4 ecmp 4
    distance bgp 20 200 200
    neighbor EVPN-OVERLAY-PEERS peer group
    neighbor EVPN-OVERLAY-PEERS update-source Loopback0
@@ -481,18 +481,18 @@ router bgp 65212
    neighbor 172.17.210.6 peer group IPv4-UNDERLAY-PEERS
    neighbor 172.17.210.6 remote-as 65210
    neighbor 172.17.210.6 description DC2-POD1-SPINE2_Ethernet4
-   redistribute attached-host
    redistribute connected route-map RM-CONN-2-BGP
+   redistribute attached-host
    !
    address-family evpn
-      neighbor EVPN-OVERLAY-PEERS activate
-   !
-   address-family rt-membership
       neighbor EVPN-OVERLAY-PEERS activate
    !
    address-family ipv4
       no neighbor EVPN-OVERLAY-PEERS activate
       neighbor IPv4-UNDERLAY-PEERS activate
+   !
+   address-family rt-membership
+      neighbor EVPN-OVERLAY-PEERS activate
 ```
 
 ## BFD

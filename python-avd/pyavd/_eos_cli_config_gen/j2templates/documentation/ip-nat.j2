@@ -164,7 +164,7 @@ NAT profile VRF is: {{ profile.vrf }}
 {%         if ip_nat.synchronization.shutdown | arista.avd.default(false) %}
 | State | Disabled |
 {%         else %}
-| State | Enabled !
+| State | Enabled |
 {%         endif %}
 {%         if ip_nat.synchronization.expiry_interval is arista.avd.defined %}
 | Expiry Interval | {{ ip_nat.synchronization.expiry_interval }} Seconds |

@@ -615,9 +615,9 @@ ASN Notation: asplain
 
 ##### EVPN Peer Groups
 
-| Peer Group | Activate | Encapsulation |
-| ---------- | -------- | ------------- |
-| EVPN-OVERLAY-PEERS | True | default |
+| Peer Group | Activate | Route-map In | Route-map Out | Encapsulation |
+| ---------- | -------- | ------------ | ------------- | ------------- |
+| EVPN-OVERLAY-PEERS | True |  - | - | default |
 
 ##### EVPN Host Flapping Settings
 
@@ -647,9 +647,9 @@ ASN Notation: asplain
 !
 router bgp 65105
    router-id 192.168.255.11
-   maximum-paths 4 ecmp 4
    update wait-install
    no bgp default ipv4-unicast
+   maximum-paths 4 ecmp 4
    distance bgp 20 200 200
    neighbor EVPN-OVERLAY-PEERS peer group
    neighbor EVPN-OVERLAY-PEERS update-source Loopback0
@@ -662,12 +662,6 @@ router bgp 65105
    neighbor UNDERLAY_PEERS password 7 <removed>
    neighbor UNDERLAY_PEERS send-community
    neighbor UNDERLAY_PEERS maximum-routes 12000
-   neighbor interface Ethernet1 peer-group UNDERLAY_PEERS remote-as 65001
-   neighbor interface Ethernet2 peer-group UNDERLAY_PEERS remote-as 65001
-   neighbor interface Ethernet3 peer-group UNDERLAY_PEERS remote-as 65001
-   neighbor interface Ethernet4 peer-group UNDERLAY_PEERS remote-as 65001
-   neighbor interface Ethernet9 peer-group UNDERLAY_PEERS remote-as 65104
-   neighbor interface Ethernet10 peer-group UNDERLAY_PEERS remote-as 65104
    neighbor 10.23.23.6 peer group UNDERLAY_PEERS
    neighbor 10.23.23.6 remote-as 64900
    neighbor 10.23.23.6 description outside-r1
@@ -684,6 +678,12 @@ router bgp 65105
    neighbor 192.168.255.4 remote-as 65001
    neighbor 192.168.255.4 description DC1-SPINE4_Loopback0
    redistribute connected route-map RM-CONN-2-BGP
+   neighbor interface Ethernet1 peer-group UNDERLAY_PEERS remote-as 65001
+   neighbor interface Ethernet2 peer-group UNDERLAY_PEERS remote-as 65001
+   neighbor interface Ethernet3 peer-group UNDERLAY_PEERS remote-as 65001
+   neighbor interface Ethernet4 peer-group UNDERLAY_PEERS remote-as 65001
+   neighbor interface Ethernet9 peer-group UNDERLAY_PEERS remote-as 65104
+   neighbor interface Ethernet10 peer-group UNDERLAY_PEERS remote-as 65104
    !
    vlan-aware-bundle Tenant_A_WAN_Zone
       rd 192.168.255.11:14
@@ -704,13 +704,13 @@ router bgp 65105
       vlan 350
    !
    address-family evpn
-      host-flap detection window 20 threshold 30
       neighbor EVPN-OVERLAY-PEERS activate
+      host-flap detection window 20 threshold 30
    !
    address-family ipv4
       no neighbor EVPN-OVERLAY-PEERS activate
-      neighbor UNDERLAY_PEERS next-hop address-family ipv6 originate
       neighbor UNDERLAY_PEERS activate
+      neighbor UNDERLAY_PEERS next-hop address-family ipv6 originate
    !
    vrf Tenant_A_WAN_Zone
       rd 192.168.255.11:14
@@ -720,13 +720,13 @@ router bgp 65105
       update wait-install
       neighbor 123.1.1.10 remote-as 1234
       neighbor 123.1.1.10 local-as 123 no-prepend replace-as
+      neighbor 123.1.1.10 update-source Loopback123
       neighbor 123.1.1.10 description External IPv4 BGP peer
       neighbor 123.1.1.10 ebgp-multihop 3
+      neighbor 123.1.1.10 route-map RM-Tenant_A_WAN_Zone-123.1.1.10-SET-NEXT-HOP-OUT out
+      neighbor 123.1.1.10 default-originate route-map RM-Tenant_A_WAN_Zone-123.1.1.10-SET-NEXT-HOP-OUT
       neighbor 123.1.1.10 send-community standard extended
       neighbor 123.1.1.10 maximum-routes 0
-      neighbor 123.1.1.10 default-originate route-map RM-Tenant_A_WAN_Zone-123.1.1.10-SET-NEXT-HOP-OUT
-      neighbor 123.1.1.10 update-source Loopback123
-      neighbor 123.1.1.10 route-map RM-Tenant_A_WAN_Zone-123.1.1.10-SET-NEXT-HOP-OUT out
       neighbor fd5a:fe45:8831:06c5::a remote-as 12345
       neighbor fd5a:fe45:8831:06c5::a route-map RM-Tenant_A_WAN_Zone-fd5a:fe45:8831:06c5::a-SET-NEXT-HOP-OUT out
       neighbor fd5a:fe45:8831:06c5::b remote-as 12345

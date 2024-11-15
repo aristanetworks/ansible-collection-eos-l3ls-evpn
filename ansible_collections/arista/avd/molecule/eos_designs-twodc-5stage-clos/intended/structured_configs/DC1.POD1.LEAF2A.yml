@@ -11,6 +11,11 @@ router_bgp:
   maximum_paths:
     paths: 4
     ecmp: 4
+  redistribute:
+    connected:
+      enabled: true
+    attached_host:
+      enabled: true
   updates:
     wait_install: true
   peer_groups:
@@ -106,9 +111,6 @@ router_bgp:
     peer: DC2-POD1-LEAF1A
     description: DC2-POD1-LEAF1A
     peer_group: IPv4-UNDERLAY-PEERS
-  redistribute_routes:
-  - source_protocol: connected
-  - source_protocol: attached-host
   address_family_evpn:
     neighbor_default:
       next_hop_self_received_evpn_routes:
@@ -148,8 +150,9 @@ router_bgp:
         route_targets:
         - 1025:1025
     router_id: 172.16.110.4
-    redistribute_routes:
-    - source_protocol: connected
+    redistribute:
+      connected:
+        enabled: true
   - name: vrf_with_loopbacks_dc1_pod1_only
     rd: 172.16.110.4:1102
     route_targets:
@@ -162,8 +165,9 @@ router_bgp:
         route_targets:
         - 1102:1102
     router_id: 172.16.110.4
-    redistribute_routes:
-    - source_protocol: connected
+    redistribute:
+      connected:
+        enabled: true
   - name: vrf_with_loopbacks_from_overlapping_pool
     rd: 172.16.110.4:1100
     route_targets:
@@ -176,8 +180,9 @@ router_bgp:
         route_targets:
         - 1100:1100
     router_id: 172.16.110.4
-    redistribute_routes:
-    - source_protocol: connected
+    redistribute:
+      connected:
+        enabled: true
   - name: vrf_with_loopbacks_from_pod_pools
     rd: 172.16.110.4:1101
     route_targets:
@@ -190,8 +195,9 @@ router_bgp:
         route_targets:
         - 1101:1101
     router_id: 172.16.110.4
-    redistribute_routes:
-    - source_protocol: connected
+    redistribute:
+      connected:
+        enabled: true
   vlans:
   - id: 110
     tenant: Tenant_A
@@ -746,6 +752,7 @@ loopback_interfaces:
   shutdown: false
   vrf: vrf_with_loopbacks_from_pod_pools
   ip_address: 10.101.101.4/32
+  ipv6_address: 2001:db8:1::2/128
 router_bfd:
   multihop:
     interval: 300
@@ -788,6 +795,7 @@ virtual_source_nat_vrfs:
   ip_address: 10.100.0.4
 - name: vrf_with_loopbacks_from_pod_pools
   ip_address: 10.101.101.4
+  ipv6_address: 2001:db8:1::2
 metadata:
   platform: vEOS-LAB
 domain_list:

@@ -13,6 +13,10 @@ router_bgp:
   maximum_paths:
     paths: 4
     ecmp: 4
+  redistribute:
+    connected:
+      enabled: true
+      route_map: RM-CONN-2-BGP
   updates:
     wait_install: true
   peer_groups:
@@ -62,9 +66,6 @@ router_bgp:
       activate: false
     - name: Tenant_C_WAN_Zone_BGP_PEER_GROUP
       activate: true
-  redistribute_routes:
-  - source_protocol: connected
-    route_map: RM-CONN-2-BGP
   neighbors:
   - ip_address: 172.31.255.0
     peer_group: UNDERLAY-PEERS
@@ -167,8 +168,9 @@ router_bgp:
         route_targets:
         - 65000:123
     router_id: 192.168.255.17
-    redistribute_routes:
-    - source_protocol: connected
+    redistribute:
+      connected:
+        enabled: true
   - name: Tenant_B_OP_Zone
     rd: 192.168.255.17:20
     route_targets:
@@ -181,8 +183,9 @@ router_bgp:
         route_targets:
         - '20:20'
     router_id: 192.168.255.17
-    redistribute_routes:
-    - source_protocol: connected
+    redistribute:
+      connected:
+        enabled: true
   - name: Tenant_B_WAN_Zone
     rd: 192.168.255.17:21
     route_targets:
@@ -195,8 +198,9 @@ router_bgp:
         route_targets:
         - '21:21'
     router_id: 192.168.255.17
-    redistribute_routes:
-    - source_protocol: connected
+    redistribute:
+      connected:
+        enabled: true
   - name: Tenant_C_WAN_Zone
     rd: 192.168.255.17:31
     route_targets:
@@ -209,8 +213,9 @@ router_bgp:
         route_targets:
         - '31:31'
     router_id: 192.168.255.17
-    redistribute_routes:
-    - source_protocol: connected
+    redistribute:
+      connected:
+        enabled: true
     address_family_ipv4:
       neighbors:
       - ip_address: 1.1.1.1
@@ -234,6 +239,18 @@ router_bgp:
         activate: true
     updates:
       wait_install: true
+  - name: TENANT_D_WAN_ZONE
+    rd: 192.168.255.17:42
+    route_targets:
+      import:
+      - address_family: evpn
+        route_targets:
+        - '42:42'
+      export:
+      - address_family: evpn
+        route_targets:
+        - '42:42'
+    router_id: 192.168.255.17
   vlan_aware_bundles:
   - name: Tenant_A_WAN_Zone
     rd: 192.168.255.17:14
@@ -259,6 +276,14 @@ router_bgp:
     redistribute_routes:
     - learned
     vlan: '350'
+  - name: TENANT_D_WAN_ZONE
+    rd: 192.168.255.17:42
+    route_targets:
+      both:
+      - '42:42'
+    redistribute_routes:
+    - learned
+    vlan: '453'
 static_routes:
 - vrf: MGMT
   destination_address_prefix: 0.0.0.0/0
@@ -330,6 +355,10 @@ vrfs:
 - name: Tenant_C_WAN_Zone
   tenant: Tenant_C
   ip_routing: true
+- name: TENANT_D_WAN_ZONE
+  tenant: Tenant_D
+  ip_routing: true
+  ipv6_routing: true
 management_interfaces:
 - name: Management1
   description: OOB_MANAGEMENT
@@ -447,6 +476,9 @@ vlans:
 - id: 350
   name: Tenant_C_WAN_Zone_1
   tenant: Tenant_C
+- id: 453
+  name: Tenant_D_WAN_Zone_1
+  tenant: Tenant_D
 ip_igmp_snooping:
   globally_enabled: true
 ip_virtual_router_mac_address: 00:dc:00:00:00:0a
@@ -480,6 +512,16 @@ vlan_interfaces:
   shutdown: false
   ip_address_virtual: 10.3.50.1/24
   vrf: Tenant_C_WAN_Zone
+- name: Vlan453
+  tenant: Tenant_D
+  tags:
+  - wan
+  description: Tenant_D_WAN_Zone_1
+  shutdown: false
+  ipv6_enable: true
+  ipv6_address_virtuals:
+  - 10.0.10.1/24
+  vrf: TENANT_D_WAN_ZONE
 vxlan_interface:
   vxlan1:
     description: DC1-BL2B_VTEP
@@ -493,6 +535,8 @@ vxlan_interface:
         vni: 20250
       - id: 350
         vni: 30350
+      - id: 453
+        vni: 40453
       vrfs:
       - name: Tenant_A_WAN_Zone
         vni: 14
@@ -502,5 +546,7 @@ vxlan_interface:
         vni: 21
       - name: Tenant_C_WAN_Zone
         vni: 31
+      - name: TENANT_D_WAN_ZONE
+        vni: 42
 metadata:
   platform: 7280R3

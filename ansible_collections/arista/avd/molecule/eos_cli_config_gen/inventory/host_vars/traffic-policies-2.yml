@@ -8,4 +8,5 @@ traffic_policies:
       - name: IPv6-DEMO-2
 port_channel_interfaces:
   - name: Port-Channel2
-    type: routed
+    switchport:
+      enabled: false

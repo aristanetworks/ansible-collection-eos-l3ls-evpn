@@ -49,8 +49,8 @@ class VxlanInterfaceMixin(UtilsMixin):
         if self.shared_utils.mlag_l3 and self.shared_utils.network_services_l3 and self.shared_utils.overlay_evpn:
             vxlan["virtual_router_encapsulation_mac_address"] = "mlag-system-id"
 
-        if self.shared_utils.overlay_her and self._overlay_her_flood_list_per_vni is False:
-            vxlan["flood_vteps"] = natural_sort(unique(self._overlay_her_flood_lists.get("common", [])))
+        if self.shared_utils.overlay_her and self._overlay_her_flood_list_per_vni is False and (common := self._overlay_her_flood_lists.get("common")):
+            vxlan["flood_vteps"] = natural_sort(unique(common))
 
         if self.shared_utils.overlay_cvx:
             vxlan["controller_client"] = {"enabled": True}
@@ -253,8 +253,8 @@ class VxlanInterfaceMixin(UtilsMixin):
                 underlay_l2_multicast_group_ipv4_pool_offset,
             )
 
-        if self.shared_utils.overlay_her and self._overlay_her_flood_list_per_vni:
-            vxlan_interface_vlan["flood_vteps"] = natural_sort(unique(self._overlay_her_flood_lists.get(vlan_id, [])))
+        if self.shared_utils.overlay_her and self._overlay_her_flood_list_per_vni and (vlan_id_entry := self._overlay_her_flood_lists.get(vlan_id)):
+            vxlan_interface_vlan["flood_vteps"] = natural_sort(unique(vlan_id_entry))
 
         return vxlan_interface_vlan
 

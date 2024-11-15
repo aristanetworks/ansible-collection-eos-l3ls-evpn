@@ -1,4 +1,0 @@
-# test aliases
-aliases: |
-  alias wr copy running-config startup-config
-  alias siib show ip interface brief

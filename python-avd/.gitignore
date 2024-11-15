@@ -3,7 +3,6 @@
 __pycache__/
 /build/
 /dist/
-/tests/artifacts/
 /pyavd.egg-info/
 /pyavd/eos_cli_config_gen.templates.zip
 *.prof

@@ -81,7 +81,7 @@ class PrefixListsMixin(UtilsMixin):
                 if self._mlag_ibgp_peering_vlan_vrf(vrf, tenant) is None:
                     continue
 
-                if self._mlag_ibgp_peering_redistribute(vrf, tenant):
+                if not self._exclude_mlag_ibgp_peering_from_redistribute(vrf, tenant):
                     # By default the BGP peering is redistributed, so we only need the prefix-list for the false case.
                     continue
 

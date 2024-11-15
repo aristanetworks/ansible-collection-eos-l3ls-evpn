@@ -62,8 +62,8 @@ cvp_configlets:
     RM-CONN-2-BGP-VRFS permit 20\n!\nroute-map RM-MLAG-PEER-IN permit 10\n   description
     Make routes learned over MLAG Peer-link less preferred on spines to ensure optimal
     routing\n   set origin incomplete\n!\nrouter bfd\n   multihop interval 1200 min-rx
-    1200 multiplier 3\n!\nrouter bgp 65104\n   router-id 192.168.255.10\n   maximum-paths
-    4 ecmp 4\n   update wait-install\n   no bgp default ipv4-unicast\n   distance
+    1200 multiplier 3\n!\nrouter bgp 65104\n   router-id 192.168.255.10\n   update
+    wait-install\n   no bgp default ipv4-unicast\n   maximum-paths 4 ecmp 4\n   distance
     bgp 20 200 200\n   neighbor EVPN-OVERLAY-PEERS peer group\n   neighbor EVPN-OVERLAY-PEERS
     update-source Loopback0\n   neighbor EVPN-OVERLAY-PEERS bfd\n   neighbor EVPN-OVERLAY-PEERS
     ebgp-multihop 3\n   neighbor EVPN-OVERLAY-PEERS password 7 q+VNViP5i4rVjW1cxFv2wA==\n
@@ -73,9 +73,9 @@ cvp_configlets:
     \  neighbor IPv4-UNDERLAY-PEERS maximum-routes 12000\n   neighbor MLAG-IPv4-UNDERLAY-PEER
     peer group\n   neighbor MLAG-IPv4-UNDERLAY-PEER remote-as 65104\n   neighbor MLAG-IPv4-UNDERLAY-PEER
     next-hop-self\n   neighbor MLAG-IPv4-UNDERLAY-PEER description DC1-BL1B\n   neighbor
-    MLAG-IPv4-UNDERLAY-PEER password 7 vnEaG8gMeQf3d3cN6PktXQ==\n   neighbor MLAG-IPv4-UNDERLAY-PEER
-    send-community\n   neighbor MLAG-IPv4-UNDERLAY-PEER maximum-routes 12000\n   neighbor
-    MLAG-IPv4-UNDERLAY-PEER route-map RM-MLAG-PEER-IN in\n   neighbor 10.255.251.11
+    MLAG-IPv4-UNDERLAY-PEER route-map RM-MLAG-PEER-IN in\n   neighbor MLAG-IPv4-UNDERLAY-PEER
+    password 7 vnEaG8gMeQf3d3cN6PktXQ==\n   neighbor MLAG-IPv4-UNDERLAY-PEER send-community\n
+    \  neighbor MLAG-IPv4-UNDERLAY-PEER maximum-routes 12000\n   neighbor 10.255.251.11
     peer group MLAG-IPv4-UNDERLAY-PEER\n   neighbor 10.255.251.11 description DC1-BL1B_Vlan4093\n
     \  neighbor 172.31.255.40 peer group IPv4-UNDERLAY-PEERS\n   neighbor 172.31.255.40
     remote-as 65001\n   neighbor 172.31.255.40 description DC1-SPINE1_Ethernet6\n
@@ -179,8 +179,8 @@ cvp_configlets:
     RM-CONN-2-BGP-VRFS permit 20\n!\nroute-map RM-MLAG-PEER-IN permit 10\n   description
     Make routes learned over MLAG Peer-link less preferred on spines to ensure optimal
     routing\n   set origin incomplete\n!\nrouter bfd\n   multihop interval 1200 min-rx
-    1200 multiplier 3\n!\nrouter bgp 65104\n   router-id 192.168.255.11\n   maximum-paths
-    4 ecmp 4\n   update wait-install\n   no bgp default ipv4-unicast\n   distance
+    1200 multiplier 3\n!\nrouter bgp 65104\n   router-id 192.168.255.11\n   update
+    wait-install\n   no bgp default ipv4-unicast\n   maximum-paths 4 ecmp 4\n   distance
     bgp 20 200 200\n   neighbor EVPN-OVERLAY-PEERS peer group\n   neighbor EVPN-OVERLAY-PEERS
     update-source Loopback0\n   neighbor EVPN-OVERLAY-PEERS bfd\n   neighbor EVPN-OVERLAY-PEERS
     ebgp-multihop 3\n   neighbor EVPN-OVERLAY-PEERS password 7 q+VNViP5i4rVjW1cxFv2wA==\n
@@ -190,9 +190,9 @@ cvp_configlets:
     \  neighbor IPv4-UNDERLAY-PEERS maximum-routes 12000\n   neighbor MLAG-IPv4-UNDERLAY-PEER
     peer group\n   neighbor MLAG-IPv4-UNDERLAY-PEER remote-as 65104\n   neighbor MLAG-IPv4-UNDERLAY-PEER
     next-hop-self\n   neighbor MLAG-IPv4-UNDERLAY-PEER description DC1-BL1A\n   neighbor
-    MLAG-IPv4-UNDERLAY-PEER password 7 vnEaG8gMeQf3d3cN6PktXQ==\n   neighbor MLAG-IPv4-UNDERLAY-PEER
-    send-community\n   neighbor MLAG-IPv4-UNDERLAY-PEER maximum-routes 12000\n   neighbor
-    MLAG-IPv4-UNDERLAY-PEER route-map RM-MLAG-PEER-IN in\n   neighbor 10.255.251.10
+    MLAG-IPv4-UNDERLAY-PEER route-map RM-MLAG-PEER-IN in\n   neighbor MLAG-IPv4-UNDERLAY-PEER
+    password 7 vnEaG8gMeQf3d3cN6PktXQ==\n   neighbor MLAG-IPv4-UNDERLAY-PEER send-community\n
+    \  neighbor MLAG-IPv4-UNDERLAY-PEER maximum-routes 12000\n   neighbor 10.255.251.10
     peer group MLAG-IPv4-UNDERLAY-PEER\n   neighbor 10.255.251.10 description DC1-BL1A_Vlan4093\n
     \  neighbor 172.31.255.48 peer group IPv4-UNDERLAY-PEERS\n   neighbor 172.31.255.48
     remote-as 65001\n   neighbor 172.31.255.48 description DC1-SPINE1_Ethernet7\n
@@ -372,8 +372,8 @@ cvp_configlets:
     local-interface vrf MGMT Management1\nntp server vrf MGMT 192.168.200.5 prefer\n!\nroute-map
     RM-CONN-2-BGP permit 10\n   match ip address prefix-list PL-LOOPBACKS-EVPN-OVERLAY\n!\nrouter
     bfd\n   multihop interval 1200 min-rx 1200 multiplier 3\n!\nrouter bgp 65101\n
-    \  router-id 192.168.255.5\n   maximum-paths 4 ecmp 4\n   update wait-install\n
-    \  no bgp default ipv4-unicast\n   distance bgp 20 200 200\n   neighbor EVPN-OVERLAY-PEERS
+    \  router-id 192.168.255.5\n   update wait-install\n   no bgp default ipv4-unicast\n
+    \  maximum-paths 4 ecmp 4\n   distance bgp 20 200 200\n   neighbor EVPN-OVERLAY-PEERS
     peer group\n   neighbor EVPN-OVERLAY-PEERS update-source Loopback0\n   neighbor
     EVPN-OVERLAY-PEERS bfd\n   neighbor EVPN-OVERLAY-PEERS ebgp-multihop 3\n   neighbor
     EVPN-OVERLAY-PEERS password 7 q+VNViP5i4rVjW1cxFv2wA==\n   neighbor EVPN-OVERLAY-PEERS
@@ -517,9 +517,9 @@ cvp_configlets:
     permit 20\n!\nroute-map RM-MLAG-PEER-IN permit 10\n   description Make routes
     learned over MLAG Peer-link less preferred on spines to ensure optimal routing\n
     \  set origin incomplete\n!\nrouter bfd\n   multihop interval 1200 min-rx 1200
-    multiplier 3\n!\nrouter bgp 65102\n   router-id 192.168.255.6\n   maximum-paths
-    4 ecmp 4\n   update wait-install\n   no bgp default ipv4-unicast\n   distance
-    bgp 20 200 200\n   neighbor EVPN-OVERLAY-PEERS peer group\n   neighbor EVPN-OVERLAY-PEERS
+    multiplier 3\n!\nrouter bgp 65102\n   router-id 192.168.255.6\n   update wait-install\n
+    \  no bgp default ipv4-unicast\n   maximum-paths 4 ecmp 4\n   distance bgp 20
+    200 200\n   neighbor EVPN-OVERLAY-PEERS peer group\n   neighbor EVPN-OVERLAY-PEERS
     update-source Loopback0\n   neighbor EVPN-OVERLAY-PEERS bfd\n   neighbor EVPN-OVERLAY-PEERS
     ebgp-multihop 3\n   neighbor EVPN-OVERLAY-PEERS password 7 q+VNViP5i4rVjW1cxFv2wA==\n
     \  neighbor EVPN-OVERLAY-PEERS send-community\n   neighbor EVPN-OVERLAY-PEERS
@@ -528,9 +528,9 @@ cvp_configlets:
     \  neighbor IPv4-UNDERLAY-PEERS maximum-routes 12000\n   neighbor MLAG-IPv4-UNDERLAY-PEER
     peer group\n   neighbor MLAG-IPv4-UNDERLAY-PEER remote-as 65102\n   neighbor MLAG-IPv4-UNDERLAY-PEER
     next-hop-self\n   neighbor MLAG-IPv4-UNDERLAY-PEER description DC1-LEAF2B\n   neighbor
-    MLAG-IPv4-UNDERLAY-PEER password 7 vnEaG8gMeQf3d3cN6PktXQ==\n   neighbor MLAG-IPv4-UNDERLAY-PEER
-    send-community\n   neighbor MLAG-IPv4-UNDERLAY-PEER maximum-routes 12000\n   neighbor
-    MLAG-IPv4-UNDERLAY-PEER route-map RM-MLAG-PEER-IN in\n   neighbor 10.255.251.3
+    MLAG-IPv4-UNDERLAY-PEER route-map RM-MLAG-PEER-IN in\n   neighbor MLAG-IPv4-UNDERLAY-PEER
+    password 7 vnEaG8gMeQf3d3cN6PktXQ==\n   neighbor MLAG-IPv4-UNDERLAY-PEER send-community\n
+    \  neighbor MLAG-IPv4-UNDERLAY-PEER maximum-routes 12000\n   neighbor 10.255.251.3
     peer group MLAG-IPv4-UNDERLAY-PEER\n   neighbor 10.255.251.3 description DC1-LEAF2B_Vlan4093\n
     \  neighbor 172.31.255.8 peer group IPv4-UNDERLAY-PEERS\n   neighbor 172.31.255.8
     remote-as 65001\n   neighbor 172.31.255.8 description DC1-SPINE1_Ethernet2\n   neighbor
@@ -698,9 +698,9 @@ cvp_configlets:
     permit 20\n!\nroute-map RM-MLAG-PEER-IN permit 10\n   description Make routes
     learned over MLAG Peer-link less preferred on spines to ensure optimal routing\n
     \  set origin incomplete\n!\nrouter bfd\n   multihop interval 1200 min-rx 1200
-    multiplier 3\n!\nrouter bgp 65102\n   router-id 192.168.255.7\n   maximum-paths
-    4 ecmp 4\n   update wait-install\n   no bgp default ipv4-unicast\n   distance
-    bgp 20 200 200\n   neighbor EVPN-OVERLAY-PEERS peer group\n   neighbor EVPN-OVERLAY-PEERS
+    multiplier 3\n!\nrouter bgp 65102\n   router-id 192.168.255.7\n   update wait-install\n
+    \  no bgp default ipv4-unicast\n   maximum-paths 4 ecmp 4\n   distance bgp 20
+    200 200\n   neighbor EVPN-OVERLAY-PEERS peer group\n   neighbor EVPN-OVERLAY-PEERS
     update-source Loopback0\n   neighbor EVPN-OVERLAY-PEERS bfd\n   neighbor EVPN-OVERLAY-PEERS
     ebgp-multihop 3\n   neighbor EVPN-OVERLAY-PEERS password 7 q+VNViP5i4rVjW1cxFv2wA==\n
     \  neighbor EVPN-OVERLAY-PEERS send-community\n   neighbor EVPN-OVERLAY-PEERS
@@ -709,9 +709,9 @@ cvp_configlets:
     \  neighbor IPv4-UNDERLAY-PEERS maximum-routes 12000\n   neighbor MLAG-IPv4-UNDERLAY-PEER
     peer group\n   neighbor MLAG-IPv4-UNDERLAY-PEER remote-as 65102\n   neighbor MLAG-IPv4-UNDERLAY-PEER
     next-hop-self\n   neighbor MLAG-IPv4-UNDERLAY-PEER description DC1-LEAF2A\n   neighbor
-    MLAG-IPv4-UNDERLAY-PEER password 7 vnEaG8gMeQf3d3cN6PktXQ==\n   neighbor MLAG-IPv4-UNDERLAY-PEER
-    send-community\n   neighbor MLAG-IPv4-UNDERLAY-PEER maximum-routes 12000\n   neighbor
-    MLAG-IPv4-UNDERLAY-PEER route-map RM-MLAG-PEER-IN in\n   neighbor 10.255.251.2
+    MLAG-IPv4-UNDERLAY-PEER route-map RM-MLAG-PEER-IN in\n   neighbor MLAG-IPv4-UNDERLAY-PEER
+    password 7 vnEaG8gMeQf3d3cN6PktXQ==\n   neighbor MLAG-IPv4-UNDERLAY-PEER send-community\n
+    \  neighbor MLAG-IPv4-UNDERLAY-PEER maximum-routes 12000\n   neighbor 10.255.251.2
     peer group MLAG-IPv4-UNDERLAY-PEER\n   neighbor 10.255.251.2 description DC1-LEAF2A_Vlan4093\n
     \  neighbor 172.31.255.16 peer group IPv4-UNDERLAY-PEERS\n   neighbor 172.31.255.16
     remote-as 65001\n   neighbor 172.31.255.16 description DC1-SPINE1_Ethernet3\n
@@ -799,8 +799,8 @@ cvp_configlets:
     vrf MGMT Management1\nntp server vrf MGMT 192.168.200.5 prefer\n!\nroute-map RM-CONN-2-BGP
     permit 10\n   match ip address prefix-list PL-LOOPBACKS-EVPN-OVERLAY\n!\nrouter
     bfd\n   multihop interval 1200 min-rx 1200 multiplier 3\n!\nrouter bgp 65001\n
-    \  router-id 192.168.255.1\n   maximum-paths 4 ecmp 4\n   update wait-install\n
-    \  no bgp default ipv4-unicast\n   distance bgp 20 200 200\n   neighbor EVPN-OVERLAY-PEERS
+    \  router-id 192.168.255.1\n   update wait-install\n   no bgp default ipv4-unicast\n
+    \  maximum-paths 4 ecmp 4\n   distance bgp 20 200 200\n   neighbor EVPN-OVERLAY-PEERS
     peer group\n   neighbor EVPN-OVERLAY-PEERS next-hop-unchanged\n   neighbor EVPN-OVERLAY-PEERS
     update-source Loopback0\n   neighbor EVPN-OVERLAY-PEERS bfd\n   neighbor EVPN-OVERLAY-PEERS
     ebgp-multihop 3\n   neighbor EVPN-OVERLAY-PEERS password 7 q+VNViP5i4rVjW1cxFv2wA==\n
@@ -869,8 +869,8 @@ cvp_configlets:
     vrf MGMT Management1\nntp server vrf MGMT 192.168.200.5 prefer\n!\nroute-map RM-CONN-2-BGP
     permit 10\n   match ip address prefix-list PL-LOOPBACKS-EVPN-OVERLAY\n!\nrouter
     bfd\n   multihop interval 1200 min-rx 1200 multiplier 3\n!\nrouter bgp 65001\n
-    \  router-id 192.168.255.2\n   maximum-paths 4 ecmp 4\n   update wait-install\n
-    \  no bgp default ipv4-unicast\n   distance bgp 20 200 200\n   neighbor EVPN-OVERLAY-PEERS
+    \  router-id 192.168.255.2\n   update wait-install\n   no bgp default ipv4-unicast\n
+    \  maximum-paths 4 ecmp 4\n   distance bgp 20 200 200\n   neighbor EVPN-OVERLAY-PEERS
     peer group\n   neighbor EVPN-OVERLAY-PEERS next-hop-unchanged\n   neighbor EVPN-OVERLAY-PEERS
     update-source Loopback0\n   neighbor EVPN-OVERLAY-PEERS bfd\n   neighbor EVPN-OVERLAY-PEERS
     ebgp-multihop 3\n   neighbor EVPN-OVERLAY-PEERS password 7 q+VNViP5i4rVjW1cxFv2wA==\n
@@ -939,8 +939,8 @@ cvp_configlets:
     vrf MGMT Management1\nntp server vrf MGMT 192.168.200.5 prefer\n!\nroute-map RM-CONN-2-BGP
     permit 10\n   match ip address prefix-list PL-LOOPBACKS-EVPN-OVERLAY\n!\nrouter
     bfd\n   multihop interval 1200 min-rx 1200 multiplier 3\n!\nrouter bgp 65001\n
-    \  router-id 192.168.255.3\n   maximum-paths 4 ecmp 4\n   update wait-install\n
-    \  no bgp default ipv4-unicast\n   distance bgp 20 200 200\n   neighbor EVPN-OVERLAY-PEERS
+    \  router-id 192.168.255.3\n   update wait-install\n   no bgp default ipv4-unicast\n
+    \  maximum-paths 4 ecmp 4\n   distance bgp 20 200 200\n   neighbor EVPN-OVERLAY-PEERS
     peer group\n   neighbor EVPN-OVERLAY-PEERS next-hop-unchanged\n   neighbor EVPN-OVERLAY-PEERS
     update-source Loopback0\n   neighbor EVPN-OVERLAY-PEERS bfd\n   neighbor EVPN-OVERLAY-PEERS
     ebgp-multihop 3\n   neighbor EVPN-OVERLAY-PEERS password 7 q+VNViP5i4rVjW1cxFv2wA==\n
@@ -1009,8 +1009,8 @@ cvp_configlets:
     vrf MGMT Management1\nntp server vrf MGMT 192.168.200.5 prefer\n!\nroute-map RM-CONN-2-BGP
     permit 10\n   match ip address prefix-list PL-LOOPBACKS-EVPN-OVERLAY\n!\nrouter
     bfd\n   multihop interval 1200 min-rx 1200 multiplier 3\n!\nrouter bgp 65001\n
-    \  router-id 192.168.255.4\n   maximum-paths 4 ecmp 4\n   update wait-install\n
-    \  no bgp default ipv4-unicast\n   distance bgp 20 200 200\n   neighbor EVPN-OVERLAY-PEERS
+    \  router-id 192.168.255.4\n   update wait-install\n   no bgp default ipv4-unicast\n
+    \  maximum-paths 4 ecmp 4\n   distance bgp 20 200 200\n   neighbor EVPN-OVERLAY-PEERS
     peer group\n   neighbor EVPN-OVERLAY-PEERS next-hop-unchanged\n   neighbor EVPN-OVERLAY-PEERS
     update-source Loopback0\n   neighbor EVPN-OVERLAY-PEERS bfd\n   neighbor EVPN-OVERLAY-PEERS
     ebgp-multihop 3\n   neighbor EVPN-OVERLAY-PEERS password 7 q+VNViP5i4rVjW1cxFv2wA==\n
@@ -1087,7 +1087,7 @@ cvp_configlets:
     trunk allowed vlan 110-111,120-121,130-131,140-141,150,210-211,250,310-311,350\n
     \  switchport mode trunk\n   switchport\n   mlag 7\n!\ninterface Port-Channel10\n
     \  description SERVER_server03_ESI\n   no shutdown\n   switchport trunk allowed
-    vlan 110-111,210-211\n   switchport mode trunk\n   switchport\n   evpn ethernet-segment\n
+    vlan 110-111,210-211\n   switchport mode trunk\n   switchport\n   !\n   evpn ethernet-segment\n
     \     identifier 0000:0000:0303:0202:0101\n      route-target import 03:03:02:02:01:01\n
     \  lacp system-id 0303.0202.0101\n!\ninterface Ethernet1\n   description P2P_DC1-SPINE1_Ethernet4\n
     \  no shutdown\n   mtu 1500\n   no switchport\n   ip address 172.31.255.25/31\n!\ninterface
@@ -1179,8 +1179,8 @@ cvp_configlets:
     RM-CONN-2-BGP-VRFS permit 20\n!\nroute-map RM-MLAG-PEER-IN permit 10\n   description
     Make routes learned over MLAG Peer-link less preferred on spines to ensure optimal
     routing\n   set origin incomplete\n!\nrouter bfd\n   multihop interval 1200 min-rx
-    1200 multiplier 3\n!\nrouter bgp 65103\n   router-id 192.168.255.8\n   maximum-paths
-    4 ecmp 4\n   update wait-install\n   no bgp default ipv4-unicast\n   distance
+    1200 multiplier 3\n!\nrouter bgp 65103\n   router-id 192.168.255.8\n   update
+    wait-install\n   no bgp default ipv4-unicast\n   maximum-paths 4 ecmp 4\n   distance
     bgp 20 200 200\n   neighbor EVPN-OVERLAY-PEERS peer group\n   neighbor EVPN-OVERLAY-PEERS
     update-source Loopback0\n   neighbor EVPN-OVERLAY-PEERS bfd\n   neighbor EVPN-OVERLAY-PEERS
     ebgp-multihop 3\n   neighbor EVPN-OVERLAY-PEERS password 7 q+VNViP5i4rVjW1cxFv2wA==\n
@@ -1190,9 +1190,9 @@ cvp_configlets:
     \  neighbor IPv4-UNDERLAY-PEERS maximum-routes 12000\n   neighbor MLAG-IPv4-UNDERLAY-PEER
     peer group\n   neighbor MLAG-IPv4-UNDERLAY-PEER remote-as 65103\n   neighbor MLAG-IPv4-UNDERLAY-PEER
     next-hop-self\n   neighbor MLAG-IPv4-UNDERLAY-PEER description DC1-SVC3B\n   neighbor
-    MLAG-IPv4-UNDERLAY-PEER password 7 vnEaG8gMeQf3d3cN6PktXQ==\n   neighbor MLAG-IPv4-UNDERLAY-PEER
-    send-community\n   neighbor MLAG-IPv4-UNDERLAY-PEER maximum-routes 12000\n   neighbor
-    MLAG-IPv4-UNDERLAY-PEER route-map RM-MLAG-PEER-IN in\n   neighbor 10.255.251.7
+    MLAG-IPv4-UNDERLAY-PEER route-map RM-MLAG-PEER-IN in\n   neighbor MLAG-IPv4-UNDERLAY-PEER
+    password 7 vnEaG8gMeQf3d3cN6PktXQ==\n   neighbor MLAG-IPv4-UNDERLAY-PEER send-community\n
+    \  neighbor MLAG-IPv4-UNDERLAY-PEER maximum-routes 12000\n   neighbor 10.255.251.7
     peer group MLAG-IPv4-UNDERLAY-PEER\n   neighbor 10.255.251.7 description DC1-SVC3B_Vlan4093\n
     \  neighbor 172.31.255.24 peer group IPv4-UNDERLAY-PEERS\n   neighbor 172.31.255.24
     remote-as 65001\n   neighbor 172.31.255.24 description DC1-SPINE1_Ethernet4\n
@@ -1394,8 +1394,8 @@ cvp_configlets:
     RM-CONN-2-BGP-VRFS permit 20\n!\nroute-map RM-MLAG-PEER-IN permit 10\n   description
     Make routes learned over MLAG Peer-link less preferred on spines to ensure optimal
     routing\n   set origin incomplete\n!\nrouter bfd\n   multihop interval 1200 min-rx
-    1200 multiplier 3\n!\nrouter bgp 65103\n   router-id 192.168.255.9\n   maximum-paths
-    4 ecmp 4\n   update wait-install\n   no bgp default ipv4-unicast\n   distance
+    1200 multiplier 3\n!\nrouter bgp 65103\n   router-id 192.168.255.9\n   update
+    wait-install\n   no bgp default ipv4-unicast\n   maximum-paths 4 ecmp 4\n   distance
     bgp 20 200 200\n   neighbor EVPN-OVERLAY-PEERS peer group\n   neighbor EVPN-OVERLAY-PEERS
     update-source Loopback0\n   neighbor EVPN-OVERLAY-PEERS bfd\n   neighbor EVPN-OVERLAY-PEERS
     ebgp-multihop 3\n   neighbor EVPN-OVERLAY-PEERS password 7 q+VNViP5i4rVjW1cxFv2wA==\n
@@ -1405,9 +1405,9 @@ cvp_configlets:
     \  neighbor IPv4-UNDERLAY-PEERS maximum-routes 12000\n   neighbor MLAG-IPv4-UNDERLAY-PEER
     peer group\n   neighbor MLAG-IPv4-UNDERLAY-PEER remote-as 65103\n   neighbor MLAG-IPv4-UNDERLAY-PEER
     next-hop-self\n   neighbor MLAG-IPv4-UNDERLAY-PEER description DC1-SVC3A\n   neighbor
-    MLAG-IPv4-UNDERLAY-PEER password 7 vnEaG8gMeQf3d3cN6PktXQ==\n   neighbor MLAG-IPv4-UNDERLAY-PEER
-    send-community\n   neighbor MLAG-IPv4-UNDERLAY-PEER maximum-routes 12000\n   neighbor
-    MLAG-IPv4-UNDERLAY-PEER route-map RM-MLAG-PEER-IN in\n   neighbor 10.255.251.6
+    MLAG-IPv4-UNDERLAY-PEER route-map RM-MLAG-PEER-IN in\n   neighbor MLAG-IPv4-UNDERLAY-PEER
+    password 7 vnEaG8gMeQf3d3cN6PktXQ==\n   neighbor MLAG-IPv4-UNDERLAY-PEER send-community\n
+    \  neighbor MLAG-IPv4-UNDERLAY-PEER maximum-routes 12000\n   neighbor 10.255.251.6
     peer group MLAG-IPv4-UNDERLAY-PEER\n   neighbor 10.255.251.6 description DC1-SVC3A_Vlan4093\n
     \  neighbor 172.31.255.32 peer group IPv4-UNDERLAY-PEERS\n   neighbor 172.31.255.32
     remote-as 65001\n   neighbor 172.31.255.32 description DC1-SPINE1_Ethernet5\n

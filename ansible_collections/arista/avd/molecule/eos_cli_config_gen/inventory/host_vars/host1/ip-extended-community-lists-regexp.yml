@@ -1,0 +1,14 @@
+---
+### IP extended community lists regexp ###
+
+ip_extcommunity_lists_regexp:
+  - name: TEST1
+    entries:
+      - type: permit
+        regexp: "65[0-9]{3}:[0-9]+"
+      - type: deny
+        regexp: ".*"
+  - name: TEST2
+    entries:
+      - type: deny
+        regexp: "6500[0-1]:650[0-9][0-9]"

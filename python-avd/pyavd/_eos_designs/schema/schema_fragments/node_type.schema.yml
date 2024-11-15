@@ -9,5 +9,6 @@ dynamic_keys:
   "node_type_keys.key":
     $ref: "eos_designs#/$defs/node_type"
     type: dict
+    display_name: Node Types
     documentation_options:
       table: node-type-structure

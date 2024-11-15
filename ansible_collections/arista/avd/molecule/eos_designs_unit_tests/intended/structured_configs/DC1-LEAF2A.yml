@@ -11,6 +11,10 @@ router_bgp:
   maximum_paths:
     paths: 4
     ecmp: 4
+  redistribute:
+    connected:
+      enabled: true
+      route_map: RM-CONN-2-BGP
   updates:
     wait_for_convergence: true
     wait_install: true
@@ -34,9 +38,6 @@ router_bgp:
       activate: true
     - name: EVPN-OVERLAY-PEERS
       activate: false
-  redistribute_routes:
-  - source_protocol: connected
-    route_map: RM-CONN-2-BGP
   neighbors:
   - ip_address: 172.31.254.32
     peer_group: UNDERLAY-PEERS
@@ -120,8 +121,9 @@ router_bgp:
         route_targets:
         - '100000:12'
     router_id: 192.168.255.10
-    redistribute_routes:
-    - source_protocol: connected
+    redistribute:
+      connected:
+        enabled: true
   - name: Tenant_A_DB_Zone
     rd: '65001:13'
     route_targets:
@@ -134,8 +136,9 @@ router_bgp:
         route_targets:
         - '100000:13'
     router_id: 192.168.255.10
-    redistribute_routes:
-    - source_protocol: connected
+    redistribute:
+      connected:
+        enabled: true
   - name: Tenant_A_OP_Zone
     rd: '65001:9'
     route_targets:
@@ -148,8 +151,9 @@ router_bgp:
         route_targets:
         - '100000:9'
     router_id: 192.168.255.10
-    redistribute_routes:
-    - source_protocol: connected
+    redistribute:
+      connected:
+        enabled: true
   - name: Tenant_A_OSPF
     rd: '65001:16'
     route_targets:
@@ -162,9 +166,11 @@ router_bgp:
         route_targets:
         - '100000:16'
     router_id: 192.168.255.10
-    redistribute_routes:
-    - source_protocol: connected
-    - source_protocol: ospf
+    redistribute:
+      connected:
+        enabled: true
+      ospf:
+        enabled: true
   - name: Tenant_A_WEB_Zone
     rd: '65001:11'
     route_targets:
@@ -177,8 +183,9 @@ router_bgp:
         route_targets:
         - '100000:11'
     router_id: 192.168.255.10
-    redistribute_routes:
-    - source_protocol: connected
+    redistribute:
+      connected:
+        enabled: true
   - name: Tenant_B_OP_Zone
     rd: '65001:20'
     route_targets:
@@ -191,8 +198,9 @@ router_bgp:
         route_targets:
         - '100000:20'
     router_id: 192.168.255.10
-    redistribute_routes:
-    - source_protocol: connected
+    redistribute:
+      connected:
+        enabled: true
   - name: Tenant_C_OP_Zone
     rd: '65001:30'
     route_targets:
@@ -205,8 +213,9 @@ router_bgp:
         route_targets:
         - '100000:30'
     router_id: 192.168.255.10
-    redistribute_routes:
-    - source_protocol: connected
+    redistribute:
+      connected:
+        enabled: true
   - name: '12345678'
     rd: '65001:41'
     route_targets:
@@ -219,8 +228,9 @@ router_bgp:
         route_targets:
         - '100000:41'
     router_id: 192.168.255.10
-    redistribute_routes:
-    - source_protocol: connected
+    redistribute:
+      connected:
+        enabled: true
   - name: Tenant_D_OP_Zone
     rd: '65001:40'
     route_targets:
@@ -233,9 +243,11 @@ router_bgp:
         route_targets:
         - '100000:40'
     router_id: 192.168.255.10
-    redistribute_routes:
-    - source_protocol: connected
-    - source_protocol: static
+    redistribute:
+      connected:
+        enabled: true
+      static:
+        enabled: true
   vlan_aware_bundles:
   - name: Tenant_A_APP_Zone
     rd: '65001:12'
@@ -641,8 +653,6 @@ ethernet_interfaces:
   port_profile: DOT1X_PORT_PROFILE
   description: PC
   shutdown: false
-  switchport:
-    enabled: true
   dot1x:
     port_control: auto
     reauthentication: true
@@ -660,13 +670,13 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
+  switchport:
+    enabled: true
 - name: Ethernet25
   peer_type: network_port
   port_profile: DOT1X_PORT_PROFILE
   description: PC
   shutdown: false
-  switchport:
-    enabled: true
   dot1x:
     port_control: auto
     reauthentication: true
@@ -684,6 +694,8 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
+  switchport:
+    enabled: true
 - name: Ethernet10
   peer: server01_MLAG
   peer_interface: Eth2
@@ -1214,10 +1226,10 @@ router_ospf:
   - id: 16
     vrf: Tenant_A_OSPF
     passive_interface_default: true
-    router_id: 192.168.255.10
     no_passive_interfaces:
     - Ethernet22
     - Ethernet23
+    router_id: 192.168.255.10
     redistribute:
       bgp:
         enabled: true

@@ -132,6 +132,7 @@ class AvdStringFormatter(Formatter):
 
         Mostly a copy from the base class, but only supporting !u for upper().
         """
+        # TODO: !l for lowercase, !t for TitleCase and shorten interface names i.e Ethernet -> Et
         # do any conversion on the resulting object
         if conversion is None:
             return value

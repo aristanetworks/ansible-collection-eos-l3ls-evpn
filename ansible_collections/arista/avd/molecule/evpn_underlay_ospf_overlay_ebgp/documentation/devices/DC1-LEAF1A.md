@@ -425,12 +425,12 @@ ip route vrf MGMT 0.0.0.0/0 192.168.200.5
 !
 router ospf 101
    router-id 192.168.255.5
+   bfd default
    passive-interface default
    no passive-interface Ethernet1
    no passive-interface Ethernet2
    no passive-interface Ethernet3
    no passive-interface Ethernet4
-   bfd default
    max-lsa 12000
 ```
 
@@ -477,9 +477,9 @@ ASN Notation: asplain
 
 ##### EVPN Peer Groups
 
-| Peer Group | Activate | Encapsulation |
-| ---------- | -------- | ------------- |
-| EVPN-OVERLAY-PEERS | True | default |
+| Peer Group | Activate | Route-map In | Route-map Out | Encapsulation |
+| ---------- | -------- | ------------ | ------------- | ------------- |
+| EVPN-OVERLAY-PEERS | True |  - | - | default |
 
 ##### EVPN Host Flapping Settings
 
@@ -493,9 +493,9 @@ ASN Notation: asplain
 !
 router bgp 65101
    router-id 192.168.255.5
-   maximum-paths 10 ecmp 10
    update wait-install
    no bgp default ipv4-unicast
+   maximum-paths 10 ecmp 10
    distance bgp 20 200 200
    neighbor EVPN-OVERLAY-PEERS peer group
    neighbor EVPN-OVERLAY-PEERS update-source Loopback0
@@ -518,8 +518,8 @@ router bgp 65101
    neighbor 192.168.255.4 description DC1-SPINE4_Loopback0
    !
    address-family evpn
-      host-flap detection window 180 threshold 30
       neighbor EVPN-OVERLAY-PEERS activate
+      host-flap detection window 180 threshold 30
    !
    address-family ipv4
       no neighbor EVPN-OVERLAY-PEERS activate

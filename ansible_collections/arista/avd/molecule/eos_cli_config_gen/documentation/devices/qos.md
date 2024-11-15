@@ -78,10 +78,10 @@ interface Ethernet1
    mtu 1500
    no switchport
    ip address 172.31.255.1/31
-   qos trust dscp
-   qos dscp 48
    service-policy type qos input pmap_test1
    service-profile test
+   qos trust dscp
+   qos dscp 48
 !
 interface Ethernet3
    description MLAG_PEER_DC1-LEAF1B_Ethernet3
@@ -96,9 +96,9 @@ interface Ethernet6
    switchport trunk allowed vlan 110-111,210-211
    switchport mode trunk
    switchport
+   service-profile experiment
    qos trust cos
    qos cos 2
-   service-profile experiment
    !
    tx-queue 2
       random-detect ecn count
@@ -135,10 +135,10 @@ interface Port-Channel3
    switchport trunk group LEAF_PEER_L3
    switchport trunk group MLAG
    switchport
+   service-policy type qos input pmap_test1
+   service-profile experiment
    qos trust cos
    qos cos 2
-   service-profile experiment
-   service-policy type qos input pmap_test1
 ```
 
 ## ACL
@@ -519,8 +519,8 @@ qos profile experiment
    service-policy type qos input test_qos_policy_v1
    !
    tx-queue 3
-      bandwidth percent 30
       no priority
+      bandwidth percent 30
    !
    tx-queue 4
       bandwidth guaranteed percent 10
@@ -549,8 +549,8 @@ qos profile qprof_testwithpolicy
    tx-queue 5
       !! Multi-line comment
       !! here.
-      bandwidth percent 19
       no priority
+      bandwidth percent 19
 !
 qos profile test
    qos trust dscp
@@ -558,12 +558,12 @@ qos profile test
    shape rate 80 percent
    !
    tx-queue 1
-      bandwidth percent 50
       no priority
+      bandwidth percent 50
    !
    tx-queue 2
-      bandwidth percent 10
       priority strict
+      bandwidth percent 10
       random-detect ecn minimum-threshold 320 kbytes maximum-threshold 320 kbytes max-mark-probability 90
    !
    tx-queue 4
@@ -580,8 +580,8 @@ qos profile test_with_pfc
       bandwidth percent 80
    !
    tx-queue 5
-      bandwidth percent 19
       no priority
+      bandwidth percent 19
    !
    priority-flow-control on
    priority-flow-control priority 0 no-drop
@@ -594,13 +594,13 @@ qos profile uc_mc_queues_test
    !
    uc-tx-queue 1
       !! Test no priority
-      bandwidth percent 50
       no priority
+      bandwidth percent 50
       random-detect ecn minimum-threshold 3 milliseconds maximum-threshold 9 milliseconds max-mark-probability 90
    !
    uc-tx-queue 2
-      bandwidth percent 10
       priority strict
+      bandwidth percent 10
       random-detect ecn minimum-threshold 320 kbytes maximum-threshold 320 kbytes max-mark-probability 90
    !
    uc-tx-queue 4
@@ -609,13 +609,13 @@ qos profile uc_mc_queues_test
       random-detect ecn minimum-threshold 320 segments maximum-threshold 320 segments weight 10
    !
    mc-tx-queue 1
-      bandwidth percent 50
       no priority
+      bandwidth percent 50
    !
    mc-tx-queue 2
       !! Test strict priority
-      bandwidth percent 10
       priority strict
+      bandwidth percent 10
    !
    mc-tx-queue 4
       !! Test guaranteed percent
@@ -625,18 +625,18 @@ qos profile wred_queues_test
    !
    tx-queue 1
       !! Test no priority
-      bandwidth percent 50
       no priority
+      bandwidth percent 50
       random-detect drop minimum-threshold 1 kbytes maximum-threshold 10 kbytes drop-probability 100
    !
    tx-queue 2
-      bandwidth percent 10
       priority strict
+      bandwidth percent 10
       random-detect drop drop-precedence 2 minimum-threshold 2 kbytes maximum-threshold 200 kbytes drop-probability 50 weight 10
    !
    tx-queue 3
-      bandwidth percent 10
       priority strict
+      bandwidth percent 10
       random-detect ecn minimum-threshold 320 kbytes maximum-threshold 320 kbytes weight 10
    !
    tx-queue 4
@@ -645,13 +645,13 @@ qos profile wred_queues_test
       random-detect drop minimum-threshold 1 kbytes maximum-threshold 10 kbytes drop-probability 90
    !
    mc-tx-queue 1
-      bandwidth percent 50
       no priority
+      bandwidth percent 50
    !
    mc-tx-queue 2
       !! Test strict priority
-      bandwidth percent 10
       priority strict
+      bandwidth percent 10
    !
    mc-tx-queue 4
       !! Test guaranteed percent
@@ -661,13 +661,13 @@ qos profile wred_uc_queues_test
    !
    uc-tx-queue 1
       !! Test no priority
-      bandwidth percent 50
       no priority
+      bandwidth percent 50
       random-detect drop minimum-threshold 1 microseconds maximum-threshold 10 microseconds drop-probability 90 weight 15
    !
    uc-tx-queue 2
-      bandwidth percent 10
       priority strict
+      bandwidth percent 10
       random-detect drop drop-precedence 1 minimum-threshold 2 milliseconds maximum-threshold 20 milliseconds drop-probability 80
    !
    uc-tx-queue 4

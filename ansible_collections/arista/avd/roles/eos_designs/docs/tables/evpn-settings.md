@@ -21,7 +21,7 @@
     | [<samp>evpn_prevent_readvertise_to_server</samp>](## "evpn_prevent_readvertise_to_server") | Boolean |  | `False` |  | Configure route-map on eBGP sessions towards route-servers, where prefixes with the peer's ASN in the AS Path are filtered away.<br>This is very useful in large-scale networks, where convergence will be quicker by not returning all updates received<br>from Route-server-1 to Router-server-2 just for Route-server-2 to throw them away because of AS Path loop detection.<br> |
     | [<samp>evpn_short_esi_prefix</samp>](## "evpn_short_esi_prefix") | String |  | `0000:0000:` |  | Configure prefix for "short_esi" values. |
     | [<samp>evpn_vlan_aware_bundles</samp>](## "evpn_vlan_aware_bundles") | Boolean |  | `False` |  | Enable VLAN aware bundles for every EVPN MAC-VRF.<br>If set to `true` all SVIs in a VRF are configured in a vlan-aware-bundle using the VRF name as the bundle name. `l2vlans` are bundled in vlan-aware-bundles using the VLAN name as the bundle name.<br><br>The `evpn_vlan_bundle` option under `svis` and `l2vlans` takes precedence and overrides this behavior. Per svi/l2vlan `evpn_vlan_bundle` also works when this setting is disabled which allow mixing vlan-aware-bundles with regular MAC-VRFs. |
-    | [<samp>fabric_evpn_encapsulation</samp>](## "fabric_evpn_encapsulation") | String |  | `vxlan` | Valid Values:<br>- <code>vxlan</code><br>- <code>mpls</code> | Should be set to mpls for evpn-mpls scenario. |
+    | [<samp>fabric_evpn_encapsulation</samp>](## "fabric_evpn_encapsulation") | String |  |  | Valid Values:<br>- <code>vxlan</code><br>- <code>mpls</code> | Should be set to mpls for evpn-mpls scenario. This overrides the evpn_encapsulation setting under node_type_keys. |
 
 === "YAML"
 
@@ -83,6 +83,6 @@
     # The `evpn_vlan_bundle` option under `svis` and `l2vlans` takes precedence and overrides this behavior. Per svi/l2vlan `evpn_vlan_bundle` also works when this setting is disabled which allow mixing vlan-aware-bundles with regular MAC-VRFs.
     evpn_vlan_aware_bundles: <bool; default=False>
 
-    # Should be set to mpls for evpn-mpls scenario.
-    fabric_evpn_encapsulation: <str; "vxlan" | "mpls"; default="vxlan">
+    # Should be set to mpls for evpn-mpls scenario. This overrides the evpn_encapsulation setting under node_type_keys.
+    fabric_evpn_encapsulation: <str; "vxlan" | "mpls">
     ```

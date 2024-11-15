@@ -384,9 +384,9 @@ ASN Notation: asplain
 
 ##### EVPN Peer Groups
 
-| Peer Group | Activate | Encapsulation |
-| ---------- | -------- | ------------- |
-| EVPN-OVERLAY-PEERS | True | default |
+| Peer Group | Activate | Route-map In | Route-map Out | Encapsulation |
+| ---------- | -------- | ------------ | ------------- | ------------- |
+| EVPN-OVERLAY-PEERS | True |  - | - | default |
 
 #### Router BGP Device Configuration
 
@@ -394,9 +394,9 @@ ASN Notation: asplain
 !
 router bgp 65001
    router-id 192.168.255.6
-   maximum-paths 4 ecmp 4
    update wait-install
    no bgp default ipv4-unicast
+   maximum-paths 4 ecmp 4
    distance bgp 20 200 200
    neighbor EVPN-OVERLAY-PEERS peer group
    neighbor EVPN-OVERLAY-PEERS next-hop-unchanged
@@ -410,8 +410,6 @@ router bgp 65001
    neighbor UNDERLAY_PEERS password 7 <removed>
    neighbor UNDERLAY_PEERS send-community
    neighbor UNDERLAY_PEERS maximum-routes 12000
-   neighbor interface Ethernet1 peer-group UNDERLAY_PEERS remote-as 65107
-   neighbor interface Ethernet2 peer-group UNDERLAY_PEERS remote-as 65107
    neighbor 192.168.255.14 peer group EVPN-OVERLAY-PEERS
    neighbor 192.168.255.14 remote-as 65107
    neighbor 192.168.255.14 description DC1-LEAF4A_Loopback0
@@ -419,14 +417,16 @@ router bgp 65001
    neighbor 192.168.255.15 remote-as 65107
    neighbor 192.168.255.15 description DC1-LEAF4B_Loopback0
    redistribute connected route-map RM-CONN-2-BGP
+   neighbor interface Ethernet1 peer-group UNDERLAY_PEERS remote-as 65107
+   neighbor interface Ethernet2 peer-group UNDERLAY_PEERS remote-as 65107
    !
    address-family evpn
       neighbor EVPN-OVERLAY-PEERS activate
    !
    address-family ipv4
       no neighbor EVPN-OVERLAY-PEERS activate
-      neighbor UNDERLAY_PEERS next-hop address-family ipv6 originate
       neighbor UNDERLAY_PEERS activate
+      neighbor UNDERLAY_PEERS next-hop address-family ipv6 originate
    !
    address-family ipv6
       neighbor UNDERLAY_PEERS activate

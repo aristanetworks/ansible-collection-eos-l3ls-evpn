@@ -8,8 +8,44 @@ router_bgp:
       ipv4_unicast: false
   maximum_paths:
     paths: 16
+  redistribute:
+    connected:
+      enabled: true
+      route_map: RM-CONN-2-BGP
   updates:
     wait_install: true
+  neighbors:
+  - ip_address: 172.29.0.13
+    remote_as: '64520'
+    route_map_in: RM-BGP-172.29.0.13-IN
+    route_map_out: RM-BGP-172.29.0.13-OUT
+  - ip_address: 172.28.0.14
+    remote_as: '64520'
+    route_map_out: RM-BGP-172.28.0.14-OUT
+  - ip_address: 172.17.0.2
+    peer_group: IPv4-UNDERLAY-PEERS
+    remote_as: '65199'
+    peer: site-ha-disabled-leaf
+    description: site-ha-disabled-leaf_Ethernet2
+  - ip_address: 192.168.144.2
+    peer_group: WAN-OVERLAY-PEERS
+    peer: cv-pathfinder-pathfinder1
+    description: cv-pathfinder-pathfinder1_Dps1
+  - ip_address: 192.168.144.3
+    peer_group: WAN-OVERLAY-PEERS
+    peer: cv-pathfinder-pathfinder2
+    description: cv-pathfinder-pathfinder2_Dps1
+  address_family_ipv4:
+    neighbors:
+    - ip_address: 172.29.0.13
+      activate: true
+    - ip_address: 172.28.0.14
+      activate: true
+    peer_groups:
+    - name: IPv4-UNDERLAY-PEERS
+      activate: true
+    - name: WAN-OVERLAY-PEERS
+      activate: false
   peer_groups:
   - name: IPv4-UNDERLAY-PEERS
     type: ipv4
@@ -29,36 +65,6 @@ router_bgp:
       interval: 1000
       min_rx: 1000
       multiplier: 10
-  address_family_ipv4:
-    peer_groups:
-    - name: IPv4-UNDERLAY-PEERS
-      activate: true
-    - name: WAN-OVERLAY-PEERS
-      activate: false
-  redistribute_routes:
-  - source_protocol: connected
-    route_map: RM-CONN-2-BGP
-  neighbors:
-  - ip_address: 172.17.0.2
-    peer_group: IPv4-UNDERLAY-PEERS
-    remote_as: '65199'
-    peer: site-ha-disabled-leaf
-    description: site-ha-disabled-leaf_Ethernet2
-  - ip_address: 172.29.0.13
-    remote_as: '64520'
-    route_map_in: RM-BGP-172.29.0.13-IN
-    route_map_out: RM-BGP-172.29.0.13-OUT
-  - ip_address: 172.28.0.14
-    remote_as: '64520'
-    route_map_out: RM-BGP-172.28.0.14-OUT
-  - ip_address: 192.168.144.2
-    peer_group: WAN-OVERLAY-PEERS
-    peer: cv-pathfinder-pathfinder1
-    description: cv-pathfinder-pathfinder1_Dps1
-  - ip_address: 192.168.144.3
-    peer_group: WAN-OVERLAY-PEERS
-    peer: cv-pathfinder-pathfinder2
-    description: cv-pathfinder-pathfinder2_Dps1
   vrfs:
   - name: IT
     router_id: 192.168.42.2
@@ -77,8 +83,9 @@ router_bgp:
       - address_family: evpn
         route_targets:
         - 1000:1000
-    redistribute_routes:
-    - source_protocol: connected
+    redistribute:
+      connected:
+        enabled: true
   - name: PROD
     router_id: 192.168.42.2
     neighbors:
@@ -96,8 +103,9 @@ router_bgp:
       - address_family: evpn
         route_targets:
         - 142:142
-    redistribute_routes:
-    - source_protocol: connected
+    redistribute:
+      connected:
+        enabled: true
   - name: ATTRACTED-VRF-FROM-UPLINK
     router_id: 192.168.42.2
     neighbors:
@@ -115,8 +123,9 @@ router_bgp:
       - address_family: evpn
         route_targets:
         - 666:666
-    redistribute_routes:
-    - source_protocol: connected
+    redistribute:
+      connected:
+        enabled: true
   - name: default
     rd: 192.168.42.2:1
     route_targets:
@@ -181,6 +190,79 @@ management_api_http:
   enable_vrfs:
   - name: MGMT
   enable_https: true
+prefix_lists:
+- name: PL2
+  sequence_numbers:
+  - sequence: 10
+    action: permit 5.0.0.0/0
+  - sequence: 20
+    action: deny 10.00.0.0/24
+- name: ALLOW-DEFAULT
+  sequence_numbers:
+  - sequence: 10
+    action: permit 0.0.0.0/0
+- name: PL-LOOPBACKS-EVPN-OVERLAY
+  sequence_numbers:
+  - sequence: 10
+    action: permit 192.168.42.0/24 eq 32
+route_maps:
+- name: RM-BGP-172.29.0.13-IN
+  sequence_numbers:
+  - sequence: 10
+    type: permit
+    match:
+    - ip address prefix-list PL2
+- name: RM-BGP-172.29.0.13-OUT
+  sequence_numbers:
+  - sequence: 10
+    type: permit
+    match:
+    - ip address prefix-list ALLOW-DEFAULT
+  - sequence: 20
+    type: deny
+- name: RM-BGP-172.28.0.14-OUT
+  sequence_numbers:
+  - sequence: 10
+    type: permit
+    match:
+    - ip address prefix-list PL2
+  - sequence: 20
+    type: deny
+- name: RM-CONN-2-BGP
+  sequence_numbers:
+  - sequence: 10
+    type: permit
+    match:
+    - ip address prefix-list PL-LOOPBACKS-EVPN-OVERLAY
+    set:
+    - extcommunity soo 192.168.42.2:511 additive
+- name: RM-BGP-UNDERLAY-PEERS-IN
+  sequence_numbers:
+  - sequence: 40
+    type: permit
+    description: Mark prefixes originated from the LAN
+    set:
+    - extcommunity soo 192.168.42.2:511 additive
+- name: RM-EVPN-SOO-IN
+  sequence_numbers:
+  - sequence: 10
+    type: deny
+    match:
+    - extcommunity ECL-EVPN-SOO
+  - sequence: 20
+    type: permit
+- name: RM-EVPN-SOO-OUT
+  sequence_numbers:
+  - sequence: 10
+    type: permit
+    set:
+    - extcommunity soo 192.168.42.2:511 additive
+- name: RM-EVPN-EXPORT-VRF-DEFAULT
+  sequence_numbers:
+  - sequence: 10
+    type: permit
+    match:
+    - extcommunity ECL-EVPN-SOO
 ethernet_interfaces:
 - name: Ethernet52
   peer: site-ha-disabled-leaf
@@ -275,79 +357,6 @@ loopback_interfaces:
   description: ROUTER_ID
   shutdown: false
   ip_address: 192.168.42.2/32
-prefix_lists:
-- name: PL-LOOPBACKS-EVPN-OVERLAY
-  sequence_numbers:
-  - sequence: 10
-    action: permit 192.168.42.0/24 eq 32
-- name: PL2
-  sequence_numbers:
-  - sequence: 10
-    action: permit 5.0.0.0/0
-  - sequence: 20
-    action: deny 10.00.0.0/24
-- name: ALLOW-DEFAULT
-  sequence_numbers:
-  - sequence: 10
-    action: permit 0.0.0.0/0
-route_maps:
-- name: RM-CONN-2-BGP
-  sequence_numbers:
-  - sequence: 10
-    type: permit
-    match:
-    - ip address prefix-list PL-LOOPBACKS-EVPN-OVERLAY
-    set:
-    - extcommunity soo 192.168.42.2:511 additive
-- name: RM-BGP-UNDERLAY-PEERS-IN
-  sequence_numbers:
-  - sequence: 40
-    type: permit
-    description: Mark prefixes originated from the LAN
-    set:
-    - extcommunity soo 192.168.42.2:511 additive
-- name: RM-BGP-172.29.0.13-IN
-  sequence_numbers:
-  - sequence: 10
-    type: permit
-    match:
-    - ip address prefix-list PL2
-- name: RM-BGP-172.29.0.13-OUT
-  sequence_numbers:
-  - sequence: 10
-    type: permit
-    match:
-    - ip address prefix-list ALLOW-DEFAULT
-  - sequence: 20
-    type: deny
-- name: RM-BGP-172.28.0.14-OUT
-  sequence_numbers:
-  - sequence: 10
-    type: permit
-    match:
-    - ip address prefix-list PL2
-  - sequence: 20
-    type: deny
-- name: RM-EVPN-SOO-IN
-  sequence_numbers:
-  - sequence: 10
-    type: deny
-    match:
-    - extcommunity ECL-EVPN-SOO
-  - sequence: 20
-    type: permit
-- name: RM-EVPN-SOO-OUT
-  sequence_numbers:
-  - sequence: 10
-    type: permit
-    set:
-    - extcommunity soo 192.168.42.2:511 additive
-- name: RM-EVPN-EXPORT-VRF-DEFAULT
-  sequence_numbers:
-  - sequence: 10
-    type: permit
-    match:
-    - extcommunity ECL-EVPN-SOO
 agents:
 - name: KernelFib
   environment_variables:
@@ -970,10 +979,34 @@ metadata:
       tunnels:
       - name: Tunnel100
         preference: Preferred
+        endpoint:
+          city: Fremont, CA
+          datacenter: FMT1
+          country: United States
+          region: us-west1
+          latitude: '37'
+          longitude: '-121'
+          ip_address: 10.37.121.1
       - name: Tunnel101
         preference: Alternate
+        endpoint:
+          city: Washington, DC
+          datacenter: WAS1
+          country: United States
+          region: us-east1
+          latitude: '39'
+          longitude: '-77'
+          ip_address: 10.39.77.1
       - name: Tunnel102
         preference: Alternate
+        endpoint:
+          city: Frankfurt
+          datacenter: FRA4
+          country: Germany
+          region: eu-west1
+          latitude: '50'
+          longitude: '9'
+          ip_address: 10.50.9.1
     - name: ZSCALER-EXIT-POLICY-2
       type: zscaler
       city: Santa Clara, CA
@@ -988,10 +1021,34 @@ metadata:
       tunnels:
       - name: Tunnel110
         preference: Preferred
+        endpoint:
+          city: Fremont, CA
+          datacenter: FMT1
+          country: United States
+          region: us-west1
+          latitude: '37'
+          longitude: '-121'
+          ip_address: 10.37.121.1
       - name: Tunnel111
         preference: Alternate
+        endpoint:
+          city: Washington, DC
+          datacenter: WAS1
+          country: United States
+          region: us-east1
+          latitude: '39'
+          longitude: '-77'
+          ip_address: 10.39.77.1
       - name: Tunnel112
         preference: Alternate
+        endpoint:
+          city: Frankfurt
+          datacenter: FRA4
+          country: Germany
+          region: eu-west1
+          latitude: '50'
+          longitude: '9'
+          ip_address: 10.50.9.1
     role: edge
     ssl_profile: profileA
     vtep_ip: 192.168.142.2

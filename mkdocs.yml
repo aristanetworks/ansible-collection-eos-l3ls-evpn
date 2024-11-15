@@ -23,6 +23,7 @@ theme:
     - content.tabs.link
     - header.autohide
     - navigation.instant
+    - navigation.prune
     - navigation.top
     - search.highlight
     # - toc.integrate
@@ -81,7 +82,16 @@ plugins:
         - docs/release-notes/1.1.x.md
         - docs/release-notes/2.x.x.md
         - docs/release-notes/3.x.x.md
+        - docs/*/4.x.x.md
         - roles/*/docs/tables/*
+      regex:
+        # Exclude examples common md snippets
+        - '^examples\/common/.*'
+        # Exclude all examples but single-dc-l3ls which is referenced in getting getting-started
+        - '^examples\/((?!single-dc-l3ls).*)\/documentation\/.*'
+        # Exclude all single-dc-l3ls files not referenced in getting getting-started
+        - '^examples\/single-dc-l3ls\/documentation\/fabric\/((?!FABRIC-documentation.md).*)'
+        - '^examples\/single-dc-l3ls\/documentation\/devices\/((?!dc1-leaf1a.md).*)'
   - include_dir_to_nav
   - git-revision-date-localized:
       type: date
@@ -141,6 +151,7 @@ nav:
       - L2LS Fabric: examples/l2ls-fabric/README.md
       - Campus Fabric: examples/campus-fabric/README.md
       - ISIS-LDP IPVPN: examples/isis-ldp-ipvpn/README.md
+      - CV Pathfinder: examples/cv-pathfinder/README.md
   - Installation:
       - Collection Installation: docs/installation/collection-installation.md
   - Ansible Collection Roles:
@@ -151,6 +162,7 @@ nav:
           - How-To Guides:
               - Configuring PTP: roles/eos_designs/docs/how-to/ptp.md
               - Configuring WAN: roles/eos_designs/docs/how-to/wan.md
+              - Custom descriptions and names: roles/eos_designs/docs/how-to/custom-descriptions-names.md
               - Custom Structured Configuration: roles/eos_designs/docs/how-to/custom-structured-configuration.md
               - Custom Templates: roles/eos_designs/docs/how-to/custom-templates.md
               - Generate CloudVision Tags Preview: roles/eos_designs/docs/how-to/cloudvision-tags-preview.md

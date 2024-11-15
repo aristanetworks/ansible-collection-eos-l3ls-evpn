@@ -9,6 +9,10 @@ router_bgp:
   maximum_paths:
     paths: 4
     ecmp: 4
+  redistribute:
+    connected:
+      enabled: true
+      route_map: RM-CONN-2-BGP
   peer_groups:
   - name: IPv4-UNDERLAY-PEERS
     type: ipv4
@@ -27,9 +31,6 @@ router_bgp:
       activate: true
     - name: EVPN-OVERLAY-PEERS
       activate: false
-  redistribute_routes:
-  - source_protocol: connected
-    route_map: RM-CONN-2-BGP
   neighbors:
   - ip_address: 10.254.2.0
     peer_group: IPv4-UNDERLAY-PEERS
@@ -68,8 +69,9 @@ router_bgp:
         route_targets:
         - '1:1'
     router_id: 10.254.1.1
-    redistribute_routes:
-    - source_protocol: connected
+    redistribute:
+      connected:
+        enabled: true
   vlans:
   - id: 11
     tenant: FLOW_TRACKING

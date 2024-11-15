@@ -373,26 +373,31 @@ interface Port-Channel4
 !
 interface Port-Channel4.1000
    no shutdown
+   !
    encapsulation vlan
       client dot1q 1000 network client
 !
 interface Port-Channel4.1001
    no shutdown
+   !
    encapsulation vlan
       client dot1q 1001 network client
 !
 interface Port-Channel4.1002
    no shutdown
+   !
    encapsulation vlan
       client dot1q 1002 network client
 !
 interface Port-Channel4.1003
    no shutdown
+   !
    encapsulation vlan
       client dot1q 1003 network client
 !
 interface Port-Channel4.1004
    no shutdown
+   !
    encapsulation vlan
       client dot1q 1004 network client
 !
@@ -403,14 +408,14 @@ interface Port-Channel11
    no switchport
    ip address 100.64.49.2/30
    ipv6 enable
-   mpls ip
-   mpls ldp interface
    mpls ldp igp sync
+   mpls ldp interface
+   mpls ip
    isis enable CORE
    isis circuit-type level-2
    isis metric 60
-   isis network point-to-point
    no isis hello padding
+   isis network point-to-point
    isis authentication mode md5
    isis authentication key 7 <removed>
    link-debounce time 1600
@@ -423,14 +428,14 @@ interface Port-Channel220
    no switchport
    ip address 100.64.49.6/30
    ipv6 enable
-   mpls ip
-   mpls ldp interface
    mpls ldp igp sync
+   mpls ldp interface
+   mpls ip
    isis enable CORE
    isis circuit-type level-2
    isis metric 60
-   isis network point-to-point
    no isis hello padding
+   isis network point-to-point
    isis authentication mode md5
    isis authentication key 7 <removed>
    link-debounce time 1600
@@ -607,8 +612,8 @@ router ospf 99 vrf TENANT_B_WAN
    router-id 192.168.48.4
    passive-interface default
    no passive-interface Ethernet6.100
-   max-lsa 10000
    redistribute bgp
+   max-lsa 10000
 ```
 
 ### Router ISIS
@@ -623,9 +628,14 @@ router ospf 99 vrf TENANT_B_WAN
 | Router-ID | 100.70.0.7 |
 | Log Adjacency Changes | True |
 | MPLS LDP Sync Default | True |
-| Local Convergence Delay (ms) | 15000 |
 | Advertise Passive-only | True |
 | SR MPLS Enabled | True |
+
+#### ISIS Route Timers
+
+| Settings | Value |
+| -------- | ----- |
+| Local Convergence Delay | 15000 milliseconds |
 
 #### ISIS Interfaces Summary
 
@@ -723,9 +733,9 @@ ASN Notation: asplain
 
 ##### EVPN Peer Groups
 
-| Peer Group | Activate | Encapsulation |
-| ---------- | -------- | ------------- |
-| MPLS-OVERLAY-PEERS | True | default |
+| Peer Group | Activate | Route-map In | Route-map Out | Encapsulation |
+| ---------- | -------- | ------------ | ------------- | ------------- |
+| MPLS-OVERLAY-PEERS | True |  - | - | default |
 
 ##### EVPN Neighbor Default Encapsulation
 
@@ -781,9 +791,9 @@ ASN Notation: asplain
 !
 router bgp 65000
    router-id 100.70.0.7
-   maximum-paths 4 ecmp 4
    update wait-install
    no bgp default ipv4-unicast
+   maximum-paths 4 ecmp 4
    distance bgp 20 200 200
    neighbor MPLS-OVERLAY-PEERS peer group
    neighbor MPLS-OVERLAY-PEERS remote-as 65000
@@ -870,8 +880,8 @@ router bgp 65000
       router-id 100.70.0.7
       update wait-install
       neighbor 192.168.48.3 remote-as 65202
-      neighbor 192.168.48.3 password 7 <removed>
       neighbor 192.168.48.3 description TENANT_B_CPE_SITE5
+      neighbor 192.168.48.3 password 7 <removed>
       redistribute connected
       redistribute ospf
       !

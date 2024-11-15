@@ -11,6 +11,10 @@ router_bgp:
   maximum_paths:
     paths: 4
     ecmp: 4
+  redistribute:
+    connected:
+      enabled: true
+      route_map: RM-CONN-2-BGP
   updates:
     wait_install: true
   peer_groups:
@@ -78,9 +82,6 @@ router_bgp:
     remote_as: '65001'
     peer: DC1-SPINE4
     description: DC1-SPINE4_Ethernet2
-  redistribute_routes:
-  - source_protocol: connected
-    route_map: RM-CONN-2-BGP
   address_family_evpn:
     peer_groups:
     - name: EVPN-OVERLAY-PEERS
@@ -123,9 +124,10 @@ router_bgp:
         route_targets:
         - '12:12'
     router_id: 192.168.255.6
-    redistribute_routes:
-    - source_protocol: connected
-      route_map: RM-CONN-2-BGP-VRFS
+    redistribute:
+      connected:
+        enabled: true
+        route_map: RM-CONN-2-BGP-VRFS
     neighbors:
     - ip_address: 10.255.251.3
       peer_group: MLAG_PEER
@@ -150,9 +152,10 @@ router_bgp:
         route_targets:
         - '13:13'
     router_id: 192.168.255.6
-    redistribute_routes:
-    - source_protocol: connected
-      route_map: RM-CONN-2-BGP-VRFS
+    redistribute:
+      connected:
+        enabled: true
+        route_map: RM-CONN-2-BGP-VRFS
     neighbors:
     - ip_address: 10.255.251.3
       peer_group: MLAG_PEER
@@ -177,9 +180,10 @@ router_bgp:
         route_targets:
         - '10:10'
     router_id: 192.168.255.6
-    redistribute_routes:
-    - source_protocol: connected
-      route_map: RM-CONN-2-BGP-VRFS
+    redistribute:
+      connected:
+        enabled: true
+        route_map: RM-CONN-2-BGP-VRFS
     neighbors:
     - ip_address: 10.255.251.3
       peer_group: MLAG_PEER
@@ -204,9 +208,10 @@ router_bgp:
         route_targets:
         - '11:11'
     router_id: 192.168.255.6
-    redistribute_routes:
-    - source_protocol: connected
-      route_map: RM-CONN-2-BGP-VRFS
+    redistribute:
+      connected:
+        enabled: true
+        route_map: RM-CONN-2-BGP-VRFS
     neighbors:
     - ip_address: 10.255.251.3
       peer_group: MLAG_PEER
@@ -231,9 +236,10 @@ router_bgp:
         route_targets:
         - '20:20'
     router_id: 192.168.255.6
-    redistribute_routes:
-    - source_protocol: connected
-      route_map: RM-CONN-2-BGP-VRFS
+    redistribute:
+      connected:
+        enabled: true
+        route_map: RM-CONN-2-BGP-VRFS
     neighbors:
     - ip_address: 10.255.251.3
       peer_group: MLAG_PEER
@@ -258,9 +264,10 @@ router_bgp:
         route_targets:
         - '30:30'
     router_id: 192.168.255.6
-    redistribute_routes:
-    - source_protocol: connected
-      route_map: RM-CONN-2-BGP-VRFS
+    redistribute:
+      connected:
+        enabled: true
+        route_map: RM-CONN-2-BGP-VRFS
     neighbors:
     - ip_address: 10.255.251.3
       peer_group: MLAG_PEER
