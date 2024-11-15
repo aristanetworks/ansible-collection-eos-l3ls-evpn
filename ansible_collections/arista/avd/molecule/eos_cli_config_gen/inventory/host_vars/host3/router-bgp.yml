@@ -1,5 +1,11 @@
 router_bgp:
   as: "65101.0001"
+  bgp_defaults:
+    - no bgp default ipv4-unicast
+    - update wait-install
+    - distance bgp 20 200 200
+    - graceful-restart restart-time 300
+    - maximum-paths 2 ecmp 2
   router_id: 192.168.255.3
   graceful_restart_helper:
     enabled: true

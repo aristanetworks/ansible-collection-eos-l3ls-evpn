@@ -49,6 +49,11 @@ ASN Notation: asplain
 
 | BGP Tuning |
 | ---------- |
+| no bgp default ipv4-unicast |
+| update wait-install |
+| distance bgp 20 200 200 |
+| graceful-restart restart-time 300 |
+| maximum-paths 2 ecmp 2 |
 | graceful-restart-helper long-lived |
 | bgp additional-paths send limit 5 |
 
@@ -59,6 +64,11 @@ ASN Notation: asplain
 router bgp 65101.0001
    router-id 192.168.255.3
    graceful-restart-helper long-lived
+   no bgp default ipv4-unicast
+   update wait-install
+   distance bgp 20 200 200
+   graceful-restart restart-time 300
+   maximum-paths 2 ecmp 2
    bgp additional-paths send limit 5
    redistribute ospf include leaked route-map RM-OSPF-TO-BGP
    redistribute static

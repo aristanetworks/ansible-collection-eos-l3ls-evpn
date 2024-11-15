@@ -2,13 +2,6 @@ router_bgp:
   as: 65101
   router_id: 192.168.255.3
   as_notation: asdot
-  bgp_defaults:
-    - no bgp default ipv4-unicast
-    - update wait-install
-    - distance bgp 20 200 200
-    - graceful-restart restart-time 300
-    - graceful-restart
-    - maximum-paths 2 ecmp 2
   updates:
     wait_for_convergence: true
     wait_install: true
@@ -584,6 +577,7 @@ router_bgp:
         rcf: Address_Family_IPV4_Connected()
       bgp:
         enabled: true
+        route_map: RM_BGP_EVPN_IPV4
       static:
         enabled: true
         rcf: Address_Family_IPV4_Static()
@@ -602,7 +596,6 @@ router_bgp:
       - prefix: 2001:db8:200::/40
         route_map: RM-BAR-MATCH
     bgp:
-      redistribute_internal: true
       additional_paths:
         receive: true
         install_ecmp_primary: true
@@ -790,7 +783,7 @@ router_bgp:
     tunnel_source_protocols:
       - protocol: isis segment-routing
       - protocol: ldp
-        rcf: TEST
+        rcf: TEST()
     neighbors:
       - ip_address: 198.51.100.1
         activate: true
@@ -2020,8 +2013,6 @@ router_bgp:
       updates:
         wait_for_convergence: true
         wait_install: true
-      bgp:
-        redistribute_internal: true
       networks:
         - prefix: 10.0.0.0/8
           route_map: VRF-RM
@@ -2072,7 +2063,6 @@ router_bgp:
         neighbors:
           - ip_address: 10.2.3.4
             activate: true
-            route_map_out: RM-IPv4-10.2.3.4-SET-NEXT-HOP-OUT
           - ip_address: 10.2.3.5
             activate: true
             route_map_in: RM-10.2.3.5-SET-NEXT-HOP-IN

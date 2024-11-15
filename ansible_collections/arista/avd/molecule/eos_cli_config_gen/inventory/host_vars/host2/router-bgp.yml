@@ -70,7 +70,6 @@ router_bgp:
     redistribute:
       bgp:
         enabled: true
-        route_map: RM_BGP_EVPN_IPV4
       connected:
         enabled: true
         route_map: RM_BGP_EVPN_IPV4

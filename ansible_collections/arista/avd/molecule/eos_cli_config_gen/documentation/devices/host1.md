@@ -5410,12 +5410,6 @@ ASN Notation: asdot
 
 | BGP Tuning |
 | ---------- |
-| no bgp default ipv4-unicast |
-| update wait-install |
-| distance bgp 20 200 200 |
-| graceful-restart restart-time 300 |
-| graceful-restart |
-| maximum-paths 2 ecmp 2 |
 | graceful-restart restart-time 555 |
 | graceful-restart stalepath-time 666 |
 | graceful-restart |
@@ -6052,12 +6046,6 @@ router bgp 65101
    graceful-restart-helper restart-time 888
    bgp route-reflector preserve-attributes always
    maximum-paths 32 ecmp 32
-   no bgp default ipv4-unicast
-   update wait-install
-   distance bgp 20 200 200
-   graceful-restart restart-time 300
-   graceful-restart
-   maximum-paths 2 ecmp 2
    bgp additional-paths receive
    bgp additional-paths send ecmp limit 30
    bgp listen range 10.10.10.0/24 peer-group my-peer-group1 peer-filter my-peer-filter
@@ -6525,7 +6513,7 @@ router bgp 65101
       network 172.16.0.0/12
       network 192.168.0.0/16 route-map RM-FOO-MATCH
       redistribute attached-host route-map RM_BGP_EVPN_IPV4
-      redistribute bgp leaked
+      redistribute bgp leaked route-map RM_BGP_EVPN_IPV4
       redistribute connected include leaked rcf Address_Family_IPV4_Connected()
       redistribute dynamic route-map Address_Family_IPV4_Dynamic_RM
       redistribute user rcf RCF_BGP_EVPN_IPV4()
@@ -6595,7 +6583,7 @@ router bgp 65101
       lfib entry installation skipped
       label local-termination implicit-null
       tunnel source-protocol isis segment-routing
-      tunnel source-protocol ldp rcf TEST
+      tunnel source-protocol ldp rcf TEST()
       aigp-session confederation
       aigp-session ebgp
    !
@@ -6666,7 +6654,6 @@ router bgp 65101
       neighbor 2001:db8::22 additional-paths send limit 5
       network 2001:db8:100::/40
       network 2001:db8:200::/40 route-map RM-BAR-MATCH
-      bgp redistribute-internal
       redistribute attached-host
       redistribute bgp leaked route-map RM-REDISTRIBUTE-BGP
       redistribute dhcp
@@ -6891,7 +6878,6 @@ router bgp 65101
       neighbor 10.255.251.1 remove-private-as ingress replace-as
       network 10.0.0.0/8 route-map VRF-RM
       network 100.64.0.0/10
-      bgp redistribute-internal
       redistribute connected
       redistribute static
       !
@@ -6902,7 +6888,6 @@ router bgp 65101
          bgp additional-paths receive
          bgp additional-paths send ecmp
          neighbor 10.2.3.4 activate
-         neighbor 10.2.3.4 route-map RM-IPv4-10.2.3.4-SET-NEXT-HOP-OUT out
          neighbor 10.2.3.5 activate
          neighbor 10.2.3.5 route-map RM-10.2.3.5-SET-NEXT-HOP-IN in
          neighbor 10.2.3.6 next-hop address-family ipv6
