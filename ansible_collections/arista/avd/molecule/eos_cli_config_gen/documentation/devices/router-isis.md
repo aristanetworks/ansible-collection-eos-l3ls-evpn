@@ -133,8 +133,8 @@ interface Ethernet6
 
 ##### ISIS
 
-| Interface | ISIS Instance | ISIS BFD | ISIS Metric | Mode | ISIS Circuit Type | Hello Padding | Authentication Mode |
-| --------- | ------------- | -------- | ----------- | ---- | ----------------- | ------------- | ------------------- |
+| Interface | ISIS Instance | ISIS BFD | ISIS Metric | Mode | ISIS Circuit Type | Hello Padding | ISIS Authentication Mode |
+| --------- | ------------- | -------- | ----------- | ---- | ----------------- | ------------- | ------------------------ |
 | Port-Channel4 | EVPN_UNDERLAY | - | 50 | point-to-point | level-2 | - | - |
 | Port-Channel5 | EVPN_UNDERLAY | - | 50 | passive | - | - | - |
 | Port-Channel6 | EVPN_UNDERLAY | - | 100 | - | level-1-2 | - | - |

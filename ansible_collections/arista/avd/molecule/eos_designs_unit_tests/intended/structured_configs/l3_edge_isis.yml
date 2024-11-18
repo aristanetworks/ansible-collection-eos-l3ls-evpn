@@ -70,8 +70,11 @@ ethernet_interfaces:
   isis_network_point_to_point: true
   isis_hello_padding: false
   isis_circuit_type: level-2
-  isis_authentication_mode: md5
-  isis_authentication_key: $1c$sTNAlR6rKSw=
+  isis_authentication:
+    both:
+      mode: md5
+      key: $1c$sTNAlR6rKSw=
+      key_type: '7'
   description: P2P_peer2_ethernet2
 - name: ethernet3
   peer: peer3
@@ -88,8 +91,11 @@ ethernet_interfaces:
   isis_network_point_to_point: true
   isis_hello_padding: true
   isis_circuit_type: level-2
-  isis_authentication_mode: text
-  isis_authentication_key: $1c$sTNAlR6rKSw=
+  isis_authentication:
+    both:
+      mode: text
+      key: $1c$sTNAlR6rKSw=
+      key_type: '7'
   description: P2P_peer3_ethernet3
 - name: ethernet4
   peer: peer4
@@ -106,6 +112,9 @@ ethernet_interfaces:
   isis_network_point_to_point: true
   isis_hello_padding: true
   isis_circuit_type: level-2
-  isis_authentication_mode: text
-  isis_authentication_key: $1c$sTNAlR6rKSw=
+  isis_authentication:
+    both:
+      mode: text
+      key: $1c$sTNAlR6rKSw=
+      key_type: '7'
   description: P2P_peer4_ethernet4
