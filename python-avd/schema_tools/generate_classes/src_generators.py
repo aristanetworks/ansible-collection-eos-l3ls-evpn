@@ -9,11 +9,9 @@ from textwrap import indent, wrap
 
 from schema_tools.constants import LICENSE_HEADER
 
-SRC_HEADER = indent(LICENSE_HEADER + "\n\n", "# ")
+SRC_HEADER = indent(LICENSE_HEADER + "\n\n", "# ") + "from __future__ import annotations\n"
 
 BASE_IMPORTS = """\
-from __future__ import annotations
-
 from typing import TYPE_CHECKING
 
 from pyavd._schema.models.avd_indexed_list import AvdIndexedList

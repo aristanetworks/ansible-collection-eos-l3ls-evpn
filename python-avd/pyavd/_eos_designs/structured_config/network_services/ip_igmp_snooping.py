@@ -6,7 +6,7 @@ from __future__ import annotations
 from functools import cached_property
 from typing import TYPE_CHECKING
 
-from pyavd._utils import append_if_not_duplicate, default
+from pyavd._utils import append_if_not_duplicate, default, strip_empties_from_dict
 
 from .utils import UtilsMixin
 
@@ -89,26 +89,22 @@ class IpIgmpSnoopingMixin(UtilsMixin):
             if self.shared_utils.network_services_l3 and self.shared_utils.uplink_type in ["p2p", "p2p-vrfs"]:
                 igmp_snooping_querier_enabled = default(vlan.igmp_snooping_querier.enabled, tenant.igmp_snooping_querier.enabled)
 
-        ip_igmp_snooping_vlan = {}
-        if igmp_snooping_enabled is not None:
-            ip_igmp_snooping_vlan["enabled"] = igmp_snooping_enabled
-
-        if igmp_snooping_querier_enabled is not None:
-            ip_igmp_snooping_vlan["querier"] = {"enabled": igmp_snooping_querier_enabled}
-            if igmp_snooping_querier_enabled:
-                address = default(vlan.igmp_snooping_querier.source_address, tenant.igmp_snooping_querier.source_address, self.shared_utils.router_id)
-                if address is not None:
-                    ip_igmp_snooping_vlan["querier"]["address"] = address
-
-                version = default(vlan.igmp_snooping_querier.version, tenant.igmp_snooping_querier.version)
-                if version is not None:
-                    ip_igmp_snooping_vlan["querier"]["version"] = version
-
-        # IGMP snooping fast-leave feature is enabled only when evpn_l2_multicast is enabled
-        if evpn_l2_multicast_enabled:
-            fast_leave = default(vlan.igmp_snooping_querier.fast_leave, tenant.evpn_l2_multicast.fast_leave)
-            if fast_leave is not None:
-                ip_igmp_snooping_vlan["fast_leave"] = fast_leave
+        ip_igmp_snooping_vlan = strip_empties_from_dict(
+            {
+                "enabled": igmp_snooping_enabled,
+                "querier": {
+                    "enabled": igmp_snooping_querier_enabled,
+                    "address": (
+                        default(vlan.igmp_snooping_querier.source_address, tenant.igmp_snooping_querier.source_address, self.shared_utils.router_id)
+                        if igmp_snooping_querier_enabled
+                        else None
+                    ),
+                    "version": default(vlan.igmp_snooping_querier.version, tenant.igmp_snooping_querier.version) if igmp_snooping_querier_enabled else None,
+                },
+                # IGMP snooping fast-leave feature is enabled only when evpn_l2_multicast is enabled
+                "fast_leave": default(vlan.igmp_snooping_querier.fast_leave, tenant.evpn_l2_multicast.fast_leave) if evpn_l2_multicast_enabled else None,
+            }
+        )
 
         if ip_igmp_snooping_vlan:
             return {"id": vlan.id, **ip_igmp_snooping_vlan}

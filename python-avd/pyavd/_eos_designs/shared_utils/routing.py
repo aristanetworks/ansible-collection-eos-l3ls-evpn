@@ -91,26 +91,27 @@ class RoutingMixin:
            at the defaults, node_group or node level).
          - Lower level definitions override higher level definitions as is standard with AVD.
         """
-        if self.bgp:
-            if self.inputs.bgp_as:
-                return self.inputs.bgp_as
+        if not self.bgp:
+            return None
 
-            if self.node_config.bgp_as is None:
-                msg = "bgp_as"
-                raise AristaAvdMissingVariableError(msg)
+        if self.inputs.bgp_as:
+            return self.inputs.bgp_as
 
-            bgp_as_range_expanded = range_expand(self.node_config.bgp_as)
-            try:
-                if len(bgp_as_range_expanded) == 1:
-                    return bgp_as_range_expanded[0]
-                if self.mlag_switch_ids:
-                    return bgp_as_range_expanded[self.mlag_switch_ids["primary"] - 1]
+        if self.node_config.bgp_as is None:
+            msg = "bgp_as"
+            raise AristaAvdMissingVariableError(msg)
 
-                if self.id is None:
-                    msg = f"'id' is not set on '{self.hostname}' and is required when expanding 'bgp_as'"
-                    raise AristaAvdInvalidInputsError(msg)
-                return bgp_as_range_expanded[self.id - 1]
-            except IndexError as exc:
-                msg = f"Unable to allocate BGP AS: bgp_as range is too small ({len(bgp_as_range_expanded)}) for the id of the device"
-                raise AristaAvdError(msg) from exc
-        return None
+        bgp_as_range_expanded = range_expand(self.node_config.bgp_as)
+        try:
+            if len(bgp_as_range_expanded) == 1:
+                return bgp_as_range_expanded[0]
+            if self.mlag_switch_ids:
+                return bgp_as_range_expanded[self.mlag_switch_ids["primary"] - 1]
+
+            if self.id is None:
+                msg = f"'id' is not set on '{self.hostname}' and is required when expanding 'bgp_as'"
+                raise AristaAvdInvalidInputsError(msg)
+            return bgp_as_range_expanded[self.id - 1]
+        except IndexError as exc:
+            msg = f"Unable to allocate BGP AS: bgp_as range is too small ({len(bgp_as_range_expanded)}) for the id of the device"
+            raise AristaAvdError(msg) from exc
