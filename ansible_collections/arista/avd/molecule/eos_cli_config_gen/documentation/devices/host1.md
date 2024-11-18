@@ -11,6 +11,7 @@
   - [System Control-Plane](#system-control-plane)
   - [Management SSH](#management-ssh)
   - [Management Tech-Support](#management-tech-support)
+  - [IP Client Source Interfaces](#ip-client-source-interfaces)
 - [CVX](#cvx)
   - [CVX Services](#cvx-services)
   - [CVX Device Configuration](#cvx-device-configuration)
@@ -50,6 +51,7 @@
   - [System Boot Device Configuration](#system-boot-device-configuration)
 - [Monitoring](#monitoring)
   - [Custom daemons](#custom-daemons)
+  - [Logging](#logging)
   - [MCS Client Summary](#mcs-client-summary)
   - [Monitor Sessions](#monitor-sessions)
   - [Tap Aggregation](#tap-aggregation)
@@ -496,6 +498,47 @@ management tech-support
       include command show version detail | grep TerminAttr
    exit
 ```
+
+### IP Client Source Interfaces
+
+| IP Client | VRF | Source Interface Name |
+| --------- | --- | --------------------- |
+| FTP | default | Ethernet10 |
+| FTP | default | Loopback0 |
+| FTP | MGMT | Management0 |
+| HTTP | default | Loopback0 |
+| HTTP | MGMT | Management0 |
+| HTTP | default | Ethernet10 |
+| SSH | default | Ethernet10 |
+| SSH | default | Loopback0 |
+| SSH | MGMT | Management0 |
+| Telnet | default | Ethernet10 |
+| Telnet | default | Loopback0 |
+| Telnet | MGMT | Management0 |
+| TFTP | default | Ethernet10 |
+| TFTP | default | Loopback0 |
+| TFTP | MGMT | Management0 |
+
+#### IP Client Source Interfaces Device Configuration
+
+```eos
+!
+ip ftp client source-interface Ethernet10
+ip ftp client source-interface Loopback0 vrf default
+ip ftp client source-interface Management0 vrf MGMT
+ip http client local-interface Loopback0 vrf default
+ip http client local-interface Management0 vrf MGMT
+ip http client local-interface Ethernet10
+ip ssh client source-interface Ethernet10
+ip ssh client source-interface Loopback0 vrf default
+ip ssh client source-interface Management0 vrf MGMT
+ip telnet client source-interface Ethernet10
+ip telnet client source-interface Loopback0 vrf default
+ip telnet client source-interface Management0 vrf MGMT
+ip tftp client source-interface Ethernet10
+ip tftp client source-interface Loopback0 vrf default
+ip tftp client source-interface Management0 vrf MGMT
+ ```
 
 ## CVX
 
@@ -1222,6 +1265,93 @@ daemon ocprometheus
 daemon random
    exec /usr/bin/random
    shutdown
+```
+
+### Logging
+
+#### Logging Servers and Features Summary
+
+| Type | Level |
+| -----| ----- |
+| Console | errors |
+| Buffer | warnings |
+| Trap | disabled |
+| Synchronous | critical |
+
+| Format Type | Setting |
+| ----------- | ------- |
+| Timestamp | traditional year timezone |
+| Hostname | hostname |
+| Sequence-numbers | false |
+| RFC5424 | True |
+
+| VRF | Source Interface |
+| --- | ---------------- |
+| default | Loopback0 |
+| mgt | Management0 |
+
+| VRF | Hosts | Ports | Protocol |
+| --- | ----- | ----- | -------- |
+| default | 20.20.20.7 | Default | UDP |
+| default | 50.50.50.7 | 100, 200 | TCP |
+| default | 60.60.60.7 | 100, 200 | UDP |
+| default | 2001:db8::20:7 | Default | UDP |
+| default | 2001:db8::50:7 | 100, 200 | TCP |
+| default | 2001:db8::60:7 | 100, 200 | UDP |
+| mgt | 10.10.10.7 | Default | UDP |
+| mgt | 30.30.30.7 | 100, 200 | TCP |
+| mgt | 40.40.40.7 | 300, 400 | UDP |
+| mgt | 2001:db8::10:7 | Default | UDP |
+| mgt | 2001:db8::30:7 | 100, 200 | TCP |
+| mgt | 2001:db8::40:7 | 300, 400 | UDP |
+| vrf_with_no_source_interface | 1.2.3.4 | Default | UDP |
+| vrf_with_no_source_interface | 2001:db8::1:2:3:4 | Default | UDP |
+
+| Facility | Severity |
+| -------- | -------- |
+| AAA | warnings |
+| ACL | critical |
+| BGP | 0 |
+
+#### Logging Servers and Features Device Configuration
+
+```eos
+!
+logging event storm-control discards global
+logging event storm-control discards interval 10
+!
+logging event congestion-drops interval 10
+!
+logging repeat-messages
+logging buffered 1000000 warnings
+no logging trap
+logging console errors
+logging synchronous level critical
+logging host 20.20.20.7
+logging host 50.50.50.7 100 200 protocol tcp
+logging host 60.60.60.7 100 200
+logging host 2001:db8::20:7
+logging host 2001:db8::50:7 100 200 protocol tcp
+logging host 2001:db8::60:7 100 200
+logging vrf mgt host 10.10.10.7
+logging vrf mgt host 30.30.30.7 100 200 protocol tcp
+logging vrf mgt host 40.40.40.7 300 400
+logging vrf mgt host 2001:db8::10:7
+logging vrf mgt host 2001:db8::30:7 100 200 protocol tcp
+logging vrf mgt host 2001:db8::40:7 300 400
+logging vrf vrf_with_no_source_interface host 1.2.3.4
+logging vrf vrf_with_no_source_interface host 2001:db8::1:2:3:4
+logging format timestamp traditional year timezone
+logging format rfc5424
+logging source-interface Loopback0
+logging vrf mgt source-interface Management0
+logging policy match match-list molecule discard
+!
+logging level AAA warnings
+logging level ACL critical
+logging level BGP 0
+!
+no logging event link-status global
 ```
 
 ### MCS Client Summary
@@ -2545,7 +2675,12 @@ interface Dps1
 | Ethernet21 | - | - | - | - | - | - | - | Level-1: md5 |
 | Ethernet22 | - | - | - | - | - | - | - | Level-2: sha |
 | Ethernet23 | - | - | - | - | - | - | - | Level-2: shared-secret |
-| Ethernet81/10 | 110 | *ISIS_TEST | True | *99 | *point-to-point | *level-2 | *True | *text |
+| Ethernet74 | 3 | *EVPN_UNDERLAY | - | *- | *- | *- | *- | *sha |
+| Ethernet75 | 3 | *EVPN_UNDERLAY | - | *- | *- | *- | *- | *sha |
+| Ethernet77 | 8 | *EVPN_UNDERLAY | - | *- | *- | *- | *- | *Level-1: md5<br>Level-2: md5 |
+| Ethernet78 | 15 | *- | - | *- | *- | *- | *- | *md5 |
+| Ethernet79 | 16 | *EVPN_UNDERLAY | - | *- | *- | *- | *- | *md5 |
+| Ethernet81/10 | 110 | *ISIS_TEST | True | *99 | *point-to-point | *level-2 | *True | *- |
 
 *Inherited from Port-Channel Interface
 
@@ -3673,9 +3808,21 @@ interface Ethernet81/10
 
 ##### ISIS
 
-| Interface | ISIS Instance | ISIS BFD | ISIS Metric | Mode | ISIS Circuit Type | Hello Padding | Authentication Mode |
-| --------- | ------------- | -------- | ----------- | ---- | ----------------- | ------------- | ------------------- |
-| Port-Channel110 | ISIS_TEST | True | 99 | point-to-point | level-2 | True | text |
+| Interface | ISIS Instance | ISIS BFD | ISIS Metric | Mode | ISIS Circuit Type | Hello Padding | ISIS Authentication Mode |
+| --------- | ------------- | -------- | ----------- | ---- | ----------------- | ------------- | ------------------------ |
+| Port-Channel3 | EVPN_UNDERLAY | - | - | - | - | - | sha |
+| Port-Channel8 | EVPN_UNDERLAY | - | - | - | - | - | Level-1: md5<br>Level-2: md5 |
+| Port-Channel9 | - | - | - | - | - | - | Level-2: text |
+| Port-Channel10 | EVPN_UNDERLAY | - | - | - | - | - | sha |
+| Port-Channel12 | EVPN_UNDERLAY | - | - | - | - | - | Level-1: sha |
+| Port-Channel13 | - | - | - | - | - | - | - |
+| Port-Channel15 | - | - | - | - | - | - | md5 |
+| Port-Channel16 | EVPN_UNDERLAY | - | - | - | - | - | md5 |
+| Port-Channel20 | EVPN_UNDERLAY | - | - | - | - | - | Level-1: shared-secret<br>Level-2: shared-secret |
+| Port-Channel50 | EVPN_UNDERLAY | - | - | - | - | - | shared-secret |
+| Port-Channel51 | EVPN_UNDERLAY | - | - | - | - | - | shared-secret |
+| Port-Channel100 | EVPN_UNDERLAY | - | - | - | - | - | Level-1: md5<br>Level-2: text |
+| Port-Channel110 | ISIS_TEST | True | 99 | point-to-point | level-2 | True | - |
 
 #### Port-Channel Interfaces Device Configuration
 
@@ -3690,6 +3837,9 @@ interface Port-Channel3
    switchport
    no snmp trap link-change
    shape rate 200000 kbps
+   isis enable EVPN_UNDERLAY
+   isis authentication mode sha key-id 2 rx-disabled
+   isis authentication key 0 <removed>
 !
 interface Port-Channel5
    description DC1_L2LEAF1_Po1
@@ -3728,6 +3878,11 @@ interface Port-Channel8
    description to Dev02 Port-channel 8
    no switchport
    switchport port-security violation protect
+   isis enable EVPN_UNDERLAY
+   isis authentication mode md5 level-1
+   isis authentication mode md5 level-2
+   isis authentication key 0 <removed> level-1
+   isis authentication key 0 <removed> level-2
 !
 interface Port-Channel8.101
    description to Dev02 Port-Channel8.101 - VRF-C1
@@ -3741,6 +3896,8 @@ interface Port-Channel9
    bfd echo
    bfd neighbor 10.1.2.4
    bfd per-link rfc-7130
+   isis authentication mode text rx-disabled level-2
+   isis authentication key 0 <removed> level-2
    spanning-tree guard root
 !
 interface Port-Channel10
@@ -3753,6 +3910,9 @@ interface Port-Channel10
       identifier 0000:0000:0404:0404:0303
       route-target import 04:04:03:03:02:02
    shape rate 50 percent
+   isis enable EVPN_UNDERLAY
+   isis authentication mode sha key-id 2
+   isis authentication key 0 <removed>
 !
 interface Port-Channel12
    description interface_in_mode_access_with_voice
@@ -3761,6 +3921,8 @@ interface Port-Channel12
    switchport phone trunk untagged
    switchport mode trunk phone
    switchport
+   isis enable EVPN_UNDERLAY
+   isis authentication mode sha key-id 5 level-1
 !
 interface Port-Channel13
    description EVPN-Vxlan single-active redundancy
@@ -3773,6 +3935,13 @@ interface Port-Channel13
       designated-forwarder election hold-time 10
       designated-forwarder election candidate reachability required
       route-target import 00:00:01:02:03:04
+   isis authentication key-id 2 algorithm sha-512 key 0 <removed>
+   isis authentication key-id 3 algorithm sha-512 rfc-5310 key 0 <removed>
+   isis authentication key-id 1 algorithm sha-1 key 0 <removed> level-1
+   isis authentication key-id 4 algorithm sha-1 rfc-5310 key 0 <removed> level-1
+   isis authentication key-id 5 algorithm sha-1 key 0 <removed> level-1
+   isis authentication key-id 1 algorithm sha-1 key 0 <removed> level-2
+   isis authentication key-id 5 algorithm sha-1 rfc-5310 key 0 <removed> level-2
 !
 interface Port-Channel14
    description EVPN-MPLS multihoming
@@ -3790,6 +3959,8 @@ interface Port-Channel15
    switchport mode trunk
    switchport
    mlag 15
+   isis authentication mode md5 rx-disabled
+   isis authentication key 0 <removed>
    spanning-tree guard loop
    link tracking group EVPN_MH_ES2 upstream
 !
@@ -3805,6 +3976,9 @@ interface Port-Channel16
    mlag 16
    switchport port-security violation protect log
    switchport port-security mac-address maximum 100
+   isis enable EVPN_UNDERLAY
+   isis authentication mode md5
+   isis authentication key 0 <removed>
    spanning-tree guard none
    switchport backup-link Port-Channel100.102 prefer vlan 20
 !
@@ -3820,6 +3994,9 @@ interface Port-Channel20
    switchport mode access
    switchport
    l2-protocol encapsulation dot1q vlan 200
+   isis enable EVPN_UNDERLAY
+   isis authentication mode shared-secret profile profile1 algorithm sha-256 rx-disabled level-1
+   isis authentication mode shared-secret profile profile2 algorithm sha-1 rx-disabled level-2
 !
 interface Port-Channel50
    description SRV-POD03_PortChanne1
@@ -3831,6 +4008,8 @@ interface Port-Channel50
       identifier 0000:0000:0303:0202:0101
       route-target import 03:03:02:02:01:01
    lacp system-id 0303.0202.0101
+   isis enable EVPN_UNDERLAY
+   isis authentication mode shared-secret profile profile1 algorithm sha-1 rx-disabled
 !
 interface Port-Channel51
    description ipv6_prefix
@@ -3844,6 +4023,8 @@ interface Port-Channel51
    switchport port-security vlan 2 mac-address maximum 3
    switchport port-security vlan 3 mac-address maximum 3
    switchport port-security vlan default mac-address maximum 2
+   isis enable EVPN_UNDERLAY
+   isis authentication mode shared-secret profile profile1 algorithm sha-1
 !
 interface Port-Channel99
    description MCAST
@@ -3886,6 +4067,11 @@ interface Port-Channel100
    switchport pvlan mapping 20-30
    switchport port-security
    switchport port-security mac-address maximum disabled
+   isis enable EVPN_UNDERLAY
+   isis authentication mode md5 rx-disabled level-1
+   isis authentication mode text rx-disabled level-2
+   isis authentication key 0 <removed> level-1
+   isis authentication key 0 <removed> level-2
    switchport backup-link Port-channel51
    switchport backup preemption-delay 35
    switchport backup mac-move-burst 20
@@ -3983,8 +4169,6 @@ interface Port-Channel110
    isis metric 99
    isis hello padding
    isis network point-to-point
-   isis authentication mode text
-   isis authentication key 7 <removed>
 !
 interface Port-Channel111
    description Flexencap Port-Channel
