@@ -319,7 +319,7 @@ class UtilsMixin:
 
             node_index = p2p_link["nodes"].index(self.shared_utils.hostname)
             if (ptp_role := get(p2p_link, "ptp.role")) and ptp_role[node_index] == "master":
-                    ptp_config["role"] = "master"
+                ptp_config["role"] = "master"
 
         ptp_config["enable"] = True
         ptp_config.pop("profile", None)
