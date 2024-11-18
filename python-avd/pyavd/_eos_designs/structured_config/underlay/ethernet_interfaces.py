@@ -137,8 +137,13 @@ class EthernetInterfacesMixin(UtilsMixin):
                             "isis_metric": self.shared_utils.isis_default_metric,
                             "isis_network_point_to_point": True,
                             "isis_circuit_type": self.shared_utils.isis_default_circuit_type,
-                            "isis_authentication_mode": get(self._hostvars, "underlay_isis_authentication_mode"),
-                            "isis_authentication_key": get(self._hostvars, "underlay_isis_authentication_key"),
+                            "isis_authentication": {
+                                "both": {
+                                    "mode": get(self._hostvars, "underlay_isis_authentication_mode"),
+                                    "key": get(self._hostvars, "underlay_isis_authentication_key"),
+                                    "key_type": "7",
+                                }
+                            }
                         }
                     )
 
