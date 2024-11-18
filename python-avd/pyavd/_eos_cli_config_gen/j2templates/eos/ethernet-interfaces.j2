@@ -927,7 +927,11 @@ interface {{ ethernet_interface.name }}
    switchport tap encapsulation vxlan strip
 {%         endif %}
 {%         if ethernet_interface.switchport.tap.encapsulation.gre is arista.avd.defined %}
-{%             for gre_strip_config in ethernet_interface.switchport.tap.encapsulation.gre %}
+{%             set with_protocol_only = ethernet_interface.switchport.tap.encapsulation.gre | selectattr('protocol', 'arista.avd.defined') | rejectattr('destination', 'arista.avd.defined') | rejectattr('source', 'arista.avd.defined') | arista.avd.natural_sort('protocol') %}
+{%             set with_destination = ethernet_interface.switchport.tap.encapsulation.gre | selectattr('destination', 'arista.avd.defined') | arista.avd.natural_sort('destination') %}
+{%             set with_strip_only = ethernet_interface.switchport.tap.encapsulation.gre | selectattr('strip', 'arista.avd.defined') | rejectattr('destination', 'arista.avd.defined') | rejectattr('source', 'arista.avd.defined') | rejectattr('protocol', 'arista.avd.defined') | arista.avd.natural_sort %}
+{%             set sorted_gre_strip =  with_protocol_only | list + with_strip_only | list + with_destination | list %}
+{%             for gre_strip_config in sorted_gre_strip %}
 {%                 if gre_strip_config.strip is arista.avd.defined(true) %}
 {%                     set tap_encapsulation_cli = "switchport tap encapsulation gre" %}
 {%                     if gre_strip_config.destination is arista.avd.defined %}
