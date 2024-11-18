@@ -97,6 +97,7 @@ ASN Notation: asdot
 router bgp 65101.0001
    bgp asn notation asdot
    router-id 192.168.255.3
+   timers bgp send-failure hold-time 65
    neighbor PG-1 peer group
    neighbor PG-1 remote-as 65001.0002
    neighbor PG-2 peer group
