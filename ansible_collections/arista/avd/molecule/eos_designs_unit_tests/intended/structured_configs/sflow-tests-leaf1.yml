@@ -150,7 +150,7 @@ ethernet_interfaces:
   switchport:
     enabled: true
     mode: access
-    access_vlan: '11'
+    access_vlan: 11
   sflow:
     enable: true
 - name: Ethernet12
@@ -162,7 +162,7 @@ ethernet_interfaces:
   switchport:
     enabled: true
     mode: access
-    access_vlan: '11'
+    access_vlan: 11
   sflow:
     enable: false
 - name: Ethernet14
@@ -174,7 +174,7 @@ ethernet_interfaces:
   switchport:
     enabled: true
     mode: access
-    access_vlan: '11'
+    access_vlan: 11
   sflow:
     enable: true
 loopback_interfaces:

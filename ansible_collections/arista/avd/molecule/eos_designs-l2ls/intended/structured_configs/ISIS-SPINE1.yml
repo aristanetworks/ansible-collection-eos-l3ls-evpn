@@ -52,7 +52,7 @@ ethernet_interfaces:
   switchport:
     enabled: true
     mode: access
-    access_vlan: '110'
+    access_vlan: 110
 port_channel_interfaces:
 - name: Port-Channel1
   description: L2_ISIS-LEAF1_Port-Channel1

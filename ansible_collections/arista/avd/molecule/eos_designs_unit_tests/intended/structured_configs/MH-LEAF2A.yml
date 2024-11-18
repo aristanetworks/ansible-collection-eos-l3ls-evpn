@@ -229,7 +229,7 @@ ethernet_interfaces:
   switchport:
     enabled: true
     mode: access
-    access_vlan: '310'
+    access_vlan: 310
   link_tracking_groups:
   - name: Eth-conn-to-router
     direction: downstream
