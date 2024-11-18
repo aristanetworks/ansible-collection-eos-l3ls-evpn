@@ -8,6 +8,7 @@
   - [IP Domain-list](#ip-domain-list)
   - [Clock Settings](#clock-settings)
   - [NTP](#ntp)
+  - [System Control-Plane](#system-control-plane)
   - [Management SSH](#management-ssh)
   - [Management Tech-Support](#management-tech-support)
 - [CVX](#cvx)
@@ -57,6 +58,7 @@
   - [Event Handler](#event-handler)
   - [Object Tracking](#object-tracking)
   - [Monitor Telemetry Postcard Policy](#monitor-telemetry-postcard-policy)
+  - [Monitor Server Radius Summary](#monitor-server-radius-summary)
 - [Monitor Connectivity](#monitor-connectivity)
   - [Global Configuration](#global-configuration)
   - [VRF Configuration](#vrf-configuration)
@@ -146,10 +148,21 @@
 - [Power Over Ethernet (PoE)](#power-over-ethernet-poe)
   - [PoE Summary](#poe-summary)
 - [ACL](#acl)
+  - [Standard Access-lists](#standard-access-lists)
+  - [Extended Access-lists](#extended-access-lists)
+  - [IP Access-lists](#ip-access-lists)
+  - [IPv6 Standard Access-lists](#ipv6-standard-access-lists)
+  - [IPv6 Extended Access-lists](#ipv6-extended-access-lists)
   - [MAC Access-lists](#mac-access-lists)
 - [VRF Instances](#vrf-instances)
   - [VRF Instances Summary](#vrf-instances-summary)
   - [VRF Instances Device Configuration](#vrf-instances-device-configuration)
+- [Virtual Source NAT](#virtual-source-nat)
+  - [Virtual Source NAT Summary](#virtual-source-nat-summary)
+  - [Virtual Source NAT Configuration](#virtual-source-nat-configuration)
+- [System L1](#system-l1)
+  - [Unsupported Interface Configurations](#unsupported-interface-configurations)
+  - [System L1 Device Configuration](#system-l1-device-configuration)
 - [Application Traffic Recognition](#application-traffic-recognition)
   - [Applications](#applications)
   - [Application Profiles](#application-profiles)
@@ -173,6 +186,12 @@
   - [IPv6 DHCP Relay Device Configuration](#ipv6-dhcp-relay-device-configuration)
 - [IP DHCP Snooping](#ip-dhcp-snooping)
   - [IP DHCP Snooping Device Configuration](#ip-dhcp-snooping-device-configuration)
+- [IP NAT](#ip-nat)
+  - [NAT Profiles](#nat-profiles)
+  - [NAT Pools](#nat-pools)
+  - [NAT Synchronization](#nat-synchronization)
+  - [NAT Translation Settings](#nat-translation-settings)
+  - [IP NAT Device Configuration](#ip-nat-device-configuration)
 - [Errdisable](#errdisable)
   - [Errdisable Summary](#errdisable-summary)
 - [Quality Of Service](#quality-of-service)
@@ -326,6 +345,48 @@ ntp server 10.1.1.1
 ntp server 10.1.1.2 prefer
 ntp server 20.20.20.1 key <removed>
 ntp server ie.pool.ntp.org iburst key <removed>
+```
+
+### System Control-Plane
+
+#### TCP MSS Ceiling
+
+| Protocol | Segment Size |
+| -------- | -------------|
+| IPv4 | 1344 |
+| IPv6 | 1366 |
+
+#### Control-Plane Access-Groups
+
+| Protocol | VRF | Access-list |
+| -------- | --- | ------------|
+| IPv4 Ingress default | All | ingress_ipv4_acl |
+| IPv4 | default | acl4_1 |
+| IPv4 | red | acl4_2 |
+| IPv4 | red_1 | acl4_2 |
+| IPv4 | default | acl4_3 |
+| IPv6 Ingress default | All | ingress_ipv6_acl |
+| IPv6 | default | acl6_1 |
+| IPv6 | blue | acl6_2 |
+| IPv6 | blue_1 | acl6_2 |
+| IPv6 | default | acl6_3 |
+
+#### System Control-Plane Device Configuration
+
+```eos
+!
+system control-plane
+   tcp mss ceiling ipv4 1344 ipv6 1366
+   ip access-group ingress default ingress_ipv4_acl
+   ip access-group acl4_1 in
+   ip access-group acl4_3 vrf default in
+   ip access-group acl4_2 vrf red in
+   ip access-group acl4_2 vrf red_1 in
+   ipv6 access-group ingress default ingress_ipv6_acl
+   ipv6 access-group acl6_1 in
+   ipv6 access-group acl6_3 vrf default in
+   ipv6 access-group acl6_2 vrf blue in
+   ipv6 access-group acl6_2 vrf blue_1 in
 ```
 
 ### Management SSH
@@ -1664,6 +1725,29 @@ monitor telemetry postcard policy
       ingress sample policy samplepo2
 ```
 
+### Monitor Server Radius Summary
+
+Monitor servers are used for 802.1x authentication.
+
+#### Server Probe Settings
+
+| Setting | Value |
+| ------- | ----- |
+| Probe interval | 100 |
+| Threshold failure | 100 |
+| Probe method | access-request |
+
+#### Monitor Server Radius Device Configuration
+
+```eos
+!
+monitor server radius
+   service dot1x
+   probe interval 100 seconds
+   probe threshold failure 100
+   probe method access-request username arista password 7 <removed>
+```
+
 ## Monitor Connectivity
 
 ### Global Configuration
@@ -2439,10 +2523,31 @@ interface Dps1
 
 ##### ISIS
 
-| Interface | Channel Group | ISIS Instance | ISIS BFD | ISIS Metric | Mode | ISIS Circuit Type | Hello Padding | Authentication Mode |
-| --------- | ------------- | ------------- | -------- | ----------- | ---- | ----------------- | ------------- | ------------------- |
-| Ethernet5 | - | ISIS_TEST | True | 99 | point-to-point | level-2 | False | md5 |
-| Ethernet81/10 | 110 | *ISIS_TEST | True | *99 | *point-to-point | *level-2 | *True | *text |
+| Interface | Channel Group | ISIS Instance | ISIS BFD | ISIS Metric | Mode | ISIS Circuit Type | Hello Padding | ISIS Authentication Mode |
+| --------- | ------------- | ------------- | -------- | ----------- | ---- | ----------------- | ------------- | ------------------------ |
+| Ethernet5 | - | ISIS_TEST | True | 99 | point-to-point | level-2 | False | - |
+| Ethernet8 | - | - | - | - | - | - | - | md5 |
+| Ethernet8.101 | - | - | - | - | - | - | - | md5 |
+| Ethernet9 | - | - | - | - | - | - | - | sha |
+| Ethernet10 | - | - | - | - | - | - | - | sha |
+| Ethernet11 | - | - | - | - | - | - | - | shared-secret |
+| Ethernet12 | - | - | - | - | - | - | - | shared-secret |
+| Ethernet13 | - | - | - | - | - | - | - | Level-1: md5<br>Level-2: text |
+| Ethernet14 | - | - | - | - | - | - | - | Level-1: md5<br>Level-2: sha |
+| Ethernet15 | - | - | - | - | - | - | - | Level-1: shared-secret<br>Level-2: shared-secret |
+| Ethernet16 | - | - | - | - | - | - | - | Level-1: shared-secret<br>Level-2: shared-secret |
+| Ethernet17 | - | - | - | - | - | - | - | Level-1: sha<br>Level-2: sha |
+| Ethernet18 | - | - | - | - | - | - | - | Level-1: sha<br>Level-2: sha |
+| Ethernet20 | - | - | - | - | - | - | - | Level-1: shared-secret<br>Level-2: md5 |
+| Ethernet21 | - | - | - | - | - | - | - | Level-1: md5 |
+| Ethernet22 | - | - | - | - | - | - | - | Level-2: sha |
+| Ethernet23 | - | - | - | - | - | - | - | Level-2: shared-secret |
+| Ethernet74 | 3 | *EVPN_UNDERLAY | - | *- | *- | *- | *- | *sha |
+| Ethernet75 | 3 | *EVPN_UNDERLAY | - | *- | *- | *- | *- | *sha |
+| Ethernet77 | 8 | *EVPN_UNDERLAY | - | *- | *- | *- | *- | *Level-1: md5<br>Level-2: md5 |
+| Ethernet78 | 15 | *- | - | *- | *- | *- | *- | *md5 |
+| Ethernet79 | 16 | *EVPN_UNDERLAY | - | *- | *- | *- | *- | *md5 |
+| Ethernet81/10 | 110 | *ISIS_TEST | True | *99 | *point-to-point | *level-2 | *True | *- |
 
 *Inherited from Port-Channel Interface
 
@@ -2657,8 +2762,6 @@ interface Ethernet5
    isis metric 99
    no isis hello padding
    isis network point-to-point
-   isis authentication mode md5
-   isis authentication key 7 <removed>
    spanning-tree guard loop
 !
 interface Ethernet6
@@ -2705,6 +2808,8 @@ interface Ethernet8
    no switchport
    no lldp transmit
    no lldp receive
+   isis authentication mode md5 rx-disabled
+   isis authentication key 0 <removed>
 !
 interface Ethernet8.101
    description to WAN-ISP-01 Ethernet2.101 - VRF-C1
@@ -2712,6 +2817,8 @@ interface Ethernet8.101
    ip address 172.31.128.1/31
    ipv6 enable
    ipv6 address 2002:ABDC::1/64
+   isis authentication mode md5
+   isis authentication key 0 <removed>
 !
 interface Ethernet9
    description interface_with_mpls_enabled
@@ -2721,6 +2828,8 @@ interface Ethernet9
    multicast ipv4 boundary ACL_MULTICAST out
    multicast ipv6 static
    mpls ip
+   isis authentication mode sha key-id 2 rx-disabled
+   isis authentication key 0 <removed>
 !
 interface Ethernet10
    description interface_with_mpls_disabled
@@ -2728,6 +2837,8 @@ interface Ethernet10
    ip address 172.31.128.10/31
    no mpls ldp interface
    no mpls ip
+   isis authentication mode sha key-id 2
+   isis authentication key 0 <removed>
 !
 interface Ethernet11
    description interface_in_mode_access_accepting_tagged_LACP
@@ -2735,12 +2846,14 @@ interface Ethernet11
    switchport mode access
    switchport
    l2-protocol encapsulation dot1q vlan 200
+   isis authentication mode shared-secret profile profile1 algorithm sha-1 rx-disabled
 !
 interface Ethernet12
    description interface_with_dot1q_tunnel
    switchport access vlan 300
    switchport mode dot1q-tunnel
    switchport
+   isis authentication mode shared-secret profile profile1 algorithm sha-1
 !
 interface Ethernet13
    description interface_in_mode_access_with_voice
@@ -2751,6 +2864,10 @@ interface Ethernet13
    switchport phone trunk untagged
    switchport mode trunk phone
    switchport
+   isis authentication mode md5 rx-disabled level-1
+   isis authentication mode text rx-disabled level-2
+   isis authentication key 0 <removed> level-1
+   isis authentication key 0 <removed> level-2
    no logging event storm-control discards
    no logging event spanning-tree
 !
@@ -2760,6 +2877,10 @@ interface Ethernet14
    switchport trunk allowed vlan 110-111,210-211
    switchport mode trunk
    switchport
+   isis authentication mode md5 level-1
+   isis authentication mode sha key-id 10 level-2
+   isis authentication key 0 <removed> level-1
+   isis authentication key 0 <removed> level-2
 !
 interface Ethernet15
    description PVLAN Promiscuous Access - only one secondary
@@ -2767,6 +2888,8 @@ interface Ethernet15
    switchport mode access
    switchport
    switchport pvlan mapping 111
+   isis authentication mode shared-secret profile profile1 algorithm sha-256 level-1
+   isis authentication mode shared-secret profile profile2 algorithm sha-1 level-2
 !
 interface Ethernet16
    description PVLAN Promiscuous Trunk - vlan translation out
@@ -2775,6 +2898,8 @@ interface Ethernet16
    switchport mode trunk
    switchport
    switchport vlan translation out 111-112 110
+   isis authentication mode shared-secret profile profile1 algorithm sha-256 rx-disabled level-1
+   isis authentication mode shared-secret profile profile2 algorithm sha-1 rx-disabled level-2
 !
 interface Ethernet17
    description PVLAN Secondary Trunk
@@ -2782,6 +2907,8 @@ interface Ethernet17
    switchport mode trunk
    switchport
    switchport trunk private-vlan secondary
+   isis authentication mode sha key-id 5 rx-disabled level-1
+   isis authentication mode sha key-id 10 rx-disabled level-2
 !
 interface Ethernet18
    description PBR Description
@@ -2789,6 +2916,8 @@ interface Ethernet18
    no switchport
    ip address 192.0.2.1/31
    service-policy type pbr input MyLANServicePolicy
+   isis authentication mode sha key-id 5 level-1
+   isis authentication mode sha key-id 10 level-2
 !
 interface Ethernet19
    description Switched port with no LLDP rx/tx
@@ -2798,29 +2927,43 @@ interface Ethernet19
    no lldp transmit
    no lldp receive
    lldp tlv transmit ztp vlan 666
+   isis authentication key-id 2 algorithm sha-512 key 0 <removed>
+   isis authentication key-id 3 algorithm sha-512 rfc-5310 key 0 <removed>
+   isis authentication key-id 1 algorithm sha-1 key 0 <removed> level-1
+   isis authentication key-id 4 algorithm sha-1 rfc-5310 key 0 <removed> level-1
+   isis authentication key-id 1 algorithm sha-1 key 0 <removed> level-2
+   isis authentication key-id 5 algorithm sha-1 rfc-5310 key 0 <removed> level-2
 !
 interface Ethernet20
    description Port patched through patch-panel to pseudowire
    no switchport
    no lldp transmit
    no lldp receive
+   isis authentication mode shared-secret profile profile1 algorithm sha-256 level-1
+   isis authentication mode md5 level-2
+   isis authentication key 0 <removed> level-2
 !
 interface Ethernet21
    description 200MBit/s shape
    switchport
    no qos trust
    shape rate 200000 kbps
+   isis authentication mode md5 rx-disabled level-1
+   isis authentication key 0 <removed> level-1
 !
 interface Ethernet22
    description 10% shape
    switchport
    shape rate 10 percent
+   isis authentication mode sha key-id 100 level-2
+   isis authentication key 0 <removed> level-2
 !
 interface Ethernet23
    description Error-correction encoding
    error-correction encoding fire-code
    error-correction encoding reed-solomon
    switchport
+   isis authentication mode shared-secret profile profile2 algorithm sha-1 level-2
 !
 interface Ethernet24
    description Disable error-correction encoding
@@ -3569,9 +3712,21 @@ interface Ethernet83
 
 ##### ISIS
 
-| Interface | ISIS Instance | ISIS BFD | ISIS Metric | Mode | ISIS Circuit Type | Hello Padding | Authentication Mode |
-| --------- | ------------- | -------- | ----------- | ---- | ----------------- | ------------- | ------------------- |
-| Port-Channel110 | ISIS_TEST | True | 99 | point-to-point | level-2 | True | text |
+| Interface | ISIS Instance | ISIS BFD | ISIS Metric | Mode | ISIS Circuit Type | Hello Padding | ISIS Authentication Mode |
+| --------- | ------------- | -------- | ----------- | ---- | ----------------- | ------------- | ------------------------ |
+| Port-Channel3 | EVPN_UNDERLAY | - | - | - | - | - | sha |
+| Port-Channel8 | EVPN_UNDERLAY | - | - | - | - | - | Level-1: md5<br>Level-2: md5 |
+| Port-Channel9 | - | - | - | - | - | - | Level-2: text |
+| Port-Channel10 | EVPN_UNDERLAY | - | - | - | - | - | sha |
+| Port-Channel12 | EVPN_UNDERLAY | - | - | - | - | - | Level-1: sha |
+| Port-Channel13 | - | - | - | - | - | - | - |
+| Port-Channel15 | - | - | - | - | - | - | md5 |
+| Port-Channel16 | EVPN_UNDERLAY | - | - | - | - | - | md5 |
+| Port-Channel20 | EVPN_UNDERLAY | - | - | - | - | - | Level-1: shared-secret<br>Level-2: shared-secret |
+| Port-Channel50 | EVPN_UNDERLAY | - | - | - | - | - | shared-secret |
+| Port-Channel51 | EVPN_UNDERLAY | - | - | - | - | - | shared-secret |
+| Port-Channel100 | EVPN_UNDERLAY | - | - | - | - | - | Level-1: md5<br>Level-2: text |
+| Port-Channel110 | ISIS_TEST | True | 99 | point-to-point | level-2 | True | - |
 
 #### Port-Channel Interfaces Device Configuration
 
@@ -3586,6 +3741,9 @@ interface Port-Channel3
    switchport
    no snmp trap link-change
    shape rate 200000 kbps
+   isis enable EVPN_UNDERLAY
+   isis authentication mode sha key-id 2 rx-disabled
+   isis authentication key 0 <removed>
 !
 interface Port-Channel5
    description DC1_L2LEAF1_Po1
@@ -3624,6 +3782,11 @@ interface Port-Channel8
    description to Dev02 Port-channel 8
    no switchport
    switchport port-security violation protect
+   isis enable EVPN_UNDERLAY
+   isis authentication mode md5 level-1
+   isis authentication mode md5 level-2
+   isis authentication key 0 <removed> level-1
+   isis authentication key 0 <removed> level-2
 !
 interface Port-Channel8.101
    description to Dev02 Port-Channel8.101 - VRF-C1
@@ -3637,6 +3800,8 @@ interface Port-Channel9
    bfd echo
    bfd neighbor 10.1.2.4
    bfd per-link rfc-7130
+   isis authentication mode text rx-disabled level-2
+   isis authentication key 0 <removed> level-2
    spanning-tree guard root
 !
 interface Port-Channel10
@@ -3649,6 +3814,9 @@ interface Port-Channel10
       identifier 0000:0000:0404:0404:0303
       route-target import 04:04:03:03:02:02
    shape rate 50 percent
+   isis enable EVPN_UNDERLAY
+   isis authentication mode sha key-id 2
+   isis authentication key 0 <removed>
 !
 interface Port-Channel12
    description interface_in_mode_access_with_voice
@@ -3657,6 +3825,8 @@ interface Port-Channel12
    switchport phone trunk untagged
    switchport mode trunk phone
    switchport
+   isis enable EVPN_UNDERLAY
+   isis authentication mode sha key-id 5 level-1
 !
 interface Port-Channel13
    description EVPN-Vxlan single-active redundancy
@@ -3669,6 +3839,13 @@ interface Port-Channel13
       designated-forwarder election hold-time 10
       designated-forwarder election candidate reachability required
       route-target import 00:00:01:02:03:04
+   isis authentication key-id 2 algorithm sha-512 key 0 <removed>
+   isis authentication key-id 3 algorithm sha-512 rfc-5310 key 0 <removed>
+   isis authentication key-id 1 algorithm sha-1 key 0 <removed> level-1
+   isis authentication key-id 4 algorithm sha-1 rfc-5310 key 0 <removed> level-1
+   isis authentication key-id 5 algorithm sha-1 key 0 <removed> level-1
+   isis authentication key-id 1 algorithm sha-1 key 0 <removed> level-2
+   isis authentication key-id 5 algorithm sha-1 rfc-5310 key 0 <removed> level-2
 !
 interface Port-Channel14
    description EVPN-MPLS multihoming
@@ -3686,6 +3863,8 @@ interface Port-Channel15
    switchport mode trunk
    switchport
    mlag 15
+   isis authentication mode md5 rx-disabled
+   isis authentication key 0 <removed>
    spanning-tree guard loop
    link tracking group EVPN_MH_ES2 upstream
 !
@@ -3701,6 +3880,9 @@ interface Port-Channel16
    mlag 16
    switchport port-security violation protect log
    switchport port-security mac-address maximum 100
+   isis enable EVPN_UNDERLAY
+   isis authentication mode md5
+   isis authentication key 0 <removed>
    spanning-tree guard none
    switchport backup-link Port-Channel100 prefer vlan 20
 !
@@ -3716,6 +3898,9 @@ interface Port-Channel20
    switchport mode access
    switchport
    l2-protocol encapsulation dot1q vlan 200
+   isis enable EVPN_UNDERLAY
+   isis authentication mode shared-secret profile profile1 algorithm sha-256 rx-disabled level-1
+   isis authentication mode shared-secret profile profile2 algorithm sha-1 rx-disabled level-2
 !
 interface Port-Channel50
    description SRV-POD03_PortChanne1
@@ -3727,6 +3912,8 @@ interface Port-Channel50
       identifier 0000:0000:0303:0202:0101
       route-target import 03:03:02:02:01:01
    lacp system-id 0303.0202.0101
+   isis enable EVPN_UNDERLAY
+   isis authentication mode shared-secret profile profile1 algorithm sha-1 rx-disabled
 !
 interface Port-Channel51
    description ipv6_prefix
@@ -3740,6 +3927,8 @@ interface Port-Channel51
    switchport port-security vlan 2 mac-address maximum 3
    switchport port-security vlan 3 mac-address maximum 3
    switchport port-security vlan default mac-address maximum 2
+   isis enable EVPN_UNDERLAY
+   isis authentication mode shared-secret profile profile1 algorithm sha-1
 !
 interface Port-Channel99
    description MCAST
@@ -3782,6 +3971,11 @@ interface Port-Channel100
    switchport pvlan mapping 20-30
    switchport port-security
    switchport port-security mac-address maximum disabled
+   isis enable EVPN_UNDERLAY
+   isis authentication mode md5 rx-disabled level-1
+   isis authentication mode text rx-disabled level-2
+   isis authentication key 0 <removed> level-1
+   isis authentication key 0 <removed> level-2
    switchport backup-link Port-channel51
    switchport backup preemption-delay 35
    switchport backup mac-move-burst 20
@@ -3886,8 +4080,6 @@ interface Port-Channel110
    isis metric 99
    isis hello padding
    isis network point-to-point
-   isis authentication mode text
-   isis authentication key 7 <removed>
 !
 interface Port-Channel111
    description Flexencap Port-Channel
@@ -5356,6 +5548,10 @@ policy-map type pbr PM_PBR_BREAKOUT
 
 ### Router BFD
 
+| BFD Tuning |
+| ---------- |
+| Slow-Timer 5000 |
+
 #### Router BFD Singlehop Summary
 
 | Interval | Minimum RX | Multiplier |
@@ -5381,6 +5577,7 @@ policy-map type pbr PM_PBR_BREAKOUT
 router bfd
    interval 900 min-rx 900 multiplier 50 default
    multihop interval 300 min-rx 300 multiplier 3
+   slow-timer 5000
    local-address 192.168.255.1
    session stats snapshot interval 51
    !
@@ -6083,6 +6280,283 @@ ip as-path access-list mylist2 deny _64517$ igp
 
 ## ACL
 
+### Standard Access-lists
+
+#### Standard Access-lists Summary
+
+##### 99
+
+| Sequence | Action |
+| -------- | ------ |
+| 10 | remark ACL to restrict access RFC1918 addresses |
+| 20 | permit 10.0.0.0/8 |
+| 30 | permit 172.16.0.0/12 |
+| 40 | permit 192.168.0.0/16 |
+
+##### ACL-API
+
+| Sequence | Action |
+| -------- | ------ |
+| 10 | remark ACL to restrict access to switch API to CVP and Ansible |
+| 20 | permit host 10.10.10.10 |
+| 30 | permit host 10.10.10.11 |
+| 40 | permit host 10.10.10.12 |
+
+##### ACL-SSH
+
+ACL has counting mode `counters per-entry` enabled!
+
+| Sequence | Action |
+| -------- | ------ |
+| 10 | remark ACL to restrict access RFC1918 addresses |
+| 20 | permit 10.0.0.0/8 |
+| 30 | permit 172.16.0.0/12 |
+| 40 | permit 192.168.0.0/16 |
+
+##### ACL-SSH-VRF
+
+| Sequence | Action |
+| -------- | ------ |
+| 10 | remark ACL to restrict access RFC1918 addresses |
+| 20 | permit 10.0.0.0/8 |
+| 30 | permit 172.16.0.0/12 |
+| 40 | permit 192.168.0.0/16 |
+
+#### Standard Access-lists Device Configuration
+
+```eos
+!
+ip access-list standard 99
+   10 remark ACL to restrict access RFC1918 addresses
+   20 permit 10.0.0.0/8
+   30 permit 172.16.0.0/12
+   40 permit 192.168.0.0/16
+!
+ip access-list standard ACL-API
+   10 remark ACL to restrict access to switch API to CVP and Ansible
+   20 permit host 10.10.10.10
+   30 permit host 10.10.10.11
+   40 permit host 10.10.10.12
+!
+ip access-list standard ACL-SSH
+   counters per-entry
+   10 remark ACL to restrict access RFC1918 addresses
+   20 permit 10.0.0.0/8
+   30 permit 172.16.0.0/12
+   40 permit 192.168.0.0/16
+!
+ip access-list standard ACL-SSH-VRF
+   10 remark ACL to restrict access RFC1918 addresses
+   20 permit 10.0.0.0/8
+   30 permit 172.16.0.0/12
+   40 permit 192.168.0.0/16
+```
+
+### Extended Access-lists
+
+#### Extended Access-lists Summary
+
+##### 4
+
+| Sequence | Action |
+| -------- | ------ |
+| 10 | remark ACL to restrict access RFC1918 addresses |
+| 20 | deny ip 10.0.0.0/8 any |
+| 30 | permit ip 192.0.2.0/24 any |
+
+##### ACL-01
+
+| Sequence | Action |
+| -------- | ------ |
+| 10 | remark ACL to restrict access to switch API to CVP and Ansible |
+| 20 | deny ip host 192.0.2.1 any |
+| 30 | permit ip 192.0.2.0/24 any |
+
+##### ACL-02
+
+ACL has counting mode `counters per-entry` enabled!
+
+| Sequence | Action |
+| -------- | ------ |
+| 10 | remark ACL to restrict access RFC1918 addresses |
+| 20 | permit ip 10.0.0.0/8 any |
+| 30 | permit ip 192.0.2.0/24 any |
+| - | permit response traffic nat |
+
+##### ACL-03
+
+| Sequence | Action |
+| -------- | ------ |
+| 10 | remark ACL to restrict access RFC1918 addresses |
+| 20 | deny ip 10.0.0.0/8 any |
+| 30 | permit ip 192.0.2.0/24 any |
+
+##### ACL-04
+
+ACL has counting mode `counters per-entry` enabled!
+
+| Sequence | Action |
+| -------- | ------ |
+| 20 | deny ip 12.0.0.0/8 any |
+| 30 | permit ip 194.0.2.0/24 any |
+| - | permit response traffic nat |
+
+#### Extended Access-lists Device Configuration
+
+```eos
+!
+ip access-list 4
+   10 remark ACL to restrict access RFC1918 addresses
+   20 deny ip 10.0.0.0/8 any
+   30 permit ip 192.0.2.0/24 any
+!
+ip access-list ACL-01
+   10 remark ACL to restrict access to switch API to CVP and Ansible
+   20 deny ip host 192.0.2.1 any
+   30 permit ip 192.0.2.0/24 any
+!
+ip access-list ACL-02
+   counters per-entry
+   10 remark ACL to restrict access RFC1918 addresses
+   20 permit ip 10.0.0.0/8 any
+   30 permit ip 192.0.2.0/24 any
+   permit response traffic nat
+!
+ip access-list ACL-03
+   10 remark ACL to restrict access RFC1918 addresses
+   20 deny ip 10.0.0.0/8 any
+   30 permit ip 192.0.2.0/24 any
+!
+ip access-list ACL-04
+   counters per-entry
+   20 deny ip 12.0.0.0/8 any
+   30 permit ip 194.0.2.0/24 any
+   permit response traffic nat
+```
+
+### IP Access-lists
+
+#### IP Access-lists Summary
+
+- The maximum number of ACL entries allowed to be provisioned per switch: 10000
+
+#### IP Access-lists Device Configuration
+
+```eos
+!
+ip access-list ACL_NO_SEQUENCE
+   remark test acl without sequence numbers
+   deny udp any any log
+   permit icmp any any 3 4 ttl eq 40
+   permit icmp any any unreachable ttl gt 3
+   permit ip any any fragments dscp 46
+   permit ip any any tracked dscp ef
+   permit ip any any nexthop-group NH_TEST
+   permit vlan inner 123 0x000 ip any any
+   permit vlan 234 0xFFF ip any any
+   permit icmp any any
+!
+ip access-list ACL_SEQUENCE_AND_COUNTERS
+   counters per-entry
+   10 remark test acl with sequence numbers
+   20 permit ip 10.0.0.0/8 any
+   30 permit tcp host 192.168.122.22 any established
+   40 permit tcp any gt 1023 host 172.16.16.16 eq 22
+   50 permit tcp any range 1000 1100 any range 10 20
+   4294967295 deny ip any any
+   permit response traffic nat
+```
+
+### IPv6 Standard Access-lists
+
+#### IPv6 Standard Access-lists Summary
+
+##### TEST4
+
+| Sequence | Action |
+| -------- | ------ |
+| 5 | deny fe80::/64 |
+| 10 | permit fe90::/64 |
+
+##### TEST5
+
+ACL has counting mode `counters per-entry` enabled!
+
+| Sequence | Action |
+| -------- | ------ |
+| 5 | permit 2001:db8::/64 |
+| 10 | deny 2001:db8::/32 |
+
+##### TEST6
+
+| Sequence | Action |
+| -------- | ------ |
+| 5 | deny 2001:db8:1000::/64 |
+| 10 | permit 2001:db8::/32 |
+
+#### IPv6 Standard Access-lists Device Configuration
+
+```eos
+!
+ipv6 access-list standard TEST4
+   5 deny fe80::/64
+   10 permit fe90::/64
+!
+ipv6 access-list standard TEST5
+   counters per-entry
+   5 permit 2001:db8::/64
+   10 deny 2001:db8::/32
+!
+ipv6 access-list standard TEST6
+   5 deny 2001:db8:1000::/64
+   10 permit 2001:db8::/32
+```
+
+### IPv6 Extended Access-lists
+
+#### IPv6 Extended Access-lists Summary
+
+##### TEST1
+
+| Sequence | Action |
+| -------- | ------ |
+| 5 | deny ipv6 fe80::/64 any |
+| 10 | permit ipv6 fe90::/64 any |
+
+##### TEST2
+
+ACL has counting mode `counters per-entry` enabled!
+
+| Sequence | Action |
+| -------- | ------ |
+| 5 | permit ipv6 2001:db8::/64 any |
+| 10 | deny ipv6 2001:db8::/32 any |
+
+##### TEST3
+
+| Sequence | Action |
+| -------- | ------ |
+| 5 | deny ipv6 2001:db8:1000::/64 any |
+| 10 | permit ipv6 2001:db8::/32 any |
+
+#### IPv6 Extended Access-lists Device Configuration
+
+```eos
+!
+ipv6 access-list TEST1
+   5 deny ipv6 fe80::/64 any
+   10 permit ipv6 fe90::/64 any
+!
+ipv6 access-list TEST2
+   counters per-entry
+   5 permit ipv6 2001:db8::/64 any
+   10 deny ipv6 2001:db8::/32 any
+!
+ipv6 access-list TEST3
+   5 deny ipv6 2001:db8:1000::/64 any
+   10 permit ipv6 2001:db8::/32 any
+```
+
 ### MAC Access-lists
 
 #### MAC Access-lists Summary
@@ -6173,6 +6647,46 @@ vrf instance MGMT
 vrf instance TENANT_A_PROJECT01
 !
 vrf instance TENANT_A_PROJECT02
+```
+
+## Virtual Source NAT
+
+### Virtual Source NAT Summary
+
+| Source NAT VRF | Source NAT IPv4 Address | Source NAT IPv6 Address |
+| -------------- | ----------------------- | ----------------------- |
+| TEST_01 | 1.1.1.1 | - |
+| TEST_02 | 1.1.1.2 | - |
+| TEST_03 | - | 2001:db8:85a3::8a2e:370:7334 |
+| TEST_04 | 1.1.1.3 | 2001:db8:85a3::8a2e:370:7335 |
+
+### Virtual Source NAT Configuration
+
+```eos
+!
+ip address virtual source-nat vrf TEST_01 address 1.1.1.1
+ip address virtual source-nat vrf TEST_02 address 1.1.1.2
+ip address virtual source-nat vrf TEST_04 address 1.1.1.3
+ipv6 address virtual source-nat vrf TEST_03 address 2001:db8:85a3::8a2e:370:7334
+ipv6 address virtual source-nat vrf TEST_04 address 2001:db8:85a3::8a2e:370:7335
+```
+
+## System L1
+
+### Unsupported Interface Configurations
+
+| Unsupported Configuration | action |
+| ---------------- | -------|
+| Speed | warn |
+| Error correction | error |
+
+### System L1 Device Configuration
+
+```eos
+!
+system l1
+   unsupported speed action warn
+   unsupported error-correction action error
 ```
 
 ## Application Traffic Recognition
@@ -6837,6 +7351,189 @@ ip dhcp snooping bridging
 ip dhcp snooping information option
 ip dhcp snooping information option circuit-id type 10 format %h:%p
 ip dhcp snooping vlan 10,20,500,1000-2000
+```
+
+## IP NAT
+
+| Setting | Value |
+| -------- | ----- |
+| Kernel Buffer Size | 64 MB |
+
+### NAT Profiles
+
+#### Profile: NAT-PROFILE-NO-VRF-1
+
+#### Profile: NAT-PROFILE-NO-VRF-2
+
+##### IP NAT: Source Static
+
+| Direction | Original IP | Original Port | Access List | Translated IP | Translated Port | Protocol | Group | Priority | Comment |
+| --------- | ----------- | ------------- | ----------- | ------------- | --------------- | -------- | ----- | -------- | ------- |
+| - | 3.0.0.1 | - | - | 4.0.0.1 | - | - | - | 0 | - |
+| - | 3.0.0.2 | 22 | - | 4.0.0.2 | - | - | - | 0 | - |
+| - | 3.0.0.3 | 22 | - | 4.0.0.3 | 23 | - | - | 0 | - |
+| - | 3.0.0.4 | 22 | - | 4.0.0.4 | 23 | UDP | - | 0 | - |
+| - | 3.0.0.5 | 22 | - | 4.0.0.5 | 23 | TCP | 1 | 0 | - |
+| - | 3.0.0.6 | 22 | - | 4.0.0.6 | 23 | TCP | 2 | 5 | Comment Test |
+| - | 3.0.0.7 | - | ACL21 | 4.0.0.7 | - | - | - | 0 | - |
+| ingress | 3.0.0.8 | - | - | 4.0.0.8 | - | - | - | 0 | - |
+
+##### IP NAT: Source Dynamic
+
+| Access List | NAT Type | Pool Name | Priority | Comment |
+| ----------- | -------- | --------- | -------- | ------- |
+| ACL11 | pool | POOL11 | 0 | - |
+| ACL12 | pool | POOL11 | 0 | POOL11 shared with ACL11/12 |
+| ACL13 | pool | POOL13 | 10 | - |
+| ACL14 | pool | POOL14 | 1 | Priority low end |
+| ACL15 | pool | POOL15 | 4294967295 | Priority high end |
+| ACL16 | pool | POOL16 | 0 | Priority default |
+| ACL17 | overload | - | 10 | Priority_10 |
+| ACL18 | pool-address-only | POOL18 | 10 | Priority_10 |
+| ACL19 | pool-full-cone | POOL19 | 10 | Priority_10 |
+
+##### IP NAT: Destination Static
+
+| Direction | Original IP | Original Port | Access List | Translated IP | Translated Port | Protocol | Group | Priority | Comment |
+| --------- | ----------- | ------------- | ----------- | ------------- | --------------- | -------- | ----- | -------- | ------- |
+| - | 1.0.0.1 | - | - | 2.0.0.1 | - | - | - | 0 | - |
+| - | 1.0.0.2 | 22 | - | 2.0.0.2 | - | - | - | 0 | - |
+| - | 1.0.0.2 | 23 | - | 2.0.0.3 | 23 | - | - | 0 | - |
+| - | 1.0.0.4 | 22 | - | 2.0.0.4 | 23 | udp | - | 0 | - |
+| - | 1.0.0.5 | 22 | - | 2.0.0.5 | 23 | tcp | 1 | 0 | - |
+| - | 1.0.0.6 | 22 | - | 2.0.0.6 | 23 | tcp | 2 | 5 | Comment Test |
+| - | 1.0.0.7 | - | ACL21 | 2.0.0.7 | - | - | - | 0 | - |
+| egress | 239.0.0.1 | - | - | 239.0.0.2 | - | - | - | 0 | - |
+
+##### IP NAT: Destination Dynamic
+
+| Access List | Pool Name | Priority | Comment |
+| ----------- | --------- | -------- | ------- |
+| ACL1 | POOL1 | 0 | - |
+| ACL2 | POOL1 | 0 | POOL1 shared with ACL1/2 |
+| ACL3 | POOL3 | 10 | - |
+| ACL4 | POOL4 | 1 | Priority low end |
+| ACL5 | POOL5 | 4294967295 | Priority high end |
+| ACL6 | POOL6 | 0 | Priority default |
+
+#### Profile: NAT-PROFILE-TEST-VRF
+
+NAT profile VRF is: TEST
+
+### NAT Pools
+
+| Pool Name | Pool Type | Prefix Length | Utilization Log Threshold | First-Last IP Addresses | First-Last Ports |
+| --------- | --------- | ------------- | ------------------------- | ----------------------- | ---------------- |
+| port_only_1 | port-only | - | - | - | - |
+| port_only_2 | port-only | - | - | - | 1024-65535 |
+| prefix_16 | ip-port | 16 | 91 | 10.0.0.1-10.0.255.254<br>10.1.0.0-10.1.255.255 | -<br>1024-65535 |
+| prefix_21 | ip-port | 21 | - | - | - |
+| prefix_24 | ip-port | 24 | 100 | - | - |
+| prefix_32 | ip-port | 32 | - | 10.2.0.1-10.2.0.1<br>10.2.0.2-10.2.0.2 | 1024-65535<br>- |
+| prefix_32_without_ip | ip-port | 32 | - | - | 1024-65535 |
+
+### NAT Synchronization
+
+| Setting | Value |
+| -------- | ----- |
+| State | Disabled |
+| Expiry Interval | 60 Seconds |
+| Interface | Ethernet1 |
+| Peer IP Address | 1.1.1.1 |
+| Port Range | 1024 - 65535 |
+| Port Range Split | Disabled |
+
+### NAT Translation Settings
+
+| Setting | Value |
+| -------- | ----- |
+| Address Selection | Any |
+| Address Selection | Hash Source IP Field |
+| Counters | Enabled |
+| Global Connection Limit | max. 100000 Connections |
+| per Host Connection Limit | max. 1000 Connections |
+| IP Host 10.0.0.1 Connection Limit | max. 100 Connections |
+| IP Host 10.0.0.2 Connection Limit | max. 200 Connections |
+| Global Connection Limit Low Mark | 50 % |
+| per Host Connection Limit Low Mark | 50 % |
+| UDP Connection Timeout | 3600 Seconds |
+| TCP Connection Timeout | 7200 Seconds |
+
+### IP NAT Device Configuration
+
+```eos
+!
+ip nat translation address selection hash field source-ip
+ip nat translation address selection any
+ip nat translation tcp-timeout 7200
+ip nat translation udp-timeout 3600
+ip nat translation max-entries 100000
+ip nat translation low-mark 50
+ip nat translation max-entries 1000 host
+ip nat translation low-mark 50 host
+ip nat translation max-entries 100 10.0.0.1
+ip nat translation max-entries 200 10.0.0.2
+ip nat kernel buffer size 64
+!
+ip nat profile NAT-PROFILE-NO-VRF-1
+!
+ip nat profile NAT-PROFILE-NO-VRF-2
+   ip nat destination static 1.0.0.1 2.0.0.1
+   ip nat destination static 1.0.0.2 22 2.0.0.2
+   ip nat destination static 1.0.0.2 23 2.0.0.3 23
+   ip nat destination static 1.0.0.4 22 2.0.0.4 23 protocol udp
+   ip nat destination static 1.0.0.7 access-list ACL21 2.0.0.7
+   ip nat source static 3.0.0.1 4.0.0.1
+   ip nat source static 3.0.0.2 22 4.0.0.2
+   ip nat source static 3.0.0.3 22 4.0.0.3 23
+   ip nat source static 3.0.0.4 22 4.0.0.4 23 protocol udp
+   ip nat source static 3.0.0.7 access-list ACL21 4.0.0.7
+   ip nat source ingress static 3.0.0.8 4.0.0.8
+   ip nat destination egress static 239.0.0.1 239.0.0.2
+   ip nat source static 3.0.0.5 22 4.0.0.5 23 protocol tcp group 1
+   ip nat destination static 1.0.0.5 22 2.0.0.5 23 protocol tcp group 1
+   ip nat source static 3.0.0.6 22 4.0.0.6 23 protocol tcp group 2 comment Comment Test
+   ip nat destination static 1.0.0.6 22 2.0.0.6 23 protocol tcp group 2 comment Comment Test
+   ip nat destination dynamic access-list ACL1 pool POOL1
+   ip nat source dynamic access-list ACL11 pool POOL11
+   ip nat source dynamic access-list ACL12 pool POOL11 comment POOL11 shared with ACL11/12
+   ip nat source dynamic access-list ACL13 pool POOL13 priority 10
+   ip nat source dynamic access-list ACL14 pool POOL14 priority 1 comment Priority low end
+   ip nat source dynamic access-list ACL15 pool POOL15 priority 4294967295 comment Priority high end
+   ip nat source dynamic access-list ACL16 pool POOL16 comment Priority default
+   ip nat source dynamic access-list ACL17 overload priority 10 comment Priority_10
+   ip nat source dynamic access-list ACL18 pool POOL18 address-only priority 10 comment Priority_10
+   ip nat source dynamic access-list ACL19 pool POOL19 full-cone priority 10 comment Priority_10
+   ip nat destination dynamic access-list ACL2 pool POOL1 comment POOL1 shared with ACL1/2
+   ip nat destination dynamic access-list ACL3 pool POOL3 priority 10
+   ip nat destination dynamic access-list ACL4 pool POOL4 priority 1 comment Priority low end
+   ip nat destination dynamic access-list ACL5 pool POOL5 priority 4294967295 comment Priority high end
+   ip nat destination dynamic access-list ACL6 pool POOL6 comment Priority default
+!
+ip nat profile NAT-PROFILE-TEST-VRF vrf TEST
+!
+ip nat pool prefix_16 prefix-length 16
+   range 10.0.0.1 10.0.255.254
+   range 10.1.0.0 10.1.255.255 1024 65535
+   utilization threshold 91 action log
+ip nat pool prefix_21 prefix-length 21
+ip nat pool prefix_24 prefix-length 24
+   utilization threshold 100 action log
+ip nat pool prefix_32 prefix-length 32
+   range 10.2.0.1 10.2.0.1 1024 65535
+   range 10.2.0.2 10.2.0.2
+ip nat pool prefix_32_without_ip prefix-length 32
+ip nat pool port_only_1 port-only
+ip nat pool port_only_2 port-only
+   port range 1024 65535
+ip nat synchronization
+   description test sync config
+   expiry-interval 60
+   shutdown
+   peer-address 1.1.1.1
+   local-interface Ethernet1
+   port-range 1024 65535
+   port-range split disabled
 ```
 
 ## Errdisable

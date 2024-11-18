@@ -251,10 +251,18 @@ class UtilsMixin:
                         "isis_network_point_to_point": p2p_link.get("isis_network_type", "point-to-point") == "point-to-point",
                         "isis_hello_padding": p2p_link.get("isis_hello_padding", True),
                         "isis_circuit_type": default(p2p_link.get("isis_circuit_type"), self.shared_utils.isis_default_circuit_type),
-                        "isis_authentication_mode": p2p_link.get("isis_authentication_mode"),
-                        "isis_authentication_key": p2p_link.get("isis_authentication_key"),
                     },
                 )
+                if (isis_authentication_mode := p2p_link.get("isis_authentication_mode")) is not None:
+                    interface_cfg.setdefault("isis_authentication", {}).setdefault("both", {})["mode"] = isis_authentication_mode
+
+                if (isis_authentication_key := p2p_link.get("isis_authentication_key")) is not None:
+                    interface_cfg.setdefault("isis_authentication", {}).setdefault("both", {}).update(
+                        {
+                            "key": isis_authentication_key,
+                            "key_type": "7",
+                        }
+                    )
 
         if p2p_link.get("macsec_profile"):
             interface_cfg["mac_security"] = {

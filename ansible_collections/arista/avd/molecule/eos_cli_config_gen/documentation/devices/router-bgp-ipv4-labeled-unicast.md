@@ -75,6 +75,7 @@ ASN Notation: asplain
 ```eos
 !
 router bgp 65101
+   timers bgp 4 6 min-hold-time 5 send-failure hold-time 67
    !
    address-family ipv4 labeled-unicast
       update wait-for-convergence

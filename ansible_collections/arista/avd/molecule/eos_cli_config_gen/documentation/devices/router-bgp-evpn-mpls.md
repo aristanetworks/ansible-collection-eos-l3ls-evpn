@@ -117,11 +117,13 @@ ASN Notation: asplain
 !
 router bgp 65101
    router-id 192.168.255.3
+   timers bgp min-hold-time 5 send-failure hold-time 65
    no bgp default ipv4-unicast
    distance bgp 20 200 200
    graceful-restart restart-time 300
    graceful-restart
    maximum-paths 2 ecmp 2
+   neighbor default send-community standard extended large
    neighbor EVPN-OVERLAY-PEERS peer group
    neighbor EVPN-OVERLAY-PEERS remote-as 65001
    neighbor EVPN-OVERLAY-PEERS update-source Loopback0

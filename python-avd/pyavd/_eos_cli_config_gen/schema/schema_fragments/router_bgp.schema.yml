@@ -27,6 +27,43 @@ keys:
       router_id:
         type: str
         description: In IP address format A.B.C.D.
+      timers:
+        type: dict
+        keys:
+          keepalive_time:
+            description: |-
+              Time between BGP keepalive messages in seconds.
+              `keepalive_time` should be lesser than `hold_time`.
+            type: int
+            convert_types:
+              - str
+            min: 0
+            max: 3600
+          hold_time:
+            description: |-
+              Hold time in seconds. Must be defined along with `keepalive_time`.
+              The valid values are 3-7200 or 0 if both values are 0.
+            type: int
+            convert_types:
+              - str
+            min: 0
+            max: 7200
+          min_hold_time:
+            description: |-
+              Neighbor's minimum hold time constraint in seconds.
+              `min_hold_time` should be less than `hold_time`.
+            type: int
+            convert_types:
+              - str
+            min: 3
+            max: 7200
+          send_failure_hold_time:
+            description: Send failure hold time in seconds.
+            type: int
+            convert_types:
+              - str
+            min: 60
+            max: 65535
       distance:
         type: dict
         keys:
@@ -185,6 +222,20 @@ keys:
               description: |-
                 BGP AS <1-4294967295> or AS number in asdot notation "<1-65535>.<0-65535>".
                 For asdot notation in YAML inputs, the value must be put in quotes, to prevent it from being interpreted as a float number.
+      neighbor_default:
+        type: dict
+        keys:
+          send_community:
+            type: str
+            valid_values:
+              - all
+              - large
+              - extended
+              - standard
+              - extended large
+              - standard large
+              - standard extended
+              - standard extended large
       peer_groups:
         type: list
         primary_key: name

@@ -10,6 +10,7 @@ tenants:
         vtep_diagnostic:
           loopback: 100
           loopback_ip_range: 10.255.1.0/24
+          loopback_ipv6_range: 2001:db8:1::/48
         svis:
           - id: 310
             name: Tenant_X_OP_Zone_1

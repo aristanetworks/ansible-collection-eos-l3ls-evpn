@@ -647,6 +647,12 @@ roles/eos_cli_config_gen/docs/tables/management-api-gnmi.md
 roles/eos_cli_config_gen/docs/tables/monitor-connectivity.md
 --8<--
 
+### Monitor server Radius
+
+--8<--
+roles/eos_cli_config_gen/docs/tables/monitor-server-radius.md
+--8<--
+
 ### Monitor sessions
 
 --8<--

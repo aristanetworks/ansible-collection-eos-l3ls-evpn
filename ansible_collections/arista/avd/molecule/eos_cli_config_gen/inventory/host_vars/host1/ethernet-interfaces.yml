@@ -310,8 +310,6 @@ ethernet_interfaces:
     isis_network_point_to_point: true
     isis_circuit_type: level-2
     isis_hello_padding: false
-    isis_authentication_mode: md5
-    isis_authentication_key: "asfddja23452"
     spanning_tree_guard: loop
     # test for switchport access vlan
     switchport:
@@ -388,7 +386,23 @@ ethernet_interfaces:
     lldp:
       transmit: false
       receive: false
-
+    # Test isis authentication both md5 rx
+    isis_authentication:
+      both:
+        key_type: 0
+        key: password
+        mode: md5
+        rx_disabled: true
+      level_1:
+        key_type: 0
+        key: password
+        mode: md5
+        rx_disabled: true
+      level_2:
+        key_type: 0
+        key: password
+        mode: md5
+        rx_disabled: true
   - name: Ethernet8.101
     description: to WAN-ISP-01 Ethernet2.101 - VRF-C1
     encapsulation_dot1q:
@@ -396,6 +410,12 @@ ethernet_interfaces:
     ip_address: 172.31.128.1/31
     ipv6_enable: true
     ipv6_address: 2002:ABDC::1/64
+    # Test isis auth both md5
+    isis_authentication:
+      both:
+        key_type: 0
+        key: password
+        mode: md5
 
   - name: Ethernet9
     description: interface_with_mpls_enabled
@@ -413,6 +433,15 @@ ethernet_interfaces:
       ip: true
       ldp:
         interface: true
+    # Test isis auth both sha rx
+    isis_authentication:
+      both:
+        key_type: 0
+        key: password
+        mode: sha
+        sha:
+          key_id: 2
+        rx_disabled: true
 
   - name: Ethernet10
     description: interface_with_mpls_disabled
@@ -423,6 +452,14 @@ ethernet_interfaces:
       ip: false
       ldp:
         interface: false
+    # Test isis auth both sha
+    isis_authentication:
+      both:
+        key_type: 0
+        key: password
+        mode: sha
+        sha:
+          key_id: 2
 
   - name: Ethernet11
     description: interface_in_mode_access_accepting_tagged_LACP
@@ -435,6 +472,14 @@ ethernet_interfaces:
       encapsulation_dot1q_vlan: 200
     spanning_tree_bpduguard: false # No config should be rendered for this case
     spanning_tree_bpdufilter: false # No config should be rendered for this case
+    # Test isis auth both shared secret rx
+    isis_authentication:
+      both:
+        mode: shared-secret
+        shared_secret:
+          profile: profile1
+          algorithm: sha-1
+        rx_disabled: true
 
   - name: Ethernet12
     description: interface_with_dot1q_tunnel
@@ -443,6 +488,13 @@ ethernet_interfaces:
       enabled: true
       mode: dot1q-tunnel
       access_vlan: 300
+    # Test isis auth both shared secret
+    isis_authentication:
+      both:
+        mode: shared-secret
+        shared_secret:
+          profile: profile1
+          algorithm: sha-1
 
   - name: Ethernet13
     logging:
@@ -461,6 +513,18 @@ ethernet_interfaces:
       phone:
         trunk: untagged
         vlan: 70
+    # Test isis auth l1 md5 l2 text rx
+    isis_authentication:
+      level_1:
+        key_type: 0
+        key: password
+        mode: md5
+        rx_disabled: true
+      level_2:
+        key_type: 0
+        key: password
+        mode: text
+        rx_disabled: true
 
   - name: Ethernet14
     logging:
@@ -476,6 +540,18 @@ ethernet_interfaces:
       mode: trunk
       trunk:
         allowed_vlan: 110-111,210-211
+    # Test isis auth l1 md5 l2 sha
+    isis_authentication:
+      level_1:
+        key_type: 0
+        key: password
+        mode: md5
+      level_2:
+        key_type: 0
+        key: password
+        mode: sha
+        sha:
+          key_id: 10
 
   - name: Ethernet15
     description: PVLAN Promiscuous Access - only one secondary
@@ -485,6 +561,18 @@ ethernet_interfaces:
       mode: access
       access_vlan: 110
       pvlan_mapping: 111
+    # Test isis auth l1l2 shared secret
+    isis_authentication:
+      level_1:
+        mode: shared-secret
+        shared_secret:
+          profile: profile1
+          algorithm: sha-256
+      level_2:
+        mode: shared-secret
+        shared_secret:
+          profile: profile2
+          algorithm: sha-1
 
   - name: Ethernet16
     description: PVLAN Promiscuous Trunk - vlan translation out
@@ -498,6 +586,20 @@ ethernet_interfaces:
         direction_out:
           - from: 111-112
             to: 110
+    # Test isis auth l1l2 shared secret rx
+    isis_authentication:
+      level_1:
+        mode: shared-secret
+        shared_secret:
+          profile: profile1
+          algorithm: sha-256
+        rx_disabled: true
+      level_2:
+        mode: shared-secret
+        shared_secret:
+          profile: profile2
+          algorithm: sha-1
+        rx_disabled: true
 
   - name: Ethernet17
     description: PVLAN Secondary Trunk
@@ -507,6 +609,18 @@ ethernet_interfaces:
       trunk:
         allowed_vlan: 110-112
         private_vlan_secondary: true
+    # Test isis auth l1l2 sha rx
+    isis_authentication:
+      level_1:
+        mode: sha
+        sha:
+          key_id: 5
+        rx_disabled: true
+      level_2:
+        mode: sha
+        sha:
+          key_id: 10
+        rx_disabled: true
 
   - name: Ethernet18
     description: PBR Description
@@ -517,6 +631,16 @@ ethernet_interfaces:
     service_policy:
       pbr:
         input: MyLANServicePolicy
+    # Test isis auth l1l2 sha
+    isis_authentication:
+      level_1:
+        mode: sha
+        sha:
+          key_id: 5
+      level_2:
+        mode: sha
+        sha:
+          key_id: 10
 
   - name: Ethernet19
     description: Switched port with no LLDP rx/tx
@@ -528,6 +652,52 @@ ethernet_interfaces:
       transmit: false
       receive: false
       ztp_vlan: 666
+    # Test isis authentication
+    isis_authentication:
+      both:
+        key_ids:
+          - id: 2
+            algorithm: sha-512
+            key_type: 0
+            key: password
+            rfc_5310: false
+          - id: 3
+            algorithm: sha-512
+            key_type: 0
+            key: password1
+            rfc_5310: true
+      level_1:
+        key_ids:
+          - id: 1
+            algorithm: sha-1
+            key_type: 0
+            key: password
+            rfc_5310: false
+          - id: 4
+            algorithm: sha-1
+            key_type: 0
+            key: password
+            rfc_5310: true
+          - id: 3
+            algorithm: sha-1
+            key_type: 0
+            key: password3
+      level_2:
+        key_ids:
+          - id: 1
+            algorithm: sha-1
+            key_type: 0
+            key: password
+            rfc_5310: false
+          - id: 5
+            algorithm: sha-1
+            key_type: 0
+            key: password
+            rfc_5310: true
+          - id: 3
+            algorithm: sha-1
+            key_type: 0
+            key: password2
 
   - name: Ethernet20
     description: Port patched through patch-panel to pseudowire
@@ -536,6 +706,16 @@ ethernet_interfaces:
     lldp:
       transmit: false
       receive: false
+    isis_authentication:
+      level_1:
+        mode: shared-secret
+        shared_secret:
+          profile: profile1
+          algorithm: sha-256
+      level_2:
+        key_type: 0
+        key: password
+        mode: md5
 
   - name: Ethernet21
     switchport:
@@ -545,6 +725,13 @@ ethernet_interfaces:
       trust: disabled
     shape:
       rate: "200000 kbps"
+    # Test isis auth only level-1
+    isis_authentication:
+      level_1:
+        key_type: 0
+        key: password
+        mode: md5
+        rx_disabled: true
 
   - name: Ethernet22
     switchport:
@@ -552,6 +739,14 @@ ethernet_interfaces:
     description: 10% shape
     shape:
       rate: "10 percent"
+    # Test isis auth only level2
+    isis_authentication:
+      level_2:
+        key_type: 0
+        key: password
+        mode: sha
+        sha:
+          key_id: 100
 
   - name: Ethernet23
     switchport:
@@ -560,6 +755,12 @@ ethernet_interfaces:
     error_correction_encoding:
       fire_code: true
       reed_solomon: true
+    isis_authentication:
+      level_2:
+        mode: shared-secret
+        shared_secret:
+          profile: profile2
+          algorithm: sha-1
 
   - name: Ethernet24
     switchport:

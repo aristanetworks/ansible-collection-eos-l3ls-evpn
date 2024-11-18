@@ -150,8 +150,8 @@ vlan internal order ascending range 1006 1199
 
 ##### ISIS
 
-| Interface | Channel Group | ISIS Instance | ISIS BFD | ISIS Metric | Mode | ISIS Circuit Type | Hello Padding | Authentication Mode |
-| --------- | ------------- | ------------- | -------- | ----------- | ---- | ----------------- | ------------- | ------------------- |
+| Interface | Channel Group | ISIS Instance | ISIS BFD | ISIS Metric | Mode | ISIS Circuit Type | Hello Padding | ISIS Authentication Mode |
+| --------- | ------------- | ------------- | -------- | ----------- | ---- | ----------------- | ------------- | ------------------------ |
 | Ethernet1 | - | CORE | - | 60 | point-to-point | level-2 | False | md5 |
 | Ethernet3 | - | CORE | - | 60 | point-to-point | level-2 | False | md5 |
 | Ethernet4 | - | CORE | - | 60 | point-to-point | level-2 | False | md5 |
