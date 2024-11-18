@@ -1,6 +1,8 @@
 router_bgp:
   as: 65101
   router_id: 192.168.255.3
+  timers:
+    min_hold_time: 5
   bgp_defaults:
     - distance bgp 20 200 200
     - graceful-restart restart-time 300
