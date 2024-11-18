@@ -57,8 +57,6 @@ class DhcpServerMixin(UtilsMixin):
         cvp_instance_ips = get(self._hostvars, "cvp_instance_ips")
         if not cvp_instance_ips:
             return None
-        if "arista.io" in cvp_instance_ips[0]:
-            return "https://www.arista.io/ztp/bootstrap"
 
         return f"https://{cvp_instance_ips[0]}/ztp/bootstrap"
 
