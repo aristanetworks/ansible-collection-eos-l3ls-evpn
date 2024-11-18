@@ -235,14 +235,12 @@ class ModelSrc:
 
         fields_types_dict = ", ".join(field.field_as_dict_str() for field in self.fields)
         src = f"    _fields: ClassVar[dict] = {{{fields_types_dict}}}\n"
-        required_field_names = tuple(field.name for field in self.fields if not field.optional and field.default_value is None)
-        src += f"    _required_fields: ClassVar[tuple] = {required_field_names}\n"
 
-        field_to_key_map = str({field.name: field.key for field in self.fields if field.name and field.key and field.name != field.key})
-        src += f"    _field_to_key_map: ClassVar[dict] = {field_to_key_map}\n"
+        if field_to_key_map := {field.name: field.key for field in self.fields if field.name and field.key and field.name != field.key}:
+            src += f"    _field_to_key_map: ClassVar[dict] = {field_to_key_map}\n"
 
-        key_to_field_map = str({field.key: field.name for field in self.fields if field.name and field.key and field.name != field.key})
-        src += f"    _key_to_field_map: ClassVar[dict] = {key_to_field_map}\n"
+        if key_to_field_map := {field.key: field.name for field in self.fields if field.name and field.key and field.name != field.key}:
+            src += f"    _key_to_field_map: ClassVar[dict] = {key_to_field_map}\n"
 
         if self.allow_extra:
             src += "    _allow_other_keys: ClassVar[bool] = True\n"
@@ -252,10 +250,10 @@ class ModelSrc:
         for field in self.fields:
             src += indent(f"{field.field_as_class_attr()}\n", INDENT)
             if docstring := field._docstring().strip():
-                multiline = ""
                 if "\n" in docstring:
-                    multiline = "\n"
-                src += indent(f'"""{multiline}{docstring}{multiline}"""\n', INDENT)
+                    src += indent(f'"""\n{docstring}\n"""\n', INDENT)
+                else:
+                    src += indent(f'"""{docstring}"""\n', INDENT)
         if self.base_classes == ["object"]:
             # This is some internal class so we don't need __init__
             return src
@@ -274,8 +272,6 @@ class ModelSrc:
         if self.class_vars:
             for class_var in self.class_vars:
                 imports.update(class_var.get_imports())
-        if self.allow_extra:
-            imports.add("from typing import Any")
         for cls in self.classes:
             imports.update(cls.get_imports())
         for field in self.fields:

@@ -29,11 +29,9 @@ class AvdModel(AvdBase):
     Metadata serving as a shortcut for knowing the expected type of each field and default value.
     This is used instead of inspecting the type-hints to improve performance significantly.
     """
-    _required_fields: ClassVar[tuple[str, ...]]
-    """Metadata telling which fields are required. Currently not used."""
-    _field_to_key_map: ClassVar[dict[str, str]]
+    _field_to_key_map: ClassVar[dict[str, str]] = {}
     """Map of field name to original dict key. Used when fields have the field_ prefix to get the original key."""
-    _key_to_field_map: ClassVar[dict[str, str]]
+    _key_to_field_map: ClassVar[dict[str, str]] = {}
     """Map of dict key to field name. Used when the key is names with a reserved keyword or mixed case. E.g. `Vxlan1` or `as`."""
 
     @classmethod
