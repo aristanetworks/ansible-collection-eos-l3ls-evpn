@@ -199,19 +199,6 @@ class CVWorkspaceBuildResult:
 
 
 @dataclass
-class CVWorkspaceProcessingTime:
-    validate_devices: float | None = None
-    stage_device_tags: float | None = None
-    stage_interface_tags: float | None = None
-    stage_configs: float | None = None
-    stage_studio_inputs: float | None = None
-    stage_pathfinder: float | None = None
-    build_workspace: float | None = None
-    fetch_build_details: float | None = None
-    submit_workspace: float | None = None
-
-
-@dataclass
 class CVWorkspace:
     name: str = field(default_factory=lambda: f"AVD {datetime.now()}")
     description: str | None = None
@@ -244,8 +231,6 @@ class CVWorkspace:
     """last_build_id of the Workspace. Used to fetch build details related to the last Workspace build attempt."""
     build_results: list[CVWorkspaceBuildResult] = field(default_factory=list)
     """Details of Workspace build results."""
-    processing_time: CVWorkspaceProcessingTime | None = None
-    """Time consumed by various stages of the Workspace lifecycle."""
 
 
 @dataclass

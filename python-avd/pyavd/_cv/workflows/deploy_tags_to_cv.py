@@ -6,8 +6,6 @@ from __future__ import annotations
 from logging import getLogger
 from typing import TYPE_CHECKING
 
-from pyavd._cv.client.async_decorators import time_async
-
 from .models import CVDeviceTag, CVInterfaceTag, CVWorkspace
 
 if TYPE_CHECKING:
@@ -16,7 +14,6 @@ if TYPE_CHECKING:
 LOGGER = getLogger(__name__)
 
 
-@time_async
 async def deploy_tags_to_cv(
     tags: list[CVDeviceTag | CVInterfaceTag],
     workspace: CVWorkspace,

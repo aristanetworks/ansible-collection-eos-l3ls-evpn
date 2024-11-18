@@ -6,7 +6,6 @@ from __future__ import annotations
 from logging import getLogger
 from typing import TYPE_CHECKING
 
-from pyavd._cv.client.async_decorators import time_async
 from pyavd._cv.client.exceptions import CVResourceNotFound
 
 from .models import CVDevice
@@ -17,7 +16,6 @@ if TYPE_CHECKING:
 LOGGER = getLogger(__name__)
 
 
-@time_async
 async def verify_devices_on_cv(
     *, devices: list[CVDevice], workspace_id: str, skip_missing_devices: bool, warnings: list[Exception], cv_client: CVClient
 ) -> list[CVDevice]:

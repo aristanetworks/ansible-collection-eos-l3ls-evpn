@@ -26,7 +26,6 @@ from pyavd._cv.api.arista.workspace.v1 import (
     WorkspaceServiceStub,
     WorkspaceStreamRequest,
 )
-from pyavd._cv.client.async_decorators import time_async
 
 from .constants import DEFAULT_API_TIMEOUT
 from .exceptions import get_cv_client_exception
@@ -143,7 +142,6 @@ class WorkspaceMixin:
         response = await client.set(request, metadata=self._metadata, timeout=timeout)
         return response.value
 
-    @time_async
     async def build_workspace(
         self: CVClient,
         workspace_id: str,
@@ -192,7 +190,6 @@ class WorkspaceMixin:
         response = await client.delete(request, metadata=self._metadata, timeout=timeout)
         return response.key
 
-    @time_async
     async def submit_workspace(
         self: CVClient,
         workspace_id: str,
@@ -222,7 +219,6 @@ class WorkspaceMixin:
         LOGGER.debug("submit_workspace: Got response to submission: %s", response.value)
         return response.value
 
-    @time_async
     async def wait_for_workspace_response(
         self: CVClient,
         workspace_id: str,

@@ -6,8 +6,6 @@ from __future__ import annotations
 from logging import getLogger
 from typing import TYPE_CHECKING
 
-from pyavd._cv.client.async_decorators import time_async
-
 if TYPE_CHECKING:
     from pyavd._cv.client import CVClient
 
@@ -21,7 +19,6 @@ CONFIGLET_CONTAINER_ID = f"{CONFIGLET_ID_PREFIX}configlets"
 STATIC_CONFIGLET_STUDIO_ID = "studio-static-configlet"
 
 
-@time_async
 async def deploy_configs_to_cv(configs: list[CVEosConfig], result: DeployToCvResult, cv_client: CVClient) -> None:
     """
     Deploy given configs using "Static Configlet Studio".

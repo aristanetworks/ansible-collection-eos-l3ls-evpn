@@ -6,7 +6,6 @@ from __future__ import annotations
 from functools import wraps
 from inspect import signature
 from logging import getLogger
-from time import time
 from typing import TYPE_CHECKING, Any, ClassVar, get_origin
 
 from pyavd._utils import batch
@@ -151,17 +150,3 @@ class LimitCvVersion:
             raise LookupError(msg)
 
         return wrapper_cv_version
-
-
-def time_async(func: Callable) -> Callable:
-    """Decorator used to calculate amount of time taken by async function to complete it's execution."""
-
-    @wraps(func)
-    async def wrapper(*args: Any, **kwargs: Any) -> tuple[Any, float]:
-        start_time = time()
-        result = await func(*args, **kwargs)
-        end_time = time()
-        consumed_time = float(f"{(end_time - start_time):.6f}")
-        return result, consumed_time
-
-    return wrapper

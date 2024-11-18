@@ -7,7 +7,6 @@ from asyncio import gather
 from logging import getLogger
 from typing import TYPE_CHECKING
 
-from pyavd._cv.client.async_decorators import time_async
 from pyavd._utils import batch
 
 if TYPE_CHECKING:
@@ -27,7 +26,6 @@ def get_studio_id(studio_input: CVStudioInputs) -> str:
     return studio_input.studio_id
 
 
-@time_async
 async def deploy_studio_inputs_to_cv(studio_inputs: list[CVStudioInputs], result: DeployToCvResult, cv_client: CVClient) -> None:
     """
     Deploy given Studio Inputs.
