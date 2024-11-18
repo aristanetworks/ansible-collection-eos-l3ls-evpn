@@ -101,7 +101,7 @@ class MoleculeScenario:
         self.hosts = []
         for host in self._inventory.get_hosts():
             if self.name.startswith("example-") and host.name in ["cvp", "cloudvision"]:
-                # Ignore CVP devices in examples without bloating the example with out test groups.
+                # Ignore CVP devices in examples without bloating the example without test groups.
                 continue
             if "IGNORE_IN_PYTEST" in [group.name for group in host.groups]:
                 # Ignore members of the group IGNORE_IN_PYTEST from Molecule scenarios.
