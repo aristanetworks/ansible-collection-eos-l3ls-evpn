@@ -157,5 +157,6 @@ extend = "../pyproject.toml"
 [tool.pytest.ini_options]
 markers = [
     "molecule_scenarios: Create test case fixtures 'molecule_host' or 'molecule_scenario' for the given molecule scenarios.",
+    "examples: Create test case fixtures 'molecule_host' or 'molecule_scenario' for the given example.",
 ]
 asyncio_default_fixture_loop_scope = "function"
