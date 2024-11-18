@@ -728,7 +728,7 @@ port_channel_interfaces:
   switchport:
     enabled: true
     mode: access
-    access_vlan: '110'
+    access_vlan: 110
   mlag: 11
 - name: Port-Channel12
   description: PortChanne1

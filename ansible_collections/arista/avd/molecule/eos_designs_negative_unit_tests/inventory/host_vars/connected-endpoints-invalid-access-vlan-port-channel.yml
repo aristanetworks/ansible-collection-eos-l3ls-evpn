@@ -1,0 +1,22 @@
+loopback_ipv4_pool: 192.168.0.0/24
+
+type: l2leaf
+l2leaf:
+  defaults:
+  nodes:
+    - name: connected-endpoints-invalid-access-vlan-port-channel
+
+servers:
+  # port-channel provide physical and individual port-channel descriptions
+  - name: OLD_SW-1/7
+    adapters:
+      - switches: [connected-endpoints-invalid-access-vlan-port-channel]
+        switch_ports: [Ethernet9]
+        mode: access
+        vlans: 1-2
+        port_channel:
+          mode: "active"
+
+expected_error_message: >-
+  Adapter 'vlans' value must be a single vlan ID when mode is 'access' or 'dot1q-tunnel'.
+  Got 1-2 for interface Port-Channel9.

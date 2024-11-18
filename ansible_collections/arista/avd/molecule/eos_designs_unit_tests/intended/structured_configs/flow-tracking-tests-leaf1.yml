@@ -189,7 +189,7 @@ ethernet_interfaces:
   switchport:
     enabled: true
     mode: access
-    access_vlan: '11'
+    access_vlan: 11
   flow_tracker:
     hardware: FLOW-TRACKER-3
 - name: Ethernet11
@@ -201,7 +201,7 @@ ethernet_interfaces:
   switchport:
     enabled: true
     mode: access
-    access_vlan: '11'
+    access_vlan: 11
 - name: Ethernet12
   peer: single-interface-no-definition
   peer_interface: eth12
@@ -211,7 +211,7 @@ ethernet_interfaces:
   switchport:
     enabled: true
     mode: access
-    access_vlan: '11'
+    access_vlan: 11
   flow_tracker:
     hardware: FLOW-TRACKER
 - name: Ethernet13
@@ -223,7 +223,7 @@ ethernet_interfaces:
   switchport:
     enabled: true
     mode: access
-    access_vlan: '11'
+    access_vlan: 11
   flow_tracker:
     hardware: FLOW-TRACKER
 loopback_interfaces:
