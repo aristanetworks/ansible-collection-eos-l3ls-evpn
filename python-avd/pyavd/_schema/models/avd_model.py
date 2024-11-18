@@ -103,6 +103,16 @@ class AvdModel(AvdBase):
 
         return field_info.get("default")
 
+    def __init__(self, **kwargs: Any) -> None:
+        """
+        Runtime init without specific kwargs and type hints.
+
+        Only walking the given kwargs improves performance compared to having named kwargs.
+
+        This method is typically overridden when TYPE_HINTING is True, to provider proper suggestions and type hints for the arguments.
+        """
+        [setattr(self, arg, arg_value) for arg, arg_value in kwargs.items() if arg_value is not Undefined]
+
     def __getattr__(self, name: str) -> Any:
         """
         Resolves the default value for a field, set the default value on the attribute and return the value.

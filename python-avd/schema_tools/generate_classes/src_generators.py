@@ -12,10 +12,16 @@ from schema_tools.constants import LICENSE_HEADER
 SRC_HEADER = indent(LICENSE_HEADER + "\n\n", "# ")
 
 BASE_IMPORTS = """\
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
 from pyavd._schema.models.avd_indexed_list import AvdIndexedList
 from pyavd._schema.models.avd_list import AvdList
 from pyavd._schema.models.avd_model import AvdModel
-from pyavd._utils import Undefined, UndefinedType
+
+if TYPE_CHECKING:
+    from pyavd._utils import Undefined, UndefinedType
 """
 BASE_MODEL_NAME = "AvdModel"
 INDENT = "    "
@@ -201,8 +207,6 @@ class ModelSrc:
                     field_arg += f": {field.name}"
                 args += indent(field_arg, INDENT)
                 args += "\n"
-            if self.allow_extra:
-                args += "    **kwargs: All other keys - will be ignored.\n"
             docstring_elements.append(args)
 
         if docstring_elements:
@@ -257,14 +261,9 @@ class ModelSrc:
             return src
 
         field_as_args = ["self", "*", *(str(field).split("\n", maxsplit=1)[0] for field in self.fields)]
-        if self.allow_extra:
-            field_as_args.append("**kwargs: Any")
-        src += indent(f"\n\ndef __init__({', '.join(field_as_args)}) -> None:\n", INDENT)
-        src += indent(self._init_docstring(), INDENT)
-        src += "        for arg, arg_value in locals().items():\n"
-        src += '            if arg_value is Undefined or arg in ("self", "kwargs"):\n'
-        src += "                continue\n"
-        src += "            setattr(self, arg, arg_value)\n"
+        src += indent("\n\nif TYPE_CHECKING:\n", INDENT)
+        src += indent(f"def __init__({', '.join(field_as_args)}) -> None:\n", INDENT * 2)
+        src += indent(self._init_docstring(), INDENT * 2)
         return src
 
     def get_imports(self) -> set:
@@ -370,7 +369,8 @@ class FileSrc:
     def __str__(self) -> str:
         """Returns Python source code for this file."""
         src = f"{SRC_HEADER}"
-        src += f"{BASE_IMPORTS + self._render_imports()}\n\n"
+        # BASE_IMPORTS comes last since we have if TYPE_CHECKING.
+        src += f"{self._render_imports()}\n{BASE_IMPORTS}\n\n"
         src += self._render_classes()
         return src.rstrip() + "\n"
 
