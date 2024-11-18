@@ -58,6 +58,9 @@ class DhcpServerMixin(UtilsMixin):
         if not cvp_instance_ips:
             return None
 
+        if "arista.io" in cvp_instance_ips[0]:
+            cvp_instance_ips[0] = f"www.{cvp_instance_ips[0].replace('https://', '').replace('www.', '').replace('apiserver.', '')}"
+
         return f"https://{cvp_instance_ips[0]}/ztp/bootstrap"
 
     @cached_property
