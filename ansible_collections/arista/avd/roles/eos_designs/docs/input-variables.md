@@ -1396,7 +1396,7 @@ roles/eos_designs/docs/tables/svi-profiles.md
 
 ### EVPN VLAN aware bundles settings
 
-Optional VLAN aware bundles to share common settings for l2vlans which are supposed to use the same vlan-aware-bundle.
+Common settings for VLAN aware bundles.
 
 --8<--
 roles/eos_designs/docs/tables/evpn-vlan-bundles.md
