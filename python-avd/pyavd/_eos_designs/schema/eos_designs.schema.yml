@@ -6577,8 +6577,6 @@ $defs:
 
                         '
               evpn_l2_multi_domain:
-                documentation_options:
-                  table: network-services-multicast-settings
                 type: bool
                 description: 'Explicitly extend all VLANs/VLAN-Aware Bundles inside
                   the VRF to remote EVPN domains.
@@ -9722,7 +9720,7 @@ $defs:
           keys:
             node:
               type: str
-              description: l3_leaf inventory hostname.
+              description: Node inventory hostname.
   svi_settings:
     type: dict
     keys:
@@ -10081,6 +10079,16 @@ $defs:
           warning: true
           remove_in_version: 5.0.0
           new_key: ipv6_address_virtuals
+      evpn_l2_multi_domain:
+        type: bool
+        description: 'Explicitly extend SVI to remote EVPN domains.
+
+          Overrides `<network_services_key>.[].evpn_l2_multi_domain` and `<network_services_key>.[].vrfs.[].evpn_l2_multi_domain`.
+
+          Not supported in conjuction with EVPN vlan aware bundles. i.e. `evpn_vlan_aware_bundles:
+          true` or `<network_services_key>.[].evpn_vlan_bundle` or `<network_services_key>.[].vrfs.[].evpn_vlan_bundle`.
+
+          '
   virtual_topology:
     type: dict
     keys:

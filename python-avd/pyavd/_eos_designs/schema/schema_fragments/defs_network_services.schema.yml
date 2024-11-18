@@ -593,8 +593,6 @@ $defs:
                         If access_list_name is set, a standard access-list will be configured matching these groups.
                         Otherwise the groups are configured directly on the RP command.
               evpn_l2_multi_domain:
-                documentation_options:
-                  table: network-services-multicast-settings
                 type: bool
                 description: |
                   Explicitly extend all VLANs/VLAN-Aware Bundles inside the VRF to remote EVPN domains.

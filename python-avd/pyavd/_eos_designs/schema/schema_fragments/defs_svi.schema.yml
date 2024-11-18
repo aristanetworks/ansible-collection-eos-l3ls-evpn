@@ -22,4 +22,4 @@ $defs:
           keys:
             node:
               type: str
-              description: l3_leaf inventory hostname.
+              description: Node inventory hostname.
