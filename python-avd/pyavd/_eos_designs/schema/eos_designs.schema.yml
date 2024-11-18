@@ -5264,13 +5264,21 @@ $defs:
             default: false
           endpoint_role:
             type: str
-            description: Set `dynamic` instead of `bmca`(deprecated).
+            description: 'PTP role of the endpoint.
+
+              `follower` will configure the switch port as `ptp role master`.
+
+              `dynamic` will use BMCA.
+
+              `default` is deprecated in favor of `follower`.
+
+              `bmca` is deprecated in favor of `dynamic`.'
             default: follower
             valid_values:
-            - bmca
-            - default
             - follower
             - dynamic
+            - bmca
+            - default
           profile:
             type: str
             default: aes67-r16-2016
@@ -9646,11 +9654,13 @@ $defs:
               default: false
               description: Enable PTP.
             role:
-              type: str
-              description: EOS default is `dynamic`.
-              valid_values:
-              - dynamic
-              - master
+              type: list
+              description: Role in boundary clock mode. EOS default is `dynamic`.
+              items:
+                type: str
+                valid_values:
+                - dynamic
+                - master
             profile:
               type: str
               default: aes67-r16-2016

@@ -234,6 +234,7 @@ ethernet_interfaces:
     sync_message:
       interval: -3
     transport: ipv4
+    role: master
     enable: true
 - name: Ethernet8
   peer: ptp-tests-spine2

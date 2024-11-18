@@ -317,8 +317,9 @@ class UtilsMixin:
                 msg = f"PTP Profile '{ptp_profile_name}' referenced under {self.data_model}.p2p_links does not exist in `ptp_profiles`."
                 ptp_config.update(get_item(self.shared_utils.ptp_profiles, "profile", ptp_profile_name, required=True, custom_error_msg=msg))
 
-            if get(p2p_link, "ptp.role") == "master":
-                ptp_config["role"] = "master"
+            node_index = p2p_link["nodes"].index(self.shared_utils.hostname)
+            if (ptp_role := get(p2p_link, "ptp.role")) and ptp_role[node_index] == "master":
+                    ptp_config["role"] = "master"
 
         ptp_config["enable"] = True
         ptp_config.pop("profile", None)

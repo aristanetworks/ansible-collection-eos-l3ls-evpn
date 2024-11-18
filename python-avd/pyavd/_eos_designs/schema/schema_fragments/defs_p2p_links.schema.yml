@@ -133,11 +133,13 @@ $defs:
               default: false
               description: Enable PTP.
             role:
-              type: str
-              description: EOS default is `dynamic`.
-              valid_values:
-                - "dynamic"
-                - "master"
+              type: list
+              description: Role in boundary clock mode. EOS default is `dynamic`.
+              items:
+                type: str
+                valid_values:
+                  - "dynamic"
+                  - "master"
             profile:
               type: str
               default: "aes67-r16-2016"
