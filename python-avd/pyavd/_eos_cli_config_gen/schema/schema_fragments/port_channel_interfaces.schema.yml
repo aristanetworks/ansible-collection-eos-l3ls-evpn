@@ -1433,7 +1433,6 @@ keys:
                       description: MAC address for the source.
                     dest:
                       type: str
-                      required: true
                       pattern: "^([0-9a-f]{2}:){5}[0-9a-f]{2}$"
                       description: MAC address for the destination.
                 encapsulation:
