@@ -33,6 +33,7 @@ Please refer to the schema documentation for details on the various keys in the 
     - Highlight the key names in description, like - `<key_name>`.
 4. **Type Conversion:** Add `convert_types: [str]` for `type: int` keys.
 5. **Defaults:** Avoid using `defaults` in eos_cli_config_gen.
+6. **Min/Max:** Specify min/max values in the schema if they are defined in the EOS CLI.
 
 ### Creating Jinja2 Templates
 
