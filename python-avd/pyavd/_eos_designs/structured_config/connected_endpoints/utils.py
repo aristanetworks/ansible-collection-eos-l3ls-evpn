@@ -213,7 +213,7 @@ class UtilsMixin:
 
         ptp_config["enable"] = True
 
-        if get(adapter, "ptp.endpoint_role") != "dynamic":
+        if get(adapter, "ptp.endpoint_role") not in ["dynamic", "bmca"]:
             ptp_config["role"] = "master"
 
         ptp_config.pop("profile", None)
