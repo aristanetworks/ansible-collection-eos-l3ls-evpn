@@ -4,11 +4,11 @@
   ~ that can be found in the LICENSE file.
   -->
 
-# Contribution Guide for `eos_cli_config_gen` role
+# Contribution Guide for the `eos_cli_config_gen` role
 
 This document outlines the steps and checklist for contributing to the `eos_cli_config_gen` role under Arista AVD.
 
-## Steps to add a new feature to eos_cli_config_gen role
+## Steps to add a new feature to the `eos_cli_config_gen` role
 
 ### Prepare development environment
 
@@ -32,19 +32,19 @@ Please refer to the schema documentation for details on the various keys in the 
     - Ensure all descriptions end with punctuation.
     - Highlight the key names in description, like - `<key_name>`.
 4. **Type Conversion:** Add `convert_types: [str]` for `type: int` keys.
-5. **Defaults:** Avoid using `defaults` in eos_cli_config_gen.
-6. **Min/Max:** Specify min/max values in the schema if they are defined in the EOS CLI.
+5. **Defaults:** Avoid using `default` in eos_cli_config_gen.
+6. **Min/Max:** Specify min/max values in the schema if they are defined in the EOS CLI. Make sure to check on different hardware platforms.
 
 ### Creating Jinja2 Templates
 
 Edit the appropriate jinja2 templates in `pyavd/_eos_cli_config_gen/j2templates/eos` and `pyavd/_eos_cli_config_gen/j2templates/documentation` to generate the desired configuration and documentation.
 
-Add new jinja2 template if adding a top-level feature, also modify the `pyavd/_eos_cli_config_gen/j2templates/eos-intended-config.j2` and `pyavd/_eos_cli_config_gen/j2templates/eos-device-documentation.j2` to add these new templates, trying to respect the order in the EOS CLI.
+Add a new jinja2 template if adding a top-level feature, also modify the `pyavd/_eos_cli_config_gen/j2templates/eos-intended-config.j2` and `pyavd/_eos_cli_config_gen/j2templates/eos-device-documentation.j2` to add these new templates, trying to respect the order in the EOS CLI.
 
 #### Jinja2 Templates Guidelines
 
 1. **Code Indentation:** Keep less indented code to improve readability.
-2. **Variable Naming:** Use meaningful variable names.
+2. **Variable Naming:** Use meaningful variable names. Avoid short variables like `ei` for `ethernet_interface`
 3. **Use AVD filters:** Use AVD filters for code optimization - [AVD Filters](https://avd.arista.com/5.0/docs/plugins/Filter_plugins/add_md_toc.html).
 4. **Natural Sorting:** Use `arista.avd.natural_sort` for sorting the `for loops` after checking on EOS CLI.
 5. **Defined Checks:**
@@ -55,7 +55,7 @@ Add new jinja2 template if adding a top-level feature, also modify the `pyavd/_e
 7. **Config Order:** Ensure the order and indentation of configuration matches EOS CLI.
 8. **Exclamation Marks:** Place exclamation marks `!` correctly as per the EOS running-config.
 9. Along with EOS config template, update the documentation template as well (if required).
-10. Implement only commands visible in running-config of the EOS device.
+10. Implement only commands visible in `show running-config all` of the EOS device. We should not hide config if given by the user.
 11. Validate the template using j2lint tool, run `pre-commit run j2lint --all`.
 
 ### Build Schemas and Documentation
@@ -67,7 +67,7 @@ It also updates the documentation with new options.
 
 Add some molecule tests in the `ansible_collections/arista/avd/molecule/eos_cli_config_gen` scenario exercising the new knob configuration.
 
-When marking any key as "deprecated," move the related tests to the `eos_cli_config_gen_deprecated_vars` molecule scenario and add any missing tests if necessary.
+When marking any key as "deprecated", move the related tests to the `eos_cli_config_gen_deprecated_vars` molecule scenario and add any missing tests if necessary.
 
 ### Run Molecule Tests
 
