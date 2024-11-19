@@ -8,7 +8,7 @@ from functools import cached_property
 from typing import TYPE_CHECKING
 
 from pyavd._errors import AristaAvdError
-from pyavd._utils import append_if_not_duplicate, default, get
+from pyavd._utils import append_if_not_duplicate, get
 from pyavd.j2filters import natural_sort
 
 from .utils import UtilsMixin
@@ -67,7 +67,7 @@ class EthernetInterfacesMixin(UtilsMixin):
                                 "peer_type": "l3_interface",
                                 "ip_address": l3_interface.ip_addresses[node_index],
                                 "mtu": l3_interface.mtu if self.shared_utils.platform_settings.feature_support.per_interface_mtu else None,
-                                "shutdown": not default(l3_interface.enabled, True),  # noqa: FBT003
+                                "shutdown": not l3_interface.enabled,
                                 "description": interface_description,
                                 "eos_cli": l3_interface.raw_eos_cli,
                                 "struct_cfg": l3_interface.structured_config._as_dict() or None,
@@ -142,18 +142,14 @@ class EthernetInterfacesMixin(UtilsMixin):
                                             f"'pim: enabled' set on l3_interface '{interface_name}' on '{self.shared_utils.hostname}' requires "
                                             f"'evpn_l3_multicast.enabled: true' under VRF '{vrf.name}' or Tenant '{tenant.name}'"
                                         )
-                                    raise AristaAvdError(
-                                        msg,
-                                    )
+                                    raise AristaAvdError(msg)
 
                                 if not getattr(vrf, "_pim_rp_addresses", None):
                                     msg = (
                                         f"'pim: enabled' set on l3_interface '{interface_name}' on '{self.shared_utils.hostname}' requires at least one RP"
                                         f" defined in pim_rp_addresses under VRF '{vrf.name}' or Tenant '{tenant.name}'"
                                     )
-                                    raise AristaAvdError(
-                                        msg,
-                                    )
+                                    raise AristaAvdError(msg)
 
                                 interface["pim"] = {"ipv4": {"sparse_mode": True}}
 

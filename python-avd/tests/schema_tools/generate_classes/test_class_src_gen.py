@@ -42,13 +42,12 @@ sys.path.insert(0, str(Path(__file__).parent))
 @pytest.mark.parametrize("schema_name", TEST_SCHEMAS_FROM_STORE)
 def test_generate_class_src(schema_name: str) -> None:
     """
-    Builds pydantic models from the schemas in the schema store.
+    Builds Python classes from the schemas in the schema store.
 
     Writes the resulting models to python files under artifacts/.
     """
     schema = AristaAvdSchema(_resolve_schema=schema_name, **STORE[schema_name])
     output_file = Path(__file__).parent.joinpath(f"artifacts/{schema_name}.py")
-    print(f"Building pydantic from schema {schema_name}")  # noqa: T201
     schemasrc = schema._generate_class_src(class_name=generate_class_name(schema_name))
     src_file_contents = FileSrc(classes=[schemasrc.cls])
     with output_file.open(mode="w", encoding="UTF-8") as file:
@@ -57,7 +56,7 @@ def test_generate_class_src(schema_name: str) -> None:
 
 @pytest.mark.parametrize(("schema_name", "data_file"), TEST_DATA)
 def test_import_and_load_model(schema_name: str, data_file: str | None, artifacts_path: Path) -> None:
-    """Imports the generated Python Classes and initializes them with data from the given data_file or no data."""
+    """Imports the generated Python classes and initializes them with data from the given data_file or no data."""
     module = import_module(f"artifacts.{schema_name}")
     class_name = generate_class_name(schema_name)
     cls = getattr(module, class_name)

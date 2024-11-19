@@ -13,7 +13,7 @@ if TYPE_CHECKING:
     from typing_extensions import Self
 
 
-class AvdRootModel(AvdModel):
+class EosCliConfigGenRootModel(AvdModel):
     @classmethod
     def _from_dict(cls, data: Mapping, keep_extra_keys: bool = True) -> Self:
         """

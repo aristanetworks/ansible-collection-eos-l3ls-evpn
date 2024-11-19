@@ -125,14 +125,14 @@ class UtilsMixin:
         connected_endpoint: EosDesigns._DynamicKeys.DynamicConnectedEndpointsItem.ConnectedEndpointsItem,
     ) -> list | None:
         """Return trunk_groups for one adapter."""
-        if self.inputs.enable_trunk_groups and "trunk" in (adapter.mode or ""):
-            if adapter._get("trunk_groups") is None:
-                msg = f"'trunk_groups' for the connected_endpoint {connected_endpoint.name} is required."
-                raise AristaAvdInvalidInputsError(msg)
+        if not self.inputs.enable_trunk_groups or adapter.mode not in ["trunk", "trunk phone"]:
+            return None
 
-            return adapter.trunk_groups._as_list()
+        if adapter._get("trunk_groups") is None:
+            msg = f"'trunk_groups' for the connected_endpoint {connected_endpoint.name} is required."
+            raise AristaAvdInvalidInputsError(msg)
 
-        return None
+        return adapter.trunk_groups._as_list()
 
     def _get_adapter_storm_control(
         self: AvdStructuredConfigConnectedEndpoints,
@@ -263,9 +263,7 @@ class UtilsMixin:
                 "With 'phone_vlan' and 'mode: trunk phone' the data VLAN is set via 'native_vlan' instead of 'vlans'. Found 'vlans' on connected endpoint"
                 f" '{connected_endpoint.name}'."
             )
-            raise AristaAvdError(
-                msg,
-            )
+            raise AristaAvdError(msg)
 
         return {
             "vlan": adapter.phone_vlan,

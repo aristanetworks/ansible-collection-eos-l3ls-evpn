@@ -199,9 +199,7 @@ class WanMixin:
                 f"The IP address for WAN interface '{interface.name}' on Route Server '{self.hostname}' is set to 'dhcp'. "
                 "Clients need to peer with a static IP which must be set under the 'wan_route_servers.path_groups.interfaces' key."
             )
-            raise AristaAvdError(
-                msg,
-            )
+            raise AristaAvdError(msg)
 
         return get_ip_from_ip_prefix(interface.ip_address)
 

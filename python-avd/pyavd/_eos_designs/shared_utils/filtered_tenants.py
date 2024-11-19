@@ -68,9 +68,7 @@ class FilteredTenantsMixin:
                     continue
                 if "evpn" not in tenant.vrfs["default"].address_families:
                     msg = "WAN configuration requires EVPN to be enabled for VRF 'default'. Got 'address_families: {vrf_default['address_families']}."
-                    raise AristaAvdError(
-                        msg,
-                    )
+                    raise AristaAvdError(msg)
                 if self.inputs.underlay_filter_peer_as:
                     msg = "WAN configuration is not compatible with 'underlay_filter_peer_as'"
                     raise AristaAvdError

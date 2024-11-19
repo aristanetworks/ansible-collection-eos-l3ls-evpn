@@ -109,9 +109,7 @@ class MiscMixin:
                     f"'uplink_switch_interfaces' is not set on '{self.hostname}' and 'uplink_switch' '{uplink_switch}' "
                     f"does not have 'downlink_interfaces[{downlink_index}]' set under 'default_interfaces'"
                 )
-                raise AristaAvdError(
-                    msg,
-                )
+                raise AristaAvdError(msg)
 
         return uplink_switch_interfaces
 
@@ -230,9 +228,7 @@ class MiscMixin:
                     f"since no substitution value was found for interface '{interface_name}'. "
                     "Make sure to set the appropriate fields on the interface."
                 )
-                raise AristaAvdError(
-                    msg,
-                )
+                raise AristaAvdError(msg)
 
             return value
 

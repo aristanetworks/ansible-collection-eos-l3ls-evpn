@@ -157,9 +157,7 @@ class CvPathfinderMixin:
                         "If this is an auto-generated policy, ensure that at least one default_preference "
                         "for a non excluded path-group is set to 'preferred' (or unset as this is the default)."
                     )
-                    raise AristaAvdError(
-                        msg,
-                    )
+                    raise AristaAvdError(msg)
 
         return strip_empties_from_list(
             [

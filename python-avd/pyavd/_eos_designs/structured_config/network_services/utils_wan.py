@@ -195,9 +195,7 @@ class UtilsWanMixin:
                     "an empty load-balancing policy. Make sure at least one path-group present on the device is allowed in the "
                     "`default_virtual_topology` path-groups."
                 )
-                raise AristaAvdError(
-                    msg,
-                )
+                raise AristaAvdError(msg)
             application_profile = get(default_virtual_topology, "application_profile", default="default")
 
             default_match = {
@@ -216,9 +214,7 @@ class UtilsWanMixin:
                 f"The policy `wan_virtual_topologies.policies[{policy['name']}]` cannot match any traffic but is assigned to a VRF. "
                 "Make sure at least one path-group present on the device is used in the policy."
             )
-            raise AristaAvdError(
-                msg,
-            )
+            raise AristaAvdError(msg)
 
         policy["matches"] = matches
         policy["default_match"] = default_match
@@ -319,9 +315,7 @@ class UtilsWanMixin:
                 f"Invalid value '{path_group_preference}' for Path-Group preference - should be either 'preferred', "
                 f"'alternate' or an integer[1-65535] for {context_path}."
             )
-            raise AristaAvdError(
-                msg,
-            )
+            raise AristaAvdError(msg)
 
         return priority
 

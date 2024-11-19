@@ -142,9 +142,7 @@ class UtilsMixin:
             f"'downlink_pools' was defined at uplink_switch, but one of the 'uplink_switch_interfaces' ({uplink_switch_interface}) "
             "in the downlink_switch does not match any of the downlink_pools"
         )
-        raise AristaAvdError(
-            msg,
-        )
+        raise AristaAvdError(msg)
 
     def _get_p2p_ipv4_pool_and_offset(self: AvdIpAddressing, uplink_switch_index: int) -> tuple[str, int]:
         """

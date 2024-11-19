@@ -5,13 +5,14 @@ from __future__ import annotations
 
 from copy import deepcopy
 from functools import lru_cache
+from typing import Literal
 
 from deepmerge import conservative_merger
 
 from schema_tools.store import create_store
 
 
-def merge_schema_from_ref(schema: dict, resolve_schema: bool | str | None = None) -> dict:
+def merge_schema_from_ref(schema: dict, resolve_schema: Literal["eos_designs", "eos_cli_config_gen", "all"] | None = None) -> dict:
     """
     Returns a copy of the schema with any $ref resolved.
 
@@ -38,7 +39,7 @@ def merge_schema_from_ref(schema: dict, resolve_schema: bool | str | None = None
 
     pure_ref_schema = (
         {"type", "$ref", "description", "documentation_options", "deprecation"}.issuperset(schema.keys())
-        and isinstance(resolve_schema, str)
+        and resolve_schema not in [None, "all"]
         and not schema["$ref"].startswith(f"{resolve_schema}#")
     )
 

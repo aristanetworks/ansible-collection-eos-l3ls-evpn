@@ -9,13 +9,13 @@ from typing import TYPE_CHECKING, Any, ClassVar, Literal
 from pyavd._schema.models.avd_indexed_list import AvdIndexedList
 from pyavd._schema.models.avd_list import AvdList
 from pyavd._schema.models.avd_model import AvdModel
-from pyavd._schema.models.avd_root_model import AvdRootModel
+from pyavd._schema.models.eos_cli_config_gen_root_model import EosCliConfigGenRootModel
 
 if TYPE_CHECKING:
     from pyavd._utils import Undefined, UndefinedType
 
 
-class EosCliConfigGen(AvdRootModel):
+class EosCliConfigGen(EosCliConfigGenRootModel):
     """Subclass of AvdModel."""
 
     class AaaAccounting(AvdModel):

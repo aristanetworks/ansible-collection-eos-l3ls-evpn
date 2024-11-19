@@ -747,10 +747,7 @@ class RouterBgpMixin(UtilsMixin):
 
         vpws = []
         for tenant in self.shared_utils.filtered_tenants:
-            if not tenant.point_to_point_services:
-                continue
-
-            if tenant.pseudowire_rt_base is None:
+            if not tenant.point_to_point_services or tenant.pseudowire_rt_base is None:
                 continue
 
             pseudowires = []
@@ -765,15 +762,14 @@ class RouterBgpMixin(UtilsMixin):
                     remote_endpoint = endpoints[(local_index + 1) % 2]
 
                     if point_to_point_service.subinterfaces:
-                        for subif in point_to_point_service.subinterfaces:
-                            subif_number = subif.number
-                            pseudowires.append(
-                                {
-                                    "name": f"{point_to_point_service.name}_{subif_number}",
-                                    "id_local": endpoint.id + subif_number,
-                                    "id_remote": remote_endpoint.id + subif_number,
-                                },
-                            )
+                        pseudowires.extend(
+                            {
+                                "name": f"{point_to_point_service.name}_{subif.number}",
+                                "id_local": endpoint.id + subif.number,
+                                "id_remote": remote_endpoint.id + subif.number,
+                            }
+                            for subif in point_to_point_service.subinterfaces
+                        )
 
                     else:
                         pseudowires.append(

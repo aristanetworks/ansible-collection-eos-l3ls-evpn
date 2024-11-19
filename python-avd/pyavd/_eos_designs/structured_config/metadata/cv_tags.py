@@ -125,9 +125,7 @@ class CvTagsMixin:
                     f"The CloudVision tag name 'generate_cv_tags.device_tags[name={generate_tag.name}] is invalid. "
                     "System Tags cannot be overridden. Try using a different name for this tag."
                 )
-                raise AristaAvdError(
-                    msg,
-                )
+                raise AristaAvdError(msg)
 
             # Get value from either 'value' key, structured config based on the 'data_path' key or raise.
             if generate_tag.value is not None:
@@ -139,9 +137,7 @@ class CvTagsMixin:
                         f"'generate_cv_tags.device_tags[name={generate_tag.name}].data_path' ({generate_tag.data_path}) "
                         f"points to a variable of type {type(value).__name__}. This is not supported for cloudvision tag data_paths."
                     )
-                    raise AristaAvdError(
-                        msg,
-                    )
+                    raise AristaAvdError(msg)
             else:
                 msg = f"'generate_cv_tags.device_tags[name={generate_tag.name}]' is missing either a static 'value' or a dynamic 'data_path'"
                 raise AristaAvdError(msg)
@@ -171,14 +167,10 @@ class CvTagsMixin:
                             f"'generate_cv_tags.interface_tags[name={generate_tag.name}].data_path' ({generate_tag.data_path}) "
                             f"points to a variable of type {type(value).__name__}. This is not supported for cloudvision tag data_paths."
                         )
-                        raise AristaAvdError(
-                            msg,
-                        )
+                        raise AristaAvdError(msg)
                 else:
                     msg = f"'generate_cv_tags.interface_tags[name={generate_tag.name}]' is missing either a static 'value' or a dynamic 'data_path'"
-                    raise AristaAvdError(
-                        msg,
-                    )
+                    raise AristaAvdError(msg)
 
                 # Silently ignoring empty values since structured config may vary between devices.
                 if value:

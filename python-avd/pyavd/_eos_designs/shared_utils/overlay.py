@@ -86,9 +86,7 @@ class OverlayMixin:
         overlay_routing_protocol_address_family = self.inputs.overlay_routing_protocol_address_family
         if overlay_routing_protocol_address_family == "ipv6" and not (self.underlay_ipv6 is True and self.inputs.underlay_rfc5549):
             msg = "'overlay_routing_protocol_address_family: ipv6' is only supported in combination with 'underlay_ipv6: True' and 'underlay_rfc5549: True'"
-            raise AristaAvdError(
-                msg,
-            )
+            raise AristaAvdError(msg)
         return overlay_routing_protocol_address_family
 
     @cached_property

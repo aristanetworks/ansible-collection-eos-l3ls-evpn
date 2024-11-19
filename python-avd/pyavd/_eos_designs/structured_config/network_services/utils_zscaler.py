@@ -78,9 +78,7 @@ class UtilsZscalerMixin:
                     f"{context} but found more than one device named '{self.shared_utils.hostname}' on the server '{cv_server}'. "
                     "Set 'serial_number' for the device in AVD vars, to ensure a unique match."
                 )
-                raise AristaAvdError(
-                    msg,
-                )
+                raise AristaAvdError(msg)
             device_id: str = cv_inventory_devices[0].serial_number
             request_time, _ = await cv_client.set_swg_device(device_id=device_id, service="zscaler", location=wan_site_location)
             cv_endpoint_status = await cv_client.wait_for_swg_endpoint_status(device_id=device_id, service="zscaler", start_time=request_time)

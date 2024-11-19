@@ -90,11 +90,7 @@ class RouterIsisMixin(UtilsMixin):
 
     @cached_property
     def _is_type(self: AvdStructuredConfigUnderlay) -> str:
-        default_is_type = self.inputs.isis_default_is_type
-        is_type = default(self.shared_utils.node_config.is_type, default_is_type)
-        if is_type not in ["level-1", "level-2", "level-1-2"]:
-            is_type = default_is_type
-        return is_type
+        return default(self.shared_utils.node_config.is_type, self.inputs.isis_default_is_type)
 
     @staticmethod
     def ipv4_to_isis_system_id(ipv4_address: str) -> str:

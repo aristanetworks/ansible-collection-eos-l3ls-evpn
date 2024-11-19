@@ -37,7 +37,7 @@ class PortChannelInterfacesMixin(UtilsMixin):
         """
         port_channel_interfaces = []
         for connected_endpoint in self._filtered_connected_endpoints:
-            for adapter in connected_endpoint.adapters or []:
+            for adapter in connected_endpoint.adapters:
                 if not adapter.port_channel or not adapter.port_channel.mode:
                     continue
 
@@ -54,7 +54,7 @@ class PortChannelInterfacesMixin(UtilsMixin):
                     context_keys=["name"],
                 )
 
-                for subinterface in adapter.port_channel.subinterfaces or []:
+                for subinterface in adapter.port_channel.subinterfaces:
                     if not subinterface.number:
                         continue
 
