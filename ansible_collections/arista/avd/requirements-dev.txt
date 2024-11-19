@@ -6,7 +6,7 @@ PyYAML>=6.0.0
 treelib>=1.5.5
 jsonschema>=3.2.0
 # dev requirements
-ansible-core>=2.15.0,<2.18.0
+ansible-core>=2.15.0,<2.19.0
 ansible-doc-extractor>=0.1.10
 ansible-lint>=24.6.0
 aristaproto[compiler]>=0.1.1
@@ -22,7 +22,7 @@ pylint>=3.2.6
 pre-commit>=3.2.0
 pre-commit-hooks>=3.3.0
 referencing>=0.35.0
-ruff==0.5.6
+ruff==0.7.4
 tox
 treelib>=1.5.5
 twine

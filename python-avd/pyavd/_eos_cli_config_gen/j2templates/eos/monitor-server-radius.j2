@@ -1,0 +1,28 @@
+{#
+ Copyright (c) 2023-2024 Arista Networks, Inc.
+ Use of this source code is governed by the Apache License 2.0
+ that can be found in the LICENSE file.
+#}
+{# eos - monitor server radius #}
+{% if monitor_server_radius is arista.avd.defined %}
+!
+monitor server radius
+{%     if monitor_server_radius.service_dot1x is arista.avd.defined(true) %}
+   service dot1x
+{%     endif %}
+{%     if monitor_server_radius.probe.interval is arista.avd.defined %}
+   probe interval {{ monitor_server_radius.probe.interval }} seconds
+{%     endif %}
+{%     if monitor_server_radius.probe.threshold_failure is arista.avd.defined %}
+   probe threshold failure {{ monitor_server_radius.probe.threshold_failure }}
+{%     endif %}
+{%     if monitor_server_radius.probe.method is arista.avd.defined("status-server") %}
+   probe method status-server
+{%     elif monitor_server_radius.probe.method is arista.avd.defined("access-request") %}
+{%         if monitor_server_radius.probe.access_request.username is arista.avd.defined and
+              monitor_server_radius.probe.access_request.password is arista.avd.defined %}
+{%             set access_request = monitor_server_radius.probe.access_request %}
+   probe method access-request username {{ access_request.username }} password {{ access_request.password_type | arista.avd.default("7") }} {{ access_request.password | arista.avd.hide_passwords(hide_passwords) }}
+{%         endif %}
+{%     endif %}
+{% endif %}

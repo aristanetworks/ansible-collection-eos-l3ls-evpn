@@ -5,6 +5,8 @@ my_special_dci_ethernet_interfaces:
 
 custom_structured_configuration_list_merge: append
 
+use_router_general_for_router_id: true
+
 # Test appending to list of ip name-servers.
 override_ip_name_servers:
   - ip_address: 1.1.1.1

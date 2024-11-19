@@ -1086,7 +1086,7 @@ port_channel_interfaces:
   switchport:
     enabled: true
     mode: access
-    access_vlan: '110'
+    access_vlan: 110
   mlag: 22
 - name: Port-Channel23
   description: server16_port_channel_with_disabled_port_channel_server16_port_channel_with_disabled_port_channel
@@ -1094,7 +1094,7 @@ port_channel_interfaces:
   switchport:
     enabled: true
     mode: access
-    access_vlan: '110'
+    access_vlan: 110
   mlag: 23
 - name: Port-Channel24
   description: server17_port_channel_with_disabled_phy_and_po_interfaces_server17_port_channel_with_disabled_phy_and_po_interfaces
@@ -1102,7 +1102,7 @@ port_channel_interfaces:
   switchport:
     enabled: true
     mode: access
-    access_vlan: '110'
+    access_vlan: 110
   mlag: 24
 - name: Port-Channel27
   description: server18_monitoring_session_source_po_server18_monitoring_session_source_po
@@ -1110,7 +1110,7 @@ port_channel_interfaces:
   switchport:
     enabled: true
     mode: access
-    access_vlan: '110'
+    access_vlan: 110
   mlag: 27
 - name: Port-Channel42
   description: server21_monitoring_session_destination_po_server21_monitoring_session_destination_po
@@ -1118,7 +1118,7 @@ port_channel_interfaces:
   switchport:
     enabled: true
     mode: access
-    access_vlan: '110'
+    access_vlan: 110
   mlag: 42
 - name: Port-Channel1291
   description: SERVER_server22_port_channel_with_custom_id_server22_port_channel_with_custom_id
@@ -1126,7 +1126,7 @@ port_channel_interfaces:
   switchport:
     enabled: true
     mode: access
-    access_vlan: '110'
+    access_vlan: 110
   mlag: 1291
 - name: Port-Channel31
   description: server24_port_channel_lacp_timer_profile_server24_port_channel_with_lacp_timer
@@ -1164,7 +1164,7 @@ port_channel_interfaces:
   switchport:
     enabled: true
     mode: access
-    access_vlan: '110'
+    access_vlan: 110
   mlag: 43
 ethernet_interfaces:
 - name: Ethernet53/1
@@ -1330,7 +1330,7 @@ ethernet_interfaces:
   switchport:
     enabled: true
     mode: access
-    access_vlan: '210'
+    access_vlan: 210
   spanning_tree_portfast: network
   spanning_tree_bpdufilter: disabled
   spanning_tree_bpduguard: 'True'
@@ -1378,7 +1378,7 @@ ethernet_interfaces:
   switchport:
     enabled: true
     mode: access
-    access_vlan: '210'
+    access_vlan: 210
   spanning_tree_portfast: network
   spanning_tree_bpdufilter: disabled
   spanning_tree_bpduguard: 'True'
@@ -1437,7 +1437,7 @@ ethernet_interfaces:
   switchport:
     enabled: true
     mode: access
-    access_vlan: '110'
+    access_vlan: 110
 - name: Ethernet21
   peer: server14_explicitly_enabled_interfaces
   peer_interface: Eth1
@@ -1448,7 +1448,7 @@ ethernet_interfaces:
   switchport:
     enabled: true
     mode: access
-    access_vlan: '110'
+    access_vlan: 110
 - name: Ethernet22
   peer: server15_port_channel_with_disabled_phy_interfaces
   peer_interface: Eth1
@@ -1489,7 +1489,7 @@ ethernet_interfaces:
   switchport:
     enabled: true
     mode: access
-    access_vlan: '110'
+    access_vlan: 110
 - name: Ethernet27
   peer: server18_monitoring_session_source_po
   peer_interface: Eth3
@@ -1510,7 +1510,7 @@ ethernet_interfaces:
   switchport:
     enabled: true
     mode: access
-    access_vlan: '110'
+    access_vlan: 110
 - name: Ethernet26
   peer: server19_monitoring_session_destination_phys
   peer_interface: Eth1

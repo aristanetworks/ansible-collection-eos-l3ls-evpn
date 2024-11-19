@@ -1,0 +1,22 @@
+---
+tap_aggregation:
+  mode:
+    exclusive:
+      enabled: true
+      profile: tap-aggregation-extended
+      no_errdisable:
+      - Ethernet1/1
+      - Ethetnet 42/1
+      - Port-Channel200
+  encapsulation_dot1br_strip: true
+  encapsulation_vn_tag_strip: true
+  protocol_lldp_trap: true
+  truncation_size: 169
+  mac:
+    timestamp:
+      replace_source_mac: false
+      header:
+        format: 64-bit
+        eth_type: 5
+    fcs_append: false
+    fcs_error: pass-through

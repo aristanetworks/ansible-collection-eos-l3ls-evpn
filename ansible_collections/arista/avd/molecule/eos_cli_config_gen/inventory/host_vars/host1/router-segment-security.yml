@@ -1,0 +1,65 @@
+---
+### Router Segment-Security
+
+router_segment_security:
+  enabled: true
+  policies:
+    - name: POLICY-TEST1
+      sequence_numbers:
+        - sequence: 10
+          application: APP-TEST-1
+          action: forward
+          stateless: false
+        - sequence: 20
+          application: APP-TEST-2
+          action: drop
+          log: true
+        - sequence: 25
+          application: APP-TEST-3
+          action: redirect
+          next_hop: 198.51.100.1
+  vrfs:
+    - name: default
+      segments:
+        - name: SEGMENT-TEST1
+          definition:
+            match_lists:
+              - prefix: MATCH-LIST10
+                address_family: ipv4
+              - prefix: MATCH-LIST11
+                address_family: ipv6
+          policies:
+            - from: MATCH-LIST22
+              policy: POLICY-TEST1
+        - name: SEGMENT-TEST2
+          definition:
+            match_lists:
+              - prefix: MATCH-LIST4
+                address_family: ipv4
+              - prefix: MATCH-LIST3
+                address_family: ipv6
+          policies:
+            - from: MATCH-LIST20
+              policy: policy-forward-all
+            - from: MATCH-LIST21
+              policy: POLICY-TEST1
+            - from: MATCH-LIST30
+              policy: policy-drop-all
+    - name: SECURE
+      segments:
+        - name: SEGMENT-TEST1
+          definition:
+            match_lists:
+              - covered_prefix_list: PREFIX-LIST10
+                address_family: ipv4
+              - covered_prefix_list: PREFIX-LIST1
+                address_family: ipv6
+            interfaces:
+              - Ethernet1
+              - Ethernet2
+          policies:
+            - from: MATCH-LIST20
+              policy: policy-forward-all
+            - from: MATCH-LIST30
+              policy: policy-drop-all
+          fallback_policy: policy-custom

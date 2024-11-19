@@ -20,6 +20,12 @@ from tests.models import MoleculeHost
     "evpn_underlay_isis_overlay_ibgp",
     "evpn_underlay_ospf_overlay_ebgp",
     "evpn_underlay_rfc5549_overlay_ebgp",
+    "example-campus-fabric",
+    # TODO: "example-cv-pathfinder", # Work around Ansible vault
+    "example-dual-dc-l3ls",
+    "example-isis-ldp-ipvpn",
+    "example-l2ls-fabric",
+    "example-single-dc-l3ls",
 )
 def test_validate_inputs_with_valid_inputs(molecule_host: MoleculeHost) -> None:
     """Test validate_inputs."""

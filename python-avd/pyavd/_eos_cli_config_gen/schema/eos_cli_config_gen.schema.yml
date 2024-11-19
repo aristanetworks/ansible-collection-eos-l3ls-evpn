@@ -569,6 +569,7 @@ keys:
                   description: Application name.
       application_profiles:
         type: list
+        primary_key: name
         description: Group of applications.
         items:
           type: dict
@@ -1771,7 +1772,7 @@ keys:
             type: str
           start_limit_infinite:
             type: bool
-            description: Set captive-portal start limit to infinte.
+            description: Set captive-portal start limit to infinite.
           access_list_ipv4:
             type: str
             description: Standard access-list name.
@@ -2167,7 +2168,7 @@ keys:
           deprecation:
             warning: true
             remove_in_version: 6.0.0
-            url: https://avd.arista.com/stable/docs/release-notes/5.x.x.html#removal-of-type-key-dependency-for-rendering-ethernetport-channel-interfaces-configuration-and-documentation
+            url: https://avd.arista.com/5.x/docs/porting-guides/5.x.x.html#removal-of-type-key-dependency-for-rendering-ethernetport-channel-interfaces-configuration-and-documentation
           valid_values:
           - routed
           - switched
@@ -2238,6 +2239,20 @@ keys:
                 valid_values:
                 - upstream
                 - downstream
+        link_tracking:
+          type: dict
+          keys:
+            direction:
+              type: str
+              valid_values:
+              - upstream
+              - downstream
+            groups:
+              type: list
+              description: Link state group(s) an interface belongs to.
+              items:
+                type: str
+                description: Group names.
         evpn_ethernet_segment:
           type: dict
           keys:
@@ -2787,12 +2802,27 @@ keys:
           type: bool
         isis_authentication_mode:
           type: str
+          deprecation:
+            warning: true
+            remove_in_version: v6.0.0
+            new_key: isis_authentication.both.mode or isis_authentication.level_1.mode
+              or isis_authentication.level_2.mode
           valid_values:
           - text
           - md5
         isis_authentication_key:
           type: str
+          deprecation:
+            warning: true
+            remove_in_version: v6.0.0
+            new_key: isis_authentication.both.key or isis_authentication.level_1.key
+              or isis_authentication.level_2.key
           description: Type-7 encrypted password.
+        isis_authentication:
+          type: dict
+          description: This key should not be mixed with ethernet_interfaces[].isis_authentication_mode
+            or ethernet_interfaces[].isis_authentication_key.
+          $ref: eos_cli_config_gen#/keys/router_isis/keys/authentication
         poe:
           type: dict
           keys:
@@ -3755,6 +3785,10 @@ keys:
           type: bool
           description: Set to false to disable interface state and LLDP topology validation
             performed by the `eos_validate_state` role.
+        validate_lldp:
+          type: bool
+          description: Set to false to disable the LLDP topology validation performed
+            by the `eos_validate_state` role.
         switchport:
           type: dict
           description: This should not be combined with `ethernet_interfaces[].type
@@ -4505,7 +4539,7 @@ keys:
     deprecation:
       warning: true
       remove_in_version: 6.0.0
-      url: https://avd.arista.com/devel/docs/porting-guides/5.x.x.html#default-eos-configuration-is-no-longer-automatically-generated
+      url: https://avd.arista.com/5.x/docs/porting-guides/5.x.x.html#default-eos-configuration-is-no-longer-automatically-generated
   generate_device_documentation:
     type: bool
     documentation_options:
@@ -6399,7 +6433,7 @@ keys:
               type: str
               convert_types:
               - int
-              description: 'Severity of facility. Below are the supported severites.
+              description: 'Severity of facility. Below are the supported severities.
 
                 emergencies    System is unusable                (severity=0)
 
@@ -8157,6 +8191,57 @@ keys:
             type: bool
             description: Some platforms support only the `logging transceiver` command.
               `enabled` key configures this command.
+  monitor_server_radius:
+    type: dict
+    description: Settings to monitor radius servers.
+    keys:
+      service_dot1x:
+        type: bool
+        description: Monitor servers used for 802.1X authentication.
+      probe:
+        type: dict
+        description: Settings for probe sent to the server.
+        keys:
+          interval:
+            type: int
+            description: Server probe interval in seconds.
+            convert_types:
+            - str
+            min: 1
+            max: 1000
+          threshold_failure:
+            type: int
+            description: Number of consecutive failed probes before a server is marked
+              as dead.
+            convert_types:
+            - str
+            min: 1
+            max: 255
+          method:
+            type: str
+            description: Method used to probe the server. `status-server` is the EOS
+              default method.
+            valid_values:
+            - status-server
+            - access-request
+          access_request:
+            type: dict
+            description: This can only be set when `method` is `access_request`.
+            keys:
+              username:
+                type: str
+              password:
+                type: str
+                description: Encrypted password using the `password_type`.
+              password_type:
+                type: str
+                convert_types:
+                - int
+                valid_values:
+                - '0'
+                - '7'
+                - 8a
+                default: '7'
   monitor_session_default_encapsulation_gre:
     documentation_options:
       table: monitor-sessions
@@ -8387,7 +8472,7 @@ keys:
                   mask:
                     type: str
                     description: 16 bit hexadecimal mask for TCP/UDP or IP ID with
-                      atmost 2 unset bits.
+                      at most 2 unset bits.
       marker_vxlan:
         type: dict
         keys:
@@ -9233,7 +9318,7 @@ keys:
           deprecation:
             warning: true
             remove_in_version: 6.0.0
-            url: https://avd.arista.com/stable/docs/release-notes/5.x.x.html#removal-of-type-key-dependency-for-rendering-ethernetport-channel-interfaces-configuration-and-documentation
+            url: https://avd.arista.com/5.x/docs/porting-guides/5.x.x.html#removal-of-type-key-dependency-for-rendering-ethernetport-channel-interfaces-configuration-and-documentation
           valid_values:
           - routed
           - switched
@@ -9472,7 +9557,6 @@ keys:
             new_key: switchport.trunk.native_vlan
         native_vlan_tag:
           type: bool
-          default: false
           description: If setting both native_vlan and native_vlan_tag, native_vlan_tag
             takes precedence.
           deprecation:
@@ -9494,6 +9578,20 @@ keys:
                 valid_values:
                 - upstream
                 - downstream
+        link_tracking:
+          type: dict
+          keys:
+            direction:
+              type: str
+              valid_values:
+              - upstream
+              - downstream
+            groups:
+              type: list
+              description: Link state group(s) an interface belongs to.
+              items:
+                type: str
+                description: Group names.
         phone:
           type: dict
           deprecation:
@@ -9548,10 +9646,9 @@ keys:
             new_key: switchport.trunk.groups
         lacp_fallback_timeout:
           type: int
-          description: Timeout in seconds.
+          description: Timeout in seconds. EOS default is 90 seconds.
           convert_types:
           - str
-          default: 90
           min: 0
           max: 300
         lacp_fallback_mode:
@@ -9795,12 +9892,27 @@ keys:
           type: bool
         isis_authentication_mode:
           type: str
+          deprecation:
+            warning: true
+            remove_in_version: v6.0.0
+            new_key: port_channel_interfaces[].isis_authentication.both.mode or port_channel_interfaces[].isis_authentication.level_1.mode
+              or port_channel_interfaces[].isis_authentication.level_2.mode
           valid_values:
           - text
           - md5
         isis_authentication_key:
           type: str
           description: Type-7 encrypted password.
+          deprecation:
+            warning: true
+            remove_in_version: v6.0.0
+            new_key: port_channel_interfaces[].isis_authentication.both.key or port_channel_interfaces[].isis_authentication.level_1.key
+              or port_channel_interfaces[].isis_authentication.level_2.key
+        isis_authentication:
+          type: dict
+          description: This key should not be mixed with port_channel_interfaces[].isis_authentication_mode
+            or ethernet_interfaces[].isis_authentication_key.
+          $ref: eos_cli_config_gen#/keys/router_isis/keys/authentication
         traffic_policy:
           type: dict
           keys:
@@ -10556,6 +10668,10 @@ keys:
           type: bool
           description: Set to false to disable interface state and LLDP topology validation
             performed by the `eos_validate_state` role.
+        validate_lldp:
+          type: bool
+          description: Set to false to disable the LLDP topology validation performed
+            by the `eos_validate_state` role.
         eos_cli:
           type: str
           description: Multiline EOS CLI rendered directly on the port-channel interface
@@ -11872,6 +11988,13 @@ keys:
               local_discriminator:
                 type: str
                 description: IPv4 address or 32 bit integer.
+      slow_timer:
+        description: Rate in milliseconds.
+        type: int
+        convert_types:
+        - str
+        min: 2000
+        max: 60000
   router_bgp:
     type: dict
     keys:
@@ -11895,6 +12018,43 @@ keys:
       router_id:
         type: str
         description: In IP address format A.B.C.D.
+      timers:
+        type: dict
+        keys:
+          keepalive_time:
+            description: 'Time between BGP keepalive messages in seconds.
+
+              `keepalive_time` should be lesser than `hold_time`.'
+            type: int
+            convert_types:
+            - str
+            min: 0
+            max: 3600
+          hold_time:
+            description: 'Hold time in seconds. Must be defined along with `keepalive_time`.
+
+              The valid values are 3-7200 or 0 if both values are 0.'
+            type: int
+            convert_types:
+            - str
+            min: 0
+            max: 7200
+          min_hold_time:
+            description: 'Neighbor''s minimum hold time constraint in seconds.
+
+              `min_hold_time` should be less than `hold_time`.'
+            type: int
+            convert_types:
+            - str
+            min: 3
+            max: 7200
+          send_failure_hold_time:
+            description: Send failure hold time in seconds.
+            type: int
+            convert_types:
+            - str
+            min: 60
+            max: 65535
       distance:
         type: dict
         keys:
@@ -12076,6 +12236,20 @@ keys:
 
                 For asdot notation in YAML inputs, the value must be put in quotes,
                 to prevent it from being interpreted as a float number.'
+      neighbor_default:
+        type: dict
+        keys:
+          send_community:
+            type: str
+            valid_values:
+            - all
+            - large
+            - extended
+            - standard
+            - extended large
+            - standard large
+            - standard extended
+            - standard extended large
       peer_groups:
         type: list
         primary_key: name
@@ -20401,6 +20575,9 @@ keys:
               ipv6:
                 type: int
                 description: Segment size.
+          ipv4_access_group_ingress_default:
+            type: str
+            description: ACL name to be used as the default CP ACL for all VRFs.
           ipv4_access_groups:
             type: list
             unique_keys:
@@ -20415,6 +20592,9 @@ keys:
                   type: str
                   convert_types:
                   - int
+          ipv6_access_group_ingress_default:
+            type: str
+            description: ACL name to be used as the default CP ACL for all VRFs.
           ipv6_access_groups:
             type: list
             unique_keys:
@@ -20964,6 +21144,9 @@ keys:
         ip_address:
           type: str
           description: IPv4 Address.
+        ipv6_address:
+          type: str
+          description: IPv6 Address.
   vlan_interfaces:
     type: list
     primary_key: name

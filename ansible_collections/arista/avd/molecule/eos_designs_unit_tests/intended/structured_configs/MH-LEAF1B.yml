@@ -381,6 +381,7 @@ loopback_interfaces:
   shutdown: false
   vrf: Tenant_X_OP_Zone
   ip_address: 10.255.1.34/32
+  ipv6_address: 2001:db8:1::2/128
 prefix_lists:
 - name: PL-LOOPBACKS-EVPN-OVERLAY
   sequence_numbers:
@@ -431,6 +432,7 @@ vxlan_interface:
 virtual_source_nat_vrfs:
 - name: Tenant_X_OP_Zone
   ip_address: 10.255.1.34
+  ipv6_address: 2001:db8:1::2
 port_channel_interfaces:
 - name: Port-Channel10
   description: server01_ES1_PortChanne1
@@ -441,7 +443,7 @@ port_channel_interfaces:
   switchport:
     enabled: true
     mode: access
-    access_vlan: '310'
+    access_vlan: 310
   evpn_ethernet_segment:
     identifier: 0000:0000:0001:1010:1010
     route_target: 00:01:10:10:10:10
@@ -455,7 +457,7 @@ port_channel_interfaces:
   switchport:
     enabled: true
     mode: access
-    access_vlan: '310'
+    access_vlan: 310
   evpn_ethernet_segment:
     identifier: 0000:0000:fc87:ae24:2cb3
     route_target: fc:87:ae:24:2c:b3
@@ -469,7 +471,7 @@ port_channel_interfaces:
   switchport:
     enabled: true
     mode: access
-    access_vlan: '310'
+    access_vlan: 310
   evpn_ethernet_segment:
     identifier: 0000:0000:29cc:4043:0a29
     route_target: 29:cc:40:43:0a:29
@@ -483,7 +485,7 @@ port_channel_interfaces:
   switchport:
     enabled: true
     mode: access
-    access_vlan: '310'
+    access_vlan: 310
   evpn_ethernet_segment:
     identifier: 0000:0000:010a:010a:010a
     route_target: 01:0a:01:0a:01:0a

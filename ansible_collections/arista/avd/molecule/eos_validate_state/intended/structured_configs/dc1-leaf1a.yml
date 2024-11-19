@@ -454,7 +454,7 @@ ethernet_interfaces:
   switchport:
     enabled: true
     mode: access
-    access_vlan: '11'
+    access_vlan: 11
   spanning_tree_portfast: edge
 - name: Ethernet32
   peer: dc1-leaf1-workstation2
@@ -467,7 +467,7 @@ ethernet_interfaces:
   switchport:
     enabled: true
     mode: access
-    access_vlan: '11'
+    access_vlan: 11
   spanning_tree_portfast: edge
 mlag_configuration:
   domain_id: DC1_L3_LEAF1

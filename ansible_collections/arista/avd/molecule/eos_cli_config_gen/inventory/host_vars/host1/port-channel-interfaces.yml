@@ -1,0 +1,903 @@
+---
+### Port-Channel Interfaces ###
+port_channel_interfaces:
+  - name: Port-Channel5
+    description: DC1_L2LEAF1_Po1
+    link_tracking_groups:
+      - name: EVPN_MH_ES1
+        direction: downstream
+    link_tracking:
+      direction: downstream
+      groups: [EVPN_MH_ES3, EVPN_MH_ES4]
+    switchport:
+      enabled: true
+      mode: trunk
+      trunk:
+        allowed_vlan: 110,201
+    mlag: 5
+    storm_control:
+      broadcast:
+        level: 1
+        unit: percent
+      multicast:
+        level: 1
+        unit: percent
+      unknown_unicast:
+        level: 1
+        unit: percent
+    bgp:
+      session_tracker: ST2
+    l2_mtu: 8000
+    l2_mru: 8000
+    ip_verify_unicast_source_reachable_via: rx
+    eos_cli: |
+      comment
+      Comment created from eos_cli under port_channel_interfaces.Port-Channel5
+      EOF
+    ip_igmp_host_proxy:
+      enabled: true
+      groups:
+        - group: 239.0.0.1
+        - group: 239.0.0.2
+          exclude:
+            - source: 10.0.2.1
+        - group: 239.0.0.3
+          include:
+            - source: 10.0.3.1
+        - group: 239.0.0.4
+          exclude:
+            - source: 10.0.4.1
+            - source: 10.0.4.2
+          include:
+            - source: 10.0.4.3
+            - source: 10.0.4.4
+      report_interval: 2
+      access_lists:
+        - name: ACL1
+        - name: ACL2
+      version: 2
+  - name: Port-Channel15
+    description: DC1_L2LEAF3_Po1
+    link_tracking_groups:
+      - name: EVPN_MH_ES2
+        direction: upstream
+    switchport:
+      enabled: true
+      mode: trunk
+      trunk:
+        allowed_vlan: 110,201
+        private_vlan_secondary: false
+    mlag: 15
+    spanning_tree_guard: loop
+    # Test isis authentication both md5 rx
+    isis_authentication:
+      both:
+        key_type: 0
+        key: password
+        mode: md5
+        rx_disabled: true
+      level_1:
+        key_type: 0
+        key: password
+        mode: md5
+        rx_disabled: true
+      level_2:
+        key_type: 0
+        key: password
+        mode: text
+        rx_disabled: true
+
+  - name: Port-Channel16
+    description: DC1_L2LEAF4_Po1
+    snmp_trap_link_change: true
+    mlag: 16
+    spanning_tree_guard: disabled
+    # Test isis auth both md5
+    isis_enable: "EVPN_UNDERLAY"
+    isis_authentication:
+      both:
+        key_type: 0
+        key: password
+        mode: md5
+    switchport:
+      mode: trunk
+      port_security:
+        mac_address_maximum:
+          limit: 100
+        violation:
+          mode: protect
+          protect_log: true
+      enabled: true
+      trunk:
+        native_vlan: 10
+        allowed_vlan: 110,201
+      dot1q:
+        vlan_tag: disallowed
+      vlan_translations:
+        direction_out:
+          - from: 23
+            dot1q_tunnel_to: 22
+      backup_link:
+        interface: Port-Channel100.102
+        prefer_vlan: 20
+
+  - name: Port-Channel3
+    description: MLAG_PEER_DC1-LEAF1B_Po3
+    snmp_trap_link_change: false
+    shape:
+      rate: 200000 kbps
+    switchport:
+      enabled: true
+      mode: trunk
+      trunk:
+        allowed_vlan: "2-4094"
+        groups:
+          - LEAF_PEER_L3
+          - MLAG
+    isis_enable: "EVPN_UNDERLAY"
+    # Test isis auth both sha rx
+    isis_authentication:
+      both:
+        key_type: 0
+        key: password
+        mode: sha
+        sha:
+          key_id: 2
+        rx_disabled: true
+
+  - name: Port-Channel10
+    description: SRV01_bond0
+    switchport:
+      enabled: true
+      mode: trunk
+      trunk:
+        allowed_vlan: 2-3000
+    evpn_ethernet_segment:
+      identifier: "0000:0000:0404:0404:0303"
+      route_target: "04:04:03:03:02:02"
+    shape:
+      rate: 50 percent
+    # Test isis auth both sha
+    isis_enable: "EVPN_UNDERLAY"
+    isis_authentication:
+      both:
+        key_type: 0
+        key: password
+        mode: sha
+        sha:
+          key_id: 2
+
+  - name: Port-Channel50
+    description: SRV-POD03_PortChanne1
+    switchport:
+      enabled: true
+      mode: trunk
+      trunk:
+        allowed_vlan: 1-4000
+    evpn_ethernet_segment:
+      identifier: "0000:0000:0303:0202:0101"
+      route_target: "03:03:02:02:01:01"
+    lacp_id: 0303.0202.0101
+    # Test isis auth both shared secret rx
+    isis_enable: "EVPN_UNDERLAY"
+    isis_authentication:
+      both:
+        mode: shared-secret
+        shared_secret:
+          profile: profile1
+          algorithm: sha-1
+        rx_disabled: true
+
+  - name: Port-Channel51
+    description: ipv6_prefix
+    switchport:
+      enabled: true
+      mode: trunk
+      trunk:
+        allowed_vlan: 1-500
+      port_security:
+        mac_address_maximum:
+          disabled: false
+        violation:
+          mode: shutdown
+        vlan_default_mac_address_maximum: 2
+        vlans:
+          - range: 1-3
+            mac_address_maximum: 3
+          - range: 4-5
+    ipv6_nd_prefixes:
+      - ipv6_prefix: a1::/64
+        valid_lifetime: infinite
+        preferred_lifetime: infinite
+        no_autoconfig_flag: true
+    # Test isis auth both shared secret
+    isis_enable: "EVPN_UNDERLAY"
+    isis_authentication:
+      both:
+        mode: shared-secret
+        shared_secret:
+          profile: profile1
+          algorithm: sha-1
+
+  - name: Port-Channel100
+    logging:
+      event:
+        link_status: true
+    # Test isis auth both l1l2 md5 rx
+    isis_enable: "EVPN_UNDERLAY"
+    isis_authentication:
+      level_1:
+        key_type: 0
+        key: password
+        mode: md5
+        rx_disabled: true
+      level_2:
+        key_type: 0
+        key: password
+        mode: text
+        rx_disabled: true
+
+    switchport:
+      enabled: false
+      port_security:
+        enabled: true
+        mac_address_maximum:
+          disabled: true
+      trunk:
+        allowed_vlan: 10-11
+        native_vlan: 5
+        native_vlan_tag: true
+        groups:
+          - g1
+          - g2
+        private_vlan_secondary: true
+      access_vlan: 200
+      phone:
+        vlan: 110
+        trunk: tagged
+      mode: dot1q-tunnel
+      pvlan_mapping: 20-30
+      dot1q:
+        ethertype: 1536
+        vlan_tag: required
+      source_interface: tx multicast
+      vlan_translations:
+        in_required: true
+        direction_in:
+          - from: 34
+            to: 23
+          - from: 37
+            to: 49
+            inner_vlan_from: 56
+          - from: 23
+            to: 45
+            dot1q_tunnel: true
+        direction_both:
+          - from: 24
+            inner_vlan_from: 78
+            network: true
+            to: 46
+          - from: 12
+            to: 20
+          - from: 43
+            to: 30
+            dot1q_tunnel: true
+          - from: 23
+            inner_vlan_from: 74
+            network: false
+            to: 42
+        direction_out:
+          - from: 34
+            to: 50
+          - from: 10
+            to: 45
+            inner_vlan_to: 34
+          - from: 45
+            dot1q_tunnel_to: all
+          - from: 55
+      vlan_forwarding_accept_all: true
+      backup_link:
+        interface: Port-channel51
+      backup:
+        dest_macaddr: 01:00:00:00:00:00
+        mac_move_burst: 20
+        mac_move_burst_interval: 30
+        initial_mac_move_delay: 10
+        preemption_delay: 35
+
+  - name: Port-Channel100.101
+    logging:
+      event:
+        link_status: true
+    description: IFL for TENANT01
+    mtu: 1500
+    ip_address: 10.1.1.3/31
+    encapsulation_dot1q:
+      vlan: 101
+
+  - name: Port-Channel100.102
+    logging:
+      event:
+        link_status: false
+        storm_control_discards: true
+    description: IFL for TENANT02
+    mtu: 1500
+    ip_address: 10.1.2.3/31
+    vrf: C2
+    encapsulation_dot1q:
+      vlan: 102
+      inner_vlan: 110
+    bfd:
+
+  - name: Port-Channel8
+    description: to Dev02 Port-channel 8
+    switchport:
+      enabled: false
+      port_security:
+        violation:
+          mode: protect
+    # Test isis auth l1l2 md5
+    isis_enable: "EVPN_UNDERLAY"
+    isis_authentication:
+      level_1:
+        key_type: 0
+        key: password
+        mode: md5
+      level_2:
+        key_type: 0
+        key: password1
+        mode: md5
+
+  - name: Port-Channel8.101
+    description: to Dev02 Port-Channel8.101 - VRF-C1
+    ip_address: 10.1.2.3/31
+    encapsulation_dot1q:
+      vlan: 101
+
+  - name: Port-Channel9
+    switchport:
+      enabled: false
+    ip_address: 10.9.2.3/31
+    bfd:
+      echo: true
+      interval: 500
+      min_rx: 500
+      multiplier: 5
+      neighbor: 10.1.2.4
+      per_link:
+        enabled: true
+        rfc_7130: true
+    spanning_tree_guard: root
+    isis_authentication:
+      level_2:
+        key_type: 0
+        key: password
+        mode: text
+        rx_disabled: true
+  - name: Port-Channel20
+    description: Po_in_mode_access_accepting_tagged_LACP_frames
+    switchport:
+      enabled: true
+      mode: access
+      access_vlan: 200
+    l2_protocol:
+      encapsulation_dot1q_vlan: 200
+    # Test isis auth l1l2 shared secret rx
+    isis_enable: "EVPN_UNDERLAY"
+    isis_authentication:
+      level_1:
+        mode: shared-secret
+        shared_secret:
+          profile: profile1
+          algorithm: sha-256
+        rx_disabled: true
+      level_2:
+        mode: shared-secret
+        shared_secret:
+          profile: profile2
+          algorithm: sha-1
+        rx_disabled: true
+
+  - name: Port-Channel12
+    description: interface_in_mode_access_with_voice
+    switchport:
+      enabled: true
+      mode: "trunk phone"
+      trunk:
+        native_vlan: 100
+      phone:
+        trunk: untagged
+        vlan: 70
+    # Test isis auth l1l2 sha
+    isis_enable: "EVPN_UNDERLAY"
+    isis_authentication:
+      level_1:
+        mode: sha
+        sha:
+          key_id: 5
+
+  - name: Port-Channel13
+    description: EVPN-Vxlan single-active redundancy
+    switchport:
+      enabled: true
+    evpn_ethernet_segment:
+      redundancy: single-active
+      identifier: "0000:0000:0000:0102:0304"
+      designated_forwarder_election:
+        algorithm: preference
+        preference_value: 100
+        dont_preempt: true
+        hold_time: 10
+        candidate_reachability_required: true
+      route_target: "00:00:01:02:03:04"
+    isis_authentication:
+      both:
+        key_ids:
+          - id: 2
+            algorithm: sha-512
+            key_type: 0
+            key: password
+            rfc_5310: false
+          - id: 3
+            algorithm: sha-512
+            key_type: 0
+            key: password1
+            rfc_5310: true
+      level_1:
+        key_ids:
+          - id: 1
+            algorithm: sha-1
+            key_type: 0
+            key: password
+            rfc_5310: false
+          - id: 4
+            algorithm: sha-1
+            key_type: 0
+            key: password
+            rfc_5310: true
+          - id: 3
+            algorithm: sha-1
+            key_type: 0
+            key: password3
+          - id: 5
+            algorithm: sha-1
+            key_type: 0
+            key: password3
+      level_2:
+        key_ids:
+          - id: 1
+            algorithm: sha-1
+            key_type: 0
+            key: password
+            rfc_5310: false
+          - id: 5
+            algorithm: sha-1
+            key_type: 0
+            key: password
+            rfc_5310: true
+          - id: 3
+            algorithm: sha-1
+            key_type: 0
+            key: password2
+
+  - name: Port-Channel14
+    switchport:
+      enabled: true
+    description: EVPN-MPLS multihoming
+    evpn_ethernet_segment:
+      identifier: "0000:0000:0000:0102:0305"
+      mpls:
+        shared_index: 100
+        tunnel_flood_filter_time: 100
+      route_target: "00:00:01:02:03:05"
+
+  - name: Port-Channel17
+    description: PBR Description
+    switchport:
+      enabled: false
+    ip_address: 192.0.2.3/31
+    service_policy:
+      pbr:
+        input: MyPolicy
+
+  - name: Port-Channel99
+    description: MCAST
+    switchport:
+      enabled: false
+    ip_address: 192.0.2.10/31
+    pim:
+      ipv4:
+        dr_priority: 200
+        sparse_mode: true
+        bfd: true
+        bidirectional: true
+        hello:
+          count: 4.5
+          interval: 15
+
+  - name: Port-Channel101
+    description: PVLAN Promiscuous Access - only one secondary
+    switchport:
+      enabled: true
+      mode: access
+      access_vlan: 110
+      pvlan_mapping: 111
+    qos:
+      trust: disabled
+
+  - name: Port-Channel102
+    description: PVLAN Promiscuous Trunk - vlan translation out
+    switchport:
+      enabled: true
+      mode: trunk
+      trunk:
+        allowed_vlan: 110-112
+      vlan_translations:
+        out_required: true
+        direction_out:
+          - from: 111-112
+            to: 110
+
+  - name: Port-Channel103
+    description: PVLAN Secondary Trunk
+    switchport:
+      enabled: true
+      mode: trunk
+      trunk:
+        allowed_vlan: 110-112
+        private_vlan_secondary: true
+
+  - name: Port-Channel104
+    description: LACP fallback individual
+    switchport:
+      enabled: true
+      mode: trunk
+      trunk:
+        allowed_vlan: 112
+    lacp_fallback_timeout: 300
+    lacp_fallback_mode: individual
+
+  - name: Port-Channel105
+    switchport:
+      enabled: true
+    description: bpdu disabled
+    spanning_tree_bpduguard: disabled
+    spanning_tree_bpdufilter: disabled
+
+  - name: Port-Channel106
+    switchport:
+      enabled: true
+    description: bpdu enabled
+    spanning_tree_bpduguard: enabled
+    spanning_tree_bpdufilter: enabled
+
+  - name: Port-Channel107
+    switchport:
+      enabled: true
+    description: bpdu true
+    spanning_tree_bpduguard: true
+    spanning_tree_bpdufilter: true
+
+  - name: Port-Channel108
+    switchport:
+      enabled: true
+    description: bpdu false
+    spanning_tree_bpduguard: false # No config should be rendered for this case
+    spanning_tree_bpdufilter: false # No config should be rendered for this case
+
+  - name: Port-Channel109
+    description: Molecule ACLs
+    switchport:
+      enabled: true
+      mode: access
+      access_vlan: 110
+    access_group_in: IPV4_ACL_IN
+    access_group_out: IPV4_ACL_OUT
+    ipv6_access_group_in: IPV6_ACL_IN
+    ipv6_access_group_out: IPV6_ACL_OUT
+    mac_access_group_in: MAC_ACL_IN
+    mac_access_group_out: MAC_ACL_OUT
+
+  - name: Port-Channel110
+    description: isis_interface_knobs
+    switchport:
+      enabled: false
+    isis_enable: ISIS_TEST
+    isis_bfd: true
+    isis_passive: false
+    isis_metric: 99
+    isis_network_point_to_point: true
+    isis_circuit_type: level-2
+    isis_hello_padding: true
+
+  - name: Port-Channel111
+    description: Flexencap Port-Channel
+    switchport:
+      enabled: false
+
+  - name: Port-Channel111.1
+    description: TENANT_A pseudowire 1 interface
+    encapsulation_vlan:
+      client:
+        encapsulation: unmatched
+
+  - name: Port-Channel111.100
+    description: TENANT_A pseudowire 2 interface
+    encapsulation_vlan:
+      client:
+        encapsulation: dot1q
+        vlan: 100
+      network:
+        encapsulation: client
+
+  - name: Port-Channel111.200
+    description: TENANT_A pseudowire 3 interface
+    encapsulation_vlan:
+      client:
+        encapsulation: dot1q
+        vlan: 200
+
+  - name: Port-Channel111.300
+    description: TENANT_A pseudowire 4 interface
+    encapsulation_vlan:
+      client:
+        encapsulation: dot1q
+        vlan: 300
+      network:
+        encapsulation: dot1q
+        vlan: 400
+
+  - name: Port-Channel111.400
+    description: TENANT_A pseudowire 3 interface
+    encapsulation_vlan:
+      client:
+        encapsulation: dot1q
+        outer_vlan: 400
+        inner_vlan: 20
+      network:
+        encapsulation: dot1q
+        outer_vlan: 401
+        inner_vlan: 21
+
+  - name: Port-Channel111.1000
+    description: L2 Subinterface
+    vlan_id: 1000
+    encapsulation_vlan:
+      client:
+        encapsulation: dot1q
+        vlan: 100
+      network:
+        encapsulation: client
+    evpn_ethernet_segment:
+      identifier: 0000:0000:0303:0202:0101
+      route_target: 03:03:02:02:01:01
+    lacp_id: 0303.0202.0101
+
+  - name: Port-Channel112
+    description: LACP fallback individual
+    switchport:
+      enabled: true
+      mode: trunk
+      trunk:
+        allowed_vlan: 112
+    lacp_fallback_timeout: 5
+    lacp_fallback_mode: individual
+
+  - name: Port-Channel113
+    description: interface_with_mpls_enabled
+    switchport:
+      enabled: false
+    ip_address: 172.31.128.9/31
+    mpls:
+      ip: true
+      ldp:
+        interface: true
+        igp_sync: true
+
+  - name: Port-Channel114
+    description: interface_with_mpls_disabled
+    switchport:
+      enabled: false
+    ip_address: 172.31.128.10/31
+    mpls:
+      ip: false
+      ldp:
+        interface: false
+
+  - name: Port-Channel115
+    description: native-vlan-tag-precedence
+    switchport:
+      enabled: true
+      trunk:
+        native_vlan_tag: true
+        native_vlan: 100
+      mode: trunk
+
+  - name: Port-Channel117
+    description: interface_with_sflow_ingress_egress_enabled
+    switchport:
+      enabled: false
+    sflow:
+      enable: true
+      egress:
+        enable: true
+
+  - name: Port-Channel118
+    description: interface_with_sflow_ingress_egress_unmodified_enabled
+    switchport:
+      enabled: false
+    sflow:
+      enable: true
+      egress:
+        unmodified_enable: true
+
+  - name: Port-Channel119
+    description: interface_with_sflow_ingress_egress_disabled
+    switchport:
+      enabled: false
+    sflow:
+      enable: false
+      egress:
+        enable: false
+
+  - name: Port-Channel120
+    description: interface_with_sflow_ingress_egress_unmodified_disabled
+    switchport:
+      enabled: false
+    sflow:
+      enable: false
+      egress:
+        unmodified_enable: false
+
+  - name: Port-Channel121
+    description: access_port_with_no_vlans
+    switchport:
+      enabled: true
+      mode: access
+
+  - name: Port-Channel122
+    description: trunk_port_with_no_vlans
+    switchport:
+      enabled: true
+      mode: trunk
+
+  - name: Port-Channel130
+    description: IP NAT Testing
+    switchport:
+      enabled: true
+    ip_nat:
+      destination:
+        dynamic:
+          - access_list: ACL1
+            pool_name: POOL1
+        static:
+          - original_ip: 1.0.0.1
+            translated_ip: 2.0.0.1
+      source:
+        dynamic:
+          - access_list: ACL2
+            pool_name: POOL2
+            nat_type: pool
+        static:
+          - original_ip: 3.0.0.1
+            translated_ip: 4.0.0.1
+
+  - name: Port-Channel131
+    description: dot1q-tunnel mode
+    switchport:
+      enabled: true
+      mode: dot1q-tunnel
+      access_vlan: 115
+
+  - name: Port-Channel131.1
+    description: Test_encapsulation_vlan1
+    encapsulation_vlan:
+      client:
+        outer_vlan: 23
+        inner_vlan: 45
+        encapsulation: dot1q
+        inner_encapsulation: dot1q
+      network:
+        encapsulation: dot1ad
+        outer_vlan: 32
+        inner_vlan: 54
+        inner_encapsulation: dot1ad
+
+  - name: Port-Channel131.2
+    description: Test_encapsulation_vlan2
+    encapsulation_vlan:
+      client:
+        encapsulation: dot1q
+        vlan: 10
+      network:
+        encapsulation: dot1q
+        outer_vlan: 32
+        inner_vlan: 54
+
+  - name: Port-Channel131.3
+    description: Test_encapsulation_vlan3
+    encapsulation_vlan:
+      client:
+        encapsulation: dot1ad
+        vlan: 12
+      network:
+        encapsulation: dot1q
+        vlan: 25
+
+  - name: Port-Channel131.4
+    description: Test_encapsulation_vlan4
+    encapsulation_vlan:
+      client:
+        encapsulation: dot1ad
+        outer_vlan: 35
+        inner_vlan: 60
+        inner_encapsulation: dot1q
+      network:
+        encapsulation: dot1q
+        outer_vlan: 53
+        inner_vlan: 6
+        inner_encapsulation: dot1ad
+
+  - name: Port-Channel131.5
+    description: Test_encapsulation_vlan5
+    encapsulation_vlan:
+      client:
+        encapsulation: dot1ad
+        outer_vlan: 35
+        inner_vlan: 60
+      network:
+        encapsulation: dot1ad
+        outer_vlan: 52
+        inner_vlan: 62
+
+  - name: Port-Channel131.6
+    description: Test_encapsulation_vlan6
+    encapsulation_vlan:
+      client:
+        encapsulation: dot1ad
+        outer_vlan: 35
+        inner_vlan: 60
+      network:
+        encapsulation: client
+
+  - name: Port-Channel131.7
+    description: Test_encapsulation_vlan7
+    encapsulation_vlan:
+      client:
+        encapsulation: untagged
+      network:
+        encapsulation: dot1ad
+        outer_vlan: 35
+        inner_vlan: 60
+
+  - name: Port-Channel131.8
+    description: Test_encapsulation_vlan8
+    encapsulation_vlan:
+      client:
+        encapsulation: untagged
+      network:
+        encapsulation: dot1q
+        outer_vlan: 35
+        inner_vlan: 60
+
+  - name: Port-Channel131.9
+    description: Test_encapsulation_vlan9
+    encapsulation_vlan:
+      client:
+        encapsulation: untagged
+      network:
+        encapsulation: untagged
+
+  - name: Port-Channel131.10
+    description: Test_encapsulation_vlan9
+    encapsulation_vlan:
+      client:
+        encapsulation: dot1q
+        outer_vlan: 14
+        inner_vlan: 11
+      network:
+        encapsulation: client inner
+
+  - name: Port-Channel132
+    description: Test_port-channel_interface-profile
+    profile: test-interface-profile

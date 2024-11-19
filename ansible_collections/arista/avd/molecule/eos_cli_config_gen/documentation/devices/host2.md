@@ -4,6 +4,7 @@
 
 - [Management](#management)
   - [Management Interfaces](#management-interfaces)
+  - [Management SSH](#management-ssh)
 - [CVX](#cvx)
   - [CVX Device Configuration](#cvx-device-configuration)
 - [Authentication](#authentication)
@@ -16,15 +17,36 @@
 - [Management Security](#management-security)
   - [Management Security Summary](#management-security-summary)
   - [Management Security Device Configuration](#management-security-device-configuration)
+- [Prompt Device Configuration](#prompt-device-configuration)
 - [DHCP Relay](#dhcp-relay)
   - [DHCP Relay Summary](#dhcp-relay-summary)
   - [DHCP Relay Device Configuration](#dhcp-relay-device-configuration)
 - [System Boot Settings](#system-boot-settings)
   - [System Boot Device Configuration](#system-boot-device-configuration)
+- [Monitoring](#monitoring)
+  - [Logging](#logging)
+  - [Monitor Server Radius Summary](#monitor-server-radius-summary)
+- [Monitor Connectivity](#monitor-connectivity)
+  - [Global Configuration](#global-configuration)
+  - [Monitor Connectivity Device Configuration](#monitor-connectivity-device-configuration)
+- [LACP](#lacp)
+  - [LACP Summary](#lacp-summary)
+  - [LACP Device Configuration](#lacp-device-configuration)
 - [Interfaces](#interfaces)
   - [DPS Interfaces](#dps-interfaces)
+  - [VXLAN Interface](#vxlan-interface)
 - [Routing](#routing)
+  - [Service Routing Protocols Model](#service-routing-protocols-model)
   - [ARP](#arp)
+  - [Router Adaptive Virtual Topology](#router-adaptive-virtual-topology)
+  - [PBR Policy Maps](#pbr-policy-maps)
+- [BFD](#bfd)
+  - [Router BFD](#router-bfd)
+- [Queue Monitor](#queue-monitor)
+  - [Queue Monitor Length](#queue-monitor-length)
+  - [Queue Monitor Configuration](#queue-monitor-configuration)
+- [Multicast](#multicast)
+  - [IP IGMP Snooping](#ip-igmp-snooping)
 - [Filters](#filters)
   - [AS Path Lists](#as-path-lists)
 - [802.1X Port Security](#8021x-port-security)
@@ -32,6 +54,13 @@
 - [Application Traffic Recognition](#application-traffic-recognition)
   - [Applications](#applications)
   - [Router Application-Traffic-Recognition Device Configuration](#router-application-traffic-recognition-device-configuration)
+- [IP DHCP Relay](#ip-dhcp-relay)
+  - [IP DHCP Relay Summary](#ip-dhcp-relay-summary)
+  - [IP DHCP Relay Device Configuration](#ip-dhcp-relay-device-configuration)
+- [IP DHCP Snooping](#ip-dhcp-snooping)
+  - [IP DHCP Snooping Device Configuration](#ip-dhcp-snooping-device-configuration)
+- [IP NAT](#ip-nat)
+  - [IP NAT Device Configuration](#ip-nat-device-configuration)
 
 ## Management
 
@@ -59,6 +88,59 @@ interface Management1
    description OOB_MANAGEMENT
    vrf MGMT
    ip address 10.73.255.122/24
+```
+
+### Management SSH
+
+#### IPv4 ACL
+
+| IPv4 ACL | VRF |
+| -------- | --- |
+| ACL-SSH | - |
+| ACL-SSH-VRF | mgt |
+
+#### SSH Timeout and Management
+
+| Idle Timeout | SSH Management |
+| ------------ | -------------- |
+| 15 | Enabled |
+
+#### Max number of SSH sessions limit and per-host limit
+
+| Connection Limit | Max from a single Host |
+| ---------------- | ---------------------- |
+| 55 | - |
+
+#### Ciphers and Algorithms
+
+| Ciphers | Key-exchange methods | MAC algorithms | Hostkey server algorithms |
+|---------|----------------------|----------------|---------------------------|
+| aes256-cbc, aes256-ctr, aes256-gcm@openssh.com | ecdh-sha2-nistp521 | hmac-sha2-512, hmac-sha2-512-etm@openssh.com | ecdsa-nistp256, ecdsa-nistp521 |
+
+#### VRFs
+
+| VRF | Status |
+| --- | ------ |
+| mgt | Enabled |
+
+#### Management SSH Device Configuration
+
+```eos
+!
+management ssh
+   ip access-group ACL-SSH in
+   ip access-group ACL-SSH-VRF vrf mgt in
+   idle-timeout 15
+   cipher aes256-cbc aes256-ctr aes256-gcm@openssh.com
+   key-exchange ecdh-sha2-nistp521
+   mac hmac-sha2-512 hmac-sha2-512-etm@openssh.com
+   hostkey server ecdsa-nistp256 ecdsa-nistp521
+   connection limit 55
+   no shutdown
+   hostkey server cert sshkey.cert
+   !
+   vrf mgt
+      no shutdown
 ```
 
 ## CVX
@@ -180,6 +262,13 @@ management security
    password encryption reversible aes-256-gcm
 ```
 
+## Prompt Device Configuration
+
+```eos
+!
+prompt Test
+```
+
 ## DHCP Relay
 
 ### DHCP Relay Summary
@@ -209,6 +298,91 @@ dhcp relay
 !
 ```
 
+## Monitoring
+
+### Logging
+
+#### Logging Servers and Features Summary
+
+| Type | Level |
+| -----| ----- |
+| Console | informational |
+| Monitor | debugging |
+| Buffer | - |
+
+**Syslog facility value:** syslog
+
+#### Logging Servers and Features Device Configuration
+
+```eos
+!
+no logging repeat-messages
+logging buffered 64000
+logging console informational
+logging monitor debugging
+logging facility syslog
+!
+logging event link-status global
+```
+
+### Monitor Server Radius Summary
+
+#### Server Probe Settings
+
+| Setting | Value |
+| ------- | ----- |
+| Probe method | status-server |
+
+#### Monitor Server Radius Device Configuration
+
+```eos
+!
+monitor server radius
+   probe method status-server
+```
+
+## Monitor Connectivity
+
+### Global Configuration
+
+#### Interface Sets
+
+| Name | Interfaces |
+| ---- | ---------- |
+| HOST_SET2 | Loopback2-4, Loopback10-12 |
+
+#### Probing Configuration
+
+| Enabled | Interval | Default Interface Set | Address Only |
+| ------- | -------- | --------------------- | ------------ |
+| False | 5 | HOST_SET2 | False |
+
+### Monitor Connectivity Device Configuration
+
+```eos
+!
+monitor connectivity
+   interval 5
+   shutdown
+   interface set HOST_SET2 Loopback2-4, Loopback10-12
+   local-interfaces HOST_SET2 default
+```
+
+## LACP
+
+### LACP Summary
+
+| Port-id range | Rate-limit default | System-priority |
+| ------------- | ------------------ | --------------- |
+| - | - | 0 |
+
+### LACP Device Configuration
+
+```eos
+!
+lacp system-priority 0
+```
+
 ## Interfaces
 
 ### DPS Interfaces
@@ -231,7 +405,37 @@ interface Dps1
    ip address 192.168.42.42/24
 ```
 
+### VXLAN Interface
+
+#### VXLAN Interface Summary
+
+| Setting | Value |
+| ------- | ----- |
+| UDP port | 4789 |
+| Qos dscp propagation encapsulation | Disabled |
+| Qos ECN propagation | Disabled |
+| Qos map dscp to traffic-class decapsulation | Disabled |
+
+#### VXLAN Interface Device Configuration
+
+```eos
+!
+interface Vxlan1
+   no vxlan qos ecn propagation
+   no vxlan qos dscp propagation encapsulation
+   no vxlan qos map dscp to traffic-class decapsulation
+```
+
 ## Routing
+
+### Service Routing Protocols Model
+
+Single agent routing protocol model enabled
+
+```eos
+!
+service routing protocols model ribd
+```
 
 ### ARP
 
@@ -242,6 +446,109 @@ ARP cache persistency is enabled.
 ```eos
 !
 arp persistent
+```
+
+### Router Adaptive Virtual Topology
+
+#### Router Adaptive Virtual Topology Summary
+
+Topology role: edge
+
+VXLAN gateway: Enabled
+
+#### Router Adaptive Virtual Topology Configuration
+
+```eos
+!
+router adaptive-virtual-topology
+   topology role edge gateway vxlan
+```
+
+### PBR Policy Maps
+
+#### PBR Policy Maps Summary
+
+##### POLICY_DROP_THEN_NEXTHOP
+
+| Class | Index | Drop | Nexthop | Recursive |
+| ----- | ----- | ---- | ------- | --------- |
+| CLASS_DROP | 10 | True | - | - |
+| CLASS_NEXTHOP | 20 | - | 172.30.1.2 | True |
+| NO_ACTION | - | - | - | - |
+
+#### PBR Policy Maps Device Configuration
+
+```eos
+!
+policy-map type pbr POLICY_DROP_THEN_NEXTHOP
+   10 class CLASS_DROP
+      drop
+   !
+   20 class CLASS_NEXTHOP
+      set nexthop recursive 172.30.1.2
+   !
+   class NO_ACTION
+```
+
+## BFD
+
+### Router BFD
+
+#### Router BFD Device Configuration
+
+```eos
+!
+router bfd
+   session stats snapshot interval dangerous 8
+```
+
+## Queue Monitor
+
+### Queue Monitor Length
+
+| Enabled | Logging Interval | Default Thresholds High | Default Thresholds Low | Notifying | TX Latency | CPU Thresholds High | CPU Thresholds Low |
+| ------- | ---------------- | ----------------------- | ---------------------- | --------- | ---------- | ------------------- | ------------------ |
+| True | - | 100 | - | disabled | disabled | - | - |
+
+### Queue Monitor Configuration
+
+```eos
+!
+queue-monitor length
+no queue-monitor length notifying
+queue-monitor length default threshold 100
+```
+
+## Multicast
+
+### IP IGMP Snooping
+
+#### IP IGMP Snooping Summary
+
+| IGMP Snooping | Fast Leave | Interface Restart Query | Proxy | Restart Query Interval | Robustness Variable |
+| ------------- | ---------- | ----------------------- | ----- | ---------------------- | ------------------- |
+| Disabled | False | - | False | - | - |
+
+| Querier Enabled | IP Address | Query Interval | Max Response Time | Last Member Query Interval | Last Member Query Count | Startup Query Interval | Startup Query Count | Version |
+| --------------- | ---------- | -------------- | ----------------- | -------------------------- | ----------------------- | ---------------------- | ------------------- | ------- |
+| False | - | - | - | - | - | - | - | - |
+
+##### IP IGMP Snooping Vlan Summary
+
+| Vlan | IGMP Snooping | Fast Leave | Max Groups | Proxy |
+| ---- | ------------- | ---------- | ---------- | ----- |
+| 20 | False | - | - | - |
+| 30 | False | - | - | - |
+
+#### IP IGMP Snooping Device Configuration
+
+```eos
+!
+no ip igmp snooping
+no ip igmp snooping fast-leave
+no ip igmp snooping vlan 20
+no ip igmp snooping vlan 30
+no ip igmp snooping querier
 ```
 
 ## Filters
@@ -308,4 +615,38 @@ application traffic recognition
    application l4 l4-app-1
       protocol tcp source port field-set src_port_set1 destination port field-set dest_port_set1
       protocol udp
+```
+
+## IP DHCP Relay
+
+### IP DHCP Relay Summary
+
+IP DHCP Relay Option 82 is enabled.
+
+### IP DHCP Relay Device Configuration
+
+```eos
+!
+ip dhcp relay information option
+```
+
+## IP DHCP Snooping
+
+IP DHCP Snooping is enabled
+
+### IP DHCP Snooping Device Configuration
+
+```eos
+!
+ip dhcp snooping
+```
+
+## IP NAT
+
+### IP NAT Device Configuration
+
+```eos
+!
+!
+ip nat synchronization
 ```

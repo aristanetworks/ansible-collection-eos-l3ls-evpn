@@ -1,0 +1,13 @@
+---
+ipv6_neighbor:
+  static_entries:
+    - ipv6_address: 11:22:33:44:55:66:77:88
+      interface: Ethernet1
+      mac_address: 11:22:33:44:55:66
+      vrf: MGMT
+    - ipv6_address: ::ffff:192.1.56.10
+      interface: Loopback99
+      mac_address: aa:af:12:34:bc:bf
+  persistent:
+    enabled: true
+    refresh_delay: 1000

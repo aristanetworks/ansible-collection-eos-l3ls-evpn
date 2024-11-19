@@ -1,0 +1,30 @@
+---
+router_general:
+  router_id:
+    ipv4: 10.1.2.3
+    ipv6: 2001:beef:cafe::1
+  nexthop_fast_failover: true
+  vrfs:
+    - name: BLUE-C2
+      leak_routes:
+        - source_vrf: BLUE-C1
+          subscribe_policy: RM-BLUE-LEAKING
+        - source_vrf: BLUE-C3
+          subscribe_policy: RM-BLUE-LEAKING
+      routes:
+        dynamic_prefix_lists:
+          - name: DYNAMIC_TEST_PREFIX_LIST_2
+          - name: DYNAMIC_TEST_PREFIX_LIST_1
+  control_functions:
+    code_units:
+      - name: code1
+        content: |-
+          function ACCEPT_ALL() {
+            return true;
+            }
+          EOF
+      - name: code2
+        content: |-
+          function DENY_ALL() {
+            return true;
+            }

@@ -20,7 +20,7 @@ keys:
             - int
           description: |
             Specify an EVPN vlan-aware-bundle name.
-            EVPN vlan-aware-bundles group L2 VLANs and define common settings.
+            EVPN vlan-aware-bundles group VLANs and define common settings.
         id:
           type: int
           required: true

@@ -191,6 +191,7 @@ router bgp 65101
    router-id 192.168.255.3
    bgp default ipv4-unicast
    bgp default ipv4-unicast transport ipv6
+   timers bgp min-hold-time 5
    distance bgp 20 200 200
    graceful-restart restart-time 300
    graceful-restart

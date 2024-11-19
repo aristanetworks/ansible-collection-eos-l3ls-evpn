@@ -283,7 +283,7 @@ port_channel_interfaces:
   switchport:
     enabled: true
     mode: access
-    access_vlan: '11'
+    access_vlan: 11
   mlag: 6
 ethernet_interfaces:
 - name: Ethernet9
@@ -378,7 +378,7 @@ ethernet_interfaces:
   switchport:
     enabled: true
     mode: access
-    access_vlan: '11'
+    access_vlan: 11
   spanning_tree_portfast: edge
   ptp:
     announce:

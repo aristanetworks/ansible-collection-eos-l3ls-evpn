@@ -10,4 +10,5 @@ keys:
     documentation_options:
       table: bgp-settings
     type: bool
+    default: true
     $ref: "eos_cli_config_gen#/keys/router_bgp/keys/updates/keys/wait_install"

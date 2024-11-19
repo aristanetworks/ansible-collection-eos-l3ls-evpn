@@ -1,0 +1,1760 @@
+---
+### Ethernet Interfaces ###
+ethernet_interfaces:
+  - name: Ethernet1
+    peer: DC1-SPINE1
+    peer_interface: Ethernet1
+    peer_type: spine
+    description: P2P_LINK_TO_DC1-SPINE1_Ethernet1
+    speed: forced 100gfull
+    mtu: 1500
+    l2_mtu: 8000
+    l2_mru: 8000
+    ip_address: 172.31.255.1/31
+    link_tracking_groups:
+      - name: EVPN_MH_ES1
+        direction: upstream
+    link_tracking:
+      direction: upstream
+      groups: [EVPN_MH_ES3, EVPN_MH_ES4]
+    priority_flow_control:
+      enabled: true
+      priorities:
+        - priority: 5
+          # drop
+          no_drop: false
+    bfd:
+      echo: true
+      interval: 500
+      min_rx: 500
+      multiplier: 5
+    bgp:
+      session_tracker: ST1
+    ip_verify_unicast_source_reachable_via: rx
+    tcp_mss_ceiling:
+      ipv4_segment_size: 70
+      ipv6_segment_size: 75
+      direction: egress
+    # test for switchport settings
+    switchport:
+      enabled: false
+      port_security:
+        enabled: true
+        mac_address_maximum:
+          disabled: true
+      trunk:
+        allowed_vlan: 110-111,210-211
+        native_vlan: 5
+        native_vlan_tag: true
+        groups:
+          - g1
+          - g2
+        private_vlan_secondary: true
+      access_vlan: 200
+      phone:
+        vlan: 110
+        trunk: tagged
+      mode: dot1q-tunnel
+      pvlan_mapping: 20-30
+      dot1q:
+        ethertype: 1536
+        vlan_tag: required
+      vlan_translations:
+        in_required: true
+        direction_in:
+          - from: 10
+            to: 24
+          - from: 37
+            to: 49
+            inner_vlan_from: 56
+          - from: 23
+            to: 45
+            dot1q_tunnel: true
+        direction_both:
+          - from: 24
+            inner_vlan_from: 78
+            network: true
+            to: 46
+          - from: 12
+            to: 20
+          - from: 43
+            to: 30
+            dot1q_tunnel: true
+          - from: 24
+            inner_vlan_from: 78
+            network: false
+            to: 46
+        direction_out:
+          - from: 34
+            to: 50
+          - from: 10
+            to: 45
+            inner_vlan_to: 34
+          - from: 45
+            dot1q_tunnel_to: all
+          - from: 55
+      vlan_forwarding_accept_all: true
+      source_interface: tx
+      backup_link:
+        interface: Ethernet5
+        prefer_vlan: 10
+      backup:
+        dest_macaddr: 01:00:00:00:00:00
+        mac_move_burst: 20
+        mac_move_burst_interval: 30
+        initial_mac_move_delay: 10
+        preemption_delay: 35
+    eos_cli: |
+      comment
+      Comment created from eos_cli under ethernet_interfaces.Ethernet1
+      EOF
+    ip_igmp_host_proxy:
+      enabled: true
+      groups:
+        - group: 239.0.0.1
+        - group: 239.0.0.2
+          exclude:
+            - source: 10.0.2.1
+        - group: 239.0.0.3
+          include:
+            - source: 10.0.3.1
+        - group: 239.0.0.4
+          exclude:
+            - source: 10.0.4.1
+            - source: 10.0.4.2
+          include:
+            - source: 10.0.4.3
+            - source: 10.0.4.4
+      report_interval: 2
+      access_lists:
+        - name: ACL1
+        - name: ACL2
+      version: 2
+
+  - name: Ethernet2
+    ip_address: 10.1.255.3/24
+    ip_address_secondaries:
+      - 192.168.1.1/24
+      - 10.0.0.254/24
+      - 1.1.1.3/24
+      - 1.1.1.4/24
+    peer: SRV-POD03
+    peer_interface: Eth1
+    peer_type: server
+    description: SRV-POD02_Eth1
+    tcp_mss_ceiling:
+      ipv4_segment_size: 70
+      direction: ingress
+    multicast:
+      ipv4:
+        static: true
+        boundaries:
+          - boundary: ACL_MULTICAST
+      ipv6:
+        boundaries:
+          - boundary: ACL_V6_MULTICAST
+    storm_control:
+      all:
+        level: 10
+      broadcast:
+        level: 500
+        unit: pps
+      unknown_unicast:
+        level: 1
+        unit: percent
+    priority_flow_control:
+      enabled: true
+      priorities:
+        - priority: 5
+          # no-drop
+          no_drop: true
+    spanning_tree_bpduguard: disabled
+    spanning_tree_bpdufilter: disabled
+    # test for switchport settings
+    switchport:
+      mode: trunk
+      trunk:
+        allowed_vlan: 110-111,210-211
+        private_vlan_secondary: false
+      enabled: true
+      dot1q:
+        vlan_tag: disallowed
+      port_security:
+        mac_address_maximum:
+          limit: 100
+        violation:
+          mode: protect
+          protect_log: true
+      vlan_translations:
+        in_required: false
+      backup_link:
+        prefer_vlan: 20
+
+  - name: Ethernet3
+    peer: DC1-SPINE2
+    peer_interface: Ethernet2
+    peer_type: spine
+    description: P2P_LINK_TO_DC1-SPINE2_Ethernet2
+    mtu: 1500
+    ip_address: 172.31.128.1/31
+    snmp_trap_link_change: false
+    link_tracking_groups:
+      - name: EVPN_MH_ES2
+        direction: downstream
+    ipv6_enable: true
+    ipv6_address: 2002:ABDC::1/64
+    ipv6_nd_prefixes:
+      - ipv6_prefix: 2345:ABCD:3FE0::1/96
+        valid_lifetime: infinite
+        preferred_lifetime: 50
+        no_autoconfig_flag: true
+      - ipv6_prefix: 2345:ABCD:3FE0::2/96
+        valid_lifetime: 50
+        preferred_lifetime: infinite
+        no_autoconfig_flag: false
+      - ipv6_prefix: 2345:ABCD:3FE0::3/96
+        valid_lifetime: 100000
+        no_autoconfig_flag: true
+    priority_flow_control:
+      enabled: false
+    spanning_tree_guard: root
+    tcp_mss_ceiling:
+      ipv6_segment_size: 65
+    # test for switchport settings
+    switchport:
+      enabled: false
+      mode: trunk
+      trunk:
+        native_vlan: 5
+      port_security:
+        mac_address_maximum:
+          disabled: false
+        violation:
+          mode: shutdown
+        vlan_default_mac_address_maximum: 2
+        vlans:
+          - range: 1-3
+            mac_address_maximum: 3
+          - range: 41,2,22
+            mac_address_maximum: 4
+      vlan_translations:
+        out_required: false
+        direction_out:
+          - from: 23
+            dot1q_tunnel_to: 50
+      backup_link:
+        interface: Ethernet4
+
+  - name: Ethernet4
+    description: Molecule IPv6
+    shutdown: true
+    mtu: 9100
+    ipv6_enable: true
+    ipv6_address: 2020::2020/64
+    ipv6_address_link_local: FE80:FEA::AB65/64
+    ipv6_nd_ra_disabled: true
+    ipv6_nd_managed_config_flag: true
+    ipv6_access_group_in: IPv6_ACL_IN
+    ipv6_access_group_out: IPv6_ACL_OUT
+    snmp_trap_link_change: true
+    priority_flow_control:
+      enabled: true
+    spanning_tree_guard: disabled
+    tcp_mss_ceiling:
+      ipv4_segment_size: 65
+    multicast:
+      ipv4:
+        static: true
+        boundaries:
+          - boundary: 224.0.1.0/24
+            out: true
+          - boundary: 224.0.2.0/24
+      ipv6:
+        boundaries:
+          - boundary: ff00::/16
+          - boundary: ff01::/16
+    # test for switchport port-security violation
+    switchport:
+      enabled: false
+      port_security:
+        violation:
+          mode: protect
+
+  - name: Ethernet5
+    description: Molecule Routing
+    shutdown: false
+    mtu: 9100
+    ospf_network_point_to_point: true
+    ospf_area: 100
+    ospf_cost: 99
+    ospf_authentication: message-digest
+    ospf_authentication_key: "asfddja23452"
+    ospf_message_digest_keys:
+      - id: 1
+        hash_algorithm: sha512
+        key: "asfddja23452"
+    pim:
+      ipv4:
+        dr_priority: 200
+        sparse_mode: true
+        border_router: true
+        bfd: true
+        bidirectional: true
+        hello:
+          count: 2.5
+          interval: 10
+    isis_enable: ISIS_TEST
+    isis_bfd: true
+    isis_passive: false
+    isis_metric: 99
+    isis_network_point_to_point: true
+    isis_circuit_type: level-2
+    isis_hello_padding: false
+    spanning_tree_guard: loop
+    # test for switchport access vlan
+    switchport:
+      enabled: false
+      access_vlan: 220
+
+  - name: Ethernet6
+    logging:
+      event:
+        link_status: true
+        congestion_drops: true
+        spanning_tree: true
+        storm_control_discards: true
+    peer: SRV-POD02
+    peer_interface: Eth1
+    peer_type: server
+    description: SRV-POD02_Eth1
+    # test for switchport trunk mode
+    switchport:
+      enabled: true
+      trunk:
+        allowed_vlan: 110-111,210-211
+      mode: trunk
+    spanning_tree_bpduguard: enabled
+    spanning_tree_bpdufilter: enabled
+
+  - name: Ethernet7
+    description: Molecule L2
+    shutdown: false
+    switchport:
+      enabled: true
+    mtu: 7000
+    ptp:
+      enable: true
+      announce:
+        interval: 10
+        timeout: 30
+      delay_req: 20
+      delay_mechanism: p2p
+      sync_message:
+        interval: 5
+      role: master
+      vlan: all
+      transport: layer2
+    service_profile: QoS
+    qos:
+      trust: cos
+      cos: 5
+    spanning_tree_bpdufilter: true
+    spanning_tree_bpduguard: true
+    spanning_tree_portfast: edge
+    vmtracer: true
+    storm_control:
+      all:
+        level: 75
+        unit: percent
+      broadcast:
+        level: 10
+        unit: pps
+      multicast:
+        level: 50
+        unit:
+      unknown_unicast:
+        level: 10
+        unit: percent
+    transceiver:
+      media:
+        override: 100gbase-ar4
+
+  - name: Ethernet8
+    description: to WAN-ISP1-01 Ethernet2
+    switchport:
+      enabled: false
+    lldp:
+      transmit: false
+      receive: false
+    # Test isis authentication both md5 rx
+    isis_authentication:
+      both:
+        key_type: 0
+        key: password
+        mode: md5
+        rx_disabled: true
+      level_1:
+        key_type: 0
+        key: password
+        mode: md5
+        rx_disabled: true
+      level_2:
+        key_type: 0
+        key: password
+        mode: md5
+        rx_disabled: true
+  - name: Ethernet8.101
+    description: to WAN-ISP-01 Ethernet2.101 - VRF-C1
+    encapsulation_dot1q:
+      vlan: 101
+    ip_address: 172.31.128.1/31
+    ipv6_enable: true
+    ipv6_address: 2002:ABDC::1/64
+    # Test isis auth both md5
+    isis_authentication:
+      both:
+        key_type: 0
+        key: password
+        mode: md5
+
+  - name: Ethernet9
+    description: interface_with_mpls_enabled
+    switchport:
+      enabled: false
+    ip_address: 172.31.128.9/31
+    multicast:
+      ipv4:
+        boundaries:
+          - boundary: ACL_MULTICAST
+            out: true
+      ipv6:
+        static: true
+    mpls:
+      ip: true
+      ldp:
+        interface: true
+    # Test isis auth both sha rx
+    isis_authentication:
+      both:
+        key_type: 0
+        key: password
+        mode: sha
+        sha:
+          key_id: 2
+        rx_disabled: true
+
+  - name: Ethernet10
+    description: interface_with_mpls_disabled
+    switchport:
+      enabled: false
+    ip_address: 172.31.128.10/31
+    mpls:
+      ip: false
+      ldp:
+        interface: false
+    # Test isis auth both sha
+    isis_authentication:
+      both:
+        key_type: 0
+        key: password
+        mode: sha
+        sha:
+          key_id: 2
+
+  - name: Ethernet11
+    description: interface_in_mode_access_accepting_tagged_LACP
+    # test for switchport access mode
+    switchport:
+      enabled: true
+      mode: access
+      access_vlan: 200
+    l2_protocol:
+      encapsulation_dot1q_vlan: 200
+    spanning_tree_bpduguard: false # No config should be rendered for this case
+    spanning_tree_bpdufilter: false # No config should be rendered for this case
+    # Test isis auth both shared secret rx
+    isis_authentication:
+      both:
+        mode: shared-secret
+        shared_secret:
+          profile: profile1
+          algorithm: sha-1
+        rx_disabled: true
+
+  - name: Ethernet12
+    description: interface_with_dot1q_tunnel
+    # test for switchport dot1q-tunnel mode
+    switchport:
+      enabled: true
+      mode: dot1q-tunnel
+      access_vlan: 300
+    # Test isis auth both shared secret
+    isis_authentication:
+      both:
+        mode: shared-secret
+        shared_secret:
+          profile: profile1
+          algorithm: sha-1
+
+  - name: Ethernet13
+    logging:
+      event:
+        link_status: false
+        congestion_drops: false
+        spanning_tree: false
+        storm_control_discards: false
+    description: interface_in_mode_access_with_voice
+    # test for switchport trunk-phone mode
+    switchport:
+      enabled: true
+      trunk:
+        native_vlan: 100
+      mode: "trunk phone"
+      phone:
+        trunk: untagged
+        vlan: 70
+    # Test isis auth l1 md5 l2 text rx
+    isis_authentication:
+      level_1:
+        key_type: 0
+        key: password
+        mode: md5
+        rx_disabled: true
+      level_2:
+        key_type: 0
+        key: password
+        mode: text
+        rx_disabled: true
+
+  - name: Ethernet14
+    logging:
+      event:
+        link_status: true
+    peer: SRV-POD02
+    peer_interface: Eth1
+    peer_type: server
+    description: SRV-POD02_Eth1
+    # test for switchport trunk mode settings
+    switchport:
+      enabled: true
+      mode: trunk
+      trunk:
+        allowed_vlan: 110-111,210-211
+    # Test isis auth l1 md5 l2 sha
+    isis_authentication:
+      level_1:
+        key_type: 0
+        key: password
+        mode: md5
+      level_2:
+        key_type: 0
+        key: password
+        mode: sha
+        sha:
+          key_id: 10
+
+  - name: Ethernet15
+    description: PVLAN Promiscuous Access - only one secondary
+    # test for switchport pvlan mapping
+    switchport:
+      enabled: true
+      mode: access
+      access_vlan: 110
+      pvlan_mapping: 111
+    # Test isis auth l1l2 shared secret
+    isis_authentication:
+      level_1:
+        mode: shared-secret
+        shared_secret:
+          profile: profile1
+          algorithm: sha-256
+      level_2:
+        mode: shared-secret
+        shared_secret:
+          profile: profile2
+          algorithm: sha-1
+
+  - name: Ethernet16
+    description: PVLAN Promiscuous Trunk - vlan translation out
+    switchport:
+      enabled: true
+      mode: trunk
+      trunk:
+        allowed_vlan: 110-112
+      vlan_translations:
+        out_required: true
+        direction_out:
+          - from: 111-112
+            to: 110
+    # Test isis auth l1l2 shared secret rx
+    isis_authentication:
+      level_1:
+        mode: shared-secret
+        shared_secret:
+          profile: profile1
+          algorithm: sha-256
+        rx_disabled: true
+      level_2:
+        mode: shared-secret
+        shared_secret:
+          profile: profile2
+          algorithm: sha-1
+        rx_disabled: true
+
+  - name: Ethernet17
+    description: PVLAN Secondary Trunk
+    switchport:
+      enabled: true
+      mode: trunk
+      trunk:
+        allowed_vlan: 110-112
+        private_vlan_secondary: true
+    # Test isis auth l1l2 sha rx
+    isis_authentication:
+      level_1:
+        mode: sha
+        sha:
+          key_id: 5
+        rx_disabled: true
+      level_2:
+        mode: sha
+        sha:
+          key_id: 10
+        rx_disabled: true
+
+  - name: Ethernet18
+    description: PBR Description
+    mtu: 1500
+    switchport:
+      enabled: false
+    ip_address: 192.0.2.1/31
+    service_policy:
+      pbr:
+        input: MyLANServicePolicy
+    # Test isis auth l1l2 sha
+    isis_authentication:
+      level_1:
+        mode: sha
+        sha:
+          key_id: 5
+      level_2:
+        mode: sha
+        sha:
+          key_id: 10
+
+  - name: Ethernet19
+    description: Switched port with no LLDP rx/tx
+    switchport:
+      enabled: true
+      mode: access
+      access_vlan: 110
+    lldp:
+      transmit: false
+      receive: false
+      ztp_vlan: 666
+    # Test isis authentication
+    isis_authentication:
+      both:
+        key_ids:
+          - id: 2
+            algorithm: sha-512
+            key_type: 0
+            key: password
+            rfc_5310: false
+          - id: 3
+            algorithm: sha-512
+            key_type: 0
+            key: password1
+            rfc_5310: true
+      level_1:
+        key_ids:
+          - id: 1
+            algorithm: sha-1
+            key_type: 0
+            key: password
+            rfc_5310: false
+          - id: 4
+            algorithm: sha-1
+            key_type: 0
+            key: password
+            rfc_5310: true
+          - id: 3
+            algorithm: sha-1
+            key_type: 0
+            key: password3
+      level_2:
+        key_ids:
+          - id: 1
+            algorithm: sha-1
+            key_type: 0
+            key: password
+            rfc_5310: false
+          - id: 5
+            algorithm: sha-1
+            key_type: 0
+            key: password
+            rfc_5310: true
+          - id: 3
+            algorithm: sha-1
+            key_type: 0
+            key: password2
+
+  - name: Ethernet20
+    description: Port patched through patch-panel to pseudowire
+    switchport:
+      enabled: false
+    lldp:
+      transmit: false
+      receive: false
+    isis_authentication:
+      level_1:
+        mode: shared-secret
+        shared_secret:
+          profile: profile1
+          algorithm: sha-256
+      level_2:
+        key_type: 0
+        key: password
+        mode: md5
+
+  - name: Ethernet21
+    switchport:
+      enabled: true
+    description: 200MBit/s shape
+    qos:
+      trust: disabled
+    shape:
+      rate: "200000 kbps"
+    # Test isis auth only level-1
+    isis_authentication:
+      level_1:
+        key_type: 0
+        key: password
+        mode: md5
+        rx_disabled: true
+
+  - name: Ethernet22
+    switchport:
+      enabled: true
+    description: 10% shape
+    shape:
+      rate: "10 percent"
+    # Test isis auth only level2
+    isis_authentication:
+      level_2:
+        key_type: 0
+        key: password
+        mode: sha
+        sha:
+          key_id: 100
+
+  - name: Ethernet23
+    switchport:
+      enabled: true
+    description: Error-correction encoding
+    error_correction_encoding:
+      fire_code: true
+      reed_solomon: true
+    isis_authentication:
+      level_2:
+        mode: shared-secret
+        shared_secret:
+          profile: profile2
+          algorithm: sha-1
+
+  - name: Ethernet24
+    switchport:
+      enabled: true
+    description: Disable error-correction encoding
+    error_correction_encoding:
+      enabled: false
+
+  - name: Ethernet25
+    switchport:
+      enabled: true
+    description: Molecule MAC
+    mac_access_group_in: MAC_ACL_IN
+    mac_access_group_out: MAC_ACL_OUT
+
+  - name: Ethernet26
+    switchport:
+      enabled: false
+
+  - name: Ethernet26.1
+    description: TENANT_A pseudowire 1 interface
+    encapsulation_vlan:
+      client:
+        encapsulation: unmatched
+
+  - name: Ethernet26.100
+    description: TENANT_A pseudowire 1 interface
+    vlan_id: 10
+    encapsulation_vlan:
+      client:
+        encapsulation: dot1q
+        vlan: 100
+      network:
+        encapsulation: client
+
+  - name: Ethernet26.200
+    description: TENANT_A pseudowire 2 interface
+    encapsulation_vlan:
+      client:
+        encapsulation: dot1q
+        vlan: 200
+
+  - name: Ethernet26.300
+    description: TENANT_A pseudowire 3 interface
+    encapsulation_vlan:
+      client:
+        encapsulation: dot1q
+        vlan: 300
+      network:
+        encapsulation: dot1q
+        vlan: 400
+
+  - name: Ethernet26.400
+    description: TENANT_A pseudowire 3 interface
+    encapsulation_vlan:
+      client:
+        encapsulation: dot1q
+        outer_vlan: 400
+        inner_vlan: 20
+      network:
+        encapsulation: dot1q
+        outer_vlan: 401
+        inner_vlan: 21
+
+  - name: Ethernet26.500
+    description: TENANT_A pseudowire 3 interface
+    encapsulation_vlan:
+      client:
+        encapsulation: dot1q
+        outer_vlan: 500
+        inner_vlan: 50
+      network:
+        encapsulation: client
+
+  - name: Ethernet27
+    switchport:
+      enabled: true
+    description: EVPN-Vxlan single-active redundancy
+    evpn_ethernet_segment:
+      identifier: "0000:0000:0000:0102:0304"
+      route_target: "00:00:01:02:03:04"
+      redundancy: single-active
+      designated_forwarder_election:
+        algorithm: preference
+        preference_value: 100
+        dont_preempt: true
+        hold_time: 10
+        candidate_reachability_required: true
+
+  - name: Ethernet28
+    switchport:
+      enabled: true
+    description: EVPN-MPLS multihoming
+    evpn_ethernet_segment:
+      identifier: "0000:0000:0000:0102:0305"
+      route_target: "00:00:01:02:03:05"
+      mpls:
+        shared_index: 100
+        tunnel_flood_filter_time: 100
+
+  - name: Ethernet29
+    switchport:
+      enabled: true
+    description: DOT1X Testing - auto phone true
+    dot1x:
+      port_control: auto
+      port_control_force_authorized_phone: true
+
+  - name: Ethernet30
+    switchport:
+      enabled: true
+    description: DOT1X Testing - force-authorized phone false
+    dot1x:
+      port_control: force-authorized
+      port_control_force_authorized_phone: false
+
+  - name: Ethernet31
+    switchport:
+      enabled: true
+    description: DOT1X Testing - force-unauthorized - no phone
+    dot1x:
+      port_control: force-unauthorized
+
+  - name: Ethernet32
+    switchport:
+      enabled: true
+    description: DOT1X Testing - auto reauthentication
+    dot1x:
+      port_control: auto
+      reauthentication: true
+
+  - name: Ethernet33
+    switchport:
+      enabled: true
+    description: DOT1X Testing - pae mode authenticator
+    dot1x:
+      pae:
+        mode: authenticator
+
+  - name: Ethernet34
+    switchport:
+      enabled: true
+    description: DOT1X Testing - authentication_failure allow
+    dot1x:
+      authentication_failure:
+        action: allow
+        allow_vlan: 800
+
+  - name: Ethernet35
+    switchport:
+      enabled: true
+    description: DOT1X Testing - authentication_failure drop
+    dot1x:
+      authentication_failure:
+        action: drop
+
+  - name: Ethernet36
+    switchport:
+      enabled: true
+    description: DOT1X Testing - host-mode single-host
+    dot1x:
+      host_mode:
+        mode: single-host
+
+  - name: Ethernet37
+    switchport:
+      enabled: true
+    description: DOT1X Testing - host-mode multi-host
+    dot1x:
+      host_mode:
+        mode: multi-host
+
+  - name: Ethernet38
+    switchport:
+      enabled: true
+    description: DOT1X Testing - host-mode multi-host authenticated
+    dot1x:
+      host_mode:
+        mode: multi-host
+        multi_host_authenticated: true
+
+  - name: Ethernet39
+    switchport:
+      enabled: true
+    description: DOT1X Testing - mac_based_authentication host-mode common true
+    dot1x:
+      mac_based_authentication:
+        enabled: true
+        host_mode_common: true
+
+  - name: Ethernet40
+    switchport:
+      enabled: true
+    description: DOT1X Testing - mac_based_authentication always
+    dot1x:
+      mac_based_authentication:
+        enabled: true
+        always: true
+
+  - name: Ethernet41
+    switchport:
+      enabled: true
+    description: DOT1X Testing - mac_based_authentication always and host-mode common
+    dot1x:
+      mac_based_authentication:
+        enabled: true
+        always: true
+        host_mode_common: true
+
+  - name: Ethernet42
+    switchport:
+      enabled: true
+    description: DOT1X Testing - mac_based_authentication
+    dot1x:
+      mac_based_authentication:
+        enabled: true
+
+  - name: Ethernet43
+    switchport:
+      enabled: true
+    description: DOT1X Testing - timeout values
+    dot1x:
+      timeout:
+        idle_host: 15
+        quiet_period: 10
+        reauth_period: server
+        reauth_timeout_ignore: true
+        tx_period: 6
+
+  - name: Ethernet44
+    switchport:
+      enabled: true
+    description: DOT1X Testing - reauthorization_request_limit
+    dot1x:
+      reauthorization_request_limit: 3
+      eapol:
+        disabled: true
+
+  - name: Ethernet45
+    switchport:
+      enabled: true
+    description: DOT1X Testing - all features
+    dot1x:
+      port_control: auto
+      reauthentication: true
+      pae:
+        mode: authenticator
+      authentication_failure:
+        action: allow
+        allow_vlan: 800
+      host_mode:
+        mode: multi-host
+        multi_host_authenticated: true
+      mac_based_authentication:
+        enabled: true
+      timeout:
+        idle_host: 10
+        quiet_period: 10
+        reauth_period: server
+        reauth_timeout_ignore: true
+        tx_period: 10
+      eapol:
+        disabled: false
+        authentication_failure_fallback_mba:
+          enabled: true
+          timeout: 600
+      reauthorization_request_limit: 2
+      unauthorized:
+        access_vlan_membership_egress: true
+        native_vlan_membership_egress: true
+
+  - name: Ethernet46
+    description: native-vlan-tag-precedence
+    switchport:
+      enabled: true
+      mode: trunk
+      trunk:
+        native_vlan_tag: true
+        native_vlan: 100
+
+  - name: Ethernet47
+    description: IP Helper
+    switchport:
+      enabled: false
+    ip_address: 172.31.255.1/31
+    ip_helpers:
+      - ip_helper: 10.10.96.101
+        source_interface: Loopback0
+      - ip_helper: 10.10.96.151
+        vrf: MGMT
+      - ip_helper: 10.10.96.150
+        source_interface: Loopback0
+        vrf: MGMT
+      - ip_helper: 10.10.64.151
+
+  - name: Ethernet48
+    description: Load Interval
+    switchport:
+      enabled: true
+    load_interval: 5
+
+  - name: Ethernet50
+    switchport:
+      enabled: true
+    description: SFlow Interface Testing - SFlow ingress enabled
+    sflow:
+      enable: true
+
+  - name: Ethernet51
+    switchport:
+      enabled: true
+    description: SFlow Interface Testing - SFlow egress enabled
+    sflow:
+      egress:
+        enable: true
+
+  - name: Ethernet52
+    switchport:
+      enabled: true
+    description: SFlow Interface Testing - SFlow ingress and egress unmodified enabled
+    sflow:
+      enable: true
+      egress:
+        unmodified_enable: true
+
+  - name: Ethernet53
+    switchport:
+      enabled: true
+    description: SFlow Interface Testing - SFlow ingress and egress disabled
+    sflow:
+      enable: false
+      egress:
+        enable: false
+
+  - name: Ethernet54
+    switchport:
+      enabled: true
+    description: SFlow Interface Testing - SFlow ingress and egress unmodified disabled
+    sflow:
+      enable: false
+      egress:
+        unmodified_enable: false
+
+  - name: Ethernet55
+    description: DHCPv6 Relay Testing
+    switchport:
+      enabled: false
+    shutdown: false
+    ipv6_address: a0::1/64
+    ipv6_dhcp_relay_destinations:
+      - address: a0::2
+        link_address: a0::3
+      - address: a0::4
+        link_address: a0::5
+        vrf: TEST
+        local_interface: Loopback55
+
+  - name: Ethernet56
+    switchport:
+      enabled: true
+    description: Interface with poe commands and limit in class
+    poe:
+      priority: low
+      reboot:
+        action: power-off
+      link_down:
+        action: power-off
+        power_off_delay: 10
+      shutdown:
+        action: maintain
+      limit:
+        class: 4
+        fixed: false
+      negotiation_lldp: false
+
+  - name: Ethernet57
+    switchport:
+      enabled: true
+    description: Interface with poe commands and limit in watts
+    poe:
+      disabled: false
+      priority: critical
+      reboot:
+        action: maintain
+      link_down:
+        action: maintain
+      shutdown:
+        action: power-off
+      limit:
+        watts: 45
+        fixed: true
+      legacy_detect: true
+      negotiation_lldp: true
+
+  - name: Ethernet58
+    switchport:
+      enabled: true
+    description: Interface with poe disabled and no other poe keys
+    poe:
+      disabled: true
+
+  - name: Ethernet60
+    switchport:
+      enabled: true
+    description: IP NAT Testing
+    ip_nat:
+      destination:
+        dynamic:
+          - access_list: ACL1
+            pool_name: POOL1
+          - access_list: ACL2
+            pool_name: POOL1
+            comment: POOL1 shared with ACL1/2
+          - access_list: ACL3
+            pool_name: POOL3
+            priority: 10
+          - access_list: ACL4
+            pool_name: POOL4
+            comment: Priority low end
+            priority: 1
+          - access_list: ACL6
+            pool_name: POOL6
+            comment: Priority default
+            priority: 0
+          - access_list: ACL5
+            pool_name: POOL5
+            comment: Priority high end
+            priority: 4294967295
+        static:
+          - original_ip: 1.0.0.1
+            translated_ip: 2.0.0.1
+          - original_ip: 1.0.0.2
+            translated_ip: 2.0.0.2
+            original_port: 22
+          - original_ip: 1.0.0.3
+            translated_ip: 2.0.0.3
+            original_port: 22
+            translated_port: 23
+          - original_ip: 1.0.0.4
+            translated_ip: 2.0.0.4
+            original_port: 22
+            translated_port: 23
+            protocol: udp
+          - original_ip: 1.0.0.5
+            translated_ip: 2.0.0.5
+            original_port: 22
+            translated_port: 23
+            protocol: tcp
+            group: 1
+          - original_ip: 1.0.0.6
+            translated_ip: 2.0.0.6
+            original_port: 22
+            translated_port: 23
+            protocol: tcp
+            group: 2
+            priority: 5
+            comment: 'Comment Test'
+          - original_ip: 1.0.0.7
+            translated_ip: 2.0.0.7
+            access_list: ACL21
+          - original_ip: 239.0.0.1
+            translated_ip: 239.0.0.2
+            direction: egress
+      source:
+        dynamic:
+          - access_list: ACL11
+            pool_name: POOL11
+            nat_type: pool
+          - access_list: ACL12
+            pool_name: POOL11
+            comment: POOL11 shared with ACL11/12
+            nat_type: pool
+          - access_list: ACL13
+            pool_name: POOL13
+            priority: 10
+            nat_type: pool
+          - access_list: ACL14
+            pool_name: POOL14
+            comment: Priority low end
+            priority: 1
+            nat_type: pool
+          - access_list: ACL16
+            pool_name: POOL16
+            comment: Priority default
+            priority: 0
+            nat_type: pool
+          - access_list: ACL15
+            pool_name: POOL15
+            comment: Priority high end
+            priority: 4294967295
+            nat_type: pool
+          - access_list: ACL17
+            comment: Priority_10
+            priority: 10
+            nat_type: overload
+          - access_list: ACL18
+            pool_name: POOL18
+            comment: Priority_10
+            priority: 10
+            nat_type: pool-address-only
+          - access_list: ACL19
+            pool_name: POOL19
+            comment: Priority_10
+            priority: 10
+            nat_type: pool-full-cone
+        static:
+          - original_ip: 3.0.0.1
+            translated_ip: 4.0.0.1
+          - original_ip: 3.0.0.2
+            translated_ip: 4.0.0.2
+            original_port: 22
+          - original_ip: 3.0.0.3
+            translated_ip: 4.0.0.3
+            original_port: 22
+            translated_port: 23
+          - original_ip: 3.0.0.4
+            translated_ip: 4.0.0.4
+            original_port: 22
+            translated_port: 23
+            protocol: udp
+          - original_ip: 3.0.0.5
+            translated_ip: 4.0.0.5
+            original_port: 22
+            translated_port: 23
+            protocol: tcp
+            group: 1
+          - original_ip: 3.0.0.6
+            translated_ip: 4.0.0.6
+            original_port: 22
+            translated_port: 23
+            protocol: tcp
+            group: 2
+            priority: 5
+            comment: 'Comment Test'
+          - original_ip: 3.0.0.7
+            translated_ip: 4.0.0.7
+            access_list: ACL21
+          - original_ip: 3.0.0.8
+            translated_ip: 4.0.0.8
+            direction: ingress
+
+  - name: Ethernet61
+    logging:
+      event:
+        link_status: false
+        congestion_drops: false
+        spanning_tree: false
+        storm_control_discards: false
+    description: interface_in_mode_access_with_voice
+    switchport:
+      enabled: true
+      trunk:
+        native_vlan: 100
+      mode: "trunk phone"
+      phone:
+        trunk: "untagged phone"
+        vlan: 70
+
+  - name: Ethernet62
+    logging:
+      event:
+        link_status: false
+        congestion_drops: false
+        spanning_tree: false
+        storm_control_discards: false
+    description: interface_in_mode_access_with_voice
+    switchport:
+      enabled: true
+      trunk:
+        native_vlan: 100
+      mode: "trunk phone"
+      phone:
+        trunk: "tagged phone"
+        vlan: 70
+
+  - name: Ethernet63
+    description: DHCP client interface
+    switchport:
+      enabled: false
+    ip_address: "dhcp"
+    dhcp_client_accept_default_route: true
+
+  - name: Ethernet64
+    description: DHCP server interface
+    switchport:
+      enabled: false
+    ip_address: 192.168.42.42/24
+    dhcp_server_ipv4: true
+    dhcp_server_ipv6: true
+    mac_timestamp: replace-fcs
+
+  - name: Ethernet69
+    switchport:
+      enabled: true
+    description: IP NAT service-profile
+    ip_nat:
+      service_profile: TEST-NAT-PROFILE
+# VRRP
+  - name: Ethernet65
+    description: Multiple VRIDs
+    switchport:
+      enabled: false
+    shutdown: false
+    ip_address: 192.0.2.2/25
+    ipv6_enable: true
+    ipv6_address: 2001:db8::2/64
+    ipv6_address_link_local: fe80::2/64
+    mac_timestamp: header
+    vrrp_ids:
+      - id: 1
+        priority_level: 105
+        advertisement:
+          interval: 2
+        preempt:
+          enabled: true
+          delay:
+            minimum: 30
+            reload: 800
+        ipv4:
+          address: 192.0.2.1
+      - id: 2
+        preempt:
+          enabled: true
+          delay:
+        ipv6:
+          address: 2001:db8::1
+
+  - name: Ethernet66
+    description: Multiple VRIDs and tracking
+    shutdown: false
+    switchport:
+      enabled: false
+    ip_address: 192.0.2.2/25
+    ipv6_enable: true
+    ipv6_address: 2001:db8::2/64
+    ipv6_address_link_local: fe80::2/64
+    vrrp_ids:
+      - id: 1
+        priority_level: 105
+        advertisement:
+          interval: 2
+        preempt:
+          enabled: true
+          delay:
+            minimum: 30
+            reload: 800
+        ipv4:
+          address: 192.0.2.1
+        tracked_object:
+          - name: ID1TrackedObjectDecrement
+            decrement: 5
+          - name: ID1TrackedObjectShutdown
+            shutdown: true
+      - id: 2
+        preempt:
+          enabled: true
+          delay:
+        ipv6:
+          address: 2001:db8::1
+        tracked_object:
+          - name: ID2TrackedObjectDecrement
+            decrement: 10
+          - name: ID2TrackedObjectShutdown
+            shutdown: true
+      - id: 3
+        timers:
+          delay:
+            reload: 900
+        preempt:
+          enabled: false
+        ipv4:
+          address: 100.64.0.1
+          version: 3
+# Transceiver Frequency
+  - name: Ethernet67
+    switchport:
+      enabled: true
+    description: Custom_Transceiver_Frequency
+    shutdown: false
+    transceiver:
+      frequency: 190050
+    mac_timestamp: before-fcs
+
+  - name: Ethernet67.1
+    description: Test_encapsulation_dot1q
+    encapsulation_dot1q:
+      vlan: 4
+      inner_vlan: 34
+
+  - name: Ethernet68
+    switchport:
+      enabled: true
+    description: Custom_Transceiver_Frequency
+    shutdown: false
+    transceiver:
+      frequency: 190080
+      frequency_unit: ghz
+      media:
+        override: 100gbase-ar4
+
+  - name: Ethernet68.1
+    description: Test_encapsulation_vlan1
+    encapsulation_vlan:
+      client:
+        outer_vlan: 23
+        inner_vlan: 45
+        encapsulation: dot1q
+        inner_encapsulation: dot1q
+      network:
+        encapsulation: dot1ad
+        outer_vlan: 32
+        inner_vlan: 54
+        inner_encapsulation: dot1ad
+
+  - name: Ethernet68.2
+    description: Test_encapsulation_vlan2
+    encapsulation_vlan:
+      client:
+        encapsulation: dot1q
+        vlan: 10
+      network:
+        encapsulation: dot1q
+        outer_vlan: 32
+        inner_vlan: 54
+
+  - name: Ethernet68.3
+    description: Test_encapsulation_vlan3
+    encapsulation_vlan:
+      client:
+        encapsulation: dot1ad
+        vlan: 12
+      network:
+        encapsulation: dot1q
+        vlan: 25
+
+  - name: Ethernet68.4
+    description: Test_encapsulation_vlan4
+    encapsulation_vlan:
+      client:
+        encapsulation: dot1ad
+        outer_vlan: 35
+        inner_vlan: 60
+        inner_encapsulation: dot1q
+      network:
+        encapsulation: dot1q
+        outer_vlan: 53
+        inner_vlan: 6
+        inner_encapsulation: dot1ad
+
+  - name: Ethernet68.5
+    description: Test_encapsulation_vlan5
+    encapsulation_vlan:
+      client:
+        encapsulation: dot1ad
+        outer_vlan: 35
+        inner_vlan: 60
+      network:
+        encapsulation: dot1ad
+        outer_vlan: 52
+        inner_vlan: 62
+
+  - name: Ethernet68.6
+    description: Test_encapsulation_vlan6
+    encapsulation_vlan:
+      client:
+        encapsulation: dot1ad
+        outer_vlan: 35
+        inner_vlan: 60
+      network:
+        encapsulation: client
+
+  - name: Ethernet68.7
+    description: Test_encapsulation_vlan7
+    encapsulation_vlan:
+      client:
+        encapsulation: untagged
+      network:
+        encapsulation: dot1ad
+        outer_vlan: 35
+        inner_vlan: 60
+
+  - name: Ethernet68.8
+    description: Test_encapsulation_vlan8
+    encapsulation_vlan:
+      client:
+        encapsulation: untagged
+      network:
+        encapsulation: dot1q
+        outer_vlan: 35
+        inner_vlan: 60
+
+  - name: Ethernet68.9
+    description: Test_encapsulation_vlan9
+    encapsulation_vlan:
+      client:
+        encapsulation: untagged
+      network:
+        encapsulation: untagged
+
+  - name: Ethernet68.10
+    description: Test_encapsulation_vlan9
+    encapsulation_vlan:
+      client:
+        encapsulation: dot1q
+        outer_vlan: 14
+        inner_vlan: 11
+      network:
+        encapsulation: client inner
+  - name: Ethernet70
+    description: dot1x_aaa_unresponsive
+    shutdown: false
+    dot1x:
+      aaa:
+        unresponsive:
+          eap_response: success
+          action:
+            traffic_allow_vlan: 10
+            traffic_allow_access_list: acl1
+          phone_action:
+            apply_cached_results: true
+            cached_results_timeout:
+              time_duration: 10
+              time_duration_unit: hours
+            traffic_allow: true
+            apply_alternate: true
+      mac_based_access_list: true
+  - name: Ethernet71
+    description: dot1x_aaa_unresponsive1
+    shutdown: false
+    dot1x:
+      aaa:
+        unresponsive:
+          eap_response: success
+          action:
+            traffic_allow_vlan: 10
+            traffic_allow_access_list: acl1
+          phone_action:
+            apply_cached_results: true
+            cached_results_timeout:
+              time_duration: 10
+              time_duration_unit: hours
+      mac_based_access_list: true
+  - name: Ethernet72
+    description: dot1x_aaa_unresponsive2
+    shutdown: false
+    dot1x:
+      aaa:
+        unresponsive:
+          eap_response: success
+          action:
+            traffic_allow_vlan: 10
+            traffic_allow_access_list: acl1
+      mac_based_access_list: true
+
+  - name: Ethernet73
+    peer: DC1-AGG01
+    peer_interface: Ethernet1
+    peer_type: l2leaf
+    description: DC1-AGG01_Ethernet1
+    channel_group:
+      id: 5
+      mode: active
+    transceiver:
+      media:
+        override: 100gbase-ar4
+
+  - name: Ethernet74
+    peer: DC1-LEAF1B
+    peer_interface: Ethernet3
+    peer_type: mlag_peer
+    description: MLAG_PEER_DC1-LEAF1B_Ethernet3
+    channel_group:
+      id: 3
+      mode: active
+
+  - name: Ethernet75
+    peer: DC1-LEAF1B
+    peer_interface: Ethernet4
+    peer_type: mlag_peer
+    description: MLAG_PEER_DC1-LEAF1B_Ethernet4
+    channel_group:
+      id: 3
+      mode: active
+
+  - name: Ethernet76
+    peer: SRV-POD03
+    peer_interface: Eth1
+    peer_type: server
+    description: SRV-POD03_Eth1
+    channel_group:
+      id: 5
+      mode: "active"
+    lldp:
+      receive: false
+      transmit: false
+
+  - name: Ethernet77
+    peer: DC1-LEAF1B
+    peer_interface: Ethernet4
+    description: MLAG_PEER_DC1-LEAF1B_Ethernet8
+    channel_group:
+      id: 8
+      mode: active
+
+  - name: Ethernet78
+    peer: DC1-AGG03
+    peer_interface: Ethernet1
+    peer_type: l2leaf
+    description: DC1-AGG03_Ethernet1
+    channel_group:
+      id: 15
+      mode: active
+    lacp_timer:
+      mode: fast
+      multiplier: 30
+
+  - name: Ethernet79
+    peer: DC1-AGG04
+    peer_interface: Ethernet1
+    peer_type: l2leaf
+    description: DC1-AGG04_Ethernet1
+    channel_group:
+      id: 16
+      mode: active
+    lacp_timer:
+      mode: normal
+
+  - name: Ethernet80
+    description: LAG Member
+    channel_group:
+      id: 17
+      mode: active
+
+  - name: Ethernet80/1
+    description: LAG Member
+    channel_group:
+      id: 101
+      mode: active
+
+  - name: Ethernet80/2
+    description: LAG Member
+    channel_group:
+      id: 102
+      mode: active
+
+  - name: Ethernet80/3
+    description: LAG Member
+    channel_group:
+      id: 103
+      mode: active
+
+  - name: Ethernet80/4
+    description: LAG Member LACP fallback
+    channel_group:
+      id: 104
+      mode: active
+    switchport:
+      enabled: true
+      mode: trunk
+      trunk:
+        allowed_vlan: 100
+    spanning_tree_portfast: edge
+
+  - name: Ethernet81
+    description: LAG Member
+    channel_group:
+      id: 109
+      mode: active
+
+  - name: Ethernet81/10
+    description: isis_port_channel_member
+    channel_group:
+      id: 110
+      mode: active
+
+  - name: Ethernet81/1
+    description: LAG Member with error_correction
+    error_correction_encoding:
+      fire_code: true
+      reed_solomon: true
+    channel_group:
+      id: 111
+      mode: active
+
+  - name: Ethernet81/2
+    description: LAG Member LACP fallback LLDP ZTP VLAN
+    channel_group:
+      id: 112
+      mode: active
+    switchport:
+      enabled: true
+      mode: trunk
+      trunk:
+        allowed_vlan: 112
+    spanning_tree_portfast: edge
+    lldp:
+      ztp_vlan: 112

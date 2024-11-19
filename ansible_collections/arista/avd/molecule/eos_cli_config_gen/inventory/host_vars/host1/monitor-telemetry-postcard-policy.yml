@@ -1,0 +1,62 @@
+---
+monitor_telemetry_postcard_policy:
+  disabled: false
+  ingress:
+    collection:
+      source: 10.3.3.3
+      destination: 10.3.3.4
+      version: 2
+    sample:
+      rate: 16384
+      tcp_udp_checksum:
+        value: 65000
+        mask: "0xffff"
+  marker_vxlan:
+    enabled: true
+    header_word_zero_bit: 30
+  profiles:
+    - name: profile1
+      ingress_sample_policy: samplepo1
+    - name: profile2
+      ingress_sample_policy: samplepo2
+  sample_policies:
+    - name: samplepo1
+      match_rules:
+        - name: rule1
+          type: ipv4
+          destination_prefix: 10.3.3.0/24
+          source_prefix: 3.4.5.0/24
+          protocols:
+            - protocol: tcp
+              destination_ports:
+                - '77'
+                - 78-80
+                - 82
+            - protocol: udp
+              destination_ports:
+                - "99"
+              source_ports:
+                - "98"
+        - name: rule2
+          type: ipv6
+          destination_prefix: 4::0/128
+          source_prefix: 5::0/128
+          protocols:
+            - protocol: udp
+              destination_ports:
+                - '747'
+                - 748-800
+        - name: rule3
+          type: ipv4
+    - name: samplepo2
+      match_rules:
+        - name: rule1
+          type: ipv4
+          destination_prefix: 10.3.3.0/24
+          source_prefix: 3.4.5.0/24
+          protocols:
+            - protocol: udp
+              source_ports:
+                - bgp
+              destination_ports:
+                - https
