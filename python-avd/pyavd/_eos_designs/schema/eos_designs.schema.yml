@@ -9653,7 +9653,7 @@ $defs:
               type: bool
               default: false
               description: Enable PTP.
-            role:
+            roles:
               type: list
               description: Role in boundary clock mode for each node. Default is `dynamic`.
               items:

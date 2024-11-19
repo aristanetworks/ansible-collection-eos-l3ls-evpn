@@ -20,7 +20,7 @@ core_interfaces:
       interfaces: [ Ethernet7, Ethernet7 ]
       ptp:
         enabled: true
-        role: ["master", "dynamic"]
+        roles: ["master", "dynamic"]
       include_in_underlay_protocol: false
 
 # Testing the same as above with l3_edge

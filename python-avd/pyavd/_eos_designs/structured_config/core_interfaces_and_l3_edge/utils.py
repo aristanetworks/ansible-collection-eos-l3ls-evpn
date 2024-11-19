@@ -318,7 +318,7 @@ class UtilsMixin:
                 ptp_config.update(get_item(self.shared_utils.ptp_profiles, "profile", ptp_profile_name, required=True, custom_error_msg=msg))
 
             node_index = p2p_link["nodes"].index(self.shared_utils.hostname)
-            if (ptp_role := get(p2p_link, "ptp.role")) and ptp_role[node_index] == "master":
+            if (ptp_roles := get(p2p_link, "ptp.roles")) and len(ptp_roles) > node_index and ptp_roles[node_index] == "master":
                 ptp_config["role"] = "master"
 
         ptp_config["enable"] = True
