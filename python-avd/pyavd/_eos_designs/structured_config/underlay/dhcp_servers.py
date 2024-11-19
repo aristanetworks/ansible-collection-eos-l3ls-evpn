@@ -6,6 +6,7 @@ from __future__ import annotations
 from functools import cached_property
 from ipaddress import AddressValueError, IPv4Address, ip_network
 
+from pyavd._errors import AristaAvdInvalidInputsError
 from pyavd._utils import get
 
 from .utils import UtilsMixin
@@ -81,7 +82,7 @@ class DhcpServerMixin(UtilsMixin):
 
         ntp_servers = []
         for ntp_server in ntp_servers_settings:
-            # Validate NTP server IP address
+            # Check and validate NTP server IP address
             try:
                 ntp_server_ip = IPv4Address(ntp_server["name"])
             except AddressValueError:
@@ -90,8 +91,8 @@ class DhcpServerMixin(UtilsMixin):
 
         if ntp_servers:
             return {"vendor_id": "NTP", "sub_options": [{"code": 42, "array_ipv4_address": ntp_servers}]}
-
-        return None
+        msg = "When in-band ZTP is enabled, at least one NTP server's `name` field provided under `ntp_settings.servers` must be a valid IPv4 address."
+        raise AristaAvdInvalidInputsError(msg)
 
     @cached_property
     def dhcp_servers(self) -> list | None:
