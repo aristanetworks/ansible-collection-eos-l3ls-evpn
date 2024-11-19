@@ -84,6 +84,17 @@ class EthernetInterfacesMixin(UtilsMixin):
     def _update_ethernet_interface_cfg(
         self: AvdStructuredConfigConnectedEndpoints, adapter: dict | ChainMap, ethernet_interface: dict, connected_endpoint: dict
     ) -> dict:
+        if (vlans := adapter.get("vlans")) is not None and adapter.get("mode") in ["access", "dot1q-tunnel"]:
+            try:
+                # For access ports we use the 'vlans' field (str) as 'access_vlan' (int). Attempting to convert.
+                vlans = int(vlans)
+            except ValueError as e:
+                msg = (
+                    "Adapter 'vlans' value must be a single vlan ID when mode is 'access' or 'dot1q-tunnel'. "
+                    f"Got {vlans} for interface {ethernet_interface['name']}."
+                )
+                raise AristaAvdInvalidInputsError(msg) from e
+
         ethernet_interface.update(
             {
                 "mtu": adapter.get("mtu") if self.shared_utils.platform_settings_feature_support_per_interface_mtu else None,
@@ -93,12 +104,12 @@ class EthernetInterfacesMixin(UtilsMixin):
                     "enabled": True,
                     "mode": adapter.get("mode"),
                     "trunk": {
-                        "allowed_vlan": adapter.get("vlans") if adapter.get("mode") == "trunk" else None,
+                        "allowed_vlan": vlans if adapter.get("mode") == "trunk" else None,
                         "groups": self._get_adapter_trunk_groups(adapter, connected_endpoint),
                         "native_vlan_tag": adapter.get("native_vlan_tag"),
                         "native_vlan": adapter.get("native_vlan"),
                     },
-                    "access_vlan": adapter.get("vlans") if adapter.get("mode") in ["access", "dot1q-tunnel"] else None,
+                    "access_vlan": vlans if adapter.get("mode") in ["access", "dot1q-tunnel"] else None,
                     "phone": self._get_adapter_phone(adapter, connected_endpoint),
                 },
                 "spanning_tree_portfast": adapter.get("spanning_tree_portfast"),

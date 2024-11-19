@@ -300,7 +300,7 @@ ethernet_interfaces:
   switchport:
     enabled: true
     mode: access
-    access_vlan: '110'
+    access_vlan: 110
 loopback_interfaces:
 - name: Loopback0
   description: CUSTOM_EVPN_Overlay_Peering_L3LEAF
