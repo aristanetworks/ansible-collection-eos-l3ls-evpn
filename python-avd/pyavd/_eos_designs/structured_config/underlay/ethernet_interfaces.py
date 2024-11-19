@@ -143,7 +143,7 @@ class EthernetInterfacesMixin(UtilsMixin):
                                     "key": get(self._hostvars, "underlay_isis_authentication_key"),
                                     "key_type": "7",
                                 }
-                            }
+                            },
                         }
                     )
 
