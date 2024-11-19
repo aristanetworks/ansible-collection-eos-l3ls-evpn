@@ -24,6 +24,7 @@
 - [System Boot Settings](#system-boot-settings)
   - [System Boot Device Configuration](#system-boot-device-configuration)
 - [Monitoring](#monitoring)
+  - [Logging](#logging)
   - [Monitor Server Radius Summary](#monitor-server-radius-summary)
 - [Monitor Connectivity](#monitor-connectivity)
   - [Global Configuration](#global-configuration)
@@ -299,6 +300,31 @@ dhcp relay
 
 ## Monitoring
 
+### Logging
+
+#### Logging Servers and Features Summary
+
+| Type | Level |
+| -----| ----- |
+| Console | informational |
+| Monitor | debugging |
+| Buffer | - |
+
+**Syslog facility value:** syslog
+
+#### Logging Servers and Features Device Configuration
+
+```eos
+!
+no logging repeat-messages
+logging buffered 64000
+logging console informational
+logging monitor debugging
+logging facility syslog
+!
+logging event link-status global
+```
+
 ### Monitor Server Radius Summary
 
 #### Server Probe Settings
@@ -501,17 +527,27 @@ queue-monitor length default threshold 100
 
 | IGMP Snooping | Fast Leave | Interface Restart Query | Proxy | Restart Query Interval | Robustness Variable |
 | ------------- | ---------- | ----------------------- | ----- | ---------------------- | ------------------- |
-| Enabled | False | - | False | - | - |
+| Disabled | False | - | False | - | - |
 
 | Querier Enabled | IP Address | Query Interval | Max Response Time | Last Member Query Interval | Last Member Query Count | Startup Query Interval | Startup Query Count | Version |
 | --------------- | ---------- | -------------- | ----------------- | -------------------------- | ----------------------- | ---------------------- | ------------------- | ------- |
 | False | - | - | - | - | - | - | - | - |
 
+##### IP IGMP Snooping Vlan Summary
+
+| Vlan | IGMP Snooping | Fast Leave | Max Groups | Proxy |
+| ---- | ------------- | ---------- | ---------- | ----- |
+| 20 | False | - | - | - |
+| 30 | False | - | - | - |
+
 #### IP IGMP Snooping Device Configuration
 
 ```eos
 !
+no ip igmp snooping
 no ip igmp snooping fast-leave
+no ip igmp snooping vlan 20
+no ip igmp snooping vlan 30
 no ip igmp snooping querier
 ```
 

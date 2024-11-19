@@ -11,6 +11,7 @@
   - [System Control-Plane](#system-control-plane)
   - [Management SSH](#management-ssh)
   - [Management Tech-Support](#management-tech-support)
+  - [IP Client Source Interfaces](#ip-client-source-interfaces)
 - [CVX](#cvx)
   - [CVX Services](#cvx-services)
   - [CVX Device Configuration](#cvx-device-configuration)
@@ -50,6 +51,7 @@
   - [System Boot Device Configuration](#system-boot-device-configuration)
 - [Monitoring](#monitoring)
   - [Custom daemons](#custom-daemons)
+  - [Logging](#logging)
   - [MCS Client Summary](#mcs-client-summary)
   - [Monitor Sessions](#monitor-sessions)
   - [Tap Aggregation](#tap-aggregation)
@@ -493,6 +495,47 @@ management tech-support
       include command show version detail | grep TerminAttr
    exit
 ```
+
+### IP Client Source Interfaces
+
+| IP Client | VRF | Source Interface Name |
+| --------- | --- | --------------------- |
+| FTP | default | Ethernet10 |
+| FTP | default | Loopback0 |
+| FTP | MGMT | Management0 |
+| HTTP | default | Loopback0 |
+| HTTP | MGMT | Management0 |
+| HTTP | default | Ethernet10 |
+| SSH | default | Ethernet10 |
+| SSH | default | Loopback0 |
+| SSH | MGMT | Management0 |
+| Telnet | default | Ethernet10 |
+| Telnet | default | Loopback0 |
+| Telnet | MGMT | Management0 |
+| TFTP | default | Ethernet10 |
+| TFTP | default | Loopback0 |
+| TFTP | MGMT | Management0 |
+
+#### IP Client Source Interfaces Device Configuration
+
+```eos
+!
+ip ftp client source-interface Ethernet10
+ip ftp client source-interface Loopback0 vrf default
+ip ftp client source-interface Management0 vrf MGMT
+ip http client local-interface Loopback0 vrf default
+ip http client local-interface Management0 vrf MGMT
+ip http client local-interface Ethernet10
+ip ssh client source-interface Ethernet10
+ip ssh client source-interface Loopback0 vrf default
+ip ssh client source-interface Management0 vrf MGMT
+ip telnet client source-interface Ethernet10
+ip telnet client source-interface Loopback0 vrf default
+ip telnet client source-interface Management0 vrf MGMT
+ip tftp client source-interface Ethernet10
+ip tftp client source-interface Loopback0 vrf default
+ip tftp client source-interface Management0 vrf MGMT
+ ```
 
 ## CVX
 
@@ -1219,6 +1262,93 @@ daemon ocprometheus
 daemon random
    exec /usr/bin/random
    shutdown
+```
+
+### Logging
+
+#### Logging Servers and Features Summary
+
+| Type | Level |
+| -----| ----- |
+| Console | errors |
+| Buffer | warnings |
+| Trap | disabled |
+| Synchronous | critical |
+
+| Format Type | Setting |
+| ----------- | ------- |
+| Timestamp | traditional year timezone |
+| Hostname | hostname |
+| Sequence-numbers | false |
+| RFC5424 | True |
+
+| VRF | Source Interface |
+| --- | ---------------- |
+| default | Loopback0 |
+| mgt | Management0 |
+
+| VRF | Hosts | Ports | Protocol |
+| --- | ----- | ----- | -------- |
+| default | 20.20.20.7 | Default | UDP |
+| default | 50.50.50.7 | 100, 200 | TCP |
+| default | 60.60.60.7 | 100, 200 | UDP |
+| default | 2001:db8::20:7 | Default | UDP |
+| default | 2001:db8::50:7 | 100, 200 | TCP |
+| default | 2001:db8::60:7 | 100, 200 | UDP |
+| mgt | 10.10.10.7 | Default | UDP |
+| mgt | 30.30.30.7 | 100, 200 | TCP |
+| mgt | 40.40.40.7 | 300, 400 | UDP |
+| mgt | 2001:db8::10:7 | Default | UDP |
+| mgt | 2001:db8::30:7 | 100, 200 | TCP |
+| mgt | 2001:db8::40:7 | 300, 400 | UDP |
+| vrf_with_no_source_interface | 1.2.3.4 | Default | UDP |
+| vrf_with_no_source_interface | 2001:db8::1:2:3:4 | Default | UDP |
+
+| Facility | Severity |
+| -------- | -------- |
+| AAA | warnings |
+| ACL | critical |
+| BGP | 0 |
+
+#### Logging Servers and Features Device Configuration
+
+```eos
+!
+logging event storm-control discards global
+logging event storm-control discards interval 10
+!
+logging event congestion-drops interval 10
+!
+logging repeat-messages
+logging buffered 1000000 warnings
+no logging trap
+logging console errors
+logging synchronous level critical
+logging host 20.20.20.7
+logging host 50.50.50.7 100 200 protocol tcp
+logging host 60.60.60.7 100 200
+logging host 2001:db8::20:7
+logging host 2001:db8::50:7 100 200 protocol tcp
+logging host 2001:db8::60:7 100 200
+logging vrf mgt host 10.10.10.7
+logging vrf mgt host 30.30.30.7 100 200 protocol tcp
+logging vrf mgt host 40.40.40.7 300 400
+logging vrf mgt host 2001:db8::10:7
+logging vrf mgt host 2001:db8::30:7 100 200 protocol tcp
+logging vrf mgt host 2001:db8::40:7 300 400
+logging vrf vrf_with_no_source_interface host 1.2.3.4
+logging vrf vrf_with_no_source_interface host 2001:db8::1:2:3:4
+logging format timestamp traditional year timezone
+logging format rfc5424
+logging source-interface Loopback0
+logging vrf mgt source-interface Management0
+logging policy match match-list molecule discard
+!
+logging level AAA warnings
+logging level ACL critical
+logging level BGP 0
+!
+no logging event link-status global
 ```
 
 ### MCS Client Summary

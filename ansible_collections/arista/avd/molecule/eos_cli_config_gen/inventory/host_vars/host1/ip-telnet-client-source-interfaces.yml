@@ -1,0 +1,9 @@
+---
+## IP TELNET CLIENT SOURCE INTERFACES ##
+
+ip_telnet_client_source_interfaces:
+  - name: Loopback0
+    vrf: default
+  - name: Management0
+    vrf: MGMT
+  - name: Ethernet10

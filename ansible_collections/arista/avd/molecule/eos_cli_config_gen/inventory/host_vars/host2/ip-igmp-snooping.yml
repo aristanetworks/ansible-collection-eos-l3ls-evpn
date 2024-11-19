@@ -1,0 +1,14 @@
+---
+### IGMP Snooping Disabled
+
+ip_igmp_snooping:
+  globally_enabled: false
+  fast_leave: false
+  querier:
+    enabled: false
+  proxy: false
+  vlans:
+    - id: 20
+      enabled: false
+    - id: 30
+      enabled: false

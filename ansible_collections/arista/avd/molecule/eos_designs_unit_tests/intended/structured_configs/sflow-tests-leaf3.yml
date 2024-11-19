@@ -204,7 +204,7 @@ port_channel_interfaces:
     trunk:
       groups:
       - MLAG
-    access_vlan: '11'
+    access_vlan: 11
   shutdown: false
   sflow:
     enable: true
@@ -240,7 +240,7 @@ port_channel_interfaces:
   switchport:
     enabled: true
     mode: access
-    access_vlan: '11'
+    access_vlan: 11
   spanning_tree_portfast: edge
   mlag: 13
 - name: Port-Channel15
@@ -251,7 +251,7 @@ port_channel_interfaces:
   switchport:
     enabled: true
     mode: access
-    access_vlan: '11'
+    access_vlan: 11
   spanning_tree_portfast: edge
   mlag: 15
 ethernet_interfaces:
