@@ -1,0 +1,294 @@
+hostname: evpn_l2_multi_domain
+is_deployed: true
+router_bgp:
+  as: '65001'
+  router_id: 192.168.255.1
+  bgp:
+    default:
+      ipv4_unicast: false
+  maximum_paths:
+    paths: 4
+    ecmp: 4
+  redistribute:
+    connected:
+      enabled: true
+      route_map: RM-CONN-2-BGP
+  peer_groups:
+  - name: IPv4-UNDERLAY-PEERS
+    type: ipv4
+    maximum_routes: 12000
+    send_community: all
+  - name: EVPN-OVERLAY-PEERS
+    type: evpn
+    update_source: Loopback0
+    bfd: true
+    send_community: all
+    maximum_routes: 0
+    ebgp_multihop: 3
+  - name: EVPN-OVERLAY-CORE
+    type: evpn
+    update_source: Loopback0
+    bfd: true
+    send_community: all
+    maximum_routes: 0
+    ebgp_multihop: 15
+  address_family_ipv4:
+    peer_groups:
+    - name: IPv4-UNDERLAY-PEERS
+      activate: true
+    - name: EVPN-OVERLAY-PEERS
+      activate: false
+    - name: EVPN-OVERLAY-CORE
+      activate: false
+  address_family_evpn:
+    peer_groups:
+    - name: EVPN-OVERLAY-CORE
+      domain_remote: true
+      activate: true
+    - name: EVPN-OVERLAY-PEERS
+      activate: true
+  neighbors:
+  - ip_address: 192.168.100.10
+    peer_group: EVPN-OVERLAY-CORE
+    peer: DCI_TEST
+    description: DCI_TEST
+    remote_as: '65002'
+  vrfs:
+  - name: Tenant_A_OP_Zone
+    rd: 192.168.255.1:10
+    route_targets:
+      import:
+      - address_family: evpn
+        route_targets:
+        - '10:10'
+      export:
+      - address_family: evpn
+        route_targets:
+        - '10:10'
+    router_id: 192.168.255.1
+    redistribute:
+      connected:
+        enabled: true
+  - name: Tenant_A_WAN_Zone
+    rd: 192.168.255.1:21
+    route_targets:
+      import:
+      - address_family: evpn
+        route_targets:
+        - '21:21'
+      export:
+      - address_family: evpn
+        route_targets:
+        - '21:21'
+    router_id: 192.168.255.1
+    redistribute:
+      connected:
+        enabled: true
+  vlans:
+  - id: 110
+    tenant: Tenant_A
+    rd: 192.168.255.1:10110
+    route_targets:
+      both:
+      - 10110:10110
+    redistribute_routes:
+    - learned
+  - id: 111
+    tenant: Tenant_A
+    rd: 192.168.255.1:10111
+    route_targets:
+      both:
+      - 10111:10111
+      import_export_evpn_domains:
+      - domain: remote
+        route_target: 10111:10111
+    redistribute_routes:
+    - learned
+    rd_evpn_domain:
+      domain: remote
+      rd: 192.168.255.1:10111
+  - id: 150
+    tenant: Tenant_A
+    rd: 192.168.255.1:10150
+    route_targets:
+      both:
+      - 10150:10150
+      import_export_evpn_domains:
+      - domain: remote
+        route_target: 10150:10150
+    redistribute_routes:
+    - learned
+    rd_evpn_domain:
+      domain: remote
+      rd: 192.168.255.1:10150
+  - id: 160
+    tenant: Tenant_A
+    rd: 192.168.255.1:10160
+    route_targets:
+      both:
+      - 10160:10160
+      import_export_evpn_domains:
+      - domain: remote
+        route_target: 10160:10160
+    redistribute_routes:
+    - learned
+    rd_evpn_domain:
+      domain: remote
+      rd: 192.168.255.1:10160
+  - id: 210
+    tenant: Tenant_A
+    rd: 192.168.255.1:10210
+    route_targets:
+      both:
+      - 10210:10210
+    redistribute_routes:
+    - learned
+  - id: 220
+    tenant: Tenant_A
+    rd: 192.168.255.1:10220
+    route_targets:
+      both:
+      - 10220:10220
+      import_export_evpn_domains:
+      - domain: remote
+        route_target: 10220:10220
+    redistribute_routes:
+    - learned
+    rd_evpn_domain:
+      domain: remote
+      rd: 192.168.255.1:10220
+service_routing_protocols_model: multi-agent
+ip_routing: true
+vlan_internal_order:
+  allocation: ascending
+  range:
+    beginning: 1006
+    ending: 1199
+aaa_root:
+  disabled: true
+config_end: true
+enable_password:
+  disabled: true
+transceiver_qsfp_default_mode_4x10: true
+vrfs:
+- name: MGMT
+  ip_routing: false
+- name: Tenant_A_OP_Zone
+  tenant: Tenant_A
+  ip_routing: true
+- name: Tenant_A_WAN_Zone
+  tenant: Tenant_A
+  ip_routing: true
+management_interfaces:
+- name: Management1
+  description: OOB_MANAGEMENT
+  shutdown: false
+  vrf: MGMT
+  ip_address: 192.168.100.101/24
+  gateway: null
+  type: oob
+management_api_http:
+  enable_vrfs:
+  - name: MGMT
+  enable_https: true
+loopback_interfaces:
+- name: Loopback0
+  description: ROUTER_ID
+  shutdown: false
+  ip_address: 192.168.255.1/32
+- name: Loopback1
+  description: VXLAN_TUNNEL_SOURCE
+  shutdown: false
+  ip_address: 192.168.254.1/32
+prefix_lists:
+- name: PL-LOOPBACKS-EVPN-OVERLAY
+  sequence_numbers:
+  - sequence: 10
+    action: permit 192.168.255.0/24 eq 32
+  - sequence: 20
+    action: permit 192.168.254.0/24 eq 32
+route_maps:
+- name: RM-CONN-2-BGP
+  sequence_numbers:
+  - sequence: 10
+    type: permit
+    match:
+    - ip address prefix-list PL-LOOPBACKS-EVPN-OVERLAY
+router_bfd:
+  multihop:
+    interval: 300
+    min_rx: 300
+    multiplier: 3
+vlans:
+- id: 110
+  name: Tenant_B_OP_Zone_1
+  tenant: Tenant_A
+- id: 111
+  name: Tenant_B_OP_Zone_2
+  tenant: Tenant_A
+- id: 150
+  name: Tenant_A_WAN_Zone_1
+  tenant: Tenant_A
+- id: 160
+  name: Tenant_A_WAN_Zone_2
+  tenant: Tenant_A
+- id: 210
+  name: Tenant_A_L2_1
+  tenant: Tenant_A
+- id: 220
+  name: Tenant_A_L2_2
+  tenant: Tenant_A
+ip_igmp_snooping:
+  globally_enabled: true
+ip_virtual_router_mac_address: 00:dc:00:00:00:0a
+vlan_interfaces:
+- name: Vlan110
+  tenant: Tenant_A
+  description: Tenant_B_OP_Zone_1
+  shutdown: false
+  ip_address_virtual: 10.1.10.1/24
+  vrf: Tenant_A_OP_Zone
+- name: Vlan111
+  tenant: Tenant_A
+  description: Tenant_B_OP_Zone_2
+  shutdown: false
+  ip_address_virtual: 10.1.11.1/24
+  vrf: Tenant_A_OP_Zone
+- name: Vlan150
+  tenant: Tenant_A
+  description: Tenant_A_WAN_Zone_1
+  shutdown: false
+  ip_address_virtual: 10.1.50.1/24
+  vrf: Tenant_A_WAN_Zone
+- name: Vlan160
+  tenant: Tenant_A
+  description: Tenant_A_WAN_Zone_2
+  shutdown: false
+  ip_address_virtual: 10.1.60.1/24
+  vrf: Tenant_A_WAN_Zone
+vxlan_interface:
+  vxlan1:
+    description: evpn_l2_multi_domain_VTEP
+    vxlan:
+      udp_port: 4789
+      source_interface: Loopback1
+      vlans:
+      - id: 110
+        vni: 10110
+      - id: 111
+        vni: 10111
+      - id: 150
+        vni: 10150
+      - id: 160
+        vni: 10160
+      - id: 210
+        vni: 10210
+      - id: 220
+        vni: 10220
+      vrfs:
+      - name: Tenant_A_OP_Zone
+        vni: 10
+      - name: Tenant_A_WAN_Zone
+        vni: 21
+metadata:
+  platform: vEOS

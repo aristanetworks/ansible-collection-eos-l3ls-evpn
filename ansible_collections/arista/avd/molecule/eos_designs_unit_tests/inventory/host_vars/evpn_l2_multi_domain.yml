@@ -1,0 +1,58 @@
+type: l3leaf
+
+l3leaf:
+  defaults:
+    loopback_ipv4_pool: 192.168.255.0/24
+    vtep_loopback_ipv4_pool: 192.168.254.0/24
+    virtual_router_mac_address: 00:dc:00:00:00:0a
+    platform: vEOS
+  nodes:
+    - name: evpn_l2_multi_domain
+      id: 1
+      mgmt_ip: 192.168.100.101/24
+      bgp_as: 65001
+      evpn_gateway:
+        remote_peers:
+          - hostname: DCI_TEST
+            ip_address: 192.168.100.10
+            bgp_as: 65002
+        evpn_l2:
+          enabled: true
+
+tenants:
+  - name: Tenant_A
+    mac_vrf_vni_base: 10000
+    evpn_l2_multi_domain: false
+    vrfs:
+      - name: Tenant_A_OP_Zone
+        vrf_vni: 10
+        svis:
+          - id: 110
+            name: Tenant_B_OP_Zone_1
+            enabled: True
+            ip_address_virtual: 10.1.10.1/24
+          - id: 111
+            name: Tenant_B_OP_Zone_2
+            enabled: True
+            ip_address_virtual: 10.1.11.1/24
+             # Test to enable specific VLAN for l2 multi-domain
+            evpn_l2_multi_domain: True
+      - name: Tenant_A_WAN_Zone
+        vrf_vni: 21
+        # Test to enable all vlans in VRF for l2 multi-domain
+        evpn_l2_multi_domain: true
+        svis:
+          - id: 150
+            name: Tenant_A_WAN_Zone_1
+            enabled: True
+            ip_address_virtual: 10.1.50.1/24
+          - id: 160
+            name: Tenant_A_WAN_Zone_2
+            enabled: True
+            ip_address_virtual: 10.1.60.1/24
+    l2vlans:
+      - id: 210
+        name: Tenant_A_L2_1
+      - id: 220
+        name: Tenant_A_L2_2
+        evpn_l2_multi_domain: true
