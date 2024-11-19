@@ -42,7 +42,7 @@ class AvdStructuredConfigUnderlay(
     MplsMixin,
     AgentsMixin,
     IpAccesslistsMixin,
-    DhcpServerMixin,
+    DhcpServersMixin,
 ):
     """
     The AvdStructuredConfig Class is imported used "get_structured_config" to render parts of the structured config.
