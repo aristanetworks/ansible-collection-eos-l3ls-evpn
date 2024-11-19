@@ -214,7 +214,7 @@ cv_submit_workspace: true
 cv_submit_workspace_force: false
 
 # Fetch and expose Workspace build warnings.
-# Suppress specific warnings based on pre-defined options or custom string(s).
+# Suppress specific warnings based on pre-defined options or custom regex pattern(s).
 cv_workspace_build_warnings:
   enabled: true
   suppress_patterns: []

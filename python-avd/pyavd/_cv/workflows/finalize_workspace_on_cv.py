@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 from logging import getLogger
+from re import compile as re_compile
 from typing import TYPE_CHECKING
 
 from pyavd._cv.api.arista.workspace.v1 import ResponseStatus, WorkspaceState
@@ -110,7 +111,7 @@ async def process_workspace_build_details(
     """
     Get and parse Workspace Build Details Response.
 
-    Extracts (with ability to suppress warnings based on the pre-defined use-cases or custom pattern strings):
+    Extracts (with ability to suppress warnings based on the pre-defined use-cases or custom regex pattern(s)):
     - Config validation errors.
     - Config validation warnings.
     - Image validation errors.
@@ -128,9 +129,23 @@ async def process_workspace_build_details(
         workspace_build_details_stream_response = await cv_client.get_workspace_build_details(workspace_id=workspace.id, build_id=workspace.build_id)
 
         if workspace.build_warnings:
-            workspace_build_warning_suppress_list = workspace.build_warnings_suppress_patterns[:]
+            # Deduplicate list of patterns from user
+            workspace_build_warning_suppress_list = list(set(workspace.build_warnings_suppress_patterns[:]))
             if workspace.build_warnings_suppress_portfast and EOS_CLI_PORTFAST_WARNING not in workspace_build_warning_suppress_list:
                 workspace_build_warning_suppress_list.append(EOS_CLI_PORTFAST_WARNING)
+            compiled_workspace_build_warning_suppress_list: list = []
+            for proposed_regex_pattern in workspace_build_warning_suppress_list:
+                try:
+                    compiled_workspace_build_warning_suppress_list.append(re_compile(proposed_regex_pattern))
+                except Exception as e:  # noqa: PERF203
+                    LOGGER.warning(
+                        "process_workspace_build_details: Failed to process proposed regex pattern '%s'. "
+                        "This incorrect pattern will not be used for warnings suppression. Error: '%s'",
+                        proposed_regex_pattern,
+                        e,
+                    )
+                    # Delete invalid regex pattern string from workspace.build_warnings_suppress_patterns
+                    workspace.build_warnings_suppress_patterns = [item for item in workspace.build_warnings_suppress_patterns if item != proposed_regex_pattern]
 
         workspace_build_results = [
             CVWorkspaceBuildResult(
@@ -159,14 +174,16 @@ async def process_workspace_build_details(
                     warnings=[
                         CVWorkspaceBuildConfigValidationError(
                             error_code=getattr(getattr(config_validation_warning, "error_code", None), "name", None),
-                            error_msg=error_msg,
+                            error_msg=getattr(config_validation_warning, "error_msg", None),
                             line_num=getattr(config_validation_warning, "line_num", None),
                             configlet_name=getattr(config_validation_warning, "configlet_name", None),
                         )
                         for config_validation_warning in getattr(
                             getattr(getattr(getattr(response, "value", None), "config_validation_result", None), "warnings", None), "values", []
                         )
-                        if (error_msg := getattr(config_validation_warning, "error_msg", None)) not in workspace_build_warning_suppress_list
+                        if not any(
+                            pattern.search(getattr(config_validation_warning, "error_msg", "")) for pattern in compiled_workspace_build_warning_suppress_list
+                        )
                     ]
                     if workspace.build_warnings
                     else [],
@@ -186,13 +203,15 @@ async def process_workspace_build_details(
                     warnings=[
                         CVWorkspaceBuildImageValidationWarning(
                             sku=getattr(image_validation_warning, "sku", None),
-                            warning_code=warning_code,
-                            warning_msg=warning_msg,
+                            warning_code=getattr(image_validation_warning, "warning_code", None),
+                            warning_msg=getattr(image_validation_warning, "warning_msg", None),
                         )
                         for image_validation_warning in getattr(
                             getattr(getattr(getattr(response, "value", None), "image_validation_result", None), "warnings", None), "values", []
                         )
-                        if (warning_msg := getattr(image_validation_warning, "warning_msg", None)) not in workspace_build_warning_suppress_list
+                        if not any(
+                            pattern.search(getattr(image_validation_warning, "warning_msg", "")) for pattern in compiled_workspace_build_warning_suppress_list
+                        )
                     ]
                     if workspace.build_warnings
                     else [],
@@ -210,21 +229,24 @@ async def process_workspace_build_details(
                     or getattr(getattr(getattr(response, "value", None), "image_validation_result", None), "warnings", None)
                 )
                 and (
-                    not {
-                        i.error_msg
+                    len(compiled_workspace_build_warning_suppress_list) == 0
+                    or {False}
+                    in [
+                        {bool(pattern.search(i.error_msg)) for pattern in compiled_workspace_build_warning_suppress_list}
                         for i in getattr(getattr(getattr(getattr(response, "value", None), "config_validation_result", None), "warnings", None), "values", [])
-                    }.issubset(set(workspace_build_warning_suppress_list))
-                    or not {
-                        i.warning_msg
+                    ]
+                    or {False}
+                    in [
+                        {bool(pattern.search(i.warning_msg)) for pattern in compiled_workspace_build_warning_suppress_list}
                         for i in getattr(getattr(getattr(getattr(response, "value", None), "image_validation_result", None), "warnings", None), "values", [])
-                    }.issubset(set(workspace_build_warning_suppress_list))
+                    ]
                 )
             )
         ]
 
     except Exception as e:
-        LOGGER.info(
-            "process_workspace_build_details: Failed to fetch and process Workspace build results for workspace '%s' and it's build_id '%s'. Error: '%s'",
+        LOGGER.warning(
+            "process_workspace_build_details: Failed to fetch and process Workspace build results for workspace '%s' and build_id '%s'. Error: '%s'",
             workspace.id,
             workspace.build_id,
             e,

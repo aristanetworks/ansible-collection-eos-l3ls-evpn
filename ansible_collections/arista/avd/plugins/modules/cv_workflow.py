@@ -100,7 +100,7 @@ options:
         type: bool
         default: true
       build_warnings_suppress_patterns:
-        description: List of the EoS CLI warning string patterns to suppress.
+        description: List of the regex patterns. Matched EoS CLI warnings will be suppressed.
         type: list
         elements: str
         default: []

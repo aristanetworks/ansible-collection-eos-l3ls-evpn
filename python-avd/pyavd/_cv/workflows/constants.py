@@ -3,7 +3,7 @@
 # that can be found in the LICENSE file.
 
 EOS_CLI_PORTFAST_WARNING = (
-    "! portfast should only be enabled on ports connected to a single host. Connecting hubs, concentrators, switches, bridges, etc. "
-    "to this interface when portfast is enabled can cause temporary bridging loops. Use with CAUTION."
+    "^! portfast should only be enabled on ports connected to a single host. Connecting hubs, concentrators, switches, bridges, etc. "
+    "to this interface when portfast is enabled can cause temporary bridging loops. Use with CAUTION.$"
 )
 """Text pattern to match EoS CLI warning regarding utilization of the spanning-tree portfast feature."""
