@@ -52,10 +52,10 @@ async def cv_client() -> AsyncGenerator[CVClient, None]:
                 yield cv_client
 
     else:
-        with patch("aristaproto.ServiceStub", new=MockedServiceStub):  # noqa: SIM117, We do not want to combine since the second mock will mess up imports.
-            with patch("pyavd._cv.client.CVClient.__aenter__", new=mocked_cv_client_aenter):
-                from pyavd._cv.client import CVClient
+        with patch("aristaproto.ServiceStub", new=MockedServiceStub):
+            from pyavd._cv.client import CVClient
 
+            with patch("pyavd._cv.client.CVClient.__aenter__", new=mocked_cv_client_aenter):
                 async with CVClient("www.cv-staging.corp.arista.io", token=token) as cv_client:
                     yield cv_client
 
