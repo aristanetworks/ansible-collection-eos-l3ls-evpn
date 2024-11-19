@@ -237,7 +237,7 @@ class UtilsMixin:
                         "isis_circuit_type": default(p2p_link.isis_circuit_type, self.inputs.isis_default_circuit_type),
                     },
                 )
-                if (isis_authentication_mode := default(p2p_link.isis_authentication_mode, self.inputs.underlay_isis_authentication_mode)):
+                if isis_authentication_mode := default(p2p_link.isis_authentication_mode, self.inputs.underlay_isis_authentication_mode):
                     interface_cfg.setdefault("isis_authentication", {}).setdefault("both", {})["mode"] = isis_authentication_mode
 
                 if (isis_authentication_key := default(p2p_link.isis_authentication_key, self.inputs.underlay_isis_authentication_key)) is not None:
