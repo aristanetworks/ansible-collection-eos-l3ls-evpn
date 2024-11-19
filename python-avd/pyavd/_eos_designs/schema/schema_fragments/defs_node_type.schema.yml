@@ -1381,7 +1381,6 @@ $defs:
               table: node-type-l3-interfaces-configuration
             description: |-
               L3 Interfaces to configure on the node.
-              Used to define the node for WAN interfaces when `wan_carrier` is set.
             items:
               type: dict
               keys:
@@ -1396,7 +1395,6 @@ $defs:
               table: node-type-l3-port-channels-configuration
             description: |-
               L3 Port-Channel interfaces to configure on the node.
-              Used to define the node for WAN interfaces when `wan_carrier` is set.
           data_plane_cpu_allocation_max:
             documentation_options:
               table: system-settings

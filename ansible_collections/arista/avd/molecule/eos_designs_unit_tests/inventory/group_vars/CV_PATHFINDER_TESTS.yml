@@ -15,7 +15,7 @@ ipv4_prefix_list_catalog:
       - sequence: 10
         action: permit 5.0.0.0/0
       - sequence: 20
-        action: deny 10.00.0.0/24
+        action: deny 10.0.0.0/24
 
 cv_pathfinder_regions:
   - name: AVD_Land_West
@@ -212,6 +212,84 @@ wan_router:
               bgp:
                 peer_as: 64520
                 ipv4_prefix_list_out: PL2
+          l3_port_channels:
+            - # Port-Channel with 2 member ports
+              name: Port-Channel1
+              mode: active
+              member_interfaces:
+                - name: Ethernet6
+                  peer: peerDevice1
+                  peer_interface: PeerDevIntf1
+                  speed: "forced 10000full"
+                - # peer, peer_interface not set, use peer from parent L3 Port-Channel
+                  name: Ethernet7
+                  speed: "forced 10000full"
+              ip_address: 172.15.5.7/31
+              # Using peer_ip same as the one specified for Ethernet3 under l3_interfaces above.
+              # This will cause identical nexthop for Zscaler tunnel destinations to be configured via ip route.
+              # instead of multiple routes to same Zscaler destination via different nexthops.
+              peer: peerDeviceA
+              peer_ip: 172.31.0.1
+              peer_port_channel: Port-Channel2
+              wan_carrier: ATT
+              wan_circuit_id: 404
+              static_routes:
+                - prefix: 172.16.0.0/16
+              bgp:
+                peer_as: 64520
+                ipv4_prefix_list_in: PL2
+                ipv4_prefix_list_out: ALLOW-DEFAULT
+              # TODO: Enable this after adding EOS side support for internet exit
+              # using port-channel interface
+              # cv_pathfinder_internet_exit:
+              #   policies:
+              #    - name: ZSCALER-EXIT-POLICY-3
+              #      tunnel_interface_numbers: 200-202
+              #    - name: DIRECT-EXIT-POLICY-1
+              flow_tracking:
+                enabled: true
+            - # Port-Channel with 1 member ports
+              name: Port-Channel450
+              mode: 'on'
+              member_interfaces:
+                - name: Ethernet1/10
+                  speed: "forced 10000full"
+              ip_address: 172.15.5.8/31
+              peer: peerDevice10
+              peer_ip: 172.31.0.10
+              peer_port_channel: Port-Channel455
+              wan_carrier: Orange
+              connected_to_pathfinder: false
+              static_routes:
+                - prefix: 172.17.0.0/16
+              bgp:
+                peer_as: 64520
+                ipv4_prefix_list_in: PL2
+              flow_tracking:
+                enabled: false
+            - # Port-Channel with 3 member ports
+              name: Port-Channel540
+              # use default mode
+              member_interfaces:
+                - name: Ethernet1/16
+                  speed: "auto 10000full"
+                - name: Ethernet1/17
+                  # interface speed not specified
+                - name: Ethernet1/18
+                  speed: "1000full"
+              ip_address: 172.15.6.9/31
+              public_ip: 10.36.36.100
+              peer: peerDevice11
+              peer_ip: 172.31.0.11
+              peer_port_channel: Port-Channel545
+              wan_carrier: Comcast
+              connected_to_pathfinder: true
+              static_routes:
+                - prefix: 172.18.0.0/16
+              # flow_tracking not set, hence not configured
+              ipv4_acl_in: TEST-IPV4-ACL-WITH-IP-FIELDS-IN
+              ipv4_acl_out: TEST-IPV4-ACL-WITH-IP-FIELDS-OUT
+
     # SITE_HA_ENABLED
     # Because HA is enabled, this allow to test that MPLS-ONLY, present on
     # cv-pathfinder-edge2B (because of Colt) is being configured on cv-pathfinder-edge2A
@@ -607,6 +685,17 @@ wan_virtual_topologies:
             - names: [MPLS]
               preference: preferred
           id: 5
+        - application_profile: CRITICAL-APP
+          path_groups:
+            - names: [INET]
+              preference: preferred
+            - names: [AWS]
+              preference: alternate
+          constraints:
+            loss_rate: 45.0
+          internet_exit:
+            policy: ZSCALER-EXIT-POLICY-3
+          id: 6
     - name: DEFAULT-AVT-POLICY
       default_virtual_topology:
         path_groups:
@@ -659,6 +748,14 @@ application_classification:
         - rtp
     - name: IT
     - name: MPLS-ONLY
+    - name: CRITICAL-APP
+      applications:
+        # CRITICAL-APP application profile is included under policy 'PROD-AVT-POLICY'
+        # (avt profile - PROD-AVT-POLICY-CRITICAL-APP).
+        # This profile makes use of internet exit policy of type Zscaler with
+        # Port-Channel as tunnel source interface.
+        # Device 'cv-pathfinder-edge1' uses this.
+        - name: CUSTOM-APPLICATION-3
     - name: VOICE
       applications:
         # Testing applications in application-profiles filtering
@@ -688,6 +785,9 @@ application_classification:
         protocols: [tcp]
         tcp_src_port_set_name: TCP-SRC-2
         tcp_dest_port_set_name: TCP-DEST-2
+      - name: CUSTOM-APPLICATION-3
+        protocols: [tcp]
+        tcp_src_port_set_name: TCP-SRC-3
       - name: CUSTOM-voice-APPLICATION
         protocols: [udp]
         udp_src_port_set_name: UDP-SRC-VOICE
@@ -714,6 +814,9 @@ application_classification:
       - name: TCP-SRC-2
         port_values:
           - 42
+      - name: TCP-SRC-3
+        port_values:
+          - 400
       - name: TCP-DEST-2
         port_values:
           - 666
@@ -733,6 +836,12 @@ cv_pathfinder_internet_exit_policies:
       domain_name: test.local
       ipsec_key_salt: THIS_SHOULD_BE_VAULTED
   - name: ZSCALER-EXIT-POLICY-2
+    fallback_to_system_default: false
+    type: zscaler
+    zscaler:
+      domain_name: test.local
+      ipsec_key_salt: THIS_SHOULD_BE_VAULTED
+  - name: ZSCALER-EXIT-POLICY-3
     fallback_to_system_default: false
     type: zscaler
     zscaler:

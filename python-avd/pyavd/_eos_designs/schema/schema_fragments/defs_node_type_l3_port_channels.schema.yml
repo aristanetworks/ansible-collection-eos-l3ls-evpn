@@ -23,7 +23,7 @@ $defs:
           type: str
           description: |-
             Interface description.
-            If not set a default description will be configured with '[<peer>[ <peer_port_channel>]]'.
+            If not set, a default description will be configured with '[<peer>[ <peer_port_channel>]]'.
         mode:
           type: str
           description: |-
@@ -33,7 +33,7 @@ $defs:
             - "active"
             - "passive"
             - "on"
-          default: "on"
+          default: "active"
         member_interfaces:
           description: |-
             Port-Channel member interfaces.
@@ -54,7 +54,7 @@ $defs:
                 type: str
                 description: |-
                   Interface description for this member.
-                  If not set a default description will be configured with '[<peer>[ <peer_interface>]]'.
+                  If not set, a default description will be configured with '[<peer>[ <peer_interface>]]'.
               peer:
                 type: str
                 description: |-
@@ -68,6 +68,13 @@ $defs:
                 type: str
                 description: |-
                   Speed should be set in the format `<interface_speed>` or `forced <interface_speed>` or `auto <interface_speed>`.
+              structured_config:
+                type: dict
+                documentation_options:
+                  hide_keys: true
+                description: |-
+                  Custom structured config for the member ethernet interface.
+                $ref: "eos_cli_config_gen#/keys/ethernet_interfaces/items"
         ip_address:
           type: str
           description: Node IPv4 address/Mask or 'dhcp'.
@@ -162,12 +169,12 @@ $defs:
           description: Configure IPv4 static routes pointing to `peer_ip`.
           type: list
           min_length: 1
+          primary_key: prefix
           items:
             type: dict
             keys:
               prefix:
                 type: str
-                required: true
                 description: IPv4_network/Mask.
         qos_profile:
           type: str
@@ -190,34 +197,35 @@ $defs:
           default: true
           description: |-
             For a WAN interface (`wan_carrier` is set), allow to disable the static tunnel towards Pathfinders.
-        cv_pathfinder_internet_exit:
-          description: |-
-            PREVIEW: This key is in preview mode
-          type: dict
-          keys:
-            policies:
-              type: list
-              primary_key: name
-              description: List of Internet-exit policies using this interface as exit.
-              items:
-                type: dict
-                keys:
-                  name:
-                    type: str
-                    description: Internet-exit policy name.
-                  tunnel_interface_numbers:
-                    type: str
-                    description: |-
-                      Number range to use for Tunnel interfaces to an internet-exit service provider using this local interface.
-                      Examples: '1-3' or '100,200,300'
+        # TODO: Enable this after EOS side change to support 'direct' internet exit using port-channel interface
+        # cv_pathfinder_internet_exit:
+        #  description: |-
+        #    PREVIEW: This key is in preview mode
+        #  type: dict
+        #  keys:
+        #    policies:
+        #      type: list
+        #      primary_key: name
+        #      description: List of Internet-exit policies using this interface as exit.
+        #      items:
+        #        type: dict
+        #        keys:
+        #          name:
+        #            type: str
+        #            description: Internet-exit policy name.
+        #          tunnel_interface_numbers:
+        #            type: str
+        #            description: |-
+        #              Number range to use for Tunnel interfaces to an internet-exit service provider using this local interface.
+        #              Examples: '1-3' or '100,200,300'
         raw_eos_cli:
           type: str
-          description: EOS CLI rendered directly on the interface in the final EOS configuration.
+          description: EOS CLI rendered directly on the Port-Channel interface in the final EOS configuration.
         flow_tracking:
           type: dict
           $ref: "eos_designs#/$defs/flow_tracking_link"
           description: |-
-            Configures flow-tracking on the interface. Overrides `fabric_flow_tracking.l3_interfaces` setting.
+            Configures flow-tracking on the interface. Overrides `fabric_flow_tracking.l3_port_channels` setting.
         structured_config:
           type: dict
           documentation_options:
