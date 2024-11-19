@@ -1396,7 +1396,7 @@ roles/eos_designs/docs/tables/svi-profiles.md
 
 ### EVPN VLAN aware bundles settings
 
-Common settings for VLAN aware bundles.
+Common settings for VLAN aware bundles defined in: `<network_services_key>[].evpn_vlan_bundle` or `<network_services_key>[].vrfs[].svis[].evpn_vlan_bundle` or `<network_services_key>[].l2vlans[].evpn_vlan_bundle`.
 
 --8<--
 roles/eos_designs/docs/tables/evpn-vlan-bundles.md

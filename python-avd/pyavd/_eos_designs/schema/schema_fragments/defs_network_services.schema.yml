@@ -596,7 +596,7 @@ $defs:
                 type: bool
                 description: |
                   Explicitly extend all VLANs/VLAN-Aware Bundles inside the VRF to remote EVPN domains.
-                  Overrides `<network_services_key>.[].evpn_l2_multi_domain`.
+                  Overrides `<network_services_key>[].evpn_l2_multi_domain`.
               svis:
                 documentation_options:
                   table: network-services-vrfs-svis-settings
