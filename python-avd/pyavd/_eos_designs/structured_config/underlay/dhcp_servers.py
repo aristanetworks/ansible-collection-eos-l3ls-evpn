@@ -42,7 +42,7 @@ class DhcpServerMixin(UtilsMixin):
                         "subnet": str(ip_network(f"{uplink['peer_ip_address']}/{uplink['prefix_length']}", strict=False)),
                         "ranges": [{"start": str(uplink["ip_address"]), "end": str(uplink["ip_address"])}],
                         "name": f"inband ztp for {peer}-{uplink['interface']}",
-                        "default_gateway": f"{uplink['peer_ip_address'].split('/')[0]}",
+                        "default_gateway": f"{uplink['peer_ip_address']}",
                     }
                     subnets.append(subnet)
 

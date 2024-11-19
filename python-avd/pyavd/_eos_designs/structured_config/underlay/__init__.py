@@ -5,7 +5,7 @@ from pyavd._eos_designs.avdfacts import AvdFacts
 
 from .agents import AgentsMixin
 from .as_path import AsPathMixin
-from .dhcp_server import DhcpServerMixin
+from .dhcp_servers import DhcpServerMixin
 from .ethernet_interfaces import EthernetInterfacesMixin
 from .ip_access_lists import IpAccesslistsMixin
 from .loopback_interfaces import LoopbackInterfacesMixin
