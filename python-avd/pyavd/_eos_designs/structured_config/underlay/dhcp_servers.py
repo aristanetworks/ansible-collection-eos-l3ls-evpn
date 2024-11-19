@@ -13,7 +13,7 @@ from pyavd._utils import get
 from .utils import UtilsMixin
 
 
-class DhcpServerMixin(UtilsMixin):
+class DhcpServersMixin(UtilsMixin):
     """
     Mixin Class used to generate structured config for one key.
 
