@@ -549,8 +549,7 @@ class AvdStructuredConfigBase(AvdFacts, NtpMixin, SnmpServerMixin, RouterGeneral
         if enable is True:
             queue_monitor["enable"] = enable
 
-        if vrf is not None:
-            queue_monitor["vrf"] = vrf
+        queue_monitor["vrf"] = vrf
 
         return queue_monitor
 

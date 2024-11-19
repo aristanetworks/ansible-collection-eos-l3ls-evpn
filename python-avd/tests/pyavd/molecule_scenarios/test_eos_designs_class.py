@@ -71,6 +71,12 @@ def test_eos_designs_custom_structured_configuration(prefix: str | None, expecte
     "evpn_underlay_isis_overlay_ibgp",
     "evpn_underlay_ospf_overlay_ebgp",
     "evpn_underlay_rfc5549_overlay_ebgp",
+    "example-campus-fabric",
+    # TODO: "example-cv-pathfinder", # Work around Ansible vault
+    "example-dual-dc-l3ls",
+    "example-isis-ldp-ipvpn",
+    "example-l2ls-fabric",
+    "example-single-dc-l3ls",
 )
 def test_eos_designs_initialize_kwargs_with_valid_data(molecule_host: MoleculeHost) -> None:
     """Test EosDesigns model with valid data."""
@@ -98,6 +104,12 @@ def test_eos_designs_initialize_kwargs_with_valid_data(molecule_host: MoleculeHo
     "evpn_underlay_isis_overlay_ibgp",
     "evpn_underlay_ospf_overlay_ebgp",
     "evpn_underlay_rfc5549_overlay_ebgp",
+    "example-campus-fabric",
+    # TODO: "example-cv-pathfinder", # Work around Ansible vault
+    "example-dual-dc-l3ls",
+    "example-isis-ldp-ipvpn",
+    "example-l2ls-fabric",
+    "example-single-dc-l3ls",
 )
 def test_eos_designs_initialize_dict_with_valid_data(molecule_host: MoleculeHost) -> None:
     """Test EosDesigns model with valid data."""
