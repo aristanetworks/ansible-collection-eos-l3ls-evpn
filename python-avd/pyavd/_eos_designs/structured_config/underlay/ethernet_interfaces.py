@@ -141,7 +141,7 @@ class EthernetInterfacesMixin(UtilsMixin):
                     )
                     if (isis_authentication_mode := get(self._hostvars, "underlay_isis_authentication_mode")) is not None:
                         ethernet_interface.setdefault("isis_authentication", {}).setdefault("both", {})["mode"] = isis_authentication_mode
-                    
+
                     if (isis_authentication_key := get(self._hostvars, "underlay_isis_authentication_key")) is not None:
                         ethernet_interface.setdefault("isis_authentication", {}).setdefault("both", {}).update(
                             {
