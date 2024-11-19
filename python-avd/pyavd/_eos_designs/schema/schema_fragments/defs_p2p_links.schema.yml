@@ -134,9 +134,10 @@ $defs:
               description: Enable PTP.
             role:
               type: list
-              description: Role in boundary clock mode. EOS default is `dynamic`.
+              description: Role in boundary clock mode for each node. Default is `dynamic`.
               items:
                 type: str
+                default: "dynamic"
                 valid_values:
                   - "dynamic"
                   - "master"
