@@ -14,6 +14,8 @@
 BFD enabled: {{ router_pim_sparse_mode.ipv4.bfd | arista.avd.default(false) }}
 {%         if router_pim_sparse_mode.ipv4.rp_addresses is arista.avd.defined %}
 
+Make-before-break: {{ router_pim_sparse_mode.ipv4.make_before_break }}
+
 ##### IP Rendezvous Information
 
 | Rendezvous Point Address | Group Address | Access Lists | Priority | Hashmask | Override |

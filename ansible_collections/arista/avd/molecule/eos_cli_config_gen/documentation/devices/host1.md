@@ -5854,6 +5854,8 @@ router multicast
 
 BFD enabled: True
 
+Make-before-break: False
+
 ##### IP Rendezvous Information
 
 | Rendezvous Point Address | Group Address | Access Lists | Priority | Hashmask | Override |
@@ -5890,6 +5892,7 @@ router pim sparse-mode
    ipv4
       ssm range standard
       bfd
+      make-before-break disabled
       rp address 10.238.1.161 239.12.12.12/32 priority 20
       rp address 10.238.1.161 239.12.12.13/32 priority 20
       rp address 10.238.1.161 239.12.12.14/32 priority 20
@@ -5905,6 +5908,7 @@ router pim sparse-mode
    vrf MCAST_VRF1
       ipv4
          bfd
+         make-before-break disabled
          rp address 10.238.2.161 239.12.22.12/32
          rp address 10.238.2.161 239.12.22.13/32
          rp address 10.238.2.161 239.12.22.14/32
