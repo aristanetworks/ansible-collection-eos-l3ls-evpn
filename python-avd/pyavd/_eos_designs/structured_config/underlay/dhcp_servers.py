@@ -3,6 +3,7 @@
 # that can be found in the LICENSE file.
 from __future__ import annotations
 
+import re
 from functools import cached_property
 from ipaddress import AddressValueError, IPv4Address, ip_network
 
@@ -60,7 +61,8 @@ class DhcpServerMixin(UtilsMixin):
             return None
 
         if "arista.io" in cvp_instance_ips[0]:
-            cvp_instance_ips[0] = f"www.{cvp_instance_ips[0].replace('https://', '').replace('www.', '').replace('apiserver.', '')}"
+            clean_cvaas_fqdn = re.sub(r"https:\/\/|www\.|apiserver\.", "", cvp_instance_ips[0])
+            cvp_instance_ips[0] = f"www.{clean_cvaas_fqdn}"
 
         return f"https://{cvp_instance_ips[0]}/ztp/bootstrap"
 
