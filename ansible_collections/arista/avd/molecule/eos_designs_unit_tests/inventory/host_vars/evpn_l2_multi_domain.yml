@@ -20,39 +20,92 @@ l3leaf:
           enabled: true
 
 tenants:
-  - name: Tenant_A
+  - name: L2_MULTI_DOMAIN_DISABLED
     mac_vrf_vni_base: 10000
+    # Test to disable all vlans in Tenant for l2 multi-domain
     evpn_l2_multi_domain: false
     vrfs:
-      - name: Tenant_A_OP_Zone
+      - name: L2_MULTI_DOMAIN_NEUTRAL_1
         vrf_vni: 10
         svis:
           - id: 110
-            name: Tenant_B_OP_Zone_1
-            enabled: True
+            name: L2_MULTI_DOMAIN_NEUTRAL
+            enabled: true
             ip_address_virtual: 10.1.10.1/24
           - id: 111
-            name: Tenant_B_OP_Zone_2
-            enabled: True
+            name: L2_MULTI_DOMAIN_ENABLED
+            enabled: true
             ip_address_virtual: 10.1.11.1/24
-             # Test to enable specific VLAN for l2 multi-domain
-            evpn_l2_multi_domain: True
-      - name: Tenant_A_WAN_Zone
-        vrf_vni: 21
-        # Test to enable all vlans in VRF for l2 multi-domain
+            # Test to enable specific VLAN for l2 multi-domain when disabled on Tenant
+            evpn_l2_multi_domain: true
+      - name: L2_MULTI_DOMAIN_ENABLED
+        vrf_vni: 11
+        # Test to enable all vlans in VRF for l2 multi-domain when disabled on Tenant
         evpn_l2_multi_domain: true
         svis:
           - id: 150
-            name: Tenant_A_WAN_Zone_1
-            enabled: True
+            name: L2_MULTI_DOMAIN_NEUTRAL
+            enabled: true
             ip_address_virtual: 10.1.50.1/24
           - id: 160
-            name: Tenant_A_WAN_Zone_2
-            enabled: True
+            name: L2_MULTI_DOMAIN_NEUTRAL
+            enabled: true
             ip_address_virtual: 10.1.60.1/24
+          - id: 170
+            name: L2_MULTI_DOMAIN_DISABLED
+            enabled: true
+            ip_address_virtual: 10.1.70.1/24
+            # Test to disable specific VLAN for l2 multi-domain when enabled on VRF
+            evpn_l2_multi_domain: false
     l2vlans:
-      - id: 210
-        name: Tenant_A_L2_1
-      - id: 220
-        name: Tenant_A_L2_2
+      - id: 180
+        name: L2_MULTI_DOMAIN_NEUTRAL
+      - id: 190
+        name: L2_MULTI_DOMAIN_ENABLED
+        # Test to enable specific VLAN for l2 multi-domain when disabled on Tenant
         evpn_l2_multi_domain: true
+
+  - name: L2_MULTI_DOMAIN_ENABLED
+    mac_vrf_vni_base: 20000
+    # Test to enable all vlans in Tenant for l2 multi-domain
+    evpn_l2_multi_domain: true
+    vrfs:
+      - name: L2_MULTI_DOMAIN_NEUTRAL_2
+        vrf_vni: 20
+        svis:
+          - id: 210
+            name: L2_MULTI_DOMAIN_NEUTRAL
+            enabled: true
+            ip_address_virtual: 10.2.10.1/24
+          - id: 211
+            name: L2_MULTI_DOMAIN_DISABLED
+            enabled: true
+            ip_address_virtual: 10.2.11.1/24
+             # Test to disable specific VLAN for l2 multi-domain when enabled on Tenant
+            evpn_l2_multi_domain: false
+      - name: L2_MULTI_DOMAIN_DISBLED
+        vrf_vni: 21
+        # Test to disable all vlans in VRF for l2 multi-domain when enabled on Tenant
+        evpn_l2_multi_domain: false
+        svis:
+          - id: 250
+            name: L2_MULTI_DOMAIN_NEUTRAL
+            enabled: true
+            ip_address_virtual: 10.2.50.1/24
+          - id: 260
+            name: L2_MULTI_DOMAIN_NEUTRAL
+            enabled: true
+            ip_address_virtual: 10.2.60.1/24
+          - id: 270
+            name: L2_MULTI_DOMAIN_ENABLED
+            enabled: true
+            ip_address_virtual: 10.2.70.1/24
+            # Test to enable specific VLAN in VRF for l2 multi-domain when disabled on VRF
+            evpn_l2_multi_domain: true
+    l2vlans:
+      - id: 280
+        name: L2_MULTI_DOMAIN_NEUTRAL
+      - id: 290
+        name: L2_MULTI_DOMAIN_DISABLED
+        # Test to disable specific VLAN for l2 multi-domain when enabled on Tenant
+        evpn_l2_multi_domain: false
