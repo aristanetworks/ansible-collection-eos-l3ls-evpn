@@ -100,13 +100,13 @@ class AvdStructuredConfigMlag(AvdFacts):
                     "isis_network_point_to_point": True,
                 }
             )
-            if (isis_authentication_mode := get(self._hostvars, "underlay_isis_authentication_mode")) is not None:
-                l3_cfg.setdefault("isis_authentication", {}).setdefault("both", {})["mode"] = isis_authentication_mode
+            if self.inputs.underlay_isis_authentication_mode:
+                l3_cfg.setdefault("isis_authentication", {}).setdefault("both", {})["mode"] = self.inputs.underlay_isis_authentication_mode
 
-            if (isis_authentication_key := get(self._hostvars, "underlay_isis_authentication_key")) is not None:
+            if self.inputs.underlay_isis_authentication_key is not None:
                 l3_cfg.setdefault("isis_authentication", {}).setdefault("both", {}).update(
                     {
-                        "key": isis_authentication_key,
+                        "key": self.inputs.underlay_isis_authentication_key,
                         "key_type": "7",
                     }
                 )
