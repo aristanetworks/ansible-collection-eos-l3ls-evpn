@@ -80,10 +80,10 @@ roles/eos_cli_config_gen/docs/tables/ip-tacacs-source-interfaces.md
 roles/eos_cli_config_gen/docs/tables/local-users.md
 --8<--
 
-### Radius servers
+### Radius server
 
 --8<--
-roles/eos_cli_config_gen/docs/tables/radius-servers.md
+roles/eos_cli_config_gen/docs/tables/radius-server.md
 --8<--
 
 ### Roles
