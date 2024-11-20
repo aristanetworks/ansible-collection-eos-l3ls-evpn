@@ -1204,7 +1204,7 @@ router_bgp:
     - ip_address: 192.168.255.11
     - ip_address: 172.31.255.0
       peer_group: IPv4-UNDERLAY-PEERS
-      password: 071B245F5A584B5643
+      password: viDjZCwoPIoXECb3hxWioA==
       remove_private_as:
         enabled: false
       remove_private_as_ingress:
