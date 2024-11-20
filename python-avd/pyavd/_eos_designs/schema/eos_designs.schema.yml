@@ -1522,7 +1522,11 @@ keys:
     type: str
     required: true
   fabric_numbering:
-    description: Assignment policies for numbers like Node ID.
+    description: 'PREVIEW: This feature is in marked as "preview", which means it
+      is subject to change at any time.
+
+
+      Assignment policies for numbers like Node ID.'
     type: dict
     keys:
       node_id:
