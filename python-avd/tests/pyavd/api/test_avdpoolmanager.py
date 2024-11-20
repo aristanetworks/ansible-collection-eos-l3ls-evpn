@@ -47,7 +47,7 @@ def get_file_content(data: dict) -> str:
 
 
 @pytest.mark.parametrize(
-    ("hostvars_list", "expected_ids", "mock_file_data", "expected_data"),
+    ("hostvars_list", "expected_ids", "mock_file_data", "expected_data", "requested_ids"),
     [
         pytest.param(
             # File exists but is empty. Request id for testhost1, get 1 back.
@@ -56,6 +56,7 @@ def get_file_content(data: dict) -> str:
             [1],
             "",
             BASIC_DATA,
+            None,  # requested_ids
             id="empty_file_add_testhost1",
         ),
         pytest.param(
@@ -65,6 +66,7 @@ def get_file_content(data: dict) -> str:
             [1],
             None,
             BASIC_DATA,
+            None,  # requested_ids
             id="no_file_add_testhost1",
         ),
         pytest.param(
@@ -74,6 +76,7 @@ def get_file_content(data: dict) -> str:
             [1],
             BASIC_DATA,
             BASIC_DATA,
+            None,  # requested_ids
             id="keep_testhost1",
         ),
         pytest.param(
@@ -83,6 +86,7 @@ def get_file_content(data: dict) -> str:
             [1, 2],
             BASIC_DATA,
             get_data([get_pool(TESTHOST1, [get_assignment(TESTHOST1, 1), get_assignment(TESTHOST2, 2)])]),
+            None,  # requested_ids
             id="keep_testhost1_add_testhost2",
         ),
         pytest.param(
@@ -92,6 +96,7 @@ def get_file_content(data: dict) -> str:
             [2, 1],
             BASIC_DATA,
             get_data([get_pool(TESTHOST1, [get_assignment(TESTHOST1, 1), get_assignment(TESTHOST2, 2)])]),
+            None,  # requested_ids
             id="add_testhost2_keep_testhost1",
         ),
         pytest.param(
@@ -101,6 +106,7 @@ def get_file_content(data: dict) -> str:
             [2],
             BASIC_DATA,
             get_data([get_pool(TESTHOST2, [get_assignment(TESTHOST2, 2)])]),
+            None,  # requested_ids
             id="add_testhost2_remove_testhost1",
         ),
         pytest.param(
@@ -110,6 +116,7 @@ def get_file_content(data: dict) -> str:
             [2],
             get_data([get_pool(TESTHOST2, [get_assignment(TESTHOST2, 2)])]),
             get_data([get_pool(TESTHOST2, [get_assignment(TESTHOST2, 2)])]),
+            None,  # requested_ids
             id="keep_testhost2",
         ),
         pytest.param(
@@ -119,6 +126,7 @@ def get_file_content(data: dict) -> str:
             [1, 2],
             get_data([get_pool(TESTHOST2, [get_assignment(TESTHOST2, 2)])]),
             get_data([get_pool(TESTHOST1, [get_assignment(TESTHOST1, 1), get_assignment(TESTHOST2, 2)])]),
+            None,  # requested_ids
             id="add_testhost1_remove_testhost2",
         ),
         pytest.param(
@@ -128,6 +136,7 @@ def get_file_content(data: dict) -> str:
             [1],
             BASIC_DATA,
             get_data([get_pool(TESTHOST3, [get_assignment(TESTHOST3, 1)])]),
+            None,  # requested_ids
             id="add_pool_with_testhost2_remove_pool_with_testhost1",
         ),
         pytest.param(
@@ -137,6 +146,7 @@ def get_file_content(data: dict) -> str:
             [1, 1],
             get_data([get_pool(TESTHOST3, [get_assignment(TESTHOST3, 1)])]),
             get_data([get_pool(TESTHOST3, [get_assignment(TESTHOST3, 1)]), get_pool(TESTHOST1, [get_assignment(TESTHOST1, 1)])]),
+            None,  # requested_ids
             id="add_pool_with_testhost1_keep_pool_with_testhost3",
         ),
         pytest.param(
@@ -154,20 +164,53 @@ def get_file_content(data: dict) -> str:
                     get_pool(TESTHOST1, [get_assignment(TESTHOST2, 1), get_assignment(TESTHOST1, 2)]),
                 ]
             ),
+            None,  # requested_ids
             id="no_file_add_three_pools_and_four_hosts",
+        ),
+        pytest.param(
+            # File has BASIC_DATA where testhost has id 1. Request the specific id 1 for testhost1, get 1 back.
+            # After saving the file contains BASIC_DATA.
+            [TESTHOST1],
+            [1],
+            BASIC_DATA,
+            BASIC_DATA,
+            [1],  # requested_ids
+            id="keep_testhost1",
+        ),
+        pytest.param(
+            # File has BASIC_DATA where testhost has id 1. Request the specific id 66 for testhost1, get 66 back.
+            # After saving the file contains testhost1 with id 66.
+            [TESTHOST1],
+            [66],
+            BASIC_DATA,
+            get_data([get_pool(TESTHOST1, [get_assignment(TESTHOST1, 66)])]),
+            [66],  # requested_ids
+            id="keep_testhost1",
+        ),
+        pytest.param(
+            # File has BASIC_DATA where testhost has id 1. Request the specific id 1 for testhost2, get 2 back.
+            # After saving the file contains testhost1 with id 1 and testhost2 with 2.
+            [TESTHOST1, TESTHOST2],
+            [1, 2],
+            BASIC_DATA,
+            get_data([get_pool(TESTHOST1, [get_assignment(TESTHOST1, 1), get_assignment(TESTHOST2, 2)])]),
+            [None, 1],  # requested_ids
+            id="keep_testhost1",
         ),
     ],
 )
-def test_avdpoolmanager_pool(hostvars_list: list[dict], expected_ids: list[int], mock_file_data: str, expected_data: dict) -> None:
+def test_avdpoolmanager_pool(
+    hostvars_list: list[dict], expected_ids: list[int], mock_file_data: str, expected_data: dict, requested_ids: list[int | None] | None
+) -> None:
     """
     Test PoolManager.
 
     Args:
-        id: Short description used as pytest id
-        hostvars_list: We will ask for IDs for each host.
+        hostvars_list: Request ID for each host in this list.
         expected_ids: Expected answer on get_id for each host.
         mock_file_data: Initial file data. None for missing file.
         expected_data: File data after saving to file.
+        requested_ids: Request this specific ID per host. Index must match hostvars_list.
     """
     file_exists = mock_file_data is not None
     expected_write = mock_file_data != expected_data
@@ -185,9 +228,10 @@ def test_avdpoolmanager_pool(hostvars_list: list[dict], expected_ids: list[int],
         pool_manager = PoolManager(Path(DUMMYDIR))
 
         for index, hostvars in enumerate(hostvars_list):
+            requested_id = requested_ids[index] if requested_ids else None
             shared_utils = SharedUtils(hostvars=hostvars, templar=object(), schema=schema)
             # Get the id of the host from hostvars. If not, a new data set will be created.
-            assert pool_manager.get_assignment_value("node_id_pools", shared_utils) == expected_ids[index]
+            assert pool_manager.get_assignment("node_id_pools", shared_utils, requested_id) == expected_ids[index]
 
         mocked_exists.assert_called_once()
         if file_exists:

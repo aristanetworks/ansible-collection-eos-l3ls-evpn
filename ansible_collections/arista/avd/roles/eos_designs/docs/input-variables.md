@@ -130,7 +130,7 @@ roles/eos_designs/docs/tables/fabric-topology.md
 roles/eos_designs/docs/tables/fabric-ip-addressing.md
 --8<--
 
-## Fabric Numbering
+## PREVIEW - Fabric Numbering
 
 Fabric Numbering controls how various numbers are derived across the fabric.
 
@@ -138,11 +138,17 @@ Fabric Numbering controls how various numbers are derived across the fabric.
 
 IDs will be automatically assigned according to the configured algorithm.
 
-- `static` will use the statically set IDs under [node setting](#node-type-common-configuration).
+- `static` will use the statically set IDs under node setting.
 - `pool_manager` will activate the pool manager for ID pools.
+  Any statically set ID under node settings will be reserved in the pool if possible.
+  Otherwise an error will be raised.
 
 !!! note
-    It is not allowed to override `pool_manager` with a static ID for the same device, since that could lead to allocation conflicts.
+    It is strongly encouraged to use the same Node ID algorithm for all devices in the fabric.
+    Using different algorithms for groups of devices may lead to duplicates or inconsistent allocations.
+
+    The pool manager will not change IDs if already set under the node settings,
+    so it is possible to enable the pool manager on an existing inventory without changes.
 
 --8<--
 roles/eos_designs/docs/tables/fabric-numbering.md
@@ -157,12 +163,12 @@ When using `pool_manager` for node IDs the pools are dynamically built and match
 - `pod_name`
 - `type`
 
-Each pool will assign the first available ID starting from 1.
+Each pool will assign the first available ID starting from 1. Any statically set ID under node settings will be reserved in the pool if possible, otherwise an error will be raised.
 
-It is important to make sure the combination of these variables is unique for each intended pool of devices.
+It is important to make sure the *combination* of the variables above is unique for each intended pool of devices.
 
 !!! warning
-    This means changing any of these fields may renumber the nodes, and in turn lead to renumbering of IP addresses etc.!
+    This means changing any of these fields may renumber the node IDs, and in turn lead to renumbering of IP addresses etc!
 
 Stale entries will be reclaimed from each pool automatically after every run.
 A stale entry is an entry that was not accessed during the run.
@@ -173,8 +179,11 @@ A stale entry is an entry that was not accessed during the run.
 
     To reuse a freed ID, first remove the old device and run AVD. Then add the new device and rerun AVD.
 
+The pool manager stores data in a YAML file per fabric. The default path is `<root_dir>/intended/data/<fabric_name>-ids.yml`
+
 !!! tip
-    It is possible to override the automatic assignments by the pool manager by editing the data files manually. Just make sure to have a backup or use source control like Git and rerun AVD after changing the file.
+    It is possible to override the automatic assignments by editing the data files manually.
+    Just make sure to have a backup or use source control like Git and rerun AVD after changing the file.
 
 ## Node Type Variables
 

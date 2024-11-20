@@ -51,7 +51,8 @@ class MiscMixin:
             Use 'self.hostvars.switch.id' or None
 
         If running under eos_designs_facts and pool manager is activated:
-            Use pool manager
+            Use pool manager requesting the value of 'self.switch_data_combined.id' if set.
+            If the 'id' field is set but not available in the pool, an error will be raised.
 
         If running under eos_designs_facts and pool manager is _not_ activated:
             Use 'self.switch_data_combined.id' which is the ID defined in the node type config or None.
@@ -63,19 +64,26 @@ class MiscMixin:
 
         # We are running from eos_designs_facts.
         # Check if pool manager is activated.
+        node_id = get(self.switch_data_combined, "id")
         if get(self.hostvars, "fabric_numbering.node_id.algorithm") == "pool_manager":
             if not isinstance(self.pool_manager, PoolManager):
                 msg = "'fabric_numbering.id.algorithm' is set to 'pool_manager' but no PoolManager instance is available."
                 raise AristaAvdError(msg)
 
-            if (node_id := get(self.switch_data_combined, "id")) is not None:
-                msg = "When 'fabric_numbering.id.algorithm' is set to 'pool_manager', 'id' must not be set under node settings. " f"Got 'id: {node_id}'."
-                raise AristaAvdError(msg)
+            id_from_pool = self.pool_manager.get_assignment(pool_type="node_id_pools", shared_utils=self, requested_value=node_id)
 
-            return self.pool_manager.get_assignment_value("node_id_pools", self)
+            if node_id is not None and node_id != id_from_pool:
+                msg = (
+                    "When 'fabric_numbering.node_id.algorithm' is set to 'pool_manager', any 'id' set for the node will be reserved in the pool if possible. "
+                    f"Unfortunately the 'id: {node_id}' is not available in the Node ID pool at this time. The 'id' setting must either be removed or changed. "
+                    f"If you prefer to keep the 'id' setting, the next available value is {id_from_pool}."
+                )
+                raise AristaAvdInvalidInputsError(msg)
+
+            return id_from_pool
 
         # Pool manager is not activated. Return 'id' from node settings or None.
-        return get(self.switch_data_combined, "id")
+        return node_id
 
     @cached_property
     def trunk_groups(self: SharedUtils) -> dict:

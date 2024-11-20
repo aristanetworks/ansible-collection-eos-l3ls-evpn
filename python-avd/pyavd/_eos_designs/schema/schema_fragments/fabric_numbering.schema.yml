@@ -18,7 +18,7 @@ keys:
         description: |-
           Assignment policy for Node ID.
           Node ID is mainly used for IP address assignment but can also affect BGP AS and/or
-          interface assignments depending on the settings.
+          interface assignments depending on other settings.
         keys:
           algorithm:
             type: str
@@ -30,6 +30,8 @@ keys:
               IDs will be automatically assigned according to the configured algorithm.
               - `static` will use the statically set IDs under node setting.
               - `pool_manager` will activate the pool manager for ID pools.
+                Any statically set ID under node settings will be reserved in the pool if possible.
+                Otherwise an error will be raised.
           pools_file:
             type: str
             description: |-

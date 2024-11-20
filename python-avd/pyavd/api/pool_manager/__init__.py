@@ -7,7 +7,7 @@ from abc import ABC, abstractmethod
 from ast import literal_eval as str_to_tuple
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import TYPE_CHECKING, Any, ClassVar, Generic, Literal, TypeVar, cast
+from typing import TYPE_CHECKING, ClassVar, Generic, Literal, TypeVar, cast
 
 from yaml import CSafeDumper, CSafeLoader, dump, load
 
@@ -59,34 +59,58 @@ class PoolAssignment(Generic[T_ValueType]):
 class Pool(Generic[T_ValueType]):
     """One Pool of resources. Currently only supporting a pool of Integers."""
 
-    collection: PoolCollection
+    collection: PoolCollection[T_ValueType]
     pool_key: PoolKey
     assignments: dict[AssignmentKey, PoolAssignment[T_ValueType]]
 
+    def _is_value_available(self, value: T_ValueType) -> bool:
+        if self.collection.value_type is int and isinstance(value, int):
+            collection = cast(PoolCollection[int], self.collection)
+            assignments = cast(dict[AssignmentKey, PoolAssignment[int]], self.assignments)
+            existing_ids = {assignment.value for assignment in assignments.values()}
+            return not (value in existing_ids or value < collection.min_value or (collection.max_value is not None and value > collection.max_value))
+
+        # currently we only support int pools
+        return False
+
     def _next_available(self) -> T_ValueType:
         if self.collection.value_type is int:
-            cast(int, T_ValueType)
-            existing_ids = {assignment.value for assignment in self.assignments.values()}
-            available_ids = set(range(self.collection.min_value, len(existing_ids) + 2)) - existing_ids
+            collection = cast(PoolCollection[int], self.collection)
+            assignments = cast(dict[AssignmentKey, PoolAssignment[int]], self.assignments)
+            existing_ids = {assignment.value for assignment in assignments.values()}
+            available_ids = set(range(collection.min_value, len(existing_ids) + 2)) - existing_ids
             next_available = next(iter(available_ids))
-            if self.collection.max_value is not None and next_available > self.collection.max_value:
-                msg = "No available items found within pool."
+            if collection.max_value is not None and next_available > collection.max_value:
+                msg = (
+                    f"No available values found within '{self.collection.pools_key}' with key '{self.pool_key}' "
+                    f"and range {collection.min_value}-{collection.max_value}."
+                )
                 raise ValueError(msg)
-            return next_available
+            return cast(T_ValueType, next_available)
 
         msg = f"Currently we only support pools of Integers. Got {self.collection.value_type}."
         raise NotImplementedError(msg)
 
-    def get_assignment(self, key: AssignmentKey) -> PoolAssignment[T_ValueType]:
+    def get_assignment(self, key: AssignmentKey, requested_value: T_ValueType | None = None) -> PoolAssignment[T_ValueType]:
         """
         Returns the assignment for the key if found in the pool.
 
         Otherwise a new entry is inserted into the pool and returned.
+
+        If 'requested_value' is given and available in the pool, any existing assignment will be updated and returned.
+        For new assignments this value will be used.
         """
         if key not in self.assignments:
-            self.assignments[key] = self.collection.assignment_cls(key=key, value=self._next_available(), accessed=True)
+            # No existing assignment. Use the requested value if given and available. Otherwise use next available.
+            new_assignment_value = requested_value if requested_value is not None and self._is_value_available(requested_value) else self._next_available()
+            self.assignments[key] = self.collection.assignment_cls(key=key, value=new_assignment_value, accessed=True)
+            self.collection.changed = True
+        elif requested_value is not None and requested_value != self.assignments[key].value and self._is_value_available(requested_value):
+            # Existing assignment but not with the requested value. Change the existing assignment to the requested_value.
+            self.assignments[key] = self.collection.assignment_cls(key=key, value=requested_value, accessed=True)
             self.collection.changed = True
         else:
+            # Existing item
             self.assignments[key].accessed = True
 
         return self.assignments[key]
@@ -313,8 +337,16 @@ class PoolManager:
         pool_key = pools_cls._pool_key_from_shared_utils(shared_utils)
         return pool_collection.get_pool(pool_key)
 
-    def get_assignment_value(self, pool_type: PoolType, shared_utils: SharedUtils) -> Any:
-        """Returns the assignment for this device for the given pool type. Assignment and pool will be autocreated if missing."""
+    def get_assignment(self, pool_type: PoolType, shared_utils: SharedUtils, requested_value: int | str | None = None) -> int:
+        """
+        Returns the assignment value for this device for the given pool type. Assignment and pool will be autocreated if missing.
+
+        Args:
+            pool_type: Currently only supports "node_id_poools".
+            shared_utils: Instance of SharedUtils for the device.
+            requested_value: A requested value to assign to the device if available. Existing assignment will be changed if possible.
+                There are no guarantees that this value will be assigned, so the caller should check and handle accordingly.
+        """
         pool = self.get_pool(pool_type, shared_utils)
         key = self._pool_types[pool_type]._assignment_key_from_shared_utils(shared_utils)
-        return pool.get_assignment(key).value
+        return pool.get_assignment(key, requested_value).value
