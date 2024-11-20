@@ -495,7 +495,9 @@ class RouterBgpMixin(UtilsMixin):
             "eos_cli": vlan.bgp.raw_eos_cli,
             "struct_cfg": vlan.bgp.structured_config._as_dict() or None,
         }
-        if self.shared_utils.node_config.evpn_gateway.evpn_l2.enabled and default(vrf.evpn_l2_multi_domain, tenant.evpn_l2_multi_domain):
+        if self.shared_utils.node_config.evpn_gateway.evpn_l2.enabled and default(
+            vlan.evpn_l2_multi_domain, vrf.evpn_l2_multi_domain, tenant.evpn_l2_multi_domain
+        ):
             bgp_vlan["rd_evpn_domain"] = {"domain": "remote", "rd": vlan_rd}
             bgp_vlan["route_targets"]["import_export_evpn_domains"] = [{"domain": "remote", "route_target": vlan_rt}]
 
