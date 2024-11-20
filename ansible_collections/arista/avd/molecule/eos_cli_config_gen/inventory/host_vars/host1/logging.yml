@@ -81,3 +81,8 @@ logging:
       severity: warnings
     - facility: ACL
       severity: critical
+  policy:
+    match:
+      match_lists:
+        - name: molecule
+          action: discard

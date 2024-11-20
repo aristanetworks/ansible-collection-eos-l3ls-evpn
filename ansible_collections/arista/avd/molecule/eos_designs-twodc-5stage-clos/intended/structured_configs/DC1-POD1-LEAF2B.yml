@@ -512,7 +512,7 @@ port_channel_interfaces:
   switchport:
     enabled: true
     mode: access
-    access_vlan: '110'
+    access_vlan: 110
   mlag: 16
 - name: Port-Channel17
   description: Set using structured_config on server adapter port-channel
@@ -521,7 +521,7 @@ port_channel_interfaces:
   switchport:
     enabled: true
     mode: access
-    access_vlan: '110'
+    access_vlan: 110
   mlag: 17
 - name: Port-Channel18
   description: PortChannel
@@ -537,7 +537,7 @@ port_channel_interfaces:
   switchport:
     enabled: true
     mode: access
-    access_vlan: '110'
+    access_vlan: 110
   mlag: 18
 - name: Port-Channel19
   description: PortChannel
@@ -553,7 +553,7 @@ port_channel_interfaces:
   switchport:
     enabled: true
     mode: access
-    access_vlan: '110'
+    access_vlan: 110
   mlag: 19
 ethernet_interfaces:
 - name: Ethernet5

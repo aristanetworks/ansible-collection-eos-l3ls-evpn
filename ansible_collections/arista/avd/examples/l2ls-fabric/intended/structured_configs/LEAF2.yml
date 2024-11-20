@@ -146,7 +146,7 @@ ethernet_interfaces:
   switchport:
     enabled: true
     mode: access
-    access_vlan: '20'
+    access_vlan: 20
   spanning_tree_portfast: edge
 mlag_configuration:
   domain_id: RACK1

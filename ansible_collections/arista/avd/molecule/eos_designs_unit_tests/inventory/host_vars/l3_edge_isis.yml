@@ -1,5 +1,7 @@
 underlay_routing_protocol: isis
 underlay_isis_bfd: true
+underlay_isis_authentication_mode: text
+underlay_isis_authentication_key: $1c$sTNAlR6rKSw=
 isis_area_id: "49.0001"
 
 type: spine

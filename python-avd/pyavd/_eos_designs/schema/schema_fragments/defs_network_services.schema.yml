@@ -593,12 +593,10 @@ $defs:
                         If access_list_name is set, a standard access-list will be configured matching these groups.
                         Otherwise the groups are configured directly on the RP command.
               evpn_l2_multi_domain:
-                documentation_options:
-                  table: network-services-multicast-settings
                 type: bool
                 description: |
                   Explicitly extend all VLANs/VLAN-Aware Bundles inside the VRF to remote EVPN domains.
-                  Overrides `<network_services_key>.[].evpn_l2_multi_domain`.
+                  Overrides `<network_services_key>[].evpn_l2_multi_domain`.
               svis:
                 documentation_options:
                   table: network-services-vrfs-svis-settings
@@ -1251,6 +1249,11 @@ $defs:
                   description: |
                     Trunk groups are used for limiting vlans to trunk ports assigned to the same trunk group.
                     Requires enable_trunk_groups: true.
+              evpn_l2_multi_domain:
+                type: bool
+                description: |
+                  Explicitly extend this VLAN to remote EVPN domains.
+                  Overrides `<network_services_key>[].evpn_l2_multi_domain`.
               evpn_l2_multicast:
                 documentation_options:
                   table: network-services-multicast-settings
