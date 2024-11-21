@@ -37,6 +37,7 @@ Please refer to the schema documentation for details on the various keys in the 
 5. **Defaults:** Avoid using `default` in eos_cli_config_gen.
 6. **Min/Max:** Specify min/max values in the schema if they are defined in the EOS CLI. Make sure to check on different hardware platforms.
 7. **Valid_Values:** Specify valid options in the schema as per the EOS CLI and ensure compatibility across different hardware platforms.
+8. **Required key:** Mark the key as required with `required: true`, if it is mandatory to generate the configuration.
 
 ### Creating Jinja2 Templates
 
@@ -99,13 +100,14 @@ Confirm that all new features work as intended and that existing features are un
 2. If the PR addresses an issue raised in the repository, confirm that the issue is fully resolved by the PR.
 3. Refer to the Arista documentation for a deeper understanding of the proposed feature.
 4. Verify that the schema adheres to EOS CLI and all relevant guidelines mentioned above.
-5. Ensure that the min/max values are specified in the schema if they are defined in the EOS CLI.
-6. Ensure that Jinja2 templates follow all the guidelines mentioned above.
-7. Check that the template generates valid configuration and documentation, maintaining the same configuration order and indentation as EOS CLI.
-8. Check out the PR in a local IDE and run all tests to ensure functionality.
-9. Test the generated configuration through EAPI or CVP in the ATD lab.
-10. If providing code suggestions, test them locally to ensure that your proposals work as intended.
-11. Check that the molecule tests are added for the new feature.
-12. If any keys are marked as deprecated, ensure that the associated tests are moved to the `eos_cli_config_gen_deprecated_vars` scenario.
-13. If the proposed feature requires any changes to the documentation, ensure that it is updated accordingly.
-14. Approve the PR if everything looks good.
+5. Ensure that the min/max and valid-values are specified in the schema if they are defined in the EOS CLI.
+6. Ensure the key is marked as required, if it is mandatory for generating the configuration.
+7. Ensure that Jinja2 templates follow all the guidelines mentioned above.
+8. Check that the template generates valid configuration and documentation, maintaining the same configuration order and indentation as EOS CLI.
+9. Check out the PR in a local IDE and run all tests to ensure functionality.
+10. Test the generated configuration through EAPI or CVP in the ATD lab.
+11. If providing code suggestions, test them locally to ensure that your proposals work as intended.
+12. Check that the molecule tests are added for the new feature.
+13. If any keys are marked as deprecated, ensure that the associated tests are moved to the `eos_cli_config_gen_deprecated_vars` scenario.
+14. If the proposed feature requires any changes to the documentation, ensure that it is updated accordingly.
+15. Approve the PR if everything looks good.
