@@ -84,14 +84,14 @@ keys:
                   type: dict
                   keys:
                     id:
-                      type: int
+                      type: str
                       convert_types:
-                        - str
+                        - int
                       description: VLAN ID.
                     vni:
-                      type: int
+                      type: str
                       convert_types:
-                        - str
+                        - int
                     multicast_group:
                       type: str
                       description: IP Multicast Group Address.
