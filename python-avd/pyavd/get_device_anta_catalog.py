@@ -7,9 +7,9 @@ import logging
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from anta.catalog import AntaCatalog
-
-    from ._anta.utils import FabricData, TestSpec
+    from ._anta.lib import AntaCatalog
+    from .api.anta_test_spec import TestSpec
+    from .api.fabric_data import FabricData
 
 LOGGER = logging.getLogger("pyavd")
 
@@ -25,9 +25,9 @@ def get_device_anta_catalog(
 ) -> AntaCatalog:
     """Generate an ANTA catalog for a single device.
 
-    By default, the ANTA catalog will be generated from all tests specified in the PyAVD test index,
-    loaded from the `pyavd._anta.utils.test_loader` module. The user can optionally provide a list of
-    custom TestSpec to be added to the default PyAVD test index and a set of test names to skip or run.
+    By default, the ANTA catalog will be generated from all tests specified in the PyAVD test index.
+    The user can optionally provide a list of custom TestSpec to be added to the default PyAVD test
+    index and a set of test names to skip or run.
 
     When creating test definitions for the catalog, PyAVD will use the FabricData instance containing
     the structured configurations of all devices in the fabric. Test definitions can be omitted from

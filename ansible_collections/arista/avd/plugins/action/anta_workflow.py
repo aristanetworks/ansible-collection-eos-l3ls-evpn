@@ -280,7 +280,7 @@ class ActionModule(ActionBase):
             "port": get(device_vars, "ansible_httpapi_port", default=(80 if get(device_vars, "ansible_httpapi_use_ssl", default=False) is False else 443)),
             "timeout": get(anta_runner_settings, "timeout"),
             "disable_cache": get(anta_runner_settings, "disable_cache"),
-            "tags": set(get(device_vars, "anta_tags", default=[])),
+            "tags": set(get(device_vars, "metadata.anta_tags", default=[])),
         }
 
         # Make sure we found all required connection settings. Other settings have defaults in the ANTA device object
