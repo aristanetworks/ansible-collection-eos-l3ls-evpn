@@ -137,8 +137,18 @@ class EthernetInterfacesMixin(UtilsMixin):
                             "isis_metric": self.shared_utils.isis_default_metric,
                             "isis_network_point_to_point": True,
                             "isis_circuit_type": self.shared_utils.isis_default_circuit_type,
-                        },
+                        }
                     )
+                    if (isis_authentication_mode := get(self._hostvars, "underlay_isis_authentication_mode")) is not None:
+                        ethernet_interface.setdefault("isis_authentication", {}).setdefault("both", {})["mode"] = isis_authentication_mode
+
+                    if (isis_authentication_key := get(self._hostvars, "underlay_isis_authentication_key")) is not None:
+                        ethernet_interface.setdefault("isis_authentication", {}).setdefault("both", {}).update(
+                            {
+                                "key": isis_authentication_key,
+                                "key_type": "7",
+                            }
+                        )
 
                 if link.get("underlay_multicast") is True:
                     ethernet_interface["pim"] = {"ipv4": {"sparse_mode": True}}

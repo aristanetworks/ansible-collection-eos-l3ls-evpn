@@ -303,3 +303,9 @@ $defs:
           warning: true
           remove_in_version: 5.0.0
           new_key: ipv6_address_virtuals
+      evpn_l2_multi_domain:
+        type: bool
+        description: |
+          Explicitly extend SVI to remote EVPN domains.
+          Overrides `<network_services_key>[].evpn_l2_multi_domain` and `<network_services_key>[].vrfs[].evpn_l2_multi_domain`.
+          Not supported in conjuction with EVPN vlan aware bundles. i.e. `evpn_vlan_aware_bundles: true` or `<network_services_key>[].evpn_vlan_bundle` or `<network_services_key>[].vrfs[].svis[].evpn_vlan_bundle`.

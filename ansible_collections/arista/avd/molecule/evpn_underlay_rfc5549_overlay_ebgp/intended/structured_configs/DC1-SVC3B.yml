@@ -1039,7 +1039,7 @@ ethernet_interfaces:
   switchport:
     enabled: true
     mode: access
-    access_vlan: '210'
+    access_vlan: 210
   spanning_tree_portfast: network
   spanning_tree_bpdufilter: 'False'
   spanning_tree_bpduguard: 'True'
@@ -1085,7 +1085,7 @@ ethernet_interfaces:
   switchport:
     enabled: true
     mode: access
-    access_vlan: '210'
+    access_vlan: 210
   spanning_tree_portfast: network
   spanning_tree_bpdufilter: 'False'
   spanning_tree_bpduguard: 'True'

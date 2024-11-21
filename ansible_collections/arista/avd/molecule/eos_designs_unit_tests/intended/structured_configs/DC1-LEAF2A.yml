@@ -745,7 +745,7 @@ ethernet_interfaces:
   switchport:
     enabled: true
     mode: access
-    access_vlan: '110'
+    access_vlan: 110
 - name: Ethernet26
   peer: PHONE03_port_channel
   peer_interface: Eth0
@@ -834,7 +834,7 @@ port_channel_interfaces:
   switchport:
     enabled: true
     mode: access
-    access_vlan: '110'
+    access_vlan: 110
   spanning_tree_bpdufilter: enabled
   spanning_tree_bpduguard: enabled
 - name: Port-Channel12

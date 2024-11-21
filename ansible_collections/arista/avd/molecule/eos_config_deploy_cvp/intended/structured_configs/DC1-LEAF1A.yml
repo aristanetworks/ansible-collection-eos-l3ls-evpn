@@ -268,7 +268,7 @@ ethernet_interfaces:
   switchport:
     enabled: true
     mode: access
-    access_vlan: '110'
+    access_vlan: 110
 loopback_interfaces:
 - name: Loopback0
   description: ROUTER_ID
