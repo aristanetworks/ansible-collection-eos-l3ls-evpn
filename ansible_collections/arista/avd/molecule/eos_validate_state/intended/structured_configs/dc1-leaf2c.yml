@@ -124,8 +124,8 @@ vxlan_interface:
       udp_port: 4789
       virtual_router_encapsulation_mac_address: mlag-system-id
       vlans:
-      - id: 11
-        vni: 10011
+      - id: '11'
+        vni: '10011'
       vrfs:
       - name: VRF10
         vni: 10
