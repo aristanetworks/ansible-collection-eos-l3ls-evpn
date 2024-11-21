@@ -302,9 +302,11 @@ class UtilsMixin:
         """
         ethernet_cfg = {"speed": p2p_link.get("speed")}
 
-        if get(p2p_link, "port_channel") is None and get(p2p_link, "ptp.enabled") is True:
-            if ptp_config := self._get_interface_ptp_config(p2p_link):
-                ethernet_cfg["ptp"] = ptp_config
+        if get(p2p_link, "port_channel") is not None:
+            return ethernet_cfg
+
+        if get(p2p_link, "ptp.enabled") is True and (ptp_config := self._get_interface_ptp_config(p2p_link)):
+            ethernet_cfg["ptp"] = ptp_config
 
         return ethernet_cfg
 
