@@ -1014,32 +1014,42 @@ interface {{ ethernet_interface.name }}
 {%         elif ethernet_interface.switchport.tap.encapsulation.vxlan_strip is arista.avd.defined(true) %}
    switchport tap encapsulation vxlan strip
 {%         endif %}
-{%         if ethernet_interface.switchport.tap.encapsulation.gre is arista.avd.defined %}
-{%             set with_protocol_only = ethernet_interface.switchport.tap.encapsulation.gre | selectattr('protocol', 'arista.avd.defined') | rejectattr('destination', 'arista.avd.defined') | rejectattr('source', 'arista.avd.defined') | arista.avd.natural_sort('protocol') %}
-{%             set with_destination = ethernet_interface.switchport.tap.encapsulation.gre | selectattr('destination', 'arista.avd.defined') | arista.avd.natural_sort('destination') %}
-{%             set with_strip_only = ethernet_interface.switchport.tap.encapsulation.gre | selectattr('strip', 'arista.avd.defined') | rejectattr('destination', 'arista.avd.defined') | rejectattr('source', 'arista.avd.defined') | rejectattr('protocol', 'arista.avd.defined') | arista.avd.natural_sort %}
-{%             set sorted_gre_strip =  with_protocol_only | list + with_strip_only | list + with_destination | list %}
-{%             for gre_strip_config in sorted_gre_strip %}
-{%                 if gre_strip_config.strip is arista.avd.defined(true) %}
-{%                     set tap_encapsulation_cli = "switchport tap encapsulation gre" %}
-{%                     if gre_strip_config.destination is arista.avd.defined %}
-{%                         set tap_encapsulation_cli = tap_encapsulation_cli ~ " destination " ~ gre_strip_config.destination %}
-{%                         if gre_strip_config.source is arista.avd.defined %}
-{%                             set tap_encapsulation_cli = tap_encapsulation_cli ~ " source " ~ gre_strip_config.source %}
-{%                         endif %}
-{%                     endif %}
-{%                     if gre_strip_config.protocol is arista.avd.defined %}
-{%                         set tap_encapsulation_cli = tap_encapsulation_cli ~ " protocol " ~ gre_strip_config.protocol %}
-{%                         if gre_strip_config.feature_header_length is arista.avd.defined %}
-{%                             set tap_encapsulation_cli = tap_encapsulation_cli ~ " feature header length " ~ gre_strip_config.feature_header_length %}
-{%                         endif %}
-{%                     endif %}
-{%                     set tap_encapsulation_cli = tap_encapsulation_cli ~ " strip" %}
-{%                     if gre_strip_config.protocol is arista.avd.defined and
-                         gre_strip_config.feature_header_length is arista.avd.defined and
-                         gre_strip_config.re_encapsulation_ethernet_header is arista.avd.defined(true) %}
+{%         if ethernet_interface.switchport.tap.encapsulation.gre.strip is arista.avd.defined(true) %}
+{%             for protocol in ethernet_interface.switchport.tap.encapsulation.gre.protocols | arista.avd.natural_sort('protocol') %}
+{%                 set tap_encapsulation_cli = "switchport tap encapsulation gre protocol " ~ protocol.protocol %}
+{%                 if protocol.feature_header_length is arista.avd.defined %}
+{%                     set tap_encapsulation_cli = tap_encapsulation_cli ~ " feature header length " ~ protocol.feature_header_length ~ " " ~ "strip" %}
+{%                     if protocol.re_encapsulation_ethernet_header is arista.avd.defined(true) %}
 {%                         set tap_encapsulation_cli = tap_encapsulation_cli ~ " re-encapsulation ethernet" %}
 {%                     endif %}
+{%                 else %}
+{%                     set tap_encapsulation_cli = tap_encapsulation_cli ~ " strip" %}
+{%                 endif %}
+   {{ tap_encapsulation_cli }}
+{%             endfor %}
+{%             if ethernet_interface.switchport.tap.encapsulation.gre.protocols is not arista.avd.defined and
+                ethernet_interface.switchport.tap.encapsulation.gre.destinations is not arista.avd.defined %}
+   switchport tap encapsulation gre strip
+{%             endif %}
+{%             for destination in ethernet_interface.switchport.tap.encapsulation.gre.destinations | arista.avd.natural_sort('destination') %}
+{%                 set tap_encapsulation_cli = "switchport tap encapsulation gre destination " ~ destination.destination %}
+{%                 if destination.source is arista.avd.defined %}
+{%                     set tap_encapsulation_cli = tap_encapsulation_cli ~ " source " ~ destination.source %}
+{%                 endif %}
+{%                 for destination_protocol in destination.protocols | arista.avd.natural_sort('protocol') %}
+{%                     set tap_encapsulation_cli = tap_encapsulation_cli ~ " protocol " ~ destination_protocol.protocol %}
+{%                     if destination_protocol.feature_header_length is arista.avd.defined %}
+{%                         set tap_encapsulation_cli = tap_encapsulation_cli ~ " feature header length " ~ destination_protocol.feature_header_length ~ " " ~ "strip" %}
+{%                         if destination_protocol.re_encapsulation_ethernet_header is arista.avd.defined(true) %}
+{%                             set tap_encapsulation_cli = tap_encapsulation_cli ~ " re-encapsulation ethernet" %}
+{%                         endif %}
+{%                     else %}
+{%                         set tap_encapsulation_cli = tap_encapsulation_cli ~ " strip" %}
+{%                     endif %}
+   {{ tap_encapsulation_cli }}
+{%                 endfor %}
+{%                 if destination.protocols is not arista.avd.defined %}
+{%                     set tap_encapsulation_cli = tap_encapsulation_cli ~ " strip" %}
    {{ tap_encapsulation_cli }}
 {%                 endif %}
 {%             endfor %}
