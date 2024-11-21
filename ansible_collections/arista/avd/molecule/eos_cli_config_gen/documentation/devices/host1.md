@@ -5919,6 +5919,7 @@ router pim sparse-mode
    !
    vrf Test_RP_ACL
       ipv4
+         make-before-break
          rp address 10.238.4.161 access-list RP_ACL
          rp address 10.238.4.161 access-list RP_ACL2 priority 20 hashmask 30 override
 ```

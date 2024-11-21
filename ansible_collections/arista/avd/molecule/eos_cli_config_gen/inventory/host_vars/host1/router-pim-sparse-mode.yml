@@ -47,6 +47,7 @@ router_pim_sparse_mode:
             hashmask: 30
     - name: Test_RP_ACL
       ipv4:
+        make_before_break: true
         rp_addresses:
           - address: 10.238.4.161
             access_lists:
