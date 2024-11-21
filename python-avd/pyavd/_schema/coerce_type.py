@@ -14,7 +14,6 @@ if TYPE_CHECKING:
 
     from typing_extensions import Self
 
-    from pyavd._schema.models.avd_model import AvdModel
     from pyavd._schema.models.type_vars import T_AvdBase
 
     T = TypeVar("T")
@@ -29,26 +28,16 @@ def nullifiy_class(cls: type[T_AvdBase]) -> type:
     """
 
     class NullifiedCls(cls):
-        if hasattr(cls, "_fields"):
+        def _get_defined_attr(self, name: str) -> T_AvdBase | None:
+            """
+            Return the default values or None.
 
-            def _get_defined_attr(self: AvdModel, name: str) -> T_AvdBase | None:
-                """
-                All attributes are forced to None or Nullified classes.
+            This is required for the various merge / inheritance logic to always take from this if undefined.
+            """
+            return getattr(self, name)
 
-                This is required for the various merge / inheritance logic to overwrite values correctly.
-                """
-                if name not in self._fields:
-                    msg = f"'{type(self).__name__}' object has no attribute '{name}'"
-                    raise AttributeError(msg)
-
-                field_type = self._fields[name]["type"]
-                if issubclass(field_type, AvdBase):
-                    return nullifiy_class(field_type)()
-
-                return None
-
-            def _as_dict(self, *_args: Any, **_kwargs: Any) -> None:
-                """Always None."""
+        def _as_dict(self, *_args: Any, **_kwargs: Any) -> None:
+            """Always None."""
 
         def _as_list(self, *_args: Any, **_kwargs: Any) -> None:
             """Always None."""
@@ -81,7 +70,7 @@ def nullifiy_class(cls: type[T_AvdBase]) -> type:
     return NullifiedCls
 
 
-def coerce_type(value: Any, target_type: type[T]) -> T | None:
+def coerce_type(value: Any, target_type: type[T]) -> T:
     """
     Return a coerced variant of the given value to the target_type.
 
@@ -97,6 +86,7 @@ def coerce_type(value: Any, target_type: type[T]) -> T | None:
 
         # Other None values are left untouched.
     elif target_type is Any or isinstance(value, target_type):
+        # Avoid hitting the else block.
         pass
 
     elif target_type in ACCEPTED_COERCION_MAP and isinstance(value, ACCEPTED_COERCION_MAP[target_type]):

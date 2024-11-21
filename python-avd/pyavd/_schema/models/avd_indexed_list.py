@@ -70,7 +70,7 @@ class AvdIndexedList(Sequence[T_AvdModel], Generic[T_PrimaryKey, T_AvdModel], Av
     def __repr__(self) -> str:
         """Returns a repr with all the items including any nested models."""
         cls_name = self.__class__.__name__
-        attrs = [f"{item!r}" for item in (self._items or ())]
+        attrs = [f"{item!r}" for item in (self._items.values())]
         return f"<{cls_name}([{', '.join(attrs)}])>"
 
     def __bool__(self) -> bool:

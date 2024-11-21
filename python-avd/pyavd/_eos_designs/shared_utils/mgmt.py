@@ -58,7 +58,7 @@ class MgmtMixin:
         """
         default_mgmt_method = self.inputs.default_mgmt_method
         if default_mgmt_method == "oob":
-            if (self.node_config.mgmt_ip is None) and (self.node_config.ipv6_mgmt_ip is None):
+            if self.node_config.mgmt_ip is None and self.node_config.ipv6_mgmt_ip is None:
                 msg = "'default_mgmt_method: oob' requires either 'mgmt_ip' or 'ipv6_mgmt_ip' to be set."
                 raise AristaAvdInvalidInputsError(msg)
 

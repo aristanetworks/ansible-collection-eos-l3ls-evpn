@@ -5,7 +5,7 @@ from __future__ import annotations
 
 from functools import cached_property
 from re import search
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Literal
 
 from pyavd._errors import AristaAvdInvalidInputsError
 from pyavd._utils import default
@@ -64,14 +64,13 @@ class NodeTypeMixin:
         return self.node_type_key_data.underlay_router
 
     @cached_property
-    def uplink_type(self: SharedUtils) -> str:
+    def uplink_type(self: SharedUtils) -> Literal["p2p", "port-channel", "p2p-vrfs", "lan"]:
         """
         Uplink type.
 
         uplink_type set based on <node_type_key>.nodes.[].uplink_type and node_type_keys.<node_type_key>.uplink_type.
         """
-        default_uplink_type = self.node_type_key_data.uplink_type
-        return default(self.node_config.uplink_type, default_uplink_type)
+        return default(self.node_config.uplink_type, self.node_type_key_data.uplink_type)
 
     @cached_property
     def network_services_l1(self: SharedUtils) -> bool:
