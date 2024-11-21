@@ -27,6 +27,24 @@ management_api_http:
   enable_vrfs:
   - name: MGMT
   enable_https: true
+ptp:
+  mode: boundary
+  clock_identity: 00:1C:73:7f:00:02
+  priority1: 127
+  priority2: 2
+  domain: 127
+  monitor:
+    enabled: true
+    threshold:
+      offset_from_master: 250
+      mean_path_delay: 1500
+    missing_message:
+      sequence_ids:
+        enabled: true
+        announce: 3
+        delay_resp: 3
+        follow_up: 3
+        sync: 3
 router_general:
   router_id:
     ipv4: 10.0.0.2
@@ -191,6 +209,13 @@ ethernet_interfaces:
   description: P2P_LINK_TO_CORE-1-ISIS-SR-LDP_Ethernet10
   speed: forced 1000full
   ptp:
+    announce:
+      interval: 0
+      timeout: 3
+    delay_req: -3
+    sync_message:
+      interval: -3
+    transport: ipv4
     enable: true
 - name: Ethernet12
   peer: core-1-isis-sr-ldp
@@ -307,3 +332,12 @@ port_channel_interfaces:
       interface: true
       igp_sync: true
   description: CUSTOM_DESCRIPTION_ON_P2P_LINK_B
+  ptp:
+    announce:
+      interval: 0
+      timeout: 3
+    delay_req: -3
+    sync_message:
+      interval: -3
+    transport: ipv4
+    enable: true

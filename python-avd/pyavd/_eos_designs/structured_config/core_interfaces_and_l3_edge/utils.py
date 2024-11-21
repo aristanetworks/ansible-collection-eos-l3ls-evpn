@@ -302,28 +302,9 @@ class UtilsMixin:
         """
         ethernet_cfg = {"speed": p2p_link.get("speed")}
 
-        if get(p2p_link, "ptp.enabled") is not True:
-            return ethernet_cfg
-
-        ptp_config = {}
-
-        if self.shared_utils.ptp_enabled:
-            # Apply PTP profile config from node settings when profile is not defined on p2p_link
-            if (ptp_profile_name := get(p2p_link, "ptp.profile")) is None:
-                ptp_config.update(self.shared_utils.ptp_profile)
-
-            # Apply PTP profile defined for the p2p_link
-            else:
-                msg = f"PTP Profile '{ptp_profile_name}' referenced under {self.data_model}.p2p_links does not exist in `ptp_profiles`."
-                ptp_config.update(get_item(self.shared_utils.ptp_profiles, "profile", ptp_profile_name, required=True, custom_error_msg=msg))
-
-            node_index = p2p_link["nodes"].index(self.shared_utils.hostname)
-            if (ptp_roles := get(p2p_link, "ptp.roles")) and len(ptp_roles) > node_index and ptp_roles[node_index] == "master":
-                ptp_config["role"] = "master"
-
-        ptp_config["enable"] = True
-        ptp_config.pop("profile", None)
-        ethernet_cfg["ptp"] = ptp_config
+        if get(p2p_link, "port_channel") is None and get(p2p_link, "ptp.enabled") is True:
+            if ptp_config := self._get_interface_ptp_config(p2p_link):
+                ethernet_cfg["ptp"] = ptp_config
 
         return ethernet_cfg
 
@@ -344,3 +325,30 @@ class UtilsMixin:
                 "mode": get(p2p_link, "port_channel.mode", default="active"),
             },
         }
+
+    def _get_interface_ptp_config(self: AvdStructuredConfigCoreInterfacesAndL3Edge, p2p_link: dict) -> dict:
+        """
+        Return partial structured_config for one p2p_link.
+
+        Covers PTP config for ethernet and port channel interfaces
+        """
+        ptp_config = {}
+
+        if self.shared_utils.ptp_enabled and get(p2p_link, "ptp.enabled"):
+            # Apply PTP profile config from node settings when profile is not defined on p2p_link
+            if (ptp_profile_name := get(p2p_link, "ptp.profile")) is None:
+                ptp_config.update(self.shared_utils.ptp_profile)
+
+            # Apply PTP profile defined for the p2p_link
+            else:
+                msg = f"PTP Profile '{ptp_profile_name}' referenced under {self.data_model}.p2p_links does not exist in `ptp_profiles`."
+                ptp_config.update(get_item(self.shared_utils.ptp_profiles, "profile", ptp_profile_name, required=True, custom_error_msg=msg))
+
+            node_index = p2p_link["nodes"].index(self.shared_utils.hostname)
+            if (ptp_roles := get(p2p_link, "ptp.roles")) and len(ptp_roles) > node_index and ptp_roles[node_index] == "master":
+                ptp_config["role"] = "master"
+
+        ptp_config["enable"] = True
+        ptp_config.pop("profile", None)
+
+        return ptp_config

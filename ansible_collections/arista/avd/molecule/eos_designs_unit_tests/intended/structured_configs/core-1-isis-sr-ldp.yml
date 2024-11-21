@@ -477,3 +477,12 @@ port_channel_interfaces:
       interface: true
       igp_sync: true
   description: CUSTOM_DESCRIPTION_ON_P2P_LINK_A
+  ptp:
+    announce:
+      interval: 0
+      timeout: 3
+    delay_req: -3
+    sync_message:
+      interval: -3
+    transport: ipv4
+    enable: true
