@@ -70046,15 +70046,15 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                     FloodVteps._item_type = str
 
                     _fields: ClassVar[dict] = {
-                        "id": {"type": int},
-                        "vni": {"type": int},
+                        "id": {"type": str},
+                        "vni": {"type": str},
                         "multicast_group": {"type": str},
                         "flood_vteps": {"type": FloodVteps},
                         "_custom_data": {"type": dict},
                     }
-                    id: int
+                    id: str
                     """VLAN ID."""
-                    vni: int | None
+                    vni: str | None
                     multicast_group: str | None
                     """IP Multicast Group Address."""
                     flood_vteps: FloodVteps
@@ -70066,8 +70066,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                         def __init__(
                             self,
                             *,
-                            id: int | UndefinedType = Undefined,
-                            vni: int | None | UndefinedType = Undefined,
+                            id: str | UndefinedType = Undefined,
+                            vni: str | None | UndefinedType = Undefined,
                             multicast_group: str | None | UndefinedType = Undefined,
                             flood_vteps: FloodVteps | UndefinedType = Undefined,
                             _custom_data: dict[str, Any] | UndefinedType = Undefined,
@@ -70087,8 +70087,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                             """
 
-                class Vlans(AvdIndexedList[int, VlansItem]):
-                    """Subclass of AvdIndexedList with `VlansItem` items. Primary key is `id` (`int`)."""
+                class Vlans(AvdIndexedList[str, VlansItem]):
+                    """Subclass of AvdIndexedList with `VlansItem` items. Primary key is `id` (`str`)."""
 
                     _primary_key: ClassVar[str] = "id"
 
@@ -70186,7 +70186,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 Subclass of AvdModel.
                 """
                 vlans: Vlans
-                """Subclass of AvdIndexedList with `VlansItem` items. Primary key is `id` (`int`)."""
+                """Subclass of AvdIndexedList with `VlansItem` items. Primary key is `id` (`str`)."""
                 vrfs: Vrfs
                 """Subclass of AvdIndexedList with `VrfsItem` items. Primary key is `name` (`str`)."""
                 flood_vteps: FloodVteps
@@ -70240,7 +70240,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
 
                                Subclass of AvdModel.
-                            vlans: Subclass of AvdIndexedList with `VlansItem` items. Primary key is `id` (`int`).
+                            vlans: Subclass of AvdIndexedList with `VlansItem` items. Primary key is `id` (`str`).
                             vrfs: Subclass of AvdIndexedList with `VrfsItem` items. Primary key is `name` (`str`).
                             flood_vteps: Subclass of AvdList with `str` items.
                             flood_vtep_learned_data_plane: flood_vtep_learned_data_plane
@@ -70429,15 +70429,15 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                     FloodVteps._item_type = str
 
                     _fields: ClassVar[dict] = {
-                        "id": {"type": int},
-                        "vni": {"type": int},
+                        "id": {"type": str},
+                        "vni": {"type": str},
                         "multicast_group": {"type": str},
                         "flood_vteps": {"type": FloodVteps},
                         "_custom_data": {"type": dict},
                     }
-                    id: int
+                    id: str
                     """VLAN ID."""
-                    vni: int | None
+                    vni: str | None
                     multicast_group: str | None
                     """IP Multicast Group Address."""
                     flood_vteps: FloodVteps
@@ -70449,8 +70449,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                         def __init__(
                             self,
                             *,
-                            id: int | UndefinedType = Undefined,
-                            vni: int | None | UndefinedType = Undefined,
+                            id: str | UndefinedType = Undefined,
+                            vni: str | None | UndefinedType = Undefined,
                             multicast_group: str | None | UndefinedType = Undefined,
                             flood_vteps: FloodVteps | UndefinedType = Undefined,
                             _custom_data: dict[str, Any] | UndefinedType = Undefined,
@@ -70470,8 +70470,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                             """
 
-                class Vlans(AvdIndexedList[int, VlansItem]):
-                    """Subclass of AvdIndexedList with `VlansItem` items. Primary key is `id` (`int`)."""
+                class Vlans(AvdIndexedList[str, VlansItem]):
+                    """Subclass of AvdIndexedList with `VlansItem` items. Primary key is `id` (`str`)."""
 
                     _primary_key: ClassVar[str] = "id"
 
@@ -70569,7 +70569,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 Subclass of AvdModel.
                 """
                 vlans: Vlans
-                """Subclass of AvdIndexedList with `VlansItem` items. Primary key is `id` (`int`)."""
+                """Subclass of AvdIndexedList with `VlansItem` items. Primary key is `id` (`str`)."""
                 vrfs: Vrfs
                 """Subclass of AvdIndexedList with `VrfsItem` items. Primary key is `name` (`str`)."""
                 flood_vteps: FloodVteps
@@ -70623,7 +70623,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
 
                                Subclass of AvdModel.
-                            vlans: Subclass of AvdIndexedList with `VlansItem` items. Primary key is `id` (`int`).
+                            vlans: Subclass of AvdIndexedList with `VlansItem` items. Primary key is `id` (`str`).
                             vrfs: Subclass of AvdIndexedList with `VrfsItem` items. Primary key is `name` (`str`).
                             flood_vteps: Subclass of AvdList with `str` items.
                             flood_vtep_learned_data_plane: flood_vtep_learned_data_plane
