@@ -1016,7 +1016,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         _fields: ClassVar[dict] = {"name": {"type": str}, "type": {"type": str}, "servers": {"type": Servers}, "_custom_data": {"type": dict}}
         name: str
         """Group name."""
-        type: Literal["tacacs+", "radius", "ldap"]
+        type: Literal["tacacs+", "radius", "ldap"] | None
         servers: Servers
         """Subclass of AvdList with `ServersItem` items."""
         _custom_data: dict[str, Any]
@@ -1027,7 +1027,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 self,
                 *,
                 name: str | UndefinedType = Undefined,
-                type: Literal["tacacs+", "radius", "ldap"] | UndefinedType = Undefined,
+                type: Literal["tacacs+", "radius", "ldap"] | None | UndefinedType = Undefined,
                 servers: Servers | UndefinedType = Undefined,
                 _custom_data: dict[str, Any] | UndefinedType = Undefined,
             ) -> None:

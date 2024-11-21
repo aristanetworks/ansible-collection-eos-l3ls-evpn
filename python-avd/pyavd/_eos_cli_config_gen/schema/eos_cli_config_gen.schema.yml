@@ -311,7 +311,6 @@ keys:
           type: str
         type:
           type: str
-          required: true
           valid_values:
           - tacacs+
           - radius
