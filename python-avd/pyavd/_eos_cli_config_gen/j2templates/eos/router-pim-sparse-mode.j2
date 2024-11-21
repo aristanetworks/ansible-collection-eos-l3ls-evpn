@@ -16,7 +16,7 @@ router pim sparse-mode
       bfd
 {%         endif %}
 {%         if router_pim_sparse_mode.ipv4.make_before_break is arista.avd.defined %}
-{%             if router_pim_sparse_mode.ipv4.make_before_break: %}
+{%             if router_pim_sparse_mode.ipv4.make_before_break %}
       make-before-break
 {%             else %}
       make-before-break disabled
@@ -67,7 +67,7 @@ router pim sparse-mode
          bfd
 {%             endif %}
 {%             if vrf.ipv4.make_before_break is arista.avd.defined %}
-{%                 if vrf.ipv4.make_before_break: %}
+{%                 if vrf.ipv4.make_before_break %}
          make-before-break
 {%                 else %}
          make-before-break disabled
