@@ -92,7 +92,8 @@ class AvdModel(AvdBase):
         - For other types we return None.
         """
         if name not in cls._fields:
-            raise AttributeError("'" + cls.__name__ + "' object has no attribute '" + name + "'")
+            msg = f"'{cls.__name__}' object has no attribute '{name}'"
+            raise AttributeError(msg)
         field_info = cls._fields[name]
         field_type: type = field_info["type"]
 
@@ -118,7 +119,8 @@ class AvdModel(AvdBase):
         We only get here if the attribute is not set already, and next call will skip this since the attribute is set.
         """
         if name not in self._fields:
-            raise AttributeError("'" + self.__class__.__name__ + "' object has no attribute '" + name + "'")
+            msg = f"'{type(self).__name__}' object has no attribute '{name}'"
+            raise AttributeError(msg)
 
         default_value = self._get_field_default_value(name)
         setattr(self, name, default_value)
@@ -131,7 +133,8 @@ class AvdModel(AvdBase):
         Avoids the overridden __getattr__ to avoid default values.
         """
         if name not in self._fields:
-            raise AttributeError("'" + self.__class__.__name__ + "' object has no attribute '" + name + "'")
+            msg = f"'{type(self).__name__}' object has no attribute '{name}'"
+            raise AttributeError(msg)
         try:
             return self.__getattribute__(name)
         except AttributeError:
@@ -285,15 +288,15 @@ class AvdModel(AvdBase):
             if old_value == new_value:
                 continue
 
+            # Inherit the field only if the old value is Undefined.
+            if old_value is Undefined:
+                setattr(self, field, deepcopy(new_value))
+
             # Merge new value if it is a class with inheritance support.
             field_type = field_info["type"]
             if issubclass(field_type, (AvdModel, AvdIndexedList)) and isinstance(old_value, field_type):
                 # Inherit into the existing object.
                 old_value._deepinherit(new_value)
-
-            # Inherit the field only if the old value is Undefined, otherwise ignore.
-            if old_value is Undefined:
-                setattr(self, field, deepcopy(new_value))
 
     def _deepinherited(self, other: Self) -> Self:
         """Return new instance with the result of recursively inheriting unset fields from other instance. Lists are not merged."""

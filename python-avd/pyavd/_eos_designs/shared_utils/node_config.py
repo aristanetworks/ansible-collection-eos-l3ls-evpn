@@ -22,9 +22,7 @@ class NodeConfigMixin:
     """
 
     @cached_property
-    def node_type_config(
-        self: SharedUtils,
-    ) -> EosDesigns._DynamicKeys.DynamicNodeTypesItem.NodeTypes:
+    def node_type_config(self: SharedUtils) -> EosDesigns._DynamicKeys.DynamicNodeTypesItem.NodeTypes:
         """
         The object representing the `<node_type_key like l3leaf, spine etc>:` containing the `defaults`, `nodes`, `node_groups` etc.
 
@@ -42,9 +40,7 @@ class NodeConfigMixin:
         raise AristaAvdInvalidInputsError(msg)
 
     @cached_property
-    def node_group_config(
-        self: SharedUtils,
-    ) -> EosDesigns._DynamicKeys.DynamicNodeTypesItem.NodeTypes.NodeGroupsItem | None:
+    def node_group_config(self: SharedUtils) -> EosDesigns._DynamicKeys.DynamicNodeTypesItem.NodeTypes.NodeGroupsItem | None:
         """
         The object representing the `<node_type_key like l3leaf, spine etc>.node_groups[]` where this node is found.
 
@@ -57,9 +53,7 @@ class NodeConfigMixin:
         return None
 
     @cached_property
-    def node_config(
-        self: SharedUtils,
-    ) -> EosDesigns._DynamicKeys.DynamicNodeTypesItem.NodeTypes.NodesItem:
+    def node_config(self: SharedUtils) -> EosDesigns._DynamicKeys.DynamicNodeTypesItem.NodeTypes.NodesItem:
         """
         NodesItem object containing the fully inherited node config.
 
@@ -76,12 +70,9 @@ class NodeConfigMixin:
         )
 
         if self.node_group_config is not None:
-            if self.hostname in self.node_group_config.nodes:
-                node_config._deepinherit(
-                    self.node_group_config.nodes[self.hostname]._cast_as(
-                        EosDesigns._DynamicKeys.DynamicNodeTypesItem.NodeTypes.NodesItem, ignore_extra_keys=True
-                    )
-                )
+            node_config._deepinherit(
+                self.node_group_config.nodes[self.hostname]._cast_as(EosDesigns._DynamicKeys.DynamicNodeTypesItem.NodeTypes.NodesItem, ignore_extra_keys=True)
+            )
             node_config._deepinherit(self.node_group_config._cast_as(EosDesigns._DynamicKeys.DynamicNodeTypesItem.NodeTypes.NodesItem, ignore_extra_keys=True))
 
         node_config._deepinherit(
