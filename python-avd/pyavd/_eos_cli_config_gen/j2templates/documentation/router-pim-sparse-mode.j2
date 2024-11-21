@@ -12,9 +12,11 @@
 {%     if router_pim_sparse_mode.ipv4 is arista.avd.defined %}
 
 BFD enabled: {{ router_pim_sparse_mode.ipv4.bfd | arista.avd.default(false) }}
-{%         if router_pim_sparse_mode.ipv4.rp_addresses is arista.avd.defined %}
+{%         if router_pim_sparse_mode.ipv4.make_before_break is arista.avd.defined %}
 
 Make-before-break: {{ router_pim_sparse_mode.ipv4.make_before_break }}
+{%         endif %}
+{%         if router_pim_sparse_mode.ipv4.rp_addresses is arista.avd.defined %}
 
 ##### IP Rendezvous Information
 
