@@ -7,7 +7,7 @@ from functools import cached_property
 from ipaddress import ip_network
 from typing import TYPE_CHECKING
 
-from pyavd._errors import AristaAvdError, AristaAvdInvalidInputsError
+from pyavd._errors import AristaAvdInvalidInputsError
 from pyavd._utils import default, get
 from pyavd.j2filters import natural_sort
 
@@ -179,11 +179,7 @@ class InbandManagementMixin:
 
     @cached_property
     def inband_ztp(self: SharedUtils) -> bool | None:
-        inband_ztp = get(self.switch_data_combined, "inband_ztp")
-        if inband_ztp and self.uplink_type != "port-channel":
-            msg = "'inband_ztp' is currently only supported for L2 switches ('uplink_type: port-channel')."
-            raise AristaAvdError(msg)
-        return inband_ztp
+        return get(self.switch_data_combined, "inband_ztp")
 
     @cached_property
     def inband_ztp_lacp_fallback_delay(self: SharedUtils) -> int | None:

@@ -153,6 +153,10 @@ class EthernetInterfacesMixin(UtilsMixin):
                 if link.get("underlay_multicast") is True:
                     ethernet_interface["pim"] = {"ipv4": {"sparse_mode": True}}
 
+                # DHCP server settings (primarily used for ZTP)
+                if link.get("ip_address") is not None and "unnumbered" not in link["ip_address"].lower() and link.get("dhcp_server"):
+                    ethernet_interface["dhcp_server_ipv4"] = True
+
                 # Structured Config
                 ethernet_interface["struct_cfg"] = link.get("structured_config")
 
