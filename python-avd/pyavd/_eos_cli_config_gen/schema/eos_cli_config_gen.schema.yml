@@ -4394,10 +4394,13 @@ keys:
         traffic_engineering:
           type: dict
           keys:
+            enabled:
+              type: bool
+              description: Whether to enable traffic-engineering on this interface.
             administrative_groups:
               type: list
-              description: List of administrative groups, valid values are names,
-                ranges 0-127, or single integers 0-127.
+              description: List of traffic-engineering administrative groups, valid
+                values are names, ranges 0-127, or single integers 0-127.
               items:
                 type: str
                 convert_types:

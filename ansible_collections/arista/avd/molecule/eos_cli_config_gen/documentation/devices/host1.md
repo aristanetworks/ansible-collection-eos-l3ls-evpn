@@ -4767,6 +4767,7 @@ interface Ethernet81/3
    no shutdown
    no switchport
    ip address 100.64.127.0/31
+   traffic-engineering
    traffic-engineering administrative-group 3,testgrp,15-29
 !
 interface Ethernet81/10

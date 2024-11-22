@@ -12194,10 +12194,14 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
             AdministrativeGroups._item_type = str
 
-            _fields: ClassVar[dict] = {"administrative_groups": {"type": AdministrativeGroups}, "_custom_data": {"type": dict}}
+            _fields: ClassVar[dict] = {"enabled": {"type": bool}, "administrative_groups": {"type": AdministrativeGroups}, "_custom_data": {"type": dict}}
+            enabled: bool | None
+            """Whether to enable traffic-engineering on this interface."""
             administrative_groups: AdministrativeGroups
             """
-            List of administrative groups, valid values are names, ranges 0-127, or single integers 0-127.
+            List of traffic-engineering administrative groups, valid values are names, ranges 0-127, or single
+            integers 0-127.
+
             Subclass of AvdList with `str` items.
             """
             _custom_data: dict[str, Any]
@@ -12205,7 +12209,11 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             if TYPE_CHECKING:
 
                 def __init__(
-                    self, *, administrative_groups: AdministrativeGroups | UndefinedType = Undefined, _custom_data: dict[str, Any] | UndefinedType = Undefined
+                    self,
+                    *,
+                    enabled: bool | None | UndefinedType = Undefined,
+                    administrative_groups: AdministrativeGroups | UndefinedType = Undefined,
+                    _custom_data: dict[str, Any] | UndefinedType = Undefined,
                 ) -> None:
                     """
                     TrafficEngineering.
@@ -12214,8 +12222,11 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                     Subclass of AvdModel.
 
                     Args:
+                        enabled: Whether to enable traffic-engineering on this interface.
                         administrative_groups:
-                           List of administrative groups, valid values are names, ranges 0-127, or single integers 0-127.
+                           List of traffic-engineering administrative groups, valid values are names, ranges 0-127, or single
+                           integers 0-127.
+
                            Subclass of AvdList with `str` items.
                         _custom_data: _custom_data
 

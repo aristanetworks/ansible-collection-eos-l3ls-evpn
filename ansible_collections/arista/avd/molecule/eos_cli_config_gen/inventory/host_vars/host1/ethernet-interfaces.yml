@@ -1856,6 +1856,7 @@ ethernet_interfaces:
       enabled: false
     ip_address: 100.64.127.0/31
     traffic_engineering:
+      enabled: true
       administrative_groups:
         - 3
         - testgrp
