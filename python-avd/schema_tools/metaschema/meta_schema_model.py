@@ -131,7 +131,7 @@ class AvdSchemaBaseModel(BaseModel, ABC):
 
     def __init__(self, _resolve_schema: Literal["eos_designs", "eos_cli_config_gen", "all"] | None = None, **data: Any) -> None:
         """
-        Takes a kwarg "resolve_schema" which controls if $refs are resolved, and if a string, only the given schema will be resolved.
+        Takes a kwarg "_resolve_schema" which controls if $refs are resolved, and if a string, only the given schema will be resolved.
 
         The $ref expansion _only_ covers this field.
         Any $ref on child fields are expanded as they are initialized by Pydantic since they are based on this base class.
