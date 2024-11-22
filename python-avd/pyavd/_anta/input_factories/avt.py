@@ -4,8 +4,8 @@
 from __future__ import annotations
 
 from typing import TYPE_CHECKING
-from pyavd._anta.utils import LogMessage
 
+from pyavd._anta.utils import LogMessage
 from pyavd._utils import get
 
 if TYPE_CHECKING:
@@ -13,6 +13,7 @@ if TYPE_CHECKING:
 
     from pyavd._anta.utils import TestLoggerAdapter
     from pyavd._anta.utils.config_manager import ConfigManager
+
 
 class VerifyAVTRoleInputFactory:
     """Input factory class for the VerifyAVTRole test.
@@ -26,7 +27,6 @@ class VerifyAVTRoleInputFactory:
     @classmethod
     def create(cls, test: type[VerifyAVTRole], manager: ConfigManager, logger: TestLoggerAdapter) -> VerifyAVTRole.Input | None:
         """Create Input for the VerifyAVTRole test."""
-
         # Retrieve AVT role from the structured configuration
         avt_role = get(manager.structured_config, "router_adaptive_virtual_topology.topology_role")
         if not avt_role:

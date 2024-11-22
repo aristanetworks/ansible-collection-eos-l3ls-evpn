@@ -14,6 +14,7 @@ if TYPE_CHECKING:
     from pyavd._anta.utils import TestLoggerAdapter
     from pyavd._anta.utils.config_manager import ConfigManager
 
+
 class VerifySpecificIPSecConnInputFactory:
     """Input factory class for the VerifySpecificIPSecConn test.
 
@@ -31,7 +32,6 @@ class VerifySpecificIPSecConnInputFactory:
     @classmethod
     def create(cls, test: type[VerifySpecificIPSecConn], manager: ConfigManager, logger: TestLoggerAdapter) -> VerifySpecificIPSecConn.Input | None:
         """Create Input for the VerifySpecificIPSecConn test."""
-
         connections = []
 
         path_groups = get(manager.structured_config, "router_path_selection.path_groups")
@@ -52,11 +52,11 @@ class VerifySpecificIPSecConnInputFactory:
                 vrf = "default"  # TODO: Keeping the vrf name static for now. We may need to change later on.
                 if (peer_address, vrf) not in added_peers:
                     connections.append(
-                test.Input.IPSecPeers(
-                    peer=peer_address,
-                    vrf=vrf,
-                ),
-            )
+                        test.Input.IPSecPeers(
+                            peer=peer_address,
+                            vrf=vrf,
+                        ),
+                    )
                     added_peers.add((peer_address, vrf))
 
         return test.Input(ip_security_connections=connections) if connections else None
