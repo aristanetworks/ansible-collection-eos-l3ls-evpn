@@ -50,7 +50,7 @@ Make-before-break: {{ router_pim_sparse_mode.ipv4.make_before_break }}
 ##### IP Sparse Mode VRFs
 
 {%         set any_ipv4_ip_addresses = namespace(present=false) %}
-| VRF Name | BFD Enabled | Make Before Break |
+| VRF Name | BFD Enabled | Make-before-break |
 | -------- | ----------- | ----------------- |
 {%         for vrf in router_pim_sparse_mode.vrfs | arista.avd.natural_sort('name') %}
 {%             set any_ipv4_ip_addresses.present =  any_ipv4_ip_addresses.present or (vrf.ipv4.rp_addresses is arista.avd.defined and (vrf.ipv4.rp_addresses | length) > 0) %}
