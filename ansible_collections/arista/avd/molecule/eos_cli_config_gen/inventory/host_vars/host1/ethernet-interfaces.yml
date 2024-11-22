@@ -1804,6 +1804,8 @@ ethernet_interfaces:
                   - protocol: "0x0011"
                     feature_header_length: 2
                     re_encapsulation_ethernet_header: true
+                  - protocol: "0x0012"
+                    re_encapsulation_ethernet_header: true
               - destination: 2.1.1.3
                 source: 2.1.1.4
             protocols:
@@ -1812,6 +1814,8 @@ ethernet_interfaces:
                 feature_header_length: 3
               - protocol: "0x0003"
                 feature_header_length: 2
+                re_encapsulation_ethernet_header: true
+              - protocol: "0x0004"
                 re_encapsulation_ethernet_header: true
       tool:
         mpls_pop_all: true

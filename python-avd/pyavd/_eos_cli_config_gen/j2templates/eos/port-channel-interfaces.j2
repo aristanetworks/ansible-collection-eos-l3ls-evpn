@@ -835,12 +835,11 @@ interface {{ port_channel_interface.name }}
 {%             for protocol in port_channel_interface.switchport.tap.encapsulation.gre.protocols | arista.avd.natural_sort('protocol') %}
 {%                 set tap_encapsulation_cli = "switchport tap encapsulation gre protocol " ~ protocol.protocol %}
 {%                 if protocol.feature_header_length is arista.avd.defined %}
-{%                     set tap_encapsulation_cli = tap_encapsulation_cli ~ " feature header length " ~ protocol.feature_header_length ~ " " ~ "strip" %}
-{%                     if protocol.re_encapsulation_ethernet_header is arista.avd.defined(true) %}
-{%                         set tap_encapsulation_cli = tap_encapsulation_cli ~ " re-encapsulation ethernet" %}
-{%                     endif %}
-{%                 else %}
-{%                     set tap_encapsulation_cli = tap_encapsulation_cli ~ " strip" %}
+{%                     set tap_encapsulation_cli = tap_encapsulation_cli ~ " feature header length " ~ protocol.feature_header_length %}
+{%                 endif %}
+{%                 set tap_encapsulation_cli = tap_encapsulation_cli ~ " strip" %}
+{%                 if protocol.re_encapsulation_ethernet_header is arista.avd.defined(true) %}
+{%                     set tap_encapsulation_cli = tap_encapsulation_cli ~ " re-encapsulation ethernet" %}
 {%                 endif %}
    {{ tap_encapsulation_cli }}
 {%             endfor %}
@@ -856,12 +855,11 @@ interface {{ port_channel_interface.name }}
 {%                 for destination_protocol in destination.protocols | arista.avd.natural_sort('protocol') %}
 {%                     set tap_encapsulation_cli = tap_encapsulation_cli ~ " protocol " ~ destination_protocol.protocol %}
 {%                     if destination_protocol.feature_header_length is arista.avd.defined %}
-{%                         set tap_encapsulation_cli = tap_encapsulation_cli ~ " feature header length " ~ destination_protocol.feature_header_length ~ " " ~ "strip" %}
-{%                         if destination_protocol.re_encapsulation_ethernet_header is arista.avd.defined(true) %}
-{%                             set tap_encapsulation_cli = tap_encapsulation_cli ~ " re-encapsulation ethernet" %}
-{%                         endif %}
-{%                     else %}
-{%                         set tap_encapsulation_cli = tap_encapsulation_cli ~ " strip" %}
+{%                         set tap_encapsulation_cli = tap_encapsulation_cli ~ " feature header length " ~ destination_protocol.feature_header_length %}
+{%                     endif %}
+{%                     set tap_encapsulation_cli = tap_encapsulation_cli ~ " strip" %}
+{%                     if destination_protocol.re_encapsulation_ethernet_header is arista.avd.defined(true) %}
+{%                         set tap_encapsulation_cli = tap_encapsulation_cli ~ " re-encapsulation ethernet" %}
 {%                     endif %}
    {{ tap_encapsulation_cli }}
 {%                 endfor %}
