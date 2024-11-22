@@ -3491,7 +3491,6 @@ interface Dps1
 | Ethernet80/4 | LAG Member LACP fallback | *trunk | *112 | *- | *- | 104 |
 | Ethernet81 | LAG Member | *access | *110 | *- | *- | 109 |
 | Ethernet81/2 | LAG Member LACP fallback LLDP ZTP VLAN | *trunk | *112 | *- | *- | 112 |
-| Ethernet85 | MLAG_PEER_EAPI-LEAF1B_Ethernet3 | *trunk | *2-4094 | *- | *LEAF_PEER_L3, MLAG | 3 |
 
 *Inherited from Port-Channel Interface
 
@@ -3616,8 +3615,6 @@ interface Dps1
 | Ethernet66 | Multiple VRIDs and tracking | - | 192.0.2.2/25 | default | - | False | - | - |
 | Ethernet80 | LAG Member | 17 | *192.0.2.3/31 | **default | **- | **- | **- | **- |
 | Ethernet81/2 | LAG Member LACP fallback LLDP ZTP VLAN | 112 | *dhcp | **default | **- | **- | **- | **- |
-| Ethernet83 | P2P_LINK_TO_EAPI-SPINE1_Ethernet1 | - | 172.31.255.1/31 | default | 1500 | - | - | - |
-| Ethernet84 | P2P_LINK_TO_EAPI-SPINE2_Ethernet1 | - | 172.31.255.3/31 | default | 1500 | - | - | - |
 
 *Inherited from Port-Channel Interface
 
@@ -3726,9 +3723,6 @@ interface Dps1
 | Ethernet78 | 15 | *- | - | *- | *- | *- | *- | *md5 |
 | Ethernet79 | 16 | *EVPN_UNDERLAY | - | *- | *- | *- | *- | *md5 |
 | Ethernet81/10 | 110 | *ISIS_TEST | True | *99 | *point-to-point | *level-2 | *True | *- |
-| Ethernet83 | - | EVPN_UNDERLAY | - | 50 | point-to-point | - | - | - |
-| Ethernet84 | - | EVPN_UNDERLAY | - | 50 | point-to-point | - | - | - |
-| Ethernet85 | 3 | *EVPN_UNDERLAY | - | *- | *- | *- | *- | *sha |
 
 *Inherited from Port-Channel Interface
 
@@ -4747,36 +4741,6 @@ interface Ethernet81/2
 interface Ethernet81/10
    description isis_port_channel_member
    channel-group 110 mode active
-!
-interface Ethernet82
-   no switchport
-   ip ospf cost 99
-   ip ospf network point-to-point
-   ip ospf authentication message-digest
-   ip ospf area 0.0.0.1
-   ip ospf message-digest-key 55 md5 7 <removed>
-!
-interface Ethernet83
-   description P2P_LINK_TO_EAPI-SPINE1_Ethernet1
-   mtu 1500
-   no switchport
-   ip address 172.31.255.1/31
-   isis enable EVPN_UNDERLAY
-   isis metric 50
-   isis network point-to-point
-!
-interface Ethernet84
-   description P2P_LINK_TO_EAPI-SPINE2_Ethernet1
-   mtu 1500
-   no switchport
-   ip address 172.31.255.3/31
-   isis enable EVPN_UNDERLAY
-   isis metric 50
-   isis network point-to-point
-!
-interface Ethernet85
-   description MLAG_PEER_EAPI-LEAF1B_Ethernet3
-   channel-group 3 mode active
 ```
 
 ### Port-Channel Interfaces
@@ -5137,14 +5101,6 @@ interface Port-Channel17
    no switchport
    ip address 192.0.2.3/31
    service-policy type pbr input MyPolicy
-!
-interface Port-Channel18
-   no switchport
-   ip ospf cost 99
-   ip ospf network point-to-point
-   ip ospf authentication message-digest
-   ip ospf area 0.0.0.12
-   ip ospf message-digest-key 55 md5 7 <removed>
 !
 interface Port-Channel20
    description Po_in_mode_access_accepting_tagged_LACP_frames
@@ -5532,9 +5488,6 @@ interface Port-Channel132
 | --------- | ----------- | --- | ---------- |
 | Loopback0 | EVPN_Overlay_Peering | default | 192.168.255.3/32 |
 | Loopback1 | VTEP_VXLAN_Tunnel_Source | default | 192.168.254.3/32 |
-| Loopback2 | - | default | - |
-| Loopback3 | EVPN_Overlay_Peering | default | 192.168.255.3/32 |
-| Loopback4 | VTEP_VXLAN_Tunnel_Source | default | 192.168.254.3/32 |
 | Loopback99 | TENANT_A_PROJECT02_VTEP_DIAGNOSTICS | TENANT_A_PROJECT02 | 10.1.255.3/32 <br> 192.168.1.1/32 secondary <br> 10.0.0.254/32 secondary |
 | Loopback100 | TENANT_A_PROJECT02_VTEP_DIAGNOSTICS | TENANT_A_PROJECT02 | 10.1.255.3/32 |
 
@@ -5544,9 +5497,6 @@ interface Port-Channel132
 | --------- | ----------- | --- | ------------ |
 | Loopback0 | EVPN_Overlay_Peering | default | - |
 | Loopback1 | VTEP_VXLAN_Tunnel_Source | default | - |
-| Loopback2 | - | default | - |
-| Loopback3 | EVPN_Overlay_Peering | default | - |
-| Loopback4 | VTEP_VXLAN_Tunnel_Source | default | - |
 | Loopback99 | TENANT_A_PROJECT02_VTEP_DIAGNOSTICS | TENANT_A_PROJECT02 | 2002::CAFE/64 |
 | Loopback100 | TENANT_A_PROJECT02_VTEP_DIAGNOSTICS | TENANT_A_PROJECT02 | - |
 
@@ -5554,8 +5504,6 @@ interface Port-Channel132
 
 | Interface | ISIS instance | ISIS metric | Interface mode |
 | --------- | ------------- | ----------- | -------------- |
-| Loopback3 | EVPN_UNDERLAY | - | passive |
-| Loopback4 | EVPN_UNDERLAY | - | passive |
 | Loopback99 | ISIS_TEST | 100 | point-to-point |
 
 #### Loopback Interfaces Device Configuration
@@ -5573,21 +5521,6 @@ interface Loopback0
 interface Loopback1
    description VTEP_VXLAN_Tunnel_Source
    ip address 192.168.254.3/32
-!
-interface Loopback2
-   ip ospf area 0.0.0.2
-!
-interface Loopback3
-   description EVPN_Overlay_Peering
-   ip address 192.168.255.3/32
-   isis enable EVPN_UNDERLAY
-   isis passive
-!
-interface Loopback4
-   description VTEP_VXLAN_Tunnel_Source
-   ip address 192.168.254.3/32
-   isis enable EVPN_UNDERLAY
-   isis passive
 !
 interface Loopback99
    description TENANT_A_PROJECT02_VTEP_DIAGNOSTICS
@@ -6910,10 +6843,7 @@ router traffic-engineering
 | Interface | Area | Cost | Point To Point |
 | -------- | -------- | -------- | -------- |
 | Ethernet5 | 100 | 99 | True |
-| Ethernet82 | 0.0.0.1 | 99 | True |
-| Port-Channel18 | 0.0.0.12 | 99 | True |
 | Vlan26 | 0.0.0.24 | 99 | True |
-| Loopback2 | 0.0.0.2 | - | - |
 
 #### Router OSPF Device Configuration
 
@@ -7049,8 +6979,6 @@ router ospf 600
 | Interface | ISIS Instance | ISIS Metric | Interface Mode |
 | --------- | ------------- | ----------- | -------------- |
 | Ethernet5 | ISIS_TEST | 99 | point-to-point |
-| Ethernet83 | EVPN_UNDERLAY | 50 | point-to-point |
-| Ethernet84 | EVPN_UNDERLAY | 50 | point-to-point |
 | Vlan42 | EVPN_UNDERLAY | - | - |
 | Vlan83 | EVPN_UNDERLAY | - | - |
 | Vlan84 | EVPN_UNDERLAY | - | - |
@@ -7064,8 +6992,6 @@ router ospf 600
 | Vlan2002 | EVPN_UNDERLAY | - | - |
 | Vlan4093 | EVPN_UNDERLAY | 50 | point-to-point |
 | Vlan4094 | EVPN_UNDERLAY | - | - |
-| Loopback3 | EVPN_UNDERLAY | - | passive |
-| Loopback4 | EVPN_UNDERLAY | - | passive |
 | Loopback99 | ISIS_TEST | 100 | point-to-point |
 
 #### Prefix Segments

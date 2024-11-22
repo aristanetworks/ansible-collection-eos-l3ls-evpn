@@ -12,21 +12,6 @@ loopback_interfaces:
     description: VTEP_VXLAN_Tunnel_Source
     ip_address: 192.168.254.3/32
 
-  - name: Loopback2
-    ospf_area: 0.0.0.2
-
-  - name: Loopback3
-    description: EVPN_Overlay_Peering
-    ip_address: 192.168.255.3/32
-    isis_enable: EVPN_UNDERLAY
-    isis_passive: true
-
-  - name: Loopback4
-    description: VTEP_VXLAN_Tunnel_Source
-    ip_address: 192.168.254.3/32
-    isis_enable: EVPN_UNDERLAY
-    isis_passive: true
-
   - name: Loopback100
     description: TENANT_A_PROJECT02_VTEP_DIAGNOSTICS
     vrf: TENANT_A_PROJECT02

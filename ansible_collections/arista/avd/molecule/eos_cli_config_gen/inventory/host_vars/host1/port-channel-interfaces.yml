@@ -523,18 +523,6 @@ port_channel_interfaces:
       pbr:
         input: MyPolicy
 
-  - name: Port-Channel18
-    switchport:
-      enabled: false
-    ospf_network_point_to_point: true
-    ospf_area: 0.0.0.12
-    ospf_cost: 99
-    ospf_authentication: message-digest
-    ospf_message_digest_keys:
-      - id: 55
-        hash_algorithm: md5
-        key: "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-
   - name: Port-Channel99
     description: MCAST
     switchport:
