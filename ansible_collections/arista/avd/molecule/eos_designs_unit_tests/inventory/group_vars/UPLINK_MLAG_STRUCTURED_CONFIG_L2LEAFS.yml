@@ -11,13 +11,10 @@ l2leaf:
           level: 25
         unknown_unicast:
           level: 25
-      switchport:
-        trunk:
-          native_vlan_tag: true
     mlag_interfaces: [ Ethernet3, Ethernet4 ]
     mlag_peer_ipv4_pool: 10.255.252.0/24
-    mlag_port_channel_structured_config:  # Setting structured config here but it is overridden on group level and applied again on node level.
-      description: "Port-channel description not being used because it is overridden on node-group level."
+    mlag_port_channel_structured_config:  # Setting structured config here but it is overridden by 'null' on group level and applied again on node level.
+      description: "Port-channel description not being used because it is overridden by 'null' on node-group level."
 
     spanning_tree_mode: mstp
     spanning_tree_priority: 16384
@@ -25,6 +22,11 @@ l2leaf:
     - group: UPLINK-MLAG-STRUCTURED-CONFIG-L2LEAF1
       # Testing the inheritance works correctly when nullifying a dict in the group and then applying a new one per node.
       mlag_port_channel_structured_config: null
+      # Testing merging of uplink_structured_config which is a dict type with no schema.
+      uplink_structured_config:
+        switchport:
+          trunk:
+            native_vlan_tag: true
       nodes:
         - name: UPLINK-MLAG-STRUCTURED-CONFIG-L2LEAF1A
           id: 1

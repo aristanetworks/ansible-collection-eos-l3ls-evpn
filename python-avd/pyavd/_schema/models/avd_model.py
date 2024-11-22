@@ -8,7 +8,7 @@ from copy import deepcopy
 from typing import TYPE_CHECKING, Any, ClassVar, Literal
 
 from pyavd._schema.coerce_type import coerce_type
-from pyavd._utils import Undefined, UndefinedType
+from pyavd._utils import Undefined, UndefinedType, merge
 
 from .avd_base import AvdBase
 from .avd_indexed_list import AvdIndexedList
@@ -256,8 +256,15 @@ class AvdModel(AvdBase):
             if issubclass(field_type, AvdBase) and isinstance(old_value, field_type):
                 # Merge in to the existing object
                 old_value._deepmerge(new_value, list_merge=list_merge)
-            else:
-                setattr(self, field, new_value)
+                continue
+
+            if field_type is dict:
+                # In-place deepmerge in to the existing dict without schema.
+                # Deepcopying since merge() does not copy.
+                merge(old_value, deepcopy(new_value), list_merge=list_merge)
+                continue
+
+            setattr(self, field, new_value)
 
     def _inherit(self, other: Self) -> None:
         """Update unset fields on this instance with fields from other instance. No merging."""
@@ -291,12 +298,19 @@ class AvdModel(AvdBase):
             # Inherit the field only if the old value is Undefined.
             if old_value is Undefined:
                 setattr(self, field, deepcopy(new_value))
+                continue
 
             # Merge new value if it is a class with inheritance support.
             field_type = field_info["type"]
             if issubclass(field_type, (AvdModel, AvdIndexedList)) and isinstance(old_value, field_type):
                 # Inherit into the existing object.
                 old_value._deepinherit(new_value)
+                continue
+
+            if field_type is dict:
+                # In-place deepmerge in to the existing dict without schema.
+                # Deepcopying since merge() does not copy.
+                merge(old_value, deepcopy(new_value), list_merge="replace")
 
     def _deepinherited(self, other: Self) -> Self:
         """Return new instance with the result of recursively inheriting unset fields from other instance. Lists are not merged."""
