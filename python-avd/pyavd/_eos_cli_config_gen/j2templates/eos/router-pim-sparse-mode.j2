@@ -15,12 +15,10 @@ router pim sparse-mode
 {%         if router_pim_sparse_mode.ipv4.bfd is arista.avd.defined(true) %}
       bfd
 {%         endif %}
-{%         if router_pim_sparse_mode.ipv4.make_before_break is arista.avd.defined %}
-{%             if router_pim_sparse_mode.ipv4.make_before_break %}
+{%         if vrf.ipv4.make_before_break is arista.avd.defined(true) %}
       make-before-break
-{%             else %}
+{%         elif vrf.ipv4.make_before_break is arista.avd.defined(false) %}
       make-before-break disabled
-{%             endif %}
 {%         endif %}
 {%         for rp_address in router_pim_sparse_mode.ipv4.rp_addresses | arista.avd.natural_sort('address') %}
 {%             set rp_options_cli = "" %}
@@ -66,12 +64,10 @@ router pim sparse-mode
 {%             if vrf.ipv4.bfd is arista.avd.defined(true) %}
          bfd
 {%             endif %}
-{%             if vrf.ipv4.make_before_break is arista.avd.defined %}
-{%                 if vrf.ipv4.make_before_break %}
+{%             if vrf.ipv4.make_before_break is arista.avd.defined(true) %}
          make-before-break
-{%                 else %}
+{%             elif vrf.ipv4.make_before_break is arista.avd.defined(false) %}
          make-before-break disabled
-{%                 endif %}
 {%             endif %}
 {%             for rp_address in vrf.ipv4.rp_addresses | arista.avd.natural_sort('address') %}
 {%                 set rp_options_cli = "" %}
