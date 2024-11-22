@@ -78,5 +78,7 @@ class LogMessage(Enum):
     UNAVAILABLE_IP = "{entity} skipped. IP address missing."
     INELIGIBLE_DATA = "{entity} skipped. {issues}"
     SUBINTERFACE = "Subinterface {entity} skipped."
-    SKIP_INTERFACE = "{entity} skipped. `validate_state` set to False."
+    SKIP_INTERFACE = "{entity} skipped. `validate_state` or `validate_lldp` set to False."
     NOT_VTEP = "Skipped. Not a VTEP or is a WAN VTEP."
+    NOT_WAN_VTEP = "Skipped. Not a WAN VTEP."
+    NOT_STUN_CLIENT_INTERFACE = "Skipped. STUN client interfaces are not found."

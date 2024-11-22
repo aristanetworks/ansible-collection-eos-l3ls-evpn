@@ -28,7 +28,7 @@ def validate_dict(input_dict: dict, required_keys: list[str] | None = None, requ
     missing_keys = []
     invalid_values = []
 
-    missing_keys = [exp_key for exp_key in required_keys if exp_key not in input_dict if required_keys]
+    missing_keys = [exp_key for exp_key in required_keys if get(input_dict, exp_key) is None if required_keys]
 
     if required_key_values:
         for exp_key, exp_value in required_key_values.items():

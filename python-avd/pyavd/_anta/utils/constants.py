@@ -13,6 +13,9 @@ class StructuredConfigKey(Enum):
     HTTPS_SSL_PROFILE = "management_api_http.https_ssl_profile"
     MLAG_CONFIGURATION = "mlag_configuration"
     ROUTER_BGP = "router_bgp"
+    SERVICE_ROUTING_PROTOCOLS_MODEL = "service_routing_protocols_model"
+    AVT_ROLE = "router_adaptive_virtual_topology.topology_role"
+    ROUTER_PATH_SELECTION_GROUPS = "router_path_selection.path_groups"
 
     @classmethod
     def to_string_list(cls, keys: list[StructuredConfigKey]) -> list[str]:

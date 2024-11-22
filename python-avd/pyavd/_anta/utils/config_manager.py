@@ -33,7 +33,7 @@ class ConfigManager:
         """
         self.device_name = device_name
         self.fabric_data = fabric_data
-        self.structured_config = get(fabric_data.structured_configs, device_name, default={})
+        self.structured_config = get(fabric_data.structured_configs, device_name, separator="..", default={})
         if not self.structured_config:
             raise AristaAvdError(message=f"Device '{device_name}' structured configuration not found in the provided fabric data.")
 
@@ -95,7 +95,7 @@ class ConfigManager:
         -------
             str | None: IP address of the device interface or None if unavailable.
         """
-        device_struct_cfg = get(self.fabric_data.structured_configs, device, default={}) if device else self.structured_config
+        device_struct_cfg = get(self.fabric_data.structured_configs, device, separator="..", default={}) if device else self.structured_config
         interfaces = get(device_struct_cfg, interface_model, default=[])
         interface = get_item(interfaces, "name", interface_name, default={})
         return get(interface, "ip_address")
@@ -107,7 +107,11 @@ class ConfigManager:
         -------
             bool: True if the device is a WAN VTEP, False otherwise.
         """
-        return self.is_vtep() and "Dps" in get(self.structured_config, "vxlan_interface.vxlan1.vxlan.source_interface")
+        return self.is_vtep() and "Dps" in get(
+            self.structured_config,
+            "vxlan_interface.vxlan1.vxlan.source_interface",
+            (get(self.structured_config, "vxlan_interface.Vxlan1.vxlan.source_interface", "")),
+        )
 
     def is_vtep(self) -> bool:
         """Check if the device is a VTEP by looking at the presence of a VXLAN interface.

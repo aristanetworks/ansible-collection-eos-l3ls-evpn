@@ -16,6 +16,11 @@ PYAVD_TEST_INDEX: list[TestSpec] = [
         input_dict={"profile": StructuredConfigKey.HTTPS_SSL_PROFILE},
     ),
     TestSpec(
+        test_class=VerifySpecificIPSecConn,
+        conditional_keys=[StructuredConfigKey.ROUTER_PATH_SELECTION_GROUPS],
+        input_factory=VerifySpecificIPSecConnInputFactory,
+    ),
+    TestSpec(
         test_class=VerifyBGPSpecificPeers,
         conditional_keys=[StructuredConfigKey.ROUTER_BGP],
         input_factory=VerifyBGPSpecificPeersInputFactory,
@@ -45,6 +50,11 @@ PYAVD_TEST_INDEX: list[TestSpec] = [
         conditional_keys=[StructuredConfigKey.MLAG_CONFIGURATION],
     ),
     TestSpec(
+        test_class=VerifyRoutingProtocolModel,
+        conditional_keys=[StructuredConfigKey.SERVICE_ROUTING_PROTOCOLS_MODEL],
+        input_dict={"model": StructuredConfigKey.SERVICE_ROUTING_PROTOCOLS_MODEL},
+    ),
+    TestSpec(
         test_class=VerifyReachability,
         input_factory=VerifyReachabilityInputFactory,
     ),
@@ -61,6 +71,22 @@ PYAVD_TEST_INDEX: list[TestSpec] = [
     ),
     TestSpec(
         test_class=VerifyTransceiversTemperature,
+    ),
+    TestSpec(
+        test_class=VerifyNTP,
+    ),
+    TestSpec(
+        test_class=VerifyReloadCause,
+    ),
+    TestSpec(
+        test_class=VerifyStunClient,
+        conditional_keys=[StructuredConfigKey.ROUTER_PATH_SELECTION_GROUPS],
+        input_factory=VerifyStunClientInputFactory,
+    ),
+    TestSpec(
+        test_class=VerifyAVTRole,
+        conditional_keys=[StructuredConfigKey.AVT_ROLE],
+        input_factory=VerifyAVTRoleInputFactory,
     ),
 ]
 """List of all ANTA tests with their specifications that PyAVD will run by default."""

@@ -7,7 +7,7 @@ from ipaddress import ip_interface
 from typing import TYPE_CHECKING
 
 from pyavd._anta.utils import LogMessage
-from pyavd._utils import get, validate_dict
+from pyavd._utils import default, get, validate_dict
 
 if TYPE_CHECKING:
     from anta.tests.connectivity import VerifyLLDPNeighbors, VerifyReachability
@@ -30,7 +30,6 @@ class VerifyLLDPNeighborsInputFactory:
       - DNS domain is appended to peer name when available (`dns_domain`)
       - Neighbor collection is skipped if no valid neighbors are found
 
-    TODO: Add support for `validate_state: false` configuration.
     """
 
     @classmethod
@@ -44,6 +43,10 @@ class VerifyLLDPNeighborsInputFactory:
 
         for interface in ethernet_interfaces:
             # Skip subinterfaces
+            if interface.get("validate_state", True) is False or interface.get("validate_lldp", True) is False:
+                logger.debug(LogMessage.SKIP_INTERFACE, entity=interface["name"])
+                continue
+
             if manager.is_subinterface(interface):
                 logger.debug(LogMessage.SUBINTERFACE, entity=interface["name"])
                 continue
@@ -60,7 +63,7 @@ class VerifyLLDPNeighborsInputFactory:
                 continue
 
             # Append the DNS domain if available
-            if (dns_domain := get(manager.fabric_data.structured_configs[peer], "dns_domain")) is not None:
+            if (dns_domain := get(manager.fabric_data.structured_configs[peer], "dns_domain", separator="..")) is not None:
                 peer = f"{peer}.{dns_domain}"
 
             neighbors.append(
@@ -84,7 +87,6 @@ class VerifyReachabilityInputFactory:
       - VTEP Loopback0s to all fabric Loopback0s
       - P2P links between directly connected Ethernet interfaces
 
-    TODO: Add WAN VTEPs support - DPS to DPS reachability.
     The factory ensures:
       - Only non-shutdown interfaces (`shutdown: false`) with valid `ip_address` configuration are used as sources
       - Only available peers (`is_deployed: true`) are used as destinations
@@ -100,7 +102,7 @@ class VerifyReachabilityInputFactory:
         # Get the eligible source IPs and VRFs
         inband_mgmt_svis = cls._get_inband_mgmt_svis(manager, logger=logger.add_context(context="Inband MGMT"))
         vtep_loopback0s = cls._get_vtep_loopback0s(manager, logger=logger.add_context(context="VTEP Loopback0"))
-
+        dps_vteps = cls._get_vtep_dps(manager, logger=logger.add_context(context="DPS VTEP"))
         # Generate the hosts from the eligible sources and remote loopback0 interfaces from the mapping
         hosts = []
         for dst_node, dst_ip in manager.fabric_data.loopback0_mapping.items():
@@ -109,7 +111,12 @@ class VerifyReachabilityInputFactory:
                 continue
 
             hosts.extend([test.Input.Host(**source_vrf, destination=dst_ip, repeat=1) for source_vrf in inband_mgmt_svis + vtep_loopback0s])
+        for dst_node, dst_ip in manager.fabric_data.dps_mapping.items():
+            if not manager.is_peer_available(dst_node):
+                logger.debug(LogMessage.UNAVAILABLE_PEER, entity=f"Destination {dst_ip}", peer=dst_node)
+                continue
 
+            hosts.extend([test.Input.Host(**source_vrf, destination=dst_ip, repeat=1) for source_vrf in dps_vteps])
         # Add the P2P hosts
         hosts.extend(cls._get_p2p_hosts(test, manager, logger=logger.add_context(context="P2P")))
 
@@ -200,3 +207,26 @@ class VerifyReachabilityInputFactory:
             logger.debug(LogMessage.NO_SOURCES, entity="Loopback0")
 
         return vtep_loopback0s
+
+    @staticmethod
+    def _get_vtep_dps(manager: ConfigManager, logger: TestLoggerAdapter) -> list[dict]:
+        """Generate the source IPs and VRFs from Dps1 interface of VTEPs for the VerifyReachability test."""
+        dps_vteps = []
+        if not manager.is_wan_vtep():
+            logger.debug(LogMessage.NOT_WAN_VTEP)
+            return dps_vteps
+
+        # TODO: Remove the support of Vxlan1 in AVD 6.0.0 version
+        dps_source_interface = default(
+            get(manager.structured_config, "vxlan_interface.vxlan1.vxlan.source_interface"),
+            get(manager.structured_config, "vxlan_interface.Vxlan1.vxlan.source_interface", ""),
+        )
+        if "Dps" in dps_source_interface:
+            if (dps_ip := manager.get_interface_ip(interface_model="dps_interfaces", interface_name=dps_source_interface)) is None:
+                logger.debug(LogMessage.UNAVAILABLE_IP, entity=dps_source_interface)
+            else:
+                dps_vteps.append({"source": ip_interface(dps_ip).ip, "vrf": "default"})
+        if not dps_vteps:
+            logger.debug(LogMessage.NO_SOURCES, entity=dps_source_interface)
+
+        return dps_vteps

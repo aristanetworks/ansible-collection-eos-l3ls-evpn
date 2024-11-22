@@ -5,11 +5,14 @@
 
 from __future__ import annotations
 
+from .avt import VerifyAVTRoleInputFactory
 from .connectivity import VerifyLLDPNeighborsInputFactory, VerifyReachabilityInputFactory
 from .hardware import VerifyEnvironmentCoolingInputFactory, VerifyEnvironmentPowerInputFactory, VerifyTransceiversManufacturersInputFactory
 from .interfaces import VerifyInterfacesStatusInputFactory
 from .routing_bgp import VerifyBGPSpecificPeersInputFactory
 from .routing_generic import VerifyRoutingTableEntryInputFactory
+from .security import VerifySpecificIPSecConnInputFactory
+from .stun import VerifyStunClientInputFactory
 
 __all__ = [
     "VerifyLLDPNeighborsInputFactory",
@@ -20,4 +23,7 @@ __all__ = [
     "VerifyInterfacesStatusInputFactory",
     "VerifyBGPSpecificPeersInputFactory",
     "VerifyRoutingTableEntryInputFactory",
+    "VerifyStunClientInputFactory",
+    "VerifyAVTRoleInputFactory",
+    "VerifySpecificIPSecConnInputFactory",
 ]

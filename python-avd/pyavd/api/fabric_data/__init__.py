@@ -7,7 +7,7 @@ from collections import defaultdict
 from ipaddress import ip_interface
 from typing import TYPE_CHECKING
 
-from pyavd._utils import get, get_item
+from pyavd._utils import default, get, get_item
 
 if TYPE_CHECKING:
     from logging import Logger
@@ -27,8 +27,10 @@ class FabricData:
         The mapping of the Loopback0 IP addresses for each device.
     vtep_mapping : dict[str, IPv4Address]
         The mapping of the VTEP IP addresses for each device.
+    dps_mapping : dict[str, IPv4Address]
+        The mapping of the Dps1 interface IP addresses for each device.
     combined_mapping : defaultdict[str, list[IPv4Address]]
-        The combined mapping of the Loopback0 and VTEP IP addresses for each device.
+        The combined mapping of the Loopback0 and VTEP and DPS IP addresses for each device.
     logger : Logger
         The logger object to use for logging messages.
     """
@@ -38,6 +40,7 @@ class FabricData:
         self.structured_configs = structured_configs
         self.loopback0_mapping = {}
         self.vtep_mapping = {}
+        self.dps_mapping = {}
         self.combined_mapping = defaultdict(list)
         self.logger = logger
 
@@ -49,6 +52,7 @@ class FabricData:
         for device, config in self.structured_configs.items():
             self._process_loopback0(device, config)
             self._process_vtep(device, config)
+            self._process_dps(device, config)
 
     def _process_loopback0(self, device: str, structured_config: dict) -> None:
         """Process the loopback0 mapping.
@@ -79,8 +83,9 @@ class FabricData:
             structured_config: The structured configuration of the device.
         """
         loopback_interfaces = get(structured_config, "loopback_interfaces", default=[])
-        vtep_interface = get(structured_config, "vxlan_interface.vxlan1.vxlan.source_interface")
-
+        vtep_interface = default(
+            get(structured_config, "vxlan_interface.vxlan1.vxlan.source_interface"), get(structured_config, "vxlan_interface.Vxlan1.vxlan.source_interface")
+        )
         # TODO: For now we exclude WAN VTEPs from the vtep_mapping
         if vtep_interface is not None and "Dps" not in vtep_interface:
             if (loopback_interface := get_item(loopback_interfaces, "name", vtep_interface)) is not None and (
@@ -91,5 +96,29 @@ class FabricData:
                 self.combined_mapping[device].append(ip_obj)
             else:
                 self.logger.debug("<%s>: Not added to VTEP mapping. VTEP source %s or its IP is missing.", device, vtep_interface)
+        else:
+            self.logger.debug("<%s>: Not added to VTEP mapping. Not a VTEP or is a WAN VTEP.", device)
+
+    def _process_dps(self, device: str, structured_config: dict) -> None:
+        """Process the dps mapping.
+
+        Populates the dps_mapping and combined_mapping attributes.
+
+        Parameters
+        ----------
+            device: The device name.
+            structured_config: The structured configuration of the device.
+        """
+        dps_interfaces = get(structured_config, "dps_interfaces", default=[])
+        vtep_interface = default(
+            get(structured_config, "vxlan_interface.vxlan1.vxlan.source_interface"), get(structured_config, "vxlan_interface.Vxlan1.vxlan.source_interface", "")
+        )
+        if "DPS" in vtep_interface:
+            if (dps_interface := get_item(dps_interfaces, "name", vtep_interface)) is not None and (dps_ip := get(dps_interface, "ip_address")) is not None:
+                ip_obj = ip_interface(dps_ip).ip
+                self.dps_mapping[device] = ip_obj
+                self.combined_mapping[device].append(ip_obj)
+            else:
+                self.logger.debug("<%s>: Not added to Loopback0 mapping. Loopback0 or its IP is missing.", device)
         else:
             self.logger.debug("<%s>: Not added to VTEP mapping. Not a VTEP or is a WAN VTEP.", device)
