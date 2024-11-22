@@ -1,4 +1,4 @@
-# router-bgp-vpws
+# host3
 
 ## Table of Contents
 
@@ -45,53 +45,46 @@ ASN Notation: asplain
 
 | BGP AS | Router ID |
 | ------ | --------- |
-| 65101 | 192.168.255.3 |
+| 65101.0001 | 192.168.255.3 |
 
 | BGP Tuning |
 | ---------- |
 | no bgp default ipv4-unicast |
+| update wait-install |
 | distance bgp 20 200 200 |
 | graceful-restart restart-time 300 |
-| graceful-restart |
 | maximum-paths 2 ecmp 2 |
-
-#### Router BGP VPWS Instances
-
-| Instance | Route-Distinguisher | Both Route-Target | MPLS Control Word | Label Flow | MTU | Pseudowire | Local ID | Remote ID |
-| -------- | ------------------- | ----------------- | ----------------- | -----------| --- | ---------- | -------- | --------- |
-| TENANT_A | 100.70.0.2:1000 | 65000:1000 | True | True | 1600 | TEN_A_site1_site3_pw | 15 | 35 |
-| TENANT_A | 100.70.0.2:1000 | 65000:1000 | True | True | 1600 | TEN_A_site2_site5_pw | 25 | 57 |
-| TENANT_B | 100.70.0.2:2000 | 65000:2000 | False | False | - | TEN_B_site2_site5_pw | 26 | 58 |
+| graceful-restart-helper long-lived |
+| bgp additional-paths send limit 5 |
 
 #### Router BGP Device Configuration
 
 ```eos
 !
-router bgp 65101
+router bgp 65101.0001
    router-id 192.168.255.3
+   graceful-restart-helper long-lived
    no bgp default ipv4-unicast
+   update wait-install
    distance bgp 20 200 200
    graceful-restart restart-time 300
-   graceful-restart
    maximum-paths 2 ecmp 2
+   bgp additional-paths send limit 5
+   redistribute ospf include leaked route-map RM-OSPF-TO-BGP
+   redistribute static
    !
-   vpws TENANT_A
-      rd 100.70.0.2:1000
-      route-target import export evpn 65000:1000
-      mpls control-word
-      label flow
-      mtu 1600
-      !
-      pseudowire TEN_A_site1_site3_pw
-         evpn vpws id local 15 remote 35
-      !
-      pseudowire TEN_A_site2_site5_pw
-         evpn vpws id local 25 remote 57
+   address-family ipv4 multicast
+      redistribute attached-host
+      redistribute connected
+      redistribute isis rcf Router_BGP_Isis()
+      redistribute ospf match internal
+      redistribute ospfv3 match internal
+      redistribute ospfv3 match external
+      redistribute ospfv3 match nssa-external 2
+      redistribute ospf match external
+      redistribute ospf match nssa-external 2
    !
-   vpws TENANT_B
-      rd 100.70.0.2:2000
-      route-target import export evpn 65000:2000
-      !
-      pseudowire TEN_B_site2_site5_pw
-         evpn vpws id local 26 remote 58
+   address-family ipv6
+      redistribute ospfv3 include leaked route-map RM-REDISTRIBUTE-OSPFV3
+      redistribute ospfv3 match external include leaked route-map RM-REDISTRIBUTE-OSPFV3-EXTERNAL
 ```

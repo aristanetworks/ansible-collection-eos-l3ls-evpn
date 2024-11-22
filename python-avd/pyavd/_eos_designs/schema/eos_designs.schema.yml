@@ -8816,10 +8816,15 @@ $defs:
             documentation_options:
               table: node-type-inband-management-configuration
             description: 'Enable to configure upstream device with proper configuration
-              to allow downstream devices to ZTP inband.
+              to allow downstream devices to be Zero-Touch-Provisioned over the uplink
+              interfaces.
 
-              This setting also requires that the `inband_mgmt_vlan` is set for the
-              node.'
+              For L2 devices this setting also requires that the `inband_mgmt_vlan`
+              is set for the node.
+
+
+              PREVIEW: Support for L3 devices is marked as "preview", meaning the
+              data models or generated configuration can change at any time.'
             type: bool
             default: false
           inband_ztp_lacp_fallback_delay:
