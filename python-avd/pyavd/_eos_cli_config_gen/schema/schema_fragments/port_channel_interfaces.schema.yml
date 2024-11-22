@@ -1385,6 +1385,19 @@ keys:
             tool:
               type: dict
               $ref: "eos_cli_config_gen#/keys/ethernet_interfaces/items/keys/switchport/keys/tool"
+        traffic_engineering:
+          type: dict
+          keys:
+            enabled:
+              type: bool
+              description: Whether to enable traffic-engineering on this interface.
+            administrative_groups:
+              type: list
+              description: List of traffic-engineering administrative groups, valid values are names, ranges 0-127, or single integers 0-127.
+              items:
+                type: str
+                convert_types:
+                  - int
         validate_state:
           type: bool
           description: Set to false to disable interface state and LLDP topology validation performed by the `eos_validate_state` role.

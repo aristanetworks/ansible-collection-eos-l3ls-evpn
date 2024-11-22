@@ -936,6 +936,12 @@ interface {{ port_channel_interface.name }}
 {%     if port_channel_interface.vmtracer is arista.avd.defined(true) %}
    vmtracer vmware-esx
 {%     endif %}
+{%     if port_channel_interface.traffic_engineering.enabled is arista.avd.defined(true) %}
+   traffic-engineering
+{%         if port_channel_interface.traffic_engineering.administrative_groups is arista.avd.defined %}
+   traffic-engineering administrative-group {{ port_channel_interface.traffic_engineering.administrative_groups | join(",") }}
+{%         endif %}
+{%     endif %}
 {%     if port_channel_interface.eos_cli is arista.avd.defined %}
    {{ port_channel_interface.eos_cli | indent(3, false) }}
 {%     endif %}
