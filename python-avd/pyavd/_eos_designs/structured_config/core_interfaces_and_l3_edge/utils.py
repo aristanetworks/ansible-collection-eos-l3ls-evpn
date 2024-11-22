@@ -320,9 +320,7 @@ class UtilsMixin:
         Covers config that is only applicable to ethernet interfaces.
         This config will only be used on both main interfaces and port-channel members.
         """
-        ethernet_cfg = {"speed": p2p_link.get("speed")}
-
-        return ethernet_cfg
+        return {"speed": p2p_link.get("speed")}
 
     def _get_port_channel_member_cfg(self: AvdStructuredConfigCoreInterfacesAndL3Edge, p2p_link: dict, member: dict) -> dict:
         """
