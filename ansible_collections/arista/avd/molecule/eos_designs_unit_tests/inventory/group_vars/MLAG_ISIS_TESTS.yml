@@ -1,0 +1,34 @@
+---
+underlay_routing_protocol: isis
+underlay_isis_authentication_mode: md5
+underlay_isis_authentication_key: $1c$sTNAlR6rKSw=
+
+type: l3leaf
+
+l3leaf:
+  defaults:
+    mlag_peer_vlan: 4094
+    mlag_peer_l3_vlan: 4094
+    mlag_peer_ipv4_pool: 10.10.255.0/24
+    uplink_ipv4_pool: 10.10.101.0/24
+    loopback_ipv4_pool: 192.168.255.0/24
+    loopback_ipv4_offset: 32
+    vtep_loopback_ipv4_pool: 192.168.254.0/24
+    platform: vEOS-LAB
+    uplink_switches: ["MLAG-ISIS-SPINE"]
+    uplink_interfaces: ["Ethernet1"]
+  node_groups:
+    - group: MLAG_ISIS_L3LEAF1
+      nodes:
+        - name: MLAG-ISIS-L3LEAF1A
+          id: 4
+          bgp_as: 65161
+          mgmt_ip: 192.168.201.116/24
+          uplink_switch_interfaces: [Ethernet30]
+          mlag_interfaces: [Ethernet5, Ethernet6]
+        - name: MLAG-ISIS-L3LEAF1B
+          id: 5
+          bgp_as: 65161
+          mgmt_ip: 192.168.201.117/24
+          uplink_switch_interfaces: [Ethernet31]
+          mlag_interfaces: [Ethernet5, Ethernet6]

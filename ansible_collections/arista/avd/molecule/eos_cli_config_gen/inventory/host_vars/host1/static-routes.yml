@@ -2,6 +2,18 @@
 #### static routes ####
 
 static_routes:
+  - vrf: BLUE-C1
+    destination_address_prefix: 193.1.0.0/24
+    interface: Null0
+
+  - vrf: BLUE-C1
+    destination_address_prefix: 193.1.1.0/24
+    interface: Null0
+
+  - vrf: BLUE-C1
+    destination_address_prefix: 193.1.2.0/24
+    interface: Null0
+
   - vrf: default
     destination_address_prefix: 1.1.1.0/24
     interface: vlan1001

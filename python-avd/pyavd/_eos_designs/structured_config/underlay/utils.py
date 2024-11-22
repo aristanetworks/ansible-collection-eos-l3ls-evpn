@@ -92,8 +92,11 @@ class UtilsMixin:
                         "structured_config": get(uplink, "structured_config"),
                     }
                     if get(peer_facts, "inband_ztp"):
+                        # l2 inband ztp
                         link["inband_ztp_vlan"] = get(peer_facts, "inband_ztp_vlan")
                         link["inband_ztp_lacp_fallback_delay"] = get(peer_facts, "inband_ztp_lacp_fallback_delay")
+                        # l3 inband ztp
+                        link["dhcp_server"] = True
 
                     if (subinterfaces := get(uplink, "subinterfaces")) is not None:
                         link["subinterfaces"] = [
