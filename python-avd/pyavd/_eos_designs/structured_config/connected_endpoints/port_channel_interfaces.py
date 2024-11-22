@@ -8,6 +8,7 @@ from collections import ChainMap
 from functools import cached_property
 from typing import TYPE_CHECKING
 
+from pyavd._errors import AristaAvdInvalidInputsError
 from pyavd._utils import append_if_not_duplicate, get, short_esi_to_route_target, strip_null_from_data
 from pyavd.api.interface_descriptions import InterfaceDescriptionData
 from pyavd.j2filters import range_expand
@@ -166,19 +167,30 @@ class PortChannelInterfacesMixin(UtilsMixin):
             port_channel_interface.update({"switchport": {"enabled": False}})
         else:
             # switchport
+            if (vlans := adapter.get("vlans")) is not None and adapter.get("mode") in ["access", "dot1q-tunnel"]:
+                try:
+                    # For access ports we use the 'vlans' field (str) as 'access_vlan' (int). Attempting to convert.
+                    vlans = int(vlans)
+                except ValueError as e:
+                    msg = (
+                        "Adapter 'vlans' value must be a single vlan ID when mode is 'access' or 'dot1q-tunnel'. "
+                        f"Got {vlans} for interface {port_channel_interface['name']}."
+                    )
+                    raise AristaAvdInvalidInputsError(msg) from e
+
             port_channel_interface.update(
                 {
                     "switchport": {
                         "enabled": True,
                         "mode": adapter.get("mode"),
                         "trunk": {
-                            "allowed_vlan": adapter.get("vlans") if adapter.get("mode") == "trunk" else None,
+                            "allowed_vlan": vlans if adapter.get("mode") == "trunk" else None,
                             "groups": self._get_adapter_trunk_groups(adapter, connected_endpoint),
                             "native_vlan_tag": adapter.get("native_vlan_tag"),
                             "native_vlan": adapter.get("native_vlan"),
                         },
                         "phone": self._get_adapter_phone(adapter, connected_endpoint),
-                        "access_vlan": adapter.get("vlans") if adapter.get("mode") in ["access", "dot1q-tunnel"] else None,
+                        "access_vlan": vlans if adapter.get("mode") in ["access", "dot1q-tunnel"] else None,
                     },
                     "l2_mtu": adapter.get("l2_mtu"),
                     "l2_mru": adapter.get("l2_mru"),

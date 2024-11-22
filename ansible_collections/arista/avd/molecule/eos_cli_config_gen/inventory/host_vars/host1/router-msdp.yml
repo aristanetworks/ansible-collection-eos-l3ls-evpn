@@ -1,0 +1,55 @@
+---
+router_msdp:
+  originator_id_local_interface: Loopback10
+  rejected_limit: 123
+  forward_register_packets: true
+  connection_retry_interval: 5
+  group_limits:
+    - limit: 100
+      source_prefix: 10.0.1.0/24
+    - limit: 123
+      source_prefix: 10.0.123.0/24
+  peers:
+    - ipv4_address: 1.2.3.4
+      default_peer:
+        enabled: true
+        prefix_list: PLIST1
+      mesh_groups:
+        - name: MG1
+        - name: MG2
+      local_interface: Loopback11
+      keepalive:
+        keepalive_timer: 10
+        hold_timer: 30
+      sa_filter:
+        in_list: ACL1
+        out_list: ACL2
+      description: Some kind of MSDP Peer
+      disabled: true
+      sa_limit: 1000
+    - ipv4_address: 4.3.2.1
+      local_interface: Loopback21
+      default_peer:
+        enabled: false
+        prefix_list: PLIST2
+  vrfs:
+    - name: RED
+      originator_id_local_interface: Loopback12
+      rejected_limit: 10
+      connection_retry_interval: 10
+      group_limits:
+        - limit: 22
+          source_prefix: 10.0.22.0/24
+      peers:
+        - ipv4_address: 2.3.4.5
+          default_peer:
+            enabled: true
+          local_interface: Loopback13
+          keepalive:
+            keepalive_timer: 5
+            hold_timer: 15
+          sa_filter:
+            in_list: ACL3
+            out_list: ACL4
+          description: Some other kind of MSDP Peer
+          sa_limit: 100

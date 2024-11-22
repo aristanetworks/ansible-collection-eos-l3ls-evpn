@@ -1,0 +1,69 @@
+---
+#### static routes ####
+
+static_routes:
+  - vrf: BLUE-C1
+    destination_address_prefix: 193.1.0.0/24
+    interface: Null0
+
+  - vrf: BLUE-C1
+    destination_address_prefix: 193.1.1.0/24
+    interface: Null0
+
+  - vrf: BLUE-C1
+    destination_address_prefix: 193.1.2.0/24
+    interface: Null0
+
+  - vrf: default
+    destination_address_prefix: 1.1.1.0/24
+    interface: vlan1001
+    gateway: 10.1.1.1
+
+  - vrf: default
+    destination_address_prefix: 1.1.2.0/24
+    interface: vlan1001
+    gateway: 10.1.1.1
+    distance: 200
+    tag: 666
+    name: RT-TO-FAKE-DMZ
+
+  - vrf: TENANT_A_PROJECT01
+    destination_address_prefix: 1.2.1.0/24
+    interface: vlan202
+    gateway: 10.1.2.1
+
+  - vrf: TENANT_A_PROJECT01
+    destination_address_prefix: 1.2.2.0/24
+    interface: vlan1001
+    gateway: 10.1.2.1
+    distance: 201
+    tag: 667
+    name: RT-TO-FAKE-DMZ
+
+  - destination_address_prefix: 10.3.4.0/24
+    gateway: 1.2.3.4
+    vrf: TENANT_A_PROJECT02
+
+  - destination_address_prefix: 10.3.5.0/24
+    vrf: TENANT_A_PROJECT02
+    interface: Null0
+
+  - vrf: TENANT_A_PROJECT01
+    destination_address_prefix: 10.3.6.0/24
+    interface: Ethernet40
+    gateway: 11.2.1.1
+    track_bfd: true
+    tag: 1000
+    name: Track-BFD
+    distance: 100
+    metric: 300
+
+  - vrf: TENANT_A_PROJECT01
+    destination_address_prefix: 10.3.7.0/24
+    interface: Ethernet41
+    # Negative test case - Tacking should not be enabled
+    track_bfd: true
+    tag: 1000
+    name: No-Track-BFD
+    distance: 100
+    metric: 300

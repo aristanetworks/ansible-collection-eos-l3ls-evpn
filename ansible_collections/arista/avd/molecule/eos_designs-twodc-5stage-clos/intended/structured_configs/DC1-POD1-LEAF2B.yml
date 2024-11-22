@@ -512,7 +512,7 @@ port_channel_interfaces:
   switchport:
     enabled: true
     mode: access
-    access_vlan: '110'
+    access_vlan: 110
   mlag: 16
 - name: Port-Channel17
   description: Set using structured_config on server adapter port-channel
@@ -521,7 +521,7 @@ port_channel_interfaces:
   switchport:
     enabled: true
     mode: access
-    access_vlan: '110'
+    access_vlan: 110
   mlag: 17
 - name: Port-Channel18
   description: PortChannel
@@ -537,7 +537,7 @@ port_channel_interfaces:
   switchport:
     enabled: true
     mode: access
-    access_vlan: '110'
+    access_vlan: 110
   mlag: 18
 - name: Port-Channel19
   description: PortChannel
@@ -553,7 +553,7 @@ port_channel_interfaces:
   switchport:
     enabled: true
     mode: access
-    access_vlan: '110'
+    access_vlan: 110
   mlag: 19
 ethernet_interfaces:
 - name: Ethernet5
@@ -790,6 +790,7 @@ loopback_interfaces:
   shutdown: false
   vrf: vrf_with_loopbacks_from_pod_pools
   ip_address: 10.101.101.5/32
+  ipv6_address: 2001:db8:1::3/128
 router_bfd:
   multihop:
     interval: 300
@@ -832,6 +833,7 @@ virtual_source_nat_vrfs:
   ip_address: 10.100.0.5
 - name: vrf_with_loopbacks_from_pod_pools
   ip_address: 10.101.101.5
+  ipv6_address: 2001:db8:1::3
 metadata:
   platform: vEOS-LAB
 domain_list:

@@ -1,0 +1,9 @@
+---
+## IP FTP CLIENT SOURCE INTERFACES ##
+
+ip_ftp_client_source_interfaces:
+  - name: Loopback0
+    vrf: default
+  - name: Management0
+    vrf: MGMT
+  - name: Ethernet10

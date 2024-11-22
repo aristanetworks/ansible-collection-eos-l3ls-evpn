@@ -162,7 +162,7 @@ keys:
               convert_types:
                 - int
               description: |-
-                Severity of facility. Below are the supported severites.
+                Severity of facility. Below are the supported severities.
                 emergencies    System is unusable                (severity=0)
                 alerts         Immediate action needed           (severity=1)
                 critical       Critical conditions               (severity=2)

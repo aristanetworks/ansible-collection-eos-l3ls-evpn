@@ -36,7 +36,7 @@
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;rate</samp>](## "monitor_telemetry_postcard_policy.ingress.sample.rate") | Integer |  |  | Valid Values:<br>- <code>16384</code><br>- <code>32768</code><br>- <code>65536</code> | Sampling rate. `rate` is preferred when both `rate` and `tcp_udp_checksum` are defined. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;tcp_udp_checksum</samp>](## "monitor_telemetry_postcard_policy.ingress.sample.tcp_udp_checksum") | Dictionary |  |  |  | TCP/UDP parameters. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;value</samp>](## "monitor_telemetry_postcard_policy.ingress.sample.tcp_udp_checksum.value") | Integer |  |  | Min: 0<br>Max: 65535 | TCP/UDP checksum or IP ID value. |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;mask</samp>](## "monitor_telemetry_postcard_policy.ingress.sample.tcp_udp_checksum.mask") | String |  |  |  | 16 bit hexadecimal mask for TCP/UDP or IP ID with atmost 2 unset bits. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;mask</samp>](## "monitor_telemetry_postcard_policy.ingress.sample.tcp_udp_checksum.mask") | String |  |  |  | 16 bit hexadecimal mask for TCP/UDP or IP ID with at most 2 unset bits. |
     | [<samp>&nbsp;&nbsp;marker_vxlan</samp>](## "monitor_telemetry_postcard_policy.marker_vxlan") | Dictionary |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "monitor_telemetry_postcard_policy.marker_vxlan.enabled") | Boolean |  |  |  | Enable vxlan marking using default bit 0. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;header_word_zero_bit</samp>](## "monitor_telemetry_postcard_policy.marker_vxlan.header_word_zero_bit") | Integer |  |  | Min: 1<br>Max: 31 |  |
@@ -128,7 +128,7 @@
             # TCP/UDP checksum or IP ID value.
             value: <int; 0-65535>
 
-            # 16 bit hexadecimal mask for TCP/UDP or IP ID with atmost 2 unset bits.
+            # 16 bit hexadecimal mask for TCP/UDP or IP ID with at most 2 unset bits.
             mask: <str>
       marker_vxlan:
 

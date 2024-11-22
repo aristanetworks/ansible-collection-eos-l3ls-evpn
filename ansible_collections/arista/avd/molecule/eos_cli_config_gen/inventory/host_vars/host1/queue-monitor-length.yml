@@ -1,0 +1,14 @@
+---
+queue_monitor_length:
+  enabled: true
+  default_thresholds:
+    low: 10
+    high: 100
+  log: 100
+  notifying: true
+  tx_latency: true
+  cpu:
+    thresholds:
+      # "high" threshold is mandatory
+      high: 200000
+      low: 100000

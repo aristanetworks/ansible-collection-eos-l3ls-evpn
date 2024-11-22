@@ -7,7 +7,7 @@ from functools import cached_property
 from typing import TYPE_CHECKING
 
 from pyavd._errors import AristaAvdInvalidInputsError
-from pyavd._utils import get
+from pyavd._utils import get, strip_empties_from_dict
 
 from .utils import UtilsMixin
 
@@ -32,7 +32,7 @@ class RouterIsisMixin(UtilsMixin):
             "instance": self.shared_utils.isis_instance_name,
             "log_adjacency_changes": True,
             "net": self._isis_net,
-            "router_id": self.shared_utils.router_id,
+            "router_id": self.shared_utils.router_id if not self.shared_utils.use_router_general_for_router_id else None,
             "is_type": self._is_type,
             "address_family_ipv4": {"enabled": True, "maximum_paths": get(self._hostvars, "isis_maximum_paths", default=4)},
         }
@@ -72,7 +72,7 @@ class RouterIsisMixin(UtilsMixin):
                     router_isis["address_family_ipv6"]["fast_reroute_ti_lfa"] = {"mode": "node-protection"}
             router_isis["segment_routing_mpls"] = {"router_id": self.shared_utils.router_id, "enabled": True}
 
-        return router_isis
+        return strip_empties_from_dict(router_isis)
 
     @cached_property
     def _isis_net(self: AvdStructuredConfigUnderlay) -> str | None:

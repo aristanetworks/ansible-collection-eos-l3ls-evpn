@@ -1,0 +1,649 @@
+### VLAN Interfaces ###
+vlan_interfaces:
+# Standard SVI configuration
+  - name: Vlan2001
+    description: SVI Description
+    vrf: Tenant_B
+    ip_address_virtual: 10.2.1.1/24
+    logging:
+      event:
+        link_status: true
+    eos_cli: |
+      comment
+      Comment created from eos_cli under vlan_interfaces.Vlan2001
+      EOF
+
+  - name: Vlan2002
+    description: SVI Description
+    vrf: Tenant_B
+    ip_address_virtual: 10.2.2.1/24
+    no_autostate: true
+    isis_enable: "EVPN_UNDERLAY"
+    isis_bfd: true
+    ip_verify_unicast_source_reachable_via: rx
+    # Test isis authentication both md5 rx
+    isis_authentication:
+      both:
+        key_type: 0
+        key: password
+        mode: md5
+        rx_disabled: true
+      level_1:
+        key_type: 0
+        key: password
+        mode: md5
+        rx_disabled: true
+      level_2:
+        key_type: 0
+        key: password
+        mode: text
+        rx_disabled: true
+
+  - name: Vlan81
+    description: IPv6 Virtual Address
+    vrf: Tenant_C
+    ip_address_virtual: 10.10.81.1/24
+    ipv6_enable: true
+    ipv6_address_virtuals:
+      - fc00:10:10:81::1/64
+      - fc00:10:11:81::1/64
+      - fc00:10:12:81::1/64
+
+  - name: Vlan83
+    description: SVI Description
+    shutdown: false
+    ip_address_virtual: 10.10.83.1/24
+    ip_address_virtual_secondaries:
+      - 10.11.83.1/24
+      - 10.11.84.1/24
+    # Test isis auth both md5
+    isis_enable: "EVPN_UNDERLAY"
+    isis_authentication:
+      both:
+        key_type: 0
+        key: password
+        mode: md5
+
+  - name: Vlan84
+    description: SVI Description
+    ip_address: 10.10.84.1/24
+    ip_virtual_router_addresses:
+      - 10.10.84.254
+      - 10.11.84.254/24
+    arp_gratuitous_accept: true
+    arp_monitor_mac_address: true
+    isis_enable: "EVPN_UNDERLAY"
+    # Test isis auth both sha rx
+    isis_authentication:
+      both:
+        key_type: 0
+        key: password
+        mode: sha
+        sha:
+          key_id: 2
+        rx_disabled: true
+
+  - name: Vlan85
+    description: SVI Description
+    ip_address: 10.10.84.1/24
+    arp_cache_dynamic_capacity: 50000
+    bfd:
+      echo: true
+      interval: 500
+      min_rx: 500
+      multiplier: 5
+    # Test isis auth both sha
+    isis_enable: "EVPN_UNDERLAY"
+    isis_authentication:
+      both:
+        key_type: 0
+        key: password
+        mode: sha
+        sha:
+          key_id: 2
+
+  - name: Vlan86
+    description: SVI Description
+    ip_address: 10.10.83.1/24
+    ip_attached_host_route_export:
+      enabled: true
+      distance: 10
+    # Test isis auth both shared secret rx
+    isis_enable: "EVPN_UNDERLAY"
+    isis_authentication:
+      both:
+        mode: shared-secret
+        shared_secret:
+          profile: profile1
+          algorithm: sha-1
+        rx_disabled: true
+
+  - name: Vlan87
+    description: SVI Description
+    shutdown: true
+    ip_address: 10.10.87.1/24
+    access_group_in: ACL_IN
+    access_group_out: ACL_OUT
+    # Test isis auth both shared secret
+    isis_enable: "EVPN_UNDERLAY"
+    isis_authentication:
+      both:
+        mode: shared-secret
+        shared_secret:
+          profile: profile1
+          algorithm: sha-1
+
+  - name: Vlan88
+    description: SVI Description
+    shutdown: true
+    ip_address_virtual: 10.10.87.1/23
+    # Test isis auth both l1l2 md5 text rx
+    isis_enable: "EVPN_UNDERLAY"
+    isis_authentication:
+      level_1:
+        key_type: 0
+        key: password
+        mode: md5
+        rx_disabled: true
+      level_2:
+        key_type: 0
+        key: password
+        mode: text
+        rx_disabled: true
+
+  - name: Vlan91
+    description: PBR Description
+    shutdown: true
+    service_policy:
+      pbr:
+        input: MyServicePolicy
+    # Test isis auth l1l2 md5 text
+    isis_enable: "EVPN_UNDERLAY"
+    isis_authentication:
+      level_1:
+        key_type: 0
+        key: password
+        mode: md5
+      level_2:
+        key_type: 0
+        key: password
+        mode: text
+
+  - name: Vlan90
+    description: SVI Description
+    ip_address: 10.10.83.1/24
+    ip_attached_host_route_export:
+      enabled: true
+    # Test isis auth l1l2 shared secret
+    isis_enable: "EVPN_UNDERLAY"
+    isis_authentication:
+      level_1:
+        mode: shared-secret
+        shared_secret:
+          profile: profile2
+          algorithm: sha-1
+      level_2:
+        mode: shared-secret
+        shared_secret:
+          profile: profile1
+          algorithm: sha-256
+
+  - name: Vlan92
+    description: SVI Description
+    ip_address: 10.10.92.1/24
+    ip_proxy_arp: true
+    ip_directed_broadcast: true
+    # Test isis auth l1l2 shared secret rx
+    isis_enable: "EVPN_UNDERLAY"
+    isis_authentication:
+      level_1:
+        mode: shared-secret
+        shared_secret:
+          profile: profile2
+          algorithm: sha-1
+        rx_disabled: true
+      level_2:
+        mode: shared-secret
+        shared_secret:
+          profile: profile1
+          algorithm: sha-256
+        rx_disabled: true
+
+# MCAST Configuration
+
+  - name: Vlan4094
+    description: SVI Description
+    ip_address: 169.254.252.0/31
+    ipv6_address_link_local: fe80::a/64
+    mtu: 9214
+    pim:
+      ipv4:
+        dr_priority: 200
+        sparse_mode: true
+        bfd: true
+        bidirectional: true
+        hello:
+          count: 3.5
+          interval: 10
+    # Test isis auth l1l2 sha rx
+    isis_enable: "EVPN_UNDERLAY"
+    isis_authentication:
+      level_1:
+        mode: sha
+        sha:
+          key_id: 5
+        rx_disabled: true
+      level_2:
+        mode: sha
+        sha:
+          key_id: 10
+        rx_disabled: true
+
+# Helpers on SVI
+
+  - name: Vlan41
+    description: SVI Description
+    shutdown: false
+    ip_address_virtual: 10.10.41.1/24
+    ip_helpers:
+      - ip_helper: 10.10.96.151
+        source_interface: Loopback0
+      - ip_helper: 10.10.96.150
+        source_interface: Loopback0
+      - ip_helper: 10.10.64.150
+        source_interface: Loopback0
+    ip_igmp_host_proxy:
+      enabled: true
+      groups:
+        - group: 239.0.0.1
+        - group: 239.0.0.2
+          exclude:
+            - source: 10.0.2.1
+        - group: 239.0.0.3
+          include:
+            - source: 10.0.3.1
+        - group: 239.0.0.4
+          exclude:
+            - source: 10.0.4.1
+            - source: 10.0.4.2
+          include:
+            - source: 10.0.4.3
+            - source: 10.0.4.4
+      report_interval: 2
+      access_lists:
+        - name: ACL1
+        - name: ACL2
+      version: 2
+
+  - name: Vlan42
+    description: SVI Description
+    shutdown: false
+    ip_address_virtual: 10.10.42.1/24
+    ip_helpers:
+      - ip_helper: 10.10.96.151
+        source_interface: Loopback0
+      - ip_helper: 10.10.96.150
+        source_interface: Loopback0
+      - ip_helper: 10.10.64.150
+        source_interface: Loopback0
+    # Test isis auth l1l2 sha
+    isis_enable: "EVPN_UNDERLAY"
+    isis_authentication:
+      level_1:
+        mode: sha
+        sha:
+          key_id: 5
+
+  - name: Vlan43
+    description: SVI Description
+    shutdown: false
+    ipv6_address: a0::1/64
+    ipv6_dhcp_relay_destinations:
+      - address: a0::2
+        vrf: TEST
+        local_interface: Loopback44
+        link_address: a0::4
+    isis_authentication:
+      both:
+        key_ids:
+          - id: 2
+            algorithm: sha-512
+            key_type: 0
+            key: password
+            rfc_5310: false
+          - id: 3
+            algorithm: sha-512
+            key_type: 0
+            key: password1
+            rfc_5310: true
+      level_1:
+        key_ids:
+          - id: 1
+            algorithm: sha-1
+            key_type: 0
+            key: password
+            rfc_5310: false
+          - id: 4
+            algorithm: sha-1
+            key_type: 0
+            key: password
+            rfc_5310: true
+          - id: 3
+            algorithm: sha-1
+            key_type: 0
+            key: password3
+          - id: 5
+            algorithm: sha-1
+            key_type: 0
+            key: password3
+      level_2:
+        key_ids:
+          - id: 1
+            algorithm: sha-1
+            key_type: 0
+            key: password
+            rfc_5310: false
+          - id: 5
+            algorithm: sha-1
+            key_type: 0
+            key: password
+            rfc_5310: true
+          - id: 3
+            algorithm: sha-1
+            key_type: 0
+            key: password2
+
+  - name: Vlan44
+    description: SVI Description
+    shutdown: false
+    ipv6_address: a0::4/64
+    ipv6_dhcp_relay_destinations:
+      - address: a0::5
+        vrf: TEST
+        source_address: a0::6
+        link_address: a0::7
+      - address: a0::8
+
+  - name: Vlan50
+    description: IP NAT Testing
+    ip_nat:
+      destination:
+        dynamic:
+          - access_list: ACL1
+            pool_name: POOL1
+        static:
+          - original_ip: 1.0.0.1
+            translated_ip: 2.0.0.1
+      source:
+        dynamic:
+          - access_list: ACL2
+            pool_name: POOL2
+            nat_type: pool
+        static:
+          - original_ip: 3.0.0.1
+            translated_ip: 4.0.0.1
+    isis_authentication:
+      level_2:
+        key_type: 0
+        key: password
+        mode: text
+        rx_disabled: true
+
+# IPv6 SVI configuration
+
+  - name: Vlan501
+    description: SVI Description
+    shutdown: false
+    ip_address: 10.50.26.29/27
+    ipv6_address: 1b11:3a00:22b0:0088::207/127
+    ipv6_nd_ra_disabled: true
+
+  - name: Vlan1001
+    description: SVI Description
+    shutdown: false
+    vrf: Tenant_A
+    ip_address_virtual: 10.1.1.1/24
+    ipv6_address: a1::1/64
+    ipv6_nd_managed_config_flag: true
+    ipv6_nd_prefixes:
+      - ipv6_prefix: a1::/64
+        valid_lifetime: infinite
+        preferred_lifetime: infinite
+        no_autoconfig_flag: true
+
+  - name: Vlan24
+    description: SVI Description
+    shutdown: false
+    ip_address_virtual: 10.10.24.1/24
+    ipv6_address: 1b11:3a00:22b0:6::15/64
+    ipv6_nd_managed_config_flag: true
+    ipv6_nd_prefixes:
+      - ipv6_prefix: 1b11:3a00:22b0:6::/64
+        valid_lifetime: infinite
+        preferred_lifetime: infinite
+        no_autoconfig_flag: true
+    ipv6_virtual_router_addresses:
+      - 1b11:3a00:22b0:6::1
+
+  - name: Vlan25
+    description: SVI Description
+    shutdown: false
+    ipv6_address: 1b11:3a00:22b0:16::16/64
+    ipv6_virtual_router_addresses:
+      - 1b11:3a00:22b0:16::15
+      - 1b11:3a00:22b0:16::14
+  - name: Vlan1002
+    description: SVI Description
+    shutdown: false
+    vrf: Tenant_A
+    ip_address_virtual: 10.1.2.1/24
+    ipv6_address: a2::1/64
+    ipv6_nd_managed_config_flag: true
+    ipv6_nd_prefixes:
+      - ipv6_prefix: a2::/64
+        valid_lifetime: infinite
+        preferred_lifetime: infinite
+        no_autoconfig_flag: true
+    ipv6_nd_ra_disabled: true
+
+  - name: Vlan75
+    description: SVI Description
+    shutdown: false
+    ip_address_virtual: 10.10.75.1/24
+    ipv6_address: 1b11:3a00:22b0:1000::15/64
+    ipv6_nd_managed_config_flag: true
+    ipv6_nd_prefixes:
+      - ipv6_prefix: 1b11:3a00:22b0:1000::/64
+        valid_lifetime: infinite
+        preferred_lifetime: infinite
+        no_autoconfig_flag: true
+    ipv6_virtual_router_addresses:
+      - 1b11:3a00:22b0:1000::1
+    multicast:
+      ipv4:
+        static: true
+        boundaries:
+          - boundary: 224.0.1.0/24
+            out: true
+          - boundary: 224.0.2.0/24
+      ipv6:
+        boundaries:
+          - boundary: ff00::/16
+          - boundary: ff01::/16
+
+# IPv6 + helpers + Mcast
+
+  - name: Vlan89
+    description: SVI Description
+    shutdown: false
+    ip_igmp: true
+    ip_igmp_version: 2
+    ip_address_virtual: 10.10.144.3/20
+    ipv6_address: 1b11:3a00:22b0:5200::15/64
+    ipv6_nd_managed_config_flag: true
+    ipv6_nd_prefixes:
+      - ipv6_prefix: 1b11:3a00:22b0:5200::/64
+        valid_lifetime: infinite
+        preferred_lifetime: infinite
+        no_autoconfig_flag: true
+    ipv6_virtual_router_addresses:
+      - 1b11:3a00:22b0:5200::3
+    ip_helpers:
+      - ip_helper: 10.10.96.101
+        source_interface: Loopback0
+      - ip_helper: 10.10.96.151
+        source_interface: Loopback0
+      - ip_helper: 10.10.96.150
+        source_interface: Loopback0
+      - ip_helper: 10.10.64.150
+        source_interface: Loopback0
+    multicast:
+      ipv4:
+        source_route_export:
+          enabled: true
+        boundaries:
+          - boundary: ACL_MULTICAST
+      ipv6:
+        static: true
+        boundaries:
+          - boundary: ACL_V6_MULTICAST_WITH_OUT
+    pim:
+      ipv4:
+        sparse_mode: true
+        local_interface: Loopback0
+
+  - name: Vlan110
+    description: PVLAN Primary with vlan mapping
+    shutdown: false
+    vrf: Tenant_A
+    ip_address: 10.0.101.1/24
+    pvlan_mapping: 111-112
+    multicast:
+      ipv4:
+        static: true
+        boundaries:
+          - boundary: ACL_MULTICAST
+            out: true
+      ipv6:
+        source_route_export:
+          enabled: true
+          administrative_distance: 20
+
+# VRRP
+  - name: Vlan667
+    description: Multiple VRIDs
+    shutdown: false
+    arp_aging_timeout: 180
+    ip_address: 192.0.2.2/25
+    ipv6_enable: true
+    ipv6_address: 2001:db8:667::2/64
+    ipv6_address_link_local: fe80::2/64
+    vrrp_ids:
+      - id: 1
+        priority_level: 105
+        advertisement:
+          interval: 2
+        preempt:
+          enabled: true
+          delay:
+            minimum: 30
+            reload: 800
+        ipv4:
+          address: 192.0.2.1
+      - id: 2
+        preempt:
+          enabled: true
+          delay:
+        ipv6:
+          address: 2001:db8:667::1
+
+  - name: Vlan333
+    description: Multiple VRIDs and tracking
+    shutdown: false
+    arp_aging_timeout: 180
+    ip_address: 192.0.2.2/25
+    ipv6_enable: true
+    ipv6_address: 2001:db8:333::2/64
+    ipv6_address_link_local: fe80::2/64
+    vrrp_ids:
+      - id: 1
+        priority_level: 105
+        advertisement:
+          interval: 2
+        preempt:
+          enabled: true
+          delay:
+            minimum: 30
+            reload: 800
+        ipv4:
+          address: 192.0.2.1
+        tracked_object:
+          - name: ID1TrackedObjectDecrement
+            decrement: 5
+          - name: ID1TrackedObjectShutdown
+            shutdown: true
+      - id: 2
+        preempt:
+          enabled: true
+          delay:
+        ipv6:
+          address: 2001:db8:333::1
+        tracked_object:
+          - name: ID2TrackedObjectDecrement
+            decrement: 10
+          - name: ID2TrackedObjectShutdown
+            shutdown: true
+      - id: 3
+        timers:
+          delay:
+            reload: 900
+        preempt:
+          enabled: false
+        ipv4:
+          address: 100.64.0.1
+          version: 3
+
+  - name: Vlan334
+    description: v6 attached host exports
+    ipv6_enable: true
+    ipv6_address: 2001:db8:334::1/64
+    ipv6_attached_host_route_export:
+      enabled: true
+      distance: 19
+
+  - name: Vlan335
+    description: v6 attached host exports
+    ipv6_enable: true
+    ipv6_address: 2001:db8:335::1/64
+    ipv6_attached_host_route_export:
+      enabled: true
+      prefix_length: 64
+
+  - name: Vlan336
+    description: v6 attached host exports
+    ipv6_enable: true
+    ipv6_address: 2001:db8:336::1/64
+    ipv6_attached_host_route_export:
+      enabled: true
+      distance: 18
+      prefix_length: 64
+
+  - name: Vlan337
+    description: v4 dhcp relay all-subnets
+    ip_address: 10.0.2.2/25
+    ip_dhcp_relay_all_subnets: true
+
+  - name: Vlan338
+    description: v6 dhcp relay all-subnets
+    ipv6_address: 2001:db8:338::1/64
+    ipv6_dhcp_relay_all_subnets: true
+
+  - name: Vlan339
+    description: v6 nd options
+    ipv6_enable: true
+    ipv6_address: 2001:db8:339::1/64
+    ipv6_nd_other_config_flag: true
+    ipv6_nd_cache:
+      dynamic_capacity: 900
+      expire: 250
+      refresh_always: true

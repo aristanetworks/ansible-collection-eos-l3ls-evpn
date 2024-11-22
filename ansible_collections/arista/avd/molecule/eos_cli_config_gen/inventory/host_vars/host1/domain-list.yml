@@ -1,0 +1,5 @@
+---
+### Domain List ###
+domain_list:
+  - domain1.local
+  - domain2.local

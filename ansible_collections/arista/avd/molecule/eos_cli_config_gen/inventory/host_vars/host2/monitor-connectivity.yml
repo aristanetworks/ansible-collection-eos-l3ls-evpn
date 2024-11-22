@@ -1,0 +1,11 @@
+---
+### Monitor connectivity example for address_only as true
+monitor_connectivity:
+  interval: 5
+  shutdown: true
+  interface_sets:
+    - name: GLOBAL_SET2
+    - name: HOST_SET2
+      interfaces: Loopback2-4, Loopback10-12
+  local_interfaces: HOST_SET2
+  address_only: false

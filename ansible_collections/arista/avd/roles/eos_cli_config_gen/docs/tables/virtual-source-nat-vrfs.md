@@ -10,6 +10,7 @@
     | [<samp>virtual_source_nat_vrfs</samp>](## "virtual_source_nat_vrfs") | List, items: Dictionary |  |  |  |  |
     | [<samp>&nbsp;&nbsp;-&nbsp;name</samp>](## "virtual_source_nat_vrfs.[].name") | String | Required, Unique |  |  | VRF Name. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;ip_address</samp>](## "virtual_source_nat_vrfs.[].ip_address") | String |  |  |  | IPv4 Address. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;ipv6_address</samp>](## "virtual_source_nat_vrfs.[].ipv6_address") | String |  |  |  | IPv6 Address. |
 
 === "YAML"
 
@@ -21,4 +22,7 @@
 
         # IPv4 Address.
         ip_address: <str>
+
+        # IPv6 Address.
+        ipv6_address: <str>
     ```

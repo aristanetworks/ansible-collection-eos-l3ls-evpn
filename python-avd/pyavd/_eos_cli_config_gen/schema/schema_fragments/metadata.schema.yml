@@ -248,6 +248,37 @@ keys:
                       preference:
                         type: str
                         required: true
+                      endpoint:
+                        type: dict
+                        required: true
+                        keys:
+                          ip_address:
+                            type: str
+                            required: true
+                          datacenter:
+                            type: str
+                            required: true
+                          city:
+                            type: str
+                            required: true
+                          country:
+                            type: str
+                            required: true
+                          region:
+                            type: str
+                            required: true
+                          latitude:
+                            type: str
+                            convert_types:
+                              - float
+                              - int
+                            required: true
+                          longitude:
+                            type: str
+                            convert_types:
+                              - float
+                              - int
+                            required: true
           applications:
             type: dict
             keys:

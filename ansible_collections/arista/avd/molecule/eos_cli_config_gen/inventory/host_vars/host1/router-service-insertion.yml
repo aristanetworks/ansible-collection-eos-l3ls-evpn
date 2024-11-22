@@ -1,0 +1,46 @@
+---
+### Router service-insertion ###
+router_service_insertion:
+  enabled: true
+  connections:
+    - name: connection1
+      ethernet_interface:
+        name: Ethernet2/2.2
+        next_hop: 10.10.10.10
+      monitor_connectivity_host: host1
+    - name: connection2
+      tunnel_interface:
+        primary: Tunnel1
+        secondary: Tunnel2
+      monitor_connectivity_host: host2
+    - name: connection3
+      tunnel_interface:
+        secondary: Tunnel3
+      monitor_connectivity_host: host3
+    - name: connection4
+      tunnel_interface:
+        primary: Tunnel4
+    - name: connection5
+      tunnel_interface:
+        primary: Tunnel5
+        secondary: Tunnel6
+    - name: connection6
+      ethernet_interface:
+        name: Ethernet2
+        next_hop: 10.10.10.10
+    - name: connection7
+      ethernet_interface:
+        name: Ethernet3/1
+        next_hop: 10.10.10.10
+      tunnel_interface:
+        primary: Tunnel9
+        secondary: Tunnel10
+      monitor_connectivity_host: host4
+    - name: aconnection
+      ethernet_interface:
+        name: Ethernet4/1
+        next_hop: 10.10.10.10
+      tunnel_interface:
+        primary: Tunnel11
+        secondary: Tunnel12
+      monitor_connectivity_host: host4

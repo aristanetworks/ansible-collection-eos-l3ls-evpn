@@ -27,6 +27,10 @@ management_api_http:
   enable_vrfs:
   - name: MGMT
   enable_https: true
+router_general:
+  router_id:
+    ipv4: 10.0.0.1
+    ipv6: 2000:1234:ffff:ffff::1
 loopback_interfaces:
 - name: Loopback0
   description: ROUTER_ID
@@ -45,7 +49,6 @@ router_isis:
   instance: CORE
   log_adjacency_changes: true
   net: 49.0001.0100.0000.0001.00
-  router_id: 10.0.0.1
   is_type: level-2
   address_family_ipv4:
     enabled: true
@@ -71,7 +74,6 @@ mpls:
   ip: true
   ldp:
     interface_disabled_default: true
-    router_id: 10.0.0.1
     shutdown: false
     transport_address_interface: Loopback0
 ethernet_interfaces:
@@ -90,8 +92,11 @@ ethernet_interfaces:
   isis_network_point_to_point: true
   isis_hello_padding: false
   isis_circuit_type: level-2
-  isis_authentication_mode: md5
-  isis_authentication_key: $1c$sTNAlR6rKSw=
+  isis_authentication:
+    both:
+      mode: md5
+      key: $1c$sTNAlR6rKSw=
+      key_type: '7'
   mpls:
     ip: true
     ldp:
@@ -111,7 +116,7 @@ ethernet_interfaces:
   ip_address: 100.123.123.2/31
   isis_enable: CORE
   isis_metric: 60
-  isis_network_point_to_point: true
+  isis_network_point_to_point: false
   isis_hello_padding: true
   isis_circuit_type: level-1
   mpls:
@@ -136,8 +141,11 @@ ethernet_interfaces:
   isis_network_point_to_point: true
   isis_hello_padding: false
   isis_circuit_type: level-2
-  isis_authentication_mode: md5
-  isis_authentication_key: $1c$sTNAlR6rKSw=
+  isis_authentication:
+    both:
+      mode: md5
+      key: $1c$sTNAlR6rKSw=
+      key_type: '7'
   mpls:
     ip: true
     ldp:
@@ -160,8 +168,11 @@ ethernet_interfaces:
   isis_network_point_to_point: true
   isis_hello_padding: false
   isis_circuit_type: level-2
-  isis_authentication_mode: md5
-  isis_authentication_key: $1c$sTNAlR6rKSw=
+  isis_authentication:
+    both:
+      mode: md5
+      key: $1c$sTNAlR6rKSw=
+      key_type: '7'
   description: P2P_LINK_TO_CORE-2-OSPF-LDP_Ethernet4
   speed: forced 1000full
 - name: Ethernet5
@@ -179,8 +190,11 @@ ethernet_interfaces:
   isis_network_point_to_point: true
   isis_hello_padding: false
   isis_circuit_type: level-2
-  isis_authentication_mode: md5
-  isis_authentication_key: $1c$sTNAlR6rKSw=
+  isis_authentication:
+    both:
+      mode: md5
+      key: $1c$sTNAlR6rKSw=
+      key_type: '7'
   mpls:
     ip: true
   description: P2P_LINK_TO_CORE-2-OSPF-LDP_Ethernet5
@@ -201,8 +215,11 @@ ethernet_interfaces:
   isis_network_point_to_point: true
   isis_hello_padding: true
   isis_circuit_type: level-1-2
-  isis_authentication_mode: md5
-  isis_authentication_key: $1c$sTNAlR6rKSw=
+  isis_authentication:
+    both:
+      mode: md5
+      key: $1c$sTNAlR6rKSw=
+      key_type: '7'
   mpls:
     ip: true
     ldp:
@@ -370,8 +387,11 @@ port_channel_interfaces:
   isis_network_point_to_point: true
   isis_hello_padding: false
   isis_circuit_type: level-2
-  isis_authentication_mode: md5
-  isis_authentication_key: $1c$sTNAlR6rKSw=
+  isis_authentication:
+    both:
+      mode: md5
+      key: $1c$sTNAlR6rKSw=
+      key_type: '7'
   mpls:
     ip: true
     ldp:
@@ -393,8 +413,11 @@ port_channel_interfaces:
   isis_network_point_to_point: true
   isis_hello_padding: false
   isis_circuit_type: level-2
-  isis_authentication_mode: md5
-  isis_authentication_key: $1c$sTNAlR6rKSw=
+  isis_authentication:
+    both:
+      mode: md5
+      key: $1c$sTNAlR6rKSw=
+      key_type: '7'
   mpls:
     ip: true
     ldp:
@@ -416,8 +439,11 @@ port_channel_interfaces:
   isis_network_point_to_point: true
   isis_hello_padding: false
   isis_circuit_type: level-2
-  isis_authentication_mode: md5
-  isis_authentication_key: $1c$sTNAlR6rKSw=
+  isis_authentication:
+    both:
+      mode: md5
+      key: $1c$sTNAlR6rKSw=
+      key_type: '7'
   mpls:
     ip: true
     ldp:

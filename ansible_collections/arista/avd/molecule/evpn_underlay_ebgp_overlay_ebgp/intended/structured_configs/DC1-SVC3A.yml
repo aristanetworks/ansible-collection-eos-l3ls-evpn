@@ -1033,7 +1033,7 @@ port_channel_interfaces:
   switchport:
     enabled: true
     mode: access
-    access_vlan: '110'
+    access_vlan: 110
   mlag: 22
 ethernet_interfaces:
 - name: Ethernet5
@@ -1193,7 +1193,7 @@ ethernet_interfaces:
   switchport:
     enabled: true
     mode: access
-    access_vlan: '210'
+    access_vlan: 210
   spanning_tree_portfast: network
   spanning_tree_bpdufilter: 'False'
   spanning_tree_bpduguard: 'True'
@@ -1240,7 +1240,7 @@ ethernet_interfaces:
   switchport:
     enabled: true
     mode: access
-    access_vlan: '210'
+    access_vlan: 210
   spanning_tree_portfast: network
   spanning_tree_bpdufilter: 'False'
   spanning_tree_bpduguard: 'True'
@@ -1299,7 +1299,7 @@ ethernet_interfaces:
   switchport:
     enabled: true
     mode: access
-    access_vlan: '110'
+    access_vlan: 110
 - name: Ethernet21
   peer: server14_explicitly_enabled_interfaces
   peer_interface: Eth1
@@ -1310,7 +1310,7 @@ ethernet_interfaces:
   switchport:
     enabled: true
     mode: access
-    access_vlan: '110'
+    access_vlan: 110
 - name: Ethernet22
   peer: server15_port_channel_disabled_interfaces
   peer_interface: Eth1

@@ -1,0 +1,107 @@
+---
+# eos - extended access-lists - improved data model, ip-access-lists.j2
+ip_access_lists_max_entries: 10000
+ip_access_lists:
+  - name: ACL_SEQUENCE_AND_COUNTERS
+    counters_per_entry: true
+    entries:
+      - sequence: 10
+        remark: test acl with sequence numbers
+      - sequence: 20
+        action: permit
+        protocol: ip
+        source: 10.0.0.0/8
+        destination: any
+      - sequence: 30
+        action: permit
+        protocol: tcp
+        source: 192.168.122.22
+        destination: any
+        tcp_flags: ["established"]
+      - sequence: 40
+        action: permit
+        protocol: tcp
+        source: any
+        source_ports_match: gt
+        source_ports: [1023]
+        destination: 172.16.16.16
+        destination_ports: [22]
+      # test port range
+      - sequence: 50
+        action: permit
+        protocol: tcp
+        source: any
+        source_ports_match: range
+        source_ports: [1000, 1100]
+        destination: any
+        destination_ports_match: range
+        destination_ports: [10, 20]
+      # verify issue 4423 where a protocol was missing
+      # and an entry with only the sequence number was rendered.
+      - sequence: 60
+        source: any
+        destination: any
+      - sequence: 4294967295
+        action: deny
+        protocol: ip
+        source: any
+        destination: any
+    permit_response_traffic: nat
+  - name: ACL_NO_SEQUENCE
+    entries:
+      - remark: test acl without sequence numbers
+      - action: deny
+        protocol: udp
+        source: any
+        destination: any
+        log: true
+      - action: permit
+        protocol: icmp
+        source: any
+        destination: any
+        icmp_type: 3
+        icmp_code: 4
+        ttl: 40
+      - action: permit
+        protocol: icmp
+        source: any
+        destination: any
+        icmp_type: unreachable
+        ttl: 3
+        ttl_match: gt
+      - action: permit
+        protocol: ip
+        source: any
+        destination: any
+        fragments: true
+        dscp: 46
+      - action: permit
+        protocol: ip
+        source: any
+        destination: any
+        tracked: true
+        dscp: ef
+      - action: permit
+        protocol: ip
+        source: any
+        destination: any
+        nexthop_group: NH_TEST
+      - action: permit
+        vlan_number: 123
+        vlan_inner: true
+        vlan_mask: "0x000"
+        protocol: ip
+        source: any
+        destination: any
+      - action: permit
+        vlan_number: 234
+        vlan_mask: "0xFFF"
+        protocol: ip
+        source: any
+        destination: any
+      - action: permit
+        protocol: icmp
+        source: any
+        destination: any
+  - name: ACL_WITHOUT_ENTRIES
+    counters_per_entry: false
