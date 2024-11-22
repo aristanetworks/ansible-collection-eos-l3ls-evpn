@@ -118,6 +118,7 @@
   - [Connections](#connections)
   - [Router Service Insertion Configuration](#router-service-insertion-configuration)
   - [Router Traffic-Engineering](#router-traffic-engineering)
+  - [Router BGP](#router-bgp)
   - [PBR Policy Maps](#pbr-policy-maps)
 - [BFD](#bfd)
   - [Router BFD](#router-bfd)
@@ -5200,6 +5201,9 @@ ip routing vrf TENANT_A_PROJECT02
 
 | VRF | Destination Prefix | Next Hop IP | Exit interface | Administrative Distance | Tag | Route Name | Metric |
 | --- | ------------------ | ----------- | -------------- | ----------------------- | --- | ---------- | ------ |
+| BLUE-C1 | 193.1.0.0/24 | - | Null0 | 1 | - | - | - |
+| BLUE-C1 | 193.1.1.0/24 | - | Null0 | 1 | - | - | - |
+| BLUE-C1 | 193.1.2.0/24 | - | Null0 | 1 | - | - | - |
 | default | 1.1.1.0/24 | 10.1.1.1 | vlan1001 | 1 | - | - | - |
 | default | 1.1.2.0/24 | 10.1.1.1 | vlan1001 | 200 | 666 | RT-TO-FAKE-DMZ | - |
 | TENANT_A_PROJECT01 | 1.2.1.0/24 | 10.1.2.1 | vlan202 | 1 | - | - | - |
@@ -5215,6 +5219,9 @@ ip routing vrf TENANT_A_PROJECT02
 !
 ip route 1.1.1.0/24 Vlan1001 10.1.1.1
 ip route 1.1.2.0/24 Vlan1001 10.1.1.1 200 tag 666 name RT-TO-FAKE-DMZ
+ip route vrf BLUE-C1 193.1.0.0/24 Null0
+ip route vrf BLUE-C1 193.1.1.0/24 Null0
+ip route vrf BLUE-C1 193.1.2.0/24 Null0
 ip route vrf TENANT_A_PROJECT01 1.2.1.0/24 Vlan202 10.1.2.1
 ip route vrf TENANT_A_PROJECT01 1.2.2.0/24 Vlan1001 10.1.2.1 201 tag 667 name RT-TO-FAKE-DMZ
 ip route vrf TENANT_A_PROJECT01 10.3.6.0/24 Ethernet40 11.2.1.1 track bfd 100 tag 1000 name Track-BFD metric 300
@@ -5573,6 +5580,1722 @@ router traffic-engineering
             segment-list label-stack 900002 900010 900011 900012
    router-id ipv4 10.0.0.1
    router-id ipv6 2001:beef:cafe::1
+```
+
+### Router BGP
+
+ASN Notation: asdot
+
+#### Router BGP Summary
+
+| BGP AS | Router ID |
+| ------ | --------- |
+| 65101 | 192.168.255.3 |
+
+| BGP Tuning |
+| ---------- |
+| graceful-restart restart-time 555 |
+| graceful-restart stalepath-time 666 |
+| graceful-restart |
+| graceful-restart-helper restart-time 888 |
+| bgp bestpath d-path |
+| bgp additional-paths receive |
+| bgp additional-paths send ecmp limit 30 |
+| update wait-for-convergence |
+| update wait-install |
+| bgp default ipv4-unicast |
+| bgp default ipv4-unicast transport ipv6 |
+| no bgp redistribute-internal |
+| distance bgp 20 200 200 |
+| maximum-paths 32 ecmp 32 |
+| bgp route-reflector preserve-attributes always |
+
+#### Router BGP Listen Ranges
+
+| Prefix | Peer-ID Include Router ID | Peer Group | Peer-Filter | Remote-AS | VRF |
+| ------ | ------------------------- | ---------- | ----------- | --------- | --- |
+| 10.10.10.0/24 | - | my-peer-group1 | my-peer-filter | - | default |
+| 12.10.10.0/24 | True | my-peer-group3 | - | 65444 | default |
+| 13.10.10.0/24 | - | my-peer-group4 | my-peer-filter | - | default |
+| 10.10.10.0/24 | - | my-peer-group1 | my-peer-filter | - | YELLOW-C1 |
+| 12.10.10.0/24 | True | my-peer-group3 | - | 65444 | YELLOW-C1 |
+| 13.10.10.0/24 | - | my-peer-group4 | my-peer-filter | - | YELLOW-C1 |
+
+#### Router BGP Peer Groups
+
+##### EVPN-OVERLAY-PEERS
+
+| Settings | Value |
+| -------- | ----- |
+| Address Family | evpn |
+| Allowas-in | Allowed, allowed 3 (default) times |
+| Remote AS | 65001 |
+| Source | Loopback0 |
+| RIB Pre-Policy Retain | True (All) |
+| BFD | True |
+| BFD Timers | interval: 2000, min_rx: 2000, multiplier: 3 |
+| Ebgp multihop | 3 |
+| Default originate | True |
+| Send community | all |
+| Maximum routes | 0 (no limit) |
+
+##### EVPN-OVERLAY-RS-PEERS
+
+| Settings | Value |
+| -------- | ----- |
+| Address Family | evpn |
+| Remote AS | 65001 |
+| Source | Loopback0 |
+| BFD | True |
+| Ebgp multihop | 3 |
+| Send community | all |
+| Maximum routes | 0 (no limit) |
+
+##### EXTENDED-COMMUNITY
+
+| Settings | Value |
+| -------- | ----- |
+| Address Family | ipv4 |
+| Send community | extended |
+
+##### IPv4-UNDERLAY-PEERS
+
+| Settings | Value |
+| -------- | ----- |
+| Address Family | ipv4 |
+| Remote AS | 65001 |
+| RIB Pre-Policy Retain | False |
+| Send community | all |
+| Maximum routes | 12000 |
+
+##### IPV6-UNDERLAY
+
+| Settings | Value |
+| -------- | ----- |
+| Remote AS | 65000 |
+| Send community | all |
+| Maximum routes | 12000 |
+
+##### IPV6-UNDERLAY-MLAG
+
+| Settings | Value |
+| -------- | ----- |
+| Remove Private AS Outbound | False |
+| Remove Private AS Inbound | False |
+| Remote AS | 65100 |
+| Next-hop self | True |
+| Send community | all |
+| Maximum routes | 12000 |
+
+##### LARGE-COMMUNITY
+
+| Settings | Value |
+| -------- | ----- |
+| Address Family | ipv4 |
+| Send community | large |
+
+##### LOCAL-AS
+
+| Settings | Value |
+| -------- | ----- |
+| Address Family | ipv4 |
+| Local AS | 65000 |
+
+##### MLAG-IPv4-UNDERLAY-PEER
+
+| Settings | Value |
+| -------- | ----- |
+| Address Family | ipv4 |
+| Remove Private AS Outbound | True (All) (Replace AS) |
+| Remove Private AS Inbound | True (Replace AS) |
+| Remote AS | 65101 |
+| Next-hop self | True |
+| Send community | all |
+| Maximum routes | 12000 (warning-limit 80 percent, warning-only) |
+
+##### MPLS-IBGP-PEERS
+
+| Settings | Value |
+| -------- | ----- |
+| Address Family | vpn-ipv4, vpn-ipv6 |
+| Remote AS | 65000 |
+| Local AS | 65000 |
+| Send community | all |
+| Maximum routes | 0 (no limit) |
+
+##### MULTIPLE-COMMUNITY
+
+| Settings | Value |
+| -------- | ----- |
+| Address Family | ipv4 |
+| Send community | standard large |
+
+##### NO-COMMUNITY
+
+| Settings | Value |
+| -------- | ----- |
+| Address Family | ipv4 |
+
+##### OBS_WAN
+
+| Settings | Value |
+| -------- | ----- |
+| Address Family | ipv4 |
+| Remote AS | 65000 |
+| BFD | True |
+| BFD Timers | interval: 2000, min_rx: 2000, multiplier: 3 |
+
+##### PATH-SELECTION-PG-1
+
+| Settings | Value |
+| -------- | ----- |
+| Address Family | ipv4 |
+| Remote AS | 65001 |
+
+##### PATH-SELECTION-PG-2
+
+| Settings | Value |
+| -------- | ----- |
+| Address Family | ipv4 |
+| Remote AS | 65001 |
+
+##### PATH-SELECTION-PG-3
+
+| Settings | Value |
+| -------- | ----- |
+| Address Family | ipv4 |
+| Remote AS | 65001 |
+
+##### PATH-SELECTION-PG-4
+
+| Settings | Value |
+| -------- | ----- |
+| Address Family | ipv4 |
+| Remote AS | 65001 |
+
+##### PATH-SELECTION-PG-5
+
+| Settings | Value |
+| -------- | ----- |
+| Address Family | ipv4 |
+| Remote AS | 65001 |
+
+##### PG-1
+
+| Settings | Value |
+| -------- | ----- |
+| Remote AS | 65001.0002 |
+
+##### PG-2
+
+| Settings | Value |
+| -------- | ----- |
+| Remote AS | 65001.0003 |
+
+##### SEDI
+
+| Settings | Value |
+| -------- | ----- |
+| Address Family | ipv4 |
+| Remote AS | 65003 |
+| Source | Loopback101 |
+| Ebgp multihop | 10 |
+
+##### SEDI-shut
+
+| Settings | Value |
+| -------- | ----- |
+| Address Family | ipv4 |
+| Shutdown | True |
+
+##### SR-TE-PG-1
+
+| Settings | Value |
+| -------- | ----- |
+| Remote AS | 65000 |
+
+##### SR-TE-PG-2
+
+| Settings | Value |
+| -------- | ----- |
+| Remote AS | 65000 |
+
+##### STARDARD-COMMUNITY
+
+| Settings | Value |
+| -------- | ----- |
+| Address Family | ipv4 |
+| Send community | standard |
+
+##### TEST
+
+| Settings | Value |
+| -------- | ----- |
+| TTL Max Hops | 42 |
+
+##### test-link-bandwidth1
+
+| Settings | Value |
+| -------- | ----- |
+| TTL Max Hops | 1 |
+| Link-Bandwidth | default 100G |
+
+##### test-link-bandwidth2
+
+| Settings | Value |
+| -------- | ----- |
+| Link-Bandwidth | enabled |
+
+##### test-passive
+
+| Settings | Value |
+| -------- | ----- |
+| Passive | True |
+
+##### TEST-PASSIVE
+
+| Settings | Value |
+| -------- | ----- |
+| Address Family | ipv4 |
+| Remote AS | 65003 |
+| Passive | True |
+
+##### test-session-tracker
+
+| Settings | Value |
+| -------- | ----- |
+| Session tracker | ST2 |
+
+##### WELCOME_ROUTERS
+
+| Settings | Value |
+| -------- | ----- |
+| Address Family | ipv4 |
+| Remote AS | 65001 |
+
+#### BGP Neighbors
+
+| Neighbor | Remote AS | VRF | Shutdown | Send-community | Maximum-routes | Allowas-in | BFD | RIB Pre-Policy Retain | Route-Reflector Client | Passive | TTL Max Hops |
+| -------- | --------- | --- | -------- | -------------- | -------------- | ---------- | --- | --------------------- | ---------------------- | ------- | ------------ |
+| 1.1.1.1 | 1 | default | False | - | - | - | - | - | - | - | - |
+| 1b11:3a00:22b0:0088::1 | Inherited from peer group IPV6-UNDERLAY | default | - | Inherited from peer group IPV6-UNDERLAY | Inherited from peer group IPV6-UNDERLAY | - | - | - | - | - | - |
+| 1b11:3a00:22b0:0088::3 | Inherited from peer group IPV6-UNDERLAY | default | - | Inherited from peer group IPV6-UNDERLAY | Inherited from peer group IPV6-UNDERLAY | - | - | - | - | - | - |
+| 1b11:3a00:22b0:0088::5 | Inherited from peer group IPV6-UNDERLAY | default | - | Inherited from peer group IPV6-UNDERLAY | Inherited from peer group IPV6-UNDERLAY | - | - | - | - | - | - |
+| 10.50.2.1 | - | default | - | - | - | - | - | - | - | - | - |
+| 10.50.2.3 | - | default | - | - | - | - | - | - | - | - | - |
+| 10.50.2.5 | - | default | - | - | - | - | - | - | - | - | - |
+| 10.50.64.11 | - | default | - | - | - | - | - | - | - | - | - |
+| 10.50.64.12 | - | default | - | - | - | - | - | - | - | - | - |
+| 10.50.64.13 | - | default | - | - | - | - | - | - | - | - | - |
+| 169.254.252.1 | - | default | - | - | - | - | - | - | - | - | - |
+| 172.31.255.0 | Inherited from peer group IPv4-UNDERLAY-PEERS | default | - | Inherited from peer group IPv4-UNDERLAY-PEERS | Inherited from peer group IPv4-UNDERLAY-PEERS | - | - | - | - | - | - |
+| 172.31.255.2 | - | default | - | - | - | - | - | - | - | - | - |
+| 172.31.255.3 | - | default | - | - | - | - | - | - | - | - | - |
+| 172.31.255.4 | Inherited from peer group EVPN-OVERLAY-PEERS | default | - | Inherited from peer group EVPN-OVERLAY-PEERS | Inherited from peer group EVPN-OVERLAY-PEERS | Allowed, allowed 5 times | Inherited from peer group EVPN-OVERLAY-PEERS(interval: 2000, min_rx: 2000, multiplier: 3) | True (All) | - | - | - |
+| 192.0.3.1 | 65432 | default | - | all | - | - | True(interval: 2000, min_rx: 2000, multiplier: 3) | True | - | True | - |
+| 192.0.3.2 | 65433 | default | - | extended | 10000 | - | False | True (All) | - | - | - |
+| 192.0.3.3 | 65434 | default | - | standard | - | - | - | True | - | - | - |
+| 192.0.3.4 | 65435 | default | - | large | - | - | - | False | - | - | 1 |
+| 192.0.3.5 | 65436 | default | - | standard | 12000 | - | - | - | - | - | - |
+| 192.0.3.6 | 65437 | default | - | - | - | - | - | - | False | - | - |
+| 192.0.3.7 | 65438 | default | - | - | - | - | - | - | True | - | - |
+| 192.0.3.8 | 65438 | default | - | - | - | - | True | - | - | - | Inherited from peer group TEST |
+| 192.0.3.9 | 65438 | default | - | - | - | - | False | - | - | - | Inherited from peer group TEST |
+| 192.168.42.42 | 65004 | default | - | - | - | - | - | - | - | - | - |
+| 192.168.251.1 | - | default | True | - | - | - | - | - | - | - | - |
+| 192.168.251.2 | - | default | - | - | - | - | - | - | - | - | - |
+| 192.168.252.1 | - | default | - | - | - | - | - | - | - | - | - |
+| 192.168.255.1 | Inherited from peer group EVPN-OVERLAY-PEERS | default | - | Inherited from peer group EVPN-OVERLAY-PEERS | Inherited from peer group EVPN-OVERLAY-PEERS | Inherited from peer group EVPN-OVERLAY-PEERS | Inherited from peer group EVPN-OVERLAY-PEERS(interval: 2000, min_rx: 2000, multiplier: 3) | Inherited from peer group EVPN-OVERLAY-PEERS | - | - | - |
+| 192.168.255.2 | Inherited from peer group EVPN-OVERLAY-PEERS | default | - | Inherited from peer group EVPN-OVERLAY-PEERS | Inherited from peer group EVPN-OVERLAY-PEERS | Inherited from peer group EVPN-OVERLAY-PEERS | Inherited from peer group EVPN-OVERLAY-PEERS(interval: 2000, min_rx: 2000, multiplier: 3) | Inherited from peer group EVPN-OVERLAY-PEERS | - | - | - |
+| 192.168.255.3 | - | default | - | - | 52000 (warning-limit 2000, warning-only) | Allowed, allowed 5 times | - | - | - | - | - |
+| 192.168.255.4 | 65004 | default | - | all | - | - | - | - | - | - | - |
+| 192.168.255.11 | - | default | - | - | - | - | - | - | - | - | - |
+| 192.168.255.21 | Inherited from peer group EVPN-OVERLAY-PEERS | default | - | Inherited from peer group EVPN-OVERLAY-PEERS | Inherited from peer group EVPN-OVERLAY-PEERS | Inherited from peer group EVPN-OVERLAY-PEERS | Inherited from peer group EVPN-OVERLAY-PEERS(interval: 2000, min_rx: 2000, multiplier: 3) | False | - | - | - |
+| 192.168.255.101 | Inherited from peer group MPLS-IBGP-PEERS | default | - | Inherited from peer group MPLS-IBGP-PEERS | Inherited from peer group MPLS-IBGP-PEERS | - | - | - | - | - | - |
+| 192.168.255.201 | Inherited from peer group MPLS-IBGP-PEERS | default | - | Inherited from peer group MPLS-IBGP-PEERS | Inherited from peer group MPLS-IBGP-PEERS | - | - | - | - | - | - |
+| 2001:cafe:192:168::4 | 65004 | default | - | all | - | - | - | - | - | - | - |
+| 2001:db8::dead:beef:cafe | 65004 | default | - | - | - | - | - | - | - | - | - |
+| fe80::b%Vl4094 | Inherited from peer group IPV6-UNDERLAY-MLAG | default | - | Inherited from peer group IPV6-UNDERLAY-MLAG | Inherited from peer group IPV6-UNDERLAY-MLAG | - | - | - | - | - | - |
+| 10.1.1.0 | Inherited from peer group OBS_WAN | BLUE-C1 | - | - | - | - | Inherited from peer group OBS_WAN(interval: 2000, min_rx: 2000, multiplier: 3) | - | False | - | - |
+| 10.255.1.1 | Inherited from peer group WELCOME_ROUTERS | BLUE-C1 | - | - | - | - | - | - | True | - | - |
+| 101.0.3.1 | Inherited from peer group SEDI | BLUE-C1 | - | - | - | - | - | - | - | - | - |
+| 101.0.3.2 | Inherited from peer group SEDI | BLUE-C1 | True | - | - | Allowed, allowed 3 (default) times | - | - | - | - | - |
+| 101.0.3.3 | - | BLUE-C1 | Inherited from peer group SEDI-shut | - | - | Allowed, allowed 5 times | - | - | - | - | - |
+| 101.0.3.4 | Inherited from peer group TEST-PASSIVE | BLUE-C1 | - | - | - | - | - | - | - | Inherited from peer group TEST-PASSIVE | - |
+| 101.0.3.5 | Inherited from peer group WELCOME_ROUTERS | BLUE-C1 | - | - | - | - | False | - | - | True | - |
+| 101.0.3.6 | Inherited from peer group WELCOME_ROUTERS | BLUE-C1 | - | - | - | - | True(interval: 2500, min_rx: 2000, multiplier: 3) | - | - | - | - |
+| 101.0.3.7 | - | BLUE-C1 | - | - | - | - | True | - | - | - | - |
+| 101.0.3.8 | - | BLUE-C1 | - | - | - | - | False | - | - | - | - |
+| 10.1.1.0 | Inherited from peer group OBS_WAN | RED-C1 | - | - | - | - | Inherited from peer group OBS_WAN(interval: 2000, min_rx: 2000, multiplier: 3) | - | - | - | - |
+| 10.255.251.1 | Inherited from peer group MLAG-IPv4-UNDERLAY-PEER | TENANT_A_PROJECT01 | - | Inherited from peer group MLAG-IPv4-UNDERLAY-PEER | Inherited from peer group MLAG-IPv4-UNDERLAY-PEER | - | - | - | - | - | - |
+| 10.2.3.4 | 1234 | TENANT_A_PROJECT01 | - | all | 0 (no limit) (warning-limit 100, warning-only) | - | - | - | - | - | - |
+| 10.255.251.1 | Inherited from peer group MLAG-IPv4-UNDERLAY-PEER | TENANT_A_PROJECT02 | - | standard | Inherited from peer group MLAG-IPv4-UNDERLAY-PEER | - | - | - | - | - | - |
+| 10.255.251.2 | Inherited from peer group MLAG-IPv4-UNDERLAY-PEER | TENANT_A_PROJECT02 | - | extended | Inherited from peer group MLAG-IPv4-UNDERLAY-PEER | - | - | - | - | - | - |
+| 10.255.251.3 | Inherited from peer group MLAG-IPv4-UNDERLAY-PEER | TENANT_A_PROJECT02 | - | large | Inherited from peer group MLAG-IPv4-UNDERLAY-PEER | - | - | - | - | - | - |
+| 10.255.251.4 | Inherited from peer group MLAG-IPv4-UNDERLAY-PEER | TENANT_A_PROJECT02 | - | Inherited from peer group MLAG-IPv4-UNDERLAY-PEER | Inherited from peer group MLAG-IPv4-UNDERLAY-PEER | - | True | - | - | - | - |
+| 1.1.1.1 | - | VRF02 | - | - | - | - | - | - | - | - | - |
+| 10.1.1.0 | Inherited from peer group OBS_WAN | YELLOW-C1 | - | - | - | - | Inherited from peer group OBS_WAN(interval: 2000, min_rx: 2000, multiplier: 3) | - | - | - | - |
+
+#### BGP Neighbor Interfaces
+
+| Neighbor Interface | VRF | Peer Group | Remote AS | Peer Filter |
+| ------------------ | --- | ---------- | --------- | ----------- |
+| Ethernet2 | default | PG-FOO-v4 | 65102 | - |
+| Ethernet3 | default | PG-FOO-v4 | - | PF-BAR-v4 |
+
+#### BGP Route Aggregation
+
+| Prefix | AS Set | Summary Only | Attribute Map | Match Map | Advertise Only |
+| ------ | ------ | ------------ | ------------- | --------- | -------------- |
+| 1.1.1.0/24 | False | False | - | - | True |
+| 1.12.1.0/24 | True | True | RM-ATTRIBUTE | RM-MATCH | True |
+| 2.2.1.0/24 | False | False | - | - | False |
+
+#### Router BGP EVPN Address Family
+
+- VPN import pruning is **enabled**
+
+- Next-hop resolution is **disabled**
+- Next-hop-unchanged is explicitly configured (default behaviour)
+
+- Next-hop MPLS resolution Primary-RIB : tunnel-rib colored system-colored-tunnel-rib
+- Next-hop MPLS resolution Secondary-RIB : tunnel-rib test-rib
+- Next-hop MPLS resolution Tertiary-RIB : system-connected
+- Layer-2 In-place FEC update tracking timeout: 100 seconds
+
+##### EVPN Peer Groups
+
+| Peer Group | Activate | Route-map In | Route-map Out | Encapsulation |
+| ---------- | -------- | ------------ | ------------- | ------------- |
+| ADDITIONAL-PATH-PG-1 | True |  - | - | default |
+| ADDITIONAL-PATH-PG-2 | True |  - | - | default |
+| ADDITIONAL-PATH-PG-3 | True |  - | - | default |
+| ADDITIONAL-PATH-PG-4 | True |  - | - | default |
+| ADDITIONAL-PATH-PG-5 | True |  - | - | default |
+| ADDITIONAL-PATH-PG-6 | True |  - | - | default |
+| EVPN-OVERLAY | True |  RM-HIDE-AS-PATH | RM-HIDE-AS-PATH | default |
+| EVPN-OVERLAY-PEERS | True |  - | - | vxlan |
+| IPv4-UNDERLAY-PEERS | False |  - | - | default |
+| MLAG-IPv4-UNDERLAY-PEER | False |  - | - | default |
+| RCF_TEST | False |  - | - | default |
+| TEST-ENCAPSULATION | True |  - | - | mpls |
+| TEST-ENCAPSULATION-2 | True |  - | - | path-selection |
+
+##### EVPN Neighbors
+
+| Neighbor | Activate | Route-map In | Route-map Out | Encapsulation |
+| -------- | -------- | ------------ | ------------- | ------------- |
+| 10.100.100.1 | True | - | - | default |
+| 10.100.100.2 | True | - | - | default |
+| 10.100.100.3 | True | - | - | default |
+| 10.100.100.4 | True | RM1 | RM2 | path-selection |
+| 10.100.100.5 | True | - | - | mpls |
+| 192.168.255.3 | False | - | - | default |
+| 192.168.255.4 | False | - | - | mpls |
+
+##### EVPN Neighbor Default Encapsulation
+
+| Neighbor Default Encapsulation | Next-hop-self Source Interface |
+| ------------------------------ | ------------------------------ |
+| mpls | Loopback0 |
+
+##### EVPN Host Flapping Settings
+
+| State | Window | Threshold | Expiry Timeout |
+| ----- | ------ | --------- | -------------- |
+| Enabled | 10 Seconds | 1 | 3 Seconds |
+
+##### EVPN DCI Gateway Summary
+
+| Settings | Value |
+| -------- | ----- |
+| Local Domain | 65101:0 |
+| Remote Domain | 65101:1 |
+| Remote Domain Peer Groups | EVPN-OVERLAY-PEERS |
+| Local Domain: Ethernet-Segment Identifier | 0011:1111:1111:1111:1111 |
+| Local Domain: Ethernet-Segment import Route-Target | 11:11:11:11:11:11 |
+| Remote Domain: Ethernet-Segment Identifier | 0022:2222:2222:2222:2222 |
+| Remote Domain: Ethernet-Segment import Route-Target | 22:22:22:22:22:22 |
+
+#### Router BGP IPv4 Labeled Unicast
+
+##### General Settings
+
+| Settings | Value |
+| -------- | ----- |
+| Update wait-for-convergence | Enabled |
+| Next-hop Unchanged | True |
+| LFIB entry installation skipped | True |
+| Label local-termination | implicit-null |
+
+##### IPv4 BGP-LU Peer-groups
+
+| Peer-group | Activate | Route-map In | Route-map Out | RCF In | RCF Out |
+| ---------- | -------- | ------------ | ------------- | ------ | ------- |
+| PG-BGP-LU | True | RM_BGP_LU_IN | RM_BGP_LU_OUT | - | - |
+| PG-BGP-LU1 | False | - | - | RCF_BGP_LU_IN() | RCF_BGP_LU_OUT() |
+| PG-BGP-LU2 | False | - | - | - | - |
+| PG-BGP-LU3 | False | - | - | - | - |
+
+##### IPv4 BGP-LU Neighbors
+
+| Neighbor | Activate | Route-map In | Route-map Out | RCF In | RCF Out |
+| -------- | -------- | ------------ | ------------- | ------ | ------- |
+| 192.168.66.21 | False | - | - | - | - |
+| 192.168.66.22 | False | - | - | - | - |
+| 198.51.100.1 | True | - | - | RCF_TEST() | RCF_TEST_OUT() |
+| 198.51.100.2 | False | RM_IN_TEST | RM_OUT_TEST | - | - |
+
+#### Router BGP IPv4 SR-TE Address Family
+
+##### IPv4 SR-TE Neighbors
+
+| Neighbor | Activate | Route-map In | Route-map Out |
+| -------- | -------- | ------------ | ------------- |
+| 192.168.42.42 | True | RM-SR-TE-PEER-IN4 | RM-SR-TE-PEER-OUT4 |
+| 192.168.42.43 | False | - | - |
+
+##### IPv4 SR-TE Peer Groups
+
+| Peer Group | Activate | Route-map In | Route-map Out |
+| ---------- | -------- | ------------ | ------------- |
+| SR-TE-PG-1 | True | RM-SR-TE-PEER-IN4 | RM-SR-TE-PEER-OUT4 |
+| SR-TE-PG-2 | False | - | - |
+
+#### Router BGP IPv6 SR-TE Address Family
+
+##### IPv6 SR-TE Neighbors
+
+| Neighbor | Activate | Route-map In | Route-map Out |
+| -------- | -------- | ------------ | ------------- |
+| 2001:db8::dead:beef:cafe | True | RM-SR-TE-PEER-IN6 | RM-SR-TE-PEER-OUT6 |
+| 2002:db8::dead:beef:cafe | False | - | - |
+
+##### IPv6 SR-TE Peer Groups
+
+| Peer Group | Activate | Route-map In | Route-map Out |
+| ---------- | -------- | ------------ | ------------- |
+| SR-TE-PG-2 | True | RM-SR-TE-PEER-IN6 | RM-SR-TE-PEER-OUT6 |
+| SR-TE-PG-3 | False | - | - |
+
+#### Router BGP Link-State Address Family
+
+##### Link-State Neighbors
+
+| Neighbor | Activate | Missing policy In action | Missing policy Out action |
+| -------- | -------- | ------------------------ | ------------------------- |
+| 192.168.255.1 | True | deny | deny |
+| 192.168.255.2 | True | - | - |
+
+##### Link-State Peer Groups
+
+| Peer Group | Activate | Missing policy In action | Missing policy Out action |
+| ---------- | -------- | ------------------------ | ------------------------- |
+| PG-1 | True | deny-in-out | permit |
+| PG-2 | False | - | - |
+
+##### Link-State Path Selection Configuration
+
+| Settings | Value |
+| -------- | ----- |
+| Role(s) | producer<br>consumer<br>propagator |
+
+#### Router BGP VPN-IPv4 Address Family
+
+- VPN import pruning is **enabled**
+
+##### VPN-IPv4 Neighbors
+
+| Neighbor | Activate | Route-map In | Route-map Out | RCF In | RCF Out |
+| -------- | -------- | ------------ | ------------- | ------ | ------- |
+| 192.168.255.4 | True | RM-NEIGHBOR-PEER-IN4 | RM-NEIGHBOR-PEER-OUT4 | - | - |
+| 192.168.255.5 | False | - | - | Address_Family_VPN_IPV4_In() | Address_Family_VPN_IPV4_Out() |
+
+##### VPN-IPv4 Peer Groups
+
+| Peer Group | Activate | Route-map In | Route-map Out | RCF In | RCF Out |
+| ---------- | -------- | ------------ | ------------- | ------ | ------- |
+| MPLS-IBGP-PEERS | True | RM-IBGP-PEER-IN4 | RM-IBGP-PEER-OUT4 | - | - |
+| Test_RCF | False | - | - | Address_Family_VPN_IPV4_In() | Address_Family_VPN_IPV4_Out() |
+
+#### Router BGP VPN-IPv6 Address Family
+
+- VPN import pruning is **enabled**
+
+##### VPN-IPv6 Neighbors
+
+| Neighbor | Activate | Route-map In | Route-map Out | RCF In | RCF Out |
+| -------- | -------- | ------------ | ------------- | ------ | ------- |
+| 2001:cafe:192:168::4 | True | RM-NEIGHBOR-PEER-IN6 | RM-NEIGHBOR-PEER-OUT6 | - | - |
+| 2001:cafe:192:168::5 | False | - | - | Address_Family_VPN_IPV6_In() | Address_Family_VPN_IPV6_Out() |
+
+##### VPN-IPv6 Peer Groups
+
+| Peer Group | Activate | Route-map In | Route-map Out | RCF In | RCF Out |
+| ---------- | -------- | ------------ | ------------- | ------ | ------- |
+| MPLS-IBGP-PEERS | True | RM-IBGP-PEER-IN6 | RM-IBGP-PEER-OUT6 | - | - |
+| Test_RCF | False | - | - | Address_Family_VPN_IPV6_In() | Address_Family_VPN_IPV6_Out() |
+
+#### Router BGP Path-Selection Address Family
+
+##### Path-Selection Neighbors
+
+| Neighbor | Activate |
+| -------- | -------- |
+| 172.31.255.0 | True |
+| 172.31.255.1 | True |
+| 172.31.255.2 | True |
+| 172.31.255.3 | True |
+| 172.31.255.4 | False |
+
+##### Path-Selection Peer Groups
+
+| Peer Group | Activate |
+| ---------- | -------- |
+| PATH-SELECTION-PG-1 | True |
+| PATH-SELECTION-PG-2 | True |
+| PATH-SELECTION-PG-3 | True |
+| PATH-SELECTION-PG-4 | True |
+| PATH-SELECTION-PG-5 | False |
+
+#### Router BGP VLAN Aware Bundles
+
+| VLAN Aware Bundle | Route-Distinguisher | Both Route-Target | Import Route Target | Export Route-Target | Redistribute | VLANs |
+| ----------------- | ------------------- | ----------------- | ------------------- | ------------------- | ------------ | ----- |
+| B-ELAN-201 | 192.168.255.3:20201 | - | - | 20201:20201 | learned<br>no host-route | 201 |
+| TENANT_A_PROJECT01 | 192.168.255.3:11 | 11:11<br>remote 2:11 | - | - | learned<br>igmp<br>no static | 110 |
+| TENANT_A_PROJECT02 | 192.168.255.3:12 | - | 12:12<br>remote 2:12 | remote 2:12 | learned | 112 |
+
+#### Router BGP VLANs
+
+| VLAN | Route-Distinguisher | Both Route-Target | Import Route Target | Export Route-Target | Redistribute |
+| ---- | ------------------- | ----------------- | ------------------- | ------------------- | ------------ |
+| 24 | 10.50.64.15:10024 | 1:10024 | - | - | learned |
+| 41 | 10.50.64.15:10041 | 1:10041 | - | - | learned |
+| 42 | 10.50.64.15:10042 | 1:10042 | - | - | learned |
+| 65 | 10.50.64.15:10065 | 1:10065 | - | - | learned |
+| 66 | 145.245.21.0:66 | - | - | all 145.245.21.0:66 | no learned |
+| 67 | 145.245.21.0:67 | - | 145.245.21.0:67 | - | no learned |
+| 600 | 145.245.21.0:600 | - | all 145.245.21.0:600 | - | no learned |
+| 666 | 145.245.21.0:666 | - | - | 145.245.21.0:666 | no learned |
+| 2488 | 145.245.21.0:1 | 145.245.21.0:1 | - | - | no learned |
+
+#### Router BGP VPWS Instances
+
+| Instance | Route-Distinguisher | Both Route-Target | MPLS Control Word | Label Flow | MTU | Pseudowire | Local ID | Remote ID |
+| -------- | ------------------- | ----------------- | ----------------- | -----------| --- | ---------- | -------- | --------- |
+| TENANT_A | 100.70.0.2:1000 | 65000:1000 | True | True | 1600 | TEN_A_site1_site3_pw | 15 | 35 |
+| TENANT_A | 100.70.0.2:1000 | 65000:1000 | True | True | 1600 | TEN_A_site2_site5_pw | 25 | 57 |
+| TENANT_B | 100.70.0.2:2000 | 65000:2000 | False | False | - | TEN_B_site2_site5_pw | 26 | 58 |
+
+#### Router BGP VRFs
+
+| VRF | Route-Distinguisher | Redistribute | EVPN Multicast |
+| --- | ------------------- | ------------ | -------------- |
+| BLUE-C1 | 1.0.1.1:101 | static<br>ospf | IPv4: False<br>Transit: False |
+| RED-C1 | 1.0.1.1:102 | - | IPv4: False<br>Transit: False |
+| Tenant_A | 10.50.64.15:30001 | ospf<br>ospfv3<br>connected | IPv4: False<br>Transit: False |
+| TENANT_A_PROJECT01 | 192.168.255.3:11 | connected<br>static | IPv4: False<br>Transit: False |
+| TENANT_A_PROJECT02 | 192.168.255.3:12 | connected<br>static | IPv4: False<br>Transit: False |
+| TENANT_A_PROJECT03 | 192.168.255.3:13 | - | IPv4: True<br>Transit: True |
+| TENANT_A_PROJECT04 | 192.168.255.3:14 | - | IPv4: True<br>Transit: False |
+| Tenant_B | 10.50.64.15:30002 | - | IPv4: False<br>Transit: False |
+| VRF01 | - | user<br>static<br>rip<br>ospf<br>ospfv3<br>isis<br>connected<br>bgp<br>attached_host | IPv4: False<br>Transit: False |
+| VRF02 | - | dynamic<br>user<br>static<br>rip<br>ospf<br>ospfv3<br>isis<br>connected<br>bgp<br>attached_host | IPv4: False<br>Transit: False |
+| VRF03 | - | dynamic | IPv4: False<br>Transit: False |
+| YELLOW-C1 | 1.0.1.1:103 | - | IPv4: False<br>Transit: False |
+
+#### Router BGP Session Trackers
+
+| Session Tracker Name | Recovery Delay (in seconds) |
+| -------------------- | --------------------------- |
+| ST1 | 666 |
+| ST2 | 42 |
+
+#### Router BGP Device Configuration
+
+```eos
+!
+router bgp 65101
+   bgp asn notation asdot
+   router-id 192.168.255.3
+   update wait-for-convergence
+   update wait-install
+   bgp default ipv4-unicast
+   bgp default ipv4-unicast transport ipv6
+   distance bgp 20 200 200
+   graceful-restart restart-time 555
+   graceful-restart stalepath-time 666
+   graceful-restart
+   graceful-restart-helper restart-time 888
+   bgp route-reflector preserve-attributes always
+   maximum-paths 32 ecmp 32
+   bgp additional-paths receive
+   bgp additional-paths send ecmp limit 30
+   bgp listen range 10.10.10.0/24 peer-group my-peer-group1 peer-filter my-peer-filter
+   bgp listen range 12.10.10.0/24 peer-id include router-id peer-group my-peer-group3 remote-as 65444
+   bgp listen range 13.10.10.0/24 peer-group my-peer-group4 peer-filter my-peer-filter
+   bgp bestpath d-path
+   neighbor EVPN-OVERLAY-PEERS peer group
+   neighbor EVPN-OVERLAY-PEERS remote-as 65001
+   neighbor EVPN-OVERLAY-PEERS weight 100
+   neighbor EVPN-OVERLAY-PEERS update-source Loopback0
+   neighbor EVPN-OVERLAY-PEERS bfd
+   neighbor EVPN-OVERLAY-PEERS bfd interval 2000 min-rx 2000 multiplier 3
+   neighbor EVPN-OVERLAY-PEERS allowas-in
+   neighbor EVPN-OVERLAY-PEERS rib-in pre-policy retain all
+   neighbor EVPN-OVERLAY-PEERS ebgp-multihop 3
+   neighbor EVPN-OVERLAY-PEERS timers 1600 1600
+   neighbor EVPN-OVERLAY-PEERS password 7 <removed>
+   neighbor EVPN-OVERLAY-PEERS password shared-secret profile profile2 algorithm aes-128-cmac-96
+   neighbor EVPN-OVERLAY-PEERS default-originate route-map RM-FOO always
+   neighbor EVPN-OVERLAY-PEERS send-community
+   neighbor EVPN-OVERLAY-PEERS maximum-routes 0
+   neighbor EVPN-OVERLAY-PEERS missing-policy address-family all direction out action permit
+   neighbor EVPN-OVERLAY-RS-PEERS peer group
+   neighbor EVPN-OVERLAY-RS-PEERS remote-as 65001
+   neighbor EVPN-OVERLAY-RS-PEERS update-source Loopback0
+   neighbor EVPN-OVERLAY-RS-PEERS bfd
+   neighbor EVPN-OVERLAY-RS-PEERS ebgp-multihop 3
+   neighbor EVPN-OVERLAY-RS-PEERS password 7 <removed>
+   neighbor EVPN-OVERLAY-RS-PEERS send-community
+   neighbor EVPN-OVERLAY-RS-PEERS maximum-routes 0
+   neighbor EXTENDED-COMMUNITY peer group
+   neighbor EXTENDED-COMMUNITY send-community extended
+   neighbor IPv4-UNDERLAY-PEERS peer group
+   neighbor IPv4-UNDERLAY-PEERS remote-as 65001
+   no neighbor IPv4-UNDERLAY-PEERS rib-in pre-policy retain
+   neighbor IPv4-UNDERLAY-PEERS password 7 <removed>
+   neighbor IPv4-UNDERLAY-PEERS send-community
+   neighbor IPv4-UNDERLAY-PEERS maximum-routes 12000
+   neighbor IPV6-UNDERLAY peer group
+   neighbor IPV6-UNDERLAY remote-as 65000
+   neighbor IPV6-UNDERLAY password 7 <removed>
+   neighbor IPV6-UNDERLAY send-community
+   neighbor IPV6-UNDERLAY maximum-routes 12000
+   neighbor IPV6-UNDERLAY-MLAG peer group
+   neighbor IPV6-UNDERLAY-MLAG remote-as 65100
+   neighbor IPV6-UNDERLAY-MLAG next-hop-self
+   no neighbor IPV6-UNDERLAY-MLAG remove-private-as
+   neighbor IPV6-UNDERLAY-MLAG password 7 <removed>
+   neighbor IPV6-UNDERLAY-MLAG send-community
+   neighbor IPV6-UNDERLAY-MLAG maximum-routes 12000
+   neighbor IPV6-UNDERLAY-MLAG missing-policy address-family all include sub-route-map direction in action deny
+   no neighbor IPV6-UNDERLAY-MLAG remove-private-as ingress
+   neighbor LARGE-COMMUNITY peer group
+   neighbor LARGE-COMMUNITY send-community large
+   neighbor LOCAL-AS peer group
+   neighbor LOCAL-AS local-as 65000 no-prepend replace-as
+   neighbor MLAG-IPv4-UNDERLAY-PEER peer group
+   neighbor MLAG-IPv4-UNDERLAY-PEER remote-as 65101
+   neighbor MLAG-IPv4-UNDERLAY-PEER next-hop-self
+   neighbor MLAG-IPv4-UNDERLAY-PEER remove-private-as all replace-as
+   neighbor MLAG-IPv4-UNDERLAY-PEER route-map RM-MLAG-PEER-IN in
+   neighbor MLAG-IPv4-UNDERLAY-PEER route-map RM-MLAG-PEER-OUT out
+   neighbor MLAG-IPv4-UNDERLAY-PEER password 7 <removed>
+   neighbor MLAG-IPv4-UNDERLAY-PEER send-community
+   neighbor MLAG-IPv4-UNDERLAY-PEER maximum-routes 12000 warning-limit 80 percent warning-only
+   neighbor MLAG-IPv4-UNDERLAY-PEER missing-policy address-family all direction in action deny
+   neighbor MLAG-IPv4-UNDERLAY-PEER remove-private-as ingress replace-as
+   neighbor MPLS-IBGP-PEERS peer group
+   neighbor MPLS-IBGP-PEERS remote-as 65000
+   neighbor MPLS-IBGP-PEERS local-as 65000 no-prepend replace-as
+   neighbor MPLS-IBGP-PEERS password 7 <removed>
+   neighbor MPLS-IBGP-PEERS send-community
+   neighbor MPLS-IBGP-PEERS maximum-routes 0
+   neighbor MULTIPLE-COMMUNITY peer group
+   neighbor MULTIPLE-COMMUNITY send-community standard large
+   neighbor NO-COMMUNITY peer group
+   neighbor OBS_WAN peer group
+   neighbor OBS_WAN remote-as 65000
+   neighbor OBS_WAN as-path prepend-own disabled
+   neighbor OBS_WAN as-path remote-as replace out
+   neighbor OBS_WAN bfd
+   neighbor OBS_WAN bfd interval 2000 min-rx 2000 multiplier 3
+   neighbor OBS_WAN description BGP Connection to OBS WAN CPE
+   neighbor PATH-SELECTION-PG-1 peer group
+   neighbor PATH-SELECTION-PG-1 remote-as 65001
+   neighbor PATH-SELECTION-PG-2 peer group
+   neighbor PATH-SELECTION-PG-2 remote-as 65001
+   neighbor PATH-SELECTION-PG-3 peer group
+   neighbor PATH-SELECTION-PG-3 remote-as 65001
+   neighbor PATH-SELECTION-PG-4 peer group
+   neighbor PATH-SELECTION-PG-4 remote-as 65001
+   neighbor PATH-SELECTION-PG-5 peer group
+   neighbor PATH-SELECTION-PG-5 remote-as 65001
+   neighbor PG-1 peer group
+   neighbor PG-1 remote-as 65001.0002
+   neighbor PG-2 peer group
+   neighbor PG-2 remote-as 65001.0003
+   neighbor SEDI peer group
+   neighbor SEDI remote-as 65003
+   neighbor SEDI update-source Loopback101
+   neighbor SEDI description BGP Connection to OBS WAN CPE
+   neighbor SEDI ebgp-multihop 10
+   neighbor SEDI-shut peer group
+   neighbor SEDI-shut shutdown
+   neighbor SEDI-shut description BGP Peer Shutdown
+   neighbor SR-TE-PG-1 peer group
+   neighbor SR-TE-PG-1 remote-as 65000
+   neighbor SR-TE-PG-2 peer group
+   neighbor SR-TE-PG-2 remote-as 65000
+   neighbor STARDARD-COMMUNITY peer group
+   neighbor STARDARD-COMMUNITY send-community standard
+   neighbor TEST peer group
+   neighbor TEST ttl maximum-hops 42
+   neighbor test-link-bandwidth1 peer group
+   neighbor test-link-bandwidth1 ttl maximum-hops 1
+   neighbor test-link-bandwidth1 missing-policy address-family all include community-list prefix-list direction in action deny
+   neighbor test-link-bandwidth1 missing-policy address-family all include community-list direction out action permit
+   neighbor test-link-bandwidth1 link-bandwidth default 100G
+   neighbor test-link-bandwidth2 peer group
+   neighbor test-link-bandwidth2 link-bandwidth
+   neighbor test-passive peer group
+   neighbor test-passive passive
+   neighbor TEST-PASSIVE peer group
+   neighbor TEST-PASSIVE remote-as 65003
+   neighbor TEST-PASSIVE passive
+   neighbor TEST-PASSIVE description BGP Connection in passive mode
+   neighbor test-session-tracker peer group
+   neighbor test-session-tracker session tracker ST2
+   neighbor WELCOME_ROUTERS peer group
+   neighbor WELCOME_ROUTERS remote-as 65001
+   neighbor WELCOME_ROUTERS description BGP Connection to WELCOME ROUTER 02
+   neighbor 1.1.1.1 remote-as 1
+   neighbor 1.1.1.1 description TEST
+   neighbor 1b11:3a00:22b0:0088::1 peer group IPV6-UNDERLAY
+   neighbor 1b11:3a00:22b0:0088::3 peer group IPV6-UNDERLAY
+   neighbor 1b11:3a00:22b0:0088::5 peer group IPV6-UNDERLAY
+   neighbor 10.50.2.1 peer group IPV4-UNDERLAY
+   neighbor 10.50.2.3 peer group IPV4-UNDERLAY
+   neighbor 10.50.2.5 peer group IPV4-UNDERLAY
+   neighbor 10.50.64.11 peer group EVPN-OVERLAY
+   neighbor 10.50.64.12 peer group EVPN-OVERLAY
+   neighbor 10.50.64.13 peer group EVPN-OVERLAY
+   neighbor 169.254.252.1 peer group IPV4-UNDERLAY-MLAG
+   neighbor 172.31.255.0 peer group IPv4-UNDERLAY-PEERS
+   no neighbor 172.31.255.0 remove-private-as
+   neighbor 172.31.255.0 weight 101
+   neighbor 172.31.255.0 timers 1500 1500
+   neighbor 172.31.255.0 password 7 <removed>
+   no neighbor 172.31.255.0 remove-private-as ingress
+   neighbor 172.31.255.4 peer group EVPN-OVERLAY-PEERS
+   neighbor 172.31.255.4 allowas-in 5
+   neighbor 172.31.255.4 rib-in pre-policy retain all
+   neighbor 172.31.255.4 password shared-secret profile profile1 algorithm aes-128-cmac-96
+   neighbor 192.0.3.1 remote-as 65432
+   neighbor 192.0.3.1 as-path prepend-own disabled
+   neighbor 192.0.3.1 as-path remote-as replace out
+   neighbor 192.0.3.1 passive
+   neighbor 192.0.3.1 bfd
+   neighbor 192.0.3.1 bfd interval 2000 min-rx 2000 multiplier 3
+   neighbor 192.0.3.1 rib-in pre-policy retain
+   neighbor 192.0.3.1 session tracker ST1
+   neighbor 192.0.3.1 default-originate always
+   neighbor 192.0.3.1 send-community
+   neighbor 192.0.3.1 link-bandwidth default 100G
+   neighbor 192.0.3.2 remote-as 65433
+   neighbor 192.0.3.2 rib-in pre-policy retain all
+   neighbor 192.0.3.2 default-originate route-map RM-FOO-MATCH3
+   neighbor 192.0.3.2 send-community extended
+   neighbor 192.0.3.2 maximum-routes 10000
+   neighbor 192.0.3.2 missing-policy address-family all include community-list prefix-list direction in action deny
+   neighbor 192.0.3.2 missing-policy address-family all include community-list direction out action permit
+   neighbor 192.0.3.2 link-bandwidth
+   neighbor 192.0.3.3 remote-as 65434
+   neighbor 192.0.3.3 rib-in pre-policy retain
+   neighbor 192.0.3.3 send-community standard
+   neighbor 192.0.3.3 missing-policy address-family all include community-list prefix-list sub-route-map direction in action deny
+   neighbor 192.0.3.4 remote-as 65435
+   no neighbor 192.0.3.4 rib-in pre-policy retain
+   neighbor 192.0.3.4 ttl maximum-hops 1
+   neighbor 192.0.3.4 send-community large
+   neighbor 192.0.3.5 remote-as 65436
+   neighbor 192.0.3.5 description test_ebgp_multihop
+   neighbor 192.0.3.5 ebgp-multihop 2
+   neighbor 192.0.3.5 send-community standard
+   neighbor 192.0.3.5 maximum-routes 12000
+   neighbor 192.0.3.6 remote-as 65437
+   neighbor 192.0.3.6 remove-private-as
+   neighbor 192.0.3.6 description test_remove_private_as
+   no neighbor 192.0.3.6 route-reflector-client
+   neighbor 192.0.3.6 remove-private-as ingress
+   neighbor 192.0.3.7 remote-as 65438
+   neighbor 192.0.3.7 remove-private-as all replace-as
+   neighbor 192.0.3.7 description test_remove_private_as_all
+   neighbor 192.0.3.7 route-reflector-client
+   neighbor 192.0.3.7 remove-private-as ingress replace-as
+   neighbor 192.0.3.8 peer group TEST
+   neighbor 192.0.3.8 remote-as 65438
+   neighbor 192.0.3.8 bfd
+   neighbor 192.0.3.9 peer group TEST
+   neighbor 192.0.3.9 remote-as 65438
+   no neighbor 192.0.3.9 bfd
+   neighbor 192.168.42.42 remote-as 65004
+   neighbor 192.168.42.42 next-hop-self
+   neighbor 192.168.251.1 shutdown
+   neighbor 192.168.255.1 peer group EVPN-OVERLAY-PEERS
+   neighbor 192.168.255.2 peer group EVPN-OVERLAY-PEERS
+   neighbor 192.168.255.3 allowas-in 5
+   neighbor 192.168.255.3 maximum-routes 52000 warning-limit 2000 warning-only
+   neighbor 192.168.255.3 missing-policy address-family all direction in action deny
+   neighbor 192.168.255.4 remote-as 65004
+   neighbor 192.168.255.4 send-community
+   neighbor 192.168.255.21 peer group EVPN-OVERLAY-PEERS
+   no neighbor 192.168.255.21 rib-in pre-policy retain
+   neighbor 192.168.255.21 missing-policy address-family all direction out action deny-in-out
+   neighbor 192.168.255.101 peer group MPLS-IBGP-PEERS
+   neighbor 192.168.255.201 peer group MPLS-IBGP-PEERS
+   neighbor 2001:cafe:192:168::4 remote-as 65004
+   neighbor 2001:cafe:192:168::4 send-community
+   neighbor 2001:db8::dead:beef:cafe remote-as 65004
+   neighbor fe80::b%Vl4094 peer group IPV6-UNDERLAY-MLAG
+   no bgp redistribute-internal
+   aggregate-address 1.1.1.0/24 advertise-only
+   aggregate-address 1.12.1.0/24 as-set summary-only attribute-map RM-ATTRIBUTE match-map RM-MATCH advertise-only
+   aggregate-address 2.2.1.0/24
+   redistribute connected rcf Router_BGP_Connected()
+   redistribute isis level-2 include leaked route-map RM_BGP_EVPN
+   redistribute ospf match internal
+   redistribute ospf match external
+   redistribute ospf match nssa-external 1 include leaked route-map RM-REDISTRIBUTE-OSPF-NSSA-1
+   redistribute ospfv3 include leaked route-map RM_BGP_EVPN
+   redistribute ospfv3 match external include leaked route-map RM_BGP_EVPN
+   redistribute ospfv3 match nssa-external 1 include leaked route-map RM_BGP_EVPN
+   redistribute static include leaked rcf Router_BGP_Static()
+   redistribute rip route-map RM_BGP_EVPN
+   redistribute attached-host route-map RM_BGP_EVPN
+   redistribute dynamic route-map RM_BGP_EVPN
+   redistribute bgp leaked route-map RM-REDISTRIBUTE-BGP
+   redistribute user rcf RCF_BGP_EVPN()
+   neighbor interface Ethernet2 peer-group PG-FOO-v4 remote-as 65102
+   neighbor interface Ethernet3 peer-group PG-FOO-v4 peer-filter PF-BAR-v4
+   !
+   vlan 24
+      rd 10.50.64.15:10024
+      route-target both 1:10024
+      redistribute learned
+   !
+   vlan 41
+      rd 10.50.64.15:10041
+      route-target both 1:10041
+      redistribute learned
+   !
+   vlan 42
+      rd 10.50.64.15:10042
+      route-target both 1:10042
+      redistribute learned
+   !
+   vlan 65
+      rd 10.50.64.15:10065
+      route-target both 1:10065
+      redistribute learned
+   !
+   vlan 66
+      rd 145.245.21.0:66
+      route-target export evpn domain all 145.245.21.0:66
+      no redistribute learned
+   !
+   vlan 67
+      rd 145.245.21.0:67
+      route-target import 145.245.21.0:67
+      no redistribute learned
+   !
+   vlan 600
+      rd 145.245.21.0:600
+      route-target import evpn domain all 145.245.21.0:600
+      no redistribute learned
+   !
+   vlan 666
+      rd 145.245.21.0:666
+      route-target export 145.245.21.0:666
+      no redistribute learned
+   !
+   vlan 2488
+      rd 145.245.21.0:1
+      route-target both 145.245.21.0:1
+      no redistribute learned
+   !
+   vpws TENANT_A
+      rd 100.70.0.2:1000
+      route-target import export evpn 65000:1000
+      mpls control-word
+      label flow
+      mtu 1600
+      !
+      pseudowire TEN_A_site1_site3_pw
+         evpn vpws id local 15 remote 35
+      !
+      pseudowire TEN_A_site2_site5_pw
+         evpn vpws id local 25 remote 57
+   !
+   vpws TENANT_B
+      rd 100.70.0.2:2000
+      route-target import export evpn 65000:2000
+      !
+      pseudowire TEN_B_site2_site5_pw
+         evpn vpws id local 26 remote 58
+   !
+   vlan-aware-bundle B-ELAN-201
+      rd 192.168.255.3:20201
+      route-target export 20201:20201
+      redistribute learned
+      no redistribute host-route
+      vlan 201
+   !
+   vlan-aware-bundle TENANT_A_PROJECT01
+      rd 192.168.255.3:11
+      route-target both 11:11
+      route-target import export evpn domain remote 2:11
+      redistribute igmp
+      redistribute learned
+      no redistribute static
+      vlan 110
+   !
+   vlan-aware-bundle TENANT_A_PROJECT02
+      rd 192.168.255.3:12
+      rd evpn domain remote 192.168.255.3:12
+      route-target import 12:12
+      route-target import evpn domain remote 2:12
+      route-target export evpn domain remote 2:12
+      redistribute learned
+      vlan 112
+   !
+   address-family evpn
+      route export ethernet-segment ip mass-withdraw
+      route import ethernet-segment ip mass-withdraw
+      bgp additional-paths receive
+      bgp additional-paths send limit 10
+      bgp next-hop-unchanged
+      neighbor default encapsulation mpls next-hop-self source-interface Loopback0
+      next-hop mpls resolution ribs tunnel-rib colored system-colored-tunnel-rib tunnel-rib test-rib system-connected
+      neighbor ADDITIONAL-PATH-PG-1 activate
+      neighbor ADDITIONAL-PATH-PG-1 additional-paths receive
+      neighbor ADDITIONAL-PATH-PG-1 default-route rcf DEFAULT_ROUTE_RCF()
+      neighbor ADDITIONAL-PATH-PG-1 additional-paths send any
+      neighbor ADDITIONAL-PATH-PG-2 activate
+      neighbor ADDITIONAL-PATH-PG-2 default-route route-map DEFAULT_ROUTE_RM
+      neighbor ADDITIONAL-PATH-PG-2 additional-paths send backup
+      neighbor ADDITIONAL-PATH-PG-3 activate
+      neighbor ADDITIONAL-PATH-PG-3 additional-paths send ecmp
+      neighbor ADDITIONAL-PATH-PG-4 activate
+      neighbor ADDITIONAL-PATH-PG-4 additional-paths send ecmp limit 42
+      neighbor ADDITIONAL-PATH-PG-5 activate
+      neighbor ADDITIONAL-PATH-PG-5 additional-paths send limit 42
+      neighbor ADDITIONAL-PATH-PG-6 activate
+      no neighbor ADDITIONAL-PATH-PG-6 additional-paths send
+      neighbor EVPN-OVERLAY activate
+      neighbor EVPN-OVERLAY route-map RM-HIDE-AS-PATH in
+      neighbor EVPN-OVERLAY route-map RM-HIDE-AS-PATH out
+      neighbor EVPN-OVERLAY-PEERS activate
+      neighbor EVPN-OVERLAY-PEERS default-route
+      neighbor EVPN-OVERLAY-PEERS encapsulation vxlan
+      neighbor EVPN-OVERLAY-PEERS domain remote
+      no neighbor IPv4-UNDERLAY-PEERS activate
+      no neighbor MLAG-IPv4-UNDERLAY-PEER activate
+      neighbor RCF_TEST rcf in Address_Family_EVPN_In()
+      neighbor RCF_TEST rcf out Address_Family_EVPN_Out()
+      neighbor TEST-ENCAPSULATION activate
+      neighbor TEST-ENCAPSULATION encapsulation mpls
+      neighbor TEST-ENCAPSULATION-2 activate
+      neighbor TEST-ENCAPSULATION-2 encapsulation path-selection
+      neighbor 10.100.100.1 activate
+      neighbor 10.100.100.1 additional-paths receive
+      neighbor 10.100.100.1 default-route
+      neighbor 10.100.100.1 additional-paths send any
+      neighbor 10.100.100.2 activate
+      neighbor 10.100.100.2 default-route route-map RM_DEFAULT_ROUTE
+      no neighbor 10.100.100.2 additional-paths send
+      neighbor 10.100.100.3 activate
+      neighbor 10.100.100.3 default-route rcf RCF_DEFAULT_ROUTE()
+      neighbor 10.100.100.3 additional-paths send ecmp limit 11
+      neighbor 10.100.100.4 activate
+      neighbor 10.100.100.4 route-map RM1 in
+      neighbor 10.100.100.4 route-map RM2 out
+      neighbor 10.100.100.4 additional-paths send limit 9
+      neighbor 10.100.100.4 encapsulation path-selection
+      neighbor 10.100.100.5 activate
+      neighbor 10.100.100.5 encapsulation mpls
+      no neighbor 192.168.255.3 activate
+      neighbor 192.168.255.4 rcf in Address_Family_EVPN_In()
+      neighbor 192.168.255.4 rcf out Address_Family_EVPN_Out()
+      neighbor 192.168.255.4 encapsulation mpls next-hop-self source-interface Ethernet1
+      domain identifier 65101:0
+      domain identifier 65101:1 remote
+      next-hop resolution disabled
+      route import match-failure action discard
+      host-flap detection window 10 threshold 1 expiry timeout 3 seconds
+      layer-2 fec in-place update timeout 100 seconds
+      route import overlay-index gateway
+      !
+      evpn ethernet-segment domain local
+         identifier 0011:1111:1111:1111:1111
+         route-target import 11:11:11:11:11:11
+      !
+      evpn ethernet-segment domain remote
+         identifier 0022:2222:2222:2222:2222
+         route-target import 22:22:22:22:22:22
+   !
+   address-family flow-spec ipv4
+      bgp missing-policy direction in action deny-in-out
+      bgp missing-policy direction out action deny
+      neighbor FOOBAR activate
+      no neighbor IPv4_SEC activate
+      neighbor 192.168.66.22 activate
+   !
+   address-family flow-spec ipv6
+      bgp missing-policy direction in action deny
+      bgp missing-policy direction out action permit
+      no neighbor FOOBAR activate
+      neighbor IPv6_SEC activate
+      neighbor 192.168.66.21 activate
+   !
+   address-family ipv4
+      bgp additional-paths install
+      bgp additional-paths receive
+      bgp additional-paths send ecmp limit 20
+      no neighbor EVPN-OVERLAY-PEERS activate
+      neighbor foo additional-paths receive
+      neighbor foo prefix-list PL-BAR-v4-IN in
+      neighbor foo prefix-list PL-BAR-v4-OUT out
+      neighbor foo default-originate route-map RM-FOO-MATCH always
+      neighbor foo additional-paths send ecmp limit 20 prefix-list PL1
+      neighbor FOOBAR activate
+      neighbor FOOBAR next-hop address-family ipv6 originate
+      neighbor IPV4-UNDERLAY activate
+      neighbor IPV4-UNDERLAY route-map RM-HIDE-AS-PATH in
+      neighbor IPV4-UNDERLAY route-map RM-HIDE-AS-PATH out
+      no neighbor IPV4-UNDERLAY additional-paths send
+      neighbor IPv4-UNDERLAY-PEERS activate
+      neighbor MLAG-IPv4-UNDERLAY-PEER activate
+      neighbor OBS_WAN activate
+      neighbor OBS_WAN additional-paths send limit 8
+      neighbor SEDI activate
+      neighbor SEDI route-map RM-BGP-EXPORT-DEFAULT-BLUE-C1 out
+      neighbor SEDI-shut activate
+      neighbor SEDI-shut route-map RM-BGP-EXPORT-DEFAULT-BLUE-C1 out
+      neighbor TEST_PEER_GRP activate
+      neighbor TEST_PEER_GRP next-hop address-family ipv6 originate
+      neighbor TEST_RCF rcf in Address_Family_IPV4_In()
+      neighbor TEST_RCF rcf out Address_Family_IPV4_Out()
+      neighbor WELCOME_ROUTERS activate
+      neighbor WELCOME_ROUTERS additional-paths send any
+      neighbor 10.2.3.8 rcf in Address_Family_IPV4_In()
+      no neighbor 10.2.3.8 additional-paths send
+      neighbor 10.2.3.9 rcf out Address_Family_IPV4_Out()
+      neighbor 10.2.3.9 default-originate route-map Address_Family_IPV4 always
+      neighbor 10.2.3.9 additional-paths send ecmp limit 4
+      neighbor 192.0.2.1 additional-paths receive
+      neighbor 192.0.2.1 route-map Address_Family_IPV4_In in
+      neighbor 192.0.2.1 route-map Address_Family_IPV4_Out out
+      neighbor 192.0.2.1 prefix-list PL-FOO-v4-IN in
+      neighbor 192.0.2.1 prefix-list PL-FOO-v4-OUT out
+      neighbor 192.0.2.1 additional-paths send limit 20 prefix-list PL1
+      no neighbor 192.168.66.21 activate
+      neighbor 192.168.66.21 additional-paths send any
+      network 10.0.0.0/8
+      network 172.16.0.0/12
+      network 192.168.0.0/16 route-map RM-FOO-MATCH
+      redistribute attached-host route-map RM_BGP_EVPN_IPV4
+      redistribute bgp leaked route-map RM_BGP_EVPN_IPV4
+      redistribute connected include leaked rcf Address_Family_IPV4_Connected()
+      redistribute dynamic route-map Address_Family_IPV4_Dynamic_RM
+      redistribute user rcf RCF_BGP_EVPN_IPV4()
+      redistribute isis level-1 include leaked route-map RM_BGP_EVPN_IPV4
+      redistribute ospf match internal include leaked route-map RM_BGP_EVPN_IPV4
+      redistribute ospfv3 include leaked route-map RM_BGP_EVPN_IPV4
+      redistribute ospfv3 match external include leaked route-map RM_BGP_EVPN_IPV4
+      redistribute ospfv3 match nssa-external 2 include leaked route-map RM_BGP_EVPN_IPV4
+      redistribute ospf match external include leaked route-map RM-REDISTRIBUTE-OSPF-EXTERNAL
+      redistribute ospf match nssa-external
+      redistribute rip route-map RM_BGP_EVPN_IPV4
+      redistribute static rcf Address_Family_IPV4_Static()
+   !
+   address-family ipv4 labeled-unicast
+      update wait-for-convergence
+      bgp missing-policy include community-list prefix-list sub-route-map direction in action deny
+      bgp additional-paths receive
+      bgp additional-paths send ecmp limit 20
+      bgp next-hop-unchanged
+      next-hop resolution ribs tunnel-rib colored system-colored-tunnel-rib tunnel-rib test-rib system-connected
+      neighbor PG-BGP-LU activate
+      neighbor PG-BGP-LU route-map RM_BGP_LU_IN in
+      neighbor PG-BGP-LU route-map RM_BGP_LU_OUT out
+      neighbor PG-BGP-LU additional-paths send ecmp limit 10
+      neighbor PG-BGP-LU next-hop-unchanged
+      neighbor PG-BGP-LU maximum-advertised-routes 120000 warning-limit 1000
+      neighbor PG-BGP-LU missing-policy include community-list prefix-list sub-route-map direction in action deny
+      neighbor PG-BGP-LU aigp-session
+      neighbor PG-BGP-LU multi-path
+      no neighbor PG-BGP-LU1 activate
+      neighbor PG-BGP-LU1 additional-paths receive
+      neighbor PG-BGP-LU1 graceful-restart-helper stale-route route-map RM_BGP_LU_TEST
+      neighbor PG-BGP-LU1 rcf in RCF_BGP_LU_IN()
+      neighbor PG-BGP-LU1 rcf out RCF_BGP_LU_OUT()
+      no neighbor PG-BGP-LU1 additional-paths send
+      neighbor PG-BGP-LU1 next-hop-self
+      no neighbor PG-BGP-LU2 activate
+      neighbor PG-BGP-LU2 additional-paths send any
+      neighbor PG-BGP-LU2 next-hop-self v4-mapped-v6 source-interface Ethernet1
+      no neighbor PG-BGP-LU3 activate
+      neighbor PG-BGP-LU3 next-hop-self source-interface Ethernet2
+      no neighbor 192.168.66.21 activate
+      neighbor 192.168.66.21 additional-paths send limit 11
+      no neighbor 192.168.66.22 activate
+      no neighbor 192.168.66.22 additional-paths send
+      neighbor 198.51.100.1 activate
+      neighbor 198.51.100.1 additional-paths receive
+      neighbor 198.51.100.1 rcf in RCF_TEST()
+      neighbor 198.51.100.1 rcf out RCF_TEST_OUT()
+      neighbor 198.51.100.1 additional-paths send ecmp limit 11
+      neighbor 198.51.100.1 next-hop-self
+      neighbor 198.51.100.1 next-hop-self v4-mapped-v6 source-interface Ethernet1
+      neighbor 198.51.100.1 maximum-advertised-routes 120000 warning-limit 1000
+      no neighbor 198.51.100.2 activate
+      neighbor 198.51.100.2 graceful-restart-helper stale-route route-map RM_STALE
+      neighbor 198.51.100.2 route-map RM_IN_TEST in
+      neighbor 198.51.100.2 route-map RM_OUT_TEST out
+      neighbor 198.51.100.2 additional-paths send any
+      neighbor 198.51.100.2 next-hop-unchanged
+      neighbor 198.51.100.2 next-hop-self source-interface Ethernet2
+      neighbor 198.51.100.2 missing-policy  include community-list prefix-list sub-route-map direction in action deny
+      neighbor 198.51.100.2 aigp-session
+      neighbor 198.51.100.2 multi-path
+      network 203.0.113.0/25 route-map RM-TEST
+      network 203.0.113.128/25
+      next-hop 192.51.100.1 originate lfib-backup ip-forwarding
+      lfib entry installation skipped
+      label local-termination implicit-null
+      tunnel source-protocol isis segment-routing
+      tunnel source-protocol ldp rcf TEST()
+      aigp-session confederation
+      aigp-session ebgp
+   !
+   address-family ipv4 multicast
+      bgp additional-paths receive
+      neighbor FOOBAR activate
+      neighbor FOOBAR additional-paths receive
+      no neighbor IPV4-MULTICAST-INACTIVE activate
+      neighbor IPV4-UNDERLAY activate
+      neighbor IPV4-UNDERLAY route-map IPV4-MULTICAST-RM-IN in
+      neighbor IPV4-UNDERLAY route-map IPV4-MULTICAST-RM-OUT out
+      neighbor IPV4-UNDERLAY-MLAG activate
+      neighbor 10.1.1.1 activate
+      neighbor 10.1.1.1 additional-paths receive
+      neighbor 10.1.1.1 route-map IPV4-MULTICAST-RM-IN in
+      neighbor 10.1.1.1 route-map IPV4-MULTICAST-RM-OUT out
+      no neighbor 10.1.1.2 activate
+      redistribute attached-host route-map AFIPV4M_ATTACHED_HOST
+      redistribute connected route-map AFIPV4M_CONNECTED
+      redistribute isis level-1-2 include leaked route-map AFIPV4M_ISIS
+      redistribute ospf route-map RM_BGP_EVPN_IPV4M
+      redistribute ospfv3 match internal route-map RM_BGP_EVPN_IPV4M
+      redistribute ospfv3 match external route-map RM_BGP_EVPN_IPV4M
+      redistribute ospfv3 match nssa-external 1 route-map RM_BGP_EVPN_IPV4M
+      redistribute ospf match nssa-external route-map AFIPV4M_OSPF_NSSA
+      redistribute static route-map AFIPV4M_STATIC
+   !
+   address-family ipv4 sr-te
+      neighbor SR-TE-PG-1 activate
+      neighbor SR-TE-PG-1 route-map RM-SR-TE-PEER-IN4 in
+      neighbor SR-TE-PG-1 route-map RM-SR-TE-PEER-OUT4 out
+      no neighbor SR-TE-PG-2 activate
+      neighbor 192.168.42.42 activate
+      neighbor 192.168.42.42 route-map RM-SR-TE-PEER-IN4 in
+      neighbor 192.168.42.42 route-map RM-SR-TE-PEER-OUT4 out
+      no neighbor 192.168.42.43 activate
+   !
+   address-family ipv6
+      bgp additional-paths install ecmp-primary
+      bgp additional-paths receive
+      bgp additional-paths send any
+      neighbor baz additional-paths receive
+      neighbor baz prefix-list PL-BAR-v6-IN in
+      neighbor baz prefix-list PL-BAR-v6-OUT out
+      neighbor baz additional-paths send ecmp limit 20
+      no neighbor FOOBAR activate
+      neighbor IPV6-UNDERLAY activate
+      neighbor IPV6-UNDERLAY route-map RM-HIDE-AS-PATH in
+      neighbor IPV6-UNDERLAY route-map RM-HIDE-AS-PATH out
+      neighbor IPV6-UNDERLAY additional-paths send any
+      neighbor IPV6-UNDERLAY-MLAG activate
+      no neighbor IPV6-UNDERLAY-MLAG additional-paths send
+      neighbor TEST_RCF rcf in Address_Family_IPV6_In()
+      neighbor TEST_RCF rcf out Address_Family_IPV6_Out()
+      neighbor TEST_RCF additional-paths send limit 11
+      neighbor 2001:db8::1 additional-paths receive
+      neighbor 2001:db8::1 route-map Address_Family_IPV6_In in
+      neighbor 2001:db8::1 route-map Address_Family_IPV6_Out out
+      neighbor 2001:db8::1 prefix-list PL-FOO-v6-IN in
+      neighbor 2001:db8::1 prefix-list PL-FOO-v6-OUT out
+      neighbor 2001:db8::1 additional-paths send ecmp limit 20
+      neighbor 2001:db8::2 activate
+      neighbor 2001:db8::2 rcf in Address_Family_IPV6_In()
+      neighbor 2001:db8::2 rcf out Address_Family_IPV6_Out()
+      neighbor 2001:db8::2 additional-paths send any
+      no neighbor 2001:db8::21 activate
+      no neighbor 2001:db8::21 additional-paths send
+      neighbor 2001:db8::22 additional-paths send limit 5
+      network 2001:db8:100::/40
+      network 2001:db8:200::/40 route-map RM-BAR-MATCH
+      redistribute attached-host
+      redistribute bgp leaked route-map RM-REDISTRIBUTE-BGP
+      redistribute dhcp
+      redistribute connected include leaked rcf Address_Family_IPV6_Connected()
+      redistribute dynamic route-map RM-REDISTRIBUTE-DYNAMIC
+      redistribute user
+      redistribute isis level-1-2 rcf RCF_Address_Family_IPV6_ISIS()
+      redistribute ospfv3
+      redistribute ospfv3 match external include leaked
+      redistribute ospfv3 match nssa-external 1
+      redistribute static route-map RM-IPV6-STATIC-TO-BGP
+   !
+   address-family ipv6 multicast
+      bgp missing-policy direction in action permit
+      bgp missing-policy direction out action permit
+      bgp additional-paths receive
+      no neighbor FOOBAR activate
+      neighbor FOOBAR additional-paths receive
+      neighbor FOOBAR1 activate
+      neighbor aa::1 activate
+      neighbor aa::1 additional-paths receive
+      neighbor aa::1 route-map IPv6_MULTICAST_RM_IN in
+      neighbor aa::1 route-map IPv6_MULTICAST_RM_OUT out
+      network aa::1/126 route-map IPv6_MULTICAST_RM
+      redistribute connected route-map RM-address_family_ipv6_multicast-Connected
+      redistribute isis level-1 include leaked route-map RM-address_family_ipv6_multicast-ISIS
+      redistribute ospf route-map RM-address_family_ipv6_multicast-OSPF
+      redistribute ospfv3 route-map RM-address_family_ipv6_multicast-OSPFv3
+      redistribute ospfv3 match external route-map RM-address_family_ipv6_multicast-OSPFv3-External
+      redistribute ospfv3 match nssa-external 2 route-map RM-address_family_ipv6_multicast-OSPFv3-External
+      redistribute ospf match external route-map RM-address_family_ipv6_multicast-OSPF-External
+      redistribute ospf match nssa-external 2 route-map RM-address_family_ipv6_multicast-OSPF-External
+      redistribute static route-map RM-address_family_ipv6_multicast-Static
+   !
+   address-family ipv6 sr-te
+      neighbor SR-TE-PG-2 activate
+      neighbor SR-TE-PG-2 route-map RM-SR-TE-PEER-IN6 in
+      neighbor SR-TE-PG-2 route-map RM-SR-TE-PEER-OUT6 out
+      no neighbor SR-TE-PG-3 activate
+      neighbor 2001:db8::dead:beef:cafe activate
+      neighbor 2001:db8::dead:beef:cafe route-map RM-SR-TE-PEER-IN6 in
+      neighbor 2001:db8::dead:beef:cafe route-map RM-SR-TE-PEER-OUT6 out
+      no neighbor 2002:db8::dead:beef:cafe activate
+   !
+   address-family link-state
+      bgp missing-policy direction in action permit
+      bgp missing-policy direction out action deny
+      neighbor PG-1 activate
+      neighbor PG-1 missing-policy direction in action deny-in-out
+      neighbor PG-1 missing-policy direction out action permit
+      no neighbor PG-2 activate
+      neighbor 192.168.255.1 activate
+      neighbor 192.168.255.1 missing-policy direction in action deny
+      neighbor 192.168.255.1 missing-policy direction out action deny
+      neighbor 192.168.255.2 activate
+      path-selection
+      path-selection role consumer propagator
+   !
+   address-family path-selection
+      bgp additional-paths receive
+      bgp additional-paths send ecmp limit 42
+      neighbor PATH-SELECTION-PG-1 activate
+      neighbor PATH-SELECTION-PG-1 additional-paths receive
+      no neighbor PATH-SELECTION-PG-1 send
+      neighbor PATH-SELECTION-PG-2 activate
+      neighbor PATH-SELECTION-PG-2 additional-paths send backup
+      neighbor PATH-SELECTION-PG-3 activate
+      neighbor PATH-SELECTION-PG-3 additional-paths send ecmp
+      neighbor PATH-SELECTION-PG-4 activate
+      neighbor PATH-SELECTION-PG-4 additional-paths send ecmp limit 42
+      no neighbor PATH-SELECTION-PG-5 activate
+      neighbor PATH-SELECTION-PG-5 additional-paths send limit 42
+      neighbor 172.31.255.0 activate
+      neighbor 172.31.255.0 additional-paths receive
+      neighbor 172.31.255.0 additional-paths send any
+      neighbor 172.31.255.1 activate
+      no neighbor 172.31.255.1 additional-paths send
+      neighbor 172.31.255.2 activate
+      neighbor 172.31.255.2 additional-paths send ecmp
+      neighbor 172.31.255.3 activate
+      neighbor 172.31.255.3 additional-paths send ecmp limit 42
+      no neighbor 172.31.255.4 activate
+      neighbor 172.31.255.4 additional-paths send limit 42
+   !
+   address-family rt-membership
+      neighbor EVPN-OVERLAY-PEERS activate
+      neighbor EVPN-OVERLAY-PEERS default-route-target
+      neighbor EVPN-OVERLAY-RS-PEERS activate
+      neighbor EVPN-OVERLAY-RS-PEERS default-route-target only
+      neighbor EVPN-OVERLAY-RS-PEERS default-route-target encoding origin-as omit
+      no neighbor RTC-INACTIVE-PEERS activate
+   !
+   address-family vpn-ipv4
+      neighbor MPLS-IBGP-PEERS activate
+      neighbor MPLS-IBGP-PEERS route-map RM-IBGP-PEER-IN4 in
+      neighbor MPLS-IBGP-PEERS route-map RM-IBGP-PEER-OUT4 out
+      neighbor MPLS-IBGP-PEERS default-route route-map RM-IBGP-PEER-IN4
+      no neighbor Test_RCF activate
+      neighbor Test_RCF rcf in Address_Family_VPN_IPV4_In()
+      neighbor Test_RCF rcf out Address_Family_VPN_IPV4_Out()
+      neighbor Test_RCF default-route rcf Address_Family_VPN_IPV4_In()
+      neighbor 192.168.255.4 activate
+      neighbor 192.168.255.4 route-map RM-NEIGHBOR-PEER-IN4 in
+      neighbor 192.168.255.4 route-map RM-NEIGHBOR-PEER-OUT4 out
+      neighbor 192.168.255.4 default-route route-map RM-NEIGHBOR-PEER-IN4
+      no neighbor 192.168.255.5 activate
+      neighbor 192.168.255.5 rcf in Address_Family_VPN_IPV4_In()
+      neighbor 192.168.255.5 rcf out Address_Family_VPN_IPV4_Out()
+      neighbor 192.168.255.5 default-route rcf Address_Family_VPN_IPV4_In()
+      neighbor default encapsulation mpls next-hop-self source-interface Loopback0
+      domain identifier 65000:0
+      route import match-failure action discard
+   !
+   address-family vpn-ipv6
+      neighbor MPLS-IBGP-PEERS activate
+      neighbor MPLS-IBGP-PEERS route-map RM-IBGP-PEER-IN6 in
+      neighbor MPLS-IBGP-PEERS route-map RM-IBGP-PEER-OUT6 out
+      neighbor MPLS-IBGP-PEERS default-route route-map RM-IBGP-PEER-OUT6
+      no neighbor Test_RCF activate
+      neighbor Test_RCF rcf in Address_Family_VPN_IPV6_In()
+      neighbor Test_RCF rcf out Address_Family_VPN_IPV6_Out()
+      neighbor Test_RCF default-route rcf Address_Family_VPN_IPV6_Out()
+      neighbor 2001:cafe:192:168::4 activate
+      neighbor 2001:cafe:192:168::4 route-map RM-NEIGHBOR-PEER-IN6 in
+      neighbor 2001:cafe:192:168::4 route-map RM-NEIGHBOR-PEER-OUT6 out
+      neighbor 2001:cafe:192:168::4 default-route route-map RM-NEIGHBOR-PEER-IN6
+      no neighbor 2001:cafe:192:168::5 activate
+      neighbor 2001:cafe:192:168::5 rcf in Address_Family_VPN_IPV6_In()
+      neighbor 2001:cafe:192:168::5 rcf out Address_Family_VPN_IPV6_Out()
+      neighbor 2001:cafe:192:168::5 default-route rcf Address_Family_VPN_IPV6_In()
+      neighbor default encapsulation mpls next-hop-self source-interface Loopback0
+      domain identifier 65000:0
+      route import match-failure action discard
+   !
+   vrf BLUE-C1
+      rd 1.0.1.1:101
+      no bgp additional-paths send
+      neighbor 10.1.1.0 peer group OBS_WAN
+      neighbor 10.1.1.0 as-path prepend-own disabled
+      no neighbor 10.1.1.0 route-reflector-client
+      neighbor 10.255.1.1 peer group WELCOME_ROUTERS
+      neighbor 10.255.1.1 as-path remote-as replace out
+      neighbor 10.255.1.1 weight 65535
+      neighbor 10.255.1.1 route-reflector-client
+      neighbor 101.0.3.1 peer group SEDI
+      neighbor 101.0.3.1 weight 100
+      neighbor 101.0.3.2 peer group SEDI
+      neighbor 101.0.3.2 shutdown
+      neighbor 101.0.3.2 allowas-in
+      neighbor 101.0.3.3 peer group SEDI-shut
+      neighbor 101.0.3.3 allowas-in 5
+      neighbor 101.0.3.4 peer group TEST-PASSIVE
+      neighbor 101.0.3.5 peer group WELCOME_ROUTERS
+      neighbor 101.0.3.5 passive
+      no neighbor 101.0.3.5 bfd
+      neighbor 101.0.3.6 peer group WELCOME_ROUTERS
+      neighbor 101.0.3.6 bfd
+      neighbor 101.0.3.6 bfd interval 2500 min-rx 2000 multiplier 3
+      neighbor 101.0.3.7 bfd
+      aggregate-address 0.0.0.0/0 as-set summary-only attribute-map RM-BGP-AGG-APPLY-SET advertise-only
+      aggregate-address 193.1.0.0/16 as-set summary-only attribute-map RM-BGP-AGG-APPLY-SET match-map VRF-MATCH-MAP
+      redistribute ospf include leaked
+      redistribute static rcf VRF_STATIC_RCF()
+      !
+      comment
+      Comment created from eos_cli under router_bgp.vrfs.BLUE-C1
+      EOF
+
+   !
+   vrf RED-C1
+      rd 1.0.1.1:102
+      neighbor 10.1.1.0 peer group OBS_WAN
+      no neighbor 10.1.1.0 remove-private-as
+      !
+      address-family ipv4
+         neighbor 10.1.1.0 prefix-list PL-BGP-DEFAULT-RED-IN-C1 in
+         neighbor 10.1.1.0 prefix-list PL-BGP-DEFAULT-RED-OUT-C1 out
+      !
+      address-family ipv6
+         neighbor 2001:cafe:192:168::4 prefix-list PL-BGP-V6-RED-IN-C1 in
+         neighbor 2001:cafe:192:168::4 prefix-list PL-BGP-V6-RED-OUT-C1 out
+   !
+   vrf Tenant_A
+      rd 10.50.64.15:30001
+      route-target import evpn 1:30001
+      route-target import evpn route-map RM-DENY-DEFAULT
+      route-target import vpn-ipv4 1:30011
+      route-target import vpn-ipv4 rcf RT_IMPORT_AF_RCF() vpn-route filter-rcf RT_IMPORT_AF_RCF_FILTER()
+      route-target import vpn-ipv4 route-map RT_IMPORT_AF_RM
+      route-target import vpn-ipv6 1:30011
+      route-target import vpn-ipv6 rcf RT_IMPORT_AF_RCF()
+      route-target import vpn-ipv6 route-map RT_IMPORT_AF_RM
+      route-target export evpn 1:30001
+      route-target export evpn rcf RT_EXPORT_AF_RCF()
+      route-target export vpn-ipv6 1:30011
+      route-target export vpn-ipv6 rcf RT_IMPORT_AF_RCF() vpn-route filter-rcf RT_IMPORT_AF_RCF_FILTER()
+      route-target export vpn-ipv6 route-map RT_IMPORT_AF_RM
+      redistribute connected
+      redistribute ospf match external include leaked
+      redistribute ospfv3
+      redistribute ospfv3 match nssa-external
+   !
+   vrf TENANT_A_PROJECT01
+      rd 192.168.255.3:11
+      route-target import evpn 11:11
+      route-target import evpn rcf RT_IMPORT_AF_RCF()
+      route-target export evpn 11:11
+      route-target export evpn rcf RT_EXPORT_AF_RCF()
+      router-id 192.168.255.3
+      update wait-for-convergence
+      update wait-install
+      neighbor 10.2.3.4 remote-as 1234
+      neighbor 10.2.3.4 remove-private-as all replace-as
+      neighbor 10.2.3.4 local-as 123 no-prepend replace-as
+      neighbor 10.2.3.4 description Tenant A BGP Peer
+      neighbor 10.2.3.4 ebgp-multihop 3
+      neighbor 10.2.3.4 route-map RM-10.2.3.4-SET-NEXT-HOP-OUT out
+      neighbor 10.2.3.4 default-originate route-map RM-10.2.3.4-SET-NEXT-HOP-OUT always
+      neighbor 10.2.3.4 send-community
+      neighbor 10.2.3.4 maximum-routes 0 warning-limit 100 warning-only
+      neighbor 10.255.251.1 peer group MLAG-IPv4-UNDERLAY-PEER
+      neighbor 10.255.251.1 remove-private-as ingress replace-as
+      network 10.0.0.0/8 route-map VRF-RM
+      network 100.64.0.0/10
+      redistribute connected
+      redistribute static
+      !
+      address-family ipv4
+         bgp additional-paths install
+         bgp missing-policy direction in action permit
+         bgp missing-policy direction out action deny
+         bgp additional-paths receive
+         bgp additional-paths send ecmp
+         neighbor 10.2.3.4 activate
+         neighbor 10.2.3.5 activate
+         neighbor 10.2.3.5 route-map RM-10.2.3.5-SET-NEXT-HOP-IN in
+         neighbor 10.2.3.6 next-hop address-family ipv6
+         neighbor 10.2.3.7 next-hop address-family ipv6 originate
+         no neighbor 10.2.3.8 next-hop address-family ipv6
+         neighbor 10.2.3.9 activate
+         neighbor 10.2.3.9 rcf in VRF_AFIPV4_RCF_IN()
+         neighbor 10.2.3.10 activate
+         neighbor 10.2.3.10 rcf out VRF_AFIPV4_RCF_OUT()
+         network 10.0.0.0/8
+         network 100.64.0.0/10 route-map RM-10.2.3.4
+         redistribute connected rcf VRF_AFIPV4_RCF_CONNECTED()
+         redistribute static route-map VRF_AFIPV4_RM_STATIC
+   !
+   vrf TENANT_A_PROJECT02
+      rd 192.168.255.3:12
+      route-target import evpn 12:12
+      route-target export evpn 12:12
+      router-id 192.168.255.3
+      timers bgp 5 15
+      neighbor 10.255.251.1 peer group MLAG-IPv4-UNDERLAY-PEER
+      neighbor 10.255.251.1 next-hop-self
+      neighbor 10.255.251.1 description ABCDEFG
+      neighbor 10.255.251.1 timers 1 3
+      neighbor 10.255.251.1 send-community standard
+      neighbor 10.255.251.2 peer group MLAG-IPv4-UNDERLAY-PEER
+      neighbor 10.255.251.2 description ABCDEFGfg
+      neighbor 10.255.251.2 timers 1 3
+      neighbor 10.255.251.2 send-community extended
+      neighbor 10.255.251.3 peer group MLAG-IPv4-UNDERLAY-PEER
+      neighbor 10.255.251.3 next-hop-self
+      neighbor 10.255.251.3 description ABCDEFGfgLCLCLCLC
+      neighbor 10.255.251.3 timers 1 3
+      neighbor 10.255.251.3 default-originate always
+      neighbor 10.255.251.3 send-community large
+      neighbor 10.255.251.4 peer group MLAG-IPv4-UNDERLAY-PEER
+      neighbor 10.255.251.4 bfd
+      neighbor 10.255.251.4 description Test_Bfd
+      redistribute connected
+      redistribute static route-map RM-CONN-2-BGP
+   !
+   vrf TENANT_A_PROJECT03
+      rd 192.168.255.3:13
+      default-route export evpn always route-map TENANT_A_PROJECT03_RM_DEFAULT
+      route-target import evpn 13:13
+      route-target export evpn 13:13
+      router-id 192.168.255.3
+      evpn multicast
+         address-family ipv4
+            transit
+   !
+   vrf TENANT_A_PROJECT04
+      rd 192.168.255.3:14
+      default-route export evpn rcf TENANT_A_PROJECT03_RCF_DEFAULT()
+      route-target import evpn 14:14
+      route-target export evpn 14:14
+      router-id 192.168.255.3
+      evpn multicast
+   !
+   vrf Tenant_B
+      rd 10.50.64.15:30002
+      route-target import evpn 1:30002
+      route-target export evpn 1:30002
+      route-target export evpn route-map RM-DEFAULT-EXTRA-COMM
+   !
+   vrf VRF01
+      bgp additional-paths install
+      bgp additional-paths receive
+      bgp additional-paths send any
+      redistribute connected include leaked rcf RCF_VRF_CONNECTED()
+      redistribute isis level-2 rcf RCF_VRF_ISIS()
+      redistribute ospf match internal include leaked route-map RM_VRF_OSPF
+      redistribute ospf match external include leaked route-map RM_VRF_OSPF
+      redistribute ospf match nssa-external 1 include leaked route-map RM_VRF_OSPF
+      redistribute ospfv3 match internal include leaked route-map RM_VRF_OSPF
+      redistribute static route-map RM_VRF_STATIC
+      redistribute rip route-map RM_VRF_RIP
+      redistribute attached-host route-map RM_VRF_ATTACHED-HOST
+      redistribute bgp leaked route-map RM_VRF_BGP
+      redistribute user rcf RCF_VRF_USER()
+      !
+      address-family flow-spec ipv4
+         bgp missing-policy direction in action permit
+         bgp missing-policy direction out action permit
+         neighbor 1.2.3.4 activate
+      !
+      address-family flow-spec ipv6
+         bgp missing-policy direction in action permit
+         bgp missing-policy direction out action deny
+         neighbor aa::1 activate
+      !
+      address-family ipv4
+         bgp additional-paths install ecmp-primary
+         bgp missing-policy direction in action deny
+         bgp missing-policy direction out action permit
+         bgp additional-paths receive
+         bgp additional-paths send ecmp limit 4
+         neighbor 1.2.3.4 activate
+         neighbor 1.2.3.4 additional-paths receive
+         neighbor 1.2.3.4 route-map FOO in
+         neighbor 1.2.3.4 route-map BAR out
+         neighbor 1.2.3.4 additional-paths send any
+         network 2.3.4.0/24 route-map BARFOO
+         redistribute attached-host route-map VRF_AFIPV4_RM_HOST
+         redistribute bgp leaked route-map VRF_AFIPV4_RM_BGP
+         redistribute connected include leaked rcf VRF_AFIPV4_RCF_CONNECTED_1()
+         redistribute dynamic route-map VRF_AFIPV4_RM_DYNAMIC
+         redistribute user rcf VRF_AFIPV4_RCF_USER()
+         redistribute isis level-1 include leaked rcf VRF_AFIPV4_RCF_ISIS()
+         redistribute ospf include leaked route-map VRF_AFIPV4_RM_OSPF
+         redistribute ospfv3 match internal include leaked route-map VRF_AFIPV4_RM_OSPF
+         redistribute ospfv3 match external include leaked route-map VRF_AFIPV4_RM_OSPF
+         redistribute ospfv3 match nssa-external 2 include leaked route-map VRF_AFIPV4_RM_OSPF
+         redistribute ospf match external include leaked route-map VRF_AFIPV4_RM_OSPF
+         redistribute ospf match nssa-external 1 include leaked route-map VRF_AFIPV4_RM_OSPF
+         redistribute rip route-map VRF_AFIPV4_RM_RIP
+         redistribute static include leaked route-map VRF_AFIPV4_RM_STATIC_1
+      !
+      address-family ipv4 multicast
+         bgp missing-policy direction in action permit
+         bgp missing-policy direction out action permit
+         bgp additional-paths receive
+         neighbor 1.2.3.4 additional-paths receive
+         neighbor 1.2.3.4 route-map FOO in
+         neighbor 1.2.3.4 route-map BAR out
+         network 239.0.0.0/24 route-map BARFOO
+         redistribute attached-host route-map VRF_AFIPV4MULTI_RM_HOST
+         redistribute connected route-map VRF_AFIPV4MULTI_RM_CONNECTED
+         redistribute isis level-1 include leaked route-map VRF_AFIPV4MULTI_RM_ISIS
+         redistribute ospf match internal route-map VRF_AFIPV4MULTI_RM_OSPF
+         redistribute ospfv3 match internal route-map VRF_AFIPV4MULTI_RM_OSPFv3
+         redistribute ospfv3 match external route-map VRF_AFIPV4MULTI_RM_OSPFv3
+         redistribute ospfv3 match nssa-external 1 route-map VRF_AFIPV4MULTI_RM_OSPFv3
+         redistribute ospf match external route-map VRF_AFIPV4MULTI_RM_OSPF
+         redistribute ospf match nssa-external 2 route-map VRF_AFIPV4MULTI_RM_OSPF
+         redistribute static route-map VRF_AFIPV4MULTI_RM_STATIC
+      !
+      address-family ipv6
+         bgp additional-paths install
+         bgp missing-policy direction in action deny-in-out
+         bgp missing-policy direction out action deny-in-out
+         bgp additional-paths receive
+         bgp additional-paths send any
+         neighbor aa::1 activate
+         neighbor aa::1 additional-paths receive
+         neighbor aa::1 route-map FOO in
+         neighbor aa::1 route-map BAR out
+         neighbor aa::1 additional-paths send any
+         neighbor aa::2 activate
+         neighbor aa::2 rcf in VRF_AFIPV6_RCF_IN()
+         neighbor aa::2 rcf out VRF_AFIPV6_RCF_OUT()
+         network aa::/64
+         redistribute connected rcf VRF_AFIPV6_RCF_CONNECTED()
+         redistribute isis include leaked
+         redistribute ospfv3 match internal include leaked
+         redistribute ospfv3 match external
+         redistribute ospfv3 match nssa-external
+         redistribute static route-map VRF_AFIPV6_RM_STATIC
+      !
+      address-family ipv6 multicast
+         bgp missing-policy direction in action deny
+         bgp missing-policy direction out action deny
+         bgp additional-paths receive
+         neighbor aa::1 additional-paths receive
+         network ff08:1::/64
+         redistribute connected route-map VRF_AFIPV6MULTI_RM_CONNECTED
+         redistribute isis level-1-2 include leaked route-map VRF_AFIPV6MULTI_RM_ISIS
+         redistribute ospf route-map VRF_AFIPV6MULTI_RM_OSPF
+         redistribute ospfv3 match internal route-map VRF_AFIPV6MULTI_RM_OSPFv3
+         redistribute ospfv3 match external route-map VRF_AFIPV6MULTI_RM_OSPFv3
+         redistribute ospfv3 match nssa-external 1 route-map VRF_AFIPV6MULTI_RM_OSPFv3
+         redistribute ospf match external route-map VRF_AFIPV6MULTI_RM_OSPF
+         redistribute ospf match nssa-external 1 route-map VRF_AFIPV6MULTI_RM_OSPF
+         redistribute static route-map VRF_AFIPV6MULTI_RM_STATIC
+   !
+   vrf VRF02
+      neighbor 1.1.1.1 additional-paths receive
+      neighbor 1.1.1.1 additional-paths send ecmp limit 24
+      redistribute connected include leaked route-map RM_VRF_CONNECTED
+      redistribute isis level-2 include leaked route-map RM_VRF_ISIS
+      redistribute ospf include leaked route-map RM_VRF_OSPF
+      redistribute ospfv3 include leaked route-map RM_VRF_OSPFv3
+      redistribute ospfv3 match external include leaked route-map RM_VRF_OSPFv3
+      redistribute ospfv3 match nssa-external 1 include leaked route-map RM_VRF_OSPFv3
+      redistribute static include leaked
+      redistribute rip
+      redistribute attached-host route-map RM_VRF_HOST
+      redistribute dynamic route-map RM_VRF_DYNAMIC
+      redistribute bgp leaked route-map RM_VRF_BGP
+      redistribute user
+      !
+      address-family ipv4
+         bgp additional-paths send backup
+      !
+      address-family ipv6
+         bgp additional-paths send limit 3
+   !
+   vrf VRF03
+      maximum-paths 10 ecmp 10
+      bgp additional-paths send ecmp limit 4
+      redistribute dynamic rcf VRF_RCF_DYNAMIC()
+      !
+      address-family ipv4
+         bgp additional-paths install ecmp-primary
+         bgp additional-paths send ecmp
+   !
+   vrf YELLOW-C1
+      rd 1.0.1.1:103
+      bgp listen range 10.10.10.0/24 peer-group my-peer-group1 peer-filter my-peer-filter
+      bgp listen range 12.10.10.0/24 peer-id include router-id peer-group my-peer-group3 remote-as 65444
+      bgp listen range 13.10.10.0/24 peer-group my-peer-group4 peer-filter my-peer-filter
+      neighbor 10.1.1.0 peer group OBS_WAN
+      no neighbor 10.1.1.0 remove-private-as ingress
+   session tracker ST1
+      recovery delay 666 seconds
+   session tracker ST2
+      recovery delay 42 seconds
+   !
+   address-family evpn
+      evpn ethernet-segment domain all
+         identifier 0011:1111:1111:1111:1111
+         route-target import 00:01:00:01:00:01
+            !
+            layer-2 fec in-place update
 ```
 
 ### PBR Policy Maps
@@ -6069,6 +7792,18 @@ peer-filter PF2
 | -------- | ---- | ----- | --- | ------------- | -------- |
 | 10 | permit | - | ip next-hop 10.2.3.4 | - | - |
 
+##### RM-BGP-AGG-APPLY-SET
+
+| Sequence | Type | Match | Set | Sub-Route-Map | Continue |
+| -------- | ---- | ----- | --- | ------------- | -------- |
+| 10 | permit | - | local-preference 50 | - | - |
+
+##### RM-BGP-EXPORT-DEFAULT-BLUE-C1
+
+| Sequence | Type | Match | Set | Sub-Route-Map | Continue |
+| -------- | ---- | ----- | --- | ------------- | -------- |
+| 10 | permit | ip address prefix-list PL-BGP-DEFAULT-BLUE-C1 | - | - | - |
+
 ##### RM-CONN-BL-BGP
 
 | Sequence | Type | Match | Set | Sub-Route-Map | Continue |
@@ -6110,6 +7845,14 @@ peer-filter PF2
 !
 route-map RM-10.2.3.4-SET-NEXT-HOP-OUT permit 10
    set ip next-hop 10.2.3.4
+!
+route-map RM-BGP-AGG-APPLY-SET permit 10
+   description RM for BGP AGG Set
+   set local-preference 50
+!
+route-map RM-BGP-EXPORT-DEFAULT-BLUE-C1 permit 10
+   description RM for BGP default route in BLUE-C1
+   match ip address prefix-list PL-BGP-DEFAULT-BLUE-C1
 !
 route-map RM-CONN-BL-BGP deny 10
    match ip address prefix-list PL-MLAG

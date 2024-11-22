@@ -6,6 +6,9 @@ underlay_l2_port_channel_description: "{peer_node_group_or_uppercase_peer}_Po{pe
 
 default_node_types:
   - match_hostnames:
+      - inband-mgmt-spine.*
+    node_type: spine
+  - match_hostnames:
       - inband-mgmt-parent.*
     node_type: l3leaf
   - match_hostnames:
@@ -13,11 +16,36 @@ default_node_types:
     node_type: l2leaf
 
 default_interfaces:
+  - types: [ spine ]
+    platforms: [ default ]
+    downlink_interfaces: [ Ethernet1-10 ]
   - types: [ l3leaf, l2leaf ]
     platforms: [ default ]
     uplink_interfaces: [ Ethernet1-10 ]
     mlag_interfaces: [ Ethernet11-20 ]
     downlink_interfaces: [ Ethernet21-30 ]
+
+default_mgmt_method: none
+
+cvp_instance_ips:
+  - apiserver.arista.io
+
+name_servers:
+  - 1.1.1.1
+  - 8.8.8.8
+
+ntp_settings:
+  servers:
+    - name: 2.2.2.55
+    - name: pool.ntp.org
+
+spine:
+  defaults:
+    loopback_ipv4_pool: 10.0.254.0/24
+    bgp_as: 64999
+  nodes:
+    - name: inband-mgmt-spine1-ztp
+      id: 1
 
 l3leaf:
   defaults:
@@ -31,9 +59,15 @@ l3leaf:
   nodes:
     - name: inband-mgmt-parent
       id: 1
+      inband_ztp: true
+      uplink_switches: [inband-mgmt-spine1-ztp]
+      uplink_ipv4_pool: 172.16.255.0/24
     - name: inband-mgmt-parent-vrf
       inband_mgmt_vrf: INBANDMGMT
       id: 2
+      inband_ztp: true
+      uplink_switches: [inband-mgmt-spine1-ztp]
+      uplink_ipv4_pool: 172.16.255.0/24
   node_groups:
     - group: inband-mgmt-parents-dualstack
       mlag_peer_ipv4_pool: 100.64.0.0/24
