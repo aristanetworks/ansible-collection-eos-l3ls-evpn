@@ -32,7 +32,7 @@
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;neighbors</samp>](## "mpls.rsvp.neighbors") | List, items: Dictionary |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;ip_address</samp>](## "mpls.rsvp.neighbors.[].ip_address") | String |  |  |  | Neighbor's interface IPv4 address. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ipv6_address</samp>](## "mpls.rsvp.neighbors.[].ipv6_address") | String |  |  |  | Neighbor's interface IPv6 address. |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;authentication</samp>](## "mpls.rsvp.neighbors.[].authentication") | Dictionary | Required |  |  | Cryptographic authentication. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;authentication</samp>](## "mpls.rsvp.neighbors.[].authentication") | Dictionary |  |  |  | Cryptographic authentication. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;index</samp>](## "mpls.rsvp.neighbors.[].authentication.index") | Integer |  |  | Min: 1<br>Max: 4294967295 | Password index. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;type</samp>](## "mpls.rsvp.neighbors.[].authentication.type") | String |  |  | Valid Values:<br>- <code>md5</code><br>- <code>none</code> | Authentication mechanism. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;ip_access_group</samp>](## "mpls.rsvp.ip_access_group") | String |  |  |  | IPv4 Access list name. |
@@ -42,25 +42,25 @@
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;reversion</samp>](## "mpls.rsvp.fast_reroute.reversion") | String |  |  | Valid Values:<br>- <code>global</code><br>- <code>local</code> | Reversion behavior.<br>Global revertive repair.<br>Local revertive repair. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;bypass_tunnel_optimization_interval</samp>](## "mpls.rsvp.fast_reroute.bypass_tunnel_optimization_interval") | Integer |  |  | Min: 1<br>Max: 65535 | Fast-reroute bypass configuration.<br>Interval between each re-optimization attempt in seconds. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;srlg</samp>](## "mpls.rsvp.srlg") | Dictionary |  |  |  |  |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "mpls.rsvp.srlg.enabled") | Boolean | Required |  |  | Select SRLG behavior. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "mpls.rsvp.srlg.enabled") | Boolean |  |  |  | Select SRLG behavior. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;strict</samp>](## "mpls.rsvp.srlg.strict") | Boolean |  |  |  | Apply strict SRLG constraint. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;label_local_termination</samp>](## "mpls.rsvp.label_local_termination") | String |  |  | Valid Values:<br>- <code>implicit-null</code><br>- <code>explicit-null</code> | Local termination label to be advertised. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;preemption_method</samp>](## "mpls.rsvp.preemption_method") | Dictionary |  |  |  |  |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;preemption</samp>](## "mpls.rsvp.preemption_method.preemption") | String | Required |  | Valid Values:<br>- <code>hard</code><br>- <code>soft</code> |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;preemption</samp>](## "mpls.rsvp.preemption_method.preemption") | String |  |  | Valid Values:<br>- <code>hard</code><br>- <code>soft</code> |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;timer</samp>](## "mpls.rsvp.preemption_method.timer") | Integer |  |  | Min: 1<br>Max: 65535 | Timer value in units of seconds. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;mtu_signaling</samp>](## "mpls.rsvp.mtu_signaling") | Boolean |  |  |  | Enable MTU signaling. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;graceful_restart</samp>](## "mpls.rsvp.graceful_restart") | Dictionary |  |  |  | RSVP graceful restart. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;role_helper</samp>](## "mpls.rsvp.graceful_restart.role_helper") | Dictionary |  |  |  |  |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "mpls.rsvp.graceful_restart.role_helper.enabled") | Boolean | Required |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "mpls.rsvp.graceful_restart.role_helper.enabled") | Boolean |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;timer_recovery</samp>](## "mpls.rsvp.graceful_restart.role_helper.timer_recovery") | Integer |  |  | Min: 1<br>Max: 320 | Maximum recovery timer value in seconds. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;timer_restart</samp>](## "mpls.rsvp.graceful_restart.role_helper.timer_restart") | Integer |  |  | Min: 1<br>Max: 320 | Maximum restart timer value in seconds. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;role_speaker</samp>](## "mpls.rsvp.graceful_restart.role_speaker") | Dictionary |  |  |  |  |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "mpls.rsvp.graceful_restart.role_speaker.enabled") | Boolean | Required |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "mpls.rsvp.graceful_restart.role_speaker.enabled") | Boolean |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;timer_recovery</samp>](## "mpls.rsvp.graceful_restart.role_speaker.timer_recovery") | Integer |  |  | Min: 1<br>Max: 320 | Maximum recovery timer value in seconds. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;timer_restart</samp>](## "mpls.rsvp.graceful_restart.role_speaker.timer_restart") | Integer |  |  | Min: 1<br>Max: 320 | Maximum restart timer value in seconds. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;hello</samp>](## "mpls.rsvp.hello") | Dictionary |  |  |  |  |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;interval</samp>](## "mpls.rsvp.hello.interval") | Integer | Required |  | Min: 1<br>Max: 60 | Time between hello messages in seconds. |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;multiplier</samp>](## "mpls.rsvp.hello.multiplier") | Integer | Required |  | Min: 1<br>Max: 255 | Number of missed hellos after which the neighbor is expired. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;interval</samp>](## "mpls.rsvp.hello.interval") | Integer |  |  | Min: 1<br>Max: 60 | Time between hello messages in seconds. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;multiplier</samp>](## "mpls.rsvp.hello.multiplier") | Integer |  |  | Min: 1<br>Max: 255 | Number of missed hellos after which the neighbor is expired. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;hitless_restart</samp>](## "mpls.rsvp.hitless_restart") | Dictionary |  |  |  | RSVP hitless restart. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "mpls.rsvp.hitless_restart.enabled") | Boolean |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;timer_recovery</samp>](## "mpls.rsvp.hitless_restart.timer_recovery") | Integer |  |  | Min: 1<br>Max: 320 | Time stale states will be preserved after restart.<br>Value in seconds. |
@@ -129,7 +129,7 @@
             ipv6_address: <str>
 
             # Cryptographic authentication.
-            authentication: # required
+            authentication:
 
               # Password index.
               index: <int; 1-4294967295>
@@ -161,7 +161,7 @@
         srlg:
 
           # Select SRLG behavior.
-          enabled: <bool; required>
+          enabled: <bool>
 
           # Apply strict SRLG constraint.
           strict: <bool>
@@ -169,7 +169,7 @@
         # Local termination label to be advertised.
         label_local_termination: <str; "implicit-null" | "explicit-null">
         preemption_method:
-          preemption: <str; "hard" | "soft"; required>
+          preemption: <str; "hard" | "soft">
 
           # Timer value in units of seconds.
           timer: <int; 1-65535>
@@ -180,7 +180,7 @@
         # RSVP graceful restart.
         graceful_restart:
           role_helper:
-            enabled: <bool; required>
+            enabled: <bool>
 
             # Maximum recovery timer value in seconds.
             timer_recovery: <int; 1-320>
@@ -188,7 +188,7 @@
             # Maximum restart timer value in seconds.
             timer_restart: <int; 1-320>
           role_speaker:
-            enabled: <bool; required>
+            enabled: <bool>
 
             # Maximum recovery timer value in seconds.
             timer_recovery: <int; 1-320>
@@ -198,10 +198,10 @@
         hello:
 
           # Time between hello messages in seconds.
-          interval: <int; 1-60; required>
+          interval: <int; 1-60>
 
           # Number of missed hellos after which the neighbor is expired.
-          multiplier: <int; 1-255; required>
+          multiplier: <int; 1-255>
 
         # RSVP hitless restart.
         hitless_restart:

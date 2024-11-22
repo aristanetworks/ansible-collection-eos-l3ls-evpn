@@ -117,7 +117,6 @@ keys:
                 authentication:
                   description: Cryptographic authentication.
                   type: dict
-                  required: true
                   keys:
                     index:
                       description: Password index.
@@ -174,7 +173,6 @@ keys:
               enabled:
                 description: Select SRLG behavior.
                 type: bool
-                required: true
               strict:
                 description: Apply strict SRLG constraint.
                 type: bool
@@ -189,7 +187,6 @@ keys:
             keys:
               preemption:
                 type: str
-                required: true
                 valid_values:
                   - hard
                   - soft
@@ -212,7 +209,6 @@ keys:
                 keys:
                   enabled:
                     type: bool
-                    required: true
                   timer_recovery:
                     type: int
                     convert_types:
@@ -232,7 +228,6 @@ keys:
                 keys:
                   enabled:
                     type: bool
-                    required: true
                   timer_recovery:
                     type: int
                     convert_types:
@@ -253,7 +248,6 @@ keys:
               interval:
                 description: Time between hello messages in seconds.
                 type: int
-                required: true
                 convert_types:
                   - str
                 min: 1
@@ -261,7 +255,6 @@ keys:
               multiplier:
                 description: Number of missed hellos after which the neighbor is expired.
                 type: int
-                required: true
                 convert_types:
                   - str
                 min: 1

@@ -7419,17 +7419,17 @@ router bfd
 | Authentication active index | - |
 | IPv4 access-group | RSVP_access_group_ipv4 |
 | IPv6 access-group | RSVP_access_group_ipv6 |
-| SRLG strict | enabled |
+| SRLG strict | Enabled |
 | Label local-termination | explicit-null |
 | Preemption method | soft |
 | Preemption timer | 444 |
-| MTU signaling | True |
+| MTU signaling | Enabled |
 | Fast reroute mode | - |
 | Fast reroute reversion | local |
 | Fast reroute  bypass tunnel optimization interval | 65535 |
 | Hitless restart | Active |
 | Hitless restart recovery timer | 222 |
-| Shutdown | Active |
+| Shutdown | True |
 
 ##### RSVP Neighbor Authentication
 

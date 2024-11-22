@@ -35,7 +35,7 @@
 | IPv6 access-group | {{ mpls.rsvp.ipv6_access_group | arista.avd.default('-') }} |
 {%     endif %}
 {%     if mpls.rsvp.srlg.strict is arista.avd.defined(true) %}
-| SRLG strict | enabled |
+| SRLG strict | Enabled |
 {%     elif mpls.rsvp.srlg.enabled is arista.avd.defined(true) %}
 | SRLG | enabled |
 {%     endif %}
@@ -49,7 +49,7 @@
 {%         endif %}
 {%     endif %}
 {%     if mpls.rsvp.mtu_signaling is arista.avd.defined %}
-| MTU signaling | {{ mpls.rsvp.mtu_signaling | arista.avd.default('-') }} |
+| MTU signaling | Enabled |
 {%     endif %}
 {%     if mpls.rsvp.fast_reroute is arista.avd.defined %}
 {%         set fast_reroute = mpls.rsvp.fast_reroute %}
@@ -57,14 +57,12 @@
 | Fast reroute reversion | {{ fast_reroute.reversion | arista.avd.default('-') }} |
 | Fast reroute  bypass tunnel optimization interval | {{ fast_reroute.bypass_tunnel_optimization_interval | arista.avd.default('-') }} |
 {%     endif %}
-{%     if mpls.rsvp.hitless_restart is arista.avd.defined %}
+{%     if mpls.rsvp.hitless_restart.enabled is arista.avd.defined(true) %}
 | Hitless restart | Active |
 | Hitless restart recovery timer | {{ mpls.rsvp.hitless_restart.timer_recovery | arista.avd.default('-') }} |
 {%     endif %}
-{%     if mpls.rsvp.shutdown is arista.avd.defined(true) %}
-| Shutdown | Active |
-{%     elif mpls.rsvp.shutdown is arista.avd.defined(false) %}
-| No shutdown | Active |
+{%     if mpls.rsvp.shutdown is arista.avd.defined %}
+| Shutdown | {{ mpls.rsvp.shutdown }} |
 {%     endif %}
 {%     if mpls.rsvp.neighbors is arista.avd.defined %}
 

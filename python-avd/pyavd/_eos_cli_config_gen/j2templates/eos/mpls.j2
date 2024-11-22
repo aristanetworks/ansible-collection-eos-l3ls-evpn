@@ -46,7 +46,7 @@ mpls rsvp
    refresh method {{ mpls.rsvp.refresh.method }}
 {%         endif %}
 {%     endif %}
-{%     if mpls.rsvp.hello is arista.avd.defined %}
+{%     if mpls.rsvp.hello.interval is arista.avd.defined and mpls.rsvp.hello.multiplier is arista.avd.defined %}
    hello interval {{ mpls.rsvp.hello.interval }} multiplier {{ mpls.rsvp.hello.multiplier }}
 {%     endif %}
 {%     if mpls.rsvp.authentication is arista.avd.defined %}
