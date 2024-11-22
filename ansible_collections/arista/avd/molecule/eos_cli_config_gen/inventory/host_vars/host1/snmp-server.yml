@@ -113,7 +113,7 @@ snmp_server:
       remote_address: 42.42.42.42
       localized: DEADBEEFCAFE123456
       auth: sha
-      auth_passphrase: ShouldBeEncryptedPassword
+      auth_passphrase: DEADBEEFCAFE123456ABC1234321AB1233456778
   hosts:
     - host: 10.6.75.121
       vrf: MGMT
