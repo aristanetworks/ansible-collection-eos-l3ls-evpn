@@ -7594,7 +7594,7 @@ Make-before-break: False
 
 ##### IP Sparse Mode VRFs
 
-| VRF Name | BFD Enabled | Make Before Break |
+| VRF Name | BFD Enabled | Make-before-break |
 | -------- | ----------- | ----------------- |
 | MCAST_VRF1 | True | False |
 | MCAST_VRF2_ALL_GROUPS | False | - |
