@@ -2053,7 +2053,7 @@ keys:
                       keys:
                         strip:
                           type: bool
-                          description: Strip GRE encapsulation header. This key shoulde be `true` to generate GRE encapsulation config.
+                          description: Strip GRE encapsulation header.
                         protocols:
                           type: list
                           primary_key: protocol

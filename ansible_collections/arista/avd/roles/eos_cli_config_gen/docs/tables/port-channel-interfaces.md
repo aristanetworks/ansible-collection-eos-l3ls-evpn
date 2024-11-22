@@ -396,7 +396,7 @@
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;encapsulation</samp>](## "port_channel_interfaces.[].switchport.tap.encapsulation") | Dictionary |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;vxlan_strip</samp>](## "port_channel_interfaces.[].switchport.tap.encapsulation.vxlan_strip") | Boolean |  |  |  | Strip VXLAN encapsulation header.<br>`encapsulation.vxlan_strip` and `mpls_pop_all` are mutually exclusive.<br>`mpls_pop_all` takes precedence. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;gre</samp>](## "port_channel_interfaces.[].switchport.tap.encapsulation.gre") | Dictionary |  |  |  |  |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;strip</samp>](## "port_channel_interfaces.[].switchport.tap.encapsulation.gre.strip") | Boolean |  |  |  | Strip GRE encapsulation header. This key shoulde be `true` to generate GRE encapsulation config. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;strip</samp>](## "port_channel_interfaces.[].switchport.tap.encapsulation.gre.strip") | Boolean |  |  |  | Strip GRE encapsulation header. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;protocols</samp>](## "port_channel_interfaces.[].switchport.tap.encapsulation.gre.protocols") | List, items: Dictionary |  |  |  | Protocols for all destinations; destination-specific protocols should be set under the `destinations[].protocols` key. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;protocol</samp>](## "port_channel_interfaces.[].switchport.tap.encapsulation.gre.protocols.[].protocol") | String | Required, Unique |  |  | Protocol type in GRE header.<br>Protocol range: 0x0000-0xFFFF. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;feature_header_length</samp>](## "port_channel_interfaces.[].switchport.tap.encapsulation.gre.protocols.[].feature_header_length") | Integer |  |  | Min: 1<br>Max: 16 | Feature header length in bytes.<br>This setting does not reflect in the EOS running-config for protocol 0x0000. |
@@ -1320,7 +1320,7 @@
               vxlan_strip: <bool>
               gre:
 
-                # Strip GRE encapsulation header. This key shoulde be `true` to generate GRE encapsulation config.
+                # Strip GRE encapsulation header.
                 strip: <bool>
 
                 # Protocols for all destinations; destination-specific protocols should be set under the `destinations[].protocols` key.
