@@ -7600,6 +7600,13 @@ Make-before-break: False
 | MCAST_VRF2_ALL_GROUPS | False | - |
 | Test_RP_ACL | False | True |
 
+| VRF Name | Rendezvous Point Address | Group Address | Access Lists | Priority | Hashmask | Override |
+| -------- | ------------------------ | ------------- | ------------ | -------- | -------- | -------- |
+| MCAST_VRF1 | 10.238.2.161 | 239.12.22.12/32, 239.12.22.13/32, 239.12.22.14/32 | - | - | - | - |
+| MCAST_VRF2_ALL_GROUPS | 10.238.3.161 | - | - | - | 30 | - |
+| Test_RP_ACL | 10.238.4.161 | - | RP_ACL | - | - | - |
+| Test_RP_ACL | 10.238.4.161 | - | RP_ACL2 | 20 | 30 | True |
+
 ##### Router Multicast Device Configuration
 
 ```eos

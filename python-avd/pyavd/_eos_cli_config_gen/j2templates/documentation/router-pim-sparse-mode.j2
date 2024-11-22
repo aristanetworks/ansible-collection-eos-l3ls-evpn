@@ -49,14 +49,14 @@ Make-before-break: {{ router_pim_sparse_mode.ipv4.make_before_break }}
 
 ##### IP Sparse Mode VRFs
 
-{%         set any_ipv4_ip_addresses = False %}
+{%         set any_ipv4_ip_addresses = namespace(present=false) %}
 | VRF Name | BFD Enabled | Make Before Break |
 | -------- | ----------- | ----------------- |
 {%         for vrf in router_pim_sparse_mode.vrfs | arista.avd.natural_sort('name') %}
-{%             set any_ipv4_ip_addresses =  any_ipv4_ip_addresses or (vrf.ipv4.rp_addresses is arista.avd.defined and (vrf.ipv4.rp_addresses | length) > 0) %}
+{%             set any_ipv4_ip_addresses.present =  any_ipv4_ip_addresses.present or (vrf.ipv4.rp_addresses is arista.avd.defined and (vrf.ipv4.rp_addresses | length) > 0) %}
 | {{ vrf.name }} | {{ vrf.ipv4.bfd | arista.avd.default(false) }} | {{ vrf.ipv4.make_before_break | default("-") }} |
 {%         endfor %}
-{%         if any_ipv4_ip_addresses %}
+{%         if any_ipv4_ip_addresses.present %}
 
 | VRF Name | Rendezvous Point Address | Group Address | Access Lists | Priority | Hashmask | Override |
 | -------- | ------------------------ | ------------- | ------------ | -------- | -------- | -------- |
