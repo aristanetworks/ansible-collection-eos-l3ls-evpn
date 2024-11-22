@@ -170,9 +170,16 @@ ethernet_interfaces:
     enabled: false
   shutdown: false
   ip_address: 200.200.200.101/24
-  description: P2P_DC2-POD1-SPINE2_Ethernet5
   ptp:
+    announce:
+      interval: 0
+      timeout: 3
+    delay_req: -3
+    sync_message:
+      interval: -3
+    transport: ipv4
     enable: true
+  description: P2P_DC2-POD1-SPINE2_Ethernet5
 loopback_interfaces:
 - name: Loopback0
   description: ROUTER_ID

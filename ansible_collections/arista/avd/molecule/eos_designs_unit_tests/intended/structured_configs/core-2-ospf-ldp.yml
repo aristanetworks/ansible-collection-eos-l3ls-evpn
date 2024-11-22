@@ -199,15 +199,6 @@ ethernet_interfaces:
   shutdown: false
   mtu: 1500
   ip_address: 100.64.48.13/31
-  ospf_network_point_to_point: true
-  ospf_area: 0.0.0.0
-  mpls:
-    ip: true
-    ldp:
-      interface: true
-      igp_sync: true
-  description: P2P_LINK_TO_CORE-1-ISIS-SR-LDP_Ethernet10
-  speed: forced 1000full
   ptp:
     announce:
       interval: 0
@@ -217,6 +208,15 @@ ethernet_interfaces:
       interval: -3
     transport: ipv4
     enable: true
+  ospf_network_point_to_point: true
+  ospf_area: 0.0.0.0
+  mpls:
+    ip: true
+    ldp:
+      interface: true
+      igp_sync: true
+  description: P2P_LINK_TO_CORE-1-ISIS-SR-LDP_Ethernet10
+  speed: forced 1000full
 - name: Ethernet12
   peer: core-1-isis-sr-ldp
   peer_interface: Ethernet12
@@ -323,15 +323,6 @@ port_channel_interfaces:
   shutdown: false
   mtu: 1500
   ip_address: 100.64.48.17/31
-  ipv6_enable: true
-  ospf_network_point_to_point: true
-  ospf_area: 0.0.0.0
-  mpls:
-    ip: true
-    ldp:
-      interface: true
-      igp_sync: true
-  description: CUSTOM_DESCRIPTION_ON_P2P_LINK_B
   ptp:
     announce:
       interval: 0
@@ -341,3 +332,12 @@ port_channel_interfaces:
       interval: -3
     transport: ipv4
     enable: true
+  ipv6_enable: true
+  ospf_network_point_to_point: true
+  ospf_area: 0.0.0.0
+  mpls:
+    ip: true
+    ldp:
+      interface: true
+      igp_sync: true
+  description: CUSTOM_DESCRIPTION_ON_P2P_LINK_B

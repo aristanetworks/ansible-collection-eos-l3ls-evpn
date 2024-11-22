@@ -170,11 +170,18 @@ ethernet_interfaces:
     enabled: false
   shutdown: false
   ip_address: 11.1.2.0/31
+  ptp:
+    announce:
+      interval: 0
+      timeout: 3
+    delay_req: -3
+    sync_message:
+      interval: -3
+    transport: ipv4
+    enable: true
   mac_security:
     profile: MACSEC_PROFILE
   description: P2P_DC2-SUPER-SPINE1_Ethernet4
-  ptp:
-    enable: true
 loopback_interfaces:
 - name: Loopback0
   description: ROUTER_ID

@@ -254,6 +254,15 @@ ethernet_interfaces:
   shutdown: false
   mtu: 1500
   ip_address: 100.64.48.12/31
+  ptp:
+    announce:
+      interval: 0
+      timeout: 3
+    delay_req: -3
+    sync_message:
+      interval: -3
+    transport: ipv4
+    enable: true
   isis_enable: CORE
   isis_metric: 50
   isis_network_point_to_point: true
@@ -266,15 +275,6 @@ ethernet_interfaces:
       igp_sync: true
   description: P2P_LINK_TO_CORE-2-OSPF-LDP_Ethernet10
   speed: forced 1000full
-  ptp:
-    announce:
-      interval: 0
-      timeout: 3
-    delay_req: -3
-    sync_message:
-      interval: -3
-    transport: ipv4
-    enable: true
 - name: Ethernet12
   peer: core-2-ospf-ldp
   peer_interface: Ethernet12
@@ -460,6 +460,15 @@ port_channel_interfaces:
   shutdown: false
   mtu: 1500
   ip_address: 100.64.48.16/31
+  ptp:
+    announce:
+      interval: 0
+      timeout: 3
+    delay_req: -3
+    sync_message:
+      interval: -3
+    transport: ipv4
+    enable: true
   ipv6_enable: true
   isis_enable: CORE
   isis_metric: 60
@@ -477,12 +486,3 @@ port_channel_interfaces:
       interface: true
       igp_sync: true
   description: CUSTOM_DESCRIPTION_ON_P2P_LINK_A
-  ptp:
-    announce:
-      interval: 0
-      timeout: 3
-    delay_req: -3
-    sync_message:
-      interval: -3
-    transport: ipv4
-    enable: true

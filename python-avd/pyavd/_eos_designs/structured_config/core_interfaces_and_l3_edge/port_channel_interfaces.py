@@ -37,9 +37,6 @@ class PortChannelInterfacesMixin(UtilsMixin):
             # Remove None values
             port_channel_interface = {key: value for key, value in port_channel_interface.items() if value is not None}
 
-            if get(p2p_link, "ptp.enabled") and (ptp_config := self._get_interface_ptp_config(p2p_link)) is not None:
-                port_channel_interface["ptp"] = ptp_config
-
             port_channel_interfaces.append(port_channel_interface)
 
         if port_channel_interfaces:
