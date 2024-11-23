@@ -134,7 +134,7 @@ class AvdValidator:
             # Perform regular validation of the child schema if we don't have dynamic valid values.
             if "dynamic_valid_values" not in childschema:
                 yield from self.validate(instance[key], childschema, path=[*path, key])
-                return
+                continue
 
             # First copy things we modify in the schema for dynamic valid values.
             modified_childschema = childschema.copy()
