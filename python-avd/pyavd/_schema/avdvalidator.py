@@ -60,37 +60,30 @@ class AvdValidator:
         if not instance:
             return
 
-        if not all(self.is_type(element, "dict") for element in instance):
-            return
-
         for unique_key in unique_keys:
-            if not (paths_and_values := tuple(get_all_with_path(instance, unique_key))):
+            unique_key_path = unique_key.split(".")
+            if not (paths_and_values := tuple(get_all_with_path(instance, unique_key_path))):
                 # No values matching the unique key, check the next unique_key
                 continue
 
             # Separate all paths and values
             paths, values = zip(*paths_and_values, strict=False)
 
-            key = unique_key.split(".")[-1]
-            is_nested_key = unique_key != key
-
             # Find any duplicate values and emit errors for each index.
             for duplicate_value, duplicate_indices in get_indices_of_duplicate_items(values):
                 for duplicate_index in duplicate_indices:
                     yield AvdValidationError(
-                        f"The value '{duplicate_value}' is not unique between all {'nested ' if is_nested_key else ''}list items as required.",
-                        path=[*path, *paths[duplicate_index], key],
+                        f"The value '{duplicate_value}' is not unique between all {'nested ' if len(unique_key_path) > 1 else ''}list items as required.",
+                        path=[*path, *paths[duplicate_index], unique_key_path[-1]],
                     )
 
     def primary_key_validator(self, primary_key: str, instance: list, schema: dict, path: list[str | int]) -> Generator:
         if not instance:
             return
 
-        if not all(self.is_type(element, "dict") for element in instance):
-            return
-
-        if not all(element.get(primary_key) is not None for element in instance):
-            yield AvdValidationError(f"Primary key '{primary_key}' is not set on all items as required.", path=path)
+        for index, element in enumerate(instance):
+            if self.is_type(element, "dict") and element.get(primary_key) is None:
+                yield AvdValidationError(f"Primary key '{primary_key}' is not set on list item as required.", path=[*path, index])
 
         if not schema.get("allow_duplicate_primary_key"):
             # Reusing the unique keys validator
@@ -108,27 +101,28 @@ class AvdValidator:
         - Expand "dynamic_valid_values" under child keys (don't perform validation).
         """
         # Compile schema_dynamic_keys and add to "dynamic_keys"
-        schema_dynamic_keys = schema.get("dynamic_keys", {})
-        dynamic_keys = {}
-        for dynamic_key, childschema in schema_dynamic_keys.items():
-            instance_with_defaults = get_instance_with_defaults(instance, dynamic_key, schema)
-            resolved_keys = get_all(instance_with_defaults, dynamic_key)
-            for resolved_key in resolved_keys:
-                dynamic_keys.setdefault(resolved_key, childschema)
+        if schema_dynamic_keys := schema.get("dynamic_keys"):
+            dynamic_keys = {}
+            for dynamic_key, childschema in schema_dynamic_keys.items():
+                instance_with_defaults = get_instance_with_defaults(instance, dynamic_key, schema)
+                resolved_keys = get_all(instance_with_defaults, dynamic_key)
+                for resolved_key in resolved_keys:
+                    dynamic_keys.setdefault(resolved_key, childschema)
 
-        all_keys = ChainMap(keys, dynamic_keys)
+            all_keys = ChainMap(keys, dynamic_keys)
+        else:
+            all_keys = keys
 
         # Validation of "allow_other_keys"
         if not schema.get("allow_other_keys", False):
             # Check that instance only contains the schema keys
-            invalid_keys = ", ".join([key for key in instance if key not in all_keys and key[0] != "_"])
+            invalid_keys = ", ".join([key for key in instance if key not in all_keys and not key.startswith("_")])
             if invalid_keys:
                 yield AvdValidationError(f"Unexpected key(s) '{invalid_keys}' found in dict.", path=path)
 
         # Run over child keys and check for required and update child schema with dynamic valid values before
         # descending into validation of child schema.
-        for key in all_keys:
-            childschema = all_keys[key].copy()
+        for key, childschema in all_keys.items():
             if instance.get(key) is None:
                 # Validation of "required" on child keys
                 if childschema.get("required"):
@@ -137,18 +131,21 @@ class AvdValidator:
                 # Skip further validation since there is nothing to validate.
                 continue
 
-            # Expand "dynamic_valid_values" in child schema and add to "valid_values"
-            if "dynamic_valid_values" in childschema:
-                for dynamic_valid_value in childschema["dynamic_valid_values"]:
-                    instance_with_defaults = get_instance_with_defaults(instance, dynamic_valid_value, schema)
-                    childschema.setdefault("valid_values", []).extend(get_all(instance_with_defaults, dynamic_valid_value))
+            # Perform regular validation of the child schema if we don't have dynamic valid values.
+            if "dynamic_valid_values" not in childschema:
+                yield from self.validate(instance[key], childschema, path=[*path, key])
+                return
 
-            # Perform regular validation of the child schema.
-            yield from self.validate(
-                instance[key],
-                childschema,
-                path=[*path, key],
-            )
+            # First copy things we modify in the schema for dynamic valid values.
+            modified_childschema = childschema.copy()
+            modified_childschema["valid_values"] = modified_childschema.get("valid_values", []).copy()
+            # Expand "dynamic_valid_values" in child schema and add to "valid_values"
+            for dynamic_valid_value in modified_childschema["dynamic_valid_values"]:
+                instance_with_defaults = get_instance_with_defaults(instance, dynamic_valid_value, schema)
+                modified_childschema["valid_values"].extend(get_all(instance_with_defaults, dynamic_valid_value))
+
+            # Perform validation of the modified childschema.
+            yield from self.validate(instance[key], modified_childschema, path=[*path, key])
 
     def dynamic_keys_validator(self, _dynamic_keys: dict, instance: dict, schema: dict, path: list[str | int]) -> Generator:
         """This function triggers the regular "keys" validator in case only dynamic_keys is set."""
@@ -215,7 +212,7 @@ class AvdValidator:
         if match(pattern, instance) is None:
             yield AvdValidationError(f"The value '{instance}' is not matching the pattern '{pattern}'.", path=path)
 
-    def is_type(self, instance: Any, type_str: Literal["dict", "int", "str", "bool"]) -> bool:
+    def is_type(self, instance: Any, type_str: Literal["dict", "int", "str", "bool", "list"]) -> bool:
         match type_str:
             case "int":
                 return isinstance(instance, int)
