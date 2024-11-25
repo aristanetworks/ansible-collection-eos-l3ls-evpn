@@ -832,15 +832,17 @@ interface {{ port_channel_interface.name }}
    switchport tap encapsulation vxlan strip
 {%         endif %}
 {%         for protocol in port_channel_interface.switchport.tap.encapsulation.gre.protocols | arista.avd.natural_sort('protocol') %}
-{%             set tap_encapsulation_cli = "switchport tap encapsulation gre protocol " ~ protocol.protocol %}
-{%             if protocol.feature_header_length is arista.avd.defined %}
-{%                 set tap_encapsulation_cli = tap_encapsulation_cli ~ " feature header length " ~ protocol.feature_header_length %}
-{%             endif %}
-{%             set tap_encapsulation_cli = tap_encapsulation_cli ~ " strip" %}
-{%             if protocol.re_encapsulation_ethernet_header is arista.avd.defined(true) %}
-{%                 set tap_encapsulation_cli = tap_encapsulation_cli ~ " re-encapsulation ethernet" %}
-{%             endif %}
+{%             if protocol.strip is arista.avd.defined(true) %}
+{%                 set tap_encapsulation_cli = "switchport tap encapsulation gre protocol " ~ protocol.protocol %}
+{%                 if protocol.feature_header_length is arista.avd.defined %}
+{%                     set tap_encapsulation_cli = tap_encapsulation_cli ~ " feature header length " ~ protocol.feature_header_length %}
+{%                 endif %}
+{%                 set tap_encapsulation_cli = tap_encapsulation_cli ~ " strip" %}
+{%                 if protocol.re_encapsulation_ethernet_header is arista.avd.defined(true) %}
+{%                     set tap_encapsulation_cli = tap_encapsulation_cli ~ " re-encapsulation ethernet" %}
+{%                 endif %}
    {{ tap_encapsulation_cli }}
+{%             endif %}
 {%         endfor %}
 {%         if port_channel_interface.switchport.tap.encapsulation.gre.strip is arista.avd.defined(true) %}
    switchport tap encapsulation gre strip
@@ -851,17 +853,19 @@ interface {{ port_channel_interface.name }}
 {%                 set tap_encapsulation_cli = tap_encapsulation_cli ~ " source " ~ destination.source %}
 {%             endif %}
 {%             for destination_protocol in destination.protocols | arista.avd.natural_sort('protocol') %}
-{%                 set tap_encapsulation_cli = tap_encapsulation_cli ~ " protocol " ~ destination_protocol.protocol %}
-{%                 if destination_protocol.feature_header_length is arista.avd.defined %}
-{%                     set tap_encapsulation_cli = tap_encapsulation_cli ~ " feature header length " ~ destination_protocol.feature_header_length %}
+{%                 if destination_protocol.strip is arista.avd.defined(true) %}
+{%                     set tap_encapsulation_protocol_cli = tap_encapsulation_cli ~ " protocol " ~ destination_protocol.protocol %}
+{%                     if destination_protocol.feature_header_length is arista.avd.defined %}
+{%                         set tap_encapsulation_protocol_cli = tap_encapsulation_protocol_cli ~ " feature header length " ~ destination_protocol.feature_header_length %}
+{%                     endif %}
+{%                     set tap_encapsulation_protocol_cli = tap_encapsulation_protocol_cli ~ " strip" %}
+{%                     if destination_protocol.re_encapsulation_ethernet_header is arista.avd.defined(true) %}
+{%                         set tap_encapsulation_protocol_cli = tap_encapsulation_protocol_cli ~ " re-encapsulation ethernet" %}
+{%                     endif %}
+   {{ tap_encapsulation_protocol_cli }}
 {%                 endif %}
-{%                 set tap_encapsulation_cli = tap_encapsulation_cli ~ " strip" %}
-{%                 if destination_protocol.re_encapsulation_ethernet_header is arista.avd.defined(true) %}
-{%                     set tap_encapsulation_cli = tap_encapsulation_cli ~ " re-encapsulation ethernet" %}
-{%                 endif %}
-   {{ tap_encapsulation_cli }}
 {%             endfor %}
-{%             if destination.protocols is not arista.avd.defined %}
+{%             if destination.strip is arista.avd.defined(true) %}
 {%                 set tap_encapsulation_cli = tap_encapsulation_cli ~ " strip" %}
    {{ tap_encapsulation_cli }}
 {%             endif %}

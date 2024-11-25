@@ -1798,25 +1798,35 @@ ethernet_interfaces:
                 source: 1.1.1.2
                 protocols:
                   - protocol: "0x0000"
+                    strip: true
+                strip: true
               - destination: 2.1.1.2
                 protocols:
                   - protocol: "0x0010"
+                    strip: true
                   - protocol: "0x0011"
                     feature_header_length: 2
                     re_encapsulation_ethernet_header: true
+                    strip: true
                   - protocol: "0x0012"
                     re_encapsulation_ethernet_header: true
+                    strip: true
               - destination: 2.1.1.3
                 source: 2.1.1.4
+                strip: true
             protocols:
               - protocol: "0x0001"
+                strip: true
               - protocol: "0x0002"
                 feature_header_length: 3
+                strip: true
               - protocol: "0x0003"
                 feature_header_length: 2
                 re_encapsulation_ethernet_header: true
+                strip: true
               - protocol: "0x0004"
                 re_encapsulation_ethernet_header: true
+                strip: true
       tool:
         mpls_pop_all: true
         encapsulation:

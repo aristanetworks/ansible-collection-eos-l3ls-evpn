@@ -3520,6 +3520,7 @@ interface Ethernet82
    switchport tap encapsulation gre protocol 0x0004 strip re-encapsulation ethernet
    switchport tap encapsulation gre strip
    switchport tap encapsulation gre destination 1.1.1.1 source 1.1.1.2 protocol 0x0000 strip
+   switchport tap encapsulation gre destination 1.1.1.1 source 1.1.1.2 strip
    switchport tap encapsulation gre destination 2.1.1.2 protocol 0x0010 strip
    switchport tap encapsulation gre destination 2.1.1.2 protocol 0x0011 feature header length 2 strip re-encapsulation ethernet
    switchport tap encapsulation gre destination 2.1.1.2 protocol 0x0012 strip re-encapsulation ethernet
@@ -4283,6 +4284,7 @@ interface Port-Channel133
    switchport tap encapsulation gre protocol 0x0010 strip
    switchport tap encapsulation gre strip
    switchport tap encapsulation gre destination 1.1.1.1 source 1.1.1.2 protocol 0x0000 strip
+   switchport tap encapsulation gre destination 1.1.1.1 source 1.1.1.2 strip
    switchport tap encapsulation gre destination 1.1.1.3 source 1.1.1.4 strip
    switchport tap encapsulation gre destination 2.1.1.2 protocol 0x0001 strip
    switchport tap encapsulation gre destination 2.1.1.2 protocol 0x0002 feature header length 2 strip re-encapsulation ethernet

@@ -2053,7 +2053,7 @@ keys:
                       keys:
                         strip:
                           type: bool
-                          description: Strip GRE encapsulation header.
+                          description: Strip GRE encapsulation header without protocols.
                         protocols:
                           type: list
                           primary_key: protocol
@@ -2066,6 +2066,10 @@ keys:
                                 description: |-
                                   Protocol type in GRE header.
                                   Protocol range: 0x0000-0xFFFF.
+                              strip:
+                                type: bool
+                                description: |-
+                                  This is a required key to strip GRE encapsulation header with protocols.
                               feature_header_length:
                                 description: |-
                                   Feature header length in bytes.
@@ -2092,6 +2096,9 @@ keys:
                               source:
                                 description: Source IP address of tunnel packets. Applied only when destination is defined.
                                 type: str
+                              strip:
+                                type: bool
+                                description: Strip GRE encapsulation header for sepecific destination without protocol.
                               protocols:
                                 type: list
                                 primary_key: protocol
@@ -2103,6 +2110,9 @@ keys:
                                       description: |-
                                         Protocol type in GRE header.
                                         Protocol range: 0x0000-0xFFFF.
+                                    strip:
+                                      type: bool
+                                      description: This is a required key to strip GRE encapsulation header for specific destination with protocols.
                                     feature_header_length:
                                       description: |-
                                         Feature header length in bytes.
