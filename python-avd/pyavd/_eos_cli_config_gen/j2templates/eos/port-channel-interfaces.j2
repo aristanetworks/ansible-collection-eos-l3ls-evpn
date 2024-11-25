@@ -645,12 +645,98 @@ interface {{ port_channel_interface.name }}
 {%     if port_channel_interface.isis_network_point_to_point is arista.avd.defined(true) %}
    isis network point-to-point
 {%     endif %}
-{%     if port_channel_interface.isis_authentication_mode is arista.avd.defined and
-          port_channel_interface.isis_authentication_mode in ["text", "md5"] %}
+{%     if port_channel_interface.isis_authentication is arista.avd.defined %}
+{%         if port_channel_interface.isis_authentication.both.mode is arista.avd.defined
+              and (port_channel_interface.isis_authentication.both.mode in ["md5", "text"]
+                   or (port_channel_interface.isis_authentication.both.mode == "sha" and port_channel_interface.isis_authentication.both.sha.key_id is arista.avd.defined)
+                   or (port_channel_interface.isis_authentication.both.mode == "shared-secret" and port_channel_interface.isis_authentication.both.shared_secret is arista.avd.defined)) %}
+{%             set isis_auth_cli = "isis authentication mode " ~ port_channel_interface.isis_authentication.both.mode %}
+{%             if port_channel_interface.isis_authentication.both.mode == "sha" %}
+{%                 set isis_auth_cli = isis_auth_cli ~ " key-id " ~ port_channel_interface.isis_authentication.both.sha.key_id %}
+{%             elif port_channel_interface.isis_authentication.both.mode == "shared-secret" %}
+{%                 set isis_auth_cli = isis_auth_cli ~ " profile " ~ port_channel_interface.isis_authentication.both.shared_secret.profile ~ " algorithm " ~ port_channel_interface.isis_authentication.both.shared_secret.algorithm %}
+{%             endif %}
+{%             if port_channel_interface.isis_authentication.both.rx_disabled is arista.avd.defined(true) %}
+{%                 set isis_auth_cli = isis_auth_cli ~ " rx-disabled" %}
+{%             endif %}
+   {{ isis_auth_cli }}
+{%         else %}
+{%             if port_channel_interface.isis_authentication.level_1.mode is arista.avd.defined
+                   and (port_channel_interface.isis_authentication.level_1.mode in ["md5", "text"]
+                   or (port_channel_interface.isis_authentication.level_1.mode == "sha" and port_channel_interface.isis_authentication.level_1.sha.key_id is arista.avd.defined)
+                   or (port_channel_interface.isis_authentication.level_1.mode == "shared-secret" and port_channel_interface.isis_authentication.level_1.shared_secret is arista.avd.defined)) %}
+{%                 set isis_auth_cli = "isis authentication mode " ~ port_channel_interface.isis_authentication.level_1.mode %}
+{%                 if port_channel_interface.isis_authentication.level_1.mode == "sha" %}
+{%                     set isis_auth_cli = isis_auth_cli ~ " key-id " ~ port_channel_interface.isis_authentication.level_1.sha.key_id %}
+{%                 elif port_channel_interface.isis_authentication.level_1.mode == "shared-secret" %}
+{%                     set isis_auth_cli = isis_auth_cli ~ " profile " ~ port_channel_interface.isis_authentication.level_1.shared_secret.profile ~ " algorithm " ~ port_channel_interface.isis_authentication.level_1.shared_secret.algorithm %}
+{%                 endif %}
+{%                 if port_channel_interface.isis_authentication.level_1.rx_disabled is arista.avd.defined(true) %}
+{%                     set isis_auth_cli = isis_auth_cli ~ " rx-disabled" %}
+{%                 endif %}
+   {{ isis_auth_cli }} level-1
+{%             endif %}
+{%             if port_channel_interface.isis_authentication.level_2.mode is arista.avd.defined
+                   and (port_channel_interface.isis_authentication.level_2.mode in ["md5", "text"]
+                   or (port_channel_interface.isis_authentication.level_2.mode == "sha" and port_channel_interface.isis_authentication.level_2.sha.key_id is arista.avd.defined)
+                   or (port_channel_interface.isis_authentication.level_2.mode == "shared-secret" and port_channel_interface.isis_authentication.level_2.shared_secret is arista.avd.defined)) %}
+{%                 set isis_auth_cli = "isis authentication mode " ~ port_channel_interface.isis_authentication.level_2.mode %}
+{%                 if port_channel_interface.isis_authentication.level_2.mode == "sha" %}
+{%                     set isis_auth_cli = isis_auth_cli ~ " key-id " ~ port_channel_interface.isis_authentication.level_2.sha.key_id %}
+{%                 elif port_channel_interface.isis_authentication.level_2.mode == "shared-secret" %}
+{%                     set isis_auth_cli = isis_auth_cli ~ " profile " ~ port_channel_interface.isis_authentication.level_2.shared_secret.profile ~ " algorithm " ~ port_channel_interface.isis_authentication.level_2.shared_secret.algorithm %}
+{%                 endif %}
+{%                 if port_channel_interface.isis_authentication.level_2.rx_disabled is arista.avd.defined(true) %}
+{%                     set isis_auth_cli = isis_auth_cli ~ " rx-disabled" %}
+{%                 endif %}
+   {{ isis_auth_cli }} level-2
+{%             endif %}
+{%         endif %}
+{%         set both_key_ids = [] %}
+{%         for auth_key in port_channel_interface.isis_authentication.both.key_ids | arista.avd.natural_sort("id") %}
+{%             do both_key_ids.append(auth_key.id) %}
+{%             if auth_key.rfc_5310 is arista.avd.defined(true) %}
+   isis authentication key-id {{ auth_key.id }} algorithm {{ auth_key.algorithm }} rfc-5310 key {{ auth_key.key_type }} {{ auth_key.key | arista.avd.hide_passwords(hide_passwords) }}
+{%             else %}
+   isis authentication key-id {{ auth_key.id }} algorithm {{ auth_key.algorithm }} key {{ auth_key.key_type }} {{ auth_key.key | arista.avd.hide_passwords(hide_passwords) }}
+{%             endif %}
+{%         endfor %}
+{%         for auth_key in port_channel_interface.isis_authentication.level_1.key_ids | arista.avd.natural_sort("id") %}
+{%             if auth_key.id not in both_key_ids %}
+{%                 if auth_key.rfc_5310 is arista.avd.defined(true) %}
+   isis authentication key-id {{ auth_key.id }} algorithm {{ auth_key.algorithm }} rfc-5310 key {{ auth_key.key_type }} {{ auth_key.key | arista.avd.hide_passwords(hide_passwords) }} level-1
+{%                 else %}
+   isis authentication key-id {{ auth_key.id }} algorithm {{ auth_key.algorithm }} key {{ auth_key.key_type }} {{ auth_key.key | arista.avd.hide_passwords(hide_passwords) }} level-1
+{%                 endif %}
+{%             endif %}
+{%         endfor %}
+{%         for auth_key in port_channel_interface.isis_authentication.level_2.key_ids | arista.avd.natural_sort("id") %}
+{%             if auth_key.id not in both_key_ids %}
+{%                 if auth_key.rfc_5310 is arista.avd.defined(true) %}
+   isis authentication key-id {{ auth_key.id }} algorithm {{ auth_key.algorithm }} rfc-5310 key {{ auth_key.key_type }} {{ auth_key.key | arista.avd.hide_passwords(hide_passwords) }} level-2
+{%                 else %}
+   isis authentication key-id {{ auth_key.id }} algorithm {{ auth_key.algorithm }} key {{ auth_key.key_type }} {{ auth_key.key | arista.avd.hide_passwords(hide_passwords) }} level-2
+{%                 endif %}
+{%             endif %}
+{%         endfor %}
+{%         if port_channel_interface.isis_authentication.both.key_type is arista.avd.defined and port_channel_interface.isis_authentication.both.key is arista.avd.defined %}
+   isis authentication key {{ port_channel_interface.isis_authentication.both.key_type }} {{ port_channel_interface.isis_authentication.both.key | arista.avd.hide_passwords(hide_passwords) }}
+{%         else %}
+{%             if port_channel_interface.isis_authentication.level_1.key_type is arista.avd.defined and port_channel_interface.isis_authentication.level_1.key is arista.avd.defined %}
+   isis authentication key {{ port_channel_interface.isis_authentication.level_1.key_type }} {{ port_channel_interface.isis_authentication.level_1.key | arista.avd.hide_passwords(hide_passwords) }} level-1
+{%             endif %}
+{%             if port_channel_interface.isis_authentication.level_2.key_type is arista.avd.defined and port_channel_interface.isis_authentication.level_2.key is arista.avd.defined %}
+   isis authentication key {{ port_channel_interface.isis_authentication.level_2.key_type }} {{ port_channel_interface.isis_authentication.level_2.key | arista.avd.hide_passwords(hide_passwords) }} level-2
+{%             endif %}
+{%         endif %}
+{%     else %}
+{%         if port_channel_interface.isis_authentication_mode is arista.avd.defined and
+              port_channel_interface.isis_authentication_mode in ["text", "md5"] %}
    isis authentication mode {{ port_channel_interface.isis_authentication_mode }}
-{%     endif %}
-{%     if port_channel_interface.isis_authentication_key is arista.avd.defined %}
+{%         endif %}
+{%         if port_channel_interface.isis_authentication_key is arista.avd.defined %}
    isis authentication key 7 {{ port_channel_interface.isis_authentication_key | arista.avd.hide_passwords(hide_passwords) }}
+{%         endif %}
 {%     endif %}
 {%     for section in port_channel_interface.storm_control | arista.avd.natural_sort %}
 {%         if section != "all" %}

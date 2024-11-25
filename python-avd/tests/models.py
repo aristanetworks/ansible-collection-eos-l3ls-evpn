@@ -21,6 +21,7 @@ if TYPE_CHECKING:
 
 REPO_ROOT = Path(__file__).parents[2]
 MOLECULE_PATH = REPO_ROOT / "ansible_collections/arista/avd/molecule"
+EXAMPLE_PATH = REPO_ROOT / "ansible_collections/arista/avd/examples"
 
 
 class MoleculeHost:
@@ -86,12 +87,24 @@ class MoleculeScenario:
         for each host found in the inventory.
         """
         self.name = name
-        self.path = MOLECULE_PATH / name
-        self._inventory = InventoryManager(loader=DataLoader(), sources=[(self.path / "inventory/hosts.yml").as_posix()])
+        if name.startswith("example-"):
+            # Example paths
+            self.path = EXAMPLE_PATH / name.removeprefix("example-")
+            inventory_path = self.path / "inventory.yml"
+        else:
+            # Molecule paths
+            self.path = MOLECULE_PATH / name
+            inventory_path = self.path / "inventory/hosts.yml"
+
+        self._inventory = InventoryManager(loader=DataLoader(), sources=[inventory_path.as_posix()])
         self._vars = VariableManager(loader=DataLoader(), inventory=self._inventory)
         self.hosts = []
         for host in self._inventory.get_hosts():
+            if self.name.startswith("example-") and host.name in ["cvp", "cloudvision"]:
+                # Ignore CVP devices in examples without bloating the example without test groups.
+                continue
             if "IGNORE_IN_PYTEST" in [group.name for group in host.groups]:
+                # Ignore members of the group IGNORE_IN_PYTEST from Molecule scenarios.
                 continue
             self.hosts.append(MoleculeHost(name=host.name, ansible_host=host, scenario=self))
 

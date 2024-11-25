@@ -11,6 +11,11 @@
     | [<samp>&nbsp;&nbsp;as</samp>](## "router_bgp.as") | String |  |  |  | BGP AS <1-4294967295> or AS number in asdot notation "<1-65535>.<0-65535>".<br>For asdot notation in YAML inputs, the value must be put in quotes, to prevent it from being interpreted as a float number. |
     | [<samp>&nbsp;&nbsp;as_notation</samp>](## "router_bgp.as_notation") | String |  |  | Valid Values:<br>- <code>asdot</code><br>- <code>asplain</code> | BGP AS can be deplayed in the asplain <1-4294967295> or asdot notation "<1-65535>.<0-65535>". This flag indicates which mode is preferred - asplain is the default. |
     | [<samp>&nbsp;&nbsp;router_id</samp>](## "router_bgp.router_id") | String |  |  |  | In IP address format A.B.C.D. |
+    | [<samp>&nbsp;&nbsp;timers</samp>](## "router_bgp.timers") | Dictionary |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;keepalive_time</samp>](## "router_bgp.timers.keepalive_time") | Integer |  |  | Min: 0<br>Max: 3600 | Time between BGP keepalive messages in seconds.<br>`keepalive_time` should be lesser than `hold_time`. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;hold_time</samp>](## "router_bgp.timers.hold_time") | Integer |  |  | Min: 0<br>Max: 7200 | Hold time in seconds. Must be defined along with `keepalive_time`.<br>The valid values are 3-7200 or 0 if both values are 0. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;min_hold_time</samp>](## "router_bgp.timers.min_hold_time") | Integer |  |  | Min: 3<br>Max: 7200 | Neighbor's minimum hold time constraint in seconds.<br>`min_hold_time` should be less than `hold_time`. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;send_failure_hold_time</samp>](## "router_bgp.timers.send_failure_hold_time") | Integer |  |  | Min: 60<br>Max: 65535 | Send failure hold time in seconds. |
     | [<samp>&nbsp;&nbsp;distance</samp>](## "router_bgp.distance") | Dictionary |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;external_routes</samp>](## "router_bgp.distance.external_routes") | Integer | Required |  | Min: 1<br>Max: 255 |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;internal_routes</samp>](## "router_bgp.distance.internal_routes") | Integer | Required |  | Min: 1<br>Max: 255 |  |
@@ -52,6 +57,8 @@
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;peer_group</samp>](## "router_bgp.listen_ranges.[].peer_group") | String |  |  |  | Peer group name. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;peer_filter</samp>](## "router_bgp.listen_ranges.[].peer_filter") | String |  |  |  | Peer-filter name.<br>note: `peer_filter` or `remote_as` is required but mutually exclusive.<br>If both are defined, `peer_filter` takes precedence<br> |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;remote_as</samp>](## "router_bgp.listen_ranges.[].remote_as") | String |  |  |  | BGP AS <1-4294967295> or AS number in asdot notation "<1-65535>.<0-65535>".<br>For asdot notation in YAML inputs, the value must be put in quotes, to prevent it from being interpreted as a float number. |
+    | [<samp>&nbsp;&nbsp;neighbor_default</samp>](## "router_bgp.neighbor_default") | Dictionary |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;send_community</samp>](## "router_bgp.neighbor_default.send_community") | String |  |  | Valid Values:<br>- <code>all</code><br>- <code>large</code><br>- <code>extended</code><br>- <code>standard</code><br>- <code>extended large</code><br>- <code>standard large</code><br>- <code>standard extended</code><br>- <code>standard extended large</code> |  |
     | [<samp>&nbsp;&nbsp;peer_groups</samp>](## "router_bgp.peer_groups") | List, items: Dictionary |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;name</samp>](## "router_bgp.peer_groups.[].name") | String | Required, Unique |  |  | Peer-group name. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;type</samp>](## "router_bgp.peer_groups.[].type") | String |  |  |  | Key only used for documentation or validation purposes. |
@@ -1582,6 +1589,22 @@
 
       # In IP address format A.B.C.D.
       router_id: <str>
+      timers:
+
+        # Time between BGP keepalive messages in seconds.
+        # `keepalive_time` should be lesser than `hold_time`.
+        keepalive_time: <int; 0-3600>
+
+        # Hold time in seconds. Must be defined along with `keepalive_time`.
+        # The valid values are 3-7200 or 0 if both values are 0.
+        hold_time: <int; 0-7200>
+
+        # Neighbor's minimum hold time constraint in seconds.
+        # `min_hold_time` should be less than `hold_time`.
+        min_hold_time: <int; 3-7200>
+
+        # Send failure hold time in seconds.
+        send_failure_hold_time: <int; 60-65535>
       distance:
         external_routes: <int; 1-255; required>
         internal_routes: <int; 1-255; required>
@@ -1675,6 +1698,8 @@
           # BGP AS <1-4294967295> or AS number in asdot notation "<1-65535>.<0-65535>".
           # For asdot notation in YAML inputs, the value must be put in quotes, to prevent it from being interpreted as a float number.
           remote_as: <str>
+      neighbor_default:
+        send_community: <str; "all" | "large" | "extended" | "standard" | "extended large" | "standard large" | "standard extended" | "standard extended large">
       peer_groups:
 
           # Peer-group name.

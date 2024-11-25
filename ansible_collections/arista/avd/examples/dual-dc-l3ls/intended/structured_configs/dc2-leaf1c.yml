@@ -73,7 +73,7 @@ ethernet_interfaces:
   switchport:
     enabled: true
     mode: access
-    access_vlan: '11'
+    access_vlan: 11
   spanning_tree_portfast: edge
 port_channel_interfaces:
 - name: Port-Channel1

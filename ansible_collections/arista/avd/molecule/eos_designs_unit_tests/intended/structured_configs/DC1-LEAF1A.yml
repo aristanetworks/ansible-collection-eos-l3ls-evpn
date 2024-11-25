@@ -363,7 +363,7 @@ ethernet_interfaces:
   switchport:
     enabled: true
     mode: access
-    access_vlan: '110'
+    access_vlan: 110
 - name: Ethernet8
   peer: PHONE01_untagged
   peer_interface: Eth0
