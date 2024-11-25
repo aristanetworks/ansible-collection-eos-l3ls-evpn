@@ -4,7 +4,6 @@
 
 - [Management](#management)
   - [Management Interfaces](#management-interfaces)
-  - [Management API HTTP](#management-api-http)
 - [Routing](#routing)
   - [Router BGP](#router-bgp)
   - [Traffic Policies information](#traffic-policies-information)
@@ -35,34 +34,6 @@ interface Management1
    description OOB_MANAGEMENT
    vrf MGMT
    ip address 10.73.255.122/24
-```
-
-### Management API HTTP
-
-#### Management API HTTP Summary
-
-| HTTP | HTTPS | Default Services |
-| ---- | ----- | ---------------- |
-| True | True | - |
-
-#### Management API VRF Access
-
-| VRF Name | IPv4 ACL | IPv6 ACL |
-| -------- | -------- | -------- |
-| MGMT | ACL-API | - |
-
-#### Management API HTTP Device Configuration
-
-```eos
-!
-management api http-commands
-   protocol https
-   protocol http
-   no shutdown
-   !
-   vrf MGMT
-      no shutdown
-      ip access-group ACL-API
 ```
 
 ## Routing

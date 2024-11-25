@@ -5,5 +5,3 @@ ip_domain_lookup:
     - name: Management0
       vrf: mgt
     - name: Loopback0
-    # Note there is no value here. This is valid with the current data model, but triggered an issue with convert_dicts filter.
-    # So this is added to ensure we catch regression.
