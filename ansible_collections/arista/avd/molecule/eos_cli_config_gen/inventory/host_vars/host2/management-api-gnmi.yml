@@ -1,6 +1,5 @@
 ---
 management_api_gnmi:
-  provider: eos-native
   transport:
     grpc:
       - name: MGMT

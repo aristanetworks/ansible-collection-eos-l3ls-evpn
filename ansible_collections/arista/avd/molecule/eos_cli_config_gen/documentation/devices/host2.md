@@ -157,8 +157,6 @@ management ssh
 | MGMT | - | MGMT | last-change-time | ACL-GNMI | 6030 |
 | MONITORING | - | MONITORING | last-change-time | - | 6031 |
 
-Provider eos-native is configured.
-
 #### Management API gNMI Device Configuration
 
 ```eos
@@ -171,7 +169,6 @@ management api gnmi
    transport grpc MONITORING
       port 6031
       vrf MONITORING
-   provider eos-native
 ```
 
 ### Management CVX Summary

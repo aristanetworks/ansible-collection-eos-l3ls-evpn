@@ -27,7 +27,7 @@ management_api_gnmi:
         target:
           use_serial_number: false
           target_ids:
-          - testid100
+            - testid100
       - name: multipletargets
         shutdown: false
         tunnel_ssl_profile: ssl_profile
@@ -42,10 +42,10 @@ management_api_gnmi:
         target:
           use_serial_number: false
           target_ids:
-          - testid1
-          - testid2
-          - testid3
-          - testid4
+            - testid1
+            - testid2
+            - testid3
+            - testid4
       - name: serialandtargets
         shutdown: false
         tunnel_ssl_profile: ssl_profile
@@ -60,8 +60,8 @@ management_api_gnmi:
         target:
           use_serial_number: true
           target_ids:
-          - testid10
-          - testid20
+            - testid10
+            - testid20
       - name: noserialnotargets
       - name: serialonly
         target:
