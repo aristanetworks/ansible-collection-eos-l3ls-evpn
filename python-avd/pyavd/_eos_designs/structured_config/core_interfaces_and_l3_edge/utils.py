@@ -229,14 +229,16 @@ class UtilsMixin:
 
         if get(p2p_link, "ptp.enabled"):
             ptp_config = {}
-            # Apply PTP profile config from node settings when profile is not defined on p2p_link
-            if (ptp_profile_name := get(p2p_link, "ptp.profile")) is None:
-                ptp_config.update(self.shared_utils.ptp_profile)
 
-            # Apply PTP profile defined for the p2p_link
-            else:
-                msg = f"PTP Profile '{ptp_profile_name}' referenced under {self.data_model}.p2p_links does not exist in `ptp_profiles`."
-                ptp_config.update(get_item(self.shared_utils.ptp_profiles, "profile", ptp_profile_name, required=True, custom_error_msg=msg))
+            if self.shared_utils.ptp_enabled:
+                # Apply PTP profile config from node settings when profile is not defined on p2p_link
+                if (ptp_profile_name := get(p2p_link, "ptp.profile")) is None:
+                    ptp_config.update(self.shared_utils.ptp_profile)
+
+                # Apply PTP profile defined for the p2p_link
+                else:
+                    msg = f"PTP Profile '{ptp_profile_name}' referenced under {self.data_model}.p2p_links does not exist in `ptp_profiles`."
+                    ptp_config.update(get_item(self.shared_utils.ptp_profiles, "profile", ptp_profile_name, required=True, custom_error_msg=msg))
 
             node_index = p2p_link["nodes"].index(self.shared_utils.hostname)
             if (ptp_roles := get(p2p_link, "ptp.roles")) and len(ptp_roles) > node_index and ptp_roles[node_index] == "master":

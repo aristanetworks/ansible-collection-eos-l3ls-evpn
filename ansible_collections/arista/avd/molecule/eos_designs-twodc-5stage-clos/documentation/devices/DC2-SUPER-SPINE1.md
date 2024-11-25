@@ -215,11 +215,6 @@ interface Ethernet4
    ip address 11.1.2.1/31
    mac security profile MACSEC_PROFILE
    ptp enable
-   ptp announce interval 0
-   ptp announce timeout 3
-   ptp delay-req interval -3
-   ptp sync-message interval -3
-   ptp transport ipv4
 !
 interface Ethernet5
    description P2P_DC2-RS2_Ethernet1

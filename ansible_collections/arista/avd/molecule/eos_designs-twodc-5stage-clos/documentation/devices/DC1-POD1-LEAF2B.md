@@ -359,11 +359,6 @@ interface Ethernet7
    no switchport
    ip address 11.1.0.38/31
    ptp enable
-   ptp announce interval 0
-   ptp announce timeout 3
-   ptp delay-req interval -3
-   ptp sync-message interval -3
-   ptp transport ipv4
 !
 interface Ethernet11
    description P2P_DC1-POD1-SPINE1_Ethernet8

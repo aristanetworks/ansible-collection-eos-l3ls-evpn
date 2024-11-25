@@ -220,13 +220,6 @@ ethernet_interfaces:
   shutdown: false
   ip_address: 11.1.2.1/31
   ptp:
-    announce:
-      interval: 0
-      timeout: 3
-    delay_req: -3
-    sync_message:
-      interval: -3
-    transport: ipv4
     enable: true
   mac_security:
     profile: MACSEC_PROFILE
