@@ -55861,6 +55861,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             "instance": {"type": str},
             "net": {"type": str},
             "router_id": {"type": str},
+            "is_hostname": {"type": str},
             "is_type": {"type": str},
             "log_adjacency_changes": {"type": bool},
             "mpls_ldp_sync_default": {"type": bool},
@@ -55883,6 +55884,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         """CLNS Address like "49.0001.0001.0000.0001.00"."""
         router_id: str | None
         """IPv4 Address."""
+        is_hostname: str | None
+        """Hostname of Intermediate System."""
         is_type: Literal["level-1", "level-1-2", "level-2"] | None
         log_adjacency_changes: bool | None
         mpls_ldp_sync_default: bool | None
@@ -55918,6 +55921,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 instance: str | UndefinedType = Undefined,
                 net: str | None | UndefinedType = Undefined,
                 router_id: str | None | UndefinedType = Undefined,
+                is_hostname: str | None | UndefinedType = Undefined,
                 is_type: Literal["level-1", "level-1-2", "level-2"] | None | UndefinedType = Undefined,
                 log_adjacency_changes: bool | None | UndefinedType = Undefined,
                 mpls_ldp_sync_default: bool | None | UndefinedType = Undefined,
@@ -55944,6 +55948,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                     instance: ISIS Instance Name.
                     net: CLNS Address like "49.0001.0001.0000.0001.00".
                     router_id: IPv4 Address.
+                    is_hostname: Hostname of Intermediate System.
                     is_type: is_type
                     log_adjacency_changes: log_adjacency_changes
                     mpls_ldp_sync_default: mpls_ldp_sync_default
