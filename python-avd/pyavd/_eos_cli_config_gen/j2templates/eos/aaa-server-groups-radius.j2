@@ -5,14 +5,9 @@
 #}
 {# eos - aaa server groups #}
 {% if aaa_server_groups is arista.avd.defined %}
-{%     set filtered_groups = [] %}
-{%     for aaa_server_group in aaa_server_groups %}
-{%         if aaa_server_group.type is arista.avd.defined %}
-{%             do filtered_groups.append(aaa_server_group) %}
-{%         endif %}
-{%     endfor %}
-{%     for aaa_server_group in filtered_groups | arista.avd.natural_sort('name') | arista.avd.natural_sort('type') %}
-{%         if aaa_server_group.type | arista.avd.default("") == 'radius' %}
+{%     set aaa_server_groups = aaa_server_groups | selectattr('type', 'arista.avd.defined') | list %}
+{%     for aaa_server_group in aaa_server_groups | arista.avd.natural_sort('name') %}
+{%         if aaa_server_group.type | arista.avd.default == 'radius' %}
 !
 aaa group server {{ aaa_server_group.type }} {{ aaa_server_group.name }}
 {%             if aaa_server_group.servers is arista.avd.defined %}
