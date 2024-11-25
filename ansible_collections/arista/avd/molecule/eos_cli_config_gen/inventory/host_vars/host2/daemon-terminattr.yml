@@ -1,5 +1,10 @@
 ---
 daemon_terminattr:
+  cvaddrs:
+    - apiserver.arista.io:443
+  cvauth:
+    method: "key"
+    key: ""
   clusters:
     - name: DC1
       cvaddrs:
