@@ -1,0 +1,104 @@
+release_summary: |
+  Release 5.1.0 - See documentation on avd.arista.com for details.
+bugfixes:
+### Fixed issues in eos_cli_config_gen
+- |-
+ Fix(eos_cli_config_gen): Prevent empty source and dest ports list for ip access lists by @gmuloc in https://github.com/aristanetworks/avd/pull/4660
+### Fixed issues in eos_designs
+- |-
+ Fix(eos_designs): Add redistribution of attached-host to BGP for inband management by @ClausHolbechArista in https://github.com/aristanetworks/avd/pull/4696
+- |-
+ Fix(eos_designs): Always output interface access_vlan as int in structured_config by @ClausHolbechArista in https://github.com/aristanetworks/avd/pull/4738
+- |-
+ Fix(eos_designs): Explicitly extend SVI or L2VLAN to remote EVPN domains by @carlbuchmann in https://github.com/aristanetworks/avd/pull/4736
+### Other Fixed issues
+- |-
+ Fix(eos_validate_state): Fix the VerifyLLDPNeighbors test to skip in case validate_state is set to False by @MaheshGSLAB in https://github.com/aristanetworks/avd/pull/4679
+minor_changes:
+### Documentation
+- |-
+ Doc(eos_designs,eos_cli_config_gen): Fix incorrect schemas by @ClausHolbechArista in https://github.com/aristanetworks/avd/pull/4691
+- |-
+ Doc: Fix invalid deprecation links by @ClausHolbechArista in https://github.com/aristanetworks/avd/pull/4703
+- |-
+ Doc(eos_designs): Add note in network services redistribute connected regarding VRF default by @carlbuchmann in https://github.com/aristanetworks/avd/pull/4704
+- |-
+ Doc(eos_designs): Fix MPLS node types documentation in node_types table by @gmuloc in https://github.com/aristanetworks/avd/pull/4733
+- |-
+ Doc(eos_cli_config_gen): Make the Radius Server documentation visible by @gmuloc in https://github.com/aristanetworks/avd/pull/4741
+### New features and enhancements in eos_cli_config_gen
+- |-
+ Feat(eos_cli_config_gen): Add support for OSPF graceful restart by @Shivani-gslab in https://github.com/aristanetworks/avd/pull/4591
+- |-
+ Feat(eos_cli_config_gen): Added dot1x radius av-pair `lldp` and `dhcp` command support by @MaheshGSLAB in https://github.com/aristanetworks/avd/pull/4618
+- |-
+ Feat(eos_cli_config_gen): Add maximum_paths  to router_bgp.vrfs by @juanjtomasg in https://github.com/aristanetworks/avd/pull/4655
+- |-
+ Feat(eos_cli_config_gen): Added support for `neighbor x.x.x.x encapsulation mpls next-hop-self source-intf <source-interface>` by @MaheshGSLAB in https://github.com/aristanetworks/avd/pull/4608
+- |-
+ Feat(eos_cli_config_gen): Add vrf support for vmtracer_sessions by @Shivani-gslab in https://github.com/aristanetworks/avd/pull/4601
+- |-
+ Feat(eos_cli_config_gen): Add `route_map_in/out` for `router_bgp.address_family_evpn.neighbors[]` by @laxmikantchintakindi in https://github.com/aristanetworks/avd/pull/4625
+- |-
+ Feat(eos_cli_config_gen): Expand CLI to support DualEncap MH EVPN GW requirements by @colinmacgiolla in https://github.com/aristanetworks/avd/pull/4613
+- |-
+ Feat(eos_cli_config_gen): Add support for deadtime configuration to radius_server by @Shivani-gslab in https://github.com/aristanetworks/avd/pull/4614
+- |-
+ Feat(eos_cli_config_gen): Add integrity key under ike policy by @sugetha24 in https://github.com/aristanetworks/avd/pull/4606
+- |-
+ Feat(eos_cli_config_gen): Support for Interface Profiles on Port-channel interfaces by @JaakkoRautanen in https://github.com/aristanetworks/avd/pull/4661
+- |-
+ Feat(eos_cli_config_gen): Add support for LSP and CSNP timers under router_isis by @Shivani-gslab in https://github.com/aristanetworks/avd/pull/4619
+- |-
+ Feat(eos_cli_config_gen): Add support for `mac timestamp header` command by @laxmikantchintakindi in https://github.com/aristanetworks/avd/pull/4635
+- |-
+ Feat(eos_cli_config_gen): Adding improved model for interface link tracking groups by @Vibhu-gslab in https://github.com/aristanetworks/avd/pull/4610
+- |-
+ Feat(eos_cli_config_gen): Add support for ipv4/ipv6 access group ingress default in system.control_plane by @Vibhu-gslab in https://github.com/aristanetworks/avd/pull/4710
+- |-
+ Feat(eos_cli_config_gen): Add BFD Slow-Timer Knob by @ccsnw in https://github.com/aristanetworks/avd/pull/4718
+- |-
+ Feat(eos_cli_config_gen): Add support for `monitor server radius` by @laxmikantchintakindi in https://github.com/aristanetworks/avd/pull/4595
+- |-
+ Feat(eos_cli_config_gen): Add support for additional isis authentication commands in `ethernet-interfaces` by @laxmikantchintakindi in https://github.com/aristanetworks/avd/pull/4326
+- |-
+ Feat(eos_cli_config_gen): Add support for BGP default timers and send-community commands by @Shivani-gslab in https://github.com/aristanetworks/avd/pull/4607
+- |-
+ Feat(eos_cli_config_gen): Add support for additional modes and feature in isis authentication under `port-channel-interfaces` by @laxmikantchintakindi in https://github.com/aristanetworks/avd/pull/4353
+### New features and enhancements in eos_designs
+- |-
+ Feat(eos_designs): Add support the all dot1x features under adapters/port-profiles/network-ports by @ClausHolbechArista in https://github.com/aristanetworks/avd/pull/4648
+- |-
+ Feat(eos_designs): Add option to disable default 'redistribute connected' in VRF. by @laxmikantchintakindi in https://github.com/aristanetworks/avd/pull/4220
+- |-
+ Feat(eos_designs): Adding port_channel_id as option for endpoint ethernet description by @bjmeuer in https://github.com/aristanetworks/avd/pull/4667
+- |-
+ Feat(eos_designs): Add support to use router general for router id by @laxmikantchintakindi in https://github.com/aristanetworks/avd/pull/4687
+- |-
+ Feat(eos_designs): Add support to enable ISIS authentication at global level by @laxmikantchintakindi in https://github.com/aristanetworks/avd/pull/4102
+- |-
+ Feat(eos_designs): Support for L3 Inband ZTP by @jrecchia1029 in https://github.com/aristanetworks/avd/pull/4304
+### New features and enhancement in both eos_designs and eos_cli_config_gen
+- |-
+ Feat(eos_designs,eos_cli_config_gen): Support for IPv6 on network services VRF diagnostic loopback by @Vibhu-gslab in https://github.com/aristanetworks/avd/pull/4222
+### Other new features and enhancements
+- |-
+ Feat(eos_validate_state): Added the support of `validate_lldp` key to skip the VerifyLLDPNeighbors tests by @MaheshGSLAB in https://github.com/aristanetworks/avd/pull/4684
+- |-
+ Feat(plugins): Set changed=true and print yellow updates when recompiling schemas/templates by @gmuloc in https://github.com/aristanetworks/avd/pull/4715
+- |-
+ Feat(plugins): Verify pyavd extras again in verify_requirements by @gmuloc in https://github.com/aristanetworks/avd/pull/4720
+### PyAVD Changes
+- |-
+ Refactor(pyavd): Adding `path` attribute to the validation error for removed keys by @Shivani-gslab in https://github.com/aristanetworks/avd/pull/4688
+### Other Changes
+- |-
+ Refactor(cv_deploy): Improve metadata for zscaler by @ClausHolbechArista in https://github.com/aristanetworks/avd/pull/4631
+- |-
+ Refactor(eos_cli_config_gen): Adding check for hosts key in TACACS server j2 file by @Vibhu-gslab in https://github.com/aristanetworks/avd/pull/4701
+- |-
+ Bump(requirements): Update ansible-core requirement from <2.18.0,>=2.15.0 to >=2.15.0,<2.19.0 in /ansible_collections/arista/avd by @dependabot in https://github.com/aristanetworks/avd/pull/4713
+- |-
+ Bump: Pre-release 5.1.0-dev2 by @carlbuchmann in https://github.com/aristanetworks/avd/pull/4705
+- |-
+ Refactor(eos_designs): Use new isis_authentication data models by @ClausHolbechArista in https://github.com/aristanetworks/avd/pull/4734
