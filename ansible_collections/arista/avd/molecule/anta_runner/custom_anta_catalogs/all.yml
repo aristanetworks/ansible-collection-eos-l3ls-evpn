@@ -1,0 +1,233 @@
+---
+# These tests will be added to all the devices in the inventory
+anta.tests.aaa:
+  - VerifyTacacsSourceIntf:
+      intf: Management0
+      vrf: default
+  - VerifyTacacsServers:
+      servers:
+        - 1.1.1.1
+        - 2.2.2.2
+      vrf: default
+  - VerifyTacacsServerGroups:
+      groups:
+        - admin
+        - user
+  - VerifyAuthenMethods:
+      methods:
+        - local
+        - none
+        - logging
+      types:
+        - login
+        - enable
+        - dot1x
+  - VerifyAuthzMethods:
+      methods:
+        - local
+        - none
+        - logging
+      types:
+        - commands
+        - exec
+  - VerifyAcctDefaultMethods:
+      methods:
+        - local
+        - none
+        - logging
+      types:
+        - system
+        - exec
+        - commands
+        - dot1x
+  - VerifyAcctConsoleMethods:
+      methods:
+        - local
+        - none
+        - logging
+      types:
+        - system
+        - exec
+        - commands
+        - dot1x
+
+anta.tests.configuration:
+  - VerifyZeroTouch:
+  - VerifyRunningConfigDiffs:
+
+anta.tests.field_notices:
+  - VerifyFieldNotice44Resolution:
+  - VerifyFieldNotice72Resolution:
+
+anta.tests.greent:
+  - VerifyGreenT:
+  - VerifyGreenTCounters:
+
+anta.tests.lanz:
+  - VerifyLANZ:
+
+anta.tests.ptp:
+  - VerifyPtpModeStatus:
+  - VerifyPtpGMStatus:
+      gmid: 0xec:46:70:ff:fe:00:ff:a9
+  - VerifyPtpLockStatus:
+  - VerifyPtpOffset:
+  - VerifyPtpPortModeStatus:
+
+anta.tests.security:
+  - VerifySSHStatus:
+  - VerifySSHIPv4Acl:
+      number: 3
+      vrf: default
+  - VerifySSHIPv6Acl:
+      number: 3
+      vrf: default
+  - VerifyTelnetStatus:
+  - VerifyAPIHttpStatus:
+  - VerifyAPIHttpsSSL:
+      profile: default
+  - VerifyAPIIPv4Acl:
+      number: 3
+      vrf: default
+  - VerifyAPIIPv6Acl:
+      number: 3
+      vrf: default
+  - VerifyAPISSLCertificate:
+      certificates:
+        - certificate_name: ARISTA_SIGNING_CA.crt
+          expiry_threshold: 30
+          common_name: AristaIT-ICA ECDSA Issuing Cert Authority
+          encryption_algorithm: ECDSA
+          key_size: 256
+        - certificate_name: ARISTA_ROOT_CA.crt
+          expiry_threshold: 30
+          common_name: Arista Networks Internal IT Root Cert Authority
+          encryption_algorithm: RSA
+          key_size: 4096
+  - VerifyBannerLogin:
+      login_banner: |
+          # Copyright (c) 2023-2024 Arista Networks, Inc.
+          # Use of this source code is governed by the Apache License 2.0
+          # that can be found in the LICENSE file.
+  - VerifyBannerMotd:
+      motd_banner: |
+          # Copyright (c) 2023-2024 Arista Networks, Inc.
+          # Use of this source code is governed by the Apache License 2.0
+          # that can be found in the LICENSE file.
+  - VerifyIPv4ACL:
+      ipv4_access_lists:
+        - name: default-control-plane-acl
+          entries:
+            - sequence: 10
+              action: permit icmp any any
+            - sequence: 20
+              action: permit ip any any tracked
+            - sequence: 30
+              action: permit udp any any eq bfd ttl eq 255
+        - name: LabTest
+          entries:
+            - sequence: 10
+              action: permit icmp any any
+            - sequence: 20
+              action: permit tcp any any range 5900 5910
+  - VerifyIPSecConnHealth:
+  - VerifySpecificIPSecConn:
+      ip_security_connections:
+        - peer: 10.255.0.1
+        - peer: 10.255.0.2
+          vrf: default
+          connections:
+            - source_address: 100.64.3.2
+              destination_address: 100.64.2.2
+            - source_address: 172.18.3.2
+              destination_address: 172.18.2.2
+
+anta.tests.services:
+  - VerifyHostname:
+      hostname: s1-spine1
+  - VerifyDNSLookup:
+      domain_names:
+        - arista.com
+        - www.google.com
+        - arista.ca
+  - VerifyDNSServers:
+      dns_servers:
+        - server_address: 10.14.0.1
+          vrf: default
+          priority: 1
+        - server_address: 10.14.0.11
+          vrf: MGMT
+          priority: 0
+  - VerifyErrdisableRecovery:
+      reasons:
+        - reason: acl
+          interval: 30
+        - reason: bpduguard
+          interval: 30
+
+anta.tests.stun:
+  - VerifyStunClient:
+      stun_clients:
+        - source_address: 172.18.3.2
+          public_address: 172.18.3.21
+          source_port: 4500
+          public_port: 6006
+        - source_address: 100.64.3.2
+          public_address: 100.64.3.21
+          source_port: 4500
+          public_port: 6006
+
+anta.tests.vlan:
+  - VerifyVlanInternalPolicy:
+      policy: ascending
+      start_vlan_id: 1006
+      end_vlan_id: 4094
+
+# Some of these hardware tests will be duplicated in the catalog, but ANTA will only run them once
+anta.tests.hardware:
+  - VerifyTransceiversManufacturers:
+      manufacturers:
+        - Not Present
+        - Arista Networks
+        - Arastra, Inc.
+  - VerifyTemperature:
+  - VerifyTransceiversTemperature:
+  - VerifyEnvironmentSystemCooling:
+  - VerifyEnvironmentCooling:
+      states:
+        - ok
+  - VerifyEnvironmentPower:
+      states:
+        - ok
+  - VerifyAdverseDrops:
+
+anta.tests.snmp:
+  - VerifySnmpStatus:
+      vrf: default
+  - VerifySnmpIPv4Acl:
+      number: 3
+      vrf: default
+  - VerifySnmpIPv6Acl:
+      number: 3
+      vrf: default
+
+anta.tests.software:
+  - VerifyEOSVersion:
+      versions:
+        - 4.25.4M
+        - 4.26.1F
+  - VerifyTerminAttrVersion:
+      versions:
+        - v1.13.6
+        - v1.8.0
+
+anta.tests.system:
+  - VerifyUptime:
+      minimum: 86400
+  - VerifyReloadCause:
+  - VerifyCoredump:
+  - VerifyAgentLogs:
+  - VerifyCPUUtilization:
+  - VerifyMemoryUtilization:
+  - VerifyFileSystemUtilization:
+  - VerifyNTP:

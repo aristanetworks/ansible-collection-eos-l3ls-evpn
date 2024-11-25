@@ -1,0 +1,143 @@
+---
+### group_vars/CONNECTED_ENDPOINTS.yml
+
+# This profile will not be validated
+port_profiles:
+  - profile: Workstations
+    mode: access
+    vlans: 11
+    spanning_tree_portfast: edge
+    validate_state: false
+
+# Definition of connected endpoints in the fabric.
+servers:
+  # Name of the defined server.
+  - name: dc1-leaf1-server1
+    # Definition of adapters on the server.
+    adapters:
+      # Name of the server interfaces that will be used in the description of each interface
+      - endpoint_ports: [ PCI1, PCI2 ]
+        # Device ports where the server ports are connected.
+        switch_ports: [ Ethernet5, Ethernet5 ]
+        # Device names where the server ports are connected.
+        switches: [ dc1-leaf1a, dc1-leaf1b ]
+        # VLANs that will be configured on these ports.
+        vlans: 11-12,21-22
+        # Native VLAN to be used on these ports.
+        native_vlan: 4092
+        # L2 mode of the port.
+        mode: trunk
+        # Spanning tree portfast configuration on this port.
+        spanning_tree_portfast: edge
+        # Definition of the pair of ports as port channel.
+        port_channel:
+          # Description of the port channel interface.
+          description: PortChannel dc1-leaf1-server1
+          # Port channel mode for LACP.
+          mode: active
+
+      - endpoint_ports: [ iLO ]
+        switch_ports: [ Ethernet5 ]
+        switches: [ dc1-leaf1c ]
+        vlans: 11
+        mode: access
+        spanning_tree_portfast: edge
+
+  - name: dc1-leaf2-server1
+    adapters:
+      - endpoint_ports: [ PCI1, PCI2 ]
+        switch_ports: [ Ethernet5, Ethernet5 ]
+        switches: [ dc1-leaf2a, dc1-leaf2b ]
+        vlans: 11-12,21-22
+        native_vlan: 4092
+        mode: trunk
+        spanning_tree_portfast: edge
+        port_channel:
+          endpoint_port_channel: PortChannel dc1-leaf2-server1
+          mode: active
+
+      - endpoint_ports: [ iLO ]
+        switch_ports: [ Ethernet5 ]
+        switches: [ dc1-leaf2c ]
+        vlans: 11
+        mode: access
+        spanning_tree_portfast: edge
+
+  # Start of definitions for DC2 (identical to DC1)
+
+  # Name of the defined server.
+  - name: dc2-leaf1-server1
+    # Definition of adapters on the server.
+    adapters:
+      # Name of the server interfaces that will be used in the description of each interface
+      - endpoint_ports: [ PCI1, PCI2 ]
+        # Device ports where the server ports are connected.
+        switch_ports: [ Ethernet5, Ethernet5 ]
+        # Device names where the server ports are connected.
+        switches: [ dc2-leaf1a, dc2-leaf1b ]
+        # VLANs that will be configured on these ports.
+        vlans: 11-12,21-22
+        # Native VLAN to be used on these ports.
+        native_vlan: 4092
+        # L2 mode of the port.
+        mode: trunk
+        # Spanning tree portfast configuration on this port.
+        spanning_tree_portfast: edge
+        # Definition of the pair of ports as port channel.
+        port_channel:
+          # Description of the port channel interface.
+          description: PortChannel dc2-leaf1-server1
+          # Port channel mode for LACP.
+          mode: active
+
+      - endpoint_ports: [ iLO ]
+        switch_ports: [ Ethernet5 ]
+        switches: [ dc2-leaf1c ]
+        vlans: 11
+        mode: access
+        spanning_tree_portfast: edge
+
+  - name: dc2-leaf2-server1
+    adapters:
+      - endpoint_ports: [ PCI1, PCI2 ]
+        switch_ports: [ Ethernet5, Ethernet5 ]
+        switches: [ dc2-leaf2a, dc2-leaf2b ]
+        vlans: 11-12,21-22
+        native_vlan: 4092
+        mode: trunk
+        spanning_tree_portfast: edge
+        port_channel:
+          endpoint_port_channel: PortChannel dc2-leaf2-server1
+          mode: active
+
+      - endpoint_ports: [ iLO ]
+        switch_ports: [ Ethernet5 ]
+        switches: [ dc2-leaf2c ]
+        vlans: 11
+        mode: access
+        spanning_tree_portfast: edge
+
+workstations:
+  - name: dc1-leaf1-workstation1
+    adapters:
+      - profile: Workstations
+        endpoint_ports: [ e1 ]
+        switch_ports: [ Ethernet31 ]
+        switches: [ dc1-leaf1a ]
+
+  - name: dc1-leaf1-workstation2
+    adapters:
+      - profile: Workstations
+        endpoint_ports: [ e1 ]
+        switch_ports: [ Ethernet32 ]
+        switches: [ dc1-leaf1a ]
+
+# These ports will not be validated
+network_ports:
+  - switches: [ dc1-leaf1b ]
+    switch_ports: [ Ethernet41-49 ]
+    description: Cameras
+    mode: access
+    vlans: 50
+    spanning_tree_portfast: edge
+    validate_state: false

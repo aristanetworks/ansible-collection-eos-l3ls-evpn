@@ -1,0 +1,85 @@
+---
+# inventory.yml
+all:
+  children:
+    WAN:
+      children:
+        DC1_WAN:
+    FABRIC:
+      children:
+        DC1:
+          children:
+            DC1_SPINES:
+              hosts:
+                dc1-spine1:
+                  ansible_host: 172.16.1.11
+                dc1-spine2:
+                  ansible_host: 172.16.1.12
+            DC1_L3_LEAVES:
+              hosts:
+                dc1-leaf1a:
+                  ansible_host: 172.16.1.101
+                dc1-leaf1b:
+                  ansible_host: 172.16.1.102
+                dc1-leaf2a:
+                  ansible_host: 172.16.1.103
+                dc1-leaf2b:
+                  ansible_host: 172.16.1.104
+                  is_deployed: false
+            DC1_L2_LEAVES:
+              hosts:
+                dc1-leaf1c:
+                  ansible_host: 172.16.1.151
+                dc1-leaf2c:
+                  ansible_host: 172.16.1.152
+            DC1_WAN:
+              hosts:
+                dc1-wan1:
+                  ansible_host: 172.16.1.15
+                dc1-wan2:
+                  ansible_host: 172.16.1.16
+            DC1_SVC_LEAVES:
+              hosts:
+                dc1-svc-leaf1a:
+                  ansible_host: 172.16.1.31
+                dc1-svc-leaf1b:
+                  ansible_host: 172.16.1.32
+        DC2:
+          children:
+            DC2_SPINES:
+              hosts:
+                dc2-spine1:
+                  ansible_host: 172.16.1.21
+                dc2-spine2:
+                  ansible_host: 172.16.1.22
+            DC2_L3_LEAVES:
+              hosts:
+                dc2-leaf1a:
+                  ansible_host: 172.16.1.111
+                dc2-leaf1b:
+                  ansible_host: 172.16.1.112
+                dc2-leaf2a:
+                  ansible_host: 172.16.1.113
+                dc2-leaf2b:
+                  ansible_host: 172.16.1.114
+                dc2-leaf3a.arista.com:
+                dc2-leaf3b.arista.com:
+            DC2_L2_LEAVES:
+              hosts:
+                dc2-leaf1c:
+                  ansible_host: 172.16.1.161
+                dc2-leaf2c:
+                  ansible_host: 172.16.1.162
+
+    NETWORK_SERVICES:
+      children:
+        DC1_L3_LEAVES:
+        DC1_L2_LEAVES:
+        DC2_L3_LEAVES:
+        DC2_L2_LEAVES:
+    CONNECTED_ENDPOINTS:
+      children:
+        DC1_L3_LEAVES:
+        DC1_L2_LEAVES:
+        DC2_L3_LEAVES:
+        DC2_L2_LEAVES:

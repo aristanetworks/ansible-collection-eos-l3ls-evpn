@@ -1,0 +1,58 @@
+# Format for path to r/w reports. Sync with default values configured in arista.avd.build_output_folders
+root_dir: "{{ inventory_dir }}"
+
+# AVD configurations output
+# Main output directory
+output_dir_name: "intended"
+output_dir: "{{ root_dir }}/{{ output_dir_name }}"
+
+# Output for structured YAML files:
+structured_dir_name: "structured_configs"
+structured_dir: "{{ output_dir }}/{{ structured_dir_name }}"
+
+# Output for test catalog YAML files:
+test_catalogs_dir_name: "test_catalogs"
+test_catalogs_dir: "{{ output_dir }}/{{ test_catalogs_dir_name }}"
+
+# Output directory for anta reports
+anta_name: "reports"
+anta_dir: "{{ root_dir }}/{{ anta_name }}"
+
+# Output for test results JSON files:
+test_results_dir_name: "test_results"
+test_results_dir: "{{ anta_dir }}/{{ test_results_dir_name }}"
+
+# Reports name
+anta_md_report_path: "{{ anta_dir }}/{{ fabric_name }}-state.md"
+anta_csv_report_path: "{{ anta_dir }}/{{ fabric_name }}-state.csv"
+
+# Input directory for custom ANTA catalogs:
+custom_anta_catalogs_dir_name: "custom_anta_catalogs"
+custom_anta_catalogs_dir: "{{ root_dir }}/{{ custom_anta_catalogs_dir_name }}"
+
+# Markdown flavor to support non-text rendering
+# Only support default and github
+validate_state_markdown_flavor: "default"
+
+# Fabric Name. Required to run the validation role
+fabric_name: "all"
+
+# Allow different manufacturers
+accepted_xcvr_manufacturers: "{{ validation_role.xcvr_own_manufacturers | arista.avd.default(['Arastra, Inc.', 'Arista Networks']) }}"
+
+# Allow different states for power supplies
+accepted_pwr_supply_states: "{{ validation_role.pwr_supply_states | arista.avd.default(['ok']) }}"
+
+# Allow different states for fans
+accepted_fan_states: "{{ validation_role.fan_states | arista.avd.default(['ok']) }}"
+
+# Generate CSV results file
+validation_report_csv: "{{ validation_role.validation_report_csv | arista.avd.default(true) }}"
+
+# Generate MD results file
+validation_report_md: "{{ validation_role.validation_report_md | arista.avd.default(true) }}"
+
+# Print only FAILED tests
+only_failed_tests: "{{ validation_role.only_failed_tests | arista.avd.default(false) }}"
+
+avd_structured_config_file_format: "yml"

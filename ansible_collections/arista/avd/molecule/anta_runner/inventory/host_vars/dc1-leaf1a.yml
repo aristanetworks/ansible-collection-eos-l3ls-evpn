@@ -1,0 +1,31 @@
+# Custom router bgp structured_config to test external BGP peer
+custom_structured_configuration_router_bgp:
+  neighbors:
+    - ip_address: 10.1.1.1
+      description: External peer
+      peer_group: EVPN-OVERLAY-PEERS
+# Custom router path selection structured_config to test negative case for STUN client testcase
+custom_structured_configuration_router_path_selection:
+  path_groups:
+    - name: Test_local_interface
+      id: 110
+      dynamic_peers:
+        enabled: true
+    - name: Test_stun_server_profile
+      id: 210
+      local_interfaces:
+        - name: Ethernet3
+
+# Custom inputs for the hardware tests
+accepted_xcvr_manufacturers:
+  - "Arastra, Inc."
+  - "Arista Networks"
+  - "Generic"
+
+accepted_pwr_supply_states:
+  - "ok"
+  - "Not Present"
+
+accepted_fan_states:
+  - "ok"
+  - "Not Present"

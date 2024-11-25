@@ -1,0 +1,16 @@
+# TODO: Remove the example test of Vxlan1 in AVD 6.0.0 version
+custom_structured_configuration_vxlan_interface:
+  Vxlan1:
+    description: dc1-leaf2c_VTEP
+    vxlan:
+      udp_port: 4789
+      source_interface: Loopback1
+      virtual_router_encapsulation_mac_address: mlag-system-id
+      vlans:
+      - id: 11
+        vni: 10011
+      vrfs:
+      - name: VRF10
+        vni: 10
+      - name: VRF11
+        vni: 11

@@ -1,0 +1,277 @@
+hostname: dc1-spine1
+is_deployed: true
+router_bgp:
+  as: '65100'
+  router_id: 10.255.0.1
+  bgp:
+    default:
+      ipv4_unicast: false
+  maximum_paths:
+    paths: 4
+    ecmp: 4
+  redistribute:
+    connected:
+      enabled: true
+      route_map: RM-CONN-2-BGP
+  peer_groups:
+  - name: IPv4-UNDERLAY-PEERS
+    type: ipv4
+    password: 7x4B4rnJhZB438m9+BrBfQ==
+    maximum_routes: 12000
+    send_community: all
+  - name: EVPN-OVERLAY-PEERS
+    type: evpn
+    update_source: Loopback0
+    bfd: true
+    password: Q4fqtbqcZ7oQuKfuWtNGRQ==
+    send_community: all
+    maximum_routes: 0
+    ebgp_multihop: 3
+    next_hop_unchanged: true
+  address_family_ipv4:
+    peer_groups:
+    - name: IPv4-UNDERLAY-PEERS
+      activate: true
+    - name: EVPN-OVERLAY-PEERS
+      activate: false
+    neighbors:
+    - ip_address: 123.1.1.10
+      activate: true
+    - ip_address: 123.1.1.11
+      activate: true
+  neighbors:
+  - ip_address: 10.255.255.1
+    peer_group: IPv4-UNDERLAY-PEERS
+    remote_as: '65101'
+    peer: dc1-leaf1a
+    description: dc1-leaf1a_Ethernet1
+  - ip_address: 10.255.255.5
+    peer_group: IPv4-UNDERLAY-PEERS
+    remote_as: '65101'
+    peer: dc1-leaf1b
+    description: dc1-leaf1b_Ethernet1
+  - ip_address: 10.255.255.9
+    peer_group: IPv4-UNDERLAY-PEERS
+    remote_as: '65102'
+    peer: dc1-leaf2a
+    description: dc1-leaf2a_Ethernet1
+  - ip_address: 10.255.255.13
+    peer_group: IPv4-UNDERLAY-PEERS
+    remote_as: '65102'
+    peer: dc1-leaf2b
+    description: dc1-leaf2b_Ethernet1
+    shutdown: true
+  - ip_address: 10.33.255.17
+    peer_group: IPv4-UNDERLAY-PEERS
+    remote_as: '65133'
+    peer: dc1-svc-leaf1a
+    description: dc1-svc-leaf1a_Ethernet1
+  - ip_address: 10.33.255.21
+    peer_group: IPv4-UNDERLAY-PEERS
+    remote_as: '65133'
+    peer: dc1-svc-leaf1b
+    description: dc1-svc-leaf1b_Ethernet1
+  - ip_address: 10.255.0.3
+    peer_group: EVPN-OVERLAY-PEERS
+    peer: dc1-leaf1a
+    description: dc1-leaf1a_Loopback0
+    remote_as: '65101'
+  - ip_address: 10.255.0.4
+    peer_group: EVPN-OVERLAY-PEERS
+    peer: dc1-leaf1b
+    description: dc1-leaf1b_Loopback0
+    remote_as: '65101'
+  - ip_address: 10.255.0.5
+    peer_group: EVPN-OVERLAY-PEERS
+    peer: dc1-leaf2a
+    description: dc1-leaf2a_Loopback0
+    remote_as: '65102'
+  - ip_address: 10.255.0.6
+    peer_group: EVPN-OVERLAY-PEERS
+    peer: dc1-leaf2b
+    description: dc1-leaf2b_Loopback0
+    remote_as: '65102'
+    shutdown: true
+  - ip_address: 10.33.0.5
+    peer_group: EVPN-OVERLAY-PEERS
+    peer: dc1-svc-leaf1a
+    description: dc1-svc-leaf1a_Loopback0
+    remote_as: '65133'
+  - ip_address: 10.33.0.6
+    peer_group: EVPN-OVERLAY-PEERS
+    peer: dc1-svc-leaf1b
+    description: dc1-svc-leaf1b_Loopback0
+    remote_as: '65133'
+  - ip_address: 123.1.1.10
+    remote_as: '1234'
+    password: oBztv71m2uhR7hh58/OCNA==
+    description: External IPv4 BGP peer
+    send_community: standard extended
+    maximum_routes: 0
+    default_originate:
+      always: false
+      route_map: RM-Tenant_A_WAN_Zone-123.1.1.10-SET-NEXT-HOP-OUT
+    update_source: Loopback123
+    ebgp_multihop: 3
+    route_map_in: RM-123-1-1-10-IN
+    route_map_out: RM-Tenant_A_WAN_Zone-123.1.1.10-SET-NEXT-HOP-OUT
+    local_as: '123'
+  - ip_address: 123.1.1.11
+    remote_as: '1234'
+    password: oBztv71m2uhR7hh58/OCNA==
+    description: External IPv4 BGP peer
+    send_community: standard extended
+    maximum_routes: 0
+    default_originate:
+      always: false
+    update_source: Loopback123
+    ebgp_multihop: 3
+    route_map_in: RM-123-1-1-11-IN
+    route_map_out: RM-123-1-1-11-OUT
+    local_as: '123'
+  - ip_address: fd5a:fe45:8831:06c5::a
+    remote_as: '12345'
+    send_community: all
+    route_map_out: RM-Tenant_A_WAN_Zone-fd5a:fe45:8831:06c5::a-SET-NEXT-HOP-OUT
+  - ip_address: fd5a:fe45:8831:06c5::b
+    remote_as: '12345'
+  address_family_evpn:
+    peer_groups:
+    - name: EVPN-OVERLAY-PEERS
+      activate: true
+  address_family_ipv6:
+    neighbors:
+    - ip_address: fd5a:fe45:8831:06c5::a
+      activate: true
+    - ip_address: fd5a:fe45:8831:06c5::b
+      activate: true
+static_routes:
+- vrf: MGMT
+  destination_address_prefix: 0.0.0.0/0
+  gateway: 172.16.1.1
+service_routing_protocols_model: multi-agent
+ip_routing: true
+vlan_internal_order:
+  allocation: ascending
+  range:
+    beginning: 1006
+    ending: 1199
+aaa_root:
+  disabled: true
+config_end: true
+enable_password:
+  disabled: true
+transceiver_qsfp_default_mode_4x10: true
+spanning_tree:
+  mode: none
+local_users:
+- name: admin
+  privilege: 15
+  role: network-admin
+  no_password: true
+- name: ansible
+  privilege: 15
+  role: network-admin
+  sha512_password: $6$7u4j1rkb3VELgcZE$EJt2Qff8kd/TapRoci0XaIZsL4tFzgq1YZBLD9c6f/knXzvcYY0NcMKndZeCv0T268knGKhOEwZAxqKjlMm920
+vrfs:
+- name: MGMT
+  ip_routing: false
+management_interfaces:
+- name: Management1
+  description: OOB_MANAGEMENT
+  shutdown: false
+  vrf: MGMT
+  ip_address: 172.16.1.11/24
+  gateway: 172.16.1.1
+  type: oob
+management_api_http:
+  enable_vrfs:
+  - name: MGMT
+  enable_https: true
+  https_ssl_profile: eAPI_SSL_Profile
+ethernet_interfaces:
+- name: Ethernet1
+  peer: dc1-leaf1a
+  peer_interface: Ethernet1
+  peer_type: l3leaf
+  description: P2P_dc1-leaf1a_Ethernet1
+  shutdown: false
+  mtu: 1500
+  switchport:
+    enabled: false
+  ip_address: 10.255.255.0/31
+- name: Ethernet2
+  peer: dc1-leaf1b
+  peer_interface: Ethernet1
+  peer_type: l3leaf
+  description: P2P_dc1-leaf1b_Ethernet1
+  shutdown: false
+  mtu: 1500
+  switchport:
+    enabled: false
+  ip_address: 10.255.255.4/31
+- name: Ethernet3
+  peer: dc1-leaf2a
+  peer_interface: Ethernet1
+  peer_type: l3leaf
+  description: P2P_dc1-leaf2a_Ethernet1
+  shutdown: false
+  mtu: 1500
+  switchport:
+    enabled: false
+  ip_address: 10.255.255.8/31
+- name: Ethernet4
+  peer: dc1-leaf2b
+  peer_interface: Ethernet1
+  peer_type: l3leaf
+  description: P2P_dc1-leaf2b_Ethernet1
+  shutdown: true
+  mtu: 1500
+  switchport:
+    enabled: false
+  ip_address: 10.255.255.12/31
+- name: Ethernet5
+  peer: dc1-svc-leaf1a
+  peer_interface: Ethernet1
+  peer_type: service_leaf
+  description: P2P_dc1-svc-leaf1a_Ethernet1
+  shutdown: false
+  mtu: 1500
+  switchport:
+    enabled: false
+  ip_address: 10.33.255.16/31
+- name: Ethernet6
+  peer: dc1-svc-leaf1b
+  peer_interface: Ethernet1
+  peer_type: service_leaf
+  description: P2P_dc1-svc-leaf1b_Ethernet1
+  shutdown: false
+  mtu: 1500
+  switchport:
+    enabled: false
+  ip_address: 10.33.255.20/31
+loopback_interfaces:
+- name: Loopback0
+  description: ROUTER_ID
+  shutdown: false
+  ip_address: 10.255.0.1/32
+prefix_lists:
+- name: PL-LOOPBACKS-EVPN-OVERLAY
+  sequence_numbers:
+  - sequence: 10
+    action: permit 10.255.0.0/27 eq 32
+route_maps:
+- name: RM-CONN-2-BGP
+  sequence_numbers:
+  - sequence: 10
+    type: permit
+    match:
+    - ip address prefix-list PL-LOOPBACKS-EVPN-OVERLAY
+router_bfd:
+  multihop:
+    interval: 300
+    min_rx: 300
+    multiplier: 3
+metadata:
+  platform: vEOS-lab
+dns_domain: dc1.local

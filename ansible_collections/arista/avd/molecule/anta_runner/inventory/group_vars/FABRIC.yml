@@ -1,0 +1,168 @@
+---
+### group_vars/FABRIC.yml
+
+# Ansible connectivity definitions
+# eAPI connectivity via HTTPS is specified (as opposed to CLI via SSH)
+ansible_connection: ansible.netcommon.httpapi
+# Specifies that we are indeed using Arista EOS
+ansible_network_os: arista.eos.eos
+# This user/password must exist on the switches to enable Ansible access
+ansible_user: ansible
+ansible_password: ansible
+# User escalation (to enter enable mode)
+ansible_become: true
+ansible_become_method: enable
+# Use SSL (HTTPS)
+ansible_httpapi_use_ssl: true
+# Do not try to validate certs
+ansible_httpapi_validate_certs: false
+
+# If a device is set to "is_deployed: false" at the host_vars level, then shutdown interfaces towards undeployed peers.
+shutdown_interfaces_towards_undeployed_peers: true
+
+# Common AVD group variables
+fabric_name: FABRIC
+
+# Define underlay and overlay routing protocol to be used
+underlay_routing_protocol: ebgp
+overlay_routing_protocol: ebgp
+
+# eAPI HTTPS SSL profile
+custom_structured_configuration_management_api_http:
+  https_ssl_profile: eAPI_SSL_Profile
+
+# Local users
+local_users:
+  # Define a new user, which is called "ansible"
+  - name: ansible
+    privilege: 15
+    role: network-admin
+    # Password set to "ansible". Same string as the device generates when configuring a username.
+    sha512_password: $6$7u4j1rkb3VELgcZE$EJt2Qff8kd/TapRoci0XaIZsL4tFzgq1YZBLD9c6f/knXzvcYY0NcMKndZeCv0T268knGKhOEwZAxqKjlMm920
+  - name: admin
+    privilege: 15
+    role: network-admin
+    no_password: true
+
+# BGP peer groups passwords
+bgp_peer_groups:
+  # all passwords set to "arista"
+  evpn_overlay_peers:
+    password: Q4fqtbqcZ7oQuKfuWtNGRQ==
+  ipv4_underlay_peers:
+    password: 7x4B4rnJhZB438m9+BrBfQ==
+  mlag_ipv4_underlay_peer:
+    password: 4b21pAdCvWeAqpcKDFMdWw==
+  wan_overlay_peers:
+    password: "htm4AZe9mIQOO1uiMuGgYQ=="
+    listen_range_prefixes:
+      - 10.0.0.0/8
+
+# P2P interfaces MTU, includes VLANs 4093 and 4094 that are over peer-link
+# If you're running vEOS-lab or cEOS, you should use MTU of 1500 instead as shown in the following line
+# p2p_uplinks_mtu: 1500
+p2p_uplinks_mtu: 1500
+
+# Define default interfaces
+default_interfaces:
+  - types: [ spine ]
+    platforms: [ vEOS-lab ]
+    uplink_interfaces: [ Ethernet1-2 ]
+    downlink_interfaces: [ Ethernet1-8 ]
+  - types: [ l3leaf, service_leaf ]
+    platforms: [ vEOS-lab ]
+    uplink_interfaces: [ Ethernet1-8 ]
+    mlag_interfaces: [ Ethernet3-4 ]
+    downlink_interfaces: [ Ethernet8, Ethernet8 ]
+  - types: [ l2leaf ]
+    platforms: [ vEOS-lab ]
+    uplink_interfaces: [ Ethernet1-2 ]
+
+# L3 Edge port definitions. This can be any port in the entire Fabric, where IP interfaces are defined.
+l3_edge:
+  # Define a new IP pool that will be used to assign IP addresses to L3 Edge interfaces.
+  p2p_links_ip_pools:
+    - name: DCI_IP_pool
+      ipv4_pool: 192.168.100.0/24
+  # Define a new link profile which will match the IP pool, the used ASNs and include the defined interface into underlay routing
+  p2p_links_profiles:
+    - name: DCI_profile
+      ip_pool: DCI_IP_pool
+      as: [65102, 65202]
+      include_in_underlay_protocol: true
+  # Define each P2P L3 link and link the nodes, the interfaces and the profile used.
+  p2p_links:
+    - id: 1
+      nodes: [dc1-leaf2a, dc2-leaf2a]
+      interfaces: [Ethernet6, Ethernet6]
+      profile: DCI_profile
+    - id: 2
+      nodes: [dc1-leaf2b, dc2-leaf2b]
+      interfaces: [Ethernet6, Ethernet6]
+      profile: DCI_profile
+
+# Custom node types
+node_type_keys:
+
+  - key: spine
+    type: spine
+    default_evpn_role: server
+    default_ptp_priority1: 20
+
+  - key: l3leaf
+    type: l3leaf
+    connected_endpoints: true
+    default_evpn_role: client
+    default_ptp_priority1: 30
+    mlag_support: true
+    network_services:
+      l2: true
+      l3: true
+    vtep: true
+
+  - key: l2leaf
+    type: l2leaf
+    connected_endpoints: true
+    mlag_support: true
+    network_services:
+      l2: true
+    underlay_router: false
+    uplink_type: port-channel
+
+  - key: super_spine
+    type: super-spine
+
+  - key: overlay_controller
+    type: overlay-controller
+    default_evpn_role: server
+
+  - key: wan_router
+    type: wan_router
+    default_evpn_role: client
+    default_wan_role: client
+    default_underlay_routing_protocol: none
+    default_overlay_routing_protocol: ibgp
+    network_services:
+      l3: true
+    vtep: true
+
+  - key: wan_rr
+    type: wan_rr
+    default_evpn_role: server
+    default_wan_role: server
+    default_underlay_routing_protocol: none
+    default_overlay_routing_protocol: ibgp
+    network_services:
+      l3: true
+    vtep: true
+
+  - key: service_leaf
+    type: service_leaf
+    connected_endpoints: true
+    default_evpn_role: client
+    default_ptp_priority1: 30
+    mlag_support: true
+    network_services:
+      l2: true
+      l3: true
+    vtep: true

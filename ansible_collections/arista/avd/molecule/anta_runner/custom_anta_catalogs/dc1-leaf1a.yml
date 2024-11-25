@@ -1,0 +1,25 @@
+---
+# These tests will be added to dc1-leaf1a device only
+anta.tests.profiles:
+  - VerifyUnifiedForwardingTableMode:
+      mode: 3
+  - VerifyTcamProfile:
+      profile: vxlan-routing
+
+anta.tests.software:
+  - VerifyEOSExtensions:
+
+anta.tests.vxlan:
+  - VerifyVxlan1Interface:
+  - VerifyVxlanConfigSanity:
+  - VerifyVxlanVniBinding:
+      bindings:
+        10010: 10
+        10020: 20
+  - VerifyVxlanVtep:
+      vteps:
+        - 10.1.1.5
+        - 10.1.1.6
+  - VerifyVxlan1ConnSettings:
+      source_interface: Loopback1
+      udp_port: 4789

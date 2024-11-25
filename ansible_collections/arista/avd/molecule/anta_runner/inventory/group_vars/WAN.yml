@@ -1,0 +1,54 @@
+---
+
+wan_mode: cv-pathfinder
+
+cv_pathfinder_regions:
+  - name: Global
+    id: 1
+    sites:
+      - name: DC1
+        id: 100
+
+wan_ipsec_profiles:
+  control_plane:
+    shared_key: 0110100A480E0A0E231D1E
+  data_plane:
+    shared_key: 0110100A480E0A0E231D1E
+
+wan_path_groups:
+  - name: mpls
+    id: 101
+  - name: internet
+    id: 102
+
+wan_carriers:
+  - name: isp-1
+    path_group: internet
+    trusted: true
+  - name: mpls-sp-1
+    path_group: mpls
+    trusted: true
+
+wan_route_servers:
+  - hostname: dc1-leaf1a
+    vtep_ip: 10.255.255.10
+    path_groups:
+      - name: mpls
+        interfaces:
+          - name: Ethernet6
+            public_ip: 172.18.1.2
+      - name: internet
+        interfaces:
+          - name: Ethernet7
+            public_ip: 100.64.1.2
+  - hostname: dc1-leaf1b
+    vtep_ip: 10.255.255.20
+    path_groups:
+      - name: mpls
+        interfaces:
+          - name: Ethernet6
+            public_ip: 172.18.2.2
+      - name: internet
+        interfaces:
+          - name: Ethernet7
+            public_ip: 100.64.2.2

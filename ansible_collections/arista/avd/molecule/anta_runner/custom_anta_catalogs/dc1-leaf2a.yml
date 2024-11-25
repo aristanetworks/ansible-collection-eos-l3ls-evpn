@@ -1,0 +1,10 @@
+---
+# These tests will be added to dc1-leaf2a device only
+anta.tests.profiles:
+  - VerifyUnifiedForwardingTableMode:
+      mode: 3
+  - VerifyTcamProfile:
+      profile: vxlan-routing
+
+anta.tests.software:
+  - VerifyEOSExtensions:

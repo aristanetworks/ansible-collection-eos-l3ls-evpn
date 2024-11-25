@@ -1,0 +1,259 @@
+---
+### group_vars/DC1.yml
+
+# Default gateway used for the management interface
+mgmt_gateway: 172.16.1.1
+
+### DNS Domain ###
+custom_structured_configuration_dns_domain: dc1.local
+
+# Spine switch group
+spine:
+  # Definition of default values that will be configured to all nodes defined in this group
+  defaults:
+    # Set the relevant platform as each platform has different default values in Ansible AVD
+    platform: vEOS-lab
+    # Pool of IPv4 addresses to configure interface Loopback0 used for BGP EVPN sessions
+    loopback_ipv4_pool: 10.255.0.0/27
+    # ASN to be used by BGP
+    bgp_as: 65100
+
+  # Definition of nodes contained in this group.
+  # Specific configuration of device must take place under the node definition. Each node inherites all values defined under 'defaults'
+  nodes:
+    # Name of the node to be defined (must be consistent with definition in inventory)
+    - name: dc1-spine1
+      # Device ID definition. An integer number used for internal calculations (ie. IPv4 address of the loopback_ipv4_pool among others)
+      id: 1
+      # Management IP to be assigned to the management interface
+      mgmt_ip: 172.16.1.11/24
+      # Custom BGP configuration for BGP tests
+      structured_config:
+        router_bgp:
+          address_family_ipv4:
+            neighbors:
+              - ip_address: 123.1.1.10
+                activate: true
+              - ip_address: 123.1.1.11
+                activate: true
+          neighbors:
+            - ip_address: 123.1.1.10
+              remote_as: '1234'
+              password: oBztv71m2uhR7hh58/OCNA==
+              description: External IPv4 BGP peer
+              send_community: standard extended
+              maximum_routes: 0
+              default_originate:
+                always: false
+                route_map: RM-Tenant_A_WAN_Zone-123.1.1.10-SET-NEXT-HOP-OUT
+              update_source: Loopback123
+              ebgp_multihop: 3
+              route_map_in: RM-123-1-1-10-IN
+              route_map_out: RM-Tenant_A_WAN_Zone-123.1.1.10-SET-NEXT-HOP-OUT
+              local_as: '123'
+            - ip_address: 123.1.1.11
+              remote_as: '1234'
+              password: oBztv71m2uhR7hh58/OCNA==
+              description: External IPv4 BGP peer
+              send_community: standard extended
+              maximum_routes: 0
+              default_originate:
+                always: false
+              update_source: Loopback123
+              ebgp_multihop: 3
+              route_map_in: RM-123-1-1-11-IN
+              route_map_out: RM-123-1-1-11-OUT
+              local_as: '123'
+            - ip_address: fd5a:fe45:8831:06c5::a
+              remote_as: '12345'
+              send_community: all
+              route_map_out: RM-Tenant_A_WAN_Zone-fd5a:fe45:8831:06c5::a-SET-NEXT-HOP-OUT
+            - ip_address: fd5a:fe45:8831:06c5::b
+              remote_as: '12345'
+          address_family_ipv6:
+            neighbors:
+              - ip_address: fd5a:fe45:8831:06c5::a
+                activate: true
+              - ip_address: fd5a:fe45:8831:06c5::b
+                activate: true
+    - name: dc1-spine2
+      id: 2
+      mgmt_ip: 172.16.1.12/24
+      # Custom BGP configuration for BGP tests
+      structured_config:
+        router_bgp:
+          peer_groups:
+            - name: IPv4-EXTERNAL-PEERS
+              type: ipv4
+              remote_as: 577
+            - name: IPv6-EXTERNAL-PEERS
+              type: ipv6
+              remote_as: 577
+            - name: EVPN-EXTERNAL-PEERS
+              type: evpn
+              remote_as: 577
+          neighbors:
+            - ip_address: 142.112.39.2
+              peer_group: IPv4-EXTERNAL-PEERS
+              description: "Primary_ISP_IPv4"
+            - ip_address: 2001:db8:1::2
+              peer_group: IPv6-EXTERNAL-PEERS
+              description: "Primary_ISP_IPv6"
+            - ip_address: 142.112.41.2
+              peer_group: EVPN-EXTERNAL-PEERS
+              description: "Primary_ISP_EVPN"
+          address_family_ipv4:
+            peer_groups:
+              - name: IPv4-EXTERNAL-PEERS
+                activate: true
+          address_family_ipv6:
+            peer_groups:
+              - name: IPv6-EXTERNAL-PEERS
+                activate: true
+          address_family_evpn:
+            peer_groups:
+              - name: EVPN-EXTERNAL-PEERS
+                activate: true
+# L3 Leaf switch group
+l3leaf:
+  defaults:
+    # Set the relevant platform as each platform has different default values in Ansible AVD
+    platform: vEOS-lab
+    # Pool of IPv4 addresses to configure interface Loopback0 used for BGP EVPN sessions
+    loopback_ipv4_pool: 10.255.0.0/27
+    # Offset all assigned loopback IP addresses.
+    # Required when the < loopback_ipv4_pool > is same for 2 different node_types (like spine and l3leaf) to avoid over-lapping IPs.
+    # For example, set the minimum offset l3leaf.defaults.loopback_ipv4_offset: < total # spine switches > or vice versa.
+    loopback_ipv4_offset: 2
+    # Definition of pool of IPs to be used as Virtual Tunnel EndPoint (VXLAN origin and destination IPs)
+    vtep_loopback_ipv4_pool: 10.255.1.0/27
+    # Ansible hostname of the devices used to establish neighborship (IP assignments and BGP peering)
+    uplink_switches: ['dc1-spine1', 'dc1-spine2']
+    # Definition of pool of IPs to be used in P2P links
+    uplink_ipv4_pool: 10.255.255.0/26
+    # Definition of pool of IPs to be used for MLAG peer-link connectivity
+    mlag_peer_ipv4_pool: 10.255.1.64/27
+    # iBGP Peering between MLAG peers
+    mlag_peer_l3_ipv4_pool: 10.255.1.96/27
+    # Virtual router mac for VNIs assigned to Leaf switches in format xx:xx:xx:xx:xx:xx
+    virtual_router_mac_address: 00:1c:73:00:00:99
+    spanning_tree_priority: 4096
+    spanning_tree_mode: mstp
+
+  # If two nodes (and only two) are in the same node_group, they will automatically form an MLAG pair
+  node_groups:
+    # Definition of a node group that will include two devices in MLAG.
+    # Definitions under the group will be inherited by both nodes in the group
+    - group: DC1_L3_LEAF1
+      # ASN to be used by BGP for the group. Both devices in the MLAG pair will use the same BGP ASN
+      bgp_as: 65101
+      nodes:
+        # Definition of hostnames under the node_group
+        - name: dc1-leaf1a
+          id: 1
+          mgmt_ip: 172.16.1.101/24
+          # Definition of the port to be used in the uplink device facing this device.
+          # Note that the number of elements in this list must match the length of 'uplink_switches' as well as 'uplink_interfaces'
+          uplink_switch_interfaces:
+            - Ethernet1
+            - Ethernet1
+        - name: dc1-leaf1b
+          id: 2
+          mgmt_ip: 172.16.1.102/24
+          uplink_switch_interfaces:
+            - Ethernet2
+            - Ethernet2
+
+    - group: DC1_L3_LEAF2
+      bgp_as: 65102
+      evpn_gateway:
+        # Specific BGP EVPN Gateway functionality for route types 2 (MAC-IP), 3 (IMET) and 5 (IP-PREFIX) can be enabled separately as needed.
+        evpn_l2:
+          enabled: true
+        evpn_l3:
+          enabled: true
+          inter_domain: true
+      nodes:
+        - name: dc1-leaf2a
+          id: 3
+          mgmt_ip: 172.16.1.103/24
+          uplink_switch_interfaces:
+            - Ethernet3
+            - Ethernet3
+          evpn_gateway:
+            # Define remote peers of the EVPN VXLAN Gateway.
+            # If the hostname can be found in the inventory, ip_address and BGP ASN will be automatically populated.
+            # Manual override takes precedence. If the peer's hostname can not be found in the inventory, ip_address and bgp_as must be defined.
+            remote_peers:
+              - hostname: dc2-leaf2a
+        - name: dc1-leaf2b
+          id: 4
+          mgmt_ip: 172.16.1.104/24
+          uplink_switch_interfaces:
+            - Ethernet4
+            - Ethernet4
+          evpn_gateway:
+            # Define remote peers of the EVPN VXLAN Gateway.
+            # If the hostname can be found in the inventory, ip_address and BGP ASN will be automatically populated. Manual override takes precedence.
+            # If the peer's hostname can not be found in the inventory, ip_address and bgp_as must be defined.
+            remote_peers:
+              - hostname: dc2-leaf2b
+# L2 Leaf switch group
+l2leaf:
+  defaults:
+    platform: vEOS-lab
+    spanning_tree_mode: mstp
+    inband_mgmt_subnet: 172.21.110.0/24
+    inband_mgmt_description: L2LEAF_INBAND_MGMT
+    inband_mgmt_vlan_name: L2LEAF_INBAND_MGMT
+    inband_mgmt_vlan: 4085
+    inband_mgmt_vrf: MGMT
+  node_groups:
+    - group: DC1_L2_LEAF1
+      uplink_switches: ['dc1-leaf1a', 'dc1-leaf1b']
+      nodes:
+        - name: dc1-leaf1c
+          id: 1
+          uplink_switch_interfaces:
+            - Ethernet8
+            - Ethernet8
+
+    - group: DC1_L2_LEAF2
+      uplink_switches: ['dc1-leaf2a', 'dc1-leaf2b']
+      nodes:
+        - name: dc1-leaf2c
+          id: 2
+          uplink_switch_interfaces:
+            - Ethernet8
+            - Ethernet8
+
+# Custom node type service_leaf group
+service_leaf:
+  defaults:
+    platform: vEOS-lab
+    loopback_ipv4_pool: 10.33.0.0/27
+    vtep_loopback_ipv4_pool: 10.33.1.0/27
+    uplink_switches: ['dc1-spine1', 'dc1-spine2']
+    uplink_ipv4_pool: 10.33.255.0/26
+    mlag_peer_ipv4_pool: 10.33.1.64/27
+    mlag_peer_l3_ipv4_pool: 10.33.1.96/27
+    virtual_router_mac_address: 00:1c:73:00:00:99
+    spanning_tree_priority: 4096
+    spanning_tree_mode: mstp
+
+  node_groups:
+    - group: DC1_SVC_LEAF1
+      bgp_as: 65133
+      nodes:
+        - name: dc1-svc-leaf1a
+          id: 5
+          mgmt_ip: 172.16.1.31/24
+          uplink_switch_interfaces:
+            - Ethernet5
+            - Ethernet5
+        - name: dc1-svc-leaf1b
+          id: 6
+          mgmt_ip: 172.16.1.32/24
+          uplink_switch_interfaces:
+            - Ethernet6
+            - Ethernet6

@@ -1,0 +1,83 @@
+# Copyright (c) 2023-2024 Arista Networks, Inc.
+# Use of this source code is governed by the Apache License 2.0
+# that can be found in the LICENSE file.
+---
+- name: Verify Requirements
+  delegate_to: localhost
+  when: avd_requirements is not defined and avd_verify_requirements | default(true)
+  arista.avd.verify_requirements:
+    requirements: "{{ lookup('file', requirements_path ~ '/requirements.txt').splitlines() }}"
+    avd_ignore_requirements: "{{ avd_ignore_requirements | default(false) }}"
+  vars:
+    requirements_path: "{{ (role_path | split('/'))[0:-2] | join('/') }}"
+  run_once: true
+  register: avd_requirements
+
+- name: Create required output directories if not present
+  when: avd_create_directories | arista.avd.default(true)
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    mode: "0o775"
+  loop:
+    - "{{ anta_dir }}"
+    - "{{ output_dir }}"
+    - "{{ test_catalogs_dir }}"
+    - "{{ test_results_dir }}"
+    - "{{ custom_anta_catalogs_dir }}"
+  delegate_to: localhost
+  run_once: true
+  check_mode: false
+
+- name: Include device intended structured configuration variables
+  ansible.builtin.include_vars: "{{ filename }}"
+  delegate_to: localhost
+  when: structured_config is not defined and lookup('first_found', filename, skip=True, errors='ignore')
+  vars:
+    filename: "{{ structured_dir }}/{{ inventory_hostname }}.{{ avd_structured_config_file_format }}"
+
+- name: Run anta_runner
+  arista.avd.anta_workflow:
+    device_list: "{{ ansible_play_hosts }}"
+    anta_catalogs:
+      avd_catalog_dir: "{{ test_catalogs_dir }}"
+      avd_catalog_filters: 
+        - device_list: "all"
+          run_tests: "{{ avd_catalog_filters.run_tests | default(omit) }}"
+          skip_tests: "{{ avd_catalog_filters.skip_tests | default(omit) }}"
+      structured_config_dir: "{{ structured_dir }}"
+      structured_config_suffix: yml
+      user_catalog_dir: "{{ custom_anta_catalogs_dir }}"
+    anta_logging:
+      log_level: "{{ logging_level | default('INFO') }}"
+      log_file: "{{ root_dir }}/anta.log"
+    anta_runner_settings:
+      timeout: "{{ timeout | default(30.0) }}"
+      disable_cache: "{{ disable_cache | default(False) }}"
+      tags: "{{ tags | default([]) }}"
+    report:
+      test_results_dir: "{{ test_results_dir }}"
+      csv_output: "{{ anta_csv_report_path }}"
+      md_output: "{{ anta_md_report_path }}"
+      filters:
+        hide_statuses:
+          - success
+          - error
+  register: anta_results
+  check_mode: false
+
+
+# - name: Create validation reports
+#   arista.avd.anta_reports:
+#     csv_report_path: "{{ anta_csv_report_path }}"
+#     md_report_path: "{{ anta_md_report_path }}"
+#     validation_report_csv: "{{ validation_report_csv }}"
+#     validation_report_md: "{{ validation_report_md }}"
+#     only_failed_tests: "{{ only_failed_tests }}"
+#     test_results_dir: "{{ test_results_dir }}"
+#     # cprofile_file: "anta_reports.prof"
+#   delegate_to: localhost
+#   run_once: true
+#   check_mode: false
+#   when:
+#     - validation_report_csv | bool or validation_report_md | bool

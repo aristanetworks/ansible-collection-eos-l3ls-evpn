@@ -1,0 +1,56 @@
+---
+# These tests will be added to devices part of the DC2_L3_LEAVES group
+anta.tests.logging:
+  - VerifyLoggingPersistent:
+  - VerifyLoggingSourceIntf:
+      interface: Management0
+      vrf: default
+  - VerifyLoggingHosts:
+      hosts:
+        - 1.1.1.1
+        - 2.2.2.2
+      vrf: default
+  - VerifyLoggingLogsGeneration:
+  - VerifyLoggingHostname:
+  - VerifyLoggingTimestamp:
+  - VerifyLoggingAccounting:
+  - VerifyLoggingErrors:
+
+anta.tests.mlag:
+  - VerifyMlagStatus:
+  - VerifyMlagInterfaces:
+  - VerifyMlagConfigSanity:
+  - VerifyMlagReloadDelay:
+      reload_delay: 300
+      reload_delay_non_mlag: 330
+  - VerifyMlagDualPrimary:
+      detection_delay: 200
+      errdisabled: True
+      recovery_delay: 60
+      recovery_delay_non_mlag: 0
+
+anta.tests.multicast:
+  - VerifyIGMPSnoopingVlans:
+      vlans:
+        10: False
+        12: False
+  - VerifyIGMPSnoopingGlobal:
+      enabled: True
+
+anta.tests.stp:
+  - VerifySTPMode:
+      mode: rapidPvst
+      vlans:
+        - 10
+        - 20
+  - VerifySTPBlockedPorts:
+  - VerifySTPCounters:
+  - VerifySTPForwardingPorts:
+      vlans:
+        - 10
+        - 20
+  - VerifySTPRootPriority:
+      priority: 32768
+      instances:
+        - 10
+        - 20

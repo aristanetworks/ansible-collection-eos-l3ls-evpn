@@ -1,0 +1,35 @@
+---
+scenario:
+  converge_sequence:
+    - converge
+  test_sequence:
+    - create
+    - converge
+    - idempotence
+  cleanup_sequence:
+    - destroy
+dependency:
+  name: galaxy
+  enabled: false
+driver:
+  name: default
+  options:
+    managed: false
+platforms:
+  - name: dummy
+provisioner:
+  name: ansible
+  config_options:
+    defaults:
+      jinja2_extensions: jinja2.ext.loopcontrols,jinja2.ext.do,jinja2.ext.i18n
+      duplicate_dict_key: error
+      gathering: explicit
+  inventory:
+    links:
+      hosts: 'inventory/inventory.yml'
+      group_vars: 'inventory/group_vars/'
+      host_vars: 'inventory/host_vars/'
+  ansible_args:
+    - --check
+verifier:
+  name: ansible

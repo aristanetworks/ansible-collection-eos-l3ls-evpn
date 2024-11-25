@@ -1,0 +1,177 @@
+---
+# These tests will be added to devices part of the DC1_SPINES group
+anta.tests.interfaces:
+  - VerifyInterfaceUtilization:
+      threshold: 70.0
+  - VerifyInterfaceErrors:
+  - VerifyInterfaceDiscards:
+  - VerifyInterfaceErrDisabled:
+  - VerifyInterfacesStatus:
+      interfaces:
+        - name: Ethernet1
+          status: up
+        - name: Ethernet2
+          status: up
+          line_protocol_status: up
+        - name: Vlan10
+          status: adminDown
+          line_protocol_status: down
+  - VerifyStormControlDrops:
+  - VerifyPortChannels:
+  - VerifyIllegalLACP:
+  - VerifyLoopbackCount:
+      number: 3
+  - VerifySVI:
+  - VerifyL3MTU:
+      mtu: 1500
+      ignored_interfaces:
+        - Vxlan1
+      specific_mtu:
+        - Ethernet1: 2500
+  - VerifyIPProxyARP:
+      interfaces:
+        - Ethernet1
+        - Ethernet2
+  - VerifyL2MTU:
+      mtu: 1500
+      ignored_interfaces:
+        - Management1
+        - Vxlan1
+      specific_mtu:
+        - Ethernet1/1: 1500
+
+anta.tests.bfd:
+  - VerifyBFDSpecificPeers:
+      bfd_peers:
+        - peer_address: 192.0.255.8
+          vrf: default
+        - peer_address: 192.0.255.7
+          vrf: default
+  - VerifyBFDPeersIntervals:
+      bfd_peers:
+        - peer_address: 192.0.255.8
+          vrf: default
+          tx_interval: 1200
+          rx_interval: 1200
+          multiplier: 3
+        - peer_address: 192.0.255.7
+          vrf: default
+          tx_interval: 1200
+          rx_interval: 1200
+          multiplier: 3
+  - VerifyBFDPeersHealth:
+      down_threshold: 2
+
+anta.tests.routing:
+  generic:
+    - VerifyRoutingProtocolModel:
+        model: multi-agent
+    - VerifyRoutingTableSize:
+        minimum: 2
+        maximum: 20
+    - VerifyRoutingTableEntry:
+        vrf: default
+        routes:
+          - 10.1.0.1
+          - 10.1.0.2
+  bgp:
+    - VerifyBGPPeerCount:
+        address_families:
+          - afi: "evpn"
+            num_peers: 2
+          - afi: "ipv4"
+            safi: "unicast"
+            vrf: "PROD"
+            num_peers: 2
+          - afi: "ipv4"
+            safi: "unicast"
+            vrf: "default"
+            num_peers: 3
+          - afi: "ipv4"
+            safi: "multicast"
+            vrf: "DEV"
+            num_peers: 3
+    - VerifyBGPPeersHealth:
+        address_families:
+          - afi: "evpn"
+          - afi: "ipv4"
+            safi: "unicast"
+            vrf: "default"
+          - afi: "ipv6"
+            safi: "unicast"
+            vrf: "DEV"
+    - VerifyBGPSpecificPeers:
+        address_families:
+          - afi: "evpn"
+            peers:
+              - 10.1.0.1
+              - 10.1.0.2
+          - afi: "ipv4"
+            safi: "unicast"
+            peers:
+              - 10.1.254.1
+              - 10.1.255.0
+              - 10.1.255.2
+              - 10.1.255.4
+    - VerifyBGPExchangedRoutes:
+        bgp_peers:
+          - peer_address: 172.30.255.5
+            vrf: default
+            advertised_routes:
+              - 192.0.254.5/32
+            received_routes:
+              - 192.0.255.4/32
+          - peer_address: 172.30.255.1
+            vrf: default
+            advertised_routes:
+              - 192.0.255.1/32
+              - 192.0.254.5/32
+            received_routes:
+              - 192.0.254.3/32
+    - VerifyBGPPeerMPCaps:
+        bgp_peers:
+          - peer_address: 172.30.11.1
+            vrf: default
+            capabilities:
+              - ipv4Unicast
+    - VerifyBGPPeerASNCap:
+        bgp_peers:
+          - peer_address: 172.30.11.1
+            vrf: default
+    - VerifyBGPPeerRouteRefreshCap:
+        bgp_peers:
+          - peer_address: 172.30.11.1
+            vrf: default
+    - VerifyBGPPeerMD5Auth:
+        bgp_peers:
+          - peer_address: 172.30.11.1
+            vrf: default
+          - peer_address: 172.30.11.5
+            vrf: default
+    - VerifyEVPNType2Route:
+        vxlan_endpoints:
+          - address: 192.168.20.102
+            vni: 10020
+          - address: aac1.ab5d.b41e
+            vni: 10010
+    - VerifyBGPAdvCommunities:
+        bgp_peers:
+          - peer_address: 172.30.11.17
+            vrf: default
+          - peer_address: 172.30.11.21
+            vrf: default
+    - VerifyBGPTimers:
+        bgp_peers:
+          - peer_address: 172.30.11.1
+            vrf: default
+            hold_time: 180
+            keep_alive_time: 60
+          - peer_address: 172.30.11.5
+            vrf: default
+            hold_time: 180
+            keep_alive_time: 60
+  ospf:
+    - VerifyOSPFNeighborState:
+    - VerifyOSPFNeighborCount:
+        number: 3
+    - VerifyOSPFMaxLSA:

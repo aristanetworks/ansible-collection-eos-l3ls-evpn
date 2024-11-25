@@ -1,0 +1,13 @@
+---
+- name: Configure local folders
+  hosts: FABRIC
+  gather_facts: false
+  connection: local
+  vars:
+    root_dir: '{{ playbook_dir }}'
+  tasks:
+    - name: Create local output folders
+      delegate_to: 127.0.0.1
+      ansible.builtin.import_role:
+        name: arista.avd.build_output_folders
+      run_once: true

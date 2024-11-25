@@ -193,7 +193,7 @@ class ActionModule(ActionBase):
         result_manager = ResultManager()
 
         # Load the user-defined ANTA catalogs if a directory path is provided
-        user_catalog_dir = get(anta_catalogs, "avd_catalog_dir")
+        user_catalog_dir = get(anta_catalogs, "user_catalog_dir")
         if user_catalog_dir is not None:
             user_catalog = self.load_anta_catalogs(user_catalog_dir)
             final_catalog = AntaCatalog.merge_catalogs([final_catalog, user_catalog])
@@ -216,7 +216,7 @@ class ActionModule(ActionBase):
                 device_catalog = get_device_anta_catalog(device, fabric_data, run_tests=run_tests, skip_tests=skip_tests, logger=LOGGER)
 
                 # Dump the device catalog to the provided directory if provided
-                catalog_dir = get(anta_catalogs, "user_catalog_dir")
+                catalog_dir = get(anta_catalogs, "avd_catalog_dir")
                 if catalog_dir is not None:
                     self.dump_anta_catalog(device, device_catalog, catalog_dir)
 

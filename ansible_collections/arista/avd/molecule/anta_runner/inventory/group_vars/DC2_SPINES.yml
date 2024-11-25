@@ -1,0 +1,4 @@
+---
+### group_vars/DC2_SPINES.yml
+
+type: spine
