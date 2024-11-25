@@ -586,6 +586,11 @@ management accounts
 
 #### Management API gNMI Summary
 
+| Transport | SSL Profile | VRF | Notification Timestamp | ACL | Port |
+| --------- | ----------- | --- | ---------------------- | --- | ---- |
+| MGMT | gnmi | MGMT | send-time | acl1 | 6030 |
+| mytransport | - | - | send-time | acl1 | 6032 |
+
 | Transport | Destination | Destination Port | gNMI SSL Profile | Tunnel SSL Profile | VRF | Local Interface | Local Port | Target ID |
 | --------- | ----------- | ---------------- | ---------------- | ------------------ | --- | --------------- | ---------- | --------- |
 | onetarget | 10.1.1.100 | 10000 | ssl_profile | ssl_profile | management | Management1 | 10001 | testid100 |
@@ -601,6 +606,17 @@ Provider eos-native is configured.
 ```eos
 !
 management api gnmi
+   transport grpc MGMT
+      ssl profile gnmi
+      vrf MGMT
+      ip access-group acl1
+      notification timestamp send-time
+   !
+   transport grpc mytransport
+      port 6032
+      ip access-group acl1
+      notification timestamp send-time
+   !
    transport grpc-tunnel multipletargets
       no shutdown
       vrf management
