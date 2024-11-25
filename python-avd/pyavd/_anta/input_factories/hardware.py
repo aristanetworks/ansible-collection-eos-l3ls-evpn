@@ -7,13 +7,13 @@ from typing import TYPE_CHECKING
 
 from pyavd._utils import get
 
+from ._base_classes import AntaTestInputFactory
+
 if TYPE_CHECKING:
     from anta.tests.hardware import VerifyEnvironmentCooling, VerifyEnvironmentPower, VerifyTransceiversManufacturers
 
-    from pyavd._anta.utils import ConfigManager, TestLoggerAdapter
 
-
-class VerifyEnvironmentPowerInputFactory:
+class VerifyEnvironmentPowerInputFactory(AntaTestInputFactory):
     """Input factory class for the VerifyEnvironmentPower test.
 
     This factory creates test inputs for power supply status verification.
@@ -25,17 +25,14 @@ class VerifyEnvironmentPowerInputFactory:
     TODO: `accepted_pwr_supply_states` is not yet implemented in the AVD structured config schema.
     """
 
-    @classmethod
-    def create(cls, test: type[VerifyEnvironmentPower], manager: ConfigManager, logger: TestLoggerAdapter) -> VerifyEnvironmentPower.Input:
+    def create(self) -> VerifyEnvironmentPower.Input:
         """Create Input for the VerifyEnvironmentPower test."""
-        _ = logger
+        pwr_supply_states = get(self.manager.structured_config, "accepted_pwr_supply_states", ["ok"])
 
-        pwr_supply_states = get(manager.structured_config, "accepted_pwr_supply_states", ["ok"])
-
-        return test.Input(states=pwr_supply_states)
+        return self.test.Input(states=pwr_supply_states)
 
 
-class VerifyEnvironmentCoolingInputFactory:
+class VerifyEnvironmentCoolingInputFactory(AntaTestInputFactory):
     """Input factory class for the VerifyEnvironmentCooling test.
 
     This factory creates test inputs for cooling system status verification.
@@ -47,17 +44,14 @@ class VerifyEnvironmentCoolingInputFactory:
     TODO: `accepted_fan_states` is not yet implemented in the AVD structured config schema.
     """
 
-    @classmethod
-    def create(cls, test: type[VerifyEnvironmentCooling], manager: ConfigManager, logger: TestLoggerAdapter) -> VerifyEnvironmentCooling.Input:
+    def create(self) -> VerifyEnvironmentCooling.Input:
         """Create Input for the VerifyEnvironmentCooling test."""
-        _ = logger
+        fan_states = get(self.manager.structured_config, "accepted_fan_states", ["ok"])
 
-        fan_states = get(manager.structured_config, "accepted_fan_states", ["ok"])
-
-        return test.Input(states=fan_states)
+        return self.test.Input(states=fan_states)
 
 
-class VerifyTransceiversManufacturersInputFactory:
+class VerifyTransceiversManufacturersInputFactory(AntaTestInputFactory):
     """Input factory class for the VerifyTransceiversManufacturers test.
 
     This factory creates test inputs for transceiver manufacturer verification.
@@ -70,12 +64,9 @@ class VerifyTransceiversManufacturersInputFactory:
     TODO: `accepted_xcvr_manufacturers` is not yet implemented in the AVD structured config schema.
     """
 
-    @classmethod
-    def create(cls, test: type[VerifyTransceiversManufacturers], manager: ConfigManager, logger: TestLoggerAdapter) -> VerifyTransceiversManufacturers.Input:
+    def create(self) -> VerifyTransceiversManufacturers.Input:
         """Create Input for the VerifyTransceiversManufacturers test."""
-        _ = logger
-
-        xcvr_manufacturers = get(manager.structured_config, "accepted_xcvr_manufacturers", ["Arista Networks", "Arastra, Inc."])
+        xcvr_manufacturers = get(self.manager.structured_config, "accepted_xcvr_manufacturers", ["Arista Networks", "Arastra, Inc."])
         xcvr_manufacturers.append("Not Present")
 
-        return test.Input(manufacturers=xcvr_manufacturers)
+        return self.test.Input(manufacturers=xcvr_manufacturers)

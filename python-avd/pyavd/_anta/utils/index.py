@@ -90,3 +90,9 @@ PYAVD_TEST_INDEX: list[TestSpec] = [
     ),
 ]
 """List of all ANTA tests with their specifications that PyAVD will run by default."""
+
+PYAVD_TEST_INDEX.sort(key=lambda x: x.test_class.name)
+"""Sort the test index by the test class name."""
+
+PYAVD_TEST_NAMES: list[str] = [test.test_class.name for test in PYAVD_TEST_INDEX]
+"""List of all available ANTA test names that PyAVD will run by default."""

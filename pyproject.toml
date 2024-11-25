@@ -102,4 +102,4 @@ docstring-code-format = true
 
 [tool.ruff.lint.flake8-type-checking]
 # These classes require that type annotations be available at runtime
-runtime-evaluated-base-classes = ["pydantic.BaseModel"]
+runtime-evaluated-base-classes = ["pydantic.BaseModel", "pyavd._anta.input_factories._base_classes.AntaTestInputFactoryFilter"]

@@ -74,6 +74,7 @@ class LogMessage(Enum):
     NO_DATA_MODEL = "Data model(s) {entity} not found. Skipping."
     NO_SOURCES = "No {entity} sources found. Skipping."
     UNAVAILABLE_PEER = "{entity} skipped. Peer {peer} unavailable."
+    FILTERED_PEER = "{entity} skipped. Peer {peer} filtered."
     UNAVAILABLE_PEER_IP = "{entity} skipped. Peer {peer} IP for {peer_interface} missing."
     UNAVAILABLE_IP = "{entity} skipped. IP address missing."
     INELIGIBLE_DATA = "{entity} skipped. {issues}"

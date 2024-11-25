@@ -9,14 +9,13 @@ from typing import TYPE_CHECKING
 from pyavd._anta.utils import LogMessage
 from pyavd._utils import default, get, validate_dict
 
+from ._base_classes import AntaTestInputFactory, AntaTestInputFactoryFilter
+
 if TYPE_CHECKING:
     from anta.tests.connectivity import VerifyLLDPNeighbors, VerifyReachability
 
-    from pyavd._anta.utils import TestLoggerAdapter
-    from pyavd._anta.utils.config_manager import ConfigManager
 
-
-class VerifyLLDPNeighborsInputFactory:
+class VerifyLLDPNeighborsInputFactory(AntaTestInputFactory):
     """Input factory class for the VerifyLLDPNeighbors test.
 
     This factory creates test inputs for LLDP neighbor verification.
@@ -32,10 +31,13 @@ class VerifyLLDPNeighborsInputFactory:
 
     """
 
-    @classmethod
-    def create(cls, test: type[VerifyLLDPNeighbors], manager: ConfigManager, logger: TestLoggerAdapter) -> VerifyLLDPNeighbors.Input | None:
+    # TODO: Add filter class
+    class Filter(AntaTestInputFactoryFilter):
+        pass
+
+    def create(self) -> VerifyLLDPNeighbors.Input | None:
         """Create Input for the VerifyLLDPNeighbors test."""
-        ethernet_interfaces = get(manager.structured_config, "ethernet_interfaces", [])
+        ethernet_interfaces = get(self.manager.structured_config, "ethernet_interfaces", [])
 
         neighbors = []
         required_keys = ["peer", "peer_interface"]
@@ -44,40 +46,40 @@ class VerifyLLDPNeighborsInputFactory:
         for interface in ethernet_interfaces:
             # Skip subinterfaces
             if interface.get("validate_state", True) is False or interface.get("validate_lldp", True) is False:
-                logger.debug(LogMessage.SKIP_INTERFACE, entity=interface["name"])
+                self.logger.debug(LogMessage.SKIP_INTERFACE, entity=interface["name"])
                 continue
 
-            if manager.is_subinterface(interface):
-                logger.debug(LogMessage.SUBINTERFACE, entity=interface["name"])
+            if self.manager.is_subinterface(interface):
+                self.logger.debug(LogMessage.SUBINTERFACE, entity=interface["name"])
                 continue
 
-            manager.update_interface_shutdown(interface)
+            self.manager.update_interface_shutdown(interface)
 
             is_valid, issues = validate_dict(interface, required_keys, required_key_values)
             if not is_valid:
-                logger.debug(LogMessage.INELIGIBLE_DATA, entity=interface["name"], issues=issues)
+                self.logger.debug(LogMessage.INELIGIBLE_DATA, entity=interface["name"], issues=issues)
                 continue
 
-            if not manager.is_peer_available(peer := interface["peer"]):
-                logger.debug(LogMessage.UNAVAILABLE_PEER, entity=interface["name"], peer=peer)
+            if not self.manager.is_peer_available(peer := interface["peer"]):
+                self.logger.debug(LogMessage.UNAVAILABLE_PEER, entity=interface["name"], peer=peer)
                 continue
 
             # Append the DNS domain if available
-            if (dns_domain := get(manager.fabric_data.structured_configs[peer], "dns_domain", separator="..")) is not None:
+            if (dns_domain := get(self.manager.fabric_data.structured_configs[peer], "dns_domain", separator="..")) is not None:
                 peer = f"{peer}.{dns_domain}"
 
             neighbors.append(
-                test.Input.Neighbor(
+                self.test.Input.Neighbor(
                     port=interface["name"],
                     neighbor_device=peer,
                     neighbor_port=interface["peer_interface"],
                 ),
             )
 
-        return test.Input(neighbors=neighbors) if neighbors else None
+        return self.test.Input(neighbors=neighbors) if neighbors else None
 
 
-class VerifyReachabilityInputFactory:
+class VerifyReachabilityInputFactory(AntaTestInputFactory):
     """Input factory class for the VerifyReachability test.
 
     This factory creates test inputs for IP reachability verification.
@@ -96,61 +98,69 @@ class VerifyReachabilityInputFactory:
       - Reachability collection is skipped if no valid pairs are found
     """
 
-    @classmethod
-    def create(cls, test: type[VerifyReachability], manager: ConfigManager, logger: TestLoggerAdapter) -> VerifyReachability.Input | None:
+    # TODO: Add filter class
+    class Filter(AntaTestInputFactoryFilter):
+        pass
+
+    def create(self) -> VerifyReachability.Input | None:
         """Create Input for the VerifyReachability test."""
         # Get the eligible source IPs and VRFs
-        inband_mgmt_svis = cls._get_inband_mgmt_svis(manager, logger=logger.add_context(context="Inband MGMT"))
-        vtep_loopback0s = cls._get_vtep_loopback0s(manager, logger=logger.add_context(context="VTEP Loopback0"))
-        dps_vteps = cls._get_vtep_dps(manager, logger=logger.add_context(context="DPS VTEP"))
+        inband_mgmt_svis = self._get_inband_mgmt_svis()
+        vtep_loopback0s = self._get_vtep_loopback0s()
+        dps_vteps = self._get_vtep_dps()
+
         # Generate the hosts from the eligible sources and remote loopback0 interfaces from the mapping
         hosts = []
-        for dst_node, dst_ip in manager.fabric_data.loopback0_mapping.items():
-            if not manager.is_peer_available(dst_node):
-                logger.debug(LogMessage.UNAVAILABLE_PEER, entity=f"Destination {dst_ip}", peer=dst_node)
+        for dst_node, dst_ip in self.manager.fabric_data.loopback0_mapping.items():
+            if not self.manager.is_peer_available(dst_node):
+                self.logger.debug(LogMessage.UNAVAILABLE_PEER, entity=f"Destination {dst_ip}", peer=dst_node)
                 continue
 
-            hosts.extend([test.Input.Host(**source_vrf, destination=dst_ip, repeat=1) for source_vrf in inband_mgmt_svis + vtep_loopback0s])
-        for dst_node, dst_ip in manager.fabric_data.dps_mapping.items():
-            if not manager.is_peer_available(dst_node):
-                logger.debug(LogMessage.UNAVAILABLE_PEER, entity=f"Destination {dst_ip}", peer=dst_node)
+            hosts.extend([self.test.Input.Host(**source_vrf, destination=dst_ip, repeat=1) for source_vrf in inband_mgmt_svis + vtep_loopback0s])
+        for dst_node, dst_ip in self.manager.fabric_data.dps_mapping.items():
+            if not self.manager.is_peer_available(dst_node):
+                self.logger.debug(LogMessage.UNAVAILABLE_PEER, entity=f"Destination {dst_ip}", peer=dst_node)
                 continue
 
-            hosts.extend([test.Input.Host(**source_vrf, destination=dst_ip, repeat=1) for source_vrf in dps_vteps])
+            hosts.extend([self.test.Input.Host(**source_vrf, destination=dst_ip, repeat=1) for source_vrf in dps_vteps])
+
         # Add the P2P hosts
-        hosts.extend(cls._get_p2p_hosts(test, manager, logger=logger.add_context(context="P2P")))
+        hosts.extend(self._get_p2p_hosts())
 
-        return test.Input(hosts=hosts) if hosts else None
+        return self.test.Input(hosts=hosts) if hosts else None
 
-    @staticmethod
-    def _get_p2p_hosts(test: type[VerifyReachability], manager: ConfigManager, logger: TestLoggerAdapter) -> list[VerifyReachability.Input.Host]:
+    def _get_p2p_hosts(self) -> list[VerifyReachability.Input.Host]:
         """Generate the P2P hosts for the VerifyReachability test."""
-        ethernet_interfaces = get(manager.structured_config, "ethernet_interfaces", default=[])
+        logger = self.logger.add_context(context="P2P")
+
+        ethernet_interfaces = get(self.manager.structured_config, "ethernet_interfaces", default=[])
 
         hosts = []
         required_keys = ["peer", "peer_interface", "ip_address"]
         required_key_values = {"switchport.enabled": False, "shutdown": False}
 
         for interface in ethernet_interfaces:
-            manager.update_interface_shutdown(interface)
+            self.manager.update_interface_shutdown(interface)
 
             is_valid, issues = validate_dict(interface, required_keys, required_key_values)
             if not is_valid:
                 logger.debug(LogMessage.INELIGIBLE_DATA, entity=interface["name"], issues=issues)
                 continue
 
-            if not manager.is_peer_available(peer := interface["peer"]):
+            if not self.manager.is_peer_available(peer := interface["peer"]):
                 logger.debug(LogMessage.UNAVAILABLE_PEER, entity=interface["name"], peer=peer)
                 continue
 
             if (
-                peer_interface_ip := manager.get_interface_ip(interface_model="ethernet_interfaces", interface_name=interface["peer_interface"], device=peer)
+                peer_interface_ip := self.manager.get_interface_ip(
+                    interface_model="ethernet_interfaces", interface_name=interface["peer_interface"], device=peer
+                )
             ) is None:
                 logger.debug(LogMessage.UNAVAILABLE_PEER_IP, entity=interface["name"], peer=peer, peer_interface=interface["peer_interface"])
                 continue
 
             hosts.append(
-                test.Input.Host(
+                self.test.Input.Host(
                     source=ip_interface(interface["ip_address"]).ip,
                     destination=ip_interface(peer_interface_ip).ip,
                     vrf="default",
@@ -163,17 +173,18 @@ class VerifyReachabilityInputFactory:
 
         return hosts
 
-    @staticmethod
-    def _get_inband_mgmt_svis(manager: ConfigManager, logger: TestLoggerAdapter) -> list[dict]:
+    def _get_inband_mgmt_svis(self) -> list[dict]:
         """Generate the source IPs and VRFs from inband management SVIs for the VerifyReachability test."""
-        vlan_interfaces = get(manager.structured_config, "vlan_interfaces", default=[])
+        logger = self.logger.add_context(context="Inband MGMT")
+
+        vlan_interfaces = get(self.manager.structured_config, "vlan_interfaces", default=[])
 
         svis = []
         required_keys = ["ip_address"]
         required_key_values = {"type": "inband_mgmt", "shutdown": False}
 
         for svi in vlan_interfaces:
-            manager.update_interface_shutdown(svi)
+            self.manager.update_interface_shutdown(svi)
 
             is_valid, issues = validate_dict(svi, required_keys, required_key_values)
             if not is_valid:
@@ -189,16 +200,17 @@ class VerifyReachabilityInputFactory:
 
         return svis
 
-    @staticmethod
-    def _get_vtep_loopback0s(manager: ConfigManager, logger: TestLoggerAdapter) -> list[dict]:
+    def _get_vtep_loopback0s(self) -> list[dict]:
         """Generate the source IPs and VRFs from loopback0 interfaces of VTEPs for the VerifyReachability test."""
+        logger = self.logger.add_context(context="VTEP Loopback0")
+
         vtep_loopback0s = []
 
-        if not manager.is_vtep() or manager.is_wan_vtep():
+        if not self.manager.is_vtep() or self.manager.is_wan_vtep():
             logger.debug(LogMessage.NOT_VTEP)
             return vtep_loopback0s
 
-        if (loopback0_ip := manager.get_interface_ip(interface_model="loopback_interfaces", interface_name="Loopback0")) is None:
+        if (loopback0_ip := self.manager.get_interface_ip(interface_model="loopback_interfaces", interface_name="Loopback0")) is None:
             logger.debug(LogMessage.UNAVAILABLE_IP, entity="Loopback0")
         else:
             vtep_loopback0s.append({"source": ip_interface(loopback0_ip).ip, "vrf": "default"})
@@ -208,21 +220,22 @@ class VerifyReachabilityInputFactory:
 
         return vtep_loopback0s
 
-    @staticmethod
-    def _get_vtep_dps(manager: ConfigManager, logger: TestLoggerAdapter) -> list[dict]:
+    def _get_vtep_dps(self) -> list[dict]:
         """Generate the source IPs and VRFs from Dps1 interface of VTEPs for the VerifyReachability test."""
+        logger = self.logger.add_context(context="DPS VTEP")
+
         dps_vteps = []
-        if not manager.is_wan_vtep():
+        if not self.manager.is_wan_vtep():
             logger.debug(LogMessage.NOT_WAN_VTEP)
             return dps_vteps
 
         # TODO: Remove the support of Vxlan1 in AVD 6.0.0 version
         dps_source_interface = default(
-            get(manager.structured_config, "vxlan_interface.vxlan1.vxlan.source_interface"),
-            get(manager.structured_config, "vxlan_interface.Vxlan1.vxlan.source_interface", ""),
+            get(self.manager.structured_config, "vxlan_interface.vxlan1.vxlan.source_interface"),
+            get(self.manager.structured_config, "vxlan_interface.Vxlan1.vxlan.source_interface", ""),
         )
         if "Dps" in dps_source_interface:
-            if (dps_ip := manager.get_interface_ip(interface_model="dps_interfaces", interface_name=dps_source_interface)) is None:
+            if (dps_ip := self.manager.get_interface_ip(interface_model="dps_interfaces", interface_name=dps_source_interface)) is None:
                 logger.debug(LogMessage.UNAVAILABLE_IP, entity=dps_source_interface)
             else:
                 dps_vteps.append({"source": ip_interface(dps_ip).ip, "vrf": "default"})

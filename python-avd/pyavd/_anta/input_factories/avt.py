@@ -8,14 +8,13 @@ from typing import TYPE_CHECKING
 from pyavd._anta.utils import LogMessage
 from pyavd._utils import get
 
+from ._base_classes import AntaTestInputFactory, AntaTestInputFactoryFilter
+
 if TYPE_CHECKING:
     from anta.tests.avt import VerifyAVTRole
 
-    from pyavd._anta.utils import TestLoggerAdapter
-    from pyavd._anta.utils.config_manager import ConfigManager
 
-
-class VerifyAVTRoleInputFactory:
+class VerifyAVTRoleInputFactory(AntaTestInputFactory):
     """Input factory class for the VerifyAVTRole test.
 
     This factory creates test inputs for AVT role verification.
@@ -24,15 +23,18 @@ class VerifyAVTRoleInputFactory:
 
     """
 
-    @classmethod
-    def create(cls, test: type[VerifyAVTRole], manager: ConfigManager, logger: TestLoggerAdapter) -> VerifyAVTRole.Input | None:
+    # TODO: Add filter class
+    class Filter(AntaTestInputFactoryFilter):
+        pass
+
+    def create(self) -> VerifyAVTRole.Input | None:
         """Create Input for the VerifyAVTRole test."""
         # Retrieve AVT role from the structured configuration
-        avt_role = get(manager.structured_config, "router_adaptive_virtual_topology.topology_role")
+        avt_role = get(self.manager.structured_config, "router_adaptive_virtual_topology.topology_role")
         if not avt_role:
-            logger.debug(LogMessage.NO_INPUTS)
+            self.logger.debug(LogMessage.NO_INPUTS)
         # Translating avt role for transit region and zone due to json output
         if avt_role in ["transit region", "transit zone"]:
             avt_role = " ".join(reversed(avt_role.split()))
 
-        return test.Input(role=avt_role)
+        return self.test.Input(role=avt_role)

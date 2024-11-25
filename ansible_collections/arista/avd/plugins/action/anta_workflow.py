@@ -22,7 +22,7 @@ PLUGIN_NAME = "arista.avd.anta_workflow"
 
 try:
     from pyavd._anta.lib import AntaCatalog, AntaInventory, AsyncEOSDevice, ResultManager, anta_runner, setup_logging
-    from pyavd._utils import default, get, strip_empties_from_dict
+    from pyavd._utils import default, get
     from pyavd.get_device_anta_catalog import get_device_anta_catalog
     from pyavd.get_fabric_data import get_fabric_data
 
@@ -51,6 +51,7 @@ ARGUMENT_SPEC = {
                     "device_list": {"type": "list", "elements": "str"},
                     "run_tests": {"type": "list", "elements": "str"},
                     "skip_tests": {"type": "list", "elements": "str"},
+                    "input_filters": {"type": "dict"},
                 },
             },
             "structured_config_dir": {"type": "str"},
@@ -115,9 +116,7 @@ class ActionModule(ActionBase):
         hostvars = task_vars["hostvars"]
 
         # Get task arguments and validate them
-        validated_args = strip_empties_from_dict(self._task.args)
         validation_result, validated_args = self.validate_argument_spec(ARGUMENT_SPEC)
-        validated_args = strip_empties_from_dict(validated_args)
 
         # Converting to json and back to remove any AnsibeUnsafe types
         validated_args = json.loads(json.dumps(validated_args))
@@ -155,6 +154,7 @@ class ActionModule(ActionBase):
 
         tags = set(get(validated_args, "anta_runner_settings.tags", default=[])) or None
 
+        # TODO: Implement dry-run mode
         await anta_runner(result_manager, inventory, catalog, tags=tags)
 
         # TODO: Do something useful with the results (reporting, etc.)
@@ -194,6 +194,7 @@ class ActionModule(ActionBase):
 
         # Load the user-defined ANTA catalogs if a directory path is provided
         user_catalog_dir = get(anta_catalogs, "user_catalog_dir")
+        user_catalog_dir = get(anta_catalogs, "user_catalog_dir")
         if user_catalog_dir is not None:
             user_catalog = self.load_anta_catalogs(user_catalog_dir)
             final_catalog = AntaCatalog.merge_catalogs([final_catalog, user_catalog])
@@ -207,47 +208,60 @@ class ActionModule(ActionBase):
         for device in device_list:
             # Build the ANTA device object and add it to the ANTA inventory
             anta_device = self.build_anta_device(device, hostvars, anta_runner_settings)
-            if anta_device:
-                final_inventory.add_device(anta_device)
+            if not anta_device:
+                continue
+            final_inventory.add_device(anta_device)
 
             # Load the AVD catalog for that device if structured configs are provided
             if structured_config_dir is not None:
-                run_tests, skip_tests = self.get_test_filters_for_device(device, anta_catalogs)
-                device_catalog = get_device_anta_catalog(device, fabric_data, run_tests=run_tests, skip_tests=skip_tests, logger=LOGGER)
-
-                # Dump the device catalog to the provided directory if provided
-                catalog_dir = get(anta_catalogs, "avd_catalog_dir")
-                if catalog_dir is not None:
-                    self.dump_anta_catalog(device, device_catalog, catalog_dir)
+                catalog_filters = get(anta_catalogs, "avd_catalog_filters", default=[])
+                device_test_filters = self.get_test_filters_for_device(device, catalog_filters)
+                device_catalog = get_device_anta_catalog(
+                    hostname=device,
+                    fabric_data=fabric_data,
+                    output_dir=get(anta_catalogs, "avd_catalog_dir"),
+                    logger=LOGGER,
+                    **device_test_filters,
+                )
 
                 final_catalog = AntaCatalog.merge_catalogs([final_catalog, device_catalog])
 
         return result_manager, final_inventory, final_catalog
 
-    def get_test_filters_for_device(self, device: str, anta_catalogs: dict) -> tuple[set[str], set[str]]:
+    def get_test_filters_for_device(self, device: str, catalog_filters: list[dict]) -> dict[str, Any]:
         """Get the test filters for a device from the ANTA catalogs settings.
 
         Parameters
         ----------
             device: The name of the device.
-            anta_catalogs: The ANTA catalogs settings for the run.
+            catalog_filters: The ANTA catalog filters from the plugin arguments.
 
         Returns:
         -------
-            tuple: A tuple containing the `run_tests` and `skip_tests` filters for the device.
+            dict: A dictionary containing the test filters for the device.
         """
         run_tests = set()
         skip_tests = set()
-
-        catalog_filters = get(anta_catalogs, "avd_catalog_filters", default=[])
+        input_filters = {}
 
         for filter_config in catalog_filters:
             device_list = get(filter_config, "device_list", default=[])
-            if device in device_list:
-                run_tests.update(get(filter_config, "run_tests", default=[]))
-                skip_tests.update(get(filter_config, "skip_tests", default=[]))
+            if device not in device_list:
+                continue
+            run_tests.update(get(filter_config, "run_tests", default=[]))
+            skip_tests.update(get(filter_config, "skip_tests", default=[]))
+            device_input_filters = get(filter_config, "input_filters", default={})
+            for test_name, filter_dict in device_input_filters.items():
+                if test_name not in input_filters:
+                    input_filters[test_name] = filter_dict
+                else:
+                    LOGGER.warning("Duplicate input filter for test '%s' found on device '%s'. Only the first provided filter will be used.", test_name, device)
 
-        return run_tests or None, skip_tests or None
+        return {
+            "run_tests": list(run_tests) if run_tests else None,
+            "skip_tests": list(skip_tests) if skip_tests else None,
+            "input_filters": input_filters if input_filters else None,
+        }
 
     def build_anta_device(self, device: str, hostvars: Mapping, anta_runner_settings: dict) -> AsyncEOSDevice | None:
         """Build the ANTA device object for a device using the provided Ansible hostvars.
@@ -266,10 +280,16 @@ class ActionModule(ActionBase):
         required_settings = ["host", "username", "password"]
 
         if device not in hostvars:
-            LOGGER.warning("Device '%s' not found in Ansible inventory. Skipping device.", device)
+            LOGGER.warning("Device '%s' not found in Ansible inventory. Skipping all tests.", device)
             return None
 
         device_vars = hostvars[device]
+
+        if get(device_vars, "is_deployed", default=True) is False:
+            LOGGER.warning("Device '%s' is marked as not deployed (is_deployed: false). Skipping all tests.", device)
+            return None
+
+        # TODO: Confirm this is working with vaulted passwords
         device_settings = {
             "name": device,
             "host": get(device_vars, "ansible_host", default=get(device_vars, "inventory_hostname")),
@@ -280,6 +300,7 @@ class ActionModule(ActionBase):
             "port": get(device_vars, "ansible_httpapi_port", default=(80 if get(device_vars, "ansible_httpapi_use_ssl", default=False) is False else 443)),
             "timeout": get(anta_runner_settings, "timeout"),
             "disable_cache": get(anta_runner_settings, "disable_cache"),
+            # TODO: Need to add anta_tags to the metadata schema
             "tags": set(get(device_vars, "metadata.anta_tags", default=[])),
         }
 
@@ -294,21 +315,6 @@ class ActionModule(ActionBase):
             return None
 
         return AsyncEOSDevice(**device_settings)
-
-    def dump_anta_catalog(self, device: str, catalog: AntaCatalog, catalog_dir: str) -> None:
-        """Dump the ANTA catalog for a device to the provided directory.
-
-        Parameters
-        ----------
-            device: The name of the device.
-            catalog: The ANTA catalog of the device.
-            catalog_dir: The directory where the ANTA catalogs should be saved.
-        """
-        catalog_path = Path(catalog_dir) / f"{device}.yml"
-        catalog_dump = catalog.dump()
-
-        with catalog_path.open(mode="w", encoding="UTF-8") as stream:
-            stream.write(catalog_dump.yaml())
 
     def load_anta_catalogs(self, catalog_dir: str) -> AntaCatalog:
         """Load ANTA catalogs from the provided directory.
@@ -336,7 +342,7 @@ class ActionModule(ActionBase):
                 LOGGER.warning("Unsupported file format for ANTA catalog: %s. Skipping file.", path_obj)
                 continue
 
-            LOGGER.info("Loading ANTA catalog from %s", path_obj)
+            LOGGER.debug("Loading ANTA catalog from %s", path_obj)
             catalog = AntaCatalog.parse(path_obj, file_format)
             catalogs.append(catalog)
 

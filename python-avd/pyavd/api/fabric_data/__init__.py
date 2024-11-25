@@ -4,7 +4,7 @@
 from __future__ import annotations
 
 from collections import defaultdict
-from ipaddress import ip_interface
+from ipaddress import IPv4Address, ip_interface
 from typing import TYPE_CHECKING
 
 from pyavd._utils import default, get, get_item
@@ -38,10 +38,10 @@ class FabricData:
     def __init__(self, structured_configs: dict[str, dict], logger: Logger) -> None:
         """Initialize the FabricData instance."""
         self.structured_configs = structured_configs
-        self.loopback0_mapping = {}
-        self.vtep_mapping = {}
-        self.dps_mapping = {}
-        self.combined_mapping = defaultdict(list)
+        self.loopback0_mapping: dict[str, IPv4Address] = {}
+        self.vtep_mapping: dict[str, IPv4Address] = {}
+        self.dps_mapping: dict[str, IPv4Address] = {}
+        self.combined_mapping: defaultdict[str, list[IPv4Address]] = defaultdict(list)
         self.logger = logger
 
         # Generate the mappings and populate the attributes
@@ -67,8 +67,11 @@ class FabricData:
         loopback_interfaces = get(structured_config, "loopback_interfaces", default=[])
         if (loopback0 := get_item(loopback_interfaces, "name", "Loopback0")) is not None and (loopback_ip := get(loopback0, "ip_address")) is not None:
             ip_obj = ip_interface(loopback_ip).ip
-            self.loopback0_mapping[device] = ip_obj
-            self.combined_mapping[device].append(ip_obj)
+            if isinstance(ip_obj, IPv4Address):
+                self.loopback0_mapping[device] = ip_obj
+                self.combined_mapping[device].append(ip_obj)
+            else:
+                self.logger.debug("<%s>: Not added to Loopback0 mapping. IPv6 Loopback0 is not supported.", device)
         else:
             self.logger.debug("<%s>: Not added to Loopback0 mapping. Loopback0 or its IP is missing.", device)
 
@@ -92,8 +95,11 @@ class FabricData:
                 loopback_ip := get(loopback_interface, "ip_address")
             ) is not None:
                 ip_obj = ip_interface(loopback_ip).ip
-                self.vtep_mapping[device] = ip_obj
-                self.combined_mapping[device].append(ip_obj)
+                if isinstance(ip_obj, IPv4Address):
+                    self.vtep_mapping[device] = ip_obj
+                    self.combined_mapping[device].append(ip_obj)
+                else:
+                    self.logger.debug("<%s>: Not added to VTEP mapping. IPv6 VTEP is not supported.", device)
             else:
                 self.logger.debug("<%s>: Not added to VTEP mapping. VTEP source %s or its IP is missing.", device, vtep_interface)
         else:
@@ -116,9 +122,12 @@ class FabricData:
         if "DPS" in vtep_interface:
             if (dps_interface := get_item(dps_interfaces, "name", vtep_interface)) is not None and (dps_ip := get(dps_interface, "ip_address")) is not None:
                 ip_obj = ip_interface(dps_ip).ip
-                self.dps_mapping[device] = ip_obj
-                self.combined_mapping[device].append(ip_obj)
+                if isinstance(ip_obj, IPv4Address):
+                    self.dps_mapping[device] = ip_obj
+                    self.combined_mapping[device].append(ip_obj)
+                else:
+                    self.logger.debug("<%s>: Not added to WAN VTEP mapping. IPv6 DPS is not supported.", device)
             else:
                 self.logger.debug("<%s>: Not added to Loopback0 mapping. Loopback0 or its IP is missing.", device)
         else:
-            self.logger.debug("<%s>: Not added to VTEP mapping. Not a VTEP or is a WAN VTEP.", device)
+            self.logger.debug("<%s>: Not added to WAN VTEP mapping. Not a WAN VTEP.", device)
