@@ -5,6 +5,7 @@
 - [Management](#management)
   - [Management Interfaces](#management-interfaces)
   - [Management SSH](#management-ssh)
+  - [Management API gNMI](#management-api-gnmi)
   - [Management CVX Summary](#management-cvx-summary)
   - [Management API HTTP](#management-api-http)
 - [CVX](#cvx)
@@ -145,6 +146,32 @@ management ssh
    !
    vrf mgt
       no shutdown
+```
+
+### Management API gNMI
+
+#### Management API gNMI Summary
+
+| Transport | SSL Profile | VRF | Notification Timestamp | ACL | Port |
+| --------- | ----------- | --- | ---------------------- | --- | ---- |
+| MGMT | - | MGMT | last-change-time | ACL-GNMI | 6030 |
+| MONITORING | - | MONITORING | last-change-time | - | 6031 |
+
+Provider eos-native is configured.
+
+#### Management API gNMI Device Configuration
+
+```eos
+!
+management api gnmi
+   transport grpc MGMT
+      vrf MGMT
+      ip access-group ACL-GNMI
+   !
+   transport grpc MONITORING
+      port 6031
+      vrf MONITORING
+   provider eos-native
 ```
 
 ### Management CVX Summary

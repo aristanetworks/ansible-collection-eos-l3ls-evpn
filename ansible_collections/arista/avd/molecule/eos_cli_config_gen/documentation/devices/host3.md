@@ -4,6 +4,7 @@
 
 - [Management](#management)
   - [Management Interfaces](#management-interfaces)
+  - [Management API gNMI](#management-api-gnmi)
 - [Routing](#routing)
   - [Router BGP](#router-bgp)
 
@@ -33,6 +34,35 @@ interface Management1
    description OOB_MANAGEMENT
    vrf MGMT
    ip address 10.73.255.122/24
+```
+
+### Management API gNMI
+
+#### Management API gNMI Summary
+
+| Transport | SSL Profile | VRF | Notification Timestamp | ACL | Port |
+| --------- | ----------- | --- | ---------------------- | --- | ---- |
+| MGMT | gnmi | MGMT | send-time | acl1 | 6030 |
+| mytransport | - | - | send-time | acl1 | 6032 |
+
+Provider eos-native is configured.
+
+#### Management API gNMI Device Configuration
+
+```eos
+!
+management api gnmi
+   transport grpc MGMT
+      ssl profile gnmi
+      vrf MGMT
+      ip access-group acl1
+      notification timestamp send-time
+   !
+   transport grpc mytransport
+      port 6032
+      ip access-group acl1
+      notification timestamp send-time
+   provider eos-native
 ```
 
 ## Routing
