@@ -41,7 +41,7 @@
     device_list: "{{ ansible_play_hosts }}"
     anta_catalogs:
       avd_catalog_dir: "{{ test_catalogs_dir }}"
-      avd_catalog_filters: 
+      avd_catalog_filters:
         - device_list: "all"
           run_tests: "{{ avd_catalog_filters.run_tests | default(omit) }}"
           skip_tests: "{{ avd_catalog_filters.skip_tests | default(omit) }}"
