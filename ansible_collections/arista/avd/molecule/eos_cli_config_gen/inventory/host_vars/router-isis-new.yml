@@ -1,6 +1,7 @@
 ### Routing - ISIS ###
 router_isis:
   instance: EVPN_UNDERLAY
+  is_hostname: MYROUTER
   log_adjacency_changes: false
   mpls_ldp_sync_default: true
   spf_interval:

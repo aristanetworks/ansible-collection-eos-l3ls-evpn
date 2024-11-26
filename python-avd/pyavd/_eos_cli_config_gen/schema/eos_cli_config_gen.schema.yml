@@ -18046,6 +18046,9 @@ keys:
       router_id:
         type: str
         description: IPv4 Address.
+      is_hostname:
+        type: str
+        description: Hostname of Intermediate System.
       is_type:
         display_name: IS Type
         type: str
