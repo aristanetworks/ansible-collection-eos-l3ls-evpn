@@ -24,6 +24,7 @@ aaa_accounting:
         - method: group
           group: group2
           multicast: true
+        - method: logging
   commands:
     console:
       - commands: all

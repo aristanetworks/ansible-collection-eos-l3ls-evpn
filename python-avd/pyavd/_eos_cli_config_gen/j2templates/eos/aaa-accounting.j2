@@ -52,22 +52,22 @@ aaa accounting system default {{ aaa_accounting.system.default.type }} group {{ 
 {%     endif %}
 {%     if aaa_accounting.dot1x.default.methods is arista.avd.defined %}
 {%         set accounting_default_list = [] %}
-{%         if aaa_accounting.dot1x.default.methods is arista.avd.defined %}
-{%             for method in aaa_accounting.dot1x.default.methods %}
-{%                 if method.method == "logging" %}
-{%                     do accounting_default_list.append(method.method) %}
-{%                 elif method.method == "group" and method.group is arista.avd.defined %}
-{%                     set group_cli = "group " ~ method.group %}
-{%                     if method.multicast is arista.avd.defined %}
-{%                         set group_cli = group_cli ~ " multicast" %}
-{%                     endif %}
-{%                     do accounting_default_list.append(group_cli) %}
+{%         for method in aaa_accounting.dot1x.default.methods %}
+{%             if method.method == "logging" %}
+{%                 do accounting_default_list.append(method.method) %}
+{%             elif method.method == "group" and method.group is arista.avd.defined %}
+{%                 set group_cli = "group " ~ method.group %}
+{%                 if method.multicast is arista.avd.defined %}
+{%                     set group_cli = group_cli ~ " multicast" %}
 {%                 endif %}
-{%             endfor %}
-{%         endif %}
+{%                 do accounting_default_list.append(group_cli) %}
+{%             endif %}
+{%         endfor %}
 {%         set accounting_list_cli = " ".join(accounting_default_list) %}
+{%         if aaa_accounting.dot1x.default.type is arista.avd.defined %}
 aaa accounting dot1x default {{ aaa_accounting.dot1x.default.type }} {{ accounting_list_cli }}
-{%     elif aaa_accounting.dot1x.default.group is arista.avd.defined %}
+{%         endif %}
+{%     elif aaa_accounting.dot1x.default.group is arista.avd.defined and aaa_accounting.dot1x.default.type is arista.avd.defined %}
 aaa accounting dot1x default {{ aaa_accounting.dot1x.default.type }} group {{ aaa_accounting.dot1x.default.group }}
 {%     endif %}
 {%     if aaa_accounting.commands.default is arista.avd.defined %}

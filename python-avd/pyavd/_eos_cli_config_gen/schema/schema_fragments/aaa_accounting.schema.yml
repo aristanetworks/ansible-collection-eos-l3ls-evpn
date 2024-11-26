@@ -55,7 +55,6 @@ keys:
             keys:
               type:
                 type: str
-                required: true
                 valid_values: ["start-stop", "stop-only"]
               group:
                 description: Group Name.
@@ -71,7 +70,6 @@ keys:
                   keys:
                     method:
                       type: str
-                      required: true
                       valid_values: ["logging", "group"]
                     group:
                       type: str

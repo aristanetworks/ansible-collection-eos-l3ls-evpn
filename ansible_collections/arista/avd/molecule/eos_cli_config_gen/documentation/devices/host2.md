@@ -355,7 +355,7 @@ no aaa authorization config-commands
 | ---- | -------- | ----------- | ----- | ------- |
 | Exec - Console | - | none | - | True |
 | Exec - Default | - | none | - | - |
-| Dot1x - Default | - | start-stop | logging, group1, group2 | - |
+| Dot1x - Default | - | start-stop | group1, group2 | True |
 
 #### AAA Accounting Device Configuration
 
