@@ -185,7 +185,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                     """Subclass of AvdModel."""
 
                     _fields: ClassVar[dict] = {"method": {"type": str}, "group": {"type": str}, "multicast": {"type": bool}, "_custom_data": {"type": dict}}
-                    method: Literal["logging", "group"]
+                    method: Literal["logging", "group"] | None
                     group: str | None
                     """Server group. This can only be set when method is set as `group`."""
                     multicast: bool | None
@@ -200,7 +200,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                         def __init__(
                             self,
                             *,
-                            method: Literal["logging", "group"] | UndefinedType = Undefined,
+                            method: Literal["logging", "group"] | None | UndefinedType = Undefined,
                             group: str | None | UndefinedType = Undefined,
                             multicast: bool | None | UndefinedType = Undefined,
                             _custom_data: dict[str, Any] | UndefinedType = Undefined,
@@ -227,7 +227,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 Methods._item_type = MethodsItem
 
                 _fields: ClassVar[dict] = {"type": {"type": str}, "group": {"type": str}, "methods": {"type": Methods}, "_custom_data": {"type": dict}}
-                type: Literal["start-stop", "stop-only"]
+                type: Literal["start-stop", "stop-only"] | None
                 group: str | None
                 """Group Name."""
                 methods: Methods
@@ -239,7 +239,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                     def __init__(
                         self,
                         *,
-                        type: Literal["start-stop", "stop-only"] | UndefinedType = Undefined,
+                        type: Literal["start-stop", "stop-only"] | None | UndefinedType = Undefined,
                         group: str | None | UndefinedType = Undefined,
                         methods: Methods | UndefinedType = Undefined,
                         _custom_data: dict[str, Any] | UndefinedType = Undefined,

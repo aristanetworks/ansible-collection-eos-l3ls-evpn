@@ -67,7 +67,6 @@ keys:
             keys:
               type:
                 type: str
-                required: true
                 valid_values:
                 - start-stop
                 - stop-only
@@ -85,7 +84,6 @@ keys:
                   keys:
                     method:
                       type: str
-                      required: true
                       valid_values:
                       - logging
                       - group
