@@ -421,7 +421,7 @@ class AvdSchemaList(AvdSchemaBaseModel):
 
         return descendant_tables
 
-    def model_post_init(self, __context: Any) -> None:
+    def model_post_init(self, context: Any) -> None:
         """
         Overrides BaseModel.model_post_init.
 
@@ -453,7 +453,7 @@ class AvdSchemaList(AvdSchemaBaseModel):
             else:
                 self.items._is_first_list_key = True
 
-        return super().model_post_init(__context)
+        return super().model_post_init(context)
 
 
 class AvdSchemaDict(AvdSchemaBaseModel):
@@ -530,7 +530,7 @@ class AvdSchemaDict(AvdSchemaBaseModel):
 
         return descendant_tables
 
-    def model_post_init(self, __context: Any) -> None:
+    def model_post_init(self, context: Any) -> None:
         """
         Overrides BaseModel.model_post_init.
 
@@ -550,7 +550,7 @@ class AvdSchemaDict(AvdSchemaBaseModel):
                 childschema._key = f"<{key}>"
                 childschema._parent_schema = self
 
-        return super().model_post_init(__context)
+        return super().model_post_init(context)
 
 
 class AristaAvdSchema(AvdSchemaDict):
