@@ -73,8 +73,14 @@ When adding a top-level feature, add a new Jinja2 template following the naming 
 
 ### Build Schemas and Documentation
 
-Run `pre-commit run schemas --all` to re-generate the eos_cli_config_gen schema with any modifications. This command should be executed every time the schema is changed, even if only a description is updated.
-It also updates the documentation with new options.
+When developing a feature, it is recommended to run from source using Ansible (either through molecule or from a test repo). This ensures that schemas and templates are automatically recompiled during the "Verify Requirements" step, as outlined in the [Development Tooling Guide](development-tooling.md).
+
+However, if you are using pyavd or need to manually recompile the schemas and templates for any other reason, you can run the following commands:
+
+`pre-commit run schemas --all` to regenerate the eos_cli_config_gen schema.
+`pre-commit run templates --all` to regenerate the templates.
+
+These commands should be executed whenever the schema or templates are modified, even if only a description is updated.
 
 ### Validate With Molecule Tests
 
