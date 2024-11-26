@@ -402,7 +402,7 @@ class FieldTypeHintSrc(AnnotationSrc):
     """
     Dataclass containing the type and any annotations for one dataclass field.
 
-    The annotations can either be a string, a subclass of AnnotationSrc or another FieldAnnotationSrc.
+    The annotations can either be a string, a subclass of AnnotationSrc or another FieldTypeHintSrc.
     For field_type=="list" there list_item_type can be a string or another FieldTypeHintSrc.
     """
 
