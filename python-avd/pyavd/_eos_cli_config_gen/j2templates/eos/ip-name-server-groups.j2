@@ -1,0 +1,27 @@
+{#
+ Copyright (c) 2023-2024 Arista Networks, Inc.
+ Use of this source code is governed by the Apache License 2.0
+ that can be found in the LICENSE file.
+#}
+{% for name_server_group in ip_name_server_groups | arista.avd.natural_sort("name") %}
+!
+ip name-server group {{ name_server_group.name }}
+{%     for name_server in name_server_group.name_servers | arista.avd.natural_sort("ip_address") %}
+{%         if name_server.priority is not arista.avd.defined %}
+{%             set name_server_cli = "name-server vrf " ~ name_server.vrf | arista.avd.default("default") ~ " " ~ name_server.ip_address %}
+   {{ name_server_cli }}
+{%         endif %}
+{%     endfor %}
+{%     for name_server in name_server_group.name_servers | arista.avd.natural_sort("ip_address") %}
+{%         if name_server.priority is arista.avd.defined %}
+{%             set name_server_cli = "name-server vrf " ~ name_server.vrf | arista.avd.default("default") ~ " " ~ name_server.ip_address ~ " priority " ~ name_server.priority %}
+   {{ name_server_cli }}
+{%         endif %}
+{%     endfor %}
+{%     if name_server_group.dns_domain is arista.avd.defined %}
+   dns domain {{ name_server_group.dns_domain }}
+{%     endif %}
+{%     if name_server_group.ip_domain_list is arista.avd.defined %}
+   ip domain-list {{ name_server_group.ip_domain_list }}
+{%     endif %}
+{% endfor %}

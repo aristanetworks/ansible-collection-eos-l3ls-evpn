@@ -5557,27 +5557,22 @@ keys:
                 per-vlan.
 
                 '
-  ip_name_servers:
+  ip_name_server_groups:
     type: list
+    primary_key: name
     items:
       type: dict
       keys:
-        ip_address:
+        name:
           type: str
-          required: true
-          description: IPv4 or IPv6 address for DNS server.
-        vrf:
-          description: VRF Name.
+        name_servers:
+          type: list
+          $ref: eos_cli_config_gen#/$defs/ip_name_servers
+        dns_domain:
           type: str
-          convert_types:
-          - int
-        priority:
-          description: Priority value (lower is first).
-          type: int
-          convert_types:
-          - str
-          min: 0
-          max: 4
+        ip_domain_list:
+          type: str
+          description: Set domain names to complete unqualified host names.
   ip_nat:
     type: dict
     keys:
@@ -8421,6 +8416,9 @@ keys:
               default: true
             url:
               type: str
+      name_server_group:
+        type: str
+        description: Set name-server group.
       vrfs:
         type: list
         primary_key: name
@@ -23045,3 +23043,24 @@ $defs:
           min: 1
           max: 65535
           description: requires 'original_port'.
+  ip_name_servers:
+    type: list
+    items:
+      type: dict
+      keys:
+        ip_address:
+          type: str
+          required: true
+          description: IPv4 or IPv6 address for DNS server.
+        vrf:
+          description: VRF Name.
+          type: str
+          convert_types:
+          - int
+        priority:
+          description: Priority value (lower is first).
+          type: int
+          convert_types:
+          - str
+          min: 0
+          max: 4

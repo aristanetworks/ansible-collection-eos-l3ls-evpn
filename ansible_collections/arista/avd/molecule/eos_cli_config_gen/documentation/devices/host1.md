@@ -2806,6 +2806,10 @@ monitor server radius
 | Name | Interfaces |
 | ---- | ---------- |
 
+##### Name-server
+
+Name-server Group: mynameserver1
+
 ### Monitor Connectivity Device Configuration
 
 ```eos
@@ -2846,6 +2850,7 @@ monitor connectivity
          url https://server2.local.com
    !
    vrf yellow
+   name-server group mynameserver1
    interval 5
    no shutdown
    interface set GLOBAL_SET Ethernet1-4
