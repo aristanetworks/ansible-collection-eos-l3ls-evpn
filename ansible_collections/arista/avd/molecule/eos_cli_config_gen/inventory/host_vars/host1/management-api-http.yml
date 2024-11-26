@@ -10,6 +10,8 @@ management_api_http:
       ipv6_access_group: ACL-API6
     - name: MGMT
       access_group: ACL-API
+  # The self-signed certificate and the key below have been generated only for the test
+  # and are not in use anywhere else.
   protocol_https_certificate:
     certificate: |-
       -----BEGIN CERTIFICATE-----
