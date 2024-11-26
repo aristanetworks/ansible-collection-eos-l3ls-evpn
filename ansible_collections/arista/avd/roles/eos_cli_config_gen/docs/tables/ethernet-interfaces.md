@@ -563,7 +563,7 @@
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;mpls_pop_all</samp>](## "ethernet_interfaces.[].switchport.tap.mpls_pop_all") | Boolean |  |  |  | Pop all MPLS labels. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;native_vlan</samp>](## "ethernet_interfaces.[].switchport.tap.native_vlan") | Integer |  |  | Min: 1<br>Max: 4094 | Native VLAN ID when interface is in tap mode. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;truncation</samp>](## "ethernet_interfaces.[].switchport.tap.truncation") | Dictionary |  |  |  |  |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "ethernet_interfaces.[].switchport.tap.truncation.enabled") | Boolean | Required |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "ethernet_interfaces.[].switchport.tap.truncation.enabled") | Boolean |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;size</samp>](## "ethernet_interfaces.[].switchport.tap.truncation.size") | Integer |  |  | Min: 100<br>Max: 9236 | Ingress packet truncation size in bytes. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;mac_address</samp>](## "ethernet_interfaces.[].switchport.tap.mac_address") | Dictionary |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;source</samp>](## "ethernet_interfaces.[].switchport.tap.mac_address.source") | String |  |  | Pattern: `^([0-9a-f]{2}:){5}[0-9a-f]{2}$` | MAC address for the source. |
@@ -571,7 +571,7 @@
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;encapsulation</samp>](## "ethernet_interfaces.[].switchport.tap.encapsulation") | Dictionary |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;vxlan_strip</samp>](## "ethernet_interfaces.[].switchport.tap.encapsulation.vxlan_strip") | Boolean |  |  |  | Strip VXLAN encapsulation header.<br>`encapsulation.vxlan_strip` and `mpls_pop_all` are mutually exclusive.<br>`mpls_pop_all` takes precedence. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;gre</samp>](## "ethernet_interfaces.[].switchport.tap.encapsulation.gre") | Dictionary |  |  |  |  |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;strip</samp>](## "ethernet_interfaces.[].switchport.tap.encapsulation.gre.strip") | Boolean |  |  |  | Strip GRE encapsulation header without protocols. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;strip</samp>](## "ethernet_interfaces.[].switchport.tap.encapsulation.gre.strip") | Boolean |  |  |  | Strip GRE encapsulation header for all GRE tunnels. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;protocols</samp>](## "ethernet_interfaces.[].switchport.tap.encapsulation.gre.protocols") | List, items: Dictionary |  |  |  | Protocols for all destinations; destination-specific protocols should be set under the `destinations[].protocols` key. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;protocol</samp>](## "ethernet_interfaces.[].switchport.tap.encapsulation.gre.protocols.[].protocol") | String | Required, Unique |  |  | Protocol type in GRE header.<br>Protocol range: 0x0000-0xFFFF. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;strip</samp>](## "ethernet_interfaces.[].switchport.tap.encapsulation.gre.protocols.[].strip") | Boolean |  |  |  | This is a required key to strip GRE encapsulation header with protocols. |
@@ -579,8 +579,8 @@
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;re_encapsulation_ethernet_header</samp>](## "ethernet_interfaces.[].switchport.tap.encapsulation.gre.protocols.[].re_encapsulation_ethernet_header") | Boolean |  |  |  | Extra ethernet header to prepend to the terminated packet.<br>This setting does not reflect in the EOS running-config for protocol 0x0000. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;destinations</samp>](## "ethernet_interfaces.[].switchport.tap.encapsulation.gre.destinations") | List, items: Dictionary |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;destination</samp>](## "ethernet_interfaces.[].switchport.tap.encapsulation.gre.destinations.[].destination") | String | Required, Unique |  |  | Destination IP address of tunnel packets. |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;source</samp>](## "ethernet_interfaces.[].switchport.tap.encapsulation.gre.destinations.[].source") | String |  |  |  | Source IP address of tunnel packets. Applied only when destination is defined. |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;strip</samp>](## "ethernet_interfaces.[].switchport.tap.encapsulation.gre.destinations.[].strip") | Boolean |  |  |  | Strip GRE encapsulation header for sepecific destination without protocol. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;source</samp>](## "ethernet_interfaces.[].switchport.tap.encapsulation.gre.destinations.[].source") | String |  |  |  | Source IP address of tunnel packets. Applied only when destination is defined. When not defined; any GRE packet that matches the `destination` is terminated. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;strip</samp>](## "ethernet_interfaces.[].switchport.tap.encapsulation.gre.destinations.[].strip") | Boolean |  |  |  | Strip GRE encapsulation header for sepecific destination. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;protocols</samp>](## "ethernet_interfaces.[].switchport.tap.encapsulation.gre.destinations.[].protocols") | List, items: Dictionary |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;protocol</samp>](## "ethernet_interfaces.[].switchport.tap.encapsulation.gre.destinations.[].protocols.[].protocol") | String | Required, Unique |  |  | Protocol type in GRE header.<br>Protocol range: 0x0000-0xFFFF. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;strip</samp>](## "ethernet_interfaces.[].switchport.tap.encapsulation.gre.destinations.[].protocols.[].strip") | Boolean |  |  |  | This is a required key to strip GRE encapsulation header for specific destination with protocols. |
@@ -597,7 +597,7 @@
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dot1q_dzgre_source</samp>](## "ethernet_interfaces.[].switchport.tool.identity.dot1q_dzgre_source") | String |  |  | Valid Values:<br>- <code>policy</code><br>- <code>port</code> |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;qinq_dzgre_source</samp>](## "ethernet_interfaces.[].switchport.tool.identity.qinq_dzgre_source") | String |  |  | Valid Values:<br>- <code>policy inner port</code><br>- <code>port inner policy</code> |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;truncation</samp>](## "ethernet_interfaces.[].switchport.tool.truncation") | Dictionary |  |  |  |  |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "ethernet_interfaces.[].switchport.tool.truncation.enabled") | Boolean | Required |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "ethernet_interfaces.[].switchport.tool.truncation.enabled") | Boolean |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;size</samp>](## "ethernet_interfaces.[].switchport.tool.truncation.size") | Integer |  |  | Valid Values:<br>- <code>160</code> | Egress packet truncation size in bytes. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;groups</samp>](## "ethernet_interfaces.[].switchport.tool.groups") | List, items: String |  |  |  | Tool groups for the interface. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;&lt;str&gt;</samp>](## "ethernet_interfaces.[].switchport.tool.groups.[]") | String |  |  |  |  |
@@ -1819,7 +1819,7 @@
             # Native VLAN ID when interface is in tap mode.
             native_vlan: <int; 1-4094>
             truncation:
-              enabled: <bool; required>
+              enabled: <bool>
 
               # Ingress packet truncation size in bytes.
               size: <int; 100-9236>
@@ -1838,7 +1838,7 @@
               vxlan_strip: <bool>
               gre:
 
-                # Strip GRE encapsulation header without protocols.
+                # Strip GRE encapsulation header for all GRE tunnels.
                 strip: <bool>
 
                 # Protocols for all destinations; destination-specific protocols should be set under the `destinations[].protocols` key.
@@ -1863,10 +1863,10 @@
                     # Destination IP address of tunnel packets.
                   - destination: <str; required; unique>
 
-                    # Source IP address of tunnel packets. Applied only when destination is defined.
+                    # Source IP address of tunnel packets. Applied only when destination is defined. When not defined; any GRE packet that matches the `destination` is terminated.
                     source: <str>
 
-                    # Strip GRE encapsulation header for sepecific destination without protocol.
+                    # Strip GRE encapsulation header for sepecific destination.
                     strip: <bool>
                     protocols:
 
@@ -1906,7 +1906,7 @@
               dot1q_dzgre_source: <str; "policy" | "port">
               qinq_dzgre_source: <str; "policy inner port" | "port inner policy">
             truncation:
-              enabled: <bool; required>
+              enabled: <bool>
 
               # Egress packet truncation size in bytes.
               size: <int; 160>

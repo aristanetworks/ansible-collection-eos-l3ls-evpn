@@ -4202,7 +4202,6 @@ keys:
                   keys:
                     enabled:
                       type: bool
-                      required: true
                     size:
                       description: Ingress packet truncation size in bytes.
                       type: int
@@ -4237,7 +4236,8 @@ keys:
                       keys:
                         strip:
                           type: bool
-                          description: Strip GRE encapsulation header without protocols.
+                          description: Strip GRE encapsulation header for all GRE
+                            tunnels.
                         protocols:
                           type: list
                           primary_key: protocol
@@ -4284,12 +4284,14 @@ keys:
                                 type: str
                               source:
                                 description: Source IP address of tunnel packets.
-                                  Applied only when destination is defined.
+                                  Applied only when destination is defined. When not
+                                  defined; any GRE packet that matches the `destination`
+                                  is terminated.
                                 type: str
                               strip:
                                 type: bool
                                 description: Strip GRE encapsulation header for sepecific
-                                  destination without protocol.
+                                  destination.
                               protocols:
                                 type: list
                                 primary_key: protocol
@@ -4371,7 +4373,6 @@ keys:
                   keys:
                     enabled:
                       type: bool
-                      required: true
                     size:
                       description: Egress packet truncation size in bytes.
                       type: int
