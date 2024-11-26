@@ -6522,12 +6522,12 @@ Topology role: pathfinder
 
 #### AVT Profiles
 
-| Profile name | Load balance policy | Internet exit policy |
-| ------------ | ------------------- | -------------------- |
-| office365 | - | - |
-| scavenger | scavenger-lb | scavenger-ie |
-| video | - | video-ie |
-| voice | voice-lb | - |
+| Profile name | Load balance policy | Internet exit policy | Metric Order | Jitter Threshold | Latency Threshold | Load Percentage | Loss-rate Percentage |
+| ------------ | ------------------- | -------------------- | ------------ | ---------------- | ----------------- | --------------- | -------------------- |
+| office365 | - | - | - | - | - | - | -
+| scavenger | scavenger-lb | scavenger-ie | latency | 200 | 100 | 25.16 | 20
+| video | - | video-ie | - | - | 100 | - | -
+| voice | voice-lb | - | - | 100 | - | - | -
 
 #### AVT Policies
 
@@ -6595,12 +6595,21 @@ router adaptive-virtual-topology
    profile scavenger
       internet-exit policy scavenger-ie
       path-selection load-balance scavenger-lb
+      metric order latency
+      path-selection outlier elimination threshold latency 100 milliseconds
+      path-selection outlier elimination threshold jitter 200 milliseconds
+      path-selection outlier elimination threshold loss-rate 20 percent
+      path-selection outlier elimination threshold load 25.16 percent
    !
    profile video
       internet-exit policy video-ie
+      path-selection outlier elimination disabled
+      path-selection outlier elimination threshold latency 100 milliseconds
    !
    profile voice
       path-selection load-balance voice-lb
+      path-selection outlier elimination
+      path-selection outlier elimination threshold jitter 100 milliseconds
    !
    vrf blue
       avt profile video id 1

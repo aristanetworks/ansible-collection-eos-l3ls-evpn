@@ -23,6 +23,14 @@
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;name</samp>](## "router_adaptive_virtual_topology.profiles.[].name") | String | Required, Unique |  |  | AVT Name. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;load_balance_policy</samp>](## "router_adaptive_virtual_topology.profiles.[].load_balance_policy") | String |  |  |  | Name of the load-balance policy. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;internet_exit_policy</samp>](## "router_adaptive_virtual_topology.profiles.[].internet_exit_policy") | String |  |  |  | Name of the internet exit policy. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;metric_order</samp>](## "router_adaptive_virtual_topology.profiles.[].metric_order") | String |  |  | Valid Values:<br>- <code>jitter</code><br>- <code>latency</code><br>- <code>load</code><br>- <code>loss-rate</code> | Metric order to be used for path comparison. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;outlier_elimination</samp>](## "router_adaptive_virtual_topology.profiles.[].outlier_elimination") | Dictionary |  |  |  | AVT path outlier elimination. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "router_adaptive_virtual_topology.profiles.[].outlier_elimination.enabled") | Boolean |  |  |  | Set true for enable the AVT path outlier elimination and False to disable the same. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;threshold</samp>](## "router_adaptive_virtual_topology.profiles.[].outlier_elimination.threshold") | Dictionary |  |  |  | Change the threshold values for path comparison. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;jitter</samp>](## "router_adaptive_virtual_topology.profiles.[].outlier_elimination.threshold.jitter") | Integer |  |  | Min: 0<br>Max: 10000 | Jitter threshold in millisecond. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;latency</samp>](## "router_adaptive_virtual_topology.profiles.[].outlier_elimination.threshold.latency") | Integer |  |  | Min: 0<br>Max: 10000 | Latency threshold in millisecond. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;load</samp>](## "router_adaptive_virtual_topology.profiles.[].outlier_elimination.threshold.load") | String |  |  |  | Load threshold percentage. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;loss_rate</samp>](## "router_adaptive_virtual_topology.profiles.[].outlier_elimination.threshold.loss_rate") | String |  |  |  | Loss-rate threshold percentage. |
     | [<samp>&nbsp;&nbsp;policies</samp>](## "router_adaptive_virtual_topology.policies") | List, items: Dictionary |  |  |  | A sequence of application profiles mapped to some virtual topologies. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;name</samp>](## "router_adaptive_virtual_topology.policies.[].name") | String | Required, Unique |  |  | Policy name. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;matches</samp>](## "router_adaptive_virtual_topology.policies.[].matches") | List, items: Dictionary |  |  |  |  |
@@ -73,6 +81,30 @@
 
           # Name of the internet exit policy.
           internet_exit_policy: <str>
+
+          # Metric order to be used for path comparison.
+          metric_order: <str; "jitter" | "latency" | "load" | "loss-rate">
+
+          # AVT path outlier elimination.
+          outlier_elimination:
+
+            # Set true for enable the AVT path outlier elimination and False to disable the same.
+            enabled: <bool>
+
+            # Change the threshold values for path comparison.
+            threshold:
+
+              # Jitter threshold in millisecond.
+              jitter: <int; 0-10000>
+
+              # Latency threshold in millisecond.
+              latency: <int; 0-10000>
+
+              # Load threshold percentage.
+              load: <str>
+
+              # Loss-rate threshold percentage.
+              loss_rate: <str>
 
       # A sequence of application profiles mapped to some virtual topologies.
       policies:
