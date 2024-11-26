@@ -58830,6 +58830,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
             _fields: ClassVar[dict] = {
                 "bfd": {"type": bool},
+                "make_before_break": {"type": bool},
                 "ssm_range": {"type": str},
                 "rp_addresses": {"type": RpAddresses},
                 "anycast_rps": {"type": AnycastRps},
@@ -58837,6 +58838,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             }
             bfd: bool | None
             """Enable/Disable BFD."""
+            make_before_break: bool | None
+            """Enable/Disable Make-Before-Break."""
             ssm_range: str | None
             """IPv4 Prefix associated with SSM."""
             rp_addresses: RpAddresses
@@ -58851,6 +58854,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                     self,
                     *,
                     bfd: bool | None | UndefinedType = Undefined,
+                    make_before_break: bool | None | UndefinedType = Undefined,
                     ssm_range: str | None | UndefinedType = Undefined,
                     rp_addresses: RpAddresses | UndefinedType = Undefined,
                     anycast_rps: AnycastRps | UndefinedType = Undefined,
@@ -58864,6 +58868,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                     Args:
                         bfd: Enable/Disable BFD.
+                        make_before_break: Enable/Disable Make-Before-Break.
                         ssm_range: IPv4 Prefix associated with SSM.
                         rp_addresses: Subclass of AvdList with `RpAddressesItem` items.
                         anycast_rps: Subclass of AvdIndexedList with `AnycastRpsItem` items. Primary key is `address` (`str`).
@@ -58945,9 +58950,16 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                 RpAddresses._item_type = RpAddressesItem
 
-                _fields: ClassVar[dict] = {"bfd": {"type": bool}, "rp_addresses": {"type": RpAddresses}, "_custom_data": {"type": dict}}
+                _fields: ClassVar[dict] = {
+                    "bfd": {"type": bool},
+                    "make_before_break": {"type": bool},
+                    "rp_addresses": {"type": RpAddresses},
+                    "_custom_data": {"type": dict},
+                }
                 bfd: bool | None
                 """Enable/Disable BFD."""
+                make_before_break: bool | None
+                """Enable/Disable Make-Before-Break."""
                 rp_addresses: RpAddresses
                 """Subclass of AvdList with `RpAddressesItem` items."""
                 _custom_data: dict[str, Any]
@@ -58958,6 +58970,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                         self,
                         *,
                         bfd: bool | None | UndefinedType = Undefined,
+                        make_before_break: bool | None | UndefinedType = Undefined,
                         rp_addresses: RpAddresses | UndefinedType = Undefined,
                         _custom_data: dict[str, Any] | UndefinedType = Undefined,
                     ) -> None:
@@ -58969,6 +58982,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                         Args:
                             bfd: Enable/Disable BFD.
+                            make_before_break: Enable/Disable Make-Before-Break.
                             rp_addresses: Subclass of AvdList with `RpAddressesItem` items.
                             _custom_data: _custom_data
 
