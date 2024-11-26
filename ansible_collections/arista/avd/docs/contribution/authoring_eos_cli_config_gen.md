@@ -12,11 +12,11 @@ This document outlines the steps and checklist for contributing to the `eos_cli_
 
 ### Prepare development environment
 
-Follow the [Development Tooling Guide](https://avd.arista.com/5.0/docs/contribution/development-tooling.html).
+Follow the [Development Tooling Guide](https://avd.arista.com/stable/docs/contribution/development-tooling.html).
 
 ### Schema creation
 
-Add the schema for new feature as per EOS CLI to the appropriate schema fragments file in the `pyavd/_eos_cli_config_gen/schema/schema_fragments` directory or create a new schema file if adding a top-level feature.
+Add the schema for new feature as per EOS CLI to the appropriate schema fragments file in the `python-avd/pyavd/_eos_cli_config_gen/schema/schema_fragments` directory or create a new schema file if adding a top-level feature.
 
 Please refer to the schema documentation for details on the various keys in the schema: [Schema Documentation](https://avd.arista.com/5.0/docs/contribution/input-variable-validation.html#schema-details).
 
@@ -40,9 +40,9 @@ Please refer to the schema documentation for details on the various keys in the 
 
 ### Creating Jinja2 Templates
 
-Edit the appropriate jinja2 templates in `pyavd/_eos_cli_config_gen/j2templates/eos` and `pyavd/_eos_cli_config_gen/j2templates/documentation` to generate the desired configuration and documentation.
+Edit the appropriate Jinja2 templates in `pyavd/_eos_cli_config_gen/j2templates/eos` and `pyavd/_eos_cli_config_gen/j2templates/documentation` to generate the desired configuration and documentation.
 
-Add a new jinja2 template if adding a top-level feature, also modify the `pyavd/_eos_cli_config_gen/j2templates/eos-intended-config.j2` and `pyavd/_eos_cli_config_gen/j2templates/eos-device-documentation.j2` to add these new templates, trying to respect the order in the EOS CLI.
+When adding a top-level feature, add a new jinja2 template following the naming convention and modify the `pyavd/_eos_cli_config_gen/j2templates/eos-intended-config.j2` and `pyavd/_eos_cli_config_gen/j2templates/eos-device-documentation.j2` to add these new templates where relevant, in particular to respect EOS CLI order.
 
 #### Jinja2 Templates Guidelines
 
@@ -102,7 +102,7 @@ Confirm that all new features work as intended and that existing features are un
 5. Ensure that the min/max and valid-values are specified in the schema if they are defined in the EOS CLI.
 6. Ensure that Jinja2 templates follow all the guidelines mentioned above.
 7. Check that the template generates valid configuration and documentation, maintaining the same configuration order and indentation as EOS CLI.
-8. Check out the PR in a local IDE and run all tests to ensure functionality.
+8. Check out the PR in a local IDE using the instructions in the PR comment and run all tests to ensure functionality.
 9. Test the generated configuration through EAPI or CVP in the ATD lab.
 10. If providing code suggestions, test them locally to ensure that your proposals work as intended.
 11. Check that the molecule tests are added for the new feature.
