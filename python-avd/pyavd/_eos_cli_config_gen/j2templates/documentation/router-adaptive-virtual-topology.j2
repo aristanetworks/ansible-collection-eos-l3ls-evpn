@@ -46,7 +46,7 @@ VXLAN gateway: Enabled
 {%             set latency =  profile.outlier_elimination.threshold.latency | arista.avd.default("-") %}
 {%             set load =  profile.outlier_elimination.threshold.load | arista.avd.default("-") %}
 {%             set loss_rate =  profile.outlier_elimination.threshold.loss_rate | arista.avd.default("-") %}
-| {{ profile.name }} | {{ load_balance_policy }} | {{ internet_exit_policy }} | {{ metric_order }} | {{ jitter }} | {{ latency }} | {{ load }} | {{ loss_rate }}
+| {{ profile.name }} | {{ load_balance_policy }} | {{ internet_exit_policy }} | {{ metric_order }} | {{ jitter }} | {{ latency }} | {{ load }} | {{ loss_rate }} |
 {%         endfor %}
 {%     endif %}
 {%     if router_adaptive_virtual_topology.policies is arista.avd.defined

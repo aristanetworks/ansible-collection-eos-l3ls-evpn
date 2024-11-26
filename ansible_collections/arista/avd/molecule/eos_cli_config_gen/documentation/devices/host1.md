@@ -6524,10 +6524,10 @@ Topology role: pathfinder
 
 | Profile name | Load balance policy | Internet exit policy | Metric Order | Jitter Threshold | Latency Threshold | Load Percentage | Loss-rate Percentage |
 | ------------ | ------------------- | -------------------- | ------------ | ---------------- | ----------------- | --------------- | -------------------- |
-| office365 | - | - | - | - | - | - | -
-| scavenger | scavenger-lb | scavenger-ie | latency | 200 | 100 | 25.16 | 20
-| video | - | video-ie | - | - | 100 | - | -
-| voice | voice-lb | - | - | 100 | - | - | -
+| office365 | - | - | - | - | - | - | - |
+| scavenger | scavenger-lb | scavenger-ie | latency | 200 | 100 | 25.16 | 20 |
+| video | - | video-ie | - | - | 100 | - | - |
+| voice | voice-lb | - | - | 100 | - | - | - |
 
 #### AVT Policies
 
