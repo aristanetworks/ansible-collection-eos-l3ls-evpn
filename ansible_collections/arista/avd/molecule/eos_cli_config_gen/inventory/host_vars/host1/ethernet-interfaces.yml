@@ -1788,8 +1788,8 @@ ethernet_interfaces:
           enabled: true
           size: 150
         mac_address:
-          dest: 01:00:00:00:00:00
-          src: 01:23:45:67:89:ab
+          destination: 01:00:00:00:00:00
+          source: 01:23:45:67:89:ab
         encapsulation:
           gre:
             strip: true
@@ -1852,7 +1852,7 @@ ethernet_interfaces:
         identity:
           id: 5
         mac_address:
-          dest: 01:00:00:00:00:00
+          destination: 01:00:00:00:00:00
         encapsulation:
           vxlan_strip: true
           gre:

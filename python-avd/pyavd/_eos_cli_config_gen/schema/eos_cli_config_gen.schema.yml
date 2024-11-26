@@ -4213,11 +4213,11 @@ keys:
                 mac_address:
                   type: dict
                   keys:
-                    src:
+                    source:
                       type: str
                       pattern: ^([0-9a-f]{2}:){5}[0-9a-f]{2}$
                       description: MAC address for the source.
-                    dest:
+                    destination:
                       type: str
                       pattern: ^([0-9a-f]{2}:){5}[0-9a-f]{2}$
                       description: MAC address for the destination.

@@ -320,7 +320,7 @@ port_channel_interfaces:
           id: 3
           inner_vlan: 10
         mac_address:
-          dest: 01:00:00:00:00:00
+          destination: 01:00:00:00:00:00
         encapsulation:
           vxlan_strip: true
         truncation:
@@ -944,8 +944,8 @@ port_channel_interfaces:
         truncation:
           enabled: true
         mac_address:
-          dest: 01:00:00:00:00:00
-          src: 01:23:45:67:89:ab
+          destination: 01:00:00:00:00:00
+          source: 01:23:45:67:89:ab
         encapsulation:
           gre:
             strip: true

@@ -1001,10 +1001,10 @@ interface {{ ethernet_interface.name }}
 {%             endif %}
    {{ tap_identity_cli }}
 {%         endif %}
-{%         if ethernet_interface.switchport.tap.mac_address.dest is arista.avd.defined %}
-{%             set tap_mac_address_cli = "switchport tap mac-address dest " ~ ethernet_interface.switchport.tap.mac_address.dest %}
-{%             if ethernet_interface.switchport.tap.mac_address.src is arista.avd.defined %}
-{%                 set tap_mac_address_cli = tap_mac_address_cli ~ " src " ~ ethernet_interface.switchport.tap.mac_address.src %}
+{%         if ethernet_interface.switchport.tap.mac_address.destination is arista.avd.defined %}
+{%             set tap_mac_address_cli = "switchport tap mac-address dest " ~ ethernet_interface.switchport.tap.mac_address.destination %}
+{%             if ethernet_interface.switchport.tap.mac_address.source is arista.avd.defined %}
+{%                 set tap_mac_address_cli = tap_mac_address_cli ~ " src " ~ ethernet_interface.switchport.tap.mac_address.source %}
 {%             endif %}
    {{ tap_mac_address_cli }}
 {%         endif %}
