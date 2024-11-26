@@ -48,6 +48,7 @@
   - [Queue Monitor Configuration](#queue-monitor-configuration)
 - [Multicast](#multicast)
   - [IP IGMP Snooping](#ip-igmp-snooping)
+  - [PIM Sparse Mode](#pim-sparse-mode)
 - [Filters](#filters)
   - [AS Path Lists](#as-path-lists)
 - [802.1X Port Security](#8021x-port-security)
@@ -681,6 +682,35 @@ no ip igmp snooping fast-leave
 no ip igmp snooping vlan 20
 no ip igmp snooping vlan 30
 no ip igmp snooping querier
+```
+
+### PIM Sparse Mode
+
+#### Router PIM Sparse Mode
+
+##### IP Sparse Mode Information
+
+BFD enabled: False
+
+Make-before-break: True
+
+##### IP Sparse Mode VRFs
+
+| VRF Name | BFD Enabled | Make-before-break |
+| -------- | ----------- | ----------------- |
+| MCAST_VRF1 | False | True |
+
+##### Router Multicast Device Configuration
+
+```eos
+!
+router pim sparse-mode
+   ipv4
+      make-before-break
+   !
+   vrf MCAST_VRF1
+      ipv4
+         make-before-break
 ```
 
 ## Filters
