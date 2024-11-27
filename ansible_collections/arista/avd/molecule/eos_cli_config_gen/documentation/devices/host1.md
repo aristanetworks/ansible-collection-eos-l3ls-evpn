@@ -7577,6 +7577,8 @@ router multicast
 
 BFD enabled: True
 
+Make-before-break: False
+
 ##### IP Rendezvous Information
 
 | Rendezvous Point Address | Group Address | Access Lists | Priority | Hashmask | Override |
@@ -7592,11 +7594,11 @@ BFD enabled: True
 
 ##### IP Sparse Mode VRFs
 
-| VRF Name | BFD Enabled |
-| -------- | ----------- |
-| MCAST_VRF1 | True |
-| MCAST_VRF2_ALL_GROUPS | False |
-| Test_RP_ACL | False |
+| VRF Name | BFD Enabled | Make-before-break |
+| -------- | ----------- | ----------------- |
+| MCAST_VRF1 | True | False |
+| MCAST_VRF2_ALL_GROUPS | False | - |
+| Test_RP_ACL | False | True |
 
 | VRF Name | Rendezvous Point Address | Group Address | Access Lists | Priority | Hashmask | Override |
 | -------- | ------------------------ | ------------- | ------------ | -------- | -------- | -------- |
@@ -7613,6 +7615,7 @@ router pim sparse-mode
    ipv4
       ssm range standard
       bfd
+      make-before-break disabled
       rp address 10.238.1.161 239.12.12.12/32 priority 20
       rp address 10.238.1.161 239.12.12.13/32 priority 20
       rp address 10.238.1.161 239.12.12.14/32 priority 20
@@ -7628,6 +7631,7 @@ router pim sparse-mode
    vrf MCAST_VRF1
       ipv4
          bfd
+         make-before-break disabled
          rp address 10.238.2.161 239.12.22.12/32
          rp address 10.238.2.161 239.12.22.13/32
          rp address 10.238.2.161 239.12.22.14/32
@@ -7638,6 +7642,7 @@ router pim sparse-mode
    !
    vrf Test_RP_ACL
       ipv4
+         make-before-break
          rp address 10.238.4.161 access-list RP_ACL
          rp address 10.238.4.161 access-list RP_ACL2 priority 20 hashmask 30 override
 ```
