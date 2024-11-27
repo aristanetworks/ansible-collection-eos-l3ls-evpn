@@ -5567,12 +5567,52 @@ keys:
           type: str
         name_servers:
           type: list
-          $ref: eos_cli_config_gen#/$defs/ip_name_servers
+          items:
+            type: dict
+            keys:
+              ip_address:
+                type: str
+                required: true
+                description: IPv4 or IPv6 address for DNS server.
+              vrf:
+                description: VRF Name.
+                type: str
+                default: default
+                convert_types:
+                - int
+              priority:
+                description: Priority value (lower is first).
+                type: int
+                convert_types:
+                - str
+                min: 0
+                max: 4
         dns_domain:
           type: str
         ip_domain_list:
           type: str
           description: Set domain names to complete unqualified host names.
+  ip_name_servers:
+    type: list
+    items:
+      type: dict
+      keys:
+        ip_address:
+          type: str
+          required: true
+          description: IPv4 or IPv6 address for DNS server.
+        vrf:
+          description: VRF Name.
+          type: str
+          convert_types:
+          - int
+        priority:
+          description: Priority value (lower is first).
+          type: int
+          convert_types:
+          - str
+          min: 0
+          max: 4
   ip_nat:
     type: dict
     keys:
@@ -23043,24 +23083,3 @@ $defs:
           min: 1
           max: 65535
           description: requires 'original_port'.
-  ip_name_servers:
-    type: list
-    items:
-      type: dict
-      keys:
-        ip_address:
-          type: str
-          required: true
-          description: IPv4 or IPv6 address for DNS server.
-        vrf:
-          description: VRF Name.
-          type: str
-          convert_types:
-          - int
-        priority:
-          description: Priority value (lower is first).
-          type: int
-          convert_types:
-          - str
-          min: 0
-          max: 4

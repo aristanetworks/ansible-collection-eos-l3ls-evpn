@@ -15753,11 +15753,20 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class NameServersItem(AvdModel):
             """Subclass of AvdModel."""
 
-            _fields: ClassVar[dict] = {"ip_address": {"type": str}, "vrf": {"type": str}, "priority": {"type": int}, "_custom_data": {"type": dict}}
+            _fields: ClassVar[dict] = {
+                "ip_address": {"type": str},
+                "vrf": {"type": str, "default": "default"},
+                "priority": {"type": int},
+                "_custom_data": {"type": dict},
+            }
             ip_address: str
             """IPv4 or IPv6 address for DNS server."""
-            vrf: str | None
-            """VRF Name."""
+            vrf: str
+            """
+            VRF Name.
+
+            Default value: `"default"`
+            """
             priority: int | None
             """Priority value (lower is first)."""
             _custom_data: dict[str, Any]
@@ -15768,7 +15777,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                     self,
                     *,
                     ip_address: str | UndefinedType = Undefined,
-                    vrf: str | None | UndefinedType = Undefined,
+                    vrf: str | UndefinedType = Undefined,
                     priority: int | None | UndefinedType = Undefined,
                     _custom_data: dict[str, Any] | UndefinedType = Undefined,
                 ) -> None:
@@ -15838,6 +15847,47 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         _primary_key: ClassVar[str] = "name"
 
     IpNameServerGroups._item_type = IpNameServerGroupsItem
+
+    class IpNameServersItem(AvdModel):
+        """Subclass of AvdModel."""
+
+        _fields: ClassVar[dict] = {"ip_address": {"type": str}, "vrf": {"type": str}, "priority": {"type": int}, "_custom_data": {"type": dict}}
+        ip_address: str
+        """IPv4 or IPv6 address for DNS server."""
+        vrf: str | None
+        """VRF Name."""
+        priority: int | None
+        """Priority value (lower is first)."""
+        _custom_data: dict[str, Any]
+
+        if TYPE_CHECKING:
+
+            def __init__(
+                self,
+                *,
+                ip_address: str | UndefinedType = Undefined,
+                vrf: str | None | UndefinedType = Undefined,
+                priority: int | None | UndefinedType = Undefined,
+                _custom_data: dict[str, Any] | UndefinedType = Undefined,
+            ) -> None:
+                """
+                IpNameServersItem.
+
+
+                Subclass of AvdModel.
+
+                Args:
+                    ip_address: IPv4 or IPv6 address for DNS server.
+                    vrf: VRF Name.
+                    priority: Priority value (lower is first).
+                    _custom_data: _custom_data
+
+                """
+
+    class IpNameServers(AvdList[IpNameServersItem]):
+        """Subclass of AvdList with `IpNameServersItem` items."""
+
+    IpNameServers._item_type = IpNameServersItem
 
     class IpNat(AvdModel):
         """Subclass of AvdModel."""
@@ -70320,6 +70370,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         "ip_icmp_redirect": {"type": bool},
         "ip_igmp_snooping": {"type": IpIgmpSnooping},
         "ip_name_server_groups": {"type": IpNameServerGroups},
+        "ip_name_servers": {"type": IpNameServers},
         "ip_nat": {"type": IpNat},
         "ip_radius_source_interfaces": {"type": IpRadiusSourceInterfaces},
         "ip_routing": {"type": bool},
@@ -70691,6 +70742,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
     """Subclass of AvdModel."""
     ip_name_server_groups: IpNameServerGroups
     """Subclass of AvdIndexedList with `IpNameServerGroupsItem` items. Primary key is `name` (`str`)."""
+    ip_name_servers: IpNameServers
+    """Subclass of AvdList with `IpNameServersItem` items."""
     ip_nat: IpNat
     """Subclass of AvdModel."""
     ip_radius_source_interfaces: IpRadiusSourceInterfaces
@@ -71055,6 +71108,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             ip_icmp_redirect: bool | None | UndefinedType = Undefined,
             ip_igmp_snooping: IpIgmpSnooping | UndefinedType = Undefined,
             ip_name_server_groups: IpNameServerGroups | UndefinedType = Undefined,
+            ip_name_servers: IpNameServers | UndefinedType = Undefined,
             ip_nat: IpNat | UndefinedType = Undefined,
             ip_radius_source_interfaces: IpRadiusSourceInterfaces | UndefinedType = Undefined,
             ip_routing: bool | None | UndefinedType = Undefined,
@@ -71349,6 +71403,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 ip_icmp_redirect: ip_icmp_redirect
                 ip_igmp_snooping: Subclass of AvdModel.
                 ip_name_server_groups: Subclass of AvdIndexedList with `IpNameServerGroupsItem` items. Primary key is `name` (`str`).
+                ip_name_servers: Subclass of AvdList with `IpNameServersItem` items.
                 ip_nat: Subclass of AvdModel.
                 ip_radius_source_interfaces: Subclass of AvdList with `IpRadiusSourceInterfacesItem` items.
                 ip_routing: ip_routing
