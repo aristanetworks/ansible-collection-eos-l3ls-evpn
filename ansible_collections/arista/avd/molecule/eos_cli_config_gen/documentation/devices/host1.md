@@ -12,6 +12,12 @@
   - [Management SSH](#management-ssh)
   - [Management Tech-Support](#management-tech-support)
   - [IP Client Source Interfaces](#ip-client-source-interfaces)
+  - [Management Accounts](#management-accounts)
+  - [Management API gNMI](#management-api-gnmi)
+  - [Management CVX Summary](#management-cvx-summary)
+  - [Management Console](#management-console)
+  - [Management API HTTP](#management-api-http)
+  - [Management API Models](#management-api-models)
 - [CVX](#cvx)
   - [CVX Services](#cvx-services)
   - [CVX Device Configuration](#cvx-device-configuration)
@@ -19,6 +25,7 @@
   - [Local Users](#local-users)
   - [Roles](#roles)
   - [Enable Password](#enable-password)
+  - [Management defaults](#management-defaults)
   - [TACACS Servers](#tacacs-servers)
   - [IP TACACS Source Interfaces](#ip-tacacs-source-interfaces)
   - [RADIUS Server](#radius-server)
@@ -254,22 +261,45 @@ agent KernelFib environment KERNELFIB_PROGRAM_ALL_ECMP=true
 
 | Management Interface | Description | Type | VRF | IP Address | Gateway |
 | -------------------- | ----------- | ---- | --- | ---------- | ------- |
+| Management0 | - | oob | default | 10.1.1.1 | - |
 | Management1 | OOB_MANAGEMENT | oob | MGMT | 10.73.255.122/24 | 10.73.255.2 |
+| Management42 | - | oob | default | - | - |
+| Vlan123 | inband_management | inband | default | 10.73.0.123/24 | 10.73.0.1 |
 
 ##### IPv6
 
 | Management Interface | Description | Type | VRF | IPv6 Address | IPv6 Gateway |
 | -------------------- | ----------- | ---- | --- | ------------ | ------------ |
+| Management0 | - | oob | default | - | - |
 | Management1 | OOB_MANAGEMENT | oob | MGMT | - | - |
+| Management42 | - | oob | default | - | - |
+| Vlan123 | inband_management | inband | default | - | - |
 
 #### Management Interfaces Device Configuration
 
 ```eos
 !
+interface Management0
+   mac-address 00:1c:73:00:00:aa
+   ip address 10.1.1.1
+!
 interface Management1
    description OOB_MANAGEMENT
    vrf MGMT
    ip address 10.73.255.122/24
+!
+interface Management42
+   shutdown
+   speed forced 1000full
+   no lldp transmit
+   no lldp receive
+   lldp tlv transmit ztp vlan 666
+!
+interface Vlan123
+   description inband_management
+   mtu 1500
+   ip address 10.73.0.123/24
+   ip virtual-router address 10.73.0.1
 ```
 
 ### IP Domain-list
@@ -541,6 +571,287 @@ ip tftp client source-interface Loopback0 vrf default
 ip tftp client source-interface Management0 vrf MGMT
  ```
 
+### Management Accounts
+
+#### Password Policy
+
+The password policy set for management accounts is: AVD_POLICY
+
+#### Management Accounts Device Configuration
+
+```eos
+!
+management accounts
+   password policy AVD_POLICY
+```
+
+### Management API gNMI
+
+#### Management API gNMI Summary
+
+| Transport | SSL Profile | VRF | Notification Timestamp | ACL | Port |
+| --------- | ----------- | --- | ---------------------- | --- | ---- |
+| MGMT | gnmi | MGMT | send-time | acl1 | 6030 |
+| mytransport | - | - | send-time | acl1 | 6032 |
+
+| Transport | Destination | Destination Port | gNMI SSL Profile | Tunnel SSL Profile | VRF | Local Interface | Local Port | Target ID |
+| --------- | ----------- | ---------------- | ---------------- | ------------------ | --- | --------------- | ---------- | --------- |
+| onetarget | 10.1.1.100 | 10000 | ssl_profile | ssl_profile | management | Management1 | 10001 | testid100 |
+| multipletargets | 10.1.1.100 | 10000 | ssl_profile | ssl_profile | management | Management1 | 10001 | testid1 testid2 testid3 testid4 |
+| serialandtargets | 10.1.1.100 | 10000 | ssl_profile | ssl_profile | management | Management1 | 10001 | Serial-Number testid10 testid20 |
+| noserialnotargets | - | - | - | - | - | - | - |  |
+| serialonly | - | - | - | - | - | - | - | Serial-Number |
+
+Provider eos-native is configured.
+
+#### Management API gNMI Device Configuration
+
+```eos
+!
+management api gnmi
+   transport grpc MGMT
+      ssl profile gnmi
+      vrf MGMT
+      ip access-group acl1
+      notification timestamp send-time
+   !
+   transport grpc mytransport
+      port 6032
+      ip access-group acl1
+      notification timestamp send-time
+   !
+   transport grpc-tunnel multipletargets
+      no shutdown
+      vrf management
+      tunnel ssl profile ssl_profile
+      gnmi ssl profile ssl_profile
+      destination 10.1.1.100 port 10000
+      local interface Management1 port 10001
+      target testid1 testid2 testid3 testid4
+   !
+   transport grpc-tunnel noserialnotargets
+   !
+   transport grpc-tunnel onetarget
+      shutdown
+      vrf management
+      tunnel ssl profile ssl_profile
+      gnmi ssl profile ssl_profile
+      destination 10.1.1.100 port 10000
+      local interface Management1 port 10001
+      target testid100
+   !
+   transport grpc-tunnel serialandtargets
+      no shutdown
+      vrf management
+      tunnel ssl profile ssl_profile
+      gnmi ssl profile ssl_profile
+      destination 10.1.1.100 port 10000
+      local interface Management1 port 10001
+      target serial-number testid10 testid20
+   !
+   transport grpc-tunnel serialonly
+      target serial-number
+   provider eos-native
+```
+
+### Management CVX Summary
+
+| Shutdown | CVX Servers |
+| -------- | ----------- |
+| False | 10.90.224.188, 10.90.224.189, leaf1.atd.lab |
+
+#### Management CVX Source Interface
+
+| Interface | VRF |
+| --------- | --- |
+| Loopback0 | MGMT |
+
+#### Management CVX Device Configuration
+
+```eos
+!
+management cvx
+   no shutdown
+   server host 10.90.224.188
+   server host 10.90.224.189
+   server host leaf1.atd.lab
+   source-interface Loopback0
+   vrf MGMT
+```
+
+### Management Console
+
+#### Management Console Timeout
+
+Management Console Timeout is set to **15** minutes.
+
+#### Management Console Device Configuration
+
+```eos
+!
+management console
+   idle-timeout 15
+```
+
+### Management API HTTP
+
+#### Management API HTTP Summary
+
+| HTTP | HTTPS | Default Services |
+| ---- | ----- | ---------------- |
+| False | True | True |
+
+Management HTTPS is using the SSL profile SSL_PROFILE
+
+#### Management API VRF Access
+
+| VRF Name | IPv4 ACL | IPv6 ACL |
+| -------- | -------- | -------- |
+| default | ACL-API | ACL-API6 |
+| MGMT | ACL-API | - |
+
+HTTPS certificate and private key are configured.
+
+#### Management API HTTP Device Configuration
+
+```eos
+!
+management api http-commands
+   protocol https
+   no protocol http
+   default-services
+   protocol https ssl profile SSL_PROFILE
+   no shutdown
+   !
+   vrf default
+      no shutdown
+      ip access-group ACL-API
+      ipv6 access-group ACL-API6
+   !
+   vrf MGMT
+      no shutdown
+      ip access-group ACL-API
+   protocol https certificate
+-----BEGIN CERTIFICATE-----
+MIIFNjCCAx4CCQCVGSFu9M4dNDANBgkqhkiG9w0BAQsFADBdMQswCQYDVQQGEwJD
+QTELMAkGA1UECAwCQkMxEjAQBgNVBAcMCVZhbmNvdXZlcjEPMA0GA1UECgwGQXJp
+c3RhMQwwCgYDVQQLDANBVkQxDjAMBgNVBAMMBWhvc3QxMB4XDTI0MTExMzE3NTAw
+N1oXDTM0MTExMTE3NTAwN1owXTELMAkGA1UEBhMCQ0ExCzAJBgNVBAgMAkJDMRIw
+EAYDVQQHDAlWYW5jb3V2ZXIxDzANBgNVBAoMBkFyaXN0YTEMMAoGA1UECwwDQVZE
+MQ4wDAYDVQQDDAVob3N0MTCCAiIwDQYJKoZIhvcNAQEBBQADggIPADCCAgoCggIB
+AJz2eUVD/4u+nmz0Ak6QJqPrQSJ6spZtxnfgSD3ETGhWgVO+aV7UbnpCAvKB+G7B
+X3WEHl2zphFE+O4HhRCBiDFB9LXZ2fiiBKcPmFMuJChL15wLaa5yP99trMX3wxSL
+ZIFKVmD5kxjtqZOjst+dPDm1v4KIXZxCuMhu8hpviZLhLGq+eFlYV4scIMgOSuOo
+8HBoqGkHmmOJmO+KlaLdXPQcqOqJIjwL++ZjP46eHa9fyaea1ZqmYC11syNTesVS
+4G7v4fvd+rFi+ZAWu5Iuv6vbllLKqwHOiMcQ+Y4IbzDaqCk5VBh0PnxI+PWGDeUl
+lx83p3+o0zi7HHeI9uTumRV8b7sc++9qaaPDtzD4wzJFwVJWIiHjdfCTQ0mRraz6
+uYbk2Kwo7rjmOQnby3K4+Lx+eylihzc3bWsDe96YUYVRi7Xsg56lz+SPSlxvBUjL
+uQ6TQHMgg7/AMrwnHVcgvJozM7eDGnwt6eYxoJZGiw+W60KjQcxlV4tt5HCiGHIO
+pCajVDjeN3quBCpCOlTCCoPQXjFB14EJagjS5QzFeRwrZcegKFKx61jClp0L4X8t
+EgCuTRlQtMdwvx4sBKqND+RqE9YlC2ktQHpOyRtKlj3fZ1behzrO50rtKDZzrqOS
+/PpifGh3ZcJDsO3qt9xq3kUJm8rHKDuGgtEyXGkXUd7RAgMBAAEwDQYJKoZIhvcN
+AQELBQADggIBAH0vpyvehlfjKmMMv5S05ruEW1La0+m2CypdxvgQ9IGHFnsUqSzl
+hMsR5mISyhfaHSlYTE8YxiSoHUL7lMsIi6G+tEXglad3KJEpqVi2tg9GbteaBONN
+P7mjnDnHRhVxodSUVOJvZmtGFv7lKRvGXYgwwCHq93Z3iyXvkFMNO6aYU3ghwYci
+1gMRXsWG/K8r4TzAC87RBTSXaFEIvrVYNwhL61fRPvIvFzdf5I0Zi7LSKRDZ6Ks/
+AwMOQaTwF9W0a/dBc4twbmbajcTbXDcUA/Jxr97XrtlNioHe3itlwJaQ2LgSkfM9
+h5CJ+wcCmWLanHpeCoXu6kj17mZScfxHmHyuNXugq8Ryj23qndN37ZDADh0rqRKm
+XxVai6s0KBZENiUiastKolA3CL27/312Wv5cPSi66NDdrNqwDZVS0d5QZd3Motni
+1aX/+GmOURX5O3xDMJZTx/lP2zRwIdfwEgBntBSipzmv73y5aMJqUCl3w980pLTj
+kc6u4R7x93bWtRedCtL8SroKgg3iSP+MNvjh7GRVrisKi1mHq37xBFbfcKWQ8Fux
+xak6B5u7Dkwio2KGtQAzUTw8GNrG8ix6wYbCxRTorl0qtxWKqB1sqPkxVmo73PkO
+sVbhuzXgHBzA4RNdl/qmwSKlL7pKfpQUm3jSzewJm224QTYODTF8KRpf
+-----END CERTIFICATE-----
+EOF
+-----BEGIN PRIVATE KEY-----
+MIIJQgIBADANBgkqhkiG9w0BAQEFAASCCSwwggkoAgEAAoICAQCc9nlFQ/+Lvp5s
+9AJOkCaj60EierKWbcZ34Eg9xExoVoFTvmle1G56QgLygfhuwV91hB5ds6YRRPju
+B4UQgYgxQfS12dn4ogSnD5hTLiQoS9ecC2mucj/fbazF98MUi2SBSlZg+ZMY7amT
+o7LfnTw5tb+CiF2cQrjIbvIab4mS4SxqvnhZWFeLHCDIDkrjqPBwaKhpB5pjiZjv
+ipWi3Vz0HKjqiSI8C/vmYz+Onh2vX8mnmtWapmAtdbMjU3rFUuBu7+H73fqxYvmQ
+FruSLr+r25ZSyqsBzojHEPmOCG8w2qgpOVQYdD58SPj1hg3lJZcfN6d/qNM4uxx3
+iPbk7pkVfG+7HPvvammjw7cw+MMyRcFSViIh43Xwk0NJka2s+rmG5NisKO645jkJ
+28tyuPi8fnspYoc3N21rA3vemFGFUYu17IOepc/kj0pcbwVIy7kOk0BzIIO/wDK8
+Jx1XILyaMzO3gxp8LenmMaCWRosPlutCo0HMZVeLbeRwohhyDqQmo1Q43jd6rgQq
+QjpUwgqD0F4xQdeBCWoI0uUMxXkcK2XHoChSsetYwpadC+F/LRIArk0ZULTHcL8e
+LASqjQ/kahPWJQtpLUB6TskbSpY932dW3oc6zudK7Sg2c66jkvz6Ynxod2XCQ7Dt
+6rfcat5FCZvKxyg7hoLRMlxpF1He0QIDAQABAoICAEPrCtKD9+G6G8c9Vno0OeQX
++dk3ims5GPXqIJhJhl5ngBKChAm6lgtk4O2ae6tBFVM+Vf1prOQwGh61NkjMI+hc
+h8zgdUb2pFi9kMX9YzvkhWlKLvKDEUxWoroO2WTcZCLlzbash4/z1rrBzLahzNuT
+30hWRVtGK7re9velZ7wcnyGZRW4zob3Z7/1g4drc0R1yy9yWo6GKepi8OL9+Vahz
+dkv2BtBAx0ELlQbbODEYm6Nghiki8N763QbeKnOTxvV56ykXBlEXaLGGhKdefyWY
+INW2SITBn8GzgKiK0cIr+zPLUK48LoWM9d0Xoo+S0m95n4rHvI4BuPGoXFz3OVm7
+PFPbNIptq6/kavkWzbASMhL8NZVV/KAj0ik5vrTcb+sa5PEeNjqxUVbX852SGk2I
+grjNTfQNiBffjTXGRlS8zIC6NPaWiW4UU76kpspcaWExzip0SR92nHURolIyiFVL
+xcDEsNzRVCvB0kDYrgBobIWJ0ZdwTPhueqO6YVngOaOm92JPXxy7dK+gS9Jm3VAD
+mlrbS5OCwoI929XyTIZWhHYbr5nASDO90oudg5Jzo4EJrPx3JK9IXt5l+wf915Cx
+EJWHVnvZHNZYBRSFFS/tbxNPhfPnRfkEtm1S4b5G3M/gtuxCbG1dmEn3Rn0rnxTl
+iABt70XREolnDlRu3rWhAoIBAQDLvaxDeb0iTcp4rhzSjRmoLeWZOdzyZeUpHitO
+6uLocCOrFVXZPK1WFRManS7CvmqOLABNPTTcwIHFQIxToDsiqoKnYm2QQoAWbkMr
+rq0tKptW1iAre+v6BPUQ2+KksHHS9fc/oY4hKzK4JCZpVGdIrteZQ9YeJ36JCIMv
+PNYdv4CeTQFjhvbLIT8ia+Dt/ZxAbeVXwQOmEuwuv/eDutigXkuwqZ2F8D1RKBQz
+sBhwNTfivX3PMORPvH00CT2PCh7cd4PGLynZIoX+qVkJK5ecDY/Biolk9XnGJAkS
+Jv5qhMBqfJg9xe9kKpcXwEFl7VSgvwK1MUkO2oSScjwPxeMtAoIBAQDFOTBYfCIe
+43MHhT8ak7PoEadcCazHclDr/i61qabIKhWnkoREwpfju/dkl1lgoFVX/vwpk3G0
+BxUeoDxx1CmjVygyLMH6oeESKk26Fx4pzEYIsaNxEkPltA380maqNYFCVTesqdOw
+HVEcl/uQdGCR3HTytYhXy2NKn+3orJeKF9XOL6qJPzhNr6tBW32k24jbMCJoz6Kd
+OVkxo+JXQqeKIygWXqW3x7kLOHcdNL3lTkVq0qA3kfK4BRPKPHpKc+ttNWv0ex6Z
+R25pC4Oxpff5THJSeOXMSmQ9PzLEfz06kZ96PWhlvoTW/OjR1/zJEaZcbrzJVSRC
+du7Z8g1sMUC1AoIBAC6amV/p5fCF2M2YDjG/YuIMdZuCF98+nZe1NfTcV8ERfacx
+vyxs671oHrGUyNB1HAyfVgZU/NWOF2EWbcLnQP+h/zboleVMwN3gpO7GCwjs2RGY
+80zfENBk9+W+Vm6TicXWy5K7krZVmklyw3KOgv2mONzvHnhRUmloEBHrGZM+bd5I
+AQxSH/vBBB8MjCwEOgym1rInDX2ckHf1I1n3kHvGdgvYEJdFp9D7mPtlyYFJOxpb
+e/670U3H8N/JSVKB3yNRF0xrF2h6tCnXdO1bElf45ixAU0NLv2oqbgS/9KxK53S0
+QWLH9wVzlJIzQQJesl/+sVDfEDYcl/yjssds3ZUCggEBAInUutXMAuiFWnmSBJTl
+TqDL3aNz230Thjw3SpuIsddHmhSfT7LiL9ZnIbD6GOtvgdVajQ3dTmRbYsYhg7yl
+YmgV3DCcmQA4q5vPVrzLtTfO287tnmTCOBNLL09WF4uykuAxwBP6J8f35RzPlm7Q
+9kBZyp1ogp2gtYaMmG64V7uZhsFvDIaYWRfpwgyODRPunQlZ7WJEYcfxMUWA3AjR
+u1bN1RE1GimC+e4+ivgtSNz9Q4QxKOlNJUy3t6npdCmeM5UB9a1Jcgv7IM1mz6WS
+cOeYJnk+ppKMFtu61BcBOWA6LzL1wYUBjcLVwzwL70zx+cq1VVh7GTkd9zT3dav8
+C9UCggEAKud0g9RkaLpJXtH37C6byeCuvw2MA7h0LmjK0lQ5pljxc7bGoEeWYZMT
+x9TBkzgHVedKpgPUQiZAZqIkDx5JOJOh4gswoNq4kzhCZXOM2gqECMwFHn9paq9E
+CfyGgAASHlnG6MBdmhRtCIdTvXD7nTnTHAHS3IHybkvpP/C+FvPSnpFl5kmad/52
+xEnBkzW4rhGpE+D72RC0Z4wOurE+pLxJpHnPu3lqVmD8m/AaxUzGdiRWPCLkx2G1
+lRIvIpbuqzZ1QzAdWwCX/5mgBk/xoI88N3EcxvgEJJhiXihYwW/630KkKETqnu64
+9ZBLoqoLmPhKxDHZuwO7re9GxVZ1HQ==
+-----END PRIVATE KEY-----
+EOF
+```
+
+### Management API Models
+
+#### Management API Models Summary
+
+| Provider | Path | Disabled |
+| -------- | ---- | ------- |
+| smash | flexCounters | False |
+| smash | forwarding/srte/status/fec | False |
+| smash | routing6/status | False |
+| smash | routing/bgp/export/allPeerAdjRibIn | False |
+| smash | routing/status | True |
+| smash | tunnel/tunnelFib/entry | False |
+| sysdb | /Sysdb/sys/logging/config/vrfLoggingHost/mgmt | True |
+| sysdb | cell/1/agent | True |
+
+#### Management API Models Device Configuration
+
+```eos
+!
+management api models
+   !
+   provider smash
+      path flexCounters
+      path forwarding/srte/status/fec
+      path routing6/status
+      path routing/bgp/export/allPeerAdjRibIn
+      path routing/status disabled
+      path tunnel/tunnelFib/entry
+   !
+   provider sysdb
+      path /Sysdb/sys/logging/config/vrfLoggingHost/mgmt disabled
+      path cell/1/agent disabled
+```
+
 ## CVX
 
 | Peer Hosts |
@@ -634,6 +945,18 @@ sha512 encrypted enable password is configured
 !
 enable password sha512 <removed>
 !
+```
+
+### Management defaults
+
+Default secret hash is set to md5
+
+#### Management defaults Device Configuration
+
+```eos
+!
+management defaults
+  secret hash md5
 ```
 
 ### TACACS Servers
