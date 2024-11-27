@@ -190,8 +190,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                     """Server group. This can only be set when method is set as `group`."""
                     multicast: bool | None
                     """
-                    Forward accounting packets to all servers in the group. This can only be set when method is set as
-                    `group`.
+                    Forward accounting packets to all servers within the specified group. This option is applicable only
+                    when the `method` key is explicitly set to `group`.
                     """
                     _custom_data: dict[str, Any]
 
@@ -215,8 +215,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                                 method: method
                                 group: Server group. This can only be set when method is set as `group`.
                                 multicast:
-                                   Forward accounting packets to all servers in the group. This can only be set when method is set as
-                                   `group`.
+                                   Forward accounting packets to all servers within the specified group. This option is applicable only
+                                   when the `method` key is explicitly set to `group`.
                                 _custom_data: _custom_data
 
                             """
