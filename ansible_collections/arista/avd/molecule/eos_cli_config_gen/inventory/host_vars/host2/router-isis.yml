@@ -13,24 +13,6 @@ router_isis:
   timers:
     local_convergence:
       protected_prefixes: true
-      delay: 15000
-    csnp:
-      generation:
-        interval: 10
-        p2p_disabled: true
-    lsp:
-      out_delay: 20
-      refresh_interval: 56
-      generation:
-        interval: 30
-        initial_wait_time: 40
-        wait_time: 50
-      min_remaining_lifetime: 78
-  advertise:
-    passive_only: true
-  redistribute_routes:
-    - source_protocol: bgp
-      route_map: RM-BGP
   address_family_ipv4:
     enabled: true
     tunnel_source_labeled_unicast:
@@ -78,9 +60,3 @@ router_isis:
         profile: test2
         algorithm: md5
       rx_disabled: true
-  eos_cli: |-
-    address-family ipv6 unicast
-      multi-topology
-    traffic-engineering
-      no shutdown
-      is-type level-2

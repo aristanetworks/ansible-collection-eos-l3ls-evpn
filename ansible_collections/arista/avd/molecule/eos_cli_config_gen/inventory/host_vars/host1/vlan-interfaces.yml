@@ -454,7 +454,7 @@ vlan_interfaces:
     ospf_message_digest_keys:
       - id: 55
         hash_algorithm: md5
-        key: "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+        key: "dRx9sULvl+hzkCMYJLEQCw=="
 
   - name: Vlan1002
     description: SVI Description

@@ -6956,14 +6956,21 @@ router ospf 600
 
 | Settings | Value |
 | -------- | ----- |
-| Local Convergence Delay | 10000 milliseconds |
+| Local Convergence Delay | 15000 milliseconds |
+| CSN Packet Transmission Interval | 10 seconds |
+| CSN Packet P2P Links Disabled | True |
 | LSP Generation Maximum Interval | 30 seconds |
 | LSP Generation Initial Wait-time | 40 milliseconds |
+| LSP Generation Wait-time | 50 milliseconds |
+| LSP Out-delay | 20 milliseconds |
+| LSP Refresh Interval | 56 seconds |
+| LSP Minimum Remaining Lifetime | 78 seconds |
 
 #### ISIS Route Redistribution
 
 | Route Type | Route-Map | Include Leaked |
 | ---------- | --------- | -------------- |
+| bgp | RM-BGP | - |
 | connected | - | - |
 | isis instance | RM-REDIS-ISIS-INSTANCE | - |
 | ospf internal | - | - |
@@ -7037,6 +7044,7 @@ router isis EVPN_UNDERLAY
    is-hostname MYROUTER
    no log-adjacency-changes
    mpls ldp sync default
+   redistribute bgp route-map RM-BGP
    redistribute connected
    redistribute isis instance route-map RM-REDIS-ISIS-INSTANCE
    redistribute ospf match internal
@@ -7044,11 +7052,16 @@ router isis EVPN_UNDERLAY
    redistribute ospf include leaked match nssa-external route-map RM-OSPF-NSSA_EXT-TO-ISIS
    redistribute ospfv3 match external
    redistribute static include leaked route-map RM-STATIC-TO-ISIS
-   timers local-convergence-delay protected-prefixes
+   timers local-convergence-delay 15000 protected-prefixes
    set-overload-bit
    advertise passive-only
    spf-interval 250 seconds 10 milliseconds 20 milliseconds
-   timers lsp generation 30 40
+   timers csnp generation interval 10 seconds
+   timers csnp generation p2p disabled
+   timers lsp out-delay 20
+   timers lsp refresh 56
+   timers lsp generation 30 40 50
+   timers lsp min-remaining-lifetime 78
    authentication mode shared-secret profile test1 algorithm md5 level-1
    authentication mode sha key-id 2 level-2
    graceful-restart
@@ -7079,6 +7092,11 @@ router isis EVPN_UNDERLAY
       no shutdown
       prefix-segment 155.2.1.1/32 index 211
       prefix-segment 2001:cafe:155::/64 index 6211
+   address-family ipv6 unicast
+     multi-topology
+   traffic-engineering
+     no shutdown
+     is-type level-2
 ```
 
 ### Router BGP
