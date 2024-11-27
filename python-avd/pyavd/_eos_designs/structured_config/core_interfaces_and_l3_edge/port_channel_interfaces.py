@@ -26,13 +26,13 @@ class PortChannelInterfacesMixin(UtilsMixin):
     def port_channel_interfaces(self: AvdStructuredConfigCoreInterfacesAndL3Edge) -> list | None:
         """Return structured config for port_channel_interfaces."""
         port_channel_interfaces = []
-        for p2p_link in self._filtered_p2p_links:
-            if p2p_link["data"]["port_channel_id"] is None:
+        for p2p_link, p2p_link_data in self._filtered_p2p_links:
+            if p2p_link_data["port_channel_id"] is None:
                 continue
 
             # Port-Channel interface
-            port_channel_interface = self._get_common_interface_cfg(p2p_link)
-            port_channel_interface["description"] = self._p2p_link_port_channel_description(p2p_link)
+            port_channel_interface = self._get_common_interface_cfg(p2p_link, p2p_link_data)
+            port_channel_interface["description"] = self._p2p_link_port_channel_description(p2p_link_data)
 
             # Remove None values
             port_channel_interface = {key: value for key, value in port_channel_interface.items() if value is not None}
@@ -44,16 +44,16 @@ class PortChannelInterfacesMixin(UtilsMixin):
 
         return None
 
-    def _p2p_link_port_channel_description(self: AvdStructuredConfigCoreInterfacesAndL3Edge, p2p_link: dict) -> str:
+    def _p2p_link_port_channel_description(self: AvdStructuredConfigCoreInterfacesAndL3Edge, p2p_link_data: dict) -> str:
         return self.shared_utils.interface_descriptions.underlay_port_channel_interface(
             InterfaceDescriptionData(
                 shared_utils=self.shared_utils,
-                port_channel_description=default(get(p2p_link, "data.port_channel_description"), get(p2p_link, "data.description")),
-                interface=p2p_link["data"]["interface"],
-                port_channel_id=p2p_link["data"]["port_channel_id"],
-                peer_channel_group_id=p2p_link["data"]["peer_port_channel_id"],
+                port_channel_description=default(get(p2p_link_data, "port_channel_description"), get(p2p_link_data, "description")),
+                interface=p2p_link_data["interface"],
+                port_channel_id=p2p_link_data["port_channel_id"],
+                peer_channel_group_id=p2p_link_data["peer_port_channel_id"],
                 link_type=self.data_model,
-                peer=p2p_link["data"]["peer"],
-                peer_interface=p2p_link["data"]["peer_interface"],
+                peer=p2p_link_data["peer"],
+                peer_interface=p2p_link_data["peer_interface"],
             ),
         )

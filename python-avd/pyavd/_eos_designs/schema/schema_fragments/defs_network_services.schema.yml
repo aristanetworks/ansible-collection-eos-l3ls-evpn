@@ -709,6 +709,7 @@ $defs:
                         "descriptions" has precedence over "description".
                     enabled:
                       type: bool
+                      default: true
                     mtu:
                       type: int
                       convert_types:

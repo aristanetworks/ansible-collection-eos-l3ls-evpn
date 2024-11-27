@@ -190,6 +190,8 @@ ethernet_interfaces:
       igp_sync: true
   description: P2P_LINK_TO_CORE-1-ISIS-SR-LDP_Ethernet10
   speed: forced 1000full
+  l2_mru: 2222
+  l2_mtu: 2222
 - name: Ethernet12
   peer: core-1-isis-sr-ldp
   peer_interface: Ethernet12

@@ -7,7 +7,8 @@ from functools import cached_property
 from re import search
 from typing import TYPE_CHECKING
 
-from pyavd._utils import default, get
+from pyavd._eos_designs.schema import EosDesigns
+from pyavd._utils import default
 
 if TYPE_CHECKING:
     from . import SharedUtils
@@ -23,65 +24,44 @@ class PlatformMixin:
 
     @cached_property
     def platform(self: SharedUtils) -> str | None:
-        return get(self.switch_data_combined, "platform", default=self.cv_topology_platform)
+        return default(self.node_config.platform, self.cv_topology_platform)
 
     @cached_property
-    def platform_settings(self: SharedUtils) -> dict:
-        custom_platform_settings = get(self.hostvars, "custom_platform_settings", default=[])
-
-        # Reading default value from schema
-        default_platform_settings = self.schema.get_default_value(["platform_settings"])
-        platform_settings = custom_platform_settings + get(self.hostvars, "platform_settings", default=default_platform_settings)
-
+    def platform_settings(self: SharedUtils) -> EosDesigns.PlatformSettingsItem | EosDesigns.CustomPlatformSettingsItem:
         # First look for a matching platform setting specifying our platform
-        for platform_setting in platform_settings:
-            if self.platform in platform_setting.get("platforms", []):
-                return platform_setting
+        if self.platform is not None:
+            for platform_setting in self.inputs.custom_platform_settings:
+                if self.platform in platform_setting.platforms:
+                    return platform_setting
+            for platform_setting in self.inputs.platform_settings:
+                if self.platform in platform_setting.platforms:
+                    return platform_setting
 
         # If not found, then look for a default platform setting
-        for platform_setting in platform_settings:
-            if "default" in platform_setting.get("platforms", []):
+        for platform_setting in self.inputs.custom_platform_settings:
+            if "default" in platform_setting.platforms:
+                return platform_setting
+        for platform_setting in self.inputs.platform_settings:
+            if "default" in platform_setting.platforms:
                 return platform_setting
 
-        return {}
+        return EosDesigns.PlatformSettingsItem()
 
     @cached_property
-    def default_interfaces(self: SharedUtils) -> dict:
+    def default_interfaces(self: SharedUtils) -> EosDesigns.DefaultInterfacesItem:
         """default_interfaces set based on default_interfaces."""
-        default_interfaces = get(self.hostvars, "default_interfaces", default=[])
-
-        device_platform = default(self.platform, "default")
+        device_platform = self.platform or "default"
 
         # First look for a matching default interface set that matches our platform and type
-        for default_interface in default_interfaces:
-            for platform in default_interface.get("platforms", []):
-                if search(f"^{platform}$", device_platform) and self.type in default_interface.get("types", []):
+        for default_interface in self.inputs.default_interfaces:
+            for platform in default_interface.platforms:
+                if search(f"^{platform}$", device_platform) and self.type in default_interface.types:
                     return default_interface
 
         # If not found, then look for a default default_interface that matches our type
-        for default_interface in default_interfaces:
-            for platform in default_interface.get("platforms", []):
-                if search(f"^{platform}$", "default") and self.type in default_interface.get("types", []):
+        for default_interface in self.inputs.default_interfaces:
+            for platform in default_interface.platforms:
+                if search(f"^{platform}$", "default") and self.type in default_interface.types:
                     return default_interface
 
-        return {}
-
-    @cached_property
-    def platform_settings_feature_support_interface_storm_control(self) -> bool:
-        return get(self.platform_settings, "feature_support.interface_storm_control", default=True) is True
-
-    @cached_property
-    def platform_settings_feature_support_queue_monitor_length_notify(self) -> bool:
-        return get(self.platform_settings, "feature_support.queue_monitor_length_notify", default=True) is True
-
-    @cached_property
-    def platform_settings_feature_support_poe(self) -> bool:
-        return get(self.platform_settings, "feature_support.poe", default=False) is True
-
-    @cached_property
-    def platform_settings_feature_support_per_interface_mtu(self) -> bool:
-        return get(self.platform_settings, "feature_support.per_interface_mtu", default=True) is True
-
-    @cached_property
-    def platform_settings_p2p_uplinks_mtu(self) -> int | None:
-        return get(self.platform_settings, "p2p_uplinks_mtu")
+        return EosDesigns.DefaultInterfacesItem()

@@ -3,9 +3,10 @@
 # that can be found in the LICENSE file.
 from __future__ import annotations
 
-from functools import cached_property
+from functools import cached_property, partial
 from typing import TYPE_CHECKING
 
+from pyavd._errors import AristaAvdInvalidInputsError
 from pyavd._utils import append_if_not_duplicate, get, get_item, strip_empties_from_dict
 
 from .utils import UtilsMixin
@@ -116,7 +117,7 @@ class ApplicationTrafficRecognitionMixin(UtilsMixin):
             ipv4_prefixes_field_sets = get(app_dict, "field_sets.ipv4_prefixes", [])
             if get_item(ipv4_prefixes_field_sets, "name", self._wan_cp_app_dst_prefix) is not None:
                 return
-            pathfinder_vtep_ips = [f"{wan_rs_data.get('vtep_ip')}/32" for wan_rs, wan_rs_data in self.shared_utils.filtered_wan_route_servers.items()]
+            pathfinder_vtep_ips = [f"{wan_rs.vtep_ip}/32" for wan_rs in self.shared_utils.filtered_wan_route_servers]
             app_dict.setdefault("field_sets", {}).setdefault("ipv4_prefixes", []).append(
                 {
                     "name": self._wan_cp_app_dst_prefix,
@@ -142,108 +143,80 @@ class ApplicationTrafficRecognitionMixin(UtilsMixin):
 
         For applications - the existence cannot be verified as there are 4000+ applications built-in in the DPI engine used by EOS.
         """
-        input_application_classification = get(self._hostvars, "application_classification", {})
         # Application profiles first
         application_profiles = []
 
-        def _append_object_to_list_of_dicts(path: str, obj_name: str, list_of_dicts: list, message: str | None = None, *, required: bool = True) -> None:
-            """
-            Helper function.
-
-            Technically impossible to get a duplicate, just reusing the method when the same application is used in multiple places.
-            """
-            if (
-                obj := get_item(
-                    get(input_application_classification, path, default=[]),
-                    "name",
-                    obj_name,
-                    required=required,
-                    custom_error_msg=message,
-                )
-            ) is None:
-                return
-
-            append_if_not_duplicate(
-                list_of_dicts=list_of_dicts,
-                primary_key="name",
-                new_dict=obj,
-                context="Application traffic recognition",
-                context_keys=["name"],
-            )
+        append_dict_to_list_of_dicts = partial(append_if_not_duplicate, primary_key="name", context="Application traffic recognition", context_keys=["name"])
 
         for policy in self._filtered_wan_policies:
-            if policy.get("is_default"):
-                _append_object_to_list_of_dicts(
-                    path="application_profiles",
-                    obj_name=self._wan_control_plane_application_profile_name,
+            if policy.get("is_default") and self._wan_control_plane_application_profile_name in self.inputs.application_classification.application_profiles:
+                append_dict_to_list_of_dicts(
                     list_of_dicts=application_profiles,
-                    required=False,
+                    new_dict=self.inputs.application_classification.application_profiles[self._wan_control_plane_application_profile_name]._as_dict(),
                 )
 
             for match in get(policy, "matches", []):
                 application_profile = get(match, "application_profile", required=True)
-                if application_profile == self._wan_control_plane_application_profile_name:
-                    # Special handling for control plane as it could be injected later.
-                    _append_object_to_list_of_dicts(
-                        path="application_profiles",
-                        obj_name=application_profile,
-                        list_of_dicts=application_profiles,
-                        required=False,
+
+                if application_profile not in self.inputs.application_classification.application_profiles:
+                    if application_profile == self._wan_control_plane_application_profile_name:
+                        # Ignore for control plane as it could be injected later.
+                        continue
+
+                    msg = (
+                        f"The application profile {application_profile} used in policy {policy['name']} "
+                        "is not defined in 'application_classification.application_profiles'."
                     )
-                else:
-                    _append_object_to_list_of_dicts(
-                        path="application_profiles",
-                        obj_name=application_profile,
-                        list_of_dicts=application_profiles,
-                        message=(
-                            f"The application profile {application_profile} used in policy {policy['name']} "
-                            "is not defined in 'application_classification.application_profiles'."
-                        ),
-                    )
+                    raise AristaAvdInvalidInputsError(msg)
+
+                append_dict_to_list_of_dicts(
+                    list_of_dicts=application_profiles, new_dict=self.inputs.application_classification.application_profiles[application_profile]._as_dict()
+                )
+
             if (default_match := policy.get("default_match")) is not None:
                 application_profile = get(default_match, "application_profile", default="default")
                 if application_profile != "default":
-                    _append_object_to_list_of_dicts(
-                        path="application_profiles",
-                        obj_name=application_profile,
-                        list_of_dicts=application_profiles,
-                        message=(
+                    if application_profile not in self.inputs.application_classification.application_profiles:
+                        msg = (
                             f"The application profile {application_profile} used in policy {policy['name']} "
                             "is not defined in 'application_classification.application_profiles'."
-                        ),
+                        )
+                        raise AristaAvdInvalidInputsError(msg)
+
+                    append_dict_to_list_of_dicts(
+                        list_of_dicts=application_profiles, new_dict=self.inputs.application_classification.application_profiles[application_profile]._as_dict()
                     )
+
         output = {"application_profiles": application_profiles}
         # Now handle categories, applicaations
         categories = []
         applications = []
+
         for application_profile in application_profiles:
             for category in get(application_profile, "categories", default=[]):
-                _append_object_to_list_of_dicts(
-                    path="categories",
-                    obj_name=category["name"],
-                    list_of_dicts=categories,
-                    message=(
+                if category["name"] not in self.inputs.application_classification.categories:
+                    msg = (
                         f"The application profile {application_profile['name']} uses the category {category['name']} "
                         "undefined in 'application_classification.categories'."
-                    ),
-                )
+                    )
+                    raise AristaAvdInvalidInputsError(msg)
+                append_dict_to_list_of_dicts(new_dict=self.inputs.application_classification.categories[category["name"]]._as_dict(), list_of_dicts=categories)
             # Applications in application profiles
             for application in get(application_profile, "applications", default=[]):
-                _append_object_to_list_of_dicts(
-                    path="applications.ipv4_applications",
-                    obj_name=application["name"],
-                    list_of_dicts=applications,
-                    required=False,
-                )
+                if application["name"] in self.inputs.application_classification.applications.ipv4_applications:
+                    append_dict_to_list_of_dicts(
+                        new_dict=self.inputs.application_classification.applications.ipv4_applications[application["name"]]._as_dict(),
+                        list_of_dicts=applications,
+                    )
         # Applications in categories
         for category in categories:
             for application in get(category, "applications", default=[]):
-                _append_object_to_list_of_dicts(
-                    path="applications.ipv4_applications",
-                    obj_name=application["name"],
-                    list_of_dicts=applications,
-                    required=False,
-                )
+                if application["name"] in self.inputs.application_classification.applications.ipv4_applications:
+                    append_dict_to_list_of_dicts(
+                        new_dict=self.inputs.application_classification.applications.ipv4_applications[application["name"]]._as_dict(),
+                        list_of_dicts=applications,
+                    )
+
         output["categories"] = categories
         # IPv4 only for now
         output["applications"] = {"ipv4_applications": applications}
@@ -251,66 +224,29 @@ class ApplicationTrafficRecognitionMixin(UtilsMixin):
         l4_ports = []
         ipv4_prefixes = []
         for application in applications:
-            if (src_prefix_set_name := get(application, "src_prefix_set_name")) is not None:
-                _append_object_to_list_of_dicts(
-                    path="field_sets.ipv4_prefixes",
-                    obj_name=src_prefix_set_name,
-                    list_of_dicts=ipv4_prefixes,
-                    message=(
-                        f"The IPv4 prefix field set {src_prefix_set_name} used in the application {application} "
-                        "is undefined in 'application_classification.fields_sets.ipv4_prefixes'."
-                    ),
-                )
-            if (dest_prefix_set_name := get(application, "dest_prefix_set_name")) is not None:
-                _append_object_to_list_of_dicts(
-                    path="field_sets.ipv4_prefixes",
-                    obj_name=dest_prefix_set_name,
-                    list_of_dicts=ipv4_prefixes,
-                    message=(
-                        f"The IPv4 prefix field set {dest_prefix_set_name} used in the application {application} "
-                        "is undefined in 'application_classification.fields_sets.ipv4_prefixes'."
-                    ),
-                )
-            if (udp_src_port_set_name := get(application, "udp_src_port_set_name")) is not None:
-                _append_object_to_list_of_dicts(
-                    path="field_sets.l4_ports",
-                    obj_name=udp_src_port_set_name,
-                    list_of_dicts=l4_ports,
-                    message=(
-                        f"The L4 Ports field set {udp_src_port_set_name} used in the application {application} "
-                        "is undefined in 'application_classification.fields_sets.l4_ports'."
-                    ),
-                )
-            if (udp_dest_port_set_name := get(application, "udp_dest_port_set_name")) is not None:
-                _append_object_to_list_of_dicts(
-                    path="field_sets.l4_ports",
-                    obj_name=udp_dest_port_set_name,
-                    list_of_dicts=l4_ports,
-                    message=(
-                        f"The L4 Ports field set {udp_dest_port_set_name} used in the application {application} "
-                        "is undefined in 'application_classification.fields_sets.l4_ports'."
-                    ),
-                )
-            if (tcp_src_port_set_name := get(application, "tcp_src_port_set_name")) is not None:
-                _append_object_to_list_of_dicts(
-                    path="field_sets.l4_ports",
-                    obj_name=tcp_src_port_set_name,
-                    list_of_dicts=l4_ports,
-                    message=(
-                        f"The L4 Ports field set {tcp_src_port_set_name} used in the application {application} "
-                        "is undefined in 'application_classification.fields_sets.l4_ports'."
-                    ),
-                )
-            if (tcp_dest_port_set_name := get(application, "tcp_dest_port_set_name")) is not None:
-                _append_object_to_list_of_dicts(
-                    path="field_sets.l4_ports",
-                    obj_name=tcp_dest_port_set_name,
-                    list_of_dicts=l4_ports,
-                    message=(
-                        f"The L4 Ports field set {tcp_dest_port_set_name} used in the application {application} "
-                        "is undefined in 'application_classification.fields_sets.l4_ports'."
-                    ),
-                )
+            for prefix_set_key in ("src_prefix_set_name", "dest_prefix_set_name"):
+                if (prefix_set_name := get(application, prefix_set_key)) is not None:
+                    if prefix_set_name not in self.inputs.application_classification.field_sets.ipv4_prefixes:
+                        msg = (
+                            f"The IPv4 prefix field set {prefix_set_name} used in the application {application} "
+                            "is undefined in 'application_classification.fields_sets.ipv4_prefixes'."
+                        )
+                        raise AristaAvdInvalidInputsError(msg)
+                    append_dict_to_list_of_dicts(
+                        new_dict=self.inputs.application_classification.field_sets.ipv4_prefixes[prefix_set_name]._as_dict(), list_of_dicts=ipv4_prefixes
+                    )
+
+            for port_set_key in ("udp_src_port_set_name", "udp_dest_port_set_name", "tcp_src_port_set_name", "tcp_dest_port_set_name"):
+                if (port_set_name := get(application, port_set_key)) is not None:
+                    if port_set_name not in self.inputs.application_classification.field_sets.l4_ports:
+                        msg = (
+                            f"The L4 Ports field set {port_set_name} used in the application {application} "
+                            "is undefined in 'application_classification.fields_sets.l4_ports'."
+                        )
+                        raise AristaAvdInvalidInputsError(msg)
+                    append_dict_to_list_of_dicts(
+                        new_dict=self.inputs.application_classification.field_sets.l4_ports[port_set_name]._as_dict(), list_of_dicts=l4_ports
+                    )
 
         output["field_sets"] = {
             "l4_ports": l4_ports,

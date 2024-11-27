@@ -371,14 +371,14 @@ ethernet_interfaces:
   description: P2P_outside-r1_other2
 - name: Ethernet4000
   description: My test
-  ip_address: 10.1.2.3/12
   shutdown: false
-  switchport:
-    enabled: false
   mtu: 1500
+  ip_address: 10.1.2.3/12
   peer: MY-own-peer
   peer_interface: Ethernet123
   peer_type: my_precious
+  switchport:
+    enabled: false
 loopback_interfaces:
 - name: Loopback0
   description: ROUTER_ID
