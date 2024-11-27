@@ -1,4 +1,4 @@
-# Management API Models
+---
 management_api_models:
   providers:
     - name: smash

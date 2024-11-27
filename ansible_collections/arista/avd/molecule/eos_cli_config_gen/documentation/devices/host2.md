@@ -5,6 +5,9 @@
 - [Management](#management)
   - [Management Interfaces](#management-interfaces)
   - [Management SSH](#management-ssh)
+  - [Management API gNMI](#management-api-gnmi)
+  - [Management CVX Summary](#management-cvx-summary)
+  - [Management API HTTP](#management-api-http)
 - [CVX](#cvx)
   - [CVX Device Configuration](#cvx-device-configuration)
 - [Authentication](#authentication)
@@ -48,6 +51,7 @@
   - [Queue Monitor Configuration](#queue-monitor-configuration)
 - [Multicast](#multicast)
   - [IP IGMP Snooping](#ip-igmp-snooping)
+  - [PIM Sparse Mode](#pim-sparse-mode)
 - [Filters](#filters)
   - [AS Path Lists](#as-path-lists)
 - [802.1X Port Security](#8021x-port-security)
@@ -142,6 +146,62 @@ management ssh
    !
    vrf mgt
       no shutdown
+```
+
+### Management API gNMI
+
+#### Management API gNMI Summary
+
+| Transport | SSL Profile | VRF | Notification Timestamp | ACL | Port |
+| --------- | ----------- | --- | ---------------------- | --- | ---- |
+| MGMT | - | MGMT | last-change-time | ACL-GNMI | 6030 |
+| MONITORING | - | MONITORING | last-change-time | - | 6031 |
+
+#### Management API gNMI Device Configuration
+
+```eos
+!
+management api gnmi
+   transport grpc MGMT
+      vrf MGMT
+      ip access-group ACL-GNMI
+   !
+   transport grpc MONITORING
+      port 6031
+      vrf MONITORING
+```
+
+### Management CVX Summary
+
+| Shutdown | CVX Servers |
+| -------- | ----------- |
+| True | - |
+
+#### Management CVX Device Configuration
+
+```eos
+!
+management cvx
+   shutdown
+```
+
+### Management API HTTP
+
+#### Management API HTTP Summary
+
+| HTTP | HTTPS | Default Services |
+| ---- | ----- | ---------------- |
+| True | False | False |
+
+#### Management API HTTP Device Configuration
+
+```eos
+!
+management api http-commands
+   no protocol https
+   protocol http
+   no default-services
+   no shutdown
 ```
 
 ## CVX
@@ -681,6 +741,35 @@ no ip igmp snooping fast-leave
 no ip igmp snooping vlan 20
 no ip igmp snooping vlan 30
 no ip igmp snooping querier
+```
+
+### PIM Sparse Mode
+
+#### Router PIM Sparse Mode
+
+##### IP Sparse Mode Information
+
+BFD enabled: False
+
+Make-before-break: True
+
+##### IP Sparse Mode VRFs
+
+| VRF Name | BFD Enabled | Make-before-break |
+| -------- | ----------- | ----------------- |
+| MCAST_VRF1 | False | True |
+
+##### Router Multicast Device Configuration
+
+```eos
+!
+router pim sparse-mode
+   ipv4
+      make-before-break
+   !
+   vrf MCAST_VRF1
+      ipv4
+         make-before-break
 ```
 
 ## Filters

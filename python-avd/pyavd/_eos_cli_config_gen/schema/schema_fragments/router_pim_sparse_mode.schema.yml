@@ -15,6 +15,9 @@ keys:
           bfd:
             type: bool
             description: Enable/Disable BFD.
+          make_before_break:
+            type: bool
+            description: Enable/Disable Make-Before-Break.
           ssm_range:
             type: str
             description: IPv4 Prefix associated with SSM.
@@ -85,6 +88,9 @@ keys:
                 bfd:
                   type: bool
                   description: Enable/Disable BFD.
+                make_before_break:
+                  type: bool
+                  description: Enable/Disable Make-Before-Break.
                 rp_addresses:
                   type: list
                   items:
