@@ -187,7 +187,10 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                     _fields: ClassVar[dict] = {"method": {"type": str}, "group": {"type": str}, "multicast": {"type": bool}, "_custom_data": {"type": dict}}
                     method: Literal["logging", "group"] | None
                     group: str | None
-                    """Server group. This can only be set when method is set as `group`."""
+                    """
+                    Specify the server group to be used. This option is applicable only when the `method` key is
+                    explicitly set to `group`.
+                    """
                     multicast: bool | None
                     """
                     Forward accounting packets to all servers within the specified group. This option is applicable only
@@ -213,7 +216,9 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                             Args:
                                 method: method
-                                group: Server group. This can only be set when method is set as `group`.
+                                group:
+                                   Specify the server group to be used. This option is applicable only when the `method` key is
+                                   explicitly set to `group`.
                                 multicast:
                                    Forward accounting packets to all servers within the specified group. This option is applicable only
                                    when the `method` key is explicitly set to `group`.

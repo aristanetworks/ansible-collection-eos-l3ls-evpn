@@ -89,8 +89,9 @@ keys:
                       - group
                     group:
                       type: str
-                      description: Server group. This can only be set when method
-                        is set as `group`.
+                      description: Specify the server group to be used. This option
+                        is applicable only when the `method` key is explicitly set
+                        to `group`.
                     multicast:
                       type: bool
                       description: Forward accounting packets to all servers within

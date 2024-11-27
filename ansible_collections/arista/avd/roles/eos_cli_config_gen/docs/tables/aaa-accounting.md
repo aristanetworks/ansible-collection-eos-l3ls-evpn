@@ -27,7 +27,7 @@
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;group</samp>](## "aaa_accounting.dot1x.default.group") <span style="color:red">deprecated</span> | String |  |  |  | Group Name.<span style="color:red">This key is deprecated. Support will be removed in AVD version v6.0.0. Use <samp>methods[].group</samp> instead.</span> |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;methods</samp>](## "aaa_accounting.dot1x.default.methods") | List, items: Dictionary |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;method</samp>](## "aaa_accounting.dot1x.default.methods.[].method") | String |  |  | Valid Values:<br>- <code>logging</code><br>- <code>group</code> |  |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;group</samp>](## "aaa_accounting.dot1x.default.methods.[].group") | String |  |  |  | Server group. This can only be set when method is set as `group`. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;group</samp>](## "aaa_accounting.dot1x.default.methods.[].group") | String |  |  |  | Specify the server group to be used. This option is applicable only when the `method` key is explicitly set to `group`. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;multicast</samp>](## "aaa_accounting.dot1x.default.methods.[].multicast") | Boolean |  |  |  | Forward accounting packets to all servers within the specified group. This option is applicable only when the `method` key is explicitly set to `group`. |
     | [<samp>&nbsp;&nbsp;commands</samp>](## "aaa_accounting.commands") | Dictionary |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;console</samp>](## "aaa_accounting.commands.console") | List, items: Dictionary |  |  |  |  |
@@ -76,7 +76,7 @@
           methods:
             - method: <str; "logging" | "group">
 
-              # Server group. This can only be set when method is set as `group`.
+              # Specify the server group to be used. This option is applicable only when the `method` key is explicitly set to `group`.
               group: <str>
 
               # Forward accounting packets to all servers within the specified group. This option is applicable only when the `method` key is explicitly set to `group`.
