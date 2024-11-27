@@ -8,12 +8,6 @@ aaa_accounting:
     default:
       type: none
   dot1x:
+    # Test - methods are not defined
     default:
       type: start-stop
-      methods:
-        - method: logging
-        - method: group
-          group: group1
-        - method: group
-          group: group2
-          multicast: true
