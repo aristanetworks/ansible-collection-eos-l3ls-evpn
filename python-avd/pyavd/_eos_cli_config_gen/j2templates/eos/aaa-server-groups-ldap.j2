@@ -4,23 +4,20 @@
  that can be found in the LICENSE file.
 #}
 {# eos - aaa server groups ldap #}
-{% if aaa_server_groups is arista.avd.defined %}
-{%     set aaa_server_groups = aaa_server_groups | selectattr('type', 'arista.avd.defined') | list %}
-{%     for aaa_server_group in aaa_server_groups | arista.avd.natural_sort('name') %}
-{%         if aaa_server_group.type | arista.avd.default == 'ldap' %}
+{% for aaa_server_group in aaa_server_groups | arista.avd.natural_sort('name') %}
+{%     if aaa_server_group.type is arista.avd.defined('ldap') %}
 !
 aaa group server {{ aaa_server_group.type }} {{ aaa_server_group.name }}
-{%             if aaa_server_group.servers is arista.avd.defined %}
-{%                 for server in aaa_server_group.servers %}
-{%                     if server.server is arista.avd.defined %}
-{%                         set server_cli = "server " ~ server.server %}
-{%                         if server.vrf is arista.avd.defined %}
-{%                             set server_cli = server_cli ~ " vrf " ~ server.vrf %}
-{%                         endif %}
-   {{ server_cli }}
+{%         if aaa_server_group.servers is arista.avd.defined %}
+{%             for server in aaa_server_group.servers %}
+{%                 if server.server is arista.avd.defined %}
+{%                     set server_cli = "server " ~ server.server %}
+{%                     if server.vrf is arista.avd.defined %}
+{%                         set server_cli = server_cli ~ " vrf " ~ server.vrf %}
 {%                     endif %}
-{%                 endfor %}
-{%             endif %}
+   {{ server_cli }}
+{%                 endif %}
+{%             endfor %}
 {%         endif %}
-{%     endfor %}
-{% endif %}
+{%     endif %}
+{% endfor %}
