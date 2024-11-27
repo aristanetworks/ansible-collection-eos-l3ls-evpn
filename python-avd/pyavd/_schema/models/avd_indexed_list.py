@@ -110,12 +110,16 @@ class AvdIndexedList(Sequence[T_AvdModel], Generic[T_PrimaryKey, T_AvdModel], Av
     def extend(self, items: Iterable[T_AvdModel]) -> None:
         self._items.update({getattr(item, self._primary_key): item for item in items})
 
-    def _as_list(self, include_default_values: bool = False) -> list[dict]:
+    def _as_list(self, include_default_values: bool = False, strip_values: tuple = (None, [], {})) -> list[dict]:
         """Returns a list with all the data from this model and any nested models."""
-        return [item._as_dict(include_default_values=include_default_values) for item in self._items.values()]
+        return [
+            value
+            for item in self._items.values()
+            if (value := item._as_dict(include_default_values=include_default_values, strip_values=strip_values)) not in strip_values
+        ]
 
-    def _dump(self, include_default_values: bool = False) -> list[dict]:
-        return self._as_list(include_default_values=include_default_values)
+    def _dump(self, include_default_values: bool = False, strip_values: tuple = (None, [], {})) -> list[dict]:
+        return self._as_list(include_default_values=include_default_values, strip_values=strip_values)
 
     def _natural_sorted(self, ignore_case: bool = True) -> Self:
         """Return new instance where the items are natural sorted by primary key."""

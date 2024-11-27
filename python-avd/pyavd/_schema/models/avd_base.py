@@ -34,7 +34,7 @@ class AvdBase(ABC):
         """Returns a new instance loaded with the given data."""
 
     @abstractmethod
-    def _dump(self, include_default_values: bool = False) -> dict | list:
+    def _dump(self, include_default_values: bool = False, strip_values: tuple = (None, [], {})) -> dict | list:
         """Dump data into native Python types with or without default values."""
 
     @abstractmethod

@@ -101,15 +101,17 @@ class AvdList(Sequence[T_ItemType], Generic[T_ItemType], AvdBase):
     def extend(self, items: Iterable[T_ItemType]) -> None:
         self._items.extend(items)
 
-    def _as_list(self, include_default_values: bool = False) -> list:
+    def _as_list(self, include_default_values: bool = False, strip_values: tuple = (None, [], {})) -> list:
         """Returns a list with all the data from this model and any nested models."""
         if issubclass(self._item_type, AvdBase):
             items: list[AvdBase] = self._items
-            return [item._dump(include_default_values=include_default_values) for item in items]
-        return self._items.copy()
+            return [
+                value for item in items if (value := item._dump(include_default_values=include_default_values, strip_values=strip_values)) not in strip_values
+            ]
+        return [item for item in self._items if item not in strip_values]
 
-    def _dump(self, include_default_values: bool = False) -> list:
-        return self._as_list(include_default_values=include_default_values)
+    def _dump(self, include_default_values: bool = False, strip_values: tuple = (None, [], {})) -> list:
+        return self._as_list(include_default_values=include_default_values, strip_values=strip_values)
 
     def _natural_sorted(self, sort_key: str | None = None, ignore_case: bool = True) -> Self:
         """Return new instance where the items are natural sorted by the given sort key or by the item itself."""

@@ -164,7 +164,7 @@ class AvdModel(AvdBase):
             for field in self._fields
         )
 
-    def _as_dict(self, include_default_values: bool = False) -> dict:
+    def _as_dict(self, include_default_values: bool = False, strip_values: tuple = (None, [], {})) -> dict:
         """
         Returns a dict with all the data from this model and any nested models.
 
@@ -177,8 +177,6 @@ class AvdModel(AvdBase):
                     continue
 
                 value = self._get_field_default_value(field)
-                if value in (None, [], {}):
-                    continue
 
             if field == "_custom_data" and isinstance(value, dict) and value:
                 as_dict.update(value)
@@ -188,16 +186,17 @@ class AvdModel(AvdBase):
             key = self._field_to_key_map.get(field, field)
 
             if issubclass(field_info["type"], AvdBase) and isinstance(value, AvdBase):
-                value = value._dump(include_default_values=include_default_values)
-                if not value and value is not None:  # Removing empty dict/list but keeping None values for nullified data.
-                    continue
+                value = value._dump(include_default_values=include_default_values, strip_values=strip_values)
+
+            if value in strip_values:
+                continue
 
             as_dict[key] = value
 
         return as_dict
 
-    def _dump(self, include_default_values: bool = False) -> dict:
-        return self._as_dict(include_default_values=include_default_values)
+    def _dump(self, include_default_values: bool = False, strip_values: tuple = (None, [], {})) -> dict:
+        return self._as_dict(include_default_values=include_default_values, strip_values=strip_values)
 
     def _get(self, name: str, default: Any = None) -> Any:
         """

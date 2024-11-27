@@ -181,7 +181,7 @@ class EthernetInterfacesMixin(UtilsMixin):
             "dot1x": adapter.dot1x._as_dict() or None,
             "poe": self._get_adapter_poe(adapter),
             "eos_cli": adapter.raw_eos_cli,
-            "struct_cfg": adapter.structured_config._as_dict(),
+            "struct_cfg": adapter.structured_config._as_dict(strip_values=()),
         }
 
         # Port-channel member
