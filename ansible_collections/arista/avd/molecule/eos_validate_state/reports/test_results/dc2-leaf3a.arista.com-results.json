@@ -141,6 +141,15 @@
       "connectivity"
     ],
     "description": "Verifies that the provided LLDP neighbors are connected properly.",
+    "custom_field": "Local: Ethernet16 - Remote: dc2-leaf3b.arista.com Ethernet16"
+  },
+  {
+    "name": "dc2-leaf3a.arista.com",
+    "test": "VerifyLLDPNeighbors",
+    "categories": [
+      "connectivity"
+    ],
+    "description": "Verifies that the provided LLDP neighbors are connected properly.",
     "custom_field": "Local: Ethernet2 - Remote: dc2-spine2 Ethernet5"
   },
   {
@@ -499,6 +508,15 @@
     ],
     "description": "Verifies the status of the provided interfaces.",
     "custom_field": "Interface Ethernet15 - Test_type_routed = 'up'"
+  },
+  {
+    "name": "dc2-leaf3a.arista.com",
+    "test": "VerifyInterfacesStatus",
+    "categories": [
+      "interfaces"
+    ],
+    "description": "Verifies the status of the provided interfaces.",
+    "custom_field": "Interface Ethernet16 - Test_dhcp_interface_connectivity = 'up'"
   },
   {
     "name": "dc2-leaf3a.arista.com",

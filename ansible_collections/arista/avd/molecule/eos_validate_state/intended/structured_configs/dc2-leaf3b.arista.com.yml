@@ -374,6 +374,11 @@ ethernet_interfaces:
   channel_group:
     id: 11
     mode: active
+- name: Ethernet16
+  description: Test_dhcp_interface_connectivity
+  ip_address: dhcp
+  peer: dc2-leaf3a.arista.com
+  peer_interface: Ethernet16
 mlag_configuration:
   domain_id: DC2_L3_LEAF3
   local_interface: Vlan4094
