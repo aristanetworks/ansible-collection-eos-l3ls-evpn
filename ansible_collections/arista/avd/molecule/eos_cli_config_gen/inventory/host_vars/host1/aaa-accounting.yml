@@ -20,9 +20,9 @@ aaa_accounting:
       methods:
         - method: logging
         - method: group
-          group: group1
+          group: Radius1
         - method: group
-          group: group2
+          group: Radius2
           multicast: true
         - method: logging
   commands:
