@@ -18,6 +18,8 @@
     | [<samp>&nbsp;&nbsp;enabled</samp>](## "isis_ti_lfa.enabled") | Boolean |  | `False` |  |  |
     | [<samp>&nbsp;&nbsp;protection</samp>](## "isis_ti_lfa.protection") | String |  |  | Valid Values:<br>- <code>link</code><br>- <code>node</code> |  |
     | [<samp>&nbsp;&nbsp;local_convergence_delay</samp>](## "isis_ti_lfa.local_convergence_delay") | Integer |  | `10000` |  | Local convergence delay in milliseconds. |
+    | [<samp>underlay_isis_authentication_key</samp>](## "underlay_isis_authentication_key") | String |  |  |  | Type-7 encrypted password. |
+    | [<samp>underlay_isis_authentication_mode</samp>](## "underlay_isis_authentication_mode") | String |  |  | Valid Values:<br>- <code>md5</code><br>- <code>text</code> | Underlay ISIS authentication mode. |
     | [<samp>underlay_isis_bfd</samp>](## "underlay_isis_bfd") | Boolean |  | `False` |  | Enable BFD for ISIS on all underlay links. |
     | [<samp>underlay_isis_instance_name</samp>](## "underlay_isis_instance_name") | String |  |  |  | Default -> "EVPN_UNDERLAY" for l3ls, "CORE" for mpls. |
 
@@ -47,6 +49,12 @@
 
       # Local convergence delay in milliseconds.
       local_convergence_delay: <int; default=10000>
+
+    # Type-7 encrypted password.
+    underlay_isis_authentication_key: <str>
+
+    # Underlay ISIS authentication mode.
+    underlay_isis_authentication_mode: <str; "md5" | "text">
 
     # Enable BFD for ISIS on all underlay links.
     underlay_isis_bfd: <bool; default=False>

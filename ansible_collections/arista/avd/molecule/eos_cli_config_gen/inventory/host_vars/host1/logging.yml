@@ -1,0 +1,88 @@
+### Logging ###
+logging:
+  console: errors
+  buffered:
+    size: 1000000
+    level: warnings
+  repeat_messages: true
+  trap: disabled
+  synchronous:
+    level:
+  format:
+    timestamp: traditional year timezone
+    rfc5424: true
+  source_interface:
+  vrfs:
+    - name: mgt
+      source_interface: Management0
+      hosts:
+        - name: 10.10.10.7
+        - name: 2001:db8::10:7
+        - name: 30.30.30.7
+          protocol: tcp
+          ports:
+            - 100
+            - 200
+        - name: 2001:db8::30:7
+          protocol: tcp
+          ports:
+            - 100
+            - 200
+        - name: 40.40.40.7
+          ports:
+            - 300
+            - 400
+        - name: 2001:db8::40:7
+          ports:
+            - 300
+            - 400
+    - name: vrf_with_no_source_interface
+      hosts:
+        - name: 1.2.3.4
+          protocol: udp
+        - name: 2001:db8::1:2:3:4
+          protocol: udp
+    - name: default
+      source_interface: Loopback0
+      hosts:
+        - name: 20.20.20.7
+        - name: 2001:db8::20:7
+        - name: 50.50.50.7
+          protocol: tcp
+          ports:
+            - 100
+            - 200
+        - name: 2001:db8::50:7
+          protocol: tcp
+          ports:
+            - 100
+            - 200
+        - name: 60.60.60.7
+          protocol: udp
+          ports:
+            - 100
+            - 200
+        - name: 2001:db8::60:7
+          protocol: udp
+          ports:
+            - 100
+            - 200
+  event:
+    congestion_drops_interval: 10
+    global_link_status: false
+    storm_control:
+      discards:
+        global: true
+        interval: 10
+  level:
+    - facility: BGP
+      severity: 0
+    - facility: AAA
+      severity: warnings
+    - facility: ACL
+      severity: critical
+  policy:
+    match:
+      match_lists:
+        - name: molecule
+          action: discard

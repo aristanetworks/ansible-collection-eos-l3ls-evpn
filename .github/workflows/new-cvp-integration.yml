@@ -12,6 +12,8 @@ env:
   # Apparently it is set in secrets when running with debug
   ANSIBLE_VERBOSITY: ${{ secrets.ACTIONS_STEP_DEBUG && 3 || 0 }}
   AVD_NEVER_RUN_FROM_SOURCE: 1
+  PY_COLORS: 1 # allows molecule colors to be passed to GitHub Actions
+  ANSIBLE_FORCE_COLOR: 1 # allows ansible colors to be passed to GitHub Actions
 
 jobs:
   # ----------------------------------------------- #
@@ -26,12 +28,8 @@ jobs:
         avd_scenario:
           - 'cv_workflow'
         ansible_version:
-          - 'ansible-core<2.18.0 --upgrade'
+          - 'ansible-core<2.19.0 --upgrade'
     steps:
-      - name: 'Set environment variables'
-        run: |
-          echo "PY_COLORS=1" >> $GITHUB_ENV
-          echo "ANSIBLE_FORCE_COLOR=1" >> $GITHUB_ENV
       - uses: actions/checkout@v4
       - name: Run molecule action
         env:
@@ -59,12 +57,8 @@ jobs:
         avd_scenario:
           - 'cv_deploy'
         ansible_version:
-          - 'ansible-core<2.18.0 --upgrade'
+          - 'ansible-core<2.19.0 --upgrade'
     steps:
-      - name: 'Set environment variables'
-        run: |
-          echo "PY_COLORS=1" >> $GITHUB_ENV
-          echo "ANSIBLE_FORCE_COLOR=1" >> $GITHUB_ENV
       - uses: actions/checkout@v4
       - name: Run molecule action
         env:

@@ -51,7 +51,7 @@ ethernet_interfaces:
   switchport:
     enabled: true
     mode: access
-    access_vlan: '100'
+    access_vlan: 100
 - name: Ethernet11
   peer_type: network_port
   description: Endpoint
@@ -59,7 +59,7 @@ ethernet_interfaces:
   switchport:
     enabled: true
     mode: access
-    access_vlan: '100'
+    access_vlan: 100
 port_channel_interfaces:
 - name: Port-Channel1
   description: L2_OSPF_SPINES_Port-Channel2

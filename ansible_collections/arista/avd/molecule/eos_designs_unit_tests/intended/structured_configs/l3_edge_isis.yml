@@ -91,6 +91,11 @@ ethernet_interfaces:
   isis_network_point_to_point: true
   isis_hello_padding: true
   isis_circuit_type: level-2
+  isis_authentication:
+    both:
+      mode: text
+      key: $1c$sTNAlR6rKSw=
+      key_type: '7'
   description: P2P_peer3_ethernet3
 - name: ethernet4
   peer: peer4
@@ -107,4 +112,9 @@ ethernet_interfaces:
   isis_network_point_to_point: true
   isis_hello_padding: true
   isis_circuit_type: level-2
+  isis_authentication:
+    both:
+      mode: text
+      key: $1c$sTNAlR6rKSw=
+      key_type: '7'
   description: P2P_peer4_ethernet4

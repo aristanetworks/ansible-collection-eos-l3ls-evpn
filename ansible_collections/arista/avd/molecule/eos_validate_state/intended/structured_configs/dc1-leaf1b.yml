@@ -439,7 +439,7 @@ ethernet_interfaces:
   switchport:
     enabled: true
     mode: access
-    access_vlan: '50'
+    access_vlan: 50
   spanning_tree_portfast: edge
 - name: Ethernet42
   peer_type: network_port
@@ -449,7 +449,7 @@ ethernet_interfaces:
   switchport:
     enabled: true
     mode: access
-    access_vlan: '50'
+    access_vlan: 50
   spanning_tree_portfast: edge
 - name: Ethernet43
   peer_type: network_port
@@ -459,7 +459,7 @@ ethernet_interfaces:
   switchport:
     enabled: true
     mode: access
-    access_vlan: '50'
+    access_vlan: 50
   spanning_tree_portfast: edge
 - name: Ethernet44
   peer_type: network_port
@@ -469,7 +469,7 @@ ethernet_interfaces:
   switchport:
     enabled: true
     mode: access
-    access_vlan: '50'
+    access_vlan: 50
   spanning_tree_portfast: edge
 - name: Ethernet45
   peer_type: network_port
@@ -479,7 +479,7 @@ ethernet_interfaces:
   switchport:
     enabled: true
     mode: access
-    access_vlan: '50'
+    access_vlan: 50
   spanning_tree_portfast: edge
 - name: Ethernet46
   peer_type: network_port
@@ -489,7 +489,7 @@ ethernet_interfaces:
   switchport:
     enabled: true
     mode: access
-    access_vlan: '50'
+    access_vlan: 50
   spanning_tree_portfast: edge
 - name: Ethernet47
   peer_type: network_port
@@ -499,7 +499,7 @@ ethernet_interfaces:
   switchport:
     enabled: true
     mode: access
-    access_vlan: '50'
+    access_vlan: 50
   spanning_tree_portfast: edge
 - name: Ethernet48
   peer_type: network_port
@@ -509,7 +509,7 @@ ethernet_interfaces:
   switchport:
     enabled: true
     mode: access
-    access_vlan: '50'
+    access_vlan: 50
   spanning_tree_portfast: edge
 - name: Ethernet49
   peer_type: network_port
@@ -519,7 +519,7 @@ ethernet_interfaces:
   switchport:
     enabled: true
     mode: access
-    access_vlan: '50'
+    access_vlan: 50
   spanning_tree_portfast: edge
 - name: Ethernet5
   peer: dc1-leaf1-server1

@@ -253,10 +253,14 @@ class UtilsMixin:
                         "isis_circuit_type": default(p2p_link.get("isis_circuit_type"), self.shared_utils.isis_default_circuit_type),
                     },
                 )
-                if (isis_authentication_mode := p2p_link.get("isis_authentication_mode")) is not None:
+                if (
+                    isis_authentication_mode := default(p2p_link.get("isis_authentication_mode"), get(self._hostvars, "underlay_isis_authentication_mode"))
+                ) is not None:
                     interface_cfg.setdefault("isis_authentication", {}).setdefault("both", {})["mode"] = isis_authentication_mode
 
-                if (isis_authentication_key := p2p_link.get("isis_authentication_key")) is not None:
+                if (
+                    isis_authentication_key := default(p2p_link.get("isis_authentication_key"), get(self._hostvars, "underlay_isis_authentication_key"))
+                ) is not None:
                     interface_cfg.setdefault("isis_authentication", {}).setdefault("both", {}).update(
                         {
                             "key": isis_authentication_key,

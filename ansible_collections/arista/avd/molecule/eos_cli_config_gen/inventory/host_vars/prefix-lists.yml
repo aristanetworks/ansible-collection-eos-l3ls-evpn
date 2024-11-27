@@ -16,6 +16,18 @@ dynamic_prefix_lists:
 
 ### IPv4 Prefix-Lists ###
 prefix_lists:
+  - name: PL-BGP-DEFAULT-BLUE-C1
+    sequence_numbers:
+      - sequence: 10
+        action: permit 0.0.0.0/0 le 1
+  - name: PL-BGP-DEFAULT-RED-OUT-C1
+    sequence_numbers:
+      - sequence: 10
+        action: permit 10.0.0.0/8
+  - name: PL-BGP-DEFAULT-RED-IN-C1
+    sequence_numbers:
+      - sequence: 10
+        action: permit 0.0.0.0/0
   - name: PL-LOOPBACKS-EVPN-OVERLAY
     sequence_numbers:
       - sequence: 10

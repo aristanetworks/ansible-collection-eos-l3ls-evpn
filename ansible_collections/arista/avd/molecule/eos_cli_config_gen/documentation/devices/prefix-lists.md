@@ -71,6 +71,24 @@ dynamic prefix-list DYNAMIC_PREFIX_LIST_NAME_3
 
 #### Prefix-lists Summary
 
+##### PL-BGP-DEFAULT-BLUE-C1
+
+| Sequence | Action |
+| -------- | ------ |
+| 10 | permit 0.0.0.0/0 le 1 |
+
+##### PL-BGP-DEFAULT-RED-IN-C1
+
+| Sequence | Action |
+| -------- | ------ |
+| 10 | permit 0.0.0.0/0 |
+
+##### PL-BGP-DEFAULT-RED-OUT-C1
+
+| Sequence | Action |
+| -------- | ------ |
+| 10 | permit 10.0.0.0/8 |
+
 ##### PL-IPV4-LOOPBACKS
 
 | Sequence | Action |
@@ -86,6 +104,15 @@ dynamic prefix-list DYNAMIC_PREFIX_LIST_NAME_3
 #### Prefix-lists Device Configuration
 
 ```eos
+!
+ip prefix-list PL-BGP-DEFAULT-BLUE-C1
+   seq 10 permit 0.0.0.0/0 le 1
+!
+ip prefix-list PL-BGP-DEFAULT-RED-IN-C1
+   seq 10 permit 0.0.0.0/0
+!
+ip prefix-list PL-BGP-DEFAULT-RED-OUT-C1
+   seq 10 permit 10.0.0.0/8
 !
 ip prefix-list PL-IPV4-LOOPBACKS
 !

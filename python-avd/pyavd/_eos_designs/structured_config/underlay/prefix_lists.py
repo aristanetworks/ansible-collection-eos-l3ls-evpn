@@ -5,7 +5,10 @@ from __future__ import annotations
 
 import ipaddress
 from functools import cached_property
+from ipaddress import ip_network
 from typing import TYPE_CHECKING
+
+from pyavd._utils import get
 
 from .utils import UtilsMixin
 
@@ -67,6 +70,25 @@ class PrefixListsMixin(UtilsMixin):
 
             if sequence_numbers:
                 prefix_lists.append({"name": "PL-WAN-HA-PEER-PREFIXES", "sequence_numbers": sequence_numbers})
+
+        # P2P-LINKS needed for L3 inband ZTP
+        p2p_links_sequence_numbers = []
+        sequence_number = 0
+        for peer in self._avd_peers:
+            peer_facts = self.shared_utils.get_peer_facts(peer, required=True)
+            for uplink in peer_facts["uplinks"]:
+                if (
+                    uplink["peer"] == self.shared_utils.hostname
+                    and uplink["type"] == "underlay_p2p"
+                    and uplink.get("ip_address")
+                    and "unnumbered" not in uplink["ip_address"]
+                    and get(peer_facts, "inband_ztp")
+                ):
+                    sequence_number += 10
+                    subnet = str(ip_network(f"{uplink['ip_address']}/{uplink['prefix_length']}", strict=False))
+                    p2p_links_sequence_numbers.append({"sequence": sequence_number, "action": f"permit {subnet}"})
+        if p2p_links_sequence_numbers:
+            prefix_lists.append({"name": "PL-P2P-LINKS", "sequence_numbers": p2p_links_sequence_numbers})
 
         return prefix_lists
 
