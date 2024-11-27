@@ -57,7 +57,7 @@ aaa accounting system default {{ aaa_accounting.system.default.type }} group {{ 
 {%                 do accounting_default_list.append(method.method) %}
 {%             elif method.method == "group" and method.group is arista.avd.defined %}
 {%                 set group_cli = "group " ~ method.group %}
-{%                 if method.multicast is arista.avd.defined %}
+{%                 if method.multicast is arista.avd.defined(true) %}
 {%                     set group_cli = group_cli ~ " multicast" %}
 {%                 endif %}
 {%                 do accounting_default_list.append(group_cli) %}
