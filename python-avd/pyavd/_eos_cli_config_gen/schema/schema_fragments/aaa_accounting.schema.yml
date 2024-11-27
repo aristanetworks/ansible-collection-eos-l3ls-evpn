@@ -76,7 +76,7 @@ keys:
                       description: Server group. This can only be set when method is set as `group`.
                     multicast:
                       type: bool
-                      description: Forward accounting packets to all servers in the group. This can only be set when method is set as `group`.
+                      description: Forward accounting packets to all servers within the specified group. This option is applicable only when the `method` key is explicitly set to `group`.
       commands:
         type: dict
         keys:
