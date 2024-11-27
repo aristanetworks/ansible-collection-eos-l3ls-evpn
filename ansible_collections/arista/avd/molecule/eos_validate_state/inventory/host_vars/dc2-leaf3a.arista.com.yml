@@ -52,7 +52,7 @@ custom_structured_configuration_ethernet_interfaces:
     # Test to skip the VerifyLLDPNeighbors testcase via `validate_lldp` key
   - name: Ethernet4
     validate_lldp: false
-  
+
   - name: Ethernet16
     description: Test_dhcp_interface_connectivity
     ip_address: dhcp
