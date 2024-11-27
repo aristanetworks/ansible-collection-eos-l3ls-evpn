@@ -177,6 +177,22 @@ class VlanInterfacesMixin(UtilsMixin):
         if self.shared_utils.underlay_rfc5549 and self.shared_utils.overlay_mlag_rfc5549:
             return {"ipv6_enable": True}
 
+        if not self.shared_utils.underlay_ipv4:
+            if (mlag_ibgp_peering_ipv6_pool := vrf.get("mlag_ibgp_peering_ipv6_pool")) is not None:
+                if self.shared_utils.mlag_role == "primary":
+                    return {
+                        "ipv6_address": (
+                            f"{self.shared_utils.ip_addressing.mlag_ibgp_peering_ip_primary(mlag_ibgp_peering_ipv6_pool)}/"
+                            f"{self.shared_utils.fabric_ip_addressing_mlag_ipv6_prefix_length}"
+                        )
+                    }
+                return {
+                    "ipv6_address": (
+                        f"{self.shared_utils.ip_addressing.mlag_ibgp_peering_ip_secondary(mlag_ibgp_peering_ipv6_pool)}/"
+                        f"{self.shared_utils.fabric_ip_addressing_mlag_ipv6_prefix_length}"
+                    )
+                }
+            return {"ipv6_address": (f"{self.shared_utils.mlag_ibgp_ip}/" f"{self.shared_utils.fabric_ip_addressing_mlag_ipv6_prefix_length}")}
         if (mlag_ibgp_peering_ipv4_pool := vrf.get("mlag_ibgp_peering_ipv4_pool")) is not None:
             if self.shared_utils.mlag_role == "primary":
                 return {

@@ -43,11 +43,14 @@ class LoopbackInterfacesMixin(UtilsMixin):
                 ),
             ),
             "shutdown": False,
-            "ip_address": f"{self.shared_utils.router_id}/32",
         }
+        if not self.shared_utils.underlay_ipv4:
+            loopback0["ipv6_address"] = f"{self.shared_utils.ipv6_router_id}/{self.shared_utils.loopback_ipv6_prefix_length}"
+        else:
+            loopback0["ip_address"] = f"{self.shared_utils.router_id}/32"
 
         if self.shared_utils.ipv6_router_id is not None:
-            loopback0["ipv6_address"] = f"{self.shared_utils.ipv6_router_id}/128"
+            loopback0["ipv6_address"] = f"{self.shared_utils.ipv6_router_id}/{self.shared_utils.loopback_ipv6_prefix_length}"
 
         if self.shared_utils.underlay_ospf:
             loopback0["ospf_area"] = self.shared_utils.underlay_ospf_area
@@ -84,8 +87,11 @@ class LoopbackInterfacesMixin(UtilsMixin):
                     )
                 ),
                 "shutdown": False,
-                "ip_address": f"{self.shared_utils.vtep_ip}/32",
             }
+            if not self.shared_utils.underlay_ipv4:
+                vtep_loopback["ipv6_address"] = f"{self.shared_utils.vtep_ipv6}/{self.shared_utils.loopback_ipv6_prefix_length}"
+            else:
+                vtep_loopback["ip_address"] = f"{self.shared_utils.vtep_ip}/32"
 
             if self.shared_utils.network_services_l3 is True and self.shared_utils.vtep_vvtep_ip is not None:
                 vtep_loopback["ip_address_secondaries"] = [self.shared_utils.vtep_vvtep_ip]

@@ -1,0 +1,52 @@
+---
+tenants:
+  # Definition of tenants. Additional level of abstraction to VRFs
+  - name: TENANT1
+    # Number used to generate the VNI of each VLAN by adding the VLAN number in this tenant.
+    mac_vrf_vni_base: 10000
+    vrfs:
+      # VRF definitions inside the tenant.
+      - name: VRF10
+        # VRF VNI definition.
+        vrf_vni: 10
+        # Enable VTEP Network diagnostics
+        # This will create a loopback with virtual source-nat enable to perform diagnostics from the switch.
+        vtep_diagnostic:
+          # Loopback interface number
+          loopback: 10
+          # Loopback ip range, a unique ip is derived from this ranged and assigned
+          # to each l3 leaf based on it's unique id.
+          loopback_ip_range: 10.255.10.0/27
+        svis:
+          # SVI definitions.
+          - id: 11
+            # SVI Description
+            name: VRF10_VLAN11
+            enabled: true
+            # IP anycast gateway to be used in the SVI in every leaf.
+            ip_address_virtual: 10.10.11.1/24
+          - id: 12
+            name: VRF10_VLAN12
+            enabled: true
+            ip_address_virtual: 10.10.12.1/24
+      - name: VRF11
+        vrf_vni: 11
+        vtep_diagnostic:
+          loopback: 11
+          loopback_ip_range: 10.255.11.0/27
+        svis:
+          - id: 21
+            name: VRF11_VLAN21
+            enabled: true
+            ip_address_virtual: 10.10.21.1/24
+          - id: 22
+            name: VRF11_VLAN22
+            enabled: true
+            ip_address_virtual: 10.10.22.1/24
+
+    l2vlans:
+      # These are pure L2 vlans. They do not have a SVI defined in the l3leafs and they will be bridged inside the VXLAN fabric
+      - id: 3401
+        name: L2_VLAN3401
+      - id: 3402
+        name: L2_VLAN3402

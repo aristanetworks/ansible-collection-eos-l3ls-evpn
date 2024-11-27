@@ -78,6 +78,10 @@ class MlagMixin:
         return get(self.switch_data_combined, "mlag_peer_l3_ipv4_pool", required=True)
 
     @cached_property
+    def mlag_peer_l3_ipv6_pool(self: SharedUtils) -> str:
+        return get(self.switch_data_combined, "mlag_peer_l3_ipv6_pool", required=True)
+
+    @cached_property
     def mlag_role(self: SharedUtils) -> str | None:
         if self.mlag:
             if self.switch_data_node_group_nodes[0]["name"] == self.hostname:

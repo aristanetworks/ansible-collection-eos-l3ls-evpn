@@ -146,7 +146,10 @@ class AvdStructuredConfigMlag(AvdFacts):
             "mtu": self.shared_utils.p2p_uplinks_mtu,
         }
         if not self.shared_utils.underlay_rfc5549:
-            l3_vlan_interface["ip_address"] = f"{self.shared_utils.mlag_l3_ip}/{self.shared_utils.fabric_ip_addressing_mlag_ipv4_prefix_length}"
+            if not self.shared_utils.underlay_ipv4:
+                l3_vlan_interface["ipv6_address"] = f"{self.shared_utils.mlag_l3_ip}/{self.shared_utils.fabric_ip_addressing_mlag_ipv6_prefix_length}"
+            else:
+                l3_vlan_interface["ip_address"] = f"{self.shared_utils.mlag_l3_ip}/{self.shared_utils.fabric_ip_addressing_mlag_ipv4_prefix_length}"
 
         l3_vlan_interface.update(l3_cfg)
 

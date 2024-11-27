@@ -24,6 +24,9 @@ interface Vxlan1
 {%     if vxlan_config.vxlan.udp_port is arista.avd.defined %}
    vxlan udp-port {{ vxlan_config.vxlan.udp_port }}
 {%     endif %}
+{%     if vxlan_config.vxlan.ipv6_underlay.enabled is arista.avd.defined(true) %}
+   vxlan encapsulation ipv6
+{%     endif %}
 {%     if vxlan_config.vxlan.vtep_to_vtep_bridging is arista.avd.defined(true) %}
    vxlan bridging vtep-to-vtep
 {%     endif %}

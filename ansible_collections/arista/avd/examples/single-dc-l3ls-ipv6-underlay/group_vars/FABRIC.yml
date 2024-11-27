@@ -1,0 +1,88 @@
+---
+# Ansible connectivity definitions
+# eAPI connectivity via HTTPS is specified (as opposed to CLI via SSH)
+ansible_connection: ansible.netcommon.httpapi
+# Specifies that we are indeed using Arista EOS
+ansible_network_os: arista.eos.eos
+# This user/password must exist on the switches to enable Ansible access
+ansible_user: cvpadmin
+ansible_password: arista123
+# User escalation (to enter enable mode)
+ansible_become: true
+ansible_become_method: enable
+# Use SSL (HTTPS)
+ansible_httpapi_use_ssl: true
+# Do not try to validate certs
+ansible_httpapi_validate_certs: false
+
+# Common AVD group variables
+fabric_name: FABRIC
+
+# Define underlay and overlay routing protocol to be used
+underlay_routing_protocol: ebgp
+overlay_routing_protocol: ebgp
+
+# Local users
+local_users:
+  # Define a new user, which is called "ansible"
+  - name: ansible
+    privilege: 15
+    role: network-admin
+    # Password set to "ansible". Same string as the device generates when configuring a username.
+    sha512_password: $6$7u4j1rkb3VELgcZE$EJt2Qff8kd/TapRoci0XaIZsL4tFzgq1YZBLD9c6f/knXzvcYY0NcMKndZeCv0T268knGKhOEwZAxqKjlMm920
+  - name: admin
+    privilege: 15
+    role: network-admin
+    no_password: true
+
+# BGP peer groups passwords
+bgp_peer_groups:
+  # all passwords set to "arista"
+  evpn_overlay_peers:
+    password: Q4fqtbqcZ7oQuKfuWtNGRQ==
+  ipv4_underlay_peers:
+    password: 7x4B4rnJhZB438m9+BrBfQ==
+  mlag_ipv4_underlay_peer:
+    password: 4b21pAdCvWeAqpcKDFMdWw==
+
+# P2P interfaces MTU, includes VLANs 4093 and 4094 that are over peer-link
+# If you're running vEOS-lab or cEOS, you should use MTU of 1500 instead as shown in the following line
+# p2p_uplinks_mtu: 9214
+p2p_uplinks_mtu: 1500
+
+# Set default uplink, downlink, and MLAG interfaces based on node type
+default_interfaces:
+  - types: [ spine ]
+    platforms: [ default ]
+    uplink_interfaces: [ Ethernet1-2 ]
+    downlink_interfaces: [ Ethernet1-8 ]
+  - types: [ l3leaf ]
+    platforms: [ default ]
+    uplink_interfaces: [ Ethernet1-2 ]
+    mlag_interfaces: [ Ethernet11-12 ]
+    downlink_interfaces: [ Ethernet8 ]
+
+# CloudVision Portal definitions
+cvp_instance_ips:
+  - 192.168.1.100
+terminattr_smashexcludes: "ale,flexCounter,hardware,kni,pulse,strata"
+terminattr_ingestexclude: "/Sysdb/cell/1/agent,/Sysdb/cell/2/agent"
+terminattr_disable_aaa: true
+
+# DNS Server
+ip_name_servers:
+    # IPv4 or IPv6 address for DNS server
+  - ip_address: 8.8.8.8
+    # VRF Name
+    vrf: MGMT
+
+fabric_ip_addressing:
+  mlag:
+    # Modifies the default MLAG peer-link prefix length of 64.
+    ipv6_prefix_length: 64
+
+# NTP Servers IP or DNS name, first NTP server will be preferred, and sourced from Management VRF
+ntp_settings:
+  server_vrf: use_mgmt_interface_vrf
+  servers:
+    - name: time.google.com

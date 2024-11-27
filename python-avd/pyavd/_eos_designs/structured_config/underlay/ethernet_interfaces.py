@@ -94,6 +94,8 @@ class EthernetInterfacesMixin(UtilsMixin):
                 if link.get("ip_address") is not None:
                     if "unnumbered" in link["ip_address"].lower():
                         ethernet_interface["ip_address"] = link["ip_address"]
+                    elif self.shared_utils.underlay_ipv6:
+                        ethernet_interface["ipv6_address"] = f"{link['ip_address']}/{link['prefix_length']}"
                     else:
                         ethernet_interface["ip_address"] = f"{link['ip_address']}/{link['prefix_length']}"
 

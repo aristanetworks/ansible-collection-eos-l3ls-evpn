@@ -1,0 +1,42 @@
+---
+all:
+  children:
+    CLOUDVISION:
+      hosts:
+        cvp:
+          # Ansible variables used by the ansible_avd and ansible_cvp roles to push configuration to devices via CVP
+          ansible_host: 192.168.1.100
+          ansible_user: ansible
+          ansible_password: ansible
+          ansible_connection: httpapi
+          ansible_httpapi_use_ssl: true
+          ansible_httpapi_validate_certs: false
+          ansible_network_os: eos
+
+    FABRIC:
+      children:
+        DC1:
+          children:
+            DC1_SPINES:
+              hosts:
+                spine1:
+                  ansible_host: 192.168.1.235
+                spine2:
+                  ansible_host: 192.168.1.236
+            DC1_L3_LEAVES:
+              hosts:
+                leaf1:
+                  ansible_host: 192.168.1.231
+                leaf2:
+                  ansible_host: 192.168.1.232
+                leaf3:
+                  ansible_host: 192.168.1.233
+                leaf4:
+                  ansible_host: 192.168.1.234
+
+    NETWORK_SERVICES:
+      children:
+        DC1_L3_LEAVES:
+    CONNECTED_ENDPOINTS:
+      children:
+        DC1_L3_LEAVES:

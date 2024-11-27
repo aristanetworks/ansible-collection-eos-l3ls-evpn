@@ -1,0 +1,9 @@
+Type,Node,Node Interface,Leaf IP Address,Peer Type,Peer Node,Peer Interface,Peer IP Address
+l3leaf,leaf1,Ethernet1,,spine,spine1,Ethernet1,
+l3leaf,leaf1,Ethernet2,,spine,spine2,Ethernet1,
+l3leaf,leaf2,Ethernet1,,spine,spine1,Ethernet2,
+l3leaf,leaf2,Ethernet2,,spine,spine2,Ethernet2,
+l3leaf,leaf3,Ethernet1,,spine,spine1,Ethernet3,
+l3leaf,leaf3,Ethernet2,,spine,spine2,Ethernet3,
+l3leaf,leaf4,Ethernet1,,spine,spine1,Ethernet4,
+l3leaf,leaf4,Ethernet2,,spine,spine2,Ethernet4,

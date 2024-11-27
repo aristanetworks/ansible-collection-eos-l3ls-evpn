@@ -24,6 +24,12 @@
 | MLAG Source Interface | {{ vxlan_config.vxlan.mlag_source_interface }} |
 {%     endif %}
 | UDP port | {{ vxlan_config.vxlan.udp_port | arista.avd.default('4789') }} |
+{%     if vxlan_config.vxlan.ipv6_underlay.enabled is arista.avd.defined(true) %}
+   vxlan encapsulation ipv6 | Enabled |
+{%     endif %}
+{%     if vxlan_config.vxlan.ipv6_underlay.enabled is arista.avd.defined(false) %}
+   vxlan encapsulation ipv6 | Disabled |
+{%     endif %}
 {%     if vxlan_config.vxlan.vtep_to_vtep_bridging is arista.avd.defined(true) %}
 | Vtep-to-Vtep Bridging | {{ vxlan_config.vxlan.vtep_to_vtep_bridging }} |
 {%     endif %}

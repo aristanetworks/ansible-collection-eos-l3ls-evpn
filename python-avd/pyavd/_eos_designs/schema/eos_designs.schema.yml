@@ -1500,6 +1500,14 @@ keys:
             convert_types:
             - str
             description: IPv4 prefix length used for L3 point-to-point uplinks.
+          ipv6_prefix_length:
+            type: int
+            default: 64
+            min: 1
+            max: 127
+            convert_types:
+            - str
+            description: IPv6 prefix length used for L3 point-to-point uplinks.
       wan_ha:
         type: dict
         description: Allow to manipulate the IP addressing scheme for WAN HA direct
@@ -4268,6 +4276,18 @@ keys:
       '
     type: bool
     default: false
+  underlay_ipv4:
+    documentation_options:
+      table: fabric-settings
+    description: 'Setting this feature to false allows a pure IPv6 underlay routing
+      protocol with numbered addresses.
+
+      Requires "underlay_ipv6: true" and "loopback_ipv6_pool" under the node type
+      settings.
+
+      '
+    type: bool
+    default: true
   underlay_isis_authentication_key:
     documentation_options:
       table: isis-settings
@@ -7750,6 +7770,12 @@ $defs:
             description: IPv4 subnet to use to connect to uplink switches.
             type: str
             format: ipv4_cidr
+          uplink_ipv6_pool:
+            documentation_options:
+              table: node-type-uplink-configuration
+            description: IPv6 subnet to use to connect to uplink switches.
+            type: str
+            format: ipv6_cidr
           uplink_interfaces:
             documentation_options:
               table: node-type-uplink-configuration
@@ -8072,6 +8098,18 @@ $defs:
             description: IPv4 subnet for VTEP-Loopback allocation.
             type: str
             format: ipv4_cidr
+          router_id_pool:
+            documentation_options:
+              table: node-type-loopback-vtep-configuration
+            description: IPv4 subnet for allocation router-id allocation.
+            type: str
+            format: ipv4_cidr
+          vtep_loopback_ipv6_pool:
+            documentation_options:
+              table: node-type-loopback-vtep-configuration
+            description: IPv6 subnet for VTEP-Loopback allocation.
+            type: str
+            format: ipv6_cidr
           vtep_loopback_ipv4_address:
             documentation_options:
               table: node-type-loopback-vtep-configuration
@@ -8083,6 +8121,17 @@ $defs:
               catch duplicates.'
             type: str
             format: ipv4
+          vtep_loopback_ipv6_address:
+            documentation_options:
+              table: node-type-loopback-vtep-configuration
+            description: 'IPv6 address without mask for VTEP-Loopback.
+
+              When set, it takes precedence over `vtep_loopback_ipv6_pool`.
+
+              Note: AVD does not check for validity of the IPv6 address and does not
+              catch duplicates.'
+            type: str
+            format: ipv6
           loopback_ipv4_offset:
             documentation_options:
               table: node-type-loopback-vtep-configuration
@@ -8105,6 +8154,15 @@ $defs:
             description: IPv6 subnet for Loopback0 allocation.
             type: str
             format: ipv6_cidr
+          loopback_ipv6_prefix_length:
+            documentation_options:
+              table: node-type-loopback-vtep-configuration
+            description: IPv6 prefix length used for loopbacks
+            type: int
+            valid_values:
+            - 64
+            - 128
+            default: 128
           loopback_ipv6_offset:
             documentation_options:
               table: node-type-loopback-vtep-configuration
@@ -8479,8 +8537,8 @@ $defs:
           mlag_peer_l3_ipv4_pool:
             documentation_options:
               table: node-type-l2-mlag-configuration
-            description: 'IP address pool used for MLAG underlay L3 peering. IP is
-              derived from the node id.
+            description: 'IPv4 address pool used for MLAG underlay L3 peering. IP
+              is derived from the node id.
 
               Required when MLAG leafs present in topology and they are using a separate
               L3 peering VLAN.
@@ -8488,6 +8546,18 @@ $defs:
               '
             type: str
             format: ipv4_cidr
+          mlag_peer_l3_ipv6_pool:
+            documentation_options:
+              table: node-type-l2-mlag-configuration
+            description: 'IPv6 address pool used for MLAG underlay L3 peering. IP
+              is derived from the node id.
+
+              Required when MLAG leafs present in topology and they are using a separate
+              L3 peering VLAN.
+
+              '
+            type: str
+            format: ipv6_cidr
           mlag_peer_vlan:
             documentation_options:
               table: node-type-l2-mlag-configuration

@@ -37,6 +37,12 @@ keys:
                 type: int
                 convert_types:
                   - str
+              ipv6_underlay:
+                type: dict
+                description: Enable bridging over EVPN IPv6 VXLAN underlay.
+                keys:
+                  enabled:
+                    type: bool
               vtep_to_vtep_bridging:
                 type: bool
                 description: Enable bridging between different VTEPs in vxlan overlay.

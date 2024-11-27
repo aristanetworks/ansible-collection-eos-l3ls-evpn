@@ -14,6 +14,7 @@
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;ipv6_prefix_length</samp>](## "fabric_ip_addressing.mlag.ipv6_prefix_length") | Integer |  | `64` | Min: 1<br>Max: 127 | IPv6 prefix length used for MLAG peer-vlan and L3 point-to-point SVIs over the MLAG peer-link. |
     | [<samp>&nbsp;&nbsp;p2p_uplinks</samp>](## "fabric_ip_addressing.p2p_uplinks") | Dictionary |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;ipv4_prefix_length</samp>](## "fabric_ip_addressing.p2p_uplinks.ipv4_prefix_length") | Integer |  | `31` | Min: 1<br>Max: 31 | IPv4 prefix length used for L3 point-to-point uplinks. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;ipv6_prefix_length</samp>](## "fabric_ip_addressing.p2p_uplinks.ipv6_prefix_length") | Integer |  | `64` | Min: 1<br>Max: 127 | IPv6 prefix length used for L3 point-to-point uplinks. |
     | [<samp>&nbsp;&nbsp;wan_ha</samp>](## "fabric_ip_addressing.wan_ha") | Dictionary |  |  |  | Allow to manipulate the IP addressing scheme for WAN HA direct subnets. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;ipv4_prefix_length</samp>](## "fabric_ip_addressing.wan_ha.ipv4_prefix_length") | Integer |  | `31` | Min: 1<br>Max: 31 | IPv4 prefix length used for point-to-point interface for direct WAN HA link. |
 
@@ -43,6 +44,9 @@
 
         # IPv4 prefix length used for L3 point-to-point uplinks.
         ipv4_prefix_length: <int; 1-31; default=31>
+
+        # IPv6 prefix length used for L3 point-to-point uplinks.
+        ipv6_prefix_length: <int; 1-127; default=64>
 
       # Allow to manipulate the IP addressing scheme for WAN HA direct subnets.
       wan_ha:

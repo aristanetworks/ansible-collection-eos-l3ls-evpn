@@ -56,6 +56,14 @@ keys:
             convert_types:
               - str
             description: IPv4 prefix length used for L3 point-to-point uplinks.
+          ipv6_prefix_length:
+            type: int
+            default: 64
+            min: 1
+            max: 127
+            convert_types:
+              - str
+            description: IPv6 prefix length used for L3 point-to-point uplinks.
       wan_ha:
         type: dict
         description: Allow to manipulate the IP addressing scheme for WAN HA direct subnets.

@@ -18,6 +18,8 @@
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "vxlan_interface.vxlan1.vxlan.controller_client.enabled") | Boolean |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;mlag_source_interface</samp>](## "vxlan_interface.vxlan1.vxlan.mlag_source_interface") | String |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;udp_port</samp>](## "vxlan_interface.vxlan1.vxlan.udp_port") | Integer |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ipv6_underlay</samp>](## "vxlan_interface.vxlan1.vxlan.ipv6_underlay") | Dictionary |  |  |  | Enable bridging over EVPN IPv6 VXLAN underlay. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "vxlan_interface.vxlan1.vxlan.ipv6_underlay.enabled") | Boolean |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;vtep_to_vtep_bridging</samp>](## "vxlan_interface.vxlan1.vxlan.vtep_to_vtep_bridging") | Boolean |  |  |  | Enable bridging between different VTEPs in vxlan overlay. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;virtual_router_encapsulation_mac_address</samp>](## "vxlan_interface.vxlan1.vxlan.virtual_router_encapsulation_mac_address") | String |  |  |  | "mlag-system-id" or ethernet_address (H.H.H).<br> |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;bfd_vtep_evpn</samp>](## "vxlan_interface.vxlan1.vxlan.bfd_vtep_evpn") | Dictionary |  |  |  |  |
@@ -53,6 +55,8 @@
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "vxlan_interface.Vxlan1.vxlan.controller_client.enabled") | Boolean |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;mlag_source_interface</samp>](## "vxlan_interface.Vxlan1.vxlan.mlag_source_interface") | String |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;udp_port</samp>](## "vxlan_interface.Vxlan1.vxlan.udp_port") | Integer |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ipv6_underlay</samp>](## "vxlan_interface.Vxlan1.vxlan.ipv6_underlay") | Dictionary |  |  |  | Enable bridging over EVPN IPv6 VXLAN underlay. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "vxlan_interface.Vxlan1.vxlan.ipv6_underlay.enabled") | Boolean |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;vtep_to_vtep_bridging</samp>](## "vxlan_interface.Vxlan1.vxlan.vtep_to_vtep_bridging") | Boolean |  |  |  | Enable bridging between different VTEPs in vxlan overlay. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;virtual_router_encapsulation_mac_address</samp>](## "vxlan_interface.Vxlan1.vxlan.virtual_router_encapsulation_mac_address") | String |  |  |  | "mlag-system-id" or ethernet_address (H.H.H).<br> |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;bfd_vtep_evpn</samp>](## "vxlan_interface.Vxlan1.vxlan.bfd_vtep_evpn") | Dictionary |  |  |  |  |
@@ -97,6 +101,10 @@
             enabled: <bool>
           mlag_source_interface: <str>
           udp_port: <int>
+
+          # Enable bridging over EVPN IPv6 VXLAN underlay.
+          ipv6_underlay:
+            enabled: <bool>
 
           # Enable bridging between different VTEPs in vxlan overlay.
           vtep_to_vtep_bridging: <bool>
@@ -162,6 +170,10 @@
             enabled: <bool>
           mlag_source_interface: <str>
           udp_port: <int>
+
+          # Enable bridging over EVPN IPv6 VXLAN underlay.
+          ipv6_underlay:
+            enabled: <bool>
 
           # Enable bridging between different VTEPs in vxlan overlay.
           vtep_to_vtep_bridging: <bool>

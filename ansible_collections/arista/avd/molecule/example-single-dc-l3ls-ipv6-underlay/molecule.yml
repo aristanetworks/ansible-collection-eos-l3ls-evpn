@@ -1,0 +1,34 @@
+---
+scenario:
+  converge_sequence:
+    - converge
+  test_sequence:
+    - converge
+    - idempotence
+  cleanup_sequence:
+    - destroy
+dependency:
+  name: galaxy
+  enabled: false
+driver:
+  name: default
+  options:
+    managed: false
+platforms:
+  - name: dummy
+provisioner:
+  name: ansible
+  config_options:
+    defaults:
+      jinja2_extensions: jinja2.ext.loopcontrols,jinja2.ext.do,jinja2.ext.i18n
+      duplicate_dict_key: error
+  playbooks:
+    converge: '../../examples/single-dc-l3ls-ipv6-underlay/build.yml'
+  ansible_args:
+    - --inventory
+    - ${MOLECULE_SCENARIO_DIRECTORY}/../../examples/single-dc-l3ls-ipv6-underlay/inventory.yml
+    # Running with tags build to avoid deploy_eapi to run.
+    - --tags
+    - build
+verifier:
+  name: ansible
