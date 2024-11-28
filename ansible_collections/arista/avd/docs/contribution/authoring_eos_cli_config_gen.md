@@ -22,13 +22,13 @@ This document outlines the steps and checklist for contributing to the `eos_cli_
 
 ### Prepare development environment
 
-Follow the [Development Tooling Guide](development-tooling.md).
+Follow the [Development Tooling Guide](https://avd.arista.com/stable/docs/contribution/development-tooling.html).
 
 ### Schema creation
 
 Add the schema for new feature as per EOS CLI to the appropriate schema fragments file in the `python-avd/pyavd/_eos_cli_config_gen/schema/schema_fragments` directory or create a new schema file if adding a top-level feature.
 
-Please refer to the schema documentation for details on the various keys in the schema: [Schema Documentation](input-variable-validation.md).
+Please refer to the schema documentation for details on the various keys in the schema: [Schema Documentation](https://avd.arista.com/stable/docs/contribution/input-variable-validation.html).
 
 #### Schema Guidelines
 
@@ -58,7 +58,7 @@ When adding a top-level feature, add a new Jinja2 template following the naming 
 
 1. **Code Indentation:** Keep less indented code to improve readability.
 2. **Variable Naming:** Use meaningful variable names. Avoid short variables like `ei` for `ethernet_interface`
-3. **Use AVD filters:** Use AVD filters for code optimization - [AVD Filters](../plugins/Filter_plugins/).
+3. **Use AVD filters:** Use AVD filters for code optimization - [AVD Filters](https://avd.arista.com/5.1/docs/plugins/Filter_plugins/add_md_toc.html).
 4. **Natural Sorting:** Use `arista.avd.natural_sort` for sorting the `for loops` after checking on EOS CLI.
 5. **Defined Checks:**
     - Avoid `arista.avd.defined` check for parent keys when directly checking for child keys.
@@ -73,7 +73,7 @@ When adding a top-level feature, add a new Jinja2 template following the naming 
 
 ### Build Schemas and Documentation
 
-When developing a feature, it is recommended to run from source using Ansible (either through molecule or from a test repo). This ensures that schemas and templates are automatically recompiled during the "Verify Requirements" step, as outlined in the [Development Tooling Guide](development-tooling.md).
+When developing a feature, it is recommended to run from source using Ansible (either through molecule or from a test repo). This ensures that schemas and templates are automatically recompiled during the "Verify Requirements" step, as outlined in the [Development Tooling Guide](https://avd.arista.com/stable/docs/contribution/development-tooling.html).
 
 However, if you are using pyavd or need to manually recompile the schemas and templates for any other reason, you can run the following commands:
 
@@ -82,7 +82,7 @@ However, if you are using pyavd or need to manually recompile the schemas and te
 
 These commands should be executed whenever the schema or templates are modified, even if only a description is updated.
 
-### Validate With Molecule Tests
+### Validate Changes and Test Configurations
 
 1. Add some molecule tests in the `ansible_collections/arista/avd/molecule/eos_cli_config_gen` scenario exercising the new knob configuration.
 2. Update the `host_vars` files:
@@ -94,6 +94,7 @@ These commands should be executed whenever the schema or templates are modified,
 3. When marking any key as "deprecated", move the related tests to the `eos_cli_config_gen_deprecated_vars` molecule scenario and add any missing tests if necessary.
 4. Run `molecule converge -s eos_cli_config_gen` from the path `ansible_collections/arista/avd/` to execute the molecule tests locally and generate the new expected configuration and documentation for newly added test-cases.
 5. Check the PyAVD test coverage report by running `tox -e coverage,report` and work on improving the coverage where possible.
+6. Test the generated configuration using EAPI or CVP in a relevant lab, if available, to ensure it works as intended.
 
 ### Update Documentation
 
