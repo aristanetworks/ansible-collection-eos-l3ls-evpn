@@ -33677,7 +33677,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                 _fields: ClassVar[dict] = {"enabled": {"type": bool}, "threshold": {"type": Threshold}, "_custom_data": {"type": dict}}
                 enabled: bool | None
-                """Set true for enable the AVT path outlier elimination and False to disable the same."""
+                """Set true to enable the AVT path outlier elimination or false to disable the same."""
                 threshold: Threshold
                 """
                 Change the threshold values for path comparison.
@@ -33702,7 +33702,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                         Subclass of AvdModel.
 
                         Args:
-                            enabled: Set true for enable the AVT path outlier elimination and False to disable the same.
+                            enabled: Set true to enable the AVT path outlier elimination or false to disable the same.
                             threshold:
                                Change the threshold values for path comparison.
 
