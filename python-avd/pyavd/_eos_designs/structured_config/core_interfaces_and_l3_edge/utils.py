@@ -211,21 +211,24 @@ class UtilsMixin:
         if p2p_link.ip:
             interface_cfg["ip_address"] = p2p_link.ip[index]
 
-        if get(p2p_link, "ptp.enabled"):
+        if p2p_link.ptp.enabled:
             ptp_config = {}
 
             if self.shared_utils.ptp_enabled:
                 # Apply PTP profile config from node settings when profile is not defined on p2p_link
-                if (ptp_profile_name := get(p2p_link, "ptp.profile")) is None:
-                    ptp_config.update(self.shared_utils.ptp_profile)
+                if not p2p_link.ptp.profile:
+                    ptp_config.update(self.shared_utils.ptp_profile._as_dict(include_default_values=True))
 
                 # Apply PTP profile defined for the p2p_link
-                else:
-                    msg = f"PTP Profile '{ptp_profile_name}' referenced under {self.data_model}.p2p_links does not exist in `ptp_profiles`."
-                    ptp_config.update(get_item(self.shared_utils.ptp_profiles, "profile", ptp_profile_name, required=True, custom_error_msg=msg))
+                elif p2p_link.ptp.profile not in self.inputs.ptp_profiles:
+                    msg = f"PTP Profile '{p2p_link.ptp.profile}' referenced under {self.data_model}.p2p_links does not exist in `ptp_profiles`."
+                    raise AristaAvdInvalidInputsError(msg)
 
-            node_index = p2p_link["nodes"].index(self.shared_utils.hostname)
-            if (ptp_roles := get(p2p_link, "ptp.roles")) and len(ptp_roles) > node_index and ptp_roles[node_index] == "master":
+                else:
+                    ptp_config.update(self.inputs.ptp_profiles[p2p_link.ptp.profile]._as_dict(include_default_values=True))
+
+            node_index = p2p_link.nodes._as_list().index(self.shared_utils.hostname)  # TODO: Implement .index() method on AvdList and AvdIndexedList class.
+            if len(p2p_link.ptp.roles) > node_index and p2p_link.ptp.roles[node_index] == "master":
                 ptp_config["role"] = "master"
 
             ptp_config["enable"] = True
@@ -293,7 +296,7 @@ class UtilsMixin:
         Covers config that is only applicable to ethernet interfaces.
         This config will only be used on both main interfaces and port-channel members.
         """
-        return {"speed": p2p_link.get("speed")}
+        return {"speed": p2p_link.speed}
 
     def _get_port_channel_member_cfg(self: AvdStructuredConfigCoreInterfacesAndL3Edge, p2p_link: T_P2pLinksItem, p2p_link_data: dict, member: dict) -> dict:
         """
