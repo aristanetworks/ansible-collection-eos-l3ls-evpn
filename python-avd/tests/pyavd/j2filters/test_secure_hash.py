@@ -10,18 +10,20 @@ import pytest
 
 from pyavd.j2filters import secure_hash
 
+sha512_regex = r"^\$6\$[A-Za-z0-9\.\\\/]{16}\$[A-Za-z0-9\.\\\/]{86}"
+
+
 INVALID_PASSWORDS = [
     pytest.param(True, TypeError, "Password MUST be of type 'str' but is of type <class 'bool'>"),
     pytest.param([], TypeError, "Password MUST be of type 'str' but is of type <class 'list'>"),
-    pytest.param({"key": "value"}, TypeError, "Password MUST be of type 'str' but is of type <class 'list'>"),
+    pytest.param({}, TypeError, "Password MUST be of type 'str' but is of type <class 'dict'>"),
 ]
 
-
 VALID_PASSWORDS = [
-    pytest.param("arista", r"^\$6\$[A-Za-z0-9\.\\]{16}\$[A-Za-z0-9\.\\\/]{86}"),
-    pytest.param("rAnDoM123456789", r"^\$6\$[A-Za-z0-9\.\\]{16}\$[A-Za-z0-9\.\\\/]{86}"),
-    pytest.param("aristaCloudvisionUser", r"^\$6\$[A-Za-z0-9\.\\]{16}\$[A-Za-z0-9\.\\\/]{86}"),
-    pytest.param("superSecure999", r"^\$6\$[A-Za-z0-9\.\\]{16}\$[A-Za-z0-9\.\\\/]{86}"),
+    pytest.param("arista", sha512_regex),
+    pytest.param("rAnDoM123456789", sha512_regex),
+    pytest.param("ar!st@Us95r", sha512_regex),
+    pytest.param("superSecure999", sha512_regex),
 ]
 
 
