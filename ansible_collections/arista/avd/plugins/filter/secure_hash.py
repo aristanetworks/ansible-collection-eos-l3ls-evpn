@@ -29,9 +29,9 @@ name: secure_hash
 collection: arista.avd
 author: Arista Ansible Team (@aristanetworks)
 version_added: "5.2.0"
-short_description: Generate password hash
+short_description: Generate a sha512 password hash for a local user
 description:
-  - Generate a SHA512-Crypt password hash with a random salt value.
+  - Generate a SHA512-Crypt password hash with a random salt value for a local user.
 positional: _input
 options:
   _input:
@@ -45,7 +45,7 @@ RETURN = r"""
 ---
 _value:
   description:
-    - the SHA512-Crypt password hash with modular crypt prefix $6$
+    - the SHA512-Crypt password hash.
   type: string
 """
 
