@@ -121,8 +121,8 @@ router_bgp:
     neighbors:
     - ip_address: 123.1.1.10
       remote_as: '1234'
-      password: oBztv71m2uhR7hh58/OCNA==
       description: External IPv4 BGP peer
+      password: oBztv71m2uhR7hh58/OCNA==
       send_community: standard extended
       maximum_routes: 0
       default_originate:
@@ -130,21 +130,21 @@ router_bgp:
         route_map: RM-Tenant_A_WAN_Zone-123.1.1.10-SET-NEXT-HOP-OUT
       update_source: Loopback123
       ebgp_multihop: 3
-      route_map_in: RM-123-1-1-10-IN
       route_map_out: RM-Tenant_A_WAN_Zone-123.1.1.10-SET-NEXT-HOP-OUT
+      route_map_in: RM-123-1-1-10-IN
       local_as: '123'
     - ip_address: 123.1.1.11
       remote_as: '1234'
-      password: oBztv71m2uhR7hh58/OCNA==
       description: External IPv4 BGP peer
+      password: oBztv71m2uhR7hh58/OCNA==
       send_community: standard extended
       maximum_routes: 0
       default_originate:
         always: false
       update_source: Loopback123
       ebgp_multihop: 3
-      route_map_in: RM-123-1-1-11-IN
       route_map_out: RM-123-1-1-11-OUT
+      route_map_in: RM-123-1-1-11-IN
       local_as: '123'
     - ip_address: fd5a:fe45:8831:06c5::a
       remote_as: '12345'
@@ -245,15 +245,15 @@ static_routes:
   gateway: 1.2.3.4
   vrf: Tenant_A_WAN_Zone
 - destination_address_prefix: 1.1.1.0/24
-  interface: vlan101
   gateway: 10.1.1.1
+  interface: vlan101
   vrf: Tenant_A_WAN_Zone
 - destination_address_prefix: 1.1.2.0/24
-  interface: vlan101
   gateway: 10.1.1.1
   distance: 200
   tag: 666
   name: RT-TO-FAKE-DMZ
+  interface: vlan101
   vrf: Tenant_A_WAN_Zone
 - destination_address_prefix: 10.3.5.0/24
   interface: Null0
@@ -454,14 +454,14 @@ ethernet_interfaces:
   shutdown: false
 - name: Ethernet4000
   description: My test
-  ip_address: 10.3.2.1/21
   shutdown: false
-  switchport:
-    enabled: false
   mtu: 1500
+  ip_address: 10.3.2.1/21
   peer: MY-own-peer
   peer_interface: Ethernet123
   peer_type: my_precious
+  switchport:
+    enabled: false
 loopback_interfaces:
 - name: Loopback0
   description: CUSTOM_EVPN_Overlay_Peering_L3LEAF

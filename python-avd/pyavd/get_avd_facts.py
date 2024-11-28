@@ -67,6 +67,7 @@ def _create_avd_switch_facts_instances(all_inputs: dict[str, dict]) -> dict:
     """
     # pylint: disable=import-outside-toplevel
     from ._eos_designs.eos_designs_facts import EosDesignsFacts
+    from ._eos_designs.schema import EosDesigns
     from ._eos_designs.shared_utils import SharedUtils
     from .avd_schema_tools import EosDesignsAvdSchemaTools
 
@@ -81,11 +82,14 @@ def _create_avd_switch_facts_instances(all_inputs: dict[str, dict]) -> dict:
             hostvars,
         )
 
+        # Load input vars into the EosDesigns data class.
+        inputs = EosDesigns._from_dict(hostvars)
+
         # Initialize SharedUtils class to be passed to each python_module below.
-        shared_utils = SharedUtils(hostvars=mapped_hostvars, templar=None, schema=EosDesignsAvdSchemaTools().avdschema)
+        shared_utils = SharedUtils(hostvars=mapped_hostvars, inputs=inputs, templar=None, schema=EosDesignsAvdSchemaTools().avdschema)
 
         # Notice templar is set as None, so any calls to jinja templates will fail with Nonetype has no "_loader" attribute
-        avd_switch_facts[hostname] = {"switch": EosDesignsFacts(hostvars=mapped_hostvars, shared_utils=shared_utils)}
+        avd_switch_facts[hostname] = {"switch": EosDesignsFacts(hostvars=mapped_hostvars, inputs=inputs, shared_utils=shared_utils)}
 
     return avd_switch_facts
 
