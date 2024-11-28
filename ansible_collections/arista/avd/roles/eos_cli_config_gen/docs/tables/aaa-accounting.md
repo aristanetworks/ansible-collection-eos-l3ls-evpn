@@ -27,8 +27,8 @@
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;group</samp>](## "aaa_accounting.dot1x.default.group") <span style="color:red">deprecated</span> | String |  |  |  | Group Name.<span style="color:red">This key is deprecated. Support will be removed in AVD version v6.0.0. Use <samp>methods[].group</samp> instead.</span> |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;methods</samp>](## "aaa_accounting.dot1x.default.methods") | List, items: Dictionary |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;method</samp>](## "aaa_accounting.dot1x.default.methods.[].method") | String |  |  | Valid Values:<br>- <code>logging</code><br>- <code>group</code> |  |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;group</samp>](## "aaa_accounting.dot1x.default.methods.[].group") | String |  |  |  | Specify the server group to be used. This option is applicable only when the `method` key is explicitly set to `group`. |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;multicast</samp>](## "aaa_accounting.dot1x.default.methods.[].multicast") | Boolean |  |  |  | Forward accounting packets to all servers within the specified group. This option is applicable only when the `method` key is explicitly set to `group`. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;group</samp>](## "aaa_accounting.dot1x.default.methods.[].group") | String |  |  |  | Specify the server group to be used.<br>This option is applicable only when the `method` key is explicitly set to `group`. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;multicast</samp>](## "aaa_accounting.dot1x.default.methods.[].multicast") | Boolean |  |  |  | Forward accounting packets to all servers within the specified group.<br>This option is applicable only when the `method` key is explicitly set to `group`. |
     | [<samp>&nbsp;&nbsp;commands</samp>](## "aaa_accounting.commands") | Dictionary |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;console</samp>](## "aaa_accounting.commands.console") | List, items: Dictionary |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;commands</samp>](## "aaa_accounting.commands.console.[].commands") | String |  |  |  | Privilege level 'all' or 0-15. Ensure that if ranges are used, they do not overlap with one another. |
@@ -76,10 +76,12 @@
           methods:
             - method: <str; "logging" | "group">
 
-              # Specify the server group to be used. This option is applicable only when the `method` key is explicitly set to `group`.
+              # Specify the server group to be used.
+              # This option is applicable only when the `method` key is explicitly set to `group`.
               group: <str>
 
-              # Forward accounting packets to all servers within the specified group. This option is applicable only when the `method` key is explicitly set to `group`.
+              # Forward accounting packets to all servers within the specified group.
+              # This option is applicable only when the `method` key is explicitly set to `group`.
               multicast: <bool>
       commands:
         console:

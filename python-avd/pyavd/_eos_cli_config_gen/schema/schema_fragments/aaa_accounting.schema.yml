@@ -73,10 +73,14 @@ keys:
                       valid_values: ["logging", "group"]
                     group:
                       type: str
-                      description: Specify the server group to be used. This option is applicable only when the `method` key is explicitly set to `group`.
+                      description: |-
+                        Specify the server group to be used.
+                        This option is applicable only when the `method` key is explicitly set to `group`.
                     multicast:
                       type: bool
-                      description: Forward accounting packets to all servers within the specified group. This option is applicable only when the `method` key is explicitly set to `group`.
+                      description: |-
+                        Forward accounting packets to all servers within the specified group.
+                        This option is applicable only when the `method` key is explicitly set to `group`.
       commands:
         type: dict
         keys:

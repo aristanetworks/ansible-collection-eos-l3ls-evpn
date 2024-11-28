@@ -48,7 +48,7 @@
 {%         if methods_list == [] %}
 {%             do methods_list.append("-") %}
 {%         endif %}
-| Dot1x - Default | - | {{ aaa_accounting.dot1x.default.type }} | {{ ", ".join(methods_list) }} | {{ logging_namespace.method_logging }} |
+| Dot1x - Default | - | {{ aaa_accounting.dot1x.default.type }} | {{ ", ".join(methods_list | arista.avd.default(["-"])) }} | {{ logging_namespace.method_logging }} |
 {%     elif aaa_accounting.dot1x.default.type is arista.avd.defined and aaa_accounting.dot1x.default.group is arista.avd.defined %}
 | Dot1x - Default | - | {{ aaa_accounting.dot1x.default.type }} | {{ aaa_accounting.dot1x.default.group }} | - |
 {%     endif %}

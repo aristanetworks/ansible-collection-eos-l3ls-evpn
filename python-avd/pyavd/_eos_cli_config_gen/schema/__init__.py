@@ -188,12 +188,14 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                     method: Literal["logging", "group"] | None
                     group: str | None
                     """
-                    Specify the server group to be used. This option is applicable only when the `method` key is
+                    Specify the server group to be used.
+                    This option is applicable only when the `method` key is
                     explicitly set to `group`.
                     """
                     multicast: bool | None
                     """
-                    Forward accounting packets to all servers within the specified group. This option is applicable only
+                    Forward accounting packets to all servers within the specified group.
+                    This option is applicable only
                     when the `method` key is explicitly set to `group`.
                     """
                     _custom_data: dict[str, Any]
@@ -217,10 +219,12 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                             Args:
                                 method: method
                                 group:
-                                   Specify the server group to be used. This option is applicable only when the `method` key is
+                                   Specify the server group to be used.
+                                   This option is applicable only when the `method` key is
                                    explicitly set to `group`.
                                 multicast:
-                                   Forward accounting packets to all servers within the specified group. This option is applicable only
+                                   Forward accounting packets to all servers within the specified group.
+                                   This option is applicable only
                                    when the `method` key is explicitly set to `group`.
                                 _custom_data: _custom_data
 
