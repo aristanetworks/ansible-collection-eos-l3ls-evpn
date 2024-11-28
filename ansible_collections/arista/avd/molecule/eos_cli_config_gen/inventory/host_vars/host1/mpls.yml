@@ -39,7 +39,8 @@ mpls:
     ipv6_access_group: RSVP_access_group_ipv6
     label_local_termination: explicit-null
     mtu_signaling: true
-    p2mp_enabled: false
+    p2mp:
+      enabled: false
     preemption_method:
       preemption: soft
       timer: 444

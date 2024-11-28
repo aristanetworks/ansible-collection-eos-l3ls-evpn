@@ -7752,6 +7752,7 @@ router bfd
 | Fast reroute  bypass tunnel optimization interval | 65535 |
 | Hitless restart | Active |
 | Hitless restart recovery timer | 222 |
+| P2MP | False |
 | Shutdown | True |
 
 ##### RSVP Neighbor Authentication

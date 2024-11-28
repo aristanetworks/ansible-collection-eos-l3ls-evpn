@@ -730,6 +730,7 @@ router bfd
 | Fast reroute  bypass tunnel optimization interval | - |
 | Hitless restart | Active |
 | Hitless restart recovery timer | - |
+| P2MP | True |
 
 ##### RSVP Graceful Restart
 

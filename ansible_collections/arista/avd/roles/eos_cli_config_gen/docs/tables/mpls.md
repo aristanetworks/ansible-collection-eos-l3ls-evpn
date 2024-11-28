@@ -25,7 +25,7 @@
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;password_indexes</samp>](## "mpls.rsvp.authentication.password_indexes") | List, items: Dictionary |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;index</samp>](## "mpls.rsvp.authentication.password_indexes.[].index") | Integer | Required, Unique |  | Min: 1<br>Max: 4294967295 | Password index. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;password_type</samp>](## "mpls.rsvp.authentication.password_indexes.[].password_type") | String |  |  | Valid Values:<br>- <code>0</code><br>- <code>7</code><br>- <code>8a</code> | Authentication password type. |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;password</samp>](## "mpls.rsvp.authentication.password_indexes.[].password") | String | Required |  |  | Password string. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;password</samp>](## "mpls.rsvp.authentication.password_indexes.[].password") | String |  |  |  | Password string. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;active_index</samp>](## "mpls.rsvp.authentication.active_index") | Integer |  |  |  | Use index as active password. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sequence_number_window</samp>](## "mpls.rsvp.authentication.sequence_number_window") | Integer |  |  | Min: 1<br>Max: 255 | Size of reorder window for index in the sequence. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;type</samp>](## "mpls.rsvp.authentication.type") | String |  |  | Valid Values:<br>- <code>md5</code><br>- <code>none</code> | Authentication mechanism. |
@@ -64,7 +64,8 @@
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;hitless_restart</samp>](## "mpls.rsvp.hitless_restart") | Dictionary |  |  |  | RSVP hitless restart. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "mpls.rsvp.hitless_restart.enabled") | Boolean |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;timer_recovery</samp>](## "mpls.rsvp.hitless_restart.timer_recovery") | Integer |  |  | Min: 1<br>Max: 320 | Time stale states will be preserved after restart.<br>Value in seconds. |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;p2mp_enabled</samp>](## "mpls.rsvp.p2mp_enabled") | Boolean |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;p2mp</samp>](## "mpls.rsvp.p2mp") | Dictionary |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "mpls.rsvp.p2mp.enabled") | Boolean |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;shutdown</samp>](## "mpls.rsvp.shutdown") | Boolean |  |  |  | Make `shutdown` key false for `no shutdown` cli. |
 
 === "YAML"
@@ -110,7 +111,7 @@
               password_type: <str; "0" | "7" | "8a">
 
               # Password string.
-              password: <str; required>
+              password: <str>
 
           # Use index as active password.
           active_index: <int>
@@ -210,7 +211,8 @@
           # Time stale states will be preserved after restart.
           # Value in seconds.
           timer_recovery: <int; 1-320>
-        p2mp_enabled: <bool>
+        p2mp:
+          enabled: <bool>
 
         # Make `shutdown` key false for `no shutdown` cli.
         shutdown: <bool>

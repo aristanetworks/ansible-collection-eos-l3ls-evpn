@@ -61,6 +61,9 @@
 | Hitless restart | Active |
 | Hitless restart recovery timer | {{ mpls.rsvp.hitless_restart.timer_recovery | arista.avd.default('-') }} |
 {%     endif %}
+{%     if mpls.rsvp.p2mp.enabled is arista.avd.defined %}
+| P2MP | {{ mpls.rsvp.p2mp.enabled }} |
+{%     endif %}
 {%     if mpls.rsvp.shutdown is arista.avd.defined %}
 | Shutdown | {{ mpls.rsvp.shutdown }} |
 {%     endif %}

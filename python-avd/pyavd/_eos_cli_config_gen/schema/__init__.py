@@ -25009,7 +25009,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                     """Password index."""
                     password_type: Literal["0", "7", "8a"] | None
                     """Authentication password type."""
-                    password: str
+                    password: str | None
                     """Password string."""
                     _custom_data: dict[str, Any]
 
@@ -25020,7 +25020,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                             *,
                             index: int | UndefinedType = Undefined,
                             password_type: Literal["0", "7", "8a"] | None | UndefinedType = Undefined,
-                            password: str | UndefinedType = Undefined,
+                            password: str | None | UndefinedType = Undefined,
                             _custom_data: dict[str, Any] | UndefinedType = Undefined,
                         ) -> None:
                             """
@@ -25479,6 +25479,28 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                         """
 
+            class P2mp(AvdModel):
+                """Subclass of AvdModel."""
+
+                _fields: ClassVar[dict] = {"enabled": {"type": bool}, "_custom_data": {"type": dict}}
+                enabled: bool | None
+                _custom_data: dict[str, Any]
+
+                if TYPE_CHECKING:
+
+                    def __init__(self, *, enabled: bool | None | UndefinedType = Undefined, _custom_data: dict[str, Any] | UndefinedType = Undefined) -> None:
+                        """
+                        P2mp.
+
+
+                        Subclass of AvdModel.
+
+                        Args:
+                            enabled: enabled
+                            _custom_data: _custom_data
+
+                        """
+
             _fields: ClassVar[dict] = {
                 "refresh": {"type": Refresh},
                 "authentication": {"type": Authentication},
@@ -25493,7 +25515,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 "graceful_restart": {"type": GracefulRestart},
                 "hello": {"type": Hello},
                 "hitless_restart": {"type": HitlessRestart},
-                "p2mp_enabled": {"type": bool},
+                "p2mp": {"type": P2mp},
                 "shutdown": {"type": bool},
                 "_custom_data": {"type": dict},
             }
@@ -25535,7 +25557,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
             Subclass of AvdModel.
             """
-            p2mp_enabled: bool | None
+            p2mp: P2mp
+            """Subclass of AvdModel."""
             shutdown: bool | None
             """Make `shutdown` key false for `no shutdown` cli."""
             _custom_data: dict[str, Any]
@@ -25558,7 +25581,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                     graceful_restart: GracefulRestart | UndefinedType = Undefined,
                     hello: Hello | UndefinedType = Undefined,
                     hitless_restart: HitlessRestart | UndefinedType = Undefined,
-                    p2mp_enabled: bool | None | UndefinedType = Undefined,
+                    p2mp: P2mp | UndefinedType = Undefined,
                     shutdown: bool | None | UndefinedType = Undefined,
                     _custom_data: dict[str, Any] | UndefinedType = Undefined,
                 ) -> None:
@@ -25591,7 +25614,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                            RSVP hitless restart.
 
                            Subclass of AvdModel.
-                        p2mp_enabled: p2mp_enabled
+                        p2mp: Subclass of AvdModel.
                         shutdown: Make `shutdown` key false for `no shutdown` cli.
                         _custom_data: _custom_data
 
