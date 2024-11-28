@@ -33626,10 +33626,97 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class ProfilesItem(AvdModel):
             """Subclass of AvdModel."""
 
+            class OutlierElimination(AvdModel):
+                """Subclass of AvdModel."""
+
+                class Threshold(AvdModel):
+                    """Subclass of AvdModel."""
+
+                    _fields: ClassVar[dict] = {
+                        "jitter": {"type": int},
+                        "latency": {"type": int},
+                        "load": {"type": str},
+                        "loss_rate": {"type": str},
+                        "_custom_data": {"type": dict},
+                    }
+                    jitter: int | None
+                    """Jitter threshold in millisecond."""
+                    latency: int | None
+                    """Latency threshold in millisecond."""
+                    load: str | None
+                    """Load threshold percentage."""
+                    loss_rate: str | None
+                    """Loss-rate threshold percentage."""
+                    _custom_data: dict[str, Any]
+
+                    if TYPE_CHECKING:
+
+                        def __init__(
+                            self,
+                            *,
+                            jitter: int | None | UndefinedType = Undefined,
+                            latency: int | None | UndefinedType = Undefined,
+                            load: str | None | UndefinedType = Undefined,
+                            loss_rate: str | None | UndefinedType = Undefined,
+                            _custom_data: dict[str, Any] | UndefinedType = Undefined,
+                        ) -> None:
+                            """
+                            Threshold.
+
+
+                            Subclass of AvdModel.
+
+                            Args:
+                                jitter: Jitter threshold in millisecond.
+                                latency: Latency threshold in millisecond.
+                                load: Load threshold percentage.
+                                loss_rate: Loss-rate threshold percentage.
+                                _custom_data: _custom_data
+
+                            """
+
+                _fields: ClassVar[dict] = {"enabled": {"type": bool}, "threshold": {"type": Threshold}, "_custom_data": {"type": dict}}
+                enabled: bool | None
+                """Set true for enable the AVT path outlier elimination and False to disable the same."""
+                threshold: Threshold
+                """
+                Change the threshold values for path comparison.
+
+                Subclass of AvdModel.
+                """
+                _custom_data: dict[str, Any]
+
+                if TYPE_CHECKING:
+
+                    def __init__(
+                        self,
+                        *,
+                        enabled: bool | None | UndefinedType = Undefined,
+                        threshold: Threshold | UndefinedType = Undefined,
+                        _custom_data: dict[str, Any] | UndefinedType = Undefined,
+                    ) -> None:
+                        """
+                        OutlierElimination.
+
+
+                        Subclass of AvdModel.
+
+                        Args:
+                            enabled: Set true for enable the AVT path outlier elimination and False to disable the same.
+                            threshold:
+                               Change the threshold values for path comparison.
+
+                               Subclass of AvdModel.
+                            _custom_data: _custom_data
+
+                        """
+
             _fields: ClassVar[dict] = {
                 "name": {"type": str},
                 "load_balance_policy": {"type": str},
                 "internet_exit_policy": {"type": str},
+                "metric_order": {"type": str},
+                "outlier_elimination": {"type": OutlierElimination},
                 "_custom_data": {"type": dict},
             }
             name: str
@@ -33638,6 +33725,14 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             """Name of the load-balance policy."""
             internet_exit_policy: str | None
             """Name of the internet exit policy."""
+            metric_order: Literal["jitter", "latency", "load", "loss-rate"] | None
+            """Metric order to be used for path comparison."""
+            outlier_elimination: OutlierElimination
+            """
+            AVT path outlier elimination.
+
+            Subclass of AvdModel.
+            """
             _custom_data: dict[str, Any]
 
             if TYPE_CHECKING:
@@ -33648,6 +33743,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                     name: str | UndefinedType = Undefined,
                     load_balance_policy: str | None | UndefinedType = Undefined,
                     internet_exit_policy: str | None | UndefinedType = Undefined,
+                    metric_order: Literal["jitter", "latency", "load", "loss-rate"] | None | UndefinedType = Undefined,
+                    outlier_elimination: OutlierElimination | UndefinedType = Undefined,
                     _custom_data: dict[str, Any] | UndefinedType = Undefined,
                 ) -> None:
                     """
@@ -33660,6 +33757,11 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                         name: AVT Name.
                         load_balance_policy: Name of the load-balance policy.
                         internet_exit_policy: Name of the internet exit policy.
+                        metric_order: Metric order to be used for path comparison.
+                        outlier_elimination:
+                           AVT path outlier elimination.
+
+                           Subclass of AvdModel.
                         _custom_data: _custom_data
 
                     """
