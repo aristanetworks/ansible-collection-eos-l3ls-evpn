@@ -83,11 +83,13 @@ router_isis:
         index: 211
       - prefix: 2001:cafe:155::/64
         index: 6211
+      - prefix: 155.2.1.11/32
   set_overload_bit:
     enabled: true
     on_startup:
       wait_for_bgp:
-        enabled: false
+        enabled: true
+        timeout: 10
   authentication:
     both:
       key_ids:

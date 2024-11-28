@@ -674,20 +674,11 @@ router adaptive-virtual-topology
 | Interface | ISIS Instance | ISIS Metric | Interface Mode |
 | --------- | ------------- | ----------- | -------------- |
 
-#### Prefix Segments
-
-| Prefix Segment | Index |
-| -------------- | ----- |
-| 155.2.1.19/32 | 2121 |
-
 #### ISIS IPv4 Address Family Summary
 
 | Settings | Value |
 | -------- | ----- |
 | IPv4 Address-family Enabled | True |
-| TI-LFA Mode | node-protection |
-| TI-LFA Level | level-2 |
-| TI-LFA SRLG Enabled | True |
 
 #### Tunnel Source
 
@@ -721,8 +712,6 @@ router isis EVPN_UNDERLAY
    !
    address-family ipv4 unicast
       tunnel source-protocol bgp ipv4 labeled-unicast
-      fast-reroute ti-lfa mode node-protection level-2
-      fast-reroute ti-lfa srlg
    !
    address-family ipv6 unicast
       bfd all-interfaces
@@ -730,7 +719,6 @@ router isis EVPN_UNDERLAY
    !
    segment-routing mpls
       shutdown
-      prefix-segment 155.2.1.19/32 index 2121
 ```
 
 ### Router BGP

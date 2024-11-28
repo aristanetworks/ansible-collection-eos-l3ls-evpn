@@ -1,15 +1,12 @@
 router_isis:
   instance: EVPN_UNDERLAY
-  mpls_ldp_sync_default: true
   spf_interval:
     interval: 250
     wait_interval: 30
   set_overload_bit:
     enabled: true
     on_startup:
-      wait_for_bgp:
-        enabled: true
-        timeout: 10
+      delay: 55
   authentication:
     both:
       key_type: 0
@@ -19,6 +16,3 @@ router_isis:
         profile: test1
         algorithm: md5
       rx_disabled: true
-  segment_routing_mpls:
-    prefix_segments:
-      - prefix: 155.2.1.11/32

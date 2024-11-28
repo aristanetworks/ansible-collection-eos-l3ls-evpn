@@ -7054,6 +7054,7 @@ router isis EVPN_UNDERLAY
    redistribute static include leaked route-map RM-STATIC-TO-ISIS
    timers local-convergence-delay 15000 protected-prefixes
    set-overload-bit
+   set-overload-bit on-startup wait-for-bgp timeout 10
    advertise passive-only
    spf-interval 250 seconds 10 milliseconds 20 milliseconds
    timers csnp generation interval 10 seconds

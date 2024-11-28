@@ -17,12 +17,8 @@ router_isis:
     enabled: true
     tunnel_source_labeled_unicast:
       enabled: True
-    fast_reroute_ti_lfa:
-      mode: node-protection
-      level: level-2
-      srlg:
-        enable: true
-        strict: false
+  segment_routing_mpls:
+    enabled: false
   address_family_ipv6:
     enabled: true
     bfd_all_interfaces: true
@@ -31,11 +27,6 @@ router_isis:
       srlg:
         enable: true
         strict: false
-  segment_routing_mpls:
-    enabled: false
-    prefix_segments:
-      - prefix: 155.2.1.19/32
-        index: 2121
   set_overload_bit:
     on_startup:
       wait_for_bgp:

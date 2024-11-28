@@ -66,12 +66,6 @@ daemon TerminAttr
 | -------- | ----- |
 | Instance | EVPN_UNDERLAY |
 
-#### ISIS Route Timers
-
-| Settings | Value |
-| -------- | ----- |
-| LSP Generation Maximum Interval | 30 seconds |
-
 #### ISIS Interfaces Summary
 
 | Interface | ISIS Instance | ISIS Metric | Interface Mode |
@@ -82,9 +76,6 @@ daemon TerminAttr
 ```eos
 !
 router isis EVPN_UNDERLAY
-   set-overload-bit
-   set-overload-bit on-startup 55
-   timers lsp generation 30
    authentication mode sha key-id 4 rx-disabled
    !
 ```
