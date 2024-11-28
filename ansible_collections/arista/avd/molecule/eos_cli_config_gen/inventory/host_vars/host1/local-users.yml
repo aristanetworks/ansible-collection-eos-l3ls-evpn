@@ -31,5 +31,6 @@ local_users:
   - name: sha-user-the-second
     privilege: 15
     role: network-admin
-    sha512_password: "{{ key_password | secure_hash }}"
-key_password: "arista"
+    sha512_password: "{{ clear_password | secure_hash }}"
+
+clear_password: "arista"
