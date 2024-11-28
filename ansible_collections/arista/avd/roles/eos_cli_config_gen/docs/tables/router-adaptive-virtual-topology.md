@@ -25,7 +25,7 @@
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;internet_exit_policy</samp>](## "router_adaptive_virtual_topology.profiles.[].internet_exit_policy") | String |  |  |  | Name of the internet exit policy. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;metric_order</samp>](## "router_adaptive_virtual_topology.profiles.[].metric_order") | String |  |  | Valid Values:<br>- <code>jitter</code><br>- <code>latency</code><br>- <code>load</code><br>- <code>loss-rate</code> | Metric order to be used for path comparison. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;outlier_elimination</samp>](## "router_adaptive_virtual_topology.profiles.[].outlier_elimination") | Dictionary |  |  |  | AVT path outlier elimination. |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "router_adaptive_virtual_topology.profiles.[].outlier_elimination.enabled") | Boolean |  |  |  | Set true for enable the AVT path outlier elimination and False to disable the same. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "router_adaptive_virtual_topology.profiles.[].outlier_elimination.enabled") | Boolean |  |  |  | Set true to enable the AVT path outlier elimination or false to disable the same. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;threshold</samp>](## "router_adaptive_virtual_topology.profiles.[].outlier_elimination.threshold") | Dictionary |  |  |  | Change the threshold values for path comparison. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;jitter</samp>](## "router_adaptive_virtual_topology.profiles.[].outlier_elimination.threshold.jitter") | Integer |  |  | Min: 0<br>Max: 10000 | Jitter threshold in millisecond. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;latency</samp>](## "router_adaptive_virtual_topology.profiles.[].outlier_elimination.threshold.latency") | Integer |  |  | Min: 0<br>Max: 10000 | Latency threshold in millisecond. |
@@ -88,7 +88,7 @@
           # AVT path outlier elimination.
           outlier_elimination:
 
-            # Set true for enable the AVT path outlier elimination and False to disable the same.
+            # Set true to enable the AVT path outlier elimination or false to disable the same.
             enabled: <bool>
 
             # Change the threshold values for path comparison.

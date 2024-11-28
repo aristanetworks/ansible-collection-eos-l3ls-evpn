@@ -11865,8 +11865,8 @@ keys:
               type: dict
               keys:
                 enabled:
-                  description: Set true for enable the AVT path outlier elimination
-                    and False to disable the same.
+                  description: Set true to enable the AVT path outlier elimination
+                    or false to disable the same.
                   type: bool
                 threshold:
                   description: Change the threshold values for path comparison.

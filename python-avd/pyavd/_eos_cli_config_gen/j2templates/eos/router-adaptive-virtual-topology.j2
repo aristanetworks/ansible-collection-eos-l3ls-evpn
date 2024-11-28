@@ -61,10 +61,7 @@ router adaptive-virtual-topology
 {%         elif profile.outlier_elimination.enabled is arista.avd.defined(false) %}
       path-selection outlier elimination disabled
 {%         endif %}
-{%         if profile.outlier_elimination.threshold.latency is arista.avd.defined or
-               profile.outlier_elimination.threshold.jitter is arista.avd.defined or
-               profile.outlier_elimination.threshold.loss_rate is arista.avd.defined or
-               profile.outlier_elimination.threshold.load is arista.avd.defined %}
+{%         if profile.outlier_elimination.threshold is arista.avd.defined %}
 {%             if profile.outlier_elimination.threshold.latency is arista.avd.defined %}
       path-selection outlier elimination threshold latency {{ profile.outlier_elimination.threshold.latency }} milliseconds
 {%             endif %}
