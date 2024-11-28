@@ -33,7 +33,7 @@ class MplsMixin(UtilsMixin):
                     "ip": True,
                     "ldp": {
                         "interface_disabled_default": True,
-                        "router_id": self.shared_utils.router_id if not self.shared_utils.use_router_general_for_router_id else None,
+                        "router_id": self.shared_utils.router_id if not self.inputs.use_router_general_for_router_id else None,
                         "shutdown": False,
                         "transport_address_interface": "Loopback0",
                     },
