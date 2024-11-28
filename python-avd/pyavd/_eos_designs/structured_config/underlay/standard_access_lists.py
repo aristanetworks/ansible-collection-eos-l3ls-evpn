@@ -26,23 +26,23 @@ class StandardAccessListsMixin(UtilsMixin):
 
         Used for to configure ACLs used by multicast RPs for the underlay
         """
-        if self.shared_utils.underlay_multicast_rps is None:
+        if not self.shared_utils.underlay_multicast or not self.inputs.underlay_multicast_rps:
             return None
 
         standard_access_lists = []
-        for rp_entry in self.shared_utils.underlay_multicast_rps:
-            if rp_entry.get("groups") is None or rp_entry.get("access_list_name") is None:
+        for rp_entry in self.inputs.underlay_multicast_rps:
+            if not rp_entry.groups or not rp_entry.access_list_name:
                 continue
 
             standard_access_lists.append(
                 {
-                    "name": rp_entry["access_list_name"],
+                    "name": rp_entry.access_list_name,
                     "sequence_numbers": [
                         {
                             "sequence": (index + 1) * 10,
                             "action": f"permit {group}",
                         }
-                        for index, group in enumerate(rp_entry["groups"])
+                        for index, group in enumerate(rp_entry.groups)
                     ],
                 },
             )

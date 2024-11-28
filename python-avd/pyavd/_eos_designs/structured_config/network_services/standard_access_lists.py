@@ -6,7 +6,7 @@ from __future__ import annotations
 from functools import cached_property
 from typing import TYPE_CHECKING
 
-from pyavd._utils import append_if_not_duplicate, default, get
+from pyavd._utils import append_if_not_duplicate
 
 from .utils import UtilsMixin
 
@@ -33,30 +33,29 @@ class StandardAccessListsMixin(UtilsMixin):
 
         standard_access_lists = []
         for tenant in self.shared_utils.filtered_tenants:
-            for vrf in tenant["vrfs"]:
-                for rp_entry in default(get(vrf, "pim_rp_addresses"), get(tenant, "pim_rp_addresses"), []):
-                    if self.shared_utils.hostname in get(rp_entry, "nodes", default=[self.shared_utils.hostname]):
-                        if rp_entry.get("groups") is None or rp_entry.get("access_list_name") is None:
-                            continue
+            for vrf in tenant.vrfs:
+                for rp_entry in vrf.pim_rp_addresses or tenant.pim_rp_addresses:
+                    if (rp_entry.nodes and self.shared_utils.hostname not in rp_entry.nodes) or not rp_entry.groups or not rp_entry.access_list_name:
+                        continue
 
-                        standard_access_list = {
-                            "name": rp_entry["access_list_name"],
-                            "sequence_numbers": [
-                                {
-                                    "sequence": (index + 1) * 10,
-                                    "action": f"permit {group}",
-                                }
-                                for index, group in enumerate(rp_entry["groups"])
-                            ],
-                        }
+                    standard_access_list = {
+                        "name": rp_entry.access_list_name,
+                        "sequence_numbers": [
+                            {
+                                "sequence": (index) * 10,
+                                "action": f"permit {group}",
+                            }
+                            for index, group in enumerate(rp_entry.groups, 1)
+                        ],
+                    }
 
-                        append_if_not_duplicate(
-                            list_of_dicts=standard_access_lists,
-                            primary_key="name",
-                            new_dict=standard_access_list,
-                            context="PIM RP Address ACL for VRFs",
-                            context_keys=["name"],
-                        )
+                    append_if_not_duplicate(
+                        list_of_dicts=standard_access_lists,
+                        primary_key="name",
+                        new_dict=standard_access_list,
+                        context="PIM RP Address ACL for VRFs",
+                        context_keys=["name"],
+                    )
 
         if standard_access_lists:
             return standard_access_lists

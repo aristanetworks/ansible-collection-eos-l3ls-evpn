@@ -18050,6 +18050,9 @@ keys:
       router_id:
         type: str
         description: IPv4 Address.
+      is_hostname:
+        type: str
+        description: Hostname of Intermediate System.
       is_type:
         display_name: IS Type
         type: str
@@ -19422,6 +19425,9 @@ keys:
           bfd:
             type: bool
             description: Enable/Disable BFD.
+          make_before_break:
+            type: bool
+            description: Enable/Disable Make-Before-Break.
           ssm_range:
             type: str
             description: IPv4 Prefix associated with SSM.
@@ -19492,6 +19498,9 @@ keys:
                 bfd:
                   type: bool
                   description: Enable/Disable BFD.
+                make_before_break:
+                  type: bool
+                  description: Enable/Disable Make-Before-Break.
                 rp_addresses:
                   type: list
                   items:

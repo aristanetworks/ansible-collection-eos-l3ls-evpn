@@ -192,6 +192,7 @@ interface Vlan4094
 | Settings | Value |
 | -------- | ----- |
 | Instance | EVPN_UNDERLAY |
+| Hostname | MYROUTER |
 | Log Adjacency Changes | False |
 | MPLS LDP Sync Default | True |
 | Advertise Passive-only | True |
@@ -276,6 +277,7 @@ interface Vlan4094
 ```eos
 !
 router isis EVPN_UNDERLAY
+   is-hostname MYROUTER
    no log-adjacency-changes
    mpls ldp sync default
    redistribute connected

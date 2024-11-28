@@ -6,7 +6,7 @@ from __future__ import annotations
 from functools import cached_property
 from typing import TYPE_CHECKING
 
-from pyavd._utils import append_if_not_duplicate, get
+from pyavd._utils import append_if_not_duplicate
 
 from .utils import UtilsMixin
 
@@ -33,10 +33,10 @@ class RouterPimSparseModeMixin(UtilsMixin):
 
         vrfs = []
         for tenant in self.shared_utils.filtered_tenants:
-            for vrf in tenant["vrfs"]:
-                if vrf_rps := get(vrf, "_pim_rp_addresses"):
+            for vrf in tenant.vrfs:
+                if vrf_rps := getattr(vrf, "_pim_rp_addresses", None):
                     vrf_config = {
-                        "name": vrf["name"],
+                        "name": vrf.name,
                         "ipv4": {
                             "rp_addresses": vrf_rps,
                         },

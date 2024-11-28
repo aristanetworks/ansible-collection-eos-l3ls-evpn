@@ -38,6 +38,10 @@ PICKLED_SCHEMAS = {
     "eos_cli_config_gen": EOS_CLI_CONFIG_GEN_PICKLED_SCHEMA_PATH,
     "eos_designs": EOS_DESIGNS_PICKLED_SCHEMA_PATH,
 }
+PYTHON_CLASS_PATHS = {
+    "eos_cli_config_gen": EOS_CLI_CONFIG_GEN_SCHEMA_DIR.joinpath("__init__.py"),
+    "eos_designs": EOS_DESIGNS_SCHEMA_DIR.joinpath("__init__.py"),
+}
 DOCS_PATHS = {
     "eos_cli_config_gen": EOS_CLI_CONFIG_GEN_DOCS_PATH,
     "eos_designs": EOS_DESIGNS_DOCS_PATH,
