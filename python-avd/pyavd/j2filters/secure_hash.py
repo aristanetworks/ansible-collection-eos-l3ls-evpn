@@ -12,13 +12,12 @@ except ImportError as imp_exc:
 
 def _get_password_hash(user_password: str) -> str:
     """
-
     Generate a SHA512-Crypt password hash with a random salt value for a local user.
 
     Parameters:
     ----------
     user_password : str
-                    the clear text password provided by the user that will be hashed
+        the clear text password provided by the user that will be hashed
 
     Returns:
     -------
@@ -32,17 +31,16 @@ def _get_password_hash(user_password: str) -> str:
     ValueError
         If sha512_crypt fails for any reason
     """
-    if isinstance(user_password, str):
-        try:
-            # setting the rounds parameter to 5000 to omit rounds from the hash string, similar to EOS implementation
-            return sha512_crypt.using(rounds=5000).hash(user_password)
-        except Exception as exc:
-            msg = "SHA512 password hashing failed - check the input parameters of arista.avd.secure_hash"
-            raise ValueError(msg) from exc
-
-    else:
+    if not isinstance(user_password, str):
         msg = f"Password MUST be of type 'str' but is of type {type(user_password)}"
         raise TypeError(msg)
+
+    try:
+        # setting the rounds parameter to 5000 to omit rounds from the hash string, similar to EOS implementation
+        return sha512_crypt.using(rounds=5000).hash(user_password)
+    except Exception as exc:
+        msg = "SHA512 password hashing failed - check the input parameters of arista.avd.secure_hash"
+        raise ValueError(msg) from exc
 
 
 def secure_hash(user_password: str) -> str:
