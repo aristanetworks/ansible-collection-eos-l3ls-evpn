@@ -320,12 +320,12 @@ port_channel_interfaces:
   shutdown: false
 - name: Port-Channel11
   description: dc2-leaf3-fw1_PortChannel
+  vlans: 11-12,21-22
   type: switched
   mode: trunk
-  vlans: 11-12,21-22
   native_vlan: 4092
-  spanning_tree_portfast: edge
   mlag: 11
+  spanning_tree_portfast: edge
 ethernet_interfaces:
 - name: Ethernet3
   peer: dc2-leaf3a.arista.com
@@ -366,14 +366,14 @@ ethernet_interfaces:
     enabled: false
   ip_address: 10.255.255.127/31
 - name: Ethernet11
-  peer: dc2-leaf3-fw1
-  peer_interface: e1
-  peer_type: firewall
   description: dc2-leaf3-fw1_e1
   type: port-channel-member
   channel_group:
     id: 11
     mode: active
+  peer: dc2-leaf3-fw1
+  peer_interface: e1
+  peer_type: firewall
 mlag_configuration:
   domain_id: DC2_L3_LEAF3
   local_interface: Vlan4094

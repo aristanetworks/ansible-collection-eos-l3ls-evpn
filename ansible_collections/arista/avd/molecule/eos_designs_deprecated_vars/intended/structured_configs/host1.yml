@@ -53,6 +53,13 @@ transceiver_qsfp_default_mode_4x10: true
 vrfs:
 - name: MGMT
   ip_routing: false
+management_interfaces:
+- name: Management1
+  description: OOB_MANAGEMENT
+  shutdown: false
+  vrf: MGMT
+  ip_address: 192.168.0.103/24
+  type: oob
 management_api_http:
   enable_vrfs:
   - name: MGMT

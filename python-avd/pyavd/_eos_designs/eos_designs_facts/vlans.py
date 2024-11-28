@@ -7,10 +7,11 @@ import re
 from functools import cached_property
 from typing import TYPE_CHECKING
 
-from pyavd._utils import get
 from pyavd.j2filters import list_compress, range_expand
 
 if TYPE_CHECKING:
+    from pyavd._eos_designs.schema import EosDesigns
+
     from . import EosDesignsFacts
 
 
@@ -36,34 +37,37 @@ class VlansMixin:
         """
         return list_compress(self._vlans)
 
-    def _parse_adapter_settings(self: EosDesignsFacts, adapter_settings: dict) -> tuple[set, set]:
+    def _parse_adapter_settings(
+        self: EosDesignsFacts,
+        adapter_settings: EosDesigns._DynamicKeys.DynamicConnectedEndpointsItem.ConnectedEndpointsItem.AdaptersItem | EosDesigns.NetworkPortsItem,
+    ) -> tuple[set, set]:
         """Parse the given adapter_settings and return relevant vlans and trunk_groups."""
         vlans = set()
-        trunk_groups = set(adapter_settings.get("trunk_groups", []))
-        if "vlans" in adapter_settings and adapter_settings["vlans"] not in ["all", "", None]:
-            vlans.update(map(int, range_expand(str(adapter_settings["vlans"]))))
-        elif adapter_settings.get("mode", "") == "trunk" and not trunk_groups:
+        trunk_groups = set(adapter_settings.trunk_groups)
+        if adapter_settings.vlans not in ["all", "", None]:
+            vlans.update(map(int, range_expand(adapter_settings.vlans)))
+        elif adapter_settings.mode == "trunk" and not trunk_groups:
             # No vlans or trunk_groups defined, but this is a trunk, so default is all vlans allowed
             # No need to check further, since the list is now containing all vlans.
             return set(range(1, 4094)), trunk_groups
-        elif adapter_settings.get("mode", "") == "trunk phone":
+        elif adapter_settings.mode == "trunk phone":
             # # EOS default native VLAN is VLAN 1
-            if "native_vlan" not in adapter_settings:
+            if not adapter_settings.native_vlan:
                 vlans.add(1)
         else:
             # No vlans or mode defined so this is an access port with only vlan 1 allowed
             vlans.add(1)
 
-        if "native_vlan" in adapter_settings:
-            vlans.add(int(adapter_settings["native_vlan"]))
-        if "phone_vlan" in adapter_settings:
-            vlans.add(int(adapter_settings["phone_vlan"]))
+        if adapter_settings.native_vlan:
+            vlans.add(adapter_settings.native_vlan)
+        if adapter_settings.phone_vlan:
+            vlans.add(adapter_settings.phone_vlan)
 
-        for subinterface in get(adapter_settings, "port_channel.subinterfaces", default=[]):
-            if "vlan_id" in subinterface:
-                vlans.add(int(subinterface["vlan_id"]))
-            elif "number" in subinterface:
-                vlans.add(int(subinterface["number"]))
+        for subinterface in adapter_settings.port_channel.subinterfaces:
+            if subinterface.vlan_id:
+                vlans.add(subinterface.vlan_id)
+            elif subinterface.number:
+                vlans.add(subinterface.number)
 
         return vlans, trunk_groups
 
@@ -72,7 +76,7 @@ class VlansMixin:
         """
         Return list of vlans and list of trunk groups used by connected_endpoints on this switch.
 
-        Also includes the inband_mgmt_vlan
+        Also includes the inband_mgmt_vlan.
         """
         if not (self.shared_utils.any_network_services and self.shared_utils.connected_endpoints):
             return set(), set()
@@ -81,15 +85,14 @@ class VlansMixin:
         trunk_groups = set()
 
         if self.shared_utils.configure_inband_mgmt:
-            vlans.add(self.shared_utils.inband_mgmt_vlan)
+            vlans.add(self.shared_utils.node_config.inband_mgmt_vlan)
 
-        for connected_endpoints_key in self.shared_utils.connected_endpoints_keys:
-            connected_endpoints = get(self._hostvars, connected_endpoints_key["key"], default=[])
-            for connected_endpoint in connected_endpoints:
-                for index, adapter in enumerate(connected_endpoint.get("adapters", [])):
-                    adapter["context"] = f"{connected_endpoints_key['key']}[name={connected_endpoint['name']}].adapters[{index}]"
+        for connected_endpoints_key in self.inputs._dynamic_keys.connected_endpoints:
+            for connected_endpoint in connected_endpoints_key.value:
+                for index, adapter in enumerate(connected_endpoint.adapters):
+                    adapter._context = f"{connected_endpoints_key.key}[name={connected_endpoint.name}].adapters[{index}]"
                     adapter_settings = self.shared_utils.get_merged_adapter_settings(adapter)
-                    if self.shared_utils.hostname not in adapter_settings.get("switches", []):
+                    if self.shared_utils.hostname not in adapter_settings.switches:
                         # This switch is not connected to this endpoint. Skipping.
                         continue
 
@@ -102,9 +105,8 @@ class VlansMixin:
                         # configure all vlans anyway.
                         return vlans, trunk_groups
 
-        network_ports = get(self._hostvars, "network_ports", default=[])
-        for index, network_port_item in enumerate(network_ports):
-            for switch_regex in network_port_item.get("switches", []):
+        for index, network_port_item in enumerate(self.inputs.network_ports):
+            for switch_regex in network_port_item.switches:
                 # The match test is built on Python re.match which tests from the beginning of the string #}
                 # Since the user would not expect "DC1-LEAF1" to also match "DC-LEAF11" we will force ^ and $ around the regex
                 raw_switch_regex = rf"^{switch_regex}$"
@@ -112,7 +114,7 @@ class VlansMixin:
                     # Skip entry if no match
                     continue
 
-                network_port_item["context"] = f"network_ports[{index}]"
+                network_port_item._context = f"network_ports[{index}]"
                 adapter_settings = self.shared_utils.get_merged_adapter_settings(network_port_item)
                 adapter_vlans, adapter_trunk_groups = self._parse_adapter_settings(adapter_settings)
                 vlans.update(adapter_vlans)
@@ -179,7 +181,7 @@ class VlansMixin:
 
         Ex: {1, 20, 21, 22, 23} or set().
         """
-        if not self.shared_utils.filter_only_vlans_in_use:
+        if not self.shared_utils.node_config.filter.only_vlans_in_use:
             return set()
 
         endpoint_vlans, _ = self._endpoint_vlans_and_trunk_groups
@@ -197,7 +199,7 @@ class VlansMixin:
 
         Ex: "1,20-30" or "".
         """
-        if self.shared_utils.filter_only_vlans_in_use:
+        if self.shared_utils.node_config.filter.only_vlans_in_use:
             return list_compress(list(self._endpoint_vlans))
 
         return None
@@ -205,7 +207,7 @@ class VlansMixin:
     @cached_property
     def _endpoint_trunk_groups(self: EosDesignsFacts) -> set[str]:
         """Return set of trunk_groups in use by endpoints connected to this switch, downstream switches or MLAG peer."""
-        if not self.shared_utils.filter_only_vlans_in_use:
+        if not self.shared_utils.node_config.filter.only_vlans_in_use:
             return set()
 
         _, endpoint_trunk_groups = self._endpoint_vlans_and_trunk_groups
@@ -251,61 +253,48 @@ class VlansMixin:
             vlans = []
             match_tags = self.shared_utils.filter_tags
 
-            if self.shared_utils.filter_only_vlans_in_use:
+            if self.shared_utils.node_config.filter.only_vlans_in_use:
                 # Only include the vlans that are used by connected endpoints
                 endpoint_trunk_groups = self._endpoint_trunk_groups
                 endpoint_vlans = self._endpoint_vlans
 
-            for network_services_key in self.shared_utils.network_services_keys:
-                tenants = get(self._hostvars, network_services_key["name"], default=[])
+            for network_services_key in self.inputs._dynamic_keys.network_services:
+                tenants = network_services_key.value
                 for tenant in tenants:
-                    if not set(self.shared_utils.filter_tenants).intersection([tenant["name"], "all"]):
+                    if not set(self.shared_utils.node_config.filter.tenants).intersection([tenant.name, "all"]):
                         # Not matching tenant filters. Skipping this tenant.
                         continue
 
-                    vrfs = tenant.get("vrfs", [])
-                    for vrf in vrfs:
-                        svis = vrf.get("svis", [])
-                        for svi in svis:
-                            svi_tags = svi.get("tags", ["all"])
-                            if "all" in match_tags or set(svi_tags).intersection(match_tags):
-                                if self.shared_utils.filter_only_vlans_in_use:
+                    for vrf in tenant.vrfs:
+                        for svi in vrf.svis:
+                            if "all" in match_tags or set(svi.tags).intersection(match_tags):
+                                if self.shared_utils.node_config.filter.only_vlans_in_use:
                                     # Check if vlan is in use
-                                    if int(svi["id"]) in endpoint_vlans:
-                                        vlans.append(int(svi["id"]))
+                                    if svi.id in endpoint_vlans:
+                                        vlans.append(svi.id)
                                         continue
                                     # Check if vlan has a trunk group defined which is in use
-                                    if (
-                                        self.shared_utils.enable_trunk_groups
-                                        and svi.get("trunk_groups")
-                                        and endpoint_trunk_groups.intersection(svi["trunk_groups"])
-                                    ):
-                                        vlans.append(int(svi["id"]))
+                                    if self.inputs.enable_trunk_groups and svi.trunk_groups and endpoint_trunk_groups.intersection(svi.trunk_groups):
+                                        vlans.append(svi.id)
                                         continue
                                     # Skip since the vlan is not in use
                                     continue
-                                vlans.append(int(svi["id"]))
+                                vlans.append(svi.id)
 
-                    l2vlans = tenant.get("l2vlans", [])
-                    for l2vlan in l2vlans:
-                        l2vlan_tags = l2vlan.get("tags", ["all"])
-                        if "all" in match_tags or set(l2vlan_tags).intersection(match_tags):
-                            if self.shared_utils.filter_only_vlans_in_use:
+                    for l2vlan in tenant.l2vlans:
+                        if "all" in match_tags or set(l2vlan.tags).intersection(match_tags):
+                            if self.shared_utils.node_config.filter.only_vlans_in_use:
                                 # Check if vlan is in use
-                                if int(l2vlan["id"]) in endpoint_vlans:
-                                    vlans.append(int(l2vlan["id"]))
+                                if l2vlan.id in endpoint_vlans:
+                                    vlans.append(l2vlan.id)
                                     continue
                                 # Check if vlan has a trunk group defined which is in use
-                                if (
-                                    self.shared_utils.enable_trunk_groups
-                                    and l2vlan.get("trunk_groups")
-                                    and endpoint_trunk_groups.intersection(l2vlan["trunk_groups"])
-                                ):
-                                    vlans.append(int(l2vlan["id"]))
+                                if self.inputs.enable_trunk_groups and l2vlan.trunk_groups and endpoint_trunk_groups.intersection(l2vlan.trunk_groups):
+                                    vlans.append(l2vlan.id)
                                     continue
                                 # Skip since the vlan is not in use
                                 continue
-                            vlans.append(int(l2vlan["id"]))
+                            vlans.append(l2vlan.id)
 
             return vlans
         return []

@@ -65,6 +65,20 @@ def get_all(data: Any, path: str, required: bool = False, org_path: str | None =
 
         return [value]
 
+    if isinstance(data, object):
+        value = getattr(data, path_elements[0], None)
+
+        if value is None:
+            if required:
+                raise AristaAvdMissingVariableError(org_path)
+
+            return []
+
+        if len(path_elements) > 1:
+            return get_all(value, ".".join(path_elements[1:]), required=required, org_path=org_path)
+
+        return [value]
+
     return []
 
 
