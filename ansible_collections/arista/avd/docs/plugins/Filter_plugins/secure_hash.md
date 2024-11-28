@@ -23,7 +23,7 @@ Generate a SHA512-Crypt password hash with a random salt value for a local user.
 
 | Argument | Type | Required | Default | Value Restrictions | Description |
 | -------- | ---- | -------- | ------- | ------------------ | ----------- |
-| <samp>_input</samp> | string | True | None |  | Password string to be hashed. |
+| <samp>_input</samp> | string | True | None |  | Clear text password to be hashed. |
 
 ## Return Values
 

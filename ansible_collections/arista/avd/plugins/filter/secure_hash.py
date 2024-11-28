@@ -35,7 +35,7 @@ description:
 positional: _input
 options:
   _input:
-    description: Password string to be hashed.
+    description: Clear text password to be hashed.
     type: string
     required: true
 """

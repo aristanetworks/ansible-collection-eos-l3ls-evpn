@@ -18,7 +18,7 @@ def _get_password_hash(user_password: str) -> str:
     Parameters:
     ----------
     user_password : str
-                    the password provided by the user that will be hashed
+                    the clear text password provided by the user that will be hashed
 
     Returns:
     -------
