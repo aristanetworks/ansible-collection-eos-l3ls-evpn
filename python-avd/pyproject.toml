@@ -25,7 +25,7 @@ dependencies = [
     "deepmerge>=1.1.0",
     "Jinja2>=3.0",
     "requests>=2.27.0",
-    "passlib==1.7.4",
+    "passlib>=1.7.4",
 ]
 
 [project.urls]
@@ -40,7 +40,6 @@ pytest = [
     "PyYAML>=6.0.0",
     "pydantic>=2.3.0",
     "referencing>=0.35.0",
-    "passlib==1.7.4",
 ]
 coverage = [
     "coverage[toml]",

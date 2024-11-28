@@ -17,7 +17,7 @@ try:
 except ImportError as e:
     secure_hash = RaiseOnUse(
         AnsibleFilterError(
-            f"The '{PLUGIN_NAME}' plugin requires the 'passlib' and 'pyavd' Python library. Got import error",
+            f"The '{PLUGIN_NAME}' plugin requires the 'pyavd' Python library. Got import error",
             orig_exc=e,
         ),
     )
