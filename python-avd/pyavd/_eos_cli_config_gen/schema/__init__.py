@@ -11662,7 +11662,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                             GRE packet that matches the `destination` is terminated.
                             """
                             strip: bool | None
-                            """Strip GRE encapsulation header for sepecific destination."""
+                            """Strip GRE encapsulation header for specific destination."""
                             protocols: Protocols
                             """Subclass of AvdIndexedList with `ProtocolsItem` items. Primary key is `protocol` (`str`)."""
                             _custom_data: dict[str, Any]
@@ -11689,7 +11689,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                                         source:
                                            Source IP address of tunnel packets. Applied only when destination is defined. When not defined; any
                                            GRE packet that matches the `destination` is terminated.
-                                        strip: Strip GRE encapsulation header for sepecific destination.
+                                        strip: Strip GRE encapsulation header for specific destination.
                                         protocols: Subclass of AvdIndexedList with `ProtocolsItem` items. Primary key is `protocol` (`str`).
                                         _custom_data: _custom_data
 
@@ -31409,7 +31409,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                             GRE packet that matches the `destination` is terminated.
                             """
                             strip: bool | None
-                            """Strip GRE encapsulation header for sepecific destination."""
+                            """Strip GRE encapsulation header for specific destination."""
                             protocols: Protocols
                             """Subclass of AvdIndexedList with `ProtocolsItem` items. Primary key is `protocol` (`str`)."""
                             _custom_data: dict[str, Any]
@@ -31436,7 +31436,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                                         source:
                                            Source IP address of tunnel packets. Applied only when destination is defined. When not defined; any
                                            GRE packet that matches the `destination` is terminated.
-                                        strip: Strip GRE encapsulation header for sepecific destination.
+                                        strip: Strip GRE encapsulation header for specific destination.
                                         protocols: Subclass of AvdIndexedList with `ProtocolsItem` items. Primary key is `protocol` (`str`).
                                         _custom_data: _custom_data
 

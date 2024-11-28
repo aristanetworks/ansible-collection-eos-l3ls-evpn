@@ -580,7 +580,7 @@
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;destinations</samp>](## "ethernet_interfaces.[].switchport.tap.encapsulation.gre.destinations") | List, items: Dictionary |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;destination</samp>](## "ethernet_interfaces.[].switchport.tap.encapsulation.gre.destinations.[].destination") | String | Required, Unique |  |  | Destination IP address of tunnel packets. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;source</samp>](## "ethernet_interfaces.[].switchport.tap.encapsulation.gre.destinations.[].source") | String |  |  |  | Source IP address of tunnel packets. Applied only when destination is defined. When not defined; any GRE packet that matches the `destination` is terminated. |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;strip</samp>](## "ethernet_interfaces.[].switchport.tap.encapsulation.gre.destinations.[].strip") | Boolean |  |  |  | Strip GRE encapsulation header for sepecific destination. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;strip</samp>](## "ethernet_interfaces.[].switchport.tap.encapsulation.gre.destinations.[].strip") | Boolean |  |  |  | Strip GRE encapsulation header for specific destination. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;protocols</samp>](## "ethernet_interfaces.[].switchport.tap.encapsulation.gre.destinations.[].protocols") | List, items: Dictionary |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;protocol</samp>](## "ethernet_interfaces.[].switchport.tap.encapsulation.gre.destinations.[].protocols.[].protocol") | String | Required, Unique |  |  | Protocol type in GRE header.<br>Protocol range: 0x0000-0xFFFF. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;strip</samp>](## "ethernet_interfaces.[].switchport.tap.encapsulation.gre.destinations.[].protocols.[].strip") | Boolean |  |  |  | This is a required key to strip GRE encapsulation header for specific destination with protocols. |
@@ -1867,7 +1867,7 @@
                     # Source IP address of tunnel packets. Applied only when destination is defined. When not defined; any GRE packet that matches the `destination` is terminated.
                     source: <str>
 
-                    # Strip GRE encapsulation header for sepecific destination.
+                    # Strip GRE encapsulation header for specific destination.
                     strip: <bool>
                     protocols:
 

@@ -2098,7 +2098,7 @@ keys:
                                 type: str
                               strip:
                                 type: bool
-                                description: Strip GRE encapsulation header for sepecific destination.
+                                description: Strip GRE encapsulation header for specific destination.
                               protocols:
                                 type: list
                                 primary_key: protocol
