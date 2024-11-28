@@ -15,15 +15,22 @@ def _get_password_hash(user_password: str) -> str:
 
     Generate a SHA512-Crypt password hash with a random salt value.
 
-    Args:
-        user_password(str): the password provided by the user that will be hashed
+    Parameters:
+    ----------
+    user_password : str
+                    the password provided by the user that will be hashed
 
     Returns:
-        str: the SHA512-Crypt password hash with modular crypt prefix $6$
+    -------
+    str
+        the SHA512-Crypt password hash with modular crypt prefix $6$
 
     Raises:
-      TypeError: If the password is not of type `str`
-      ValueError: If sha512_crypt fails for any reason
+    ------
+    TypeError
+        If the password is not of type `str`
+    ValueError
+        If sha512_crypt fails for any reason
     """
     if isinstance(user_password, str):
         try:
