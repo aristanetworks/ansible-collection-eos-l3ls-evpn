@@ -673,7 +673,6 @@ port_channel_interfaces:
   - name: Port-Channel111.400
     description: TENANT_A pseudowire 3 interface
     ip_address: dhcp
-    dhcp_client_accept_default_route: false
     encapsulation_vlan:
       client:
         encapsulation: dot1q
@@ -727,7 +726,6 @@ port_channel_interfaces:
     switchport:
       enabled: false
     ip_address: 172.31.128.10/31
-    dhcp_client_accept_default_route: false
     mpls:
       ip: false
       ldp:
