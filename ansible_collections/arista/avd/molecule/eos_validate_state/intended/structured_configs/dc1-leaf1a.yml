@@ -82,8 +82,8 @@ router_bgp:
     description: dc1-spine2_Loopback0
     remote_as: '65100'
   - ip_address: 10.1.1.1
-    description: External peer
     peer_group: EVPN-OVERLAY-PEERS
+    description: External peer
   address_family_evpn:
     peer_groups:
     - name: EVPN-OVERLAY-PEERS

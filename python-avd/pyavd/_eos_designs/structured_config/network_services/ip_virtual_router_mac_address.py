@@ -22,7 +22,11 @@ class IpVirtualRouterMacAddressMixin(UtilsMixin):
     @cached_property
     def ip_virtual_router_mac_address(self: AvdStructuredConfigNetworkServices) -> str | None:
         """Return structured config for ip_virtual_router_mac_address."""
-        if self.shared_utils.network_services_l2 and self.shared_utils.network_services_l3 and self.shared_utils.virtual_router_mac_address is not None:
-            return str(self.shared_utils.virtual_router_mac_address).lower()
+        if (
+            self.shared_utils.network_services_l2
+            and self.shared_utils.network_services_l3
+            and self.shared_utils.node_config.virtual_router_mac_address is not None
+        ):
+            return str(self.shared_utils.node_config.virtual_router_mac_address).lower()
 
         return None

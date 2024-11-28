@@ -43,19 +43,19 @@ router_bgp:
     local_as: '65001'
   - name: Tenant_C_BGP_PEER_GROUP
     remote_as: '666'
+    local_as: '777'
     description: Tenant C peer group
-    send_community: all
-    next_hop_self: true
-    maximum_routes: 1000
-    default_originate:
-      enabled: true
-      always: true
     update_source: lo0
     bfd: false
     ebgp_multihop: 3
-    route_map_out: TEST_OUT
+    next_hop_self: true
+    default_originate:
+      enabled: true
+      always: true
+    send_community: all
+    maximum_routes: 1000
     route_map_in: TEST_IN
-    local_as: '777'
+    route_map_out: TEST_OUT
   - name: Tenant_C_BGP_PEER_GROUP2
     remote_as: '667'
     description: Tenant C peer group2

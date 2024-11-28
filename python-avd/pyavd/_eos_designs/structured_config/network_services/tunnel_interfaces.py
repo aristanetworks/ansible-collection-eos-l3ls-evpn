@@ -28,13 +28,13 @@ class TunnelInterfacesMixin(UtilsMixin):
 
         Only used for CV Pathfinder edge routers today
         """
-        if not self._filtered_internet_exit_policies:
+        if not self._filtered_internet_exit_policies_and_connections:
             return None
 
         tunnel_interfaces = []
 
-        for internet_exit_policy in self._filtered_internet_exit_policies:
-            for connection in internet_exit_policy.get("connections", []):
+        for internet_exit_policy, connections in self._filtered_internet_exit_policies_and_connections:
+            for connection in connections:
                 if connection["type"] == "tunnel":
                     tunnel_interface = {
                         "name": f"Tunnel{connection['tunnel_id']}",
@@ -47,8 +47,8 @@ class TunnelInterfacesMixin(UtilsMixin):
                         "ipsec_profile": connection["ipsec_profile"],
                     }
 
-                    if internet_exit_policy["type"] == "zscaler":
-                        tunnel_interface["nat_profile"] = self.get_internet_exit_nat_profile_name(internet_exit_policy["type"])
+                    if internet_exit_policy.type == "zscaler":
+                        tunnel_interface["nat_profile"] = self.get_internet_exit_nat_profile_name(internet_exit_policy.type)
 
                     append_if_not_duplicate(
                         list_of_dicts=tunnel_interfaces,

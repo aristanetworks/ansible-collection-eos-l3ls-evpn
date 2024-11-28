@@ -320,23 +320,23 @@ port_channel_interfaces:
   shutdown: false
 - name: Port-Channel11
   description: dc2-leaf3-fw1_PortChannel
+  vlans: 11-12,21-22
   type: switched
   mode: trunk
-  vlans: 11-12,21-22
   native_vlan: 4092
-  spanning_tree_portfast: edge
   mlag: 11
+  spanning_tree_portfast: edge
 - name: Port-Channel12
   description: Test_mode_and_vlans
+  vlans: '100'
   type: switched
   mode: access
-  vlans: '100'
 - name: Port-Channel13
   description: Test_native_vlan_and_trunk_groups
   type: switched
+  mode: trunk
   native_vlan: 4092
   native_vlan_tag: true
-  mode: trunk
   trunk_groups:
   - MLAG
 - name: Port-Channel14
@@ -344,8 +344,8 @@ port_channel_interfaces:
   type: switched
   mode: trunk phone
   phone:
-    vlan: 20
     trunk: tagged
+    vlan: 20
 - name: Port-Channel15
   description: Test_type_routed
   type: routed
@@ -394,41 +394,41 @@ ethernet_interfaces:
     enabled: false
   ip_address: 10.255.255.123/31
 - name: Ethernet11
-  peer: dc2-leaf3-fw1
-  peer_interface: e1
-  peer_type: firewall
   description: dc2-leaf3-fw1_e1
   type: port-channel-member
   channel_group:
     id: 11
     mode: active
+  peer: dc2-leaf3-fw1
+  peer_interface: e1
+  peer_type: firewall
 - name: Ethernet12
   description: Test_mode_and_vlans
-  type: switched
-  mode: access
   vlans: '100'
+  mode: access
+  type: switched
 - name: Ethernet13
   description: Test_native_vlan_and_trunk_groups
-  type: switched
   native_vlan: 4092
   native_vlan_tag: true
   mode: trunk
   trunk_groups:
   - MLAG
+  type: switched
 - name: Ethernet14
   description: Test_phone
-  type: switched
   mode: trunk phone
   phone:
-    vlan: 20
     trunk: tagged
+    vlan: 20
+  type: switched
 - name: Ethernet15
   description: Test_type_routed
+  shutdown: false
   type: routed
   ip_address: 1.1.1.1/24
   peer: dc2-leaf2b
   peer_interface: Ethernet2
-  shutdown: false
 mlag_configuration:
   domain_id: DC2_L3_LEAF3
   local_interface: Vlan4094
