@@ -13,7 +13,7 @@ except ImportError as imp_exc:
 def _get_password_hash(user_password: str) -> str:
     """
 
-    Generate a SHA512-Crypt password hash with a random salt value.
+    Generate a SHA512-Crypt password hash with a random salt value for a local user.
 
     Parameters:
     ----------
@@ -23,7 +23,7 @@ def _get_password_hash(user_password: str) -> str:
     Returns:
     -------
     str
-        the SHA512-Crypt password hash with modular crypt prefix $6$
+        the SHA512-Crypt password hash
 
     Raises:
     ------
@@ -37,7 +37,7 @@ def _get_password_hash(user_password: str) -> str:
             # setting the rounds parameter to 5000 to omit rounds from the hash string, similar to EOS implementation
             return sha512_crypt.using(rounds=5000).hash(user_password)
         except Exception as exc:
-            msg = "SHA512 password hashing failed - check the input parameters of arista.avd.hash"
+            msg = "SHA512 password hashing failed - check the input parameters of arista.avd.secure_hash"
             raise ValueError(msg) from exc
 
     else:
