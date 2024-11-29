@@ -19,8 +19,6 @@ target-version = "py310"
 [tool.ruff.lint]
 extend-select = ["ALL"]
 ignore = [
-  "ANN101",  # Missing type annotation for `self` in method - we know what self is..
-  "ANN102",  # Missing type annotation for `cls` in classmethod - we know what cls is..
   "D203",    # Ignoring conflicting D* warnings - one-blank-line-before-class
   "D212",    # Ignoring conflicting D* warnings - multi-line-summary-first-line
   "COM812",  # Ignoring conflicting rules that may cause conflicts when used with the formatter
