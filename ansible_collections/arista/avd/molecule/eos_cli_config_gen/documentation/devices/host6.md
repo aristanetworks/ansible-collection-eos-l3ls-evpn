@@ -4,6 +4,8 @@
 
 - [Management](#management)
   - [Management Interfaces](#management-interfaces)
+- [Monitoring](#monitoring)
+  - [SNMP](#snmp)
 
 ## Management
 
@@ -31,4 +33,29 @@ interface Management1
    description OOB_MANAGEMENT
    vrf MGMT
    ip address 10.73.255.122/24
+```
+
+## Monitoring
+
+### SNMP
+
+#### SNMP Configuration Summary
+
+| Contact | Location | SNMP Traps | State |
+| ------- | -------- | ---------- | ----- |
+| - | - | All | Disabled |
+
+#### SNMP Hosts Configuration
+
+| Host | VRF | Community | Username | Authentication level | SNMP Version |
+| ---- |---- | --------- | -------- | -------------------- | ------------ |
+| 10.6.75.121 | MGMT | SNMP-COMMUNITY-1 | - | - | 1 |
+| 10.6.75.121 | MGMT | SNMP-COMMUNITY-2 | - | - | 2c |
+
+#### SNMP Device Configuration
+
+```eos
+!
+snmp-server host 10.6.75.121 vrf MGMT version 1 SNMP-COMMUNITY-1
+snmp-server host 10.6.75.121 vrf MGMT version 2c SNMP-COMMUNITY-2
 ```
