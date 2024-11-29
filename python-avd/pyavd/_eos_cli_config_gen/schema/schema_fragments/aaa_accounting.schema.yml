@@ -63,8 +63,6 @@ keys:
         keys:
           console:
             type: list
-            unique_keys:
-              - commands
             items:
               type: dict
               keys:
@@ -72,7 +70,7 @@ keys:
                   type: str
                   convert_types:
                     - int
-                  description: Privilege level 'all' or 0-15.
+                  description: Privilege level 'all' or 0-15. Ensure that if ranges are used, they do not overlap with one another.
                 type:
                   type: str
                   valid_values: ["none", "start-stop", "stop-only"]
@@ -83,8 +81,6 @@ keys:
                   type: bool
           default:
             type: list
-            unique_keys:
-              - commands
             items:
               type: dict
               keys:
@@ -92,7 +88,7 @@ keys:
                   type: str
                   convert_types:
                     - int
-                  description: Privilege level 'all' or 0-15.
+                  description: Privilege level 'all' or 0-15. Ensure that if ranges are used, they do not overlap with one another.
                 type:
                   type: str
                   valid_values: ["none", "start-stop", "stop-only"]
