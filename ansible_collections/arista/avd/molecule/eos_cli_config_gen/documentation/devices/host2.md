@@ -719,24 +719,26 @@ router bfd
 
 | Setting | Value |
 | ------- | ----- |
-| Refresh method  | explicit |
-| Authentication type | md5 |
-| Authentication sequence-number window | 234 |
+| Refresh interval | 4 |
+| Authentication type | - |
+| Authentication sequence-number window | - |
 | Authentication active index | 766 |
 | SRLG | enabled |
 | Preemption method | hard |
-| Fast reroute mode | link-protection |
+| Fast reroute mode | node-protection |
 | Fast reroute reversion | - |
 | Fast reroute  bypass tunnel optimization interval | - |
 | Hitless restart | Active |
 | Hitless restart recovery timer | - |
 | P2MP | True |
+| Shutdown | False |
 
 ##### RSVP Graceful Restart
 
 | Role | Recovery timer | Restart timer |
 | ---- | -------------- | ------------- |
-| Helper | 32 | 33 |
+| Helper | - | - |
+| Speaker | - | - |
 
 ### MPLS Device Configuration
 
@@ -750,21 +752,20 @@ mpls ldp
 mpls icmp ttl-exceeded tunneling
 !
 mpls rsvp
-   refresh method explicit
-   authentication type md5
-   authentication sequence-number window 234
+   refresh interval 4
    authentication index 766 active
-   fast-reroute mode link-protection
+   fast-reroute mode node-protection
    srlg
    preemption method hard
    !
    hitless-restart
    !
    graceful-restart role helper
-      timer restart maximum 32 seconds
-      timer recovery maximum 33 seconds
+   !
+   graceful-restart role speaker
    !
    p2mp
+   no shutdown
 ```
 
 ## Queue Monitor

@@ -113,8 +113,6 @@ router bgp 65101.0001
 
 | Setting | Value |
 | ------- | ----- |
-| Hello interval | 30 |
-| Timeout multiplier | 254 |
 
 ### MPLS Device Configuration
 
@@ -127,5 +125,4 @@ mpls ldp
    interface disabled default
 !
 mpls rsvp
-   hello interval 30 multiplier 254
 ```

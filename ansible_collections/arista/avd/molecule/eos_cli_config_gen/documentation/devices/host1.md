@@ -7737,9 +7737,12 @@ router bfd
 | Setting | Value |
 | ------- | ----- |
 | Refresh interval | 3 |
-| Authentication type | - |
-| Authentication sequence-number window | - |
-| Authentication active index | - |
+| Refresh method  | explicit |
+| Hello interval | 30 |
+| Timeout multiplier | 254 |
+| Authentication type | md5 |
+| Authentication sequence-number window | 234 |
+| Authentication active index | 766 |
 | IPv4 access-group | RSVP_access_group_ipv4 |
 | IPv6 access-group | RSVP_access_group_ipv6 |
 | SRLG strict | Enabled |
@@ -7747,7 +7750,7 @@ router bfd
 | Preemption method | soft |
 | Preemption timer | 444 |
 | MTU signaling | Enabled |
-| Fast reroute mode | - |
+| Fast reroute mode | link-protection |
 | Fast reroute reversion | local |
 | Fast reroute  bypass tunnel optimization interval | 65535 |
 | Hitless restart | Active |
@@ -7771,6 +7774,7 @@ router bfd
 
 | Role | Recovery timer | Restart timer |
 | ---- | -------------- | ------------- |
+| Helper | 32 | 33 |
 | Speaker | 35 | 36 |
 
 ### MPLS Device Configuration
@@ -7789,9 +7793,14 @@ mpls icmp fragmentation-needed tunneling
 !
 mpls rsvp
    refresh interval 3
+   refresh method explicit
+   hello interval 30 multiplier 254
+   authentication type md5
+   authentication sequence-number window 234
    authentication index 55 password 7 <removed>
    authentication index 766 password 7 <removed>
    authentication index 999 password <removed>
+   authentication index 766 active
    neighbor 1.1.1.1 authentication type md5
    neighbor 1.1.1.1 authentication index 3 active
    neighbor 1.1.12.2 authentication type none
@@ -7805,6 +7814,7 @@ mpls rsvp
    neighbor 2001::db8 authentication index 31 active
    ip access-group RSVP_access_group_ipv4
    ipv6 access-group RSVP_access_group_ipv6
+   fast-reroute mode link-protection
    fast-reroute reversion local
    fast-reroute bypass tunnel optimization interval 65535 seconds
    srlg strict
@@ -7814,6 +7824,10 @@ mpls rsvp
    !
    hitless-restart
       timer recovery 222 seconds
+   !
+   graceful-restart role helper
+      timer restart maximum 32 seconds
+      timer recovery maximum 33 seconds
    !
    graceful-restart role speaker
       timer restart 35 seconds

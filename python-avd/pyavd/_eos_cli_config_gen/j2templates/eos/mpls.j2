@@ -76,15 +76,15 @@ mpls rsvp
 {%         set sorted_ip_addresses =  with_neighbor_ipv4_address | list + with_neighbor_ipv6_address | list %}
 {%         for neighbor in sorted_ip_addresses | arista.avd.default([]) %}
 {%             if neighbor.ip_address is arista.avd.defined %}
-{%                 set ipaddress = neighbor.ip_address %}
-{%             elif neighbor.ipv6_address is arista.avd.defined %}
-{%                 set ipaddress = neighbor.ipv6_address %}
+{%                 set ip_address = neighbor.ip_address %}
+{%             else %}
+{%                 set ip_address = neighbor.ipv6_address %}
 {%             endif %}
 {%             if neighbor.authentication.type is arista.avd.defined %}
-   neighbor {{ ipaddress }} authentication type {{ neighbor.authentication.type }}
+   neighbor {{ ip_address }} authentication type {{ neighbor.authentication.type }}
 {%             endif %}
 {%             if neighbor.authentication.index is arista.avd.defined %}
-   neighbor {{ ipaddress }} authentication index {{ neighbor.authentication.index }} active
+   neighbor {{ ip_address }} authentication index {{ neighbor.authentication.index }} active
 {%             endif %}
 {%         endfor %}
 {%     endif %}

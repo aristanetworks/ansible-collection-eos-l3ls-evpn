@@ -6,6 +6,4 @@ mpls:
     interface_disabled_default: true
     router_id: 192.168.1.2
   rsvp:
-    hello:
-      interval: 30
-      multiplier: 254
+    graceful_restart:
