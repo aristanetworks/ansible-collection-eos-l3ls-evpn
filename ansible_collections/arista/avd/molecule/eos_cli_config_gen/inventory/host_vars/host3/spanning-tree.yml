@@ -13,10 +13,7 @@ spanning_tree:
         - id: 4
           vlans: 200-300
     pvst_border: true
-  edge_port:
-    bpduguard_default: true
   mode: mstp
-  no_spanning_tree_vlan: 105,202,505-506
   mst_instances:
     - id: 0
       priority: 4096

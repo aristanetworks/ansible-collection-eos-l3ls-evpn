@@ -86,8 +86,6 @@ STP mode: **mstp**
 
 #### Global Spanning-Tree Settings
 
-- Spanning Tree disabled for VLANs: **105,202,505-506**
-- Global BPDU Guard for Edge ports is enabled.
 - MST PSVT Border is enabled.
 
 ### Spanning Tree Device Configuration
@@ -95,9 +93,7 @@ STP mode: **mstp**
 ```eos
 !
 spanning-tree mode mstp
-no spanning-tree vlan-id 105,202,505-506
 spanning-tree mst pvst border
-spanning-tree edge-port bpduguard default
 spanning-tree mst 0 priority 4096
 spanning-tree mst 100-200 priority 8192
 !

@@ -530,12 +530,17 @@ STP mode: **rstp**
 #### Global Spanning-Tree Settings
 
 - Global RSTP priority: 8192
+- Global BPDU Guard for Edge ports is enabled.
+- Global BPDU Filter for Edge ports is enabled.
 
 ### Spanning Tree Device Configuration
 
 ```eos
 !
 spanning-tree mode rstp
+spanning-tree edge-port bpduguard default
+spanning-tree edge-port bpdufilter default
+no spanning-tree bpduguard rate-limit default
 spanning-tree priority 8192
 ```
 

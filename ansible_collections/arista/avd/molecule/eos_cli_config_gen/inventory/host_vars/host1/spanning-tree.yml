@@ -16,3 +16,4 @@ spanning_tree:
       priority: 8192
     - id: "100-500"
       priority: 16384
+  no_spanning_tree_vlan: 105,202,505-506

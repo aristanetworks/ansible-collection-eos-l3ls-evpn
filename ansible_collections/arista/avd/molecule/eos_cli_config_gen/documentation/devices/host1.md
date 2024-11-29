@@ -3100,6 +3100,7 @@ STP mode: **rapid-pvst**
 
 #### Global Spanning-Tree Settings
 
+- Spanning Tree disabled for VLANs: **105,202,505-506**
 - Global BPDU Guard for Edge ports is disabled.
 - Global BPDU Filter for Edge ports is disabled.
 
@@ -3108,6 +3109,7 @@ STP mode: **rapid-pvst**
 ```eos
 !
 spanning-tree mode rapid-pvst
+no spanning-tree vlan-id 105,202,505-506
 no spanning-tree edge-port bpduguard default
 no spanning-tree edge-port bpdufilter default
 spanning-tree bpduguard rate-limit default
