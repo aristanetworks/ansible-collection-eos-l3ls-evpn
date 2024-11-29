@@ -70053,10 +70053,15 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                         "_custom_data": {"type": dict},
                     }
                     id: str
-                    """VLAN ID."""
+                    """
+                    VLAN ID or range of VLAN ID.
+                    When set as range, if no. of vni in range(if set) of `vni` does not
+                    match with no. of vlans in the range. The inputs of vlans in the range are ignored.
+                    """
                     vni: str | None
+                    """VNI or range of VNI."""
                     multicast_group: str | None
-                    """IP Multicast Group Address."""
+                    """IP Multicast Group Address. Set this only when `id` is not a range of VLAN id."""
                     flood_vteps: FloodVteps
                     """Subclass of AvdList with `str` items."""
                     _custom_data: dict[str, Any]
@@ -70079,9 +70084,12 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                             Subclass of AvdModel.
 
                             Args:
-                                id: VLAN ID.
-                                vni: vni
-                                multicast_group: IP Multicast Group Address.
+                                id:
+                                   VLAN ID or range of VLAN ID.
+                                   When set as range, if no. of vni in range(if set) of `vni` does not
+                                   match with no. of vlans in the range. The inputs of vlans in the range are ignored.
+                                vni: VNI or range of VNI.
+                                multicast_group: IP Multicast Group Address. Set this only when `id` is not a range of VLAN id.
                                 flood_vteps: Subclass of AvdList with `str` items.
                                 _custom_data: _custom_data
 
@@ -70436,10 +70444,15 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                         "_custom_data": {"type": dict},
                     }
                     id: str
-                    """VLAN ID."""
+                    """
+                    VLAN ID or range of VLAN ID.
+                    When set as range, if no. of vni in range(if set) of `vni` does not
+                    match with no. of vlans in the range. The inputs of vlans in the range are ignored.
+                    """
                     vni: str | None
+                    """VNI or range of VNI."""
                     multicast_group: str | None
-                    """IP Multicast Group Address."""
+                    """IP Multicast Group Address. Set this only when `id` is not a range of VLAN id."""
                     flood_vteps: FloodVteps
                     """Subclass of AvdList with `str` items."""
                     _custom_data: dict[str, Any]
@@ -70462,9 +70475,12 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                             Subclass of AvdModel.
 
                             Args:
-                                id: VLAN ID.
-                                vni: vni
-                                multicast_group: IP Multicast Group Address.
+                                id:
+                                   VLAN ID or range of VLAN ID.
+                                   When set as range, if no. of vni in range(if set) of `vni` does not
+                                   match with no. of vlans in the range. The inputs of vlans in the range are ignored.
+                                vni: VNI or range of VNI.
+                                multicast_group: IP Multicast Group Address. Set this only when `id` is not a range of VLAN id.
                                 flood_vteps: Subclass of AvdList with `str` items.
                                 _custom_data: _custom_data
 

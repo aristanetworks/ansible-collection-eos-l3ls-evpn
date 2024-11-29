@@ -87,9 +87,9 @@
 {%                             set vlan_namespace.valid = false %}
 {%                             continue %}
 {%                         endif %}
-{%                             set vlan_namespace.valid = true %}
-{%                             set vlan_idx = vlans.index(all_vlans_item) %}
-{%                             set vlan_namespace.vlan_vni = vlan_vnis[vlan_idx] %}
+{%                         set vlan_namespace.valid = true %}
+{%                         set vlan_idx = vlans.index(all_vlans_item) %}
+{%                         set vlan_namespace.vlan_vni = vlan_vnis[vlan_idx] %}
 {%                     endif %}
 {%                     if vxlan_vlans.multicast_group is arista.avd.defined %}
 {%                         set vlan_namespace.multicast_group = vxlan_vlans.multicast_group %}
@@ -99,7 +99,7 @@
 {%                     endif %}
 {%                 endif %}
 {%             endfor %}
-{%             if vlan_namespace.valid == true %}
+{%             if vlan_namespace.valid %}
 | {{ all_vlans_item }} | {{ vlan_namespace.vlan_vni }} | {{ vlan_namespace.flood_list }} | {{ vlan_namespace.multicast_group }} |
 {%             endif %}
 {%         endfor %}
