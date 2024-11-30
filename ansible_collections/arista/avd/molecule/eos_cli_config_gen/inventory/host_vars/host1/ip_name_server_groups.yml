@@ -10,6 +10,14 @@ ip_name_server_groups:
       - ip_address: 2.2.2.2
         vrf: vrf1
         priority: 1
+      - ip_address: 2.2.2.1
+        vrf: vrf1
+      - ip_address: 2.2.2.4
+        vrf: vrf1
+        priority: 4
+      - ip_address: 2.2.2.5
+        vrf: a_vrf
+        priority: 3
   - name: mynameserver0
     ip_domain_list: domain-list1
     dns_domain: arista.avd.com

@@ -10,7 +10,7 @@
     | [<samp>ip_name_server_groups</samp>](## "ip_name_server_groups") | List, items: Dictionary |  |  |  |  |
     | [<samp>&nbsp;&nbsp;-&nbsp;name</samp>](## "ip_name_server_groups.[].name") | String | Required, Unique |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;name_servers</samp>](## "ip_name_server_groups.[].name_servers") | List, items: Dictionary |  |  |  |  |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;ip_address</samp>](## "ip_name_server_groups.[].name_servers.[].ip_address") | String | Required |  |  | IPv4 or IPv6 address for DNS server. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;ip_address</samp>](## "ip_name_server_groups.[].name_servers.[].ip_address") | String | Required, Unique |  |  | IPv4 or IPv6 address for DNS server. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;vrf</samp>](## "ip_name_server_groups.[].name_servers.[].vrf") | String |  | `default` |  | VRF Name. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;priority</samp>](## "ip_name_server_groups.[].name_servers.[].priority") | Integer |  |  | Min: 0<br>Max: 4 | Priority value (lower is first). |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;dns_domain</samp>](## "ip_name_server_groups.[].dns_domain") | String |  |  |  |  |
@@ -24,7 +24,7 @@
         name_servers:
 
             # IPv4 or IPv6 address for DNS server.
-          - ip_address: <str; required>
+          - ip_address: <str; required; unique>
 
             # VRF Name.
             vrf: <str; default="default">

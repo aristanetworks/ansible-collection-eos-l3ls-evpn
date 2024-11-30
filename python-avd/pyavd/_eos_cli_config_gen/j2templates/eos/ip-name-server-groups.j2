@@ -6,17 +6,26 @@
 {% for name_server_group in ip_name_server_groups | arista.avd.natural_sort("name") %}
 !
 ip name-server group {{ name_server_group.name }}
-{%     for name_server in name_server_group.name_servers | arista.avd.natural_sort("ip_address") %}
-{%         if name_server.priority is not arista.avd.defined %}
-{%             set name_server_cli = "name-server vrf " ~ name_server.vrf | arista.avd.default("default") ~ " " ~ name_server.ip_address %}
-   {{ name_server_cli }}
-{%         endif %}
-{%     endfor %}
-{%     for name_server in name_server_group.name_servers | arista.avd.natural_sort("ip_address") %}
+{%     set all_server_groups = [] %}
+{%     for name_server in name_server_group.name_servers | arista.avd.default([]) %}
+{%         set server = {"priority": "0", "vrf": "default", "ip_address": ""} %}
 {%         if name_server.priority is arista.avd.defined %}
-{%             set name_server_cli = "name-server vrf " ~ name_server.vrf | arista.avd.default("default") ~ " " ~ name_server.ip_address ~ " priority " ~ name_server.priority %}
-   {{ name_server_cli }}
+{%             do server.update({"priority": name_server.priority}) %}
 {%         endif %}
+{%         do server.update({"ip_address": name_server.ip_address}) %}
+{%         if name_server.vrf is arista.avd.defined %}
+{%             do server.update({"vrf": name_server.vrf}) %}
+{%         endif %}
+{%         do all_server_groups.append(server) %}
+{%     endfor %}
+{%     for server in all_server_groups | arista.avd.natural_sort("ip_address") | arista.avd.natural_sort("vrf") | arista.avd.natural_sort("priority") %}
+{%         if server["priority"] == "0" %}
+{%             set priority = "" %}
+{%         else %}
+{%             set priority = " priority " ~ server["priority"] %}
+{%         endif %}
+{%         set name_server_cli = "name-server vrf " ~ server["vrf"] ~ " " ~ server["ip_address"] ~ priority %}
+   {{ name_server_cli }}
 {%     endfor %}
 {%     if name_server_group.dns_domain is arista.avd.defined %}
    dns domain {{ name_server_group.dns_domain }}
