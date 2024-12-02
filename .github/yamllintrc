@@ -47,6 +47,7 @@ rules:
       - /ansible_collections/arista/avd/changelogs/fragments_backup/
       - /ansible_collections/arista/avd/tests/inventory/**/expected_output/
       - /python-avd/pyavd/**/schema/
+      - /python-avd/tests/**/artifacts/
       - /.github/workflows/
   new-lines:
     type: unix

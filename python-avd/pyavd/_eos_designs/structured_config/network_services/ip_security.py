@@ -6,7 +6,7 @@ from __future__ import annotations
 from functools import cached_property
 from typing import TYPE_CHECKING
 
-from pyavd._utils import get, strip_null_from_data
+from pyavd._utils import strip_null_from_data
 
 from .utils import UtilsMixin
 
@@ -24,17 +24,17 @@ class IpSecurityMixin(UtilsMixin):
     @cached_property
     def ip_security(self: AvdStructuredConfigNetworkServices) -> dict | None:
         """ip_security set based on cv_pathfinder_internet_exit_policies."""
-        if not self._filtered_internet_exit_policies:
+        if not self._filtered_internet_exit_policies_and_connections:
             return None
 
         ip_security = {"ike_policies": [], "sa_policies": [], "profiles": []}
-        for internet_exit_policy in self._filtered_internet_exit_policies:
+        for internet_exit_policy, _connections in self._filtered_internet_exit_policies_and_connections:
             # Currently we only need ipsec for zscaler.
-            if internet_exit_policy["type"] != "zscaler":
+            if internet_exit_policy.type != "zscaler":
                 continue
 
-            policy_name = internet_exit_policy["name"]
-            encrypt_traffic = get(internet_exit_policy, "zscaler.encrypt_traffic", default=True)
+            policy_name = internet_exit_policy.name
+            encrypt_traffic = internet_exit_policy.zscaler.encrypt_traffic
             ike_policy_name = f"IE-{policy_name}-IKE-POLICY"
             sa_policy_name = f"IE-{policy_name}-SA-POLICY"
             profile_name = f"IE-{policy_name}-PROFILE"

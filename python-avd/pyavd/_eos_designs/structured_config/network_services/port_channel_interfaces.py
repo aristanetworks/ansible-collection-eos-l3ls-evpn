@@ -7,8 +7,7 @@ import re
 from functools import cached_property
 from typing import TYPE_CHECKING
 
-from pyavd._utils import append_if_not_duplicate, get, short_esi_to_route_target
-from pyavd.j2filters import natural_sort
+from pyavd._utils import append_if_not_duplicate, short_esi_to_route_target
 
 from .utils import UtilsMixin
 
@@ -38,24 +37,22 @@ class PortChannelInterfacesMixin(UtilsMixin):
         subif_parent_interfaces = []
 
         for tenant in self.shared_utils.filtered_tenants:
-            if "point_to_point_services" not in tenant:
+            if not tenant.point_to_point_services:
                 continue
 
-            for point_to_point_service in natural_sort(tenant["point_to_point_services"], "name"):
-                if subifs := point_to_point_service.get("subinterfaces", []):
-                    subifs = [subif for subif in subifs if subif.get("number") is not None]
-                for endpoint in point_to_point_service.get("endpoints", []):
-                    if self.shared_utils.hostname not in endpoint.get("nodes", []):
+            for point_to_point_service in tenant.point_to_point_services._natural_sorted():
+                for endpoint in point_to_point_service.endpoints:
+                    if self.shared_utils.hostname not in endpoint.nodes:
                         continue
 
-                    node_index = list(endpoint["nodes"]).index(self.shared_utils.hostname)
-                    interface_name = endpoint["interfaces"][node_index]
-                    if (port_channel_mode := get(endpoint, "port_channel.mode")) not in ["active", "on"]:
+                    node_index = endpoint.nodes.index(self.shared_utils.hostname)
+                    interface_name = endpoint.interfaces[node_index]
+                    if (port_channel_mode := endpoint.port_channel.mode) not in ["active", "on"]:
                         continue
 
                     channel_group_id = "".join(re.findall(r"\d", interface_name))
                     interface_name = f"Port-Channel{channel_group_id}"
-                    if subifs:
+                    if point_to_point_service.subinterfaces:
                         # This is a subinterface so we need to ensure that the parent is created
                         parent_interface = {
                             "name": interface_name,
@@ -63,11 +60,11 @@ class PortChannelInterfacesMixin(UtilsMixin):
                             "peer_type": "system",
                             "shutdown": False,
                         }
-                        if (short_esi := get(endpoint, "port_channel.short_esi")) is not None and len(short_esi.split(":")) == 3:
+                        if (short_esi := endpoint.port_channel.short_esi) is not None and len(short_esi.split(":")) == 3:
                             parent_interface.update(
                                 {
                                     "evpn_ethernet_segment": {
-                                        "identifier": f"{self.shared_utils.evpn_short_esi_prefix}{short_esi}",
+                                        "identifier": f"{self.inputs.evpn_short_esi_prefix}{short_esi}",
                                         "route_target": short_esi_to_route_target(short_esi),
                                     },
                                 },
@@ -77,8 +74,8 @@ class PortChannelInterfacesMixin(UtilsMixin):
 
                         subif_parent_interfaces.append(parent_interface)
 
-                        for subif in subifs:
-                            subif_name = f"{interface_name}.{subif['number']}"
+                        for subif in point_to_point_service.subinterfaces:
+                            subif_name = f"{interface_name}.{subif.number}"
 
                             port_channel_interface = {
                                 "name": subif_name,
@@ -86,7 +83,7 @@ class PortChannelInterfacesMixin(UtilsMixin):
                                 "encapsulation_vlan": {
                                     "client": {
                                         "encapsulation": "dot1q",
-                                        "vlan": subif["number"],
+                                        "vlan": subif.number,
                                     },
                                     "network": {
                                         "encapsulation": "client",
@@ -110,17 +107,17 @@ class PortChannelInterfacesMixin(UtilsMixin):
                             "peer_type": "point_to_point_service",
                             "shutdown": False,
                         }
-                        if point_to_point_service.get("lldp_disable") is True:
+                        if point_to_point_service.lldp_disable:
                             interface["lldp"] = {
                                 "transmit": False,
                                 "receive": False,
                             }
 
-                        if (short_esi := get(endpoint, "port_channel.short_esi")) is not None and len(short_esi.split(":")) == 3:
+                        if (short_esi := endpoint.port_channel.short_esi) is not None and len(short_esi.split(":")) == 3:
                             interface.update(
                                 {
                                     "evpn_ethernet_segment": {
-                                        "identifier": f"{self.shared_utils.evpn_short_esi_prefix}{short_esi}",
+                                        "identifier": f"{self.inputs.evpn_short_esi_prefix}{short_esi}",
                                         "route_target": short_esi_to_route_target(short_esi),
                                     },
                                 },

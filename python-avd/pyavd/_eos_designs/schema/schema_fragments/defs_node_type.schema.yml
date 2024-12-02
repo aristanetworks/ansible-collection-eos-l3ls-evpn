@@ -252,6 +252,7 @@ $defs:
             documentation_options:
               table: node-type-uplink-configuration
             type: int
+            default: 1
             convert_types:
               - str
             description: |

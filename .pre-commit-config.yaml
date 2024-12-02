@@ -15,7 +15,7 @@ repos:
         exclude: ansible_collections/arista/avd/molecule
       - id: check-added-large-files
         name: Prevents giant files from being committed.
-        exclude: (ansible_collections/arista/avd/molecule|pickle$)
+        exclude: (ansible_collections/arista/avd/molecule|pickle$|python-avd/pyavd/_(eos_cli_config_gen|eos_designs)/schema/__init__.py)
       - id: check-merge-conflict
         name: Checks for files that contain merge conflict strings.
         exclude: ansible_collections/arista/avd/molecule
@@ -75,7 +75,7 @@ repos:
 
   - repo: https://github.com/astral-sh/ruff-pre-commit
     # Ruff version.
-    rev: v0.7.4
+    rev: v0.8.0
     hooks:
       # Run the linter.
       - id: ruff
@@ -202,7 +202,7 @@ repos:
         language: python
         files: python-avd/pyavd/[a-z_]+/schema
         pass_filenames: false
-        additional_dependencies: ['deepmerge>=1.1.0', 'PyYAML>=6.0.0', 'pydantic>=2.3.0', 'jsonschema-rs>=0.24', 'referencing>=0.35.0']
+        additional_dependencies: ['deepmerge>=1.1.0', 'PyYAML>=6.0.0', 'pydantic>=2.3.0', 'jsonschema-rs>=0.24', 'referencing>=0.35.0', 'ruff==0.7.2']
 
       - id: templates
         name: Precompile Jinja2 templates
@@ -213,7 +213,7 @@ repos:
         additional_dependencies: ['Jinja2>=3.0.0', 'cryptography>=38.0.4', 'deepmerge>=1.1.0']
 
   - repo: https://github.com/igorshubovych/markdownlint-cli
-    rev: v0.42.0
+    rev: v0.43.0
     hooks:
       - id: markdownlint
         name: Check for Linting errors on Markdown files with settings defined in `.github/.markdownlint.yaml`.

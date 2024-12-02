@@ -6,9 +6,12 @@ from __future__ import annotations
 from functools import cached_property
 from typing import TYPE_CHECKING
 
-from pyavd._utils import get, get_item
+from pyavd._errors import AristaAvdInvalidInputsError
+from pyavd._utils import default
 
 if TYPE_CHECKING:
+    from pyavd._eos_designs.schema import EosDesigns
+
     from . import SharedUtils
 
 
@@ -22,25 +25,18 @@ class PtpMixin:
 
     @cached_property
     def ptp_enabled(self: SharedUtils) -> bool:
-        default_ptp_enabled = get(self.hostvars, "ptp_settings.enabled")
-        return get(self.switch_data_combined, "ptp.enabled", default=default_ptp_enabled) is True
-
-    @cached_property
-    def ptp_mlag(self: SharedUtils) -> bool:
-        return get(self.switch_data_combined, "ptp.mlag") is True
+        default_ptp_enabled = self.inputs.ptp_settings.enabled
+        return bool(default(self.node_config.ptp.enabled, default_ptp_enabled))
 
     @cached_property
     def ptp_profile_name(self: SharedUtils) -> str:
-        default_ptp_profile = get(self.hostvars, "ptp_settings.profile", default="aes67-r16-2016")
-        return get(self.switch_data_combined, "ptp.profile", default=default_ptp_profile)
+        default_ptp_profile = self.inputs.ptp_settings.profile
+        return self.node_config.ptp.profile or default_ptp_profile
 
     @cached_property
-    def ptp_profile(self: SharedUtils) -> dict:
-        msg = f"PTP Profile '{self.ptp_profile_name}' referenced under `ptp.profile` node variables does not exist in `ptp_profiles`."
-        return get_item(self.ptp_profiles, "profile", self.ptp_profile_name, required=True, custom_error_msg=msg)
+    def ptp_profile(self: SharedUtils) -> EosDesigns.PtpProfilesItem:
+        if self.ptp_profile_name not in self.inputs.ptp_profiles:
+            msg = f"PTP Profile '{self.ptp_profile_name}' referenced under `ptp.profile` node variables does not exist in `ptp_profiles`."
+            raise AristaAvdInvalidInputsError(msg)
 
-    @cached_property
-    def ptp_profiles(self: SharedUtils) -> list:
-        """Return ptp_profiles."""
-        default_ptp_profiles = self.schema.get_default_value(["ptp_profiles"])
-        return get(self.hostvars, "ptp_profiles", default=default_ptp_profiles)
+        return self.inputs.ptp_profiles[self.ptp_profile_name]
