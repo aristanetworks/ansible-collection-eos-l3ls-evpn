@@ -514,6 +514,18 @@ port_channel_interfaces:
         tunnel_flood_filter_time: 100
       route_target: "00:00:01:02:03:05"
 
+  - name: Port-Channel18
+    switchport:
+      enabled: false
+    ospf_network_point_to_point: true
+    ospf_area: 0.0.0.12
+    ospf_cost: 99
+    ospf_authentication: message-digest
+    ospf_message_digest_keys:
+      - id: 55
+        hash_algorithm: md5
+        key: dRx9sULvl+hzkCMYJLEQCw==
+
   - name: Port-Channel17
     description: PBR Description
     switchport:

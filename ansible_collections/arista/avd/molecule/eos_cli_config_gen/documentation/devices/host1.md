@@ -5104,6 +5104,14 @@ interface Port-Channel17
    ip address 192.0.2.3/31
    service-policy type pbr input MyPolicy
 !
+interface Port-Channel18
+   no switchport
+   ip ospf cost 99
+   ip ospf network point-to-point
+   ip ospf authentication message-digest
+   ip ospf area 0.0.0.12
+   ip ospf message-digest-key 55 md5 7 <removed>
+!
 interface Port-Channel20
    description Po_in_mode_access_accepting_tagged_LACP_frames
    switchport access vlan 200
@@ -5490,6 +5498,7 @@ interface Port-Channel132
 | --------- | ----------- | --- | ---------- |
 | Loopback0 | EVPN_Overlay_Peering | default | 192.168.255.3/32 |
 | Loopback1 | VTEP_VXLAN_Tunnel_Source | default | 192.168.254.3/32 |
+| Loopback2 | - | default | - |
 | Loopback99 | TENANT_A_PROJECT02_VTEP_DIAGNOSTICS | TENANT_A_PROJECT02 | 10.1.255.3/32 <br> 192.168.1.1/32 secondary <br> 10.0.0.254/32 secondary |
 | Loopback100 | TENANT_A_PROJECT02_VTEP_DIAGNOSTICS | TENANT_A_PROJECT02 | 10.1.255.3/32 |
 
@@ -5499,6 +5508,7 @@ interface Port-Channel132
 | --------- | ----------- | --- | ------------ |
 | Loopback0 | EVPN_Overlay_Peering | default | - |
 | Loopback1 | VTEP_VXLAN_Tunnel_Source | default | - |
+| Loopback2 | - | default | - |
 | Loopback99 | TENANT_A_PROJECT02_VTEP_DIAGNOSTICS | TENANT_A_PROJECT02 | 2002::CAFE/64 |
 | Loopback100 | TENANT_A_PROJECT02_VTEP_DIAGNOSTICS | TENANT_A_PROJECT02 | - |
 
@@ -5523,6 +5533,9 @@ interface Loopback0
 interface Loopback1
    description VTEP_VXLAN_Tunnel_Source
    ip address 192.168.254.3/32
+!
+interface Loopback2
+   ip ospf area 0.0.0.2
 !
 interface Loopback99
    description TENANT_A_PROJECT02_VTEP_DIAGNOSTICS
@@ -6845,7 +6858,9 @@ router traffic-engineering
 | Interface | Area | Cost | Point To Point |
 | -------- | -------- | -------- | -------- |
 | Ethernet5 | 100 | 99 | True |
+| Port-Channel18 | 0.0.0.12 | 99 | True |
 | Vlan26 | 0.0.0.24 | 99 | True |
+| Loopback2 | 0.0.0.2 | - | - |
 
 #### Router OSPF Device Configuration
 
