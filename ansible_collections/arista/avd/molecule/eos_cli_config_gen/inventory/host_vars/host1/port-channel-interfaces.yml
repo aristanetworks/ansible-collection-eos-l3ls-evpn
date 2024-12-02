@@ -714,6 +714,7 @@ port_channel_interfaces:
     switchport:
       enabled: false
     ip_address: 172.31.128.9/31
+    # This won't be rendered because IP address is not DHCP
     dhcp_client_accept_default_route: true
     mpls:
       ip: true
