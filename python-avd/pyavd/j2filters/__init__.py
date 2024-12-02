@@ -24,7 +24,7 @@ __all__ = [
     "list_compress",
     "natural_sort",
     "range_expand",
+    "secure_hash",
     "snmp_hash",
     "status_render",
-    "secure_hash",
 ]
