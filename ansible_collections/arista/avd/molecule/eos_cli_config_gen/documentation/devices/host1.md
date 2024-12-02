@@ -3630,6 +3630,7 @@ interface Dps1
 | Ethernet80 | LAG Member | 17 | *192.0.2.3/31 | **default | **- | **- | **- | **- |
 | Ethernet81/2 | LAG Member LACP fallback LLDP ZTP VLAN | 112 | *dhcp | **default | **- | **- | **- | **- |
 | Ethernet81/3 | Traffic Engineering Interface | - | 100.64.127.0/31 | default | - | False | - | - |
+| Ethernet81/4 | Traffic Engineering Interface | - | 100.64.127.0/31 | default | - | False | - | - |
 
 *Inherited from Port-Channel Interface
 
@@ -3788,9 +3789,10 @@ interface Dps1
 
 #### Traffic Engineering
 
-| Interface | Administrative Groups |
-| --------- | --------------------- |
-| Ethernet81/3 | 3,testgrp,15-29 |
+| Interface | Enabled | Administrative Groups |
+| --------- | ------- | --------------------- |
+| Ethernet81/3 | True | 3,testgrp,15-29 |
+| Ethernet81/4 | False | 4,testgrp,7-100 |
 
 #### Ethernet Interfaces Device Configuration
 
@@ -4769,6 +4771,13 @@ interface Ethernet81/3
    ip address 100.64.127.0/31
    traffic-engineering
    traffic-engineering administrative-group 3,testgrp,15-29
+!
+interface Ethernet81/4
+   description Traffic Engineering Interface
+   no shutdown
+   no switchport
+   ip address 100.64.127.0/31
+   traffic-engineering administrative-group 4,testgrp,7-100
 !
 interface Ethernet81/10
    description isis_port_channel_member

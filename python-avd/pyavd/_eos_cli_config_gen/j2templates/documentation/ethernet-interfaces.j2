@@ -797,7 +797,7 @@
 {%     endif %}
 {%     set te_interfaces = [] %}
 {%     for ethernet_interface in ethernet_interfaces | arista.avd.natural_sort('name') %}
-{%         if ethernet_interface.traffic_engineering.enabled is arista.avd.defined(true) or traffic_engineering.administrative_groups is arista.avd.defined %}
+{%         if ethernet_interface.traffic_engineering.enabled is arista.avd.defined(true) or ethernet_interface.traffic_engineering.administrative_groups is arista.avd.defined %}
 {%             do te_interfaces.append(ethernet_interface) %}
 {%         endif %}
 {%     endfor %}
@@ -805,11 +805,12 @@
 
 #### Traffic Engineering
 
-| Interface | Administrative Groups |
-| --------- | --------------------- |
+| Interface | Enabled | Administrative Groups |
+| --------- | ------- | --------------------- |
 {%         for te_interface in te_interfaces %}
 {%             set admin_groups = te_interface.traffic_engineering.administrative_groups | arista.avd.default (["-"]) | join(",") %}
-| {{ te_interface.name }} | {{ admin_groups }} |
+{%             set te_enabled = te_interface.traffic_engineering.enabled | arista.avd.default (["false"]) %}
+| {{ te_interface.name }} | {{ te_enabled }} | {{ admin_groups }} |
 {%         endfor %}
 {%     endif %}
 
