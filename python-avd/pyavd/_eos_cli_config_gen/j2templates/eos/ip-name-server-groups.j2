@@ -19,12 +19,7 @@ ip name-server group {{ name_server_group.name }}
 {%         do all_server_groups.append(server) %}
 {%     endfor %}
 {%     for server in all_server_groups | arista.avd.natural_sort("ip_address") | arista.avd.natural_sort("vrf") | arista.avd.natural_sort("priority") %}
-{%         if server["priority"] == "0" %}
-{%             set priority = "" %}
-{%         else %}
-{%             set priority = " priority " ~ server["priority"] %}
-{%         endif %}
-{%         set name_server_cli = "name-server vrf " ~ server["vrf"] ~ " " ~ server["ip_address"] ~ priority %}
+{%         set name_server_cli = "name-server vrf " ~ server["vrf"] ~ " " ~ server["ip_address"] ~ " priority " ~ server["priority"] %}
    {{ name_server_cli }}
 {%     endfor %}
 {%     if name_server_group.dns_domain is arista.avd.defined %}
