@@ -1,5 +1,5 @@
 ---
-# Test on-prem tokens
+# Test on-prem token
 daemon_terminattr:
   cvaddrs:
     - 192.0.2.1:9910
