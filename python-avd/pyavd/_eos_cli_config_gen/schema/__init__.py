@@ -30486,6 +30486,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             "vmtracer": {"type": bool},
             "ptp": {"type": Ptp},
             "ip_address": {"type": str},
+            "dhcp_client_accept_default_route": {"type": bool},
             "ip_verify_unicast_source_reachable_via": {"type": str},
             "ip_nat": {"type": IpNat},
             "ipv6_enable": {"type": bool},
@@ -30641,7 +30642,9 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         ptp: Ptp
         """Subclass of AvdModel."""
         ip_address: str | None
-        """IPv4 address/mask."""
+        """IPv4 address/mask or "dhcp"."""
+        dhcp_client_accept_default_route: bool | None
+        """Install default-route obtained via DHCP."""
         ip_verify_unicast_source_reachable_via: Literal["any", "rx"] | None
         ip_nat: IpNat
         """Subclass of AvdModel."""
@@ -30767,6 +30770,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 vmtracer: bool | None | UndefinedType = Undefined,
                 ptp: Ptp | UndefinedType = Undefined,
                 ip_address: str | None | UndefinedType = Undefined,
+                dhcp_client_accept_default_route: bool | None | UndefinedType = Undefined,
                 ip_verify_unicast_source_reachable_via: Literal["any", "rx"] | None | UndefinedType = Undefined,
                 ip_nat: IpNat | UndefinedType = Undefined,
                 ipv6_enable: bool | None | UndefinedType = Undefined,
@@ -30886,7 +30890,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                     spanning_tree_portfast: spanning_tree_portfast
                     vmtracer: vmtracer
                     ptp: Subclass of AvdModel.
-                    ip_address: IPv4 address/mask.
+                    ip_address: IPv4 address/mask or "dhcp".
+                    dhcp_client_accept_default_route: Install default-route obtained via DHCP.
                     ip_verify_unicast_source_reachable_via: ip_verify_unicast_source_reachable_via
                     ip_nat: Subclass of AvdModel.
                     ipv6_enable: ipv6_enable

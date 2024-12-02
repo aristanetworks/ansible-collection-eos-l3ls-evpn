@@ -3430,6 +3430,7 @@ interface Dps1
 | Ethernet65 | Multiple VRIDs | - | 192.0.2.2/25 | default | - | False | - | - |
 | Ethernet66 | Multiple VRIDs and tracking | - | 192.0.2.2/25 | default | - | False | - | - |
 | Ethernet80 | LAG Member | 17 | *192.0.2.3/31 | **default | **- | **- | **- | **- |
+| Ethernet81/2 | LAG Member LACP fallback LLDP ZTP VLAN | 112 | *dhcp | **default | **- | **- | **- | **- |
 
 *Inherited from Port-Channel Interface
 
@@ -4692,6 +4693,8 @@ interface Ethernet81/10
 | Port-Channel99 | MCAST | - | 192.0.2.10/31 | default | - | - | - | - |
 | Port-Channel100.101 | IFL for TENANT01 | - | 10.1.1.3/31 | default | 1500 | - | - | - |
 | Port-Channel100.102 | IFL for TENANT02 | - | 10.1.2.3/31 | C2 | 1500 | - | - | - |
+| Port-Channel111.400 | TENANT_A pseudowire 3 interface | - | dhcp | default | - | - | - | - |
+| Port-Channel112 | LACP fallback individual | - | dhcp | default | - | - | - | - |
 | Port-Channel113 | interface_with_mpls_enabled | - | 172.31.128.9/31 | default | - | - | - | - |
 | Port-Channel114 | interface_with_mpls_disabled | - | 172.31.128.10/31 | default | - | - | - | - |
 
@@ -5130,6 +5133,7 @@ interface Port-Channel111.400
    !
    encapsulation vlan
       client dot1q outer 400 inner 20 network dot1q outer 401 inner 21
+   ip address dhcp
 !
 interface Port-Channel111.1000
    description L2 Subinterface
@@ -5148,6 +5152,8 @@ interface Port-Channel112
    switchport trunk allowed vlan 112
    switchport mode trunk
    switchport
+   ip address dhcp
+   dhcp client accept default-route
    port-channel lacp fallback individual
    port-channel lacp fallback timeout 5
 !
