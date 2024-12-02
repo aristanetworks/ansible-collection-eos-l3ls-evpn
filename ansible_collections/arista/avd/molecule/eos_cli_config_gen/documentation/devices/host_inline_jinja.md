@@ -1,4 +1,4 @@
-# host4_inline_jinja
+# host_inline_jinja
 
 ## Table of Contents
 
