@@ -18,7 +18,7 @@ ip_name_server_groups:
       - ip_address: 2.2.2.6
         vrf: b_vrf
         priority: 3
-      - ip_address: 2.2.2.5
+      - ip_address: 2.2.2.7
         vrf: a_vrf
         priority: 3
 
