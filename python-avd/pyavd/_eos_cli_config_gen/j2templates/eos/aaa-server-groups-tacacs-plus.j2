@@ -7,7 +7,7 @@
 {% for aaa_server_group in aaa_server_groups | arista.avd.natural_sort('name') %}
 {%     if aaa_server_group.type is arista.avd.defined('tacacs+') %}
 !
-aaa group server {{ aaa_server_group.type }} {{ aaa_server_group.name }}
+aaa group server tacacs+ {{ aaa_server_group.name }}
 {%         if aaa_server_group.servers is arista.avd.defined %}
 {%             for server in aaa_server_group.servers %}
 {%                 if server.server is arista.avd.defined %}
