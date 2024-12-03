@@ -1314,6 +1314,9 @@ interface {{ ethernet_interface.name }}
    {{ auth_failure_fallback_mba }}
 {%         endif %}
 {%     endif %}
+{%     if ethernet_interface.traffic_engineering.administrative_groups is arista.avd.defined %}
+   traffic-engineering administrative-group {{ ethernet_interface.traffic_engineering.administrative_groups | join(",") }}
+{%     endif %}
 {%     if ethernet_interface.eos_cli is arista.avd.defined %}
    {{ ethernet_interface.eos_cli | indent(3, false) }}
 {%     endif %}

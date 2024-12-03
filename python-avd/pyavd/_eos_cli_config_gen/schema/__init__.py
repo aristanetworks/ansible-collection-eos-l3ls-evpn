@@ -12186,6 +12186,41 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                     """
 
+        class TrafficEngineering(AvdModel):
+            """Subclass of AvdModel."""
+
+            class AdministrativeGroups(AvdList[str]):
+                """Subclass of AvdList with `str` items."""
+
+            AdministrativeGroups._item_type = str
+
+            _fields: ClassVar[dict] = {"administrative_groups": {"type": AdministrativeGroups}, "_custom_data": {"type": dict}}
+            administrative_groups: AdministrativeGroups
+            """
+            List of administrative groups, valid values are names, ranges 0-127, or single integers 0-127.
+            Subclass of AvdList with `str` items.
+            """
+            _custom_data: dict[str, Any]
+
+            if TYPE_CHECKING:
+
+                def __init__(
+                    self, *, administrative_groups: AdministrativeGroups | UndefinedType = Undefined, _custom_data: dict[str, Any] | UndefinedType = Undefined
+                ) -> None:
+                    """
+                    TrafficEngineering.
+
+
+                    Subclass of AvdModel.
+
+                    Args:
+                        administrative_groups:
+                           List of administrative groups, valid values are names, ranges 0-127, or single integers 0-127.
+                           Subclass of AvdList with `str` items.
+                        _custom_data: _custom_data
+
+                    """
+
         _fields: ClassVar[dict] = {
             "name": {"type": str},
             "description": {"type": str},
@@ -12300,6 +12335,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             "validate_state": {"type": bool},
             "validate_lldp": {"type": bool},
             "switchport": {"type": Switchport},
+            "traffic_engineering": {"type": TrafficEngineering},
             "eos_cli": {"type": str},
             "_custom_data": {"type": dict},
         }
@@ -12565,6 +12601,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         Subclass of
         AvdModel.
         """
+        traffic_engineering: TrafficEngineering
+        """Subclass of AvdModel."""
         eos_cli: str | None
         """Multiline EOS CLI rendered directly on the ethernet interface in the final EOS configuration."""
         _custom_data: dict[str, Any]
@@ -12687,6 +12725,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 validate_state: bool | None | UndefinedType = Undefined,
                 validate_lldp: bool | None | UndefinedType = Undefined,
                 switchport: Switchport | UndefinedType = Undefined,
+                traffic_engineering: TrafficEngineering | UndefinedType = Undefined,
                 eos_cli: str | None | UndefinedType = Undefined,
                 _custom_data: dict[str, Any] | UndefinedType = Undefined,
             ) -> None:
@@ -12861,6 +12900,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                        Subclass of
                        AvdModel.
+                    traffic_engineering: Subclass of AvdModel.
                     eos_cli: Multiline EOS CLI rendered directly on the ethernet interface in the final EOS configuration.
                     _custom_data: _custom_data
 

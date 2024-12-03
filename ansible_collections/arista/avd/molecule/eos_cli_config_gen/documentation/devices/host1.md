@@ -3629,6 +3629,7 @@ interface Dps1
 | Ethernet66 | Multiple VRIDs and tracking | - | 192.0.2.2/25 | default | - | False | - | - |
 | Ethernet80 | LAG Member | 17 | *192.0.2.3/31 | **default | **- | **- | **- | **- |
 | Ethernet81/2 | LAG Member LACP fallback LLDP ZTP VLAN | 112 | *dhcp | **default | **- | **- | **- | **- |
+| Ethernet81/3 | Traffic Engineering Interface | - | 100.64.127.0/31 | default | - | False | - | - |
 
 *Inherited from Port-Channel Interface
 
@@ -3784,6 +3785,12 @@ interface Dps1
 | Ethernet3 | 10 |
 | Ethernet5 | 127 |
 | Ethernet6 | disabled |
+
+#### Traffic Engineering
+
+| Interface | Administrative Groups |
+| --------- | --------------------- |
+| Ethernet81/3 | 3,testgrp,15-29 |
 
 #### Ethernet Interfaces Device Configuration
 
@@ -4754,6 +4761,13 @@ interface Ethernet81/2
    channel-group 112 mode active
    lldp tlv transmit ztp vlan 112
    spanning-tree portfast
+!
+interface Ethernet81/3
+   description Traffic Engineering Interface
+   no shutdown
+   no switchport
+   ip address 100.64.127.0/31
+   traffic-engineering administrative-group 3,testgrp,15-29
 !
 interface Ethernet81/10
    description isis_port_channel_member
