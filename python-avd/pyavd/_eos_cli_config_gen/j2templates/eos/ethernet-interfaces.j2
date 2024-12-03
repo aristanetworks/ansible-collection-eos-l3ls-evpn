@@ -1102,6 +1102,7 @@ interface {{ ethernet_interface.name }}
 {%         if ethernet_interface.switchport.tool.dzgre_preserve is arista.avd.defined(true) %}
    switchport tool dzgre preserve
 {%         endif %}
+{%     endif %}
 {%     if ethernet_interface.traffic_engineering.enabled is arista.avd.defined(true) %}
    traffic-engineering
 {%     endif %}

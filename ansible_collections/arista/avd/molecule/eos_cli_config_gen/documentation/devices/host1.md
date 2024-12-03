@@ -5011,9 +5011,9 @@ interface Ethernet84
 
 #### Traffic Engineering
 
-| Interface | Administrative Groups |
-| --------- | --------------------- |
-| Port-Channel136 | 7 |
+| Interface | Enabled | Administrative Groups |
+| --------- | ------- | --------------------- |
+| Port-Channel136 | True | 7 |
 
 #### Port-Channel Interfaces Device Configuration
 

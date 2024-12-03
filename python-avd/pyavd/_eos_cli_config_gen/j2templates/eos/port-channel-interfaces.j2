@@ -922,6 +922,7 @@ interface {{ port_channel_interface.name }}
 {%         if port_channel_interface.switchport.tool.dot1q_remove_outer_vlan_tag is arista.avd.defined %}
    switchport tool dot1q remove outer {{ port_channel_interface.switchport.tool.dot1q_remove_outer_vlan_tag }}
 {%         endif %}
+{%     endif %}
 {%     if port_channel_interface.traffic_engineering.enabled is arista.avd.defined(true) %}
    traffic-engineering
 {%     endif %}
