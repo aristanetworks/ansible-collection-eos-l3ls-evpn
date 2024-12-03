@@ -9,7 +9,7 @@ from re import fullmatch as re_fullmatch
 from typing import TYPE_CHECKING
 
 from pyavd._errors import AristaAvdError, AristaAvdInvalidInputsError
-from pyavd._utils import default, get
+from pyavd._utils import default, get, get_item
 from pyavd.j2filters import natural_sort
 
 from .utils_wan import UtilsWanMixin
@@ -402,3 +402,57 @@ class UtilsMixin(UtilsWanMixin, UtilsZscalerMixin):
             return f"{admin_subfield}:{rt_override}"
 
         return f"{admin_subfield}:{bundle_number}"
+
+    def get_vrf_router_id(
+        self: AvdStructuredConfigNetworkServices,
+        vrf: EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem.VrfsItem,
+        router_id: str,
+        tenant_name: str,
+    ) -> str | None:
+        """
+        Determine the router ID for a given VRF based on its configuration.
+
+        Args:
+            vrf (VrfsItem): The VRF object containing OSPF/BGP and vtep_diagnostic details.
+            router_id (str): The router ID type specified for the VRF (e.g., "vtep_diagnostic", "main_router_id", "none", or "IPv4 address").
+            tenant_name (str): The name of the tenant to which the VRF belongs.
+
+        Returns:
+            str | None: The resolved router ID as a string, or None if the router ID is not applicable.
+
+        Raises:
+            AristaAvdInvalidInputsError: If required configuration for "vtep_diagnostic" router ID is missing.
+        """
+        # Handle "vtep_diagnostic" router ID case
+        if router_id == "vtep_diagnostic":
+            vrf_diagnostic_loopback = vrf.vtep_diagnostic.loopback
+            loopback_ip_pools = vrf.vtep_diagnostic.loopback_ip_pools
+
+            # Validate required configuration
+            if vrf_diagnostic_loopback is None or loopback_ip_pools is None:
+                msg = (
+                    f"Invalid configuration on VRF '{vrf.name}' in Tenant '{tenant_name}'. "
+                    "Both 'vtep_diagnostic.loopback' and 'vtep_diagnostic.loopback_ip_pools' must be defined "
+                    "when 'router_id' is set to 'vtep_diagnostic' on the VRF."
+                )
+                raise AristaAvdInvalidInputsError(msg)
+
+            # Resolve router ID from loopback interface
+            interface_name = f"Loopback{vrf_diagnostic_loopback}"
+            interface_data = get_item(self.loopback_interfaces, "name", interface_name)
+            return interface_data["ip_address"].split("/")[0]
+
+        # Handle "main_router_id" with general router ID enabled
+        if router_id == "main_router_id" and self.inputs.use_router_general_for_router_id:
+            return None
+
+        # Handle "main_router_id" with general router ID disabled
+        if router_id == "main_router_id" and not self.inputs.use_router_general_for_router_id:
+            return self.shared_utils.router_id
+
+        # Handle "none" router ID or custom value
+        if router_id == "none":
+            return None
+
+        # Default to the specified router ID
+        return router_id
