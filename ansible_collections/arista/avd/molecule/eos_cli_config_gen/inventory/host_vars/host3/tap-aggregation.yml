@@ -1,0 +1,9 @@
+---
+tap_aggregation:
+  mode:
+    exclusive:
+      enabled: true
+  mac:
+    timestamp:
+      replace_source_mac: true
+    fcs_error: pass-through

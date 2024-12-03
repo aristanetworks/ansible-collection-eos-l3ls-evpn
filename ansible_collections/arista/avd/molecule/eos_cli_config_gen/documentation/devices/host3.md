@@ -43,8 +43,28 @@ interface Management1
 ```eos
 !
 daemon TerminAttr
-   exec /usr/bin/TerminAttr -cvaddr=apiserver.arista.io:443 -cvauth=token-secure,/tmp/cv-onboarding-token -cvvrf=mgt -smashexcludes=ale,flexCounter,hardware,kni,pulse,strata -ingestexclude=/Sysdb/cell/1/agent,/Sysdb/cell/2/agent -taillogs
+   exec /usr/bin/TerminAttr -cvaddr=apiserver.arista.io:443 -cvauth=token-secure,/tmp/cv-onboarding-token -cvvrf=mgt -smashexcludes=ale,flexCounter,hardware,kni,pulse,strata -ingestexclude=/Sysdb/cell/1/agent,/Sysdb/cell/2/agent -taillogs -ipfix=false -sflow=false
    no shutdown
+```
+
+### Tap Aggregation
+
+#### Tap Aggregation Summary
+
+| Settings | Values |
+| -------- | ------ |
+| Mode Exclusive | True |
+| Mac Timestamp | Replace Source-Mac |
+| Mac FCS Error | pass-through |
+
+#### Tap Aggregation Device Configuration
+
+```eos
+!
+tap aggregation
+   mode exclusive
+   mac timestamp replace source-mac
+   mac fcs-error pass-through
 ```
 
 ## Spanning Tree

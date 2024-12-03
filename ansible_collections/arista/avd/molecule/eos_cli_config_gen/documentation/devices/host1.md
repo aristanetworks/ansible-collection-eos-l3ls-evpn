@@ -1821,7 +1821,7 @@ boot secret 5 <removed>
 ```eos
 !
 daemon TerminAttr
-   exec /usr/bin/TerminAttr -cvaddr=10.10.10.8:9910,10.10.10.9:9910,10.10.10.10:9910 -cvauth=key,<removed> -cvvrf=mgt -cvgnmi -disableaaa -cvproxy=http://arista:arista@10.10.10.1:3128 -grpcaddr=mgmt/0.0.0.0:6042 -grpcreadonly -smashexcludes=ale,flexCounter,hardware,kni,pulse,strata -ingestexclude=/Sysdb/cell/1/agent,/Sysdb/cell/2/agent -taillogs=/var/log/messages,/var/log/agents/ -cvconfig -cvsourceintf=Vlan100
+   exec /usr/bin/TerminAttr -cvaddr=10.10.10.8:9910,10.10.10.9:9910,10.10.10.10:9910 -cvauth=key,<removed> -cvvrf=mgt -cvsourceip=10.10.10.10 -cvgnmi -cvobscurekeyfile -disableaaa -cvproxy=http://arista:arista@10.10.10.1:3128 -grpcaddr=mgmt/0.0.0.0:6042 -grpcreadonly -smashexcludes=ale,flexCounter,hardware,kni,pulse,strata -ingestexclude=/Sysdb/cell/1/agent,/Sysdb/cell/2/agent -taillogs=/var/log/messages,/var/log/agents/ -ecodhcpaddr=127.0.0.1:67 -ipfix -ipfixaddr=10.10.10.12 -sflow -sflowaddr=10.10.10.11 -cvconfig -cvsourceintf=Vlan100
    no shutdown
 ```
 
@@ -2687,12 +2687,21 @@ track MyTrackSetProperty interface Ethernet2/1 line-protocol
 | --------- | --------- | ------------- | ------------------ | -------- | ------------ | ----------------- |
 | rule1 | ipv4 | 3.4.5.0/24 | 10.3.3.0/24 | udp | bgp | https |
 
+##### samplepo4
+
+###### Match rules
+
+| Rule Name | Rule Type | Source Prefix | Destination Prefix | Protocol | Source Ports | Destination Ports |
+| --------- | --------- | ------------- | ------------------ | -------- | ------------ | ----------------- |
+| rule1 | ipv4 | 3.4.5.0/24 | 10.3.3.0/24 | - | - | - |
+
 #### Telemetry Postcard Policy Profiles
 
 | Profile Name | Ingress Sample Policy |
 | ------------ | --------------------- |
 | profile1 | samplepo1 |
 | profile2 | samplepo2 |
+| profile3 | - |
 
 #### Monitor Telemetry Postcard Policy Configuration
 
@@ -2724,11 +2733,18 @@ monitor telemetry postcard policy
          destination prefix 10.3.3.0/24
          protocol udp source port bgp destination port https
    !
+   sample policy samplepo4
+      match rule1 ipv4
+         source prefix 3.4.5.0/24
+         destination prefix 10.3.3.0/24
+   !
    profile profile1
       ingress sample policy samplepo1
    !
    profile profile2
       ingress sample policy samplepo2
+   !
+   profile profile3
 ```
 
 ### Monitor Server Radius Summary

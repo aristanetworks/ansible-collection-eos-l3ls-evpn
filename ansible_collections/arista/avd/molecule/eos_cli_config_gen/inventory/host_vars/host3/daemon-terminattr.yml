@@ -10,3 +10,5 @@ daemon_terminattr:
   cvvrf: mgt
   smashexcludes: ale,flexCounter,hardware,kni,pulse,strata
   ingestexclude: /Sysdb/cell/1/agent,/Sysdb/cell/2/agent
+  ipfix: false
+  sflow: false

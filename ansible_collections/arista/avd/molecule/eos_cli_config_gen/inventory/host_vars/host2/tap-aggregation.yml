@@ -1,0 +1,11 @@
+tap_aggregation:
+  mode:
+    exclusive:
+      no_errdisable:
+      - Ethernet1/1
+      - Ethetnet 42/1
+      - Port-Channel200
+  mac:
+    timestamp:
+      replace_source_mac: true
+    fcs_append: true

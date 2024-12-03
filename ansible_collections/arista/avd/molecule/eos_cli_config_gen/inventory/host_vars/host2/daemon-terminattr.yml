@@ -33,5 +33,30 @@ daemon_terminattr:
         token_file: /tmp/tokenDC3
       cvvrf: mgt
       cvsourceintf: Vlan500
-  smashexcludes: ale,flexCounter,hardware,kni,pulse,strata
-  ingestexclude: /Sysdb/cell/1/agent,/Sysdb/cell/2/agent
+    - name: DC4
+      cvaddrs:
+        - 10.40.40.1:9910
+      cvauth:
+        method: token-secure
+        token_file: /tmp/tokenDC4
+        ca_file: /persist/secure/ssl/terminattr/DC1/certs/ca.crt
+      cvvrf: mgt
+      cvsourceintf: Vlan500
+      cvsourceip: 10.10.10.10
+      cvproxy: http://arista:arista@10.10.10.1:3128
+      cvobscurekeyfile: true
+    - name: DC5
+      cvaddrs:
+        - 10.20.20.2:9910
+      cvauth:
+        method: certs
+        cert_file: /persist/secure/ssl/terminattr/DC1/certs/client.crt
+        key_file: /persist/secure/ssl/terminattr/DC1/keys/client.key
+      cvvrf: mgt
+      cvsourceintf: Loopback11
+    - name: DC6
+      cvaddrs:
+        - 10.20.20.3:9910
+      cvauth:
+        method: certs
+        cert_file: /persist/secure/ssl/terminattr/DC1/certs/client.crt
