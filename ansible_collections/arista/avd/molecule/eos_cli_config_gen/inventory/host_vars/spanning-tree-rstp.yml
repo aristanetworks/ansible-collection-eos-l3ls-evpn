@@ -1,4 +1,0 @@
-### Spanning-Tree (Rapid-PVST settings)
-spanning_tree:
-  mode: rstp
-  rstp_priority: 8192

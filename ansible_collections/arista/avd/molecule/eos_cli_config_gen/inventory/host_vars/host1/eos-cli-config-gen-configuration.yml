@@ -1,0 +1,4 @@
+---
+eos_cli_config_gen_configuration:
+  enable: true
+  hide_passwords: false
