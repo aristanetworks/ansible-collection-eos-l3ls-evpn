@@ -1266,6 +1266,8 @@ aaa group server radius RADIUS2
    server 10.10.10.157 vrf mgt
    server 10.10.10.249
 !
+aaa group server radius RADIUS3
+!
 aaa group server tacacs+ TACACS
    server 10.10.11.157 vrf mgt
    server 10.10.11.249
