@@ -3762,10 +3762,10 @@ keys:
                           RCF function name with parenthesis.
                           Example: MyFunction(myarg).
                           Only applicable if `address_family` is one of `evpn`, `vpn-ipv4` or `vpn-ipv6`.
-                      vpn_route_filter_rcf:
+                      vrf_route_filter_rcf:
                         type: str
                         description: |-
-                          RCF function name with parenthesis for filtering VPN routes. Also requires `rcf` to be set.
+                          RCF function name with parenthesis for filtering VRF routes. Also requires `rcf` to be set.
                           Example: MyFunction(myarg).
                           Only applicable if `address_family` is one of `vpn-ipv4` or `vpn-ipv6`.
             router_id:

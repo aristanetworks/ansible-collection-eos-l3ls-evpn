@@ -36,7 +36,7 @@
 {%     if daemon_terminattr.cvaddrs is arista.avd.defined %}
 {%         set url = daemon_terminattr.cvaddrs | arista.avd.default([]) | join(',') %}
 {%         if daemon_terminattr.cvauth.method is arista.avd.defined('key') %}
-{%             set auth = 'key,' ~ daemon_terminattr.cvauth.key | arista.avd.default('') %}
+{%             set auth = 'key,' ~ daemon_terminattr.cvauth.key | arista.avd.default('') | arista.avd.hide_passwords(hide_passwords) %}
 {%         elif daemon_terminattr.cvauth.method is arista.avd.defined('token') and daemon_terminattr.cvauth.token_file is arista.avd.defined %}
 {%             set auth = 'token,' ~ daemon_terminattr.cvauth.token_file %}
 {%         elif daemon_terminattr.cvauth.method is arista.avd.defined('token-secure') and daemon_terminattr.cvauth.token_file is arista.avd.defined %}

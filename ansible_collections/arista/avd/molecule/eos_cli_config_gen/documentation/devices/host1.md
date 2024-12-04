@@ -67,9 +67,11 @@
   - [Boot Secret Summary](#boot-secret-summary)
   - [System Boot Device Configuration](#system-boot-device-configuration)
 - [Monitoring](#monitoring)
+  - [TerminAttr Daemon](#terminattr-daemon)
   - [Custom daemons](#custom-daemons)
   - [Logging](#logging)
   - [MCS Client Summary](#mcs-client-summary)
+  - [SNMP](#snmp)
   - [Monitor Sessions](#monitor-sessions)
   - [Tap Aggregation](#tap-aggregation)
   - [SFlow](#sflow)
@@ -102,6 +104,9 @@
 - [LACP](#lacp)
   - [LACP Summary](#lacp-summary)
   - [LACP Device Configuration](#lacp-device-configuration)
+- [Spanning Tree](#spanning-tree)
+  - [Spanning Tree Summary](#spanning-tree-summary)
+  - [Spanning Tree Device Configuration](#spanning-tree-device-configuration)
   - [Synchronous Ethernet (SyncE) Settings](#synchronous-ethernet-synce-settings)
 - [Internal VLAN Allocation Policy](#internal-vlan-allocation-policy)
   - [Internal VLAN Allocation Policy Summary](#internal-vlan-allocation-policy-summary)
@@ -148,6 +153,8 @@
   - [Connections](#connections)
   - [Router Service Insertion Configuration](#router-service-insertion-configuration)
   - [Router Traffic-Engineering](#router-traffic-engineering)
+  - [Router OSPF](#router-ospf)
+  - [Router ISIS](#router-isis)
   - [Router BGP](#router-bgp)
   - [PBR Policy Maps](#pbr-policy-maps)
 - [BFD](#bfd)
@@ -1348,12 +1355,16 @@ aaa authorization commands 10,15 default group tacacs+ local
 | Commands - Console | all | start-stop | TACACS | True |
 | Commands - Console | 0 | start-stop |  -  | True |
 | Commands - Console | 1 | start-stop | TACACS1 | False |
+| Commands - Console | 2 | none |  -  | True |
+| Commands - Console | 3 | start-stop |  -  | False |
 | Exec - Default | - | start-stop | TACACS | True |
 | System - Default | - | start-stop | TACACS | - |
 | Dot1x - Default  | - | start-stop | RADIUS | - |
 | Commands - Default | all | start-stop | TACACS | True |
 | Commands - Default | 0 | start-stop | - | True |
 | Commands - Default | 1 | start-stop | TACACS | False |
+| Commands - Default | 2 | none | - | True |
+| Commands - Default | 3 | start-stop | - | False |
 
 #### AAA Accounting Device Configuration
 
@@ -1362,12 +1373,14 @@ aaa accounting exec console start-stop group TACACS logging
 aaa accounting commands all console start-stop group TACACS logging
 aaa accounting commands 0 console start-stop logging
 aaa accounting commands 1 console start-stop group TACACS1
+aaa accounting commands 2 console none
 aaa accounting exec default start-stop group TACACS logging
 aaa accounting system default start-stop group TACACS
 aaa accounting dot1x default start-stop group RADIUS
 aaa accounting commands all default start-stop group TACACS logging
 aaa accounting commands 0 default start-stop logging
 aaa accounting commands 1 default start-stop group TACACS
+aaa accounting commands 2 default none
 ```
 
 ## Address Locking
@@ -1769,6 +1782,23 @@ boot secret 5 <removed>
 
 ## Monitoring
 
+### TerminAttr Daemon
+
+#### TerminAttr Daemon Summary
+
+| CV Compression | CloudVision Servers | VRF | Authentication | Smash Excludes | Ingest Exclude | Bypass AAA |
+| -------------- | ------------------- | --- | -------------- | -------------- | -------------- | ---------- |
+| gzip | 10.10.10.8:9910,10.10.10.9:9910,10.10.10.10:9910 | mgt | key,<removed> | ale,flexCounter,hardware,kni,pulse,strata | /Sysdb/cell/1/agent,/Sysdb/cell/2/agent | True |
+
+#### TerminAttr Daemon Device Configuration
+
+```eos
+!
+daemon TerminAttr
+   exec /usr/bin/TerminAttr -cvaddr=10.10.10.8:9910,10.10.10.9:9910,10.10.10.10:9910 -cvauth=key,<removed> -cvvrf=mgt -cvgnmi -disableaaa -cvproxy=http://arista:arista@10.10.10.1:3128 -grpcaddr=mgmt/0.0.0.0:6042 -grpcreadonly -smashexcludes=ale,flexCounter,hardware,kni,pulse,strata -ingestexclude=/Sysdb/cell/1/agent,/Sysdb/cell/2/agent -taillogs=/var/log/messages,/var/log/agents/ -cvconfig -cvsourceintf=Vlan100
+   no shutdown
+```
+
 ### Custom daemons
 
 #### Custom Daemons Device Configuration
@@ -1891,6 +1921,151 @@ mcs client
       server host 10.90.224.188
       server host 10.90.224.189
       server host leaf2.atd.lab
+```
+
+### SNMP
+
+#### SNMP Configuration Summary
+
+| Contact | Location | SNMP Traps | State |
+| ------- | -------- | ---------- | ----- |
+| DC1_OPS | DC1 | All | Enabled |
+| DC1_OPS | DC1 | bgp, bridge, lldp, mpls, msdp backward-transition, msdp established, snmp link-down, snmpConfigManEvent | Enabled |
+| DC1_OPS | DC1 | bgp arista-backward-transition, bridge arista-mac-age | Disabled |
+
+#### SNMP EngineID Configuration
+
+| Type | EngineID (Hex) | IP | Port |
+| ---- | -------------- | -- | ---- |
+| local | 424242424242424242 | - | - |
+| remote | 6172697374615F6970 | 1.1.1.1 | - |
+| remote | DEADBEEFCAFE123456 | 2.2.2.2 | 1337 |
+
+#### SNMP ACLs
+
+| IP | ACL | VRF |
+| -- | --- | --- |
+| IPv4 | SNMP-MGMT | MGMT |
+| IPv4 | onur | default |
+| IPv6 | SNMP-MGMT | MGMT |
+| IPv6 | onur_v6 | default |
+
+#### SNMP Local Interfaces
+
+| Local Interface | VRF |
+| --------------- | --- |
+| Management1 | MGMT |
+| Loopback0 | default |
+| Loopback12 | Tenant_A_APP_Zone |
+
+#### SNMP VRF Status
+
+| VRF | Status |
+| --- | ------ |
+| default | Disabled |
+| MGMT | Enabled |
+
+#### SNMP Hosts Configuration
+
+| Host | VRF | Community | Username | Authentication level | SNMP Version |
+| ---- |---- | --------- | -------- | -------------------- | ------------ |
+| 10.6.75.121 | MGMT | <removed> | - | - | 1 |
+| 10.6.75.121 | MGMT | <removed> | - | - | 2c |
+| 10.6.75.122 | MGMT | <removed> | - | - | 2c |
+| 10.6.75.99 | MGMT | - | USER-READ-AUTH-NO-PRIV | auth | 3 |
+| 10.6.75.99 | MGMT | - | USER-WRITE | auth | 3 |
+| 10.6.75.100 | MGMT | - | USER-READ-AUTH-PRIV | priv | 3 |
+
+#### SNMP Views Configuration
+
+| View | MIB Family Name | Status |
+| ---- | --------------- | ------ |
+| VW-WRITE | iso | Included |
+| VW-READ | iso | Included |
+
+#### SNMP Communities
+
+| Community | Access | Access List IPv4 | Access List IPv6 | View |
+| --------- | ------ | ---------------- | ---------------- | ---- |
+| <removed> | ro | onur | - | - |
+| <removed> | rw | SNMP-MGMT | SNMP-MGMT | VW-READ |
+| <removed> | ro | - | - | - |
+
+#### SNMP Groups Configuration
+
+| Group | SNMP Version | Authentication | Read | Write | Notify |
+| ----- | ------------ | -------------- | ---- | ----- | ------ |
+| GRP-READ-ONLY | v3 | priv | v3read | - | - |
+| GRP-READ-WRITE | v3 | auth | v3read | v3write | - |
+
+#### SNMP Users Configuration
+
+| User | Group | Version | Authentication | Privacy | Remote Address | Remote Port | Engine ID |
+| ---- | ----- | ------- | -------------- | ------- | -------------- | ----------- | --------- |
+| USER-READ-NO-AUTH-NO-PRIV | GRP-READ-ONLY | v3 | - | - | - | - | - |
+| USER-READ-AUTH-NO-PRIV | GRP-READ-ONLY | v3 | sha | - | - | - | - |
+| USER-READ-AUTH-PRIV | GRP-READ-ONLY | v3 | sha | aes | - | - | - |
+| USER-READ-NO-AUTH-NO-PRIV-LOC | GRP-READ-ONLY | v3 | - | - | - | - | 424242424242424242 |
+| USER-READ-AUTH-NO-PRIV-LOC | GRP-READ-ONLY | v3 | sha | - | - | - | 424242424242424242 |
+| USER-READ-AUTH-PRIV-LOC | GRP-READ-ONLY | v3 | sha | aes | - | - | 424242424242424242 |
+| USER-WRITE | GRP-READ-WRITE | v3 | sha | aes | - | - | - |
+| REMOTE-USER-IP-ONLY | GRP-REMOTE | v3 | - | - | 42.42.42.42 | - | - |
+| REMOTE-USER-IP-PORT | GRP-REMOTE | v3 | - | - | 42.42.42.42 | 666 | - |
+| REMOTE-USER-IP-LOCALIZED | GRP-REMOTE | v3 | sha | - | 42.42.42.42 | - | DEADBEEFCAFE123456 |
+
+#### SNMP Device Configuration
+
+```eos
+!
+snmp-server ipv4 access-list SNMP-MGMT vrf MGMT
+snmp-server ipv4 access-list onur
+snmp-server ipv6 access-list SNMP-MGMT vrf MGMT
+snmp-server ipv6 access-list onur_v6
+snmp-server engineID local 424242424242424242
+snmp-server contact DC1_OPS
+snmp-server location DC1
+snmp-server local-interface Loopback0
+snmp-server vrf Tenant_A_APP_Zone local-interface Loopback12
+snmp-server vrf MGMT local-interface Management1
+snmp-server view VW-READ iso included
+snmp-server view VW-WRITE iso included
+snmp-server community <removed> ro onur
+snmp-server community <removed> view VW-READ rw ipv6 SNMP-MGMT SNMP-MGMT
+snmp-server community <removed> ro
+snmp-server group GRP-READ-ONLY v3 priv read v3read
+snmp-server group GRP-READ-WRITE v3 auth read v3read write v3write
+snmp-server user REMOTE-USER-IP-LOCALIZED GRP-REMOTE remote 42.42.42.42 v3 localized DEADBEEFCAFE123456 auth sha <removed>
+snmp-server user REMOTE-USER-IP-ONLY GRP-REMOTE remote 42.42.42.42 v3
+snmp-server user REMOTE-USER-IP-PORT GRP-REMOTE remote 42.42.42.42 udp-port 666 v3
+snmp-server user USER-READ-AUTH-NO-PRIV GRP-READ-ONLY v3 auth sha <removed>
+snmp-server user USER-READ-AUTH-NO-PRIV-LOC GRP-READ-ONLY v3 localized 424242424242424242 auth sha <removed>
+snmp-server user USER-READ-AUTH-PRIV GRP-READ-ONLY v3 auth sha <removed> priv aes <removed>
+snmp-server user USER-READ-AUTH-PRIV-LOC GRP-READ-ONLY v3 localized 424242424242424242 auth sha <removed> priv aes <removed>
+snmp-server user USER-READ-NO-AUTH-NO-PRIV GRP-READ-ONLY v3
+snmp-server user USER-READ-NO-AUTH-NO-PRIV-LOC GRP-READ-ONLY v3
+snmp-server user USER-WRITE GRP-READ-WRITE v3 auth sha <removed> priv aes <removed>
+snmp-server engineID remote 1.1.1.1 6172697374615F6970
+snmp-server engineID remote 2.2.2.2 udp-port 1337 DEADBEEFCAFE123456
+snmp-server host 10.6.75.99 vrf MGMT version 3 auth USER-READ-AUTH-NO-PRIV
+snmp-server host 10.6.75.99 vrf MGMT version 3 auth USER-WRITE
+snmp-server host 10.6.75.100 vrf MGMT version 3 priv USER-READ-AUTH-PRIV
+snmp-server host 10.6.75.121 vrf MGMT version 1 <removed>
+snmp-server host 10.6.75.121 vrf MGMT version 2c <removed>
+snmp-server host 10.6.75.122 vrf MGMT version 2c <removed>
+snmp-server enable traps
+snmp-server enable traps bgp
+no snmp-server enable traps bgp arista-backward-transition
+snmp-server enable traps bridge
+no snmp-server enable traps bridge arista-mac-age
+snmp-server enable traps lldp
+snmp-server enable traps mpls
+snmp-server enable traps msdp backward-transition
+snmp-server enable traps msdp established
+snmp-server enable traps snmp link-down
+snmp-server enable traps snmpConfigManEvent
+no snmp-server vrf default
+snmp-server vrf MGMT
+snmp-server ifmib ifspeed shape-rate
 ```
 
 ### Monitor Sessions
@@ -2913,6 +3088,41 @@ l2-protocol
 !
 lacp port-id range 1 128
 no lacp rate-limit default
+```
+
+## Spanning Tree
+
+### Spanning Tree Summary
+
+STP mode: **rapid-pvst**
+
+#### Rapid-PVST Instance and Priority
+
+| Instance(s) | Priority |
+| -------- | -------- |
+| 1,2,3,4,5,10-15 | 4096 |
+| 3 | 8192 |
+| 100-500 | 16384 |
+
+#### Global Spanning-Tree Settings
+
+- Spanning Tree disabled for VLANs: **105,202,505-506**
+- Global BPDU Guard for Edge ports is disabled.
+- Global BPDU Filter for Edge ports is disabled.
+
+### Spanning Tree Device Configuration
+
+```eos
+!
+spanning-tree mode rapid-pvst
+no spanning-tree vlan-id 105,202,505-506
+no spanning-tree edge-port bpduguard default
+no spanning-tree edge-port bpdufilter default
+spanning-tree bpduguard rate-limit default
+spanning-tree bpduguard rate-limit count 100
+spanning-tree vlan-id 1,2,3,4,5,10-15 priority 4096
+spanning-tree vlan-id 3 priority 8192
+spanning-tree vlan-id 100-500 priority 16384
 ```
 
 ### Synchronous Ethernet (SyncE) Settings
@@ -4900,6 +5110,14 @@ interface Port-Channel17
    ip address 192.0.2.3/31
    service-policy type pbr input MyPolicy
 !
+interface Port-Channel18
+   no switchport
+   ip ospf cost 99
+   ip ospf network point-to-point
+   ip ospf authentication message-digest
+   ip ospf area 0.0.0.12
+   ip ospf message-digest-key 55 md5 7 <removed>
+!
 interface Port-Channel20
    description Po_in_mode_access_accepting_tagged_LACP_frames
    switchport access vlan 200
@@ -5286,6 +5504,7 @@ interface Port-Channel132
 | --------- | ----------- | --- | ---------- |
 | Loopback0 | EVPN_Overlay_Peering | default | 192.168.255.3/32 |
 | Loopback1 | VTEP_VXLAN_Tunnel_Source | default | 192.168.254.3/32 |
+| Loopback2 | - | default | - |
 | Loopback99 | TENANT_A_PROJECT02_VTEP_DIAGNOSTICS | TENANT_A_PROJECT02 | 10.1.255.3/32 <br> 192.168.1.1/32 secondary <br> 10.0.0.254/32 secondary |
 | Loopback100 | TENANT_A_PROJECT02_VTEP_DIAGNOSTICS | TENANT_A_PROJECT02 | 10.1.255.3/32 |
 
@@ -5295,6 +5514,7 @@ interface Port-Channel132
 | --------- | ----------- | --- | ------------ |
 | Loopback0 | EVPN_Overlay_Peering | default | - |
 | Loopback1 | VTEP_VXLAN_Tunnel_Source | default | - |
+| Loopback2 | - | default | - |
 | Loopback99 | TENANT_A_PROJECT02_VTEP_DIAGNOSTICS | TENANT_A_PROJECT02 | 2002::CAFE/64 |
 | Loopback100 | TENANT_A_PROJECT02_VTEP_DIAGNOSTICS | TENANT_A_PROJECT02 | - |
 
@@ -5319,6 +5539,9 @@ interface Loopback0
 interface Loopback1
    description VTEP_VXLAN_Tunnel_Source
    ip address 192.168.254.3/32
+!
+interface Loopback2
+   ip ospf area 0.0.0.2
 !
 interface Loopback99
    description TENANT_A_PROJECT02_VTEP_DIAGNOSTICS
@@ -5438,6 +5661,7 @@ interface Tunnel4
 | --------- | ----------- | --- | ---- | -------- |
 | Vlan24 | SVI Description | default | - | False |
 | Vlan25 | SVI Description | default | - | False |
+| Vlan26 | - | default | - | - |
 | Vlan41 | SVI Description | default | - | False |
 | Vlan42 | SVI Description | default | - | False |
 | Vlan43 | SVI Description | default | - | False |
@@ -5456,6 +5680,7 @@ interface Tunnel4
 | Vlan91 | PBR Description | default | - | True |
 | Vlan92 | SVI Description | default | - | - |
 | Vlan110 | PVLAN Primary with vlan mapping | Tenant_A | - | False |
+| Vlan111 | PR01-DEMO | TENANT_A_PROJECT01 | - | False |
 | Vlan333 | Multiple VRIDs and tracking | default | - | False |
 | Vlan334 | v6 attached host exports | default | - | - |
 | Vlan335 | v6 attached host exports | default | - | - |
@@ -5469,6 +5694,8 @@ interface Tunnel4
 | Vlan1002 | SVI Description | Tenant_A | - | False |
 | Vlan2001 | SVI Description | Tenant_B | - | - |
 | Vlan2002 | SVI Description | Tenant_B | - | - |
+| Vlan4092 | MLAG_PEER | default | 1500 | - |
+| Vlan4093 | MLAG_PEER_L3_PEERING | default | - | - |
 | Vlan4094 | SVI Description | default | 9214 | - |
 
 ##### Private VLAN
@@ -5483,6 +5710,7 @@ interface Tunnel4
 | --------- | --- | ---------- | ------------------ | ------------------------- | ------ | ------- |
 | Vlan24 |  default  |  -  |  10.10.24.1/24  |  -  |  -  |  -  |
 | Vlan25 |  default  |  -  |  -  |  -  |  -  |  -  |
+| Vlan26 |  default  |  -  |  -  |  -  |  -  |  -  |
 | Vlan41 |  default  |  -  |  10.10.41.1/24  |  -  |  -  |  -  |
 | Vlan42 |  default  |  -  |  10.10.42.1/24  |  -  |  -  |  -  |
 | Vlan43 |  default  |  -  |  -  |  -  |  -  |  -  |
@@ -5501,6 +5729,7 @@ interface Tunnel4
 | Vlan91 |  default  |  -  |  -  |  -  |  -  |  -  |
 | Vlan92 |  default  |  10.10.92.1/24  |  -  |  -  |  -  |  -  |
 | Vlan110 |  Tenant_A  |  10.0.101.1/24  |  -  |  -  |  -  |  -  |
+| Vlan111 |  TENANT_A_PROJECT01  |  -  |  10.1.10.254/24  |  -  |  -  |  -  |
 | Vlan333 |  default  |  192.0.2.2/25  |  -  |  -  |  -  |  -  |
 | Vlan334 |  default  |  -  |  -  |  -  |  -  |  -  |
 | Vlan335 |  default  |  -  |  -  |  -  |  -  |  -  |
@@ -5514,6 +5743,8 @@ interface Tunnel4
 | Vlan1002 |  Tenant_A  |  -  |  10.1.2.1/24  |  -  |  -  |  -  |
 | Vlan2001 |  Tenant_B  |  -  |  10.2.1.1/24  |  -  |  -  |  -  |
 | Vlan2002 |  Tenant_B  |  -  |  10.2.2.1/24  |  -  |  -  |  -  |
+| Vlan4092 |  default  |  10.255.252.0/31  |  -  |  -  |  -  |  -  |
+| Vlan4093 |  default  |  10.255.251.0/31  |  -  |  -  |  -  |  -  |
 | Vlan4094 |  default  |  169.254.252.0/31  |  -  |  -  |  -  |  -  |
 
 ##### IP NAT: Source Static
@@ -5587,6 +5818,7 @@ interface Tunnel4
 | Vlan91 | EVPN_UNDERLAY | - | - | - | Level-1: md5<br>Level-2: text |
 | Vlan92 | EVPN_UNDERLAY | - | - | - | Level-1: shared-secret<br>Level-2: shared-secret |
 | Vlan2002 | EVPN_UNDERLAY | True | - | - | md5 |
+| Vlan4093 | EVPN_UNDERLAY | - | 50 | point-to-point | - |
 | Vlan4094 | EVPN_UNDERLAY | - | - | - | Level-1: sha<br>Level-2: sha |
 
 ##### Multicast Routing
@@ -5619,6 +5851,13 @@ interface Vlan25
    ipv6 address 1b11:3a00:22b0:16::16/64
    ipv6 virtual-router address 1b11:3a00:22b0:16::14
    ipv6 virtual-router address 1b11:3a00:22b0:16::15
+!
+interface Vlan26
+   ip ospf cost 99
+   ip ospf network point-to-point
+   ip ospf authentication message-digest
+   ip ospf area 0.0.0.24
+   ip ospf message-digest-key 55 md5 7 <removed>
 !
 interface Vlan41
    description SVI Description
@@ -5817,6 +6056,12 @@ interface Vlan110
    multicast ipv6 source route export 20
    multicast ipv4 static
 !
+interface Vlan111
+   description PR01-DEMO
+   no shutdown
+   vrf TENANT_A_PROJECT01
+   ip address virtual 10.1.10.254/24
+!
 interface Vlan333
    description Multiple VRIDs and tracking
    no shutdown
@@ -5936,6 +6181,19 @@ interface Vlan2002
    isis authentication mode md5 rx-disabled
    isis authentication key 0 password
    ip address virtual 10.2.2.1/24
+!
+interface Vlan4092
+   description MLAG_PEER
+   mtu 1500
+   no autostate
+   ip address 10.255.252.0/31
+!
+interface Vlan4093
+   description MLAG_PEER_L3_PEERING
+   ip address 10.255.251.0/31
+   isis enable EVPN_UNDERLAY
+   isis metric 50
+   isis network point-to-point
 !
 interface Vlan4094
    description SVI Description
@@ -6522,6 +6780,347 @@ router traffic-engineering
             segment-list label-stack 900002 900010 900011 900012
    router-id ipv4 10.0.0.1
    router-id ipv6 2001:beef:cafe::1
+```
+
+### Router OSPF
+
+#### Router OSPF Summary
+
+| Process ID | Router ID | Default Passive Interface | No Passive Interface | BFD | Max LSA | Default Information Originate | Log Adjacency Changes Detail | Auto Cost Reference Bandwidth | Maximum Paths | MPLS LDP Sync Default | Distribute List In |
+| ---------- | --------- | ------------------------- | -------------------- | --- | ------- | ----------------------------- | ---------------------------- | ----------------------------- | ------------- | --------------------- | ------------------ |
+| 100 | 192.168.255.3 | enabled | Ethernet1 <br> Ethernet2 <br> Vlan4093 <br> | enabled<br>(any state) | 12000 | disabled | disabled | 100 | 10 | True | route-map RM-OSPF-DIST-IN |
+| 101 | 1.0.1.1 | enabled | Ethernet2.101 <br> | disabled | default | disabled | enabled | - | - | - | - |
+| 200 | 192.168.254.1 | disabled |- | disabled | 5 | Always | enabled | - | - | - | - |
+| 300 | - | disabled |- | disabled | default | disabled | disabled | - | - | - | - |
+| 400 | - | disabled |- | disabled | default | disabled | disabled | - | - | - | - |
+| 500 | - | disabled |- | disabled | default | disabled | disabled | - | - | - | - |
+| 600 | - | disabled |- | disabled | default | disabled | disabled | - | - | - | - |
+
+#### Router OSPF Distance
+
+| Process ID | Intra Area | Inter Area | External |
+| ---------- | ---------- | ---------- | -------- |
+| 100 | 50 | 70 | 60 |
+
+#### Router OSPF Router Redistribution
+
+| Process ID | Source Protocol | Include Leaked | Route Map |
+| ---------- | --------------- | -------------- | --------- |
+| 100 | connected | disabled | - |
+| 100 | static | disabled | - |
+| 100 | bgp | disabled | - |
+| 200 | connected | enabled | rm-ospf-connected |
+| 200 | static | enabled | rm-ospf-static |
+| 200 | bgp | enabled | rm-ospf-bgp |
+| 300 | connected | disabled | rm-ospf-connected |
+| 300 | static | disabled | rm-ospf-static |
+| 300 | bgp | disabled | rm-ospf-bgp |
+| 400 | connected | enabled | - |
+| 400 | static | enabled | - |
+| 400 | bgp | enabled | - |
+
+#### Router OSPF Router Max-Metric
+
+| Process ID | Router-LSA | External-LSA (metric) | Include Stub | On Startup Delay | Summary-LSA (metric) |
+| ---------- | ---------- | --------------------- | ------------ | ---------------- | -------------------- |
+| 300 | enabled | disabled | disabled | disabled | disabled |
+| 400 | enabled | enabled | enabled | wait-for-bgp | enabled |
+| 500 | enabled | enabled (123) | disabled | 222 | enabled (456) |
+
+#### Router OSPF timers
+
+| Process ID | LSA rx | LSA tx (initial/min/max) | SPF (initial/min/max) |
+| ---------- | ------ | ------------------------ | --------------------- |
+| 101 | 100 | 100 / 200 / 300 | 100 / 200 / 300 |
+| 200 | 100 | - | - |
+
+#### Router OSPF Route Summary
+
+| Process ID | Prefix | Tag | Attribute Route Map | Not Advertised |
+|------------|--------|-----|---------------------|----------------|
+| 101 | 10.0.0.0/8 | - | - | - |
+| 101 | 20.0.0.0/8 | 10 | - | - |
+| 101 | 30.0.0.0/8 | - | RM-OSPF_SUMMARY | - |
+| 101 | 40.0.0.0/8 | - | - | True |
+
+#### Router OSPF Areas
+
+| Process ID | Area | Area Type | Filter Networks | Filter Prefix List | Additional Options |
+| ---------- | ---- | --------- | --------------- | ------------------ | ------------------ |
+| 200 | 0.0.0.2 | normal | 1.1.1.0/24, 2.2.2.0/24 | - |  |
+| 200 | 3 | normal | - | PL-OSPF-FILTERING |  |
+| 600 | 0.0.0.1 | normal | - | - |  |
+| 600 | 0.0.10.11 | stub | - | - | no-summary |
+| 600 | 0.0.20.20 | nssa | - | - |  |
+| 600 | 0.0.20.21 | nssa | - | - | no-summary |
+| 600 | 0.0.20.22 | nssa | - | - | nssa-only |
+| 600 | 0.0.20.23 | nssa | - | - | default-information-originate |
+| 600 | 0.0.20.24 | nssa | - | - | default-information-originate metric 50 |
+| 600 | 0.0.20.25 | nssa | - | - | no-summary, default-information-originate metric-type 1 |
+| 600 | 0.0.20.26 | nssa | - | - | no-summary, default-information-originate metric 50 metric-type 1, nssa-only |
+
+#### OSPF Interfaces
+
+| Interface | Area | Cost | Point To Point |
+| -------- | -------- | -------- | -------- |
+| Ethernet5 | 100 | 99 | True |
+| Port-Channel18 | 0.0.0.12 | 99 | True |
+| Vlan26 | 0.0.0.24 | 99 | True |
+| Loopback2 | 0.0.0.2 | - | - |
+
+#### Router OSPF Device Configuration
+
+```eos
+!
+router ospf 100
+   router-id 192.168.255.3
+   auto-cost reference-bandwidth 100
+   bfd default
+   bfd adjacency state any
+   distance ospf intra-area 50
+   distance ospf external 60
+   distance ospf inter-area 70
+   passive-interface default
+   no passive-interface Ethernet1
+   no passive-interface Ethernet2
+   no passive-interface Vlan4093
+   redistribute bgp
+   redistribute connected
+   redistribute static
+   distribute-list route-map RM-OSPF-DIST-IN in
+   network 198.51.100.0/24 area 0.0.0.1
+   network 203.0.113.0/24 area 0.0.0.2
+   max-lsa 12000
+   maximum-paths 10
+   default-information originate
+   graceful-restart
+   mpls ldp sync default
+   graceful-restart-helper
+!
+router ospf 101 vrf CUSTOMER01
+   router-id 1.0.1.1
+   passive-interface default
+   no passive-interface Ethernet2.101
+   log-adjacency-changes detail
+   timers spf delay initial 100 200 300
+   timers lsa rx min interval 100
+   timers lsa tx delay initial 100 200 300
+   summary-address 10.0.0.0/8
+   summary-address 20.0.0.0/8 tag 10
+   summary-address 30.0.0.0/8 attribute-map RM-OSPF_SUMMARY
+   summary-address 40.0.0.0/8 not-advertise
+   graceful-restart grace-period 10
+   no graceful-restart-helper
+   area 5 not-so-stubby lsa type-7 convert type-5
+
+!
+router ospf 200 vrf ospf_zone
+   router-id 192.168.254.1
+   redistribute bgp include leaked route-map rm-ospf-bgp
+   redistribute connected include leaked route-map rm-ospf-connected
+   redistribute static include leaked route-map rm-ospf-static
+   area 0.0.0.2 filter 1.1.1.0/24
+   area 0.0.0.2 filter 2.2.2.0/24
+   area 3 filter prefix-list PL-OSPF-FILTERING
+   max-lsa 5
+   log-adjacency-changes detail
+   timers lsa rx min interval 100
+   default-information originate always metric 100 metric-type 1
+!
+router ospf 300
+   redistribute bgp route-map rm-ospf-bgp
+   redistribute connected route-map rm-ospf-connected
+   redistribute static route-map rm-ospf-static
+   max-metric router-lsa
+!
+router ospf 400
+   redistribute bgp include leaked
+   redistribute connected include leaked
+   redistribute static include leaked
+   max-metric router-lsa external-lsa include-stub on-startup wait-for-bgp summary-lsa
+!
+router ospf 500
+   max-metric router-lsa external-lsa 123 on-startup 222 summary-lsa 456
+!
+router ospf 600
+   area 0.0.10.11 stub no-summary
+   area 0.0.20.20 nssa
+   area 0.0.20.21 nssa no-summary
+   area 0.0.20.22 nssa nssa-only
+   area 0.0.20.23 nssa default-information-originate
+   area 0.0.20.24 nssa default-information-originate metric 50
+   area 0.0.20.25 nssa no-summary
+   area 0.0.20.25 nssa default-information-originate metric-type 1
+   area 0.0.20.26 nssa no-summary
+   area 0.0.20.26 nssa default-information-originate metric 50 metric-type 1 nssa-only
+```
+
+### Router ISIS
+
+#### Router ISIS Summary
+
+| Settings | Value |
+| -------- | ----- |
+| Instance | EVPN_UNDERLAY |
+| Hostname | MYROUTER |
+| Log Adjacency Changes | False |
+| MPLS LDP Sync Default | True |
+| Advertise Passive-only | True |
+| SR MPLS Enabled | True |
+| SPF Interval | 250 seconds |
+| SPF Interval Wait Time| 10 milliseconds |
+| SPF Interval Hold Time| 20 milliseconds |
+| Graceful-restart Enabled | True |
+| Graceful-restart t2 Level-1 | 10 |
+| Graceful-restart t2 Level-2 | 20 |
+| Graceful-restart Restart-hold-time | 10 |
+
+#### ISIS Route Timers
+
+| Settings | Value |
+| -------- | ----- |
+| Local Convergence Delay | 15000 milliseconds |
+| CSN Packet Transmission Interval | 10 seconds |
+| CSN Packet P2P Links Disabled | True |
+| LSP Generation Maximum Interval | 30 seconds |
+| LSP Generation Initial Wait-time | 40 milliseconds |
+| LSP Generation Wait-time | 50 milliseconds |
+| LSP Out-delay | 20 milliseconds |
+| LSP Refresh Interval | 56 seconds |
+| LSP Minimum Remaining Lifetime | 78 seconds |
+
+#### ISIS Route Redistribution
+
+| Route Type | Route-Map | Include Leaked |
+| ---------- | --------- | -------------- |
+| bgp | RM-BGP | - |
+| connected | - | - |
+| isis instance | RM-REDIS-ISIS-INSTANCE | - |
+| ospf internal | - | - |
+| ospf external | RM-OSPF-EXTERNAL-TO-ISIS | - |
+| ospf nssa-external | RM-OSPF-NSSA_EXT-TO-ISIS | True |
+| ospf | - | - |
+| ospfv3 external | - | - |
+| ospfv3 | - | - |
+| static | RM-STATIC-TO-ISIS | True |
+
+#### ISIS Interfaces Summary
+
+| Interface | ISIS Instance | ISIS Metric | Interface Mode |
+| --------- | ------------- | ----------- | -------------- |
+| Ethernet5 | ISIS_TEST | 99 | point-to-point |
+| Vlan42 | EVPN_UNDERLAY | - | - |
+| Vlan83 | EVPN_UNDERLAY | - | - |
+| Vlan84 | EVPN_UNDERLAY | - | - |
+| Vlan85 | EVPN_UNDERLAY | - | - |
+| Vlan86 | EVPN_UNDERLAY | - | - |
+| Vlan87 | EVPN_UNDERLAY | - | - |
+| Vlan88 | EVPN_UNDERLAY | - | - |
+| Vlan90 | EVPN_UNDERLAY | - | - |
+| Vlan91 | EVPN_UNDERLAY | - | - |
+| Vlan92 | EVPN_UNDERLAY | - | - |
+| Vlan2002 | EVPN_UNDERLAY | - | - |
+| Vlan4093 | EVPN_UNDERLAY | 50 | point-to-point |
+| Vlan4094 | EVPN_UNDERLAY | - | - |
+| Loopback99 | ISIS_TEST | 100 | point-to-point |
+
+#### Prefix Segments
+
+| Prefix Segment | Index |
+| -------------- | ----- |
+| 155.2.1.1/32 | 211 |
+| 2001:cafe:155::/64 | 6211 |
+
+#### ISIS IPv4 Address Family Summary
+
+| Settings | Value |
+| -------- | ----- |
+| IPv4 Address-family Enabled | True |
+| Maximum-paths | 4 |
+| BFD All-interfaces | True |
+| TI-LFA Mode | link-protection |
+| TI-LFA Level | level-2 |
+| TI-LFA SRLG Enabled | True |
+| TI-LFA SRLG Strict Mode | True |
+
+#### Tunnel Source
+
+| Source Protocol | RCF |
+| --------------- | --- |
+| BGP Labeled-Unicast | lu_2_sr_pfx() |
+
+#### ISIS IPv6 Address Family Summary
+
+| Settings | Value |
+| -------- | ----- |
+| IPv6 Address-family Enabled | True |
+| TI-LFA Mode | node-protection |
+| TI-LFA Level | level-1 |
+| TI-LFA SRLG Enabled | True |
+| TI-LFA SRLG Strict Mode | True |
+
+#### Router ISIS Device Configuration
+
+```eos
+!
+router isis EVPN_UNDERLAY
+   is-hostname MYROUTER
+   no log-adjacency-changes
+   mpls ldp sync default
+   redistribute bgp route-map RM-BGP
+   redistribute connected
+   redistribute isis instance route-map RM-REDIS-ISIS-INSTANCE
+   redistribute ospf match internal
+   redistribute ospf match external route-map RM-OSPF-EXTERNAL-TO-ISIS
+   redistribute ospf include leaked match nssa-external route-map RM-OSPF-NSSA_EXT-TO-ISIS
+   redistribute ospfv3 match external
+   redistribute static include leaked route-map RM-STATIC-TO-ISIS
+   timers local-convergence-delay 15000 protected-prefixes
+   set-overload-bit
+   set-overload-bit on-startup wait-for-bgp timeout 10
+   advertise passive-only
+   spf-interval 250 seconds 10 milliseconds 20 milliseconds
+   timers csnp generation interval 10 seconds
+   timers csnp generation p2p disabled
+   timers lsp out-delay 20
+   timers lsp refresh 56
+   timers lsp generation 30 40 50
+   timers lsp min-remaining-lifetime 78
+   authentication mode shared-secret profile test1 algorithm md5 level-1
+   authentication mode sha key-id 2 level-2
+   graceful-restart
+   graceful-restart t2 level-1 10
+   graceful-restart t2 level-2 20
+   graceful-restart restart-hold-time 10
+   authentication key-id 2 algorithm sha-512 key 0 password
+   authentication key-id 3 algorithm sha-512 rfc-5310 key 0 password1
+   authentication key-id 1 algorithm sha-1 key 0 password level-1
+   authentication key-id 4 algorithm sha-1 rfc-5310 key 0 password level-1
+   authentication key-id 1 algorithm sha-1 key 0 password level-2
+   authentication key-id 5 algorithm sha-1 rfc-5310 key 0 password level-2
+   authentication key 0 password level-1
+   authentication key 0 password level-2
+   !
+   address-family ipv4 unicast
+      maximum-paths 4
+      tunnel source-protocol bgp ipv4 labeled-unicast rcf lu_2_sr_pfx()
+      bfd all-interfaces
+      fast-reroute ti-lfa mode link-protection level-2
+      fast-reroute ti-lfa srlg strict
+   !
+   address-family ipv6 unicast
+      fast-reroute ti-lfa mode node-protection level-1
+      fast-reroute ti-lfa srlg strict
+   !
+   segment-routing mpls
+      no shutdown
+      prefix-segment 155.2.1.1/32 index 211
+      prefix-segment 2001:cafe:155::/64 index 6211
+   address-family ipv6 unicast
+     multi-topology
+   traffic-engineering
+     no shutdown
+     is-type level-2
 ```
 
 ### Router BGP
@@ -7975,7 +8574,7 @@ router bgp 65101
       route-target export evpn 1:30001
       route-target export evpn rcf RT_EXPORT_AF_RCF()
       route-target export vpn-ipv6 1:30011
-      route-target export vpn-ipv6 rcf RT_IMPORT_AF_RCF() vpn-route filter-rcf RT_IMPORT_AF_RCF_FILTER()
+      route-target export vpn-ipv6 rcf RT_IMPORT_AF_RCF() vrf-route filter-rcf RT_IMPORT_AF_RCF_FILTER()
       route-target export vpn-ipv6 route-map RT_IMPORT_AF_RM
       redistribute connected
       redistribute ospf match external include leaked
