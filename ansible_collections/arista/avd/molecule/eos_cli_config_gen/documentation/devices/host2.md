@@ -427,7 +427,6 @@ dhcp relay
 | gzip | 10.20.20.1:9910 | mgt | certs,/persist/secure/ssl/terminattr/DC1/certs/client.crt,/persist/secure/ssl/terminattr/DC1/keys/client.key,/persist/secure/ssl/terminattr/DC1/certs/ca.crt | - | - | False |
 | gzip | 10.30.30.1:9910 | mgt | key,<removed> | - | - | False |
 | gzip | 10.40.40.1:9910 | mgt | token,/tmp/tokenDC3 | - | - | False |
-+
 | gzip | 10.40.40.1:9910 | mgt | token-secure,/tmp/tokenDC4 | - | - | False |
 | gzip | 10.20.20.2:9910 | mgt | certs,/persist/secure/ssl/terminattr/DC1/certs/client.crt,/persist/secure/ssl/terminattr/DC1/keys/client.key | - | - | False |
 | gzip | 10.20.20.3:9910 | - | - | - | - | False |
