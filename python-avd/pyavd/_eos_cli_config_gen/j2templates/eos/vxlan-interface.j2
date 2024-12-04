@@ -32,11 +32,14 @@ interface Vxlan1
 {%     endif %}
 {%     for vlan in vxlan_config.vxlan.vlans | arista.avd.natural_sort('id') %}
 {%         if vlan.vni is arista.avd.defined %}
-{%             if vlan.id | arista.avd.range_expand | length == vlan.vni | arista.avd.range_expand | length %}
    vxlan vlan {{ vlan.id }} vni {{ vlan.vni }}
-{%             endif %}
 {%         endif %}
 {%     endfor %}
+{%     if vxlan_config.vxlan.vlan_range is arista.avd.defined %}
+{%         if vxlan_config.vxlan.vlan_range.vlans is arista.avd.defined and vxlan_config.vxlan.vlan_range.vnis is arista.avd.defined %}
+   vxlan vlan {{ vxlan_config.vxlan.vlan_range.vlans }} vni {{ vxlan_config.vxlan.vlan_range.vnis }}
+{%         endif %}
+{%     endif %}
 {%     for vrf in vxlan_config.vxlan.vrfs | arista.avd.natural_sort('name') %}
 {%         if vrf.vni is arista.avd.defined %}
    vxlan vrf {{ vrf.name }} vni {{ vrf.vni }}

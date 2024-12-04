@@ -69,33 +69,36 @@
 {%     elif vxlan_config.vxlan.multicast.headend_replication is arista.avd.defined(false) %}
 | Multicast headend-replication | Disabled |
 {%     endif %}
-{%     if vxlan_config.vxlan.vlans is arista.avd.defined %}
+{%     if vxlan_config.vxlan.vlans is arista.avd.defined or vxlan_config.vxlan.vlan_range is arista.avd.defined %}
 
 ##### VLAN to VNI, Flood List and Multicast Group Mappings
 
 | VLAN | VNI | Flood List | Multicast Group |
 | ---- | --- | ---------- | --------------- |
 {%         set all_vlans = {} %}
-{%         for vxlan_vlan in vxlan_config.vxlan.vlans %}
-{%             set vlans = vxlan_vlan.id | arista.avd.range_expand %}
-{%             set vni = vxlan_vlan.vni | arista.avd.range_expand if vxlan_vlan.vni is arista.avd.defined else [] %}
-{%             for idx in range(vlans | length) %}
-{%                 set vlan = vlans[idx] %}
-{%                 set vni_value = vni[idx] if (vni | length > idx) else '-' %}
-{%                 do all_vlans.setdefault(vlan, {'vlan': vlan}) %}
-{%                 if vni_value != '-' %}
-{%                     do all_vlans[vlan].update({'vni': vni_value}) %}
-{%                 endif %}
-{%                 if vxlan_vlan.multicast_group is arista.avd.defined %}
-{%                     do all_vlans[vlan].update({'multicast_group': vxlan_vlan.multicast_group}) %}
-{%                 endif %}
-{%                 if vxlan_vlan.flood_vteps is arista.avd.defined %}
-{%                     do all_vlans[vlan].update({'flood_vteps': vxlan_vlan.flood_vteps | join('<br/>')}) %}
-{%                 endif %}
-{%             endfor %}
+{%         for vlan in vxlan_config.vxlan.vlans %}
+{%             do all_vlans.setdefault(vlan.id, {}) %}
+{%             if vlan.vni is arista.avd.defined %}
+{%                 do all_vlans[vlan.id].update({"vni": vlan.vni}) %}
+{%             endif %}
+{%             if vlan.multicast_group is arista.avd.defined %}
+{%                 do all_vlans[vlan.id].update({"multicast_group": vlan.multicast_group}) %}
+{%             endif %}
+{%             if vlan.flood_vteps is arista.avd.defined %}
+{%                 do all_vlans[vlan.id].update({'flood_list': vlan.flood_vteps | join('<br/>')}) %}
+{%             endif %}
 {%         endfor %}
-{%         for vlan in all_vlans.values() | arista.avd.natural_sort("vlan") %}
-| {{ vlan.vlan }} | {{ vlan.vni | arista.avd.default('-') }} | {{ vlan.flood_vteps | arista.avd.default('-') }} | {{ vlan.multicast_group | arista.avd.default('-') }} |
+{%         if vxlan_config.vxlan.vlan_range.vlans is arista.avd.defined and vxlan_config.vxlan.vlan_range.vnis is arista.avd.defined %}
+{%             set vlans = vxlan_config.vxlan.vlan_range.vlans | arista.avd.range_expand %}
+{%             for vlan in vlans %}
+{%                 do all_vlans.setdefault(vlan, {}) %}
+{%                 set vnis = vxlan_config.vxlan.vlan_range.vnis | arista.avd.range_expand %}
+{%                 set vni = vnis[vlans.index(vlan)] %}
+{%                 do all_vlans[vlan].update({"vni": vni}) %}
+{%             endfor %}
+{%         endif %}
+{%         for vlan, data in all_vlans.items() | arista.avd.natural_sort %}
+| {{ vlan }} | {{ data.vni | arista.avd.default('-') }} | {{ data.flood_list | arista.avd.default('-') }} | {{ data.multicast_group | arista.avd.default('-') }} |
 {%         endfor %}
 {%     endif %}
 {%     if vxlan_config.vxlan.vrfs is arista.avd.defined %}

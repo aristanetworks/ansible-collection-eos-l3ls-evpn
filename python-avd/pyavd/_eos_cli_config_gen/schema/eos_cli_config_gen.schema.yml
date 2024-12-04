@@ -22936,11 +22936,7 @@ keys:
                       type: str
                       convert_types:
                       - int
-                      description: 'VLAN ID or range of VLAN ID.
-
-                        When set as range, if no. of vni in range(if set) of `vni`
-                        does not match with no. of vlans in the range. The inputs
-                        of vlans in the range are ignored.'
+                      description: VLAN ID or range of VLAN ID.
                     vni:
                       type: str
                       convert_types:
@@ -22948,13 +22944,22 @@ keys:
                       description: VNI or range of VNI.
                     multicast_group:
                       type: str
-                      description: IP Multicast Group Address. Set this only when
-                        `id` is not a range of VLAN id.
+                      description: IP Multicast Group Address.
                     flood_vteps:
                       type: list
                       items:
                         type: str
                         description: Remote VTEP IP Address.
+              vlan_range:
+                type: dict
+                description: Set VNI on range of vlans.
+                keys:
+                  vlans:
+                    type: str
+                    description: e.g. 100-110
+                  vnis:
+                    type: str
+                    description: e.g. 10100-10110.
               vrfs:
                 type: list
                 primary_key: name
