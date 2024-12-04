@@ -9,7 +9,7 @@ from re import fullmatch as re_fullmatch
 from typing import TYPE_CHECKING
 
 from pyavd._errors import AristaAvdError, AristaAvdInvalidInputsError
-from pyavd._utils import default, get, get_item
+from pyavd._utils import default, get
 from pyavd.j2filters import natural_sort
 
 from .utils_wan import UtilsWanMixin
@@ -438,17 +438,14 @@ class UtilsMixin(UtilsWanMixin, UtilsZscalerMixin):
                 raise AristaAvdInvalidInputsError(msg)
 
             # Resolve router ID from loopback interface
-            interface_name = f"Loopback{vrf_diagnostic_loopback}"
-            interface_data = get_item(self.loopback_interfaces, "name", interface_name)
+            interface_data = self._get_vtep_diagnostic_loopback_for_vrf(vrf)
             return interface_data["ip_address"].split("/")[0]
 
-        # Handle "main_router_id" with general router ID enabled
-        if router_id == "main_router_id" and self.inputs.use_router_general_for_router_id:
+        # Handle "main_router_id" with general router ID enabled/disabled
+        if router_id == "main_router_id":
+            if not self.inputs.use_router_general_for_router_id:
+                return self.shared_utils.router_id
             return None
-
-        # Handle "main_router_id" with general router ID disabled
-        if router_id == "main_router_id" and not self.inputs.use_router_general_for_router_id:
-            return self.shared_utils.router_id
 
         # Handle "none" router ID or custom value
         if router_id == "none":
