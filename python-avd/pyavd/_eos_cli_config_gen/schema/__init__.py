@@ -20745,8 +20745,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             cipher_list syntax follows the openssl cipher strings format.
             Colon (:) separated list of allowed
             ciphers as a string.
-            If using EOS version 4.32.0F or later, use the setting ciphers instead of
-            cipher_list.
+            If using EOS version 4.32.0F or later, use the setting `ciphers` instead of
+            `cipher_list`.
             """
             ciphers: Ciphers
             """
@@ -20804,8 +20804,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                            cipher_list syntax follows the openssl cipher strings format.
                            Colon (:) separated list of allowed
                            ciphers as a string.
-                           If using EOS version 4.32.0F or later, use the setting ciphers instead of
-                           cipher_list.
+                           If using EOS version 4.32.0F or later, use the setting `ciphers` instead of
+                           `cipher_list`.
                         ciphers:
                            This setting is applicable to EOS versions 4.32.0F and later.
 
