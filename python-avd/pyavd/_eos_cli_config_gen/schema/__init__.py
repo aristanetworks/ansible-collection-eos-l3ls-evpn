@@ -11513,7 +11513,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                             protocol: str
                             """
                             Protocol type in GRE header.
-                            Protocol range: 0x0000-0xFFFF.
+                            Valid range: 0x0-0xFFFF. The value must be enclosed in quotes, e.g.,
+                            "0x0".
                             """
                             strip: bool | None
                             """This is a required key to strip GRE encapsulation header with protocols."""
@@ -11551,7 +11552,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                                     Args:
                                         protocol:
                                            Protocol type in GRE header.
-                                           Protocol range: 0x0000-0xFFFF.
+                                           Valid range: 0x0-0xFFFF. The value must be enclosed in quotes, e.g.,
+                                           "0x0".
                                         strip: This is a required key to strip GRE encapsulation header with protocols.
                                         feature_header_length:
                                            Feature header length in bytes.
@@ -11588,7 +11590,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                                 protocol: str
                                 """
                                 Protocol type in GRE header.
-                                Protocol range: 0x0000-0xFFFF.
+                                Valid range: 0x0-0xFFFF. The value must be enclosed in quotes, e.g.,
+                                "0x0".
                                 """
                                 strip: bool | None
                                 """This is a required key to strip GRE encapsulation header for specific destination with protocols."""
@@ -11626,7 +11629,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                                         Args:
                                             protocol:
                                                Protocol type in GRE header.
-                                               Protocol range: 0x0000-0xFFFF.
+                                               Valid range: 0x0-0xFFFF. The value must be enclosed in quotes, e.g.,
+                                               "0x0".
                                             strip: This is a required key to strip GRE encapsulation header for specific destination with protocols.
                                             feature_header_length:
                                                Feature header length in bytes.
@@ -31260,7 +31264,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                             protocol: str
                             """
                             Protocol type in GRE header.
-                            Protocol range: 0x0000-0xFFFF.
+                            Valid range: 0x0-0xFFFF. The value must be enclosed in quotes, e.g.,
+                            "0x0".
                             """
                             strip: bool | None
                             """This is a required key to strip GRE encapsulation header with protocols."""
@@ -31298,7 +31303,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                                     Args:
                                         protocol:
                                            Protocol type in GRE header.
-                                           Protocol range: 0x0000-0xFFFF.
+                                           Valid range: 0x0-0xFFFF. The value must be enclosed in quotes, e.g.,
+                                           "0x0".
                                         strip: This is a required key to strip GRE encapsulation header with protocols.
                                         feature_header_length:
                                            Feature header length in bytes.
@@ -31335,7 +31341,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                                 protocol: str
                                 """
                                 Protocol type in GRE header.
-                                Protocol range: 0x0000-0xFFFF.
+                                Valid range: 0x0-0xFFFF. The value must be enclosed in quotes, e.g.,
+                                "0x0".
                                 """
                                 strip: bool | None
                                 """This is a required key to strip GRE encapsulation header for specific destination with protocols."""
@@ -31373,7 +31380,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                                         Args:
                                             protocol:
                                                Protocol type in GRE header.
-                                               Protocol range: 0x0000-0xFFFF.
+                                               Valid range: 0x0-0xFFFF. The value must be enclosed in quotes, e.g.,
+                                               "0x0".
                                             strip: This is a required key to strip GRE encapsulation header for specific destination with protocols.
                                             feature_header_length:
                                                Feature header length in bytes.

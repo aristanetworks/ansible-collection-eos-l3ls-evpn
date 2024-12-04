@@ -1797,34 +1797,34 @@ ethernet_interfaces:
               - destination: 1.1.1.1
                 source: 1.1.1.2
                 protocols:
-                  - protocol: "0x0000"
+                  - protocol: "0x0"
                     strip: true
                 strip: true
               - destination: 2.1.1.2
                 protocols:
-                  - protocol: "0x0010"
+                  - protocol: "0x10"
                     strip: true
-                  - protocol: "0x0011"
+                  - protocol: "0x11"
                     feature_header_length: 2
                     re_encapsulation_ethernet_header: true
                     strip: true
-                  - protocol: "0x0012"
+                  - protocol: "0x12"
                     re_encapsulation_ethernet_header: true
                     strip: true
               - destination: 2.1.1.3
                 source: 2.1.1.4
                 strip: true
             protocols:
-              - protocol: "0x0001"
+              - protocol: "0x1"
                 strip: true
-              - protocol: "0x0002"
+              - protocol: "0x2"
                 feature_header_length: 3
                 strip: true
-              - protocol: "0x0003"
+              - protocol: "0x3"
                 feature_header_length: 2
                 re_encapsulation_ethernet_header: true
                 strip: true
-              - protocol: "0x0004"
+              - protocol: "0x4"
                 re_encapsulation_ethernet_header: true
                 strip: true
       tool:

@@ -2065,7 +2065,7 @@ keys:
                                 type: str
                                 description: |-
                                   Protocol type in GRE header.
-                                  Protocol range: 0x0000-0xFFFF.
+                                  Valid range: 0x0-0xFFFF. The value must be enclosed in quotes, e.g., "0x0".
                               strip:
                                 type: bool
                                 description: |-
@@ -2109,7 +2109,7 @@ keys:
                                       type: str
                                       description: |-
                                         Protocol type in GRE header.
-                                        Protocol range: 0x0000-0xFFFF.
+                                        Valid range: 0x0-0xFFFF. The value must be enclosed in quotes, e.g., "0x0".
                                     strip:
                                       type: bool
                                       description: This is a required key to strip GRE encapsulation header for specific destination with protocols.
