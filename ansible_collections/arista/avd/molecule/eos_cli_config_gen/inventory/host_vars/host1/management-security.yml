@@ -31,6 +31,10 @@ management_security:
       tls_versions: "1.0 1.1"
     - name: cipher-list-profile
       cipher_list: ECDHE-RSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-SHA384
+    - name: cipher-v1.0-v1.3
+      ciphers:
+        v1_0: SHA256:SHA384
+        v1_3: TLS_AES_256_GCM_SHA384:TLS_CHACHA20_POLY1305_SHA256
     - name: certificate-profile
       certificate:
         file: eAPI.crt

@@ -93,6 +93,12 @@ management security
 {%         if ssl_profile.cipher_list is arista.avd.defined %}
       cipher-list {{ ssl_profile.cipher_list }}
 {%         endif %}
+{%         if ssl_profile.ciphers.v1_0 is arista.avd.defined %}
+      cipher v1.0 {{ ssl_profile.ciphers.v1_0 }}
+{%         endif %}
+{%         if ssl_profile.ciphers.v1_3 is arista.avd.defined %}
+      cipher v1.3 {{ ssl_profile.ciphers.v1_3 }}
+{%         endif %}
 {%         if ssl_profile.trust_certificate is arista.avd.defined %}
 {%             for trust_cert in ssl_profile.trust_certificate.certificates | arista.avd.natural_sort %}
       trust certificate {{ trust_cert }}
