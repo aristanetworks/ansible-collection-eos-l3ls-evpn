@@ -1,0 +1,40 @@
+---
+mac_security:
+  fips_restrictions: true
+  license:
+    license_name: license1
+    license_key: "123456"
+  profiles:
+    - name: A1
+      sci: true
+      mka:
+        key_server_priority: 100
+        session:
+          rekey_period: 30
+      cipher: aes128-gcm
+      connection_keys:
+        - id: 1234a
+          encrypted_key: 025756085F535976
+        - id: 1234c
+          encrypted_key: 10195F4C5144405A
+          fallback: true
+      l2_protocols:
+        lldp:
+          mode: bypass unauthorized
+      traffic_unprotected:
+        action: allow
+    - name: A2
+      connection_keys:
+        - id: 1234b
+          encrypted_key: 12485744465E5A53
+      traffic_unprotected:
+        action: allow
+        allow_active_sak: true
+    - name: A3
+      cipher: aes256-gcm-xpn
+      connection_keys:
+        - id: ab
+          encrypted_key: 10195F4C5144405A
+          fallback: false
+      traffic_unprotected:
+        action: drop

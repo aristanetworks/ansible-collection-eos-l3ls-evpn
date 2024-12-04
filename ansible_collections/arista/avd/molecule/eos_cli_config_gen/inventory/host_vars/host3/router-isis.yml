@@ -1,0 +1,18 @@
+router_isis:
+  instance: EVPN_UNDERLAY
+  spf_interval:
+    interval: 250
+    wait_interval: 30
+  set_overload_bit:
+    enabled: true
+    on_startup:
+      delay: 55
+  authentication:
+    both:
+      key_type: 0
+      key: password
+      mode: shared-secret
+      shared_secret:
+        profile: test1
+        algorithm: md5
+      rx_disabled: true

@@ -56,6 +56,19 @@ port_channel_interfaces:
         - name: ACL1
         - name: ACL2
       version: 2
+    ptp:
+      enable: true
+      mpass: true
+      delay_mechanism: e2e
+      sync_message:
+        interval: 1
+      role: dynamic
+      vlan: 2
+      transport: layer2
+      profile:
+        g8275_1:
+          destination_mac_address: forwardable
+
   - name: Port-Channel15
     description: DC1_L2LEAF3_Po1
     link_tracking_groups:
@@ -86,6 +99,16 @@ port_channel_interfaces:
         key: password
         mode: text
         rx_disabled: true
+    service_profile: experiment
+    service_policy:
+      qos:
+        input: pmap_test1
+    qos:
+      trust: cos
+      cos: 2
+    traffic_policy:
+      input: BLUE-C1-POLICY
+      output: BLUE-C2-POLICY
 
   - name: Port-Channel16
     description: DC1_L2LEAF4_Po1
@@ -491,6 +514,18 @@ port_channel_interfaces:
         tunnel_flood_filter_time: 100
       route_target: "00:00:01:02:03:05"
 
+  - name: Port-Channel18
+    switchport:
+      enabled: false
+    ospf_network_point_to_point: true
+    ospf_area: 0.0.0.12
+    ospf_cost: 99
+    ospf_authentication: message-digest
+    ospf_message_digest_keys:
+      - id: 55
+        hash_algorithm: md5
+        key: dRx9sULvl+hzkCMYJLEQCw==
+
   - name: Port-Channel17
     description: PBR Description
     switchport:
@@ -649,6 +684,7 @@ port_channel_interfaces:
 
   - name: Port-Channel111.400
     description: TENANT_A pseudowire 3 interface
+    ip_address: dhcp
     encapsulation_vlan:
       client:
         encapsulation: dot1q
@@ -682,12 +718,16 @@ port_channel_interfaces:
         allowed_vlan: 112
     lacp_fallback_timeout: 5
     lacp_fallback_mode: individual
+    ip_address: dhcp
+    dhcp_client_accept_default_route: true
 
   - name: Port-Channel113
     description: interface_with_mpls_enabled
     switchport:
       enabled: false
     ip_address: 172.31.128.9/31
+    # This won't be rendered because IP address is not DHCP
+    dhcp_client_accept_default_route: true
     mpls:
       ip: true
       ldp:
@@ -712,6 +752,11 @@ port_channel_interfaces:
         native_vlan_tag: true
         native_vlan: 100
       mode: trunk
+    flow_tracker:
+      sampled: T3
+      hardware: T3
+    l2_protocol:
+      forwarding_profile: TEST2
 
   - name: Port-Channel117
     description: interface_with_sflow_ingress_egress_enabled

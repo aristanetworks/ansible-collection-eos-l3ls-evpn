@@ -801,7 +801,10 @@ keys:
                 Hence, MPASS is needed only on MLAG port-channels connected to non-Arista devices.
         ip_address:
           type: str
-          description: IPv4 address/mask.
+          description: IPv4 address/mask or "dhcp".
+        dhcp_client_accept_default_route:
+          type: bool
+          description: Install default-route obtained via DHCP.
         ip_verify_unicast_source_reachable_via:
           type: str
           valid_values:

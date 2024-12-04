@@ -1,0 +1,3 @@
+---
+switchport_default:
+  mode: routed
