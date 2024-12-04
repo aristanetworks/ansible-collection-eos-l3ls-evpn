@@ -1,5 +1,4 @@
 ---
-# test for mpls.ldp.shutdown: true and mpls.icmp.ttl_exceeded_tunneling: true
 mpls:
   ip: true
   ldp:
