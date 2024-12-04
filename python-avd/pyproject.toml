@@ -39,6 +39,7 @@ pytest = [
     "PyYAML>=6.0.0",
     "pydantic>=2.3.0",
     "referencing>=0.35.0",
+    "python-mermaid>=0.1.3",
 ]
 coverage = [
     "coverage[toml]",
