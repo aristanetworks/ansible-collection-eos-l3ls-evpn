@@ -243,7 +243,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                     "_custom_data": {"type": dict},
                 }
                 commands: str | None
-                """Privilege level 'all' or 0-15."""
+                """Privilege level 'all' or 0-15. Ensure that if ranges are used, they do not overlap with one another."""
                 type: Literal["none", "start-stop", "stop-only"] | None
                 group: str | None
                 """Group Name."""
@@ -268,7 +268,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                         Subclass of AvdModel.
 
                         Args:
-                            commands: Privilege level 'all' or 0-15.
+                            commands: Privilege level 'all' or 0-15. Ensure that if ranges are used, they do not overlap with one another.
                             type: type
                             group: Group Name.
                             logging: logging
@@ -292,7 +292,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                     "_custom_data": {"type": dict},
                 }
                 commands: str | None
-                """Privilege level 'all' or 0-15."""
+                """Privilege level 'all' or 0-15. Ensure that if ranges are used, they do not overlap with one another."""
                 type: Literal["none", "start-stop", "stop-only"] | None
                 group: str | None
                 """Group Name."""
@@ -317,7 +317,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                         Subclass of AvdModel.
 
                         Args:
-                            commands: Privilege level 'all' or 0-15.
+                            commands: Privilege level 'all' or 0-15. Ensure that if ranges are used, they do not overlap with one another.
                             type: type
                             group: Group Name.
                             logging: logging
