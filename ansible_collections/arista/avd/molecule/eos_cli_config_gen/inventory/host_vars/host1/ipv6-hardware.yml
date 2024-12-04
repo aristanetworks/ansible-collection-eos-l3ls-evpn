@@ -1,0 +1,6 @@
+---
+ipv6_hardware:
+  fib:
+    optimize:
+      prefixes:
+        profile: internet

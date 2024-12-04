@@ -1,0 +1,9 @@
+router_isis:
+  instance: EVPN_UNDERLAY
+  authentication:
+    both:
+      key_type: 0
+      mode: sha
+      sha:
+        key_id: 4
+      rx_disabled: true

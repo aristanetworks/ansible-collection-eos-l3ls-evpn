@@ -1,0 +1,6 @@
+---
+tcam_profile:
+  system: traffic_policy
+  profiles:
+    - name: traffic_policy
+      config: "{{ lookup('file', '{{ root_dir }}/inventory/TCAM_TRAFFIC_POLICY.conf') }}"

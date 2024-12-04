@@ -1761,6 +1761,7 @@ router_bgp:
     - name: VRF02
       neighbors:
         - ip_address: 1.1.1.1
+          password: CRWZZy7NjZF5vUQbiZLrzw==
           additional_paths:
             receive: true
             send: ecmp

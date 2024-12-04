@@ -4,12 +4,19 @@
 
 - [Management](#management)
   - [Management Interfaces](#management-interfaces)
+- [Monitoring](#monitoring)
+  - [TerminAttr Daemon](#terminattr-daemon)
+- [Spanning Tree](#spanning-tree)
+  - [Spanning Tree Summary](#spanning-tree-summary)
+  - [Spanning Tree Device Configuration](#spanning-tree-device-configuration)
 - [Routing](#routing)
+  - [Router ISIS](#router-isis)
   - [Router BGP](#router-bgp)
 - [MPLS](#mpls)
   - [MPLS and LDP](#mpls-and-ldp)
   - [MPLS RSVP](#mpls-rsvp)
   - [MPLS Device Configuration](#mpls-device-configuration)
+  - [Traffic Policies information](#traffic-policies-information)
 
 ## Management
 
@@ -39,7 +46,98 @@ interface Management1
    ip address 10.73.255.122/24
 ```
 
+## Monitoring
+
+### TerminAttr Daemon
+
+#### TerminAttr Daemon Summary
+
+| CV Compression | CloudVision Servers | VRF | Authentication | Smash Excludes | Ingest Exclude | Bypass AAA |
+| -------------- | ------------------- | --- | -------------- | -------------- | -------------- | ---------- |
+| gzip | apiserver.arista.io:443 | mgt | token-secure,/tmp/cv-onboarding-token | ale,flexCounter,hardware,kni,pulse,strata | /Sysdb/cell/1/agent,/Sysdb/cell/2/agent | False |
+
+#### TerminAttr Daemon Device Configuration
+
+```eos
+!
+daemon TerminAttr
+   exec /usr/bin/TerminAttr -cvaddr=apiserver.arista.io:443 -cvauth=token-secure,/tmp/cv-onboarding-token -cvvrf=mgt -smashexcludes=ale,flexCounter,hardware,kni,pulse,strata -ingestexclude=/Sysdb/cell/1/agent,/Sysdb/cell/2/agent -taillogs
+   no shutdown
+```
+
+## Spanning Tree
+
+### Spanning Tree Summary
+
+STP mode: **mstp**
+
+#### MSTP Instance and Priority
+
+| Instance(s) | Priority |
+| -------- | -------- |
+| 0 | 4096 |
+| 100-200 | 8192 |
+
+#### MST Configuration
+
+| Variable | Value |
+| -------- | -------- |
+| Name | test |
+| Revision | 5 |
+| Instance 2 | VLAN(s) 15,16,17,18 |
+| Instance 3 | VLAN(s) 15 |
+| Instance 4 | VLAN(s) 200-300 |
+
+#### Global Spanning-Tree Settings
+
+- MST PSVT Border is enabled.
+
+### Spanning Tree Device Configuration
+
+```eos
+!
+spanning-tree mode mstp
+spanning-tree mst pvst border
+spanning-tree mst 0 priority 4096
+spanning-tree mst 100-200 priority 8192
+!
+spanning-tree mst configuration
+   name test
+   revision 5
+   instance 2 vlan 15,16,17,18
+   instance 3 vlan 15
+   instance 4 vlan 200-300
+```
+
 ## Routing
+
+### Router ISIS
+
+#### Router ISIS Summary
+
+| Settings | Value |
+| -------- | ----- |
+| Instance | EVPN_UNDERLAY |
+| SPF Interval | 250 seconds |
+| SPF Interval Wait Time| 30 milliseconds |
+
+#### ISIS Interfaces Summary
+
+| Interface | ISIS Instance | ISIS Metric | Interface Mode |
+| --------- | ------------- | ----------- | -------------- |
+
+#### Router ISIS Device Configuration
+
+```eos
+!
+router isis EVPN_UNDERLAY
+   set-overload-bit
+   set-overload-bit on-startup 55
+   spf-interval 250 30
+   authentication mode shared-secret profile test1 algorithm md5 rx-disabled
+   authentication key 0 password
+   !
+```
 
 ### Router BGP
 
@@ -125,4 +223,13 @@ mpls ldp
    interface disabled default
 !
 mpls rsvp
+```
+
+### Traffic Policies information
+
+#### Traffic Policies Device Configuration
+
+```eos
+!
+traffic-policies
 ```

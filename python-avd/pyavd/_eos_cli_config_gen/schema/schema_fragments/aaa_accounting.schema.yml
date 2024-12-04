@@ -69,8 +69,8 @@ keys:
                 commands:
                   type: str
                   convert_types:
-                  - int
-                  description: Privilege level 'all' or 0-15.
+                    - int
+                  description: Privilege level 'all' or 0-15. Ensure that if ranges are used, they do not overlap with one another.
                 type:
                   type: str
                   valid_values: ["none", "start-stop", "stop-only"]
@@ -87,8 +87,8 @@ keys:
                 commands:
                   type: str
                   convert_types:
-                  - int
-                  description: Privilege level 'all' or 0-15.
+                    - int
+                  description: Privilege level 'all' or 0-15. Ensure that if ranges are used, they do not overlap with one another.
                 type:
                   type: str
                   valid_values: ["none", "start-stop", "stop-only"]

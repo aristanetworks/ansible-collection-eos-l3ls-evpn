@@ -1,0 +1,9 @@
+---
+priority_flow_control:
+  all_off: true
+  watchdog:
+    action: no-drop
+    timeout: "0.05"
+    polling_interval: 10.001
+    recovery_time: 1.22
+    override_action_drop: false
