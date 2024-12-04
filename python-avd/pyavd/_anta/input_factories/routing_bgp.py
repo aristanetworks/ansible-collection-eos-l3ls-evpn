@@ -5,14 +5,11 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from pydantic import Field
-
 from pyavd._anta.utils import LogMessage
 from pyavd._utils import get
 
-from ._base_classes import AntaTestInputFactory, AntaTestInputFactoryFilter
+from ._base_classes import AntaTestInputFactory
 from ._constants import BGP_MAPPINGS
-from ._filter_models import BgpAddressFamily
 
 if TYPE_CHECKING:
     from anta.tests.routing.bgp import VerifyBGPSpecificPeers
@@ -35,35 +32,6 @@ class VerifyBGPSpecificPeersInputFactory(AntaTestInputFactory):
 
     TODO: Add support for BGP VRFs
     """
-
-    class Filter(AntaTestInputFactoryFilter):
-        """Filter model for the VerifyBGPSpecificPeers test.
-
-        This filter allows excluding peers and specific address families from the test.
-        """
-
-        exclude_peers: list[str] = Field(default_factory=list, description="List of peers to exclude from the test.", examples=["DC1-LEAF1A", "DC1-LEAF1B"])
-        exclude_address_families: list[BgpAddressFamily] = Field(
-            default_factory=list,
-            description="List of BGP address families to exclude from the test.",
-            examples=[{"afi": "ipv4", "safi": "unicast", "peers": ["10.0.0.1", "10.0.0.2"]}],
-        )
-
-    def _create_address_family(self, afi: str, safi: str | None, peers: list[str]) -> VerifyBGPSpecificPeers.Input.BgpAfi | None:
-        """Create an address family input for the VerifyBGPSpecificPeers test, considering `input_filter`."""
-        # If no address family filters are defined, return the input as is
-        if not (exclude_address_families := getattr(self.input_filter, "exclude_address_families", [])):
-            return self.test.Input.BgpAfi(afi=afi, safi=safi, peers=peers)
-
-        # Find all matching filters based on the AFI and SAFI
-        matching_filters = [f for f in exclude_address_families if (f.afi, f.safi) == (afi, safi)]
-
-        # If we found matching filters, remove all filter peers from actual peers
-        if matching_filters:
-            filter_peers_set = set().union(*(set(f.peers) for f in matching_filters))
-            peers = [peer for peer in peers if peer not in filter_peers_set]
-
-        return self.test.Input.BgpAfi(afi=afi, safi=safi, peers=peers) if peers else None
 
     def create(self) -> VerifyBGPSpecificPeers.Input | None:
         """Create Input for the VerifyBGPSpecificPeers test."""
@@ -90,19 +58,12 @@ class VerifyBGPSpecificPeersInputFactory(AntaTestInputFactory):
             peers = []
             for ip, peer in all_neighbors:
                 # Check peer availability if the 'peer' key exists. Otherwise, still include the test for potential BGP external peers
-                if peer is not None:
-                    if not self.manager.is_peer_available(peer):
-                        self.logger.debug(LogMessage.UNAVAILABLE_PEER, entity=f"{ip} ({bgp_mapping['description']})", peer=peer)
-                        continue
-                    if self.is_peer_filtered(peer):
-                        self.logger.debug(LogMessage.FILTERED_PEER, entity=f"{ip} ({bgp_mapping['description']})", peer=peer)
-                        continue
-
+                if peer is not None and not self.manager.is_peer_available(peer):
+                    self.logger.debug(LogMessage.UNAVAILABLE_PEER, entity=f"{ip} ({bgp_mapping['description']})", peer=peer)
+                    continue
                 peers.append(ip)
 
             if peers:
-                filtered_address_family = self._create_address_family(bgp_mapping["afi"], bgp_mapping["safi"], peers)
-                if filtered_address_family:
-                    address_families.append(filtered_address_family)
+                address_families.append(self.test.Input.BgpAfi(afi=bgp_mapping["afi"], safi=bgp_mapping["safi"], peers=peers))
 
         return self.test.Input(address_families=address_families) if address_families else None

@@ -9,7 +9,7 @@ from typing import TYPE_CHECKING
 from pyavd._anta.utils import LogMessage
 from pyavd._utils import get, validate_dict
 
-from ._base_classes import AntaTestInputFactory, AntaTestInputFactoryFilter
+from ._base_classes import AntaTestInputFactory
 
 if TYPE_CHECKING:
     from anta.tests.stun import VerifyStunClient
@@ -29,10 +29,6 @@ class VerifyStunClientInputFactory(AntaTestInputFactory):
       - Only explicitly ip address configured stun local interfaces are tested
 
     """
-
-    # TODO: Add filter class
-    class Filter(AntaTestInputFactoryFilter):
-        pass
 
     def create(self) -> VerifyStunClient.Input | None:
         """Create Input for the VerifyStunClient test."""
@@ -59,7 +55,7 @@ class VerifyStunClientInputFactory(AntaTestInputFactory):
             self.logger.debug(LogMessage.NOT_STUN_CLIENT_INTERFACE)
             return None
 
-        # Generate the ANTA tests for each identified local interface.
+        # Generate the ANTA tests for each identified local interface
         for source_interface in stun_interfaces:
             if (ip_address := self.manager.get_interface_ip("ethernet_interfaces", source_interface)) is None:
                 continue

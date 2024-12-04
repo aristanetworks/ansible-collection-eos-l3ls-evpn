@@ -3,14 +3,11 @@
 # that can be found in the LICENSE file.
 from __future__ import annotations
 
-from ipaddress import IPv4Address
 from typing import TYPE_CHECKING
-
-from pydantic import Field
 
 from pyavd._anta.utils import LogMessage
 
-from ._base_classes import AntaTestInputFactory, AntaTestInputFactoryFilter
+from ._base_classes import AntaTestInputFactory
 
 if TYPE_CHECKING:
     from anta.tests.routing.generic import VerifyRoutingTableEntry
@@ -32,26 +29,6 @@ class VerifyRoutingTableEntryInputFactory(AntaTestInputFactory):
       - Route collection is skipped if no routes are found
     """
 
-    class Filter(AntaTestInputFactoryFilter):
-        """Input factory filter class for the VerifyBGPSpecificPeers test.
-
-        This filter allows excluding peers and specific routes from the test.
-        """
-
-        exclude_peers: list[str] = Field(default_factory=list, description="List of peers to exclude from the test.", examples=["DC1-LEAF1A", "DC1-LEAF1B"])
-        exclude_routes: list[IPv4Address] = Field(
-            default_factory=list, description="List of specific routes to exclude from the test.", examples=["10.0.0.1", "10.0.0.2"]
-        )
-
-    def _create_routes(self, ips: set[IPv4Address]) -> list[IPv4Address]:
-        """Create the list of routes input for the VerifyRoutingTableEntry test, considering `input_filter`."""
-        # If no route filters are defined, return the input as is
-        if not (exclude_routes := getattr(self.input_filter, "exclude_routes", [])):
-            return list(ips)
-
-        # Filter out routes that match the filter peers
-        return [ip for ip in ips if ip not in exclude_routes]
-
     def create(self) -> VerifyRoutingTableEntry.Input | None:
         """Create Input for the VerifyRoutingTableEntry test."""
         # Skip the test if the device is not a VTEP or is a WAN VTEP
@@ -69,12 +46,6 @@ class VerifyRoutingTableEntryInputFactory(AntaTestInputFactory):
                 self.logger.debug(LogMessage.UNAVAILABLE_PEER, entity=entity, peer=peer)
                 continue
 
-            # Check if the peer is filtered
-            if self.is_peer_filtered(peer):
-                self.logger.debug(LogMessage.FILTERED_PEER, entity=entity, peer=peer)
-                continue
-
             processed_ips.update(ips)
 
-        filtered_routes = self._create_routes(processed_ips)
-        return self.test.Input(routes=filtered_routes, collect="all") if filtered_routes else None
+        return self.test.Input(routes=list(processed_ips), collect="all") if processed_ips else None

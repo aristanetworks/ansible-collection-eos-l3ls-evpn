@@ -24,7 +24,6 @@ def get_device_anta_catalog(
     custom_test_specs: list[TestSpec] | None = None,
     run_tests: list[str] | None = None,
     skip_tests: list[str] | None = None,
-    input_filters: dict[str, dict] | None = None,
     *,
     logger: logging.Logger | None = None,
 ) -> AntaCatalog:
@@ -55,8 +54,6 @@ def get_device_anta_catalog(
         Optional list of test names to run from the default PyAVD test index.
     skip_tests : list[str]
         Optional list of test names to skip from the default PyAVD test index. Takes precedence over `run_tests`.
-    input_filters : dict[str, dict]
-        Optional dictionary keyed by ANTA test names with values as a filter dictionary for that test.
     logger : logging.Logger
         Optional logger to use for logging messages. If not provided, the `pyavd` logger will be used.
 
@@ -75,7 +72,6 @@ def get_device_anta_catalog(
         "custom_test_specs": custom_test_specs or [],
         "run_tests": run_tests or [],
         "skip_tests": skip_tests or [],
-        "input_filters": input_filters or {},
     }
 
     start_time = perf_counter()
@@ -85,7 +81,6 @@ def get_device_anta_catalog(
     invalid_tests = {
         "run_tests": set(opt_params["run_tests"]) - set(PYAVD_TEST_NAMES),
         "skip_tests": set(opt_params["skip_tests"]) - set(PYAVD_TEST_NAMES),
-        "input_filters": set(opt_params["input_filters"].keys()) - set(PYAVD_TEST_NAMES),
     }
 
     for filter_type, invalid_names in invalid_tests.items():
@@ -106,10 +101,6 @@ def get_device_anta_catalog(
         # If run_tests is specified, only include tests in that set
         if opt_params["run_tests"] and test.test_class.name not in opt_params["run_tests"]:
             continue
-
-        # Create input filters for the test if specified
-        if test.test_class.name in opt_params["input_filters"]:
-            test.create_input_filter(opt_params["input_filters"][test.test_class.name])
 
         filtered_test_specs.append(test)
 

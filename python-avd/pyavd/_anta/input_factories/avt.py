@@ -8,7 +8,7 @@ from typing import TYPE_CHECKING
 from pyavd._anta.utils import LogMessage
 from pyavd._utils import get
 
-from ._base_classes import AntaTestInputFactory, AntaTestInputFactoryFilter
+from ._base_classes import AntaTestInputFactory
 
 if TYPE_CHECKING:
     from anta.tests.avt import VerifyAVTRole
@@ -22,10 +22,6 @@ class VerifyAVTRoleInputFactory(AntaTestInputFactory):
     It collect the expected AVT role and resversed the role name if role is either `transit region` or `transit zone`.
 
     """
-
-    # TODO: Add filter class
-    class Filter(AntaTestInputFactoryFilter):
-        pass
 
     def create(self) -> VerifyAVTRole.Input | None:
         """Create Input for the VerifyAVTRole test."""

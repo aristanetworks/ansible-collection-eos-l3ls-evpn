@@ -9,7 +9,7 @@ from typing import TYPE_CHECKING
 from pyavd._anta.utils import LogMessage
 from pyavd._utils import default, get, validate_dict
 
-from ._base_classes import AntaTestInputFactory, AntaTestInputFactoryFilter
+from ._base_classes import AntaTestInputFactory
 
 if TYPE_CHECKING:
     from anta.tests.connectivity import VerifyLLDPNeighbors, VerifyReachability
@@ -30,10 +30,6 @@ class VerifyLLDPNeighborsInputFactory(AntaTestInputFactory):
       - Neighbor collection is skipped if no valid neighbors are found
 
     """
-
-    # TODO: Add filter class
-    class Filter(AntaTestInputFactoryFilter):
-        pass
 
     def create(self) -> VerifyLLDPNeighbors.Input | None:
         """Create Input for the VerifyLLDPNeighbors test."""
@@ -97,10 +93,6 @@ class VerifyReachabilityInputFactory(AntaTestInputFactory):
       - VTEP Loopback0 testing is on VTEP devices (presence of `vxlan_interface`) only, excluding WAN VTEPs (DPS interface)
       - Reachability collection is skipped if no valid pairs are found
     """
-
-    # TODO: Add filter class
-    class Filter(AntaTestInputFactoryFilter):
-        pass
 
     def create(self) -> VerifyReachability.Input | None:
         """Create Input for the VerifyReachability test."""

@@ -35,7 +35,7 @@ def create_catalog(config_manager: ConfigManager, test_specs: list[TestSpec], lo
         test_logger = TestLoggerAdapter.create(device=config_manager.device_name, test=test.test_class.name, logger=logger)
         test_definition = test.create_test_definition(config_manager, test_logger)
 
-        # Skip the test if we couldn't create the test definition. Logging is done in the service
+        # Skip the test if we couldn't create the test definition. Logging is done in the TestSpec class
         if test_definition is None:
             continue
 

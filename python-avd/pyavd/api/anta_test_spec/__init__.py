@@ -5,9 +5,9 @@ from __future__ import annotations
 
 from typing import Self
 
-from pydantic import BaseModel, ValidationError, model_validator
+from pydantic import BaseModel, model_validator
 
-from pyavd._anta.input_factories._base_classes import AntaTestInputFactory, AntaTestInputFactoryFilter
+from pyavd._anta.input_factories._base_classes import AntaTestInputFactory
 from pyavd._anta.lib import AntaTest, AntaTestDefinition
 from pyavd._anta.utils import ConfigManager, LogMessage, StructuredConfigKey, TestLoggerAdapter
 from pyavd._utils import get
@@ -31,15 +31,12 @@ class TestSpec(BaseModel, validate_assignment=True):
     input_dict : dict[str, StructuredConfigKey] | None
         Optional dictionary that maps the input fields to structured config keys.
         The structured config keys values will be extracted to generate the `AntaTest.Input` model (inputs) for the test.
-    input_filter : AntaTestInputFactoryFilter | None
-        Optional input filter to be used by the input factory to filter the inputs for the test.
     """
 
     test_class: type[AntaTest]
     conditional_keys: list[StructuredConfigKey] | None = None
     input_factory: type[AntaTestInputFactory] | None = None
     input_dict: dict[str, StructuredConfigKey] | None = None
-    input_filter: AntaTestInputFactoryFilter | None = None
 
     @model_validator(mode="after")
     def check_inputs(self) -> Self:
@@ -52,28 +49,7 @@ class TestSpec(BaseModel, validate_assignment=True):
             msg = f"TestSpec {self.test_class.name} must have `input_factory or `input_dict`."
             raise ValueError(msg)
 
-        if self.input_filter is not None and (self.input_factory is None or "Filter" not in self.input_factory.__dict__):
-            msg = f"TestSpec {self.test_class.name} must have `input_factory` with a `Filter` class to use `input_filters`."
-            raise ValueError(msg)
-
         return self
-
-    def create_input_filter(self, input_filter: dict) -> None:
-        """Create the input filters for the test."""
-        if "Filter" not in self.input_factory.__dict__:
-            msg = f"Test {self.test_class.name} doesn't support input filters."
-            raise ValueError(msg)
-
-        if not isinstance(input_filter, dict):
-            msg = f"Input filter for test {self.test_class.name} must be a dictionary, got {type(input_filter).__name__}."
-            raise TypeError(msg)
-
-        try:
-            self.input_filter = self.input_factory.Filter(**input_filter)
-        except ValidationError as exc:
-            empty_filter = self.input_factory.Filter()
-            msg = empty_filter.format_validation_error(exc, self.test_class.name)
-            raise ValueError(msg) from exc
 
     def create_test_definition(self, manager: ConfigManager, logger: TestLoggerAdapter) -> AntaTestDefinition | None:
         """Create the AntaTestDefinition from this TestSpec instance."""
@@ -100,7 +76,7 @@ class TestSpec(BaseModel, validate_assignment=True):
 
         # Else create the AntaTest.Input instance from the input factory if available
         elif self.input_factory:
-            factory = self.input_factory(self.test_class, manager, logger, self.input_filter)  # pylint: disable=not-callable
+            factory = self.input_factory(self.test_class, manager, logger)  # pylint: disable=not-callable
             inputs = factory.create()
             if inputs is None:
                 logger.debug(LogMessage.NO_INPUTS)

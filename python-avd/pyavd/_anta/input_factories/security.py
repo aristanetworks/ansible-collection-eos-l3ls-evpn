@@ -8,7 +8,7 @@ from typing import TYPE_CHECKING
 from pyavd._anta.utils import LogMessage
 from pyavd._utils import get, validate_dict
 
-from ._base_classes import AntaTestInputFactory, AntaTestInputFactoryFilter
+from ._base_classes import AntaTestInputFactory
 
 if TYPE_CHECKING:
     from anta.tests.security import VerifySpecificIPSecConn
@@ -27,10 +27,6 @@ class VerifySpecificIPSecConnInputFactory(AntaTestInputFactory):
       - IP security collection is skipped for missing required key `router_path_selection.path_groups[].static_peers[].router_ip`
 
     """
-
-    # TODO: Add filter class
-    class Filter(AntaTestInputFactoryFilter):
-        pass
 
     def create(self) -> VerifySpecificIPSecConn.Input | None:
         """Create Input for the VerifySpecificIPSecConn test."""

@@ -8,7 +8,7 @@ from typing import TYPE_CHECKING
 from pyavd._anta.utils import LogMessage
 from pyavd._utils import get
 
-from ._base_classes import AntaTestInputFactory, AntaTestInputFactoryFilter
+from ._base_classes import AntaTestInputFactory
 from ._constants import INTERFACE_MODELS
 
 if TYPE_CHECKING:
@@ -29,10 +29,6 @@ class VerifyInterfacesStatusInputFactory(AntaTestInputFactory):
       - Only interfaces marked for validation (`validate_state: true`) are included
       - Interface collection is skipped if no interfaces are found
     """
-
-    # TODO: Add filter class
-    class Filter(AntaTestInputFactoryFilter):
-        pass
 
     def create(self) -> VerifyInterfacesStatus.Input | None:
         """Create Input for the VerifyInterfacesStatus test."""
