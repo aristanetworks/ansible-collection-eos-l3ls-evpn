@@ -1982,7 +1982,7 @@ router_bgp:
               - "1:30011"
             rcf: RT_IMPORT_AF_RCF()
             route_map: RT_IMPORT_AF_RM
-            vpn_route_filter_rcf: RT_IMPORT_AF_RCF_FILTER()
+            vrf_route_filter_rcf: RT_IMPORT_AF_RCF_FILTER()
       redistribute:
         ospf:
           match_external:

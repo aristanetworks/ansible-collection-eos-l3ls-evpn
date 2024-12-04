@@ -47726,7 +47726,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                         "route_targets": {"type": RouteTargets},
                         "route_map": {"type": str},
                         "rcf": {"type": str},
-                        "vpn_route_filter_rcf": {"type": str},
+                        "vrf_route_filter_rcf": {"type": str},
                         "_custom_data": {"type": dict},
                     }
                     address_family: str
@@ -47741,9 +47741,9 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                     Only applicable if `address_family`
                     is one of `evpn`, `vpn-ipv4` or `vpn-ipv6`.
                     """
-                    vpn_route_filter_rcf: str | None
+                    vrf_route_filter_rcf: str | None
                     """
-                    RCF function name with parenthesis for filtering VPN routes. Also requires `rcf` to be set.
+                    RCF function name with parenthesis for filtering VRF routes. Also requires `rcf` to be set.
                     Example:
                     MyFunction(myarg).
                     Only applicable if `address_family` is one of `vpn-ipv4` or `vpn-ipv6`.
@@ -47759,7 +47759,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                             route_targets: RouteTargets | UndefinedType = Undefined,
                             route_map: str | None | UndefinedType = Undefined,
                             rcf: str | None | UndefinedType = Undefined,
-                            vpn_route_filter_rcf: str | None | UndefinedType = Undefined,
+                            vrf_route_filter_rcf: str | None | UndefinedType = Undefined,
                             _custom_data: dict[str, Any] | UndefinedType = Undefined,
                         ) -> None:
                             """
@@ -47777,8 +47777,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                                    Example: MyFunction(myarg).
                                    Only applicable if `address_family`
                                    is one of `evpn`, `vpn-ipv4` or `vpn-ipv6`.
-                                vpn_route_filter_rcf:
-                                   RCF function name with parenthesis for filtering VPN routes. Also requires `rcf` to be set.
+                                vrf_route_filter_rcf:
+                                   RCF function name with parenthesis for filtering VRF routes. Also requires `rcf` to be set.
                                    Example:  # fmt: skip
                                    MyFunction(myarg).
                                    Only applicable if `address_family` is one of `vpn-ipv4` or `vpn-ipv6`.
