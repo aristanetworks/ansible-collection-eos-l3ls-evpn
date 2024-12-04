@@ -6,6 +6,7 @@ from __future__ import annotations
 from collections import ChainMap
 from typing import TYPE_CHECKING
 
+from pyavd._eos_cli_config_gen.schema import EosCliConfigGen
 from pyavd._eos_designs.schema import EosDesigns
 from pyavd._eos_designs.shared_utils import SharedUtils
 from pyavd._utils import get, merge
@@ -14,6 +15,7 @@ from .base import AvdStructuredConfigBase
 from .connected_endpoints import AvdStructuredConfigConnectedEndpoints
 from .core_interfaces_and_l3_edge import AvdStructuredConfigCoreInterfacesAndL3Edge
 from .custom_structured_configuration import AvdStructuredConfigCustomStructuredConfiguration
+from .execution import StructuredConfigExecutor
 from .flows import AvdStructuredConfigFlows
 from .inband_management import AvdStructuredConfigInbandManagement
 from .metadata import AvdStructuredConfigMetadata
@@ -48,6 +50,8 @@ AVD_STRUCTURED_CONFIG_CLASSES = [
 AVD_STRUCTURED_CONFIG contains a list of AvdStructuredConfig classes which generate the complete structured config.
 The order is important, since later modules can overwrite or read config created by earlier ones.
 """
+
+STRUCTURED_CONFIG_GENERATORS = ()
 
 
 def get_structured_config(
@@ -86,14 +90,28 @@ def get_structured_config(
             # Input data validation failed so return empty dict. Calling function should check result.get("failed").
             return {}
 
-    structured_config = {}
-    module_vars = ChainMap(structured_config, vars)
-
     # Load input vars into the EosDesigns data class.
     inputs = EosDesigns._from_dict(vars)
 
     # Initialize SharedUtils class to be passed to each python_module below.
-    shared_utils = SharedUtils(hostvars=module_vars, inputs=inputs, templar=templar, schema=input_schema_tools.avdschema)
+    shared_utils = SharedUtils(hostvars=vars, inputs=inputs, templar=templar, schema=input_schema_tools.avdschema)
+
+    # Run structured config executor which executes all StructuredConfigGenerator subclasses.
+    structured_config_instance = EosCliConfigGen()
+    custom_structured_configurations: list[EosCliConfigGen] = []
+    StructuredConfigExecutor(
+        hostvars=vars,
+        inputs=inputs,
+        structured_config=structured_config_instance,
+        custom_structured_configurations=custom_structured_configurations,
+        shared_utils=shared_utils,
+        classes=STRUCTURED_CONFIG_GENERATORS,
+    ).execute()
+    structured_config = structured_config_instance._as_dict()
+    structured_config["struct_cfgs"] = [
+        custom_structured_configuration._as_dict(strip_values=()) for custom_structured_configuration in custom_structured_configurations
+    ]
+    module_vars = ChainMap(structured_config, vars)
 
     for cls in AVD_STRUCTURED_CONFIG_CLASSES:
         eos_designs_module: AvdFacts = cls(hostvars=module_vars, inputs=inputs, shared_utils=shared_utils)
