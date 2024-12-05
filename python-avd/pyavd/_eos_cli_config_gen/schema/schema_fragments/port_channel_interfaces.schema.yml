@@ -392,6 +392,13 @@ keys:
             - str
           min: 0
           max: 300
+        min_links:
+          type: int
+          description: Minimum no of ports required up before bringing up a port-channel.
+          convert_types:
+            - str
+          min: 0
+          max: 16
         lacp_fallback_mode:
           type: str
           valid_values:

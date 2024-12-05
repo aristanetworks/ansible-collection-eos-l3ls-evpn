@@ -30455,6 +30455,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             "mlag": {"type": int},
             "trunk_groups": {"type": TrunkGroups},
             "lacp_fallback_timeout": {"type": int},
+            "min_links": {"type": int},
             "lacp_fallback_mode": {"type": str},
             "qos": {"type": Qos},
             "bfd": {"type": Bfd},
@@ -30590,6 +30591,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         """Subclass of AvdList with `str` items."""
         lacp_fallback_timeout: int | None
         """Timeout in seconds. EOS default is 90 seconds."""
+        min_links: int | None
+        """Minimum no of ports required up before bringing up a port-channel."""
         lacp_fallback_mode: Literal["individual", "static"] | None
         qos: Qos
         """Subclass of AvdModel."""
@@ -30739,6 +30742,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 mlag: int | None | UndefinedType = Undefined,
                 trunk_groups: TrunkGroups | UndefinedType = Undefined,
                 lacp_fallback_timeout: int | None | UndefinedType = Undefined,
+                min_links: int | None | UndefinedType = Undefined,
                 lacp_fallback_mode: Literal["individual", "static"] | None | UndefinedType = Undefined,
                 qos: Qos | UndefinedType = Undefined,
                 bfd: Bfd | UndefinedType = Undefined,
@@ -30856,6 +30860,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                     mlag: MLAG ID.
                     trunk_groups: Subclass of AvdList with `str` items.
                     lacp_fallback_timeout: Timeout in seconds. EOS default is 90 seconds.
+                    min_links: Minimum no of ports required up before bringing up a port-channel.
                     lacp_fallback_mode: lacp_fallback_mode
                     qos: Subclass of AvdModel.
                     bfd: Subclass of AvdModel.
