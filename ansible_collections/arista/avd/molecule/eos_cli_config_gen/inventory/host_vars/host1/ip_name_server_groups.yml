@@ -6,6 +6,7 @@ ip_name_server_groups:
     name_servers:
       - ip_address: 8.8.8.8
         vrf: vrf1
+        priority: 0
       - ip_address: 1.1.1.1
       - ip_address: 2.2.2.2
         vrf: vrf1
