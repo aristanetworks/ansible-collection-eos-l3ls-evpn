@@ -3,7 +3,6 @@ router_general:
   router_id:
     ipv4: 10.1.2.3
     ipv6: 2001:beef:cafe::1
-  nexthop_fast_failover: true
   vrfs:
     - name: BLUE-C2
       leak_routes:

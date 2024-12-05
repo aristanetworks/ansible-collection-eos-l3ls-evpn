@@ -1,0 +1,10 @@
+router_bgp:
+  address_family_evpn:
+    peer_groups:
+      - name: TEST-ENCAPSULATION-2
+        activate: true
+        encapsulation: path-selection
+    neighbors:
+      - ip_address: 10.100.100.4
+        activate: true
+        encapsulation: path-selection

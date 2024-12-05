@@ -1,0 +1,8 @@
+### Logging ###
+logging:
+  event:
+    congestion_drops_interval: 10
+    storm_control:
+      discards:
+        global: true
+        interval: 10

@@ -1,0 +1,20 @@
+---
+### Sflow ###
+sflow:
+  sample_output_subinterface: true
+  extensions:
+    - name: tunnel
+      enabled: false
+  interface:
+    egress:
+      enable_default: true
+      unmodified: true
+  hardware_acceleration:
+    enabled: true
+    sample: 1024
+    modules:
+      - name: Linecard1
+      - name: Linecard2
+        enabled: true
+      - name: Linecard3
+        enabled: false

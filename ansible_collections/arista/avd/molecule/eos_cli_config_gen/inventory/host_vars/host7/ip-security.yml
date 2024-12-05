@@ -1,0 +1,4 @@
+---
+### IP Security ###
+ip_security:
+  hardware_encryption_disabled: true

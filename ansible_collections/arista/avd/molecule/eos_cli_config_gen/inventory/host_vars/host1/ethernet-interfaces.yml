@@ -8,8 +8,6 @@ ethernet_interfaces:
     description: P2P_LINK_TO_DC1-SPINE1_Ethernet1
     speed: forced 100gfull
     mtu: 1500
-    l2_mtu: 8000
-    l2_mru: 8000
     ip_address: 172.31.255.1/31
     link_tracking_groups:
       - name: EVPN_MH_ES1
@@ -18,7 +16,6 @@ ethernet_interfaces:
       direction: upstream
       groups: [EVPN_MH_ES3, EVPN_MH_ES4]
     priority_flow_control:
-      enabled: true
       priorities:
         - priority: 5
           # drop
@@ -30,7 +27,6 @@ ethernet_interfaces:
       multiplier: 5
     bgp:
       session_tracker: ST1
-    ip_verify_unicast_source_reachable_via: rx
     tcp_mss_ceiling:
       ipv4_segment_size: 70
       ipv6_segment_size: 75
@@ -56,30 +52,16 @@ ethernet_interfaces:
         trunk: tagged
       mode: dot1q-tunnel
       pvlan_mapping: 20-30
-      dot1q:
-        ethertype: 1536
-        vlan_tag: required
       vlan_translations:
-        in_required: true
         direction_in:
           - from: 10
             to: 24
           - from: 37
             to: 49
             inner_vlan_from: 56
-          - from: 23
-            to: 45
-            dot1q_tunnel: true
         direction_both:
-          - from: 24
-            inner_vlan_from: 78
-            network: true
-            to: 46
           - from: 12
             to: 20
-          - from: 43
-            to: 30
-            dot1q_tunnel: true
           - from: 24
             inner_vlan_from: 78
             network: false
@@ -90,11 +72,6 @@ ethernet_interfaces:
           - from: 10
             to: 45
             inner_vlan_to: 34
-          - from: 45
-            dot1q_tunnel_to: all
-          - from: 55
-      vlan_forwarding_accept_all: true
-      source_interface: tx
       backup_link:
         interface: Ethernet5
         prefer_vlan: 10
@@ -132,8 +109,6 @@ ethernet_interfaces:
       version: 2
     address_locking:
       ipv4: true
-    l2_protocol:
-      forwarding_profile: TEST1
     service_profile: test
     service_policy:
       qos:
@@ -167,21 +142,6 @@ ethernet_interfaces:
       ipv6:
         boundaries:
           - boundary: ACL_V6_MULTICAST
-    storm_control:
-      all:
-        level: 10
-      broadcast:
-        level: 500
-        unit: pps
-      unknown_unicast:
-        level: 1
-        unit: percent
-    priority_flow_control:
-      enabled: true
-      priorities:
-        - priority: 5
-          # no-drop
-          no_drop: true
     spanning_tree_bpduguard: disabled
     spanning_tree_bpdufilter: disabled
     # test for switchport settings
@@ -191,8 +151,6 @@ ethernet_interfaces:
         allowed_vlan: 110-111,210-211
         private_vlan_secondary: false
       enabled: true
-      dot1q:
-        vlan_tag: disallowed
       port_security:
         mac_address_maximum:
           limit: 100
@@ -203,9 +161,6 @@ ethernet_interfaces:
         in_required: false
       backup_link:
         prefer_vlan: 20
-    address_locking:
-      ipv4: true
-      ipv6: true
 
   - name: Ethernet3
     peer: DC1-SPINE2
@@ -213,7 +168,7 @@ ethernet_interfaces:
     peer_type: spine
     description: P2P_LINK_TO_DC1-SPINE2_Ethernet2
     mtu: 1500
-    ip_address: 172.31.128.1/31
+    ip_address: 172.31.129.11/31
     snmp_trap_link_change: false
     link_tracking_groups:
       - name: EVPN_MH_ES2
@@ -256,16 +211,8 @@ ethernet_interfaces:
             mac_address_maximum: 4
       vlan_translations:
         out_required: false
-        direction_out:
-          - from: 23
-            dot1q_tunnel_to: 50
       backup_link:
         interface: Ethernet4
-    address_locking:
-      ipv4: false
-      ipv6: true
-    mac_security:
-      profile: A1
     ptp:
       enable: true
       delay_mechanism: e2e
@@ -290,8 +237,6 @@ ethernet_interfaces:
     ipv6_access_group_in: IPv6_ACL_IN
     ipv6_access_group_out: IPv6_ACL_OUT
     snmp_trap_link_change: true
-    priority_flow_control:
-      enabled: true
     spanning_tree_guard: disabled
     tcp_mss_ceiling:
       ipv4_segment_size: 65
@@ -321,11 +266,11 @@ ethernet_interfaces:
     ospf_area: 100
     ospf_cost: 99
     ospf_authentication: message-digest
-    ospf_authentication_key: "asfddja23452"
+    ospf_authentication_key: fjFkT9Jr2EhntE9Ldwr4dg==
     ospf_message_digest_keys:
       - id: 1
         hash_algorithm: sha512
-        key: "asfddja23452"
+        key: G75zB5e7mIMLz07mT+ZwAQ==
     pim:
       ipv4:
         dr_priority: 200
@@ -355,9 +300,7 @@ ethernet_interfaces:
     logging:
       event:
         link_status: true
-        congestion_drops: true
         spanning_tree: true
-        storm_control_discards: true
     peer: SRV-POD02
     peer_interface: Eth1
     peer_type: server
@@ -391,11 +334,6 @@ ethernet_interfaces:
     qos:
       trust: cos
       cos: 2
-    tx_queues:
-      - id: 2
-        random_detect:
-          ecn:
-            count: true
     sync_e:
       enable: true
       priority: disabled
@@ -409,12 +347,12 @@ ethernet_interfaces:
     ptp:
       enable: true
       announce:
-        interval: 10
-        timeout: 30
-      delay_req: 20
+        interval: 4
+        timeout: 40
+      delay_req: 8
       delay_mechanism: p2p
       sync_message:
-        interval: 5
+        interval: 3
       role: master
       vlan: all
       transport: layer2
@@ -426,19 +364,6 @@ ethernet_interfaces:
     spanning_tree_bpduguard: true
     spanning_tree_portfast: edge
     vmtracer: true
-    storm_control:
-      all:
-        level: 75
-        unit: percent
-      broadcast:
-        level: 10
-        unit: pps
-      multicast:
-        level: 50
-        unit:
-      unknown_unicast:
-        level: 10
-        unit: percent
     transceiver:
       media:
         override: 100gbase-ar4
@@ -468,11 +393,6 @@ ethernet_interfaces:
         mode: md5
         rx_disabled: true
     service_profile: qprof_testwithpolicy
-    uc_tx_queues:
-      - id: 4
-        random_detect:
-          ecn:
-            count: true
 
   - name: Ethernet8.101
     description: to WAN-ISP-01 Ethernet2.101 - VRF-C1
@@ -480,7 +400,7 @@ ethernet_interfaces:
       vlan: 101
     ip_address: 172.31.128.1/31
     ipv6_enable: true
-    ipv6_address: 2002:ABDC::1/64
+    ipv6_address: 2004:ABDC::101/64
     # Test isis auth both md5
     isis_authentication:
       both:
@@ -492,7 +412,7 @@ ethernet_interfaces:
     description: interface_with_mpls_enabled
     switchport:
       enabled: false
-    ip_address: 172.31.128.9/31
+    ip_address: 172.31.128.91/31
     multicast:
       ipv4:
         boundaries:
@@ -521,7 +441,7 @@ ethernet_interfaces:
     description: interface_with_mpls_disabled
     switchport:
       enabled: false
-    ip_address: 172.31.128.10/31
+    ip_address: 172.31.128.110/31
     mpls:
       ip: false
       ldp:
@@ -574,9 +494,7 @@ ethernet_interfaces:
     logging:
       event:
         link_status: false
-        congestion_drops: false
         spanning_tree: false
-        storm_control_discards: false
     description: interface_in_mode_access_with_voice
     # test for switchport trunk-phone mode
     switchport:
@@ -914,8 +832,8 @@ ethernet_interfaces:
       enabled: true
     description: EVPN-Vxlan single-active redundancy
     evpn_ethernet_segment:
-      identifier: "0000:0000:0000:0102:0304"
-      route_target: "00:00:01:02:03:04"
+      identifier: "0000:0000:0000:0102:0308"
+      route_target: "00:00:01:02:03:08"
       redundancy: single-active
       designated_forwarder_election:
         algorithm: preference
@@ -929,8 +847,8 @@ ethernet_interfaces:
       enabled: true
     description: EVPN-MPLS multihoming
     evpn_ethernet_segment:
-      identifier: "0000:0000:0000:0102:0305"
-      route_target: "00:00:01:02:03:05"
+      identifier: "0000:0000:0000:0102:0309"
+      route_target: "00:00:01:02:03:09"
       mpls:
         shared_index: 100
         tunnel_flood_filter_time: 100
@@ -1035,7 +953,6 @@ ethernet_interfaces:
         always: true
     flow_tracker:
       sampled: T2
-      hardware: T2
 
   - name: Ethernet41
     switchport:
@@ -1048,7 +965,6 @@ ethernet_interfaces:
         host_mode_common: true
     flow_tracker:
       sampled: T3
-      hardware: T3
 
   - name: Ethernet42
     switchport:
@@ -1127,7 +1043,7 @@ ethernet_interfaces:
     description: IP Helper
     switchport:
       enabled: false
-    ip_address: 172.31.255.1/31
+    ip_address: 172.31.255.21/31
     ip_helpers:
       - ip_helper: 10.10.96.101
         source_interface: Loopback0
@@ -1165,8 +1081,6 @@ ethernet_interfaces:
     description: SFlow Interface Testing - SFlow ingress and egress unmodified enabled
     sflow:
       enable: true
-      egress:
-        unmodified_enable: true
 
   - name: Ethernet53
     switchport:
@@ -1174,8 +1088,6 @@ ethernet_interfaces:
     description: SFlow Interface Testing - SFlow ingress and egress disabled
     sflow:
       enable: false
-      egress:
-        enable: false
 
   - name: Ethernet54
     switchport:
@@ -1183,8 +1095,6 @@ ethernet_interfaces:
     description: SFlow Interface Testing - SFlow ingress and egress unmodified disabled
     sflow:
       enable: false
-      egress:
-        unmodified_enable: false
 
   - name: Ethernet55
     description: DHCPv6 Relay Testing
@@ -1199,50 +1109,6 @@ ethernet_interfaces:
         link_address: a0::5
         vrf: TEST
         local_interface: Loopback55
-
-  - name: Ethernet56
-    switchport:
-      enabled: true
-    description: Interface with poe commands and limit in class
-    poe:
-      priority: low
-      reboot:
-        action: power-off
-      link_down:
-        action: power-off
-        power_off_delay: 10
-      shutdown:
-        action: maintain
-      limit:
-        class: 4
-        fixed: false
-      negotiation_lldp: false
-
-  - name: Ethernet57
-    switchport:
-      enabled: true
-    description: Interface with poe commands and limit in watts
-    poe:
-      disabled: false
-      priority: critical
-      reboot:
-        action: maintain
-      link_down:
-        action: maintain
-      shutdown:
-        action: power-off
-      limit:
-        watts: 45
-        fixed: true
-      legacy_detect: true
-      negotiation_lldp: true
-
-  - name: Ethernet58
-    switchport:
-      enabled: true
-    description: Interface with poe disabled and no other poe keys
-    poe:
-      disabled: true
 
   - name: Ethernet60
     switchport:
@@ -1303,9 +1169,6 @@ ethernet_interfaces:
           - original_ip: 1.0.0.7
             translated_ip: 2.0.0.7
             access_list: ACL21
-          - original_ip: 239.0.0.1
-            translated_ip: 239.0.0.2
-            direction: egress
       source:
         dynamic:
           - access_list: ACL11
@@ -1380,17 +1243,12 @@ ethernet_interfaces:
           - original_ip: 3.0.0.7
             translated_ip: 4.0.0.7
             access_list: ACL21
-          - original_ip: 3.0.0.8
-            translated_ip: 4.0.0.8
-            direction: ingress
 
   - name: Ethernet61
     logging:
       event:
         link_status: false
-        congestion_drops: false
         spanning_tree: false
-        storm_control_discards: false
     description: interface_in_mode_access_with_voice
     switchport:
       enabled: true
@@ -1405,9 +1263,7 @@ ethernet_interfaces:
     logging:
       event:
         link_status: false
-        congestion_drops: false
         spanning_tree: false
-        storm_control_discards: false
     description: interface_in_mode_access_with_voice
     switchport:
       enabled: true
@@ -1432,25 +1288,17 @@ ethernet_interfaces:
     ip_address: 192.168.42.42/24
     dhcp_server_ipv4: true
     dhcp_server_ipv6: true
-    mac_timestamp: replace-fcs
-
-  - name: Ethernet69
-    switchport:
-      enabled: true
-    description: IP NAT service-profile
-    ip_nat:
-      service_profile: TEST-NAT-PROFILE
+    
 # VRRP
   - name: Ethernet65
     description: Multiple VRIDs
     switchport:
       enabled: false
     shutdown: false
-    ip_address: 192.0.2.2/25
+    ip_address: 192.0.3.2/25
     ipv6_enable: true
-    ipv6_address: 2001:db8::2/64
+    ipv6_address: 2001:db6::2/64
     ipv6_address_link_local: fe80::2/64
-    mac_timestamp: header
     vrrp_ids:
       - id: 1
         priority_level: 105
@@ -1462,20 +1310,20 @@ ethernet_interfaces:
             minimum: 30
             reload: 800
         ipv4:
-          address: 192.0.2.1
+          address: 192.0.12.1
       - id: 2
         preempt:
           enabled: true
           delay:
         ipv6:
-          address: 2001:db8::1
+          address: 2002:db8::1
 
   - name: Ethernet66
     description: Multiple VRIDs and tracking
     shutdown: false
     switchport:
       enabled: false
-    ip_address: 192.0.2.2/25
+    ip_address: 192.0.12.2/25
     ipv6_enable: true
     ipv6_address: 2001:db8::2/64
     ipv6_address_link_local: fe80::2/64
@@ -1490,7 +1338,7 @@ ethernet_interfaces:
             minimum: 30
             reload: 800
         ipv4:
-          address: 192.0.2.1
+          address: 192.10.2.1
         tracked_object:
           - name: ID1TrackedObjectDecrement
             decrement: 5
@@ -1524,7 +1372,6 @@ ethernet_interfaces:
     shutdown: false
     transceiver:
       frequency: 190050
-    mac_timestamp: before-fcs
 
   - name: Ethernet67.1
     description: Test_encapsulation_dot1q
@@ -1624,24 +1471,6 @@ ethernet_interfaces:
         outer_vlan: 35
         inner_vlan: 60
 
-  - name: Ethernet68.8
-    description: Test_encapsulation_vlan8
-    encapsulation_vlan:
-      client:
-        encapsulation: untagged
-      network:
-        encapsulation: dot1q
-        outer_vlan: 35
-        inner_vlan: 60
-
-  - name: Ethernet68.9
-    description: Test_encapsulation_vlan9
-    encapsulation_vlan:
-      client:
-        encapsulation: untagged
-      network:
-        encapsulation: untagged
-
   - name: Ethernet68.10
     description: Test_encapsulation_vlan9
     encapsulation_vlan:
@@ -1658,9 +1487,6 @@ ethernet_interfaces:
       aaa:
         unresponsive:
           eap_response: success
-          action:
-            traffic_allow_vlan: 10
-            traffic_allow_access_list: acl1
           phone_action:
             apply_cached_results: true
             cached_results_timeout:
@@ -1668,7 +1494,6 @@ ethernet_interfaces:
               time_duration_unit: hours
             traffic_allow: true
             apply_alternate: true
-      mac_based_access_list: true
   - name: Ethernet71
     description: dot1x_aaa_unresponsive1
     shutdown: false
@@ -1676,15 +1501,11 @@ ethernet_interfaces:
       aaa:
         unresponsive:
           eap_response: success
-          action:
-            traffic_allow_vlan: 10
-            traffic_allow_access_list: acl1
           phone_action:
             apply_cached_results: true
             cached_results_timeout:
               time_duration: 10
               time_duration_unit: hours
-      mac_based_access_list: true
   - name: Ethernet72
     description: dot1x_aaa_unresponsive2
     shutdown: false
@@ -1692,10 +1513,6 @@ ethernet_interfaces:
       aaa:
         unresponsive:
           eap_response: success
-          action:
-            traffic_allow_vlan: 10
-            traffic_allow_access_list: acl1
-      mac_based_access_list: true
 
   - name: Ethernet73
     peer: DC1-AGG01

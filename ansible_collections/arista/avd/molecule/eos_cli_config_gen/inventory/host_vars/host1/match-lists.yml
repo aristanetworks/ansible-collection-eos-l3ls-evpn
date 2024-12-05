@@ -5,10 +5,6 @@ match_list_input:
       prefixes:
         - 10.10.10.0/24
         - 10.10.20.0/24
-  prefix_ipv6:
-    - name: molecule_v6
-      prefixes:
-        - 2001:0DB8::/32
   string:
     - name: molecule
       sequence_numbers:

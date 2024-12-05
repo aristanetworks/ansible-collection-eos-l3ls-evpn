@@ -351,7 +351,6 @@ router_bgp:
           send_limit: 11
       - ip_address: 10.100.100.4
         activate: true
-        encapsulation: path-selection
         route_map_in: RM1
         route_map_out: RM2
         additional_paths:
@@ -415,9 +414,6 @@ router_bgp:
       - name: TEST-ENCAPSULATION
         activate: true
         encapsulation: mpls
-      - name: TEST-ENCAPSULATION-2
-        activate: true
-        encapsulation: path-selection
       - name: EVPN-OVERLAY
         route_map_in: RM-HIDE-AS-PATH
         route_map_out: RM-HIDE-AS-PATH
@@ -894,7 +890,6 @@ router_bgp:
         activate: true
         additional_paths:
           receive: true
-          send: disabled
       - name: PATH-SELECTION-PG-2
         activate: true
         additional_paths:

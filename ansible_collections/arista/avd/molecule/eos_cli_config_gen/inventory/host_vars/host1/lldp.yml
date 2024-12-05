@@ -4,7 +4,7 @@ lldp:
   run: false
   timer: 30
   holdtime: 90
-  management_address: 192.168.1.1/24
+  management_address: Ethernet1
   vrf: Management
   tlvs:
     - name: system-capabilities

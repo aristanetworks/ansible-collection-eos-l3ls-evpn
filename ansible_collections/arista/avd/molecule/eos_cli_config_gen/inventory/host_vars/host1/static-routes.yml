@@ -29,7 +29,7 @@ static_routes:
 
   - vrf: TENANT_A_PROJECT01
     destination_address_prefix: 1.2.1.0/24
-    interface: vlan202
+    interface: vlan2002
     gateway: 10.1.2.1
 
   - vrf: TENANT_A_PROJECT01

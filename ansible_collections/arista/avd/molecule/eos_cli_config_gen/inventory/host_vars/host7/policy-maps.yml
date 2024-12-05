@@ -1,0 +1,50 @@
+---
+policy_maps:
+  qos:
+    - name: PM_REPLICATION_LD
+      classes:
+        - name: CM_REPLICATION_LD
+          set:
+            drop_precedence: 1
+          police:
+            rate: 10
+            rate_unit: kbps
+            rate_burst_size: 260
+            rate_burst_size_unit: kbytes
+            higher_rate: 30
+            higher_rate_unit: kbps
+            higher_rate_burst_size: 270
+            higher_rate_burst_size_unit: kbytes
+            action:
+              type: drop-precedence
+    - name: PM_REPLICATION_LD2
+      classes:
+        - name: CM_REPLICATION_LD
+          police:
+            rate: 30
+            rate_unit: kbps
+            rate_burst_size: 280
+            higher_rate: 1
+            higher_rate_unit: mbps
+            higher_rate_burst_size: 270
+            action:
+              type: dscp
+              dscp_value: af11
+    - name: PM_REPLICATION_LD3
+      classes:
+        - name: CM_REPLICATION_LD
+          police:
+            rate: 10000
+            rate_burst_size: 260
+            rate_burst_size_unit: kbytes
+  copp_system_policy:
+    classes:
+      - name: copp-system-OspfIsis
+        shape: 1000
+        bandwidth: 1000
+        rate_unit: kbps
+      - name: copp-system-cvx
+        shape: 2000
+        bandwidth: 2000
+        rate_unit: pps
+      - name: copp-system-rsvp

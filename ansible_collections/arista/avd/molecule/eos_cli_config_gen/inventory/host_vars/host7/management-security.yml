@@ -1,0 +1,6 @@
+---
+### Management Security ###
+management_security:
+  entropy_sources:
+    hardware: true
+    hardware_exclusive: true

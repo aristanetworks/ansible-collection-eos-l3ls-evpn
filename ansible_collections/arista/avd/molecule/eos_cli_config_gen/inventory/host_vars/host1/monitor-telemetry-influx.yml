@@ -7,7 +7,7 @@ monitor_telemetry_influx:
       data_retention_policy: test
       url: https://influx_test.localhost
       username: test
-      password: <password>
+      password: 111918160405041E00
     - name: test1
       database: test1
       data_retention_policy: test1

@@ -5,12 +5,8 @@ errdisable:
   detect:
     causes:
       - arp-inspection
-      - dot1x
       - link-change
       - tapagg
-      - xcvr-misconfigured
-      - xcvr-overheat
-      - xcvr-power-unsupported
       - acl
   recovery:
     causes:
@@ -22,12 +18,7 @@ errdisable:
       - no-internal-vlan
       - portchannelguard
       - portsec
-      - speed-misconfigured
       - tapagg
       - uplink-failure-detection
-      - xcvr-misconfigured
-      - xcvr-overheat
-      - xcvr-power-unsupported
-      - xcvr-unsupported
       - arp-inspection
     interval: 300

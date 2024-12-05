@@ -68,12 +68,7 @@ logging:
             - 100
             - 200
   event:
-    congestion_drops_interval: 10
     global_link_status: false
-    storm_control:
-      discards:
-        global: true
-        interval: 10
   level:
     - facility: BGP
       severity: 0

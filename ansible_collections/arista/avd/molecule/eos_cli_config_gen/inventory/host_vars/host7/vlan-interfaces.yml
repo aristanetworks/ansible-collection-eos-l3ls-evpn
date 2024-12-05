@@ -1,0 +1,7 @@
+### VLAN Interfaces ###
+vlan_interfaces:
+# Standard SVI configuration
+  - name: Vlan2001
+    access_group_in: ACL_IN
+    access_group_out: ACL_OUT
+    ip_verify_unicast_source_reachable_via: rx

@@ -1,0 +1,155 @@
+---
+### Ethernet Interfaces ###
+ethernet_interfaces:
+  - name: Ethernet1
+    flow_tracker:
+      hardware: T2
+    l2_protocol:
+      forwarding_profile: TEST1
+    sflow:
+      egress:
+        unmodified_enable: true
+    ip_verify_unicast_source_reachable_via: rx
+    l2_mtu: 8000
+    l2_mru: 8000
+    logging:
+      event:
+        congestion_drops: true
+        storm_control_discards: true
+    tx_queues:
+      - id: 2
+        random_detect:
+          ecn:
+            count: true
+    mac_security:
+      profile: A1
+    priority_flow_control:
+      enabled: true
+    address_locking:
+      ipv4: true
+      ipv6: true
+    storm_control:
+      all:
+        level: 10
+      broadcast:
+        level: 500
+        unit: pps
+      unknown_unicast:
+        level: 1
+        unit: percent
+    switchport:
+      dot1q:
+        ethertype: 1536
+        vlan_tag: required
+      vlan_translations:
+        in_required: true
+        direction_in:
+          - from: 23
+            to: 45
+            dot1q_tunnel: true
+        direction_out:
+          - from: 45
+            dot1q_tunnel_to: all
+          - from: 55
+          - from: 23
+            dot1q_tunnel_to: 50
+        direction_both:
+          - from: 24
+            inner_vlan_from: 78
+            network: true
+            to: 46
+          - from: 43
+            to: 30
+            dot1q_tunnel: true
+      vlan_forwarding_accept_all: true
+      source_interface: tx
+    poe:
+      priority: low
+      reboot:
+        action: power-off
+      link_down:
+        action: power-off
+        power_off_delay: 10
+      shutdown:
+        action: maintain
+      limit:
+        class: 4
+        fixed: false
+      negotiation_lldp: false
+      disabled: true
+    ip_nat:
+      source:
+        static:
+          - original_ip: 3.0.0.8
+            translated_ip: 4.0.0.8
+            direction: ingress
+      destination:
+        static:
+          - original_ip: 239.0.0.1
+            translated_ip: 239.0.0.2
+            direction: egress
+    mac_timestamp: replace-fcs
+  - name: Ethernet2
+    mac_timestamp: header
+    sflow:
+      egress:
+        unmodified_enable: false
+    switchport:
+      dot1q:
+        vlan_tag: disallowed
+    logging:
+      event:
+        congestion_drops: false
+        storm_control_discards: false
+    storm_control:
+      all:
+        level: 75
+        unit: percent
+      broadcast:
+        level: 10
+        unit: pps
+      multicast:
+        level: 50
+        unit:
+      unknown_unicast:
+        level: 10
+        unit: percent
+    priority_flow_control:
+      enabled: true
+      priorities:
+        - priority: 5
+          # no-drop
+          no_drop: true
+    address_locking:
+      ipv4: false
+      ipv6: true
+    poe:
+      disabled: false
+      priority: critical
+      reboot:
+        action: maintain
+      link_down:
+        action: maintain
+      shutdown:
+        action: power-off
+      limit:
+        watts: 45
+        fixed: true
+      legacy_detect: true
+      negotiation_lldp: true
+  - name: Ethernet3
+    mac_timestamp: before-fcs
+    ip_nat:
+      service_profile: TEST-NAT-PROFILE
+    uc_tx_queues:
+      - id: 4
+        random_detect:
+          ecn:
+            count: true
+    dot1x:
+      aaa:
+        unresponsive:
+          action:
+            traffic_allow_vlan: 10
+            traffic_allow_access_list: acl1
+      mac_based_access_list: true

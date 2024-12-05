@@ -2,10 +2,8 @@
 ### Management Security ###
 management_security:
   entropy_sources:
-    hardware: true
     haveged: true
     cpu_jitter: true
-    hardware_exclusive: true
   password:
     minimum_length: 17
     encryption_key_common: true

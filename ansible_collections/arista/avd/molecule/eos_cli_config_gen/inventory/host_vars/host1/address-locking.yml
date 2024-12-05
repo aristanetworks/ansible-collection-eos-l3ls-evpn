@@ -13,5 +13,3 @@ address_locking:
   local_interface: Loopback0
   locked_address:
     expiration_mac_disabled: true
-    ipv4_enforcement_disabled: true
-    ipv6_enforcement_disabled: true

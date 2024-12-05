@@ -1,7 +1,5 @@
 ---
 traffic_policies:
-  options:
-    counter_per_interface: true
   field_sets:
     ports:
       - name: SERVICE-DEMO
@@ -99,7 +97,7 @@ traffic_policies:
             prefix_lists:
               - DEMO-01
           protocols:
-            - protocol: bgp
+            - protocol: tcp
           fragment:
           actions:
             traffic_class: 5

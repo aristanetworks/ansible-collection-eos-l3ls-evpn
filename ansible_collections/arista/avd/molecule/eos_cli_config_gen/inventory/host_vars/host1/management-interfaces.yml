@@ -7,7 +7,7 @@ management_interfaces:
     gateway: 10.73.255.2
     type: oob
   - name: Management0
-    ip_address: 10.1.1.1
+    ip_address: 12.1.1.1/24
     mac_address: 00:1c:73:00:00:aa
   - name: Vlan123
     description: inband_management

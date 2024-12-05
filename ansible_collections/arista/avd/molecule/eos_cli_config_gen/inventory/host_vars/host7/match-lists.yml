@@ -1,0 +1,6 @@
+---
+match_list_input:
+  prefix_ipv6:
+    - name: molecule_v6
+      prefixes:
+        - 2001:0DB8::/32

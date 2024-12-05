@@ -15,21 +15,8 @@ port_channel_interfaces:
       trunk:
         allowed_vlan: 110,201
     mlag: 5
-    storm_control:
-      broadcast:
-        level: 1
-        unit: percent
-      multicast:
-        level: 1
-        unit: percent
-      unknown_unicast:
-        level: 1
-        unit: percent
     bgp:
       session_tracker: ST2
-    l2_mtu: 8000
-    l2_mru: 8000
-    ip_verify_unicast_source_reachable_via: rx
     eos_cli: |
       comment
       Comment created from eos_cli under port_channel_interfaces.Port-Channel5
@@ -134,14 +121,8 @@ port_channel_interfaces:
       trunk:
         native_vlan: 10
         allowed_vlan: 110,201
-      dot1q:
-        vlan_tag: disallowed
-      vlan_translations:
-        direction_out:
-          - from: 23
-            dot1q_tunnel_to: 22
       backup_link:
-        interface: Port-Channel100.102
+        interface: Port-Channel5
         prefer_vlan: 20
 
   - name: Port-Channel3
@@ -280,31 +261,16 @@ port_channel_interfaces:
         trunk: tagged
       mode: dot1q-tunnel
       pvlan_mapping: 20-30
-      dot1q:
-        ethertype: 1536
-        vlan_tag: required
-      source_interface: tx multicast
       vlan_translations:
-        in_required: true
         direction_in:
           - from: 34
             to: 23
           - from: 37
             to: 49
             inner_vlan_from: 56
-          - from: 23
-            to: 45
-            dot1q_tunnel: true
         direction_both:
-          - from: 24
-            inner_vlan_from: 78
-            network: true
-            to: 46
           - from: 12
             to: 20
-          - from: 43
-            to: 30
-            dot1q_tunnel: true
           - from: 23
             inner_vlan_from: 74
             network: false
@@ -315,10 +281,7 @@ port_channel_interfaces:
           - from: 10
             to: 45
             inner_vlan_to: 34
-          - from: 45
-            dot1q_tunnel_to: all
           - from: 55
-      vlan_forwarding_accept_all: true
       backup_link:
         interface: Port-channel51
       backup:
@@ -342,11 +305,10 @@ port_channel_interfaces:
     logging:
       event:
         link_status: false
-        storm_control_discards: true
     description: IFL for TENANT02
     mtu: 1500
-    ip_address: 10.1.2.3/31
-    vrf: C2
+    ip_address: 10.1.2.13/31
+    vrf: TEST1
     encapsulation_dot1q:
       vlan: 102
       inner_vlan: 110
@@ -524,7 +486,7 @@ port_channel_interfaces:
     ospf_message_digest_keys:
       - id: 55
         hash_algorithm: md5
-        key: dRx9sULvl+hzkCMYJLEQCw==
+        key: M3FSwxvAu5M0xOVgnmppFw==
 
   - name: Port-Channel17
     description: PBR Description
@@ -705,9 +667,8 @@ port_channel_interfaces:
       network:
         encapsulation: client
     evpn_ethernet_segment:
-      identifier: 0000:0000:0303:0202:0101
-      route_target: 03:03:02:02:01:01
-    lacp_id: 0303.0202.0101
+      identifier: 0000:0000:0303:0202:0102
+      route_target: 03:03:02:02:01:02
 
   - name: Port-Channel112
     description: LACP fallback individual
@@ -754,9 +715,6 @@ port_channel_interfaces:
       mode: trunk
     flow_tracker:
       sampled: T3
-      hardware: T3
-    l2_protocol:
-      forwarding_profile: TEST2
 
   - name: Port-Channel117
     description: interface_with_sflow_ingress_egress_enabled
@@ -773,8 +731,6 @@ port_channel_interfaces:
       enabled: false
     sflow:
       enable: true
-      egress:
-        unmodified_enable: true
 
   - name: Port-Channel119
     description: interface_with_sflow_ingress_egress_disabled
@@ -791,8 +747,6 @@ port_channel_interfaces:
       enabled: false
     sflow:
       enable: false
-      egress:
-        unmodified_enable: false
 
   - name: Port-Channel121
     description: access_port_with_no_vlans
@@ -914,24 +868,6 @@ port_channel_interfaces:
         encapsulation: dot1ad
         outer_vlan: 35
         inner_vlan: 60
-
-  - name: Port-Channel131.8
-    description: Test_encapsulation_vlan8
-    encapsulation_vlan:
-      client:
-        encapsulation: untagged
-      network:
-        encapsulation: dot1q
-        outer_vlan: 35
-        inner_vlan: 60
-
-  - name: Port-Channel131.9
-    description: Test_encapsulation_vlan9
-    encapsulation_vlan:
-      client:
-        encapsulation: untagged
-      network:
-        encapsulation: untagged
 
   - name: Port-Channel131.10
     description: Test_encapsulation_vlan9

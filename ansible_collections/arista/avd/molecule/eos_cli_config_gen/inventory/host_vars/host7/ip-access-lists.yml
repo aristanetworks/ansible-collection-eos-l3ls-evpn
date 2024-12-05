@@ -1,0 +1,5 @@
+---
+# eos - extended access-lists - improved data model, ip-access-lists.j2
+ip_access_lists:
+  - name: ACL_SEQUENCE_AND_COUNTERS
+    permit_response_traffic: nat

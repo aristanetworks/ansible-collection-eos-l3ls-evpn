@@ -4,12 +4,10 @@ tunnel_interfaces:
   - name: Tunnel1
     description: test ipv4 only
     shutdown: false
-    vrf: Tunnel-VRF
+    vrf: TEST1
     underlay_vrf: Underlay-VRF
     mtu: 1500
     ip_address: 42.42.42.42/24
-    access_group_in: test-in
-    access_group_out: test-out
     tcp_mss_ceiling:
       ipv4: 666
       direction: ingress
@@ -26,8 +24,6 @@ tunnel_interfaces:
     shutdown: true
     ipv6_enable: true
     ipv6_address: cafe::1/64
-    ipv6_access_group_in: test-in
-    ipv6_access_group_out: test-out
     tcp_mss_ceiling:
       ipv6: 666
       direction: egress
@@ -36,14 +32,13 @@ tunnel_interfaces:
     destination: dead:beef::1
     path_mtu_discovery: false
     ipsec_profile: Profile-2
-    nat_profile: NAT-PROFILE-NO-VRF-2
 
   - name: Tunnel3
     description: test dual stack
     mtu: 1500
-    ip_address: 64.64.64.64/24
+    ip_address: 64.64.164.64/24
     ipv6_enable: true
-    ipv6_address: beef::64/64
+    ipv6_address: beee::64/64
     # no direction this time
     tunnel_mode: ipsec
     tcp_mss_ceiling:
@@ -61,6 +56,5 @@ tunnel_interfaces:
     ipv6_enable: true
     ipv6_address: beef::64/64
     # no tcp_mss_ceiling
-    nat_profile: NAT-PROFILE-NO-VRF-1
     source_interface: Ethernet42
     destination: 1.1.1.1

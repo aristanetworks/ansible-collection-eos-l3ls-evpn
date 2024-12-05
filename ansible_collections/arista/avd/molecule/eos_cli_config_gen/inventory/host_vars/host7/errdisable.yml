@@ -1,0 +1,18 @@
+---
+### Errdisable ###
+
+errdisable:
+  detect:
+    causes:
+      - dot1x
+      - xcvr-misconfigured
+      - xcvr-overheat
+      - xcvr-power-unsupported
+  recovery:
+    causes:
+      - speed-misconfigured
+      - xcvr-misconfigured
+      - xcvr-overheat
+      - xcvr-power-unsupported
+      - xcvr-unsupported
+    interval: 300

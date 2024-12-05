@@ -1,0 +1,6 @@
+---
+### Address Locking ###
+address_locking:
+  locked_address:
+    ipv4_enforcement_disabled: true
+    ipv6_enforcement_disabled: true

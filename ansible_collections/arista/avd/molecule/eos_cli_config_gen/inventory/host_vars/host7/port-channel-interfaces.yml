@@ -1,0 +1,59 @@
+---
+### Port-Channel Interfaces ###
+port_channel_interfaces:
+  - name: Port-Channel5
+    ip_verify_unicast_source_reachable_via: rx
+    logging:
+      event:
+        storm_control_discards: true
+    l2_mtu: 8000
+    l2_mru: 8000
+    l2_protocol:
+      forwarding_profile: TEST2
+    flow_tracker:
+      hardware: T3
+    sflow:
+      egress:
+        unmodified_enable: true
+    storm_control:
+      broadcast:
+        level: 1
+        unit: percent
+      multicast:
+        level: 1
+        unit: percent
+      unknown_unicast:
+        level: 1
+        unit: percent
+    switchport:
+      dot1q:
+        vlan_tag: disallowed
+      source_interface: tx multicast
+      vlan_translations:
+        in_required: true
+        direction_in:
+          - from: 23
+            to: 45
+            dot1q_tunnel: true
+        direction_out:
+          - from: 23
+            dot1q_tunnel_to: 22
+          - from: 45
+            dot1q_tunnel_to: all
+        direction_both:
+          - from: 24
+            inner_vlan_from: 78
+            network: true
+            to: 46
+          - from: 43
+            to: 30
+            dot1q_tunnel: true
+      vlan_forwarding_accept_all: true
+  - name: Port-Channel6
+    switchport:
+      dot1q:
+        ethertype: 1536
+        vlan_tag: required
+    sflow:
+      egress:
+        unmodified_enable: false

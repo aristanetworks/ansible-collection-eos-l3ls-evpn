@@ -1,0 +1,3 @@
+---
+router_general:
+  nexthop_fast_failover: true

@@ -1,7 +1,3 @@
 ---
 switchport_port_security:
-  mac_address:
-    aging: true
-    moveable: true
   persistence_disabled: true
-  violation_protect_chip_based: true

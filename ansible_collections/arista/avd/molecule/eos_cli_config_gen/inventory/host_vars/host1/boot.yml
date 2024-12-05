@@ -3,4 +3,4 @@
 boot:
   secret:
     hash_algorithm: md5
-    key: a153de6290ff1409257a
+    key: $1$XQfC4MBN$yQxeK1NnyB/lWBTokN/Yo0

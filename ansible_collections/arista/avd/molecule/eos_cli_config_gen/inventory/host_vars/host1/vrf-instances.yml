@@ -13,6 +13,7 @@ vrfs:
   - name: BLAH
   - name: defauls
   - name: defaulu
+  - name: BLUE-C1
   - name: TEST1
     ip_routing: true
     ipv6_routing: true

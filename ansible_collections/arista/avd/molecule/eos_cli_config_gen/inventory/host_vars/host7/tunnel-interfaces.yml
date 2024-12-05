@@ -1,0 +1,9 @@
+---
+### Tunnel Interfaces ###
+tunnel_interfaces:
+  - name: Tunnel1
+    access_group_in: test-in
+    access_group_out: test-out
+    ipv6_access_group_in: test-in
+    ipv6_access_group_out: test-out
+    nat_profile: NAT-PROFILE-NO-VRF-2

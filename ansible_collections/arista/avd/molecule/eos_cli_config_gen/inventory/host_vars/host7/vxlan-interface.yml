@@ -1,0 +1,11 @@
+---
+### VxLAN interface ###
+
+vxlan_interface:
+  vxlan1:
+    description: DC1-LEAF2A_VTEP
+    vxlan:
+      qos:
+        dscp_propagation_encapsulation: true
+        map_dscp_to_traffic_class_decapsulation: true
+        ecn_propagation: true

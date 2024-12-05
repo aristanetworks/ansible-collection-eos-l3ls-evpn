@@ -11,9 +11,6 @@ monitor_telemetry_postcard_policy:
       tcp_udp_checksum:
         value: 65000
         mask: "0xffff"
-  marker_vxlan:
-    enabled: true
-    header_word_zero_bit: 30
   profiles:
     - name: profile1
       ingress_sample_policy: samplepo1
@@ -37,15 +34,6 @@ monitor_telemetry_postcard_policy:
                 - "99"
               source_ports:
                 - "98"
-        - name: rule2
-          type: ipv6
-          destination_prefix: 4::0/128
-          source_prefix: 5::0/128
-          protocols:
-            - protocol: udp
-              destination_ports:
-                - '747'
-                - 748-800
         - name: rule3
           type: ipv4
     - name: samplepo2

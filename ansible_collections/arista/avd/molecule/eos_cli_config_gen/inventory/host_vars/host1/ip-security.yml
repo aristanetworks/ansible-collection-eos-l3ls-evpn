@@ -57,7 +57,7 @@ ip_security:
       sa_policy: SA-1
       connection: start
       # Need real one
-      shared_key: 12312312313213AA
+      shared_key: 01030717481C091D25
       dpd:
         interval: 42
         time: 666
@@ -67,16 +67,15 @@ ip_security:
       sa_policy: SA-2
       connection: start
       # Need real one
-      shared_key: 1231231231321AA
+      shared_key: 01030717481C091D25
       flow_parallelization_encapsulation_udp: false
       mode: tunnel
     - name: Profile-3
       sa_policy: SA-3
       connection: start
       # Need real one
-      shared_key: 1231231231321AA
+      shared_key: 01030717481C091D25
       flow_parallelization_encapsulation_udp: true
       mode: tunnel
   key_controller:
     profile: Profile-1
-  hardware_encryption_disabled: true

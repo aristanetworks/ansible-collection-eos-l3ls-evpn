@@ -3,7 +3,7 @@ vlan_interfaces:
 # Standard SVI configuration
   - name: Vlan2001
     description: SVI Description
-    vrf: Tenant_B
+    vrf: TEST2
     ip_address_virtual: 10.2.1.1/24
     logging:
       event:
@@ -15,12 +15,11 @@ vlan_interfaces:
 
   - name: Vlan2002
     description: SVI Description
-    vrf: Tenant_B
+    vrf: TEST2
     ip_address_virtual: 10.2.2.1/24
     no_autostate: true
     isis_enable: "EVPN_UNDERLAY"
     isis_bfd: true
-    ip_verify_unicast_source_reachable_via: rx
     # Test isis authentication both md5 rx
     isis_authentication:
       both:
@@ -41,7 +40,7 @@ vlan_interfaces:
 
   - name: Vlan81
     description: IPv6 Virtual Address
-    vrf: Tenant_C
+    vrf: TEST1
     ip_address_virtual: 10.10.81.1/24
     ipv6_enable: true
     ipv6_address_virtuals:
@@ -52,7 +51,7 @@ vlan_interfaces:
   - name: Vlan83
     description: SVI Description
     shutdown: false
-    ip_address_virtual: 10.10.83.1/24
+    ip_address_virtual: 10.10.88.1/24
     ip_address_virtual_secondaries:
       - 10.11.83.1/24
       - 10.11.84.1/24
@@ -66,7 +65,7 @@ vlan_interfaces:
 
   - name: Vlan84
     description: SVI Description
-    ip_address: 10.10.84.1/24
+    ip_address: 10.10.86.1/24
     ip_virtual_router_addresses:
       - 10.10.84.254
       - 10.11.84.254/24
@@ -104,7 +103,7 @@ vlan_interfaces:
 
   - name: Vlan86
     description: SVI Description
-    ip_address: 10.10.83.1/24
+    ip_address: 10.110.83.1/24
     ip_attached_host_route_export:
       enabled: true
       distance: 10
@@ -122,8 +121,6 @@ vlan_interfaces:
     description: SVI Description
     shutdown: true
     ip_address: 10.10.87.1/24
-    access_group_in: ACL_IN
-    access_group_out: ACL_OUT
     # Test isis auth both shared secret
     isis_enable: "EVPN_UNDERLAY"
     isis_authentication:
@@ -136,7 +133,7 @@ vlan_interfaces:
   - name: Vlan88
     description: SVI Description
     shutdown: true
-    ip_address_virtual: 10.10.87.1/23
+    ip_address_virtual: 10.11.87.1/23
     # Test isis auth both l1l2 md5 text rx
     isis_enable: "EVPN_UNDERLAY"
     isis_authentication:
@@ -310,7 +307,7 @@ vlan_interfaces:
   - name: Vlan43
     description: SVI Description
     shutdown: false
-    ipv6_address: a0::1/64
+    ipv6_address: b0::1/64
     ipv6_dhcp_relay_destinations:
       - address: a0::2
         vrf: TEST
@@ -369,7 +366,7 @@ vlan_interfaces:
   - name: Vlan44
     description: SVI Description
     shutdown: false
-    ipv6_address: a0::4/64
+    ipv6_address: d0::4/64
     ipv6_dhcp_relay_destinations:
       - address: a0::5
         vrf: TEST
@@ -414,8 +411,8 @@ vlan_interfaces:
   - name: Vlan1001
     description: SVI Description
     shutdown: false
-    vrf: Tenant_A
-    ip_address_virtual: 10.1.1.1/24
+    vrf: TEST1
+    ip_address_virtual: 10.1.11.1/24
     ipv6_address: a1::1/64
     ipv6_nd_managed_config_flag: true
     ipv6_nd_prefixes:
@@ -454,13 +451,13 @@ vlan_interfaces:
     ospf_message_digest_keys:
       - id: 55
         hash_algorithm: md5
-        key: "dRx9sULvl+hzkCMYJLEQCw=="
+        key: 8AvHnD1rZB2kdz7I1E1Egg==
 
   - name: Vlan1002
     description: SVI Description
     shutdown: false
-    vrf: Tenant_A
-    ip_address_virtual: 10.1.2.1/24
+    vrf: TEST1
+    ip_address_virtual: 10.11.2.1/24
     ipv6_address: a2::1/64
     ipv6_nd_managed_config_flag: true
     ipv6_nd_prefixes:
@@ -539,7 +536,7 @@ vlan_interfaces:
   - name: Vlan110
     description: PVLAN Primary with vlan mapping
     shutdown: false
-    vrf: Tenant_A
+    vrf: TEST1
     ip_address: 10.0.101.1/24
     pvlan_mapping: 111-112
     multicast:
@@ -558,7 +555,7 @@ vlan_interfaces:
     tags: ['DC1']
     description: PR01-DEMO
     shutdown: false
-    vrf: TENANT_A_PROJECT01
+    vrf: TEST1
     ip_address_virtual: 10.1.10.254/24
 
 # VRRP
@@ -566,7 +563,7 @@ vlan_interfaces:
     description: Multiple VRIDs
     shutdown: false
     arp_aging_timeout: 180
-    ip_address: 192.0.2.2/25
+    ip_address: 192.10.2.2/25
     ipv6_enable: true
     ipv6_address: 2001:db8:667::2/64
     ipv6_address_link_local: fe80::2/64
@@ -581,7 +578,7 @@ vlan_interfaces:
             minimum: 30
             reload: 800
         ipv4:
-          address: 192.0.2.1
+          address: 192.20.2.1
       - id: 2
         preempt:
           enabled: true
@@ -593,7 +590,7 @@ vlan_interfaces:
     description: Multiple VRIDs and tracking
     shutdown: false
     arp_aging_timeout: 180
-    ip_address: 192.0.2.2/25
+    ip_address: 192.0.21.2/25
     ipv6_enable: true
     ipv6_address: 2001:db8:333::2/64
     ipv6_address_link_local: fe80::2/64
@@ -608,7 +605,7 @@ vlan_interfaces:
             minimum: 30
             reload: 800
         ipv4:
-          address: 192.0.2.1
+          address: 192.10.12.1
         tracked_object:
           - name: ID1TrackedObjectDecrement
             decrement: 5
@@ -632,7 +629,7 @@ vlan_interfaces:
         preempt:
           enabled: false
         ipv4:
-          address: 100.64.0.1
+          address: 100.66.0.1
           version: 3
 
   - name: Vlan334

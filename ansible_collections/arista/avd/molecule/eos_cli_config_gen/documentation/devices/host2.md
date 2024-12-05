@@ -43,11 +43,9 @@
   - [Spanning Tree Device Configuration](#spanning-tree-device-configuration)
 - [Interfaces](#interfaces)
   - [Switchport Default](#switchport-default)
-  - [DPS Interfaces](#dps-interfaces)
-  - [VXLAN Interface](#vxlan-interface)
 - [Routing](#routing)
-  - [Service Routing Protocols Model](#service-routing-protocols-model)
   - [IP Routing](#ip-routing)
+  - [IPv6 Routing](#ipv6-routing)
   - [ARP](#arp)
   - [Router Adaptive Virtual Topology](#router-adaptive-virtual-topology)
   - [Router ISIS](#router-isis)
@@ -55,9 +53,6 @@
   - [PBR Policy Maps](#pbr-policy-maps)
 - [BFD](#bfd)
   - [Router BFD](#router-bfd)
-- [Queue Monitor](#queue-monitor)
-  - [Queue Monitor Length](#queue-monitor-length)
-  - [Queue Monitor Configuration](#queue-monitor-configuration)
 - [Multicast](#multicast)
   - [IP IGMP Snooping](#ip-igmp-snooping)
   - [PIM Sparse Mode](#pim-sparse-mode)
@@ -65,9 +60,9 @@
   - [AS Path Lists](#as-path-lists)
 - [802.1X Port Security](#8021x-port-security)
   - [802.1X Summary](#8021x-summary)
-- [Application Traffic Recognition](#application-traffic-recognition)
-  - [Applications](#applications)
-  - [Router Application-Traffic-Recognition Device Configuration](#router-application-traffic-recognition-device-configuration)
+- [VRF Instances](#vrf-instances)
+  - [VRF Instances Summary](#vrf-instances-summary)
+  - [VRF Instances Device Configuration](#vrf-instances-device-configuration)
 - [IP DHCP Relay](#ip-dhcp-relay)
   - [IP DHCP Relay Summary](#ip-dhcp-relay-summary)
   - [IP DHCP Relay Device Configuration](#ip-dhcp-relay-device-configuration)
@@ -559,57 +554,7 @@ spanning-tree priority 8192
 switchport default mode routed
 ```
 
-### DPS Interfaces
-
-#### DPS Interfaces Summary
-
-| Interface | IP address | Shutdown | MTU | Flow tracker(s) | TCP MSS Ceiling |
-| --------- | ---------- | -------- | --- | --------------- | --------------- |
-| Dps1 | 192.168.42.42/24 | False | 666 | Sampled: FT-S |  |
-
-#### DPS Interfaces Device Configuration
-
-```eos
-!
-interface Dps1
-   description Test DPS Interface
-   no shutdown
-   mtu 666
-   flow tracker sampled FT-S
-   ip address 192.168.42.42/24
-```
-
-### VXLAN Interface
-
-#### VXLAN Interface Summary
-
-| Setting | Value |
-| ------- | ----- |
-| UDP port | 4789 |
-| Qos dscp propagation encapsulation | Disabled |
-| Qos ECN propagation | Disabled |
-| Qos map dscp to traffic-class decapsulation | Disabled |
-
-#### VXLAN Interface Device Configuration
-
-```eos
-!
-interface Vxlan1
-   no vxlan qos ecn propagation
-   no vxlan qos dscp propagation encapsulation
-   no vxlan qos map dscp to traffic-class decapsulation
-```
-
 ## Routing
-
-### Service Routing Protocols Model
-
-Single agent routing protocol model enabled
-
-```eos
-!
-service routing protocols model ribd
-```
 
 ### IP Routing
 
@@ -618,6 +563,7 @@ service routing protocols model ribd
 | VRF | Routing Enabled |
 | --- | --------------- |
 | default | False |
+| MGMT | False |
 
 #### IP Routing Device Configuration
 
@@ -625,7 +571,17 @@ service routing protocols model ribd
 !
 no ip routing
 no ip icmp redirect
+no ip routing vrf MGMT
 ```
+
+### IPv6 Routing
+
+#### IPv6 Routing Summary
+
+| VRF | Routing Enabled |
+| --- | --------------- |
+| default | False |
+| MGMT | false |
 
 ### ARP
 
@@ -895,23 +851,6 @@ router bfd
    session stats snapshot interval dangerous 8
 ```
 
-## Queue Monitor
-
-### Queue Monitor Length
-
-| Enabled | Logging Interval | Default Thresholds High | Default Thresholds Low | Notifying | TX Latency | CPU Thresholds High | CPU Thresholds Low |
-| ------- | ---------------- | ----------------------- | ---------------------- | --------- | ---------- | ------------------- | ------------------ |
-| True | - | 100 | - | disabled | disabled | - | - |
-
-### Queue Monitor Configuration
-
-```eos
-!
-queue-monitor length
-no queue-monitor length notifying
-queue-monitor length default threshold 100
-```
-
 ## Multicast
 
 ### IP IGMP Snooping
@@ -1004,39 +943,19 @@ router pim sparse-mode
 | ------------ | ---------- |
 | True | 1500 |
 
-## Application Traffic Recognition
+## VRF Instances
 
-### Applications
+### VRF Instances Summary
 
-#### IPv4 Applications
+| VRF Name | IP Routing |
+| -------- | ---------- |
+| MGMT | disabled |
 
-| Name | Source Prefix | Destination Prefix | Protocols | Protocol Ranges | TCP Source Port Set | TCP Destination Port Set | UDP Source Port Set | UDP Destination Port Set | DSCP |
-| ---- | ------------- | ------------------ | --------- | --------------- | ------------------- | ------------------------ | ------------------- | ------------------------ | ---- |
-| user_defined_app1 | src_prefix_set1 | dest_prefix_set1 | udp, tcp | 25 | src_port_set1 | dest_port_set1 | - | - | 12-19 af43 af41 ef 1-4,6 32-33,34-35 11 56-57, 58 59-60, 61-62 |
-
-#### Layer 4 Applications
-
-| Name | Protocols | Protocol Ranges | TCP Source Port Set | TCP Destination Port Set | UDP Source Port Set | UDP Destination Port Set |
-| ---- | --------- | --------------- | ------------------- | ------------------------ | ------------------- | ------------------------ |
-| l4-app-1 | tcp, udp | - | src_port_set1 | dest_port_set1 | - | - |
-
-### Router Application-Traffic-Recognition Device Configuration
+### VRF Instances Device Configuration
 
 ```eos
 !
-application traffic recognition
-   !
-   application ipv4 user_defined_app1
-      source prefix field-set src_prefix_set1
-      destination prefix field-set dest_prefix_set1
-      protocol tcp source port field-set src_port_set1 destination port field-set dest_port_set1
-      protocol udp
-      protocol 25
-      dscp 12-19 af43 af41 ef 1-4,6 32-33,34-35 11 56-57, 58 59-60, 61-62
-   !
-   application l4 l4-app-1
-      protocol tcp source port field-set src_port_set1 destination port field-set dest_port_set1
-      protocol udp
+vrf instance MGMT
 ```
 
 ## IP DHCP Relay

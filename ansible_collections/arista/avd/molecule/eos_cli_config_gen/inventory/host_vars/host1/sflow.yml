@@ -33,7 +33,6 @@ sflow:
   source_interface: Management0
   sample: 1000
   sample_input_subinterface: true
-  sample_output_subinterface: true
   dangerous: true
   polling_interval: 10
   extensions:
@@ -43,21 +42,7 @@ sflow:
       enabled: true
     - name: switch
       enabled: false
-    - name: tunnel
-      enabled: false
   run: true
   interface:
     disable:
       default: true
-    egress:
-      enable_default: true
-      unmodified: true
-  hardware_acceleration:
-    enabled: true
-    sample: 1024
-    modules:
-      - name: Linecard1
-      - name: Linecard2
-        enabled: true
-      - name: Linecard3
-        enabled: false

@@ -1,0 +1,4 @@
+---
+traffic_policies:
+  options:
+    counter_per_interface: true
