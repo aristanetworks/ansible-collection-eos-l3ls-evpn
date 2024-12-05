@@ -39,8 +39,10 @@ class RegisterForExecution:
             execution: Instruction on when the call this method.
                 - 'pre' will be called before network services are parsed.
                 - 'per_tenant' will be called once per Tenant with the Tenant as argument.
+                  The call is _after_ all per-VRF and per-L2VLAN executions
                 - 'per_vrf' will be called once per Tenant per VRF with the VRF and Tenant as arguments.
                   If the same VRF is defined across multiple Tenants the method will be called multiple times.
+                  The call is _after_ all per-SVI executions.
                 - 'per_svi' will be called once per SVI with the SVI, VRF and Tenant as arguments.
                 - 'per_l2vlan' will be called once per L2VLAN with the L2VLAN and Tenant as arguments.
                 - 'post' will be called after network services have been parsed.
@@ -108,13 +110,13 @@ class StructuredConfigExecutor:
         LOGGER.debug("Starting execution of structured config generators.")
         self._execute_pre()
         for tenant in self._shared_utils.filtered_tenants:
-            self._execute_per_tenant(tenant)
             for vrf in tenant.vrfs:
-                self._execute_per_vrf(vrf, tenant)
                 for svi in vrf.svis:
                     self._execute_per_svi(svi, vrf, tenant)
+                self._execute_per_vrf(vrf, tenant)
             for l2vlan in tenant.l2vlans:
                 self._execute_per_l2vlan(l2vlan, tenant)
+            self._execute_per_tenant(tenant)
         self._execute_post()
 
     def graph(self) -> str:
@@ -125,17 +127,18 @@ class StructuredConfigExecutor:
         """
         from python_mermaid.diagram import MermaidDiagram, Node, Link  # pylint: disable=import-outside-toplevel  # noqa: I001
 
-        nodes = [Node(id="start", content="Start")]
+        start_node = Node(id="start", content="Build Structured Config")
+        nodes = [start_node]
         links: list[Link] = []
 
         for instance, method in self._method_execution_registry["pre"]:
             cls = type(instance)
             nodes.append(Node(id=f"{cls.__name__}.{method}", content=f"{cls.__name__}.{method}()"))
-            links.append(Link(origin=nodes[-2], end=nodes[-1]))
+            links.append(Link(origin=start_node, end=nodes[-1]))
 
         per_tenant_node = Node("loop_tenants", content="Loop over filtered Tenants")
         nodes.append(per_tenant_node)
-        links.append(Link(origin=nodes[-2], end=nodes[-1]))
+        links.append(Link(start_node, end=nodes[-1]))
         for instance, method in self._method_execution_registry["per_tenant"]:
             cls = type(instance)
             nodes.append(Node(id=f"{cls.__name__}.{method}", content=f"{cls.__name__}.{method}(tenant)"))
@@ -169,12 +172,6 @@ class StructuredConfigExecutor:
             cls = type(instance)
             nodes.append(Node(id=f"{cls.__name__}.{method}", content=f"{cls.__name__}.{method}()"))
             links.append(Link(origin=per_tenant_node, end=nodes[-1]))
-
-        nodes.append(Node(id="stop", content="Stop"))
-        if not self._method_execution_registry["post"]:
-            links.append(Link(origin=per_tenant_node, end=nodes[-1]))
-        else:
-            links.append(Link(origin=nodes[-2], end=nodes[-1]))
 
         flowchart = MermaidDiagram("AVD eos_designs execution", nodes=nodes, links=links)
         return str(flowchart)
