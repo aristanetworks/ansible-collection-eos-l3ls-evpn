@@ -27,7 +27,10 @@
 - [System Boot Settings](#system-boot-settings)
   - [System Boot Device Configuration](#system-boot-device-configuration)
 - [Monitoring](#monitoring)
+  - [TerminAttr Daemon](#terminattr-daemon)
   - [Logging](#logging)
+  - [SNMP](#snmp)
+  - [Flow Tracking](#flow-tracking)
   - [Monitor Server Radius Summary](#monitor-server-radius-summary)
 - [Monitor Connectivity](#monitor-connectivity)
   - [Global Configuration](#global-configuration)
@@ -35,13 +38,19 @@
 - [LACP](#lacp)
   - [LACP Summary](#lacp-summary)
   - [LACP Device Configuration](#lacp-device-configuration)
+- [Spanning Tree](#spanning-tree)
+  - [Spanning Tree Summary](#spanning-tree-summary)
+  - [Spanning Tree Device Configuration](#spanning-tree-device-configuration)
 - [Interfaces](#interfaces)
+  - [Switchport Default](#switchport-default)
   - [DPS Interfaces](#dps-interfaces)
   - [VXLAN Interface](#vxlan-interface)
 - [Routing](#routing)
   - [Service Routing Protocols Model](#service-routing-protocols-model)
+  - [IP Routing](#ip-routing)
   - [ARP](#arp)
   - [Router Adaptive Virtual Topology](#router-adaptive-virtual-topology)
+  - [Router ISIS](#router-isis)
   - [Router BGP](#router-bgp)
   - [PBR Policy Maps](#pbr-policy-maps)
 - [BFD](#bfd)
@@ -66,6 +75,7 @@
   - [IP DHCP Snooping Device Configuration](#ip-dhcp-snooping-device-configuration)
 - [IP NAT](#ip-nat)
   - [IP NAT Device Configuration](#ip-nat-device-configuration)
+  - [Traffic Policies information](#traffic-policies-information)
 
 ## Management
 
@@ -361,6 +371,26 @@ dhcp relay
 
 ## Monitoring
 
+### TerminAttr Daemon
+
+#### TerminAttr Daemon Summary
+
+| CV Compression | CloudVision Servers | VRF | Authentication | Smash Excludes | Ingest Exclude | Bypass AAA |
+| -------------- | ------------------- | --- | -------------- | -------------- | -------------- | ---------- |
+| gzip | 10.20.20.1:9910 | mgt | certs,/persist/secure/ssl/terminattr/DC1/certs/client.crt,/persist/secure/ssl/terminattr/DC1/keys/client.key,/persist/secure/ssl/terminattr/DC1/certs/ca.crt | ale,flexCounter,hardware,kni,pulse,strata | /Sysdb/cell/1/agent,/Sysdb/cell/2/agent | False |
+| gzip | 10.30.30.1:9910 | mgt | key,<removed> | ale,flexCounter,hardware,kni,pulse,strata | /Sysdb/cell/1/agent,/Sysdb/cell/2/agent | False |
+| gzip | 10.40.40.1:9910 | mgt | token,/tmp/tokenDC3 | ale,flexCounter,hardware,kni,pulse,strata | /Sysdb/cell/1/agent,/Sysdb/cell/2/agent | False |
+| gzip | apiserver.arista.io:443 | - | key,<removed> | ale,flexCounter,hardware,kni,pulse,strata | /Sysdb/cell/1/agent,/Sysdb/cell/2/agent | False |
+
+#### TerminAttr Daemon Device Configuration
+
+```eos
+!
+daemon TerminAttr
+   exec /usr/bin/TerminAttr -cvopt DC1.addr=10.20.20.1:9910 -cvopt DC1.auth=certs,/persist/secure/ssl/terminattr/DC1/certs/client.crt,/persist/secure/ssl/terminattr/DC1/keys/client.key,/persist/secure/ssl/terminattr/DC1/certs/ca.crt -cvopt DC1.vrf=mgt -cvopt DC1.sourceintf=Loopback10 -cvopt DC2.addr=10.30.30.1:9910 -cvopt DC2.auth=key,<removed> -cvopt DC2.vrf=mgt -cvopt DC2.sourceintf=Vlan500 -cvopt DC3.addr=10.40.40.1:9910 -cvopt DC3.auth=token,/tmp/tokenDC3 -cvopt DC3.vrf=mgt -cvopt DC3.sourceintf=Vlan500 -cvaddr=apiserver.arista.io:443 -cvauth=key,<removed> -smashexcludes=ale,flexCounter,hardware,kni,pulse,strata -ingestexclude=/Sysdb/cell/1/agent,/Sysdb/cell/2/agent -taillogs
+   no shutdown
+```
+
 ### Logging
 
 #### Logging Servers and Features Summary
@@ -384,6 +414,53 @@ logging monitor debugging
 logging facility syslog
 !
 logging event link-status global
+```
+
+### SNMP
+
+#### SNMP Configuration Summary
+
+| Contact | Location | SNMP Traps | State |
+| ------- | -------- | ---------- | ----- |
+| - | - | All | Disabled |
+
+#### SNMP Device Configuration
+
+```eos
+!
+no snmp-server enable traps
+```
+
+### Flow Tracking
+
+#### Flow Tracking Sampled
+
+| Sample Size | Minimum Sample Size | Hardware Offload for IPv4 | Hardware Offload for IPv6 | Encapsulations |
+| ----------- | ------------------- | ------------------------- | ------------------------- | -------------- |
+| 666 | default | enabled | enabled | - |
+
+##### Trackers Summary
+
+| Tracker Name | Record Export On Inactive Timeout | Record Export On Interval | MPLS | Number of Exporters | Applied On | Table Size |
+| ------------ | --------------------------------- | ------------------------- | ---- | ------------------- | ---------- | ---------- |
+| T21 | 3666 | 5666 | True | 0 |  | - |
+
+##### Exporters Summary
+
+| Tracker Name | Exporter Name | Collector IP/Host | Collector Port | Local Interface |
+| ------------ | ------------- | ----------------- | -------------- | --------------- |
+
+#### Flow Tracking Device Configuration
+
+```eos
+!
+flow tracking sampled
+   sample 666
+   hardware offload ipv4 ipv6
+   tracker T21
+      record export on inactive timeout 3666
+      record export on interval 5666
+      record export mpls
 ```
 
 ### Monitor Server Radius Summary
@@ -444,7 +521,43 @@ monitor connectivity
 lacp system-priority 0
 ```
 
+## Spanning Tree
+
+### Spanning Tree Summary
+
+STP mode: **rstp**
+
+#### Global Spanning-Tree Settings
+
+- Global RSTP priority: 8192
+- Global BPDU Guard for Edge ports is enabled.
+- Global BPDU Filter for Edge ports is enabled.
+
+### Spanning Tree Device Configuration
+
+```eos
+!
+spanning-tree mode rstp
+spanning-tree edge-port bpduguard default
+spanning-tree edge-port bpdufilter default
+no spanning-tree bpduguard rate-limit default
+spanning-tree priority 8192
+```
+
 ## Interfaces
+
+### Switchport Default
+
+#### Switchport Defaults Summary
+
+- Default Switchport Mode: routed
+
+#### Switchport Default Device Configuration
+
+```eos
+!
+switchport default mode routed
+```
 
 ### DPS Interfaces
 
@@ -498,6 +611,22 @@ Single agent routing protocol model enabled
 service routing protocols model ribd
 ```
 
+### IP Routing
+
+#### IP Routing Summary
+
+| VRF | Routing Enabled |
+| --- | --------------- |
+| default | False |
+
+#### IP Routing Device Configuration
+
+```eos
+!
+no ip routing
+no ip icmp redirect
+```
+
 ### ARP
 
 ARP cache persistency is enabled.
@@ -523,6 +652,78 @@ VXLAN gateway: Enabled
 !
 router adaptive-virtual-topology
    topology role edge gateway vxlan
+```
+
+### Router ISIS
+
+#### Router ISIS Summary
+
+| Settings | Value |
+| -------- | ----- |
+| Instance | EVPN_UNDERLAY |
+| Net-ID | 49.0001.0001.0001.0001.00 |
+| Type | level-2 |
+| Router-ID | 192.168.255.3 |
+| Log Adjacency Changes | True |
+| SR MPLS Enabled | False |
+| SPF Interval | 250 seconds |
+
+#### ISIS Route Timers
+
+| Settings | Value |
+| -------- | ----- |
+| Local Convergence Delay | 10000 milliseconds |
+
+#### ISIS Interfaces Summary
+
+| Interface | ISIS Instance | ISIS Metric | Interface Mode |
+| --------- | ------------- | ----------- | -------------- |
+
+#### ISIS IPv4 Address Family Summary
+
+| Settings | Value |
+| -------- | ----- |
+| IPv4 Address-family Enabled | True |
+
+#### Tunnel Source
+
+| Source Protocol | RCF |
+| --------------- | --- |
+| BGP Labeled-Unicast | - |
+
+#### ISIS IPv6 Address Family Summary
+
+| Settings | Value |
+| -------- | ----- |
+| IPv6 Address-family Enabled | True |
+| BFD All-interfaces | True |
+| TI-LFA SRLG Enabled | True |
+
+#### Router ISIS Device Configuration
+
+```eos
+!
+router isis EVPN_UNDERLAY
+   net 49.0001.0001.0001.0001.00
+   router-id ipv4 192.168.255.3
+   is-type level-2
+   log-adjacency-changes
+   timers local-convergence-delay protected-prefixes
+   set-overload-bit on-startup wait-for-bgp
+   spf-interval 250
+   authentication mode sha key-id 5 rx-disabled level-1
+   authentication mode shared-secret profile test2 algorithm md5 rx-disabled level-2
+   authentication key 0 password
+   !
+   address-family ipv4 unicast
+      tunnel source-protocol bgp ipv4 labeled-unicast
+   !
+   address-family ipv6 unicast
+      bfd all-interfaces
+      fast-reroute ti-lfa srlg
+   !
+   segment-routing mpls
+      shutdown
 ```
 
 ### Router BGP
@@ -870,4 +1071,24 @@ ip dhcp snooping
 !
 !
 ip nat synchronization
+```
+
+### Traffic Policies information
+
+#### IPv6 Field Sets
+
+| Field Set Name | IPv6 Prefixes |
+| -------------- | ------------- |
+| IPv6-DEMO-1 | 11:22:33:44:55:66:77:88 |
+| IPv6-DEMO-2 | - |
+
+#### Traffic Policies Device Configuration
+
+```eos
+!
+traffic-policies
+   field-set ipv6 prefix IPv6-DEMO-1
+      11:22:33:44:55:66:77:88
+   !
+   field-set ipv6 prefix IPv6-DEMO-2
 ```
