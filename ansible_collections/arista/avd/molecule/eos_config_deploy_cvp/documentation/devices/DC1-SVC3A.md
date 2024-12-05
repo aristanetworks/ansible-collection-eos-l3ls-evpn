@@ -469,11 +469,11 @@ interface Ethernet10
 
 ##### L2
 
-| Interface | Description | Mode | VLANs | Native VLAN | Trunk Group | LACP Fallback Timeout | LACP Fallback Mode | MLAG ID | EVPN ESI |
-| --------- | ----------- | ---- | ----- | ----------- | ------------| --------------------- | ------------------ | ------- | -------- |
-| Port-Channel5 | MLAG_DC1-SVC3B_Port-Channel5 | trunk | - | - | MLAG | - | - | - | - |
-| Port-Channel7 | L2_DC1_L2LEAF2_Port-Channel1 | trunk | 110-111,120-121,130-131,140-141,150,210-211,250,310-311,350 | - | - | - | - | 7 | - |
-| Port-Channel10 | SERVER_server03_ESI | trunk | 110-111,210-211 | - | - | - | - | - | 0000:0000:0303:0202:0101 |
+| Interface | Description | Mode | VLANs | Native VLAN | Trunk Group | LACP Fallback Timeout | LACP Fallback Mode | MLAG ID | EVPN ESI | MIN Links |
+| --------- | ----------- | ---- | ----- | ----------- | ------------| --------------------- | ------------------ | ------- | -------- | --------- |
+| Port-Channel5 | MLAG_DC1-SVC3B_Port-Channel5 | trunk | - | - | MLAG | - | - | - | - | - |
+| Port-Channel7 | L2_DC1_L2LEAF2_Port-Channel1 | trunk | 110-111,120-121,130-131,140-141,150,210-211,250,310-311,350 | - | - | - | - | 7 | - | - |
+| Port-Channel10 | SERVER_server03_ESI | trunk | 110-111,210-211 | - | - | - | - | - | 0000:0000:0303:0202:0101 | - |
 
 ##### EVPN Multihoming
 

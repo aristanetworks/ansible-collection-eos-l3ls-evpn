@@ -213,11 +213,11 @@ interface Ethernet5
 
 ##### L2
 
-| Interface | Description | Mode | VLANs | Native VLAN | Trunk Group | LACP Fallback Timeout | LACP Fallback Mode | MLAG ID | EVPN ESI |
-| --------- | ----------- | ---- | ----- | ----------- | ------------| --------------------- | ------------------ | ------- | -------- |
-| Port-Channel1 | L2_OSPF-LEAF1_Port-Channel1 | trunk | 100,4092 | - | - | - | - | 1 | - |
-| Port-Channel2 | L2_OSPF-LEAF2_Port-Channel1 | trunk | 100,4092 | - | - | - | - | 2 | - |
-| Port-Channel3 | MLAG_OSPF-SPINE1_Port-Channel3 | trunk | - | - | MLAG | - | - | - | - |
+| Interface | Description | Mode | VLANs | Native VLAN | Trunk Group | LACP Fallback Timeout | LACP Fallback Mode | MLAG ID | EVPN ESI | MIN Links |
+| --------- | ----------- | ---- | ----- | ----------- | ------------| --------------------- | ------------------ | ------- | -------- | --------- |
+| Port-Channel1 | L2_OSPF-LEAF1_Port-Channel1 | trunk | 100,4092 | - | - | - | - | 1 | - | - |
+| Port-Channel2 | L2_OSPF-LEAF2_Port-Channel1 | trunk | 100,4092 | - | - | - | - | 2 | - | - |
+| Port-Channel3 | MLAG_OSPF-SPINE1_Port-Channel3 | trunk | - | - | MLAG | - | - | - | - | - |
 
 #### Port-Channel Interfaces Device Configuration
 

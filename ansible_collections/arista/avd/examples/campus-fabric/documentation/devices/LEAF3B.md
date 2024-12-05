@@ -2454,13 +2454,13 @@ interface Ethernet98/4
 
 ##### L2
 
-| Interface | Description | Mode | VLANs | Native VLAN | Trunk Group | LACP Fallback Timeout | LACP Fallback Mode | MLAG ID | EVPN ESI |
-| --------- | ----------- | ---- | ----- | ----------- | ------------| --------------------- | ------------------ | ------- | -------- |
-| Port-Channel971 | L2_SPINES_Port-Channel501 | trunk | 10,310,320,330 | - | - | - | - | 971 | - |
-| Port-Channel973 | L2_LEAF3C_Port-Channel971 | trunk | 10,310,320,330 | - | - | - | - | 973 | - |
-| Port-Channel974 | L2_LEAF3D_Port-Channel971 | trunk | 10,310,320,330 | - | - | - | - | 974 | - |
-| Port-Channel981 | L2_LEAF3E_Port-Channel971 | trunk | 10,310,320,330 | - | - | - | - | 981 | - |
-| Port-Channel983 | MLAG_LEAF3A_Port-Channel983 | trunk | - | - | MLAG | - | - | - | - |
+| Interface | Description | Mode | VLANs | Native VLAN | Trunk Group | LACP Fallback Timeout | LACP Fallback Mode | MLAG ID | EVPN ESI | MIN Links |
+| --------- | ----------- | ---- | ----- | ----------- | ------------| --------------------- | ------------------ | ------- | -------- | --------- |
+| Port-Channel971 | L2_SPINES_Port-Channel501 | trunk | 10,310,320,330 | - | - | - | - | 971 | - | - |
+| Port-Channel973 | L2_LEAF3C_Port-Channel971 | trunk | 10,310,320,330 | - | - | - | - | 973 | - | - |
+| Port-Channel974 | L2_LEAF3D_Port-Channel971 | trunk | 10,310,320,330 | - | - | - | - | 974 | - | - |
+| Port-Channel981 | L2_LEAF3E_Port-Channel971 | trunk | 10,310,320,330 | - | - | - | - | 981 | - | - |
+| Port-Channel983 | MLAG_LEAF3A_Port-Channel983 | trunk | - | - | MLAG | - | - | - | - | - |
 
 #### Port-Channel Interfaces Device Configuration
 

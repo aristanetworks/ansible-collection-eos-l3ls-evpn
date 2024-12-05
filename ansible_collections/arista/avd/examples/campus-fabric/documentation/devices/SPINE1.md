@@ -376,12 +376,12 @@ interface Ethernet56/1
 
 ##### L2
 
-| Interface | Description | Mode | VLANs | Native VLAN | Trunk Group | LACP Fallback Timeout | LACP Fallback Mode | MLAG ID | EVPN ESI |
-| --------- | ----------- | ---- | ----- | ----------- | ------------| --------------------- | ------------------ | ------- | -------- |
-| Port-Channel1 | L2_IDF1_Port-Channel51 | trunk | 10,110,120,130 | - | - | - | - | 1 | - |
-| Port-Channel491 | L2_LEAF2A_Port-Channel11 | trunk | 10,210,220,230 | - | - | - | - | 491 | - |
-| Port-Channel501 | L2_IDF3_AGG_Port-Channel971 | trunk | 10,310,320,330 | - | - | - | - | 501 | - |
-| Port-Channel551 | MLAG_SPINE2_Port-Channel551 | trunk | - | - | MLAG | - | - | - | - |
+| Interface | Description | Mode | VLANs | Native VLAN | Trunk Group | LACP Fallback Timeout | LACP Fallback Mode | MLAG ID | EVPN ESI | MIN Links |
+| --------- | ----------- | ---- | ----- | ----------- | ------------| --------------------- | ------------------ | ------- | -------- | --------- |
+| Port-Channel1 | L2_IDF1_Port-Channel51 | trunk | 10,110,120,130 | - | - | - | - | 1 | - | - |
+| Port-Channel491 | L2_LEAF2A_Port-Channel11 | trunk | 10,210,220,230 | - | - | - | - | 491 | - | - |
+| Port-Channel501 | L2_IDF3_AGG_Port-Channel971 | trunk | 10,310,320,330 | - | - | - | - | 501 | - | - |
+| Port-Channel551 | MLAG_SPINE2_Port-Channel551 | trunk | - | - | MLAG | - | - | - | - | - |
 
 #### Port-Channel Interfaces Device Configuration
 
