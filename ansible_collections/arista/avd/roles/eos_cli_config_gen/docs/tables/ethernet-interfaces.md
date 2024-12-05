@@ -575,8 +575,8 @@
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;protocols</samp>](## "ethernet_interfaces.[].switchport.tap.encapsulation.gre.protocols") | List, items: Dictionary |  |  |  | Protocols for all destinations; destination-specific protocols should be set under the `destinations[].protocols` key. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;protocol</samp>](## "ethernet_interfaces.[].switchport.tap.encapsulation.gre.protocols.[].protocol") | String | Required, Unique |  |  | Protocol type in GRE header.<br>Valid range: 0x0-0xFFFF. The value must be enclosed in quotes, e.g., "0x0". |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;strip</samp>](## "ethernet_interfaces.[].switchport.tap.encapsulation.gre.protocols.[].strip") | Boolean |  |  |  | This is a required key to strip GRE encapsulation header with protocols. |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;feature_header_length</samp>](## "ethernet_interfaces.[].switchport.tap.encapsulation.gre.protocols.[].feature_header_length") | Integer |  |  | Min: 1<br>Max: 16 | Feature header length in bytes.<br>This setting does not reflect in the EOS running-config for protocol 0x0000. |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;re_encapsulation_ethernet_header</samp>](## "ethernet_interfaces.[].switchport.tap.encapsulation.gre.protocols.[].re_encapsulation_ethernet_header") | Boolean |  |  |  | Extra ethernet header to prepend to the terminated packet.<br>This setting does not reflect in the EOS running-config for protocol 0x0000. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;feature_header_length</samp>](## "ethernet_interfaces.[].switchport.tap.encapsulation.gre.protocols.[].feature_header_length") | Integer |  |  | Min: 1<br>Max: 16 | Feature header length in bytes.<br>Note: This setting does not appear in the EOS running-config for protocol 0x0. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;re_encapsulation_ethernet_header</samp>](## "ethernet_interfaces.[].switchport.tap.encapsulation.gre.protocols.[].re_encapsulation_ethernet_header") | Boolean |  |  |  | Extra ethernet header to prepend to the terminated packet.<br>Note: This setting does not appear in the EOS running-config for protocol 0x0. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;destinations</samp>](## "ethernet_interfaces.[].switchport.tap.encapsulation.gre.destinations") | List, items: Dictionary |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;destination</samp>](## "ethernet_interfaces.[].switchport.tap.encapsulation.gre.destinations.[].destination") | String | Required, Unique |  |  | Destination IP address of tunnel packets. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;source</samp>](## "ethernet_interfaces.[].switchport.tap.encapsulation.gre.destinations.[].source") | String |  |  |  | Source IP address of tunnel packets. Applied only when destination is defined. When not defined; any GRE packet that matches the `destination` is terminated. |
@@ -584,8 +584,8 @@
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;protocols</samp>](## "ethernet_interfaces.[].switchport.tap.encapsulation.gre.destinations.[].protocols") | List, items: Dictionary |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;protocol</samp>](## "ethernet_interfaces.[].switchport.tap.encapsulation.gre.destinations.[].protocols.[].protocol") | String | Required, Unique |  |  | Protocol type in GRE header.<br>Valid range: 0x0-0xFFFF. The value must be enclosed in quotes, e.g., "0x0". |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;strip</samp>](## "ethernet_interfaces.[].switchport.tap.encapsulation.gre.destinations.[].protocols.[].strip") | Boolean |  |  |  | This is a required key to strip GRE encapsulation header for specific destination with protocols. |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;feature_header_length</samp>](## "ethernet_interfaces.[].switchport.tap.encapsulation.gre.destinations.[].protocols.[].feature_header_length") | Integer |  |  | Min: 1<br>Max: 16 | Feature header length in bytes.<br>This setting does not reflect in the EOS running-config for protocol 0x0000. |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;re_encapsulation_ethernet_header</samp>](## "ethernet_interfaces.[].switchport.tap.encapsulation.gre.destinations.[].protocols.[].re_encapsulation_ethernet_header") | Boolean |  |  |  | Extra ethernet header to prepend to the terminated packet.<br>This setting does not reflect in the EOS running-config for protocol 0x0000. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;feature_header_length</samp>](## "ethernet_interfaces.[].switchport.tap.encapsulation.gre.destinations.[].protocols.[].feature_header_length") | Integer |  |  | Min: 1<br>Max: 16 | Feature header length in bytes.<br>Note: This setting does not appear in the EOS running-config for protocol 0x0. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;re_encapsulation_ethernet_header</samp>](## "ethernet_interfaces.[].switchport.tap.encapsulation.gre.destinations.[].protocols.[].re_encapsulation_ethernet_header") | Boolean |  |  |  | Extra ethernet header to prepend to the terminated packet.<br>Note: This setting does not appear in the EOS running-config for protocol 0x0. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;tool</samp>](## "ethernet_interfaces.[].switchport.tool") | Dictionary |  |  |  | In tool mode, the interface operates as a tool port.<br>Tool ports replicate traffic received by tap ports.<br>This setting applies only to parent interfaces. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;mpls_pop_all</samp>](## "ethernet_interfaces.[].switchport.tool.mpls_pop_all") | Boolean |  |  |  | Pop all MPLS labels. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;encapsulation</samp>](## "ethernet_interfaces.[].switchport.tool.encapsulation") | Dictionary |  |  |  |  |
@@ -1853,11 +1853,11 @@
                     strip: <bool>
 
                     # Feature header length in bytes.
-                    # This setting does not reflect in the EOS running-config for protocol 0x0000.
+                    # Note: This setting does not appear in the EOS running-config for protocol 0x0.
                     feature_header_length: <int; 1-16>
 
                     # Extra ethernet header to prepend to the terminated packet.
-                    # This setting does not reflect in the EOS running-config for protocol 0x0000.
+                    # Note: This setting does not appear in the EOS running-config for protocol 0x0.
                     re_encapsulation_ethernet_header: <bool>
                 destinations:
 
@@ -1879,11 +1879,11 @@
                         strip: <bool>
 
                         # Feature header length in bytes.
-                        # This setting does not reflect in the EOS running-config for protocol 0x0000.
+                        # Note: This setting does not appear in the EOS running-config for protocol 0x0.
                         feature_header_length: <int; 1-16>
 
                         # Extra ethernet header to prepend to the terminated packet.
-                        # This setting does not reflect in the EOS running-config for protocol 0x0000.
+                        # Note: This setting does not appear in the EOS running-config for protocol 0x0.
                         re_encapsulation_ethernet_header: <bool>
 
           # In tool mode, the interface operates as a tool port.

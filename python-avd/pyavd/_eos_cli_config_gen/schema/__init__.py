@@ -11521,14 +11521,14 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                             feature_header_length: int | None
                             """
                             Feature header length in bytes.
-                            This setting does not reflect in the EOS running-config for protocol
-                            0x0000.
+                            Note: This setting does not appear in the EOS running-config for
+                            protocol 0x0.
                             """
                             re_encapsulation_ethernet_header: bool | None
                             """
                             Extra ethernet header to prepend to the terminated packet.
-                            This setting does not reflect in the EOS
-                            running-config for protocol 0x0000.
+                            Note: This setting does not appear in the
+                            EOS running-config for protocol 0x0.
                             """
                             _custom_data: dict[str, Any]
 
@@ -11557,12 +11557,12 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                                         strip: This is a required key to strip GRE encapsulation header with protocols.
                                         feature_header_length:
                                            Feature header length in bytes.
-                                           This setting does not reflect in the EOS running-config for protocol
-                                           0x0000.
+                                           Note: This setting does not appear in the EOS running-config for
+                                           protocol 0x0.
                                         re_encapsulation_ethernet_header:
                                            Extra ethernet header to prepend to the terminated packet.
-                                           This setting does not reflect in the EOS
-                                           running-config for protocol 0x0000.
+                                           Note: This setting does not appear in the
+                                           EOS running-config for protocol 0x0.
                                         _custom_data: _custom_data
 
                                     """
@@ -11598,14 +11598,14 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                                 feature_header_length: int | None
                                 """
                                 Feature header length in bytes.
-                                This setting does not reflect in the EOS running-config for protocol
-                                0x0000.
+                                Note: This setting does not appear in the EOS running-config for
+                                protocol 0x0.
                                 """
                                 re_encapsulation_ethernet_header: bool | None
                                 """
                                 Extra ethernet header to prepend to the terminated packet.
-                                This setting does not reflect in the EOS
-                                running-config for protocol 0x0000.
+                                Note: This setting does not appear in the
+                                EOS running-config for protocol 0x0.
                                 """
                                 _custom_data: dict[str, Any]
 
@@ -11634,12 +11634,12 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                                             strip: This is a required key to strip GRE encapsulation header for specific destination with protocols.
                                             feature_header_length:
                                                Feature header length in bytes.
-                                               This setting does not reflect in the EOS running-config for protocol
-                                               0x0000.
+                                               Note: This setting does not appear in the EOS running-config for
+                                               protocol 0x0.
                                             re_encapsulation_ethernet_header:
                                                Extra ethernet header to prepend to the terminated packet.
-                                               This setting does not reflect in the EOS
-                                               running-config for protocol 0x0000.
+                                               Note: This setting does not appear in the
+                                               EOS running-config for protocol 0x0.
                                             _custom_data: _custom_data
 
                                         """
@@ -31272,14 +31272,14 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                             feature_header_length: int | None
                             """
                             Feature header length in bytes.
-                            This setting does not reflect in the EOS running-config for protocol
-                            0x0000.
+                            Note: This setting does not appear in the EOS running-config for
+                            protocol 0x0.
                             """
                             re_encapsulation_ethernet_header: bool | None
                             """
                             Extra ethernet header to prepend to the terminated packet.
-                            This setting does not reflect in the EOS
-                            running-config for protocol 0x0000.
+                            Note: This setting does not appear in the
+                            EOS running-config for protocol 0x0.
                             """
                             _custom_data: dict[str, Any]
 
@@ -31308,12 +31308,12 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                                         strip: This is a required key to strip GRE encapsulation header with protocols.
                                         feature_header_length:
                                            Feature header length in bytes.
-                                           This setting does not reflect in the EOS running-config for protocol
-                                           0x0000.
+                                           Note: This setting does not appear in the EOS running-config for
+                                           protocol 0x0.
                                         re_encapsulation_ethernet_header:
                                            Extra ethernet header to prepend to the terminated packet.
-                                           This setting does not reflect in the EOS
-                                           running-config for protocol 0x0000.
+                                           Note: This setting does not appear in the
+                                           EOS running-config for protocol 0x0.
                                         _custom_data: _custom_data
 
                                     """
@@ -31349,14 +31349,14 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                                 feature_header_length: int | None
                                 """
                                 Feature header length in bytes.
-                                This setting does not reflect in the EOS running-config for protocol
-                                0x0000.
+                                Note: This setting does not appear in the EOS running-config for
+                                protocol 0x0.
                                 """
                                 re_encapsulation_ethernet_header: bool | None
                                 """
                                 Extra ethernet header to prepend to the terminated packet.
-                                This setting does not reflect in the EOS
-                                running-config for protocol 0x0000.
+                                Note: This setting does not appear in the
+                                EOS running-config for protocol 0x0.
                                 """
                                 _custom_data: dict[str, Any]
 
@@ -31385,12 +31385,12 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                                             strip: This is a required key to strip GRE encapsulation header for specific destination with protocols.
                                             feature_header_length:
                                                Feature header length in bytes.
-                                               This setting does not reflect in the EOS running-config for protocol
-                                               0x0000.
+                                               Note: This setting does not appear in the EOS running-config for
+                                               protocol 0x0.
                                             re_encapsulation_ethernet_header:
                                                Extra ethernet header to prepend to the terminated packet.
-                                               This setting does not reflect in the EOS
-                                               running-config for protocol 0x0000.
+                                               Note: This setting does not appear in the
+                                               EOS running-config for protocol 0x0.
                                             _custom_data: _custom_data
 
                                         """
