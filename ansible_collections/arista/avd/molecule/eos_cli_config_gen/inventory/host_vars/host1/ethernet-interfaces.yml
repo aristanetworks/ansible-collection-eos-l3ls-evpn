@@ -1288,7 +1288,7 @@ ethernet_interfaces:
     ip_address: 192.168.42.42/24
     dhcp_server_ipv4: true
     dhcp_server_ipv6: true
-    
+
 # VRRP
   - name: Ethernet65
     description: Multiple VRIDs
