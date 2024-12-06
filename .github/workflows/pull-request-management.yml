@@ -452,6 +452,31 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-pip-ansible-core-3.12
             ${{ runner.os }}-pip-ansible-core-3.13
+      
+      # # Restore dependencies cache
+      # - name: Restore dependencies cache
+      #   uses: actions/cache@v3
+      #   with:
+      #     path: ~/.cache/pip
+      #     key: ${{ runner.os }}-pip-requirements-${{ hashFiles('.github/requirements-ci.txt') }}-${{ matrix.python_version }}
+      #     restore-keys: |
+      #       ${{ runner.os }}-pip-requirements-
+
+      # Check dependencies without installation
+      - name: Check Python requirements (dry-run)
+        run: |
+          pip install --cache-dir ~/.cache/pip -r .github/requirements-ci.txt --upgrade --dry-run
+
+      - name: Check ansible requirements (dry-run)
+        run: |
+          pip install --cache-dir ~/.cache/ansible -r ansible-core<2.19.0 --upgrade --dry-run
+
+      # Install dependencies if needed
+      - name: Install Python requirements
+        if: failure()  # Runs only if the dry-run step fails
+        run: |
+          pip install --cache-dir ~/.cache/pip -r .github/requirements-ci.txt --upgrade
+
 
       - name: Print pip list
         run: |
