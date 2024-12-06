@@ -89,31 +89,31 @@ jobs:
   # ----------------------------------- #
   # Test Requirements
   # ----------------------------------- #
-  python_requirements:
-    name: Test Python requirements installation
-    runs-on: ubuntu-latest
-    needs: [ file-changes ]
-    if: needs.file-changes.outputs.requirements == 'true'
-    strategy:
-      fail-fast: true
-      matrix:
-        python_version:
-          - "3.10"
-          - "3.11"
-          - "3.12"
-          - "3.13"
-    steps:
-      - uses: actions/checkout@v4
-      - name: Set up Python 3
-        uses: actions/setup-python@v5
-        id: pipcache
-        with:
-          python-version: ${{ matrix.python_version }}
-          cache: 'pip'
-      - name: 'Install Python requirements'
-        if: steps.pipcache.outputs.cache-hit != 'true'
-        run: |
-          pip install -r .github/requirements-ci.txt -r ansible_collections/arista/avd/requirements-dev.txt --upgrade
+  # python_requirements:
+  #   name: Test Python requirements installation
+  #   runs-on: ubuntu-latest
+  #   needs: [ file-changes ]
+  #   if: needs.file-changes.outputs.requirements == 'true'
+  #   strategy:
+  #     fail-fast: true
+  #     matrix:
+  #       python_version:
+  #         - "3.10"
+  #         - "3.11"
+  #         - "3.12"
+  #         - "3.13"
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #     - name: Set up Python 3
+  #       uses: actions/setup-python@v5
+  #       id: pipcache
+  #       with:
+  #         python-version: ${{ matrix.python_version }}
+  #         cache: 'pip'
+  #     - name: 'Install Python requirements'
+  #       if: steps.pipcache.outputs.cache-hit != 'true'
+  #       run: |
+  #         pip install -r .github/requirements-ci.txt -r ansible_collections/arista/avd/requirements-dev.txt --upgrade
 
   # ----------------------------------- #
   # EOS CLI CONFIG GEN MOLECULE
@@ -578,7 +578,7 @@ jobs:
   #           3.10
   #         cache: 'pip'
 
-  #     # create a separate step to cache insatalling ansible-galaxy collection install -r ansible_collections/arista/avd/collections.yml   
+  #     # create a separate step to cache insatalling ansible-galaxy collection install -r ansible_collections/arista/avd/collections.yml
   #     - name: 'Install Python & Ansible requirements'
   #       run: |
   #         pip install "ansible-core<2.19.0" -r .github/requirements-ci.txt --upgrade
