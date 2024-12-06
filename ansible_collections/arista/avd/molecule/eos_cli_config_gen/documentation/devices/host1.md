@@ -1449,8 +1449,8 @@ address locking
 
 ### Management Security SSL Profiles
 
-| SSL Profile Name | TLS protocol accepted | Certificate filename | Key filename | Cipher List | Ciphers v1.0 | Ciphers v1.3 | CRLs |
-| ---------------- | --------------------- | -------------------- | ------------ | ----------- | ------------ | ------------ | ---- |
+| SSL Profile Name | TLS protocol accepted | Certificate filename | Key filename | Cipher List | Cipher v1.0 | Cipher v1.3 | CRLs |
+| ---------------- | --------------------- | -------------------- | ------------ | ----------- | ----------- | ----------- | ---- |
 | certificate-profile | - | eAPI.crt | eAPI.key | - | - | - | ca.crl<br>intermediate.crl |
 | cipher-list-profile | - | - | - | ECDHE-RSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-SHA384 | - | - | - |
 | cipher-v1.0-v1.3 | - | - | - | - | SHA256:SHA384 | TLS_AES_256_GCM_SHA384:TLS_CHACHA20_POLY1305_SHA256 | - |
