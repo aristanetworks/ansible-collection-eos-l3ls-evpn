@@ -425,21 +425,20 @@ class UtilsMixin(UtilsWanMixin, UtilsZscalerMixin):
         """
         # Handle "vtep_diagnostic" router ID case
         if router_id == "vtep_diagnostic":
-            vrf_diagnostic_loopback = vrf.vtep_diagnostic.loopback
-            loopback_ip_pools = vrf.vtep_diagnostic.loopback_ip_pools
+            interface_data = self._get_vtep_diagnostic_loopback_for_vrf(vrf)
 
             # Validate required configuration
-            if vrf_diagnostic_loopback is None or loopback_ip_pools is None:
+            if interface_data is None:
                 msg = (
                     f"Invalid configuration on VRF '{vrf.name}' in Tenant '{tenant_name}'. "
-                    "Both 'vtep_diagnostic.loopback' and 'vtep_diagnostic.loopback_ip_pools' must be defined "
+                    "'vtep_diagnostic.loopback' along with either 'vtep_diagnostic.loopback_ip_pools' or 'vtep_diagnostic.loopback_ip_range' must be defined "
                     "when 'router_id' is set to 'vtep_diagnostic' on the VRF."
                 )
                 raise AristaAvdInvalidInputsError(msg)
 
             # Resolve router ID from loopback interface
-            interface_data = self._get_vtep_diagnostic_loopback_for_vrf(vrf)
-            return interface_data["ip_address"].split("/")[0]
+
+            return str(ipaddress.ip_interface(interface_data["ip_address"]).ip)
 
         # Handle "main_router_id" with general router ID enabled/disabled
         if router_id == "main_router_id":
