@@ -33644,9 +33644,9 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                     latency: int | None
                     """Latency threshold in millisecond."""
                     load: str | None
-                    """Load threshold percentage."""
+                    """Load threshold percentage. Valid range <0.00-100.00>."""
                     loss_rate: str | None
-                    """Loss-rate threshold percentage."""
+                    """Loss-rate threshold percentage. Valid range <0.00-100.00>."""
                     _custom_data: dict[str, Any]
 
                     if TYPE_CHECKING:
@@ -33669,15 +33669,15 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                             Args:
                                 jitter: Jitter threshold in millisecond.
                                 latency: Latency threshold in millisecond.
-                                load: Load threshold percentage.
-                                loss_rate: Loss-rate threshold percentage.
+                                load: Load threshold percentage. Valid range <0.00-100.00>.
+                                loss_rate: Loss-rate threshold percentage. Valid range <0.00-100.00>.
                                 _custom_data: _custom_data
 
                             """
 
-                _fields: ClassVar[dict] = {"enabled": {"type": bool}, "threshold": {"type": Threshold}, "_custom_data": {"type": dict}}
-                enabled: bool | None
-                """Set true to enable the AVT path outlier elimination or false to disable the same."""
+                _fields: ClassVar[dict] = {"disabled": {"type": bool}, "threshold": {"type": Threshold}, "_custom_data": {"type": dict}}
+                disabled: bool | None
+                """Set true to disable the AVT path outlier elimination."""
                 threshold: Threshold
                 """
                 Change the threshold values for path comparison.
@@ -33691,7 +33691,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                     def __init__(
                         self,
                         *,
-                        enabled: bool | None | UndefinedType = Undefined,
+                        disabled: bool | None | UndefinedType = Undefined,
                         threshold: Threshold | UndefinedType = Undefined,
                         _custom_data: dict[str, Any] | UndefinedType = Undefined,
                     ) -> None:
@@ -33702,7 +33702,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                         Subclass of AvdModel.
 
                         Args:
-                            enabled: Set true to enable the AVT path outlier elimination or false to disable the same.
+                            disabled: Set true to disable the AVT path outlier elimination.
                             threshold:
                                Change the threshold values for path comparison.
 

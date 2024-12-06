@@ -16,13 +16,12 @@ router_adaptive_virtual_topology:
     - name: voice
       load_balance_policy: voice-lb
       outlier_elimination:
-        enabled: true
         threshold:
           jitter: 100
     - name: video
       internet_exit_policy: video-ie
       outlier_elimination:
-        enabled: false
+        disabled: true
         threshold:
           latency: 100
     - name: office365

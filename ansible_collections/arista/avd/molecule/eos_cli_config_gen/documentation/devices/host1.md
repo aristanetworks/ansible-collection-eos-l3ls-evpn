@@ -6608,7 +6608,6 @@ router adaptive-virtual-topology
    !
    profile voice
       path-selection load-balance voice-lb
-      path-selection outlier elimination
       path-selection outlier elimination threshold jitter 100 milliseconds
    !
    vrf blue

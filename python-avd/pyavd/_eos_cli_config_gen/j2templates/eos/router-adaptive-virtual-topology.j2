@@ -56,9 +56,7 @@ router adaptive-virtual-topology
 {%         if profile.metric_order is arista.avd.defined %}
       metric order {{ profile.metric_order }}
 {%         endif %}
-{%         if profile.outlier_elimination.enabled is arista.avd.defined(true) %}
-      path-selection outlier elimination
-{%         elif profile.outlier_elimination.enabled is arista.avd.defined(false) %}
+{%         if profile.outlier_elimination.disabled is arista.avd.defined(true) %}
       path-selection outlier elimination disabled
 {%         endif %}
 {%         if profile.outlier_elimination.threshold is arista.avd.defined %}

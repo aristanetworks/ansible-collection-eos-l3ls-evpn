@@ -11864,9 +11864,8 @@ keys:
               description: AVT path outlier elimination.
               type: dict
               keys:
-                enabled:
-                  description: Set true to enable the AVT path outlier elimination
-                    or false to disable the same.
+                disabled:
+                  description: Set true to disable the AVT path outlier elimination.
                   type: bool
                 threshold:
                   description: Change the threshold values for path comparison.
@@ -11875,21 +11874,25 @@ keys:
                     jitter:
                       description: Jitter threshold in millisecond.
                       type: int
+                      convert_types:
+                      - str
                       min: 0
                       max: 10000
                     latency:
                       description: Latency threshold in millisecond.
                       type: int
+                      convert_types:
+                      - str
                       min: 0
                       max: 10000
                     load:
-                      description: Load threshold percentage.
+                      description: Load threshold percentage. Valid range <0.00-100.00>.
                       type: str
                       convert_types:
                       - float
                       - int
                     loss_rate:
-                      description: Loss-rate threshold percentage.
+                      description: Loss-rate threshold percentage. Valid range <0.00-100.00>.
                       type: str
                       convert_types:
                       - float
