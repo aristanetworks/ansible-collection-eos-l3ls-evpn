@@ -7236,8 +7236,8 @@ keys:
 
                 Colon (:) separated list of allowed ciphers as a string.
 
-                If using EOS version 4.32.0F or later, use the setting `ciphers` instead
-                of `cipher_list`.
+                Not supported on EOS version starting 4.32.0F, use the `ciphers` setting
+                instead..
 
                 '
             ciphers:
