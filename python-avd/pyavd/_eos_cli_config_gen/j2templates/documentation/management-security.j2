@@ -34,8 +34,8 @@
 
 ### Management Security SSL Profiles
 
-| SSL Profile Name | TLS protocol accepted | Certificate filename | Key filename | Cipher List | Ciphers v1.0 | Ciphers v1.3 | CRLs |
-| ---------------- | --------------------- | -------------------- | ------------ | ----------- | ------------ | ------------ | ---- |
+| SSL Profile Name | TLS protocol accepted | Certificate filename | Key filename | Cipher List | Cipher v1.0 | Cipher v1.3 | CRLs |
+| ---------------- | --------------------- | -------------------- | ------------ | ----------- | ----------- | ----------- | ---- |
 {%         set ssl_profiles_certs = [] %}
 {%         for ssl_profile in management_security.ssl_profiles | arista.avd.natural_sort %}
 {%             set crls = "-" %}
