@@ -343,7 +343,7 @@ jobs:
             3.13
           cache: 'pip'
       - name: 'Install Python requirements'
-        if: steps.pipcache.outputs.cache-hit != 'true'
+        # if: steps.pipcache.outputs.cache-hit != 'true'
         run: |
           pip install "ansible-core<2.19.0" -r .github/requirements-ci.txt --upgrade
       - name: 'Run ansible-test sanity'
@@ -365,7 +365,7 @@ jobs:
             3.10
           cache: 'pip'
       - name: 'Install Python requirements'
-        if: steps.pipcache.outputs.cache-hit != 'true'
+        # if: steps.pipcache.outputs.cache-hit != 'true'
         run: |
           pip install mock pytest pytest-mock pytest-xdist pyyaml "ansible-core<2.19.0" -r .github/requirements-ci.txt --upgrade
       - name: 'Run ansible-test units test cases'
@@ -388,7 +388,7 @@ jobs:
             3.13
           cache: 'pip'
       - name: 'Install Python requirements'
-        if: steps.pipcache.outputs.cache-hit != 'true'
+        # if: steps.pipcache.outputs.cache-hit != 'true'
         run: |
           pip install "ansible-core<2.19.0" -r .github/requirements-ci.txt --upgrade
       - name: 'Run ansible-test integration test cases'
@@ -480,7 +480,7 @@ jobs:
           python-version: ${{ matrix.python }}
           cache: 'pip'
       - name: 'Install tox'
-        if: steps.pipcache.outputs.cache-hit != 'true'
+        # if: steps.pipcache.outputs.cache-hit != 'true'
         run: |
           pip install tox tox-gh-actions --upgrade
       - name: "Run pytest via tox for ${{ matrix.python }}"
