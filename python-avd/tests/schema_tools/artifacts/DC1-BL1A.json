@@ -1,0 +1,5032 @@
+{
+    "root_dir": "/home/holbech/avd/python-avd/scripts",
+    "eos_designs_documentation": {
+        "enable": false
+    },
+    "eos_cli_config_gen_documentation": {
+        "enable": false
+    },
+    "fabric_name": "EOS_DESIGNS_UNIT_TESTS",
+    "trunk_groups": {
+        "mlag_l3": {
+            "name": "LEAF_PEER_L3"
+        }
+    },
+    "default_network_ports_description": "",
+    "default_network_ports_port_channel_description": "{adapter_description_or_endpoint?}{endpoint_port_channel?<_}",
+    "default_connected_endpoints_description": "{endpoint}{endpoint_port?<_}",
+    "default_connected_endpoints_port_channel_description": "{adapter_description_or_endpoint}{endpoint_port_channel?<_}",
+    "mlag_member_description": "MLAG_PEER_{mlag_peer}_{interface}",
+    "mlag_port_channel_description": "MLAG_PEER_{mlag_peer}_Po{mlag_port_channel_id}",
+    "mlag_peer_svi_description": "MLAG_PEER",
+    "mlag_peer_l3_svi_description": "MLAG_PEER_L3_PEERING",
+    "mlag_peer_vlan_name": "MLAG_PEER",
+    "mlag_peer_l3_vlan_name": "LEAF_PEER_L3",
+    "mlag_peer_l3_vrf_svi_description": "MLAG_PEER_L3_iBGP: vrf {vrf}",
+    "mlag_peer_l3_vrf_vlan_name": "MLAG_iBGP_{vrf}",
+    "mlag_bgp_peer_description": "{mlag_peer}",
+    "overlay_bgp_peer_description": "{peer}",
+    "default_underlay_p2p_ethernet_description": "P2P_LINK_TO_{peer!u}_{peer_interface}{vrf?<_vrf_}",
+    "default_underlay_p2p_port_channel_description": "P2P_LINK_TO_{peer}_{peer_interface}",
+    "underlay_l2_ethernet_description": "{peer!u}_{peer_interface}",
+    "underlay_l2_port_channel_description": "{peer_node_group_or_uppercase_peer}_Po{peer_port_channel_id}",
+    "default_vrf_diag_loopback_description": "{vrf}_VTEP_DIAGNOSTICS",
+    "mlag_bgp_peer_group_description": "MLAG_PEER_{mlag_peer}",
+    "local_users": [
+        {
+            "name": "admin",
+            "disabled": true,
+            "privilege": 15,
+            "role": "network-admin",
+            "no_password": true
+        },
+        {
+            "name": "cvpadmin",
+            "privilege": 15,
+            "role": "network-admin",
+            "sha512_password": "$6$rZKcbIZ7iWGAWTUM$TCgDn1KcavS0s.OV8lacMTUkxTByfzcGlFlYUWroxYuU7M/9bIodhRO7nXGzMweUxvbk8mJmQl8Bh44cRktUj.",
+            "ssh_key": "ssh-rsa AAAAB3NzaC1yc2EAA82spi2mkxp4FgaLi4CjWkpnL1A/MD7WhrSNgqXToF7QCb9Lidagy9IHafQxfu7LwkFdyQIMu8XNwDZIycuf29wHbDdz1N+YNVK8zwyNAbMOeKMqblsEm2YIorgjzQX1m9+/rJeFBKz77PSgeMp/Rc3txFVuSmFmeTy3aMkU= cvpadmin@hostmachine.local",
+            "secondary_ssh_key": "ssh-rsa AAAAB3NzaC1yc2EAA82spi2mkxp4FgaLi4CjWkpnL1A/MD7WhrSNgqXToF7QCb9Lidagy9IHafQxfu7LwkFdyQIMu8XNwDZIycuf29wHbDdz1N+YNVK8zwyNAbMOeKMqblsEm2YIorgjzQX1m9+/rJeFBKz77PSgeMp/Rc3txFVuSmFmeTy3aMkz= cvpadmin@hostmachine.local"
+        }
+    ],
+    "cvp_instance_ips": [
+        "192.168.200.11"
+    ],
+    "cvp_ingestauth_key": "",
+    "terminattr_disable_aaa": false,
+    "snmp_settings": {
+        "contact": "example@example.com",
+        "location": true
+    },
+    "mgmt_gateway": "192.168.200.5",
+    "name_servers": [
+        "192.168.200.5",
+        "8.8.8.8",
+        "2001:db8::1",
+        "2001:db8::2"
+    ],
+    "management_eapi": {
+        "enable_https": true,
+        "default_services": false
+    },
+    "ntp_settings": {
+        "server_vrf": "use_mgmt_interface_vrf",
+        "servers": [
+            {
+                "name": "192.168.200.5"
+            },
+            {
+                "name": "2001:db8::3"
+            }
+        ]
+    },
+    "default_interfaces": [
+        {
+            "types": [
+                "spine"
+            ],
+            "platforms": [
+                "7280R3",
+                "default"
+            ],
+            "uplink_interfaces": [
+                "Ethernet49-54/1"
+            ],
+            "mlag_interfaces": [
+                "Ethernet55-56/1"
+            ],
+            "downlink_interfaces": [
+                "Ethernet1-32/1"
+            ]
+        },
+        {
+            "types": [
+                "spine"
+            ],
+            "platforms": [
+                "7[58]00R3",
+                "7500R"
+            ],
+            "uplink_interfaces": [
+                "Ethernet1/31-34/1"
+            ],
+            "mlag_interfaces": [
+                "Ethernet1/35-36/1"
+            ],
+            "downlink_interfaces": [
+                "Ethernet1/1-30/1"
+            ]
+        },
+        {
+            "types": [
+                "spine",
+                "l3leaf"
+            ],
+            "platforms": [
+                "7050[SC]X3"
+            ],
+            "uplink_interfaces": [
+                "Ethernet49-52/1"
+            ],
+            "mlag_interfaces": [
+                "Ethernet53-54/1"
+            ],
+            "downlink_interfaces": [
+                "Ethernet1-30/1"
+            ]
+        },
+        {
+            "types": [
+                "l3leaf",
+                "spine"
+            ],
+            "platforms": [
+                "VEOS",
+                "vEOS",
+                "vEOS.*",
+                "VEOS.*"
+            ],
+            "uplink_interfaces": [
+                "Ethernet27-34"
+            ],
+            "mlag_interfaces": [
+                "Ethernet35-36"
+            ],
+            "downlink_interfaces": [
+                "Ethernet1-26"
+            ]
+        },
+        {
+            "types": [
+                "l3leaf"
+            ],
+            "platforms": [
+                "default"
+            ],
+            "uplink_interfaces": [
+                "Ethernet49-52/1"
+            ],
+            "mlag_interfaces": [
+                "Ethernet53-54/1"
+            ],
+            "downlink_interfaces": [
+                "Ethernet1-30/1"
+            ]
+        },
+        {
+            "types": [
+                "l3leaf"
+            ],
+            "platforms": [
+                "7280R",
+                "7280R2",
+                "my_custom_platform"
+            ],
+            "uplink_interfaces": [
+                "Ethernet49-56/1"
+            ],
+            "mlag_interfaces": [
+                "Ethernet57-58/1"
+            ],
+            "downlink_interfaces": [
+                "Ethernet1-30/1"
+            ]
+        },
+        {
+            "types": [
+                "l3leaf"
+            ],
+            "platforms": [
+                "7368.*"
+            ],
+            "uplink_interfaces": [
+                "Ethernet1/9-14/1"
+            ],
+            "mlag_interfaces": [
+                "Ethernet1/15-16/1"
+            ],
+            "downlink_interfaces": [
+                "Ethernet1/1-8/1"
+            ]
+        },
+        {
+            "types": [
+                "l3leaf"
+            ],
+            "platforms": [
+                "7300X3"
+            ],
+            "uplink_interfaces": [
+                "Ethernet1/27-30/1"
+            ],
+            "mlag_interfaces": [
+                "Ethernet1/31-32/1"
+            ],
+            "downlink_interfaces": [
+                "Ethernet1/1-26/1"
+            ]
+        }
+    ],
+    "custom_platform_settings": [
+        {
+            "platforms": [
+                "my_custom_platform"
+            ],
+            "management_interface": "Management42",
+            "tcam_profile": "vxlan-routing",
+            "lag_hardware_only": true,
+            "reload_delay": {
+                "mlag": 900,
+                "non_mlag": 1020
+            },
+            "feature_support": {
+                "queue_monitor_length_notify": false,
+                "interface_storm_control": false,
+                "bgp_update_wait_for_convergence": true,
+                "bgp_update_wait_install": true
+            }
+        },
+        {
+            "platforms": [
+                "7280R"
+            ],
+            "management_interface": "Management99",
+            "tcam_profile": "vxlan-routing",
+            "lag_hardware_only": true,
+            "reload_delay": {
+                "mlag": 900,
+                "non_mlag": 1020
+            }
+        }
+    ],
+    "shutdown_interfaces_towards_undeployed_peers": true,
+    "shutdown_bgp_towards_undeployed_peers": true,
+    "evpn_vlan_aware_bundles": true,
+    "evpn_hostflap_detection": {
+        "expiry_timeout": 10
+    },
+    "bgp_peer_groups": {
+        "ipv4_underlay_peers": {
+            "name": "UNDERLAY-PEERS",
+            "password": "0nsCUm70mvSTxVO0ldytrg=="
+        },
+        "evpn_overlay_peers": {
+            "password": "q+VNViP5i4rVjW1cxFv2wA=="
+        },
+        "mlag_ipv4_underlay_peer": {
+            "name": "MLAG-PEERS",
+            "password": "15AwQNBEJ1nyF/kBEtoAGw=="
+        },
+        "ipvpn_gateway_peers": {
+            "name": "IPVPN-INTERWORKING-PEERS",
+            "password": "nWwwZQLPI34O1AhoANg77g=="
+        }
+    },
+    "spine_platform": "7050SX3",
+    "spine_bgp_defaults": [
+        "distance bgp 20 200 200"
+    ],
+    "spine": {
+        "defaults": {
+            "platform": "7050SX3",
+            "bgp_as": 65001,
+            "loopback_ipv4_pool": "192.168.255.0/24",
+            "bgp_defaults": [
+                "distance bgp 20 200 200"
+            ]
+        },
+        "nodes": [
+            {
+                "name": "DC1-SPINE1",
+                "id": 1,
+                "mgmt_ip": "192.168.200.101/24",
+                "mac_address": "0c:1d:c0:1d:62:01"
+            },
+            {
+                "name": "DC1-SPINE2",
+                "platform": "7500R",
+                "id": 2,
+                "mgmt_ip": "192.168.200.102/24",
+                "mac_address": "0c:1d:c0:1d:62:01"
+            },
+            {
+                "name": "DC1-SPINE3",
+                "platform": "7800R3",
+                "id": 3,
+                "mgmt_ip": "192.168.200.103/24",
+                "mac_address": "0c:1d:c0:1d:62:01"
+            },
+            {
+                "name": "DC1-SPINE4",
+                "platform": "7280R3",
+                "id": 4,
+                "mgmt_ip": "192.168.200.104/24",
+                "mac_address": "0c:1d:c0:1d:62:01"
+            }
+        ]
+    },
+    "l3leaf": {
+        "defaults": {
+            "max_parallel_uplinks": 2,
+            "loopback_ipv4_pool": "192.168.255.0/24",
+            "loopback_ipv4_offset": 8,
+            "vtep_loopback_ipv4_pool": "192.168.254.0/24",
+            "uplink_switches": [
+                "DC1-SPINE1",
+                "DC1-SPINE2",
+                "DC1-SPINE3",
+                "DC1-SPINE4"
+            ],
+            "max_uplink_switches": 8,
+            "uplink_ipv4_pool": "172.31.254.0/23",
+            "uplink_interface_speed": "forced 100gfull",
+            "bgp_defaults": [
+                "distance bgp 20 200 200"
+            ],
+            "platform": "7280R",
+            "bgp_as": 65101,
+            "mlag_interfaces_speed": "100g",
+            "mlag_peer_l3_vlan": 4090,
+            "mlag_peer_vlan": 4092,
+            "mlag_peer_link_allowed_vlans": "1-4094",
+            "spanning_tree_mode": "mstp",
+            "spanning_tree_root_super": true,
+            "spanning_tree_priority": 4096,
+            "virtual_router_mac_address": "00:dc:00:00:00:0a",
+            "filter": {
+                "tenants": [
+                    "Tenant_A",
+                    "Tenant_B",
+                    "Tenant_C",
+                    "Tenant_D"
+                ],
+                "tags": [
+                    "opzone",
+                    "web",
+                    "app",
+                    "db",
+                    "vmotion",
+                    "nfs",
+                    "v6wan",
+                    "v6opzone"
+                ]
+            },
+            "mlag_peer_l3_ipv4_pool": "10.255.251.0/24",
+            "mlag_peer_ipv4_pool": "10.255.252.0/24"
+        },
+        "node_groups": [
+            {
+                "group": "DC1_LEAF1",
+                "platform": "VEOS",
+                "filter": {
+                    "tenants": [
+                        "all"
+                    ],
+                    "tags": [
+                        "web",
+                        "app",
+                        "erp2",
+                        "v6wan"
+                    ]
+                },
+                "nodes": [
+                    {
+                        "name": "DC1-LEAF1A",
+                        "id": 1,
+                        "rack": "rackA",
+                        "mgmt_ip": "192.168.200.105/24",
+                        "mac_address": "0c:1d:c0:1d:62:01",
+                        "loopback_ipv4_address": "192.168.42.42",
+                        "vtep_loopback_ipv4_address": "192.168.43.43"
+                    }
+                ]
+            },
+            {
+                "group": "DC1_LEAF2",
+                "bgp_as": 65102,
+                "rack": "rackD",
+                "mlag": false,
+                "uplink_switches": [
+                    "DC1-SPINE1",
+                    "DC1-SPINE2",
+                    "DC1-SPINE2",
+                    "DC1-SPINE1",
+                    "DC1-SPINE3",
+                    "DC1-SPINE4",
+                    "DC1-SPINE4",
+                    "DC1-SPINE3"
+                ],
+                "nodes": [
+                    {
+                        "name": "DC1-LEAF2A",
+                        "id": 2,
+                        "rack": "rackC",
+                        "mgmt_ip": "192.168.200.106/24",
+                        "mac_address": "0c:1d:c0:1d:62:01"
+                    },
+                    {
+                        "name": "DC1-LEAF2B",
+                        "id": 3,
+                        "mgmt_ip": "192.168.200.107/24"
+                    }
+                ]
+            },
+            {
+                "group": "DC1_SVC3",
+                "platform": "7050SX3",
+                "bgp_as": 65103,
+                "mlag_port_channel_id": 2000,
+                "mlag_domain_id": "custom_mlag_domain_id",
+                "filter": {
+                    "tenants": [
+                        "Tenant_A",
+                        "Tenant_B",
+                        "Tenant_C"
+                    ],
+                    "tags": [
+                        "opzone",
+                        "web",
+                        "app",
+                        "db",
+                        "vmotion",
+                        "nfs",
+                        "wan"
+                    ]
+                },
+                "nodes": [
+                    {
+                        "name": "DC1-SVC3A",
+                        "id": 4,
+                        "mgmt_ip": "192.168.200.108/24",
+                        "mac_address": "0c:1d:c0:1d:62:01"
+                    },
+                    {
+                        "name": "DC1-SVC3B",
+                        "id": 5,
+                        "mgmt_ip": "192.168.200.109/24"
+                    }
+                ]
+            },
+            {
+                "group": "DC1_BL1",
+                "uplink_interfaces": [
+                    "Ethernet1",
+                    "Ethernet2",
+                    "Ethernet3",
+                    "Ethernet4"
+                ],
+                "mlag": false,
+                "filter": {
+                    "tenants": [
+                        "all"
+                    ],
+                    "tags": [
+                        "wan"
+                    ],
+                    "always_include_vrfs_in_tenants": [
+                        "Tenant_B"
+                    ]
+                },
+                "structured_config": {
+                    "sflow": {
+                        "vrfs": [
+                            {
+                                "name": "OOB",
+                                "destinations": [
+                                    {
+                                        "destination": "192.168.200.10"
+                                    },
+                                    {
+                                        "destination": "10.0.200.90"
+                                    }
+                                ],
+                                "source_interface": "Management99"
+                            }
+                        ]
+                    }
+                },
+                "nodes": [
+                    {
+                        "name": "DC1-BL1A",
+                        "id": 6,
+                        "bgp_as": 65104,
+                        "mgmt_ip": "192.168.200.110/24",
+                        "mac_address": "0c:1d:c0:1d:62:01",
+                        "uplink_switch_interfaces": [
+                            "Ethernet22",
+                            "Ethernet22",
+                            "Ethernet22",
+                            "Ethernet22"
+                        ],
+                        "evpn_gateway": {
+                            "remote_peers": [
+                                {
+                                    "hostname": "DC1-BL2A"
+                                },
+                                {
+                                    "hostname": "DC1-BL2B",
+                                    "ip_address": "192.168.42.42",
+                                    "bgp_as": 65042
+                                }
+                            ],
+                            "evpn_l2": {
+                                "enabled": true
+                            },
+                            "evpn_l3": {
+                                "enabled": true,
+                                "inter_domain": true
+                            }
+                        }
+                    },
+                    {
+                        "name": "DC1-BL1B",
+                        "id": 7,
+                        "bgp_as": 65105,
+                        "mgmt_ip": "192.168.200.111/24",
+                        "mac_address": "0c:1d:c0:1d:62:01",
+                        "uplink_switch_interfaces": [
+                            "Ethernet23",
+                            "Ethernet23",
+                            "Ethernet23",
+                            "Ethernet23"
+                        ],
+                        "evpn_gateway": {
+                            "remote_peers": [
+                                {
+                                    "hostname": "MY_EVPN_GW1_USER_DEFINED",
+                                    "ip_address": "1.1.1.1",
+                                    "bgp_as": 65555
+                                },
+                                {
+                                    "hostname": "MY_EVPN_GW2_USER_DEFINED",
+                                    "ip_address": "2.2.2.2",
+                                    "bgp_as": 65555
+                                }
+                            ],
+                            "evpn_l2": {
+                                "enabled": true
+                            },
+                            "evpn_l3": {
+                                "enabled": true,
+                                "inter_domain": false
+                            }
+                        }
+                    }
+                ]
+            },
+            {
+                "group": "DC1_BL2",
+                "uplink_interfaces": [
+                    "Ethernet1",
+                    "Ethernet2",
+                    "Ethernet3",
+                    "Ethernet4"
+                ],
+                "mlag": false,
+                "ipvpn_gateway": {
+                    "enabled": true,
+                    "evpn_domain_id": "65000:3",
+                    "ipvpn_domain_id": "65000:4",
+                    "maximum_routes": 50000,
+                    "local_as": 65001,
+                    "address_families": [
+                        "vpn-ipv4",
+                        "vpn-ipv6"
+                    ],
+                    "remote_peers": [
+                        {
+                            "hostname": "rr1",
+                            "ip_address": "100.70.0.1",
+                            "bgp_as": 64512
+                        },
+                        {
+                            "hostname": "rr2",
+                            "ip_address": "100.70.0.2",
+                            "bgp_as": 64512
+                        }
+                    ]
+                },
+                "filter": {
+                    "tenants": [
+                        "all"
+                    ],
+                    "tags": [
+                        "wan"
+                    ],
+                    "always_include_vrfs_in_tenants": [
+                        "Tenant_B"
+                    ]
+                },
+                "nodes": [
+                    {
+                        "name": "DC1-BL2A",
+                        "platform": "7280R2",
+                        "id": 8,
+                        "bgp_as": 65106,
+                        "mgmt_ip": "192.168.200.117/24",
+                        "mac_address": "0c:1d:c0:1d:62:01",
+                        "uplink_switch_interfaces": [
+                            "Ethernet24",
+                            "Ethernet24",
+                            "Ethernet24",
+                            "Ethernet24"
+                        ]
+                    },
+                    {
+                        "name": "DC1-BL2B",
+                        "platform": "7280R3",
+                        "id": 9,
+                        "bgp_as": 65107,
+                        "mgmt_ip": "192.168.200.118/24",
+                        "mac_address": "0c:1d:c0:1d:62:01",
+                        "uplink_switch_interfaces": [
+                            "Ethernet25",
+                            "Ethernet25",
+                            "Ethernet25",
+                            "Ethernet25"
+                        ]
+                    }
+                ]
+            },
+            {
+                "group": "DC1_CL1",
+                "mlag": true,
+                "uplink_interfaces": [
+                    "Ethernet1",
+                    "Ethernet2",
+                    "Ethernet3",
+                    "Ethernet4"
+                ],
+                "evpn_services_l2_only": true,
+                "filter": {
+                    "tenants": [
+                        "Tenant_A",
+                        "Tenant_B",
+                        "Tenant_C"
+                    ],
+                    "tags": [
+                        "opzone",
+                        "web",
+                        "app",
+                        "db",
+                        "vmotion",
+                        "nfs",
+                        "wan"
+                    ]
+                },
+                "nodes": [
+                    {
+                        "name": "DC1-CL1A",
+                        "platform": "7368X4",
+                        "id": 10,
+                        "bgp_as": 65108,
+                        "mgmt_ip": "192.168.200.119/24",
+                        "uplink_switch_interfaces": [
+                            "Ethernet26",
+                            "Ethernet26",
+                            "Ethernet26",
+                            "Ethernet26"
+                        ],
+                        "mlag_ibgp_origin_incomplete": false
+                    },
+                    {
+                        "name": "DC1-CL1B",
+                        "platform": "7300X3",
+                        "id": 11,
+                        "bgp_as": 65109,
+                        "mgmt_ip": "192.168.200.120/24",
+                        "uplink_switch_interfaces": [
+                            "Ethernet27",
+                            "Ethernet27",
+                            "Ethernet27",
+                            "Ethernet27"
+                        ]
+                    }
+                ]
+            },
+            {
+                "group": "DC1_UNDEPLOYED_LEAF1",
+                "platform": "my_custom_platform",
+                "filter": {
+                    "tenants": [
+                        "Tenant_A",
+                        "Tenant_B",
+                        "Tenant_C"
+                    ],
+                    "tags": [
+                        "opzone",
+                        "web",
+                        "app",
+                        "db",
+                        "vmotion",
+                        "nfs",
+                        "wan"
+                    ]
+                },
+                "nodes": [
+                    {
+                        "name": "DC1_UNDEPLOYED_LEAF1A",
+                        "id": 13,
+                        "bgp_as": 65110,
+                        "uplink_switch_interface_speed": "100g-2",
+                        "mgmt_ip": "192.168.200.121/24",
+                        "uplink_switch_interfaces": [
+                            "Ethernet28",
+                            "Ethernet28",
+                            "Ethernet28",
+                            "Ethernet28"
+                        ]
+                    },
+                    {
+                        "name": "DC1_UNDEPLOYED_LEAF1B",
+                        "id": 14,
+                        "bgp_as": 65111,
+                        "mgmt_ip": "192.168.200.122/24",
+                        "uplink_switch_interfaces": [
+                            "Ethernet29",
+                            "Ethernet29",
+                            "Ethernet29",
+                            "Ethernet29"
+                        ]
+                    }
+                ]
+            }
+        ]
+    },
+    "l2leaf": {
+        "defaults": {
+            "platform": "vEOS-LAB",
+            "uplink_switches": [
+                "DC1-SVC3A",
+                "DC1-SVC3B"
+            ],
+            "uplink_interfaces": [
+                "Ethernet1",
+                "Ethernet2"
+            ],
+            "mlag": true,
+            "mlag_interfaces": [
+                "Ethernet3",
+                "Ethernet4"
+            ],
+            "mlag_peer_vlan": 4091,
+            "spanning_tree_mode": "mstp",
+            "spanning_tree_priority": 16384,
+            "rack": "rackE",
+            "mlag_peer_l3_ipv4_pool": "10.255.251.0/24",
+            "mlag_peer_ipv4_pool": "10.255.252.0/24"
+        },
+        "node_groups": [
+            {
+                "group": "DC1_L2LEAF1",
+                "mlag_interfaces_speed": "forced 40gfull",
+                "uplink_interface_speed": "forced 10000",
+                "uplink_switches": [
+                    "DC1-LEAF2A",
+                    "DC1-LEAF2B"
+                ],
+                "short_esi": "0808:0707:0606",
+                "filter": {
+                    "tenants": [
+                        "Tenant_A"
+                    ],
+                    "tags": [
+                        "opzone",
+                        "web",
+                        "app"
+                    ]
+                },
+                "uplink_mtu": 1499,
+                "nodes": [
+                    {
+                        "name": "DC1-L2LEAF1A",
+                        "id": 8,
+                        "mgmt_ip": "192.168.200.112/24",
+                        "mac_address": "0c:1d:c0:1d:62:01",
+                        "uplink_switch_interfaces": [
+                            "Ethernet7",
+                            "Ethernet7"
+                        ],
+                        "uplink_mtu": 1498
+                    },
+                    {
+                        "name": "DC1-L2LEAF1B",
+                        "id": 11,
+                        "mgmt_ip": "192.168.200.115/24",
+                        "mac_address": "0c:1d:c0:1d:62:02",
+                        "uplink_switch_interfaces": [
+                            "Ethernet8",
+                            "Ethernet8"
+                        ]
+                    }
+                ]
+            },
+            {
+                "group": "DC1_L2LEAF2",
+                "mlag_dual_primary_detection": true,
+                "uplink_interface_speed": "forced 100gfull",
+                "uplink_switch_interface_speed": "100g-2",
+                "uplink_switch_port_channel_id": 1007,
+                "uplink_port_channel_id": 1001,
+                "nodes": [
+                    {
+                        "name": "DC1-L2LEAF2A",
+                        "id": 9,
+                        "mgmt_ip": "192.168.200.113/24",
+                        "mac_address": "0c:1d:c0:1d:62:01",
+                        "uplink_switch_interfaces": [
+                            "Ethernet7",
+                            "Ethernet7"
+                        ]
+                    },
+                    {
+                        "name": "DC1-L2LEAF2B",
+                        "id": 10,
+                        "mgmt_ip": "192.168.200.114/24",
+                        "mac_address": "0c:1d:c0:1d:62:01",
+                        "uplink_switch_interfaces": [
+                            "Ethernet8",
+                            "Ethernet8"
+                        ]
+                    }
+                ]
+            },
+            {
+                "group": "DC1_L2LEAF3",
+                "uplink_switches": [
+                    "DC1-LEAF2A",
+                    "DC1-LEAF2B"
+                ],
+                "short_esi": "0606:0707:0808",
+                "filter": {
+                    "tenants": [
+                        "Tenant_A"
+                    ],
+                    "tags": [
+                        "opzone",
+                        "web",
+                        "app"
+                    ]
+                },
+                "nodes": [
+                    {
+                        "name": "DC1-L2LEAF3A",
+                        "mgmt_ip": "192.168.200.116/24",
+                        "mac_address": "0c:1d:c0:1d:62:01",
+                        "uplink_switch_interfaces": [
+                            "Ethernet9",
+                            "Ethernet9"
+                        ]
+                    }
+                ]
+            },
+            {
+                "group": "DC1_L2LEAF4",
+                "uplink_switches": [
+                    "DC1-LEAF2A",
+                    "DC1-LEAF2B"
+                ],
+                "short_esi": "auto",
+                "filter": {
+                    "tenants": [
+                        "Tenant_A"
+                    ],
+                    "tags": [
+                        "opzone",
+                        "web",
+                        "app"
+                    ]
+                },
+                "nodes": [
+                    {
+                        "name": "DC1-L2LEAF4A",
+                        "id": 13,
+                        "mgmt_ip": "192.168.200.119/24",
+                        "uplink_switch_interfaces": [
+                            "Ethernet13",
+                            "Ethernet13"
+                        ],
+                        "uplink_switch_port_channel_id": 1013,
+                        "uplink_port_channel_id": 1001
+                    }
+                ]
+            },
+            {
+                "group": "DC1_L2LEAF5",
+                "uplink_switches": [
+                    "DC1-LEAF2A",
+                    "DC1-LEAF2B"
+                ],
+                "short_esi": "auto",
+                "filter": {
+                    "tenants": [
+                        "Tenant_A"
+                    ],
+                    "tags": [
+                        "opzone",
+                        "web",
+                        "app"
+                    ]
+                },
+                "nodes": [
+                    {
+                        "name": "DC1.L2LEAF5A",
+                        "id": 14,
+                        "mgmt_ip": "192.168.200.120/24"
+                    },
+                    {
+                        "name": "DC1.L2LEAF5B",
+                        "id": 15,
+                        "mgmt_ip": "192.168.200.121/24"
+                    }
+                ]
+            },
+            {
+                "group": "DC1_L2LEAF6",
+                "short_esi": "auto",
+                "nodes": [
+                    {
+                        "name": "DC1.L2LEAF6A",
+                        "id": 16,
+                        "mgmt_ip": "192.168.200.122/24",
+                        "uplink_switches": [
+                            "DC1-LEAF2A"
+                        ],
+                        "uplink_switch_interfaces": [
+                            "Ethernet30"
+                        ]
+                    },
+                    {
+                        "name": "DC1.L2LEAF6B",
+                        "id": 17,
+                        "mgmt_ip": "192.168.200.123/24",
+                        "uplink_switches": [
+                            "DC1-LEAF2B"
+                        ],
+                        "uplink_switch_interfaces": [
+                            "Ethernet31"
+                        ]
+                    }
+                ]
+            }
+        ]
+    },
+    "p2p_uplinks_mtu": 1500,
+    "bfd_multihop": {
+        "interval": 1200,
+        "min_rx": 1200,
+        "multiplier": 3
+    },
+    "custom_structured_configuration_prefix": [
+        "my_dci_",
+        "my_special_dci_",
+        "override_"
+    ],
+    "platform_speed_groups": [
+        {
+            "platform": "7280R",
+            "speeds": [
+                {
+                    "speed": "25G",
+                    "speed_groups": [
+                        3,
+                        2,
+                        "5/1"
+                    ]
+                },
+                {
+                    "speed": "10G",
+                    "speed_groups": [
+                        1,
+                        2,
+                        4
+                    ]
+                }
+            ]
+        },
+        {
+            "platform": "my_custom_platform",
+            "speeds": [
+                {
+                    "speed": "10G",
+                    "speed_groups": [
+                        3,
+                        2,
+                        "5/1"
+                    ]
+                },
+                {
+                    "speed": "25G",
+                    "speed_groups": [
+                        1,
+                        2,
+                        4
+                    ]
+                }
+            ]
+        }
+    ],
+    "boot": {
+        "secret": {
+            "key": "a153de6290ff1409257ade45f"
+        }
+    },
+    "port_profiles": [
+        {
+            "profile": "TENANT_A_B",
+            "mode": "trunk",
+            "vlans": "110-111,210-211"
+        },
+        {
+            "profile": "TENANT_A",
+            "mode": "access",
+            "vlans": "110"
+        },
+        {
+            "profile": "TENANT_A_MTU",
+            "mode": "access",
+            "vlans": "110",
+            "mtu": 1600
+        },
+        {
+            "profile": "TENANT_B",
+            "mode": "trunk",
+            "vlans": "210-211"
+        },
+        {
+            "profile": "PHONE_WITH_PC",
+            "mode": "trunk phone",
+            "phone_vlan": 211,
+            "native_vlan": 210,
+            "phone_trunk_mode": "untagged"
+        },
+        {
+            "profile": "ALL_WITH_SECURITY",
+            "mode": "trunk",
+            "vlans": "1-4094",
+            "spanning_tree_bpdufilter": "disabled",
+            "spanning_tree_bpduguard": "disabled",
+            "spanning_tree_portfast": "edge",
+            "l2_mtu": 8000,
+            "l2_mru": 9000,
+            "storm_control": {
+                "all": {
+                    "level": 10.0,
+                    "unit": "percent"
+                },
+                "broadcast": {
+                    "level": 100.0,
+                    "unit": "pps"
+                },
+                "multicast": {
+                    "level": 1.5,
+                    "unit": "percent"
+                },
+                "unknown_unicast": {
+                    "level": 2.8,
+                    "unit": "percent"
+                }
+            }
+        },
+        {
+            "profile": "ALL_WITH_SECURITY_PORT_CHANNEL",
+            "mode": "trunk",
+            "vlans": "1-4094",
+            "spanning_tree_bpdufilter": "enabled",
+            "spanning_tree_bpduguard": "enabled",
+            "spanning_tree_portfast": "edge",
+            "l2_mtu": 8000,
+            "l2_mru": 9000,
+            "storm_control": {
+                "all": {
+                    "level": 10,
+                    "unit": "percent"
+                },
+                "broadcast": {
+                    "level": 100,
+                    "unit": "pps"
+                },
+                "multicast": {
+                    "level": 1,
+                    "unit": "percent"
+                },
+                "unknown_unicast": {
+                    "level": 2,
+                    "unit": "percent"
+                }
+            },
+            "port_channel": {
+                "endpoint_port_channel": "ALL_WITH_SECURITY_PORT_CHANNEL",
+                "mode": "active"
+            }
+        },
+        {
+            "profile": "ALL_WITH_SECURITY_PORT_CHANNEL_LACP_FALLBACK",
+            "mode": "trunk",
+            "vlans": "1-4094",
+            "spanning_tree_bpdufilter": true,
+            "spanning_tree_bpduguard": true,
+            "spanning_tree_portfast": "edge",
+            "l2_mtu": 8000,
+            "storm_control": {
+                "all": {
+                    "level": 10,
+                    "unit": "percent"
+                },
+                "broadcast": {
+                    "level": 100,
+                    "unit": "pps"
+                },
+                "multicast": {
+                    "level": 1,
+                    "unit": "percent"
+                },
+                "unknown_unicast": {
+                    "level": 2,
+                    "unit": "percent"
+                }
+            },
+            "port_channel": {
+                "endpoint_port_channel": "ALL_WITH_SECURITY_PORT_CHANNEL",
+                "mode": "active",
+                "lacp_fallback": {
+                    "mode": "static",
+                    "timeout": 10
+                }
+            }
+        },
+        {
+            "profile": "PORT_CHANNEL_LACP_TIMER",
+            "mode": "trunk",
+            "vlans": "1-4094",
+            "port_channel": {
+                "endpoint_port_channel": "PORT_CHANNEL_LACP_MODE",
+                "mode": "active",
+                "lacp_timer": {
+                    "mode": "fast",
+                    "multiplier": 10
+                }
+            }
+        },
+        {
+            "profile": "PORT_CHANNEL_LACP_TIMER_NORMAL",
+            "mode": "trunk",
+            "vlans": "1-4094",
+            "port_channel": {
+                "endpoint_port_channel": "PORT_CHANNEL_LACP_MODE_NORMAL",
+                "mode": "active",
+                "lacp_timer": {
+                    "mode": "normal",
+                    "multiplier": 100
+                }
+            }
+        },
+        {
+            "profile": "NESTED_PORT_PROFILE",
+            "parent_profile": "ALL_WITH_SECURITY_PORT_CHANNEL_LACP_FALLBACK",
+            "port_channel": {
+                "endpoint_port_channel": "NESTED_ALL_WITH_SECURITY_PORT_CHANNEL",
+                "mode": "active"
+            }
+        },
+        {
+            "profile": "DOT1X_PORT_PROFILE",
+            "dot1x": {
+                "port_control": "auto",
+                "reauthentication": true,
+                "pae": {
+                    "mode": "authenticator"
+                },
+                "authentication_failure": {
+                    "action": "allow",
+                    "allow_vlan": 800
+                },
+                "host_mode": {
+                    "mode": "multi-host",
+                    "multi_host_authenticated": true
+                },
+                "mac_based_authentication": {
+                    "enabled": true
+                },
+                "timeout": {
+                    "reauth_period": "server",
+                    "tx_period": 3
+                },
+                "reauthorization_request_limit": 3
+            }
+        }
+    ],
+    "servers": [
+        {
+            "name": "server01_MLAG",
+            "rack": "RackB",
+            "adapters": [
+                {
+                    "endpoint_ports": [
+                        "Eth2",
+                        "Eth3"
+                    ],
+                    "switch_ports": [
+                        "Ethernet10",
+                        "Ethernet10"
+                    ],
+                    "switches": [
+                        "DC1-LEAF2A",
+                        "DC1-LEAF2B"
+                    ],
+                    "profile": "TENANT_B",
+                    "port_channel": {
+                        "endpoint_port_channel": "PortChanne1",
+                        "mode": "active"
+                    },
+                    "spanning_tree_bpdufilter": "disabled",
+                    "spanning_tree_bpduguard": "disabled"
+                }
+            ]
+        },
+        {
+            "name": "server01_MTU_PROFILE_MLAG",
+            "rack": "RackB",
+            "adapters": [
+                {
+                    "endpoint_ports": [
+                        "Eth4",
+                        "Eth5"
+                    ],
+                    "switch_ports": [
+                        "Ethernet11",
+                        "Ethernet11"
+                    ],
+                    "switches": [
+                        "DC1-LEAF2A",
+                        "DC1-LEAF2B"
+                    ],
+                    "profile": "TENANT_A_MTU",
+                    "port_channel": {
+                        "endpoint_port_channel": "PortChanne1",
+                        "mode": "active"
+                    },
+                    "spanning_tree_bpdufilter": "enabled",
+                    "spanning_tree_bpduguard": "enabled"
+                }
+            ]
+        },
+        {
+            "name": "server01_MTU_ADAPTOR_MLAG",
+            "rack": "RackB",
+            "adapters": [
+                {
+                    "endpoint_ports": [
+                        "Eth6",
+                        "Eth7"
+                    ],
+                    "switch_ports": [
+                        "Ethernet12",
+                        "Ethernet12"
+                    ],
+                    "switches": [
+                        "DC1-LEAF2A",
+                        "DC1-LEAF2B"
+                    ],
+                    "mtu": 1601,
+                    "port_channel": {
+                        "endpoint_port_channel": "PortChanne1",
+                        "mode": "active"
+                    },
+                    "spanning_tree_bpdufilter": true,
+                    "spanning_tree_bpduguard": true
+                }
+            ]
+        },
+        {
+            "name": "server02_SINGLE_NODE_TRUNK",
+            "rack": "RackB",
+            "adapters": [
+                {
+                    "endpoint_ports": [
+                        "Eth1"
+                    ],
+                    "switch_ports": [
+                        "Ethernet6"
+                    ],
+                    "switches": [
+                        "DC1-LEAF1A"
+                    ],
+                    "profile": "ALL_WITH_SECURITY",
+                    "spanning_tree_bpdufilter": false,
+                    "spanning_tree_bpduguard": false
+                }
+            ]
+        },
+        {
+            "name": "server02_SINGLE_NODE",
+            "rack": "RackB",
+            "adapters": [
+                {
+                    "endpoint_ports": [
+                        "Eth1"
+                    ],
+                    "switch_ports": [
+                        "Ethernet7"
+                    ],
+                    "switches": [
+                        "DC1-LEAF1A"
+                    ],
+                    "profile": "TENANT_A"
+                }
+            ]
+        },
+        {
+            "name": "server03_ESI",
+            "rack": "RackC",
+            "adapters": [
+                {
+                    "endpoint_ports": [
+                        "Eth1",
+                        "Eth2"
+                    ],
+                    "switch_ports": [
+                        "Ethernet10",
+                        "Ethernet10"
+                    ],
+                    "switches": [
+                        "DC1-SVC3A",
+                        "DC1-SVC4A"
+                    ],
+                    "profile": "TENANT_A_B",
+                    "ethernet_segment": {
+                        "short_esi": "0303:0202:0101"
+                    },
+                    "port_channel": {
+                        "endpoint_port_channel": "PortChanne1",
+                        "mode": "active"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "server03_ESI_L2LEAF",
+            "rack": "RackC",
+            "adapters": [
+                {
+                    "endpoint_ports": [
+                        "Eth1",
+                        "Eth2"
+                    ],
+                    "switch_ports": [
+                        "Ethernet5",
+                        "Ethernet5"
+                    ],
+                    "switches": [
+                        "DC1-L2LEAF1A",
+                        "DC1-L2LEAF1B"
+                    ],
+                    "profile": "TENANT_A_B",
+                    "ethernet_segment": {
+                        "short_esi": "0303:0202:0101"
+                    },
+                    "port_channel": {
+                        "endpoint_port_channel": "PortChanne1",
+                        "mode": "active"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "server04_inherit_all_from_profile",
+            "rack": "RackC",
+            "adapters": [
+                {
+                    "switch_ports": [
+                        "Ethernet11",
+                        "Ethernet11"
+                    ],
+                    "endpoint_ports": [
+                        "Eth1",
+                        "Eth2"
+                    ],
+                    "switches": [
+                        "DC1-SVC3A",
+                        "DC1-SVC3B"
+                    ],
+                    "profile": "ALL_WITH_SECURITY"
+                }
+            ]
+        },
+        {
+            "name": "server05_no_profile",
+            "rack": "RackC",
+            "adapters": [
+                {
+                    "endpoint_ports": [
+                        "Eth1",
+                        "Eth2"
+                    ],
+                    "switch_ports": [
+                        "Ethernet12",
+                        "Ethernet12"
+                    ],
+                    "switches": [
+                        "DC1-SVC3A",
+                        "DC1-SVC3B"
+                    ],
+                    "mode": "trunk",
+                    "vlans": "1-4094",
+                    "spanning_tree_bpdufilter": true,
+                    "spanning_tree_bpduguard": "disabled",
+                    "spanning_tree_portfast": "edge",
+                    "storm_control": {
+                        "all": {
+                            "level": 10,
+                            "unit": "percent"
+                        },
+                        "broadcast": {
+                            "level": 100,
+                            "unit": "pps"
+                        },
+                        "multicast": {
+                            "level": 1,
+                            "unit": "percent"
+                        },
+                        "unknown_unicast": {
+                            "level": 2,
+                            "unit": "percent"
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "server06_override_profile",
+            "rack": "RackC",
+            "adapters": [
+                {
+                    "endpoint_ports": [
+                        "Eth1",
+                        "Eth2"
+                    ],
+                    "switch_ports": [
+                        "Ethernet13",
+                        "Ethernet13"
+                    ],
+                    "switches": [
+                        "DC1-SVC3A",
+                        "DC1-SVC3B"
+                    ],
+                    "profile": "ALL_WITH_SECURITY",
+                    "mode": "access",
+                    "vlans": "210",
+                    "spanning_tree_bpdufilter": "disabled",
+                    "spanning_tree_bpduguard": true,
+                    "spanning_tree_portfast": "network",
+                    "storm_control": {
+                        "all": {
+                            "level": 20,
+                            "unit": "pps"
+                        },
+                        "broadcast": {
+                            "level": 200,
+                            "unit": "percent"
+                        },
+                        "multicast": {
+                            "level": 1,
+                            "unit": "percent"
+                        },
+                        "unknown_unicast": {
+                            "level": 2,
+                            "unit": "percent"
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "server07_inherit_all_from_profile_port_channel",
+            "rack": "RackC",
+            "adapters": [
+                {
+                    "endpoint_ports": [
+                        "Eth1",
+                        "Eth2"
+                    ],
+                    "switch_ports": [
+                        "Ethernet14",
+                        "Ethernet14"
+                    ],
+                    "switches": [
+                        "DC1-SVC3A",
+                        "DC1-SVC3B"
+                    ],
+                    "profile": "ALL_WITH_SECURITY_PORT_CHANNEL"
+                }
+            ]
+        },
+        {
+            "name": "server08_no_profile_port_channel",
+            "rack": "RackC",
+            "adapters": [
+                {
+                    "endpoint_ports": [
+                        "Eth1",
+                        "Eth2"
+                    ],
+                    "switch_ports": [
+                        "Ethernet15",
+                        "Ethernet15"
+                    ],
+                    "switches": [
+                        "DC1-SVC3A",
+                        "DC1-SVC3B"
+                    ],
+                    "mode": "trunk",
+                    "vlans": "1-4094",
+                    "spanning_tree_bpdufilter": true,
+                    "spanning_tree_bpduguard": "disabled",
+                    "spanning_tree_portfast": "edge",
+                    "storm_control": {
+                        "all": {
+                            "level": 10,
+                            "unit": "percent"
+                        },
+                        "broadcast": {
+                            "level": 100,
+                            "unit": "pps"
+                        },
+                        "multicast": {
+                            "level": 1,
+                            "unit": "percent"
+                        },
+                        "unknown_unicast": {
+                            "level": 2,
+                            "unit": "percent"
+                        }
+                    },
+                    "port_channel": {
+                        "endpoint_port_channel": "server08_no_profile_port_channel",
+                        "mode": "on"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "server09_override_profile_no_port_channel",
+            "rack": "RackC",
+            "adapters": [
+                {
+                    "endpoint_ports": [
+                        "Eth1",
+                        "Eth2"
+                    ],
+                    "switch_ports": [
+                        "Ethernet16",
+                        "Ethernet16"
+                    ],
+                    "switches": [
+                        "DC1-SVC3A",
+                        "DC1-SVC3B"
+                    ],
+                    "profile": "ALL_WITH_SECURITY_PORT_CHANNEL",
+                    "mode": "access",
+                    "vlans": "210",
+                    "spanning_tree_bpdufilter": "disabled",
+                    "spanning_tree_bpduguard": true,
+                    "spanning_tree_portfast": "network",
+                    "storm_control": {
+                        "all": {
+                            "level": 20,
+                            "unit": "pps"
+                        },
+                        "broadcast": {
+                            "level": 200,
+                            "unit": "percent"
+                        },
+                        "multicast": {
+                            "level": 1,
+                            "unit": "percent"
+                        },
+                        "unknown_unicast": {
+                            "level": 2,
+                            "unit": "percent"
+                        }
+                    },
+                    "port_channel": null
+                }
+            ]
+        },
+        {
+            "name": "server10_no_profile_port_channel_lacp_fallback",
+            "rack": "RackC",
+            "adapters": [
+                {
+                    "endpoint_ports": [
+                        "Eth1",
+                        "Eth2"
+                    ],
+                    "switch_ports": [
+                        "Ethernet17",
+                        "Ethernet17"
+                    ],
+                    "switches": [
+                        "DC1-SVC3A",
+                        "DC1-SVC3B"
+                    ],
+                    "mode": "trunk",
+                    "vlans": "1-4094",
+                    "spanning_tree_bpdufilter": true,
+                    "spanning_tree_bpduguard": "disabled",
+                    "spanning_tree_portfast": "edge",
+                    "storm_control": {
+                        "all": {
+                            "level": 10,
+                            "unit": "percent"
+                        },
+                        "broadcast": {
+                            "level": 100,
+                            "unit": "pps"
+                        },
+                        "multicast": {
+                            "level": 1,
+                            "unit": "percent"
+                        },
+                        "unknown_unicast": {
+                            "level": 2,
+                            "unit": "percent"
+                        }
+                    },
+                    "port_channel": {
+                        "endpoint_port_channel": "server10_no_profile_port_channel_lacp_fallback",
+                        "mode": "passive",
+                        "lacp_fallback": {
+                            "mode": "static"
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "server11_inherit_profile_port_channel_lacp_fallback",
+            "rack": "RackC",
+            "adapters": [
+                {
+                    "endpoint_ports": [
+                        "Eth1",
+                        "Eth2"
+                    ],
+                    "switch_ports": [
+                        "Ethernet18",
+                        "Ethernet18"
+                    ],
+                    "switches": [
+                        "DC1-SVC3A",
+                        "DC1-SVC3B"
+                    ],
+                    "profile": "ALL_WITH_SECURITY_PORT_CHANNEL_LACP_FALLBACK"
+                }
+            ]
+        },
+        {
+            "name": "server12_inherit_nested_profile_port_channel_lacp_fallback",
+            "rack": "RackC",
+            "adapters": [
+                {
+                    "endpoint_ports": [
+                        "Eth1",
+                        "Eth2"
+                    ],
+                    "switch_ports": [
+                        "Ethernet19",
+                        "Ethernet19"
+                    ],
+                    "switches": [
+                        "DC1-SVC3A",
+                        "DC1-SVC3B"
+                    ],
+                    "profile": "NESTED_PORT_PROFILE"
+                }
+            ]
+        },
+        {
+            "name": "server13_disabled_interfaces",
+            "rack": "RackC",
+            "adapters": [
+                {
+                    "endpoint_ports": [
+                        "Eth1",
+                        "Eth2"
+                    ],
+                    "switch_ports": [
+                        "Ethernet20",
+                        "Ethernet20"
+                    ],
+                    "switches": [
+                        "DC1-SVC3A",
+                        "DC1-SVC3B"
+                    ],
+                    "profile": "TENANT_A",
+                    "enabled": false
+                }
+            ]
+        },
+        {
+            "name": "server14_explicitly_enabled_interfaces",
+            "rack": "RackC",
+            "adapters": [
+                {
+                    "endpoint_ports": [
+                        "Eth1",
+                        "Eth2"
+                    ],
+                    "switch_ports": [
+                        "Ethernet21",
+                        "Ethernet21"
+                    ],
+                    "switches": [
+                        "DC1-SVC3A",
+                        "DC1-SVC3B"
+                    ],
+                    "profile": "TENANT_A",
+                    "enabled": true
+                }
+            ]
+        },
+        {
+            "name": "server15_port_channel_with_disabled_phy_interfaces",
+            "rack": "RackC",
+            "adapters": [
+                {
+                    "endpoint_ports": [
+                        "Eth1",
+                        "Eth2"
+                    ],
+                    "switch_ports": [
+                        "Ethernet22",
+                        "Ethernet22"
+                    ],
+                    "switches": [
+                        "DC1-SVC3A",
+                        "DC1-SVC3B"
+                    ],
+                    "profile": "TENANT_A",
+                    "enabled": false,
+                    "port_channel": {
+                        "endpoint_port_channel": "server15_port_channel_with_disabled_phy_interfaces",
+                        "mode": "active",
+                        "enabled": true
+                    }
+                }
+            ]
+        },
+        {
+            "name": "server16_port_channel_with_disabled_port_channel",
+            "rack": "RackC",
+            "adapters": [
+                {
+                    "endpoint_ports": [
+                        "Eth1",
+                        "Eth2"
+                    ],
+                    "switch_ports": [
+                        "Ethernet23",
+                        "Ethernet23"
+                    ],
+                    "switches": [
+                        "DC1-SVC3A",
+                        "DC1-SVC3B"
+                    ],
+                    "profile": "TENANT_A",
+                    "port_channel": {
+                        "endpoint_port_channel": "server16_port_channel_with_disabled_port_channel",
+                        "mode": "active",
+                        "enabled": false
+                    }
+                }
+            ]
+        },
+        {
+            "name": "server17_port_channel_with_disabled_phy_and_po_interfaces",
+            "rack": "RackC",
+            "adapters": [
+                {
+                    "endpoint_ports": [
+                        "Eth1",
+                        "Eth2"
+                    ],
+                    "switch_ports": [
+                        "Ethernet24",
+                        "Ethernet24"
+                    ],
+                    "switches": [
+                        "DC1-SVC3A",
+                        "DC1-SVC3B"
+                    ],
+                    "profile": "TENANT_A",
+                    "enabled": false,
+                    "port_channel": {
+                        "endpoint_port_channel": "server17_port_channel_with_disabled_phy_and_po_interfaces",
+                        "mode": "active",
+                        "enabled": false
+                    }
+                }
+            ]
+        },
+        {
+            "name": "server18_monitoring_session_source_phys_interfaces",
+            "rack": "RackC",
+            "adapters": [
+                {
+                    "endpoint_ports": [
+                        "Eth1",
+                        "Eth2"
+                    ],
+                    "switch_ports": [
+                        "Ethernet25",
+                        "Ethernet25"
+                    ],
+                    "switches": [
+                        "DC1-SVC3A",
+                        "DC1-SVC3B"
+                    ],
+                    "profile": "TENANT_A",
+                    "monitor_sessions": [
+                        {
+                            "name": "MonitoringSessionServer18WithDest",
+                            "role": "source",
+                            "source_settings": {
+                                "direction": "rx",
+                                "access_group": {
+                                    "type": "ip",
+                                    "name": "MyIpACL",
+                                    "priority": 5
+                                }
+                            }
+                        },
+                        {
+                            "name": "MonitoringSessionServer18WithoutDest",
+                            "role": "source",
+                            "source_settings": {
+                                "direction": "tx"
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "server18_monitoring_session_source_po",
+            "rack": "RackC",
+            "adapters": [
+                {
+                    "endpoint_ports": [
+                        "Eth3",
+                        "Eth4"
+                    ],
+                    "switch_ports": [
+                        "Ethernet27",
+                        "Ethernet27"
+                    ],
+                    "switches": [
+                        "DC1-SVC3A",
+                        "DC1-SVC3B"
+                    ],
+                    "profile": "TENANT_A",
+                    "enabled": true,
+                    "port_channel": {
+                        "endpoint_port_channel": "server18_monitoring_session_source_po",
+                        "mode": "active",
+                        "enabled": true
+                    },
+                    "monitor_sessions": [
+                        {
+                            "name": "MonitoringSessionServer18WithDest",
+                            "role": "source",
+                            "source_settings": {
+                                "direction": "tx",
+                                "access_group": {
+                                    "type": "mac",
+                                    "name": "MyMacACL",
+                                    "priority": 5
+                                }
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "server18_monitoring_session_source_phys_interface",
+            "rack": "RackC",
+            "adapters": [
+                {
+                    "endpoint_ports": [
+                        "Eth5"
+                    ],
+                    "switch_ports": [
+                        "Ethernet28"
+                    ],
+                    "switches": [
+                        "DC1-SVC3A"
+                    ],
+                    "profile": "TENANT_A",
+                    "enabled": true,
+                    "monitor_sessions": [
+                        {
+                            "name": "MonitoringSessionServer18WithDest",
+                            "role": "source",
+                            "source_settings": {
+                                "direction": "tx",
+                                "access_group": {
+                                    "type": "mac",
+                                    "name": "MyMacACL",
+                                    "priority": 5
+                                }
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "server19_monitoring_session_destination_phys",
+            "rack": "RackC",
+            "adapters": [
+                {
+                    "endpoint_ports": [
+                        "Eth1",
+                        "Eth2"
+                    ],
+                    "switch_ports": [
+                        "Ethernet26",
+                        "Ethernet26"
+                    ],
+                    "switches": [
+                        "DC1-SVC3A",
+                        "DC1-SVC3B"
+                    ],
+                    "monitor_sessions": [
+                        {
+                            "name": "MonitoringSessionServer18WithDest",
+                            "role": "destination",
+                            "session_settings": {
+                                "encapsulation_gre_metadata_tx": true,
+                                "header_remove_size": 20,
+                                "access_group": {
+                                    "type": "ip",
+                                    "name": "ip_acl"
+                                },
+                                "rate_limit_per_ingress_chip": "30 bps",
+                                "rate_limit_per_egress_chip": "30 bps",
+                                "sample": 10,
+                                "truncate": {
+                                    "enabled": true,
+                                    "size": 20
+                                }
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "server20_monitoring_session_destination_phys",
+            "rack": "RackC",
+            "adapters": [
+                {
+                    "endpoint_ports": [
+                        "Eth1"
+                    ],
+                    "switch_ports": [
+                        "Ethernet40"
+                    ],
+                    "switches": [
+                        "DC1-SVC3A"
+                    ],
+                    "monitor_sessions": [
+                        {
+                            "name": "MonitoringSessionServer18WithDest",
+                            "role": "destination",
+                            "session_settings": {
+                                "encapsulation_gre_metadata_tx": false,
+                                "header_remove_size": 200,
+                                "access_group": {
+                                    "type": "mac",
+                                    "name": "mac_acl"
+                                },
+                                "rate_limit_per_ingress_chip": "30 bps",
+                                "rate_limit_per_egress_chip": "30 bps",
+                                "sample": 10,
+                                "truncate": {
+                                    "enabled": true,
+                                    "size": 20
+                                }
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "server21_monitoring_session_destination_po",
+            "rack": "RackC",
+            "adapters": [
+                {
+                    "endpoint_ports": [
+                        "Eth1",
+                        "Eth2"
+                    ],
+                    "switch_ports": [
+                        "Ethernet42",
+                        "Ethernet42"
+                    ],
+                    "switches": [
+                        "DC1-SVC3A",
+                        "DC1-SVC3B"
+                    ],
+                    "profile": "TENANT_A",
+                    "enabled": true,
+                    "port_channel": {
+                        "endpoint_port_channel": "server21_monitoring_session_destination_po",
+                        "mode": "active",
+                        "enabled": true
+                    },
+                    "monitor_sessions": [
+                        {
+                            "name": "MonitoringSessionServer18WithDest",
+                            "role": "destination"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "server22_port_channel_with_custom_id",
+            "rack": "RackC",
+            "adapters": [
+                {
+                    "endpoint_ports": [
+                        "Eth1",
+                        "Eth2"
+                    ],
+                    "switch_ports": [
+                        "Ethernet29",
+                        "Ethernet29"
+                    ],
+                    "switches": [
+                        "DC1-SVC3A",
+                        "DC1-SVC3B"
+                    ],
+                    "profile": "TENANT_A",
+                    "port_channel": {
+                        "endpoint_port_channel": "server22_port_channel_with_custom_id",
+                        "mode": "active",
+                        "enabled": true,
+                        "channel_id": 1291
+                    }
+                }
+            ]
+        },
+        {
+            "name": "server23_phone",
+            "rack": "RackC",
+            "adapters": [
+                {
+                    "endpoint_ports": [
+                        "int_1"
+                    ],
+                    "switch_ports": [
+                        "Ethernet30"
+                    ],
+                    "switches": [
+                        "DC1-SVC3A"
+                    ],
+                    "profile": "TENANT_A",
+                    "mode": "trunk phone",
+                    "enabled": true
+                }
+            ]
+        },
+        {
+            "name": "server24_port_channel_lacp_timer_profile",
+            "rack": "RackC",
+            "adapters": [
+                {
+                    "endpoint_ports": [
+                        "Eth1",
+                        "Eth2"
+                    ],
+                    "switch_ports": [
+                        "Ethernet31",
+                        "Ethernet31"
+                    ],
+                    "switches": [
+                        "DC1-SVC3A",
+                        "DC1-SVC3B"
+                    ],
+                    "profile": "PORT_CHANNEL_LACP_TIMER",
+                    "port_channel": {
+                        "endpoint_port_channel": "server24_port_channel_with_lacp_timer"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "server25_port_channel_lacp_timer",
+            "rack": "RackC",
+            "adapters": [
+                {
+                    "endpoint_ports": [
+                        "Eth1",
+                        "Eth2"
+                    ],
+                    "switch_ports": [
+                        "Ethernet32",
+                        "Ethernet32"
+                    ],
+                    "switches": [
+                        "DC1-SVC3A",
+                        "DC1-SVC3B"
+                    ],
+                    "port_channel": {
+                        "endpoint_port_channel": "server25_port_channel_with_lacp_timer",
+                        "mode": "active",
+                        "enabled": true,
+                        "lacp_timer": {
+                            "mode": "fast",
+                            "multiplier": 5
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "server26_port_channel_lacp_timer_profile",
+            "rack": "RackC",
+            "adapters": [
+                {
+                    "endpoint_ports": [
+                        "Eth1",
+                        "Eth2"
+                    ],
+                    "switch_ports": [
+                        "Ethernet33",
+                        "Ethernet33"
+                    ],
+                    "switches": [
+                        "DC1-SVC3A",
+                        "DC1-SVC3B"
+                    ],
+                    "profile": "PORT_CHANNEL_LACP_TIMER_NORMAL",
+                    "port_channel": {
+                        "endpoint_port_channel": "server26_port_channel_with_lacp_timer"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "server27_port_channel_lacp_timer",
+            "rack": "RackC",
+            "adapters": [
+                {
+                    "endpoint_ports": [
+                        "Eth1",
+                        "Eth2"
+                    ],
+                    "switch_ports": [
+                        "Ethernet34",
+                        "Ethernet34"
+                    ],
+                    "switches": [
+                        "DC1-SVC3A",
+                        "DC1-SVC3B"
+                    ],
+                    "port_channel": {
+                        "endpoint_port_channel": "server27_port_channel_with_lacp_timer",
+                        "mode": "active",
+                        "enabled": true,
+                        "lacp_timer": {
+                            "mode": "normal",
+                            "multiplier": 50
+                        }
+                    }
+                }
+            ]
+        }
+    ],
+    "phones": [
+        {
+            "name": "PHONE01_untagged",
+            "adapters": [
+                {
+                    "endpoint_ports": [
+                        "Eth0"
+                    ],
+                    "switch_ports": [
+                        "Ethernet8"
+                    ],
+                    "switches": [
+                        "DC1-LEAF1A"
+                    ],
+                    "mode": "trunk phone",
+                    "native_vlan": 120,
+                    "phone_vlan": 113,
+                    "phone_trunk_mode": "untagged"
+                }
+            ]
+        },
+        {
+            "name": "PHONE02_tagged",
+            "adapters": [
+                {
+                    "endpoint_ports": [
+                        "Eth0"
+                    ],
+                    "switch_ports": [
+                        "Ethernet9"
+                    ],
+                    "switches": [
+                        "DC1-LEAF1A"
+                    ],
+                    "mode": "trunk phone",
+                    "native_vlan": 120,
+                    "phone_vlan": 113,
+                    "phone_trunk_mode": "tagged"
+                }
+            ]
+        },
+        {
+            "name": "PHONE03_port_channel",
+            "adapters": [
+                {
+                    "endpoint_ports": [
+                        "Eth0",
+                        "Eth1"
+                    ],
+                    "switch_ports": [
+                        "Ethernet26",
+                        "Ethernet26"
+                    ],
+                    "switches": [
+                        "DC1-LEAF2A",
+                        "DC1-LEAF2B"
+                    ],
+                    "profile": "PHONE_WITH_PC",
+                    "port_channel": {
+                        "mode": "active",
+                        "description": "{endpoint} Port-Channel to {endpoint_type}"
+                    }
+                }
+            ]
+        }
+    ],
+    "firewalls": [
+        {
+            "name": "FIREWALL01",
+            "rack": "RackB",
+            "adapters": [
+                {
+                    "endpoint_ports": [
+                        "E0",
+                        "E1"
+                    ],
+                    "switch_ports": [
+                        "Ethernet20",
+                        "Ethernet20"
+                    ],
+                    "switches": [
+                        "DC1-LEAF2A",
+                        "DC1-LEAF2B"
+                    ],
+                    "profile": "TENANT_A_B",
+                    "port_channel": {
+                        "endpoint_port_channel": "PortChanne1",
+                        "mode": "active"
+                    }
+                }
+            ]
+        }
+    ],
+    "routers": [
+        {
+            "name": "ROUTER01",
+            "rack": "RackB",
+            "adapters": [
+                {
+                    "endpoint_ports": [
+                        "Eth0",
+                        "Eth1"
+                    ],
+                    "switch_ports": [
+                        "Ethernet21",
+                        "Ethernet21"
+                    ],
+                    "switches": [
+                        "DC1-LEAF2A",
+                        "DC1-LEAF2B"
+                    ],
+                    "profile": "TENANT_A"
+                }
+            ]
+        }
+    ],
+    "network_ports": [
+        {
+            "switches": [
+                "DC1-LEAF2A"
+            ],
+            "switch_ports": [
+                "Ethernet24-25"
+            ],
+            "profile": "DOT1X_PORT_PROFILE",
+            "description": "PC"
+        }
+    ],
+    "tenant_a": [
+        {
+            "name": "Tenant_A",
+            "mac_vrf_vni_base": 10000,
+            "mac_vrf_id_base": 20000,
+            "redistribute_mlag_ibgp_peering_vrfs": true,
+            "vrfs": [
+                {
+                    "name": "Tenant_A_OP_Zone",
+                    "description": "Tenant_A_OP_Zone",
+                    "vrf_vni": 10,
+                    "vrf_id": 9,
+                    "vtep_diagnostic": {
+                        "loopback": 100,
+                        "loopback_ip_range": "10.255.1.0/24"
+                    },
+                    "redistribute_mlag_ibgp_peering_vrfs": false,
+                    "svis": [
+                        {
+                            "id": "110",
+                            "name": "Tenant_A_OP_Zone_1",
+                            "tags": [
+                                "opzone"
+                            ],
+                            "enabled": true,
+                            "ipv4_acl_in": "TEST-IPV4-ACL-WITH-IP-FIELDS-IN",
+                            "ipv4_acl_out": "TEST-IPV4-ACL-WITH-IP-FIELDS-OUT",
+                            "ip_address_virtual": "10.1.10.1/24"
+                        },
+                        {
+                            "id": 111,
+                            "vni_override": 50111,
+                            "name": "Tenant_A_OP_Zone_2",
+                            "tags": [
+                                "opzone"
+                            ],
+                            "enabled": true,
+                            "ip_address_virtual": "10.1.11.1/24",
+                            "ip_helpers": [
+                                {
+                                    "ip_helper": "1.1.1.1",
+                                    "source_interface": "lo100",
+                                    "source_vrf": "MGMT"
+                                }
+                            ]
+                        },
+                        {
+                            "id": 112,
+                            "name": "Tenant_A_OP_Zone_3",
+                            "profile": "DERIVED_DHCP",
+                            "tags": [
+                                "opzone"
+                            ],
+                            "enabled": true
+                        },
+                        {
+                            "id": 113,
+                            "name": "Tenant_A_OP_Zone_4",
+                            "tags": [
+                                "DC1_LEAF1"
+                            ],
+                            "enabled": true,
+                            "ospf": {
+                                "enabled": true,
+                                "area": 0,
+                                "authentication": "message-digest",
+                                "point_to_point": true,
+                                "message_digest_keys": [
+                                    {
+                                        "id": 1,
+                                        "hash_algorithm": "sha1",
+                                        "key": "AQQvKeimxJu+uGQ/yYvv9w=="
+                                    },
+                                    {
+                                        "id": 2,
+                                        "key": "AQQvKeimxJu+uGQ/yYvv9w=="
+                                    }
+                                ]
+                            }
+                        }
+                    ],
+                    "ospf": {
+                        "enabled": true,
+                        "nodes": [
+                            "DC1-LEAF1A"
+                        ]
+                    }
+                },
+                {
+                    "name": "Tenant_A_WEB_Zone",
+                    "vrf_vni": 11,
+                    "mlag_ibgp_peering_ipv4_pool": "172.31.11.0/24",
+                    "svis": [
+                        {
+                            "id": 120,
+                            "name": "Tenant_A_WEB_Zone_1",
+                            "tags": [
+                                "web",
+                                "erp1"
+                            ],
+                            "profile": "WITH_DHCP_AND_SNOOPING",
+                            "ip_address_virtual": "10.1.20.1/24",
+                            "ip_address_virtual_secondaries": [
+                                "10.2.20.1/24",
+                                "10.2.21.1/24"
+                            ]
+                        },
+                        {
+                            "id": 121,
+                            "name": "Tenant_A_WEBZone_2",
+                            "tags": [
+                                "web"
+                            ],
+                            "profile": "GENERIC_FULL"
+                        }
+                    ]
+                },
+                {
+                    "name": "Tenant_A_APP_Zone",
+                    "vrf_vni": 12,
+                    "svis": [
+                        {
+                            "id": 130,
+                            "name": "Tenant_A_APP_Zone_1",
+                            "tags": [
+                                "app",
+                                "erp1"
+                            ],
+                            "profile": "WITH_NO_MTU",
+                            "ip_address_virtual": "10.1.30.1/24"
+                        },
+                        {
+                            "id": 131,
+                            "name": "Tenant_A_APP_Zone_2",
+                            "tags": [
+                                "app"
+                            ],
+                            "enabled": true,
+                            "ip_address_virtual": "10.1.31.1/24"
+                        },
+                        {
+                            "id": 132,
+                            "name": "Tenant_A_APP_Zone_3",
+                            "tags": [
+                                "erp2"
+                            ],
+                            "enabled": true,
+                            "nodes": [
+                                {
+                                    "node": "DC1-LEAF1A",
+                                    "ip_address": "10.1.32.1/24"
+                                }
+                            ],
+                            "ip_virtual_router_addresses": [
+                                "10.1.32.254",
+                                "10.2.32.254/24",
+                                "10.3.32.254/24"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "name": "Tenant_A_DB_Zone",
+                    "vrf_vni": 13,
+                    "svis": [
+                        {
+                            "id": 140,
+                            "name": "Tenant_A_DB_BZone_1",
+                            "tags": [
+                                "db",
+                                "erp1"
+                            ],
+                            "enabled": true,
+                            "ip_address_virtual": "10.1.40.1/24"
+                        },
+                        {
+                            "id": 141,
+                            "name": "Tenant_A_DB_Zone_2",
+                            "tags": [
+                                "db"
+                            ],
+                            "enabled": true,
+                            "ip_address_virtual": "10.1.41.1/24"
+                        }
+                    ]
+                },
+                {
+                    "name": "Tenant_A_WAN_Zone",
+                    "vrf_id": 14,
+                    "ospf": {
+                        "enabled": true,
+                        "max_lsa": 15000,
+                        "redistribute_bgp": {
+                            "enabled": true
+                        },
+                        "redistribute_connected": {
+                            "enabled": true,
+                            "route_map": "RM_TEST"
+                        },
+                        "nodes": [
+                            "DC1-BL1A",
+                            "DC1-BL1B"
+                        ]
+                    },
+                    "l3_interfaces": [
+                        {
+                            "interfaces": [
+                                "Ethernet7"
+                            ],
+                            "ip_addresses": [
+                                "10.10.10.10/24"
+                            ],
+                            "nodes": [
+                                "DC1-BL1A"
+                            ],
+                            "mtu": 9000,
+                            "enabled": true,
+                            "description": "test",
+                            "ospf": {
+                                "enabled": true,
+                                "area": 0,
+                                "cost": 100,
+                                "authentication": "message-digest",
+                                "point_to_point": true,
+                                "message_digest_keys": [
+                                    {
+                                        "id": 1,
+                                        "hash_algorithm": "sha1",
+                                        "key": "AQQvKeimxJu+uGQ/yYvv9w=="
+                                    },
+                                    {
+                                        "id": 2,
+                                        "key": "AQQvKeimxJu+uGQ/yYvv9w=="
+                                    }
+                                ]
+                            }
+                        },
+                        {
+                            "interfaces": [
+                                "Ethernet7"
+                            ],
+                            "ip_addresses": [
+                                "10.10.20.20/24"
+                            ],
+                            "nodes": [
+                                "DC1-BL1B"
+                            ],
+                            "mtu": 9000,
+                            "enabled": true,
+                            "description": "test"
+                        }
+                    ],
+                    "static_routes": [
+                        {
+                            "destination_address_prefix": "10.3.4.0/24",
+                            "gateway": "1.2.3.4",
+                            "nodes": [
+                                "DC1-BL1A",
+                                "DC1-BL1B"
+                            ]
+                        }
+                    ],
+                    "bgp_peers": [
+                        {
+                            "ip_address": "123.1.1.10",
+                            "remote_as": "1234",
+                            "password": "oBztv71m2uhR7hh58/OCNA==",
+                            "description": "External IPv4 BGP peer",
+                            "send_community": "standard extended",
+                            "maximum_routes": 0,
+                            "maximum_routes_warning_only": true,
+                            "default_originate": {
+                                "always": false
+                            },
+                            "update_source": "Loopback123",
+                            "ebgp_multihop": 3,
+                            "nodes": [
+                                "DC1-BL1A",
+                                "DC1-BL1B"
+                            ],
+                            "set_ipv4_next_hop": "123.1.1.1",
+                            "route_map_in": "RM-123-1-1-10-IN",
+                            "shutdown": true,
+                            "route_map_out": "RM-123-1-1-10-OUT",
+                            "local_as": 123
+                        },
+                        {
+                            "ip_address": "123.1.1.11",
+                            "remote_as": "65000.100",
+                            "password": "oBztv71m2uhR7hh58/OCNA==",
+                            "description": "External IPv4 BGP peer",
+                            "send_community": "standard extended",
+                            "maximum_routes": 0,
+                            "default_originate": {
+                                "always": false
+                            },
+                            "update_source": "Loopback123",
+                            "ebgp_multihop": 3,
+                            "nodes": [
+                                "DC1-BL1A",
+                                "DC1-BL1B"
+                            ],
+                            "route_map_in": "RM-123-1-1-11-IN",
+                            "route_map_out": "RM-123-1-1-11-OUT",
+                            "prefix_list_in": "PL-TEST-IN-AF4",
+                            "prefix_list_out": "PL-TEST-OUT-AF4",
+                            "local_as": 123,
+                            "bfd": true
+                        },
+                        {
+                            "ip_address": "fd5a:fe45:8831:06c5::a",
+                            "remote_as": 12345,
+                            "send_community": "all",
+                            "nodes": [
+                                "DC1-BL1A",
+                                "DC1-BL1B"
+                            ],
+                            "set_ipv6_next_hop": "fd5a:fe45:8831:06c5::1",
+                            "prefix_list_in": "PL-TEST-IN-AF6",
+                            "prefix_list_out": "PL-TEST-OUT-AF6"
+                        },
+                        {
+                            "ip_address": "fd5a:fe45:8831:06c5::b",
+                            "remote_as": 12345,
+                            "nodes": [
+                                "DC1-BL1A",
+                                "DC1-BL1B"
+                            ]
+                        }
+                    ],
+                    "svis": [
+                        {
+                            "id": 150,
+                            "name": "Tenant_A_WAN_Zone_1",
+                            "tags": [
+                                "wan"
+                            ],
+                            "enabled": true,
+                            "ip_address_virtual": "10.1.40.1/24",
+                            "ospf": {
+                                "enabled": true,
+                                "area": 1,
+                                "cost": 100,
+                                "authentication": "simple",
+                                "simple_auth_key": "AQQvKeimxJu+uGQ/yYvv9w=="
+                            }
+                        },
+                        {
+                            "id": 151,
+                            "name": "svi_with_no_tags",
+                            "enabled": true,
+                            "ip_address_virtual": "10.1.51.1/24"
+                        }
+                    ],
+                    "additional_route_targets": [
+                        {
+                            "type": "import",
+                            "address_family": "vpn-ipv4",
+                            "route_target": "65000:123",
+                            "nodes": [
+                                "DC1-BL1A",
+                                "DC1-BL1B",
+                                "DC1-BL2A",
+                                "DC1-BL2B"
+                            ]
+                        },
+                        {
+                            "type": "export",
+                            "address_family": "vpn-ipv4",
+                            "route_target": "65000:123",
+                            "nodes": [
+                                "DC1-BL1A",
+                                "DC1-BL1B",
+                                "DC1-BL2A",
+                                "DC1-BL2B"
+                            ]
+                        },
+                        {
+                            "type": "import",
+                            "address_family": "evpn",
+                            "route_target": "65000:456"
+                        },
+                        {
+                            "type": "export",
+                            "address_family": "evpn",
+                            "route_target": "65000:789"
+                        }
+                    ]
+                },
+                {
+                    "name": "Tenant_A_L3_VRF_Zone",
+                    "vrf_vni": 15,
+                    "l3_interfaces": [
+                        {
+                            "interfaces": [
+                                "Ethernet8",
+                                "Ethernet9",
+                                "Ethernet8",
+                                "Ethernet9"
+                            ],
+                            "ip_addresses": [
+                                "10.10.10.10/24",
+                                "10.10.20.20/24",
+                                "10.10.30.10/24",
+                                "10.10.40.20/24"
+                            ],
+                            "nodes": [
+                                "DC1-BL1A",
+                                "DC1-BL1A",
+                                "DC1-BL1B",
+                                "DC1-BL1B"
+                            ],
+                            "mtu": 9000,
+                            "enabled": true,
+                            "description": "test"
+                        },
+                        {
+                            "interfaces": [
+                                "Ethernet10",
+                                "Ethernet10"
+                            ],
+                            "ip_addresses": [
+                                "10.10.30.10/24",
+                                "10.10.40.20/24"
+                            ],
+                            "nodes": [
+                                "DC1-BL1A",
+                                "DC1-BL1B"
+                            ],
+                            "mtu": 9000,
+                            "enabled": true,
+                            "descriptions": [
+                                "test-DC1-BL1A",
+                                "test-DC1-BL1B"
+                            ]
+                        },
+                        {
+                            "interfaces": [
+                                "Ethernet11",
+                                "Ethernet11"
+                            ],
+                            "ip_addresses": [
+                                "10.10.30.10/24",
+                                "10.10.40.20/24"
+                            ],
+                            "nodes": [
+                                "DC1-BL1A",
+                                "DC1-BL1B"
+                            ],
+                            "mtu": 9000,
+                            "enabled": true,
+                            "description": "Single description",
+                            "descriptions": [
+                                "DC1-BL1A descriptions preferred over single description",
+                                "DC1-BL1B descriptions preferred over single description"
+                            ]
+                        },
+                        {
+                            "interfaces": [
+                                "Ethernet12",
+                                "Ethernet13.10",
+                                "Ethernet12",
+                                "Ethernet13.10"
+                            ],
+                            "ip_addresses": [
+                                "10.10.40.10/24",
+                                "10.10.40.20/24",
+                                "10.10.50.10/24",
+                                "10.10.50.20/24"
+                            ],
+                            "nodes": [
+                                "DC1-BL1A",
+                                "DC1-BL1A",
+                                "DC1-BL1B",
+                                "DC1-BL1B"
+                            ],
+                            "mtu": 9000,
+                            "enabled": true,
+                            "description": "test l3 interfaces acls",
+                            "ipv4_acl_in": "TEST-IPV4-ACL-WITH-IP-FIELDS-IN",
+                            "ipv4_acl_out": "TEST-IPV4-ACL-WITH-IP-FIELDS-OUT"
+                        }
+                    ]
+                },
+                {
+                    "name": "Tenant_A_OSPF",
+                    "vrf_id": 16,
+                    "ospf": {
+                        "enabled": true
+                    },
+                    "l3_interfaces": [
+                        {
+                            "interfaces": [
+                                "Ethernet22",
+                                "Ethernet24",
+                                "Ethernet23"
+                            ],
+                            "ip_addresses": [
+                                "10.0.0.1/30",
+                                "10.0.0.5/30",
+                                "10.0.0.13/30"
+                            ],
+                            "nodes": [
+                                "DC1-LEAF2A",
+                                "DC1-LEAF2B",
+                                "DC1-LEAF2A"
+                            ],
+                            "ospf": {
+                                "enabled": true,
+                                "point_to_point": true,
+                                "area": 0
+                            }
+                        }
+                    ],
+                    "loopbacks": [
+                        {
+                            "loopback": 123,
+                            "ip_address": "10.1.53.0/32",
+                            "node": "DC1-LEAF2A",
+                            "description": "Test-Loopback",
+                            "enabled": true,
+                            "ospf": {
+                                "enabled": true,
+                                "area": 1
+                            }
+                        },
+                        {
+                            "loopback": 123,
+                            "ip_address": "10.1.53.1/32",
+                            "node": "DC1-LEAF2B",
+                            "enabled": false,
+                            "ospf": {
+                                "enabled": true
+                            },
+                            "raw_eos_cli": "ip ospf cost 100\n"
+                        }
+                    ],
+                    "vtep_diagnostic": {
+                        "loopback": 101,
+                        "loopback_ip_range": "10.255.11.0/24"
+                    }
+                }
+            ],
+            "l2vlans": [
+                {
+                    "id": "160",
+                    "name": "Tenant_A_VMOTION",
+                    "tags": [
+                        "opzone"
+                    ]
+                },
+                {
+                    "id": 161,
+                    "name": "Tenant_A_NFS",
+                    "tags": [
+                        "opzone"
+                    ]
+                },
+                {
+                    "id": 162,
+                    "name": "l2vlan_with_no_tags"
+                },
+                {
+                    "id": 163,
+                    "name": "overlapping_name"
+                },
+                {
+                    "id": 164,
+                    "name": "overlapping_name"
+                },
+                {
+                    "id": 165,
+                    "name": "overlapping_name"
+                }
+            ]
+        }
+    ],
+    "ipv4_acls": [
+        {
+            "name": "TEST-IPV4-ACL-WITH-IP-FIELDS-IN",
+            "entries": [
+                {
+                    "sequence": 15,
+                    "action": "deny",
+                    "protocol": "ip",
+                    "source": "any",
+                    "destination": "interface_ip"
+                }
+            ]
+        },
+        {
+            "name": "TEST-IPV4-ACL-WITH-IP-FIELDS-OUT",
+            "entries": [
+                {
+                    "remark": "Some remark will not require source and destination fields."
+                },
+                {
+                    "action": "permit",
+                    "protocol": "ip",
+                    "source": "interface_ip",
+                    "destination": "any"
+                }
+            ]
+        }
+    ],
+    "tenant_b": [
+        {
+            "name": "Tenant_B",
+            "mac_vrf_vni_base": 20000,
+            "vrfs": [
+                {
+                    "name": "Tenant_B_OP_Zone",
+                    "vrf_vni": 20,
+                    "svis": [
+                        {
+                            "id": 210,
+                            "name": "Tenant_B_OP_Zone_1",
+                            "tags": [
+                                "opzone"
+                            ],
+                            "enabled": true,
+                            "ip_address_virtual": "10.2.10.1/24"
+                        },
+                        {
+                            "id": 211,
+                            "name": "Tenant_B_OP_Zone_2",
+                            "tags": [
+                                "opzone"
+                            ],
+                            "enabled": true,
+                            "ip_address_virtual": "10.2.11.1/24"
+                        }
+                    ]
+                },
+                {
+                    "name": "Tenant_B_WAN_Zone",
+                    "vrf_vni": 21,
+                    "evpn_l2_multi_domain": false,
+                    "svis": [
+                        {
+                            "id": 250,
+                            "name": "Tenant_B_WAN_Zone_1",
+                            "tags": [
+                                "wan"
+                            ],
+                            "enabled": true,
+                            "ip_address_virtual": "10.2.50.1/24"
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "tenant_c": [
+        {
+            "name": "Tenant_C",
+            "mac_vrf_vni_base": 30000,
+            "evpn_l2_multi_domain": false,
+            "bgp_peer_groups": [
+                {
+                    "name": "Tenant_C_BGP_PEER_GROUP",
+                    "remote_as": "666",
+                    "description": "Tenant C peer group",
+                    "send_community": "all",
+                    "next_hop_self": true,
+                    "maximum_routes": 1000,
+                    "address_family_ipv4": {
+                        "activate": true,
+                        "prefix_list_in": "PL_In_Test_1",
+                        "prefix_list_out": "PL_Out_Test_1"
+                    },
+                    "address_family_ipv6": {
+                        "activate": false
+                    },
+                    "default_originate": {
+                        "enabled": true,
+                        "always": true
+                    },
+                    "update_source": "lo0",
+                    "bfd": false,
+                    "ebgp_multihop": 3,
+                    "route_map_out": "TEST_OUT",
+                    "route_map_in": "TEST_IN",
+                    "local_as": 777
+                },
+                {
+                    "name": "Tenant_C_BGP_PEER_GROUP2",
+                    "remote_as": "667",
+                    "description": "Tenant C peer group2",
+                    "update_source": "lo0",
+                    "address_family_ipv4": {
+                        "activate": true,
+                        "route_map_in": "TEST_IN",
+                        "route_map_out": "TEST_OUT"
+                    }
+                }
+            ],
+            "vrfs": [
+                {
+                    "name": "Tenant_C_OP_Zone",
+                    "vrf_vni": 30,
+                    "enable_mlag_ibgp_peering_vrfs": true,
+                    "mlag_ibgp_peering_vlan": 2,
+                    "svis": [
+                        {
+                            "id": 310,
+                            "name": "Tenant_C_OP_Zone_1",
+                            "tags": [
+                                "opzone"
+                            ],
+                            "enabled": true,
+                            "ip_address_virtual": "10.3.10.1/24"
+                        },
+                        {
+                            "id": 311,
+                            "name": "Tenant_C_OP_Zone_2",
+                            "tags": [
+                                "opzone"
+                            ],
+                            "enabled": true,
+                            "ip_address_virtual": "10.3.11.1/24"
+                        }
+                    ]
+                },
+                {
+                    "name": "Tenant_C_WAN_Zone",
+                    "vrf_vni": 31,
+                    "svis": [
+                        {
+                            "id": 350,
+                            "name": "Tenant_C_WAN_Zone_1",
+                            "tags": [
+                                "wan"
+                            ],
+                            "enabled": true,
+                            "ip_address_virtual": "10.3.50.1/24"
+                        }
+                    ],
+                    "bgp_peer_groups": [
+                        {
+                            "name": "Tenant_C_WAN_Zone_BGP_PEER_GROUP",
+                            "remote_as": "666",
+                            "description": "Tenant C VRF WAN Zone peer group",
+                            "send_community": "all",
+                            "next_hop_self": true,
+                            "maximum_routes": 1000,
+                            "default_originate": {
+                                "enabled": true,
+                                "always": true
+                            },
+                            "address_family_ipv4": {
+                                "activate": true
+                            },
+                            "address_family_ipv6": {
+                                "activate": true
+                            },
+                            "nodes": [
+                                "DC1-BL2B"
+                            ],
+                            "update_source": "lo0",
+                            "bfd": false,
+                            "ebgp_multihop": 3,
+                            "route_map_out": "TEST_OUT",
+                            "route_map_in": "TEST_IN",
+                            "local_as": 777
+                        }
+                    ],
+                    "bgp_peers": [
+                        {
+                            "ip_address": "1.1.1.1",
+                            "peer_group": "Tenant_C_WAN_Zone_BGP_PEER_GROUP",
+                            "description": "test_description",
+                            "nodes": [
+                                "DC1-BL2B"
+                            ],
+                            "set_ipv4_next_hop": "1.1.1.1"
+                        },
+                        {
+                            "ip_address": "BEBA::C0CA:C07A",
+                            "peer_group": "Tenant_C_WAN_Zone_BGP_PEER_GROUP",
+                            "nodes": [
+                                "DC1-BL2B"
+                            ],
+                            "description": "test_ipv6"
+                        },
+                        {
+                            "ip_address": "2.2.2.2",
+                            "peer_group": "Tenant_C_BGP_PEER_GROUP",
+                            "nodes": [
+                                "DC1-BL2A"
+                            ],
+                            "description": "test_bgp_peer_group_without_nodes"
+                        },
+                        {
+                            "ip_address": "2.2.2.3",
+                            "peer_group": "Tenant_C_BGP_PEER_GROUP2",
+                            "nodes": [
+                                "DC1-BL2A"
+                            ],
+                            "description": "test_bgp_peer_group_without_nodes_2nd_time"
+                        },
+                        {
+                            "ip_address": "2.2.2.3",
+                            "peer_group": "Tenant_C_WAN_Zone_BGP_PEER_GROUP",
+                            "nodes": [
+                                "DC1-BL2B"
+                            ],
+                            "description": "test_duplicate_peer_ip_address"
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "tenant_d": [
+        {
+            "name": "Tenant_D",
+            "mac_vrf_vni_base": 40000,
+            "vrfs": [
+                {
+                    "name": "Tenant_D_OP_Zone",
+                    "vrf_vni": 40,
+                    "enable_mlag_ibgp_peering_vrfs": true,
+                    "mlag_ibgp_peering_vlan": 2,
+                    "svis": [
+                        {
+                            "id": 410,
+                            "name": "Tenant_D_v6_OP_Zone_1",
+                            "tags": [
+                                "v6opzone"
+                            ],
+                            "enabled": true,
+                            "ip_address_virtual": "10.3.10.1/24",
+                            "ipv6_address_virtuals": [
+                                "2001:db8:310::1/64",
+                                "2001:db8:311::1/64",
+                                "2001:db8:312::1/64"
+                            ]
+                        },
+                        {
+                            "id": 411,
+                            "name": "Tenant_D_v6_OP_Zone_2",
+                            "tags": [
+                                "v6opzone"
+                            ],
+                            "enabled": true,
+                            "ip_virtual_router_addresses": [
+                                "10.3.11.1/24"
+                            ],
+                            "ipv6_virtual_router_addresses": [
+                                "2001:db8:311::1"
+                            ],
+                            "nodes": [
+                                {
+                                    "node": "DC1-LEAF2A",
+                                    "ip_address": "10.3.11.2/24",
+                                    "ipv6_address": "2001:db8:311::2/64"
+                                },
+                                {
+                                    "node": "DC1-LEAF2B",
+                                    "ip_address": "10.3.11.3/24",
+                                    "ipv6_address": "2001:db8:311::3/64"
+                                },
+                                {
+                                    "node": "evpn_services_l2_only_false",
+                                    "ip_address": "10.3.11.4/24",
+                                    "ipv6_address": "2001:db8:311::4/64"
+                                }
+                            ]
+                        },
+                        {
+                            "id": 412,
+                            "name": "Tenant_D_v6_OP_Zone_1",
+                            "tags": [
+                                "v6opzone"
+                            ],
+                            "enabled": true,
+                            "profile": "GENERIC_DUAL_STACK"
+                        },
+                        {
+                            "id": 413,
+                            "name": "Tenant_D_v6_OP_Zone_3",
+                            "tags": [
+                                "v6opzone"
+                            ],
+                            "enabled": true,
+                            "profile": "TEST_SVI_NODE_INHERIT",
+                            "ip_virtual_router_addresses": [
+                                "11.4.13.1"
+                            ],
+                            "ipv6_virtual_router_addresses": [
+                                "2001:db9:413::1"
+                            ],
+                            "nodes": [
+                                {
+                                    "node": "DC1-LEAF2A",
+                                    "ip_address": "11.4.13.2/24",
+                                    "ipv6_address": "2001:db9:413::2/64"
+                                },
+                                {
+                                    "node": "DC1-LEAF2B",
+                                    "ip_address": "101.4.13.2/24",
+                                    "ipv6_address": "2002:db9:413::2/64",
+                                    "ip_virtual_router_addresses": [
+                                        "101.4.13.1"
+                                    ],
+                                    "ipv6_virtual_router_addresses": [
+                                        "2002:db9:413::1"
+                                    ]
+                                },
+                                {
+                                    "node": "evpn_services_l2_only_false",
+                                    "ip_helpers": [
+                                        {
+                                            "ip_helper": "1.1.1.2",
+                                            "source_interface": "lo102",
+                                            "source_vrf": "TEST"
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ],
+                    "static_routes": [
+                        {
+                            "destination_address_prefix": "0.0.0.0/0",
+                            "gateway": "10.3.11.4",
+                            "nodes": [
+                                "DC1-LEAF2A",
+                                "DC1-LEAF2B"
+                            ]
+                        },
+                        {
+                            "destination_address_prefix": "1.1.1.0/24",
+                            "gateway": "10.3.11.4",
+                            "nodes": [
+                                "DC1-LEAF2A",
+                                "DC1-LEAF2B"
+                            ],
+                            "track_bfd": true,
+                            "name": "Track-bfd-network-services"
+                        }
+                    ],
+                    "ipv6_static_routes": [
+                        {
+                            "destination_address_prefix": "::/0",
+                            "gateway": "2001:db8:311::4",
+                            "name": "IPv6-test-2",
+                            "nodes": [
+                                "DC1-LEAF2A",
+                                "DC1-LEAF2B"
+                            ]
+                        },
+                        {
+                            "destination_address_prefix": "2001:db8::/32",
+                            "gateway": "2001:db8:310::1",
+                            "name": "IPv6-test",
+                            "nodes": [
+                                "DC1-LEAF1A"
+                            ]
+                        },
+                        {
+                            "destination_address_prefix": "2001:db9::/32",
+                            "gateway": "2001:db8:310::1",
+                            "name": "IPv6-test-1",
+                            "nodes": [
+                                "DC1-LEAF1A"
+                            ]
+                        },
+                        {
+                            "destination_address_prefix": "2001:dba::/32",
+                            "gateway": "2001:db8:310::1",
+                            "name": "Track-bfd-network-services",
+                            "track_bfd": true,
+                            "nodes": [
+                                "DC1-LEAF2A"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "name": 12345678,
+                    "vrf_vni": 41,
+                    "svis": [
+                        {
+                            "id": 450,
+                            "name": "Tenant_D_v6_WAN_Zone_1",
+                            "tags": [
+                                "v6wan"
+                            ],
+                            "enabled": true,
+                            "ipv6_address_virtuals": [
+                                "2001:db8:355::1/64"
+                            ]
+                        },
+                        {
+                            "id": 451,
+                            "name": "Tenant_D_v6_WAN_Zone_2",
+                            "tags": [
+                                "v6wan"
+                            ],
+                            "enabled": true,
+                            "profile": "GENERIC_FULL_V6"
+                        },
+                        {
+                            "id": 452,
+                            "name": "Tenant_D_v6_WAN_Zone_3",
+                            "tags": [
+                                "v6wan"
+                            ],
+                            "enabled": true,
+                            "profile": "GENERIC_DUAL_STACK"
+                        }
+                    ]
+                },
+                {
+                    "name": "default",
+                    "vrf_id": 123,
+                    "ospf": {
+                        "enabled": true,
+                        "process_id": 123
+                    },
+                    "svis": [
+                        {
+                            "id": 1234,
+                            "name": "VRF_DEFAULT_SVI_WITH_OSPF",
+                            "ospf": {
+                                "area": "0.0.0.0",
+                                "enabled": true
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "svi_profiles": [
+        {
+            "profile": "GENERIC",
+            "mtu": 1560,
+            "enabled": true
+        },
+        {
+            "profile": "GENERIC_FULL",
+            "name": "GENERIC Name",
+            "mtu": 1560,
+            "enabled": false,
+            "ip_address_virtual": "10.1.10.254/24"
+        },
+        {
+            "profile": "GENERIC_FULL_V6",
+            "name": "GENERIC Name V6",
+            "mtu": 1560,
+            "enabled": false,
+            "ipv6_address_virtuals": [
+                "2001:db8:451::1/64"
+            ]
+        },
+        {
+            "profile": "GENERIC_DUAL_STACK",
+            "name": "GENERIC DUAL STACK v4 and v6",
+            "mtu": 1560,
+            "enabled": false,
+            "ip_address_virtual": "10.4.12.254/24",
+            "ipv6_address_virtuals": [
+                "2001:db8:412::1/64"
+            ],
+            "ipv6_enable": false
+        },
+        {
+            "profile": "TEST_SVI_NODE_INHERIT",
+            "name": "Test the SVI and node config inheritance",
+            "mtu": 1560,
+            "enabled": false,
+            "ip_address_virtual": "10.4.13.254/24",
+            "ipv6_address_virtuals": [
+                "2001:db8:413::1/64"
+            ],
+            "ip_helpers": [
+                {
+                    "ip_helper": "1.1.1.1",
+                    "source_interface": "lo101",
+                    "source_vrf": "TEST"
+                }
+            ],
+            "nodes": [
+                {
+                    "node": "evpn_services_l2_only_false",
+                    "ip_address": "12.4.13.2/24",
+                    "ipv6_address": "2012:db9:413::2/64",
+                    "ip_virtual_router_addresses": [
+                        "12.4.13.1"
+                    ],
+                    "ipv6_virtual_router_addresses": [
+                        "2012:db9:413::1"
+                    ]
+                }
+            ]
+        },
+        {
+            "profile": "GENERIC_DHCP",
+            "mtu": 1560,
+            "enabled": false,
+            "ip_helpers": [
+                {
+                    "ip_helper": "2.2.2.2",
+                    "source_interface": "lo101",
+                    "source_vrf": "MGMT"
+                }
+            ]
+        },
+        {
+            "profile": "WITH_NO_MTU",
+            "enabled": true
+        },
+        {
+            "profile": "WITH_DHCP_AND_SNOOPING",
+            "enabled": true,
+            "ip_address_virtual": "10.1.11.254/24",
+            "igmp_snooping_enabled": false,
+            "ip_helpers": [
+                {
+                    "ip_helper": "1.1.1.1",
+                    "source_interface": "lo100",
+                    "source_vrf": "TEST"
+                }
+            ]
+        },
+        {
+            "profile": "WITH_DHCP",
+            "enabled": true,
+            "ip_helpers": [
+                {
+                    "ip_helper": "1.1.1.1",
+                    "source_interface": "lo100",
+                    "source_vrf": "MGMT"
+                }
+            ]
+        },
+        {
+            "profile": "DERIVED_DHCP",
+            "parent_profile": "GENERIC_DHCP",
+            "enabled": true
+        }
+    ],
+    "network_services_keys": [
+        {
+            "name": "tenant_a"
+        },
+        {
+            "name": "tenant_b"
+        },
+        {
+            "name": "tenant_c"
+        },
+        {
+            "name": "tenant_d"
+        }
+    ],
+    "type": "l3leaf",
+    "my_dci_ethernet_interfaces": [
+        {
+            "name": "Ethernet4000",
+            "description": "My test",
+            "ip_address": "10.1.2.3/12",
+            "shutdown": false,
+            "switchport": {
+                "enabled": false
+            },
+            "mtu": 1500,
+            "peer": "MY-own-peer",
+            "peer_interface": "Ethernet123",
+            "peer_type": "my_precious"
+        }
+    ],
+    "override_ntp": null,
+    "evpn_overlay_bgp_rtc": true,
+    "my_special_dci_ethernet_interfaces": [
+        {
+            "name": "Ethernet4000",
+            "ip_address": "10.3.2.1/21"
+        }
+    ],
+    "overlay_rd_type": {
+        "admin_subfield": "vtep_loopback"
+    },
+    "overlay_rt_type": {
+        "admin_subfield": "bgp_as"
+    },
+    "inventory_file": "/home/holbech/avd/ansible_collections/arista/avd/molecule/eos_designs_unit_tests/inventory/hosts.yml",
+    "inventory_dir": "/home/holbech/avd/ansible_collections/arista/avd/molecule/eos_designs_unit_tests/inventory",
+    "ansible_host": "192.168.200.110",
+    "inventory_hostname": "DC1-BL1A",
+    "inventory_hostname_short": "DC1-BL1A",
+    "group_names": [
+        "AVD_LAB",
+        "DC1_BL1",
+        "DC1_FABRIC",
+        "DC1_LEAFS",
+        "DC1_SERVERS",
+        "DC1_TENANTS_NETWORKS",
+        "EOS_DESIGNS_UNIT_TESTS"
+    ],
+    "custom_structured_configuration_list_merge": "append",
+    "override_ip_name_servers": [
+        {
+            "ip_address": "1.1.1.1",
+            "vrf": "MGMT"
+        }
+    ],
+    "router_id_loopback_description": "MY_ROUTER_ID_LOOPBACK",
+    "vtep_vvtep_ip": "192.168.255.255/32",
+    "event_handlers": [
+        {
+            "name": "evpn-blacklist-recovery",
+            "actions": {
+                "bash_command": "FastCli -p 15 -c \"clear bgp evpn host-flap\""
+            },
+            "delay": 300,
+            "trigger": "on-logging",
+            "trigger_on_logging": {
+                "regex": "EVPN-3-BLACKLISTED_DUPLICATE_MAC"
+            },
+            "asynchronous": true
+        }
+    ],
+    "template_timezone": "correctly_templated_timezone",
+    "timezone": "correctly_templated_timezone",
+    "mac_address_table": {
+        "aging_time": 42
+    },
+    "my_mac_address_table": {
+        "notification_host_flap": {
+            "logging": true
+        }
+    },
+    "override_mac_address_table": {
+        "notification_host_flap": {
+            "logging": true
+        }
+    },
+    "generate_cv_tags": {
+        "topology_hints": true
+    },
+    "ansible_facts": {},
+    "testdir": "eos_designs_unit_tests",
+    "playbook_dir": "/home/holbech/avd/python-avd/scripts",
+    "ansible_playbook_python": "/usr/bin/python3.10",
+    "ansible_config_file": null,
+    "groups": {
+        "all": [
+            "always-configure-ip-routing",
+            "bgp-options",
+            "connected_endpoints",
+            "cvp-instance-ips-cvaas",
+            "cvp-instance-ips-onprem-token",
+            "device.with.dots.in.hostname",
+            "evpn-vtep-with-default-vrf-not-evpn",
+            "duplicate-vrfs",
+            "filter.only_vlans_in_use",
+            "filter.vrfs",
+            "generate-cv-tags-1",
+            "generate-cv-tags-2",
+            "ignore-custom-keys-in-data-models",
+            "isis-system-id-format-using-underlay-loopback",
+            "isis-system-id-format-using-node-id",
+            "no_mgmt_interface",
+            "no_mgmt_gateway",
+            "ntp-settings-1",
+            "ntp-settings-2",
+            "hardware_counters",
+            "source-interfaces",
+            "mgmt_interface_description",
+            "mgmt_interface_ipv6",
+            "mgmt_interface_dualstack",
+            "default_overlay_protocol_cvx",
+            "default_overlay_protocol_her",
+            "evpn_vlan_bundle",
+            "evpn_vlan_bundle_svi_l2vlan",
+            "default_interface_mtu_hostvars",
+            "default_interface_mtu_platform",
+            "evpn-to-ipvpn-gateway",
+            "vrfs_rd_rt_override",
+            "spanning-tree-mode-rapid-pvst",
+            "node-type-l3-interfaces",
+            "ipv4-acls",
+            "only-connected-endpoints",
+            "platform_settings",
+            "varpv6",
+            "override_uplink_type-d",
+            "override_uplink_type-u",
+            "core-1-isis-sr-ldp",
+            "core-2-ospf-ldp",
+            "core-3-isis-sr-ldp",
+            "core-4-multicast",
+            "network-ports-tests.1",
+            "network-ports-tests-2",
+            "P2P-UPLINKS-IPV4-PREFIX-LENGTH",
+            "bgp-peer-groups-1",
+            "bgp-peer-groups-2",
+            "bgp-peer-groups-3",
+            "bgp-from-network-services-1",
+            "bgp-from-network-services-2",
+            "SVI_PROFILE_NODE_1",
+            "SVI_PROFILE_NODE_2",
+            "RD-RT-ADMIN-SUBFIELD-L3LEAF1",
+            "RD-RT-ADMIN-SUBFIELD-L3LEAF2",
+            "RD-RT-ADMIN-SUBFIELD-L3LEAF3",
+            "RD-RT-ADMIN-SUBFIELD-L3LEAF4",
+            "RD-RT-ADMIN-SUBFIELD-L3LEAF5",
+            "RD-RT-ADMIN-SUBFIELD-L3LEAF6",
+            "RD-RT-ADMIN-SUBFIELD-L3LEAF7",
+            "AUTO_BGP_ASN_LEAF1A",
+            "AUTO_BGP_ASN_LEAF1B",
+            "AUTO_BGP_ASN_LEAF2",
+            "AUTO_BGP_ASN_LEAF3A",
+            "AUTO_BGP_ASN_LEAF3B",
+            "AUTO_BGP_ASN_LEAF4A",
+            "AUTO_BGP_ASN_LEAF4B",
+            "AUTO_BGP_ASN_LEAF5A",
+            "AUTO_BGP_UNGROUPED_LEAF6",
+            "AUTO_BGP_ASN_LEAF7A",
+            "AUTO_BGP_ASN_LEAF7B",
+            "AUTO_BGP_ASN_LEAF8A",
+            "AUTO_BGP_ASN_LEAF8B",
+            "AUTO_NODE_TYPE_SPINE01",
+            "AUTO_NODE_TYPE_SPINE02",
+            "AUTO_NODE_TYPE_LEAF01",
+            "AUTO_NODE_TYPE_UNGROUPED_LEAF02",
+            "OVERLAY_ROUTING_PROTOCOL_HER_L3LEAF1",
+            "OVERLAY_ROUTING_PROTOCOL_HER_L3LEAF2",
+            "OVERLAY_ROUTING_PROTOCOL_HER_L3LEAF3A",
+            "OVERLAY_ROUTING_PROTOCOL_HER_L3LEAF3B",
+            "OVERLAY_ROUTING_PROTOCOL_CVX_L3LEAF1",
+            "OVERLAY_ROUTING_PROTOCOL_CVX_L3LEAF2",
+            "OVERLAY_ROUTING_PROTOCOL_CVX_SERVER1",
+            "OVERLAY_ROUTING_PROTOCOL_CVX_SERVER2",
+            "UNDERLAY_FILTER_PEER_AS_L3LEAF1",
+            "UNDERLAY_FILTER_PEER_AS_SPINE1",
+            "UNDERLAY_FILTER_PEER_AS_SPINE2",
+            "SNMP_SYSTEM_MAC_ENGINEID_1",
+            "SNMP_SYSTEM_MAC_ENGINEID_2",
+            "SNMP_AUTOGEN_ENGINEID",
+            "snmp-settings-1",
+            "snmp-settings-2",
+            "underlay_filter_peer_as_evpn_1",
+            "underlay_filter_peer_as_evpn_2",
+            "underlay_filter_peer_as_evpn_3",
+            "l3_edge_bgp",
+            "l3_edge_ospf",
+            "l3_edge_isis",
+            "l3_edge_multicast",
+            "uplink-native-vlan-grandparent",
+            "uplink-native-vlan-parent",
+            "uplink-native-vlan-child",
+            "inband-mgmt-parent",
+            "inband-mgmt-parent-vrf",
+            "inband-mgmt-subnet",
+            "inband-mgmt-subnet-vrf",
+            "inband-mgmt-ip",
+            "inband-mgmt-parent-dualstack1",
+            "inband-mgmt-parent-dualstack2",
+            "inband-mgmt-dualstack-subnets",
+            "inband-mgmt-dualstack-ips",
+            "inband-mgmt-parent-ipv6-1",
+            "inband-mgmt-parent-ipv6-2",
+            "inband-mgmt-ipv6-only",
+            "inband-mgmt-ipv6-only-vrf",
+            "inband-mgmt-mlag-a",
+            "inband-mgmt-mlag-b",
+            "TEST-MGMT-GATEWAY-IN-NODE-GROUP",
+            "UPLINK_P2P_VRFS_TESTS_SPINE1",
+            "UPLINK_P2P_VRFS_TESTS_SPINE2",
+            "UPLINK_P2P_VRFS_TESTS_LEAF1",
+            "UPLINK_P2P_VRFS_TESTS_L2LEAF1",
+            "uplink_lan_l2leaf",
+            "uplink_lan_wan_router1",
+            "uplink_lan_wan_router2",
+            "downlink-pools-spine1",
+            "downlink-pools-spine2",
+            "downlink-pools-l3leaf1",
+            "downlink-pools-l3leaf2",
+            "downlink-pools-l3leaf3",
+            "downlink-pools-l3leaf4",
+            "SL-LEAF0A",
+            "SL-LEAF0B",
+            "SL-LEAF1A",
+            "SL-LEAF1B",
+            "SL-MLEAF1",
+            "SL-LEAF2A",
+            "SL-LEAF2B",
+            "DUP-LEAF1",
+            "DUP-LEAF2",
+            "7010TX-LEAF1",
+            "7010TX-LEAF2",
+            "IGMP-QUERIER-L3LEAF1A",
+            "IGMP-QUERIER-L2LEAF1A",
+            "UNDERLAY-MULTICAST-SPINE1",
+            "UNDERLAY-MULTICAST-SPINE2",
+            "UNDERLAY-MULTICAST-L2LEAF1A",
+            "EVPN-MULTICAST-SPINE1",
+            "EVPN-MULTICAST-L2LEAF1A",
+            "CUSTOM-TEMPLATES-SPINE1",
+            "CUSTOM-TEMPLATES-L3LEAF1A",
+            "CUSTOM-TEMPLATES-L3LEAF1B",
+            "CUSTOM-TEMPLATES-L2LEAF1A",
+            "CUSTOM-TEMPLATES-L2LEAF1B",
+            "legacy-autovpn-rr1",
+            "legacy-autovpn-rr2",
+            "legacy-autovpn-edge",
+            "legacy-autovpn-edge-no-default-policy",
+            "cv-pathfinder-edge-no-default-policy",
+            "cv-pathfinder-edge-custom-default-policy",
+            "OVERRIDE_VTEP_L3LEAF1A",
+            "OVERRIDE_VTEP_L3LEAF1B",
+            "MLAG_ODD_ID_L3LEAF1A",
+            "MLAG_ODD_ID_L3LEAF1B",
+            "MLAG_IPV6_L3LEAF1A",
+            "MLAG_IPV6_L3LEAF1B",
+            "MLAG_SAME_SUBNET_L3LEAF1A",
+            "MLAG_SAME_SUBNET_L3LEAF1B",
+            "MLAG_SAME_SUBNET_L3LEAF2A",
+            "MLAG_SAME_SUBNET_L3LEAF2B",
+            "ptp-tests-spine1",
+            "ptp-tests-spine2",
+            "ptp-tests-spine3",
+            "ptp-tests-leaf1",
+            "ptp-tests-leaf2",
+            "ptp-tests-l2leaf1-ptp-disabled",
+            "ptp-tests-l2leaf2-ptp-enabled",
+            "ptp-tests-l2leaf2-ptp-enabled-uplink-disabled",
+            "UPLINK-MLAG-STRUCTURED-CONFIG-SPINE1",
+            "UPLINK-MLAG-STRUCTURED-CONFIG-L3LEAF1A",
+            "UPLINK-MLAG-STRUCTURED-CONFIG-L3LEAF1B",
+            "UPLINK-MLAG-STRUCTURED-CONFIG-L2LEAF1A",
+            "UPLINK-MLAG-STRUCTURED-CONFIG-L2LEAF1B",
+            "sflow-tests-spine1",
+            "sflow-tests-spine2",
+            "sflow-tests-leaf1",
+            "sflow-tests-leaf2",
+            "sflow-tests-l2-leaf1",
+            "sflow-tests-l2-leaf2",
+            "trunk-group-tests-l3leaf1a",
+            "trunk-group-tests-l3leaf1b",
+            "trunk-group-tests-l3leaf2a",
+            "trunk-group-tests-l3leaf2b",
+            "trunk-group-tests-l2leaf1a",
+            "trunk-group-tests-l2leaf1b",
+            "trunk-group-tests-l2leaf3",
+            "trunk-group-tests-l2leaf4",
+            "flow-tracking-tests-leaf1",
+            "flow-tracking-tests-l2-leaf1",
+            "flow-tracking-tests-l2-leaf2",
+            "CUSTOM-PYTHON_MODULES-SPINE1",
+            "CUSTOM-PYTHON_MODULES-L3LEAF1A",
+            "CUSTOM-PYTHON_MODULES-L3LEAF1B",
+            "CUSTOM-PYTHON_MODULES-L3LEAF2",
+            "MH-L2LEAF1A",
+            "UNDERLAY-MULTICAST-L3LEAF1A",
+            "UNDERLAY-MULTICAST-L3LEAF1B",
+            "UNDERLAY-MULTICAST-L3LEAF2A",
+            "UNDERLAY-MULTICAST-L3LEAF2B",
+            "cv-pathfinder-edge2A",
+            "cv-pathfinder-edge2B",
+            "site-ha-enabled-leaf2A",
+            "site-ha-enabled-leaf2B",
+            "cv-pathfinder-transit1A",
+            "cv-pathfinder-transit1B",
+            "site-ha-enabled-leaf1",
+            "cv-pathfinder-edge3A",
+            "cv-pathfinder-edge3B",
+            "cv-pathfinder-edge4A",
+            "cv-pathfinder-edge4B",
+            "cv-pathfinder-edge",
+            "cv-pathfinder-edge1",
+            "site-ha-disabled-leaf",
+            "cv-pathfinder-pathfinder",
+            "sflow-tests-leaf3",
+            "sflow-tests-leaf4",
+            "flow-tracking-tests-spine1",
+            "flow-tracking-tests-spine2",
+            "EVPN-MULTICAST-L3LEAF1A",
+            "EVPN-MULTICAST-L3LEAF1B",
+            "EVPN-MULTICAST-L3LEAF2A",
+            "EVPN-MULTICAST-L3LEAF3A",
+            "EVPN-MULTICAST-L3LEAF3B",
+            "EVPN-MULTICAST-DISABLED",
+            "DC1-SPINE1",
+            "DC1-SPINE2",
+            "DC1-SPINE3",
+            "DC1-SPINE4",
+            "flow-tracking-tests-leaf2",
+            "flow-tracking-tests-leaf4",
+            "DC1-LEAF1A",
+            "DC1-LEAF2A",
+            "DC1-LEAF2B",
+            "DC1-SVC3A",
+            "DC1-SVC3B",
+            "DC1-BL1A",
+            "DC1-BL1B",
+            "DC1-BL2A",
+            "DC1-BL2B",
+            "DC1-CL1A",
+            "DC1-CL1B",
+            "evpn_services_l2_only_true",
+            "evpn_services_l2_only_false",
+            "DC1_UNDEPLOYED_LEAF1A",
+            "DC1_UNDEPLOYED_LEAF1B",
+            "DC1-L2LEAF1A",
+            "DC1-L2LEAF1B",
+            "DC1-L2LEAF2A",
+            "DC1-L2LEAF2B",
+            "DC1-L2LEAF3A",
+            "DC1-L2LEAF4A",
+            "DC1.L2LEAF5A",
+            "DC1.L2LEAF5B",
+            "DC1.L2LEAF6A",
+            "DC1.L2LEAF6B",
+            "mgmt_interface_default",
+            "mgmt_interface_fabric",
+            "mgmt_interface_host",
+            "mgmt_interface_platform",
+            "cv-pathfinder-pathfinder1",
+            "cv-pathfinder-pathfinder2",
+            "cv-pathfinder-custom-control-plane-policy-edge-1",
+            "cv-pathfinder-custom-control-plane-policy-pathfinder-1",
+            "cv-pathfinder-custom-control-plane-policy-edge-2",
+            "cv-pathfinder-custom-control-plane-policy-edge-3",
+            "flow-tracking-tests-leaf3",
+            "MLAG-OSPF-L3LEAF1A",
+            "MLAG-OSPF-L3LEAF1B",
+            "MH-LEAF1A",
+            "MH-LEAF1B",
+            "MH-LEAF2A"
+        ],
+        "ungrouped": [],
+        "EOS_DESIGNS_UNIT_TESTS": [
+            "always-configure-ip-routing",
+            "bgp-options",
+            "connected_endpoints",
+            "cvp-instance-ips-cvaas",
+            "cvp-instance-ips-onprem-token",
+            "device.with.dots.in.hostname",
+            "evpn-vtep-with-default-vrf-not-evpn",
+            "duplicate-vrfs",
+            "filter.only_vlans_in_use",
+            "filter.vrfs",
+            "generate-cv-tags-1",
+            "generate-cv-tags-2",
+            "ignore-custom-keys-in-data-models",
+            "isis-system-id-format-using-underlay-loopback",
+            "isis-system-id-format-using-node-id",
+            "no_mgmt_interface",
+            "no_mgmt_gateway",
+            "ntp-settings-1",
+            "ntp-settings-2",
+            "hardware_counters",
+            "source-interfaces",
+            "mgmt_interface_description",
+            "mgmt_interface_ipv6",
+            "mgmt_interface_dualstack",
+            "default_overlay_protocol_cvx",
+            "default_overlay_protocol_her",
+            "evpn_vlan_bundle",
+            "evpn_vlan_bundle_svi_l2vlan",
+            "default_interface_mtu_hostvars",
+            "default_interface_mtu_platform",
+            "evpn-to-ipvpn-gateway",
+            "vrfs_rd_rt_override",
+            "spanning-tree-mode-rapid-pvst",
+            "node-type-l3-interfaces",
+            "ipv4-acls",
+            "only-connected-endpoints",
+            "platform_settings",
+            "varpv6",
+            "override_uplink_type-d",
+            "override_uplink_type-u",
+            "core-1-isis-sr-ldp",
+            "core-2-ospf-ldp",
+            "core-3-isis-sr-ldp",
+            "core-4-multicast",
+            "network-ports-tests.1",
+            "network-ports-tests-2",
+            "P2P-UPLINKS-IPV4-PREFIX-LENGTH",
+            "bgp-peer-groups-1",
+            "bgp-peer-groups-2",
+            "bgp-peer-groups-3",
+            "bgp-from-network-services-1",
+            "bgp-from-network-services-2",
+            "SVI_PROFILE_NODE_1",
+            "SVI_PROFILE_NODE_2",
+            "RD-RT-ADMIN-SUBFIELD-L3LEAF1",
+            "RD-RT-ADMIN-SUBFIELD-L3LEAF2",
+            "RD-RT-ADMIN-SUBFIELD-L3LEAF3",
+            "RD-RT-ADMIN-SUBFIELD-L3LEAF4",
+            "RD-RT-ADMIN-SUBFIELD-L3LEAF5",
+            "RD-RT-ADMIN-SUBFIELD-L3LEAF6",
+            "RD-RT-ADMIN-SUBFIELD-L3LEAF7",
+            "AUTO_BGP_ASN_LEAF1A",
+            "AUTO_BGP_ASN_LEAF1B",
+            "AUTO_BGP_ASN_LEAF2",
+            "AUTO_BGP_ASN_LEAF3A",
+            "AUTO_BGP_ASN_LEAF3B",
+            "AUTO_BGP_ASN_LEAF4A",
+            "AUTO_BGP_ASN_LEAF4B",
+            "AUTO_BGP_ASN_LEAF5A",
+            "AUTO_BGP_UNGROUPED_LEAF6",
+            "AUTO_BGP_ASN_LEAF7A",
+            "AUTO_BGP_ASN_LEAF7B",
+            "AUTO_BGP_ASN_LEAF8A",
+            "AUTO_BGP_ASN_LEAF8B",
+            "AUTO_NODE_TYPE_SPINE01",
+            "AUTO_NODE_TYPE_SPINE02",
+            "AUTO_NODE_TYPE_LEAF01",
+            "AUTO_NODE_TYPE_UNGROUPED_LEAF02",
+            "OVERLAY_ROUTING_PROTOCOL_HER_L3LEAF1",
+            "OVERLAY_ROUTING_PROTOCOL_HER_L3LEAF2",
+            "OVERLAY_ROUTING_PROTOCOL_HER_L3LEAF3A",
+            "OVERLAY_ROUTING_PROTOCOL_HER_L3LEAF3B",
+            "OVERLAY_ROUTING_PROTOCOL_CVX_L3LEAF1",
+            "OVERLAY_ROUTING_PROTOCOL_CVX_L3LEAF2",
+            "OVERLAY_ROUTING_PROTOCOL_CVX_SERVER1",
+            "OVERLAY_ROUTING_PROTOCOL_CVX_SERVER2",
+            "UNDERLAY_FILTER_PEER_AS_L3LEAF1",
+            "UNDERLAY_FILTER_PEER_AS_SPINE1",
+            "UNDERLAY_FILTER_PEER_AS_SPINE2",
+            "SNMP_SYSTEM_MAC_ENGINEID_1",
+            "SNMP_SYSTEM_MAC_ENGINEID_2",
+            "SNMP_AUTOGEN_ENGINEID",
+            "snmp-settings-1",
+            "snmp-settings-2",
+            "underlay_filter_peer_as_evpn_1",
+            "underlay_filter_peer_as_evpn_2",
+            "underlay_filter_peer_as_evpn_3",
+            "l3_edge_bgp",
+            "l3_edge_ospf",
+            "l3_edge_isis",
+            "l3_edge_multicast",
+            "uplink-native-vlan-grandparent",
+            "uplink-native-vlan-parent",
+            "uplink-native-vlan-child",
+            "inband-mgmt-parent",
+            "inband-mgmt-parent-vrf",
+            "inband-mgmt-subnet",
+            "inband-mgmt-subnet-vrf",
+            "inband-mgmt-ip",
+            "inband-mgmt-parent-dualstack1",
+            "inband-mgmt-parent-dualstack2",
+            "inband-mgmt-dualstack-subnets",
+            "inband-mgmt-dualstack-ips",
+            "inband-mgmt-parent-ipv6-1",
+            "inband-mgmt-parent-ipv6-2",
+            "inband-mgmt-ipv6-only",
+            "inband-mgmt-ipv6-only-vrf",
+            "inband-mgmt-mlag-a",
+            "inband-mgmt-mlag-b",
+            "TEST-MGMT-GATEWAY-IN-NODE-GROUP",
+            "UPLINK_P2P_VRFS_TESTS_SPINE1",
+            "UPLINK_P2P_VRFS_TESTS_SPINE2",
+            "UPLINK_P2P_VRFS_TESTS_LEAF1",
+            "UPLINK_P2P_VRFS_TESTS_L2LEAF1",
+            "uplink_lan_l2leaf",
+            "uplink_lan_wan_router1",
+            "uplink_lan_wan_router2",
+            "downlink-pools-spine1",
+            "downlink-pools-spine2",
+            "downlink-pools-l3leaf1",
+            "downlink-pools-l3leaf2",
+            "downlink-pools-l3leaf3",
+            "downlink-pools-l3leaf4",
+            "SL-LEAF0A",
+            "SL-LEAF0B",
+            "SL-LEAF1A",
+            "SL-LEAF1B",
+            "SL-MLEAF1",
+            "SL-LEAF2A",
+            "SL-LEAF2B",
+            "DUP-LEAF1",
+            "DUP-LEAF2",
+            "7010TX-LEAF1",
+            "7010TX-LEAF2",
+            "IGMP-QUERIER-L3LEAF1A",
+            "IGMP-QUERIER-L2LEAF1A",
+            "UNDERLAY-MULTICAST-SPINE1",
+            "UNDERLAY-MULTICAST-SPINE2",
+            "UNDERLAY-MULTICAST-L2LEAF1A",
+            "EVPN-MULTICAST-SPINE1",
+            "EVPN-MULTICAST-L2LEAF1A",
+            "CUSTOM-TEMPLATES-SPINE1",
+            "CUSTOM-TEMPLATES-L3LEAF1A",
+            "CUSTOM-TEMPLATES-L3LEAF1B",
+            "CUSTOM-TEMPLATES-L2LEAF1A",
+            "CUSTOM-TEMPLATES-L2LEAF1B",
+            "legacy-autovpn-rr1",
+            "legacy-autovpn-rr2",
+            "legacy-autovpn-edge",
+            "legacy-autovpn-edge-no-default-policy",
+            "cv-pathfinder-edge-no-default-policy",
+            "cv-pathfinder-edge-custom-default-policy",
+            "OVERRIDE_VTEP_L3LEAF1A",
+            "OVERRIDE_VTEP_L3LEAF1B",
+            "MLAG_ODD_ID_L3LEAF1A",
+            "MLAG_ODD_ID_L3LEAF1B",
+            "MLAG_IPV6_L3LEAF1A",
+            "MLAG_IPV6_L3LEAF1B",
+            "MLAG_SAME_SUBNET_L3LEAF1A",
+            "MLAG_SAME_SUBNET_L3LEAF1B",
+            "MLAG_SAME_SUBNET_L3LEAF2A",
+            "MLAG_SAME_SUBNET_L3LEAF2B",
+            "ptp-tests-spine1",
+            "ptp-tests-spine2",
+            "ptp-tests-spine3",
+            "ptp-tests-leaf1",
+            "ptp-tests-leaf2",
+            "ptp-tests-l2leaf1-ptp-disabled",
+            "ptp-tests-l2leaf2-ptp-enabled",
+            "ptp-tests-l2leaf2-ptp-enabled-uplink-disabled",
+            "UPLINK-MLAG-STRUCTURED-CONFIG-SPINE1",
+            "UPLINK-MLAG-STRUCTURED-CONFIG-L3LEAF1A",
+            "UPLINK-MLAG-STRUCTURED-CONFIG-L3LEAF1B",
+            "UPLINK-MLAG-STRUCTURED-CONFIG-L2LEAF1A",
+            "UPLINK-MLAG-STRUCTURED-CONFIG-L2LEAF1B",
+            "sflow-tests-spine1",
+            "sflow-tests-spine2",
+            "sflow-tests-leaf1",
+            "sflow-tests-leaf2",
+            "sflow-tests-l2-leaf1",
+            "sflow-tests-l2-leaf2",
+            "trunk-group-tests-l3leaf1a",
+            "trunk-group-tests-l3leaf1b",
+            "trunk-group-tests-l3leaf2a",
+            "trunk-group-tests-l3leaf2b",
+            "trunk-group-tests-l2leaf1a",
+            "trunk-group-tests-l2leaf1b",
+            "trunk-group-tests-l2leaf3",
+            "trunk-group-tests-l2leaf4",
+            "flow-tracking-tests-leaf1",
+            "flow-tracking-tests-l2-leaf1",
+            "flow-tracking-tests-l2-leaf2",
+            "CUSTOM-PYTHON_MODULES-SPINE1",
+            "CUSTOM-PYTHON_MODULES-L3LEAF1A",
+            "CUSTOM-PYTHON_MODULES-L3LEAF1B",
+            "CUSTOM-PYTHON_MODULES-L3LEAF2",
+            "MH-L2LEAF1A",
+            "cv-pathfinder-edge2A",
+            "cv-pathfinder-edge2B",
+            "site-ha-enabled-leaf2A",
+            "site-ha-enabled-leaf2B",
+            "cv-pathfinder-transit1A",
+            "cv-pathfinder-transit1B",
+            "site-ha-enabled-leaf1",
+            "cv-pathfinder-edge3A",
+            "cv-pathfinder-edge3B",
+            "cv-pathfinder-edge4A",
+            "cv-pathfinder-edge4B",
+            "cv-pathfinder-edge",
+            "cv-pathfinder-edge1",
+            "site-ha-disabled-leaf",
+            "cv-pathfinder-pathfinder",
+            "flow-tracking-tests-spine1",
+            "flow-tracking-tests-spine2",
+            "EVPN-MULTICAST-L3LEAF1A",
+            "EVPN-MULTICAST-L3LEAF1B",
+            "EVPN-MULTICAST-L3LEAF2A",
+            "EVPN-MULTICAST-L3LEAF3A",
+            "EVPN-MULTICAST-L3LEAF3B",
+            "EVPN-MULTICAST-DISABLED",
+            "flow-tracking-tests-leaf2",
+            "flow-tracking-tests-leaf4",
+            "UNDERLAY-MULTICAST-L3LEAF1A",
+            "UNDERLAY-MULTICAST-L3LEAF1B",
+            "UNDERLAY-MULTICAST-L3LEAF2A",
+            "UNDERLAY-MULTICAST-L3LEAF2B",
+            "sflow-tests-leaf3",
+            "sflow-tests-leaf4",
+            "DC1-SPINE1",
+            "DC1-SPINE2",
+            "DC1-SPINE3",
+            "DC1-SPINE4",
+            "DC1-LEAF1A",
+            "DC1-LEAF2A",
+            "DC1-LEAF2B",
+            "DC1-SVC3A",
+            "DC1-SVC3B",
+            "DC1-BL1A",
+            "DC1-BL1B",
+            "DC1-BL2A",
+            "DC1-BL2B",
+            "DC1-CL1A",
+            "DC1-CL1B",
+            "evpn_services_l2_only_true",
+            "evpn_services_l2_only_false",
+            "DC1_UNDEPLOYED_LEAF1A",
+            "DC1_UNDEPLOYED_LEAF1B",
+            "DC1-L2LEAF1A",
+            "DC1-L2LEAF1B",
+            "DC1-L2LEAF2A",
+            "DC1-L2LEAF2B",
+            "DC1-L2LEAF3A",
+            "DC1-L2LEAF4A",
+            "DC1.L2LEAF5A",
+            "DC1.L2LEAF5B",
+            "DC1.L2LEAF6A",
+            "DC1.L2LEAF6B",
+            "mgmt_interface_default",
+            "mgmt_interface_fabric",
+            "mgmt_interface_host",
+            "mgmt_interface_platform",
+            "cv-pathfinder-pathfinder1",
+            "cv-pathfinder-pathfinder2",
+            "cv-pathfinder-custom-control-plane-policy-edge-1",
+            "cv-pathfinder-custom-control-plane-policy-pathfinder-1",
+            "cv-pathfinder-custom-control-plane-policy-edge-2",
+            "cv-pathfinder-custom-control-plane-policy-edge-3",
+            "flow-tracking-tests-leaf3",
+            "MLAG-OSPF-L3LEAF1A",
+            "MLAG-OSPF-L3LEAF1B",
+            "MH-LEAF1A",
+            "MH-LEAF1B",
+            "MH-LEAF2A"
+        ],
+        "CLEAN_UNIT_TESTS": [
+            "always-configure-ip-routing",
+            "bgp-options",
+            "connected_endpoints",
+            "cvp-instance-ips-cvaas",
+            "cvp-instance-ips-onprem-token",
+            "device.with.dots.in.hostname",
+            "evpn-vtep-with-default-vrf-not-evpn",
+            "duplicate-vrfs",
+            "filter.only_vlans_in_use",
+            "filter.vrfs",
+            "generate-cv-tags-1",
+            "generate-cv-tags-2",
+            "ignore-custom-keys-in-data-models",
+            "isis-system-id-format-using-underlay-loopback",
+            "isis-system-id-format-using-node-id",
+            "no_mgmt_interface",
+            "no_mgmt_gateway",
+            "ntp-settings-1",
+            "ntp-settings-2",
+            "hardware_counters",
+            "source-interfaces",
+            "mgmt_interface_description",
+            "mgmt_interface_ipv6",
+            "mgmt_interface_dualstack",
+            "default_overlay_protocol_cvx",
+            "default_overlay_protocol_her",
+            "evpn_vlan_bundle",
+            "evpn_vlan_bundle_svi_l2vlan",
+            "default_interface_mtu_hostvars",
+            "default_interface_mtu_platform",
+            "evpn-to-ipvpn-gateway",
+            "vrfs_rd_rt_override",
+            "spanning-tree-mode-rapid-pvst",
+            "node-type-l3-interfaces",
+            "ipv4-acls",
+            "only-connected-endpoints",
+            "platform_settings",
+            "varpv6"
+        ],
+        "OVERRIDE_UPLINK_TYPE": [
+            "override_uplink_type-d",
+            "override_uplink_type-u"
+        ],
+        "CORE_UNIT_TESTS": [
+            "core-1-isis-sr-ldp",
+            "core-2-ospf-ldp",
+            "core-3-isis-sr-ldp",
+            "core-4-multicast"
+        ],
+        "TRUNK_GROUP_TESTS": [
+            "trunk-group-tests-l3leaf1a",
+            "trunk-group-tests-l3leaf1b",
+            "trunk-group-tests-l3leaf2a",
+            "trunk-group-tests-l3leaf2b",
+            "trunk-group-tests-l2leaf1a",
+            "trunk-group-tests-l2leaf1b",
+            "trunk-group-tests-l2leaf3",
+            "trunk-group-tests-l2leaf4"
+        ],
+        "TRUNK_GROUP_TESTS_L3LEAF": [
+            "trunk-group-tests-l3leaf1a",
+            "trunk-group-tests-l3leaf1b",
+            "trunk-group-tests-l3leaf2a",
+            "trunk-group-tests-l3leaf2b"
+        ],
+        "TRUNK_GROUP_TESTS_L2LEAF": [
+            "trunk-group-tests-l2leaf1a",
+            "trunk-group-tests-l2leaf1b",
+            "trunk-group-tests-l2leaf3",
+            "trunk-group-tests-l2leaf4"
+        ],
+        "NETWORK_PORTS_TESTS": [
+            "network-ports-tests.1",
+            "network-ports-tests-2"
+        ],
+        "FABRIC_IP_ADDRESSING": [
+            "P2P-UPLINKS-IPV4-PREFIX-LENGTH",
+            "MLAG_ODD_ID_L3LEAF1A",
+            "MLAG_ODD_ID_L3LEAF1B",
+            "MLAG_IPV6_L3LEAF1A",
+            "MLAG_IPV6_L3LEAF1B",
+            "MLAG_SAME_SUBNET_L3LEAF1A",
+            "MLAG_SAME_SUBNET_L3LEAF1B",
+            "MLAG_SAME_SUBNET_L3LEAF2A",
+            "MLAG_SAME_SUBNET_L3LEAF2B"
+        ],
+        "MLAG_ODD_ID": [
+            "MLAG_ODD_ID_L3LEAF1A",
+            "MLAG_ODD_ID_L3LEAF1B"
+        ],
+        "MLAG_IPV6": [
+            "MLAG_IPV6_L3LEAF1A",
+            "MLAG_IPV6_L3LEAF1B"
+        ],
+        "MLAG_SAME_SUBNET": [
+            "MLAG_SAME_SUBNET_L3LEAF1A",
+            "MLAG_SAME_SUBNET_L3LEAF1B",
+            "MLAG_SAME_SUBNET_L3LEAF2A",
+            "MLAG_SAME_SUBNET_L3LEAF2B"
+        ],
+        "NODE_TYPE_OVERRIDES_TESTS": [
+            "OVERRIDE_VTEP_L3LEAF1A",
+            "OVERRIDE_VTEP_L3LEAF1B"
+        ],
+        "OVERRIDE_VTEP_LEAFS": [
+            "OVERRIDE_VTEP_L3LEAF1A",
+            "OVERRIDE_VTEP_L3LEAF1B"
+        ],
+        "UPLINK_MLAG_STRUCTURED_CONFIG_TESTS": [
+            "UPLINK-MLAG-STRUCTURED-CONFIG-SPINE1",
+            "UPLINK-MLAG-STRUCTURED-CONFIG-L3LEAF1A",
+            "UPLINK-MLAG-STRUCTURED-CONFIG-L3LEAF1B",
+            "UPLINK-MLAG-STRUCTURED-CONFIG-L2LEAF1A",
+            "UPLINK-MLAG-STRUCTURED-CONFIG-L2LEAF1B"
+        ],
+        "UPLINK_MLAG_STRUCTURED_CONFIG_SPINES": [
+            "UPLINK-MLAG-STRUCTURED-CONFIG-SPINE1"
+        ],
+        "UPLINK_MLAG_STRUCTURED_CONFIG_L3LEAFS": [
+            "UPLINK-MLAG-STRUCTURED-CONFIG-L3LEAF1A",
+            "UPLINK-MLAG-STRUCTURED-CONFIG-L3LEAF1B"
+        ],
+        "UPLINK_MLAG_STRUCTURED_CONFIG_L2LEAFS": [
+            "UPLINK-MLAG-STRUCTURED-CONFIG-L2LEAF1A",
+            "UPLINK-MLAG-STRUCTURED-CONFIG-L2LEAF1B"
+        ],
+        "UNDERLAY_MULTICAST_TESTS": [
+            "UNDERLAY-MULTICAST-SPINE1",
+            "UNDERLAY-MULTICAST-SPINE2",
+            "UNDERLAY-MULTICAST-L2LEAF1A",
+            "UNDERLAY-MULTICAST-L3LEAF1A",
+            "UNDERLAY-MULTICAST-L3LEAF1B",
+            "UNDERLAY-MULTICAST-L3LEAF2A",
+            "UNDERLAY-MULTICAST-L3LEAF2B"
+        ],
+        "UNDERLAY_MULTICAST_SPINES": [
+            "UNDERLAY-MULTICAST-SPINE1",
+            "UNDERLAY-MULTICAST-SPINE2"
+        ],
+        "UNDERLAY_MULTICAST_L3LEAFS": [
+            "UNDERLAY-MULTICAST-L3LEAF1A",
+            "UNDERLAY-MULTICAST-L3LEAF1B",
+            "UNDERLAY-MULTICAST-L3LEAF2A",
+            "UNDERLAY-MULTICAST-L3LEAF2B"
+        ],
+        "UNDERLAY_MULTICAST_L3LEAF1": [
+            "UNDERLAY-MULTICAST-L3LEAF1A",
+            "UNDERLAY-MULTICAST-L3LEAF1B"
+        ],
+        "UNDERLAY_MULTICAST_L3LEAF2": [
+            "UNDERLAY-MULTICAST-L3LEAF2A",
+            "UNDERLAY-MULTICAST-L3LEAF2B"
+        ],
+        "UNDERLAY_MULTICAST_L2LEAFS": [
+            "UNDERLAY-MULTICAST-L2LEAF1A"
+        ],
+        "IGMP_QUERIER_TESTS": [
+            "IGMP-QUERIER-L3LEAF1A",
+            "IGMP-QUERIER-L2LEAF1A"
+        ],
+        "IGMP_QUERIER_L3LEAFS": [
+            "IGMP-QUERIER-L3LEAF1A"
+        ],
+        "IGMP_QUERIER_L2LEAFS": [
+            "IGMP-QUERIER-L2LEAF1A"
+        ],
+        "BGP_PEER_GROUPS": [
+            "bgp-peer-groups-1",
+            "bgp-peer-groups-2",
+            "bgp-peer-groups-3"
+        ],
+        "EVPN_MULTICAST_TESTS": [
+            "EVPN-MULTICAST-SPINE1",
+            "EVPN-MULTICAST-L2LEAF1A",
+            "EVPN-MULTICAST-L3LEAF1A",
+            "EVPN-MULTICAST-L3LEAF1B",
+            "EVPN-MULTICAST-L3LEAF2A",
+            "EVPN-MULTICAST-L3LEAF3A",
+            "EVPN-MULTICAST-L3LEAF3B",
+            "EVPN-MULTICAST-DISABLED"
+        ],
+        "EVPN_MULTICAST_TESTS_SPINES": [
+            "EVPN-MULTICAST-SPINE1"
+        ],
+        "EVPN_MULTICAST_TESTS_L3LEAFS": [
+            "EVPN-MULTICAST-L3LEAF1A",
+            "EVPN-MULTICAST-L3LEAF1B",
+            "EVPN-MULTICAST-L3LEAF2A",
+            "EVPN-MULTICAST-L3LEAF3A",
+            "EVPN-MULTICAST-L3LEAF3B",
+            "EVPN-MULTICAST-DISABLED"
+        ],
+        "EVPN_MULTICAST_L3LEAF1": [
+            "EVPN-MULTICAST-L3LEAF1A",
+            "EVPN-MULTICAST-L3LEAF1B"
+        ],
+        "EVPN_MULTICAST_L3LEAF2": [
+            "EVPN-MULTICAST-L3LEAF2A"
+        ],
+        "EVPN_MULTICAST_L3LEAF3": [
+            "EVPN-MULTICAST-L3LEAF3A",
+            "EVPN-MULTICAST-L3LEAF3B"
+        ],
+        "EVPN_MULTICAST_DISABLED": [
+            "EVPN-MULTICAST-DISABLED"
+        ],
+        "EVPN_MULTICAST_TESTS_L2LEAFS": [
+            "EVPN-MULTICAST-L2LEAF1A"
+        ],
+        "BGP_FROM_NETWORK_SERVICES": [
+            "bgp-from-network-services-1",
+            "bgp-from-network-services-2"
+        ],
+        "SVI_PROFILE_TESTS": [
+            "SVI_PROFILE_NODE_1",
+            "SVI_PROFILE_NODE_2"
+        ],
+        "RD_RT_ADMIN_SUBFIELD_TESTS": [
+            "RD-RT-ADMIN-SUBFIELD-L3LEAF1",
+            "RD-RT-ADMIN-SUBFIELD-L3LEAF2",
+            "RD-RT-ADMIN-SUBFIELD-L3LEAF3",
+            "RD-RT-ADMIN-SUBFIELD-L3LEAF4",
+            "RD-RT-ADMIN-SUBFIELD-L3LEAF5",
+            "RD-RT-ADMIN-SUBFIELD-L3LEAF6",
+            "RD-RT-ADMIN-SUBFIELD-L3LEAF7"
+        ],
+        "CUSTOM_TEMPLATES_TESTS": [
+            "CUSTOM-TEMPLATES-SPINE1",
+            "CUSTOM-TEMPLATES-L3LEAF1A",
+            "CUSTOM-TEMPLATES-L3LEAF1B",
+            "CUSTOM-TEMPLATES-L2LEAF1A",
+            "CUSTOM-TEMPLATES-L2LEAF1B"
+        ],
+        "CUSTOM_TEMPLATES_SPINES": [
+            "CUSTOM-TEMPLATES-SPINE1"
+        ],
+        "CUSTOM_TEMPLATES_L3LEAFS": [
+            "CUSTOM-TEMPLATES-L3LEAF1A",
+            "CUSTOM-TEMPLATES-L3LEAF1B"
+        ],
+        "CUSTOM_TEMPLATES_L2LEAFS": [
+            "CUSTOM-TEMPLATES-L2LEAF1A",
+            "CUSTOM-TEMPLATES-L2LEAF1B"
+        ],
+        "CUSTOM_PYTHON_MODULES_TESTS": [
+            "CUSTOM-PYTHON_MODULES-SPINE1",
+            "CUSTOM-PYTHON_MODULES-L3LEAF1A",
+            "CUSTOM-PYTHON_MODULES-L3LEAF1B",
+            "CUSTOM-PYTHON_MODULES-L3LEAF2"
+        ],
+        "CUSTOM_PYTHON_MODULES_SPINES": [
+            "CUSTOM-PYTHON_MODULES-SPINE1"
+        ],
+        "CUSTOM_PYTHON_MODULES_L3LEAFS": [
+            "CUSTOM-PYTHON_MODULES-L3LEAF1A",
+            "CUSTOM-PYTHON_MODULES-L3LEAF1B",
+            "CUSTOM-PYTHON_MODULES-L3LEAF2"
+        ],
+        "AUTO_BGP_ASN": [
+            "AUTO_BGP_ASN_LEAF1A",
+            "AUTO_BGP_ASN_LEAF1B",
+            "AUTO_BGP_ASN_LEAF2",
+            "AUTO_BGP_ASN_LEAF3A",
+            "AUTO_BGP_ASN_LEAF3B",
+            "AUTO_BGP_ASN_LEAF4A",
+            "AUTO_BGP_ASN_LEAF4B",
+            "AUTO_BGP_ASN_LEAF5A",
+            "AUTO_BGP_UNGROUPED_LEAF6",
+            "AUTO_BGP_ASN_LEAF7A",
+            "AUTO_BGP_ASN_LEAF7B",
+            "AUTO_BGP_ASN_LEAF8A",
+            "AUTO_BGP_ASN_LEAF8B"
+        ],
+        "AUTO_NODE_TYPE": [
+            "AUTO_NODE_TYPE_SPINE01",
+            "AUTO_NODE_TYPE_SPINE02",
+            "AUTO_NODE_TYPE_LEAF01",
+            "AUTO_NODE_TYPE_UNGROUPED_LEAF02"
+        ],
+        "OVERLAY_ROUTING_PROTOCOL_HER_TESTS": [
+            "OVERLAY_ROUTING_PROTOCOL_HER_L3LEAF1",
+            "OVERLAY_ROUTING_PROTOCOL_HER_L3LEAF2",
+            "OVERLAY_ROUTING_PROTOCOL_HER_L3LEAF3A",
+            "OVERLAY_ROUTING_PROTOCOL_HER_L3LEAF3B"
+        ],
+        "OVERLAY_ROUTING_PROTOCOL_CVX_TESTS": [
+            "OVERLAY_ROUTING_PROTOCOL_CVX_L3LEAF1",
+            "OVERLAY_ROUTING_PROTOCOL_CVX_L3LEAF2",
+            "OVERLAY_ROUTING_PROTOCOL_CVX_SERVER1",
+            "OVERLAY_ROUTING_PROTOCOL_CVX_SERVER2"
+        ],
+        "UNDERLAY_FILTER_PEER_AS_TESTS": [
+            "UNDERLAY_FILTER_PEER_AS_L3LEAF1",
+            "UNDERLAY_FILTER_PEER_AS_SPINE1",
+            "UNDERLAY_FILTER_PEER_AS_SPINE2"
+        ],
+        "PTP_TESTS": [
+            "ptp-tests-spine1",
+            "ptp-tests-spine2",
+            "ptp-tests-spine3",
+            "ptp-tests-leaf1",
+            "ptp-tests-leaf2",
+            "ptp-tests-l2leaf1-ptp-disabled",
+            "ptp-tests-l2leaf2-ptp-enabled",
+            "ptp-tests-l2leaf2-ptp-enabled-uplink-disabled"
+        ],
+        "PTP_TESTS_SPINES": [
+            "ptp-tests-spine1",
+            "ptp-tests-spine2",
+            "ptp-tests-spine3"
+        ],
+        "PTP_TESTS_LEAFS": [
+            "ptp-tests-leaf1",
+            "ptp-tests-leaf2"
+        ],
+        "PTP_TESTS_L2LEAFS": [
+            "ptp-tests-l2leaf1-ptp-disabled",
+            "ptp-tests-l2leaf2-ptp-enabled",
+            "ptp-tests-l2leaf2-ptp-enabled-uplink-disabled"
+        ],
+        "SFLOW_TESTS": [
+            "sflow-tests-spine1",
+            "sflow-tests-spine2",
+            "sflow-tests-leaf1",
+            "sflow-tests-leaf2",
+            "sflow-tests-l2-leaf1",
+            "sflow-tests-l2-leaf2",
+            "sflow-tests-leaf3",
+            "sflow-tests-leaf4"
+        ],
+        "SFLOW_TESTS_SPINES": [
+            "sflow-tests-spine1",
+            "sflow-tests-spine2"
+        ],
+        "SFLOW_TESTS_LEAFS": [
+            "sflow-tests-leaf1",
+            "sflow-tests-leaf2",
+            "sflow-tests-leaf3",
+            "sflow-tests-leaf4"
+        ],
+        "SFLOW_TESTS_LEAF_MLAG": [
+            "sflow-tests-leaf3",
+            "sflow-tests-leaf4"
+        ],
+        "SFLOW_TESTS_L2_LEAFS": [
+            "sflow-tests-l2-leaf1",
+            "sflow-tests-l2-leaf2"
+        ],
+        "FLOW_TRACKING_TESTS": [
+            "flow-tracking-tests-leaf1",
+            "flow-tracking-tests-l2-leaf1",
+            "flow-tracking-tests-l2-leaf2",
+            "flow-tracking-tests-spine1",
+            "flow-tracking-tests-spine2",
+            "flow-tracking-tests-leaf2",
+            "flow-tracking-tests-leaf4",
+            "flow-tracking-tests-leaf3"
+        ],
+        "FLOW_TRACKING_TESTS_SPINES": [
+            "flow-tracking-tests-spine1",
+            "flow-tracking-tests-spine2"
+        ],
+        "FLOW_TRACKING_TESTS_SPINES_1": [
+            "flow-tracking-tests-spine1"
+        ],
+        "FLOW_TRACKING_TESTS_SPINES_2": [
+            "flow-tracking-tests-spine2"
+        ],
+        "FLOW_TRACKING_TESTS_LEAFS": [
+            "flow-tracking-tests-leaf1",
+            "flow-tracking-tests-leaf2",
+            "flow-tracking-tests-leaf4",
+            "flow-tracking-tests-leaf3"
+        ],
+        "FLOW_TRACKING_TESTS_LEAFS_2": [
+            "flow-tracking-tests-leaf2"
+        ],
+        "FLOW_TRACKING_TESTS_LEAF_MLAG": [
+            "flow-tracking-tests-leaf4",
+            "flow-tracking-tests-leaf3"
+        ],
+        "FLOW_TRACKING_TESTS_LEAFS_3": [
+            "flow-tracking-tests-leaf3"
+        ],
+        "FLOW_TRACKING_TESTS_L2_LEAFS": [
+            "flow-tracking-tests-l2-leaf1",
+            "flow-tracking-tests-l2-leaf2"
+        ],
+        "SNMP_SETTINGS_TESTS": [
+            "SNMP_SYSTEM_MAC_ENGINEID_1",
+            "SNMP_SYSTEM_MAC_ENGINEID_2",
+            "SNMP_AUTOGEN_ENGINEID",
+            "snmp-settings-1",
+            "snmp-settings-2"
+        ],
+        "UNDERLAY_PEER_FILTER_TESTS": [
+            "underlay_filter_peer_as_evpn_1",
+            "underlay_filter_peer_as_evpn_2",
+            "underlay_filter_peer_as_evpn_3"
+        ],
+        "L3_EDGE_TESTS": [
+            "l3_edge_bgp",
+            "l3_edge_ospf",
+            "l3_edge_isis",
+            "l3_edge_multicast"
+        ],
+        "UPLINK_NATIVE_VLAN_TESTS": [
+            "uplink-native-vlan-grandparent",
+            "uplink-native-vlan-parent",
+            "uplink-native-vlan-child"
+        ],
+        "INBAND_MGMT_TESTS": [
+            "inband-mgmt-parent",
+            "inband-mgmt-parent-vrf",
+            "inband-mgmt-subnet",
+            "inband-mgmt-subnet-vrf",
+            "inband-mgmt-ip",
+            "inband-mgmt-parent-dualstack1",
+            "inband-mgmt-parent-dualstack2",
+            "inband-mgmt-dualstack-subnets",
+            "inband-mgmt-dualstack-ips",
+            "inband-mgmt-parent-ipv6-1",
+            "inband-mgmt-parent-ipv6-2",
+            "inband-mgmt-ipv6-only",
+            "inband-mgmt-ipv6-only-vrf",
+            "inband-mgmt-mlag-a",
+            "inband-mgmt-mlag-b"
+        ],
+        "MGMT_GATEWAY_TESTS": [
+            "TEST-MGMT-GATEWAY-IN-NODE-GROUP"
+        ],
+        "WAN_TESTS": [
+            "legacy-autovpn-rr1",
+            "legacy-autovpn-rr2",
+            "legacy-autovpn-edge",
+            "legacy-autovpn-edge-no-default-policy",
+            "cv-pathfinder-edge-no-default-policy",
+            "cv-pathfinder-edge-custom-default-policy",
+            "cv-pathfinder-edge2A",
+            "cv-pathfinder-edge2B",
+            "site-ha-enabled-leaf2A",
+            "site-ha-enabled-leaf2B",
+            "cv-pathfinder-transit1A",
+            "cv-pathfinder-transit1B",
+            "site-ha-enabled-leaf1",
+            "cv-pathfinder-edge3A",
+            "cv-pathfinder-edge3B",
+            "cv-pathfinder-edge4A",
+            "cv-pathfinder-edge4B",
+            "cv-pathfinder-edge",
+            "cv-pathfinder-edge1",
+            "site-ha-disabled-leaf",
+            "cv-pathfinder-pathfinder",
+            "cv-pathfinder-pathfinder1",
+            "cv-pathfinder-pathfinder2",
+            "cv-pathfinder-custom-control-plane-policy-edge-1",
+            "cv-pathfinder-custom-control-plane-policy-pathfinder-1",
+            "cv-pathfinder-custom-control-plane-policy-edge-2",
+            "cv-pathfinder-custom-control-plane-policy-edge-3"
+        ],
+        "LEGACY_AUTOVPN_TESTS": [
+            "legacy-autovpn-rr1",
+            "legacy-autovpn-rr2",
+            "legacy-autovpn-edge"
+        ],
+        "CV_PATHFINDER_TESTS": [
+            "cv-pathfinder-edge2A",
+            "cv-pathfinder-edge2B",
+            "site-ha-enabled-leaf2A",
+            "site-ha-enabled-leaf2B",
+            "cv-pathfinder-transit1A",
+            "cv-pathfinder-transit1B",
+            "site-ha-enabled-leaf1",
+            "cv-pathfinder-edge3A",
+            "cv-pathfinder-edge3B",
+            "cv-pathfinder-edge4A",
+            "cv-pathfinder-edge4B",
+            "cv-pathfinder-edge",
+            "cv-pathfinder-edge1",
+            "site-ha-disabled-leaf",
+            "cv-pathfinder-pathfinder",
+            "cv-pathfinder-pathfinder1",
+            "cv-pathfinder-pathfinder2",
+            "cv-pathfinder-custom-control-plane-policy-edge-1",
+            "cv-pathfinder-custom-control-plane-policy-pathfinder-1",
+            "cv-pathfinder-custom-control-plane-policy-edge-2",
+            "cv-pathfinder-custom-control-plane-policy-edge-3"
+        ],
+        "SITE_HA_ENABLED": [
+            "cv-pathfinder-edge2A",
+            "cv-pathfinder-edge2B",
+            "site-ha-enabled-leaf2A",
+            "site-ha-enabled-leaf2B"
+        ],
+        "TRANSIT_SITE_HA_ENABLED": [
+            "cv-pathfinder-transit1A",
+            "cv-pathfinder-transit1B",
+            "site-ha-enabled-leaf1"
+        ],
+        "SITE_DIRECT_HA": [
+            "cv-pathfinder-edge3A",
+            "cv-pathfinder-edge3B"
+        ],
+        "SITE_DIRECT_HA_PORT_CHANNEL": [
+            "cv-pathfinder-edge4A",
+            "cv-pathfinder-edge4B"
+        ],
+        "SITE_HA_DISABLED": [
+            "cv-pathfinder-edge",
+            "cv-pathfinder-edge1",
+            "site-ha-disabled-leaf"
+        ],
+        "CV_PATHFINDERS": [
+            "cv-pathfinder-pathfinder",
+            "cv-pathfinder-pathfinder1",
+            "cv-pathfinder-pathfinder2",
+            "cv-pathfinder-custom-control-plane-policy-edge-1",
+            "cv-pathfinder-custom-control-plane-policy-pathfinder-1",
+            "cv-pathfinder-custom-control-plane-policy-edge-2",
+            "cv-pathfinder-custom-control-plane-policy-edge-3"
+        ],
+        "CV_PATHFINDER_MULTI_RR_TESTS": [
+            "cv-pathfinder-pathfinder1",
+            "cv-pathfinder-pathfinder2"
+        ],
+        "CV_PATHFINDER_CUSTOM_CONTROL_PLANE_POLICY_TESTS": [
+            "cv-pathfinder-custom-control-plane-policy-edge-1",
+            "cv-pathfinder-custom-control-plane-policy-pathfinder-1",
+            "cv-pathfinder-custom-control-plane-policy-edge-2",
+            "cv-pathfinder-custom-control-plane-policy-edge-3"
+        ],
+        "WAN_UNIT_TESTS": [
+            "legacy-autovpn-edge-no-default-policy",
+            "cv-pathfinder-edge-no-default-policy",
+            "cv-pathfinder-edge-custom-default-policy"
+        ],
+        "UPLINK_P2P_VRFS_TESTS": [
+            "UPLINK_P2P_VRFS_TESTS_SPINE1",
+            "UPLINK_P2P_VRFS_TESTS_SPINE2",
+            "UPLINK_P2P_VRFS_TESTS_LEAF1",
+            "UPLINK_P2P_VRFS_TESTS_L2LEAF1"
+        ],
+        "UPLINK_LAN_TESTS": [
+            "uplink_lan_l2leaf",
+            "uplink_lan_wan_router1",
+            "uplink_lan_wan_router2"
+        ],
+        "DOWNLINK_POOLS_TESTS": [
+            "downlink-pools-spine1",
+            "downlink-pools-spine2",
+            "downlink-pools-l3leaf1",
+            "downlink-pools-l3leaf2",
+            "downlink-pools-l3leaf3",
+            "downlink-pools-l3leaf4"
+        ],
+        "SINGLE_LINK_TO_MLAG_PAIR": [
+            "SL-LEAF0A",
+            "SL-LEAF0B",
+            "SL-LEAF1A",
+            "SL-LEAF1B",
+            "SL-MLEAF1",
+            "SL-LEAF2A",
+            "SL-LEAF2B"
+        ],
+        "AVD_LAB": [
+            "MH-L2LEAF1A",
+            "DC1-SPINE1",
+            "DC1-SPINE2",
+            "DC1-SPINE3",
+            "DC1-SPINE4",
+            "MH-LEAF1A",
+            "MH-LEAF1B",
+            "MH-LEAF2A",
+            "DC1-L2LEAF1A",
+            "DC1-L2LEAF1B",
+            "DC1-L2LEAF2A",
+            "DC1-L2LEAF2B",
+            "DC1-L2LEAF3A",
+            "DC1-L2LEAF4A",
+            "DC1.L2LEAF5A",
+            "DC1.L2LEAF5B",
+            "DC1.L2LEAF6A",
+            "DC1.L2LEAF6B",
+            "mgmt_interface_default",
+            "mgmt_interface_fabric",
+            "mgmt_interface_host",
+            "mgmt_interface_platform",
+            "DC1-LEAF1A",
+            "DC1-LEAF2A",
+            "DC1-LEAF2B",
+            "DC1-SVC3A",
+            "DC1-SVC3B",
+            "DC1-BL1A",
+            "DC1-BL1B",
+            "DC1-BL2A",
+            "DC1-BL2B",
+            "DC1-CL1A",
+            "DC1-CL1B",
+            "evpn_services_l2_only_true",
+            "evpn_services_l2_only_false",
+            "DC1_UNDEPLOYED_LEAF1A",
+            "DC1_UNDEPLOYED_LEAF1B",
+            "MLAG-OSPF-L3LEAF1A",
+            "MLAG-OSPF-L3LEAF1B"
+        ],
+        "DC1_FABRIC": [
+            "DC1-SPINE1",
+            "DC1-SPINE2",
+            "DC1-SPINE3",
+            "DC1-SPINE4",
+            "MH-L2LEAF1A",
+            "MH-LEAF1A",
+            "MH-LEAF1B",
+            "MH-LEAF2A",
+            "DC1-L2LEAF1A",
+            "DC1-L2LEAF1B",
+            "DC1-L2LEAF2A",
+            "DC1-L2LEAF2B",
+            "DC1-L2LEAF3A",
+            "DC1-L2LEAF4A",
+            "DC1.L2LEAF5A",
+            "DC1.L2LEAF5B",
+            "DC1.L2LEAF6A",
+            "DC1.L2LEAF6B",
+            "mgmt_interface_default",
+            "mgmt_interface_fabric",
+            "mgmt_interface_host",
+            "mgmt_interface_platform",
+            "DC1-LEAF1A",
+            "DC1-LEAF2A",
+            "DC1-LEAF2B",
+            "DC1-SVC3A",
+            "DC1-SVC3B",
+            "DC1-BL1A",
+            "DC1-BL1B",
+            "DC1-BL2A",
+            "DC1-BL2B",
+            "DC1-CL1A",
+            "DC1-CL1B",
+            "evpn_services_l2_only_true",
+            "evpn_services_l2_only_false",
+            "DC1_UNDEPLOYED_LEAF1A",
+            "DC1_UNDEPLOYED_LEAF1B",
+            "MLAG-OSPF-L3LEAF1A",
+            "MLAG-OSPF-L3LEAF1B"
+        ],
+        "DC1_SPINES": [
+            "DC1-SPINE1",
+            "DC1-SPINE2",
+            "DC1-SPINE3",
+            "DC1-SPINE4"
+        ],
+        "DC1_LEAFS": [
+            "DC1-LEAF1A",
+            "DC1-LEAF2A",
+            "DC1-LEAF2B",
+            "DC1-SVC3A",
+            "DC1-SVC3B",
+            "DC1-BL1A",
+            "DC1-BL1B",
+            "DC1-BL2A",
+            "DC1-BL2B",
+            "DC1-CL1A",
+            "DC1-CL1B",
+            "evpn_services_l2_only_true",
+            "evpn_services_l2_only_false",
+            "DC1_UNDEPLOYED_LEAF1A",
+            "DC1_UNDEPLOYED_LEAF1B"
+        ],
+        "DC1_LEAF1": [
+            "DC1-LEAF1A"
+        ],
+        "DC1_LEAF2": [
+            "DC1-LEAF2A",
+            "DC1-LEAF2B"
+        ],
+        "DC1_SVC3": [
+            "DC1-SVC3A",
+            "DC1-SVC3B"
+        ],
+        "DC1_BL1": [
+            "DC1-BL1A",
+            "DC1-BL1B"
+        ],
+        "DC1_BL2": [
+            "DC1-BL2A",
+            "DC1-BL2B"
+        ],
+        "DC1_CL1": [
+            "DC1-CL1A",
+            "DC1-CL1B"
+        ],
+        "UNIT_TESTS": [
+            "evpn_services_l2_only_true",
+            "evpn_services_l2_only_false"
+        ],
+        "DC1_UNDEPLOYED_LEAF1": [
+            "DC1_UNDEPLOYED_LEAF1A",
+            "DC1_UNDEPLOYED_LEAF1B"
+        ],
+        "DC1_L2LEAFS": [
+            "DC1-L2LEAF1A",
+            "DC1-L2LEAF1B",
+            "DC1-L2LEAF2A",
+            "DC1-L2LEAF2B",
+            "DC1-L2LEAF3A",
+            "DC1-L2LEAF4A",
+            "DC1.L2LEAF5A",
+            "DC1.L2LEAF5B",
+            "DC1.L2LEAF6A",
+            "DC1.L2LEAF6B",
+            "mgmt_interface_default",
+            "mgmt_interface_fabric",
+            "mgmt_interface_host",
+            "mgmt_interface_platform"
+        ],
+        "DC1_L2LEAF1": [
+            "DC1-L2LEAF1A",
+            "DC1-L2LEAF1B"
+        ],
+        "DC1_L2LEAF2": [
+            "DC1-L2LEAF2A",
+            "DC1-L2LEAF2B"
+        ],
+        "DC1_L2LEAF3": [
+            "DC1-L2LEAF3A"
+        ],
+        "DC1_L2LEAF4": [
+            "DC1-L2LEAF4A"
+        ],
+        "DC1_L2LEAF5": [
+            "DC1.L2LEAF5A",
+            "DC1.L2LEAF5B"
+        ],
+        "DC1_L2LEAF6": [
+            "DC1.L2LEAF6A",
+            "DC1.L2LEAF6B"
+        ],
+        "TESTS": [
+            "mgmt_interface_default",
+            "mgmt_interface_fabric",
+            "mgmt_interface_host",
+            "mgmt_interface_platform"
+        ],
+        "MH_LEAFS_TESTS": [
+            "MH-LEAF1A",
+            "MH-LEAF1B",
+            "MH-LEAF2A"
+        ],
+        "MH_L3LEAF1": [
+            "MH-LEAF1A",
+            "MH-LEAF1B"
+        ],
+        "MH_L3LEAF2": [
+            "MH-LEAF2A"
+        ],
+        "MH_L2LEAFS_TESTS": [
+            "MH-L2LEAF1A"
+        ],
+        "MLAG_OSPF_TESTS": [
+            "MLAG-OSPF-L3LEAF1A",
+            "MLAG-OSPF-L3LEAF1B"
+        ],
+        "MLAG_OSPF_L3LEAF1": [
+            "MLAG-OSPF-L3LEAF1A",
+            "MLAG-OSPF-L3LEAF1B"
+        ],
+        "DC1_TENANTS_NETWORKS": [
+            "DC1-L2LEAF1A",
+            "DC1-L2LEAF1B",
+            "DC1-L2LEAF2A",
+            "DC1-L2LEAF2B",
+            "DC1-L2LEAF3A",
+            "DC1-L2LEAF4A",
+            "DC1.L2LEAF5A",
+            "DC1.L2LEAF5B",
+            "DC1.L2LEAF6A",
+            "DC1.L2LEAF6B",
+            "mgmt_interface_default",
+            "mgmt_interface_fabric",
+            "mgmt_interface_host",
+            "mgmt_interface_platform",
+            "DC1-LEAF1A",
+            "DC1-LEAF2A",
+            "DC1-LEAF2B",
+            "DC1-SVC3A",
+            "DC1-SVC3B",
+            "DC1-BL1A",
+            "DC1-BL1B",
+            "DC1-BL2A",
+            "DC1-BL2B",
+            "DC1-CL1A",
+            "DC1-CL1B",
+            "evpn_services_l2_only_true",
+            "evpn_services_l2_only_false",
+            "DC1_UNDEPLOYED_LEAF1A",
+            "DC1_UNDEPLOYED_LEAF1B"
+        ],
+        "DC1_SERVERS": [
+            "DC1-L2LEAF1A",
+            "DC1-L2LEAF1B",
+            "DC1-L2LEAF2A",
+            "DC1-L2LEAF2B",
+            "DC1-L2LEAF3A",
+            "DC1-L2LEAF4A",
+            "DC1.L2LEAF5A",
+            "DC1.L2LEAF5B",
+            "DC1.L2LEAF6A",
+            "DC1.L2LEAF6B",
+            "mgmt_interface_default",
+            "mgmt_interface_fabric",
+            "mgmt_interface_host",
+            "mgmt_interface_platform",
+            "DC1-LEAF1A",
+            "DC1-LEAF2A",
+            "DC1-LEAF2B",
+            "DC1-SVC3A",
+            "DC1-SVC3B",
+            "DC1-BL1A",
+            "DC1-BL1B",
+            "DC1-BL2A",
+            "DC1-BL2B",
+            "DC1-CL1A",
+            "DC1-CL1B",
+            "evpn_services_l2_only_true",
+            "evpn_services_l2_only_false",
+            "DC1_UNDEPLOYED_LEAF1A",
+            "DC1_UNDEPLOYED_LEAF1B"
+        ],
+        "MH_TENANT_NETWORKS": [
+            "MH-L2LEAF1A",
+            "MH-LEAF1A",
+            "MH-LEAF1B",
+            "MH-LEAF2A"
+        ],
+        "MH_SERVERS": [
+            "MH-L2LEAF1A",
+            "MH-LEAF1A",
+            "MH-LEAF1B",
+            "MH-LEAF2A"
+        ],
+        "DUPLICATE_SVIS_L2VLANS": [
+            "DUP-LEAF1",
+            "DUP-LEAF2"
+        ],
+        "PLATFORM_SETTINGS_TESTS": [
+            "7010TX-LEAF1",
+            "7010TX-LEAF2"
+        ]
+    },
+    "ansible_version": {
+        "string": "2.17.0",
+        "full": "2.17.0",
+        "major": 2,
+        "minor": 17,
+        "revision": 0
+    },
+    "ansible_check_mode": false,
+    "ansible_diff_mode": false,
+    "ansible_forks": 10,
+    "ansible_inventory_sources": [
+        "/home/holbech/avd/ansible_collections/arista/avd/molecule/eos_designs_unit_tests/inventory/hosts.yml"
+    ],
+    "ansible_skip_tags": [],
+    "ansible_run_tags": [
+        "all"
+    ],
+    "ansible_verbosity": 0
+}

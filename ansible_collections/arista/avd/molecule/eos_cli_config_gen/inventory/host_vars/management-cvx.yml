@@ -1,9 +1,0 @@
-### MANAGEMENT CVX ###
-management_cvx:
-  shutdown: false
-  server_hosts:
-  - 10.90.224.188
-  - 10.90.224.189
-  - leaf1.atd.lab
-  source_interface: Loopback0
-  vrf: MGMT

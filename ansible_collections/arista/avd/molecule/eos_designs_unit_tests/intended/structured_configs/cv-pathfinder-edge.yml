@@ -664,13 +664,13 @@ stun:
 application_traffic_recognition:
   application_profiles:
   - name: VIDEO
-    categories:
-    - name: VIDEO1
     applications:
     - name: CUSTOM-APPLICATION-1
     - name: skype
     application_transports:
     - rtp
+    categories:
+    - name: VIDEO1
   - name: VOICE
     applications:
     - name: CUSTOM-VOICE-APPLICATION
@@ -687,10 +687,10 @@ application_traffic_recognition:
   applications:
     ipv4_applications:
     - name: CUSTOM-APPLICATION-1
-      protocols:
-      - tcp
       src_prefix_set_name: CUSTOM-SRC-PREFIX-1
       dest_prefix_set_name: CUSTOM-DEST-PREFIX-1
+      protocols:
+      - tcp
     - name: CUSTOM-APPLICATION-2
       protocols:
       - tcp
@@ -927,33 +927,33 @@ metadata:
       - name: Tunnel100
         preference: Preferred
         endpoint:
-          city: Fremont, CA
+          ip_address: 10.37.121.1
           datacenter: FMT1
+          city: Fremont, CA
           country: United States
           region: us-west1
           latitude: '37'
           longitude: '-121'
-          ip_address: 10.37.121.1
       - name: Tunnel101
         preference: Alternate
         endpoint:
-          city: Washington, DC
+          ip_address: 10.39.77.1
           datacenter: WAS1
+          city: Washington, DC
           country: United States
           region: us-east1
           latitude: '39'
           longitude: '-77'
-          ip_address: 10.39.77.1
       - name: Tunnel102
         preference: Alternate
         endpoint:
-          city: Frankfurt
+          ip_address: 10.50.9.1
           datacenter: FRA4
+          city: Frankfurt
           country: Germany
           region: eu-west1
           latitude: '50'
           longitude: '9'
-          ip_address: 10.50.9.1
     role: edge
     ssl_profile: profileA
     vtep_ip: 192.168.142.1

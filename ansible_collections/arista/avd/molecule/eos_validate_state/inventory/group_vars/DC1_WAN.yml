@@ -50,7 +50,7 @@ wan_router: # dynamic_key: node_type
               static_routes:
                 - prefix: 172.18.0.0/16
             - name: Ethernet4
-              ip_address: 100.64.4.2/24
+              ip_address: dhcp
               wan_carrier: isp-1
               wan_circuit_id: DC1-INET-4
               peer_ip: 100.64.4.1

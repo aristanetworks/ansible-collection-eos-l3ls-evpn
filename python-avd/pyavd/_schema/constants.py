@@ -19,3 +19,10 @@ PICKLED_SCHEMAS = {
     "eos_cli_config_gen": EOS_CLI_CONFIG_GEN_PICKLED_SCHEMA_PATH,
     "eos_designs": EOS_DESIGNS_PICKLED_SCHEMA_PATH,
 }
+
+ACCEPTED_COERCION_MAP = {
+    int: (str, bool),
+    str: (int, bool, float),
+    bool: (str, int),
+}
+"""Map of target_types and allowed source types for automatic coercion."""

@@ -6,6 +6,7 @@ from __future__ import annotations
 from collections import ChainMap
 from typing import TYPE_CHECKING
 
+from pyavd._eos_designs.schema import EosDesigns
 from pyavd._eos_designs.shared_utils import SharedUtils
 from pyavd._utils import get, merge
 
@@ -88,11 +89,14 @@ def get_structured_config(
     structured_config = {}
     module_vars = ChainMap(structured_config, vars)
 
+    # Load input vars into the EosDesigns data class.
+    inputs = EosDesigns._from_dict(vars)
+
     # Initialize SharedUtils class to be passed to each python_module below.
-    shared_utils = SharedUtils(hostvars=module_vars, templar=templar, schema=input_schema_tools.avdschema)
+    shared_utils = SharedUtils(hostvars=module_vars, inputs=inputs, templar=templar, schema=input_schema_tools.avdschema)
 
     for cls in AVD_STRUCTURED_CONFIG_CLASSES:
-        eos_designs_module: AvdFacts = cls(module_vars, shared_utils)
+        eos_designs_module: AvdFacts = cls(hostvars=module_vars, inputs=inputs, shared_utils=shared_utils)
         results = eos_designs_module.render()
 
         # Modules can return a dict or a list of dicts

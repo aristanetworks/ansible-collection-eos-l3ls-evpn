@@ -38,32 +38,30 @@ class UtilsMixin:
 
         evpn_gateway_remote_peers = {}
 
-        evpn_gateway_remote_peers_list = get(self.shared_utils.switch_data_combined, "evpn_gateway.remote_peers", default=[])
+        for remote_peer in self.shared_utils.node_config.evpn_gateway.remote_peers._natural_sorted():
+            remote_peer_name = remote_peer.hostname
 
-        for gw_remote_peer_dict in natural_sort(evpn_gateway_remote_peers_list, sort_key="hostname"):
             # These remote gateways can be outside of the inventory or in the inventory
-            gw_remote_peer = gw_remote_peer_dict["hostname"]
-
             gw_info = strip_empties_from_dict(
                 {
-                    "bgp_as": str(_as) if (_as := gw_remote_peer_dict.get("bgp_as")) else None,
-                    "ip_address": gw_remote_peer_dict.get("ip_address"),
+                    "bgp_as": remote_peer.bgp_as,
+                    "ip_address": remote_peer.ip_address,
                     # Not adding the "overlay_peering_interface" since we do not know it for this device. Only used for description.
                 }
             )
 
-            peer_facts = self.shared_utils.get_peer_facts(gw_remote_peer, required=False)
+            peer_facts = self.shared_utils.get_peer_facts(remote_peer_name, required=False)
             if peer_facts is None:
                 # No matching host found in the inventory for this remote gateway
-                evpn_gateway_remote_peers[gw_remote_peer] = gw_info
+                evpn_gateway_remote_peers[remote_peer_name] = gw_info
             else:
                 # Found a matching name for this remote gateway in the inventory
-                self._append_peer(evpn_gateway_remote_peers, gw_remote_peer, peer_facts)
+                self._append_peer(evpn_gateway_remote_peers, remote_peer_name, peer_facts)
                 # Apply potential override if present in the input variables
-                evpn_gateway_remote_peers[gw_remote_peer].update(strip_empties_from_dict(gw_info))
+                evpn_gateway_remote_peers[remote_peer_name].update(strip_empties_from_dict(gw_info))
 
-            if any(key not in evpn_gateway_remote_peers[gw_remote_peer] for key in ["bgp_as", "ip_address"]):
-                msg = f"The EVPN Gateway remote peer '{gw_remote_peer}' is missing either a `bpg_as` or an `ip_address`."
+            if any(key not in evpn_gateway_remote_peers[remote_peer_name] for key in ["bgp_as", "ip_address"]):
+                msg = f"The EVPN Gateway remote peer '{remote_peer_name}' is missing either a `bpg_as` or an `ip_address`."
                 raise AristaAvdError(msg)
 
         return evpn_gateway_remote_peers
@@ -121,31 +119,20 @@ class UtilsMixin:
         return peer_facts.get("mpls_overlay_role") == "server" or (peer_facts.get("evpn_role") == "server" and get(peer_facts, "overlay.evpn_mpls") is True)
 
     @cached_property
-    def _ipvpn_gateway_local_as(self: AvdStructuredConfigOverlay) -> str | None:
-        return str(_as) if (_as := get(self.shared_utils.switch_data_combined, "ipvpn_gateway.local_as")) is not None else None
-
-    @cached_property
     def _ipvpn_gateway_remote_peers(self: AvdStructuredConfigOverlay) -> dict:
         if self.shared_utils.overlay_ipvpn_gateway is not True:
             return {}
 
         ipvpn_gateway_remote_peers = {}
 
-        for ipvpn_gw_peer_dict in natural_sort(
-            get(
-                self.shared_utils.switch_data_combined,
-                "ipvpn_gateway.remote_peers",
-                default=[],
-            ),
-            "hostname",
-        ):
+        for remote_peer in self.shared_utils.node_config.ipvpn_gateway.remote_peers._natural_sorted():
             # These remote gw are outside of the inventory
 
-            bgp_as = ipvpn_gw_peer_dict["bgp_as"]
+            bgp_as = remote_peer.bgp_as
 
-            ipvpn_gateway_remote_peers[ipvpn_gw_peer_dict["hostname"]] = {
+            ipvpn_gateway_remote_peers[remote_peer.hostname] = {
                 "bgp_as": str(bgp_as) if bgp_as is not None else None,
-                "ip_address": ipvpn_gw_peer_dict["ip_address"],
+                "ip_address": remote_peer.ip_address,
                 # Not adding the "overlay_peering_interface" since we do not know it for this device. Only used for description.
             }
 
@@ -170,14 +157,10 @@ class UtilsMixin:
 
     @cached_property
     def _mpls_mesh_pe(self: AvdStructuredConfigOverlay) -> dict:
-        if self.shared_utils.overlay_mpls is not True:
-            return {}
-
-        if get(self._hostvars, "bgp_mesh_pes") is not True:
+        if not self.shared_utils.overlay_mpls or not self.inputs.bgp_mesh_pes:
             return {}
 
         mpls_mesh_pe = {}
-
         for fabric_switch in self.shared_utils.all_fabric_devices:
             if self._mpls_route_reflectors is not None and fabric_switch in self._mpls_route_reflectors:
                 continue
@@ -284,18 +267,18 @@ class UtilsMixin:
     def _stun_server_profiles(self: AvdStructuredConfigOverlay) -> dict:
         """Return a dictionary of _stun_server_profiles with ip_address per local path_group."""
         stun_server_profiles = {}
-        for wan_route_server, data in self.shared_utils.filtered_wan_route_servers.items():
-            for path_group in data.get("wan_path_groups", []):
-                stun_server_profiles.setdefault(path_group["name"], []).extend(
+        for wan_route_server in self.shared_utils.filtered_wan_route_servers:
+            for path_group in wan_route_server.path_groups:
+                stun_server_profiles.setdefault(path_group.name, []).extend(
                     {
-                        "name": self._stun_server_profile_name(wan_route_server, path_group["name"], get(interface_dict, "name", required=True)),
-                        "ip_address": get(interface_dict, "public_ip", required=True),
+                        "name": self._stun_server_profile_name(wan_route_server.hostname, path_group.name, interface.name),
+                        "ip_address": interface.public_ip,
                         "ssl_profile": self.shared_utils.wan_stun_dtls_profile_name,
                     }
-                    for interface_dict in get(path_group, "interfaces", required=True)
+                    for interface in path_group.interfaces
                 )
         return stun_server_profiles
 
-    def _wan_ha_peer_vtep_ip(self) -> str:
+    def _wan_ha_peer_vtep_ip(self: AvdStructuredConfigOverlay) -> str:
         peer_facts = self.shared_utils.get_peer_facts(self.shared_utils.wan_ha_peer, required=True)
         return get(peer_facts, "vtep_ip", required=True)

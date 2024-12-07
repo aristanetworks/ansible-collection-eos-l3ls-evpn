@@ -1,7 +1,0 @@
-custom_templates:
-  - 'custom_templates/test-template-1.j2'
-  - 'custom_templates/test-template-2.j2'
-  - 'custom_templates/test-template-3.j2'
-
-test1: true
-test3: true

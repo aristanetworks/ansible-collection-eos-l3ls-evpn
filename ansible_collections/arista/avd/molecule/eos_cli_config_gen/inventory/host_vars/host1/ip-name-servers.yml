@@ -1,0 +1,27 @@
+---
+### Name Servers ###
+ip_name_servers:
+  # no VRF
+  - ip_address: 10.10.128.10
+  # no VRF priority
+  - ip_address: 10.10.129.10
+    priority: 0
+  # Same DNS management VRF
+  - ip_address: 10.10.128.10
+    vrf: mgmt
+  # Same DNS different VRF and priority
+  - ip_address: 10.10.128.10
+    vrf: TEST
+    priority: 3
+  # no VRF
+  - ip_address: 2001:db8::1
+  # no VRF priority
+  - ip_address: 2001:db8::2
+    priority: 0
+  # Same DNS management VRF
+  - ip_address: 2001:db8::1
+    vrf: mgmt
+  # Same DNS different VRF and priority
+  - ip_address: 2001:db8::2
+    vrf: TEST
+    priority: 3
