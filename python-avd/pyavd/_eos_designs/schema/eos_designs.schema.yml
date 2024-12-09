@@ -2296,10 +2296,10 @@ keys:
             type: str
         platforms:
           type: list
-          description: 'Match on platform type, you may need to create a custom platform
-            in platform_settings.
-
-            '
+          description: "Matching the platform type of one or more switches, to match
+            full platform names, create a custom platform in `platform_settings`.\nFor
+            example, `720XP-48Y6` would require a custom platform type:\n\nplatforms:\n
+            \ - 720XP\n  - 720XP-48Y6\n"
           items:
             type: str
         switch_ports:

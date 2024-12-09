@@ -20,11 +20,15 @@ keys:
             The regular expression must match the full hostname.
           items:
             type: str
-        #TODO: Update for review
         platforms:
           type: list
           description: |
-            Match on platform type, you may need to create a custom platform in platform_settings.
+            Matching the platform type of one or more switches, to match full platform names, create a custom platform in `platform_settings`.
+            For example, `720XP-48Y6` would require a custom platform type:
+
+            platforms:
+              - 720XP
+              - 720XP-48Y6
           items:
             type: str
         switch_ports:

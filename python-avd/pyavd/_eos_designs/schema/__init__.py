@@ -7994,11 +7994,15 @@ class EosDesigns(EosDesignsRootModel):
         """
         platforms: Platforms
         """
-        Match on platform type, you may need to create a custom platform in platform_settings.
+        Matching the platform type of one or more switches, to match full platform names, create a custom
+        platform in `platform_settings`.
+        For example, `720XP-48Y6` would require a custom platform type:
+        platforms:
+          - 720XP
+          - 720XP-48Y6
 
 
-        Subclass of
-        AvdList with `str` items.
+        Subclass of AvdList with `str` items.
         """
         switch_ports: SwitchPorts
         """
@@ -8243,11 +8247,15 @@ class EosDesigns(EosDesignsRootModel):
 
                        Subclass of AvdList with `str` items.
                     platforms:
-                       Match on platform type, you may need to create a custom platform in platform_settings.
+                       Matching the platform type of one or more switches, to match full platform names, create a custom
+                       platform in `platform_settings`.
+                       For example, `720XP-48Y6` would require a custom platform type:
+                       platforms:
+                         - 720XP
+                         - 720XP-48Y6
 
 
-                       Subclass of
-                       AvdList with `str` items.
+                       Subclass of AvdList with `str` items.
                     switch_ports:
                        List of ranges using AVD range_expand syntax.
                        For example:
