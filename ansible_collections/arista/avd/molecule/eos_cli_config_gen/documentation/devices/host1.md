@@ -9552,6 +9552,7 @@ router pim sparse-mode
 | 1.2.3.4 | True | default | True | PLIST1 | MG1, MG2 | Loopback11 | Some kind of MSDP Peer | ACL1 | ACL2 |
 | 4.3.2.1 | False | default | False | PLIST2 | - | Loopback21 | - | - | - |
 | 2.3.4.5 | False | RED | True | - | - | Loopback13 | Some other kind of MSDP Peer | ACL3 | ACL4 |
+| 2.3.4.6 | True | RED | True | PL1 | MG1, MG2 | - | - | - | - |
 
 #### Router MSDP Device Configuration
 
@@ -9584,6 +9585,7 @@ router msdp
       group-limit 22 source 10.0.22.0/24
       originator-id local-interface Loopback12
       rejected-limit 10
+      forward register-packets
       connection retry interval 10
       !
       peer 2.3.4.5
@@ -9594,6 +9596,12 @@ router msdp
          sa-filter out list ACL4
          description Some other kind of MSDP Peer
          sa-limit 100
+      !
+      peer 2.3.4.6
+         default-peer prefix-list PL1
+         mesh-group MG1
+         mesh-group MG2
+         disabled
 ```
 
 ### Router IGMP

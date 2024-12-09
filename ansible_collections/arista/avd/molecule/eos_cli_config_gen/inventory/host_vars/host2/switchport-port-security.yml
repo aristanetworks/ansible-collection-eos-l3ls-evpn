@@ -1,0 +1,4 @@
+---
+switchport_port_security:
+  mac_address:
+    aging: true

@@ -5,6 +5,7 @@
 - [Management](#management)
   - [Banner](#banner)
   - [Management Interfaces](#management-interfaces)
+  - [PTP](#ptp)
   - [Management SSH](#management-ssh)
   - [Management API gNMI](#management-api-gnmi)
   - [Management CVX Summary](#management-cvx-summary)
@@ -39,6 +40,11 @@
 - [Monitor Connectivity](#monitor-connectivity)
   - [Global Configuration](#global-configuration)
   - [Monitor Connectivity Device Configuration](#monitor-connectivity-device-configuration)
+- [Monitor Layer 1 Logging](#monitor-layer-1-logging)
+  - [Monitor Layer 1 Device Configuration](#monitor-layer-1-device-configuration)
+- [Hardware TCAM Profile](#hardware-tcam-profile)
+  - [Custom TCAM Profiles](#custom-tcam-profiles)
+  - [Hardware TCAM Device Configuration](#hardware-tcam-device-configuration)
 - [LACP](#lacp)
   - [LACP Summary](#lacp-summary)
   - [LACP Device Configuration](#lacp-device-configuration)
@@ -53,6 +59,9 @@
   - [Interface Defaults](#interface-defaults)
   - [DPS Interfaces](#dps-interfaces)
   - [VXLAN Interface](#vxlan-interface)
+- [Switchport Port-security](#switchport-port-security)
+  - [Switchport Port-security Summary](#switchport-port-security-summary)
+  - [Switchport Port-security Device Configuration](#switchport-port-security-device-configuration)
 - [Routing](#routing)
   - [Service Routing Protocols Model](#service-routing-protocols-model)
   - [IP Routing](#ip-routing)
@@ -81,6 +90,9 @@
 - [Application Traffic Recognition](#application-traffic-recognition)
   - [Applications](#applications)
   - [Router Application-Traffic-Recognition Device Configuration](#router-application-traffic-recognition-device-configuration)
+- [Router L2 VPN](#router-l2-vpn)
+  - [Router L2 VPN Summary](#router-l2-vpn-summary)
+  - [Router L2 VPN Device Configuration](#router-l2-vpn-device-configuration)
 - [IP DHCP Relay](#ip-dhcp-relay)
   - [IP DHCP Relay Summary](#ip-dhcp-relay-summary)
   - [IP DHCP Relay Device Configuration](#ip-dhcp-relay-device-configuration)
@@ -144,6 +156,20 @@ interface Management1
    description OOB_MANAGEMENT
    vrf MGMT
    ip address 10.73.255.122/24
+```
+
+### PTP
+#### PTP Summary
+
+| Clock ID | Source IP | Priority 1 | Priority 2 | TTL | Domain | Mode | Forward Unicast |
+| -------- | --------- | ---------- | ---------- | --- | ------ | ---- | --------------- |
+| - | - | - | - | - | - | - | - |
+
+#### PTP Device Configuration
+
+```eos
+!
+no ptp monitor sequence-id
 ```
 
 ### Management SSH
@@ -603,6 +629,38 @@ monitor connectivity
    local-interfaces HOST_SET2 default
 ```
 
+## Monitor Layer 1 Logging
+
+| Layer 1 Event | Logging |
+| ------------- | ------- |
+
+### Monitor Layer 1 Device Configuration
+
+```eos
+!
+monitor layer1
+```
+
+## Hardware TCAM Profile
+
+TCAM profile **`default`** is active
+
+### Custom TCAM Profiles
+
+Following TCAM profiles are configured on device:
+
+- Profile Name: `MY_TCAM_PROFILE`
+
+### Hardware TCAM Device Configuration
+
+```eos
+!
+hardware tcam
+   profile MY_TCAM_PROFILE
+Thisisnotaidealinput
+   !
+```
+
 ## LACP
 
 ### LACP Summary
@@ -723,6 +781,21 @@ interface Vxlan1
    no vxlan qos ecn propagation
    no vxlan qos dscp propagation encapsulation
    no vxlan qos map dscp to traffic-class decapsulation
+```
+
+## Switchport Port-security
+
+### Switchport Port-security Summary
+
+| Settings | Value |
+| -------- | ----- |
+| Mac-address Aging | True |
+
+### Switchport Port-security Device Configuration
+
+```eos
+!
+switchport port-security mac-address aging
 ```
 
 ## Routing
@@ -1241,6 +1314,20 @@ application traffic recognition
    application l4 l4-app-1
       protocol tcp source port field-set src_port_set1 destination port field-set dest_port_set1
       protocol udp
+```
+
+## Router L2 VPN
+
+### Router L2 VPN Summary
+
+- VXLAN ARP Proxying is disabled for IPv4 addresses defined in the prefix-list pl-router-l2-vpn.
+
+### Router L2 VPN Device Configuration
+
+```eos
+!
+router l2-vpn
+   arp proxy prefix-list pl-router-l2-vpn
 ```
 
 ## IP DHCP Relay

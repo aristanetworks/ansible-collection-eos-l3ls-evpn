@@ -28,6 +28,20 @@ interface Management1
    ip address 10.73.255.122/24
 ```
 
+### PTP
+#### PTP Summary
+
+| Clock ID | Source IP | Priority 1 | Priority 2 | TTL | Domain | Mode | Forward Unicast |
+| -------- | --------- | ---------- | ---------- | --- | ------ | ---- | --------------- |
+| - | - | - | - | - | - | - | - |
+
+#### PTP Device Configuration
+
+```eos
+!
+no ptp monitor
+```
+
 ## Monitoring
 
 ### TerminAttr Daemon
