@@ -751,6 +751,30 @@ ethernet_interfaces:
   shutdown: true
   switchport:
     enabled: true
+- name: Ethernet47
+  peer: PCs
+  peer_type: network_port
+  port_profile: pc
+  description: PCs
+  shutdown: false
+  switchport:
+    enabled: true
+    mode: access
+    access_vlan: 100
+  spanning_tree_portfast: edge
+  spanning_tree_bpdufilter: enabled
+- name: Ethernet48
+  peer: PCs
+  peer_type: network_port
+  port_profile: pc
+  description: PCs
+  shutdown: false
+  switchport:
+    enabled: true
+    mode: access
+    access_vlan: 100
+  spanning_tree_portfast: edge
+  spanning_tree_bpdufilter: enabled
 mlag_configuration:
   domain_id: mlag
   local_interface: Vlan4094
@@ -760,3 +784,5 @@ mlag_configuration:
   reload_delay_non_mlag: '330'
 ip_igmp_snooping:
   globally_enabled: true
+metadata:
+  platform: 720XPM-48Y6

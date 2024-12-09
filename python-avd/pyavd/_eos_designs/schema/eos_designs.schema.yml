@@ -2294,6 +2294,13 @@ keys:
             '
           items:
             type: str
+        platforms:
+          type: list
+          description: 'Match on platform type
+
+            '
+          items:
+            type: str
         switch_ports:
           type: list
           description: "List of ranges using AVD range_expand syntax.\nFor example:\n\nswitch_ports:\n

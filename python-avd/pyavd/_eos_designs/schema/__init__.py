@@ -6777,6 +6777,11 @@ class EosDesigns(EosDesignsRootModel):
 
         Switches._item_type = str
 
+        class Platforms(AvdList[str]):
+            """Subclass of AvdList with `str` items."""
+
+        Platforms._item_type = str
+
         class SwitchPorts(AvdList[str]):
             """Subclass of AvdList with `str` items."""
 
@@ -7940,6 +7945,7 @@ class EosDesigns(EosDesignsRootModel):
 
         _fields: ClassVar[dict] = {
             "switches": {"type": Switches},
+            "platforms": {"type": Platforms},
             "switch_ports": {"type": SwitchPorts},
             "description": {"type": str},
             "endpoint": {"type": str},
@@ -7982,6 +7988,13 @@ class EosDesigns(EosDesignsRootModel):
         Regex matching the full hostname of one or more switches.
         The regular expression must match the full
         hostname.
+
+
+        Subclass of AvdList with `str` items.
+        """
+        platforms: Platforms
+        """
+        Match on platform type
 
 
         Subclass of AvdList with `str` items.
@@ -8176,6 +8189,7 @@ class EosDesigns(EosDesignsRootModel):
                 self,
                 *,
                 switches: Switches | UndefinedType = Undefined,
+                platforms: Platforms | UndefinedType = Undefined,
                 switch_ports: SwitchPorts | UndefinedType = Undefined,
                 description: str | None | UndefinedType = Undefined,
                 endpoint: str | None | UndefinedType = Undefined,
@@ -8224,6 +8238,11 @@ class EosDesigns(EosDesignsRootModel):
                        Regex matching the full hostname of one or more switches.
                        The regular expression must match the full
                        hostname.
+
+
+                       Subclass of AvdList with `str` items.
+                    platforms:
+                       Match on platform type
 
 
                        Subclass of AvdList with `str` items.

@@ -141,6 +141,27 @@ network_ports:
       channel_id: 43
       mode: "active"
 
+  # The next two switches are targeted using a like regex filtering on correct 
+  # platform type
+  - switches:
+      - network-ports-tests.*
+    switch_ports:
+      - Ethernet47-48 # Fix ports
+    platforms:
+      - 720XPM-48Y6
+    profile: pc
+    endpoint: PCs
+
+  - switches:
+      - network-ports-tests.*
+    switch_ports:
+      - Ethernet23-24 # Fix ports
+    platforms:
+      - 720XPM-24Y6
+    profile: pc
+    endpoint: PCs
+
+
 servers:
   - name: CONNECTED_ENDPOINT_OVERWRITING_NETWORK_PORT
     adapters:
@@ -171,7 +192,22 @@ l2leaf:
       nodes:
         - name: network-ports-tests.1
           id: 1
+          platform: 720XPM-48Y6
         - name: network-ports-tests-2
           filter:
             only_vlans_in_use: true
           id: 2
+          platform: 720XPM-24Y6
+
+custom_platform_settings:
+  - platforms:
+      - 720XPM-48Y6
+      - 720XPM-24Y6
+    feature_support:
+      poe: true
+      queue_monitor_length_notify: false
+    reload_delay:
+      mlag: 300
+      non_mlag: 330
+    trident_forwarding_table_partition: flexible exact-match 16000 l2-shared 18000 l3-shared
+      22000

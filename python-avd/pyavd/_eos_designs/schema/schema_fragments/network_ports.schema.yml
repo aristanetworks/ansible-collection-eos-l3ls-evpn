@@ -20,6 +20,13 @@ keys:
             The regular expression must match the full hostname.
           items:
             type: str
+        #TODO: Update for review
+        platforms:
+          type: list
+          description: |
+            Match on platform type, you may need to create a custom platform in platform_settings.
+          items:
+            type: str
         switch_ports:
           type: list
           description: |
