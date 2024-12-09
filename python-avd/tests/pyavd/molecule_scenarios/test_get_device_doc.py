@@ -48,8 +48,8 @@ def test_get_device_doc(molecule_host: MoleculeHost) -> None:
     validate_structured_config(structured_config)
 
     expected_doc = molecule_host.doc
-
-    device_doc = get_device_doc(structured_config, add_md_toc=True)
+    add_md_toc = get(structured_config, "eos_cli_config_gen_documentation.toc", default=True)
+    device_doc = get_device_doc(structured_config, add_md_toc=add_md_toc)
 
     assert isinstance(device_doc, str)
     assert device_doc == expected_doc

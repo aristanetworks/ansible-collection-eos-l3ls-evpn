@@ -13,7 +13,7 @@
     | [<samp>eos_cli_config_gen_documentation</samp>](## "eos_cli_config_gen_documentation") | Dictionary |  |  |  |  |
     | [<samp>&nbsp;&nbsp;enable</samp>](## "eos_cli_config_gen_documentation.enable") | Boolean |  | `True` |  | Generate device Markdown documentation. |
     | [<samp>&nbsp;&nbsp;hide_passwords</samp>](## "eos_cli_config_gen_documentation.hide_passwords") | Boolean |  | `True` |  | Replace the input data using the `hide_passwords` filter in the Jinja2 templates by '<removed>' in the documentation if true.<br> |
-    | [<samp>&nbsp;&nbsp;toc</samp>](## "eos_cli_config_gen_documentation.toc") | Boolean |  |  |  | Generate or skip the table of content(TOC) on fabric and device documentation. |
+    | [<samp>&nbsp;&nbsp;toc</samp>](## "eos_cli_config_gen_documentation.toc") | Boolean |  | `True` |  | Generate or skip the table of content(TOC) on fabric and device documentation. |
     | [<samp>generate_device_documentation</samp>](## "generate_device_documentation") <span style="color:red">deprecated</span> | Boolean |  | `True` |  | <span style="color:red">This key is deprecated. Support will be removed in AVD version 6.0.0. Use <samp>eos_cli_config_gen_documentation.enable</samp> instead.</span> |
 
 === "YAML"
@@ -35,7 +35,7 @@
       hide_passwords: <bool; default=True>
 
       # Generate or skip the table of content(TOC) on fabric and device documentation.
-      toc: <bool>
+      toc: <bool; default=True>
     # This key is deprecated.
     # Support will be removed in AVD version 6.0.0.
     # Use <samp>eos_cli_config_gen_documentation.enable</samp> instead.

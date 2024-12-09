@@ -5496,7 +5496,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         _fields: ClassVar[dict] = {
             "enable": {"type": bool, "default": True},
             "hide_passwords": {"type": bool, "default": True},
-            "toc": {"type": bool},
+            "toc": {"type": bool, "default": True},
             "_custom_data": {"type": dict},
         }
         enable: bool
@@ -5512,8 +5512,12 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
         Default value: `True`
         """
-        toc: bool | None
-        """Generate or skip the table of content(TOC) on fabric and device documentation."""
+        toc: bool
+        """
+        Generate or skip the table of content(TOC) on fabric and device documentation.
+
+        Default value: `True`
+        """
         _custom_data: dict[str, Any]
 
         if TYPE_CHECKING:
@@ -5523,7 +5527,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 *,
                 enable: bool | UndefinedType = Undefined,
                 hide_passwords: bool | UndefinedType = Undefined,
-                toc: bool | None | UndefinedType = Undefined,
+                toc: bool | UndefinedType = Undefined,
                 _custom_data: dict[str, Any] | UndefinedType = Undefined,
             ) -> None:
                 """
