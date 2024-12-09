@@ -32,7 +32,7 @@ class RaiseOnUse:
     def __call__(self, *_args: Any, **_kwargs: Any) -> NoReturn:
         raise self.exception
 
-    def __getattr__(self, name: str) -> NoReturn:
+    def __getattr__(self, name: str) -> Any:
         if not name.startswith("__"):
             raise self.exception
         return self.__getattribute__(name)
