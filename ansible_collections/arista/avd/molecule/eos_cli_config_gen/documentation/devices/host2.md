@@ -711,12 +711,6 @@ ASN Notation: asplain
 | EVPN-OVERLAY-PEERS | True |  - | - | default |
 | MLAG-IPv4-UNDERLAY-PEER | False |  - | - | default |
 
-##### EVPN Neighbor Default Encapsulation
-
-| Neighbor Default Encapsulation | Next-hop-self Source Interface |
-| ------------------------------ | ------------------------------ |
-| path-selection | - |
-
 ##### EVPN Host Flapping Settings
 
 | State | Window | Threshold | Expiry Timeout |
@@ -762,7 +756,6 @@ router bgp 65101
    !
    address-family evpn
       no bgp additional-paths send
-      neighbor default encapsulation path-selection
       neighbor EVPN-OVERLAY-PEERS activate
       no neighbor MLAG-IPv4-UNDERLAY-PEER activate
       neighbor default next-hop-self received-evpn-routes route-type ip-prefix inter-domain
@@ -998,7 +991,7 @@ ip nat synchronization
 
 | Field Set Name | IPv6 Prefixes |
 | -------------- | ------------- |
-| IPv6-DEMO-1 | 11:22:33:44:55:66:77:88 |
+| IPv6-DEMO-1 | 11:22:33:44:55:66:77:88/126 |
 | IPv6-DEMO-2 | - |
 
 #### Traffic Policies Device Configuration
@@ -1007,7 +1000,7 @@ ip nat synchronization
 !
 traffic-policies
    field-set ipv6 prefix IPv6-DEMO-1
-      11:22:33:44:55:66:77:88
+      11:22:33:44:55:66:77:88/126
    !
    field-set ipv6 prefix IPv6-DEMO-2
 ```

@@ -4,6 +4,8 @@ router_bgp:
       - name: TEST-ENCAPSULATION-2
         activate: true
         encapsulation: path-selection
+    neighbor_default:
+      encapsulation: path-selection
     neighbors:
       - ip_address: 10.100.100.4
         activate: true

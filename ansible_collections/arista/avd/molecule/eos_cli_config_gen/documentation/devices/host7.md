@@ -913,6 +913,12 @@ ASN Notation: asplain
 | -------- | -------- | ------------ | ------------- | ------------- |
 | 10.100.100.4 | True | - | - | path-selection |
 
+##### EVPN Neighbor Default Encapsulation
+
+| Neighbor Default Encapsulation | Next-hop-self Source Interface |
+| ------------------------------ | ------------------------------ |
+| path-selection | - |
+
 #### Router BGP Device Configuration
 
 ```eos

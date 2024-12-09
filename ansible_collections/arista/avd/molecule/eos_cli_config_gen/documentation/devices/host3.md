@@ -10,8 +10,13 @@
   - [Spanning Tree Summary](#spanning-tree-summary)
   - [Spanning Tree Device Configuration](#spanning-tree-device-configuration)
 - [Routing](#routing)
+  - [IP Routing](#ip-routing)
+  - [IPv6 Routing](#ipv6-routing)
   - [Router ISIS](#router-isis)
   - [Router BGP](#router-bgp)
+- [VRF Instances](#vrf-instances)
+  - [VRF Instances Summary](#vrf-instances-summary)
+  - [VRF Instances Device Configuration](#vrf-instances-device-configuration)
   - [Traffic Policies information](#traffic-policies-information)
 
 ## Management
@@ -107,6 +112,30 @@ spanning-tree mst configuration
 
 ## Routing
 
+### IP Routing
+
+#### IP Routing Summary
+
+| VRF | Routing Enabled |
+| --- | --------------- |
+| default | False |
+| MGMT | False |
+
+#### IP Routing Device Configuration
+
+```eos
+no ip routing vrf MGMT
+```
+
+### IPv6 Routing
+
+#### IPv6 Routing Summary
+
+| VRF | Routing Enabled |
+| --- | --------------- |
+| default | False |
+| MGMT | false |
+
 ### Router ISIS
 
 #### Router ISIS Summary
@@ -185,6 +214,21 @@ router bgp 65101.0001
    address-family ipv6
       redistribute ospfv3 include leaked route-map RM-REDISTRIBUTE-OSPFV3
       redistribute ospfv3 match external include leaked route-map RM-REDISTRIBUTE-OSPFV3-EXTERNAL
+```
+
+## VRF Instances
+
+### VRF Instances Summary
+
+| VRF Name | IP Routing |
+| -------- | ---------- |
+| MGMT | disabled |
+
+### VRF Instances Device Configuration
+
+```eos
+!
+vrf instance MGMT
 ```
 
 ### Traffic Policies information

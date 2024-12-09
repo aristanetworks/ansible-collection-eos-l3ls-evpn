@@ -7,7 +7,12 @@
 - [Monitoring](#monitoring)
   - [TerminAttr Daemon](#terminattr-daemon)
 - [Routing](#routing)
+  - [IP Routing](#ip-routing)
+  - [IPv6 Routing](#ipv6-routing)
   - [Router ISIS](#router-isis)
+- [VRF Instances](#vrf-instances)
+  - [VRF Instances Summary](#vrf-instances-summary)
+  - [VRF Instances Device Configuration](#vrf-instances-device-configuration)
 
 ## Management
 
@@ -58,6 +63,30 @@ daemon TerminAttr
 
 ## Routing
 
+### IP Routing
+
+#### IP Routing Summary
+
+| VRF | Routing Enabled |
+| --- | --------------- |
+| default | False |
+| MGMT | False |
+
+#### IP Routing Device Configuration
+
+```eos
+no ip routing vrf MGMT
+```
+
+### IPv6 Routing
+
+#### IPv6 Routing Summary
+
+| VRF | Routing Enabled |
+| --- | --------------- |
+| default | False |
+| MGMT | false |
+
 ### Router ISIS
 
 #### Router ISIS Summary
@@ -78,4 +107,19 @@ daemon TerminAttr
 router isis EVPN_UNDERLAY
    authentication mode sha key-id 4 rx-disabled
    !
+```
+
+## VRF Instances
+
+### VRF Instances Summary
+
+| VRF Name | IP Routing |
+| -------- | ---------- |
+| MGMT | disabled |
+
+### VRF Instances Device Configuration
+
+```eos
+!
+vrf instance MGMT
 ```

@@ -5,5 +5,5 @@ traffic_policies:
     ipv6:
       - name: IPv6-DEMO-1
         prefixes:
-          - 11:22:33:44:55:66:77:88
+          - 11:22:33:44:55:66:77:88/126
       - name: IPv6-DEMO-2

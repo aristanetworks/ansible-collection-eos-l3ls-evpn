@@ -52,7 +52,6 @@ router_bgp:
       next_hop_self_received_evpn_routes:
         enable: true
         inter_domain: true
-      encapsulation: path-selection
     evpn_hostflap_detection:
       enabled: true
       expiry_timeout: 20
