@@ -6522,8 +6522,8 @@ Topology role: pathfinder
 
 #### AVT Profiles
 
-| Profile name | Load balance policy | Internet exit policy | Metric Order | Jitter Threshold | Latency Threshold | Load Percentage | Loss-rate Percentage |
-| ------------ | ------------------- | -------------------- | ------------ | ---------------- | ----------------- | --------------- | -------------------- |
+| Profile name | Load balance policy | Internet exit policy | Metric Order | Jitter Threshold (ms) | Latency Threshold (ms) | Load (%) | Loss Rate (%) |
+| ------------ | ------------------- | -------------------- | ------------ | --------------------- | ---------------------- | -------- | ------------- |
 | office365 | - | - | - | - | - | - | - |
 | scavenger | scavenger-lb | scavenger-ie | latency | 200 | 100 | 25.16 | 20 |
 | video | - | video-ie | - | - | 100 | - | - |

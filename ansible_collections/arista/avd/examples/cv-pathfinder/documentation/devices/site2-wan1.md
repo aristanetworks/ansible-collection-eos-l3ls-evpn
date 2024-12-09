@@ -612,8 +612,8 @@ Topology role: transit region
 
 #### AVT Profiles
 
-| Profile name | Load balance policy | Internet exit policy | Metric Order | Jitter Threshold | Latency Threshold | Load Percentage | Loss-rate Percentage |
-| ------------ | ------------------- | -------------------- | ------------ | ---------------- | ----------------- | --------------- | -------------------- |
+| Profile name | Load balance policy | Internet exit policy | Metric Order | Jitter Threshold (ms) | Latency Threshold (ms) | Load (%) | Loss Rate (%) |
+| ------------ | ------------------- | -------------------- | ------------ | --------------------- | ---------------------- | -------- | ------------- |
 | BLUE-POLICY-DEFAULT | LB-BLUE-POLICY-DEFAULT | - | - | - | - | - | - |
 | BLUE-POLICY-VIDEO | LB-BLUE-POLICY-VIDEO | - | - | - | - | - | - |
 | BLUE-POLICY-VOICE | LB-BLUE-POLICY-VOICE | - | - | - | - | - | - |
