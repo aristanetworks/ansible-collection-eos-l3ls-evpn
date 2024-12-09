@@ -20746,7 +20746,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             Colon (:) separated list of allowed
             ciphers as a string.
             Not supported on EOS version starting 4.32.0F, use the `ciphers` setting
-            instead..
+            instead.
             """
             ciphers: Ciphers
             """
@@ -20805,7 +20805,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                            Colon (:) separated list of allowed
                            ciphers as a string.
                            Not supported on EOS version starting 4.32.0F, use the `ciphers` setting
-                           instead..
+                           instead.
                         ciphers:
                            This setting is applicable to EOS versions 4.32.0F and later.
 
