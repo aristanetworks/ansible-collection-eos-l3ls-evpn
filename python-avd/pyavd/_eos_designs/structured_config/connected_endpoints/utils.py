@@ -75,7 +75,7 @@ class UtilsMixin:
             if not self._match_regexes(network_port_settings.switches, self.shared_utils.hostname):
                 continue
             # TODO: Review
-            if network_port_settings.platforms and not self.shared_utils.platform in network_port_settings.platforms:
+            if network_port_settings.platforms and self.shared_utils.platform not in network_port_settings.platforms:
                 continue
 
             filtered_network_ports.append(network_port_settings)

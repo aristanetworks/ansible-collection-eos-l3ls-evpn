@@ -7994,10 +7994,11 @@ class EosDesigns(EosDesignsRootModel):
         """
         platforms: Platforms
         """
-        Match on platform type
+        Match on platform type, you may need to create a custom platform in platform_settings.
 
 
-        Subclass of AvdList with `str` items.
+        Subclass of
+        AvdList with `str` items.
         """
         switch_ports: SwitchPorts
         """
@@ -8242,10 +8243,11 @@ class EosDesigns(EosDesignsRootModel):
 
                        Subclass of AvdList with `str` items.
                     platforms:
-                       Match on platform type
+                       Match on platform type, you may need to create a custom platform in platform_settings.
 
 
-                       Subclass of AvdList with `str` items.
+                       Subclass of
+                       AvdList with `str` items.
                     switch_ports:
                        List of ranges using AVD range_expand syntax.
                        For example:
