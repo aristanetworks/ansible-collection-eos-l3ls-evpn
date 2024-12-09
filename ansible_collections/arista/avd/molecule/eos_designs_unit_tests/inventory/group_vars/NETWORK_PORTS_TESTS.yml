@@ -141,8 +141,7 @@ network_ports:
       channel_id: 43
       mode: "active"
 
-  # The next two switches are targeted using a like regex filtering on correct 
-  # platform type
+  # The next two switches are targeted using a like regex filtering on correct platform type
   - switches:
       - network-ports-tests.*
     switch_ports:
@@ -160,7 +159,6 @@ network_ports:
       - 720XPM-24Y6
     profile: pc
     endpoint: PCs
-
 
 servers:
   - name: CONNECTED_ENDPOINT_OVERWRITING_NETWORK_PORT
