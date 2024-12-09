@@ -57,10 +57,10 @@ class AvdList(Sequence[T_ItemType], Generic[T_ItemType], AvdBase):
 
     def __init__(self, items: Iterable[T_ItemType] | UndefinedType = Undefined) -> None:
         """
-        AvdIndexedList subclass.
+        AvdList subclass.
 
         Args:
-            items: Iterable holding items of the correct type to be loaded into the indexed list.
+            items: Iterable holding items of the correct type to be loaded into the list.
         """
         if isinstance(items, UndefinedType):
             self._items = []
@@ -97,6 +97,21 @@ class AvdList(Sequence[T_ItemType], Generic[T_ItemType], AvdBase):
 
     def append(self, item: T_ItemType) -> None:
         self._items.append(item)
+
+    def append_unique(self, item: T_ItemType) -> None:
+        """Append the item if not there already. Otherwise ignore."""
+        if item not in self._items:
+            self._items.append(item)
+
+    if TYPE_CHECKING:
+        append_new: type[T_ItemType]
+    else:
+
+        def append_new(self, *args: Any, **kwargs: Any) -> T_ItemType:
+            """Create a new instance with the given arguments and append to the list. Returns the new item."""
+            new_item = self._item_type(*args, **kwargs)
+            self.append(new_item)
+            return new_item
 
     def extend(self, items: Iterable[T_ItemType]) -> None:
         self._items.extend(items)

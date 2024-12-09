@@ -208,20 +208,13 @@ class AvdModel(AvdBase):
             return default
         return value
 
-    def _update(self, other: Self) -> None:
-        """Update instance by shallow merging the other instance in."""
-        cls = type(self)
-        if not isinstance(other, cls):
-            msg = f"Unable to merge type '{type(other)}' into '{cls}'"
-            raise TypeError(msg)
+    if TYPE_CHECKING:
+        _update: type[Self]
+    else:
 
-        for field in cls._fields:
-            if new_value := other._get_defined_attr(field) is Undefined:
-                continue
-            old_value = self._get_defined_attr(field)
-            if old_value == new_value:
-                continue
-            setattr(self, field, new_value)
+        def _update(self, *args: Any, **kwargs: Any) -> None:
+            """Update instance with the given kwargs. Reuses __init__."""
+            self.__init__(*args, **kwargs)
 
     def _deepmerge(self, other: Self, list_merge: Literal["append", "replace"] = "append") -> None:
         """
@@ -351,6 +344,13 @@ class AvdModel(AvdBase):
                 raise TypeError(msg)
 
             new_args[field] = value
-            continue
 
         return new_type(**new_args)
+
+    def _compare(self, other: Self, ignore_fields: tuple[str, ...] = ()) -> bool:
+        cls = type(self)
+        if not isinstance(other, cls):
+            msg = f"Unable to compare '{cls}' with a '{type(other)}' class."
+            raise TypeError(msg)
+
+        return all(self._get_defined_attr(field) == other._get_defined_attr(field) for field in self._fields if field not in ignore_fields)

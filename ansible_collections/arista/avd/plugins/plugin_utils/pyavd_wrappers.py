@@ -32,6 +32,9 @@ class RaiseOnUse:
     def __call__(self, *_args: Any, **_kwargs: Any) -> NoReturn:
         raise self.exception
 
+    def __getattr__(self, *_args: Any, **_kwargs: Any) -> NoReturn:
+        raise self.exception
+
 
 def wrap_plugin(plugin_type: Literal["filter", "test"], name: str) -> Callable:
     plugin_map = {

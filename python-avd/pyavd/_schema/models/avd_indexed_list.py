@@ -8,6 +8,7 @@ from collections.abc import Iterable, Iterator, Sequence
 from copy import deepcopy
 from typing import TYPE_CHECKING, ClassVar, Generic, Literal
 
+from pyavd._errors import AristaAvdDuplicateDataError
 from pyavd._schema.coerce_type import coerce_type
 from pyavd._utils import Undefined, UndefinedType
 
@@ -104,8 +105,36 @@ class AvdIndexedList(Sequence[T_AvdModel], Generic[T_PrimaryKey, T_AvdModel], Av
     def values(self) -> Iterable[T_AvdModel]:
         return self._items.values()
 
-    def append(self, item: T_AvdModel) -> None:
-        self._items[getattr(item, self._primary_key)] = item
+    def obtain(self, key: T_PrimaryKey) -> T_AvdModel:
+        """Return item with given primary key, autocreating if missing."""
+        if key not in self._items:
+            self._items[key] = self._item_type._from_dict({self._primary_key: key})
+        return self._items[key]
+
+    def append(self, item: T_AvdModel, ignore_fields: tuple[str, ...] = ()) -> None:
+        if (primary_key := getattr(item, self._primary_key)) in self._items:
+            # Found existing entry using the same primary key. Ignore if it is the exact same content.
+            if item._compare(existing_item := self._items[primary_key], ignore_fields):
+                # Ignore identical item.
+                return
+            raise AristaAvdDuplicateDataError(type(self).__name__, item, existing_item)
+
+        self._items[primary_key] = item
+
+    if TYPE_CHECKING:
+        append_new: type[T_AvdModel]
+
+    else:
+
+        def append_new(self, *args: Any, **kwargs: Any) -> T_AvdModel:
+            """
+            Create a new instance with the given arguments and append to the list.
+
+            Returns the new item, or in case of an identical duplicate item it returns the existing item.
+            """
+            new_item = self._item_type(*args, **kwargs)
+            self.append(new_item)
+            return self._items[kwargs[self._primary_key]]
 
     def extend(self, items: Iterable[T_AvdModel]) -> None:
         self._items.update({getattr(item, self._primary_key): item for item in items})
