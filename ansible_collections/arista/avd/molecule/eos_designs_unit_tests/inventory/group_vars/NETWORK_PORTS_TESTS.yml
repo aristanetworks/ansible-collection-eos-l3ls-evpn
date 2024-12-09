@@ -146,7 +146,7 @@ network_ports:
   - switches:
       - network-ports-tests.*
     switch_ports:
-      - Ethernet47-48 # Fix ports
+      - Ethernet47-48
     platforms:
       - 720XPM-48Y6
     profile: pc
@@ -154,7 +154,7 @@ network_ports:
 
   # Test only platform match
   - switch_ports:
-      - Ethernet23-24 # Fix ports
+      - Ethernet23-24
     platforms:
       - 720XPM-24Y6
     profile: pc
