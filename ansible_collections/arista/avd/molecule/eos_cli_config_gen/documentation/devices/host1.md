@@ -1847,19 +1847,21 @@ daemon random
 | Type | Level |
 | -----| ----- |
 | Console | errors |
+| Monitor | disabled |
 | Buffer | warnings |
 | Trap | disabled |
-| Synchronous | critical |
+| Synchronous | warnings |
 
 | Format Type | Setting |
 | ----------- | ------- |
 | Timestamp | traditional year timezone |
-| Hostname | hostname |
-| Sequence-numbers | false |
+| Hostname | fqdn |
+| Sequence-numbers | true |
 | RFC5424 | True |
 
 | VRF | Source Interface |
 | --- | ---------------- |
+| - | Ethernet2 |
 | default | Loopback0 |
 | mgt | Management0 |
 
@@ -1899,7 +1901,8 @@ logging repeat-messages
 logging buffered 1000000 warnings
 no logging trap
 logging console errors
-logging synchronous level critical
+no logging monitor
+logging synchronous level warnings
 logging host 20.20.20.7
 logging host 50.50.50.7 100 200 protocol tcp
 logging host 60.60.60.7 100 200
@@ -1916,6 +1919,9 @@ logging vrf vrf_with_no_source_interface host 1.2.3.4
 logging vrf vrf_with_no_source_interface host 2001:db8::1:2:3:4
 logging format timestamp traditional year timezone
 logging format rfc5424
+logging format hostname fqdn
+logging format sequence-numbers
+logging source-interface Ethernet2
 logging source-interface Loopback0
 logging vrf mgt source-interface Management0
 logging policy match match-list molecule discard
@@ -2114,6 +2120,8 @@ snmp-server ifmib ifspeed shape-rate
 | Destinations | Ethernet48 |
 | Encapsulation Gre Metadata Tx | True |
 | Header Remove Size | 32 |
+| Rate Limit per Ingress Chip | 100 kbps |
+| Rate Limit per Egress Chip | 100 kbps |
 | Truncate Enabled | True |
 
 ##### myMonitoringSession2
@@ -2136,6 +2144,8 @@ snmp-server ifmib ifspeed shape-rate
 | Access Group Type | ip |
 | Access Group Name | ipv4ACL |
 | Sample | 50 |
+| Truncate Enabled | True |
+| Truncate Size | 100 |
 
 ##### myMonitoringSession3
 
@@ -2183,6 +2193,8 @@ monitor session myMonitoringSession1 source Ethernet1 ipv6 access-group ipv6ACL
 monitor session myMonitoringSession1 source Ethernet5 both ip access-group ipv4ACL priority 10
 monitor session myMonitoringSession1 destination Ethernet48
 monitor session myMonitoringSession1 truncate
+monitor session myMonitoringSession1 rate-limit per-ingress-chip 100 kbps
+monitor session myMonitoringSession1 rate-limit per-egress-chip 100 kbps
 monitor session myMonitoringSession1 header remove size 32
 monitor session myMonitoringSession1 encapsulation gre metadata tx
 monitor session myMonitoringSession2 ip access-group ipv4ACL
@@ -2192,6 +2204,7 @@ monitor session myMonitoringSession2 source Ethernet12 rx
 monitor session myMonitoringSession2 source Ethernet18 tx
 monitor session myMonitoringSession2 destination Cpu
 monitor session myMonitoringSession2 destination Ethernet50
+monitor session myMonitoringSession2 truncate size 100
 monitor session myMonitoringSession2 sample 50
 monitor session myMonitoringSession2 encapsulation gre metadata tx
 monitor session myMonitoringSession3 source Ethernet20 both ip access-group ipv4ACL priority 10
@@ -3010,7 +3023,7 @@ mlag configuration
 
 | Enabled | Management Address | Management VRF | Timer | Hold-Time | Re-initialization Timer | Drop Received Tagged Packets |
 | ------- | ------------------ | -------------- | ----- | --------- | ----------------------- | ---------------------------- |
-| False | 192.168.1.1/24 | Management | 30 | 90 | 2 | - |
+| False | 192.168.1.1/24 | Management | 30 | 90 | 10 | - |
 
 #### LLDP Explicit TLV Transmit Settings
 
@@ -3038,6 +3051,7 @@ LLDP is **disabled** globally. Local interface configs will not apply.
 !
 lldp timer 30
 lldp hold-time 90
+lldp timer reinitialization 10
 no lldp tlv transmit system-capabilities
 lldp tlv transmit system-description
 no lldp run

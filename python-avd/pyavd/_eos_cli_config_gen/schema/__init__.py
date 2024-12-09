@@ -18330,7 +18330,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
         _fields: ClassVar[dict] = {
             "timer": {"type": int},
-            "timer_reinitialization": {"type": str},
+            "timer_reinitialization": {"type": int},
             "holdtime": {"type": int},
             "management_address": {"type": str},
             "vrf": {"type": str},
@@ -18340,7 +18340,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             "_custom_data": {"type": dict},
         }
         timer: int | None
-        timer_reinitialization: str | None
+        timer_reinitialization: int | None
         holdtime: int | None
         management_address: str | None
         vrf: str | None
@@ -18356,7 +18356,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 self,
                 *,
                 timer: int | None | UndefinedType = Undefined,
-                timer_reinitialization: str | None | UndefinedType = Undefined,
+                timer_reinitialization: int | None | UndefinedType = Undefined,
                 holdtime: int | None | UndefinedType = Undefined,
                 management_address: str | None | UndefinedType = Undefined,
                 vrf: str | None | UndefinedType = Undefined,

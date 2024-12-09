@@ -31,6 +31,7 @@
 - [Monitoring](#monitoring)
   - [TerminAttr Daemon](#terminattr-daemon)
   - [Logging](#logging)
+  - [MCS Client Summary](#mcs-client-summary)
   - [SNMP](#snmp)
   - [Flow Tracking](#flow-tracking)
   - [Monitor Telemetry Postcard Policy](#monitor-telemetry-postcard-policy)
@@ -49,6 +50,7 @@
   - [MAC Address Table Device Configuration](#mac-address-table-device-configuration)
 - [Interfaces](#interfaces)
   - [Switchport Default](#switchport-default)
+  - [Interface Defaults](#interface-defaults)
   - [DPS Interfaces](#dps-interfaces)
   - [VXLAN Interface](#vxlan-interface)
 - [Routing](#routing)
@@ -67,6 +69,7 @@
   - [MPLS Device Configuration](#mpls-device-configuration)
 - [Queue Monitor](#queue-monitor)
   - [Queue Monitor Length](#queue-monitor-length)
+  - [Queue Monitor Streaming](#queue-monitor-streaming)
   - [Queue Monitor Configuration](#queue-monitor-configuration)
 - [Multicast](#multicast)
   - [IP IGMP Snooping](#ip-igmp-snooping)
@@ -89,6 +92,7 @@
 - [IP NAT](#ip-nat)
   - [IP NAT Device Configuration](#ip-nat-device-configuration)
   - [Traffic Policies information](#traffic-policies-information)
+  - [Priority Flow Control](#priority-flow-control)
 - [STUN](#stun)
   - [STUN Server](#stun-server)
   - [STUN Device Configuration](#stun-device-configuration)
@@ -447,9 +451,17 @@ daemon TerminAttr
 
 | Type | Level |
 | -----| ----- |
-| Console | informational |
+| Console | disabled |
 | Monitor | debugging |
-| Buffer | - |
+| Buffer | disabled |
+| Trap | alerts |
+| Synchronous | disabled |
+
+| Format Type | Setting |
+| ----------- | ------- |
+| Hostname | ipv4 |
+| Sequence-numbers | false |
+| RFC5424 | False |
 
 **Syslog facility value:** syslog
 
@@ -458,12 +470,34 @@ daemon TerminAttr
 ```eos
 !
 no logging repeat-messages
-logging buffered 64000
-logging console informational
+no logging buffered
+logging trap alerts
+no logging console
 logging monitor debugging
+no logging synchronous
+logging format hostname ipv4
 logging facility syslog
 !
 logging event link-status global
+```
+
+### MCS Client Summary
+
+MCS client is shutdown
+
+| Secondary CVX cluster | Server Hosts | Enabled |
+| --------------------- | ------------ | ------- |
+| default | - | False |
+
+#### MCS Client Device Configuration
+
+```eos
+!
+mcs client
+   shutdown
+   !
+   cvx secondary default
+      shutdown
 ```
 
 ### SNMP
@@ -633,6 +667,21 @@ no mac address-table notification host-flap logging
 ```eos
 !
 switchport default mode routed
+```
+
+### Interface Defaults
+
+#### Interface Defaults Summary
+
+- Default Ethernet Interface Shutdown: False
+
+#### Interface Defaults Device Configuration
+
+```eos
+!
+interface defaults
+   ethernet
+      no shutdown
 ```
 
 ### DPS Interfaces
@@ -1049,6 +1098,12 @@ mpls rsvp
 | ------- | ---------------- | ----------------------- | ---------------------- | --------- | ---------- | ------------------- | ------------------ |
 | True | - | 100 | - | disabled | disabled | - | - |
 
+### Queue Monitor Streaming
+
+| Enabled | IP Access Group | IPv6 Access Group | Max Connections | VRF |
+| ------- | --------------- | ----------------- | --------------- | --- |
+| False | - | - | - | - |
+
 ### Queue Monitor Configuration
 
 ```eos
@@ -1056,6 +1111,9 @@ mpls rsvp
 queue-monitor length
 no queue-monitor length notifying
 queue-monitor length default threshold 100
+!
+queue-monitor streaming
+   shutdown
 ```
 
 ## Multicast
@@ -1250,6 +1308,21 @@ traffic-policies
       11:22:33:44:55:66:77:88
    !
    field-set ipv6 prefix IPv6-DEMO-2
+```
+
+### Priority Flow Control
+
+#### Global Settings
+
+##### Priority Flow Control Watchdog Settings
+
+| Action | Timeout | Recovery | Polling | Override Action Drop |
+| ------ | ------- | -------- | ------- |
+| errdisable | - | - | - | True |
+
+```eos
+!
+priority-flow-control pause watchdog override action drop
 ```
 
 ## STUN

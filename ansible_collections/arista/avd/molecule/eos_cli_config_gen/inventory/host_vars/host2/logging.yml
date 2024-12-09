@@ -1,10 +1,15 @@
 ### Logging ###
 logging:
-  console: informational
+  console: disabled
   monitor: debugging
   facility: syslog
   repeat_messages: false
+  trap: alerts
   buffered:
-    size: 64000
+    level: disabled
   event:
     global_link_status: true
+  synchronous:
+    level: disabled
+  format:
+    hostname: ipv4
