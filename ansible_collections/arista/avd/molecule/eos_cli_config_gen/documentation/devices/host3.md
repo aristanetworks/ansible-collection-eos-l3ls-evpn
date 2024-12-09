@@ -2,17 +2,8 @@
 
 ## Table of Contents
 
-- [Management](#management)
-  - [Management Interfaces](#management-interfaces)
-- [Monitoring](#monitoring)
-  - [TerminAttr Daemon](#terminattr-daemon)
-- [Spanning Tree](#spanning-tree)
-  - [Spanning Tree Summary](#spanning-tree-summary)
-  - [Spanning Tree Device Configuration](#spanning-tree-device-configuration)
-- [Routing](#routing)
-  - [Router ISIS](#router-isis)
-  - [Router BGP](#router-bgp)
-  - [Traffic Policies information](#traffic-policies-information)
+<!-- toc -->
+<!-- toc -->
 
 ## Management
 
