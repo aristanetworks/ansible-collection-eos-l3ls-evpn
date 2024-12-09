@@ -1964,6 +1964,10 @@ keys:
 
           '
         default: true
+      toc:
+        type: bool
+        description: Generate or skip the table of content(TOC) on fabric and device
+          documentation.
   errdisable:
     type: dict
     keys:

@@ -1,10 +1,5 @@
 # host3
 
-## Table of Contents
-
-<!-- toc -->
-<!-- toc -->
-
 ## Management
 
 ### Management Interfaces
