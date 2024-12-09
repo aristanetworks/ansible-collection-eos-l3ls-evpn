@@ -142,6 +142,7 @@ network_ports:
       mode: "active"
 
   # The next two switches are targeted using a like regex filtering on correct platform type
+  # Test regex and platform match criteria
   - switches:
       - network-ports-tests.*
     switch_ports:
@@ -151,9 +152,8 @@ network_ports:
     profile: pc
     endpoint: PCs
 
-  - switches:
-      - network-ports-tests.*
-    switch_ports:
+  # Test only platform match
+  - switch_ports:
       - Ethernet23-24 # Fix ports
     platforms:
       - 720XPM-24Y6
@@ -197,6 +197,7 @@ l2leaf:
           id: 2
           platform: 720XPM-24Y6
 
+# Used for platform filtering tests
 custom_platform_settings:
   - platforms:
       - 720XPM-48Y6
