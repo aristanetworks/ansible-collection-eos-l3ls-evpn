@@ -1,0 +1,38 @@
+{#
+ Copyright (c) 2023-2024 Arista Networks, Inc.
+ Use of this source code is governed by the Apache License 2.0
+ that can be found in the LICENSE file.
+#}
+{# doc - ip name server groups #}
+{% if ip_name_server_groups is arista.avd.defined %}
+
+### IP Name Server Groups
+
+#### IP Name Server Groups Summary
+{%     for group in ip_name_server_groups | arista.avd.natural_sort("name") %}
+
+##### {{ group.name }}
+{%         if group.dns_domain is arista.avd.defined %}
+
+DNS Domain : {{ group.dns_domain }}
+{%         endif %}
+{%         if group.ip_domain_list is arista.avd.defined %}
+
+IP Domain List : {{ group.ip_domain_list }}
+{%         endif %}
+{%         if group.name_servers is arista.avd.defined %}
+
+| IP Address | VRF | Priority |
+| ----------- | --- | -------- |
+{%             for server in group.name_servers | arista.avd.natural_sort("ip_address") %}
+| {{ server.ip_address }} | {{ server.vrf | arista.avd.default('-') }} | {{ server.priority | arista.avd.default('-') }} |
+{%             endfor %}
+{%         endif %}
+{%     endfor %}
+
+#### IP Name Server Groups Device Configuration
+
+```eos
+{%     include 'eos/ip-name-server-groups.j2' %}
+```
+{% endif %}
