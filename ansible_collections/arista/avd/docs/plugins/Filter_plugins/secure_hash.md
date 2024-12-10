@@ -33,11 +33,11 @@ Generate a SHA512-Crypt password hash with a random salt value for a local user.
 local_users:
   # Create sha512 password hash with random salt. Note: this will create a new hash each time it is run
   - name: admin
-    sha512_password: "{{ 'password123' | secure_hash }}"
+    sha512_password: "{{ 'password123' | arista.avd.secure_hash }}"
 
   # Create sha512 password hash with user defined salt value
   - name: cvpadmin
-    sha512_password: "{{ 'securepassword' | secure_hash(salt='Yar49ahkzKddRVYS') }}"
+    sha512_password: "{{ 'securepassword' | arista.avd.secure_hash(salt='Yar49ahkzKddRVYS') }}"
 ```
 
 ## Return Values
