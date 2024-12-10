@@ -473,13 +473,13 @@ interface Ethernet12
 
 ##### L2
 
-| Interface | Description | Mode | VLANs | Native VLAN | Trunk Group | LACP Fallback Timeout | LACP Fallback Mode | MLAG ID | EVPN ESI | MIN Links |
-| --------- | ----------- | ---- | ----- | ----------- | ------------| --------------------- | ------------------ | ------- | -------- | --------- |
-| Port-Channel5 | MLAG_DC1-LEAF2A_Port-Channel5 | trunk | - | - | MLAG | - | - | - | - | - |
-| Port-Channel7 | L2_DC1-L2LEAF1A_Port-Channel1 | trunk | 110-111,120-121,130-131,160-161 | - | - | - | - | 7 | - | - |
-| Port-Channel10 | PortChanne1 | trunk | 210-211 | - | - | - | - | 10 | - | - |
-| Port-Channel11 | PortChanne1 | access | 110 | - | - | - | - | 11 | - | - |
-| Port-Channel12 | PortChanne1 | - | - | - | - | - | - | 12 | - | - |
+| Interface | Description | Mode | VLANs | Native VLAN | Trunk Group | LACP Fallback Timeout | LACP Fallback Mode | MLAG ID | EVPN ESI |
+| --------- | ----------- | ---- | ----- | ----------- | ------------| --------------------- | ------------------ | ------- | -------- |
+| Port-Channel5 | MLAG_DC1-LEAF2A_Port-Channel5 | trunk | - | - | MLAG | - | - | - | - |
+| Port-Channel7 | L2_DC1-L2LEAF1A_Port-Channel1 | trunk | 110-111,120-121,130-131,160-161 | - | - | - | - | 7 | - |
+| Port-Channel10 | PortChanne1 | trunk | 210-211 | - | - | - | - | 10 | - |
+| Port-Channel11 | PortChanne1 | access | 110 | - | - | - | - | 11 | - |
+| Port-Channel12 | PortChanne1 | - | - | - | - | - | - | 12 | - |
 
 #### Port-Channel Interfaces Device Configuration
 

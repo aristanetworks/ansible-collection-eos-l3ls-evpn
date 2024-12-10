@@ -374,10 +374,10 @@ interface Ethernet4
 
 ##### L2
 
-| Interface | Description | Mode | VLANs | Native VLAN | Trunk Group | LACP Fallback Timeout | LACP Fallback Mode | MLAG ID | EVPN ESI | MIN Links |
-| --------- | ----------- | ---- | ----- | ----------- | ------------| --------------------- | ------------------ | ------- | -------- | --------- |
-| Port-Channel1 | L2_DC1_SVC3_Port-Channel7 | trunk | 110-111,120-121,130-131,140-141,150,160-161,210-211,250,310-311,350 | - | - | - | - | 1 | - | - |
-| Port-Channel3 | MLAG_DC1-L2LEAF2B_Port-Channel3 | trunk | - | - | MLAG | - | - | - | - | - |
+| Interface | Description | Mode | VLANs | Native VLAN | Trunk Group | LACP Fallback Timeout | LACP Fallback Mode | MLAG ID | EVPN ESI |
+| --------- | ----------- | ---- | ----- | ----------- | ------------| --------------------- | ------------------ | ------- | -------- |
+| Port-Channel1 | L2_DC1_SVC3_Port-Channel7 | trunk | 110-111,120-121,130-131,140-141,150,160-161,210-211,250,310-311,350 | - | - | - | - | 1 | - |
+| Port-Channel3 | MLAG_DC1-L2LEAF2B_Port-Channel3 | trunk | - | - | MLAG | - | - | - | - |
 
 #### Port-Channel Interfaces Device Configuration
 

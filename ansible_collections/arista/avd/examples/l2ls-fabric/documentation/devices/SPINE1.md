@@ -350,12 +350,12 @@ interface Ethernet48
 
 ##### L2
 
-| Interface | Description | Mode | VLANs | Native VLAN | Trunk Group | LACP Fallback Timeout | LACP Fallback Mode | MLAG ID | EVPN ESI | MIN Links |
-| --------- | ----------- | ---- | ----- | ----------- | ------------| --------------------- | ------------------ | ------- | -------- | --------- |
-| Port-Channel1 | L2_RACK1_Port-Channel1 | trunk | 10,20 | - | - | - | - | 1 | - | - |
-| Port-Channel3 | L2_RACK2_Port-Channel1 | trunk | 10,30 | - | - | - | - | 3 | - | - |
-| Port-Channel5 | FIREWALL_FIREWALL | trunk | 10,20,30 | - | - | - | - | 5 | - | - |
-| Port-Channel47 | MLAG_SPINE2_Port-Channel47 | trunk | - | - | MLAG | - | - | - | - | - |
+| Interface | Description | Mode | VLANs | Native VLAN | Trunk Group | LACP Fallback Timeout | LACP Fallback Mode | MLAG ID | EVPN ESI |
+| --------- | ----------- | ---- | ----- | ----------- | ------------| --------------------- | ------------------ | ------- | -------- |
+| Port-Channel1 | L2_RACK1_Port-Channel1 | trunk | 10,20 | - | - | - | - | 1 | - |
+| Port-Channel3 | L2_RACK2_Port-Channel1 | trunk | 10,30 | - | - | - | - | 3 | - |
+| Port-Channel5 | FIREWALL_FIREWALL | trunk | 10,20,30 | - | - | - | - | 5 | - |
+| Port-Channel47 | MLAG_SPINE2_Port-Channel47 | trunk | - | - | MLAG | - | - | - | - |
 
 #### Port-Channel Interfaces Device Configuration
 

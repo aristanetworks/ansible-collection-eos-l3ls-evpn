@@ -71,7 +71,7 @@
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;trunk_groups</samp>](## "port_channel_interfaces.[].trunk_groups") <span style="color:red">deprecated</span> | List, items: String |  |  |  | <span style="color:red">This key is deprecated. Support will be removed in AVD version 6.0.0. Use <samp>switchport.trunk.groups</samp> instead.</span> |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;&lt;str&gt;</samp>](## "port_channel_interfaces.[].trunk_groups.[]") | String |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;lacp_fallback_timeout</samp>](## "port_channel_interfaces.[].lacp_fallback_timeout") | Integer |  |  | Min: 0<br>Max: 300 | Timeout in seconds. EOS default is 90 seconds. |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;min_links</samp>](## "port_channel_interfaces.[].min_links") | Integer |  |  | Min: 0<br>Max: 16 | Minimum no of ports required up before bringing up a port-channel. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;min_links</samp>](## "port_channel_interfaces.[].min_links") | Integer |  |  | Min: 0<br>Max: 64 | Minimum no of ports required up before bringing up a port-channel. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;lacp_fallback_mode</samp>](## "port_channel_interfaces.[].lacp_fallback_mode") | String |  |  | Valid Values:<br>- <code>individual</code><br>- <code>static</code> |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;qos</samp>](## "port_channel_interfaces.[].qos") | Dictionary |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;trust</samp>](## "port_channel_interfaces.[].qos.trust") | String |  |  | Valid Values:<br>- <code>dscp</code><br>- <code>cos</code><br>- <code>disabled</code> |  |
@@ -560,7 +560,7 @@
         lacp_fallback_timeout: <int; 0-300>
 
         # Minimum no of ports required up before bringing up a port-channel.
-        min_links: <int; 0-16>
+        min_links: <int; 0-64>
         lacp_fallback_mode: <str; "individual" | "static">
         qos:
           trust: <str; "dscp" | "cos" | "disabled">

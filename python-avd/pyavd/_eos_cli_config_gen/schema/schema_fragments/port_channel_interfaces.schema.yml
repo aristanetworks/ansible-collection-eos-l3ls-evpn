@@ -398,7 +398,7 @@ keys:
           convert_types:
             - str
           min: 0
-          max: 16
+          max: 64
         lacp_fallback_mode:
           type: str
           valid_values:

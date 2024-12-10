@@ -4760,35 +4760,35 @@ interface Ethernet81/10
 
 ##### L2
 
-| Interface | Description | Mode | VLANs | Native VLAN | Trunk Group | LACP Fallback Timeout | LACP Fallback Mode | MLAG ID | EVPN ESI | MIN Links |
-| --------- | ----------- | ---- | ----- | ----------- | ------------| --------------------- | ------------------ | ------- | -------- | --------- |
-| Port-Channel3 | MLAG_PEER_DC1-LEAF1B_Po3 | trunk | 2-4094 | - | LEAF_PEER_L3, MLAG | - | - | - | - | - |
-| Port-Channel5 | DC1_L2LEAF1_Po1 | trunk | 110,201 | - | - | - | - | 5 | - | - |
-| Port-Channel10 | SRV01_bond0 | trunk | 2-3000 | - | - | - | - | - | 0000:0000:0404:0404:0303 | - |
-| Port-Channel12 | interface_in_mode_access_with_voice | trunk phone | - | 100 | - | - | - | - | - | - |
-| Port-Channel13 | EVPN-Vxlan single-active redundancy | - | - | - | - | - | - | - | 0000:0000:0000:0102:0304 | - |
-| Port-Channel14 | EVPN-MPLS multihoming | - | - | - | - | - | - | - | 0000:0000:0000:0102:0305 | - |
-| Port-Channel15 | DC1_L2LEAF3_Po1 | trunk | 110,201 | - | - | - | - | 15 | - | - |
-| Port-Channel16 | DC1_L2LEAF4_Po1 | trunk | 110,201 | 10 | - | - | - | 16 | - | - |
-| Port-Channel20 | Po_in_mode_access_accepting_tagged_LACP_frames | access | 200 | - | - | - | - | - | - | - |
-| Port-Channel50 | SRV-POD03_PortChanne1 | trunk | 1-4000 | - | - | - | - | - | 0000:0000:0303:0202:0101 | - |
-| Port-Channel51 | ipv6_prefix | trunk | 1-500 | - | - | - | - | - | - | - |
-| Port-Channel100 | - | dot1q-tunnel | 10-11,200 | tag | g1, g2 | - | - | - | - | - |
-| Port-Channel101 | PVLAN Promiscuous Access - only one secondary | access | 110 | - | - | - | - | - | - | - |
-| Port-Channel102 | PVLAN Promiscuous Trunk - vlan translation out | trunk | 110-112 | - | - | - | - | - | - | - |
-| Port-Channel103 | PVLAN Secondary Trunk | trunk | 110-112 | - | - | - | - | - | - | - |
-| Port-Channel104 | LACP fallback individual | trunk | 112 | - | - | 300 | individual | - | - | 3 |
-| Port-Channel105 | bpdu disabled | - | - | - | - | - | - | - | - | - |
-| Port-Channel106 | bpdu enabled | - | - | - | - | - | - | - | - | - |
-| Port-Channel107 | bpdu true | - | - | - | - | - | - | - | - | - |
-| Port-Channel108 | bpdu false | - | - | - | - | - | - | - | - | - |
-| Port-Channel109 | Molecule ACLs | access | 110 | - | - | - | - | - | - | - |
-| Port-Channel112 | LACP fallback individual | trunk | 112 | - | - | 5 | individual | - | - | - |
-| Port-Channel115 | native-vlan-tag-precedence | trunk | - | tag | - | - | - | - | - | - |
-| Port-Channel121 | access_port_with_no_vlans | access | - | - | - | - | - | - | - | - |
-| Port-Channel122 | trunk_port_with_no_vlans | trunk | - | - | - | - | - | - | - | - |
-| Port-Channel130 | IP NAT Testing | - | - | - | - | - | - | - | - | - |
-| Port-Channel131 | dot1q-tunnel mode | dot1q-tunnel | 115 | - | - | - | - | - | - | - |
+| Interface | Description | Mode | VLANs | Native VLAN | Trunk Group | LACP Fallback Timeout | LACP Fallback Mode | MLAG ID | EVPN ESI |
+| --------- | ----------- | ---- | ----- | ----------- | ------------| --------------------- | ------------------ | ------- | -------- |
+| Port-Channel3 | MLAG_PEER_DC1-LEAF1B_Po3 | trunk | 2-4094 | - | LEAF_PEER_L3, MLAG | - | - | - | - |
+| Port-Channel5 | DC1_L2LEAF1_Po1 | trunk | 110,201 | - | - | - | - | 5 | - |
+| Port-Channel10 | SRV01_bond0 | trunk | 2-3000 | - | - | - | - | - | 0000:0000:0404:0404:0303 |
+| Port-Channel12 | interface_in_mode_access_with_voice | trunk phone | - | 100 | - | - | - | - | - |
+| Port-Channel13 | EVPN-Vxlan single-active redundancy | - | - | - | - | - | - | - | 0000:0000:0000:0102:0304 |
+| Port-Channel14 | EVPN-MPLS multihoming | - | - | - | - | - | - | - | 0000:0000:0000:0102:0305 |
+| Port-Channel15 | DC1_L2LEAF3_Po1 | trunk | 110,201 | - | - | - | - | 15 | - |
+| Port-Channel16 | DC1_L2LEAF4_Po1 | trunk | 110,201 | 10 | - | - | - | 16 | - |
+| Port-Channel20 | Po_in_mode_access_accepting_tagged_LACP_frames | access | 200 | - | - | - | - | - | - |
+| Port-Channel50 | SRV-POD03_PortChanne1 | trunk | 1-4000 | - | - | - | - | - | 0000:0000:0303:0202:0101 |
+| Port-Channel51 | ipv6_prefix | trunk | 1-500 | - | - | - | - | - | - |
+| Port-Channel100 | - | dot1q-tunnel | 10-11,200 | tag | g1, g2 | - | - | - | - |
+| Port-Channel101 | PVLAN Promiscuous Access - only one secondary | access | 110 | - | - | - | - | - | - |
+| Port-Channel102 | PVLAN Promiscuous Trunk - vlan translation out | trunk | 110-112 | - | - | - | - | - | - |
+| Port-Channel103 | PVLAN Secondary Trunk | trunk | 110-112 | - | - | - | - | - | - |
+| Port-Channel104 | LACP fallback individual | trunk | 112 | - | - | 300 | individual | - | - |
+| Port-Channel105 | bpdu disabled | - | - | - | - | - | - | - | - |
+| Port-Channel106 | bpdu enabled | - | - | - | - | - | - | - | - |
+| Port-Channel107 | bpdu true | - | - | - | - | - | - | - | - |
+| Port-Channel108 | bpdu false | - | - | - | - | - | - | - | - |
+| Port-Channel109 | Molecule ACLs | access | 110 | - | - | - | - | - | - |
+| Port-Channel112 | LACP fallback individual | trunk | 112 | - | - | 5 | individual | - | - |
+| Port-Channel115 | native-vlan-tag-precedence | trunk | - | tag | - | - | - | - | - |
+| Port-Channel121 | access_port_with_no_vlans | access | - | - | - | - | - | - | - |
+| Port-Channel122 | trunk_port_with_no_vlans | trunk | - | - | - | - | - | - | - |
+| Port-Channel130 | IP NAT Testing | - | - | - | - | - | - | - | - |
+| Port-Channel131 | dot1q-tunnel mode | dot1q-tunnel | 115 | - | - | - | - | - | - |
 
 ##### Encapsulation Dot1q
 

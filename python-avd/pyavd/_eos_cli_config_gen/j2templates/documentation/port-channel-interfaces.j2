@@ -12,8 +12,8 @@
 
 ##### L2
 
-| Interface | Description | Mode | VLANs | Native VLAN | Trunk Group | LACP Fallback Timeout | LACP Fallback Mode | MLAG ID | EVPN ESI | MIN Links |
-| --------- | ----------- | ---- | ----- | ----------- | ------------| --------------------- | ------------------ | ------- | -------- | --------- |
+| Interface | Description | Mode | VLANs | Native VLAN | Trunk Group | LACP Fallback Timeout | LACP Fallback Mode | MLAG ID | EVPN ESI |
+| --------- | ----------- | ---- | ----- | ----------- | ------------| --------------------- | ------------------ | ------- | -------- |
 {%     for port_channel_interface in port_channel_interfaces | arista.avd.natural_sort('name') %}
 {#  Below if condition is added to keep the existing support for rendering switchport attributes on the basis of port_channel_interface.type == switched #}
 {#  TODO: AVD6.0 this if condition should be removed once the port_channel_interface.type key is removed in AVD6.0 #}
@@ -50,10 +50,9 @@
 {%             set trunk_groups = port_channel_interface.switchport.trunk.groups | arista.avd.default(['-']) | join(', ') %}
 {%             set lacp_fallback_timeout = port_channel_interface.lacp_fallback_timeout | arista.avd.default("-") %}
 {%             set lacp_fallback_mode = port_channel_interface.lacp_fallback_mode | arista.avd.default("-") %}
-{%             set min_links = port_channel_interface.min_links | arista.avd.default("-") %}
 {%             set mlag = port_channel_interface.mlag | arista.avd.default("-") %}
 {%             set esi = port_channel_interface.evpn_ethernet_segment.identifier | arista.avd.default("-") %}
-| {{ port_channel_interface.name }} | {{ description }} | {{ mode }} | {{ switchport_vlans | arista.avd.default('-') }} | {{ native_vlan }} | {{ trunk_groups }} | {{ lacp_fallback_timeout }} | {{ lacp_fallback_mode }} | {{ mlag }} | {{ esi }} | {{ min_links }} |
+| {{ port_channel_interface.name }} | {{ description }} | {{ mode }} | {{ switchport_vlans | arista.avd.default('-') }} | {{ native_vlan }} | {{ trunk_groups }} | {{ lacp_fallback_timeout }} | {{ lacp_fallback_mode }} | {{ mlag }} | {{ esi }} |
 {# TODO: AVD6.0 Below elif block should be removed once the deprecated keys are removed in AVD6.0 #}
 {%         elif port_channel_interface.type is arista.avd.defined("switched") %}
 {%             set description = port_channel_interface.description | arista.avd.default("-") %}
@@ -67,10 +66,9 @@
 {%             set trunk_groups = port_channel_interface.trunk_groups | arista.avd.default(['-']) | join(', ') %}
 {%             set lacp_fallback_timeout = port_channel_interface.lacp_fallback_timeout | arista.avd.default("-") %}
 {%             set lacp_fallback_mode = port_channel_interface.lacp_fallback_mode | arista.avd.default("-") %}
-{%             set min_links = port_channel_interface.min_links | arista.avd.default("-") %}
 {%             set mlag = port_channel_interface.mlag | arista.avd.default("-") %}
 {%             set esi = port_channel_interface.evpn_ethernet_segment.identifier | arista.avd.default("-") %}
-| {{ port_channel_interface.name }} | {{ description }} | {{ mode }} | {{ switchport_vlans }} | {{ native_vlan }} | {{ trunk_groups }} | {{ lacp_fallback_timeout }} | {{ lacp_fallback_mode }} | {{ mlag }} | {{ esi }} | {{ min_links }} |
+| {{ port_channel_interface.name }} | {{ description }} | {{ mode }} | {{ switchport_vlans }} | {{ native_vlan }} | {{ trunk_groups }} | {{ lacp_fallback_timeout }} | {{ lacp_fallback_mode }} | {{ mlag }} | {{ esi }} |
 {%         endif %}
 {%     endfor %}
 {# Encapsulation #}

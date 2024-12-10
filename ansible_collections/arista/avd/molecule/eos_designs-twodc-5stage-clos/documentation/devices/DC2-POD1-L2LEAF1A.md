@@ -209,9 +209,9 @@ interface Ethernet1
 
 ##### L2
 
-| Interface | Description | Mode | VLANs | Native VLAN | Trunk Group | LACP Fallback Timeout | LACP Fallback Mode | MLAG ID | EVPN ESI | MIN Links |
-| --------- | ----------- | ---- | ----- | ----------- | ------------| --------------------- | ------------------ | ------- | -------- | --------- |
-| Port-Channel1 | L2_DC2-POD1-LEAF1A_Port-Channel3 | trunk | 4092 | - | - | - | - | - | - | - |
+| Interface | Description | Mode | VLANs | Native VLAN | Trunk Group | LACP Fallback Timeout | LACP Fallback Mode | MLAG ID | EVPN ESI |
+| --------- | ----------- | ---- | ----- | ----------- | ------------| --------------------- | ------------------ | ------- | -------- |
+| Port-Channel1 | L2_DC2-POD1-LEAF1A_Port-Channel3 | trunk | 4092 | - | - | - | - | - | - |
 
 #### Port-Channel Interfaces Device Configuration
 

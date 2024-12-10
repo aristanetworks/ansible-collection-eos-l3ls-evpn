@@ -193,9 +193,9 @@ interface Ethernet14
 
 ##### L2
 
-| Interface | Description | Mode | VLANs | Native VLAN | Trunk Group | LACP Fallback Timeout | LACP Fallback Mode | MLAG ID | EVPN ESI | MIN Links |
-| --------- | ----------- | ---- | ----- | ----------- | ------------| --------------------- | ------------------ | ------- | -------- | --------- |
-| Port-Channel1 | L2_BGP_SPINES_Port-Channel1 | trunk | 1,100,200,4092 | - | - | - | - | - | - | - |
+| Interface | Description | Mode | VLANs | Native VLAN | Trunk Group | LACP Fallback Timeout | LACP Fallback Mode | MLAG ID | EVPN ESI |
+| --------- | ----------- | ---- | ----- | ----------- | ------------| --------------------- | ------------------ | ------- | -------- |
+| Port-Channel1 | L2_BGP_SPINES_Port-Channel1 | trunk | 1,100,200,4092 | - | - | - | - | - | - |
 
 #### Port-Channel Interfaces Device Configuration
 

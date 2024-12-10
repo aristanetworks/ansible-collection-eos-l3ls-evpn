@@ -321,11 +321,11 @@ interface Ethernet8
 
 ##### L2
 
-| Interface | Description | Mode | VLANs | Native VLAN | Trunk Group | LACP Fallback Timeout | LACP Fallback Mode | MLAG ID | EVPN ESI | MIN Links |
-| --------- | ----------- | ---- | ----- | ----------- | ------------| --------------------- | ------------------ | ------- | -------- | --------- |
-| Port-Channel3 | MLAG_dc2-leaf2b_Port-Channel3 | trunk | - | - | MLAG | - | - | - | - | - |
-| Port-Channel5 | SERVER_dc2-leaf2-server1 | trunk | 11-12,21-22 | 4092 | - | - | - | 5 | - | - |
-| Port-Channel8 | L2_dc2-leaf2c_Port-Channel1 | trunk | 11-12,21-22,3401-3402 | - | - | - | - | 8 | - | - |
+| Interface | Description | Mode | VLANs | Native VLAN | Trunk Group | LACP Fallback Timeout | LACP Fallback Mode | MLAG ID | EVPN ESI |
+| --------- | ----------- | ---- | ----- | ----------- | ------------| --------------------- | ------------------ | ------- | -------- |
+| Port-Channel3 | MLAG_dc2-leaf2b_Port-Channel3 | trunk | - | - | MLAG | - | - | - | - |
+| Port-Channel5 | SERVER_dc2-leaf2-server1 | trunk | 11-12,21-22 | 4092 | - | - | - | 5 | - |
+| Port-Channel8 | L2_dc2-leaf2c_Port-Channel1 | trunk | 11-12,21-22,3401-3402 | - | - | - | - | 8 | - |
 
 #### Port-Channel Interfaces Device Configuration
 

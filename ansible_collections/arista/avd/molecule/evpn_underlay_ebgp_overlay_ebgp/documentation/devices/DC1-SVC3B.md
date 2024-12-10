@@ -629,17 +629,17 @@ interface Ethernet44
 
 ##### L2
 
-| Interface | Description | Mode | VLANs | Native VLAN | Trunk Group | LACP Fallback Timeout | LACP Fallback Mode | MLAG ID | EVPN ESI | MIN Links |
-| --------- | ----------- | ---- | ----- | ----------- | ------------| --------------------- | ------------------ | ------- | -------- | --------- |
-| Port-Channel5 | CUSTOM_MLAG_PEER_DC1-SVC3A_Po5 | trunk | - | - | MLAG | - | - | - | - | - |
-| Port-Channel7 | CUSTOM_DC1-L2LEAF2A_Po1 | trunk | 110-111,120-124,130-131,140-141,150,160-162,210-211,250,310-311,350 | - | - | - | - | 7 | - | - |
-| Port-Channel10 | CUSTOM_server03_ESI_PortChanne1 | trunk | 110-111,210-211 | - | - | - | - | - | 0000:1234:0303:0202:0101 | - |
-| Port-Channel14 | CUSTOM_server07_inherit_all_from_profile_port_channel_ALL_WITH_SECURITY_PORT_CHANNEL | trunk | 1-4094 | - | - | - | - | 14 | - | - |
-| Port-Channel15 | CUSTOM_server08_no_profile_port_channel_server08_no_profile_port_channel | trunk | 1-4094 | - | - | - | - | 15 | - | - |
-| Port-Channel17 | CUSTOM_server10_no_profile_port_channel_lacp_fallback_server10_no_profile_port_channel_lacp_fallback | trunk | 1-4094 | - | - | 90 | static | 17 | - | - |
-| Port-Channel18 | CUSTOM_server11_inherit_profile_port_channel_lacp_fallback_ALL_WITH_SECURITY_PORT_CHANNEL | trunk | 1-4094 | - | - | 10 | static | 18 | - | - |
-| Port-Channel19 | CUSTOM_server12_inherit_nested_profile_port_channel_lacp_fallback_NESTED_ALL_WITH_SECURITY_PORT_CHANNEL | trunk | 1-4094 | - | - | 10 | static | 19 | - | - |
-| Port-Channel22 | CUSTOM_server15_port_channel_disabled_interfaces_ | access | 110 | - | - | - | - | 22 | - | - |
+| Interface | Description | Mode | VLANs | Native VLAN | Trunk Group | LACP Fallback Timeout | LACP Fallback Mode | MLAG ID | EVPN ESI |
+| --------- | ----------- | ---- | ----- | ----------- | ------------| --------------------- | ------------------ | ------- | -------- |
+| Port-Channel5 | CUSTOM_MLAG_PEER_DC1-SVC3A_Po5 | trunk | - | - | MLAG | - | - | - | - |
+| Port-Channel7 | CUSTOM_DC1-L2LEAF2A_Po1 | trunk | 110-111,120-124,130-131,140-141,150,160-162,210-211,250,310-311,350 | - | - | - | - | 7 | - |
+| Port-Channel10 | CUSTOM_server03_ESI_PortChanne1 | trunk | 110-111,210-211 | - | - | - | - | - | 0000:1234:0303:0202:0101 |
+| Port-Channel14 | CUSTOM_server07_inherit_all_from_profile_port_channel_ALL_WITH_SECURITY_PORT_CHANNEL | trunk | 1-4094 | - | - | - | - | 14 | - |
+| Port-Channel15 | CUSTOM_server08_no_profile_port_channel_server08_no_profile_port_channel | trunk | 1-4094 | - | - | - | - | 15 | - |
+| Port-Channel17 | CUSTOM_server10_no_profile_port_channel_lacp_fallback_server10_no_profile_port_channel_lacp_fallback | trunk | 1-4094 | - | - | 90 | static | 17 | - |
+| Port-Channel18 | CUSTOM_server11_inherit_profile_port_channel_lacp_fallback_ALL_WITH_SECURITY_PORT_CHANNEL | trunk | 1-4094 | - | - | 10 | static | 18 | - |
+| Port-Channel19 | CUSTOM_server12_inherit_nested_profile_port_channel_lacp_fallback_NESTED_ALL_WITH_SECURITY_PORT_CHANNEL | trunk | 1-4094 | - | - | 10 | static | 19 | - |
+| Port-Channel22 | CUSTOM_server15_port_channel_disabled_interfaces_ | access | 110 | - | - | - | - | 22 | - |
 
 ##### EVPN Multihoming
 

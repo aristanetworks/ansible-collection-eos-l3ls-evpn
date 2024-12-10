@@ -2388,9 +2388,9 @@ interface Ethernet97/2
 
 ##### L2
 
-| Interface | Description | Mode | VLANs | Native VLAN | Trunk Group | LACP Fallback Timeout | LACP Fallback Mode | MLAG ID | EVPN ESI | MIN Links |
-| --------- | ----------- | ---- | ----- | ----------- | ------------| --------------------- | ------------------ | ------- | -------- | --------- |
-| Port-Channel971 | L2_IDF3_AGG_Port-Channel974 | trunk | 10,310,320,330 | - | - | - | - | - | - | - |
+| Interface | Description | Mode | VLANs | Native VLAN | Trunk Group | LACP Fallback Timeout | LACP Fallback Mode | MLAG ID | EVPN ESI |
+| --------- | ----------- | ---- | ----- | ----------- | ------------| --------------------- | ------------------ | ------- | -------- |
+| Port-Channel971 | L2_IDF3_AGG_Port-Channel974 | trunk | 10,310,320,330 | - | - | - | - | - | - |
 
 #### Port-Channel Interfaces Device Configuration
 
