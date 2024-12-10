@@ -141,8 +141,8 @@ network_ports:
       channel_id: 43
       mode: "active"
 
-  # The next two switches are targeted using a like regex filtering on correct platform type
-  # Test regex and platform match criteria
+  # Tests below test hostname and platform matching.
+  # Test regex match all switches and specific platform match criteria.
   - switches:
       - network-ports-tests.*
     switch_ports:
@@ -152,7 +152,17 @@ network_ports:
     profile: pc
     endpoint: PCs
 
-  # Test only platform match
+  # Test regex match switch and no match on platform.
+  - switches:
+      - network-ports-tests.2
+    switch_ports:
+      - Ethernet47-48
+    platforms:
+      - 720XPM-48Y6
+    profile: pc
+    endpoint: PCs
+
+  # Test only platform match.
   - switch_ports:
       - Ethernet23-24
     platforms:
