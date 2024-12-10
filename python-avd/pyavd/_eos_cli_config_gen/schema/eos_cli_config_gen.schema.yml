@@ -9655,7 +9655,7 @@ keys:
           max: 300
         min_links:
           type: int
-          description: Minimum no of ports required up before bringing up a port-channel.
+          description: Minimum number of ports required up before bringing up a port-channel.
           convert_types:
           - str
           min: 0
