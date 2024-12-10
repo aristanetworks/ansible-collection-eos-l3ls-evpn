@@ -215,6 +215,7 @@ class AvdModel(AvdBase):
         def _update(self, *args: Any, **kwargs: Any) -> Self:
             """Update instance with the given kwargs. Reuses __init__."""
             self.__init__(*args, **kwargs)
+            return self
 
     def _deepmerge(self, other: Self, list_merge: Literal["append", "replace"] = "append") -> None:
         """
