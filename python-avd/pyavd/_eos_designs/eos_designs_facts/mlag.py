@@ -9,7 +9,7 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from . import EosDesignsFacts
 
-
+# comment for testing CI
 class MlagMixin:
     """
     Mixin Class used to generate some of the EosDesignsFacts.
