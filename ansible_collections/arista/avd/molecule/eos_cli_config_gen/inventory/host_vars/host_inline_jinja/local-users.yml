@@ -4,10 +4,10 @@ local_users:
   - name: sha-user
     privilege: 15
     role: network-admin
-    sha512_password: "{{ 'randomstring' | secure_hash }}"
+    sha512_password: "{{ 'randomstring' | secure_hash(salt='1234abcd') }}"
   - name: sha-user-the-second
     privilege: 15
     role: network-admin
-    sha512_password: "{{ clear_password | secure_hash }}"
+    sha512_password: "{{ clear_password | secure_hash(salt='Yar49ahkzKddRVYS') }}"
 
 clear_password: "arista"

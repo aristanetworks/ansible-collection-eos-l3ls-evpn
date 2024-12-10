@@ -24,6 +24,21 @@ Generate a SHA512-Crypt password hash with a random salt value for a local user.
 | Argument | Type | Required | Default | Value Restrictions | Description |
 | -------- | ---- | -------- | ------- | ------------------ | ----------- |
 | <samp>_input</samp> | string | True | None |  | Clear text password to be hashed. |
+| <samp>salt</samp> | string | optional | None |  | Salt value to be used when creating password hash.<br>The salt value can only contain the characters `./`, digits `0-9`, and uppercase or lowercase letters `A-Z a-z`.<br>The salt value should not be greater than 16 characters long.<br>If a salt value is not included then a random salt will be generated. |
+
+## Examples
+
+```yaml
+---
+local_users:
+  # Create sha512 password hash with random salt. Note: this will create a new hash each time it is run
+  - name: admin
+    sha512_password: "{{ 'password123' | secure_hash }}"
+
+  # Create sha512 password hash with user defined salt value
+  - name: cvpadmin
+    sha512_password: "{{ 'securepassword' | secure_hash(salt='Yar49ahkzKddRVYS') }}"
+```
 
 ## Return Values
 
