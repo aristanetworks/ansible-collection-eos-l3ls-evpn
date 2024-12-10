@@ -29,6 +29,22 @@ interface {{ vlan_interface.name }}
 {%     if vlan_interface.no_autostate is arista.avd.defined(true) %}
    no autostate
 {%     endif %}
+{%     if vlan_interface.address_locking.address_faimly.ipv4 is arista.avd.defined or vlan_interface.address_locking.address_faimly.ipv6 is arista.avd.defined or vlan_interface.address_locking.ipv4_enforcement_disabled is arista.avd.defined(true) %}
+   address locking
+{%         if vlan_interface.address_locking.address_faimly.ipv4 is arista.avd.defined(true) %}
+      address-family ipv4
+{%         elif vlan_interface.address_locking.address_faimly.ipv4 is arista.avd.defined(false) %}
+      address-family ipv4 disabled
+{%         endif %}
+{%         if vlan_interface.address_locking.address_faimly.ipv6 is arista.avd.defined(true) %}
+      address-family ipv6
+{%         elif vlan_interface.address_locking.address_faimly.ipv6 is arista.avd.defined(false) %}
+      address-family ipv6 disabled
+{%         endif %}
+{%         if vlan_interface.address_locking.ipv4_enforcement_disabled is arista.avd.defined(true) %}
+      locked-address ipv4 enforcement disabled
+{%         endif %}
+{%     endif %}
 {%     if vlan_interface.vrf is arista.avd.defined %}
    vrf {{ vlan_interface.vrf }}
 {%     endif %}

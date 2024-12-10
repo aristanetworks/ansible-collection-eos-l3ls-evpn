@@ -3934,6 +3934,9 @@ interface Ethernet4
    mtu 9100
    no switchport
    snmp trap link-change
+   address locking
+      address-family ipv4
+      address-family ipv6
    ipv6 enable
    ipv6 address 2020::2020/64
    ipv6 address FE80:FEA::AB65/64 link-local
@@ -3957,6 +3960,9 @@ interface Ethernet5
    mtu 9100
    switchport access vlan 220
    no switchport
+   address locking
+      address-family ipv4 disabled
+      address-family ipv6 disabled
    ip ospf cost 99
    ip ospf network point-to-point
    ip ospf authentication message-digest
@@ -3987,6 +3993,8 @@ interface Ethernet6
    switchport trunk allowed vlan 110-111,210-211
    switchport mode trunk
    switchport
+   address locking
+      locked-address ipv4 enforcement disabled
    no lldp transmit
    ptp enable
    ptp announce interval 3
@@ -5938,6 +5946,9 @@ interface Vlan75
 !
 interface Vlan81
    description IPv6 Virtual Address
+   address locking
+      address-family ipv4 disabled
+      address-family ipv6 disabled
    vrf Tenant_C
    ipv6 enable
    ip address virtual 10.10.81.1/24
@@ -5948,6 +5959,8 @@ interface Vlan81
 interface Vlan83
    description SVI Description
    no shutdown
+   address locking
+      locked-address ipv4 enforcement disabled
    isis enable EVPN_UNDERLAY
    isis authentication mode md5
    isis authentication key 0 password
@@ -6178,6 +6191,9 @@ interface Vlan2001
 interface Vlan2002
    description SVI Description
    no autostate
+   address locking
+      address-family ipv4
+      address-family ipv6
    vrf Tenant_B
    ip verify unicast source reachable-via rx
    isis enable EVPN_UNDERLAY

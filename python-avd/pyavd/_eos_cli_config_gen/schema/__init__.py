@@ -5707,11 +5707,58 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class AddressLocking(AvdModel):
             """Subclass of AvdModel."""
 
-            _fields: ClassVar[dict] = {"ipv4": {"type": bool}, "ipv6": {"type": bool}, "_custom_data": {"type": dict}}
+            class AddressFaimly(AvdModel):
+                """Subclass of AvdModel."""
+
+                _fields: ClassVar[dict] = {"ipv4": {"type": bool}, "ipv6": {"type": bool}, "_custom_data": {"type": dict}}
+                ipv4: bool | None
+                """Enable/disable address locking for IPv4."""
+                ipv6: bool | None
+                """Enable/disable address locking for IPv6."""
+                _custom_data: dict[str, Any]
+
+                if TYPE_CHECKING:
+
+                    def __init__(
+                        self,
+                        *,
+                        ipv4: bool | None | UndefinedType = Undefined,
+                        ipv6: bool | None | UndefinedType = Undefined,
+                        _custom_data: dict[str, Any] | UndefinedType = Undefined,
+                    ) -> None:
+                        """
+                        AddressFaimly.
+
+
+                        Subclass of AvdModel.
+
+                        Args:
+                            ipv4: Enable/disable address locking for IPv4.
+                            ipv6: Enable/disable address locking for IPv6.
+                            _custom_data: _custom_data
+
+                        """
+
+            _fields: ClassVar[dict] = {
+                "ipv4": {"type": bool},
+                "ipv6": {"type": bool},
+                "address_faimly": {"type": AddressFaimly},
+                "ipv4_enforcement_disabled": {"type": bool},
+                "_custom_data": {"type": dict},
+            }
             ipv4: bool | None
             """Enable address locking for IPv4."""
             ipv6: bool | None
             """Enable address locking for IPv6."""
+            address_faimly: AddressFaimly
+            """
+            The `address_locking.ipv4/ipv6` and `address_locking.address_faimly.ipv4/ipv6` are mutually exclude
+            and `address_locking.address_faimly.ipv4/ipv6` take precedence.
+
+            Subclass of AvdModel.
+            """
+            ipv4_enforcement_disabled: bool | None
+            """Disable enforcement for IPv4 locked addresses."""
             _custom_data: dict[str, Any]
 
             if TYPE_CHECKING:
@@ -5721,6 +5768,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                     *,
                     ipv4: bool | None | UndefinedType = Undefined,
                     ipv6: bool | None | UndefinedType = Undefined,
+                    address_faimly: AddressFaimly | UndefinedType = Undefined,
+                    ipv4_enforcement_disabled: bool | None | UndefinedType = Undefined,
                     _custom_data: dict[str, Any] | UndefinedType = Undefined,
                 ) -> None:
                     """
@@ -5732,6 +5781,12 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                     Args:
                         ipv4: Enable address locking for IPv4.
                         ipv6: Enable address locking for IPv6.
+                        address_faimly:
+                           The `address_locking.ipv4/ipv6` and `address_locking.address_faimly.ipv4/ipv6` are mutually exclude
+                           and `address_locking.address_faimly.ipv4/ipv6` take precedence.
+
+                           Subclass of AvdModel.
+                        ipv4_enforcement_disabled: Disable enforcement for IPv4 locked addresses.
                         _custom_data: _custom_data
 
                     """
@@ -63898,6 +63953,70 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                     """
 
+        class AddressLocking(AvdModel):
+            """Subclass of AvdModel."""
+
+            class AddressFaimly(AvdModel):
+                """Subclass of AvdModel."""
+
+                _fields: ClassVar[dict] = {"ipv4": {"type": bool}, "ipv6": {"type": bool}, "_custom_data": {"type": dict}}
+                ipv4: bool | None
+                """Enable/disable address locking for IPv4."""
+                ipv6: bool | None
+                """Enable/disable address locking for IPv6."""
+                _custom_data: dict[str, Any]
+
+                if TYPE_CHECKING:
+
+                    def __init__(
+                        self,
+                        *,
+                        ipv4: bool | None | UndefinedType = Undefined,
+                        ipv6: bool | None | UndefinedType = Undefined,
+                        _custom_data: dict[str, Any] | UndefinedType = Undefined,
+                    ) -> None:
+                        """
+                        AddressFaimly.
+
+
+                        Subclass of AvdModel.
+
+                        Args:
+                            ipv4: Enable/disable address locking for IPv4.
+                            ipv6: Enable/disable address locking for IPv6.
+                            _custom_data: _custom_data
+
+                        """
+
+            _fields: ClassVar[dict] = {"address_faimly": {"type": AddressFaimly}, "ipv4_enforcement_disabled": {"type": bool}, "_custom_data": {"type": dict}}
+            address_faimly: AddressFaimly
+            """Subclass of AvdModel."""
+            ipv4_enforcement_disabled: bool | None
+            """Disable enforcement for IPv4 locked addresses."""
+            _custom_data: dict[str, Any]
+
+            if TYPE_CHECKING:
+
+                def __init__(
+                    self,
+                    *,
+                    address_faimly: AddressFaimly | UndefinedType = Undefined,
+                    ipv4_enforcement_disabled: bool | None | UndefinedType = Undefined,
+                    _custom_data: dict[str, Any] | UndefinedType = Undefined,
+                ) -> None:
+                    """
+                    AddressLocking.
+
+
+                    Subclass of AvdModel.
+
+                    Args:
+                        address_faimly: Subclass of AvdModel.
+                        ipv4_enforcement_disabled: Disable enforcement for IPv4 locked addresses.
+                        _custom_data: _custom_data
+
+                    """
+
         class IpAddressSecondaries(AvdList[str]):
             """Subclass of AvdList with `str` items."""
 
@@ -66195,6 +66314,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             "arp_cache_dynamic_capacity": {"type": int},
             "arp_gratuitous_accept": {"type": bool},
             "arp_monitor_mac_address": {"type": bool},
+            "address_locking": {"type": AddressLocking},
             "ip_proxy_arp": {"type": bool},
             "ip_directed_broadcast": {"type": bool},
             "ip_address": {"type": str},
@@ -66266,6 +66386,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         arp_cache_dynamic_capacity: int | None
         arp_gratuitous_accept: bool | None
         arp_monitor_mac_address: bool | None
+        address_locking: AddressLocking
+        """Subclass of AvdModel."""
         ip_proxy_arp: bool | None
         ip_directed_broadcast: bool | None
         ip_address: str | None
@@ -66413,6 +66535,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 arp_cache_dynamic_capacity: int | None | UndefinedType = Undefined,
                 arp_gratuitous_accept: bool | None | UndefinedType = Undefined,
                 arp_monitor_mac_address: bool | None | UndefinedType = Undefined,
+                address_locking: AddressLocking | UndefinedType = Undefined,
                 ip_proxy_arp: bool | None | UndefinedType = Undefined,
                 ip_directed_broadcast: bool | None | UndefinedType = Undefined,
                 ip_address: str | None | UndefinedType = Undefined,
@@ -66487,6 +66610,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                     arp_cache_dynamic_capacity: arp_cache_dynamic_capacity
                     arp_gratuitous_accept: arp_gratuitous_accept
                     arp_monitor_mac_address: arp_monitor_mac_address
+                    address_locking: Subclass of AvdModel.
                     ip_proxy_arp: ip_proxy_arp
                     ip_directed_broadcast: ip_directed_broadcast
                     ip_address: IPv4_address/Mask.

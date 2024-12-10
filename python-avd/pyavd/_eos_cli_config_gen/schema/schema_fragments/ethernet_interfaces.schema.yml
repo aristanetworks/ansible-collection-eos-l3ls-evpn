@@ -153,6 +153,19 @@ keys:
             ipv6:
               type: bool
               description: Enable address locking for IPv6.
+            address_faimly:
+              description: The `address_locking.ipv4/ipv6` and `address_locking.address_faimly.ipv4/ipv6` are mutually exclude and `address_locking.address_faimly.ipv4/ipv6` take precedence.
+              type: dict
+              keys:
+                ipv4:
+                  type: bool
+                  description: Enable/disable address locking for IPv4.
+                ipv6:
+                  type: bool
+                  description: Enable/disable address locking for IPv6.
+            ipv4_enforcement_disabled:
+              type: bool
+              description: Disable enforcement for IPv4 locked addresses.
         flowcontrol:
           type: dict
           keys:

@@ -358,7 +358,19 @@ interface {{ ethernet_interface.name }}
 {%     elif ethernet_interface.snmp_trap_link_change is arista.avd.defined(true) %}
    snmp trap link-change
 {%     endif %}
-{%     if ethernet_interface.address_locking.ipv4 is arista.avd.defined(true) or ethernet_interface.address_locking.ipv6 is arista.avd.defined(true) %}
+{%     if ethernet_interface.address_locking.address_faimly.ipv4 is arista.avd.defined or ethernet_interface.address_locking.address_faimly.ipv6 is arista.avd.defined or ethernet_interface.address_locking.ipv4_enforcement_disabled is arista.avd.defined(true) %}
+   address locking
+{%         if ethernet_interface.address_locking.address_faimly.ipv4 is arista.avd.defined(true) %}
+      address-family ipv4
+{%         elif ethernet_interface.address_locking.address_faimly.ipv4 is arista.avd.defined(false) %}
+      address-family ipv4 disabled
+{%         endif %}
+{%         if ethernet_interface.address_locking.address_faimly.ipv6 is arista.avd.defined(true) %}
+      address-family ipv6
+{%         elif ethernet_interface.address_locking.address_faimly.ipv6 is arista.avd.defined(false) %}
+      address-family ipv6 disabled
+{%         endif %}
+{%     elif ethernet_interface.address_locking.ipv4 is arista.avd.defined(true) or ethernet_interface.address_locking.ipv6 is arista.avd.defined(true) %}
 {%         set address_locking_cli = "address locking" %}
 {%         if ethernet_interface.address_locking.ipv4 is arista.avd.defined(true) %}
 {%             set address_locking_cli = address_locking_cli + " ipv4" %}
@@ -367,6 +379,9 @@ interface {{ ethernet_interface.name }}
 {%             set address_locking_cli = address_locking_cli + " ipv6" %}
 {%         endif %}
    {{ address_locking_cli }}
+{%     endif %}
+{%     if ethernet_interface.address_locking.ipv4_enforcement_disabled is arista.avd.defined(true) %}
+      locked-address ipv4 enforcement disabled
 {%     endif %}
 {%     if ethernet_interface.vrf is arista.avd.defined %}
    vrf {{ ethernet_interface.vrf }}

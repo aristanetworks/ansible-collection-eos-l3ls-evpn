@@ -38,6 +38,10 @@ vlan_interfaces:
         key: password
         mode: text
         rx_disabled: true
+    address_locking:
+      address_faimly:
+        ipv4: true
+        ipv6: true
 
   - name: Vlan81
     description: IPv6 Virtual Address
@@ -48,6 +52,10 @@ vlan_interfaces:
       - fc00:10:10:81::1/64
       - fc00:10:11:81::1/64
       - fc00:10:12:81::1/64
+    address_locking:
+      address_faimly:
+        ipv4: false
+        ipv6: false
 
   - name: Vlan83
     description: SVI Description
@@ -63,6 +71,8 @@ vlan_interfaces:
         key_type: 0
         key: password
         mode: md5
+    address_locking:
+      ipv4_enforcement_disabled: true
 
   - name: Vlan84
     description: SVI Description
