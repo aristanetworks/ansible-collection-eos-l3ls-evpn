@@ -66,7 +66,7 @@ RETURN = r"""
 ---
 _value:
   description:
-    - the SHA512-Crypt password hash.
+    - The SHA-512 password hash.
   type: string
 """
 

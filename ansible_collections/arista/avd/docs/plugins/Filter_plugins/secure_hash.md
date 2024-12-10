@@ -44,7 +44,7 @@ local_users:
 
 | Name | Type | Description |
 | ---- | ---- | ----------- |
-| _value | string | the SHA512-Crypt password hash. |
+| _value | string | The SHA-512 password hash. |
 
 ## Authors
 

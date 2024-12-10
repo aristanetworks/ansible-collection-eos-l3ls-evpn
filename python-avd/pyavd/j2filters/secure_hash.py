@@ -39,16 +39,16 @@ def _validate_salt(salt: str | None) -> None:
 
 def _get_password_hash(user_password: str, salt: str | None = None) -> str:
     """
-    Generate a SHA512-Crypt password hash with a random salt value for a local user.
+    Generate a SHA-512 password hash from a cleartext password for a local user.
 
     Parameters:
     ----------
-        user_password: The clear text password provided by the user that will be hashed.
-        salt: Salt value to be used when creating password hash. If not included then random salt value will be used.
+        user_password: The cleartext password provided by the user that will be hashed.
+        salt: Salt value to be used when creating password hash. A randomly generated salt will be used unless the user specifies one.
 
     Returns:
     -------
-        The SHA512-Crypt password hash
+        The SHA-512 password hash
 
     Raises:
     ------
@@ -65,7 +65,7 @@ def _get_password_hash(user_password: str, salt: str | None = None) -> str:
         # setting the rounds parameter to 5000 to omit rounds from the hash string, similar to EOS implementation
         return sha512_crypt.using(rounds=5000, salt=salt).hash(user_password)
     except Exception as exc:
-        msg = "SHA512 password hashing failed - check the input parameters of arista.avd.secure_hash"
+        msg = "SHA-512 password hashing failed - check the input parameters of arista.avd.secure_hash"
         raise ValueError(msg) from exc
 
 
