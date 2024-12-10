@@ -131,7 +131,12 @@ class AvdModel(AvdBase):
         Get attribute or Undefined.
 
         Avoids the overridden __getattr__ to avoid default values.
+
+        Falls back to __getattr__ in case of _created_from_null to always insert None or default value.
         """
+        if self._created_from_null:
+            return self.__getattr__(name)
+
         if name not in self._fields:
             msg = f"'{type(self).__name__}' object has no attribute '{name}'"
             raise AttributeError(msg)
@@ -186,7 +191,7 @@ class AvdModel(AvdBase):
             key = self._field_to_key_map.get(field, field)
 
             if issubclass(field_info["type"], AvdBase) and isinstance(value, AvdBase):
-                value = value._dump(include_default_values=include_default_values, strip_values=strip_values)
+                value = None if value._created_from_null else value._dump(include_default_values=include_default_values, strip_values=strip_values)
 
             if value in strip_values:
                 continue
@@ -231,6 +236,14 @@ class AvdModel(AvdBase):
         if not isinstance(other, cls):
             msg = f"Unable to merge type '{type(other)}' into '{cls}'"
             raise TypeError(msg)
+
+        if self._created_from_null:
+            # Clear the flag and all data and call merge again.
+            # This means we merge in all data from "other".
+            [delattr(self, field) for field in cls._fields]
+            self._created_from_null = False
+            self._deepmerge(other, list_merge=list_merge)
+            return
 
         for field, field_info in cls._fields.items():
             if (new_value := other._get_defined_attr(field)) is Undefined:
@@ -280,6 +293,9 @@ class AvdModel(AvdBase):
         if not isinstance(other, cls):
             msg = f"Unable to inherit from type '{type(other)}' into '{cls}'"
             raise TypeError(msg)
+
+        if self._created_from_null:
+            return
 
         for field, field_info in cls._fields.items():
             if (new_value := other._get_defined_attr(field)) is Undefined:
@@ -346,7 +362,12 @@ class AvdModel(AvdBase):
 
             new_args[field] = value
 
-        return new_type(**new_args)
+        new_instance = new_type(**new_args)
+
+        if self._created_from_null:
+            new_instance._created_from_null = True
+
+        return new_instance
 
     def _compare(self, other: Self, ignore_fields: tuple[str, ...] = ()) -> bool:
         cls = type(self)

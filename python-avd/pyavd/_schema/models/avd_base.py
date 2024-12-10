@@ -18,6 +18,19 @@ if TYPE_CHECKING:
 class AvdBase(ABC):
     """Base class used for schema-based data classes holding data loaded from AVD inputs."""
 
+    _created_from_null: bool = False
+    """
+    Flag to say if this data was loaded from a '<key>: null' value in YAML.
+
+    This is used to handle inheritance and merging correctly.
+    When _created_from_null we inherit nothing (we win!).
+    When _created_from_null we take anything in when merging and clear the flag.
+    TODO: Stop changing data in-place.
+
+    The flag is not carried across between classes, so it should not affect anything outside the loaded inputs.
+    Only exception is on _cast_as, where the flag is carried over.
+    """
+
     def __eq__(self, other: object) -> bool:
         """Compare two instances of AvdBase by comparing their repr."""
         if isinstance(other, self.__class__):

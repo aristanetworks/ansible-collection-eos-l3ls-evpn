@@ -168,6 +168,11 @@ class AvdList(Sequence[T_ItemType], Generic[T_ItemType], AvdBase):
             msg = f"Unable to merge type '{type(other)}' into '{cls}'"
             raise TypeError(msg)
 
+        if self._created_from_null:
+            # Overwrite all data from other and clear the flag.
+            self._created_from_null = False
+            list_merge = "replace"
+
         if list_merge == "replace":
             self._items = deepcopy(other._items)
             return
@@ -196,4 +201,9 @@ class AvdList(Sequence[T_ItemType], Generic[T_ItemType], AvdBase):
             msg = f"Unable to cast '{cls}' as type '{new_type}' since they have incompatible item types."
             raise TypeError(msg)
 
-        return new_type(self._items)
+        new_instance = new_type(self._items)
+
+        if self._created_from_null:
+            new_instance._created_from_null = True
+
+        return new_instance

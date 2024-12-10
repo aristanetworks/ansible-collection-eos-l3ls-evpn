@@ -180,6 +180,11 @@ class AvdIndexedList(Sequence[T_AvdModel], Generic[T_PrimaryKey, T_AvdModel], Av
             msg = f"Unable to merge type '{type(other)}' into '{cls}'"
             raise TypeError(msg)
 
+        if self._created_from_null:
+            # Overwrite all data from other and clear the flag.
+            self._created_from_null = False
+            list_merge = "replace"
+
         if list_merge == "replace":
             self._items = deepcopy(other._items)
             return
@@ -200,6 +205,10 @@ class AvdIndexedList(Sequence[T_AvdModel], Generic[T_PrimaryKey, T_AvdModel], Av
         if not isinstance(other, cls):
             msg = f"Unable to inherit from type '{type(other)}' into '{cls}'"
             raise TypeError(msg)
+
+        if self._created_from_null:
+            # Null always wins, so no inheritance.
+            return
 
         for primary_key, new_item in other.items():
             old_value = self.get(primary_key)
@@ -224,4 +233,9 @@ class AvdIndexedList(Sequence[T_AvdModel], Generic[T_PrimaryKey, T_AvdModel], Av
             msg = f"Unable to cast '{cls}' as type '{new_type}' since '{new_type}' is not an AvdIndexedList subclass."
             raise TypeError(msg)
 
-        return new_type([item._cast_as(new_type._item_type, ignore_extra_keys=ignore_extra_keys) for item in self])
+        new_instance = new_type([item._cast_as(new_type._item_type, ignore_extra_keys=ignore_extra_keys) for item in self])
+
+        if self._created_from_null:
+            new_instance._created_from_null = True
+
+        return new_instance
