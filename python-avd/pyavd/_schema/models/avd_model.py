@@ -212,7 +212,7 @@ class AvdModel(AvdBase):
         _update: type[Self]
     else:
 
-        def _update(self, *args: Any, **kwargs: Any) -> None:
+        def _update(self, *args: Any, **kwargs: Any) -> Self:
             """Update instance with the given kwargs. Reuses __init__."""
             self.__init__(*args, **kwargs)
 
