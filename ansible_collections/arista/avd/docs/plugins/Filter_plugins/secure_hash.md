@@ -13,11 +13,11 @@ title: arista.avd.secure_hash
 !!! note
     Always use the FQCN (Fully Qualified Collection Name) `arista.avd.secure_hash` when using this plugin.
 
-Generate a sha512 password hash for a local user
+Generate a SHA-512 password hash for an EOS user.
 
 ## Synopsis
 
-Generate a SHA512-Crypt password hash with a random salt value for a local user.
+This filter generates a SHA-512 password hash from a cleartext password for a local user. A randomly generated salt will be used unless the user specifies one.
 
 ## Parameters
 

@@ -29,9 +29,10 @@ name: secure_hash
 collection: arista.avd
 author: Arista Ansible Team (@aristanetworks)
 version_added: "5.2.0"
-short_description: Generate a sha512 password hash for a local user
+short_description: Generate a SHA-512 password hash for an EOS user.
 description:
-  - Generate a SHA512-Crypt password hash with a random salt value for a local user.
+  - This filter generates a SHA-512 password hash from a cleartext password for a local user. A randomly generated salt will be used
+    unless the user specifies one.
 positional: _input
 options:
   _input:
