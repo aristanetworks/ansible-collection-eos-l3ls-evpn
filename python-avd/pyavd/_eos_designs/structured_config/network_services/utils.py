@@ -9,7 +9,7 @@ from re import fullmatch as re_fullmatch
 from typing import TYPE_CHECKING
 
 from pyavd._errors import AristaAvdError, AristaAvdInvalidInputsError
-from pyavd._utils import default, get
+from pyavd._utils import default, get, get_ip_from_ip_prefix
 from pyavd.j2filters import natural_sort
 
 from .utils_wan import UtilsWanMixin
@@ -438,7 +438,7 @@ class UtilsMixin(UtilsWanMixin, UtilsZscalerMixin):
 
             # Resolve router ID from loopback interface
 
-            return str(ipaddress.ip_interface(interface_data["ip_address"]).ip)
+            return get_ip_from_ip_prefix(interface_data["ip_address"])
 
         # Handle "main_router_id" with general router ID enabled/disabled
         if router_id == "main_router_id":
