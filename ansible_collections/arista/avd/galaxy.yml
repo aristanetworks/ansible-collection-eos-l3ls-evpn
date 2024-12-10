@@ -9,7 +9,7 @@ namespace: arista
 name: avd
 
 # The version of the collection. Must be compatible with semantic versioning
-version: 5.1.0
+version: 5.2.0-dev1
 # The path to the Markdown (.md) readme file. This path is relative to the root of the collection
 readme: README.md
 
