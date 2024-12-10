@@ -37,7 +37,7 @@
 {%     if mpls.rsvp.srlg.strict is arista.avd.defined(true) %}
 | SRLG strict | Enabled |
 {%     elif mpls.rsvp.srlg.enabled is arista.avd.defined(true) %}
-| SRLG | enabled |
+| SRLG | Enabled |
 {%     endif %}
 {%     if mpls.rsvp.label_local_termination is arista.avd.defined %}
 | Label local-termination | {{ mpls.rsvp.label_local_termination }} |
