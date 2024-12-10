@@ -413,7 +413,7 @@ DNS Domain : arista.avd.com
 IP Domain List : domain-list1
 
 | IP Address | VRF | Priority |
-| ----------- | --- | -------- |
+| ---------- | --- | -------- |
 | 1.1.1.1 | - | - |
 | 2.2.2.2 | - | 1 |
 | 8.8.8.8 | - | - |
@@ -425,14 +425,18 @@ DNS Domain : arista.avd.com
 IP Domain List : domain-list1
 
 | IP Address | VRF | Priority |
-| ----------- | --- | -------- |
+| ---------- | --- | -------- |
 | 1.1.1.1 | - | - |
 | 2.2.2.1 | vrf1 | - |
 | 2.2.2.2 | vrf1 | 1 |
 | 2.2.2.4 | vrf1 | 4 |
 | 2.2.2.6 | b_vrf | 3 |
 | 2.2.2.7 | a_vrf | 3 |
-| 8.8.8.8 | vrf1 | 0 |
+| 8.8.8.8 | vrf1 | - |
+
+##### mynameserver2
+
+DNS Domain : arista.avd.com
 
 #### IP Name Server Groups Device Configuration
 
@@ -448,13 +452,16 @@ ip name-server group mynameserver0
 ip name-server group mynameserver1
    name-server vrf default 1.1.1.1
    name-server vrf vrf1 2.2.2.1
-   name-server vrf vrf1 8.8.8.8 priority 0
+   name-server vrf vrf1 8.8.8.8
    name-server vrf vrf1 2.2.2.2 priority 1
    name-server vrf a_vrf 2.2.2.7 priority 3
    name-server vrf b_vrf 2.2.2.6 priority 3
    name-server vrf vrf1 2.2.2.4 priority 4
    dns domain arista.avd.com
    ip domain-list domain-list1
+!
+ip name-server group mynameserver2
+   dns domain arista.avd.com
 ```
 
 ### Domain Lookup

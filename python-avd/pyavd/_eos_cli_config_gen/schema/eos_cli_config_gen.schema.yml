@@ -5567,7 +5567,6 @@ keys:
           type: str
         name_servers:
           type: list
-          primary_key: ip_address
           items:
             type: dict
             keys:

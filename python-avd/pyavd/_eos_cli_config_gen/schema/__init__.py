@@ -15795,10 +15795,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                     """
 
-        class NameServers(AvdIndexedList[str, NameServersItem]):
-            """Subclass of AvdIndexedList with `NameServersItem` items. Primary key is `ip_address` (`str`)."""
-
-            _primary_key: ClassVar[str] = "ip_address"
+        class NameServers(AvdList[NameServersItem]):
+            """Subclass of AvdList with `NameServersItem` items."""
 
         NameServers._item_type = NameServersItem
 
@@ -15811,7 +15809,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         }
         name: str
         name_servers: NameServers
-        """Subclass of AvdIndexedList with `NameServersItem` items. Primary key is `ip_address` (`str`)."""
+        """Subclass of AvdList with `NameServersItem` items."""
         dns_domain: str | None
         ip_domain_list: str | None
         """Set domain names to complete unqualified host names."""
@@ -15836,7 +15834,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                 Args:
                     name: name
-                    name_servers: Subclass of AvdIndexedList with `NameServersItem` items. Primary key is `ip_address` (`str`).
+                    name_servers: Subclass of AvdList with `NameServersItem` items.
                     dns_domain: dns_domain
                     ip_domain_list: Set domain names to complete unqualified host names.
                     _custom_data: _custom_data

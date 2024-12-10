@@ -23,7 +23,7 @@ IP Domain List : {{ group.ip_domain_list }}
 {%         if group.name_servers is arista.avd.defined %}
 
 | IP Address | VRF | Priority |
-| ----------- | --- | -------- |
+| ---------- | --- | -------- |
 {%             for server in group.name_servers | arista.avd.natural_sort("ip_address") %}
 | {{ server.ip_address }} | {{ server.vrf | arista.avd.default('-') }} | {{ server.priority | arista.avd.default('-') }} |
 {%             endfor %}
