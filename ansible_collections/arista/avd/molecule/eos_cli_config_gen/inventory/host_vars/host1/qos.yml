@@ -1,0 +1,23 @@
+---
+### QOS ###
+qos:
+  map:
+    cos:
+      - "1 2 3 4 to traffic-class 2"
+      - "3 to traffic-class 3"
+    dscp:
+      - "8 9 10 11 12 13 14 15 16 17 19 21 23 24 25 27 29 31 32 33 35 37 39 40 41 42 43 44 45 47 49 50 51 52 53 54 55 57 58 59 60 61 62 63 to traffic-class 1"
+      - "46 to traffic-class 5"
+      - "18 20 22 26 28 30 34 36 38 to traffic-class 4 drop-precedence 2"
+    exp:
+      - "0 to traffic-class 0"
+    traffic_class:
+      - "2 4 5 to cos 7"
+      - "1 to dscp 56"
+      - "6 to tx-queue 2"
+  rewrite_dscp: true
+  random_detect:
+    ecn:
+      allow_non_ect:
+        enabled: true
+        chip_based: true

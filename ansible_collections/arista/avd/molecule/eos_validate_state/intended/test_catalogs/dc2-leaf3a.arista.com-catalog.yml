@@ -73,6 +73,13 @@ anta.tests.connectivity:
       port: Ethernet15
     result_overwrite:
       custom_field: 'Local: Ethernet15 - Remote: dc2-leaf2b Ethernet2'
+- VerifyLLDPNeighbors:
+    neighbors:
+    - neighbor_device: dc2-leaf3b.arista.com
+      neighbor_port: Ethernet16
+      port: Ethernet16
+    result_overwrite:
+      custom_field: 'Local: Ethernet16 - Remote: dc2-leaf3b.arista.com Ethernet16'
 - VerifyReachability:
     hosts:
     - destination: 10.255.255.120
@@ -343,6 +350,12 @@ anta.tests.interfaces:
       status: up
     result_overwrite:
       custom_field: Interface Ethernet15 - Test_type_routed = 'up'
+- VerifyInterfacesStatus:
+    interfaces:
+    - name: Ethernet16
+      status: up
+    result_overwrite:
+      custom_field: Interface Ethernet16 - Test_dhcp_interface_connectivity = 'up'
 - VerifyInterfacesStatus:
     interfaces:
     - name: Port-Channel3

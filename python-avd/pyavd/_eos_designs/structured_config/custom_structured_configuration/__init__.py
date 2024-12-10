@@ -21,15 +21,6 @@ class AvdStructuredConfigCustomStructuredConfiguration(AvdFacts):
     """
 
     @cached_property
-    def _custom_structured_configuration_prefix(self) -> list:
-        """Reads custom_structured_configuration_prefix from hostvars and converts to list if necessary."""
-        custom_structured_configuration_prefix = get(self._hostvars, "custom_structured_configuration_prefix", default=["custom_structured_configuration_"])
-        if not isinstance(custom_structured_configuration_prefix, list):
-            return [custom_structured_configuration_prefix]
-
-        return custom_structured_configuration_prefix
-
-    @cached_property
     def _router_bgp(self) -> dict | None:
         return get(self._hostvars, "router_bgp")
 
@@ -48,7 +39,7 @@ class AvdStructuredConfigCustomStructuredConfiguration(AvdFacts):
         return struct_cfgs
 
     def _struct_cfg(self) -> list:
-        if (struct_cfg := get(self.shared_utils.switch_data_combined, "structured_config")) is not None:
+        if struct_cfg := self.shared_utils.node_config.structured_config._as_dict(strip_values=()):
             return [struct_cfg]
 
         return []
@@ -123,19 +114,8 @@ class AvdStructuredConfigCustomStructuredConfiguration(AvdFacts):
         ]
 
     def _custom_structured_configurations(self) -> list[dict]:
-        if not self._custom_structured_configuration_prefix:
-            return []
-
         return [
-            {
-                # Disable black to prevent whitespace before colon PEP8 E203
-                # fmt: off
-                str(key)[len(prefix) :]: self._hostvars[key]
-                # fmt: on
-                for key in self._hostvars
-                if str(key).startswith(prefix) and key not in CUSTOM_STRUCTURED_CONFIGURATION_EXEMPT_KEYS
-            }
-            for prefix in self._custom_structured_configuration_prefix
+            custom_structured_configuration.value._as_dict(strip_values=()) for custom_structured_configuration in self.inputs._custom_structured_configurations
         ]
 
     def render(self) -> list[dict]:

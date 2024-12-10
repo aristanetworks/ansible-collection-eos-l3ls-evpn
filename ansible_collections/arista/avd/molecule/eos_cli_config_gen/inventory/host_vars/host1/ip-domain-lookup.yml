@@ -1,0 +1,7 @@
+---
+### Domain Lookup ###
+ip_domain_lookup:
+  source_interfaces:
+    - name: Management0
+      vrf: mgt
+    - name: Loopback0

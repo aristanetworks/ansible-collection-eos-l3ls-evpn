@@ -84,7 +84,8 @@ keys:
                   type: str
                   convert_types:
                   - int
-                  description: Privilege level 'all' or 0-15.
+                  description: Privilege level 'all' or 0-15. Ensure that if ranges
+                    are used, they do not overlap with one another.
                 type:
                   type: str
                   valid_values:
@@ -105,7 +106,8 @@ keys:
                   type: str
                   convert_types:
                   - int
-                  description: Privilege level 'all' or 0-15.
+                  description: Privilege level 'all' or 0-15. Ensure that if ranges
+                    are used, they do not overlap with one another.
                 type:
                   type: str
                   valid_values:
@@ -10087,7 +10089,10 @@ keys:
                 devices.'
         ip_address:
           type: str
-          description: IPv4 address/mask.
+          description: IPv4 address/mask or "dhcp".
+        dhcp_client_accept_default_route:
+          type: bool
+          description: Install default-route obtained via DHCP.
         ip_verify_unicast_source_reachable_via:
           type: str
           valid_values:
@@ -15942,10 +15947,10 @@ keys:
 
                           Only applicable if `address_family` is one of `evpn`, `vpn-ipv4`
                           or `vpn-ipv6`.'
-                      vpn_route_filter_rcf:
+                      vrf_route_filter_rcf:
                         type: str
                         description: 'RCF function name with parenthesis for filtering
-                          VPN routes. Also requires `rcf` to be set.
+                          VRF routes. Also requires `rcf` to be set.
 
                           Example: MyFunction(myarg).
 
@@ -18046,6 +18051,9 @@ keys:
       router_id:
         type: str
         description: IPv4 Address.
+      is_hostname:
+        type: str
+        description: Hostname of Intermediate System.
       is_type:
         display_name: IS Type
         type: str
@@ -19418,6 +19426,9 @@ keys:
           bfd:
             type: bool
             description: Enable/Disable BFD.
+          make_before_break:
+            type: bool
+            description: Enable/Disable Make-Before-Break.
           ssm_range:
             type: str
             description: IPv4 Prefix associated with SSM.
@@ -19488,6 +19499,9 @@ keys:
                 bfd:
                   type: bool
                   description: Enable/Disable BFD.
+                make_before_break:
+                  type: bool
+                  description: Enable/Disable Make-Before-Break.
                 rp_addresses:
                   type: list
                   items:

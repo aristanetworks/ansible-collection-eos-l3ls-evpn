@@ -1,0 +1,9 @@
+---
+#### Router pim sparse mode ####
+router_pim_sparse_mode:
+  ipv4:
+    make_before_break: true
+  vrfs:
+    - name: MCAST_VRF1
+      ipv4:
+        make_before_break: true
