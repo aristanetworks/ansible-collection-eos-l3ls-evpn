@@ -1008,10 +1008,7 @@ interface {{ ethernet_interface.name }}
 {%             endif %}
    {{ tap_mac_address_cli }}
 {%         endif %}
-{# The position of "mpls_pop_all" does not match the EOS CLI to implement this "elif" with "vxlan_strip" #}
-{%         if ethernet_interface.switchport.tap.mpls_pop_all is arista.avd.defined(true) %}
-   switchport tap mpls pop all
-{%         elif ethernet_interface.switchport.tap.encapsulation.vxlan_strip is arista.avd.defined(true) %}
+{%         if ethernet_interface.switchport.tap.encapsulation.vxlan_strip is arista.avd.defined(true) and ethernet_interface.switchport.tap.mpls_pop_all is not arista.avd.defined(true) %}
    switchport tap encapsulation vxlan strip
 {%         endif %}
 {%         for protocol in ethernet_interface.switchport.tap.encapsulation.gre.protocols | arista.avd.natural_sort('protocol') %}
@@ -1053,6 +1050,9 @@ interface {{ ethernet_interface.name }}
    {{ tap_encapsulation_cli }}
 {%             endif %}
 {%         endfor %}
+{%         if ethernet_interface.switchport.tap.mpls_pop_all is arista.avd.defined(true) %}
+   switchport tap mpls pop all
+{%         endif %}
 {%         if ethernet_interface.switchport.tool.mpls_pop_all is arista.avd.defined(true) %}
    switchport tool mpls pop all
 {%         endif %}

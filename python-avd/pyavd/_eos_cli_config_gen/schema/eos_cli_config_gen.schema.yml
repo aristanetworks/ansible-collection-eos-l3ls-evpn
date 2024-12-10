@@ -4280,6 +4280,8 @@ keys:
                                   for protocol 0x0.'
                         destinations:
                           type: list
+                          description: In EOS, `gre.strip` and `destinations.destination/source.strip`
+                            (without defining protocols) are mutually exclusive.
                           primary_key: destination
                           items:
                             type: dict

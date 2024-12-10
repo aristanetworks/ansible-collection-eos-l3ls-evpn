@@ -11723,7 +11723,13 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                         is `protocol` (`str`).
                         """
                         destinations: Destinations
-                        """Subclass of AvdIndexedList with `DestinationsItem` items. Primary key is `destination` (`str`)."""
+                        """
+                        In EOS, `gre.strip` and `destinations.destination/source.strip` (without defining protocols) are
+                        mutually exclusive.
+
+                        Subclass of AvdIndexedList with `DestinationsItem` items. Primary key is
+                        `destination` (`str`).
+                        """
                         _custom_data: dict[str, Any]
 
                         if TYPE_CHECKING:
@@ -11750,7 +11756,12 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                                        Subclass of AvdIndexedList with `ProtocolsItem` items. Primary key
                                        is `protocol` (`str`).
-                                    destinations: Subclass of AvdIndexedList with `DestinationsItem` items. Primary key is `destination` (`str`).
+                                    destinations:
+                                       In EOS, `gre.strip` and `destinations.destination/source.strip` (without defining protocols) are
+                                       mutually exclusive.
+
+                                       Subclass of AvdIndexedList with `DestinationsItem` items. Primary key is
+                                       `destination` (`str`).
                                     _custom_data: _custom_data
 
                                 """
@@ -31474,7 +31485,13 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                         is `protocol` (`str`).
                         """
                         destinations: Destinations
-                        """Subclass of AvdIndexedList with `DestinationsItem` items. Primary key is `destination` (`str`)."""
+                        """
+                        In EOS, `gre.strip` and `destinations.destination/source.strip` (without defining protocols) are
+                        mutually exclusive.
+
+                        Subclass of AvdIndexedList with `DestinationsItem` items. Primary key is
+                        `destination` (`str`).
+                        """
                         _custom_data: dict[str, Any]
 
                         if TYPE_CHECKING:
@@ -31501,7 +31518,12 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                                        Subclass of AvdIndexedList with `ProtocolsItem` items. Primary key
                                        is `protocol` (`str`).
-                                    destinations: Subclass of AvdIndexedList with `DestinationsItem` items. Primary key is `destination` (`str`).
+                                    destinations:
+                                       In EOS, `gre.strip` and `destinations.destination/source.strip` (without defining protocols) are
+                                       mutually exclusive.
+
+                                       Subclass of AvdIndexedList with `DestinationsItem` items. Primary key is
+                                       `destination` (`str`).
                                     _custom_data: _custom_data
 
                                 """

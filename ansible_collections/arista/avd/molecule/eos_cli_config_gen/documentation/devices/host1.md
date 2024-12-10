@@ -4755,7 +4755,6 @@ interface Ethernet82
    switchport tap native vlan 10
    switchport tap identity 3 inner 5
    switchport tap mac-address dest 01:00:00:00:00:00 src 01:23:45:67:89:ab
-   switchport tap mpls pop all
    switchport tap encapsulation gre protocol 0x1 strip
    switchport tap encapsulation gre protocol 0x2 feature header length 3 strip
    switchport tap encapsulation gre protocol 0x3 feature header length 2 strip re-encapsulation ethernet
@@ -4767,6 +4766,7 @@ interface Ethernet82
    switchport tap encapsulation gre destination 2.1.1.2 protocol 0x11 feature header length 2 strip re-encapsulation ethernet
    switchport tap encapsulation gre destination 2.1.1.2 protocol 0x12 strip re-encapsulation ethernet
    switchport tap encapsulation gre destination 2.1.1.3 source 2.1.1.4 strip
+   switchport tap mpls pop all
    switchport tool mpls pop all
    switchport tool encapsulation vn-tag strip
    switchport tool encapsulation dot1br strip
@@ -5543,7 +5543,6 @@ interface Port-Channel133
    switchport tap native vlan 10
    switchport tap identity 3
    switchport tap mac-address dest 01:00:00:00:00:00 src 01:23:45:67:89:ab
-   switchport tap mpls pop all
    switchport tap encapsulation gre protocol 0x2 feature header length 3 strip
    switchport tap encapsulation gre protocol 0x3 feature header length 2 strip re-encapsulation ethernet
    switchport tap encapsulation gre protocol 0x10 strip
@@ -5553,6 +5552,7 @@ interface Port-Channel133
    switchport tap encapsulation gre destination 1.1.1.3 source 1.1.1.4 strip
    switchport tap encapsulation gre destination 2.1.1.2 protocol 0x1 strip
    switchport tap encapsulation gre destination 2.1.1.2 protocol 0x2 feature header length 2 strip re-encapsulation ethernet
+   switchport tap mpls pop all
    switchport tool mpls pop all
    switchport tool encapsulation vn-tag strip
    switchport tool encapsulation dot1br strip
