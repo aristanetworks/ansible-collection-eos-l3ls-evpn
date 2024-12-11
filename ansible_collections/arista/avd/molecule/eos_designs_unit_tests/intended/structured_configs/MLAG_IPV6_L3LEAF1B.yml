@@ -1,159 +1,32 @@
-hostname: MLAG_IPV6_L3LEAF1B
-is_deployed: true
-router_bgp:
-  as: '65001'
-  router_id: 192.168.255.36
-  bgp:
-    default:
-      ipv4_unicast: false
-  maximum_paths:
-    paths: 4
-    ecmp: 4
-  redistribute:
-    connected:
-      enabled: true
-      route_map: RM-CONN-2-BGP
-  updates:
-    wait_install: true
-  peer_groups:
-  - name: MLAG-IPv4-UNDERLAY-PEER
-    type: ipv4
-    remote_as: '65001'
-    next_hop_self: true
-    description: MLAG_IPV6_L3LEAF1A
-    maximum_routes: 12000
-    send_community: all
-    route_map_in: RM-MLAG-PEER-IN
-  - name: IPv4-UNDERLAY-PEERS
-    type: ipv4
-    maximum_routes: 12000
-    send_community: all
-  - name: EVPN-OVERLAY-PEERS
-    type: evpn
-    update_source: Loopback0
-    bfd: true
-    send_community: all
-    maximum_routes: 0
-    ebgp_multihop: 3
-  address_family_ipv4:
-    peer_groups:
-    - name: MLAG-IPv4-UNDERLAY-PEER
-      activate: true
-    - name: IPv4-UNDERLAY-PEERS
-      activate: true
-    - name: EVPN-OVERLAY-PEERS
-      activate: false
-  neighbors:
-  - ip_address: 10.10.224.4
-    peer_group: MLAG-IPv4-UNDERLAY-PEER
-    peer: MLAG_IPV6_L3LEAF1A
-    description: MLAG_IPV6_L3LEAF1A_Vlan4093
-  address_family_evpn:
-    peer_groups:
-    - name: EVPN-OVERLAY-PEERS
-      activate: true
-service_routing_protocols_model: multi-agent
-ip_routing: true
-vlan_internal_order:
-  allocation: ascending
-  range:
-    beginning: 1006
-    ending: 1199
 aaa_root:
   disabled: true
 config_end: true
 enable_password:
   disabled: true
-transceiver_qsfp_default_mode_4x10: true
-vrfs:
-- name: MGMT
-  ip_routing: false
-management_interfaces:
-- name: Management1
-  description: OOB_MANAGEMENT
-  shutdown: false
-  vrf: MGMT
-  ip_address: 192.168.201.117/24
-  type: oob
-management_api_http:
-  enable_vrfs:
-  - name: MGMT
-  enable_https: true
-spanning_tree:
-  no_spanning_tree_vlan: 4093-4094
-vlans:
-- id: 4093
-  tenant: system
-  name: MLAG_L3
-  trunk_groups:
-  - MLAG
-- id: 4094
-  tenant: system
-  name: MLAG
-  trunk_groups:
-  - MLAG
-vlan_interfaces:
-- name: Vlan4093
-  description: MLAG_L3
-  shutdown: false
-  mtu: 9214
-  ip_address: 10.10.224.5/31
-- name: Vlan4094
-  description: MLAG
-  shutdown: false
-  no_autostate: true
-  mtu: 9214
-  ipv6_address: 2001:db8:0:2::2/64
-port_channel_interfaces:
-- name: Port-Channel5
-  description: MLAG_MLAG_IPV6_L3LEAF1A_Port-Channel5
-  switchport:
-    enabled: true
-    mode: trunk
-    trunk:
-      groups:
-      - MLAG
-  shutdown: false
 ethernet_interfaces:
 - name: Ethernet5
-  peer: MLAG_IPV6_L3LEAF1A
-  peer_interface: Ethernet5
-  peer_type: mlag_peer
   description: MLAG_MLAG_IPV6_L3LEAF1A_Ethernet5
   shutdown: false
   channel_group:
     id: 5
     mode: active
-- name: Ethernet6
   peer: MLAG_IPV6_L3LEAF1A
-  peer_interface: Ethernet6
+  peer_interface: Ethernet5
   peer_type: mlag_peer
+- name: Ethernet6
   description: MLAG_MLAG_IPV6_L3LEAF1A_Ethernet6
   shutdown: false
   channel_group:
     id: 5
     mode: active
-mlag_configuration:
-  domain_id: MLAG_IPV6
-  local_interface: Vlan4094
-  peer_address: 2001:db8:0:2::1
-  peer_link: Port-Channel5
-  reload_delay_mlag: '300'
-  reload_delay_non_mlag: '330'
-route_maps:
-- name: RM-MLAG-PEER-IN
-  sequence_numbers:
-  - sequence: 10
-    type: permit
-    set:
-    - origin incomplete
-    description: Make routes learned over MLAG Peer-link less preferred on spines to ensure optimal routing
-- name: RM-CONN-2-BGP
-  sequence_numbers:
-  - sequence: 10
-    type: permit
-    match:
-    - ip address prefix-list PL-LOOPBACKS-EVPN-OVERLAY
+  peer: MLAG_IPV6_L3LEAF1A
+  peer_interface: Ethernet6
+  peer_type: mlag_peer
+hostname: MLAG_IPV6_L3LEAF1B
+ip_igmp_snooping:
+  globally_enabled: true
+ip_routing: true
+is_deployed: true
 loopback_interfaces:
 - name: Loopback0
   description: ROUTER_ID
@@ -163,6 +36,36 @@ loopback_interfaces:
   description: VXLAN_TUNNEL_SOURCE
   shutdown: false
   ip_address: 192.168.254.35/32
+management_api_http:
+  enable_https: true
+  enable_vrfs:
+  - name: MGMT
+management_interfaces:
+- name: Management1
+  description: OOB_MANAGEMENT
+  shutdown: false
+  vrf: MGMT
+  ip_address: 192.168.201.117/24
+  type: oob
+metadata:
+  platform: vEOS-LAB
+mlag_configuration:
+  domain_id: MLAG_IPV6
+  local_interface: Vlan4094
+  peer_address: 2001:db8:0:2::1
+  peer_link: Port-Channel5
+  reload_delay_mlag: '300'
+  reload_delay_non_mlag: '330'
+port_channel_interfaces:
+- name: Port-Channel5
+  description: MLAG_MLAG_IPV6_L3LEAF1A_Port-Channel5
+  shutdown: false
+  switchport:
+    enabled: true
+    mode: trunk
+    trunk:
+      groups:
+      - MLAG
 prefix_lists:
 - name: PL-LOOPBACKS-EVPN-OVERLAY
   sequence_numbers:
@@ -170,19 +73,116 @@ prefix_lists:
     action: permit 192.168.255.0/24 eq 32
   - sequence: 20
     action: permit 192.168.254.0/24 eq 32
+route_maps:
+- name: RM-MLAG-PEER-IN
+  sequence_numbers:
+  - sequence: 10
+    type: permit
+    description: Make routes learned over MLAG Peer-link less preferred on spines to ensure optimal routing
+    set:
+    - origin incomplete
+- name: RM-CONN-2-BGP
+  sequence_numbers:
+  - sequence: 10
+    type: permit
+    match:
+    - ip address prefix-list PL-LOOPBACKS-EVPN-OVERLAY
 router_bfd:
   multihop:
     interval: 300
     min_rx: 300
     multiplier: 3
-ip_igmp_snooping:
-  globally_enabled: true
+router_bgp:
+  as: '65001'
+  router_id: 192.168.255.36
+  maximum_paths:
+    paths: 4
+    ecmp: 4
+  updates:
+    wait_install: true
+  bgp:
+    default:
+      ipv4_unicast: false
+  peer_groups:
+  - name: MLAG-IPv4-UNDERLAY-PEER
+    type: ipv4
+    remote_as: '65001'
+    description: MLAG_IPV6_L3LEAF1A
+    next_hop_self: true
+    send_community: all
+    maximum_routes: 12000
+    route_map_in: RM-MLAG-PEER-IN
+  - name: IPv4-UNDERLAY-PEERS
+    type: ipv4
+    send_community: all
+    maximum_routes: 12000
+  - name: EVPN-OVERLAY-PEERS
+    type: evpn
+    update_source: Loopback0
+    bfd: true
+    ebgp_multihop: 3
+    send_community: all
+    maximum_routes: 0
+  neighbors:
+  - ip_address: 10.10.224.4
+    peer_group: MLAG-IPv4-UNDERLAY-PEER
+    peer: MLAG_IPV6_L3LEAF1A
+    description: MLAG_IPV6_L3LEAF1A_Vlan4093
+  redistribute:
+    connected:
+      enabled: true
+      route_map: RM-CONN-2-BGP
+  address_family_evpn:
+    peer_groups:
+    - name: EVPN-OVERLAY-PEERS
+      activate: true
+  address_family_ipv4:
+    peer_groups:
+    - name: MLAG-IPv4-UNDERLAY-PEER
+      activate: true
+    - name: IPv4-UNDERLAY-PEERS
+      activate: true
+    - name: EVPN-OVERLAY-PEERS
+      activate: false
+service_routing_protocols_model: multi-agent
+spanning_tree:
+  no_spanning_tree_vlan: 4093-4094
+transceiver_qsfp_default_mode_4x10: true
+vlan_interfaces:
+- name: Vlan4093
+  description: MLAG_L3
+  shutdown: false
+  ip_address: 10.10.224.5/31
+  mtu: 9214
+- name: Vlan4094
+  description: MLAG
+  shutdown: false
+  ipv6_address: 2001:db8:0:2::2/64
+  mtu: 9214
+  no_autostate: true
+vlan_internal_order:
+  allocation: ascending
+  range:
+    beginning: 1006
+    ending: 1199
+vlans:
+- id: 4093
+  name: MLAG_L3
+  trunk_groups:
+  - MLAG
+  tenant: system
+- id: 4094
+  name: MLAG
+  trunk_groups:
+  - MLAG
+  tenant: system
+vrfs:
+- name: MGMT
+  ip_routing: false
 vxlan_interface:
   vxlan1:
     description: MLAG_IPV6_L3LEAF1B_VTEP
     vxlan:
-      udp_port: 4789
       source_interface: Loopback1
+      udp_port: 4789
       virtual_router_encapsulation_mac_address: mlag-system-id
-metadata:
-  platform: vEOS-LAB

@@ -1,52 +1,6 @@
-hostname: DC1-LEAF1A
-is_deployed: true
-router_bgp:
-  as: '65000'
-  router_id: 192.168.255.5
-  bgp_defaults:
-  - distance bgp 20 200 200
-  bgp:
-    default:
-      ipv4_unicast: false
-  maximum_paths:
-    paths: 4
-    ecmp: 4
-  updates:
-    wait_install: true
-  peer_groups:
-  - name: OVERLAY-PEERS
-    type: evpn
-    update_source: Loopback0
-    bfd: true
-    password: 64fqSH5CFUNLRHErezMrRg==
-    send_community: all
-    maximum_routes: 0
-    remote_as: '65000'
-  address_family_evpn:
-    peer_groups:
-    - name: OVERLAY-PEERS
-      activate: true
-      route_map_in: RM-EVPN-SOO-IN
-      route_map_out: RM-EVPN-SOO-OUT
-  address_family_ipv4:
-    peer_groups:
-    - name: OVERLAY-PEERS
-      activate: false
-  neighbors:
-  - ip_address: 192.168.255.1
-    peer_group: OVERLAY-PEERS
-    peer: DC1-SPINE1
-    description: DC1-SPINE1_Loopback0
-  - ip_address: 192.168.255.4
-    peer_group: OVERLAY-PEERS
-    peer: DC1-SPINE4
-    description: DC1-SPINE4_Loopback0
-static_routes:
-- vrf: MGMT
-  destination_address_prefix: 0.0.0.0/0
-  gateway: 192.168.200.5
-service_routing_protocols_model: multi-agent
-ip_routing: true
+aaa_root:
+  disabled: true
+config_end: true
 daemon_terminattr:
   cvaddrs:
   - 192.168.200.11:9910
@@ -54,30 +8,88 @@ daemon_terminattr:
     method: key
     key: telarista
   cvvrf: MGMT
-  smashexcludes: ale,flexCounter,hardware,kni,pulse,strata
-  ingestexclude: /Sysdb/cell/1/agent,/Sysdb/cell/2/agent
   disable_aaa: true
-vlan_internal_order:
-  allocation: ascending
-  range:
-    beginning: 1006
-    ending: 1199
-aaa_root:
-  disabled: true
-config_end: true
+  ingestexclude: /Sysdb/cell/1/agent,/Sysdb/cell/2/agent
+  smashexcludes: ale,flexCounter,hardware,kni,pulse,strata
 enable_password:
   disabled: true
-transceiver_qsfp_default_mode_4x10: true
+ethernet_interfaces:
+- name: Ethernet1
+  description: P2P_DC1-SPINE1_Ethernet1
+  shutdown: false
+  mtu: 1500
+  ip_address: 172.31.255.1/31
+  isis_enable: EVPN_UNDERLAY
+  isis_bfd: true
+  isis_metric: 50
+  isis_network_point_to_point: true
+  isis_circuit_type: level-2
+  peer: DC1-SPINE1
+  peer_interface: Ethernet1
+  peer_type: spine
+  switchport:
+    enabled: false
+- name: Ethernet2
+  description: P2P_DC1-SPINE2_Ethernet1
+  shutdown: false
+  mtu: 1500
+  ip_address: 172.31.255.3/31
+  isis_enable: EVPN_UNDERLAY
+  isis_bfd: true
+  isis_metric: 50
+  isis_network_point_to_point: true
+  isis_circuit_type: level-2
+  peer: DC1-SPINE2
+  peer_interface: Ethernet1
+  peer_type: spine
+  switchport:
+    enabled: false
+- name: Ethernet3
+  description: P2P_DC1-SPINE3_Ethernet1
+  shutdown: false
+  mtu: 1500
+  ip_address: 172.31.255.5/31
+  isis_enable: EVPN_UNDERLAY
+  isis_bfd: true
+  isis_metric: 50
+  isis_network_point_to_point: true
+  isis_circuit_type: level-2
+  peer: DC1-SPINE3
+  peer_interface: Ethernet1
+  peer_type: spine
+  switchport:
+    enabled: false
+- name: Ethernet4
+  description: P2P_DC1-SPINE4_Ethernet1
+  shutdown: false
+  mtu: 1500
+  ip_address: 172.31.255.7/31
+  isis_enable: EVPN_UNDERLAY
+  isis_bfd: true
+  isis_metric: 50
+  isis_network_point_to_point: true
+  isis_circuit_type: level-2
+  peer: DC1-SPINE4
+  peer_interface: Ethernet1
+  peer_type: spine
+  switchport:
+    enabled: false
+hostname: DC1-LEAF1A
+ip_extcommunity_lists:
+- name: ECL-EVPN-SOO
+  entries:
+  - type: permit
+    extcommunities: soo 192.168.254.5:1
+ip_igmp_snooping:
+  globally_enabled: true
 ip_name_servers:
 - ip_address: 192.168.200.5
   vrf: MGMT
 - ip_address: 8.8.8.8
   vrf: MGMT
-spanning_tree:
-  mode: mstp
-  mst_instances:
-  - id: '0'
-    priority: 4096
+ip_routing: true
+ip_virtual_router_mac_address: 00:dc:00:00:00:0a
+is_deployed: true
 local_users:
 - name: admin
   privilege: 15
@@ -87,90 +99,6 @@ local_users:
   privilege: 15
   role: network-admin
   sha512_password: $6$rZKcbIZ7iWGAWTUM$TCgDn1KcavS0s.OV8lacMTUkxTByfzcGlFlYUWroxYuU7M/9bIodhRO7nXGzMweUxvbk8mJmQl8Bh44cRktUj.
-vrfs:
-- name: MGMT
-  ip_routing: false
-management_interfaces:
-- name: Management1
-  description: OOB_MANAGEMENT
-  shutdown: false
-  vrf: MGMT
-  ip_address: 192.168.200.105/24
-  gateway: 192.168.200.5
-  type: oob
-management_api_http:
-  enable_vrfs:
-  - name: MGMT
-  enable_https: true
-ntp:
-  local_interface:
-    name: Management1
-    vrf: MGMT
-  servers:
-  - name: 192.168.200.5
-    vrf: MGMT
-    preferred: true
-ethernet_interfaces:
-- name: Ethernet1
-  peer: DC1-SPINE1
-  peer_interface: Ethernet1
-  peer_type: spine
-  description: P2P_DC1-SPINE1_Ethernet1
-  shutdown: false
-  mtu: 1500
-  switchport:
-    enabled: false
-  ip_address: 172.31.255.1/31
-  isis_enable: EVPN_UNDERLAY
-  isis_bfd: true
-  isis_metric: 50
-  isis_network_point_to_point: true
-  isis_circuit_type: level-2
-- name: Ethernet2
-  peer: DC1-SPINE2
-  peer_interface: Ethernet1
-  peer_type: spine
-  description: P2P_DC1-SPINE2_Ethernet1
-  shutdown: false
-  mtu: 1500
-  switchport:
-    enabled: false
-  ip_address: 172.31.255.3/31
-  isis_enable: EVPN_UNDERLAY
-  isis_bfd: true
-  isis_metric: 50
-  isis_network_point_to_point: true
-  isis_circuit_type: level-2
-- name: Ethernet3
-  peer: DC1-SPINE3
-  peer_interface: Ethernet1
-  peer_type: spine
-  description: P2P_DC1-SPINE3_Ethernet1
-  shutdown: false
-  mtu: 1500
-  switchport:
-    enabled: false
-  ip_address: 172.31.255.5/31
-  isis_enable: EVPN_UNDERLAY
-  isis_bfd: true
-  isis_metric: 50
-  isis_network_point_to_point: true
-  isis_circuit_type: level-2
-- name: Ethernet4
-  peer: DC1-SPINE4
-  peer_interface: Ethernet1
-  peer_type: spine
-  description: P2P_DC1-SPINE4_Ethernet1
-  shutdown: false
-  mtu: 1500
-  switchport:
-    enabled: false
-  ip_address: 172.31.255.7/31
-  isis_enable: EVPN_UNDERLAY
-  isis_bfd: true
-  isis_metric: 50
-  isis_network_point_to_point: true
-  isis_circuit_type: level-2
 loopback_interfaces:
 - name: Loopback0
   description: ROUTER_ID
@@ -178,25 +106,28 @@ loopback_interfaces:
   ip_address: 192.168.255.5/32
   isis_enable: EVPN_UNDERLAY
   isis_passive: true
-router_isis:
-  instance: EVPN_UNDERLAY
-  log_adjacency_changes: true
-  net: 49.0001.1921.6825.5005.00
-  router_id: 192.168.255.5
-  is_type: level-2
-  address_family_ipv4:
-    enabled: true
-    maximum_paths: 4
-ip_extcommunity_lists:
-- name: ECL-EVPN-SOO
-  entries:
-  - type: permit
-    extcommunities: soo 192.168.254.5:1
-router_bfd:
-  multihop:
-    interval: 1200
-    min_rx: 1200
-    multiplier: 3
+management_api_http:
+  enable_https: true
+  enable_vrfs:
+  - name: MGMT
+management_interfaces:
+- name: Management1
+  description: OOB_MANAGEMENT
+  shutdown: false
+  vrf: MGMT
+  ip_address: 192.168.200.105/24
+  type: oob
+  gateway: 192.168.200.5
+metadata:
+  platform: vEOS-LAB
+ntp:
+  local_interface:
+    name: Management1
+    vrf: MGMT
+  servers:
+  - name: 192.168.200.5
+    preferred: true
+    vrf: MGMT
 route_maps:
 - name: RM-EVPN-SOO-IN
   sequence_numbers:
@@ -212,14 +143,83 @@ route_maps:
     type: permit
     set:
     - extcommunity soo 192.168.254.5:1 additive
-ip_igmp_snooping:
-  globally_enabled: true
-ip_virtual_router_mac_address: 00:dc:00:00:00:0a
+router_bfd:
+  multihop:
+    interval: 1200
+    min_rx: 1200
+    multiplier: 3
+router_bgp:
+  as: '65000'
+  router_id: 192.168.255.5
+  maximum_paths:
+    paths: 4
+    ecmp: 4
+  updates:
+    wait_install: true
+  bgp_defaults:
+  - distance bgp 20 200 200
+  bgp:
+    default:
+      ipv4_unicast: false
+  peer_groups:
+  - name: OVERLAY-PEERS
+    type: evpn
+    remote_as: '65000'
+    update_source: Loopback0
+    bfd: true
+    password: 64fqSH5CFUNLRHErezMrRg==
+    send_community: all
+    maximum_routes: 0
+  neighbors:
+  - ip_address: 192.168.255.1
+    peer_group: OVERLAY-PEERS
+    peer: DC1-SPINE1
+    description: DC1-SPINE1_Loopback0
+  - ip_address: 192.168.255.4
+    peer_group: OVERLAY-PEERS
+    peer: DC1-SPINE4
+    description: DC1-SPINE4_Loopback0
+  address_family_evpn:
+    peer_groups:
+    - name: OVERLAY-PEERS
+      activate: true
+      route_map_in: RM-EVPN-SOO-IN
+      route_map_out: RM-EVPN-SOO-OUT
+  address_family_ipv4:
+    peer_groups:
+    - name: OVERLAY-PEERS
+      activate: false
+router_isis:
+  instance: EVPN_UNDERLAY
+  net: 49.0001.1921.6825.5005.00
+  router_id: 192.168.255.5
+  is_type: level-2
+  log_adjacency_changes: true
+  address_family_ipv4:
+    enabled: true
+    maximum_paths: 4
+service_routing_protocols_model: multi-agent
+spanning_tree:
+  mode: mstp
+  mst_instances:
+  - id: '0'
+    priority: 4096
+static_routes:
+- vrf: MGMT
+  destination_address_prefix: 0.0.0.0/0
+  gateway: 192.168.200.5
+transceiver_qsfp_default_mode_4x10: true
+vlan_internal_order:
+  allocation: ascending
+  range:
+    beginning: 1006
+    ending: 1199
+vrfs:
+- name: MGMT
+  ip_routing: false
 vxlan_interface:
   vxlan1:
     description: DC1-LEAF1A_VTEP
     vxlan:
-      udp_port: 4789
       source_interface: Loopback0
-metadata:
-  platform: vEOS-LAB
+      udp_port: 4789

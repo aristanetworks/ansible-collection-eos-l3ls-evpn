@@ -1,32 +1,82 @@
-hostname: SPINE1
-is_deployed: true
-static_routes:
-- vrf: MGMT
-  destination_address_prefix: 0.0.0.0/0
-  gateway: 172.16.100.1
-service_routing_protocols_model: multi-agent
-vlan_internal_order:
-  allocation: ascending
-  range:
-    beginning: 1006
-    ending: 1199
 aaa_root:
   disabled: true
 config_end: true
 enable_password:
   disabled: true
-transceiver_qsfp_default_mode_4x10: true
+ethernet_interfaces:
+- name: Ethernet47
+  description: MLAG_SPINE2_Ethernet47
+  shutdown: false
+  channel_group:
+    id: 47
+    mode: active
+  peer: SPINE2
+  peer_interface: Ethernet47
+  peer_type: mlag_peer
+- name: Ethernet48
+  description: MLAG_SPINE2_Ethernet48
+  shutdown: false
+  channel_group:
+    id: 47
+    mode: active
+  peer: SPINE2
+  peer_interface: Ethernet48
+  peer_type: mlag_peer
+- name: Ethernet1
+  description: L2_LEAF1_Ethernet1
+  shutdown: false
+  channel_group:
+    id: 1
+    mode: active
+  peer: LEAF1
+  peer_interface: Ethernet1
+  peer_type: l2leaf
+- name: Ethernet2
+  description: L2_LEAF2_Ethernet1
+  shutdown: false
+  channel_group:
+    id: 1
+    mode: active
+  peer: LEAF2
+  peer_interface: Ethernet1
+  peer_type: l2leaf
+- name: Ethernet3
+  description: L2_LEAF3_Ethernet1
+  shutdown: false
+  channel_group:
+    id: 3
+    mode: active
+  peer: LEAF3
+  peer_interface: Ethernet1
+  peer_type: l2leaf
+- name: Ethernet4
+  description: L2_LEAF4_Ethernet1
+  shutdown: false
+  channel_group:
+    id: 3
+    mode: active
+  peer: LEAF4
+  peer_interface: Ethernet1
+  peer_type: l2leaf
+- name: Ethernet5
+  description: FIREWALL_FIREWALL_Eth1
+  shutdown: false
+  channel_group:
+    id: 5
+    mode: active
+  peer: FIREWALL
+  peer_interface: Eth1
+  peer_type: firewall
+  port_profile: PP-FIREWALL
+hostname: SPINE1
+ip_igmp_snooping:
+  globally_enabled: true
 ip_name_servers:
 - ip_address: 8.8.4.4
   vrf: MGMT
 - ip_address: 8.8.8.8
   vrf: MGMT
-spanning_tree:
-  mode: mstp
-  mst_instances:
-  - id: '0'
-    priority: 4096
-  no_spanning_tree_vlan: '4094'
+is_deployed: true
 local_users:
 - name: admin
   privilege: 15
@@ -36,37 +86,104 @@ local_users:
   privilege: 15
   role: network-admin
   no_password: true
-vrfs:
-- name: MGMT
-  ip_routing: false
+management_api_http:
+  enable_https: true
+  enable_vrfs:
+  - name: MGMT
 management_interfaces:
 - name: Management0
   description: OOB_MANAGEMENT
   shutdown: false
   vrf: MGMT
   ip_address: 172.16.100.101/24
-  gateway: 172.16.100.1
   type: oob
-management_api_http:
-  enable_vrfs:
-  - name: MGMT
-  enable_https: true
+  gateway: 172.16.100.1
+metadata:
+  platform: cEOS-LAB
+mlag_configuration:
+  domain_id: SPINES
+  local_interface: Vlan4094
+  peer_address: 192.168.0.1
+  peer_link: Port-Channel47
+  reload_delay_mlag: '300'
+  reload_delay_non_mlag: '330'
 ntp:
   local_interface:
     name: Management0
     vrf: MGMT
   servers:
   - name: time.google.com
-    vrf: MGMT
     preferred: true
+    vrf: MGMT
   - name: pool.ntp.org
     vrf: MGMT
+port_channel_interfaces:
+- name: Port-Channel47
+  description: MLAG_SPINE2_Port-Channel47
+  shutdown: false
+  switchport:
+    enabled: true
+    mode: trunk
+    trunk:
+      groups:
+      - MLAG
+- name: Port-Channel1
+  description: L2_RACK1_Port-Channel1
+  shutdown: false
+  mlag: 1
+  switchport:
+    enabled: true
+    mode: trunk
+    trunk:
+      allowed_vlan: 10,20
+- name: Port-Channel3
+  description: L2_RACK2_Port-Channel1
+  shutdown: false
+  mlag: 3
+  switchport:
+    enabled: true
+    mode: trunk
+    trunk:
+      allowed_vlan: 10,30
+- name: Port-Channel5
+  description: FIREWALL_FIREWALL
+  shutdown: false
+  mlag: 5
+  switchport:
+    enabled: true
+    mode: trunk
+    trunk:
+      allowed_vlan: 10,20,30
+service_routing_protocols_model: multi-agent
+spanning_tree:
+  mode: mstp
+  mst_instances:
+  - id: '0'
+    priority: 4096
+  no_spanning_tree_vlan: '4094'
+static_routes:
+- vrf: MGMT
+  destination_address_prefix: 0.0.0.0/0
+  gateway: 172.16.100.1
+transceiver_qsfp_default_mode_4x10: true
+vlan_interfaces:
+- name: Vlan4094
+  description: MLAG
+  shutdown: false
+  ip_address: 192.168.0.0/31
+  mtu: 1500
+  no_autostate: true
+vlan_internal_order:
+  allocation: ascending
+  range:
+    beginning: 1006
+    ending: 1199
 vlans:
 - id: 4094
-  tenant: system
   name: MLAG
   trunk_groups:
   - MLAG
+  tenant: system
 - id: 10
   name: BLUE-NET
   tenant: MY_FABRIC
@@ -76,123 +193,6 @@ vlans:
 - id: 30
   name: ORANGE-NET
   tenant: MY_FABRIC
-vlan_interfaces:
-- name: Vlan4094
-  description: MLAG
-  shutdown: false
-  no_autostate: true
-  mtu: 1500
-  ip_address: 192.168.0.0/31
-port_channel_interfaces:
-- name: Port-Channel47
-  description: MLAG_SPINE2_Port-Channel47
-  switchport:
-    enabled: true
-    mode: trunk
-    trunk:
-      groups:
-      - MLAG
-  shutdown: false
-- name: Port-Channel1
-  description: L2_RACK1_Port-Channel1
-  switchport:
-    enabled: true
-    mode: trunk
-    trunk:
-      allowed_vlan: 10,20
-  shutdown: false
-  mlag: 1
-- name: Port-Channel3
-  description: L2_RACK2_Port-Channel1
-  switchport:
-    enabled: true
-    mode: trunk
-    trunk:
-      allowed_vlan: 10,30
-  shutdown: false
-  mlag: 3
-- name: Port-Channel5
-  description: FIREWALL_FIREWALL
-  shutdown: false
-  switchport:
-    enabled: true
-    mode: trunk
-    trunk:
-      allowed_vlan: 10,20,30
-  mlag: 5
-ethernet_interfaces:
-- name: Ethernet47
-  peer: SPINE2
-  peer_interface: Ethernet47
-  peer_type: mlag_peer
-  description: MLAG_SPINE2_Ethernet47
-  shutdown: false
-  channel_group:
-    id: 47
-    mode: active
-- name: Ethernet48
-  peer: SPINE2
-  peer_interface: Ethernet48
-  peer_type: mlag_peer
-  description: MLAG_SPINE2_Ethernet48
-  shutdown: false
-  channel_group:
-    id: 47
-    mode: active
-- name: Ethernet1
-  peer: LEAF1
-  peer_interface: Ethernet1
-  peer_type: l2leaf
-  description: L2_LEAF1_Ethernet1
-  shutdown: false
-  channel_group:
-    id: 1
-    mode: active
-- name: Ethernet2
-  peer: LEAF2
-  peer_interface: Ethernet1
-  peer_type: l2leaf
-  description: L2_LEAF2_Ethernet1
-  shutdown: false
-  channel_group:
-    id: 1
-    mode: active
-- name: Ethernet3
-  peer: LEAF3
-  peer_interface: Ethernet1
-  peer_type: l2leaf
-  description: L2_LEAF3_Ethernet1
-  shutdown: false
-  channel_group:
-    id: 3
-    mode: active
-- name: Ethernet4
-  peer: LEAF4
-  peer_interface: Ethernet1
-  peer_type: l2leaf
-  description: L2_LEAF4_Ethernet1
-  shutdown: false
-  channel_group:
-    id: 3
-    mode: active
-- name: Ethernet5
-  peer: FIREWALL
-  peer_interface: Eth1
-  peer_type: firewall
-  port_profile: PP-FIREWALL
-  description: FIREWALL_FIREWALL_Eth1
-  shutdown: false
-  channel_group:
-    id: 5
-    mode: active
-mlag_configuration:
-  domain_id: SPINES
-  local_interface: Vlan4094
-  peer_address: 192.168.0.1
-  peer_link: Port-Channel47
-  reload_delay_mlag: '300'
-  reload_delay_non_mlag: '330'
-ip_igmp_snooping:
-  globally_enabled: true
-metadata:
-  platform: cEOS-LAB
+vrfs:
+- name: MGMT
+  ip_routing: false

@@ -1,52 +1,13 @@
-hostname: OVERLAY_ROUTING_PROTOCOL_HER_L3LEAF2
-is_deployed: true
-router_bgp:
-  as: '65002'
-  router_id: 192.168.254.2
-  bgp:
-    default:
-      ipv4_unicast: false
-  maximum_paths:
-    paths: 4
-    ecmp: 4
-  redistribute:
-    connected:
-      enabled: true
-      route_map: RM-CONN-2-BGP
-  updates:
-    wait_install: true
-  peer_groups:
-  - name: IPv4-UNDERLAY-PEERS
-    type: ipv4
-    maximum_routes: 12000
-    send_community: all
-  address_family_ipv4:
-    peer_groups:
-    - name: IPv4-UNDERLAY-PEERS
-      activate: true
-service_routing_protocols_model: multi-agent
-ip_routing: true
-vlan_internal_order:
-  allocation: ascending
-  range:
-    beginning: 1006
-    ending: 1199
 aaa_root:
   disabled: true
 config_end: true
 enable_password:
   disabled: true
-transceiver_qsfp_default_mode_4x10: true
-vrfs:
-- name: MGMT
-  ip_routing: false
-- name: TEST
-  tenant: TEST
-  ip_routing: true
-management_api_http:
-  enable_vrfs:
-  - name: MGMT
-  enable_https: true
+hostname: OVERLAY_ROUTING_PROTOCOL_HER_L3LEAF2
+ip_igmp_snooping:
+  globally_enabled: true
+ip_routing: true
+is_deployed: true
 loopback_interfaces:
 - name: Loopback0
   description: ROUTER_ID
@@ -56,6 +17,10 @@ loopback_interfaces:
   description: VXLAN_TUNNEL_SOURCE
   shutdown: false
   ip_address: 192.168.253.2/32
+management_api_http:
+  enable_https: true
+  enable_vrfs:
+  - name: MGMT
 prefix_lists:
 - name: PL-LOOPBACKS-EVPN-OVERLAY
   sequence_numbers:
@@ -70,6 +35,63 @@ route_maps:
     type: permit
     match:
     - ip address prefix-list PL-LOOPBACKS-EVPN-OVERLAY
+router_bgp:
+  as: '65002'
+  router_id: 192.168.254.2
+  maximum_paths:
+    paths: 4
+    ecmp: 4
+  updates:
+    wait_install: true
+  bgp:
+    default:
+      ipv4_unicast: false
+  peer_groups:
+  - name: IPv4-UNDERLAY-PEERS
+    type: ipv4
+    send_community: all
+    maximum_routes: 12000
+  redistribute:
+    connected:
+      enabled: true
+      route_map: RM-CONN-2-BGP
+  address_family_ipv4:
+    peer_groups:
+    - name: IPv4-UNDERLAY-PEERS
+      activate: true
+service_routing_protocols_model: multi-agent
+transceiver_qsfp_default_mode_4x10: true
+vlan_interfaces:
+- name: Vlan3900
+  description: SVI_ON_ALL_LEAFS
+  shutdown: true
+  vrf: TEST
+  tenant: TEST
+  tags:
+  - leaf1
+  - leaf2
+  - leaf3
+- name: Vlan3902
+  description: SVI_ON_LEAF1-2
+  shutdown: true
+  vrf: TEST
+  tenant: TEST
+  tags:
+  - leaf1
+  - leaf2
+- name: Vlan3903
+  description: SVI_ON_LEAF2-3
+  shutdown: true
+  vrf: TEST
+  tenant: TEST
+  tags:
+  - leaf2
+  - leaf3
+vlan_internal_order:
+  allocation: ascending
+  range:
+    beginning: 1006
+    ending: 1199
 vlans:
 - id: 3900
   name: SVI_ON_ALL_LEAFS
@@ -89,40 +111,18 @@ vlans:
 - id: 2903
   name: L2VLAN_ON_LEAF2-3
   tenant: TEST
-ip_igmp_snooping:
-  globally_enabled: true
-vlan_interfaces:
-- name: Vlan3900
+vrfs:
+- name: MGMT
+  ip_routing: false
+- name: TEST
+  ip_routing: true
   tenant: TEST
-  tags:
-  - leaf1
-  - leaf2
-  - leaf3
-  description: SVI_ON_ALL_LEAFS
-  shutdown: true
-  vrf: TEST
-- name: Vlan3902
-  tenant: TEST
-  tags:
-  - leaf1
-  - leaf2
-  description: SVI_ON_LEAF1-2
-  shutdown: true
-  vrf: TEST
-- name: Vlan3903
-  tenant: TEST
-  tags:
-  - leaf2
-  - leaf3
-  description: SVI_ON_LEAF2-3
-  shutdown: true
-  vrf: TEST
 vxlan_interface:
   vxlan1:
     description: OVERLAY_ROUTING_PROTOCOL_HER_L3LEAF2_VTEP
     vxlan:
-      udp_port: 4789
       source_interface: Loopback1
+      udp_port: 4789
       vlans:
       - id: 3900
         vni: 13900

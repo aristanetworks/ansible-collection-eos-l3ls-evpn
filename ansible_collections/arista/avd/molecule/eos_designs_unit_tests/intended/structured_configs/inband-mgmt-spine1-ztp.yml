@@ -1,66 +1,6 @@
-hostname: inband-mgmt-spine1-ztp
-is_deployed: true
-router_bgp:
-  as: '64999'
-  router_id: 10.0.254.1
-  bgp:
-    default:
-      ipv4_unicast: false
-  maximum_paths:
-    paths: 4
-    ecmp: 4
-  redistribute:
-    connected:
-      enabled: true
-      route_map: RM-CONN-2-BGP
-  updates:
-    wait_install: true
-  peer_groups:
-  - name: IPv4-UNDERLAY-PEERS
-    type: ipv4
-    maximum_routes: 12000
-    send_community: all
-  - name: EVPN-OVERLAY-PEERS
-    type: evpn
-    update_source: Loopback0
-    bfd: true
-    send_community: all
-    maximum_routes: 0
-    ebgp_multihop: 3
-    next_hop_unchanged: true
-  address_family_ipv4:
-    peer_groups:
-    - name: IPv4-UNDERLAY-PEERS
-      activate: true
-    - name: EVPN-OVERLAY-PEERS
-      activate: false
-  neighbors:
-  - ip_address: 172.16.255.1
-    peer_group: IPv4-UNDERLAY-PEERS
-    remote_as: '65000'
-    peer: inband-mgmt-parent
-    description: inband-mgmt-parent_Ethernet1
-  - ip_address: 172.16.255.3
-    peer_group: IPv4-UNDERLAY-PEERS
-    remote_as: '65001'
-    peer: inband-mgmt-parent-vrf
-    description: inband-mgmt-parent-vrf_Ethernet1
-  - ip_address: 10.0.255.1
-    peer_group: EVPN-OVERLAY-PEERS
-    peer: inband-mgmt-parent
-    description: inband-mgmt-parent_Loopback0
-    remote_as: '65000'
-  - ip_address: 10.0.255.2
-    peer_group: EVPN-OVERLAY-PEERS
-    peer: inband-mgmt-parent-vrf
-    description: inband-mgmt-parent-vrf_Loopback0
-    remote_as: '65001'
-  address_family_evpn:
-    peer_groups:
-    - name: EVPN-OVERLAY-PEERS
-      activate: true
-service_routing_protocols_model: multi-agent
-ip_routing: true
+aaa_root:
+  disabled: true
+config_end: true
 daemon_terminattr:
   cvaddrs:
   - apiserver.arista.io:443
@@ -68,72 +8,82 @@ daemon_terminattr:
     method: token-secure
     token_file: /tmp/cv-onboarding-token
   cvvrf: MGMT
-  smashexcludes: ale,flexCounter,hardware,kni,pulse,strata
-  ingestexclude: /Sysdb/cell/1/agent,/Sysdb/cell/2/agent
   disable_aaa: false
-vlan_internal_order:
-  allocation: ascending
-  range:
-    beginning: 1006
-    ending: 1199
-aaa_root:
-  disabled: true
-config_end: true
+  ingestexclude: /Sysdb/cell/1/agent,/Sysdb/cell/2/agent
+  smashexcludes: ale,flexCounter,hardware,kni,pulse,strata
+dhcp_servers:
+- vrf: default
+  dns_servers_ipv4:
+  - 1.1.1.1
+  - 8.8.8.8
+  tftp_server:
+    file_ipv4: https://www.arista.io/ztp/bootstrap
+  ipv4_vendor_options:
+  - vendor_id: NTP
+    sub_options:
+    - code: 42
+      array_ipv4_address:
+      - 2.2.2.55
+  subnets:
+  - subnet: 172.16.255.0/31
+    name: inband ztp for inband-mgmt-parent-Ethernet1
+    default_gateway: 172.16.255.0
+    ranges:
+    - start: 172.16.255.1
+      end: 172.16.255.1
+  - subnet: 172.16.255.2/31
+    name: inband ztp for inband-mgmt-parent-vrf-Ethernet1
+    default_gateway: 172.16.255.2
+    ranges:
+    - start: 172.16.255.3
+      end: 172.16.255.3
 enable_password:
   disabled: true
-transceiver_qsfp_default_mode_4x10: true
+ethernet_interfaces:
+- name: Ethernet1
+  description: P2P_inband-mgmt-parent_Ethernet1
+  shutdown: false
+  mtu: 9214
+  ip_address: 172.16.255.0/31
+  dhcp_server_ipv4: true
+  peer: inband-mgmt-parent
+  peer_interface: Ethernet1
+  peer_type: l3leaf
+  switchport:
+    enabled: false
+- name: Ethernet2
+  description: P2P_inband-mgmt-parent-vrf_Ethernet1
+  shutdown: false
+  mtu: 9214
+  ip_address: 172.16.255.2/31
+  dhcp_server_ipv4: true
+  peer: inband-mgmt-parent-vrf
+  peer_interface: Ethernet1
+  peer_type: l3leaf
+  switchport:
+    enabled: false
+hostname: inband-mgmt-spine1-ztp
 ip_name_servers:
 - ip_address: 1.1.1.1
   vrf: MGMT
 - ip_address: 8.8.8.8
   vrf: MGMT
-spanning_tree:
-  mode: none
-vrfs:
-- name: MGMT
-  ip_routing: false
-management_api_http:
-  enable_vrfs:
-  - name: MGMT
-  enable_https: true
-ntp:
-  local_interface:
-    name: null
-    vrf: null
-  servers:
-  - name: 2.2.2.55
-    vrf: null
-    preferred: true
-  - name: pool.ntp.org
-    vrf: null
-ethernet_interfaces:
-- name: Ethernet1
-  peer: inband-mgmt-parent
-  peer_interface: Ethernet1
-  peer_type: l3leaf
-  description: P2P_inband-mgmt-parent_Ethernet1
-  shutdown: false
-  mtu: 9214
-  switchport:
-    enabled: false
-  ip_address: 172.16.255.0/31
-  dhcp_server_ipv4: true
-- name: Ethernet2
-  peer: inband-mgmt-parent-vrf
-  peer_interface: Ethernet1
-  peer_type: l3leaf
-  description: P2P_inband-mgmt-parent-vrf_Ethernet1
-  shutdown: false
-  mtu: 9214
-  switchport:
-    enabled: false
-  ip_address: 172.16.255.2/31
-  dhcp_server_ipv4: true
+ip_routing: true
+is_deployed: true
 loopback_interfaces:
 - name: Loopback0
   description: ROUTER_ID
   shutdown: false
   ip_address: 10.0.254.1/32
+management_api_http:
+  enable_https: true
+  enable_vrfs:
+  - name: MGMT
+ntp:
+  servers:
+  - name: 2.2.2.55
+    preferred: true
+  - name: pool.ntp.org
 prefix_lists:
 - name: PL-LOOPBACKS-EVPN-OVERLAY
   sequence_numbers:
@@ -156,34 +106,79 @@ route_maps:
     type: permit
     match:
     - ip address prefix-list PL-P2P-LINKS
-dhcp_servers:
-- vrf: default
-  subnets:
-  - subnet: 172.16.255.0/31
-    ranges:
-    - start: 172.16.255.1
-      end: 172.16.255.1
-    name: inband ztp for inband-mgmt-parent-Ethernet1
-    default_gateway: 172.16.255.0
-  - subnet: 172.16.255.2/31
-    ranges:
-    - start: 172.16.255.3
-      end: 172.16.255.3
-    name: inband ztp for inband-mgmt-parent-vrf-Ethernet1
-    default_gateway: 172.16.255.2
-  tftp_server:
-    file_ipv4: https://www.arista.io/ztp/bootstrap
-  dns_servers_ipv4:
-  - 1.1.1.1
-  - 8.8.8.8
-  ipv4_vendor_options:
-  - vendor_id: NTP
-    sub_options:
-    - code: 42
-      array_ipv4_address:
-      - 2.2.2.55
 router_bfd:
   multihop:
     interval: 300
     min_rx: 300
     multiplier: 3
+router_bgp:
+  as: '64999'
+  router_id: 10.0.254.1
+  maximum_paths:
+    paths: 4
+    ecmp: 4
+  updates:
+    wait_install: true
+  bgp:
+    default:
+      ipv4_unicast: false
+  peer_groups:
+  - name: IPv4-UNDERLAY-PEERS
+    type: ipv4
+    send_community: all
+    maximum_routes: 12000
+  - name: EVPN-OVERLAY-PEERS
+    type: evpn
+    next_hop_unchanged: true
+    update_source: Loopback0
+    bfd: true
+    ebgp_multihop: 3
+    send_community: all
+    maximum_routes: 0
+  neighbors:
+  - ip_address: 172.16.255.1
+    peer_group: IPv4-UNDERLAY-PEERS
+    remote_as: '65000'
+    peer: inband-mgmt-parent
+    description: inband-mgmt-parent_Ethernet1
+  - ip_address: 172.16.255.3
+    peer_group: IPv4-UNDERLAY-PEERS
+    remote_as: '65001'
+    peer: inband-mgmt-parent-vrf
+    description: inband-mgmt-parent-vrf_Ethernet1
+  - ip_address: 10.0.255.1
+    peer_group: EVPN-OVERLAY-PEERS
+    remote_as: '65000'
+    peer: inband-mgmt-parent
+    description: inband-mgmt-parent_Loopback0
+  - ip_address: 10.0.255.2
+    peer_group: EVPN-OVERLAY-PEERS
+    remote_as: '65001'
+    peer: inband-mgmt-parent-vrf
+    description: inband-mgmt-parent-vrf_Loopback0
+  redistribute:
+    connected:
+      enabled: true
+      route_map: RM-CONN-2-BGP
+  address_family_evpn:
+    peer_groups:
+    - name: EVPN-OVERLAY-PEERS
+      activate: true
+  address_family_ipv4:
+    peer_groups:
+    - name: IPv4-UNDERLAY-PEERS
+      activate: true
+    - name: EVPN-OVERLAY-PEERS
+      activate: false
+service_routing_protocols_model: multi-agent
+spanning_tree:
+  mode: none
+transceiver_qsfp_default_mode_4x10: true
+vlan_internal_order:
+  allocation: ascending
+  range:
+    beginning: 1006
+    ending: 1199
+vrfs:
+- name: MGMT
+  ip_routing: false

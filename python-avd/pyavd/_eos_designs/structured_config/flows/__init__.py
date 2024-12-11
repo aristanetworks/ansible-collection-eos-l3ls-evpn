@@ -4,15 +4,16 @@
 from __future__ import annotations
 
 from functools import cached_property
+from itertools import chain
 
-from pyavd._eos_designs.avdfacts import AvdFacts
 from pyavd._eos_designs.schema import EosDesigns
+from pyavd._eos_designs.structured_config.structured_config_generator import StructuredConfigGenerator
 from pyavd._errors import AristaAvdInvalidInputsError
-from pyavd._utils import get, strip_null_from_data
+from pyavd._utils import strip_null_from_data
 from pyavd.j2filters import natural_sort
 
 
-class AvdStructuredConfigFlows(AvdFacts):
+class AvdStructuredConfigFlows(StructuredConfigGenerator):
     """
     Structured config for sflow and flow_tracker.
 
@@ -119,11 +120,14 @@ class AvdStructuredConfigFlows(AvdFacts):
 
         This relies on sFlow being rendered after all other eos_designs modules (except structured config).
         """
-        for interface in get(self._hostvars, "ethernet_interfaces", default=[]):
-            if get(interface, "sflow.enable") is True:
-                return True
-
-        return any(get(interface, "sflow.enable") is True for interface in get(self._hostvars, "port_channel_interfaces", default=[]))
+        return any(
+            interface.sflow.enable
+            for interface in chain(
+                # Using ._get to avoid auto-creating the empty lists in the output.
+                self.structured_config._get("ethernet_interfaces", default=[]),
+                self.structured_config._get("port_channel_interfaces", default=[]),
+            )
+        )
 
     def resolve_flow_tracker_by_type(self, tracker_settings: EosDesigns.FlowTrackingSettings.TrackersItem) -> dict:
         tracker = {
@@ -179,21 +183,18 @@ class AvdStructuredConfigFlows(AvdFacts):
 
         return flow_tracking
 
-    def _get_enabled_flow_trackers(self) -> dict:
+    def _get_enabled_flow_trackers(self) -> set:
         """
         Enable flow-tracking if any interface is enabled for flow-tracking.
 
         This relies on flow-tracking being rendered after all other eos_designs modules (except structured config).
         """
-        trackers = {
-            "sampled": {},
-            "hardware": {},
-        }
+        all_interfaces = chain(
+            self.structured_config._get("ethernet_interfaces", default=[]),
+            self.structured_config._get("port_channel_interfaces", default=[]),
+            self.structured_config._get("dps_interfaces", default=[]),
+        )
+        if self.shared_utils.flow_tracking_type == "hardware":
+            return {interface.flow_tracker.hardware for interface in all_interfaces if interface.flow_tracker.hardware}
 
-        for interface_type in ["ethernet_interfaces", "port_channel_interfaces", "dps_interfaces"]:
-            for interface in get(self._hostvars, interface_type, default=[]):
-                if tracker := get(interface, "flow_tracker"):
-                    for tracker_type, tracker_name in tracker.items():
-                        trackers[tracker_type][tracker_name] = True
-
-        return trackers[self.shared_utils.flow_tracking_type]
+        return {interface.flow_tracker.sampled for interface in all_interfaces if interface.flow_tracker.sampled}

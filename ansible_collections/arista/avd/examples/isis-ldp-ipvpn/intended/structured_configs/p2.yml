@@ -1,24 +1,112 @@
-hostname: p2
-is_deployed: true
-static_routes:
-- vrf: MGMT
-  destination_address_prefix: 0.0.0.0/0
-  gateway: 172.16.1.1
-service_routing_protocols_model: multi-agent
-ip_routing: true
-vlan_internal_order:
-  allocation: ascending
-  range:
-    beginning: 1006
-    ending: 1199
 aaa_root:
   disabled: true
 config_end: true
 enable_password:
   disabled: true
-transceiver_qsfp_default_mode_4x10: true
-spanning_tree:
-  mode: none
+ethernet_interfaces:
+- name: Ethernet2
+  description: P2P_pe1_Ethernet2
+  shutdown: false
+  mtu: 1500
+  ip_address: 10.255.3.3/31
+  isis_enable: CORE
+  isis_metric: 50
+  isis_network_point_to_point: true
+  isis_circuit_type: level-2
+  isis_hello_padding: true
+  isis_authentication:
+    both:
+      key_type: '7'
+      key: $1c$sTNAlR6rKSw=
+      mode: md5
+  mpls:
+    ip: true
+    ldp:
+      interface: true
+      igp_sync: true
+  peer: pe1
+  peer_interface: Ethernet2
+  peer_type: pe
+  switchport:
+    enabled: false
+- name: Ethernet1
+  description: P2P_pe2_Ethernet1
+  shutdown: false
+  mtu: 1500
+  ip_address: 10.255.3.5/31
+  isis_enable: CORE
+  isis_metric: 50
+  isis_network_point_to_point: true
+  isis_circuit_type: level-2
+  isis_hello_padding: true
+  isis_authentication:
+    both:
+      key_type: '7'
+      key: $1c$sTNAlR6rKSw=
+      mode: md5
+  mpls:
+    ip: true
+    ldp:
+      interface: true
+      igp_sync: true
+  peer: pe2
+  peer_interface: Ethernet1
+  peer_type: pe
+  switchport:
+    enabled: false
+- name: Ethernet4
+  description: P2P_p1_Ethernet4
+  shutdown: false
+  mtu: 1500
+  ip_address: 10.255.3.9/31
+  isis_enable: CORE
+  isis_metric: 50
+  isis_network_point_to_point: true
+  isis_circuit_type: level-2
+  isis_hello_padding: true
+  isis_authentication:
+    both:
+      key_type: '7'
+      key: $1c$sTNAlR6rKSw=
+      mode: md5
+  mpls:
+    ip: true
+    ldp:
+      interface: true
+      igp_sync: true
+  peer: p1
+  peer_interface: Ethernet4
+  peer_type: p
+  switchport:
+    enabled: false
+- name: Ethernet3
+  description: P2P_rr2_Ethernet3
+  shutdown: false
+  mtu: 1500
+  ip_address: 10.255.3.17/31
+  isis_enable: CORE
+  isis_metric: 50
+  isis_network_point_to_point: true
+  isis_circuit_type: level-2
+  isis_hello_padding: true
+  isis_authentication:
+    both:
+      key_type: '7'
+      key: $1c$sTNAlR6rKSw=
+      mode: md5
+  mpls:
+    ip: true
+    ldp:
+      interface: true
+      igp_sync: true
+  peer: rr2
+  peer_interface: Ethernet3
+  peer_type: rr
+  switchport:
+    enabled: false
+hostname: p2
+ip_routing: true
+is_deployed: true
 local_users:
 - name: admin
   privilege: 15
@@ -28,21 +116,6 @@ local_users:
   privilege: 15
   role: network-admin
   sha512_password: $6$QJUtFkyu9yoecsq.$ysGzlb2YXaIMvezqGEna7RE8CMALJHnv7Q1i.27VygyKUtSeX.n2xRTyOtCR8eOAl.4imBLyhXFc4o97P5n071
-vrfs:
-- name: MGMT
-  ip_routing: false
-management_interfaces:
-- name: Management1
-  description: OOB_MANAGEMENT
-  shutdown: false
-  vrf: MGMT
-  ip_address: 172.16.1.12/24
-  gateway: 172.16.1.1
-  type: oob
-management_api_http:
-  enable_vrfs:
-  - name: MGMT
-  enable_https: true
 loopback_interfaces:
 - name: Loopback0
   description: ROUTER_ID
@@ -53,16 +126,20 @@ loopback_interfaces:
       interface: true
   isis_enable: CORE
   isis_passive: true
-router_isis:
-  instance: CORE
-  log_adjacency_changes: true
-  net: 49.0001.0102.5500.0002.00
-  router_id: 10.255.0.2
-  is_type: level-2
-  address_family_ipv4:
-    enabled: true
-    maximum_paths: 4
-  mpls_ldp_sync_default: true
+management_api_http:
+  enable_https: true
+  enable_vrfs:
+  - name: MGMT
+management_interfaces:
+- name: Management1
+  description: OOB_MANAGEMENT
+  shutdown: false
+  vrf: MGMT
+  ip_address: 172.16.1.12/24
+  type: oob
+  gateway: 172.16.1.1
+metadata:
+  platform: vEOS-lab
 mpls:
   ip: true
   ldp:
@@ -70,106 +147,29 @@ mpls:
     router_id: 10.255.0.2
     shutdown: false
     transport_address_interface: Loopback0
-ethernet_interfaces:
-- name: Ethernet2
-  peer: pe1
-  peer_interface: Ethernet2
-  peer_type: pe
-  switchport:
-    enabled: false
-  shutdown: false
-  mtu: 1500
-  ip_address: 10.255.3.3/31
-  isis_enable: CORE
-  isis_metric: 50
-  isis_network_point_to_point: true
-  isis_hello_padding: true
-  isis_circuit_type: level-2
-  isis_authentication:
-    both:
-      mode: md5
-      key: $1c$sTNAlR6rKSw=
-      key_type: '7'
-  mpls:
-    ip: true
-    ldp:
-      interface: true
-      igp_sync: true
-  description: P2P_pe1_Ethernet2
-- name: Ethernet1
-  peer: pe2
-  peer_interface: Ethernet1
-  peer_type: pe
-  switchport:
-    enabled: false
-  shutdown: false
-  mtu: 1500
-  ip_address: 10.255.3.5/31
-  isis_enable: CORE
-  isis_metric: 50
-  isis_network_point_to_point: true
-  isis_hello_padding: true
-  isis_circuit_type: level-2
-  isis_authentication:
-    both:
-      mode: md5
-      key: $1c$sTNAlR6rKSw=
-      key_type: '7'
-  mpls:
-    ip: true
-    ldp:
-      interface: true
-      igp_sync: true
-  description: P2P_pe2_Ethernet1
-- name: Ethernet4
-  peer: p1
-  peer_interface: Ethernet4
-  peer_type: p
-  switchport:
-    enabled: false
-  shutdown: false
-  mtu: 1500
-  ip_address: 10.255.3.9/31
-  isis_enable: CORE
-  isis_metric: 50
-  isis_network_point_to_point: true
-  isis_hello_padding: true
-  isis_circuit_type: level-2
-  isis_authentication:
-    both:
-      mode: md5
-      key: $1c$sTNAlR6rKSw=
-      key_type: '7'
-  mpls:
-    ip: true
-    ldp:
-      interface: true
-      igp_sync: true
-  description: P2P_p1_Ethernet4
-- name: Ethernet3
-  peer: rr2
-  peer_interface: Ethernet3
-  peer_type: rr
-  switchport:
-    enabled: false
-  shutdown: false
-  mtu: 1500
-  ip_address: 10.255.3.17/31
-  isis_enable: CORE
-  isis_metric: 50
-  isis_network_point_to_point: true
-  isis_hello_padding: true
-  isis_circuit_type: level-2
-  isis_authentication:
-    both:
-      mode: md5
-      key: $1c$sTNAlR6rKSw=
-      key_type: '7'
-  mpls:
-    ip: true
-    ldp:
-      interface: true
-      igp_sync: true
-  description: P2P_rr2_Ethernet3
-metadata:
-  platform: vEOS-lab
+router_isis:
+  instance: CORE
+  net: 49.0001.0102.5500.0002.00
+  router_id: 10.255.0.2
+  is_type: level-2
+  log_adjacency_changes: true
+  mpls_ldp_sync_default: true
+  address_family_ipv4:
+    enabled: true
+    maximum_paths: 4
+service_routing_protocols_model: multi-agent
+spanning_tree:
+  mode: none
+static_routes:
+- vrf: MGMT
+  destination_address_prefix: 0.0.0.0/0
+  gateway: 172.16.1.1
+transceiver_qsfp_default_mode_4x10: true
+vlan_internal_order:
+  allocation: ascending
+  range:
+    beginning: 1006
+    ending: 1199
+vrfs:
+- name: MGMT
+  ip_routing: false

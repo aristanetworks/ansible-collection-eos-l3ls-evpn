@@ -1,40 +1,135 @@
+aaa_root:
+  disabled: true
+config_end: true
+enable_password:
+  disabled: true
+ethernet_interfaces:
+- name: Ethernet5
+  description: MLAG_7010TX-LEAF1_Ethernet5
+  shutdown: false
+  channel_group:
+    id: 5
+    mode: active
+  peer: 7010TX-LEAF1
+  peer_interface: Ethernet5
+  peer_type: mlag_peer
+- name: Ethernet6
+  description: MLAG_7010TX-LEAF1_Ethernet6
+  shutdown: false
+  channel_group:
+    id: 5
+    mode: active
+  peer: 7010TX-LEAF1
+  peer_interface: Ethernet6
+  peer_type: mlag_peer
 hostname: 7010TX-LEAF2
+ip_igmp_snooping:
+  globally_enabled: true
+ip_routing: true
 is_deployed: true
+loopback_interfaces:
+- name: Loopback0
+  description: ROUTER_ID
+  shutdown: false
+  ip_address: 192.168.255.36/32
+management_api_http:
+  enable_https: true
+  enable_vrfs:
+  - name: MGMT
+management_interfaces:
+- name: Management1
+  description: OOB_MANAGEMENT
+  shutdown: false
+  vrf: MGMT
+  ip_address: 192.168.201.117/24
+  type: oob
+metadata:
+  platform: 7010TX
+mlag_configuration:
+  domain_id: MLAG_PER_MTU_INTERFACE
+  local_interface: Vlan4094
+  peer_address: 10.10.255.4
+  peer_link: Port-Channel5
+  reload_delay_mlag: '300'
+  reload_delay_non_mlag: '330'
+port_channel_interfaces:
+- name: Port-Channel5
+  description: MLAG_7010TX-LEAF1_Port-Channel5
+  shutdown: false
+  switchport:
+    enabled: true
+    mode: trunk
+    trunk:
+      groups:
+      - MLAG
+prefix_lists:
+- name: PL-LOOPBACKS-EVPN-OVERLAY
+  sequence_numbers:
+  - sequence: 10
+    action: permit 192.168.255.0/24 eq 32
+route_maps:
+- name: RM-MLAG-PEER-IN
+  sequence_numbers:
+  - sequence: 10
+    type: permit
+    description: Make routes learned over MLAG Peer-link less preferred on spines to ensure optimal routing
+    set:
+    - origin incomplete
+- name: RM-CONN-2-BGP
+  sequence_numbers:
+  - sequence: 10
+    type: permit
+    match:
+    - ip address prefix-list PL-LOOPBACKS-EVPN-OVERLAY
+router_bfd:
+  multihop:
+    interval: 300
+    min_rx: 300
+    multiplier: 3
 router_bgp:
   as: '923'
   router_id: 192.168.255.36
-  bgp:
-    default:
-      ipv4_unicast: false
   maximum_paths:
     paths: 4
     ecmp: 4
-  redistribute:
-    connected:
-      enabled: true
-      route_map: RM-CONN-2-BGP
   updates:
     wait_install: true
+  bgp:
+    default:
+      ipv4_unicast: false
   peer_groups:
   - name: MLAG-IPv4-UNDERLAY-PEER
     type: ipv4
     remote_as: '923'
-    next_hop_self: true
     description: 7010TX-LEAF1
-    maximum_routes: 12000
+    next_hop_self: true
     send_community: all
+    maximum_routes: 12000
     route_map_in: RM-MLAG-PEER-IN
   - name: IPv4-UNDERLAY-PEERS
     type: ipv4
-    maximum_routes: 12000
     send_community: all
+    maximum_routes: 12000
   - name: EVPN-OVERLAY-PEERS
     type: evpn
     update_source: Loopback0
     bfd: true
+    ebgp_multihop: 3
     send_community: all
     maximum_routes: 0
-    ebgp_multihop: 3
+  neighbors:
+  - ip_address: 10.10.224.4
+    peer_group: MLAG-IPv4-UNDERLAY-PEER
+    peer: 7010TX-LEAF1
+    description: 7010TX-LEAF1_Vlan4093
+  redistribute:
+    connected:
+      enabled: true
+      route_map: RM-CONN-2-BGP
+  address_family_evpn:
+    peer_groups:
+    - name: EVPN-OVERLAY-PEERS
+      activate: true
   address_family_ipv4:
     peer_groups:
     - name: MLAG-IPv4-UNDERLAY-PEER
@@ -43,55 +138,10 @@ router_bgp:
       activate: true
     - name: EVPN-OVERLAY-PEERS
       activate: false
-  neighbors:
-  - ip_address: 10.10.224.4
-    peer_group: MLAG-IPv4-UNDERLAY-PEER
-    peer: 7010TX-LEAF1
-    description: 7010TX-LEAF1_Vlan4093
-  address_family_evpn:
-    peer_groups:
-    - name: EVPN-OVERLAY-PEERS
-      activate: true
 service_routing_protocols_model: multi-agent
-ip_routing: true
-vlan_internal_order:
-  allocation: ascending
-  range:
-    beginning: 1006
-    ending: 1199
-aaa_root:
-  disabled: true
-config_end: true
-enable_password:
-  disabled: true
-transceiver_qsfp_default_mode_4x10: true
-vrfs:
-- name: MGMT
-  ip_routing: false
-management_interfaces:
-- name: Management1
-  description: OOB_MANAGEMENT
-  shutdown: false
-  vrf: MGMT
-  ip_address: 192.168.201.117/24
-  type: oob
-management_api_http:
-  enable_vrfs:
-  - name: MGMT
-  enable_https: true
 spanning_tree:
   no_spanning_tree_vlan: 4093-4094
-vlans:
-- id: 4093
-  tenant: system
-  name: MLAG_L3
-  trunk_groups:
-  - MLAG
-- id: 4094
-  tenant: system
-  name: MLAG
-  trunk_groups:
-  - MLAG
+transceiver_qsfp_default_mode_4x10: true
 vlan_interfaces:
 - name: Vlan4093
   description: MLAG_L3
@@ -100,74 +150,24 @@ vlan_interfaces:
 - name: Vlan4094
   description: MLAG
   shutdown: false
-  no_autostate: true
   ip_address: 10.10.255.5/31
-port_channel_interfaces:
-- name: Port-Channel5
-  description: MLAG_7010TX-LEAF1_Port-Channel5
-  switchport:
-    enabled: true
-    mode: trunk
-    trunk:
-      groups:
-      - MLAG
-  shutdown: false
-ethernet_interfaces:
-- name: Ethernet5
-  peer: 7010TX-LEAF1
-  peer_interface: Ethernet5
-  peer_type: mlag_peer
-  description: MLAG_7010TX-LEAF1_Ethernet5
-  shutdown: false
-  channel_group:
-    id: 5
-    mode: active
-- name: Ethernet6
-  peer: 7010TX-LEAF1
-  peer_interface: Ethernet6
-  peer_type: mlag_peer
-  description: MLAG_7010TX-LEAF1_Ethernet6
-  shutdown: false
-  channel_group:
-    id: 5
-    mode: active
-mlag_configuration:
-  domain_id: MLAG_PER_MTU_INTERFACE
-  local_interface: Vlan4094
-  peer_address: 10.10.255.4
-  peer_link: Port-Channel5
-  reload_delay_mlag: '300'
-  reload_delay_non_mlag: '330'
-route_maps:
-- name: RM-MLAG-PEER-IN
-  sequence_numbers:
-  - sequence: 10
-    type: permit
-    set:
-    - origin incomplete
-    description: Make routes learned over MLAG Peer-link less preferred on spines to ensure optimal routing
-- name: RM-CONN-2-BGP
-  sequence_numbers:
-  - sequence: 10
-    type: permit
-    match:
-    - ip address prefix-list PL-LOOPBACKS-EVPN-OVERLAY
-loopback_interfaces:
-- name: Loopback0
-  description: ROUTER_ID
-  shutdown: false
-  ip_address: 192.168.255.36/32
-prefix_lists:
-- name: PL-LOOPBACKS-EVPN-OVERLAY
-  sequence_numbers:
-  - sequence: 10
-    action: permit 192.168.255.0/24 eq 32
-router_bfd:
-  multihop:
-    interval: 300
-    min_rx: 300
-    multiplier: 3
-ip_igmp_snooping:
-  globally_enabled: true
-metadata:
-  platform: 7010TX
+  no_autostate: true
+vlan_internal_order:
+  allocation: ascending
+  range:
+    beginning: 1006
+    ending: 1199
+vlans:
+- id: 4093
+  name: MLAG_L3
+  trunk_groups:
+  - MLAG
+  tenant: system
+- id: 4094
+  name: MLAG
+  trunk_groups:
+  - MLAG
+  tenant: system
+vrfs:
+- name: MGMT
+  ip_routing: false

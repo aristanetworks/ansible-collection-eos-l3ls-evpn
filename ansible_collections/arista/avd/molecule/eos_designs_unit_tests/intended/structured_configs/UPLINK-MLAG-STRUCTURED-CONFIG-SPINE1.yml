@@ -1,130 +1,57 @@
-hostname: UPLINK-MLAG-STRUCTURED-CONFIG-SPINE1
-is_deployed: true
-router_bgp:
-  as: '65001'
-  router_id: 192.168.255.1
-  bgp:
-    default:
-      ipv4_unicast: false
-  maximum_paths:
-    paths: 4
-    ecmp: 4
-  redistribute:
-    connected:
-      enabled: true
-      route_map: RM-CONN-2-BGP
-  updates:
-    wait_install: true
-  peer_groups:
-  - name: IPv4-UNDERLAY-PEERS
-    type: ipv4
-    maximum_routes: 12000
-    send_community: all
-  - name: EVPN-OVERLAY-PEERS
-    type: evpn
-    update_source: Loopback0
-    bfd: true
-    send_community: all
-    maximum_routes: 0
-    ebgp_multihop: 3
-    next_hop_unchanged: true
-  address_family_ipv4:
-    peer_groups:
-    - name: IPv4-UNDERLAY-PEERS
-      activate: true
-    - name: EVPN-OVERLAY-PEERS
-      activate: false
-  neighbors:
-  - ip_address: 172.31.255.1
-    peer_group: IPv4-UNDERLAY-PEERS
-    remote_as: '65101'
-    peer: UPLINK-MLAG-STRUCTURED-CONFIG-L3LEAF1A
-    description: UPLINK-MLAG-STRUCTURED-CONFIG-L3LEAF1A_Ethernet1
-  - ip_address: 172.31.255.3
-    peer_group: IPv4-UNDERLAY-PEERS
-    remote_as: '65101'
-    peer: UPLINK-MLAG-STRUCTURED-CONFIG-L3LEAF1B
-    description: UPLINK-MLAG-STRUCTURED-CONFIG-L3LEAF1B_Ethernet1
-  - ip_address: 192.168.255.3
-    peer_group: EVPN-OVERLAY-PEERS
-    peer: UPLINK-MLAG-STRUCTURED-CONFIG-L3LEAF1A
-    description: UPLINK-MLAG-STRUCTURED-CONFIG-L3LEAF1A_Loopback0
-    remote_as: '65101'
-  - ip_address: 192.168.255.4
-    peer_group: EVPN-OVERLAY-PEERS
-    peer: UPLINK-MLAG-STRUCTURED-CONFIG-L3LEAF1B
-    description: UPLINK-MLAG-STRUCTURED-CONFIG-L3LEAF1B_Loopback0
-    remote_as: '65101'
-  address_family_evpn:
-    peer_groups:
-    - name: EVPN-OVERLAY-PEERS
-      activate: true
-static_routes:
-- vrf: MGMT
-  destination_address_prefix: 0.0.0.0/0
-  gateway: 192.168.200.5
-service_routing_protocols_model: multi-agent
-ip_routing: true
-vlan_internal_order:
-  allocation: ascending
-  range:
-    beginning: 1006
-    ending: 1199
 aaa_root:
   disabled: true
 config_end: true
 enable_password:
   disabled: true
-transceiver_qsfp_default_mode_4x10: true
-spanning_tree:
-  mode: none
-vrfs:
-- name: MGMT
-  ip_routing: false
+ethernet_interfaces:
+- name: Ethernet1
+  description: P2P_UPLINK-MLAG-STRUCTURED-CONFIG-L3LEAF1A_Ethernet1
+  shutdown: false
+  mtu: 9214
+  ip_address: 172.31.255.0/31
+  pim:
+    ipv4:
+      sparse_mode: true
+  peer: UPLINK-MLAG-STRUCTURED-CONFIG-L3LEAF1A
+  peer_interface: Ethernet1
+  peer_type: l3leaf
+  switchport:
+    enabled: false
+- name: Ethernet2
+  description: P2P_UPLINK-MLAG-STRUCTURED-CONFIG-L3LEAF1B_Ethernet1
+  shutdown: false
+  mtu: 9214
+  ip_address: 172.31.255.2/31
+  pim:
+    ipv4:
+      sparse_mode: true
+  peer: UPLINK-MLAG-STRUCTURED-CONFIG-L3LEAF1B
+  peer_interface: Ethernet1
+  peer_type: l3leaf
+  switchport:
+    enabled: false
+hostname: UPLINK-MLAG-STRUCTURED-CONFIG-SPINE1
+ip_routing: true
+is_deployed: true
+loopback_interfaces:
+- name: Loopback0
+  description: ROUTER_ID
+  shutdown: false
+  ip_address: 192.168.255.1/32
+management_api_http:
+  enable_https: true
+  enable_vrfs:
+  - name: MGMT
 management_interfaces:
 - name: Management1
   description: OOB_MANAGEMENT
   shutdown: false
   vrf: MGMT
   ip_address: 192.168.200.101/24
-  gateway: 192.168.200.5
   type: oob
-management_api_http:
-  enable_vrfs:
-  - name: MGMT
-  enable_https: true
-ethernet_interfaces:
-- name: Ethernet1
-  peer: UPLINK-MLAG-STRUCTURED-CONFIG-L3LEAF1A
-  peer_interface: Ethernet1
-  peer_type: l3leaf
-  description: P2P_UPLINK-MLAG-STRUCTURED-CONFIG-L3LEAF1A_Ethernet1
-  shutdown: false
-  mtu: 9214
-  switchport:
-    enabled: false
-  ip_address: 172.31.255.0/31
-  pim:
-    ipv4:
-      sparse_mode: true
-- name: Ethernet2
-  peer: UPLINK-MLAG-STRUCTURED-CONFIG-L3LEAF1B
-  peer_interface: Ethernet1
-  peer_type: l3leaf
-  description: P2P_UPLINK-MLAG-STRUCTURED-CONFIG-L3LEAF1B_Ethernet1
-  shutdown: false
-  mtu: 9214
-  switchport:
-    enabled: false
-  ip_address: 172.31.255.2/31
-  pim:
-    ipv4:
-      sparse_mode: true
-loopback_interfaces:
-- name: Loopback0
-  description: ROUTER_ID
-  shutdown: false
-  ip_address: 192.168.255.1/32
+  gateway: 192.168.200.5
+metadata:
+  platform: vEOS-LAB
 prefix_lists:
 - name: PL-LOOPBACKS-EVPN-OVERLAY
   sequence_numbers:
@@ -142,5 +69,78 @@ router_bfd:
     interval: 300
     min_rx: 300
     multiplier: 3
-metadata:
-  platform: vEOS-LAB
+router_bgp:
+  as: '65001'
+  router_id: 192.168.255.1
+  maximum_paths:
+    paths: 4
+    ecmp: 4
+  updates:
+    wait_install: true
+  bgp:
+    default:
+      ipv4_unicast: false
+  peer_groups:
+  - name: IPv4-UNDERLAY-PEERS
+    type: ipv4
+    send_community: all
+    maximum_routes: 12000
+  - name: EVPN-OVERLAY-PEERS
+    type: evpn
+    next_hop_unchanged: true
+    update_source: Loopback0
+    bfd: true
+    ebgp_multihop: 3
+    send_community: all
+    maximum_routes: 0
+  neighbors:
+  - ip_address: 172.31.255.1
+    peer_group: IPv4-UNDERLAY-PEERS
+    remote_as: '65101'
+    peer: UPLINK-MLAG-STRUCTURED-CONFIG-L3LEAF1A
+    description: UPLINK-MLAG-STRUCTURED-CONFIG-L3LEAF1A_Ethernet1
+  - ip_address: 172.31.255.3
+    peer_group: IPv4-UNDERLAY-PEERS
+    remote_as: '65101'
+    peer: UPLINK-MLAG-STRUCTURED-CONFIG-L3LEAF1B
+    description: UPLINK-MLAG-STRUCTURED-CONFIG-L3LEAF1B_Ethernet1
+  - ip_address: 192.168.255.3
+    peer_group: EVPN-OVERLAY-PEERS
+    remote_as: '65101'
+    peer: UPLINK-MLAG-STRUCTURED-CONFIG-L3LEAF1A
+    description: UPLINK-MLAG-STRUCTURED-CONFIG-L3LEAF1A_Loopback0
+  - ip_address: 192.168.255.4
+    peer_group: EVPN-OVERLAY-PEERS
+    remote_as: '65101'
+    peer: UPLINK-MLAG-STRUCTURED-CONFIG-L3LEAF1B
+    description: UPLINK-MLAG-STRUCTURED-CONFIG-L3LEAF1B_Loopback0
+  redistribute:
+    connected:
+      enabled: true
+      route_map: RM-CONN-2-BGP
+  address_family_evpn:
+    peer_groups:
+    - name: EVPN-OVERLAY-PEERS
+      activate: true
+  address_family_ipv4:
+    peer_groups:
+    - name: IPv4-UNDERLAY-PEERS
+      activate: true
+    - name: EVPN-OVERLAY-PEERS
+      activate: false
+service_routing_protocols_model: multi-agent
+spanning_tree:
+  mode: none
+static_routes:
+- vrf: MGMT
+  destination_address_prefix: 0.0.0.0/0
+  gateway: 192.168.200.5
+transceiver_qsfp_default_mode_4x10: true
+vlan_internal_order:
+  allocation: ascending
+  range:
+    beginning: 1006
+    ending: 1199
+vrfs:
+- name: MGMT
+  ip_routing: false
