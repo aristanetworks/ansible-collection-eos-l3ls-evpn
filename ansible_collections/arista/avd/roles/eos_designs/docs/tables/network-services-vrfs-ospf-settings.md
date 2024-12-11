@@ -14,7 +14,7 @@
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ospf</samp>](## "<network_services_keys.name>.[].vrfs.[].ospf") | Dictionary |  |  |  | Router OSPF configuration.<br>This will create an OSPF routing instance in the tenant VRF. If there is no nodes definition, the OSPF instance will be<br>created on all leafs where the VRF is deployed. This will also cause automatic OSPF redistribution into BGP unless<br>explicitly turned off with "redistribute_ospf: false".<br> |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "<network_services_keys.name>.[].vrfs.[].ospf.enabled") | Boolean |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;process_id</samp>](## "<network_services_keys.name>.[].vrfs.[].ospf.process_id") | Integer |  |  |  | If not set, "vrf_id" will be used. |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;router_id</samp>](## "<network_services_keys.name>.[].vrfs.[].ospf.router_id") | String |  | `main_router_id` |  | Router ID to use for OSPF in this VRF.<br>This can be an IP address, "main_router_id", "none", "vtep_diagnostic"<br>- "main_router_id" will reuse the main OSPF Router ID which is the IP address of Loopback0.<br>- "none" will not configure a OSPF Router ID for this VRF. EOS will use the main OSPF Router ID.<br>- "vtep_diagnostic" will use the IP address of the VRF Diagnostic Loopback interface. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;router_id</samp>](## "<network_services_keys.name>.[].vrfs.[].ospf.router_id") | String |  | `main_router_id` |  | Router ID to use for OSPF in this VRF.<br>This can be an IPv4 address, "main_router_id", "none" or "vtep_diagnostic".<br>- "main_router_id" will reuse the main OSPF Router ID which is the IP address of Loopback0.<br>- "none" will not configure a OSPF Router ID for this VRF. EOS will use the main OSPF Router ID.<br>- "vtep_diagnostic" will use the IP address of the VRF Diagnostic Loopback interface. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;max_lsa</samp>](## "<network_services_keys.name>.[].vrfs.[].ospf.max_lsa") | Integer |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;bfd</samp>](## "<network_services_keys.name>.[].vrfs.[].ospf.bfd") | Boolean |  | `False` |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;redistribute_bgp</samp>](## "<network_services_keys.name>.[].vrfs.[].ospf.redistribute_bgp") | Dictionary |  |  |  |  |
@@ -111,7 +111,7 @@
               process_id: <int>
 
               # Router ID to use for OSPF in this VRF.
-              # This can be an IP address, "main_router_id", "none", "vtep_diagnostic"
+              # This can be an IPv4 address, "main_router_id", "none" or "vtep_diagnostic".
               # - "main_router_id" will reuse the main OSPF Router ID which is the IP address of Loopback0.
               # - "none" will not configure a OSPF Router ID for this VRF. EOS will use the main OSPF Router ID.
               # - "vtep_diagnostic" will use the IP address of the VRF Diagnostic Loopback interface.

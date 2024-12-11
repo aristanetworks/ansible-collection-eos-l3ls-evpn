@@ -7,6 +7,8 @@
 type: dict
 keys:
   use_router_general_for_router_id:
+    documentation_options:
+      table: fabric-settings
     type: bool
     description: Use `router general` to set router ID for all routing protocols and VRFs.
     default: false

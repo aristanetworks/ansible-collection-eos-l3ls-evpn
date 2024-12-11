@@ -34972,8 +34972,8 @@ class EosDesigns(EosDesignsRootModel):
                         router_id: str
                         """
                         Router ID to use for OSPF in this VRF.
-                        This can be an IP address, "main_router_id", "none",
-                        "vtep_diagnostic"
+                        This can be an IPv4 address, "main_router_id", "none" or
+                        "vtep_diagnostic".
                         - "main_router_id" will reuse the main OSPF Router ID which is the IP address of
                         Loopback0.
                         - "none" will not configure a OSPF Router ID for this VRF. EOS will use the main OSPF
@@ -35019,8 +35019,8 @@ class EosDesigns(EosDesignsRootModel):
                                     process_id: If not set, "vrf_id" will be used.
                                     router_id:
                                        Router ID to use for OSPF in this VRF.
-                                       This can be an IP address, "main_router_id", "none",
-                                       "vtep_diagnostic"
+                                       This can be an IPv4 address, "main_router_id", "none" or
+                                       "vtep_diagnostic".
                                        - "main_router_id" will reuse the main OSPF Router ID which is the IP address of
                                        Loopback0.
                                        - "none" will not configure a OSPF Router ID for this VRF. EOS will use the main OSPF
@@ -37732,8 +37732,8 @@ class EosDesigns(EosDesignsRootModel):
                         router_id: str
                         """
                         Router ID to use for BGP in this VRF.
-                        This can be an IP address, "main_router_id", "none",
-                        "vtep_diagnostic"
+                        This can be an IPv4 address, "main_router_id", "none" or
+                        "vtep_diagnostic".
                         - "main_router_id" will reuse the main BGP Router ID which is the IP address of
                         Loopback0.
                         - "none" will not configure a BGP Router ID for this VRF. EOS will use the main BGP
@@ -37783,8 +37783,8 @@ class EosDesigns(EosDesignsRootModel):
                                        in the uplink VRFs, BGP will be configured for it.
                                     router_id:
                                        Router ID to use for BGP in this VRF.
-                                       This can be an IP address, "main_router_id", "none",
-                                       "vtep_diagnostic"
+                                       This can be an IPv4 address, "main_router_id", "none" or
+                                       "vtep_diagnostic".
                                        - "main_router_id" will reuse the main BGP Router ID which is the IP address of
                                        Loopback0.
                                        - "none" will not configure a BGP Router ID for this VRF. EOS will use the main BGP

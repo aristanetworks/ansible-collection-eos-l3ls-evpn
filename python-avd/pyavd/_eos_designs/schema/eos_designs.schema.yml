@@ -4559,6 +4559,8 @@ keys:
 
       See `cv_topology` for details.'
   use_router_general_for_router_id:
+    documentation_options:
+      table: fabric-settings
     type: bool
     description: Use `router general` to set router ID for all routing protocols and
       VRFs.
@@ -6487,7 +6489,7 @@ $defs:
                     type: str
                     description: 'Router ID to use for OSPF in this VRF.
 
-                      This can be an IP address, "main_router_id", "none", "vtep_diagnostic"
+                      This can be an IPv4 address, "main_router_id", "none" or "vtep_diagnostic".
 
                       - "main_router_id" will reuse the main OSPF Router ID which
                       is the IP address of Loopback0.
@@ -7185,7 +7187,7 @@ $defs:
                     type: str
                     description: 'Router ID to use for BGP in this VRF.
 
-                      This can be an IP address, "main_router_id", "none", "vtep_diagnostic"
+                      This can be an IPv4 address, "main_router_id", "none" or "vtep_diagnostic".
 
                       - "main_router_id" will reuse the main BGP Router ID which is
                       the IP address of Loopback0.

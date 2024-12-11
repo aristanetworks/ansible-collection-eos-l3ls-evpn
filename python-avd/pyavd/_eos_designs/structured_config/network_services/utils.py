@@ -414,7 +414,7 @@ class UtilsMixin(UtilsWanMixin, UtilsZscalerMixin):
 
         Args:
             vrf (VrfsItem): The VRF object containing OSPF/BGP and vtep_diagnostic details.
-            router_id (str): The router ID type specified for the VRF (e.g., "vtep_diagnostic", "main_router_id", "none", or "IPv4 address").
+            router_id (str): The router ID type specified for the VRF (e.g., "vtep_diagnostic", "main_router_id", "none", or an IPv4 address).
             tenant_name (str): The name of the tenant to which the VRF belongs.
 
         Returns:
@@ -425,28 +425,19 @@ class UtilsMixin(UtilsWanMixin, UtilsZscalerMixin):
         """
         # Handle "vtep_diagnostic" router ID case
         if router_id == "vtep_diagnostic":
-            interface_data = self._get_vtep_diagnostic_loopback_for_vrf(vrf)
-
             # Validate required configuration
-            if interface_data is None:
+            if (interface_data := self._get_vtep_diagnostic_loopback_for_vrf(vrf)) is None:
                 msg = (
                     f"Invalid configuration on VRF '{vrf.name}' in Tenant '{tenant_name}'. "
                     "'vtep_diagnostic.loopback' along with either 'vtep_diagnostic.loopback_ip_pools' or 'vtep_diagnostic.loopback_ip_range' must be defined "
                     "when 'router_id' is set to 'vtep_diagnostic' on the VRF."
                 )
                 raise AristaAvdInvalidInputsError(msg)
-
             # Resolve router ID from loopback interface
-
             return get_ip_from_ip_prefix(interface_data["ip_address"])
-
-        # Handle "main_router_id" with general router ID enabled/disabled
         if router_id == "main_router_id":
-            if not self.inputs.use_router_general_for_router_id:
-                return self.shared_utils.router_id
-            return None
-
-        # Handle "none" router ID or custom value
+            return self.shared_utils.router_id if not self.inputs.use_router_general_for_router_id else None
+        # Handle "none" router ID
         if router_id == "none":
             return None
 
