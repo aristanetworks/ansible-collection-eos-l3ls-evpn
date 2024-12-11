@@ -430,7 +430,7 @@ jobs:
         # The version conflicts with our requirements,
         # so we let the galaxy-importer version resolve remaining requirements.
         run: |
-          pip install "galaxy-importer==0.4.25"
+          pip install "galaxy-importer==0.4.26"
       - name: 'Build ansible package'
         run: make collection-build
       - name: 'Run galaxy-importer checks'
