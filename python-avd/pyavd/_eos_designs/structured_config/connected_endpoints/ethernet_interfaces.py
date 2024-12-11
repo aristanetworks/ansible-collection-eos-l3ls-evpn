@@ -178,6 +178,7 @@ class EthernetInterfacesMixin(UtilsMixin):
             "speed": adapter.speed,
             "shutdown": not (adapter.enabled if adapter.enabled is not None else True),
             "validate_state": None if (adapter.validate_state if adapter.validate_state is not None else True) else False,
+            "validate_lldp": None if (adapter.validate_lldp if adapter.validate_lldp is not None else True) else False,
             "dot1x": adapter.dot1x._as_dict() or None,
             "poe": self._get_adapter_poe(adapter),
             "eos_cli": adapter.raw_eos_cli,
