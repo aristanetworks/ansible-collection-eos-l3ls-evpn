@@ -70046,15 +70046,15 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                     FloodVteps._item_type = str
 
                     _fields: ClassVar[dict] = {
-                        "id": {"type": str},
-                        "vni": {"type": str},
+                        "id": {"type": int},
+                        "vni": {"type": int},
                         "multicast_group": {"type": str},
                         "flood_vteps": {"type": FloodVteps},
                         "_custom_data": {"type": dict},
                     }
-                    id: str
+                    id: int
                     """VLAN ID or range of VLAN ID."""
-                    vni: str | None
+                    vni: int | None
                     """VNI or range of VNI."""
                     multicast_group: str | None
                     """IP Multicast Group Address."""
@@ -70067,8 +70067,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                         def __init__(
                             self,
                             *,
-                            id: str | UndefinedType = Undefined,
-                            vni: str | None | UndefinedType = Undefined,
+                            id: int | UndefinedType = Undefined,
+                            vni: int | None | UndefinedType = Undefined,
                             multicast_group: str | None | UndefinedType = Undefined,
                             flood_vteps: FloodVteps | UndefinedType = Undefined,
                             _custom_data: dict[str, Any] | UndefinedType = Undefined,
@@ -70088,8 +70088,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                             """
 
-                class Vlans(AvdIndexedList[str, VlansItem]):
-                    """Subclass of AvdIndexedList with `VlansItem` items. Primary key is `id` (`str`)."""
+                class Vlans(AvdIndexedList[int, VlansItem]):
+                    """Subclass of AvdIndexedList with `VlansItem` items. Primary key is `id` (`int`)."""
 
                     _primary_key: ClassVar[str] = "id"
 
@@ -70100,9 +70100,9 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                     _fields: ClassVar[dict] = {"vlans": {"type": str}, "vnis": {"type": str}, "_custom_data": {"type": dict}}
                     vlans: str | None
-                    """e.g. 100-110"""
+                    """e.g. "94,96,100-110"."""
                     vnis: str | None
-                    """e.g. 10100-10110."""
+                    """e.g. "10094,10096,10100-10110"."""
                     _custom_data: dict[str, Any]
 
                     if TYPE_CHECKING:
@@ -70121,8 +70121,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                             Subclass of AvdModel.
 
                             Args:
-                                vlans: e.g. 100-110
-                                vnis: e.g. 10100-10110.
+                                vlans: e.g. "94,96,100-110".
+                                vnis: e.g. "10094,10096,10100-10110".
                                 _custom_data: _custom_data
 
                             """
@@ -70220,7 +70220,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 Subclass of AvdModel.
                 """
                 vlans: Vlans
-                """Subclass of AvdIndexedList with `VlansItem` items. Primary key is `id` (`str`)."""
+                """Subclass of AvdIndexedList with `VlansItem` items. Primary key is `id` (`int`)."""
                 vlan_range: VlanRange
                 """
                 Set VNI on range of vlans.
@@ -70281,7 +70281,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
 
                                Subclass of AvdModel.
-                            vlans: Subclass of AvdIndexedList with `VlansItem` items. Primary key is `id` (`str`).
+                            vlans: Subclass of AvdIndexedList with `VlansItem` items. Primary key is `id` (`int`).
                             vlan_range:
                                Set VNI on range of vlans.
 
@@ -70474,15 +70474,15 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                     FloodVteps._item_type = str
 
                     _fields: ClassVar[dict] = {
-                        "id": {"type": str},
-                        "vni": {"type": str},
+                        "id": {"type": int},
+                        "vni": {"type": int},
                         "multicast_group": {"type": str},
                         "flood_vteps": {"type": FloodVteps},
                         "_custom_data": {"type": dict},
                     }
-                    id: str
+                    id: int
                     """VLAN ID or range of VLAN ID."""
-                    vni: str | None
+                    vni: int | None
                     """VNI or range of VNI."""
                     multicast_group: str | None
                     """IP Multicast Group Address."""
@@ -70495,8 +70495,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                         def __init__(
                             self,
                             *,
-                            id: str | UndefinedType = Undefined,
-                            vni: str | None | UndefinedType = Undefined,
+                            id: int | UndefinedType = Undefined,
+                            vni: int | None | UndefinedType = Undefined,
                             multicast_group: str | None | UndefinedType = Undefined,
                             flood_vteps: FloodVteps | UndefinedType = Undefined,
                             _custom_data: dict[str, Any] | UndefinedType = Undefined,
@@ -70516,8 +70516,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                             """
 
-                class Vlans(AvdIndexedList[str, VlansItem]):
-                    """Subclass of AvdIndexedList with `VlansItem` items. Primary key is `id` (`str`)."""
+                class Vlans(AvdIndexedList[int, VlansItem]):
+                    """Subclass of AvdIndexedList with `VlansItem` items. Primary key is `id` (`int`)."""
 
                     _primary_key: ClassVar[str] = "id"
 
@@ -70528,9 +70528,9 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                     _fields: ClassVar[dict] = {"vlans": {"type": str}, "vnis": {"type": str}, "_custom_data": {"type": dict}}
                     vlans: str | None
-                    """e.g. 100-110"""
+                    """e.g. "94,96,100-110"."""
                     vnis: str | None
-                    """e.g. 10100-10110."""
+                    """e.g. "10094,10096,10100-10110"."""
                     _custom_data: dict[str, Any]
 
                     if TYPE_CHECKING:
@@ -70549,8 +70549,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                             Subclass of AvdModel.
 
                             Args:
-                                vlans: e.g. 100-110
-                                vnis: e.g. 10100-10110.
+                                vlans: e.g. "94,96,100-110".
+                                vnis: e.g. "10094,10096,10100-10110".
                                 _custom_data: _custom_data
 
                             """
@@ -70648,7 +70648,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 Subclass of AvdModel.
                 """
                 vlans: Vlans
-                """Subclass of AvdIndexedList with `VlansItem` items. Primary key is `id` (`str`)."""
+                """Subclass of AvdIndexedList with `VlansItem` items. Primary key is `id` (`int`)."""
                 vlan_range: VlanRange
                 """
                 Set VNI on range of vlans.
@@ -70709,7 +70709,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
 
                                Subclass of AvdModel.
-                            vlans: Subclass of AvdIndexedList with `VlansItem` items. Primary key is `id` (`str`).
+                            vlans: Subclass of AvdIndexedList with `VlansItem` items. Primary key is `id` (`int`).
                             vlan_range:
                                Set VNI on range of vlans.
 

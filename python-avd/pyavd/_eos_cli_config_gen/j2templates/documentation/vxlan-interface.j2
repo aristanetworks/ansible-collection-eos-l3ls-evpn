@@ -90,11 +90,12 @@
 {%         endfor %}
 {%         if vxlan_config.vxlan.vlan_range.vlans is arista.avd.defined and vxlan_config.vxlan.vlan_range.vnis is arista.avd.defined %}
 {%             set vlans = vxlan_config.vxlan.vlan_range.vlans | arista.avd.range_expand %}
+{%             set vnis = vxlan_config.vxlan.vlan_range.vnis | arista.avd.range_expand %}
 {%             for vlan in vlans %}
-{%                 do all_vlans.setdefault(vlan, {}) %}
-{%                 set vnis = vxlan_config.vxlan.vlan_range.vnis | arista.avd.range_expand %}
+{%                 set vlan_int = vlan | int %}
+{%                 do all_vlans.setdefault(vlan_int, {}) %}
 {%                 set vni = vnis[vlans.index(vlan)] %}
-{%                 do all_vlans[vlan].update({"vni": vni}) %}
+{%                 do all_vlans[vlan_int].update({"vni": vni}) %}
 {%             endfor %}
 {%         endif %}
 {%         for vlan, data in all_vlans.items() | arista.avd.natural_sort %}

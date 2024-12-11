@@ -22933,14 +22933,14 @@ keys:
                   type: dict
                   keys:
                     id:
-                      type: str
+                      type: int
                       convert_types:
-                      - int
+                      - str
                       description: VLAN ID or range of VLAN ID.
                     vni:
-                      type: str
+                      type: int
                       convert_types:
-                      - int
+                      - str
                       description: VNI or range of VNI.
                     multicast_group:
                       type: str
@@ -22956,10 +22956,10 @@ keys:
                 keys:
                   vlans:
                     type: str
-                    description: e.g. 100-110
+                    description: e.g. "94,96,100-110".
                   vnis:
                     type: str
-                    description: e.g. 10100-10110.
+                    description: e.g. "10094,10096,10100-10110".
               vrfs:
                 type: list
                 primary_key: name
