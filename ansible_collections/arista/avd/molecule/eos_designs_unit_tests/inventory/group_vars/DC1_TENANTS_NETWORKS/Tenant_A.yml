@@ -198,7 +198,7 @@ tenant_a:
             nodes: [DC1-BL1A, DC1-BL1B]
             route_map_in: RM-123-1-1-11-IN
             route_map_out: RM-123-1-1-11-OUT
-            prefix_list_in: PL-TEST-IN-AF444444
+            prefix_list_in: PL-TEST-IN-AF4
             prefix_list_out: PL-TEST-OUT-AF4
             local_as: 123
             bfd: true
