@@ -469,6 +469,19 @@ ethernet_interfaces:
     mode: access
     access_vlan: 11
   spanning_tree_portfast: edge
+- name: Ethernet33
+  peer: dc1-leaf1-workstationNoLLDP
+  peer_interface: e1
+  peer_type: workstation
+  port_profile: Workstations_NoLLDP
+  description: WORKSTATION_dc1-leaf1-workstationNoLLDP_e1
+  shutdown: false
+  validate_lldp: false
+  switchport:
+    enabled: true
+    mode: access
+    access_vlan: 11
+  spanning_tree_portfast: edge
 mlag_configuration:
   domain_id: DC1_L3_LEAF1
   local_interface: Vlan4094
