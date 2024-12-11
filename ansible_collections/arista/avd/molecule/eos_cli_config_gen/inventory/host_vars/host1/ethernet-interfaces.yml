@@ -313,7 +313,7 @@ ethernet_interfaces:
         violation:
           mode: protect
     address_locking:
-      address_faimly:
+      address_family:
         ipv4: true
         ipv6: true
 
@@ -355,7 +355,7 @@ ethernet_interfaces:
     sync_e:
       enable: true
     address_locking:
-      address_faimly:
+      address_family:
         ipv4: false
         ipv6: false
 

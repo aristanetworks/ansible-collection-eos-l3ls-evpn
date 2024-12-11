@@ -358,16 +358,17 @@ interface {{ ethernet_interface.name }}
 {%     elif ethernet_interface.snmp_trap_link_change is arista.avd.defined(true) %}
    snmp trap link-change
 {%     endif %}
-{%     if ethernet_interface.address_locking.address_faimly.ipv4 is arista.avd.defined or ethernet_interface.address_locking.address_faimly.ipv6 is arista.avd.defined or ethernet_interface.address_locking.ipv4_enforcement_disabled is arista.avd.defined(true) %}
+{%     if ethernet_interface.address_locking.address_family.ipv4 is arista.avd.defined or ethernet_interface.address_locking.address_family.ipv6 is arista.avd.defined or ethernet_interface.address_locking.ipv4_enforcement_disabled is arista.avd.defined(true) %}
+   !
    address locking
-{%         if ethernet_interface.address_locking.address_faimly.ipv4 is arista.avd.defined(true) %}
+{%         if ethernet_interface.address_locking.address_family.ipv4 is arista.avd.defined(true) %}
       address-family ipv4
-{%         elif ethernet_interface.address_locking.address_faimly.ipv4 is arista.avd.defined(false) %}
+{%         elif ethernet_interface.address_locking.address_family.ipv4 is arista.avd.defined(false) %}
       address-family ipv4 disabled
 {%         endif %}
-{%         if ethernet_interface.address_locking.address_faimly.ipv6 is arista.avd.defined(true) %}
+{%         if ethernet_interface.address_locking.address_family.ipv6 is arista.avd.defined(true) %}
       address-family ipv6
-{%         elif ethernet_interface.address_locking.address_faimly.ipv6 is arista.avd.defined(false) %}
+{%         elif ethernet_interface.address_locking.address_family.ipv6 is arista.avd.defined(false) %}
       address-family ipv6 disabled
 {%         endif %}
 {%         if ethernet_interface.address_locking.ipv4_enforcement_disabled is arista.avd.defined(true) %}

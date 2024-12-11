@@ -34,9 +34,9 @@
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;address_locking</samp>](## "ethernet_interfaces.[].address_locking") | Dictionary |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ipv4</samp>](## "ethernet_interfaces.[].address_locking.ipv4") | Boolean |  |  |  | Enable address locking for IPv4. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ipv6</samp>](## "ethernet_interfaces.[].address_locking.ipv6") | Boolean |  |  |  | Enable address locking for IPv6. |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;address_faimly</samp>](## "ethernet_interfaces.[].address_locking.address_faimly") | Dictionary |  |  |  | The `address_locking.ipv4/ipv6` and `address_locking.address_faimly.ipv4/ipv6` are mutually exclude and `address_locking.address_faimly.ipv4/ipv6` take precedence. |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ipv4</samp>](## "ethernet_interfaces.[].address_locking.address_faimly.ipv4") | Boolean |  |  |  | Enable/disable address locking for IPv4. |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ipv6</samp>](## "ethernet_interfaces.[].address_locking.address_faimly.ipv6") | Boolean |  |  |  | Enable/disable address locking for IPv6. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;address_family</samp>](## "ethernet_interfaces.[].address_locking.address_family") | Dictionary |  |  |  | The `address_locking.ipv4/ipv6` and `address_locking.address_family.ipv4/ipv6` are mutually exclusive and `address_locking.address_family.ipv4/ipv6` take precedence.<br>This feature is supported starting from EOS version 4.31.0F and later. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ipv4</samp>](## "ethernet_interfaces.[].address_locking.address_family.ipv4") | Boolean |  |  |  | Enable/disable address locking for IPv4. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ipv6</samp>](## "ethernet_interfaces.[].address_locking.address_family.ipv6") | Boolean |  |  |  | Enable/disable address locking for IPv6. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ipv4_enforcement_disabled</samp>](## "ethernet_interfaces.[].address_locking.ipv4_enforcement_disabled") | Boolean |  |  |  | Disable enforcement for IPv4 locked addresses. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;flowcontrol</samp>](## "ethernet_interfaces.[].flowcontrol") | Dictionary |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;received</samp>](## "ethernet_interfaces.[].flowcontrol.received") | String |  |  | Valid Values:<br>- <code>desired</code><br>- <code>on</code><br>- <code>off</code> |  |
@@ -635,8 +635,9 @@
           # Enable address locking for IPv6.
           ipv6: <bool>
 
-          # The `address_locking.ipv4/ipv6` and `address_locking.address_faimly.ipv4/ipv6` are mutually exclude and `address_locking.address_faimly.ipv4/ipv6` take precedence.
-          address_faimly:
+          # The `address_locking.ipv4/ipv6` and `address_locking.address_family.ipv4/ipv6` are mutually exclusive and `address_locking.address_family.ipv4/ipv6` take precedence.
+          # This feature is supported starting from EOS version 4.31.0F and later.
+          address_family:
 
             # Enable/disable address locking for IPv4.
             ipv4: <bool>

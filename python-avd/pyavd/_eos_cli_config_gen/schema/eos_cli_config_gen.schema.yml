@@ -2195,10 +2195,12 @@ keys:
             ipv6:
               type: bool
               description: Enable address locking for IPv6.
-            address_faimly:
-              description: The `address_locking.ipv4/ipv6` and `address_locking.address_faimly.ipv4/ipv6`
-                are mutually exclude and `address_locking.address_faimly.ipv4/ipv6`
+            address_family:
+              description: 'The `address_locking.ipv4/ipv6` and `address_locking.address_family.ipv4/ipv6`
+                are mutually exclusive and `address_locking.address_family.ipv4/ipv6`
                 take precedence.
+
+                This feature is supported starting from EOS version 4.31.0F and later.'
               type: dict
               keys:
                 ipv4:
@@ -21251,21 +21253,6 @@ keys:
           type: bool
         arp_monitor_mac_address:
           type: bool
-        address_locking:
-          type: dict
-          keys:
-            address_faimly:
-              type: dict
-              keys:
-                ipv4:
-                  type: bool
-                  description: Enable/disable address locking for IPv4.
-                ipv6:
-                  type: bool
-                  description: Enable/disable address locking for IPv6.
-            ipv4_enforcement_disabled:
-              type: bool
-              description: Disable enforcement for IPv4 locked addresses.
         ip_proxy_arp:
           type: bool
         ip_directed_broadcast:
@@ -21935,6 +21922,21 @@ keys:
           valid_values:
           - active
           - suspend
+        address_locking:
+          type: dict
+          keys:
+            address_family:
+              type: dict
+              keys:
+                ipv4:
+                  type: bool
+                  description: Enable address locking for IPv4.
+                ipv6:
+                  type: bool
+                  description: Enable address locking for IPv6.
+            ipv4_enforcement_disabled:
+              type: bool
+              description: Disable enforcement for IPv4 locked addresses.
         trunk_groups:
           type: list
           items:

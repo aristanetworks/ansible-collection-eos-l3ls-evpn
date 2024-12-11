@@ -3181,10 +3181,17 @@ vlan internal order ascending range 10 40
 !
 vlan 110
    name PR01-DMZ
+   !
+   address locking
+      address-family ipv4
+      address-family ipv6
 !
 vlan 111
    name PRIVATE_VLAN_COMMUNITY
    private-vlan community primary vlan 110
+   !
+   address locking
+      locked-address ipv4 enforcement disabled
 !
 vlan 112
    name PRIVATE_VLAN_ISOLATED
@@ -3934,6 +3941,7 @@ interface Ethernet4
    mtu 9100
    no switchport
    snmp trap link-change
+   !
    address locking
       address-family ipv4
       address-family ipv6
@@ -3960,6 +3968,7 @@ interface Ethernet5
    mtu 9100
    switchport access vlan 220
    no switchport
+   !
    address locking
       address-family ipv4 disabled
       address-family ipv6 disabled
@@ -3993,6 +4002,7 @@ interface Ethernet6
    switchport trunk allowed vlan 110-111,210-211
    switchport mode trunk
    switchport
+   !
    address locking
       locked-address ipv4 enforcement disabled
    no lldp transmit
@@ -5946,9 +5956,6 @@ interface Vlan75
 !
 interface Vlan81
    description IPv6 Virtual Address
-   address locking
-      address-family ipv4 disabled
-      address-family ipv6 disabled
    vrf Tenant_C
    ipv6 enable
    ip address virtual 10.10.81.1/24
@@ -5959,8 +5966,6 @@ interface Vlan81
 interface Vlan83
    description SVI Description
    no shutdown
-   address locking
-      locked-address ipv4 enforcement disabled
    isis enable EVPN_UNDERLAY
    isis authentication mode md5
    isis authentication key 0 password
@@ -6191,9 +6196,6 @@ interface Vlan2001
 interface Vlan2002
    description SVI Description
    no autostate
-   address locking
-      address-family ipv4
-      address-family ipv6
    vrf Tenant_B
    ip verify unicast source reachable-via rx
    isis enable EVPN_UNDERLAY
