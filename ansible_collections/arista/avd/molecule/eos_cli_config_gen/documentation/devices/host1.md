@@ -1245,6 +1245,7 @@ ip radius source-interface loopback10
 | RADIUS1 | radius | default | 10.10.10.248 |
 | RADIUS2 | radius | mgt | 10.10.10.157 |
 | RADIUS2 | radius | default | 10.10.10.249 |
+| RADIUS3 | radius | - | - |
 
 #### AAA Server Groups Device Configuration
 
