@@ -72,6 +72,9 @@ class UtilsMixin:
         for index, network_port in enumerate(self.inputs.network_ports):
             network_port._context = f"network_ports[{index}]"
             network_port_settings = self.shared_utils.get_merged_adapter_settings(network_port)
+
+            if not network_port_settings.switches and not network_port_settings.platforms:
+                continue
             if network_port_settings.switches and not self._match_regexes(network_port_settings.switches, self.shared_utils.hostname):
                 continue
             if network_port_settings.platforms and self.shared_utils.platform not in network_port_settings.platforms:

@@ -141,34 +141,36 @@ network_ports:
       channel_id: 43
       mode: "active"
 
-  # Tests below test hostname and platform matching.
+  # Tests for issue #4786
   # Test regex match all switches and specific platform match criteria.
   - switches:
       - network-ports-tests.*
-    switch_ports:
-      - Ethernet47-48
     platforms:
       - 720XPM-48Y6
-    profile: pc
-    endpoint: PCs
+    switch_ports:
+      - Ethernet48
+    description: Matched on all hostnames and 48 port platform
 
-  # Test regex match switch and no match on platform.
-  - switches:
-      - network-ports-tests.2
+  # Test only platform match.
+  - platforms:
+      - 720XPM-24Y6
     switch_ports:
-      - Ethernet47-48
+      - Ethernet24
+    description: Matched on only 24 port platform
+
+  # Test criteria must match both hostname/platform.
+  - switches:
+      - network-ports-no-match
     platforms:
       - 720XPM-48Y6
-    profile: pc
-    endpoint: PCs
+    switch_ports:
+      - Ethernet49
+    description: Should not match hostname and platform
 
   # Test only platform match.
   - switch_ports:
-      - Ethernet23-24
-    platforms:
-      - 720XPM-24Y6
-    profile: pc
-    endpoint: PCs
+      - Ethernet25
+    description: No criteria, no config
 
 servers:
   - name: CONNECTED_ENDPOINT_OVERWRITING_NETWORK_PORT

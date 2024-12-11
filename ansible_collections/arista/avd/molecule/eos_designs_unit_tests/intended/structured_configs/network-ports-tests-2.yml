@@ -814,30 +814,12 @@ ethernet_interfaces:
   channel_group:
     id: 43
     mode: active
-- name: Ethernet23
-  peer: PCs
-  peer_type: network_port
-  port_profile: pc
-  description: PCs
-  shutdown: false
-  switchport:
-    enabled: true
-    mode: access
-    access_vlan: 100
-  spanning_tree_portfast: edge
-  spanning_tree_bpdufilter: enabled
 - name: Ethernet24
-  peer: PCs
   peer_type: network_port
-  port_profile: pc
-  description: PCs
+  description: Matched on only 24 port platform
   shutdown: false
   switchport:
     enabled: true
-    mode: access
-    access_vlan: 100
-  spanning_tree_portfast: edge
-  spanning_tree_bpdufilter: enabled
 mlag_configuration:
   domain_id: mlag
   local_interface: Vlan4094
