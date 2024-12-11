@@ -1139,11 +1139,61 @@ roles/eos_designs/docs/tables/default-connected-endpoints-description.md
 The `network_ports` data model is intended to be used with `port_profiles` and `parent_profiles` to keep the configuration generic and compact,
 but all features and keys supported under `connected_endpoints.adapters` are also supported directly under `network_ports`.
 
+Switches match criteria uses the list of `switches` hostname regex patterns or `platforms` list. When used in combination, the switch must match both criteria to generate the associated port configurations defined.
+
 All ranges defined under `switch_ports` will be expanded to individual port configuration which leads to a some behavioral differences to `connected_endpoints`:
 
 - By default each port will be configured in a port-channel with one member when leveraging automatic channel-id generation.
   To configure multiple ports as member of the same port-channel set the channel-id key (see the example below).
 - Inconsistent configurations when used with `short_esi: auto` or `designated_forwarder_algorithm: auto`, since those rely on information from multiple switches and interfaces.
+
+??? example "Example using match criteria"
+
+    ```yaml
+    # Port Profiles
+    # Common settings inherited to network_ports
+    port_profiles:
+      - profile: common
+        mode: access
+        vlans: "999"
+        spanning_tree_portfast: edge
+        spanning_tree_bpdufilter: enabled
+
+    # Network Ports
+    # Switches are matched with regex matching the full hostname and platform type.
+    network_ports:
+      - switches:
+          - network-ports-[est]{5}-.*
+        platforms:
+          - 720XPM-48Y6
+        switch_ports:
+          - Ethernet1-48
+        profile: common
+
+    # Switches are matched on platform type, regardless of hostname.
+      - platforms:
+          - 720XPM-24Y6
+        switch_ports:
+          - Ethernet1-24
+        profile: common
+
+    # Custom Platform Settings
+    # Copied default 720XP platform settings, adding more specific platform names for match.
+    # These platform types can be assigned to devices as part of nodes/node_group settings.
+    custom_platform_settings:
+      - platforms:
+          - 720XPM-48Y6
+          - 720XPM-24Y6
+        feature_support:
+          poe: true
+          queue_monitor_length_notify: false
+        reload_delay:
+          mlag: 300
+          non_mlag: 330
+        trident_forwarding_table_partition: flexible exact-match 16000 l2-shared 18000 l3-shared
+          22000
+
+    ```
 
 ??? example "Example using network ports and profiles"
 

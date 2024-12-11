@@ -22,6 +22,8 @@ keys:
             type: str
         platforms:
           type: list
+          # TODO: AVD 6.0.0 add min_length: 1 for switches
+          min_length: 1
           description: |
             Matching the platform type of one or more switches. If you need to add custom platforms to match specific port quantities, create them under `custom_platform_settings`.
             Entries under `custom_platform_settings` should match the platform match criteria.
