@@ -31,6 +31,9 @@ class AvdBase(ABC):
     Only exception is on _cast_as, where the flag is carried over.
     """
 
+    _block_inheritance: bool = False
+    """Flag to block inheriting further if we at some point inherited from a class with _created_from_null set."""
+
     def __eq__(self, other: object) -> bool:
         """Compare two instances of AvdBase by comparing their repr."""
         if isinstance(other, self.__class__):
@@ -46,8 +49,19 @@ class AvdBase(ABC):
     def _load(cls, data: Sequence | Mapping) -> Self:
         """Returns a new instance loaded with the given data."""
 
+    @classmethod
+    def _from_null(cls) -> Self:
+        """Returns a new instance with all attributes set to None. This represents the YAML input '<key>: null'."""
+        new_instance = cls()
+        new_instance._created_from_null = True
+        return new_instance
+
     @abstractmethod
-    def _dump(self, include_default_values: bool = False, strip_values: tuple = (None, [], {})) -> dict | list:
+    def _strip_values(self, strip_values: tuple = (None, {}, [])) -> None:
+        """In-place update the instance to remove data matching the given strip_values."""
+
+    @abstractmethod
+    def _dump(self, include_default_values: bool = False) -> dict | list:
         """Dump data into native Python types with or without default values."""
 
     @abstractmethod

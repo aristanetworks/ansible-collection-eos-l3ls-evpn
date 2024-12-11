@@ -6,7 +6,7 @@ from __future__ import annotations
 import re
 from collections.abc import Callable, Iterable, Iterator, Mapping, Sequence
 from copy import deepcopy
-from typing import TYPE_CHECKING, Any, ClassVar, Generic, Literal
+from typing import TYPE_CHECKING, Any, ClassVar, Generic, Literal, cast
 
 from pyavd._schema.coerce_type import coerce_type
 from pyavd._utils import Undefined, UndefinedType
@@ -116,17 +116,25 @@ class AvdList(Sequence[T_ItemType], Generic[T_ItemType], AvdBase):
     def extend(self, items: Iterable[T_ItemType]) -> None:
         self._items.extend(items)
 
-    def _as_list(self, include_default_values: bool = False, strip_values: tuple = (None, [], {})) -> list:
+    def _strip_values(self, strip_values: tuple = (None, {}, [])) -> None:
+        """In-place update the instance to remove data matching the given strip_values."""
+        if issubclass(self._item_type, AvdBase):
+            [item._strip_values(strip_values=strip_values) for item in self._items]
+            self._items = [item for item in self._items if item._dump() not in strip_values]
+            return
+
+        self._items = [item for item in self._items if item not in strip_values]
+
+    def _as_list(self, include_default_values: bool = False) -> list:
         """Returns a list with all the data from this model and any nested models."""
         if issubclass(self._item_type, AvdBase):
-            items: list[AvdBase] = self._items
-            return [
-                value for item in items if (value := item._dump(include_default_values=include_default_values, strip_values=strip_values)) not in strip_values
-            ]
-        return [item for item in self._items if item not in strip_values]
+            items = cast(list[AvdBase], self._items)
+            return [item._dump(include_default_values=include_default_values) for item in items]
 
-    def _dump(self, include_default_values: bool = False, strip_values: tuple = (None, [], {})) -> list:
-        return self._as_list(include_default_values=include_default_values, strip_values=strip_values)
+        return list(self._items)
+
+    def _dump(self, include_default_values: bool = False) -> list:
+        return self._as_list(include_default_values=include_default_values)
 
     def _natural_sorted(self, sort_key: str | None = None, ignore_case: bool = True) -> Self:
         """Return new instance where the items are natural sorted by the given sort key or by the item itself."""

@@ -26,10 +26,7 @@ def coerce_type(value: Any, target_type: type[T]) -> T:
     if value is None:
         if issubclass(target_type, AvdBase):
             # None values are sometimes used to overwrite inherited profiles.
-            # This ensures we still follow the type hint of the class.
-            new_instance = target_type()
-            new_instance._created_from_null = True
-            return new_instance
+            return target_type._from_null()
 
         # Other None values are left untouched.
     elif target_type is Any or isinstance(value, target_type):

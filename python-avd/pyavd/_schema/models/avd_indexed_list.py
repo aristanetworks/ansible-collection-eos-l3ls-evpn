@@ -139,16 +139,17 @@ class AvdIndexedList(Sequence[T_AvdModel], Generic[T_PrimaryKey, T_AvdModel], Av
     def extend(self, items: Iterable[T_AvdModel]) -> None:
         self._items.update({getattr(item, self._primary_key): item for item in items})
 
-    def _as_list(self, include_default_values: bool = False, strip_values: tuple = (None, [], {})) -> list[dict]:
-        """Returns a list with all the data from this model and any nested models."""
-        return [
-            value
-            for item in self._items.values()
-            if (value := item._as_dict(include_default_values=include_default_values, strip_values=strip_values)) not in strip_values
-        ]
+    def _strip_values(self, strip_values: tuple = (None, {}, [])) -> None:
+        """In-place update the instance to remove data matching the given strip_values."""
+        [item._strip_values(strip_values=strip_values) for item in self._items.values()]
+        self._items = {primary_key: item for primary_key, item in self._items.items() if item._dump() not in strip_values}
 
-    def _dump(self, include_default_values: bool = False, strip_values: tuple = (None, [], {})) -> list[dict]:
-        return self._as_list(include_default_values=include_default_values, strip_values=strip_values)
+    def _as_list(self, include_default_values: bool = False) -> list[dict]:
+        """Returns a list with all the data from this model and any nested models."""
+        return [item._as_dict(include_default_values=include_default_values) for item in self._items.values()]
+
+    def _dump(self, include_default_values: bool = False) -> list[dict]:
+        return self._as_list(include_default_values=include_default_values)
 
     def _natural_sorted(self, ignore_case: bool = True) -> Self:
         """Return new instance where the items are natural sorted by primary key."""
@@ -180,8 +181,8 @@ class AvdIndexedList(Sequence[T_AvdModel], Generic[T_PrimaryKey, T_AvdModel], Av
             msg = f"Unable to merge type '{type(other)}' into '{cls}'"
             raise TypeError(msg)
 
-        if self._created_from_null:
-            # Overwrite all data from other and clear the flag.
+        if self._created_from_null or other._created_from_null:
+            # Clear the flag and set list_merge to replace so we overwrite with data from other below.
             self._created_from_null = False
             list_merge = "replace"
 
@@ -199,6 +200,10 @@ class AvdIndexedList(Sequence[T_AvdModel], Generic[T_PrimaryKey, T_AvdModel], Av
             # Existing item of same type, so deepmerge.
             self[primary_key]._deepmerge(new_item, list_merge=list_merge)
 
+            # Make sure the primary key is never lost / changed.
+            if getattr(self[primary_key], self._primary_key, None) != primary_key:
+                setattr(self[primary_key], self._primary_key, primary_key)
+
     def _deepinherit(self, other: Self) -> None:
         """Update instance by recursively inheriting from other instance for all existing items. New items are *not* added."""
         cls = type(self)
@@ -206,8 +211,13 @@ class AvdIndexedList(Sequence[T_AvdModel], Generic[T_PrimaryKey, T_AvdModel], Av
             msg = f"Unable to inherit from type '{type(other)}' into '{cls}'"
             raise TypeError(msg)
 
-        if self._created_from_null:
+        if self._created_from_null or self._block_inheritance:
             # Null always wins, so no inheritance.
+            return
+
+        if other._created_from_null:
+            # Nothing to inherit, and we set the special block flag to prevent inheriting from something else later.
+            self._block_inheritance = True
             return
 
         for primary_key, new_item in other.items():
@@ -237,5 +247,7 @@ class AvdIndexedList(Sequence[T_AvdModel], Generic[T_PrimaryKey, T_AvdModel], Av
 
         if self._created_from_null:
             new_instance._created_from_null = True
+        if self._block_inheritance:
+            new_instance._block_inheritance = True
 
         return new_instance
