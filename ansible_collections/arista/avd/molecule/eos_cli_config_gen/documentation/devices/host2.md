@@ -924,7 +924,7 @@ router bfd
 | Authentication type | - |
 | Authentication sequence-number window | - |
 | Authentication active index | 766 |
-| SRLG | enabled |
+| SRLG | Enabled |
 | Preemption method | hard |
 | Fast reroute mode | node-protection |
 | Fast reroute reversion | - |
