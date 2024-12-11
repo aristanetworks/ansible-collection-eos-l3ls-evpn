@@ -60950,7 +60950,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             vrf: str | None
             version: Literal["1", "2c", "3"] | None
             community: str | None
-            """Community name."""
+            """Community name. Required when version "1" or "2c"."""
             users: Users
             """Subclass of AvdList with `UsersItem` items."""
             _custom_data: dict[str, Any]
@@ -60977,7 +60977,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                         host: Host IP address or name.
                         vrf: vrf
                         version: version
-                        community: Community name.
+                        community: Community name. Required when version "1" or "2c".
                         users: Subclass of AvdList with `UsersItem` items.
                         _custom_data: _custom_data
 
