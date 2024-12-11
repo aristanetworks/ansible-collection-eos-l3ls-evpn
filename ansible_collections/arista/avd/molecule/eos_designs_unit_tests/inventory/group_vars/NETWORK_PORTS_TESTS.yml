@@ -167,7 +167,7 @@ network_ports:
       - Ethernet49
     description: Should not match hostname and platform
 
-  # Test only platform match.
+  # Test no match criteria
   - switch_ports:
       - Ethernet25
     description: No criteria, no config
