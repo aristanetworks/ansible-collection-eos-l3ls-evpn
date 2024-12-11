@@ -168,7 +168,7 @@ router_bgp:
         activate: true
       - ip_address: 123.1.1.11
         activate: true
-        prefix_list_in: PL-TEST-IN-AF4
+        prefix_list_in: PL-TEST-IN-AF444444
         prefix_list_out: PL-TEST-OUT-AF4
     neighbors:
     - ip_address: 123.1.1.10
