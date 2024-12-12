@@ -54,7 +54,7 @@ router adaptive-virtual-topology
       path-selection load-balance {{ profile.load_balance_policy }}
 {%         endif %}
 {%         if profile.metric_order is arista.avd.defined %}
-      metric order {{ profile.metric_order }}
+      metric order {{ profile.metric_order.preferred_metric }}
 {%         endif %}
 {%         if profile.outlier_elimination.disabled is arista.avd.defined(true) %}
       path-selection outlier elimination disabled

@@ -32,7 +32,8 @@ router_adaptive_virtual_topology:
           jitter: 200
           load: 25.16
           loss_rate: 20
-      metric_order: latency
+      metric_order:
+        preferred_metric: latency
       load_balance_policy: scavenger-lb
       internet_exit_policy: scavenger-ie
   policies:

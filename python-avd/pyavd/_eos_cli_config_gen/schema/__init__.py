@@ -33626,6 +33626,33 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class ProfilesItem(AvdModel):
             """Subclass of AvdModel."""
 
+            class MetricOrder(AvdModel):
+                """Subclass of AvdModel."""
+
+                _fields: ClassVar[dict] = {"preferred_metric": {"type": str}, "_custom_data": {"type": dict}}
+                preferred_metric: Literal["jitter", "latency", "load", "loss-rate"]
+                _custom_data: dict[str, Any]
+
+                if TYPE_CHECKING:
+
+                    def __init__(
+                        self,
+                        *,
+                        preferred_metric: Literal["jitter", "latency", "load", "loss-rate"] | UndefinedType = Undefined,
+                        _custom_data: dict[str, Any] | UndefinedType = Undefined,
+                    ) -> None:
+                        """
+                        MetricOrder.
+
+
+                        Subclass of AvdModel.
+
+                        Args:
+                            preferred_metric: preferred_metric
+                            _custom_data: _custom_data
+
+                        """
+
             class OutlierElimination(AvdModel):
                 """Subclass of AvdModel."""
 
@@ -33715,7 +33742,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 "name": {"type": str},
                 "load_balance_policy": {"type": str},
                 "internet_exit_policy": {"type": str},
-                "metric_order": {"type": str},
+                "metric_order": {"type": MetricOrder},
                 "outlier_elimination": {"type": OutlierElimination},
                 "_custom_data": {"type": dict},
             }
@@ -33725,8 +33752,12 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             """Name of the load-balance policy."""
             internet_exit_policy: str | None
             """Name of the internet exit policy."""
-            metric_order: Literal["jitter", "latency", "load", "loss-rate"] | None
-            """Metric order to be used for path comparison."""
+            metric_order: MetricOrder
+            """
+            Metric order to be used for path comparison.
+
+            Subclass of AvdModel.
+            """
             outlier_elimination: OutlierElimination
             """
             AVT path outlier elimination.
@@ -33743,7 +33774,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                     name: str | UndefinedType = Undefined,
                     load_balance_policy: str | None | UndefinedType = Undefined,
                     internet_exit_policy: str | None | UndefinedType = Undefined,
-                    metric_order: Literal["jitter", "latency", "load", "loss-rate"] | None | UndefinedType = Undefined,
+                    metric_order: MetricOrder | UndefinedType = Undefined,
                     outlier_elimination: OutlierElimination | UndefinedType = Undefined,
                     _custom_data: dict[str, Any] | UndefinedType = Undefined,
                 ) -> None:
@@ -33757,7 +33788,10 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                         name: AVT Name.
                         load_balance_policy: Name of the load-balance policy.
                         internet_exit_policy: Name of the internet exit policy.
-                        metric_order: Metric order to be used for path comparison.
+                        metric_order:
+                           Metric order to be used for path comparison.
+
+                           Subclass of AvdModel.
                         outlier_elimination:
                            AVT path outlier elimination.
 

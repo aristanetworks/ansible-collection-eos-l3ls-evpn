@@ -23,7 +23,8 @@
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;name</samp>](## "router_adaptive_virtual_topology.profiles.[].name") | String | Required, Unique |  |  | AVT Name. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;load_balance_policy</samp>](## "router_adaptive_virtual_topology.profiles.[].load_balance_policy") | String |  |  |  | Name of the load-balance policy. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;internet_exit_policy</samp>](## "router_adaptive_virtual_topology.profiles.[].internet_exit_policy") | String |  |  |  | Name of the internet exit policy. |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;metric_order</samp>](## "router_adaptive_virtual_topology.profiles.[].metric_order") | String |  |  | Valid Values:<br>- <code>jitter</code><br>- <code>latency</code><br>- <code>load</code><br>- <code>loss-rate</code> | Metric order to be used for path comparison. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;metric_order</samp>](## "router_adaptive_virtual_topology.profiles.[].metric_order") | Dictionary |  |  |  | Metric order to be used for path comparison. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;preferred_metric</samp>](## "router_adaptive_virtual_topology.profiles.[].metric_order.preferred_metric") | String | Required |  | Valid Values:<br>- <code>jitter</code><br>- <code>latency</code><br>- <code>load</code><br>- <code>loss-rate</code> |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;outlier_elimination</samp>](## "router_adaptive_virtual_topology.profiles.[].outlier_elimination") | Dictionary |  |  |  | AVT path outlier elimination. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;disabled</samp>](## "router_adaptive_virtual_topology.profiles.[].outlier_elimination.disabled") | Boolean |  |  |  | Set true to disable the AVT path outlier elimination. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;threshold</samp>](## "router_adaptive_virtual_topology.profiles.[].outlier_elimination.threshold") | Dictionary |  |  |  | Change the threshold values for path comparison. |
@@ -83,7 +84,8 @@
           internet_exit_policy: <str>
 
           # Metric order to be used for path comparison.
-          metric_order: <str; "jitter" | "latency" | "load" | "loss-rate">
+          metric_order:
+            preferred_metric: <str; "jitter" | "latency" | "load" | "loss-rate"; required>
 
           # AVT path outlier elimination.
           outlier_elimination:

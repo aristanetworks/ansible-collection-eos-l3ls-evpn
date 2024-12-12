@@ -84,12 +84,16 @@ keys:
               description: Name of the internet exit policy.
             metric_order:
               description: Metric order to be used for path comparison.
-              type: str
-              valid_values:
-                - jitter
-                - latency
-                - load
-                - loss-rate
+              type: dict
+              keys:
+                preferred_metric:
+                  type: str
+                  required: true
+                  valid_values:
+                    - jitter
+                    - latency
+                    - load
+                    - loss-rate
             outlier_elimination:
               description: AVT path outlier elimination.
               type: dict
