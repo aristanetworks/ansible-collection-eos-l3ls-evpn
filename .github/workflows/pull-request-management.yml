@@ -510,8 +510,16 @@ jobs:
           pip install "ansible-core<2.19.0" -r .github/requirements-ci.txt --upgrade
 
       - name: Find and print wheel file path
+        shell: bash
         run: |
-          find . -type f -name '*5.2.0.dev1-py3-none-any.whl' -print
+          set -e
+          echo "Searching for the wheel file..."
+          FILE_PATH=$(find . -type f -name '*5.2.0.dev1-py3-none-any.whl')
+          if [ -z "$FILE_PATH" ]; then
+            echo "Error: Wheel file not found."
+            exit 1
+          fi
+          echo "Found wheel file at: $FILE_PATH"
 
       - name: 'Run ansible-test sanity'
         run: |
