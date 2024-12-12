@@ -5752,12 +5752,14 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             """Enable address locking for IPv6."""
             address_family: AddressFamily
             """
-            The `address_locking.ipv4/ipv6` and `address_locking.address_family.ipv4/ipv6` are mutually
-            exclusive and `address_locking.address_family.ipv4/ipv6` take precedence.
-            This feature is supported
-            starting from EOS version 4.31.0F and later.
+            Configure address locking per address family.
+            The `address_locking.ipv4/ipv6` and
+            `address_locking.address_family.ipv4/ipv6` are mutually exclusive and
+            `address_locking.address_family.ipv4/ipv6` take precedence.
+            Introduced in EOS 4.31.0F.
 
-            Subclass of AvdModel.
+            Subclass of
+            AvdModel.
             """
             ipv4_enforcement_disabled: bool | None
             """Disable enforcement for IPv4 locked addresses."""
@@ -5784,12 +5786,14 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                         ipv4: Enable address locking for IPv4.
                         ipv6: Enable address locking for IPv6.
                         address_family:
-                           The `address_locking.ipv4/ipv6` and `address_locking.address_family.ipv4/ipv6` are mutually
-                           exclusive and `address_locking.address_family.ipv4/ipv6` take precedence.
-                           This feature is supported
-                           starting from EOS version 4.31.0F and later.
+                           Configure address locking per address family.
+                           The `address_locking.ipv4/ipv6` and
+                           `address_locking.address_family.ipv4/ipv6` are mutually exclusive and
+                           `address_locking.address_family.ipv4/ipv6` take precedence.
+                           Introduced in EOS 4.31.0F.
 
-                           Subclass of AvdModel.
+                           Subclass of
+                           AvdModel.
                         ipv4_enforcement_disabled: Disable enforcement for IPv4 locked addresses.
                         _custom_data: _custom_data
 

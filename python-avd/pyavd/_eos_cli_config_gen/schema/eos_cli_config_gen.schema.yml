@@ -2196,11 +2196,13 @@ keys:
               type: bool
               description: Enable address locking for IPv6.
             address_family:
-              description: 'The `address_locking.ipv4/ipv6` and `address_locking.address_family.ipv4/ipv6`
+              description: 'Configure address locking per address family.
+
+                The `address_locking.ipv4/ipv6` and `address_locking.address_family.ipv4/ipv6`
                 are mutually exclusive and `address_locking.address_family.ipv4/ipv6`
                 take precedence.
 
-                This feature is supported starting from EOS version 4.31.0F and later.'
+                Introduced in EOS 4.31.0F.'
               type: dict
               keys:
                 ipv4:

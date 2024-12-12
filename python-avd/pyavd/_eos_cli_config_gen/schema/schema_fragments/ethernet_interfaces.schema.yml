@@ -157,8 +157,9 @@ keys:
               # TODO: Deprecate the key after discussion with AVD maintainers.
             address_family:
               description: |-
+                Configure address locking per address family.
                 The `address_locking.ipv4/ipv6` and `address_locking.address_family.ipv4/ipv6` are mutually exclusive and `address_locking.address_family.ipv4/ipv6` take precedence.
-                This feature is supported starting from EOS version 4.31.0F and later.
+                Introduced in EOS 4.31.0F.
               type: dict
               keys:
                 ipv4:
