@@ -1248,6 +1248,7 @@ ip radius source-interface loopback10
 | RADIUS1 | radius | default | 10.10.10.248 |
 | RADIUS2 | radius | mgt | 10.10.10.157 |
 | RADIUS2 | radius | default | 10.10.10.249 |
+| RADIUS3 | radius | - | - |
 
 #### AAA Server Groups Device Configuration
 
@@ -1268,6 +1269,8 @@ aaa group server radius RADIUS1
 aaa group server radius RADIUS2
    server 10.10.10.157 vrf mgt
    server 10.10.10.249
+!
+aaa group server radius RADIUS3
 !
 aaa group server tacacs+ TACACS
    server 10.10.11.157 vrf mgt
