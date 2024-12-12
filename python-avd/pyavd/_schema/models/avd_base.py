@@ -34,12 +34,6 @@ class AvdBase(ABC):
     _block_inheritance: bool = False
     """Flag to block inheriting further if we at some point inherited from a class with _created_from_null set."""
 
-    def __eq__(self, other: object) -> bool:
-        """Compare two instances of AvdBase by comparing their repr."""
-        if isinstance(other, self.__class__):
-            return repr(self) == repr(other)
-        return False
-
     def _deepcopy(self) -> Self:
         """Return a copy including all nested models."""
         return deepcopy(self)
@@ -57,7 +51,7 @@ class AvdBase(ABC):
         return new_instance
 
     @abstractmethod
-    def _strip_values(self, strip_values: tuple = (None, {}, [])) -> None:
+    def _strip_empties(self) -> None:
         """In-place update the instance to remove data matching the given strip_values."""
 
     @abstractmethod

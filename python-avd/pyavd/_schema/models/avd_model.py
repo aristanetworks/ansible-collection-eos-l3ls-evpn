@@ -169,18 +169,19 @@ class AvdModel(AvdBase):
             for field in self._fields
         )
 
-    def _strip_values(self, strip_values: tuple = (None, {}, [])) -> None:
+    def _strip_empties(self) -> None:
         """In-place update the instance to remove data matching the given strip_values."""
-        for field, field_info in self._fields.items() or ():
+        for field, field_info in self._fields.items():
             if (value := self._get_defined_attr(field)) is Undefined or field == "_custom_data":
                 continue
 
             if issubclass(field_info["type"], AvdBase) and isinstance(value, AvdBase):
-                value._strip_values(strip_values=strip_values)
-                # Overriding the same variable with the _dump() result.
-                value = value._dump()
+                value._strip_empties()
+                if not value:
+                    delattr(self, field)
+                continue
 
-            if value in strip_values:
+            if value is None:
                 delattr(self, field)
 
     def _as_dict(self, include_default_values: bool = False) -> dict:
@@ -190,7 +191,7 @@ class AvdModel(AvdBase):
         Filtered for nested None, {} and [] values.
         """
         as_dict = {}
-        for field, field_info in self._fields.items() or ():
+        for field, field_info in self._fields.items():
             value = self._get_defined_attr(field)
 
             if field == "_custom_data":
@@ -264,7 +265,7 @@ class AvdModel(AvdBase):
 
             if not isinstance(old_value, type(new_value)):
                 # Different types so we can just replace with the new value.
-                setattr(self, field, deepcopy(new_value))
+                setattr(self, field, new_value)
                 continue
 
             # Merge new value
@@ -277,7 +278,7 @@ class AvdModel(AvdBase):
             if field_type is dict:
                 # In-place deepmerge in to the existing dict without schema.
                 # Deepcopying since merge() does not copy.
-                merge(old_value, deepcopy(new_value), list_merge=list_merge)
+                merge(old_value, new_value, list_merge=list_merge)
                 continue
 
             setattr(self, field, new_value)
@@ -338,7 +339,7 @@ class AvdModel(AvdBase):
 
             # Inherit the field only if the old value is Undefined.
             if old_value is Undefined:
-                setattr(self, field, deepcopy(new_value))
+                setattr(self, field, new_value)
                 continue
 
             # Merge new value if it is a class with inheritance support.
@@ -350,7 +351,6 @@ class AvdModel(AvdBase):
 
             if field_type is dict:
                 # In-place deepmerge in to the existing dict without schema.
-                # Deepcopying since merge() does not copy.
                 merge(old_value, deepcopy(new_value), list_merge="replace")
 
     def _deepinherited(self, other: Self) -> Self:

@@ -116,14 +116,14 @@ class AvdList(Sequence[T_ItemType], Generic[T_ItemType], AvdBase):
     def extend(self, items: Iterable[T_ItemType]) -> None:
         self._items.extend(items)
 
-    def _strip_values(self, strip_values: tuple = (None, {}, [])) -> None:
+    def _strip_empties(self) -> None:
         """In-place update the instance to remove data matching the given strip_values."""
         if issubclass(self._item_type, AvdBase):
-            [item._strip_values(strip_values=strip_values) for item in self._items]
-            self._items = [item for item in self._items if item._dump() not in strip_values]
+            [item._strip_empties() for item in self._items]
+            self._items = [item for item in self._items if item]
             return
 
-        self._items = [item for item in self._items if item not in strip_values]
+        self._items = [item for item in self._items if item is not None]
 
     def _as_list(self, include_default_values: bool = False) -> list:
         """Returns a list with all the data from this model and any nested models."""
@@ -182,7 +182,7 @@ class AvdList(Sequence[T_ItemType], Generic[T_ItemType], AvdBase):
             list_merge = "replace"
 
         if list_merge == "replace":
-            self._items = deepcopy(other._items)
+            self._items = other._items.copy()
             return
 
         # Append non-existing items.

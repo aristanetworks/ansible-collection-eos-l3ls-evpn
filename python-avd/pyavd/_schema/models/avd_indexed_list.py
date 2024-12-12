@@ -5,7 +5,6 @@ from __future__ import annotations
 
 import re
 from collections.abc import Iterable, Iterator, Sequence
-from copy import deepcopy
 from typing import TYPE_CHECKING, ClassVar, Generic, Literal
 
 from pyavd._errors import AristaAvdDuplicateDataError
@@ -139,10 +138,10 @@ class AvdIndexedList(Sequence[T_AvdModel], Generic[T_PrimaryKey, T_AvdModel], Av
     def extend(self, items: Iterable[T_AvdModel]) -> None:
         self._items.update({getattr(item, self._primary_key): item for item in items})
 
-    def _strip_values(self, strip_values: tuple = (None, {}, [])) -> None:
+    def _strip_empties(self) -> None:
         """In-place update the instance to remove data matching the given strip_values."""
-        [item._strip_values(strip_values=strip_values) for item in self._items.values()]
-        self._items = {primary_key: item for primary_key, item in self._items.items() if item._dump() not in strip_values}
+        [item._strip_empties() for item in self._items.values()]
+        self._items = {primary_key: item for primary_key, item in self._items.items() if item}
 
     def _as_list(self, include_default_values: bool = False) -> list[dict]:
         """Returns a list with all the data from this model and any nested models."""
@@ -187,14 +186,14 @@ class AvdIndexedList(Sequence[T_AvdModel], Generic[T_PrimaryKey, T_AvdModel], Av
             list_merge = "replace"
 
         if list_merge == "replace":
-            self._items = deepcopy(other._items)
+            self._items = other._items.copy()
             return
 
         for primary_key, new_item in other.items():
             old_value = self.get(primary_key)
             if old_value is Undefined or not isinstance(old_value, type(new_item)):
                 # New item or different type so we can just replace
-                self[primary_key] = deepcopy(new_item)
+                self[primary_key] = new_item
                 continue
 
             # Existing item of same type, so deepmerge.
@@ -221,10 +220,9 @@ class AvdIndexedList(Sequence[T_AvdModel], Generic[T_PrimaryKey, T_AvdModel], Av
             return
 
         for primary_key, new_item in other.items():
-            old_value = self.get(primary_key)
-            if old_value is Undefined:
+            if self.get(primary_key) is Undefined:
                 # New item so we can just append
-                self[primary_key] = deepcopy(new_item)
+                self[primary_key] = new_item
                 continue
 
             # Existing item, so deepinherit.
