@@ -233,7 +233,6 @@ lacp:
 link_tracking_groups:
 - name: LT_GROUP1
   recovery_delay: 300
-  _custom_data: {}
 local_users:
 - name: admin
   disabled: true

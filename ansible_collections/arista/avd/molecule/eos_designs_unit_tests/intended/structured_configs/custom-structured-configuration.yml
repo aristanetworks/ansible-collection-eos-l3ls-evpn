@@ -4,7 +4,7 @@ config_end: true
 enable_password:
   disabled: true
 hostname: custom-structured-configuration
-ip_igmp_snooping: null
+ip_igmp_snooping: {}
 ip_name_servers:
 - ip_address: 192.168.42.10
   vrf: MGMT

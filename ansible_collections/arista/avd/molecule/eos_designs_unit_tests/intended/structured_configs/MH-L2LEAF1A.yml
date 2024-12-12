@@ -50,7 +50,6 @@ is_deployed: true
 link_tracking_groups:
 - name: l2leaf-server02
   recovery_delay: 300
-  _custom_data: {}
 local_users:
 - name: admin
   disabled: true

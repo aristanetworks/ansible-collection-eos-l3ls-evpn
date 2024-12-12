@@ -583,7 +583,6 @@ router_bgp:
       interval: 1000
       min_rx: 1000
       multiplier: 10
-      _custom_data: {}
     password: htm4AZe9mIQOO1uiMuGgYQ==
     send_community: all
     maximum_routes: 0
@@ -598,7 +597,6 @@ router_bgp:
       interval: 2020
       min_rx: 2000
       multiplier: 3
-      _custom_data: {}
     send_community: all
     maximum_routes: 0
     ttl_maximum_hops: 42

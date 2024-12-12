@@ -435,7 +435,6 @@ router_bgp:
       interval: 1000
       min_rx: 1000
       multiplier: 10
-      _custom_data: {}
     password: htm4AZe9mIQOO1uiMuGgYQ==
     send_community: all
     maximum_routes: 0

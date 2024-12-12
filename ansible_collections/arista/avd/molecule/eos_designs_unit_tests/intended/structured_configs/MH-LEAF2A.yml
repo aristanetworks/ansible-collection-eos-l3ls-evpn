@@ -73,7 +73,6 @@ lacp:
 link_tracking_groups:
 - name: Eth-conn-to-router
   recovery_delay: 520
-  _custom_data: {}
 local_users:
 - name: admin
   disabled: true

@@ -22,7 +22,6 @@ management_security:
     haveged: true
     cpu_jitter: true
     hardware_exclusive: true
-    _custom_data: {}
 service_routing_protocols_model: multi-agent
 transceiver_qsfp_default_mode_4x10: true
 vlan_internal_order:

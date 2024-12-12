@@ -27,7 +27,7 @@ class AvdStructuredConfigCustomStructuredConfiguration(StructuredConfigGenerator
         Next we merge in custom structured config from various sources including None, {}, [].
         """
         # Strip empties from regular structured config
-        self.structured_config._strip_values()
+        self.structured_config._strip_empties()
 
         # Apply structured_config from node config
         if struct_cfg := self.shared_utils.node_config.structured_config:

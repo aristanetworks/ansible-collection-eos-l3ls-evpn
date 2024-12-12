@@ -260,7 +260,6 @@ is_deployed: true
 link_tracking_groups:
 - name: LT_GROUP1
   recovery_delay: 300
-  _custom_data: {}
 management_api_http:
   enable_https: true
   enable_vrfs:

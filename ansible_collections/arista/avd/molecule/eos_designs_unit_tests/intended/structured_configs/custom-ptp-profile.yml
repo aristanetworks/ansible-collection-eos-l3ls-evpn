@@ -13,13 +13,10 @@ ethernet_interfaces:
     announce:
       interval: 4
       timeout: 3
-      _custom_data: {}
     delay_req: -6
     sync_message:
       interval: -7
-      _custom_data: {}
     transport: ipv4
-    _custom_data: {}
   peer: not-in-this-fabric
   peer_interface: Ethernet8
   peer_type: other

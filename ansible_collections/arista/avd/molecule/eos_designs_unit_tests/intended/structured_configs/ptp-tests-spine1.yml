@@ -89,13 +89,10 @@ ethernet_interfaces:
     announce:
       interval: 0
       timeout: 3
-      _custom_data: {}
     delay_req: -3
     sync_message:
       interval: -3
-      _custom_data: {}
     transport: ipv4
-    _custom_data: {}
   peer: ptp-tests-spine2
   peer_interface: Ethernet6
   peer_type: spine
@@ -110,13 +107,10 @@ ethernet_interfaces:
     announce:
       interval: 0
       timeout: 3
-      _custom_data: {}
     delay_req: -3
     sync_message:
       interval: -3
-      _custom_data: {}
     transport: ipv4
-    _custom_data: {}
   peer: ptp-tests-spine2
   peer_interface: Ethernet7
   peer_type: spine
@@ -131,13 +125,10 @@ ethernet_interfaces:
     announce:
       interval: 0
       timeout: 3
-      _custom_data: {}
     delay_req: -3
     sync_message:
       interval: -3
-      _custom_data: {}
     transport: ipv4
-    _custom_data: {}
   peer: ptp-tests-spine2
   peer_interface: Ethernet8
   peer_type: spine
@@ -152,13 +143,10 @@ ethernet_interfaces:
     announce:
       interval: 0
       timeout: 3
-      _custom_data: {}
     delay_req: -3
     sync_message:
       interval: -3
-      _custom_data: {}
     transport: ipv4
-    _custom_data: {}
   peer: ptp-tests-spine2
   peer_interface: Ethernet9
   peer_type: spine
