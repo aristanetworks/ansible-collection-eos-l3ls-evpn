@@ -156,6 +156,7 @@ class PortChannelInterfacesMixin(UtilsMixin):
             "sflow": self._get_adapter_sflow(adapter),
             "flow_tracker": self.shared_utils.get_flow_tracker(adapter.flow_tracking),
             "validate_state": None if (adapter.validate_state if adapter.validate_state is not None else True) else False,
+            "validate_lldp": None if (adapter.validate_lldp if adapter.validate_lldp is not None else True) else False,
             "eos_cli": adapter.port_channel.raw_eos_cli,
             "struct_cfg": adapter.port_channel.structured_config._as_dict(strip_values=()) or None,
         }

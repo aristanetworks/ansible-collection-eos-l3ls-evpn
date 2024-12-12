@@ -9,6 +9,12 @@ port_profiles:
     spanning_tree_portfast: edge
     validate_state: false
 
+  - profile: Workstations_NoLLDP
+    mode: access
+    vlans: 11
+    spanning_tree_portfast: edge
+    validate_lldp: false
+
 # Definition of connected endpoints in the fabric.
 servers:
   # Name of the defined server.
@@ -130,6 +136,13 @@ workstations:
       - profile: Workstations
         endpoint_ports: [ e1 ]
         switch_ports: [ Ethernet32 ]
+        switches: [ dc1-leaf1a ]
+
+  - name: dc1-leaf1-workstationNoLLDP
+    adapters:
+      - profile: Workstations_NoLLDP
+        endpoint_ports: [ e1 ]
+        switch_ports: [ Ethernet33]
         switches: [ dc1-leaf1a ]
 
 # These ports will not be validated
