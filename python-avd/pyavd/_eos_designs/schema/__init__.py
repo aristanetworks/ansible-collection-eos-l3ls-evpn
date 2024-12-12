@@ -12836,7 +12836,7 @@ class EosDesigns(EosDesignsRootModel):
             """
             version: Literal["1", "2c", "3"] | None
             community: str | None
-            """Community name."""
+            """Community name. Required with version "1" or "2c"."""
             users: Users
             """Subclass of AvdList with `UsersItem` items."""
             _custom_data: dict[str, Any]
@@ -12878,7 +12878,7 @@ class EosDesigns(EosDesignsRootModel):
                            configured at all. Can be used in combination with "vrf" and "use_mgmt_interface_vrf" to configure
                            the SNMP host under multiple VRFs.
                         version: version
-                        community: Community name.
+                        community: Community name. Required with version "1" or "2c".
                         users: Subclass of AvdList with `UsersItem` items.
                         _custom_data: _custom_data
 
