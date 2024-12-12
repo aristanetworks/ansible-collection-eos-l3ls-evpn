@@ -1452,8 +1452,8 @@ address locking
 
 ### Management Security SSL Profiles
 
-| SSL Profile Name | TLS protocol accepted | Certificate filename | Key filename | Cipher List | CRLs |
-| ---------------- | --------------------- | -------------------- | ------------ | ----------- | ---- |
+| SSL Profile Name | TLS protocol accepted | Certificate filename | Key filename | Ciphers | CRLs |
+| ---------------- | --------------------- | -------------------- | ------------ | ------- | ---- |
 | certificate-profile | - | eAPI.crt | eAPI.key | - | ca.crl<br>intermediate.crl |
 | cipher-list-profile | - | - | - | ECDHE-RSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-SHA384 | - |
 | SSL_PROFILE | 1.1 1.2 | SSL_CERT | SSL_KEY | - | - |
@@ -5262,6 +5262,7 @@ interface Port-Channel104
    switchport trunk allowed vlan 112
    switchport mode trunk
    switchport
+   port-channel min-links 3
    port-channel lacp fallback individual
    port-channel lacp fallback timeout 300
 !

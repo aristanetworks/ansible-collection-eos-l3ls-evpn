@@ -20460,6 +20460,50 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class SslProfilesItem(AvdModel):
             """Subclass of AvdModel."""
 
+            class Ciphers(AvdModel):
+                """Subclass of AvdModel."""
+
+                _fields: ClassVar[dict] = {"v1_0": {"type": str}, "v1_3": {"type": str}, "_custom_data": {"type": dict}}
+                v1_0: str | None
+                """
+                The cipher suites for TLS version 1.0, 1.1 and 1.2.
+                Colon (:) separated list of allowed ciphers as a
+                string.
+                """
+                v1_3: str | None
+                """
+                The cipher suites for TLS version 1.3.
+                Colon (:) separated list of allowed ciphers as a string.
+                """
+                _custom_data: dict[str, Any]
+
+                if TYPE_CHECKING:
+
+                    def __init__(
+                        self,
+                        *,
+                        v1_0: str | None | UndefinedType = Undefined,
+                        v1_3: str | None | UndefinedType = Undefined,
+                        _custom_data: dict[str, Any] | UndefinedType = Undefined,
+                    ) -> None:
+                        """
+                        Ciphers.
+
+
+                        Subclass of AvdModel.
+
+                        Args:
+                            v1_0:
+                               The cipher suites for TLS version 1.0, 1.1 and 1.2.
+                               Colon (:) separated list of allowed ciphers as a
+                               string.
+                            v1_3:
+                               The cipher suites for TLS version 1.3.
+                               Colon (:) separated list of allowed ciphers as a string.
+                            _custom_data: _custom_data
+
+                        """
+
             class TrustCertificate(AvdModel):
                 """Subclass of AvdModel."""
 
@@ -20681,6 +20725,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 "name": {"type": str},
                 "tls_versions": {"type": str},
                 "cipher_list": {"type": str},
+                "ciphers": {"type": Ciphers},
                 "trust_certificate": {"type": TrustCertificate},
                 "chain_certificate": {"type": ChainCertificate},
                 "certificate": {"type": Certificate},
@@ -20700,6 +20745,14 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             cipher_list syntax follows the openssl cipher strings format.
             Colon (:) separated list of allowed
             ciphers as a string.
+            Not supported on EOS version starting 4.32.0F, use the `ciphers` setting
+            instead.
+            """
+            ciphers: Ciphers
+            """
+            This setting is applicable to EOS versions 4.32.0F and later.
+
+            Subclass of AvdModel.
             """
             trust_certificate: TrustCertificate
             """Subclass of AvdModel."""
@@ -20727,6 +20780,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                     name: str | None | UndefinedType = Undefined,
                     tls_versions: str | None | UndefinedType = Undefined,
                     cipher_list: str | None | UndefinedType = Undefined,
+                    ciphers: Ciphers | UndefinedType = Undefined,
                     trust_certificate: TrustCertificate | UndefinedType = Undefined,
                     chain_certificate: ChainCertificate | UndefinedType = Undefined,
                     certificate: Certificate | UndefinedType = Undefined,
@@ -20750,6 +20804,12 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                            cipher_list syntax follows the openssl cipher strings format.
                            Colon (:) separated list of allowed
                            ciphers as a string.
+                           Not supported on EOS version starting 4.32.0F, use the `ciphers` setting
+                           instead.
+                        ciphers:
+                           This setting is applicable to EOS versions 4.32.0F and later.
+
+                           Subclass of AvdModel.
                         trust_certificate: Subclass of AvdModel.
                         chain_certificate: Subclass of AvdModel.
                         certificate: Subclass of AvdModel.
@@ -31130,6 +31190,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             "mlag": {"type": int},
             "trunk_groups": {"type": TrunkGroups},
             "lacp_fallback_timeout": {"type": int},
+            "min_links": {"type": int},
             "lacp_fallback_mode": {"type": str},
             "qos": {"type": Qos},
             "bfd": {"type": Bfd},
@@ -31265,6 +31326,12 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         """Subclass of AvdList with `str` items."""
         lacp_fallback_timeout: int | None
         """Timeout in seconds. EOS default is 90 seconds."""
+        min_links: int | None
+        """
+        Minimum number of ports required up before bringing up a port-channel.
+        Maximum in `min_links` is
+        hardware dependent.
+        """
         lacp_fallback_mode: Literal["individual", "static"] | None
         qos: Qos
         """Subclass of AvdModel."""
@@ -31414,6 +31481,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 mlag: int | None | UndefinedType = Undefined,
                 trunk_groups: TrunkGroups | UndefinedType = Undefined,
                 lacp_fallback_timeout: int | None | UndefinedType = Undefined,
+                min_links: int | None | UndefinedType = Undefined,
                 lacp_fallback_mode: Literal["individual", "static"] | None | UndefinedType = Undefined,
                 qos: Qos | UndefinedType = Undefined,
                 bfd: Bfd | UndefinedType = Undefined,
@@ -31531,6 +31599,10 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                     mlag: MLAG ID.
                     trunk_groups: Subclass of AvdList with `str` items.
                     lacp_fallback_timeout: Timeout in seconds. EOS default is 90 seconds.
+                    min_links:
+                       Minimum number of ports required up before bringing up a port-channel.
+                       Maximum in `min_links` is
+                       hardware dependent.
                     lacp_fallback_mode: lacp_fallback_mode
                     qos: Subclass of AvdModel.
                     bfd: Subclass of AvdModel.
