@@ -191,15 +191,18 @@ class AvdModel(AvdBase):
         """
         as_dict = {}
         for field, field_info in self._fields.items() or ():
-            if (value := self._get_defined_attr(field)) is Undefined:
+            value = self._get_defined_attr(field)
+
+            if field == "_custom_data":
+                if isinstance(value, dict) and value:
+                    as_dict.update(value)
+                continue
+
+            if value is Undefined:
                 if not include_default_values:
                     continue
 
                 value = self._get_field_default_value(field)
-
-            if field == "_custom_data" and isinstance(value, dict) and value:
-                as_dict.update(value)
-                continue
 
             # Removing field_ prefix if needed.
             key = self._field_to_key_map.get(field, field)
@@ -248,12 +251,9 @@ class AvdModel(AvdBase):
             msg = f"Unable to merge type '{type(other)}' into '{cls}'"
             raise TypeError(msg)
 
-        if other._created_from_null or self._created_from_null:
-            LOGGER.warning("merging %r/%s into %r/%s", other, other._created_from_null, self, self._created_from_null)
         for field, field_info in cls._fields.items():
             if other._created_from_null and self._get_defined_attr(field) is not Undefined:
                 # Force the field back to unset if other is a "null" class.
-                LOGGER.warning("deleting field %s", field)
                 delattr(self, field)
 
             if (new_value := other._get_defined_attr(field)) is Undefined:
@@ -302,7 +302,6 @@ class AvdModel(AvdBase):
 
         if other._created_from_null:
             # Nothing to inherit, but we set the flag to prevent inheriting from something else later.
-            LOGGER.warning("deepinherit %r into %s", other, self)
             self._created_from_null = True
             return
 
@@ -323,14 +322,10 @@ class AvdModel(AvdBase):
 
         if self._created_from_null or self._block_inheritance:
             # Null always wins, so no inheritance.
-            LOGGER.warning(
-                "skipping deepinherit %r into %s. Created_from_null: %s, Block inheritance: %s", other, self, self._created_from_null, self._block_inheritance
-            )
             return
 
         if other._created_from_null:
             # Nothing to inherit, and we set the special block flag to prevent inheriting from something else later.
-            LOGGER.warning("blocking further deepinherit %r into %s", other, self)
             self._block_inheritance = True
             return
 

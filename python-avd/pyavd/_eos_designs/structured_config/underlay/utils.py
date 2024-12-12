@@ -182,7 +182,7 @@ class UtilsMixin:
             "access_group_in": get(self._l3_interface_acls, f"{l3_interface.name}..ipv4_acl_in..name", separator=".."),
             "access_group_out": get(self._l3_interface_acls, f"{l3_interface.name}..ipv4_acl_out..name", separator=".."),
             "eos_cli": l3_interface.raw_eos_cli,
-            "struct_cfg": l3_interface.structured_config._as_dict(strip_values=()),
+            "struct_cfg": l3_interface.structured_config._as_dict(),
             "flow_tracker": self.shared_utils.get_flow_tracker(l3_interface.flow_tracking),
         }
 
@@ -268,7 +268,7 @@ class UtilsMixin:
             "ipv6_enable": svi.ipv6_enable,
             "mtu": svi.mtu if self.shared_utils.platform_settings.feature_support.per_interface_mtu else None,
             "eos_cli": svi.raw_eos_cli,
-            "struct_cfg": svi.structured_config._as_dict(strip_values=()) or None,
+            "struct_cfg": svi.structured_config._as_dict() or None,
             "flow_tracker": link.get("flow_tracker"),
         }
         if (mtu := subinterface["mtu"]) is not None and subinterface["mtu"] > self.shared_utils.p2p_uplinks_mtu:
