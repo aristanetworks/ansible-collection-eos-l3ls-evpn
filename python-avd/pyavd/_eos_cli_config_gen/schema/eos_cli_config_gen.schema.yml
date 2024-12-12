@@ -4162,8 +4162,8 @@ keys:
                       items:
                         type: str
                     interfaces:
-                      description: Interfaces like -  Ethernet, InternalRecirc, Port-Channel,
-                        Recirc-Channel.
+                      description: Interfaces like -  Ethernet1, InternalRecirc1,
+                        Port-Channel1, Recirc-Channel1.
                       type: list
                       items:
                         type: str

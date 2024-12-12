@@ -11352,10 +11352,10 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                     """
                     interfaces: Interfaces
                     """
-                    Interfaces like -  Ethernet, InternalRecirc, Port-Channel, Recirc-Channel.
+                    Interfaces like -  Ethernet1, InternalRecirc1, Port-Channel1, Recirc-Channel1.
 
-                    Subclass of AvdList with
-                    `str` items.
+                    Subclass of AvdList
+                    with `str` items.
                     """
                     nexthop_groups: NexthopGroups
                     """
@@ -11387,10 +11387,10 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                                    Subclass of AvdList with `str` items.
                                 interfaces:
-                                   Interfaces like -  Ethernet, InternalRecirc, Port-Channel, Recirc-Channel.
+                                   Interfaces like -  Ethernet1, InternalRecirc1, Port-Channel1, Recirc-Channel1.
 
-                                   Subclass of AvdList with
-                                   `str` items.
+                                   Subclass of AvdList
+                                   with `str` items.
                                 nexthop_groups:
                                    Default nexthop-group names.
 
@@ -31114,10 +31114,10 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                     """
                     interfaces: Interfaces
                     """
-                    Interfaces like -  Ethernet, InternalRecirc, Port-Channel, Recirc-Channel.
+                    Interfaces like -  Ethernet1, InternalRecirc1, Port-Channel1, Recirc-Channel1.
 
-                    Subclass of AvdList with
-                    `str` items.
+                    Subclass of AvdList
+                    with `str` items.
                     """
                     nexthop_groups: NexthopGroups
                     """
@@ -31149,10 +31149,10 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                                    Subclass of AvdList with `str` items.
                                 interfaces:
-                                   Interfaces like -  Ethernet, InternalRecirc, Port-Channel, Recirc-Channel.
+                                   Interfaces like -  Ethernet1, InternalRecirc1, Port-Channel1, Recirc-Channel1.
 
-                                   Subclass of AvdList with
-                                   `str` items.
+                                   Subclass of AvdList
+                                   with `str` items.
                                 nexthop_groups:
                                    Default nexthop-group names.
 
