@@ -8,6 +8,8 @@
   - [TerminAttr Daemon](#terminattr-daemon)
 - [Routing](#routing)
   - [Router ISIS](#router-isis)
+- [Multicast](#multicast)
+  - [Router Multicast](#router-multicast)
 
 ## Management
 
@@ -78,4 +80,21 @@ daemon TerminAttr
 router isis EVPN_UNDERLAY
    authentication mode sha key-id 4 rx-disabled
    !
+```
+
+## Multicast
+
+### Router Multicast
+
+#### IP Router Multicast Summary
+
+- Multipathing disabled.
+
+#### Router Multicast Device Configuration
+
+```eos
+!
+router multicast
+   ipv4
+      multipath none
 ```

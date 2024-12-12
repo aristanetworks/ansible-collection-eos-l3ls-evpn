@@ -29,6 +29,7 @@ interface Management1
 ```
 
 ### PTP
+
 #### PTP Summary
 
 | Clock ID | Source IP | Priority 1 | Priority 2 | TTL | Domain | Mode | Forward Unicast |
@@ -40,6 +41,31 @@ interface Management1
 ```eos
 !
 no ptp monitor
+```
+
+## CVX
+
+CVX is enabled
+
+### CVX Services
+
+| Service | Enabled | Settings |
+| ------- | ------- | -------- |
+| MCS | - | Redis Password Set |
+| VXLAN | - | VTEP MAC learning: control-plane |
+
+### CVX Device Configuration
+
+```eos
+!
+cvx
+   no shutdown
+   !
+   service mcs
+      redis password 7 <removed>
+   !
+   service vxlan
+      vtep mac-learning control-plane
 ```
 
 ## Monitoring
@@ -59,6 +85,39 @@ no ptp monitor
 daemon TerminAttr
    exec /usr/bin/TerminAttr -cvaddr=apiserver.arista.io:443 -cvauth=token-secure,/tmp/cv-onboarding-token -cvvrf=mgt -smashexcludes=ale,flexCounter,hardware,kni,pulse,strata -ingestexclude=/Sysdb/cell/1/agent,/Sysdb/cell/2/agent -taillogs -ipfix=false -sflow=false
    no shutdown
+```
+
+### Logging
+
+#### Logging Servers and Features Summary
+
+| Type | Level |
+| -----| ----- |
+| Console | disabled |
+
+#### Logging Servers and Features Device Configuration
+
+```eos
+!
+no logging console
+```
+
+### MCS Client Summary
+
+MCS client is shutdown
+
+| Secondary CVX cluster | Server Hosts | Enabled |
+| --------------------- | ------------ | ------- |
+| default | - | - |
+
+#### MCS Client Device Configuration
+
+```eos
+!
+mcs client
+   shutdown
+   !
+   cvx secondary default
 ```
 
 ### Tap Aggregation
@@ -239,6 +298,23 @@ mpls ldp
    interface disabled default
 !
 mpls rsvp
+```
+
+## Multicast
+
+### Router Multicast
+
+#### IP Router Multicast Summary
+
+- Multipathing via ECMP.
+
+#### Router Multicast Device Configuration
+
+```eos
+!
+router multicast
+   ipv4
+      multipath deterministic
 ```
 
 ### Traffic Policies information

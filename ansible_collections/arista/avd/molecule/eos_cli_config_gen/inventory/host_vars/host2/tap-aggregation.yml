@@ -1,6 +1,7 @@
 tap_aggregation:
   mode:
     exclusive:
+      enabled: true
       no_errdisable:
       - Ethernet1/1
       - Ethetnet 42/1

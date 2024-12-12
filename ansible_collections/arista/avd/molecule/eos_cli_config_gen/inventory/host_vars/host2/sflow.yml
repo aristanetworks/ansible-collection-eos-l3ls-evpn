@@ -1,0 +1,9 @@
+---
+sflow:
+  run: false
+  interface:
+    disable:
+      default: true
+    egress:
+      enable_default: true
+      unmodified: false

@@ -1,3 +1,4 @@
+---
 ### Logging ###
 logging:
   console: errors

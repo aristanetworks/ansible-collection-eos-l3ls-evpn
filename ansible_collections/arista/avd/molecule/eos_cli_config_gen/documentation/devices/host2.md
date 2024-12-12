@@ -34,6 +34,8 @@
   - [Logging](#logging)
   - [MCS Client Summary](#mcs-client-summary)
   - [SNMP](#snmp)
+  - [Tap Aggregation](#tap-aggregation)
+  - [SFlow](#sflow)
   - [Flow Tracking](#flow-tracking)
   - [Monitor Telemetry Postcard Policy](#monitor-telemetry-postcard-policy)
   - [Monitor Server Radius Summary](#monitor-server-radius-summary)
@@ -63,6 +65,7 @@
   - [Switchport Port-security Summary](#switchport-port-security-summary)
   - [Switchport Port-security Device Configuration](#switchport-port-security-device-configuration)
 - [Routing](#routing)
+  - [Service Routing Configuration BGP](#service-routing-configuration-bgp)
   - [Service Routing Protocols Model](#service-routing-protocols-model)
   - [IP Routing](#ip-routing)
   - [ARP](#arp)
@@ -82,6 +85,7 @@
   - [Queue Monitor Configuration](#queue-monitor-configuration)
 - [Multicast](#multicast)
   - [IP IGMP Snooping](#ip-igmp-snooping)
+  - [Router Multicast](#router-multicast)
   - [PIM Sparse Mode](#pim-sparse-mode)
 - [Filters](#filters)
   - [AS Path Lists](#as-path-lists)
@@ -103,7 +107,12 @@
   - [IP DHCP Snooping Device Configuration](#ip-dhcp-snooping-device-configuration)
 - [IP NAT](#ip-nat)
   - [IP NAT Device Configuration](#ip-nat-device-configuration)
+- [MACsec](#macsec)
+  - [MACsec Summary](#macsec-summary)
+  - [MACsec Device Configuration](#macsec-device-configuration)
   - [Traffic Policies information](#traffic-policies-information)
+- [Quality Of Service](#quality-of-service)
+  - [QOS](#qos)
   - [Priority Flow Control](#priority-flow-control)
 - [STUN](#stun)
   - [STUN Server](#stun-server)
@@ -159,6 +168,7 @@ interface Management1
 ```
 
 ### PTP
+
 #### PTP Summary
 
 | Clock ID | Source IP | Priority 1 | Priority 2 | TTL | Domain | Mode | Forward Unicast |
@@ -174,6 +184,12 @@ no ptp monitor sequence-id
 
 ### Management SSH
 
+#### Authentication Settings
+
+| Authentication protocols | Empty passwords |
+| ------------------------ | --------------- |
+| keyboard-interactive, public-key | permit |
+
 #### IPv4 ACL
 
 | IPv4 ACL | VRF |
@@ -185,7 +201,7 @@ no ptp monitor sequence-id
 
 | Idle Timeout | SSH Management |
 | ------------ | -------------- |
-| 15 | Enabled |
+| 15 | Disabled |
 
 #### Max number of SSH sessions limit and per-host limit
 
@@ -218,7 +234,8 @@ management ssh
    mac hmac-sha2-512 hmac-sha2-512-etm@openssh.com
    hostkey server ecdsa-nistp256 ecdsa-nistp521
    connection limit 55
-   no shutdown
+   authentication empty-passwords permit
+   shutdown
    hostkey server cert sshkey.cert
    !
    vrf mgt
@@ -541,6 +558,48 @@ mcs client
 no snmp-server enable traps
 ```
 
+### Tap Aggregation
+
+#### Tap Aggregation Summary
+
+| Settings | Values |
+| -------- | ------ |
+| Mode Exclusive | True |
+| Mode Exclusive No-Errdisable | Ethernet1/1, Ethetnet 42/1, Port-Channel200 |
+| Mac Timestamp | Replace Source-Mac |
+| Mac FCS Append | True |
+
+#### Tap Aggregation Device Configuration
+
+```eos
+!
+tap aggregation
+   mode exclusive
+   mode exclusive no-errdisable Ethernet1/1
+   mode exclusive no-errdisable Ethetnet 42/1
+   mode exclusive no-errdisable Port-Channel200
+   mac timestamp replace source-mac
+   mac fcs append
+```
+
+### SFlow
+
+#### SFlow Summary
+
+sFlow is disabled.
+
+sFlow is disabled on all interfaces by default.
+
+Egress sFlow is enabled on all interfaces by default.
+
+#### SFlow Device Configuration
+
+```eos
+!
+sflow interface disable default
+sflow interface egress enable default
+```
+
 ### Flow Tracking
 
 #### Flow Tracking Sampled
@@ -799,6 +858,13 @@ switchport port-security mac-address aging
 ```
 
 ## Routing
+
+### Service Routing Configuration BGP
+
+BGP no equals default disabled
+
+```eos
+```
 
 ### Service Routing Protocols Model
 
@@ -1221,6 +1287,23 @@ no ip igmp snooping vlan 30
 no ip igmp snooping querier
 ```
 
+### Router Multicast
+
+#### IP Router Multicast Summary
+
+- Multipathing deterministically by selecting the same-colored upstream routers.
+- Software forwarding by the Linux kernel
+
+#### Router Multicast Device Configuration
+
+```eos
+!
+router multicast
+   ipv4
+      multipath deterministic color
+      software-forwarding kernel
+```
+
 ### PIM Sparse Mode
 
 #### Router PIM Sparse Mode
@@ -1377,6 +1460,22 @@ ip dhcp snooping
 ip nat synchronization
 ```
 
+## MACsec
+
+### MACsec Summary
+
+License is not installed.
+
+FIPS restrictions enabled.
+
+### MACsec Device Configuration
+
+```eos
+!
+mac security
+   fips restrictions
+```
+
 ### Traffic Policies information
 
 #### IPv6 Field Sets
@@ -1395,6 +1494,29 @@ traffic-policies
       11:22:33:44:55:66:77:88
    !
    field-set ipv6 prefix IPv6-DEMO-2
+```
+
+## Quality Of Service
+
+### QOS
+
+#### QOS Summary
+
+QOS rewrite DSCP: **disabled**
+
+##### QOS Mappings
+
+| COS to Traffic Class mappings |
+| ----------------------------- |
+| 1 2 3 4 to traffic-class 2 |
+| 3 to traffic-class 3 |
+
+#### QOS Device Configuration
+
+```eos
+!
+qos map cos 1 2 3 4 to traffic-class 2
+qos map cos 3 to traffic-class 3
 ```
 
 ### Priority Flow Control

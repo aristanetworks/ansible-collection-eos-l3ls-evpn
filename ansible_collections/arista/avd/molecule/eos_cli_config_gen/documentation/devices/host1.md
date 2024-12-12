@@ -2267,6 +2267,8 @@ tap aggregation
 | BBB | 1.1.1.1 | - | - |
 | CCC | - | 10.6.75.62 | 6343 |
 | CCC | Management1 | - | - |
+| DDD | - | 10.6.75.62 | 6343 |
+| DDD | 1.1.1.1 | - | - |
 | MGMT | - | 10.6.75.59 | 6343 |
 | MGMT | - | 10.6.75.62 | 123 |
 | MGMT | - | 10.6.75.63 | 333 |
@@ -2337,6 +2339,8 @@ sflow vrf BBB destination 10.6.75.62
 sflow vrf BBB source 1.1.1.1
 sflow vrf CCC destination 10.6.75.62
 sflow vrf CCC source-interface Management1
+sflow vrf DDD destination 10.6.75.62
+sflow vrf DDD source 1.1.1.1
 sflow vrf MGMT destination 10.6.75.59
 sflow vrf MGMT destination 10.6.75.62 123
 sflow vrf MGMT destination 10.6.75.63 333
@@ -9428,6 +9432,7 @@ no ip igmp snooping vlan 25 proxy
 | -------- | ----------------- |
 | MCAST_VRF1 | enabled |
 | MCAST_VRF2 | enabled |
+| MCAST_VRF3 | disabled |
 
 #### Router Multicast Device Configuration
 
@@ -9454,6 +9459,8 @@ router multicast
    vrf MCAST_VRF2
       ipv4
          routing
+   !
+   vrf MCAST_VRF3
 ```
 
 ### PIM Sparse Mode
