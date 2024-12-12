@@ -134,8 +134,6 @@ class AvdModel(AvdBase):
         Get attribute or Undefined.
 
         Avoids the overridden __getattr__ to avoid default values.
-
-        Falls back to __getattr__ in case of _created_from_null to always insert None or default value.
         """
         if name not in self._fields:
             msg = f"'{type(self).__name__}' object has no attribute '{name}'"
@@ -225,7 +223,7 @@ class AvdModel(AvdBase):
         """
         Behave like dict.get() to get a field value only if set.
 
-        If the field balue is not set, this will not insert a default schema values but will instead return the given 'default' value (or None).
+        If the field value is not set, this will not insert a default schema values but will instead return the given 'default' value (or None).
         """
         if (value := self._get_defined_attr(name)) is Undefined:
             return default
@@ -294,30 +292,6 @@ class AvdModel(AvdBase):
         elif self._created_from_null:
             # We merged into a "null" class, but since we now have proper data, we clear the flag.
             self._created_from_null = False
-
-    def _inherit(self, other: Self) -> None:
-        """Update unset fields on this instance with fields from other instance. No merging."""
-        cls = type(self)
-        if not isinstance(other, cls):
-            msg = f"Unable to inherit from type '{type(other)}' into '{cls}'"
-            raise TypeError(msg)
-
-        if self._created_from_null:
-            # Null always wins, so no inheritance.
-            return
-
-        if other._created_from_null:
-            # Nothing to inherit, but we set the flag to prevent inheriting from something else later.
-            self._created_from_null = True
-            return
-
-        for field in cls._fields:
-            if self._get_defined_attr(field) is not Undefined:
-                continue
-            if (new_value := other._get_defined_attr(field)) is Undefined:
-                continue
-
-            setattr(self, field, deepcopy(new_value))
 
     def _deepinherit(self, other: Self) -> None:
         """Update instance by recursively inheriting unset fields from other instance. Lists are not merged."""

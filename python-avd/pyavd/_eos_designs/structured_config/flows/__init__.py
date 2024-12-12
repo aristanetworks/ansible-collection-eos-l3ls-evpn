@@ -120,14 +120,7 @@ class AvdStructuredConfigFlows(StructuredConfigGenerator):
 
         This relies on sFlow being rendered after all other eos_designs modules (except structured config).
         """
-        return any(
-            interface.sflow.enable
-            for interface in chain(
-                # Using ._get to avoid auto-creating the empty lists in the output.
-                self.structured_config._get("ethernet_interfaces", default=[]),
-                self.structured_config._get("port_channel_interfaces", default=[]),
-            )
-        )
+        return any(interface.sflow.enable for interface in chain(self.structured_config.ethernet_interfaces, self.structured_config.port_channel_interfaces))
 
     def resolve_flow_tracker_by_type(self, tracker_settings: EosDesigns.FlowTrackingSettings.TrackersItem) -> dict:
         tracker = {
@@ -161,7 +154,7 @@ class AvdStructuredConfigFlows(StructuredConfigGenerator):
             flow_tracking[tracker_type]["sample"] = global_settings.sample
 
         filtered_trackers = []
-        for tracker_name in configured_trackers:
+        for tracker_name in natural_sort(configured_trackers):
             """
             We allow overriding the default flow tracker name, so if user has configured a tracker
             with the default tracker name, then we just use that, if not, we create a default config
@@ -190,9 +183,7 @@ class AvdStructuredConfigFlows(StructuredConfigGenerator):
         This relies on flow-tracking being rendered after all other eos_designs modules (except structured config).
         """
         all_interfaces = chain(
-            self.structured_config._get("ethernet_interfaces", default=[]),
-            self.structured_config._get("port_channel_interfaces", default=[]),
-            self.structured_config._get("dps_interfaces", default=[]),
+            self.structured_config.ethernet_interfaces, self.structured_config.port_channel_interfaces, self.structured_config.dps_interfaces
         )
         if self.shared_utils.flow_tracking_type == "hardware":
             return {interface.flow_tracker.hardware for interface in all_interfaces if interface.flow_tracker.hardware}

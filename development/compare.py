@@ -9,6 +9,8 @@ from dataclasses import dataclass, field
 from itertools import groupby
 from pathlib import Path
 
+import yaml
+
 
 @dataclass(frozen=True, eq=True)
 class ConfigLine:
@@ -30,7 +32,7 @@ def parse_config(config: str, config_source: str) -> set[ConfigLine]:
             parent = last_config_line
         else:
             # We may be jumping out multiple levels at once
-            parent = last_config_line.parent.parent
+            parent = last_config_line.parent.parent if last_config_line.parent is not None else last_config_line.parent
             while indentation <= getattr(parent, "indentation", -1):
                 parent = parent.parent
 
@@ -79,6 +81,11 @@ def main() -> None:
 
     old = Path(args.old_file).read_text()
     new = Path(args.new_file).read_text()
+
+    if args.old_file.endswith("yml"):
+        old = yaml.dump(yaml.load(old, Loader=yaml.CSafeLoader), Dumper=yaml.CDumper, sort_keys=True)
+    if args.new_file.endswith("yml"):
+        new = yaml.dump(yaml.load(new, Loader=yaml.CSafeLoader), Dumper=yaml.CDumper, sort_keys=True)
 
     # Build set of diffs
     diffs = parse_config(old, "old").symmetric_difference(parse_config(new, "new"))

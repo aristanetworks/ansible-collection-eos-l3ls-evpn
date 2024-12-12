@@ -137,16 +137,6 @@ flow_tracking:
     record:
       format_ipfix_standard_timestamps_counters: true
     trackers:
-    - name: FLOW-TRACKER-2
-      record_export:
-        on_inactive_timeout: 50020
-        on_interval: 300321
-      exporters:
-      - name: ayush_exporter
-        collector:
-          host: 127.0.2.1
-        local_interface: Loopback0
-        template_interval: 40020
     - name: FLOW-TRACKER-1
       record_export:
         on_inactive_timeout: 50000
@@ -157,6 +147,16 @@ flow_tracking:
           host: 127.0.0.1
         local_interface: Loopback0
         template_interval: 40000
+    - name: FLOW-TRACKER-2
+      record_export:
+        on_inactive_timeout: 50020
+        on_interval: 300321
+      exporters:
+      - name: ayush_exporter
+        collector:
+          host: 127.0.2.1
+        local_interface: Loopback0
+        template_interval: 40020
     shutdown: false
 hostname: flow-tracking-tests-spine2
 ip_routing: true

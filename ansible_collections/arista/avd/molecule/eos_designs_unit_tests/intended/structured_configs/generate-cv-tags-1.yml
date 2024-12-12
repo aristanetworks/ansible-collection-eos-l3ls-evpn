@@ -39,6 +39,8 @@ metadata:
       value: ABC567
     - name: static-device-tag
       value: myvalue
+    - name: dynamic_device_tag
+      value: '65000'
     - name: UPPERCASE_DEVICE_TAG
       value: something with spaces
     interface_tags:
