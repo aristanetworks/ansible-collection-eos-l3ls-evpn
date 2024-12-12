@@ -134,7 +134,7 @@ class CvTagsMixin:
             if generate_tag.value is not None:
                 value = generate_tag.value
             elif generate_tag.data_path is not None:
-                value = get_v2(self._hostvars, generate_tag.data_path)
+                value = get_v2(self.structured_config, generate_tag.data_path)
                 if isinstance(type(value), AvdBase):
                     msg = (
                         f"'generate_cv_tags.device_tags[name={generate_tag.name}].data_path' ({generate_tag.data_path}) "
