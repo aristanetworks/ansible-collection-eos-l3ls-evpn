@@ -25,16 +25,16 @@ ethernet_interfaces:
   shutdown: false
   ip_address: dhcp
   dhcp_client_accept_default_route: true
-  access_group_in: TEST-IPV4-ACL-WITH-NO-FIELDS-IN_Ethernet3
-  access_group_out: TEST-IPV4-ACL-WITH-NO-FIELDS-OUT_Ethernet3
+  access_group_in: TEST-IPV4-ACL-WITH-NO-FIELDS-IN
+  access_group_out: TEST-IPV4-ACL-WITH-NO-FIELDS-OUT
   peer_type: l3_interface
   switchport:
     enabled: false
 - name: Ethernet4
   shutdown: false
   ip_address: 172.19.19.0/31
-  access_group_in: TEST-IPV4-ACL-WITH-NO-FIELDS-IN_Ethernet4
-  access_group_out: TEST-IPV4-ACL-WITH-NO-FIELDS-OUT_Ethernet4
+  access_group_in: TEST-IPV4-ACL-WITH-NO-FIELDS-IN
+  access_group_out: TEST-IPV4-ACL-WITH-NO-FIELDS-OUT
   peer_type: l3_interface
   switchport:
     enabled: false
@@ -113,25 +113,13 @@ ip_access_lists:
     protocol: ip
     source: 172.21.21.0
     destination: any
-- name: TEST-IPV4-ACL-WITH-NO-FIELDS-IN_Ethernet3
+- name: TEST-IPV4-ACL-WITH-NO-FIELDS-IN
   entries:
   - action: permit
     protocol: ip
     source: 172.18.18.18
     destination: any
-- name: TEST-IPV4-ACL-WITH-NO-FIELDS-IN_Ethernet4
-  entries:
-  - action: permit
-    protocol: ip
-    source: 172.18.18.18
-    destination: any
-- name: TEST-IPV4-ACL-WITH-NO-FIELDS-OUT_Ethernet3
-  entries:
-  - action: permit
-    protocol: ip
-    source: 172.18.18.18
-    destination: any
-- name: TEST-IPV4-ACL-WITH-NO-FIELDS-OUT_Ethernet4
+- name: TEST-IPV4-ACL-WITH-NO-FIELDS-OUT
   entries:
   - action: permit
     protocol: ip

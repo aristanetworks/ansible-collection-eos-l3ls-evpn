@@ -111,16 +111,6 @@ ethernet_interfaces:
 flow_tracking:
   hardware:
     trackers:
-    - name: FLOW-TRACKER-3
-      record_export:
-        on_inactive_timeout: 50000
-        on_interval: 300331
-      exporters:
-      - name: ayush_exporter
-        collector:
-          host: 127.0.0.1
-        local_interface: Loopback0
-        template_interval: 40000
     - name: FLOW-TRACKER
       record_export:
         on_inactive_timeout: 50001
@@ -131,6 +121,16 @@ flow_tracking:
           host: 127.0.0.2
         local_interface: Loopback0
         template_interval: 40002
+    - name: FLOW-TRACKER-3
+      record_export:
+        on_inactive_timeout: 50000
+        on_interval: 300331
+      exporters:
+      - name: ayush_exporter
+        collector:
+          host: 127.0.0.1
+        local_interface: Loopback0
+        template_interval: 40000
     shutdown: false
 hostname: flow-tracking-tests-leaf1
 ip_igmp_snooping:

@@ -140,6 +140,16 @@ flow_tracking:
   sampled:
     sample: 10000
     trackers:
+    - record_export:
+        on_inactive_timeout: 50001
+        on_interval: 300332
+      name: FLOW-TRACKER
+      exporters:
+      - name: ayush_exporter
+        collector:
+          host: 127.0.0.2
+        local_interface: Loopback0
+        template_interval: 40002
     - table_size: 4331
       record_export:
         mpls: true
@@ -152,16 +162,6 @@ flow_tracking:
           host: 127.0.0.1
         local_interface: Loopback0
         template_interval: 40000
-    - record_export:
-        on_inactive_timeout: 50001
-        on_interval: 300332
-      name: FLOW-TRACKER
-      exporters:
-      - name: ayush_exporter
-        collector:
-          host: 127.0.0.2
-        local_interface: Loopback0
-        template_interval: 40002
     shutdown: false
 hostname: flow-tracking-tests-spine1
 ip_routing: true
