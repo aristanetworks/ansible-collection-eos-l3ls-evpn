@@ -69678,9 +69678,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                         "_custom_data": {"type": dict},
                     }
                     id: int
-                    """VLAN ID or range of VLAN ID."""
+                    """VLAN ID."""
                     vni: int | None
-                    """VNI or range of VNI."""
                     multicast_group: str | None
                     """IP Multicast Group Address."""
                     flood_vteps: FloodVteps
@@ -69705,8 +69704,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                             Subclass of AvdModel.
 
                             Args:
-                                id: VLAN ID or range of VLAN ID.
-                                vni: VNI or range of VNI.
+                                id: VLAN ID.
+                                vni: vni
                                 multicast_group: IP Multicast Group Address.
                                 flood_vteps: Subclass of AvdList with `str` items.
                                 _custom_data: _custom_data
@@ -69727,7 +69726,10 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                     vlans: str | None
                     """e.g. "94,96,100-110"."""
                     vnis: str | None
-                    """e.g. "10094,10096,10100-10110"."""
+                    """
+                    Set `vnis` in the correct sequence for the `vlans`.
+                    e.g. "10094,10096,10100-10110".
+                    """
                     _custom_data: dict[str, Any]
 
                     if TYPE_CHECKING:
@@ -69747,7 +69749,9 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                             Args:
                                 vlans: e.g. "94,96,100-110".
-                                vnis: e.g. "10094,10096,10100-10110".
+                                vnis:
+                                   Set `vnis` in the correct sequence for the `vlans`.
+                                   e.g. "10094,10096,10100-10110".
                                 _custom_data: _custom_data
 
                             """
@@ -69849,6 +69853,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 vlan_range: VlanRange
                 """
                 Set VNI on range of vlans.
+                If vni is set on the vlan in `vxlan_interface.vxlan1.vxlan.vlans`, it
+                should not overlap in `vlan_range.vlans`.
 
                 Subclass of AvdModel.
                 """
@@ -69909,6 +69915,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                             vlans: Subclass of AvdIndexedList with `VlansItem` items. Primary key is `id` (`int`).
                             vlan_range:
                                Set VNI on range of vlans.
+                               If vni is set on the vlan in `vxlan_interface.vxlan1.vxlan.vlans`, it
+                               should not overlap in `vlan_range.vlans`.
 
                                Subclass of AvdModel.
                             vrfs: Subclass of AvdIndexedList with `VrfsItem` items. Primary key is `name` (`str`).
@@ -70106,9 +70114,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                         "_custom_data": {"type": dict},
                     }
                     id: int
-                    """VLAN ID or range of VLAN ID."""
+                    """VLAN ID."""
                     vni: int | None
-                    """VNI or range of VNI."""
                     multicast_group: str | None
                     """IP Multicast Group Address."""
                     flood_vteps: FloodVteps
@@ -70133,8 +70140,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                             Subclass of AvdModel.
 
                             Args:
-                                id: VLAN ID or range of VLAN ID.
-                                vni: VNI or range of VNI.
+                                id: VLAN ID.
+                                vni: vni
                                 multicast_group: IP Multicast Group Address.
                                 flood_vteps: Subclass of AvdList with `str` items.
                                 _custom_data: _custom_data
@@ -70155,7 +70162,10 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                     vlans: str | None
                     """e.g. "94,96,100-110"."""
                     vnis: str | None
-                    """e.g. "10094,10096,10100-10110"."""
+                    """
+                    Set `vnis` in the correct sequence for the `vlans`.
+                    e.g. "10094,10096,10100-10110".
+                    """
                     _custom_data: dict[str, Any]
 
                     if TYPE_CHECKING:
@@ -70175,7 +70185,9 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                             Args:
                                 vlans: e.g. "94,96,100-110".
-                                vnis: e.g. "10094,10096,10100-10110".
+                                vnis:
+                                   Set `vnis` in the correct sequence for the `vlans`.
+                                   e.g. "10094,10096,10100-10110".
                                 _custom_data: _custom_data
 
                             """
@@ -70277,6 +70289,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 vlan_range: VlanRange
                 """
                 Set VNI on range of vlans.
+                If vni is set on the vlan in `vxlan_interface.vxlan1.vxlan.vlans`, it
+                should not overlap in `vlan_range.vlans`.
 
                 Subclass of AvdModel.
                 """
@@ -70337,6 +70351,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                             vlans: Subclass of AvdIndexedList with `VlansItem` items. Primary key is `id` (`int`).
                             vlan_range:
                                Set VNI on range of vlans.
+                               If vni is set on the vlan in `vxlan_interface.vxlan1.vxlan.vlans`, it
+                               should not overlap in `vlan_range.vlans`.
 
                                Subclass of AvdModel.
                             vrfs: Subclass of AvdIndexedList with `VrfsItem` items. Primary key is `name` (`str`).
