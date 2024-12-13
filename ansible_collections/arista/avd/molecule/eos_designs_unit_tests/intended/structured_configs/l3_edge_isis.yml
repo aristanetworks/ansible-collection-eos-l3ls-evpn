@@ -3,53 +3,6 @@ aaa_root:
 config_end: true
 enable_password:
   disabled: true
-<<<<<<< HEAD
-transceiver_qsfp_default_mode_4x10: true
-spanning_tree:
-  mode: none
-vrfs:
-- name: MGMT
-  ip_routing: false
-management_api_http:
-  enable_vrfs:
-  - name: MGMT
-  enable_https: true
-ptp:
-  mode: boundary
-  clock_identity: 00:1C:73:14:00:01
-  priority1: 20
-  priority2: 1
-  domain: 127
-  monitor:
-    enabled: true
-    threshold:
-      offset_from_master: 250
-      mean_path_delay: 1500
-    missing_message:
-      sequence_ids:
-        enabled: true
-        announce: 3
-        delay_resp: 3
-        follow_up: 3
-        sync: 3
-loopback_interfaces:
-- name: Loopback0
-  description: ROUTER_ID
-  shutdown: false
-  ip_address: 1.2.3.1/32
-  isis_enable: EVPN_UNDERLAY
-  isis_passive: true
-router_isis:
-  instance: EVPN_UNDERLAY
-  log_adjacency_changes: true
-  net: 49.0001.0010.0200.3001.00
-  router_id: 1.2.3.1
-  is_type: level-2
-  address_family_ipv4:
-    enabled: true
-    maximum_paths: 4
-=======
->>>>>>> ec243a7e22 (Refactor structured config base classes to support models as outputs)
 ethernet_interfaces:
 - name: ethernet1
   description: P2P_peer1_ethernet1
@@ -61,18 +14,6 @@ ethernet_interfaces:
     profile: TEST-MACSEC-PROFILE
   ptp:
     enable: true
-  service_profile: TEST-QOS-PROFILE
-  peer: peer1
-  peer_interface: ethernet1
-  peer_type: other
-  switchport:
-    enabled: false
-<<<<<<< HEAD
-  shutdown: false
-  mtu: 2000
-  service_profile: TEST-QOS-PROFILE
-  ip_address: 192.168.0.0/31
-  ptp:
     announce:
       interval: 0
       timeout: 3
@@ -80,13 +21,12 @@ ethernet_interfaces:
     sync_message:
       interval: -3
     transport: ipv4
-    enable: true
-  mac_security:
-    profile: TEST-MACSEC-PROFILE
-  description: P2P_peer1_ethernet1
-  speed: forced 10000full
-=======
->>>>>>> ec243a7e22 (Refactor structured config base classes to support models as outputs)
+  service_profile: TEST-QOS-PROFILE
+  peer: peer1
+  peer_interface: ethernet1
+  peer_type: other
+  switchport:
+    enabled: false
 - name: ethernet2
   description: P2P_peer2_ethernet2
   shutdown: false
@@ -164,6 +104,24 @@ management_api_http:
   enable_https: true
   enable_vrfs:
   - name: MGMT
+ptp:
+  mode: boundary
+  clock_identity: 00:1C:73:14:00:01
+  priority1: 20
+  priority2: 1
+  domain: 127
+  monitor:
+    enabled: true
+    threshold:
+      offset_from_master: 250
+      mean_path_delay: 1500
+    missing_message:
+      sequence_ids:
+        enabled: true
+        announce: 3
+        delay_resp: 3
+        follow_up: 3
+        sync: 3
 router_isis:
   instance: EVPN_UNDERLAY
   net: 49.0001.0010.0200.3001.00

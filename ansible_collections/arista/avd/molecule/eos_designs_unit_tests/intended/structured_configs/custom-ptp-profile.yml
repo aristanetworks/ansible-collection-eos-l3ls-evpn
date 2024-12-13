@@ -145,19 +145,6 @@ vlan_interfaces:
 - name: Vlan11
   description: VLAN11
   shutdown: false
-<<<<<<< HEAD
-  mtu: 9214
-  ptp:
-    announce:
-      interval: 4
-      timeout: 3
-    delay_req: -6
-    sync_message:
-      interval: -7
-    transport: ipv4
-    enable: true
-  description: P2P_not-in-this-fabric_Ethernet8
-=======
   vrf: VRF1
   ip_address: 172.16.11.1/24
   tenant: PTP
@@ -166,7 +153,6 @@ vlan_internal_order:
   range:
     beginning: 1006
     ending: 1199
->>>>>>> ec243a7e22 (Refactor structured config base classes to support models as outputs)
 vlans:
 - id: 11
   name: VLAN11

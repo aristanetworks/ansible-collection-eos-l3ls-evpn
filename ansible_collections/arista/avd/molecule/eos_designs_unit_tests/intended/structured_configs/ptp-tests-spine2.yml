@@ -11,11 +11,11 @@ ethernet_interfaces:
   ptp:
     enable: true
     announce:
-      interval: 0
-      timeout: 3
-    delay_req: -3
+      interval: 2
+      timeout: 10
+    delay_req: 2
     sync_message:
-      interval: -3
+      interval: 2
     transport: ipv4
   peer: ptp-tests-spine1
   peer_interface: Ethernet6
@@ -147,83 +147,6 @@ router_bfd:
     interval: 300
     min_rx: 300
     multiplier: 3
-<<<<<<< HEAD
-ethernet_interfaces:
-- name: Ethernet6
-  peer: ptp-tests-spine1
-  peer_interface: Ethernet6
-  peer_type: spine
-  switchport:
-    enabled: false
-  shutdown: false
-  mtu: 9214
-  ptp:
-    announce:
-      interval: 2
-      timeout: 10
-    delay_req: 2
-    sync_message:
-      interval: 2
-    transport: ipv4
-    enable: true
-  description: P2P_ptp-tests-spine1_Ethernet6
-- name: Ethernet7
-  peer: ptp-tests-spine1
-  peer_interface: Ethernet7
-  peer_type: spine
-  switchport:
-    enabled: false
-  shutdown: false
-  mtu: 9214
-  ptp:
-    announce:
-      interval: 0
-      timeout: 3
-    delay_req: -3
-    sync_message:
-      interval: -3
-    transport: ipv4
-    enable: true
-  description: P2P_ptp-tests-spine1_Ethernet7
-- name: Ethernet8
-  peer: ptp-tests-spine1
-  peer_interface: Ethernet8
-  peer_type: spine
-  switchport:
-    enabled: false
-  shutdown: false
-  mtu: 9214
-  ptp:
-    announce:
-      interval: 0
-      timeout: 3
-    delay_req: -3
-    sync_message:
-      interval: -3
-    transport: ipv4
-    enable: true
-  description: P2P_ptp-tests-spine1_Ethernet8
-- name: Ethernet9
-  peer: ptp-tests-spine1
-  peer_interface: Ethernet9
-  peer_type: spine
-  switchport:
-    enabled: false
-  shutdown: false
-  mtu: 9214
-  ptp:
-    announce:
-      interval: 0
-      timeout: 3
-    delay_req: -3
-    sync_message:
-      interval: -3
-    transport: ipv4
-    enable: true
-  description: P2P_ptp-tests-spine1_Ethernet9
-metadata:
-  platform: vEOS-LAB
-=======
 router_bgp:
   as: '65200'
   router_id: 10.255.0.2
@@ -278,4 +201,3 @@ vlan_internal_order:
 vrfs:
 - name: MGMT
   ip_routing: false
->>>>>>> ec243a7e22 (Refactor structured config base classes to support models as outputs)
