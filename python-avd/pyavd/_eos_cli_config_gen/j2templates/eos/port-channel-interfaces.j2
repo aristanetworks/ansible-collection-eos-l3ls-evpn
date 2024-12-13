@@ -435,6 +435,9 @@ interface {{ port_channel_interface.name }}
 {%     if port_channel_interface.mac_access_group_out is arista.avd.defined %}
    mac access-group {{ port_channel_interface.mac_access_group_out }} out
 {%     endif %}
+{%     if port_channel_interface.min_links is arista.avd.defined %}
+   port-channel min-links {{ port_channel_interface.min_links }}
+{%     endif %}
 {%     if port_channel_interface.lacp_fallback_mode is arista.avd.defined %}
    port-channel lacp fallback {{ port_channel_interface.lacp_fallback_mode }}
 {%     endif %}

@@ -1,0 +1,19 @@
+---
+# The required key 'type' is added via custom_structured_configuration.
+custom_structured_configuration_aaa_accounting:
+  exec:
+    console:
+      type: start-stop
+
+type: l2leaf
+
+l2leaf:
+  nodes:
+    - name: relaxed-structured-config-validation
+      structured_config:
+        aaa_accounting:
+          exec:
+            console:
+              # Adding group here but not including the required key 'type'.
+              # This will not raise a validation error because of relax mode in the schema.
+              group: node_group

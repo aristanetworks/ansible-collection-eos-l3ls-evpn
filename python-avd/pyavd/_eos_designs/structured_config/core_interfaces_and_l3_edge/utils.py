@@ -211,6 +211,31 @@ class UtilsMixin:
         if p2p_link.ip:
             interface_cfg["ip_address"] = p2p_link.ip[index]
 
+        if p2p_link.ptp.enabled:
+            ptp_config = {}
+
+            if self.shared_utils.ptp_enabled:
+                # Apply PTP profile config from node settings when profile is not defined on p2p_link
+                if not p2p_link.ptp.profile:
+                    ptp_config.update(self.shared_utils.ptp_profile._as_dict(include_default_values=True))
+
+                # Apply PTP profile defined for the p2p_link
+                elif p2p_link.ptp.profile not in self.inputs.ptp_profiles:
+                    msg = f"PTP Profile '{p2p_link.ptp.profile}' referenced under {self.data_model}.p2p_links does not exist in `ptp_profiles`."
+                    raise AristaAvdInvalidInputsError(msg)
+
+                else:
+                    ptp_config.update(self.inputs.ptp_profiles[p2p_link.ptp.profile]._as_dict(include_default_values=True))
+
+            node_index = p2p_link.nodes._as_list().index(self.shared_utils.hostname)  # TODO: Implement .index() method on AvdList and AvdIndexedList class.
+            if len(p2p_link.ptp.roles) > node_index and p2p_link.ptp.roles[node_index] == "master":
+                ptp_config["role"] = "master"
+
+            ptp_config["enable"] = True
+            ptp_config.pop("profile", None)
+
+            interface_cfg["ptp"] = ptp_config
+
         if p2p_link.include_in_underlay_protocol:
             if p2p_link.underlay_multicast and self.shared_utils.underlay_multicast:
                 interface_cfg["pim"] = {"ipv4": {"sparse_mode": True}}
@@ -271,22 +296,7 @@ class UtilsMixin:
         Covers config that is only applicable to ethernet interfaces.
         This config will only be used on both main interfaces and port-channel members.
         """
-        ethernet_cfg = {"speed": p2p_link.speed}
-
-        if not p2p_link.ptp.enabled:
-            return ethernet_cfg
-
-        ptp_config = {}
-
-        # Apply PTP profile config
-        if self.shared_utils.ptp_enabled:
-            ptp_config.update(self.shared_utils.ptp_profile._as_dict(include_default_values=True))
-
-        ptp_config["enable"] = True
-        ptp_config.pop("profile", None)
-        ethernet_cfg["ptp"] = ptp_config
-
-        return ethernet_cfg
+        return {"speed": p2p_link.speed}
 
     def _get_port_channel_member_cfg(self: AvdStructuredConfigCoreInterfacesAndL3Edge, p2p_link: T_P2pLinksItem, p2p_link_data: dict, member: dict) -> dict:
         """

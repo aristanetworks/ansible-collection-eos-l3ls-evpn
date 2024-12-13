@@ -272,9 +272,9 @@ ethernet_interfaces:
     enabled: false
   shutdown: false
   ip_address: 11.1.0.39/31
-  description: P2P_DC1-POD1-LEAF2B_Ethernet7
   ptp:
     enable: true
+  description: P2P_DC1-POD1-LEAF2B_Ethernet7
 port_channel_interfaces:
 - name: Port-Channel3
   description: L2_DC2-POD1-L2LEAF1A_Port-Channel1

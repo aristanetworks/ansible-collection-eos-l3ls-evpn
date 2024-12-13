@@ -34,15 +34,26 @@
 
 ### Management Security SSL Profiles
 
-| SSL Profile Name | TLS protocol accepted | Certificate filename | Key filename | Cipher List | CRLs |
-| ---------------- | --------------------- | -------------------- | ------------ | ----------- | ---- |
+| SSL Profile Name | TLS protocol accepted | Certificate filename | Key filename | Ciphers | CRLs |
+| ---------------- | --------------------- | -------------------- | ------------ | ------- | ---- |
 {%         set ssl_profiles_certs = [] %}
 {%         for ssl_profile in management_security.ssl_profiles | arista.avd.natural_sort %}
 {%             set crls = "-" %}
 {%             if ssl_profile.certificate_revocation_lists is arista.avd.defined %}
 {%                 set crls = ssl_profile.certificate_revocation_lists | arista.avd.natural_sort | join("<br>") %}
 {%             endif %}
-| {{ ssl_profile.name | arista.avd.default('-') }} | {{ ssl_profile.tls_versions | arista.avd.default('-') }} | {{ ssl_profile.certificate.file | arista.avd.default('-') }} | {{ ssl_profile.certificate.key | arista.avd.default('-') }} | {{ ssl_profile.cipher_list | arista.avd.default('-') }} | {{ crls }} |
+{%             if ssl_profile.ciphers is arista.avd.defined %}
+{%                 set ciphers = [] %}
+{%                 if ssl_profile.ciphers.v1_0 is arista.avd.defined %}
+{%                     do ciphers.append("v1.0 to v1.2: " ~ ssl_profile.ciphers.v1_0) %}
+{%                 endif %}
+{%                 if ssl_profile.ciphers.v1_3 is arista.avd.defined %}
+{%                     do ciphers.append("v1.3: " ~ ssl_profile.ciphers.v1_3) %}
+{%                 endif %}
+{%             elif ssl_profile.cipher_list is arista.avd.defined %}
+{%                 set ciphers = [ssl_profile.cipher_list] %}
+{%             endif %}
+| {{ ssl_profile.name | arista.avd.default('-') }} | {{ ssl_profile.tls_versions | arista.avd.default('-') }} | {{ ssl_profile.certificate.file | arista.avd.default('-') }} | {{ ssl_profile.certificate.key | arista.avd.default('-') }} | {{ ciphers | arista.avd.default(['-']) | join('<br>') }} | {{ crls }} |
 {%             set tmp_cert = {} %}
 {%             if ssl_profile.trust_certificate is arista.avd.defined %}
 {%                 set tmp_cert = {'trust_certificate': ssl_profile.trust_certificate} %}

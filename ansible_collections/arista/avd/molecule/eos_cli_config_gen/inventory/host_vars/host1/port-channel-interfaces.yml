@@ -591,6 +591,7 @@ port_channel_interfaces:
         allowed_vlan: 112
     lacp_fallback_timeout: 300
     lacp_fallback_mode: individual
+    min_links: 3
 
   - name: Port-Channel105
     switchport:
