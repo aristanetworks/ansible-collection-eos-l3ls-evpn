@@ -1859,8 +1859,8 @@ ethernet_interfaces:
       enabled: true
       administrative_groups:
         - 3
-        - testgrp
         - 15-29
+        - testgrp
 
   - name: Ethernet81/4
     description: Traffic Engineering Interface
@@ -1872,8 +1872,8 @@ ethernet_interfaces:
       enabled: false
       administrative_groups:
         - 4
-        - testgrp
         - 7-100
+        - testgrp
 
   - name: Ethernet82
     description: Switchport_tap_tool
