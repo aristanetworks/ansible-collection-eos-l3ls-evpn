@@ -11535,6 +11535,7 @@ FIPS restrictions enabled.
 
 | L2 Protocol | Mode |
 | ----------- | ---- |
+| ethernet-flow-control | bypass |
 | lldp | bypass unauthorized |
 
 ##### Profile A2
@@ -11581,6 +11582,7 @@ mac security
       mka session rekey-period 30
       traffic unprotected allow
       sci
+      l2-protocol ethernet-flow-control bypass
       l2-protocol lldp bypass unauthorized
    !
    profile A2
