@@ -33,7 +33,7 @@ def parse_config(config: str, config_source: str) -> set[ConfigLine]:
         else:
             # We may be jumping out multiple levels at once
             parent = last_config_line.parent.parent if last_config_line.parent is not None else last_config_line.parent
-            while indentation <= getattr(parent, "indentation", -1):
+            while parent is not None and indentation <= getattr(parent, "indentation", -1):
                 parent = parent.parent
 
         new_config_line = ConfigLine(
@@ -83,9 +83,9 @@ def main() -> None:
     new = Path(args.new_file).read_text()
 
     if args.old_file.endswith("yml"):
-        old = yaml.dump(yaml.load(old, Loader=yaml.CSafeLoader), Dumper=yaml.CDumper, sort_keys=True)
+        old = yaml.dump(yaml.load(old, Loader=yaml.CSafeLoader), Dumper=yaml.CDumper, sort_keys=True, indent=2)
     if args.new_file.endswith("yml"):
-        new = yaml.dump(yaml.load(new, Loader=yaml.CSafeLoader), Dumper=yaml.CDumper, sort_keys=True)
+        new = yaml.dump(yaml.load(new, Loader=yaml.CSafeLoader), Dumper=yaml.CDumper, sort_keys=True, indent=2)
 
     # Build set of diffs
     diffs = parse_config(old, "old").symmetric_difference(parse_config(new, "new"))
@@ -108,16 +108,16 @@ def main() -> None:
             # Remove the one without +/- - [0] is the boolean signalling this is a diff
             lines = [line for line in lines if line[0]]
 
-        is_diff, config_line = lines[0]
-        if not is_diff:
-            # Print line for parent
-            print(f" {line_number:5}    {config_line.config}")  # noqa: T201
-        elif config_line.config_source == "old":
-            # Print line for removal
-            print(f"-{line_number:5}    {config_line.config}")  # noqa: T201
-        else:
-            # Print line for addition
-            print(f"+{line_number:5}    {config_line.config}")  # noqa: T201
+        for is_diff, config_line in lines:
+            if not is_diff:
+                # Print line for parent
+                print(f" {line_number:5}    {config_line.config}")  # noqa: T201
+            elif config_line.config_source == "old":
+                # Print line for removal
+                print(f"-{line_number:5}    {config_line.config}")  # noqa: T201
+            else:
+                # Print line for addition
+                print(f"+{line_number:5}    {config_line.config}")  # noqa: T201
 
 
 if __name__ == "__main__":
