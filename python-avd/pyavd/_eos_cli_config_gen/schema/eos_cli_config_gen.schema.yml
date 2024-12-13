@@ -22936,12 +22936,11 @@ keys:
                       type: int
                       convert_types:
                       - str
-                      description: VLAN ID or range of VLAN ID.
+                      description: VLAN ID.
                     vni:
                       type: int
                       convert_types:
                       - str
-                      description: VNI or range of VNI.
                     multicast_group:
                       type: str
                       description: IP Multicast Group Address.
@@ -22952,14 +22951,19 @@ keys:
                         description: Remote VTEP IP Address.
               vlan_range:
                 type: dict
-                description: Set VNI on range of vlans.
+                description: 'Set VNI on range of vlans.
+
+                  If vni is set on the vlan in `vxlan_interface.vxlan1.vxlan.vlans`,
+                  it should not overlap in `vlan_range.vlans`.'
                 keys:
                   vlans:
                     type: str
                     description: e.g. "94,96,100-110".
                   vnis:
                     type: str
-                    description: e.g. "10094,10096,10100-10110".
+                    description: 'Set `vnis` in the correct sequence for the `vlans`.
+
+                      e.g. "10094,10096,10100-10110".'
               vrfs:
                 type: list
                 primary_key: name
