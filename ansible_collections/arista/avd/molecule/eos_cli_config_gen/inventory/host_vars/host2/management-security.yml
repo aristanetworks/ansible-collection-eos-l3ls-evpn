@@ -1,5 +1,12 @@
 ---
+# schema_id = eos_cli_config_gen
 ## Management Security
 management_security:
   password:
     encryption_reversible: aes-256-gcm
+  ssl_profiles:
+    # test for ciphers for EOS versions 4.32.0F and later.
+    - name: cipher-v1.0-v1.3
+      ciphers:
+        v1_0: SHA256:SHA384
+        v1_3: TLS_AES_256_GCM_SHA384:TLS_CHACHA20_POLY1305_SHA256
