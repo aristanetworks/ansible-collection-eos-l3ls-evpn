@@ -483,6 +483,7 @@ $defs:
             description: EOS CLI rendered directly on the port-channel interface in the final EOS configuration.
           structured_config:
             type: dict
+            relaxed_validation: true
             description: Custom structured config added under port_channel_interfaces.[name=<interface>] for eos_cli_config_gen.
             documentation_options:
               hide_keys: true
@@ -506,6 +507,7 @@ $defs:
         description: EOS CLI rendered directly on the ethernet interface in the final EOS configuration.
       structured_config:
         type: dict
+        relaxed_validation: true
         description: Custom structured config added under ethernet_interfaces.[name=<interface>] for eos_cli_config_gen.
         documentation_options:
           hide_keys: true

@@ -16,7 +16,8 @@ keys:
         name:
           type: str
           description: Access-list Name.
-          convert_types: [ int ]
+          convert_types:
+            - int
         counters_per_entry:
           type: bool
         permit_response_traffic:

@@ -272,6 +272,7 @@ $defs:
         keys:
           structured_config:
             type: dict
+            relaxed_validation: true
             description: |
               Structured configuration and EOS CLI commands rendered on router_bgp.vlans.[id=<vlan>].
               This configuration will not be applied to vlan aware bundles.
@@ -288,6 +289,7 @@ $defs:
           EOS CLI rendered directly on the VLAN interface in the final EOS configuration.
       structured_config:
         type: dict
+        relaxed_validation: true
         description: |
           Custom structured config added under vlan_interfaces.[name=<interface>] for eos_cli_config_gen.
         documentation_options:

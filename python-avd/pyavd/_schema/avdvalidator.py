@@ -31,6 +31,8 @@ class AvdValidator:
             "unique_keys": self.unique_keys_validator,
             "$ref": self.ref_validator,
         }
+        self._relaxed_validation: bool = False
+        """Used to ignore missing required keys."""
 
     def validate(self, instance: Any, schema: dict | None = None, path: list[str | int] | None = None) -> Generator:
         if schema is None:
@@ -50,6 +52,7 @@ class AvdValidator:
             yield from validator(schema_value, instance, schema, path)
 
     def type_validator(self, schema_type: str, instance: Any, _schema: dict, path: list[str | int]) -> Generator:
+        """Validates the type of `instance` equal to `schema_type`."""
         if not self.is_type(instance, schema_type):
             yield AvdValidationError(
                 f"Invalid type '{type(instance).__name__}'. Expected a '{schema_type}'.",
@@ -57,6 +60,7 @@ class AvdValidator:
             )
 
     def unique_keys_validator(self, unique_keys: list[str], instance: list, _schema: dict, path: list[str | int]) -> Generator:
+        """Validates that the keys defined in the `unique_keys` list are unique in the `instance`."""
         if not instance:
             return
 
@@ -116,16 +120,21 @@ class AvdValidator:
         # Validation of "allow_other_keys"
         if not schema.get("allow_other_keys", False):
             # Check that instance only contains the schema keys
+
             invalid_keys = ", ".join([key for key in instance if key not in all_keys and not key.startswith("_")])
             if invalid_keys:
                 yield AvdValidationError(f"Unexpected key(s) '{invalid_keys}' found in dict.", path=path)
+
+        old_relaxed_validation = self._relaxed_validation
+        if (relaxed_validation := schema.get("relaxed_validation")) is not None:
+            self._relaxed_validation = relaxed_validation
 
         # Run over child keys and check for required and update child schema with dynamic valid values before
         # descending into validation of child schema.
         for key, childschema in all_keys.items():
             if instance.get(key) is None:
                 # Validation of "required" on child keys
-                if childschema.get("required"):
+                if childschema.get("required") and not self._relaxed_validation:
                     yield AvdValidationError(f"Required key '{key}' is not set in dict.", path=path)
 
                 # Skip further validation since there is nothing to validate.
@@ -146,6 +155,9 @@ class AvdValidator:
 
             # Perform validation of the modified childschema.
             yield from self.validate(instance[key], modified_childschema, path=[*path, key])
+
+        # Restore value
+        self._relaxed_validation = old_relaxed_validation
 
     def dynamic_keys_validator(self, _dynamic_keys: dict, instance: dict, schema: dict, path: list[str | int]) -> Generator:
         """This function triggers the regular "keys" validator in case only dynamic_keys is set."""

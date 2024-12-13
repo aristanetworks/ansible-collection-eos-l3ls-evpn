@@ -164,6 +164,7 @@ $defs:
               hide_keys: true
             description: Custom structured config for eos_cli_config_gen.
             type: dict
+            relaxed_validation: true
             $ref: "eos_cli_config_gen#"
           uplink_type:
             documentation_options:
@@ -340,6 +341,7 @@ $defs:
               hide_keys: true
             # TODO: Add deprecation warning when introducing new keys for specific configuration.
             type: dict
+            relaxed_validation: true
             description: |
               Custom structured config applied to "uplink_interfaces", and "uplink_switch_interfaces".
               When uplink_type == "p2p", custom structured config added under ethernet_interfaces.[name=<interface>] for eos_cli_config_gen overrides the settings on the ethernet interface level.
@@ -354,6 +356,7 @@ $defs:
               table: node-type-l2-mlag-configuration
               hide_keys: true
             type: dict
+            relaxed_validation: true
             description: |
               Custom structured config applied to MLAG peer link port-channel id.
               Added under port_channel_interfaces.[name=<interface>] for eos_cli_config_gen.
@@ -365,6 +368,7 @@ $defs:
               table: node-type-l2-mlag-configuration
               hide_keys: true
             type: dict
+            relaxed_validation: true
             description: |
               Custom structured config applied to MLAG Peer Link (control link) SVI interface id.
               Added under vlan_interfaces.[name=<interface>] for eos_cli_config_gen.
@@ -376,6 +380,7 @@ $defs:
               table: node-type-l2-mlag-configuration
               hide_keys: true
             type: dict
+            relaxed_validation: true
             description: |
               Custom structured config applied to MLAG underlay L3 peering SVI interface id.
               Added under vlan_interfaces.[name=<interface>] for eos_cli_config_gen.
