@@ -1,7 +1,0 @@
-loopback_ipv4_pool: 192.168.0.0/24
-
-type: l2leaf
-l2leaf:
-  defaults:
-  nodes:
-    - name: host3
