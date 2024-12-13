@@ -586,6 +586,12 @@ tap aggregation
 
 #### SFlow Summary
 
+| VRF | SFlow Source | SFlow Destination | Port |
+| --- | ------------ | ----------------- | ---- |
+| DDD | - | 10.6.75.62 | 6343 |
+| DDD | 1.1.1.1 | - | - |
+| default | 1.1.1.1 | - | - |
+
 sFlow is disabled.
 
 sFlow is disabled on all interfaces by default.
@@ -596,6 +602,9 @@ Egress sFlow is enabled on all interfaces by default.
 
 ```eos
 !
+sflow vrf DDD destination 10.6.75.62
+sflow vrf DDD source 1.1.1.1
+sflow source 1.1.1.1
 sflow interface disable default
 sflow interface egress enable default
 ```

@@ -1,5 +1,10 @@
 ---
 sflow:
+  vrfs:
+    - name: DDD
+      destinations:
+        - destination: 10.6.75.62
+      source: 1.1.1.1
   run: false
   interface:
     disable:
@@ -7,3 +12,4 @@ sflow:
     egress:
       enable_default: true
       unmodified: false
+  source: 1.1.1.1

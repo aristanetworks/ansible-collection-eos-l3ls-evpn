@@ -43,6 +43,41 @@ interface Management1
 no ptp monitor
 ```
 
+### Management SSH
+
+#### SSH Timeout and Management
+
+| Idle Timeout | SSH Management |
+| ------------ | -------------- |
+| default | Enabled |
+
+#### Max number of SSH sessions limit and per-host limit
+
+| Connection Limit | Max from a single Host |
+| ---------------- | ---------------------- |
+| - | - |
+
+#### Ciphers and Algorithms
+
+| Ciphers | Key-exchange methods | MAC algorithms | Hostkey server algorithms |
+|---------|----------------------|----------------|---------------------------|
+| default | default | default | default |
+
+#### VRFs
+
+| VRF | Status |
+| --- | ------ |
+| mgt | Disabled |
+
+#### Management SSH Device Configuration
+
+```eos
+!
+management ssh
+   !
+   vrf mgt
+```
+
 ## CVX
 
 CVX is enabled
@@ -95,11 +130,19 @@ daemon TerminAttr
 | -----| ----- |
 | Console | disabled |
 
+| Format Type | Setting |
+| ----------- | ------- |
+| Timestamp | traditional year timezone |
+| Hostname | hostname |
+| Sequence-numbers | false |
+| RFC5424 | False |
+
 #### Logging Servers and Features Device Configuration
 
 ```eos
 !
 no logging console
+logging format timestamp traditional year timezone
 ```
 
 ### MCS Client Summary
