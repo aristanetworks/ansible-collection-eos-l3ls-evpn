@@ -2,7 +2,6 @@ hostname: DC1-BL1A
 is_deployed: true
 router_bgp:
   as: '65104'
-  router_id: 192.168.255.14
   bgp_defaults:
   - distance bgp 20 200 200
   bgp:
@@ -131,7 +130,6 @@ router_bgp:
       - address_family: evpn
         route_targets:
         - '65104:15'
-    router_id: 192.168.255.14
     redistribute:
       connected:
         enabled: true
@@ -154,7 +152,6 @@ router_bgp:
       - address_family: vpn-ipv4
         route_targets:
         - 65000:123
-    router_id: 192.168.255.14
     redistribute:
       connected:
         enabled: true
@@ -173,8 +170,8 @@ router_bgp:
     neighbors:
     - ip_address: 123.1.1.10
       remote_as: '1234'
-      password: oBztv71m2uhR7hh58/OCNA==
       description: External IPv4 BGP peer
+      password: oBztv71m2uhR7hh58/OCNA==
       send_community: standard extended
       maximum_routes: 0
       maximum_routes_warning_only: true
@@ -183,22 +180,22 @@ router_bgp:
         route_map: RM-Tenant_A_WAN_Zone-123.1.1.10-SET-NEXT-HOP-OUT
       update_source: Loopback123
       ebgp_multihop: 3
-      route_map_in: RM-123-1-1-10-IN
-      shutdown: true
       route_map_out: RM-Tenant_A_WAN_Zone-123.1.1.10-SET-NEXT-HOP-OUT
+      route_map_in: RM-123-1-1-10-IN
       local_as: '123'
+      shutdown: true
     - ip_address: 123.1.1.11
       remote_as: '65000.100'
-      password: oBztv71m2uhR7hh58/OCNA==
       description: External IPv4 BGP peer
+      password: oBztv71m2uhR7hh58/OCNA==
       send_community: standard extended
       maximum_routes: 0
       default_originate:
         always: false
       update_source: Loopback123
       ebgp_multihop: 3
-      route_map_in: RM-123-1-1-11-IN
       route_map_out: RM-123-1-1-11-OUT
+      route_map_in: RM-123-1-1-11-IN
       local_as: '123'
       bfd: true
     - ip_address: fd5a:fe45:8831:06c5::a
@@ -228,7 +225,6 @@ router_bgp:
       - address_family: evpn
         route_targets:
         - '65104:20'
-    router_id: 192.168.255.14
     redistribute:
       connected:
         enabled: true
@@ -243,7 +239,6 @@ router_bgp:
       - address_family: evpn
         route_targets:
         - '65104:21'
-    router_id: 192.168.255.14
     redistribute:
       connected:
         enabled: true
@@ -258,7 +253,6 @@ router_bgp:
       - address_family: evpn
         route_targets:
         - '65104:31'
-    router_id: 192.168.255.14
     redistribute:
       connected:
         enabled: true
@@ -273,7 +267,6 @@ router_bgp:
       - address_family: evpn
         route_targets:
         - '65104:42'
-    router_id: 192.168.255.14
   vlan_aware_bundles:
   - name: Tenant_A_WAN_Zone
     rd: 192.168.254.14:14
@@ -452,6 +445,9 @@ ntp: null
 snmp_server:
   contact: example@example.com
   location: EOS_DESIGNS_UNIT_TESTS DC1-BL1A
+router_general:
+  router_id:
+    ipv4: 192.168.255.14
 ethernet_interfaces:
 - name: Ethernet1
   peer: DC1-SPINE1
@@ -582,14 +578,14 @@ ethernet_interfaces:
   shutdown: false
 - name: Ethernet4000
   description: My test
-  ip_address: 10.3.2.1/21
   shutdown: false
-  switchport:
-    enabled: false
   mtu: 1500
+  ip_address: 10.3.2.1/21
   peer: MY-own-peer
   peer_interface: Ethernet123
   peer_type: my_precious
+  switchport:
+    enabled: false
 loopback_interfaces:
 - name: Loopback0
   description: MY_ROUTER_ID_LOOPBACK
@@ -650,32 +646,32 @@ vlans:
 ip_access_lists:
 - name: TEST-IPV4-ACL-WITH-IP-FIELDS-IN_Ethernet12
   entries:
-  - sequence: 15
+  - source: any
+    destination: 10.10.40.10
+    sequence: 15
     action: deny
     protocol: ip
-    source: any
-    destination: 10.10.40.10
 - name: TEST-IPV4-ACL-WITH-IP-FIELDS-IN_Ethernet13.10
   entries:
-  - sequence: 15
+  - source: any
+    destination: 10.10.40.20
+    sequence: 15
     action: deny
     protocol: ip
-    source: any
-    destination: 10.10.40.20
 - name: TEST-IPV4-ACL-WITH-IP-FIELDS-OUT_Ethernet12
   entries:
   - remark: Some remark will not require source and destination fields.
-  - action: permit
-    protocol: ip
-    source: 10.10.40.10
+  - source: 10.10.40.10
     destination: any
+    action: permit
+    protocol: ip
 - name: TEST-IPV4-ACL-WITH-IP-FIELDS-OUT_Ethernet13.10
   entries:
   - remark: Some remark will not require source and destination fields.
-  - action: permit
-    protocol: ip
-    source: 10.10.40.20
+  - source: 10.10.40.20
     destination: any
+    action: permit
+    protocol: ip
 ip_igmp_snooping:
   globally_enabled: true
 ip_virtual_router_mac_address: 00:dc:00:00:00:0a
@@ -724,7 +720,6 @@ router_ospf:
   - id: 14
     vrf: Tenant_A_WAN_Zone
     passive_interface_default: true
-    router_id: 192.168.255.14
     no_passive_interfaces:
     - Ethernet7
     - Vlan150

@@ -1,0 +1,27 @@
+---
+management_ssh:
+  cipher:
+    - aes256-cbc
+    - aes256-ctr
+    - aes256-gcm@openssh.com
+  key_exchange:
+    - ecdh-sha2-nistp521
+  mac:
+    - hmac-sha2-512
+    - hmac-sha2-512-etm@openssh.com
+  hostkey:
+    server:
+      - ecdsa-nistp256
+      - ecdsa-nistp521
+    server_cert: sshkey.cert
+  access_groups:
+    - name: ACL-SSH
+    - name: ACL-SSH-VRF
+      vrf: mgt
+  idle_timeout: 15
+  connection:
+    limit: 55
+  enable: true
+  vrfs:
+    - name: mgt
+      enable: true

@@ -21,18 +21,18 @@ except ImportError as e:
     default = get = RaiseOnUse(ImportError(f"The 'arista.avd' collection requires the 'pyavd' Python library. Got import error {e}"))
 
 __all__ = [
-    "compile_searchpath",
-    "get_templar",
-    "log_message",
+    "NoAliasDumper",
     "PythonToAnsibleContextFilter",
     "PythonToAnsibleHandler",
-    "NoAliasDumper",
-    "get_validated_path",
-    "get_validated_value",
-    "cprofile",
     "YamlDumper",
     "YamlLoader",
+    "compile_searchpath",
+    "cprofile",
     "default",
     "get",
+    "get_templar",
+    "get_validated_path",
+    "get_validated_value",
+    "log_message",
     "write_file",
 ]

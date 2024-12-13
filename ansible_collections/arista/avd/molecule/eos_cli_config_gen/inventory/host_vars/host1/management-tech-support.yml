@@ -1,0 +1,16 @@
+---
+management_tech_support:
+  policy_show_tech_support:
+    exclude_commands:
+      - command: show platform fap ip route
+      - command: show platform fap ipv6 route
+      - command: show ip bgp vrf all
+      - command: show ipv6 bgp vrf all
+      - command: show kernel ip route vrf all
+      - command: show kernel ipv6 route vrf all
+      - command: show ip route vrf all detail
+      - command: show ipv6 route vrf all detail
+      - command: show version detail
+        type: json
+    include_commands:
+      - command: show version detail | grep TerminAttr

@@ -238,7 +238,7 @@ port_channel_interfaces:
   switchport:
     enabled: true
     mode: access
-    access_vlan: '11'
+    access_vlan: 11
   spanning_tree_portfast: edge
   mlag: 14
 - name: Port-Channel15
@@ -249,7 +249,7 @@ port_channel_interfaces:
   switchport:
     enabled: true
     mode: access
-    access_vlan: '11'
+    access_vlan: 11
   spanning_tree_portfast: edge
   mlag: 15
 - name: Port-Channel16
@@ -258,7 +258,7 @@ port_channel_interfaces:
   switchport:
     enabled: true
     mode: access
-    access_vlan: '11'
+    access_vlan: 11
   spanning_tree_portfast: edge
   mlag: 16
 ethernet_interfaces:

@@ -494,7 +494,7 @@ ethernet_interfaces:
   switchport:
     enabled: true
     mode: access
-    access_vlan: '110'
+    access_vlan: 110
 port_channel_interfaces:
 - name: Port-Channel7
   description: CUSTOM_DC1-L2LEAF1A_Po1
@@ -535,7 +535,7 @@ port_channel_interfaces:
   switchport:
     enabled: true
     mode: access
-    access_vlan: '110'
+    access_vlan: 110
 - name: Port-Channel12
   description: CUSTOM_server01_MTU_ADAPTOR_MLAG_PortChanne1
   shutdown: false

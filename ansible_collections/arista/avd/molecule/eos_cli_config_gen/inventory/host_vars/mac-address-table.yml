@@ -1,8 +1,0 @@
-### MAC address table ###
-mac_address_table:
-  aging_time: 100
-  notification_host_flap:
-    logging: true
-    detection:
-      window: 10
-      moves: 2

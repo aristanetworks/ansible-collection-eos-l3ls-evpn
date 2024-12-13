@@ -7,6 +7,14 @@
 {% if router_bfd is arista.avd.defined %}
 
 ### Router BFD
+{%     if router_bfd.slow_timer is arista.avd.defined %}
+
+| BFD Tuning |
+| ---------- |
+{%         if router_bfd.slow_timer is arista.avd.defined %}
+| Slow-Timer {{ router_bfd.slow_timer }} |
+{%         endif %}
+{%     endif %}
 {%     if router_bfd.interval is arista.avd.defined and router_bfd.min_rx is arista.avd.defined and router_bfd.multiplier is arista.avd.defined  %}
 
 #### Router BFD Singlehop Summary

@@ -6,9 +6,18 @@
 {# eos - virtual source nat vrfs #}
 {% if virtual_source_nat_vrfs is arista.avd.defined %}
 !
+{%     set ipv4_address_list = [] %}
+{%     set ipv6_address_list = [] %}
 {%     for vrf in virtual_source_nat_vrfs | arista.avd.natural_sort('name') %}
 {%         if vrf.ip_address is arista.avd.defined %}
-ip address virtual source-nat vrf {{ vrf.name }} address {{ vrf.ip_address }}
+{%             do ipv4_address_list.append("ip address virtual source-nat vrf " + vrf.name + " address " + vrf.ip_address) %}
 {%         endif %}
+{%         if vrf.ipv6_address is arista.avd.defined %}
+{%             do ipv6_address_list.append("ipv6 address virtual source-nat vrf " + vrf.name + " address " + vrf.ipv6_address) %}
+{%         endif %}
+{%     endfor %}
+{%     set ip_addresses = ipv4_address_list + ipv6_address_list %}
+{%     for ip_address in ip_addresses %}
+{{ ip_address }}
 {%     endfor %}
 {% endif %}

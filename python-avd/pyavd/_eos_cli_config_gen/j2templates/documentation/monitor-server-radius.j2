@@ -1,0 +1,36 @@
+{#
+ Copyright (c) 2023-2024 Arista Networks, Inc.
+ Use of this source code is governed by the Apache License 2.0
+ that can be found in the LICENSE file.
+#}
+{# doc - monitor server radius #}
+{% if monitor_server_radius is arista.avd.defined %}
+
+### Monitor Server Radius Summary
+{%     if monitor_server_radius.service_dot1x is arista.avd.defined(true) %}
+
+Monitor servers are used for 802.1x authentication.
+{%     endif %}
+{%     if monitor_server_radius.probe is arista.avd.defined %}
+
+#### Server Probe Settings
+
+| Setting | Value |
+| ------- | ----- |
+{%         if monitor_server_radius.probe.interval is arista.avd.defined %}
+| Probe interval | {{ monitor_server_radius.probe.interval }} |
+{%         endif %}
+{%         if monitor_server_radius.probe.threshold_failure is arista.avd.defined %}
+| Threshold failure | {{ monitor_server_radius.probe.threshold_failure }} |
+{%         endif %}
+{%         if monitor_server_radius.probe.method is arista.avd.defined %}
+| Probe method | {{ monitor_server_radius.probe.method }} |
+{%         endif %}
+{%     endif %}
+
+#### Monitor Server Radius Device Configuration
+
+```eos
+{%     include 'eos/monitor-server-radius.j2' %}
+```
+{% endif %}

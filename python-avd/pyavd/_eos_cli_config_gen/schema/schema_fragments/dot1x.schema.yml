@@ -235,7 +235,7 @@ keys:
             type: str
           start_limit_infinite:
             type: bool
-            description: Set captive-portal start limit to infinte.
+            description: Set captive-portal start limit to infinite.
           access_list_ipv4:
             type: str
             description: Standard access-list name.

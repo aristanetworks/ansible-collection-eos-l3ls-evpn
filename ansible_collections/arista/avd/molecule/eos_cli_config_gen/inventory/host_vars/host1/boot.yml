@@ -1,0 +1,6 @@
+---
+### System Boot Configuration
+boot:
+  secret:
+    hash_algorithm: md5
+    key: a153de6290ff1409257a

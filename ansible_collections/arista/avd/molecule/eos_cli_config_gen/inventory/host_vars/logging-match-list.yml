@@ -1,9 +1,0 @@
----
-logging:
-  console: informational
-  monitor: debugging
-  policy:
-    match:
-      match_lists:
-        - name: molecule
-          action: discard

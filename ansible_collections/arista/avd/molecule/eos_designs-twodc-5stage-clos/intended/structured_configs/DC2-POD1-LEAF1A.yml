@@ -187,8 +187,8 @@ local_users:
 - name: admin
   privilege: 15
   role: network-admin
-  no_password: true
   sha512_password: $6$eJ5TvI8oru5i9e8G$R1X/SbtGTk9xoEHEBQASc7SC2nHYmi.crVgp2pXuCXwxsXEA81e4E0cXgQ6kX08fIeQzauqhv2kS.RGJFCon5/
+  no_password: true
 vrfs:
 - name: MGMT
   ip_routing: false
@@ -272,9 +272,9 @@ ethernet_interfaces:
     enabled: false
   shutdown: false
   ip_address: 11.1.0.39/31
-  description: P2P_DC1-POD1-LEAF2B_Ethernet7
   ptp:
     enable: true
+  description: P2P_DC1-POD1-LEAF2B_Ethernet7
 port_channel_interfaces:
 - name: Port-Channel3
   description: L2_DC2-POD1-L2LEAF1A_Port-Channel1

@@ -41,7 +41,7 @@
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;qos_profile</samp>](## "<connected_endpoints_keys.key>.[].adapters.[].qos_profile") | String |  |  |  | QOS profile name. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ptp</samp>](## "<connected_endpoints_keys.key>.[].adapters.[].ptp") | Dictionary |  |  |  | The global PTP profile parameters will be applied to all connected endpoints where `ptp` is manually enabled.<br>`ptp role master` is set to ensure control over the PTP topology.<br> |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "<connected_endpoints_keys.key>.[].adapters.[].ptp.enabled") | Boolean |  | `False` |  |  |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;endpoint_role</samp>](## "<connected_endpoints_keys.key>.[].adapters.[].ptp.endpoint_role") | String |  | `follower` | Valid Values:<br>- <code>bmca</code><br>- <code>default</code><br>- <code>follower</code> |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;endpoint_role</samp>](## "<connected_endpoints_keys.key>.[].adapters.[].ptp.endpoint_role") | String |  | `follower` | Valid Values:<br>- <code>follower</code><br>- <code>dynamic</code><br>- <code>bmca</code><br>- <code>default</code> | PTP role of the endpoint.<br>`follower` will configure the switch port as `ptp role master`.<br>`dynamic` will use BMCA.<br>`default` is deprecated in favor of `follower`.<br>`bmca` is deprecated in favor of `dynamic`. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;profile</samp>](## "<connected_endpoints_keys.key>.[].adapters.[].ptp.profile") | String |  | `aes67-r16-2016` |  | Default available profiles are:<br>  - "aes67"<br>  - "aes67-r16-2016"<br>  - "smpte2059-2" |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sflow</samp>](## "<connected_endpoints_keys.key>.[].adapters.[].sflow") | Boolean |  |  |  | Configures sFlow on the interface. Overrides `fabric_sflow.endpoints` setting. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;flow_tracking</samp>](## "<connected_endpoints_keys.key>.[].adapters.[].flow_tracking") | Dictionary |  |  |  | Configures flow-tracking on the interface. Overrides `fabric_flow_tracking.endpoints` setting. |
@@ -182,7 +182,8 @@
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;raw_eos_cli</samp>](## "<connected_endpoints_keys.key>.[].adapters.[].port_channel.raw_eos_cli") | String |  |  |  | EOS CLI rendered directly on the port-channel interface in the final EOS configuration. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;structured_config</samp>](## "<connected_endpoints_keys.key>.[].adapters.[].port_channel.structured_config") | Dictionary |  |  |  | Custom structured config added under port_channel_interfaces.[name=<interface>] for eos_cli_config_gen. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;short_esi</samp>](## "<connected_endpoints_keys.key>.[].adapters.[].port_channel.short_esi") <span style="color:red">removed</span> | String |  |  |  | In format xxxx:xxxx:xxxx or "auto".<span style="color:red">This key was removed. Support was removed in AVD version 5.0.0. Use <samp>ethernet_segment.short_esi</samp> instead.</span> |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;validate_state</samp>](## "<connected_endpoints_keys.key>.[].adapters.[].validate_state") | Boolean |  |  |  | Set to false to disable interface validation by the `eos_validate_state` role. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;validate_state</samp>](## "<connected_endpoints_keys.key>.[].adapters.[].validate_state") | Boolean |  |  |  | Set to false to disable interface state and LLDP topology validation performed by the `eos_validate_state` role. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;validate_lldp</samp>](## "<connected_endpoints_keys.key>.[].adapters.[].validate_lldp") | Boolean |  |  |  | Set to false to disable the LLDP topology validation performed by the `eos_validate_state` role. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;raw_eos_cli</samp>](## "<connected_endpoints_keys.key>.[].adapters.[].raw_eos_cli") | String |  |  |  | EOS CLI rendered directly on the ethernet interface in the final EOS configuration. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;structured_config</samp>](## "<connected_endpoints_keys.key>.[].adapters.[].structured_config") | Dictionary |  |  |  | Custom structured config added under ethernet_interfaces.[name=<interface>] for eos_cli_config_gen. |
 
@@ -299,7 +300,13 @@
             # `ptp role master` is set to ensure control over the PTP topology.
             ptp:
               enabled: <bool; default=False>
-              endpoint_role: <str; "bmca" | "default" | "follower"; default="follower">
+
+              # PTP role of the endpoint.
+              # `follower` will configure the switch port as `ptp role master`.
+              # `dynamic` will use BMCA.
+              # `default` is deprecated in favor of `follower`.
+              # `bmca` is deprecated in favor of `dynamic`.
+              endpoint_role: <str; "follower" | "dynamic" | "bmca" | "default"; default="follower">
 
               # Default available profiles are:
               #   - "aes67"
@@ -664,8 +671,11 @@
               # Custom structured config added under port_channel_interfaces.[name=<interface>] for eos_cli_config_gen.
               structured_config: <dict>
 
-            # Set to false to disable interface validation by the `eos_validate_state` role.
+            # Set to false to disable interface state and LLDP topology validation performed by the `eos_validate_state` role.
             validate_state: <bool>
+
+            # Set to false to disable the LLDP topology validation performed by the `eos_validate_state` role.
+            validate_lldp: <bool>
 
             # EOS CLI rendered directly on the ethernet interface in the final EOS configuration.
             raw_eos_cli: <str>

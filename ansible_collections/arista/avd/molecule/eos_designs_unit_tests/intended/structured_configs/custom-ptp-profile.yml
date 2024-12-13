@@ -140,7 +140,6 @@ ethernet_interfaces:
     enabled: false
   shutdown: false
   mtu: 9214
-  description: P2P_not-in-this-fabric_Ethernet8
   ptp:
     announce:
       interval: 4
@@ -150,6 +149,7 @@ ethernet_interfaces:
       interval: -7
     transport: ipv4
     enable: true
+  description: P2P_not-in-this-fabric_Ethernet8
 vlans:
 - id: 11
   name: VLAN11

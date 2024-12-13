@@ -29,6 +29,7 @@ keys:
             default: False
           structured_config:
             type: dict
+            relaxed_validation: true
             description: Custom structured config added under router_bgp.peer_groups.[name=<name>] for eos_cli_config_gen.
             documentation_options:
               hide_keys: true
@@ -48,6 +49,7 @@ keys:
             default: False
           structured_config:
             type: dict
+            relaxed_validation: true
             description: Custom structured config added under router_bgp.peer_groups.[name=<name>] for eos_cli_config_gen.
             documentation_options:
               hide_keys: true
@@ -67,6 +69,7 @@ keys:
             default: True
           structured_config:
             type: dict
+            relaxed_validation: true
             description: Custom structured config added under router_bgp.peer_groups.[name=<name>] for eos_cli_config_gen.
             documentation_options:
               hide_keys: true
@@ -86,6 +89,7 @@ keys:
             default: True
           structured_config:
             type: dict
+            relaxed_validation: true
             description: Custom structured config added under router_bgp.peer_groups.[name=<name>] for eos_cli_config_gen.
             documentation_options:
               hide_keys: true
@@ -105,6 +109,7 @@ keys:
             default: True
           structured_config:
             type: dict
+            relaxed_validation: true
             description: Custom structured config added under router_bgp.peer_groups.[name=<name>] for eos_cli_config_gen.
             documentation_options:
               hide_keys: true
@@ -124,6 +129,7 @@ keys:
             default: True
           structured_config:
             type: dict
+            relaxed_validation: true
             description: Custom structured config added under router_bgp.peer_groups.[name=<name>] for eos_cli_config_gen.
             documentation_options:
               hide_keys: true
@@ -143,6 +149,7 @@ keys:
             default: True
           structured_config:
             type: dict
+            relaxed_validation: true
             description: Custom structured config added under router_bgp.peer_groups.[name=<name>] for eos_cli_config_gen.
             documentation_options:
               hide_keys: true
@@ -197,6 +204,7 @@ keys:
             default: 1
           structured_config:
             type: dict
+            relaxed_validation: true
             description: Custom structured config added under router_bgp.peer_groups.[name=<name>] for eos_cli_config_gen.
             documentation_options:
               hide_keys: true
@@ -244,6 +252,7 @@ keys:
             default: 1
           structured_config:
             type: dict
+            relaxed_validation: true
             description: Custom structured config added under router_bgp.peer_groups.[name=<name>] for eos_cli_config_gen.
             documentation_options:
               hide_keys: true

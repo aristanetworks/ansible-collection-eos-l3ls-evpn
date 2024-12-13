@@ -69,7 +69,7 @@ ethernet_interfaces:
   switchport:
     enabled: true
     mode: access
-    access_vlan: '11'
+    access_vlan: 11
   spanning_tree_portfast: edge
 port_channel_interfaces:
 - name: Port-Channel1
@@ -119,8 +119,8 @@ vxlan_interface:
   Vxlan1:
     description: dc1-leaf2c_VTEP
     vxlan:
-      udp_port: 4789
       source_interface: Loopback1
+      udp_port: 4789
       virtual_router_encapsulation_mac_address: mlag-system-id
       vlans:
       - id: 11

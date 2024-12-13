@@ -35,7 +35,7 @@ MSG_SIZE_HANDLER_TESTS = [
 ]
 
 
-class TestClass:
+class CvClass:
     _cv_version: CvVersion
 
     def __init__(self, version: CvVersion) -> None:
@@ -74,20 +74,20 @@ class TestClass:
 @pytest.mark.parametrize(("version", "expected_exception"), INVALID_VERSION_TESTS)
 async def test_invalid_versions(version: str, expected_exception: Exception) -> None:
     with pytest.raises(type(expected_exception), match=expected_exception.args[0]):
-        await TestClass(CvVersion(version)).version_limited_method()
+        await CvClass(CvVersion(version)).version_limited_method()
 
 
 @pytest.mark.asyncio
 @pytest.mark.parametrize(("version", "expected_response"), VALID_VERSION_TESTS)
 async def test_valid_versions(version: str, expected_response: tuple[str, str]) -> None:
-    resp = await TestClass(CvVersion(version)).version_limited_method()
+    resp = await CvClass(CvVersion(version)).version_limited_method()
     assert resp == expected_response
 
 
 @pytest.mark.asyncio
 @pytest.mark.parametrize(("data", "max_len", "expected_response"), MSG_SIZE_HANDLER_TESTS)
 async def test_msg_size_handler(data: list, max_len: int, expected_response: list[int]) -> None:
-    resp = await TestClass(CvVersion(CVAAS_VERSION_STRING)).msgsize_limited_method(field=data, max_accepted_len=max_len)
+    resp = await CvClass(CvVersion(CVAAS_VERSION_STRING)).msgsize_limited_method(field=data, max_accepted_len=max_len)
     assert resp == expected_response
 
 

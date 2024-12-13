@@ -43,29 +43,29 @@ class MetadataMixin(UtilsMixin):
 
         return {"cv_pathfinder": cv_pathfinder_metadata}
 
-    def get_cv_pathfinder_metadata_internet_exit_policies(self: AvdStructuredConfigNetworkServices) -> dict | None:
+    def get_cv_pathfinder_metadata_internet_exit_policies(self: AvdStructuredConfigNetworkServices) -> list[dict] | None:
         """Generate metadata.cv_pathfinder.internet_exit_policies if available."""
-        if not self._filtered_internet_exit_policies:
+        if not self._filtered_internet_exit_policies_and_connections:
             return None
 
         internet_exit_polices = []
-        for internet_exit_policy in self._filtered_internet_exit_policies:
+        for internet_exit_policy, connections in self._filtered_internet_exit_policies_and_connections:
             # Currently only supporting zscaler
-            if internet_exit_policy["type"] != "zscaler":
+            if internet_exit_policy.type != "zscaler":
                 continue
 
             ufqdn, ipsec_key = self._get_ipsec_credentials(internet_exit_policy)
             internet_exit_polices.append(
                 {
-                    "name": internet_exit_policy["name"],
-                    "type": internet_exit_policy["type"],
-                    "city": get(self._zscaler_endpoints, "device_location.city", required=True, org_key="zscaler_endpoints.device_location.city"),
-                    "country": get(self._zscaler_endpoints, "device_location.country", required=True, org_key="zscaler_endpoints.device_location.country"),
-                    "upload_bandwidth": get(internet_exit_policy, "zscaler.upload_bandwidth"),
-                    "download_bandwidth": get(internet_exit_policy, "zscaler.download_bandwidth"),
-                    "firewall": get(internet_exit_policy, "zscaler.firewall.enabled", default=False),
-                    "ips_control": get(internet_exit_policy, "zscaler.firewall.ips", default=False),
-                    "acceptable_use_policy": get(internet_exit_policy, "zscaler.acceptable_use_policy", default=False),
+                    "name": internet_exit_policy.name,
+                    "type": internet_exit_policy.type,
+                    "city": self._zscaler_endpoints.device_location.city,
+                    "country": self._zscaler_endpoints.device_location.country,
+                    "upload_bandwidth": internet_exit_policy.zscaler.upload_bandwidth,
+                    "download_bandwidth": internet_exit_policy.zscaler.download_bandwidth,
+                    "firewall": internet_exit_policy.zscaler.firewall.enabled,
+                    "ips_control": internet_exit_policy.zscaler.firewall.ips,
+                    "acceptable_use_policy": internet_exit_policy.zscaler.acceptable_use_policy,
                     "vpn_credentials": [
                         {
                             "fqdn": ufqdn,
@@ -77,8 +77,9 @@ class MetadataMixin(UtilsMixin):
                         {
                             "name": f"Tunnel{connection['tunnel_id']}",
                             "preference": "Preferred" if connection["preference"] == "primary" else "Alternate",
+                            "endpoint": connection["endpoint"],
                         }
-                        for connection in internet_exit_policy["connections"]
+                        for connection in connections
                     ],
                 },
             )

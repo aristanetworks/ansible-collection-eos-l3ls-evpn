@@ -1,0 +1,96 @@
+---
+### Flow Tracking
+
+flow_tracking:
+  sampled:
+    encapsulation:
+      ipv4_ipv6: true
+      mpls: true
+    sample: 666
+    hardware_offload:
+      ipv4: true
+      threshold_minimum: 2
+    trackers:
+      - name: T1
+        record_export:
+          on_inactive_timeout: 3666
+          on_interval: 5666
+          mpls: true
+        # no exporter
+      - name: T2
+        # table size as string
+        table_size: "614400"
+        record_export:
+          # Should not be rendered
+          mpls: false
+        # one exporter
+        exporters:
+          - name: T2-E1
+            collector:
+              host: 42.42.42.42
+              # no port
+      - name: T3
+        # specify table size
+        table_size: 100000
+        # two exporters
+        exporters:
+          - name: T3-E1
+            collector:
+              # only port - should not be rendered
+              port: 666
+          - name: T3-E2
+            collector:
+              host: 10.10.10.10
+              port: 777
+          - name: T3-E3
+            collector:
+              host: this.is.my.awesome.collector.dns.name
+              port: 888
+            format:
+              ipfix_version: 10
+            local_interface: Management1
+            template_interval: 424242
+          - name: T3-E4
+            collector:
+              host: dead:beef::cafe
+    shutdown: false
+  # Checking hardware
+  hardware:
+    trackers:
+      - name: T1
+        record_export:
+          on_inactive_timeout: 3666
+          on_interval: 5666
+        # no exporter
+      - name: T2
+        # one exporter
+        exporters:
+          - name: T2-E1
+            collector:
+              host: 42.42.42.42
+              # no port
+      - name: T3
+        # two exporters
+        exporters:
+          - name: T3-E1
+            collector:
+              # only port - should not be rendered
+              port: 666
+          - name: T3-E2
+            collector:
+              host: 10.10.10.10
+              port: 777
+          - name: T3-E3
+            collector:
+              host: this.is.my.awesome.collector.dns.name
+              port: 888
+            format:
+              ipfix_version: 10
+            local_interface: Management1
+            template_interval: 424242
+          - name: T3-E4
+            collector:
+              host: dead:beef::cafe
+    shutdown: false
+    record:
+      format_ipfix_standard_timestamps_counters: true

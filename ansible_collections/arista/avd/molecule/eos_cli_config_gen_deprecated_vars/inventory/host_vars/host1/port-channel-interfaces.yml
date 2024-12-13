@@ -20,6 +20,9 @@ port_channel_interfaces:
     trunk_groups:
       - group1
       - group2
+    isis_enable: ISIS_TEST
+    isis_authentication_mode: md5
+    isis_authentication_key: "asfddja23452"
 
   - name: Port-Channel4
     description: Test_native_vlan_tag_and_phone

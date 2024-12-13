@@ -5,7 +5,10 @@ from __future__ import annotations
 
 import ipaddress
 from functools import cached_property
+from ipaddress import ip_network
 from typing import TYPE_CHECKING
+
+from pyavd._utils import get
 
 from .utils import UtilsMixin
 
@@ -29,7 +32,7 @@ class PrefixListsMixin(UtilsMixin):
         if self.shared_utils.overlay_routing_protocol == "none":
             return None
 
-        if not self.shared_utils.underlay_filter_redistribute_connected:
+        if not self.inputs.underlay_filter_redistribute_connected:
             return None
 
         # IPv4 - PL-LOOPBACKS-EVPN-OVERLAY
@@ -38,8 +41,8 @@ class PrefixListsMixin(UtilsMixin):
         if self.shared_utils.overlay_vtep and self.shared_utils.vtep_loopback.lower() != "loopback0" and not self.shared_utils.is_wan_router:
             sequence_numbers.append({"sequence": 20, "action": f"permit {self.shared_utils.vtep_loopback_ipv4_pool} eq 32"})
 
-        if self.shared_utils.vtep_vvtep_ip is not None and self.shared_utils.network_services_l3 is True and not self.shared_utils.is_wan_router:
-            sequence_numbers.append({"sequence": 30, "action": f"permit {self.shared_utils.vtep_vvtep_ip}"})
+        if self.inputs.vtep_vvtep_ip is not None and self.shared_utils.network_services_l3 is True and not self.shared_utils.is_wan_router:
+            sequence_numbers.append({"sequence": 30, "action": f"permit {self.inputs.vtep_vvtep_ip}"})
 
         prefix_lists = [{"name": "PL-LOOPBACKS-EVPN-OVERLAY", "sequence_numbers": sequence_numbers}]
 
@@ -68,6 +71,25 @@ class PrefixListsMixin(UtilsMixin):
             if sequence_numbers:
                 prefix_lists.append({"name": "PL-WAN-HA-PEER-PREFIXES", "sequence_numbers": sequence_numbers})
 
+        # P2P-LINKS needed for L3 inband ZTP
+        p2p_links_sequence_numbers = []
+        sequence_number = 0
+        for peer in self._avd_peers:
+            peer_facts = self.shared_utils.get_peer_facts(peer, required=True)
+            for uplink in peer_facts["uplinks"]:
+                if (
+                    uplink["peer"] == self.shared_utils.hostname
+                    and uplink["type"] == "underlay_p2p"
+                    and uplink.get("ip_address")
+                    and "unnumbered" not in uplink["ip_address"]
+                    and get(peer_facts, "inband_ztp")
+                ):
+                    sequence_number += 10
+                    subnet = str(ip_network(f"{uplink['ip_address']}/{uplink['prefix_length']}", strict=False))
+                    p2p_links_sequence_numbers.append({"sequence": sequence_number, "action": f"permit {subnet}"})
+        if p2p_links_sequence_numbers:
+            prefix_lists.append({"name": "PL-P2P-LINKS", "sequence_numbers": p2p_links_sequence_numbers})
+
         return prefix_lists
 
     @cached_property
@@ -82,7 +104,7 @@ class PrefixListsMixin(UtilsMixin):
         if self.shared_utils.overlay_routing_protocol == "none" and not self.shared_utils.is_wan_router:
             return None
 
-        if not self.shared_utils.underlay_filter_redistribute_connected:
+        if not self.inputs.underlay_filter_redistribute_connected:
             return None
 
         # IPv6 - PL-LOOPBACKS-EVPN-OVERLAY-V6

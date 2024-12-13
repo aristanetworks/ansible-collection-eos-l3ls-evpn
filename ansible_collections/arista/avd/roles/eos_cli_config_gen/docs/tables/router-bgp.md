@@ -11,6 +11,11 @@
     | [<samp>&nbsp;&nbsp;as</samp>](## "router_bgp.as") | String |  |  |  | BGP AS <1-4294967295> or AS number in asdot notation "<1-65535>.<0-65535>".<br>For asdot notation in YAML inputs, the value must be put in quotes, to prevent it from being interpreted as a float number. |
     | [<samp>&nbsp;&nbsp;as_notation</samp>](## "router_bgp.as_notation") | String |  |  | Valid Values:<br>- <code>asdot</code><br>- <code>asplain</code> | BGP AS can be deplayed in the asplain <1-4294967295> or asdot notation "<1-65535>.<0-65535>". This flag indicates which mode is preferred - asplain is the default. |
     | [<samp>&nbsp;&nbsp;router_id</samp>](## "router_bgp.router_id") | String |  |  |  | In IP address format A.B.C.D. |
+    | [<samp>&nbsp;&nbsp;timers</samp>](## "router_bgp.timers") | Dictionary |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;keepalive_time</samp>](## "router_bgp.timers.keepalive_time") | Integer |  |  | Min: 0<br>Max: 3600 | Time between BGP keepalive messages in seconds.<br>`keepalive_time` should be lesser than `hold_time`. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;hold_time</samp>](## "router_bgp.timers.hold_time") | Integer |  |  | Min: 0<br>Max: 7200 | Hold time in seconds. Must be defined along with `keepalive_time`.<br>The valid values are 3-7200 or 0 if both values are 0. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;min_hold_time</samp>](## "router_bgp.timers.min_hold_time") | Integer |  |  | Min: 3<br>Max: 7200 | Neighbor's minimum hold time constraint in seconds.<br>`min_hold_time` should be less than `hold_time`. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;send_failure_hold_time</samp>](## "router_bgp.timers.send_failure_hold_time") | Integer |  |  | Min: 60<br>Max: 65535 | Send failure hold time in seconds. |
     | [<samp>&nbsp;&nbsp;distance</samp>](## "router_bgp.distance") | Dictionary |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;external_routes</samp>](## "router_bgp.distance.external_routes") | Integer | Required |  | Min: 1<br>Max: 255 |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;internal_routes</samp>](## "router_bgp.distance.internal_routes") | Integer | Required |  | Min: 1<br>Max: 255 |  |
@@ -52,6 +57,8 @@
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;peer_group</samp>](## "router_bgp.listen_ranges.[].peer_group") | String |  |  |  | Peer group name. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;peer_filter</samp>](## "router_bgp.listen_ranges.[].peer_filter") | String |  |  |  | Peer-filter name.<br>note: `peer_filter` or `remote_as` is required but mutually exclusive.<br>If both are defined, `peer_filter` takes precedence<br> |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;remote_as</samp>](## "router_bgp.listen_ranges.[].remote_as") | String |  |  |  | BGP AS <1-4294967295> or AS number in asdot notation "<1-65535>.<0-65535>".<br>For asdot notation in YAML inputs, the value must be put in quotes, to prevent it from being interpreted as a float number. |
+    | [<samp>&nbsp;&nbsp;neighbor_default</samp>](## "router_bgp.neighbor_default") | Dictionary |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;send_community</samp>](## "router_bgp.neighbor_default.send_community") | String |  |  | Valid Values:<br>- <code>all</code><br>- <code>large</code><br>- <code>extended</code><br>- <code>standard</code><br>- <code>extended large</code><br>- <code>standard large</code><br>- <code>standard extended</code><br>- <code>standard extended large</code> |  |
     | [<samp>&nbsp;&nbsp;peer_groups</samp>](## "router_bgp.peer_groups") | List, items: Dictionary |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;name</samp>](## "router_bgp.peer_groups.[].name") | String | Required, Unique |  |  | Peer-group name. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;type</samp>](## "router_bgp.peer_groups.[].type") | String |  |  |  | Key only used for documentation or validation purposes. |
@@ -345,6 +352,7 @@
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;id_remote</samp>](## "router_bgp.vpws.[].pseudowires.[].id_remote") | Integer |  |  |  | Must match id_local on other pe. |
     | [<samp>&nbsp;&nbsp;address_family_evpn</samp>](## "router_bgp.address_family_evpn") | Dictionary |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;domain_identifier</samp>](## "router_bgp.address_family_evpn.domain_identifier") | String |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;domain_identifier_remote</samp>](## "router_bgp.address_family_evpn.domain_identifier_remote") | String |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;neighbor_default</samp>](## "router_bgp.address_family_evpn.neighbor_default") | Dictionary |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;encapsulation</samp>](## "router_bgp.address_family_evpn.neighbor_default.encapsulation") | String |  |  | Valid Values:<br>- <code>vxlan</code><br>- <code>mpls</code><br>- <code>path-selection</code> | Transport encapsulation for neighbor. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;next_hop_self_source_interface</samp>](## "router_bgp.address_family_evpn.neighbor_default.next_hop_self_source_interface") | String |  |  |  | Source interface name for MPLS encapsulation. Requires `encapsulation` to be set as `mpls`. |
@@ -409,6 +417,10 @@
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;layer_2_fec_in_place_update</samp>](## "router_bgp.address_family_evpn.layer_2_fec_in_place_update") | Dictionary |  |  |  | BGP layer-2 in-place FEC operation. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "router_bgp.address_family_evpn.layer_2_fec_in_place_update.enabled") | Boolean | Required |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;timeout</samp>](## "router_bgp.address_family_evpn.layer_2_fec_in_place_update.timeout") | Integer |  |  | Min: 0<br>Max: 300 | In-place FEC update tracking timeout in seconds. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;evpn_ethernet_segment</samp>](## "router_bgp.address_family_evpn.evpn_ethernet_segment") | List, items: Dictionary |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;domain</samp>](## "router_bgp.address_family_evpn.evpn_ethernet_segment.[].domain") | String | Required, Unique |  | Valid Values:<br>- <code>all</code><br>- <code>local</code><br>- <code>remote</code> |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;identifier</samp>](## "router_bgp.address_family_evpn.evpn_ethernet_segment.[].identifier") | String |  |  |  | EVPN Ethernet Segment Identifier (Type 1 format). |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;route_target_import</samp>](## "router_bgp.address_family_evpn.evpn_ethernet_segment.[].route_target_import") | String |  |  |  | Low-order 6 bytes of ES-Import Route Target. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;bgp_additional_paths</samp>](## "router_bgp.address_family_evpn.bgp_additional_paths") <span style="color:red">deprecated</span> | Dictionary |  |  |  | BGP additional-paths commands.<span style="color:red">This key is deprecated. Support will be removed in AVD version 6.0.0. Use <samp>bgp.additional_paths</samp> instead.</span> |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;receive</samp>](## "router_bgp.address_family_evpn.bgp_additional_paths.receive") | Boolean |  |  |  | Receive multiple paths. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;send</samp>](## "router_bgp.address_family_evpn.bgp_additional_paths.send") | Dictionary |  |  |  | Send multiple paths. |
@@ -1064,7 +1076,7 @@
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;&lt;str&gt;</samp>](## "router_bgp.vrfs.[].route_targets.export.[].route_targets.[]") | String |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;route_map</samp>](## "router_bgp.vrfs.[].route_targets.export.[].route_map") | String |  |  |  | Only applicable if `address_family` is one of `evpn`, `vpn-ipv4` or `vpn-ipv6`. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;rcf</samp>](## "router_bgp.vrfs.[].route_targets.export.[].rcf") | String |  |  |  | RCF function name with parenthesis.<br>Example: MyFunction(myarg).<br>Only applicable if `address_family` is one of `evpn`, `vpn-ipv4` or `vpn-ipv6`. |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;vpn_route_filter_rcf</samp>](## "router_bgp.vrfs.[].route_targets.export.[].vpn_route_filter_rcf") | String |  |  |  | RCF function name with parenthesis for filtering VPN routes. Also requires `rcf` to be set.<br>Example: MyFunction(myarg).<br>Only applicable if `address_family` is one of `vpn-ipv4` or `vpn-ipv6`. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;vrf_route_filter_rcf</samp>](## "router_bgp.vrfs.[].route_targets.export.[].vrf_route_filter_rcf") | String |  |  |  | RCF function name with parenthesis for filtering VRF routes. Also requires `rcf` to be set.<br>Example: MyFunction(myarg).<br>Only applicable if `address_family` is one of `vpn-ipv4` or `vpn-ipv6`. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;router_id</samp>](## "router_bgp.vrfs.[].router_id") | String |  |  |  | in IP address format A.B.C.D. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;timers</samp>](## "router_bgp.vrfs.[].timers") | String |  |  |  | BGP Keepalive and Hold Timer values in seconds as string "<0-3600> <0-3600>". |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;networks</samp>](## "router_bgp.vrfs.[].networks") | List, items: Dictionary |  |  |  |  |
@@ -1577,6 +1589,22 @@
 
       # In IP address format A.B.C.D.
       router_id: <str>
+      timers:
+
+        # Time between BGP keepalive messages in seconds.
+        # `keepalive_time` should be lesser than `hold_time`.
+        keepalive_time: <int; 0-3600>
+
+        # Hold time in seconds. Must be defined along with `keepalive_time`.
+        # The valid values are 3-7200 or 0 if both values are 0.
+        hold_time: <int; 0-7200>
+
+        # Neighbor's minimum hold time constraint in seconds.
+        # `min_hold_time` should be less than `hold_time`.
+        min_hold_time: <int; 3-7200>
+
+        # Send failure hold time in seconds.
+        send_failure_hold_time: <int; 60-65535>
       distance:
         external_routes: <int; 1-255; required>
         internal_routes: <int; 1-255; required>
@@ -1670,6 +1698,8 @@
           # BGP AS <1-4294967295> or AS number in asdot notation "<1-65535>.<0-65535>".
           # For asdot notation in YAML inputs, the value must be put in quotes, to prevent it from being interpreted as a float number.
           remote_as: <str>
+      neighbor_default:
+        send_community: <str; "all" | "large" | "extended" | "standard" | "extended large" | "standard large" | "standard extended" | "standard extended large">
       peer_groups:
 
           # Peer-group name.
@@ -2237,6 +2267,7 @@
               id_remote: <int>
       address_family_evpn:
         domain_identifier: <str>
+        domain_identifier_remote: <str>
         neighbor_default:
 
           # Transport encapsulation for neighbor.
@@ -2388,6 +2419,14 @@
 
           # In-place FEC update tracking timeout in seconds.
           timeout: <int; 0-300>
+        evpn_ethernet_segment:
+          - domain: <str; "all" | "local" | "remote"; required; unique>
+
+            # EVPN Ethernet Segment Identifier (Type 1 format).
+            identifier: <str>
+
+            # Low-order 6 bytes of ES-Import Route Target.
+            route_target_import: <str>
 
         # BGP additional-paths commands.
         # This key is deprecated.
@@ -3786,10 +3825,10 @@
                 # Only applicable if `address_family` is one of `evpn`, `vpn-ipv4` or `vpn-ipv6`.
                 rcf: <str>
 
-                # RCF function name with parenthesis for filtering VPN routes. Also requires `rcf` to be set.
+                # RCF function name with parenthesis for filtering VRF routes. Also requires `rcf` to be set.
                 # Example: MyFunction(myarg).
                 # Only applicable if `address_family` is one of `vpn-ipv4` or `vpn-ipv6`.
-                vpn_route_filter_rcf: <str>
+                vrf_route_filter_rcf: <str>
 
           # in IP address format A.B.C.D.
           router_id: <str>

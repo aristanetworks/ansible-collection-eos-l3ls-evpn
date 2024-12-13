@@ -298,8 +298,8 @@ local_users:
 - name: admin
   privilege: 15
   role: network-admin
-  no_password: true
   sha512_password: $6$eJ5TvI8oru5i9e8G$R1X/SbtGTk9xoEHEBQASc7SC2nHYmi.crVgp2pXuCXwxsXEA81e4E0cXgQ6kX08fIeQzauqhv2kS.RGJFCon5/
+  no_password: true
 vrfs:
 - name: MGMT
   ip_routing: false
@@ -472,7 +472,7 @@ port_channel_interfaces:
   switchport:
     enabled: true
     mode: access
-    access_vlan: '110'
+    access_vlan: 110
   mlag: 16
 - name: Port-Channel17
   description: Set using structured_config on server adapter port-channel
@@ -481,7 +481,7 @@ port_channel_interfaces:
   switchport:
     enabled: true
     mode: access
-    access_vlan: '110'
+    access_vlan: 110
   mlag: 17
 - name: Port-Channel18
   description: PortChannel
@@ -497,7 +497,7 @@ port_channel_interfaces:
   switchport:
     enabled: true
     mode: access
-    access_vlan: '110'
+    access_vlan: 110
   mlag: 18
 - name: Port-Channel19
   description: PortChannel
@@ -513,7 +513,7 @@ port_channel_interfaces:
   switchport:
     enabled: true
     mode: access
-    access_vlan: '110'
+    access_vlan: 110
   mlag: 19
 ethernet_interfaces:
 - name: Ethernet5
@@ -752,6 +752,7 @@ loopback_interfaces:
   shutdown: false
   vrf: vrf_with_loopbacks_from_pod_pools
   ip_address: 10.101.101.4/32
+  ipv6_address: 2001:db8:1::2/128
 router_bfd:
   multihop:
     interval: 300
@@ -794,6 +795,7 @@ virtual_source_nat_vrfs:
   ip_address: 10.100.0.4
 - name: vrf_with_loopbacks_from_pod_pools
   ip_address: 10.101.101.4
+  ipv6_address: 2001:db8:1::2
 metadata:
   platform: vEOS-LAB
 domain_list:

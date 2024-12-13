@@ -135,11 +135,18 @@ $defs:
             default: false
           endpoint_role:
             type: str
+            description: |-
+              PTP role of the endpoint.
+              `follower` will configure the switch port as `ptp role master`.
+              `dynamic` will use BMCA.
+              `default` is deprecated in favor of `follower`.
+              `bmca` is deprecated in favor of `dynamic`.
             default: "follower"
             valid_values:
+              - "follower"
+              - "dynamic"
               - "bmca"
               - "default"
-              - "follower"
           profile:
             type: str
             default: "aes67-r16-2016"
@@ -483,6 +490,7 @@ $defs:
             description: EOS CLI rendered directly on the port-channel interface in the final EOS configuration.
           structured_config:
             type: dict
+            relaxed_validation: true
             description: Custom structured config added under port_channel_interfaces.[name=<interface>] for eos_cli_config_gen.
             documentation_options:
               hide_keys: true
@@ -497,12 +505,16 @@ $defs:
               new_key: ethernet_segment.short_esi
       validate_state:
         type: bool
-        description: Set to false to disable interface validation by the `eos_validate_state` role.
+        description: Set to false to disable interface state and LLDP topology validation performed by the `eos_validate_state` role.
+      validate_lldp:
+        type: bool
+        description: Set to false to disable the LLDP topology validation performed by the `eos_validate_state` role.
       raw_eos_cli:
         type: str
         description: EOS CLI rendered directly on the ethernet interface in the final EOS configuration.
       structured_config:
         type: dict
+        relaxed_validation: true
         description: Custom structured config added under ethernet_interfaces.[name=<interface>] for eos_cli_config_gen.
         documentation_options:
           hide_keys: true

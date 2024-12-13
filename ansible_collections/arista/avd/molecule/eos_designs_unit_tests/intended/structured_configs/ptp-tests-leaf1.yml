@@ -272,7 +272,7 @@ port_channel_interfaces:
   switchport:
     enabled: true
     mode: access
-    access_vlan: '11'
+    access_vlan: 11
   mlag: 6
 ethernet_interfaces:
 - name: Ethernet9
@@ -359,16 +359,16 @@ ethernet_interfaces:
     id: 14
     mode: active
 - name: Ethernet13
-  peer: bmca-endpoint
+  peer: dynamic-endpoint
   peer_interface: eth1
   peer_type: server
-  port_profile: PTP-profile-BMCA
-  description: SERVER_bmca-endpoint_eth1
+  port_profile: PTP-profile-dynamic
+  description: SERVER_dynamic-endpoint_eth1
   shutdown: false
   switchport:
     enabled: true
     mode: access
-    access_vlan: '11'
+    access_vlan: 11
   ptp:
     announce:
       interval: 0
@@ -387,7 +387,7 @@ ethernet_interfaces:
   switchport:
     enabled: true
     mode: access
-    access_vlan: '11'
+    access_vlan: 11
   spanning_tree_portfast: edge
   ptp:
     announce:
@@ -417,7 +417,7 @@ ethernet_interfaces:
   switchport:
     enabled: true
     mode: access
-    access_vlan: '11'
+    access_vlan: 11
   ptp:
     announce:
       interval: -2
