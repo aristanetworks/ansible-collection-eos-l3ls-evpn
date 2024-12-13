@@ -18,6 +18,7 @@ l3_edge:
       interfaces: [ Ethernet8, Ethernet8 ]
       ptp:
         enabled: true
+        profile: my-custom-ptp-profile
       include_in_underlay_protocol: false
 
 ptp_settings:

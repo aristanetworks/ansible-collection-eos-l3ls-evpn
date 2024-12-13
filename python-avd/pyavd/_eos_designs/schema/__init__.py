@@ -1026,18 +1026,51 @@ class EosDesigns(EosDesignsRootModel):
             class Ptp(AvdModel):
                 """Subclass of AvdModel."""
 
-                _fields: ClassVar[dict] = {"enabled": {"type": bool, "default": False}, "_custom_data": {"type": dict}}
+                class Roles(AvdList[str]):
+                    """Subclass of AvdList with `str` items."""
+
+                Roles._item_type = str
+
+                _fields: ClassVar[dict] = {
+                    "enabled": {"type": bool, "default": False},
+                    "roles": {"type": Roles},
+                    "profile": {"type": str, "default": "aes67-r16-2016"},
+                    "_custom_data": {"type": dict},
+                }
                 enabled: bool
                 """
                 Enable PTP.
 
                 Default value: `False`
                 """
+                roles: Roles
+                """
+                Role in boundary clock mode for each node. Default is `dynamic`.
+
+                Subclass of AvdList with `str`
+                items.
+                """
+                profile: str
+                """
+                Default available profiles are:
+                  - "aes67"
+                  - "aes67-r16-2016"
+                  - "smpte2059-2"
+
+                Default value: `"aes67-r16-2016"`
+                """
                 _custom_data: dict[str, Any]
 
                 if TYPE_CHECKING:
 
-                    def __init__(self, *, enabled: bool | UndefinedType = Undefined, _custom_data: dict[str, Any] | UndefinedType = Undefined) -> None:
+                    def __init__(
+                        self,
+                        *,
+                        enabled: bool | UndefinedType = Undefined,
+                        roles: Roles | UndefinedType = Undefined,
+                        profile: str | UndefinedType = Undefined,
+                        _custom_data: dict[str, Any] | UndefinedType = Undefined,
+                    ) -> None:
                         """
                         Ptp.
 
@@ -1046,6 +1079,16 @@ class EosDesigns(EosDesignsRootModel):
 
                         Args:
                             enabled: Enable PTP.
+                            roles:
+                               Role in boundary clock mode for each node. Default is `dynamic`.
+
+                               Subclass of AvdList with `str`
+                               items.
+                            profile:
+                               Default available profiles are:
+                                 - "aes67"
+                                 - "aes67-r16-2016"
+                                 - "smpte2059-2"
                             _custom_data: _custom_data
 
                         """
@@ -1556,18 +1599,51 @@ class EosDesigns(EosDesignsRootModel):
             class Ptp(AvdModel):
                 """Subclass of AvdModel."""
 
-                _fields: ClassVar[dict] = {"enabled": {"type": bool, "default": False}, "_custom_data": {"type": dict}}
+                class Roles(AvdList[str]):
+                    """Subclass of AvdList with `str` items."""
+
+                Roles._item_type = str
+
+                _fields: ClassVar[dict] = {
+                    "enabled": {"type": bool, "default": False},
+                    "roles": {"type": Roles},
+                    "profile": {"type": str, "default": "aes67-r16-2016"},
+                    "_custom_data": {"type": dict},
+                }
                 enabled: bool
                 """
                 Enable PTP.
 
                 Default value: `False`
                 """
+                roles: Roles
+                """
+                Role in boundary clock mode for each node. Default is `dynamic`.
+
+                Subclass of AvdList with `str`
+                items.
+                """
+                profile: str
+                """
+                Default available profiles are:
+                  - "aes67"
+                  - "aes67-r16-2016"
+                  - "smpte2059-2"
+
+                Default value: `"aes67-r16-2016"`
+                """
                 _custom_data: dict[str, Any]
 
                 if TYPE_CHECKING:
 
-                    def __init__(self, *, enabled: bool | UndefinedType = Undefined, _custom_data: dict[str, Any] | UndefinedType = Undefined) -> None:
+                    def __init__(
+                        self,
+                        *,
+                        enabled: bool | UndefinedType = Undefined,
+                        roles: Roles | UndefinedType = Undefined,
+                        profile: str | UndefinedType = Undefined,
+                        _custom_data: dict[str, Any] | UndefinedType = Undefined,
+                    ) -> None:
                         """
                         Ptp.
 
@@ -1576,6 +1652,16 @@ class EosDesigns(EosDesignsRootModel):
 
                         Args:
                             enabled: Enable PTP.
+                            roles:
+                               Role in boundary clock mode for each node. Default is `dynamic`.
+
+                               Subclass of AvdList with `str`
+                               items.
+                            profile:
+                               Default available profiles are:
+                                 - "aes67"
+                                 - "aes67-r16-2016"
+                                 - "smpte2059-2"
                             _custom_data: _custom_data
 
                         """
@@ -5079,18 +5165,51 @@ class EosDesigns(EosDesignsRootModel):
             class Ptp(AvdModel):
                 """Subclass of AvdModel."""
 
-                _fields: ClassVar[dict] = {"enabled": {"type": bool, "default": False}, "_custom_data": {"type": dict}}
+                class Roles(AvdList[str]):
+                    """Subclass of AvdList with `str` items."""
+
+                Roles._item_type = str
+
+                _fields: ClassVar[dict] = {
+                    "enabled": {"type": bool, "default": False},
+                    "roles": {"type": Roles},
+                    "profile": {"type": str, "default": "aes67-r16-2016"},
+                    "_custom_data": {"type": dict},
+                }
                 enabled: bool
                 """
                 Enable PTP.
 
                 Default value: `False`
                 """
+                roles: Roles
+                """
+                Role in boundary clock mode for each node. Default is `dynamic`.
+
+                Subclass of AvdList with `str`
+                items.
+                """
+                profile: str
+                """
+                Default available profiles are:
+                  - "aes67"
+                  - "aes67-r16-2016"
+                  - "smpte2059-2"
+
+                Default value: `"aes67-r16-2016"`
+                """
                 _custom_data: dict[str, Any]
 
                 if TYPE_CHECKING:
 
-                    def __init__(self, *, enabled: bool | UndefinedType = Undefined, _custom_data: dict[str, Any] | UndefinedType = Undefined) -> None:
+                    def __init__(
+                        self,
+                        *,
+                        enabled: bool | UndefinedType = Undefined,
+                        roles: Roles | UndefinedType = Undefined,
+                        profile: str | UndefinedType = Undefined,
+                        _custom_data: dict[str, Any] | UndefinedType = Undefined,
+                    ) -> None:
                         """
                         Ptp.
 
@@ -5099,6 +5218,16 @@ class EosDesigns(EosDesignsRootModel):
 
                         Args:
                             enabled: Enable PTP.
+                            roles:
+                               Role in boundary clock mode for each node. Default is `dynamic`.
+
+                               Subclass of AvdList with `str`
+                               items.
+                            profile:
+                               Default available profiles are:
+                                 - "aes67"
+                                 - "aes67-r16-2016"
+                                 - "smpte2059-2"
                             _custom_data: _custom_data
 
                         """
@@ -5609,18 +5738,51 @@ class EosDesigns(EosDesignsRootModel):
             class Ptp(AvdModel):
                 """Subclass of AvdModel."""
 
-                _fields: ClassVar[dict] = {"enabled": {"type": bool, "default": False}, "_custom_data": {"type": dict}}
+                class Roles(AvdList[str]):
+                    """Subclass of AvdList with `str` items."""
+
+                Roles._item_type = str
+
+                _fields: ClassVar[dict] = {
+                    "enabled": {"type": bool, "default": False},
+                    "roles": {"type": Roles},
+                    "profile": {"type": str, "default": "aes67-r16-2016"},
+                    "_custom_data": {"type": dict},
+                }
                 enabled: bool
                 """
                 Enable PTP.
 
                 Default value: `False`
                 """
+                roles: Roles
+                """
+                Role in boundary clock mode for each node. Default is `dynamic`.
+
+                Subclass of AvdList with `str`
+                items.
+                """
+                profile: str
+                """
+                Default available profiles are:
+                  - "aes67"
+                  - "aes67-r16-2016"
+                  - "smpte2059-2"
+
+                Default value: `"aes67-r16-2016"`
+                """
                 _custom_data: dict[str, Any]
 
                 if TYPE_CHECKING:
 
-                    def __init__(self, *, enabled: bool | UndefinedType = Undefined, _custom_data: dict[str, Any] | UndefinedType = Undefined) -> None:
+                    def __init__(
+                        self,
+                        *,
+                        enabled: bool | UndefinedType = Undefined,
+                        roles: Roles | UndefinedType = Undefined,
+                        profile: str | UndefinedType = Undefined,
+                        _custom_data: dict[str, Any] | UndefinedType = Undefined,
+                    ) -> None:
                         """
                         Ptp.
 
@@ -5629,6 +5791,16 @@ class EosDesigns(EosDesignsRootModel):
 
                         Args:
                             enabled: Enable PTP.
+                            roles:
+                               Role in boundary clock mode for each node. Default is `dynamic`.
+
+                               Subclass of AvdList with `str`
+                               items.
+                            profile:
+                               Default available profiles are:
+                                 - "aes67"
+                                 - "aes67-r16-2016"
+                                 - "smpte2059-2"
                             _custom_data: _custom_data
 
                         """
@@ -6825,8 +6997,18 @@ class EosDesigns(EosDesignsRootModel):
             }
             enabled: bool
             """Default value: `False`"""
-            endpoint_role: Literal["bmca", "default", "follower"]
-            """Default value: `"follower"`"""
+            endpoint_role: Literal["follower", "dynamic", "bmca", "default"]
+            """
+            PTP role of the endpoint.
+            `follower` will configure the switch port as `ptp role master`.
+            `dynamic`
+            will use BMCA.
+            `default` is deprecated in favor of `follower`.
+            `bmca` is deprecated in favor of
+            `dynamic`.
+
+            Default value: `"follower"`
+            """
             profile: str
             """
             Default available profiles are:
@@ -6844,7 +7026,7 @@ class EosDesigns(EosDesignsRootModel):
                     self,
                     *,
                     enabled: bool | UndefinedType = Undefined,
-                    endpoint_role: Literal["bmca", "default", "follower"] | UndefinedType = Undefined,
+                    endpoint_role: Literal["follower", "dynamic", "bmca", "default"] | UndefinedType = Undefined,
                     profile: str | UndefinedType = Undefined,
                     _custom_data: dict[str, Any] | UndefinedType = Undefined,
                 ) -> None:
@@ -6856,7 +7038,14 @@ class EosDesigns(EosDesignsRootModel):
 
                     Args:
                         enabled: enabled
-                        endpoint_role: endpoint_role
+                        endpoint_role:
+                           PTP role of the endpoint.
+                           `follower` will configure the switch port as `ptp role master`.
+                           `dynamic`
+                           will use BMCA.
+                           `default` is deprecated in favor of `follower`.
+                           `bmca` is deprecated in favor of
+                           `dynamic`.
                         profile:
                            Default available profiles are:
                              - "aes67"
@@ -10664,8 +10853,18 @@ class EosDesigns(EosDesignsRootModel):
             }
             enabled: bool
             """Default value: `False`"""
-            endpoint_role: Literal["bmca", "default", "follower"]
-            """Default value: `"follower"`"""
+            endpoint_role: Literal["follower", "dynamic", "bmca", "default"]
+            """
+            PTP role of the endpoint.
+            `follower` will configure the switch port as `ptp role master`.
+            `dynamic`
+            will use BMCA.
+            `default` is deprecated in favor of `follower`.
+            `bmca` is deprecated in favor of
+            `dynamic`.
+
+            Default value: `"follower"`
+            """
             profile: str
             """
             Default available profiles are:
@@ -10683,7 +10882,7 @@ class EosDesigns(EosDesignsRootModel):
                     self,
                     *,
                     enabled: bool | UndefinedType = Undefined,
-                    endpoint_role: Literal["bmca", "default", "follower"] | UndefinedType = Undefined,
+                    endpoint_role: Literal["follower", "dynamic", "bmca", "default"] | UndefinedType = Undefined,
                     profile: str | UndefinedType = Undefined,
                     _custom_data: dict[str, Any] | UndefinedType = Undefined,
                 ) -> None:
@@ -10695,7 +10894,14 @@ class EosDesigns(EosDesignsRootModel):
 
                     Args:
                         enabled: enabled
-                        endpoint_role: endpoint_role
+                        endpoint_role:
+                           PTP role of the endpoint.
+                           `follower` will configure the switch port as `ptp role master`.
+                           `dynamic`
+                           will use BMCA.
+                           `default` is deprecated in favor of `follower`.
+                           `bmca` is deprecated in favor of
+                           `dynamic`.
                         profile:
                            Default available profiles are:
                              - "aes67"
@@ -17657,8 +17863,18 @@ class EosDesigns(EosDesignsRootModel):
                         }
                         enabled: bool
                         """Default value: `False`"""
-                        endpoint_role: Literal["bmca", "default", "follower"]
-                        """Default value: `"follower"`"""
+                        endpoint_role: Literal["follower", "dynamic", "bmca", "default"]
+                        """
+                        PTP role of the endpoint.
+                        `follower` will configure the switch port as `ptp role master`.
+                        `dynamic`
+                        will use BMCA.
+                        `default` is deprecated in favor of `follower`.
+                        `bmca` is deprecated in favor of
+                        `dynamic`.
+
+                        Default value: `"follower"`
+                        """
                         profile: str
                         """
                         Default available profiles are:
@@ -17676,7 +17892,7 @@ class EosDesigns(EosDesignsRootModel):
                                 self,
                                 *,
                                 enabled: bool | UndefinedType = Undefined,
-                                endpoint_role: Literal["bmca", "default", "follower"] | UndefinedType = Undefined,
+                                endpoint_role: Literal["follower", "dynamic", "bmca", "default"] | UndefinedType = Undefined,
                                 profile: str | UndefinedType = Undefined,
                                 _custom_data: dict[str, Any] | UndefinedType = Undefined,
                             ) -> None:
@@ -17688,7 +17904,14 @@ class EosDesigns(EosDesignsRootModel):
 
                                 Args:
                                     enabled: enabled
-                                    endpoint_role: endpoint_role
+                                    endpoint_role:
+                                       PTP role of the endpoint.
+                                       `follower` will configure the switch port as `ptp role master`.
+                                       `dynamic`
+                                       will use BMCA.
+                                       `default` is deprecated in favor of `follower`.
+                                       `bmca` is deprecated in favor of
+                                       `dynamic`.
                                     profile:
                                        Default available profiles are:
                                          - "aes67"

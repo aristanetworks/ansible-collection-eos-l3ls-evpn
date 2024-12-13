@@ -135,11 +135,18 @@ $defs:
             default: false
           endpoint_role:
             type: str
+            description: |-
+              PTP role of the endpoint.
+              `follower` will configure the switch port as `ptp role master`.
+              `dynamic` will use BMCA.
+              `default` is deprecated in favor of `follower`.
+              `bmca` is deprecated in favor of `dynamic`.
             default: "follower"
             valid_values:
+              - "follower"
+              - "dynamic"
               - "bmca"
               - "default"
-              - "follower"
           profile:
             type: str
             default: "aes67-r16-2016"
