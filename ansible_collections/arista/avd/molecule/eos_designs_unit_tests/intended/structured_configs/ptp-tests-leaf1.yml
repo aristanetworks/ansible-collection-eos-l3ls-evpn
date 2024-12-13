@@ -359,11 +359,11 @@ ethernet_interfaces:
     id: 14
     mode: active
 - name: Ethernet13
-  peer: bmca-endpoint
+  peer: dynamic-endpoint
   peer_interface: eth1
   peer_type: server
-  port_profile: PTP-profile-BMCA
-  description: SERVER_bmca-endpoint_eth1
+  port_profile: PTP-profile-dynamic
+  description: SERVER_dynamic-endpoint_eth1
   shutdown: false
   switchport:
     enabled: true

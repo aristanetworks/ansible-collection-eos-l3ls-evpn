@@ -22,6 +22,24 @@ management_api_http:
   enable_vrfs:
   - name: MGMT
   enable_https: true
+ptp:
+  mode: boundary
+  clock_identity: 00:1C:73:14:00:01
+  priority1: 20
+  priority2: 1
+  domain: 127
+  monitor:
+    enabled: true
+    threshold:
+      offset_from_master: 250
+      mean_path_delay: 1500
+    missing_message:
+      sequence_ids:
+        enabled: true
+        announce: 3
+        delay_resp: 3
+        follow_up: 3
+        sync: 3
 loopback_interfaces:
 - name: Loopback0
   description: ROUTER_ID
@@ -50,12 +68,19 @@ ethernet_interfaces:
   mtu: 2000
   service_profile: TEST-QOS-PROFILE
   ip_address: 192.168.0.0/31
+  ptp:
+    announce:
+      interval: 0
+      timeout: 3
+    delay_req: -3
+    sync_message:
+      interval: -3
+    transport: ipv4
+    enable: true
   mac_security:
     profile: TEST-MACSEC-PROFILE
   description: P2P_peer1_ethernet1
   speed: forced 10000full
-  ptp:
-    enable: true
 - name: ethernet2
   peer: peer2
   peer_interface: ethernet2

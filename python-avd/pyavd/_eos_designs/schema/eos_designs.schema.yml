@@ -5274,11 +5274,21 @@ $defs:
             default: false
           endpoint_role:
             type: str
+            description: 'PTP role of the endpoint.
+
+              `follower` will configure the switch port as `ptp role master`.
+
+              `dynamic` will use BMCA.
+
+              `default` is deprecated in favor of `follower`.
+
+              `bmca` is deprecated in favor of `dynamic`.'
             default: follower
             valid_values:
+            - follower
+            - dynamic
             - bmca
             - default
-            - follower
           profile:
             type: str
             default: aes67-r16-2016
@@ -9712,6 +9722,20 @@ $defs:
               type: bool
               default: false
               description: Enable PTP.
+            roles:
+              type: list
+              description: Role in boundary clock mode for each node. Default is `dynamic`.
+              items:
+                type: str
+                default: dynamic
+                valid_values:
+                - dynamic
+                - master
+            profile:
+              type: str
+              default: aes67-r16-2016
+              description: "Default available profiles are:\n  - \"aes67\"\n  - \"aes67-r16-2016\"\n
+                \ - \"smpte2059-2\""
         sflow:
           type: bool
           description: Enable sFlow. Overrides `fabric_sflow` setting.

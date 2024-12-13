@@ -656,9 +656,9 @@ ethernet_interfaces:
     enabled: false
   shutdown: false
   ip_address: 11.1.0.38/31
-  description: P2P_DC2-POD1-LEAF1A_Ethernet7
   ptp:
     enable: true
+  description: P2P_DC2-POD1-LEAF1A_Ethernet7
 - name: Ethernet16
   peer: server-1
   peer_interface: Eth2
