@@ -207,16 +207,16 @@ ethernet_interfaces:
     enabled: false
   shutdown: false
   mtu: 9214
-  description: P2P_ptp-tests-spine2_Ethernet6
   ptp:
     announce:
-      interval: 0
-      timeout: 3
-    delay_req: -3
+      interval: 2
+      timeout: 10
+    delay_req: 2
     sync_message:
-      interval: -3
+      interval: 2
     transport: ipv4
     enable: true
+  description: P2P_ptp-tests-spine2_Ethernet6
 - name: Ethernet7
   peer: ptp-tests-spine2
   peer_interface: Ethernet7
@@ -225,7 +225,6 @@ ethernet_interfaces:
     enabled: false
   shutdown: false
   mtu: 9214
-  description: P2P_ptp-tests-spine2_Ethernet7
   ptp:
     announce:
       interval: 0
@@ -234,7 +233,9 @@ ethernet_interfaces:
     sync_message:
       interval: -3
     transport: ipv4
+    role: master
     enable: true
+  description: P2P_ptp-tests-spine2_Ethernet7
 - name: Ethernet8
   peer: ptp-tests-spine2
   peer_interface: Ethernet8
@@ -243,7 +244,6 @@ ethernet_interfaces:
     enabled: false
   shutdown: false
   mtu: 9214
-  description: P2P_ptp-tests-spine2_Ethernet8
   ptp:
     announce:
       interval: 0
@@ -253,6 +253,7 @@ ethernet_interfaces:
       interval: -3
     transport: ipv4
     enable: true
+  description: P2P_ptp-tests-spine2_Ethernet8
 - name: Ethernet9
   peer: ptp-tests-spine2
   peer_interface: Ethernet9
@@ -261,7 +262,6 @@ ethernet_interfaces:
     enabled: false
   shutdown: false
   mtu: 9214
-  description: P2P_ptp-tests-spine2_Ethernet9
   ptp:
     announce:
       interval: 0
@@ -271,6 +271,7 @@ ethernet_interfaces:
       interval: -3
     transport: ipv4
     enable: true
+  description: P2P_ptp-tests-spine2_Ethernet9
 loopback_interfaces:
 - name: Loopback0
   description: ROUTER_ID

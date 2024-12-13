@@ -24,6 +24,7 @@ keys:
                 - none
                 - start-stop
                 - stop-only
+                required: true
               group:
                 description: Group Name.
                 type: str

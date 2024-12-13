@@ -100,3 +100,37 @@ vxlan_interface:
     vxlan:
       udp_port: 4789
       source_interface: Loopback1
+ethernet_interfaces:
+- name: Ethernet1
+  peer: OLD_SW-1/2
+  peer_interface: Endpoint_port1
+  peer_type: server
+  description: SERVER_OLD_SW-1/2_Endpoint_port1
+  shutdown: false
+  channel_group:
+    id: 1
+    mode: active
+- name: Ethernet2
+  peer: OLD_SW-1/2
+  peer_interface: ENDPOINT_PORT2
+  peer_type: server
+  description: SERVER_OLD_SW-1/2_ENDPOINT_PORT2
+  shutdown: false
+  channel_group:
+    id: 1
+    mode: active
+port_channel_interfaces:
+- name: Port-Channel1
+  description: SERVER_OLD_SW-1/2_ENDPOINT_PORT_CHANNEL
+  shutdown: false
+  ptp:
+    announce:
+      interval: 0
+      timeout: 3
+    delay_req: -3
+    sync_message:
+      interval: -3
+    transport: ipv4
+    enable: true
+  switchport:
+    enabled: true

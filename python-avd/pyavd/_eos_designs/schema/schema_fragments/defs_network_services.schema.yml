@@ -787,6 +787,7 @@ $defs:
                         Configures flow-tracking on the interface. Overrides `fabric_flow_tracking.l3_interfaces` setting.
                     structured_config:
                       type: dict
+                      relaxed_validation: true
                       description: Custom structured config added under ethernet_interfaces.[name=<interface>] for eos_cli_config_gen.
                       documentation_options:
                         hide_keys: true
@@ -1064,6 +1065,7 @@ $defs:
                       EOS CLI rendered directly on the Router BGP, VRF definition in the final EOS configuration.
                   structured_config:
                     type: dict
+                    relaxed_validation: true
                     description: Custom structured config added under router_bgp.vrfs.[name=<vrf>] for eos_cli_config_gen.
                     documentation_options:
                       hide_keys: true
@@ -1158,6 +1160,7 @@ $defs:
                 description: EOS CLI rendered directly on the root level of the final EOS configuration.
               structured_config:
                 type: dict
+                relaxed_validation: true
                 description: Custom structured config for eos_cli_config_gen.
                 documentation_options:
                   hide_keys: true
@@ -1304,6 +1307,7 @@ $defs:
                 keys:
                   structured_config:
                     type: dict
+                    relaxed_validation: true
                     description: |
                       Custom structured config added under router_bgp.vlans.[id=<vlan>] for eos_cli_config_gen.
                       This configuration will not be applied to vlan aware bundles.

@@ -28,7 +28,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 """Subclass of AvdModel."""
 
                 _fields: ClassVar[dict] = {"type": {"type": str}, "group": {"type": str}, "logging": {"type": bool}, "_custom_data": {"type": dict}}
-                type: Literal["none", "start-stop", "stop-only"] | None
+                type: Literal["none", "start-stop", "stop-only"]
                 group: str | None
                 """Group Name."""
                 logging: bool | None
@@ -39,7 +39,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                     def __init__(
                         self,
                         *,
-                        type: Literal["none", "start-stop", "stop-only"] | None | UndefinedType = Undefined,
+                        type: Literal["none", "start-stop", "stop-only"] | UndefinedType = Undefined,
                         group: str | None | UndefinedType = Undefined,
                         logging: bool | None | UndefinedType = Undefined,
                         _custom_data: dict[str, Any] | UndefinedType = Undefined,
