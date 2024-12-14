@@ -25,3 +25,9 @@ ip_name_servers:
   - ip_address: 2001:db8::2
     vrf: TEST
     priority: 3
+  - ip_address: 2001:db8::1
+    vrf: TEST
+    priority: 3
+  - ip_address: 10.10.128.11
+    vrf: TEST
+    priority: 2

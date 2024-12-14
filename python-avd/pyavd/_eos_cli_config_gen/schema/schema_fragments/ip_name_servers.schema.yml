@@ -18,6 +18,7 @@ keys:
         vrf:
           description: VRF Name.
           type: str
+          default: default
           convert_types:
             - int
         priority:

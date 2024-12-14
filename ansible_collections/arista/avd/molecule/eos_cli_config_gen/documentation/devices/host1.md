@@ -387,17 +387,21 @@ ip domain-list domain2.local
 | 2001:db8::2 | - | 0 |
 | 2001:db8::1 | mgmt | - |
 | 2001:db8::2 | TEST | 3 |
+| 2001:db8::1 | TEST | 3 |
+| 10.10.128.11 | TEST | 2 |
 
 #### IP Name Servers Device Configuration
 
 ```eos
-ip name-server 10.10.128.10
+ip name-server vrf default 10.10.128.10
+ip name-server vrf default 10.10.129.10
+ip name-server vrf default 2001:db8::1
+ip name-server vrf default 2001:db8::2
 ip name-server vrf mgmt 10.10.128.10
-ip name-server vrf TEST 10.10.128.10 priority 3
-ip name-server 10.10.129.10 priority 0
-ip name-server 2001:db8::1
 ip name-server vrf mgmt 2001:db8::1
-ip name-server 2001:db8::2 priority 0
+ip name-server vrf TEST 10.10.128.11 priority 2
+ip name-server vrf TEST 10.10.128.10 priority 3
+ip name-server vrf TEST 2001:db8::1 priority 3
 ip name-server vrf TEST 2001:db8::2 priority 3
 ```
 

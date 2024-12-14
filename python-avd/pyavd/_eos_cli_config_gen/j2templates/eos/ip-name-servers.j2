@@ -4,14 +4,24 @@
  that can be found in the LICENSE file.
 #}
 {# eos - ip name servers #}
-{% for name_server in ip_name_servers | arista.avd.natural_sort('ip_address') %}
-{%     set name_server_cli = "ip name-server" %}
-{%     if name_server.vrf is arista.avd.defined %}
-{%         set name_server_cli = name_server_cli ~ " vrf " ~ name_server.vrf %}
-{%     endif %}
-{%     set name_server_cli = name_server_cli ~ " " ~ name_server.ip_address %}
-{%     if name_server.priority is arista.avd.defined %}
-{%         set name_server_cli = name_server_cli ~ " priority " ~ name_server.priority %}
-{%     endif %}
-{{ name_server_cli }}
-{% endfor %}
+{% if ip_name_servers is arista.avd.defined %}
+{%     set all_name_servers = [] %}
+{%     for name_server in ip_name_servers %}
+{%         set server = {'ip_address':"",'priority': 0, 'vrf': 'default'} %}
+{%         do server.update({'ip_address': name_server.ip_address}) %}
+{%         if name_server.priority is arista.avd.defined %}
+{%             do server.update({'priority': name_server.priority}) %}
+{%         endif %}
+{%         if name_server.vrf is arista.avd.defined %}
+{%             do server.update({'vrf': name_server.vrf}) %}
+{%         endif %}
+{%         do all_name_servers.append(server) %}
+{%     endfor %}
+{%     for name_server in all_name_servers | arista.avd.natural_sort('ip_address') | arista.avd.natural_sort('vrf') | arista.avd.natural_sort('priority') %}
+{%         if name_server.priority | int == 0 %}
+ip name-server vrf {{ name_server.vrf }} {{ name_server.ip_address }}
+{%         else %}
+ip name-server vrf {{ name_server.vrf }} {{ name_server.ip_address }} priority {{ name_server.priority }}
+{%         endif %}
+{%     endfor %}
+{% endif %}

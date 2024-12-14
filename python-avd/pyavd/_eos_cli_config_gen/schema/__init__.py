@@ -15750,11 +15750,20 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
     class IpNameServersItem(AvdModel):
         """Subclass of AvdModel."""
 
-        _fields: ClassVar[dict] = {"ip_address": {"type": str}, "vrf": {"type": str}, "priority": {"type": int}, "_custom_data": {"type": dict}}
+        _fields: ClassVar[dict] = {
+            "ip_address": {"type": str},
+            "vrf": {"type": str, "default": "default"},
+            "priority": {"type": int},
+            "_custom_data": {"type": dict},
+        }
         ip_address: str
         """IPv4 or IPv6 address for DNS server."""
-        vrf: str | None
-        """VRF Name."""
+        vrf: str
+        """
+        VRF Name.
+
+        Default value: `"default"`
+        """
         priority: int | None
         """Priority value (lower is first)."""
         _custom_data: dict[str, Any]
@@ -15765,7 +15774,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 self,
                 *,
                 ip_address: str | UndefinedType = Undefined,
-                vrf: str | None | UndefinedType = Undefined,
+                vrf: str | UndefinedType = Undefined,
                 priority: int | None | UndefinedType = Undefined,
                 _custom_data: dict[str, Any] | UndefinedType = Undefined,
             ) -> None:
