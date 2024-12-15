@@ -7,7 +7,7 @@ from functools import cached_property
 from typing import TYPE_CHECKING
 
 from pyavd._errors import AristaAvdInvalidInputsError
-from pyavd._utils import default
+from pyavd._utils import default, get
 
 if TYPE_CHECKING:
     from pyavd._eos_designs.schema import EosDesigns
@@ -27,6 +27,10 @@ class PtpMixin:
     def ptp_enabled(self: SharedUtils) -> bool:
         default_ptp_enabled = self.inputs.ptp_settings.enabled
         return bool(default(self.node_config.ptp.enabled, default_ptp_enabled))
+
+    @cached_property
+    def ptp_uplinks(self: SharedUtils) -> list:
+        return self.node_config.ptp.uplinks
 
     @cached_property
     def ptp_profile_name(self: SharedUtils) -> str:

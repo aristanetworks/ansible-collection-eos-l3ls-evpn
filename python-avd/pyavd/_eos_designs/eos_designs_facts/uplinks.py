@@ -186,8 +186,11 @@ class UplinksMixin:
         if self.shared_utils.uplink_switch_interface_speed is not None:
             uplink["peer_speed"] = self.shared_utils.uplink_switch_interface_speed
 
-        if self.shared_utils.node_config.uplink_ptp:
-            uplink["ptp"] = {"enable": self.shared_utils.node_config.uplink_ptp.enable}
+        if self.shared_utils.node_config.uplink_ptp.enable:
+            if not (ptp_uplinks:=self.shared_utils.node_config.ptp.uplinks): 
+                uplink["ptp"] = {"enable": True}
+            elif ptp_uplinks and uplink_interface in ptp_uplinks:
+                uplink["ptp"] = {"enable": True}
         elif self.shared_utils.ptp_enabled:
             uplink["ptp"] = {"enable": True}
 

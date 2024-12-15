@@ -9080,6 +9080,11 @@ $defs:
                 type: str
                 description: "Default available profiles are:\n  - \"aes67\"\n  -
                   \"aes67-r16-2016\"\n  - \"smpte2059-2\""
+              uplinks:
+                type: list
+                items:
+                  type: str
+                  description: Limit PTP to the specified uplink interfaces.
               mlag:
                 description: Configure PTP on the MLAG peer-link port-channel when
                   PTP is enabled. By default PTP will not be configured on the MLAG
