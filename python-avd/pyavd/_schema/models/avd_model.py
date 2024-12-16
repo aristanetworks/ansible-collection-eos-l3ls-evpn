@@ -396,9 +396,9 @@ class AvdModel(AvdBase):
 
         new_instance = new_type(**new_args)
 
-    # Pass along the flags
-    new_instance._created_from_null = self._created_from_null
-    new_instance._block_inheritance = self._block_inheritance
+        # Pass along the internal flags
+        new_instance._created_from_null = self._created_from_null
+        new_instance._block_inheritance = self._block_inheritance
 
         return new_instance
 
