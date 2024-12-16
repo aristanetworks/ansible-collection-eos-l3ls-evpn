@@ -24,7 +24,6 @@ mpls:
           password_type: 7
           password: 13361E3F1B20011A2A173B
         - index: 55
-          password_type: '7'
           password: 14241B062114062E142900260B1D23133B
         - index: 999
           password_type: 0
