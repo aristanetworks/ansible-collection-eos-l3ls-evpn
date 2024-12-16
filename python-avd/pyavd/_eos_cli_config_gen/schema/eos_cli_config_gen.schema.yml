@@ -8665,6 +8665,7 @@ keys:
                       type: str
                       convert_types:
                       - int
+                      default: '7'
                       valid_values:
                       - '0'
                       - '7'

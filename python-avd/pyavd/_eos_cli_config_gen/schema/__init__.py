@@ -25061,14 +25061,18 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                     _fields: ClassVar[dict] = {
                         "index": {"type": int},
-                        "password_type": {"type": str},
+                        "password_type": {"type": str, "default": "7"},
                         "password": {"type": str},
                         "_custom_data": {"type": dict},
                     }
                     index: int
                     """Password index."""
-                    password_type: Literal["0", "7", "8a"] | None
-                    """Authentication password type."""
+                    password_type: Literal["0", "7", "8a"]
+                    """
+                    Authentication password type.
+
+                    Default value: `"7"`
+                    """
                     password: str | None
                     """Password string."""
                     _custom_data: dict[str, Any]
@@ -25079,7 +25083,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                             self,
                             *,
                             index: int | UndefinedType = Undefined,
-                            password_type: Literal["0", "7", "8a"] | None | UndefinedType = Undefined,
+                            password_type: Literal["0", "7", "8a"] | UndefinedType = Undefined,
                             password: str | None | UndefinedType = Undefined,
                             _custom_data: dict[str, Any] | UndefinedType = Undefined,
                         ) -> None:
