@@ -9,6 +9,7 @@ from unittest import mock
 import pytest
 from yaml import safe_dump
 
+from pyavd._eos_designs.schema import EosDesigns
 from pyavd._eos_designs.shared_utils import SharedUtils
 from pyavd._schema.avdschema import AvdSchema
 from pyavd.api.pool_manager import FILE_HEADER, PoolManager
@@ -229,7 +230,7 @@ def test_avdpoolmanager_pool(
 
         for index, hostvars in enumerate(hostvars_list):
             requested_id = requested_ids[index] if requested_ids else None
-            shared_utils = SharedUtils(hostvars=hostvars, templar=object(), schema=schema)
+            shared_utils = SharedUtils(hostvars=hostvars, inputs=EosDesigns._from_dict(hostvars), templar=object(), schema=schema)
             # Get the id of the host from hostvars. If not, a new data set will be created.
             assert pool_manager.get_assignment("node_id_pools", shared_utils, requested_id) == expected_ids[index]
 
