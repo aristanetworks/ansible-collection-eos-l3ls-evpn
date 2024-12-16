@@ -1936,7 +1936,7 @@ ethernet_interfaces:
 
   - name: Ethernet84
     switchport:
-      tap: 
+      tap:
         encapsulation:
           gre:
             protocols:
