@@ -9022,7 +9022,7 @@ mpls rsvp
    authentication sequence-number window 234
    authentication index 55 password 7 <removed>
    authentication index 766 password 7 <removed>
-   authentication index 999 password <removed>
+   authentication index 999 password 0 <removed>
    authentication index 766 active
    neighbor 1.1.1.1 authentication type md5
    neighbor 1.1.1.1 authentication index 3 active
