@@ -3883,6 +3883,110 @@ class EosDesigns(EosDesignsRootModel):
 
                 """
 
+    class FabricNumbering(AvdModel):
+        """Subclass of AvdModel."""
+
+        class NodeId(AvdModel):
+            """Subclass of AvdModel."""
+
+            _fields: ClassVar[dict] = {"algorithm": {"type": str, "default": "static"}, "pools_file": {"type": str}, "_custom_data": {"type": dict}}
+            algorithm: Literal["static", "pool_manager"]
+            """
+            IDs will be automatically assigned according to the configured algorithm.
+            - `static` will use the
+            statically set IDs under node setting.
+            - `pool_manager` will activate the pool manager for ID pools.
+            Any statically set ID under node settings will be reserved in the pool if possible.
+              Otherwise an
+            error will be raised.
+
+            Default value: `"static"`
+            """
+            pools_file: str | None
+            """
+            Path to file to use for storing ID pool data when using "pool_manager" as algorithm.
+            This can be an
+            absolute path or a path relative to current working directory.
+
+            By default the path is
+            "<root_dir>/intended/data/<fabric_name>-ids.yml".
+
+            Note: Since the pool manager will remove stale
+            entries after every run, each fabric should be using it's own file.
+            """
+            _custom_data: dict[str, Any]
+
+            if TYPE_CHECKING:
+
+                def __init__(
+                    self,
+                    *,
+                    algorithm: Literal["static", "pool_manager"] | UndefinedType = Undefined,
+                    pools_file: str | None | UndefinedType = Undefined,
+                    _custom_data: dict[str, Any] | UndefinedType = Undefined,
+                ) -> None:
+                    """
+                    NodeId.
+
+
+                    Subclass of AvdModel.
+
+                    Args:
+                        algorithm:
+                           IDs will be automatically assigned according to the configured algorithm.
+                           - `static` will use the
+                           statically set IDs under node setting.
+                           - `pool_manager` will activate the pool manager for ID pools.
+                           Any statically set ID under node settings will be reserved in the pool if possible.
+                             Otherwise an
+                           error will be raised.
+                        pools_file:
+                           Path to file to use for storing ID pool data when using "pool_manager" as algorithm.
+                           This can be an
+                           absolute path or a path relative to current working directory.
+
+                           By default the path is
+                           "<root_dir>/intended/data/<fabric_name>-ids.yml".
+
+                           Note: Since the pool manager will remove stale
+                           entries after every run, each fabric should be using it's own file.
+                        _custom_data: _custom_data
+
+                    """
+
+        _fields: ClassVar[dict] = {"node_id": {"type": NodeId}, "_custom_data": {"type": dict}}
+        node_id: NodeId
+        """
+        Assignment policy for Node ID.
+        Node ID is mainly used for IP address assignment but can also affect
+        BGP AS and/or
+        interface assignments depending on other settings.
+
+        Subclass of AvdModel.
+        """
+        _custom_data: dict[str, Any]
+
+        if TYPE_CHECKING:
+
+            def __init__(self, *, node_id: NodeId | UndefinedType = Undefined, _custom_data: dict[str, Any] | UndefinedType = Undefined) -> None:
+                """
+                FabricNumbering.
+
+
+                Subclass of AvdModel.
+
+                Args:
+                    node_id:
+                       Assignment policy for Node ID.
+                       Node ID is mainly used for IP address assignment but can also affect
+                       BGP AS and/or
+                       interface assignments depending on other settings.
+
+                       Subclass of AvdModel.
+                    _custom_data: _custom_data
+
+                """
+
     class FabricSflow(AvdModel):
         """Subclass of AvdModel."""
 
@@ -54379,6 +54483,7 @@ class EosDesigns(EosDesignsRootModel):
         "fabric_flow_tracking": {"type": FabricFlowTracking},
         "fabric_ip_addressing": {"type": FabricIpAddressing},
         "fabric_name": {"type": str},
+        "fabric_numbering": {"type": FabricNumbering},
         "fabric_sflow": {"type": FabricSflow},
         "flow_tracking_settings": {"type": FlowTrackingSettings},
         "generate_cv_tags": {"type": GenerateCvTags},
@@ -55302,6 +55407,13 @@ class EosDesigns(EosDesignsRootModel):
     """
     Fabric Name, required to match Ansible Group name covering all devices in the Fabric, **must** be an
     inventory group name.
+    """
+    fabric_numbering: FabricNumbering
+    """
+    PREVIEW: This feature is in marked as "preview", which means it is subject to change at any time.
+    Assignment policies for numbers like Node ID.
+
+    Subclass of AvdModel.
     """
     fabric_sflow: FabricSflow
     """
@@ -56466,6 +56578,7 @@ class EosDesigns(EosDesignsRootModel):
             fabric_flow_tracking: FabricFlowTracking | UndefinedType = Undefined,
             fabric_ip_addressing: FabricIpAddressing | UndefinedType = Undefined,
             fabric_name: str | UndefinedType = Undefined,
+            fabric_numbering: FabricNumbering | UndefinedType = Undefined,
             fabric_sflow: FabricSflow | UndefinedType = Undefined,
             flow_tracking_settings: FlowTrackingSettings | UndefinedType = Undefined,
             generate_cv_tags: GenerateCvTags | UndefinedType = Undefined,
@@ -57074,6 +57187,11 @@ class EosDesigns(EosDesignsRootModel):
                 fabric_name:
                    Fabric Name, required to match Ansible Group name covering all devices in the Fabric, **must** be an
                    inventory group name.
+                fabric_numbering:
+                   PREVIEW: This feature is in marked as "preview", which means it is subject to change at any time.
+                   Assignment policies for numbers like Node ID.
+
+                   Subclass of AvdModel.
                 fabric_sflow:
                    Default enabling of sFlow for various interface types across the fabric.
                    sFlow can also be

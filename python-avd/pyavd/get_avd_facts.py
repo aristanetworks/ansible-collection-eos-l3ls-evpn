@@ -95,7 +95,9 @@ def _create_avd_switch_facts_instances(all_inputs: dict[str, dict], pool_manager
         inputs = EosDesigns._from_dict(hostvars)
 
         # Initialize SharedUtils class to be passed to each python_module below.
-        shared_utils = SharedUtils(hostvars=mapped_hostvars, inputs=inputs, templar=None, schema=EosDesignsAvdSchemaTools().avdschema, pool_manager=pool_manager)
+        shared_utils = SharedUtils(
+            hostvars=mapped_hostvars, inputs=inputs, templar=None, schema=EosDesignsAvdSchemaTools().avdschema, pool_manager=pool_manager
+        )
 
         # Notice templar is set as None, so any calls to jinja templates will fail with Nonetype has no "_loader" attribute
         avd_switch_facts[hostname] = {"switch": EosDesignsFacts(hostvars=mapped_hostvars, inputs=inputs, shared_utils=shared_utils)}

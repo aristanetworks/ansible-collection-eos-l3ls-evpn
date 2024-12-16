@@ -9,7 +9,7 @@ from typing import TYPE_CHECKING, Any
 from pyavd._errors import AristaAvdError, AristaAvdInvalidInputsError, AristaAvdMissingVariableError
 from pyavd._utils import default, get
 from pyavd.api.pool_manager import PoolManager
-from pyavd.j2filters import natural_sort, range_expand
+from pyavd.j2filters import range_expand
 
 if TYPE_CHECKING:
     from pyavd._eos_designs.eos_designs_facts import EosDesignsFacts
