@@ -20,7 +20,7 @@ keys:
         description: SNMP contact.
       location:
         type: bool
-        default: False
+        default: false
         description: Set SNMP location. Formatted as "<fabric_name> <dc_name> <pod_name> <switch_rack> <inventory_hostname>".
       vrfs:
         $ref: "eos_cli_config_gen#/keys/snmp_server/keys/vrfs"
@@ -42,7 +42,7 @@ keys:
           Can be used in combination with "vrfs" and "enable_mgmt_interface_vrf".
       compute_local_engineid:
         type: bool
-        default: False
+        default: false
         description: |
           Generate a local engineId for SNMP using the 'compute_local_engineid_source' method.
       compute_local_engineid_source:
@@ -61,7 +61,7 @@ keys:
           - system_mac
       compute_v3_user_localized_key:
         type: bool
-        default: False
+        default: false
         description: |
           Requires compute_local_engineid to be `true`.
           If enabled, the SNMPv3 passphrases for auth and priv are transformed using RFC 2574, matching the value they would take in EOS CLI.

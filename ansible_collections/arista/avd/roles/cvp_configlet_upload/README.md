@@ -49,8 +49,8 @@ all:
           ansible_user: ansible
           ansible_password: ansible
           ansible_connection: httpapi
-          ansible_httpapi_use_ssl: True
-          ansible_httpapi_validate_certs: False
+          ansible_httpapi_use_ssl: true
+          ansible_httpapi_validate_certs: false
           ansible_network_os: eos
           ansible_httpapi_port: 443
 ```

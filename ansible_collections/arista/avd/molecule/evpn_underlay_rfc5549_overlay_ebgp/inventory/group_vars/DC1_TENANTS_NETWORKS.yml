@@ -42,14 +42,14 @@ tenants:
           - id: 110
             name: Tenant_A_OP_Zone_1
             tags: ['opzone']
-            enabled: True
+            enabled: true
             ip_address_virtual: 10.1.10.1/24
           # SVI as integer
           - id: 111
             vni_override: 50111
             name: Tenant_A_OP_Zone_2
             tags: ['opzone']
-            enabled: True
+            enabled: true
             ip_address_virtual: 10.1.11.1/24
             ip_helpers:
               - ip_helper: 1.1.1.1
@@ -78,7 +78,7 @@ tenants:
           - id: 131
             name: Tenant_A_APP_Zone_2
             tags: ['app']
-            enabled: True
+            enabled: true
             ip_address_virtual: 10.1.31.1/24
       - name: Tenant_A_DB_Zone
         vrf_vni: 13
@@ -86,12 +86,12 @@ tenants:
           - id: 140
             name: Tenant_A_DB_BZone_1
             tags: ['db', 'erp1']
-            enabled: True
+            enabled: true
             ip_address_virtual: 10.1.40.1/24
           - id: 141
             name: Tenant_A_DB_Zone_2
             tags: ['db']
-            enabled: True
+            enabled: true
             ip_address_virtual: 10.1.41.1/24
       - name: Tenant_A_WAN_Zone
         vrf_vni: 14
@@ -124,7 +124,7 @@ tenants:
           - id: 150
             name: Tenant_A_WAN_Zone_1
             tags: ['wan']
-            enabled: True
+            enabled: true
             ip_address_virtual: 10.1.40.1/24
     l2vlans:
       # L2 vlan as string
@@ -145,12 +145,12 @@ tenants:
           - id: 210
             name: Tenant_B_OP_Zone_1
             tags: ['opzone']
-            enabled: True
+            enabled: true
             ip_address_virtual: 10.2.10.1/24
           - id: 211
             name: Tenant_B_OP_Zone_2
             tags: ['opzone']
-            enabled: True
+            enabled: true
             ip_address_virtual: 10.2.11.1/24
       - name: Tenant_B_WAN_Zone
         vrf_vni: 21
@@ -158,7 +158,7 @@ tenants:
           - id: 250
             name: Tenant_B_WAN_Zone_1
             tags: ['wan']
-            enabled: True
+            enabled: true
             ip_address_virtual: 10.2.50.1/24
   # Tenant_C Specific Information - VRFs / VLANs
   - name: Tenant_C
@@ -172,12 +172,12 @@ tenants:
           - id: 310
             name: Tenant_C_OP_Zone_1
             tags: ['opzone']
-            enabled: True
+            enabled: true
             ip_address_virtual: 10.3.10.1/24
           - id: 311
             name: Tenant_C_OP_Zone_2
             tags: ['opzone']
-            enabled: True
+            enabled: true
             ip_address_virtual: 10.3.11.1/24
       - name: Tenant_C_WAN_Zone
         vrf_vni: 31
@@ -185,5 +185,5 @@ tenants:
           - id: 350
             name: Tenant_C_WAN_Zone_1
             tags: ['wan']
-            enabled: True
+            enabled: true
             ip_address_virtual: 10.3.50.1/24
