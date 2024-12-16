@@ -28,6 +28,7 @@ from .utils import UtilsMixin
 from .wan import WanMixin
 
 if TYPE_CHECKING:
+    from pyavd._eos_designs.schema import EosDesigns
     from pyavd._schema.avdschema import AvdSchema
     from pyavd.api.pool_manager import PoolManager
 

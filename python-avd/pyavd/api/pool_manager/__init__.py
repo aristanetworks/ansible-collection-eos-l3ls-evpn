@@ -271,8 +271,8 @@ class NodeIdPoolCollection(PoolCollection):
 
     @staticmethod
     def _pool_key_from_shared_utils(shared_utils: SharedUtils) -> PoolKey:
-        """Returns the pool key to use for tthis device."""
-        return (shared_utils.fabric_name, shared_utils.dc_name, shared_utils.pod_name, shared_utils.type)
+        """Returns the pool key to use for this device."""
+        return (shared_utils.fabric_name, shared_utils.inputs.dc_name, shared_utils.inputs.pod_name, shared_utils.type)
 
     @staticmethod
     def _pool_file_from_shared_utils(output_dir: Path, shared_utils: SharedUtils) -> Path:
