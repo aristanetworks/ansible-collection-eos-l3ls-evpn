@@ -5,7 +5,7 @@ from __future__ import annotations
 
 import re
 from collections.abc import Iterable, Iterator, Sequence
-from typing import TYPE_CHECKING, ClassVar, Generic, Literal
+from typing import TYPE_CHECKING, ClassVar, Generic, Literal, cast
 
 from pyavd._errors import AristaAvdDuplicateDataError
 from pyavd._schema.coerce_type import coerce_type
@@ -52,7 +52,7 @@ class AvdIndexedList(Sequence[T_AvdModel], Generic[T_PrimaryKey, T_AvdModel], Av
             msg = f"Expecting 'data' as a 'Sequence' when loading data into '{cls.__name__}'. Got '{type(data)}"
             raise TypeError(msg)
 
-        cls_items = [coerce_type(item, cls._item_type) for item in data]
+        cls_items = cast(Iterable[T_AvdModel], (coerce_type(item, cls._item_type) for item in data))
         return cls(cls_items)
 
     def __init__(self, items: Iterable[T_AvdModel] | UndefinedType = Undefined) -> None:
@@ -107,7 +107,8 @@ class AvdIndexedList(Sequence[T_AvdModel], Generic[T_PrimaryKey, T_AvdModel], Av
     def obtain(self, key: T_PrimaryKey) -> T_AvdModel:
         """Return item with given primary key, autocreating if missing."""
         if key not in self._items:
-            self._items[key] = self._item_type._from_dict({self._primary_key: key})
+            item_type = cast(T_AvdModel, self._item_type)
+            self._items[key] = item_type._from_dict({self._primary_key: key})
         return self._items[key]
 
     def append(self, item: T_AvdModel, ignore_fields: tuple[str, ...] = ()) -> None:
@@ -116,7 +117,7 @@ class AvdIndexedList(Sequence[T_AvdModel], Generic[T_PrimaryKey, T_AvdModel], Av
             if item._compare(existing_item := self._items[primary_key], ignore_fields):
                 # Ignore identical item.
                 return
-            raise AristaAvdDuplicateDataError(type(self).__name__, item, existing_item)
+            raise AristaAvdDuplicateDataError(type(self).__name__, str(item), str(existing_item))
 
         self._items[primary_key] = item
 
@@ -190,18 +191,18 @@ class AvdIndexedList(Sequence[T_AvdModel], Generic[T_PrimaryKey, T_AvdModel], Av
             return
 
         for primary_key, new_item in other.items():
-            old_value = self.get(primary_key)
-            if old_value is Undefined or not isinstance(old_value, type(new_item)):
+            if new_item._created_from_null:
+                # Remove the complete item when merging in a Null item.
+                self._items.pop(primary_key, None)
+                continue
+
+            if (old_value := self.get(primary_key)) is Undefined or not isinstance(old_value, type(new_item)):
                 # New item or different type so we can just replace
                 self[primary_key] = new_item
                 continue
 
             # Existing item of same type, so deepmerge.
             self[primary_key]._deepmerge(new_item, list_merge=list_merge)
-
-            # Make sure the primary key is never lost / changed. Happens when merging a null value over a model/dict.
-            if getattr(self[primary_key], self._primary_key, None) != primary_key:
-                setattr(self[primary_key], self._primary_key, primary_key)
 
     def _deepinherit(self, other: Self) -> None:
         """Update instance by recursively inheriting from other instance for all existing items. New items are *not* added."""

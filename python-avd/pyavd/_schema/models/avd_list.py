@@ -5,7 +5,6 @@ from __future__ import annotations
 
 import re
 from collections.abc import Callable, Iterable, Iterator, Mapping, Sequence
-from copy import deepcopy
 from typing import TYPE_CHECKING, Any, ClassVar, Generic, Literal, cast
 
 from pyavd._schema.coerce_type import coerce_type
@@ -119,7 +118,8 @@ class AvdList(Sequence[T_ItemType], Generic[T_ItemType], AvdBase):
     def _strip_empties(self) -> None:
         """In-place update the instance to remove data matching the given strip_values."""
         if issubclass(self._item_type, AvdBase):
-            [item._strip_empties() for item in self._items]
+            items = cast(list[AvdBase], self._items)
+            [item._strip_empties() for item in items]
             self._items = [item for item in self._items if item]
             return
 
@@ -186,7 +186,7 @@ class AvdList(Sequence[T_ItemType], Generic[T_ItemType], AvdBase):
             return
 
         # Append non-existing items.
-        self._items.extend(deepcopy([new_item for new_item in other._items if new_item not in self._items]))
+        self._items.extend(new_item for new_item in other._items if new_item not in self._items)
 
     def _cast_as(self, new_type: type[T_AvdList], ignore_extra_keys: bool = False) -> T_AvdList:
         """
@@ -202,7 +202,7 @@ class AvdList(Sequence[T_ItemType], Generic[T_ItemType], AvdBase):
             raise TypeError(msg)
 
         if issubclass(self._item_type, AvdBase):
-            items: list[AvdBase] = self._items
+            items = cast(list[AvdBase], self._items)
             return new_type([item._cast_as(new_type._item_type, ignore_extra_keys=ignore_extra_keys) for item in items])
 
         if self._item_type != new_type._item_type:
