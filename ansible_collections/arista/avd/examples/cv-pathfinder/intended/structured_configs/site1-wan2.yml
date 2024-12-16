@@ -459,24 +459,24 @@ ip_access_lists:
   entries:
   - sequence: 1
     remark: 'Not for PRODUCTION: This ACL is built this way because the lab has an out-of-band interface'
-  - sequence: 10
+  - source: any
+    destination: 100.64.11.2
+    sequence: 10
     action: permit
     protocol: udp
-    source: any
-    destination: 100.64.11.2
     destination_ports_match: eq
     destination_ports:
     - isakmp
     - non500-isakmp
-  - sequence: 30
+  - source: any
+    destination: 100.64.11.2
+    sequence: 30
     action: permit
     protocol: icmp
-    source: any
-    destination: 100.64.11.2
-  - action: deny
-    protocol: ip
-    source: any
+  - source: any
     destination: any
+    action: deny
+    protocol: ip
 ip_extcommunity_lists:
 - name: ECL-EVPN-SOO
   entries:
@@ -759,8 +759,8 @@ application_traffic_recognition:
       protocols:
       - tcp
       - udp
-      tcp_dest_port_set_name: VIDEO-PORTS
       udp_dest_port_set_name: VIDEO-PORTS
+      tcp_dest_port_set_name: VIDEO-PORTS
     - name: VOICE-APP
       protocols:
       - tcp

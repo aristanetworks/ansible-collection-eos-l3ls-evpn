@@ -30,7 +30,7 @@ class StunMixin(UtilsMixin):
 
         stun = {}
         if self.shared_utils.is_wan_server:
-            local_interfaces = [wan_interface["name"] for wan_interface in self.shared_utils.wan_interfaces]
+            local_interfaces = [wan_interface.name for wan_interface in self.shared_utils.wan_interfaces]
             stun["server"] = {
                 "local_interfaces": local_interfaces,
                 "ssl_profile": self.shared_utils.wan_stun_dtls_profile_name,

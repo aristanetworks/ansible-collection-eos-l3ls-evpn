@@ -471,6 +471,15 @@
       "interfaces"
     ],
     "description": "Verifies the status of the provided interfaces.",
+    "custom_field": "Interface Ethernet16 - Test_dhcp_interface_connectivity = 'adminDown'"
+  },
+  {
+    "name": "dc2-leaf3b.arista.com",
+    "test": "VerifyInterfacesStatus",
+    "categories": [
+      "interfaces"
+    ],
+    "description": "Verifies the status of the provided interfaces.",
     "custom_field": "Interface Ethernet2 - P2P_dc2-spine2_Ethernet6 = 'up'"
   },
   {

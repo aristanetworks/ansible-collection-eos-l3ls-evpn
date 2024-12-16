@@ -1,0 +1,6 @@
+---
+ip_hardware:
+  fib:
+    optimize:
+      prefixes:
+        profile: urpf-internet

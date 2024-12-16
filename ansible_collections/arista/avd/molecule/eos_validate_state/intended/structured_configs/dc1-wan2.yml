@@ -191,11 +191,12 @@ ethernet_interfaces:
   description: mpls-sp-1_DC1-MPLS-4
 - name: Ethernet4
   peer_type: l3_interface
-  ip_address: 100.64.4.2/24
+  ip_address: dhcp
   shutdown: false
   switchport:
     enabled: false
   description: isp-1_DC1-INET-4
+  dhcp_client_accept_default_route: true
 loopback_interfaces:
 - name: Loopback0
   description: ROUTER_ID

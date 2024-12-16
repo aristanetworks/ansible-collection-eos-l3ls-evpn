@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import re
+from collections.abc import Iterable, Mapping
 from typing import Any
 
 from jinja2.runtime import Undefined
@@ -30,22 +31,19 @@ def convert(text: str, ignore_case: bool) -> int | str:
     return text.lower() if ignore_case else text
 
 
-def natural_sort(iterable: list | dict | str | None, sort_key: str | None = None, *, strict: bool = True, ignore_case: bool = True) -> list:
+def natural_sort(iterable: Iterable | None, sort_key: str | None = None, *, strict: bool = True, ignore_case: bool = True) -> list:
     """Sorts an iterable in a natural (alphanumeric) order.
 
     Args:
-    -----
-        iterable (list | dict | str | None): Input iterable.
-        sort_key (str | None, optional): Key to sort by, defaults to None.
-        strict (bool, optional): If strict is True, raise an error is the sort_key is missing.
-        ignore_case (bool, optional): If ignore_case is True, strings are applied lower() function.
+        iterable: Input iterable.
+        sort_key: Key to sort by, defaults to None.
+        strict: If strict is True, raise an error is the sort_key is missing.
+        ignore_case: If ignore_case is True, strings are applied lower() function.
 
     Returns:
-    -------
         list: Sorted iterable.
 
     Raises:
-    ------
         KeyError, AttributeError: if strict=True and sort_key is not present in an item in the iterable.
     """
     if isinstance(iterable, Undefined) or iterable is None:
@@ -53,7 +51,7 @@ def natural_sort(iterable: list | dict | str | None, sort_key: str | None = None
 
     def alphanum_key(key: Any) -> list:
         pattern = r"(\d+)"
-        if sort_key is not None and isinstance(key, dict):
+        if sort_key is not None and isinstance(key, Mapping):
             if strict and sort_key not in key:
                 msg = f"Missing key '{sort_key}' in item to sort {key}."
                 raise KeyError(msg)
@@ -62,7 +60,7 @@ def natural_sort(iterable: list | dict | str | None, sort_key: str | None = None
             if strict and not hasattr(key, sort_key):
                 msg = f"Missing attribute '{sort_key}' in item to sort {key}."
                 raise AttributeError(msg)
-            return [convert(c, ignore_case) for c in re.split(pattern, getattr(key, sort_key))]
+            return [convert(c, ignore_case) for c in re.split(pattern, str(getattr(key, sort_key)))]
         return [convert(c, ignore_case) for c in re.split(pattern, str(key))]
 
     return sorted(iterable, key=alphanum_key)

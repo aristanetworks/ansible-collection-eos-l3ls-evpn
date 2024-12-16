@@ -23,8 +23,8 @@ router_bgp:
       activate: true
   neighbors:
   - ip_address: 100.64.21.2
-    remote_as: '65000'
     peer_group: IPv4-UNDERLAY-PEERS
+    remote_as: '65000'
     default_originate:
       enabled: true
       always: true

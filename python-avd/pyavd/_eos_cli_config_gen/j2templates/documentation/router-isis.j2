@@ -18,6 +18,9 @@
 {%     if router_isis.net is arista.avd.defined %}
 | Net-ID | {{ router_isis.net }} |
 {%     endif %}
+{%     if router_isis.is_hostname is arista.avd.defined %}
+| Hostname | {{ router_isis.is_hostname }} |
+{%     endif %}
 {%     if router_isis.is_type is arista.avd.defined %}
 | Type | {{ router_isis.is_type }} |
 {%     endif %}

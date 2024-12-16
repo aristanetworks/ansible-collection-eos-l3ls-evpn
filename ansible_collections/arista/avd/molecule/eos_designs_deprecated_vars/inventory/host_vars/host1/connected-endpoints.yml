@@ -1,0 +1,14 @@
+---
+# Test deprecated key endpoint_role - bmca
+servers:
+  - name: OLD_SW-1/2
+    adapters:
+      - switches: [host1, host1]
+        switch_ports: [Ethernet1, Ethernet2]
+        endpoint_ports: [Endpoint_port1, ENDPOINT_PORT2]
+        port_channel:
+          mode: "active"
+          endpoint_port_channel: ENDPOINT_PORT_CHANNEL
+        ptp:
+          enabled: true
+          endpoint_role: bmca

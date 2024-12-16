@@ -33,8 +33,10 @@ class RouterPathSelectionMixin(UtilsMixin):
 
         # When running CV Pathfinder, only load balance policies are configured
         # for AutoVPN, need also vrfs and policies.
-        if self.shared_utils.wan_mode == "autovpn":
-            vrfs = [{"name": vrf["name"], "path_selection_policy": vrf["policy"]} for vrf in self._filtered_wan_vrfs]
+        if self.inputs.wan_mode == "autovpn":
+            vrfs = [
+                {"name": vrf.name, "path_selection_policy": f"{vrf.policy}-WITH-CP" if vrf.name == "default" else vrf.policy} for vrf in self._filtered_wan_vrfs
+            ]
 
             router_path_selection.update(
                 {

@@ -1,0 +1,18 @@
+---
+ptp_profiles:
+  - profile: myptpprofile
+    announce:
+      interval: 2
+      timeout: 10
+    delay_req: 2
+    sync_message:
+      interval: 2
+    transport: ipv4
+  - profile: aes67-r16-2016
+    announce:
+      interval: 0
+      timeout: 3
+    delay_req: -3
+    sync_message:
+      interval: -3
+    transport: ipv4

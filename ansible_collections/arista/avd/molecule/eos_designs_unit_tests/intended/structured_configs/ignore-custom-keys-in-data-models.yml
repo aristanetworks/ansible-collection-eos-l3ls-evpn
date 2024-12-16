@@ -21,11 +21,11 @@ management_api_http:
   enable_https: true
 ip_igmp_snooping:
   globally_enabled: true
-_custom_key2:
-- custom_value2
 ethernet_interfaces:
 - name: Ethernet1
   switchport:
     enabled: true
   _custom_key3:
     custom_dict3: custom_value3
+_custom_key2:
+- custom_value2

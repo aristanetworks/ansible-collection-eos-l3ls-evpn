@@ -1,12 +1,19 @@
 # Copyright (c) 2023-2024 Arista Networks, Inc.
 # Use of this source code is governed by the Apache License 2.0
 # that can be found in the LICENSE file.
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
 from pyavd._eos_designs.avdfacts import AvdFacts
 
 from .ethernet_interfaces import EthernetInterfacesMixin
 from .port_channel_interfaces import PortChannelInterfacesMixin
 from .router_bgp import RouterBgpMixin
 from .router_ospf import RouterOspfMixin
+
+if TYPE_CHECKING:
+    from pyavd._eos_designs.schema import EosDesigns
 
 DATA_MODELS = ["core_interfaces", "l3_edge"]
 
@@ -31,12 +38,15 @@ class AvdStructuredConfigCoreInterfacesAndL3Edge(
     The order of the @cached_properties methods imported from Mixins will also control the order in the output.
     """
 
+    inputs_data: EosDesigns.CoreInterfaces | EosDesigns.L3Edge
+
     def render(self) -> dict:
         """Render structured configs for core_interfaces and l3_Edge."""
         result_list = []
 
         for data_model in DATA_MODELS:
             self.data_model = data_model
+            self.inputs_data = self.inputs.core_interfaces if data_model == "core_interfaces" else self.inputs.l3_edge
             result_list.append(super().render())
             self.clear_cache()
 

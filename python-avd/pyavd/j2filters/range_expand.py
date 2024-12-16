@@ -5,8 +5,8 @@
 from __future__ import annotations
 
 import re
+from collections.abc import Sequence
 from dataclasses import dataclass
-from typing import Any
 
 
 @dataclass
@@ -82,15 +82,15 @@ def expand_module(interface_string: str, data: InterfaceData) -> list:
     return result
 
 
-def range_expand(range_to_expand: Any) -> list:
-    if not isinstance(range_to_expand, (list, str)):
-        msg = f"value must be of type list or str, got {type(range_to_expand)}"
+def range_expand(range_to_expand: Sequence) -> list:
+    if not isinstance(range_to_expand, Sequence):
+        msg = f"value must be a Sequence, got {type(range_to_expand)}"
         raise TypeError(msg)
 
     result = []
 
     # If we got a list, unpack it and run this function recursively
-    if isinstance(range_to_expand, list):
+    if not isinstance(range_to_expand, str):
         for r in range_to_expand:
             result.extend(range_expand(r))
 

@@ -337,6 +337,11 @@
                         "required": {
                             "$ref": "#/$defs/required"
                         },
+                        "relaxed_validation": {
+                            "type": "boolean",
+                            "default": false,
+                            "description": "Disable required key validation."
+                        },
                         "deprecation": {
                             "$ref": "#/$defs/deprecation"
                         },

@@ -25,9 +25,9 @@ snmp_server:
     version: 2c
     community: SNMP-COMMUNITY-2
   - host: 10.6.75.125
+    vrf: SNMPVRF
     version: 2c
     community: SNMP-COMMUNITY-2
-    vrf: SNMPVRF
   - host: 10.6.75.126
     version: '3'
     users:
@@ -37,9 +37,9 @@ snmp_server:
     version: 2c
     community: SNMP-COMMUNITY-2
   - host: 10.6.75.127
+    vrf: SNMPVRF
     version: 2c
     community: SNMP-COMMUNITY-2
-    vrf: SNMPVRF
   - host: 10.6.75.128
     version: '3'
     users:

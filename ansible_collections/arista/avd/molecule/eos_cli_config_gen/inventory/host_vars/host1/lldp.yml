@@ -1,0 +1,13 @@
+---
+### LLDP ###
+lldp:
+  run: false
+  timer: 30
+  holdtime: 90
+  management_address: 192.168.1.1/24
+  vrf: Management
+  tlvs:
+    - name: system-capabilities
+      transmit: false
+    - name: system-description
+      transmit: true

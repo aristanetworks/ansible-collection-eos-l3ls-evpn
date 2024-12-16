@@ -46,7 +46,7 @@ MAP_ANSIBLE_LIST_MERGE_TO_DEEPMERGE_LIST_STRATEGY = {
 
 def merge(
     base: Any,
-    *nxt_list: list[Any],
+    *nxt_list: Any,
     recursive: bool = True,
     list_merge: str = "append",
     same_key_strategy: str = "override",

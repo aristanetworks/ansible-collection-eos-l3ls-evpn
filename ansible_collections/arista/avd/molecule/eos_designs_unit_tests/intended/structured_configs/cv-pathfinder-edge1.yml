@@ -365,39 +365,39 @@ agents:
 ip_access_lists:
 - name: TEST-IPV4-ACL-WITH-IP-FIELDS-IN_Ethernet1_49.3
   entries:
-  - sequence: 15
+  - source: any
+    destination: 172.24.49.3
+    sequence: 15
     action: deny
     protocol: ip
-    source: any
+  - source: 172.24.49.2
     destination: 172.24.49.3
-  - action: permit
+    action: permit
     protocol: ip
-    source: 172.24.49.2
-    destination: 172.24.49.3
 - name: ACL-NAT-IE-DIRECT
   entries:
-  - sequence: 10
+  - source: any
+    destination: 5.0.0.0/24
+    sequence: 10
     action: deny
     protocol: ip
-    source: any
-    destination: 5.0.0.0/24
-  - sequence: 20
+  - source: any
+    destination: any
+    sequence: 20
     action: permit
     protocol: ip
-    source: any
-    destination: any
 - name: ACL-NAT-IE-ZSCALER
   entries:
-  - sequence: 10
+  - source: any
+    destination: 10.0.0.0/24
+    sequence: 10
     action: permit
     protocol: ip
-    source: any
-    destination: 10.0.0.0/24
-  - sequence: 20
+  - source: any
+    destination: any
+    sequence: 20
     action: deny
     protocol: ip
-    source: any
-    destination: any
 ip_extcommunity_lists:
 - name: ECL-EVPN-SOO
   entries:
@@ -668,13 +668,13 @@ stun:
 application_traffic_recognition:
   application_profiles:
   - name: VIDEO
-    categories:
-    - name: VIDEO1
     applications:
     - name: CUSTOM-APPLICATION-1
     - name: skype
     application_transports:
     - rtp
+    categories:
+    - name: VIDEO1
   - name: VOICE
     applications:
     - name: CUSTOM-VOICE-APPLICATION
@@ -690,10 +690,10 @@ application_traffic_recognition:
   applications:
     ipv4_applications:
     - name: CUSTOM-APPLICATION-1
-      protocols:
-      - tcp
       src_prefix_set_name: CUSTOM-SRC-PREFIX-1
       dest_prefix_set_name: CUSTOM-DEST-PREFIX-1
+      protocols:
+      - tcp
     - name: CUSTOM-APPLICATION-2
       protocols:
       - tcp
@@ -980,33 +980,33 @@ metadata:
       - name: Tunnel100
         preference: Preferred
         endpoint:
-          city: Fremont, CA
+          ip_address: 10.37.121.1
           datacenter: FMT1
+          city: Fremont, CA
           country: United States
           region: us-west1
           latitude: '37'
           longitude: '-121'
-          ip_address: 10.37.121.1
       - name: Tunnel101
         preference: Alternate
         endpoint:
-          city: Washington, DC
+          ip_address: 10.39.77.1
           datacenter: WAS1
+          city: Washington, DC
           country: United States
           region: us-east1
           latitude: '39'
           longitude: '-77'
-          ip_address: 10.39.77.1
       - name: Tunnel102
         preference: Alternate
         endpoint:
-          city: Frankfurt
+          ip_address: 10.50.9.1
           datacenter: FRA4
+          city: Frankfurt
           country: Germany
           region: eu-west1
           latitude: '50'
           longitude: '9'
-          ip_address: 10.50.9.1
     - name: ZSCALER-EXIT-POLICY-2
       type: zscaler
       city: Santa Clara, CA
@@ -1022,33 +1022,33 @@ metadata:
       - name: Tunnel110
         preference: Preferred
         endpoint:
-          city: Fremont, CA
+          ip_address: 10.37.121.1
           datacenter: FMT1
+          city: Fremont, CA
           country: United States
           region: us-west1
           latitude: '37'
           longitude: '-121'
-          ip_address: 10.37.121.1
       - name: Tunnel111
         preference: Alternate
         endpoint:
-          city: Washington, DC
+          ip_address: 10.39.77.1
           datacenter: WAS1
+          city: Washington, DC
           country: United States
           region: us-east1
           latitude: '39'
           longitude: '-77'
-          ip_address: 10.39.77.1
       - name: Tunnel112
         preference: Alternate
         endpoint:
-          city: Frankfurt
+          ip_address: 10.50.9.1
           datacenter: FRA4
+          city: Frankfurt
           country: Germany
           region: eu-west1
           latitude: '50'
           longitude: '9'
-          ip_address: 10.50.9.1
     role: edge
     ssl_profile: profileA
     vtep_ip: 192.168.142.2

@@ -1,9 +1,0 @@
-### interface default all knobs
-
-interface_defaults:
-  ethernet:
-    shutdown: true
-  mtu: 9000
-
-switchport_default:
-  mode: routed

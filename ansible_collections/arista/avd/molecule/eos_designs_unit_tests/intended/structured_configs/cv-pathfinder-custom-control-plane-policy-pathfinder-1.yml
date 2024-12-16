@@ -354,13 +354,13 @@ stun:
 application_traffic_recognition:
   application_profiles:
   - name: VIDEO
-    categories:
-    - name: VIDEO1
     applications:
     - name: CUSTOM-APPLICATION-1
     - name: skype
     application_transports:
     - rtp
+    categories:
+    - name: VIDEO1
   - name: APP-PROFILE-CONTROL-PLANE
     applications:
     - name: APP-CONTROL-PLANE
@@ -373,10 +373,10 @@ application_traffic_recognition:
   applications:
     ipv4_applications:
     - name: CUSTOM-APPLICATION-1
-      protocols:
-      - tcp
       src_prefix_set_name: CUSTOM-SRC-PREFIX-1
       dest_prefix_set_name: CUSTOM-DEST-PREFIX-1
+      protocols:
+      - tcp
     - name: CUSTOM-APPLICATION-2
       protocols:
       - tcp

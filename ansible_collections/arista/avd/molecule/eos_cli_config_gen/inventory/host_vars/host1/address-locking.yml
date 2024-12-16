@@ -1,0 +1,17 @@
+---
+### Address Locking ###
+address_locking:
+  dhcp_servers_ipv4:
+    - 1.1.1.1
+    - 4.4.4.4
+  disabled: true
+  leases:
+    - ip: 2.2.2.2
+      mac: dead.beef.cafe
+    - ip: 3.3.3.3
+      mac: de:af:be:ef:ca:fe
+  local_interface: Loopback0
+  locked_address:
+    expiration_mac_disabled: true
+    ipv4_enforcement_disabled: true
+    ipv6_enforcement_disabled: true

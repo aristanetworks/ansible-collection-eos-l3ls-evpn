@@ -6,6 +6,7 @@ from __future__ import annotations
 from functools import cached_property
 from typing import TYPE_CHECKING
 
+from pyavd._errors import AristaAvdMissingVariableError
 from pyavd._utils import get, strip_null_from_data
 
 from .utils import UtilsMixin
@@ -34,15 +35,19 @@ class IpSecurityMixin(UtilsMixin):
         if not self.shared_utils.is_wan_router:
             return None
 
-        wan_ipsec_profiles = get(self._hostvars, "wan_ipsec_profiles", required=True)
+        if not self.inputs.wan_ipsec_profiles:
+            msg = "wan_ipsec_profiles"
+            raise AristaAvdMissingVariableError(msg)
+        if not self.inputs.wan_ipsec_profiles.control_plane:
+            msg = "wan_ipsec_profiles.control_plane"
+            raise AristaAvdMissingVariableError(msg)
 
         # Structure initialization
         ip_security = {"ike_policies": [], "sa_policies": [], "profiles": []}
 
-        if self.shared_utils.is_wan_client and (data_plane := get(wan_ipsec_profiles, "data_plane")) is not None:
-            self._append_data_plane(ip_security, data_plane)
-        control_plane = get(wan_ipsec_profiles, "control_plane", required=True)
-        self._append_control_plane(ip_security, control_plane)
+        if self.shared_utils.is_wan_client and (data_plane := self.inputs.wan_ipsec_profiles.data_plane):
+            self._append_data_plane(ip_security, data_plane._as_dict())
+        self._append_control_plane(ip_security, self.inputs.wan_ipsec_profiles.control_plane._as_dict())
 
         return strip_null_from_data(ip_security)
 

@@ -13,10 +13,18 @@
 | Server Group Name | Type  | VRF | IP address |
 | ------------------| ----- | --- | ---------- |
 {%     for aaa_server_group in aaa_server_groups %}
-{%         for server in aaa_server_group.servers %}
-{%             set vrf = server.vrf | arista.avd.default('default') %}
+{%         if aaa_server_group.type is arista.avd.defined %}
+{%             if aaa_server_group.servers is arista.avd.defined %}
+{%                 for server in aaa_server_group.servers %}
+{%                     if server.server is arista.avd.defined %}
+{%                         set vrf = server.vrf | arista.avd.default('default') %}
 | {{ aaa_server_group.name }} | {{ aaa_server_group.type }} | {{ vrf }} | {{ server.server }} |
-{%         endfor %}
+{%                     endif %}
+{%                 endfor %}
+{%             else %}
+| {{ aaa_server_group.name }} | {{ aaa_server_group.type }} | - | - |
+{%             endif %}
+{%         endif %}
 {%     endfor %}
 
 #### AAA Server Groups Device Configuration

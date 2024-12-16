@@ -39,6 +39,10 @@ class AvdTestP2PIPReachability(AvdTestBase):
             if not self.validate_data(data=interface, data_path=f"ethernet_interfaces.[{idx}]", required_keys=required_keys, shutdown=False):
                 continue
 
+            if self.is_dhcp_interface(interface):
+                LOGGER.info("Interface '%s' is a DHCP interface. %s is skipped.", interface["name"], self.__class__.__name__)
+                continue
+
             if not self.is_peer_available(peer := interface["peer"]):
                 continue
 
@@ -86,6 +90,10 @@ class AvdTestInbandReachability(AvdTestBase):
         for idx, interface in enumerate(vlan_interfaces):
             self.update_interface_shutdown(interface)
             if not self.validate_data(data=interface, data_path=f"vlan_interfaces.[{idx}]", required_keys=required_keys, type="inband_mgmt", shutdown=False):
+                continue
+
+            if self.is_dhcp_interface(interface):
+                LOGGER.info("Interface '%s' is a DHCP interface. %s is skipped.", interface["name"], self.__class__.__name__)
                 continue
 
             vrf = interface.get("vrf", "default")

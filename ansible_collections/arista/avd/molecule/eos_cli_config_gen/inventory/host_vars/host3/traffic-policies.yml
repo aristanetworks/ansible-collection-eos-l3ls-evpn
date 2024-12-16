@@ -1,0 +1,5 @@
+---
+### Traffic policies for without field_sets option case
+traffic_policies:
+  options:
+    counter_per_interface: false

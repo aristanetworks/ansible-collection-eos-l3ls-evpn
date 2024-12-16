@@ -1,0 +1,179 @@
+router_bgp:
+  as: 65101
+  bgp:
+    default:
+      ipv4_unicast: false
+      ipv4_unicast_transport_ipv6: false
+    route_reflector_preserve_attributes:
+      enabled: true
+    redistribute_internal: true
+    additional_paths:
+      receive: false
+      send: disabled
+  graceful_restart:
+    enabled: true
+  graceful_restart_helper:
+    enabled: false
+  redistribute:
+    dynamic:
+      enabled: true
+      rcf: RCF_CONN_2_BGP()
+    connected:
+      enabled: true
+      include_leaked: true
+      route_map: RM-CONN-2-BGP
+    isis:
+      enabled: true
+      isis_level: level-2
+      include_leaked: true
+      rcf: RCF_CONN_2_BGP()
+    ospfv3:
+      match_internal:
+        enabled: true
+        include_leaked: true
+        route_map: RM-CONN-2-BGP
+    ospf:
+      match_internal:
+        enabled: true
+        include_leaked: true
+        route_map: RM_BGP_EVPN
+      match_external:
+        enabled: true
+        include_leaked: true
+        route_map: RM_BGP_EVPN
+    static:
+      enabled: true
+      route_map: RM-STATIC-2-BGP
+  address_family_evpn:
+    bgp:
+      additional_paths:
+        send: disabled
+    neighbor_default:
+      next_hop_self_received_evpn_routes:
+        enable: true
+        inter_domain: true
+      encapsulation: path-selection
+    evpn_hostflap_detection:
+      enabled: true
+      expiry_timeout: 20
+    peer_groups:
+      - name: EVPN-OVERLAY-PEERS
+        activate: true
+      - name: MLAG-IPv4-UNDERLAY-PEER
+        activate: false
+  address_family_ipv4:
+    bgp:
+      redistribute_internal: true
+      additional_paths:
+        install_ecmp_primary: true
+        send: disabled
+    redistribute:
+      bgp:
+        enabled: true
+      connected:
+        enabled: true
+        route_map: RM_BGP_EVPN_IPV4
+      dynamic:
+        enabled: true
+        rcf: RCF_BGP_EVPN_IPV4()
+      ospf:
+        enabled: true
+        include_leaked: true
+        route_map: RM_BGP_EVPN_IPV4
+        match_external:
+          enabled: true
+          include_leaked: true
+          route_map: RM_BGP_EVPN_IPV4
+        match_nssa_external:
+          enabled: true
+          include_leaked: true
+          nssa_type: 1
+          route_map: RM_BGP_EVPN_IPV4
+      ospfv3:
+        match_internal:
+          enabled: true
+          include_leaked: true
+          route_map: RM_BGP_EVPN_IPV4
+      isis:
+        enabled: true
+        isis_level: level-1
+        include_leaked: true
+        rcf: Address_Family_IPV4_ISIS()
+      static:
+        enabled: true
+        include_leaked: true
+        route_map: RM_BGP_EVPN_IPV4
+  address_family_ipv6:
+    bgp:
+      redistribute_internal: false
+      additional_paths:
+        install: true
+        send: ecmp
+        send_limit: 8
+    redistribute:
+      attached_host:
+        enabled: true
+        route_map: RM-Address_Family_IPV6_Attached-Host
+      dhcp:
+        enabled: true
+        route_map: RM-Address_Family_IPV6_DHCP
+      static:
+        enabled: true
+        include_leaked: true
+        rcf: RCF_IPV6_STATIC_TO_BGP()
+      dynamic:
+        enabled: true
+        rcf: RCF_Address_Family_IPV6_Dynamic()
+      connected:
+        enabled: true
+        route_map: RM-Address_Family_IPV6_Connected
+      user:
+        enabled: true
+        rcf: RCF_Address_Family_IPV6_User()
+      isis:
+        enabled: true
+        include_leaked: true
+        route_map: RM-Address_Family_IPV6_ISIS
+      ospfv3:
+        match_external:
+          enabled: true
+          include_leaked: true
+        match_internal:
+          enabled: true
+          route_map: RM-REDISTRIBUTE-OSPF-INTERNAL
+          include_leaked: true
+        match_nssa_external:
+          enabled: true
+          nssa_type: 1
+          include_leaked: true
+          route_map: RM-REDISTRIBUTE-OSPF-NSSA-EXTERNAL
+  address_family_ipv4_multicast:
+    redistribute:
+      ospf:
+        match_external:
+          enabled: true
+          route_map: AFIPV4M_OSPF_EXTERNAL
+      ospfv3:
+        enabled: true
+        route_map: AFIPV4M_OSPFV3
+  address_family_ipv6_multicast:
+    redistribute:
+      ospf:
+        match_internal:
+          enabled: true
+          route_map:  RM-address_family_ipv6_multicast-OSPF
+      isis:
+        enabled: true
+        rcf: Router_BGP_Isis()
+      ospfv3:
+        match_internal:
+          enabled: true
+          route_map:  RM-address_family_ipv6_multicast-OSPFv3
+  address_family_ipv4_labeled_unicast:
+    bgp:
+      additional_paths:
+        send: any
+  address_family_path_selection:
+    bgp:
+      additional_paths:
+        send: disabled

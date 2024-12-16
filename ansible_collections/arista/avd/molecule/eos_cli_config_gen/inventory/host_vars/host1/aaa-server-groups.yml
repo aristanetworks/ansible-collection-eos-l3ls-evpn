@@ -43,3 +43,5 @@ aaa_server_groups:
       - server: 10.10.10.157
         vrf: mgt
       - server: 10.10.10.249
+  - name: RADIUS3
+    type: radius

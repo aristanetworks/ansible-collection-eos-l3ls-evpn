@@ -5,10 +5,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from .bgp_peer_groups import BgpPeerGroupsMixin
-from .connected_endpoints_keys import ConnectedEndpointsKeysMixin
 from .cv_topology import CvTopology
-from .descriptions import DescriptionsMixin
 from .filtered_tenants import FilteredTenantsMixin
 from .flow_tracking import FlowTrackingMixin
 from .inband_management import InbandManagementMixin
@@ -19,13 +16,13 @@ from .link_tracking_groups import LinkTrackingGroupsMixin
 from .mgmt import MgmtMixin
 from .misc import MiscMixin
 from .mlag import MlagMixin
+from .node_config import NodeConfigMixin
 from .node_type import NodeTypeMixin
 from .node_type_keys import NodeTypeKeysMixin
 from .overlay import OverlayMixin
 from .platform import PlatformMixin
 from .ptp import PtpMixin
 from .routing import RoutingMixin
-from .switch_data import SwitchDataMixin
 from .underlay import UnderlayMixin
 from .utils import UtilsMixin
 from .wan import WanMixin
@@ -36,9 +33,6 @@ if TYPE_CHECKING:
 
 
 class SharedUtils(
-    BgpPeerGroupsMixin,
-    ConnectedEndpointsKeysMixin,
-    DescriptionsMixin,
     FilteredTenantsMixin,
     InbandManagementMixin,
     InterfaceDescriptionsMixin,
@@ -49,13 +43,13 @@ class SharedUtils(
     MgmtMixin,
     MlagMixin,
     MiscMixin,
+    NodeConfigMixin,
     NodeTypeMixin,
     NodeTypeKeysMixin,
     OverlayMixin,
     PlatformMixin,
     PtpMixin,
     WanMixin,
-    SwitchDataMixin,
     RoutingMixin,
     UnderlayMixin,
     UtilsMixin,
@@ -75,8 +69,9 @@ class SharedUtils(
     The class cannot be overridden.
     """
 
-    def __init__(self, hostvars: dict, templar: object, schema: AvdSchema, pool_manager: PoolManager | None = None) -> None:
+    def __init__(self, hostvars: dict, inputs: EosDesigns, templar: object, schema: AvdSchema, pool_manager: PoolManager | None = None) -> None:
         self.hostvars = hostvars
+        self.inputs = inputs
         self.templar = templar
         self.schema = schema
         self.pool_manager = pool_manager

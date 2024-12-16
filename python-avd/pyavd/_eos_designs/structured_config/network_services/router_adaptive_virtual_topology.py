@@ -41,7 +41,7 @@ class RouterAdaptiveVirtualTopologyMixin(UtilsMixin):
         wan_vrfs = []
 
         for vrf in self._filtered_wan_vrfs:
-            wan_vrf = {"name": vrf["name"], "policy": vrf["policy"], "profiles": []}
+            wan_vrf = {"name": vrf.name, "policy": f"{vrf.policy}-WITH-CP" if vrf.name == "default" else vrf.policy, "profiles": []}
 
             # Need to allocate an ID for each profile in the policy, for now picked up from the input.
             policy = get_item(
@@ -110,11 +110,9 @@ class RouterAdaptiveVirtualTopologyMixin(UtilsMixin):
                     "name": match["avt_profile"],
                     "load_balance_policy": match["load_balance_policy"]["name"],
                 }
-                if (internet_exit_policy_name := match["internet_exit_policy_name"]) is not None and get_item(
-                    self._filtered_internet_exit_policies,
-                    "name",
-                    internet_exit_policy_name,
-                ) is not None:
+                if (internet_exit_policy_name := match["internet_exit_policy_name"]) is not None and internet_exit_policy_name in [
+                    policy.name for policy, _connections in self._filtered_internet_exit_policies_and_connections
+                ]:
                     profile["internet_exit_policy"] = internet_exit_policy_name
 
                 append_if_not_duplicate(
@@ -129,11 +127,9 @@ class RouterAdaptiveVirtualTopologyMixin(UtilsMixin):
                     "name": default_match["avt_profile"],
                     "load_balance_policy": default_match["load_balance_policy"]["name"],
                 }
-                if (internet_exit_policy_name := default_match["internet_exit_policy_name"]) is not None and get_item(
-                    self._filtered_internet_exit_policies,
-                    "name",
-                    internet_exit_policy_name,
-                ) is not None:
+                if (internet_exit_policy_name := default_match["internet_exit_policy_name"]) is not None and internet_exit_policy_name in [
+                    policy.name for policy, _connections in self._filtered_internet_exit_policies_and_connections
+                ]:
                     profile["internet_exit_policy"] = internet_exit_policy_name
 
                 append_if_not_duplicate(

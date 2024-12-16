@@ -6,8 +6,6 @@ from __future__ import annotations
 from functools import cached_property
 from typing import TYPE_CHECKING
 
-from pyavd._utils import get
-
 if TYPE_CHECKING:
     from . import EosDesignsFacts
 
@@ -40,8 +38,8 @@ class OverlayMixin:
         """
         if self.shared_utils.underlay_router is True:
             if self.evpn_role == "client":
-                return get(self.shared_utils.switch_data_combined, "evpn_route_servers", default=self.shared_utils.uplink_switches)
-            return get(self.shared_utils.switch_data_combined, "evpn_route_servers")
+                return self.shared_utils.node_config.evpn_route_servers or self.shared_utils.uplink_switches
+            return self.shared_utils.node_config.evpn_route_servers
         return []
 
     @cached_property
@@ -50,7 +48,7 @@ class OverlayMixin:
         if self.shared_utils.underlay_router is True and (
             self.mpls_overlay_role in ["client", "server"] or (self.evpn_role in ["client", "server"] and self.overlay["evpn_mpls"])
         ):
-            return get(self.shared_utils.switch_data_combined, "mpls_route_reflectors")
+            return self.shared_utils.node_config.mpls_route_reflectors
         return None
 
     @cached_property

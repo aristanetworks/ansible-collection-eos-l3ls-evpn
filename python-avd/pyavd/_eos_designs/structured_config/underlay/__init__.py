@@ -5,6 +5,7 @@ from pyavd._eos_designs.avdfacts import AvdFacts
 
 from .agents import AgentsMixin
 from .as_path import AsPathMixin
+from .dhcp_servers import DhcpServersMixin
 from .ethernet_interfaces import EthernetInterfacesMixin
 from .ip_access_lists import IpAccesslistsMixin
 from .loopback_interfaces import LoopbackInterfacesMixin
@@ -41,6 +42,7 @@ class AvdStructuredConfigUnderlay(
     MplsMixin,
     AgentsMixin,
     IpAccesslistsMixin,
+    DhcpServersMixin,
 ):
     """
     The AvdStructuredConfig Class is imported used "get_structured_config" to render parts of the structured config.

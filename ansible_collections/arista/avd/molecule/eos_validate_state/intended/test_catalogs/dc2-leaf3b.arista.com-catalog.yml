@@ -325,6 +325,12 @@ anta.tests.interfaces:
       custom_field: Interface Ethernet11 - dc2-leaf3-fw1_e1 = 'adminDown'
 - VerifyInterfacesStatus:
     interfaces:
+    - name: Ethernet16
+      status: adminDown
+    result_overwrite:
+      custom_field: Interface Ethernet16 - Test_dhcp_interface_connectivity = 'adminDown'
+- VerifyInterfacesStatus:
+    interfaces:
     - name: Port-Channel3
       status: up
     result_overwrite:

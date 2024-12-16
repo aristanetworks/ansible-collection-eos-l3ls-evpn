@@ -1,0 +1,7 @@
+---
+### PoE Global ###
+poe:
+  reboot:
+    action: maintain
+  interface_shutdown:
+    action: power-off

@@ -1,0 +1,10 @@
+---
+### Spanning-Tree (Rapid-PVST settings)
+spanning_tree:
+  mode: rstp
+  rstp_priority: 8192
+  edge_port:
+    bpduguard_default: true
+    bpdufilter_default: true
+  bpduguard_rate_limit:
+    default: false

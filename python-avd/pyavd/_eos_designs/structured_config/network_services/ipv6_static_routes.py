@@ -33,14 +33,15 @@ class Ipv6StaticRoutesMixin(UtilsMixin):
 
         ipv6_static_routes = []
         for tenant in self.shared_utils.filtered_tenants:
-            for vrf in tenant["vrfs"]:
-                for static_route in vrf["ipv6_static_routes"]:
-                    static_route["vrf"] = vrf["name"]
-                    static_route.pop("nodes", None)
+            for vrf in tenant.vrfs:
+                for static_route in vrf.ipv6_static_routes:
+                    ipv6_static_route = static_route._as_dict()
+                    ipv6_static_route["vrf"] = vrf.name
+                    ipv6_static_route.pop("nodes", None)
 
                     # Ignore duplicate items in case of duplicate VRF definitions across multiple tenants.
                     if static_route not in ipv6_static_routes:
-                        ipv6_static_routes.append(static_route)
+                        ipv6_static_routes.append(ipv6_static_route)
 
         if ipv6_static_routes:
             return ipv6_static_routes

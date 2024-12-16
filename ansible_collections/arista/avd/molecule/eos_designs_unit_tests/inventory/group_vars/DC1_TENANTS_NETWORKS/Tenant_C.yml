@@ -32,6 +32,12 @@ tenant_c:
           activate: True
           route_map_in: TEST_IN
           route_map_out: TEST_OUT
+          rcf_in: TEST_RCF_IN()
+          rcf_out: TEST_RCF_OUT()
+        address_family_ipv6:
+          activate: true
+          rcf_in: TEST_RCF_IN()
+          rcf_out: TEST_RCF_OUT()
     vrfs:
       - name: Tenant_C_OP_Zone
         vrf_vni: 30
@@ -68,8 +74,16 @@ tenant_c:
               always: true
             address_family_ipv4:
               activate: True
+              route_map_in: TEST_IN
+              route_map_out: TEST_OUT
+              rcf_in: TEST_RCF_IN()
+              rcf_out: TEST_RCF_OUT()
             address_family_ipv6:
               activate: True
+              route_map_in: TEST_IN
+              route_map_out: TEST_OUT
+              rcf_in: TEST_RCF_IN()
+              rcf_out: TEST_RCF_OUT()
             nodes: [ DC1-BL2B ]
             update_source: lo0
             bfd: false

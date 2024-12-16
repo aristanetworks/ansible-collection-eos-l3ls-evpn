@@ -1,0 +1,4 @@
+---
+snmp_server:
+  traps:
+    enable: false

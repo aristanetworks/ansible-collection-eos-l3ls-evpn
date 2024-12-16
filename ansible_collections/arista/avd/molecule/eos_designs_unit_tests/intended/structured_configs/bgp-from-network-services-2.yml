@@ -25,7 +25,6 @@ management_interfaces:
   shutdown: false
   vrf: MGMT
   ip_address: 10.1.1.2/24
-  gateway: null
   type: oob
 management_api_http:
   enable_vrfs:

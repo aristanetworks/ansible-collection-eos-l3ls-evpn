@@ -1,0 +1,11 @@
+---
+banners:
+  login: |
+    !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    !***!!!Unauthorized access prohibited!!!***!
+    !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+  motd: |
+    .         Switch       : $(hostname)                            .
+    .         Site         : DC1                      .
+    .         Type info for information about the device            .
+    .         Type help for information about the aliases           .

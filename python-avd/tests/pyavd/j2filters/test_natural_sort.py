@@ -2,6 +2,7 @@
 # Use of this source code is governed by the Apache License 2.0
 # that can be found in the LICENSE file.
 
+from contextlib import AbstractContextManager
 from contextlib import nullcontext as does_not_raise
 from typing import Any
 
@@ -32,7 +33,15 @@ class TestNaturalSortFilter:
             pytest.param({}, "", False, True, [], does_not_raise(), id="empty-dict"),
             pytest.param("", "", False, True, [], does_not_raise(), id="empty-string"),
             pytest.param("access_list", None, False, True, ["_", "a", "c", "c", "e", "i", "l", "s", "s", "s", "t"], does_not_raise(), id="string-input"),
-            pytest.param(["1,2,3,4", "11,2,3,4", "5.6.7.8"], None, False, True, ["1,2,3,4", "5.6.7.8", "11,2,3,4"], does_not_raise(), id="list-of-integers"),
+            pytest.param(
+                ["1,2,3,4", "11,2,3,4", "5.6.7.8"],  # NOSONAR, IP is just test data
+                None,
+                False,
+                True,
+                ["1,2,3,4", "5.6.7.8", "11,2,3,4"],  # NOSONAR, IP is just test data
+                does_not_raise(),
+                id="list-of-integers",
+            ),
             pytest.param({"a1": 123, "a10": 333, "a2": 2, "a11": 4456}, None, False, True, ["a1", "a2", "a10", "a11"], does_not_raise(), id="dict"),
             pytest.param(
                 [
@@ -137,7 +146,13 @@ class TestNaturalSortFilter:
         ],
     )
     def test_natural_sort(
-        self, item_to_natural_sort: Any, sort_key: str | None, strict: bool | None, ignore_case: bool | None, sorted_list: list | None, expected_raise: object
+        self,
+        item_to_natural_sort: Any,
+        sort_key: str | None,
+        strict: bool,
+        ignore_case: bool,
+        sorted_list: list | None,
+        expected_raise: AbstractContextManager,
     ) -> None:
         with expected_raise:
             resp = natural_sort(item_to_natural_sort, sort_key, strict=strict, ignore_case=ignore_case)

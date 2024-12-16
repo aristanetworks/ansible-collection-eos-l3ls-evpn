@@ -269,7 +269,8 @@ jobs:
           - avd_scenario: 'eos_config_deploy_cvp'
             ansible_version: 'ansible-core==2.15.0'
     needs: [ file-changes ]
-    if: needs.file-changes.outputs.cloudvision == 'true'
+    if: needs.file-changes.outputs.cloudvision == 'true' || needs.file-changes.outputs.eos_design == 'true' || needs.file-changes.outputs.config_gen == 'true'
+
     steps:
       - uses: actions/checkout@v4
       - name: Run molecule action
@@ -429,7 +430,7 @@ jobs:
         # The version conflicts with our requirements,
         # so we let the galaxy-importer version resolve remaining requirements.
         run: |
-          pip install "galaxy-importer==0.4.25"
+          pip install "galaxy-importer==0.4.26"
       - name: 'Build ansible package'
         run: make collection-build
       - name: 'Run galaxy-importer checks'

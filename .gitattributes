@@ -1,6 +1,8 @@
 # Collapsing generated schemas from PR diff by default
 /python-avd/pyavd/_eos_cli_config_gen/schema/eos_cli_config_gen.schema.yml  linguist-generated=true -merge -diff
 /python-avd/pyavd/_eos_designs/schema/eos_designs.schema.yml  linguist-generated=true -merge -diff
+/python-avd/pyavd/_eos_cli_config_gen/schema/__init__.py  linguist-generated=true -merge -diff
+/python-avd/pyavd/_eos_designs/schema/__init__.py linguist-generated=true -merge -diff
 
 # Showing generated tables in PR diff by default by count as generated and automatically use the latest file on merge
 /ansible_collections/arista/avd/roles/eos_cli_config_gen/docs/tables/*  linguist-generated=true -merge diff

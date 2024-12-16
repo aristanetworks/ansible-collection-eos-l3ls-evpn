@@ -1,0 +1,164 @@
+---
+snmp_server:
+  engine_ids:
+    local: 424242424242424242
+    remotes:
+      # TODO: make address as primary key
+      # First one without IP should not be rendered
+      # - id: 1234567890ABCDEF12
+      - id: 6172697374615F6970
+        address: 1.1.1.1
+      - id: DEADBEEFCAFE123456
+        address: 2.2.2.2
+        udp_port: 1337
+  contact: DC1_OPS
+  location: DC1
+  communities:
+    - name: SNMP-COMMUNITY-1
+      access: ro
+      access_list_ipv4:
+        name: onur
+    - name: SNMP-COMMUNITY-2
+      access: rw
+      access_list_ipv4:
+        name: SNMP-MGMT
+      access_list_ipv6:
+        name: SNMP-MGMT
+      view: VW-READ
+    - name: SNMP-COMMUNITY-3
+  local_interfaces:
+    - name: Management1
+      vrf: MGMT
+    - name: Loopback0
+    - name: Loopback12
+      vrf: Tenant_A_APP_Zone
+  ipv4_acls:
+    - name: SNMP-MGMT
+      vrf: MGMT
+    - name: onur
+  ipv6_acls:
+    - name: SNMP-MGMT
+      vrf: MGMT
+    - name: onur_v6
+  views:
+    - name: VW-WRITE
+      mib_family_name: iso
+      included: true
+    - name: VW-READ
+      mib_family_name: iso
+      included: true
+  groups:
+    - name: GRP-READ-ONLY
+      version: v3
+      authentication: priv
+      read: v3read
+    - name: GRP-READ-WRITE
+      version: v3
+      authentication: auth
+      read: v3read
+      write: v3write
+  users:
+    - name: USER-READ-NO-AUTH-NO-PRIV
+      group: GRP-READ-ONLY
+      version: v3
+    - name: USER-READ-AUTH-NO-PRIV
+      group: GRP-READ-ONLY
+      version: v3
+      auth: sha
+      auth_passphrase: clearPassword
+    - name: USER-READ-AUTH-PRIV
+      group: GRP-READ-ONLY
+      version: v3
+      auth: sha
+      auth_passphrase: clearPassword
+      priv: aes
+      priv_passphrase: clearPassword
+    - name: USER-READ-NO-AUTH-NO-PRIV-LOC
+      group: GRP-READ-ONLY
+      version: v3
+      localized: 424242424242424242
+    - name: USER-READ-AUTH-NO-PRIV-LOC
+      group: GRP-READ-ONLY
+      version: v3
+      auth: sha
+      auth_passphrase: 8da526cd35b9ea9b42d819036f7fad058576ea0a
+      localized: 424242424242424242
+    - name: USER-READ-AUTH-PRIV-LOC
+      group: GRP-READ-ONLY
+      version: v3
+      auth: sha
+      auth_passphrase: 8da526cd35b9ea9b42d819036f7fad058576ea0a
+      priv: aes
+      priv_passphrase: 8da526cd35b9ea9b42d819036f7fad05
+      localized: 424242424242424242
+    - name: USER-WRITE
+      group: GRP-READ-WRITE
+      version: v3
+      auth: sha
+      auth_passphrase: clearPassword
+      priv: aes
+      priv_passphrase: clearPassword
+    - name: REMOTE-USER-IP-ONLY
+      group: GRP-REMOTE
+      version: v3
+      remote_address: 42.42.42.42
+    - name: REMOTE-USER-IP-PORT
+      group: GRP-REMOTE
+      version: v3
+      remote_address: 42.42.42.42
+      udp_port: 666
+    - name: REMOTE-USER-IP-LOCALIZED
+      group: GRP-REMOTE
+      version: v3
+      remote_address: 42.42.42.42
+      localized: DEADBEEFCAFE123456
+      auth: sha
+      auth_passphrase: DEADBEEFCAFE123456ABC1234321AB1233456778
+  hosts:
+    - host: 10.6.75.121
+      vrf: MGMT
+      version: 1
+      community: SNMP-COMMUNITY-1
+    - host: 10.6.75.121
+      vrf: MGMT
+      version: 2c
+      community: SNMP-COMMUNITY-2
+    - host: 10.6.75.122
+      vrf: MGMT
+      # version: 2c should be autodetected based on community key.
+      community: SNMP-COMMUNITY-2
+    - host: 10.6.75.99
+      vrf: MGMT
+      version: 3
+      users:
+        - username: USER-READ-AUTH-NO-PRIV
+          authentication_level: auth
+        - username: USER-WRITE
+          authentication_level: auth
+    - host: 10.6.75.100
+      vrf: MGMT
+      # version: 3 should be autodetected based on users key.
+      users:
+        - username: USER-READ-AUTH-PRIV
+          authentication_level: priv
+  traps:
+    enable: true
+    snmp_traps:
+      - name: bridge
+      - name: bridge arista-mac-age
+        enabled: false
+      - name: mpls
+      - name: bgp
+      - name: bgp arista-backward-transition
+        enabled: false
+      - name: lldp
+      - name: msdp backward-transition
+      - name: msdp established
+      - name: snmp link-down
+      - name: snmpConfigManEvent
+  vrfs:
+    - name: default
+      enable: false
+    - name: MGMT
+      enable: true
+  ifmib_ifspeed_shape_rate: true

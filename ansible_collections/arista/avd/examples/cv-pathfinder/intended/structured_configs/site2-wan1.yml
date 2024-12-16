@@ -611,8 +611,8 @@ application_traffic_recognition:
       protocols:
       - tcp
       - udp
-      tcp_dest_port_set_name: VIDEO-PORTS
       udp_dest_port_set_name: VIDEO-PORTS
+      tcp_dest_port_set_name: VIDEO-PORTS
     - name: VOICE-APP
       protocols:
       - tcp

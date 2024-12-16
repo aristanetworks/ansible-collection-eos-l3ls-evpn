@@ -77,7 +77,7 @@ class PrefixListsMixin(UtilsMixin):
         """Return sorted list of MLAG peerings for VRFs where MLAG iBGP peering should not be redistributed."""
         mlag_prefixes = set()
         for tenant in self.shared_utils.filtered_tenants:
-            for vrf in tenant["vrfs"]:
+            for vrf in tenant.vrfs:
                 if self._mlag_ibgp_peering_vlan_vrf(vrf, tenant) is None:
                     continue
 

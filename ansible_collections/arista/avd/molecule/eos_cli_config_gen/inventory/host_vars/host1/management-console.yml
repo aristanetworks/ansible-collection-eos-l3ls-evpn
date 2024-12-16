@@ -1,0 +1,3 @@
+---
+management_console:
+  idle_timeout: 15

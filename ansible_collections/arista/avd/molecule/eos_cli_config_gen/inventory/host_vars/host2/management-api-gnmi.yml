@@ -1,0 +1,10 @@
+---
+management_api_gnmi:
+  transport:
+    grpc:
+      - name: MGMT
+        vrf: MGMT
+        ip_access_group: ACL-GNMI
+      - name: MONITORING
+        vrf: MONITORING
+        port: 6031

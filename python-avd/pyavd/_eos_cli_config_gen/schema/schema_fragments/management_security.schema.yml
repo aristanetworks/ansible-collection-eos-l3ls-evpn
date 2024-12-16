@@ -115,6 +115,21 @@ keys:
               description: |
                 cipher_list syntax follows the openssl cipher strings format.
                 Colon (:) separated list of allowed ciphers as a string.
+                Not supported on EOS version starting 4.32.0F, use the `ciphers` setting instead.
+            ciphers:
+              type: dict
+              description: This setting is applicable to EOS versions 4.32.0F and later.
+              keys:
+                v1_0:
+                  type: str
+                  description: |
+                    The cipher suites for TLS version 1.0, 1.1 and 1.2.
+                    Colon (:) separated list of allowed ciphers as a string.
+                v1_3:
+                  type: str
+                  description: |
+                    The cipher suites for TLS version 1.3.
+                    Colon (:) separated list of allowed ciphers as a string.
             trust_certificate:
               type: dict
               keys:

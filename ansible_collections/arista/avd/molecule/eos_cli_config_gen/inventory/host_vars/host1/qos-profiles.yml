@@ -1,0 +1,231 @@
+---
+qos_profiles:
+  - name: test
+    trust: dscp
+    dscp: 46
+    shape:
+      rate: 80 percent
+    tx_queues:
+      - id: 1
+        bandwidth_percent: 50
+        priority: 'no priority'
+      - id: 2
+        bandwidth_percent: 10
+        priority: 'priority strict'
+        random_detect:
+          ecn:
+            threshold:
+              units: kbytes
+              min: 320
+              max: 320
+              max_probability: 90
+              # weight: 0
+      - id: 4
+        bandwidth_guaranteed_percent: 10
+        random_detect:
+          ecn:
+            threshold:
+              units: segments
+              min: 320
+              max: 320
+              weight: 10
+  - name: experiment
+    trust: cos
+    cos: 2
+    service_policy:
+      type:
+        qos_input: test_qos_policy_v1
+    tx_queues:
+      - id: 3
+        bandwidth_percent: 30
+        priority: 'no priority'
+      - id: 5
+        bandwidth_percent: 40
+      - id: 4
+        bandwidth_guaranteed_percent: 10
+      - id: 7
+        bandwidth_percent: 30
+        shape:
+          rate: 40 percent
+  - name: no_qos_trust
+    trust: disabled
+    cos: 3
+    dscp: 4
+  - name: qprof_testwithpolicy
+    service_policy:
+      type:
+        qos_input: pmap_test1
+    tx_queues:
+      - id: 5
+        priority: 'no priority'
+        bandwidth_percent: 19
+        comment: |
+          Multi-line comment
+          here.
+      - id: 1
+        bandwidth_percent: 80
+      - id: 0
+        bandwidth_percent: 1
+  - name: test_with_pfc
+    service_policy:
+      type:
+        qos_input: pmap_test1
+    priority_flow_control:
+      enabled: true
+      watchdog:
+        enabled: true
+        action: drop
+        timer:
+          timeout: "0.05"
+          polling_interval: auto
+          recovery_time: 1.11
+          forced: true
+      priorities:
+        - priority: 0
+          no_drop: true
+        - priority: 1
+          no_drop: false
+    tx_queues:
+      - id: 5
+        priority: 'no priority'
+        bandwidth_percent: 19
+      - id: 1
+        bandwidth_percent: 80
+      - id: 0
+        bandwidth_percent: 1
+  - name: uc_mc_queues_test
+    uc_tx_queues:
+      - id: 1
+        bandwidth_percent: 50
+        priority: 'no priority'
+        comment: "Test no priority"
+        random_detect:
+          ecn:
+            threshold:
+              units: milliseconds
+              min: 3
+              max: 9
+              max_probability: 90
+      - id: 2
+        bandwidth_percent: 10
+        priority: 'priority strict'
+        random_detect:
+          ecn:
+            threshold:
+              units: kbytes
+              min: 320
+              max: 320
+              max_probability: 90
+              # weight: 0
+      - id: 4
+        bandwidth_guaranteed_percent: 10
+        comment: "Test guaranteed percent"
+        random_detect:
+          ecn:
+            threshold:
+              units: segments
+              min: 320
+              max: 320
+              weight: 10
+    mc_tx_queues:
+      - id: 1
+        bandwidth_percent: 50
+        priority: 'no priority'
+      - id: 2
+        bandwidth_percent: 10
+        priority: 'priority strict'
+        comment: "Test strict priority"
+      - id: 4
+        bandwidth_guaranteed_percent: 10
+        comment: "Test guaranteed percent"
+  - name: wred_queues_test
+    tx_queues:
+      - id: 1
+        bandwidth_percent: 50
+        priority: 'no priority'
+        comment: "Test no priority"
+        random_detect:
+          drop:
+            threshold:
+              units: kbytes
+              min: 1
+              max: 10
+              drop_probability: 100
+      - id: 2
+        bandwidth_percent: 10
+        priority: 'priority strict'
+        random_detect:
+          drop:
+            threshold:
+              drop_precedence: 2
+              units: kbytes
+              min: 2
+              max: 200
+              drop_probability: 50
+              weight: 10
+      - id: 3
+        bandwidth_percent: 10
+        priority: 'priority strict'
+        random_detect:
+          ecn:
+            threshold:
+              units: kbytes
+              min: 320
+              max: 320
+              weight: 10
+      - id: 4
+        bandwidth_guaranteed_percent: 10
+        comment: "Test guaranteed percent"
+        random_detect:
+          drop:
+            threshold:
+              units: kbytes
+              min: 1
+              max: 10
+              drop_probability: 90
+    mc_tx_queues:
+      - id: 1
+        bandwidth_percent: 50
+        priority: 'no priority'
+      - id: 2
+        bandwidth_percent: 10
+        priority: 'priority strict'
+        comment: "Test strict priority"
+      - id: 4
+        bandwidth_guaranteed_percent: 10
+        comment: "Test guaranteed percent"
+  - name: wred_uc_queues_test
+    uc_tx_queues:
+      - id: 1
+        bandwidth_percent: 50
+        priority: 'no priority'
+        comment: "Test no priority"
+        random_detect:
+          drop:
+            threshold:
+              units: "microseconds"
+              min: 1
+              max: 10
+              drop_probability: 90
+              weight: 15
+      - id: 2
+        bandwidth_percent: 10
+        priority: 'priority strict'
+        random_detect:
+          drop:
+            threshold:
+              drop_precedence: 1
+              units: "milliseconds"
+              min: 2
+              max: 20
+              drop_probability: 80
+      - id: 4
+        bandwidth_guaranteed_percent: 10
+        comment: "Test guaranteed percent"
+        random_detect:
+          drop:
+            threshold:
+              units: "microseconds"
+              min: 1
+              max: 10
+              drop_probability: 90

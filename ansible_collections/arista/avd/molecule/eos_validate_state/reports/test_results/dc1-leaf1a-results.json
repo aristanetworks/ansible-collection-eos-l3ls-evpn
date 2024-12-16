@@ -552,6 +552,15 @@
       "interfaces"
     ],
     "description": "Verifies the status of the provided interfaces.",
+    "custom_field": "Interface Ethernet33 - WORKSTATION_dc1-leaf1-workstationNoLLDP_e1 = 'up'"
+  },
+  {
+    "name": "dc1-leaf1a",
+    "test": "VerifyInterfacesStatus",
+    "categories": [
+      "interfaces"
+    ],
+    "description": "Verifies the status of the provided interfaces.",
     "custom_field": "Interface Ethernet4 - MLAG_dc1-leaf1b_Ethernet4 = 'up'"
   },
   {

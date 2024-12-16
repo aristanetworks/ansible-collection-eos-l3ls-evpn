@@ -1,0 +1,28 @@
+---
+# test hw counter
+hardware_counters:
+  features:
+    - name: gre tunnel interface
+      direction: out
+    - name: ip
+      direction: in
+      layer3: false
+      units_packets: false
+    - name: ip
+      direction: out
+      layer3: true
+      units_packets: true
+    - name: acl
+      direction: out
+      address_type: mac
+    - name: mpls lfib
+      units_packets: true
+    - name: route
+      address_type: ipv4
+      vrf: test
+      prefix: 192.168.0.0/24
+    - name: route
+      address_type: ipv6
+      prefix: 2001:db8:cafe::/64
+    - name: segment-security
+      direction: in

@@ -1,0 +1,4 @@
+---
+management_defaults:
+  secret:
+    hash: md5

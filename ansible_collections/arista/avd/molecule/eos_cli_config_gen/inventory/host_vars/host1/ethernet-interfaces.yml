@@ -130,6 +130,20 @@ ethernet_interfaces:
         - name: ACL1
         - name: ACL2
       version: 2
+    address_locking:
+      ipv4: true
+    l2_protocol:
+      forwarding_profile: TEST1
+    service_profile: test
+    service_policy:
+      qos:
+        input: pmap_test1
+    qos:
+      trust: dscp
+      dscp: 48
+    traffic_policy:
+      input: BLUE-C1-POLICY
+      output: BLUE-C2-POLICY
 
   - name: Ethernet2
     ip_address: 10.1.255.3/24
@@ -189,6 +203,9 @@ ethernet_interfaces:
         in_required: false
       backup_link:
         prefer_vlan: 20
+    address_locking:
+      ipv4: true
+      ipv6: true
 
   - name: Ethernet3
     peer: DC1-SPINE2
@@ -244,6 +261,22 @@ ethernet_interfaces:
             dot1q_tunnel_to: 50
       backup_link:
         interface: Ethernet4
+    address_locking:
+      ipv4: false
+      ipv6: true
+    mac_security:
+      profile: A1
+    ptp:
+      enable: true
+      delay_mechanism: e2e
+      sync_message:
+        interval: 1
+      role: dynamic
+      vlan: 2
+      transport: layer2
+    sync_e:
+      enable: true
+      priority: 10
 
   - name: Ethernet4
     description: Molecule IPv6
@@ -315,6 +348,8 @@ ethernet_interfaces:
     switchport:
       enabled: false
       access_vlan: 220
+    sync_e:
+      enable: true
 
   - name: Ethernet6
     logging:
@@ -335,6 +370,35 @@ ethernet_interfaces:
       mode: trunk
     spanning_tree_bpduguard: enabled
     spanning_tree_bpdufilter: enabled
+    lldp:
+      transmit: false
+      receive: true
+    ptp:
+      enable: true
+      announce:
+        interval: 3
+        timeout: 9
+      delay_req: -7
+      delay_mechanism: e2e
+      sync_message:
+        interval: 1
+      role: dynamic
+      transport: ipv4
+      profile:
+        g8275_1:
+          destination_mac_address: non-forwardable
+    service_profile: experiment
+    qos:
+      trust: cos
+      cos: 2
+    tx_queues:
+      - id: 2
+        random_detect:
+          ecn:
+            count: true
+    sync_e:
+      enable: true
+      priority: disabled
 
   - name: Ethernet7
     description: Molecule L2
@@ -403,6 +467,13 @@ ethernet_interfaces:
         key: password
         mode: md5
         rx_disabled: true
+    service_profile: qprof_testwithpolicy
+    uc_tx_queues:
+      - id: 4
+        random_detect:
+          ecn:
+            count: true
+
   - name: Ethernet8.101
     description: to WAN-ISP-01 Ethernet2.101 - VRF-C1
     encapsulation_dot1q:
@@ -442,6 +513,9 @@ ethernet_interfaces:
         sha:
           key_id: 2
         rx_disabled: true
+    lldp:
+      transmit: true
+      receive: false
 
   - name: Ethernet10
     description: interface_with_mpls_disabled
@@ -959,6 +1033,9 @@ ethernet_interfaces:
       mac_based_authentication:
         enabled: true
         always: true
+    flow_tracker:
+      sampled: T2
+      hardware: T2
 
   - name: Ethernet41
     switchport:
@@ -969,6 +1046,9 @@ ethernet_interfaces:
         enabled: true
         always: true
         host_mode_common: true
+    flow_tracker:
+      sampled: T3
+      hardware: T3
 
   - name: Ethernet42
     switchport:
@@ -977,6 +1057,8 @@ ethernet_interfaces:
     dot1x:
       mac_based_authentication:
         enabled: true
+    flow_tracker:
+      sampled: T3
 
   - name: Ethernet43
     switchport:

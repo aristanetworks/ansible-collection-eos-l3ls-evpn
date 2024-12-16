@@ -30,39 +30,39 @@ class RouterBgpMixin(UtilsMixin):
 
         neighbors = []
         neighbor_interfaces = []
-        for p2p_link in self._filtered_p2p_links:
-            if p2p_link.get("include_in_underlay_protocol", True) is not True:
+        for p2p_link, p2p_link_data in self._filtered_p2p_links:
+            if not p2p_link.include_in_underlay_protocol:
                 continue
 
-            if p2p_link["data"]["bgp_as"] is None or p2p_link["data"]["peer_bgp_as"] is None:
+            if p2p_link_data["bgp_as"] is None or p2p_link_data["peer_bgp_as"] is None:
                 msg = f"{self.data_model}.p2p_links.[].as or {self.data_model}.p2p_links_profiles.[].as"
                 raise AristaAvdInvalidInputsError(msg)
 
             neighbor = {
-                "remote_as": p2p_link["data"]["peer_bgp_as"],
-                "peer": p2p_link["data"]["peer"],
-                "description": p2p_link["data"]["peer"],
-                "peer_group": self.shared_utils.bgp_peer_groups["ipv4_underlay_peers"]["name"],
+                "remote_as": p2p_link_data["peer_bgp_as"],
+                "peer": p2p_link_data["peer"],
+                "description": p2p_link_data["peer"],
+                "peer_group": self.inputs.bgp_peer_groups.ipv4_underlay_peers.name,
             }
 
             # RFC5549
-            if self.shared_utils.underlay_rfc5549 and p2p_link.get("routing_protocol") != "ebgp":
-                neighbor_interfaces.append({"name": p2p_link["data"]["interface"], **neighbor})
+            if self.inputs.underlay_rfc5549 and p2p_link.routing_protocol != "ebgp":
+                neighbor_interfaces.append({"name": p2p_link_data["interface"], **neighbor})
                 continue
 
             # Regular BGP Neighbors
-            if p2p_link["data"]["ip"] is None or p2p_link["data"]["peer_ip"] is None:
+            if p2p_link_data["ip"] is None or p2p_link_data["peer_ip"] is None:
                 msg = f"{self.data_model}.p2p_links.[].ip, .subnet or .ip_pool"
                 raise AristaAvdInvalidInputsError(msg)
 
-            neighbor["bfd"] = p2p_link.get("bfd")
-            if p2p_link["data"]["bgp_as"] != self.shared_utils.bgp_as:
-                neighbor["local_as"] = p2p_link["data"]["bgp_as"]
+            neighbor["bfd"] = p2p_link.bfd
+            if p2p_link_data["bgp_as"] != self.shared_utils.bgp_as:
+                neighbor["local_as"] = p2p_link_data["bgp_as"]
 
             # Remove None values
             neighbor = {key: value for key, value in neighbor.items() if value is not None}
 
-            neighbors.append({"ip_address": get_ip_from_ip_prefix(p2p_link["data"]["peer_ip"]), **neighbor})
+            neighbors.append({"ip_address": get_ip_from_ip_prefix(p2p_link_data["peer_ip"]), **neighbor})
 
         router_bgp = {}
         if neighbors:

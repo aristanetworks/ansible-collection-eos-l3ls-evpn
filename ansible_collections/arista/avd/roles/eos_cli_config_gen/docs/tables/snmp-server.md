@@ -60,7 +60,7 @@
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;host</samp>](## "snmp_server.hosts.[].host") | String |  |  |  | Host IP address or name. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;vrf</samp>](## "snmp_server.hosts.[].vrf") | String |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;version</samp>](## "snmp_server.hosts.[].version") | String |  |  | Valid Values:<br>- <code>1</code><br>- <code>2c</code><br>- <code>3</code> |  |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;community</samp>](## "snmp_server.hosts.[].community") | String |  |  |  | Community name. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;community</samp>](## "snmp_server.hosts.[].community") | String |  |  |  | Community name. Required with version "1" or "2c". |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;users</samp>](## "snmp_server.hosts.[].users") | List, items: Dictionary |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;username</samp>](## "snmp_server.hosts.[].users.[].username") | String |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;authentication_level</samp>](## "snmp_server.hosts.[].users.[].authentication_level") | String |  |  | Valid Values:<br>- <code>auth</code><br>- <code>noauth</code><br>- <code>priv</code> |  |
@@ -184,7 +184,7 @@
           vrf: <str>
           version: <str; "1" | "2c" | "3">
 
-          # Community name.
+          # Community name. Required with version "1" or "2c".
           community: <str>
           users:
             - username: <str>

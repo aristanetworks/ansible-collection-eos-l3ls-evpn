@@ -26,14 +26,13 @@ class RouterServiceInsertionMixin(UtilsMixin):
 
         Only used for CV Pathfinder edge routers today
         """
-        if not self._filtered_internet_exit_policies:
+        if not self._filtered_internet_exit_policies_and_connections:
             return None
 
-        router_service_insertion = {}
-        connections = []
+        service_connections = []
 
-        for policy in self._filtered_internet_exit_policies:
-            for connection in policy.get("connections", []):
+        for _policy, connections in self._filtered_internet_exit_policies_and_connections:
+            for connection in connections:
                 service_connection = {
                     "name": connection["name"],
                     "monitor_connectivity_host": connection["monitor_name"],
@@ -49,12 +48,9 @@ class RouterServiceInsertionMixin(UtilsMixin):
                         "next_hop": connection["next_hop"],
                     }
 
-                connections.append(service_connection)
-        if connections:
-            router_service_insertion["enabled"] = True
-            router_service_insertion["connections"] = connections
+                service_connections.append(service_connection)
 
-        if router_service_insertion:
-            return router_service_insertion
+        if service_connections:
+            return {"enabled": True, "connections": service_connections}
 
         return None

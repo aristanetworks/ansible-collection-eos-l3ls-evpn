@@ -6,7 +6,7 @@ from __future__ import annotations
 from functools import cached_property
 from typing import TYPE_CHECKING
 
-from pyavd._utils import append_if_not_duplicate, get
+from pyavd._utils import append_if_not_duplicate
 
 from .utils import UtilsMixin
 
@@ -33,9 +33,9 @@ class RouterMulticastMixin(UtilsMixin):
 
         vrfs = []
         for tenant in self.shared_utils.filtered_tenants:
-            for vrf in tenant["vrfs"]:
-                if get(vrf, "_evpn_l3_multicast_enabled"):
-                    vrf_config = {"name": vrf["name"], "ipv4": {"routing": True}}
+            for vrf in tenant.vrfs:
+                if getattr(vrf, "_evpn_l3_multicast_enabled", False):
+                    vrf_config = {"name": vrf.name, "ipv4": {"routing": True}}
                     append_if_not_duplicate(
                         list_of_dicts=vrfs,
                         primary_key="name",

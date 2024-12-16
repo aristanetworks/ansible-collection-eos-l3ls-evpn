@@ -1,0 +1,17 @@
+---
+### Hardware ###
+hardware:
+  access_list:
+    mechanism: tcam
+  speed_groups:
+    - speed_group: 1
+      serdes: 10g
+    - speed_group: 2
+      serdes: 25g
+    - speed_group: 3/1
+      serdes: 25g
+  port_groups:
+    - port_group: 1
+      select: Et32/1-4
+    - port_group: 2
+      select: Et32/1,Et32/3,Et34

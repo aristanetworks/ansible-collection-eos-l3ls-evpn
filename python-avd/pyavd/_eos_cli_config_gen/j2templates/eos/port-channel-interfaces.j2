@@ -330,6 +330,9 @@ interface {{ port_channel_interface.name }}
 {%     if port_channel_interface.ip_address is arista.avd.defined %}
    ip address {{ port_channel_interface.ip_address }}
 {%     endif %}
+{%     if port_channel_interface.ip_address is arista.avd.defined("dhcp") and port_channel_interface.dhcp_client_accept_default_route is arista.avd.defined(true) %}
+   dhcp client accept default-route
+{%     endif %}
 {%     if port_channel_interface.ip_verify_unicast_source_reachable_via is arista.avd.defined %}
    ip verify unicast source reachable-via {{ port_channel_interface.ip_verify_unicast_source_reachable_via }}
 {%     endif %}
@@ -431,6 +434,9 @@ interface {{ port_channel_interface.name }}
 {%     endif %}
 {%     if port_channel_interface.mac_access_group_out is arista.avd.defined %}
    mac access-group {{ port_channel_interface.mac_access_group_out }} out
+{%     endif %}
+{%     if port_channel_interface.min_links is arista.avd.defined %}
+   port-channel min-links {{ port_channel_interface.min_links }}
 {%     endif %}
 {%     if port_channel_interface.lacp_fallback_mode is arista.avd.defined %}
    port-channel lacp fallback {{ port_channel_interface.lacp_fallback_mode }}

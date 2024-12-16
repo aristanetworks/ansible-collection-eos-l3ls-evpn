@@ -6,12 +6,14 @@ from __future__ import annotations
 from functools import cached_property
 from typing import TYPE_CHECKING
 
-from pyavd._errors import AristaAvdError
+from pyavd._errors import AristaAvdError, AristaAvdMissingVariableError
 from pyavd._utils import default, get, get_ip_from_ip_prefix, get_item, strip_empties_from_dict
 from pyavd.api.interface_descriptions import InterfaceDescriptionData
 from pyavd.j2filters import natural_sort, range_expand
 
 if TYPE_CHECKING:
+    from pyavd._eos_designs.schema import EosDesigns
+
     from . import AvdStructuredConfigUnderlay
 
 
@@ -35,7 +37,7 @@ class UtilsMixin:
     @cached_property
     def _underlay_filter_peer_as_route_maps_asns(self: AvdStructuredConfigUnderlay) -> list:
         """Filtered ASNs."""
-        if self.shared_utils.underlay_filter_peer_as is False:
+        if not self.inputs.underlay_filter_peer_as:
             return []
 
         # using set comprehension with `{}` to remove duplicates and then run natural_sort to convert to list.
@@ -46,16 +48,16 @@ class UtilsMixin:
         """Returns the list of underlay links for this device."""
         underlay_links = []
         underlay_links.extend(self._uplinks)
-        if self.shared_utils.fabric_sflow_uplinks is not None:
+        if self.inputs.fabric_sflow.uplinks is not None:
             for uplink in underlay_links:
-                uplink.update({"sflow": {"enable": self.shared_utils.fabric_sflow_uplinks}})
+                uplink.update({"sflow": {"enable": self.inputs.fabric_sflow.uplinks}})
 
-        uplinks_flow_tracker = self.shared_utils.get_flow_tracker(None, "uplinks")
+        uplinks_flow_tracker = self.shared_utils.get_flow_tracker(self.inputs.fabric_flow_tracking.uplinks)
         if uplinks_flow_tracker is not None:
             for uplink in underlay_links:
-                uplink.update({"flow_tracker": uplinks_flow_tracker})
+                uplink["flow_tracker"] = uplinks_flow_tracker
 
-        downlinks_flow_tracker = self.shared_utils.get_flow_tracker(None, "downlinks")
+        downlinks_flow_tracker = self.shared_utils.get_flow_tracker(self.inputs.fabric_flow_tracking.downlinks)
 
         for peer in self._avd_peers:
             peer_facts = self.shared_utils.get_peer_facts(peer, required=True)
@@ -86,14 +88,17 @@ class UtilsMixin:
                         "mlag": get(uplink, "peer_mlag"),
                         "underlay_multicast": get(uplink, "underlay_multicast"),
                         "ipv6_enable": get(uplink, "ipv6_enable"),
-                        "sflow": {"enable": self.shared_utils.fabric_sflow_downlinks},
+                        "sflow": {"enable": self.inputs.fabric_sflow.downlinks},
                         "flow_tracker": downlinks_flow_tracker,
                         "spanning_tree_portfast": get(uplink, "peer_spanning_tree_portfast"),
                         "structured_config": get(uplink, "structured_config"),
                     }
                     if get(peer_facts, "inband_ztp"):
+                        # l2 inband ztp
                         link["inband_ztp_vlan"] = get(peer_facts, "inband_ztp_vlan")
                         link["inband_ztp_lacp_fallback_delay"] = get(peer_facts, "inband_ztp_lacp_fallback_delay")
+                        # l3 inband ztp
+                        link["dhcp_server"] = True
 
                     if (subinterfaces := get(uplink, "subinterfaces")) is not None:
                         link["subinterfaces"] = [
@@ -113,7 +118,7 @@ class UtilsMixin:
     @cached_property
     def _underlay_vlan_trunk_groups(self: AvdStructuredConfigUnderlay) -> list:
         """Returns a list of trunk groups to configure on the underlay link."""
-        if self.shared_utils.enable_trunk_groups is not True:
+        if self.inputs.enable_trunk_groups is not True:
             return []
 
         trunk_groups = []
@@ -141,67 +146,64 @@ class UtilsMixin:
     def _uplinks(self: AvdStructuredConfigUnderlay) -> list:
         return get(self._hostvars, "switch.uplinks")
 
-    def _get_l3_interface_cfg(self: AvdStructuredConfigUnderlay, l3_interface: dict) -> dict | None:
+    def _get_l3_interface_cfg(
+        self: AvdStructuredConfigUnderlay, l3_interface: EosDesigns._DynamicKeys.DynamicNodeTypesItem.NodeTypes.NodesItem.L3InterfacesItem
+    ) -> dict | None:
         """Returns structured_configuration for one L3 interface."""
-        interface_name = get(l3_interface, "name", required=True, org_key=f"<node_type_key>...[node={self.shared_utils.hostname}].l3_interfaces[].name]")
-
-        interface_description = l3_interface.get("description")
+        interface_description = l3_interface.description
         if not interface_description:
             interface_description = self.shared_utils.interface_descriptions.underlay_ethernet_interface(
                 InterfaceDescriptionData(
                     shared_utils=self.shared_utils,
-                    interface=interface_name,
-                    peer=l3_interface.get("peer"),
-                    peer_interface=l3_interface.get("peer_interface"),
-                    wan_carrier=l3_interface.get("wan_carrier"),
-                    wan_circuit_id=l3_interface.get("wan_circuit_id"),
+                    interface=l3_interface.name,
+                    peer=l3_interface.peer,
+                    peer_interface=l3_interface.peer_interface,
+                    wan_carrier=l3_interface.wan_carrier,
+                    wan_circuit_id=l3_interface.wan_circuit_id,
                 ),
             )
 
         # TODO: catch if ip_address is not valid or not dhcp
-        ip_address = get(
-            l3_interface,
-            "ip_address",
-            required=True,
-            org_key=f"{self.shared_utils.node_type_key_data['key']}.nodes[name={self.shared_utils.hostname}].l3_interfaces[name={interface_name}].ip_address",
-        )
+        if not l3_interface.ip_address:
+            msg = f"{self.shared_utils.node_type_key_data.key}.nodes[name={self.shared_utils.hostname}].l3_interfaces[name={l3_interface.name}].ip_address"
+            raise AristaAvdMissingVariableError(msg)
 
         interface = {
-            "name": interface_name,
+            "name": l3_interface.name,
             "peer_type": "l3_interface",
-            "peer": l3_interface.get("peer"),
-            "peer_interface": l3_interface.get("peer_interface"),
-            "ip_address": ip_address,
-            "shutdown": not l3_interface.get("enabled", True),
-            "switchport": {"enabled": False if "." not in interface_name else None},
+            "peer": l3_interface.peer,
+            "peer_interface": l3_interface.peer_interface,
+            "ip_address": l3_interface.ip_address,
+            "shutdown": not l3_interface.enabled,
+            "switchport": {"enabled": False if "." not in l3_interface.name else None},
             "description": interface_description,
-            "speed": l3_interface.get("speed"),
-            "service_profile": l3_interface.get("qos_profile"),
-            "access_group_in": get(self._l3_interface_acls, f"{interface_name}..ipv4_acl_in..name", separator=".."),
-            "access_group_out": get(self._l3_interface_acls, f"{interface_name}..ipv4_acl_out..name", separator=".."),
-            "eos_cli": l3_interface.get("raw_eos_cli"),
-            "struct_cfg": l3_interface.get("structured_config"),
-            "flow_tracker": self.shared_utils.get_flow_tracker(l3_interface, "l3_interfaces"),
+            "speed": l3_interface.speed,
+            "service_profile": l3_interface.qos_profile,
+            "access_group_in": get(self._l3_interface_acls, f"{l3_interface.name}..ipv4_acl_in..name", separator=".."),
+            "access_group_out": get(self._l3_interface_acls, f"{l3_interface.name}..ipv4_acl_out..name", separator=".."),
+            "eos_cli": l3_interface.raw_eos_cli,
+            "struct_cfg": l3_interface.structured_config._as_dict(strip_values=()),
+            "flow_tracker": self.shared_utils.get_flow_tracker(l3_interface.flow_tracking),
         }
 
-        if self.shared_utils.fabric_sflow_l3_interfaces is not None:
-            interface["sflow"] = {"enable": self.shared_utils.fabric_sflow_l3_interfaces}
+        if self.inputs.fabric_sflow.l3_interfaces is not None:
+            interface["sflow"] = {"enable": self.inputs.fabric_sflow.l3_interfaces}
 
-        if "." in interface_name:
-            interface["encapsulation_dot1q"] = {"vlan": int(get(l3_interface, "encapsulation_dot1q_vlan", default=interface_name.split(".")[-1]))}
+        if "." in l3_interface.name:
+            interface["encapsulation_dot1q"] = {"vlan": default(l3_interface.encapsulation_dot1q_vlan, int(l3_interface.name.split(".", maxsplit=1)[-1]))}
 
-        if ip_address == "dhcp" and l3_interface.get("dhcp_accept_default_route", True):
+        if l3_interface.ip_address == "dhcp" and l3_interface.dhcp_accept_default_route:
             interface["dhcp_client_accept_default_route"] = True
 
         if (
             self.shared_utils.is_wan_router
-            and (wan_carrier_name := l3_interface.get("wan_carrier")) is not None
+            and (wan_carrier_name := l3_interface.wan_carrier) is not None
             and interface["access_group_in"] is None
-            and not get(get_item(self.shared_utils.wan_carriers, "name", wan_carrier_name, default={}), "trusted")
+            and (wan_carrier_name not in self.inputs.wan_carriers or not self.inputs.wan_carriers[wan_carrier_name].trusted)
         ):
             msg = (
                 "'ipv4_acl_in' must be set on WAN interfaces where 'wan_carrier' is set, unless the carrier is configured as 'trusted' "
-                f"under 'wan_carriers'. 'ipv4_acl_in' is missing on interface '{interface_name}'."
+                f"under 'wan_carriers'. 'ipv4_acl_in' is missing on interface '{l3_interface.name}'."
             )
             raise AristaAvdError(msg)
 
@@ -216,11 +218,10 @@ class UtilsMixin:
 
         interfaces = []
         for tenant in self.shared_utils.filtered_tenants:
-            for vrf in tenant["vrfs"]:
-                for svi in vrf["svis"]:
-                    svi_id = int(svi["id"])
+            for vrf in tenant.vrfs:
+                for svi in vrf.svis:
                     # Skip any vlans not part of the link
-                    if svi_id not in vlans:
+                    if svi.id not in vlans:
                         continue
 
                     interfaces.append(self._get_l2_as_subint(link, svi, vrf))
@@ -239,37 +240,41 @@ class UtilsMixin:
             raise AristaAvdError(msg)
         return main_interface, [interface for interface in interfaces if interface["name"] != link["interface"]]
 
-    def _get_l2_as_subint(self: AvdStructuredConfigUnderlay, link: dict, svi: dict, vrf: dict) -> dict:
+    def _get_l2_as_subint(
+        self: AvdStructuredConfigUnderlay,
+        link: dict,
+        svi: EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem.VrfsItem.SvisItem,
+        vrf: EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem.VrfsItem,
+    ) -> dict:
         """
         Return structured config for one subinterface representing the given SVI.
 
         Only supports static IPs or VRRP.
         """
-        svi_id = int(svi["id"])
-        is_native = svi_id == link.get("native_vlan")
-        interface_name = link["interface"] if is_native else f"{link['interface']}.{svi_id}"
+        is_native = svi.id == link.get("native_vlan")
+        interface_name = link["interface"] if is_native else f"{link['interface']}.{svi.id}"
         subinterface = {
             "name": interface_name,
             "peer": link["peer"],
-            "peer_interface": f"{link['peer_interface']} VLAN {svi_id}",
+            "peer_interface": f"{link['peer_interface']} VLAN {svi.id}",
             "peer_type": link["peer_type"],
-            "description": default(svi.get("description"), svi["name"]),
-            "shutdown": not (svi.get("enabled", False)),
+            "description": default(svi.description, svi.name),
+            "shutdown": not default(svi.enabled, False),  # noqa: FBT003
             "switchport": {"enabled": False if is_native else None},
-            "encapsulation_dot1q": {"vlan": None if is_native else svi_id},
-            "vrf": vrf["name"] if vrf["name"] != "default" else None,
-            "ip_address": svi.get("ip_address"),
-            "ipv6_address": svi.get("ipv6_address"),
-            "ipv6_enable": svi.get("ipv6_enable"),
-            "mtu": svi.get("mtu") if self.shared_utils.platform_settings_feature_support_per_interface_mtu else None,
-            "eos_cli": svi.get("raw_eos_cli"),
-            "struct_cfg": svi.get("structured_config"),
+            "encapsulation_dot1q": {"vlan": None if is_native else svi.id},
+            "vrf": vrf.name if vrf.name != "default" else None,
+            "ip_address": svi.ip_address,
+            "ipv6_address": svi.ipv6_address,
+            "ipv6_enable": svi.ipv6_enable,
+            "mtu": svi.mtu if self.shared_utils.platform_settings.feature_support.per_interface_mtu else None,
+            "eos_cli": svi.raw_eos_cli,
+            "struct_cfg": svi.structured_config._as_dict(strip_values=()) or None,
             "flow_tracker": link.get("flow_tracker"),
         }
         if (mtu := subinterface["mtu"]) is not None and subinterface["mtu"] > self.shared_utils.p2p_uplinks_mtu:
             msg = (
                 f"MTU '{self.shared_utils.p2p_uplinks_mtu}' set for 'p2p_uplinks_mtu' must be larger or equal to MTU '{mtu}' "
-                f"set on the SVI '{svi_id}'."
+                f"set on the SVI '{svi.id}'."
                 "Either adjust the MTU on the SVI or p2p_uplinks_mtu."
             )
             raise AristaAvdError(msg)
@@ -304,30 +309,28 @@ class UtilsMixin:
         """
         l3_interface_acls = {}
         for l3_interface in self.shared_utils.l3_interfaces:
-            ipv4_acl_in = get(l3_interface, "ipv4_acl_in")
-            ipv4_acl_out = get(l3_interface, "ipv4_acl_out")
+            ipv4_acl_in = l3_interface.ipv4_acl_in
+            ipv4_acl_out = l3_interface.ipv4_acl_out
             if ipv4_acl_in is None and ipv4_acl_out is None:
                 continue
 
-            interface_name = l3_interface["name"]
-            interface_ip: str | None = l3_interface.get("dhcp_ip") if (ip_address := l3_interface.get("ip_address")) == "dhcp" else ip_address
+            interface_ip = l3_interface.dhcp_ip if (ip_address := l3_interface.ip_address) == "dhcp" else ip_address
             if interface_ip is not None and "/" in interface_ip:
                 interface_ip = get_ip_from_ip_prefix(interface_ip)
-            peer_ip: str | None = get(l3_interface, "peer_ip")
 
             if ipv4_acl_in is not None:
-                l3_interface_acls.setdefault(interface_name, {})["ipv4_acl_in"] = self.shared_utils.get_ipv4_acl(
+                l3_interface_acls.setdefault(l3_interface.name, {})["ipv4_acl_in"] = self.shared_utils.get_ipv4_acl(
                     name=ipv4_acl_in,
-                    interface_name=interface_name,
+                    interface_name=l3_interface.name,
                     interface_ip=interface_ip,
-                    peer_ip=peer_ip,
-                )
+                    peer_ip=l3_interface.peer_ip,
+                )._as_dict()
             if ipv4_acl_out is not None:
-                l3_interface_acls.setdefault(interface_name, {})["ipv4_acl_out"] = self.shared_utils.get_ipv4_acl(
+                l3_interface_acls.setdefault(l3_interface.name, {})["ipv4_acl_out"] = self.shared_utils.get_ipv4_acl(
                     name=ipv4_acl_out,
-                    interface_name=interface_name,
+                    interface_name=l3_interface.name,
                     interface_ip=interface_ip,
-                    peer_ip=peer_ip,
-                )
+                    peer_ip=l3_interface.peer_ip,
+                )._as_dict()
 
         return l3_interface_acls

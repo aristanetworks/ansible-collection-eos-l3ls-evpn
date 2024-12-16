@@ -1,6 +1,14 @@
 ---
 ### IPv6 ACLs ###
 ipv6_access_lists:
+  - name: acl_qos_tc0_v6
+    sequence_numbers:
+      - sequence: 10
+        action: "permit ipv6 any any dscp cs1"
+  - name: acl_qos_tc5_v6
+    sequence_numbers:
+      - sequence: 10
+        action: "permit ipv6 any 2001:db8::/48"
   - name: TEST1
     sequence_numbers:
       - sequence: 10

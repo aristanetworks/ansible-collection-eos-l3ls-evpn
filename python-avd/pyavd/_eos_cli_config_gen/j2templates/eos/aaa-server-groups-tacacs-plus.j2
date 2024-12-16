@@ -3,21 +3,19 @@
  Use of this source code is governed by the Apache License 2.0
  that can be found in the LICENSE file.
 #}
-{# eos - aaa server groups #}
-{% for aaa_server_group in aaa_server_groups | arista.avd.natural_sort('name') | arista.avd.natural_sort('type') %}
-{%     if aaa_server_group.type == 'tacacs+' %}
+{# eos - aaa server group tacacs+ #}
+{% for aaa_server_group in aaa_server_groups | arista.avd.natural_sort('name') | selectattr('type', 'equalto', 'tacacs+') %}
 !
-aaa group server {{ aaa_server_group.type }} {{ aaa_server_group.name }}
-{%         if aaa_server_group.servers is arista.avd.defined %}
-{%             for server in aaa_server_group.servers %}
-{%                 if server.server is arista.avd.defined %}
-{%                     set server_cli = "server " ~ server.server %}
-{%                     if server.vrf is arista.avd.defined %}
-{%                         set server_cli = server_cli ~ " vrf " ~ server.vrf %}
-{%                     endif %}
-   {{ server_cli }}
+aaa group server tacacs+ {{ aaa_server_group.name }}
+{%     if aaa_server_group.servers is arista.avd.defined %}
+{%         for server in aaa_server_group.servers %}
+{%             if server.server is arista.avd.defined %}
+{%                 set server_cli = "server " ~ server.server %}
+{%                 if server.vrf is arista.avd.defined %}
+{%                     set server_cli = server_cli ~ " vrf " ~ server.vrf %}
 {%                 endif %}
-{%             endfor %}
-{%         endif %}
+   {{ server_cli }}
+{%             endif %}
+{%         endfor %}
 {%     endif %}
 {% endfor %}

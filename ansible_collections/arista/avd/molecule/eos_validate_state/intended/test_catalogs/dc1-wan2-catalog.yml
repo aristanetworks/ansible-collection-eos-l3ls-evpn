@@ -482,12 +482,6 @@ anta.tests.stun:
     - source_address: 172.18.4.2
       source_port: 4500
 - VerifyStunClient:
-    result_overwrite:
-      custom_field: 'Source IPv4 Address: 100.64.4.2 Source Port: 4500'
-    stun_clients:
-    - source_address: 100.64.4.2
-      source_port: 4500
-- VerifyStunClient:
     stun_clients:
     - public_address: 172.18.3.21
       public_port: 6006

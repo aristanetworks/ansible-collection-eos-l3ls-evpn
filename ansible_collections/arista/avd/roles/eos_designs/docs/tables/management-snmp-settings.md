@@ -32,7 +32,7 @@
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;use_mgmt_interface_vrf</samp>](## "snmp_settings.hosts.[].use_mgmt_interface_vrf") | Boolean |  |  |  | Configure the SNMP host under the VRF set with "mgmt_interface_vrf". Ignored if 'mgmt_ip' or 'ipv6_mgmt_ip' are not configured for the device, so if the host is only configured with this VRF, the host will not be configured at all. Can be used in combination with "vrf" and "use_inband_mgmt_vrf" to configure the SNMP host under multiple VRFs. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;use_inband_mgmt_vrf</samp>](## "snmp_settings.hosts.[].use_inband_mgmt_vrf") | Boolean |  |  |  | Configure the SNMP host under the VRF set with "inband_mgmt_vrf". Ignored if inband management is not configured for the device, so if the host is only configured with this VRF, the host will not be configured at all. Can be used in combination with "vrf" and "use_mgmt_interface_vrf" to configure the SNMP host under multiple VRFs. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;version</samp>](## "snmp_settings.hosts.[].version") | String |  |  | Valid Values:<br>- <code>1</code><br>- <code>2c</code><br>- <code>3</code> |  |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;community</samp>](## "snmp_settings.hosts.[].community") | String |  |  |  | Community name. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;community</samp>](## "snmp_settings.hosts.[].community") | String |  |  |  | Community name. Required with version "1" or "2c". |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;users</samp>](## "snmp_settings.hosts.[].users") | List, items: Dictionary |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;username</samp>](## "snmp_settings.hosts.[].users.[].username") | String |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;authentication_level</samp>](## "snmp_settings.hosts.[].users.[].authentication_level") | String |  |  | Valid Values:<br>- <code>auth</code><br>- <code>noauth</code><br>- <code>priv</code> |  |
@@ -151,7 +151,7 @@
           use_inband_mgmt_vrf: <bool>
           version: <str; "1" | "2c" | "3">
 
-          # Community name.
+          # Community name. Required with version "1" or "2c".
           community: <str>
           users:
             - username: <str>

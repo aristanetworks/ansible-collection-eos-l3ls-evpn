@@ -132,6 +132,23 @@ $defs:
               type: bool
               default: false
               description: Enable PTP.
+            roles:
+              type: list
+              description: Role in boundary clock mode for each node. Default is `dynamic`.
+              items:
+                type: str
+                default: "dynamic"
+                valid_values:
+                  - "dynamic"
+                  - "master"
+            profile:
+              type: str
+              default: "aes67-r16-2016"
+              description: |-
+                Default available profiles are:
+                  - "aes67"
+                  - "aes67-r16-2016"
+                  - "smpte2059-2"
         sflow:
           type: bool
           description: Enable sFlow. Overrides `fabric_sflow` setting.
@@ -200,6 +217,7 @@ $defs:
             - ebgp: Enforce plain IPv4 BGP peering
         structured_config:
           type: dict
+          relaxed_validation: true
           documentation_options:
             hide_keys: true
           description: |-

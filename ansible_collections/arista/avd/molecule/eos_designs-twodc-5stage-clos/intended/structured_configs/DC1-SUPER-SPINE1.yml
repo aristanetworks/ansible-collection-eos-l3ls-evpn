@@ -83,8 +83,8 @@ local_users:
 - name: admin
   privilege: 15
   role: network-admin
-  no_password: true
   sha512_password: $6$eJ5TvI8oru5i9e8G$R1X/SbtGTk9xoEHEBQASc7SC2nHYmi.crVgp2pXuCXwxsXEA81e4E0cXgQ6kX08fIeQzauqhv2kS.RGJFCon5/
+  no_password: true
 vrfs:
 - name: MGMT
   ip_routing: false
@@ -170,11 +170,11 @@ ethernet_interfaces:
     enabled: false
   shutdown: false
   ip_address: 11.1.2.0/31
+  ptp:
+    enable: true
   mac_security:
     profile: MACSEC_PROFILE
   description: P2P_DC2-SUPER-SPINE1_Ethernet4
-  ptp:
-    enable: true
 loopback_interfaces:
 - name: Loopback0
   description: ROUTER_ID

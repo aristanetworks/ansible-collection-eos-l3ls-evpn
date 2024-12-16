@@ -82,8 +82,8 @@ router_bgp:
     description: dc1-spine2_Loopback0
     remote_as: '65100'
   - ip_address: 10.1.1.1
-    description: External peer
     peer_group: EVPN-OVERLAY-PEERS
+    description: External peer
   address_family_evpn:
     peer_groups:
     - name: EVPN-OVERLAY-PEERS
@@ -464,6 +464,19 @@ ethernet_interfaces:
   description: WORKSTATION_dc1-leaf1-workstation2_e1
   shutdown: false
   validate_state: false
+  switchport:
+    enabled: true
+    mode: access
+    access_vlan: 11
+  spanning_tree_portfast: edge
+- name: Ethernet33
+  peer: dc1-leaf1-workstationNoLLDP
+  peer_interface: e1
+  peer_type: workstation
+  port_profile: Workstations_NoLLDP
+  description: WORKSTATION_dc1-leaf1-workstationNoLLDP_e1
+  shutdown: false
+  validate_lldp: false
   switchport:
     enabled: true
     mode: access

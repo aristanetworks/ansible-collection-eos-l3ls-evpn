@@ -179,6 +179,7 @@ $defs:
             Configures flow-tracking on the interface. Overrides `fabric_flow_tracking.l3_interfaces` setting.
         structured_config:
           type: dict
+          relaxed_validation: true
           documentation_options:
             hide_keys: true
           description: |-

@@ -2677,8 +2677,8 @@ router bgp {{ router_bgp.as }}
 {%                 endfor %}
 {%                 if address_family.address_family in ['evpn', 'vpn-ipv4', 'vpn-ipv6'] %}
 {%                     if address_family.rcf is arista.avd.defined %}
-{%                         if address_family.vpn_route_filter_rcf is arista.avd.defined and address_family.address_family in ['vpn-ipv4', 'vpn-ipv6'] %}
-      route-target export {{ address_family.address_family }} rcf {{ address_family.rcf }} vpn-route filter-rcf {{ address_family.vpn_route_filter_rcf }}
+{%                         if address_family.vrf_route_filter_rcf is arista.avd.defined and address_family.address_family in ['vpn-ipv4', 'vpn-ipv6'] %}
+      route-target export {{ address_family.address_family }} rcf {{ address_family.rcf }} vrf-route filter-rcf {{ address_family.vrf_route_filter_rcf }}
 {%                         else %}
       route-target export {{ address_family.address_family }} rcf {{ address_family.rcf }}
 {%                         endif %}

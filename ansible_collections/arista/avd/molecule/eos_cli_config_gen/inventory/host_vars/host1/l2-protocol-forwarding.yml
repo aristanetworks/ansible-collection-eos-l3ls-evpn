@@ -1,0 +1,64 @@
+---
+#### L2 Protocol Forwarding Tests
+
+l2_protocol:
+  forwarding_profiles:
+    - name: TEST1
+      protocols:
+        - name: bfd per-link rfc-7130
+          forward: true
+          tagged_forward: true
+          untagged_forward: true
+        - name: e-lmi
+          forward: true
+          tagged_forward: true
+          untagged_forward: true
+        - name: isis
+          forward: true
+          tagged_forward: true
+          untagged_forward: true
+        - name: lacp
+          forward: true
+          tagged_forward: true
+          untagged_forward: true
+        - name: lldp
+          forward: true
+          tagged_forward: true
+          untagged_forward: true
+        - name: macsec
+          forward: true
+          tagged_forward: true
+          untagged_forward: true
+        - name: pause
+          forward: true
+          tagged_forward: true
+          untagged_forward: true
+        - name: stp
+          forward: true
+          tagged_forward: true
+          untagged_forward: true
+    - name: TEST2
+      protocols:
+        - name: bfd per-link rfc-7130
+          forward: false
+          tagged_forward: true
+        - name: e-lmi
+          forward: true
+        - name: isis
+          untagged_forward: true
+        - name: lacp
+          forward: true
+          tagged_forward: false
+          untagged_forward: true
+        - name: lldp
+          forward: false
+          tagged_forward: true
+          untagged_forward: false
+        - name: macsec
+          tagged_forward: true
+        - name: pause
+          forward: false
+          untagged_forward: true
+        - name: stp
+          tagged_forward: true
+          untagged_forward: true

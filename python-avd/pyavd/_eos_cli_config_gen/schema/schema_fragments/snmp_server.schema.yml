@@ -215,7 +215,7 @@ keys:
               valid_values: ["1", "2c", "3"]
             community:
               type: str
-              description: Community name.
+              description: Community name. Required with version "1" or "2c".
             users:
               type: list
               items:

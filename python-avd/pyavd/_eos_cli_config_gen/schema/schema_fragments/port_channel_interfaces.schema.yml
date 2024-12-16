@@ -392,6 +392,15 @@ keys:
             - str
           min: 0
           max: 300
+        min_links:
+          type: int
+          convert_types:
+            - str
+          min: 0
+          max: 120
+          description: |-
+            Minimum number of ports required up before bringing up a port-channel.
+            Maximum in `min_links` is hardware dependent.
         lacp_fallback_mode:
           type: str
           valid_values:
@@ -801,7 +810,10 @@ keys:
                 Hence, MPASS is needed only on MLAG port-channels connected to non-Arista devices.
         ip_address:
           type: str
-          description: IPv4 address/mask.
+          description: IPv4 address/mask or "dhcp".
+        dhcp_client_accept_default_route:
+          type: bool
+          description: Install default-route obtained via DHCP.
         ip_verify_unicast_source_reachable_via:
           type: str
           valid_values:

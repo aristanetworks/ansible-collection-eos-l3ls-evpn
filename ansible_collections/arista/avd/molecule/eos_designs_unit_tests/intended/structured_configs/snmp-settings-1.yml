@@ -43,41 +43,41 @@ snmp_server:
     priv_passphrase: clearpriv
   hosts:
   - host: 10.6.75.121
+    vrf: SNMPVRF
     version: '1'
     community: SNMP-COMMUNITY-1
-    vrf: SNMPVRF
   - host: 10.6.75.123
-    version: 2c
-    community: SNMP-COMMUNITY-2
     vrf: MGMT
-  - host: 10.6.75.123
     version: 2c
     community: SNMP-COMMUNITY-2
+  - host: 10.6.75.123
     vrf: SNMPVRF
+    version: 2c
+    community: SNMP-COMMUNITY-2
   - host: 10.6.75.124
+    vrf: MGMT
     version: '3'
     users:
     - username: USER-WRITE
       authentication_level: auth
-    vrf: MGMT
   - host: 10.6.75.125
-    version: 2c
-    community: SNMP-COMMUNITY-2
     vrf: SNMPVRF
-  - host: 10.6.75.127
     version: 2c
     community: SNMP-COMMUNITY-2
+  - host: 10.6.75.127
     vrf: MGMT
-  - host: 10.6.75.127
     version: 2c
     community: SNMP-COMMUNITY-2
+  - host: 10.6.75.127
     vrf: SNMPVRF
+    version: 2c
+    community: SNMP-COMMUNITY-2
   - host: 10.6.75.128
+    vrf: MGMT
     version: '3'
     users:
     - username: USER-WRITE
       authentication_level: auth
-    vrf: MGMT
   vrfs:
   - name: default
     enable: false

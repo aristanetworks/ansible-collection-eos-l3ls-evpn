@@ -1,0 +1,187 @@
+### Routing - OSPF ###
+router_ospf:
+  process_ids:
+    - id: 100
+      passive_interface_default: true
+      router_id: 192.168.255.3
+      no_passive_interfaces:
+        - Ethernet1
+        - Ethernet2
+        - Vlan4093
+      network_prefixes:
+        - ipv4_prefix: 198.51.100.0/24
+          area: 0.0.0.1
+        - ipv4_prefix: 203.0.113.0/24
+          area: 0.0.0.2
+      bfd_enable: true
+      bfd_adjacency_state_any: true
+      max_lsa: 12000
+      default_information_originate:
+      redistribute:
+        static:
+          enabled: true
+        connected:
+          enabled: true
+        bgp:
+          enabled: true
+      auto_cost_reference_bandwidth: 100
+      maximum_paths: 10
+      mpls_ldp_sync_default: true
+      distance:
+        intra_area: 50
+        external: 60
+        inter_area: 70
+      distribute_list_in:
+        route_map: RM-OSPF-DIST-IN
+      graceful_restart:
+        enabled: true
+      graceful_restart_helper: true
+    - id: 101
+      vrf: CUSTOMER01
+      passive_interface_default: true
+      router_id: 1.0.1.1
+      log_adjacency_changes_detail: true
+      bfd_enable: false
+      no_passive_interfaces:
+        - Ethernet2.101
+      summary_addresses:
+        - prefix: 10.0.0.0/8
+        - prefix: 20.0.0.0/8
+          tag: 10
+        - prefix: 30.0.0.0/8
+          attribute_map: RM-OSPF_SUMMARY
+        - prefix: 40.0.0.0/8
+          not_advertise: true
+      timers:
+        lsa:
+          rx_min_interval: 100
+          tx_delay:
+            initial: 100
+            min: 200
+            max: 300
+        spf_delay:
+          initial: 100
+          min: 200
+          max: 300
+      graceful_restart:
+        enabled: true
+        grace_period: 10
+      graceful_restart_helper: false
+      eos_cli: |
+        area 5 not-so-stubby lsa type-7 convert type-5
+
+    - id: 200
+      vrf: ospf_zone
+      passive_interface_default: false
+      router_id: 192.168.254.1
+      log_adjacency_changes_detail: true
+      bfd_enable: false
+      max_lsa: 5
+      default_information_originate:
+        always: true
+        metric_type: 1
+        metric: 100
+      redistribute:
+        static:
+          enabled: true
+          route_map: rm-ospf-static
+          include_leaked: true
+        connected:
+          enabled: true
+          route_map: rm-ospf-connected
+          include_leaked: true
+        bgp:
+          enabled: true
+          route_map: rm-ospf-bgp
+          include_leaked: true
+      areas:
+        - id: '0.0.0.2'
+          filter:
+            networks:
+              - 1.1.1.0/24
+              - 2.2.2.0/24
+        - id: 3
+          filter:
+            prefix_list: PL-OSPF-FILTERING
+      max_metric: # not expected to produce config. Just here to test proper variable checks.
+      timers:
+        lsa:
+          rx_min_interval: 100
+    - id: 300
+      max_metric:
+        router_lsa:
+      redistribute:
+        static:
+          enabled: true
+          route_map: rm-ospf-static
+        connected:
+          enabled: true
+          route_map: rm-ospf-connected
+        bgp:
+          enabled: true
+          route_map: rm-ospf-bgp
+    - id: 400
+      max_metric:
+        router_lsa:
+          external_lsa:
+          include_stub: true
+          on_startup: "wait-for-bgp"
+          summary_lsa:
+      redistribute:
+        static:
+          enabled: true
+          include_leaked: true
+        connected:
+          enabled: true
+          include_leaked: true
+        bgp:
+          enabled: true
+          include_leaked: true
+    - id: 500
+      max_metric:
+        router_lsa:
+          external_lsa:
+            override_metric: 123
+          on_startup: 222
+          summary_lsa:
+            override_metric: 456
+      redistribute:
+        static:
+          enabled: false
+        connected:
+          enabled: false
+        bgp:
+          enabled: false
+    - id: 600
+      areas:
+        - id: 0.0.0.1
+        - id: 0.0.10.11
+          type: stub
+          no_summary: true
+        - id: 0.0.20.20
+          type: nssa
+        - id: 0.0.20.21
+          type: nssa
+          no_summary: true
+        - id: 0.0.20.22
+          type: nssa
+          nssa_only: true
+        - id: 0.0.20.23
+          type: nssa
+          default_information_originate:
+        - id: 0.0.20.24
+          type: nssa
+          default_information_originate:
+            metric: 50
+        - id: 0.0.20.25
+          type: nssa
+          default_information_originate:
+            metric_type: 1
+          no_summary: true
+        - id: 0.0.20.26
+          type: nssa
+          no_summary: true
+          nssa_only: true
+          default_information_originate:
+            metric: 50
+            metric_type: 1

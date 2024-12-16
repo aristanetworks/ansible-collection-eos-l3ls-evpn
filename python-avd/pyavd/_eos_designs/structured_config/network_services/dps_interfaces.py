@@ -42,7 +42,7 @@ class DpsInterfacesMixin(UtilsMixin):
         # TODO: do IPv6 when needed - for now no easy way in AVD to detect if this is needed
         # When needed - need a default value if different than IPv4
 
-        if (dps_flow := self.shared_utils.get_flow_tracker(None, "dps_interfaces")) is not None:
+        if (dps_flow := self.shared_utils.get_flow_tracker(self.inputs.fabric_flow_tracking.dps_interfaces)) is not None:
             dps1["flow_tracker"] = dps_flow
 
         return [dps1]

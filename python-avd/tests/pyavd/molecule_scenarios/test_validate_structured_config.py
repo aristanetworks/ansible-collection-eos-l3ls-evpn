@@ -29,10 +29,16 @@ SCHEMA = AvdSchemaTools(schema_id="eos_cli_config_gen").avdschema._schema
     "example-isis-ldp-ipvpn",
     "example-l2ls-fabric",
     "example-single-dc-l3ls",
+    "eos_cli_config_gen",
+    "eos_cli_config_gen_deprecated_vars",
 )
 def test_validate_structured_config_with_valid_data(molecule_host: MoleculeHost) -> None:
     """Test validate_structured_config."""
-    structured_config = deepcopy(molecule_host.structured_config)
+    if molecule_host.scenario.name.startswith("eos_cli_config_gen"):
+        structured_config = deepcopy(molecule_host.hostvars)
+    else:
+        structured_config = deepcopy(molecule_host.structured_config)
+
     validation_result = validate_structured_config(structured_config)
     assert validation_result.validation_errors == []
     assert validation_result.failed is False
@@ -44,7 +50,10 @@ def test_validate_structured_config_with_valid_data(molecule_host: MoleculeHost)
 )
 def test_validate_structured_config_with_invalid_data(molecule_host: MoleculeHost) -> None:
     """Test validate_structured_config."""
-    structured_config = deepcopy(molecule_host.structured_config)
+    if molecule_host.scenario.name.startswith("eos_cli_config_gen"):
+        structured_config = deepcopy(molecule_host.hostvars)
+    else:
+        structured_config = deepcopy(molecule_host.structured_config)
 
     updated = False
     # Insert a bad key in a random dict (making sure the dict is covered by the schema)
@@ -60,46 +69,6 @@ def test_validate_structured_config_with_invalid_data(molecule_host: MoleculeHos
         structured_config.update({"router_bgp": {"invalid_key": "some_value"}})
 
     validation_result = validate_structured_config(structured_config)
-    assert validation_result.failed is True
-    assert len(validation_result.validation_errors) >= 1
-    assert isinstance(validation_result.validation_errors[0], AvdValidationError)
-    assert "invalid_key" in str(validation_result.validation_errors[0])
-
-
-@pytest.mark.molecule_scenarios(
-    "eos_cli_config_gen",
-    "eos_cli_config_gen_deprecated_vars",
-)
-def test_validate_cli_gen_inputs_with_valid_data(molecule_host: MoleculeHost) -> None:
-    """Test validate_structured_config."""
-    inputs = deepcopy(molecule_host.hostvars)
-    validation_result = validate_structured_config(inputs)
-    assert validation_result.validation_errors == []
-    assert validation_result.failed is False
-
-
-@pytest.mark.molecule_scenarios(
-    "eos_cli_config_gen",
-    "eos_cli_config_gen_deprecated_vars",
-)
-def test_validate_cli_gen_inputs_with_invalid_data(molecule_host: MoleculeHost) -> None:
-    """Test validate_structured_config."""
-    inputs = deepcopy(molecule_host.hostvars)
-
-    updated = False
-    # Insert a bad key in a random dict (making sure the dict is covered by the schema)
-    for key, value in inputs.items():
-        if not isinstance(value, dict) or key not in SCHEMA["keys"]:
-            continue
-        value.update({"invalid_key": "some_value"})
-        updated = True
-        break
-
-    # No dict found, so we insert our own instead
-    if not updated:
-        inputs.update({"router_bgp": {"invalid_key": "some_value"}})
-
-    validation_result = validate_structured_config(inputs)
     assert validation_result.failed is True
     assert len(validation_result.validation_errors) >= 1
     assert isinstance(validation_result.validation_errors[0], AvdValidationError)

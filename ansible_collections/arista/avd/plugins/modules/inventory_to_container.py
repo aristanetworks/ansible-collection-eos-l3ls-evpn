@@ -195,7 +195,7 @@ def get_configlet(src_folder: str = "", prefix: str = "AVD", extension: str = "c
     for file in src_configlets:
         # Build structure only if configlet match device_filter.
         if is_in_filter(hostname=file.stem, hostname_filter=device_filter):
-            name = prefix + "_" + file.stem if prefix != "none" else file.stem
+            name = f"{prefix}_{file.stem}" if prefix != "none" else file.stem
             with file.open(encoding="utf8") as stream:
                 data = stream.read()
             configlets[name] = data
@@ -222,10 +222,10 @@ def get_device_option_value(device_data_dict: dict, option_name: str) -> str | N
         Value set for variable, else None
     """
     if is_iterable(device_data_dict):
-        for option in device_data_dict:
-            if option_name == option:
-                return device_data_dict[option]
-        return None
+        return next(
+            (value for option, value in device_data_dict.items() if option_name == option),
+            None,
+        )
     return None
 
 

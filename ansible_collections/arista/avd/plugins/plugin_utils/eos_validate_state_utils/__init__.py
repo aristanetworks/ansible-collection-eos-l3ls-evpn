@@ -9,4 +9,4 @@ from .get_anta_results import get_anta_results
 from .md_report import MDReport
 from .results_manager import ResultsManager
 
-__all__ = ["AnsibleEOSDevice", "get_anta_results", "AvdTestBase", "MDReport", "CSVReport", "ResultsManager", "ConfigManager"]
+__all__ = ["AnsibleEOSDevice", "AvdTestBase", "CSVReport", "ConfigManager", "MDReport", "ResultsManager", "get_anta_results"]

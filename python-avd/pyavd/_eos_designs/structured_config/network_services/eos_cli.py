@@ -31,7 +31,7 @@ class EosCliMixin(UtilsMixin):
         if (eos_cli := get(self._hostvars, "eos_cli")) is not None:
             eos_clis.append(eos_cli)
 
-        eos_clis.extend(vrf["raw_eos_cli"] for tenant in self.shared_utils.filtered_tenants for vrf in tenant["vrfs"] if vrf.get("raw_eos_cli") is not None)
+        eos_clis.extend(vrf.raw_eos_cli for tenant in self.shared_utils.filtered_tenants for vrf in tenant.vrfs if vrf.raw_eos_cli is not None)
 
         if eos_clis:
             return "\n".join(eos_clis)

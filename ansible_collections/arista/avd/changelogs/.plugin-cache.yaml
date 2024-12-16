@@ -131,4 +131,4 @@ plugins:
         than group_vars or host_vars
       name: global_vars
       version_added: 4.0.0
-version: 5.0.0
+version: 5.1.0

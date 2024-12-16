@@ -1,0 +1,58 @@
+router_bgp:
+  as: "65101.0001"
+  bgp_defaults:
+    - no bgp default ipv4-unicast
+    - update wait-install
+    - distance bgp 20 200 200
+    - graceful-restart restart-time 300
+    - maximum-paths 2 ecmp 2
+  router_id: 192.168.255.3
+  graceful_restart_helper:
+    enabled: true
+    long_lived: true
+  bgp:
+    additional_paths:
+      send: limit
+      send_limit: 5
+  redistribute:
+    static:
+      enabled: true
+    ospf:
+      enabled: true
+      include_leaked: true
+      route_map: RM-OSPF-TO-BGP
+  address_family_ipv6:
+    redistribute:
+      ospfv3:
+        enabled: true
+        match_external:
+          enabled: true
+          include_leaked: true
+          route_map: RM-REDISTRIBUTE-OSPFV3-EXTERNAL
+        include_leaked: true
+        route_map: RM-REDISTRIBUTE-OSPFV3
+  address_family_ipv4_multicast:
+    redistribute:
+      ospf:
+        match_external:
+          enabled: true
+        match_internal:
+          enabled: true
+        match_nssa_external:
+          enabled: true
+          nssa_type: 2
+      attached_host:
+        enabled: true
+      isis:
+        enabled: true
+        rcf: Router_BGP_Isis()
+      connected:
+        enabled: true
+      ospfv3:
+        match_external:
+          enabled: true
+        match_internal:
+          enabled: true
+        match_nssa_external:
+          enabled: true
+          nssa_type: 2

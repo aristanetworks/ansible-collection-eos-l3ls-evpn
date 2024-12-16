@@ -56,7 +56,7 @@ class MlagMixin:
         if (
             self.shared_utils.mlag_l3
             and self.shared_utils.mlag_peer_l3_vlan is not None
-            and not (self.shared_utils.underlay_rfc5549 and self.shared_utils.overlay_mlag_rfc5549)
+            and not (self.inputs.underlay_rfc5549 and self.inputs.overlay_mlag_rfc5549)
         ):
             return self.shared_utils.mlag_l3_ip
         return None

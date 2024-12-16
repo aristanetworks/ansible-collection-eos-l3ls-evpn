@@ -11,7 +11,7 @@ from typing import TYPE_CHECKING
 from urllib.error import HTTPError
 
 from ansible.errors import AnsibleActionFail, AnsibleConnectionFailure
-from ansible.module_utils.connection import ConnectionError
+from ansible.module_utils.connection import ConnectionError as AnsibleConnectionError
 
 from ansible_collections.arista.avd.plugins.plugin_utils.pyavd_wrappers import RaiseOnUse
 
@@ -169,7 +169,7 @@ class AnsibleEOSDevice(AntaDevice):
         except (AnsibleConnectionFailure, HTTPError) as e:
             message = "Failed to connect to device"
             anta_log_exception(e, message, logger)
-        except ConnectionError as e:
+        except AnsibleConnectionError as e:
             message = "Error while getting the device information"
             anta_log_exception(e, message, logger)
         else:

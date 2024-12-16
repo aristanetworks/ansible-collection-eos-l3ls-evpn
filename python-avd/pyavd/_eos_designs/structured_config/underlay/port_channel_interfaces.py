@@ -60,7 +60,7 @@ class PortChannelInterfacesMixin(UtilsMixin):
                     },
                 },
                 "shutdown": False,
-                "service_profile": self.shared_utils.p2p_uplinks_qos_profile,
+                "service_profile": self.inputs.p2p_uplinks_qos_profile,
                 "link_tracking_groups": link.get("link_tracking_groups"),
                 "sflow": link.get("sflow"),
                 "flow_tracker": link.get("flow_tracker"),
@@ -73,12 +73,12 @@ class PortChannelInterfacesMixin(UtilsMixin):
                 port_channel_interface["switchport"]["trunk"]["allowed_vlan"] = vlans
 
             # Configure MLAG on MLAG switches if either 'mlag_on_orphan_port_channel_downlink' or 'link.mlag' is True
-            if self.shared_utils.mlag is True and any([get(self._hostvars, "mlag_on_orphan_port_channel_downlink", default=False), link.get("mlag", True)]):
+            if self.shared_utils.mlag is True and any([self.inputs.mlag_on_orphan_port_channel_downlink, link.get("mlag", True)]):
                 port_channel_interface["mlag"] = int(link.get("channel_group_id"))
 
             if (short_esi := link.get("short_esi")) is not None:
                 port_channel_interface["evpn_ethernet_segment"] = {
-                    "identifier": f"{self.shared_utils.evpn_short_esi_prefix}{short_esi}",
+                    "identifier": f"{self.inputs.evpn_short_esi_prefix}{short_esi}",
                     "route_target": short_esi_to_route_target(short_esi),
                 }
                 port_channel_interface["lacp_id"] = short_esi.replace(":", ".")
@@ -89,7 +89,7 @@ class PortChannelInterfacesMixin(UtilsMixin):
 
                 # Apply PTP profile config if using the new ptp config style
                 if self.shared_utils.ptp_enabled:
-                    ptp_config.update(self.shared_utils.ptp_profile)
+                    ptp_config.update(self.shared_utils.ptp_profile._as_dict(include_default_values=True))
 
                 ptp_config["enable"] = True
                 ptp_config.pop("profile", None)
@@ -129,8 +129,7 @@ class PortChannelInterfacesMixin(UtilsMixin):
         if not self.shared_utils.use_port_channel_for_direct_ha:
             return None
 
-        direct_wan_ha_links_flow_tracker = self.shared_utils.get_flow_tracker(get(self.shared_utils.switch_data_combined, "wan_ha"), "direct_wan_ha_links")
-
+        direct_wan_ha_links_flow_tracker = self.shared_utils.get_flow_tracker(self.shared_utils.node_config.wan_ha.flow_tracking)
         port_channel_name = f"Port-Channel{self.shared_utils.wan_ha_port_channel_id}"
         description = self.shared_utils.interface_descriptions.wan_ha_port_channel_interface(
             InterfaceDescriptionData(
@@ -152,5 +151,5 @@ class PortChannelInterfacesMixin(UtilsMixin):
             "description": description,
             "ip_address": self.shared_utils.wan_ha_ip_addresses[0],
             "flow_tracker": direct_wan_ha_links_flow_tracker,
-            "mtu": self.shared_utils.configured_wan_ha_mtu,
+            "mtu": self.shared_utils.node_config.wan_ha.mtu,
         }

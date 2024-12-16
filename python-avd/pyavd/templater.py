@@ -45,7 +45,7 @@ class Undefined(StrictUndefined):
 
 
 class Templar:
-    def __init__(self, precompiled_templates_path: str, searchpaths: list[str] | None = None) -> None:
+    def __init__(self, precompiled_templates_path: str | Path, searchpaths: list[str | Path] | None = None) -> None:
         if not RUNNING_FROM_SRC:
             self.loader = ModuleLoader(precompiled_templates_path)
         else:
@@ -115,7 +115,7 @@ class Templar:
     def render_template_from_file(self, template_file: str, template_vars: dict) -> str:
         return self.environment.get_template(template_file).render(template_vars)
 
-    def compile_templates_in_paths(self, precompiled_templates_path: str, searchpaths: list[str]) -> None:
+    def compile_templates_in_paths(self, precompiled_templates_path: str | Path, searchpaths: list[str | Path]) -> None:
         """
         Compile the Jinja2 templates in the path.
 

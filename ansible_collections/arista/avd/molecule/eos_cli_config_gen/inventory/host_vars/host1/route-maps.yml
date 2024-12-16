@@ -1,6 +1,20 @@
 ---
 ### Route-maps ###
 route_maps:
+  - name: RM-BGP-AGG-APPLY-SET
+    sequence_numbers:
+      - sequence: 10
+        type: permit
+        description: RM for BGP AGG Set
+        set:
+          - "local-preference 50"
+  - name: RM-BGP-EXPORT-DEFAULT-BLUE-C1
+    sequence_numbers:
+      - sequence: 10
+        type: permit
+        description: RM for BGP default route in BLUE-C1
+        match:
+          - ip address prefix-list PL-BGP-DEFAULT-BLUE-C1
   - name: RM-CONN-BL-BGP
     sequence_numbers:
       - sequence: 10
