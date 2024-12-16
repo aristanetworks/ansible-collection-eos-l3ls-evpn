@@ -1,8 +1,0 @@
-# test for mpls.ldp.shutdown: true and mpls.icmp.ttl_exceeded_tunneling: true
-mpls:
-  ip: true
-  ldp:
-    interface_disabled_default: false
-    shutdown: true
-  icmp:
-    ttl_exceeded_tunneling: true

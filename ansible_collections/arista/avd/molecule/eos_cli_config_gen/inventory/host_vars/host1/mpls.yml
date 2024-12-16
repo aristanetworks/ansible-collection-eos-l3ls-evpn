@@ -1,0 +1,86 @@
+---
+mpls:
+  ip: true
+  ldp:
+    interface_disabled_default: true
+    router_id: 192.168.1.1
+    shutdown: false
+    transport_address_interface: Loopback0
+  icmp:
+    fragmentation_needed_tunneling: true
+  rsvp:
+    hello:
+      interval: 30
+      multiplier: 254
+    refresh:
+      interval: 3
+      method: explicit
+    authentication:
+      active_index: 766
+      sequence_number_window: 234
+      type: md5
+      password_indexes:
+        - index: 766
+          password_type: 7
+          password: 13361E3F1B20011A2A173B
+        - index: 55
+          password: 14241B062114062E142900260B1D23133B
+        - index: 999
+          password_type: 0
+          password: simplePassword
+        - index: 333
+    fast_reroute:
+      mode: link-protection
+      reversion: local
+      bypass_tunnel_optimization_interval: 65535
+    srlg:
+      enabled: true
+      strict: true
+    graceful_restart:
+      role_speaker:
+        enabled: true
+        timer_recovery: 35
+        timer_restart: 36
+      role_helper:
+        enabled: true
+        timer_recovery: 32
+        timer_restart: 33
+    hitless_restart:
+      enabled: true
+      timer_recovery: 222
+    ip_access_group: RSVP_access_group_ipv4
+    ipv6_access_group: RSVP_access_group_ipv6
+    label_local_termination: explicit-null
+    mtu_signaling: true
+    p2mp:
+      enabled: false
+    preemption_method:
+      preemption: soft
+      timer: 444
+    shutdown: true
+    neighbors:
+      - ip_address: 1.1.1.1
+        authentication:
+          index: 3
+          type: md5
+      - ipv6_address: 2::11.22.33.44
+        authentication:
+          index: 3133
+          type: none
+      - ip_address: 10.1.1.2
+        authentication:
+          index: 303
+      - ip_address: 1.1.12.2
+        authentication:
+          index: 30
+          type: none
+      - ipv6_address: 2001::db8
+        authentication:
+          index: 31
+          type: none
+      - ip_address: 1.21.1.20
+        authentication:
+          type: md5
+      - ip_address: 1.10.1.2
+        authentication:
+          type: none
