@@ -53,7 +53,7 @@ router adaptive-virtual-topology
 {%         if profile.load_balance_policy is arista.avd.defined %}
       path-selection load-balance {{ profile.load_balance_policy }}
 {%         endif %}
-{%         if profile.metric_order is arista.avd.defined %}
+{%         if profile.metric_order.preferred_metric is arista.avd.defined %}
       metric order {{ profile.metric_order.preferred_metric }}
 {%         endif %}
 {%         if profile.outlier_elimination.disabled is arista.avd.defined(true) %}
