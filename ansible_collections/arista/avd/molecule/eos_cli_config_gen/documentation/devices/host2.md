@@ -19,6 +19,7 @@
   - [AAA Accounting](#aaa-accounting)
 - [Management Security](#management-security)
   - [Management Security Summary](#management-security-summary)
+  - [Management Security SSL Profiles](#management-security-ssl-profiles)
   - [Management Security Device Configuration](#management-security-device-configuration)
 - [Prompt Device Configuration](#prompt-device-configuration)
 - [DHCP Relay](#dhcp-relay)
@@ -325,12 +326,22 @@ aaa accounting exec default none
 | -------- | ----- |
 | Reversible password encryption | aes-256-gcm |
 
+### Management Security SSL Profiles
+
+| SSL Profile Name | TLS protocol accepted | Certificate filename | Key filename | Ciphers | CRLs |
+| ---------------- | --------------------- | -------------------- | ------------ | ------- | ---- |
+| cipher-v1.0-v1.3 | - | - | - | v1.0 to v1.2: SHA256:SHA384<br>v1.3: TLS_AES_256_GCM_SHA384:TLS_CHACHA20_POLY1305_SHA256 | - |
+
 ### Management Security Device Configuration
 
 ```eos
 !
 management security
    password encryption reversible aes-256-gcm
+   !
+   ssl profile cipher-v1.0-v1.3
+      cipher v1.0 SHA256:SHA384
+      cipher v1.3 TLS_AES_256_GCM_SHA384:TLS_CHACHA20_POLY1305_SHA256
 ```
 
 ## Prompt Device Configuration

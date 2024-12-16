@@ -108,6 +108,8 @@ class AvdStructuredConfigBase(AvdFacts, NtpMixin, SnmpServerMixin, RouterGeneral
                 "description": neighbor_info["description"],
                 "route_map_in": get(neighbor_info, "route_map_in"),
                 "route_map_out": get(neighbor_info, "route_map_out"),
+                "rcf_in": get(neighbor_info, "rcf_in"),
+                "rcf_out": get(neighbor_info, "rcf_out"),
             }
             l3_interfaces_neighbors.append(strip_empties_from_dict(neighbor))
 

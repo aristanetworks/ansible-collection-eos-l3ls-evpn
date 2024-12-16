@@ -219,11 +219,11 @@ ethernet_interfaces:
     enabled: false
   shutdown: false
   ip_address: 11.1.2.1/31
+  ptp:
+    enable: true
   mac_security:
     profile: MACSEC_PROFILE
   description: P2P_DC1-SUPER-SPINE1_Ethernet6
-  ptp:
-    enable: true
 loopback_interfaces:
 - name: Loopback0
   description: ROUTER_ID

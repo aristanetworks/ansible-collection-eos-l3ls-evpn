@@ -117,6 +117,16 @@ $defs:
                   route_map_out:
                     type: str
                     description: Outbound route-map name.
+                  rcf_in:
+                    type: str
+                    description: |-
+                      Inbound RCF function name with parenthesis.
+                      Example: MyFunction(myarg).
+                  rcf_out:
+                    type: str
+                    description: |-
+                      Outbound RCF function name with parenthesis.
+                      Example: MyFunction(myarg).
                   default_originate:
                     type: dict
                     $ref: "eos_cli_config_gen#/keys/router_bgp/keys/address_family_ipv4/keys/peer_groups/items/keys/default_originate"
@@ -140,6 +150,16 @@ $defs:
                   route_map_out:
                     type: str
                     description: Outbound route-map name.
+                  rcf_in:
+                    type: str
+                    description: |-
+                      Inbound RCF function name with parenthesis.
+                      Example: MyFunction(myarg).
+                  rcf_out:
+                    type: str
+                    description: |-
+                      Outbound RCF function name with parenthesis.
+                      Example: MyFunction(myarg).
                   prefix_list_in:
                     type: str
                     description: Inbound prefix-list name.
@@ -787,6 +807,7 @@ $defs:
                         Configures flow-tracking on the interface. Overrides `fabric_flow_tracking.l3_interfaces` setting.
                     structured_config:
                       type: dict
+                      relaxed_validation: true
                       description: Custom structured config added under ethernet_interfaces.[name=<interface>] for eos_cli_config_gen.
                       documentation_options:
                         hide_keys: true
@@ -1064,6 +1085,7 @@ $defs:
                       EOS CLI rendered directly on the Router BGP, VRF definition in the final EOS configuration.
                   structured_config:
                     type: dict
+                    relaxed_validation: true
                     description: Custom structured config added under router_bgp.vrfs.[name=<vrf>] for eos_cli_config_gen.
                     documentation_options:
                       hide_keys: true
@@ -1102,6 +1124,16 @@ $defs:
                         route_map_out:
                           type: str
                           description: Outbound route-map name.
+                        rcf_in:
+                          type: str
+                          description: |-
+                            Inbound RCF function name with parenthesis.
+                            Example: MyFunction(myarg).
+                        rcf_out:
+                          type: str
+                          description: |-
+                            Outbound RCF function name with parenthesis.
+                            Example: MyFunction(myarg).
                         default_originate:
                           type: dict
                           $ref: "eos_cli_config_gen#/keys/router_bgp/keys/address_family_ipv4/keys/peer_groups/items/keys/default_originate"
@@ -1125,6 +1157,16 @@ $defs:
                         route_map_out:
                           type: str
                           description: Outbound route-map name.
+                        rcf_in:
+                          type: str
+                          description: |-
+                            Inbound RCF function name with parenthesis.
+                            Example: MyFunction(myarg).
+                        rcf_out:
+                          type: str
+                          description: |-
+                            Outbound RCF function name with parenthesis.
+                            Example: MyFunction(myarg).
                         prefix_list_in:
                           type: str
                           description: Inbound prefix-list name.
@@ -1158,6 +1200,7 @@ $defs:
                 description: EOS CLI rendered directly on the root level of the final EOS configuration.
               structured_config:
                 type: dict
+                relaxed_validation: true
                 description: Custom structured config for eos_cli_config_gen.
                 documentation_options:
                   hide_keys: true
@@ -1304,6 +1347,7 @@ $defs:
                 keys:
                   structured_config:
                     type: dict
+                    relaxed_validation: true
                     description: |
                       Custom structured config added under router_bgp.vlans.[id=<vlan>] for eos_cli_config_gen.
                       This configuration will not be applied to vlan aware bundles.
