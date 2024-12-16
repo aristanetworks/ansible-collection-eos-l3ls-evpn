@@ -153,7 +153,7 @@ network_ports:
 
   # Test only platform match.
   - platforms:
-      - 720XPM-24Y6
+      - 720\w+-24Y6
     switch_ports:
       - Ethernet24
     description: Matched on only 24 port platform
