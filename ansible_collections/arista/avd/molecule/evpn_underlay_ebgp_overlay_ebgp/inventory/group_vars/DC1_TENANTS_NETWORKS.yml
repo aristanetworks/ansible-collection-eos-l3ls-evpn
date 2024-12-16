@@ -46,7 +46,7 @@ tenants:
             name: Tenant_A_OP_Zone_1
             description: SVI 110 CUSTOM DESCRIPTION
             tags: ['opzone']
-            enabled: True
+            enabled: true
             ip_address_virtual: 10.1.10.1/24
           # SVI as integer
           - id: 111
@@ -54,7 +54,7 @@ tenants:
             name: Tenant_A_OP_Zone_2
             description: SVI 111 CUSTOM DESCRIPTION
             tags: ['opzone']
-            enabled: True
+            enabled: true
             ip_address_virtual: 10.1.11.1/24
             ip_helpers:
               - ip_helper: 1.1.1.1
@@ -110,7 +110,7 @@ tenants:
           - id: 131
             name: Tenant_A_APP_Zone_2
             tags: ['app']
-            enabled: True
+            enabled: true
             ip_address_virtual: 10.1.31.1/24
             vxlan: false
       - name: Tenant_A_DB_Zone
@@ -119,12 +119,12 @@ tenants:
           - id: 140
             name: Tenant_A_DB_BZone_1
             tags: ['db', 'erp1']
-            enabled: True
+            enabled: true
             ip_address_virtual: 10.1.40.1/24
           - id: 141
             name: Tenant_A_DB_Zone_2
             tags: ['db']
-            enabled: True
+            enabled: true
             ip_address_virtual: 10.1.41.1/24
       - name: Tenant_A_WAN_Zone
         vrf_vni: 14
@@ -133,13 +133,13 @@ tenants:
             ip_addresses: [10.10.10.10/24]
             nodes: [DC1-BL1A]
             mtu: 9000
-            enabled: True
+            enabled: true
             description: "test"
           - interfaces: [Ethernet7]
             ip_addresses: [10.10.20.20/24]
             nodes: [DC1-BL1B]
             mtu: 9000
-            enabled: True
+            enabled: true
             description: "test"
         static_routes:
           - destination_address_prefix: 10.3.4.0/24
@@ -201,7 +201,7 @@ tenants:
           - id: 150
             name: Tenant_A_WAN_Zone_1
             tags: ['wan']
-            enabled: True
+            enabled: true
             ip_address_virtual: 10.1.40.1/24
         additional_route_targets:
           - type: import
@@ -227,20 +227,20 @@ tenants:
             ip_addresses: [10.10.10.10/24, 10.10.20.20/24, 10.10.30.10/24, 10.10.40.20/24]
             nodes: [DC1-BL1A, DC1-BL1A, DC1-BL1B, DC1-BL1B]
             mtu: 9000
-            enabled: True
+            enabled: true
             description: "test"
           - interfaces: [ Ethernet10.100, Ethernet10.100 ]
             ip_addresses: [10.10.11.10/24, 10.10.31.10/24]
             nodes: [DC1-BL1A, DC1-BL1B]
             mtu: 9000
-            enabled: True
+            enabled: true
             description: "subinterface test"
           - interfaces: [ Ethernet10.200, Ethernet10.200 ]
             encapsulation_dot1q_vlan: [ 121, 141 ]
             ip_addresses: [10.10.21.10/24, 10.10.41.10/24]
             nodes: [DC1-BL1A, DC1-BL1B]
             mtu: 9000
-            enabled: True
+            enabled: true
             description: "subinterface test with vlan override"
     l2vlans:
       # L2 vlan as string
@@ -266,12 +266,12 @@ tenants:
           - id: 210
             name: Tenant_B_OP_Zone_1
             tags: ['opzone']
-            enabled: True
+            enabled: true
             ip_address_virtual: 10.2.10.1/24
           - id: 211
             name: Tenant_B_OP_Zone_2
             tags: ['opzone']
-            enabled: True
+            enabled: true
             ip_address_virtual: 10.2.11.1/24
       - name: Tenant_B_WAN_Zone
         vrf_vni: 21
@@ -279,7 +279,7 @@ tenants:
           - id: 250
             name: Tenant_B_WAN_Zone_1
             tags: ['wan']
-            enabled: True
+            enabled: true
             ip_address_virtual: 10.2.50.1/24
   # Tenant_C Specific Information - VRFs / VLANs
   - name: Tenant_C
@@ -294,12 +294,12 @@ tenants:
           - id: 310
             name: Tenant_C_OP_Zone_1
             tags: ['opzone']
-            enabled: True
+            enabled: true
             ip_address_virtual: 10.3.10.1/24
           - id: 311
             name: Tenant_C_OP_Zone_2
             tags: ['opzone']
-            enabled: True
+            enabled: true
             ip_address_virtual: 10.3.11.1/24
       - name: Tenant_C_WAN_Zone
         vrf_vni: 31
@@ -307,6 +307,6 @@ tenants:
           - id: 350
             name: Tenant_C_WAN_Zone_1
             tags: ['wan']
-            enabled: True
+            enabled: true
             ip_address_virtual: 10.3.50.1/24
-            vxlan: False
+            vxlan: false

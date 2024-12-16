@@ -24,7 +24,7 @@ port_profiles:
   - profile: INDIVIDUAL_TRUNKS
     mode: trunk
     vlans: "1,2,3,4,5,6,7,123,234"
-    native_vlan_tag: False
+    native_vlan_tag: false
     native_vlan: 123
 
 expected_error_message: >-

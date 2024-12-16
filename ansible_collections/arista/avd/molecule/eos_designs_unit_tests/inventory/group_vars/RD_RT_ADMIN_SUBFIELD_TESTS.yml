@@ -55,24 +55,24 @@ tenants:
           - id: 1
             name: "VLAN_1"
             tags: ['test_l3']
-            enabled: True
+            enabled: true
             ip_address_virtual: 10.0.1.1/24
           - id: 2
             name: "VLAN_2"
             tags: ['test_l3']
-            enabled: True
+            enabled: true
             ip_address_virtual: 10.0.2.1/24
           - id: 3
             name: "VLAN_3"
             tags: ['test_l3']
-            enabled: True
+            enabled: true
             ip_address_virtual: 10.0.3.1/24
             rt_override: 3333
             rd_override: 33333
           - id: 4
             name: "VLAN_4"
             tags: ['test_l3']
-            enabled: True
+            enabled: true
             ip_address_virtual: 10.0.4.1/24
             rt_override: 3333:3333
             rd_override: 33333:33333
