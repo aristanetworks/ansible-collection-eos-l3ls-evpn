@@ -72,7 +72,7 @@ Below is an example to use in your playbook to build output folders using defaul
 - name: Build Switch configuration
   hosts: DC1_FABRIC
   connection: local
-  gather_facts: no
+  gather_facts: false
   tasks:
     - name: 'Build local folders for output'
       ansible.builtin.import_role:
