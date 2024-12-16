@@ -77,7 +77,7 @@ class UtilsMixin:
                 continue
             if network_port_settings.switches and not self._match_regexes(network_port_settings.switches, self.shared_utils.hostname):
                 continue
-            if network_port_settings.platforms and self.shared_utils.platform not in network_port_settings.platforms:
+            if network_port_settings.platforms and not self._match_regexes(network_port_settings.platforms, self.shared_utils.platform):
                 continue
 
             filtered_network_ports.append(network_port_settings)
@@ -90,7 +90,7 @@ class UtilsMixin:
 
         Regex must match the full value to pass, so regex is wrapped in ^$.
         """
-        return any(re.match(rf"^{regex}$", value) for regex in regexes)
+        return any(re.fullmatch(regex, value) for regex in regexes)
 
     def _get_short_esi(
         self: AvdStructuredConfigConnectedEndpoints,
