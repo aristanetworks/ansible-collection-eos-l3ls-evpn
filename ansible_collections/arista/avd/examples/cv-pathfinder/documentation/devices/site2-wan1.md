@@ -612,16 +612,16 @@ Topology role: transit region
 
 #### AVT Profiles
 
-| Profile name | Load balance policy | Internet exit policy |
-| ------------ | ------------------- | -------------------- |
-| BLUE-POLICY-DEFAULT | LB-BLUE-POLICY-DEFAULT | - |
-| BLUE-POLICY-VIDEO | LB-BLUE-POLICY-VIDEO | - |
-| BLUE-POLICY-VOICE | LB-BLUE-POLICY-VOICE | - |
-| DEFAULT-POLICY-CONTROL-PLANE | LB-DEFAULT-POLICY-CONTROL-PLANE | - |
-| DEFAULT-POLICY-DEFAULT | LB-DEFAULT-POLICY-DEFAULT | - |
-| RED-POLICY-CRITICAL-SECRET-DATA | LB-RED-POLICY-CRITICAL-SECRET-DATA | - |
-| RED-POLICY-NORMAL-DATA | LB-RED-POLICY-NORMAL-DATA | - |
-| RED-POLICY-NOT-SO-IMPORTANT-DATA | LB-RED-POLICY-NOT-SO-IMPORTANT-DATA | - |
+| Profile name | Load balance policy | Internet exit policy | Metric Order | Jitter Threshold (ms) | Latency Threshold (ms) | Load (%) | Loss Rate (%) |
+| ------------ | ------------------- | -------------------- | ------------ | --------------------- | ---------------------- | -------- | ------------- |
+| BLUE-POLICY-DEFAULT | LB-BLUE-POLICY-DEFAULT | - | - | - | - | - | - |
+| BLUE-POLICY-VIDEO | LB-BLUE-POLICY-VIDEO | - | - | - | - | - | - |
+| BLUE-POLICY-VOICE | LB-BLUE-POLICY-VOICE | - | - | - | - | - | - |
+| DEFAULT-POLICY-CONTROL-PLANE | LB-DEFAULT-POLICY-CONTROL-PLANE | - | - | - | - | - | - |
+| DEFAULT-POLICY-DEFAULT | LB-DEFAULT-POLICY-DEFAULT | - | - | - | - | - | - |
+| RED-POLICY-CRITICAL-SECRET-DATA | LB-RED-POLICY-CRITICAL-SECRET-DATA | - | - | - | - | - | - |
+| RED-POLICY-NORMAL-DATA | LB-RED-POLICY-NORMAL-DATA | - | - | - | - | - | - |
+| RED-POLICY-NOT-SO-IMPORTANT-DATA | LB-RED-POLICY-NOT-SO-IMPORTANT-DATA | - | - | - | - | - | - |
 
 #### AVT Policies
 
