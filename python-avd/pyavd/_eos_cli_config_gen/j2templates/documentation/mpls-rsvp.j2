@@ -1,0 +1,101 @@
+{#
+ Copyright (c) 2023-2024 Arista Networks, Inc.
+ Use of this source code is governed by the Apache License 2.0
+ that can be found in the LICENSE file.
+#}
+{# doc - mpls interfaces #}
+{% if mpls.rsvp is arista.avd.defined %}
+
+### MPLS RSVP
+
+#### MPLS RSVP Summary
+
+| Setting | Value |
+| ------- | ----- |
+{%     if mpls.rsvp.refresh is arista.avd.defined %}
+{%         if mpls.rsvp.refresh.interval is arista.avd.defined %}
+| Refresh interval | {{ mpls.rsvp.refresh.interval }} |
+{%         endif %}
+{%         if mpls.rsvp.refresh.method is arista.avd.defined %}
+| Refresh method  | {{ mpls.rsvp.refresh.method }} |
+{%         endif %}
+{%     endif %}
+{%     if mpls.rsvp.hello.interval is arista.avd.defined and mpls.rsvp.hello.multiplier is arista.avd.defined %}
+| Hello interval | {{ mpls.rsvp.hello.interval }} |
+| Timeout multiplier | {{ mpls.rsvp.hello.multiplier }} |
+{%     endif %}
+{%     if mpls.rsvp.authentication is arista.avd.defined %}
+{%         set auth = mpls.rsvp.authentication %}
+| Authentication type | {{ auth.type | arista.avd.default('-') }} |
+| Authentication sequence-number window | {{ auth.sequence_number_window | arista.avd.default('-') }} |
+| Authentication active index | {{ auth.active_index | arista.avd.default('-') }} |
+{%     endif %}
+{%     if mpls.rsvp.ip_access_group is arista.avd.defined or mpls.rsvp.ipv6_access_group is arista.avd.defined %}
+| IPv4 access-group | {{ mpls.rsvp.ip_access_group | arista.avd.default('-') }} |
+| IPv6 access-group | {{ mpls.rsvp.ipv6_access_group | arista.avd.default('-') }} |
+{%     endif %}
+{%     if mpls.rsvp.srlg.strict is arista.avd.defined(true) %}
+| SRLG strict | Enabled |
+{%     elif mpls.rsvp.srlg.enabled is arista.avd.defined(true) %}
+| SRLG | Enabled |
+{%     endif %}
+{%     if mpls.rsvp.label_local_termination is arista.avd.defined %}
+| Label local-termination | {{ mpls.rsvp.label_local_termination }} |
+{%     endif %}
+{%     if mpls.rsvp.preemption_method.preemption is arista.avd.defined %}
+| Preemption method | {{ mpls.rsvp.preemption_method.preemption }} |
+{%         if mpls.rsvp.preemption_method.timer is arista.avd.defined %}
+| Preemption timer | {{ mpls.rsvp.preemption_method.timer }} |
+{%         endif %}
+{%     endif %}
+{%     if mpls.rsvp.mtu_signaling is arista.avd.defined %}
+| MTU signaling | Enabled |
+{%     endif %}
+{%     if mpls.rsvp.fast_reroute is arista.avd.defined %}
+{%         set fast_reroute = mpls.rsvp.fast_reroute %}
+| Fast reroute mode | {{ fast_reroute.mode | arista.avd.default('-') }} |
+| Fast reroute reversion | {{ fast_reroute.reversion | arista.avd.default('-') }} |
+| Fast reroute  bypass tunnel optimization interval | {{ fast_reroute.bypass_tunnel_optimization_interval | arista.avd.default('-') }} |
+{%     endif %}
+{%     if mpls.rsvp.hitless_restart.enabled is arista.avd.defined(true) %}
+| Hitless restart | Active |
+| Hitless restart recovery timer | {{ mpls.rsvp.hitless_restart.timer_recovery | arista.avd.default('-') }} |
+{%     endif %}
+{%     if mpls.rsvp.p2mp.enabled is arista.avd.defined %}
+| P2MP | {{ mpls.rsvp.p2mp.enabled }} |
+{%     endif %}
+{%     if mpls.rsvp.shutdown is arista.avd.defined %}
+| Shutdown | {{ mpls.rsvp.shutdown }} |
+{%     endif %}
+{%     if mpls.rsvp.neighbors is arista.avd.defined %}
+
+##### RSVP Neighbor Authentication
+
+| Neighbor IP | Index | Type |
+| ----------- | ----- | ---- |
+{%         set with_neighbor_ipv4_address = mpls.rsvp.neighbors | selectattr('ip_address', 'arista.avd.defined') | arista.avd.natural_sort('ip_address') %}
+{%         set with_neighbor_ipv6_address = mpls.rsvp.neighbors | selectattr('ipv6_address', 'arista.avd.defined') | arista.avd.natural_sort('ipv6_address') %}
+{%         set sorted_ip_addresses =  with_neighbor_ipv4_address | list + with_neighbor_ipv6_address | list %}
+{%         for neighbor in sorted_ip_addresses %}
+{%             if neighbor.ip_address is arista.avd.defined %}
+| {{ neighbor.ip_address }} | {{ neighbor.authentication.index | arista.avd.default('-') }} | {{ neighbor.authentication.type | arista.avd.default('-') }} |
+{%             elif neighbor.ipv6_address is arista.avd.defined %}
+| {{ neighbor.ipv6_address }} | {{ neighbor.authentication.index | arista.avd.default('-') }} | {{ neighbor.authentication.type | arista.avd.default('-') }} |
+{%             endif %}
+{%         endfor %}
+{%     endif %}
+{%     if mpls.rsvp.graceful_restart is arista.avd.defined %}
+{%         set graceful_restart = mpls.rsvp.graceful_restart %}
+
+##### RSVP Graceful Restart
+
+| Role | Recovery timer | Restart timer |
+| ---- | -------------- | ------------- |
+{%         if graceful_restart.role_helper.enabled is arista.avd.defined(true) %}
+| Helper | {{ graceful_restart.role_helper.timer_recovery | arista.avd.default('-') }} | {{ graceful_restart.role_helper.timer_restart | arista.avd.default('-') }} |
+{%         endif %}
+{%         if graceful_restart.role_speaker.enabled is arista.avd.defined(true) %}
+| Speaker | {{ graceful_restart.role_speaker.timer_recovery | arista.avd.default('-') }} | {{ graceful_restart.role_speaker.timer_restart | arista.avd.default('-') }} |
+{%         endif %}
+{%     endif %}
+{% endif %}

@@ -53,6 +53,26 @@ router adaptive-virtual-topology
 {%         if profile.load_balance_policy is arista.avd.defined %}
       path-selection load-balance {{ profile.load_balance_policy }}
 {%         endif %}
+{%         if profile.metric_order.preferred_metric is arista.avd.defined %}
+      metric order {{ profile.metric_order.preferred_metric }}
+{%         endif %}
+{%         if profile.outlier_elimination.disabled is arista.avd.defined(true) %}
+      path-selection outlier elimination disabled
+{%         endif %}
+{%         if profile.outlier_elimination.threshold is arista.avd.defined %}
+{%             if profile.outlier_elimination.threshold.latency is arista.avd.defined %}
+      path-selection outlier elimination threshold latency {{ profile.outlier_elimination.threshold.latency }} milliseconds
+{%             endif %}
+{%             if profile.outlier_elimination.threshold.jitter is arista.avd.defined %}
+      path-selection outlier elimination threshold jitter {{ profile.outlier_elimination.threshold.jitter }} milliseconds
+{%             endif %}
+{%             if profile.outlier_elimination.threshold.loss_rate is arista.avd.defined %}
+      path-selection outlier elimination threshold loss-rate {{ profile.outlier_elimination.threshold.loss_rate }} percent
+{%             endif %}
+{%             if profile.outlier_elimination.threshold.load is arista.avd.defined %}
+      path-selection outlier elimination threshold load {{ profile.outlier_elimination.threshold.load }} percent
+{%             endif %}
+{%         endif %}
 {%     endfor %}
 {#   VRFs #}
 {%     for vrf in router_adaptive_virtual_topology.vrfs | arista.avd.natural_sort('name') %}

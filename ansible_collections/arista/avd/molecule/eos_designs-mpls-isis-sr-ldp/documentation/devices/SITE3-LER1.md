@@ -25,6 +25,7 @@
 - [MPLS](#mpls)
   - [MPLS and LDP](#mpls-and-ldp)
   - [MPLS Interfaces](#mpls-interfaces)
+  - [MPLS Device Configuration](#mpls-device-configuration)
 - [Multicast](#multicast)
   - [IP IGMP Snooping](#ip-igmp-snooping)
 - [VRF Instances](#vrf-instances)
@@ -328,7 +329,13 @@ router isis CORE
 | LDP Interface Disabled Default | True |
 | LDP Transport-Address Interface | Loopback0 |
 
-#### MPLS and LDP Device Configuration
+### MPLS Interfaces
+
+| Interface | MPLS IP Enabled | LDP Enabled | IGP Sync |
+| --------- | --------------- | ----------- | -------- |
+| Loopback0 | - | True | - |
+
+### MPLS Device Configuration
 
 ```eos
 !
@@ -340,12 +347,6 @@ mpls ldp
    interface disabled default
    no shutdown
 ```
-
-### MPLS Interfaces
-
-| Interface | MPLS IP Enabled | LDP Enabled | IGP Sync |
-| --------- | --------------- | ----------- | -------- |
-| Loopback0 | - | True | - |
 
 ## Multicast
 

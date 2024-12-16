@@ -36,10 +36,17 @@ VXLAN gateway: Enabled
 
 #### AVT Profiles
 
-| Profile name | Load balance policy | Internet exit policy |
-| ------------ | ------------------- | -------------------- |
+| Profile name | Load balance policy | Internet exit policy | Metric Order | Jitter Threshold (ms) | Latency Threshold (ms) | Load (%) | Loss Rate (%) |
+| ------------ | ------------------- | -------------------- | ------------ | --------------------- | ---------------------- | -------- | ------------- |
 {%         for profile in router_adaptive_virtual_topology.profiles | arista.avd.natural_sort('name') %}
-| {{ profile.name }} | {{ profile.load_balance_policy | arista.avd.default("-") }} | {{ profile.internet_exit_policy | arista.avd.default("-") }} |
+{%             set load_balance_policy =  profile.load_balance_policy | arista.avd.default("-") %}
+{%             set internet_exit_policy =  profile.internet_exit_policy | arista.avd.default("-") %}
+{%             set metric_order =  profile.metric_order.preferred_metric | arista.avd.default("-") %}
+{%             set jitter =  profile.outlier_elimination.threshold.jitter | arista.avd.default("-") %}
+{%             set latency =  profile.outlier_elimination.threshold.latency | arista.avd.default("-") %}
+{%             set load =  profile.outlier_elimination.threshold.load | arista.avd.default("-") %}
+{%             set loss_rate =  profile.outlier_elimination.threshold.loss_rate | arista.avd.default("-") %}
+| {{ profile.name }} | {{ load_balance_policy }} | {{ internet_exit_policy }} | {{ metric_order }} | {{ jitter }} | {{ latency }} | {{ load }} | {{ loss_rate }} |
 {%         endfor %}
 {%     endif %}
 {%     if router_adaptive_virtual_topology.policies is arista.avd.defined

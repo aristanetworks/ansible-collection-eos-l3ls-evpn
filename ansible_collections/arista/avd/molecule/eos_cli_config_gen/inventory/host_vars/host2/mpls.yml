@@ -1,0 +1,29 @@
+---
+mpls:
+  ip: true
+  ldp:
+    interface_disabled_default: false
+    shutdown: true
+  icmp:
+    ttl_exceeded_tunneling: true
+  rsvp:
+    p2mp:
+      enabled: true
+    authentication:
+      active_index: 766
+    fast_reroute:
+      mode: node-protection
+    refresh:
+      interval: 4
+    srlg:
+      enabled: true
+    preemption_method:
+      preemption: hard
+    hitless_restart:
+      enabled: true
+    graceful_restart:
+      role_speaker:
+        enabled: true
+      role_helper:
+        enabled: true
+    shutdown: false

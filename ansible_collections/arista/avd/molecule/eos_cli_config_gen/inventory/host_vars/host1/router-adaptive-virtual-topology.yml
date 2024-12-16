@@ -15,10 +15,25 @@ router_adaptive_virtual_topology:
     # Out of order to test sorting
     - name: voice
       load_balance_policy: voice-lb
+      outlier_elimination:
+        threshold:
+          jitter: 100
     - name: video
       internet_exit_policy: video-ie
+      outlier_elimination:
+        disabled: true
+        threshold:
+          latency: 100
     - name: office365
     - name: scavenger
+      outlier_elimination:
+        threshold:
+          latency: 100
+          jitter: 200
+          load: 25.16
+          loss_rate: 20
+      metric_order:
+        preferred_metric: latency
       load_balance_policy: scavenger-lb
       internet_exit_policy: scavenger-ie
   policies:

@@ -144,6 +144,11 @@ ethernet_interfaces:
     traffic_policy:
       input: BLUE-C1-POLICY
       output: BLUE-C2-POLICY
+    mpls:
+      ip: true
+      ldp:
+        interface: true
+        igp_sync: true
 
   - name: Ethernet2
     ip_address: 10.1.255.3/24
