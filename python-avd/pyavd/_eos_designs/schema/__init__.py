@@ -7994,20 +7994,23 @@ class EosDesigns(EosDesignsRootModel):
         """
         platforms: Platforms
         """
-        Matching the platform type of one or more switches. If you need to add custom platforms to match
-        specific port quantities, create them under `custom_platform_settings`.
-        Entries under
-        `custom_platform_settings` should match the platform match criteria.
-        For example, `720XP-48Y6` would
-        require a custom platform type:
+        Regex matching the full platform name of one or more switches. If used in combination with switch
+        hostname matching, both criteria must match for configuration.
+        If you need to add custom platforms
+        to match specific port quantities, create them under `custom_platform_settings`. Entries under
+        `custom_platform_settings` should
+        match the platform match criteria.
+
+        For example, `720XP-48Y6`
+        would require a custom platform type:
 
         platforms:
           - 720XP
           - 720XP-48Y6
 
 
-        Subclass of AvdList with
-        `str` items.
+        Subclass of AvdList
+        with `str` items.
         """
         switch_ports: SwitchPorts
         """
@@ -8252,20 +8255,23 @@ class EosDesigns(EosDesignsRootModel):
 
                        Subclass of AvdList with `str` items.
                     platforms:
-                       Matching the platform type of one or more switches. If you need to add custom platforms to match
-                       specific port quantities, create them under `custom_platform_settings`.
-                       Entries under
-                       `custom_platform_settings` should match the platform match criteria.
-                       For example, `720XP-48Y6` would
-                       require a custom platform type:
+                       Regex matching the full platform name of one or more switches. If used in combination with switch
+                       hostname matching, both criteria must match for configuration.
+                       If you need to add custom platforms
+                       to match specific port quantities, create them under `custom_platform_settings`. Entries under
+                       `custom_platform_settings` should
+                       match the platform match criteria.
+
+                       For example, `720XP-48Y6`
+                       would require a custom platform type:
 
                        platforms:
                          - 720XP
                          - 720XP-48Y6
 
 
-                       Subclass of AvdList with
-                       `str` items.
+                       Subclass of AvdList
+                       with `str` items.
                     switch_ports:
                        List of ranges using AVD range_expand syntax.
                        For example:

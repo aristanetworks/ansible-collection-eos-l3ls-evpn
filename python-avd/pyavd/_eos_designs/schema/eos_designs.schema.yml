@@ -2297,11 +2297,13 @@ keys:
         platforms:
           type: list
           min_length: 1
-          description: "Matching the platform type of one or more switches. If you
-            need to add custom platforms to match specific port quantities, create
-            them under `custom_platform_settings`.\nEntries under `custom_platform_settings`
-            should match the platform match criteria.\nFor example, `720XP-48Y6` would
-            require a custom platform type:\n\nplatforms:\n  - 720XP\n  - 720XP-48Y6\n"
+          description: "Regex matching the full platform name of one or more switches.
+            If used in combination with switch hostname matching, both criteria must
+            match for configuration.\nIf you need to add custom platforms to match
+            specific port quantities, create them under `custom_platform_settings`.
+            Entries under `custom_platform_settings` should\nmatch the platform match
+            criteria.\n\nFor example, `720XP-48Y6` would require a custom platform
+            type:\n\nplatforms:\n  - 720XP\n  - 720XP-48Y6\n"
           items:
             type: str
         switch_ports:
