@@ -59,11 +59,7 @@ mpls rsvp
 {%         endif %}
 {%         for password_index in auth.password_indexes | arista.avd.natural_sort('index') %}
 {%             if password_index.password is arista.avd.defined %}
-{%                 if password_index.password_type is arista.avd.defined %}
-   authentication index {{ password_index.index }} password {{ password_index.password_type }} {{ password_index.password | arista.avd.hide_passwords(hide_passwords) }}
-{%                 else %}
-   authentication index {{ password_index.index }} password {{ password_index.password | arista.avd.hide_passwords(hide_passwords) }}
-{%                 endif %}
+   authentication index {{ password_index.index }} password {{ password_index.password_type | arista.avd.default('7') }} {{ password_index.password | arista.avd.hide_passwords(hide_passwords) }}
 {%             endif %}
 {%         endfor %}
 {%         if auth.active_index is arista.avd.defined %}
