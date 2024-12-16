@@ -12717,7 +12717,7 @@ class EosDesigns(EosDesignsRootModel):
 
     class SflowSettings(AvdModel):
         """Subclass of AvdModel."""
-
+    
         class Sample(AvdModel):
             """Subclass of AvdModel."""
 
@@ -12868,15 +12868,11 @@ class EosDesigns(EosDesignsRootModel):
 
         Vrfs._item_type = VrfsItem
 
-        _fields: ClassVar[dict] = {
-            "polling_interval": {"type": int},
-            "sample": {"type": Sample},
-            "destinations": {"type": Destinations},
-            "vrfs": {"type": Vrfs},
-            "_custom_data": {"type": dict},
-        }
+        _fields: ClassVar[dict] = {"polling_interval": {"type": int}, "sample": {"type": Sample}, "destinations": {"type": Destinations}, "vrfs": {"type": Vrfs}, "_custom_data": {"type": dict}}
         polling_interval: int | None
-        """Interval for sending counter data to the sFlow collector"""
+        """
+        Interval for sending counter data to the sFlow collector
+        """
         sample: Sample
         """Subclass of AvdModel."""
         destinations: Destinations
