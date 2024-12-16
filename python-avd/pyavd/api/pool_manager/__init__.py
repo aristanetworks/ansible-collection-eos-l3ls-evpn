@@ -11,7 +11,7 @@ from typing import TYPE_CHECKING, ClassVar, Generic, Literal, TypeVar, cast
 
 from yaml import CSafeDumper, CSafeLoader, dump, load
 
-from pyavd._utils import get
+from pyavd._utils import default
 from pyavd.j2filters import natural_sort
 
 if TYPE_CHECKING:
@@ -177,6 +177,7 @@ class PoolCollection(ABC, Generic[T_ValueType]):
         """Try to load data from the pools_file into _pools. If the file is missing, we just set a blank pools."""
         if not self.pools_file.exists():
             self._pools = {}
+            return
 
         file_data = load(self.pools_file.read_text(encoding="UTF-8"), Loader=CSafeLoader)
         if not isinstance(file_data, dict) or self.pools_key not in file_data:
@@ -279,7 +280,7 @@ class NodeIdPoolCollection(PoolCollection):
         """Returns the file to use for this device."""
         fabric_name = shared_utils.fabric_name
         default_id_file = output_dir.joinpath(f"data/{fabric_name}-ids.yml")
-        return Path(get(shared_utils.hostvars, "fabric_numbering.node_id.pools_file", default=default_id_file))
+        return Path(default(shared_utils.inputs.fabric_numbering.node_id.pools_file, default_id_file))
 
     @staticmethod
     def _assignment_key_from_shared_utils(shared_utils: SharedUtils) -> AssignmentKey:
