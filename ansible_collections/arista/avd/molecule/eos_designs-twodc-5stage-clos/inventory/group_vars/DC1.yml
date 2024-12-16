@@ -32,7 +32,7 @@ super_spine:
 overlay_controller:
   defaults:
     loopback_ipv4_pool: 172.16.10.0/24
-    uplink_bfd: True
+    uplink_bfd: true
     max_uplink_switches: 4
     uplink_ipv4_pool: 172.17.10.0/24
     bgp_defaults:
