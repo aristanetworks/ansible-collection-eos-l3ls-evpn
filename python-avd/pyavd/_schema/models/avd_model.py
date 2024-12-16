@@ -396,10 +396,9 @@ class AvdModel(AvdBase):
 
         new_instance = new_type(**new_args)
 
-        if self._created_from_null:
-            new_instance._created_from_null = True
-        if self._block_inheritance:
-            new_instance._block_inheritance = True
+    # Pass along the flags
+    new_instance._created_from_null = self._created_from_null
+    new_instance._block_inheritance = self._block_inheritance
 
         return new_instance
 
