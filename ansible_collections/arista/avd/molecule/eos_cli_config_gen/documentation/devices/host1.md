@@ -3792,7 +3792,6 @@ interface Dps1
 | Interface | Enabled | Administrative Groups |
 | --------- | ------- | --------------------- |
 | Ethernet81/3 | True | 3,15-29,testgrp |
-| Ethernet81/4 | False | 4,7-100,testgrp |
 
 #### Ethernet Interfaces Device Configuration
 

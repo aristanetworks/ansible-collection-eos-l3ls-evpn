@@ -797,7 +797,7 @@
 {%     endif %}
 {%     set te_interfaces = [] %}
 {%     for ethernet_interface in ethernet_interfaces | arista.avd.natural_sort('name') %}
-{%         if ethernet_interface.traffic_engineering.enabled is arista.avd.defined(true) or ethernet_interface.traffic_engineering.administrative_groups is arista.avd.defined %}
+{%         if ethernet_interface.traffic_engineering.enabled is arista.avd.defined(true) %}
 {%             do te_interfaces.append(ethernet_interface) %}
 {%         endif %}
 {%     endfor %}
