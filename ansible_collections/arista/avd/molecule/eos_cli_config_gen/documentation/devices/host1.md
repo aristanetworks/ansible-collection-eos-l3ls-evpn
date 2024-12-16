@@ -4758,11 +4758,6 @@ interface Ethernet82
    switchport tap native vlan 10
    switchport tap identity 3 inner 5
    switchport tap mac-address dest 01:00:00:00:00:00 src 01:23:45:67:89:ab
-   switchport tap encapsulation gre protocol 0x1 strip
-   switchport tap encapsulation gre protocol 0x2 feature header length 3 strip
-   switchport tap encapsulation gre protocol 0x3 feature header length 2 strip re-encapsulation ethernet
-   switchport tap encapsulation gre protocol 0x4 strip re-encapsulation ethernet
-   switchport tap encapsulation gre strip
    switchport tap encapsulation gre destination 1.1.1.1 source 1.1.1.2 protocol 0x0 strip
    switchport tap encapsulation gre destination 1.1.1.1 source 1.1.1.2 strip
    switchport tap encapsulation gre destination 2.1.1.2 protocol 0x10 strip
@@ -4778,14 +4773,12 @@ interface Ethernet82
    switchport tool identity qinq
    switchport tool identity dot1q source dzgre port
    switchport tap truncation 150
-   switchport tool truncation
    switchport tap default group g1 group g2 group g3
    switchport tap default nexthop-group nexthop_g1 nexthop_g2 nexthop_g3
    switchport tap default interface ethernet4
    switchport tap default interface port-channel10
    switchport tool group set group1 group2 group3
    switchport tool dot1q remove outer 1
-   switchport tool dzgre preserve
 !
 interface Ethernet83
    description Test_tap_tool
@@ -4796,7 +4789,12 @@ interface Ethernet83
    switchport tool identity dot1q
    switchport tool identity qinq source dzgre policy inner port
    switchport tap truncation
-   switchport tool truncation 160
+!
+interface Ethernet84
+   switchport tap encapsulation gre protocol 0x1 strip
+   switchport tap encapsulation gre protocol 0x2 feature header length 3 strip
+   switchport tap encapsulation gre protocol 0x3 feature header length 2 strip re-encapsulation ethernet
+   switchport tap encapsulation gre protocol 0x4 strip re-encapsulation ethernet
 ```
 
 ### Port-Channel Interfaces
@@ -5547,10 +5545,6 @@ interface Port-Channel133
    switchport tap native vlan 10
    switchport tap identity 3
    switchport tap mac-address dest 01:00:00:00:00:00 src 01:23:45:67:89:ab
-   switchport tap encapsulation gre protocol 0x2 feature header length 3 strip
-   switchport tap encapsulation gre protocol 0x3 feature header length 2 strip re-encapsulation ethernet
-   switchport tap encapsulation gre protocol 0x10 strip
-   switchport tap encapsulation gre strip
    switchport tap encapsulation gre destination 1.1.1.1 source 1.1.1.2 protocol 0x0 strip
    switchport tap encapsulation gre destination 1.1.1.1 source 1.1.1.2 strip
    switchport tap encapsulation gre destination 1.1.1.3 source 1.1.1.4 strip
@@ -5565,24 +5559,27 @@ interface Port-Channel133
    switchport tool identity qinq
    switchport tool identity qinq source dzgre port inner policy
    switchport tap truncation
-   switchport tool truncation 160
    switchport tap default group g1 group g2 group g3
    switchport tap default nexthop-group nexthop_g1 nexthop_g2 nexthop_g3
    switchport tap default interface ethernet4
    switchport tap default interface port-channel10
    switchport tool group set group1 group2 group3
    switchport tool dot1q remove outer 1-2
-   switchport tool dzgre preserve
 !
 interface Port-Channel134
    description Test2_switchport_tap_tool
    switchport tap identity 3 inner 10
    switchport tap mac-address dest 01:00:00:00:00:00
    switchport tap encapsulation vxlan strip
+   switchport tap encapsulation gre strip
    switchport tool identity dot1q
    switchport tool identity dot1q source dzgre policy
    switchport tap truncation 120
-   switchport tool truncation
+!
+interface Port-Channel135
+   switchport tap encapsulation gre protocol 0x2 feature header length 3 strip
+   switchport tap encapsulation gre protocol 0x3 feature header length 2 strip re-encapsulation ethernet
+   switchport tap encapsulation gre protocol 0x10 strip
 ```
 
 ### Loopback Interfaces

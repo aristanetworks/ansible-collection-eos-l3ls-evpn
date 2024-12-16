@@ -1083,13 +1083,6 @@ interface {{ ethernet_interface.name }}
 {%             endif %}
    {{ tap_truncation_cli }}
 {%         endif %}
-{%         if ethernet_interface.switchport.tool.truncation.enabled is arista.avd.defined(true) %}
-{%             set tool_truncation_cli = "switchport tool truncation" %}
-{%             if ethernet_interface.switchport.tool.truncation.size is arista.avd.defined %}
-{%                 set tool_truncation_cli = tool_truncation_cli ~ " " ~ ethernet_interface.switchport.tool.truncation.size %}
-{%             endif %}
-   {{ tool_truncation_cli }}
-{%         endif %}
 {%         if ethernet_interface.switchport.tap.default.groups is arista.avd.defined %}
    switchport tap default group {{ ethernet_interface.switchport.tap.default.groups | arista.avd.natural_sort | join(" group ") }}
 {%         endif %}

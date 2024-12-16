@@ -11947,37 +11947,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                             """
 
-                class Truncation(AvdModel):
-                    """Subclass of AvdModel."""
-
-                    _fields: ClassVar[dict] = {"enabled": {"type": bool}, "size": {"type": int}, "_custom_data": {"type": dict}}
-                    enabled: bool | None
-                    size: Literal[160] | None
-                    """Egress packet truncation size in bytes."""
-                    _custom_data: dict[str, Any]
-
-                    if TYPE_CHECKING:
-
-                        def __init__(
-                            self,
-                            *,
-                            enabled: bool | None | UndefinedType = Undefined,
-                            size: Literal[160] | None | UndefinedType = Undefined,
-                            _custom_data: dict[str, Any] | UndefinedType = Undefined,
-                        ) -> None:
-                            """
-                            Truncation.
-
-
-                            Subclass of AvdModel.
-
-                            Args:
-                                enabled: enabled
-                                size: Egress packet truncation size in bytes.
-                                _custom_data: _custom_data
-
-                            """
-
                 class Groups(AvdList[str]):
                     """Subclass of AvdList with `str` items."""
 
@@ -11988,10 +11957,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                     "encapsulation": {"type": Encapsulation},
                     "allowed_vlan": {"type": str},
                     "identity": {"type": Identity},
-                    "truncation": {"type": Truncation},
                     "groups": {"type": Groups},
                     "dot1q_remove_outer_vlan_tag": {"type": str},
-                    "dzgre_preserve": {"type": bool},
                     "_custom_data": {"type": dict},
                 }
                 mpls_pop_all: bool | None
@@ -12001,8 +11968,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 allowed_vlan: str | None
                 """VLAN ID or range of VLAN IDs within range 1-4094."""
                 identity: Identity
-                """Subclass of AvdModel."""
-                truncation: Truncation
                 """Subclass of AvdModel."""
                 groups: Groups
                 """
@@ -12015,8 +11980,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 Indices of vlan tags to be removed.
                 Range: 1-2
                 """
-                dzgre_preserve: bool | None
-                """Preserve the DzGRE header."""
                 _custom_data: dict[str, Any]
 
                 if TYPE_CHECKING:
@@ -12028,10 +11991,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                         encapsulation: Encapsulation | UndefinedType = Undefined,
                         allowed_vlan: str | None | UndefinedType = Undefined,
                         identity: Identity | UndefinedType = Undefined,
-                        truncation: Truncation | UndefinedType = Undefined,
                         groups: Groups | UndefinedType = Undefined,
                         dot1q_remove_outer_vlan_tag: str | None | UndefinedType = Undefined,
-                        dzgre_preserve: bool | None | UndefinedType = Undefined,
                         _custom_data: dict[str, Any] | UndefinedType = Undefined,
                     ) -> None:
                         """
@@ -12045,7 +12006,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                             encapsulation: Subclass of AvdModel.
                             allowed_vlan: VLAN ID or range of VLAN IDs within range 1-4094.
                             identity: Subclass of AvdModel.
-                            truncation: Subclass of AvdModel.
                             groups:
                                Tool groups for the interface.
 
@@ -12053,7 +12013,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                             dot1q_remove_outer_vlan_tag:
                                Indices of vlan tags to be removed.
                                Range: 1-2
-                            dzgre_preserve: Preserve the DzGRE header.
                             _custom_data: _custom_data
 
                         """
@@ -31769,37 +31728,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                             """
 
-                class Truncation(AvdModel):
-                    """Subclass of AvdModel."""
-
-                    _fields: ClassVar[dict] = {"enabled": {"type": bool}, "size": {"type": int}, "_custom_data": {"type": dict}}
-                    enabled: bool | None
-                    size: Literal[160] | None
-                    """Egress packet truncation size in bytes."""
-                    _custom_data: dict[str, Any]
-
-                    if TYPE_CHECKING:
-
-                        def __init__(
-                            self,
-                            *,
-                            enabled: bool | None | UndefinedType = Undefined,
-                            size: Literal[160] | None | UndefinedType = Undefined,
-                            _custom_data: dict[str, Any] | UndefinedType = Undefined,
-                        ) -> None:
-                            """
-                            Truncation.
-
-
-                            Subclass of AvdModel.
-
-                            Args:
-                                enabled: enabled
-                                size: Egress packet truncation size in bytes.
-                                _custom_data: _custom_data
-
-                            """
-
                 class Groups(AvdList[str]):
                     """Subclass of AvdList with `str` items."""
 
@@ -31810,10 +31738,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                     "encapsulation": {"type": Encapsulation},
                     "allowed_vlan": {"type": str},
                     "identity": {"type": Identity},
-                    "truncation": {"type": Truncation},
                     "groups": {"type": Groups},
                     "dot1q_remove_outer_vlan_tag": {"type": str},
-                    "dzgre_preserve": {"type": bool},
                     "_custom_data": {"type": dict},
                 }
                 mpls_pop_all: bool | None
@@ -31823,8 +31749,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 allowed_vlan: str | None
                 """VLAN ID or range of VLAN IDs within range 1-4094."""
                 identity: Identity
-                """Subclass of AvdModel."""
-                truncation: Truncation
                 """Subclass of AvdModel."""
                 groups: Groups
                 """
@@ -31837,8 +31761,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 Indices of vlan tags to be removed.
                 Range: 1-2
                 """
-                dzgre_preserve: bool | None
-                """Preserve the DzGRE header."""
                 _custom_data: dict[str, Any]
 
                 if TYPE_CHECKING:
@@ -31850,10 +31772,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                         encapsulation: Encapsulation | UndefinedType = Undefined,
                         allowed_vlan: str | None | UndefinedType = Undefined,
                         identity: Identity | UndefinedType = Undefined,
-                        truncation: Truncation | UndefinedType = Undefined,
                         groups: Groups | UndefinedType = Undefined,
                         dot1q_remove_outer_vlan_tag: str | None | UndefinedType = Undefined,
-                        dzgre_preserve: bool | None | UndefinedType = Undefined,
                         _custom_data: dict[str, Any] | UndefinedType = Undefined,
                     ) -> None:
                         """
@@ -31867,7 +31787,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                             encapsulation: Subclass of AvdModel.
                             allowed_vlan: VLAN ID or range of VLAN IDs within range 1-4094.
                             identity: Subclass of AvdModel.
-                            truncation: Subclass of AvdModel.
                             groups:
                                Tool groups for the interface.
 
@@ -31875,7 +31794,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                             dot1q_remove_outer_vlan_tag:
                                Indices of vlan tags to be removed.
                                Range: 1-2
-                            dzgre_preserve: Preserve the DzGRE header.
                             _custom_data: _custom_data
 
                         """

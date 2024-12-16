@@ -423,13 +423,9 @@
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;tag</samp>](## "port_channel_interfaces.[].switchport.tool.identity.tag") | String |  |  | Valid Values:<br>- <code>dot1q</code><br>- <code>qinq</code> |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dot1q_dzgre_source</samp>](## "port_channel_interfaces.[].switchport.tool.identity.dot1q_dzgre_source") | String |  |  | Valid Values:<br>- <code>policy</code><br>- <code>port</code> |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;qinq_dzgre_source</samp>](## "port_channel_interfaces.[].switchport.tool.identity.qinq_dzgre_source") | String |  |  | Valid Values:<br>- <code>policy inner port</code><br>- <code>port inner policy</code> |  |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;truncation</samp>](## "port_channel_interfaces.[].switchport.tool.truncation") | Dictionary |  |  |  |  |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "port_channel_interfaces.[].switchport.tool.truncation.enabled") | Boolean |  |  |  |  |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;size</samp>](## "port_channel_interfaces.[].switchport.tool.truncation.size") | Integer |  |  | Valid Values:<br>- <code>160</code> | Egress packet truncation size in bytes. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;groups</samp>](## "port_channel_interfaces.[].switchport.tool.groups") | List, items: String |  |  |  | Tool groups for the interface. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;&lt;str&gt;</samp>](## "port_channel_interfaces.[].switchport.tool.groups.[]") | String |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dot1q_remove_outer_vlan_tag</samp>](## "port_channel_interfaces.[].switchport.tool.dot1q_remove_outer_vlan_tag") | String |  |  |  | Indices of vlan tags to be removed.<br>Range: 1-2 |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dzgre_preserve</samp>](## "port_channel_interfaces.[].switchport.tool.dzgre_preserve") | Boolean |  |  |  | Preserve the DzGRE header. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;validate_state</samp>](## "port_channel_interfaces.[].validate_state") | Boolean |  |  |  | Set to false to disable interface state and LLDP topology validation performed by the `eos_validate_state` role. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;validate_lldp</samp>](## "port_channel_interfaces.[].validate_lldp") | Boolean |  |  |  | Set to false to disable the LLDP topology validation performed by the `eos_validate_state` role. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;eos_cli</samp>](## "port_channel_interfaces.[].eos_cli") | String |  |  |  | Multiline EOS CLI rendered directly on the port-channel interface in the final EOS configuration. |
@@ -1403,11 +1399,6 @@
               tag: <str; "dot1q" | "qinq">
               dot1q_dzgre_source: <str; "policy" | "port">
               qinq_dzgre_source: <str; "policy inner port" | "port inner policy">
-            truncation:
-              enabled: <bool>
-
-              # Egress packet truncation size in bytes.
-              size: <int; 160>
 
             # Tool groups for the interface.
             groups:
@@ -1416,9 +1407,6 @@
             # Indices of vlan tags to be removed.
             # Range: 1-2
             dot1q_remove_outer_vlan_tag: <str>
-
-            # Preserve the DzGRE header.
-            dzgre_preserve: <bool>
 
         # Set to false to disable interface state and LLDP topology validation performed by the `eos_validate_state` role.
         validate_state: <bool>

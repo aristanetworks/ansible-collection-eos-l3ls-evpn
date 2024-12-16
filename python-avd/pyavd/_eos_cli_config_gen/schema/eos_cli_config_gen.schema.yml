@@ -4379,18 +4379,6 @@ keys:
                       valid_values:
                       - policy inner port
                       - port inner policy
-                truncation:
-                  type: dict
-                  keys:
-                    enabled:
-                      type: bool
-                    size:
-                      description: Egress packet truncation size in bytes.
-                      type: int
-                      convert_types:
-                      - str
-                      valid_values:
-                      - 160
                 groups:
                   type: list
                   items:
@@ -4403,9 +4391,6 @@ keys:
                   description: 'Indices of vlan tags to be removed.
 
                     Range: 1-2'
-                dzgre_preserve:
-                  type: bool
-                  description: Preserve the DzGRE header.
         eos_cli:
           type: str
           description: Multiline EOS CLI rendered directly on the ethernet interface

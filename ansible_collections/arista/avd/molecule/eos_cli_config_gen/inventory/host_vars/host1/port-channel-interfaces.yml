@@ -976,7 +976,6 @@ port_channel_interfaces:
           source: 01:23:45:67:89:ab
         encapsulation:
           gre:
-            strip: true
             destinations:
               - destination: 1.1.1.1
                 source: 1.1.1.2
@@ -996,16 +995,6 @@ port_channel_interfaces:
               - destination: 1.1.1.3
                 source: 1.1.1.4
                 strip: true
-            protocols:
-              - protocol: "0x10"
-                strip: true
-              - protocol: "0x2"
-                feature_header_length: 3
-                strip: true
-              - protocol: "0x3"
-                feature_header_length: 2
-                re_encapsulation_ethernet_header: true
-                strip: true
       tool:
         mpls_pop_all: true
         encapsulation:
@@ -1015,15 +1004,11 @@ port_channel_interfaces:
         identity:
           tag: qinq
           qinq_dzgre_source: port inner policy
-        truncation:
-          enabled: true
-          size: 160
         groups:
           - group1
           - group2
           - group3
         dot1q_remove_outer_vlan_tag: 1-2
-        dzgre_preserve: true
 
   - name: Port-Channel134
     description: Test2_switchport_tap_tool
@@ -1036,12 +1021,28 @@ port_channel_interfaces:
           destination: 01:00:00:00:00:00
         encapsulation:
           vxlan_strip: true
+          gre:
+            strip: true
         truncation:
           enabled: true
           size: 120
       tool:
-        truncation:
-          enabled: true
         identity:
           tag: dot1q
           dot1q_dzgre_source: policy
+
+  - name: Port-Channel135
+    switchport:
+      tap:
+        encapsulation:
+          gre:
+            protocols:
+              - protocol: "0x10"
+                strip: true
+              - protocol: "0x2"
+                feature_header_length: 3
+                strip: true
+              - protocol: "0x3"
+                feature_header_length: 2
+                re_encapsulation_ethernet_header: true
+                strip: true

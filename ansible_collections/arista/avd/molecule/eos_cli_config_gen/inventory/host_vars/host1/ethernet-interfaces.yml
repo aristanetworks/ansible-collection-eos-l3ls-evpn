@@ -1874,7 +1874,6 @@ ethernet_interfaces:
           source: 01:23:45:67:89:ab
         encapsulation:
           gre:
-            strip: true
             destinations:
               - destination: 1.1.1.1
                 source: 1.1.1.2
@@ -1896,19 +1895,6 @@ ethernet_interfaces:
               - destination: 2.1.1.3
                 source: 2.1.1.4
                 strip: true
-            protocols:
-              - protocol: "0x1"
-                strip: true
-              - protocol: "0x2"
-                feature_header_length: 3
-                strip: true
-              - protocol: "0x3"
-                feature_header_length: 2
-                re_encapsulation_ethernet_header: true
-                strip: true
-              - protocol: "0x4"
-                re_encapsulation_ethernet_header: true
-                strip: true
       tool:
         mpls_pop_all: true
         encapsulation:
@@ -1918,14 +1904,11 @@ ethernet_interfaces:
         identity:
           tag: qinq
           dot1q_dzgre_source: port
-        truncation:
-          enabled: true
         groups:
           - group1
           - group2
           - group3
         dot1q_remove_outer_vlan_tag: 1
-        dzgre_preserve: true
 
   - name: Ethernet83
     description: Test_tap_tool
@@ -1945,6 +1928,22 @@ ethernet_interfaces:
         identity:
           tag: dot1q
           qinq_dzgre_source: policy inner port
-        truncation:
-          enabled: true
-          size: 160
+
+  - name: Ethernet84
+    switchport:
+      tap: 
+        encapsulation:
+          gre:
+            protocols:
+              - protocol: "0x1"
+                strip: true
+              - protocol: "0x2"
+                feature_header_length: 3
+                strip: true
+              - protocol: "0x3"
+                feature_header_length: 2
+                re_encapsulation_ethernet_header: true
+                strip: true
+              - protocol: "0x4"
+                re_encapsulation_ethernet_header: true
+                strip: true
