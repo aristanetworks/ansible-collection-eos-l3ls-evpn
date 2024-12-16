@@ -199,7 +199,7 @@ class AvdIndexedList(Sequence[T_AvdModel], Generic[T_PrimaryKey, T_AvdModel], Av
             # Existing item of same type, so deepmerge.
             self[primary_key]._deepmerge(new_item, list_merge=list_merge)
 
-            # Make sure the primary key is never lost / changed.
+            # Make sure the primary key is never lost / changed. Happens when merging a null value over a model/dict.
             if getattr(self[primary_key], self._primary_key, None) != primary_key:
                 setattr(self[primary_key], self._primary_key, primary_key)
 
