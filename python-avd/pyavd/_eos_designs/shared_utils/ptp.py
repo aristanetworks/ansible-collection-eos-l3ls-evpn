@@ -7,7 +7,7 @@ from functools import cached_property
 from typing import TYPE_CHECKING
 
 from pyavd._errors import AristaAvdInvalidInputsError
-from pyavd._utils import default, get
+from pyavd._utils import default
 
 if TYPE_CHECKING:
     from pyavd._eos_designs.schema import EosDesigns
