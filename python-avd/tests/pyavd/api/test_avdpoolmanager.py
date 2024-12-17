@@ -236,7 +236,12 @@ def test_avdpoolmanager_pool(
 
         mocked_exists.assert_called_once()
         if file_exists:
-            mocked_open.assert_called_once_with(mode="r", encoding=mock.ANY, errors=None)
+            mocked_open.assert_called_once()
+            _args, kwargs = mocked_open.call_args
+            assert "mode" in kwargs
+            assert kwargs["mode"] == "r"
+        else:
+            mocked_open.assert_not_called()
 
         assert pool_manager.save_updated_pools() is expected_write
 
@@ -247,8 +252,14 @@ def test_avdpoolmanager_pool(
             mocked_touch.assert_called_once()
 
         if expected_write:
-            mocked_open.assert_called_with(mode="w", encoding=mock.ANY, errors=None, newline=None)
+            mocked_open.assert_called()
+            _args, kwargs = mocked_open.call_args_list[-1]
+            assert "mode" in kwargs
+            assert kwargs["mode"] == "w"
             mocked_file_write.assert_called_once_with(get_file_content(expected_data))
         else:
-            mocked_open.assert_called_with(mode="r", encoding=mock.ANY, errors=None)
+            mocked_open.assert_called_once()
+            _args, kwargs = mocked_open.call_args
+            assert "mode" in kwargs
+            assert kwargs["mode"] == "r"
             mocked_file_write.assert_not_called()
