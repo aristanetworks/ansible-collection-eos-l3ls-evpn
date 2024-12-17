@@ -19,7 +19,7 @@ keys:
         type: int
         convert_types:
           - str
-        description: Interval for sending counter data to the sFlow collector.
+        description: Interval in seconds for sending counter data to the sFlow collector.
       sample:
         type: dict
         keys:
