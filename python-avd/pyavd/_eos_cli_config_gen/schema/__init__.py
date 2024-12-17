@@ -69723,9 +69723,9 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                     """Subclass of AvdModel."""
 
                     _fields: ClassVar[dict] = {"vlans": {"type": str}, "vnis": {"type": str}, "_custom_data": {"type": dict}}
-                    vlans: str | None
+                    vlans: str
                     """e.g. "94,96,100-110"."""
-                    vnis: str | None
+                    vnis: str
                     """
                     Set `vnis` in the correct sequence for the `vlans`.
                     e.g. "10094,10096,10100-10110".
@@ -69737,8 +69737,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                         def __init__(
                             self,
                             *,
-                            vlans: str | None | UndefinedType = Undefined,
-                            vnis: str | None | UndefinedType = Undefined,
+                            vlans: str | UndefinedType = Undefined,
+                            vnis: str | UndefinedType = Undefined,
                             _custom_data: dict[str, Any] | UndefinedType = Undefined,
                         ) -> None:
                             """
@@ -70159,9 +70159,9 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                     """Subclass of AvdModel."""
 
                     _fields: ClassVar[dict] = {"vlans": {"type": str}, "vnis": {"type": str}, "_custom_data": {"type": dict}}
-                    vlans: str | None
+                    vlans: str
                     """e.g. "94,96,100-110"."""
-                    vnis: str | None
+                    vnis: str
                     """
                     Set `vnis` in the correct sequence for the `vlans`.
                     e.g. "10094,10096,10100-10110".
@@ -70173,8 +70173,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                         def __init__(
                             self,
                             *,
-                            vlans: str | None | UndefinedType = Undefined,
-                            vnis: str | None | UndefinedType = Undefined,
+                            vlans: str | UndefinedType = Undefined,
+                            vnis: str | UndefinedType = Undefined,
                             _custom_data: dict[str, Any] | UndefinedType = Undefined,
                         ) -> None:
                             """
