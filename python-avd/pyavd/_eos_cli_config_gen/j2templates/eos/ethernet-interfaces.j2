@@ -1103,6 +1103,12 @@ interface {{ ethernet_interface.name }}
    switchport tool dzgre preserve
 {%         endif %}
 {%     endif %}
+{%     if ethernet_interface.traffic_engineering.enabled is arista.avd.defined(true) %}
+   traffic-engineering
+{%     endif %}
+{%     if ethernet_interface.traffic_engineering.administrative_groups is arista.avd.defined %}
+   traffic-engineering administrative-group {{ ethernet_interface.traffic_engineering.administrative_groups | join(",") }}
+{%     endif %}
 {%     for link_tracking_group in ethernet_interface.link_tracking_groups | arista.avd.natural_sort %}
 {%         if link_tracking_group.name is arista.avd.defined and link_tracking_group.direction is arista.avd.defined %}
    link tracking group {{ link_tracking_group.name }} {{ link_tracking_group.direction }}

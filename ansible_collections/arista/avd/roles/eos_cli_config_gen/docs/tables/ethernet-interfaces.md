@@ -599,6 +599,10 @@
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;groups</samp>](## "ethernet_interfaces.[].switchport.tool.groups") | List, items: String |  |  |  | Tool groups for the interface. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;&lt;str&gt;</samp>](## "ethernet_interfaces.[].switchport.tool.groups.[]") | String |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dot1q_remove_outer_vlan_tag</samp>](## "ethernet_interfaces.[].switchport.tool.dot1q_remove_outer_vlan_tag") | String |  |  |  | Indices of vlan tags to be removed.<br>Range: 1-2 |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;traffic_engineering</samp>](## "ethernet_interfaces.[].traffic_engineering") | Dictionary |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "ethernet_interfaces.[].traffic_engineering.enabled") | Boolean |  |  |  | Whether to enable traffic-engineering on this interface. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;administrative_groups</samp>](## "ethernet_interfaces.[].traffic_engineering.administrative_groups") | List, items: String |  |  |  | List of traffic-engineering administrative groups, valid values are names, ranges 0-127, or single integers 0-127. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;&lt;str&gt;</samp>](## "ethernet_interfaces.[].traffic_engineering.administrative_groups.[]") | String |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;eos_cli</samp>](## "ethernet_interfaces.[].eos_cli") | String |  |  |  | Multiline EOS CLI rendered directly on the ethernet interface in the final EOS configuration. |
 
 === "YAML"
@@ -1913,6 +1917,14 @@
             # Indices of vlan tags to be removed.
             # Range: 1-2
             dot1q_remove_outer_vlan_tag: <str>
+        traffic_engineering:
+
+          # Whether to enable traffic-engineering on this interface.
+          enabled: <bool>
+
+          # List of traffic-engineering administrative groups, valid values are names, ranges 0-127, or single integers 0-127.
+          administrative_groups:
+            - <str>
 
         # Multiline EOS CLI rendered directly on the ethernet interface in the final EOS configuration.
         eos_cli: <str>
