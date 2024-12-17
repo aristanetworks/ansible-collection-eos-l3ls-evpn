@@ -23,10 +23,4 @@
 {%     if mpls.icmp.ttl_exceeded_tunneling is arista.avd.defined %}
 | ICMP TTL-Exceeded Tunneling Enabled | {{ mpls.icmp.ttl_exceeded_tunneling }} |
 {%     endif %}
-
-#### MPLS and LDP Device Configuration
-
-```eos
-{%     include 'eos/mpls.j2' %}
-```
 {% endif %}

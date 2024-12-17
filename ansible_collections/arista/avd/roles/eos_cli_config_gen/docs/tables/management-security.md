@@ -31,7 +31,10 @@
     | [<samp>&nbsp;&nbsp;ssl_profiles</samp>](## "management_security.ssl_profiles") | List, items: Dictionary |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;name</samp>](## "management_security.ssl_profiles.[].name") | String |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;tls_versions</samp>](## "management_security.ssl_profiles.[].tls_versions") | String |  |  |  | List of allowed TLS versions as string.<br>Examples:<br>  - "1.0"<br>  - "1.0 1.1"<br> |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cipher_list</samp>](## "management_security.ssl_profiles.[].cipher_list") | String |  |  |  | cipher_list syntax follows the openssl cipher strings format.<br>Colon (:) separated list of allowed ciphers as a string.<br> |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cipher_list</samp>](## "management_security.ssl_profiles.[].cipher_list") | String |  |  |  | cipher_list syntax follows the openssl cipher strings format.<br>Colon (:) separated list of allowed ciphers as a string.<br>Not supported on EOS version starting 4.32.0F, use the `ciphers` setting instead.<br> |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ciphers</samp>](## "management_security.ssl_profiles.[].ciphers") | Dictionary |  |  |  | This setting is applicable to EOS versions 4.32.0F and later. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;v1_0</samp>](## "management_security.ssl_profiles.[].ciphers.v1_0") | String |  |  |  | The cipher suites for TLS version 1.0, 1.1 and 1.2.<br>Colon (:) separated list of allowed ciphers as a string.<br> |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;v1_3</samp>](## "management_security.ssl_profiles.[].ciphers.v1_3") | String |  |  |  | The cipher suites for TLS version 1.3.<br>Colon (:) separated list of allowed ciphers as a string.<br> |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;trust_certificate</samp>](## "management_security.ssl_profiles.[].trust_certificate") | Dictionary |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;certificates</samp>](## "management_security.ssl_profiles.[].trust_certificate.certificates") | List, items: String |  |  |  | List of trust certificate names.<br>Examples:<br>  - test1.crt<br>  - test2.crt<br> |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;&lt;str&gt;</samp>](## "management_security.ssl_profiles.[].trust_certificate.certificates.[]") | String |  |  |  |  |
@@ -113,7 +116,19 @@
 
           # cipher_list syntax follows the openssl cipher strings format.
           # Colon (:) separated list of allowed ciphers as a string.
+          # Not supported on EOS version starting 4.32.0F, use the `ciphers` setting instead.
           cipher_list: <str>
+
+          # This setting is applicable to EOS versions 4.32.0F and later.
+          ciphers:
+
+            # The cipher suites for TLS version 1.0, 1.1 and 1.2.
+            # Colon (:) separated list of allowed ciphers as a string.
+            v1_0: <str>
+
+            # The cipher suites for TLS version 1.3.
+            # Colon (:) separated list of allowed ciphers as a string.
+            v1_3: <str>
           trust_certificate:
 
             # List of trust certificate names.

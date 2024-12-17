@@ -795,6 +795,24 @@
 | {{ sync_e_interface.name }} | {{ sync_e_interface.sync_e.priority | arista.avd.default('127') }} |
 {%         endfor %}
 {%     endif %}
+{%     set te_interfaces = [] %}
+{%     for ethernet_interface in ethernet_interfaces | arista.avd.natural_sort('name') %}
+{%         if ethernet_interface.traffic_engineering.enabled is arista.avd.defined(true) %}
+{%             do te_interfaces.append(ethernet_interface) %}
+{%         endif %}
+{%     endfor %}
+{%     if te_interfaces | length > 0 %}
+
+#### Traffic Engineering
+
+| Interface | Enabled | Administrative Groups |
+| --------- | ------- | --------------------- |
+{%         for te_interface in te_interfaces %}
+{%             set admin_groups = te_interface.traffic_engineering.administrative_groups | arista.avd.default (["-"]) | join(",") %}
+{%             set te_enabled = te_interface.traffic_engineering.enabled | arista.avd.default ("-") %}
+| {{ te_interface.name }} | {{ te_enabled }} | {{ admin_groups }} |
+{%         endfor %}
+{%     endif %}
 
 #### Ethernet Interfaces Device Configuration
 

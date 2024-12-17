@@ -392,6 +392,15 @@ keys:
             - str
           min: 0
           max: 300
+        min_links:
+          type: int
+          convert_types:
+            - str
+          min: 0
+          max: 120
+          description: |-
+            Minimum number of ports required up before bringing up a port-channel.
+            Maximum in `min_links` is hardware dependent.
         lacp_fallback_mode:
           type: str
           valid_values:
@@ -1370,6 +1379,25 @@ keys:
                         type: int
                         convert_types:
                           - str
+            tap:
+              type: dict
+              $ref: "eos_cli_config_gen#/keys/ethernet_interfaces/items/keys/switchport/keys/tap"
+            tool:
+              type: dict
+              $ref: "eos_cli_config_gen#/keys/ethernet_interfaces/items/keys/switchport/keys/tool"
+        traffic_engineering:
+          type: dict
+          keys:
+            enabled:
+              type: bool
+              description: Whether to enable traffic-engineering on this interface.
+            administrative_groups:
+              type: list
+              description: List of traffic-engineering administrative groups, valid values are names, ranges 0-127, or single integers 0-127.
+              items:
+                type: str
+                convert_types:
+                  - int
         validate_state:
           type: bool
           description: Set to false to disable interface state and LLDP topology validation performed by the `eos_validate_state` role.

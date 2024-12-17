@@ -76,6 +76,8 @@ router_bgp:
       activate: true
       route_map_in: TEST_IN
       route_map_out: TEST_OUT
+      rcf_in: TEST_RCF_IN()
+      rcf_out: TEST_RCF_OUT()
   neighbors:
   - ip_address: 172.31.254.224
     peer_group: UNDERLAY-PEERS
@@ -157,6 +159,10 @@ router_bgp:
     peer_groups:
     - name: Tenant_C_BGP_PEER_GROUP
       activate: false
+    - name: Tenant_C_BGP_PEER_GROUP2
+      activate: true
+      rcf_in: TEST_RCF_IN()
+      rcf_out: TEST_RCF_OUT()
   vrfs:
   - name: Tenant_A_WAN_Zone
     rd: 192.168.255.16:14

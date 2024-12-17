@@ -35,7 +35,7 @@ router_isis:
     passive_only: true
   redistribute_routes:
     - source_protocol: static
-      include_leaked: True
+      include_leaked: true
       route_map: RM-STATIC-TO-ISIS
     - source_protocol: connected
     - source_protocol: isis
@@ -46,7 +46,7 @@ router_isis:
       ospf_route_type: external
       route_map: RM-OSPF-EXTERNAL-TO-ISIS
     - source_protocol: ospf
-      include_leaked: True
+      include_leaked: true
       ospf_route_type: nssa-external
       route_map: RM-OSPF-NSSA_EXT-TO-ISIS
     - source_protocol: ospf
@@ -66,7 +66,7 @@ router_isis:
         enable: true
         strict: true
     tunnel_source_labeled_unicast:
-      enabled: True
+      enabled: true
       rcf: lu_2_sr_pfx()
   address_family_ipv6:
     enabled: true

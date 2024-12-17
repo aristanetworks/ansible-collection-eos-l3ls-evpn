@@ -1480,7 +1480,7 @@ This feature currently provides the following configurations based on the given 
     `max_uplink_switches` and `max_parallel_uplinks` to ensure consistent IP addressing.
 
 ??? example "`cv_topology` example"
-    To use this feature set `default_interfaces` according to the intended design (see [default_intefaces](#default-interface-settings) for details) and set `use_cv_topology` to `true`.
+    To use this feature set `default_interfaces` according to the intended design (see [default_interfaces](#default-interface-settings) for details) and set `use_cv_topology` to `true`.
     Provide a full topology under `cv_topology` like this example:
 
     ```yaml

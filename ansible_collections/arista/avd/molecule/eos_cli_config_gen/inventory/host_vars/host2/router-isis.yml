@@ -16,7 +16,7 @@ router_isis:
   address_family_ipv4:
     enabled: true
     tunnel_source_labeled_unicast:
-      enabled: True
+      enabled: true
   segment_routing_mpls:
     enabled: false
   address_family_ipv6:

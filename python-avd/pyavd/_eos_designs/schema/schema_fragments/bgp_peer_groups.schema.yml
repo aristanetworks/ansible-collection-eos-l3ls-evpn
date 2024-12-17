@@ -26,9 +26,10 @@ keys:
             description: Type 7 encrypted password.
           bfd:
             type: bool
-            default: False
+            default: false
           structured_config:
             type: dict
+            relaxed_validation: true
             description: Custom structured config added under router_bgp.peer_groups.[name=<name>] for eos_cli_config_gen.
             documentation_options:
               hide_keys: true
@@ -45,9 +46,10 @@ keys:
             description: Type 7 encrypted password.
           bfd:
             type: bool
-            default: False
+            default: false
           structured_config:
             type: dict
+            relaxed_validation: true
             description: Custom structured config added under router_bgp.peer_groups.[name=<name>] for eos_cli_config_gen.
             documentation_options:
               hide_keys: true
@@ -64,9 +66,10 @@ keys:
             description: Type 7 encrypted password.
           bfd:
             type: bool
-            default: True
+            default: true
           structured_config:
             type: dict
+            relaxed_validation: true
             description: Custom structured config added under router_bgp.peer_groups.[name=<name>] for eos_cli_config_gen.
             documentation_options:
               hide_keys: true
@@ -83,9 +86,10 @@ keys:
             description: Type 7 encrypted password.
           bfd:
             type: bool
-            default: True
+            default: true
           structured_config:
             type: dict
+            relaxed_validation: true
             description: Custom structured config added under router_bgp.peer_groups.[name=<name>] for eos_cli_config_gen.
             documentation_options:
               hide_keys: true
@@ -102,9 +106,10 @@ keys:
             description: Type 7 encrypted password.
           bfd:
             type: bool
-            default: True
+            default: true
           structured_config:
             type: dict
+            relaxed_validation: true
             description: Custom structured config added under router_bgp.peer_groups.[name=<name>] for eos_cli_config_gen.
             documentation_options:
               hide_keys: true
@@ -121,9 +126,10 @@ keys:
             description: Type 7 encrypted password.
           bfd:
             type: bool
-            default: True
+            default: true
           structured_config:
             type: dict
+            relaxed_validation: true
             description: Custom structured config added under router_bgp.peer_groups.[name=<name>] for eos_cli_config_gen.
             documentation_options:
               hide_keys: true
@@ -140,9 +146,10 @@ keys:
             description: Type 7 encrypted password.
           bfd:
             type: bool
-            default: True
+            default: true
           structured_config:
             type: dict
+            relaxed_validation: true
             description: Custom structured config added under router_bgp.peer_groups.[name=<name>] for eos_cli_config_gen.
             documentation_options:
               hide_keys: true
@@ -164,7 +171,7 @@ keys:
               If the password is not set, the static BGP peerings between Pathfinders may not come up.
           bfd:
             type: bool
-            default: True
+            default: true
           bfd_timers:
             type: dict
             description: |-
@@ -197,6 +204,7 @@ keys:
             default: 1
           structured_config:
             type: dict
+            relaxed_validation: true
             description: Custom structured config added under router_bgp.peer_groups.[name=<name>] for eos_cli_config_gen.
             documentation_options:
               hide_keys: true
@@ -219,7 +227,7 @@ keys:
               If the password is not set, the static BGP peerings between Pathfinders may not come up.
           bfd:
             type: bool
-            default: True
+            default: true
           bfd_timers:
             type: dict
             description: |-
@@ -244,6 +252,7 @@ keys:
             default: 1
           structured_config:
             type: dict
+            relaxed_validation: true
             description: Custom structured config added under router_bgp.peer_groups.[name=<name>] for eos_cli_config_gen.
             documentation_options:
               hide_keys: true

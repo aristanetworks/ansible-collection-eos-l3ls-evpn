@@ -35,3 +35,134 @@ mpls icmp fragmentation-needed tunneling
 mpls icmp ttl-exceeded tunneling
 {%     endif %}
 {% endif %}
+{% if mpls.rsvp is arista.avd.defined %}
+!
+mpls rsvp
+{%     if mpls.rsvp.refresh is arista.avd.defined %}
+{%         if mpls.rsvp.refresh.interval is arista.avd.defined %}
+   refresh interval {{ mpls.rsvp.refresh.interval }}
+{%         endif %}
+{%         if mpls.rsvp.refresh.method is arista.avd.defined %}
+   refresh method {{ mpls.rsvp.refresh.method }}
+{%         endif %}
+{%     endif %}
+{%     if mpls.rsvp.hello.interval is arista.avd.defined and mpls.rsvp.hello.multiplier is arista.avd.defined %}
+   hello interval {{ mpls.rsvp.hello.interval }} multiplier {{ mpls.rsvp.hello.multiplier }}
+{%     endif %}
+{%     if mpls.rsvp.authentication is arista.avd.defined %}
+{%         set auth = mpls.rsvp.authentication %}
+{%         if auth.type is arista.avd.defined %}
+   authentication type {{ auth.type }}
+{%         endif %}
+{%         if auth.sequence_number_window is arista.avd.defined %}
+   authentication sequence-number window {{ auth.sequence_number_window }}
+{%         endif %}
+{%         for password_index in auth.password_indexes | arista.avd.natural_sort('index') %}
+{%             if password_index.password is arista.avd.defined %}
+   authentication index {{ password_index.index }} password {{ password_index.password_type | arista.avd.default('7') }} {{ password_index.password | arista.avd.hide_passwords(hide_passwords) }}
+{%             endif %}
+{%         endfor %}
+{%         if auth.active_index is arista.avd.defined %}
+   authentication index {{ auth.active_index }} active
+{%         endif %}
+{%     endif %}
+{%     if mpls.rsvp.neighbors is arista.avd.defined %}
+{%         set with_neighbor_ipv4_address = mpls.rsvp.neighbors | selectattr('ip_address', 'arista.avd.defined') | arista.avd.natural_sort('ip_address') %}
+{%         set with_neighbor_ipv6_address = mpls.rsvp.neighbors | selectattr('ipv6_address', 'arista.avd.defined') | arista.avd.natural_sort('ipv6_address') %}
+{%         set sorted_ip_addresses =  with_neighbor_ipv4_address | list + with_neighbor_ipv6_address | list %}
+{%         for neighbor in sorted_ip_addresses | arista.avd.default([]) %}
+{%             if neighbor.ip_address is arista.avd.defined %}
+{%                 set ip_address = neighbor.ip_address %}
+{%             else %}
+{%                 set ip_address = neighbor.ipv6_address %}
+{%             endif %}
+{%             if neighbor.authentication.type is arista.avd.defined %}
+   neighbor {{ ip_address }} authentication type {{ neighbor.authentication.type }}
+{%             endif %}
+{%             if neighbor.authentication.index is arista.avd.defined %}
+   neighbor {{ ip_address }} authentication index {{ neighbor.authentication.index }} active
+{%             endif %}
+{%         endfor %}
+{%     endif %}
+{%     if mpls.rsvp.ip_access_group is arista.avd.defined %}
+   ip access-group {{ mpls.rsvp.ip_access_group }}
+{%     endif %}
+{%     if mpls.rsvp.ipv6_access_group is arista.avd.defined %}
+   ipv6 access-group {{ mpls.rsvp.ipv6_access_group }}
+{%     endif %}
+{%     if mpls.rsvp.fast_reroute is arista.avd.defined %}
+{%         set fast_reroute = mpls.rsvp.fast_reroute %}
+{%         if fast_reroute.mode is arista.avd.defined %}
+   fast-reroute mode {{ fast_reroute.mode }}
+{%         endif %}
+{%         if fast_reroute.reversion is arista.avd.defined %}
+   fast-reroute reversion {{ fast_reroute.reversion }}
+{%         endif %}
+{%         if fast_reroute.bypass_tunnel_optimization_interval is arista.avd.defined %}
+   fast-reroute bypass tunnel optimization interval {{ fast_reroute.bypass_tunnel_optimization_interval }} seconds
+{%         endif %}
+{%     endif %}
+{%     if mpls.rsvp.srlg.enabled is arista.avd.defined(true) %}
+{%         set srlg_cli = "srlg" %}
+{%         if mpls.rsvp.srlg.strict is arista.avd.defined(true) %}
+{%             set srlg_cli = srlg_cli ~ " strict" %}
+{%         endif %}
+   {{ srlg_cli }}
+{%     endif %}
+{%     if mpls.rsvp.label_local_termination is arista.avd.defined %}
+   label local-termination {{ mpls.rsvp.label_local_termination }}
+{%     endif %}
+{%     if mpls.rsvp.preemption_method.preemption is arista.avd.defined %}
+{%         set preemption_cli = "preemption method " ~ mpls.rsvp.preemption_method.preemption %}
+{%         if mpls.rsvp.preemption_method.timer is arista.avd.defined %}
+{%             set preemption_cli = preemption_cli ~ " timer " ~ mpls.rsvp.preemption_method.timer %}
+{%         endif %}
+   {{ preemption_cli }}
+{%     endif %}
+{%     if mpls.rsvp.mtu_signaling is arista.avd.defined %}
+   mtu signaling
+{%     endif %}
+{%     if mpls.rsvp.hitless_restart.enabled is arista.avd.defined(true) %}
+   !
+   hitless-restart
+{%         if mpls.rsvp.hitless_restart.timer_recovery is arista.avd.defined %}
+      timer recovery {{ mpls.rsvp.hitless_restart.timer_recovery }} seconds
+{%         endif %}
+{%     endif %}
+{%     if mpls.rsvp.graceful_restart is arista.avd.defined %}
+{%         set graceful_restart = mpls.rsvp.graceful_restart %}
+{%         if graceful_restart.role_helper.enabled is arista.avd.defined(true) %}
+   !
+   graceful-restart role helper
+{%             if graceful_restart.role_helper.timer_recovery is arista.avd.defined %}
+      timer restart maximum {{ graceful_restart.role_helper.timer_recovery }} seconds
+{%             endif %}
+{%             if graceful_restart.role_helper.timer_restart is arista.avd.defined %}
+      timer recovery maximum {{ graceful_restart.role_helper.timer_restart }} seconds
+{%             endif %}
+{%         endif %}
+{%         if graceful_restart.role_speaker.enabled is arista.avd.defined(true) %}
+   !
+   graceful-restart role speaker
+{%             if graceful_restart.role_speaker.timer_recovery is arista.avd.defined %}
+      timer restart {{ graceful_restart.role_speaker.timer_recovery }} seconds
+{%             endif %}
+{%             if graceful_restart.role_speaker.timer_restart is arista.avd.defined %}
+      timer recovery {{ graceful_restart.role_speaker.timer_restart }} seconds
+{%             endif %}
+{%         endif %}
+{%     endif %}
+{%     if mpls.rsvp.p2mp.enabled is arista.avd.defined(true) %}
+   !
+   p2mp
+{%     elif mpls.rsvp.p2mp.enabled is arista.avd.defined(false) %}
+   !
+   p2mp
+      disabled
+{%     endif %}
+{%     if mpls.rsvp.shutdown is arista.avd.defined(true) %}
+   shutdown
+{%     elif mpls.rsvp.shutdown is arista.avd.defined(false) %}
+   no shutdown
+{%     endif %}
+{% endif %}
