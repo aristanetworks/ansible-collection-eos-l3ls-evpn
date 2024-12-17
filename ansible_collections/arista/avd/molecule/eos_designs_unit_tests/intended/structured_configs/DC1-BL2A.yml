@@ -200,24 +200,6 @@ router_bgp:
     remote_as: '667'
     description: Tenant C peer group2
     update_source: lo0
-  address_family_ipv4:
-    peer_groups:
-    - name: UNDERLAY-PEERS
-      activate: true
-    - name: EVPN-OVERLAY-PEERS
-      activate: false
-    - name: IPVPN-INTERWORKING-PEERS
-      activate: false
-    - name: Tenant_C_BGP_PEER_GROUP
-      activate: true
-      prefix_list_in: PL_In_Test_1
-      prefix_list_out: PL_Out_Test_1
-    - name: Tenant_C_BGP_PEER_GROUP2
-      activate: true
-      route_map_in: TEST_IN
-      route_map_out: TEST_OUT
-      rcf_in: TEST_RCF_IN()
-      rcf_out: TEST_RCF_OUT()
   neighbors:
   - ip_address: 172.31.254.224
     peer_group: UNDERLAY-PEERS
@@ -334,6 +316,8 @@ router_bgp:
       activate: true
       route_map_in: TEST_IN
       route_map_out: TEST_OUT
+      rcf_in: TEST_RCF_IN()
+      rcf_out: TEST_RCF_OUT()
   address_family_ipv6:
     peer_groups:
     - name: Tenant_C_BGP_PEER_GROUP
@@ -342,6 +326,20 @@ router_bgp:
       activate: true
       rcf_in: TEST_RCF_IN()
       rcf_out: TEST_RCF_OUT()
+  address_family_vpn_ipv4:
+    domain_identifier: '65000:4'
+    peer_groups:
+    - name: IPVPN-INTERWORKING-PEERS
+      activate: true
+    neighbor_default_encapsulation_mpls_next_hop_self:
+      source_interface: Loopback0
+  address_family_vpn_ipv6:
+    domain_identifier: '65000:4'
+    peer_groups:
+    - name: IPVPN-INTERWORKING-PEERS
+      activate: true
+    neighbor_default_encapsulation_mpls_next_hop_self:
+      source_interface: Loopback0
   vrfs:
   - name: Tenant_A_WAN_Zone
     rd: 192.168.255.16:14
