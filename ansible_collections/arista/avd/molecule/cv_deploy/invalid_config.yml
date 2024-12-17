@@ -109,8 +109,8 @@
           run_once: true
           ansible.legacy.uri:
             url: https://{{ cv_server }}/api/resources/workspace/v1/WorkspaceConfig/some
-            validate_certs: yes
-            return_content: yes
+            validate_certs: true
+            return_content: true
             headers:
               Accept: "application/json"
               Content-Type: "application/json"
@@ -131,13 +131,13 @@
                   }
                 ]
               }
-            force_basic_auth: yes
+            force_basic_auth: true
             timeout: 10
           register: cvp_abandon_workspace_result
           until: cvp_abandon_workspace_result.status == 200
           retries: 3
           delay: 3
-          ignore_errors: True
+          ignore_errors: true
           when: cv_deploy_results.workspace.id is not none and cv_deploy_results.workspace.id | length > 0
 
     - name: "{{ test_id | upper }} Build Workspace with portfast warning suppressed by knob"
@@ -213,8 +213,8 @@
           run_once: true
           ansible.legacy.uri:
             url: https://{{ cv_server }}/api/resources/workspace/v1/WorkspaceConfig/some
-            validate_certs: yes
-            return_content: yes
+            validate_certs: true
+            return_content: true
             headers:
               Accept: "application/json"
               Content-Type: "application/json"
@@ -235,13 +235,13 @@
                   }
                 ]
               }
-            force_basic_auth: yes
+            force_basic_auth: true
             timeout: 10
           register: cvp_abandon_workspace_result
           until: cvp_abandon_workspace_result.status == 200
           retries: 3
           delay: 3
-          ignore_errors: True
+          ignore_errors: true
           when: cv_deploy_results.workspace.id is not none and cv_deploy_results.workspace.id | length > 0
 
     - name: "{{ test_id | upper }} Build Workspace with manually suppressed warning"
@@ -319,8 +319,8 @@
           run_once: true
           ansible.legacy.uri:
             url: https://{{ cv_server }}/api/resources/workspace/v1/WorkspaceConfig/some
-            validate_certs: yes
-            return_content: yes
+            validate_certs: true
+            return_content: true
             headers:
               Accept: "application/json"
               Content-Type: "application/json"
@@ -341,13 +341,13 @@
                   }
                 ]
               }
-            force_basic_auth: yes
+            force_basic_auth: true
             timeout: 10
           register: cvp_abandon_workspace_result
           until: cvp_abandon_workspace_result.status == 200
           retries: 3
           delay: 3
-          ignore_errors: True
+          ignore_errors: true
           when: cv_deploy_results.workspace.id is not none and cv_deploy_results.workspace.id | length > 0
 
     - name: "{{ test_id | upper }} Build Workspace with two manually suppressed warnings"
@@ -420,8 +420,8 @@
           run_once: true
           ansible.legacy.uri:
             url: https://{{ cv_server }}/api/resources/workspace/v1/WorkspaceConfig/some
-            validate_certs: yes
-            return_content: yes
+            validate_certs: true
+            return_content: true
             headers:
               Accept: "application/json"
               Content-Type: "application/json"
@@ -442,13 +442,13 @@
                   }
                 ]
               }
-            force_basic_auth: yes
+            force_basic_auth: true
             timeout: 10
           register: cvp_abandon_workspace_result
           until: cvp_abandon_workspace_result.status == 200
           retries: 3
           delay: 3
-          ignore_errors: True
+          ignore_errors: true
           when: cv_deploy_results.workspace.id is not none and cv_deploy_results.workspace.id | length > 0
 
     - name: "{{ test_id | upper }} Build Workspace with mix of manual and knob-based suppressed warnings"
@@ -519,8 +519,8 @@
           run_once: true
           ansible.legacy.uri:
             url: https://{{ cv_server }}/api/resources/workspace/v1/WorkspaceConfig/some
-            validate_certs: yes
-            return_content: yes
+            validate_certs: true
+            return_content: true
             headers:
               Accept: "application/json"
               Content-Type: "application/json"
@@ -541,13 +541,13 @@
                   }
                 ]
               }
-            force_basic_auth: yes
+            force_basic_auth: true
             timeout: 10
           register: cvp_abandon_workspace_result
           until: cvp_abandon_workspace_result.status == 200
           retries: 3
           delay: 3
-          ignore_errors: True
+          ignore_errors: true
           when: cv_deploy_results.workspace.id is not none and cv_deploy_results.workspace.id | length > 0
 
     - name: "{{ test_id | upper }} Build Workspace with invalid regex suppression pattern"
@@ -633,8 +633,8 @@
           run_once: true
           ansible.legacy.uri:
             url: https://{{ cv_server }}/api/resources/workspace/v1/WorkspaceConfig/some
-            validate_certs: yes
-            return_content: yes
+            validate_certs: true
+            return_content: true
             headers:
               Accept: "application/json"
               Content-Type: "application/json"
@@ -655,13 +655,13 @@
                   }
                 ]
               }
-            force_basic_auth: yes
+            force_basic_auth: true
             timeout: 10
           register: cvp_abandon_workspace_result
           until: cvp_abandon_workspace_result.status == 200
           retries: 3
           delay: 3
-          ignore_errors: True
+          ignore_errors: true
           when: cv_deploy_results.workspace.id is not none and cv_deploy_results.workspace.id | length > 0
 
     - name: "{{ test_id | upper }} Build Workspace with portfast warning suppressed by both knob and regex pattern"
@@ -739,8 +739,8 @@
           run_once: true
           ansible.legacy.uri:
             url: https://{{ cv_server }}/api/resources/workspace/v1/WorkspaceConfig/some
-            validate_certs: yes
-            return_content: yes
+            validate_certs: true
+            return_content: true
             headers:
               Accept: "application/json"
               Content-Type: "application/json"
@@ -761,13 +761,13 @@
                   }
                 ]
               }
-            force_basic_auth: yes
+            force_basic_auth: true
             timeout: 10
           register: cvp_abandon_workspace_result
           until: cvp_abandon_workspace_result.status == 200
           retries: 3
           delay: 3
-          ignore_errors: True
+          ignore_errors: true
           when: cv_deploy_results.workspace.id is not none and cv_deploy_results.workspace.id | length > 0
 
     - name: "{{ test_id | upper }} Build Workspace with suppressed warnings"
@@ -836,8 +836,8 @@
           run_once: true
           ansible.legacy.uri:
             url: https://{{ cv_server }}/api/resources/workspace/v1/WorkspaceConfig/some
-            validate_certs: yes
-            return_content: yes
+            validate_certs: true
+            return_content: true
             headers:
               Accept: "application/json"
               Content-Type: "application/json"
@@ -858,13 +858,13 @@
                   }
                 ]
               }
-            force_basic_auth: yes
+            force_basic_auth: true
             timeout: 10
           register: cvp_abandon_workspace_result
           until: cvp_abandon_workspace_result.status == 200
           retries: 3
           delay: 3
-          ignore_errors: True
+          ignore_errors: true
           when: cv_deploy_results.workspace.id is not none and cv_deploy_results.workspace.id | length > 0
 
     - name: "{{ test_id | upper }}  Cleanup"
