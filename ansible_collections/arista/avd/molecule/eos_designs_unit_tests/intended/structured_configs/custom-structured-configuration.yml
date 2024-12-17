@@ -1,9 +1,7 @@
 aaa_root:
   disabled: true
 config_end: true
-domain_list:
-- foo.foo
-- bar.bar
+domain_list: null
 enable_password:
   disabled: true
 hostname: custom-structured-configuration
