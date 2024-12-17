@@ -1,5 +1,5 @@
 - name: Test with template_output false
-  ignore_errors: no
+  ignore_errors: false
   register: result
   vars:
     custom_structured_configuration_inline_jinja_value_1: "test"

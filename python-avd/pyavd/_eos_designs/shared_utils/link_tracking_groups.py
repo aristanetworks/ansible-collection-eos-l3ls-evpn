@@ -6,7 +6,7 @@ from __future__ import annotations
 from functools import cached_property
 from typing import TYPE_CHECKING
 
-from pyavd._utils import default
+from pyavd._utils import default, strip_empties_from_list
 
 if TYPE_CHECKING:
     from . import SharedUtils
@@ -33,6 +33,6 @@ class LinkTrackingGroupsMixin:
             else:
                 link_tracking_groups.append({"name": "LT_GROUP1", "recovery_delay": default_recovery_delay})
 
-            return link_tracking_groups
+            return strip_empties_from_list(link_tracking_groups)
 
         return None

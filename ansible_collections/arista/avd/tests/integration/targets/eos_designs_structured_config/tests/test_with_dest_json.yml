@@ -1,5 +1,5 @@
 - name: Test with dest and changed
-  ignore_errors: no
+  ignore_errors: false
   register: result
   arista.avd.eos_designs_structured_config:
     dest: "{{ actual_output_dir }}/eos_designs_structured_config_test_with_dest.json"

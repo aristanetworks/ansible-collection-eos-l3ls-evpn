@@ -24,7 +24,7 @@ tenants:
           - id: 350
             name: Tenant_C_WAN_Zone_1
             tags: ['wan']
-            enabled: True
+            enabled: true
         bgp_peers:
           - ip_address: 2.2.2.2
             peer_group: Tenant_C_BGP_PEER_GROUP

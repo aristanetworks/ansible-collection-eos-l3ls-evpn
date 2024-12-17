@@ -10,5 +10,5 @@ keys:
     documentation_options:
       table: management-interface-settings
     type: bool
-    default: False
+    default: false
     description: Configure IP routing for the OOB Management VRF.

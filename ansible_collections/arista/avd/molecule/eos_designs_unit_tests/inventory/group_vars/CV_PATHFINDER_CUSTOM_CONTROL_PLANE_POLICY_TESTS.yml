@@ -25,7 +25,7 @@ wan_router:
       cv_pathfinder_region: AVD_Land_East
       cv_pathfinder_site: Site511
       wan_ha:
-        enabled: False
+        enabled: false
       nodes:
         - name: cv-pathfinder-custom-control-plane-policy-edge-1
           id: 1

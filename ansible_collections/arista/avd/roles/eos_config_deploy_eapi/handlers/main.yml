@@ -6,7 +6,7 @@
 
 - name: Backup running config
   arista.eos.eos_config:
-    backup: yes
+    backup: true
     backup_options:
       filename: "{{ post_running_config_backup_filename }}"
       dir_path: "{{ post_running_config_backup_dir }}"

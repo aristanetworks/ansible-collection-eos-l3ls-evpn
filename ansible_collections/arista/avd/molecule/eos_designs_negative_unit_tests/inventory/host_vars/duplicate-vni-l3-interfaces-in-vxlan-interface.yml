@@ -30,7 +30,7 @@ tenants:
             ip_addresses: [ 10.10.10.10/24 ]
             nodes: [ duplicate-vni-l3-interfaces-in-vxlan-interface ]
             mtu: 9000
-            enabled: True
+            enabled: true
             description: "test"
 
 expected_error_message: >-

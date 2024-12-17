@@ -11,7 +11,7 @@ spine:
     max_uplink_switches: 4
     uplink_ipv4_pool: 172.16.21.0/24
     uplink_ptp:
-      enable: True
+      enable: true
     bgp_defaults:
       - distance bgp 20 200 200
     raw_eos_cli: |
@@ -40,7 +40,7 @@ l3leaf:
     uplink_interfaces: ['Ethernet1', 'Ethernet2']
     uplink_switches: ['DC2-POD1-SPINE1', 'DC2-POD1-SPINE2']
     uplink_ipv4_pool: 172.17.210.0/24
-    uplink_ptp: {'enable': True}
+    uplink_ptp: {'enable': true}
     bgp_defaults:
       - distance bgp 20 200 200
     bgp_as: 65555

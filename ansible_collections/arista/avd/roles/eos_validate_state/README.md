@@ -284,7 +284,7 @@ all:
 ansible_user: arista
 ansible_password: arista
 ansible_network_os: eos
-ansible_become: yes
+ansible_become: true
 ansible_become_method: enable
 ansible_become_password: arista
 ansible_connection: httpapi

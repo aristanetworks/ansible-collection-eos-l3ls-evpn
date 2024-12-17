@@ -13,7 +13,7 @@ l3leaf:
       bgp_as: 65042
       id: 1
       filter:
-        only_vlans_in_use: True
+        only_vlans_in_use: true
 
 servers:
   - name: TEST-ENDPOINT

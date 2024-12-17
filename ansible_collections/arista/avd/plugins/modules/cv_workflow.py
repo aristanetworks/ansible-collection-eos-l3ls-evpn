@@ -158,7 +158,7 @@ EXAMPLES = r"""
       arista.avd.cv_workflow:
         cv_servers: [ "www.arista.io" ]
         cv_token: "<insert vaulted service account token here>"
-        # cv_verify_certs: True
+        # cv_verify_certs: true
         configuration_dir: "{{ inventory_dir }}/intended/configs"
         structured_config_dir: "{{ inventory_dir }}/intended/structured_configs"
         # structured_config_suffix: "yml"
@@ -171,7 +171,7 @@ EXAMPLES = r"""
         #   description:
         #   id: <uuid or similar>
           requested_state: submitted
-          force: True
+          force: true
         change_control:
         #   name:
         #   description:

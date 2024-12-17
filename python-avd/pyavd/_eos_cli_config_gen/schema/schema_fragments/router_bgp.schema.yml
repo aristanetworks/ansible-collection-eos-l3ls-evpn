@@ -1021,7 +1021,7 @@ keys:
       redistribute_routes:
         type: list
         primary_key: source_protocol
-        allow_duplicate_primary_key: True
+        allow_duplicate_primary_key: true
         deprecation:
           warning: true
           remove_in_version: 6.0.0
@@ -1953,7 +1953,7 @@ keys:
           redistribute_routes:
             type: list
             primary_key: source_protocol
-            allow_duplicate_primary_key: True
+            allow_duplicate_primary_key: true
             deprecation:
               warning: true
               remove_in_version: 6.0.0

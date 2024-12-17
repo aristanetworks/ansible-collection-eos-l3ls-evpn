@@ -31,4 +31,4 @@ custom_structured_configuration_port_channel_interfaces:
 
 custom_structured_configuration_interface_defaults:
   ethernet:
-    shutdown: True
+    shutdown: true

@@ -39,7 +39,7 @@ class AvdStructuredConfigCustomStructuredConfiguration(AvdFacts):
         return struct_cfgs
 
     def _struct_cfg(self) -> list:
-        if struct_cfg := self.shared_utils.node_config.structured_config._as_dict(strip_values=()):
+        if struct_cfg := self.shared_utils.node_config.structured_config._as_dict():
             return [struct_cfg]
 
         return []
@@ -114,9 +114,7 @@ class AvdStructuredConfigCustomStructuredConfiguration(AvdFacts):
         ]
 
     def _custom_structured_configurations(self) -> list[dict]:
-        return [
-            custom_structured_configuration.value._as_dict(strip_values=()) for custom_structured_configuration in self.inputs._custom_structured_configurations
-        ]
+        return [custom_structured_configuration.value._as_dict() for custom_structured_configuration in self.inputs._custom_structured_configurations]
 
     def render(self) -> list[dict]:
         """

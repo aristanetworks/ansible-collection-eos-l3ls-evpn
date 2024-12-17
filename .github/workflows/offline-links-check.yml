@@ -1,7 +1,7 @@
 ---
 name: "Check links offline for dead targets"
 
-on:
+"on":
   # schedule every day at 3 AM on devel
   schedule:
     - cron: "0 3 * * *"

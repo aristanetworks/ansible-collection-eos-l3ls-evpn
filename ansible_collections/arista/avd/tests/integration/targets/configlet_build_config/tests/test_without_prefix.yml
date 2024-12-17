@@ -1,5 +1,5 @@
 - name: Test without prefix
-  ignore_errors: yes
+  ignore_errors: true
   configlet_build_config:
     configlet_dir: '{{ configlet_path }}'
     configlet_extension: 'cfg'

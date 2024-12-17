@@ -1,5 +1,5 @@
 - name: Test with list_merge invalid option
-  ignore_errors: yes
+  ignore_errors: true
   register: result
   arista.avd.eos_designs_structured_config:
     eos_designs_custom_templates:
@@ -12,5 +12,5 @@
       merge: 'list_merge' argument can only be equal to one of ['replace', 'keep', 'append', 'prepend', 'append_rp', 'prepend_rp']
   assert:
     that:
-      - result.failed == True
+      - result.failed == true
       - result.msg == error_msg

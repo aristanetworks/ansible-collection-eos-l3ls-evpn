@@ -1,5 +1,5 @@
 - name: Test without configlet_dir
-  ignore_errors: yes
+  ignore_errors: true
   configlet_build_config:
     configlet_prefix: 'Prefix'
     configlet_extension: 'cfg'

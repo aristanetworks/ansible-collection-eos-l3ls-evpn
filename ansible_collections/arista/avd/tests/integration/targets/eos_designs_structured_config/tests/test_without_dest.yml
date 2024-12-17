@@ -1,5 +1,5 @@
 - name: Test without dest
-  ignore_errors: no
+  ignore_errors: false
   register: result
   arista.avd.eos_designs_structured_config:
 

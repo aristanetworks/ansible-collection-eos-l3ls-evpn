@@ -158,7 +158,7 @@ class PortChannelInterfacesMixin(UtilsMixin):
             "validate_state": None if (adapter.validate_state if adapter.validate_state is not None else True) else False,
             "validate_lldp": None if (adapter.validate_lldp if adapter.validate_lldp is not None else True) else False,
             "eos_cli": adapter.port_channel.raw_eos_cli,
-            "struct_cfg": adapter.port_channel.structured_config._as_dict(strip_values=()) or None,
+            "struct_cfg": adapter.port_channel.structured_config._as_dict() or None,
         }
 
         if adapter.port_channel.subinterfaces:

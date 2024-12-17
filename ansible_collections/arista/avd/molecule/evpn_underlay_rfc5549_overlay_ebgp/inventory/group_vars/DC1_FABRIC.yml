@@ -11,7 +11,7 @@ fabric_name: DC1_FABRIC
 # Point to Point Underlay with IPv6 Unnumbered
 underlay_rfc5549: true
 
-# Test if overlay_mlag_rfc5549 is True
+# Test if overlay_mlag_rfc5549 is true
 # Results to the following EOS config:
 #   ipv6 unicast-routing vrf <vrf_name>
 overlay_mlag_rfc5549: true
@@ -268,4 +268,4 @@ l3_edge:
       as: [ "65105", "64900" ]
       subnet: 10.23.23.4/30
       profile: IPV4-UNDERLAY-EXTERNAL
-      ipv6_enable: True
+      ipv6_enable: true

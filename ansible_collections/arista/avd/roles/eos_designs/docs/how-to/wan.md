@@ -394,7 +394,7 @@ wan_router:
             peer_ip: 172.16.5.4
             static_routes:
               - prefix: 172.16.0.0/16
-            connected_to_pathfinder: False
+            connected_to_pathfinder: false
             # Configure BGP peering with peer
             bgp:
               peer_as: 65042
@@ -522,7 +522,7 @@ cv_pathfinder_internet_exit_policies:
     type: zscaler
     # [...] type specific options
   - name: ZSCALER-EXIT-POLICY-2
-    fallback_to_system_default: False
+    fallback_to_system_default: false
     type: zscaler
     # [...] type specific options
   - name: DIRECT-EXIT-POLICY-1

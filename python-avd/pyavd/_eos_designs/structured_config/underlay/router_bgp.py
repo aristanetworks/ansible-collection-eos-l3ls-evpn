@@ -36,7 +36,7 @@ class RouterBgpMixin(UtilsMixin):
             "bfd": self.inputs.bgp_peer_groups.ipv4_underlay_peers.bfd or None,
             "maximum_routes": 12000,
             "send_community": "all",
-            "struct_cfg": self.inputs.bgp_peer_groups.ipv4_underlay_peers.structured_config._as_dict(strip_values=()) or None,
+            "struct_cfg": self.inputs.bgp_peer_groups.ipv4_underlay_peers.structured_config._as_dict() or None,
         }
 
         if self.shared_utils.overlay_routing_protocol == "ibgp" and self.shared_utils.is_cv_pathfinder_router:

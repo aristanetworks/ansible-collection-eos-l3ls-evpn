@@ -62,7 +62,7 @@ $defs:
           documentation_options:
             table: network-services-vrfs-settings
           type: bool
-          default: True
+          default: true
           description: |
             MLAG iBGP peering per VRF.
             By default an iBGP peering is configured per VRF between MLAG peers on separate VLANs.
@@ -622,7 +622,7 @@ $defs:
                   table: network-services-vrfs-svis-settings
                 type: list
                 primary_key: id
-                allow_duplicate_primary_key: True
+                allow_duplicate_primary_key: true
                 description: |
                   List of SVIs.
                   This will create both the L3 SVI and L2 VLAN based on filters applied to the node.
@@ -841,14 +841,14 @@ $defs:
                       type: str
                     enabled:
                       type: bool
-                      default: True
+                      default: true
                     ospf:
                       type: dict
                       description: OSPF interface configuration.
                       keys:
                         enabled:
                           type: bool
-                          default: False
+                          default: false
                         area:
                           type: str
                           convert_types:
@@ -958,7 +958,7 @@ $defs:
                   table: network-services-vrfs-bgp-settings
                 type: list
                 primary_key: ip_address
-                allow_duplicate_primary_key: True
+                allow_duplicate_primary_key: true
                 description: |
                   List of BGP peer definitions.
                   This will configure BGP neighbors inside the tenant VRF for peering with external devices.
@@ -1210,7 +1210,7 @@ $defs:
             table: network-services-l2vlans-settings
           type: list
           primary_key: id
-          allow_duplicate_primary_key: True
+          allow_duplicate_primary_key: true
           description: Define L2 network services organized by vlan id.
           items:
             type: dict

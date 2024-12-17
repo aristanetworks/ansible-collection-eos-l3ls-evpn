@@ -78,9 +78,9 @@ tenants:
           - id: 113
             name: SVI_with_no_vxlan
             tags: [opzone]
-            enabled: True
+            enabled: true
             ip_address_virtual: 10.10.13.1/24
-            vxlan: False
+            vxlan: false
         raw_eos_cli: |
           interface Loopback1000
             description Loopback created from raw_eos_cli under VRF Common_VRF
@@ -104,9 +104,9 @@ tenants:
           - id: 1100
             name: test_svi
             tags: [opzone, web]
-            enabled: True
+            enabled: true
             ip_address_virtual: 10.100.100.1/24
-            vxlan: False
+            vxlan: false
       - name: vrf_with_loopbacks_from_pod_pools
         vrf_vni: 1101
         vtep_diagnostic:
@@ -125,9 +125,9 @@ tenants:
           - id: 1101
             name: test_svi
             tags: [opzone, web]
-            enabled: True
+            enabled: true
             ip_address_virtual: 10.101.100.1/24
-            vxlan: False
+            vxlan: false
       - name: vrf_with_loopbacks_dc1_pod1_only
         vrf_vni: 1102
         vtep_diagnostic:
@@ -139,9 +139,9 @@ tenants:
           - id: 1102
             name: test_svi
             tags: [opzone, web]
-            enabled: True
+            enabled: true
             ip_address_virtual: 10.102.100.1/24
-            vxlan: False
+            vxlan: false
 
     # These are pure L2 vlans - so no SVI on l3leafs
     l2vlans:
@@ -164,4 +164,4 @@ tenants:
       - id: 2601
         name: l2vlan_with_no_vxlan
         tags: [web]
-        vxlan: False
+        vxlan: false

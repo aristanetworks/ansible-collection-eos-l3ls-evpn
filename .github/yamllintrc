@@ -57,4 +57,9 @@ rules:
   octal-values:
     forbid-implicit-octal: true
     forbid-explicit-octal: true
-  truthy: disable
+  trailing-spaces:
+    ignore:
+      /python-avd/pyavd/**/schema/*.schema.yml
+  new-line-at-end-of-file:
+    ignore:
+      /python-avd/pyavd/**/schema/*.schema.yml

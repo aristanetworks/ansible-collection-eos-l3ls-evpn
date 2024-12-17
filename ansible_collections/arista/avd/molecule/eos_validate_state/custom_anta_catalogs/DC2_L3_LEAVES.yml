@@ -25,17 +25,17 @@ anta.tests.mlag:
       reload_delay_non_mlag: 330
   - VerifyMlagDualPrimary:
       detection_delay: 200
-      errdisabled: True
+      errdisabled: true
       recovery_delay: 60
       recovery_delay_non_mlag: 0
 
 anta.tests.multicast:
   - VerifyIGMPSnoopingVlans:
       vlans:
-        10: False
-        12: False
+        10: false
+        12: false
   - VerifyIGMPSnoopingGlobal:
-      enabled: True
+      enabled: true
 
 anta.tests.stp:
   - VerifySTPMode:

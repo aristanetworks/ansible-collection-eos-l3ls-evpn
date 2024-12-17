@@ -26,7 +26,7 @@ keys:
             description: Type 7 encrypted password.
           bfd:
             type: bool
-            default: False
+            default: false
           structured_config:
             type: dict
             relaxed_validation: true
@@ -46,7 +46,7 @@ keys:
             description: Type 7 encrypted password.
           bfd:
             type: bool
-            default: False
+            default: false
           structured_config:
             type: dict
             relaxed_validation: true
@@ -66,7 +66,7 @@ keys:
             description: Type 7 encrypted password.
           bfd:
             type: bool
-            default: True
+            default: true
           structured_config:
             type: dict
             relaxed_validation: true
@@ -86,7 +86,7 @@ keys:
             description: Type 7 encrypted password.
           bfd:
             type: bool
-            default: True
+            default: true
           structured_config:
             type: dict
             relaxed_validation: true
@@ -106,7 +106,7 @@ keys:
             description: Type 7 encrypted password.
           bfd:
             type: bool
-            default: True
+            default: true
           structured_config:
             type: dict
             relaxed_validation: true
@@ -126,7 +126,7 @@ keys:
             description: Type 7 encrypted password.
           bfd:
             type: bool
-            default: True
+            default: true
           structured_config:
             type: dict
             relaxed_validation: true
@@ -146,7 +146,7 @@ keys:
             description: Type 7 encrypted password.
           bfd:
             type: bool
-            default: True
+            default: true
           structured_config:
             type: dict
             relaxed_validation: true
@@ -171,7 +171,7 @@ keys:
               If the password is not set, the static BGP peerings between Pathfinders may not come up.
           bfd:
             type: bool
-            default: True
+            default: true
           bfd_timers:
             type: dict
             description: |-
@@ -227,7 +227,7 @@ keys:
               If the password is not set, the static BGP peerings between Pathfinders may not come up.
           bfd:
             type: bool
-            default: True
+            default: true
           bfd_timers:
             type: dict
             description: |-

@@ -12,7 +12,7 @@ tenants:
         svis:
           - id: 100
             name: svi100_with_trunk_groups
-            enabled: True
+            enabled: true
             ip_address_virtual: 10.1.0.1/24
             trunk_groups: [ TG_100, TG_NOT_MATCHING_ANY_SERVERS ]
             tags: [ TRUNK_GROUP_TESTS_L3LEAF1, TRUNK_GROUP_TESTS_L2LEAF1 ]
@@ -21,7 +21,7 @@ tenants:
         svis:
           - id: 200
             name: svi200_with_trunk_groups
-            enabled: True
+            enabled: true
             ip_address_virtual: 10.2.0.1/24
             trunk_groups: [ TG_200, TG_NOT_MATCHING_ANY_SERVERS ]
             tags: [ TRUNK_GROUP_TESTS_L3LEAF1, TRUNK_GROUP_TESTS_L2LEAF1 ]
@@ -30,19 +30,19 @@ tenants:
         svis:
           - id: 300
             name: svi300_with_trunk_groups
-            enabled: True
+            enabled: true
             ip_address_virtual: 10.3.0.1/24
             trunk_groups: [ TG_300, TG_NOT_MATCHING_ANY_SERVERS ]
             tags: [ TRUNK_GROUP_TESTS_L3LEAF1, TRUNK_GROUP_TESTS_L2LEAF1 ]
           - id: 301
             name: svi301_with_trunk_groups_only_l3leaf
-            enabled: True
+            enabled: true
             ip_address_virtual: 10.3.1.1/24
             trunk_groups: [ TG_300, TG_NOT_MATCHING_ANY_SERVERS ]
             tags: [ TRUNK_GROUP_TESTS_L3LEAF1 ]
           - id: 398
             name: svi398_without_trunk_groups
-            enabled: True
+            enabled: true
             ip_address_virtual: 10.3.1.1/24
             tags: [ TRUNK_GROUP_TESTS_L3LEAF1, TRUNK_GROUP_TESTS_L2LEAF1 ]
     l2vlans:
@@ -79,7 +79,7 @@ tenants:
         svis:
           - id: 200
             name: duplicate svi200_with_trunk_groups not in use. Should not get configured anywhere
-            enabled: True
+            enabled: true
             ip_address_virtual: 10.22.0.1/24
             trunk_groups: [ TG_NOT_MATCHING_ANY_SERVERS ]
     l2vlans:

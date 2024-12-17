@@ -24,7 +24,7 @@ overlay_controller:
   defaults:
     platform: vEOS-LAB
     loopback_ipv4_pool: 172.16.20.0/24
-    uplink_bfd: False
+    uplink_bfd: false
     uplink_switches: ['DC2-SUPER-SPINE1', 'DC2-SUPER-SPINE1']
     max_uplink_switches: 4
     uplink_ipv4_pool: 172.17.20.0/24

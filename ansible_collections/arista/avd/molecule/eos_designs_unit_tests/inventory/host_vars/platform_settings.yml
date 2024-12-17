@@ -7,10 +7,10 @@ platform_settings:
   - platforms: [ default ]
     # Test for security_entropy_sources
     security_entropy_sources:
-      hardware: True
-      haveged: True
-      cpu_jitter: True
-      hardware_exclusive: True
+      hardware: true
+      haveged: true
+      cpu_jitter: true
+      hardware_exclusive: true
     # Test for structured_config
     structured_config:
       ethernet_interfaces:

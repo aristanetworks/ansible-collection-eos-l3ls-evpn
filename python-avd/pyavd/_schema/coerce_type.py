@@ -12,62 +12,7 @@ from .constants import ACCEPTED_COERCION_MAP
 if TYPE_CHECKING:
     from typing import NoReturn, TypeVar
 
-    from typing_extensions import Self
-
-    from pyavd._schema.models.type_vars import T_AvdBase
-
     T = TypeVar("T")
-
-
-def nullifiy_class(cls: type[T_AvdBase]) -> type:
-    """
-    Returns a subclass of the given class with overrides for "null" values.
-
-    This class is used when the input for a dict or a list is None/null/none,
-    to be able to signal to the deepmerge/inherit methods that this is not the same as an unset variable.
-    """
-
-    class NullifiedCls(cls):
-        def _get_defined_attr(self, name: str) -> T_AvdBase | None:
-            """
-            Return the default values or None.
-
-            This is required for the various merge / inheritance logic to always take from this if undefined.
-            """
-            return getattr(self, name)
-
-        def _as_dict(self, *_args: Any, **_kwargs: Any) -> None:
-            """Always None."""
-
-        def _as_list(self, *_args: Any, **_kwargs: Any) -> None:
-            """Always None."""
-
-        def __repr__(self) -> str:
-            return f"<NullifiedCls[{cls.__name__}]>"
-
-        def _deepinherited(self, *_args: Any, **_kwargs: Any) -> Self:
-            """Nothing to do since a NullifiedCls will override anything with None."""
-            return self._deepcopy()
-
-        def _deepinherit(self, *_args: Any, **_kwargs: Any) -> None:
-            """Nothing to do since a NullifiedCls will override anything with None."""
-
-        def _inherit(self, *_args: Any, **_kwargs: Any) -> None:
-            """Nothing to do since a NullifiedCls will override anything with None."""
-
-        def _deepmerge(self, *_args: Any, **_kwargs: Any) -> NoReturn:
-            msg = "A NullifiedCls cannot be inplace deepmerged. Use _deepmerged() instead."
-            raise NotImplementedError(msg)
-
-        def _deepmerged(self, other: T_AvdBase, *_args: Any, **_kwargs: Any) -> T_AvdBase:
-            """Returning the other directly since NullifiedCls is empty."""
-            return other._deepcopy()
-
-        def _cast_as(self, new_type: type[T_AvdBase], *_args: Any, **_kwargs: Any) -> T_AvdBase:
-            """Wrap the new type in it's own NullifiedCls."""
-            return nullifiy_class(new_type)()
-
-    return NullifiedCls
 
 
 def coerce_type(value: Any, target_type: type[T]) -> T:
@@ -81,8 +26,7 @@ def coerce_type(value: Any, target_type: type[T]) -> T:
     if value is None:
         if issubclass(target_type, AvdBase):
             # None values are sometimes used to overwrite inherited profiles.
-            # This ensures we still follow the type hint of the class.
-            return nullifiy_class(target_type)()
+            return target_type._from_null()
 
         # Other None values are left untouched.
     elif target_type is Any or isinstance(value, target_type):

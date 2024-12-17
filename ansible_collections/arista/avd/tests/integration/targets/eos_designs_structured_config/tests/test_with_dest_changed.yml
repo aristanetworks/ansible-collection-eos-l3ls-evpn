@@ -4,7 +4,7 @@
     state: absent
 
 - name: Test with dest (changing)
-  ignore_errors: no
+  ignore_errors: false
   register: result
   arista.avd.eos_designs_structured_config:
     dest: "{{ actual_output_dir }}/eos_designs_structured_config_test_with_dest.yml"

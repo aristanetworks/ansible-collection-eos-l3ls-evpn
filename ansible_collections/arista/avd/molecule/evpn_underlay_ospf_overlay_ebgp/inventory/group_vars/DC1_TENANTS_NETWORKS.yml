@@ -14,5 +14,5 @@ tenant_group1:
           - id: 210
             name: Tenant_B_OP_Zone_1
             tags: ['opzone']
-            enabled: True
+            enabled: true
             ip_address_virtual: 10.2.10.1/24

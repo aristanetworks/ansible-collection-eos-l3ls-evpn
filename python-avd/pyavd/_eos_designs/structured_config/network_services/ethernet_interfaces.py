@@ -70,7 +70,7 @@ class EthernetInterfacesMixin(UtilsMixin):
                                 "shutdown": not l3_interface.enabled,
                                 "description": interface_description,
                                 "eos_cli": l3_interface.raw_eos_cli,
-                                "struct_cfg": l3_interface.structured_config._as_dict(strip_values=()) or None,
+                                "struct_cfg": l3_interface.structured_config._as_dict() or None,
                                 "flow_tracker": self.shared_utils.get_flow_tracker(l3_interface.flow_tracking),
                             }
 

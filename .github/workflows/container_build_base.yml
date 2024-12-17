@@ -1,7 +1,7 @@
 ---
 name: Build base container
 
-on:
+"on":
   push:
     branches:
       - devel

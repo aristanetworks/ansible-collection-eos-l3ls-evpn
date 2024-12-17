@@ -91,6 +91,6 @@ EXAMPLES = r"""
         options:
           list_merge: replace
           strip_empty_keys: false
-  check_mode: no
-  changed_when: False
+  check_mode: false
+  changed_when: false
 """

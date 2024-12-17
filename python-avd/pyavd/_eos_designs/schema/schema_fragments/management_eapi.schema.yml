@@ -16,9 +16,9 @@ keys:
     keys:
       enable_http:
         type: bool
-        default: False
+        default: false
       enable_https:
         type: bool
-        default: True
+        default: true
       default_services:
         type: bool

@@ -14,7 +14,7 @@ keys:
     keys:
       control_plane:
         type: dict
-        required: True
+        required: true
         $ref: "eos_designs#/$defs/ipsec_profile"
         keys:
           ike_policy_name:
@@ -28,7 +28,7 @@ keys:
             default: CP-PROFILE
           shared_key:
             type: str
-            required: True
+            required: true
             description: |-
               The IPSec shared key.
               This variable is sensitive and SHOULD be configured using some vault mechanism.

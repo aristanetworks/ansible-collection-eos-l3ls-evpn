@@ -110,7 +110,7 @@ wan_router:
       cv_pathfinder_region: AVD_Land_East
       cv_pathfinder_site: Site511
       wan_ha:
-        enabled: False
+        enabled: false
       nodes:
         - name: cv-pathfinder-edge
           id: 1
@@ -529,7 +529,7 @@ tenants:
         vrf_id: 1
       - name: TRANSIT
         vrf_id: 66
-      # Test that a VRF with address_families: [] on a WAN router is not configured on Vxlan1 interface. Only configured for BGP because we force enabled: True
+      # Test that a VRF with address_families: [] on a WAN router is not configured on Vxlan1 interface. Only configured for BGP because we force enabled: true
       - name: NOT-WAN-VRF
         vrf_id: 13
         address_families: []
@@ -733,13 +733,13 @@ cv_pathfinder_internet_exit_policies:
       domain_name: test.local
       ipsec_key_salt: THIS_SHOULD_BE_VAULTED
   - name: ZSCALER-EXIT-POLICY-2
-    fallback_to_system_default: False
+    fallback_to_system_default: false
     type: zscaler
     zscaler:
       domain_name: test.local
       ipsec_key_salt: THIS_SHOULD_BE_VAULTED
   - name: DIRECT-EXIT-POLICY-1
-    fallback_to_system_default: False
+    fallback_to_system_default: false
     type: direct
   - name: DIRECT-EXIT-POLICY-2
     type: direct

@@ -780,6 +780,6 @@ class AvdStructuredConfigBase(AvdFacts, NtpMixin, SnmpServerMixin, RouterGeneral
     @cached_property
     def struct_cfgs(self) -> list | None:
         if self.shared_utils.platform_settings.structured_config:
-            return [self.shared_utils.platform_settings.structured_config._as_dict(strip_values=())]
+            return [self.shared_utils.platform_settings.structured_config._as_dict()]
 
         return None

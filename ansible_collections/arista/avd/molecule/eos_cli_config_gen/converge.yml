@@ -5,7 +5,7 @@
   connection: local
   vars:
     tacacs_key_set_as_play_var: "071B245F5A"
-    read_structured_config_from_file: False
+    read_structured_config_from_file: false
   tasks:
 
     - name: Generate device intended config and documentation

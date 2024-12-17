@@ -194,7 +194,7 @@ keys:
             description: IPsec profile name to use.
       hardware_encryption_disabled:
         type: bool
-        default: False
+        default: false
         description: |-
           Disable hardware encryption.
           An SFE restart is needed for this change to take effect.

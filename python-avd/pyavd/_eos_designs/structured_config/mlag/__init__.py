@@ -70,7 +70,7 @@ class AvdStructuredConfigMlag(AvdFacts):
             ),
             "shutdown": False,
             "no_autostate": True,
-            "struct_cfg": self.shared_utils.node_config.mlag_peer_vlan_structured_config._as_dict(strip_values=()) or None,
+            "struct_cfg": self.shared_utils.node_config.mlag_peer_vlan_structured_config._as_dict() or None,
             "mtu": self.shared_utils.p2p_uplinks_mtu,
         }
 
@@ -82,7 +82,7 @@ class AvdStructuredConfigMlag(AvdFacts):
             return [strip_empties_from_dict(main_vlan_interface)]
 
         # Create L3 data which will go on either a dedicated l3 vlan or the main mlag vlan
-        l3_cfg = {"struct_cfg": self.shared_utils.node_config.mlag_peer_l3_vlan_structured_config._as_dict(strip_values=()) or None}
+        l3_cfg = {"struct_cfg": self.shared_utils.node_config.mlag_peer_l3_vlan_structured_config._as_dict() or None}
         if self.shared_utils.underlay_routing_protocol == "ospf":
             l3_cfg.update(
                 {
@@ -121,7 +121,7 @@ class AvdStructuredConfigMlag(AvdFacts):
             main_vlan_interface.update(l3_cfg)
             # Applying structured config again in the case it is set on both l3vlan and main vlan
             if self.shared_utils.node_config.mlag_peer_vlan_structured_config is not None:
-                main_vlan_interface["struct_cfg"] = self.shared_utils.node_config.mlag_peer_vlan_structured_config._as_dict(strip_values=())
+                main_vlan_interface["struct_cfg"] = self.shared_utils.node_config.mlag_peer_vlan_structured_config._as_dict()
 
             return [strip_empties_from_dict(main_vlan_interface)]
 
@@ -169,7 +169,7 @@ class AvdStructuredConfigMlag(AvdFacts):
             },
             "shutdown": False,
             "service_profile": self.inputs.p2p_uplinks_qos_profile,
-            "struct_cfg": self.shared_utils.node_config.mlag_port_channel_structured_config._as_dict(strip_values=()) or None,
+            "struct_cfg": self.shared_utils.node_config.mlag_port_channel_structured_config._as_dict() or None,
             "flow_tracker": self.shared_utils.get_flow_tracker(self.inputs.fabric_flow_tracking.mlag_interfaces),
         }
 
@@ -350,7 +350,7 @@ class AvdStructuredConfigMlag(AvdFacts):
             "bfd": self.inputs.bgp_peer_groups.ipv4_underlay_peers.bfd or None,
             "maximum_routes": 12000,
             "send_community": "all",
-            "struct_cfg": self.inputs.bgp_peer_groups.mlag_ipv4_underlay_peer.structured_config._as_dict(strip_values=()) or None,
+            "struct_cfg": self.inputs.bgp_peer_groups.mlag_ipv4_underlay_peer.structured_config._as_dict() or None,
         }
         if self.shared_utils.node_config.mlag_ibgp_origin_incomplete:
             peer_group["route_map_in"] = "RM-MLAG-PEER-IN"

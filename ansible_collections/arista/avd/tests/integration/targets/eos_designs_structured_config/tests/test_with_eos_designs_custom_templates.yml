@@ -1,5 +1,5 @@
 - name: Test with eos_designs_custom_templates
-  ignore_errors: no
+  ignore_errors: false
   register: result
   arista.avd.eos_designs_structured_config:
     eos_designs_custom_templates:

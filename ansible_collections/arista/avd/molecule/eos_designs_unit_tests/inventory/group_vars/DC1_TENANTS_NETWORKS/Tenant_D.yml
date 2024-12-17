@@ -10,7 +10,7 @@ tenant_d:
           - id: 410
             name: Tenant_D_v6_OP_Zone_1
             tags: ['v6opzone']
-            enabled: True
+            enabled: true
             ip_address_virtual: 10.3.10.1/24
             ipv6_address_virtuals:
               - 2001:db8:310::1/64
@@ -19,7 +19,7 @@ tenant_d:
           - id: 411
             name: Tenant_D_v6_OP_Zone_2
             tags: ['v6opzone']
-            enabled: True
+            enabled: true
             ip_virtual_router_addresses: [ 10.3.11.1/24 ]
             ipv6_virtual_router_addresses: [ "2001:db8:311::1" ]
             nodes:
@@ -35,13 +35,13 @@ tenant_d:
           - id: 412
             name: Tenant_D_v6_OP_Zone_1
             tags: ['v6opzone']
-            enabled: True
+            enabled: true
             profile: GENERIC_DUAL_STACK
           # Test case for SVI - Node config inheritance
           - id: 413
             name: Tenant_D_v6_OP_Zone_3
             tags: ['v6opzone']
-            enabled: True
+            enabled: true
             profile: TEST_SVI_NODE_INHERIT
             ip_virtual_router_addresses: [ "11.4.13.1" ]
             ipv6_virtual_router_addresses: [ "2001:db9:413::1" ]
@@ -97,18 +97,18 @@ tenant_d:
           - id: 450
             name: Tenant_D_v6_WAN_Zone_1
             tags: ['v6wan']
-            enabled: True
+            enabled: true
             ipv6_address_virtuals:
               - 2001:db8:355::1/64
           - id: 451
             name: Tenant_D_v6_WAN_Zone_2
             tags: ['v6wan']
-            enabled: True
+            enabled: true
             profile: GENERIC_FULL_V6
           - id: 452
             name: Tenant_D_v6_WAN_Zone_3
             tags: ['v6wan']
-            enabled: True
+            enabled: true
             profile: GENERIC_DUAL_STACK
       - name: default
         vrf_id: 123
@@ -128,6 +128,6 @@ tenant_d:
           - id: 453
             name: Tenant_D_WAN_Zone_1
             tags: ['wan']
-            enabled: True
+            enabled: true
             ipv6_address_virtuals:
               - "10.0.10.1/24"

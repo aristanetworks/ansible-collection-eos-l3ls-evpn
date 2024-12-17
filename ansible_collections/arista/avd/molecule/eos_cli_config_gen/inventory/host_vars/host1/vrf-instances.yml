@@ -3,7 +3,7 @@
 
 vrfs:
   - name: MGMT
-    ip_routing: False
+    ip_routing: false
   - name: TENANT_A_PROJECT01
     tenant: Tenant_A
     ip_routing: true
