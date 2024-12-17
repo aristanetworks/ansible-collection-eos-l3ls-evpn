@@ -108,9 +108,11 @@ keys:
                 keys:
                   vlans:
                     type: str
+                    required: true
                     description: e.g. "94,96,100-110".
                   vnis:
                     type: str
+                    required: true
                     description: |-
                       Set `vnis` in the correct sequence for the `vlans`.
                       e.g. "10094,10096,10100-10110".
