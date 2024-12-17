@@ -14,7 +14,14 @@ l3leaf:
       id: 1
       uplink_switch_interfaces: [Ethernet15, Ethernet15]
       ptp:
+        # PTP configured on below interfaces.
         uplinks: ['Ethernet1']
     - name: ptp-tests-l2leaf4
       id: 2
       uplink_switch_interfaces: [Ethernet16, Ethernet16]
+      ptp:
+        uplinks: ['Ethernet1','Ethernet2']
+      # PTP configured on all uplinks when 'ptp.uplinks' is not set.
+    - name: ptp-tests-l2leaf5
+      id: 3
+      uplink_switch_interfaces: [Ethernet17, Ethernet17]
