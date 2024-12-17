@@ -11,6 +11,8 @@ try:
 except ImportError as imp_exc:
     raise AristaAvdError(imp_exc) from imp_exc
 
+HASH_INPUT_TYPE = ["user_password"]
+
 
 def _validate_salt(salt: str | None) -> None:
     """
@@ -37,7 +39,7 @@ def _validate_salt(salt: str | None) -> None:
         raise ValueError(msg)
 
 
-def _get_password_hash(user_password: str, salt: str | None = None) -> str:
+def _user_password_hash(user_password: str, salt: str | None = None) -> str:
     """
     Generate a SHA-512 password hash from a cleartext password for a local user.
 
@@ -69,5 +71,30 @@ def _get_password_hash(user_password: str, salt: str | None = None) -> str:
         raise ValueError(msg) from exc
 
 
-def secure_hash(user_password: str, salt: str | None = None) -> str:
-    return _get_password_hash(user_password, salt)
+def secure_hash(user_input: str, input_type: str | None = None, salt: str | None = None) -> str:
+    """
+    Returns a hash for a given input.
+
+    Parameters:
+    ----------
+        user_input: the user input cleartext that will be hashed.
+        input_type: the use case for the input cleartext provided by the user.
+
+    Returns:
+    -------
+        A hash digest.
+
+    Raises:
+    ------
+        KeyError: if input_type argument is not used.
+        ValueError: if the input_type provided by the user is not supported.
+    """
+    if not input_type:
+        msg = "secure_hash filter MUST include the input_type key"
+        raise KeyError(msg)
+
+    if input_type not in HASH_INPUT_TYPE:
+        msg = f"{input_type} is a not a supported input_type for the secure_hash filter. input_type value must be in {HASH_INPUTS}"
+        raise ValueError(msg)
+
+    return _user_password_hash(user_input, salt)
