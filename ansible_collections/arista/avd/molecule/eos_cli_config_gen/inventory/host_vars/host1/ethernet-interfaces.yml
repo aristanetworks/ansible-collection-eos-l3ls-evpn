@@ -409,6 +409,9 @@ ethernet_interfaces:
       priority: disabled
     address_locking:
       ipv4_enforcement_disabled: true
+      address_family:
+        ipv4: false
+        ipv6: true
 
   - name: Ethernet7
     description: Molecule L2

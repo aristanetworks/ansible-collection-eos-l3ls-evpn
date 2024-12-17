@@ -4004,6 +4004,8 @@ interface Ethernet6
    switchport
    !
    address locking
+      address-family ipv6
+      address-family ipv4 disabled
       locked-address ipv4 enforcement disabled
    no lldp transmit
    ptp enable

@@ -5747,9 +5747,17 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 "_custom_data": {"type": dict},
             }
             ipv4: bool | None
-            """Enable address locking for IPv4."""
+            """
+            Enable address locking for IPv4.
+            For EOS version 4.31 and above, the `address_family.ipv4` parameter
+            should be used instead.
+            """
             ipv6: bool | None
-            """Enable address locking for IPv6."""
+            """
+            Enable address locking for IPv6.
+            For EOS version 4.31 and above, the `address_family.ipv6` parameter
+            should be used instead.
+            """
             address_family: AddressFamily
             """
             Configure address locking per address family.
@@ -5783,8 +5791,14 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                     Subclass of AvdModel.
 
                     Args:
-                        ipv4: Enable address locking for IPv4.
-                        ipv6: Enable address locking for IPv6.
+                        ipv4:
+                           Enable address locking for IPv4.
+                           For EOS version 4.31 and above, the `address_family.ipv4` parameter
+                           should be used instead.
+                        ipv6:
+                           Enable address locking for IPv6.
+                           For EOS version 4.31 and above, the `address_family.ipv6` parameter
+                           should be used instead.
                         address_family:
                            Configure address locking per address family.
                            The `address_locking.ipv4/ipv6` and

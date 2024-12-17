@@ -363,12 +363,14 @@ interface {{ ethernet_interface.name }}
    address locking
 {%         if ethernet_interface.address_locking.address_family.ipv4 is arista.avd.defined(true) %}
       address-family ipv4
-{%         elif ethernet_interface.address_locking.address_family.ipv4 is arista.avd.defined(false) %}
-      address-family ipv4 disabled
 {%         endif %}
 {%         if ethernet_interface.address_locking.address_family.ipv6 is arista.avd.defined(true) %}
       address-family ipv6
-{%         elif ethernet_interface.address_locking.address_family.ipv6 is arista.avd.defined(false) %}
+{%         endif %}
+{%         if ethernet_interface.address_locking.address_family.ipv4 is arista.avd.defined(false) %}
+      address-family ipv4 disabled
+{%         endif %}
+{%         if ethernet_interface.address_locking.address_family.ipv6 is arista.avd.defined(false) %}
       address-family ipv6 disabled
 {%         endif %}
 {%         if ethernet_interface.address_locking.ipv4_enforcement_disabled is arista.avd.defined(true) %}
