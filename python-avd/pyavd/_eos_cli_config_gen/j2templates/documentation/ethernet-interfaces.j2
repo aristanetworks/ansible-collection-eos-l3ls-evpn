@@ -809,7 +809,7 @@
 | --------- | ------- | --------------------- |
 {%         for te_interface in te_interfaces %}
 {%             set admin_groups = te_interface.traffic_engineering.administrative_groups | arista.avd.default (["-"]) | join(",") %}
-{%             set te_enabled = te_interface.traffic_engineering.enabled | arista.avd.default (["false"]) %}
+{%             set te_enabled = te_interface.traffic_engineering.enabled | arista.avd.default ("-") %}
 | {{ te_interface.name }} | {{ te_enabled }} | {{ admin_groups }} |
 {%         endfor %}
 {%     endif %}
