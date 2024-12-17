@@ -12876,7 +12876,7 @@ class EosDesigns(EosDesignsRootModel):
             "_custom_data": {"type": dict},
         }
         polling_interval: int | None
-        """Interval for sending counter data to the sFlow collector."""
+        """Interval in seconds for sending counter data to the sFlow collector."""
         sample: Sample
         """Subclass of AvdModel."""
         destinations: Destinations
@@ -12903,7 +12903,7 @@ class EosDesigns(EosDesignsRootModel):
                 Subclass of AvdModel.
 
                 Args:
-                    polling_interval: Interval for sending counter data to the sFlow collector.
+                    polling_interval: Interval in seconds for sending counter data to the sFlow collector.
                     sample: Subclass of AvdModel.
                     destinations: Subclass of AvdList with `DestinationsItem` items.
                     vrfs: Subclass of AvdIndexedList with `VrfsItem` items. Primary key is `name` (`str`).
