@@ -17,7 +17,9 @@ keys:
     keys:
       polling_interval:
         type: int
-        description: Interval for sending counter data to the sFlow collector
+        convert_types:
+          - str
+        description: Interval for sending counter data to the sFlow collector.
       sample:
         type: dict
         keys:
