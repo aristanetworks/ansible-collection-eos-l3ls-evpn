@@ -173,6 +173,40 @@ router bgp 65101.0001
       redistribute ospfv3 match external include leaked route-map RM-REDISTRIBUTE-OSPFV3-EXTERNAL
 ```
 
+## MPLS
+
+### MPLS and LDP
+
+#### MPLS and LDP Summary
+
+| Setting | Value |
+| -------- | ---- |
+| MPLS IP Enabled | True |
+| LDP Enabled | False |
+| LDP Router ID | 192.168.1.2 |
+| LDP Interface Disabled Default | True |
+| LDP Transport-Address Interface | - |
+
+### MPLS RSVP
+
+#### MPLS RSVP Summary
+
+| Setting | Value |
+| ------- | ----- |
+
+### MPLS Device Configuration
+
+```eos
+!
+mpls ip
+!
+mpls ldp
+   router-id 192.168.1.2
+   interface disabled default
+!
+mpls rsvp
+```
+
 ### Traffic Policies information
 
 #### Traffic Policies Device Configuration

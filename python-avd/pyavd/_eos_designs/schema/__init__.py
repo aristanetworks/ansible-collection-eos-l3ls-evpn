@@ -1026,18 +1026,51 @@ class EosDesigns(EosDesignsRootModel):
             class Ptp(AvdModel):
                 """Subclass of AvdModel."""
 
-                _fields: ClassVar[dict] = {"enabled": {"type": bool, "default": False}, "_custom_data": {"type": dict}}
+                class Roles(AvdList[str]):
+                    """Subclass of AvdList with `str` items."""
+
+                Roles._item_type = str
+
+                _fields: ClassVar[dict] = {
+                    "enabled": {"type": bool, "default": False},
+                    "roles": {"type": Roles},
+                    "profile": {"type": str, "default": "aes67-r16-2016"},
+                    "_custom_data": {"type": dict},
+                }
                 enabled: bool
                 """
                 Enable PTP.
 
                 Default value: `False`
                 """
+                roles: Roles
+                """
+                Role in boundary clock mode for each node. Default is `dynamic`.
+
+                Subclass of AvdList with `str`
+                items.
+                """
+                profile: str
+                """
+                Default available profiles are:
+                  - "aes67"
+                  - "aes67-r16-2016"
+                  - "smpte2059-2"
+
+                Default value: `"aes67-r16-2016"`
+                """
                 _custom_data: dict[str, Any]
 
                 if TYPE_CHECKING:
 
-                    def __init__(self, *, enabled: bool | UndefinedType = Undefined, _custom_data: dict[str, Any] | UndefinedType = Undefined) -> None:
+                    def __init__(
+                        self,
+                        *,
+                        enabled: bool | UndefinedType = Undefined,
+                        roles: Roles | UndefinedType = Undefined,
+                        profile: str | UndefinedType = Undefined,
+                        _custom_data: dict[str, Any] | UndefinedType = Undefined,
+                    ) -> None:
                         """
                         Ptp.
 
@@ -1046,6 +1079,16 @@ class EosDesigns(EosDesignsRootModel):
 
                         Args:
                             enabled: Enable PTP.
+                            roles:
+                               Role in boundary clock mode for each node. Default is `dynamic`.
+
+                               Subclass of AvdList with `str`
+                               items.
+                            profile:
+                               Default available profiles are:
+                                 - "aes67"
+                                 - "aes67-r16-2016"
+                                 - "smpte2059-2"
                             _custom_data: _custom_data
 
                         """
@@ -1556,18 +1599,51 @@ class EosDesigns(EosDesignsRootModel):
             class Ptp(AvdModel):
                 """Subclass of AvdModel."""
 
-                _fields: ClassVar[dict] = {"enabled": {"type": bool, "default": False}, "_custom_data": {"type": dict}}
+                class Roles(AvdList[str]):
+                    """Subclass of AvdList with `str` items."""
+
+                Roles._item_type = str
+
+                _fields: ClassVar[dict] = {
+                    "enabled": {"type": bool, "default": False},
+                    "roles": {"type": Roles},
+                    "profile": {"type": str, "default": "aes67-r16-2016"},
+                    "_custom_data": {"type": dict},
+                }
                 enabled: bool
                 """
                 Enable PTP.
 
                 Default value: `False`
                 """
+                roles: Roles
+                """
+                Role in boundary clock mode for each node. Default is `dynamic`.
+
+                Subclass of AvdList with `str`
+                items.
+                """
+                profile: str
+                """
+                Default available profiles are:
+                  - "aes67"
+                  - "aes67-r16-2016"
+                  - "smpte2059-2"
+
+                Default value: `"aes67-r16-2016"`
+                """
                 _custom_data: dict[str, Any]
 
                 if TYPE_CHECKING:
 
-                    def __init__(self, *, enabled: bool | UndefinedType = Undefined, _custom_data: dict[str, Any] | UndefinedType = Undefined) -> None:
+                    def __init__(
+                        self,
+                        *,
+                        enabled: bool | UndefinedType = Undefined,
+                        roles: Roles | UndefinedType = Undefined,
+                        profile: str | UndefinedType = Undefined,
+                        _custom_data: dict[str, Any] | UndefinedType = Undefined,
+                    ) -> None:
                         """
                         Ptp.
 
@@ -1576,6 +1652,16 @@ class EosDesigns(EosDesignsRootModel):
 
                         Args:
                             enabled: Enable PTP.
+                            roles:
+                               Role in boundary clock mode for each node. Default is `dynamic`.
+
+                               Subclass of AvdList with `str`
+                               items.
+                            profile:
+                               Default available profiles are:
+                                 - "aes67"
+                                 - "aes67-r16-2016"
+                                 - "smpte2059-2"
                             _custom_data: _custom_data
 
                         """
@@ -5079,18 +5165,51 @@ class EosDesigns(EosDesignsRootModel):
             class Ptp(AvdModel):
                 """Subclass of AvdModel."""
 
-                _fields: ClassVar[dict] = {"enabled": {"type": bool, "default": False}, "_custom_data": {"type": dict}}
+                class Roles(AvdList[str]):
+                    """Subclass of AvdList with `str` items."""
+
+                Roles._item_type = str
+
+                _fields: ClassVar[dict] = {
+                    "enabled": {"type": bool, "default": False},
+                    "roles": {"type": Roles},
+                    "profile": {"type": str, "default": "aes67-r16-2016"},
+                    "_custom_data": {"type": dict},
+                }
                 enabled: bool
                 """
                 Enable PTP.
 
                 Default value: `False`
                 """
+                roles: Roles
+                """
+                Role in boundary clock mode for each node. Default is `dynamic`.
+
+                Subclass of AvdList with `str`
+                items.
+                """
+                profile: str
+                """
+                Default available profiles are:
+                  - "aes67"
+                  - "aes67-r16-2016"
+                  - "smpte2059-2"
+
+                Default value: `"aes67-r16-2016"`
+                """
                 _custom_data: dict[str, Any]
 
                 if TYPE_CHECKING:
 
-                    def __init__(self, *, enabled: bool | UndefinedType = Undefined, _custom_data: dict[str, Any] | UndefinedType = Undefined) -> None:
+                    def __init__(
+                        self,
+                        *,
+                        enabled: bool | UndefinedType = Undefined,
+                        roles: Roles | UndefinedType = Undefined,
+                        profile: str | UndefinedType = Undefined,
+                        _custom_data: dict[str, Any] | UndefinedType = Undefined,
+                    ) -> None:
                         """
                         Ptp.
 
@@ -5099,6 +5218,16 @@ class EosDesigns(EosDesignsRootModel):
 
                         Args:
                             enabled: Enable PTP.
+                            roles:
+                               Role in boundary clock mode for each node. Default is `dynamic`.
+
+                               Subclass of AvdList with `str`
+                               items.
+                            profile:
+                               Default available profiles are:
+                                 - "aes67"
+                                 - "aes67-r16-2016"
+                                 - "smpte2059-2"
                             _custom_data: _custom_data
 
                         """
@@ -5609,18 +5738,51 @@ class EosDesigns(EosDesignsRootModel):
             class Ptp(AvdModel):
                 """Subclass of AvdModel."""
 
-                _fields: ClassVar[dict] = {"enabled": {"type": bool, "default": False}, "_custom_data": {"type": dict}}
+                class Roles(AvdList[str]):
+                    """Subclass of AvdList with `str` items."""
+
+                Roles._item_type = str
+
+                _fields: ClassVar[dict] = {
+                    "enabled": {"type": bool, "default": False},
+                    "roles": {"type": Roles},
+                    "profile": {"type": str, "default": "aes67-r16-2016"},
+                    "_custom_data": {"type": dict},
+                }
                 enabled: bool
                 """
                 Enable PTP.
 
                 Default value: `False`
                 """
+                roles: Roles
+                """
+                Role in boundary clock mode for each node. Default is `dynamic`.
+
+                Subclass of AvdList with `str`
+                items.
+                """
+                profile: str
+                """
+                Default available profiles are:
+                  - "aes67"
+                  - "aes67-r16-2016"
+                  - "smpte2059-2"
+
+                Default value: `"aes67-r16-2016"`
+                """
                 _custom_data: dict[str, Any]
 
                 if TYPE_CHECKING:
 
-                    def __init__(self, *, enabled: bool | UndefinedType = Undefined, _custom_data: dict[str, Any] | UndefinedType = Undefined) -> None:
+                    def __init__(
+                        self,
+                        *,
+                        enabled: bool | UndefinedType = Undefined,
+                        roles: Roles | UndefinedType = Undefined,
+                        profile: str | UndefinedType = Undefined,
+                        _custom_data: dict[str, Any] | UndefinedType = Undefined,
+                    ) -> None:
                         """
                         Ptp.
 
@@ -5629,6 +5791,16 @@ class EosDesigns(EosDesignsRootModel):
 
                         Args:
                             enabled: Enable PTP.
+                            roles:
+                               Role in boundary clock mode for each node. Default is `dynamic`.
+
+                               Subclass of AvdList with `str`
+                               items.
+                            profile:
+                               Default available profiles are:
+                                 - "aes67"
+                                 - "aes67-r16-2016"
+                                 - "smpte2059-2"
                             _custom_data: _custom_data
 
                         """
@@ -6825,8 +6997,18 @@ class EosDesigns(EosDesignsRootModel):
             }
             enabled: bool
             """Default value: `False`"""
-            endpoint_role: Literal["bmca", "default", "follower"]
-            """Default value: `"follower"`"""
+            endpoint_role: Literal["follower", "dynamic", "bmca", "default"]
+            """
+            PTP role of the endpoint.
+            `follower` will configure the switch port as `ptp role master`.
+            `dynamic`
+            will use BMCA.
+            `default` is deprecated in favor of `follower`.
+            `bmca` is deprecated in favor of
+            `dynamic`.
+
+            Default value: `"follower"`
+            """
             profile: str
             """
             Default available profiles are:
@@ -6844,7 +7026,7 @@ class EosDesigns(EosDesignsRootModel):
                     self,
                     *,
                     enabled: bool | UndefinedType = Undefined,
-                    endpoint_role: Literal["bmca", "default", "follower"] | UndefinedType = Undefined,
+                    endpoint_role: Literal["follower", "dynamic", "bmca", "default"] | UndefinedType = Undefined,
                     profile: str | UndefinedType = Undefined,
                     _custom_data: dict[str, Any] | UndefinedType = Undefined,
                 ) -> None:
@@ -6856,7 +7038,14 @@ class EosDesigns(EosDesignsRootModel):
 
                     Args:
                         enabled: enabled
-                        endpoint_role: endpoint_role
+                        endpoint_role:
+                           PTP role of the endpoint.
+                           `follower` will configure the switch port as `ptp role master`.
+                           `dynamic`
+                           will use BMCA.
+                           `default` is deprecated in favor of `follower`.
+                           `bmca` is deprecated in favor of
+                           `dynamic`.
                         profile:
                            Default available profiles are:
                              - "aes67"
@@ -10664,8 +10853,18 @@ class EosDesigns(EosDesignsRootModel):
             }
             enabled: bool
             """Default value: `False`"""
-            endpoint_role: Literal["bmca", "default", "follower"]
-            """Default value: `"follower"`"""
+            endpoint_role: Literal["follower", "dynamic", "bmca", "default"]
+            """
+            PTP role of the endpoint.
+            `follower` will configure the switch port as `ptp role master`.
+            `dynamic`
+            will use BMCA.
+            `default` is deprecated in favor of `follower`.
+            `bmca` is deprecated in favor of
+            `dynamic`.
+
+            Default value: `"follower"`
+            """
             profile: str
             """
             Default available profiles are:
@@ -10683,7 +10882,7 @@ class EosDesigns(EosDesignsRootModel):
                     self,
                     *,
                     enabled: bool | UndefinedType = Undefined,
-                    endpoint_role: Literal["bmca", "default", "follower"] | UndefinedType = Undefined,
+                    endpoint_role: Literal["follower", "dynamic", "bmca", "default"] | UndefinedType = Undefined,
                     profile: str | UndefinedType = Undefined,
                     _custom_data: dict[str, Any] | UndefinedType = Undefined,
                 ) -> None:
@@ -10695,7 +10894,14 @@ class EosDesigns(EosDesignsRootModel):
 
                     Args:
                         enabled: enabled
-                        endpoint_role: endpoint_role
+                        endpoint_role:
+                           PTP role of the endpoint.
+                           `follower` will configure the switch port as `ptp role master`.
+                           `dynamic`
+                           will use BMCA.
+                           `default` is deprecated in favor of `follower`.
+                           `bmca` is deprecated in favor of
+                           `dynamic`.
                         profile:
                            Default available profiles are:
                              - "aes67"
@@ -12836,7 +13042,7 @@ class EosDesigns(EosDesignsRootModel):
             """
             version: Literal["1", "2c", "3"] | None
             community: str | None
-            """Community name."""
+            """Community name. Required with version "1" or "2c"."""
             users: Users
             """Subclass of AvdList with `UsersItem` items."""
             _custom_data: dict[str, Any]
@@ -12878,7 +13084,7 @@ class EosDesigns(EosDesignsRootModel):
                            configured at all. Can be used in combination with "vrf" and "use_mgmt_interface_vrf" to configure
                            the SNMP host under multiple VRFs.
                         version: version
-                        community: Community name.
+                        community: Community name. Required with version "1" or "2c".
                         users: Subclass of AvdList with `UsersItem` items.
                         _custom_data: _custom_data
 
@@ -17657,8 +17863,18 @@ class EosDesigns(EosDesignsRootModel):
                         }
                         enabled: bool
                         """Default value: `False`"""
-                        endpoint_role: Literal["bmca", "default", "follower"]
-                        """Default value: `"follower"`"""
+                        endpoint_role: Literal["follower", "dynamic", "bmca", "default"]
+                        """
+                        PTP role of the endpoint.
+                        `follower` will configure the switch port as `ptp role master`.
+                        `dynamic`
+                        will use BMCA.
+                        `default` is deprecated in favor of `follower`.
+                        `bmca` is deprecated in favor of
+                        `dynamic`.
+
+                        Default value: `"follower"`
+                        """
                         profile: str
                         """
                         Default available profiles are:
@@ -17676,7 +17892,7 @@ class EosDesigns(EosDesignsRootModel):
                                 self,
                                 *,
                                 enabled: bool | UndefinedType = Undefined,
-                                endpoint_role: Literal["bmca", "default", "follower"] | UndefinedType = Undefined,
+                                endpoint_role: Literal["follower", "dynamic", "bmca", "default"] | UndefinedType = Undefined,
                                 profile: str | UndefinedType = Undefined,
                                 _custom_data: dict[str, Any] | UndefinedType = Undefined,
                             ) -> None:
@@ -17688,7 +17904,14 @@ class EosDesigns(EosDesignsRootModel):
 
                                 Args:
                                     enabled: enabled
-                                    endpoint_role: endpoint_role
+                                    endpoint_role:
+                                       PTP role of the endpoint.
+                                       `follower` will configure the switch port as `ptp role master`.
+                                       `dynamic`
+                                       will use BMCA.
+                                       `default` is deprecated in favor of `follower`.
+                                       `bmca` is deprecated in favor of
+                                       `dynamic`.
                                     profile:
                                        Default available profiles are:
                                          - "aes67"
@@ -33300,6 +33523,8 @@ class EosDesigns(EosDesignsRootModel):
                             "activate": {"type": bool},
                             "route_map_in": {"type": str},
                             "route_map_out": {"type": str},
+                            "rcf_in": {"type": str},
+                            "rcf_out": {"type": str},
                             "default_originate": {"type": DefaultOriginate},
                             "next_hop": {"type": NextHop},
                             "prefix_list_in": {"type": str},
@@ -33311,6 +33536,16 @@ class EosDesigns(EosDesignsRootModel):
                         """Inbound route-map name."""
                         route_map_out: str | None
                         """Outbound route-map name."""
+                        rcf_in: str | None
+                        """
+                        Inbound RCF function name with parenthesis.
+                        Example: MyFunction(myarg).
+                        """
+                        rcf_out: str | None
+                        """
+                        Outbound RCF function name with parenthesis.
+                        Example: MyFunction(myarg).
+                        """
                         default_originate: DefaultOriginate
                         """Subclass of AvdModel."""
                         next_hop: NextHop
@@ -33329,6 +33564,8 @@ class EosDesigns(EosDesignsRootModel):
                                 activate: bool | None | UndefinedType = Undefined,
                                 route_map_in: str | None | UndefinedType = Undefined,
                                 route_map_out: str | None | UndefinedType = Undefined,
+                                rcf_in: str | None | UndefinedType = Undefined,
+                                rcf_out: str | None | UndefinedType = Undefined,
                                 default_originate: DefaultOriginate | UndefinedType = Undefined,
                                 next_hop: NextHop | UndefinedType = Undefined,
                                 prefix_list_in: str | None | UndefinedType = Undefined,
@@ -33345,6 +33582,12 @@ class EosDesigns(EosDesignsRootModel):
                                     activate: activate
                                     route_map_in: Inbound route-map name.
                                     route_map_out: Outbound route-map name.
+                                    rcf_in:
+                                       Inbound RCF function name with parenthesis.
+                                       Example: MyFunction(myarg).
+                                    rcf_out:
+                                       Outbound RCF function name with parenthesis.
+                                       Example: MyFunction(myarg).
                                     default_originate: Subclass of AvdModel.
                                     next_hop: Subclass of AvdModel.
                                     prefix_list_in: Inbound prefix-list name.
@@ -33360,6 +33603,8 @@ class EosDesigns(EosDesignsRootModel):
                             "activate": {"type": bool},
                             "route_map_in": {"type": str},
                             "route_map_out": {"type": str},
+                            "rcf_in": {"type": str},
+                            "rcf_out": {"type": str},
                             "prefix_list_in": {"type": str},
                             "prefix_list_out": {"type": str},
                             "_custom_data": {"type": dict},
@@ -33369,6 +33614,16 @@ class EosDesigns(EosDesignsRootModel):
                         """Inbound route-map name."""
                         route_map_out: str | None
                         """Outbound route-map name."""
+                        rcf_in: str | None
+                        """
+                        Inbound RCF function name with parenthesis.
+                        Example: MyFunction(myarg).
+                        """
+                        rcf_out: str | None
+                        """
+                        Outbound RCF function name with parenthesis.
+                        Example: MyFunction(myarg).
+                        """
                         prefix_list_in: str | None
                         """Inbound prefix-list name."""
                         prefix_list_out: str | None
@@ -33383,6 +33638,8 @@ class EosDesigns(EosDesignsRootModel):
                                 activate: bool | None | UndefinedType = Undefined,
                                 route_map_in: str | None | UndefinedType = Undefined,
                                 route_map_out: str | None | UndefinedType = Undefined,
+                                rcf_in: str | None | UndefinedType = Undefined,
+                                rcf_out: str | None | UndefinedType = Undefined,
                                 prefix_list_in: str | None | UndefinedType = Undefined,
                                 prefix_list_out: str | None | UndefinedType = Undefined,
                                 _custom_data: dict[str, Any] | UndefinedType = Undefined,
@@ -33397,6 +33654,12 @@ class EosDesigns(EosDesignsRootModel):
                                     activate: activate
                                     route_map_in: Inbound route-map name.
                                     route_map_out: Outbound route-map name.
+                                    rcf_in:
+                                       Inbound RCF function name with parenthesis.
+                                       Example: MyFunction(myarg).
+                                    rcf_out:
+                                       Outbound RCF function name with parenthesis.
+                                       Example: MyFunction(myarg).
                                     prefix_list_in: Inbound prefix-list name.
                                     prefix_list_out: Outbound prefix-list name.
                                     _custom_data: _custom_data
@@ -37555,6 +37818,8 @@ class EosDesigns(EosDesignsRootModel):
                                 "activate": {"type": bool},
                                 "route_map_in": {"type": str},
                                 "route_map_out": {"type": str},
+                                "rcf_in": {"type": str},
+                                "rcf_out": {"type": str},
                                 "default_originate": {"type": DefaultOriginate},
                                 "next_hop": {"type": NextHop},
                                 "prefix_list_in": {"type": str},
@@ -37566,6 +37831,16 @@ class EosDesigns(EosDesignsRootModel):
                             """Inbound route-map name."""
                             route_map_out: str | None
                             """Outbound route-map name."""
+                            rcf_in: str | None
+                            """
+                            Inbound RCF function name with parenthesis.
+                            Example: MyFunction(myarg).
+                            """
+                            rcf_out: str | None
+                            """
+                            Outbound RCF function name with parenthesis.
+                            Example: MyFunction(myarg).
+                            """
                             default_originate: DefaultOriginate
                             """Subclass of AvdModel."""
                             next_hop: NextHop
@@ -37584,6 +37859,8 @@ class EosDesigns(EosDesignsRootModel):
                                     activate: bool | None | UndefinedType = Undefined,
                                     route_map_in: str | None | UndefinedType = Undefined,
                                     route_map_out: str | None | UndefinedType = Undefined,
+                                    rcf_in: str | None | UndefinedType = Undefined,
+                                    rcf_out: str | None | UndefinedType = Undefined,
                                     default_originate: DefaultOriginate | UndefinedType = Undefined,
                                     next_hop: NextHop | UndefinedType = Undefined,
                                     prefix_list_in: str | None | UndefinedType = Undefined,
@@ -37600,6 +37877,12 @@ class EosDesigns(EosDesignsRootModel):
                                         activate: activate
                                         route_map_in: Inbound route-map name.
                                         route_map_out: Outbound route-map name.
+                                        rcf_in:
+                                           Inbound RCF function name with parenthesis.
+                                           Example: MyFunction(myarg).
+                                        rcf_out:
+                                           Outbound RCF function name with parenthesis.
+                                           Example: MyFunction(myarg).
                                         default_originate: Subclass of AvdModel.
                                         next_hop: Subclass of AvdModel.
                                         prefix_list_in: Inbound prefix-list name.
@@ -37615,6 +37898,8 @@ class EosDesigns(EosDesignsRootModel):
                                 "activate": {"type": bool},
                                 "route_map_in": {"type": str},
                                 "route_map_out": {"type": str},
+                                "rcf_in": {"type": str},
+                                "rcf_out": {"type": str},
                                 "prefix_list_in": {"type": str},
                                 "prefix_list_out": {"type": str},
                                 "_custom_data": {"type": dict},
@@ -37624,6 +37909,16 @@ class EosDesigns(EosDesignsRootModel):
                             """Inbound route-map name."""
                             route_map_out: str | None
                             """Outbound route-map name."""
+                            rcf_in: str | None
+                            """
+                            Inbound RCF function name with parenthesis.
+                            Example: MyFunction(myarg).
+                            """
+                            rcf_out: str | None
+                            """
+                            Outbound RCF function name with parenthesis.
+                            Example: MyFunction(myarg).
+                            """
                             prefix_list_in: str | None
                             """Inbound prefix-list name."""
                             prefix_list_out: str | None
@@ -37638,6 +37933,8 @@ class EosDesigns(EosDesignsRootModel):
                                     activate: bool | None | UndefinedType = Undefined,
                                     route_map_in: str | None | UndefinedType = Undefined,
                                     route_map_out: str | None | UndefinedType = Undefined,
+                                    rcf_in: str | None | UndefinedType = Undefined,
+                                    rcf_out: str | None | UndefinedType = Undefined,
                                     prefix_list_in: str | None | UndefinedType = Undefined,
                                     prefix_list_out: str | None | UndefinedType = Undefined,
                                     _custom_data: dict[str, Any] | UndefinedType = Undefined,
@@ -37652,6 +37949,12 @@ class EosDesigns(EosDesignsRootModel):
                                         activate: activate
                                         route_map_in: Inbound route-map name.
                                         route_map_out: Outbound route-map name.
+                                        rcf_in:
+                                           Inbound RCF function name with parenthesis.
+                                           Example: MyFunction(myarg).
+                                        rcf_out:
+                                           Outbound RCF function name with parenthesis.
+                                           Example: MyFunction(myarg).
                                         prefix_list_in: Inbound prefix-list name.
                                         prefix_list_out: Outbound prefix-list name.
                                         _custom_data: _custom_data

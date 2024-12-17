@@ -1,26 +1,6 @@
 # Copyright (c) 2023-2024 Arista Networks, Inc.
 # Use of this source code is governed by the Apache License 2.0
 # that can be found in the LICENSE file.
-from __future__ import annotations
-
-from abc import ABC
-from enum import Enum
-from functools import cached_property
-from typing import TYPE_CHECKING, Annotated, Any, ClassVar, Literal
-
-from pydantic import BaseModel, ConfigDict, Field, constr
-
-from schema_tools.generate_classes.class_src_gen import SrcGenBase, SrcGenBool, SrcGenDict, SrcGenInt, SrcGenList, SrcGenRootDict, SrcGenStr
-from schema_tools.generate_docs.tablerowgen import TableRow, TableRowGenBase, TableRowGenBool, TableRowGenDict, TableRowGenInt, TableRowGenList, TableRowGenStr
-from schema_tools.generate_docs.yamllinegen import YamlLine, YamlLineGenBase, YamlLineGenBool, YamlLineGenDict, YamlLineGenInt, YamlLineGenList, YamlLineGenStr
-
-from .resolvemodel import merge_schema_from_ref
-
-if TYPE_CHECKING:
-    from collections.abc import Generator
-
-    from schema_tools.generate_classes.src_generators import SrcData
-
 """
 This module provides Pydantic models (classes) representing the meta-schema of the AVD Schema.
 
@@ -39,6 +19,28 @@ as needed. For example, only "AvdSchemaList" and "AvdSchemaDict" need to parse c
 The overall schema is covered by the class "AristaAvdSchema" which inherits from "AvdSchemaDict" since the root of the schema is a dict.
 """
 
+from __future__ import annotations
+
+import logging
+from abc import ABC
+from enum import Enum
+from functools import cached_property
+from typing import TYPE_CHECKING, Annotated, Any, ClassVar, Literal
+
+from pydantic import BaseModel, ConfigDict, Field, constr
+
+from schema_tools.generate_classes.class_src_gen import SrcGenBase, SrcGenBool, SrcGenDict, SrcGenInt, SrcGenList, SrcGenRootDict, SrcGenStr
+from schema_tools.generate_docs.tablerowgen import TableRow, TableRowGenBase, TableRowGenBool, TableRowGenDict, TableRowGenInt, TableRowGenList, TableRowGenStr
+from schema_tools.generate_docs.yamllinegen import YamlLine, YamlLineGenBase, YamlLineGenBool, YamlLineGenDict, YamlLineGenInt, YamlLineGenList, YamlLineGenStr
+
+from .resolvemodel import merge_schema_from_ref
+
+if TYPE_CHECKING:
+    from collections.abc import Generator
+
+    from schema_tools.generate_classes.src_generators import SrcData
+
+LOGGER = logging.getLogger(__name__)
 
 KEY_PATTERN = r"^[a-z][a-z0-9_]*$"
 """Common pattern to match legal key strings"""
@@ -514,6 +516,8 @@ class AvdSchemaDict(AvdSchemaBaseModel):
     `schema` is the schema for each key. This is a recursive schema, so the value must conform to AVD Schema.
     Note that this is building the schema from values in the _data_ being validated!
     """
+    relaxed_validation: bool | None = False
+    """Disable validation of `required` keys for any children."""
     allow_other_keys: bool | None = False
     """Allow keys in the dictionary which are not defined in the schema."""
     documentation_options: DocumentationOptions | None = None

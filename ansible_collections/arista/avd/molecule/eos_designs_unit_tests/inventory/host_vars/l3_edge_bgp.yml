@@ -2,6 +2,8 @@ type: spine
 spine:
   nodes:
     - name: l3_edge_bgp
+      ptp:
+        enabled: true
       id: 1
       evpn_role: "none"
       loopback_ipv4_pool: 1.2.3.4/24

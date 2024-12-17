@@ -5,8 +5,7 @@ from __future__ import annotations
 
 import re
 from collections.abc import Callable, Iterable, Iterator, Mapping, Sequence
-from copy import deepcopy
-from typing import TYPE_CHECKING, Any, ClassVar, Generic, Literal
+from typing import TYPE_CHECKING, Any, ClassVar, Generic, Literal, cast
 
 from pyavd._schema.coerce_type import coerce_type
 from pyavd._utils import Undefined, UndefinedType
@@ -57,10 +56,10 @@ class AvdList(Sequence[T_ItemType], Generic[T_ItemType], AvdBase):
 
     def __init__(self, items: Iterable[T_ItemType] | UndefinedType = Undefined) -> None:
         """
-        AvdIndexedList subclass.
+        AvdList subclass.
 
         Args:
-            items: Iterable holding items of the correct type to be loaded into the indexed list.
+            items: Iterable holding items of the correct type to be loaded into the list.
         """
         if isinstance(items, UndefinedType):
             self._items = []
@@ -98,20 +97,44 @@ class AvdList(Sequence[T_ItemType], Generic[T_ItemType], AvdBase):
     def append(self, item: T_ItemType) -> None:
         self._items.append(item)
 
+    def append_unique(self, item: T_ItemType) -> None:
+        """Append the item if not there already. Otherwise ignore."""
+        if item not in self._items:
+            self._items.append(item)
+
+    if TYPE_CHECKING:
+        append_new: type[T_ItemType]
+    else:
+
+        def append_new(self, *args: Any, **kwargs: Any) -> T_ItemType:
+            """Create a new instance with the given arguments and append to the list. Returns the new item."""
+            new_item = self._item_type(*args, **kwargs)
+            self.append(new_item)
+            return new_item
+
     def extend(self, items: Iterable[T_ItemType]) -> None:
         self._items.extend(items)
 
-    def _as_list(self, include_default_values: bool = False, strip_values: tuple = (None, [], {})) -> list:
+    def _strip_empties(self) -> None:
+        """In-place update the instance to remove data matching the given strip_values."""
+        if issubclass(self._item_type, AvdBase):
+            items = cast(list[AvdBase], self._items)
+            [item._strip_empties() for item in items]
+            self._items = [item for item in self._items if item]
+            return
+
+        self._items = [item for item in self._items if item is not None]
+
+    def _as_list(self, include_default_values: bool = False) -> list:
         """Returns a list with all the data from this model and any nested models."""
         if issubclass(self._item_type, AvdBase):
-            items: list[AvdBase] = self._items
-            return [
-                value for item in items if (value := item._dump(include_default_values=include_default_values, strip_values=strip_values)) not in strip_values
-            ]
-        return [item for item in self._items if item not in strip_values]
+            items = cast(list[AvdBase], self._items)
+            return [item._dump(include_default_values=include_default_values) for item in items]
 
-    def _dump(self, include_default_values: bool = False, strip_values: tuple = (None, [], {})) -> list:
-        return self._as_list(include_default_values=include_default_values, strip_values=strip_values)
+        return list(self._items)
+
+    def _dump(self, include_default_values: bool = False) -> list:
+        return self._as_list(include_default_values=include_default_values)
 
     def _natural_sorted(self, sort_key: str | None = None, ignore_case: bool = True) -> Self:
         """Return new instance where the items are natural sorted by the given sort key or by the item itself."""
@@ -153,12 +176,17 @@ class AvdList(Sequence[T_ItemType], Generic[T_ItemType], AvdBase):
             msg = f"Unable to merge type '{type(other)}' into '{cls}'"
             raise TypeError(msg)
 
+        if self._created_from_null:
+            # Overwrite all data from other and clear the flag.
+            self._created_from_null = False
+            list_merge = "replace"
+
         if list_merge == "replace":
-            self._items = deepcopy(other._items)
+            self._items = other._items.copy()
             return
 
         # Append non-existing items.
-        self._items.extend(deepcopy([new_item for new_item in other._items if new_item not in self._items]))
+        self._items.extend(new_item for new_item in other._items if new_item not in self._items)
 
     def _cast_as(self, new_type: type[T_AvdList], ignore_extra_keys: bool = False) -> T_AvdList:
         """
@@ -174,11 +202,16 @@ class AvdList(Sequence[T_ItemType], Generic[T_ItemType], AvdBase):
             raise TypeError(msg)
 
         if issubclass(self._item_type, AvdBase):
-            items: list[AvdBase] = self._items
+            items = cast(list[AvdBase], self._items)
             return new_type([item._cast_as(new_type._item_type, ignore_extra_keys=ignore_extra_keys) for item in items])
 
         if self._item_type != new_type._item_type:
             msg = f"Unable to cast '{cls}' as type '{new_type}' since they have incompatible item types."
             raise TypeError(msg)
 
-        return new_type(self._items)
+        new_instance = new_type(self._items)
+
+        # Pass along the _created_from_null flag
+        new_instance._created_from_null = self._created_from_null
+
+        return new_instance

@@ -153,7 +153,7 @@ class RouterBgpMixin(UtilsMixin):
                 bgp_vrf = strip_empties_from_dict(
                     {
                         "eos_cli": vrf.bgp.raw_eos_cli,
-                        "struct_cfg": vrf.bgp.structured_config._as_dict(strip_values=()) or None,
+                        "struct_cfg": vrf.bgp.structured_config._as_dict() or None,
                     }
                 )
 
@@ -493,7 +493,7 @@ class RouterBgpMixin(UtilsMixin):
             "route_targets": {"both": [vlan_rt]},
             "redistribute_routes": ["learned"],
             "eos_cli": vlan.bgp.raw_eos_cli,
-            "struct_cfg": vlan.bgp.structured_config._as_dict(strip_values=()) or None,
+            "struct_cfg": vlan.bgp.structured_config._as_dict() or None,
         }
         if self.shared_utils.node_config.evpn_gateway.evpn_l2.enabled and default(
             vlan.evpn_l2_multi_domain, vrf.evpn_l2_multi_domain, tenant.evpn_l2_multi_domain
@@ -816,7 +816,7 @@ class RouterBgpMixin(UtilsMixin):
             "password": self.inputs.bgp_peer_groups.mlag_ipv4_underlay_peer.password,
             "maximum_routes": 12000,
             "send_community": "all",
-            "struct_cfg": self.inputs.bgp_peer_groups.mlag_ipv4_underlay_peer.structured_config._as_dict(strip_values=()) or None,
+            "struct_cfg": self.inputs.bgp_peer_groups.mlag_ipv4_underlay_peer.structured_config._as_dict() or None,
         }
 
         if self.shared_utils.node_config.mlag_ibgp_origin_incomplete:

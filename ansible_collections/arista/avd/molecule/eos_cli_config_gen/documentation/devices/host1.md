@@ -161,7 +161,10 @@
   - [Router BFD](#router-bfd)
   - [BFD Interfaces](#bfd-interfaces)
 - [MPLS](#mpls)
+  - [MPLS and LDP](#mpls-and-ldp)
   - [MPLS Interfaces](#mpls-interfaces)
+  - [MPLS RSVP](#mpls-rsvp)
+  - [MPLS Device Configuration](#mpls-device-configuration)
 - [Patch Panel](#patch-panel)
   - [Patch Panel Summary](#patch-panel-summary)
   - [Patch Panel Device Configuration](#patch-panel-device-configuration)
@@ -1245,6 +1248,7 @@ ip radius source-interface loopback10
 | RADIUS1 | radius | default | 10.10.10.248 |
 | RADIUS2 | radius | mgt | 10.10.10.157 |
 | RADIUS2 | radius | default | 10.10.10.249 |
+| RADIUS3 | radius | - | - |
 
 #### AAA Server Groups Device Configuration
 
@@ -1265,6 +1269,8 @@ aaa group server radius RADIUS1
 aaa group server radius RADIUS2
    server 10.10.10.157 vrf mgt
    server 10.10.10.249
+!
+aaa group server radius RADIUS3
 !
 aaa group server tacacs+ TACACS
    server 10.10.11.157 vrf mgt
@@ -1446,8 +1452,8 @@ address locking
 
 ### Management Security SSL Profiles
 
-| SSL Profile Name | TLS protocol accepted | Certificate filename | Key filename | Cipher List | CRLs |
-| ---------------- | --------------------- | -------------------- | ------------ | ----------- | ---- |
+| SSL Profile Name | TLS protocol accepted | Certificate filename | Key filename | Ciphers | CRLs |
+| ---------------- | --------------------- | -------------------- | ------------ | ------- | ---- |
 | certificate-profile | - | eAPI.crt | eAPI.key | - | ca.crl<br>intermediate.crl |
 | cipher-list-profile | - | - | - | ECDHE-RSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-SHA384 | - |
 | SSL_PROFILE | 1.1 1.2 | SSL_CERT | SSL_KEY | - | - |
@@ -3837,6 +3843,9 @@ interface Ethernet1
    ip igmp host-proxy report-interval 2
    ip igmp host-proxy version 2
    tcp mss ceiling ipv4 70 ipv6 75 egress
+   mpls ldp igp sync
+   mpls ldp interface
+   mpls ip
    switchport port-security
    switchport port-security mac-address maximum disabled
    service-policy type qos input pmap_test1
@@ -5253,6 +5262,7 @@ interface Port-Channel104
    switchport trunk allowed vlan 112
    switchport mode trunk
    switchport
+   port-channel min-links 3
    port-channel lacp fallback individual
    port-channel lacp fallback timeout 300
 !
@@ -5531,6 +5541,7 @@ interface Port-Channel132
 interface Loopback0
    description EVPN_Overlay_Peering
    ip address 192.168.255.3/32
+   mpls ldp interface
    comment
    Comment created from eos_cli under loopback_interfaces.Loopback0
    EOF
@@ -6522,12 +6533,12 @@ Topology role: pathfinder
 
 #### AVT Profiles
 
-| Profile name | Load balance policy | Internet exit policy |
-| ------------ | ------------------- | -------------------- |
-| office365 | - | - |
-| scavenger | scavenger-lb | scavenger-ie |
-| video | - | video-ie |
-| voice | voice-lb | - |
+| Profile name | Load balance policy | Internet exit policy | Metric Order | Jitter Threshold (ms) | Latency Threshold (ms) | Load (%) | Loss Rate (%) |
+| ------------ | ------------------- | -------------------- | ------------ | --------------------- | ---------------------- | -------- | ------------- |
+| office365 | - | - | - | - | - | - | - |
+| scavenger | scavenger-lb | scavenger-ie | latency | 200 | 100 | 25.16 | 20 |
+| video | - | video-ie | - | - | 100 | - | - |
+| voice | voice-lb | - | - | 100 | - | - | - |
 
 #### AVT Policies
 
@@ -6595,12 +6606,20 @@ router adaptive-virtual-topology
    profile scavenger
       internet-exit policy scavenger-ie
       path-selection load-balance scavenger-lb
+      metric order latency
+      path-selection outlier elimination threshold latency 100 milliseconds
+      path-selection outlier elimination threshold jitter 200 milliseconds
+      path-selection outlier elimination threshold loss-rate 20 percent
+      path-selection outlier elimination threshold load 25.16 percent
    !
    profile video
       internet-exit policy video-ie
+      path-selection outlier elimination disabled
+      path-selection outlier elimination threshold latency 100 milliseconds
    !
    profile voice
       path-selection load-balance voice-lb
+      path-selection outlier elimination threshold jitter 100 milliseconds
    !
    vrf blue
       avt profile video id 1
@@ -8917,15 +8936,138 @@ router bfd
 
 ## MPLS
 
+### MPLS and LDP
+
+#### MPLS and LDP Summary
+
+| Setting | Value |
+| -------- | ---- |
+| MPLS IP Enabled | True |
+| LDP Enabled | True |
+| LDP Router ID | 192.168.1.1 |
+| LDP Interface Disabled Default | True |
+| LDP Transport-Address Interface | Loopback0 |
+| ICMP Fragmentation-Needed Tunneling Enabled | True |
+
 ### MPLS Interfaces
 
 | Interface | MPLS IP Enabled | LDP Enabled | IGP Sync |
 | --------- | --------------- | ----------- | -------- |
+| Ethernet1 | True | True | True |
 | Ethernet9 | True | True | - |
 | Ethernet10 | False | False | - |
+| Loopback0 | - | True | - |
 | Loopback99 | - | True | - |
 | Port-Channel113 | True | True | True |
 | Port-Channel114 | False | False | - |
+
+### MPLS RSVP
+
+#### MPLS RSVP Summary
+
+| Setting | Value |
+| ------- | ----- |
+| Refresh interval | 3 |
+| Refresh method  | explicit |
+| Hello interval | 30 |
+| Timeout multiplier | 254 |
+| Authentication type | md5 |
+| Authentication sequence-number window | 234 |
+| Authentication active index | 766 |
+| IPv4 access-group | RSVP_access_group_ipv4 |
+| IPv6 access-group | RSVP_access_group_ipv6 |
+| SRLG strict | Enabled |
+| Label local-termination | explicit-null |
+| Preemption method | soft |
+| Preemption timer | 444 |
+| MTU signaling | Enabled |
+| Fast reroute mode | link-protection |
+| Fast reroute reversion | local |
+| Fast reroute  bypass tunnel optimization interval | 65535 |
+| Hitless restart | Active |
+| Hitless restart recovery timer | 222 |
+| P2MP | False |
+| Shutdown | True |
+
+##### RSVP Neighbor Authentication
+
+| Neighbor IP | Index | Type |
+| ----------- | ----- | ---- |
+| 1.1.1.1 | 3 | md5 |
+| 1.1.12.2 | 30 | none |
+| 1.10.1.2 | - | none |
+| 1.21.1.20 | - | md5 |
+| 10.1.1.2 | 303 | - |
+| 2::11.22.33.44 | 3133 | none |
+| 2001::db8 | 31 | none |
+
+##### RSVP Graceful Restart
+
+| Role | Recovery timer | Restart timer |
+| ---- | -------------- | ------------- |
+| Helper | 32 | 33 |
+| Speaker | 35 | 36 |
+
+### MPLS Device Configuration
+
+```eos
+!
+mpls ip
+!
+mpls ldp
+   router-id 192.168.1.1
+   transport-address interface Loopback0
+   interface disabled default
+   no shutdown
+!
+mpls icmp fragmentation-needed tunneling
+!
+mpls rsvp
+   refresh interval 3
+   refresh method explicit
+   hello interval 30 multiplier 254
+   authentication type md5
+   authentication sequence-number window 234
+   authentication index 55 password 7 <removed>
+   authentication index 766 password 7 <removed>
+   authentication index 999 password 0 <removed>
+   authentication index 766 active
+   neighbor 1.1.1.1 authentication type md5
+   neighbor 1.1.1.1 authentication index 3 active
+   neighbor 1.1.12.2 authentication type none
+   neighbor 1.1.12.2 authentication index 30 active
+   neighbor 1.10.1.2 authentication type none
+   neighbor 1.21.1.20 authentication type md5
+   neighbor 10.1.1.2 authentication index 303 active
+   neighbor 2::11.22.33.44 authentication type none
+   neighbor 2::11.22.33.44 authentication index 3133 active
+   neighbor 2001::db8 authentication type none
+   neighbor 2001::db8 authentication index 31 active
+   ip access-group RSVP_access_group_ipv4
+   ipv6 access-group RSVP_access_group_ipv6
+   fast-reroute mode link-protection
+   fast-reroute reversion local
+   fast-reroute bypass tunnel optimization interval 65535 seconds
+   srlg strict
+   label local-termination explicit-null
+   preemption method soft timer 444
+   mtu signaling
+   !
+   hitless-restart
+      timer recovery 222 seconds
+   !
+   graceful-restart role helper
+      timer restart maximum 32 seconds
+      timer recovery maximum 33 seconds
+   !
+   graceful-restart role speaker
+      timer restart 35 seconds
+      timer recovery 36 seconds
+   !
+   p2mp
+      disabled
+   shutdown
+```
 
 ## Patch Panel
 
