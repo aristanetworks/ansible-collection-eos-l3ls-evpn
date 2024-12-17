@@ -22,7 +22,7 @@ def _validate_salt(salt: str | None) -> None:
         salt: The salt value provided by the user.
 
     Raises:
-        TypeError: If the salt is not of type `str`.
+        TypeError: If the salt is not of type 'str'.
         ValueError: If the salt is greater than 16 characters.
         ValueError: If the salt contains a character not matching ./0-9A-Za-z
     """
@@ -50,12 +50,12 @@ def _user_password_hash(user_password: str, salt: str | None = None) -> str:
 
     Returns:
     -------
-        The SHA-512 password hash
+        The SHA-512 password hash.
 
     Raises:
     ------
-        TypeError: If the password is not of type `str`
-        ValueError: If sha512_crypt fails for any reason
+        TypeError: If the password is not of type 'str'.
+        ValueError: If sha512_crypt fails for any reason.
     """
     if not isinstance(user_password, str):
         msg = f"Password MUST be of type 'str' but is of type {type(user_password)}"
@@ -87,14 +87,14 @@ def secure_hash(user_input: str, input_type: str | None = None, salt: str | None
     Raises:
     ------
         KeyError: if input_type argument is not used.
-        ValueError: if the input_type provided by the user is not supported.
+        ValueError: if the input_type value provided by the user is not supported.
     """
-    if not input_type:
-        msg = "secure_hash filter MUST include the input_type key"
+    if input_type is None:
+        msg = "The input_type key MUST be used in the secure_hash filter"
         raise KeyError(msg)
 
     if input_type not in HASH_INPUT_TYPE:
-        msg = f"{input_type} is a not a supported input_type for the secure_hash filter. input_type value must be in {HASH_INPUTS}"
+        msg = f"The secure_hash filter does not support the value '{input_type}' for the input_type key. input_type value must be in {HASH_INPUT_TYPE}"
         raise ValueError(msg)
 
     return _user_password_hash(user_input, salt)
