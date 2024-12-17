@@ -183,7 +183,7 @@ class AvdIndexedList(Sequence[T_AvdModel], Generic[T_PrimaryKey, T_AvdModel], Av
 
         if self._created_from_null or other._created_from_null:
             # Clear the flag and set list_merge to replace so we overwrite with data from other below.
-            self._created_from_null = False
+            self._created_from_null = other._created_from_null
             list_merge = "replace"
 
         if list_merge == "replace":

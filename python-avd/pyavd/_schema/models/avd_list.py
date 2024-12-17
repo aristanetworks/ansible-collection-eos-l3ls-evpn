@@ -176,9 +176,9 @@ class AvdList(Sequence[T_ItemType], Generic[T_ItemType], AvdBase):
             msg = f"Unable to merge type '{type(other)}' into '{cls}'"
             raise TypeError(msg)
 
-        if self._created_from_null:
+        if self._created_from_null or other._created_from_null:
             # Overwrite all data from other and clear the flag.
-            self._created_from_null = False
+            self._created_from_null = other._created_from_null
             list_merge = "replace"
 
         if list_merge == "replace":

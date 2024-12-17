@@ -172,4 +172,4 @@ service_routing_protocols_model: null
 spanning_tree: null
 transceiver_qsfp_default_mode_4x10: null
 vlan_internal_order: null
-vrfs: []
+vrfs: null
