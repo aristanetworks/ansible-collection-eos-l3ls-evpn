@@ -27,8 +27,9 @@ class AvdStructuredConfigConnectedEndpoints(
     The order of the @cached_properties methods imported from Mixins will also control the order in the output.
     """
 
-    def render(self) -> dict:
+    def render(self) -> None:
         """Wrap class render function with a check if connected_endpoints feature is enabled."""
         if self.shared_utils.connected_endpoints:
             return super().render()
-        return {}
+
+        return None

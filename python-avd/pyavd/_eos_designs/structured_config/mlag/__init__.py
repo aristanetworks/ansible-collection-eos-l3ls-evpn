@@ -12,11 +12,11 @@ from pyavd.j2filters import list_compress
 
 
 class AvdStructuredConfigMlag(StructuredConfigGenerator):
-    def render(self) -> dict:
+    def render(self) -> None:
         """Wrap class render function with a check for mlag is True."""
         if self.shared_utils.mlag is True:
             return super().render()
-        return {}
+        return None
 
     @cached_property
     def spanning_tree(self) -> dict:

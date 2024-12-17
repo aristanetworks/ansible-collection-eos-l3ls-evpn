@@ -20,7 +20,7 @@ class StructCfgsMixin(UtilsMixin):
     """
 
     @cached_property
-    def struct_cfgs(self: AvdStructuredConfigNetworkServices) -> list | None:
+    def struct_cfgs(self: AvdStructuredConfigNetworkServices) -> None:
         """Return the combined structured config from VRFs."""
         if not self.shared_utils.network_services_l3:
             return None

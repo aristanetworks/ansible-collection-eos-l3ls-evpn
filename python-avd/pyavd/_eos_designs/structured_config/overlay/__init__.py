@@ -45,7 +45,7 @@ class AvdStructuredConfigOverlay(
     The order of the @cached_properties methods imported from Mixins will also control the order in the output.
     """
 
-    def render(self) -> dict:
+    def render(self) -> None:
         """
         Wrap class render function with a check if one of the following vars are True.
 
@@ -64,4 +64,4 @@ class AvdStructuredConfigOverlay(
             ],
         ):
             return super().render()
-        return {}
+        return None
