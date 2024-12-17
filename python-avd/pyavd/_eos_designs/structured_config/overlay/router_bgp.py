@@ -88,7 +88,7 @@ class RouterBgpMixin(UtilsMixin):
             "password": peer_group.password,
             "send_community": "all",
             "maximum_routes": maximum_routes,
-            "struct_cfg": peer_group.structured_config._as_dict(strip_values=()) or None,
+            "struct_cfg": peer_group.structured_config._as_dict() or None,
         }
 
     def _peer_groups(self: AvdStructuredConfigOverlay) -> list | None:

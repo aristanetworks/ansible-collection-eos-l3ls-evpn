@@ -1958,6 +1958,231 @@ keys:
                         required: true
                         convert_types:
                           - str
+            tap:
+              description: |-
+                In tap mode, the interface operates as a tap port.
+                Tap ports receive traffic for replication on one or more tool ports.
+                This setting applies only to parent interfaces.
+              type: dict
+              keys:
+                allowed_vlan:
+                  type: str
+                  convert_types:
+                    - int
+                  description: VLAN ID or range(s) of VLAN IDs within range 1-4094.
+                default:
+                  description: Default tap destination config.
+                  type: dict
+                  keys:
+                    groups:
+                      description: Tap group names for the interface.
+                      type: list
+                      items:
+                        type: str
+                    interfaces:
+                      description: Interfaces like -  Ethernet1, InternalRecirc1, Port-Channel1, Recirc-Channel1.
+                      type: list
+                      items:
+                        type: str
+                    nexthop_groups:
+                      type: list
+                      description: Default nexthop-group names.
+                      items:
+                        type: str
+                identity:
+                  type: dict
+                  keys:
+                    id:
+                      type: int
+                      convert_types:
+                        - str
+                      min: 1
+                      max: 65535
+                      description: Tap port VLAN ID (1-4094) or DzGRE extended ID (1-65535).
+                    inner_vlan:
+                      description: Tap port inner VLAN ID. Only applicable if `id` is a VLAN ID (1-4094).
+                      type: int
+                      convert_types:
+                        - str
+                      min: 1
+                      max: 4094
+                mpls_pop_all:
+                  type: bool
+                  description: Pop all MPLS labels.
+                native_vlan:
+                  type: int
+                  convert_types:
+                    - str
+                  min: 1
+                  max: 4094
+                  description: Native VLAN ID when interface is in tap mode.
+                truncation:
+                  type: dict
+                  keys:
+                    enabled:
+                      type: bool
+                    size:
+                      description: Ingress packet truncation size in bytes.
+                      type: int
+                      convert_types:
+                        - str
+                      min: 100
+                      max: 9236
+                mac_address:
+                  type: dict
+                  keys:
+                    source:
+                      type: str
+                      pattern: "^([0-9a-f]{2}:){5}[0-9a-f]{2}$"
+                      description: MAC address for the source.
+                    destination:
+                      type: str
+                      pattern: "^([0-9a-f]{2}:){5}[0-9a-f]{2}$"
+                      description: MAC address for the destination.
+                encapsulation:
+                  type: dict
+                  keys:
+                    vxlan_strip:
+                      type: bool
+                      description: |-
+                        Strip VXLAN encapsulation header.
+                        `encapsulation.vxlan_strip` and `mpls_pop_all` are mutually exclusive.
+                        `mpls_pop_all` takes precedence.
+                    gre:
+                      type: dict
+                      keys:
+                        strip:
+                          type: bool
+                          description: Strip GRE encapsulation header for all GRE tunnels.
+                        protocols:
+                          type: list
+                          primary_key: protocol
+                          description: Protocols for all destinations; destination-specific protocols should be set under the `destinations[].protocols` key.
+                          items:
+                            type: dict
+                            keys:
+                              protocol:
+                                type: str
+                                description: |-
+                                  Protocol type in GRE header.
+                                  Valid range: 0x0-0xFFFF. The value must be enclosed in quotes, e.g., "0x0".
+                              strip:
+                                type: bool
+                                description: |-
+                                  This is a required key to strip GRE encapsulation header with protocols.
+                              feature_header_length:
+                                description: |-
+                                  Feature header length in bytes.
+                                  Note: This setting does not appear in the EOS running-config for protocol 0x0.
+                                type: int
+                                convert_types:
+                                  - str
+                                min: 1
+                                max: 16
+                              re_encapsulation_ethernet_header:
+                                type: bool
+                                description: |-
+                                  Extra ethernet header to prepend to the terminated packet.
+                                  Note: This setting does not appear in the EOS running-config for protocol 0x0.
+                        destinations:
+                          type: list
+                          description: |-
+                            In EOS, `gre.strip` and `destinations.destination/source.strip` (without defining protocols) are mutually exclusive.
+                          primary_key: destination
+                          items:
+                            type: dict
+                            keys:
+                              destination:
+                                description: Destination IP address of tunnel packets.
+                                type: str
+                              source:
+                                description: Source IP address of tunnel packets. Applied only when destination is defined. When not defined; any GRE packet that matches the `destination` is terminated.
+                                type: str
+                              strip:
+                                type: bool
+                                description: Strip GRE encapsulation header for specific destination.
+                              protocols:
+                                type: list
+                                primary_key: protocol
+                                items:
+                                  type: dict
+                                  keys:
+                                    protocol:
+                                      type: str
+                                      description: |-
+                                        Protocol type in GRE header.
+                                        Valid range: 0x0-0xFFFF. The value must be enclosed in quotes, e.g., "0x0".
+                                    strip:
+                                      type: bool
+                                      description: This is a required key to strip GRE encapsulation header for specific destination with protocols.
+                                    feature_header_length:
+                                      description: |-
+                                        Feature header length in bytes.
+                                        Note: This setting does not appear in the EOS running-config for protocol 0x0.
+                                      type: int
+                                      convert_types:
+                                        - str
+                                      min: 1
+                                      max: 16
+                                    re_encapsulation_ethernet_header:
+                                      type: bool
+                                      description: |-
+                                        Extra ethernet header to prepend to the terminated packet.
+                                        Note: This setting does not appear in the EOS running-config for protocol 0x0.
+            tool:
+              description: |-
+                In tool mode, the interface operates as a tool port.
+                Tool ports replicate traffic received by tap ports.
+                This setting applies only to parent interfaces.
+              type: dict
+              keys:
+                mpls_pop_all:
+                  type: bool
+                  description: Pop all MPLS labels.
+                encapsulation:
+                  type: dict
+                  keys:
+                    dot1br_strip:
+                      type: bool
+                      description: Remove a 802.1 BR tag in packet header. 'mpls_pop_all' takes precedence over 'dot1br_strip' in EOS.
+                    vn_tag_strip:
+                      type: bool
+                      description: Remove a VN-tag in packet header. 'mpls_pop_all' takes precedence over 'vn_tag_strip' in EOS.
+                allowed_vlan:
+                  type: str
+                  convert_types:
+                    - int
+                  description: VLAN ID or range of VLAN IDs within range 1-4094.
+                identity:
+                  type: dict
+                  keys:
+                    tag:
+                      type: str
+                      valid_values:
+                        - dot1q
+                        - qinq
+                    dot1q_dzgre_source:
+                      type: str
+                      valid_values:
+                        - policy
+                        - port
+                    qinq_dzgre_source:
+                      type: str
+                      valid_values:
+                        - policy inner port
+                        - port inner policy
+                groups:
+                  type: list
+                  items:
+                    type: str
+                  description: Tool groups for the interface.
+                dot1q_remove_outer_vlan_tag:
+                  type: str
+                  convert_types:
+                    - int
+                  description: |-
+                    Indices of vlan tags to be removed.
+                    Range: 1-2
         eos_cli:
           type: str
           description: Multiline EOS CLI rendered directly on the ethernet interface in the final EOS configuration.

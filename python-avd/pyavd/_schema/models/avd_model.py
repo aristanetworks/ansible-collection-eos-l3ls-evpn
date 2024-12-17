@@ -5,7 +5,8 @@ from __future__ import annotations
 
 from collections.abc import Mapping
 from copy import deepcopy
-from typing import TYPE_CHECKING, Any, ClassVar, Literal
+from logging import getLogger
+from typing import TYPE_CHECKING, Any, ClassVar, Literal, cast
 
 from pyavd._schema.coerce_type import coerce_type
 from pyavd._utils import Undefined, UndefinedType, merge
@@ -17,6 +18,8 @@ if TYPE_CHECKING:
     from typing_extensions import Self
 
     from .type_vars import T_AvdModel
+
+LOGGER = getLogger(__name__)
 
 
 class AvdModel(AvdBase):
@@ -131,6 +134,8 @@ class AvdModel(AvdBase):
         Get attribute or Undefined.
 
         Avoids the overridden __getattr__ to avoid default values.
+
+        Falls back to __getattr__ in case of _created_from_null to always insert None or default value.
         """
         if name not in self._fields:
             msg = f"'{type(self).__name__}' object has no attribute '{name}'"
@@ -164,39 +169,57 @@ class AvdModel(AvdBase):
             for field in self._fields
         )
 
-    def _as_dict(self, include_default_values: bool = False, strip_values: tuple = (None, [], {})) -> dict:
+    def _strip_empties(self) -> None:
+        """In-place update the instance to remove data matching the given strip_values."""
+        for field, field_info in self._fields.items():
+            if (value := self._get_defined_attr(field)) is Undefined or field == "_custom_data":
+                continue
+
+            if issubclass(field_info["type"], AvdBase):
+                value = cast(AvdBase, value)
+                value._strip_empties()
+                if not value:
+                    delattr(self, field)
+                continue
+
+            if value is None:
+                delattr(self, field)
+
+    def _as_dict(self, include_default_values: bool = False) -> dict:
         """
         Returns a dict with all the data from this model and any nested models.
 
         Filtered for nested None, {} and [] values.
         """
         as_dict = {}
-        for field, field_info in self._fields.items() or ():
-            if (value := self._get_defined_attr(field)) is Undefined:
+        for field, field_info in self._fields.items():
+            value = self._get_defined_attr(field)
+
+            if field == "_custom_data":
+                if value:
+                    value = cast(dict[str, Any], value)
+                    as_dict.update(value)
+                continue
+
+            if value is Undefined:
                 if not include_default_values:
                     continue
 
                 value = self._get_field_default_value(field)
 
-            if field == "_custom_data" and isinstance(value, dict) and value:
-                as_dict.update(value)
-                continue
-
             # Removing field_ prefix if needed.
             key = self._field_to_key_map.get(field, field)
 
-            if issubclass(field_info["type"], AvdBase) and isinstance(value, AvdBase):
-                value = value._dump(include_default_values=include_default_values, strip_values=strip_values)
-
-            if value in strip_values:
-                continue
+            if issubclass(field_info["type"], AvdBase):
+                value = cast(AvdBase, value)
+                value = None if value._created_from_null else value._dump(include_default_values=include_default_values)
 
             as_dict[key] = value
 
         return as_dict
 
-    def _dump(self, include_default_values: bool = False, strip_values: tuple = (None, [], {})) -> dict:
-        return self._as_dict(include_default_values=include_default_values, strip_values=strip_values)
+    def _dump(self, include_default_values: bool = False) -> dict:
+        return self._as_dict(include_default_values=include_default_values)
 
     def _get(self, name: str, default: Any = None) -> Any:
         """
@@ -208,20 +231,14 @@ class AvdModel(AvdBase):
             return default
         return value
 
-    def _update(self, other: Self) -> None:
-        """Update instance by shallow merging the other instance in."""
-        cls = type(self)
-        if not isinstance(other, cls):
-            msg = f"Unable to merge type '{type(other)}' into '{cls}'"
-            raise TypeError(msg)
+    if TYPE_CHECKING:
+        _update: type[Self]
+    else:
 
-        for field in cls._fields:
-            if new_value := other._get_defined_attr(field) is Undefined:
-                continue
-            old_value = self._get_defined_attr(field)
-            if old_value == new_value:
-                continue
-            setattr(self, field, new_value)
+        def _update(self, *args: Any, **kwargs: Any) -> Self:
+            """Update instance with the given kwargs. Reuses __init__."""
+            self.__init__(*args, **kwargs)
+            return self
 
     def _deepmerge(self, other: Self, list_merge: Literal["append", "replace"] = "append") -> None:
         """
@@ -239,6 +256,10 @@ class AvdModel(AvdBase):
             raise TypeError(msg)
 
         for field, field_info in cls._fields.items():
+            if other._created_from_null and self._get_defined_attr(field) is not Undefined:
+                # Force the field back to unset if other is a "null" class.
+                delattr(self, field)
+
             if (new_value := other._get_defined_attr(field)) is Undefined:
                 continue
             old_value = self._get_defined_attr(field)
@@ -246,24 +267,33 @@ class AvdModel(AvdBase):
                 continue
 
             if not isinstance(old_value, type(new_value)):
-                # Different type so we can just replace
-                setattr(self, field, deepcopy(new_value))
+                # Different types so we can just replace with the new value.
+                setattr(self, field, new_value)
                 continue
 
             # Merge new value
             field_type = field_info["type"]
-            if issubclass(field_type, AvdBase) and isinstance(old_value, field_type):
+            if issubclass(field_type, AvdBase):
                 # Merge in to the existing object
+                old_value = cast(AvdBase, old_value)
+                new_value = cast(AvdBase, new_value)
                 old_value._deepmerge(new_value, list_merge=list_merge)
                 continue
 
             if field_type is dict:
                 # In-place deepmerge in to the existing dict without schema.
                 # Deepcopying since merge() does not copy.
-                merge(old_value, deepcopy(new_value), list_merge=list_merge)
+                merge(old_value, new_value, list_merge=list_merge)
                 continue
 
             setattr(self, field, new_value)
+
+        if other._created_from_null:
+            # Inherit the _created_from_null attribute to make sure we output null values instead of empty dicts.
+            self._created_from_null = True
+        elif self._created_from_null:
+            # We merged into a "null" class, but since we now have proper data, we clear the flag.
+            self._created_from_null = False
 
     def _inherit(self, other: Self) -> None:
         """Update unset fields on this instance with fields from other instance. No merging."""
@@ -271,6 +301,15 @@ class AvdModel(AvdBase):
         if not isinstance(other, cls):
             msg = f"Unable to inherit from type '{type(other)}' into '{cls}'"
             raise TypeError(msg)
+
+        if self._created_from_null:
+            # Null always wins, so no inheritance.
+            return
+
+        if other._created_from_null:
+            # Nothing to inherit, but we set the flag to prevent inheriting from something else later.
+            self._created_from_null = True
+            return
 
         for field in cls._fields:
             if self._get_defined_attr(field) is not Undefined:
@@ -287,6 +326,15 @@ class AvdModel(AvdBase):
             msg = f"Unable to inherit from type '{type(other)}' into '{cls}'"
             raise TypeError(msg)
 
+        if self._created_from_null or self._block_inheritance:
+            # Null always wins, so no inheritance.
+            return
+
+        if other._created_from_null:
+            # Nothing to inherit, and we set the special block flag to prevent inheriting from something else later.
+            self._block_inheritance = True
+            return
+
         for field, field_info in cls._fields.items():
             if (new_value := other._get_defined_attr(field)) is Undefined:
                 continue
@@ -296,19 +344,26 @@ class AvdModel(AvdBase):
 
             # Inherit the field only if the old value is Undefined.
             if old_value is Undefined:
-                setattr(self, field, deepcopy(new_value))
+                setattr(self, field, new_value)
                 continue
 
             # Merge new value if it is a class with inheritance support.
             field_type = field_info["type"]
-            if issubclass(field_type, (AvdModel, AvdIndexedList)) and isinstance(old_value, field_type):
+            if issubclass(field_type, AvdModel):
                 # Inherit into the existing object.
+                old_value = cast(AvdModel, old_value)
+                new_value = cast(AvdModel, new_value)
+                old_value._deepinherit(new_value)
+                continue
+            if issubclass(field_type, AvdIndexedList):
+                # Inherit into the existing object.
+                old_value = cast(AvdIndexedList, old_value)
+                new_value = cast(AvdIndexedList, new_value)
                 old_value._deepinherit(new_value)
                 continue
 
             if field_type is dict:
                 # In-place deepmerge in to the existing dict without schema.
-                # Deepcopying since merge() does not copy.
                 merge(old_value, deepcopy(new_value), list_merge="replace")
 
     def _deepinherited(self, other: Self) -> Self:
@@ -341,9 +396,10 @@ class AvdModel(AvdBase):
                 msg = f"Unable to cast '{cls}' as type '{new_type}' since the field '{field}' is missing from the new class. "
                 raise TypeError(msg)
             if field_info != new_type._fields[field]:
-                if issubclass(field_info["type"], (AvdBase)) and isinstance(value, (AvdBase)):
+                if issubclass(field_info["type"], AvdBase):
                     # TODO: Consider using the TypeError we raise below to ensure we know the outer type.
                     # TODO: with suppress(TypeError):
+                    value = cast(AvdBase, value)
                     new_args[field] = value._cast_as(new_type._fields[field]["type"], ignore_extra_keys=ignore_extra_keys)
                     continue
 
@@ -351,6 +407,19 @@ class AvdModel(AvdBase):
                 raise TypeError(msg)
 
             new_args[field] = value
-            continue
 
-        return new_type(**new_args)
+        new_instance = new_type(**new_args)
+
+        # Pass along the internal flags
+        new_instance._created_from_null = self._created_from_null
+        new_instance._block_inheritance = self._block_inheritance
+
+        return new_instance
+
+    def _compare(self, other: Self, ignore_fields: tuple[str, ...] = ()) -> bool:
+        cls = type(self)
+        if not isinstance(other, cls):
+            msg = f"Unable to compare '{cls}' with a '{type(other)}' class."
+            raise TypeError(msg)
+
+        return all(self._get_defined_attr(field) == other._get_defined_attr(field) for field in self._fields if field not in ignore_fields)

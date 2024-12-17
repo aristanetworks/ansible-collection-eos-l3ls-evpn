@@ -141,7 +141,7 @@ port_channel_interfaces:
           - from: 23
             dot1q_tunnel_to: 22
       backup_link:
-        interface: Port-Channel100.102
+        interface: Port-Channel100
         prefer_vlan: 20
 
   - name: Port-Channel3
@@ -947,3 +947,102 @@ port_channel_interfaces:
   - name: Port-Channel132
     description: Test_port-channel_interface-profile
     profile: test-interface-profile
+
+  - name: Port-Channel133
+    description: Test1_switchport_tap_tool
+    switchport:
+      tap:
+        allowed_vlan: 25
+        default:
+          groups:
+            - g2
+            - g1
+            - g3
+          nexthop_groups:
+            - nexthop_g1
+            - nexthop_g3
+            - nexthop_g2
+          interfaces:
+            - port-channel10
+            - ethernet4
+        identity:
+          id: 3
+        mpls_pop_all: true
+        native_vlan: 10
+        truncation:
+          enabled: true
+        mac_address:
+          destination: 01:00:00:00:00:00
+          source: 01:23:45:67:89:ab
+        encapsulation:
+          gre:
+            destinations:
+              - destination: 1.1.1.1
+                source: 1.1.1.2
+                protocols:
+                  # the protocol value must be enclosed in quotes
+                  - protocol: "0x0"
+                    strip: true
+                strip: true
+              - destination: 2.1.1.2
+                protocols:
+                  - protocol: "0x1"
+                    strip: true
+                  - protocol: "0x2"
+                    feature_header_length: 2
+                    re_encapsulation_ethernet_header: true
+                    strip: true
+              - destination: 1.1.1.3
+                source: 1.1.1.4
+                strip: true
+      tool:
+        mpls_pop_all: true
+        encapsulation:
+          dot1br_strip: true
+          vn_tag_strip: true
+        allowed_vlan: 23
+        identity:
+          tag: qinq
+          qinq_dzgre_source: port inner policy
+        groups:
+          - group1
+          - group2
+          - group3
+        dot1q_remove_outer_vlan_tag: 1-2
+
+  - name: Port-Channel134
+    description: Test2_switchport_tap_tool
+    switchport:
+      tap:
+        identity:
+          id: 3
+          inner_vlan: 10
+        mac_address:
+          destination: 01:00:00:00:00:00
+        encapsulation:
+          vxlan_strip: true
+          gre:
+            strip: true
+        truncation:
+          enabled: true
+          size: 120
+      tool:
+        identity:
+          tag: dot1q
+          dot1q_dzgre_source: policy
+
+  - name: Port-Channel135
+    switchport:
+      tap:
+        encapsulation:
+          gre:
+            protocols:
+              - protocol: "0x10"
+                strip: true
+              - protocol: "0x2"
+                feature_header_length: 3
+                strip: true
+              - protocol: "0x3"
+                feature_header_length: 2
+                re_encapsulation_ethernet_header: true
+                strip: true

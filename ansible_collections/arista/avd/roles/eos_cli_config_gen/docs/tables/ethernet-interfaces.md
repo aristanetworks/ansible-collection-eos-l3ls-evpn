@@ -548,6 +548,57 @@
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;vlans</samp>](## "ethernet_interfaces.[].switchport.port_security.vlans") | List, items: Dictionary |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;range</samp>](## "ethernet_interfaces.[].switchport.port_security.vlans.[].range") | String | Required, Unique |  |  | VLAN ID or range(s) of VLAN IDs, <1-4094>.<br>Example:<br>  - 3<br>  - 1,3<br>  - 1-10<br> |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;mac_address_maximum</samp>](## "ethernet_interfaces.[].switchport.port_security.vlans.[].mac_address_maximum") | Integer | Required |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;tap</samp>](## "ethernet_interfaces.[].switchport.tap") | Dictionary |  |  |  | In tap mode, the interface operates as a tap port.<br>Tap ports receive traffic for replication on one or more tool ports.<br>This setting applies only to parent interfaces. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;allowed_vlan</samp>](## "ethernet_interfaces.[].switchport.tap.allowed_vlan") | String |  |  |  | VLAN ID or range(s) of VLAN IDs within range 1-4094. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;default</samp>](## "ethernet_interfaces.[].switchport.tap.default") | Dictionary |  |  |  | Default tap destination config. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;groups</samp>](## "ethernet_interfaces.[].switchport.tap.default.groups") | List, items: String |  |  |  | Tap group names for the interface. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;&lt;str&gt;</samp>](## "ethernet_interfaces.[].switchport.tap.default.groups.[]") | String |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;interfaces</samp>](## "ethernet_interfaces.[].switchport.tap.default.interfaces") | List, items: String |  |  |  | Interfaces like -  Ethernet1, InternalRecirc1, Port-Channel1, Recirc-Channel1. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;&lt;str&gt;</samp>](## "ethernet_interfaces.[].switchport.tap.default.interfaces.[]") | String |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;nexthop_groups</samp>](## "ethernet_interfaces.[].switchport.tap.default.nexthop_groups") | List, items: String |  |  |  | Default nexthop-group names. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;&lt;str&gt;</samp>](## "ethernet_interfaces.[].switchport.tap.default.nexthop_groups.[]") | String |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;identity</samp>](## "ethernet_interfaces.[].switchport.tap.identity") | Dictionary |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;id</samp>](## "ethernet_interfaces.[].switchport.tap.identity.id") | Integer |  |  | Min: 1<br>Max: 65535 | Tap port VLAN ID (1-4094) or DzGRE extended ID (1-65535). |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;inner_vlan</samp>](## "ethernet_interfaces.[].switchport.tap.identity.inner_vlan") | Integer |  |  | Min: 1<br>Max: 4094 | Tap port inner VLAN ID. Only applicable if `id` is a VLAN ID (1-4094). |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;mpls_pop_all</samp>](## "ethernet_interfaces.[].switchport.tap.mpls_pop_all") | Boolean |  |  |  | Pop all MPLS labels. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;native_vlan</samp>](## "ethernet_interfaces.[].switchport.tap.native_vlan") | Integer |  |  | Min: 1<br>Max: 4094 | Native VLAN ID when interface is in tap mode. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;truncation</samp>](## "ethernet_interfaces.[].switchport.tap.truncation") | Dictionary |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "ethernet_interfaces.[].switchport.tap.truncation.enabled") | Boolean |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;size</samp>](## "ethernet_interfaces.[].switchport.tap.truncation.size") | Integer |  |  | Min: 100<br>Max: 9236 | Ingress packet truncation size in bytes. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;mac_address</samp>](## "ethernet_interfaces.[].switchport.tap.mac_address") | Dictionary |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;source</samp>](## "ethernet_interfaces.[].switchport.tap.mac_address.source") | String |  |  | Pattern: `^([0-9a-f]{2}:){5}[0-9a-f]{2}$` | MAC address for the source. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;destination</samp>](## "ethernet_interfaces.[].switchport.tap.mac_address.destination") | String |  |  | Pattern: `^([0-9a-f]{2}:){5}[0-9a-f]{2}$` | MAC address for the destination. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;encapsulation</samp>](## "ethernet_interfaces.[].switchport.tap.encapsulation") | Dictionary |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;vxlan_strip</samp>](## "ethernet_interfaces.[].switchport.tap.encapsulation.vxlan_strip") | Boolean |  |  |  | Strip VXLAN encapsulation header.<br>`encapsulation.vxlan_strip` and `mpls_pop_all` are mutually exclusive.<br>`mpls_pop_all` takes precedence. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;gre</samp>](## "ethernet_interfaces.[].switchport.tap.encapsulation.gre") | Dictionary |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;strip</samp>](## "ethernet_interfaces.[].switchport.tap.encapsulation.gre.strip") | Boolean |  |  |  | Strip GRE encapsulation header for all GRE tunnels. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;protocols</samp>](## "ethernet_interfaces.[].switchport.tap.encapsulation.gre.protocols") | List, items: Dictionary |  |  |  | Protocols for all destinations; destination-specific protocols should be set under the `destinations[].protocols` key. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;protocol</samp>](## "ethernet_interfaces.[].switchport.tap.encapsulation.gre.protocols.[].protocol") | String | Required, Unique |  |  | Protocol type in GRE header.<br>Valid range: 0x0-0xFFFF. The value must be enclosed in quotes, e.g., "0x0". |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;strip</samp>](## "ethernet_interfaces.[].switchport.tap.encapsulation.gre.protocols.[].strip") | Boolean |  |  |  | This is a required key to strip GRE encapsulation header with protocols. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;feature_header_length</samp>](## "ethernet_interfaces.[].switchport.tap.encapsulation.gre.protocols.[].feature_header_length") | Integer |  |  | Min: 1<br>Max: 16 | Feature header length in bytes.<br>Note: This setting does not appear in the EOS running-config for protocol 0x0. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;re_encapsulation_ethernet_header</samp>](## "ethernet_interfaces.[].switchport.tap.encapsulation.gre.protocols.[].re_encapsulation_ethernet_header") | Boolean |  |  |  | Extra ethernet header to prepend to the terminated packet.<br>Note: This setting does not appear in the EOS running-config for protocol 0x0. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;destinations</samp>](## "ethernet_interfaces.[].switchport.tap.encapsulation.gre.destinations") | List, items: Dictionary |  |  |  | In EOS, `gre.strip` and `destinations.destination/source.strip` (without defining protocols) are mutually exclusive. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;destination</samp>](## "ethernet_interfaces.[].switchport.tap.encapsulation.gre.destinations.[].destination") | String | Required, Unique |  |  | Destination IP address of tunnel packets. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;source</samp>](## "ethernet_interfaces.[].switchport.tap.encapsulation.gre.destinations.[].source") | String |  |  |  | Source IP address of tunnel packets. Applied only when destination is defined. When not defined; any GRE packet that matches the `destination` is terminated. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;strip</samp>](## "ethernet_interfaces.[].switchport.tap.encapsulation.gre.destinations.[].strip") | Boolean |  |  |  | Strip GRE encapsulation header for specific destination. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;protocols</samp>](## "ethernet_interfaces.[].switchport.tap.encapsulation.gre.destinations.[].protocols") | List, items: Dictionary |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;protocol</samp>](## "ethernet_interfaces.[].switchport.tap.encapsulation.gre.destinations.[].protocols.[].protocol") | String | Required, Unique |  |  | Protocol type in GRE header.<br>Valid range: 0x0-0xFFFF. The value must be enclosed in quotes, e.g., "0x0". |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;strip</samp>](## "ethernet_interfaces.[].switchport.tap.encapsulation.gre.destinations.[].protocols.[].strip") | Boolean |  |  |  | This is a required key to strip GRE encapsulation header for specific destination with protocols. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;feature_header_length</samp>](## "ethernet_interfaces.[].switchport.tap.encapsulation.gre.destinations.[].protocols.[].feature_header_length") | Integer |  |  | Min: 1<br>Max: 16 | Feature header length in bytes.<br>Note: This setting does not appear in the EOS running-config for protocol 0x0. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;re_encapsulation_ethernet_header</samp>](## "ethernet_interfaces.[].switchport.tap.encapsulation.gre.destinations.[].protocols.[].re_encapsulation_ethernet_header") | Boolean |  |  |  | Extra ethernet header to prepend to the terminated packet.<br>Note: This setting does not appear in the EOS running-config for protocol 0x0. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;tool</samp>](## "ethernet_interfaces.[].switchport.tool") | Dictionary |  |  |  | In tool mode, the interface operates as a tool port.<br>Tool ports replicate traffic received by tap ports.<br>This setting applies only to parent interfaces. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;mpls_pop_all</samp>](## "ethernet_interfaces.[].switchport.tool.mpls_pop_all") | Boolean |  |  |  | Pop all MPLS labels. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;encapsulation</samp>](## "ethernet_interfaces.[].switchport.tool.encapsulation") | Dictionary |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dot1br_strip</samp>](## "ethernet_interfaces.[].switchport.tool.encapsulation.dot1br_strip") | Boolean |  |  |  | Remove a 802.1 BR tag in packet header. 'mpls_pop_all' takes precedence over 'dot1br_strip' in EOS. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;vn_tag_strip</samp>](## "ethernet_interfaces.[].switchport.tool.encapsulation.vn_tag_strip") | Boolean |  |  |  | Remove a VN-tag in packet header. 'mpls_pop_all' takes precedence over 'vn_tag_strip' in EOS. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;allowed_vlan</samp>](## "ethernet_interfaces.[].switchport.tool.allowed_vlan") | String |  |  |  | VLAN ID or range of VLAN IDs within range 1-4094. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;identity</samp>](## "ethernet_interfaces.[].switchport.tool.identity") | Dictionary |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;tag</samp>](## "ethernet_interfaces.[].switchport.tool.identity.tag") | String |  |  | Valid Values:<br>- <code>dot1q</code><br>- <code>qinq</code> |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dot1q_dzgre_source</samp>](## "ethernet_interfaces.[].switchport.tool.identity.dot1q_dzgre_source") | String |  |  | Valid Values:<br>- <code>policy</code><br>- <code>port</code> |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;qinq_dzgre_source</samp>](## "ethernet_interfaces.[].switchport.tool.identity.qinq_dzgre_source") | String |  |  | Valid Values:<br>- <code>policy inner port</code><br>- <code>port inner policy</code> |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;groups</samp>](## "ethernet_interfaces.[].switchport.tool.groups") | List, items: String |  |  |  | Tool groups for the interface. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;&lt;str&gt;</samp>](## "ethernet_interfaces.[].switchport.tool.groups.[]") | String |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dot1q_remove_outer_vlan_tag</samp>](## "ethernet_interfaces.[].switchport.tool.dot1q_remove_outer_vlan_tag") | String |  |  |  | Indices of vlan tags to be removed.<br>Range: 1-2 |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;eos_cli</samp>](## "ethernet_interfaces.[].eos_cli") | String |  |  |  | Multiline EOS CLI rendered directly on the ethernet interface in the final EOS configuration. |
 
 === "YAML"
@@ -1728,6 +1779,140 @@
                 #   - 1-10
               - range: <str; required; unique>
                 mac_address_maximum: <int; required>
+
+          # In tap mode, the interface operates as a tap port.
+          # Tap ports receive traffic for replication on one or more tool ports.
+          # This setting applies only to parent interfaces.
+          tap:
+
+            # VLAN ID or range(s) of VLAN IDs within range 1-4094.
+            allowed_vlan: <str>
+
+            # Default tap destination config.
+            default:
+
+              # Tap group names for the interface.
+              groups:
+                - <str>
+
+              # Interfaces like -  Ethernet1, InternalRecirc1, Port-Channel1, Recirc-Channel1.
+              interfaces:
+                - <str>
+
+              # Default nexthop-group names.
+              nexthop_groups:
+                - <str>
+            identity:
+
+              # Tap port VLAN ID (1-4094) or DzGRE extended ID (1-65535).
+              id: <int; 1-65535>
+
+              # Tap port inner VLAN ID. Only applicable if `id` is a VLAN ID (1-4094).
+              inner_vlan: <int; 1-4094>
+
+            # Pop all MPLS labels.
+            mpls_pop_all: <bool>
+
+            # Native VLAN ID when interface is in tap mode.
+            native_vlan: <int; 1-4094>
+            truncation:
+              enabled: <bool>
+
+              # Ingress packet truncation size in bytes.
+              size: <int; 100-9236>
+            mac_address:
+
+              # MAC address for the source.
+              source: <str>
+
+              # MAC address for the destination.
+              destination: <str>
+            encapsulation:
+
+              # Strip VXLAN encapsulation header.
+              # `encapsulation.vxlan_strip` and `mpls_pop_all` are mutually exclusive.
+              # `mpls_pop_all` takes precedence.
+              vxlan_strip: <bool>
+              gre:
+
+                # Strip GRE encapsulation header for all GRE tunnels.
+                strip: <bool>
+
+                # Protocols for all destinations; destination-specific protocols should be set under the `destinations[].protocols` key.
+                protocols:
+
+                    # Protocol type in GRE header.
+                    # Valid range: 0x0-0xFFFF. The value must be enclosed in quotes, e.g., "0x0".
+                  - protocol: <str; required; unique>
+
+                    # This is a required key to strip GRE encapsulation header with protocols.
+                    strip: <bool>
+
+                    # Feature header length in bytes.
+                    # Note: This setting does not appear in the EOS running-config for protocol 0x0.
+                    feature_header_length: <int; 1-16>
+
+                    # Extra ethernet header to prepend to the terminated packet.
+                    # Note: This setting does not appear in the EOS running-config for protocol 0x0.
+                    re_encapsulation_ethernet_header: <bool>
+
+                # In EOS, `gre.strip` and `destinations.destination/source.strip` (without defining protocols) are mutually exclusive.
+                destinations:
+
+                    # Destination IP address of tunnel packets.
+                  - destination: <str; required; unique>
+
+                    # Source IP address of tunnel packets. Applied only when destination is defined. When not defined; any GRE packet that matches the `destination` is terminated.
+                    source: <str>
+
+                    # Strip GRE encapsulation header for specific destination.
+                    strip: <bool>
+                    protocols:
+
+                        # Protocol type in GRE header.
+                        # Valid range: 0x0-0xFFFF. The value must be enclosed in quotes, e.g., "0x0".
+                      - protocol: <str; required; unique>
+
+                        # This is a required key to strip GRE encapsulation header for specific destination with protocols.
+                        strip: <bool>
+
+                        # Feature header length in bytes.
+                        # Note: This setting does not appear in the EOS running-config for protocol 0x0.
+                        feature_header_length: <int; 1-16>
+
+                        # Extra ethernet header to prepend to the terminated packet.
+                        # Note: This setting does not appear in the EOS running-config for protocol 0x0.
+                        re_encapsulation_ethernet_header: <bool>
+
+          # In tool mode, the interface operates as a tool port.
+          # Tool ports replicate traffic received by tap ports.
+          # This setting applies only to parent interfaces.
+          tool:
+
+            # Pop all MPLS labels.
+            mpls_pop_all: <bool>
+            encapsulation:
+
+              # Remove a 802.1 BR tag in packet header. 'mpls_pop_all' takes precedence over 'dot1br_strip' in EOS.
+              dot1br_strip: <bool>
+
+              # Remove a VN-tag in packet header. 'mpls_pop_all' takes precedence over 'vn_tag_strip' in EOS.
+              vn_tag_strip: <bool>
+
+            # VLAN ID or range of VLAN IDs within range 1-4094.
+            allowed_vlan: <str>
+            identity:
+              tag: <str; "dot1q" | "qinq">
+              dot1q_dzgre_source: <str; "policy" | "port">
+              qinq_dzgre_source: <str; "policy inner port" | "port inner policy">
+
+            # Tool groups for the interface.
+            groups:
+              - <str>
+
+            # Indices of vlan tags to be removed.
+            # Range: 1-2
+            dot1q_remove_outer_vlan_tag: <str>
 
         # Multiline EOS CLI rendered directly on the ethernet interface in the final EOS configuration.
         eos_cli: <str>

@@ -57,4 +57,4 @@ router_pim_sparse_mode:
               - RP_ACL2
             priority: 20
             hashmask: 30
-            override: True
+            override: true

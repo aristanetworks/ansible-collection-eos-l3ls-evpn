@@ -103,7 +103,7 @@ class VlanInterfacesMixin(UtilsMixin):
             "access_group_out": get(self._svi_acls, f"{interface_name}.ipv4_acl_out.name"),
             "mtu": svi.mtu if self.shared_utils.platform_settings.feature_support.per_interface_mtu else None,
             "eos_cli": svi.raw_eos_cli,
-            "struct_cfg": svi.structured_config._as_dict(strip_values=()) or None,
+            "struct_cfg": svi.structured_config._as_dict() or None,
         }
         # Only set VARP if ip_address is set
         if vlan_interface_config["ip_address"] is not None:

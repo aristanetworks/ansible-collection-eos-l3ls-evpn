@@ -56,7 +56,7 @@ wan_router:
       cv_pathfinder_region: AVD_Land_West
       cv_pathfinder_site: Site422
       wan_ha:
-        enabled: False
+        enabled: false
       nodes:
         - name: missing-prefix-list-definition-cv-pathfinder
           id: 1

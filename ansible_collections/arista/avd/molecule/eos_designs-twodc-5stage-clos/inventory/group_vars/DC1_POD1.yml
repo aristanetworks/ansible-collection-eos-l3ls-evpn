@@ -16,7 +16,7 @@ spine:
     max_uplink_switches: 4
     uplink_ipv4_pool: 172.16.11.0/24
     uplink_ptp:
-      enable: True
+      enable: true
     uplink_macsec:
       profile: MACSEC_PROFILE
     bgp_defaults:
@@ -47,7 +47,7 @@ l3leaf:
     vtep_loopback_ipv4_pool: 172.18.110.0/24
     uplink_ipv4_pool: 172.17.110.0/24
     uplink_ptp:
-      enable: True
+      enable: true
     uplink_macsec:
       profile: MACSEC_PROFILE
     bgp_defaults:
