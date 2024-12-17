@@ -1,0 +1,7 @@
+---
+### interface default all knobs
+
+interface_defaults:
+  ethernet:
+    shutdown: true
+  mtu: 9000

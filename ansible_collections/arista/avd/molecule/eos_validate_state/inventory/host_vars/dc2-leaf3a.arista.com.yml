@@ -53,6 +53,12 @@ custom_structured_configuration_ethernet_interfaces:
   - name: Ethernet4
     validate_lldp: false
 
+  - name: Ethernet16
+    description: Test_dhcp_interface_connectivity
+    ip_address: dhcp
+    peer: dc2-leaf3b.arista.com
+    peer_interface: Ethernet16
+
 custom_structured_configuration_port_channel_interfaces:
   - name: Port-Channel11
     description: dc2-leaf3-fw1_PortChannel

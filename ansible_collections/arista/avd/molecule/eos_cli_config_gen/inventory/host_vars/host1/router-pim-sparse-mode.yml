@@ -4,6 +4,7 @@
 router_pim_sparse_mode:
   ipv4:
     bfd: true
+    make_before_break: false
     rp_addresses:
       - address: 10.238.1.161
         groups:
@@ -32,6 +33,7 @@ router_pim_sparse_mode:
     - name: MCAST_VRF1
       ipv4:
         bfd: true
+        make_before_break: false
         rp_addresses:
           - address: 10.238.2.161
             groups:
@@ -45,6 +47,7 @@ router_pim_sparse_mode:
             hashmask: 30
     - name: Test_RP_ACL
       ipv4:
+        make_before_break: true
         rp_addresses:
           - address: 10.238.4.161
             access_lists:
@@ -54,4 +57,4 @@ router_pim_sparse_mode:
               - RP_ACL2
             priority: 20
             hashmask: 30
-            override: True
+            override: true

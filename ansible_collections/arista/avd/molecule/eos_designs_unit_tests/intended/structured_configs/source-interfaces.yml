@@ -22,7 +22,6 @@ management_interfaces:
   shutdown: false
   vrf: default
   ip_address: 192.168.0.2/24
-  gateway: null
   type: oob
 management_api_http:
   enable_vrfs:

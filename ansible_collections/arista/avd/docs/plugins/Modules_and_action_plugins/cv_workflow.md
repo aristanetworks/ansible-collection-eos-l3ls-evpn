@@ -83,7 +83,7 @@ The `arista.avd.cv_workflow` module is an Ansible Action Plugin providing the fo
       arista.avd.cv_workflow:
         cv_servers: [ "www.arista.io" ]
         cv_token: "<insert vaulted service account token here>"
-        # cv_verify_certs: True
+        # cv_verify_certs: true
         configuration_dir: "{{ inventory_dir }}/intended/configs"
         structured_config_dir: "{{ inventory_dir }}/intended/structured_configs"
         # structured_config_suffix: "yml"
@@ -96,7 +96,7 @@ The `arista.avd.cv_workflow` module is an Ansible Action Plugin providing the fo
         #   description:
         #   id: <uuid or similar>
           requested_state: submitted
-          force: True
+          force: true
         #   build_warnings: true
         #   build_warnings_suppress_patterns: []
         #   build_warnings_suppress_portfast: false

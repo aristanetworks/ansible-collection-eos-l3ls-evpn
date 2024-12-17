@@ -33,14 +33,14 @@ tenants:
           - id: 1
             name: "VLAN_1"
             tags: ['test_l3']
-            enabled: True
+            enabled: true
             ip_address_virtual: 10.0.1.1/24
         # Expected results:
         # igmp querier enable, querier address set to loopback 0 address 192.168.255.1, and version not set to 3
           - id: 2
             name: "VLAN_2"
             tags: ['test_l3']
-            enabled: True
+            enabled: true
             ip_address_virtual: 10.0.2.1/24
             igmp_snooping_querier:
               version: 3
@@ -49,7 +49,7 @@ tenants:
           - id: 3
             name: "VLAN_3"
             tags: ['test_l3']
-            enabled: True
+            enabled: true
             ip_address_virtual: 10.0.3.1/24
             igmp_snooping_querier:
               enabled: false
@@ -91,14 +91,14 @@ tenants:
           - id: 11
             name: "VLAN_11"
             tags: ['test_l3']
-            enabled: True
+            enabled: true
             ip_address_virtual: 10.0.11.1/24
         # Expected results:
         # igmp querier enable, querier address set to 1.1.1.1, and version set to 2
           - id: 12
             name: "VLAN_12"
             tags: ['test_l3']
-            enabled: True
+            enabled: true
             ip_address_virtual: 10.0.12.1/24
             igmp_snooping_querier:
               version: 2
@@ -136,7 +136,7 @@ tenants:
           - id: 21
             name: "VLAN_21"
             tags: ['test_l3']
-            enabled: True
+            enabled: true
             ip_address_virtual: 10.0.21.1/24
             profile: IGMP_QUERIER_CHILD_1
           # Expected results:
@@ -144,7 +144,7 @@ tenants:
           - id: 22
             name: "VLAN_22"
             tags: ['test_l3']
-            enabled: True
+            enabled: true
             ip_address_virtual: 10.0.22.1/24
             profile: IGMP_QUERIER_CHILD_2
           # Expected results:
@@ -152,7 +152,7 @@ tenants:
           - id: 23
             name: "VLAN_23"
             tags: ['test_l3']
-            enabled: True
+            enabled: true
             ip_address_virtual: 10.0.23.1/24
             igmp_snooping_querier:
               enabled: true

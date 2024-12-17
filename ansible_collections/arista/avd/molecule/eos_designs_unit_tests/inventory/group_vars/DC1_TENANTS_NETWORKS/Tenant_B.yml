@@ -8,12 +8,12 @@ tenant_b:
           - id: 210
             name: Tenant_B_OP_Zone_1
             tags: ['opzone']
-            enabled: True
+            enabled: true
             ip_address_virtual: 10.2.10.1/24
           - id: 211
             name: Tenant_B_OP_Zone_2
             tags: ['opzone']
-            enabled: True
+            enabled: true
             ip_address_virtual: 10.2.11.1/24
       - name: Tenant_B_WAN_Zone
         vrf_vni: 21
@@ -22,5 +22,5 @@ tenant_b:
           - id: 250
             name: Tenant_B_WAN_Zone_1
             tags: ['wan']
-            enabled: True
+            enabled: true
             ip_address_virtual: 10.2.50.1/24

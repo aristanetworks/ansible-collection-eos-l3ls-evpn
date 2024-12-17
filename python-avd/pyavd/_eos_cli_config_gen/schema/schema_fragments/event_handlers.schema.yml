@@ -92,7 +92,7 @@ keys:
           keys:
             interface:
               type: str
-              required: True
+              required: true
               description: |-
                 Interface name.
                 Example - Ethernet4
@@ -151,7 +151,7 @@ keys:
               description: Name of unit. Trigger condition occurs on maintenance operation of specified unit
         asynchronous:
           type: bool
-          default: False
+          default: false
           description: |
             Set the action to be non-blocking.
         action_type:

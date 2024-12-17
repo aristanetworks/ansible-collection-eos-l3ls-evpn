@@ -1,6 +1,6 @@
 - name: Test without container_root
   register: cvp_vars
-  ignore_errors: yes
+  ignore_errors: true
   inventory_to_container:
     inventory: '{{ inventory_path }}/inventory.yml'
     configlet_dir: '{{ configlet_path }}'

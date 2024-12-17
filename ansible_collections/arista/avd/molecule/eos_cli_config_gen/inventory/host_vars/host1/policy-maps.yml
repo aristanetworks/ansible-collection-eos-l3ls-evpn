@@ -1,6 +1,23 @@
 ---
 policy_maps:
   qos:
+    - name: pmap_test1
+      classes:
+        - name: cmap_tc0_v4
+          set:
+            traffic_class: 0
+        - name: cmap_tc5_v4
+          set:
+            traffic_class: 5
+        - name: cmap_tc5_v6
+          set:
+            traffic_class: 5
+        - name: cmap_tc0_v6
+          set:
+            traffic_class: 0
+        - name: class-default
+          set:
+            traffic_class: 1
     - name: PM_REPLICATION_LD
       classes:
         - name: CM_REPLICATION_LD

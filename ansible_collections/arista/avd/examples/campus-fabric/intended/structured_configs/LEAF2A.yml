@@ -87,6 +87,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -96,9 +99,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -115,8 +115,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet3/2
@@ -129,6 +129,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -138,9 +141,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -157,8 +157,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet3/3
@@ -171,6 +171,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -180,9 +183,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -199,8 +199,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet3/4
@@ -213,6 +213,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -222,9 +225,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -241,8 +241,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet3/5
@@ -255,6 +255,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -264,9 +267,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -283,8 +283,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet3/6
@@ -297,6 +297,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -306,9 +309,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -325,8 +325,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet3/7
@@ -339,6 +339,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -348,9 +351,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -367,8 +367,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet3/8
@@ -381,6 +381,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -390,9 +393,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -409,8 +409,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet3/9
@@ -423,6 +423,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -432,9 +435,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -451,8 +451,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet3/10
@@ -465,6 +465,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -474,9 +477,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -493,8 +493,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet3/11
@@ -507,6 +507,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -516,9 +519,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -535,8 +535,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet3/12
@@ -549,6 +549,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -558,9 +561,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -577,8 +577,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet3/13
@@ -591,6 +591,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -600,9 +603,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -619,8 +619,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet3/14
@@ -633,6 +633,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -642,9 +645,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -661,8 +661,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet3/15
@@ -675,6 +675,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -684,9 +687,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -703,8 +703,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet3/16
@@ -717,6 +717,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -726,9 +729,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -745,8 +745,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet3/17
@@ -759,6 +759,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -768,9 +771,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -787,8 +787,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet3/18
@@ -801,6 +801,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -810,9 +813,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -829,8 +829,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet3/19
@@ -843,6 +843,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -852,9 +855,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -871,8 +871,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet3/20
@@ -885,6 +885,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -894,9 +897,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -913,8 +913,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet3/21
@@ -927,6 +927,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -936,9 +939,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -955,8 +955,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet3/22
@@ -969,6 +969,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -978,9 +981,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -997,8 +997,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet3/23
@@ -1011,6 +1011,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -1020,9 +1023,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -1039,8 +1039,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet3/24
@@ -1053,6 +1053,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -1062,9 +1065,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -1081,8 +1081,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet3/25
@@ -1095,6 +1095,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -1104,9 +1107,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -1123,8 +1123,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet3/26
@@ -1137,6 +1137,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -1146,9 +1149,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -1165,8 +1165,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet3/27
@@ -1179,6 +1179,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -1188,9 +1191,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -1207,8 +1207,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet3/28
@@ -1221,6 +1221,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -1230,9 +1233,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -1249,8 +1249,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet3/29
@@ -1263,6 +1263,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -1272,9 +1275,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -1291,8 +1291,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet3/30
@@ -1305,6 +1305,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -1314,9 +1317,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -1333,8 +1333,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet3/31
@@ -1347,6 +1347,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -1356,9 +1359,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -1375,8 +1375,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet3/32
@@ -1389,6 +1389,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -1398,9 +1401,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -1417,8 +1417,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet3/33
@@ -1431,6 +1431,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -1440,9 +1443,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -1459,8 +1459,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet3/34
@@ -1473,6 +1473,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -1482,9 +1485,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -1501,8 +1501,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet3/35
@@ -1515,6 +1515,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -1524,9 +1527,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -1543,8 +1543,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet3/36
@@ -1557,6 +1557,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -1566,9 +1569,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -1585,8 +1585,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet3/37
@@ -1599,6 +1599,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -1608,9 +1611,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -1627,8 +1627,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet3/38
@@ -1641,6 +1641,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -1650,9 +1653,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -1669,8 +1669,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet3/39
@@ -1683,6 +1683,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -1692,9 +1695,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -1711,8 +1711,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet3/40
@@ -1725,6 +1725,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -1734,9 +1737,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -1753,8 +1753,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet3/41
@@ -1767,6 +1767,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -1776,9 +1779,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -1795,8 +1795,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet3/42
@@ -1809,6 +1809,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -1818,9 +1821,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -1837,8 +1837,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet3/43
@@ -1851,6 +1851,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -1860,9 +1863,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -1879,8 +1879,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet3/44
@@ -1893,6 +1893,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -1902,9 +1905,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -1921,8 +1921,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet3/45
@@ -1935,6 +1935,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -1944,9 +1947,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -1963,8 +1963,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet3/46
@@ -1977,6 +1977,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -1986,9 +1989,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -2005,8 +2005,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet3/47
@@ -2019,6 +2019,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -2028,9 +2031,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -2047,8 +2047,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet3/48
@@ -2061,6 +2061,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -2070,9 +2073,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -2089,8 +2089,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet4/1
@@ -2103,6 +2103,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -2112,9 +2115,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -2131,8 +2131,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet4/2
@@ -2145,6 +2145,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -2154,9 +2157,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -2173,8 +2173,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet4/3
@@ -2187,6 +2187,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -2196,9 +2199,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -2215,8 +2215,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet4/4
@@ -2229,6 +2229,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -2238,9 +2241,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -2257,8 +2257,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet4/5
@@ -2271,6 +2271,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -2280,9 +2283,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -2299,8 +2299,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet4/6
@@ -2313,6 +2313,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -2322,9 +2325,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -2341,8 +2341,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet4/7
@@ -2355,6 +2355,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -2364,9 +2367,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -2383,8 +2383,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet4/8
@@ -2397,6 +2397,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -2406,9 +2409,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -2425,8 +2425,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet4/9
@@ -2439,6 +2439,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -2448,9 +2451,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -2467,8 +2467,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet4/10
@@ -2481,6 +2481,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -2490,9 +2493,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -2509,8 +2509,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet4/11
@@ -2523,6 +2523,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -2532,9 +2535,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -2551,8 +2551,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet4/12
@@ -2565,6 +2565,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -2574,9 +2577,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -2593,8 +2593,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet4/13
@@ -2607,6 +2607,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -2616,9 +2619,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -2635,8 +2635,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet4/14
@@ -2649,6 +2649,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -2658,9 +2661,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -2677,8 +2677,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet4/15
@@ -2691,6 +2691,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -2700,9 +2703,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -2719,8 +2719,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet4/16
@@ -2733,6 +2733,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -2742,9 +2745,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -2761,8 +2761,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet4/17
@@ -2775,6 +2775,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -2784,9 +2787,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -2803,8 +2803,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet4/18
@@ -2817,6 +2817,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -2826,9 +2829,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -2845,8 +2845,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet4/19
@@ -2859,6 +2859,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -2868,9 +2871,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -2887,8 +2887,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet4/20
@@ -2901,6 +2901,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -2910,9 +2913,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -2929,8 +2929,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet4/21
@@ -2943,6 +2943,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -2952,9 +2955,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -2971,8 +2971,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet4/22
@@ -2985,6 +2985,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -2994,9 +2997,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -3013,8 +3013,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet4/23
@@ -3027,6 +3027,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -3036,9 +3039,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -3055,8 +3055,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet4/24
@@ -3069,6 +3069,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -3078,9 +3081,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -3097,8 +3097,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet4/25
@@ -3111,6 +3111,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -3120,9 +3123,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -3139,8 +3139,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet4/26
@@ -3153,6 +3153,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -3162,9 +3165,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -3181,8 +3181,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet4/27
@@ -3195,6 +3195,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -3204,9 +3207,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -3223,8 +3223,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet4/28
@@ -3237,6 +3237,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -3246,9 +3249,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -3265,8 +3265,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet4/29
@@ -3279,6 +3279,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -3288,9 +3291,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -3307,8 +3307,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet4/30
@@ -3321,6 +3321,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -3330,9 +3333,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -3349,8 +3349,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet4/31
@@ -3363,6 +3363,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -3372,9 +3375,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -3391,8 +3391,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet4/32
@@ -3405,6 +3405,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -3414,9 +3417,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -3433,8 +3433,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet4/33
@@ -3447,6 +3447,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -3456,9 +3459,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -3475,8 +3475,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet4/34
@@ -3489,6 +3489,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -3498,9 +3501,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -3517,8 +3517,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet4/35
@@ -3531,6 +3531,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -3540,9 +3543,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -3559,8 +3559,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet4/36
@@ -3573,6 +3573,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -3582,9 +3585,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -3601,8 +3601,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet4/37
@@ -3615,6 +3615,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -3624,9 +3627,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -3643,8 +3643,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet4/38
@@ -3657,6 +3657,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -3666,9 +3669,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -3685,8 +3685,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet4/39
@@ -3699,6 +3699,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -3708,9 +3711,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -3727,8 +3727,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet4/40
@@ -3741,6 +3741,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -3750,9 +3753,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -3769,8 +3769,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet4/41
@@ -3783,6 +3783,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -3792,9 +3795,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -3811,8 +3811,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet4/42
@@ -3825,6 +3825,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -3834,9 +3837,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -3853,8 +3853,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet4/43
@@ -3867,6 +3867,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -3876,9 +3879,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -3895,8 +3895,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet4/44
@@ -3909,6 +3909,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -3918,9 +3921,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -3937,8 +3937,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet4/45
@@ -3951,6 +3951,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -3960,9 +3963,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -3979,8 +3979,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet4/46
@@ -3993,6 +3993,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -4002,9 +4005,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -4021,8 +4021,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet4/47
@@ -4035,6 +4035,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -4044,9 +4047,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -4063,8 +4063,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet4/48
@@ -4077,6 +4077,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -4086,9 +4089,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -4105,8 +4105,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet5/1
@@ -4119,6 +4119,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -4128,9 +4131,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -4147,8 +4147,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet5/2
@@ -4161,6 +4161,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -4170,9 +4173,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -4189,8 +4189,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet5/3
@@ -4203,6 +4203,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -4212,9 +4215,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -4231,8 +4231,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet5/4
@@ -4245,6 +4245,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -4254,9 +4257,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -4273,8 +4273,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet5/5
@@ -4287,6 +4287,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -4296,9 +4299,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -4315,8 +4315,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet5/6
@@ -4329,6 +4329,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -4338,9 +4341,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -4357,8 +4357,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet5/7
@@ -4371,6 +4371,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -4380,9 +4383,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -4399,8 +4399,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet5/8
@@ -4413,6 +4413,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -4422,9 +4425,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -4441,8 +4441,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet5/9
@@ -4455,6 +4455,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -4464,9 +4467,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -4483,8 +4483,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet5/10
@@ -4497,6 +4497,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -4506,9 +4509,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -4525,8 +4525,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet5/11
@@ -4539,6 +4539,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -4548,9 +4551,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -4567,8 +4567,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet5/12
@@ -4581,6 +4581,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -4590,9 +4593,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -4609,8 +4609,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet5/13
@@ -4623,6 +4623,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -4632,9 +4635,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -4651,8 +4651,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet5/14
@@ -4665,6 +4665,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -4674,9 +4677,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -4693,8 +4693,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet5/15
@@ -4707,6 +4707,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -4716,9 +4719,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -4735,8 +4735,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet5/16
@@ -4749,6 +4749,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -4758,9 +4761,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -4777,8 +4777,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet5/17
@@ -4791,6 +4791,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -4800,9 +4803,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -4819,8 +4819,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet5/18
@@ -4833,6 +4833,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -4842,9 +4845,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -4861,8 +4861,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet5/19
@@ -4875,6 +4875,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -4884,9 +4887,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -4903,8 +4903,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet5/20
@@ -4917,6 +4917,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -4926,9 +4929,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -4945,8 +4945,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet5/21
@@ -4959,6 +4959,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -4968,9 +4971,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -4987,8 +4987,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet5/22
@@ -5001,6 +5001,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -5010,9 +5013,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -5029,8 +5029,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet5/23
@@ -5043,6 +5043,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -5052,9 +5055,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -5071,8 +5071,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet5/24
@@ -5085,6 +5085,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -5094,9 +5097,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -5113,8 +5113,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet5/25
@@ -5127,6 +5127,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -5136,9 +5139,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -5155,8 +5155,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet5/26
@@ -5169,6 +5169,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -5178,9 +5181,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -5197,8 +5197,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet5/27
@@ -5211,6 +5211,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -5220,9 +5223,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -5239,8 +5239,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet5/28
@@ -5253,6 +5253,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -5262,9 +5265,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -5281,8 +5281,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet5/29
@@ -5295,6 +5295,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -5304,9 +5307,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -5323,8 +5323,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet5/30
@@ -5337,6 +5337,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -5346,9 +5349,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -5365,8 +5365,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet5/31
@@ -5379,6 +5379,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -5388,9 +5391,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -5407,8 +5407,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet5/32
@@ -5421,6 +5421,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -5430,9 +5433,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -5449,8 +5449,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet5/33
@@ -5463,6 +5463,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -5472,9 +5475,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -5491,8 +5491,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet5/34
@@ -5505,6 +5505,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -5514,9 +5517,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -5533,8 +5533,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet5/35
@@ -5547,6 +5547,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -5556,9 +5559,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -5575,8 +5575,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet5/36
@@ -5589,6 +5589,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -5598,9 +5601,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -5617,8 +5617,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet5/37
@@ -5631,6 +5631,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -5640,9 +5643,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -5659,8 +5659,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet5/38
@@ -5673,6 +5673,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -5682,9 +5685,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -5701,8 +5701,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet5/39
@@ -5715,6 +5715,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -5724,9 +5727,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -5743,8 +5743,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet5/40
@@ -5757,6 +5757,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -5766,9 +5769,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -5785,8 +5785,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet5/41
@@ -5799,6 +5799,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -5808,9 +5811,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -5827,8 +5827,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet5/42
@@ -5841,6 +5841,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -5850,9 +5853,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -5869,8 +5869,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet5/43
@@ -5883,6 +5883,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -5892,9 +5895,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -5911,8 +5911,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet5/44
@@ -5925,6 +5925,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -5934,9 +5937,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -5953,8 +5953,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet5/45
@@ -5967,6 +5967,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -5976,9 +5979,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -5995,8 +5995,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet5/46
@@ -6009,6 +6009,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -6018,9 +6021,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -6037,8 +6037,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet5/47
@@ -6051,6 +6051,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -6060,9 +6063,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -6079,8 +6079,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet5/48
@@ -6093,6 +6093,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -6102,9 +6105,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -6121,8 +6121,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet6/1
@@ -6135,6 +6135,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -6144,9 +6147,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -6163,8 +6163,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet6/2
@@ -6177,6 +6177,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -6186,9 +6189,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -6205,8 +6205,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet6/3
@@ -6219,6 +6219,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -6228,9 +6231,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -6247,8 +6247,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet6/4
@@ -6261,6 +6261,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -6270,9 +6273,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -6289,8 +6289,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet6/5
@@ -6303,6 +6303,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -6312,9 +6315,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -6331,8 +6331,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet6/6
@@ -6345,6 +6345,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -6354,9 +6357,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -6373,8 +6373,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet6/7
@@ -6387,6 +6387,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -6396,9 +6399,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -6415,8 +6415,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet6/8
@@ -6429,6 +6429,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -6438,9 +6441,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -6457,8 +6457,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet6/9
@@ -6471,6 +6471,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -6480,9 +6483,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -6499,8 +6499,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet6/10
@@ -6513,6 +6513,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -6522,9 +6525,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -6541,8 +6541,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet6/11
@@ -6555,6 +6555,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -6564,9 +6567,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -6583,8 +6583,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet6/12
@@ -6597,6 +6597,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -6606,9 +6609,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -6625,8 +6625,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet6/13
@@ -6639,6 +6639,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -6648,9 +6651,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -6667,8 +6667,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet6/14
@@ -6681,6 +6681,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -6690,9 +6693,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -6709,8 +6709,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet6/15
@@ -6723,6 +6723,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -6732,9 +6735,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -6751,8 +6751,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet6/16
@@ -6765,6 +6765,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -6774,9 +6777,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -6793,8 +6793,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet6/17
@@ -6807,6 +6807,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -6816,9 +6819,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -6835,8 +6835,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet6/18
@@ -6849,6 +6849,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -6858,9 +6861,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -6877,8 +6877,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet6/19
@@ -6891,6 +6891,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -6900,9 +6903,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -6919,8 +6919,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet6/20
@@ -6933,6 +6933,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -6942,9 +6945,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -6961,8 +6961,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet6/21
@@ -6975,6 +6975,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -6984,9 +6987,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -7003,8 +7003,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet6/22
@@ -7017,6 +7017,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -7026,9 +7029,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -7045,8 +7045,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet6/23
@@ -7059,6 +7059,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -7068,9 +7071,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -7087,8 +7087,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet6/24
@@ -7101,6 +7101,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -7110,9 +7113,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -7129,8 +7129,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet6/25
@@ -7143,6 +7143,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -7152,9 +7155,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -7171,8 +7171,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet6/26
@@ -7185,6 +7185,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -7194,9 +7197,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -7213,8 +7213,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet6/27
@@ -7227,6 +7227,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -7236,9 +7239,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -7255,8 +7255,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet6/28
@@ -7269,6 +7269,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -7278,9 +7281,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -7297,8 +7297,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet6/29
@@ -7311,6 +7311,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -7320,9 +7323,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -7339,8 +7339,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet6/30
@@ -7353,6 +7353,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -7362,9 +7365,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -7381,8 +7381,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet6/31
@@ -7395,6 +7395,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -7404,9 +7407,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -7423,8 +7423,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet6/32
@@ -7437,6 +7437,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -7446,9 +7449,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -7465,8 +7465,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet6/33
@@ -7479,6 +7479,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -7488,9 +7491,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -7507,8 +7507,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet6/34
@@ -7521,6 +7521,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -7530,9 +7533,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -7549,8 +7549,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet6/35
@@ -7563,6 +7563,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -7572,9 +7575,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -7591,8 +7591,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet6/36
@@ -7605,6 +7605,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -7614,9 +7617,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -7633,8 +7633,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet6/37
@@ -7647,6 +7647,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -7656,9 +7659,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -7675,8 +7675,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet6/38
@@ -7689,6 +7689,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -7698,9 +7701,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -7717,8 +7717,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet6/39
@@ -7731,6 +7731,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -7740,9 +7743,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -7759,8 +7759,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet6/40
@@ -7773,6 +7773,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -7782,9 +7785,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -7801,8 +7801,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet6/41
@@ -7815,6 +7815,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -7824,9 +7827,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -7843,8 +7843,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet6/42
@@ -7857,6 +7857,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -7866,9 +7869,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -7885,8 +7885,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet6/43
@@ -7899,6 +7899,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -7908,9 +7911,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -7927,8 +7927,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet6/44
@@ -7941,6 +7941,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -7950,9 +7953,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -7969,8 +7969,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet6/45
@@ -7983,6 +7983,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -7992,9 +7995,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -8011,8 +8011,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet6/46
@@ -8025,6 +8025,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -8034,9 +8037,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -8053,8 +8053,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet6/47
@@ -8067,6 +8067,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -8076,9 +8079,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -8095,8 +8095,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet6/48
@@ -8109,6 +8109,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -8118,9 +8121,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -8137,8 +8137,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet7/1
@@ -8151,6 +8151,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -8160,9 +8163,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -8179,8 +8179,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet7/2
@@ -8193,6 +8193,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -8202,9 +8205,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -8221,8 +8221,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet7/3
@@ -8235,6 +8235,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -8244,9 +8247,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -8263,8 +8263,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet7/4
@@ -8277,6 +8277,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -8286,9 +8289,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -8305,8 +8305,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet7/5
@@ -8319,6 +8319,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -8328,9 +8331,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -8347,8 +8347,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet7/6
@@ -8361,6 +8361,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -8370,9 +8373,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -8389,8 +8389,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet7/7
@@ -8403,6 +8403,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -8412,9 +8415,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -8431,8 +8431,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet7/8
@@ -8445,6 +8445,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -8454,9 +8457,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -8473,8 +8473,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet7/9
@@ -8487,6 +8487,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -8496,9 +8499,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -8515,8 +8515,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet7/10
@@ -8529,6 +8529,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -8538,9 +8541,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -8557,8 +8557,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet7/11
@@ -8571,6 +8571,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -8580,9 +8583,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -8599,8 +8599,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet7/12
@@ -8613,6 +8613,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -8622,9 +8625,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -8641,8 +8641,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet7/13
@@ -8655,6 +8655,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -8664,9 +8667,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -8683,8 +8683,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet7/14
@@ -8697,6 +8697,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -8706,9 +8709,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -8725,8 +8725,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet7/15
@@ -8739,6 +8739,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -8748,9 +8751,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -8767,8 +8767,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet7/16
@@ -8781,6 +8781,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -8790,9 +8793,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -8809,8 +8809,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet7/17
@@ -8823,6 +8823,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -8832,9 +8835,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -8851,8 +8851,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet7/18
@@ -8865,6 +8865,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -8874,9 +8877,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -8893,8 +8893,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet7/19
@@ -8907,6 +8907,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -8916,9 +8919,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -8935,8 +8935,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet7/20
@@ -8949,6 +8949,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -8958,9 +8961,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -8977,8 +8977,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet7/21
@@ -8991,6 +8991,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -9000,9 +9003,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -9019,8 +9019,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet7/22
@@ -9033,6 +9033,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -9042,9 +9045,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -9061,8 +9061,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet7/23
@@ -9075,6 +9075,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -9084,9 +9087,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -9103,8 +9103,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet7/24
@@ -9117,6 +9117,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -9126,9 +9129,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -9145,8 +9145,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet7/25
@@ -9159,6 +9159,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -9168,9 +9171,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -9187,8 +9187,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet7/26
@@ -9201,6 +9201,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -9210,9 +9213,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -9229,8 +9229,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet7/27
@@ -9243,6 +9243,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -9252,9 +9255,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -9271,8 +9271,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet7/28
@@ -9285,6 +9285,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -9294,9 +9297,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -9313,8 +9313,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet7/29
@@ -9327,6 +9327,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -9336,9 +9339,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -9355,8 +9355,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet7/30
@@ -9369,6 +9369,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -9378,9 +9381,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -9397,8 +9397,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet7/31
@@ -9411,6 +9411,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -9420,9 +9423,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -9439,8 +9439,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet7/32
@@ -9453,6 +9453,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -9462,9 +9465,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -9481,8 +9481,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet7/33
@@ -9495,6 +9495,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -9504,9 +9507,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -9523,8 +9523,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet7/34
@@ -9537,6 +9537,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -9546,9 +9549,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -9565,8 +9565,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet7/35
@@ -9579,6 +9579,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -9588,9 +9591,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -9607,8 +9607,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet7/36
@@ -9621,6 +9621,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -9630,9 +9633,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -9649,8 +9649,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet7/37
@@ -9663,6 +9663,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -9672,9 +9675,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -9691,8 +9691,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet7/38
@@ -9705,6 +9705,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -9714,9 +9717,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -9733,8 +9733,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet7/39
@@ -9747,6 +9747,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -9756,9 +9759,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -9775,8 +9775,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet7/40
@@ -9789,6 +9789,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -9798,9 +9801,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -9817,8 +9817,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet7/41
@@ -9831,6 +9831,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -9840,9 +9843,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -9859,8 +9859,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet7/42
@@ -9873,6 +9873,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -9882,9 +9885,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -9901,8 +9901,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet7/43
@@ -9915,6 +9915,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -9924,9 +9927,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -9943,8 +9943,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet7/44
@@ -9957,6 +9957,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -9966,9 +9969,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -9985,8 +9985,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet7/45
@@ -9999,6 +9999,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -10008,9 +10011,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -10027,8 +10027,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet7/46
@@ -10041,6 +10041,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -10050,9 +10053,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -10069,8 +10069,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet7/47
@@ -10083,6 +10083,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -10092,9 +10095,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -10111,8 +10111,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 - name: Ethernet7/48
@@ -10125,6 +10125,9 @@ ethernet_interfaces:
     reauthentication: true
     pae:
       mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 230
     host_mode:
       mode: multi-host
       multi_host_authenticated: true
@@ -10134,9 +10137,6 @@ ethernet_interfaces:
       reauth_period: server
       tx_period: 3
     reauthorization_request_limit: 3
-    authentication_failure:
-      action: allow
-      allow_vlan: 230
   poe:
     priority: critical
     reboot:
@@ -10153,8 +10153,8 @@ ethernet_interfaces:
     trunk:
       native_vlan: 210
     phone:
-      trunk: untagged
       vlan: 220
+      trunk: untagged
   spanning_tree_portfast: edge
   spanning_tree_bpduguard: enabled
 port_channel_interfaces:

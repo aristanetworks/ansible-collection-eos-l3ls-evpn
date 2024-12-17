@@ -29,10 +29,10 @@ class StructCfgsMixin(UtilsMixin):
 
         vrf_struct_cfgs = []
         for tenant in self.shared_utils.filtered_tenants:
-            for vrf in tenant["vrfs"]:
-                if (structured_config := vrf.get("structured_config")) is not None:
+            for vrf in tenant.vrfs:
+                if vrf.structured_config:
                     # Inserting VRF into structured_config to perform duplication checks
-                    vrf_struct_cfg = {"vrf": vrf["name"], "struct_cfg": structured_config}
+                    vrf_struct_cfg = {"vrf": vrf.name, "struct_cfg": vrf.structured_config._as_dict()}
                     append_if_not_duplicate(
                         list_of_dicts=vrf_struct_cfgs,
                         primary_key="vrf",
