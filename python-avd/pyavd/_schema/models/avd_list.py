@@ -211,7 +211,7 @@ class AvdList(Sequence[T_ItemType], Generic[T_ItemType], AvdBase):
 
         new_instance = new_type(self._items)
 
-        if self._created_from_null:
-            new_instance._created_from_null = True
+        # Pass along the _created_from_null flag
+        new_instance._created_from_null = self._created_from_null
 
         return new_instance

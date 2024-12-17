@@ -244,9 +244,8 @@ class AvdIndexedList(Sequence[T_AvdModel], Generic[T_PrimaryKey, T_AvdModel], Av
 
         new_instance = new_type([item._cast_as(new_type._item_type, ignore_extra_keys=ignore_extra_keys) for item in self])
 
-        if self._created_from_null:
-            new_instance._created_from_null = True
-        if self._block_inheritance:
-            new_instance._block_inheritance = True
+        # Pass along the internal flags
+        new_instance._created_from_null = self._created_from_null
+        new_instance._block_inheritance = self._block_inheritance
 
         return new_instance
