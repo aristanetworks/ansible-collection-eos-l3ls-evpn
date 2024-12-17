@@ -1,4 +1,6 @@
 ---
+### group_vars/DC2.yml
+
 # Default gateway used for the management interface
 mgmt_gateway: 172.16.1.1
 
@@ -9,19 +11,19 @@ spine:
     # Set the relevant platform as each platform has different default values in Ansible AVD
     platform: vEOS-lab
     # Pool of IPv4 addresses to configure interface Loopback0 used for BGP EVPN sessions
-    loopback_ipv4_pool: 10.255.0.0/27
+    loopback_ipv4_pool: 10.255.128.0/27
     # ASN to be used by BGP
-    bgp_as: 65100
+    bgp_as: 65200
 
   # Definition of nodes contained in this group.
   # Specific configuration of device must take place under the node definition. Each node inherits all values defined under 'defaults'
   nodes:
     # Name of the node to be defined (must be consistent with definition in inventory)
-    - name: dc1-spine1
+    - name: dc2-spine1
       # Device ID definition. An integer number used for internal calculations (ie. IPv4 address of the loopback_ipv4_pool among others)
-      id: 1
+      id: 11
       # Management IP to be assigned to the management interface
-      mgmt_ip: 172.16.1.11/24
+      mgmt_ip: 172.16.1.21/24
 
 # L3 Leaf switch group
 l3leaf:
@@ -29,21 +31,21 @@ l3leaf:
     # Set the relevant platform as each platform has different default values in Ansible AVD
     platform: vEOS-lab
     # Pool of IPv4 addresses to configure interface Loopback0 used for BGP EVPN sessions
-    loopback_ipv4_pool: 10.255.0.0/27
+    loopback_ipv4_pool: 10.255.128.0/27
     # Offset all assigned loopback IP addresses.
     # Required when the < loopback_ipv4_pool > is same for 2 different node_types (like spine and l3leaf) to avoid over-lapping IPs.
     # For example, set the minimum offset l3leaf.defaults.loopback_ipv4_offset: < total # spine switches > or vice versa.
     loopback_ipv4_offset: 2
     # Definition of pool of IPs to be used as Virtual Tunnel EndPoint (VXLAN origin and destination IPs)
-    vtep_loopback_ipv4_pool: 10.255.1.0/27
+    vtep_loopback_ipv4_pool: 10.255.129.0/27
     # Ansible hostname of the devices used to establish neighborship (IP assignments and BGP peering)
-    uplink_switches: ['dc1-spine1', 'site1-rs1']
+    uplink_switches: ['dc2-spine1']
     # Definition of pool of IPs to be used in P2P links
-    uplink_ipv4_pool: 10.255.255.0/26
+    uplink_ipv4_pool: 10.255.255.64/26
     # Definition of pool of IPs to be used for MLAG peer-link connectivity
-    mlag_peer_ipv4_pool: 10.255.1.64/27
+    mlag_peer_ipv4_pool: 10.255.129.64/27
     # iBGP Peering between MLAG peers
-    mlag_peer_l3_ipv4_pool: 10.255.1.96/27
+    mlag_peer_l3_ipv4_pool: 10.255.129.96/27
     # Virtual router mac for VNIs assigned to Leaf switches in format xx:xx:xx:xx:xx:xx
     virtual_router_mac_address: 00:1c:73:00:00:99
     spanning_tree_priority: 4096
@@ -53,22 +55,22 @@ l3leaf:
   node_groups:
     # Definition of a node group that will include two devices in MLAG.
     # Definitions under the group will be inherited by both nodes in the group
-    - group: DC1_L3_LEAF1
+    - group: DC2_L3_LEAF1
       # ASN to be used by BGP for the group. Both devices in the MLAG pair will use the same BGP ASN
-      bgp_as: 65101
+      bgp_as: 65201
       nodes:
         # Definition of hostnames under the node_group
-        - name: dc1-leaf1a
-          id: 1
-          mgmt_ip: 172.16.1.101/24
+        - name: dc2-leaf1a
+          id: 11
+          mgmt_ip: 172.16.1.111/24
           # Definition of the port to be used in the uplink device facing this device.
           # Note that the number of elements in this list must match the length of 'uplink_switches' as well as 'uplink_interfaces'
           uplink_switch_interfaces:
             - Ethernet1
             - Ethernet1
-        - name: dc1-leaf1b
-          id: 2
-          mgmt_ip: 172.16.1.102/24
+        - name: dc2-leaf1b
+          id: 12
+          mgmt_ip: 172.16.1.112/24
           uplink_switch_interfaces:
             - Ethernet2
             - Ethernet2
@@ -80,12 +82,12 @@ l2leaf:
     spanning_tree_mode: mstp
 
   node_groups:
-    - group: DC1_L2_LEAF1
-      uplink_switches: ['dc1-leaf1a', 'dc1-leaf1b']
+    - group: DC2_L2_LEAF1
+      uplink_switches: ['dc2-leaf1a', 'dc2-leaf1b']
       nodes:
-        - name: dc1-leaf1c
-          id: 1
-          mgmt_ip: 172.16.1.151/24
+        - name: dc2-leaf1c
+          id: 11
+          mgmt_ip: 172.16.1.161/24
           uplink_switch_interfaces:
             - Ethernet8
             - Ethernet8
@@ -93,12 +95,12 @@ l2leaf:
 # Definition of connected endpoints in the fabric.
 servers:
   # Name of the defined server.
-  - name: dc1-leaf1-server1
+  - name: dc2-leaf1-server1
     # Definition of adapters on the server.
     adapters:
       - endpoint_ports: [ iLO ]
         switch_ports: [ Ethernet5 ]
-        switches: [ dc1-leaf1c ]
+        switches: [ dc2-leaf1c ]
         vlans: 11
         mode: access
         spanning_tree_portfast: edge
@@ -107,26 +109,11 @@ servers:
 default_node_types:
   - node_type: l2leaf
     match_hostnames:
-      - dc1-leaf1c
+      - dc2-leaf1c
   - node_type: l3leaf
     match_hostnames:
-      - dc1-leaf1b
-      - dc1-leaf1a
+      - dc2-leaf1b
+      - dc2-leaf1a
   - node_type: spine
     match_hostnames:
-      - dc1-spine1
-  - node_type: overlay-controller
-    match_hostnames:
-      - site1-rs1
-
-overlay_controller:
-  defaults:
-    platform: vEOS-LAB
-    loopback_ipv4_pool: 172.16.20.0/24
-    uplink_bfd: False
-    bgp_as: 65101
-  nodes:
-    - name: site1-rs1
-      id: 1
-      mgmt_ip: 192.168.1.18/24
-      evpn_role: server
+      - dc2-spine1

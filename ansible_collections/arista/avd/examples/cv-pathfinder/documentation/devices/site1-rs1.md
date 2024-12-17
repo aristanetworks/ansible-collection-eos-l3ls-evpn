@@ -1,17 +1,20 @@
-# dc1-spine1
+# site1-rs1
 
 ## Table of Contents
 
 - [Management](#management)
   - [Management Interfaces](#management-interfaces)
+  - [DNS Domain](#dns-domain)
   - [IP Name Servers](#ip-name-servers)
   - [NTP](#ntp)
   - [Management API HTTP](#management-api-http)
 - [Authentication](#authentication)
   - [Local Users](#local-users)
   - [Enable Password](#enable-password)
+  - [AAA Authorization](#aaa-authorization)
 - [Monitoring](#monitoring)
   - [TerminAttr Daemon](#terminattr-daemon)
+  - [Flow Tracking](#flow-tracking)
 - [Spanning Tree](#spanning-tree)
   - [Spanning Tree Summary](#spanning-tree-summary)
   - [Spanning Tree Device Configuration](#spanning-tree-device-configuration)
@@ -46,7 +49,7 @@
 
 | Management Interface | Description | Type | VRF | IP Address | Gateway |
 | -------------------- | ----------- | ---- | --- | ---------- | ------- |
-| Management1 | OOB_MANAGEMENT | oob | MGMT | 172.16.1.11/24 | 172.16.1.1 |
+| Management1 | OOB_MANAGEMENT | oob | MGMT | 192.168.1.18/24 | 192.168.17.1 |
 
 ##### IPv6
 
@@ -62,7 +65,20 @@ interface Management1
    description OOB_MANAGEMENT
    no shutdown
    vrf MGMT
-   ip address 172.16.1.11/24
+   ip address 192.168.1.18/24
+   no lldp transmit
+   no lldp receive
+```
+
+### DNS Domain
+
+DNS domain: wan.example.local
+
+#### DNS Domain Device Configuration
+
+```eos
+dns domain wan.example.local
+!
 ```
 
 ### IP Name Servers
@@ -71,12 +87,12 @@ interface Management1
 
 | Name Server | VRF | Priority |
 | ----------- | --- | -------- |
-| 192.168.1.1 | MGMT | - |
+| 192.168.17.1 | MGMT | - |
 
 #### IP Name Servers Device Configuration
 
 ```eos
-ip name-server vrf MGMT 192.168.1.1
+ip name-server vrf MGMT 192.168.17.1
 ```
 
 ### NTP
@@ -137,20 +153,39 @@ management api http-commands
 
 | User | Privilege | Role | Disabled | Shell |
 | ---- | --------- | ---- | -------- | ----- |
-| admin | 15 | network-admin | False | - |
 | ansible | 15 | network-admin | False | - |
+| arista | 15 | network-admin | False | - |
+| cvpadmin | 15 | network-admin | False | - |
 
 #### Local Users Device Configuration
 
 ```eos
 !
-username admin privilege 15 role network-admin nopassword
 username ansible privilege 15 role network-admin secret sha512 <removed>
+username arista privilege 15 role network-admin secret sha512 <removed>
+username cvpadmin privilege 15 role network-admin secret sha512 <removed>
 ```
 
 ### Enable Password
 
 Enable password has been disabled
+
+### AAA Authorization
+
+#### AAA Authorization Summary
+
+| Type | User Stores |
+| ---- | ----------- |
+| Exec | local |
+
+Authorization for configuration commands is disabled.
+
+#### AAA Authorization Device Configuration
+
+```eos
+aaa authorization exec default local
+!
+```
 
 ## Monitoring
 
@@ -160,14 +195,49 @@ Enable password has been disabled
 
 | CV Compression | CloudVision Servers | VRF | Authentication | Smash Excludes | Ingest Exclude | Bypass AAA |
 | -------------- | ------------------- | --- | -------------- | -------------- | -------------- | ---------- |
-| gzip | 192.168.1.12:9910 | MGMT | token,/tmp/token | ale,flexCounter,hardware,kni,pulse,strata | /Sysdb/cell/1/agent,/Sysdb/cell/2/agent | True |
+| gzip | www.cv-staging.corp.arista.io:443 | MGMT | token-secure,/tmp/cv-onboarding-token | ale,flexCounter,hardware,kni,pulse,strata | /Sysdb/cell/1/agent,/Sysdb/cell/2/agent | False |
 
 #### TerminAttr Daemon Device Configuration
 
 ```eos
 !
 daemon TerminAttr
-   exec /usr/bin/TerminAttr -cvaddr=192.168.1.12:9910 -cvauth=token,/tmp/token -cvvrf=MGMT -disableaaa -smashexcludes=ale,flexCounter,hardware,kni,pulse,strata -ingestexclude=/Sysdb/cell/1/agent,/Sysdb/cell/2/agent -taillogs
+   exec /usr/bin/TerminAttr -cvaddr=www.cv-staging.corp.arista.io:443 -cvauth=token-secure,/tmp/cv-onboarding-token -cvvrf=MGMT -smashexcludes=ale,flexCounter,hardware,kni,pulse,strata -ingestexclude=/Sysdb/cell/1/agent,/Sysdb/cell/2/agent -taillogs
+   no shutdown
+```
+
+### Flow Tracking
+
+#### Flow Tracking Sampled
+
+| Sample Size | Minimum Sample Size | Hardware Offload for IPv4 | Hardware Offload for IPv6 | Encapsulations |
+| ----------- | ------------------- | ------------------------- | ------------------------- | -------------- |
+| 10000 | default | disabled | disabled | - |
+
+##### Trackers Summary
+
+| Tracker Name | Record Export On Inactive Timeout | Record Export On Interval | MPLS | Number of Exporters | Applied On | Table Size |
+| ------------ | --------------------------------- | ------------------------- | ---- | ------------------- | ---------- | ---------- |
+| FLOW-TRACKER | 70000 | 5000 | - | 1 | Ethernet1<br>Ethernet2 | - |
+
+##### Exporters Summary
+
+| Tracker Name | Exporter Name | Collector IP/Host | Collector Port | Local Interface |
+| ------------ | ------------- | ----------------- | -------------- | --------------- |
+| FLOW-TRACKER | CV-TELEMETRY | - | - | Loopback0 |
+
+#### Flow Tracking Device Configuration
+
+```eos
+!
+flow tracking sampled
+   sample 10000
+   tracker FLOW-TRACKER
+      record export on inactive timeout 70000
+      record export on interval 5000
+      exporter CV-TELEMETRY
+         collector 127.0.0.1
+         local interface Loopback0
    no shutdown
 ```
 
@@ -216,26 +286,28 @@ vlan internal order ascending range 1006 1199
 
 | Interface | Description | Channel Group | IP Address | VRF |  MTU | Shutdown | ACL In | ACL Out |
 | --------- | ----------- | ------------- | ---------- | ----| ---- | -------- | ------ | ------- |
-| Ethernet1 | P2P_dc1-leaf1a_Ethernet1 | - | 10.255.255.0/31 | default | 1500 | False | - | - |
-| Ethernet2 | P2P_dc1-leaf1b_Ethernet1 | - | 10.255.255.4/31 | default | 1500 | False | - | - |
+| Ethernet1 | P2P_site1-border1_Ethernet1 | - | 20.0.1.8/31 | default | 9214 | False | - | - |
+| Ethernet2 | P2P_site1-border2_Ethernet2 | - | 20.0.1.10/31 | default | 9214 | False | - | - |
 
 #### Ethernet Interfaces Device Configuration
 
 ```eos
 !
 interface Ethernet1
-   description P2P_dc1-leaf1a_Ethernet1
+   description P2P_site1-border1_Ethernet1
    no shutdown
-   mtu 1500
+   mtu 9214
    no switchport
-   ip address 10.255.255.0/31
+   flow tracker sampled FLOW-TRACKER
+   ip address 20.0.1.8/31
 !
 interface Ethernet2
-   description P2P_dc1-leaf1b_Ethernet1
+   description P2P_site1-border2_Ethernet2
    no shutdown
-   mtu 1500
+   mtu 9214
    no switchport
-   ip address 10.255.255.4/31
+   flow tracker sampled FLOW-TRACKER
+   ip address 20.0.1.10/31
 ```
 
 ### Loopback Interfaces
@@ -246,7 +318,7 @@ interface Ethernet2
 
 | Interface | Description | VRF | IP Address |
 | --------- | ----------- | --- | ---------- |
-| Loopback0 | ROUTER_ID | default | 10.255.0.1/32 |
+| Loopback0 | ROUTER_ID | default | 172.16.20.99/32 |
 
 ##### IPv6
 
@@ -261,7 +333,7 @@ interface Ethernet2
 interface Loopback0
    description ROUTER_ID
    no shutdown
-   ip address 10.255.0.1/32
+   ip address 172.16.20.99/32
 ```
 
 ## Routing
@@ -307,13 +379,13 @@ no ip routing vrf MGMT
 
 | VRF | Destination Prefix | Next Hop IP | Exit interface | Administrative Distance | Tag | Route Name | Metric |
 | --- | ------------------ | ----------- | -------------- | ----------------------- | --- | ---------- | ------ |
-| MGMT | 0.0.0.0/0 | 172.16.1.1 | - | 1 | - | - | - |
+| MGMT | 0.0.0.0/0 | 192.168.17.1 | - | 1 | - | - | - |
 
 #### Static Routes Device Configuration
 
 ```eos
 !
-ip route vrf MGMT 0.0.0.0/0 172.16.1.1
+ip route vrf MGMT 0.0.0.0/0 192.168.17.1
 ```
 
 ### Router BGP
@@ -324,7 +396,7 @@ ASN Notation: asplain
 
 | BGP AS | Router ID |
 | ------ | --------- |
-| 65100 | 10.255.0.1 |
+| 65101 | 172.16.20.99 |
 
 | BGP Tuning |
 | ---------- |
@@ -357,10 +429,12 @@ ASN Notation: asplain
 
 | Neighbor | Remote AS | VRF | Shutdown | Send-community | Maximum-routes | Allowas-in | BFD | RIB Pre-Policy Retain | Route-Reflector Client | Passive | TTL Max Hops |
 | -------- | --------- | --- | -------- | -------------- | -------------- | ---------- | --- | --------------------- | ---------------------- | ------- | ------------ |
-| 10.255.0.3 | 65101 | default | - | Inherited from peer group EVPN-OVERLAY-PEERS | Inherited from peer group EVPN-OVERLAY-PEERS | - | Inherited from peer group EVPN-OVERLAY-PEERS | - | - | - | - |
-| 10.255.0.4 | 65101 | default | - | Inherited from peer group EVPN-OVERLAY-PEERS | Inherited from peer group EVPN-OVERLAY-PEERS | - | Inherited from peer group EVPN-OVERLAY-PEERS | - | - | - | - |
-| 10.255.255.1 | 65101 | default | - | Inherited from peer group IPv4-UNDERLAY-PEERS | Inherited from peer group IPv4-UNDERLAY-PEERS | - | - | - | - | - | - |
-| 10.255.255.5 | 65101 | default | - | Inherited from peer group IPv4-UNDERLAY-PEERS | Inherited from peer group IPv4-UNDERLAY-PEERS | - | - | - | - | - | - |
+| 20.0.1.9 | 65101 | default | - | Inherited from peer group IPv4-UNDERLAY-PEERS | Inherited from peer group IPv4-UNDERLAY-PEERS | - | - | - | - | - | - |
+| 20.0.1.11 | 65101 | default | - | Inherited from peer group IPv4-UNDERLAY-PEERS | Inherited from peer group IPv4-UNDERLAY-PEERS | - | - | - | - | - | - |
+| 192.168.255.3 | 65000 | default | - | Inherited from peer group EVPN-OVERLAY-PEERS | Inherited from peer group EVPN-OVERLAY-PEERS | - | Inherited from peer group EVPN-OVERLAY-PEERS | - | - | - | - |
+| 192.168.255.4 | 65000 | default | - | Inherited from peer group EVPN-OVERLAY-PEERS | Inherited from peer group EVPN-OVERLAY-PEERS | - | Inherited from peer group EVPN-OVERLAY-PEERS | - | - | - | - |
+| 192.168.255.5 | 65101 | default | - | Inherited from peer group EVPN-OVERLAY-PEERS | Inherited from peer group EVPN-OVERLAY-PEERS | - | Inherited from peer group EVPN-OVERLAY-PEERS | - | - | - | - |
+| 192.168.255.6 | 65101 | default | - | Inherited from peer group EVPN-OVERLAY-PEERS | Inherited from peer group EVPN-OVERLAY-PEERS | - | Inherited from peer group EVPN-OVERLAY-PEERS | - | - | - | - |
 
 #### Router BGP EVPN Address Family
 
@@ -374,8 +448,8 @@ ASN Notation: asplain
 
 ```eos
 !
-router bgp 65100
-   router-id 10.255.0.1
+router bgp 65101
+   router-id 172.16.20.99
    no bgp default ipv4-unicast
    maximum-paths 4 ecmp 4
    neighbor EVPN-OVERLAY-PEERS peer group
@@ -383,25 +457,29 @@ router bgp 65100
    neighbor EVPN-OVERLAY-PEERS update-source Loopback0
    neighbor EVPN-OVERLAY-PEERS bfd
    neighbor EVPN-OVERLAY-PEERS ebgp-multihop 3
-   neighbor EVPN-OVERLAY-PEERS password 7 <removed>
    neighbor EVPN-OVERLAY-PEERS send-community
    neighbor EVPN-OVERLAY-PEERS maximum-routes 0
    neighbor IPv4-UNDERLAY-PEERS peer group
-   neighbor IPv4-UNDERLAY-PEERS password 7 <removed>
    neighbor IPv4-UNDERLAY-PEERS send-community
    neighbor IPv4-UNDERLAY-PEERS maximum-routes 12000
-   neighbor 10.255.0.3 peer group EVPN-OVERLAY-PEERS
-   neighbor 10.255.0.3 remote-as 65101
-   neighbor 10.255.0.3 description dc1-leaf1a_Loopback0
-   neighbor 10.255.0.4 peer group EVPN-OVERLAY-PEERS
-   neighbor 10.255.0.4 remote-as 65101
-   neighbor 10.255.0.4 description dc1-leaf1b_Loopback0
-   neighbor 10.255.255.1 peer group IPv4-UNDERLAY-PEERS
-   neighbor 10.255.255.1 remote-as 65101
-   neighbor 10.255.255.1 description dc1-leaf1a_Ethernet1
-   neighbor 10.255.255.5 peer group IPv4-UNDERLAY-PEERS
-   neighbor 10.255.255.5 remote-as 65101
-   neighbor 10.255.255.5 description dc1-leaf1b_Ethernet1
+   neighbor 20.0.1.9 peer group IPv4-UNDERLAY-PEERS
+   neighbor 20.0.1.9 remote-as 65101
+   neighbor 20.0.1.9 description site1-border1_Ethernet1
+   neighbor 20.0.1.11 peer group IPv4-UNDERLAY-PEERS
+   neighbor 20.0.1.11 remote-as 65101
+   neighbor 20.0.1.11 description site1-border2_Ethernet2
+   neighbor 192.168.255.3 peer group EVPN-OVERLAY-PEERS
+   neighbor 192.168.255.3 remote-as 65000
+   neighbor 192.168.255.3 description site1-wan1_Loopback0
+   neighbor 192.168.255.4 peer group EVPN-OVERLAY-PEERS
+   neighbor 192.168.255.4 remote-as 65000
+   neighbor 192.168.255.4 description site1-wan2_Loopback0
+   neighbor 192.168.255.5 peer group EVPN-OVERLAY-PEERS
+   neighbor 192.168.255.5 remote-as 65101
+   neighbor 192.168.255.5 description site1-border1_Loopback0
+   neighbor 192.168.255.6 peer group EVPN-OVERLAY-PEERS
+   neighbor 192.168.255.6 remote-as 65101
+   neighbor 192.168.255.6 description site1-border2_Loopback0
    redistribute connected route-map RM-CONN-2-BGP
    !
    address-family evpn
@@ -440,14 +518,14 @@ router bfd
 
 | Sequence | Action |
 | -------- | ------ |
-| 10 | permit 10.255.0.0/27 eq 32 |
+| 10 | permit 172.16.20.0/24 eq 32 |
 
 #### Prefix-lists Device Configuration
 
 ```eos
 !
 ip prefix-list PL-LOOPBACKS-EVPN-OVERLAY
-   seq 10 permit 10.255.0.0/27 eq 32
+   seq 10 permit 172.16.20.0/24 eq 32
 ```
 
 ### Route-maps

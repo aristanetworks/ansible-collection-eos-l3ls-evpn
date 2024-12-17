@@ -317,7 +317,6 @@ vlan 4094
 | --------- | ----------- | ---- | ----- | ----------- | ----------- | ------------- |
 | Ethernet3 | MLAG_dc1-leaf1b_Ethernet3 | *trunk | *- | *- | *MLAG | 3 |
 | Ethernet4 | MLAG_dc1-leaf1b_Ethernet4 | *trunk | *- | *- | *MLAG | 3 |
-| Ethernet5 | SERVER_dc1-leaf1-server1_PCI1 | *trunk | *11-12,21-22 | *4092 | *- | 5 |
 | Ethernet8 | L2_dc1-leaf1c_Ethernet1 | *trunk | *11-12,21-22,3401-3402 | *- | *- | 8 |
 
 *Inherited from Port-Channel Interface
@@ -327,7 +326,7 @@ vlan 4094
 | Interface | Description | Channel Group | IP Address | VRF |  MTU | Shutdown | ACL In | ACL Out |
 | --------- | ----------- | ------------- | ---------- | ----| ---- | -------- | ------ | ------- |
 | Ethernet1 | P2P_dc1-spine1_Ethernet1 | - | 10.255.255.1/31 | default | 1500 | False | - | - |
-| Ethernet2 | P2P_dc1-spine2_Ethernet1 | - | 10.255.255.3/31 | default | 1500 | False | - | - |
+| Ethernet2 | P2P_site1-rs1_Ethernet1 | - | 10.255.255.3/31 | default | 1500 | False | - | - |
 
 #### Ethernet Interfaces Device Configuration
 
@@ -341,7 +340,7 @@ interface Ethernet1
    ip address 10.255.255.1/31
 !
 interface Ethernet2
-   description P2P_dc1-spine2_Ethernet1
+   description P2P_site1-rs1_Ethernet1
    no shutdown
    mtu 1500
    no switchport
@@ -356,11 +355,6 @@ interface Ethernet4
    description MLAG_dc1-leaf1b_Ethernet4
    no shutdown
    channel-group 3 mode active
-!
-interface Ethernet5
-   description SERVER_dc1-leaf1-server1_PCI1
-   no shutdown
-   channel-group 5 mode active
 !
 interface Ethernet8
    description L2_dc1-leaf1c_Ethernet1
@@ -377,7 +371,6 @@ interface Ethernet8
 | Interface | Description | Mode | VLANs | Native VLAN | Trunk Group | LACP Fallback Timeout | LACP Fallback Mode | MLAG ID | EVPN ESI |
 | --------- | ----------- | ---- | ----- | ----------- | ------------| --------------------- | ------------------ | ------- | -------- |
 | Port-Channel3 | MLAG_dc1-leaf1b_Port-Channel3 | trunk | - | - | MLAG | - | - | - | - |
-| Port-Channel5 | SERVER_dc1-leaf1-server1_Bond1 | trunk | 11-12,21-22 | 4092 | - | - | - | 5 | - |
 | Port-Channel8 | L2_dc1-leaf1c_Port-Channel1 | trunk | 11-12,21-22,3401-3402 | - | - | - | - | 8 | - |
 
 #### Port-Channel Interfaces Device Configuration
@@ -390,16 +383,6 @@ interface Port-Channel3
    switchport mode trunk
    switchport trunk group MLAG
    switchport
-!
-interface Port-Channel5
-   description SERVER_dc1-leaf1-server1_Bond1
-   no shutdown
-   switchport trunk native vlan 4092
-   switchport trunk allowed vlan 11-12,21-22
-   switchport mode trunk
-   switchport
-   mlag 5
-   spanning-tree portfast
 !
 interface Port-Channel8
    description L2_dc1-leaf1c_Port-Channel1
@@ -712,10 +695,10 @@ ASN Notation: asplain
 | Neighbor | Remote AS | VRF | Shutdown | Send-community | Maximum-routes | Allowas-in | BFD | RIB Pre-Policy Retain | Route-Reflector Client | Passive | TTL Max Hops |
 | -------- | --------- | --- | -------- | -------------- | -------------- | ---------- | --- | --------------------- | ---------------------- | ------- | ------------ |
 | 10.255.0.1 | 65100 | default | - | Inherited from peer group EVPN-OVERLAY-PEERS | Inherited from peer group EVPN-OVERLAY-PEERS | - | Inherited from peer group EVPN-OVERLAY-PEERS | - | - | - | - |
-| 10.255.0.2 | 65100 | default | - | Inherited from peer group EVPN-OVERLAY-PEERS | Inherited from peer group EVPN-OVERLAY-PEERS | - | Inherited from peer group EVPN-OVERLAY-PEERS | - | - | - | - |
 | 10.255.1.97 | Inherited from peer group MLAG-IPv4-UNDERLAY-PEER | default | - | Inherited from peer group MLAG-IPv4-UNDERLAY-PEER | Inherited from peer group MLAG-IPv4-UNDERLAY-PEER | - | - | - | - | - | - |
 | 10.255.255.0 | 65100 | default | - | Inherited from peer group IPv4-UNDERLAY-PEERS | Inherited from peer group IPv4-UNDERLAY-PEERS | - | - | - | - | - | - |
-| 10.255.255.2 | 65100 | default | - | Inherited from peer group IPv4-UNDERLAY-PEERS | Inherited from peer group IPv4-UNDERLAY-PEERS | - | - | - | - | - | - |
+| 10.255.255.2 | 65101 | default | - | Inherited from peer group IPv4-UNDERLAY-PEERS | Inherited from peer group IPv4-UNDERLAY-PEERS | - | - | - | - | - | - |
+| 172.16.20.1 | 65101 | default | - | Inherited from peer group EVPN-OVERLAY-PEERS | Inherited from peer group EVPN-OVERLAY-PEERS | - | Inherited from peer group EVPN-OVERLAY-PEERS | - | - | - | - |
 | 10.255.1.97 | Inherited from peer group MLAG-IPv4-UNDERLAY-PEER | VRF10 | - | Inherited from peer group MLAG-IPv4-UNDERLAY-PEER | Inherited from peer group MLAG-IPv4-UNDERLAY-PEER | - | - | - | - | - | - |
 | 10.255.1.97 | Inherited from peer group MLAG-IPv4-UNDERLAY-PEER | VRF11 | - | Inherited from peer group MLAG-IPv4-UNDERLAY-PEER | Inherited from peer group MLAG-IPv4-UNDERLAY-PEER | - | - | - | - | - | - |
 
@@ -775,17 +758,17 @@ router bgp 65101
    neighbor 10.255.0.1 peer group EVPN-OVERLAY-PEERS
    neighbor 10.255.0.1 remote-as 65100
    neighbor 10.255.0.1 description dc1-spine1_Loopback0
-   neighbor 10.255.0.2 peer group EVPN-OVERLAY-PEERS
-   neighbor 10.255.0.2 remote-as 65100
-   neighbor 10.255.0.2 description dc1-spine2_Loopback0
    neighbor 10.255.1.97 peer group MLAG-IPv4-UNDERLAY-PEER
    neighbor 10.255.1.97 description dc1-leaf1b_Vlan4093
    neighbor 10.255.255.0 peer group IPv4-UNDERLAY-PEERS
    neighbor 10.255.255.0 remote-as 65100
    neighbor 10.255.255.0 description dc1-spine1_Ethernet1
    neighbor 10.255.255.2 peer group IPv4-UNDERLAY-PEERS
-   neighbor 10.255.255.2 remote-as 65100
-   neighbor 10.255.255.2 description dc1-spine2_Ethernet1
+   neighbor 10.255.255.2 remote-as 65101
+   neighbor 10.255.255.2 description site1-rs1_Ethernet1
+   neighbor 172.16.20.1 peer group EVPN-OVERLAY-PEERS
+   neighbor 172.16.20.1 remote-as 65101
+   neighbor 172.16.20.1 description site1-rs1_Loopback0
    redistribute connected route-map RM-CONN-2-BGP
    !
    vlan 11

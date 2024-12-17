@@ -1,4 +1,4 @@
-hostname: dc1-leaf2c
+hostname: dc2-leaf1c
 is_deployed: true
 static_routes:
 - vrf: MGMT
@@ -51,7 +51,7 @@ management_interfaces:
   description: OOB_MANAGEMENT
   shutdown: false
   vrf: MGMT
-  ip_address: 172.16.1.152/24
+  ip_address: 172.16.1.161/24
   gateway: 172.16.1.1
   type: oob
 management_api_http:
@@ -68,28 +68,28 @@ ntp:
     preferred: true
 ethernet_interfaces:
 - name: Ethernet1
-  peer: dc1-leaf2a
+  peer: dc2-leaf1a
   peer_interface: Ethernet8
   peer_type: l3leaf
-  description: L2_dc1-leaf2a_Ethernet8
+  description: L2_dc2-leaf1a_Ethernet8
   shutdown: false
   channel_group:
     id: 1
     mode: active
 - name: Ethernet2
-  peer: dc1-leaf2b
+  peer: dc2-leaf1b
   peer_interface: Ethernet8
   peer_type: l3leaf
-  description: L2_dc1-leaf2b_Ethernet8
+  description: L2_dc2-leaf1b_Ethernet8
   shutdown: false
   channel_group:
     id: 1
     mode: active
 - name: Ethernet5
-  peer: dc1-leaf2-server1
+  peer: dc2-leaf1-server1
   peer_interface: iLO
   peer_type: server
-  description: SERVER_dc1-leaf2-server1_iLO
+  description: SERVER_dc2-leaf1-server1_iLO
   shutdown: false
   switchport:
     enabled: true
@@ -98,7 +98,7 @@ ethernet_interfaces:
   spanning_tree_portfast: edge
 port_channel_interfaces:
 - name: Port-Channel1
-  description: L2_DC1_L3_LEAF2_Port-Channel8
+  description: L2_DC2_L3_LEAF1_Port-Channel8
   switchport:
     enabled: true
     mode: trunk

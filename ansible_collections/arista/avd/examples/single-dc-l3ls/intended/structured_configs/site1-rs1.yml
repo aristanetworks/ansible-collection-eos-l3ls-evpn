@@ -1,8 +1,8 @@
-hostname: dc1-spine2
+hostname: site1-rs1
 is_deployed: true
 router_bgp:
-  as: '65100'
-  router_id: 10.255.0.2
+  as: '65101'
+  router_id: 172.16.20.1
   bgp:
     default:
       ipv4_unicast: false
@@ -13,6 +13,8 @@ router_bgp:
     connected:
       enabled: true
       route_map: RM-CONN-2-BGP
+  updates:
+    wait_install: true
   peer_groups:
   - name: IPv4-UNDERLAY-PEERS
     type: ipv4
@@ -45,16 +47,6 @@ router_bgp:
     remote_as: '65101'
     peer: dc1-leaf1b
     description: dc1-leaf1b_Ethernet2
-  - ip_address: 10.255.255.11
-    peer_group: IPv4-UNDERLAY-PEERS
-    remote_as: '65102'
-    peer: dc1-leaf2a
-    description: dc1-leaf2a_Ethernet2
-  - ip_address: 10.255.255.15
-    peer_group: IPv4-UNDERLAY-PEERS
-    remote_as: '65102'
-    peer: dc1-leaf2b
-    description: dc1-leaf2b_Ethernet2
   - ip_address: 10.255.0.3
     peer_group: EVPN-OVERLAY-PEERS
     peer: dc1-leaf1a
@@ -65,16 +57,6 @@ router_bgp:
     peer: dc1-leaf1b
     description: dc1-leaf1b_Loopback0
     remote_as: '65101'
-  - ip_address: 10.255.0.5
-    peer_group: EVPN-OVERLAY-PEERS
-    peer: dc1-leaf2a
-    description: dc1-leaf2a_Loopback0
-    remote_as: '65102'
-  - ip_address: 10.255.0.6
-    peer_group: EVPN-OVERLAY-PEERS
-    peer: dc1-leaf2b
-    description: dc1-leaf2b_Loopback0
-    remote_as: '65102'
   address_family_evpn:
     peer_groups:
     - name: EVPN-OVERLAY-PEERS
@@ -128,7 +110,7 @@ management_interfaces:
   description: OOB_MANAGEMENT
   shutdown: false
   vrf: MGMT
-  ip_address: 172.16.1.12/24
+  ip_address: 192.168.1.18/24
   gateway: 172.16.1.1
   type: oob
 management_api_http:
@@ -164,36 +146,16 @@ ethernet_interfaces:
   switchport:
     enabled: false
   ip_address: 10.255.255.6/31
-- name: Ethernet3
-  peer: dc1-leaf2a
-  peer_interface: Ethernet2
-  peer_type: l3leaf
-  description: P2P_dc1-leaf2a_Ethernet2
-  shutdown: false
-  mtu: 1500
-  switchport:
-    enabled: false
-  ip_address: 10.255.255.10/31
-- name: Ethernet4
-  peer: dc1-leaf2b
-  peer_interface: Ethernet2
-  peer_type: l3leaf
-  description: P2P_dc1-leaf2b_Ethernet2
-  shutdown: false
-  mtu: 1500
-  switchport:
-    enabled: false
-  ip_address: 10.255.255.14/31
 loopback_interfaces:
 - name: Loopback0
   description: ROUTER_ID
   shutdown: false
-  ip_address: 10.255.0.2/32
+  ip_address: 172.16.20.1/32
 prefix_lists:
 - name: PL-LOOPBACKS-EVPN-OVERLAY
   sequence_numbers:
   - sequence: 10
-    action: permit 10.255.0.0/27 eq 32
+    action: permit 172.16.20.0/24 eq 32
 route_maps:
 - name: RM-CONN-2-BGP
   sequence_numbers:
@@ -207,4 +169,4 @@ router_bfd:
     min_rx: 300
     multiplier: 3
 metadata:
-  platform: vEOS-lab
+  platform: vEOS-LAB

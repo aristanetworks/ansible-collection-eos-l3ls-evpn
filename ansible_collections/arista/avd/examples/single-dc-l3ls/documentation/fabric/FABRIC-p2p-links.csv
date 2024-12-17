@@ -1,9 +1,7 @@
 Type,Node,Node Interface,Leaf IP Address,Peer Type,Peer Node,Peer Interface,Peer IP Address
 l3leaf,dc1-leaf1a,Ethernet1,10.255.255.1/31,spine,dc1-spine1,Ethernet1,10.255.255.0/31
-l3leaf,dc1-leaf1a,Ethernet2,10.255.255.3/31,spine,dc1-spine2,Ethernet1,10.255.255.2/31
+l3leaf,dc1-leaf1a,Ethernet2,10.255.255.3/31,overlay-controller,site1-rs1,Ethernet1,10.255.255.2/31
 l3leaf,dc1-leaf1b,Ethernet1,10.255.255.5/31,spine,dc1-spine1,Ethernet2,10.255.255.4/31
-l3leaf,dc1-leaf1b,Ethernet2,10.255.255.7/31,spine,dc1-spine2,Ethernet2,10.255.255.6/31
-l3leaf,dc1-leaf2a,Ethernet1,10.255.255.9/31,spine,dc1-spine1,Ethernet3,10.255.255.8/31
-l3leaf,dc1-leaf2a,Ethernet2,10.255.255.11/31,spine,dc1-spine2,Ethernet3,10.255.255.10/31
-l3leaf,dc1-leaf2b,Ethernet1,10.255.255.13/31,spine,dc1-spine1,Ethernet4,10.255.255.12/31
-l3leaf,dc1-leaf2b,Ethernet2,10.255.255.15/31,spine,dc1-spine2,Ethernet4,10.255.255.14/31
+l3leaf,dc1-leaf1b,Ethernet2,10.255.255.7/31,overlay-controller,site1-rs1,Ethernet2,10.255.255.6/31
+l3leaf,dc2-leaf1a,Ethernet1,10.255.255.85/31,spine,dc2-spine1,Ethernet1,10.255.255.84/31
+l3leaf,dc2-leaf1b,Ethernet1,10.255.255.87/31,spine,dc2-spine1,Ethernet2,10.255.255.86/31

@@ -138,6 +138,13 @@ class RouterBgpMixin(UtilsMixin):
                             **peer_group_config,
                         },
                     )
+                    if self._evpn_route_servers.items():
+                        peer_groups.append(
+                            {
+                                **self._generate_base_peer_group("evpn", "evpn_overlay_peers"),
+                                "ebgp_multihop": self.shared_utils.evpn_ebgp_multihop,
+                            },
+                        )
                 else:
                     # EVPN OVERLAY peer group - also in EBGP..
                     if self.shared_utils.evpn_role == "server":
@@ -225,10 +232,27 @@ class RouterBgpMixin(UtilsMixin):
                     "activate": True,
                     "encapsulation": self.shared_utils.wan_encapsulation,
                 }
+                if self.shared_utils.is_cv_pathfinder_gateway_vxlan:
+                    overlay_peer_group.update({
+                        "domain_remote": True
+                    })
+                    address_family_evpn["neighbor_default"] = {
+                        "next_hop_self_received_evpn_routes": {
+                            "enable": True,
+                            "inter_domain": self.shared_utils.evpn_gateway_vxlan_l3_inter_domain,
+                        },
+                    }
+                if self._evpn_route_servers:
+                    peer_groups.append(
+                        {
+                            "name": self._get_peer_group_name("evpn_overlay_peers"),
+                            "activate": True,
+                        },
+                    )
             else:
                 overlay_peer_group = {"name": self._get_peer_group_name("evpn_overlay_peers"), "activate": True}
 
-        if self.shared_utils.overlay_routing_protocol == "ebgp" or self.shared_utils.is_cv_pathfinder_gateway_vxlan:
+        if self.shared_utils.overlay_routing_protocol == "ebgp" :
             if self.shared_utils.evpn_gateway_vxlan_l2 is True or self.shared_utils.evpn_gateway_vxlan_l3 is True:
                 peer_groups.append(
                     {
@@ -575,8 +599,10 @@ class RouterBgpMixin(UtilsMixin):
                         data["ip_address"],
                         route_server,
                         self._get_peer_group_name("evpn_overlay_peers"),
+                        remote_as=data["bgp_as"],
                         overlay_peering_interface=data.get("overlay_peering_interface"),
                     )
+                    neighbor["remote_as"] = data["bgp_as"]
                     neighbors.append(neighbor)
 
                 for route_client, data in natural_sort(self._evpn_route_clients.items()):
@@ -586,6 +612,9 @@ class RouterBgpMixin(UtilsMixin):
                         self._get_peer_group_name("evpn_overlay_peers"),
                         overlay_peering_interface=data.get("overlay_peering_interface"),
                     )
+                    # setting explicitly for now as createneighbor will remove it because
+                    # it doesnt add remote as if overlay protocol is ibgp
+                    neighbor["remote_as"] = data["bgp_as"]
                     neighbors.append(neighbor)
 
             if self.shared_utils.is_wan_client:

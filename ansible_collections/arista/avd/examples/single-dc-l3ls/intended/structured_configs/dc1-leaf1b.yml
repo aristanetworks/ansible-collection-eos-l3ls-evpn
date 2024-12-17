@@ -56,19 +56,19 @@ router_bgp:
     description: dc1-spine1_Ethernet2
   - ip_address: 10.255.255.6
     peer_group: IPv4-UNDERLAY-PEERS
-    remote_as: '65100'
-    peer: dc1-spine2
-    description: dc1-spine2_Ethernet2
+    remote_as: '65101'
+    peer: site1-rs1
+    description: site1-rs1_Ethernet2
   - ip_address: 10.255.0.1
     peer_group: EVPN-OVERLAY-PEERS
     peer: dc1-spine1
     description: dc1-spine1_Loopback0
     remote_as: '65100'
-  - ip_address: 10.255.0.2
+  - ip_address: 172.16.20.1
     peer_group: EVPN-OVERLAY-PEERS
-    peer: dc1-spine2
-    description: dc1-spine2_Loopback0
-    remote_as: '65100'
+    peer: site1-rs1
+    description: site1-rs1_Loopback0
+    remote_as: '65101'
   address_family_evpn:
     peer_groups:
     - name: EVPN-OVERLAY-PEERS
@@ -347,17 +347,6 @@ port_channel_interfaces:
       allowed_vlan: 11-12,21-22,3401-3402
   shutdown: false
   mlag: 8
-- name: Port-Channel5
-  description: SERVER_dc1-leaf1-server1_Bond1
-  shutdown: false
-  switchport:
-    enabled: true
-    mode: trunk
-    trunk:
-      allowed_vlan: 11-12,21-22
-      native_vlan: 4092
-  spanning_tree_portfast: edge
-  mlag: 5
 ethernet_interfaces:
 - name: Ethernet3
   peer: dc1-leaf1a
@@ -388,10 +377,10 @@ ethernet_interfaces:
     enabled: false
   ip_address: 10.255.255.5/31
 - name: Ethernet2
-  peer: dc1-spine2
+  peer: site1-rs1
   peer_interface: Ethernet2
-  peer_type: spine
-  description: P2P_dc1-spine2_Ethernet2
+  peer_type: overlay-controller
+  description: P2P_site1-rs1_Ethernet2
   shutdown: false
   mtu: 1500
   switchport:
@@ -405,15 +394,6 @@ ethernet_interfaces:
   shutdown: false
   channel_group:
     id: 8
-    mode: active
-- name: Ethernet5
-  peer: dc1-leaf1-server1
-  peer_interface: PCI2
-  peer_type: server
-  description: SERVER_dc1-leaf1-server1_PCI2
-  shutdown: false
-  channel_group:
-    id: 5
     mode: active
 mlag_configuration:
   domain_id: DC1_L3_LEAF1

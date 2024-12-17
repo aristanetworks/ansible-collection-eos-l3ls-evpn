@@ -7,6 +7,8 @@ l3leaf:
   defaults:
     loopback_ipv4_pool: 192.168.255.0/24
     vtep_loopback_ipv4_pool: 192.168.42.0/24
+    uplink_switches: [site1-rs1]
+    uplink_ipv4_pool: 20.0.1.0/24
     filter:
       always_include_vrfs_in_tenants: [all]
     mlag_interfaces: [Ethernet5, Ethernet6]
@@ -17,12 +19,29 @@ l3leaf:
       bgp_as: 65101
       nodes:
         - name: site1-border1
-          evpn_role: server
+          # evpn_role: server
           mgmt_ip: 192.168.17.14/24
+          uplink_switch_interfaces: [Ethernet1]
+          uplink_interfaces: [Ethernet1]
           id: 5
         - name: site1-border2
           mgmt_ip: 192.168.17.15/24
+          uplink_switch_interfaces: [Ethernet2]
+          uplink_interfaces: [Ethernet2]
           id: 6
+
+# In DC2 we define all variables as defaults if possible
+overlay_controller:
+  defaults:
+    platform: vEOS-LAB
+    loopback_ipv4_pool: 172.16.20.0/24
+    uplink_bfd: False
+    bgp_as: 65101
+  nodes:
+    - name: site1-rs1
+      id: 99
+      mgmt_ip: 192.168.1.18/24
+      evpn_role: server
 
 wan_router:
   defaults:
@@ -33,7 +52,7 @@ wan_router:
       always_include_vrfs_in_tenants: [all]
     uplink_interfaces: [Ethernet1, Ethernet2]
     uplink_switches: [site1-border1, site1-border2]
-    uplink_type: p2p-vrfs # (1)!
+    uplink_type: p2p # (1)!
     bgp_as: 65000
   node_groups:
     - group: SITE1
@@ -50,7 +69,7 @@ wan_router:
           id: 3
           mgmt_ip: 192.168.17.12/24
           uplink_switch_interfaces: [Ethernet3, Ethernet3]
-          evpn_route_servers: [site1-border1]
+          evpn_route_servers: [site1-rs1]
           evpn_gateway:
             evpn_l3:
               enabled: true
@@ -74,6 +93,11 @@ wan_router:
           id: 4
           mgmt_ip: 192.168.17.13/24
           uplink_switch_interfaces: [Ethernet4, Ethernet4]
+          evpn_route_servers: [site1-rs1]
+          evpn_gateway:
+            evpn_l3:
+              enabled: true
+              inter_domain: true
           l3_interfaces:
             - name: Ethernet3
               profile: MPLS-WAN-INTERFACE
