@@ -155,8 +155,7 @@
             cv_register_detailed_results: true
             cv_devices: "{{ ansible_play_hosts_all }}"
             cv_submit_workspace: false
-            cv_workspace_build_warnings:
-              suppress_portfast: true
+            cv_workspace_build_warnings_suppress_portfast: true
       rescue:
         - name: "{{ test_id | upper }} Display CVP result with portfast warning suppressed by knob"
           run_once: true
@@ -259,8 +258,8 @@
             cv_register_detailed_results: true
             cv_devices: "{{ ansible_play_hosts_all }}"
             cv_submit_workspace: false
-            cv_workspace_build_warnings:
-              suppress_patterns: [".*! /32 IPv4 address is not [a-z]+ on the.*"]
+            cv_workspace_build_warnings_suppress_patterns:
+              - ".*! /32 IPv4 address is not [a-z]+ on the.*"
       rescue:
         - name: "{{ test_id | upper }} Display CVP result with manually suppressed warning"
           run_once: true
@@ -365,12 +364,11 @@
             cv_register_detailed_results: true
             cv_devices: "{{ ansible_play_hosts_all }}"
             cv_submit_workspace: false
-            cv_workspace_build_warnings:
-              suppress_patterns:
-                - ".*/32 IPv4 address is not configured.*"
-                - >-
-                  ^! portfast should only be enabled on ports connected to a single host. Connecting hubs, concentrators, switches, bridges, etc.
-                  to this interface when portfast is enabled can cause temporary bridging loops.*
+            cv_workspace_build_warnings_suppress_patterns:
+              - ".*/32 IPv4 address is not configured.*"
+              - >-
+                ^! portfast should only be enabled on ports connected to a single host. Connecting hubs, concentrators, switches, bridges, etc.
+                to this interface when portfast is enabled can cause temporary bridging loops.*
       rescue:
         - name: "{{ test_id | upper }} Display CVP result with two manually suppressed warnings"
           run_once: true
@@ -466,10 +464,9 @@
             cv_register_detailed_results: true
             cv_devices: "{{ ansible_play_hosts_all }}"
             cv_submit_workspace: false
-            cv_workspace_build_warnings:
-              suppress_patterns:
-                - "^! /32 IPv4 address is not configured on the interface$"
-              suppress_portfast: true
+            cv_workspace_build_warnings_suppress_patterns:
+              - "^! /32 IPv4 address is not configured on the interface$"
+            cv_workspace_build_warnings_suppress_portfast: true
       rescue:
         - name: "{{ test_id | upper }} Display CVP result with mix of manual and knob-based suppressed warnings"
           run_once: true
@@ -565,9 +562,8 @@
             cv_register_detailed_results: true
             cv_devices: "{{ ansible_play_hosts_all }}"
             cv_submit_workspace: false
-            cv_workspace_build_warnings:
-              suppress_patterns:
-                - r"^! /32 IPv4 address is not configured on the interface\z$"
+            cv_workspace_build_warnings_suppress_patterns:
+              - r"^! /32 IPv4 address is not configured on the interface\z$"
       rescue:
         - name: "{{ test_id | upper }} Display CVP result with invalid regex suppression pattern"
           run_once: true
@@ -679,10 +675,9 @@
             cv_register_detailed_results: true
             cv_devices: "{{ ansible_play_hosts_all }}"
             cv_submit_workspace: false
-            cv_workspace_build_warnings:
-              suppress_patterns:
-                - ".*portfast should only be enabled on ports connected to a single host.*"
-              suppress_portfast: true
+            cv_workspace_build_warnings_suppress_patterns:
+              - ".*portfast should only be enabled on ports connected to a single host.*"
+            cv_workspace_build_warnings_suppress_portfast: true
       rescue:
         - name: "{{ test_id | upper }} Display CVP result with portfast warning suppressed by both knob and regex pattern"
           run_once: true
@@ -785,8 +780,7 @@
             cv_register_detailed_results: true
             cv_devices: "{{ ansible_play_hosts_all }}"
             cv_submit_workspace: false
-            cv_workspace_build_warnings:
-              enabled: false
+            cv_workspace_build_warnings_enabled: false
       rescue:
         - name: "{{ test_id | upper }} Display CVP result with suppressed warnings"
           run_once: true

@@ -4,11 +4,13 @@
 from __future__ import annotations
 
 from logging import getLogger
+from re import Pattern
 from re import compile as re_compile
 from typing import TYPE_CHECKING
 
-from pyavd._cv.api.arista.workspace.v1 import ResponseStatus, WorkspaceState
+from pyavd._cv.api.arista.workspace.v1 import ResponseStatus, WorkspaceBuildDetailsStreamResponse, WorkspaceState
 from pyavd._cv.client.exceptions import CVWorkspaceBuildFailed, CVWorkspaceSubmitFailed
+from pyavd._utils import get_v2
 
 if TYPE_CHECKING:
     from pyavd._cv.client import CVClient
@@ -103,6 +105,145 @@ async def finalize_workspace_on_cv(workspace: CVWorkspace, cv_client: CVClient, 
     return
 
 
+def prepare_build_warnings_suppress_patterns(
+    workspace: CVWorkspace,
+    static_suppression_patterns: list[str],
+) -> list[Pattern]:
+    """
+    Process static and custom inputs for Build Warnings Suppression and return unified list of Regex patterns.
+
+    Parameters:
+        workspace: Active Workspace.
+        static_suppression_patterns: List of pre-defined Regex string patterns for matching undesired warnings.
+
+    Returns:
+        Unified list of compiled Regex patterns describing Workspace Build warnings that we would like to suppress.
+    """
+    # Deduplicate list of patterns from user
+    workspace_build_warning_suppress_list = list(set(workspace.build_warnings_suppress_patterns[:]))
+    if workspace.build_warnings_suppress_portfast:
+        for static_suppression_pattern in static_suppression_patterns:
+            if static_suppression_pattern not in workspace_build_warning_suppress_list:
+                workspace_build_warning_suppress_list.append(static_suppression_pattern)
+
+    compiled_workspace_build_warning_suppress_list: list[Pattern] = []
+    for proposed_regex_pattern in workspace_build_warning_suppress_list:
+        try:
+            compiled_workspace_build_warning_suppress_list.append(re_compile(proposed_regex_pattern))
+        except Exception as e:  # noqa: PERF203
+            LOGGER.warning(
+                "prepare_build_warnings_suppress_patterns: Failed to process proposed regex pattern '%s'. "
+                "This incorrect pattern will not be used for warnings suppression. Error: '%s'",
+                proposed_regex_pattern,
+                e,
+            )
+            # Delete invalid regex pattern string from workspace.build_warnings_suppress_patterns
+            workspace.build_warnings_suppress_patterns = [item for item in workspace.build_warnings_suppress_patterns if item != proposed_regex_pattern]
+
+    return compiled_workspace_build_warning_suppress_list
+
+
+async def produce_cvworkspace_build_result(
+    workspace: CVWorkspace,
+    workspace_build_details_stream_response: WorkspaceBuildDetailsStreamResponse,
+    compiled_workspace_build_warning_suppress_list: list[Pattern],
+    devices: list[CVDevice],
+) -> CVWorkspaceBuildResult:
+    """
+    Process WorkspaceBuildDetailsStreamResponse to generate CVWorkspaceBuildResult suppressing undesired warnings.
+
+    Parameters:
+        workspace: Active Workspace.
+        workspace_build_details_stream_response: WorkspaceBuildDetailsStreamResponse Async generator.
+        compiled_workspace_build_warning_suppress_list: List of compiled Regex patterns for matching undesired warnings.
+        devices: List of CVDevice objects representing existing CV devices.
+
+    Returns:
+        CVWorkspaceBuildResult object defining details of the Workspace build.
+    """
+    return [
+        CVWorkspaceBuildResult(
+            device=next((device for device in devices if device.serial_number == device_id), None)
+            if (device_id := response.value.key.device_id) is not None
+            else None,
+            stages_states=[
+                CVWorkspaceBuildStageState(
+                    stage=stage,
+                    state=state.name,
+                )
+                for stage, state in get_v2(response, "value.build_stage_state.values", {}).items()
+            ],
+            config_validation=CVWorkspaceBuildConfigValidationResult(
+                errors=[
+                    CVWorkspaceBuildConfigValidationError(
+                        error_code=config_validation_error.error_code.name,
+                        error_msg=config_validation_error.error_msg,
+                        line_num=config_validation_error.line_num,
+                        configlet_name=config_validation_error.configlet_name,
+                    )
+                    for config_validation_error in get_v2(response, "value.config_validation_result.errors.values", [])
+                ],
+                warnings=[
+                    CVWorkspaceBuildConfigValidationError(
+                        error_code=config_validation_warning.error_code.name,
+                        error_msg=config_validation_warning.error_msg,
+                        line_num=config_validation_warning.line_num,
+                        configlet_name=config_validation_warning.configlet_name,
+                    )
+                    for config_validation_warning in get_v2(response, "value.config_validation_result.warnings.values", [])
+                    if not any(pattern.search(config_validation_warning.error_msg) for pattern in compiled_workspace_build_warning_suppress_list)
+                ]
+                if workspace.build_warnings
+                else [],
+            ),
+            image_validation=CVWorkspaceBuildImageValidationResult(
+                image_input_error=response.value.image_validation_result.image_input_error,
+                errors=[
+                    CVWorkspaceBuildImageValidationError(
+                        sku=image_validation_error.sku,
+                        error_code=image_validation_error.error_code.name,
+                        error_msg=image_validation_error.error_msg,
+                    )
+                    for image_validation_error in get_v2(response, "value.image_validation_result.errors.values", [])
+                ],
+                warnings=[
+                    CVWorkspaceBuildImageValidationWarning(
+                        sku=image_validation_warning.sku,
+                        warning_code=image_validation_warning.warning_code,
+                        warning_msg=image_validation_warning.warning_msg,
+                    )
+                    for image_validation_warning in get_v2(response, "value.image_validation_result.warnings.values", [])
+                    if not any(pattern.search(image_validation_warning.warning_msg) for pattern in compiled_workspace_build_warning_suppress_list)
+                ]
+                if workspace.build_warnings
+                else [],
+            ),
+        )
+        async for response in workspace_build_details_stream_response
+        if isinstance(response, WorkspaceBuildDetailsStreamResponse)
+        and (
+            (response.value.config_validation_result.errors or response.value.image_validation_result.errors)
+            or (
+                workspace.build_warnings
+                and (response.value.config_validation_result.warnings or response.value.image_validation_result.warnings)
+                and (
+                    len(compiled_workspace_build_warning_suppress_list) == 0
+                    or {False}
+                    in [
+                        {bool(pattern.search(i.error_msg)) for pattern in compiled_workspace_build_warning_suppress_list}
+                        for i in get_v2(response, "value.config_validation_result.warnings.values", [])
+                    ]
+                    or {False}
+                    in [
+                        {bool(pattern.search(i.warning_msg)) for pattern in compiled_workspace_build_warning_suppress_list}
+                        for i in get_v2(response, "value.image_validation_result.warnings.values", [])
+                    ]
+                )
+            )
+        )
+    ]
+
+
 async def process_workspace_build_details(
     workspace: CVWorkspace,
     cv_client: CVClient,
@@ -125,133 +266,18 @@ async def process_workspace_build_details(
     Returns:
         List of 'CVWorkspaceBuildResult's describing observed Workspace build validation errors and warnings per targeted device.
     """
-    try:
-        workspace_build_details_stream_response = await cv_client.get_workspace_build_details(workspace_id=workspace.id, build_id=workspace.build_id)
+    workspace_build_details_stream_response = await cv_client.get_workspace_build_details(workspace_id=workspace.id, build_id=workspace.build_id)
 
-        if workspace.build_warnings:
-            # Deduplicate list of patterns from user
-            workspace_build_warning_suppress_list = list(set(workspace.build_warnings_suppress_patterns[:]))
-            if workspace.build_warnings_suppress_portfast and EOS_CLI_PORTFAST_WARNING not in workspace_build_warning_suppress_list:
-                workspace_build_warning_suppress_list.append(EOS_CLI_PORTFAST_WARNING)
-            compiled_workspace_build_warning_suppress_list: list = []
-            for proposed_regex_pattern in workspace_build_warning_suppress_list:
-                try:
-                    compiled_workspace_build_warning_suppress_list.append(re_compile(proposed_regex_pattern))
-                except Exception as e:  # noqa: PERF203
-                    LOGGER.warning(
-                        "process_workspace_build_details: Failed to process proposed regex pattern '%s'. "
-                        "This incorrect pattern will not be used for warnings suppression. Error: '%s'",
-                        proposed_regex_pattern,
-                        e,
-                    )
-                    # Delete invalid regex pattern string from workspace.build_warnings_suppress_patterns
-                    workspace.build_warnings_suppress_patterns = [item for item in workspace.build_warnings_suppress_patterns if item != proposed_regex_pattern]
-
-        workspace_build_results = [
-            CVWorkspaceBuildResult(
-                device=next((device for device in devices if device.serial_number == device_id), None)
-                if (device_id := getattr(getattr(getattr(response, "value", None), "key", None), "device_id", None)) is not None
-                else None,
-                stages_states=[
-                    CVWorkspaceBuildStageState(
-                        stage=stage,
-                        state=getattr(state, "name", None),
-                    )
-                    for stage, state in getattr(getattr(getattr(response, "value", None), "build_stage_state", None), "values", {}).items()
-                ],
-                config_validation=CVWorkspaceBuildConfigValidationResult(
-                    errors=[
-                        CVWorkspaceBuildConfigValidationError(
-                            error_code=getattr(getattr(config_validation_error, "error_code", None), "name", None),
-                            error_msg=getattr(config_validation_error, "error_msg", None),
-                            line_num=getattr(config_validation_error, "line_num", None),
-                            configlet_name=getattr(config_validation_error, "configlet_name", None),
-                        )
-                        for config_validation_error in getattr(
-                            getattr(getattr(getattr(response, "value", None), "config_validation_result", None), "errors", None), "values", []
-                        )
-                    ],
-                    warnings=[
-                        CVWorkspaceBuildConfigValidationError(
-                            error_code=getattr(getattr(config_validation_warning, "error_code", None), "name", None),
-                            error_msg=getattr(config_validation_warning, "error_msg", None),
-                            line_num=getattr(config_validation_warning, "line_num", None),
-                            configlet_name=getattr(config_validation_warning, "configlet_name", None),
-                        )
-                        for config_validation_warning in getattr(
-                            getattr(getattr(getattr(response, "value", None), "config_validation_result", None), "warnings", None), "values", []
-                        )
-                        if not any(
-                            pattern.search(getattr(config_validation_warning, "error_msg", "")) for pattern in compiled_workspace_build_warning_suppress_list
-                        )
-                    ]
-                    if workspace.build_warnings
-                    else [],
-                ),
-                image_validation=CVWorkspaceBuildImageValidationResult(
-                    image_input_error=getattr(getattr(getattr(response, "value", None), "image_validation_result", None), "image_input_error", None),
-                    errors=[
-                        CVWorkspaceBuildImageValidationError(
-                            sku=getattr(image_validation_error, "sku", None),
-                            error_code=getattr(getattr(image_validation_error, "error_code", None), "name", None),
-                            error_msg=getattr(image_validation_error, "error_msg", None),
-                        )
-                        for image_validation_error in getattr(
-                            getattr(getattr(getattr(response, "value", None), "image_validation_result", None), "errors", None), "values", []
-                        )
-                    ],
-                    warnings=[
-                        CVWorkspaceBuildImageValidationWarning(
-                            sku=getattr(image_validation_warning, "sku", None),
-                            warning_code=getattr(image_validation_warning, "warning_code", None),
-                            warning_msg=getattr(image_validation_warning, "warning_msg", None),
-                        )
-                        for image_validation_warning in getattr(
-                            getattr(getattr(getattr(response, "value", None), "image_validation_result", None), "warnings", None), "values", []
-                        )
-                        if not any(
-                            pattern.search(getattr(image_validation_warning, "warning_msg", "")) for pattern in compiled_workspace_build_warning_suppress_list
-                        )
-                    ]
-                    if workspace.build_warnings
-                    else [],
-                ),
-            )
-            async for response in workspace_build_details_stream_response
-            if (
-                getattr(getattr(getattr(response, "value", None), "config_validation_result", None), "errors", None)
-                or getattr(getattr(getattr(response, "value", None), "image_validation_result", None), "errors", None)
-            )
-            or (
-                workspace.build_warnings
-                and (
-                    getattr(getattr(getattr(response, "value", None), "config_validation_result", None), "warnings", None)
-                    or getattr(getattr(getattr(response, "value", None), "image_validation_result", None), "warnings", None)
-                )
-                and (
-                    len(compiled_workspace_build_warning_suppress_list) == 0
-                    or {False}
-                    in [
-                        {bool(pattern.search(i.error_msg)) for pattern in compiled_workspace_build_warning_suppress_list}
-                        for i in getattr(getattr(getattr(getattr(response, "value", None), "config_validation_result", None), "warnings", None), "values", [])
-                    ]
-                    or {False}
-                    in [
-                        {bool(pattern.search(i.warning_msg)) for pattern in compiled_workspace_build_warning_suppress_list}
-                        for i in getattr(getattr(getattr(getattr(response, "value", None), "image_validation_result", None), "warnings", None), "values", [])
-                    ]
-                )
-            )
-        ]
-
-    except Exception as e:
-        LOGGER.warning(
-            "process_workspace_build_details: Failed to fetch and process Workspace build results for workspace '%s' and build_id '%s'. Error: '%s'",
-            workspace.id,
-            workspace.build_id,
-            e,
+    if workspace.build_warnings:
+        compiled_workspace_build_warning_suppress_list = prepare_build_warnings_suppress_patterns(
+            workspace=workspace, static_suppression_patterns=[EOS_CLI_PORTFAST_WARNING]
         )
-        return []
-
     else:
-        return workspace_build_results
+        compiled_workspace_build_warning_suppress_list = []
+
+    return await produce_cvworkspace_build_result(
+        workspace=workspace,
+        workspace_build_details_stream_response=workspace_build_details_stream_response,
+        compiled_workspace_build_warning_suppress_list=compiled_workspace_build_warning_suppress_list,
+        devices=devices,
+    )

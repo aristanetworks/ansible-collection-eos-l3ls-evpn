@@ -31,10 +31,9 @@ cv_submit_workspace_force: false
 
 # Fetch and expose Workspace build warnings.
 # Suppress specific warnings based on pre-defined options or custom regex pattern(s).
-cv_workspace_build_warnings:
-  enabled: true
-  suppress_patterns: []
-  suppress_portfast: false
+cv_workspace_build_warnings_enabled: true
+cv_workspace_build_warnings_suppress_patterns: []
+cv_workspace_build_warnings_suppress_portfast: false
 
 # Approve and Start Change Control. Otherwise the Change Control will be left in "pending approval" mode.
 # Only applicable if cv_submit_workspace is true.

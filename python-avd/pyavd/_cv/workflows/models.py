@@ -5,8 +5,15 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 from datetime import datetime
-from typing import Any, Literal
+from typing import TYPE_CHECKING, Any, Literal
 from uuid import uuid4
+
+if TYPE_CHECKING:
+    from pyavd._cv.api.arista.configstatus.v1 import ErrorCode as ConfigStatusErrorCode
+    from pyavd._cv.api.arista.imagestatus.v1 import ErrorCode as ImageStatusErrorCode
+    from pyavd._cv.api.arista.imagestatus.v1 import WarningCode as ImageStatusWarningCode
+    from pyavd._cv.api.arista.workspace.v1 import BuildStage as WorkspaceBuildStage
+    from pyavd._cv.api.arista.workspace.v1 import BuildState as WorkspaceBuildState
 
 
 @dataclass
@@ -75,17 +82,7 @@ class CVPathfinderMetadata:
 
 @dataclass
 class CVWorkspaceBuildConfigValidationError:
-    error_code: (
-        Literal[
-            "UNSPECIFIED",
-            "DEVICE_WARNING",
-            "DEVICE_ERROR",
-            "UNREACHABLE_DEVICE",
-            "CONFIG_FILTER_ERROR",
-            "INTERNAL",
-        ]
-        | None
-    ) = None
+    error_code: ConfigStatusErrorCode | None = None
     """Error code of the returned error or warning."""
     error_msg: str | None = None
     """EOS-returned error message."""
@@ -105,29 +102,7 @@ class CVWorkspaceBuildConfigValidationResult:
 class CVWorkspaceBuildImageValidationError:
     sku: str | None = None
     """Name of the SKU."""
-    error_code: (
-        Literal[
-            "UNSPECIFIED",
-            "SUPPORT_NOT_INTRODUCED",
-            "SUPPORT_REMOVED",
-            "DEVICE_UNREACHABLE",
-            "VALIDATION_FAILED",
-            "GET_PROPOSED_IMAGE_INFO_FAILED",
-            "GET_RUNNING_IMAGE_INFO_FROM_ACTIVE_SUPERVISOR_FAILED",
-            "GET_RUNNING_IMAGE_INFO_FROM_PEER_SUPERVISOR_FAILED",
-            "EOS_TA_ARCHITECTURE_INCOMPATIBLE",
-            "TA_CV_INCOMPATIBLE",
-            "EOS_CV_INCOMPATIBLE",
-            "EOS_SUPPORT_NOT_INTRODUCED",
-            "EOS_SUPPORT_REMOVED",
-            "PHYSICAL_DEVICE_EOS_INCOMPATIBLE",
-            "TA_EMBEDDEDEXT_INCOMPATIBLE",
-            "DEVICE_EOS_2GB_INCOMPATIBLE",
-            "EOS_EXTENSION_VERSION_INCOMPATIBLE",
-            "ARCH_UNSUPPORTED",  # NEW CODE ADDED IN CVP BUT NOT TRACKED BY pyavd/_cv/api/arista/imagestatus/v1/__init__.py
-        ]
-        | None
-    ) = None
+    error_code: ImageStatusErrorCode | None = None
     """Error code of the returned error."""
     error_msg: str | None = None
     """EOS-returned error message."""
@@ -137,28 +112,7 @@ class CVWorkspaceBuildImageValidationError:
 class CVWorkspaceBuildImageValidationWarning:
     sku: str | None = None
     """Name of the sku."""
-    warning_code: (
-        Literal[
-            "UNSPECIFIED",
-            "NOT_APPLICABLE",
-            "SKUINFO_UNAVAILABLE",
-            "DEVICE_SKU_UNAVAILABLE",
-            "SWI_UNKNOWN",
-            "TA_EOS_INCOMPATIBLE",
-            "TA_CV_INCOMPATIBLE",
-            "EOS_CV_INCOMPATIBLE",
-            "EOS_ARCH_UNKNOWN",
-            "TA_EMBEDDEDEXT_INCOMPATIBLE",
-            "ARCH_INCOMPATIBLE",
-            "EOS_END_OF_LIFE_DATE_PASSED",
-            "SUPPORT_NOT_INTRODUCED",
-            "SUPPORT_REMOVED",
-            "RUNNING_TA_BELOW_MIN_SUPPORTED_VERSION",
-            "TA_STUDIO_INCOMPATIBLE",
-            "BUGALERTS_DATA_MISSING",
-        ]
-        | None
-    ) = None
+    warning_code: ImageStatusWarningCode | None = None
     """Warning code of the returned warning."""
     warning_msg: str | None = None
     """EOS-returned warning message."""
@@ -173,17 +127,9 @@ class CVWorkspaceBuildImageValidationResult:
 
 @dataclass
 class CVWorkspaceBuildStageState:
-    stage: (
-        Literal[
-            "BUILD_STAGE_UNSPECIFIED" "BUILD_STAGE_INPUT_VALIDATION",
-            "BUILD_STAGE_CONFIGLET_BUILD",
-            "BUILD_STAGE_CONFIG_VALIDATION",
-            "BUILD_STAGE_IMAGE_VALIDATION",
-        ]
-        | None
-    ) = None
+    stage: WorkspaceBuildStage | None = None
     """Stage of the build."""
-    state: Literal["UNSPECIFIED", "IN_PROGRESS", "CANCELED", "SUCCESS", "FAIL", "SKIPPED"] | None = None
+    state: WorkspaceBuildState | None = None
     """Execution status of the build."""
 
 
