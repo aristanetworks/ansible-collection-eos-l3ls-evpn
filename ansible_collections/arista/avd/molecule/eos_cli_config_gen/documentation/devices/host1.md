@@ -3184,10 +3184,17 @@ vlan internal order ascending range 10 40
 !
 vlan 110
    name PR01-DMZ
+   !
+   address locking
+      address-family ipv4
+      address-family ipv6
 !
 vlan 111
    name PRIVATE_VLAN_COMMUNITY
    private-vlan community primary vlan 110
+   !
+   address locking
+      locked-address ipv4 enforcement disabled
 !
 vlan 112
    name PRIVATE_VLAN_ISOLATED
@@ -3948,6 +3955,10 @@ interface Ethernet4
    mtu 9100
    no switchport
    snmp trap link-change
+   !
+   address locking
+      address-family ipv4
+      address-family ipv6
    ipv6 enable
    ipv6 address 2020::2020/64
    ipv6 address FE80:FEA::AB65/64 link-local
@@ -3971,6 +3982,10 @@ interface Ethernet5
    mtu 9100
    switchport access vlan 220
    no switchport
+   !
+   address locking
+      address-family ipv4 disabled
+      address-family ipv6 disabled
    ip ospf cost 99
    ip ospf network point-to-point
    ip ospf authentication message-digest
@@ -4001,6 +4016,11 @@ interface Ethernet6
    switchport trunk allowed vlan 110-111,210-211
    switchport mode trunk
    switchport
+   !
+   address locking
+      address-family ipv6
+      address-family ipv4 disabled
+      locked-address ipv4 enforcement disabled
    no lldp transmit
    ptp enable
    ptp announce interval 3
