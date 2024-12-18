@@ -11,10 +11,10 @@ try:
 except ImportError as imp_exc:
     raise AristaAvdError(imp_exc) from imp_exc
 
-HASH_INPUT_TYPE = ["user_password"]
+HASH_INPUT_TYPE = ["sha512_password"]
 
 
-def _validate_salt(salt: str | None) -> None:
+def _validate_sha512_salt(salt: str | None) -> None:
     """
     Validate a given salt value.
 
@@ -39,13 +39,13 @@ def _validate_salt(salt: str | None) -> None:
         raise ValueError(msg)
 
 
-def _user_password_hash(user_password: str, salt: str | None = None) -> str:
+def _user_password_hash(clear_password: str, salt: str | None = None) -> str:
     """
     Generate a SHA-512 password hash from a cleartext password for a local user.
 
     Parameters:
     ----------
-        user_password: The cleartext password provided by the user that will be hashed.
+        clear_password: The cleartext password provided by the user that will be hashed.
         salt: Salt value to be used when creating password hash. A randomly generated salt will be used unless the user specifies one.
 
     Returns:
@@ -57,44 +57,39 @@ def _user_password_hash(user_password: str, salt: str | None = None) -> str:
         TypeError: If the password is not of type 'str'.
         ValueError: If sha512_crypt fails for any reason.
     """
-    if not isinstance(user_password, str):
-        msg = f"Password MUST be of type 'str' but is of type {type(user_password)}"
+    if not isinstance(clear_password, str):
+        msg = f"Password MUST be of type 'str' but is of type {type(clear_password)}"
         raise TypeError(msg)
 
-    _validate_salt(salt)
+    _validate_sha512_salt(salt)
 
     try:
         # setting the rounds parameter to 5000 to omit rounds from the hash string, similar to EOS implementation
-        return sha512_crypt.using(rounds=5000, salt=salt).hash(user_password)
+        return sha512_crypt.using(rounds=5000, salt=salt).hash(clear_password)
     except Exception as exc:
         msg = "SHA-512 password hashing failed - check the input parameters of arista.avd.secure_hash"
         raise ValueError(msg) from exc
 
 
-def secure_hash(user_input: str, input_type: str | None = None, salt: str | None = None) -> str:
+def secure_hash(user_input: str, salt: str | None = None, output_type: str | None = None) -> str:
     """
     Returns a hash for a given input.
 
     Parameters:
     ----------
         user_input: the user input cleartext that will be hashed.
-        input_type: the use case for the input cleartext provided by the user.
+        output_type: the use case for the cleartext provided by the user.
 
     Returns:
     -------
-        A hash digest.
+        The hash digest.
 
     Raises:
     ------
-        KeyError: if input_type argument is not used.
-        ValueError: if the input_type value provided by the user is not supported.
+        ValueError: if the output_type value provided by the user is not supported.
     """
-    if input_type is None:
-        msg = "The input_type key MUST be used in the secure_hash filter"
-        raise KeyError(msg)
-
-    if input_type not in HASH_INPUT_TYPE:
-        msg = f"The secure_hash filter does not support the value '{input_type}' for the input_type key. input_type value must be in {HASH_INPUT_TYPE}"
+    if output_type is not None and output_type not in HASH_INPUT_TYPE:
+        msg = f"The output_type key does not support the value '{output_type}'. The value used with output_type must be in {HASH_INPUT_TYPE}"
         raise ValueError(msg)
 
     return _user_password_hash(user_input, salt)
