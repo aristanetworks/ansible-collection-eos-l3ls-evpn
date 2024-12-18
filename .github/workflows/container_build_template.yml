@@ -9,7 +9,7 @@ env:
   # The devcontainers/ci@v0.3 build will fail if this env variable is not set.
   BUILDX_NO_DEFAULT_ATTESTATIONS: 1
 
-on:
+"on":
   workflow_call:
     inputs:
       # Container name, e.g. "base", "dev", etc.

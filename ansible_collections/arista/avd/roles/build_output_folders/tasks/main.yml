@@ -10,7 +10,7 @@
     state: absent
     mode: "0o775"
   delegate_to: localhost
-  run_once: True
+  run_once: true
 
 - name: "Create folder {{ output_dir }}"
   ansible.builtin.file:
@@ -18,7 +18,7 @@
     state: directory
     mode: "0o775"
   delegate_to: localhost
-  run_once: True
+  run_once: true
 
 - name: "Create folder {{ structured_dir_name }} for structured YAML files"
   ansible.builtin.file:
@@ -26,7 +26,7 @@
     state: directory
     mode: "0o775"
   delegate_to: localhost
-  run_once: True
+  run_once: true
 
 - name: "Create folder {{ eos_config_dir_name }} for EOS Configuration files"
   ansible.builtin.file:
@@ -34,7 +34,7 @@
     state: directory
     mode: "0o775"
   delegate_to: localhost
-  run_once: True
+  run_once: true
 
 - name: "Create folder {{ structured_cvp_dir_name }} for CVP structured YAML files"
   ansible.builtin.file:
@@ -42,7 +42,7 @@
     state: directory
     mode: "0o775"
   delegate_to: localhost
-  run_once: True
+  run_once: true
 
 - name: "Create documentation folder: {{ documentation_dir_name }}"
   ansible.builtin.file:
@@ -50,7 +50,7 @@
     state: directory
     mode: "0o775"
   delegate_to: localhost
-  run_once: True
+  run_once: true
 
 - name: "Create folder {{ fabric_dir_name }} for Fabric documentation"
   ansible.builtin.file:
@@ -58,7 +58,7 @@
     state: directory
     mode: "0o775"
   delegate_to: localhost
-  run_once: True
+  run_once: true
 
 - name: "Create folder {{ devices_dir_name }} for EOS documentation"
   ansible.builtin.file:
@@ -66,7 +66,7 @@
     state: directory
     mode: "0o775"
   delegate_to: localhost
-  run_once: True
+  run_once: true
 
 - name: "Create folder {{ post_running_config_backup_dir }} for EOS post backup dir"
   ansible.builtin.file:
@@ -74,7 +74,7 @@
     state: directory
     mode: "0o775"
   delegate_to: localhost
-  run_once: True
+  run_once: true
 
 - name: "Create folder {{ pre_running_config_backup_dir }} for EOS pre backup dir"
   ansible.builtin.file:
@@ -82,7 +82,7 @@
     state: directory
     mode: "0o775"
   delegate_to: localhost
-  run_once: True
+  run_once: true
 
 - name: "Create folder {{ eos_validate_state_name }} for EOS state report dir"
   ansible.builtin.file:
@@ -90,7 +90,7 @@
     state: directory
     mode: "0o775"
   delegate_to: localhost
-  run_once: True
+  run_once: true
 
 - name: "Create folder {{ custom_anta_catalogs_dir_name }} for input custom ANTA catalogs"
   ansible.builtin.file:
@@ -98,7 +98,7 @@
     state: directory
     mode: "0o775"
   delegate_to: localhost
-  run_once: True
+  run_once: true
 
 - name: Create output directory for each EOS device
   ansible.builtin.file:
@@ -106,4 +106,4 @@
     state: directory
     mode: "0o775"
   delegate_to: localhost
-  run_once: True
+  run_once: true

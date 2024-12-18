@@ -161,7 +161,10 @@
   - [Router BFD](#router-bfd)
   - [BFD Interfaces](#bfd-interfaces)
 - [MPLS](#mpls)
+  - [MPLS and LDP](#mpls-and-ldp)
   - [MPLS Interfaces](#mpls-interfaces)
+  - [MPLS RSVP](#mpls-rsvp)
+  - [MPLS Device Configuration](#mpls-device-configuration)
 - [Patch Panel](#patch-panel)
   - [Patch Panel Summary](#patch-panel-summary)
   - [Patch Panel Device Configuration](#patch-panel-device-configuration)
@@ -3633,6 +3636,8 @@ interface Dps1
 | Ethernet66 | Multiple VRIDs and tracking | - | 192.0.2.2/25 | default | - | False | - | - |
 | Ethernet80 | LAG Member | 17 | *192.0.2.3/31 | **default | **- | **- | **- | **- |
 | Ethernet81/2 | LAG Member LACP fallback LLDP ZTP VLAN | 112 | *dhcp | **default | **- | **- | **- | **- |
+| Ethernet81/3 | Traffic Engineering Interface | - | 100.64.127.0/31 | default | - | False | - | - |
+| Ethernet81/4 | Traffic Engineering Interface | - | 100.64.127.0/31 | default | - | False | - | - |
 
 *Inherited from Port-Channel Interface
 
@@ -3789,6 +3794,12 @@ interface Dps1
 | Ethernet5 | 127 |
 | Ethernet6 | disabled |
 
+#### Traffic Engineering
+
+| Interface | Enabled | Administrative Groups |
+| --------- | ------- | --------------------- |
+| Ethernet81/3 | True | 3,15-29,testgrp |
+
 #### Ethernet Interfaces Device Configuration
 
 ```eos
@@ -3847,6 +3858,9 @@ interface Ethernet1
    ip igmp host-proxy report-interval 2
    ip igmp host-proxy version 2
    tcp mss ceiling ipv4 70 ipv6 75 egress
+   mpls ldp igp sync
+   mpls ldp interface
+   mpls ip
    switchport port-security
    switchport port-security mac-address maximum disabled
    service-policy type qos input pmap_test1
@@ -4769,9 +4783,67 @@ interface Ethernet81/2
    lldp tlv transmit ztp vlan 112
    spanning-tree portfast
 !
+interface Ethernet81/3
+   description Traffic Engineering Interface
+   no shutdown
+   no switchport
+   ip address 100.64.127.0/31
+   traffic-engineering
+   traffic-engineering administrative-group 3,15-29,testgrp
+!
+interface Ethernet81/4
+   description Traffic Engineering Interface
+   no shutdown
+   no switchport
+   ip address 100.64.127.0/31
+   traffic-engineering administrative-group 4,7-100,testgrp
+!
 interface Ethernet81/10
    description isis_port_channel_member
    channel-group 110 mode active
+!
+interface Ethernet82
+   description Switchport_tap_tool
+   switchport tap native vlan 10
+   switchport tap identity 3 inner 5
+   switchport tap mac-address dest 01:00:00:00:00:00 src 01:23:45:67:89:ab
+   switchport tap encapsulation gre destination 1.1.1.1 source 1.1.1.2 protocol 0x0 strip
+   switchport tap encapsulation gre destination 1.1.1.1 source 1.1.1.2 strip
+   switchport tap encapsulation gre destination 2.1.1.2 protocol 0x10 strip
+   switchport tap encapsulation gre destination 2.1.1.2 protocol 0x11 feature header length 2 strip re-encapsulation ethernet
+   switchport tap encapsulation gre destination 2.1.1.2 protocol 0x12 strip re-encapsulation ethernet
+   switchport tap encapsulation gre destination 2.1.1.3 source 2.1.1.4 strip
+   switchport tap mpls pop all
+   switchport tool mpls pop all
+   switchport tool encapsulation vn-tag strip
+   switchport tool encapsulation dot1br strip
+   switchport tap allowed vlan 25
+   switchport tool allowed vlan 23
+   switchport tool identity qinq
+   switchport tool identity dot1q source dzgre port
+   switchport tap truncation 150
+   switchport tap default group g1 group g2 group g3
+   switchport tap default nexthop-group nexthop_g1 nexthop_g2 nexthop_g3
+   switchport tap default interface ethernet4
+   switchport tap default interface port-channel10
+   switchport tool group set group1 group2 group3
+   switchport tool dot1q remove outer 1
+!
+interface Ethernet83
+   description Test_tap_tool
+   switchport tap identity 5
+   switchport tap mac-address dest 01:00:00:00:00:00
+   switchport tap encapsulation vxlan strip
+   switchport tap encapsulation gre strip
+   switchport tool identity dot1q
+   switchport tool identity qinq source dzgre policy inner port
+   switchport tap truncation
+!
+interface Ethernet84
+   switchport tap encapsulation gre protocol 0x1 strip
+   switchport tap encapsulation gre protocol 0x2 feature header length 3 strip
+   switchport tap encapsulation gre protocol 0x3 feature header length 2 strip re-encapsulation ethernet
+   switchport tap encapsulation gre protocol 0x4 strip re-encapsulation ethernet
 ```
 
 ### Port-Channel Interfaces
@@ -4912,6 +4984,8 @@ interface Ethernet81/10
 | Port-Channel112 | LACP fallback individual | - | dhcp | default | - | - | - | - |
 | Port-Channel113 | interface_with_mpls_enabled | - | 172.31.128.9/31 | default | - | - | - | - |
 | Port-Channel114 | interface_with_mpls_disabled | - | 172.31.128.10/31 | default | - | - | - | - |
+| Port-Channel136 | Test_te_admin_groups | - | 100.64.127.2/31 | default | - | - | - | - |
+| Port-Channel137 | Traffic Engineering Interface | - | 100.64.127.4/31 | default | - | - | - | - |
 
 ##### IP NAT: Source Static
 
@@ -4954,6 +5028,12 @@ interface Ethernet81/10
 | Port-Channel51 | EVPN_UNDERLAY | - | - | - | - | - | shared-secret |
 | Port-Channel100 | EVPN_UNDERLAY | - | - | - | - | - | Level-1: md5<br>Level-2: text |
 | Port-Channel110 | ISIS_TEST | True | 99 | point-to-point | level-2 | True | - |
+
+#### Traffic Engineering
+
+| Interface | Enabled | Administrative Groups |
+| --------- | ------- | --------------------- |
+| Port-Channel136 | True | 7 |
 
 #### Port-Channel Interfaces Device Configuration
 
@@ -5125,7 +5205,7 @@ interface Port-Channel16
    isis authentication mode md5
    isis authentication key 0 <removed>
    spanning-tree guard none
-   switchport backup-link Port-Channel100.102 prefer vlan 20
+   switchport backup-link Port-Channel100 prefer vlan 20
 !
 interface Port-Channel17
    description PBR Description
@@ -5516,6 +5596,60 @@ interface Port-Channel131.10
 interface Port-Channel132
    profile test-interface-profile
    description Test_port-channel_interface-profile
+!
+interface Port-Channel133
+   description Test1_switchport_tap_tool
+   switchport tap native vlan 10
+   switchport tap identity 3
+   switchport tap mac-address dest 01:00:00:00:00:00 src 01:23:45:67:89:ab
+   switchport tap encapsulation gre destination 1.1.1.1 source 1.1.1.2 protocol 0x0 strip
+   switchport tap encapsulation gre destination 1.1.1.1 source 1.1.1.2 strip
+   switchport tap encapsulation gre destination 1.1.1.3 source 1.1.1.4 strip
+   switchport tap encapsulation gre destination 2.1.1.2 protocol 0x1 strip
+   switchport tap encapsulation gre destination 2.1.1.2 protocol 0x2 feature header length 2 strip re-encapsulation ethernet
+   switchport tap mpls pop all
+   switchport tool mpls pop all
+   switchport tool encapsulation vn-tag strip
+   switchport tool encapsulation dot1br strip
+   switchport tap allowed vlan 25
+   switchport tool allowed vlan 23
+   switchport tool identity qinq
+   switchport tool identity qinq source dzgre port inner policy
+   switchport tap truncation
+   switchport tap default group g1 group g2 group g3
+   switchport tap default nexthop-group nexthop_g1 nexthop_g2 nexthop_g3
+   switchport tap default interface ethernet4
+   switchport tap default interface port-channel10
+   switchport tool group set group1 group2 group3
+   switchport tool dot1q remove outer 1-2
+!
+interface Port-Channel134
+   description Test2_switchport_tap_tool
+   switchport tap identity 3 inner 10
+   switchport tap mac-address dest 01:00:00:00:00:00
+   switchport tap encapsulation vxlan strip
+   switchport tap encapsulation gre strip
+   switchport tool identity dot1q
+   switchport tool identity dot1q source dzgre policy
+   switchport tap truncation 120
+!
+interface Port-Channel135
+   switchport tap encapsulation gre protocol 0x2 feature header length 3 strip
+   switchport tap encapsulation gre protocol 0x3 feature header length 2 strip re-encapsulation ethernet
+   switchport tap encapsulation gre protocol 0x10 strip
+!
+interface Port-Channel136
+   description Test_te_admin_groups
+   no switchport
+   ip address 100.64.127.2/31
+   traffic-engineering
+   traffic-engineering administrative-group 7
+!
+interface Port-Channel137
+   description Traffic Engineering Interface
+   no switchport
+   ip address 100.64.127.4/31
+   traffic-engineering administrative-group 4,7-100,testgrp
 ```
 
 ### Loopback Interfaces
@@ -5555,6 +5689,7 @@ interface Port-Channel132
 interface Loopback0
    description EVPN_Overlay_Peering
    ip address 192.168.255.3/32
+   mpls ldp interface
    comment
    Comment created from eos_cli under loopback_interfaces.Loopback0
    EOF
@@ -6546,12 +6681,12 @@ Topology role: pathfinder
 
 #### AVT Profiles
 
-| Profile name | Load balance policy | Internet exit policy |
-| ------------ | ------------------- | -------------------- |
-| office365 | - | - |
-| scavenger | scavenger-lb | scavenger-ie |
-| video | - | video-ie |
-| voice | voice-lb | - |
+| Profile name | Load balance policy | Internet exit policy | Metric Order | Jitter Threshold (ms) | Latency Threshold (ms) | Load (%) | Loss Rate (%) |
+| ------------ | ------------------- | -------------------- | ------------ | --------------------- | ---------------------- | -------- | ------------- |
+| office365 | - | - | - | - | - | - | - |
+| scavenger | scavenger-lb | scavenger-ie | latency | 200 | 100 | 25.16 | 20 |
+| video | - | video-ie | - | - | 100 | - | - |
+| voice | voice-lb | - | - | 100 | - | - | - |
 
 #### AVT Policies
 
@@ -6619,12 +6754,20 @@ router adaptive-virtual-topology
    profile scavenger
       internet-exit policy scavenger-ie
       path-selection load-balance scavenger-lb
+      metric order latency
+      path-selection outlier elimination threshold latency 100 milliseconds
+      path-selection outlier elimination threshold jitter 200 milliseconds
+      path-selection outlier elimination threshold loss-rate 20 percent
+      path-selection outlier elimination threshold load 25.16 percent
    !
    profile video
       internet-exit policy video-ie
+      path-selection outlier elimination disabled
+      path-selection outlier elimination threshold latency 100 milliseconds
    !
    profile voice
       path-selection load-balance voice-lb
+      path-selection outlier elimination threshold jitter 100 milliseconds
    !
    vrf blue
       avt profile video id 1
@@ -8941,15 +9084,138 @@ router bfd
 
 ## MPLS
 
+### MPLS and LDP
+
+#### MPLS and LDP Summary
+
+| Setting | Value |
+| -------- | ---- |
+| MPLS IP Enabled | True |
+| LDP Enabled | True |
+| LDP Router ID | 192.168.1.1 |
+| LDP Interface Disabled Default | True |
+| LDP Transport-Address Interface | Loopback0 |
+| ICMP Fragmentation-Needed Tunneling Enabled | True |
+
 ### MPLS Interfaces
 
 | Interface | MPLS IP Enabled | LDP Enabled | IGP Sync |
 | --------- | --------------- | ----------- | -------- |
+| Ethernet1 | True | True | True |
 | Ethernet9 | True | True | - |
 | Ethernet10 | False | False | - |
+| Loopback0 | - | True | - |
 | Loopback99 | - | True | - |
 | Port-Channel113 | True | True | True |
 | Port-Channel114 | False | False | - |
+
+### MPLS RSVP
+
+#### MPLS RSVP Summary
+
+| Setting | Value |
+| ------- | ----- |
+| Refresh interval | 3 |
+| Refresh method  | explicit |
+| Hello interval | 30 |
+| Timeout multiplier | 254 |
+| Authentication type | md5 |
+| Authentication sequence-number window | 234 |
+| Authentication active index | 766 |
+| IPv4 access-group | RSVP_access_group_ipv4 |
+| IPv6 access-group | RSVP_access_group_ipv6 |
+| SRLG strict | Enabled |
+| Label local-termination | explicit-null |
+| Preemption method | soft |
+| Preemption timer | 444 |
+| MTU signaling | Enabled |
+| Fast reroute mode | link-protection |
+| Fast reroute reversion | local |
+| Fast reroute  bypass tunnel optimization interval | 65535 |
+| Hitless restart | Active |
+| Hitless restart recovery timer | 222 |
+| P2MP | False |
+| Shutdown | True |
+
+##### RSVP Neighbor Authentication
+
+| Neighbor IP | Index | Type |
+| ----------- | ----- | ---- |
+| 1.1.1.1 | 3 | md5 |
+| 1.1.12.2 | 30 | none |
+| 1.10.1.2 | - | none |
+| 1.21.1.20 | - | md5 |
+| 10.1.1.2 | 303 | - |
+| 2::11.22.33.44 | 3133 | none |
+| 2001::db8 | 31 | none |
+
+##### RSVP Graceful Restart
+
+| Role | Recovery timer | Restart timer |
+| ---- | -------------- | ------------- |
+| Helper | 32 | 33 |
+| Speaker | 35 | 36 |
+
+### MPLS Device Configuration
+
+```eos
+!
+mpls ip
+!
+mpls ldp
+   router-id 192.168.1.1
+   transport-address interface Loopback0
+   interface disabled default
+   no shutdown
+!
+mpls icmp fragmentation-needed tunneling
+!
+mpls rsvp
+   refresh interval 3
+   refresh method explicit
+   hello interval 30 multiplier 254
+   authentication type md5
+   authentication sequence-number window 234
+   authentication index 55 password 7 <removed>
+   authentication index 766 password 7 <removed>
+   authentication index 999 password 0 <removed>
+   authentication index 766 active
+   neighbor 1.1.1.1 authentication type md5
+   neighbor 1.1.1.1 authentication index 3 active
+   neighbor 1.1.12.2 authentication type none
+   neighbor 1.1.12.2 authentication index 30 active
+   neighbor 1.10.1.2 authentication type none
+   neighbor 1.21.1.20 authentication type md5
+   neighbor 10.1.1.2 authentication index 303 active
+   neighbor 2::11.22.33.44 authentication type none
+   neighbor 2::11.22.33.44 authentication index 3133 active
+   neighbor 2001::db8 authentication type none
+   neighbor 2001::db8 authentication index 31 active
+   ip access-group RSVP_access_group_ipv4
+   ipv6 access-group RSVP_access_group_ipv6
+   fast-reroute mode link-protection
+   fast-reroute reversion local
+   fast-reroute bypass tunnel optimization interval 65535 seconds
+   srlg strict
+   label local-termination explicit-null
+   preemption method soft timer 444
+   mtu signaling
+   !
+   hitless-restart
+      timer recovery 222 seconds
+   !
+   graceful-restart role helper
+      timer restart maximum 32 seconds
+      timer recovery maximum 33 seconds
+   !
+   graceful-restart role speaker
+      timer restart 35 seconds
+      timer recovery 36 seconds
+   !
+   p2mp
+      disabled
+   shutdown
+```
 
 ## Patch Panel
 

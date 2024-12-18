@@ -144,6 +144,11 @@ ethernet_interfaces:
     traffic_policy:
       input: BLUE-C1-POLICY
       output: BLUE-C2-POLICY
+    mpls:
+      ip: true
+      ldp:
+        interface: true
+        igp_sync: true
 
   - name: Ethernet2
     ip_address: 10.1.255.3/24
@@ -1664,6 +1669,7 @@ ethernet_interfaces:
         inner_vlan: 11
       network:
         encapsulation: client inner
+
   - name: Ethernet70
     description: dot1x_aaa_unresponsive
     shutdown: false
@@ -1682,6 +1688,7 @@ ethernet_interfaces:
             traffic_allow: true
             apply_alternate: true
       mac_based_access_list: true
+
   - name: Ethernet71
     description: dot1x_aaa_unresponsive1
     shutdown: false
@@ -1698,6 +1705,7 @@ ethernet_interfaces:
               time_duration: 10
               time_duration_unit: hours
       mac_based_access_list: true
+
   - name: Ethernet72
     description: dot1x_aaa_unresponsive2
     shutdown: false
@@ -1853,3 +1861,133 @@ ethernet_interfaces:
     spanning_tree_portfast: edge
     lldp:
       ztp_vlan: 112
+
+  - name: Ethernet81/3
+    description: Traffic Engineering Interface
+    shutdown: false
+    switchport:
+      enabled: false
+    ip_address: 100.64.127.0/31
+    traffic_engineering:
+      enabled: true
+      administrative_groups:
+        - 3
+        - 15-29
+        - testgrp
+
+  - name: Ethernet81/4
+    description: Traffic Engineering Interface
+    shutdown: false
+    switchport:
+      enabled: false
+    ip_address: 100.64.127.0/31
+    traffic_engineering:
+      enabled: false
+      administrative_groups:
+        - 4
+        - 7-100
+        - testgrp
+
+  - name: Ethernet82
+    description: Switchport_tap_tool
+    switchport:
+      tap:
+        allowed_vlan: 25
+        default:
+          groups:
+            - g2
+            - g1
+            - g3
+          nexthop_groups:
+            - nexthop_g1
+            - nexthop_g3
+            - nexthop_g2
+          interfaces:
+            - port-channel10
+            - ethernet4
+        identity:
+          id: 3
+          inner_vlan: 5
+        mpls_pop_all: true
+        native_vlan: 10
+        truncation:
+          enabled: true
+          size: 150
+        mac_address:
+          destination: 01:00:00:00:00:00
+          source: 01:23:45:67:89:ab
+        encapsulation:
+          gre:
+            destinations:
+              - destination: 1.1.1.1
+                source: 1.1.1.2
+                protocols:
+                  - protocol: "0x0"
+                    strip: true
+                strip: true
+              - destination: 2.1.1.2
+                protocols:
+                  - protocol: "0x10"
+                    strip: true
+                  - protocol: "0x11"
+                    feature_header_length: 2
+                    re_encapsulation_ethernet_header: true
+                    strip: true
+                  - protocol: "0x12"
+                    re_encapsulation_ethernet_header: true
+                    strip: true
+              - destination: 2.1.1.3
+                source: 2.1.1.4
+                strip: true
+      tool:
+        mpls_pop_all: true
+        encapsulation:
+          dot1br_strip: true
+          vn_tag_strip: true
+        allowed_vlan: 23
+        identity:
+          tag: qinq
+          dot1q_dzgre_source: port
+        groups:
+          - group1
+          - group2
+          - group3
+        dot1q_remove_outer_vlan_tag: 1
+
+  - name: Ethernet83
+    description: Test_tap_tool
+    switchport:
+      tap:
+        identity:
+          id: 5
+        mac_address:
+          destination: 01:00:00:00:00:00
+        encapsulation:
+          vxlan_strip: true
+          gre:
+            strip: true
+        truncation:
+          enabled: true
+      tool:
+        identity:
+          tag: dot1q
+          qinq_dzgre_source: policy inner port
+
+  - name: Ethernet84
+    switchport:
+      tap:
+        encapsulation:
+          gre:
+            protocols:
+              - protocol: "0x1"
+                strip: true
+              - protocol: "0x2"
+                feature_header_length: 3
+                strip: true
+              - protocol: "0x3"
+                feature_header_length: 2
+                re_encapsulation_ethernet_header: true
+                strip: true
+              - protocol: "0x4"
+                re_encapsulation_ethernet_header: true
+                strip: true

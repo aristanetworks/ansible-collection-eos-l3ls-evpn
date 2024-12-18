@@ -44,7 +44,7 @@ class AvdStructuredConfigFlows(AvdFacts):
 
         # At this point we have at least one interface with sFlow enabled
         # and at least one destination.
-        sflow = {"run": True, "sample": self.inputs.sflow_settings.sample.rate}
+        sflow = {"run": True, "polling_interval": self.inputs.sflow_settings.polling_interval, "sample": self.inputs.sflow_settings.sample.rate}
 
         # Using a temporary dict for VRFs
         sflow_vrfs = {}

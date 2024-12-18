@@ -27,7 +27,7 @@ keys:
           required: true
         interfaces:
           type: list
-          required: True
+          required: true
           primary_key: name
           items:
             type: dict

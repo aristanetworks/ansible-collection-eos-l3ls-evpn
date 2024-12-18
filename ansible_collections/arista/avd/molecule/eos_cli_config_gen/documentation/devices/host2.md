@@ -56,6 +56,10 @@
   - [PBR Policy Maps](#pbr-policy-maps)
 - [BFD](#bfd)
   - [Router BFD](#router-bfd)
+- [MPLS](#mpls)
+  - [MPLS and LDP](#mpls-and-ldp)
+  - [MPLS RSVP](#mpls-rsvp)
+  - [MPLS Device Configuration](#mpls-device-configuration)
 - [Queue Monitor](#queue-monitor)
   - [Queue Monitor Length](#queue-monitor-length)
   - [Queue Monitor Configuration](#queue-monitor-configuration)
@@ -904,6 +908,76 @@ policy-map type pbr POLICY_DROP_THEN_NEXTHOP
 !
 router bfd
    session stats snapshot interval dangerous 8
+```
+
+## MPLS
+
+### MPLS and LDP
+
+#### MPLS and LDP Summary
+
+| Setting | Value |
+| -------- | ---- |
+| MPLS IP Enabled | True |
+| LDP Enabled | False |
+| LDP Router ID | - |
+| LDP Interface Disabled Default | False |
+| LDP Transport-Address Interface | - |
+| ICMP TTL-Exceeded Tunneling Enabled | True |
+
+### MPLS RSVP
+
+#### MPLS RSVP Summary
+
+| Setting | Value |
+| ------- | ----- |
+| Refresh interval | 4 |
+| Authentication type | - |
+| Authentication sequence-number window | - |
+| Authentication active index | 766 |
+| SRLG | Enabled |
+| Preemption method | hard |
+| Fast reroute mode | node-protection |
+| Fast reroute reversion | - |
+| Fast reroute  bypass tunnel optimization interval | - |
+| Hitless restart | Active |
+| Hitless restart recovery timer | - |
+| P2MP | True |
+| Shutdown | False |
+
+##### RSVP Graceful Restart
+
+| Role | Recovery timer | Restart timer |
+| ---- | -------------- | ------------- |
+| Helper | - | - |
+| Speaker | - | - |
+
+### MPLS Device Configuration
+
+```eos
+!
+mpls ip
+!
+mpls ldp
+   shutdown
+!
+mpls icmp ttl-exceeded tunneling
+!
+mpls rsvp
+   refresh interval 4
+   authentication index 766 active
+   fast-reroute mode node-protection
+   srlg
+   preemption method hard
+   !
+   hitless-restart
+   !
+   graceful-restart role helper
+   !
+   graceful-restart role speaker
+   !
+   p2mp
+   no shutdown
 ```
 
 ## Queue Monitor
