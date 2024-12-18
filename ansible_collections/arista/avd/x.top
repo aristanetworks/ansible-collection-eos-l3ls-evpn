@@ -1,0 +1,5368 @@
+############################q
+### DeviceID -> Hostname ###
+# evpnrtr1  -> site1-border1
+# evpnrtr2  -> site1-border2
+# evpnrtr3  -> site2-leaf1
+# evpnrtr4  -> site2-leaf2
+# evpnrtr5  -> site3-leaf1
+# evpnsfe1  -> pf1
+# evpnsfe2  -> mpls-cloud
+# evpnsfe3  -> inet-cloud
+# evpnsfe4  -> pf2
+# evpnsfe5  -> site1-wan1
+# evpnsfe6  -> site1-wan2
+# evpnsfe7  -> site1-border1-server1
+# evpnsfe8  -> site2-wan1
+# evpnsfe9  -> site2-leaf1-server1
+# evpnsfe10 -> site2-wan2
+# evpnsfe11 -> site3-wan1
+# evpnsfe12 -> site3-leaf1-server1
+# evpnsfe13 -> site3-leaf1-server2
+############################
+
+
+############################
+######## Connections #######
+evpnrtr1(Et3)---(Et1)evpnsfe5
+evpnrtr1(Et4)---(Et1)evpnsfe6
+evpnrtr1(Et5)---(Et5)evpnrtr2
+evpnrtr1(Et6)---(Et6)evpnrtr2
+evpnrtr1(Et7)---(Et1)evpnsfe7
+evpnrtr2(Et3)---(Et2)evpnsfe5
+evpnrtr2(Et4)---(Et2)evpnsfe6
+evpnrtr3(Et3)---(Et1)evpnsfe8
+evpnrtr3(Et5)---(Et5)evpnrtr4
+evpnrtr3(Et6)---(Et6)evpnrtr4
+evpnrtr3(Et7)---(Et1)evpnsfe9
+evpnrtr4(Et3)---(Et1)evpnsfe10
+evpnrtr5(Et1)---(Et1)evpnsfe11
+evpnrtr5(Et2)---(Et1)evpnsfe12
+evpnrtr5(Et3)---(Et1)evpnsfe13
+evpnsfe1(Et1)---(Et1)evpnsfe2
+evpnsfe1(Et2)---(Et1)evpnsfe3
+evpnsfe2(Et2)---(Et1)evpnsfe4
+evpnsfe2(Et5)---(Et3)evpnsfe5
+evpnsfe2(Et6)---(Et3)evpnsfe6
+evpnsfe2(Et7)---(Et3)evpnsfe8
+evpnsfe3(Et2)---(Et2)evpnsfe4
+evpnsfe3(Et5)---(Et4)evpnsfe5
+evpnsfe3(Et6)---(Et4)evpnsfe6
+evpnsfe3(Et7)---(Et4)evpnsfe10
+evpnsfe3(Et8)---(Et4)evpnsfe11
+evpnsfe8(Et5)---(Et5)evpnsfe10
+############################
+
+
+###################### evpnrtr1
+dut:evpnrtr1
+[numExtPorts 15]
+[agentsToRun StunClient SuperServer]
+[agentArgv SuperServer --service=SslManager --service=StunServer --service=SswanManager]
+[dirsToClone /etc/sswan /etc/turnserver]
+prompt site1-border1%P
+!
+no enable password
+no aaa root
+!
+username ansible privilege 15 role network-admin secret sha512 $6$7u4j1rkb3VELgcZE$EJt2Qff8kd/TapRoci0XaIZsL4tFzgq1YZBLD9c6f/knXzvcYY0NcMKndZeCv0T268knGKhOEwZAxqKjlMm920
+username arista privilege 15 role network-admin secret sha512 $6$Enl0WfE32FthwyiJ$yTyGaEJ2uPKLU.F7314YtB7J1jrzrMi7ogXIRTEHQfLdLgKWWmr1UvNlZLN6AyuxET7G5aH3AI9OYRzxVTkB1.
+username cvpadmin privilege 15 role network-admin secret sha512 $6$a7LdQWHxWzYHpvVt$n62q.1mbm4kzQ5oBr0lhXCE9ntnTn.SNa16DovZHahFQLH.iPcPMZa5JUSFtncrDW4EDQ3oSWgP8G0S4FtOFx1
+!
+daemon TerminAttr
+   exec /usr/bin/TerminAttr -cvaddr=www.cv-staging.corp.arista.io:443 -cvauth=token-secure,/tmp/cv-onboarding-token -cvvrf=MGMT -smashexcludes=ale,flexCounter,hardware,kni,pulse,strata -ingestexclude=/Sysdb/cell/1/agent,/Sysdb/cell/2/agent -taillogs
+   no shutdown
+!
+vlan internal order ascending range 1006 1199
+!
+flow tracking sampled
+   sample 10000
+   tracker FLOW-TRACKER
+      record export on inactive timeout 70000
+      record export on interval 5000
+      exporter CV-TELEMETRY
+         collector 127.0.0.1
+         local interface Loopback0
+   no shutdown
+!
+transceiver qsfp default-mode 4x10G
+!
+service routing protocols model multi-agent
+!
+hostname site1-border1
+ip name-server vrf MGMT 192.168.17.1
+dns domain wan.example.local
+!
+no spanning-tree vlan-id 4093-4094
+!
+vlan 42
+   name RED-TEST
+!
+vlan 666
+   name BLUE-TEST
+!
+vlan 3099
+   name MLAG_L3_VRF_BLUE
+   trunk group MLAG
+!
+vlan 3100
+   name MLAG_L3_VRF_RED
+   trunk group MLAG
+!
+vlan 4093
+   name MLAG_L3
+   trunk group MLAG
+!
+vlan 4094
+   name MLAG
+   trunk group MLAG
+!
+vrf instance BLUE
+!
+vrf instance MGMT
+!
+vrf instance RED
+!
+management api http-commands
+   protocol https
+   no shutdown
+   !
+   vrf MGMT
+      no shutdown
+!
+aaa authorization exec default local
+!
+interface Port-Channel5
+   description MLAG_site1-border2_Port-Channel5
+   no shutdown
+   switchport mode trunk
+   switchport trunk group MLAG
+   switchport
+!
+interface Ethernet3
+   description P2P_site1-wan1_Ethernet1
+   no shutdown
+   mtu 9214
+   no switchport
+   flow tracker sampled FLOW-TRACKER
+   ip address 10.0.1.8/31
+!
+interface Ethernet3.100
+   description P2P_site1-wan1_Ethernet1.100_VRF_BLUE
+   no shutdown
+   mtu 9214
+   encapsulation dot1q vlan 100
+   flow tracker sampled FLOW-TRACKER
+   vrf BLUE
+   ip address 10.0.1.8/31
+!
+interface Ethernet3.101
+   description P2P_site1-wan1_Ethernet1.101_VRF_RED
+   no shutdown
+   mtu 9214
+   encapsulation dot1q vlan 101
+   flow tracker sampled FLOW-TRACKER
+   vrf RED
+   ip address 10.0.1.8/31
+!
+interface Ethernet4
+   description P2P_site1-wan2_Ethernet1
+   no shutdown
+   mtu 9214
+   no switchport
+   flow tracker sampled FLOW-TRACKER
+   ip address 10.0.1.12/31
+!
+interface Ethernet4.100
+   description P2P_site1-wan2_Ethernet1.100_VRF_BLUE
+   no shutdown
+   mtu 9214
+   encapsulation dot1q vlan 100
+   flow tracker sampled FLOW-TRACKER
+   vrf BLUE
+   ip address 10.0.1.12/31
+!
+interface Ethernet4.101
+   description P2P_site1-wan2_Ethernet1.101_VRF_RED
+   no shutdown
+   mtu 9214
+   encapsulation dot1q vlan 101
+   flow tracker sampled FLOW-TRACKER
+   vrf RED
+   ip address 10.0.1.12/31
+!
+interface Ethernet5
+   description MLAG_site1-border2_Ethernet5
+   no shutdown
+   channel-group 5 mode active
+!
+interface Ethernet6
+   description MLAG_site1-border2_Ethernet6
+   no shutdown
+   channel-group 5 mode active
+!
+interface Ethernet7
+   description SERVER_site1-border1-server1_Ethernet1
+   no shutdown
+   switchport access vlan 42
+   switchport mode access
+   switchport
+!
+interface Loopback0
+   description ROUTER_ID
+   no shutdown
+   ip address 192.168.255.5/32
+!
+interface Loopback1
+   description VXLAN_TUNNEL_SOURCE
+   no shutdown
+   ip address 192.168.42.5/32
+!
+interface Management1
+   description OOB_MANAGEMENT
+   no shutdown
+   vrf MGMT
+   ip address 192.168.17.14/24
+   no lldp transmit
+   no lldp receive
+!
+interface Vlan42
+   description RED-TEST
+   no shutdown
+   no autostate
+   vrf RED
+   ip address 10.42.1.1/24
+!
+interface Vlan666
+   description BLUE-TEST
+   no shutdown
+   no autostate
+   vrf BLUE
+   ip address 10.66.1.1/24
+!
+interface Vlan3099
+   description MLAG_L3_VRF_BLUE
+   no shutdown
+   mtu 9214
+   no autostate
+   vrf BLUE
+   ip address 10.255.251.8/31
+!
+interface Vlan3100
+   description MLAG_L3_VRF_RED
+   no shutdown
+   mtu 9214
+   no autostate
+   vrf RED
+   ip address 10.255.251.8/31
+!
+interface Vlan4093
+   description MLAG_L3
+   no shutdown
+   mtu 9214
+   no autostate
+   ip address 10.255.251.8/31
+!
+interface Vlan4094
+   description MLAG
+   no shutdown
+   mtu 9214
+   no autostate
+   ip address 10.255.252.8/31
+!
+interface Vxlan1
+   description site1-border1_VTEP
+   vxlan source-interface Loopback1
+   vxlan virtual-router encapsulation mac-address mlag-system-id
+   vxlan udp-port 4789
+   vxlan vlan 42 vni 10042
+   vxlan vlan 666 vni 10666
+   vxlan vrf BLUE vni 100
+   vxlan vrf RED vni 101
+!
+ip routing
+ip routing vrf BLUE
+no ip routing vrf MGMT
+ip routing vrf RED
+!
+ip prefix-list PL-LOOPBACKS-EVPN-OVERLAY
+   seq 10 permit 192.168.255.0/24 eq 32
+   seq 20 permit 192.168.42.0/24 eq 32
+!
+ip prefix-list PL-MLAG-PEER-VRFS
+   seq 10 permit 10.255.251.8/31
+!
+mlag configuration
+   domain-id SITE1
+   local-interface Vlan4094
+   peer-address 10.255.252.9
+   peer-link Port-Channel5
+   reload-delay mlag 300
+   reload-delay non-mlag 330
+!
+ip route vrf MGMT 0.0.0.0/0 192.168.17.1
+!
+ntp local-interface vrf MGMT Management1
+ntp server vrf MGMT 0.pool.ntp.org prefer
+!
+route-map RM-CONN-2-BGP permit 10
+   match ip address prefix-list PL-LOOPBACKS-EVPN-OVERLAY
+!
+route-map RM-CONN-2-BGP-VRFS deny 10
+   match ip address prefix-list PL-MLAG-PEER-VRFS
+!
+route-map RM-CONN-2-BGP-VRFS permit 20
+!
+route-map RM-MLAG-PEER-IN permit 10
+   description Make routes learned over MLAG Peer-link less preferred on spines to ensure optimal routing
+   set origin incomplete
+!
+router bfd
+   multihop interval 300 min-rx 300 multiplier 3
+!
+router bgp 65101
+   router-id 192.168.255.5
+   no bgp default ipv4-unicast
+   maximum-paths 4 ecmp 4
+   neighbor EVPN-OVERLAY-PEERS peer group
+   neighbor EVPN-OVERLAY-PEERS update-source Loopback0
+   neighbor EVPN-OVERLAY-PEERS bfd
+   neighbor EVPN-OVERLAY-PEERS ebgp-multihop 3
+   neighbor EVPN-OVERLAY-PEERS send-community
+   neighbor EVPN-OVERLAY-PEERS maximum-routes 0
+   neighbor IPv4-UNDERLAY-PEERS peer group
+   neighbor IPv4-UNDERLAY-PEERS send-community
+   neighbor IPv4-UNDERLAY-PEERS maximum-routes 12000
+   neighbor MLAG-IPv4-UNDERLAY-PEER peer group
+   neighbor MLAG-IPv4-UNDERLAY-PEER remote-as 65101
+   neighbor MLAG-IPv4-UNDERLAY-PEER next-hop-self
+   neighbor MLAG-IPv4-UNDERLAY-PEER description site1-border2
+   neighbor MLAG-IPv4-UNDERLAY-PEER route-map RM-MLAG-PEER-IN in
+   neighbor MLAG-IPv4-UNDERLAY-PEER send-community
+   neighbor MLAG-IPv4-UNDERLAY-PEER maximum-routes 12000
+   neighbor 10.0.1.9 peer group IPv4-UNDERLAY-PEERS
+   neighbor 10.0.1.9 remote-as 65000
+   neighbor 10.0.1.9 description site1-wan1_Ethernet1
+   neighbor 10.0.1.13 peer group IPv4-UNDERLAY-PEERS
+   neighbor 10.0.1.13 remote-as 65000
+   neighbor 10.0.1.13 description site1-wan2_Ethernet1
+   neighbor 10.255.251.9 peer group MLAG-IPv4-UNDERLAY-PEER
+   neighbor 10.255.251.9 description site1-border2_Vlan4093
+   redistribute connected route-map RM-CONN-2-BGP
+   !
+   vlan 42
+      rd 192.168.255.5:10042
+      route-target both 10042:10042
+      redistribute learned
+   !
+   vlan 666
+      rd 192.168.255.5:10666
+      route-target both 10666:10666
+      redistribute learned
+   !
+   address-family evpn
+      neighbor EVPN-OVERLAY-PEERS activate
+   !
+   address-family ipv4
+      no neighbor EVPN-OVERLAY-PEERS activate
+      neighbor IPv4-UNDERLAY-PEERS activate
+      neighbor MLAG-IPv4-UNDERLAY-PEER activate
+   !
+   vrf BLUE
+      rd 192.168.255.5:100
+      route-target import evpn 100:100
+      route-target export evpn 100:100
+      router-id 192.168.255.5
+      neighbor 10.0.1.9 peer group IPv4-UNDERLAY-PEERS
+      neighbor 10.0.1.9 remote-as 65000
+      neighbor 10.0.1.9 description site1-wan1_Ethernet1.100_vrf_BLUE
+      neighbor 10.0.1.13 peer group IPv4-UNDERLAY-PEERS
+      neighbor 10.0.1.13 remote-as 65000
+      neighbor 10.0.1.13 description site1-wan2_Ethernet1.100_vrf_BLUE
+      neighbor 10.255.251.9 peer group MLAG-IPv4-UNDERLAY-PEER
+      neighbor 10.255.251.9 description site1-border2_Vlan3099
+      redistribute connected route-map RM-CONN-2-BGP-VRFS
+   !
+   vrf RED
+      rd 192.168.255.5:101
+      route-target import evpn 101:101
+      route-target export evpn 101:101
+      router-id 192.168.255.5
+      neighbor 10.0.1.9 peer group IPv4-UNDERLAY-PEERS
+      neighbor 10.0.1.9 remote-as 65000
+      neighbor 10.0.1.9 description site1-wan1_Ethernet1.101_vrf_RED
+      neighbor 10.0.1.13 peer group IPv4-UNDERLAY-PEERS
+      neighbor 10.0.1.13 remote-as 65000
+      neighbor 10.0.1.13 description site1-wan2_Ethernet1.101_vrf_RED
+      neighbor 10.255.251.9 peer group MLAG-IPv4-UNDERLAY-PEER
+      neighbor 10.255.251.9 description site1-border2_Vlan3100
+      redistribute connected route-map RM-CONN-2-BGP-VRFS
+!
+end
+
+
+
+
+###################### evpnrtr2
+dut:evpnrtr2
+[numExtPorts 15]
+[agentsToRun StunClient SuperServer]
+[agentArgv SuperServer --service=SslManager --service=StunServer --service=SswanManager]
+[dirsToClone /etc/sswan /etc/turnserver]
+prompt site1-border2%P
+!
+no enable password
+no aaa root
+!
+username ansible privilege 15 role network-admin secret sha512 $6$7u4j1rkb3VELgcZE$EJt2Qff8kd/TapRoci0XaIZsL4tFzgq1YZBLD9c6f/knXzvcYY0NcMKndZeCv0T268knGKhOEwZAxqKjlMm920
+username arista privilege 15 role network-admin secret sha512 $6$Enl0WfE32FthwyiJ$yTyGaEJ2uPKLU.F7314YtB7J1jrzrMi7ogXIRTEHQfLdLgKWWmr1UvNlZLN6AyuxET7G5aH3AI9OYRzxVTkB1.
+username cvpadmin privilege 15 role network-admin secret sha512 $6$a7LdQWHxWzYHpvVt$n62q.1mbm4kzQ5oBr0lhXCE9ntnTn.SNa16DovZHahFQLH.iPcPMZa5JUSFtncrDW4EDQ3oSWgP8G0S4FtOFx1
+!
+daemon TerminAttr
+   exec /usr/bin/TerminAttr -cvaddr=www.cv-staging.corp.arista.io:443 -cvauth=token-secure,/tmp/cv-onboarding-token -cvvrf=MGMT -smashexcludes=ale,flexCounter,hardware,kni,pulse,strata -ingestexclude=/Sysdb/cell/1/agent,/Sysdb/cell/2/agent -taillogs
+   no shutdown
+!
+vlan internal order ascending range 1006 1199
+!
+flow tracking sampled
+   sample 10000
+   tracker FLOW-TRACKER
+      record export on inactive timeout 70000
+      record export on interval 5000
+      exporter CV-TELEMETRY
+         collector 127.0.0.1
+         local interface Loopback0
+   no shutdown
+!
+transceiver qsfp default-mode 4x10G
+!
+service routing protocols model multi-agent
+!
+hostname site1-border2
+ip name-server vrf MGMT 192.168.17.1
+dns domain wan.example.local
+!
+no spanning-tree vlan-id 4093-4094
+!
+vlan 42
+   name RED-TEST
+!
+vlan 666
+   name BLUE-TEST
+!
+vlan 3099
+   name MLAG_L3_VRF_BLUE
+   trunk group MLAG
+!
+vlan 3100
+   name MLAG_L3_VRF_RED
+   trunk group MLAG
+!
+vlan 4093
+   name MLAG_L3
+   trunk group MLAG
+!
+vlan 4094
+   name MLAG
+   trunk group MLAG
+!
+vrf instance BLUE
+!
+vrf instance MGMT
+!
+vrf instance RED
+!
+management api http-commands
+   protocol https
+   no shutdown
+   !
+   vrf MGMT
+      no shutdown
+!
+aaa authorization exec default local
+!
+interface Port-Channel5
+   description MLAG_site1-border1_Port-Channel5
+   no shutdown
+   switchport mode trunk
+   switchport trunk group MLAG
+   switchport
+!
+interface Ethernet3
+   description P2P_site1-wan1_Ethernet2
+   no shutdown
+   mtu 9214
+   no switchport
+   flow tracker sampled FLOW-TRACKER
+   ip address 10.0.1.10/31
+!
+interface Ethernet3.100
+   description P2P_site1-wan1_Ethernet2.100_VRF_BLUE
+   no shutdown
+   mtu 9214
+   encapsulation dot1q vlan 100
+   flow tracker sampled FLOW-TRACKER
+   vrf BLUE
+   ip address 10.0.1.10/31
+!
+interface Ethernet3.101
+   description P2P_site1-wan1_Ethernet2.101_VRF_RED
+   no shutdown
+   mtu 9214
+   encapsulation dot1q vlan 101
+   flow tracker sampled FLOW-TRACKER
+   vrf RED
+   ip address 10.0.1.10/31
+!
+interface Ethernet4
+   description P2P_site1-wan2_Ethernet2
+   no shutdown
+   mtu 9214
+   no switchport
+   flow tracker sampled FLOW-TRACKER
+   ip address 10.0.1.14/31
+!
+interface Ethernet4.100
+   description P2P_site1-wan2_Ethernet2.100_VRF_BLUE
+   no shutdown
+   mtu 9214
+   encapsulation dot1q vlan 100
+   flow tracker sampled FLOW-TRACKER
+   vrf BLUE
+   ip address 10.0.1.14/31
+!
+interface Ethernet4.101
+   description P2P_site1-wan2_Ethernet2.101_VRF_RED
+   no shutdown
+   mtu 9214
+   encapsulation dot1q vlan 101
+   flow tracker sampled FLOW-TRACKER
+   vrf RED
+   ip address 10.0.1.14/31
+!
+interface Ethernet5
+   description MLAG_site1-border1_Ethernet5
+   no shutdown
+   channel-group 5 mode active
+!
+interface Ethernet6
+   description MLAG_site1-border1_Ethernet6
+   no shutdown
+   channel-group 5 mode active
+!
+interface Loopback0
+   description ROUTER_ID
+   no shutdown
+   ip address 192.168.255.6/32
+!
+interface Loopback1
+   description VXLAN_TUNNEL_SOURCE
+   no shutdown
+   ip address 192.168.42.5/32
+!
+interface Management1
+   description OOB_MANAGEMENT
+   no shutdown
+   vrf MGMT
+   ip address 192.168.17.15/24
+   no lldp transmit
+   no lldp receive
+!
+interface Vlan42
+   description RED-TEST
+   no shutdown
+   no autostate
+   vrf RED
+   ip address 10.42.11.1/24
+!
+interface Vlan666
+   description BLUE-TEST
+   no shutdown
+   no autostate
+   vrf BLUE
+   ip address 10.66.11.1/24
+!
+interface Vlan3099
+   description MLAG_L3_VRF_BLUE
+   no shutdown
+   mtu 9214
+   no autostate
+   vrf BLUE
+   ip address 10.255.251.9/31
+!
+interface Vlan3100
+   description MLAG_L3_VRF_RED
+   no shutdown
+   mtu 9214
+   no autostate
+   vrf RED
+   ip address 10.255.251.9/31
+!
+interface Vlan4093
+   description MLAG_L3
+   no shutdown
+   mtu 9214
+   no autostate
+   ip address 10.255.251.9/31
+!
+interface Vlan4094
+   description MLAG
+   no shutdown
+   mtu 9214
+   no autostate
+   ip address 10.255.252.9/31
+!
+interface Vxlan1
+   description site1-border2_VTEP
+   vxlan source-interface Loopback1
+   vxlan virtual-router encapsulation mac-address mlag-system-id
+   vxlan udp-port 4789
+   vxlan vlan 42 vni 10042
+   vxlan vlan 666 vni 10666
+   vxlan vrf BLUE vni 100
+   vxlan vrf RED vni 101
+!
+ip routing
+ip routing vrf BLUE
+no ip routing vrf MGMT
+ip routing vrf RED
+!
+ip prefix-list PL-LOOPBACKS-EVPN-OVERLAY
+   seq 10 permit 192.168.255.0/24 eq 32
+   seq 20 permit 192.168.42.0/24 eq 32
+!
+ip prefix-list PL-MLAG-PEER-VRFS
+   seq 10 permit 10.255.251.8/31
+!
+mlag configuration
+   domain-id SITE1
+   local-interface Vlan4094
+   peer-address 10.255.252.8
+   peer-link Port-Channel5
+   reload-delay mlag 300
+   reload-delay non-mlag 330
+!
+ip route vrf MGMT 0.0.0.0/0 192.168.17.1
+!
+ntp local-interface vrf MGMT Management1
+ntp server vrf MGMT 0.pool.ntp.org prefer
+!
+route-map RM-CONN-2-BGP permit 10
+   match ip address prefix-list PL-LOOPBACKS-EVPN-OVERLAY
+!
+route-map RM-CONN-2-BGP-VRFS deny 10
+   match ip address prefix-list PL-MLAG-PEER-VRFS
+!
+route-map RM-CONN-2-BGP-VRFS permit 20
+!
+route-map RM-MLAG-PEER-IN permit 10
+   description Make routes learned over MLAG Peer-link less preferred on spines to ensure optimal routing
+   set origin incomplete
+!
+router bfd
+   multihop interval 300 min-rx 300 multiplier 3
+!
+router bgp 65101
+   router-id 192.168.255.6
+   no bgp default ipv4-unicast
+   maximum-paths 4 ecmp 4
+   neighbor EVPN-OVERLAY-PEERS peer group
+   neighbor EVPN-OVERLAY-PEERS update-source Loopback0
+   neighbor EVPN-OVERLAY-PEERS bfd
+   neighbor EVPN-OVERLAY-PEERS ebgp-multihop 3
+   neighbor EVPN-OVERLAY-PEERS send-community
+   neighbor EVPN-OVERLAY-PEERS maximum-routes 0
+   neighbor IPv4-UNDERLAY-PEERS peer group
+   neighbor IPv4-UNDERLAY-PEERS send-community
+   neighbor IPv4-UNDERLAY-PEERS maximum-routes 12000
+   neighbor MLAG-IPv4-UNDERLAY-PEER peer group
+   neighbor MLAG-IPv4-UNDERLAY-PEER remote-as 65101
+   neighbor MLAG-IPv4-UNDERLAY-PEER next-hop-self
+   neighbor MLAG-IPv4-UNDERLAY-PEER description site1-border1
+   neighbor MLAG-IPv4-UNDERLAY-PEER route-map RM-MLAG-PEER-IN in
+   neighbor MLAG-IPv4-UNDERLAY-PEER send-community
+   neighbor MLAG-IPv4-UNDERLAY-PEER maximum-routes 12000
+   neighbor 10.0.1.11 peer group IPv4-UNDERLAY-PEERS
+   neighbor 10.0.1.11 remote-as 65000
+   neighbor 10.0.1.11 description site1-wan1_Ethernet2
+   neighbor 10.0.1.15 peer group IPv4-UNDERLAY-PEERS
+   neighbor 10.0.1.15 remote-as 65000
+   neighbor 10.0.1.15 description site1-wan2_Ethernet2
+   neighbor 10.255.251.8 peer group MLAG-IPv4-UNDERLAY-PEER
+   neighbor 10.255.251.8 description site1-border1_Vlan4093
+   redistribute connected route-map RM-CONN-2-BGP
+   !
+   vlan 42
+      rd 192.168.255.6:10042
+      route-target both 10042:10042
+      redistribute learned
+   !
+   vlan 666
+      rd 192.168.255.6:10666
+      route-target both 10666:10666
+      redistribute learned
+   !
+   address-family evpn
+      neighbor EVPN-OVERLAY-PEERS activate
+   !
+   address-family ipv4
+      no neighbor EVPN-OVERLAY-PEERS activate
+      neighbor IPv4-UNDERLAY-PEERS activate
+      neighbor MLAG-IPv4-UNDERLAY-PEER activate
+   !
+   vrf BLUE
+      rd 192.168.255.6:100
+      route-target import evpn 100:100
+      route-target export evpn 100:100
+      router-id 192.168.255.6
+      neighbor 10.0.1.11 peer group IPv4-UNDERLAY-PEERS
+      neighbor 10.0.1.11 remote-as 65000
+      neighbor 10.0.1.11 description site1-wan1_Ethernet2.100_vrf_BLUE
+      neighbor 10.0.1.15 peer group IPv4-UNDERLAY-PEERS
+      neighbor 10.0.1.15 remote-as 65000
+      neighbor 10.0.1.15 description site1-wan2_Ethernet2.100_vrf_BLUE
+      neighbor 10.255.251.8 peer group MLAG-IPv4-UNDERLAY-PEER
+      neighbor 10.255.251.8 description site1-border1_Vlan3099
+      redistribute connected route-map RM-CONN-2-BGP-VRFS
+   !
+   vrf RED
+      rd 192.168.255.6:101
+      route-target import evpn 101:101
+      route-target export evpn 101:101
+      router-id 192.168.255.6
+      neighbor 10.0.1.11 peer group IPv4-UNDERLAY-PEERS
+      neighbor 10.0.1.11 remote-as 65000
+      neighbor 10.0.1.11 description site1-wan1_Ethernet2.101_vrf_RED
+      neighbor 10.0.1.15 peer group IPv4-UNDERLAY-PEERS
+      neighbor 10.0.1.15 remote-as 65000
+      neighbor 10.0.1.15 description site1-wan2_Ethernet2.101_vrf_RED
+      neighbor 10.255.251.8 peer group MLAG-IPv4-UNDERLAY-PEER
+      neighbor 10.255.251.8 description site1-border1_Vlan3100
+      redistribute connected route-map RM-CONN-2-BGP-VRFS
+!
+end
+
+
+
+
+###################### evpnrtr3
+dut:evpnrtr3
+[numExtPorts 15]
+[agentsToRun StunClient SuperServer]
+[agentArgv SuperServer --service=SslManager --service=StunServer --service=SswanManager]
+[dirsToClone /etc/sswan /etc/turnserver]
+prompt site2-leaf1%P
+!
+no enable password
+no aaa root
+!
+username ansible privilege 15 role network-admin secret sha512 $6$7u4j1rkb3VELgcZE$EJt2Qff8kd/TapRoci0XaIZsL4tFzgq1YZBLD9c6f/knXzvcYY0NcMKndZeCv0T268knGKhOEwZAxqKjlMm920
+username arista privilege 15 role network-admin secret sha512 $6$Enl0WfE32FthwyiJ$yTyGaEJ2uPKLU.F7314YtB7J1jrzrMi7ogXIRTEHQfLdLgKWWmr1UvNlZLN6AyuxET7G5aH3AI9OYRzxVTkB1.
+username cvpadmin privilege 15 role network-admin secret sha512 $6$a7LdQWHxWzYHpvVt$n62q.1mbm4kzQ5oBr0lhXCE9ntnTn.SNa16DovZHahFQLH.iPcPMZa5JUSFtncrDW4EDQ3oSWgP8G0S4FtOFx1
+!
+daemon TerminAttr
+   exec /usr/bin/TerminAttr -cvaddr=www.cv-staging.corp.arista.io:443 -cvauth=token-secure,/tmp/cv-onboarding-token -cvvrf=MGMT -smashexcludes=ale,flexCounter,hardware,kni,pulse,strata -ingestexclude=/Sysdb/cell/1/agent,/Sysdb/cell/2/agent -taillogs
+   no shutdown
+!
+vlan internal order ascending range 1006 1199
+!
+flow tracking sampled
+   sample 10000
+   tracker FLOW-TRACKER
+      record export on inactive timeout 70000
+      record export on interval 5000
+      exporter CV-TELEMETRY
+         collector 127.0.0.1
+         local interface Loopback0
+   no shutdown
+!
+transceiver qsfp default-mode 4x10G
+!
+service routing protocols model multi-agent
+!
+hostname site2-leaf1
+ip name-server vrf MGMT 192.168.17.1
+dns domain wan.example.local
+!
+no spanning-tree vlan-id 4093-4094
+!
+vlan 42
+   name RED-TEST
+!
+vlan 666
+   name BLUE-TEST
+!
+vlan 3099
+   name MLAG_L3_VRF_BLUE
+   trunk group MLAG
+!
+vlan 3100
+   name MLAG_L3_VRF_RED
+   trunk group MLAG
+!
+vlan 4093
+   name MLAG_L3
+   trunk group MLAG
+!
+vlan 4094
+   name MLAG
+   trunk group MLAG
+!
+vrf instance BLUE
+!
+vrf instance MGMT
+!
+vrf instance RED
+!
+management api http-commands
+   protocol https
+   no shutdown
+   !
+   vrf MGMT
+      no shutdown
+!
+aaa authorization exec default local
+!
+interface Port-Channel5
+   description MLAG_site2-leaf2_Port-Channel5
+   no shutdown
+   switchport mode trunk
+   switchport trunk group MLAG
+   switchport
+!
+interface Ethernet3
+   description P2P_site2-wan1_Ethernet1
+   no shutdown
+   mtu 9214
+   no switchport
+   flow tracker sampled FLOW-TRACKER
+   ip address 10.0.2.12/31
+!
+interface Ethernet3.100
+   description P2P_site2-wan1_Ethernet1.100_VRF_BLUE
+   no shutdown
+   mtu 9214
+   encapsulation dot1q vlan 100
+   flow tracker sampled FLOW-TRACKER
+   vrf BLUE
+   ip address 10.0.2.12/31
+!
+interface Ethernet3.101
+   description P2P_site2-wan1_Ethernet1.101_VRF_RED
+   no shutdown
+   mtu 9214
+   encapsulation dot1q vlan 101
+   flow tracker sampled FLOW-TRACKER
+   vrf RED
+   ip address 10.0.2.12/31
+!
+interface Ethernet5
+   description MLAG_site2-leaf2_Ethernet5
+   no shutdown
+   channel-group 5 mode active
+!
+interface Ethernet6
+   description MLAG_site2-leaf2_Ethernet6
+   no shutdown
+   channel-group 5 mode active
+!
+interface Ethernet7
+   description SERVER_site2-leaf1-server1_Ethernet1
+   no shutdown
+   switchport access vlan 666
+   switchport mode access
+   switchport
+!
+interface Loopback0
+   description ROUTER_ID
+   no shutdown
+   ip address 192.168.255.9/32
+!
+interface Loopback1
+   description VXLAN_TUNNEL_SOURCE
+   no shutdown
+   ip address 192.168.42.9/32
+!
+interface Management1
+   description OOB_MANAGEMENT
+   no shutdown
+   vrf MGMT
+   ip address 192.168.17.18/24
+   no lldp transmit
+   no lldp receive
+!
+interface Vlan42
+   description RED-TEST
+   no shutdown
+   no autostate
+   vrf RED
+   ip address 10.42.2.1/24
+!
+interface Vlan666
+   description BLUE-TEST
+   no shutdown
+   no autostate
+   vrf BLUE
+   ip address 10.66.2.1/24
+!
+interface Vlan3099
+   description MLAG_L3_VRF_BLUE
+   no shutdown
+   mtu 9214
+   no autostate
+   vrf BLUE
+   ip address 10.255.251.16/31
+!
+interface Vlan3100
+   description MLAG_L3_VRF_RED
+   no shutdown
+   mtu 9214
+   no autostate
+   vrf RED
+   ip address 10.255.251.16/31
+!
+interface Vlan4093
+   description MLAG_L3
+   no shutdown
+   mtu 9214
+   no autostate
+   ip address 10.255.251.16/31
+!
+interface Vlan4094
+   description MLAG
+   no shutdown
+   mtu 9214
+   no autostate
+   ip address 10.255.252.16/31
+!
+interface Vxlan1
+   description site2-leaf1_VTEP
+   vxlan source-interface Loopback1
+   vxlan virtual-router encapsulation mac-address mlag-system-id
+   vxlan udp-port 4789
+   vxlan vlan 42 vni 10042
+   vxlan vlan 666 vni 10666
+   vxlan vrf BLUE vni 100
+   vxlan vrf RED vni 101
+!
+ip routing
+ip routing vrf BLUE
+no ip routing vrf MGMT
+ip routing vrf RED
+!
+ip prefix-list PL-LOOPBACKS-EVPN-OVERLAY
+   seq 10 permit 192.168.255.0/24 eq 32
+   seq 20 permit 192.168.42.0/24 eq 32
+!
+ip prefix-list PL-MLAG-PEER-VRFS
+   seq 10 permit 10.255.251.16/31
+!
+mlag configuration
+   domain-id SITE2
+   local-interface Vlan4094
+   peer-address 10.255.252.17
+   peer-link Port-Channel5
+   reload-delay mlag 300
+   reload-delay non-mlag 330
+!
+ip route vrf MGMT 0.0.0.0/0 192.168.17.1
+!
+ntp local-interface vrf MGMT Management1
+ntp server vrf MGMT 0.pool.ntp.org prefer
+!
+route-map RM-CONN-2-BGP permit 10
+   match ip address prefix-list PL-LOOPBACKS-EVPN-OVERLAY
+!
+route-map RM-CONN-2-BGP-VRFS deny 10
+   match ip address prefix-list PL-MLAG-PEER-VRFS
+!
+route-map RM-CONN-2-BGP-VRFS permit 20
+!
+route-map RM-MLAG-PEER-IN permit 10
+   description Make routes learned over MLAG Peer-link less preferred on spines to ensure optimal routing
+   set origin incomplete
+!
+router bfd
+   multihop interval 300 min-rx 300 multiplier 3
+!
+router bgp 65102
+   router-id 192.168.255.9
+   no bgp default ipv4-unicast
+   maximum-paths 4 ecmp 4
+   neighbor EVPN-OVERLAY-PEERS peer group
+   neighbor EVPN-OVERLAY-PEERS update-source Loopback0
+   neighbor EVPN-OVERLAY-PEERS bfd
+   neighbor EVPN-OVERLAY-PEERS ebgp-multihop 3
+   neighbor EVPN-OVERLAY-PEERS send-community
+   neighbor EVPN-OVERLAY-PEERS maximum-routes 0
+   neighbor IPv4-UNDERLAY-PEERS peer group
+   neighbor IPv4-UNDERLAY-PEERS send-community
+   neighbor IPv4-UNDERLAY-PEERS maximum-routes 12000
+   neighbor MLAG-IPv4-UNDERLAY-PEER peer group
+   neighbor MLAG-IPv4-UNDERLAY-PEER remote-as 65102
+   neighbor MLAG-IPv4-UNDERLAY-PEER next-hop-self
+   neighbor MLAG-IPv4-UNDERLAY-PEER description site2-leaf2
+   neighbor MLAG-IPv4-UNDERLAY-PEER route-map RM-MLAG-PEER-IN in
+   neighbor MLAG-IPv4-UNDERLAY-PEER send-community
+   neighbor MLAG-IPv4-UNDERLAY-PEER maximum-routes 12000
+   neighbor 10.0.2.13 peer group IPv4-UNDERLAY-PEERS
+   neighbor 10.0.2.13 remote-as 65000
+   neighbor 10.0.2.13 description site2-wan1_Ethernet1
+   neighbor 10.255.251.17 peer group MLAG-IPv4-UNDERLAY-PEER
+   neighbor 10.255.251.17 description site2-leaf2_Vlan4093
+   redistribute connected route-map RM-CONN-2-BGP
+   !
+   vlan 42
+      rd 192.168.255.9:10042
+      route-target both 10042:10042
+      redistribute learned
+   !
+   vlan 666
+      rd 192.168.255.9:10666
+      route-target both 10666:10666
+      redistribute learned
+   !
+   address-family evpn
+      neighbor EVPN-OVERLAY-PEERS activate
+   !
+   address-family ipv4
+      no neighbor EVPN-OVERLAY-PEERS activate
+      neighbor IPv4-UNDERLAY-PEERS activate
+      neighbor MLAG-IPv4-UNDERLAY-PEER activate
+   !
+   vrf BLUE
+      rd 192.168.255.9:100
+      route-target import evpn 100:100
+      route-target export evpn 100:100
+      router-id 192.168.255.9
+      neighbor 10.0.2.13 peer group IPv4-UNDERLAY-PEERS
+      neighbor 10.0.2.13 remote-as 65000
+      neighbor 10.0.2.13 description site2-wan1_Ethernet1.100_vrf_BLUE
+      neighbor 10.255.251.17 peer group MLAG-IPv4-UNDERLAY-PEER
+      neighbor 10.255.251.17 description site2-leaf2_Vlan3099
+      redistribute connected route-map RM-CONN-2-BGP-VRFS
+   !
+   vrf RED
+      rd 192.168.255.9:101
+      route-target import evpn 101:101
+      route-target export evpn 101:101
+      router-id 192.168.255.9
+      neighbor 10.0.2.13 peer group IPv4-UNDERLAY-PEERS
+      neighbor 10.0.2.13 remote-as 65000
+      neighbor 10.0.2.13 description site2-wan1_Ethernet1.101_vrf_RED
+      neighbor 10.255.251.17 peer group MLAG-IPv4-UNDERLAY-PEER
+      neighbor 10.255.251.17 description site2-leaf2_Vlan3100
+      redistribute connected route-map RM-CONN-2-BGP-VRFS
+!
+end
+
+
+
+
+###################### evpnrtr4
+dut:evpnrtr4
+[numExtPorts 15]
+[agentsToRun StunClient SuperServer]
+[agentArgv SuperServer --service=SslManager --service=StunServer --service=SswanManager]
+[dirsToClone /etc/sswan /etc/turnserver]
+prompt site2-leaf2%P
+!
+no enable password
+no aaa root
+!
+username ansible privilege 15 role network-admin secret sha512 $6$7u4j1rkb3VELgcZE$EJt2Qff8kd/TapRoci0XaIZsL4tFzgq1YZBLD9c6f/knXzvcYY0NcMKndZeCv0T268knGKhOEwZAxqKjlMm920
+username arista privilege 15 role network-admin secret sha512 $6$Enl0WfE32FthwyiJ$yTyGaEJ2uPKLU.F7314YtB7J1jrzrMi7ogXIRTEHQfLdLgKWWmr1UvNlZLN6AyuxET7G5aH3AI9OYRzxVTkB1.
+username cvpadmin privilege 15 role network-admin secret sha512 $6$a7LdQWHxWzYHpvVt$n62q.1mbm4kzQ5oBr0lhXCE9ntnTn.SNa16DovZHahFQLH.iPcPMZa5JUSFtncrDW4EDQ3oSWgP8G0S4FtOFx1
+!
+daemon TerminAttr
+   exec /usr/bin/TerminAttr -cvaddr=www.cv-staging.corp.arista.io:443 -cvauth=token-secure,/tmp/cv-onboarding-token -cvvrf=MGMT -smashexcludes=ale,flexCounter,hardware,kni,pulse,strata -ingestexclude=/Sysdb/cell/1/agent,/Sysdb/cell/2/agent -taillogs
+   no shutdown
+!
+vlan internal order ascending range 1006 1199
+!
+flow tracking sampled
+   sample 10000
+   tracker FLOW-TRACKER
+      record export on inactive timeout 70000
+      record export on interval 5000
+      exporter CV-TELEMETRY
+         collector 127.0.0.1
+         local interface Loopback0
+   no shutdown
+!
+transceiver qsfp default-mode 4x10G
+!
+service routing protocols model multi-agent
+!
+hostname site2-leaf2
+ip name-server vrf MGMT 192.168.17.1
+dns domain wan.example.local
+!
+no spanning-tree vlan-id 4093-4094
+!
+vlan 42
+   name RED-TEST
+!
+vlan 666
+   name BLUE-TEST
+!
+vlan 3099
+   name MLAG_L3_VRF_BLUE
+   trunk group MLAG
+!
+vlan 3100
+   name MLAG_L3_VRF_RED
+   trunk group MLAG
+!
+vlan 4093
+   name MLAG_L3
+   trunk group MLAG
+!
+vlan 4094
+   name MLAG
+   trunk group MLAG
+!
+vrf instance BLUE
+!
+vrf instance MGMT
+!
+vrf instance RED
+!
+management api http-commands
+   protocol https
+   no shutdown
+   !
+   vrf MGMT
+      no shutdown
+!
+aaa authorization exec default local
+!
+interface Port-Channel5
+   description MLAG_site2-leaf1_Port-Channel5
+   no shutdown
+   switchport mode trunk
+   switchport trunk group MLAG
+   switchport
+!
+interface Ethernet3
+   description P2P_site2-wan2_Ethernet1
+   no shutdown
+   mtu 9214
+   no switchport
+   flow tracker sampled FLOW-TRACKER
+   ip address 10.0.2.14/31
+!
+interface Ethernet3.100
+   description P2P_site2-wan2_Ethernet1.100_VRF_BLUE
+   no shutdown
+   mtu 9214
+   encapsulation dot1q vlan 100
+   flow tracker sampled FLOW-TRACKER
+   vrf BLUE
+   ip address 10.0.2.14/31
+!
+interface Ethernet3.101
+   description P2P_site2-wan2_Ethernet1.101_VRF_RED
+   no shutdown
+   mtu 9214
+   encapsulation dot1q vlan 101
+   flow tracker sampled FLOW-TRACKER
+   vrf RED
+   ip address 10.0.2.14/31
+!
+interface Ethernet5
+   description MLAG_site2-leaf1_Ethernet5
+   no shutdown
+   channel-group 5 mode active
+!
+interface Ethernet6
+   description MLAG_site2-leaf1_Ethernet6
+   no shutdown
+   channel-group 5 mode active
+!
+interface Loopback0
+   description ROUTER_ID
+   no shutdown
+   ip address 192.168.255.10/32
+!
+interface Loopback1
+   description VXLAN_TUNNEL_SOURCE
+   no shutdown
+   ip address 192.168.42.9/32
+!
+interface Management1
+   description OOB_MANAGEMENT
+   no shutdown
+   vrf MGMT
+   ip address 192.168.17.19/24
+   no lldp transmit
+   no lldp receive
+!
+interface Vlan42
+   description RED-TEST
+   no shutdown
+   no autostate
+   vrf RED
+   ip address 10.42.22.1/24
+!
+interface Vlan666
+   description BLUE-TEST
+   no shutdown
+   no autostate
+   vrf BLUE
+   ip address 10.66.22.1/24
+!
+interface Vlan3099
+   description MLAG_L3_VRF_BLUE
+   no shutdown
+   mtu 9214
+   no autostate
+   vrf BLUE
+   ip address 10.255.251.17/31
+!
+interface Vlan3100
+   description MLAG_L3_VRF_RED
+   no shutdown
+   mtu 9214
+   no autostate
+   vrf RED
+   ip address 10.255.251.17/31
+!
+interface Vlan4093
+   description MLAG_L3
+   no shutdown
+   mtu 9214
+   no autostate
+   ip address 10.255.251.17/31
+!
+interface Vlan4094
+   description MLAG
+   no shutdown
+   mtu 9214
+   no autostate
+   ip address 10.255.252.17/31
+!
+interface Vxlan1
+   description site2-leaf2_VTEP
+   vxlan source-interface Loopback1
+   vxlan virtual-router encapsulation mac-address mlag-system-id
+   vxlan udp-port 4789
+   vxlan vlan 42 vni 10042
+   vxlan vlan 666 vni 10666
+   vxlan vrf BLUE vni 100
+   vxlan vrf RED vni 101
+!
+ip routing
+ip routing vrf BLUE
+no ip routing vrf MGMT
+ip routing vrf RED
+!
+ip prefix-list PL-LOOPBACKS-EVPN-OVERLAY
+   seq 10 permit 192.168.255.0/24 eq 32
+   seq 20 permit 192.168.42.0/24 eq 32
+!
+ip prefix-list PL-MLAG-PEER-VRFS
+   seq 10 permit 10.255.251.16/31
+!
+mlag configuration
+   domain-id SITE2
+   local-interface Vlan4094
+   peer-address 10.255.252.16
+   peer-link Port-Channel5
+   reload-delay mlag 300
+   reload-delay non-mlag 330
+!
+ip route vrf MGMT 0.0.0.0/0 192.168.17.1
+!
+ntp local-interface vrf MGMT Management1
+ntp server vrf MGMT 0.pool.ntp.org prefer
+!
+route-map RM-CONN-2-BGP permit 10
+   match ip address prefix-list PL-LOOPBACKS-EVPN-OVERLAY
+!
+route-map RM-CONN-2-BGP-VRFS deny 10
+   match ip address prefix-list PL-MLAG-PEER-VRFS
+!
+route-map RM-CONN-2-BGP-VRFS permit 20
+!
+route-map RM-MLAG-PEER-IN permit 10
+   description Make routes learned over MLAG Peer-link less preferred on spines to ensure optimal routing
+   set origin incomplete
+!
+router bfd
+   multihop interval 300 min-rx 300 multiplier 3
+!
+router bgp 65102
+   router-id 192.168.255.10
+   no bgp default ipv4-unicast
+   maximum-paths 4 ecmp 4
+   neighbor EVPN-OVERLAY-PEERS peer group
+   neighbor EVPN-OVERLAY-PEERS update-source Loopback0
+   neighbor EVPN-OVERLAY-PEERS bfd
+   neighbor EVPN-OVERLAY-PEERS ebgp-multihop 3
+   neighbor EVPN-OVERLAY-PEERS send-community
+   neighbor EVPN-OVERLAY-PEERS maximum-routes 0
+   neighbor IPv4-UNDERLAY-PEERS peer group
+   neighbor IPv4-UNDERLAY-PEERS send-community
+   neighbor IPv4-UNDERLAY-PEERS maximum-routes 12000
+   neighbor MLAG-IPv4-UNDERLAY-PEER peer group
+   neighbor MLAG-IPv4-UNDERLAY-PEER remote-as 65102
+   neighbor MLAG-IPv4-UNDERLAY-PEER next-hop-self
+   neighbor MLAG-IPv4-UNDERLAY-PEER description site2-leaf1
+   neighbor MLAG-IPv4-UNDERLAY-PEER route-map RM-MLAG-PEER-IN in
+   neighbor MLAG-IPv4-UNDERLAY-PEER send-community
+   neighbor MLAG-IPv4-UNDERLAY-PEER maximum-routes 12000
+   neighbor 10.0.2.15 peer group IPv4-UNDERLAY-PEERS
+   neighbor 10.0.2.15 remote-as 65000
+   neighbor 10.0.2.15 description site2-wan2_Ethernet1
+   neighbor 10.255.251.16 peer group MLAG-IPv4-UNDERLAY-PEER
+   neighbor 10.255.251.16 description site2-leaf1_Vlan4093
+   redistribute connected route-map RM-CONN-2-BGP
+   !
+   vlan 42
+      rd 192.168.255.10:10042
+      route-target both 10042:10042
+      redistribute learned
+   !
+   vlan 666
+      rd 192.168.255.10:10666
+      route-target both 10666:10666
+      redistribute learned
+   !
+   address-family evpn
+      neighbor EVPN-OVERLAY-PEERS activate
+   !
+   address-family ipv4
+      no neighbor EVPN-OVERLAY-PEERS activate
+      neighbor IPv4-UNDERLAY-PEERS activate
+      neighbor MLAG-IPv4-UNDERLAY-PEER activate
+   !
+   vrf BLUE
+      rd 192.168.255.10:100
+      route-target import evpn 100:100
+      route-target export evpn 100:100
+      router-id 192.168.255.10
+      neighbor 10.0.2.15 peer group IPv4-UNDERLAY-PEERS
+      neighbor 10.0.2.15 remote-as 65000
+      neighbor 10.0.2.15 description site2-wan2_Ethernet1.100_vrf_BLUE
+      neighbor 10.255.251.16 peer group MLAG-IPv4-UNDERLAY-PEER
+      neighbor 10.255.251.16 description site2-leaf1_Vlan3099
+      redistribute connected route-map RM-CONN-2-BGP-VRFS
+   !
+   vrf RED
+      rd 192.168.255.10:101
+      route-target import evpn 101:101
+      route-target export evpn 101:101
+      router-id 192.168.255.10
+      neighbor 10.0.2.15 peer group IPv4-UNDERLAY-PEERS
+      neighbor 10.0.2.15 remote-as 65000
+      neighbor 10.0.2.15 description site2-wan2_Ethernet1.101_vrf_RED
+      neighbor 10.255.251.16 peer group MLAG-IPv4-UNDERLAY-PEER
+      neighbor 10.255.251.16 description site2-leaf1_Vlan3100
+      redistribute connected route-map RM-CONN-2-BGP-VRFS
+!
+end
+
+
+
+
+###################### evpnrtr5
+dut:evpnrtr5
+[numExtPorts 15]
+[agentsToRun StunClient SuperServer]
+[agentArgv SuperServer --service=SslManager --service=StunServer --service=SswanManager]
+[dirsToClone /etc/sswan /etc/turnserver]
+prompt site3-leaf1%P
+!
+no enable password
+no aaa root
+!
+username ansible privilege 15 role network-admin secret sha512 $6$7u4j1rkb3VELgcZE$EJt2Qff8kd/TapRoci0XaIZsL4tFzgq1YZBLD9c6f/knXzvcYY0NcMKndZeCv0T268knGKhOEwZAxqKjlMm920
+username arista privilege 15 role network-admin secret sha512 $6$Enl0WfE32FthwyiJ$yTyGaEJ2uPKLU.F7314YtB7J1jrzrMi7ogXIRTEHQfLdLgKWWmr1UvNlZLN6AyuxET7G5aH3AI9OYRzxVTkB1.
+username cvpadmin privilege 15 role network-admin secret sha512 $6$a7LdQWHxWzYHpvVt$n62q.1mbm4kzQ5oBr0lhXCE9ntnTn.SNa16DovZHahFQLH.iPcPMZa5JUSFtncrDW4EDQ3oSWgP8G0S4FtOFx1
+!
+daemon TerminAttr
+   exec /usr/bin/TerminAttr -cvaddr=www.cv-staging.corp.arista.io:443 -cvauth=token-secure,/tmp/cv-onboarding-token -cvvrf=MGMT -smashexcludes=ale,flexCounter,hardware,kni,pulse,strata -ingestexclude=/Sysdb/cell/1/agent,/Sysdb/cell/2/agent -taillogs
+   no shutdown
+!
+vlan internal order ascending range 1006 1199
+!
+flow tracking sampled
+   sample 10000
+   tracker FLOW-TRACKER
+      record export on inactive timeout 70000
+      record export on interval 5000
+      exporter CV-TELEMETRY
+         collector 127.0.0.1
+         local interface Loopback0
+   no shutdown
+!
+transceiver qsfp default-mode 4x10G
+!
+service routing protocols model multi-agent
+!
+hostname site3-leaf1
+ip name-server vrf MGMT 192.168.17.1
+dns domain wan.example.local
+!
+vlan 42
+   name RED-TEST
+!
+vlan 666
+   name BLUE-TEST
+!
+vrf instance MGMT
+!
+management api http-commands
+   protocol https
+   no shutdown
+   !
+   vrf MGMT
+      no shutdown
+!
+aaa authorization exec default local
+!
+interface Ethernet1
+   description L2_site3-wan1_Ethernet1
+   no shutdown
+   switchport trunk allowed vlan 42,666
+   switchport mode trunk
+   switchport
+   flow tracker sampled FLOW-TRACKER
+   spanning-tree portfast
+!
+interface Ethernet2
+   description SERVER_site3-leaf1-server1_Ethernet1
+   no shutdown
+   switchport access vlan 42
+   switchport mode access
+   switchport
+!
+interface Ethernet3
+   description SERVER_site3-leaf1-server2_Ethernet1
+   no shutdown
+   switchport access vlan 666
+   switchport mode access
+   switchport
+!
+interface Management1
+   description OOB_MANAGEMENT
+   no shutdown
+   vrf MGMT
+   ip address 192.168.17.21/24
+   no lldp transmit
+   no lldp receive
+no ip routing vrf MGMT
+!
+ip route vrf MGMT 0.0.0.0/0 192.168.17.1
+!
+ntp local-interface vrf MGMT Management1
+ntp server vrf MGMT 0.pool.ntp.org prefer
+!
+end
+
+
+
+
+###################### evpnsfe1
+dut:evpnsfe1
+[numExtPorts 15]
+[agentsToRun StunClient SuperServer]
+[agentArgv SuperServer --service=SslManager --service=StunServer --service=SswanManager]
+[dirsToClone /etc/sswan /etc/turnserver]
+prompt pf1%P
+!
+no enable password
+no aaa root
+!
+username ansible privilege 15 role network-admin secret sha512 $6$7u4j1rkb3VELgcZE$EJt2Qff8kd/TapRoci0XaIZsL4tFzgq1YZBLD9c6f/knXzvcYY0NcMKndZeCv0T268knGKhOEwZAxqKjlMm920
+username arista privilege 15 role network-admin secret sha512 $6$Enl0WfE32FthwyiJ$yTyGaEJ2uPKLU.F7314YtB7J1jrzrMi7ogXIRTEHQfLdLgKWWmr1UvNlZLN6AyuxET7G5aH3AI9OYRzxVTkB1.
+username cvpadmin privilege 15 role network-admin secret sha512 $6$a7LdQWHxWzYHpvVt$n62q.1mbm4kzQ5oBr0lhXCE9ntnTn.SNa16DovZHahFQLH.iPcPMZa5JUSFtncrDW4EDQ3oSWgP8G0S4FtOFx1
+!
+agent KernelFib environment KERNELFIB_PROGRAM_ALL_ECMP=1
+!
+daemon TerminAttr
+   exec /usr/bin/TerminAttr -cvaddr=www.cv-staging.corp.arista.io:443 -cvauth=token-secure,/tmp/cv-onboarding-token -cvvrf=MGMT -smashexcludes=ale,flexCounter,hardware,kni,pulse,strata -ingestexclude=/Sysdb/cell/1/agent,/Sysdb/cell/2/agent -taillogs
+   no shutdown
+!
+flow tracking hardware
+   tracker FLOW-TRACKER
+      record export on inactive timeout 70000
+      record export on interval 5000
+      exporter CV-TELEMETRY
+         collector 127.0.0.1
+         local interface Loopback0
+   no shutdown
+!
+service routing protocols model multi-agent
+!
+hostname pf1
+ip name-server vrf MGMT 192.168.17.1
+dns domain wan.example.local
+!
+router adaptive-virtual-topology
+   topology role pathfinder
+   !
+   policy BLUE-POLICY
+      !
+      match application-profile VIDEO
+         avt profile BLUE-POLICY-VIDEO
+      !
+      match application-profile VOICE
+         avt profile BLUE-POLICY-VOICE
+         dscp 46
+      !
+      match application-profile default
+         avt profile BLUE-POLICY-DEFAULT
+   !
+   policy DEFAULT-POLICY-WITH-CP
+      !
+      match application-profile APP-PROFILE-CONTROL-PLANE
+         avt profile DEFAULT-POLICY-CONTROL-PLANE
+      !
+      match application-profile default
+         avt profile DEFAULT-POLICY-DEFAULT
+   !
+   policy RED-POLICY
+      !
+      match application-profile CRITICAL-SECRET-DATA
+         avt profile RED-POLICY-CRITICAL-SECRET-DATA
+      !
+      match application-profile NORMAL-DATA
+         avt profile RED-POLICY-NORMAL-DATA
+      !
+      match application-profile NOT-SO-IMPORTANT-DATA
+         avt profile RED-POLICY-NOT-SO-IMPORTANT-DATA
+   !
+   profile BLUE-POLICY-DEFAULT
+      path-selection load-balance LB-BLUE-POLICY-DEFAULT
+   !
+   profile BLUE-POLICY-VIDEO
+      path-selection load-balance LB-BLUE-POLICY-VIDEO
+   !
+   profile BLUE-POLICY-VOICE
+      path-selection load-balance LB-BLUE-POLICY-VOICE
+   !
+   profile DEFAULT-POLICY-CONTROL-PLANE
+      path-selection load-balance LB-DEFAULT-POLICY-CONTROL-PLANE
+   !
+   profile DEFAULT-POLICY-DEFAULT
+      path-selection load-balance LB-DEFAULT-POLICY-DEFAULT
+   !
+   profile RED-POLICY-CRITICAL-SECRET-DATA
+      path-selection load-balance LB-RED-POLICY-CRITICAL-SECRET-DATA
+   !
+   profile RED-POLICY-NORMAL-DATA
+      path-selection load-balance LB-RED-POLICY-NORMAL-DATA
+   !
+   profile RED-POLICY-NOT-SO-IMPORTANT-DATA
+      path-selection load-balance LB-RED-POLICY-NOT-SO-IMPORTANT-DATA
+   !
+   vrf BLUE
+      avt policy BLUE-POLICY
+      avt profile BLUE-POLICY-DEFAULT id 1
+      avt profile BLUE-POLICY-VIDEO id 2
+      avt profile BLUE-POLICY-VOICE id 3
+   !
+   vrf default
+      avt policy DEFAULT-POLICY-WITH-CP
+      avt profile DEFAULT-POLICY-DEFAULT id 1
+      avt profile DEFAULT-POLICY-CONTROL-PLANE id 254
+   !
+   vrf RED
+      avt policy RED-POLICY
+      avt profile RED-POLICY-CRITICAL-SECRET-DATA id 2
+      avt profile RED-POLICY-NORMAL-DATA id 3
+      avt profile RED-POLICY-NOT-SO-IMPORTANT-DATA id 4
+!
+router path-selection
+   peer dynamic source stun
+   tcp mss ceiling ipv4 ingress
+   !
+   path-group INTERNET id 102
+      ipsec profile CP-PROFILE
+      !
+      local interface Ethernet2
+      !
+      peer static router-ip 192.168.42.2
+         name pf2
+         ipv4 address 100.64.200.2
+   !
+   path-group LAN_HA id 65535
+      flow assignment lan
+   !
+   path-group MPLS id 101
+      ipsec profile CP-PROFILE
+      !
+      local interface Ethernet1
+      !
+      peer static router-ip 192.168.42.2
+         name pf2
+         ipv4 address 172.18.200.2
+   !
+   load-balance policy LB-BLUE-POLICY-DEFAULT
+      path-group INTERNET
+      path-group LAN_HA
+      path-group MPLS
+   !
+   load-balance policy LB-BLUE-POLICY-VIDEO
+      path-group INTERNET
+      path-group LAN_HA
+      path-group MPLS priority 2
+   !
+   load-balance policy LB-BLUE-POLICY-VOICE
+      latency 150
+      jitter 30
+      loss-rate 1
+      hop count lowest
+      path-group LAN_HA
+      path-group MPLS
+      path-group INTERNET priority 2
+   !
+   load-balance policy LB-DEFAULT-POLICY-CONTROL-PLANE
+      path-group INTERNET
+      path-group LAN_HA
+      path-group MPLS
+   !
+   load-balance policy LB-DEFAULT-POLICY-DEFAULT
+      path-group INTERNET
+      path-group LAN_HA
+      path-group MPLS
+   !
+   load-balance policy LB-RED-POLICY-CRITICAL-SECRET-DATA
+      path-group LAN_HA
+      path-group MPLS
+   !
+   load-balance policy LB-RED-POLICY-NORMAL-DATA
+      path-group INTERNET
+      path-group LAN_HA
+      path-group MPLS priority 2
+   !
+   load-balance policy LB-RED-POLICY-NOT-SO-IMPORTANT-DATA
+      path-group INTERNET
+      path-group LAN_HA
+!
+platform sfe data-plane cpu allocation maximum 1
+!
+spanning-tree mode none
+!
+vrf instance MGMT
+!
+management api http-commands
+   protocol https
+   no shutdown
+   !
+   vrf MGMT
+      no shutdown
+!
+aaa authorization exec default local
+!
+ip security
+   ike policy CP-IKE-POLICY
+      local-id 192.168.42.1
+   !
+   sa policy CP-SA-POLICY
+      esp encryption aes256gcm128
+      pfs dh-group 14
+   !
+   profile CP-PROFILE
+      ike-policy CP-IKE-POLICY
+      sa-policy CP-SA-POLICY
+      connection start
+      shared-key 7 045A190F1C354D
+      dpd 10 50 clear
+      mode transport
+!
+interface Dps1
+   description DPS Interface
+   mtu 9194
+   flow tracker hardware FLOW-TRACKER
+   ip address 192.168.42.1/32
+!
+interface Ethernet1
+   description ACME-MPLS-INC_mpls-pf1_mpls-cloud_Ethernet1
+   no shutdown
+   no switchport
+   ip address 172.18.100.2/24
+!
+interface Ethernet2
+   description GLOBAL-INTERNET-LIMITED_inet-pf1_inet-cloud_Ethernet1
+   no shutdown
+   no switchport
+   ip address 100.64.100.2/24
+   ip access-group ACL-PF-INTERNET-IN_Ethernet2 in
+!
+interface Loopback0
+   description ROUTER_ID
+   no shutdown
+   ip address 192.168.255.1/32
+!
+interface Management1
+   description OOB_MANAGEMENT
+   no shutdown
+   vrf MGMT
+   ip address 192.168.17.10/24
+   no lldp transmit
+   no lldp receive
+!
+interface Vxlan1
+   description pf1_VTEP
+   vxlan source-interface Dps1
+   vxlan udp-port 4789
+   vxlan vrf BLUE vni 100
+   vxlan vrf default vni 1
+   vxlan vrf RED vni 101
+!
+application traffic recognition
+   !
+   application ipv4 APP-CONTROL-PLANE
+      source prefix field-set PFX-LOCAL-VTEP-IP
+   !
+   application ipv4 CRITICAL-SECRET-DATA-APP
+      dscp 46
+   !
+   application ipv4 NORMAL-DATA-APP
+      dscp af23
+   !
+   application ipv4 NOT-SO-IMPORTANT-DATA-APP
+      dscp 0
+   !
+   application ipv4 VIDEO-APP
+      protocol tcp destination port field-set VIDEO-PORTS
+      protocol udp destination port field-set VIDEO-PORTS
+   !
+   application ipv4 VOICE-APP
+      protocol tcp destination port field-set VOICE-PORTS
+   !
+   application-profile APP-PROFILE-CONTROL-PLANE
+      application APP-CONTROL-PLANE
+   !
+   application-profile CRITICAL-SECRET-DATA
+      application CRITICAL-SECRET-DATA-APP
+   !
+   application-profile NORMAL-DATA
+      application NORMAL-DATA-APP
+   !
+   application-profile NOT-SO-IMPORTANT-DATA
+      application NOT-SO-IMPORTANT-DATA-APP
+   !
+   application-profile VIDEO
+      application VIDEO-APP
+   !
+   application-profile VOICE
+      application VOICE-APP
+   !
+   field-set ipv4 prefix PFX-LOCAL-VTEP-IP
+      192.168.42.1/32
+   !
+   field-set l4-port VIDEO-PORTS
+      4242-4244
+   !
+   field-set l4-port VOICE-PORTS
+      666-667
+!
+ip access-list ACL-PF-INTERNET-IN_Ethernet2
+   1 remark Not for PRODUCTION: This ACL is built this way because the lab has an out-of-band interface
+   10 permit udp any host 100.64.100.2 eq isakmp non500-isakmp
+   20 permit udp any host 100.64.100.2 eq 3478
+   30 permit icmp any host 100.64.100.2
+   deny ip any any
+!
+ip routing
+no ip routing vrf MGMT
+!
+ip extcommunity-list ECL-EVPN-SOO permit soo 192.168.255.1:0
+!
+ip prefix-list PL-LOOPBACKS-EVPN-OVERLAY
+   seq 10 permit 192.168.255.0/24 eq 32
+!
+ip route 0.0.0.0/0 100.64.100.1
+ip route 172.18.0.0/16 172.18.100.1
+ip route vrf MGMT 0.0.0.0/0 192.168.17.1
+!
+ntp local-interface vrf MGMT Management1
+ntp server vrf MGMT 0.pool.ntp.org prefer
+!
+route-map RM-CONN-2-BGP permit 10
+   match ip address prefix-list PL-LOOPBACKS-EVPN-OVERLAY
+   set extcommunity soo 192.168.255.1:0 additive
+!
+route-map RM-EVPN-EXPORT-VRF-DEFAULT permit 10
+   match extcommunity ECL-EVPN-SOO
+!
+router bfd
+   multihop interval 300 min-rx 300 multiplier 3
+!
+router bgp 65000
+   router-id 192.168.255.1
+   no bgp default ipv4-unicast
+   bgp cluster-id 192.168.255.1
+   maximum-paths 16
+   bgp listen range 192.168.42.0/24 peer-group WAN-OVERLAY-PEERS remote-as 65000
+   neighbor WAN-OVERLAY-PEERS peer group
+   neighbor WAN-OVERLAY-PEERS remote-as 65000
+   neighbor WAN-OVERLAY-PEERS update-source Dps1
+   neighbor WAN-OVERLAY-PEERS bfd
+   neighbor WAN-OVERLAY-PEERS bfd interval 1000 min-rx 1000 multiplier 10
+   neighbor WAN-OVERLAY-PEERS ttl maximum-hops 1
+   neighbor WAN-OVERLAY-PEERS route-reflector-client
+   neighbor WAN-OVERLAY-PEERS password 7 htm4AZe9mIQOO1uiMuGgYQ==
+   neighbor WAN-OVERLAY-PEERS send-community
+   neighbor WAN-OVERLAY-PEERS maximum-routes 0
+   neighbor WAN-RR-OVERLAY-PEERS peer group
+   neighbor WAN-RR-OVERLAY-PEERS remote-as 65000
+   neighbor WAN-RR-OVERLAY-PEERS update-source Dps1
+   neighbor WAN-RR-OVERLAY-PEERS bfd
+   neighbor WAN-RR-OVERLAY-PEERS bfd interval 1000 min-rx 1000 multiplier 10
+   neighbor WAN-RR-OVERLAY-PEERS ttl maximum-hops 1
+   neighbor WAN-RR-OVERLAY-PEERS route-reflector-client
+   neighbor WAN-RR-OVERLAY-PEERS password 7 UYrhGgLBS9m5z2rcHbqzBg==
+   neighbor WAN-RR-OVERLAY-PEERS send-community
+   neighbor WAN-RR-OVERLAY-PEERS maximum-routes 0
+   neighbor 192.168.42.2 peer group WAN-RR-OVERLAY-PEERS
+   neighbor 192.168.42.2 description pf2_Dps1
+   redistribute connected route-map RM-CONN-2-BGP
+   !
+   address-family evpn
+      neighbor WAN-OVERLAY-PEERS activate
+      neighbor WAN-OVERLAY-PEERS encapsulation path-selection
+      neighbor WAN-RR-OVERLAY-PEERS activate
+      neighbor WAN-RR-OVERLAY-PEERS encapsulation path-selection
+      next-hop resolution disabled
+   !
+   address-family ipv4
+      no neighbor WAN-OVERLAY-PEERS activate
+      no neighbor WAN-RR-OVERLAY-PEERS activate
+   !
+   address-family ipv4 sr-te
+      neighbor WAN-OVERLAY-PEERS activate
+      neighbor WAN-RR-OVERLAY-PEERS activate
+   !
+   address-family link-state
+      neighbor WAN-OVERLAY-PEERS activate
+      neighbor WAN-OVERLAY-PEERS missing-policy direction out action deny
+      neighbor WAN-RR-OVERLAY-PEERS activate
+      path-selection role consumer propagator
+   !
+   address-family path-selection
+      bgp additional-paths receive
+      bgp additional-paths send any
+      neighbor WAN-OVERLAY-PEERS activate
+      neighbor WAN-RR-OVERLAY-PEERS activate
+   !
+   vrf default
+      rd 192.168.255.1:1
+      route-target import evpn 1:1
+      route-target export evpn 1:1
+      route-target export evpn route-map RM-EVPN-EXPORT-VRF-DEFAULT
+!
+router traffic-engineering
+!
+stun
+   server
+      local-interface Ethernet1
+      local-interface Ethernet2
+!
+end
+
+
+
+
+###################### evpnsfe2
+dut:evpnsfe2
+[numExtPorts 15]
+[agentsToRun StunClient SuperServer]
+[agentArgv SuperServer --service=SslManager --service=StunServer --service=SswanManager]
+[dirsToClone /etc/sswan /etc/turnserver]
+prompt mpls-cloud%P
+!
+no enable password
+no aaa root
+!
+username ansible privilege 15 role network-admin secret sha512 $6$7u4j1rkb3VELgcZE$EJt2Qff8kd/TapRoci0XaIZsL4tFzgq1YZBLD9c6f/knXzvcYY0NcMKndZeCv0T268knGKhOEwZAxqKjlMm920
+username arista privilege 15 role network-admin secret sha512 $6$Enl0WfE32FthwyiJ$yTyGaEJ2uPKLU.F7314YtB7J1jrzrMi7ogXIRTEHQfLdLgKWWmr1UvNlZLN6AyuxET7G5aH3AI9OYRzxVTkB1.
+username cvpadmin privilege 15 role network-admin secret sha512 $6$a7LdQWHxWzYHpvVt$n62q.1mbm4kzQ5oBr0lhXCE9ntnTn.SNa16DovZHahFQLH.iPcPMZa5JUSFtncrDW4EDQ3oSWgP8G0S4FtOFx1
+!
+daemon TerminAttr
+   exec /usr/bin/TerminAttr -cvaddr=www.cv-staging.corp.arista.io:443 -cvauth=token-secure,/tmp/cv-onboarding-token -cvvrf=MGMT -smashexcludes=ale,flexCounter,hardware,kni,pulse,strata -ingestexclude=/Sysdb/cell/1/agent,/Sysdb/cell/2/agent -taillogs
+   no shutdown
+!
+vlan internal order ascending range 1006 1199
+!
+transceiver qsfp default-mode 4x10G
+!
+service routing protocols model multi-agent
+!
+hostname mpls-cloud
+ip name-server vrf MGMT 192.168.17.1
+dns domain wan.example.local
+!
+spanning-tree mode none
+!
+vrf instance MGMT
+!
+management api http-commands
+   protocol https
+   no shutdown
+   !
+   vrf MGMT
+      no shutdown
+!
+aaa authorization exec default local
+!
+interface Ethernet1
+   description pf1-Ethernet1
+   no shutdown
+   no switchport
+   ip address 172.18.100.1/24
+!
+interface Ethernet2
+   description pf2-Ethernet1
+   no shutdown
+   no switchport
+   ip address 172.18.200.1/24
+!
+interface Ethernet5
+   description site1-wan1-Ethernet3
+   no shutdown
+   no switchport
+   ip address 172.18.10.1/24
+!
+interface Ethernet6
+   description site1-wan2-Ethernet3
+   no shutdown
+   no switchport
+   ip address 172.18.11.1/24
+!
+interface Ethernet7
+   description site2-wan1-Ethernet3
+   no shutdown
+   no switchport
+   ip address 172.18.20.1/24
+!
+interface Loopback0
+   description ROUTER_ID
+   no shutdown
+   ip address 172.31.255.22/32
+!
+interface Management1
+   description OOB_MANAGEMENT
+   no shutdown
+   vrf MGMT
+   ip address 192.168.17.30/24
+   no lldp transmit
+   no lldp receive
+!
+ip routing
+no ip routing vrf MGMT
+!
+ip prefix-list PL-LOOPBACKS-EVPN-OVERLAY
+   seq 10 permit 172.31.255.0/24 eq 32
+!
+ip route vrf MGMT 0.0.0.0/0 192.168.17.1
+!
+ntp local-interface vrf MGMT Management1
+ntp server vrf MGMT 0.pool.ntp.org prefer
+!
+route-map RM-CONN-2-BGP permit 10
+   match ip address prefix-list PL-LOOPBACKS-EVPN-OVERLAY
+!
+router bfd
+   multihop interval 300 min-rx 300 multiplier 3
+!
+router bgp 65042
+   router-id 172.31.255.22
+   no bgp default ipv4-unicast
+   maximum-paths 4 ecmp 4
+   neighbor EVPN-OVERLAY-PEERS peer group
+   neighbor EVPN-OVERLAY-PEERS next-hop-unchanged
+   neighbor EVPN-OVERLAY-PEERS update-source Loopback0
+   neighbor EVPN-OVERLAY-PEERS bfd
+   neighbor EVPN-OVERLAY-PEERS ebgp-multihop 3
+   neighbor EVPN-OVERLAY-PEERS send-community
+   neighbor EVPN-OVERLAY-PEERS maximum-routes 0
+   neighbor IPv4-UNDERLAY-PEERS peer group
+   neighbor IPv4-UNDERLAY-PEERS send-community
+   neighbor IPv4-UNDERLAY-PEERS maximum-routes 12000
+   redistribute connected route-map RM-CONN-2-BGP
+   !
+   address-family evpn
+      neighbor EVPN-OVERLAY-PEERS activate
+   !
+   address-family ipv4
+      no neighbor EVPN-OVERLAY-PEERS activate
+      neighbor IPv4-UNDERLAY-PEERS activate
+!
+end
+
+
+
+
+###################### evpnsfe3
+dut:evpnsfe3
+[numExtPorts 15]
+[agentsToRun StunClient SuperServer]
+[agentArgv SuperServer --service=SslManager --service=StunServer --service=SswanManager]
+[dirsToClone /etc/sswan /etc/turnserver]
+prompt inet-cloud%P
+!
+no enable password
+no aaa root
+!
+username ansible privilege 15 role network-admin secret sha512 $6$7u4j1rkb3VELgcZE$EJt2Qff8kd/TapRoci0XaIZsL4tFzgq1YZBLD9c6f/knXzvcYY0NcMKndZeCv0T268knGKhOEwZAxqKjlMm920
+username arista privilege 15 role network-admin secret sha512 $6$Enl0WfE32FthwyiJ$yTyGaEJ2uPKLU.F7314YtB7J1jrzrMi7ogXIRTEHQfLdLgKWWmr1UvNlZLN6AyuxET7G5aH3AI9OYRzxVTkB1.
+username cvpadmin privilege 15 role network-admin secret sha512 $6$a7LdQWHxWzYHpvVt$n62q.1mbm4kzQ5oBr0lhXCE9ntnTn.SNa16DovZHahFQLH.iPcPMZa5JUSFtncrDW4EDQ3oSWgP8G0S4FtOFx1
+!
+daemon TerminAttr
+   exec /usr/bin/TerminAttr -cvaddr=www.cv-staging.corp.arista.io:443 -cvauth=token-secure,/tmp/cv-onboarding-token -cvvrf=MGMT -smashexcludes=ale,flexCounter,hardware,kni,pulse,strata -ingestexclude=/Sysdb/cell/1/agent,/Sysdb/cell/2/agent -taillogs
+   no shutdown
+!
+dhcp server
+   lease time ipv4 6 days 23 hours 59 minutes
+   !
+   subnet 100.64.10.0/24
+      !
+      range 100.64.10.2 100.64.10.2
+      name 10 NET
+      default-gateway 100.64.10.1
+   !
+   subnet 100.64.11.0/24
+      !
+      range 100.64.11.2 100.64.11.2
+      name 11 NET
+      default-gateway 100.64.11.1
+   !
+   subnet 100.64.30.0/24
+      !
+      range 100.64.30.2 100.64.30.2
+      name 30 NET
+      default-gateway 100.64.30.1
+!
+vlan internal order ascending range 1006 1199
+!
+transceiver qsfp default-mode 4x10G
+!
+service routing protocols model multi-agent
+!
+hostname inet-cloud
+ip name-server vrf MGMT 192.168.17.1
+dns domain wan.example.local
+!
+spanning-tree mode none
+!
+vrf instance MGMT
+!
+management api http-commands
+   protocol https
+   no shutdown
+   !
+   vrf MGMT
+      no shutdown
+!
+aaa authorization exec default local
+!
+interface Ethernet1
+   description pf1-Ethernet2
+   no shutdown
+   no switchport
+   ip address 100.64.100.1/24
+!
+interface Ethernet2
+   description pf2-Ethernet2
+   no shutdown
+   no switchport
+   ip address 100.64.200.1/24
+!
+interface Ethernet5
+   description site1-wan1-Ethernet4
+   no shutdown
+   no switchport
+   ip address 100.64.10.1/24
+   dhcp server ipv4
+!
+interface Ethernet6
+   description site1-wan2-Ethernet4
+   no shutdown
+   no switchport
+   ip address 100.64.11.1/24
+   dhcp server ipv4
+!
+interface Ethernet7
+   description site2-wan2-Ethernet4
+   no shutdown
+   no switchport
+   ip address 100.64.21.1/24
+!
+interface Ethernet8
+   description site3-wan1-Ethernet4
+   no shutdown
+   no switchport
+   ip address 100.64.30.1/24
+   dhcp server ipv4
+!
+interface Loopback0
+   description ROUTER_ID
+   no shutdown
+   ip address 172.31.255.23/32
+!
+interface Management1
+   description OOB_MANAGEMENT
+   no shutdown
+   vrf MGMT
+   ip address 192.168.17.31/24
+   no lldp transmit
+   no lldp receive
+!
+ip routing
+no ip routing vrf MGMT
+!
+ip route vrf MGMT 0.0.0.0/0 192.168.17.1
+!
+ntp local-interface vrf MGMT Management1
+ntp server vrf MGMT 0.pool.ntp.org prefer
+!
+router bgp 65666
+   router-id 172.31.255.23
+   no bgp default ipv4-unicast
+   maximum-paths 4 ecmp 4
+   neighbor IPv4-UNDERLAY-PEERS peer group
+   neighbor IPv4-UNDERLAY-PEERS send-community
+   neighbor IPv4-UNDERLAY-PEERS maximum-routes 12000
+   neighbor 100.64.10.2 peer group IPv4-UNDERLAY-PEERS
+   neighbor 100.64.10.2 remote-as 65000
+   neighbor 100.64.10.2 default-originate always
+   neighbor 100.64.11.2 peer group IPv4-UNDERLAY-PEERS
+   neighbor 100.64.11.2 remote-as 65000
+   neighbor 100.64.11.2 default-originate always
+   neighbor 100.64.21.2 peer group IPv4-UNDERLAY-PEERS
+   neighbor 100.64.21.2 remote-as 65000
+   neighbor 100.64.21.2 default-originate always
+   neighbor 100.64.30.2 peer group IPv4-UNDERLAY-PEERS
+   neighbor 100.64.30.2 remote-as 65000
+   neighbor 100.64.30.2 default-originate always
+   redistribute connected
+   !
+   address-family ipv4
+      neighbor IPv4-UNDERLAY-PEERS activate
+!
+end
+
+
+
+
+###################### evpnsfe4
+dut:evpnsfe4
+[numExtPorts 15]
+[agentsToRun StunClient SuperServer]
+[agentArgv SuperServer --service=SslManager --service=StunServer --service=SswanManager]
+[dirsToClone /etc/sswan /etc/turnserver]
+prompt pf2%P
+!
+no enable password
+no aaa root
+!
+username ansible privilege 15 role network-admin secret sha512 $6$7u4j1rkb3VELgcZE$EJt2Qff8kd/TapRoci0XaIZsL4tFzgq1YZBLD9c6f/knXzvcYY0NcMKndZeCv0T268knGKhOEwZAxqKjlMm920
+username arista privilege 15 role network-admin secret sha512 $6$Enl0WfE32FthwyiJ$yTyGaEJ2uPKLU.F7314YtB7J1jrzrMi7ogXIRTEHQfLdLgKWWmr1UvNlZLN6AyuxET7G5aH3AI9OYRzxVTkB1.
+username cvpadmin privilege 15 role network-admin secret sha512 $6$a7LdQWHxWzYHpvVt$n62q.1mbm4kzQ5oBr0lhXCE9ntnTn.SNa16DovZHahFQLH.iPcPMZa5JUSFtncrDW4EDQ3oSWgP8G0S4FtOFx1
+!
+agent KernelFib environment KERNELFIB_PROGRAM_ALL_ECMP=1
+!
+daemon TerminAttr
+   exec /usr/bin/TerminAttr -cvaddr=www.cv-staging.corp.arista.io:443 -cvauth=token-secure,/tmp/cv-onboarding-token -cvvrf=MGMT -smashexcludes=ale,flexCounter,hardware,kni,pulse,strata -ingestexclude=/Sysdb/cell/1/agent,/Sysdb/cell/2/agent -taillogs
+   no shutdown
+!
+flow tracking hardware
+   tracker FLOW-TRACKER
+      record export on inactive timeout 70000
+      record export on interval 5000
+      exporter CV-TELEMETRY
+         collector 127.0.0.1
+         local interface Loopback0
+   no shutdown
+!
+service routing protocols model multi-agent
+!
+hostname pf2
+ip name-server vrf MGMT 192.168.17.1
+dns domain wan.example.local
+!
+router adaptive-virtual-topology
+   topology role pathfinder
+   !
+   policy BLUE-POLICY
+      !
+      match application-profile VIDEO
+         avt profile BLUE-POLICY-VIDEO
+      !
+      match application-profile VOICE
+         avt profile BLUE-POLICY-VOICE
+         dscp 46
+      !
+      match application-profile default
+         avt profile BLUE-POLICY-DEFAULT
+   !
+   policy DEFAULT-POLICY-WITH-CP
+      !
+      match application-profile APP-PROFILE-CONTROL-PLANE
+         avt profile DEFAULT-POLICY-CONTROL-PLANE
+      !
+      match application-profile default
+         avt profile DEFAULT-POLICY-DEFAULT
+   !
+   policy RED-POLICY
+      !
+      match application-profile CRITICAL-SECRET-DATA
+         avt profile RED-POLICY-CRITICAL-SECRET-DATA
+      !
+      match application-profile NORMAL-DATA
+         avt profile RED-POLICY-NORMAL-DATA
+      !
+      match application-profile NOT-SO-IMPORTANT-DATA
+         avt profile RED-POLICY-NOT-SO-IMPORTANT-DATA
+   !
+   profile BLUE-POLICY-DEFAULT
+      path-selection load-balance LB-BLUE-POLICY-DEFAULT
+   !
+   profile BLUE-POLICY-VIDEO
+      path-selection load-balance LB-BLUE-POLICY-VIDEO
+   !
+   profile BLUE-POLICY-VOICE
+      path-selection load-balance LB-BLUE-POLICY-VOICE
+   !
+   profile DEFAULT-POLICY-CONTROL-PLANE
+      path-selection load-balance LB-DEFAULT-POLICY-CONTROL-PLANE
+   !
+   profile DEFAULT-POLICY-DEFAULT
+      path-selection load-balance LB-DEFAULT-POLICY-DEFAULT
+   !
+   profile RED-POLICY-CRITICAL-SECRET-DATA
+      path-selection load-balance LB-RED-POLICY-CRITICAL-SECRET-DATA
+   !
+   profile RED-POLICY-NORMAL-DATA
+      path-selection load-balance LB-RED-POLICY-NORMAL-DATA
+   !
+   profile RED-POLICY-NOT-SO-IMPORTANT-DATA
+      path-selection load-balance LB-RED-POLICY-NOT-SO-IMPORTANT-DATA
+   !
+   vrf BLUE
+      avt policy BLUE-POLICY
+      avt profile BLUE-POLICY-DEFAULT id 1
+      avt profile BLUE-POLICY-VIDEO id 2
+      avt profile BLUE-POLICY-VOICE id 3
+   !
+   vrf default
+      avt policy DEFAULT-POLICY-WITH-CP
+      avt profile DEFAULT-POLICY-DEFAULT id 1
+      avt profile DEFAULT-POLICY-CONTROL-PLANE id 254
+   !
+   vrf RED
+      avt policy RED-POLICY
+      avt profile RED-POLICY-CRITICAL-SECRET-DATA id 2
+      avt profile RED-POLICY-NORMAL-DATA id 3
+      avt profile RED-POLICY-NOT-SO-IMPORTANT-DATA id 4
+!
+router path-selection
+   peer dynamic source stun
+   tcp mss ceiling ipv4 ingress
+   !
+   path-group INTERNET id 102
+      ipsec profile CP-PROFILE
+      !
+      local interface Ethernet2
+      !
+      peer static router-ip 192.168.42.1
+         name pf1
+         ipv4 address 100.64.100.2
+   !
+   path-group LAN_HA id 65535
+      flow assignment lan
+   !
+   path-group MPLS id 101
+      ipsec profile CP-PROFILE
+      !
+      local interface Ethernet1
+      !
+      peer static router-ip 192.168.42.1
+         name pf1
+         ipv4 address 172.18.100.2
+   !
+   load-balance policy LB-BLUE-POLICY-DEFAULT
+      path-group INTERNET
+      path-group LAN_HA
+      path-group MPLS
+   !
+   load-balance policy LB-BLUE-POLICY-VIDEO
+      path-group INTERNET
+      path-group LAN_HA
+      path-group MPLS priority 2
+   !
+   load-balance policy LB-BLUE-POLICY-VOICE
+      latency 150
+      jitter 30
+      loss-rate 1
+      hop count lowest
+      path-group LAN_HA
+      path-group MPLS
+      path-group INTERNET priority 2
+   !
+   load-balance policy LB-DEFAULT-POLICY-CONTROL-PLANE
+      path-group INTERNET
+      path-group LAN_HA
+      path-group MPLS
+   !
+   load-balance policy LB-DEFAULT-POLICY-DEFAULT
+      path-group INTERNET
+      path-group LAN_HA
+      path-group MPLS
+   !
+   load-balance policy LB-RED-POLICY-CRITICAL-SECRET-DATA
+      path-group LAN_HA
+      path-group MPLS
+   !
+   load-balance policy LB-RED-POLICY-NORMAL-DATA
+      path-group INTERNET
+      path-group LAN_HA
+      path-group MPLS priority 2
+   !
+   load-balance policy LB-RED-POLICY-NOT-SO-IMPORTANT-DATA
+      path-group INTERNET
+      path-group LAN_HA
+!
+platform sfe data-plane cpu allocation maximum 1
+!
+spanning-tree mode none
+!
+vrf instance MGMT
+!
+management api http-commands
+   protocol https
+   no shutdown
+   !
+   vrf MGMT
+      no shutdown
+!
+aaa authorization exec default local
+!
+ip security
+   ike policy CP-IKE-POLICY
+      local-id 192.168.42.2
+   !
+   sa policy CP-SA-POLICY
+      esp encryption aes256gcm128
+      pfs dh-group 14
+   !
+   profile CP-PROFILE
+      ike-policy CP-IKE-POLICY
+      sa-policy CP-SA-POLICY
+      connection start
+      shared-key 7 045A190F1C354D
+      dpd 10 50 clear
+      mode transport
+!
+interface Dps1
+   description DPS Interface
+   mtu 9194
+   flow tracker hardware FLOW-TRACKER
+   ip address 192.168.42.2/32
+!
+interface Ethernet1
+   description ACME-MPLS-INC_mpls-pf2_mpls-cloud_Ethernet2
+   no shutdown
+   no switchport
+   ip address 172.18.200.2/24
+!
+interface Ethernet2
+   description GLOBAL-INTERNET-LIMITED_inet-pf2_inet-cloud_Ethernet2
+   no shutdown
+   no switchport
+   ip address 100.64.200.2/24
+   ip access-group ACL-PF-INTERNET-IN_Ethernet2 in
+!
+interface Loopback0
+   description ROUTER_ID
+   no shutdown
+   ip address 192.168.255.2/32
+!
+interface Management1
+   description OOB_MANAGEMENT
+   no shutdown
+   vrf MGMT
+   ip address 192.168.17.11/24
+   no lldp transmit
+   no lldp receive
+!
+interface Vxlan1
+   description pf2_VTEP
+   vxlan source-interface Dps1
+   vxlan udp-port 4789
+   vxlan vrf BLUE vni 100
+   vxlan vrf default vni 1
+   vxlan vrf RED vni 101
+!
+application traffic recognition
+   !
+   application ipv4 APP-CONTROL-PLANE
+      source prefix field-set PFX-LOCAL-VTEP-IP
+   !
+   application ipv4 CRITICAL-SECRET-DATA-APP
+      dscp 46
+   !
+   application ipv4 NORMAL-DATA-APP
+      dscp af23
+   !
+   application ipv4 NOT-SO-IMPORTANT-DATA-APP
+      dscp 0
+   !
+   application ipv4 VIDEO-APP
+      protocol tcp destination port field-set VIDEO-PORTS
+      protocol udp destination port field-set VIDEO-PORTS
+   !
+   application ipv4 VOICE-APP
+      protocol tcp destination port field-set VOICE-PORTS
+   !
+   application-profile APP-PROFILE-CONTROL-PLANE
+      application APP-CONTROL-PLANE
+   !
+   application-profile CRITICAL-SECRET-DATA
+      application CRITICAL-SECRET-DATA-APP
+   !
+   application-profile NORMAL-DATA
+      application NORMAL-DATA-APP
+   !
+   application-profile NOT-SO-IMPORTANT-DATA
+      application NOT-SO-IMPORTANT-DATA-APP
+   !
+   application-profile VIDEO
+      application VIDEO-APP
+   !
+   application-profile VOICE
+      application VOICE-APP
+   !
+   field-set ipv4 prefix PFX-LOCAL-VTEP-IP
+      192.168.42.2/32
+   !
+   field-set l4-port VIDEO-PORTS
+      4242-4244
+   !
+   field-set l4-port VOICE-PORTS
+      666-667
+!
+ip access-list ACL-PF-INTERNET-IN_Ethernet2
+   1 remark Not for PRODUCTION: This ACL is built this way because the lab has an out-of-band interface
+   10 permit udp any host 100.64.200.2 eq isakmp non500-isakmp
+   20 permit udp any host 100.64.200.2 eq 3478
+   30 permit icmp any host 100.64.200.2
+   deny ip any any
+!
+ip routing
+no ip routing vrf MGMT
+!
+ip extcommunity-list ECL-EVPN-SOO permit soo 192.168.255.2:0
+!
+ip prefix-list PL-LOOPBACKS-EVPN-OVERLAY
+   seq 10 permit 192.168.255.0/24 eq 32
+!
+ip route 0.0.0.0/0 100.64.200.1
+ip route 172.18.0.0/16 172.18.200.1
+ip route vrf MGMT 0.0.0.0/0 192.168.17.1
+!
+ntp local-interface vrf MGMT Management1
+ntp server vrf MGMT 0.pool.ntp.org prefer
+!
+route-map RM-CONN-2-BGP permit 10
+   match ip address prefix-list PL-LOOPBACKS-EVPN-OVERLAY
+   set extcommunity soo 192.168.255.2:0 additive
+!
+route-map RM-EVPN-EXPORT-VRF-DEFAULT permit 10
+   match extcommunity ECL-EVPN-SOO
+!
+router bfd
+   multihop interval 300 min-rx 300 multiplier 3
+!
+router bgp 65000
+   router-id 192.168.255.2
+   no bgp default ipv4-unicast
+   bgp cluster-id 192.168.255.2
+   maximum-paths 16
+   bgp listen range 192.168.42.0/24 peer-group WAN-OVERLAY-PEERS remote-as 65000
+   neighbor WAN-OVERLAY-PEERS peer group
+   neighbor WAN-OVERLAY-PEERS remote-as 65000
+   neighbor WAN-OVERLAY-PEERS update-source Dps1
+   neighbor WAN-OVERLAY-PEERS bfd
+   neighbor WAN-OVERLAY-PEERS bfd interval 1000 min-rx 1000 multiplier 10
+   neighbor WAN-OVERLAY-PEERS ttl maximum-hops 1
+   neighbor WAN-OVERLAY-PEERS route-reflector-client
+   neighbor WAN-OVERLAY-PEERS password 7 htm4AZe9mIQOO1uiMuGgYQ==
+   neighbor WAN-OVERLAY-PEERS send-community
+   neighbor WAN-OVERLAY-PEERS maximum-routes 0
+   neighbor WAN-RR-OVERLAY-PEERS peer group
+   neighbor WAN-RR-OVERLAY-PEERS remote-as 65000
+   neighbor WAN-RR-OVERLAY-PEERS update-source Dps1
+   neighbor WAN-RR-OVERLAY-PEERS bfd
+   neighbor WAN-RR-OVERLAY-PEERS bfd interval 1000 min-rx 1000 multiplier 10
+   neighbor WAN-RR-OVERLAY-PEERS ttl maximum-hops 1
+   neighbor WAN-RR-OVERLAY-PEERS route-reflector-client
+   neighbor WAN-RR-OVERLAY-PEERS password 7 UYrhGgLBS9m5z2rcHbqzBg==
+   neighbor WAN-RR-OVERLAY-PEERS send-community
+   neighbor WAN-RR-OVERLAY-PEERS maximum-routes 0
+   neighbor 192.168.42.1 peer group WAN-RR-OVERLAY-PEERS
+   neighbor 192.168.42.1 description pf1_Dps1
+   redistribute connected route-map RM-CONN-2-BGP
+   !
+   address-family evpn
+      neighbor WAN-OVERLAY-PEERS activate
+      neighbor WAN-OVERLAY-PEERS encapsulation path-selection
+      neighbor WAN-RR-OVERLAY-PEERS activate
+      neighbor WAN-RR-OVERLAY-PEERS encapsulation path-selection
+      next-hop resolution disabled
+   !
+   address-family ipv4
+      no neighbor WAN-OVERLAY-PEERS activate
+      no neighbor WAN-RR-OVERLAY-PEERS activate
+   !
+   address-family ipv4 sr-te
+      neighbor WAN-OVERLAY-PEERS activate
+      neighbor WAN-RR-OVERLAY-PEERS activate
+   !
+   address-family link-state
+      neighbor WAN-OVERLAY-PEERS activate
+      neighbor WAN-OVERLAY-PEERS missing-policy direction out action deny
+      neighbor WAN-RR-OVERLAY-PEERS activate
+      path-selection role consumer propagator
+   !
+   address-family path-selection
+      bgp additional-paths receive
+      bgp additional-paths send any
+      neighbor WAN-OVERLAY-PEERS activate
+      neighbor WAN-RR-OVERLAY-PEERS activate
+   !
+   vrf default
+      rd 192.168.255.2:1
+      route-target import evpn 1:1
+      route-target export evpn 1:1
+      route-target export evpn route-map RM-EVPN-EXPORT-VRF-DEFAULT
+!
+router traffic-engineering
+!
+stun
+   server
+      local-interface Ethernet1
+      local-interface Ethernet2
+!
+end
+
+
+
+
+###################### evpnsfe5
+dut:evpnsfe5
+[numExtPorts 15]
+[agentsToRun StunClient SuperServer]
+[agentArgv SuperServer --service=SslManager --service=StunServer --service=SswanManager]
+[dirsToClone /etc/sswan /etc/turnserver]
+prompt site1-wan1%P
+!
+no enable password
+no aaa root
+!
+username ansible privilege 15 role network-admin secret sha512 $6$7u4j1rkb3VELgcZE$EJt2Qff8kd/TapRoci0XaIZsL4tFzgq1YZBLD9c6f/knXzvcYY0NcMKndZeCv0T268knGKhOEwZAxqKjlMm920
+username arista privilege 15 role network-admin secret sha512 $6$Enl0WfE32FthwyiJ$yTyGaEJ2uPKLU.F7314YtB7J1jrzrMi7ogXIRTEHQfLdLgKWWmr1UvNlZLN6AyuxET7G5aH3AI9OYRzxVTkB1.
+username cvpadmin privilege 15 role network-admin secret sha512 $6$a7LdQWHxWzYHpvVt$n62q.1mbm4kzQ5oBr0lhXCE9ntnTn.SNa16DovZHahFQLH.iPcPMZa5JUSFtncrDW4EDQ3oSWgP8G0S4FtOFx1
+!
+agent KernelFib environment KERNELFIB_PROGRAM_ALL_ECMP=1
+!
+daemon TerminAttr
+   exec /usr/bin/TerminAttr -cvaddr=www.cv-staging.corp.arista.io:443 -cvauth=token-secure,/tmp/cv-onboarding-token -cvvrf=MGMT -smashexcludes=ale,flexCounter,hardware,kni,pulse,strata -ingestexclude=/Sysdb/cell/1/agent,/Sysdb/cell/2/agent -taillogs
+   no shutdown
+!
+flow tracking hardware
+   tracker FLOW-TRACKER
+      record export on inactive timeout 70000
+      record export on interval 5000
+      exporter CV-TELEMETRY
+         collector 127.0.0.1
+         local interface Loopback0
+   no shutdown
+!
+service routing protocols model multi-agent
+!
+hostname site1-wan1
+ip name-server vrf MGMT 192.168.17.1
+dns domain wan.example.local
+!
+router adaptive-virtual-topology
+   topology role transit region
+   region REGION1 id 1
+   zone REGION1-ZONE id 1
+   site SITE1 id 101
+   !
+   policy BLUE-POLICY
+      !
+      match application-profile VIDEO
+         avt profile BLUE-POLICY-VIDEO
+      !
+      match application-profile VOICE
+         avt profile BLUE-POLICY-VOICE
+         dscp 46
+      !
+      match application-profile default
+         avt profile BLUE-POLICY-DEFAULT
+   !
+   policy DEFAULT-POLICY-WITH-CP
+      !
+      match application-profile APP-PROFILE-CONTROL-PLANE
+         avt profile DEFAULT-POLICY-CONTROL-PLANE
+      !
+      match application-profile default
+         avt profile DEFAULT-POLICY-DEFAULT
+   !
+   policy RED-POLICY
+      !
+      match application-profile CRITICAL-SECRET-DATA
+         avt profile RED-POLICY-CRITICAL-SECRET-DATA
+      !
+      match application-profile NORMAL-DATA
+         avt profile RED-POLICY-NORMAL-DATA
+      !
+      match application-profile NOT-SO-IMPORTANT-DATA
+         avt profile RED-POLICY-NOT-SO-IMPORTANT-DATA
+   !
+   profile BLUE-POLICY-DEFAULT
+      path-selection load-balance LB-BLUE-POLICY-DEFAULT
+   !
+   profile BLUE-POLICY-VIDEO
+      path-selection load-balance LB-BLUE-POLICY-VIDEO
+   !
+   profile BLUE-POLICY-VOICE
+      path-selection load-balance LB-BLUE-POLICY-VOICE
+   !
+   profile DEFAULT-POLICY-CONTROL-PLANE
+      path-selection load-balance LB-DEFAULT-POLICY-CONTROL-PLANE
+   !
+   profile DEFAULT-POLICY-DEFAULT
+      path-selection load-balance LB-DEFAULT-POLICY-DEFAULT
+   !
+   profile RED-POLICY-CRITICAL-SECRET-DATA
+      path-selection load-balance LB-RED-POLICY-CRITICAL-SECRET-DATA
+   !
+   profile RED-POLICY-NORMAL-DATA
+      path-selection load-balance LB-RED-POLICY-NORMAL-DATA
+   !
+   profile RED-POLICY-NOT-SO-IMPORTANT-DATA
+      path-selection load-balance LB-RED-POLICY-NOT-SO-IMPORTANT-DATA
+   !
+   vrf BLUE
+      avt policy BLUE-POLICY
+      avt profile BLUE-POLICY-DEFAULT id 1
+      avt profile BLUE-POLICY-VIDEO id 2
+      avt profile BLUE-POLICY-VOICE id 3
+   !
+   vrf default
+      avt policy DEFAULT-POLICY-WITH-CP
+      avt profile DEFAULT-POLICY-DEFAULT id 1
+      avt profile DEFAULT-POLICY-CONTROL-PLANE id 254
+   !
+   vrf RED
+      avt policy RED-POLICY
+      avt profile RED-POLICY-CRITICAL-SECRET-DATA id 2
+      avt profile RED-POLICY-NORMAL-DATA id 3
+      avt profile RED-POLICY-NOT-SO-IMPORTANT-DATA id 4
+!
+router path-selection
+   tcp mss ceiling ipv4 ingress
+   !
+   path-group INTERNET id 102
+      ipsec profile CP-PROFILE
+      !
+      local interface Ethernet4
+         stun server-profile INTERNET-pf1-Ethernet2 INTERNET-pf2-Ethernet2
+      !
+      peer dynamic
+      !
+      peer static router-ip 192.168.42.1
+         name pf1
+         ipv4 address 100.64.100.2
+      !
+      peer static router-ip 192.168.42.2
+         name pf2
+         ipv4 address 100.64.200.2
+   !
+   path-group LAN_HA id 65535
+      ipsec profile DP-PROFILE
+      flow assignment lan
+      !
+      local interface Ethernet1
+      !
+      local interface Ethernet2
+      !
+      peer static router-ip 192.168.42.4
+         name site1-wan2
+         ipv4 address 10.0.1.13
+         ipv4 address 10.0.1.15
+   !
+   path-group MPLS id 101
+      ipsec profile CP-PROFILE
+      !
+      local interface Ethernet3
+         stun server-profile MPLS-pf1-Ethernet1 MPLS-pf2-Ethernet1
+      !
+      peer dynamic
+      !
+      peer static router-ip 192.168.42.1
+         name pf1
+         ipv4 address 172.18.100.2
+      !
+      peer static router-ip 192.168.42.2
+         name pf2
+         ipv4 address 172.18.200.2
+   !
+   load-balance policy LB-BLUE-POLICY-DEFAULT
+      path-group INTERNET
+      path-group LAN_HA
+      path-group MPLS
+   !
+   load-balance policy LB-BLUE-POLICY-VIDEO
+      path-group INTERNET
+      path-group LAN_HA
+      path-group MPLS priority 2
+   !
+   load-balance policy LB-BLUE-POLICY-VOICE
+      latency 150
+      jitter 30
+      loss-rate 1
+      hop count lowest
+      path-group LAN_HA
+      path-group MPLS
+      path-group INTERNET priority 2
+   !
+   load-balance policy LB-DEFAULT-POLICY-CONTROL-PLANE
+      path-group INTERNET
+      path-group LAN_HA
+      path-group MPLS
+   !
+   load-balance policy LB-DEFAULT-POLICY-DEFAULT
+      path-group INTERNET
+      path-group LAN_HA
+      path-group MPLS
+   !
+   load-balance policy LB-RED-POLICY-CRITICAL-SECRET-DATA
+      path-group LAN_HA
+      path-group MPLS
+   !
+   load-balance policy LB-RED-POLICY-NORMAL-DATA
+      path-group INTERNET
+      path-group LAN_HA
+      path-group MPLS priority 2
+   !
+   load-balance policy LB-RED-POLICY-NOT-SO-IMPORTANT-DATA
+      path-group INTERNET
+      path-group LAN_HA
+!
+spanning-tree mode none
+!
+vrf instance BLUE
+!
+vrf instance MGMT
+!
+vrf instance RED
+!
+management api http-commands
+   protocol https
+   no shutdown
+   !
+   vrf MGMT
+      no shutdown
+!
+aaa authorization exec default local
+!
+ip security
+   ike policy CP-IKE-POLICY
+      local-id 192.168.42.3
+   !
+   ike policy DP-IKE-POLICY
+      local-id 192.168.42.3
+   !
+   sa policy CP-SA-POLICY
+      esp encryption aes256gcm128
+      pfs dh-group 14
+   !
+   sa policy DP-SA-POLICY
+      esp encryption aes256gcm128
+      pfs dh-group 14
+   !
+   profile CP-PROFILE
+      ike-policy CP-IKE-POLICY
+      sa-policy CP-SA-POLICY
+      connection start
+      shared-key 7 045A190F1C354D
+      dpd 10 50 clear
+      mode transport
+   !
+   profile DP-PROFILE
+      ike-policy DP-IKE-POLICY
+      sa-policy DP-SA-POLICY
+      connection start
+      shared-key 7 141600021F102B
+      dpd 10 50 clear
+      mode transport
+   !
+   key controller
+      profile DP-PROFILE
+!
+interface Dps1
+   description DPS Interface
+   mtu 9194
+   flow tracker hardware FLOW-TRACKER
+   ip address 192.168.42.3/32
+!
+interface Ethernet1
+   description P2P_site1-border1_Ethernet3
+   no shutdown
+   mtu 9214
+   no switchport
+   flow tracker hardware FLOW-TRACKER
+   ip address 10.0.1.9/31
+!
+interface Ethernet1.100
+   description P2P_site1-border1_Ethernet3.100_VRF_BLUE
+   no shutdown
+   mtu 9214
+   encapsulation dot1q vlan 100
+   flow tracker hardware FLOW-TRACKER
+   vrf BLUE
+   ip address 10.0.1.9/31
+!
+interface Ethernet1.101
+   description P2P_site1-border1_Ethernet3.101_VRF_RED
+   no shutdown
+   mtu 9214
+   encapsulation dot1q vlan 101
+   flow tracker hardware FLOW-TRACKER
+   vrf RED
+   ip address 10.0.1.9/31
+!
+interface Ethernet2
+   description P2P_site1-border2_Ethernet3
+   no shutdown
+   mtu 9214
+   no switchport
+   flow tracker hardware FLOW-TRACKER
+   ip address 10.0.1.11/31
+!
+interface Ethernet2.100
+   description P2P_site1-border2_Ethernet3.100_VRF_BLUE
+   no shutdown
+   mtu 9214
+   encapsulation dot1q vlan 100
+   flow tracker hardware FLOW-TRACKER
+   vrf BLUE
+   ip address 10.0.1.11/31
+!
+interface Ethernet2.101
+   description P2P_site1-border2_Ethernet3.101_VRF_RED
+   no shutdown
+   mtu 9214
+   encapsulation dot1q vlan 101
+   flow tracker hardware FLOW-TRACKER
+   vrf RED
+   ip address 10.0.1.11/31
+!
+interface Ethernet3
+   description ACME-MPLS-INC_mpls-site1-wan1_mpls-cloud_Ethernet5
+   no shutdown
+   no switchport
+   flow tracker hardware FLOW-TRACKER
+   ip address 172.18.10.2/24
+!
+interface Ethernet4
+   description REGION1-INTERNET-CORP_inet-site1-wan1_inet-cloud_Ethernet5
+   no shutdown
+   no switchport
+   flow tracker hardware FLOW-TRACKER
+   ip address 100.64.10.2/24
+   ip access-group ACL-INTERNET-IN_Ethernet4 in
+!
+interface Loopback0
+   description ROUTER_ID
+   no shutdown
+   ip address 192.168.255.3/32
+!
+interface Management1
+   description OOB_MANAGEMENT
+   no shutdown
+   vrf MGMT
+   ip address 192.168.17.12/24
+   no lldp transmit
+   no lldp receive
+!
+interface Vxlan1
+   description site1-wan1_VTEP
+   vxlan source-interface Dps1
+   vxlan udp-port 4789
+   vxlan vrf BLUE vni 100
+   vxlan vrf default vni 1
+   vxlan vrf RED vni 101
+!
+application traffic recognition
+   !
+   application ipv4 APP-CONTROL-PLANE
+      destination prefix field-set PFX-PATHFINDERS
+   !
+   application ipv4 CRITICAL-SECRET-DATA-APP
+      dscp 46
+   !
+   application ipv4 NORMAL-DATA-APP
+      dscp af23
+   !
+   application ipv4 NOT-SO-IMPORTANT-DATA-APP
+      dscp 0
+   !
+   application ipv4 VIDEO-APP
+      protocol tcp destination port field-set VIDEO-PORTS
+      protocol udp destination port field-set VIDEO-PORTS
+   !
+   application ipv4 VOICE-APP
+      protocol tcp destination port field-set VOICE-PORTS
+   !
+   application-profile APP-PROFILE-CONTROL-PLANE
+      application APP-CONTROL-PLANE
+   !
+   application-profile CRITICAL-SECRET-DATA
+      application CRITICAL-SECRET-DATA-APP
+   !
+   application-profile NORMAL-DATA
+      application NORMAL-DATA-APP
+   !
+   application-profile NOT-SO-IMPORTANT-DATA
+      application NOT-SO-IMPORTANT-DATA-APP
+   !
+   application-profile VIDEO
+      application VIDEO-APP
+   !
+   application-profile VOICE
+      application VOICE-APP
+   !
+   field-set ipv4 prefix PFX-PATHFINDERS
+      192.168.42.1/32 192.168.42.2/32
+   !
+   field-set l4-port VIDEO-PORTS
+      4242-4244
+   !
+   field-set l4-port VOICE-PORTS
+      666-667
+!
+ip access-list ACL-INTERNET-IN_Ethernet4
+   1 remark Not for PRODUCTION: This ACL is built this way because the lab has an out-of-band interface
+   10 permit udp any host 100.64.10.2 eq isakmp non500-isakmp
+   30 permit icmp any host 100.64.10.2
+   deny ip any any
+!
+ip routing
+ip routing vrf BLUE
+no ip routing vrf MGMT
+ip routing vrf RED
+!
+ip as-path access-list ASPATH-WAN permit 65000 any
+!
+ip extcommunity-list ECL-EVPN-SOO permit soo 192.168.255.3:101
+!
+ip prefix-list PL-LOOPBACKS-EVPN-OVERLAY
+   seq 10 permit 192.168.255.0/24 eq 32
+!
+ip prefix-list PL-WAN-HA-PEER-PREFIXES
+   seq 10 permit 10.0.1.12/31
+   seq 20 permit 10.0.1.14/31
+!
+ip prefix-list PL-WAN-HA-PREFIXES
+   seq 10 permit 10.0.1.8/31
+   seq 20 permit 10.0.1.10/31
+!
+ip route 100.64.0.0/16 100.64.10.1
+ip route 172.18.0.0/16 172.18.10.1
+ip route vrf MGMT 0.0.0.0/0 192.168.17.1
+!
+ntp local-interface vrf MGMT Management1
+ntp server vrf MGMT 0.pool.ntp.org prefer
+!
+route-map RM-BGP-UNDERLAY-PEERS-IN permit 10
+   description Allow WAN HA peer interface prefixes
+   match ip address prefix-list PL-WAN-HA-PEER-PREFIXES
+!
+route-map RM-BGP-UNDERLAY-PEERS-IN deny 20
+   description Deny other routes from the HA peer
+   match as-path ASPATH-WAN
+!
+route-map RM-BGP-UNDERLAY-PEERS-IN permit 40
+   description Mark prefixes originated from the LAN
+   set extcommunity soo 192.168.255.3:101 additive
+!
+route-map RM-BGP-UNDERLAY-PEERS-OUT permit 10
+   description Make routes learned from WAN HA peer less preferred on LAN routers
+   match route-type internal
+   match tag 50
+   set metric 50
+!
+route-map RM-BGP-UNDERLAY-PEERS-OUT permit 20
+!
+route-map RM-CONN-2-BGP permit 10
+   match ip address prefix-list PL-LOOPBACKS-EVPN-OVERLAY
+   set extcommunity soo 192.168.255.3:101 additive
+!
+route-map RM-CONN-2-BGP permit 50
+   match ip address prefix-list PL-WAN-HA-PREFIXES
+!
+route-map RM-EVPN-EXPORT-VRF-DEFAULT permit 10
+   match extcommunity ECL-EVPN-SOO
+!
+route-map RM-EVPN-SOO-IN deny 10
+   match extcommunity ECL-EVPN-SOO
+!
+route-map RM-EVPN-SOO-IN permit 20
+!
+route-map RM-EVPN-SOO-OUT permit 10
+   set extcommunity soo 192.168.255.3:101 additive
+!
+route-map RM-WAN-HA-PEER-IN permit 10
+   description Set tag 50 on routes received from HA peer over EVPN
+   set tag 50
+!
+route-map RM-WAN-HA-PEER-OUT permit 10
+   description Make EVPN routes learned from WAN less preferred on HA peer
+   match route-type internal
+   set local-preference 50
+!
+route-map RM-WAN-HA-PEER-OUT permit 20
+   description Make locally injected routes less preferred on HA peer
+   set local-preference 75
+!
+router bfd
+   multihop interval 300 min-rx 300 multiplier 3
+!
+router bgp 65000
+   router-id 192.168.255.3
+   no bgp default ipv4-unicast
+   maximum-paths 16
+   neighbor IPv4-UNDERLAY-PEERS peer group
+   neighbor IPv4-UNDERLAY-PEERS allowas-in 1
+   neighbor IPv4-UNDERLAY-PEERS route-map RM-BGP-UNDERLAY-PEERS-IN in
+   neighbor IPv4-UNDERLAY-PEERS route-map RM-BGP-UNDERLAY-PEERS-OUT out
+   neighbor IPv4-UNDERLAY-PEERS send-community
+   neighbor IPv4-UNDERLAY-PEERS maximum-routes 12000
+   neighbor WAN-OVERLAY-PEERS peer group
+   neighbor WAN-OVERLAY-PEERS remote-as 65000
+   neighbor WAN-OVERLAY-PEERS update-source Dps1
+   neighbor WAN-OVERLAY-PEERS bfd
+   neighbor WAN-OVERLAY-PEERS bfd interval 1000 min-rx 1000 multiplier 10
+   neighbor WAN-OVERLAY-PEERS ttl maximum-hops 1
+   neighbor WAN-OVERLAY-PEERS password 7 htm4AZe9mIQOO1uiMuGgYQ==
+   neighbor WAN-OVERLAY-PEERS send-community
+   neighbor WAN-OVERLAY-PEERS maximum-routes 0
+   neighbor 10.0.1.8 peer group IPv4-UNDERLAY-PEERS
+   neighbor 10.0.1.8 remote-as 65101
+   neighbor 10.0.1.8 description site1-border1_Ethernet3
+   neighbor 10.0.1.10 peer group IPv4-UNDERLAY-PEERS
+   neighbor 10.0.1.10 remote-as 65101
+   neighbor 10.0.1.10 description site1-border2_Ethernet3
+   neighbor 192.168.42.1 peer group WAN-OVERLAY-PEERS
+   neighbor 192.168.42.1 description pf1_Dps1
+   neighbor 192.168.42.2 peer group WAN-OVERLAY-PEERS
+   neighbor 192.168.42.2 description pf2_Dps1
+   neighbor 192.168.42.4 remote-as 65000
+   neighbor 192.168.42.4 update-source Dps1
+   neighbor 192.168.42.4 description site1-wan2
+   neighbor 192.168.42.4 route-reflector-client
+   neighbor 192.168.42.4 route-map RM-WAN-HA-PEER-IN in
+   neighbor 192.168.42.4 route-map RM-WAN-HA-PEER-OUT out
+   neighbor 192.168.42.4 send-community
+   redistribute connected route-map RM-CONN-2-BGP
+   !
+   address-family evpn
+      neighbor WAN-OVERLAY-PEERS activate
+      neighbor WAN-OVERLAY-PEERS route-map RM-EVPN-SOO-IN in
+      neighbor WAN-OVERLAY-PEERS route-map RM-EVPN-SOO-OUT out
+      neighbor WAN-OVERLAY-PEERS encapsulation path-selection
+      neighbor 192.168.42.4 activate
+      neighbor 192.168.42.4 encapsulation path-selection
+      neighbor default next-hop-self received-evpn-routes route-type ip-prefix
+   !
+   address-family ipv4
+      neighbor IPv4-UNDERLAY-PEERS activate
+      no neighbor WAN-OVERLAY-PEERS activate
+   !
+   address-family ipv4 sr-te
+      neighbor WAN-OVERLAY-PEERS activate
+   !
+   address-family link-state
+      neighbor WAN-OVERLAY-PEERS activate
+      path-selection
+   !
+   address-family path-selection
+      bgp additional-paths receive
+      bgp additional-paths send any
+      neighbor WAN-OVERLAY-PEERS activate
+   !
+   vrf BLUE
+      rd 192.168.255.3:100
+      route-target import evpn 100:100
+      route-target export evpn 100:100
+      router-id 192.168.255.3
+      neighbor 10.0.1.8 peer group IPv4-UNDERLAY-PEERS
+      neighbor 10.0.1.8 remote-as 65101
+      neighbor 10.0.1.8 description site1-border1_Ethernet3.100_vrf_BLUE
+      neighbor 10.0.1.10 peer group IPv4-UNDERLAY-PEERS
+      neighbor 10.0.1.10 remote-as 65101
+      neighbor 10.0.1.10 description site1-border2_Ethernet3.100_vrf_BLUE
+      redistribute connected
+   !
+   vrf default
+      rd 192.168.255.3:1
+      route-target import evpn 1:1
+      route-target export evpn 1:1
+      route-target export evpn route-map RM-EVPN-EXPORT-VRF-DEFAULT
+   !
+   vrf RED
+      rd 192.168.255.3:101
+      route-target import evpn 101:101
+      route-target export evpn 101:101
+      router-id 192.168.255.3
+      neighbor 10.0.1.8 peer group IPv4-UNDERLAY-PEERS
+      neighbor 10.0.1.8 remote-as 65101
+      neighbor 10.0.1.8 description site1-border1_Ethernet3.101_vrf_RED
+      neighbor 10.0.1.10 peer group IPv4-UNDERLAY-PEERS
+      neighbor 10.0.1.10 remote-as 65101
+      neighbor 10.0.1.10 description site1-border2_Ethernet3.101_vrf_RED
+      redistribute connected
+!
+router traffic-engineering
+!
+stun
+   client
+      server-profile INTERNET-pf1-Ethernet2
+         ip address 100.64.100.2
+      server-profile INTERNET-pf2-Ethernet2
+         ip address 100.64.200.2
+      server-profile MPLS-pf1-Ethernet1
+         ip address 172.18.100.2
+      server-profile MPLS-pf2-Ethernet1
+         ip address 172.18.200.2
+!
+end
+
+
+
+
+###################### evpnsfe6
+dut:evpnsfe6
+[numExtPorts 15]
+[agentsToRun StunClient SuperServer]
+[agentArgv SuperServer --service=SslManager --service=StunServer --service=SswanManager]
+[dirsToClone /etc/sswan /etc/turnserver]
+prompt site1-wan2%P
+!
+no enable password
+no aaa root
+!
+username ansible privilege 15 role network-admin secret sha512 $6$7u4j1rkb3VELgcZE$EJt2Qff8kd/TapRoci0XaIZsL4tFzgq1YZBLD9c6f/knXzvcYY0NcMKndZeCv0T268knGKhOEwZAxqKjlMm920
+username arista privilege 15 role network-admin secret sha512 $6$Enl0WfE32FthwyiJ$yTyGaEJ2uPKLU.F7314YtB7J1jrzrMi7ogXIRTEHQfLdLgKWWmr1UvNlZLN6AyuxET7G5aH3AI9OYRzxVTkB1.
+username cvpadmin privilege 15 role network-admin secret sha512 $6$a7LdQWHxWzYHpvVt$n62q.1mbm4kzQ5oBr0lhXCE9ntnTn.SNa16DovZHahFQLH.iPcPMZa5JUSFtncrDW4EDQ3oSWgP8G0S4FtOFx1
+!
+agent KernelFib environment KERNELFIB_PROGRAM_ALL_ECMP=1
+!
+daemon TerminAttr
+   exec /usr/bin/TerminAttr -cvaddr=www.cv-staging.corp.arista.io:443 -cvauth=token-secure,/tmp/cv-onboarding-token -cvvrf=MGMT -smashexcludes=ale,flexCounter,hardware,kni,pulse,strata -ingestexclude=/Sysdb/cell/1/agent,/Sysdb/cell/2/agent -taillogs
+   no shutdown
+!
+flow tracking hardware
+   tracker FLOW-TRACKER
+      record export on inactive timeout 70000
+      record export on interval 5000
+      exporter CV-TELEMETRY
+         collector 127.0.0.1
+         local interface Loopback0
+   no shutdown
+!
+service routing protocols model multi-agent
+!
+hostname site1-wan2
+ip name-server vrf MGMT 192.168.17.1
+dns domain wan.example.local
+!
+router adaptive-virtual-topology
+   topology role transit region
+   region REGION1 id 1
+   zone REGION1-ZONE id 1
+   site SITE1 id 101
+   !
+   policy BLUE-POLICY
+      !
+      match application-profile VIDEO
+         avt profile BLUE-POLICY-VIDEO
+      !
+      match application-profile VOICE
+         avt profile BLUE-POLICY-VOICE
+         dscp 46
+      !
+      match application-profile default
+         avt profile BLUE-POLICY-DEFAULT
+   !
+   policy DEFAULT-POLICY-WITH-CP
+      !
+      match application-profile APP-PROFILE-CONTROL-PLANE
+         avt profile DEFAULT-POLICY-CONTROL-PLANE
+      !
+      match application-profile default
+         avt profile DEFAULT-POLICY-DEFAULT
+   !
+   policy RED-POLICY
+      !
+      match application-profile CRITICAL-SECRET-DATA
+         avt profile RED-POLICY-CRITICAL-SECRET-DATA
+      !
+      match application-profile NORMAL-DATA
+         avt profile RED-POLICY-NORMAL-DATA
+      !
+      match application-profile NOT-SO-IMPORTANT-DATA
+         avt profile RED-POLICY-NOT-SO-IMPORTANT-DATA
+   !
+   profile BLUE-POLICY-DEFAULT
+      path-selection load-balance LB-BLUE-POLICY-DEFAULT
+   !
+   profile BLUE-POLICY-VIDEO
+      path-selection load-balance LB-BLUE-POLICY-VIDEO
+   !
+   profile BLUE-POLICY-VOICE
+      path-selection load-balance LB-BLUE-POLICY-VOICE
+   !
+   profile DEFAULT-POLICY-CONTROL-PLANE
+      path-selection load-balance LB-DEFAULT-POLICY-CONTROL-PLANE
+   !
+   profile DEFAULT-POLICY-DEFAULT
+      path-selection load-balance LB-DEFAULT-POLICY-DEFAULT
+   !
+   profile RED-POLICY-CRITICAL-SECRET-DATA
+      path-selection load-balance LB-RED-POLICY-CRITICAL-SECRET-DATA
+   !
+   profile RED-POLICY-NORMAL-DATA
+      path-selection load-balance LB-RED-POLICY-NORMAL-DATA
+   !
+   profile RED-POLICY-NOT-SO-IMPORTANT-DATA
+      path-selection load-balance LB-RED-POLICY-NOT-SO-IMPORTANT-DATA
+   !
+   vrf BLUE
+      avt policy BLUE-POLICY
+      avt profile BLUE-POLICY-DEFAULT id 1
+      avt profile BLUE-POLICY-VIDEO id 2
+      avt profile BLUE-POLICY-VOICE id 3
+   !
+   vrf default
+      avt policy DEFAULT-POLICY-WITH-CP
+      avt profile DEFAULT-POLICY-DEFAULT id 1
+      avt profile DEFAULT-POLICY-CONTROL-PLANE id 254
+   !
+   vrf RED
+      avt policy RED-POLICY
+      avt profile RED-POLICY-CRITICAL-SECRET-DATA id 2
+      avt profile RED-POLICY-NORMAL-DATA id 3
+      avt profile RED-POLICY-NOT-SO-IMPORTANT-DATA id 4
+!
+router path-selection
+   tcp mss ceiling ipv4 ingress
+   !
+   path-group INTERNET id 102
+      ipsec profile CP-PROFILE
+      !
+      local interface Ethernet4
+         stun server-profile INTERNET-pf1-Ethernet2 INTERNET-pf2-Ethernet2
+      !
+      peer dynamic
+      !
+      peer static router-ip 192.168.42.1
+         name pf1
+         ipv4 address 100.64.100.2
+      !
+      peer static router-ip 192.168.42.2
+         name pf2
+         ipv4 address 100.64.200.2
+   !
+   path-group LAN_HA id 65535
+      ipsec profile DP-PROFILE
+      flow assignment lan
+      !
+      local interface Ethernet1
+      !
+      local interface Ethernet2
+      !
+      peer static router-ip 192.168.42.3
+         name site1-wan1
+         ipv4 address 10.0.1.9
+         ipv4 address 10.0.1.11
+   !
+   path-group MPLS id 101
+      ipsec profile CP-PROFILE
+      !
+      local interface Ethernet3
+         stun server-profile MPLS-pf1-Ethernet1 MPLS-pf2-Ethernet1
+      !
+      peer dynamic
+      !
+      peer static router-ip 192.168.42.1
+         name pf1
+         ipv4 address 172.18.100.2
+      !
+      peer static router-ip 192.168.42.2
+         name pf2
+         ipv4 address 172.18.200.2
+   !
+   load-balance policy LB-BLUE-POLICY-DEFAULT
+      path-group INTERNET
+      path-group LAN_HA
+      path-group MPLS
+   !
+   load-balance policy LB-BLUE-POLICY-VIDEO
+      path-group INTERNET
+      path-group LAN_HA
+      path-group MPLS priority 2
+   !
+   load-balance policy LB-BLUE-POLICY-VOICE
+      latency 150
+      jitter 30
+      loss-rate 1
+      hop count lowest
+      path-group LAN_HA
+      path-group MPLS
+      path-group INTERNET priority 2
+   !
+   load-balance policy LB-DEFAULT-POLICY-CONTROL-PLANE
+      path-group INTERNET
+      path-group LAN_HA
+      path-group MPLS
+   !
+   load-balance policy LB-DEFAULT-POLICY-DEFAULT
+      path-group INTERNET
+      path-group LAN_HA
+      path-group MPLS
+   !
+   load-balance policy LB-RED-POLICY-CRITICAL-SECRET-DATA
+      path-group LAN_HA
+      path-group MPLS
+   !
+   load-balance policy LB-RED-POLICY-NORMAL-DATA
+      path-group INTERNET
+      path-group LAN_HA
+      path-group MPLS priority 2
+   !
+   load-balance policy LB-RED-POLICY-NOT-SO-IMPORTANT-DATA
+      path-group INTERNET
+      path-group LAN_HA
+!
+spanning-tree mode none
+!
+vrf instance BLUE
+!
+vrf instance MGMT
+!
+vrf instance RED
+!
+management api http-commands
+   protocol https
+   no shutdown
+   !
+   vrf MGMT
+      no shutdown
+!
+aaa authorization exec default local
+!
+ip security
+   ike policy CP-IKE-POLICY
+      local-id 192.168.42.4
+   !
+   ike policy DP-IKE-POLICY
+      local-id 192.168.42.4
+   !
+   sa policy CP-SA-POLICY
+      esp encryption aes256gcm128
+      pfs dh-group 14
+   !
+   sa policy DP-SA-POLICY
+      esp encryption aes256gcm128
+      pfs dh-group 14
+   !
+   profile CP-PROFILE
+      ike-policy CP-IKE-POLICY
+      sa-policy CP-SA-POLICY
+      connection start
+      shared-key 7 045A190F1C354D
+      dpd 10 50 clear
+      mode transport
+   !
+   profile DP-PROFILE
+      ike-policy DP-IKE-POLICY
+      sa-policy DP-SA-POLICY
+      connection start
+      shared-key 7 141600021F102B
+      dpd 10 50 clear
+      mode transport
+   !
+   key controller
+      profile DP-PROFILE
+!
+interface Dps1
+   description DPS Interface
+   mtu 9194
+   flow tracker hardware FLOW-TRACKER
+   ip address 192.168.42.4/32
+!
+interface Ethernet1
+   description P2P_site1-border1_Ethernet4
+   no shutdown
+   mtu 9214
+   no switchport
+   flow tracker hardware FLOW-TRACKER
+   ip address 10.0.1.13/31
+!
+interface Ethernet1.100
+   description P2P_site1-border1_Ethernet4.100_VRF_BLUE
+   no shutdown
+   mtu 9214
+   encapsulation dot1q vlan 100
+   flow tracker hardware FLOW-TRACKER
+   vrf BLUE
+   ip address 10.0.1.13/31
+!
+interface Ethernet1.101
+   description P2P_site1-border1_Ethernet4.101_VRF_RED
+   no shutdown
+   mtu 9214
+   encapsulation dot1q vlan 101
+   flow tracker hardware FLOW-TRACKER
+   vrf RED
+   ip address 10.0.1.13/31
+!
+interface Ethernet2
+   description P2P_site1-border2_Ethernet4
+   no shutdown
+   mtu 9214
+   no switchport
+   flow tracker hardware FLOW-TRACKER
+   ip address 10.0.1.15/31
+!
+interface Ethernet2.100
+   description P2P_site1-border2_Ethernet4.100_VRF_BLUE
+   no shutdown
+   mtu 9214
+   encapsulation dot1q vlan 100
+   flow tracker hardware FLOW-TRACKER
+   vrf BLUE
+   ip address 10.0.1.15/31
+!
+interface Ethernet2.101
+   description P2P_site1-border2_Ethernet4.101_VRF_RED
+   no shutdown
+   mtu 9214
+   encapsulation dot1q vlan 101
+   flow tracker hardware FLOW-TRACKER
+   vrf RED
+   ip address 10.0.1.15/31
+!
+interface Ethernet3
+   description ACME-MPLS-INC_mpls-site1-wan2_mpls-cloud_Ethernet6
+   no shutdown
+   no switchport
+   flow tracker hardware FLOW-TRACKER
+   ip address 172.18.11.2/24
+!
+interface Ethernet4
+   description REGION1-INTERNET-CORP_inet-site1-wan2_inet-cloud_Ethernet6
+   no shutdown
+   no switchport
+   flow tracker hardware FLOW-TRACKER
+   ip address 100.64.11.2/24
+   ip access-group ACL-INTERNET-IN_Ethernet4 in
+!
+interface Loopback0
+   description ROUTER_ID
+   no shutdown
+   ip address 192.168.255.4/32
+!
+interface Management1
+   description OOB_MANAGEMENT
+   no shutdown
+   vrf MGMT
+   ip address 192.168.17.13/24
+   no lldp transmit
+   no lldp receive
+!
+interface Vxlan1
+   description site1-wan2_VTEP
+   vxlan source-interface Dps1
+   vxlan udp-port 4789
+   vxlan vrf BLUE vni 100
+   vxlan vrf default vni 1
+   vxlan vrf RED vni 101
+!
+application traffic recognition
+   !
+   application ipv4 APP-CONTROL-PLANE
+      destination prefix field-set PFX-PATHFINDERS
+   !
+   application ipv4 CRITICAL-SECRET-DATA-APP
+      dscp 46
+   !
+   application ipv4 NORMAL-DATA-APP
+      dscp af23
+   !
+   application ipv4 NOT-SO-IMPORTANT-DATA-APP
+      dscp 0
+   !
+   application ipv4 VIDEO-APP
+      protocol tcp destination port field-set VIDEO-PORTS
+      protocol udp destination port field-set VIDEO-PORTS
+   !
+   application ipv4 VOICE-APP
+      protocol tcp destination port field-set VOICE-PORTS
+   !
+   application-profile APP-PROFILE-CONTROL-PLANE
+      application APP-CONTROL-PLANE
+   !
+   application-profile CRITICAL-SECRET-DATA
+      application CRITICAL-SECRET-DATA-APP
+   !
+   application-profile NORMAL-DATA
+      application NORMAL-DATA-APP
+   !
+   application-profile NOT-SO-IMPORTANT-DATA
+      application NOT-SO-IMPORTANT-DATA-APP
+   !
+   application-profile VIDEO
+      application VIDEO-APP
+   !
+   application-profile VOICE
+      application VOICE-APP
+   !
+   field-set ipv4 prefix PFX-PATHFINDERS
+      192.168.42.1/32 192.168.42.2/32
+   !
+   field-set l4-port VIDEO-PORTS
+      4242-4244
+   !
+   field-set l4-port VOICE-PORTS
+      666-667
+!
+ip access-list ACL-INTERNET-IN_Ethernet4
+   1 remark Not for PRODUCTION: This ACL is built this way because the lab has an out-of-band interface
+   10 permit udp any host 100.64.11.2 eq isakmp non500-isakmp
+   30 permit icmp any host 100.64.11.2
+   deny ip any any
+!
+ip routing
+ip routing vrf BLUE
+no ip routing vrf MGMT
+ip routing vrf RED
+!
+ip as-path access-list ASPATH-WAN permit 65000 any
+!
+ip extcommunity-list ECL-EVPN-SOO permit soo 192.168.255.3:101
+!
+ip prefix-list ALLOW-DEFAULT
+   seq 10 permit 0.0.0.0/0
+!
+ip prefix-list PL-LOOPBACKS-EVPN-OVERLAY
+   seq 10 permit 192.168.255.0/24 eq 32
+!
+ip prefix-list PL-WAN-HA-PEER-PREFIXES
+   seq 10 permit 10.0.1.8/31
+   seq 20 permit 10.0.1.10/31
+!
+ip prefix-list PL-WAN-HA-PREFIXES
+   seq 10 permit 10.0.1.12/31
+   seq 20 permit 10.0.1.14/31
+!
+ip route 100.64.0.0/16 100.64.11.1
+ip route 172.18.0.0/16 172.18.11.1
+ip route vrf MGMT 0.0.0.0/0 192.168.17.1
+!
+ntp local-interface vrf MGMT Management1
+ntp server vrf MGMT 0.pool.ntp.org prefer
+!
+route-map RM-BGP-100.64.11.1-IN permit 10
+   match ip address prefix-list ALLOW-DEFAULT
+   set community no-advertise additive
+!
+route-map RM-BGP-100.64.11.1-OUT deny 10
+!
+route-map RM-BGP-UNDERLAY-PEERS-IN permit 10
+   description Allow WAN HA peer interface prefixes
+   match ip address prefix-list PL-WAN-HA-PEER-PREFIXES
+!
+route-map RM-BGP-UNDERLAY-PEERS-IN deny 20
+   description Deny other routes from the HA peer
+   match as-path ASPATH-WAN
+!
+route-map RM-BGP-UNDERLAY-PEERS-IN permit 40
+   description Mark prefixes originated from the LAN
+   set extcommunity soo 192.168.255.3:101 additive
+!
+route-map RM-BGP-UNDERLAY-PEERS-OUT permit 10
+   description Make routes learned from WAN HA peer less preferred on LAN routers
+   match route-type internal
+   match tag 50
+   set metric 50
+!
+route-map RM-BGP-UNDERLAY-PEERS-OUT permit 20
+!
+route-map RM-CONN-2-BGP permit 10
+   match ip address prefix-list PL-LOOPBACKS-EVPN-OVERLAY
+   set extcommunity soo 192.168.255.3:101 additive
+!
+route-map RM-CONN-2-BGP permit 50
+   match ip address prefix-list PL-WAN-HA-PREFIXES
+!
+route-map RM-EVPN-EXPORT-VRF-DEFAULT permit 10
+   match extcommunity ECL-EVPN-SOO
+!
+route-map RM-EVPN-SOO-IN deny 10
+   match extcommunity ECL-EVPN-SOO
+!
+route-map RM-EVPN-SOO-IN permit 20
+!
+route-map RM-EVPN-SOO-OUT permit 10
+   set extcommunity soo 192.168.255.3:101 additive
+!
+route-map RM-WAN-HA-PEER-IN permit 10
+   description Set tag 50 on routes received from HA peer over EVPN
+   set tag 50
+!
+route-map RM-WAN-HA-PEER-OUT permit 10
+   description Make EVPN routes learned from WAN less preferred on HA peer
+   match route-type internal
+   set local-preference 50
+!
+route-map RM-WAN-HA-PEER-OUT permit 20
+   description Make locally injected routes less preferred on HA peer
+   set local-preference 75
+!
+router bfd
+   multihop interval 300 min-rx 300 multiplier 3
+!
+router bgp 65000
+   router-id 192.168.255.4
+   no bgp default ipv4-unicast
+   maximum-paths 16
+   neighbor IPv4-UNDERLAY-PEERS peer group
+   neighbor IPv4-UNDERLAY-PEERS allowas-in 1
+   neighbor IPv4-UNDERLAY-PEERS route-map RM-BGP-UNDERLAY-PEERS-IN in
+   neighbor IPv4-UNDERLAY-PEERS route-map RM-BGP-UNDERLAY-PEERS-OUT out
+   neighbor IPv4-UNDERLAY-PEERS send-community
+   neighbor IPv4-UNDERLAY-PEERS maximum-routes 12000
+   neighbor WAN-OVERLAY-PEERS peer group
+   neighbor WAN-OVERLAY-PEERS remote-as 65000
+   neighbor WAN-OVERLAY-PEERS update-source Dps1
+   neighbor WAN-OVERLAY-PEERS bfd
+   neighbor WAN-OVERLAY-PEERS bfd interval 1000 min-rx 1000 multiplier 10
+   neighbor WAN-OVERLAY-PEERS ttl maximum-hops 1
+   neighbor WAN-OVERLAY-PEERS password 7 htm4AZe9mIQOO1uiMuGgYQ==
+   neighbor WAN-OVERLAY-PEERS send-community
+   neighbor WAN-OVERLAY-PEERS maximum-routes 0
+   neighbor 10.0.1.12 peer group IPv4-UNDERLAY-PEERS
+   neighbor 10.0.1.12 remote-as 65101
+   neighbor 10.0.1.12 description site1-border1_Ethernet4
+   neighbor 10.0.1.14 peer group IPv4-UNDERLAY-PEERS
+   neighbor 10.0.1.14 remote-as 65101
+   neighbor 10.0.1.14 description site1-border2_Ethernet4
+   neighbor 100.64.11.1 remote-as 65666
+   neighbor 100.64.11.1 description REGION1-INTERNET-CORP_inet-site1-wan2_inet-cloud_Ethernet6
+   neighbor 100.64.11.1 route-map RM-BGP-100.64.11.1-IN in
+   neighbor 100.64.11.1 route-map RM-BGP-100.64.11.1-OUT out
+   neighbor 192.168.42.1 peer group WAN-OVERLAY-PEERS
+   neighbor 192.168.42.1 description pf1_Dps1
+   neighbor 192.168.42.2 peer group WAN-OVERLAY-PEERS
+   neighbor 192.168.42.2 description pf2_Dps1
+   neighbor 192.168.42.3 remote-as 65000
+   neighbor 192.168.42.3 update-source Dps1
+   neighbor 192.168.42.3 description site1-wan1
+   neighbor 192.168.42.3 route-reflector-client
+   neighbor 192.168.42.3 route-map RM-WAN-HA-PEER-IN in
+   neighbor 192.168.42.3 route-map RM-WAN-HA-PEER-OUT out
+   neighbor 192.168.42.3 send-community
+   redistribute connected route-map RM-CONN-2-BGP
+   !
+   address-family evpn
+      neighbor WAN-OVERLAY-PEERS activate
+      neighbor WAN-OVERLAY-PEERS route-map RM-EVPN-SOO-IN in
+      neighbor WAN-OVERLAY-PEERS route-map RM-EVPN-SOO-OUT out
+      neighbor WAN-OVERLAY-PEERS encapsulation path-selection
+      neighbor 192.168.42.3 activate
+      neighbor 192.168.42.3 encapsulation path-selection
+      neighbor default next-hop-self received-evpn-routes route-type ip-prefix
+   !
+   address-family ipv4
+      neighbor IPv4-UNDERLAY-PEERS activate
+      no neighbor WAN-OVERLAY-PEERS activate
+      neighbor 100.64.11.1 activate
+   !
+   address-family ipv4 sr-te
+      neighbor WAN-OVERLAY-PEERS activate
+   !
+   address-family link-state
+      neighbor WAN-OVERLAY-PEERS activate
+      path-selection
+   !
+   address-family path-selection
+      bgp additional-paths receive
+      bgp additional-paths send any
+      neighbor WAN-OVERLAY-PEERS activate
+   !
+   vrf BLUE
+      rd 192.168.255.4:100
+      route-target import evpn 100:100
+      route-target export evpn 100:100
+      router-id 192.168.255.4
+      neighbor 10.0.1.12 peer group IPv4-UNDERLAY-PEERS
+      neighbor 10.0.1.12 remote-as 65101
+      neighbor 10.0.1.12 description site1-border1_Ethernet4.100_vrf_BLUE
+      neighbor 10.0.1.14 peer group IPv4-UNDERLAY-PEERS
+      neighbor 10.0.1.14 remote-as 65101
+      neighbor 10.0.1.14 description site1-border2_Ethernet4.100_vrf_BLUE
+      redistribute connected
+   !
+   vrf default
+      rd 192.168.255.4:1
+      route-target import evpn 1:1
+      route-target export evpn 1:1
+      route-target export evpn route-map RM-EVPN-EXPORT-VRF-DEFAULT
+   !
+   vrf RED
+      rd 192.168.255.4:101
+      route-target import evpn 101:101
+      route-target export evpn 101:101
+      router-id 192.168.255.4
+      neighbor 10.0.1.12 peer group IPv4-UNDERLAY-PEERS
+      neighbor 10.0.1.12 remote-as 65101
+      neighbor 10.0.1.12 description site1-border1_Ethernet4.101_vrf_RED
+      neighbor 10.0.1.14 peer group IPv4-UNDERLAY-PEERS
+      neighbor 10.0.1.14 remote-as 65101
+      neighbor 10.0.1.14 description site1-border2_Ethernet4.101_vrf_RED
+      redistribute connected
+!
+router traffic-engineering
+!
+stun
+   client
+      server-profile INTERNET-pf1-Ethernet2
+         ip address 100.64.100.2
+      server-profile INTERNET-pf2-Ethernet2
+         ip address 100.64.200.2
+      server-profile MPLS-pf1-Ethernet1
+         ip address 172.18.100.2
+      server-profile MPLS-pf2-Ethernet1
+         ip address 172.18.200.2
+!
+end
+
+
+
+
+###################### evpnsfe7
+dut:evpnsfe7
+[numExtPorts 15]
+[agentsToRun StunClient SuperServer]
+[agentArgv SuperServer --service=SslManager --service=StunServer --service=SswanManager]
+[dirsToClone /etc/sswan /etc/turnserver]
+prompt site1-border1-server1%P
+!
+no enable password
+no aaa root
+!
+vlan internal order ascending range 1006 1199
+!
+transceiver qsfp default-mode 4x10G
+!
+service routing protocols model multi-agent
+!
+hostname site1-border1-server1
+!
+vrf instance MGMT
+!
+management api http-commands
+   protocol https
+   no shutdown
+   !
+   vrf MGMT
+      no shutdown
+!
+interface Ethernet1
+   description site1-border1-vlan42
+   no shutdown
+   no switchport
+   ip address 10.42.1.10/24
+no ip routing vrf MGMT
+!
+ip route 0.0.0.0/0 10.42.1.1
+!
+end
+
+
+
+
+###################### evpnsfe8
+dut:evpnsfe8
+[numExtPorts 15]
+[agentsToRun StunClient SuperServer]
+[agentArgv SuperServer --service=SslManager --service=StunServer --service=SswanManager]
+[dirsToClone /etc/sswan /etc/turnserver]
+prompt site2-wan1%P
+!
+no enable password
+no aaa root
+!
+username ansible privilege 15 role network-admin secret sha512 $6$7u4j1rkb3VELgcZE$EJt2Qff8kd/TapRoci0XaIZsL4tFzgq1YZBLD9c6f/knXzvcYY0NcMKndZeCv0T268knGKhOEwZAxqKjlMm920
+username arista privilege 15 role network-admin secret sha512 $6$Enl0WfE32FthwyiJ$yTyGaEJ2uPKLU.F7314YtB7J1jrzrMi7ogXIRTEHQfLdLgKWWmr1UvNlZLN6AyuxET7G5aH3AI9OYRzxVTkB1.
+username cvpadmin privilege 15 role network-admin secret sha512 $6$a7LdQWHxWzYHpvVt$n62q.1mbm4kzQ5oBr0lhXCE9ntnTn.SNa16DovZHahFQLH.iPcPMZa5JUSFtncrDW4EDQ3oSWgP8G0S4FtOFx1
+!
+agent KernelFib environment KERNELFIB_PROGRAM_ALL_ECMP=1
+!
+daemon TerminAttr
+   exec /usr/bin/TerminAttr -cvaddr=www.cv-staging.corp.arista.io:443 -cvauth=token-secure,/tmp/cv-onboarding-token -cvvrf=MGMT -smashexcludes=ale,flexCounter,hardware,kni,pulse,strata -ingestexclude=/Sysdb/cell/1/agent,/Sysdb/cell/2/agent -taillogs
+   no shutdown
+!
+flow tracking hardware
+   tracker FLOW-TRACKER
+      record export on inactive timeout 70000
+      record export on interval 5000
+      exporter CV-TELEMETRY
+         collector 127.0.0.1
+         local interface Loopback0
+   no shutdown
+!
+service routing protocols model multi-agent
+!
+hostname site2-wan1
+ip name-server vrf MGMT 192.168.17.1
+dns domain wan.example.local
+!
+router adaptive-virtual-topology
+   topology role transit region
+   region REGION2 id 2
+   zone REGION2-ZONE id 1
+   site SITE2 id 202
+   !
+   policy BLUE-POLICY
+      !
+      match application-profile VIDEO
+         avt profile BLUE-POLICY-VIDEO
+      !
+      match application-profile VOICE
+         avt profile BLUE-POLICY-VOICE
+         dscp 46
+      !
+      match application-profile default
+         avt profile BLUE-POLICY-DEFAULT
+   !
+   policy DEFAULT-POLICY-WITH-CP
+      !
+      match application-profile APP-PROFILE-CONTROL-PLANE
+         avt profile DEFAULT-POLICY-CONTROL-PLANE
+      !
+      match application-profile default
+         avt profile DEFAULT-POLICY-DEFAULT
+   !
+   policy RED-POLICY
+      !
+      match application-profile CRITICAL-SECRET-DATA
+         avt profile RED-POLICY-CRITICAL-SECRET-DATA
+      !
+      match application-profile NORMAL-DATA
+         avt profile RED-POLICY-NORMAL-DATA
+      !
+      match application-profile NOT-SO-IMPORTANT-DATA
+         avt profile RED-POLICY-NOT-SO-IMPORTANT-DATA
+   !
+   profile BLUE-POLICY-DEFAULT
+      path-selection load-balance LB-BLUE-POLICY-DEFAULT
+   !
+   profile BLUE-POLICY-VIDEO
+      path-selection load-balance LB-BLUE-POLICY-VIDEO
+   !
+   profile BLUE-POLICY-VOICE
+      path-selection load-balance LB-BLUE-POLICY-VOICE
+   !
+   profile DEFAULT-POLICY-CONTROL-PLANE
+      path-selection load-balance LB-DEFAULT-POLICY-CONTROL-PLANE
+   !
+   profile DEFAULT-POLICY-DEFAULT
+      path-selection load-balance LB-DEFAULT-POLICY-DEFAULT
+   !
+   profile RED-POLICY-CRITICAL-SECRET-DATA
+      path-selection load-balance LB-RED-POLICY-CRITICAL-SECRET-DATA
+   !
+   profile RED-POLICY-NORMAL-DATA
+      path-selection load-balance LB-RED-POLICY-NORMAL-DATA
+   !
+   profile RED-POLICY-NOT-SO-IMPORTANT-DATA
+      path-selection load-balance LB-RED-POLICY-NOT-SO-IMPORTANT-DATA
+   !
+   vrf BLUE
+      avt policy BLUE-POLICY
+      avt profile BLUE-POLICY-DEFAULT id 1
+      avt profile BLUE-POLICY-VIDEO id 2
+      avt profile BLUE-POLICY-VOICE id 3
+   !
+   vrf default
+      avt policy DEFAULT-POLICY-WITH-CP
+      avt profile DEFAULT-POLICY-DEFAULT id 1
+      avt profile DEFAULT-POLICY-CONTROL-PLANE id 254
+   !
+   vrf RED
+      avt policy RED-POLICY
+      avt profile RED-POLICY-CRITICAL-SECRET-DATA id 2
+      avt profile RED-POLICY-NORMAL-DATA id 3
+      avt profile RED-POLICY-NOT-SO-IMPORTANT-DATA id 4
+!
+router path-selection
+   tcp mss ceiling ipv4 ingress
+   !
+   path-group LAN_HA id 65535
+      ipsec profile DP-PROFILE
+      flow assignment lan
+      !
+      local interface Ethernet5
+      !
+      peer static router-ip 192.168.42.8
+         name site2-wan2
+         ipv4 address 10.42.0.1
+   !
+   path-group MPLS id 101
+      ipsec profile CP-PROFILE
+      !
+      local interface Ethernet3
+         stun server-profile MPLS-pf1-Ethernet1 MPLS-pf2-Ethernet1
+      !
+      peer dynamic
+      !
+      peer static router-ip 192.168.42.1
+         name pf1
+         ipv4 address 172.18.100.2
+      !
+      peer static router-ip 192.168.42.2
+         name pf2
+         ipv4 address 172.18.200.2
+   !
+   load-balance policy LB-BLUE-POLICY-DEFAULT
+      path-group LAN_HA
+      path-group MPLS
+   !
+   load-balance policy LB-BLUE-POLICY-VIDEO
+      path-group LAN_HA
+      path-group MPLS priority 2
+   !
+   load-balance policy LB-BLUE-POLICY-VOICE
+      latency 150
+      jitter 30
+      loss-rate 1
+      hop count lowest
+      path-group LAN_HA
+      path-group MPLS
+   !
+   load-balance policy LB-DEFAULT-POLICY-CONTROL-PLANE
+      path-group LAN_HA
+      path-group MPLS
+   !
+   load-balance policy LB-DEFAULT-POLICY-DEFAULT
+      path-group LAN_HA
+      path-group MPLS
+   !
+   load-balance policy LB-RED-POLICY-CRITICAL-SECRET-DATA
+      path-group LAN_HA
+      path-group MPLS
+   !
+   load-balance policy LB-RED-POLICY-NORMAL-DATA
+      path-group LAN_HA
+      path-group MPLS priority 2
+   !
+   load-balance policy LB-RED-POLICY-NOT-SO-IMPORTANT-DATA
+      path-group LAN_HA
+!
+spanning-tree mode none
+!
+vrf instance BLUE
+!
+vrf instance MGMT
+!
+vrf instance RED
+!
+management api http-commands
+   protocol https
+   no shutdown
+   !
+   vrf MGMT
+      no shutdown
+!
+aaa authorization exec default local
+!
+ip security
+   ike policy CP-IKE-POLICY
+      local-id 192.168.42.7
+   !
+   ike policy DP-IKE-POLICY
+      local-id 192.168.42.7
+   !
+   sa policy CP-SA-POLICY
+      esp encryption aes256gcm128
+      pfs dh-group 14
+   !
+   sa policy DP-SA-POLICY
+      esp encryption aes256gcm128
+      pfs dh-group 14
+   !
+   profile CP-PROFILE
+      ike-policy CP-IKE-POLICY
+      sa-policy CP-SA-POLICY
+      connection start
+      shared-key 7 045A190F1C354D
+      dpd 10 50 clear
+      mode transport
+   !
+   profile DP-PROFILE
+      ike-policy DP-IKE-POLICY
+      sa-policy DP-SA-POLICY
+      connection start
+      shared-key 7 141600021F102B
+      dpd 10 50 clear
+      mode transport
+   !
+   key controller
+      profile DP-PROFILE
+!
+interface Dps1
+   description DPS Interface
+   mtu 9194
+   flow tracker hardware FLOW-TRACKER
+   ip address 192.168.42.7/32
+!
+interface Ethernet1
+   description P2P_site2-leaf1_Ethernet3
+   no shutdown
+   mtu 9214
+   no switchport
+   flow tracker hardware FLOW-TRACKER
+   ip address 10.0.2.13/31
+!
+interface Ethernet1.100
+   description P2P_site2-leaf1_Ethernet3.100_VRF_BLUE
+   no shutdown
+   mtu 9214
+   encapsulation dot1q vlan 100
+   flow tracker hardware FLOW-TRACKER
+   vrf BLUE
+   ip address 10.0.2.13/31
+!
+interface Ethernet1.101
+   description P2P_site2-leaf1_Ethernet3.101_VRF_RED
+   no shutdown
+   mtu 9214
+   encapsulation dot1q vlan 101
+   flow tracker hardware FLOW-TRACKER
+   vrf RED
+   ip address 10.0.2.13/31
+!
+interface Ethernet3
+   description ACME-MPLS-INC_mpls-site2-wan1_mpls-cloud_Ethernet7
+   no shutdown
+   no switchport
+   flow tracker hardware FLOW-TRACKER
+   ip address 172.18.20.2/24
+!
+interface Ethernet5
+   description WAN_HA_site2-wan2_Ethernet5
+   no shutdown
+   mtu 9194
+   no switchport
+   ip address 10.42.0.0/31
+!
+interface Loopback0
+   description ROUTER_ID
+   no shutdown
+   ip address 192.168.255.7/32
+!
+interface Management1
+   description OOB_MANAGEMENT
+   no shutdown
+   vrf MGMT
+   ip address 192.168.17.16/24
+   no lldp transmit
+   no lldp receive
+!
+interface Vxlan1
+   description site2-wan1_VTEP
+   vxlan source-interface Dps1
+   vxlan udp-port 4789
+   vxlan vrf BLUE vni 100
+   vxlan vrf default vni 1
+   vxlan vrf RED vni 101
+!
+application traffic recognition
+   !
+   application ipv4 APP-CONTROL-PLANE
+      destination prefix field-set PFX-PATHFINDERS
+   !
+   application ipv4 CRITICAL-SECRET-DATA-APP
+      dscp 46
+   !
+   application ipv4 NORMAL-DATA-APP
+      dscp af23
+   !
+   application ipv4 NOT-SO-IMPORTANT-DATA-APP
+      dscp 0
+   !
+   application ipv4 VIDEO-APP
+      protocol tcp destination port field-set VIDEO-PORTS
+      protocol udp destination port field-set VIDEO-PORTS
+   !
+   application ipv4 VOICE-APP
+      protocol tcp destination port field-set VOICE-PORTS
+   !
+   application-profile APP-PROFILE-CONTROL-PLANE
+      application APP-CONTROL-PLANE
+   !
+   application-profile CRITICAL-SECRET-DATA
+      application CRITICAL-SECRET-DATA-APP
+   !
+   application-profile NORMAL-DATA
+      application NORMAL-DATA-APP
+   !
+   application-profile NOT-SO-IMPORTANT-DATA
+      application NOT-SO-IMPORTANT-DATA-APP
+   !
+   application-profile VIDEO
+      application VIDEO-APP
+   !
+   application-profile VOICE
+      application VOICE-APP
+   !
+   field-set ipv4 prefix PFX-PATHFINDERS
+      192.168.42.1/32 192.168.42.2/32
+   !
+   field-set l4-port VIDEO-PORTS
+      4242-4244
+   !
+   field-set l4-port VOICE-PORTS
+      666-667
+!
+ip routing
+ip routing vrf BLUE
+no ip routing vrf MGMT
+ip routing vrf RED
+!
+ip extcommunity-list ECL-EVPN-SOO permit soo 192.168.255.7:202
+!
+ip prefix-list PL-LOOPBACKS-EVPN-OVERLAY
+   seq 10 permit 192.168.255.0/24 eq 32
+!
+ip route 172.18.0.0/16 172.18.20.1
+ip route vrf MGMT 0.0.0.0/0 192.168.17.1
+!
+ntp local-interface vrf MGMT Management1
+ntp server vrf MGMT 0.pool.ntp.org prefer
+!
+route-map RM-BGP-UNDERLAY-PEERS-IN permit 40
+   description Mark prefixes originated from the LAN
+   set extcommunity soo 192.168.255.7:202 additive
+!
+route-map RM-BGP-UNDERLAY-PEERS-OUT permit 10
+   description Make routes learned from WAN HA peer less preferred on LAN routers
+   match route-type internal
+   match tag 50
+   set metric 50
+!
+route-map RM-BGP-UNDERLAY-PEERS-OUT permit 20
+!
+route-map RM-CONN-2-BGP permit 10
+   match ip address prefix-list PL-LOOPBACKS-EVPN-OVERLAY
+   set extcommunity soo 192.168.255.7:202 additive
+!
+route-map RM-EVPN-EXPORT-VRF-DEFAULT permit 10
+   match extcommunity ECL-EVPN-SOO
+!
+route-map RM-EVPN-SOO-IN deny 10
+   match extcommunity ECL-EVPN-SOO
+!
+route-map RM-EVPN-SOO-IN permit 20
+!
+route-map RM-EVPN-SOO-OUT permit 10
+   set extcommunity soo 192.168.255.7:202 additive
+!
+route-map RM-WAN-HA-PEER-IN permit 10
+   description Set tag 50 on routes received from HA peer over EVPN
+   set tag 50
+!
+route-map RM-WAN-HA-PEER-OUT permit 10
+   description Make EVPN routes learned from WAN less preferred on HA peer
+   match route-type internal
+   set local-preference 50
+!
+route-map RM-WAN-HA-PEER-OUT permit 20
+   description Make locally injected routes less preferred on HA peer
+   set local-preference 75
+!
+router bfd
+   multihop interval 300 min-rx 300 multiplier 3
+!
+router bgp 65000
+   router-id 192.168.255.7
+   no bgp default ipv4-unicast
+   maximum-paths 16
+   neighbor IPv4-UNDERLAY-PEERS peer group
+   neighbor IPv4-UNDERLAY-PEERS route-map RM-BGP-UNDERLAY-PEERS-IN in
+   neighbor IPv4-UNDERLAY-PEERS route-map RM-BGP-UNDERLAY-PEERS-OUT out
+   neighbor IPv4-UNDERLAY-PEERS send-community
+   neighbor IPv4-UNDERLAY-PEERS maximum-routes 12000
+   neighbor WAN-OVERLAY-PEERS peer group
+   neighbor WAN-OVERLAY-PEERS remote-as 65000
+   neighbor WAN-OVERLAY-PEERS update-source Dps1
+   neighbor WAN-OVERLAY-PEERS bfd
+   neighbor WAN-OVERLAY-PEERS bfd interval 1000 min-rx 1000 multiplier 10
+   neighbor WAN-OVERLAY-PEERS ttl maximum-hops 1
+   neighbor WAN-OVERLAY-PEERS password 7 htm4AZe9mIQOO1uiMuGgYQ==
+   neighbor WAN-OVERLAY-PEERS send-community
+   neighbor WAN-OVERLAY-PEERS maximum-routes 0
+   neighbor 10.0.2.12 peer group IPv4-UNDERLAY-PEERS
+   neighbor 10.0.2.12 remote-as 65102
+   neighbor 10.0.2.12 description site2-leaf1_Ethernet3
+   neighbor 192.168.42.1 peer group WAN-OVERLAY-PEERS
+   neighbor 192.168.42.1 description pf1_Dps1
+   neighbor 192.168.42.2 peer group WAN-OVERLAY-PEERS
+   neighbor 192.168.42.2 description pf2_Dps1
+   neighbor 192.168.42.8 remote-as 65000
+   neighbor 192.168.42.8 update-source Dps1
+   neighbor 192.168.42.8 description site2-wan2
+   neighbor 192.168.42.8 route-reflector-client
+   neighbor 192.168.42.8 route-map RM-WAN-HA-PEER-IN in
+   neighbor 192.168.42.8 route-map RM-WAN-HA-PEER-OUT out
+   neighbor 192.168.42.8 send-community
+   redistribute connected route-map RM-CONN-2-BGP
+   !
+   address-family evpn
+      neighbor WAN-OVERLAY-PEERS activate
+      neighbor WAN-OVERLAY-PEERS route-map RM-EVPN-SOO-IN in
+      neighbor WAN-OVERLAY-PEERS route-map RM-EVPN-SOO-OUT out
+      neighbor WAN-OVERLAY-PEERS encapsulation path-selection
+      neighbor 192.168.42.8 activate
+      neighbor 192.168.42.8 encapsulation path-selection
+      neighbor default next-hop-self received-evpn-routes route-type ip-prefix
+   !
+   address-family ipv4
+      neighbor IPv4-UNDERLAY-PEERS activate
+      no neighbor WAN-OVERLAY-PEERS activate
+   !
+   address-family ipv4 sr-te
+      neighbor WAN-OVERLAY-PEERS activate
+   !
+   address-family link-state
+      neighbor WAN-OVERLAY-PEERS activate
+      path-selection
+   !
+   address-family path-selection
+      bgp additional-paths receive
+      bgp additional-paths send any
+      neighbor WAN-OVERLAY-PEERS activate
+   !
+   vrf BLUE
+      rd 192.168.255.7:100
+      route-target import evpn 100:100
+      route-target export evpn 100:100
+      router-id 192.168.255.7
+      neighbor 10.0.2.12 peer group IPv4-UNDERLAY-PEERS
+      neighbor 10.0.2.12 remote-as 65102
+      neighbor 10.0.2.12 description site2-leaf1_Ethernet3.100_vrf_BLUE
+      redistribute connected
+   !
+   vrf default
+      rd 192.168.255.7:1
+      route-target import evpn 1:1
+      route-target export evpn 1:1
+      route-target export evpn route-map RM-EVPN-EXPORT-VRF-DEFAULT
+   !
+   vrf RED
+      rd 192.168.255.7:101
+      route-target import evpn 101:101
+      route-target export evpn 101:101
+      router-id 192.168.255.7
+      neighbor 10.0.2.12 peer group IPv4-UNDERLAY-PEERS
+      neighbor 10.0.2.12 remote-as 65102
+      neighbor 10.0.2.12 description site2-leaf1_Ethernet3.101_vrf_RED
+      redistribute connected
+!
+router traffic-engineering
+!
+stun
+   client
+      server-profile MPLS-pf1-Ethernet1
+         ip address 172.18.100.2
+      server-profile MPLS-pf2-Ethernet1
+         ip address 172.18.200.2
+!
+end
+
+
+
+
+###################### evpnsfe9
+dut:evpnsfe9
+[numExtPorts 15]
+[agentsToRun StunClient SuperServer]
+[agentArgv SuperServer --service=SslManager --service=StunServer --service=SswanManager]
+[dirsToClone /etc/sswan /etc/turnserver]
+prompt site2-leaf1-server1%P
+!
+no enable password
+no aaa root
+!
+vlan internal order ascending range 1006 1199
+!
+transceiver qsfp default-mode 4x10G
+!
+service routing protocols model multi-agent
+!
+hostname site2-leaf1-server1
+!
+vrf instance MGMT
+!
+management api http-commands
+   protocol https
+   no shutdown
+   !
+   vrf MGMT
+      no shutdown
+!
+interface Ethernet1
+   description site2-leaf1-vlan666
+   no shutdown
+   no switchport
+   ip address 10.66.2.10/24
+no ip routing vrf MGMT
+!
+ip route 0.0.0.0/0 10.66.2.1
+!
+end
+
+
+
+
+###################### evpnsfe10
+dut:evpnsfe10
+[numExtPorts 15]
+[agentsToRun StunClient SuperServer]
+[agentArgv SuperServer --service=SslManager --service=StunServer --service=SswanManager]
+[dirsToClone /etc/sswan /etc/turnserver]
+prompt site2-wan2%P
+!
+no enable password
+no aaa root
+!
+username ansible privilege 15 role network-admin secret sha512 $6$7u4j1rkb3VELgcZE$EJt2Qff8kd/TapRoci0XaIZsL4tFzgq1YZBLD9c6f/knXzvcYY0NcMKndZeCv0T268knGKhOEwZAxqKjlMm920
+username arista privilege 15 role network-admin secret sha512 $6$Enl0WfE32FthwyiJ$yTyGaEJ2uPKLU.F7314YtB7J1jrzrMi7ogXIRTEHQfLdLgKWWmr1UvNlZLN6AyuxET7G5aH3AI9OYRzxVTkB1.
+username cvpadmin privilege 15 role network-admin secret sha512 $6$a7LdQWHxWzYHpvVt$n62q.1mbm4kzQ5oBr0lhXCE9ntnTn.SNa16DovZHahFQLH.iPcPMZa5JUSFtncrDW4EDQ3oSWgP8G0S4FtOFx1
+!
+agent KernelFib environment KERNELFIB_PROGRAM_ALL_ECMP=1
+!
+daemon TerminAttr
+   exec /usr/bin/TerminAttr -cvaddr=www.cv-staging.corp.arista.io:443 -cvauth=token-secure,/tmp/cv-onboarding-token -cvvrf=MGMT -smashexcludes=ale,flexCounter,hardware,kni,pulse,strata -ingestexclude=/Sysdb/cell/1/agent,/Sysdb/cell/2/agent -taillogs
+   no shutdown
+!
+flow tracking hardware
+   tracker FLOW-TRACKER
+      record export on inactive timeout 70000
+      record export on interval 5000
+      exporter CV-TELEMETRY
+         collector 127.0.0.1
+         local interface Loopback0
+   no shutdown
+!
+service routing protocols model multi-agent
+!
+hostname site2-wan2
+ip name-server vrf MGMT 192.168.17.1
+dns domain wan.example.local
+!
+router adaptive-virtual-topology
+   topology role transit region
+   region REGION2 id 2
+   zone REGION2-ZONE id 1
+   site SITE2 id 202
+   !
+   policy BLUE-POLICY
+      !
+      match application-profile VIDEO
+         avt profile BLUE-POLICY-VIDEO
+      !
+      match application-profile VOICE
+         avt profile BLUE-POLICY-VOICE
+         dscp 46
+      !
+      match application-profile default
+         avt profile BLUE-POLICY-DEFAULT
+   !
+   policy DEFAULT-POLICY-WITH-CP
+      !
+      match application-profile APP-PROFILE-CONTROL-PLANE
+         avt profile DEFAULT-POLICY-CONTROL-PLANE
+      !
+      match application-profile default
+         avt profile DEFAULT-POLICY-DEFAULT
+   !
+   policy RED-POLICY
+      !
+      match application-profile CRITICAL-SECRET-DATA
+         avt profile RED-POLICY-CRITICAL-SECRET-DATA
+      !
+      match application-profile NORMAL-DATA
+         avt profile RED-POLICY-NORMAL-DATA
+      !
+      match application-profile NOT-SO-IMPORTANT-DATA
+         avt profile RED-POLICY-NOT-SO-IMPORTANT-DATA
+   !
+   profile BLUE-POLICY-DEFAULT
+      path-selection load-balance LB-BLUE-POLICY-DEFAULT
+   !
+   profile BLUE-POLICY-VIDEO
+      path-selection load-balance LB-BLUE-POLICY-VIDEO
+   !
+   profile BLUE-POLICY-VOICE
+      path-selection load-balance LB-BLUE-POLICY-VOICE
+   !
+   profile DEFAULT-POLICY-CONTROL-PLANE
+      path-selection load-balance LB-DEFAULT-POLICY-CONTROL-PLANE
+   !
+   profile DEFAULT-POLICY-DEFAULT
+      path-selection load-balance LB-DEFAULT-POLICY-DEFAULT
+   !
+   profile RED-POLICY-CRITICAL-SECRET-DATA
+      path-selection load-balance LB-RED-POLICY-CRITICAL-SECRET-DATA
+   !
+   profile RED-POLICY-NORMAL-DATA
+      path-selection load-balance LB-RED-POLICY-NORMAL-DATA
+   !
+   profile RED-POLICY-NOT-SO-IMPORTANT-DATA
+      path-selection load-balance LB-RED-POLICY-NOT-SO-IMPORTANT-DATA
+   !
+   vrf BLUE
+      avt policy BLUE-POLICY
+      avt profile BLUE-POLICY-DEFAULT id 1
+      avt profile BLUE-POLICY-VIDEO id 2
+      avt profile BLUE-POLICY-VOICE id 3
+   !
+   vrf default
+      avt policy DEFAULT-POLICY-WITH-CP
+      avt profile DEFAULT-POLICY-DEFAULT id 1
+      avt profile DEFAULT-POLICY-CONTROL-PLANE id 254
+   !
+   vrf RED
+      avt policy RED-POLICY
+      avt profile RED-POLICY-CRITICAL-SECRET-DATA id 2
+      avt profile RED-POLICY-NORMAL-DATA id 3
+      avt profile RED-POLICY-NOT-SO-IMPORTANT-DATA id 4
+!
+router path-selection
+   tcp mss ceiling ipv4 ingress
+   !
+   path-group INTERNET id 102
+      ipsec profile CP-PROFILE
+      !
+      local interface Ethernet4
+         stun server-profile INTERNET-pf1-Ethernet2 INTERNET-pf2-Ethernet2
+      !
+      peer dynamic
+      !
+      peer static router-ip 192.168.42.1
+         name pf1
+         ipv4 address 100.64.100.2
+      !
+      peer static router-ip 192.168.42.2
+         name pf2
+         ipv4 address 100.64.200.2
+   !
+   path-group LAN_HA id 65535
+      ipsec profile DP-PROFILE
+      flow assignment lan
+      !
+      local interface Ethernet5
+      !
+      peer static router-ip 192.168.42.7
+         name site2-wan1
+         ipv4 address 10.42.0.0
+   !
+   load-balance policy LB-BLUE-POLICY-DEFAULT
+      path-group INTERNET
+      path-group LAN_HA
+   !
+   load-balance policy LB-BLUE-POLICY-VIDEO
+      path-group INTERNET
+      path-group LAN_HA
+   !
+   load-balance policy LB-BLUE-POLICY-VOICE
+      latency 150
+      jitter 30
+      loss-rate 1
+      hop count lowest
+      path-group LAN_HA
+      path-group INTERNET priority 2
+   !
+   load-balance policy LB-DEFAULT-POLICY-CONTROL-PLANE
+      path-group INTERNET
+      path-group LAN_HA
+   !
+   load-balance policy LB-DEFAULT-POLICY-DEFAULT
+      path-group INTERNET
+      path-group LAN_HA
+   !
+   load-balance policy LB-RED-POLICY-CRITICAL-SECRET-DATA
+      path-group LAN_HA
+   !
+   load-balance policy LB-RED-POLICY-NORMAL-DATA
+      path-group INTERNET
+      path-group LAN_HA
+   !
+   load-balance policy LB-RED-POLICY-NOT-SO-IMPORTANT-DATA
+      path-group INTERNET
+      path-group LAN_HA
+!
+spanning-tree mode none
+!
+vrf instance BLUE
+!
+vrf instance MGMT
+!
+vrf instance RED
+!
+management api http-commands
+   protocol https
+   no shutdown
+   !
+   vrf MGMT
+      no shutdown
+!
+aaa authorization exec default local
+!
+ip security
+   ike policy CP-IKE-POLICY
+      local-id 192.168.42.8
+   !
+   ike policy DP-IKE-POLICY
+      local-id 192.168.42.8
+   !
+   sa policy CP-SA-POLICY
+      esp encryption aes256gcm128
+      pfs dh-group 14
+   !
+   sa policy DP-SA-POLICY
+      esp encryption aes256gcm128
+      pfs dh-group 14
+   !
+   profile CP-PROFILE
+      ike-policy CP-IKE-POLICY
+      sa-policy CP-SA-POLICY
+      connection start
+      shared-key 7 045A190F1C354D
+      dpd 10 50 clear
+      mode transport
+   !
+   profile DP-PROFILE
+      ike-policy DP-IKE-POLICY
+      sa-policy DP-SA-POLICY
+      connection start
+      shared-key 7 141600021F102B
+      dpd 10 50 clear
+      mode transport
+   !
+   key controller
+      profile DP-PROFILE
+!
+interface Dps1
+   description DPS Interface
+   mtu 9194
+   flow tracker hardware FLOW-TRACKER
+   ip address 192.168.42.8/32
+!
+interface Ethernet1
+   description P2P_site2-leaf2_Ethernet3
+   no shutdown
+   mtu 9214
+   no switchport
+   flow tracker hardware FLOW-TRACKER
+   ip address 10.0.2.15/31
+!
+interface Ethernet1.100
+   description P2P_site2-leaf2_Ethernet3.100_VRF_BLUE
+   no shutdown
+   mtu 9214
+   encapsulation dot1q vlan 100
+   flow tracker hardware FLOW-TRACKER
+   vrf BLUE
+   ip address 10.0.2.15/31
+!
+interface Ethernet1.101
+   description P2P_site2-leaf2_Ethernet3.101_VRF_RED
+   no shutdown
+   mtu 9214
+   encapsulation dot1q vlan 101
+   flow tracker hardware FLOW-TRACKER
+   vrf RED
+   ip address 10.0.2.15/31
+!
+interface Ethernet4
+   description REGION2-INTERNET-CORP_inet-site2-wan2_inet-cloud_Ethernet7
+   no shutdown
+   no switchport
+   flow tracker hardware FLOW-TRACKER
+   ip address 100.64.21.2/24
+   ip access-group ACL-INTERNET-IN_Ethernet4 in
+!
+interface Ethernet5
+   description WAN_HA_site2-wan1_Ethernet5
+   no shutdown
+   mtu 9194
+   no switchport
+   ip address 10.42.0.1/31
+!
+interface Loopback0
+   description ROUTER_ID
+   no shutdown
+   ip address 192.168.255.8/32
+!
+interface Management1
+   description OOB_MANAGEMENT
+   no shutdown
+   vrf MGMT
+   ip address 192.168.17.17/24
+   no lldp transmit
+   no lldp receive
+!
+interface Vxlan1
+   description site2-wan2_VTEP
+   vxlan source-interface Dps1
+   vxlan udp-port 4789
+   vxlan vrf BLUE vni 100
+   vxlan vrf default vni 1
+   vxlan vrf RED vni 101
+!
+application traffic recognition
+   !
+   application ipv4 APP-CONTROL-PLANE
+      destination prefix field-set PFX-PATHFINDERS
+   !
+   application ipv4 CRITICAL-SECRET-DATA-APP
+      dscp 46
+   !
+   application ipv4 NORMAL-DATA-APP
+      dscp af23
+   !
+   application ipv4 NOT-SO-IMPORTANT-DATA-APP
+      dscp 0
+   !
+   application ipv4 VIDEO-APP
+      protocol tcp destination port field-set VIDEO-PORTS
+      protocol udp destination port field-set VIDEO-PORTS
+   !
+   application ipv4 VOICE-APP
+      protocol tcp destination port field-set VOICE-PORTS
+   !
+   application-profile APP-PROFILE-CONTROL-PLANE
+      application APP-CONTROL-PLANE
+   !
+   application-profile CRITICAL-SECRET-DATA
+      application CRITICAL-SECRET-DATA-APP
+   !
+   application-profile NORMAL-DATA
+      application NORMAL-DATA-APP
+   !
+   application-profile NOT-SO-IMPORTANT-DATA
+      application NOT-SO-IMPORTANT-DATA-APP
+   !
+   application-profile VIDEO
+      application VIDEO-APP
+   !
+   application-profile VOICE
+      application VOICE-APP
+   !
+   field-set ipv4 prefix PFX-PATHFINDERS
+      192.168.42.1/32 192.168.42.2/32
+   !
+   field-set l4-port VIDEO-PORTS
+      4242-4244
+   !
+   field-set l4-port VOICE-PORTS
+      666-667
+!
+ip access-list ACL-INTERNET-IN_Ethernet4
+   1 remark Not for PRODUCTION: This ACL is built this way because the lab has an out-of-band interface
+   10 permit udp any host 100.64.21.2 eq isakmp non500-isakmp
+   20 permit tcp any host 100.64.21.2 eq bgp
+   30 permit icmp any host 100.64.21.2
+   deny ip any any
+!
+ip routing
+ip routing vrf BLUE
+no ip routing vrf MGMT
+ip routing vrf RED
+!
+ip extcommunity-list ECL-EVPN-SOO permit soo 192.168.255.7:202
+!
+ip prefix-list ALLOW-DEFAULT
+   seq 10 permit 0.0.0.0/0
+!
+ip prefix-list PL-LOOPBACKS-EVPN-OVERLAY
+   seq 10 permit 192.168.255.0/24 eq 32
+!
+ip route 100.64.0.0/16 100.64.21.1
+ip route vrf MGMT 0.0.0.0/0 192.168.17.1
+!
+ntp local-interface vrf MGMT Management1
+ntp server vrf MGMT 0.pool.ntp.org prefer
+!
+route-map RM-BGP-100.64.21.1-IN permit 10
+   match ip address prefix-list ALLOW-DEFAULT
+   set community no-advertise additive
+!
+route-map RM-BGP-100.64.21.1-OUT deny 10
+!
+route-map RM-BGP-UNDERLAY-PEERS-IN permit 40
+   description Mark prefixes originated from the LAN
+   set extcommunity soo 192.168.255.7:202 additive
+!
+route-map RM-BGP-UNDERLAY-PEERS-OUT permit 10
+   description Make routes learned from WAN HA peer less preferred on LAN routers
+   match route-type internal
+   match tag 50
+   set metric 50
+!
+route-map RM-BGP-UNDERLAY-PEERS-OUT permit 20
+!
+route-map RM-CONN-2-BGP permit 10
+   match ip address prefix-list PL-LOOPBACKS-EVPN-OVERLAY
+   set extcommunity soo 192.168.255.7:202 additive
+!
+route-map RM-EVPN-EXPORT-VRF-DEFAULT permit 10
+   match extcommunity ECL-EVPN-SOO
+!
+route-map RM-EVPN-SOO-IN deny 10
+   match extcommunity ECL-EVPN-SOO
+!
+route-map RM-EVPN-SOO-IN permit 20
+!
+route-map RM-EVPN-SOO-OUT permit 10
+   set extcommunity soo 192.168.255.7:202 additive
+!
+route-map RM-WAN-HA-PEER-IN permit 10
+   description Set tag 50 on routes received from HA peer over EVPN
+   set tag 50
+!
+route-map RM-WAN-HA-PEER-OUT permit 10
+   description Make EVPN routes learned from WAN less preferred on HA peer
+   match route-type internal
+   set local-preference 50
+!
+route-map RM-WAN-HA-PEER-OUT permit 20
+   description Make locally injected routes less preferred on HA peer
+   set local-preference 75
+!
+router bfd
+   multihop interval 300 min-rx 300 multiplier 3
+!
+router bgp 65000
+   router-id 192.168.255.8
+   no bgp default ipv4-unicast
+   maximum-paths 16
+   neighbor IPv4-UNDERLAY-PEERS peer group
+   neighbor IPv4-UNDERLAY-PEERS route-map RM-BGP-UNDERLAY-PEERS-IN in
+   neighbor IPv4-UNDERLAY-PEERS route-map RM-BGP-UNDERLAY-PEERS-OUT out
+   neighbor IPv4-UNDERLAY-PEERS send-community
+   neighbor IPv4-UNDERLAY-PEERS maximum-routes 12000
+   neighbor WAN-OVERLAY-PEERS peer group
+   neighbor WAN-OVERLAY-PEERS remote-as 65000
+   neighbor WAN-OVERLAY-PEERS update-source Dps1
+   neighbor WAN-OVERLAY-PEERS bfd
+   neighbor WAN-OVERLAY-PEERS bfd interval 1000 min-rx 1000 multiplier 10
+   neighbor WAN-OVERLAY-PEERS ttl maximum-hops 1
+   neighbor WAN-OVERLAY-PEERS password 7 htm4AZe9mIQOO1uiMuGgYQ==
+   neighbor WAN-OVERLAY-PEERS send-community
+   neighbor WAN-OVERLAY-PEERS maximum-routes 0
+   neighbor 10.0.2.14 peer group IPv4-UNDERLAY-PEERS
+   neighbor 10.0.2.14 remote-as 65102
+   neighbor 10.0.2.14 description site2-leaf2_Ethernet3
+   neighbor 100.64.21.1 remote-as 65666
+   neighbor 100.64.21.1 description REGION2-INTERNET-CORP_inet-site2-wan2_inet-cloud_Ethernet7
+   neighbor 100.64.21.1 route-map RM-BGP-100.64.21.1-IN in
+   neighbor 100.64.21.1 route-map RM-BGP-100.64.21.1-OUT out
+   neighbor 192.168.42.1 peer group WAN-OVERLAY-PEERS
+   neighbor 192.168.42.1 description pf1_Dps1
+   neighbor 192.168.42.2 peer group WAN-OVERLAY-PEERS
+   neighbor 192.168.42.2 description pf2_Dps1
+   neighbor 192.168.42.7 remote-as 65000
+   neighbor 192.168.42.7 update-source Dps1
+   neighbor 192.168.42.7 description site2-wan1
+   neighbor 192.168.42.7 route-reflector-client
+   neighbor 192.168.42.7 route-map RM-WAN-HA-PEER-IN in
+   neighbor 192.168.42.7 route-map RM-WAN-HA-PEER-OUT out
+   neighbor 192.168.42.7 send-community
+   redistribute connected route-map RM-CONN-2-BGP
+   !
+   address-family evpn
+      neighbor WAN-OVERLAY-PEERS activate
+      neighbor WAN-OVERLAY-PEERS route-map RM-EVPN-SOO-IN in
+      neighbor WAN-OVERLAY-PEERS route-map RM-EVPN-SOO-OUT out
+      neighbor WAN-OVERLAY-PEERS encapsulation path-selection
+      neighbor 192.168.42.7 activate
+      neighbor 192.168.42.7 encapsulation path-selection
+      neighbor default next-hop-self received-evpn-routes route-type ip-prefix
+   !
+   address-family ipv4
+      neighbor IPv4-UNDERLAY-PEERS activate
+      no neighbor WAN-OVERLAY-PEERS activate
+      neighbor 100.64.21.1 activate
+   !
+   address-family ipv4 sr-te
+      neighbor WAN-OVERLAY-PEERS activate
+   !
+   address-family link-state
+      neighbor WAN-OVERLAY-PEERS activate
+      path-selection
+   !
+   address-family path-selection
+      bgp additional-paths receive
+      bgp additional-paths send any
+      neighbor WAN-OVERLAY-PEERS activate
+   !
+   vrf BLUE
+      rd 192.168.255.8:100
+      route-target import evpn 100:100
+      route-target export evpn 100:100
+      router-id 192.168.255.8
+      neighbor 10.0.2.14 peer group IPv4-UNDERLAY-PEERS
+      neighbor 10.0.2.14 remote-as 65102
+      neighbor 10.0.2.14 description site2-leaf2_Ethernet3.100_vrf_BLUE
+      redistribute connected
+   !
+   vrf default
+      rd 192.168.255.8:1
+      route-target import evpn 1:1
+      route-target export evpn 1:1
+      route-target export evpn route-map RM-EVPN-EXPORT-VRF-DEFAULT
+   !
+   vrf RED
+      rd 192.168.255.8:101
+      route-target import evpn 101:101
+      route-target export evpn 101:101
+      router-id 192.168.255.8
+      neighbor 10.0.2.14 peer group IPv4-UNDERLAY-PEERS
+      neighbor 10.0.2.14 remote-as 65102
+      neighbor 10.0.2.14 description site2-leaf2_Ethernet3.101_vrf_RED
+      redistribute connected
+!
+router traffic-engineering
+!
+stun
+   client
+      server-profile INTERNET-pf1-Ethernet2
+         ip address 100.64.100.2
+      server-profile INTERNET-pf2-Ethernet2
+         ip address 100.64.200.2
+!
+end
+
+
+
+
+###################### evpnsfe11
+dut:evpnsfe11
+[numExtPorts 15]
+[agentsToRun StunClient SuperServer]
+[agentArgv SuperServer --service=SslManager --service=StunServer --service=SswanManager]
+[dirsToClone /etc/sswan /etc/turnserver]
+prompt site3-wan1%P
+!
+no enable password
+no aaa root
+!
+username ansible privilege 15 role network-admin secret sha512 $6$7u4j1rkb3VELgcZE$EJt2Qff8kd/TapRoci0XaIZsL4tFzgq1YZBLD9c6f/knXzvcYY0NcMKndZeCv0T268knGKhOEwZAxqKjlMm920
+username arista privilege 15 role network-admin secret sha512 $6$Enl0WfE32FthwyiJ$yTyGaEJ2uPKLU.F7314YtB7J1jrzrMi7ogXIRTEHQfLdLgKWWmr1UvNlZLN6AyuxET7G5aH3AI9OYRzxVTkB1.
+username cvpadmin privilege 15 role network-admin secret sha512 $6$a7LdQWHxWzYHpvVt$n62q.1mbm4kzQ5oBr0lhXCE9ntnTn.SNa16DovZHahFQLH.iPcPMZa5JUSFtncrDW4EDQ3oSWgP8G0S4FtOFx1
+!
+agent KernelFib environment KERNELFIB_PROGRAM_ALL_ECMP=1
+!
+daemon TerminAttr
+   exec /usr/bin/TerminAttr -cvaddr=www.cv-staging.corp.arista.io:443 -cvauth=token-secure,/tmp/cv-onboarding-token -cvvrf=MGMT -smashexcludes=ale,flexCounter,hardware,kni,pulse,strata -ingestexclude=/Sysdb/cell/1/agent,/Sysdb/cell/2/agent -taillogs
+   no shutdown
+!
+flow tracking hardware
+   tracker FLOW-TRACKER
+      record export on inactive timeout 70000
+      record export on interval 5000
+      exporter CV-TELEMETRY
+         collector 127.0.0.1
+         local interface Loopback0
+   no shutdown
+!
+service routing protocols model multi-agent
+!
+hostname site3-wan1
+ip name-server vrf MGMT 192.168.17.1
+dns domain wan.example.local
+!
+router adaptive-virtual-topology
+   topology role edge
+   region REGION2 id 2
+   zone REGION2-ZONE id 1
+   site SITE3 id 203
+   !
+   policy BLUE-POLICY
+      !
+      match application-profile VIDEO
+         avt profile BLUE-POLICY-VIDEO
+      !
+      match application-profile VOICE
+         avt profile BLUE-POLICY-VOICE
+         dscp 46
+      !
+      match application-profile default
+         avt profile BLUE-POLICY-DEFAULT
+   !
+   policy DEFAULT-POLICY-WITH-CP
+      !
+      match application-profile APP-PROFILE-CONTROL-PLANE
+         avt profile DEFAULT-POLICY-CONTROL-PLANE
+      !
+      match application-profile default
+         avt profile DEFAULT-POLICY-DEFAULT
+   !
+   policy RED-POLICY
+      !
+      match application-profile NORMAL-DATA
+         avt profile RED-POLICY-NORMAL-DATA
+      !
+      match application-profile NOT-SO-IMPORTANT-DATA
+         avt profile RED-POLICY-NOT-SO-IMPORTANT-DATA
+   !
+   profile BLUE-POLICY-DEFAULT
+      path-selection load-balance LB-BLUE-POLICY-DEFAULT
+   !
+   profile BLUE-POLICY-VIDEO
+      path-selection load-balance LB-BLUE-POLICY-VIDEO
+   !
+   profile BLUE-POLICY-VOICE
+      path-selection load-balance LB-BLUE-POLICY-VOICE
+   !
+   profile DEFAULT-POLICY-CONTROL-PLANE
+      path-selection load-balance LB-DEFAULT-POLICY-CONTROL-PLANE
+   !
+   profile DEFAULT-POLICY-DEFAULT
+      path-selection load-balance LB-DEFAULT-POLICY-DEFAULT
+   !
+   profile RED-POLICY-NORMAL-DATA
+      path-selection load-balance LB-RED-POLICY-NORMAL-DATA
+   !
+   profile RED-POLICY-NOT-SO-IMPORTANT-DATA
+      path-selection load-balance LB-RED-POLICY-NOT-SO-IMPORTANT-DATA
+   !
+   vrf BLUE
+      avt policy BLUE-POLICY
+      avt profile BLUE-POLICY-DEFAULT id 1
+      avt profile BLUE-POLICY-VIDEO id 2
+      avt profile BLUE-POLICY-VOICE id 3
+   !
+   vrf default
+      avt policy DEFAULT-POLICY-WITH-CP
+      avt profile DEFAULT-POLICY-DEFAULT id 1
+      avt profile DEFAULT-POLICY-CONTROL-PLANE id 254
+   !
+   vrf RED
+      avt policy RED-POLICY
+      avt profile RED-POLICY-NORMAL-DATA id 3
+      avt profile RED-POLICY-NOT-SO-IMPORTANT-DATA id 4
+!
+router path-selection
+   tcp mss ceiling ipv4 ingress
+   !
+   path-group INTERNET id 102
+      ipsec profile CP-PROFILE
+      !
+      local interface Ethernet4
+         stun server-profile INTERNET-pf1-Ethernet2 INTERNET-pf2-Ethernet2
+      !
+      peer dynamic
+      !
+      peer static router-ip 192.168.42.1
+         name pf1
+         ipv4 address 100.64.100.2
+      !
+      peer static router-ip 192.168.42.2
+         name pf2
+         ipv4 address 100.64.200.2
+   !
+   load-balance policy LB-BLUE-POLICY-DEFAULT
+      path-group INTERNET
+   !
+   load-balance policy LB-BLUE-POLICY-VIDEO
+      path-group INTERNET
+   !
+   load-balance policy LB-BLUE-POLICY-VOICE
+      latency 150
+      jitter 30
+      loss-rate 1
+      hop count lowest
+      path-group INTERNET priority 2
+   !
+   load-balance policy LB-DEFAULT-POLICY-CONTROL-PLANE
+      path-group INTERNET
+   !
+   load-balance policy LB-DEFAULT-POLICY-DEFAULT
+      path-group INTERNET
+   !
+   load-balance policy LB-RED-POLICY-NORMAL-DATA
+      path-group INTERNET
+   !
+   load-balance policy LB-RED-POLICY-NOT-SO-IMPORTANT-DATA
+      path-group INTERNET
+!
+spanning-tree mode none
+!
+vrf instance BLUE
+!
+vrf instance MGMT
+!
+vrf instance RED
+!
+management api http-commands
+   protocol https
+   no shutdown
+   !
+   vrf MGMT
+      no shutdown
+!
+aaa authorization exec default local
+!
+ip security
+   ike policy CP-IKE-POLICY
+      local-id 192.168.42.11
+   !
+   sa policy CP-SA-POLICY
+      esp encryption aes256gcm128
+      pfs dh-group 14
+   !
+   sa policy DP-SA-POLICY
+      esp encryption aes256gcm128
+      pfs dh-group 14
+   !
+   profile CP-PROFILE
+      ike-policy CP-IKE-POLICY
+      sa-policy CP-SA-POLICY
+      connection start
+      shared-key 7 045A190F1C354D
+      dpd 10 50 clear
+      mode transport
+   !
+   profile DP-PROFILE
+      sa-policy DP-SA-POLICY
+      connection start
+      shared-key 7 141600021F102B
+      dpd 10 50 clear
+      mode transport
+   !
+   key controller
+      profile DP-PROFILE
+!
+interface Dps1
+   description DPS Interface
+   mtu 9194
+   flow tracker hardware FLOW-TRACKER
+   ip address 192.168.42.11/32
+!
+interface Ethernet1
+   description L2_site3-leaf1_Ethernet1
+   no shutdown
+   mtu 9214
+   no switchport
+!
+interface Ethernet1.42
+   description RED-TEST
+   no shutdown
+   encapsulation dot1q vlan 42
+   flow tracker hardware FLOW-TRACKER
+   vrf RED
+   ip address 10.42.3.1/24
+!
+interface Ethernet1.666
+   description BLUE-TEST
+   no shutdown
+   encapsulation dot1q vlan 666
+   flow tracker hardware FLOW-TRACKER
+   vrf BLUE
+   ip address 10.66.3.1/24
+!
+interface Ethernet4
+   description REGION2-INTERNET-CORP_inet-site3-wan1_inet-cloud_Ethernet8
+   no shutdown
+   no switchport
+   flow tracker hardware FLOW-TRACKER
+   ip address 100.64.30.2/24
+   ip access-group ACL-INTERNET-IN_Ethernet4 in
+!
+interface Loopback0
+   description ROUTER_ID
+   no shutdown
+   ip address 192.168.255.11/32
+!
+interface Management1
+   description OOB_MANAGEMENT
+   no shutdown
+   vrf MGMT
+   ip address 192.168.17.20/24
+   no lldp transmit
+   no lldp receive
+!
+interface Vxlan1
+   description site3-wan1_VTEP
+   vxlan source-interface Dps1
+   vxlan udp-port 4789
+   vxlan vrf BLUE vni 100
+   vxlan vrf default vni 1
+   vxlan vrf RED vni 101
+!
+application traffic recognition
+   !
+   application ipv4 APP-CONTROL-PLANE
+      destination prefix field-set PFX-PATHFINDERS
+   !
+   application ipv4 NORMAL-DATA-APP
+      dscp af23
+   !
+   application ipv4 NOT-SO-IMPORTANT-DATA-APP
+      dscp 0
+   !
+   application ipv4 VIDEO-APP
+      protocol tcp destination port field-set VIDEO-PORTS
+      protocol udp destination port field-set VIDEO-PORTS
+   !
+   application ipv4 VOICE-APP
+      protocol tcp destination port field-set VOICE-PORTS
+   !
+   application-profile APP-PROFILE-CONTROL-PLANE
+      application APP-CONTROL-PLANE
+   !
+   application-profile NORMAL-DATA
+      application NORMAL-DATA-APP
+   !
+   application-profile NOT-SO-IMPORTANT-DATA
+      application NOT-SO-IMPORTANT-DATA-APP
+   !
+   application-profile VIDEO
+      application VIDEO-APP
+   !
+   application-profile VOICE
+      application VOICE-APP
+   !
+   field-set ipv4 prefix PFX-PATHFINDERS
+      192.168.42.1/32 192.168.42.2/32
+   !
+   field-set l4-port VIDEO-PORTS
+      4242-4244
+   !
+   field-set l4-port VOICE-PORTS
+      666-667
+!
+ip access-list ACL-INTERNET-IN_Ethernet4
+   1 remark Not for PRODUCTION: This ACL is built this way because the lab has an out-of-band interface
+   10 permit udp any host 100.64.30.2 eq isakmp non500-isakmp
+   30 permit icmp any host 100.64.30.2
+   deny ip any any
+!
+ip routing
+ip routing vrf BLUE
+no ip routing vrf MGMT
+ip routing vrf RED
+!
+ip extcommunity-list ECL-EVPN-SOO permit soo 192.168.255.11:203
+!
+ip prefix-list PL-LOOPBACKS-EVPN-OVERLAY
+   seq 10 permit 192.168.255.0/24 eq 32
+!
+ip route 100.64.0.0/16 100.64.30.1
+ip route vrf MGMT 0.0.0.0/0 192.168.17.1
+!
+ntp local-interface vrf MGMT Management1
+ntp server vrf MGMT 0.pool.ntp.org prefer
+!
+route-map RM-CONN-2-BGP permit 10
+   match ip address prefix-list PL-LOOPBACKS-EVPN-OVERLAY
+   set extcommunity soo 192.168.255.11:203 additive
+!
+route-map RM-EVPN-EXPORT-VRF-DEFAULT permit 10
+   match extcommunity ECL-EVPN-SOO
+!
+route-map RM-EVPN-SOO-IN deny 10
+   match extcommunity ECL-EVPN-SOO
+!
+route-map RM-EVPN-SOO-IN permit 20
+!
+route-map RM-EVPN-SOO-OUT permit 10
+   set extcommunity soo 192.168.255.11:203 additive
+!
+router bfd
+   multihop interval 300 min-rx 300 multiplier 3
+!
+router bgp 65000
+   router-id 192.168.255.11
+   no bgp default ipv4-unicast
+   maximum-paths 16
+   neighbor WAN-OVERLAY-PEERS peer group
+   neighbor WAN-OVERLAY-PEERS remote-as 65000
+   neighbor WAN-OVERLAY-PEERS update-source Dps1
+   neighbor WAN-OVERLAY-PEERS bfd
+   neighbor WAN-OVERLAY-PEERS bfd interval 1000 min-rx 1000 multiplier 10
+   neighbor WAN-OVERLAY-PEERS ttl maximum-hops 1
+   neighbor WAN-OVERLAY-PEERS password 7 htm4AZe9mIQOO1uiMuGgYQ==
+   neighbor WAN-OVERLAY-PEERS send-community
+   neighbor WAN-OVERLAY-PEERS maximum-routes 0
+   neighbor 192.168.42.1 peer group WAN-OVERLAY-PEERS
+   neighbor 192.168.42.1 description pf1_Dps1
+   neighbor 192.168.42.2 peer group WAN-OVERLAY-PEERS
+   neighbor 192.168.42.2 description pf2_Dps1
+   redistribute connected route-map RM-CONN-2-BGP
+   !
+   address-family evpn
+      neighbor WAN-OVERLAY-PEERS activate
+      neighbor WAN-OVERLAY-PEERS route-map RM-EVPN-SOO-IN in
+      neighbor WAN-OVERLAY-PEERS route-map RM-EVPN-SOO-OUT out
+      neighbor WAN-OVERLAY-PEERS encapsulation path-selection
+   !
+   address-family ipv4
+      no neighbor WAN-OVERLAY-PEERS activate
+   !
+   address-family ipv4 sr-te
+      neighbor WAN-OVERLAY-PEERS activate
+   !
+   address-family link-state
+      neighbor WAN-OVERLAY-PEERS activate
+      path-selection
+   !
+   address-family path-selection
+      bgp additional-paths receive
+      bgp additional-paths send any
+      neighbor WAN-OVERLAY-PEERS activate
+   !
+   vrf BLUE
+      rd 192.168.255.11:100
+      route-target import evpn 100:100
+      route-target export evpn 100:100
+      router-id 192.168.255.11
+      redistribute connected
+   !
+   vrf default
+      rd 192.168.255.11:1
+      route-target import evpn 1:1
+      route-target export evpn 1:1
+      route-target export evpn route-map RM-EVPN-EXPORT-VRF-DEFAULT
+   !
+   vrf RED
+      rd 192.168.255.11:101
+      route-target import evpn 101:101
+      route-target export evpn 101:101
+      router-id 192.168.255.11
+      redistribute connected
+!
+router traffic-engineering
+!
+stun
+   client
+      server-profile INTERNET-pf1-Ethernet2
+         ip address 100.64.100.2
+      server-profile INTERNET-pf2-Ethernet2
+         ip address 100.64.200.2
+!
+end
+
+
+
+
+###################### evpnsfe12
+dut:evpnsfe12
+[numExtPorts 15]
+[agentsToRun StunClient SuperServer]
+[agentArgv SuperServer --service=SslManager --service=StunServer --service=SswanManager]
+[dirsToClone /etc/sswan /etc/turnserver]
+prompt site3-leaf1-server1%P
+!
+no enable password
+no aaa root
+!
+vlan internal order ascending range 1006 1199
+!
+transceiver qsfp default-mode 4x10G
+!
+service routing protocols model multi-agent
+!
+hostname site3-leaf1-server1
+!
+vrf instance MGMT
+!
+management api http-commands
+   protocol https
+   no shutdown
+   !
+   vrf MGMT
+      no shutdown
+!
+interface Ethernet1
+   description site3-leaf1-vlan42
+   no shutdown
+   no switchport
+   ip address 10.42.3.10/24
+no ip routing vrf MGMT
+!
+ip route 0.0.0.0/0 10.42.3.1
+!
+end
+
+
+
+
+###################### evpnsfe13
+dut:evpnsfe13
+[numExtPorts 15]
+[agentsToRun StunClient SuperServer]
+[agentArgv SuperServer --service=SslManager --service=StunServer --service=SswanManager]
+[dirsToClone /etc/sswan /etc/turnserver]
+prompt site3-leaf1-server2%P
+!
+no enable password
+no aaa root
+!
+vlan internal order ascending range 1006 1199
+!
+transceiver qsfp default-mode 4x10G
+!
+service routing protocols model multi-agent
+!
+hostname site3-leaf1-server2
+!
+vrf instance MGMT
+!
+management api http-commands
+   protocol https
+   no shutdown
+   !
+   vrf MGMT
+      no shutdown
+!
+interface Ethernet1
+   description site3-leaf1-vlan666
+   no shutdown
+   no switchport
+   ip address 10.66.3.10/24
+no ip routing vrf MGMT
+!
+ip route 0.0.0.0/0 10.66.3.1
+!
+end
+
+
+
+

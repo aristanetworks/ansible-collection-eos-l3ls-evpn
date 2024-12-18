@@ -13,11 +13,6 @@
   - [Local Users](#local-users)
   - [Enable Password](#enable-password)
   - [AAA Authorization](#aaa-authorization)
-- [Management Security](#management-security)
-  - [Management Security Summary](#management-security-summary)
-  - [Management Security SSL Profiles](#management-security-ssl-profiles)
-  - [SSL profile STUN-DTLS Certificates Summary](#ssl-profile-stun-dtls-certificates-summary)
-  - [Management Security Device Configuration](#management-security-device-configuration)
 - [Monitoring](#monitoring)
   - [TerminAttr Daemon](#terminattr-daemon)
   - [Flow Tracking](#flow-tracking)
@@ -230,37 +225,6 @@ aaa authorization exec default local
 !
 ```
 
-## Management Security
-
-### Management Security Summary
-
-| Settings | Value |
-| -------- | ----- |
-
-### Management Security SSL Profiles
-
-| SSL Profile Name | TLS protocol accepted | Certificate filename | Key filename | Cipher List | CRLs |
-| ---------------- | --------------------- | -------------------- | ------------ | ----------- | ---- |
-| STUN-DTLS | 1.2 | STUN-DTLS.crt | STUN-DTLS.key | - | - |
-
-### SSL profile STUN-DTLS Certificates Summary
-
-| Trust Certificates | Requirement | Policy | System |
-| ------------------ | ----------- | ------ | ------ |
-| aristaDeviceCertProvisionerDefaultRootCA.crt | - | - | - |
-
-### Management Security Device Configuration
-
-```eos
-!
-management security
-   !
-   ssl profile STUN-DTLS
-      tls versions 1.2
-      trust certificate aristaDeviceCertProvisionerDefaultRootCA.crt
-      certificate STUN-DTLS.crt key STUN-DTLS.key
-```
-
 ## Monitoring
 
 ### TerminAttr Daemon
@@ -288,7 +252,7 @@ daemon TerminAttr
 
 | Tracker Name | Record Export On Inactive Timeout | Record Export On Interval | Number of Exporters | Applied On |
 | ------------ | --------------------------------- | ------------------------- | ------------------- | ---------- |
-| FLOW-TRACKER | 70000 | 5000 | 1 | Dps1<br>Ethernet1<br>Ethernet1.100<br>Ethernet1.101<br>Ethernet2<br>Ethernet2.100<br>Ethernet2.101<br>Ethernet3<br>Ethernet4 |
+| FLOW-TRACKER | 70000 | 5000 | 1 | Dps1<br>Ethernet1<br>Ethernet2<br>Ethernet3<br>Ethernet4 |
 
 ##### Exporters Summary
 
@@ -423,27 +387,14 @@ interface Dps1
 
 *Inherited from Port-Channel Interface
 
-##### Encapsulation Dot1q Interfaces
-
-| Interface | Description | Vlan ID | Dot1q VLAN Tag | Dot1q Inner VLAN Tag |
-| --------- | ----------- | ------- | -------------- | -------------------- |
-| Ethernet1.100 | P2P_site1-border1_Ethernet4.100_VRF_BLUE | - | 100 | - |
-| Ethernet1.101 | P2P_site1-border1_Ethernet4.101_VRF_RED | - | 101 | - |
-| Ethernet2.100 | P2P_site1-border2_Ethernet4.100_VRF_BLUE | - | 100 | - |
-| Ethernet2.101 | P2P_site1-border2_Ethernet4.101_VRF_RED | - | 101 | - |
-
 ##### IPv4
 
 | Interface | Description | Channel Group | IP Address | VRF |  MTU | Shutdown | ACL In | ACL Out |
 | --------- | ----------- | ------------- | ---------- | ----| ---- | -------- | ------ | ------- |
 | Ethernet1 | P2P_site1-border1_Ethernet4 | - | 10.0.1.13/31 | default | 9214 | False | - | - |
-| Ethernet1.100 | P2P_site1-border1_Ethernet4.100_VRF_BLUE | - | 10.0.1.13/31 | BLUE | 9214 | False | - | - |
-| Ethernet1.101 | P2P_site1-border1_Ethernet4.101_VRF_RED | - | 10.0.1.13/31 | RED | 9214 | False | - | - |
 | Ethernet2 | P2P_site1-border2_Ethernet4 | - | 10.0.1.15/31 | default | 9214 | False | - | - |
-| Ethernet2.100 | P2P_site1-border2_Ethernet4.100_VRF_BLUE | - | 10.0.1.15/31 | BLUE | 9214 | False | - | - |
-| Ethernet2.101 | P2P_site1-border2_Ethernet4.101_VRF_RED | - | 10.0.1.15/31 | RED | 9214 | False | - | - |
 | Ethernet3 | ACME-MPLS-INC_mpls-site1-wan2_mpls-cloud_Ethernet6 | - | 172.18.11.2/24 | default | - | False | - | - |
-| Ethernet4 | REGION1-INTERNET-CORP_inet-site1-wan2_inet-cloud_Ethernet6 | - | dhcp | default | - | False | ACL-INTERNET-IN_Ethernet4 | - |
+| Ethernet4 | REGION1-INTERNET-CORP_inet-site1-wan2_inet-cloud_Ethernet6 | - | 100.64.11.2/24 | default | - | False | ACL-INTERNET-IN_Ethernet4 | - |
 
 #### Ethernet Interfaces Device Configuration
 
@@ -457,48 +408,12 @@ interface Ethernet1
    flow tracker hardware FLOW-TRACKER
    ip address 10.0.1.13/31
 !
-interface Ethernet1.100
-   description P2P_site1-border1_Ethernet4.100_VRF_BLUE
-   no shutdown
-   mtu 9214
-   encapsulation dot1q vlan 100
-   flow tracker hardware FLOW-TRACKER
-   vrf BLUE
-   ip address 10.0.1.13/31
-!
-interface Ethernet1.101
-   description P2P_site1-border1_Ethernet4.101_VRF_RED
-   no shutdown
-   mtu 9214
-   encapsulation dot1q vlan 101
-   flow tracker hardware FLOW-TRACKER
-   vrf RED
-   ip address 10.0.1.13/31
-!
 interface Ethernet2
    description P2P_site1-border2_Ethernet4
    no shutdown
    mtu 9214
    no switchport
    flow tracker hardware FLOW-TRACKER
-   ip address 10.0.1.15/31
-!
-interface Ethernet2.100
-   description P2P_site1-border2_Ethernet4.100_VRF_BLUE
-   no shutdown
-   mtu 9214
-   encapsulation dot1q vlan 100
-   flow tracker hardware FLOW-TRACKER
-   vrf BLUE
-   ip address 10.0.1.15/31
-!
-interface Ethernet2.101
-   description P2P_site1-border2_Ethernet4.101_VRF_RED
-   no shutdown
-   mtu 9214
-   encapsulation dot1q vlan 101
-   flow tracker hardware FLOW-TRACKER
-   vrf RED
    ip address 10.0.1.15/31
 !
 interface Ethernet3
@@ -513,8 +428,7 @@ interface Ethernet4
    no shutdown
    no switchport
    flow tracker hardware FLOW-TRACKER
-   ip address dhcp
-   dhcp client accept default-route
+   ip address 100.64.11.2/24
    ip access-group ACL-INTERNET-IN_Ethernet4 in
 ```
 
@@ -625,11 +539,13 @@ ip routing vrf RED
 | --- | ------------------ | ----------- | -------------- | ----------------------- | --- | ---------- | ------ |
 | MGMT | 0.0.0.0/0 | 192.168.17.1 | - | 1 | - | - | - |
 | default | 172.18.0.0/16 | 172.18.11.1 | - | 1 | - | - | - |
+| default | 100.64.0.0/16 | 100.64.11.1 | - | 1 | - | - | - |
 
 #### Static Routes Device Configuration
 
 ```eos
 !
+ip route 100.64.0.0/16 100.64.11.1
 ip route 172.18.0.0/16 172.18.11.1
 ip route vrf MGMT 0.0.0.0/0 192.168.17.1
 ```
@@ -860,14 +776,10 @@ ASN Notation: asplain
 | -------- | --------- | --- | -------- | -------------- | -------------- | ---------- | --- | --------------------- | ---------------------- | ------- | ------------ |
 | 10.0.1.12 | 65101 | default | - | Inherited from peer group IPv4-UNDERLAY-PEERS | Inherited from peer group IPv4-UNDERLAY-PEERS | Inherited from peer group IPv4-UNDERLAY-PEERS | - | - | - | - | - |
 | 10.0.1.14 | 65101 | default | - | Inherited from peer group IPv4-UNDERLAY-PEERS | Inherited from peer group IPv4-UNDERLAY-PEERS | Inherited from peer group IPv4-UNDERLAY-PEERS | - | - | - | - | - |
+| 100.64.11.1 | 65666 | default | - | - | - | - | - | - | - | - | - |
 | 192.168.42.1 | Inherited from peer group WAN-OVERLAY-PEERS | default | - | Inherited from peer group WAN-OVERLAY-PEERS | Inherited from peer group WAN-OVERLAY-PEERS | - | Inherited from peer group WAN-OVERLAY-PEERS(interval: 1000, min_rx: 1000, multiplier: 10) | - | - | - | Inherited from peer group WAN-OVERLAY-PEERS |
 | 192.168.42.2 | Inherited from peer group WAN-OVERLAY-PEERS | default | - | Inherited from peer group WAN-OVERLAY-PEERS | Inherited from peer group WAN-OVERLAY-PEERS | - | Inherited from peer group WAN-OVERLAY-PEERS(interval: 1000, min_rx: 1000, multiplier: 10) | - | - | - | Inherited from peer group WAN-OVERLAY-PEERS |
 | 192.168.42.3 | 65000 | default | - | all | - | - | - | - | True | - | - |
-| 192.168.255.5 | - | default | - | - | - | - | - | - | - | - | - |
-| 10.0.1.12 | 65101 | BLUE | - | Inherited from peer group IPv4-UNDERLAY-PEERS | Inherited from peer group IPv4-UNDERLAY-PEERS | Inherited from peer group IPv4-UNDERLAY-PEERS | - | - | - | - | - |
-| 10.0.1.14 | 65101 | BLUE | - | Inherited from peer group IPv4-UNDERLAY-PEERS | Inherited from peer group IPv4-UNDERLAY-PEERS | Inherited from peer group IPv4-UNDERLAY-PEERS | - | - | - | - | - |
-| 10.0.1.12 | 65101 | RED | - | Inherited from peer group IPv4-UNDERLAY-PEERS | Inherited from peer group IPv4-UNDERLAY-PEERS | Inherited from peer group IPv4-UNDERLAY-PEERS | - | - | - | - | - |
-| 10.0.1.14 | 65101 | RED | - | Inherited from peer group IPv4-UNDERLAY-PEERS | Inherited from peer group IPv4-UNDERLAY-PEERS | Inherited from peer group IPv4-UNDERLAY-PEERS | - | - | - | - | - |
 
 #### Router BGP EVPN Address Family
 
@@ -956,6 +868,10 @@ router bgp 65000
    neighbor 10.0.1.14 peer group IPv4-UNDERLAY-PEERS
    neighbor 10.0.1.14 remote-as 65101
    neighbor 10.0.1.14 description site1-border2_Ethernet4
+   neighbor 100.64.11.1 remote-as 65666
+   neighbor 100.64.11.1 description REGION1-INTERNET-CORP_inet-site1-wan2_inet-cloud_Ethernet6
+   neighbor 100.64.11.1 route-map RM-BGP-100.64.11.1-IN in
+   neighbor 100.64.11.1 route-map RM-BGP-100.64.11.1-OUT out
    neighbor 192.168.42.1 peer group WAN-OVERLAY-PEERS
    neighbor 192.168.42.1 description pf1_Dps1
    neighbor 192.168.42.2 peer group WAN-OVERLAY-PEERS
@@ -967,8 +883,6 @@ router bgp 65000
    neighbor 192.168.42.3 route-map RM-WAN-HA-PEER-IN in
    neighbor 192.168.42.3 route-map RM-WAN-HA-PEER-OUT out
    neighbor 192.168.42.3 send-community
-   neighbor 192.168.255.5 peer group EVPN-OVERLAY-PEERS
-   neighbor 192.168.255.5 description site1-border1_Loopback0
    redistribute connected route-map RM-CONN-2-BGP
    !
    address-family evpn
@@ -983,6 +897,7 @@ router bgp 65000
    address-family ipv4
       neighbor IPv4-UNDERLAY-PEERS activate
       no neighbor WAN-OVERLAY-PEERS activate
+      neighbor 100.64.11.1 activate
    !
    address-family ipv4 sr-te
       neighbor WAN-OVERLAY-PEERS activate
@@ -1001,12 +916,6 @@ router bgp 65000
       route-target import evpn 100:100
       route-target export evpn 100:100
       router-id 192.168.255.4
-      neighbor 10.0.1.12 peer group IPv4-UNDERLAY-PEERS
-      neighbor 10.0.1.12 remote-as 65101
-      neighbor 10.0.1.12 description site1-border1_Ethernet4.100_vrf_BLUE
-      neighbor 10.0.1.14 peer group IPv4-UNDERLAY-PEERS
-      neighbor 10.0.1.14 remote-as 65101
-      neighbor 10.0.1.14 description site1-border2_Ethernet4.100_vrf_BLUE
       redistribute connected
    !
    vrf default
@@ -1020,12 +929,6 @@ router bgp 65000
       route-target import evpn 101:101
       route-target export evpn 101:101
       router-id 192.168.255.4
-      neighbor 10.0.1.12 peer group IPv4-UNDERLAY-PEERS
-      neighbor 10.0.1.12 remote-as 65101
-      neighbor 10.0.1.12 description site1-border1_Ethernet4.101_vrf_RED
-      neighbor 10.0.1.14 peer group IPv4-UNDERLAY-PEERS
-      neighbor 10.0.1.14 remote-as 65101
-      neighbor 10.0.1.14 description site1-border2_Ethernet4.101_vrf_RED
       redistribute connected
 ```
 
@@ -1053,6 +956,12 @@ router bfd
 
 #### Prefix-lists Summary
 
+##### ALLOW-DEFAULT
+
+| Sequence | Action |
+| -------- | ------ |
+| 10 | permit 0.0.0.0/0 |
+
 ##### PL-LOOPBACKS-EVPN-OVERLAY
 
 | Sequence | Action |
@@ -1077,6 +986,9 @@ router bfd
 
 ```eos
 !
+ip prefix-list ALLOW-DEFAULT
+   seq 10 permit 0.0.0.0/0
+!
 ip prefix-list PL-LOOPBACKS-EVPN-OVERLAY
    seq 10 permit 192.168.255.0/24 eq 32
 !
@@ -1092,6 +1004,18 @@ ip prefix-list PL-WAN-HA-PREFIXES
 ### Route-maps
 
 #### Route-maps Summary
+
+##### RM-BGP-100.64.11.1-IN
+
+| Sequence | Type | Match | Set | Sub-Route-Map | Continue |
+| -------- | ---- | ----- | --- | ------------- | -------- |
+| 10 | permit | ip address prefix-list ALLOW-DEFAULT | community no-advertise additive | - | - |
+
+##### RM-BGP-100.64.11.1-OUT
+
+| Sequence | Type | Match | Set | Sub-Route-Map | Continue |
+| -------- | ---- | ----- | --- | ------------- | -------- |
+| 10 | deny | - | - | - | - |
 
 ##### RM-BGP-UNDERLAY-PEERS-IN
 
@@ -1150,6 +1074,12 @@ ip prefix-list PL-WAN-HA-PREFIXES
 #### Route-maps Device Configuration
 
 ```eos
+!
+route-map RM-BGP-100.64.11.1-IN permit 10
+   match ip address prefix-list ALLOW-DEFAULT
+   set community no-advertise additive
+!
+route-map RM-BGP-100.64.11.1-OUT deny 10
 !
 route-map RM-BGP-UNDERLAY-PEERS-IN permit 10
    description Allow WAN HA peer interface prefixes
@@ -1591,10 +1521,10 @@ router path-selection
 
 | Server Profile | IP address | SSL Profile | Port |
 | -------------- | ---------- | ----------- | ---- |
-| INTERNET-pf1-Ethernet2 | 100.64.100.2 | STUN-DTLS | 3478 |
-| INTERNET-pf2-Ethernet2 | 100.64.200.2 | STUN-DTLS | 3478 |
-| MPLS-pf1-Ethernet1 | 172.18.100.2 | STUN-DTLS | 3478 |
-| MPLS-pf2-Ethernet1 | 172.18.200.2 | STUN-DTLS | 3478 |
+| INTERNET-pf1-Ethernet2 | 100.64.100.2 | - | 3478 |
+| INTERNET-pf2-Ethernet2 | 100.64.200.2 | - | 3478 |
+| MPLS-pf1-Ethernet1 | 172.18.100.2 | - | 3478 |
+| MPLS-pf2-Ethernet1 | 172.18.200.2 | - | 3478 |
 
 ### STUN Device Configuration
 
@@ -1604,14 +1534,10 @@ stun
    client
       server-profile INTERNET-pf1-Ethernet2
          ip address 100.64.100.2
-         ssl profile STUN-DTLS
       server-profile INTERNET-pf2-Ethernet2
          ip address 100.64.200.2
-         ssl profile STUN-DTLS
       server-profile MPLS-pf1-Ethernet1
          ip address 172.18.100.2
-         ssl profile STUN-DTLS
       server-profile MPLS-pf2-Ethernet1
          ip address 172.18.200.2
-         ssl profile STUN-DTLS
 ```

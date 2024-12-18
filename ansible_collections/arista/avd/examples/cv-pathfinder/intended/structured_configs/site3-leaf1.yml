@@ -83,6 +83,26 @@ ethernet_interfaces:
   spanning_tree_portfast: edge
   flow_tracker:
     sampled: FLOW-TRACKER
+- name: Ethernet2
+  peer: site3-leaf1-server1
+  peer_interface: Ethernet1
+  peer_type: server
+  description: SERVER_site3-leaf1-server1_Ethernet1
+  shutdown: false
+  switchport:
+    enabled: true
+    mode: access
+    access_vlan: '42'
+- name: Ethernet3
+  peer: site3-leaf1-server2
+  peer_interface: Ethernet1
+  peer_type: server
+  description: SERVER_site3-leaf1-server2_Ethernet1
+  shutdown: false
+  switchport:
+    enabled: true
+    mode: access
+    access_vlan: '666'
 vlans:
 - id: 666
   name: BLUE-TEST

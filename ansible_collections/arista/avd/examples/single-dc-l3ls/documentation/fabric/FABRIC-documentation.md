@@ -17,9 +17,13 @@
 
 | POD | Type | Node | Management IP | Platform | Provisioned in CloudVision | Serial Number |
 | --- | ---- | ---- | ------------- | -------- | -------------------------- | ------------- |
+| FABRIC | l2leaf | dc1-leaf1-server1 | 192.168.1.20/32 | - | Provisioned | - |
+| FABRIC | l2leaf | dc1-leaf1-server2 | 192.168.1.22/32 | - | Provisioned | - |
 | FABRIC | l3leaf | dc1-leaf1a | 172.16.1.101/24 | vEOS-lab | Provisioned | - |
 | FABRIC | l3leaf | dc1-leaf1b | 172.16.1.102/24 | vEOS-lab | Provisioned | - |
 | FABRIC | l2leaf | dc1-leaf1c | 172.16.1.151/24 | vEOS-lab | Provisioned | - |
+| FABRIC | l2leaf | dc1-leaf2-server1 | 192.168.1.24/32 | - | Provisioned | - |
+| FABRIC | l2leaf | dc1-leaf2-server2 | 192.168.1.26/32 | - | Provisioned | - |
 | FABRIC | l3leaf | dc1-leaf2a | 172.16.1.103/24 | vEOS-lab | Provisioned | - |
 | FABRIC | l3leaf | dc1-leaf2b | 172.16.1.104/24 | vEOS-lab | Provisioned | - |
 | FABRIC | l2leaf | dc1-leaf2c | 172.16.1.152/24 | vEOS-lab | Provisioned | - |

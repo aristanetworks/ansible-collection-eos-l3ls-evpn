@@ -57,6 +57,9 @@ l3leaf:
       nodes:
         - name: site2-leaf1
           id: 9
+          # evpn_gateway:
+          #   remote_peers:
+          #     - hostname: site2-wan1
           mgmt_ip: 192.168.17.18/24
         - name: site2-leaf2
           id: 10
@@ -92,6 +95,11 @@ wan_router:
           id: 7
           mgmt_ip: 192.168.17.16/24
           uplink_switches: [site2-leaf1]
+          # evpn_gateway:
+          #   remote_peers:
+          #     - hostname: site2-leaf1
+          #   evpn_l3:
+          #     enabled: true
           l3_interfaces:
             - name: Ethernet3
               profile: MPLS-WAN-INTERFACE
@@ -116,3 +124,15 @@ wan_router:
               bgp:
                 peer_as: 65666
                 ipv4_prefix_list_in: ALLOW-DEFAULT
+
+# Definition of connected endpoints in the fabric.
+servers:
+  # Name of the defined server.
+  - name: site2-leaf1-server1
+    # Definition of adapters on the server.
+    adapters:
+      - endpoint_ports: [ Ethernet1 ]
+        switch_ports: [ Ethernet7 ]
+        switches: [ site2-leaf1 ]
+        vlans: 666
+        mode: access

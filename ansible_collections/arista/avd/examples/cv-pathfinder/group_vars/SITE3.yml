@@ -1,5 +1,10 @@
 ---
 # SITE3 variables
+ipv4_prefix_list_catalog:
+  - name: ALLOW-DEFAULT
+    sequence_numbers:
+      - sequence: 10
+        action: permit 0.0.0.0/0
 
 l2leaf:
   nodes:
@@ -26,7 +31,28 @@ wan_router:
       l3_interfaces:
         - name: Ethernet4
           peer_interface: Ethernet8
-          dhcp_ip: 100.64.30.2
+          ip_address: 100.64.30.2/24
+          peer_ip: 100.64.30.1
           profile: INTERNET-WAN-INTERFACE
           wan_carrier: REGION2-INTERNET-CORP
           wan_circuit_id: inet-site3-wan1
+
+# Definition of connected endpoints in the fabric.
+servers:
+  # Name of the defined server.
+  - name: site3-leaf1-server1
+    # Definition of adapters on the server.
+    adapters:
+      - endpoint_ports: [ Ethernet1 ]
+        switch_ports: [ Ethernet2 ]
+        switches: [ site3-leaf1 ]
+        vlans: 42
+        mode: access
+  - name: site3-leaf1-server2
+    # Definition of adapters on the server.
+    adapters:
+      - endpoint_ports: [ Ethernet1 ]
+        switch_ports: [ Ethernet3 ]
+        switches: [ site3-leaf1 ]
+        vlans: 666
+        mode: access

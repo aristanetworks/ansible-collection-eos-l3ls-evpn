@@ -459,7 +459,10 @@ ASN Notation: asplain
 
 | Neighbor | Remote AS | VRF | Shutdown | Send-community | Maximum-routes | Allowas-in | BFD | RIB Pre-Policy Retain | Route-Reflector Client | Passive | TTL Max Hops |
 | -------- | --------- | --- | -------- | -------------- | -------------- | ---------- | --- | --------------------- | ---------------------- | ------- | ------------ |
+| 100.64.10.2 | 65000 | default | - | Inherited from peer group IPv4-UNDERLAY-PEERS | Inherited from peer group IPv4-UNDERLAY-PEERS | - | - | - | - | - | - |
+| 100.64.11.2 | 65000 | default | - | Inherited from peer group IPv4-UNDERLAY-PEERS | Inherited from peer group IPv4-UNDERLAY-PEERS | - | - | - | - | - | - |
 | 100.64.21.2 | 65000 | default | - | Inherited from peer group IPv4-UNDERLAY-PEERS | Inherited from peer group IPv4-UNDERLAY-PEERS | - | - | - | - | - | - |
+| 100.64.30.2 | 65000 | default | - | Inherited from peer group IPv4-UNDERLAY-PEERS | Inherited from peer group IPv4-UNDERLAY-PEERS | - | - | - | - | - | - |
 
 #### Router BGP Device Configuration
 
@@ -472,9 +475,18 @@ router bgp 65666
    neighbor IPv4-UNDERLAY-PEERS peer group
    neighbor IPv4-UNDERLAY-PEERS send-community
    neighbor IPv4-UNDERLAY-PEERS maximum-routes 12000
+   neighbor 100.64.10.2 peer group IPv4-UNDERLAY-PEERS
+   neighbor 100.64.10.2 remote-as 65000
+   neighbor 100.64.10.2 default-originate always
+   neighbor 100.64.11.2 peer group IPv4-UNDERLAY-PEERS
+   neighbor 100.64.11.2 remote-as 65000
+   neighbor 100.64.11.2 default-originate always
    neighbor 100.64.21.2 peer group IPv4-UNDERLAY-PEERS
    neighbor 100.64.21.2 remote-as 65000
    neighbor 100.64.21.2 default-originate always
+   neighbor 100.64.30.2 peer group IPv4-UNDERLAY-PEERS
+   neighbor 100.64.30.2 remote-as 65000
+   neighbor 100.64.30.2 default-originate always
    redistribute connected
    !
    address-family ipv4

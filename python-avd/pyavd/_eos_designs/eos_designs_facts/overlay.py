@@ -45,6 +45,21 @@ class OverlayMixin:
         return []
 
     @cached_property
+    def evpn_gateways(self: EosDesignsFacts) -> list:
+        """
+        Exposed in avd_switch_facts.
+
+        For evpn clients the default value for EVPN Route Servers is the content of the uplink_switches variable set elsewhere.
+        For all other evpn roles there is no default.
+        """
+        return get(self.shared_utils.switch_data_combined, "evpn_gateway.remote_peers", default=[])
+        if self.shared_utils.underlay_router is True:
+            if self.evpn_role == "client":
+                return get(self.shared_utils.switch_data_combined, "evpn_route_servers", default=self.shared_utils.uplink_switches)
+            return get(self.shared_utils.switch_data_combined, "evpn_route_servers")
+        return []
+
+    @cached_property
     def mpls_route_reflectors(self: EosDesignsFacts) -> list | None:
         """Exposed in avd_switch_facts."""
         if self.shared_utils.underlay_router is True and (

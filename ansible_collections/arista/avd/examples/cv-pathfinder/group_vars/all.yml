@@ -1,4 +1,8 @@
 ---
+eos_designs_documentation:
+  topology_csv: true
+  p2p_links_csv: true
+
 # Ansible variables
 ansible_connection: ansible.netcommon.httpapi
 ansible_network_os: arista.eos.eos
@@ -11,7 +15,7 @@ ansible_httpapi_use_ssl: true
 ansible_httpapi_validate_certs: false
 
 # fabric_name needs to be the same for all devices
-fabric_name: WAN
+fabric_name: CWAN
 
 # Disabling for virtual devices
 bgp_update_wait_install: false

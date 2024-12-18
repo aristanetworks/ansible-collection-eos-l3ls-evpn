@@ -68,6 +68,29 @@ class UtilsMixin:
 
         return evpn_gateway_remote_peers
 
+    # TODO: AYUSH
+    @cached_property
+    def _evpn_gateway_servers(self: AvdStructuredConfigOverlay) -> dict:
+        # TODO: Ayush A better name
+        # For pathfinder topology we are using one sided gateway, we want leaf to act as a server
+        if not self.shared_utils.overlay_evpn:
+            return {}
+
+
+        evpn_gateway_servers = {}
+
+
+        for avd_peer in self._avd_overlay_peers:
+            peer_facts = self.shared_utils.get_peer_facts(avd_peer, required=True)
+            remote_peers = peer_facts.get("evpn_gateways", [])
+
+            for peer in remote_peers:
+                if peer.get('hostname', None) == self.shared_utils.hostname:
+                    if avd_peer not in self._evpn_route_servers and avd_peer not in self._evpn_gateway_remote_peers:
+                        self._append_peer(evpn_gateway_servers, avd_peer, peer_facts)
+
+        return evpn_gateway_servers
+
     @cached_property
     def _evpn_route_clients(self: AvdStructuredConfigOverlay) -> dict:
         if not self.shared_utils.overlay_evpn:
@@ -76,8 +99,7 @@ class UtilsMixin:
         if self.shared_utils.evpn_role != "server":
             return {}
 
-        evpn_route_clients = {}
-
+        evpn_route_clients = self._evpn_gateway_servers
         for avd_peer in self._avd_overlay_peers:
             peer_facts = self.shared_utils.get_peer_facts(avd_peer, required=True)
             if (
@@ -86,6 +108,7 @@ class UtilsMixin:
                 and avd_peer not in self._evpn_route_servers
             ):
                 self._append_peer(evpn_route_clients, avd_peer, peer_facts)
+
 
         return evpn_route_clients
 

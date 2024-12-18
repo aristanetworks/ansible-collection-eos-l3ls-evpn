@@ -504,12 +504,14 @@ interface Loopback1
 interface Vlan42
    description RED-TEST
    no shutdown
+   no autostate
    vrf RED
    ip address 10.42.22.1/24
 !
 interface Vlan666
    description BLUE-TEST
    no shutdown
+   no autostate
    vrf BLUE
    ip address 10.66.22.1/24
 !
@@ -517,6 +519,7 @@ interface Vlan3099
    description MLAG_L3_VRF_BLUE
    no shutdown
    mtu 9214
+   no autostate
    vrf BLUE
    ip address 10.255.251.17/31
 !
@@ -524,6 +527,7 @@ interface Vlan3100
    description MLAG_L3_VRF_RED
    no shutdown
    mtu 9214
+   no autostate
    vrf RED
    ip address 10.255.251.17/31
 !
@@ -531,6 +535,7 @@ interface Vlan4093
    description MLAG_L3
    no shutdown
    mtu 9214
+   no autostate
    ip address 10.255.251.17/31
 !
 interface Vlan4094

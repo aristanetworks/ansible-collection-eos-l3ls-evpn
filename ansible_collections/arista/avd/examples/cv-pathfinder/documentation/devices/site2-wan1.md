@@ -13,11 +13,6 @@
   - [Local Users](#local-users)
   - [Enable Password](#enable-password)
   - [AAA Authorization](#aaa-authorization)
-- [Management Security](#management-security)
-  - [Management Security Summary](#management-security-summary)
-  - [Management Security SSL Profiles](#management-security-ssl-profiles)
-  - [SSL profile STUN-DTLS Certificates Summary](#ssl-profile-stun-dtls-certificates-summary)
-  - [Management Security Device Configuration](#management-security-device-configuration)
 - [Monitoring](#monitoring)
   - [TerminAttr Daemon](#terminattr-daemon)
   - [Flow Tracking](#flow-tracking)
@@ -225,37 +220,6 @@ Authorization for configuration commands is disabled.
 ```eos
 aaa authorization exec default local
 !
-```
-
-## Management Security
-
-### Management Security Summary
-
-| Settings | Value |
-| -------- | ----- |
-
-### Management Security SSL Profiles
-
-| SSL Profile Name | TLS protocol accepted | Certificate filename | Key filename | Cipher List | CRLs |
-| ---------------- | --------------------- | -------------------- | ------------ | ----------- | ---- |
-| STUN-DTLS | 1.2 | STUN-DTLS.crt | STUN-DTLS.key | - | - |
-
-### SSL profile STUN-DTLS Certificates Summary
-
-| Trust Certificates | Requirement | Policy | System |
-| ------------------ | ----------- | ------ | ------ |
-| aristaDeviceCertProvisionerDefaultRootCA.crt | - | - | - |
-
-### Management Security Device Configuration
-
-```eos
-!
-management security
-   !
-   ssl profile STUN-DTLS
-      tls versions 1.2
-      trust certificate aristaDeviceCertProvisionerDefaultRootCA.crt
-      certificate STUN-DTLS.crt key STUN-DTLS.key
 ```
 
 ## Monitoring
@@ -1418,8 +1382,8 @@ router path-selection
 
 | Server Profile | IP address | SSL Profile | Port |
 | -------------- | ---------- | ----------- | ---- |
-| MPLS-pf1-Ethernet1 | 172.18.100.2 | STUN-DTLS | 3478 |
-| MPLS-pf2-Ethernet1 | 172.18.200.2 | STUN-DTLS | 3478 |
+| MPLS-pf1-Ethernet1 | 172.18.100.2 | - | 3478 |
+| MPLS-pf2-Ethernet1 | 172.18.200.2 | - | 3478 |
 
 ### STUN Device Configuration
 
@@ -1429,8 +1393,6 @@ stun
    client
       server-profile MPLS-pf1-Ethernet1
          ip address 172.18.100.2
-         ssl profile STUN-DTLS
       server-profile MPLS-pf2-Ethernet1
          ip address 172.18.200.2
-         ssl profile STUN-DTLS
 ```

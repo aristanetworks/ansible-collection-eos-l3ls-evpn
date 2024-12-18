@@ -317,7 +317,7 @@ vlan 4094
 | --------- | ----------- | ---- | ----- | ----------- | ----------- | ------------- |
 | Ethernet3 | MLAG_dc1-leaf2b_Ethernet3 | *trunk | *- | *- | *MLAG | 3 |
 | Ethernet4 | MLAG_dc1-leaf2b_Ethernet4 | *trunk | *- | *- | *MLAG | 3 |
-| Ethernet5 | SERVER_dc1-leaf2-server1_PCI1 | *trunk | *11-12,21-22 | *4092 | *- | 5 |
+| Ethernet5 | SERVER_dc1-leaf2-server2_Ethernet1 | access | 11 | - | - | - |
 | Ethernet8 | L2_dc1-leaf2c_Ethernet1 | *trunk | *11-12,21-22,3401-3402 | *- | *- | 8 |
 
 *Inherited from Port-Channel Interface
@@ -358,9 +358,11 @@ interface Ethernet4
    channel-group 3 mode active
 !
 interface Ethernet5
-   description SERVER_dc1-leaf2-server1_PCI1
+   description SERVER_dc1-leaf2-server2_Ethernet1
    no shutdown
-   channel-group 5 mode active
+   switchport access vlan 11
+   switchport mode access
+   switchport
 !
 interface Ethernet8
    description L2_dc1-leaf2c_Ethernet1
@@ -377,7 +379,6 @@ interface Ethernet8
 | Interface | Description | Mode | VLANs | Native VLAN | Trunk Group | LACP Fallback Timeout | LACP Fallback Mode | MLAG ID | EVPN ESI |
 | --------- | ----------- | ---- | ----- | ----------- | ------------| --------------------- | ------------------ | ------- | -------- |
 | Port-Channel3 | MLAG_dc1-leaf2b_Port-Channel3 | trunk | - | - | MLAG | - | - | - | - |
-| Port-Channel5 | SERVER_dc1-leaf2-server1 | trunk | 11-12,21-22 | 4092 | - | - | - | 5 | - |
 | Port-Channel8 | L2_dc1-leaf2c_Port-Channel1 | trunk | 11-12,21-22,3401-3402 | - | - | - | - | 8 | - |
 
 #### Port-Channel Interfaces Device Configuration
@@ -390,16 +391,6 @@ interface Port-Channel3
    switchport mode trunk
    switchport trunk group MLAG
    switchport
-!
-interface Port-Channel5
-   description SERVER_dc1-leaf2-server1
-   no shutdown
-   switchport trunk native vlan 4092
-   switchport trunk allowed vlan 11-12,21-22
-   switchport mode trunk
-   switchport
-   mlag 5
-   spanning-tree portfast
 !
 interface Port-Channel8
    description L2_dc1-leaf2c_Port-Channel1
@@ -494,24 +485,28 @@ interface Loopback11
 interface Vlan11
    description VRF10_VLAN11
    no shutdown
+   no autostate
    vrf VRF10
    ip address virtual 10.10.11.1/24
 !
 interface Vlan12
    description VRF10_VLAN12
    no shutdown
+   no autostate
    vrf VRF10
    ip address virtual 10.10.12.1/24
 !
 interface Vlan21
    description VRF11_VLAN21
    no shutdown
+   no autostate
    vrf VRF11
    ip address virtual 10.10.21.1/24
 !
 interface Vlan22
    description VRF11_VLAN22
    no shutdown
+   no autostate
    vrf VRF11
    ip address virtual 10.10.22.1/24
 !
@@ -519,6 +514,7 @@ interface Vlan3009
    description MLAG_L3_VRF_VRF10
    no shutdown
    mtu 1500
+   no autostate
    vrf VRF10
    ip address 10.255.1.100/31
 !
@@ -526,6 +522,7 @@ interface Vlan3010
    description MLAG_L3_VRF_VRF11
    no shutdown
    mtu 1500
+   no autostate
    vrf VRF11
    ip address 10.255.1.100/31
 !
@@ -533,6 +530,7 @@ interface Vlan4093
    description MLAG_L3
    no shutdown
    mtu 1500
+   no autostate
    ip address 10.255.1.100/31
 !
 interface Vlan4094

@@ -253,7 +253,7 @@ vlan 3402
 | --------- | ----------- | ---- | ----- | ----------- | ----------- | ------------- |
 | Ethernet1 | L2_dc1-leaf1a_Ethernet8 | *trunk | *11-12,21-22,3401-3402 | *- | *- | 1 |
 | Ethernet2 | L2_dc1-leaf1b_Ethernet8 | *trunk | *11-12,21-22,3401-3402 | *- | *- | 1 |
-| Ethernet5 | SERVER_dc1-leaf1-server1_iLO | access | 11 | - | - | - |
+| Ethernet5 | SERVER_dc1-leaf1-server1_Ethernet1 | access | 11 | - | - | - |
 
 *Inherited from Port-Channel Interface
 
@@ -272,12 +272,11 @@ interface Ethernet2
    channel-group 1 mode active
 !
 interface Ethernet5
-   description SERVER_dc1-leaf1-server1_iLO
+   description SERVER_dc1-leaf1-server1_Ethernet1
    no shutdown
    switchport access vlan 11
    switchport mode access
    switchport
-   spanning-tree portfast
 ```
 
 ### Port-Channel Interfaces

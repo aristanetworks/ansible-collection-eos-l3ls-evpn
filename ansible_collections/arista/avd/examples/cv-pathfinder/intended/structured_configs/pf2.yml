@@ -287,16 +287,6 @@ ip_security:
       time: 50
       action: clear
     mode: transport
-management_security:
-  ssl_profiles:
-  - name: STUN-DTLS
-    certificate:
-      file: STUN-DTLS.crt
-      key: STUN-DTLS.key
-    trust_certificate:
-      certificates:
-      - aristaDeviceCertProvisionerDefaultRootCA.crt
-    tls_versions: '1.2'
 router_adaptive_virtual_topology:
   topology_role: pathfinder
   profiles:
@@ -452,7 +442,6 @@ stun:
     local_interfaces:
     - Ethernet1
     - Ethernet2
-    ssl_profile: STUN-DTLS
 application_traffic_recognition:
   application_profiles:
   - name: VIDEO
@@ -551,7 +540,6 @@ metadata:
         user_defined_applications:
         - name: APP-CONTROL-PLANE
     role: pathfinder
-    ssl_profile: STUN-DTLS
     vtep_ip: 192.168.42.2
     site: PF2-GLOBAL
     address: Coulomiers, France

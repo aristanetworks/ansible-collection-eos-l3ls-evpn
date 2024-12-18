@@ -84,6 +84,13 @@ class ActionModule(ActionBase):
             for peer in host_mpls_route_reflectors:
                 avd_overlay_peers.setdefault(peer, []).append(host)
 
+            # TODO: AYUSH
+            evpn_gateways = avd_switch_facts[host]["switch"].get("evpn_gateways", [])
+
+            for peer_dict in evpn_gateways:
+                if (peer := peer_dict.get('hostname')):
+                    avd_overlay_peers.setdefault(peer, []).append(host)
+
             host_topology_peers = avd_switch_facts[host]["switch"].get("uplink_peers", [])
 
             for peer in host_topology_peers:

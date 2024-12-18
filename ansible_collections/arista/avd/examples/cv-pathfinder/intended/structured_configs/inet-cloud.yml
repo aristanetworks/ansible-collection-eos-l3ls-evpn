@@ -28,6 +28,24 @@ router_bgp:
     default_originate:
       enabled: true
       always: true
+  - ip_address: 100.64.10.2
+    remote_as: '65000'
+    peer_group: IPv4-UNDERLAY-PEERS
+    default_originate:
+      enabled: true
+      always: true
+  - ip_address: 100.64.11.2
+    remote_as: '65000'
+    peer_group: IPv4-UNDERLAY-PEERS
+    default_originate:
+      enabled: true
+      always: true
+  - ip_address: 100.64.30.2
+    remote_as: '65000'
+    peer_group: IPv4-UNDERLAY-PEERS
+    default_originate:
+      enabled: true
+      always: true
 static_routes:
 - vrf: MGMT
   destination_address_prefix: 0.0.0.0/0

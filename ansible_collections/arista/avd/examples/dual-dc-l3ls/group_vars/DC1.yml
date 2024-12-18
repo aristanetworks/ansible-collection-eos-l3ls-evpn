@@ -66,6 +66,7 @@ l3leaf:
         # Definition of hostnames under the node_group
         - name: dc1-leaf1a
           id: 1
+          evpn_role: server
           mgmt_ip: 172.16.1.101/24
           # Definition of the port to be used in the uplink device facing this device.
           # Note that the number of elements in this list must match the length of 'uplink_switches' as well as 'uplink_interfaces'

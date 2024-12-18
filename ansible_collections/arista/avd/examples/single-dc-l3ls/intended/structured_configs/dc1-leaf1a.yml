@@ -347,17 +347,6 @@ port_channel_interfaces:
       allowed_vlan: 11-12,21-22,3401-3402
   shutdown: false
   mlag: 8
-- name: Port-Channel5
-  description: SERVER_dc1-leaf1-server1_Bond1
-  shutdown: false
-  switchport:
-    enabled: true
-    mode: trunk
-    trunk:
-      allowed_vlan: 11-12,21-22
-      native_vlan: 4092
-  spanning_tree_portfast: edge
-  mlag: 5
 ethernet_interfaces:
 - name: Ethernet3
   peer: dc1-leaf1b
@@ -407,14 +396,15 @@ ethernet_interfaces:
     id: 8
     mode: active
 - name: Ethernet5
-  peer: dc1-leaf1-server1
-  peer_interface: PCI1
+  peer: dc1-leaf1-server2
+  peer_interface: Ethernet1
   peer_type: server
-  description: SERVER_dc1-leaf1-server1_PCI1
+  description: SERVER_dc1-leaf1-server2_Ethernet1
   shutdown: false
-  channel_group:
-    id: 5
-    mode: active
+  switchport:
+    enabled: true
+    mode: access
+    access_vlan: '11'
 mlag_configuration:
   domain_id: DC1_L3_LEAF1
   local_interface: Vlan4094

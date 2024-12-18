@@ -282,6 +282,8 @@ vlan 666
 | Interface | Description | Mode | VLANs | Native VLAN | Trunk Group | Channel-Group |
 | --------- | ----------- | ---- | ----- | ----------- | ----------- | ------------- |
 | Ethernet1 | L2_site3-wan1_Ethernet1 | trunk | 42,666 | - | - | - |
+| Ethernet2 | SERVER_site3-leaf1-server1_Ethernet1 | access | 42 | - | - | - |
+| Ethernet3 | SERVER_site3-leaf1-server2_Ethernet1 | access | 666 | - | - | - |
 
 *Inherited from Port-Channel Interface
 
@@ -297,6 +299,20 @@ interface Ethernet1
    switchport
    flow tracker sampled FLOW-TRACKER
    spanning-tree portfast
+!
+interface Ethernet2
+   description SERVER_site3-leaf1-server1_Ethernet1
+   no shutdown
+   switchport access vlan 42
+   switchport mode access
+   switchport
+!
+interface Ethernet3
+   description SERVER_site3-leaf1-server2_Ethernet1
+   no shutdown
+   switchport access vlan 666
+   switchport mode access
+   switchport
 ```
 
 ## Routing

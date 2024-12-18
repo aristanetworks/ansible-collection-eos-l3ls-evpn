@@ -332,6 +332,16 @@ ethernet_interfaces:
     sampled: FLOW-TRACKER
   mtu: 9214
   ip_address: 10.0.2.12/31
+- name: Ethernet7
+  peer: site2-leaf1-server1
+  peer_interface: Ethernet1
+  peer_type: server
+  description: SERVER_site2-leaf1-server1_Ethernet1
+  shutdown: false
+  switchport:
+    enabled: true
+    mode: access
+    access_vlan: '666'
 mlag_configuration:
   domain_id: SITE2
   local_interface: Vlan4094

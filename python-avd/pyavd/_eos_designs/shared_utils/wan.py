@@ -425,6 +425,11 @@ class WanMixin:
         return self.is_cv_pathfinder_router and self.is_wan_server
 
     @cached_property
+    def is_cv_pathfinder_gateway_vxlan(self: SharedUtils) -> bool:
+        """Return True is the current wan_mode is cv-pathfinder and the device is a edge serving as evpn gateway."""
+        return self.is_cv_pathfinder_client and self.evpn_gateway_vxlan_l3
+
+    @cached_property
     def cv_pathfinder_role(self: SharedUtils) -> str | None:
         if not self.is_cv_pathfinder_router:
             return None

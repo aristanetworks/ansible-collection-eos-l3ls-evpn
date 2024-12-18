@@ -42,7 +42,7 @@ wan_ipsec_profiles: # (4)!
 # DTLS for STUN is enabled by default
 # It requires certificates to be generated and distributed on the participating
 # devices. To disable it for a lab, uncomment the following line.
-# wan_stun_dtls_disable: true
+wan_stun_dtls_disable: true
 
 # Fabric Flow tracking - by default only enabled for the Dps1 interface
 fabric_flow_tracking: # (5)!

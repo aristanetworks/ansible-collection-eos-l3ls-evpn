@@ -6,43 +6,74 @@ all:
       # cv_token is coming from an ENV variable
       ansible_password: "{{ lookup('ansible.builtin.env', 'CV_TOKEN') }}"
   children:
-    WAN:
+    CWAN:
       children:
-        PATHFINDERS:
+        WAN:
+          children:
+            PATHFINDERS:
+              hosts:
+                pf1:
+                  ansible_host: 192.168.17.10
+                pf2:
+                  ansible_host: 192.168.17.11
+            SITE1:
+              hosts:
+                site1-wan1:
+                  ansible_host: 192.168.17.12
+                site1-wan2:
+                  ansible_host: 192.168.17.13
+                site1-border1:
+                  ansible_host: 192.168.17.14
+                site1-border2:
+                  ansible_host: 192.168.17.15
+                site1-rs1:
+                  ansible_host: 192.168.17.60
+                  type: overlay-controller
+            SITE2:
+              hosts:
+                site2-wan1:
+                  ansible_host: 192.168.17.16
+                site2-wan2:
+                  ansible_host: 192.168.17.17
+                site2-leaf1:
+                  ansible_host: 192.168.17.18
+                site2-leaf2:
+                  ansible_host: 192.168.17.19
+            SITE3:
+              hosts:
+                site3-wan1:
+                  ansible_host: 192.168.17.20
+                site3-leaf1:
+                  ansible_host: 192.168.17.21
+            TRANSPORTS:
+              hosts:
+                mpls-cloud:
+                  ansible_host: 192.168.17.30
+                inet-cloud:
+                  ansible_host: 192.168.17.31
+        SERVERS:
           hosts:
-            pf1:
-              ansible_host: 192.168.17.10
-            pf2:
-              ansible_host: 192.168.17.11
-        SITE1:
-          hosts:
-            site1-wan1:
-              ansible_host: 192.168.17.12
-            site1-wan2:
-              ansible_host: 192.168.17.13
-            site1-border1:
-              ansible_host: 192.168.17.14
-            site1-border2:
-              ansible_host: 192.168.17.15
-        SITE2:
-          hosts:
-            site2-wan1:
-              ansible_host: 192.168.17.16
-            site2-wan2:
-              ansible_host: 192.168.17.17
-            site2-leaf1:
-              ansible_host: 192.168.17.18
-            site2-leaf2:
-              ansible_host: 192.168.17.19
-        SITE3:
-          hosts:
-            site3-wan1:
-              ansible_host: 192.168.17.20
-            site3-leaf1:
-              ansible_host: 192.168.17.21
-        TRANSPORTS:
-          hosts:
-            mpls-cloud:
-              ansible_host: 192.168.17.30
-            inet-cloud:
-              ansible_host: 192.168.17.31
+            site3-leaf1-server1:
+              ansible_host: 192.168.17.40
+              type: l2leaf
+            site3-leaf1-server2:
+              ansible_host: 192.168.17.41
+              type: l2leaf
+            site2-leaf1-server1:
+              ansible_host: 192.168.17.42
+              type: l2leaf
+            # site2-leaf1-server2:
+            #   ansible_host: 192.168.17.43
+            #   type: l2leaf
+            # site2-leaf2-server1:
+            #   ansible_host: 192.168.17.44
+            #   type: l2leaf
+            # site2-leaf2-server2:
+            #   ansible_host: 192.168.17.45
+            #   type: l2leaf
+            site1-border1-server1:
+              ansible_host: 192.168.17.46
+              type: l2leaf
+            # site1-border2-server1:
+            #   ansible_host: 192.168.17.47
+            #   type: l2leaf

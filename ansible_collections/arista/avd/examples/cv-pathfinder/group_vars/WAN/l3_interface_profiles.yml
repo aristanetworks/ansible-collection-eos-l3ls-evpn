@@ -10,8 +10,8 @@ l3_interface_profiles:
       enabled: true
   - profile: INTERNET-WAN-INTERFACE
     peer: inet-cloud
-    ip_address: dhcp
-    dhcp_accept_default_route: true
+    static_routes:
+      - prefix: 100.64.0.0/16
     ipv4_acl_in: ACL-INTERNET-IN
     # Enabling flow tracking on WAN interfaces
     flow_tracking:

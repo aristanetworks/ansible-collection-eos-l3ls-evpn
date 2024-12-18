@@ -1,7 +1,7 @@
 ---
 # build.yml
 - name: Build Configs
-  hosts: WAN
+  hosts: CWAN
   gather_facts: false
   tasks:
 

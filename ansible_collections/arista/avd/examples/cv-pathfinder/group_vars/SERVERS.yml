@@ -1,0 +1,43 @@
+---
+# SITE1 variables
+# Use eBGP as underlay routing protocol on SITE1, the default is 'none' for WAN routers.
+# underlay_routing_protocol: ebgp
+
+l2leaf:
+  nodes:
+    - name: site3-leaf1-server1
+      id: 20
+      l3_interfaces:
+        - name: Ethernet1
+          ip_address: 10.42.3.10/24
+          description: site3-leaf1-vlan42
+          peer_ip: 10.42.3.1
+          static_routes:
+            - prefix: 0.0.0.0/0
+    - name: site3-leaf1-server2
+      id: 21
+      l3_interfaces:
+        - name: Ethernet1
+          ip_address: 10.66.3.10/24
+          description: site3-leaf1-vlan666
+          peer_ip: 10.66.3.1
+          static_routes:
+            - prefix: 0.0.0.0/0
+    - name: site1-border1-server1
+      id: 22
+      l3_interfaces:
+        - name: Ethernet1
+          ip_address: 10.42.1.10/24
+          description: site1-border1-vlan42
+          peer_ip: 10.42.1.1
+          static_routes:
+            - prefix: 0.0.0.0/0
+    - name: site2-leaf1-server1
+      id: 23
+      l3_interfaces:
+        - name: Ethernet1
+          ip_address: 10.66.2.10/24
+          description: site2-leaf1-vlan666
+          peer_ip: 10.66.2.1
+          static_routes:
+            - prefix: 0.0.0.0/0

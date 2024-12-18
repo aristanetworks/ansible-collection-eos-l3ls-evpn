@@ -13,11 +13,6 @@
   - [Local Users](#local-users)
   - [Enable Password](#enable-password)
   - [AAA Authorization](#aaa-authorization)
-- [Management Security](#management-security)
-  - [Management Security Summary](#management-security-summary)
-  - [Management Security SSL Profiles](#management-security-ssl-profiles)
-  - [SSL profile STUN-DTLS Certificates Summary](#ssl-profile-stun-dtls-certificates-summary)
-  - [Management Security Device Configuration](#management-security-device-configuration)
 - [Monitoring](#monitoring)
   - [TerminAttr Daemon](#terminattr-daemon)
   - [Flow Tracking](#flow-tracking)
@@ -229,37 +224,6 @@ aaa authorization exec default local
 !
 ```
 
-## Management Security
-
-### Management Security Summary
-
-| Settings | Value |
-| -------- | ----- |
-
-### Management Security SSL Profiles
-
-| SSL Profile Name | TLS protocol accepted | Certificate filename | Key filename | Cipher List | CRLs |
-| ---------------- | --------------------- | -------------------- | ------------ | ----------- | ---- |
-| STUN-DTLS | 1.2 | STUN-DTLS.crt | STUN-DTLS.key | - | - |
-
-### SSL profile STUN-DTLS Certificates Summary
-
-| Trust Certificates | Requirement | Policy | System |
-| ------------------ | ----------- | ------ | ------ |
-| aristaDeviceCertProvisionerDefaultRootCA.crt | - | - | - |
-
-### Management Security Device Configuration
-
-```eos
-!
-management security
-   !
-   ssl profile STUN-DTLS
-      tls versions 1.2
-      trust certificate aristaDeviceCertProvisionerDefaultRootCA.crt
-      certificate STUN-DTLS.crt key STUN-DTLS.key
-```
-
 ## Monitoring
 
 ### TerminAttr Daemon
@@ -430,7 +394,7 @@ interface Dps1
 | --------- | ----------- | ------------- | ---------- | ----| ---- | -------- | ------ | ------- |
 | Ethernet1.42 | RED-TEST | - | 10.42.3.1/24 | RED | - | False | - | - |
 | Ethernet1.666 | BLUE-TEST | - | 10.66.3.1/24 | BLUE | - | False | - | - |
-| Ethernet4 | REGION2-INTERNET-CORP_inet-site3-wan1_inet-cloud_Ethernet8 | - | dhcp | default | - | False | ACL-INTERNET-IN_Ethernet4 | - |
+| Ethernet4 | REGION2-INTERNET-CORP_inet-site3-wan1_inet-cloud_Ethernet8 | - | 100.64.30.2/24 | default | - | False | ACL-INTERNET-IN_Ethernet4 | - |
 
 #### Ethernet Interfaces Device Configuration
 
@@ -463,8 +427,7 @@ interface Ethernet4
    no shutdown
    no switchport
    flow tracker hardware FLOW-TRACKER
-   ip address dhcp
-   dhcp client accept default-route
+   ip address 100.64.30.2/24
    ip access-group ACL-INTERNET-IN_Ethernet4 in
 ```
 
@@ -574,11 +537,13 @@ ip routing vrf RED
 | VRF | Destination Prefix | Next Hop IP | Exit interface | Administrative Distance | Tag | Route Name | Metric |
 | --- | ------------------ | ----------- | -------------- | ----------------------- | --- | ---------- | ------ |
 | MGMT | 0.0.0.0/0 | 192.168.17.1 | - | 1 | - | - | - |
+| default | 100.64.0.0/16 | 100.64.30.1 | - | 1 | - | - | - |
 
 #### Static Routes Device Configuration
 
 ```eos
 !
+ip route 100.64.0.0/16 100.64.30.1
 ip route vrf MGMT 0.0.0.0/0 192.168.17.1
 ```
 
@@ -1253,8 +1218,8 @@ router path-selection
 
 | Server Profile | IP address | SSL Profile | Port |
 | -------------- | ---------- | ----------- | ---- |
-| INTERNET-pf1-Ethernet2 | 100.64.100.2 | STUN-DTLS | 3478 |
-| INTERNET-pf2-Ethernet2 | 100.64.200.2 | STUN-DTLS | 3478 |
+| INTERNET-pf1-Ethernet2 | 100.64.100.2 | - | 3478 |
+| INTERNET-pf2-Ethernet2 | 100.64.200.2 | - | 3478 |
 
 ### STUN Device Configuration
 
@@ -1264,8 +1229,6 @@ stun
    client
       server-profile INTERNET-pf1-Ethernet2
          ip address 100.64.100.2
-         ssl profile STUN-DTLS
       server-profile INTERNET-pf2-Ethernet2
          ip address 100.64.200.2
-         ssl profile STUN-DTLS
 ```

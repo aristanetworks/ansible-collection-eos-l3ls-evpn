@@ -276,6 +276,7 @@ ethernet_interfaces:
     enabled: false
   peer_type: l3_interface
   peer: site2-wan2
+  peer_interface: Ethernet5
   shutdown: false
   description: WAN_HA_site2-wan2_Ethernet5
   ip_address: 10.42.0.0/31
@@ -408,16 +409,6 @@ ip_security:
     mode: transport
   key_controller:
     profile: DP-PROFILE
-management_security:
-  ssl_profiles:
-  - name: STUN-DTLS
-    certificate:
-      file: STUN-DTLS.crt
-      key: STUN-DTLS.key
-    trust_certificate:
-      certificates:
-      - aristaDeviceCertProvisionerDefaultRootCA.crt
-    tls_versions: '1.2'
 router_adaptive_virtual_topology:
   topology_role: transit region
   region:
@@ -581,10 +572,8 @@ stun:
     server_profiles:
     - name: MPLS-pf1-Ethernet1
       ip_address: 172.18.100.2
-      ssl_profile: STUN-DTLS
     - name: MPLS-pf2-Ethernet1
       ip_address: 172.18.200.2
-      ssl_profile: STUN-DTLS
 application_traffic_recognition:
   application_profiles:
   - name: VIDEO
@@ -712,7 +701,6 @@ metadata:
         value: lan
   cv_pathfinder:
     role: transit region
-    ssl_profile: STUN-DTLS
     vtep_ip: 192.168.42.7
     region: REGION2
     zone: REGION2-ZONE

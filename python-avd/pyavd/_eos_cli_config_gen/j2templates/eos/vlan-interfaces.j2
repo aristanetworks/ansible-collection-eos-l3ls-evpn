@@ -26,9 +26,7 @@ interface {{ vlan_interface.name }}
 {%     if vlan_interface.pvlan_mapping is arista.avd.defined %}
    pvlan mapping {{ vlan_interface.pvlan_mapping }}
 {%     endif %}
-{%     if vlan_interface.no_autostate is arista.avd.defined(true) %}
    no autostate
-{%     endif %}
 {%     if vlan_interface.vrf is arista.avd.defined %}
    vrf {{ vlan_interface.vrf }}
 {%     endif %}

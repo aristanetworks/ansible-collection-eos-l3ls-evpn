@@ -359,6 +359,7 @@ vlan 4094
 | --------- | ----------- | ---- | ----- | ----------- | ----------- | ------------- |
 | Ethernet5 | MLAG_site2-leaf2_Ethernet5 | *trunk | *- | *- | *MLAG | 5 |
 | Ethernet6 | MLAG_site2-leaf2_Ethernet6 | *trunk | *- | *- | *MLAG | 5 |
+| Ethernet7 | SERVER_site2-leaf1-server1_Ethernet1 | access | 666 | - | - | - |
 
 *Inherited from Port-Channel Interface
 
@@ -416,6 +417,13 @@ interface Ethernet6
    description MLAG_site2-leaf2_Ethernet6
    no shutdown
    channel-group 5 mode active
+!
+interface Ethernet7
+   description SERVER_site2-leaf1-server1_Ethernet1
+   no shutdown
+   switchport access vlan 666
+   switchport mode access
+   switchport
 ```
 
 ### Port-Channel Interfaces
@@ -504,12 +512,14 @@ interface Loopback1
 interface Vlan42
    description RED-TEST
    no shutdown
+   no autostate
    vrf RED
    ip address 10.42.2.1/24
 !
 interface Vlan666
    description BLUE-TEST
    no shutdown
+   no autostate
    vrf BLUE
    ip address 10.66.2.1/24
 !
@@ -517,6 +527,7 @@ interface Vlan3099
    description MLAG_L3_VRF_BLUE
    no shutdown
    mtu 9214
+   no autostate
    vrf BLUE
    ip address 10.255.251.16/31
 !
@@ -524,6 +535,7 @@ interface Vlan3100
    description MLAG_L3_VRF_RED
    no shutdown
    mtu 9214
+   no autostate
    vrf RED
    ip address 10.255.251.16/31
 !
@@ -531,6 +543,7 @@ interface Vlan4093
    description MLAG_L3
    no shutdown
    mtu 9214
+   no autostate
    ip address 10.255.251.16/31
 !
 interface Vlan4094
