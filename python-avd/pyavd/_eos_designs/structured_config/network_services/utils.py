@@ -413,9 +413,9 @@ class UtilsMixin(UtilsWanMixin, UtilsZscalerMixin):
         Determine the router ID for a given VRF based on its configuration.
 
         Args:
-            vrf (VrfsItem): The VRF object containing OSPF/BGP and vtep_diagnostic details.
-            router_id (str): The router ID type specified for the VRF (e.g., "vtep_diagnostic", "main_router_id", "none", or an IPv4 address).
-            tenant_name (str): The name of the tenant to which the VRF belongs.
+            vrf: The VRF object containing OSPF/BGP and vtep_diagnostic details.
+            router_id: The router ID type specified for the VRF (e.g., "vtep_diagnostic", "main_router_id", "none", or an IPv4 address).
+            tenant_name: The name of the tenant to which the VRF belongs.
 
         Returns:
             str | None: The resolved router ID as a string, or None if the router ID is not applicable.
