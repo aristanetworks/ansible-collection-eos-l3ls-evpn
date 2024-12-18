@@ -81,7 +81,7 @@ ethernet_interfaces:
   switchport:
     enabled: false
 - name: Ethernet15
-  description: P2P_ptp-tests-l2leaf3_Ethernet1
+  description: P2P_ptp-tests-leaf3_Ethernet1
   shutdown: false
   mtu: 9214
   ip_address: 192.168.1.0/31
@@ -94,13 +94,13 @@ ethernet_interfaces:
     sync_message:
       interval: -3
     transport: ipv4
-  peer: ptp-tests-l2leaf3
+  peer: ptp-tests-leaf3
   peer_interface: Ethernet1
   peer_type: l3leaf
   switchport:
     enabled: false
 - name: Ethernet16
-  description: P2P_ptp-tests-l2leaf4_Ethernet1
+  description: P2P_ptp-tests-leaf4_Ethernet1
   shutdown: false
   mtu: 9214
   ip_address: 192.168.1.4/31
@@ -113,13 +113,13 @@ ethernet_interfaces:
     sync_message:
       interval: -3
     transport: ipv4
-  peer: ptp-tests-l2leaf4
+  peer: ptp-tests-leaf4
   peer_interface: Ethernet1
   peer_type: l3leaf
   switchport:
     enabled: false
 - name: Ethernet17
-  description: P2P_ptp-tests-l2leaf5_Ethernet1
+  description: P2P_ptp-tests-leaf5_Ethernet1
   shutdown: false
   mtu: 9214
   ip_address: 192.168.1.8/31
@@ -132,7 +132,7 @@ ethernet_interfaces:
     sync_message:
       interval: -3
     transport: ipv4
-  peer: ptp-tests-l2leaf5
+  peer: ptp-tests-leaf5
   peer_interface: Ethernet1
   peer_type: l3leaf
   switchport:
@@ -317,33 +317,18 @@ router_bgp:
   - ip_address: 192.168.1.1
     peer_group: IPv4-UNDERLAY-PEERS
     remote_as: '65010'
-    peer: ptp-tests-l2leaf3
-    description: ptp-tests-l2leaf3_Ethernet1
+    peer: ptp-tests-leaf3
+    description: ptp-tests-leaf3_Ethernet1
   - ip_address: 192.168.1.5
     peer_group: IPv4-UNDERLAY-PEERS
     remote_as: '65010'
-    peer: ptp-tests-l2leaf4
-    description: ptp-tests-l2leaf4_Ethernet1
+    peer: ptp-tests-leaf4
+    description: ptp-tests-leaf4_Ethernet1
   - ip_address: 192.168.1.9
     peer_group: IPv4-UNDERLAY-PEERS
     remote_as: '65010'
-    peer: ptp-tests-l2leaf5
-    description: ptp-tests-l2leaf5_Ethernet1
-  - ip_address: 192.168.3.1
-    peer_group: EVPN-OVERLAY-PEERS
-    remote_as: '65010'
-    peer: ptp-tests-l2leaf3
-    description: ptp-tests-l2leaf3_Loopback0
-  - ip_address: 192.168.3.2
-    peer_group: EVPN-OVERLAY-PEERS
-    remote_as: '65010'
-    peer: ptp-tests-l2leaf4
-    description: ptp-tests-l2leaf4_Loopback0
-  - ip_address: 192.168.3.3
-    peer_group: EVPN-OVERLAY-PEERS
-    remote_as: '65010'
-    peer: ptp-tests-l2leaf5
-    description: ptp-tests-l2leaf5_Loopback0
+    peer: ptp-tests-leaf5
+    description: ptp-tests-leaf5_Ethernet1
   - ip_address: 10.254.1.1
     peer_group: EVPN-OVERLAY-PEERS
     remote_as: '65101'
@@ -354,6 +339,21 @@ router_bgp:
     remote_as: '65102'
     peer: ptp-tests-leaf2
     description: ptp-tests-leaf2_Loopback0
+  - ip_address: 192.168.3.1
+    peer_group: EVPN-OVERLAY-PEERS
+    remote_as: '65010'
+    peer: ptp-tests-leaf3
+    description: ptp-tests-leaf3_Loopback0
+  - ip_address: 192.168.3.2
+    peer_group: EVPN-OVERLAY-PEERS
+    remote_as: '65010'
+    peer: ptp-tests-leaf4
+    description: ptp-tests-leaf4_Loopback0
+  - ip_address: 192.168.3.3
+    peer_group: EVPN-OVERLAY-PEERS
+    remote_as: '65010'
+    peer: ptp-tests-leaf5
+    description: ptp-tests-leaf5_Loopback0
   redistribute:
     connected:
       enabled: true

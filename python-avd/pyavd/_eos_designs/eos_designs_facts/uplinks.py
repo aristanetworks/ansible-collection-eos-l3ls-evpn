@@ -186,10 +186,9 @@ class UplinksMixin:
         if self.shared_utils.uplink_switch_interface_speed is not None:
             uplink["peer_speed"] = self.shared_utils.uplink_switch_interface_speed
 
-        if self.shared_utils.node_config.uplink_ptp.enable:
-            if not (ptp_uplinks := self.shared_utils.node_config.ptp.uplinks) or (ptp_uplinks and uplink_interface in ptp_uplinks):
-                uplink["ptp"] = {"enable": True}
-        elif self.shared_utils.ptp_enabled:
+        if (uplink_ptp:=self.shared_utils.node_config.uplink_ptp):
+            uplink["ptp"] = uplink_ptp._as_dict()
+        elif self.shared_utils.ptp_enabled and (not (ptp_uplinks := self.shared_utils.ptp_uplinks) or (ptp_uplinks and (uplink_interface in ptp_uplinks))):
             uplink["ptp"] = {"enable": True}
 
         if self.shared_utils.node_config.uplink_macsec.profile:

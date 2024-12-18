@@ -7,21 +7,23 @@ l3leaf:
     uplink_ipv4_pool: 192.168.1.0/24
     vtep_loopback_ipv4_pool: 192.168.2.0/24
     loopback_ipv4_pool: 192.168.3.0/24
-    uplink_ptp:
-      enable: true
   nodes:
-    - name: ptp-tests-l2leaf3
+    - name: ptp-tests-leaf3
       id: 1
       uplink_switch_interfaces: [Ethernet15, Ethernet15]
       ptp:
+        enabled: true
         # PTP configured on below interfaces.
         uplinks: ['Ethernet1']
-    - name: ptp-tests-l2leaf4
+    - name: ptp-tests-leaf4
       id: 2
       uplink_switch_interfaces: [Ethernet16, Ethernet16]
       ptp:
+        enabled: true
         uplinks: ['Ethernet1', 'Ethernet2']
       # PTP configured on all uplinks when 'ptp.uplinks' is not set.
-    - name: ptp-tests-l2leaf5
+    - name: ptp-tests-leaf5
       id: 3
       uplink_switch_interfaces: [Ethernet17, Ethernet17]
+      ptp:
+        enabled: true

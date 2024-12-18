@@ -42,7 +42,7 @@ ethernet_interfaces:
   peer_type: spine
   switchport:
     enabled: false
-hostname: ptp-tests-l2leaf5
+hostname: ptp-tests-leaf5
 ip_igmp_snooping:
   globally_enabled: true
 ip_routing: true
@@ -209,7 +209,7 @@ vrfs:
   tenant: PTP
 vxlan_interface:
   vxlan1:
-    description: ptp-tests-l2leaf5_VTEP
+    description: ptp-tests-leaf5_VTEP
     vxlan:
       source_interface: Loopback1
       udp_port: 4789
