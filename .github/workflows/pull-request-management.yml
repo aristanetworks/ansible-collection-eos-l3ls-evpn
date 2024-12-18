@@ -508,11 +508,10 @@ jobs:
           cache-latest: true
       - name: Print runner path
         run: |
-          echo "Runner Tool Cache: $RUNNER_TOOL_CACHE"
-          echo "Runner Temp: $RUNNER_TEMP"
-          echo "Runner Workspace: $RUNNER_WORKSPACE"
-          echo "Home Directory: $HOME"
-          echo "GitHub Workspace: $GITHUB_WORKSPACE"
+          WHEEL_CACHE_PATH="$(pip cache dir)/wheels"
+          echo "Wheel cache path: $WHEEL_CACHE_PATH"
+          # Optionally, expose this path for other steps
+          echo "WHEEL_CACHE_PATH=$WHEEL_CACHE_PATH" >> $GITHUB_ENV
       # - name: 'Install Python requirements'
       #   run: |
       #     pip install "ansible-core<2.19.0" -r .github/requirements-ci.txt --upgrade
