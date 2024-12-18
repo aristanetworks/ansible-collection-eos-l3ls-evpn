@@ -798,6 +798,9 @@ virtual_source_nat_vrfs:
   ipv6_address: 2001:db8:1::2
 metadata:
   platform: vEOS-LAB
+  pod_name: DC1_POD1
+  dc_name: DC1
+  fabric_name: TWODC_5STAGE_CLOS
 domain_list:
 - structured-config.set.on.node
 - structured-config.set.under.vrf.common-vrf

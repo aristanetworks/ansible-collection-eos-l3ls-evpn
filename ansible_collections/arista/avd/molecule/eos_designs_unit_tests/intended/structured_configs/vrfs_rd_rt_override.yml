@@ -178,3 +178,5 @@ vxlan_interface:
         vni: 1
       - name: VRF2
         vni: 2
+metadata:
+  fabric_name: EOS_DESIGNS_UNIT_TESTS

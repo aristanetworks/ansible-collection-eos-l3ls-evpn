@@ -3182,3 +3182,4 @@ vlan_interfaces:
   type: inband_mgmt
 metadata:
   platform: cEOSLab
+  fabric_name: DC1_FABRIC

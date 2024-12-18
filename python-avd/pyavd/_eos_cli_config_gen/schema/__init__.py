@@ -24084,6 +24084,10 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             "system_mac_address": {"type": str},
             "cv_tags": {"type": CvTags},
             "cv_pathfinder": {"type": CvPathfinder},
+            "rack": {"type": str},
+            "pod_name": {"type": str},
+            "dc_name": {"type": str},
+            "fabric_name": {"type": str},
             "_custom_data": {"type": dict},
         }
         platform: str | None
@@ -24096,6 +24100,10 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
         Subclass of AvdModel.
         """
+        rack: str | None
+        pod_name: str | None
+        dc_name: str | None
+        fabric_name: str | None
         _custom_data: dict[str, Any]
 
         if TYPE_CHECKING:
@@ -24107,6 +24115,10 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 system_mac_address: str | None | UndefinedType = Undefined,
                 cv_tags: CvTags | UndefinedType = Undefined,
                 cv_pathfinder: CvPathfinder | UndefinedType = Undefined,
+                rack: str | None | UndefinedType = Undefined,
+                pod_name: str | None | UndefinedType = Undefined,
+                dc_name: str | None | UndefinedType = Undefined,
+                fabric_name: str | None | UndefinedType = Undefined,
                 _custom_data: dict[str, Any] | UndefinedType = Undefined,
             ) -> None:
                 """
@@ -24123,6 +24135,10 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                        Metadata used for CV Pathfinder visualization on CloudVision.
 
                        Subclass of AvdModel.
+                    rack: rack
+                    pod_name: pod_name
+                    dc_name: dc_name
+                    fabric_name: fabric_name
                     _custom_data: _custom_data
 
                 """

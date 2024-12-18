@@ -87,3 +87,5 @@ vlan_interfaces:
   vrf: INBANDMGMT
   ip_address: 192.168.103.22/24
   type: inband_mgmt
+metadata:
+  fabric_name: EOS_DESIGNS_UNIT_TESTS

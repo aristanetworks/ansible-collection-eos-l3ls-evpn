@@ -1684,3 +1684,4 @@ ip_igmp_snooping:
   globally_enabled: true
 metadata:
   platform: cEOSLab
+  fabric_name: DC1_FABRIC

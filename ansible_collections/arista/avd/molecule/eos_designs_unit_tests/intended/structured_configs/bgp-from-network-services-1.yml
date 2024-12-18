@@ -162,3 +162,5 @@ prefix_lists:
   sequence_numbers:
   - sequence: 10
     action: permit 10.10.20.0/31
+metadata:
+  fabric_name: EOS_DESIGNS_UNIT_TESTS

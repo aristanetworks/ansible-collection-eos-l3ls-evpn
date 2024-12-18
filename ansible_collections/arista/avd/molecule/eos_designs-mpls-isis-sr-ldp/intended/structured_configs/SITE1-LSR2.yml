@@ -146,3 +146,4 @@ ethernet_interfaces:
   speed: forced 40gfull
 metadata:
   platform: 7280SR
+  fabric_name: MPLS_CORE

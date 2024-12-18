@@ -51,3 +51,5 @@ management_api_http:
   enable_https: true
 ip_igmp_snooping:
   globally_enabled: true
+metadata:
+  fabric_name: EOS_DESIGNS_UNIT_TESTS

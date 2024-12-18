@@ -120,3 +120,5 @@ route_maps:
     - ip address prefix-list PL-LOOPBACKS-EVPN-OVERLAY
 metadata:
   platform: vEOS-LAB
+  dc_name: DC2
+  fabric_name: TWODC_5STAGE_CLOS

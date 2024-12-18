@@ -306,3 +306,4 @@ flow_tracking:
     shutdown: false
 metadata:
   platform: vEOS-lab
+  fabric_name: FLOW_TRACKING_TESTS

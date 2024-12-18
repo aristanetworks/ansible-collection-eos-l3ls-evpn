@@ -478,6 +478,7 @@ vxlan_interface:
         vni: 31
 metadata:
   platform: 7280R
+  fabric_name: DC1_FABRIC
 router_general:
   vrfs:
   - name: Tenant_B_OP_Zone

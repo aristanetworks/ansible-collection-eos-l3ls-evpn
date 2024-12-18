@@ -88,3 +88,5 @@ vlan_interfaces:
 static_routes:
 - destination_address_prefix: 0.0.0.0/0
   gateway: 192.168.101.1
+metadata:
+  fabric_name: EOS_DESIGNS_UNIT_TESTS

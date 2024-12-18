@@ -173,3 +173,5 @@ port_channel_interfaces:
     trunk:
       allowed_vlan: 1-100
       native_vlan: 1000
+metadata:
+  fabric_name: EOS_DESIGNS_UNIT_TESTS

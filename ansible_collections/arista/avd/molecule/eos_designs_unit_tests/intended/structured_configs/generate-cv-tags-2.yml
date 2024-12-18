@@ -89,3 +89,4 @@ metadata:
       value: EOS_DESIGNS_UNIT_TESTS
     - name: topology_hint_type
       value: edge
+  fabric_name: EOS_DESIGNS_UNIT_TESTS

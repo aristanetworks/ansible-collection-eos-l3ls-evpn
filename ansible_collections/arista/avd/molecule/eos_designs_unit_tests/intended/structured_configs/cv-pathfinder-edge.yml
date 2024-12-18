@@ -1038,6 +1038,7 @@ metadata:
         value: Comcast-5G
       - name: Circuit
         value: AF830
+  fabric_name: EOS_DESIGNS_UNIT_TESTS
 flow_tracking:
   hardware:
     trackers:

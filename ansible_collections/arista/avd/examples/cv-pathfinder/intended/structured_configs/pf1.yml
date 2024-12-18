@@ -718,6 +718,7 @@ metadata:
         value: GLOBAL-INTERNET-LIMITED
       - name: Circuit
         value: inet-pf1
+  fabric_name: WAN
 flow_tracking:
   hardware:
     trackers:

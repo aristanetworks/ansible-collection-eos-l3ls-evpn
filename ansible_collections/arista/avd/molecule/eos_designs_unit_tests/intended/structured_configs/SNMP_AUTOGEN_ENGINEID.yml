@@ -52,3 +52,5 @@ snmp_server:
     version: v2c
 ip_igmp_snooping:
   globally_enabled: true
+metadata:
+  fabric_name: EOS_DESIGNS_UNIT_TESTS

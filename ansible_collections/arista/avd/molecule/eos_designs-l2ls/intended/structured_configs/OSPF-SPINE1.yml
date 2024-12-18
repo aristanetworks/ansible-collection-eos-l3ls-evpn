@@ -168,3 +168,6 @@ router_ospf:
 ip_igmp_snooping:
   globally_enabled: true
 ip_virtual_router_mac_address: 00:1c:73:00:00:99
+metadata:
+  pod_name: L2LS_OSPF
+  fabric_name: L2LS

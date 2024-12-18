@@ -370,5 +370,8 @@ vlan_interfaces:
   - 172.21.210.1
 metadata:
   platform: vEOS-LAB
+  pod_name: DC2_POD1
+  dc_name: DC2
+  fabric_name: TWODC_5STAGE_CLOS
 domain_list:
 - structured-config.set.under.vrf.common-vrf

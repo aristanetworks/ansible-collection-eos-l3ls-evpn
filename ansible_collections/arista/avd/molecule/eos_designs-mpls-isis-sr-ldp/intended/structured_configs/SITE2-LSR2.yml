@@ -215,3 +215,4 @@ port_channel_interfaces:
   description: P2P_SITE2-LER1_Port-Channel220
 metadata:
   platform: 7280SR
+  fabric_name: MPLS_CORE

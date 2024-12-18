@@ -119,3 +119,7 @@ metadata:
         value: Someotherdevice
       - name: UPPERCASE_INTERFACE_TAG
         value: something else with spaces
+  rack: ABC567
+  pod_name: POD1
+  dc_name: DC23
+  fabric_name: EOS_DESIGNS_UNIT_TESTS

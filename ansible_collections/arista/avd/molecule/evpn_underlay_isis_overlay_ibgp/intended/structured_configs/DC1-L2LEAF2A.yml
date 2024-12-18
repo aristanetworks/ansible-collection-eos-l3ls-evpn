@@ -149,3 +149,4 @@ ip_igmp_snooping:
   globally_enabled: true
 metadata:
   platform: vEOS-LAB
+  fabric_name: DC1_FABRIC

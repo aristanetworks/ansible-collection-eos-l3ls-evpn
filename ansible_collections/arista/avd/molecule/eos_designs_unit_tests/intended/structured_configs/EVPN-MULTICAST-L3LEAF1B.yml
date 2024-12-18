@@ -1810,3 +1810,4 @@ sflow:
       port: 1234
 metadata:
   platform: vEOS-LAB
+  fabric_name: EOS_DESIGNS_UNIT_TESTS

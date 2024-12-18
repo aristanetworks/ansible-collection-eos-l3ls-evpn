@@ -163,3 +163,4 @@ vxlan_interface:
         vni: 10
 metadata:
   platform: vEOS-LAB
+  fabric_name: EOS_DESIGNS_UNIT_TESTS

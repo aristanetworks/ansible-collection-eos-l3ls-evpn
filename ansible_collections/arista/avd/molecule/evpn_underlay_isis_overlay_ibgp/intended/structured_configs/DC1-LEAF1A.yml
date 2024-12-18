@@ -223,3 +223,4 @@ vxlan_interface:
       source_interface: Loopback0
 metadata:
   platform: vEOS-LAB
+  fabric_name: DC1_FABRIC

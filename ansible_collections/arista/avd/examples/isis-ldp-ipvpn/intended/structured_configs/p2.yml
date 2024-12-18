@@ -173,3 +173,4 @@ ethernet_interfaces:
   description: P2P_rr2_Ethernet3
 metadata:
   platform: vEOS-lab
+  fabric_name: FABRIC

@@ -892,6 +892,7 @@ metadata:
     pathfinders:
     - vtep_ip: 192.168.42.1
     - vtep_ip: 192.168.42.2
+  fabric_name: WAN
 dns_domain: wan.example.local
 aaa_authorization:
   exec:

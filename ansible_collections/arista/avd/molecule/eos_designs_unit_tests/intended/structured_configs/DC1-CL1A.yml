@@ -517,3 +517,4 @@ vxlan_interface:
         vni: 30350
 metadata:
   platform: 7368X4
+  fabric_name: EOS_DESIGNS_UNIT_TESTS

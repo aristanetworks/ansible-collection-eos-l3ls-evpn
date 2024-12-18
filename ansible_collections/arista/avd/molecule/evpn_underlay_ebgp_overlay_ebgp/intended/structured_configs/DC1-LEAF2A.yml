@@ -850,3 +850,5 @@ virtual_source_nat_vrfs:
   ip_address: 10.255.1.10
 metadata:
   platform: 7280R
+  rack: rackC
+  fabric_name: DC1_FABRIC

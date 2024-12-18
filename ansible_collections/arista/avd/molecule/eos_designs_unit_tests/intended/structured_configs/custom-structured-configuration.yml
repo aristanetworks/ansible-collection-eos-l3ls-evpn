@@ -69,3 +69,5 @@ management_api_http:
   enable_vrfs: []
   enable_https: null
 ip_igmp_snooping: {}
+metadata:
+  fabric_name: EOS_DESIGNS_UNIT_TESTS

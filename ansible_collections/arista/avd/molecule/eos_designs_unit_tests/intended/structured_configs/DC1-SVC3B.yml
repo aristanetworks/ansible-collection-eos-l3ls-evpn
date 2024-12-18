@@ -1753,3 +1753,4 @@ monitor_sessions:
     direction: tx
 metadata:
   platform: 7050SX3
+  fabric_name: EOS_DESIGNS_UNIT_TESTS

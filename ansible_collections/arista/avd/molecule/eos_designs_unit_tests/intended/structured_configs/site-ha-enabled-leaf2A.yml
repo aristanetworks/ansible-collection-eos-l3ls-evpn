@@ -349,3 +349,5 @@ vxlan_interface:
         vni: 142
       - name: ATTRACTED-VRF-FROM-UPLINK
         vni: 666
+metadata:
+  fabric_name: EOS_DESIGNS_UNIT_TESTS

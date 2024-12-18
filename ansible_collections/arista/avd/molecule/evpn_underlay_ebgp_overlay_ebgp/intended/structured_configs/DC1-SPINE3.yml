@@ -287,3 +287,4 @@ router_bfd:
     multiplier: 3
 metadata:
   platform: 7050SX3
+  fabric_name: DC1_FABRIC

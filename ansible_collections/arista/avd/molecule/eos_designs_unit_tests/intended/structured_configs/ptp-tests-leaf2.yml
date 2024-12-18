@@ -470,3 +470,4 @@ vxlan_interface:
         vni: 1
 metadata:
   platform: vEOS-lab
+  fabric_name: PTP_TESTS

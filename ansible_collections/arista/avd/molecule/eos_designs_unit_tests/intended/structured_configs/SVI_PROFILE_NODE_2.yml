@@ -397,3 +397,5 @@ vxlan_interface:
       vrfs:
       - name: svi_profile_tests_vrf
         vni: 1
+metadata:
+  fabric_name: EOS_DESIGNS_UNIT_TESTS

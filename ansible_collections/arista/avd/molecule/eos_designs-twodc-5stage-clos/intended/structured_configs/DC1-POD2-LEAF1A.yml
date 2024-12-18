@@ -492,5 +492,8 @@ virtual_source_nat_vrfs:
   ip_address: 10.101.102.3
 metadata:
   platform: vEOS-LAB
+  pod_name: DC1_POD2
+  dc_name: DC1
+  fabric_name: TWODC_5STAGE_CLOS
 domain_list:
 - structured-config.set.under.vrf.common-vrf

@@ -128,3 +128,4 @@ ip_igmp_snooping:
     enabled: false
 metadata:
   platform: vEOS-LAB
+  fabric_name: DC1_FABRIC

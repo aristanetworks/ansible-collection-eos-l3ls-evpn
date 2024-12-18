@@ -117,3 +117,5 @@ ethernet_interfaces:
   ospf_network_point_to_point: true
   ospf_area: 0.0.0.0
   description: P2P_peer4_ethernet4
+metadata:
+  fabric_name: EOS_DESIGNS_UNIT_TESTS

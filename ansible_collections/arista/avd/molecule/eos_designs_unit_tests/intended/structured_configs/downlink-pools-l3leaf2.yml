@@ -130,3 +130,5 @@ vxlan_interface:
     vxlan:
       udp_port: 4789
       source_interface: Loopback1
+metadata:
+  fabric_name: EOS_DESIGNS_UNIT_TESTS

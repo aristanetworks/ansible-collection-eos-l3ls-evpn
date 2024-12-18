@@ -70,3 +70,5 @@ vlan_interfaces:
   type: inband_mgmt
 metadata:
   platform: vEOS-LAB
+  pod_name: L2LS_ISIS
+  fabric_name: L2LS

@@ -732,6 +732,7 @@ vxlan_interface:
         vni: 42
 metadata:
   platform: 7280R
+  fabric_name: EOS_DESIGNS_UNIT_TESTS
 sflow:
   vrfs:
   - name: OOB

@@ -604,3 +604,4 @@ metadata:
       pathgroup: INET
     pathfinders:
     - vtep_ip: 192.168.144.1
+  fabric_name: EOS_DESIGNS_UNIT_TESTS

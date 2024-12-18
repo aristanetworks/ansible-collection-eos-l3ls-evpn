@@ -10190,3 +10190,4 @@ vlan_interfaces:
   type: inband_mgmt
 metadata:
   platform: 720XP
+  fabric_name: DC1_FABRIC

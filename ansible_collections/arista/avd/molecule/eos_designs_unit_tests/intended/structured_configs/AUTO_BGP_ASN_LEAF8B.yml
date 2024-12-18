@@ -114,3 +114,4 @@ vxlan_interface:
       source_interface: Loopback1
 metadata:
   platform: vEOS-LAB
+  fabric_name: EOS_DESIGNS_UNIT_TESTS

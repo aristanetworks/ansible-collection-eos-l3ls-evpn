@@ -760,3 +760,5 @@ mlag_configuration:
   reload_delay_non_mlag: '330'
 ip_igmp_snooping:
   globally_enabled: true
+metadata:
+  fabric_name: EOS_DESIGNS_UNIT_TESTS

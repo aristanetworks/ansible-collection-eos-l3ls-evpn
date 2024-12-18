@@ -165,6 +165,8 @@ router_bfd:
     interval: 300
     min_rx: 300
     multiplier: 3
+metadata:
+  fabric_name: WAN
 dns_domain: wan.example.local
 aaa_authorization:
   exec:

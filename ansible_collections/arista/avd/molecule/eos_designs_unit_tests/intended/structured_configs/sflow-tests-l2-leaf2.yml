@@ -94,3 +94,4 @@ sflow:
     source_interface: Management1
 metadata:
   platform: vEOS-lab
+  fabric_name: SFLOW_TESTS

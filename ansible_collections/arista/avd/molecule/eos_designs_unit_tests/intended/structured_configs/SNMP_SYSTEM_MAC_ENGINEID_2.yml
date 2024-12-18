@@ -50,3 +50,4 @@ ip_igmp_snooping:
   globally_enabled: true
 metadata:
   system_mac_address: 12:34:56:78:90:AB
+  fabric_name: EOS_DESIGNS_UNIT_TESTS

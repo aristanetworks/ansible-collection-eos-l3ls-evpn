@@ -372,3 +372,4 @@ metadata:
       carrier: Comcast
       circuit_id: '999'
       pathgroup: INET
+  fabric_name: EOS_DESIGNS_UNIT_TESTS

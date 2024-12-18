@@ -594,3 +594,6 @@ vxlan_interface:
         vni: 200
       - name: TG_300
         vni: 300
+metadata:
+  pod_name: TRUNK_GROUP_TESTS
+  fabric_name: EOS_DESIGNS_UNIT_TESTS

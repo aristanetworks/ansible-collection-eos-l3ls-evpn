@@ -358,3 +358,4 @@ virtual_source_nat_vrfs:
   ipv6_address: 2001:db8:1::3
 metadata:
   platform: vEOS-LAB
+  fabric_name: EOS_DESIGNS_UNIT_TESTS

@@ -212,3 +212,6 @@ loopback_interfaces:
   ip_address: 172.16.110.2/32
 metadata:
   platform: vEOS-LAB
+  pod_name: DC1_POD1
+  dc_name: DC1
+  fabric_name: TWODC_5STAGE_CLOS

@@ -125,3 +125,6 @@ vlan_interfaces:
   mtu: 1500
   ip_address: 172.23.254.4/24
   type: inband_mgmt
+metadata:
+  pod_name: L2LS_BGP
+  fabric_name: L2LS

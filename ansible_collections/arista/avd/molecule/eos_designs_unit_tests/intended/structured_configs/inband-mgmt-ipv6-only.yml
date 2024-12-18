@@ -89,3 +89,5 @@ vlan_interfaces:
 ipv6_static_routes:
 - destination_address_prefix: ::/0
   gateway: 2a00:106::1
+metadata:
+  fabric_name: EOS_DESIGNS_UNIT_TESTS

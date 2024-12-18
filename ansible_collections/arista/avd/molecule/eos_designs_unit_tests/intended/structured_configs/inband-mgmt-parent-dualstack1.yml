@@ -432,3 +432,5 @@ ipv6_prefix_lists:
   sequence_numbers:
   - sequence: 10
     action: permit 2a00:104::/64
+metadata:
+  fabric_name: EOS_DESIGNS_UNIT_TESTS

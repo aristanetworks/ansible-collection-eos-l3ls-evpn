@@ -1216,3 +1216,4 @@ standard_access_lists:
     action: permit 232.0.136.0/21
 metadata:
   platform: vEOS-LAB
+  fabric_name: EOS_DESIGNS_UNIT_TESTS

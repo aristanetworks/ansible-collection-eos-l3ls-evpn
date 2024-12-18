@@ -250,3 +250,4 @@ router_ospf:
         enabled: true
 metadata:
   platform: vEOS-lab
+  fabric_name: FABRIC

@@ -208,3 +208,5 @@ vxlan_interface:
       vrfs:
       - name: SIT_VRF
         vni: 789654
+metadata:
+  fabric_name: EOS_DESIGNS_UNIT_TESTS

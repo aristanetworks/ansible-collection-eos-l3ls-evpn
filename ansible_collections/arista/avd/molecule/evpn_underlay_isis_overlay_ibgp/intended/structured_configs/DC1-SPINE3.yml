@@ -190,3 +190,4 @@ router_isis:
     maximum_paths: 4
 metadata:
   platform: vEOS-LAB
+  fabric_name: DC1_FABRIC

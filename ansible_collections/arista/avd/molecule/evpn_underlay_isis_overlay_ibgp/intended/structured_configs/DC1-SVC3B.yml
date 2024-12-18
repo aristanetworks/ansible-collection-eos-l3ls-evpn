@@ -310,3 +310,4 @@ vxlan_interface:
       virtual_router_encapsulation_mac_address: mlag-system-id
 metadata:
   platform: vEOS-LAB
+  fabric_name: DC1_FABRIC

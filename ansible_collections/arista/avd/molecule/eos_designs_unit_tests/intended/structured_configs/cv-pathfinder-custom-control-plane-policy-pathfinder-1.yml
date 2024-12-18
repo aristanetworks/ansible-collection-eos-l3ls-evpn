@@ -644,6 +644,7 @@ metadata:
         value: Another-ISP
       - name: Circuit
         value: '999'
+  fabric_name: EOS_DESIGNS_UNIT_TESTS
 flow_tracking:
   hardware:
     trackers:

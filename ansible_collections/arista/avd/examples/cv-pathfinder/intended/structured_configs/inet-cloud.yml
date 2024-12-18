@@ -150,6 +150,8 @@ loopback_interfaces:
   description: ROUTER_ID
   shutdown: false
   ip_address: 172.31.255.23/32
+metadata:
+  fabric_name: WAN
 dns_domain: wan.example.local
 aaa_authorization:
   exec:

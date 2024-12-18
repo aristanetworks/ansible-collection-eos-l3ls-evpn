@@ -150,3 +150,6 @@ vxlan_interface:
         vni: 12903
         flood_vteps:
         - 192.168.253.3
+metadata:
+  dc_name: OVERLAY_ROUTING_PROTOCOL_HER_TESTS
+  fabric_name: EOS_DESIGNS_UNIT_TESTS

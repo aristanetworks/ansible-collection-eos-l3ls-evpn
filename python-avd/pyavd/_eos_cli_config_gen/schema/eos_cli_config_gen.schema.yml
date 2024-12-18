@@ -8298,6 +8298,14 @@ keys:
                           type: str
                         category:
                           type: str
+      rack:
+        type: str
+      pod_name:
+        type: str
+      dc_name:
+        type: str
+      fabric_name:
+        type: str
   mlag_configuration:
     type: dict
     display_name: Multi-Chassis Link Aggregation (MLAG) Configuration

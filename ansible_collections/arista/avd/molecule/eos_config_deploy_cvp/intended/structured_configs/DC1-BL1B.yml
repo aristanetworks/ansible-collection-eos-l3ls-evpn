@@ -512,3 +512,4 @@ vxlan_interface:
         vni: 31
 metadata:
   platform: vEOS-LAB
+  fabric_name: DC1_FABRIC

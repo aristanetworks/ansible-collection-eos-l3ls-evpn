@@ -134,3 +134,5 @@ port_channel_interfaces:
     enable: true
   switchport:
     enabled: true
+metadata:
+  fabric_name: EOS_DESIGNS_DEPRECATED_VARS

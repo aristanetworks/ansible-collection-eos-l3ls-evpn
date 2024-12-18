@@ -614,3 +614,5 @@ virtual_source_nat_vrfs:
   ip_address: 10.255.1.9
 metadata:
   platform: VEOS
+  rack: rackA
+  fabric_name: EOS_DESIGNS_UNIT_TESTS

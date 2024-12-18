@@ -74,3 +74,5 @@ mpls:
     router_id: 10.0.0.3
     shutdown: false
     transport_address_interface: Loopback0
+metadata:
+  fabric_name: EOS_DESIGNS_UNIT_TESTS

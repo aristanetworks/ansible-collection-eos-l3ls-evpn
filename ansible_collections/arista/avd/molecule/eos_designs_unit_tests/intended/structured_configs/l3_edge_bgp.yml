@@ -225,3 +225,5 @@ port_channel_interfaces:
   mtu: 9214
   ip_address: 192.168.0.10/31
   description: P2P_peer6_Port-Channel7
+metadata:
+  fabric_name: EOS_DESIGNS_UNIT_TESTS

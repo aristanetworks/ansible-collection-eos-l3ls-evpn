@@ -488,3 +488,5 @@ port_channel_interfaces:
       interface: true
       igp_sync: true
   description: CUSTOM_DESCRIPTION_ON_P2P_LINK_A
+metadata:
+  fabric_name: EOS_DESIGNS_UNIT_TESTS

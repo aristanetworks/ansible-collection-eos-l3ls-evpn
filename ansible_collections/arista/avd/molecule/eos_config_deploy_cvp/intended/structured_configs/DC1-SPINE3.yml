@@ -278,3 +278,4 @@ router_bfd:
     multiplier: 3
 metadata:
   platform: vEOS-LAB
+  fabric_name: DC1_FABRIC

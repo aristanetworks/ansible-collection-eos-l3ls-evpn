@@ -114,3 +114,4 @@ loopback_interfaces:
   ip_address: 192.168.42.1/32
 metadata:
   platform: vEOS-LAB
+  fabric_name: EOS_DESIGNS_UNIT_TESTS

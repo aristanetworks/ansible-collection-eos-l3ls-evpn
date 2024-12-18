@@ -218,3 +218,6 @@ router_bfd:
     multiplier: 3
 metadata:
   platform: vEOS-LAB
+  pod_name: DC2_POD1
+  dc_name: DC2
+  fabric_name: TWODC_5STAGE_CLOS

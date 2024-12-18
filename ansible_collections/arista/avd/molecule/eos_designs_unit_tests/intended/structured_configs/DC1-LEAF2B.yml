@@ -1249,3 +1249,5 @@ virtual_source_nat_vrfs:
   ip_address: 10.255.11.11
 metadata:
   platform: 7280R
+  rack: rackD
+  fabric_name: EOS_DESIGNS_UNIT_TESTS

@@ -199,3 +199,4 @@ ip_igmp_snooping:
     enabled: false
 metadata:
   platform: 7500R2
+  fabric_name: EOS_DESIGNS_UNIT_TESTS

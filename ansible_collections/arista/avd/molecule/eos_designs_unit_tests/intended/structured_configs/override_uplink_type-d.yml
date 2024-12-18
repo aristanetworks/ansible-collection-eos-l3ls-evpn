@@ -46,3 +46,5 @@ loopback_interfaces:
   description: ROUTER_ID
   shutdown: false
   ip_address: 192.168.42.2/32
+metadata:
+  fabric_name: EOS_DESIGNS_UNIT_TESTS

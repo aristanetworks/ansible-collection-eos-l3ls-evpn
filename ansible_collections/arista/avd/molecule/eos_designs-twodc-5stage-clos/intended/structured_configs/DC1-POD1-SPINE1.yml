@@ -312,3 +312,6 @@ route_maps:
     type: permit
 metadata:
   platform: vEOS-LAB
+  pod_name: DC1_POD1
+  dc_name: DC1
+  fabric_name: TWODC_5STAGE_CLOS

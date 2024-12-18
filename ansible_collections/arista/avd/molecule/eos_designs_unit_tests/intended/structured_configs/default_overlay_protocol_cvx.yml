@@ -63,3 +63,5 @@ route_maps:
     type: permit
     match:
     - ip address prefix-list PL-LOOPBACKS-EVPN-OVERLAY
+metadata:
+  fabric_name: EOS_DESIGNS_UNIT_TESTS

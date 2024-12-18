@@ -768,6 +768,7 @@ metadata:
       value: leaf
     - name: topology_hint_rack
       value: DC1_BL1
+  fabric_name: EOS_DESIGNS_UNIT_TESTS
 sflow:
   vrfs:
   - name: OOB

@@ -82,3 +82,5 @@ router_bfd:
 ip_igmp_snooping:
   globally_enabled: true
 ip_virtual_router_mac_address: 00:1c:73:00:dc:01
+metadata:
+  fabric_name: EOS_DESIGNS_DEPRECATED_VARS

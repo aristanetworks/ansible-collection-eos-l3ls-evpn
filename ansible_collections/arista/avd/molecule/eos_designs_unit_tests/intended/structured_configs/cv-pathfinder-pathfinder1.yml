@@ -794,6 +794,7 @@ metadata:
         value: Orange
       - name: Circuit
         value: '888'
+  fabric_name: EOS_DESIGNS_UNIT_TESTS
 flow_tracking:
   hardware:
     trackers:

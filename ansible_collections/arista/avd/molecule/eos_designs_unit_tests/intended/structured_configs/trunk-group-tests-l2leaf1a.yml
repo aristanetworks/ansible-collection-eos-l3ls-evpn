@@ -184,3 +184,6 @@ mlag_configuration:
   reload_delay_non_mlag: '330'
 ip_igmp_snooping:
   globally_enabled: true
+metadata:
+  pod_name: TRUNK_GROUP_TESTS
+  fabric_name: EOS_DESIGNS_UNIT_TESTS

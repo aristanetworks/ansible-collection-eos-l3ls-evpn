@@ -449,4 +449,6 @@ vxlan_interface:
         vni: 11
 metadata:
   platform: 7050SX3
+  rack: rackA
+  fabric_name: DC1_FABRIC
 tags: no-monitor

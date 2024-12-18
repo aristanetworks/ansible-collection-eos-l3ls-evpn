@@ -460,3 +460,4 @@ router_bfd:
     multiplier: 3
 metadata:
   platform: 7800R3
+  fabric_name: EOS_DESIGNS_UNIT_TESTS

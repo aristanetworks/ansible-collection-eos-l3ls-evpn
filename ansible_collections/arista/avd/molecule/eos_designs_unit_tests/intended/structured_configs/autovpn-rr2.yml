@@ -295,3 +295,5 @@ flow_tracking:
         local_interface: Loopback0
         template_interval: 3600000
     shutdown: false
+metadata:
+  fabric_name: EOS_DESIGNS_UNIT_TESTS

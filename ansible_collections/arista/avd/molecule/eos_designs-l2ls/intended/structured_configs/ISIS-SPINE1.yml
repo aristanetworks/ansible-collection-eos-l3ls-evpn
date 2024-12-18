@@ -109,3 +109,5 @@ vlan_interfaces:
   - 172.23.254.1
 metadata:
   platform: vEOS-LAB
+  pod_name: L2LS_ISIS
+  fabric_name: L2LS

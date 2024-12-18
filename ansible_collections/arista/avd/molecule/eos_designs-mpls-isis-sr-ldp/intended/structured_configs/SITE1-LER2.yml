@@ -503,3 +503,4 @@ port_channel_interfaces:
       encapsulation: client
 metadata:
   platform: 7280SR3
+  fabric_name: MPLS_CORE

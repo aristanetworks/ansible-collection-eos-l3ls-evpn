@@ -74,3 +74,4 @@ ip_igmp_snooping:
   globally_enabled: true
 metadata:
   platform: vEOS-LAB
+  fabric_name: SINGLE_LINK_TO_MLAG_PAIR

@@ -91,3 +91,4 @@ ip_igmp_snooping:
 ip_virtual_router_mac_address: 00:1c:73:00:dc:00
 metadata:
   platform: 7280SR3
+  fabric_name: MPLS_CORE

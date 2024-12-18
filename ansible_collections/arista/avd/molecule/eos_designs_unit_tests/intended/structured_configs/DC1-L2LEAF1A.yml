@@ -217,3 +217,5 @@ ip_igmp_snooping:
     enabled: false
 metadata:
   platform: vEOS-LAB
+  rack: rackE
+  fabric_name: EOS_DESIGNS_UNIT_TESTS

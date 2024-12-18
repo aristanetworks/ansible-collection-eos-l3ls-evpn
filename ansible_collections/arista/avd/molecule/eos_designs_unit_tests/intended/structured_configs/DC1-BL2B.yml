@@ -558,3 +558,4 @@ vxlan_interface:
         vni: 42
 metadata:
   platform: 7280R3
+  fabric_name: EOS_DESIGNS_UNIT_TESTS

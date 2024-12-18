@@ -210,3 +210,4 @@ sflow:
     source_interface: Loopback321
 metadata:
   platform: vEOS-lab
+  fabric_name: SFLOW_TESTS

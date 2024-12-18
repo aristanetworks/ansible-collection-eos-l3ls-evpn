@@ -201,3 +201,4 @@ ethernet_interfaces:
   description: P2P_ptp-tests-spine1_Ethernet9
 metadata:
   platform: vEOS-LAB
+  fabric_name: PTP_TESTS

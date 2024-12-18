@@ -125,3 +125,5 @@ snmp_server:
     enable: true
 ip_igmp_snooping:
   globally_enabled: true
+metadata:
+  fabric_name: EOS_DESIGNS_UNIT_TESTS

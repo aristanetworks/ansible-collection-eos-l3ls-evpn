@@ -89,3 +89,5 @@ route_maps:
     - as 65001
   - sequence: 20
     type: permit
+metadata:
+  fabric_name: EOS_DESIGNS_UNIT_TESTS

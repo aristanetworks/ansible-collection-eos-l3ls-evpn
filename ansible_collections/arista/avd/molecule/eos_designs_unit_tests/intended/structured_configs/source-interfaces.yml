@@ -71,3 +71,5 @@ static_routes:
 - destination_address_prefix: 0.0.0.0/0
   gateway: 10.20.30.1
   vrf: INBANDMGMT
+metadata:
+  fabric_name: EOS_DESIGNS_UNIT_TESTS

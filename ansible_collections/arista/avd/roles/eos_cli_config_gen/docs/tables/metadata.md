@@ -118,6 +118,10 @@
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;user_defined_applications</samp>](## "metadata.cv_pathfinder.applications.categories.user_defined_applications") | List, items: Dictionary |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;name</samp>](## "metadata.cv_pathfinder.applications.categories.user_defined_applications.[].name") | String |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;category</samp>](## "metadata.cv_pathfinder.applications.categories.user_defined_applications.[].category") | String |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;rack</samp>](## "metadata.rack") | String |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;pod_name</samp>](## "metadata.pod_name") | String |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;dc_name</samp>](## "metadata.dc_name") | String |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;fabric_name</samp>](## "metadata.fabric_name") | String |  |  |  |  |
 
 === "YAML"
 
@@ -237,4 +241,8 @@
             user_defined_applications:
               - name: <str>
                 category: <str>
+      rack: <str>
+      pod_name: <str>
+      dc_name: <str>
+      fabric_name: <str>
     ```

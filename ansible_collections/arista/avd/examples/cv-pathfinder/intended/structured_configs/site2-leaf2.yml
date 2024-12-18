@@ -419,6 +419,8 @@ flow_tracking:
           host: 127.0.0.1
         local_interface: Loopback0
     shutdown: false
+metadata:
+  fabric_name: WAN
 dns_domain: wan.example.local
 aaa_authorization:
   exec:

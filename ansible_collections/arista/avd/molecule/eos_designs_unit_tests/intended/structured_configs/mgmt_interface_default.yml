@@ -191,3 +191,5 @@ ip_igmp_snooping:
     enabled: false
   - id: 120
     enabled: false
+metadata:
+  fabric_name: EOS_DESIGNS_UNIT_TESTS

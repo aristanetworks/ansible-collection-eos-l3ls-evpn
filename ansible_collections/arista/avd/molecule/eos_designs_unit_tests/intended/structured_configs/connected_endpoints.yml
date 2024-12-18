@@ -341,3 +341,4 @@ port_channel_interfaces:
   spanning_tree_bpdufilter: 'True'
 metadata:
   platform: 720XP
+  fabric_name: EOS_DESIGNS_UNIT_TESTS

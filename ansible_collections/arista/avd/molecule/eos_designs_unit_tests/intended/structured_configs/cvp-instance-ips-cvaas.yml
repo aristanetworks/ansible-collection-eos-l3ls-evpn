@@ -96,3 +96,5 @@ router_bfd:
     interval: 300
     min_rx: 300
     multiplier: 3
+metadata:
+  fabric_name: EOS_DESIGNS_UNIT_TESTS

@@ -339,3 +339,4 @@ ip_igmp_snooping:
 ip_virtual_router_mac_address: 00:1c:73:00:dc:01
 metadata:
   platform: cEOSLab
+  fabric_name: DC1_FABRIC

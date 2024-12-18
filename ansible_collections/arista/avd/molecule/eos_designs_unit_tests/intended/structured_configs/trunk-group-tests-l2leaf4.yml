@@ -82,3 +82,6 @@ vlans:
   - UPLINK
 ip_igmp_snooping:
   globally_enabled: true
+metadata:
+  pod_name: TRUNK_GROUP_TESTS
+  fabric_name: EOS_DESIGNS_UNIT_TESTS

@@ -833,3 +833,4 @@ virtual_source_nat_vrfs:
   ip_address: 10.255.1.6
 metadata:
   platform: vEOS-LAB
+  fabric_name: DC1_FABRIC

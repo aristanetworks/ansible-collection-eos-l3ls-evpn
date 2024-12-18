@@ -144,3 +144,5 @@ ethernet_interfaces:
   mpls:
     ip: true
   description: P2P_LINK_TO_PEER3_Ethernet3
+metadata:
+  fabric_name: EOS_DESIGNS_UNIT_TESTS
