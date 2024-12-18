@@ -10,11 +10,11 @@ tenant_c:
         next_hop_self: true
         maximum_routes: 1000
         address_family_ipv4:
-          activate: True
+          activate: true
           prefix_list_in: PL_In_Test_1
           prefix_list_out: PL_Out_Test_1
         address_family_ipv6:
-          activate: False
+          activate: false
         default_originate:
           enabled: true
           always: true
@@ -29,7 +29,7 @@ tenant_c:
         description: "Tenant C peer group2"
         update_source: lo0
         address_family_ipv4:
-          activate: True
+          activate: true
           route_map_in: TEST_IN
           route_map_out: TEST_OUT
           rcf_in: TEST_RCF_IN()
@@ -47,12 +47,12 @@ tenant_c:
           - id: 310
             name: Tenant_C_OP_Zone_1
             tags: ['opzone']
-            enabled: True
+            enabled: true
             ip_address_virtual: 10.3.10.1/24
           - id: 311
             name: Tenant_C_OP_Zone_2
             tags: ['opzone']
-            enabled: True
+            enabled: true
             ip_address_virtual: 10.3.11.1/24
       - name: Tenant_C_WAN_Zone
         vrf_vni: 31
@@ -60,7 +60,7 @@ tenant_c:
           - id: 350
             name: Tenant_C_WAN_Zone_1
             tags: ['wan']
-            enabled: True
+            enabled: true
             ip_address_virtual: 10.3.50.1/24
         bgp_peer_groups:
           - name: Tenant_C_WAN_Zone_BGP_PEER_GROUP
@@ -73,13 +73,13 @@ tenant_c:
               enabled: true
               always: true
             address_family_ipv4:
-              activate: True
+              activate: true
               route_map_in: TEST_IN
               route_map_out: TEST_OUT
               rcf_in: TEST_RCF_IN()
               rcf_out: TEST_RCF_OUT()
             address_family_ipv6:
-              activate: True
+              activate: true
               route_map_in: TEST_IN
               route_map_out: TEST_OUT
               rcf_in: TEST_RCF_IN()

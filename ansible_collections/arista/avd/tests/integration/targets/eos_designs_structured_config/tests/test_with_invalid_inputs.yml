@@ -1,5 +1,5 @@
 - name: Test with invalid inputs
-  ignore_errors: yes
+  ignore_errors: true
   register: result
   vars:
     underlay_routing_protocol: ABC

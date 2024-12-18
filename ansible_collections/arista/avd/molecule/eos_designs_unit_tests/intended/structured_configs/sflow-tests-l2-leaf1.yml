@@ -81,6 +81,7 @@ vlan_interfaces:
   type: inband_mgmt
 sflow:
   run: true
+  polling_interval: 1
   sample: 10
   destinations:
   - destination: 10.10.10.10

@@ -46,8 +46,8 @@ The module is used in `arista.avd.eos_designs` to set facts for devices, which a
 - name: Set eos_designs facts
   arista.avd.eos_designs_facts:
     schema_id: eos_designs
-  check_mode: False
-  run_once: True
+  check_mode: false
+  run_once: true
 
 - name: Set eos_designs facts per device
   ansible.builtin.set_fact:

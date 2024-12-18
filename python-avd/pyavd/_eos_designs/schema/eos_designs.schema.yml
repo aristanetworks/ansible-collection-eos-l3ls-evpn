@@ -3691,6 +3691,11 @@ keys:
       For default enabling of sFlow for various interface types across the fabric
       see `fabric_sflow`.'
     keys:
+      polling_interval:
+        type: int
+        convert_types:
+        - str
+        description: Interval in seconds for sending counter data to the sFlow collector.
       sample:
         type: dict
         keys:
