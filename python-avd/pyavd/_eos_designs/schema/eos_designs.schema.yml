@@ -988,6 +988,8 @@ keys:
           items:
             type: str
             description: Interface range or interface.
+        uplink_interface_speed:
+          type: str
   default_mgmt_method:
     documentation_options:
       table: management-interface-settings
