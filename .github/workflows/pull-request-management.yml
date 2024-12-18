@@ -508,10 +508,22 @@ jobs:
           cache-latest: true
       - name: Print runner path
         run: |
-          WHEEL_CACHE_PATH="$(pip cache dir)/wheels"
-          echo "Wheel cache path: $WHEEL_CACHE_PATH"
-          # Optionally, expose this path for other steps
-          echo "WHEEL_CACHE_PATH=$WHEEL_CACHE_PATH" >> $GITHUB_ENV
+          WHEEL_CACHE_ROOT="$(pip cache dir)/wheels"
+          echo "Wheel cache root: $WHEEL_CACHE_ROOT"
+
+          FULL_WHEEL_PATH=$(find "$WHEEL_CACHE_ROOT" -type d -mindepth 4 -maxdepth 4)
+          if [ -z "$FULL_WHEEL_PATH" ]; then
+            echo "No wheel files found."
+            exit 1
+          fi
+
+          echo "Full wheel path: $FULL_WHEEL_PATH"
+          echo "FULL_WHEEL_PATH=$FULL_WHEEL_PATH" >> $GITHUB_ENV
+
+      - name: Use the full pip wheel path
+        run: |
+          echo "Full wheel path from environment: $FULL_WHEEL_PATH"
+          ls -l $FULL_WHEEL_PATH
       # - name: 'Install Python requirements'
       #   run: |
       #     pip install "ansible-core<2.19.0" -r .github/requirements-ci.txt --upgrade
