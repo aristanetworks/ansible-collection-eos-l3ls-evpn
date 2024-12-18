@@ -1,6 +1,6 @@
 name: "Pull Request Comment"
 
-on:
+"on":
   pull_request_target:
     types:
       - opened

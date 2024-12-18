@@ -109,14 +109,14 @@ port_profiles:
   - profile: INDIVIDUAL_TRUNK
     mode: trunk
     vlans: "1,2,3,4,5,6,7,123,234"
-    native_vlan_tag: False
+    native_vlan_tag: false
     native_vlan: 123
     spanning_tree_portfast: "edge"
-    spanning_tree_bpdufilter: True
+    spanning_tree_bpdufilter: true
     dot1x:
       unauthorized:
-        access_vlan_membership_egress: True
-        native_vlan_membership_egress: True
+        access_vlan_membership_egress: true
+        native_vlan_membership_egress: true
     qos_profile: MYQOS
     poe:
       disabled: true

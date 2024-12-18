@@ -12868,7 +12868,15 @@ class EosDesigns(EosDesignsRootModel):
 
         Vrfs._item_type = VrfsItem
 
-        _fields: ClassVar[dict] = {"sample": {"type": Sample}, "destinations": {"type": Destinations}, "vrfs": {"type": Vrfs}, "_custom_data": {"type": dict}}
+        _fields: ClassVar[dict] = {
+            "polling_interval": {"type": int},
+            "sample": {"type": Sample},
+            "destinations": {"type": Destinations},
+            "vrfs": {"type": Vrfs},
+            "_custom_data": {"type": dict},
+        }
+        polling_interval: int | None
+        """Interval in seconds for sending counter data to the sFlow collector."""
         sample: Sample
         """Subclass of AvdModel."""
         destinations: Destinations
@@ -12882,6 +12890,7 @@ class EosDesigns(EosDesignsRootModel):
             def __init__(
                 self,
                 *,
+                polling_interval: int | None | UndefinedType = Undefined,
                 sample: Sample | UndefinedType = Undefined,
                 destinations: Destinations | UndefinedType = Undefined,
                 vrfs: Vrfs | UndefinedType = Undefined,
@@ -12894,6 +12903,7 @@ class EosDesigns(EosDesignsRootModel):
                 Subclass of AvdModel.
 
                 Args:
+                    polling_interval: Interval in seconds for sending counter data to the sFlow collector.
                     sample: Subclass of AvdModel.
                     destinations: Subclass of AvdList with `DestinationsItem` items.
                     vrfs: Subclass of AvdIndexedList with `VrfsItem` items. Primary key is `name` (`str`).
@@ -33523,6 +33533,8 @@ class EosDesigns(EosDesignsRootModel):
                             "activate": {"type": bool},
                             "route_map_in": {"type": str},
                             "route_map_out": {"type": str},
+                            "rcf_in": {"type": str},
+                            "rcf_out": {"type": str},
                             "default_originate": {"type": DefaultOriginate},
                             "next_hop": {"type": NextHop},
                             "prefix_list_in": {"type": str},
@@ -33534,6 +33546,16 @@ class EosDesigns(EosDesignsRootModel):
                         """Inbound route-map name."""
                         route_map_out: str | None
                         """Outbound route-map name."""
+                        rcf_in: str | None
+                        """
+                        Inbound RCF function name with parenthesis.
+                        Example: MyFunction(myarg).
+                        """
+                        rcf_out: str | None
+                        """
+                        Outbound RCF function name with parenthesis.
+                        Example: MyFunction(myarg).
+                        """
                         default_originate: DefaultOriginate
                         """Subclass of AvdModel."""
                         next_hop: NextHop
@@ -33552,6 +33574,8 @@ class EosDesigns(EosDesignsRootModel):
                                 activate: bool | None | UndefinedType = Undefined,
                                 route_map_in: str | None | UndefinedType = Undefined,
                                 route_map_out: str | None | UndefinedType = Undefined,
+                                rcf_in: str | None | UndefinedType = Undefined,
+                                rcf_out: str | None | UndefinedType = Undefined,
                                 default_originate: DefaultOriginate | UndefinedType = Undefined,
                                 next_hop: NextHop | UndefinedType = Undefined,
                                 prefix_list_in: str | None | UndefinedType = Undefined,
@@ -33568,6 +33592,12 @@ class EosDesigns(EosDesignsRootModel):
                                     activate: activate
                                     route_map_in: Inbound route-map name.
                                     route_map_out: Outbound route-map name.
+                                    rcf_in:
+                                       Inbound RCF function name with parenthesis.
+                                       Example: MyFunction(myarg).
+                                    rcf_out:
+                                       Outbound RCF function name with parenthesis.
+                                       Example: MyFunction(myarg).
                                     default_originate: Subclass of AvdModel.
                                     next_hop: Subclass of AvdModel.
                                     prefix_list_in: Inbound prefix-list name.
@@ -33583,6 +33613,8 @@ class EosDesigns(EosDesignsRootModel):
                             "activate": {"type": bool},
                             "route_map_in": {"type": str},
                             "route_map_out": {"type": str},
+                            "rcf_in": {"type": str},
+                            "rcf_out": {"type": str},
                             "prefix_list_in": {"type": str},
                             "prefix_list_out": {"type": str},
                             "_custom_data": {"type": dict},
@@ -33592,6 +33624,16 @@ class EosDesigns(EosDesignsRootModel):
                         """Inbound route-map name."""
                         route_map_out: str | None
                         """Outbound route-map name."""
+                        rcf_in: str | None
+                        """
+                        Inbound RCF function name with parenthesis.
+                        Example: MyFunction(myarg).
+                        """
+                        rcf_out: str | None
+                        """
+                        Outbound RCF function name with parenthesis.
+                        Example: MyFunction(myarg).
+                        """
                         prefix_list_in: str | None
                         """Inbound prefix-list name."""
                         prefix_list_out: str | None
@@ -33606,6 +33648,8 @@ class EosDesigns(EosDesignsRootModel):
                                 activate: bool | None | UndefinedType = Undefined,
                                 route_map_in: str | None | UndefinedType = Undefined,
                                 route_map_out: str | None | UndefinedType = Undefined,
+                                rcf_in: str | None | UndefinedType = Undefined,
+                                rcf_out: str | None | UndefinedType = Undefined,
                                 prefix_list_in: str | None | UndefinedType = Undefined,
                                 prefix_list_out: str | None | UndefinedType = Undefined,
                                 _custom_data: dict[str, Any] | UndefinedType = Undefined,
@@ -33620,6 +33664,12 @@ class EosDesigns(EosDesignsRootModel):
                                     activate: activate
                                     route_map_in: Inbound route-map name.
                                     route_map_out: Outbound route-map name.
+                                    rcf_in:
+                                       Inbound RCF function name with parenthesis.
+                                       Example: MyFunction(myarg).
+                                    rcf_out:
+                                       Outbound RCF function name with parenthesis.
+                                       Example: MyFunction(myarg).
                                     prefix_list_in: Inbound prefix-list name.
                                     prefix_list_out: Outbound prefix-list name.
                                     _custom_data: _custom_data
@@ -37821,6 +37871,8 @@ class EosDesigns(EosDesignsRootModel):
                                 "activate": {"type": bool},
                                 "route_map_in": {"type": str},
                                 "route_map_out": {"type": str},
+                                "rcf_in": {"type": str},
+                                "rcf_out": {"type": str},
                                 "default_originate": {"type": DefaultOriginate},
                                 "next_hop": {"type": NextHop},
                                 "prefix_list_in": {"type": str},
@@ -37832,6 +37884,16 @@ class EosDesigns(EosDesignsRootModel):
                             """Inbound route-map name."""
                             route_map_out: str | None
                             """Outbound route-map name."""
+                            rcf_in: str | None
+                            """
+                            Inbound RCF function name with parenthesis.
+                            Example: MyFunction(myarg).
+                            """
+                            rcf_out: str | None
+                            """
+                            Outbound RCF function name with parenthesis.
+                            Example: MyFunction(myarg).
+                            """
                             default_originate: DefaultOriginate
                             """Subclass of AvdModel."""
                             next_hop: NextHop
@@ -37850,6 +37912,8 @@ class EosDesigns(EosDesignsRootModel):
                                     activate: bool | None | UndefinedType = Undefined,
                                     route_map_in: str | None | UndefinedType = Undefined,
                                     route_map_out: str | None | UndefinedType = Undefined,
+                                    rcf_in: str | None | UndefinedType = Undefined,
+                                    rcf_out: str | None | UndefinedType = Undefined,
                                     default_originate: DefaultOriginate | UndefinedType = Undefined,
                                     next_hop: NextHop | UndefinedType = Undefined,
                                     prefix_list_in: str | None | UndefinedType = Undefined,
@@ -37866,6 +37930,12 @@ class EosDesigns(EosDesignsRootModel):
                                         activate: activate
                                         route_map_in: Inbound route-map name.
                                         route_map_out: Outbound route-map name.
+                                        rcf_in:
+                                           Inbound RCF function name with parenthesis.
+                                           Example: MyFunction(myarg).
+                                        rcf_out:
+                                           Outbound RCF function name with parenthesis.
+                                           Example: MyFunction(myarg).
                                         default_originate: Subclass of AvdModel.
                                         next_hop: Subclass of AvdModel.
                                         prefix_list_in: Inbound prefix-list name.
@@ -37881,6 +37951,8 @@ class EosDesigns(EosDesignsRootModel):
                                 "activate": {"type": bool},
                                 "route_map_in": {"type": str},
                                 "route_map_out": {"type": str},
+                                "rcf_in": {"type": str},
+                                "rcf_out": {"type": str},
                                 "prefix_list_in": {"type": str},
                                 "prefix_list_out": {"type": str},
                                 "_custom_data": {"type": dict},
@@ -37890,6 +37962,16 @@ class EosDesigns(EosDesignsRootModel):
                             """Inbound route-map name."""
                             route_map_out: str | None
                             """Outbound route-map name."""
+                            rcf_in: str | None
+                            """
+                            Inbound RCF function name with parenthesis.
+                            Example: MyFunction(myarg).
+                            """
+                            rcf_out: str | None
+                            """
+                            Outbound RCF function name with parenthesis.
+                            Example: MyFunction(myarg).
+                            """
                             prefix_list_in: str | None
                             """Inbound prefix-list name."""
                             prefix_list_out: str | None
@@ -37904,6 +37986,8 @@ class EosDesigns(EosDesignsRootModel):
                                     activate: bool | None | UndefinedType = Undefined,
                                     route_map_in: str | None | UndefinedType = Undefined,
                                     route_map_out: str | None | UndefinedType = Undefined,
+                                    rcf_in: str | None | UndefinedType = Undefined,
+                                    rcf_out: str | None | UndefinedType = Undefined,
                                     prefix_list_in: str | None | UndefinedType = Undefined,
                                     prefix_list_out: str | None | UndefinedType = Undefined,
                                     _custom_data: dict[str, Any] | UndefinedType = Undefined,
@@ -37918,6 +38002,12 @@ class EosDesigns(EosDesignsRootModel):
                                         activate: activate
                                         route_map_in: Inbound route-map name.
                                         route_map_out: Outbound route-map name.
+                                        rcf_in:
+                                           Inbound RCF function name with parenthesis.
+                                           Example: MyFunction(myarg).
+                                        rcf_out:
+                                           Outbound RCF function name with parenthesis.
+                                           Example: MyFunction(myarg).
                                         prefix_list_in: Inbound prefix-list name.
                                         prefix_list_out: Outbound prefix-list name.
                                         _custom_data: _custom_data

@@ -122,7 +122,7 @@ cv_pathfinder_internet_exit_policies:
       domain_name: test.local
       ipsec_key_salt: THIS_SHOULD_BE_VAULTED
   - name: ZSCALER-EXIT-POLICY-2
-    fallback_to_system_default: False
+    fallback_to_system_default: false
     type: zscaler
     zscaler:
       domain_name: test.local
