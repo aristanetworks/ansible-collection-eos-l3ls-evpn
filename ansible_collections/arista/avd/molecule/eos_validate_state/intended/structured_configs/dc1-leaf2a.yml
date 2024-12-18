@@ -589,4 +589,5 @@ virtual_source_nat_vrfs:
   ip_address: 10.255.11.5
 metadata:
   platform: vEOS-lab
+  fabric_name: FABRIC
 dns_domain: dc1.local

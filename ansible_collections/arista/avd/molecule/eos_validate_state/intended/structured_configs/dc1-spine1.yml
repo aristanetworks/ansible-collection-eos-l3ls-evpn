@@ -274,4 +274,5 @@ router_bfd:
     multiplier: 3
 metadata:
   platform: vEOS-lab
+  fabric_name: FABRIC
 dns_domain: dc1.local

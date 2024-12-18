@@ -247,4 +247,5 @@ vxlan_interface:
       virtual_router_encapsulation_mac_address: mlag-system-id
 metadata:
   platform: vEOS-lab
+  fabric_name: FABRIC
 dns_domain: dc1.local

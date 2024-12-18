@@ -114,6 +114,7 @@ vlan_interfaces:
   type: inband_mgmt
 metadata:
   platform: vEOS-lab
+  fabric_name: FABRIC
 dns_domain: dc1.local
 vxlan_interface:
   Vxlan1:

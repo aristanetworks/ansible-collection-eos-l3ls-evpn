@@ -588,4 +588,5 @@ metadata:
     pathfinders:
     - vtep_ip: 10.255.255.10
     - vtep_ip: 10.255.255.20
+  fabric_name: FABRIC
 dns_domain: dc1.local

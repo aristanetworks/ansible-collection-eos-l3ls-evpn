@@ -478,6 +478,7 @@ virtual_source_nat_vrfs:
   ip_address: 10.255.11.18
 metadata:
   platform: vEOS-lab
+  fabric_name: FABRIC
 interface_defaults:
   ethernet:
     shutdown: true
