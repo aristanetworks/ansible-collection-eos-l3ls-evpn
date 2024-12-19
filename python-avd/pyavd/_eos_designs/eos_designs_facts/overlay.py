@@ -6,8 +6,6 @@ from __future__ import annotations
 from functools import cached_property
 from typing import TYPE_CHECKING
 
-from pyavd._utils import get
-
 if TYPE_CHECKING:
     from . import EosDesignsFacts
 

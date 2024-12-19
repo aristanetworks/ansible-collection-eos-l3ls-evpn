@@ -9,7 +9,7 @@ from re import fullmatch
 from typing import TYPE_CHECKING
 
 from pyavd._errors import AristaAvdError, AristaAvdInvalidInputsError
-from pyavd._utils import default, get
+from pyavd._utils import default
 
 if TYPE_CHECKING:
     from . import SharedUtils

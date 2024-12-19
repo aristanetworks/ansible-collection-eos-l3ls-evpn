@@ -73,7 +73,6 @@ class UtilsMixin:
         if not self.shared_utils.overlay_evpn:
             return {}
 
-
         evpn_gateway_servers = {}
         for avd_peer in self._avd_overlay_peers:
             peer_facts = self.shared_utils.get_peer_facts(avd_peer, required=True)
