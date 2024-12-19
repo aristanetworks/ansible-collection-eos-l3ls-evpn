@@ -42,7 +42,8 @@ AVD_STRUCTURED_CONFIG_CLASSES: list[type[StructuredConfigGenerator]] = [
     # Metadata must be after anything else that can generate structured config, since CV tags can consume from structured config.
     AvdStructuredConfigMetadata,
     # The Custom Structured Configuration module must be rendered last,
-    # since it applies the structured config snips gathered by the other generators.
+    # since it strips empties from all previously generated structured config and then
+    # applies the custom structured config snips gathered by the other generators.
     AvdStructuredConfigCustomStructuredConfiguration,
 ]
 """
