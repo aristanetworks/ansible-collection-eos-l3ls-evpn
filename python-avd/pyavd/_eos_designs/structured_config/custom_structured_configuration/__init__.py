@@ -33,7 +33,7 @@ class AvdStructuredConfigCustomStructuredConfiguration(StructuredConfigGenerator
         if struct_cfg := self.shared_utils.node_config.structured_config:
             self.structured_config._deepmerge(struct_cfg, list_merge=self.custom_structured_configs.list_merge_strategy)
 
-        # Apply structured configs from base and vrfs.
+        # Apply structured configs from root.
         [
             self.structured_config._deepmerge(struct_cfg, list_merge=self.custom_structured_configs.list_merge_strategy)
             for struct_cfg in self.custom_structured_configs.root
