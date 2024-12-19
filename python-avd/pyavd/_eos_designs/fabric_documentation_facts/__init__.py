@@ -44,7 +44,7 @@ class FabricDocumentationFacts(AvdFacts):
 
     @cached_property
     def toc(self) -> bool:
-        """Generate the table of content(TOC) on device documentation."""
+        """Generate the table of content(TOC) on fabric documentation."""
         return self._toc
 
     @cached_property
