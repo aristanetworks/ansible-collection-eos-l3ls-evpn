@@ -5514,7 +5514,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         """
         toc: bool
         """
-        Generate or skip the table of content(TOC) on fabric and device documentation.
+        Generate the table of content(TOC) on device documentation.
 
         Default value: `True`
         """
@@ -5541,7 +5541,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                     hide_passwords:
                        Replace the input data using the `hide_passwords` filter in the Jinja2 templates by '<removed>' in
                        the documentation if true.
-                    toc: Generate or skip the table of content(TOC) on fabric and device documentation.
+                    toc: Generate the table of content(TOC) on device documentation.
                     _custom_data: _custom_data
 
                 """

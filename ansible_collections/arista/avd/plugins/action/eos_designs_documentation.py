@@ -35,6 +35,7 @@ ARGUMENT_SPEC = {
     "topology_csv": {"type": "bool", "default": False},
     "p2p_links_csv_file": {"type": "str", "required": True},
     "p2p_links_csv": {"type": "bool", "default": False},
+    "toc": {"type": "bool", "default": True},
 }
 
 
@@ -82,6 +83,7 @@ class ActionModule(ActionBase):
             include_connected_endpoints=validated_args["include_connected_endpoints"],
             topology_csv=validated_args["topology_csv"],
             p2p_links_csv=validated_args["p2p_links_csv"],
+            toc=validated_args["toc"],
         )
         if output.fabric_documentation:
             result["changed"] = write_file(

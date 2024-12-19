@@ -2941,6 +2941,7 @@ class EosDesigns(EosDesignsRootModel):
             "connected_endpoints": {"type": bool, "default": False},
             "topology_csv": {"type": bool, "default": False},
             "p2p_links_csv": {"type": bool, "default": False},
+            "toc": {"type": bool, "default": True},
             "_custom_data": {"type": dict},
         }
         enable: bool
@@ -2969,6 +2970,12 @@ class EosDesigns(EosDesignsRootModel):
 
         Default value: `False`
         """
+        toc: bool
+        """
+        Generate the table of content(TOC) on fabric documentation.
+
+        Default value: `True`
+        """
         _custom_data: dict[str, Any]
 
         if TYPE_CHECKING:
@@ -2980,6 +2987,7 @@ class EosDesigns(EosDesignsRootModel):
                 connected_endpoints: bool | UndefinedType = Undefined,
                 topology_csv: bool | UndefinedType = Undefined,
                 p2p_links_csv: bool | UndefinedType = Undefined,
+                toc: bool | UndefinedType = Undefined,
                 _custom_data: dict[str, Any] | UndefinedType = Undefined,
             ) -> None:
                 """
@@ -2996,6 +3004,7 @@ class EosDesigns(EosDesignsRootModel):
                        cluttering documentation for projects with thousands of endpoints.
                     topology_csv: Generate Topology CSV with all interfaces towards other devices.
                     p2p_links_csv: Generate P2P links CSV with all routed point-to-point links between devices.
+                    toc: Generate the table of content(TOC) on fabric documentation.
                     _custom_data: _custom_data
 
                 """
