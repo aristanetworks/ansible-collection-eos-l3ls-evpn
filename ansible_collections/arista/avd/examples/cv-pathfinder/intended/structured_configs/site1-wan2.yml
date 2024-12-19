@@ -69,67 +69,6 @@ router_bgp:
     send_community: all
     route_map_in: RM-WAN-HA-PEER-IN
     route_map_out: RM-WAN-HA-PEER-OUT
-  vrfs:
-  - name: BLUE
-    router_id: 192.168.255.4
-    neighbors:
-    - ip_address: 10.0.1.12
-      peer_group: IPv4-UNDERLAY-PEERS
-      remote_as: '65101'
-      description: site1-border1_Ethernet4.100_vrf_BLUE
-    - ip_address: 10.0.1.14
-      peer_group: IPv4-UNDERLAY-PEERS
-      remote_as: '65101'
-      description: site1-border2_Ethernet4.100_vrf_BLUE
-    rd: 192.168.255.4:100
-    route_targets:
-      import:
-      - address_family: evpn
-        route_targets:
-        - 100:100
-      export:
-      - address_family: evpn
-        route_targets:
-        - 100:100
-    redistribute:
-      connected:
-        enabled: true
-  - name: RED
-    router_id: 192.168.255.4
-    neighbors:
-    - ip_address: 10.0.1.12
-      peer_group: IPv4-UNDERLAY-PEERS
-      remote_as: '65101'
-      description: site1-border1_Ethernet4.101_vrf_RED
-    - ip_address: 10.0.1.14
-      peer_group: IPv4-UNDERLAY-PEERS
-      remote_as: '65101'
-      description: site1-border2_Ethernet4.101_vrf_RED
-    rd: 192.168.255.4:101
-    route_targets:
-      import:
-      - address_family: evpn
-        route_targets:
-        - 101:101
-      export:
-      - address_family: evpn
-        route_targets:
-        - 101:101
-    redistribute:
-      connected:
-        enabled: true
-  - name: default
-    rd: 192.168.255.4:1
-    route_targets:
-      import:
-      - address_family: evpn
-        route_targets:
-        - '1:1'
-      export:
-      - address_family: evpn
-        route_targets:
-        - '1:1'
-        - route-map RM-EVPN-EXPORT-VRF-DEFAULT
   address_family_evpn:
     peer_groups:
     - name: WAN-OVERLAY-PEERS
@@ -163,6 +102,49 @@ router_bgp:
       additional_paths:
         receive: true
         send: any
+  vrfs:
+  - name: BLUE
+    rd: 192.168.255.4:100
+    route_targets:
+      import:
+      - address_family: evpn
+        route_targets:
+        - 100:100
+      export:
+      - address_family: evpn
+        route_targets:
+        - 100:100
+    router_id: 192.168.255.4
+    redistribute:
+      connected:
+        enabled: true
+  - name: RED
+    rd: 192.168.255.4:101
+    route_targets:
+      import:
+      - address_family: evpn
+        route_targets:
+        - 101:101
+      export:
+      - address_family: evpn
+        route_targets:
+        - 101:101
+    router_id: 192.168.255.4
+    redistribute:
+      connected:
+        enabled: true
+  - name: default
+    rd: 192.168.255.4:1
+    route_targets:
+      import:
+      - address_family: evpn
+        route_targets:
+        - '1:1'
+      export:
+      - address_family: evpn
+        route_targets:
+        - '1:1'
+        - route-map RM-EVPN-EXPORT-VRF-DEFAULT
 static_routes:
 - vrf: MGMT
   destination_address_prefix: 0.0.0.0/0
@@ -250,32 +232,6 @@ ethernet_interfaces:
   flow_tracker:
     hardware: FLOW-TRACKER
   ip_address: 10.0.1.13/31
-- name: Ethernet1.100
-  peer: site1-border1
-  peer_interface: Ethernet4.100
-  peer_type: l3leaf
-  vrf: BLUE
-  description: P2P_site1-border1_Ethernet4.100_VRF_BLUE
-  shutdown: false
-  encapsulation_dot1q:
-    vlan: 100
-  flow_tracker:
-    hardware: FLOW-TRACKER
-  mtu: 9214
-  ip_address: 10.0.1.13/31
-- name: Ethernet1.101
-  peer: site1-border1
-  peer_interface: Ethernet4.101
-  peer_type: l3leaf
-  vrf: RED
-  description: P2P_site1-border1_Ethernet4.101_VRF_RED
-  shutdown: false
-  encapsulation_dot1q:
-    vlan: 101
-  flow_tracker:
-    hardware: FLOW-TRACKER
-  mtu: 9214
-  ip_address: 10.0.1.13/31
 - name: Ethernet2
   peer: site1-border2
   peer_interface: Ethernet4
@@ -287,32 +243,6 @@ ethernet_interfaces:
     enabled: false
   flow_tracker:
     hardware: FLOW-TRACKER
-  ip_address: 10.0.1.15/31
-- name: Ethernet2.100
-  peer: site1-border2
-  peer_interface: Ethernet4.100
-  peer_type: l3leaf
-  vrf: BLUE
-  description: P2P_site1-border2_Ethernet4.100_VRF_BLUE
-  shutdown: false
-  encapsulation_dot1q:
-    vlan: 100
-  flow_tracker:
-    hardware: FLOW-TRACKER
-  mtu: 9214
-  ip_address: 10.0.1.15/31
-- name: Ethernet2.101
-  peer: site1-border2
-  peer_interface: Ethernet4.101
-  peer_type: l3leaf
-  vrf: RED
-  description: P2P_site1-border2_Ethernet4.101_VRF_RED
-  shutdown: false
-  encapsulation_dot1q:
-    vlan: 101
-  flow_tracker:
-    hardware: FLOW-TRACKER
-  mtu: 9214
   ip_address: 10.0.1.15/31
 - name: Ethernet3
   peer_type: l3_interface
@@ -838,23 +768,7 @@ metadata:
       tags:
       - name: Type
         value: lan
-    - interface: Ethernet1.100
-      tags:
-      - name: Type
-        value: lan
-    - interface: Ethernet1.101
-      tags:
-      - name: Type
-        value: lan
     - interface: Ethernet2
-      tags:
-      - name: Type
-        value: lan
-    - interface: Ethernet2.100
-      tags:
-      - name: Type
-        value: lan
-    - interface: Ethernet2.101
       tags:
       - name: Type
         value: lan

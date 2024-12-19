@@ -288,7 +288,7 @@ daemon TerminAttr
 
 | Tracker Name | Record Export On Inactive Timeout | Record Export On Interval | Number of Exporters | Applied On |
 | ------------ | --------------------------------- | ------------------------- | ------------------- | ---------- |
-| FLOW-TRACKER | 70000 | 5000 | 1 | Dps1<br>Ethernet1<br>Ethernet1.100<br>Ethernet1.101<br>Ethernet2<br>Ethernet2.100<br>Ethernet2.101<br>Ethernet3<br>Ethernet4 |
+| FLOW-TRACKER | 70000 | 5000 | 1 | Dps1<br>Ethernet1<br>Ethernet2<br>Ethernet3<br>Ethernet4 |
 
 ##### Exporters Summary
 
@@ -423,25 +423,12 @@ interface Dps1
 
 *Inherited from Port-Channel Interface
 
-##### Encapsulation Dot1q Interfaces
-
-| Interface | Description | Vlan ID | Dot1q VLAN Tag | Dot1q Inner VLAN Tag |
-| --------- | ----------- | ------- | -------------- | -------------------- |
-| Ethernet1.100 | P2P_site1-border1_Ethernet4.100_VRF_BLUE | - | 100 | - |
-| Ethernet1.101 | P2P_site1-border1_Ethernet4.101_VRF_RED | - | 101 | - |
-| Ethernet2.100 | P2P_site1-border2_Ethernet4.100_VRF_BLUE | - | 100 | - |
-| Ethernet2.101 | P2P_site1-border2_Ethernet4.101_VRF_RED | - | 101 | - |
-
 ##### IPv4
 
 | Interface | Description | Channel Group | IP Address | VRF |  MTU | Shutdown | ACL In | ACL Out |
 | --------- | ----------- | ------------- | ---------- | ----| ---- | -------- | ------ | ------- |
 | Ethernet1 | P2P_site1-border1_Ethernet4 | - | 10.0.1.13/31 | default | 9214 | False | - | - |
-| Ethernet1.100 | P2P_site1-border1_Ethernet4.100_VRF_BLUE | - | 10.0.1.13/31 | BLUE | 9214 | False | - | - |
-| Ethernet1.101 | P2P_site1-border1_Ethernet4.101_VRF_RED | - | 10.0.1.13/31 | RED | 9214 | False | - | - |
 | Ethernet2 | P2P_site1-border2_Ethernet4 | - | 10.0.1.15/31 | default | 9214 | False | - | - |
-| Ethernet2.100 | P2P_site1-border2_Ethernet4.100_VRF_BLUE | - | 10.0.1.15/31 | BLUE | 9214 | False | - | - |
-| Ethernet2.101 | P2P_site1-border2_Ethernet4.101_VRF_RED | - | 10.0.1.15/31 | RED | 9214 | False | - | - |
 | Ethernet3 | ACME-MPLS-INC_mpls-site1-wan2_mpls-cloud_Ethernet6 | - | 172.18.11.2/24 | default | - | False | - | - |
 | Ethernet4 | REGION1-INTERNET-CORP_inet-site1-wan2_inet-cloud_Ethernet6 | - | dhcp | default | - | False | ACL-INTERNET-IN_Ethernet4 | - |
 
@@ -457,48 +444,12 @@ interface Ethernet1
    flow tracker hardware FLOW-TRACKER
    ip address 10.0.1.13/31
 !
-interface Ethernet1.100
-   description P2P_site1-border1_Ethernet4.100_VRF_BLUE
-   no shutdown
-   mtu 9214
-   encapsulation dot1q vlan 100
-   flow tracker hardware FLOW-TRACKER
-   vrf BLUE
-   ip address 10.0.1.13/31
-!
-interface Ethernet1.101
-   description P2P_site1-border1_Ethernet4.101_VRF_RED
-   no shutdown
-   mtu 9214
-   encapsulation dot1q vlan 101
-   flow tracker hardware FLOW-TRACKER
-   vrf RED
-   ip address 10.0.1.13/31
-!
 interface Ethernet2
    description P2P_site1-border2_Ethernet4
    no shutdown
    mtu 9214
    no switchport
    flow tracker hardware FLOW-TRACKER
-   ip address 10.0.1.15/31
-!
-interface Ethernet2.100
-   description P2P_site1-border2_Ethernet4.100_VRF_BLUE
-   no shutdown
-   mtu 9214
-   encapsulation dot1q vlan 100
-   flow tracker hardware FLOW-TRACKER
-   vrf BLUE
-   ip address 10.0.1.15/31
-!
-interface Ethernet2.101
-   description P2P_site1-border2_Ethernet4.101_VRF_RED
-   no shutdown
-   mtu 9214
-   encapsulation dot1q vlan 101
-   flow tracker hardware FLOW-TRACKER
-   vrf RED
    ip address 10.0.1.15/31
 !
 interface Ethernet3
@@ -863,10 +814,6 @@ ASN Notation: asplain
 | 192.168.42.1 | Inherited from peer group WAN-OVERLAY-PEERS | default | - | Inherited from peer group WAN-OVERLAY-PEERS | Inherited from peer group WAN-OVERLAY-PEERS | - | Inherited from peer group WAN-OVERLAY-PEERS(interval: 1000, min_rx: 1000, multiplier: 10) | - | - | - | Inherited from peer group WAN-OVERLAY-PEERS |
 | 192.168.42.2 | Inherited from peer group WAN-OVERLAY-PEERS | default | - | Inherited from peer group WAN-OVERLAY-PEERS | Inherited from peer group WAN-OVERLAY-PEERS | - | Inherited from peer group WAN-OVERLAY-PEERS(interval: 1000, min_rx: 1000, multiplier: 10) | - | - | - | Inherited from peer group WAN-OVERLAY-PEERS |
 | 192.168.42.3 | 65000 | default | - | all | - | - | - | - | True | - | - |
-| 10.0.1.12 | 65101 | BLUE | - | Inherited from peer group IPv4-UNDERLAY-PEERS | Inherited from peer group IPv4-UNDERLAY-PEERS | Inherited from peer group IPv4-UNDERLAY-PEERS | - | - | - | - | - |
-| 10.0.1.14 | 65101 | BLUE | - | Inherited from peer group IPv4-UNDERLAY-PEERS | Inherited from peer group IPv4-UNDERLAY-PEERS | Inherited from peer group IPv4-UNDERLAY-PEERS | - | - | - | - | - |
-| 10.0.1.12 | 65101 | RED | - | Inherited from peer group IPv4-UNDERLAY-PEERS | Inherited from peer group IPv4-UNDERLAY-PEERS | Inherited from peer group IPv4-UNDERLAY-PEERS | - | - | - | - | - |
-| 10.0.1.14 | 65101 | RED | - | Inherited from peer group IPv4-UNDERLAY-PEERS | Inherited from peer group IPv4-UNDERLAY-PEERS | Inherited from peer group IPv4-UNDERLAY-PEERS | - | - | - | - | - |
 
 #### Router BGP EVPN Address Family
 
@@ -998,12 +945,6 @@ router bgp 65000
       route-target import evpn 100:100
       route-target export evpn 100:100
       router-id 192.168.255.4
-      neighbor 10.0.1.12 peer group IPv4-UNDERLAY-PEERS
-      neighbor 10.0.1.12 remote-as 65101
-      neighbor 10.0.1.12 description site1-border1_Ethernet4.100_vrf_BLUE
-      neighbor 10.0.1.14 peer group IPv4-UNDERLAY-PEERS
-      neighbor 10.0.1.14 remote-as 65101
-      neighbor 10.0.1.14 description site1-border2_Ethernet4.100_vrf_BLUE
       redistribute connected
    !
    vrf default
@@ -1017,12 +958,6 @@ router bgp 65000
       route-target import evpn 101:101
       route-target export evpn 101:101
       router-id 192.168.255.4
-      neighbor 10.0.1.12 peer group IPv4-UNDERLAY-PEERS
-      neighbor 10.0.1.12 remote-as 65101
-      neighbor 10.0.1.12 description site1-border1_Ethernet4.101_vrf_RED
-      neighbor 10.0.1.14 peer group IPv4-UNDERLAY-PEERS
-      neighbor 10.0.1.14 remote-as 65101
-      neighbor 10.0.1.14 description site1-border2_Ethernet4.101_vrf_RED
       redistribute connected
 ```
 

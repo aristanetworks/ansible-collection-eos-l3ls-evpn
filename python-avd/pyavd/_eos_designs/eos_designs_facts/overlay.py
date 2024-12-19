@@ -6,6 +6,8 @@ from __future__ import annotations
 from functools import cached_property
 from typing import TYPE_CHECKING
 
+from pyavd._utils import get
+
 if TYPE_CHECKING:
     from . import EosDesignsFacts
 
@@ -27,6 +29,22 @@ class OverlayMixin:
     def mpls_overlay_role(self: EosDesignsFacts) -> str | None:
         """Exposed in avd_switch_facts."""
         return self.shared_utils.mpls_overlay_role
+
+    @cached_property
+    def evpn_gateways(self: EosDesignsFacts) -> list:
+        """
+        Exposed in avd_switch_facts.
+        For evpn clients the default value for EVPN Route Servers is the content of the uplink_switches variable set elsewhere.
+        For all other evpn roles there is no default.
+        """
+        hostnames = []
+        if evpn_gateway := self.shared_utils.node_config.evpn_gateway:
+            if evpn_gateway.remote_peers:
+                for peer in evpn_gateway.remote_peers:
+                    if peer.hostname:
+                        hostnames.append(peer.hostname)
+
+        return hostnames
 
     @cached_property
     def evpn_route_servers(self: EosDesignsFacts) -> list:

@@ -35,11 +35,20 @@ router_bgp:
       interval: 1000
       min_rx: 1000
       multiplier: 10
+  - name: EVPN-OVERLAY-CORE
+    type: evpn
+    update_source: Loopback0
+    bfd: true
+    send_community: all
+    maximum_routes: 0
+    ebgp_multihop: 15
   address_family_ipv4:
     peer_groups:
     - name: IPv4-UNDERLAY-PEERS
       activate: true
     - name: WAN-OVERLAY-PEERS
+      activate: false
+    - name: EVPN-OVERLAY-CORE
       activate: false
   neighbors:
   - ip_address: 10.0.1.8
@@ -52,6 +61,10 @@ router_bgp:
     remote_as: '65101'
     peer: site1-border2
     description: site1-border2_Ethernet3
+  - ip_address: 192.168.255.99
+    peer_group: EVPN-OVERLAY-CORE
+    peer: site1-rs1
+    description: site1-rs1_Loopback0
   - ip_address: 192.168.42.1
     peer_group: WAN-OVERLAY-PEERS
     peer: pf1
@@ -69,77 +82,19 @@ router_bgp:
     send_community: all
     route_map_in: RM-WAN-HA-PEER-IN
     route_map_out: RM-WAN-HA-PEER-OUT
-  vrfs:
-  - name: BLUE
-    router_id: 192.168.255.3
-    neighbors:
-    - ip_address: 10.0.1.8
-      peer_group: IPv4-UNDERLAY-PEERS
-      remote_as: '65101'
-      description: site1-border1_Ethernet3.100_vrf_BLUE
-    - ip_address: 10.0.1.10
-      peer_group: IPv4-UNDERLAY-PEERS
-      remote_as: '65101'
-      description: site1-border2_Ethernet3.100_vrf_BLUE
-    rd: 192.168.255.3:100
-    route_targets:
-      import:
-      - address_family: evpn
-        route_targets:
-        - 100:100
-      export:
-      - address_family: evpn
-        route_targets:
-        - 100:100
-    redistribute:
-      connected:
-        enabled: true
-  - name: RED
-    router_id: 192.168.255.3
-    neighbors:
-    - ip_address: 10.0.1.8
-      peer_group: IPv4-UNDERLAY-PEERS
-      remote_as: '65101'
-      description: site1-border1_Ethernet3.101_vrf_RED
-    - ip_address: 10.0.1.10
-      peer_group: IPv4-UNDERLAY-PEERS
-      remote_as: '65101'
-      description: site1-border2_Ethernet3.101_vrf_RED
-    rd: 192.168.255.3:101
-    route_targets:
-      import:
-      - address_family: evpn
-        route_targets:
-        - 101:101
-      export:
-      - address_family: evpn
-        route_targets:
-        - 101:101
-    redistribute:
-      connected:
-        enabled: true
-  - name: default
-    rd: 192.168.255.3:1
-    route_targets:
-      import:
-      - address_family: evpn
-        route_targets:
-        - '1:1'
-      export:
-      - address_family: evpn
-        route_targets:
-        - '1:1'
-        - route-map RM-EVPN-EXPORT-VRF-DEFAULT
   address_family_evpn:
+    neighbor_default:
+      next_hop_self_received_evpn_routes:
+        enable: true
     peer_groups:
+    - name: EVPN-OVERLAY-CORE
+      domain_remote: true
+      activate: true
     - name: WAN-OVERLAY-PEERS
       activate: true
       encapsulation: path-selection
       route_map_in: RM-EVPN-SOO-IN
       route_map_out: RM-EVPN-SOO-OUT
-    neighbor_default:
-      next_hop_self_received_evpn_routes:
-        enable: true
     neighbors:
     - ip_address: 192.168.42.4
       activate: true
@@ -163,6 +118,49 @@ router_bgp:
       additional_paths:
         receive: true
         send: any
+  vrfs:
+  - name: BLUE
+    rd: 192.168.255.3:100
+    route_targets:
+      import:
+      - address_family: evpn
+        route_targets:
+        - 100:100
+      export:
+      - address_family: evpn
+        route_targets:
+        - 100:100
+    router_id: 192.168.255.3
+    redistribute:
+      connected:
+        enabled: true
+  - name: RED
+    rd: 192.168.255.3:101
+    route_targets:
+      import:
+      - address_family: evpn
+        route_targets:
+        - 101:101
+      export:
+      - address_family: evpn
+        route_targets:
+        - 101:101
+    router_id: 192.168.255.3
+    redistribute:
+      connected:
+        enabled: true
+  - name: default
+    rd: 192.168.255.3:1
+    route_targets:
+      import:
+      - address_family: evpn
+        route_targets:
+        - '1:1'
+      export:
+      - address_family: evpn
+        route_targets:
+        - '1:1'
+        - route-map RM-EVPN-EXPORT-VRF-DEFAULT
 static_routes:
 - vrf: MGMT
   destination_address_prefix: 0.0.0.0/0
@@ -250,32 +248,6 @@ ethernet_interfaces:
   flow_tracker:
     hardware: FLOW-TRACKER
   ip_address: 10.0.1.9/31
-- name: Ethernet1.100
-  peer: site1-border1
-  peer_interface: Ethernet3.100
-  peer_type: l3leaf
-  vrf: BLUE
-  description: P2P_site1-border1_Ethernet3.100_VRF_BLUE
-  shutdown: false
-  encapsulation_dot1q:
-    vlan: 100
-  flow_tracker:
-    hardware: FLOW-TRACKER
-  mtu: 9214
-  ip_address: 10.0.1.9/31
-- name: Ethernet1.101
-  peer: site1-border1
-  peer_interface: Ethernet3.101
-  peer_type: l3leaf
-  vrf: RED
-  description: P2P_site1-border1_Ethernet3.101_VRF_RED
-  shutdown: false
-  encapsulation_dot1q:
-    vlan: 101
-  flow_tracker:
-    hardware: FLOW-TRACKER
-  mtu: 9214
-  ip_address: 10.0.1.9/31
 - name: Ethernet2
   peer: site1-border2
   peer_interface: Ethernet3
@@ -287,32 +259,6 @@ ethernet_interfaces:
     enabled: false
   flow_tracker:
     hardware: FLOW-TRACKER
-  ip_address: 10.0.1.11/31
-- name: Ethernet2.100
-  peer: site1-border2
-  peer_interface: Ethernet3.100
-  peer_type: l3leaf
-  vrf: BLUE
-  description: P2P_site1-border2_Ethernet3.100_VRF_BLUE
-  shutdown: false
-  encapsulation_dot1q:
-    vlan: 100
-  flow_tracker:
-    hardware: FLOW-TRACKER
-  mtu: 9214
-  ip_address: 10.0.1.11/31
-- name: Ethernet2.101
-  peer: site1-border2
-  peer_interface: Ethernet3.101
-  peer_type: l3leaf
-  vrf: RED
-  description: P2P_site1-border2_Ethernet3.101_VRF_RED
-  shutdown: false
-  encapsulation_dot1q:
-    vlan: 101
-  flow_tracker:
-    hardware: FLOW-TRACKER
-  mtu: 9214
   ip_address: 10.0.1.11/31
 - name: Ethernet3
   peer_type: l3_interface
@@ -540,6 +486,7 @@ router_adaptive_virtual_topology:
   site:
     name: SITE1
     id: 101
+  gateway_vxlan: true
   profiles:
   - name: BLUE-POLICY-VIDEO
     load_balance_policy: LB-BLUE-POLICY-VIDEO
@@ -837,23 +784,7 @@ metadata:
       tags:
       - name: Type
         value: lan
-    - interface: Ethernet1.100
-      tags:
-      - name: Type
-        value: lan
-    - interface: Ethernet1.101
-      tags:
-      - name: Type
-        value: lan
     - interface: Ethernet2
-      tags:
-      - name: Type
-        value: lan
-    - interface: Ethernet2.100
-      tags:
-      - name: Type
-        value: lan
-    - interface: Ethernet2.101
       tags:
       - name: Type
         value: lan
