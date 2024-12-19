@@ -10826,6 +10826,15 @@ router segment-security
 | ----------------- | --------- |
 | 200 | ingress |
 
+#### Interfaces metric bandwidth
+
+| Interface name | Transmit Bandwidth (Mbps) | Receive Bandwidth (Mbps) |
+| -------------- | ------------------------- | ------------------------ |
+| Ethernet1 | - | 100 |
+| Ethernet2 | - | - |
+| Ethernet3 | 200 | - |
+| Port-Channel4 | 200 | 100 |
+
 #### Path Groups
 
 ##### Path Group PG-1
@@ -10943,6 +10952,18 @@ router segment-security
 router path-selection
    peer dynamic source stun
    tcp mss ceiling ipv4 200 ingress
+   !
+   interface Ethernet1
+      metric bandwidth receive 100 Mbps
+   !
+   interface Ethernet2
+   !
+   interface Ethernet3
+      metric bandwidth transmit 200 Mbps
+   !
+   interface Port-Channel4
+      metric bandwidth transmit 200 Mbps
+      metric bandwidth receive 100 Mbps
    !
    path-group PG-1 id 666
       keepalive interval 200 milliseconds failure-threshold 3 intervals
