@@ -814,6 +814,12 @@ ethernet_interfaces:
   channel_group:
     id: 43
     mode: active
+- name: Ethernet24
+  peer_type: network_port
+  description: Matched on only 24 port platform
+  shutdown: false
+  switchport:
+    enabled: true
 mlag_configuration:
   domain_id: mlag
   local_interface: Vlan4094
@@ -833,3 +839,5 @@ monitor_sessions:
   destinations:
   - Ethernet17
   encapsulation_gre_metadata_tx: true
+metadata:
+  platform: 720XPM-24Y6

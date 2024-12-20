@@ -6949,6 +6949,11 @@ class EosDesigns(EosDesignsRootModel):
 
         Switches._item_type = str
 
+        class Platforms(AvdList[str]):
+            """Subclass of AvdList with `str` items."""
+
+        Platforms._item_type = str
+
         class SwitchPorts(AvdList[str]):
             """Subclass of AvdList with `str` items."""
 
@@ -8129,6 +8134,7 @@ class EosDesigns(EosDesignsRootModel):
 
         _fields: ClassVar[dict] = {
             "switches": {"type": Switches},
+            "platforms": {"type": Platforms},
             "switch_ports": {"type": SwitchPorts},
             "description": {"type": str},
             "endpoint": {"type": str},
@@ -8174,6 +8180,26 @@ class EosDesigns(EosDesignsRootModel):
 
 
         Subclass of AvdList with `str` items.
+        """
+        platforms: Platforms
+        """
+        Regex matching the full platform name of one or more switches. If used in combination with switch
+        hostname matching, both criteria must match for configuration.
+        If you need to add custom platforms
+        to match specific port quantities, create them under `custom_platform_settings`. Entries under
+        `custom_platform_settings` should
+        match the platform match criteria.
+
+        For example, `720XP-48Y6`
+        would require a custom platform type:
+
+        platforms:
+          - 720XP
+          - 720XP-48Y6
+
+
+        Subclass of AvdList
+        with `str` items.
         """
         switch_ports: SwitchPorts
         """
@@ -8365,6 +8391,7 @@ class EosDesigns(EosDesignsRootModel):
                 self,
                 *,
                 switches: Switches | UndefinedType = Undefined,
+                platforms: Platforms | UndefinedType = Undefined,
                 switch_ports: SwitchPorts | UndefinedType = Undefined,
                 description: str | None | UndefinedType = Undefined,
                 endpoint: str | None | UndefinedType = Undefined,
@@ -8416,6 +8443,24 @@ class EosDesigns(EosDesignsRootModel):
 
 
                        Subclass of AvdList with `str` items.
+                    platforms:
+                       Regex matching the full platform name of one or more switches. If used in combination with switch
+                       hostname matching, both criteria must match for configuration.
+                       If you need to add custom platforms
+                       to match specific port quantities, create them under `custom_platform_settings`. Entries under
+                       `custom_platform_settings` should
+                       match the platform match criteria.
+
+                       For example, `720XP-48Y6`
+                       would require a custom platform type:
+
+                       platforms:
+                         - 720XP
+                         - 720XP-48Y6
+
+
+                       Subclass of AvdList
+                       with `str` items.
                     switch_ports:
                        List of ranges using AVD range_expand syntax.
                        For example:

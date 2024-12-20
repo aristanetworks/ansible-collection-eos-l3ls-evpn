@@ -751,6 +751,12 @@ ethernet_interfaces:
   shutdown: true
   switchport:
     enabled: true
+- name: Ethernet48
+  peer_type: network_port
+  description: Matched on all hostnames and 48 port platform
+  shutdown: false
+  switchport:
+    enabled: true
 mlag_configuration:
   domain_id: mlag
   local_interface: Vlan4094
@@ -760,3 +766,5 @@ mlag_configuration:
   reload_delay_non_mlag: '330'
 ip_igmp_snooping:
   globally_enabled: true
+metadata:
+  platform: 720XPM-48Y6
