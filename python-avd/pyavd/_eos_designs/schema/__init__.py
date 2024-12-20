@@ -12696,6 +12696,9 @@ class EosDesigns(EosDesignsRootModel):
 
                 """
 
+    class QueueMonitorStreaming(EosCliConfigGen.QueueMonitorStreaming):
+        """Subclass of AvdModel."""
+
     class Redundancy(AvdModel):
         """Subclass of AvdModel."""
 
@@ -15850,6 +15853,9 @@ class EosDesigns(EosDesignsRootModel):
                     _custom_data: _custom_data
 
                 """
+
+    class UnsupportedTransceiver(EosCliConfigGen.ServiceUnsupportedTransceiver):
+        """Subclass of AvdModel."""
 
     class UplinkPtp(AvdModel):
         """Subclass of AvdModel."""
@@ -54379,6 +54385,7 @@ class EosDesigns(EosDesignsRootModel):
         "eos_designs_custom_templates": {"type": EosDesignsCustomTemplates},
         "eos_designs_documentation": {"type": EosDesignsDocumentation},
         "event_handlers": {"type": EventHandlers},
+        "event_monitor": {"type": bool},
         "evpn_ebgp_gateway_inter_domain": {"type": bool},
         "evpn_ebgp_gateway_multihop": {"type": int, "default": 15},
         "evpn_ebgp_multihop": {"type": int, "default": 3},
@@ -54417,6 +54424,7 @@ class EosDesigns(EosDesignsRootModel):
         "isis_ti_lfa": {"type": IsisTiLfa},
         "l3_edge": {"type": L3Edge},
         "l3_interface_profiles": {"type": L3InterfaceProfiles},
+        "load_interval_default": {"type": int},
         "local_users": {"type": LocalUsers},
         "mac_address_table": {"type": MacAddressTable},
         "management_eapi": {"type": ManagementEapi},
@@ -54605,6 +54613,7 @@ class EosDesigns(EosDesignsRootModel):
         },
         "ptp_settings": {"type": PtpSettings},
         "queue_monitor_length": {"type": QueueMonitorLength},
+        "queue_monitor_streaming": {"type": QueueMonitorStreaming},
         "redundancy": {"type": Redundancy},
         "router_id_loopback_description": {"type": str, "default": "ROUTER_ID"},
         "serial_number": {"type": str},
@@ -54641,6 +54650,7 @@ class EosDesigns(EosDesignsRootModel):
         "underlay_ospf_process_id": {"type": int, "default": 100},
         "underlay_rfc5549": {"type": bool, "default": False},
         "underlay_routing_protocol": {"type": str},
+        "unsupported_transceiver": {"type": UnsupportedTransceiver},
         "uplink_ptp": {"type": UplinkPtp},
         "use_cv_topology": {"type": bool},
         "use_router_general_for_router_id": {"type": bool, "default": False},
@@ -55203,6 +55213,7 @@ class EosDesigns(EosDesignsRootModel):
     customize the system behavior, and
     implement workarounds to problems discovered in the field.
     """
+    event_monitor: bool | None
     evpn_ebgp_gateway_inter_domain: bool | None
     evpn_ebgp_gateway_multihop: int
     """
@@ -55449,6 +55460,7 @@ class EosDesigns(EosDesignsRootModel):
     Subclass of AvdIndexedList with
     `L3InterfaceProfilesItem` items. Primary key is `profile` (`str`).
     """
+    load_interval_default: int | None
     local_users: LocalUsers
     mac_address_table: MacAddressTable
     """
@@ -55971,6 +55983,8 @@ class EosDesigns(EosDesignsRootModel):
     """
     queue_monitor_length: QueueMonitorLength
     """Subclass of AvdModel."""
+    queue_monitor_streaming: QueueMonitorStreaming
+    """Subclass of AvdModel."""
     redundancy: Redundancy
     """
     Redundancy for chassis platforms with dual supervisors | Optional.
@@ -56281,6 +56295,8 @@ class EosDesigns(EosDesignsRootModel):
     *Only supported with
     core_interfaces data model.
     """
+    unsupported_transceiver: UnsupportedTransceiver
+    """Subclass of AvdModel."""
     uplink_ptp: UplinkPtp
     """
     Enable PTP on all infrastructure links.
@@ -56466,6 +56482,7 @@ class EosDesigns(EosDesignsRootModel):
             eos_designs_custom_templates: EosDesignsCustomTemplates | UndefinedType = Undefined,
             eos_designs_documentation: EosDesignsDocumentation | UndefinedType = Undefined,
             event_handlers: EventHandlers | UndefinedType = Undefined,
+            event_monitor: bool | None | UndefinedType = Undefined,
             evpn_ebgp_gateway_inter_domain: bool | None | UndefinedType = Undefined,
             evpn_ebgp_gateway_multihop: int | UndefinedType = Undefined,
             evpn_ebgp_multihop: int | UndefinedType = Undefined,
@@ -56501,6 +56518,7 @@ class EosDesigns(EosDesignsRootModel):
             isis_ti_lfa: IsisTiLfa | UndefinedType = Undefined,
             l3_edge: L3Edge | UndefinedType = Undefined,
             l3_interface_profiles: L3InterfaceProfiles | UndefinedType = Undefined,
+            load_interval_default: int | None | UndefinedType = Undefined,
             local_users: LocalUsers | UndefinedType = Undefined,
             mac_address_table: MacAddressTable | UndefinedType = Undefined,
             management_eapi: ManagementEapi | UndefinedType = Undefined,
@@ -56549,6 +56567,7 @@ class EosDesigns(EosDesignsRootModel):
             ptp_profiles: PtpProfiles | UndefinedType = Undefined,
             ptp_settings: PtpSettings | UndefinedType = Undefined,
             queue_monitor_length: QueueMonitorLength | UndefinedType = Undefined,
+            queue_monitor_streaming: QueueMonitorStreaming | UndefinedType = Undefined,
             redundancy: Redundancy | UndefinedType = Undefined,
             router_id_loopback_description: str | UndefinedType = Undefined,
             serial_number: str | None | UndefinedType = Undefined,
@@ -56587,6 +56606,7 @@ class EosDesigns(EosDesignsRootModel):
             underlay_routing_protocol: Literal["ebgp", "ospf", "ospf-ldp", "isis", "isis-sr", "isis-ldp", "isis-sr-ldp", "none"]
             | None
             | UndefinedType = Undefined,
+            unsupported_transceiver: UnsupportedTransceiver | UndefinedType = Undefined,
             uplink_ptp: UplinkPtp | UndefinedType = Undefined,
             use_cv_topology: bool | None | UndefinedType = Undefined,
             use_router_general_for_router_id: bool | UndefinedType = Undefined,
@@ -57016,6 +57036,7 @@ class EosDesigns(EosDesignsRootModel):
                    flexible tool that can be used to apply self-healing actions,
                    customize the system behavior, and
                    implement workarounds to problems discovered in the field.
+                event_monitor: event_monitor
                 evpn_ebgp_gateway_inter_domain: evpn_ebgp_gateway_inter_domain
                 evpn_ebgp_gateway_multihop:
                    Default of 15, considering a large value to avoid BGP reachability issues in very complex DCI
@@ -57173,6 +57194,7 @@ class EosDesigns(EosDesignsRootModel):
 
                    Subclass of AvdIndexedList with
                    `L3InterfaceProfilesItem` items. Primary key is `profile` (`str`).
+                load_interval_default: load_interval_default
                 local_users: local_users
                 mac_address_table:
                    MAC address-table aging time.
@@ -57550,6 +57572,7 @@ class EosDesigns(EosDesignsRootModel):
 
                    Subclass of AvdModel.
                 queue_monitor_length: Subclass of AvdModel.
+                queue_monitor_streaming: Subclass of AvdModel.
                 redundancy:
                    Redundancy for chassis platforms with dual supervisors | Optional.
 
@@ -57775,6 +57798,7 @@ class EosDesigns(EosDesignsRootModel):
                    - The variables should be applied to all devices in the fabric.
                    *Only supported with
                    core_interfaces data model.
+                unsupported_transceiver: Subclass of AvdModel.
                 uplink_ptp:
                    Enable PTP on all infrastructure links.
 
