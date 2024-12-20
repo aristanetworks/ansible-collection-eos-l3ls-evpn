@@ -359,6 +359,7 @@ class EthernetInterfacesMixin(UtilsMixin):
                         "switchport": {"enabled": False},
                         "peer_type": "l3_interface",
                         "peer": self.shared_utils.wan_ha_peer,
+                        "peer_interface": interface,
                         "shutdown": False,
                         "description": description,
                         "ip_address": self.shared_utils.wan_ha_ip_addresses[index],

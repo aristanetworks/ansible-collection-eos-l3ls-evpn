@@ -82,6 +82,15 @@ class OverlayMixin:
         return admin_subfield
 
     @cached_property
+    def evpn_gateway_enabled(self: SharedUtils) -> bool:
+        if self.overlay_routing_protocol == "ebgp" or self.is_cv_pathfinder_client:
+            # Enable gateway when evpn_gateway is enabled
+            # - for ebgp
+            # - for ibgp, currently supported only for pathfinder deployment.
+            return self.node_config.evpn_gateway.evpn_l2.enabled or self.node_config.evpn_gateway.evpn_l3.enabled
+        return False
+
+    @cached_property
     def overlay_routing_protocol_address_family(self: SharedUtils) -> str:
         overlay_routing_protocol_address_family = self.inputs.overlay_routing_protocol_address_family
         if overlay_routing_protocol_address_family == "ipv6" and not (self.underlay_ipv6 is True and self.inputs.underlay_rfc5549):

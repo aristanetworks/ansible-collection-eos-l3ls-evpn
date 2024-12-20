@@ -23,6 +23,7 @@
 | WAN | wan_rr | pf2 | 192.168.17.11/24 | - | Provisioned | - |
 | WAN | l3leaf | site1-border1 | 192.168.17.14/24 | - | Provisioned | - |
 | WAN | l3leaf | site1-border2 | 192.168.17.15/24 | - | Provisioned | - |
+| WAN | overlay-controller | site1-rs1 | 192.168.17.60/24 | vEOS-LAB | Provisioned | - |
 | WAN | wan_router | site1-wan1 | 192.168.17.12/24 | - | Provisioned | - |
 | WAN | wan_router | site1-wan2 | 192.168.17.13/24 | - | Provisioned | - |
 | WAN | l3leaf | site2-leaf1 | 192.168.17.18/24 | - | Provisioned | - |
@@ -44,19 +45,13 @@
 | Type | Node | Node Interface | Peer Type | Peer Node | Peer Interface |
 | ---- | ---- | -------------- | --------- | ----------| -------------- |
 | l3leaf | site1-border1 | Ethernet3 | wan_router | site1-wan1 | Ethernet1 |
-| l3leaf | site1-border1 | Ethernet3.100 | wan_router | site1-wan1 | Ethernet1.100 |
-| l3leaf | site1-border1 | Ethernet3.101 | wan_router | site1-wan1 | Ethernet1.101 |
 | l3leaf | site1-border1 | Ethernet4 | wan_router | site1-wan2 | Ethernet1 |
-| l3leaf | site1-border1 | Ethernet4.100 | wan_router | site1-wan2 | Ethernet1.100 |
-| l3leaf | site1-border1 | Ethernet4.101 | wan_router | site1-wan2 | Ethernet1.101 |
 | l3leaf | site1-border1 | Ethernet5 | mlag_peer | site1-border2 | Ethernet5 |
 | l3leaf | site1-border1 | Ethernet6 | mlag_peer | site1-border2 | Ethernet6 |
+| l3leaf | site1-border1 | Ethernet8 | overlay-controller | site1-rs1 | Ethernet1 |
 | l3leaf | site1-border2 | Ethernet3 | wan_router | site1-wan1 | Ethernet2 |
-| l3leaf | site1-border2 | Ethernet3.100 | wan_router | site1-wan1 | Ethernet2.100 |
-| l3leaf | site1-border2 | Ethernet3.101 | wan_router | site1-wan1 | Ethernet2.101 |
 | l3leaf | site1-border2 | Ethernet4 | wan_router | site1-wan2 | Ethernet2 |
-| l3leaf | site1-border2 | Ethernet4.100 | wan_router | site1-wan2 | Ethernet2.100 |
-| l3leaf | site1-border2 | Ethernet4.101 | wan_router | site1-wan2 | Ethernet2.101 |
+| l3leaf | site1-border2 | Ethernet8 | overlay-controller | site1-rs1 | Ethernet2 |
 | l3leaf | site2-leaf1 | Ethernet3 | wan_router | site2-wan1 | Ethernet1 |
 | l3leaf | site2-leaf1 | Ethernet3.100 | wan_router | site2-wan1 | Ethernet1.100 |
 | l3leaf | site2-leaf1 | Ethernet3.101 | wan_router | site2-wan1 | Ethernet1.101 |
@@ -76,26 +71,21 @@
 
 | Uplink IPv4 Pool | Available Addresses | Assigned addresses | Assigned Address % |
 | ---------------- | ------------------- | ------------------ | ------------------ |
-| 10.0.1.0/24 | 256 | 24 | 9.38 % |
+| 10.0.1.0/24 | 256 | 8 | 3.13 % |
 | 10.0.2.0/24 | 256 | 12 | 4.69 % |
 | 10.0.3.0/24 | 256 | 0 | 0.0 % |
+| 10.0.5.0/24 | 256 | 4 | 1.57 % |
 
 ### Point-To-Point Links Node Allocation
 
 | Node | Node Interface | Node IP Address | Peer Node | Peer Interface | Peer IP Address |
 | ---- | -------------- | --------------- | --------- | -------------- | --------------- |
 | site1-border1 | Ethernet3 | 10.0.1.8/31 | site1-wan1 | Ethernet1 | 10.0.1.9/31 |
-| site1-border1 | Ethernet3.100 | 10.0.1.8/31 | site1-wan1 | Ethernet1.100 | 10.0.1.9/31 |
-| site1-border1 | Ethernet3.101 | 10.0.1.8/31 | site1-wan1 | Ethernet1.101 | 10.0.1.9/31 |
 | site1-border1 | Ethernet4 | 10.0.1.12/31 | site1-wan2 | Ethernet1 | 10.0.1.13/31 |
-| site1-border1 | Ethernet4.100 | 10.0.1.12/31 | site1-wan2 | Ethernet1.100 | 10.0.1.13/31 |
-| site1-border1 | Ethernet4.101 | 10.0.1.12/31 | site1-wan2 | Ethernet1.101 | 10.0.1.13/31 |
+| site1-border1 | Ethernet8 | 10.0.5.9/31 | site1-rs1 | Ethernet1 | 10.0.5.8/31 |
 | site1-border2 | Ethernet3 | 10.0.1.10/31 | site1-wan1 | Ethernet2 | 10.0.1.11/31 |
-| site1-border2 | Ethernet3.100 | 10.0.1.10/31 | site1-wan1 | Ethernet2.100 | 10.0.1.11/31 |
-| site1-border2 | Ethernet3.101 | 10.0.1.10/31 | site1-wan1 | Ethernet2.101 | 10.0.1.11/31 |
 | site1-border2 | Ethernet4 | 10.0.1.14/31 | site1-wan2 | Ethernet2 | 10.0.1.15/31 |
-| site1-border2 | Ethernet4.100 | 10.0.1.14/31 | site1-wan2 | Ethernet2.100 | 10.0.1.15/31 |
-| site1-border2 | Ethernet4.101 | 10.0.1.14/31 | site1-wan2 | Ethernet2.101 | 10.0.1.15/31 |
+| site1-border2 | Ethernet8 | 10.0.5.11/31 | site1-rs1 | Ethernet2 | 10.0.5.10/31 |
 | site2-leaf1 | Ethernet3 | 10.0.2.12/31 | site2-wan1 | Ethernet1 | 10.0.2.13/31 |
 | site2-leaf1 | Ethernet3.100 | 10.0.2.12/31 | site2-wan1 | Ethernet1.100 | 10.0.2.13/31 |
 | site2-leaf1 | Ethernet3.101 | 10.0.2.12/31 | site2-wan1 | Ethernet1.101 | 10.0.2.13/31 |
@@ -108,7 +98,7 @@
 | Loopback Pool | Available Addresses | Assigned addresses | Assigned Address % |
 | ------------- | ------------------- | ------------------ | ------------------ |
 | 172.31.255.0/24 | 256 | 2 | 0.79 % |
-| 192.168.255.0/24 | 256 | 11 | 4.3 % |
+| 192.168.255.0/24 | 256 | 12 | 4.69 % |
 
 ### Loopback0 Interfaces Node Allocation
 
@@ -120,6 +110,7 @@
 | WAN | pf2 | 192.168.255.2/32 |
 | WAN | site1-border1 | 192.168.255.5/32 |
 | WAN | site1-border2 | 192.168.255.6/32 |
+| WAN | site1-rs1 | 192.168.255.99/32 |
 | WAN | site1-wan1 | 192.168.255.3/32 |
 | WAN | site1-wan2 | 192.168.255.4/32 |
 | WAN | site2-leaf1 | 192.168.255.9/32 |

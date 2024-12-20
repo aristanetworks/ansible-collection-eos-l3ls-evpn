@@ -106,14 +106,6 @@ class RouterBgpMixin(UtilsMixin):
 
             peer_groups.append(ebgp_peer_group)
 
-            if self.shared_utils.node_config.evpn_gateway.evpn_l2.enabled or self.shared_utils.node_config.evpn_gateway.evpn_l3.enabled:
-                peer_groups.append(
-                    {
-                        **self._generate_base_peer_group("evpn", "evpn_overlay_core"),
-                        "ebgp_multihop": self.inputs.evpn_ebgp_gateway_multihop,
-                    },
-                )
-
         elif self.shared_utils.overlay_routing_protocol == "ibgp":
             if self.shared_utils.overlay_mpls is True:
                 # MPLS OVERLAY peer group
@@ -168,6 +160,14 @@ class RouterBgpMixin(UtilsMixin):
                 )
                 peer_groups.append(wan_rr_overlay_peer_group)
 
+        if self.shared_utils.evpn_gateway_enabled:
+            peer_groups.append(
+                {
+                    **self._generate_base_peer_group("evpn", "evpn_overlay_core"),
+                    "ebgp_multihop": self.inputs.evpn_ebgp_gateway_multihop,
+                },
+            )
+
         # same for ebgp and ibgp
         if self.shared_utils.overlay_ipvpn_gateway is True:
             peer_groups.append(
@@ -191,9 +191,7 @@ class RouterBgpMixin(UtilsMixin):
         elif self.shared_utils.overlay_evpn_vxlan is True:
             peer_groups.append({"name": self.inputs.bgp_peer_groups.evpn_overlay_peers.name, "activate": False})
 
-        if self.shared_utils.overlay_routing_protocol == "ebgp" and (
-            self.shared_utils.node_config.evpn_gateway.evpn_l2.enabled or self.shared_utils.node_config.evpn_gateway.evpn_l3.enabled
-        ):
+        if self.shared_utils.evpn_gateway_enabled:
             peer_groups.append({"name": self.inputs.bgp_peer_groups.evpn_overlay_core.name, "activate": False})
 
         if self.shared_utils.overlay_routing_protocol == "ibgp":
@@ -227,15 +225,14 @@ class RouterBgpMixin(UtilsMixin):
             else:
                 overlay_peer_group = {"name": self.inputs.bgp_peer_groups.evpn_overlay_peers.name, "activate": True}
 
-        if self.shared_utils.overlay_routing_protocol == "ebgp":
-            if self.shared_utils.node_config.evpn_gateway.evpn_l2.enabled or self.shared_utils.node_config.evpn_gateway.evpn_l3.enabled:
-                peer_groups.append(
-                    {
-                        "name": self.inputs.bgp_peer_groups.evpn_overlay_core.name,
-                        "domain_remote": True,
-                        "activate": True,
-                    },
-                )
+        if self.shared_utils.evpn_gateway_enabled:
+            peer_groups.append(
+                {
+                    "name": self.inputs.bgp_peer_groups.evpn_overlay_core.name,
+                    "domain_remote": True,
+                    "activate": True,
+                },
+            )
 
             if self.shared_utils.node_config.evpn_gateway.evpn_l3.enabled:
                 address_family_evpn["neighbor_default"] = {
@@ -519,6 +516,7 @@ class RouterBgpMixin(UtilsMixin):
                 )
                 neighbors.append(neighbor)
 
+        if self.shared_utils.overlay_routing_protocol == "ebgp" or self.shared_utils.is_cv_pathfinder_client:
             for gw_remote_peer, data in natural_sort(self._evpn_gateway_remote_peers.items()):
                 neighbor = self._create_neighbor(
                     data["ip_address"],

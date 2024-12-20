@@ -12,16 +12,33 @@ l3leaf:
     mlag_interfaces: [Ethernet5, Ethernet6]
     mlag_peer_l3_ipv4_pool: 10.255.251.0/24
     mlag_peer_ipv4_pool: 10.255.252.0/24
+    uplink_switches: [site1-rs1]
+    uplink_interfaces: [Ethernet8]
+    uplink_ipv4_pool: 10.0.5.0/24
   node_groups:
     - group: SITE1
       bgp_as: 65101
       nodes:
         - name: site1-border1
           mgmt_ip: 192.168.17.14/24
+          uplink_switch_interfaces: [Ethernet1]
           id: 5
         - name: site1-border2
           mgmt_ip: 192.168.17.15/24
+          uplink_switch_interfaces: [Ethernet2]
           id: 6
+
+overlay_controller:
+  defaults:
+    platform: vEOS-LAB
+    loopback_ipv4_pool: 192.168.255.0/24
+    uplink_bfd: False
+    bgp_as: 65101
+  nodes:
+    - name: site1-rs1
+      id: 99
+      mgmt_ip: 192.168.17.60/24
+      evpn_role: server
 
 wan_router:
   defaults:
@@ -32,7 +49,7 @@ wan_router:
       always_include_vrfs_in_tenants: [all]
     uplink_interfaces: [Ethernet1, Ethernet2]
     uplink_switches: [site1-border1, site1-border2]
-    uplink_type: p2p-vrfs # (1)!
+    uplink_type: p2p # (1)!
     bgp_as: 65000
   node_groups:
     - group: SITE1
@@ -49,6 +66,11 @@ wan_router:
           id: 3
           mgmt_ip: 192.168.17.12/24
           uplink_switch_interfaces: [Ethernet3, Ethernet3]
+          evpn_gateway:
+            remote_peers:
+              - hostname: site1-rs1
+            evpn_l3:
+              enabled: true
           l3_interfaces:
             - name: Ethernet3
               profile: MPLS-WAN-INTERFACE

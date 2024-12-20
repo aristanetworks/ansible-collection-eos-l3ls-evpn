@@ -276,6 +276,7 @@ ethernet_interfaces:
     enabled: false
   peer_type: l3_interface
   peer: site2-wan2
+  peer_interface: Ethernet5
   shutdown: false
   description: WAN_HA_site2-wan2_Ethernet5
   ip_address: 10.42.0.0/31

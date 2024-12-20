@@ -56,21 +56,22 @@ router_bgp:
     remote_as: '65000'
     peer: site1-wan2
     description: site1-wan2_Ethernet2
+  - ip_address: 10.0.5.10
+    peer_group: IPv4-UNDERLAY-PEERS
+    remote_as: '65101'
+    peer: site1-rs1
+    description: site1-rs1_Ethernet2
+  - ip_address: 192.168.255.99
+    peer_group: EVPN-OVERLAY-PEERS
+    peer: site1-rs1
+    description: site1-rs1_Loopback0
+    remote_as: '65101'
+  address_family_evpn:
+    peer_groups:
+    - name: EVPN-OVERLAY-PEERS
+      activate: true
   vrfs:
   - name: BLUE
-    router_id: 192.168.255.6
-    neighbors:
-    - ip_address: 10.0.1.11
-      peer_group: IPv4-UNDERLAY-PEERS
-      remote_as: '65000'
-      description: site1-wan1_Ethernet2.100_vrf_BLUE
-    - ip_address: 10.0.1.15
-      peer_group: IPv4-UNDERLAY-PEERS
-      remote_as: '65000'
-      description: site1-wan2_Ethernet2.100_vrf_BLUE
-    - ip_address: 10.255.251.8
-      peer_group: MLAG-IPv4-UNDERLAY-PEER
-      description: site1-border1_Vlan3099
     rd: 192.168.255.6:100
     route_targets:
       import:
@@ -81,24 +82,16 @@ router_bgp:
       - address_family: evpn
         route_targets:
         - 100:100
+    router_id: 192.168.255.6
     redistribute:
       connected:
         enabled: true
         route_map: RM-CONN-2-BGP-VRFS
-  - name: RED
-    router_id: 192.168.255.6
     neighbors:
-    - ip_address: 10.0.1.11
-      peer_group: IPv4-UNDERLAY-PEERS
-      remote_as: '65000'
-      description: site1-wan1_Ethernet2.101_vrf_RED
-    - ip_address: 10.0.1.15
-      peer_group: IPv4-UNDERLAY-PEERS
-      remote_as: '65000'
-      description: site1-wan2_Ethernet2.101_vrf_RED
     - ip_address: 10.255.251.8
       peer_group: MLAG-IPv4-UNDERLAY-PEER
-      description: site1-border1_Vlan3100
+      description: site1-border1_Vlan3099
+  - name: RED
     rd: 192.168.255.6:101
     route_targets:
       import:
@@ -109,14 +102,15 @@ router_bgp:
       - address_family: evpn
         route_targets:
         - 101:101
+    router_id: 192.168.255.6
     redistribute:
       connected:
         enabled: true
         route_map: RM-CONN-2-BGP-VRFS
-  address_family_evpn:
-    peer_groups:
-    - name: EVPN-OVERLAY-PEERS
-      activate: true
+    neighbors:
+    - ip_address: 10.255.251.8
+      peer_group: MLAG-IPv4-UNDERLAY-PEER
+      description: site1-border1_Vlan3100
   vlans:
   - id: 666
     tenant: WAN-EXAMPLE-TENANT
@@ -319,32 +313,6 @@ ethernet_interfaces:
   flow_tracker:
     sampled: FLOW-TRACKER
   ip_address: 10.0.1.10/31
-- name: Ethernet3.100
-  peer: site1-wan1
-  peer_interface: Ethernet2.100
-  peer_type: wan_router
-  vrf: BLUE
-  description: P2P_site1-wan1_Ethernet2.100_VRF_BLUE
-  shutdown: false
-  encapsulation_dot1q:
-    vlan: 100
-  flow_tracker:
-    sampled: FLOW-TRACKER
-  mtu: 9214
-  ip_address: 10.0.1.10/31
-- name: Ethernet3.101
-  peer: site1-wan1
-  peer_interface: Ethernet2.101
-  peer_type: wan_router
-  vrf: RED
-  description: P2P_site1-wan1_Ethernet2.101_VRF_RED
-  shutdown: false
-  encapsulation_dot1q:
-    vlan: 101
-  flow_tracker:
-    sampled: FLOW-TRACKER
-  mtu: 9214
-  ip_address: 10.0.1.10/31
 - name: Ethernet4
   peer: site1-wan2
   peer_interface: Ethernet2
@@ -357,32 +325,18 @@ ethernet_interfaces:
   flow_tracker:
     sampled: FLOW-TRACKER
   ip_address: 10.0.1.14/31
-- name: Ethernet4.100
-  peer: site1-wan2
-  peer_interface: Ethernet2.100
-  peer_type: wan_router
-  vrf: BLUE
-  description: P2P_site1-wan2_Ethernet2.100_VRF_BLUE
+- name: Ethernet8
+  peer: site1-rs1
+  peer_interface: Ethernet2
+  peer_type: overlay-controller
+  description: P2P_site1-rs1_Ethernet2
   shutdown: false
-  encapsulation_dot1q:
-    vlan: 100
+  mtu: 9214
+  switchport:
+    enabled: false
   flow_tracker:
     sampled: FLOW-TRACKER
-  mtu: 9214
-  ip_address: 10.0.1.14/31
-- name: Ethernet4.101
-  peer: site1-wan2
-  peer_interface: Ethernet2.101
-  peer_type: wan_router
-  vrf: RED
-  description: P2P_site1-wan2_Ethernet2.101_VRF_RED
-  shutdown: false
-  encapsulation_dot1q:
-    vlan: 101
-  flow_tracker:
-    sampled: FLOW-TRACKER
-  mtu: 9214
-  ip_address: 10.0.1.14/31
+  ip_address: 10.0.5.11/31
 mlag_configuration:
   domain_id: SITE1
   local_interface: Vlan4094
