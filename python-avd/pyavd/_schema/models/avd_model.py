@@ -290,7 +290,8 @@ class AvdModel(AvdBase):
             if field_type is dict:
                 # In-place deepmerge in to the existing dict without schema.
                 # Deepcopying since merge() does not copy.
-                merge(old_value, new_value, list_merge=list_merge)
+                legacy_list_merge = list_merge.replace("_unique", "_rp")
+                merge(old_value, new_value, list_merge=legacy_list_merge)
                 continue
 
             setattr(self, field, new_value)
