@@ -185,7 +185,7 @@ class AvdList(Sequence[T_ItemType], Generic[T_ItemType], AvdBase):
             raise TypeError(msg)
 
         if self._created_from_null or other._created_from_null:
-            # Clear the flag and set list_merge to replace so we overwrite with data from other below.
+            # Set the flag to the value of other and set list_merge to replace so we overwrite with data from other below.
             self._created_from_null = other._created_from_null
             list_merge = "replace"
 
