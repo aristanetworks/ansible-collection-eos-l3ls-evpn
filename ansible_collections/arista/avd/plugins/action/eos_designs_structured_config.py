@@ -134,16 +134,18 @@ class ActionModule(ActionBase):
                 if strip_empty_keys:
                     template_result_data = strip_null_from_data(template_result_data)
 
-                # If there is any data produced by the template, convert and merge it on top of previous output.
-                if template_result_data:
-                    # Some templates return a list of dicts, others only return a dict. Here we normalize to list.
-                    if not isinstance(template_result_data, list):
-                        template_result_data = [template_result_data]
+                if not template_result_data:
+                    continue
 
-                    try:
-                        merge(output, *template_result_data, list_merge=list_merge, schema=output_schema_tools.avdschema)
-                    except Exception as error:
-                        raise AnsibleActionFail(message=str(error)) from error
+                # If there is any data produced by the template, convert and merge it on top of previous output.
+                # Some templates return a list of dicts, others only return a dict. Here we normalize to list.
+                if not isinstance(template_result_data, list):
+                    template_result_data = [template_result_data]
+
+                try:
+                    merge(output, *template_result_data, list_merge=list_merge, schema=output_schema_tools.avdschema)
+                except Exception as error:
+                    raise AnsibleActionFail(message=str(error)) from error
 
         # If the argument 'template_output' is set, run the output data through another jinja2 rendering.
         # This is to resolve any input values with inline jinja using variables/facts set by the input templates.

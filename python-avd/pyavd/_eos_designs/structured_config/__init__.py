@@ -96,12 +96,11 @@ def get_structured_config(
 
     # Placeholder for custom structured configs added by the structured config generators.
     # Will be applied last by AvdStructuredConfigCustomStructuredConfiguration.
-    # "root" are the legacy "struct_cfgs" to be applied at the root level.
-    # "nested" is one big structured config created from "structured_config" under various nested models.
+    # "root" holds full device structured configs given under node-config or under VRFs. They will be applied at the root level of the final structured config.
+    # "nested" is one instance of structured config merged onto during parsing of various models supporting a "structured_config" option.
     # We need these variants because the order of application is important (root first, then nested).
     #
-    # TODO: Figure out if we should support all the other strategies.
-    custom_structured_configs = StructCfgs(list_merge_strategy="replace" if inputs.custom_structured_configuration_list_merge == "replace" else "append")
+    custom_structured_configs = StructCfgs.new_from_ansible_list_merge_strategy(inputs.custom_structured_configuration_list_merge)
 
     for cls in AVD_STRUCTURED_CONFIG_CLASSES:
         eos_designs_module = cls(

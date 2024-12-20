@@ -4,7 +4,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import TYPE_CHECKING, Literal
+from typing import TYPE_CHECKING, Literal, cast
 
 from pyavd._eos_cli_config_gen.schema import EosCliConfigGen
 from pyavd._eos_designs.avdfacts import AvdFacts
@@ -24,7 +24,21 @@ class StructCfgs:
 
     root: list[EosCliConfigGen] = field(default_factory=list)
     nested: EosCliConfigGen = field(default_factory=EosCliConfigGen)
-    list_merge_strategy: Literal["append", "replace"] = "append"
+    list_merge_strategy: Literal["append_unique", "append", "replace", "keep", "prepend", "prepend_unique"] = "append_unique"
+
+    @classmethod
+    def new_from_ansible_list_merge_strategy(cls, ansible_strategy: Literal["replace", "append", "keep", "prepend", "append_rp", "prepend_rp"]) -> StructCfgs:
+        merge_strategy_map = {
+            "append_rp": "append_unique",
+            "prepend_rp": "prepend_unique",
+        }
+        list_merge_strategy = merge_strategy_map.get(ansible_strategy, ansible_strategy)
+        if list_merge_strategy not in ["append_unique", "append", "replace", "keep", "prepend", "prepend_unique"]:
+            msg = f"Unsupported list merge strategy: {ansible_strategy}"
+            raise ValueError(msg)
+
+        list_merge_strategy = cast(Literal["append_unique", "append", "replace", "keep", "prepend", "prepend_unique"], list_merge_strategy)
+        return cls(list_merge_strategy=list_merge_strategy)
 
 
 class StructuredConfigGenerator(AvdFacts):
@@ -55,4 +69,4 @@ class StructuredConfigGenerator(AvdFacts):
         """
         generated_structured_config_as_dict = super().render()
         generated_structured_config = EosCliConfigGen._from_dict(generated_structured_config_as_dict)
-        self.structured_config._deepmerge(generated_structured_config, list_merge="append")
+        self.structured_config._deepmerge(generated_structured_config, list_merge="append_unique")

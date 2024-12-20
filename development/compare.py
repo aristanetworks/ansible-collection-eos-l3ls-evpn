@@ -82,9 +82,9 @@ def main() -> None:
     old = Path(args.old_file).read_text()
     new = Path(args.new_file).read_text()
 
-    if args.old_file.endswith("yml"):
+    if args.old_file.endswith(("yml", "yaml")):
         old = yaml.dump(yaml.load(old, Loader=yaml.CSafeLoader), Dumper=yaml.CDumper, sort_keys=True, indent=2)
-    if args.new_file.endswith("yml"):
+    if args.new_file.endswith(("yml", "yaml")):
         new = yaml.dump(yaml.load(new, Loader=yaml.CSafeLoader), Dumper=yaml.CDumper, sort_keys=True, indent=2)
 
     # Build set of diffs

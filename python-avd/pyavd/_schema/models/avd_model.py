@@ -238,15 +238,24 @@ class AvdModel(AvdBase):
             self.__init__(*args, **kwargs)
             return self
 
-    def _deepmerge(self, other: Self, list_merge: Literal["append", "replace"] = "append") -> None:
+    def _deepmerge(self, other: Self, list_merge: Literal["append_unique", "append", "replace", "keep", "prepend", "prepend_unique"] = "append_unique") -> None:
         """
         Update instance by deepmerging the other instance in.
 
         Args:
             other: The other instance of the same type to merge on this instance.
             list_merge: Merge strategy used on any nested lists.
-                - "append" will first try to deep merge on the primary key, and if not found it will append non-existing items.
-                - "replace" will replace the full list.
+
+        List merge strategies:
+        - "append_unique" will first try to deep merge on the primary key, and if not found it will append non-existing items.
+        - "append" will first try to deep merge on the primary key, and if not found it will append all other items (including duplicates).\
+            (For AvdIndexedList this works the same as append_unique)
+        - "replace" will replace the full list.
+        - "keep" will only use the new list if there is no existing list or existing list is `None`.
+        - "prepend_unique" will first try to deep merge on the primary key, and if not found it will prepend non-existing items.
+        - "prepend" will first try to deep merge on the primary key, and if not found it will prepend all other items (including duplicates).\
+            (For AvdIndexedList this works the same as prepend_unique)
+
         """
         cls = type(self)
         if not isinstance(other, cls):

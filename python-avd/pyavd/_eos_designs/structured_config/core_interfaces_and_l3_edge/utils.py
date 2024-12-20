@@ -209,7 +209,7 @@ class UtilsMixin:
         }
 
         if p2p_link.structured_config:
-            if str(interface_name := p2p_link_data["interface"]).lower().startswith("po"):
+            if str(interface_name := p2p_link_data["interface"]).lower().startswith("p"):
                 # Port-channel
                 self.custom_structured_configs.nested.port_channel_interfaces.obtain(interface_name)._deepmerge(
                     EosCliConfigGen.PortChannelInterfacesItem._from_dict(p2p_link.structured_config),
