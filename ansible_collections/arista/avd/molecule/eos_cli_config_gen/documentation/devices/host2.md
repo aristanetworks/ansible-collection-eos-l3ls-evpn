@@ -81,6 +81,9 @@
 - [IP NAT](#ip-nat)
   - [IP NAT Device Configuration](#ip-nat-device-configuration)
   - [Traffic Policies information](#traffic-policies-information)
+- [STUN](#stun)
+  - [STUN Server](#stun-server)
+  - [STUN Device Configuration](#stun-device-configuration)
 
 ## Management
 
@@ -1176,4 +1179,22 @@ traffic-policies
       11:22:33:44:55:66:77:88
    !
    field-set ipv6 prefix IPv6-DEMO-2
+```
+
+## STUN
+
+### STUN Server
+
+| Server Local Interfaces | Bindings Timeout (s) | SSL Profile | SSL Connection Lifetime | Port |
+| ----------------------- | -------------------- | ----------- | ----------------------- | ---- |
+| Ethernet1 | - | - | 3 hours | 3478 |
+
+### STUN Device Configuration
+
+```eos
+!
+stun
+   server
+      local-interface Ethernet1
+      ssl connection lifetime 3 hours
 ```

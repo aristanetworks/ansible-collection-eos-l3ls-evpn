@@ -5707,11 +5707,70 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class AddressLocking(AvdModel):
             """Subclass of AvdModel."""
 
-            _fields: ClassVar[dict] = {"ipv4": {"type": bool}, "ipv6": {"type": bool}, "_custom_data": {"type": dict}}
+            class AddressFamily(AvdModel):
+                """Subclass of AvdModel."""
+
+                _fields: ClassVar[dict] = {"ipv4": {"type": bool}, "ipv6": {"type": bool}, "_custom_data": {"type": dict}}
+                ipv4: bool | None
+                """Enable/disable address locking for IPv4."""
+                ipv6: bool | None
+                """Enable/disable address locking for IPv6."""
+                _custom_data: dict[str, Any]
+
+                if TYPE_CHECKING:
+
+                    def __init__(
+                        self,
+                        *,
+                        ipv4: bool | None | UndefinedType = Undefined,
+                        ipv6: bool | None | UndefinedType = Undefined,
+                        _custom_data: dict[str, Any] | UndefinedType = Undefined,
+                    ) -> None:
+                        """
+                        AddressFamily.
+
+
+                        Subclass of AvdModel.
+
+                        Args:
+                            ipv4: Enable/disable address locking for IPv4.
+                            ipv6: Enable/disable address locking for IPv6.
+                            _custom_data: _custom_data
+
+                        """
+
+            _fields: ClassVar[dict] = {
+                "ipv4": {"type": bool},
+                "ipv6": {"type": bool},
+                "address_family": {"type": AddressFamily},
+                "ipv4_enforcement_disabled": {"type": bool},
+                "_custom_data": {"type": dict},
+            }
             ipv4: bool | None
-            """Enable address locking for IPv4."""
+            """
+            Enable address locking for IPv4.
+            For EOS version 4.31 and above, the `address_family.ipv4` parameter
+            should be used instead.
+            """
             ipv6: bool | None
-            """Enable address locking for IPv6."""
+            """
+            Enable address locking for IPv6.
+            For EOS version 4.31 and above, the `address_family.ipv6` parameter
+            should be used instead.
+            """
+            address_family: AddressFamily
+            """
+            Configure address locking per address family.
+            The `address_locking.ipv4/ipv6` and
+            `address_locking.address_family.ipv4/ipv6` are mutually exclusive and
+            `address_locking.address_family.ipv4/ipv6` take precedence.
+            Introduced in EOS 4.31.0F.
+
+            Subclass of
+            AvdModel.
+            """
+            ipv4_enforcement_disabled: bool | None
+            """Disable enforcement for IPv4 locked addresses."""
             _custom_data: dict[str, Any]
 
             if TYPE_CHECKING:
@@ -5721,6 +5780,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                     *,
                     ipv4: bool | None | UndefinedType = Undefined,
                     ipv6: bool | None | UndefinedType = Undefined,
+                    address_family: AddressFamily | UndefinedType = Undefined,
+                    ipv4_enforcement_disabled: bool | None | UndefinedType = Undefined,
                     _custom_data: dict[str, Any] | UndefinedType = Undefined,
                 ) -> None:
                     """
@@ -5730,8 +5791,24 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                     Subclass of AvdModel.
 
                     Args:
-                        ipv4: Enable address locking for IPv4.
-                        ipv6: Enable address locking for IPv6.
+                        ipv4:
+                           Enable address locking for IPv4.
+                           For EOS version 4.31 and above, the `address_family.ipv4` parameter
+                           should be used instead.
+                        ipv6:
+                           Enable address locking for IPv6.
+                           For EOS version 4.31 and above, the `address_family.ipv6` parameter
+                           should be used instead.
+                        address_family:
+                           Configure address locking per address family.
+                           The `address_locking.ipv4/ipv6` and
+                           `address_locking.address_family.ipv4/ipv6` are mutually exclusive and
+                           `address_locking.address_family.ipv4/ipv6` take precedence.
+                           Introduced in EOS 4.31.0F.
+
+                           Subclass of
+                           AvdModel.
+                        ipv4_enforcement_disabled: Disable enforcement for IPv4 locked addresses.
                         _custom_data: _custom_data
 
                     """
@@ -12186,6 +12263,52 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                     """
 
+        class TrafficEngineering(AvdModel):
+            """Subclass of AvdModel."""
+
+            class AdministrativeGroups(AvdList[str]):
+                """Subclass of AvdList with `str` items."""
+
+            AdministrativeGroups._item_type = str
+
+            _fields: ClassVar[dict] = {"enabled": {"type": bool}, "administrative_groups": {"type": AdministrativeGroups}, "_custom_data": {"type": dict}}
+            enabled: bool | None
+            """Whether to enable traffic-engineering on this interface."""
+            administrative_groups: AdministrativeGroups
+            """
+            List of traffic-engineering administrative groups, valid values are names, ranges 0-127, or single
+            integers 0-127.
+
+            Subclass of AvdList with `str` items.
+            """
+            _custom_data: dict[str, Any]
+
+            if TYPE_CHECKING:
+
+                def __init__(
+                    self,
+                    *,
+                    enabled: bool | None | UndefinedType = Undefined,
+                    administrative_groups: AdministrativeGroups | UndefinedType = Undefined,
+                    _custom_data: dict[str, Any] | UndefinedType = Undefined,
+                ) -> None:
+                    """
+                    TrafficEngineering.
+
+
+                    Subclass of AvdModel.
+
+                    Args:
+                        enabled: Whether to enable traffic-engineering on this interface.
+                        administrative_groups:
+                           List of traffic-engineering administrative groups, valid values are names, ranges 0-127, or single
+                           integers 0-127.
+
+                           Subclass of AvdList with `str` items.
+                        _custom_data: _custom_data
+
+                    """
+
         _fields: ClassVar[dict] = {
             "name": {"type": str},
             "description": {"type": str},
@@ -12300,6 +12423,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             "validate_state": {"type": bool},
             "validate_lldp": {"type": bool},
             "switchport": {"type": Switchport},
+            "traffic_engineering": {"type": TrafficEngineering},
             "eos_cli": {"type": str},
             "_custom_data": {"type": dict},
         }
@@ -12565,6 +12689,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         Subclass of
         AvdModel.
         """
+        traffic_engineering: TrafficEngineering
+        """Subclass of AvdModel."""
         eos_cli: str | None
         """Multiline EOS CLI rendered directly on the ethernet interface in the final EOS configuration."""
         _custom_data: dict[str, Any]
@@ -12687,6 +12813,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 validate_state: bool | None | UndefinedType = Undefined,
                 validate_lldp: bool | None | UndefinedType = Undefined,
                 switchport: Switchport | UndefinedType = Undefined,
+                traffic_engineering: TrafficEngineering | UndefinedType = Undefined,
                 eos_cli: str | None | UndefinedType = Undefined,
                 _custom_data: dict[str, Any] | UndefinedType = Undefined,
             ) -> None:
@@ -12861,6 +12988,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                        Subclass of
                        AvdModel.
+                    traffic_engineering: Subclass of AvdModel.
                     eos_cli: Multiline EOS CLI rendered directly on the ethernet interface in the final EOS configuration.
                     _custom_data: _custom_data
 
@@ -32639,6 +32767,52 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                     """
 
+        class TrafficEngineering(AvdModel):
+            """Subclass of AvdModel."""
+
+            class AdministrativeGroups(AvdList[str]):
+                """Subclass of AvdList with `str` items."""
+
+            AdministrativeGroups._item_type = str
+
+            _fields: ClassVar[dict] = {"enabled": {"type": bool}, "administrative_groups": {"type": AdministrativeGroups}, "_custom_data": {"type": dict}}
+            enabled: bool | None
+            """Whether to enable traffic-engineering on this interface."""
+            administrative_groups: AdministrativeGroups
+            """
+            List of traffic-engineering administrative groups, valid values are names, ranges 0-127, or single
+            integers 0-127.
+
+            Subclass of AvdList with `str` items.
+            """
+            _custom_data: dict[str, Any]
+
+            if TYPE_CHECKING:
+
+                def __init__(
+                    self,
+                    *,
+                    enabled: bool | None | UndefinedType = Undefined,
+                    administrative_groups: AdministrativeGroups | UndefinedType = Undefined,
+                    _custom_data: dict[str, Any] | UndefinedType = Undefined,
+                ) -> None:
+                    """
+                    TrafficEngineering.
+
+
+                    Subclass of AvdModel.
+
+                    Args:
+                        enabled: Whether to enable traffic-engineering on this interface.
+                        administrative_groups:
+                           List of traffic-engineering administrative groups, valid values are names, ranges 0-127, or single
+                           integers 0-127.
+
+                           Subclass of AvdList with `str` items.
+                        _custom_data: _custom_data
+
+                    """
+
         _fields: ClassVar[dict] = {
             "name": {"type": str},
             "description": {"type": str},
@@ -32729,6 +32903,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             "peer_type": {"type": str},
             "sflow": {"type": Sflow},
             "switchport": {"type": Switchport},
+            "traffic_engineering": {"type": TrafficEngineering},
             "validate_state": {"type": bool},
             "validate_lldp": {"type": bool},
             "eos_cli": {"type": str},
@@ -32915,6 +33090,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         """Subclass of AvdModel."""
         switchport: Switchport
         """Subclass of AvdModel."""
+        traffic_engineering: TrafficEngineering
+        """Subclass of AvdModel."""
         validate_state: bool | None
         """
         Set to false to disable interface state and LLDP topology validation performed by the
@@ -33020,6 +33197,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 peer_type: str | None | UndefinedType = Undefined,
                 sflow: Sflow | UndefinedType = Undefined,
                 switchport: Switchport | UndefinedType = Undefined,
+                traffic_engineering: TrafficEngineering | UndefinedType = Undefined,
                 validate_state: bool | None | UndefinedType = Undefined,
                 validate_lldp: bool | None | UndefinedType = Undefined,
                 eos_cli: str | None | UndefinedType = Undefined,
@@ -33145,6 +33323,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                     peer_type: Key only used for documentation or validation purposes.
                     sflow: Subclass of AvdModel.
                     switchport: Subclass of AvdModel.
+                    traffic_engineering: Subclass of AvdModel.
                     validate_state:
                        Set to false to disable interface state and LLDP topology validation performed by the
                        `eos_validate_state` role.
@@ -68935,6 +69114,70 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
     class VlansItem(AvdModel):
         """Subclass of AvdModel."""
 
+        class AddressLocking(AvdModel):
+            """Subclass of AvdModel."""
+
+            class AddressFamily(AvdModel):
+                """Subclass of AvdModel."""
+
+                _fields: ClassVar[dict] = {"ipv4": {"type": bool}, "ipv6": {"type": bool}, "_custom_data": {"type": dict}}
+                ipv4: bool | None
+                """Enable address locking for IPv4."""
+                ipv6: bool | None
+                """Enable address locking for IPv6."""
+                _custom_data: dict[str, Any]
+
+                if TYPE_CHECKING:
+
+                    def __init__(
+                        self,
+                        *,
+                        ipv4: bool | None | UndefinedType = Undefined,
+                        ipv6: bool | None | UndefinedType = Undefined,
+                        _custom_data: dict[str, Any] | UndefinedType = Undefined,
+                    ) -> None:
+                        """
+                        AddressFamily.
+
+
+                        Subclass of AvdModel.
+
+                        Args:
+                            ipv4: Enable address locking for IPv4.
+                            ipv6: Enable address locking for IPv6.
+                            _custom_data: _custom_data
+
+                        """
+
+            _fields: ClassVar[dict] = {"address_family": {"type": AddressFamily}, "ipv4_enforcement_disabled": {"type": bool}, "_custom_data": {"type": dict}}
+            address_family: AddressFamily
+            """Subclass of AvdModel."""
+            ipv4_enforcement_disabled: bool | None
+            """Disable enforcement for IPv4 locked addresses."""
+            _custom_data: dict[str, Any]
+
+            if TYPE_CHECKING:
+
+                def __init__(
+                    self,
+                    *,
+                    address_family: AddressFamily | UndefinedType = Undefined,
+                    ipv4_enforcement_disabled: bool | None | UndefinedType = Undefined,
+                    _custom_data: dict[str, Any] | UndefinedType = Undefined,
+                ) -> None:
+                    """
+                    AddressLocking.
+
+
+                    Subclass of AvdModel.
+
+                    Args:
+                        address_family: Subclass of AvdModel.
+                        ipv4_enforcement_disabled: Disable enforcement for IPv4 locked addresses.
+                        _custom_data: _custom_data
+
+                    """
+
         class TrunkGroups(AvdList[str]):
             """Subclass of AvdList with `str` items."""
 
@@ -68975,6 +69218,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             "id": {"type": int},
             "name": {"type": str},
             "state": {"type": str},
+            "address_locking": {"type": AddressLocking},
             "trunk_groups": {"type": TrunkGroups},
             "private_vlan": {"type": PrivateVlan},
             "tenant": {"type": str},
@@ -68985,6 +69229,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         name: str | None
         """VLAN Name."""
         state: Literal["active", "suspend"] | None
+        address_locking: AddressLocking
+        """Subclass of AvdModel."""
         trunk_groups: TrunkGroups
         """Subclass of AvdList with `str` items."""
         private_vlan: PrivateVlan
@@ -69001,6 +69247,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 id: int | UndefinedType = Undefined,
                 name: str | None | UndefinedType = Undefined,
                 state: Literal["active", "suspend"] | None | UndefinedType = Undefined,
+                address_locking: AddressLocking | UndefinedType = Undefined,
                 trunk_groups: TrunkGroups | UndefinedType = Undefined,
                 private_vlan: PrivateVlan | UndefinedType = Undefined,
                 tenant: str | None | UndefinedType = Undefined,
@@ -69016,6 +69263,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                     id: VLAN ID.
                     name: VLAN Name.
                     state: state
+                    address_locking: Subclass of AvdModel.
                     trunk_groups: Subclass of AvdList with `str` items.
                     private_vlan: Subclass of AvdModel.
                     tenant: Key only used for documentation or validation purposes.

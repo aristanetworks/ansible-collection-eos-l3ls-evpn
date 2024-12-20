@@ -3184,10 +3184,17 @@ vlan internal order ascending range 10 40
 !
 vlan 110
    name PR01-DMZ
+   !
+   address locking
+      address-family ipv4
+      address-family ipv6
 !
 vlan 111
    name PRIVATE_VLAN_COMMUNITY
    private-vlan community primary vlan 110
+   !
+   address locking
+      locked-address ipv4 enforcement disabled
 !
 vlan 112
    name PRIVATE_VLAN_ISOLATED
@@ -3629,6 +3636,8 @@ interface Dps1
 | Ethernet66 | Multiple VRIDs and tracking | - | 192.0.2.2/25 | default | - | False | - | - |
 | Ethernet80 | LAG Member | 17 | *192.0.2.3/31 | **default | **- | **- | **- | **- |
 | Ethernet81/2 | LAG Member LACP fallback LLDP ZTP VLAN | 112 | *dhcp | **default | **- | **- | **- | **- |
+| Ethernet81/3 | Traffic Engineering Interface | - | 100.64.127.0/31 | default | - | False | - | - |
+| Ethernet81/4 | Traffic Engineering Interface | - | 100.64.127.0/31 | default | - | False | - | - |
 
 *Inherited from Port-Channel Interface
 
@@ -3785,6 +3794,12 @@ interface Dps1
 | Ethernet5 | 127 |
 | Ethernet6 | disabled |
 
+#### Traffic Engineering
+
+| Interface | Enabled | Administrative Groups |
+| --------- | ------- | --------------------- |
+| Ethernet81/3 | True | 3,15-29,testgrp |
+
 #### Ethernet Interfaces Device Configuration
 
 ```eos
@@ -3940,6 +3955,10 @@ interface Ethernet4
    mtu 9100
    no switchport
    snmp trap link-change
+   !
+   address locking
+      address-family ipv4
+      address-family ipv6
    ipv6 enable
    ipv6 address 2020::2020/64
    ipv6 address FE80:FEA::AB65/64 link-local
@@ -3963,6 +3982,10 @@ interface Ethernet5
    mtu 9100
    switchport access vlan 220
    no switchport
+   !
+   address locking
+      address-family ipv4 disabled
+      address-family ipv6 disabled
    ip ospf cost 99
    ip ospf network point-to-point
    ip ospf authentication message-digest
@@ -3993,6 +4016,11 @@ interface Ethernet6
    switchport trunk allowed vlan 110-111,210-211
    switchport mode trunk
    switchport
+   !
+   address locking
+      address-family ipv6
+      address-family ipv4 disabled
+      locked-address ipv4 enforcement disabled
    no lldp transmit
    ptp enable
    ptp announce interval 3
@@ -4755,6 +4783,21 @@ interface Ethernet81/2
    lldp tlv transmit ztp vlan 112
    spanning-tree portfast
 !
+interface Ethernet81/3
+   description Traffic Engineering Interface
+   no shutdown
+   no switchport
+   ip address 100.64.127.0/31
+   traffic-engineering
+   traffic-engineering administrative-group 3,15-29,testgrp
+!
+interface Ethernet81/4
+   description Traffic Engineering Interface
+   no shutdown
+   no switchport
+   ip address 100.64.127.0/31
+   traffic-engineering administrative-group 4,7-100,testgrp
+!
 interface Ethernet81/10
    description isis_port_channel_member
    channel-group 110 mode active
@@ -4941,6 +4984,8 @@ interface Ethernet84
 | Port-Channel112 | LACP fallback individual | - | dhcp | default | - | - | - | - |
 | Port-Channel113 | interface_with_mpls_enabled | - | 172.31.128.9/31 | default | - | - | - | - |
 | Port-Channel114 | interface_with_mpls_disabled | - | 172.31.128.10/31 | default | - | - | - | - |
+| Port-Channel136 | Test_te_admin_groups | - | 100.64.127.2/31 | default | - | - | - | - |
+| Port-Channel137 | Traffic Engineering Interface | - | 100.64.127.4/31 | default | - | - | - | - |
 
 ##### IP NAT: Source Static
 
@@ -4983,6 +5028,12 @@ interface Ethernet84
 | Port-Channel51 | EVPN_UNDERLAY | - | - | - | - | - | shared-secret |
 | Port-Channel100 | EVPN_UNDERLAY | - | - | - | - | - | Level-1: md5<br>Level-2: text |
 | Port-Channel110 | ISIS_TEST | True | 99 | point-to-point | level-2 | True | - |
+
+#### Traffic Engineering
+
+| Interface | Enabled | Administrative Groups |
+| --------- | ------- | --------------------- |
+| Port-Channel136 | True | 7 |
 
 #### Port-Channel Interfaces Device Configuration
 
@@ -5586,6 +5637,19 @@ interface Port-Channel135
    switchport tap encapsulation gre protocol 0x2 feature header length 3 strip
    switchport tap encapsulation gre protocol 0x3 feature header length 2 strip re-encapsulation ethernet
    switchport tap encapsulation gre protocol 0x10 strip
+!
+interface Port-Channel136
+   description Test_te_admin_groups
+   no switchport
+   ip address 100.64.127.2/31
+   traffic-engineering
+   traffic-engineering administrative-group 7
+!
+interface Port-Channel137
+   description Traffic Engineering Interface
+   no switchport
+   ip address 100.64.127.4/31
+   traffic-engineering administrative-group 4,7-100,testgrp
 ```
 
 ### Loopback Interfaces

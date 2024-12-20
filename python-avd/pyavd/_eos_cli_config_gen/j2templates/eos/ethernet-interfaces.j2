@@ -358,7 +358,25 @@ interface {{ ethernet_interface.name }}
 {%     elif ethernet_interface.snmp_trap_link_change is arista.avd.defined(true) %}
    snmp trap link-change
 {%     endif %}
-{%     if ethernet_interface.address_locking.ipv4 is arista.avd.defined(true) or ethernet_interface.address_locking.ipv6 is arista.avd.defined(true) %}
+{%     if ethernet_interface.address_locking.address_family.ipv4 is arista.avd.defined or ethernet_interface.address_locking.address_family.ipv6 is arista.avd.defined or ethernet_interface.address_locking.ipv4_enforcement_disabled is arista.avd.defined(true) %}
+   !
+   address locking
+{%         if ethernet_interface.address_locking.address_family.ipv4 is arista.avd.defined(true) %}
+      address-family ipv4
+{%         endif %}
+{%         if ethernet_interface.address_locking.address_family.ipv6 is arista.avd.defined(true) %}
+      address-family ipv6
+{%         endif %}
+{%         if ethernet_interface.address_locking.address_family.ipv4 is arista.avd.defined(false) %}
+      address-family ipv4 disabled
+{%         endif %}
+{%         if ethernet_interface.address_locking.address_family.ipv6 is arista.avd.defined(false) %}
+      address-family ipv6 disabled
+{%         endif %}
+{%         if ethernet_interface.address_locking.ipv4_enforcement_disabled is arista.avd.defined(true) %}
+      locked-address ipv4 enforcement disabled
+{%         endif %}
+{%     elif ethernet_interface.address_locking.ipv4 is arista.avd.defined(true) or ethernet_interface.address_locking.ipv6 is arista.avd.defined(true) %}
 {%         set address_locking_cli = "address locking" %}
 {%         if ethernet_interface.address_locking.ipv4 is arista.avd.defined(true) %}
 {%             set address_locking_cli = address_locking_cli + " ipv4" %}
@@ -1102,6 +1120,12 @@ interface {{ ethernet_interface.name }}
 {%         if ethernet_interface.switchport.tool.dzgre_preserve is arista.avd.defined(true) %}
    switchport tool dzgre preserve
 {%         endif %}
+{%     endif %}
+{%     if ethernet_interface.traffic_engineering.enabled is arista.avd.defined(true) %}
+   traffic-engineering
+{%     endif %}
+{%     if ethernet_interface.traffic_engineering.administrative_groups is arista.avd.defined %}
+   traffic-engineering administrative-group {{ ethernet_interface.traffic_engineering.administrative_groups | join(",") }}
 {%     endif %}
 {%     for link_tracking_group in ethernet_interface.link_tracking_groups | arista.avd.natural_sort %}
 {%         if link_tracking_group.name is arista.avd.defined and link_tracking_group.direction is arista.avd.defined %}

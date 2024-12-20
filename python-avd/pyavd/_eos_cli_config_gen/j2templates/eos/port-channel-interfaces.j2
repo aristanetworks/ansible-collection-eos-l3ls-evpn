@@ -923,6 +923,12 @@ interface {{ port_channel_interface.name }}
    switchport tool dot1q remove outer {{ port_channel_interface.switchport.tool.dot1q_remove_outer_vlan_tag }}
 {%         endif %}
 {%     endif %}
+{%     if port_channel_interface.traffic_engineering.enabled is arista.avd.defined(true) %}
+   traffic-engineering
+{%     endif %}
+{%     if port_channel_interface.traffic_engineering.administrative_groups is arista.avd.defined %}
+   traffic-engineering administrative-group {{ port_channel_interface.traffic_engineering.administrative_groups | join(",") }}
+{%     endif %}
 {%     for link_tracking_group in port_channel_interface.link_tracking_groups | arista.avd.natural_sort('name') %}
 {%         if link_tracking_group.name is arista.avd.defined and link_tracking_group.direction is arista.avd.defined %}
    link tracking group {{ link_tracking_group.name }} {{ link_tracking_group.direction }}

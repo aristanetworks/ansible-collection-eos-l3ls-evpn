@@ -317,6 +317,10 @@ ethernet_interfaces:
       port_security:
         violation:
           mode: protect
+    address_locking:
+      address_family:
+        ipv4: true
+        ipv6: true
 
   - name: Ethernet5
     description: Molecule Routing
@@ -355,6 +359,10 @@ ethernet_interfaces:
       access_vlan: 220
     sync_e:
       enable: true
+    address_locking:
+      address_family:
+        ipv4: false
+        ipv6: false
 
   - name: Ethernet6
     logging:
@@ -404,6 +412,11 @@ ethernet_interfaces:
     sync_e:
       enable: true
       priority: disabled
+    address_locking:
+      ipv4_enforcement_disabled: true
+      address_family:
+        ipv4: false
+        ipv6: true
 
   - name: Ethernet7
     description: Molecule L2
@@ -1848,6 +1861,32 @@ ethernet_interfaces:
     spanning_tree_portfast: edge
     lldp:
       ztp_vlan: 112
+
+  - name: Ethernet81/3
+    description: Traffic Engineering Interface
+    shutdown: false
+    switchport:
+      enabled: false
+    ip_address: 100.64.127.0/31
+    traffic_engineering:
+      enabled: true
+      administrative_groups:
+        - 3
+        - 15-29
+        - testgrp
+
+  - name: Ethernet81/4
+    description: Traffic Engineering Interface
+    shutdown: false
+    switchport:
+      enabled: false
+    ip_address: 100.64.127.0/31
+    traffic_engineering:
+      enabled: false
+      administrative_groups:
+        - 4
+        - 7-100
+        - testgrp
 
   - name: Ethernet82
     description: Switchport_tap_tool

@@ -149,10 +149,30 @@ keys:
           keys:
             ipv4:
               type: bool
-              description: Enable address locking for IPv4.
+              description: |-
+                Enable address locking for IPv4.
+                For EOS version 4.31 and above, the `address_family.ipv4` parameter should be used instead.
             ipv6:
               type: bool
-              description: Enable address locking for IPv6.
+              description: |-
+                Enable address locking for IPv6.
+                For EOS version 4.31 and above, the `address_family.ipv6` parameter should be used instead.
+            address_family:
+              description: |-
+                Configure address locking per address family.
+                The `address_locking.ipv4/ipv6` and `address_locking.address_family.ipv4/ipv6` are mutually exclusive and `address_locking.address_family.ipv4/ipv6` take precedence.
+                Introduced in EOS 4.31.0F.
+              type: dict
+              keys:
+                ipv4:
+                  type: bool
+                  description: Enable/disable address locking for IPv4.
+                ipv6:
+                  type: bool
+                  description: Enable/disable address locking for IPv6.
+            ipv4_enforcement_disabled:
+              type: bool
+              description: Disable enforcement for IPv4 locked addresses.
         flowcontrol:
           type: dict
           keys:
@@ -2183,6 +2203,19 @@ keys:
                   description: |-
                     Indices of vlan tags to be removed.
                     Range: 1-2
+        traffic_engineering:
+          type: dict
+          keys:
+            enabled:
+              type: bool
+              description: Whether to enable traffic-engineering on this interface.
+            administrative_groups:
+              type: list
+              description: List of traffic-engineering administrative groups, valid values are names, ranges 0-127, or single integers 0-127.
+              items:
+                type: str
+                convert_types:
+                  - int
         eos_cli:
           type: str
           description: Multiline EOS CLI rendered directly on the ethernet interface in the final EOS configuration.

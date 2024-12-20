@@ -1046,3 +1046,25 @@ port_channel_interfaces:
                 feature_header_length: 2
                 re_encapsulation_ethernet_header: true
                 strip: true
+
+  - name: Port-Channel136
+    description: Test_te_admin_groups
+    switchport:
+      enabled: false
+    ip_address: 100.64.127.2/31
+    traffic_engineering:
+      enabled: true
+      administrative_groups:
+        - 7
+
+  - name: Port-Channel137
+    description: Traffic Engineering Interface
+    switchport:
+      enabled: false
+    ip_address: 100.64.127.4/31
+    traffic_engineering:
+      enabled: false
+      administrative_groups:
+        - 4
+        - 7-100
+        - testgrp
