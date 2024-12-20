@@ -44,7 +44,7 @@ LOGGING_LEVELS = ["DEBUG", "INFO", "ERROR", "WARNING", "CRITICAL"]
 
 ARGUMENT_SPEC = {
     "configuration_dir": {"type": "str", "required": True},
-    "structured_config_dir": {"type": "str", "required": True},
+    "structured_config_dir": {"type": "str", "required": False},
     "structured_config_suffix": {"type": "str", "default": "yml"},
     "device_list": {"type": "list", "elements": "str", "required": True},
     "strict_tags": {"type": "bool", "required": False, "default": False},
@@ -184,7 +184,7 @@ class ActionModule(ActionBase):
     async def build_objects(
         self,
         device_list: list[str],
-        structured_config_dir: str,
+        structured_config_dir: str | None,
         structured_config_suffix: str,
         configuration_dir: str,
         configlet_name_template: str,
@@ -228,7 +228,7 @@ class ActionModule(ActionBase):
     async def build_object_for_device(
         self,
         hostname: str,
-        structured_config_dir: str,
+        structured_config_dir: str | None,
         structured_config_suffix: str,
         configuration_dir: str,
         configlet_name_template: str,
@@ -255,24 +255,28 @@ class ActionModule(ActionBase):
         TODO: Refactor into smaller functions.
         """
         LOGGER.info("build_object_for_device: %s", hostname)
-        with Path(structured_config_dir, f"{hostname}.{structured_config_suffix}").open(  # noqa: ASYNC230
-            mode="r", encoding="UTF-8"
-        ) as structured_config_stream:
-            if structured_config_suffix in ["yml", "yaml"]:
-                interesting_keys = ("is_deployed", "serial_number", "metadata")
-                in_interesting_context = False
-                structured_config_lines = []
-                for line in structured_config_stream:
-                    if line.startswith(interesting_keys) or (in_interesting_context and line.startswith(" ")):
-                        structured_config_lines.append(line)
-                        in_interesting_context = True
-                    else:
-                        in_interesting_context = False
+        if structured_config_dir and (file_path := Path(structured_config_dir, f"{hostname}.{structured_config_suffix}")).exists():
+            with file_path.open(  # noqa: ASYNC230
+                mode="r", encoding="UTF-8"
+            ) as structured_config_stream:
+                if structured_config_suffix in ["yml", "yaml"]:
+                    interesting_keys = ("is_deployed", "serial_number", "metadata")
+                    in_interesting_context = False
+                    structured_config_lines = []
+                    for line in structured_config_stream:
+                        if line.startswith(interesting_keys) or (in_interesting_context and line.startswith(" ")):
+                            structured_config_lines.append(line)
+                            in_interesting_context = True
+                        else:
+                            in_interesting_context = False
 
-                structured_config = load("".join(structured_config_lines), Loader=YamlLoader)  # noqa: S506 TODO: Consider safeload
-            else:
-                # Load as JSON
-                structured_config = json.load(structured_config_stream)
+                    structured_config = load("".join(structured_config_lines), Loader=YamlLoader)  # noqa: S506 TODO: Consider safeload
+                else:
+                    # Load as JSON
+                    structured_config = json.load(structured_config_stream)
+        else:
+            # No structured config file.
+            structured_config = {}
 
         if not get(structured_config, "is_deployed", default=True):
             del structured_config

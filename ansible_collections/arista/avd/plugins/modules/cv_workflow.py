@@ -41,7 +41,7 @@ options:
       Path to directory containing files with AVD structured configurations.
       If found, the `serial_number` or `system_mac_address` will be used to identify the Device on CloudVision.
       Any tags found in the structured configuration metadata will be applied to the Device and/or Interfaces.
-    required: true
+    required: false
     type: str
   structured_config_suffix:
     description: File suffix for AVD structured configuration files.
