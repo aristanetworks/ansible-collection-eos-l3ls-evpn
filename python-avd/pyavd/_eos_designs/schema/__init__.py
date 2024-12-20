@@ -12868,7 +12868,15 @@ class EosDesigns(EosDesignsRootModel):
 
         Vrfs._item_type = VrfsItem
 
-        _fields: ClassVar[dict] = {"sample": {"type": Sample}, "destinations": {"type": Destinations}, "vrfs": {"type": Vrfs}, "_custom_data": {"type": dict}}
+        _fields: ClassVar[dict] = {
+            "polling_interval": {"type": int},
+            "sample": {"type": Sample},
+            "destinations": {"type": Destinations},
+            "vrfs": {"type": Vrfs},
+            "_custom_data": {"type": dict},
+        }
+        polling_interval: int | None
+        """Interval in seconds for sending counter data to the sFlow collector."""
         sample: Sample
         """Subclass of AvdModel."""
         destinations: Destinations
@@ -12882,6 +12890,7 @@ class EosDesigns(EosDesignsRootModel):
             def __init__(
                 self,
                 *,
+                polling_interval: int | None | UndefinedType = Undefined,
                 sample: Sample | UndefinedType = Undefined,
                 destinations: Destinations | UndefinedType = Undefined,
                 vrfs: Vrfs | UndefinedType = Undefined,
@@ -12894,6 +12903,7 @@ class EosDesigns(EosDesignsRootModel):
                 Subclass of AvdModel.
 
                 Args:
+                    polling_interval: Interval in seconds for sending counter data to the sFlow collector.
                     sample: Subclass of AvdModel.
                     destinations: Subclass of AvdList with `DestinationsItem` items.
                     vrfs: Subclass of AvdIndexedList with `VrfsItem` items. Primary key is `name` (`str`).

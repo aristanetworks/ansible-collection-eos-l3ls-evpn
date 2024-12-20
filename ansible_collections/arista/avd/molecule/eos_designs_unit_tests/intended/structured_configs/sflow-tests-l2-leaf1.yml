@@ -54,6 +54,7 @@ port_channel_interfaces:
 service_routing_protocols_model: multi-agent
 sflow:
   sample: 10
+  polling_interval: 1
   vrfs:
   - name: MGMT
     destinations:

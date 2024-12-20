@@ -3184,10 +3184,17 @@ vlan internal order ascending range 10 40
 !
 vlan 110
    name PR01-DMZ
+   !
+   address locking
+      address-family ipv4
+      address-family ipv6
 !
 vlan 111
    name PRIVATE_VLAN_COMMUNITY
    private-vlan community primary vlan 110
+   !
+   address locking
+      locked-address ipv4 enforcement disabled
 !
 vlan 112
    name PRIVATE_VLAN_ISOLATED
@@ -3629,6 +3636,8 @@ interface Dps1
 | Ethernet66 | Multiple VRIDs and tracking | - | 192.0.2.2/25 | default | - | False | - | - |
 | Ethernet80 | LAG Member | 17 | *192.0.2.3/31 | **default | **- | **- | **- | **- |
 | Ethernet81/2 | LAG Member LACP fallback LLDP ZTP VLAN | 112 | *dhcp | **default | **- | **- | **- | **- |
+| Ethernet81/3 | Traffic Engineering Interface | - | 100.64.127.0/31 | default | - | False | - | - |
+| Ethernet81/4 | Traffic Engineering Interface | - | 100.64.127.0/31 | default | - | False | - | - |
 
 *Inherited from Port-Channel Interface
 
@@ -3785,6 +3794,12 @@ interface Dps1
 | Ethernet5 | 127 |
 | Ethernet6 | disabled |
 
+#### Traffic Engineering
+
+| Interface | Enabled | Administrative Groups |
+| --------- | ------- | --------------------- |
+| Ethernet81/3 | True | 3,15-29,testgrp |
+
 #### Ethernet Interfaces Device Configuration
 
 ```eos
@@ -3940,6 +3955,10 @@ interface Ethernet4
    mtu 9100
    no switchport
    snmp trap link-change
+   !
+   address locking
+      address-family ipv4
+      address-family ipv6
    ipv6 enable
    ipv6 address 2020::2020/64
    ipv6 address FE80:FEA::AB65/64 link-local
@@ -3963,6 +3982,10 @@ interface Ethernet5
    mtu 9100
    switchport access vlan 220
    no switchport
+   !
+   address locking
+      address-family ipv4 disabled
+      address-family ipv6 disabled
    ip ospf cost 99
    ip ospf network point-to-point
    ip ospf authentication message-digest
@@ -3993,6 +4016,11 @@ interface Ethernet6
    switchport trunk allowed vlan 110-111,210-211
    switchport mode trunk
    switchport
+   !
+   address locking
+      address-family ipv6
+      address-family ipv4 disabled
+      locked-address ipv4 enforcement disabled
    no lldp transmit
    ptp enable
    ptp announce interval 3
@@ -4755,9 +4783,67 @@ interface Ethernet81/2
    lldp tlv transmit ztp vlan 112
    spanning-tree portfast
 !
+interface Ethernet81/3
+   description Traffic Engineering Interface
+   no shutdown
+   no switchport
+   ip address 100.64.127.0/31
+   traffic-engineering
+   traffic-engineering administrative-group 3,15-29,testgrp
+!
+interface Ethernet81/4
+   description Traffic Engineering Interface
+   no shutdown
+   no switchport
+   ip address 100.64.127.0/31
+   traffic-engineering administrative-group 4,7-100,testgrp
+!
 interface Ethernet81/10
    description isis_port_channel_member
    channel-group 110 mode active
+!
+interface Ethernet82
+   description Switchport_tap_tool
+   switchport tap native vlan 10
+   switchport tap identity 3 inner 5
+   switchport tap mac-address dest 01:00:00:00:00:00 src 01:23:45:67:89:ab
+   switchport tap encapsulation gre destination 1.1.1.1 source 1.1.1.2 protocol 0x0 strip
+   switchport tap encapsulation gre destination 1.1.1.1 source 1.1.1.2 strip
+   switchport tap encapsulation gre destination 2.1.1.2 protocol 0x10 strip
+   switchport tap encapsulation gre destination 2.1.1.2 protocol 0x11 feature header length 2 strip re-encapsulation ethernet
+   switchport tap encapsulation gre destination 2.1.1.2 protocol 0x12 strip re-encapsulation ethernet
+   switchport tap encapsulation gre destination 2.1.1.3 source 2.1.1.4 strip
+   switchport tap mpls pop all
+   switchport tool mpls pop all
+   switchport tool encapsulation vn-tag strip
+   switchport tool encapsulation dot1br strip
+   switchport tap allowed vlan 25
+   switchport tool allowed vlan 23
+   switchport tool identity qinq
+   switchport tool identity dot1q source dzgre port
+   switchport tap truncation 150
+   switchport tap default group g1 group g2 group g3
+   switchport tap default nexthop-group nexthop_g1 nexthop_g2 nexthop_g3
+   switchport tap default interface ethernet4
+   switchport tap default interface port-channel10
+   switchport tool group set group1 group2 group3
+   switchport tool dot1q remove outer 1
+!
+interface Ethernet83
+   description Test_tap_tool
+   switchport tap identity 5
+   switchport tap mac-address dest 01:00:00:00:00:00
+   switchport tap encapsulation vxlan strip
+   switchport tap encapsulation gre strip
+   switchport tool identity dot1q
+   switchport tool identity qinq source dzgre policy inner port
+   switchport tap truncation
+!
+interface Ethernet84
+   switchport tap encapsulation gre protocol 0x1 strip
+   switchport tap encapsulation gre protocol 0x2 feature header length 3 strip
+   switchport tap encapsulation gre protocol 0x3 feature header length 2 strip re-encapsulation ethernet
+   switchport tap encapsulation gre protocol 0x4 strip re-encapsulation ethernet
 ```
 
 ### Port-Channel Interfaces
@@ -4898,6 +4984,8 @@ interface Ethernet81/10
 | Port-Channel112 | LACP fallback individual | - | dhcp | default | - | - | - | - |
 | Port-Channel113 | interface_with_mpls_enabled | - | 172.31.128.9/31 | default | - | - | - | - |
 | Port-Channel114 | interface_with_mpls_disabled | - | 172.31.128.10/31 | default | - | - | - | - |
+| Port-Channel136 | Test_te_admin_groups | - | 100.64.127.2/31 | default | - | - | - | - |
+| Port-Channel137 | Traffic Engineering Interface | - | 100.64.127.4/31 | default | - | - | - | - |
 
 ##### IP NAT: Source Static
 
@@ -4940,6 +5028,12 @@ interface Ethernet81/10
 | Port-Channel51 | EVPN_UNDERLAY | - | - | - | - | - | shared-secret |
 | Port-Channel100 | EVPN_UNDERLAY | - | - | - | - | - | Level-1: md5<br>Level-2: text |
 | Port-Channel110 | ISIS_TEST | True | 99 | point-to-point | level-2 | True | - |
+
+#### Traffic Engineering
+
+| Interface | Enabled | Administrative Groups |
+| --------- | ------- | --------------------- |
+| Port-Channel136 | True | 7 |
 
 #### Port-Channel Interfaces Device Configuration
 
@@ -5111,7 +5205,7 @@ interface Port-Channel16
    isis authentication mode md5
    isis authentication key 0 <removed>
    spanning-tree guard none
-   switchport backup-link Port-Channel100.102 prefer vlan 20
+   switchport backup-link Port-Channel100 prefer vlan 20
 !
 interface Port-Channel17
    description PBR Description
@@ -5502,6 +5596,60 @@ interface Port-Channel131.10
 interface Port-Channel132
    profile test-interface-profile
    description Test_port-channel_interface-profile
+!
+interface Port-Channel133
+   description Test1_switchport_tap_tool
+   switchport tap native vlan 10
+   switchport tap identity 3
+   switchport tap mac-address dest 01:00:00:00:00:00 src 01:23:45:67:89:ab
+   switchport tap encapsulation gre destination 1.1.1.1 source 1.1.1.2 protocol 0x0 strip
+   switchport tap encapsulation gre destination 1.1.1.1 source 1.1.1.2 strip
+   switchport tap encapsulation gre destination 1.1.1.3 source 1.1.1.4 strip
+   switchport tap encapsulation gre destination 2.1.1.2 protocol 0x1 strip
+   switchport tap encapsulation gre destination 2.1.1.2 protocol 0x2 feature header length 2 strip re-encapsulation ethernet
+   switchport tap mpls pop all
+   switchport tool mpls pop all
+   switchport tool encapsulation vn-tag strip
+   switchport tool encapsulation dot1br strip
+   switchport tap allowed vlan 25
+   switchport tool allowed vlan 23
+   switchport tool identity qinq
+   switchport tool identity qinq source dzgre port inner policy
+   switchport tap truncation
+   switchport tap default group g1 group g2 group g3
+   switchport tap default nexthop-group nexthop_g1 nexthop_g2 nexthop_g3
+   switchport tap default interface ethernet4
+   switchport tap default interface port-channel10
+   switchport tool group set group1 group2 group3
+   switchport tool dot1q remove outer 1-2
+!
+interface Port-Channel134
+   description Test2_switchport_tap_tool
+   switchport tap identity 3 inner 10
+   switchport tap mac-address dest 01:00:00:00:00:00
+   switchport tap encapsulation vxlan strip
+   switchport tap encapsulation gre strip
+   switchport tool identity dot1q
+   switchport tool identity dot1q source dzgre policy
+   switchport tap truncation 120
+!
+interface Port-Channel135
+   switchport tap encapsulation gre protocol 0x2 feature header length 3 strip
+   switchport tap encapsulation gre protocol 0x3 feature header length 2 strip re-encapsulation ethernet
+   switchport tap encapsulation gre protocol 0x10 strip
+!
+interface Port-Channel136
+   description Test_te_admin_groups
+   no switchport
+   ip address 100.64.127.2/31
+   traffic-engineering
+   traffic-engineering administrative-group 7
+!
+interface Port-Channel137
+   description Traffic Engineering Interface
+   no switchport
+   ip address 100.64.127.4/31
+   traffic-engineering administrative-group 4,7-100,testgrp
 ```
 
 ### Loopback Interfaces
