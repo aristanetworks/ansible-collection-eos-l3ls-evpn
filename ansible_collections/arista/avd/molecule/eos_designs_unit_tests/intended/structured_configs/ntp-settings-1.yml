@@ -1,20 +1,16 @@
-hostname: ntp-settings-1
-is_deployed: true
-service_routing_protocols_model: multi-agent
-vlan_internal_order:
-  allocation: ascending
-  range:
-    beginning: 1006
-    ending: 1199
 aaa_root:
   disabled: true
 config_end: true
 enable_password:
   disabled: true
-transceiver_qsfp_default_mode_4x10: true
-vrfs:
-- name: MGMT
-  ip_routing: false
+hostname: ntp-settings-1
+ip_igmp_snooping:
+  globally_enabled: true
+is_deployed: true
+management_api_http:
+  enable_https: true
+  enable_vrfs:
+  - name: MGMT
 management_interfaces:
 - name: Management1
   description: OOB_MANAGEMENT
@@ -22,23 +18,11 @@ management_interfaces:
   vrf: MGMT
   ip_address: 192.168.0.2/24
   type: oob
-management_api_http:
-  enable_vrfs:
-  - name: MGMT
-  enable_https: true
 ntp:
-  authenticate: true
-  authenticate_servers_only: true
-  authentication_keys:
-  - id: 1
-    hash_algorithm: sha1
-    key: someobfuscatedkey
-    key_type: '7'
-  trusted_keys: '1'
   servers:
   - name: 10.10.10.1
-    vrf: default
     preferred: true
+    vrf: default
   - name: 10.10.10.2
     burst: true
     iburst: true
@@ -47,5 +31,21 @@ ntp:
     minpoll: 3
     version: 4
     vrf: default
-ip_igmp_snooping:
-  globally_enabled: true
+  authenticate: true
+  authenticate_servers_only: true
+  authentication_keys:
+  - id: 1
+    hash_algorithm: sha1
+    key: someobfuscatedkey
+    key_type: '7'
+  trusted_keys: '1'
+service_routing_protocols_model: multi-agent
+transceiver_qsfp_default_mode_4x10: true
+vlan_internal_order:
+  allocation: ascending
+  range:
+    beginning: 1006
+    ending: 1199
+vrfs:
+- name: MGMT
+  ip_routing: false

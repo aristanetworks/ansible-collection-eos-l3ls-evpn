@@ -1,108 +1,46 @@
-hostname: MLAG_SAME_SUBNET_L3LEAF2A
-is_deployed: true
-router_bgp:
-  as: '923'
-  router_id: 192.168.255.34
-  bgp:
-    default:
-      ipv4_unicast: false
-  maximum_paths:
-    paths: 4
-    ecmp: 4
-  redistribute:
-    connected:
-      enabled: true
-      route_map: RM-CONN-2-BGP
-  updates:
-    wait_install: true
-  peer_groups:
-  - name: MLAG-IPv4-UNDERLAY-PEER
-    type: ipv4
-    remote_as: '923'
-    next_hop_self: true
-    description: MLAG_SAME_SUBNET_L3LEAF2B
-    maximum_routes: 12000
-    send_community: all
-    route_map_in: RM-MLAG-PEER-IN
-  - name: IPv4-UNDERLAY-PEERS
-    type: ipv4
-    maximum_routes: 12000
-    send_community: all
-  - name: EVPN-OVERLAY-PEERS
-    type: evpn
-    update_source: Loopback0
-    bfd: true
-    send_community: all
-    maximum_routes: 0
-    ebgp_multihop: 3
-  address_family_ipv4:
-    peer_groups:
-    - name: MLAG-IPv4-UNDERLAY-PEER
-      activate: true
-    - name: IPv4-UNDERLAY-PEERS
-      activate: true
-    - name: EVPN-OVERLAY-PEERS
-      activate: false
-  neighbors:
-  - ip_address: 10.10.224.2
-    peer_group: MLAG-IPv4-UNDERLAY-PEER
-    peer: MLAG_SAME_SUBNET_L3LEAF2B
-    description: MLAG_SAME_SUBNET_L3LEAF2B_Vlan4093
-  address_family_evpn:
-    peer_groups:
-    - name: EVPN-OVERLAY-PEERS
-      activate: true
-  vrfs:
-  - name: TEST
-    rd: 192.168.255.34:1
-    route_targets:
-      import:
-      - address_family: evpn
-        route_targets:
-        - '1:1'
-      export:
-      - address_family: evpn
-        route_targets:
-        - '1:1'
-    router_id: 192.168.255.34
-    redistribute:
-      connected:
-        enabled: true
-        route_map: RM-CONN-2-BGP-VRFS
-    neighbors:
-    - ip_address: 10.10.224.2
-      peer_group: MLAG-IPv4-UNDERLAY-PEER
-      description: MLAG_SAME_SUBNET_L3LEAF2B_Vlan3000
-    updates:
-      wait_install: true
-  vlans:
-  - id: 10
-    tenant: TEST_MLAG_SAME_SUBNET_ON_VRF
-    rd: 192.168.255.34:10
-    route_targets:
-      both:
-      - '10:10'
-    redistribute_routes:
-    - learned
-service_routing_protocols_model: multi-agent
-ip_routing: true
-vlan_internal_order:
-  allocation: ascending
-  range:
-    beginning: 1006
-    ending: 1199
 aaa_root:
   disabled: true
 config_end: true
 enable_password:
   disabled: true
-transceiver_qsfp_default_mode_4x10: true
-vrfs:
-- name: MGMT
-  ip_routing: false
-- name: TEST
-  tenant: TEST_MLAG_SAME_SUBNET_ON_VRF
-  ip_routing: true
+ethernet_interfaces:
+- name: Ethernet5
+  description: MLAG_MLAG_SAME_SUBNET_L3LEAF2B_Ethernet5
+  shutdown: false
+  channel_group:
+    id: 5
+    mode: active
+  peer: MLAG_SAME_SUBNET_L3LEAF2B
+  peer_interface: Ethernet5
+  peer_type: mlag_peer
+- name: Ethernet6
+  description: MLAG_MLAG_SAME_SUBNET_L3LEAF2B_Ethernet6
+  shutdown: false
+  channel_group:
+    id: 5
+    mode: active
+  peer: MLAG_SAME_SUBNET_L3LEAF2B
+  peer_interface: Ethernet6
+  peer_type: mlag_peer
+hostname: MLAG_SAME_SUBNET_L3LEAF2A
+ip_igmp_snooping:
+  globally_enabled: true
+ip_routing: true
+ip_virtual_router_mac_address: 00:1c:73:00:00:99
+is_deployed: true
+loopback_interfaces:
+- name: Loopback0
+  description: ROUTER_ID
+  shutdown: false
+  ip_address: 192.168.255.34/32
+- name: Loopback1
+  description: VXLAN_TUNNEL_SOURCE
+  shutdown: false
+  ip_address: 192.168.254.34/32
+management_api_http:
+  enable_https: true
+  enable_vrfs:
+  - name: MGMT
 management_interfaces:
 - name: Management1
   description: OOB_MANAGEMENT
@@ -110,86 +48,8 @@ management_interfaces:
   vrf: MGMT
   ip_address: 192.168.201.118/24
   type: oob
-management_api_http:
-  enable_vrfs:
-  - name: MGMT
-  enable_https: true
-spanning_tree:
-  no_spanning_tree_vlan: 4093-4094
-vlans:
-- id: 4093
-  tenant: system
-  name: MLAG_L3
-  trunk_groups:
-  - MLAG
-- id: 4094
-  tenant: system
-  name: MLAG
-  trunk_groups:
-  - MLAG
-- id: 10
-  name: VLAN10
-  tenant: TEST_MLAG_SAME_SUBNET_ON_VRF
-- id: 3000
-  name: MLAG_L3_VRF_TEST
-  trunk_groups:
-  - MLAG
-  tenant: TEST_MLAG_SAME_SUBNET_ON_VRF
-vlan_interfaces:
-- name: Vlan4093
-  description: MLAG_L3
-  shutdown: false
-  mtu: 9214
-  ip_address: 10.10.224.1/30
-- name: Vlan4094
-  description: MLAG
-  shutdown: false
-  no_autostate: true
-  mtu: 9214
-  ip_address: 10.10.255.1/30
-- name: Vlan10
-  tenant: TEST_MLAG_SAME_SUBNET_ON_VRF
-  description: VLAN10
-  shutdown: true
-  ip_address_virtual: 10.10.10.1/24
-  vrf: TEST
-- name: Vlan3000
-  tenant: TEST_MLAG_SAME_SUBNET_ON_VRF
-  type: underlay_peering
-  shutdown: false
-  description: MLAG_L3_VRF_TEST
-  vrf: TEST
-  mtu: 9214
-  ip_address: 10.10.224.1/30
-port_channel_interfaces:
-- name: Port-Channel5
-  description: MLAG_MLAG_SAME_SUBNET_L3LEAF2B_Port-Channel5
-  switchport:
-    enabled: true
-    mode: trunk
-    trunk:
-      groups:
-      - MLAG
-  shutdown: false
-ethernet_interfaces:
-- name: Ethernet5
-  peer: MLAG_SAME_SUBNET_L3LEAF2B
-  peer_interface: Ethernet5
-  peer_type: mlag_peer
-  description: MLAG_MLAG_SAME_SUBNET_L3LEAF2B_Ethernet5
-  shutdown: false
-  channel_group:
-    id: 5
-    mode: active
-- name: Ethernet6
-  peer: MLAG_SAME_SUBNET_L3LEAF2B
-  peer_interface: Ethernet6
-  peer_type: mlag_peer
-  description: MLAG_MLAG_SAME_SUBNET_L3LEAF2B_Ethernet6
-  shutdown: false
-  channel_group:
-    id: 5
-    mode: active
+metadata:
+  platform: vEOS-LAB
 mlag_configuration:
   domain_id: MLAG_SAME_SUBNET_L3LEAF2
   local_interface: Vlan4094
@@ -197,14 +57,35 @@ mlag_configuration:
   peer_link: Port-Channel5
   reload_delay_mlag: '300'
   reload_delay_non_mlag: '330'
+port_channel_interfaces:
+- name: Port-Channel5
+  description: MLAG_MLAG_SAME_SUBNET_L3LEAF2B_Port-Channel5
+  shutdown: false
+  switchport:
+    enabled: true
+    mode: trunk
+    trunk:
+      groups:
+      - MLAG
+prefix_lists:
+- name: PL-LOOPBACKS-EVPN-OVERLAY
+  sequence_numbers:
+  - sequence: 10
+    action: permit 192.168.255.0/24 eq 32
+  - sequence: 20
+    action: permit 192.168.254.0/24 eq 32
+- name: PL-MLAG-PEER-VRFS
+  sequence_numbers:
+  - sequence: 10
+    action: permit 10.10.224.0/30
 route_maps:
 - name: RM-MLAG-PEER-IN
   sequence_numbers:
   - sequence: 10
     type: permit
+    description: Make routes learned over MLAG Peer-link less preferred on spines to ensure optimal routing
     set:
     - origin incomplete
-    description: Make routes learned over MLAG Peer-link less preferred on spines to ensure optimal routing
 - name: RM-CONN-2-BGP
   sequence_numbers:
   - sequence: 10
@@ -219,40 +100,161 @@ route_maps:
     - ip address prefix-list PL-MLAG-PEER-VRFS
   - sequence: 20
     type: permit
-loopback_interfaces:
-- name: Loopback0
-  description: ROUTER_ID
-  shutdown: false
-  ip_address: 192.168.255.34/32
-- name: Loopback1
-  description: VXLAN_TUNNEL_SOURCE
-  shutdown: false
-  ip_address: 192.168.254.34/32
-prefix_lists:
-- name: PL-LOOPBACKS-EVPN-OVERLAY
-  sequence_numbers:
-  - sequence: 10
-    action: permit 192.168.255.0/24 eq 32
-  - sequence: 20
-    action: permit 192.168.254.0/24 eq 32
-- name: PL-MLAG-PEER-VRFS
-  sequence_numbers:
-  - sequence: 10
-    action: permit 10.10.224.0/30
 router_bfd:
   multihop:
     interval: 300
     min_rx: 300
     multiplier: 3
-ip_igmp_snooping:
-  globally_enabled: true
-ip_virtual_router_mac_address: 00:1c:73:00:00:99
+router_bgp:
+  as: '923'
+  router_id: 192.168.255.34
+  maximum_paths:
+    paths: 4
+    ecmp: 4
+  updates:
+    wait_install: true
+  bgp:
+    default:
+      ipv4_unicast: false
+  peer_groups:
+  - name: MLAG-IPv4-UNDERLAY-PEER
+    type: ipv4
+    remote_as: '923'
+    description: MLAG_SAME_SUBNET_L3LEAF2B
+    next_hop_self: true
+    send_community: all
+    maximum_routes: 12000
+    route_map_in: RM-MLAG-PEER-IN
+  - name: IPv4-UNDERLAY-PEERS
+    type: ipv4
+    send_community: all
+    maximum_routes: 12000
+  - name: EVPN-OVERLAY-PEERS
+    type: evpn
+    update_source: Loopback0
+    bfd: true
+    ebgp_multihop: 3
+    send_community: all
+    maximum_routes: 0
+  neighbors:
+  - ip_address: 10.10.224.2
+    peer_group: MLAG-IPv4-UNDERLAY-PEER
+    peer: MLAG_SAME_SUBNET_L3LEAF2B
+    description: MLAG_SAME_SUBNET_L3LEAF2B_Vlan4093
+  redistribute:
+    connected:
+      enabled: true
+      route_map: RM-CONN-2-BGP
+  vlans:
+  - id: 10
+    tenant: TEST_MLAG_SAME_SUBNET_ON_VRF
+    rd: 192.168.255.34:10
+    route_targets:
+      both:
+      - '10:10'
+    redistribute_routes:
+    - learned
+  address_family_evpn:
+    peer_groups:
+    - name: EVPN-OVERLAY-PEERS
+      activate: true
+  address_family_ipv4:
+    peer_groups:
+    - name: MLAG-IPv4-UNDERLAY-PEER
+      activate: true
+    - name: IPv4-UNDERLAY-PEERS
+      activate: true
+    - name: EVPN-OVERLAY-PEERS
+      activate: false
+  vrfs:
+  - name: TEST
+    rd: 192.168.255.34:1
+    route_targets:
+      import:
+      - address_family: evpn
+        route_targets:
+        - '1:1'
+      export:
+      - address_family: evpn
+        route_targets:
+        - '1:1'
+    router_id: 192.168.255.34
+    updates:
+      wait_install: true
+    neighbors:
+    - ip_address: 10.10.224.2
+      peer_group: MLAG-IPv4-UNDERLAY-PEER
+      description: MLAG_SAME_SUBNET_L3LEAF2B_Vlan3000
+    redistribute:
+      connected:
+        enabled: true
+        route_map: RM-CONN-2-BGP-VRFS
+service_routing_protocols_model: multi-agent
+spanning_tree:
+  no_spanning_tree_vlan: 4093-4094
+transceiver_qsfp_default_mode_4x10: true
+vlan_interfaces:
+- name: Vlan4093
+  description: MLAG_L3
+  shutdown: false
+  ip_address: 10.10.224.1/30
+  mtu: 9214
+- name: Vlan4094
+  description: MLAG
+  shutdown: false
+  ip_address: 10.10.255.1/30
+  mtu: 9214
+  no_autostate: true
+- name: Vlan10
+  description: VLAN10
+  shutdown: true
+  vrf: TEST
+  ip_address_virtual: 10.10.10.1/24
+  tenant: TEST_MLAG_SAME_SUBNET_ON_VRF
+- name: Vlan3000
+  description: MLAG_L3_VRF_TEST
+  shutdown: false
+  vrf: TEST
+  ip_address: 10.10.224.1/30
+  mtu: 9214
+  tenant: TEST_MLAG_SAME_SUBNET_ON_VRF
+  type: underlay_peering
+vlan_internal_order:
+  allocation: ascending
+  range:
+    beginning: 1006
+    ending: 1199
+vlans:
+- id: 4093
+  name: MLAG_L3
+  trunk_groups:
+  - MLAG
+  tenant: system
+- id: 4094
+  name: MLAG
+  trunk_groups:
+  - MLAG
+  tenant: system
+- id: 10
+  name: VLAN10
+  tenant: TEST_MLAG_SAME_SUBNET_ON_VRF
+- id: 3000
+  name: MLAG_L3_VRF_TEST
+  trunk_groups:
+  - MLAG
+  tenant: TEST_MLAG_SAME_SUBNET_ON_VRF
+vrfs:
+- name: MGMT
+  ip_routing: false
+- name: TEST
+  ip_routing: true
+  tenant: TEST_MLAG_SAME_SUBNET_ON_VRF
 vxlan_interface:
   vxlan1:
     description: MLAG_SAME_SUBNET_L3LEAF2A_VTEP
     vxlan:
-      udp_port: 4789
       source_interface: Loopback1
+      udp_port: 4789
       virtual_router_encapsulation_mac_address: mlag-system-id
       vlans:
       - id: 10
@@ -260,5 +262,3 @@ vxlan_interface:
       vrfs:
       - name: TEST
         vni: 1
-metadata:
-  platform: vEOS-LAB

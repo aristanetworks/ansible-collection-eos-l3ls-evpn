@@ -6,9 +6,12 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Any
 
 from pyavd._errors import AristaAvdError
-from pyavd._utils import default, get, strip_empties_from_dict, strip_empties_from_list
+from pyavd._schema.models.avd_base import AvdBase
+from pyavd._utils import default, get_v2, strip_empties_from_dict, strip_empties_from_list
 
 if TYPE_CHECKING:
+    from pyavd._eos_cli_config_gen.schema import EosCliConfigGen
+
     from . import AvdStructuredConfigMetadata
 
 INVALID_CUSTOM_DEVICE_TAGS = [
@@ -131,11 +134,11 @@ class CvTagsMixin:
             if generate_tag.value is not None:
                 value = generate_tag.value
             elif generate_tag.data_path is not None:
-                value = get(self._hostvars, generate_tag.data_path)
-                if type(value) in [list, dict]:
+                value = get_v2(self.structured_config, generate_tag.data_path)
+                if isinstance(type(value), AvdBase):
                     msg = (
                         f"'generate_cv_tags.device_tags[name={generate_tag.name}].data_path' ({generate_tag.data_path}) "
-                        f"points to a variable of type {type(value).__name__}. This is not supported for cloudvision tag data_paths."
+                        f"points to a list or dict. This is not supported for cloudvision tag data_paths."
                     )
                     raise AristaAvdError(msg)
             else:
@@ -154,14 +157,14 @@ class CvTagsMixin:
             return []
 
         interface_tags = []
-        for ethernet_interface in get(self._hostvars, "ethernet_interfaces", default=[]):
+        for ethernet_interface in self.structured_config.ethernet_interfaces:
             tags = []
             for generate_tag in tags_to_generate:
                 # Get value from either 'value' key, structured config based on the 'data_path' key or raise.
                 if generate_tag.value is not None:
                     value = generate_tag.value
                 elif generate_tag.data_path is not None:
-                    value = get(ethernet_interface, generate_tag.data_path)
+                    value = get_v2(ethernet_interface, generate_tag.data_path)
                     if type(value) in [list, dict]:
                         msg = (
                             f"'generate_cv_tags.interface_tags[name={generate_tag.name}].data_path' ({generate_tag.data_path}) "
@@ -180,11 +183,11 @@ class CvTagsMixin:
                 tags.extend(self._get_cv_pathfinder_interface_tags(ethernet_interface))
 
             if tags:
-                interface_tags.append({"interface": ethernet_interface["name"], "tags": tags})
+                interface_tags.append({"interface": ethernet_interface.name, "tags": tags})
 
         return interface_tags
 
-    def _get_cv_pathfinder_interface_tags(self: AvdStructuredConfigMetadata, ethernet_interface: dict) -> list:
+    def _get_cv_pathfinder_interface_tags(self: AvdStructuredConfigMetadata, ethernet_interface: EosCliConfigGen.EthernetInterfacesItem) -> list:
         """
         Return list of device_tags for cv_pathfinder solution.
 
@@ -194,8 +197,8 @@ class CvTagsMixin:
             {"name": "Circuit", <value copied from wan_circuit_id if this is a wan interface>}
         ].
         """
-        if ethernet_interface["name"] in self.shared_utils.wan_interfaces:
-            wan_interface = self.shared_utils.wan_interfaces[ethernet_interface["name"]]
+        if ethernet_interface.name in self.shared_utils.wan_interfaces:
+            wan_interface = self.shared_utils.wan_interfaces[ethernet_interface.name]
             return strip_empties_from_list(
                 [
                     self._tag_dict("Type", "wan"),

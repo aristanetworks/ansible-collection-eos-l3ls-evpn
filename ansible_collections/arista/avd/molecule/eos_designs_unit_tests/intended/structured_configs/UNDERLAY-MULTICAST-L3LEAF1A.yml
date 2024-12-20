@@ -1,48 +1,185 @@
+aaa_root:
+  disabled: true
+config_end: true
+enable_password:
+  disabled: true
+ethernet_interfaces:
+- name: Ethernet3
+  description: MLAG_UNDERLAY-MULTICAST-L3LEAF1B_Ethernet3
+  shutdown: false
+  channel_group:
+    id: 3
+    mode: active
+  peer: UNDERLAY-MULTICAST-L3LEAF1B
+  peer_interface: Ethernet3
+  peer_type: mlag_peer
+- name: Ethernet4
+  description: MLAG_UNDERLAY-MULTICAST-L3LEAF1B_Ethernet4
+  shutdown: false
+  channel_group:
+    id: 3
+    mode: active
+  peer: UNDERLAY-MULTICAST-L3LEAF1B
+  peer_interface: Ethernet4
+  peer_type: mlag_peer
+- name: Ethernet1
+  description: P2P_UNDERLAY-MULTICAST-SPINE1_Ethernet1
+  shutdown: false
+  mtu: 9214
+  ip_address: 172.31.255.1/31
+  pim:
+    ipv4:
+      sparse_mode: true
+  peer: UNDERLAY-MULTICAST-SPINE1
+  peer_interface: Ethernet1
+  peer_type: spine
+  switchport:
+    enabled: false
+- name: Ethernet2
+  description: P2P_UNDERLAY-MULTICAST-SPINE2_Ethernet1
+  shutdown: false
+  mtu: 9214
+  ip_address: 172.31.255.3/31
+  peer: UNDERLAY-MULTICAST-SPINE2
+  peer_interface: Ethernet1
+  peer_type: spine
+  switchport:
+    enabled: false
+- name: Ethernet6
+  description: L2_UNDERLAY-MULTICAST-L2LEAF1A_Ethernet1
+  shutdown: false
+  channel_group:
+    id: 6
+    mode: active
+  peer: UNDERLAY-MULTICAST-L2LEAF1A
+  peer_interface: Ethernet1
+  peer_type: l2leaf
 hostname: UNDERLAY-MULTICAST-L3LEAF1A
+ip_igmp_snooping:
+  globally_enabled: true
+ip_routing: true
 is_deployed: true
+loopback_interfaces:
+- name: Loopback0
+  description: ROUTER_ID
+  shutdown: false
+  ip_address: 192.168.255.3/32
+- name: Loopback1
+  description: VXLAN_TUNNEL_SOURCE
+  shutdown: false
+  ip_address: 192.168.254.3/32
+- name: Loopback3
+  description: PIM RP
+  ip_address: 192.168.200.3/32
+- name: Loopback4
+  description: PIM RP
+  ip_address: 192.168.200.4/32
+management_api_http:
+  enable_https: true
+  enable_vrfs:
+  - name: MGMT
+management_interfaces:
+- name: Management1
+  description: OOB_MANAGEMENT
+  shutdown: false
+  vrf: MGMT
+  ip_address: 192.168.200.105/24
+  type: oob
+  gateway: 192.168.200.5
+metadata:
+  platform: vEOS-LAB
+mlag_configuration:
+  domain_id: DC1_LEAF1
+  local_interface: Vlan4094
+  peer_address: 10.255.252.1
+  peer_link: Port-Channel3
+  reload_delay_mlag: '300'
+  reload_delay_non_mlag: '330'
+port_channel_interfaces:
+- name: Port-Channel3
+  description: MLAG_UNDERLAY-MULTICAST-L3LEAF1B_Port-Channel3
+  shutdown: false
+  switchport:
+    enabled: true
+    mode: trunk
+    trunk:
+      groups:
+      - MLAG
+- name: Port-Channel6
+  description: L2_UNDERLAY-MULTICAST-L2LEAF1A_Port-Channel1
+  shutdown: false
+  switchport:
+    enabled: true
+    mode: trunk
+    trunk:
+      allowed_vlan: none
+prefix_lists:
+- name: PL-LOOPBACKS-EVPN-OVERLAY
+  sequence_numbers:
+  - sequence: 10
+    action: permit 192.168.255.0/24 eq 32
+  - sequence: 20
+    action: permit 192.168.254.0/24 eq 32
+- name: PL-LOOPBACKS-PIM-RP
+  sequence_numbers:
+  - sequence: 10
+    action: permit 192.168.200.3/32
+  - sequence: 20
+    action: permit 192.168.200.4/32
+route_maps:
+- name: RM-MLAG-PEER-IN
+  sequence_numbers:
+  - sequence: 10
+    type: permit
+    description: Make routes learned over MLAG Peer-link less preferred on spines to ensure optimal routing
+    set:
+    - origin incomplete
+- name: RM-CONN-2-BGP
+  sequence_numbers:
+  - sequence: 10
+    type: permit
+    match:
+    - ip address prefix-list PL-LOOPBACKS-EVPN-OVERLAY
+  - sequence: 40
+    type: permit
+    match:
+    - ip address prefix-list PL-LOOPBACKS-PIM-RP
+router_bfd:
+  multihop:
+    interval: 300
+    min_rx: 300
+    multiplier: 3
 router_bgp:
   as: '65101'
   router_id: 192.168.255.3
-  bgp:
-    default:
-      ipv4_unicast: false
   maximum_paths:
     paths: 4
     ecmp: 4
-  redistribute:
-    connected:
-      enabled: true
-      route_map: RM-CONN-2-BGP
   updates:
     wait_install: true
+  bgp:
+    default:
+      ipv4_unicast: false
   peer_groups:
   - name: MLAG-IPv4-UNDERLAY-PEER
     type: ipv4
     remote_as: '65101'
-    next_hop_self: true
     description: UNDERLAY-MULTICAST-L3LEAF1B
-    maximum_routes: 12000
+    next_hop_self: true
     send_community: all
+    maximum_routes: 12000
     route_map_in: RM-MLAG-PEER-IN
   - name: IPv4-UNDERLAY-PEERS
     type: ipv4
-    maximum_routes: 12000
     send_community: all
+    maximum_routes: 12000
   - name: EVPN-OVERLAY-PEERS
     type: evpn
     update_source: Loopback0
     bfd: true
+    ebgp_multihop: 3
     send_community: all
     maximum_routes: 0
-    ebgp_multihop: 3
-  address_family_ipv4:
-    peer_groups:
-    - name: MLAG-IPv4-UNDERLAY-PEER
-      activate: true
-    - name: IPv4-UNDERLAY-PEERS
-      activate: true
-    - name: EVPN-OVERLAY-PEERS
-      activate: false
   neighbors:
   - ip_address: 10.255.251.1
     peer_group: MLAG-IPv4-UNDERLAY-PEER
@@ -60,203 +197,33 @@ router_bgp:
     description: UNDERLAY-MULTICAST-SPINE2_Ethernet1
   - ip_address: 192.168.255.1
     peer_group: EVPN-OVERLAY-PEERS
+    remote_as: '65001'
     peer: UNDERLAY-MULTICAST-SPINE1
     description: UNDERLAY-MULTICAST-SPINE1_Loopback0
-    remote_as: '65001'
   - ip_address: 192.168.255.2
     peer_group: EVPN-OVERLAY-PEERS
+    remote_as: '65001'
     peer: UNDERLAY-MULTICAST-SPINE2
     description: UNDERLAY-MULTICAST-SPINE2_Loopback0
-    remote_as: '65001'
+  redistribute:
+    connected:
+      enabled: true
+      route_map: RM-CONN-2-BGP
   address_family_evpn:
     peer_groups:
     - name: EVPN-OVERLAY-PEERS
       activate: true
-static_routes:
-- vrf: MGMT
-  destination_address_prefix: 0.0.0.0/0
-  gateway: 192.168.200.5
-service_routing_protocols_model: multi-agent
-ip_routing: true
+  address_family_ipv4:
+    peer_groups:
+    - name: MLAG-IPv4-UNDERLAY-PEER
+      activate: true
+    - name: IPv4-UNDERLAY-PEERS
+      activate: true
+    - name: EVPN-OVERLAY-PEERS
+      activate: false
 router_multicast:
   ipv4:
     routing: true
-vlan_internal_order:
-  allocation: ascending
-  range:
-    beginning: 1006
-    ending: 1199
-aaa_root:
-  disabled: true
-config_end: true
-enable_password:
-  disabled: true
-transceiver_qsfp_default_mode_4x10: true
-vrfs:
-- name: MGMT
-  ip_routing: false
-management_interfaces:
-- name: Management1
-  description: OOB_MANAGEMENT
-  shutdown: false
-  vrf: MGMT
-  ip_address: 192.168.200.105/24
-  gateway: 192.168.200.5
-  type: oob
-management_api_http:
-  enable_vrfs:
-  - name: MGMT
-  enable_https: true
-spanning_tree:
-  no_spanning_tree_vlan: 4093-4094
-vlans:
-- id: 4093
-  tenant: system
-  name: MLAG_L3
-  trunk_groups:
-  - MLAG
-- id: 4094
-  tenant: system
-  name: MLAG
-  trunk_groups:
-  - MLAG
-vlan_interfaces:
-- name: Vlan4093
-  description: MLAG_L3
-  shutdown: false
-  mtu: 9214
-  ip_address: 10.255.251.0/31
-  pim:
-    ipv4:
-      sparse_mode: true
-- name: Vlan4094
-  description: MLAG
-  shutdown: false
-  no_autostate: true
-  mtu: 9214
-  ip_address: 10.255.252.0/31
-port_channel_interfaces:
-- name: Port-Channel3
-  description: MLAG_UNDERLAY-MULTICAST-L3LEAF1B_Port-Channel3
-  switchport:
-    enabled: true
-    mode: trunk
-    trunk:
-      groups:
-      - MLAG
-  shutdown: false
-- name: Port-Channel6
-  description: L2_UNDERLAY-MULTICAST-L2LEAF1A_Port-Channel1
-  switchport:
-    enabled: true
-    mode: trunk
-    trunk:
-      allowed_vlan: none
-  shutdown: false
-ethernet_interfaces:
-- name: Ethernet3
-  peer: UNDERLAY-MULTICAST-L3LEAF1B
-  peer_interface: Ethernet3
-  peer_type: mlag_peer
-  description: MLAG_UNDERLAY-MULTICAST-L3LEAF1B_Ethernet3
-  shutdown: false
-  channel_group:
-    id: 3
-    mode: active
-- name: Ethernet4
-  peer: UNDERLAY-MULTICAST-L3LEAF1B
-  peer_interface: Ethernet4
-  peer_type: mlag_peer
-  description: MLAG_UNDERLAY-MULTICAST-L3LEAF1B_Ethernet4
-  shutdown: false
-  channel_group:
-    id: 3
-    mode: active
-- name: Ethernet1
-  peer: UNDERLAY-MULTICAST-SPINE1
-  peer_interface: Ethernet1
-  peer_type: spine
-  description: P2P_UNDERLAY-MULTICAST-SPINE1_Ethernet1
-  shutdown: false
-  mtu: 9214
-  switchport:
-    enabled: false
-  ip_address: 172.31.255.1/31
-  pim:
-    ipv4:
-      sparse_mode: true
-- name: Ethernet2
-  peer: UNDERLAY-MULTICAST-SPINE2
-  peer_interface: Ethernet1
-  peer_type: spine
-  description: P2P_UNDERLAY-MULTICAST-SPINE2_Ethernet1
-  shutdown: false
-  mtu: 9214
-  switchport:
-    enabled: false
-  ip_address: 172.31.255.3/31
-- name: Ethernet6
-  peer: UNDERLAY-MULTICAST-L2LEAF1A
-  peer_interface: Ethernet1
-  peer_type: l2leaf
-  description: L2_UNDERLAY-MULTICAST-L2LEAF1A_Ethernet1
-  shutdown: false
-  channel_group:
-    id: 6
-    mode: active
-mlag_configuration:
-  domain_id: DC1_LEAF1
-  local_interface: Vlan4094
-  peer_address: 10.255.252.1
-  peer_link: Port-Channel3
-  reload_delay_mlag: '300'
-  reload_delay_non_mlag: '330'
-route_maps:
-- name: RM-MLAG-PEER-IN
-  sequence_numbers:
-  - sequence: 10
-    type: permit
-    set:
-    - origin incomplete
-    description: Make routes learned over MLAG Peer-link less preferred on spines to ensure optimal routing
-- name: RM-CONN-2-BGP
-  sequence_numbers:
-  - sequence: 10
-    type: permit
-    match:
-    - ip address prefix-list PL-LOOPBACKS-EVPN-OVERLAY
-  - sequence: 40
-    type: permit
-    match:
-    - ip address prefix-list PL-LOOPBACKS-PIM-RP
-loopback_interfaces:
-- name: Loopback0
-  description: ROUTER_ID
-  shutdown: false
-  ip_address: 192.168.255.3/32
-- name: Loopback1
-  description: VXLAN_TUNNEL_SOURCE
-  shutdown: false
-  ip_address: 192.168.254.3/32
-- name: Loopback3
-  description: PIM RP
-  ip_address: 192.168.200.3/32
-- name: Loopback4
-  description: PIM RP
-  ip_address: 192.168.200.4/32
-prefix_lists:
-- name: PL-LOOPBACKS-EVPN-OVERLAY
-  sequence_numbers:
-  - sequence: 10
-    action: permit 192.168.255.0/24 eq 32
-  - sequence: 20
-    action: permit 192.168.254.0/24 eq 32
-- name: PL-LOOPBACKS-PIM-RP
-  sequence_numbers:
-  - sequence: 10
-    action: permit 192.168.200.3/32
-  - sequence: 20
-    action: permit 192.168.200.4/32
 router_pim_sparse_mode:
   ipv4:
     rp_addresses:
@@ -280,6 +247,9 @@ router_pim_sparse_mode:
       other_anycast_rp_addresses:
       - address: 192.168.255.3
       - address: 192.168.255.4
+service_routing_protocols_model: multi-agent
+spanning_tree:
+  no_spanning_tree_vlan: 4093-4094
 standard_access_lists:
 - name: RP_ACL_2
   sequence_numbers:
@@ -297,19 +267,49 @@ standard_access_lists:
   sequence_numbers:
   - sequence: 10
     action: permit 239.255.5.0/24
-router_bfd:
-  multihop:
-    interval: 300
-    min_rx: 300
-    multiplier: 3
-ip_igmp_snooping:
-  globally_enabled: true
+static_routes:
+- vrf: MGMT
+  destination_address_prefix: 0.0.0.0/0
+  gateway: 192.168.200.5
+transceiver_qsfp_default_mode_4x10: true
+vlan_interfaces:
+- name: Vlan4093
+  description: MLAG_L3
+  shutdown: false
+  ip_address: 10.255.251.0/31
+  pim:
+    ipv4:
+      sparse_mode: true
+  mtu: 9214
+- name: Vlan4094
+  description: MLAG
+  shutdown: false
+  ip_address: 10.255.252.0/31
+  mtu: 9214
+  no_autostate: true
+vlan_internal_order:
+  allocation: ascending
+  range:
+    beginning: 1006
+    ending: 1199
+vlans:
+- id: 4093
+  name: MLAG_L3
+  trunk_groups:
+  - MLAG
+  tenant: system
+- id: 4094
+  name: MLAG
+  trunk_groups:
+  - MLAG
+  tenant: system
+vrfs:
+- name: MGMT
+  ip_routing: false
 vxlan_interface:
   vxlan1:
     description: UNDERLAY-MULTICAST-L3LEAF1A_VTEP
     vxlan:
-      udp_port: 4789
       source_interface: Loopback1
+      udp_port: 4789
       virtual_router_encapsulation_mac_address: mlag-system-id
-metadata:
-  platform: vEOS-LAB

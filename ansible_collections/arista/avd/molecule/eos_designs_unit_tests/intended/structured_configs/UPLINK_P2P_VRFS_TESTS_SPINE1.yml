@@ -1,34 +1,86 @@
+aaa_root:
+  disabled: true
+config_end: true
+enable_password:
+  disabled: true
+ethernet_interfaces:
+- name: Ethernet1
+  description: P2P_UPLINK_P2P_VRFS_TESTS_LEAF1_Ethernet1
+  shutdown: false
+  mtu: 9214
+  ip_address: 10.42.42.8/31
+  mac_security:
+    profile: TEST
+  peer: UPLINK_P2P_VRFS_TESTS_LEAF1
+  peer_interface: Ethernet1
+  peer_type: l3leaf
+  switchport:
+    enabled: false
+- name: Ethernet1.42
+  description: P2P_UPLINK_P2P_VRFS_TESTS_LEAF1_Ethernet1.42_VRF_PROD
+  shutdown: false
+  mtu: 9214
+  vrf: PROD
+  encapsulation_dot1q:
+    vlan: 42
+  ip_address: 10.42.42.8/31
+  peer: UPLINK_P2P_VRFS_TESTS_LEAF1
+  peer_interface: Ethernet1.42
+  peer_type: l3leaf
+- name: Ethernet1.66
+  description: P2P_UPLINK_P2P_VRFS_TESTS_LEAF1_Ethernet1.66_VRF_ONLY-ON-L2LEAF
+  shutdown: false
+  mtu: 9214
+  vrf: ONLY-ON-L2LEAF
+  encapsulation_dot1q:
+    vlan: 66
+  ip_address: 10.42.42.8/31
+  peer: UPLINK_P2P_VRFS_TESTS_LEAF1
+  peer_interface: Ethernet1.66
+  peer_type: l3leaf
 hostname: UPLINK_P2P_VRFS_TESTS_SPINE1
+ip_routing: true
 is_deployed: true
+loopback_interfaces:
+- name: Loopback0
+  description: ROUTER_ID
+  shutdown: false
+  ip_address: 192.168.42.1/32
+management_api_http:
+  enable_https: true
+  enable_vrfs:
+  - name: MGMT
+metadata:
+  platform: vEOS-LAB
 router_bgp:
   as: '65000'
   router_id: 192.168.42.1
-  bgp:
-    default:
-      ipv4_unicast: false
   maximum_paths:
     paths: 4
     ecmp: 4
-  redistribute:
-    connected:
-      enabled: true
   updates:
     wait_install: true
+  bgp:
+    default:
+      ipv4_unicast: false
   peer_groups:
   - name: IPv4-UNDERLAY-PEERS
     type: ipv4
-    maximum_routes: 12000
     send_community: all
-  address_family_ipv4:
-    peer_groups:
-    - name: IPv4-UNDERLAY-PEERS
-      activate: true
+    maximum_routes: 12000
   neighbors:
   - ip_address: 10.42.42.9
     peer_group: IPv4-UNDERLAY-PEERS
     remote_as: '65000'
     peer: UPLINK_P2P_VRFS_TESTS_LEAF1
     description: UPLINK_P2P_VRFS_TESTS_LEAF1_Ethernet1
+  redistribute:
+    connected:
+      enabled: true
+  address_family_ipv4:
+    peer_groups:
+    - name: IPv4-UNDERLAY-PEERS
+      activate: true
   vrfs:
   - name: PROD
     router_id: 192.168.42.1
@@ -45,72 +97,20 @@ router_bgp:
       remote_as: '65000'
       description: UPLINK_P2P_VRFS_TESTS_LEAF1_Ethernet1.66_vrf_ONLY-ON-L2LEAF
 service_routing_protocols_model: multi-agent
-ip_routing: true
+spanning_tree:
+  mode: none
+transceiver_qsfp_default_mode_4x10: true
 vlan_internal_order:
   allocation: ascending
   range:
     beginning: 1006
     ending: 1199
-aaa_root:
-  disabled: true
-config_end: true
-enable_password:
-  disabled: true
-transceiver_qsfp_default_mode_4x10: true
-spanning_tree:
-  mode: none
 vrfs:
 - name: MGMT
   ip_routing: false
 - name: PROD
+  ip_routing: true
   tenant: TenantB
-  ip_routing: true
 - name: ONLY-ON-L2LEAF
-  tenant: TenantC
   ip_routing: true
-management_api_http:
-  enable_vrfs:
-  - name: MGMT
-  enable_https: true
-ethernet_interfaces:
-- name: Ethernet1
-  peer: UPLINK_P2P_VRFS_TESTS_LEAF1
-  peer_interface: Ethernet1
-  peer_type: l3leaf
-  description: P2P_UPLINK_P2P_VRFS_TESTS_LEAF1_Ethernet1
-  shutdown: false
-  mtu: 9214
-  mac_security:
-    profile: TEST
-  switchport:
-    enabled: false
-  ip_address: 10.42.42.8/31
-- name: Ethernet1.42
-  peer: UPLINK_P2P_VRFS_TESTS_LEAF1
-  peer_interface: Ethernet1.42
-  peer_type: l3leaf
-  vrf: PROD
-  description: P2P_UPLINK_P2P_VRFS_TESTS_LEAF1_Ethernet1.42_VRF_PROD
-  shutdown: false
-  encapsulation_dot1q:
-    vlan: 42
-  mtu: 9214
-  ip_address: 10.42.42.8/31
-- name: Ethernet1.66
-  peer: UPLINK_P2P_VRFS_TESTS_LEAF1
-  peer_interface: Ethernet1.66
-  peer_type: l3leaf
-  vrf: ONLY-ON-L2LEAF
-  description: P2P_UPLINK_P2P_VRFS_TESTS_LEAF1_Ethernet1.66_VRF_ONLY-ON-L2LEAF
-  shutdown: false
-  encapsulation_dot1q:
-    vlan: 66
-  mtu: 9214
-  ip_address: 10.42.42.8/31
-loopback_interfaces:
-- name: Loopback0
-  description: ROUTER_ID
-  shutdown: false
-  ip_address: 192.168.42.1/32
-metadata:
-  platform: vEOS-LAB
+  tenant: TenantC

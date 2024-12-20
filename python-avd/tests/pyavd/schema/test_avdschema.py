@@ -13,15 +13,15 @@ from pyavd._schema.avdschema import DEFAULT_SCHEMA, AvdSchema
 
 script_dir = Path(__file__).parent
 with Path(script_dir, "access_lists.schema.yml").open(encoding="utf-8") as schema_file:
-    acl_schema = yaml.load(schema_file, Loader=yaml.SafeLoader)
+    acl_schema = yaml.load(schema_file, Loader=yaml.CSafeLoader)
 with Path(script_dir, "ipv6_standard_access_lists.schema.yml").open(encoding="utf-8") as schema_file:
-    ipv6_acl_schema = yaml.load(schema_file, Loader=yaml.SafeLoader)
+    ipv6_acl_schema = yaml.load(schema_file, Loader=yaml.CSafeLoader)
 with Path(script_dir, "combined.schema.yml").open(encoding="utf-8") as schema_file:
-    combined_schema = yaml.load(schema_file, Loader=yaml.SafeLoader)
+    combined_schema = yaml.load(schema_file, Loader=yaml.CSafeLoader)
 with Path(script_dir, "acl.yml").open(encoding="utf-8") as data_file:
-    acl_test_data = yaml.load(data_file, Loader=yaml.SafeLoader)
+    acl_test_data = yaml.load(data_file, Loader=yaml.CSafeLoader)
 with Path(script_dir, "ipv6-access-lists.yml").open(encoding="utf-8") as data_file:
-    ipv6_acl_test_data = yaml.load(data_file, Loader=yaml.SafeLoader)
+    ipv6_acl_test_data = yaml.load(data_file, Loader=yaml.CSafeLoader)
 
 VALID_TEST_SCHEMAS = [DEFAULT_SCHEMA, acl_schema, ipv6_acl_schema, combined_schema]
 

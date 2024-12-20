@@ -1,285 +1,113 @@
-hostname: flow-tracking-tests-leaf1
-is_deployed: true
-router_bgp:
-  as: '65101'
-  router_id: 10.254.1.1
-  bgp:
-    default:
-      ipv4_unicast: false
-  maximum_paths:
-    paths: 4
-    ecmp: 4
-  redistribute:
-    connected:
-      enabled: true
-      route_map: RM-CONN-2-BGP
-  peer_groups:
-  - name: IPv4-UNDERLAY-PEERS
-    type: ipv4
-    maximum_routes: 12000
-    send_community: all
-  - name: EVPN-OVERLAY-PEERS
-    type: evpn
-    update_source: Loopback0
-    bfd: true
-    send_community: all
-    maximum_routes: 0
-    ebgp_multihop: 3
-  address_family_ipv4:
-    peer_groups:
-    - name: IPv4-UNDERLAY-PEERS
-      activate: true
-    - name: EVPN-OVERLAY-PEERS
-      activate: false
-  neighbors:
-  - ip_address: 10.254.2.0
-    peer_group: IPv4-UNDERLAY-PEERS
-    remote_as: '65200'
-    peer: flow-tracking-tests-spine1
-    description: flow-tracking-tests-spine1_Ethernet1
-  - ip_address: 10.254.2.2
-    peer_group: IPv4-UNDERLAY-PEERS
-    remote_as: '65200'
-    peer: flow-tracking-tests-spine2
-    description: flow-tracking-tests-spine2_Ethernet2
-  - ip_address: 10.255.0.1
-    peer_group: EVPN-OVERLAY-PEERS
-    peer: flow-tracking-tests-spine1
-    description: flow-tracking-tests-spine1_Loopback0
-    remote_as: '65200'
-  - ip_address: 10.255.0.2
-    peer_group: EVPN-OVERLAY-PEERS
-    peer: flow-tracking-tests-spine2
-    description: flow-tracking-tests-spine2_Loopback0
-    remote_as: '65200'
-  address_family_evpn:
-    peer_groups:
-    - name: EVPN-OVERLAY-PEERS
-      activate: true
-  vrfs:
-  - name: VRF1
-    rd: 10.254.1.1:1
-    route_targets:
-      import:
-      - address_family: evpn
-        route_targets:
-        - '1:1'
-      export:
-      - address_family: evpn
-        route_targets:
-        - '1:1'
-    router_id: 10.254.1.1
-    redistribute:
-      connected:
-        enabled: true
-  vlans:
-  - id: 11
-    tenant: FLOW_TRACKING
-    rd: 10.254.1.1:10011
-    route_targets:
-      both:
-      - 10011:10011
-    redistribute_routes:
-    - learned
-static_routes:
-- vrf: MGMT
-  destination_address_prefix: 0.0.0.0/0
-  gateway: 192.168.0.1
-service_routing_protocols_model: multi-agent
-ip_routing: true
-vlan_internal_order:
-  allocation: ascending
-  range:
-    beginning: 1006
-    ending: 1199
 aaa_root:
   disabled: true
 config_end: true
 enable_password:
   disabled: true
-transceiver_qsfp_default_mode_4x10: true
-spanning_tree:
-  mode: mstp
-  mst_instances:
-  - id: '0'
-    priority: 4096
-vrfs:
-- name: MGMT
-  ip_routing: false
-- name: VRF1
-  tenant: FLOW_TRACKING
-  ip_routing: true
-management_interfaces:
-- name: Management1
-  description: OOB_MANAGEMENT
-  shutdown: false
-  vrf: MGMT
-  ip_address: 192.168.0.101/24
-  gateway: 192.168.0.1
-  type: oob
-management_api_http:
-  enable_vrfs:
-  - name: MGMT
-  enable_https: true
 ethernet_interfaces:
 - name: Ethernet1
-  peer: flow-tracking-tests-spine1
-  peer_interface: Ethernet1
-  peer_type: spine
   description: P2P_flow-tracking-tests-spine1_Ethernet1
   shutdown: false
   mtu: 9214
-  switchport:
-    enabled: false
   flow_tracker:
     hardware: FLOW-TRACKER
   ip_address: 10.254.2.1/31
-- name: Ethernet2
-  peer: flow-tracking-tests-spine2
-  peer_interface: Ethernet2
+  peer: flow-tracking-tests-spine1
+  peer_interface: Ethernet1
   peer_type: spine
+  switchport:
+    enabled: false
+- name: Ethernet2
   description: P2P_flow-tracking-tests-spine2_Ethernet2
   shutdown: false
   mtu: 9214
-  switchport:
-    enabled: false
   flow_tracker:
     hardware: FLOW-TRACKER
   ip_address: 10.254.2.3/31
+  peer: flow-tracking-tests-spine2
+  peer_interface: Ethernet2
+  peer_type: spine
+  switchport:
+    enabled: false
 - name: Ethernet81
-  peer_type: l3_interface
+  shutdown: false
+  vrf: VRF1
+  flow_tracker:
+    hardware: FLOW-TRACKER-3
   ip_address: 10.1.55.0/31
+  peer_type: l3_interface
+  switchport:
+    enabled: false
+- name: Ethernet82
+  shutdown: false
+  vrf: VRF1
+  ip_address: 10.1.55.0/31
+  peer_type: l3_interface
+  switchport:
+    enabled: false
+- name: Ethernet83
+  shutdown: false
+  vrf: VRF1
+  flow_tracker:
+    hardware: FLOW-TRACKER
+  ip_address: 10.1.55.0/31
+  peer_type: l3_interface
+  switchport:
+    enabled: false
+- name: Ethernet84
+  shutdown: false
+  vrf: VRF1
+  flow_tracker:
+    hardware: FLOW-TRACKER
+  ip_address: 10.1.55.0/31
+  peer_type: l3_interface
+  switchport:
+    enabled: false
+- name: Ethernet10
+  description: SERVER_single-interface-true_eth1
   shutdown: false
   flow_tracker:
     hardware: FLOW-TRACKER-3
-  switchport:
-    enabled: false
-  vrf: VRF1
-- name: Ethernet82
-  peer_type: l3_interface
-  ip_address: 10.1.55.0/31
-  shutdown: false
-  switchport:
-    enabled: false
-  vrf: VRF1
-- name: Ethernet83
-  peer_type: l3_interface
-  ip_address: 10.1.55.0/31
-  shutdown: false
-  flow_tracker:
-    hardware: FLOW-TRACKER
-  switchport:
-    enabled: false
-  vrf: VRF1
-- name: Ethernet84
-  peer_type: l3_interface
-  ip_address: 10.1.55.0/31
-  shutdown: false
-  flow_tracker:
-    hardware: FLOW-TRACKER
-  switchport:
-    enabled: false
-  vrf: VRF1
-- name: Ethernet10
   peer: single-interface-true
   peer_interface: eth1
   peer_type: server
-  description: SERVER_single-interface-true_eth1
-  shutdown: false
   switchport:
     enabled: true
     mode: access
     access_vlan: 11
-  flow_tracker:
-    hardware: FLOW-TRACKER-3
 - name: Ethernet11
+  description: SERVER_single-interface-false_eth11
+  shutdown: false
   peer: single-interface-false
   peer_interface: eth11
   peer_type: server
-  description: SERVER_single-interface-false_eth11
-  shutdown: false
   switchport:
     enabled: true
     mode: access
     access_vlan: 11
 - name: Ethernet12
+  description: SERVER_single-interface-no-definition_eth12
+  shutdown: false
+  flow_tracker:
+    hardware: FLOW-TRACKER
   peer: single-interface-no-definition
   peer_interface: eth12
   peer_type: server
-  description: SERVER_single-interface-no-definition_eth12
-  shutdown: false
   switchport:
     enabled: true
     mode: access
     access_vlan: 11
+- name: Ethernet13
+  description: SERVER_single-interface-true4_eth1
+  shutdown: false
   flow_tracker:
     hardware: FLOW-TRACKER
-- name: Ethernet13
   peer: single-interface-true4
   peer_interface: eth1
   peer_type: server
-  description: SERVER_single-interface-true4_eth1
-  shutdown: false
   switchport:
     enabled: true
     mode: access
     access_vlan: 11
-  flow_tracker:
-    hardware: FLOW-TRACKER
-loopback_interfaces:
-- name: Loopback0
-  description: ROUTER_ID
-  shutdown: false
-  ip_address: 10.254.1.1/32
-- name: Loopback1
-  description: VXLAN_TUNNEL_SOURCE
-  shutdown: false
-  ip_address: 10.254.11.1/32
-prefix_lists:
-- name: PL-LOOPBACKS-EVPN-OVERLAY
-  sequence_numbers:
-  - sequence: 10
-    action: permit 10.254.1.0/27 eq 32
-  - sequence: 20
-    action: permit 10.254.11.0/27 eq 32
-route_maps:
-- name: RM-CONN-2-BGP
-  sequence_numbers:
-  - sequence: 10
-    type: permit
-    match:
-    - ip address prefix-list PL-LOOPBACKS-EVPN-OVERLAY
-router_bfd:
-  multihop:
-    interval: 300
-    min_rx: 300
-    multiplier: 3
-vlans:
-- id: 11
-  name: VLAN11
-  tenant: FLOW_TRACKING
-ip_igmp_snooping:
-  globally_enabled: true
-ip_virtual_router_mac_address: 00:11:22:33:44:55
-vlan_interfaces:
-- name: Vlan11
-  tenant: FLOW_TRACKING
-  description: VLAN11
-  shutdown: false
-  ip_address: 172.16.11.1/24
-  vrf: VRF1
-vxlan_interface:
-  vxlan1:
-    description: flow-tracking-tests-leaf1_VTEP
-    vxlan:
-      udp_port: 4789
-      source_interface: Loopback1
-      vlans:
-      - id: 11
-        vni: 10011
-      vrfs:
-      - name: VRF1
-        vni: 1
 flow_tracking:
   hardware:
     trackers:
@@ -304,5 +132,177 @@ flow_tracking:
         local_interface: Loopback0
         template_interval: 40000
     shutdown: false
+hostname: flow-tracking-tests-leaf1
+ip_igmp_snooping:
+  globally_enabled: true
+ip_routing: true
+ip_virtual_router_mac_address: 00:11:22:33:44:55
+is_deployed: true
+loopback_interfaces:
+- name: Loopback0
+  description: ROUTER_ID
+  shutdown: false
+  ip_address: 10.254.1.1/32
+- name: Loopback1
+  description: VXLAN_TUNNEL_SOURCE
+  shutdown: false
+  ip_address: 10.254.11.1/32
+management_api_http:
+  enable_https: true
+  enable_vrfs:
+  - name: MGMT
+management_interfaces:
+- name: Management1
+  description: OOB_MANAGEMENT
+  shutdown: false
+  vrf: MGMT
+  ip_address: 192.168.0.101/24
+  type: oob
+  gateway: 192.168.0.1
 metadata:
   platform: vEOS-lab
+prefix_lists:
+- name: PL-LOOPBACKS-EVPN-OVERLAY
+  sequence_numbers:
+  - sequence: 10
+    action: permit 10.254.1.0/27 eq 32
+  - sequence: 20
+    action: permit 10.254.11.0/27 eq 32
+route_maps:
+- name: RM-CONN-2-BGP
+  sequence_numbers:
+  - sequence: 10
+    type: permit
+    match:
+    - ip address prefix-list PL-LOOPBACKS-EVPN-OVERLAY
+router_bfd:
+  multihop:
+    interval: 300
+    min_rx: 300
+    multiplier: 3
+router_bgp:
+  as: '65101'
+  router_id: 10.254.1.1
+  maximum_paths:
+    paths: 4
+    ecmp: 4
+  bgp:
+    default:
+      ipv4_unicast: false
+  peer_groups:
+  - name: IPv4-UNDERLAY-PEERS
+    type: ipv4
+    send_community: all
+    maximum_routes: 12000
+  - name: EVPN-OVERLAY-PEERS
+    type: evpn
+    update_source: Loopback0
+    bfd: true
+    ebgp_multihop: 3
+    send_community: all
+    maximum_routes: 0
+  neighbors:
+  - ip_address: 10.254.2.0
+    peer_group: IPv4-UNDERLAY-PEERS
+    remote_as: '65200'
+    peer: flow-tracking-tests-spine1
+    description: flow-tracking-tests-spine1_Ethernet1
+  - ip_address: 10.254.2.2
+    peer_group: IPv4-UNDERLAY-PEERS
+    remote_as: '65200'
+    peer: flow-tracking-tests-spine2
+    description: flow-tracking-tests-spine2_Ethernet2
+  - ip_address: 10.255.0.1
+    peer_group: EVPN-OVERLAY-PEERS
+    remote_as: '65200'
+    peer: flow-tracking-tests-spine1
+    description: flow-tracking-tests-spine1_Loopback0
+  - ip_address: 10.255.0.2
+    peer_group: EVPN-OVERLAY-PEERS
+    remote_as: '65200'
+    peer: flow-tracking-tests-spine2
+    description: flow-tracking-tests-spine2_Loopback0
+  redistribute:
+    connected:
+      enabled: true
+      route_map: RM-CONN-2-BGP
+  vlans:
+  - id: 11
+    tenant: FLOW_TRACKING
+    rd: 10.254.1.1:10011
+    route_targets:
+      both:
+      - 10011:10011
+    redistribute_routes:
+    - learned
+  address_family_evpn:
+    peer_groups:
+    - name: EVPN-OVERLAY-PEERS
+      activate: true
+  address_family_ipv4:
+    peer_groups:
+    - name: IPv4-UNDERLAY-PEERS
+      activate: true
+    - name: EVPN-OVERLAY-PEERS
+      activate: false
+  vrfs:
+  - name: VRF1
+    rd: 10.254.1.1:1
+    route_targets:
+      import:
+      - address_family: evpn
+        route_targets:
+        - '1:1'
+      export:
+      - address_family: evpn
+        route_targets:
+        - '1:1'
+    router_id: 10.254.1.1
+    redistribute:
+      connected:
+        enabled: true
+service_routing_protocols_model: multi-agent
+spanning_tree:
+  mode: mstp
+  mst_instances:
+  - id: '0'
+    priority: 4096
+static_routes:
+- vrf: MGMT
+  destination_address_prefix: 0.0.0.0/0
+  gateway: 192.168.0.1
+transceiver_qsfp_default_mode_4x10: true
+vlan_interfaces:
+- name: Vlan11
+  description: VLAN11
+  shutdown: false
+  vrf: VRF1
+  ip_address: 172.16.11.1/24
+  tenant: FLOW_TRACKING
+vlan_internal_order:
+  allocation: ascending
+  range:
+    beginning: 1006
+    ending: 1199
+vlans:
+- id: 11
+  name: VLAN11
+  tenant: FLOW_TRACKING
+vrfs:
+- name: MGMT
+  ip_routing: false
+- name: VRF1
+  ip_routing: true
+  tenant: FLOW_TRACKING
+vxlan_interface:
+  vxlan1:
+    description: flow-tracking-tests-leaf1_VTEP
+    vxlan:
+      source_interface: Loopback1
+      udp_port: 4789
+      vlans:
+      - id: 11
+        vni: 10011
+      vrfs:
+      - name: VRF1
+        vni: 1

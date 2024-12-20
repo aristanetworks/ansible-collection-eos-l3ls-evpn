@@ -6,6 +6,7 @@ from __future__ import annotations
 from functools import cached_property
 from typing import TYPE_CHECKING
 
+from pyavd._eos_cli_config_gen.schema import EosCliConfigGen
 from pyavd._errors import AristaAvdError, AristaAvdMissingVariableError
 from pyavd._utils import default, get, get_ip_from_ip_prefix, get_item, strip_empties_from_dict
 from pyavd.api.interface_descriptions import InterfaceDescriptionData
@@ -182,9 +183,13 @@ class UtilsMixin:
             "access_group_in": get(self._l3_interface_acls, f"{l3_interface.name}..ipv4_acl_in..name", separator=".."),
             "access_group_out": get(self._l3_interface_acls, f"{l3_interface.name}..ipv4_acl_out..name", separator=".."),
             "eos_cli": l3_interface.raw_eos_cli,
-            "struct_cfg": l3_interface.structured_config._as_dict(),
             "flow_tracker": self.shared_utils.get_flow_tracker(l3_interface.flow_tracking),
         }
+
+        if l3_interface.structured_config:
+            self.custom_structured_configs.nested.ethernet_interfaces.obtain(l3_interface.name)._deepmerge(
+                l3_interface.structured_config, list_merge=self.custom_structured_configs.list_merge_strategy
+            )
 
         if self.inputs.fabric_sflow.l3_interfaces is not None:
             interface["sflow"] = {"enable": self.inputs.fabric_sflow.l3_interfaces}
@@ -268,9 +273,15 @@ class UtilsMixin:
             "ipv6_enable": svi.ipv6_enable,
             "mtu": svi.mtu if self.shared_utils.platform_settings.feature_support.per_interface_mtu else None,
             "eos_cli": svi.raw_eos_cli,
-            "struct_cfg": svi.structured_config._as_dict() or None,
             "flow_tracker": link.get("flow_tracker"),
         }
+
+        if svi.structured_config:
+            self.custom_structured_configs.nested.ethernet_interfaces.obtain(interface_name)._deepmerge(
+                svi.structured_config._cast_as(EosCliConfigGen.EthernetInterfacesItem, ignore_extra_keys=True),
+                list_merge=self.custom_structured_configs.list_merge_strategy,
+            )
+
         if (mtu := subinterface["mtu"]) is not None and subinterface["mtu"] > self.shared_utils.p2p_uplinks_mtu:
             msg = (
                 f"MTU '{self.shared_utils.p2p_uplinks_mtu}' set for 'p2p_uplinks_mtu' must be larger or equal to MTU '{mtu}' "

@@ -1,25 +1,97 @@
+aaa_root:
+  disabled: true
+config_end: true
+enable_password:
+  disabled: true
+ethernet_interfaces:
+- name: Ethernet30
+  description: P2P_MLAG-ISIS-L3LEAF1A_Ethernet1
+  shutdown: false
+  mtu: 9214
+  ip_address: 10.10.101.6/31
+  isis_enable: EVPN_UNDERLAY
+  isis_metric: 50
+  isis_network_point_to_point: true
+  isis_circuit_type: level-2
+  isis_authentication:
+    both:
+      key_type: '7'
+      key: $1c$sTNAlR6rKSw=
+      mode: md5
+  peer: MLAG-ISIS-L3LEAF1A
+  peer_interface: Ethernet1
+  peer_type: l3leaf
+  switchport:
+    enabled: false
+- name: Ethernet31
+  description: P2P_MLAG-ISIS-L3LEAF1B_Ethernet1
+  shutdown: false
+  mtu: 9214
+  ip_address: 10.10.101.8/31
+  isis_enable: EVPN_UNDERLAY
+  isis_metric: 50
+  isis_network_point_to_point: true
+  isis_circuit_type: level-2
+  isis_authentication:
+    both:
+      key_type: '7'
+      key: $1c$sTNAlR6rKSw=
+      mode: md5
+  peer: MLAG-ISIS-L3LEAF1B
+  peer_interface: Ethernet1
+  peer_type: l3leaf
+  switchport:
+    enabled: false
 hostname: MLAG-ISIS-SPINE
+ip_routing: true
 is_deployed: true
+loopback_interfaces:
+- name: Loopback0
+  description: ROUTER_ID
+  shutdown: false
+  ip_address: 10.10.10.1/32
+  isis_enable: EVPN_UNDERLAY
+  isis_passive: true
+management_api_http:
+  enable_https: true
+  enable_vrfs:
+  - name: MGMT
+router_bfd:
+  multihop:
+    interval: 300
+    min_rx: 300
+    multiplier: 3
 router_bgp:
   as: '65000'
   router_id: 10.10.10.1
-  bgp:
-    default:
-      ipv4_unicast: false
   maximum_paths:
     paths: 4
     ecmp: 4
   updates:
     wait_install: true
+  bgp:
+    default:
+      ipv4_unicast: false
   peer_groups:
   - name: EVPN-OVERLAY-PEERS
     type: evpn
+    next_hop_unchanged: true
     update_source: Loopback0
     bfd: true
+    ebgp_multihop: 3
     send_community: all
     maximum_routes: 0
-    ebgp_multihop: 3
-    next_hop_unchanged: true
+  neighbors:
+  - ip_address: 192.168.255.36
+    peer_group: EVPN-OVERLAY-PEERS
+    remote_as: '65161'
+    peer: MLAG-ISIS-L3LEAF1A
+    description: MLAG-ISIS-L3LEAF1A_Loopback0
+  - ip_address: 192.168.255.37
+    peer_group: EVPN-OVERLAY-PEERS
+    remote_as: '65161'
+    peer: MLAG-ISIS-L3LEAF1B
+    description: MLAG-ISIS-L3LEAF1B_Loopback0
   address_family_evpn:
     peer_groups:
     - name: EVPN-OVERLAY-PEERS
@@ -28,96 +100,24 @@ router_bgp:
     peer_groups:
     - name: EVPN-OVERLAY-PEERS
       activate: false
-  neighbors:
-  - ip_address: 192.168.255.36
-    peer_group: EVPN-OVERLAY-PEERS
-    peer: MLAG-ISIS-L3LEAF1A
-    description: MLAG-ISIS-L3LEAF1A_Loopback0
-    remote_as: '65161'
-  - ip_address: 192.168.255.37
-    peer_group: EVPN-OVERLAY-PEERS
-    peer: MLAG-ISIS-L3LEAF1B
-    description: MLAG-ISIS-L3LEAF1B_Loopback0
-    remote_as: '65161'
+router_isis:
+  instance: EVPN_UNDERLAY
+  net: 49.0001.0100.1001.0001.00
+  router_id: 10.10.10.1
+  is_type: level-2
+  log_adjacency_changes: true
+  address_family_ipv4:
+    enabled: true
+    maximum_paths: 4
 service_routing_protocols_model: multi-agent
-ip_routing: true
+spanning_tree:
+  mode: none
+transceiver_qsfp_default_mode_4x10: true
 vlan_internal_order:
   allocation: ascending
   range:
     beginning: 1006
     ending: 1199
-aaa_root:
-  disabled: true
-config_end: true
-enable_password:
-  disabled: true
-transceiver_qsfp_default_mode_4x10: true
-spanning_tree:
-  mode: none
 vrfs:
 - name: MGMT
   ip_routing: false
-management_api_http:
-  enable_vrfs:
-  - name: MGMT
-  enable_https: true
-ethernet_interfaces:
-- name: Ethernet30
-  peer: MLAG-ISIS-L3LEAF1A
-  peer_interface: Ethernet1
-  peer_type: l3leaf
-  description: P2P_MLAG-ISIS-L3LEAF1A_Ethernet1
-  shutdown: false
-  mtu: 9214
-  switchport:
-    enabled: false
-  ip_address: 10.10.101.6/31
-  isis_enable: EVPN_UNDERLAY
-  isis_metric: 50
-  isis_network_point_to_point: true
-  isis_circuit_type: level-2
-  isis_authentication:
-    both:
-      mode: md5
-      key: $1c$sTNAlR6rKSw=
-      key_type: '7'
-- name: Ethernet31
-  peer: MLAG-ISIS-L3LEAF1B
-  peer_interface: Ethernet1
-  peer_type: l3leaf
-  description: P2P_MLAG-ISIS-L3LEAF1B_Ethernet1
-  shutdown: false
-  mtu: 9214
-  switchport:
-    enabled: false
-  ip_address: 10.10.101.8/31
-  isis_enable: EVPN_UNDERLAY
-  isis_metric: 50
-  isis_network_point_to_point: true
-  isis_circuit_type: level-2
-  isis_authentication:
-    both:
-      mode: md5
-      key: $1c$sTNAlR6rKSw=
-      key_type: '7'
-loopback_interfaces:
-- name: Loopback0
-  description: ROUTER_ID
-  shutdown: false
-  ip_address: 10.10.10.1/32
-  isis_enable: EVPN_UNDERLAY
-  isis_passive: true
-router_isis:
-  instance: EVPN_UNDERLAY
-  log_adjacency_changes: true
-  net: 49.0001.0100.1001.0001.00
-  router_id: 10.10.10.1
-  is_type: level-2
-  address_family_ipv4:
-    enabled: true
-    maximum_paths: 4
-router_bfd:
-  multihop:
-    interval: 300
-    min_rx: 300
-    multiplier: 3
