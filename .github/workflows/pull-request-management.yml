@@ -499,7 +499,8 @@ jobs:
         id: pipcache
         with:
           python-version: |
-            3.10
+            3.12
+            3.13
           cache: 'pip'
           cache-latest: true
 
@@ -544,25 +545,25 @@ jobs:
           name: pyavd-wheel
           path: ${{ env.WHEEL_FILE }}
 
-  download-dependencies:
-    runs-on: ubuntu-latest
-    needs: ansible_test_sanit
+  # download-dependencies:
+  #   runs-on: ubuntu-latest
+  #   needs: ansible_test_sanit
 
-    steps:
-      - uses: actions/checkout@v4
-      - name: Set up Python 3
-        uses: actions/setup-python@v5
-        id: pipcache
-        with:
-          python-version: |
-            3.10
-          cache: 'pip'
-          cache-latest: true
-      - name: Download wheel artifact
-        uses: actions/download-artifact@v3
-        with:
-          name: pyavd-wheel
-          path: ./artifacts
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #     - name: Set up Python 3
+  #       uses: actions/setup-python@v5
+  #       id: pipcache
+  #       with:
+  #         python-version: |
+  #           3.10
+  #         cache: 'pip'
+  #         cache-latest: true
+  #     - name: Download wheel artifact
+  #       uses: actions/download-artifact@v3
+  #       with:
+  #         name: pyavd-wheel
+  #         path: ./artifacts
 
       # - name: Install the wheel file
       #   run: |
@@ -572,14 +573,14 @@ jobs:
 
       #     # Install the wheel file
       #     pip install ./artifacts/pyavd-5.2.0.dev2-py3-none-any.whl
-      - name: 'Install Python requirements'
-        run: |
-          pip install mock pytest pytest-mock pytest-xdist pyyaml "ansible-core<2.19.0" -r ansible_collections/arista/avd/requirements-dev.txt --upgrade
-          pip install ./artifacts/pyavd-5.2.0.dev2-py3-none-any.whl
-      - name: 'Run ansible-test units test cases'
-        run: |
-          cd ansible_collections/arista/avd/
-          ansible-test units -vv
+      # - name: 'Install Python requirements'
+      #   run: |
+      #     pip install mock pytest pytest-mock pytest-xdist pyyaml "ansible-core<2.19.0" -r ansible_collections/arista/avd/requirements-dev.txt --upgrade
+      #     pip install ./artifacts/pyavd-5.2.0.dev2-py3-none-any.whl
+      # - name: 'Run ansible-test units test cases'
+      #   run: |
+      #     cd ansible_collections/arista/avd/
+      #     ansible-test units -vv
       # - name: Print runner path
       #   run: |
       #     WHEEL_CACHE_ROOT="$(pip cache dir)/wheels"
@@ -629,28 +630,34 @@ jobs:
   #         cd ansible_collections/arista/avd/
   #         ansible-test units -vv
 
-  # ansible_test_integration:
-  #   name: Run ansible-test integration test cases
-  #   runs-on: ubuntu-latest
-  #   needs: [ file-changes ]
-  #   steps:
-  #     - uses: actions/checkout@v4
-  #     - name: Set up Python 3
-  #       uses: actions/setup-python@v5
-  #       id: pipcache
-  #       with:
-  #         python-version: |
-  #           3.12
-  #           3.13
-  #         cache: 'pip'
-  #         cache-latest: true
-  #     - name: 'Install Python requirements'
-  #       run: |
-  #         pip install "ansible-core<2.19.0" -r .github/requirements-ci.txt --upgrade
-  #     - name: 'Run ansible-test integration test cases'
-  #       run: |
-  #         cd ansible_collections/arista/avd/
-  #         ansible-test integration -vv
+  ansible_test_integration:
+    name: Run ansible-test integration test cases
+    runs-on: ubuntu-latest
+    needs: [ file-changes, ansible_test_sanit]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python 3
+        uses: actions/setup-python@v5
+        id: pipcache
+        with:
+          python-version: |
+            3.12
+            3.13
+          cache: 'pip'
+          cache-latest: true
+      - name: Download wheel artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: pyavd-wheel
+          path: ./artifacts
+      - name: 'Install Python requirements'
+        run: |
+          pip install "ansible-core<2.19.0" --upgrade
+          pip install ./artifacts/pyavd-5.2.0.dev2-py3-none-any.whl
+      - name: 'Run ansible-test integration test cases'
+        run: |
+          cd ansible_collections/arista/avd/
+          ansible-test integration -vv
 
   # ansible_lint:
   #   name: Run ansible-lint test case
