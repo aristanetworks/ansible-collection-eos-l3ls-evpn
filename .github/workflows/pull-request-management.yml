@@ -449,7 +449,7 @@ jobs:
   #         restore-keys: |
   #           ${{ runner.os }}-pip-ansible-core-3.12
   #           ${{ runner.os }}-pip-ansible-core-3.13
-      
+
   #     # # Restore dependencies cache
   #     # - name: Restore dependencies cache
   #     #   uses: actions/cache@v3
@@ -473,7 +473,6 @@ jobs:
   #       if: failure()  # Runs only if the dry-run step fails
   #       run: |
   #         pip install --cache-dir ~/.cache/pip -r .github/requirements-ci.txt --upgrade
-
 
   #     - name: Print pip list
   #       run: |
@@ -514,7 +513,7 @@ jobs:
 
           # Extract the "Stored in directory" path from logs
           FULL_WHEEL_PATH=$(grep -m 1 "Stored in directory:" pip_install.log | awk '{print $NF}')
-          
+
           # Verify the path and print it
           if [ -z "$FULL_WHEEL_PATH" ]; then
             echo "Wheel path not found in logs."
@@ -540,7 +539,45 @@ jobs:
 
           echo "Found wheel file: $WHEEL_FILE"
 
+          echo "WHEEL_FILE=$WHEEL_FILE" >> $GITHUB_ENV
 
+      - name: Upload wheel artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: pyavd-wheel
+          path: ${{ env.WHEEL_FILE }}
+
+  download-and-use:
+    runs-on: ubuntu-latest
+    needs: ansible_test_sanity
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python 3
+        uses: actions/setup-python@v5
+        id: pipcache
+        with:
+          python-version: |
+            3.10
+            3.11
+            3.12
+            3.13
+          cache: 'pip'
+          cache-latest: true
+      - name: Download wheel artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: pyavd-wheel
+          path: ./artifacts
+
+      - name: Install the wheel file
+        run: |
+          # Verify the downloaded artifact
+          echo "Contents of artifacts directory:"
+          ls -al ./artifacts
+
+          # Install the wheel file
+          pip install ./artifacts/pyavd-5.2.0.dev2-py3-none-any.whl
       # - name: Print runner path
       #   run: |
       #     WHEEL_CACHE_ROOT="$(pip cache dir)/wheels"
@@ -643,7 +680,7 @@ jobs:
 
   #     - name: Install Ansible Galaxy Collections
   #       run: ansible-galaxy collection install -r ansible_collections/arista/avd/collections.yml
-  
+
   #     - name: 'Run ansible-test integration test cases'
   #       run: |
   #         cd ansible_collections/arista/avd/
