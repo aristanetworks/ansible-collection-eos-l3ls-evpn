@@ -574,7 +574,7 @@ jobs:
       #     pip install ./artifacts/pyavd-5.2.0.dev2-py3-none-any.whl
       - name: 'Install Python requirements'
         run: |
-          pip install mock pytest pytest-mock pytest-xdist pyyaml "ansible-core<2.19.0" --upgrade
+          pip install mock pytest pytest-mock pytest-xdist pyyaml "ansible-core<2.19.0" -r ansible_collections/arista/avd/requirements-dev.txt --upgrade
           pip install ./artifacts/pyavd-5.2.0.dev2-py3-none-any.whl
       - name: 'Run ansible-test units test cases'
         run: |
