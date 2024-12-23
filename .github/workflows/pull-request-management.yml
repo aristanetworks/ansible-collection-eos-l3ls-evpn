@@ -506,6 +506,25 @@ jobs:
             3.13
           cache: 'pip'
           cache-latest: true
+
+      - name: Install dependencies and capture wheel path
+        run: |
+          # Install dependencies and capture logs
+          pip install "ansible-core<2.19.0" -r .github/requirements-ci.txt --upgrade | tee pip_install.log
+
+          # Extract the "Stored in directory" path from logs
+          FULL_WHEEL_PATH=$(grep "Stored in directory:" pip_install.log | awk '{print $NF}')
+          
+          # Verify the path and print it
+          if [ -z "$FULL_WHEEL_PATH" ]; then
+            echo "Wheel path not found in logs."
+            exit 1
+          fi
+          echo "Full wheel path: $FULL_WHEEL_PATH"
+
+          # Export the path for use in other steps
+          echo "FULL_WHEEL_PATH=$FULL_WHEEL_PATH" >> $GITHUB_ENV
+
       - name: Print runner path
         run: |
           WHEEL_CACHE_ROOT="$(pip cache dir)/wheels"
