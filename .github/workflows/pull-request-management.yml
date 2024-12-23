@@ -513,7 +513,7 @@ jobs:
           pip install "ansible-core<2.19.0" -r .github/requirements-ci.txt --upgrade | tee pip_install.log
 
           # Extract the "Stored in directory" path from logs
-          FULL_WHEEL_PATH=$(grep "Stored in directory:" pip_install.log | awk '{print $NF}')
+          FULL_WHEEL_PATH=$(grep -m 1 "Stored in directory:" pip_install.log | awk '{print $NF}')
           
           # Verify the path and print it
           if [ -z "$FULL_WHEEL_PATH" ]; then
@@ -522,8 +522,24 @@ jobs:
           fi
           echo "Full wheel path: $FULL_WHEEL_PATH"
 
-          # # Export the path for use in other steps
-          # echo "FULL_WHEEL_PATH=$FULL_WHEEL_PATH" >> $GITHUB_ENV
+          # Use the previously extracted FULL_WHEEL_PATH
+          echo "Searching for pyavd-5.2.0.dev2-py3-none-any.whl in $FULL_WHEEL_PATH"
+
+          # List the contents of the directory
+          echo "Contents of the wheel directory:"
+          ls -al "$FULL_WHEEL_PATH"
+
+          # Find the specific file in the directory
+          WHEEL_FILE=$(find "$FULL_WHEEL_PATH" -type f -name "pyavd-5.2.0.dev2-py3-none-any.whl")
+
+          # Check if the file exists
+          if [ -z "$WHEEL_FILE" ]; then
+            echo "Wheel file not found: pyavd-5.2.0.dev2-py3-none-any.whl"
+            exit 1
+          fi
+
+          echo "Found wheel file: $WHEEL_FILE"
+
 
       # - name: Print runner path
       #   run: |
