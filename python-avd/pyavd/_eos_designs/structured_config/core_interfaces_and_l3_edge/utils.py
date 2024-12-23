@@ -9,6 +9,7 @@ from ipaddress import ip_network
 from itertools import islice
 from typing import TYPE_CHECKING, TypeVar
 
+from pyavd._eos_cli_config_gen.schema import EosCliConfigGen
 from pyavd._eos_designs.schema import EosDesigns
 from pyavd._errors import AristaAvdInvalidInputsError, AristaAvdMissingVariableError
 from pyavd._utils import default
@@ -205,11 +206,49 @@ class UtilsMixin:
             "mtu": p2p_link._get("mtu", self.shared_utils.p2p_uplinks_mtu) if self.shared_utils.platform_settings.feature_support.per_interface_mtu else None,
             "service_profile": p2p_link._get("qos_profile", self.inputs.p2p_uplinks_qos_profile),
             "eos_cli": p2p_link.raw_eos_cli,
-            "struct_cfg": p2p_link.structured_config or None,
         }
+
+        if p2p_link.structured_config:
+            if str(interface_name := p2p_link_data["interface"]).lower().startswith("p"):
+                # Port-channel
+                self.custom_structured_configs.nested.port_channel_interfaces.obtain(interface_name)._deepmerge(
+                    EosCliConfigGen.PortChannelInterfacesItem._from_dict(p2p_link.structured_config),
+                    list_merge=self.custom_structured_configs.list_merge_strategy,
+                )
+            else:
+                # Ethernet
+                self.custom_structured_configs.nested.ethernet_interfaces.obtain(interface_name)._deepmerge(
+                    EosCliConfigGen.EthernetInterfacesItem._from_dict(p2p_link.structured_config),
+                    list_merge=self.custom_structured_configs.list_merge_strategy,
+                )
 
         if p2p_link.ip:
             interface_cfg["ip_address"] = p2p_link.ip[index]
+
+        if p2p_link.ptp.enabled:
+            ptp_config = {}
+
+            if self.shared_utils.ptp_enabled:
+                # Apply PTP profile config from node settings when profile is not defined on p2p_link
+                if not p2p_link.ptp.profile:
+                    ptp_config.update(self.shared_utils.ptp_profile._as_dict(include_default_values=True))
+
+                # Apply PTP profile defined for the p2p_link
+                elif p2p_link.ptp.profile not in self.inputs.ptp_profiles:
+                    msg = f"PTP Profile '{p2p_link.ptp.profile}' referenced under {self.data_model}.p2p_links does not exist in `ptp_profiles`."
+                    raise AristaAvdInvalidInputsError(msg)
+
+                else:
+                    ptp_config.update(self.inputs.ptp_profiles[p2p_link.ptp.profile]._as_dict(include_default_values=True))
+
+            node_index = p2p_link.nodes._as_list().index(self.shared_utils.hostname)  # TODO: Implement .index() method on AvdList and AvdIndexedList class.
+            if len(p2p_link.ptp.roles) > node_index and p2p_link.ptp.roles[node_index] == "master":
+                ptp_config["role"] = "master"
+
+            ptp_config["enable"] = True
+            ptp_config.pop("profile", None)
+
+            interface_cfg["ptp"] = ptp_config
 
         if p2p_link.include_in_underlay_protocol:
             if p2p_link.underlay_multicast and self.shared_utils.underlay_multicast:
@@ -271,22 +310,7 @@ class UtilsMixin:
         Covers config that is only applicable to ethernet interfaces.
         This config will only be used on both main interfaces and port-channel members.
         """
-        ethernet_cfg = {"speed": p2p_link.speed}
-
-        if not p2p_link.ptp.enabled:
-            return ethernet_cfg
-
-        ptp_config = {}
-
-        # Apply PTP profile config
-        if self.shared_utils.ptp_enabled:
-            ptp_config.update(self.shared_utils.ptp_profile._as_dict(include_default_values=True))
-
-        ptp_config["enable"] = True
-        ptp_config.pop("profile", None)
-        ethernet_cfg["ptp"] = ptp_config
-
-        return ethernet_cfg
+        return {"speed": p2p_link.speed}
 
     def _get_port_channel_member_cfg(self: AvdStructuredConfigCoreInterfacesAndL3Edge, p2p_link: T_P2pLinksItem, p2p_link_data: dict, member: dict) -> dict:
         """

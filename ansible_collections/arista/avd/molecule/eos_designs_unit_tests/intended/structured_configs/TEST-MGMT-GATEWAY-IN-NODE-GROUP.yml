@@ -1,43 +1,43 @@
-hostname: TEST-MGMT-GATEWAY-IN-NODE-GROUP
-is_deployed: true
-static_routes:
-- vrf: MGMT
-  destination_address_prefix: 0.0.0.0/0
-  gateway: 192.168.201.254
-ipv6_static_routes:
-- vrf: MGMT
-  destination_address_prefix: ::/0
-  gateway: 2001:db8::2
-service_routing_protocols_model: multi-agent
-vlan_internal_order:
-  allocation: ascending
-  range:
-    beginning: 1006
-    ending: 1199
 aaa_root:
   disabled: true
 config_end: true
 enable_password:
   disabled: true
-transceiver_qsfp_default_mode_4x10: true
-vrfs:
-- name: MGMT
-  ip_routing: false
-  ipv6_routing: false
+hostname: TEST-MGMT-GATEWAY-IN-NODE-GROUP
+ip_igmp_snooping:
+  globally_enabled: true
+ipv6_static_routes:
+- vrf: MGMT
+  destination_address_prefix: ::/0
+  gateway: 2001:db8::2
+is_deployed: true
+management_api_http:
+  enable_https: true
+  enable_vrfs:
+  - name: MGMT
 management_interfaces:
 - name: Management1
   description: OOB_MANAGEMENT
   shutdown: false
   vrf: MGMT
   ip_address: 192.168.201.202/24
-  gateway: 192.168.201.254
-  type: oob
   ipv6_enable: true
   ipv6_address: 2001:db8::105/64
+  type: oob
+  gateway: 192.168.201.254
   ipv6_gateway: 2001:db8::2
-management_api_http:
-  enable_vrfs:
-  - name: MGMT
-  enable_https: true
-ip_igmp_snooping:
-  globally_enabled: true
+service_routing_protocols_model: multi-agent
+static_routes:
+- vrf: MGMT
+  destination_address_prefix: 0.0.0.0/0
+  gateway: 192.168.201.254
+transceiver_qsfp_default_mode_4x10: true
+vlan_internal_order:
+  allocation: ascending
+  range:
+    beginning: 1006
+    ending: 1199
+vrfs:
+- name: MGMT
+  ip_routing: false
+  ipv6_routing: false

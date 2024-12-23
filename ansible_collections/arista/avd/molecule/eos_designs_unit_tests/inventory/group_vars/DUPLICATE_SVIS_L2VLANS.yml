@@ -31,11 +31,11 @@ tenants:
           - id: 100
             name: Duplicate_SVI_100_LEAF1
             tags: [ DUP-LEAF1 ]
-            enabled: True
+            enabled: true
           - id: 100
             name: Duplicate_SVI_100_LEAF2
             tags: [ DUP-LEAF2 ]
-            enabled: True
+            enabled: true
     l2vlans:
       # Test non unique l2vlans ids in schema
       - id: 200

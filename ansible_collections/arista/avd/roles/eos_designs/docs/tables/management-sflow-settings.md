@@ -16,6 +16,7 @@
     | [<samp>&nbsp;&nbsp;mlag_interfaces</samp>](## "fabric_sflow.mlag_interfaces") | Boolean |  |  |  | Enable sFlow on all MLAG peer interfaces. |
     | [<samp>&nbsp;&nbsp;l3_interfaces</samp>](## "fabric_sflow.l3_interfaces") | Boolean |  |  |  | Enable sFlow on all l3 interfaces. |
     | [<samp>sflow_settings</samp>](## "sflow_settings") | Dictionary |  |  |  | sFlow settings.<br>The sFlow process will only be configured if any interface is enabled for sFlow.<br>For default enabling of sFlow for various interface types across the fabric see `fabric_sflow`. |
+    | [<samp>&nbsp;&nbsp;polling_interval</samp>](## "sflow_settings.polling_interval") | Integer |  |  |  | Interval in seconds for sending counter data to the sFlow collector. |
     | [<samp>&nbsp;&nbsp;sample</samp>](## "sflow_settings.sample") | Dictionary |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;rate</samp>](## "sflow_settings.sample.rate") | Integer |  |  | Min: 1<br>Max: 4294967295 | Packet sampling rate that defines the average number of ingress packets that pass through an interface for every packet that is sampled.<br>A rate of 16384 corresponds to an average sample of one per 16384 packets. |
     | [<samp>&nbsp;&nbsp;destinations</samp>](## "sflow_settings.destinations") | List, items: Dictionary | Required |  | Min Length: 1 |  |
@@ -59,6 +60,9 @@
     # The sFlow process will only be configured if any interface is enabled for sFlow.
     # For default enabling of sFlow for various interface types across the fabric see `fabric_sflow`.
     sflow_settings:
+
+      # Interval in seconds for sending counter data to the sFlow collector.
+      polling_interval: <int>
       sample:
 
         # Packet sampling rate that defines the average number of ingress packets that pass through an interface for every packet that is sampled.

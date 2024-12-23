@@ -529,10 +529,10 @@ To build and deploy the configurations to CVaaS, run first the `build.yml` playb
 
 ``` bash
 ### Build the configurations
-ansible-playbook playbooks/build.yml
+ansible-playbook build.yml
 
 ### Deploy Configurations to CVaaS
-ansible-playbook playbooks/deploy.yml
+ansible-playbook deploy.yml
 ```
 
 ```shell

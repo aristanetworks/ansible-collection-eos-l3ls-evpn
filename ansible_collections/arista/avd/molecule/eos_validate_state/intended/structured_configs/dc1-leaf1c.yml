@@ -1,29 +1,43 @@
-hostname: dc1-leaf1c
-is_deployed: true
-static_routes:
-- vrf: MGMT
-  destination_address_prefix: 0.0.0.0/0
-  gateway: 172.16.1.1
-- destination_address_prefix: 0.0.0.0/0
-  gateway: 172.21.110.1
-  vrf: MGMT
-service_routing_protocols_model: multi-agent
-vlan_internal_order:
-  allocation: ascending
-  range:
-    beginning: 1006
-    ending: 1199
 aaa_root:
   disabled: true
 config_end: true
+dns_domain: dc1.local
 enable_password:
   disabled: true
-transceiver_qsfp_default_mode_4x10: true
-spanning_tree:
-  mode: mstp
-  mst_instances:
-  - id: '0'
-    priority: 32768
+ethernet_interfaces:
+- name: Ethernet1
+  description: L2_dc1-leaf1a_Ethernet8
+  shutdown: false
+  channel_group:
+    id: 1
+    mode: active
+  peer: dc1-leaf1a
+  peer_interface: Ethernet8
+  peer_type: l3leaf
+- name: Ethernet2
+  description: L2_dc1-leaf1b_Ethernet8
+  shutdown: false
+  channel_group:
+    id: 1
+    mode: active
+  peer: dc1-leaf1b
+  peer_interface: Ethernet8
+  peer_type: l3leaf
+- name: Ethernet5
+  description: SERVER_dc1-leaf1-server1_iLO
+  shutdown: false
+  spanning_tree_portfast: edge
+  peer: dc1-leaf1-server1
+  peer_interface: iLO
+  peer_type: server
+  switchport:
+    enabled: true
+    mode: access
+    access_vlan: 11
+hostname: dc1-leaf1c
+ip_igmp_snooping:
+  globally_enabled: true
+is_deployed: true
 local_users:
 - name: admin
   privilege: 15
@@ -33,53 +47,49 @@ local_users:
   privilege: 15
   role: network-admin
   sha512_password: $6$7u4j1rkb3VELgcZE$EJt2Qff8kd/TapRoci0XaIZsL4tFzgq1YZBLD9c6f/knXzvcYY0NcMKndZeCv0T268knGKhOEwZAxqKjlMm920
-vrfs:
-- name: MGMT
-  ip_routing: false
 management_api_http:
-  enable_vrfs:
-  - name: MGMT
   enable_https: true
   https_ssl_profile: eAPI_SSL_Profile
-ethernet_interfaces:
-- name: Ethernet1
-  peer: dc1-leaf1a
-  peer_interface: Ethernet8
-  peer_type: l3leaf
-  description: L2_dc1-leaf1a_Ethernet8
-  shutdown: false
-  channel_group:
-    id: 1
-    mode: active
-- name: Ethernet2
-  peer: dc1-leaf1b
-  peer_interface: Ethernet8
-  peer_type: l3leaf
-  description: L2_dc1-leaf1b_Ethernet8
-  shutdown: false
-  channel_group:
-    id: 1
-    mode: active
-- name: Ethernet5
-  peer: dc1-leaf1-server1
-  peer_interface: iLO
-  peer_type: server
-  description: SERVER_dc1-leaf1-server1_iLO
-  shutdown: false
-  switchport:
-    enabled: true
-    mode: access
-    access_vlan: 11
-  spanning_tree_portfast: edge
+  enable_vrfs:
+  - name: MGMT
+metadata:
+  platform: vEOS-lab
 port_channel_interfaces:
 - name: Port-Channel1
   description: L2_DC1_L3_LEAF1_Port-Channel8
+  shutdown: false
   switchport:
     enabled: true
     mode: trunk
     trunk:
       allowed_vlan: 11-12,21-22,3401-3402,4085
+service_routing_protocols_model: multi-agent
+spanning_tree:
+  mode: mstp
+  mst_instances:
+  - id: '0'
+    priority: 32768
+static_routes:
+- vrf: MGMT
+  destination_address_prefix: 0.0.0.0/0
+  gateway: 172.16.1.1
+- vrf: MGMT
+  destination_address_prefix: 0.0.0.0/0
+  gateway: 172.21.110.1
+transceiver_qsfp_default_mode_4x10: true
+vlan_interfaces:
+- name: Vlan4085
+  description: L2LEAF_INBAND_MGMT
   shutdown: false
+  vrf: MGMT
+  ip_address: 172.21.110.4/24
+  mtu: 1500
+  type: inband_mgmt
+vlan_internal_order:
+  allocation: ascending
+  range:
+    beginning: 1006
+    ending: 1199
 vlans:
 - id: 11
   name: VRF10_VLAN11
@@ -100,18 +110,8 @@ vlans:
   name: L2_VLAN3402
   tenant: TENANT1
 - id: 4085
-  tenant: system
   name: L2LEAF_INBAND_MGMT
-ip_igmp_snooping:
-  globally_enabled: true
-vlan_interfaces:
-- name: Vlan4085
-  description: L2LEAF_INBAND_MGMT
-  shutdown: false
-  mtu: 1500
-  vrf: MGMT
-  ip_address: 172.21.110.4/24
-  type: inband_mgmt
-metadata:
-  platform: vEOS-lab
-dns_domain: dc1.local
+  tenant: system
+vrfs:
+- name: MGMT
+  ip_routing: false

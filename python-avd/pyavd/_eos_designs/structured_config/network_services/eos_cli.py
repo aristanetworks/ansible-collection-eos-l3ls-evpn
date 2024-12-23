@@ -6,8 +6,6 @@ from __future__ import annotations
 from functools import cached_property
 from typing import TYPE_CHECKING
 
-from pyavd._utils import get
-
 from .utils import UtilsMixin
 
 if TYPE_CHECKING:
@@ -28,7 +26,7 @@ class EosCliMixin(UtilsMixin):
             return None
 
         eos_clis = []
-        if (eos_cli := get(self._hostvars, "eos_cli")) is not None:
+        if (eos_cli := self.structured_config.eos_cli) is not None:
             eos_clis.append(eos_cli)
 
         eos_clis.extend(vrf.raw_eos_cli for tenant in self.shared_utils.filtered_tenants for vrf in tenant.vrfs if vrf.raw_eos_cli is not None)

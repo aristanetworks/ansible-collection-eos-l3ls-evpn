@@ -411,6 +411,24 @@
 | {{ port_channel_interface.name }} | {{ isis_instance }} | {{ isis_bfd }} | {{ isis_metric }} | {{ mode }} | {{ isis_circuit_type }} | {{ isis_hello_padding }} | {{ isis_authentication_mode }} |
 {%         endfor %}
 {%     endif %}
+{%     set port_channel_te_interfaces = [] %}
+{%     for port_channel_interface in port_channel_interfaces | arista.avd.natural_sort('name') %}
+{%         if port_channel_interface.traffic_engineering.enabled is arista.avd.defined(true) %}
+{%             do port_channel_te_interfaces.append(port_channel_interface) %}
+{%         endif %}
+{%     endfor %}
+{%     if port_channel_te_interfaces | length > 0 %}
+
+#### Traffic Engineering
+
+| Interface | Enabled | Administrative Groups |
+| --------- | ------- | --------------------- |
+{%         for po_te_interface in port_channel_te_interfaces %}
+{%             set admin_groups = po_te_interface.traffic_engineering.administrative_groups | arista.avd.default(["-"]) | join(",") %}
+{%             set te_enabled = po_te_interface.traffic_engineering.enabled | arista.avd.default("-") %}
+| {{ po_te_interface.name }} | {{ te_enabled }} | {{ admin_groups }} |
+{%         endfor %}
+{%     endif %}
 
 #### Port-Channel Interfaces Device Configuration
 

@@ -6,6 +6,7 @@ from __future__ import annotations
 from functools import cached_property
 from typing import TYPE_CHECKING
 
+from pyavd._eos_cli_config_gen.schema import EosCliConfigGen
 from pyavd._utils import append_if_not_duplicate, get, short_esi_to_route_target, strip_null_from_data
 from pyavd.api.interface_descriptions import InterfaceDescriptionData
 
@@ -102,7 +103,10 @@ class PortChannelInterfacesMixin(UtilsMixin):
                 port_channel_interface["lacp_fallback_timeout"] = get(link, "inband_ztp_lacp_fallback_delay")
 
             # Structured Config
-            port_channel_interface["struct_cfg"] = link.get("structured_config")
+            if structured_config := link.get("structured_config"):
+                self.custom_structured_configs.nested.port_channel_interfaces.obtain(port_channel_name)._deepmerge(
+                    EosCliConfigGen.PortChannelInterfacesItem._from_dict(structured_config), list_merge=self.custom_structured_configs.list_merge_strategy
+                )
 
             # Remove None values
             port_channel_interface = strip_null_from_data(port_channel_interface, strip_values_tuple=(None, "", {}))

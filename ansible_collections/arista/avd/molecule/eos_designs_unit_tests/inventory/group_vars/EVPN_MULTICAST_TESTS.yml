@@ -238,7 +238,7 @@ tenants:
   - name: Tenant_C
     mac_vrf_vni_base: 10000
     evpn_l2_multicast:
-      enabled: False
+      enabled: false
       underlay_l2_multicast_group_ipv4_pool: 236.0.0.0/20
     evpn_l3_multicast:
       # Enabled =

@@ -69,8 +69,8 @@ ansible_user: cvaas
 ansible_password: <service account token> (generated in CVP when AVD service account was created)
 ansible_connection: httpapi
 ansible_network_os: eos
-ansible_httpapi_use_ssl: True
-ansible_httpapi_validate_certs: True
+ansible_httpapi_use_ssl: true
+ansible_httpapi_validate_certs: true
 ansible_httpapi_port: 443
 ```
 
@@ -111,7 +111,7 @@ Now that AVD is talking to the CVaaS service you can run the "cvaas_deploy.yml" 
 - name: Configlet upload management
   hosts: cvaas
   connection: local
-  gather_facts: no
+  gather_facts: false
   tasks:
 
   - name: "Deploying configurations to CVaaS"

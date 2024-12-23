@@ -1,206 +1,99 @@
-hostname: uplink_lan_wan_router2
-is_deployed: true
-router_bgp:
-  as: '65100'
-  router_id: 192.168.1.2
-  bgp:
-    default:
-      ipv4_unicast: false
-  maximum_paths:
-    paths: 16
-  redistribute:
-    connected:
-      enabled: true
-      route_map: RM-CONN-2-BGP
-  updates:
-    wait_install: true
-  peer_groups:
-  - name: WAN-OVERLAY-PEERS
-    type: wan
-    update_source: Dps1
-    bfd: true
-    send_community: all
-    maximum_routes: 0
-    remote_as: '65100'
-    ttl_maximum_hops: 1
-    bfd_timers:
-      interval: 1000
-      min_rx: 1000
-      multiplier: 10
-  address_family_evpn:
-    peer_groups:
-    - name: WAN-OVERLAY-PEERS
-      activate: true
-      encapsulation: path-selection
-      route_map_in: RM-EVPN-SOO-IN
-      route_map_out: RM-EVPN-SOO-OUT
-  address_family_ipv4:
-    peer_groups:
-    - name: WAN-OVERLAY-PEERS
-      activate: false
-  address_family_ipv4_sr_te:
-    peer_groups:
-    - name: WAN-OVERLAY-PEERS
-      activate: true
-  address_family_link_state:
-    peer_groups:
-    - name: WAN-OVERLAY-PEERS
-      activate: true
-    path_selection:
-      roles:
-        producer: true
-  address_family_path_selection:
-    peer_groups:
-    - name: WAN-OVERLAY-PEERS
-      activate: true
-    bgp:
-      additional_paths:
-        receive: true
-        send: any
-  vrfs:
-  - name: VRF1
-    rd: 192.168.1.2:123
-    route_targets:
-      import:
-      - address_family: evpn
-        route_targets:
-        - 123:123
-      export:
-      - address_family: evpn
-        route_targets:
-        - 123:123
-    router_id: 192.168.1.2
-    redistribute:
-      connected:
-        enabled: true
-  - name: default
-    rd: 192.168.1.2:1
-    route_targets:
-      import:
-      - address_family: evpn
-        route_targets:
-        - '1:1'
-      export:
-      - address_family: evpn
-        route_targets:
-        - '1:1'
-        - route-map RM-EVPN-EXPORT-VRF-DEFAULT
-service_routing_protocols_model: multi-agent
-ip_routing: true
 aaa_root:
   disabled: true
-config_end: true
-enable_password:
-  disabled: true
-transceiver_qsfp_default_mode_4x10: false
-spanning_tree:
-  mode: none
-vrfs:
-- name: MGMT
-  ip_routing: false
-- name: VRF1
-  tenant: TEST
-  ip_routing: true
-  ipv6_routing: true
-management_api_http:
-  enable_vrfs:
-  - name: MGMT
-  enable_https: true
-ethernet_interfaces:
-- name: Ethernet2
-  peer: uplink_lan_l2leaf
-  peer_interface: Ethernet2
-  peer_type: l2leaf
-  description: L2_uplink_lan_l2leaf_Ethernet2
-  shutdown: false
-  switchport:
-    enabled: false
-  mtu: 9218
-- name: Ethernet2.10
-  peer: uplink_lan_l2leaf
-  peer_interface: Ethernet2 VLAN 10
-  peer_type: l2leaf
-  description: VLAN10_NATIVE
-  shutdown: false
-  encapsulation_dot1q:
-    vlan: 10
-  vrf: VRF1
-  ip_address: 10.0.10.1/24
-  mtu: 9218
-  flow_tracker:
-    hardware: FLOW-TRACKER
-- name: Ethernet2.100
-  peer: uplink_lan_l2leaf
-  peer_interface: Ethernet2 VLAN 100
-  peer_type: l2leaf
-  description: My vlan 100
-  shutdown: false
-  encapsulation_dot1q:
-    vlan: 100
-  vrf: VRF1
-  ip_address: 10.0.100.1/24
-  ipv6_address: cafe::cafe/64
-  ipv6_enable: true
-  eos_cli: comment yo
-  flow_tracker:
-    hardware: FLOW-TRACKER
-  _custom_key: custom_value
-- name: Ethernet1
-  peer_type: l3_interface
-  ip_address: 10.9.9.1/31
-  shutdown: false
-  switchport:
-    enabled: false
-  description: Comcast_999
-loopback_interfaces:
-- name: Loopback0
-  description: ROUTER_ID
-  shutdown: false
-  ip_address: 192.168.1.2/32
-prefix_lists:
-- name: PL-LOOPBACKS-EVPN-OVERLAY
-  sequence_numbers:
-  - sequence: 10
-    action: permit 192.168.1.0/24 eq 32
-route_maps:
-- name: RM-CONN-2-BGP
-  sequence_numbers:
-  - sequence: 10
-    type: permit
-    match:
-    - ip address prefix-list PL-LOOPBACKS-EVPN-OVERLAY
-    set:
-    - extcommunity soo 192.168.1.2:2 additive
-- name: RM-EVPN-SOO-IN
-  sequence_numbers:
-  - sequence: 10
-    type: deny
-    match:
-    - extcommunity ECL-EVPN-SOO
-  - sequence: 20
-    type: permit
-- name: RM-EVPN-SOO-OUT
-  sequence_numbers:
-  - sequence: 10
-    type: permit
-    set:
-    - extcommunity soo 192.168.1.2:2 additive
-- name: RM-EVPN-EXPORT-VRF-DEFAULT
-  sequence_numbers:
-  - sequence: 10
-    type: permit
-    match:
-    - extcommunity ECL-EVPN-SOO
 agents:
 - name: KernelFib
   environment_variables:
   - name: KERNELFIB_PROGRAM_ALL_ECMP
     value: '1'
+application_traffic_recognition:
+  field_sets:
+    ipv4_prefixes:
+    - name: PFX-PATHFINDERS
+  applications:
+    ipv4_applications:
+    - name: APP-CONTROL-PLANE
+      dest_prefix_set_name: PFX-PATHFINDERS
+  application_profiles:
+  - name: APP-PROFILE-CONTROL-PLANE
+    applications:
+    - name: APP-CONTROL-PLANE
+config_end: true
+dps_interfaces:
+- name: Dps1
+  description: DPS Interface
+  mtu: 9194
+  ip_address: 192.168.2.2/32
+  flow_tracker:
+    hardware: FLOW-TRACKER
+enable_password:
+  disabled: true
+ethernet_interfaces:
+- name: Ethernet2
+  description: L2_uplink_lan_l2leaf_Ethernet2
+  shutdown: false
+  mtu: 9218
+  peer: uplink_lan_l2leaf
+  peer_interface: Ethernet2
+  peer_type: l2leaf
+  switchport:
+    enabled: false
+- name: Ethernet2.10
+  description: VLAN10_NATIVE
+  shutdown: false
+  mtu: 9218
+  vrf: VRF1
+  flow_tracker:
+    hardware: FLOW-TRACKER
+  encapsulation_dot1q:
+    vlan: 10
+  ip_address: 10.0.10.1/24
+  peer: uplink_lan_l2leaf
+  peer_interface: Ethernet2 VLAN 10
+  peer_type: l2leaf
+- name: Ethernet2.100
+  description: My vlan 100
+  shutdown: false
+  vrf: VRF1
+  flow_tracker:
+    hardware: FLOW-TRACKER
+  encapsulation_dot1q:
+    vlan: 100
+  ip_address: 10.0.100.1/24
+  ipv6_enable: true
+  ipv6_address: cafe::cafe/64
+  peer: uplink_lan_l2leaf
+  peer_interface: Ethernet2 VLAN 100
+  peer_type: l2leaf
+  eos_cli: comment yo
+  _custom_key: custom_value
+- name: Ethernet1
+  description: Comcast_999
+  shutdown: false
+  ip_address: 10.9.9.1/31
+  peer_type: l3_interface
+  switchport:
+    enabled: false
+flow_tracking:
+  hardware:
+    trackers:
+    - name: FLOW-TRACKER
+      record_export:
+        on_inactive_timeout: 70000
+        on_interval: 300000
+      exporters:
+      - name: CV-TELEMETRY
+        collector:
+          host: 127.0.0.1
+        local_interface: Loopback0
+        template_interval: 3600000
+    shutdown: false
+hostname: uplink_lan_wan_router2
 ip_extcommunity_lists:
 - name: ECL-EVPN-SOO
   entries:
   - type: permit
     extcommunities: soo 192.168.1.2:2
+ip_routing: true
 ip_security:
   ike_policies:
   - name: CP-IKE-POLICY
@@ -223,124 +116,26 @@ ip_security:
     mode: transport
   key_controller:
     profile: CP-PROFILE
+is_deployed: true
+loopback_interfaces:
+- name: Loopback0
+  description: ROUTER_ID
+  shutdown: false
+  ip_address: 192.168.1.2/32
+management_api_http:
+  enable_https: true
+  enable_vrfs:
+  - name: MGMT
 management_security:
   ssl_profiles:
   - name: STUN-DTLS
-    certificate:
-      file: STUN-DTLS.crt
-      key: STUN-DTLS.key
+    tls_versions: '1.2'
     trust_certificate:
       certificates:
       - aristaDeviceCertProvisionerDefaultRootCA.crt
-    tls_versions: '1.2'
-router_adaptive_virtual_topology:
-  topology_role: edge
-  region:
-    name: region1
-    id: 1
-  zone:
-    name: region1-ZONE
-    id: 1
-  site:
-    name: site2
-    id: 2
-  profiles:
-  - name: DEFAULT-POLICY-DEFAULT
-    load_balance_policy: LB-DEFAULT-POLICY-DEFAULT
-  - name: DEFAULT-POLICY-CONTROL-PLANE
-    load_balance_policy: LB-DEFAULT-POLICY-CONTROL-PLANE
-  vrfs:
-  - name: VRF1
-    policy: DEFAULT-POLICY
-    profiles:
-    - name: DEFAULT-POLICY-DEFAULT
-      id: 1
-  - name: default
-    policy: DEFAULT-POLICY-WITH-CP
-    profiles:
-    - name: DEFAULT-POLICY-CONTROL-PLANE
-      id: 254
-    - name: DEFAULT-POLICY-DEFAULT
-      id: 1
-  policies:
-  - name: DEFAULT-POLICY
-    matches:
-    - application_profile: default
-      avt_profile: DEFAULT-POLICY-DEFAULT
-  - name: DEFAULT-POLICY-WITH-CP
-    matches:
-    - application_profile: APP-PROFILE-CONTROL-PLANE
-      avt_profile: DEFAULT-POLICY-CONTROL-PLANE
-    - application_profile: default
-      avt_profile: DEFAULT-POLICY-DEFAULT
-router_bfd:
-  multihop:
-    interval: 300
-    min_rx: 300
-    multiplier: 3
-router_path_selection:
-  tcp_mss_ceiling:
-    ipv4_segment_size: auto
-  path_groups:
-  - name: INET
-    id: 100
-    local_interfaces:
-    - name: Ethernet1
-    dynamic_peers:
-      enabled: true
-  load_balance_policies:
-  - name: LB-DEFAULT-POLICY-DEFAULT
-    path_groups:
-    - name: INET
-  - name: LB-DEFAULT-POLICY-CONTROL-PLANE
-    path_groups:
-    - name: INET
-router_traffic_engineering:
-  enabled: true
-application_traffic_recognition:
-  application_profiles:
-  - name: APP-PROFILE-CONTROL-PLANE
-    applications:
-    - name: APP-CONTROL-PLANE
-  applications:
-    ipv4_applications:
-    - name: APP-CONTROL-PLANE
-      dest_prefix_set_name: PFX-PATHFINDERS
-  field_sets:
-    ipv4_prefixes:
-    - name: PFX-PATHFINDERS
-dps_interfaces:
-- name: Dps1
-  description: DPS Interface
-  mtu: 9194
-  ip_address: 192.168.2.2/32
-  flow_tracker:
-    hardware: FLOW-TRACKER
-vxlan_interface:
-  vxlan1:
-    description: uplink_lan_wan_router2_VTEP
-    vxlan:
-      udp_port: 4789
-      source_interface: Dps1
-      vrfs:
-      - name: VRF1
-        vni: 123
-      - name: default
-        vni: 1
-flow_tracking:
-  hardware:
-    trackers:
-    - name: FLOW-TRACKER
-      record_export:
-        on_inactive_timeout: 70000
-        on_interval: 300000
-      exporters:
-      - name: CV-TELEMETRY
-        collector:
-          host: 127.0.0.1
-        local_interface: Loopback0
-        template_interval: 3600000
-    shutdown: false
+    certificate:
+      file: STUN-DTLS.crt
+      key: STUN-DTLS.key
 metadata:
   cv_tags:
     device_tags:
@@ -375,13 +170,218 @@ metadata:
         value: '999'
   cv_pathfinder:
     role: edge
-    ssl_profile: STUN-DTLS
-    vtep_ip: 192.168.2.2
     region: region1
     zone: region1-ZONE
     site: site2
+    vtep_ip: 192.168.2.2
+    ssl_profile: STUN-DTLS
     interfaces:
     - name: Ethernet1
       carrier: Comcast
       circuit_id: '999'
       pathgroup: INET
+prefix_lists:
+- name: PL-LOOPBACKS-EVPN-OVERLAY
+  sequence_numbers:
+  - sequence: 10
+    action: permit 192.168.1.0/24 eq 32
+route_maps:
+- name: RM-CONN-2-BGP
+  sequence_numbers:
+  - sequence: 10
+    type: permit
+    match:
+    - ip address prefix-list PL-LOOPBACKS-EVPN-OVERLAY
+    set:
+    - extcommunity soo 192.168.1.2:2 additive
+- name: RM-EVPN-SOO-IN
+  sequence_numbers:
+  - sequence: 10
+    type: deny
+    match:
+    - extcommunity ECL-EVPN-SOO
+  - sequence: 20
+    type: permit
+- name: RM-EVPN-SOO-OUT
+  sequence_numbers:
+  - sequence: 10
+    type: permit
+    set:
+    - extcommunity soo 192.168.1.2:2 additive
+- name: RM-EVPN-EXPORT-VRF-DEFAULT
+  sequence_numbers:
+  - sequence: 10
+    type: permit
+    match:
+    - extcommunity ECL-EVPN-SOO
+router_adaptive_virtual_topology:
+  topology_role: edge
+  region:
+    name: region1
+    id: 1
+  zone:
+    name: region1-ZONE
+    id: 1
+  site:
+    name: site2
+    id: 2
+  profiles:
+  - name: DEFAULT-POLICY-DEFAULT
+    load_balance_policy: LB-DEFAULT-POLICY-DEFAULT
+  - name: DEFAULT-POLICY-CONTROL-PLANE
+    load_balance_policy: LB-DEFAULT-POLICY-CONTROL-PLANE
+  policies:
+  - name: DEFAULT-POLICY
+    matches:
+    - application_profile: default
+      avt_profile: DEFAULT-POLICY-DEFAULT
+  - name: DEFAULT-POLICY-WITH-CP
+    matches:
+    - application_profile: APP-PROFILE-CONTROL-PLANE
+      avt_profile: DEFAULT-POLICY-CONTROL-PLANE
+    - application_profile: default
+      avt_profile: DEFAULT-POLICY-DEFAULT
+  vrfs:
+  - name: VRF1
+    policy: DEFAULT-POLICY
+    profiles:
+    - name: DEFAULT-POLICY-DEFAULT
+      id: 1
+  - name: default
+    policy: DEFAULT-POLICY-WITH-CP
+    profiles:
+    - name: DEFAULT-POLICY-CONTROL-PLANE
+      id: 254
+    - name: DEFAULT-POLICY-DEFAULT
+      id: 1
+router_bfd:
+  multihop:
+    interval: 300
+    min_rx: 300
+    multiplier: 3
+router_bgp:
+  as: '65100'
+  router_id: 192.168.1.2
+  maximum_paths:
+    paths: 16
+  updates:
+    wait_install: true
+  bgp:
+    default:
+      ipv4_unicast: false
+  peer_groups:
+  - name: WAN-OVERLAY-PEERS
+    type: wan
+    remote_as: '65100'
+    update_source: Dps1
+    bfd: true
+    bfd_timers:
+      interval: 1000
+      min_rx: 1000
+      multiplier: 10
+    send_community: all
+    maximum_routes: 0
+    ttl_maximum_hops: 1
+  redistribute:
+    connected:
+      enabled: true
+      route_map: RM-CONN-2-BGP
+  address_family_evpn:
+    peer_groups:
+    - name: WAN-OVERLAY-PEERS
+      activate: true
+      route_map_in: RM-EVPN-SOO-IN
+      route_map_out: RM-EVPN-SOO-OUT
+      encapsulation: path-selection
+  address_family_ipv4:
+    peer_groups:
+    - name: WAN-OVERLAY-PEERS
+      activate: false
+  address_family_ipv4_sr_te:
+    peer_groups:
+    - name: WAN-OVERLAY-PEERS
+      activate: true
+  address_family_link_state:
+    peer_groups:
+    - name: WAN-OVERLAY-PEERS
+      activate: true
+    path_selection:
+      roles:
+        producer: true
+  address_family_path_selection:
+    bgp:
+      additional_paths:
+        receive: true
+        send: any
+    peer_groups:
+    - name: WAN-OVERLAY-PEERS
+      activate: true
+  vrfs:
+  - name: VRF1
+    rd: 192.168.1.2:123
+    route_targets:
+      import:
+      - address_family: evpn
+        route_targets:
+        - 123:123
+      export:
+      - address_family: evpn
+        route_targets:
+        - 123:123
+    router_id: 192.168.1.2
+    redistribute:
+      connected:
+        enabled: true
+  - name: default
+    rd: 192.168.1.2:1
+    route_targets:
+      import:
+      - address_family: evpn
+        route_targets:
+        - '1:1'
+      export:
+      - address_family: evpn
+        route_targets:
+        - '1:1'
+        - route-map RM-EVPN-EXPORT-VRF-DEFAULT
+router_path_selection:
+  path_groups:
+  - name: INET
+    id: 100
+    local_interfaces:
+    - name: Ethernet1
+    dynamic_peers:
+      enabled: true
+  load_balance_policies:
+  - name: LB-DEFAULT-POLICY-DEFAULT
+    path_groups:
+    - name: INET
+  - name: LB-DEFAULT-POLICY-CONTROL-PLANE
+    path_groups:
+    - name: INET
+  tcp_mss_ceiling:
+    ipv4_segment_size: auto
+router_traffic_engineering:
+  enabled: true
+service_routing_protocols_model: multi-agent
+spanning_tree:
+  mode: none
+transceiver_qsfp_default_mode_4x10: false
+vrfs:
+- name: MGMT
+  ip_routing: false
+- name: VRF1
+  ip_routing: true
+  ipv6_routing: true
+  tenant: TEST
+vxlan_interface:
+  vxlan1:
+    description: uplink_lan_wan_router2_VTEP
+    vxlan:
+      source_interface: Dps1
+      udp_port: 4789
+      vrfs:
+      - name: VRF1
+        vni: 123
+      - name: default
+        vni: 1

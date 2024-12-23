@@ -2,30 +2,30 @@
 - name: Test Encrypt & Decrypt for BGP passwords
   ansible.builtin.assert:
     that:
-      - "{{ bgp.clear_password | arista.avd.encrypt(passwd_type='bgp', key=bgp.neighbor_ip) == bgp.neighbor_encrypted_password }}"
-      - "{{ bgp.clear_password | arista.avd.encrypt(passwd_type='bgp', key=bgp.peer_group) == bgp.peer_group_encrypted_password }}"
-      - "{{ bgp.non_string_clear_password | arista.avd.encrypt(passwd_type='bgp', key=bgp.peer_group) == bgp.expected_non_string_pg_encrypted_password }}"
-      - "{{ bgp.neighbor_encrypted_password | arista.avd.decrypt(passwd_type='bgp', key=bgp.neighbor_ip) == bgp.clear_password }}"
-      - "{{ bgp.peer_group_encrypted_password | arista.avd.decrypt(passwd_type='bgp', key=bgp.peer_group) == bgp.clear_password }}"
+      - bgp.clear_password | arista.avd.encrypt(passwd_type='bgp', key=bgp.neighbor_ip) == bgp.neighbor_encrypted_password
+      - bgp.clear_password | arista.avd.encrypt(passwd_type='bgp', key=bgp.peer_group) == bgp.peer_group_encrypted_password
+      - bgp.non_string_clear_password | arista.avd.encrypt(passwd_type='bgp', key=bgp.peer_group) == bgp.expected_non_string_pg_encrypted_password
+      - bgp.neighbor_encrypted_password | arista.avd.decrypt(passwd_type='bgp', key=bgp.neighbor_ip) == bgp.clear_password
+      - bgp.peer_group_encrypted_password | arista.avd.decrypt(passwd_type='bgp', key=bgp.peer_group) == bgp.clear_password
 
 - name: Test Encrypt & Decrypt for OSPF passwords
   ansible.builtin.assert:
     that:
       - >-
-        {{ ospf.clear_password | arista.avd.encrypt(passwd_type='ospf_simple', key=ospf.interface_name)
-        == ospf.expected_ospf_simple_auth_encrypted_password }}
+        ospf.clear_password | arista.avd.encrypt(passwd_type='ospf_simple', key=ospf.interface_name)
+        == ospf.expected_ospf_simple_auth_encrypted_password
       - >-
-        {{ ospf.clear_password | arista.avd.encrypt(passwd_type='ospf_message_digest', key=ospf.interface_name,
-        hash_algorithm=ospf.hash_algorithm, key_id=ospf.key_id) == ospf.expected_ospf_message_digest_encrypted_password }}
+        ospf.clear_password | arista.avd.encrypt(passwd_type='ospf_message_digest', key=ospf.interface_name,
+        hash_algorithm=ospf.hash_algorithm, key_id=ospf.key_id) == ospf.expected_ospf_message_digest_encrypted_password
       - >-
-        {{ ospf.expected_ospf_simple_auth_encrypted_password | arista.avd.decrypt(passwd_type='ospf_simple', key=ospf.interface_name)
-        == ospf.clear_password }}
+        ospf.expected_ospf_simple_auth_encrypted_password | arista.avd.decrypt(passwd_type='ospf_simple', key=ospf.interface_name)
+        == ospf.clear_password
       - >-
-        {{ ospf.expected_ospf_message_digest_encrypted_password | arista.avd.decrypt(passwd_type='ospf_message_digest',
-        key=ospf.interface_name, hash_algorithm=ospf.hash_algorithm, key_id=ospf.key_id) == ospf.clear_password }}
+        ospf.expected_ospf_message_digest_encrypted_password | arista.avd.decrypt(passwd_type='ospf_message_digest',
+        key=ospf.interface_name, hash_algorithm=ospf.hash_algorithm, key_id=ospf.key_id) == ospf.clear_password
 
 - name: Test Encrypt & Decrypt for ISIS passwords
   ansible.builtin.assert:
     that:
-      - "{{ isis.clear_password | arista.avd.encrypt(passwd_type='isis', key=isis.instance_name, mode=isis.mode) == isis.expected_encrypted_password }}"
-      - "{{ isis.expected_encrypted_password | arista.avd.decrypt(passwd_type='isis', key=isis.instance_name, mode=isis.mode) == isis.clear_password }}"
+      - isis.clear_password | arista.avd.encrypt(passwd_type='isis', key=isis.instance_name, mode=isis.mode) == isis.expected_encrypted_password
+      - isis.expected_encrypted_password | arista.avd.decrypt(passwd_type='isis', key=isis.instance_name, mode=isis.mode) == isis.clear_password

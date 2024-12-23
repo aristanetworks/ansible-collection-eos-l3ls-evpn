@@ -1,70 +1,1674 @@
-hostname: LEAF1B
-is_deployed: true
-static_routes:
-- vrf: MGMT
-  destination_address_prefix: 0.0.0.0/0
-  gateway: 172.16.100.1
-- destination_address_prefix: 0.0.0.0/0
-  gateway: 10.10.10.1
-service_routing_protocols_model: multi-agent
-vlan_internal_order:
-  allocation: ascending
-  range:
-    beginning: 1006
-    ending: 1199
 aaa_root:
   disabled: true
 config_end: true
 enable_password:
   disabled: true
-transceiver_qsfp_default_mode_4x10: true
+ethernet_interfaces:
+- name: Ethernet53
+  description: MLAG_LEAF1A_Ethernet53
+  shutdown: false
+  channel_group:
+    id: 53
+    mode: active
+  peer: LEAF1A
+  peer_interface: Ethernet53
+  peer_type: mlag_peer
+- name: Ethernet54
+  description: MLAG_LEAF1A_Ethernet54
+  shutdown: false
+  channel_group:
+    id: 53
+    mode: active
+  peer: LEAF1A
+  peer_interface: Ethernet54
+  peer_type: mlag_peer
+- name: Ethernet51
+  description: L2_SPINE2_Ethernet1
+  shutdown: false
+  channel_group:
+    id: 51
+    mode: active
+  peer: SPINE2
+  peer_interface: Ethernet1
+  peer_type: l3spine
+- name: Ethernet1
+  description: IDF1 Standard Port
+  shutdown: false
+  dot1x:
+    port_control: auto
+    reauthentication: true
+    pae:
+      mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 130
+    host_mode:
+      mode: multi-host
+      multi_host_authenticated: true
+    mac_based_authentication:
+      enabled: true
+    timeout:
+      reauth_period: server
+      tx_period: 3
+    reauthorization_request_limit: 3
+  spanning_tree_bpduguard: enabled
+  spanning_tree_portfast: edge
+  peer_type: network_port
+  port_profile: PP-DOT1X
+  switchport:
+    enabled: true
+    mode: trunk phone
+    trunk:
+      native_vlan: 110
+    phone:
+      vlan: 120
+      trunk: untagged
+- name: Ethernet2
+  description: IDF1 Standard Port
+  shutdown: false
+  dot1x:
+    port_control: auto
+    reauthentication: true
+    pae:
+      mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 130
+    host_mode:
+      mode: multi-host
+      multi_host_authenticated: true
+    mac_based_authentication:
+      enabled: true
+    timeout:
+      reauth_period: server
+      tx_period: 3
+    reauthorization_request_limit: 3
+  spanning_tree_bpduguard: enabled
+  spanning_tree_portfast: edge
+  peer_type: network_port
+  port_profile: PP-DOT1X
+  switchport:
+    enabled: true
+    mode: trunk phone
+    trunk:
+      native_vlan: 110
+    phone:
+      vlan: 120
+      trunk: untagged
+- name: Ethernet3
+  description: IDF1 Standard Port
+  shutdown: false
+  dot1x:
+    port_control: auto
+    reauthentication: true
+    pae:
+      mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 130
+    host_mode:
+      mode: multi-host
+      multi_host_authenticated: true
+    mac_based_authentication:
+      enabled: true
+    timeout:
+      reauth_period: server
+      tx_period: 3
+    reauthorization_request_limit: 3
+  spanning_tree_bpduguard: enabled
+  spanning_tree_portfast: edge
+  peer_type: network_port
+  port_profile: PP-DOT1X
+  switchport:
+    enabled: true
+    mode: trunk phone
+    trunk:
+      native_vlan: 110
+    phone:
+      vlan: 120
+      trunk: untagged
+- name: Ethernet4
+  description: IDF1 Standard Port
+  shutdown: false
+  dot1x:
+    port_control: auto
+    reauthentication: true
+    pae:
+      mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 130
+    host_mode:
+      mode: multi-host
+      multi_host_authenticated: true
+    mac_based_authentication:
+      enabled: true
+    timeout:
+      reauth_period: server
+      tx_period: 3
+    reauthorization_request_limit: 3
+  spanning_tree_bpduguard: enabled
+  spanning_tree_portfast: edge
+  peer_type: network_port
+  port_profile: PP-DOT1X
+  switchport:
+    enabled: true
+    mode: trunk phone
+    trunk:
+      native_vlan: 110
+    phone:
+      vlan: 120
+      trunk: untagged
+- name: Ethernet5
+  description: IDF1 Standard Port
+  shutdown: false
+  dot1x:
+    port_control: auto
+    reauthentication: true
+    pae:
+      mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 130
+    host_mode:
+      mode: multi-host
+      multi_host_authenticated: true
+    mac_based_authentication:
+      enabled: true
+    timeout:
+      reauth_period: server
+      tx_period: 3
+    reauthorization_request_limit: 3
+  spanning_tree_bpduguard: enabled
+  spanning_tree_portfast: edge
+  peer_type: network_port
+  port_profile: PP-DOT1X
+  switchport:
+    enabled: true
+    mode: trunk phone
+    trunk:
+      native_vlan: 110
+    phone:
+      vlan: 120
+      trunk: untagged
+- name: Ethernet6
+  description: IDF1 Standard Port
+  shutdown: false
+  dot1x:
+    port_control: auto
+    reauthentication: true
+    pae:
+      mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 130
+    host_mode:
+      mode: multi-host
+      multi_host_authenticated: true
+    mac_based_authentication:
+      enabled: true
+    timeout:
+      reauth_period: server
+      tx_period: 3
+    reauthorization_request_limit: 3
+  spanning_tree_bpduguard: enabled
+  spanning_tree_portfast: edge
+  peer_type: network_port
+  port_profile: PP-DOT1X
+  switchport:
+    enabled: true
+    mode: trunk phone
+    trunk:
+      native_vlan: 110
+    phone:
+      vlan: 120
+      trunk: untagged
+- name: Ethernet7
+  description: IDF1 Standard Port
+  shutdown: false
+  dot1x:
+    port_control: auto
+    reauthentication: true
+    pae:
+      mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 130
+    host_mode:
+      mode: multi-host
+      multi_host_authenticated: true
+    mac_based_authentication:
+      enabled: true
+    timeout:
+      reauth_period: server
+      tx_period: 3
+    reauthorization_request_limit: 3
+  spanning_tree_bpduguard: enabled
+  spanning_tree_portfast: edge
+  peer_type: network_port
+  port_profile: PP-DOT1X
+  switchport:
+    enabled: true
+    mode: trunk phone
+    trunk:
+      native_vlan: 110
+    phone:
+      vlan: 120
+      trunk: untagged
+- name: Ethernet8
+  description: IDF1 Standard Port
+  shutdown: false
+  dot1x:
+    port_control: auto
+    reauthentication: true
+    pae:
+      mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 130
+    host_mode:
+      mode: multi-host
+      multi_host_authenticated: true
+    mac_based_authentication:
+      enabled: true
+    timeout:
+      reauth_period: server
+      tx_period: 3
+    reauthorization_request_limit: 3
+  spanning_tree_bpduguard: enabled
+  spanning_tree_portfast: edge
+  peer_type: network_port
+  port_profile: PP-DOT1X
+  switchport:
+    enabled: true
+    mode: trunk phone
+    trunk:
+      native_vlan: 110
+    phone:
+      vlan: 120
+      trunk: untagged
+- name: Ethernet9
+  description: IDF1 Standard Port
+  shutdown: false
+  dot1x:
+    port_control: auto
+    reauthentication: true
+    pae:
+      mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 130
+    host_mode:
+      mode: multi-host
+      multi_host_authenticated: true
+    mac_based_authentication:
+      enabled: true
+    timeout:
+      reauth_period: server
+      tx_period: 3
+    reauthorization_request_limit: 3
+  spanning_tree_bpduguard: enabled
+  spanning_tree_portfast: edge
+  peer_type: network_port
+  port_profile: PP-DOT1X
+  switchport:
+    enabled: true
+    mode: trunk phone
+    trunk:
+      native_vlan: 110
+    phone:
+      vlan: 120
+      trunk: untagged
+- name: Ethernet10
+  description: IDF1 Standard Port
+  shutdown: false
+  dot1x:
+    port_control: auto
+    reauthentication: true
+    pae:
+      mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 130
+    host_mode:
+      mode: multi-host
+      multi_host_authenticated: true
+    mac_based_authentication:
+      enabled: true
+    timeout:
+      reauth_period: server
+      tx_period: 3
+    reauthorization_request_limit: 3
+  spanning_tree_bpduguard: enabled
+  spanning_tree_portfast: edge
+  peer_type: network_port
+  port_profile: PP-DOT1X
+  switchport:
+    enabled: true
+    mode: trunk phone
+    trunk:
+      native_vlan: 110
+    phone:
+      vlan: 120
+      trunk: untagged
+- name: Ethernet11
+  description: IDF1 Standard Port
+  shutdown: false
+  dot1x:
+    port_control: auto
+    reauthentication: true
+    pae:
+      mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 130
+    host_mode:
+      mode: multi-host
+      multi_host_authenticated: true
+    mac_based_authentication:
+      enabled: true
+    timeout:
+      reauth_period: server
+      tx_period: 3
+    reauthorization_request_limit: 3
+  spanning_tree_bpduguard: enabled
+  spanning_tree_portfast: edge
+  peer_type: network_port
+  port_profile: PP-DOT1X
+  switchport:
+    enabled: true
+    mode: trunk phone
+    trunk:
+      native_vlan: 110
+    phone:
+      vlan: 120
+      trunk: untagged
+- name: Ethernet12
+  description: IDF1 Standard Port
+  shutdown: false
+  dot1x:
+    port_control: auto
+    reauthentication: true
+    pae:
+      mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 130
+    host_mode:
+      mode: multi-host
+      multi_host_authenticated: true
+    mac_based_authentication:
+      enabled: true
+    timeout:
+      reauth_period: server
+      tx_period: 3
+    reauthorization_request_limit: 3
+  spanning_tree_bpduguard: enabled
+  spanning_tree_portfast: edge
+  peer_type: network_port
+  port_profile: PP-DOT1X
+  switchport:
+    enabled: true
+    mode: trunk phone
+    trunk:
+      native_vlan: 110
+    phone:
+      vlan: 120
+      trunk: untagged
+- name: Ethernet13
+  description: IDF1 Standard Port
+  shutdown: false
+  dot1x:
+    port_control: auto
+    reauthentication: true
+    pae:
+      mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 130
+    host_mode:
+      mode: multi-host
+      multi_host_authenticated: true
+    mac_based_authentication:
+      enabled: true
+    timeout:
+      reauth_period: server
+      tx_period: 3
+    reauthorization_request_limit: 3
+  spanning_tree_bpduguard: enabled
+  spanning_tree_portfast: edge
+  peer_type: network_port
+  port_profile: PP-DOT1X
+  switchport:
+    enabled: true
+    mode: trunk phone
+    trunk:
+      native_vlan: 110
+    phone:
+      vlan: 120
+      trunk: untagged
+- name: Ethernet14
+  description: IDF1 Standard Port
+  shutdown: false
+  dot1x:
+    port_control: auto
+    reauthentication: true
+    pae:
+      mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 130
+    host_mode:
+      mode: multi-host
+      multi_host_authenticated: true
+    mac_based_authentication:
+      enabled: true
+    timeout:
+      reauth_period: server
+      tx_period: 3
+    reauthorization_request_limit: 3
+  spanning_tree_bpduguard: enabled
+  spanning_tree_portfast: edge
+  peer_type: network_port
+  port_profile: PP-DOT1X
+  switchport:
+    enabled: true
+    mode: trunk phone
+    trunk:
+      native_vlan: 110
+    phone:
+      vlan: 120
+      trunk: untagged
+- name: Ethernet15
+  description: IDF1 Standard Port
+  shutdown: false
+  dot1x:
+    port_control: auto
+    reauthentication: true
+    pae:
+      mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 130
+    host_mode:
+      mode: multi-host
+      multi_host_authenticated: true
+    mac_based_authentication:
+      enabled: true
+    timeout:
+      reauth_period: server
+      tx_period: 3
+    reauthorization_request_limit: 3
+  spanning_tree_bpduguard: enabled
+  spanning_tree_portfast: edge
+  peer_type: network_port
+  port_profile: PP-DOT1X
+  switchport:
+    enabled: true
+    mode: trunk phone
+    trunk:
+      native_vlan: 110
+    phone:
+      vlan: 120
+      trunk: untagged
+- name: Ethernet16
+  description: IDF1 Standard Port
+  shutdown: false
+  dot1x:
+    port_control: auto
+    reauthentication: true
+    pae:
+      mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 130
+    host_mode:
+      mode: multi-host
+      multi_host_authenticated: true
+    mac_based_authentication:
+      enabled: true
+    timeout:
+      reauth_period: server
+      tx_period: 3
+    reauthorization_request_limit: 3
+  spanning_tree_bpduguard: enabled
+  spanning_tree_portfast: edge
+  peer_type: network_port
+  port_profile: PP-DOT1X
+  switchport:
+    enabled: true
+    mode: trunk phone
+    trunk:
+      native_vlan: 110
+    phone:
+      vlan: 120
+      trunk: untagged
+- name: Ethernet17
+  description: IDF1 Standard Port
+  shutdown: false
+  dot1x:
+    port_control: auto
+    reauthentication: true
+    pae:
+      mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 130
+    host_mode:
+      mode: multi-host
+      multi_host_authenticated: true
+    mac_based_authentication:
+      enabled: true
+    timeout:
+      reauth_period: server
+      tx_period: 3
+    reauthorization_request_limit: 3
+  spanning_tree_bpduguard: enabled
+  spanning_tree_portfast: edge
+  peer_type: network_port
+  port_profile: PP-DOT1X
+  switchport:
+    enabled: true
+    mode: trunk phone
+    trunk:
+      native_vlan: 110
+    phone:
+      vlan: 120
+      trunk: untagged
+- name: Ethernet18
+  description: IDF1 Standard Port
+  shutdown: false
+  dot1x:
+    port_control: auto
+    reauthentication: true
+    pae:
+      mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 130
+    host_mode:
+      mode: multi-host
+      multi_host_authenticated: true
+    mac_based_authentication:
+      enabled: true
+    timeout:
+      reauth_period: server
+      tx_period: 3
+    reauthorization_request_limit: 3
+  spanning_tree_bpduguard: enabled
+  spanning_tree_portfast: edge
+  peer_type: network_port
+  port_profile: PP-DOT1X
+  switchport:
+    enabled: true
+    mode: trunk phone
+    trunk:
+      native_vlan: 110
+    phone:
+      vlan: 120
+      trunk: untagged
+- name: Ethernet19
+  description: IDF1 Standard Port
+  shutdown: false
+  dot1x:
+    port_control: auto
+    reauthentication: true
+    pae:
+      mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 130
+    host_mode:
+      mode: multi-host
+      multi_host_authenticated: true
+    mac_based_authentication:
+      enabled: true
+    timeout:
+      reauth_period: server
+      tx_period: 3
+    reauthorization_request_limit: 3
+  spanning_tree_bpduguard: enabled
+  spanning_tree_portfast: edge
+  peer_type: network_port
+  port_profile: PP-DOT1X
+  switchport:
+    enabled: true
+    mode: trunk phone
+    trunk:
+      native_vlan: 110
+    phone:
+      vlan: 120
+      trunk: untagged
+- name: Ethernet20
+  description: IDF1 Standard Port
+  shutdown: false
+  dot1x:
+    port_control: auto
+    reauthentication: true
+    pae:
+      mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 130
+    host_mode:
+      mode: multi-host
+      multi_host_authenticated: true
+    mac_based_authentication:
+      enabled: true
+    timeout:
+      reauth_period: server
+      tx_period: 3
+    reauthorization_request_limit: 3
+  spanning_tree_bpduguard: enabled
+  spanning_tree_portfast: edge
+  peer_type: network_port
+  port_profile: PP-DOT1X
+  switchport:
+    enabled: true
+    mode: trunk phone
+    trunk:
+      native_vlan: 110
+    phone:
+      vlan: 120
+      trunk: untagged
+- name: Ethernet21
+  description: IDF1 Standard Port
+  shutdown: false
+  dot1x:
+    port_control: auto
+    reauthentication: true
+    pae:
+      mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 130
+    host_mode:
+      mode: multi-host
+      multi_host_authenticated: true
+    mac_based_authentication:
+      enabled: true
+    timeout:
+      reauth_period: server
+      tx_period: 3
+    reauthorization_request_limit: 3
+  spanning_tree_bpduguard: enabled
+  spanning_tree_portfast: edge
+  peer_type: network_port
+  port_profile: PP-DOT1X
+  switchport:
+    enabled: true
+    mode: trunk phone
+    trunk:
+      native_vlan: 110
+    phone:
+      vlan: 120
+      trunk: untagged
+- name: Ethernet22
+  description: IDF1 Standard Port
+  shutdown: false
+  dot1x:
+    port_control: auto
+    reauthentication: true
+    pae:
+      mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 130
+    host_mode:
+      mode: multi-host
+      multi_host_authenticated: true
+    mac_based_authentication:
+      enabled: true
+    timeout:
+      reauth_period: server
+      tx_period: 3
+    reauthorization_request_limit: 3
+  spanning_tree_bpduguard: enabled
+  spanning_tree_portfast: edge
+  peer_type: network_port
+  port_profile: PP-DOT1X
+  switchport:
+    enabled: true
+    mode: trunk phone
+    trunk:
+      native_vlan: 110
+    phone:
+      vlan: 120
+      trunk: untagged
+- name: Ethernet23
+  description: IDF1 Standard Port
+  shutdown: false
+  dot1x:
+    port_control: auto
+    reauthentication: true
+    pae:
+      mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 130
+    host_mode:
+      mode: multi-host
+      multi_host_authenticated: true
+    mac_based_authentication:
+      enabled: true
+    timeout:
+      reauth_period: server
+      tx_period: 3
+    reauthorization_request_limit: 3
+  spanning_tree_bpduguard: enabled
+  spanning_tree_portfast: edge
+  peer_type: network_port
+  port_profile: PP-DOT1X
+  switchport:
+    enabled: true
+    mode: trunk phone
+    trunk:
+      native_vlan: 110
+    phone:
+      vlan: 120
+      trunk: untagged
+- name: Ethernet24
+  description: IDF1 Standard Port
+  shutdown: false
+  dot1x:
+    port_control: auto
+    reauthentication: true
+    pae:
+      mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 130
+    host_mode:
+      mode: multi-host
+      multi_host_authenticated: true
+    mac_based_authentication:
+      enabled: true
+    timeout:
+      reauth_period: server
+      tx_period: 3
+    reauthorization_request_limit: 3
+  spanning_tree_bpduguard: enabled
+  spanning_tree_portfast: edge
+  peer_type: network_port
+  port_profile: PP-DOT1X
+  switchport:
+    enabled: true
+    mode: trunk phone
+    trunk:
+      native_vlan: 110
+    phone:
+      vlan: 120
+      trunk: untagged
+- name: Ethernet25
+  description: IDF1 Standard Port
+  shutdown: false
+  dot1x:
+    port_control: auto
+    reauthentication: true
+    pae:
+      mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 130
+    host_mode:
+      mode: multi-host
+      multi_host_authenticated: true
+    mac_based_authentication:
+      enabled: true
+    timeout:
+      reauth_period: server
+      tx_period: 3
+    reauthorization_request_limit: 3
+  spanning_tree_bpduguard: enabled
+  spanning_tree_portfast: edge
+  peer_type: network_port
+  port_profile: PP-DOT1X
+  switchport:
+    enabled: true
+    mode: trunk phone
+    trunk:
+      native_vlan: 110
+    phone:
+      vlan: 120
+      trunk: untagged
+- name: Ethernet26
+  description: IDF1 Standard Port
+  shutdown: false
+  dot1x:
+    port_control: auto
+    reauthentication: true
+    pae:
+      mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 130
+    host_mode:
+      mode: multi-host
+      multi_host_authenticated: true
+    mac_based_authentication:
+      enabled: true
+    timeout:
+      reauth_period: server
+      tx_period: 3
+    reauthorization_request_limit: 3
+  spanning_tree_bpduguard: enabled
+  spanning_tree_portfast: edge
+  peer_type: network_port
+  port_profile: PP-DOT1X
+  switchport:
+    enabled: true
+    mode: trunk phone
+    trunk:
+      native_vlan: 110
+    phone:
+      vlan: 120
+      trunk: untagged
+- name: Ethernet27
+  description: IDF1 Standard Port
+  shutdown: false
+  dot1x:
+    port_control: auto
+    reauthentication: true
+    pae:
+      mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 130
+    host_mode:
+      mode: multi-host
+      multi_host_authenticated: true
+    mac_based_authentication:
+      enabled: true
+    timeout:
+      reauth_period: server
+      tx_period: 3
+    reauthorization_request_limit: 3
+  spanning_tree_bpduguard: enabled
+  spanning_tree_portfast: edge
+  peer_type: network_port
+  port_profile: PP-DOT1X
+  switchport:
+    enabled: true
+    mode: trunk phone
+    trunk:
+      native_vlan: 110
+    phone:
+      vlan: 120
+      trunk: untagged
+- name: Ethernet28
+  description: IDF1 Standard Port
+  shutdown: false
+  dot1x:
+    port_control: auto
+    reauthentication: true
+    pae:
+      mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 130
+    host_mode:
+      mode: multi-host
+      multi_host_authenticated: true
+    mac_based_authentication:
+      enabled: true
+    timeout:
+      reauth_period: server
+      tx_period: 3
+    reauthorization_request_limit: 3
+  spanning_tree_bpduguard: enabled
+  spanning_tree_portfast: edge
+  peer_type: network_port
+  port_profile: PP-DOT1X
+  switchport:
+    enabled: true
+    mode: trunk phone
+    trunk:
+      native_vlan: 110
+    phone:
+      vlan: 120
+      trunk: untagged
+- name: Ethernet29
+  description: IDF1 Standard Port
+  shutdown: false
+  dot1x:
+    port_control: auto
+    reauthentication: true
+    pae:
+      mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 130
+    host_mode:
+      mode: multi-host
+      multi_host_authenticated: true
+    mac_based_authentication:
+      enabled: true
+    timeout:
+      reauth_period: server
+      tx_period: 3
+    reauthorization_request_limit: 3
+  spanning_tree_bpduguard: enabled
+  spanning_tree_portfast: edge
+  peer_type: network_port
+  port_profile: PP-DOT1X
+  switchport:
+    enabled: true
+    mode: trunk phone
+    trunk:
+      native_vlan: 110
+    phone:
+      vlan: 120
+      trunk: untagged
+- name: Ethernet30
+  description: IDF1 Standard Port
+  shutdown: false
+  dot1x:
+    port_control: auto
+    reauthentication: true
+    pae:
+      mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 130
+    host_mode:
+      mode: multi-host
+      multi_host_authenticated: true
+    mac_based_authentication:
+      enabled: true
+    timeout:
+      reauth_period: server
+      tx_period: 3
+    reauthorization_request_limit: 3
+  spanning_tree_bpduguard: enabled
+  spanning_tree_portfast: edge
+  peer_type: network_port
+  port_profile: PP-DOT1X
+  switchport:
+    enabled: true
+    mode: trunk phone
+    trunk:
+      native_vlan: 110
+    phone:
+      vlan: 120
+      trunk: untagged
+- name: Ethernet31
+  description: IDF1 Standard Port
+  shutdown: false
+  dot1x:
+    port_control: auto
+    reauthentication: true
+    pae:
+      mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 130
+    host_mode:
+      mode: multi-host
+      multi_host_authenticated: true
+    mac_based_authentication:
+      enabled: true
+    timeout:
+      reauth_period: server
+      tx_period: 3
+    reauthorization_request_limit: 3
+  spanning_tree_bpduguard: enabled
+  spanning_tree_portfast: edge
+  peer_type: network_port
+  port_profile: PP-DOT1X
+  switchport:
+    enabled: true
+    mode: trunk phone
+    trunk:
+      native_vlan: 110
+    phone:
+      vlan: 120
+      trunk: untagged
+- name: Ethernet32
+  description: IDF1 Standard Port
+  shutdown: false
+  dot1x:
+    port_control: auto
+    reauthentication: true
+    pae:
+      mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 130
+    host_mode:
+      mode: multi-host
+      multi_host_authenticated: true
+    mac_based_authentication:
+      enabled: true
+    timeout:
+      reauth_period: server
+      tx_period: 3
+    reauthorization_request_limit: 3
+  spanning_tree_bpduguard: enabled
+  spanning_tree_portfast: edge
+  peer_type: network_port
+  port_profile: PP-DOT1X
+  switchport:
+    enabled: true
+    mode: trunk phone
+    trunk:
+      native_vlan: 110
+    phone:
+      vlan: 120
+      trunk: untagged
+- name: Ethernet33
+  description: IDF1 Standard Port
+  shutdown: false
+  dot1x:
+    port_control: auto
+    reauthentication: true
+    pae:
+      mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 130
+    host_mode:
+      mode: multi-host
+      multi_host_authenticated: true
+    mac_based_authentication:
+      enabled: true
+    timeout:
+      reauth_period: server
+      tx_period: 3
+    reauthorization_request_limit: 3
+  spanning_tree_bpduguard: enabled
+  spanning_tree_portfast: edge
+  peer_type: network_port
+  port_profile: PP-DOT1X
+  switchport:
+    enabled: true
+    mode: trunk phone
+    trunk:
+      native_vlan: 110
+    phone:
+      vlan: 120
+      trunk: untagged
+- name: Ethernet34
+  description: IDF1 Standard Port
+  shutdown: false
+  dot1x:
+    port_control: auto
+    reauthentication: true
+    pae:
+      mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 130
+    host_mode:
+      mode: multi-host
+      multi_host_authenticated: true
+    mac_based_authentication:
+      enabled: true
+    timeout:
+      reauth_period: server
+      tx_period: 3
+    reauthorization_request_limit: 3
+  spanning_tree_bpduguard: enabled
+  spanning_tree_portfast: edge
+  peer_type: network_port
+  port_profile: PP-DOT1X
+  switchport:
+    enabled: true
+    mode: trunk phone
+    trunk:
+      native_vlan: 110
+    phone:
+      vlan: 120
+      trunk: untagged
+- name: Ethernet35
+  description: IDF1 Standard Port
+  shutdown: false
+  dot1x:
+    port_control: auto
+    reauthentication: true
+    pae:
+      mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 130
+    host_mode:
+      mode: multi-host
+      multi_host_authenticated: true
+    mac_based_authentication:
+      enabled: true
+    timeout:
+      reauth_period: server
+      tx_period: 3
+    reauthorization_request_limit: 3
+  spanning_tree_bpduguard: enabled
+  spanning_tree_portfast: edge
+  peer_type: network_port
+  port_profile: PP-DOT1X
+  switchport:
+    enabled: true
+    mode: trunk phone
+    trunk:
+      native_vlan: 110
+    phone:
+      vlan: 120
+      trunk: untagged
+- name: Ethernet36
+  description: IDF1 Standard Port
+  shutdown: false
+  dot1x:
+    port_control: auto
+    reauthentication: true
+    pae:
+      mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 130
+    host_mode:
+      mode: multi-host
+      multi_host_authenticated: true
+    mac_based_authentication:
+      enabled: true
+    timeout:
+      reauth_period: server
+      tx_period: 3
+    reauthorization_request_limit: 3
+  spanning_tree_bpduguard: enabled
+  spanning_tree_portfast: edge
+  peer_type: network_port
+  port_profile: PP-DOT1X
+  switchport:
+    enabled: true
+    mode: trunk phone
+    trunk:
+      native_vlan: 110
+    phone:
+      vlan: 120
+      trunk: untagged
+- name: Ethernet37
+  description: IDF1 Standard Port
+  shutdown: false
+  dot1x:
+    port_control: auto
+    reauthentication: true
+    pae:
+      mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 130
+    host_mode:
+      mode: multi-host
+      multi_host_authenticated: true
+    mac_based_authentication:
+      enabled: true
+    timeout:
+      reauth_period: server
+      tx_period: 3
+    reauthorization_request_limit: 3
+  spanning_tree_bpduguard: enabled
+  spanning_tree_portfast: edge
+  peer_type: network_port
+  port_profile: PP-DOT1X
+  switchport:
+    enabled: true
+    mode: trunk phone
+    trunk:
+      native_vlan: 110
+    phone:
+      vlan: 120
+      trunk: untagged
+- name: Ethernet38
+  description: IDF1 Standard Port
+  shutdown: false
+  dot1x:
+    port_control: auto
+    reauthentication: true
+    pae:
+      mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 130
+    host_mode:
+      mode: multi-host
+      multi_host_authenticated: true
+    mac_based_authentication:
+      enabled: true
+    timeout:
+      reauth_period: server
+      tx_period: 3
+    reauthorization_request_limit: 3
+  spanning_tree_bpduguard: enabled
+  spanning_tree_portfast: edge
+  peer_type: network_port
+  port_profile: PP-DOT1X
+  switchport:
+    enabled: true
+    mode: trunk phone
+    trunk:
+      native_vlan: 110
+    phone:
+      vlan: 120
+      trunk: untagged
+- name: Ethernet39
+  description: IDF1 Standard Port
+  shutdown: false
+  dot1x:
+    port_control: auto
+    reauthentication: true
+    pae:
+      mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 130
+    host_mode:
+      mode: multi-host
+      multi_host_authenticated: true
+    mac_based_authentication:
+      enabled: true
+    timeout:
+      reauth_period: server
+      tx_period: 3
+    reauthorization_request_limit: 3
+  spanning_tree_bpduguard: enabled
+  spanning_tree_portfast: edge
+  peer_type: network_port
+  port_profile: PP-DOT1X
+  switchport:
+    enabled: true
+    mode: trunk phone
+    trunk:
+      native_vlan: 110
+    phone:
+      vlan: 120
+      trunk: untagged
+- name: Ethernet40
+  description: IDF1 Standard Port
+  shutdown: false
+  dot1x:
+    port_control: auto
+    reauthentication: true
+    pae:
+      mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 130
+    host_mode:
+      mode: multi-host
+      multi_host_authenticated: true
+    mac_based_authentication:
+      enabled: true
+    timeout:
+      reauth_period: server
+      tx_period: 3
+    reauthorization_request_limit: 3
+  spanning_tree_bpduguard: enabled
+  spanning_tree_portfast: edge
+  peer_type: network_port
+  port_profile: PP-DOT1X
+  switchport:
+    enabled: true
+    mode: trunk phone
+    trunk:
+      native_vlan: 110
+    phone:
+      vlan: 120
+      trunk: untagged
+- name: Ethernet41
+  description: IDF1 Standard Port
+  shutdown: false
+  dot1x:
+    port_control: auto
+    reauthentication: true
+    pae:
+      mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 130
+    host_mode:
+      mode: multi-host
+      multi_host_authenticated: true
+    mac_based_authentication:
+      enabled: true
+    timeout:
+      reauth_period: server
+      tx_period: 3
+    reauthorization_request_limit: 3
+  spanning_tree_bpduguard: enabled
+  spanning_tree_portfast: edge
+  peer_type: network_port
+  port_profile: PP-DOT1X
+  switchport:
+    enabled: true
+    mode: trunk phone
+    trunk:
+      native_vlan: 110
+    phone:
+      vlan: 120
+      trunk: untagged
+- name: Ethernet42
+  description: IDF1 Standard Port
+  shutdown: false
+  dot1x:
+    port_control: auto
+    reauthentication: true
+    pae:
+      mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 130
+    host_mode:
+      mode: multi-host
+      multi_host_authenticated: true
+    mac_based_authentication:
+      enabled: true
+    timeout:
+      reauth_period: server
+      tx_period: 3
+    reauthorization_request_limit: 3
+  spanning_tree_bpduguard: enabled
+  spanning_tree_portfast: edge
+  peer_type: network_port
+  port_profile: PP-DOT1X
+  switchport:
+    enabled: true
+    mode: trunk phone
+    trunk:
+      native_vlan: 110
+    phone:
+      vlan: 120
+      trunk: untagged
+- name: Ethernet43
+  description: IDF1 Standard Port
+  shutdown: false
+  dot1x:
+    port_control: auto
+    reauthentication: true
+    pae:
+      mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 130
+    host_mode:
+      mode: multi-host
+      multi_host_authenticated: true
+    mac_based_authentication:
+      enabled: true
+    timeout:
+      reauth_period: server
+      tx_period: 3
+    reauthorization_request_limit: 3
+  spanning_tree_bpduguard: enabled
+  spanning_tree_portfast: edge
+  peer_type: network_port
+  port_profile: PP-DOT1X
+  switchport:
+    enabled: true
+    mode: trunk phone
+    trunk:
+      native_vlan: 110
+    phone:
+      vlan: 120
+      trunk: untagged
+- name: Ethernet44
+  description: IDF1 Standard Port
+  shutdown: false
+  dot1x:
+    port_control: auto
+    reauthentication: true
+    pae:
+      mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 130
+    host_mode:
+      mode: multi-host
+      multi_host_authenticated: true
+    mac_based_authentication:
+      enabled: true
+    timeout:
+      reauth_period: server
+      tx_period: 3
+    reauthorization_request_limit: 3
+  spanning_tree_bpduguard: enabled
+  spanning_tree_portfast: edge
+  peer_type: network_port
+  port_profile: PP-DOT1X
+  switchport:
+    enabled: true
+    mode: trunk phone
+    trunk:
+      native_vlan: 110
+    phone:
+      vlan: 120
+      trunk: untagged
+- name: Ethernet45
+  description: IDF1 Standard Port
+  shutdown: false
+  dot1x:
+    port_control: auto
+    reauthentication: true
+    pae:
+      mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 130
+    host_mode:
+      mode: multi-host
+      multi_host_authenticated: true
+    mac_based_authentication:
+      enabled: true
+    timeout:
+      reauth_period: server
+      tx_period: 3
+    reauthorization_request_limit: 3
+  spanning_tree_bpduguard: enabled
+  spanning_tree_portfast: edge
+  peer_type: network_port
+  port_profile: PP-DOT1X
+  switchport:
+    enabled: true
+    mode: trunk phone
+    trunk:
+      native_vlan: 110
+    phone:
+      vlan: 120
+      trunk: untagged
+- name: Ethernet46
+  description: IDF1 Standard Port
+  shutdown: false
+  dot1x:
+    port_control: auto
+    reauthentication: true
+    pae:
+      mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 130
+    host_mode:
+      mode: multi-host
+      multi_host_authenticated: true
+    mac_based_authentication:
+      enabled: true
+    timeout:
+      reauth_period: server
+      tx_period: 3
+    reauthorization_request_limit: 3
+  spanning_tree_bpduguard: enabled
+  spanning_tree_portfast: edge
+  peer_type: network_port
+  port_profile: PP-DOT1X
+  switchport:
+    enabled: true
+    mode: trunk phone
+    trunk:
+      native_vlan: 110
+    phone:
+      vlan: 120
+      trunk: untagged
+- name: Ethernet47
+  description: IDF1 Standard Port
+  shutdown: false
+  dot1x:
+    port_control: auto
+    reauthentication: true
+    pae:
+      mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 130
+    host_mode:
+      mode: multi-host
+      multi_host_authenticated: true
+    mac_based_authentication:
+      enabled: true
+    timeout:
+      reauth_period: server
+      tx_period: 3
+    reauthorization_request_limit: 3
+  spanning_tree_bpduguard: enabled
+  spanning_tree_portfast: edge
+  peer_type: network_port
+  port_profile: PP-DOT1X
+  switchport:
+    enabled: true
+    mode: trunk phone
+    trunk:
+      native_vlan: 110
+    phone:
+      vlan: 120
+      trunk: untagged
+- name: Ethernet48
+  description: IDF1 Standard Port
+  shutdown: false
+  dot1x:
+    port_control: auto
+    reauthentication: true
+    pae:
+      mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 130
+    host_mode:
+      mode: multi-host
+      multi_host_authenticated: true
+    mac_based_authentication:
+      enabled: true
+    timeout:
+      reauth_period: server
+      tx_period: 3
+    reauthorization_request_limit: 3
+  spanning_tree_bpduguard: enabled
+  spanning_tree_portfast: edge
+  peer_type: network_port
+  port_profile: PP-DOT1X
+  switchport:
+    enabled: true
+    mode: trunk phone
+    trunk:
+      native_vlan: 110
+    phone:
+      vlan: 120
+      trunk: untagged
+hostname: LEAF1B
+ip_igmp_snooping:
+  globally_enabled: true
 ip_name_servers:
 - ip_address: 8.8.4.4
   vrf: MGMT
 - ip_address: 8.8.8.8
   vrf: MGMT
-spanning_tree:
-  mode: mstp
-  mst_instances:
-  - id: '0'
-    priority: 16384
-  no_spanning_tree_vlan: '4094'
+is_deployed: true
 local_users:
 - name: admin
   privilege: 15
   role: network-admin
   sha512_password: $6$eucN5ngreuExDgwS$xnD7T8jO..GBDX0DUlp.hn.W7yW94xTjSanqgaQGBzPIhDAsyAl9N4oScHvOMvf07uVBFI4mKMxwdVEUVKgY/.
-vrfs:
-- name: MGMT
-  ip_routing: false
+management_api_http:
+  enable_https: true
+  enable_vrfs:
+  - name: MGMT
 management_interfaces:
 - name: Management0
   description: OOB_MANAGEMENT
   shutdown: false
   vrf: MGMT
   ip_address: 172.16.100.104/24
-  gateway: 172.16.100.1
   type: oob
-management_api_http:
-  enable_vrfs:
-  - name: MGMT
-  enable_https: true
+  gateway: 172.16.100.1
+metadata:
+  platform: cEOSLab
+mlag_configuration:
+  domain_id: IDF1
+  local_interface: Vlan4094
+  peer_address: 192.168.0.4
+  peer_link: Port-Channel53
+  reload_delay_mlag: '300'
+  reload_delay_non_mlag: '330'
 ntp:
   local_interface:
     name: Management0
     vrf: MGMT
   servers:
   - name: time.google.com
-    vrf: MGMT
     preferred: true
+    vrf: MGMT
   - name: pool.ntp.org
     vrf: MGMT
+port_channel_interfaces:
+- name: Port-Channel53
+  description: MLAG_LEAF1A_Port-Channel53
+  shutdown: false
+  switchport:
+    enabled: true
+    mode: trunk
+    trunk:
+      groups:
+      - MLAG
+- name: Port-Channel51
+  description: L2_SPINES_Port-Channel1
+  shutdown: false
+  mlag: 51
+  switchport:
+    enabled: true
+    mode: trunk
+    trunk:
+      allowed_vlan: 10,110,120,130
+service_routing_protocols_model: multi-agent
+spanning_tree:
+  mode: mstp
+  mst_instances:
+  - id: '0'
+    priority: 16384
+  no_spanning_tree_vlan: '4094'
+static_routes:
+- vrf: MGMT
+  destination_address_prefix: 0.0.0.0/0
+  gateway: 172.16.100.1
+- destination_address_prefix: 0.0.0.0/0
+  gateway: 10.10.10.1
+transceiver_qsfp_default_mode_4x10: true
+vlan_interfaces:
+- name: Vlan4094
+  description: MLAG
+  shutdown: false
+  ip_address: 192.168.0.5/31
+  mtu: 1500
+  no_autostate: true
+- name: Vlan10
+  description: Inband Management
+  shutdown: false
+  ip_address: 10.10.10.7/24
+  mtu: 1500
+  type: inband_mgmt
+vlan_internal_order:
+  allocation: ascending
+  range:
+    beginning: 1006
+    ending: 1199
 vlans:
 - id: 4094
-  tenant: system
   name: MLAG
   trunk_groups:
   - MLAG
+  tenant: system
 - id: 110
   name: IDF1-Data
   tenant: MY_FABRIC
@@ -75,1612 +1679,8 @@ vlans:
   name: IDF1-Guest
   tenant: MY_FABRIC
 - id: 10
-  tenant: system
   name: INBAND_MGMT
-vlan_interfaces:
-- name: Vlan4094
-  description: MLAG
-  shutdown: false
-  no_autostate: true
-  mtu: 1500
-  ip_address: 192.168.0.5/31
-- name: Vlan10
-  description: Inband Management
-  shutdown: false
-  mtu: 1500
-  ip_address: 10.10.10.7/24
-  type: inband_mgmt
-port_channel_interfaces:
-- name: Port-Channel53
-  description: MLAG_LEAF1A_Port-Channel53
-  switchport:
-    enabled: true
-    mode: trunk
-    trunk:
-      groups:
-      - MLAG
-  shutdown: false
-- name: Port-Channel51
-  description: L2_SPINES_Port-Channel1
-  switchport:
-    enabled: true
-    mode: trunk
-    trunk:
-      allowed_vlan: 10,110,120,130
-  shutdown: false
-  mlag: 51
-ethernet_interfaces:
-- name: Ethernet53
-  peer: LEAF1A
-  peer_interface: Ethernet53
-  peer_type: mlag_peer
-  description: MLAG_LEAF1A_Ethernet53
-  shutdown: false
-  channel_group:
-    id: 53
-    mode: active
-- name: Ethernet54
-  peer: LEAF1A
-  peer_interface: Ethernet54
-  peer_type: mlag_peer
-  description: MLAG_LEAF1A_Ethernet54
-  shutdown: false
-  channel_group:
-    id: 53
-    mode: active
-- name: Ethernet51
-  peer: SPINE2
-  peer_interface: Ethernet1
-  peer_type: l3spine
-  description: L2_SPINE2_Ethernet1
-  shutdown: false
-  channel_group:
-    id: 51
-    mode: active
-- name: Ethernet1
-  peer_type: network_port
-  port_profile: PP-DOT1X
-  description: IDF1 Standard Port
-  shutdown: false
-  dot1x:
-    port_control: auto
-    reauthentication: true
-    pae:
-      mode: authenticator
-    authentication_failure:
-      action: allow
-      allow_vlan: 130
-    host_mode:
-      mode: multi-host
-      multi_host_authenticated: true
-    mac_based_authentication:
-      enabled: true
-    timeout:
-      reauth_period: server
-      tx_period: 3
-    reauthorization_request_limit: 3
-  switchport:
-    enabled: true
-    mode: trunk phone
-    trunk:
-      native_vlan: 110
-    phone:
-      vlan: 120
-      trunk: untagged
-  spanning_tree_portfast: edge
-  spanning_tree_bpduguard: enabled
-- name: Ethernet2
-  peer_type: network_port
-  port_profile: PP-DOT1X
-  description: IDF1 Standard Port
-  shutdown: false
-  dot1x:
-    port_control: auto
-    reauthentication: true
-    pae:
-      mode: authenticator
-    authentication_failure:
-      action: allow
-      allow_vlan: 130
-    host_mode:
-      mode: multi-host
-      multi_host_authenticated: true
-    mac_based_authentication:
-      enabled: true
-    timeout:
-      reauth_period: server
-      tx_period: 3
-    reauthorization_request_limit: 3
-  switchport:
-    enabled: true
-    mode: trunk phone
-    trunk:
-      native_vlan: 110
-    phone:
-      vlan: 120
-      trunk: untagged
-  spanning_tree_portfast: edge
-  spanning_tree_bpduguard: enabled
-- name: Ethernet3
-  peer_type: network_port
-  port_profile: PP-DOT1X
-  description: IDF1 Standard Port
-  shutdown: false
-  dot1x:
-    port_control: auto
-    reauthentication: true
-    pae:
-      mode: authenticator
-    authentication_failure:
-      action: allow
-      allow_vlan: 130
-    host_mode:
-      mode: multi-host
-      multi_host_authenticated: true
-    mac_based_authentication:
-      enabled: true
-    timeout:
-      reauth_period: server
-      tx_period: 3
-    reauthorization_request_limit: 3
-  switchport:
-    enabled: true
-    mode: trunk phone
-    trunk:
-      native_vlan: 110
-    phone:
-      vlan: 120
-      trunk: untagged
-  spanning_tree_portfast: edge
-  spanning_tree_bpduguard: enabled
-- name: Ethernet4
-  peer_type: network_port
-  port_profile: PP-DOT1X
-  description: IDF1 Standard Port
-  shutdown: false
-  dot1x:
-    port_control: auto
-    reauthentication: true
-    pae:
-      mode: authenticator
-    authentication_failure:
-      action: allow
-      allow_vlan: 130
-    host_mode:
-      mode: multi-host
-      multi_host_authenticated: true
-    mac_based_authentication:
-      enabled: true
-    timeout:
-      reauth_period: server
-      tx_period: 3
-    reauthorization_request_limit: 3
-  switchport:
-    enabled: true
-    mode: trunk phone
-    trunk:
-      native_vlan: 110
-    phone:
-      vlan: 120
-      trunk: untagged
-  spanning_tree_portfast: edge
-  spanning_tree_bpduguard: enabled
-- name: Ethernet5
-  peer_type: network_port
-  port_profile: PP-DOT1X
-  description: IDF1 Standard Port
-  shutdown: false
-  dot1x:
-    port_control: auto
-    reauthentication: true
-    pae:
-      mode: authenticator
-    authentication_failure:
-      action: allow
-      allow_vlan: 130
-    host_mode:
-      mode: multi-host
-      multi_host_authenticated: true
-    mac_based_authentication:
-      enabled: true
-    timeout:
-      reauth_period: server
-      tx_period: 3
-    reauthorization_request_limit: 3
-  switchport:
-    enabled: true
-    mode: trunk phone
-    trunk:
-      native_vlan: 110
-    phone:
-      vlan: 120
-      trunk: untagged
-  spanning_tree_portfast: edge
-  spanning_tree_bpduguard: enabled
-- name: Ethernet6
-  peer_type: network_port
-  port_profile: PP-DOT1X
-  description: IDF1 Standard Port
-  shutdown: false
-  dot1x:
-    port_control: auto
-    reauthentication: true
-    pae:
-      mode: authenticator
-    authentication_failure:
-      action: allow
-      allow_vlan: 130
-    host_mode:
-      mode: multi-host
-      multi_host_authenticated: true
-    mac_based_authentication:
-      enabled: true
-    timeout:
-      reauth_period: server
-      tx_period: 3
-    reauthorization_request_limit: 3
-  switchport:
-    enabled: true
-    mode: trunk phone
-    trunk:
-      native_vlan: 110
-    phone:
-      vlan: 120
-      trunk: untagged
-  spanning_tree_portfast: edge
-  spanning_tree_bpduguard: enabled
-- name: Ethernet7
-  peer_type: network_port
-  port_profile: PP-DOT1X
-  description: IDF1 Standard Port
-  shutdown: false
-  dot1x:
-    port_control: auto
-    reauthentication: true
-    pae:
-      mode: authenticator
-    authentication_failure:
-      action: allow
-      allow_vlan: 130
-    host_mode:
-      mode: multi-host
-      multi_host_authenticated: true
-    mac_based_authentication:
-      enabled: true
-    timeout:
-      reauth_period: server
-      tx_period: 3
-    reauthorization_request_limit: 3
-  switchport:
-    enabled: true
-    mode: trunk phone
-    trunk:
-      native_vlan: 110
-    phone:
-      vlan: 120
-      trunk: untagged
-  spanning_tree_portfast: edge
-  spanning_tree_bpduguard: enabled
-- name: Ethernet8
-  peer_type: network_port
-  port_profile: PP-DOT1X
-  description: IDF1 Standard Port
-  shutdown: false
-  dot1x:
-    port_control: auto
-    reauthentication: true
-    pae:
-      mode: authenticator
-    authentication_failure:
-      action: allow
-      allow_vlan: 130
-    host_mode:
-      mode: multi-host
-      multi_host_authenticated: true
-    mac_based_authentication:
-      enabled: true
-    timeout:
-      reauth_period: server
-      tx_period: 3
-    reauthorization_request_limit: 3
-  switchport:
-    enabled: true
-    mode: trunk phone
-    trunk:
-      native_vlan: 110
-    phone:
-      vlan: 120
-      trunk: untagged
-  spanning_tree_portfast: edge
-  spanning_tree_bpduguard: enabled
-- name: Ethernet9
-  peer_type: network_port
-  port_profile: PP-DOT1X
-  description: IDF1 Standard Port
-  shutdown: false
-  dot1x:
-    port_control: auto
-    reauthentication: true
-    pae:
-      mode: authenticator
-    authentication_failure:
-      action: allow
-      allow_vlan: 130
-    host_mode:
-      mode: multi-host
-      multi_host_authenticated: true
-    mac_based_authentication:
-      enabled: true
-    timeout:
-      reauth_period: server
-      tx_period: 3
-    reauthorization_request_limit: 3
-  switchport:
-    enabled: true
-    mode: trunk phone
-    trunk:
-      native_vlan: 110
-    phone:
-      vlan: 120
-      trunk: untagged
-  spanning_tree_portfast: edge
-  spanning_tree_bpduguard: enabled
-- name: Ethernet10
-  peer_type: network_port
-  port_profile: PP-DOT1X
-  description: IDF1 Standard Port
-  shutdown: false
-  dot1x:
-    port_control: auto
-    reauthentication: true
-    pae:
-      mode: authenticator
-    authentication_failure:
-      action: allow
-      allow_vlan: 130
-    host_mode:
-      mode: multi-host
-      multi_host_authenticated: true
-    mac_based_authentication:
-      enabled: true
-    timeout:
-      reauth_period: server
-      tx_period: 3
-    reauthorization_request_limit: 3
-  switchport:
-    enabled: true
-    mode: trunk phone
-    trunk:
-      native_vlan: 110
-    phone:
-      vlan: 120
-      trunk: untagged
-  spanning_tree_portfast: edge
-  spanning_tree_bpduguard: enabled
-- name: Ethernet11
-  peer_type: network_port
-  port_profile: PP-DOT1X
-  description: IDF1 Standard Port
-  shutdown: false
-  dot1x:
-    port_control: auto
-    reauthentication: true
-    pae:
-      mode: authenticator
-    authentication_failure:
-      action: allow
-      allow_vlan: 130
-    host_mode:
-      mode: multi-host
-      multi_host_authenticated: true
-    mac_based_authentication:
-      enabled: true
-    timeout:
-      reauth_period: server
-      tx_period: 3
-    reauthorization_request_limit: 3
-  switchport:
-    enabled: true
-    mode: trunk phone
-    trunk:
-      native_vlan: 110
-    phone:
-      vlan: 120
-      trunk: untagged
-  spanning_tree_portfast: edge
-  spanning_tree_bpduguard: enabled
-- name: Ethernet12
-  peer_type: network_port
-  port_profile: PP-DOT1X
-  description: IDF1 Standard Port
-  shutdown: false
-  dot1x:
-    port_control: auto
-    reauthentication: true
-    pae:
-      mode: authenticator
-    authentication_failure:
-      action: allow
-      allow_vlan: 130
-    host_mode:
-      mode: multi-host
-      multi_host_authenticated: true
-    mac_based_authentication:
-      enabled: true
-    timeout:
-      reauth_period: server
-      tx_period: 3
-    reauthorization_request_limit: 3
-  switchport:
-    enabled: true
-    mode: trunk phone
-    trunk:
-      native_vlan: 110
-    phone:
-      vlan: 120
-      trunk: untagged
-  spanning_tree_portfast: edge
-  spanning_tree_bpduguard: enabled
-- name: Ethernet13
-  peer_type: network_port
-  port_profile: PP-DOT1X
-  description: IDF1 Standard Port
-  shutdown: false
-  dot1x:
-    port_control: auto
-    reauthentication: true
-    pae:
-      mode: authenticator
-    authentication_failure:
-      action: allow
-      allow_vlan: 130
-    host_mode:
-      mode: multi-host
-      multi_host_authenticated: true
-    mac_based_authentication:
-      enabled: true
-    timeout:
-      reauth_period: server
-      tx_period: 3
-    reauthorization_request_limit: 3
-  switchport:
-    enabled: true
-    mode: trunk phone
-    trunk:
-      native_vlan: 110
-    phone:
-      vlan: 120
-      trunk: untagged
-  spanning_tree_portfast: edge
-  spanning_tree_bpduguard: enabled
-- name: Ethernet14
-  peer_type: network_port
-  port_profile: PP-DOT1X
-  description: IDF1 Standard Port
-  shutdown: false
-  dot1x:
-    port_control: auto
-    reauthentication: true
-    pae:
-      mode: authenticator
-    authentication_failure:
-      action: allow
-      allow_vlan: 130
-    host_mode:
-      mode: multi-host
-      multi_host_authenticated: true
-    mac_based_authentication:
-      enabled: true
-    timeout:
-      reauth_period: server
-      tx_period: 3
-    reauthorization_request_limit: 3
-  switchport:
-    enabled: true
-    mode: trunk phone
-    trunk:
-      native_vlan: 110
-    phone:
-      vlan: 120
-      trunk: untagged
-  spanning_tree_portfast: edge
-  spanning_tree_bpduguard: enabled
-- name: Ethernet15
-  peer_type: network_port
-  port_profile: PP-DOT1X
-  description: IDF1 Standard Port
-  shutdown: false
-  dot1x:
-    port_control: auto
-    reauthentication: true
-    pae:
-      mode: authenticator
-    authentication_failure:
-      action: allow
-      allow_vlan: 130
-    host_mode:
-      mode: multi-host
-      multi_host_authenticated: true
-    mac_based_authentication:
-      enabled: true
-    timeout:
-      reauth_period: server
-      tx_period: 3
-    reauthorization_request_limit: 3
-  switchport:
-    enabled: true
-    mode: trunk phone
-    trunk:
-      native_vlan: 110
-    phone:
-      vlan: 120
-      trunk: untagged
-  spanning_tree_portfast: edge
-  spanning_tree_bpduguard: enabled
-- name: Ethernet16
-  peer_type: network_port
-  port_profile: PP-DOT1X
-  description: IDF1 Standard Port
-  shutdown: false
-  dot1x:
-    port_control: auto
-    reauthentication: true
-    pae:
-      mode: authenticator
-    authentication_failure:
-      action: allow
-      allow_vlan: 130
-    host_mode:
-      mode: multi-host
-      multi_host_authenticated: true
-    mac_based_authentication:
-      enabled: true
-    timeout:
-      reauth_period: server
-      tx_period: 3
-    reauthorization_request_limit: 3
-  switchport:
-    enabled: true
-    mode: trunk phone
-    trunk:
-      native_vlan: 110
-    phone:
-      vlan: 120
-      trunk: untagged
-  spanning_tree_portfast: edge
-  spanning_tree_bpduguard: enabled
-- name: Ethernet17
-  peer_type: network_port
-  port_profile: PP-DOT1X
-  description: IDF1 Standard Port
-  shutdown: false
-  dot1x:
-    port_control: auto
-    reauthentication: true
-    pae:
-      mode: authenticator
-    authentication_failure:
-      action: allow
-      allow_vlan: 130
-    host_mode:
-      mode: multi-host
-      multi_host_authenticated: true
-    mac_based_authentication:
-      enabled: true
-    timeout:
-      reauth_period: server
-      tx_period: 3
-    reauthorization_request_limit: 3
-  switchport:
-    enabled: true
-    mode: trunk phone
-    trunk:
-      native_vlan: 110
-    phone:
-      vlan: 120
-      trunk: untagged
-  spanning_tree_portfast: edge
-  spanning_tree_bpduguard: enabled
-- name: Ethernet18
-  peer_type: network_port
-  port_profile: PP-DOT1X
-  description: IDF1 Standard Port
-  shutdown: false
-  dot1x:
-    port_control: auto
-    reauthentication: true
-    pae:
-      mode: authenticator
-    authentication_failure:
-      action: allow
-      allow_vlan: 130
-    host_mode:
-      mode: multi-host
-      multi_host_authenticated: true
-    mac_based_authentication:
-      enabled: true
-    timeout:
-      reauth_period: server
-      tx_period: 3
-    reauthorization_request_limit: 3
-  switchport:
-    enabled: true
-    mode: trunk phone
-    trunk:
-      native_vlan: 110
-    phone:
-      vlan: 120
-      trunk: untagged
-  spanning_tree_portfast: edge
-  spanning_tree_bpduguard: enabled
-- name: Ethernet19
-  peer_type: network_port
-  port_profile: PP-DOT1X
-  description: IDF1 Standard Port
-  shutdown: false
-  dot1x:
-    port_control: auto
-    reauthentication: true
-    pae:
-      mode: authenticator
-    authentication_failure:
-      action: allow
-      allow_vlan: 130
-    host_mode:
-      mode: multi-host
-      multi_host_authenticated: true
-    mac_based_authentication:
-      enabled: true
-    timeout:
-      reauth_period: server
-      tx_period: 3
-    reauthorization_request_limit: 3
-  switchport:
-    enabled: true
-    mode: trunk phone
-    trunk:
-      native_vlan: 110
-    phone:
-      vlan: 120
-      trunk: untagged
-  spanning_tree_portfast: edge
-  spanning_tree_bpduguard: enabled
-- name: Ethernet20
-  peer_type: network_port
-  port_profile: PP-DOT1X
-  description: IDF1 Standard Port
-  shutdown: false
-  dot1x:
-    port_control: auto
-    reauthentication: true
-    pae:
-      mode: authenticator
-    authentication_failure:
-      action: allow
-      allow_vlan: 130
-    host_mode:
-      mode: multi-host
-      multi_host_authenticated: true
-    mac_based_authentication:
-      enabled: true
-    timeout:
-      reauth_period: server
-      tx_period: 3
-    reauthorization_request_limit: 3
-  switchport:
-    enabled: true
-    mode: trunk phone
-    trunk:
-      native_vlan: 110
-    phone:
-      vlan: 120
-      trunk: untagged
-  spanning_tree_portfast: edge
-  spanning_tree_bpduguard: enabled
-- name: Ethernet21
-  peer_type: network_port
-  port_profile: PP-DOT1X
-  description: IDF1 Standard Port
-  shutdown: false
-  dot1x:
-    port_control: auto
-    reauthentication: true
-    pae:
-      mode: authenticator
-    authentication_failure:
-      action: allow
-      allow_vlan: 130
-    host_mode:
-      mode: multi-host
-      multi_host_authenticated: true
-    mac_based_authentication:
-      enabled: true
-    timeout:
-      reauth_period: server
-      tx_period: 3
-    reauthorization_request_limit: 3
-  switchport:
-    enabled: true
-    mode: trunk phone
-    trunk:
-      native_vlan: 110
-    phone:
-      vlan: 120
-      trunk: untagged
-  spanning_tree_portfast: edge
-  spanning_tree_bpduguard: enabled
-- name: Ethernet22
-  peer_type: network_port
-  port_profile: PP-DOT1X
-  description: IDF1 Standard Port
-  shutdown: false
-  dot1x:
-    port_control: auto
-    reauthentication: true
-    pae:
-      mode: authenticator
-    authentication_failure:
-      action: allow
-      allow_vlan: 130
-    host_mode:
-      mode: multi-host
-      multi_host_authenticated: true
-    mac_based_authentication:
-      enabled: true
-    timeout:
-      reauth_period: server
-      tx_period: 3
-    reauthorization_request_limit: 3
-  switchport:
-    enabled: true
-    mode: trunk phone
-    trunk:
-      native_vlan: 110
-    phone:
-      vlan: 120
-      trunk: untagged
-  spanning_tree_portfast: edge
-  spanning_tree_bpduguard: enabled
-- name: Ethernet23
-  peer_type: network_port
-  port_profile: PP-DOT1X
-  description: IDF1 Standard Port
-  shutdown: false
-  dot1x:
-    port_control: auto
-    reauthentication: true
-    pae:
-      mode: authenticator
-    authentication_failure:
-      action: allow
-      allow_vlan: 130
-    host_mode:
-      mode: multi-host
-      multi_host_authenticated: true
-    mac_based_authentication:
-      enabled: true
-    timeout:
-      reauth_period: server
-      tx_period: 3
-    reauthorization_request_limit: 3
-  switchport:
-    enabled: true
-    mode: trunk phone
-    trunk:
-      native_vlan: 110
-    phone:
-      vlan: 120
-      trunk: untagged
-  spanning_tree_portfast: edge
-  spanning_tree_bpduguard: enabled
-- name: Ethernet24
-  peer_type: network_port
-  port_profile: PP-DOT1X
-  description: IDF1 Standard Port
-  shutdown: false
-  dot1x:
-    port_control: auto
-    reauthentication: true
-    pae:
-      mode: authenticator
-    authentication_failure:
-      action: allow
-      allow_vlan: 130
-    host_mode:
-      mode: multi-host
-      multi_host_authenticated: true
-    mac_based_authentication:
-      enabled: true
-    timeout:
-      reauth_period: server
-      tx_period: 3
-    reauthorization_request_limit: 3
-  switchport:
-    enabled: true
-    mode: trunk phone
-    trunk:
-      native_vlan: 110
-    phone:
-      vlan: 120
-      trunk: untagged
-  spanning_tree_portfast: edge
-  spanning_tree_bpduguard: enabled
-- name: Ethernet25
-  peer_type: network_port
-  port_profile: PP-DOT1X
-  description: IDF1 Standard Port
-  shutdown: false
-  dot1x:
-    port_control: auto
-    reauthentication: true
-    pae:
-      mode: authenticator
-    authentication_failure:
-      action: allow
-      allow_vlan: 130
-    host_mode:
-      mode: multi-host
-      multi_host_authenticated: true
-    mac_based_authentication:
-      enabled: true
-    timeout:
-      reauth_period: server
-      tx_period: 3
-    reauthorization_request_limit: 3
-  switchport:
-    enabled: true
-    mode: trunk phone
-    trunk:
-      native_vlan: 110
-    phone:
-      vlan: 120
-      trunk: untagged
-  spanning_tree_portfast: edge
-  spanning_tree_bpduguard: enabled
-- name: Ethernet26
-  peer_type: network_port
-  port_profile: PP-DOT1X
-  description: IDF1 Standard Port
-  shutdown: false
-  dot1x:
-    port_control: auto
-    reauthentication: true
-    pae:
-      mode: authenticator
-    authentication_failure:
-      action: allow
-      allow_vlan: 130
-    host_mode:
-      mode: multi-host
-      multi_host_authenticated: true
-    mac_based_authentication:
-      enabled: true
-    timeout:
-      reauth_period: server
-      tx_period: 3
-    reauthorization_request_limit: 3
-  switchport:
-    enabled: true
-    mode: trunk phone
-    trunk:
-      native_vlan: 110
-    phone:
-      vlan: 120
-      trunk: untagged
-  spanning_tree_portfast: edge
-  spanning_tree_bpduguard: enabled
-- name: Ethernet27
-  peer_type: network_port
-  port_profile: PP-DOT1X
-  description: IDF1 Standard Port
-  shutdown: false
-  dot1x:
-    port_control: auto
-    reauthentication: true
-    pae:
-      mode: authenticator
-    authentication_failure:
-      action: allow
-      allow_vlan: 130
-    host_mode:
-      mode: multi-host
-      multi_host_authenticated: true
-    mac_based_authentication:
-      enabled: true
-    timeout:
-      reauth_period: server
-      tx_period: 3
-    reauthorization_request_limit: 3
-  switchport:
-    enabled: true
-    mode: trunk phone
-    trunk:
-      native_vlan: 110
-    phone:
-      vlan: 120
-      trunk: untagged
-  spanning_tree_portfast: edge
-  spanning_tree_bpduguard: enabled
-- name: Ethernet28
-  peer_type: network_port
-  port_profile: PP-DOT1X
-  description: IDF1 Standard Port
-  shutdown: false
-  dot1x:
-    port_control: auto
-    reauthentication: true
-    pae:
-      mode: authenticator
-    authentication_failure:
-      action: allow
-      allow_vlan: 130
-    host_mode:
-      mode: multi-host
-      multi_host_authenticated: true
-    mac_based_authentication:
-      enabled: true
-    timeout:
-      reauth_period: server
-      tx_period: 3
-    reauthorization_request_limit: 3
-  switchport:
-    enabled: true
-    mode: trunk phone
-    trunk:
-      native_vlan: 110
-    phone:
-      vlan: 120
-      trunk: untagged
-  spanning_tree_portfast: edge
-  spanning_tree_bpduguard: enabled
-- name: Ethernet29
-  peer_type: network_port
-  port_profile: PP-DOT1X
-  description: IDF1 Standard Port
-  shutdown: false
-  dot1x:
-    port_control: auto
-    reauthentication: true
-    pae:
-      mode: authenticator
-    authentication_failure:
-      action: allow
-      allow_vlan: 130
-    host_mode:
-      mode: multi-host
-      multi_host_authenticated: true
-    mac_based_authentication:
-      enabled: true
-    timeout:
-      reauth_period: server
-      tx_period: 3
-    reauthorization_request_limit: 3
-  switchport:
-    enabled: true
-    mode: trunk phone
-    trunk:
-      native_vlan: 110
-    phone:
-      vlan: 120
-      trunk: untagged
-  spanning_tree_portfast: edge
-  spanning_tree_bpduguard: enabled
-- name: Ethernet30
-  peer_type: network_port
-  port_profile: PP-DOT1X
-  description: IDF1 Standard Port
-  shutdown: false
-  dot1x:
-    port_control: auto
-    reauthentication: true
-    pae:
-      mode: authenticator
-    authentication_failure:
-      action: allow
-      allow_vlan: 130
-    host_mode:
-      mode: multi-host
-      multi_host_authenticated: true
-    mac_based_authentication:
-      enabled: true
-    timeout:
-      reauth_period: server
-      tx_period: 3
-    reauthorization_request_limit: 3
-  switchport:
-    enabled: true
-    mode: trunk phone
-    trunk:
-      native_vlan: 110
-    phone:
-      vlan: 120
-      trunk: untagged
-  spanning_tree_portfast: edge
-  spanning_tree_bpduguard: enabled
-- name: Ethernet31
-  peer_type: network_port
-  port_profile: PP-DOT1X
-  description: IDF1 Standard Port
-  shutdown: false
-  dot1x:
-    port_control: auto
-    reauthentication: true
-    pae:
-      mode: authenticator
-    authentication_failure:
-      action: allow
-      allow_vlan: 130
-    host_mode:
-      mode: multi-host
-      multi_host_authenticated: true
-    mac_based_authentication:
-      enabled: true
-    timeout:
-      reauth_period: server
-      tx_period: 3
-    reauthorization_request_limit: 3
-  switchport:
-    enabled: true
-    mode: trunk phone
-    trunk:
-      native_vlan: 110
-    phone:
-      vlan: 120
-      trunk: untagged
-  spanning_tree_portfast: edge
-  spanning_tree_bpduguard: enabled
-- name: Ethernet32
-  peer_type: network_port
-  port_profile: PP-DOT1X
-  description: IDF1 Standard Port
-  shutdown: false
-  dot1x:
-    port_control: auto
-    reauthentication: true
-    pae:
-      mode: authenticator
-    authentication_failure:
-      action: allow
-      allow_vlan: 130
-    host_mode:
-      mode: multi-host
-      multi_host_authenticated: true
-    mac_based_authentication:
-      enabled: true
-    timeout:
-      reauth_period: server
-      tx_period: 3
-    reauthorization_request_limit: 3
-  switchport:
-    enabled: true
-    mode: trunk phone
-    trunk:
-      native_vlan: 110
-    phone:
-      vlan: 120
-      trunk: untagged
-  spanning_tree_portfast: edge
-  spanning_tree_bpduguard: enabled
-- name: Ethernet33
-  peer_type: network_port
-  port_profile: PP-DOT1X
-  description: IDF1 Standard Port
-  shutdown: false
-  dot1x:
-    port_control: auto
-    reauthentication: true
-    pae:
-      mode: authenticator
-    authentication_failure:
-      action: allow
-      allow_vlan: 130
-    host_mode:
-      mode: multi-host
-      multi_host_authenticated: true
-    mac_based_authentication:
-      enabled: true
-    timeout:
-      reauth_period: server
-      tx_period: 3
-    reauthorization_request_limit: 3
-  switchport:
-    enabled: true
-    mode: trunk phone
-    trunk:
-      native_vlan: 110
-    phone:
-      vlan: 120
-      trunk: untagged
-  spanning_tree_portfast: edge
-  spanning_tree_bpduguard: enabled
-- name: Ethernet34
-  peer_type: network_port
-  port_profile: PP-DOT1X
-  description: IDF1 Standard Port
-  shutdown: false
-  dot1x:
-    port_control: auto
-    reauthentication: true
-    pae:
-      mode: authenticator
-    authentication_failure:
-      action: allow
-      allow_vlan: 130
-    host_mode:
-      mode: multi-host
-      multi_host_authenticated: true
-    mac_based_authentication:
-      enabled: true
-    timeout:
-      reauth_period: server
-      tx_period: 3
-    reauthorization_request_limit: 3
-  switchport:
-    enabled: true
-    mode: trunk phone
-    trunk:
-      native_vlan: 110
-    phone:
-      vlan: 120
-      trunk: untagged
-  spanning_tree_portfast: edge
-  spanning_tree_bpduguard: enabled
-- name: Ethernet35
-  peer_type: network_port
-  port_profile: PP-DOT1X
-  description: IDF1 Standard Port
-  shutdown: false
-  dot1x:
-    port_control: auto
-    reauthentication: true
-    pae:
-      mode: authenticator
-    authentication_failure:
-      action: allow
-      allow_vlan: 130
-    host_mode:
-      mode: multi-host
-      multi_host_authenticated: true
-    mac_based_authentication:
-      enabled: true
-    timeout:
-      reauth_period: server
-      tx_period: 3
-    reauthorization_request_limit: 3
-  switchport:
-    enabled: true
-    mode: trunk phone
-    trunk:
-      native_vlan: 110
-    phone:
-      vlan: 120
-      trunk: untagged
-  spanning_tree_portfast: edge
-  spanning_tree_bpduguard: enabled
-- name: Ethernet36
-  peer_type: network_port
-  port_profile: PP-DOT1X
-  description: IDF1 Standard Port
-  shutdown: false
-  dot1x:
-    port_control: auto
-    reauthentication: true
-    pae:
-      mode: authenticator
-    authentication_failure:
-      action: allow
-      allow_vlan: 130
-    host_mode:
-      mode: multi-host
-      multi_host_authenticated: true
-    mac_based_authentication:
-      enabled: true
-    timeout:
-      reauth_period: server
-      tx_period: 3
-    reauthorization_request_limit: 3
-  switchport:
-    enabled: true
-    mode: trunk phone
-    trunk:
-      native_vlan: 110
-    phone:
-      vlan: 120
-      trunk: untagged
-  spanning_tree_portfast: edge
-  spanning_tree_bpduguard: enabled
-- name: Ethernet37
-  peer_type: network_port
-  port_profile: PP-DOT1X
-  description: IDF1 Standard Port
-  shutdown: false
-  dot1x:
-    port_control: auto
-    reauthentication: true
-    pae:
-      mode: authenticator
-    authentication_failure:
-      action: allow
-      allow_vlan: 130
-    host_mode:
-      mode: multi-host
-      multi_host_authenticated: true
-    mac_based_authentication:
-      enabled: true
-    timeout:
-      reauth_period: server
-      tx_period: 3
-    reauthorization_request_limit: 3
-  switchport:
-    enabled: true
-    mode: trunk phone
-    trunk:
-      native_vlan: 110
-    phone:
-      vlan: 120
-      trunk: untagged
-  spanning_tree_portfast: edge
-  spanning_tree_bpduguard: enabled
-- name: Ethernet38
-  peer_type: network_port
-  port_profile: PP-DOT1X
-  description: IDF1 Standard Port
-  shutdown: false
-  dot1x:
-    port_control: auto
-    reauthentication: true
-    pae:
-      mode: authenticator
-    authentication_failure:
-      action: allow
-      allow_vlan: 130
-    host_mode:
-      mode: multi-host
-      multi_host_authenticated: true
-    mac_based_authentication:
-      enabled: true
-    timeout:
-      reauth_period: server
-      tx_period: 3
-    reauthorization_request_limit: 3
-  switchport:
-    enabled: true
-    mode: trunk phone
-    trunk:
-      native_vlan: 110
-    phone:
-      vlan: 120
-      trunk: untagged
-  spanning_tree_portfast: edge
-  spanning_tree_bpduguard: enabled
-- name: Ethernet39
-  peer_type: network_port
-  port_profile: PP-DOT1X
-  description: IDF1 Standard Port
-  shutdown: false
-  dot1x:
-    port_control: auto
-    reauthentication: true
-    pae:
-      mode: authenticator
-    authentication_failure:
-      action: allow
-      allow_vlan: 130
-    host_mode:
-      mode: multi-host
-      multi_host_authenticated: true
-    mac_based_authentication:
-      enabled: true
-    timeout:
-      reauth_period: server
-      tx_period: 3
-    reauthorization_request_limit: 3
-  switchport:
-    enabled: true
-    mode: trunk phone
-    trunk:
-      native_vlan: 110
-    phone:
-      vlan: 120
-      trunk: untagged
-  spanning_tree_portfast: edge
-  spanning_tree_bpduguard: enabled
-- name: Ethernet40
-  peer_type: network_port
-  port_profile: PP-DOT1X
-  description: IDF1 Standard Port
-  shutdown: false
-  dot1x:
-    port_control: auto
-    reauthentication: true
-    pae:
-      mode: authenticator
-    authentication_failure:
-      action: allow
-      allow_vlan: 130
-    host_mode:
-      mode: multi-host
-      multi_host_authenticated: true
-    mac_based_authentication:
-      enabled: true
-    timeout:
-      reauth_period: server
-      tx_period: 3
-    reauthorization_request_limit: 3
-  switchport:
-    enabled: true
-    mode: trunk phone
-    trunk:
-      native_vlan: 110
-    phone:
-      vlan: 120
-      trunk: untagged
-  spanning_tree_portfast: edge
-  spanning_tree_bpduguard: enabled
-- name: Ethernet41
-  peer_type: network_port
-  port_profile: PP-DOT1X
-  description: IDF1 Standard Port
-  shutdown: false
-  dot1x:
-    port_control: auto
-    reauthentication: true
-    pae:
-      mode: authenticator
-    authentication_failure:
-      action: allow
-      allow_vlan: 130
-    host_mode:
-      mode: multi-host
-      multi_host_authenticated: true
-    mac_based_authentication:
-      enabled: true
-    timeout:
-      reauth_period: server
-      tx_period: 3
-    reauthorization_request_limit: 3
-  switchport:
-    enabled: true
-    mode: trunk phone
-    trunk:
-      native_vlan: 110
-    phone:
-      vlan: 120
-      trunk: untagged
-  spanning_tree_portfast: edge
-  spanning_tree_bpduguard: enabled
-- name: Ethernet42
-  peer_type: network_port
-  port_profile: PP-DOT1X
-  description: IDF1 Standard Port
-  shutdown: false
-  dot1x:
-    port_control: auto
-    reauthentication: true
-    pae:
-      mode: authenticator
-    authentication_failure:
-      action: allow
-      allow_vlan: 130
-    host_mode:
-      mode: multi-host
-      multi_host_authenticated: true
-    mac_based_authentication:
-      enabled: true
-    timeout:
-      reauth_period: server
-      tx_period: 3
-    reauthorization_request_limit: 3
-  switchport:
-    enabled: true
-    mode: trunk phone
-    trunk:
-      native_vlan: 110
-    phone:
-      vlan: 120
-      trunk: untagged
-  spanning_tree_portfast: edge
-  spanning_tree_bpduguard: enabled
-- name: Ethernet43
-  peer_type: network_port
-  port_profile: PP-DOT1X
-  description: IDF1 Standard Port
-  shutdown: false
-  dot1x:
-    port_control: auto
-    reauthentication: true
-    pae:
-      mode: authenticator
-    authentication_failure:
-      action: allow
-      allow_vlan: 130
-    host_mode:
-      mode: multi-host
-      multi_host_authenticated: true
-    mac_based_authentication:
-      enabled: true
-    timeout:
-      reauth_period: server
-      tx_period: 3
-    reauthorization_request_limit: 3
-  switchport:
-    enabled: true
-    mode: trunk phone
-    trunk:
-      native_vlan: 110
-    phone:
-      vlan: 120
-      trunk: untagged
-  spanning_tree_portfast: edge
-  spanning_tree_bpduguard: enabled
-- name: Ethernet44
-  peer_type: network_port
-  port_profile: PP-DOT1X
-  description: IDF1 Standard Port
-  shutdown: false
-  dot1x:
-    port_control: auto
-    reauthentication: true
-    pae:
-      mode: authenticator
-    authentication_failure:
-      action: allow
-      allow_vlan: 130
-    host_mode:
-      mode: multi-host
-      multi_host_authenticated: true
-    mac_based_authentication:
-      enabled: true
-    timeout:
-      reauth_period: server
-      tx_period: 3
-    reauthorization_request_limit: 3
-  switchport:
-    enabled: true
-    mode: trunk phone
-    trunk:
-      native_vlan: 110
-    phone:
-      vlan: 120
-      trunk: untagged
-  spanning_tree_portfast: edge
-  spanning_tree_bpduguard: enabled
-- name: Ethernet45
-  peer_type: network_port
-  port_profile: PP-DOT1X
-  description: IDF1 Standard Port
-  shutdown: false
-  dot1x:
-    port_control: auto
-    reauthentication: true
-    pae:
-      mode: authenticator
-    authentication_failure:
-      action: allow
-      allow_vlan: 130
-    host_mode:
-      mode: multi-host
-      multi_host_authenticated: true
-    mac_based_authentication:
-      enabled: true
-    timeout:
-      reauth_period: server
-      tx_period: 3
-    reauthorization_request_limit: 3
-  switchport:
-    enabled: true
-    mode: trunk phone
-    trunk:
-      native_vlan: 110
-    phone:
-      vlan: 120
-      trunk: untagged
-  spanning_tree_portfast: edge
-  spanning_tree_bpduguard: enabled
-- name: Ethernet46
-  peer_type: network_port
-  port_profile: PP-DOT1X
-  description: IDF1 Standard Port
-  shutdown: false
-  dot1x:
-    port_control: auto
-    reauthentication: true
-    pae:
-      mode: authenticator
-    authentication_failure:
-      action: allow
-      allow_vlan: 130
-    host_mode:
-      mode: multi-host
-      multi_host_authenticated: true
-    mac_based_authentication:
-      enabled: true
-    timeout:
-      reauth_period: server
-      tx_period: 3
-    reauthorization_request_limit: 3
-  switchport:
-    enabled: true
-    mode: trunk phone
-    trunk:
-      native_vlan: 110
-    phone:
-      vlan: 120
-      trunk: untagged
-  spanning_tree_portfast: edge
-  spanning_tree_bpduguard: enabled
-- name: Ethernet47
-  peer_type: network_port
-  port_profile: PP-DOT1X
-  description: IDF1 Standard Port
-  shutdown: false
-  dot1x:
-    port_control: auto
-    reauthentication: true
-    pae:
-      mode: authenticator
-    authentication_failure:
-      action: allow
-      allow_vlan: 130
-    host_mode:
-      mode: multi-host
-      multi_host_authenticated: true
-    mac_based_authentication:
-      enabled: true
-    timeout:
-      reauth_period: server
-      tx_period: 3
-    reauthorization_request_limit: 3
-  switchport:
-    enabled: true
-    mode: trunk phone
-    trunk:
-      native_vlan: 110
-    phone:
-      vlan: 120
-      trunk: untagged
-  spanning_tree_portfast: edge
-  spanning_tree_bpduguard: enabled
-- name: Ethernet48
-  peer_type: network_port
-  port_profile: PP-DOT1X
-  description: IDF1 Standard Port
-  shutdown: false
-  dot1x:
-    port_control: auto
-    reauthentication: true
-    pae:
-      mode: authenticator
-    authentication_failure:
-      action: allow
-      allow_vlan: 130
-    host_mode:
-      mode: multi-host
-      multi_host_authenticated: true
-    mac_based_authentication:
-      enabled: true
-    timeout:
-      reauth_period: server
-      tx_period: 3
-    reauthorization_request_limit: 3
-  switchport:
-    enabled: true
-    mode: trunk phone
-    trunk:
-      native_vlan: 110
-    phone:
-      vlan: 120
-      trunk: untagged
-  spanning_tree_portfast: edge
-  spanning_tree_bpduguard: enabled
-mlag_configuration:
-  domain_id: IDF1
-  local_interface: Vlan4094
-  peer_address: 192.168.0.4
-  peer_link: Port-Channel53
-  reload_delay_mlag: '300'
-  reload_delay_non_mlag: '330'
-ip_igmp_snooping:
-  globally_enabled: true
-metadata:
-  platform: cEOSLab
+  tenant: system
+vrfs:
+- name: MGMT
+  ip_routing: false

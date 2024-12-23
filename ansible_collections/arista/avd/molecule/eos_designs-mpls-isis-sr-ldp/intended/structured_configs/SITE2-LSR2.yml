@@ -1,41 +1,84 @@
-hostname: SITE2-LSR2
-is_deployed: true
-static_routes:
-- vrf: MGMT
-  destination_address_prefix: 0.0.0.0/0
-  gateway: 192.168.200.5
-service_routing_protocols_model: multi-agent
-ip_routing: true
-ipv6_unicast_routing: true
-vlan_internal_order:
-  allocation: ascending
-  range:
-    beginning: 1006
-    ending: 1199
 aaa_root:
   disabled: true
 config_end: true
 enable_password:
   disabled: true
-transceiver_qsfp_default_mode_4x10: true
-spanning_tree:
-  mode: none
-vrfs:
-- name: MGMT
-  ip_routing: false
-management_interfaces:
-- name: Management1
-  description: OOB_MANAGEMENT
-  shutdown: false
-  vrf: MGMT
-  ip_address: 192.168.200.104/24
-  gateway: 192.168.200.5
-  type: oob
-management_api_http:
-  enable_vrfs:
-  - name: MGMT
-  enable_https: true
 eos_cli: "management security\n   password encryption-key common\n"
+ethernet_interfaces:
+- name: Ethernet3
+  description: P2P_SITE1-LSR2_Ethernet3
+  shutdown: false
+  speed: forced 40gfull
+  mtu: 9178
+  ip_address: 100.64.48.11/31
+  ipv6_enable: true
+  isis_enable: CUSTOM_NAME
+  isis_metric: 60
+  isis_network_point_to_point: true
+  isis_circuit_type: level-2
+  isis_hello_padding: false
+  isis_authentication:
+    both:
+      key_type: '7'
+      key: asdadjiwtelogkkdng
+      mode: md5
+  mpls:
+    ip: true
+    ldp:
+      interface: true
+      igp_sync: true
+  peer: SITE1-LSR2
+  peer_interface: Ethernet3
+  peer_type: p
+  switchport:
+    enabled: false
+  eos_cli: 'link-debounce time 1000
+
+    '
+- name: Ethernet12
+  description: P2P_SITE2-LER1_Ethernet11
+  shutdown: false
+  speed: forced 40gfull
+  channel_group:
+    id: 12
+    mode: active
+  peer: SITE2-LER1
+  peer_interface: Ethernet11
+  peer_type: pe
+- name: Ethernet13
+  description: P2P_SITE2-LER1_Ethernet12
+  shutdown: false
+  speed: forced 40gfull
+  channel_group:
+    id: 12
+    mode: active
+  peer: SITE2-LER1
+  peer_interface: Ethernet12
+  peer_type: pe
+- name: Ethernet14
+  description: P2P_SITE2-LER1_Ethernet13
+  shutdown: false
+  speed: forced 40gfull
+  channel_group:
+    id: 110
+    mode: active
+  peer: SITE2-LER1
+  peer_interface: Ethernet13
+  peer_type: pe
+- name: Ethernet15
+  description: P2P_SITE2-LER1_Ethernet14
+  shutdown: false
+  speed: forced 40gfull
+  channel_group:
+    id: 110
+    mode: active
+  peer: SITE2-LER1
+  peer_interface: Ethernet14
+  peer_type: pe
+hostname: SITE2-LSR2
+ip_routing: true
+ipv6_unicast_routing: true
+is_deployed: true
 loopback_interfaces:
 - name: Loopback0
   description: ROUTER_ID
@@ -50,32 +93,20 @@ loopback_interfaces:
   node_segment:
     ipv4_index: 304
     ipv6_index: 304
-router_isis:
-  instance: CUSTOM_NAME
-  log_adjacency_changes: true
-  net: 49.0001.1000.7000.0004.00
-  router_id: 100.70.0.4
-  is_type: level-2
-  address_family_ipv4:
-    enabled: true
-    maximum_paths: 4
-    fast_reroute_ti_lfa:
-      mode: link-protection
-  mpls_ldp_sync_default: true
-  timers:
-    local_convergence:
-      delay: 15000
-      protected_prefixes: true
-  advertise:
-    passive_only: true
-  address_family_ipv6:
-    enabled: true
-    maximum_paths: 4
-    fast_reroute_ti_lfa:
-      mode: link-protection
-  segment_routing_mpls:
-    router_id: 100.70.0.4
-    enabled: true
+management_api_http:
+  enable_https: true
+  enable_vrfs:
+  - name: MGMT
+management_interfaces:
+- name: Management1
+  description: OOB_MANAGEMENT
+  shutdown: false
+  vrf: MGMT
+  ip_address: 192.168.200.104/24
+  type: oob
+  gateway: 192.168.200.5
+metadata:
+  platform: 7280SR
 mpls:
   ip: true
   ldp:
@@ -83,135 +114,104 @@ mpls:
     router_id: 100.70.0.4
     shutdown: false
     transport_address_interface: Loopback0
-ethernet_interfaces:
-- name: Ethernet3
-  peer: SITE1-LSR2
-  peer_interface: Ethernet3
-  peer_type: p
-  switchport:
-    enabled: false
+port_channel_interfaces:
+- name: Port-Channel12
+  description: P2P_SITE2-LER1_Port-Channel11
   shutdown: false
   mtu: 9178
-  eos_cli: 'link-debounce time 1000
-
-    '
-  ip_address: 100.64.48.11/31
-  ipv6_enable: true
-  isis_enable: CUSTOM_NAME
-  isis_metric: 60
-  isis_network_point_to_point: true
-  isis_hello_padding: false
-  isis_circuit_type: level-2
-  isis_authentication:
-    both:
-      mode: md5
-      key: asdadjiwtelogkkdng
-      key_type: '7'
   mpls:
     ip: true
     ldp:
       interface: true
       igp_sync: true
-  description: P2P_SITE1-LSR2_Ethernet3
-  speed: forced 40gfull
-- name: Ethernet12
-  peer: SITE2-LER1
-  peer_interface: Ethernet11
-  peer_type: pe
-  shutdown: false
-  channel_group:
-    id: 12
-    mode: active
-  description: P2P_SITE2-LER1_Ethernet11
-  speed: forced 40gfull
-- name: Ethernet13
-  peer: SITE2-LER1
-  peer_interface: Ethernet12
-  peer_type: pe
-  shutdown: false
-  channel_group:
-    id: 12
-    mode: active
-  description: P2P_SITE2-LER1_Ethernet12
-  speed: forced 40gfull
-- name: Ethernet14
-  peer: SITE2-LER1
-  peer_interface: Ethernet13
-  peer_type: pe
-  shutdown: false
-  channel_group:
-    id: 110
-    mode: active
-  description: P2P_SITE2-LER1_Ethernet13
-  speed: forced 40gfull
-- name: Ethernet15
-  peer: SITE2-LER1
-  peer_interface: Ethernet14
-  peer_type: pe
-  shutdown: false
-  channel_group:
-    id: 110
-    mode: active
-  description: P2P_SITE2-LER1_Ethernet14
-  speed: forced 40gfull
-port_channel_interfaces:
-- name: Port-Channel12
+  isis_enable: CUSTOM_NAME
+  isis_metric: 60
+  isis_network_point_to_point: true
+  isis_circuit_type: level-2
+  isis_hello_padding: false
+  isis_authentication:
+    both:
+      key_type: '7'
+      key: asdadjiwtelogkkdng
+      mode: md5
+  ip_address: 100.64.49.1/30
+  ipv6_enable: true
   peer: SITE2-LER1
   peer_interface: Port-Channel11
   peer_type: pe
   switchport:
     enabled: false
-  shutdown: false
-  mtu: 9178
   eos_cli: 'link-debounce time 1600
 
     '
-  ip_address: 100.64.49.1/30
-  ipv6_enable: true
-  isis_enable: CUSTOM_NAME
-  isis_metric: 60
-  isis_network_point_to_point: true
-  isis_hello_padding: false
-  isis_circuit_type: level-2
-  isis_authentication:
-    both:
-      mode: md5
-      key: asdadjiwtelogkkdng
-      key_type: '7'
+- name: Port-Channel110
+  description: P2P_SITE2-LER1_Port-Channel220
+  shutdown: false
+  mtu: 9178
   mpls:
     ip: true
     ldp:
       interface: true
       igp_sync: true
-  description: P2P_SITE2-LER1_Port-Channel11
-- name: Port-Channel110
+  isis_enable: CUSTOM_NAME
+  isis_metric: 60
+  isis_network_point_to_point: true
+  isis_circuit_type: level-2
+  isis_hello_padding: false
+  isis_authentication:
+    both:
+      key_type: '7'
+      key: asdadjiwtelogkkdng
+      mode: md5
+  ip_address: 100.64.49.5/30
+  ipv6_enable: true
   peer: SITE2-LER1
   peer_interface: Port-Channel220
   peer_type: pe
   switchport:
     enabled: false
-  shutdown: false
-  mtu: 9178
   eos_cli: 'link-debounce time 1600
 
     '
-  ip_address: 100.64.49.5/30
-  ipv6_enable: true
-  isis_enable: CUSTOM_NAME
-  isis_metric: 60
-  isis_network_point_to_point: true
-  isis_hello_padding: false
-  isis_circuit_type: level-2
-  isis_authentication:
-    both:
-      mode: md5
-      key: asdadjiwtelogkkdng
-      key_type: '7'
-  mpls:
-    ip: true
-    ldp:
-      interface: true
-      igp_sync: true
-  description: P2P_SITE2-LER1_Port-Channel220
-metadata:
-  platform: 7280SR
+router_isis:
+  instance: CUSTOM_NAME
+  net: 49.0001.1000.7000.0004.00
+  router_id: 100.70.0.4
+  is_type: level-2
+  log_adjacency_changes: true
+  mpls_ldp_sync_default: true
+  timers:
+    local_convergence:
+      protected_prefixes: true
+      delay: 15000
+  advertise:
+    passive_only: true
+  address_family_ipv4:
+    enabled: true
+    maximum_paths: 4
+    fast_reroute_ti_lfa:
+      mode: link-protection
+  address_family_ipv6:
+    enabled: true
+    maximum_paths: 4
+    fast_reroute_ti_lfa:
+      mode: link-protection
+  segment_routing_mpls:
+    enabled: true
+    router_id: 100.70.0.4
+service_routing_protocols_model: multi-agent
+spanning_tree:
+  mode: none
+static_routes:
+- vrf: MGMT
+  destination_address_prefix: 0.0.0.0/0
+  gateway: 192.168.200.5
+transceiver_qsfp_default_mode_4x10: true
+vlan_internal_order:
+  allocation: ascending
+  range:
+    beginning: 1006
+    ending: 1199
+vrfs:
+- name: MGMT
+  ip_routing: false

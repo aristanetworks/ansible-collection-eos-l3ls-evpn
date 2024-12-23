@@ -19,6 +19,7 @@
   - [AAA Accounting](#aaa-accounting)
 - [Management Security](#management-security)
   - [Management Security Summary](#management-security-summary)
+  - [Management Security SSL Profiles](#management-security-ssl-profiles)
   - [Management Security Device Configuration](#management-security-device-configuration)
 - [Prompt Device Configuration](#prompt-device-configuration)
 - [DHCP Relay](#dhcp-relay)
@@ -55,6 +56,10 @@
   - [PBR Policy Maps](#pbr-policy-maps)
 - [BFD](#bfd)
   - [Router BFD](#router-bfd)
+- [MPLS](#mpls)
+  - [MPLS and LDP](#mpls-and-ldp)
+  - [MPLS RSVP](#mpls-rsvp)
+  - [MPLS Device Configuration](#mpls-device-configuration)
 - [Queue Monitor](#queue-monitor)
   - [Queue Monitor Length](#queue-monitor-length)
   - [Queue Monitor Configuration](#queue-monitor-configuration)
@@ -76,6 +81,9 @@
 - [IP NAT](#ip-nat)
   - [IP NAT Device Configuration](#ip-nat-device-configuration)
   - [Traffic Policies information](#traffic-policies-information)
+- [STUN](#stun)
+  - [STUN Server](#stun-server)
+  - [STUN Device Configuration](#stun-device-configuration)
 
 ## Management
 
@@ -325,12 +333,22 @@ aaa accounting exec default none
 | -------- | ----- |
 | Reversible password encryption | aes-256-gcm |
 
+### Management Security SSL Profiles
+
+| SSL Profile Name | TLS protocol accepted | Certificate filename | Key filename | Ciphers | CRLs |
+| ---------------- | --------------------- | -------------------- | ------------ | ------- | ---- |
+| cipher-v1.0-v1.3 | - | - | - | v1.0 to v1.2: SHA256:SHA384<br>v1.3: TLS_AES_256_GCM_SHA384:TLS_CHACHA20_POLY1305_SHA256 | - |
+
 ### Management Security Device Configuration
 
 ```eos
 !
 management security
    password encryption reversible aes-256-gcm
+   !
+   ssl profile cipher-v1.0-v1.3
+      cipher v1.0 SHA256:SHA384
+      cipher v1.3 TLS_AES_256_GCM_SHA384:TLS_CHACHA20_POLY1305_SHA256
 ```
 
 ## Prompt Device Configuration
@@ -895,6 +913,76 @@ router bfd
    session stats snapshot interval dangerous 8
 ```
 
+## MPLS
+
+### MPLS and LDP
+
+#### MPLS and LDP Summary
+
+| Setting | Value |
+| -------- | ---- |
+| MPLS IP Enabled | True |
+| LDP Enabled | False |
+| LDP Router ID | - |
+| LDP Interface Disabled Default | False |
+| LDP Transport-Address Interface | - |
+| ICMP TTL-Exceeded Tunneling Enabled | True |
+
+### MPLS RSVP
+
+#### MPLS RSVP Summary
+
+| Setting | Value |
+| ------- | ----- |
+| Refresh interval | 4 |
+| Authentication type | - |
+| Authentication sequence-number window | - |
+| Authentication active index | 766 |
+| SRLG | Enabled |
+| Preemption method | hard |
+| Fast reroute mode | node-protection |
+| Fast reroute reversion | - |
+| Fast reroute  bypass tunnel optimization interval | - |
+| Hitless restart | Active |
+| Hitless restart recovery timer | - |
+| P2MP | True |
+| Shutdown | False |
+
+##### RSVP Graceful Restart
+
+| Role | Recovery timer | Restart timer |
+| ---- | -------------- | ------------- |
+| Helper | - | - |
+| Speaker | - | - |
+
+### MPLS Device Configuration
+
+```eos
+!
+mpls ip
+!
+mpls ldp
+   shutdown
+!
+mpls icmp ttl-exceeded tunneling
+!
+mpls rsvp
+   refresh interval 4
+   authentication index 766 active
+   fast-reroute mode node-protection
+   srlg
+   preemption method hard
+   !
+   hitless-restart
+   !
+   graceful-restart role helper
+   !
+   graceful-restart role speaker
+   !
+   p2mp
+   no shutdown
+```
+
 ## Queue Monitor
 
 ### Queue Monitor Length
@@ -1091,4 +1179,22 @@ traffic-policies
       11:22:33:44:55:66:77:88
    !
    field-set ipv6 prefix IPv6-DEMO-2
+```
+
+## STUN
+
+### STUN Server
+
+| Server Local Interfaces | Bindings Timeout (s) | SSL Profile | SSL Connection Lifetime | Port |
+| ----------------------- | -------------------- | ----------- | ----------------------- | ---- |
+| Ethernet1 | - | - | 3 hours | 3478 |
+
+### STUN Device Configuration
+
+```eos
+!
+stun
+   server
+      local-interface Ethernet1
+      ssl connection lifetime 3 hours
 ```

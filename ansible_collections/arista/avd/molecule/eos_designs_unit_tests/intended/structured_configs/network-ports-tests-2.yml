@@ -1,728 +1,641 @@
-hostname: network-ports-tests-2
-is_deployed: true
-static_routes:
-- vrf: MGMT
-  destination_address_prefix: 0.0.0.0/0
-  gateway: 192.168.0.1
-service_routing_protocols_model: multi-agent
-vlan_internal_order:
-  allocation: ascending
-  range:
-    beginning: 1006
-    ending: 1199
 aaa_root:
   disabled: true
 config_end: true
 enable_password:
   disabled: true
-transceiver_qsfp_default_mode_4x10: true
-vrfs:
-- name: MGMT
-  ip_routing: false
-management_api_http:
-  enable_vrfs:
-  - name: MGMT
-  enable_https: true
-spanning_tree:
-  no_spanning_tree_vlan: '4094'
-vlans:
-- id: 4094
-  tenant: system
-  name: MLAG
-  trunk_groups:
-  - MLAG
-- id: 100
-  name: VLAN100_ON_L2LEAF_1_AND_2
-  tenant: TEST
-- id: 300
-  name: VLAN300_PHONE_ON_L2LEAF1_AND_2
-  tenant: TEST
-vlan_interfaces:
-- name: Vlan4094
-  description: MLAG
-  shutdown: false
-  no_autostate: true
-  mtu: 9214
-  ip_address: 10.255.252.1/31
-port_channel_interfaces:
-- name: Port-Channel101
-  description: MLAG_network-ports-tests.1_Port-Channel101
-  switchport:
-    enabled: true
-    mode: trunk
-    trunk:
-      groups:
-      - MLAG
-  shutdown: false
-- name: Port-Channel1
-  description: AP1 with port_channel
-  shutdown: false
-  switchport:
-    enabled: true
-    mode: access
-    access_vlan: 101
-  spanning_tree_portfast: edge
-  spanning_tree_bpdufilter: enabled
-  mlag: 1
-- name: Port-Channel2
-  description: AP1 with port_channel
-  shutdown: false
-  switchport:
-    enabled: true
-    mode: access
-    access_vlan: 101
-  spanning_tree_portfast: edge
-  spanning_tree_bpdufilter: enabled
-  mlag: 2
-- name: Port-Channel42
-  description: Checking port-channels
-  shutdown: false
-  switchport:
-    enabled: true
-  mlag: 42
-- name: Port-Channel44
-  shutdown: false
-  switchport:
-    enabled: true
-  mlag: 44
-- name: Port-Channel43
-  shutdown: false
-  switchport:
-    enabled: true
-  mlag: 43
 ethernet_interfaces:
 - name: Ethernet10/1
-  peer: network-ports-tests.1
-  peer_interface: Ethernet10/1
-  peer_type: mlag_peer
   description: MLAG_network-ports-tests.1_Ethernet10/1
   shutdown: false
   channel_group:
     id: 101
     mode: active
+  peer: network-ports-tests.1
+  peer_interface: Ethernet10/1
+  peer_type: mlag_peer
 - name: Ethernet1
-  peer: AP1 with port_channel
-  peer_type: network_port
-  port_profile: ap_with_port_channel
   description: AP1 with port_channel_Po1
   shutdown: false
   channel_group:
     id: 1
     mode: active
-- name: Ethernet2
   peer: AP1 with port_channel
   peer_type: network_port
   port_profile: ap_with_port_channel
+- name: Ethernet2
   description: AP1 with port_channel_Po2
   shutdown: false
   channel_group:
     id: 2
     mode: active
+  peer: AP1 with port_channel
+  peer_type: network_port
+  port_profile: ap_with_port_channel
 - name: Ethernet3
+  description: PCs
+  shutdown: false
+  spanning_tree_bpdufilter: enabled
+  spanning_tree_portfast: edge
   peer: PCs
   peer_type: network_port
   port_profile: pc
-  description: PCs
-  shutdown: false
   switchport:
     enabled: true
     mode: access
     access_vlan: 100
-  spanning_tree_portfast: edge
-  spanning_tree_bpdufilter: enabled
 - name: Ethernet4
+  description: PCs
+  shutdown: false
+  spanning_tree_bpdufilter: enabled
+  spanning_tree_portfast: edge
   peer: PCs
   peer_type: network_port
   port_profile: pc
-  description: PCs
-  shutdown: false
   switchport:
     enabled: true
     mode: access
     access_vlan: 100
-  spanning_tree_portfast: edge
-  spanning_tree_bpdufilter: enabled
 - name: Ethernet2/1
+  description: PCs
+  shutdown: false
+  spanning_tree_bpdufilter: enabled
+  spanning_tree_portfast: edge
   peer: PCs
   peer_type: network_port
   port_profile: pc
-  description: PCs
-  shutdown: false
   switchport:
     enabled: true
     mode: access
     access_vlan: 100
-  spanning_tree_portfast: edge
-  spanning_tree_bpdufilter: enabled
 - name: Ethernet2/2
+  description: PCs
+  shutdown: false
+  spanning_tree_bpdufilter: enabled
+  spanning_tree_portfast: edge
   peer: PCs
   peer_type: network_port
   port_profile: pc
-  description: PCs
-  shutdown: false
   switchport:
     enabled: true
     mode: access
     access_vlan: 100
-  spanning_tree_portfast: edge
-  spanning_tree_bpdufilter: enabled
 - name: Ethernet2/3
+  description: PCs
+  shutdown: false
+  spanning_tree_bpdufilter: enabled
+  spanning_tree_portfast: edge
   peer: PCs
   peer_type: network_port
   port_profile: pc
-  description: PCs
-  shutdown: false
   switchport:
     enabled: true
     mode: access
     access_vlan: 100
-  spanning_tree_portfast: edge
-  spanning_tree_bpdufilter: enabled
 - name: Ethernet2/4
+  description: PCs
+  shutdown: false
+  spanning_tree_bpdufilter: enabled
+  spanning_tree_portfast: edge
   peer: PCs
   peer_type: network_port
   port_profile: pc
-  description: PCs
-  shutdown: false
   switchport:
     enabled: true
     mode: access
     access_vlan: 100
-  spanning_tree_portfast: edge
-  spanning_tree_bpdufilter: enabled
 - name: Ethernet2/5
+  description: PCs
+  shutdown: false
+  spanning_tree_bpdufilter: enabled
+  spanning_tree_portfast: edge
   peer: PCs
   peer_type: network_port
   port_profile: pc
-  description: PCs
-  shutdown: false
   switchport:
     enabled: true
     mode: access
     access_vlan: 100
-  spanning_tree_portfast: edge
-  spanning_tree_bpdufilter: enabled
 - name: Ethernet2/6
+  description: PCs
+  shutdown: false
+  spanning_tree_bpdufilter: enabled
+  spanning_tree_portfast: edge
   peer: PCs
   peer_type: network_port
   port_profile: pc
-  description: PCs
-  shutdown: false
   switchport:
     enabled: true
     mode: access
     access_vlan: 100
-  spanning_tree_portfast: edge
-  spanning_tree_bpdufilter: enabled
 - name: Ethernet2/7
+  description: PCs
+  shutdown: false
+  spanning_tree_bpdufilter: enabled
+  spanning_tree_portfast: edge
   peer: PCs
   peer_type: network_port
   port_profile: pc
-  description: PCs
-  shutdown: false
   switchport:
     enabled: true
     mode: access
     access_vlan: 100
-  spanning_tree_portfast: edge
-  spanning_tree_bpdufilter: enabled
 - name: Ethernet2/8
+  description: PCs
+  shutdown: false
+  spanning_tree_bpdufilter: enabled
+  spanning_tree_portfast: edge
   peer: PCs
   peer_type: network_port
   port_profile: pc
-  description: PCs
-  shutdown: false
   switchport:
     enabled: true
     mode: access
     access_vlan: 100
-  spanning_tree_portfast: edge
-  spanning_tree_bpdufilter: enabled
 - name: Ethernet2/9
+  description: PCs
+  shutdown: false
+  spanning_tree_bpdufilter: enabled
+  spanning_tree_portfast: edge
   peer: PCs
   peer_type: network_port
   port_profile: pc
-  description: PCs
-  shutdown: false
   switchport:
     enabled: true
     mode: access
     access_vlan: 100
-  spanning_tree_portfast: edge
-  spanning_tree_bpdufilter: enabled
 - name: Ethernet2/10
+  description: PCs
+  shutdown: false
+  spanning_tree_bpdufilter: enabled
+  spanning_tree_portfast: edge
   peer: PCs
   peer_type: network_port
   port_profile: pc
-  description: PCs
-  shutdown: false
   switchport:
     enabled: true
     mode: access
     access_vlan: 100
-  spanning_tree_portfast: edge
-  spanning_tree_bpdufilter: enabled
 - name: Ethernet2/11
+  description: PCs
+  shutdown: false
+  spanning_tree_bpdufilter: enabled
+  spanning_tree_portfast: edge
   peer: PCs
   peer_type: network_port
   port_profile: pc
-  description: PCs
-  shutdown: false
   switchport:
     enabled: true
     mode: access
     access_vlan: 100
-  spanning_tree_portfast: edge
-  spanning_tree_bpdufilter: enabled
 - name: Ethernet2/12
+  description: PCs
+  shutdown: false
+  spanning_tree_bpdufilter: enabled
+  spanning_tree_portfast: edge
   peer: PCs
   peer_type: network_port
   port_profile: pc
-  description: PCs
-  shutdown: false
   switchport:
     enabled: true
     mode: access
     access_vlan: 100
-  spanning_tree_portfast: edge
-  spanning_tree_bpdufilter: enabled
 - name: Ethernet2/13
+  description: PCs
+  shutdown: false
+  spanning_tree_bpdufilter: enabled
+  spanning_tree_portfast: edge
   peer: PCs
   peer_type: network_port
   port_profile: pc
-  description: PCs
-  shutdown: false
   switchport:
     enabled: true
     mode: access
     access_vlan: 100
-  spanning_tree_portfast: edge
-  spanning_tree_bpdufilter: enabled
 - name: Ethernet2/14
+  description: PCs
+  shutdown: false
+  spanning_tree_bpdufilter: enabled
+  spanning_tree_portfast: edge
   peer: PCs
   peer_type: network_port
   port_profile: pc
-  description: PCs
-  shutdown: false
   switchport:
     enabled: true
     mode: access
     access_vlan: 100
-  spanning_tree_portfast: edge
-  spanning_tree_bpdufilter: enabled
 - name: Ethernet2/15
+  description: PCs
+  shutdown: false
+  spanning_tree_bpdufilter: enabled
+  spanning_tree_portfast: edge
   peer: PCs
   peer_type: network_port
   port_profile: pc
-  description: PCs
-  shutdown: false
   switchport:
     enabled: true
     mode: access
     access_vlan: 100
-  spanning_tree_portfast: edge
-  spanning_tree_bpdufilter: enabled
 - name: Ethernet2/16
+  description: PCs
+  shutdown: false
+  spanning_tree_bpdufilter: enabled
+  spanning_tree_portfast: edge
   peer: PCs
   peer_type: network_port
   port_profile: pc
-  description: PCs
-  shutdown: false
   switchport:
     enabled: true
     mode: access
     access_vlan: 100
-  spanning_tree_portfast: edge
-  spanning_tree_bpdufilter: enabled
 - name: Ethernet2/17
+  description: PCs
+  shutdown: false
+  spanning_tree_bpdufilter: enabled
+  spanning_tree_portfast: edge
   peer: PCs
   peer_type: network_port
   port_profile: pc
-  description: PCs
-  shutdown: false
   switchport:
     enabled: true
     mode: access
     access_vlan: 100
-  spanning_tree_portfast: edge
-  spanning_tree_bpdufilter: enabled
 - name: Ethernet2/18
+  description: PCs
+  shutdown: false
+  spanning_tree_bpdufilter: enabled
+  spanning_tree_portfast: edge
   peer: PCs
   peer_type: network_port
   port_profile: pc
-  description: PCs
-  shutdown: false
   switchport:
     enabled: true
     mode: access
     access_vlan: 100
-  spanning_tree_portfast: edge
-  spanning_tree_bpdufilter: enabled
 - name: Ethernet2/19
+  description: PCs
+  shutdown: false
+  spanning_tree_bpdufilter: enabled
+  spanning_tree_portfast: edge
   peer: PCs
   peer_type: network_port
   port_profile: pc
-  description: PCs
-  shutdown: false
   switchport:
     enabled: true
     mode: access
     access_vlan: 100
-  spanning_tree_portfast: edge
-  spanning_tree_bpdufilter: enabled
 - name: Ethernet2/20
+  description: PCs
+  shutdown: false
+  spanning_tree_bpdufilter: enabled
+  spanning_tree_portfast: edge
   peer: PCs
   peer_type: network_port
   port_profile: pc
-  description: PCs
-  shutdown: false
   switchport:
     enabled: true
     mode: access
     access_vlan: 100
-  spanning_tree_portfast: edge
-  spanning_tree_bpdufilter: enabled
 - name: Ethernet2/21
+  description: PCs
+  shutdown: false
+  spanning_tree_bpdufilter: enabled
+  spanning_tree_portfast: edge
   peer: PCs
   peer_type: network_port
   port_profile: pc
-  description: PCs
-  shutdown: false
   switchport:
     enabled: true
     mode: access
     access_vlan: 100
-  spanning_tree_portfast: edge
-  spanning_tree_bpdufilter: enabled
 - name: Ethernet2/22
+  description: PCs
+  shutdown: false
+  spanning_tree_bpdufilter: enabled
+  spanning_tree_portfast: edge
   peer: PCs
   peer_type: network_port
   port_profile: pc
-  description: PCs
-  shutdown: false
   switchport:
     enabled: true
     mode: access
     access_vlan: 100
-  spanning_tree_portfast: edge
-  spanning_tree_bpdufilter: enabled
 - name: Ethernet2/23
+  description: PCs
+  shutdown: false
+  spanning_tree_bpdufilter: enabled
+  spanning_tree_portfast: edge
   peer: PCs
   peer_type: network_port
   port_profile: pc
-  description: PCs
-  shutdown: false
   switchport:
     enabled: true
     mode: access
     access_vlan: 100
-  spanning_tree_portfast: edge
-  spanning_tree_bpdufilter: enabled
 - name: Ethernet2/24
+  description: PCs
+  shutdown: false
+  spanning_tree_bpdufilter: enabled
+  spanning_tree_portfast: edge
   peer: PCs
   peer_type: network_port
   port_profile: pc
-  description: PCs
-  shutdown: false
   switchport:
     enabled: true
     mode: access
     access_vlan: 100
-  spanning_tree_portfast: edge
-  spanning_tree_bpdufilter: enabled
 - name: Ethernet2/25
+  description: PCs
+  shutdown: false
+  spanning_tree_bpdufilter: enabled
+  spanning_tree_portfast: edge
   peer: PCs
   peer_type: network_port
   port_profile: pc
-  description: PCs
-  shutdown: false
   switchport:
     enabled: true
     mode: access
     access_vlan: 100
-  spanning_tree_portfast: edge
-  spanning_tree_bpdufilter: enabled
 - name: Ethernet2/26
+  description: PCs
+  shutdown: false
+  spanning_tree_bpdufilter: enabled
+  spanning_tree_portfast: edge
   peer: PCs
   peer_type: network_port
   port_profile: pc
-  description: PCs
-  shutdown: false
   switchport:
     enabled: true
     mode: access
     access_vlan: 100
-  spanning_tree_portfast: edge
-  spanning_tree_bpdufilter: enabled
 - name: Ethernet2/27
+  description: PCs
+  shutdown: false
+  spanning_tree_bpdufilter: enabled
+  spanning_tree_portfast: edge
   peer: PCs
   peer_type: network_port
   port_profile: pc
-  description: PCs
-  shutdown: false
   switchport:
     enabled: true
     mode: access
     access_vlan: 100
-  spanning_tree_portfast: edge
-  spanning_tree_bpdufilter: enabled
 - name: Ethernet2/28
+  description: PCs
+  shutdown: false
+  spanning_tree_bpdufilter: enabled
+  spanning_tree_portfast: edge
   peer: PCs
   peer_type: network_port
   port_profile: pc
-  description: PCs
-  shutdown: false
   switchport:
     enabled: true
     mode: access
     access_vlan: 100
-  spanning_tree_portfast: edge
-  spanning_tree_bpdufilter: enabled
 - name: Ethernet2/29
+  description: PCs
+  shutdown: false
+  spanning_tree_bpdufilter: enabled
+  spanning_tree_portfast: edge
   peer: PCs
   peer_type: network_port
   port_profile: pc
-  description: PCs
-  shutdown: false
   switchport:
     enabled: true
     mode: access
     access_vlan: 100
-  spanning_tree_portfast: edge
-  spanning_tree_bpdufilter: enabled
 - name: Ethernet2/30
+  description: PCs
+  shutdown: false
+  spanning_tree_bpdufilter: enabled
+  spanning_tree_portfast: edge
   peer: PCs
   peer_type: network_port
   port_profile: pc
-  description: PCs
-  shutdown: false
   switchport:
     enabled: true
     mode: access
     access_vlan: 100
-  spanning_tree_portfast: edge
-  spanning_tree_bpdufilter: enabled
 - name: Ethernet2/31
+  description: PCs
+  shutdown: false
+  spanning_tree_bpdufilter: enabled
+  spanning_tree_portfast: edge
   peer: PCs
   peer_type: network_port
   port_profile: pc
-  description: PCs
-  shutdown: false
   switchport:
     enabled: true
     mode: access
     access_vlan: 100
-  spanning_tree_portfast: edge
-  spanning_tree_bpdufilter: enabled
 - name: Ethernet2/32
+  description: PCs
+  shutdown: false
+  spanning_tree_bpdufilter: enabled
+  spanning_tree_portfast: edge
   peer: PCs
   peer_type: network_port
   port_profile: pc
-  description: PCs
-  shutdown: false
   switchport:
     enabled: true
     mode: access
     access_vlan: 100
-  spanning_tree_portfast: edge
-  spanning_tree_bpdufilter: enabled
 - name: Ethernet2/33
+  description: PCs
+  shutdown: false
+  spanning_tree_bpdufilter: enabled
+  spanning_tree_portfast: edge
   peer: PCs
   peer_type: network_port
   port_profile: pc
-  description: PCs
-  shutdown: false
   switchport:
     enabled: true
     mode: access
     access_vlan: 100
-  spanning_tree_portfast: edge
-  spanning_tree_bpdufilter: enabled
 - name: Ethernet2/34
+  description: PCs
+  shutdown: false
+  spanning_tree_bpdufilter: enabled
+  spanning_tree_portfast: edge
   peer: PCs
   peer_type: network_port
   port_profile: pc
-  description: PCs
-  shutdown: false
   switchport:
     enabled: true
     mode: access
     access_vlan: 100
-  spanning_tree_portfast: edge
-  spanning_tree_bpdufilter: enabled
 - name: Ethernet2/35
+  description: PCs
+  shutdown: false
+  spanning_tree_bpdufilter: enabled
+  spanning_tree_portfast: edge
   peer: PCs
   peer_type: network_port
   port_profile: pc
-  description: PCs
-  shutdown: false
   switchport:
     enabled: true
     mode: access
     access_vlan: 100
-  spanning_tree_portfast: edge
-  spanning_tree_bpdufilter: enabled
 - name: Ethernet2/36
+  description: PCs
+  shutdown: false
+  spanning_tree_bpdufilter: enabled
+  spanning_tree_portfast: edge
   peer: PCs
   peer_type: network_port
   port_profile: pc
-  description: PCs
-  shutdown: false
   switchport:
     enabled: true
     mode: access
     access_vlan: 100
-  spanning_tree_portfast: edge
-  spanning_tree_bpdufilter: enabled
 - name: Ethernet2/37
+  description: PCs
+  shutdown: false
+  spanning_tree_bpdufilter: enabled
+  spanning_tree_portfast: edge
   peer: PCs
   peer_type: network_port
   port_profile: pc
-  description: PCs
-  shutdown: false
   switchport:
     enabled: true
     mode: access
     access_vlan: 100
-  spanning_tree_portfast: edge
-  spanning_tree_bpdufilter: enabled
 - name: Ethernet2/38
+  description: PCs
+  shutdown: false
+  spanning_tree_bpdufilter: enabled
+  spanning_tree_portfast: edge
   peer: PCs
   peer_type: network_port
   port_profile: pc
-  description: PCs
-  shutdown: false
   switchport:
     enabled: true
     mode: access
     access_vlan: 100
-  spanning_tree_portfast: edge
-  spanning_tree_bpdufilter: enabled
 - name: Ethernet2/39
+  description: PCs
+  shutdown: false
+  spanning_tree_bpdufilter: enabled
+  spanning_tree_portfast: edge
   peer: PCs
   peer_type: network_port
   port_profile: pc
-  description: PCs
-  shutdown: false
   switchport:
     enabled: true
     mode: access
     access_vlan: 100
-  spanning_tree_portfast: edge
-  spanning_tree_bpdufilter: enabled
 - name: Ethernet2/40
+  description: PCs
+  shutdown: false
+  spanning_tree_bpdufilter: enabled
+  spanning_tree_portfast: edge
   peer: PCs
   peer_type: network_port
   port_profile: pc
-  description: PCs
-  shutdown: false
   switchport:
     enabled: true
     mode: access
     access_vlan: 100
-  spanning_tree_portfast: edge
-  spanning_tree_bpdufilter: enabled
 - name: Ethernet2/41
+  description: PCs
+  shutdown: false
+  spanning_tree_bpdufilter: enabled
+  spanning_tree_portfast: edge
   peer: PCs
   peer_type: network_port
   port_profile: pc
-  description: PCs
-  shutdown: false
   switchport:
     enabled: true
     mode: access
     access_vlan: 100
-  spanning_tree_portfast: edge
-  spanning_tree_bpdufilter: enabled
 - name: Ethernet2/42
+  description: PCs
+  shutdown: false
+  spanning_tree_bpdufilter: enabled
+  spanning_tree_portfast: edge
   peer: PCs
   peer_type: network_port
   port_profile: pc
-  description: PCs
-  shutdown: false
   switchport:
     enabled: true
     mode: access
     access_vlan: 100
-  spanning_tree_portfast: edge
-  spanning_tree_bpdufilter: enabled
 - name: Ethernet2/43
+  description: PCs
+  shutdown: false
+  spanning_tree_bpdufilter: enabled
+  spanning_tree_portfast: edge
   peer: PCs
   peer_type: network_port
   port_profile: pc
-  description: PCs
-  shutdown: false
   switchport:
     enabled: true
     mode: access
     access_vlan: 100
-  spanning_tree_portfast: edge
-  spanning_tree_bpdufilter: enabled
 - name: Ethernet2/44
+  description: PCs
+  shutdown: false
+  spanning_tree_bpdufilter: enabled
+  spanning_tree_portfast: edge
   peer: PCs
   peer_type: network_port
   port_profile: pc
-  description: PCs
-  shutdown: false
   switchport:
     enabled: true
     mode: access
     access_vlan: 100
-  spanning_tree_portfast: edge
-  spanning_tree_bpdufilter: enabled
 - name: Ethernet2/45
+  description: PCs
+  shutdown: false
+  spanning_tree_bpdufilter: enabled
+  spanning_tree_portfast: edge
   peer: PCs
   peer_type: network_port
   port_profile: pc
-  description: PCs
-  shutdown: false
   switchport:
     enabled: true
     mode: access
     access_vlan: 100
-  spanning_tree_portfast: edge
-  spanning_tree_bpdufilter: enabled
 - name: Ethernet2/46
+  description: PCs
+  shutdown: false
+  spanning_tree_bpdufilter: enabled
+  spanning_tree_portfast: edge
   peer: PCs
   peer_type: network_port
   port_profile: pc
-  description: PCs
-  shutdown: false
   switchport:
     enabled: true
     mode: access
     access_vlan: 100
-  spanning_tree_portfast: edge
-  spanning_tree_bpdufilter: enabled
 - name: Ethernet2/47
+  description: PCs
+  shutdown: false
+  spanning_tree_bpdufilter: enabled
+  spanning_tree_portfast: edge
   peer: PCs
   peer_type: network_port
   port_profile: pc
-  description: PCs
-  shutdown: false
   switchport:
     enabled: true
     mode: access
     access_vlan: 100
-  spanning_tree_portfast: edge
-  spanning_tree_bpdufilter: enabled
 - name: Ethernet2/48
+  description: PCs
+  shutdown: false
+  spanning_tree_bpdufilter: enabled
+  spanning_tree_portfast: edge
   peer: PCs
   peer_type: network_port
   port_profile: pc
-  description: PCs
-  shutdown: false
   switchport:
     enabled: true
     mode: access
     access_vlan: 100
-  spanning_tree_portfast: edge
-  spanning_tree_bpdufilter: enabled
 - name: Ethernet11
-  peer_type: network_port
-  port_profile: phone_with_pc
   description: Phones with attached PCs
   shutdown: false
+  peer_type: network_port
+  port_profile: phone_with_pc
   switchport:
     enabled: true
     mode: trunk phone
@@ -732,10 +645,10 @@ ethernet_interfaces:
       vlan: 300
       trunk: untagged
 - name: Ethernet12
-  peer_type: network_port
-  port_profile: phone_with_pc
   description: Phones with attached PCs
   shutdown: false
+  peer_type: network_port
+  port_profile: phone_with_pc
   switchport:
     enabled: true
     mode: trunk phone
@@ -745,75 +658,83 @@ ethernet_interfaces:
       vlan: 300
       trunk: untagged
 - name: Ethernet7
-  peer: Checking port-channels
-  peer_type: network_port
   description: Checking port-channels
   shutdown: false
   channel_group:
     id: 42
     mode: active
+  peer: Checking port-channels
+  peer_type: network_port
 - name: Ethernet8
-  peer: Checking port-channels
-  peer_type: network_port
   description: Checking port-channels
   shutdown: false
   channel_group:
     id: 42
     mode: active
+  peer: Checking port-channels
+  peer_type: network_port
 - name: Ethernet9
-  peer: Checking port-channels
-  peer_type: network_port
   description: Checking port-channels
   shutdown: false
   channel_group:
     id: 42
     mode: active
+  peer: Checking port-channels
+  peer_type: network_port
 - name: Ethernet10
-  peer: Checking port-channels
-  peer_type: network_port
   description: Checking port-channels
   shutdown: false
   channel_group:
     id: 42
     mode: active
-- name: Ethernet14
+  peer: Checking port-channels
   peer_type: network_port
+- name: Ethernet14
   description: Checking monitor sessions on single interface
   shutdown: false
+  peer_type: network_port
   switchport:
     enabled: true
 - name: Ethernet15
-  peer_type: network_port
   description: Checking monitor sessions on port-channels
   shutdown: false
   channel_group:
     id: 44
     mode: active
+  peer_type: network_port
 - name: Ethernet16
-  peer_type: network_port
   description: Checking monitor sessions on port-channels
   shutdown: false
   channel_group:
     id: 44
     mode: active
-- name: Ethernet17
   peer_type: network_port
+- name: Ethernet17
   description: Monitor sessions destination
   shutdown: false
+  peer_type: network_port
   switchport:
     enabled: true
 - name: Ethernet51
-  peer_type: network_port
   shutdown: false
   channel_group:
     id: 43
     mode: active
+  peer_type: network_port
 - name: Ethernet52
-  peer_type: network_port
   shutdown: false
   channel_group:
     id: 43
     mode: active
+  peer_type: network_port
+hostname: network-ports-tests-2
+ip_igmp_snooping:
+  globally_enabled: true
+is_deployed: true
+management_api_http:
+  enable_https: true
+  enable_vrfs:
+  - name: MGMT
 mlag_configuration:
   domain_id: mlag
   local_interface: Vlan4094
@@ -821,8 +742,6 @@ mlag_configuration:
   peer_link: Port-Channel101
   reload_delay_mlag: '300'
   reload_delay_non_mlag: '330'
-ip_igmp_snooping:
-  globally_enabled: true
 monitor_sessions:
 - name: DMF
   sources:
@@ -833,3 +752,84 @@ monitor_sessions:
   destinations:
   - Ethernet17
   encapsulation_gre_metadata_tx: true
+port_channel_interfaces:
+- name: Port-Channel101
+  description: MLAG_network-ports-tests.1_Port-Channel101
+  shutdown: false
+  switchport:
+    enabled: true
+    mode: trunk
+    trunk:
+      groups:
+      - MLAG
+- name: Port-Channel1
+  description: AP1 with port_channel
+  shutdown: false
+  mlag: 1
+  spanning_tree_bpdufilter: enabled
+  spanning_tree_portfast: edge
+  switchport:
+    enabled: true
+    mode: access
+    access_vlan: 101
+- name: Port-Channel2
+  description: AP1 with port_channel
+  shutdown: false
+  mlag: 2
+  spanning_tree_bpdufilter: enabled
+  spanning_tree_portfast: edge
+  switchport:
+    enabled: true
+    mode: access
+    access_vlan: 101
+- name: Port-Channel42
+  description: Checking port-channels
+  shutdown: false
+  mlag: 42
+  switchport:
+    enabled: true
+- name: Port-Channel44
+  shutdown: false
+  mlag: 44
+  switchport:
+    enabled: true
+- name: Port-Channel43
+  shutdown: false
+  mlag: 43
+  switchport:
+    enabled: true
+service_routing_protocols_model: multi-agent
+spanning_tree:
+  no_spanning_tree_vlan: '4094'
+static_routes:
+- vrf: MGMT
+  destination_address_prefix: 0.0.0.0/0
+  gateway: 192.168.0.1
+transceiver_qsfp_default_mode_4x10: true
+vlan_interfaces:
+- name: Vlan4094
+  description: MLAG
+  shutdown: false
+  ip_address: 10.255.252.1/31
+  mtu: 9214
+  no_autostate: true
+vlan_internal_order:
+  allocation: ascending
+  range:
+    beginning: 1006
+    ending: 1199
+vlans:
+- id: 4094
+  name: MLAG
+  trunk_groups:
+  - MLAG
+  tenant: system
+- id: 100
+  name: VLAN100_ON_L2LEAF_1_AND_2
+  tenant: TEST
+- id: 300
+  name: VLAN300_PHONE_ON_L2LEAF1_AND_2
+  tenant: TEST
+vrfs:
+- name: MGMT
+  ip_routing: false

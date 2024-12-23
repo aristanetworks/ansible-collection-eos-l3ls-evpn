@@ -6,12 +6,12 @@ from __future__ import annotations
 from functools import cached_property
 from ipaddress import ip_network
 
-from pyavd._eos_designs.avdfacts import AvdFacts
+from pyavd._eos_designs.structured_config.structured_config_generator import StructuredConfigGenerator
 from pyavd._errors import AristaAvdInvalidInputsError
 from pyavd._utils import strip_empties_from_dict
 
 
-class AvdStructuredConfigInbandManagement(AvdFacts):
+class AvdStructuredConfigInbandManagement(StructuredConfigGenerator):
     @cached_property
     def vlans(self) -> list | None:
         if not self.shared_utils.inband_management_parent_vlans and not (

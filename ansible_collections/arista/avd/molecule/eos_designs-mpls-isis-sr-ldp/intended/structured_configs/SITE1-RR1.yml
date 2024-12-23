@@ -1,38 +1,134 @@
+aaa_root:
+  disabled: true
+config_end: true
+enable_password:
+  disabled: true
+eos_cli: "management security\n   password encryption-key common\n"
+ethernet_interfaces:
+- name: Ethernet4
+  description: P2P_SITE1-LSR1_Ethernet4
+  shutdown: false
+  speed: forced 40gfull
+  mtu: 9178
+  ip_address: 100.64.48.7/31
+  ipv6_enable: true
+  isis_enable: CORE
+  isis_metric: 60
+  isis_network_point_to_point: true
+  isis_circuit_type: level-2
+  isis_hello_padding: false
+  isis_authentication:
+    both:
+      key_type: '7'
+      key: asdadjiwtelogkkdng
+      mode: md5
+  mpls:
+    ip: true
+    ldp:
+      interface: true
+      igp_sync: true
+  peer: SITE1-LSR1
+  peer_interface: Ethernet4
+  peer_type: p
+  switchport:
+    enabled: false
+  eos_cli: 'link-debounce time 1000
+
+    '
 hostname: SITE1-RR1
+ip_routing: true
+ipv6_unicast_routing: true
 is_deployed: true
+loopback_interfaces:
+- name: Loopback0
+  description: ROUTER_ID
+  shutdown: false
+  ip_address: 100.70.0.8/32
+  ipv6_address: 2000:1234:ffff:ffff::8/128
+  mpls:
+    ldp:
+      interface: true
+  isis_enable: CORE
+  isis_passive: true
+  node_segment:
+    ipv4_index: 108
+    ipv6_index: 108
+management_api_http:
+  enable_https: true
+  enable_vrfs:
+  - name: MGMT
+management_interfaces:
+- name: Management1
+  description: OOB_MANAGEMENT
+  shutdown: false
+  vrf: MGMT
+  ip_address: 10.30.30.108/24
+  type: oob
+  gateway: 192.168.200.5
+metadata:
+  platform: 7280SR3
+mpls:
+  ip: true
+  ldp:
+    interface_disabled_default: true
+    router_id: 100.70.0.8
+    shutdown: false
+    transport_address_interface: Loopback0
+router_bfd:
+  multihop:
+    interval: 300
+    min_rx: 300
+    multiplier: 3
 router_bgp:
   as: '65000'
   router_id: 100.70.0.8
-  bgp_defaults:
-  - distance bgp 20 200 200
-  - bgp route-reflector preserve-attributes always
-  bgp:
-    default:
-      ipv4_unicast: false
   maximum_paths:
     paths: 4
     ecmp: 4
   updates:
     wait_install: true
   bgp_cluster_id: 1.1.1.1
+  bgp_defaults:
+  - distance bgp 20 200 200
+  - bgp route-reflector preserve-attributes always
+  bgp:
+    default:
+      ipv4_unicast: false
   peer_groups:
   - name: MPLS-OVERLAY-PEERS
     type: mpls
+    remote_as: '65000'
     update_source: Loopback0
+    route_reflector_client: true
     bfd: true
     password: SHsTgDgjVUU5a9blyxSt3Q==
     send_community: all
     maximum_routes: 0
-    remote_as: '65000'
-    route_reflector_client: true
   - name: RR-OVERLAY-PEERS
     type: mpls
+    remote_as: '65000'
     update_source: Loopback0
     bfd: true
     password: 04FdfTXWrEfpDTUc3mlSjg==
     send_community: all
     maximum_routes: 0
-    remote_as: '65000'
+  neighbors:
+  - ip_address: 100.70.0.5
+    peer_group: MPLS-OVERLAY-PEERS
+    peer: SITE1-LER1
+    description: SITE1-LER1_Loopback0
+  - ip_address: 100.70.0.6
+    peer_group: MPLS-OVERLAY-PEERS
+    peer: SITE1-LER2
+    description: SITE1-LER2_Loopback0
+  - ip_address: 100.70.0.7
+    peer_group: MPLS-OVERLAY-PEERS
+    peer: SITE2-LER1
+    description: SITE2-LER1_Loopback0
+  - ip_address: 100.70.0.9
+    peer_group: RR-OVERLAY-PEERS
+    peer: SITE2-RR1
+    description: SITE2-RR1_Loopback0
   address_family_evpn:
     neighbor_default:
       encapsulation: mpls
@@ -59,141 +155,45 @@ router_bgp:
       activate: true
     - name: RR-OVERLAY-PEERS
       activate: true
-  neighbors:
-  - ip_address: 100.70.0.5
-    peer_group: MPLS-OVERLAY-PEERS
-    peer: SITE1-LER1
-    description: SITE1-LER1_Loopback0
-  - ip_address: 100.70.0.6
-    peer_group: MPLS-OVERLAY-PEERS
-    peer: SITE1-LER2
-    description: SITE1-LER2_Loopback0
-  - ip_address: 100.70.0.7
-    peer_group: MPLS-OVERLAY-PEERS
-    peer: SITE2-LER1
-    description: SITE2-LER1_Loopback0
-  - ip_address: 100.70.0.9
-    peer_group: RR-OVERLAY-PEERS
-    peer: SITE2-RR1
-    description: SITE2-RR1_Loopback0
-static_routes:
-- vrf: MGMT
-  destination_address_prefix: 0.0.0.0/0
-  gateway: 192.168.200.5
-service_routing_protocols_model: multi-agent
-ip_routing: true
-ipv6_unicast_routing: true
-vlan_internal_order:
-  allocation: ascending
-  range:
-    beginning: 1006
-    ending: 1199
-aaa_root:
-  disabled: true
-config_end: true
-enable_password:
-  disabled: true
-transceiver_qsfp_default_mode_4x10: true
-spanning_tree:
-  mode: none
-vrfs:
-- name: MGMT
-  ip_routing: false
-management_interfaces:
-- name: Management1
-  description: OOB_MANAGEMENT
-  shutdown: false
-  vrf: MGMT
-  ip_address: 10.30.30.108/24
-  gateway: 192.168.200.5
-  type: oob
-management_api_http:
-  enable_vrfs:
-  - name: MGMT
-  enable_https: true
-eos_cli: "management security\n   password encryption-key common\n"
-loopback_interfaces:
-- name: Loopback0
-  description: ROUTER_ID
-  shutdown: false
-  ip_address: 100.70.0.8/32
-  ipv6_address: 2000:1234:ffff:ffff::8/128
-  mpls:
-    ldp:
-      interface: true
-  isis_enable: CORE
-  isis_passive: true
-  node_segment:
-    ipv4_index: 108
-    ipv6_index: 108
 router_isis:
   instance: CORE
-  log_adjacency_changes: true
   net: 49.0001.1000.7000.0008.00
   router_id: 100.70.0.8
   is_type: level-1-2
+  log_adjacency_changes: true
+  mpls_ldp_sync_default: true
+  timers:
+    local_convergence:
+      protected_prefixes: true
+      delay: 15000
+  advertise:
+    passive_only: true
   address_family_ipv4:
     enabled: true
     maximum_paths: 4
     fast_reroute_ti_lfa:
       mode: link-protection
-  mpls_ldp_sync_default: true
-  timers:
-    local_convergence:
-      delay: 15000
-      protected_prefixes: true
-  advertise:
-    passive_only: true
   address_family_ipv6:
     enabled: true
     maximum_paths: 4
     fast_reroute_ti_lfa:
       mode: link-protection
   segment_routing_mpls:
-    router_id: 100.70.0.8
     enabled: true
-mpls:
-  ip: true
-  ldp:
-    interface_disabled_default: true
     router_id: 100.70.0.8
-    shutdown: false
-    transport_address_interface: Loopback0
-router_bfd:
-  multihop:
-    interval: 300
-    min_rx: 300
-    multiplier: 3
-ethernet_interfaces:
-- name: Ethernet4
-  peer: SITE1-LSR1
-  peer_interface: Ethernet4
-  peer_type: p
-  switchport:
-    enabled: false
-  shutdown: false
-  mtu: 9178
-  eos_cli: 'link-debounce time 1000
-
-    '
-  ip_address: 100.64.48.7/31
-  ipv6_enable: true
-  isis_enable: CORE
-  isis_metric: 60
-  isis_network_point_to_point: true
-  isis_hello_padding: false
-  isis_circuit_type: level-2
-  isis_authentication:
-    both:
-      mode: md5
-      key: asdadjiwtelogkkdng
-      key_type: '7'
-  mpls:
-    ip: true
-    ldp:
-      interface: true
-      igp_sync: true
-  description: P2P_SITE1-LSR1_Ethernet4
-  speed: forced 40gfull
-metadata:
-  platform: 7280SR3
+service_routing_protocols_model: multi-agent
+spanning_tree:
+  mode: none
+static_routes:
+- vrf: MGMT
+  destination_address_prefix: 0.0.0.0/0
+  gateway: 192.168.200.5
+transceiver_qsfp_default_mode_4x10: true
+vlan_internal_order:
+  allocation: ascending
+  range:
+    beginning: 1006
+    ending: 1199
+vrfs:
+- name: MGMT
+  ip_routing: false

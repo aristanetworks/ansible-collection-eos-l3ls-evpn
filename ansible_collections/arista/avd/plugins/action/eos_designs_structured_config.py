@@ -86,21 +86,11 @@ class ActionModule(ActionBase):
             plugin_name="arista.avd.eos_designs",
         )
 
-        # Load schema tools for output schema
-        output_schema_tools = AvdSchemaTools(
-            hostname=hostname,
-            ansible_display=display,
-            schema_id="eos_cli_config_gen",
-            validation_mode=validation_mode,
-            plugin_name="arista.avd.eos_cli_config_gen",
-        )
-
         # Get Structured Config from modules in PyAVD using internal api so we can supply our own templar
         try:
             output = get_structured_config(
                 vars=dict(task_vars),
                 input_schema_tools=input_schema_tools,
-                output_schema_tools=output_schema_tools,
                 result=result,
                 templar=self.templar,
             )
@@ -118,24 +108,36 @@ class ActionModule(ActionBase):
         template_vars = ChainMap(output, task_vars)
 
         # eos_designs_custom_templates can contain a list of jinja templates to run after PyAVD
-        for template_item in eos_designs_custom_templates:
-            template_options = template_item.get("options", {})
-            list_merge = template_options.get("list_merge", "append_rp")
-            strip_empty_keys = template_options.get("strip_empty_keys", True)
-            template = template_item["template"]
+        if eos_designs_custom_templates:
+            # Load schema tools for output schema
+            output_schema_tools = AvdSchemaTools(
+                hostname=hostname,
+                ansible_display=display,
+                schema_id="eos_cli_config_gen",
+                validation_mode=validation_mode,
+                plugin_name="arista.avd.eos_cli_config_gen",
+            )
 
-            # Here we parse the template, expecting the result to be a YAML formatted string
-            template_result = templater(template, template_vars, self.templar)
+            for template_item in eos_designs_custom_templates:
+                template_options = template_item.get("options", {})
+                list_merge = template_options.get("list_merge", "append_rp")
+                strip_empty_keys = template_options.get("strip_empty_keys", True)
+                template = template_item["template"]
 
-            # Load data from the template result.
-            template_result_data = yaml.safe_load(template_result)
+                # Here we parse the template, expecting the result to be a YAML formatted string
+                template_result = templater(template, template_vars, self.templar)
 
-            # If the argument 'strip_empty_keys' is set, remove keys with value of null / None from the resulting dict (recursively).
-            if strip_empty_keys:
-                template_result_data = strip_null_from_data(template_result_data)
+                # Load data from the template result.
+                template_result_data = yaml.safe_load(template_result)
 
-            # If there is any data produced by the template, convert and merge it on top of previous output.
-            if template_result_data:
+                # If the argument 'strip_empty_keys' is set, remove keys with value of null / None from the resulting dict (recursively).
+                if strip_empty_keys:
+                    template_result_data = strip_null_from_data(template_result_data)
+
+                if not template_result_data:
+                    continue
+
+                # If there is any data produced by the template, convert and merge it on top of previous output.
                 # Some templates return a list of dicts, others only return a dict. Here we normalize to list.
                 if not isinstance(template_result_data, list):
                     template_result_data = [template_result_data]

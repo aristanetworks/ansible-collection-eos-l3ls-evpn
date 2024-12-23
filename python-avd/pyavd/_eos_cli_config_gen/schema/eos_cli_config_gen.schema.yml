@@ -24,6 +24,7 @@ keys:
                 - none
                 - start-stop
                 - stop-only
+                required: true
               group:
                 description: Group Name.
                 type: str
@@ -2190,10 +2191,35 @@ keys:
           keys:
             ipv4:
               type: bool
-              description: Enable address locking for IPv4.
+              description: 'Enable address locking for IPv4.
+
+                For EOS version 4.31 and above, the `address_family.ipv4` parameter
+                should be used instead.'
             ipv6:
               type: bool
-              description: Enable address locking for IPv6.
+              description: 'Enable address locking for IPv6.
+
+                For EOS version 4.31 and above, the `address_family.ipv6` parameter
+                should be used instead.'
+            address_family:
+              description: 'Configure address locking per address family.
+
+                The `address_locking.ipv4/ipv6` and `address_locking.address_family.ipv4/ipv6`
+                are mutually exclusive and `address_locking.address_family.ipv4/ipv6`
+                take precedence.
+
+                Introduced in EOS 4.31.0F.'
+              type: dict
+              keys:
+                ipv4:
+                  type: bool
+                  description: Enable/disable address locking for IPv4.
+                ipv6:
+                  type: bool
+                  description: Enable/disable address locking for IPv6.
+            ipv4_enforcement_disabled:
+              type: bool
+              description: Disable enforcement for IPv4 locked addresses.
         flowcontrol:
           type: dict
           keys:
@@ -4139,6 +4165,271 @@ keys:
                         required: true
                         convert_types:
                         - str
+            tap:
+              description: 'In tap mode, the interface operates as a tap port.
+
+                Tap ports receive traffic for replication on one or more tool ports.
+
+                This setting applies only to parent interfaces.'
+              type: dict
+              keys:
+                allowed_vlan:
+                  type: str
+                  convert_types:
+                  - int
+                  description: VLAN ID or range(s) of VLAN IDs within range 1-4094.
+                default:
+                  description: Default tap destination config.
+                  type: dict
+                  keys:
+                    groups:
+                      description: Tap group names for the interface.
+                      type: list
+                      items:
+                        type: str
+                    interfaces:
+                      description: Interfaces like -  Ethernet1, InternalRecirc1,
+                        Port-Channel1, Recirc-Channel1.
+                      type: list
+                      items:
+                        type: str
+                    nexthop_groups:
+                      type: list
+                      description: Default nexthop-group names.
+                      items:
+                        type: str
+                identity:
+                  type: dict
+                  keys:
+                    id:
+                      type: int
+                      convert_types:
+                      - str
+                      min: 1
+                      max: 65535
+                      description: Tap port VLAN ID (1-4094) or DzGRE extended ID
+                        (1-65535).
+                    inner_vlan:
+                      description: Tap port inner VLAN ID. Only applicable if `id`
+                        is a VLAN ID (1-4094).
+                      type: int
+                      convert_types:
+                      - str
+                      min: 1
+                      max: 4094
+                mpls_pop_all:
+                  type: bool
+                  description: Pop all MPLS labels.
+                native_vlan:
+                  type: int
+                  convert_types:
+                  - str
+                  min: 1
+                  max: 4094
+                  description: Native VLAN ID when interface is in tap mode.
+                truncation:
+                  type: dict
+                  keys:
+                    enabled:
+                      type: bool
+                    size:
+                      description: Ingress packet truncation size in bytes.
+                      type: int
+                      convert_types:
+                      - str
+                      min: 100
+                      max: 9236
+                mac_address:
+                  type: dict
+                  keys:
+                    source:
+                      type: str
+                      pattern: ^([0-9a-f]{2}:){5}[0-9a-f]{2}$
+                      description: MAC address for the source.
+                    destination:
+                      type: str
+                      pattern: ^([0-9a-f]{2}:){5}[0-9a-f]{2}$
+                      description: MAC address for the destination.
+                encapsulation:
+                  type: dict
+                  keys:
+                    vxlan_strip:
+                      type: bool
+                      description: 'Strip VXLAN encapsulation header.
+
+                        `encapsulation.vxlan_strip` and `mpls_pop_all` are mutually
+                        exclusive.
+
+                        `mpls_pop_all` takes precedence.'
+                    gre:
+                      type: dict
+                      keys:
+                        strip:
+                          type: bool
+                          description: Strip GRE encapsulation header for all GRE
+                            tunnels.
+                        protocols:
+                          type: list
+                          primary_key: protocol
+                          description: Protocols for all destinations; destination-specific
+                            protocols should be set under the `destinations[].protocols`
+                            key.
+                          items:
+                            type: dict
+                            keys:
+                              protocol:
+                                type: str
+                                description: 'Protocol type in GRE header.
+
+                                  Valid range: 0x0-0xFFFF. The value must be enclosed
+                                  in quotes, e.g., "0x0".'
+                              strip:
+                                type: bool
+                                description: This is a required key to strip GRE encapsulation
+                                  header with protocols.
+                              feature_header_length:
+                                description: 'Feature header length in bytes.
+
+                                  Note: This setting does not appear in the EOS running-config
+                                  for protocol 0x0.'
+                                type: int
+                                convert_types:
+                                - str
+                                min: 1
+                                max: 16
+                              re_encapsulation_ethernet_header:
+                                type: bool
+                                description: 'Extra ethernet header to prepend to
+                                  the terminated packet.
+
+                                  Note: This setting does not appear in the EOS running-config
+                                  for protocol 0x0.'
+                        destinations:
+                          type: list
+                          description: In EOS, `gre.strip` and `destinations.destination/source.strip`
+                            (without defining protocols) are mutually exclusive.
+                          primary_key: destination
+                          items:
+                            type: dict
+                            keys:
+                              destination:
+                                description: Destination IP address of tunnel packets.
+                                type: str
+                              source:
+                                description: Source IP address of tunnel packets.
+                                  Applied only when destination is defined. When not
+                                  defined; any GRE packet that matches the `destination`
+                                  is terminated.
+                                type: str
+                              strip:
+                                type: bool
+                                description: Strip GRE encapsulation header for specific
+                                  destination.
+                              protocols:
+                                type: list
+                                primary_key: protocol
+                                items:
+                                  type: dict
+                                  keys:
+                                    protocol:
+                                      type: str
+                                      description: 'Protocol type in GRE header.
+
+                                        Valid range: 0x0-0xFFFF. The value must be
+                                        enclosed in quotes, e.g., "0x0".'
+                                    strip:
+                                      type: bool
+                                      description: This is a required key to strip
+                                        GRE encapsulation header for specific destination
+                                        with protocols.
+                                    feature_header_length:
+                                      description: 'Feature header length in bytes.
+
+                                        Note: This setting does not appear in the
+                                        EOS running-config for protocol 0x0.'
+                                      type: int
+                                      convert_types:
+                                      - str
+                                      min: 1
+                                      max: 16
+                                    re_encapsulation_ethernet_header:
+                                      type: bool
+                                      description: 'Extra ethernet header to prepend
+                                        to the terminated packet.
+
+                                        Note: This setting does not appear in the
+                                        EOS running-config for protocol 0x0.'
+            tool:
+              description: 'In tool mode, the interface operates as a tool port.
+
+                Tool ports replicate traffic received by tap ports.
+
+                This setting applies only to parent interfaces.'
+              type: dict
+              keys:
+                mpls_pop_all:
+                  type: bool
+                  description: Pop all MPLS labels.
+                encapsulation:
+                  type: dict
+                  keys:
+                    dot1br_strip:
+                      type: bool
+                      description: Remove a 802.1 BR tag in packet header. 'mpls_pop_all'
+                        takes precedence over 'dot1br_strip' in EOS.
+                    vn_tag_strip:
+                      type: bool
+                      description: Remove a VN-tag in packet header. 'mpls_pop_all'
+                        takes precedence over 'vn_tag_strip' in EOS.
+                allowed_vlan:
+                  type: str
+                  convert_types:
+                  - int
+                  description: VLAN ID or range of VLAN IDs within range 1-4094.
+                identity:
+                  type: dict
+                  keys:
+                    tag:
+                      type: str
+                      valid_values:
+                      - dot1q
+                      - qinq
+                    dot1q_dzgre_source:
+                      type: str
+                      valid_values:
+                      - policy
+                      - port
+                    qinq_dzgre_source:
+                      type: str
+                      valid_values:
+                      - policy inner port
+                      - port inner policy
+                groups:
+                  type: list
+                  items:
+                    type: str
+                  description: Tool groups for the interface.
+                dot1q_remove_outer_vlan_tag:
+                  type: str
+                  convert_types:
+                  - int
+                  description: 'Indices of vlan tags to be removed.
+
+                    Range: 1-2'
+        traffic_engineering:
+          type: dict
+          keys:
+            enabled:
+              type: bool
+              description: Whether to enable traffic-engineering on this interface.
+            administrative_groups:
+              type: list
+              description: List of traffic-engineering administrative groups, valid
+                values are names, ranges 0-127, or single integers 0-127.
+              items:
+                type: str
+                convert_types:
+                - int
         eos_cli:
           type: str
           description: Multiline EOS CLI rendered directly on the ethernet interface
@@ -7236,7 +7527,29 @@ keys:
 
                 Colon (:) separated list of allowed ciphers as a string.
 
+                Not supported on EOS version starting 4.32.0F, use the `ciphers` setting
+                instead.
+
                 '
+            ciphers:
+              type: dict
+              description: This setting is applicable to EOS versions 4.32.0F and
+                later.
+              keys:
+                v1_0:
+                  type: str
+                  description: 'The cipher suites for TLS version 1.0, 1.1 and 1.2.
+
+                    Colon (:) separated list of allowed ciphers as a string.
+
+                    '
+                v1_3:
+                  type: str
+                  description: 'The cipher suites for TLS version 1.3.
+
+                    Colon (:) separated list of allowed ciphers as a string.
+
+                    '
             trust_certificate:
               type: dict
               keys:
@@ -8597,6 +8910,259 @@ keys:
           ttl_exceeded_tunneling:
             type: bool
             description: Enables the MPLS tunneling of TTL exceeded ICMP replies.
+      rsvp:
+        type: dict
+        keys:
+          refresh:
+            type: dict
+            keys:
+              interval:
+                description: Time between refreshes.
+                type: int
+                convert_types:
+                - str
+                min: 1
+                max: 65535
+              method:
+                description: 'Neighbor refresh mechanism.
+
+                  bundled: Refresh states using message identifier lists.
+
+                  explicit: Send each message individually.'
+                type: str
+                valid_values:
+                - bundled
+                - explicit
+          authentication:
+            description: Cryptographic authentication.
+            type: dict
+            keys:
+              password_indexes:
+                type: list
+                primary_key: index
+                items:
+                  type: dict
+                  keys:
+                    index:
+                      description: Password index.
+                      type: int
+                      convert_types:
+                      - str
+                      min: 1
+                      max: 4294967295
+                    password_type:
+                      description: Authentication password type.
+                      type: str
+                      convert_types:
+                      - int
+                      default: '7'
+                      valid_values:
+                      - '0'
+                      - '7'
+                      - 8a
+                    password:
+                      type: str
+                      description: Password string.
+              active_index:
+                description: Use index as active password.
+                type: int
+                convert_types:
+                - str
+              sequence_number_window:
+                description: Size of reorder window for index in the sequence.
+                type: int
+                convert_types:
+                - str
+                min: 1
+                max: 255
+              type:
+                description: Authentication mechanism.
+                type: str
+                valid_values:
+                - md5
+                - none
+          neighbors:
+            type: list
+            items:
+              type: dict
+              keys:
+                ip_address:
+                  description: Neighbor's interface IPv4 address.
+                  type: str
+                ipv6_address:
+                  description: Neighbor's interface IPv6 address.
+                  type: str
+                authentication:
+                  description: Cryptographic authentication.
+                  type: dict
+                  keys:
+                    index:
+                      description: Password index.
+                      type: int
+                      min: 1
+                      max: 4294967295
+                    type:
+                      description: Authentication mechanism.
+                      type: str
+                      valid_values:
+                      - md5
+                      - none
+          ip_access_group:
+            description: IPv4 Access list name.
+            type: str
+          ipv6_access_group:
+            description: IPv6 access list name.
+            type: str
+          fast_reroute:
+            type: dict
+            keys:
+              mode:
+                description: 'Fast reroute mode.
+
+                  link-protection: Protect against failure of the next link.
+
+                  node-protection: Protect against failure of the next node.
+
+                  none: Disable fast reroute.'
+                type: str
+                valid_values:
+                - link-protection
+                - node-protection
+                - none
+              reversion:
+                description: 'Reversion behavior.
+
+                  Global revertive repair.
+
+                  Local revertive repair.'
+                type: str
+                valid_values:
+                - global
+                - local
+              bypass_tunnel_optimization_interval:
+                description: 'Fast-reroute bypass configuration.
+
+                  Interval between each re-optimization attempt in seconds.'
+                type: int
+                convert_types:
+                - str
+                min: 1
+                max: 65535
+          srlg:
+            type: dict
+            keys:
+              enabled:
+                description: Select SRLG behavior.
+                type: bool
+              strict:
+                description: Apply strict SRLG constraint.
+                type: bool
+          label_local_termination:
+            description: Local termination label to be advertised.
+            type: str
+            valid_values:
+            - implicit-null
+            - explicit-null
+          preemption_method:
+            type: dict
+            keys:
+              preemption:
+                type: str
+                valid_values:
+                - hard
+                - soft
+              timer:
+                description: Timer value in units of seconds.
+                type: int
+                convert_types:
+                - str
+                min: 1
+                max: 65535
+          mtu_signaling:
+            description: Enable MTU signaling.
+            type: bool
+          graceful_restart:
+            description: RSVP graceful restart.
+            type: dict
+            keys:
+              role_helper:
+                type: dict
+                keys:
+                  enabled:
+                    type: bool
+                  timer_recovery:
+                    type: int
+                    convert_types:
+                    - str
+                    min: 1
+                    max: 320
+                    description: Maximum recovery timer value in seconds.
+                  timer_restart:
+                    type: int
+                    convert_types:
+                    - str
+                    min: 1
+                    max: 320
+                    description: Maximum restart timer value in seconds.
+              role_speaker:
+                type: dict
+                keys:
+                  enabled:
+                    type: bool
+                  timer_recovery:
+                    type: int
+                    convert_types:
+                    - str
+                    min: 1
+                    max: 320
+                    description: Maximum recovery timer value in seconds.
+                  timer_restart:
+                    type: int
+                    convert_types:
+                    - str
+                    min: 1
+                    max: 320
+                    description: Maximum restart timer value in seconds.
+          hello:
+            type: dict
+            keys:
+              interval:
+                description: Time between hello messages in seconds.
+                type: int
+                convert_types:
+                - str
+                min: 1
+                max: 60
+              multiplier:
+                description: Number of missed hellos after which the neighbor is expired.
+                type: int
+                convert_types:
+                - str
+                min: 1
+                max: 255
+          hitless_restart:
+            description: RSVP hitless restart.
+            type: dict
+            keys:
+              enabled:
+                type: bool
+              timer_recovery:
+                description: 'Time stale states will be preserved after restart.
+
+                  Value in seconds.'
+                type: int
+                convert_types:
+                - str
+                min: 1
+                max: 320
+          p2mp:
+            type: dict
+            keys:
+              enabled:
+                type: bool
+          shutdown:
+            type: bool
+            description: Make `shutdown` key false for `no shutdown` cli.
   name_server:
     documentation_options:
       table: ip-name-servers
@@ -9653,6 +10219,15 @@ keys:
           - str
           min: 0
           max: 300
+        min_links:
+          type: int
+          convert_types:
+          - str
+          min: 0
+          max: 120
+          description: 'Minimum number of ports required up before bringing up a port-channel.
+
+            Maximum in `min_links` is hardware dependent.'
         lacp_fallback_mode:
           type: str
           valid_values:
@@ -10669,6 +11244,26 @@ keys:
                         type: int
                         convert_types:
                         - str
+            tap:
+              type: dict
+              $ref: eos_cli_config_gen#/keys/ethernet_interfaces/items/keys/switchport/keys/tap
+            tool:
+              type: dict
+              $ref: eos_cli_config_gen#/keys/ethernet_interfaces/items/keys/switchport/keys/tool
+        traffic_engineering:
+          type: dict
+          keys:
+            enabled:
+              type: bool
+              description: Whether to enable traffic-engineering on this interface.
+            administrative_groups:
+              type: list
+              description: List of traffic-engineering administrative groups, valid
+                values are names, ranges 0-127, or single integers 0-127.
+              items:
+                type: str
+                convert_types:
+                - int
         validate_state:
           type: bool
           description: Set to false to disable interface state and LLDP topology validation
@@ -11852,6 +12447,55 @@ keys:
             internet_exit_policy:
               type: str
               description: Name of the internet exit policy.
+            metric_order:
+              description: Metric order to be used for path comparison.
+              type: dict
+              keys:
+                preferred_metric:
+                  type: str
+                  required: true
+                  valid_values:
+                  - jitter
+                  - latency
+                  - load
+                  - loss-rate
+            outlier_elimination:
+              description: AVT path outlier elimination.
+              type: dict
+              keys:
+                disabled:
+                  description: Set true to disable the AVT path outlier elimination.
+                  type: bool
+                threshold:
+                  description: Change the threshold values for path comparison.
+                  type: dict
+                  keys:
+                    jitter:
+                      description: Jitter threshold in millisecond.
+                      type: int
+                      convert_types:
+                      - str
+                      min: 0
+                      max: 10000
+                    latency:
+                      description: Latency threshold in millisecond.
+                      type: int
+                      convert_types:
+                      - str
+                      min: 0
+                      max: 10000
+                    load:
+                      description: Load threshold percentage. Valid range <0.00-100.00>.
+                      type: str
+                      convert_types:
+                      - float
+                      - int
+                    loss_rate:
+                      description: Loss-rate threshold percentage. Valid range <0.00-100.00>.
+                      type: str
+                      convert_types:
+                      - float
+                      - int
       policies:
         type: list
         primary_key: name
@@ -21873,6 +22517,21 @@ keys:
           valid_values:
           - active
           - suspend
+        address_locking:
+          type: dict
+          keys:
+            address_family:
+              type: dict
+              keys:
+                ipv4:
+                  type: bool
+                  description: Enable address locking for IPv4.
+                ipv6:
+                  type: bool
+                  description: Enable address locking for IPv6.
+            ipv4_enforcement_disabled:
+              type: bool
+              description: Disable enforcement for IPv4 locked addresses.
         trunk_groups:
           type: list
           items:

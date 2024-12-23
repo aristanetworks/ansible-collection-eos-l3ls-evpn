@@ -1,44 +1,16 @@
-hostname: SITE3-LER1
-is_deployed: true
-static_routes:
-- vrf: MGMT
-  destination_address_prefix: 0.0.0.0/0
-  gateway: 192.168.200.5
-service_routing_protocols_model: multi-agent
-ip_routing: true
-ipv6_unicast_routing: true
-vlan_internal_order:
-  allocation: ascending
-  range:
-    beginning: 1006
-    ending: 1199
 aaa_root:
   disabled: true
 config_end: true
 enable_password:
   disabled: true
-transceiver_qsfp_default_mode_4x10: true
-spanning_tree:
-  mode: mstp
-  mst_instances:
-  - id: '0'
-    priority: 4096
-vrfs:
-- name: MGMT
-  ip_routing: false
-management_interfaces:
-- name: Management1
-  description: OOB_MANAGEMENT
-  shutdown: false
-  vrf: MGMT
-  ip_address: 192.168.200.110/24
-  gateway: 192.168.200.5
-  type: oob
-management_api_http:
-  enable_vrfs:
-  - name: MGMT
-  enable_https: true
 eos_cli: "management security\n   password encryption-key common\n"
+hostname: SITE3-LER1
+ip_igmp_snooping:
+  globally_enabled: true
+ip_routing: true
+ip_virtual_router_mac_address: 00:1c:73:00:dc:00
+ipv6_unicast_routing: true
+is_deployed: true
 loopback_interfaces:
 - name: Loopback0
   description: ROUTER_ID
@@ -53,32 +25,20 @@ loopback_interfaces:
   node_segment:
     ipv4_index: 210
     ipv6_index: 210
-router_isis:
-  instance: CORE
-  log_adjacency_changes: true
-  net: 49.0001.1000.7000.0010.00
-  router_id: 100.70.0.10
-  is_type: level-1-2
-  address_family_ipv4:
-    enabled: true
-    maximum_paths: 4
-    fast_reroute_ti_lfa:
-      mode: link-protection
-  mpls_ldp_sync_default: true
-  timers:
-    local_convergence:
-      delay: 15000
-      protected_prefixes: true
-  advertise:
-    passive_only: true
-  address_family_ipv6:
-    enabled: true
-    maximum_paths: 4
-    fast_reroute_ti_lfa:
-      mode: link-protection
-  segment_routing_mpls:
-    router_id: 100.70.0.10
-    enabled: true
+management_api_http:
+  enable_https: true
+  enable_vrfs:
+  - name: MGMT
+management_interfaces:
+- name: Management1
+  description: OOB_MANAGEMENT
+  shutdown: false
+  vrf: MGMT
+  ip_address: 192.168.200.110/24
+  type: oob
+  gateway: 192.168.200.5
+metadata:
+  platform: 7280SR3
 mpls:
   ip: true
   ldp:
@@ -86,8 +46,48 @@ mpls:
     router_id: 100.70.0.10
     shutdown: false
     transport_address_interface: Loopback0
-ip_igmp_snooping:
-  globally_enabled: true
-ip_virtual_router_mac_address: 00:1c:73:00:dc:00
-metadata:
-  platform: 7280SR3
+router_isis:
+  instance: CORE
+  net: 49.0001.1000.7000.0010.00
+  router_id: 100.70.0.10
+  is_type: level-1-2
+  log_adjacency_changes: true
+  mpls_ldp_sync_default: true
+  timers:
+    local_convergence:
+      protected_prefixes: true
+      delay: 15000
+  advertise:
+    passive_only: true
+  address_family_ipv4:
+    enabled: true
+    maximum_paths: 4
+    fast_reroute_ti_lfa:
+      mode: link-protection
+  address_family_ipv6:
+    enabled: true
+    maximum_paths: 4
+    fast_reroute_ti_lfa:
+      mode: link-protection
+  segment_routing_mpls:
+    enabled: true
+    router_id: 100.70.0.10
+service_routing_protocols_model: multi-agent
+spanning_tree:
+  mode: mstp
+  mst_instances:
+  - id: '0'
+    priority: 4096
+static_routes:
+- vrf: MGMT
+  destination_address_prefix: 0.0.0.0/0
+  gateway: 192.168.200.5
+transceiver_qsfp_default_mode_4x10: true
+vlan_internal_order:
+  allocation: ascending
+  range:
+    beginning: 1006
+    ending: 1199
+vrfs:
+- name: MGMT
+  ip_routing: false

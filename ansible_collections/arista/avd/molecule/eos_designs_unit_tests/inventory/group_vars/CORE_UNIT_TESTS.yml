@@ -47,8 +47,12 @@ core_router:
   nodes:
     - name: core-1-isis-sr-ldp
       id: 1
+      ptp:
+        enabled: true
     - name: core-2-ospf-ldp
       id: 2
+      ptp:
+        enabled: true
     - name: core-3-isis-sr-ldp
       id: 3
     - name: core-4-multicast
@@ -77,6 +81,8 @@ core_interfaces:
       speed: "forced 1000full"
       mtu: 1500
       ip_pool: underlay_pool
+      ptp:
+        enabled: true
       # Testing merge of structured config on profile and link.
       structured_config:
         l2_mtu: 2222
@@ -184,6 +190,8 @@ core_interfaces:
           - node: core-2-ospf-ldp
             interfaces: [ Ethernet16, Ethernet17 ]
       profile: isis_bb_profile
+      ptp:
+        enabled: true
 
     # P2P core links with underlay_multicast(pim-sparse) enabled.
     - nodes: [ core-4-multicast, peer1 ]

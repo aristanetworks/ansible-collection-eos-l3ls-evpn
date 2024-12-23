@@ -188,6 +188,7 @@ class MiscMixin:
             "interface_ip": interface_ip,
             "peer_ip": peer_ip,
         }
+        changed = False
         for index, entry in enumerate(ipv4_acl.entries):
             if entry._get("remark"):
                 continue
@@ -202,13 +203,15 @@ class MiscMixin:
 
             entry.source = self._get_ipv4_acl_field_with_substitution(entry.source, ip_replacements, f"{err_context}.source", interface_name)
             entry.destination = self._get_ipv4_acl_field_with_substitution(entry.destination, ip_replacements, f"{err_context}.destination", interface_name)
+            if entry.source != org_ipv4_acl.entries[index].source or entry.destination != org_ipv4_acl.entries[index].destination:
+                changed = True
 
-        if ipv4_acl != org_ipv4_acl:
+        if changed:
             ipv4_acl.name += f"_{self.sanitize_interface_name(interface_name)}"
         return ipv4_acl
 
     @staticmethod
-    def _get_ipv4_acl_field_with_substitution(field_value: str, replacements: dict[str, str], field_context: str, interface_name: str) -> str:
+    def _get_ipv4_acl_field_with_substitution(field_value: str, replacements: dict[str, str | None], field_context: str, interface_name: str) -> str:
         """
         Checks one field if the value can be substituted.
 
@@ -218,18 +221,15 @@ class MiscMixin:
 
         If a replacement is done, but the value is None, an error will be raised.
         """
-        for key, value in replacements.items():
-            if field_value != key:
-                continue
+        if field_value not in replacements:
+            return field_value
 
-            if value is None:
-                msg = (
-                    f"Unable to perform substitution of the value '{key}' defined under '{field_context}', "
-                    f"since no substitution value was found for interface '{interface_name}'. "
-                    "Make sure to set the appropriate fields on the interface."
-                )
-                raise AristaAvdError(msg)
+        if (replacement_value := replacements[field_value]) is None:
+            msg = (
+                f"Unable to perform substitution of the value '{field_value}' defined under '{field_context}', "
+                f"since no substitution value was found for interface '{interface_name}'. "
+                "Make sure to set the appropriate fields on the interface."
+            )
+            raise AristaAvdError(msg)
 
-            return value
-
-        return field_value
+        return replacement_value

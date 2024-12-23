@@ -59,21 +59,21 @@
       run_once: true
       ansible.legacy.uri:
         url: https://{{ cv_server }}/api/resources/changecontrol/v1/ChangeControlConfig?key.id={{ cv_deploy_results.change_control.id }}
-        validate_certs: yes
-        return_content: yes
+        validate_certs: true
+        return_content: true
         headers:
           Accept: "application/json"
           Content-Type: "application/json"
           Authorization: "Bearer {{ lookup('env', 'CVAAS_AAWG_CI') }}"
         method: DELETE
         body_format: json
-        force_basic_auth: yes
+        force_basic_auth: true
         timeout: 10
       register: cvp_abandon_cc_result
       until: cvp_abandon_cc_result.status == 200
       retries: 3
       delay: 3
-      ignore_errors: True
+      ignore_errors: true
       when: cv_deploy_results.change_control.state | lower in ['pending approval', 'approved']
 
     - name: Cleanup

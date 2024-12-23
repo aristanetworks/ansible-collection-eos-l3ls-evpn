@@ -4,6 +4,7 @@ type: l2leaf
 default_mgmt_method: inband
 
 sflow_settings:
+  polling_interval: 1
   sample:
     rate: 10
   destinations:
