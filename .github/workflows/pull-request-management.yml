@@ -522,22 +522,22 @@ jobs:
           fi
           echo "Full wheel path: $FULL_WHEEL_PATH"
 
-          # Export the path for use in other steps
-          echo "FULL_WHEEL_PATH=$FULL_WHEEL_PATH" >> $GITHUB_ENV
+          # # Export the path for use in other steps
+          # echo "FULL_WHEEL_PATH=$FULL_WHEEL_PATH" >> $GITHUB_ENV
 
-      - name: Print runner path
-        run: |
-          WHEEL_CACHE_ROOT="$(pip cache dir)/wheels"
-          echo "Wheel cache root: $WHEEL_CACHE_ROOT"
+      # - name: Print runner path
+      #   run: |
+      #     WHEEL_CACHE_ROOT="$(pip cache dir)/wheels"
+      #     echo "Wheel cache root: $WHEEL_CACHE_ROOT"
 
-          FULL_WHEEL_PATH=$(find "$WHEEL_CACHE_ROOT" -type d -mindepth 4 -maxdepth 4)
-          if [ -z "$FULL_WHEEL_PATH" ]; then
-            echo "No wheel files found."
-            exit 1
-          fi
+      #     FULL_WHEEL_PATH=$(find "$WHEEL_CACHE_ROOT" -type d -mindepth 4 -maxdepth 4)
+      #     if [ -z "$FULL_WHEEL_PATH" ]; then
+      #       echo "No wheel files found."
+      #       exit 1
+      #     fi
 
-          echo "Full wheel path: $FULL_WHEEL_PATH"
-          echo "FULL_WHEEL_PATH=$FULL_WHEEL_PATH" >> $GITHUB_ENV
+      #     echo "Full wheel path: $FULL_WHEEL_PATH"
+      #     echo "FULL_WHEEL_PATH=$FULL_WHEEL_PATH" >> $GITHUB_ENV
 
       - name: Use the full pip wheel path
         run: |
