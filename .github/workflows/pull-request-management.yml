@@ -488,7 +488,7 @@ jobs:
   #         cd ansible_collections/arista/avd/
   #         ansible-test integration -vv
 
-  ansible_test_sanity:
+  ansible_test_sanit:
     name: Run ansible-test sanity validation
     runs-on: ubuntu-latest
     needs: [ file-changes ]
@@ -544,9 +544,9 @@ jobs:
           name: pyavd-wheel
           path: ${{ env.WHEEL_FILE }}
 
-  download-and-use:
+  download-dependencies:
     runs-on: ubuntu-latest
-    needs: ansible_test_sanity
+    needs: ansible_test_sanit
 
     steps:
       - uses: actions/checkout@v4
