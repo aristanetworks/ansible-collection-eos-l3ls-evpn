@@ -146,7 +146,7 @@ class MiscMixin:
 
     @cached_property
     def uplink_interface_speed(self: SharedUtils) -> str | None:
-        return self.node_config.uplink_interface_speed or self.default_interfaces.uplink_interface_speed
+        return default(self.node_config.uplink_interface_speed, self.default_interfaces.uplink_interface_speed)
 
     @cached_property
     def uplink_switch_interface_speed(self: SharedUtils) -> str | None:
