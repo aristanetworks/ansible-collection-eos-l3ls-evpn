@@ -657,41 +657,47 @@ jobs:
           cd ansible_collections/arista/avd/
           ansible-test integration -vv
 
-  # ansible_lint:
-  #   name: Run ansible-lint test case
-  #   runs-on: ubuntu-latest
-  #   needs: [ file-changes ]
-  #   steps:
-  #     - uses: actions/checkout@v4
-  #     - name: Set up Python 3
-  #       uses: actions/setup-python@v5
-  #       with:
-  #         python-version: |
-  #           3.10
-  #           3.11
-  #           3.12
-  #           3.13
-  #         cache: 'pip'
-  #         cache-latest: true
-  #     - name: 'Install Python & Ansible requirements'
-  #       run: |
-  #         pip install -r .github/requirements-ci.txt -r ansible_collections/arista/avd/requirements-dev.txt --upgrade
+  ansible_lint:
+    name: Run ansible-lint test case
+    runs-on: ubuntu-latest
+    needs: [ file-changes, ansible_test_sanity ]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python 3
+        uses: actions/setup-python@v5
+        with:
+          python-version: |
+            3.10
+            3.11
+            3.12
+            3.13
+          cache: 'pip'
+          cache-latest: true
+      - name: Download wheel artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: pyavd-wheel
+          path: ./artifacts
+      - name: 'Install Python & Ansible requirements'
+        run: |
+          pip install -r ansible_collections/arista/avd/requirements-dev.txt --upgrade
+          pip install ./artifacts/pyavd-5.2.0.dev2-py3-none-any.whl
 
-  #     - name: Cache Ansible Galaxy Collections
-  #       uses: actions/cache@v3
-  #       with:
-  #         path: ~/.ansible/collections
-  #         key: ansible-galaxy-${{ hashFiles('ansible_collections/arista/avd/collections.yml') }}
-  #         restore-keys: |
-  #           ansible-galaxy-
+      - name: Cache Ansible Galaxy Collections
+        uses: actions/cache@v3
+        with:
+          path: ~/.ansible/collections
+          key: ansible-galaxy-${{ hashFiles('ansible_collections/arista/avd/collections.yml') }}
+          restore-keys: |
+            ansible-galaxy-
 
-  #     - name: Install Ansible Galaxy Collections
-  #       run: ansible-galaxy collection install -r ansible_collections/arista/avd/collections.yml
+      - name: Install Ansible Galaxy Collections
+        run: ansible-galaxy collection install -r ansible_collections/arista/avd/collections.yml
 
-  #     - name: 'Run ansible-test integration test cases'
-  #       run: |
-  #         cd ansible_collections/arista/avd/
-  #         ansible-lint --force-color --strict -v
+      - name: 'Run ansible-test integration test cases'
+        run: |
+          cd ansible_collections/arista/avd/
+          ansible-lint --force-color --strict -v
   # # ----------------------------------- #
   # # Galaxy Importer
   # # ----------------------------------- #
@@ -745,32 +751,32 @@ jobs:
   #         name: importer-logs
   #         path: ./importer_result.json
 
-  # # ----------------------------------- #
-  # # Test of pyavd
-  # # ----------------------------------- #
-  # pyavd:
-  #   name: Test pyavd
-  #   runs-on: ubuntu-latest
-  #   needs: [file-changes]
-  #   if: |
-  #     needs.file-changes.outputs.eos_design == 'true' ||
-  #     needs.file-changes.outputs.config_gen == 'true' ||
-  #     needs.file-changes.outputs.pyavd == 'true'
-  #   strategy:
-  #     matrix:
-  #       python: ["3.10", "3.11", "3.12", "3.13"]
-  #   steps:
-  #     - uses: actions/checkout@v4
-  #     - name: Set up Python 3
-  #       uses: actions/setup-python@v5
-  #       with:
-  #         python-version: ${{ matrix.python }}
-  #         cache: 'pip'
-  #         cache-latest: true
-  #     - name: 'Install tox'
-  #       run: |
-  #         pip install tox tox-gh-actions --upgrade
-  #     - name: "Run pytest via tox for ${{ matrix.python }}"
-  #       working-directory: python-avd
-  #       run: |
-  #         tox
+  # ----------------------------------- #
+  # Test of pyavd
+  # ----------------------------------- #
+  pyavd:
+    name: Test pyavd
+    runs-on: ubuntu-latest
+    needs: [file-changes]
+    if: |
+      needs.file-changes.outputs.eos_design == 'true' ||
+      needs.file-changes.outputs.config_gen == 'true' ||
+      needs.file-changes.outputs.pyavd == 'true'
+    strategy:
+      matrix:
+        python: ["3.10", "3.11", "3.12", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python 3
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+          cache: 'pip'
+          cache-latest: true
+      - name: 'Install tox'
+        run: |
+          pip install tox tox-gh-actions --upgrade
+      - name: "Run pytest via tox for ${{ matrix.python }}"
+        working-directory: python-avd
+        run: |
+          tox
