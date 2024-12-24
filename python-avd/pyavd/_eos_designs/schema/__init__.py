@@ -2711,6 +2711,7 @@ class EosDesigns(EosDesignsRootModel):
         Subclass of AvdList with `str` items.
         """
         uplink_interface_speed: str | None
+        """Set point-to-Point uplink interface speed."""
         _custom_data: dict[str, Any]
 
         if TYPE_CHECKING:
@@ -2756,7 +2757,7 @@ class EosDesigns(EosDesignsRootModel):
                        List of downlink interfaces or downlink interface ranges.
 
                        Subclass of AvdList with `str` items.
-                    uplink_interface_speed: uplink_interface_speed
+                    uplink_interface_speed: Set point-to-Point uplink interface speed.
                     _custom_data: _custom_data
 
                 """
