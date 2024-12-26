@@ -46,9 +46,9 @@
 {%                     endif %}
 {%                 endfor %}
 {%                 if methods_list == [] %}
-{%                    do methods_list.append("-") %}
+{%                     do methods_list.append("-") %}
 {%                 endif %}
-| Commands - Console | - | {{ command_console.type }} | {{ ", ".join(methods_list | arista.avd.default(["-"])) }} | {{ logging_namespace.method_logging }} |
+| Commands - Console | {{ command_console.commands }} | {{ command_console.type }} | {{ ", ".join(methods_list | arista.avd.default(["-"])) }} | {{ logging_namespace.method_logging }} |
 {%             elif command_console.commands is arista.avd.defined and command_console.type is arista.avd.defined %}
 {%                 set group = command_console.group | arista.avd.default(" - ") %}
 {%                 set logging = command_console.logging | arista.avd.default("False") %}
@@ -126,9 +126,9 @@
 {%                     endif %}
 {%                 endfor %}
 {%                 if methods_list == [] %}
-{%                    do methods_list.append("-") %}
+{%                     do methods_list.append("-") %}
 {%                 endif %}
-| Commands - Default | - | {{ command_default.type }} | {{ ", ".join(methods_list | arista.avd.default(["-"])) }} | {{ logging_namespace.method_logging }} |
+| Commands - Default | {{ command_default.commands }} | {{ command_default.type }} | {{ ", ".join(methods_list | arista.avd.default(["-"])) }} | {{ logging_namespace.method_logging }} |
 {%             elif command_default.logging is arista.avd.defined %}
 {%                 if command_default.logging %}
 {%                     set logging = 'True' %}

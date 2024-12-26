@@ -1378,19 +1378,19 @@ aaa authorization commands 10,15 default group tacacs+ local
 | Type | Commands | Record type | Group | Logging |
 | ---- | -------- | ----------- | ----- | ------- |
 | Exec - Console | - | start-stop | TACACS, RADIUS1 | True |
-| Commands - Console | - | start-stop | TACACS, RADIUS1 | True |
-| Commands - Console | - | start-stop | TACACS, RADIUS1 | False |
-| Commands - Console | - | start-stop | RADIUS1, RADIUS2 | True |
-| Commands - Console | - | none | RADIUS1, RADIUS2 | True |
-| Commands - Console | - | start-stop | RADIUS1, RADIUS2 | True |
+| Commands - Console | all | start-stop | TACACS, RADIUS1 | True |
+| Commands - Console | 0 | start-stop | TACACS, RADIUS1 | False |
+| Commands - Console | 1 | start-stop | RADIUS1, RADIUS2 | True |
+| Commands - Console | 2 | none | RADIUS1, RADIUS2 | True |
+| Commands - Console | 3 | start-stop | RADIUS1, RADIUS2 | True |
 | Exec - Default | - | start-stop | TACACS, RADIUS1 | True |
 | System - Default | - | start-stop | RADIUS1, RADIUS2 | True |
 | Dot1x - Default | - | stop-only | RADIUS1, RADIUS2 | True |
-| Commands - Default | - | start-stop | RADIUS1, RADIUS2 | True |
-| Commands - Default | - | start-stop | RADIUS1, RADIUS2 | True |
-| Commands - Default | - | start-stop | RADIUS1, RADIUS2 | True |
-| Commands - Default | - | none | RADIUS1, RADIUS2 | True |
-| Commands - Default | - | start-stop | RADIUS1, RADIUS2 | True |
+| Commands - Default | all | start-stop | RADIUS1, RADIUS2 | True |
+| Commands - Default | 0 | start-stop | RADIUS1, RADIUS2 | True |
+| Commands - Default | 1 | start-stop | RADIUS1, RADIUS2 | True |
+| Commands - Default | 2 | none | RADIUS1, RADIUS2 | True |
+| Commands - Default | 3 | start-stop | RADIUS1, RADIUS2 | True |
 
 #### AAA Accounting Device Configuration
 
