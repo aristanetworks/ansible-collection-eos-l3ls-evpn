@@ -7,4 +7,5 @@
 type: dict
 keys:
   event_monitor:
-    type: bool
+    type: dict
+    $ref: "eos_cli_config_gen#/keys/event_monitor"

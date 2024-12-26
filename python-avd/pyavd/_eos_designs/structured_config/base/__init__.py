@@ -340,7 +340,7 @@ class AvdStructuredConfigBase(StructuredConfigGenerator, NtpMixin, SnmpServerMix
     @cached_property
     def event_monitor(self) -> dict | None:
         """event_monitor set based on event_monitor data-model."""
-        if get(self._hostvars, "event_monitor") is True:
+        if get(self._hostvars, "event_monitor.enabled") is True:
             return {"enabled": True}
         return None
 
@@ -352,7 +352,7 @@ class AvdStructuredConfigBase(StructuredConfigGenerator, NtpMixin, SnmpServerMix
     @cached_property
     def load_interval(self) -> dict | None:
         """load_interval set based on load_interval_default variable."""
-        if (load_interval_default := get(self._hostvars, "load_interval_default")) is not None:
+        if (load_interval_default := get(self._hostvars, "load_interval.default")) is not None:
             return {"default": load_interval_default}
         return None
 

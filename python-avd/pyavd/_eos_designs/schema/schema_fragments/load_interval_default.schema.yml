@@ -6,7 +6,6 @@
 # Use Ctrl + Space to get suggestions for every field. Autocomplete will pop up after typing 2 letters.
 type: dict
 keys:
-  load_interval_default:
-    type: int
-    convert_types:
-      - str
+  load_interval:
+    type: dict
+    $ref: "eos_cli_config_gen#/keys/load_interval"

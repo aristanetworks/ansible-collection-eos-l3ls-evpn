@@ -7,10 +7,14 @@
 
     | Variable | Type | Required | Default | Value Restrictions | Description |
     | -------- | ---- | -------- | ------- | ------------------ | ----------- |
-    | [<samp>load_interval_default</samp>](## "load_interval_default") | Integer |  |  |  |  |
+    | [<samp>load_interval</samp>](## "load_interval") | Dictionary |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;default</samp>](## "load_interval.default") | Integer |  |  |  | Default load interval in seconds. |
 
 === "YAML"
 
     ```yaml
-    load_interval_default: <int>
+    load_interval:
+
+      # Default load interval in seconds.
+      default: <int>
     ```

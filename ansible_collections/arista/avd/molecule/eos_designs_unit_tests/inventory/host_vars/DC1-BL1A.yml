@@ -21,10 +21,12 @@ router_id_loopback_description: "MY_ROUTER_ID_LOOPBACK"
 vtep_vvtep_ip: 192.168.255.255/32
 
 # Testing event_monitor
-event_monitor: true
+event_monitor:
+  enabled: true
 
 # Testing load_interval_default
-load_interval_default: 6
+load_interval:
+  default: 6
 
 # Testing unsupported_transceiver
 unsupported_transceiver:

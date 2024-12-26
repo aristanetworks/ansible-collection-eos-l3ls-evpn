@@ -3008,6 +3008,9 @@ class EosDesigns(EosDesignsRootModel):
     class EventHandlers(EosCliConfigGen.EventHandlers):
         pass
 
+    class EventMonitor(EosCliConfigGen.EventMonitor):
+        """Subclass of AvdModel."""
+
     class EvpnHostflapDetection(AvdModel):
         """Subclass of AvdModel."""
 
@@ -6841,6 +6844,9 @@ class EosDesigns(EosDesignsRootModel):
         _primary_key: ClassVar[str] = "profile"
 
     L3InterfaceProfiles._item_type = L3InterfaceProfilesItem
+
+    class LoadInterval(EosCliConfigGen.LoadInterval):
+        """Subclass of AvdModel."""
 
     class LocalUsers(EosCliConfigGen.LocalUsers):
         pass
@@ -54385,7 +54391,7 @@ class EosDesigns(EosDesignsRootModel):
         "eos_designs_custom_templates": {"type": EosDesignsCustomTemplates},
         "eos_designs_documentation": {"type": EosDesignsDocumentation},
         "event_handlers": {"type": EventHandlers},
-        "event_monitor": {"type": bool},
+        "event_monitor": {"type": EventMonitor},
         "evpn_ebgp_gateway_inter_domain": {"type": bool},
         "evpn_ebgp_gateway_multihop": {"type": int, "default": 15},
         "evpn_ebgp_multihop": {"type": int, "default": 3},
@@ -54424,7 +54430,7 @@ class EosDesigns(EosDesignsRootModel):
         "isis_ti_lfa": {"type": IsisTiLfa},
         "l3_edge": {"type": L3Edge},
         "l3_interface_profiles": {"type": L3InterfaceProfiles},
-        "load_interval_default": {"type": int},
+        "load_interval": {"type": LoadInterval},
         "local_users": {"type": LocalUsers},
         "mac_address_table": {"type": MacAddressTable},
         "management_eapi": {"type": ManagementEapi},
@@ -55213,7 +55219,8 @@ class EosDesigns(EosDesignsRootModel):
     customize the system behavior, and
     implement workarounds to problems discovered in the field.
     """
-    event_monitor: bool | None
+    event_monitor: EventMonitor
+    """Subclass of AvdModel."""
     evpn_ebgp_gateway_inter_domain: bool | None
     evpn_ebgp_gateway_multihop: int
     """
@@ -55460,7 +55467,8 @@ class EosDesigns(EosDesignsRootModel):
     Subclass of AvdIndexedList with
     `L3InterfaceProfilesItem` items. Primary key is `profile` (`str`).
     """
-    load_interval_default: int | None
+    load_interval: LoadInterval
+    """Subclass of AvdModel."""
     local_users: LocalUsers
     mac_address_table: MacAddressTable
     """
@@ -56482,7 +56490,7 @@ class EosDesigns(EosDesignsRootModel):
             eos_designs_custom_templates: EosDesignsCustomTemplates | UndefinedType = Undefined,
             eos_designs_documentation: EosDesignsDocumentation | UndefinedType = Undefined,
             event_handlers: EventHandlers | UndefinedType = Undefined,
-            event_monitor: bool | None | UndefinedType = Undefined,
+            event_monitor: EventMonitor | UndefinedType = Undefined,
             evpn_ebgp_gateway_inter_domain: bool | None | UndefinedType = Undefined,
             evpn_ebgp_gateway_multihop: int | UndefinedType = Undefined,
             evpn_ebgp_multihop: int | UndefinedType = Undefined,
@@ -56518,7 +56526,7 @@ class EosDesigns(EosDesignsRootModel):
             isis_ti_lfa: IsisTiLfa | UndefinedType = Undefined,
             l3_edge: L3Edge | UndefinedType = Undefined,
             l3_interface_profiles: L3InterfaceProfiles | UndefinedType = Undefined,
-            load_interval_default: int | None | UndefinedType = Undefined,
+            load_interval: LoadInterval | UndefinedType = Undefined,
             local_users: LocalUsers | UndefinedType = Undefined,
             mac_address_table: MacAddressTable | UndefinedType = Undefined,
             management_eapi: ManagementEapi | UndefinedType = Undefined,
@@ -57036,7 +57044,7 @@ class EosDesigns(EosDesignsRootModel):
                    flexible tool that can be used to apply self-healing actions,
                    customize the system behavior, and
                    implement workarounds to problems discovered in the field.
-                event_monitor: event_monitor
+                event_monitor: Subclass of AvdModel.
                 evpn_ebgp_gateway_inter_domain: evpn_ebgp_gateway_inter_domain
                 evpn_ebgp_gateway_multihop:
                    Default of 15, considering a large value to avoid BGP reachability issues in very complex DCI
@@ -57194,7 +57202,7 @@ class EosDesigns(EosDesignsRootModel):
 
                    Subclass of AvdIndexedList with
                    `L3InterfaceProfilesItem` items. Primary key is `profile` (`str`).
-                load_interval_default: load_interval_default
+                load_interval: Subclass of AvdModel.
                 local_users: local_users
                 mac_address_table:
                    MAC address-table aging time.

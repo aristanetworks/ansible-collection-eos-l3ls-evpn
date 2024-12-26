@@ -1190,7 +1190,8 @@ keys:
       table: management-settings
     type: list
   event_monitor:
-    type: bool
+    type: dict
+    $ref: eos_cli_config_gen#/keys/event_monitor
   evpn_ebgp_gateway_inter_domain:
     documentation_options:
       table: evpn-settings
@@ -2047,10 +2048,9 @@ keys:
           type: str
           description: L3 interface profile name. Any variable supported under `l3_interfaces`
             can be inherited from a profile.
-  load_interval_default:
-    type: int
-    convert_types:
-    - str
+  load_interval:
+    type: dict
+    $ref: eos_cli_config_gen#/keys/load_interval
   local_users:
     documentation_options:
       table: management-settings
