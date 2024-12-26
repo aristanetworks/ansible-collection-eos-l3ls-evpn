@@ -4,7 +4,8 @@ aaa_accounting:
   exec:
     console:
       type: none
-      logging: true
+      methods:
+        - method: logging
     default:
       type: none
   dot1x:
