@@ -43,13 +43,13 @@ aaa accounting commands {{ command_console.commands }} console none
 {%                             do accounting_default_list.append(method.method) %}
 {%                         elif method.method == "group" and method.group is arista.avd.defined %}
 {%                             set group_cli = "group " ~ method.group %}
-{%                            do accounting_default_list.append(group_cli) %}
+{%                             do accounting_default_list.append(group_cli) %}
 {%                         endif %}
 {%                     endfor %}
 {%                     set accounting_list_cli = " ".join(accounting_default_list) %}
-{%                    if accounting_list_cli %}
+{%                     if accounting_list_cli %}
 aaa accounting commands {{ command_console.commands }} console {{ command_console.type }} {{ accounting_list_cli }}
-{%                    endif %}
+{%                     endif %}
 {%                 elif command_console.group is arista.avd.defined or command_console.logging is arista.avd.defined(true) %}
 {%                     set commands_console_cli = "aaa accounting commands " ~ command_console.commands ~ " console " ~ command_console.type %}
 {%                     if command_console.group is arista.avd.defined %}
