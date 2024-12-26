@@ -4,16 +4,32 @@ aaa_accounting:
   exec:
     console:
       type: start-stop
-      group: TACACS
-      logging: true
+      methods:
+        - method: logging
+        - method: group
+          group: TACACS
+        - method: group
+          group: RADIUS1
+        - method: logging
     default:
       type: start-stop
-      group: TACACS
-      logging: true
+      methods:
+        - method: logging
+        - method: group
+          group: TACACS
+        - method: group
+          group: RADIUS1
+        - method: logging
   system:
     default:
       type: start-stop
-      group: TACACS
+      methods:
+        - method: logging
+        - method: group
+          group: RADIUS1
+        - method: group
+          group: RADIUS2
+        - method: logging
   dot1x:
     default:
       type: stop-only
@@ -23,47 +39,88 @@ aaa_accounting:
           group: RADIUS1
         - method: group
           group: RADIUS2
-          multicast: true
         - method: logging
   commands:
     console:
       - commands: all
         type: start-stop
-        group: TACACS
-        logging: true
+        methods:
+          - method: logging
+          - method: group
+            group: TACACS
+          - method: group
+            group: RADIUS1
+          - method: logging
       - commands: 0
         type: start-stop
-        logging: true
+        methods:
+          - method: group
+            group: TACACS
+          - method: group
+            group: RADIUS1
       - commands: 1
         type: start-stop
-        logging: false
-        group: TACACS1
+        methods:
+          - method: logging
+          - method: group
+            group: RADIUS1
+          - method: group
+            group: RADIUS2
       # As type is none hence logging will not render in config as per actual EOS
       - commands: 2
         type: none
-        logging: true
-      # If type is start-stop or stop-only then logging should be true or group should be defined to render the config
+        methods:
+          - method: logging
+          - method: group
+            group: RADIUS1
+          - method: group
+            group: RADIUS2
       - commands: 3
         type: start-stop
-        logging: false
+        methods:
+          - method: logging
+          - method: group
+            group: RADIUS1
+          - method: group
+            group: RADIUS2
     default:
       - commands: all
         type: start-stop
-        group: TACACS
-        logging: true
+        methods:
+          - method: logging
+          - method: group
+            group: RADIUS1
+          - method: group
+            group: RADIUS2
       - commands: 0
         type: start-stop
-        logging: true
-        # To handle the missing case
+        methods:
+          - method: logging
+          - method: group
+            group: RADIUS1
+          - method: group
+            group: RADIUS2
       - commands: 1
         type: start-stop
-        logging: false
-        group: TACACS
-      # As type is none hence logging will not render in config as per actual EOS
+        methods:
+          - method: logging
+          - method: group
+            group: RADIUS1
+          - method: group
+            group: RADIUS2
       - commands: 2
         type: none
-        logging: true
-      # If type is start-stop or stop-only then logging should be true or group should be defined to render the config
+        methods:
+          - method: logging
+          - method: group
+            group: RADIUS1
+          - method: group
+            group: RADIUS2
       - commands: 3
         type: start-stop
-        logging: false
+        methods:
+          - method: logging
+          - method: group
+            group: RADIUS1
+          - method: group
+            group: RADIUS2

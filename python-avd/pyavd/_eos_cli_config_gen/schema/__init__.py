@@ -27,11 +27,62 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             class Console(AvdModel):
                 """Subclass of AvdModel."""
 
-                _fields: ClassVar[dict] = {"type": {"type": str}, "group": {"type": str}, "logging": {"type": bool}, "_custom_data": {"type": dict}}
+                class MethodsItem(AvdModel):
+                    """Subclass of AvdModel."""
+
+                    _fields: ClassVar[dict] = {"method": {"type": str}, "group": {"type": str}, "_custom_data": {"type": dict}}
+                    method: Literal["logging", "group"] | None
+                    group: str | None
+                    """
+                    Specify the server group to be used.
+                    This option is applicable only when the `method` key is
+                    explicitly set to `group`.
+                    """
+                    _custom_data: dict[str, Any]
+
+                    if TYPE_CHECKING:
+
+                        def __init__(
+                            self,
+                            *,
+                            method: Literal["logging", "group"] | None | UndefinedType = Undefined,
+                            group: str | None | UndefinedType = Undefined,
+                            _custom_data: dict[str, Any] | UndefinedType = Undefined,
+                        ) -> None:
+                            """
+                            MethodsItem.
+
+
+                            Subclass of AvdModel.
+
+                            Args:
+                                method: method
+                                group:
+                                   Specify the server group to be used.
+                                   This option is applicable only when the `method` key is
+                                   explicitly set to `group`.
+                                _custom_data: _custom_data
+
+                            """
+
+                class Methods(AvdList[MethodsItem]):
+                    """Subclass of AvdList with `MethodsItem` items."""
+
+                Methods._item_type = MethodsItem
+
+                _fields: ClassVar[dict] = {
+                    "type": {"type": str},
+                    "group": {"type": str},
+                    "logging": {"type": bool},
+                    "methods": {"type": Methods},
+                    "_custom_data": {"type": dict},
+                }
                 type: Literal["none", "start-stop", "stop-only"]
                 group: str | None
                 """Group Name."""
                 logging: bool | None
+                methods: Methods
+                """Subclass of AvdList with `MethodsItem` items."""
                 _custom_data: dict[str, Any]
 
                 if TYPE_CHECKING:
@@ -42,6 +93,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                         type: Literal["none", "start-stop", "stop-only"] | UndefinedType = Undefined,
                         group: str | None | UndefinedType = Undefined,
                         logging: bool | None | UndefinedType = Undefined,
+                        methods: Methods | UndefinedType = Undefined,
                         _custom_data: dict[str, Any] | UndefinedType = Undefined,
                     ) -> None:
                         """
@@ -54,6 +106,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                             type: type
                             group: Group Name.
                             logging: logging
+                            methods: Subclass of AvdList with `MethodsItem` items.
                             _custom_data: _custom_data
 
                         """
@@ -61,11 +114,62 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             class Default(AvdModel):
                 """Subclass of AvdModel."""
 
-                _fields: ClassVar[dict] = {"type": {"type": str}, "group": {"type": str}, "logging": {"type": bool}, "_custom_data": {"type": dict}}
+                class MethodsItem(AvdModel):
+                    """Subclass of AvdModel."""
+
+                    _fields: ClassVar[dict] = {"method": {"type": str}, "group": {"type": str}, "_custom_data": {"type": dict}}
+                    method: Literal["logging", "group"] | None
+                    group: str | None
+                    """
+                    Specify the server group to be used.
+                    This option is applicable only when the `method` key is
+                    explicitly set to `group`.
+                    """
+                    _custom_data: dict[str, Any]
+
+                    if TYPE_CHECKING:
+
+                        def __init__(
+                            self,
+                            *,
+                            method: Literal["logging", "group"] | None | UndefinedType = Undefined,
+                            group: str | None | UndefinedType = Undefined,
+                            _custom_data: dict[str, Any] | UndefinedType = Undefined,
+                        ) -> None:
+                            """
+                            MethodsItem.
+
+
+                            Subclass of AvdModel.
+
+                            Args:
+                                method: method
+                                group:
+                                   Specify the server group to be used.
+                                   This option is applicable only when the `method` key is
+                                   explicitly set to `group`.
+                                _custom_data: _custom_data
+
+                            """
+
+                class Methods(AvdList[MethodsItem]):
+                    """Subclass of AvdList with `MethodsItem` items."""
+
+                Methods._item_type = MethodsItem
+
+                _fields: ClassVar[dict] = {
+                    "type": {"type": str},
+                    "group": {"type": str},
+                    "logging": {"type": bool},
+                    "methods": {"type": Methods},
+                    "_custom_data": {"type": dict},
+                }
                 type: Literal["none", "start-stop", "stop-only"] | None
                 group: str | None
                 """Group Name."""
                 logging: bool | None
+                methods: Methods
+                """Subclass of AvdList with `MethodsItem` items."""
                 _custom_data: dict[str, Any]
 
                 if TYPE_CHECKING:
@@ -76,6 +180,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                         type: Literal["none", "start-stop", "stop-only"] | None | UndefinedType = Undefined,
                         group: str | None | UndefinedType = Undefined,
                         logging: bool | None | UndefinedType = Undefined,
+                        methods: Methods | UndefinedType = Undefined,
                         _custom_data: dict[str, Any] | UndefinedType = Undefined,
                     ) -> None:
                         """
@@ -88,6 +193,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                             type: type
                             group: Group Name.
                             logging: logging
+                            methods: Subclass of AvdList with `MethodsItem` items.
                             _custom_data: _custom_data
 
                         """
@@ -127,10 +233,55 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             class Default(AvdModel):
                 """Subclass of AvdModel."""
 
-                _fields: ClassVar[dict] = {"type": {"type": str}, "group": {"type": str}, "_custom_data": {"type": dict}}
+                class MethodsItem(AvdModel):
+                    """Subclass of AvdModel."""
+
+                    _fields: ClassVar[dict] = {"method": {"type": str}, "group": {"type": str}, "_custom_data": {"type": dict}}
+                    method: Literal["logging", "group"] | None
+                    group: str | None
+                    """
+                    Specify the server group to be used.
+                    This option is applicable only when the `method` key is
+                    explicitly set to `group`.
+                    """
+                    _custom_data: dict[str, Any]
+
+                    if TYPE_CHECKING:
+
+                        def __init__(
+                            self,
+                            *,
+                            method: Literal["logging", "group"] | None | UndefinedType = Undefined,
+                            group: str | None | UndefinedType = Undefined,
+                            _custom_data: dict[str, Any] | UndefinedType = Undefined,
+                        ) -> None:
+                            """
+                            MethodsItem.
+
+
+                            Subclass of AvdModel.
+
+                            Args:
+                                method: method
+                                group:
+                                   Specify the server group to be used.
+                                   This option is applicable only when the `method` key is
+                                   explicitly set to `group`.
+                                _custom_data: _custom_data
+
+                            """
+
+                class Methods(AvdList[MethodsItem]):
+                    """Subclass of AvdList with `MethodsItem` items."""
+
+                Methods._item_type = MethodsItem
+
+                _fields: ClassVar[dict] = {"type": {"type": str}, "group": {"type": str}, "methods": {"type": Methods}, "_custom_data": {"type": dict}}
                 type: Literal["none", "start-stop", "stop-only"] | None
                 group: str | None
                 """Group Name."""
+                methods: Methods
+                """Subclass of AvdList with `MethodsItem` items."""
                 _custom_data: dict[str, Any]
 
                 if TYPE_CHECKING:
@@ -140,6 +291,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                         *,
                         type: Literal["none", "start-stop", "stop-only"] | None | UndefinedType = Undefined,
                         group: str | None | UndefinedType = Undefined,
+                        methods: Methods | UndefinedType = Undefined,
                         _custom_data: dict[str, Any] | UndefinedType = Undefined,
                     ) -> None:
                         """
@@ -151,6 +303,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                         Args:
                             type: type
                             group: Group Name.
+                            methods: Subclass of AvdList with `MethodsItem` items.
                             _custom_data: _custom_data
 
                         """
@@ -293,11 +446,55 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             class ConsoleItem(AvdModel):
                 """Subclass of AvdModel."""
 
+                class MethodsItem(AvdModel):
+                    """Subclass of AvdModel."""
+
+                    _fields: ClassVar[dict] = {"method": {"type": str}, "group": {"type": str}, "_custom_data": {"type": dict}}
+                    method: Literal["logging", "group"] | None
+                    group: str | None
+                    """
+                    Specify the server group to be used.
+                    This option is applicable only when the `method` key is
+                    explicitly set to `group`.
+                    """
+                    _custom_data: dict[str, Any]
+
+                    if TYPE_CHECKING:
+
+                        def __init__(
+                            self,
+                            *,
+                            method: Literal["logging", "group"] | None | UndefinedType = Undefined,
+                            group: str | None | UndefinedType = Undefined,
+                            _custom_data: dict[str, Any] | UndefinedType = Undefined,
+                        ) -> None:
+                            """
+                            MethodsItem.
+
+
+                            Subclass of AvdModel.
+
+                            Args:
+                                method: method
+                                group:
+                                   Specify the server group to be used.
+                                   This option is applicable only when the `method` key is
+                                   explicitly set to `group`.
+                                _custom_data: _custom_data
+
+                            """
+
+                class Methods(AvdList[MethodsItem]):
+                    """Subclass of AvdList with `MethodsItem` items."""
+
+                Methods._item_type = MethodsItem
+
                 _fields: ClassVar[dict] = {
                     "commands": {"type": str},
                     "type": {"type": str},
                     "group": {"type": str},
                     "logging": {"type": bool},
+                    "methods": {"type": Methods},
                     "_custom_data": {"type": dict},
                 }
                 commands: str | None
@@ -306,6 +503,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 group: str | None
                 """Group Name."""
                 logging: bool | None
+                methods: Methods
+                """Subclass of AvdList with `MethodsItem` items."""
                 _custom_data: dict[str, Any]
 
                 if TYPE_CHECKING:
@@ -317,6 +516,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                         type: Literal["none", "start-stop", "stop-only"] | None | UndefinedType = Undefined,
                         group: str | None | UndefinedType = Undefined,
                         logging: bool | None | UndefinedType = Undefined,
+                        methods: Methods | UndefinedType = Undefined,
                         _custom_data: dict[str, Any] | UndefinedType = Undefined,
                     ) -> None:
                         """
@@ -330,6 +530,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                             type: type
                             group: Group Name.
                             logging: logging
+                            methods: Subclass of AvdList with `MethodsItem` items.
                             _custom_data: _custom_data
 
                         """
@@ -342,11 +543,55 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             class DefaultItem(AvdModel):
                 """Subclass of AvdModel."""
 
+                class MethodsItem(AvdModel):
+                    """Subclass of AvdModel."""
+
+                    _fields: ClassVar[dict] = {"method": {"type": str}, "group": {"type": str}, "_custom_data": {"type": dict}}
+                    method: Literal["logging", "group"] | None
+                    group: str | None
+                    """
+                    Specify the server group to be used.
+                    This option is applicable only when the `method` key is
+                    explicitly set to `group`.
+                    """
+                    _custom_data: dict[str, Any]
+
+                    if TYPE_CHECKING:
+
+                        def __init__(
+                            self,
+                            *,
+                            method: Literal["logging", "group"] | None | UndefinedType = Undefined,
+                            group: str | None | UndefinedType = Undefined,
+                            _custom_data: dict[str, Any] | UndefinedType = Undefined,
+                        ) -> None:
+                            """
+                            MethodsItem.
+
+
+                            Subclass of AvdModel.
+
+                            Args:
+                                method: method
+                                group:
+                                   Specify the server group to be used.
+                                   This option is applicable only when the `method` key is
+                                   explicitly set to `group`.
+                                _custom_data: _custom_data
+
+                            """
+
+                class Methods(AvdList[MethodsItem]):
+                    """Subclass of AvdList with `MethodsItem` items."""
+
+                Methods._item_type = MethodsItem
+
                 _fields: ClassVar[dict] = {
                     "commands": {"type": str},
                     "type": {"type": str},
                     "group": {"type": str},
                     "logging": {"type": bool},
+                    "methods": {"type": Methods},
                     "_custom_data": {"type": dict},
                 }
                 commands: str | None
@@ -355,6 +600,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 group: str | None
                 """Group Name."""
                 logging: bool | None
+                methods: Methods
+                """Subclass of AvdList with `MethodsItem` items."""
                 _custom_data: dict[str, Any]
 
                 if TYPE_CHECKING:
@@ -366,6 +613,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                         type: Literal["none", "start-stop", "stop-only"] | None | UndefinedType = Undefined,
                         group: str | None | UndefinedType = Undefined,
                         logging: bool | None | UndefinedType = Undefined,
+                        methods: Methods | UndefinedType = Undefined,
                         _custom_data: dict[str, Any] | UndefinedType = Undefined,
                     ) -> None:
                         """
@@ -379,6 +627,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                             type: type
                             group: Group Name.
                             logging: logging
+                            methods: Subclass of AvdList with `MethodsItem` items.
                             _custom_data: _custom_data
 
                         """

@@ -22,8 +22,29 @@ keys:
               group:
                 description: Group Name.
                 type: str
+                deprecation:
+                  warning: true
+                  new_key: method[].group
+                  remove_in_version: v6.0.0
               logging:
                 type: bool
+                deprecation:
+                  warning: true
+                  new_key: method[].method
+                  remove_in_version: v6.0.0
+              methods:
+                type: list
+                items:
+                  type: dict
+                  keys:
+                    method:
+                      type: str
+                      valid_values: ["logging", "group"]
+                    group:
+                      type: str
+                      description: |-
+                        Specify the server group to be used.
+                        This option is applicable only when the `method` key is explicitly set to `group`.
           default:
             type: dict
             keys:
@@ -33,8 +54,19 @@ keys:
               group:
                 description: Group Name.
                 type: str
+                deprecation:
+                  warning: true
+                  new_key: method[].group
+                  remove_in_version: v6.0.0
               logging:
                 type: bool
+                deprecation:
+                  warning: true
+                  new_key: method[].method
+                  remove_in_version: v6.0.0
+              methods:
+                type: list
+                $ref: "eos_cli_config_gen#/keys/aaa_accounting/keys/exec/keys/console/keys/methods"
       system:
         type: dict
         keys:
@@ -47,6 +79,13 @@ keys:
               group:
                 description: Group Name.
                 type: str
+                deprecation:
+                  warning: true
+                  new_key: method[].group
+                  remove_in_version: v6.0.0
+              methods:
+                type: list
+                $ref: "eos_cli_config_gen#/keys/aaa_accounting/keys/exec/keys/console/keys/methods"
       dot1x:
         type: dict
         keys:
@@ -70,12 +109,10 @@ keys:
                   keys:
                     method:
                       type: str
-                      valid_values: ["logging", "group"]
+                      $ref: "eos_cli_config_gen#/keys/aaa_accounting/keys/exec/keys/console/keys/methods/items/keys/method"
                     group:
                       type: str
-                      description: |-
-                        Specify the server group to be used.
-                        This option is applicable only when the `method` key is explicitly set to `group`.
+                      $ref: "eos_cli_config_gen#/keys/aaa_accounting/keys/exec/keys/console/keys/methods/items/keys/group"
                     multicast:
                       type: bool
                       description: |-
@@ -100,8 +137,19 @@ keys:
                 group:
                   description: Group Name.
                   type: str
+                  deprecation:
+                    warning: true
+                    new_key: method[].group
+                    remove_in_version: v6.0.0
                 logging:
                   type: bool
+                  deprecation:
+                    warning: true
+                    new_key: method[].method
+                    remove_in_version: v6.0.0
+                methods:
+                  type: list
+                  $ref: "eos_cli_config_gen#/keys/aaa_accounting/keys/exec/keys/console/keys/methods"
           default:
             type: list
             items:
@@ -118,5 +166,16 @@ keys:
                 group:
                   description: Group Name.
                   type: str
+                  deprecation:
+                    warning: true
+                    new_key: method[].group
+                    remove_in_version: v6.0.0
                 logging:
                   type: bool
+                  deprecation:
+                    warning: true
+                    new_key: method[].method
+                    remove_in_version: v6.0.0
+                methods:
+                  type: list
+                  $ref: "eos_cli_config_gen#/keys/aaa_accounting/keys/exec/keys/console/keys/methods"
