@@ -6020,6 +6020,9 @@ keys:
         description: 'Disable hardware encryption.
 
           An SFE restart is needed for this change to take effect.'
+      match_source_ip:
+        type: bool
+        description: Match source interface of the IPSEC connection.
   ip_ssh_client_source_interfaces:
     type: list
     items:

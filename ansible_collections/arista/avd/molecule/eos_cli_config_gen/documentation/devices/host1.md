@@ -3352,6 +3352,7 @@ ip security
    key controller
       profile Profile-1
    hardware encryption disabled
+   connection tx-interface match source-ip
 ```
 
 ## Interfaces
