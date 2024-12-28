@@ -3,25 +3,21 @@
 # that can be found in the LICENSE file.
 from __future__ import annotations
 
-INTERFACE_MODELS = [
-    "ethernet_interfaces",
-    "port_channel_interfaces",
-    "vlan_interfaces",
-    "loopback_interfaces",
-    "dps_interfaces",
-]
-"""List of interface models from the structured configurations that are used for testing."""
+# TODO: Add support for other address families
+DEFAULT_VRF_ADDRESS_FAMILIES = {
+    "address_family_evpn": "l2VpnEvpn",
+    "address_family_path_selection": "dps",
+    "address_family_link_state": "linkState",
+    "address_family_ipv4": "ipv4Unicast",
+    "address_family_ipv6": "ipv6Unicast",
+    "address_family_ipv4_sr_te": "ipv4SrTe",
+    "address_family_ipv6_sr_te": "ipv6SrTe",
+}
+"""Supported BGP address families for the default VRF."""
 
-BGP_MAPPINGS = [
-    {"afi": "evpn", "safi": None, "description": "EVPN", "avd_key": "address_family_evpn"},
-    {"afi": "path-selection", "safi": None, "description": "Path-Selection", "avd_key": "address_family_path_selection"},
-    {"afi": "link-state", "safi": None, "description": "Link-State", "avd_key": "address_family_link_state"},
-    {"afi": "ipv4", "safi": "unicast", "description": "IPv4 Unicast", "avd_key": "address_family_ipv4"},
-    {"afi": "ipv6", "safi": "unicast", "description": "IPv6 Unicast", "avd_key": "address_family_ipv6"},
-    {"afi": "ipv4", "safi": "sr-te", "description": "IPv4 SR-TE", "avd_key": "address_family_ipv4_sr_te"},
-    {"afi": "ipv6", "safi": "sr-te", "description": "IPv6 SR-TE", "avd_key": "address_family_ipv6_sr_te"},
-]
-"""
-List of dictionaries that maps the BGP Address Family Identifier (AFI) and the Subsequent Address Family Identifier (SAFI) for validation.
-Each dictionary includes a description formatted for input messages in the report and an avd_key to access the address families in the structured configuration.
-"""
+# TODO: Add support for other VRF address families
+VRF_ADDRESS_FAMILIES = {
+    "address_family_ipv4": "ipv4Unicast",
+    "address_family_ipv6": "ipv6Unicast",
+}
+"""Supported BGP address families for non-default VRFs."""

@@ -3,67 +3,110 @@
 # that can be found in the LICENSE file.
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
+from anta.input_models.routing.bgp import BgpPeer
+from anta.tests.routing.bgp import VerifyBGPPeerMPCaps, VerifyBGPPeerSession
 
-from pyavd._anta.utils import LogMessage
-from pyavd._utils import get
+from pyavd._anta.logs import LogMessage
 
 from ._base_classes import AntaTestInputFactory
-from ._constants import BGP_MAPPINGS
-
-if TYPE_CHECKING:
-    from anta.tests.routing.bgp import VerifyBGPSpecificPeers
+from ._constants import DEFAULT_VRF_ADDRESS_FAMILIES, VRF_ADDRESS_FAMILIES
 
 
-class VerifyBGPSpecificPeersInputFactory(AntaTestInputFactory):
-    """Input factory class for the VerifyBGPSpecificPeers test.
+class VerifyBGPPeerSessionInputFactory(AntaTestInputFactory):
+    """Input factory class for the VerifyBGPPeerSession test.
 
-    This factory creates test inputs for BGP address families peer verification.
+    Requirements:
+      - IPv4 neighbors only
+      - Peer not shutdown
+      - Peer exists and is deployed if specified
+      - Peer within boundary if `allow_bgp_external` is disabled in fabric scope
 
-    It collects BGP peers that should be established for:
-      - These configured address families: EVPN, IPv4/IPv6 Unicast, Path-Selection, Link-State, SR-TE
-      - Both peer group and direct neighbor configurations
-
-    The factory ensures:
-      - Only explicitly activated peers and peer groups are tested
-      - Only peers that are available (`is_deployed: true`) are included
-      - External BGP peers (not configured by AVD) without 'peer' key are still honored and included
-      - Peer collection is skipped for address families with no peers
-
-    TODO: Add support for BGP VRFs
+    Notes:
+      - Skips neighbors in shutdown peer groups
+      - Skips VRF peers if `allow_bgp_vrfs` is disabled in fabric scope
     """
 
-    def create(self) -> VerifyBGPSpecificPeers.Input | None:
-        """Create Input for the VerifyBGPSpecificPeers test."""
-        address_families = []
-        bgp_neighbors = get(self.manager.structured_config, "router_bgp.neighbors", [])
+    def create(self) -> VerifyBGPPeerSession.Input | None:
+        """Create Input for the VerifyBGPPeerSession test."""
+        bgp_peers = [
+            BgpPeer(
+                peer_address=neighbor.ip_address,
+                vrf=neighbor.vrf,
+            )
+            for neighbor in self.device.bgp_neighbors
+        ]
+        return VerifyBGPPeerSession.Input(bgp_peers=bgp_peers) if bgp_peers else None
 
-        for bgp_mapping in BGP_MAPPINGS:
-            # Retrieve peer groups and direct neighbors
-            peer_groups = get(self.manager.structured_config, f"router_bgp.{bgp_mapping['avd_key']}.peer_groups", [])
-            direct_neighbors = get(self.manager.structured_config, f"router_bgp.{bgp_mapping['avd_key']}.neighbors", [])
 
-            # Only explicitly activated neighbors and peer groups are tested
-            filtered_peer_groups = [peer_group["name"] for peer_group in peer_groups if peer_group.get("activate")]
-            filtered_neighbors = [neighbor["ip_address"] for neighbor in direct_neighbors if neighbor.get("activate")]
+class VerifyBGPPeerMPCapsInputFactory(AntaTestInputFactory):
+    """Input factory class for the VerifyBGPPeerMPCaps test.
 
-            # Combine neighbors from peer groups and direct neighbors
-            all_neighbors = [
-                (neighbor["ip_address"], neighbor.get("peer"))
-                for neighbor in bgp_neighbors
-                if neighbor.get("peer_group") in filtered_peer_groups or neighbor["ip_address"] in filtered_neighbors
-            ]
+    Requirements:
+      - IPv4 neighbors only
+      - Peer not shutdown
+      - Peer exists and is deployed if specified
+      - Peer within boundary if `allow_bgp_external` is disabled in fabric scope
 
-            # Gather all available peers for the address family
-            peers = []
-            for ip, peer in all_neighbors:
-                # Check peer availability if the 'peer' key exists. Otherwise, still include the test for potential BGP external peers
-                if peer is not None and not self.manager.is_peer_available(peer):
-                    self.logger.debug(LogMessage.UNAVAILABLE_PEER, entity=f"{ip} ({bgp_mapping['description']})", peer=peer)
-                    continue
-                peers.append(ip)
+    Supported address families for the default VRF:
+      - EVPN
+      - Path selection
+      - Link state
+      - IPv4 unicast
+      - IPv6 unicast
+      - IPv4 SR-TE
+      - IPv6 SR-TE
 
-            if peers:
-                address_families.append(self.test.Input.BgpAfi(afi=bgp_mapping["afi"], safi=bgp_mapping["safi"], peers=peers))
+    Supported address families for non-default VRFs:
+      - IPv4 unicast
+      - IPv6 unicast
 
-        return self.test.Input(address_families=address_families) if address_families else None
+    Notes:
+      - Skips neighbors in shutdown peer groups
+      - Skips VRF peers if `allow_bgp_vrfs` is disabled in fabric scope
+    """
+
+    def create(self) -> VerifyBGPPeerMPCaps.Input | None:
+        """Create Input for the VerifyBGPPeerMPCaps test."""
+        bgp_peers = []
+        for neighbor in self.device.bgp_neighbors:
+            multiprotocol_caps = set()
+            not_activated_afs = set()
+            neighbor_ip = str(neighbor.ip_address)
+            identifier = f"{neighbor.peer if neighbor.peer else neighbor_ip} in VRF {neighbor.vrf}"
+
+            # TODO: Check if we want to consider `router_bgp.bgp.default.ipv4_unicast` and `ipv4_unicast_transport_ipv6`
+            if neighbor.vrf == "default":
+                for af_name, multiprotocol_cap in DEFAULT_VRF_ADDRESS_FAMILIES.items():
+                    global_af = getattr(self.structured_config.router_bgp, af_name)
+                    if (neighbor_ip in global_af.neighbors and global_af.neighbors[neighbor_ip].activate is True) or (
+                        neighbor.peer_group in global_af.peer_groups and global_af.peer_groups[neighbor.peer_group].activate is True
+                    ):
+                        multiprotocol_caps.add(multiprotocol_cap)
+                        continue
+                    not_activated_afs.add(multiprotocol_cap)
+            else:
+                for af_name, multiprotocol_cap in VRF_ADDRESS_FAMILIES.items():
+                    # Check if the address family is activated for the neighbor at the VRF level
+                    vrf = self.structured_config.router_bgp.vrfs[neighbor.vrf]
+                    vrf_af = getattr(vrf, af_name)
+                    if neighbor_ip in vrf_af.neighbors and vrf_af.neighbors[neighbor_ip].activate is True:
+                        multiprotocol_caps.add(multiprotocol_cap)
+                        continue
+                    # Check if the neighbor is part of a peer group that activates the address family at the global level
+                    global_af = getattr(self.structured_config.router_bgp, af_name)
+                    if (
+                        neighbor_ip in vrf.neighbors
+                        and vrf.neighbors[neighbor_ip].peer_group in global_af.peer_groups
+                        and global_af.peer_groups[vrf.neighbors[neighbor_ip].peer_group].activate is True
+                    ):
+                        multiprotocol_caps.add(multiprotocol_cap)
+                        continue
+                    not_activated_afs.add(multiprotocol_cap)
+
+            if not_activated_afs:
+                with self.logger.context(identifier):
+                    self.logger.info(LogMessage.BGP_AF_NOT_ACTIVATED, capability=", ".join(not_activated_afs))
+
+            bgp_peers.append(BgpPeer(peer_address=neighbor.ip_address, vrf=neighbor.vrf, capabilities=list(multiprotocol_caps), strict=True))
+
+        return VerifyBGPPeerMPCaps.Input(bgp_peers=bgp_peers) if bgp_peers else None

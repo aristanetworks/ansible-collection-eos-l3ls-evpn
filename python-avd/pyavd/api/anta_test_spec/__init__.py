@@ -7,16 +7,16 @@ from typing import Self
 
 from pydantic import BaseModel, model_validator
 
+from pyavd._anta.constants import StructuredConfigKey
 from pyavd._anta.input_factories._base_classes import AntaTestInputFactory
-from pyavd._anta.lib import AntaTest, AntaTestDefinition
-from pyavd._anta.utils import ConfigManager, LogMessage, StructuredConfigKey, TestLoggerAdapter
-from pyavd._utils import get
+from pyavd._anta.lib import AntaTest
 
 
-class TestSpec(BaseModel, validate_assignment=True):
-    """TestSpec model used to define an ANTA test specification.
+class TestSpec(BaseModel):
+    """TestSpec model used to define an ANTA test specification in PyAVD.
 
-    The model attributes are used to create an AntaTestDefinition using the `create_test_definition` method.
+    Primarily used in the `PYAVD_TEST_INDEX` list to define the ANTA tests to be run
+    but can also be provided in the `get_device_anta_catalog` PyAVD function to add custom tests.
 
     If the ANTA test requires input, either `input_factory` or `input_dict` attributes should be provided, but not both.
 
@@ -50,36 +50,3 @@ class TestSpec(BaseModel, validate_assignment=True):
             raise ValueError(msg)
 
         return self
-
-    def create_test_definition(self, manager: ConfigManager, logger: TestLoggerAdapter) -> AntaTestDefinition | None:
-        """Create the AntaTestDefinition from this TestSpec instance."""
-        # Skip the test if the conditional keys are not present in the structured config
-        if self.conditional_keys and not manager.verify_keys(self.conditional_keys):
-            keys = StructuredConfigKey.to_string_list(self.conditional_keys)
-            logger.debug(LogMessage.NO_DATA_MODEL, entity=", ".join(keys))
-            return None
-
-        # AntaTestDefinition takes `inputs=None` if the test does not require input
-        inputs = None
-
-        # Create the AntaTest.Input instance from the input dict if available
-        if self.input_dict:
-            rendered_inputs = {}
-            for input_field, structured_config_key in self.input_dict.items():
-                field_value = get(manager.structured_config, structured_config_key.value)
-                if field_value is not None:
-                    rendered_inputs[input_field] = field_value
-                else:
-                    logger.debug(LogMessage.NO_DATA_MODEL, entity=structured_config_key.value)
-                    return None
-            inputs = self.test_class.Input(**rendered_inputs)
-
-        # Else create the AntaTest.Input instance from the input factory if available
-        elif self.input_factory:
-            factory = self.input_factory(self.test_class, manager, logger)  # pylint: disable=not-callable
-            inputs = factory.create()
-            if inputs is None:
-                logger.debug(LogMessage.NO_INPUTS)
-                return None
-
-        return AntaTestDefinition(test=self.test_class, inputs=inputs)

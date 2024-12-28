@@ -3,58 +3,54 @@
 # that can be found in the LICENSE file.
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
+from ipaddress import IPv6Address, ip_interface
 
-from pyavd._anta.utils import LogMessage
-from pyavd._utils import get, validate_dict
+from anta.input_models.security import IPSecPeer
+from anta.tests.security import VerifySpecificIPSecConn
+
+from pyavd._anta.logs import LogMessage
 
 from ._base_classes import AntaTestInputFactory
-
-if TYPE_CHECKING:
-    from anta.tests.security import VerifySpecificIPSecConn
 
 
 class VerifySpecificIPSecConnInputFactory(AntaTestInputFactory):
     """Input factory class for the VerifySpecificIPSecConn test.
 
-    This factory creates test inputs for IP security connections verification.
+    Required config:
+      - router_path_selection.path_groups.[].static_peers
 
-    It collects IP security connections for:
-      - Router path-selection path groups configured with static-peers.
-      - static-peers configured with router_ip.
+    Requirements:
+      - IPv4 static peers only
 
-    The factory ensures:
-      - IP security collection is skipped for missing required key `router_path_selection.path_groups[].static_peers[].router_ip`
-
+    Notes:
+      - Deduplicates connections (router_ip, vrf) pairs
+      - Always uses default VRF
     """
 
     def create(self) -> VerifySpecificIPSecConn.Input | None:
         """Create Input for the VerifySpecificIPSecConn test."""
-        connections = []
+        ip_security_connections = []
 
-        path_groups = get(self.manager.structured_config, "router_path_selection.path_groups")
         added_peers = set()
-        # Check if there are any path groups with static peers
-        for path_group in path_groups:
-            is_valid, issues = validate_dict(path_group, required_keys=["static_peers"])
-            if not is_valid:
-                self.logger.debug(LogMessage.INELIGIBLE_DATA, entity=path_group["name"], issues=issues)
+        for path_group in self.structured_config.router_path_selection.path_groups:
+            # Check if the path group has static peers
+            if not path_group.static_peers:
+                self.logger.info(LogMessage.STUN_NO_STATIC_PEERS, caller=path_group.name)
                 continue
-            # Check if there are any static peer with router_ip
-            for peer in path_group["static_peers"]:
-                is_valid, issues = validate_dict(peer, required_keys=["router_ip"])
-                if not is_valid:
-                    self.logger.debug(LogMessage.INELIGIBLE_DATA, entity=peer["name"], issues=issues)
+
+            # Add static peers to the list of IP security connections
+            for static_peer in path_group.static_peers:
+                peer_ip = ip_interface(static_peer.router_ip).ip
+                if isinstance(peer_ip, IPv6Address):
+                    self.logger.info(LogMessage.IPV6_UNSUPPORTED, caller=f"Static peer ({static_peer.router_ip})")
                     continue
-                peer_address = peer["router_ip"]
-                vrf = "default"  # TODO: Keeping the vrf name static for now. We may need to change later on.
-                if (peer_address, vrf) not in added_peers:
-                    connections.append(
-                        self.test.Input.IPSecPeers(
-                            peer=peer_address,
-                            vrf=vrf,
+                if (static_peer.router_ip, "default") not in added_peers:
+                    ip_security_connections.append(
+                        IPSecPeer(
+                            peer=peer_ip,
+                            vrf="default",
                         ),
                     )
-                    added_peers.add((peer_address, vrf))
+                    added_peers.add((static_peer.router_ip, "default"))
 
-        return self.test.Input(ip_security_connections=connections) if connections else None
+        return VerifySpecificIPSecConn.Input(ip_security_connections=ip_security_connections) if ip_security_connections else None

@@ -3,68 +3,69 @@
 # that can be found in the LICENSE file.
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
+from itertools import chain
 
-from pyavd._anta.utils import LogMessage
-from pyavd._utils import get
+from anta.input_models.interfaces import InterfaceState
+from anta.tests.interfaces import VerifyInterfacesStatus
+
+from pyavd._anta.logs import LogMessage
 
 from ._base_classes import AntaTestInputFactory
-from ._constants import INTERFACE_MODELS
-
-if TYPE_CHECKING:
-    from anta.tests.interfaces import VerifyInterfacesStatus
 
 
 class VerifyInterfacesStatusInputFactory(AntaTestInputFactory):
     """Input factory class for the VerifyInterfacesStatus test.
 
-    This factory creates test inputs for interface status verification.
+    Ethernet/Port-Channel interfaces:
+    - Required config:
+      * validate_state != False
+    - Requirements:
+      * Interface exists in config
+      * Interface is not shutdown
 
-    It collects interfaces that should be monitored for:
-      - These configured interface types: Ethernet, Port-Channel, VLAN, Loopback, DPS
-      - Vxlan1 interface on VTEP devices
+    VLAN/Loopback/DPS interfaces:
+    - Requirements:
+      * Interface exists in config
+      * Interface is not shutdown
 
-    The factory ensures:
-      - Interface shutdown state is properly considered ('adminDown' vs 'up')
-      - Only interfaces marked for validation (`validate_state: true`) are included
-      - Interface collection is skipped if no interfaces are found
+    Vxlan1 interface:
+    - Requirements:
+      * Device is VTEP
+
+    Notes:
+      - Expected status is 'adminDown' when the interface is shutdown, 'up' otherwise
+      - Ethernet interfaces can consider `interface_defaults.ethernet.shutdown`
     """
 
     def create(self) -> VerifyInterfacesStatus.Input | None:
         """Create Input for the VerifyInterfacesStatus test."""
-        inputs = []
+        interfaces = []
 
-        for interface_model in INTERFACE_MODELS:
-            if (interfaces := get(self.manager.structured_config, interface_model)) is None:
-                self.logger.debug(LogMessage.NO_DATA_MODEL, entity=interface_model)
+        # Add Ethernet interfaces, considering `validate_state` knob and interface defaults
+        for intf in self.structured_config.ethernet_interfaces:
+            if intf.validate_state is False:
+                self.logger.info(LogMessage.INTERFACE_VALIDATION_DISABLED, caller=intf.name)
                 continue
+            status = "adminDown" if intf.shutdown or self.structured_config.interface_defaults.ethernet.shutdown else "up"
+            interfaces.append(InterfaceState(name=intf.name, status=status))
 
-            for interface in interfaces:
-                self.manager.update_interface_shutdown(interface)
+        # Add Port-Channel interfaces, considering `validate_state` knob
+        for intf in self.structured_config.port_channel_interfaces:
+            if intf.validate_state is False:
+                self.logger.info(LogMessage.INTERFACE_VALIDATION_DISABLED, caller=intf.name)
+                continue
+            interfaces.append(InterfaceState(name=intf.name, status="adminDown" if intf.shutdown else "up"))
 
-                # Skip interfaces that have `validate_state: false`
-                if not self.manager.to_be_validated(interface):
-                    self.logger.debug(LogMessage.SKIP_INTERFACE, entity=interface["name"])
-                    continue
+        # Add VLAN, Loopback, and DPS interfaces
+        interfaces.extend(
+            [
+                InterfaceState(name=intf.name, status="adminDown" if intf.shutdown else "up")
+                for intf in chain(self.structured_config.vlan_interfaces, self.structured_config.loopback_interfaces, self.structured_config.dps_interfaces)
+            ]
+        )
 
-                # Find the interface status per the shutdown state
-                status = "adminDown" if interface["shutdown"] else "up"
+        # If the device is a VTEP, add the Vxlan1 interface to the list
+        if self.device.is_vtep:
+            interfaces.append(InterfaceState(name="Vxlan1", status="up"))
 
-                inputs.append(
-                    self.test.Input.InterfaceState(
-                        name=interface["name"],
-                        status=status,
-                    ),
-                )
-
-        # If the device is a VTEP, add the Vxlan1 interface to the list of interfaces to check
-        # TODO: Check if we want to add log here
-        if self.manager.is_vtep():
-            inputs.append(
-                self.test.Input.InterfaceState(
-                    name="Vxlan1",
-                    status="up",
-                ),
-            )
-
-        return self.test.Input(interfaces=inputs) if inputs else None
+        return VerifyInterfacesStatus.Input(interfaces=interfaces) if interfaces else None

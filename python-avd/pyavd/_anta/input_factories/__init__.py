@@ -9,14 +9,15 @@ from .avt import VerifyAVTRoleInputFactory
 from .connectivity import VerifyLLDPNeighborsInputFactory, VerifyReachabilityInputFactory
 from .hardware import VerifyEnvironmentCoolingInputFactory, VerifyEnvironmentPowerInputFactory, VerifyTransceiversManufacturersInputFactory
 from .interfaces import VerifyInterfacesStatusInputFactory
-from .routing_bgp import VerifyBGPSpecificPeersInputFactory
+from .routing_bgp import VerifyBGPPeerMPCapsInputFactory, VerifyBGPPeerSessionInputFactory
 from .routing_generic import VerifyRoutingTableEntryInputFactory
 from .security import VerifySpecificIPSecConnInputFactory
-from .stun import VerifyStunClientInputFactory
+from .stun import VerifyStunClientTranslationInputFactory
 
 __all__ = [
     "VerifyAVTRoleInputFactory",
-    "VerifyBGPSpecificPeersInputFactory",
+    "VerifyBGPPeerMPCapsInputFactory",
+    "VerifyBGPPeerSessionInputFactory",
     "VerifyEnvironmentCoolingInputFactory",
     "VerifyEnvironmentPowerInputFactory",
     "VerifyInterfacesStatusInputFactory",
@@ -24,6 +25,6 @@ __all__ = [
     "VerifyReachabilityInputFactory",
     "VerifyRoutingTableEntryInputFactory",
     "VerifySpecificIPSecConnInputFactory",
-    "VerifyStunClientInputFactory",
+    "VerifyStunClientTranslationInputFactory",
     "VerifyTransceiversManufacturersInputFactory",
 ]

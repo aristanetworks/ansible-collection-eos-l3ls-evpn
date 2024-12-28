@@ -4,8 +4,8 @@
 from __future__ import annotations
 
 import re
-from collections.abc import Iterable, Iterator, Sequence
-from typing import TYPE_CHECKING, ClassVar, Generic, Literal, cast
+from collections.abc import Callable, Iterable, Iterator, Sequence
+from typing import TYPE_CHECKING, Any, ClassVar, Generic, Literal, cast
 
 from pyavd._errors import AristaAvdDuplicateDataError
 from pyavd._schema.coerce_type import coerce_type
@@ -165,6 +165,10 @@ class AvdIndexedList(Sequence[T_AvdModel], Generic[T_PrimaryKey, T_AvdModel], Av
 
         cls = type(self)
         return cls(sorted(self.values(), key=key))
+
+    def _filtered(self, function: Callable[[T_AvdModel], bool]) -> Self:
+        cls = type(self)
+        return cls(filter(function, self._items.values()))
 
     def _deepmerge(self, other: Self, list_merge: Literal["append", "replace"] = "append") -> None:
         """

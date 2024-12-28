@@ -6,18 +6,16 @@
 from anta.catalog import AntaCatalog, AntaTestDefinition
 from anta.device import AsyncEOSDevice
 from anta.inventory import AntaInventory
-from anta.logger import setup_logging
 from anta.models import AntaTest
 from anta.result_manager import ResultManager
 from anta.runner import main as anta_runner
 
 __all__ = [
     "AntaCatalog",
-    "AntaTestDefinition",
     "AntaInventory",
-    "setup_logging",
-    "AsyncEOSDevice",
     "AntaTest",
+    "AntaTestDefinition",
+    "AsyncEOSDevice",
     "ResultManager",
     "anta_runner",
 ]

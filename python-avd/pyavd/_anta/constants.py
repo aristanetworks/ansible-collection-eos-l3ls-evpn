@@ -1,6 +1,8 @@
 # Copyright (c) 2023-2024 Arista Networks, Inc.
 # Use of this source code is governed by the Apache License 2.0
 # that can be found in the LICENSE file.
+"""Constants used by PyAVD for ANTA."""
+
 from __future__ import annotations
 
 from enum import Enum

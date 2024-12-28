@@ -1,6 +1,8 @@
 # Copyright (c) 2023-2024 Arista Networks, Inc.
 # Use of this source code is governed by the Apache License 2.0
 # that can be found in the LICENSE file.
+"""Test index for PyAVD ANTA tests."""
+
 from __future__ import annotations
 
 from pyavd._anta.input_factories import *
@@ -16,14 +18,19 @@ PYAVD_TEST_INDEX: list[TestSpec] = [
         input_dict={"profile": StructuredConfigKey.HTTPS_SSL_PROFILE},
     ),
     TestSpec(
-        test_class=VerifySpecificIPSecConn,
-        conditional_keys=[StructuredConfigKey.ROUTER_PATH_SELECTION_GROUPS],
-        input_factory=VerifySpecificIPSecConnInputFactory,
+        test_class=VerifyAVTRole,
+        conditional_keys=[StructuredConfigKey.AVT_ROLE],
+        input_factory=VerifyAVTRoleInputFactory,
     ),
     TestSpec(
-        test_class=VerifyBGPSpecificPeers,
+        test_class=VerifyBGPPeerMPCaps,
         conditional_keys=[StructuredConfigKey.ROUTER_BGP],
-        input_factory=VerifyBGPSpecificPeersInputFactory,
+        input_factory=VerifyBGPPeerMPCapsInputFactory,
+    ),
+    TestSpec(
+        test_class=VerifyBGPPeerSession,
+        conditional_keys=[StructuredConfigKey.ROUTER_BGP],
+        input_factory=VerifyBGPPeerSessionInputFactory,
     ),
     TestSpec(
         test_class=VerifyEnvironmentCooling,
@@ -50,17 +57,33 @@ PYAVD_TEST_INDEX: list[TestSpec] = [
         conditional_keys=[StructuredConfigKey.MLAG_CONFIGURATION],
     ),
     TestSpec(
-        test_class=VerifyRoutingProtocolModel,
-        conditional_keys=[StructuredConfigKey.SERVICE_ROUTING_PROTOCOLS_MODEL],
-        input_dict={"model": StructuredConfigKey.SERVICE_ROUTING_PROTOCOLS_MODEL},
+        test_class=VerifyNTP,
     ),
     TestSpec(
         test_class=VerifyReachability,
         input_factory=VerifyReachabilityInputFactory,
     ),
     TestSpec(
+        test_class=VerifyReloadCause,
+    ),
+    TestSpec(
+        test_class=VerifyRoutingProtocolModel,
+        conditional_keys=[StructuredConfigKey.SERVICE_ROUTING_PROTOCOLS_MODEL],
+        input_dict={"model": StructuredConfigKey.SERVICE_ROUTING_PROTOCOLS_MODEL},
+    ),
+    TestSpec(
         test_class=VerifyRoutingTableEntry,
         input_factory=VerifyRoutingTableEntryInputFactory,
+    ),
+    TestSpec(
+        test_class=VerifySpecificIPSecConn,
+        conditional_keys=[StructuredConfigKey.ROUTER_PATH_SELECTION_GROUPS],
+        input_factory=VerifySpecificIPSecConnInputFactory,
+    ),
+    TestSpec(
+        test_class=VerifyStunClient,
+        conditional_keys=[StructuredConfigKey.ROUTER_PATH_SELECTION_GROUPS],
+        input_factory=VerifyStunClientTranslationInputFactory,
     ),
     TestSpec(
         test_class=VerifyTemperature,
@@ -71,22 +94,6 @@ PYAVD_TEST_INDEX: list[TestSpec] = [
     ),
     TestSpec(
         test_class=VerifyTransceiversTemperature,
-    ),
-    TestSpec(
-        test_class=VerifyNTP,
-    ),
-    TestSpec(
-        test_class=VerifyReloadCause,
-    ),
-    TestSpec(
-        test_class=VerifyStunClient,
-        conditional_keys=[StructuredConfigKey.ROUTER_PATH_SELECTION_GROUPS],
-        input_factory=VerifyStunClientInputFactory,
-    ),
-    TestSpec(
-        test_class=VerifyAVTRole,
-        conditional_keys=[StructuredConfigKey.AVT_ROLE],
-        input_factory=VerifyAVTRoleInputFactory,
     ),
 ]
 """List of all ANTA tests with their specifications that PyAVD will run by default."""

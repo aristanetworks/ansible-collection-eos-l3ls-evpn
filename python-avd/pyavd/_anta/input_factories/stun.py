@@ -3,64 +3,51 @@
 # that can be found in the LICENSE file.
 from __future__ import annotations
 
-from ipaddress import ip_interface
-from typing import TYPE_CHECKING
+from ipaddress import IPv6Address, ip_interface
 
-from pyavd._anta.utils import LogMessage
-from pyavd._utils import get, validate_dict
+from anta.input_models.stun import StunClientTranslation
+from anta.tests.stun import VerifyStunClientTranslation
+
+from pyavd._anta.logs import LogMessage
 
 from ._base_classes import AntaTestInputFactory
 
-if TYPE_CHECKING:
-    from anta.tests.stun import VerifyStunClient
 
+class VerifyStunClientTranslationInputFactory(AntaTestInputFactory):
+    """Input factory class for the VerifyStunClientTranslation test.
 
-class VerifyStunClientInputFactory(AntaTestInputFactory):
-    """Input factory class for the VerifyStunClient test.
+    Required config:
+      - router_path_selection.path_groups.[].local_interfaces.[].stun.server_profiles
+      - ethernet_interfaces.[].ip_address (for referenced interfaces)
 
-    This factory creates test inputs for STUN client settings verification.
-
-    It collects STUN client local interfaces for:
-      - Router path-selection path groups configured with local_interfaces.
-      - local_interfaces configured with stun.server_profiles.
-
-    The factory ensures:
-      - Only explicitly stun.server_profiles configured stun local interfaces are tested
-      - Only explicitly ip address configured stun local interfaces are tested
-
+    Requirements:
+      - Path groups have local interfaces with STUN server profiles
+      - IPv4 source address for the STUN client
     """
 
-    def create(self) -> VerifyStunClient.Input | None:
-        """Create Input for the VerifyStunClient test."""
+    def create(self) -> VerifyStunClientTranslation.Input | None:
+        """Create Input for the VerifyStunClientTranslation test."""
         stun_clients = []
 
-        # Check if there are any path groups with STUN configuration
-        path_groups = get(self.manager.structured_config, "router_path_selection.path_groups")
-        # Get the interfaces with STUN configuration
-        stun_interfaces = []
-        for path_group in path_groups:
-            is_valid, issues = validate_dict(path_group, required_keys=["local_interfaces"])
-            if not is_valid:
-                self.logger.debug(LogMessage.INELIGIBLE_DATA, entity=path_group["name"], issues=issues)
+        for path_group in self.structured_config.router_path_selection.path_groups:
+            # Check if the path group has local interfaces with STUN server profiles
+            stun_interfaces = [local_interface.name for local_interface in path_group.local_interfaces if local_interface.stun.server_profiles]
+            if not stun_interfaces:
+                self.logger.info(LogMessage.STUN_NO_CLIENT_INTERFACE, caller=path_group.name)
                 continue
-            for local_interface in path_group["local_interfaces"]:
-                is_valid, issues = validate_dict(local_interface, required_keys=["stun.server_profiles"])
 
-                if not is_valid:
-                    self.logger.debug(LogMessage.INELIGIBLE_DATA, entity=local_interface["name"], issues=issues)
+            for interface in stun_interfaces:
+                # Get the source IP address for the STUN client
+                if (
+                    interface in self.structured_config.ethernet_interfaces
+                    and (ip_address := self.structured_config.ethernet_interfaces[interface].ip_address) is None
+                ):
+                    self.logger.info(LogMessage.INTERFACE_NO_IP, caller=interface)
                     continue
+                source_address = ip_interface(ip_address).ip
+                if isinstance(source_address, IPv6Address):
+                    self.logger.info(LogMessage.IPV6_UNSUPPORTED, caller=interface)
+                    continue
+                stun_clients.append(StunClientTranslation(source_address=source_address))
 
-                stun_interfaces.append(local_interface["name"])
-        if not stun_interfaces:
-            self.logger.debug(LogMessage.NOT_STUN_CLIENT_INTERFACE)
-            return None
-
-        # Generate the ANTA tests for each identified local interface
-        for source_interface in stun_interfaces:
-            if (ip_address := self.manager.get_interface_ip("ethernet_interfaces", source_interface)) is None:
-                continue
-            source_address = str(ip_interface(ip_address).ip)
-            source_port = 4500
-            stun_clients.append(self.test.Input.ClientAddress(source_address=source_address, source_port=source_port))
-
-        return self.test.Input(stun_clients=stun_clients) if stun_clients else None
+        return VerifyStunClientTranslation.Input(stun_clients=stun_clients) if stun_clients else None
