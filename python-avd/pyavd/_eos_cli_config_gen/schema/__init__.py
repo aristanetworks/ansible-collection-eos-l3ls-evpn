@@ -21587,6 +21587,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
             _fields: ClassVar[dict] = {
                 "name": {"type": str},
+                "fips_restrictions": {"type": bool},
                 "tls_versions": {"type": str},
                 "cipher_list": {"type": str},
                 "ciphers": {"type": Ciphers},
@@ -21597,6 +21598,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 "_custom_data": {"type": dict},
             }
             name: str | None
+            fips_restrictions: bool | None
+            """Use FIPS compliant algorithms."""
             tls_versions: str | None
             """
             List of allowed TLS versions as string.
@@ -21642,6 +21645,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                     self,
                     *,
                     name: str | None | UndefinedType = Undefined,
+                    fips_restrictions: bool | None | UndefinedType = Undefined,
                     tls_versions: str | None | UndefinedType = Undefined,
                     cipher_list: str | None | UndefinedType = Undefined,
                     ciphers: Ciphers | UndefinedType = Undefined,
@@ -21659,6 +21663,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                     Args:
                         name: name
+                        fips_restrictions: Use FIPS compliant algorithms.
                         tls_versions:
                            List of allowed TLS versions as string.
                            Examples:  # fmt: skip

@@ -101,6 +101,9 @@ keys:
           keys:
             name:
               type: str
+            fips_restrictions:
+              type: bool
+              description: Use FIPS compliant algorithms.
             tls_versions:
               type: str
               description: |
@@ -190,6 +193,7 @@ keys:
                 If specified, one CRL needs to be provided for every certificate in the chain, even if the revocation list in the CRL is empty.
               items:
                 type: str
+
       shared_secret_profiles:
         type: list
         primary_key: profile

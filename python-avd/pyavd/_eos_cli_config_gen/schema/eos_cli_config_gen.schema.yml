@@ -7514,6 +7514,9 @@ keys:
           keys:
             name:
               type: str
+            fips_restrictions:
+              type: bool
+              description: Use FIPS compliant algorithms.
             tls_versions:
               type: str
               description: "List of allowed TLS versions as string.\nExamples:\n  -
