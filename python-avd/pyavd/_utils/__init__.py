@@ -22,7 +22,6 @@ from .template import template
 from .template_var import template_var
 from .undefined import Undefined, UndefinedType
 from .unique import unique
-from .validate_dict import validate_dict
 
 __all__ = [
     "AvdStringFormatter",
@@ -52,5 +51,4 @@ __all__ = [
     "template",
     "template_var",
     "unique",
-    "validate_dict",
 ]
