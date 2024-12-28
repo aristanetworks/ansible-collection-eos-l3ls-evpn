@@ -4,7 +4,7 @@
 from __future__ import annotations
 
 import re
-from collections.abc import Callable, Iterable, Iterator, Sequence
+from collections.abc import Iterable, Iterator, Sequence
 from typing import TYPE_CHECKING, Any, ClassVar, Generic, Literal, cast
 
 from pyavd._errors import AristaAvdDuplicateDataError
