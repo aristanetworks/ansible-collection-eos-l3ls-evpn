@@ -1,111 +1,58 @@
-hostname: DC2-RS2
-is_deployed: true
-router_bgp:
-  as: '65201'
-  router_id: 172.16.20.2
-  bgp_defaults:
-  - distance bgp 20 200 200
-  bgp:
-    default:
-      ipv4_unicast: false
-  maximum_paths:
-    paths: 4
-    ecmp: 4
-  redistribute:
-    connected:
-      enabled: true
-      route_map: RM-CONN-2-BGP
-  updates:
-    wait_install: true
-  peer_groups:
-  - name: IPv4-UNDERLAY-PEERS
-    type: ipv4
-    maximum_routes: 12000
-    send_community: all
-  address_family_ipv4:
-    peer_groups:
-    - name: IPv4-UNDERLAY-PEERS
-      activate: true
-  neighbors:
-  - ip_address: 172.17.20.8
-    peer_group: IPv4-UNDERLAY-PEERS
-    remote_as: '65200'
-    peer: DC2-SUPER-SPINE1
-    description: DC2-SUPER-SPINE1_Ethernet5
-  - ip_address: 172.17.20.10
-    peer_group: IPv4-UNDERLAY-PEERS
-    remote_as: '65200'
-    peer: DC2-SUPER-SPINE1
-    description: DC2-SUPER-SPINE1_Ethernet7
-static_routes:
-- vrf: MGMT
-  destination_address_prefix: 0.0.0.0/0
-  gateway: 192.168.1.254
-service_routing_protocols_model: multi-agent
-ip_routing: true
-vlan_internal_order:
-  allocation: ascending
-  range:
-    beginning: 1006
-    ending: 1199
 aaa_root:
   disabled: true
 config_end: true
 enable_password:
   disabled: true
-transceiver_qsfp_default_mode_4x10: true
-spanning_tree:
-  mode: none
+eos_cli: "interface Loopback1111\n  description Loopback created from raw_eos_cli under platform_settings vEOS-LAB\n"
+ethernet_interfaces:
+- name: Ethernet1
+  description: P2P_DC2-SUPER-SPINE1_Ethernet5
+  shutdown: false
+  ip_address: 172.17.20.9/31
+  service_profile: QOS-PROFILE
+  peer: DC2-SUPER-SPINE1
+  peer_interface: Ethernet5
+  peer_type: super-spine
+  switchport:
+    enabled: false
+- name: Ethernet2
+  description: P2P_DC2-SUPER-SPINE1_Ethernet7
+  shutdown: false
+  ip_address: 172.17.20.11/31
+  service_profile: QOS-PROFILE
+  peer: DC2-SUPER-SPINE1
+  peer_interface: Ethernet7
+  peer_type: super-spine
+  switchport:
+    enabled: false
+hostname: DC2-RS2
+ip_routing: true
+is_deployed: true
 local_users:
 - name: admin
   privilege: 15
   role: network-admin
   sha512_password: $6$eJ5TvI8oru5i9e8G$R1X/SbtGTk9xoEHEBQASc7SC2nHYmi.crVgp2pXuCXwxsXEA81e4E0cXgQ6kX08fIeQzauqhv2kS.RGJFCon5/
   no_password: true
-vrfs:
-- name: MGMT
-  ip_routing: false
+loopback_interfaces:
+- name: Loopback0
+  description: ROUTER_ID
+  shutdown: false
+  ip_address: 172.16.20.2/32
+management_api_http:
+  enable_https: true
+  enable_vrfs:
+  - name: MGMT
 management_interfaces:
 - name: Management1
   description: OOB_MANAGEMENT
   shutdown: false
   vrf: MGMT
   ip_address: 192.168.1.19/24
-  gateway: 192.168.1.254
   type: oob
-management_api_http:
-  enable_vrfs:
-  - name: MGMT
-  enable_https: true
-eos_cli: "interface Loopback1111\n  description Loopback created from raw_eos_cli under platform_settings vEOS-LAB\n"
-snmp_server:
-  location: TWODC_5STAGE_CLOS DC2 DC2-RS2
-ethernet_interfaces:
-- name: Ethernet1
-  peer: DC2-SUPER-SPINE1
-  peer_interface: Ethernet5
-  peer_type: super-spine
-  description: P2P_DC2-SUPER-SPINE1_Ethernet5
-  shutdown: false
-  service_profile: QOS-PROFILE
-  switchport:
-    enabled: false
-  ip_address: 172.17.20.9/31
-- name: Ethernet2
-  peer: DC2-SUPER-SPINE1
-  peer_interface: Ethernet7
-  peer_type: super-spine
-  description: P2P_DC2-SUPER-SPINE1_Ethernet7
-  shutdown: false
-  service_profile: QOS-PROFILE
-  switchport:
-    enabled: false
-  ip_address: 172.17.20.11/31
-loopback_interfaces:
-- name: Loopback0
-  description: ROUTER_ID
-  shutdown: false
-  ip_address: 172.16.20.2/32
+  gateway: 192.168.1.254
+metadata:
+  platform: vEOS-LAB
 prefix_lists:
 - name: PL-LOOPBACKS-EVPN-OVERLAY
   sequence_numbers:
@@ -118,5 +65,58 @@ route_maps:
     type: permit
     match:
     - ip address prefix-list PL-LOOPBACKS-EVPN-OVERLAY
-metadata:
-  platform: vEOS-LAB
+router_bgp:
+  as: '65201'
+  router_id: 172.16.20.2
+  maximum_paths:
+    paths: 4
+    ecmp: 4
+  updates:
+    wait_install: true
+  bgp_defaults:
+  - distance bgp 20 200 200
+  bgp:
+    default:
+      ipv4_unicast: false
+  peer_groups:
+  - name: IPv4-UNDERLAY-PEERS
+    type: ipv4
+    send_community: all
+    maximum_routes: 12000
+  neighbors:
+  - ip_address: 172.17.20.8
+    peer_group: IPv4-UNDERLAY-PEERS
+    remote_as: '65200'
+    peer: DC2-SUPER-SPINE1
+    description: DC2-SUPER-SPINE1_Ethernet5
+  - ip_address: 172.17.20.10
+    peer_group: IPv4-UNDERLAY-PEERS
+    remote_as: '65200'
+    peer: DC2-SUPER-SPINE1
+    description: DC2-SUPER-SPINE1_Ethernet7
+  redistribute:
+    connected:
+      enabled: true
+      route_map: RM-CONN-2-BGP
+  address_family_ipv4:
+    peer_groups:
+    - name: IPv4-UNDERLAY-PEERS
+      activate: true
+service_routing_protocols_model: multi-agent
+snmp_server:
+  location: TWODC_5STAGE_CLOS DC2 DC2-RS2
+spanning_tree:
+  mode: none
+static_routes:
+- vrf: MGMT
+  destination_address_prefix: 0.0.0.0/0
+  gateway: 192.168.1.254
+transceiver_qsfp_default_mode_4x10: true
+vlan_internal_order:
+  allocation: ascending
+  range:
+    beginning: 1006
+    ending: 1199
+vrfs:
+- name: MGMT
+  ip_routing: false

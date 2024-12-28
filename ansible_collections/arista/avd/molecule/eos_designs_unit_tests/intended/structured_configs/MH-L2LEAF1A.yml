@@ -1,10 +1,6 @@
-hostname: MH-L2LEAF1A
-is_deployed: true
-static_routes:
-- vrf: MGMT
-  destination_address_prefix: 0.0.0.0/0
-  gateway: 192.168.200.5
-service_routing_protocols_model: multi-agent
+aaa_root:
+  disabled: true
+config_end: true
 daemon_terminattr:
   cvaddrs:
   - 192.168.200.11:9910
@@ -12,20 +8,35 @@ daemon_terminattr:
     method: key
     key: telarista
   cvvrf: MGMT
-  smashexcludes: ale,flexCounter,hardware,kni,pulse,strata
-  ingestexclude: /Sysdb/cell/1/agent,/Sysdb/cell/2/agent
   disable_aaa: false
-vlan_internal_order:
-  allocation: ascending
-  range:
-    beginning: 1006
-    ending: 1199
-aaa_root:
-  disabled: true
-config_end: true
+  ingestexclude: /Sysdb/cell/1/agent,/Sysdb/cell/2/agent
+  smashexcludes: ale,flexCounter,hardware,kni,pulse,strata
 enable_password:
   disabled: true
-transceiver_qsfp_default_mode_4x10: true
+ethernet_interfaces:
+- name: Ethernet1
+  description: MH-LEAF2A_Ethernet2
+  shutdown: false
+  channel_group:
+    id: 1
+    mode: active
+  peer: MH-LEAF2A
+  peer_interface: Ethernet2
+  peer_type: l3leaf
+- name: Ethernet10
+  description: server02_Eth1
+  shutdown: false
+  link_tracking_groups:
+  - name: l2leaf-server02
+    direction: downstream
+  peer: server02
+  peer_interface: Eth1
+  peer_type: server
+  switchport:
+    enabled: true
+hostname: MH-L2LEAF1A
+ip_igmp_snooping:
+  globally_enabled: true
 ip_name_servers:
 - ip_address: 192.168.200.5
   vrf: MGMT
@@ -35,11 +46,10 @@ ip_name_servers:
   vrf: MGMT
 - ip_address: 2001:db8::2
   vrf: MGMT
-spanning_tree:
-  mode: mstp
-  mst_instances:
-  - id: '0'
-    priority: 16384
+is_deployed: true
+link_tracking_groups:
+- name: l2leaf-server02
+  recovery_delay: 300
 local_users:
 - name: admin
   disabled: true
@@ -54,76 +64,66 @@ local_users:
     cvpadmin@hostmachine.local
   secondary_ssh_key: ssh-rsa AAAAB3NzaC1yc2EAA82spi2mkxp4FgaLi4CjWkpnL1A/MD7WhrSNgqXToF7QCb9Lidagy9IHafQxfu7LwkFdyQIMu8XNwDZIycuf29wHbDdz1N+YNVK8zwyNAbMOeKMqblsEm2YIorgjzQX1m9+/rJeFBKz77PSgeMp/Rc3txFVuSmFmeTy3aMkz=
     cvpadmin@hostmachine.local
-vrfs:
-- name: MGMT
-  ip_routing: false
+management_api_http:
+  enable_https: true
+  default_services: false
+  enable_vrfs:
+  - name: MGMT
 management_interfaces:
 - name: Management1
   description: OOB_MANAGEMENT
   shutdown: false
   vrf: MGMT
   ip_address: 192.168.201.201/24
-  gateway: 192.168.200.5
   type: oob
-management_api_http:
-  enable_vrfs:
-  - name: MGMT
-  enable_https: true
-  default_services: false
-link_tracking_groups:
-- name: l2leaf-server02
-  recovery_delay: 300
+  gateway: 192.168.200.5
+metadata:
+  platform: vEOS-LAB
 ntp:
   local_interface:
     name: Management1
     vrf: MGMT
   servers:
   - name: 192.168.200.5
-    vrf: MGMT
     preferred: true
+    vrf: MGMT
   - name: 2001:db8::3
     vrf: MGMT
-snmp_server:
-  contact: example@example.com
-  location: EOS_DESIGNS_UNIT_TESTS MH-L2LEAF1A
-ethernet_interfaces:
-- name: Ethernet1
-  peer: MH-LEAF2A
-  peer_interface: Ethernet2
-  peer_type: l3leaf
-  description: MH-LEAF2A_Ethernet2
-  shutdown: false
-  channel_group:
-    id: 1
-    mode: active
-- name: Ethernet10
-  peer: server02
-  peer_interface: Eth1
-  peer_type: server
-  description: server02_Eth1
-  shutdown: false
-  switchport:
-    enabled: true
-  link_tracking_groups:
-  - name: l2leaf-server02
-    direction: downstream
 port_channel_interfaces:
 - name: Port-Channel1
   description: MH-LEAF2A_Po2
+  shutdown: false
+  link_tracking_groups:
+  - name: l2leaf-server02
+    direction: upstream
   switchport:
     enabled: true
     mode: trunk
     trunk:
       allowed_vlan: '310'
-  shutdown: false
-  link_tracking_groups:
-  - name: l2leaf-server02
-    direction: upstream
+service_routing_protocols_model: multi-agent
+snmp_server:
+  contact: example@example.com
+  location: EOS_DESIGNS_UNIT_TESTS MH-L2LEAF1A
+spanning_tree:
+  mode: mstp
+  mst_instances:
+  - id: '0'
+    priority: 16384
+static_routes:
+- vrf: MGMT
+  destination_address_prefix: 0.0.0.0/0
+  gateway: 192.168.200.5
+transceiver_qsfp_default_mode_4x10: true
+vlan_internal_order:
+  allocation: ascending
+  range:
+    beginning: 1006
+    ending: 1199
 vlans:
 - id: 310
   name: Tenant_X_OP_Zone_1
   tenant: Tenant_X
-ip_igmp_snooping:
-  globally_enabled: true
-metadata:
-  platform: vEOS-LAB
+vrfs:
+- name: MGMT
+  ip_routing: false

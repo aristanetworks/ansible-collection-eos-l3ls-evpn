@@ -1,91 +1,6 @@
-hostname: MH-LEAF1A
-is_deployed: true
-router_bgp:
-  as: '65151'
-  router_id: 192.168.255.33
-  bgp:
-    default:
-      ipv4_unicast: false
-  maximum_paths:
-    paths: 4
-    ecmp: 4
-  redistribute:
-    connected:
-      enabled: true
-      route_map: RM-CONN-2-BGP
-  updates:
-    wait_install: true
-  peer_groups:
-  - name: UNDERLAY-PEERS
-    type: ipv4
-    password: 0nsCUm70mvSTxVO0ldytrg==
-    maximum_routes: 12000
-    send_community: all
-  - name: EVPN-OVERLAY-PEERS
-    type: evpn
-    update_source: Loopback0
-    bfd: true
-    password: q+VNViP5i4rVjW1cxFv2wA==
-    send_community: all
-    maximum_routes: 0
-    ebgp_multihop: 3
-  address_family_ipv4:
-    peer_groups:
-    - name: UNDERLAY-PEERS
-      activate: true
-    - name: EVPN-OVERLAY-PEERS
-      activate: false
-  neighbors:
-  - ip_address: 10.10.101.0
-    peer_group: UNDERLAY-PEERS
-    remote_as: '65001'
-    peer: DC1-SPINE1
-    description: DC1-SPINE1_Ethernet19
-  - ip_address: 192.168.255.1
-    peer_group: EVPN-OVERLAY-PEERS
-    peer: DC1-SPINE1
-    description: DC1-SPINE1
-    remote_as: '65001'
-  address_family_evpn:
-    peer_groups:
-    - name: EVPN-OVERLAY-PEERS
-      activate: true
-    evpn_hostflap_detection:
-      window: 180
-      threshold: 5
-      enabled: true
-      expiry_timeout: 10
-  vrfs:
-  - name: Tenant_X_OP_Zone
-    rd: 192.168.255.33:20
-    route_targets:
-      import:
-      - address_family: evpn
-        route_targets:
-        - '20:20'
-      export:
-      - address_family: evpn
-        route_targets:
-        - '20:20'
-    router_id: 192.168.255.33
-    redistribute:
-      connected:
-        enabled: true
-  vlan_aware_bundles:
-  - name: Tenant_X_OP_Zone
-    rd: 192.168.255.33:20
-    route_targets:
-      both:
-      - '20:20'
-    redistribute_routes:
-    - learned
-    vlan: '310'
-static_routes:
-- vrf: MGMT
-  destination_address_prefix: 0.0.0.0/0
-  gateway: 192.168.200.5
-service_routing_protocols_model: multi-agent
-ip_routing: true
+aaa_root:
+  disabled: true
+config_end: true
 daemon_terminattr:
   cvaddrs:
   - 192.168.200.11:9910
@@ -93,20 +8,211 @@ daemon_terminattr:
     method: key
     key: telarista
   cvvrf: MGMT
-  smashexcludes: ale,flexCounter,hardware,kni,pulse,strata
-  ingestexclude: /Sysdb/cell/1/agent,/Sysdb/cell/2/agent
   disable_aaa: false
-vlan_internal_order:
-  allocation: ascending
-  range:
-    beginning: 1006
-    ending: 1199
-aaa_root:
-  disabled: true
-config_end: true
+  ingestexclude: /Sysdb/cell/1/agent,/Sysdb/cell/2/agent
+  smashexcludes: ale,flexCounter,hardware,kni,pulse,strata
 enable_password:
   disabled: true
-transceiver_qsfp_default_mode_4x10: true
+ethernet_interfaces:
+- name: Ethernet1
+  description: P2P_LINK_TO_DC1-SPINE1_Ethernet19
+  shutdown: false
+  mtu: 1500
+  link_tracking_groups:
+  - name: LT_GROUP1
+    direction: upstream
+  ip_address: 10.10.101.1/31
+  peer: DC1-SPINE1
+  peer_interface: Ethernet19
+  peer_type: spine
+  switchport:
+    enabled: false
+- name: Ethernet10
+  description: server01_ES1_Eth1
+  shutdown: false
+  channel_group:
+    id: 10
+    mode: active
+  peer: server01_ES1
+  peer_interface: Eth1
+  peer_type: server
+  port_profile: Tenant_X
+- name: Ethernet12
+  description: server03_AUTO_ESI_Eth1
+  shutdown: false
+  channel_group:
+    id: 12
+    mode: active
+  peer: server03_AUTO_ESI
+  peer_interface: Eth1
+  peer_type: server
+  port_profile: Tenant_X
+- name: Ethernet13
+  description: server04_AUTO_ESI_Profile_Eth1
+  shutdown: false
+  channel_group:
+    id: 13
+    mode: active
+  peer: server04_AUTO_ESI_Profile
+  peer_interface: Eth1
+  peer_type: server
+  port_profile: Tenant_ESI_Auto
+- name: Ethernet14
+  description: server05_AUTO_ESI_Profile_Override_Eth1
+  shutdown: false
+  channel_group:
+    id: 14
+    mode: active
+  peer: server05_AUTO_ESI_Profile_Override
+  peer_interface: Eth1
+  peer_type: server
+  port_profile: Tenant_ESI_Auto
+- name: Ethernet15
+  description: server06_Single_Active_Port_Channel_Eth1
+  shutdown: false
+  channel_group:
+    id: 15
+    mode: active
+  peer: server06_Single_Active_Port_Channel
+  peer_interface: Eth1
+  peer_type: server
+  port_profile: Tenant_X_Trunk_Auto
+- name: Ethernet16
+  description: server07_Single_Active_Port_Channel_Manual_DF_Eth1
+  shutdown: false
+  channel_group:
+    id: 16
+    mode: active
+  peer: server07_Single_Active_Port_Channel_Manual_DF
+  peer_interface: Eth1
+  peer_type: server
+  port_profile: Tenant_X_Trunk
+- name: Ethernet17
+  description: server08_Single_Active_Ethernet_Eth1
+  shutdown: false
+  evpn_ethernet_segment:
+    identifier: 0000:0000:213f:36b8:ff71
+    redundancy: single-active
+    designated_forwarder_election:
+      algorithm: preference
+      preference_value: 100
+    route_target: 21:3f:36:b8:ff:71
+  peer: server08_Single_Active_Ethernet
+  peer_interface: Eth1
+  peer_type: server
+  port_profile: Tenant_X_Trunk_Auto_Eth
+  switchport:
+    enabled: true
+    mode: trunk
+    trunk:
+      allowed_vlan: '310'
+- name: Ethernet18
+  description: server09_All_Active_Ethernet_Eth1
+  shutdown: false
+  evpn_ethernet_segment:
+    identifier: 0000:0000:00dd:00dd:00dd
+    redundancy: all-active
+    designated_forwarder_election:
+      algorithm: modulus
+    route_target: 00:dd:00:dd:00:dd
+  peer: server09_All_Active_Ethernet
+  peer_interface: Eth1
+  peer_type: server
+  port_profile: Tenant_X_Trunk
+  switchport:
+    enabled: true
+    mode: trunk
+    trunk:
+      allowed_vlan: '310'
+- name: Ethernet19
+  description: server10_Single_Active_Ethernet_Manual_DF_Eth1
+  shutdown: false
+  evpn_ethernet_segment:
+    identifier: 0000:0000:885b:86cc:8bac
+    redundancy: single-active
+    designated_forwarder_election:
+      algorithm: preference
+      preference_value: 500
+    route_target: 88:5b:86:cc:8b:ac
+  peer: server10_Single_Active_Ethernet_Manual_DF
+  peer_interface: Eth1
+  peer_type: server
+  port_profile: Tenant_X_Trunk
+  switchport:
+    enabled: true
+    mode: trunk
+    trunk:
+      allowed_vlan: '310'
+- name: Ethernet20
+  description: server11_Single_Active_Port_Channel_Manual_DF_Dont_Preempt_Eth1
+  shutdown: false
+  channel_group:
+    id: 20
+    mode: active
+  peer: server11_Single_Active_Port_Channel_Manual_DF_Dont_Preempt
+  peer_interface: Eth1
+  peer_type: server
+  port_profile: Tenant_X_Trunk
+- name: Ethernet21
+  description: server12_Single_Active_Ethernet_Manual_DF_Dont_Preempt_Eth1
+  shutdown: false
+  evpn_ethernet_segment:
+    identifier: 0000:0000:5d0b:68d3:6ff9
+    redundancy: single-active
+    designated_forwarder_election:
+      algorithm: preference
+      preference_value: 500
+      dont_preempt: true
+    route_target: 5d:0b:68:d3:6f:f9
+  peer: server12_Single_Active_Ethernet_Manual_DF_Dont_Preempt
+  peer_interface: Eth1
+  peer_type: server
+  port_profile: Tenant_X_Trunk
+  switchport:
+    enabled: true
+    mode: trunk
+    trunk:
+      allowed_vlan: '310'
+- name: Ethernet22
+  description: server13_Single_Active_Port_Channel_Manual_DF_Dont_Preempt_modulus_Eth1
+  shutdown: false
+  channel_group:
+    id: 22
+    mode: active
+  peer: server13_Single_Active_Port_Channel_Manual_DF_Dont_Preempt_modulus
+  peer_interface: Eth1
+  peer_type: server
+  port_profile: Tenant_X_Trunk
+- name: Ethernet23
+  description: server14_Single_Active_Ethernet_Manual_DF_Dont_Preempt_modulus_Eth1
+  shutdown: false
+  evpn_ethernet_segment:
+    identifier: 0000:0000:262b:7df9:c98b
+    redundancy: single-active
+    designated_forwarder_election:
+      algorithm: modulus
+    route_target: 26:2b:7d:f9:c9:8b
+  peer: server14_Single_Active_Ethernet_Manual_DF_Dont_Preempt_modulus
+  peer_interface: Eth1
+  peer_type: server
+  port_profile: Tenant_X_Trunk
+  switchport:
+    enabled: true
+    mode: trunk
+    trunk:
+      allowed_vlan: '310'
+- name: Ethernet11
+  description: ROUTER02_WITH_SUBIF_Eth1
+  shutdown: false
+  channel_group:
+    id: 11
+    mode: active
+  peer: ROUTER02_WITH_SUBIF
+  peer_interface: Eth1
+  peer_type: router
+hostname: MH-LEAF1A
+ip_igmp_snooping:
+  globally_enabled: true
 ip_name_servers:
 - ip_address: 192.168.200.5
   vrf: MGMT
@@ -116,6 +222,17 @@ ip_name_servers:
   vrf: MGMT
 - ip_address: 2001:db8::2
   vrf: MGMT
+ip_routing: true
+ip_virtual_router_mac_address: 00:1c:73:00:dc:01
+is_deployed: true
+lacp:
+  port_id:
+    range:
+      begin: 1
+      end: 128
+link_tracking_groups:
+- name: LT_GROUP1
+  recovery_delay: 300
 local_users:
 - name: admin
   disabled: true
@@ -130,243 +247,6 @@ local_users:
     cvpadmin@hostmachine.local
   secondary_ssh_key: ssh-rsa AAAAB3NzaC1yc2EAA82spi2mkxp4FgaLi4CjWkpnL1A/MD7WhrSNgqXToF7QCb9Lidagy9IHafQxfu7LwkFdyQIMu8XNwDZIycuf29wHbDdz1N+YNVK8zwyNAbMOeKMqblsEm2YIorgjzQX1m9+/rJeFBKz77PSgeMp/Rc3txFVuSmFmeTy3aMkz=
     cvpadmin@hostmachine.local
-vrfs:
-- name: MGMT
-  ip_routing: false
-- name: Tenant_X_OP_Zone
-  tenant: Tenant_X
-  ip_routing: true
-management_interfaces:
-- name: Management1
-  description: OOB_MANAGEMENT
-  shutdown: false
-  vrf: MGMT
-  ip_address: 192.168.201.104/24
-  gateway: 192.168.200.5
-  type: oob
-management_api_http:
-  enable_vrfs:
-  - name: MGMT
-  enable_https: true
-  default_services: false
-link_tracking_groups:
-- name: LT_GROUP1
-  recovery_delay: 300
-lacp:
-  port_id:
-    range:
-      begin: 1
-      end: 128
-ntp:
-  local_interface:
-    name: Management1
-    vrf: MGMT
-  servers:
-  - name: 192.168.200.5
-    vrf: MGMT
-    preferred: true
-  - name: 2001:db8::3
-    vrf: MGMT
-snmp_server:
-  contact: example@example.com
-  location: EOS_DESIGNS_UNIT_TESTS MH-LEAF1A
-ethernet_interfaces:
-- name: Ethernet1
-  peer: DC1-SPINE1
-  peer_interface: Ethernet19
-  peer_type: spine
-  description: P2P_LINK_TO_DC1-SPINE1_Ethernet19
-  shutdown: false
-  mtu: 1500
-  switchport:
-    enabled: false
-  link_tracking_groups:
-  - name: LT_GROUP1
-    direction: upstream
-  ip_address: 10.10.101.1/31
-- name: Ethernet10
-  peer: server01_ES1
-  peer_interface: Eth1
-  peer_type: server
-  port_profile: Tenant_X
-  description: server01_ES1_Eth1
-  shutdown: false
-  channel_group:
-    id: 10
-    mode: active
-- name: Ethernet12
-  peer: server03_AUTO_ESI
-  peer_interface: Eth1
-  peer_type: server
-  port_profile: Tenant_X
-  description: server03_AUTO_ESI_Eth1
-  shutdown: false
-  channel_group:
-    id: 12
-    mode: active
-- name: Ethernet13
-  peer: server04_AUTO_ESI_Profile
-  peer_interface: Eth1
-  peer_type: server
-  port_profile: Tenant_ESI_Auto
-  description: server04_AUTO_ESI_Profile_Eth1
-  shutdown: false
-  channel_group:
-    id: 13
-    mode: active
-- name: Ethernet14
-  peer: server05_AUTO_ESI_Profile_Override
-  peer_interface: Eth1
-  peer_type: server
-  port_profile: Tenant_ESI_Auto
-  description: server05_AUTO_ESI_Profile_Override_Eth1
-  shutdown: false
-  channel_group:
-    id: 14
-    mode: active
-- name: Ethernet15
-  peer: server06_Single_Active_Port_Channel
-  peer_interface: Eth1
-  peer_type: server
-  port_profile: Tenant_X_Trunk_Auto
-  description: server06_Single_Active_Port_Channel_Eth1
-  shutdown: false
-  channel_group:
-    id: 15
-    mode: active
-- name: Ethernet16
-  peer: server07_Single_Active_Port_Channel_Manual_DF
-  peer_interface: Eth1
-  peer_type: server
-  port_profile: Tenant_X_Trunk
-  description: server07_Single_Active_Port_Channel_Manual_DF_Eth1
-  shutdown: false
-  channel_group:
-    id: 16
-    mode: active
-- name: Ethernet17
-  peer: server08_Single_Active_Ethernet
-  peer_interface: Eth1
-  peer_type: server
-  port_profile: Tenant_X_Trunk_Auto_Eth
-  description: server08_Single_Active_Ethernet_Eth1
-  shutdown: false
-  switchport:
-    enabled: true
-    mode: trunk
-    trunk:
-      allowed_vlan: '310'
-  evpn_ethernet_segment:
-    identifier: 0000:0000:213f:36b8:ff71
-    redundancy: single-active
-    route_target: 21:3f:36:b8:ff:71
-    designated_forwarder_election:
-      algorithm: preference
-      preference_value: 100
-- name: Ethernet18
-  peer: server09_All_Active_Ethernet
-  peer_interface: Eth1
-  peer_type: server
-  port_profile: Tenant_X_Trunk
-  description: server09_All_Active_Ethernet_Eth1
-  shutdown: false
-  switchport:
-    enabled: true
-    mode: trunk
-    trunk:
-      allowed_vlan: '310'
-  evpn_ethernet_segment:
-    identifier: 0000:0000:00dd:00dd:00dd
-    redundancy: all-active
-    route_target: 00:dd:00:dd:00:dd
-    designated_forwarder_election:
-      algorithm: modulus
-- name: Ethernet19
-  peer: server10_Single_Active_Ethernet_Manual_DF
-  peer_interface: Eth1
-  peer_type: server
-  port_profile: Tenant_X_Trunk
-  description: server10_Single_Active_Ethernet_Manual_DF_Eth1
-  shutdown: false
-  switchport:
-    enabled: true
-    mode: trunk
-    trunk:
-      allowed_vlan: '310'
-  evpn_ethernet_segment:
-    identifier: 0000:0000:885b:86cc:8bac
-    redundancy: single-active
-    route_target: 88:5b:86:cc:8b:ac
-    designated_forwarder_election:
-      algorithm: preference
-      preference_value: 500
-- name: Ethernet20
-  peer: server11_Single_Active_Port_Channel_Manual_DF_Dont_Preempt
-  peer_interface: Eth1
-  peer_type: server
-  port_profile: Tenant_X_Trunk
-  description: server11_Single_Active_Port_Channel_Manual_DF_Dont_Preempt_Eth1
-  shutdown: false
-  channel_group:
-    id: 20
-    mode: active
-- name: Ethernet21
-  peer: server12_Single_Active_Ethernet_Manual_DF_Dont_Preempt
-  peer_interface: Eth1
-  peer_type: server
-  port_profile: Tenant_X_Trunk
-  description: server12_Single_Active_Ethernet_Manual_DF_Dont_Preempt_Eth1
-  shutdown: false
-  switchport:
-    enabled: true
-    mode: trunk
-    trunk:
-      allowed_vlan: '310'
-  evpn_ethernet_segment:
-    identifier: 0000:0000:5d0b:68d3:6ff9
-    redundancy: single-active
-    route_target: 5d:0b:68:d3:6f:f9
-    designated_forwarder_election:
-      algorithm: preference
-      preference_value: 500
-      dont_preempt: true
-- name: Ethernet22
-  peer: server13_Single_Active_Port_Channel_Manual_DF_Dont_Preempt_modulus
-  peer_interface: Eth1
-  peer_type: server
-  port_profile: Tenant_X_Trunk
-  description: server13_Single_Active_Port_Channel_Manual_DF_Dont_Preempt_modulus_Eth1
-  shutdown: false
-  channel_group:
-    id: 22
-    mode: active
-- name: Ethernet23
-  peer: server14_Single_Active_Ethernet_Manual_DF_Dont_Preempt_modulus
-  peer_interface: Eth1
-  peer_type: server
-  port_profile: Tenant_X_Trunk
-  description: server14_Single_Active_Ethernet_Manual_DF_Dont_Preempt_modulus_Eth1
-  shutdown: false
-  switchport:
-    enabled: true
-    mode: trunk
-    trunk:
-      allowed_vlan: '310'
-  evpn_ethernet_segment:
-    identifier: 0000:0000:262b:7df9:c98b
-    redundancy: single-active
-    route_target: 26:2b:7d:f9:c9:8b
-    designated_forwarder_election:
-      algorithm: modulus
-- name: Ethernet11
-  peer: ROUTER02_WITH_SUBIF
-  peer_interface: Eth1
-  peer_type: router
-  description: ROUTER02_WITH_SUBIF_Eth1
-  shutdown: false
-  channel_group:
-    id: 11
-    mode: active
 loopback_interfaces:
 - name: Loopback0
   description: ROUTER_ID
@@ -382,6 +262,201 @@ loopback_interfaces:
   vrf: Tenant_X_OP_Zone
   ip_address: 10.255.1.33/32
   ipv6_address: 2001:db8:1::1/128
+management_api_http:
+  enable_https: true
+  default_services: false
+  enable_vrfs:
+  - name: MGMT
+management_interfaces:
+- name: Management1
+  description: OOB_MANAGEMENT
+  shutdown: false
+  vrf: MGMT
+  ip_address: 192.168.201.104/24
+  type: oob
+  gateway: 192.168.200.5
+metadata:
+  platform: vEOS-LAB
+ntp:
+  local_interface:
+    name: Management1
+    vrf: MGMT
+  servers:
+  - name: 192.168.200.5
+    preferred: true
+    vrf: MGMT
+  - name: 2001:db8::3
+    vrf: MGMT
+port_channel_interfaces:
+- name: Port-Channel10
+  description: server01_ES1_PortChanne1
+  shutdown: false
+  link_tracking_groups:
+  - name: LT_GROUP1
+    direction: downstream
+  evpn_ethernet_segment:
+    identifier: 0000:0000:0001:1010:1010
+    route_target: 00:01:10:10:10:10
+  lacp_id: 0001.1010.1010
+  switchport:
+    enabled: true
+    mode: access
+    access_vlan: 310
+- name: Port-Channel12
+  description: server03_AUTO_ESI_Auto-ESI PortChannel
+  shutdown: false
+  link_tracking_groups:
+  - name: LT_GROUP1
+    direction: downstream
+  evpn_ethernet_segment:
+    identifier: 0000:0000:fc87:ae24:2cb3
+    route_target: fc:87:ae:24:2c:b3
+  lacp_id: fc87.ae24.2cb3
+  switchport:
+    enabled: true
+    mode: access
+    access_vlan: 310
+- name: Port-Channel13
+  description: server04_AUTO_ESI_Profile_Auto-ESI PortChannel from profile
+  shutdown: false
+  link_tracking_groups:
+  - name: LT_GROUP1
+    direction: downstream
+  evpn_ethernet_segment:
+    identifier: 0000:0000:29cc:4043:0a29
+    route_target: 29:cc:40:43:0a:29
+  lacp_id: 29cc.4043.0a29
+  switchport:
+    enabled: true
+    mode: access
+    access_vlan: 310
+- name: Port-Channel14
+  description: server05_AUTO_ESI_Profile_Override_Auto-ESI PortChannel overridden on server
+  shutdown: false
+  link_tracking_groups:
+  - name: LT_GROUP1
+    direction: downstream
+  evpn_ethernet_segment:
+    identifier: 0000:0000:010a:010a:010a
+    route_target: 01:0a:01:0a:01:0a
+  lacp_id: 010a.010a.010a
+  switchport:
+    enabled: true
+    mode: access
+    access_vlan: 310
+- name: Port-Channel15
+  description: server06_Single_Active_Port_Channel_Single-Active ESI
+  shutdown: false
+  evpn_ethernet_segment:
+    identifier: 0000:0000:2873:c14b:64ec
+    redundancy: single-active
+    designated_forwarder_election:
+      algorithm: preference
+      preference_value: 100
+    route_target: 28:73:c1:4b:64:ec
+  lacp_id: 2873.c14b.64ec
+  switchport:
+    enabled: true
+    mode: trunk
+    trunk:
+      allowed_vlan: '310'
+- name: Port-Channel16
+  description: server07_Single_Active_Port_Channel_Manual_DF_Single-Active ESI with Manual DF
+  shutdown: false
+  evpn_ethernet_segment:
+    identifier: 0000:0000:ec11:73f8:7361
+    redundancy: single-active
+    designated_forwarder_election:
+      algorithm: preference
+      preference_value: 250
+    route_target: ec:11:73:f8:73:61
+  lacp_id: ec11.73f8.7361
+  switchport:
+    enabled: true
+    mode: trunk
+    trunk:
+      allowed_vlan: '310'
+- name: Port-Channel20
+  description: server11_Single_Active_Port_Channel_Manual_DF_Dont_Preempt_Single-Active ESI with Manual DF
+  shutdown: false
+  evpn_ethernet_segment:
+    identifier: 0000:0000:47cb:834e:c0c7
+    redundancy: single-active
+    designated_forwarder_election:
+      algorithm: preference
+      preference_value: 100
+      dont_preempt: true
+    route_target: 47:cb:83:4e:c0:c7
+  lacp_id: 47cb.834e.c0c7
+  switchport:
+    enabled: true
+    mode: trunk
+    trunk:
+      allowed_vlan: '310'
+- name: Port-Channel22
+  description: server13_Single_Active_Port_Channel_Manual_DF_Dont_Preempt_modulus_Single-Active ESI with Manual DF
+  shutdown: false
+  evpn_ethernet_segment:
+    identifier: 0000:0000:d716:1795:361e
+    redundancy: single-active
+    designated_forwarder_election:
+      algorithm: modulus
+    route_target: d7:16:17:95:36:1e
+  lacp_id: d716.1795.361e
+  switchport:
+    enabled: true
+    mode: trunk
+    trunk:
+      allowed_vlan: '310'
+- name: Port-Channel11
+  description: ROUTER02_WITH_SUBIF_Testing L2 subinterfaces
+  shutdown: false
+  switchport:
+    enabled: false
+- name: Port-Channel11.101
+  encapsulation_vlan:
+    client:
+      encapsulation: dot1q
+      vlan: 101
+    network:
+      encapsulation: client
+  vlan_id: 101
+  evpn_ethernet_segment:
+    identifier: 0000:0000:0000:0000:0101
+    route_target: 00:00:00:00:01:01
+- name: Port-Channel11.102
+  encapsulation_vlan:
+    client:
+      encapsulation: dot1q
+      vlan: 2102
+    network:
+      encapsulation: client
+  vlan_id: 1102
+  evpn_ethernet_segment:
+    identifier: 0000:0000:0000:0000:0102
+    route_target: 00:00:00:00:01:02
+- name: Port-Channel11.103
+  encapsulation_vlan:
+    client:
+      encapsulation: dot1q
+      vlan: 2103
+    network:
+      encapsulation: client
+  vlan_id: 1103
+  evpn_ethernet_segment:
+    identifier: 0000:0000:c2c9:c85a:ed92
+    route_target: c2:c9:c8:5a:ed:92
+- name: Port-Channel11.104
+  encapsulation_vlan:
+    client:
+      encapsulation: dot1q
+      vlan: 2104
+    network:
+      encapsulation: client
+  vlan_id: 1104
+  evpn_ethernet_segment:
+    identifier: 0000:0000:5c8e:1f50:9fc4
+    route_target: 5c:8e:1f:50:9f:c4
 prefix_lists:
 - name: PL-LOOPBACKS-EVPN-OVERLAY
   sequence_numbers:
@@ -401,207 +476,132 @@ router_bfd:
     interval: 1200
     min_rx: 1200
     multiplier: 3
+router_bgp:
+  as: '65151'
+  router_id: 192.168.255.33
+  maximum_paths:
+    paths: 4
+    ecmp: 4
+  updates:
+    wait_install: true
+  bgp:
+    default:
+      ipv4_unicast: false
+  peer_groups:
+  - name: UNDERLAY-PEERS
+    type: ipv4
+    password: 0nsCUm70mvSTxVO0ldytrg==
+    send_community: all
+    maximum_routes: 12000
+  - name: EVPN-OVERLAY-PEERS
+    type: evpn
+    update_source: Loopback0
+    bfd: true
+    ebgp_multihop: 3
+    password: q+VNViP5i4rVjW1cxFv2wA==
+    send_community: all
+    maximum_routes: 0
+  neighbors:
+  - ip_address: 10.10.101.0
+    peer_group: UNDERLAY-PEERS
+    remote_as: '65001'
+    peer: DC1-SPINE1
+    description: DC1-SPINE1_Ethernet19
+  - ip_address: 192.168.255.1
+    peer_group: EVPN-OVERLAY-PEERS
+    remote_as: '65001'
+    peer: DC1-SPINE1
+    description: DC1-SPINE1
+  redistribute:
+    connected:
+      enabled: true
+      route_map: RM-CONN-2-BGP
+  vlan_aware_bundles:
+  - name: Tenant_X_OP_Zone
+    rd: 192.168.255.33:20
+    route_targets:
+      both:
+      - '20:20'
+    redistribute_routes:
+    - learned
+    vlan: '310'
+  address_family_evpn:
+    peer_groups:
+    - name: EVPN-OVERLAY-PEERS
+      activate: true
+    evpn_hostflap_detection:
+      enabled: true
+      window: 180
+      threshold: 5
+      expiry_timeout: 10
+  address_family_ipv4:
+    peer_groups:
+    - name: UNDERLAY-PEERS
+      activate: true
+    - name: EVPN-OVERLAY-PEERS
+      activate: false
+  vrfs:
+  - name: Tenant_X_OP_Zone
+    rd: 192.168.255.33:20
+    route_targets:
+      import:
+      - address_family: evpn
+        route_targets:
+        - '20:20'
+      export:
+      - address_family: evpn
+        route_targets:
+        - '20:20'
+    router_id: 192.168.255.33
+    redistribute:
+      connected:
+        enabled: true
+service_routing_protocols_model: multi-agent
+snmp_server:
+  contact: example@example.com
+  location: EOS_DESIGNS_UNIT_TESTS MH-LEAF1A
+static_routes:
+- vrf: MGMT
+  destination_address_prefix: 0.0.0.0/0
+  gateway: 192.168.200.5
+transceiver_qsfp_default_mode_4x10: true
+virtual_source_nat_vrfs:
+- name: Tenant_X_OP_Zone
+  ip_address: 10.255.1.33
+  ipv6_address: 2001:db8:1::1
+vlan_interfaces:
+- name: Vlan310
+  description: Tenant_X_OP_Zone_1
+  shutdown: false
+  vrf: Tenant_X_OP_Zone
+  ip_address_virtual: 10.1.10.1/24
+  tenant: Tenant_X
+  tags:
+  - opzone
+vlan_internal_order:
+  allocation: ascending
+  range:
+    beginning: 1006
+    ending: 1199
 vlans:
 - id: 310
   name: Tenant_X_OP_Zone_1
   tenant: Tenant_X
-ip_igmp_snooping:
-  globally_enabled: true
-ip_virtual_router_mac_address: 00:1c:73:00:dc:01
-vlan_interfaces:
-- name: Vlan310
+vrfs:
+- name: MGMT
+  ip_routing: false
+- name: Tenant_X_OP_Zone
+  ip_routing: true
   tenant: Tenant_X
-  tags:
-  - opzone
-  description: Tenant_X_OP_Zone_1
-  shutdown: false
-  ip_address_virtual: 10.1.10.1/24
-  vrf: Tenant_X_OP_Zone
 vxlan_interface:
   vxlan1:
     description: MH-LEAF1A_VTEP
     vxlan:
-      udp_port: 4789
       source_interface: Loopback1
+      udp_port: 4789
       vlans:
       - id: 310
         vni: 11310
       vrfs:
       - name: Tenant_X_OP_Zone
         vni: 20
-virtual_source_nat_vrfs:
-- name: Tenant_X_OP_Zone
-  ip_address: 10.255.1.33
-  ipv6_address: 2001:db8:1::1
-port_channel_interfaces:
-- name: Port-Channel10
-  description: server01_ES1_PortChanne1
-  shutdown: false
-  link_tracking_groups:
-  - name: LT_GROUP1
-    direction: downstream
-  switchport:
-    enabled: true
-    mode: access
-    access_vlan: 310
-  evpn_ethernet_segment:
-    identifier: 0000:0000:0001:1010:1010
-    route_target: 00:01:10:10:10:10
-  lacp_id: 0001.1010.1010
-- name: Port-Channel12
-  description: server03_AUTO_ESI_Auto-ESI PortChannel
-  shutdown: false
-  link_tracking_groups:
-  - name: LT_GROUP1
-    direction: downstream
-  switchport:
-    enabled: true
-    mode: access
-    access_vlan: 310
-  evpn_ethernet_segment:
-    identifier: 0000:0000:fc87:ae24:2cb3
-    route_target: fc:87:ae:24:2c:b3
-  lacp_id: fc87.ae24.2cb3
-- name: Port-Channel13
-  description: server04_AUTO_ESI_Profile_Auto-ESI PortChannel from profile
-  shutdown: false
-  link_tracking_groups:
-  - name: LT_GROUP1
-    direction: downstream
-  switchport:
-    enabled: true
-    mode: access
-    access_vlan: 310
-  evpn_ethernet_segment:
-    identifier: 0000:0000:29cc:4043:0a29
-    route_target: 29:cc:40:43:0a:29
-  lacp_id: 29cc.4043.0a29
-- name: Port-Channel14
-  description: server05_AUTO_ESI_Profile_Override_Auto-ESI PortChannel overridden on server
-  shutdown: false
-  link_tracking_groups:
-  - name: LT_GROUP1
-    direction: downstream
-  switchport:
-    enabled: true
-    mode: access
-    access_vlan: 310
-  evpn_ethernet_segment:
-    identifier: 0000:0000:010a:010a:010a
-    route_target: 01:0a:01:0a:01:0a
-  lacp_id: 010a.010a.010a
-- name: Port-Channel15
-  description: server06_Single_Active_Port_Channel_Single-Active ESI
-  shutdown: false
-  switchport:
-    enabled: true
-    mode: trunk
-    trunk:
-      allowed_vlan: '310'
-  evpn_ethernet_segment:
-    identifier: 0000:0000:2873:c14b:64ec
-    redundancy: single-active
-    route_target: 28:73:c1:4b:64:ec
-    designated_forwarder_election:
-      algorithm: preference
-      preference_value: 100
-  lacp_id: 2873.c14b.64ec
-- name: Port-Channel16
-  description: server07_Single_Active_Port_Channel_Manual_DF_Single-Active ESI with Manual DF
-  shutdown: false
-  switchport:
-    enabled: true
-    mode: trunk
-    trunk:
-      allowed_vlan: '310'
-  evpn_ethernet_segment:
-    identifier: 0000:0000:ec11:73f8:7361
-    redundancy: single-active
-    route_target: ec:11:73:f8:73:61
-    designated_forwarder_election:
-      algorithm: preference
-      preference_value: 250
-  lacp_id: ec11.73f8.7361
-- name: Port-Channel20
-  description: server11_Single_Active_Port_Channel_Manual_DF_Dont_Preempt_Single-Active ESI with Manual DF
-  shutdown: false
-  switchport:
-    enabled: true
-    mode: trunk
-    trunk:
-      allowed_vlan: '310'
-  evpn_ethernet_segment:
-    identifier: 0000:0000:47cb:834e:c0c7
-    redundancy: single-active
-    route_target: 47:cb:83:4e:c0:c7
-    designated_forwarder_election:
-      algorithm: preference
-      preference_value: 100
-      dont_preempt: true
-  lacp_id: 47cb.834e.c0c7
-- name: Port-Channel22
-  description: server13_Single_Active_Port_Channel_Manual_DF_Dont_Preempt_modulus_Single-Active ESI with Manual DF
-  shutdown: false
-  switchport:
-    enabled: true
-    mode: trunk
-    trunk:
-      allowed_vlan: '310'
-  evpn_ethernet_segment:
-    identifier: 0000:0000:d716:1795:361e
-    redundancy: single-active
-    route_target: d7:16:17:95:36:1e
-    designated_forwarder_election:
-      algorithm: modulus
-  lacp_id: d716.1795.361e
-- name: Port-Channel11
-  description: ROUTER02_WITH_SUBIF_Testing L2 subinterfaces
-  shutdown: false
-  switchport:
-    enabled: false
-- name: Port-Channel11.101
-  vlan_id: 101
-  encapsulation_vlan:
-    client:
-      encapsulation: dot1q
-      vlan: 101
-    network:
-      encapsulation: client
-  evpn_ethernet_segment:
-    identifier: 0000:0000:0000:0000:0101
-    route_target: 00:00:00:00:01:01
-- name: Port-Channel11.102
-  vlan_id: 1102
-  encapsulation_vlan:
-    client:
-      encapsulation: dot1q
-      vlan: 2102
-    network:
-      encapsulation: client
-  evpn_ethernet_segment:
-    identifier: 0000:0000:0000:0000:0102
-    route_target: 00:00:00:00:01:02
-- name: Port-Channel11.103
-  vlan_id: 1103
-  encapsulation_vlan:
-    client:
-      encapsulation: dot1q
-      vlan: 2103
-    network:
-      encapsulation: client
-  evpn_ethernet_segment:
-    identifier: 0000:0000:c2c9:c85a:ed92
-    route_target: c2:c9:c8:5a:ed:92
-- name: Port-Channel11.104
-  vlan_id: 1104
-  encapsulation_vlan:
-    client:
-      encapsulation: dot1q
-      vlan: 2104
-    network:
-      encapsulation: client
-  evpn_ethernet_segment:
-    identifier: 0000:0000:5c8e:1f50:9fc4
-    route_target: 5c:8e:1f:50:9f:c4
-metadata:
-  platform: vEOS-LAB

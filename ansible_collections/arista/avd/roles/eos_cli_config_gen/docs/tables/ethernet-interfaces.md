@@ -32,8 +32,12 @@
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;type</samp>](## "ethernet_interfaces.[].type") <span style="color:red">deprecated</span> | String |  |  | Valid Values:<br>- <code>routed</code><br>- <code>switched</code><br>- <code>l3dot1q</code><br>- <code>l2dot1q</code><br>- <code>port-channel-member</code> | l3dot1q and l2dot1q are used for sub-interfaces. The parent interface should be defined as routed.<br>The `type = switched/routed` should not be combined with `switchport`.<br><span style="color:red">This key is deprecated. Support will be removed in AVD version 6.0.0. See [here](https://avd.arista.com/5.x/docs/porting-guides/5.x.x.html#removal-of-type-key-dependency-for-rendering-ethernetport-channel-interfaces-configuration-and-documentation) for details.</span> |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;snmp_trap_link_change</samp>](## "ethernet_interfaces.[].snmp_trap_link_change") | Boolean |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;address_locking</samp>](## "ethernet_interfaces.[].address_locking") | Dictionary |  |  |  |  |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ipv4</samp>](## "ethernet_interfaces.[].address_locking.ipv4") | Boolean |  |  |  | Enable address locking for IPv4. |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ipv6</samp>](## "ethernet_interfaces.[].address_locking.ipv6") | Boolean |  |  |  | Enable address locking for IPv6. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ipv4</samp>](## "ethernet_interfaces.[].address_locking.ipv4") | Boolean |  |  |  | Enable address locking for IPv4.<br>For EOS version 4.31 and above, the `address_family.ipv4` parameter should be used instead. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ipv6</samp>](## "ethernet_interfaces.[].address_locking.ipv6") | Boolean |  |  |  | Enable address locking for IPv6.<br>For EOS version 4.31 and above, the `address_family.ipv6` parameter should be used instead. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;address_family</samp>](## "ethernet_interfaces.[].address_locking.address_family") | Dictionary |  |  |  | Configure address locking per address family.<br>The `address_locking.ipv4/ipv6` and `address_locking.address_family.ipv4/ipv6` are mutually exclusive and `address_locking.address_family.ipv4/ipv6` take precedence.<br>Introduced in EOS 4.31.0F. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ipv4</samp>](## "ethernet_interfaces.[].address_locking.address_family.ipv4") | Boolean |  |  |  | Enable/disable address locking for IPv4. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ipv6</samp>](## "ethernet_interfaces.[].address_locking.address_family.ipv6") | Boolean |  |  |  | Enable/disable address locking for IPv6. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ipv4_enforcement_disabled</samp>](## "ethernet_interfaces.[].address_locking.ipv4_enforcement_disabled") | Boolean |  |  |  | Disable enforcement for IPv4 locked addresses. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;flowcontrol</samp>](## "ethernet_interfaces.[].flowcontrol") | Dictionary |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;received</samp>](## "ethernet_interfaces.[].flowcontrol.received") | String |  |  | Valid Values:<br>- <code>desired</code><br>- <code>on</code><br>- <code>off</code> |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;vrf</samp>](## "ethernet_interfaces.[].vrf") | String |  |  |  | VRF name. |
@@ -681,10 +685,26 @@
         address_locking:
 
           # Enable address locking for IPv4.
+          # For EOS version 4.31 and above, the `address_family.ipv4` parameter should be used instead.
           ipv4: <bool>
 
           # Enable address locking for IPv6.
+          # For EOS version 4.31 and above, the `address_family.ipv6` parameter should be used instead.
           ipv6: <bool>
+
+          # Configure address locking per address family.
+          # The `address_locking.ipv4/ipv6` and `address_locking.address_family.ipv4/ipv6` are mutually exclusive and `address_locking.address_family.ipv4/ipv6` take precedence.
+          # Introduced in EOS 4.31.0F.
+          address_family:
+
+            # Enable/disable address locking for IPv4.
+            ipv4: <bool>
+
+            # Enable/disable address locking for IPv6.
+            ipv6: <bool>
+
+          # Disable enforcement for IPv4 locked addresses.
+          ipv4_enforcement_disabled: <bool>
         flowcontrol:
           received: <str; "desired" | "on" | "off">
 

@@ -20,4 +20,17 @@ vlan {{ vlan.id }}
           vlan.private_vlan.primary_vlan is arista.avd.defined %}
    private-vlan {{ vlan.private_vlan.type }} primary vlan {{ vlan.private_vlan.primary_vlan }}
 {%     endif %}
+{%     if vlan.address_locking.address_family.ipv4 is arista.avd.defined or vlan.address_locking.address_family.ipv6 is arista.avd.defined or vlan.address_locking.ipv4_enforcement_disabled is arista.avd.defined(true) %}
+   !
+   address locking
+{%         if vlan.address_locking.address_family.ipv4 is arista.avd.defined(true) %}
+      address-family ipv4
+{%         endif %}
+{%         if vlan.address_locking.address_family.ipv6 is arista.avd.defined(true) %}
+      address-family ipv6
+{%         endif %}
+{%         if vlan.address_locking.ipv4_enforcement_disabled is arista.avd.defined(true) %}
+      locked-address ipv4 enforcement disabled
+{%         endif %}
+{%     endif %}
 {% endfor %}

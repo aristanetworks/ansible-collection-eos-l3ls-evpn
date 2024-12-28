@@ -1,7 +1,7 @@
 # Copyright (c) 2023-2024 Arista Networks, Inc.
 # Use of this source code is governed by the Apache License 2.0
 # that can be found in the LICENSE file.
-from pyavd._eos_designs.avdfacts import AvdFacts
+from pyavd._eos_designs.structured_config.structured_config_generator import StructuredConfigGenerator
 
 from .cvx import CvxMixin
 from .ip_extcommunity_lists import IpExtCommunityListsMixin
@@ -18,7 +18,7 @@ from .stun import StunMixin
 
 
 class AvdStructuredConfigOverlay(
-    AvdFacts,
+    StructuredConfigGenerator,
     CvxMixin,
     IpExtCommunityListsMixin,
     IpSecurityMixin,
@@ -39,13 +39,13 @@ class AvdStructuredConfigOverlay(
     .render() runs all class methods not starting with _ and of type @cached property and inserts the returned data into
     a dict with the name of the method as key. This means that each key in the final dict corresponds to a method.
 
-    The Class uses AvdFacts, as the base class, to get the render, keys and other attributes.
+    The Class uses StructuredConfigGenerator, as the base class, to get the render, keys and other attributes.
     All other methods are included as "Mixins" to make the files more manageable.
 
     The order of the @cached_properties methods imported from Mixins will also control the order in the output.
     """
 
-    def render(self) -> dict:
+    def render(self) -> None:
         """
         Wrap class render function with a check if one of the following vars are True.
 
@@ -64,4 +64,4 @@ class AvdStructuredConfigOverlay(
             ],
         ):
             return super().render()
-        return {}
+        return None

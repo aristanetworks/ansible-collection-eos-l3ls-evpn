@@ -1,5 +1,133 @@
+aaa_root:
+  disabled: true
+config_end: true
+enable_password:
+  disabled: true
+ethernet_interfaces:
+- name: Ethernet1
+  description: P2P_p2_Ethernet1
+  shutdown: false
+  mtu: 1500
+  ip_address: 10.255.3.4/31
+  isis_enable: CORE
+  isis_metric: 50
+  isis_network_point_to_point: true
+  isis_circuit_type: level-2
+  isis_hello_padding: true
+  isis_authentication:
+    both:
+      key_type: '7'
+      key: $1c$sTNAlR6rKSw=
+      mode: md5
+  mpls:
+    ip: true
+    ldp:
+      interface: true
+      igp_sync: true
+  peer: p2
+  peer_interface: Ethernet1
+  peer_type: p
+  switchport:
+    enabled: false
+- name: Ethernet2
+  description: P2P_p1_Ethernet2
+  shutdown: false
+  mtu: 1500
+  ip_address: 10.255.3.6/31
+  isis_enable: CORE
+  isis_metric: 50
+  isis_network_point_to_point: true
+  isis_circuit_type: level-2
+  isis_hello_padding: true
+  isis_authentication:
+    both:
+      key_type: '7'
+      key: $1c$sTNAlR6rKSw=
+      mode: md5
+  mpls:
+    ip: true
+    ldp:
+      interface: true
+      igp_sync: true
+  peer: p1
+  peer_interface: Ethernet2
+  peer_type: p
+  switchport:
+    enabled: false
+- name: Ethernet4.10
+  description: C1_L3_SERVICE
+  shutdown: false
+  vrf: C1_VRF1
+  encapsulation_dot1q:
+    vlan: 10
+  ip_address: 10.0.1.2/29
+  ospf_network_point_to_point: false
+  ospf_area: 0.0.0.0
+  peer_type: l3_interface
+- name: Ethernet4.20
+  description: C2_L3_SERVICE
+  shutdown: false
+  vrf: C2_VRF1
+  encapsulation_dot1q:
+    vlan: 20
+  ip_address: 10.1.1.2/29
+  peer_type: l3_interface
+- name: Ethernet4
+  shutdown: false
+  peer_type: l3_interface
+  switchport:
+    enabled: false
 hostname: pe2
+ip_igmp_snooping:
+  globally_enabled: true
+ip_routing: true
+ip_virtual_router_mac_address: 00:1c:73:00:dc:00
 is_deployed: true
+local_users:
+- name: admin
+  privilege: 15
+  role: network-admin
+  no_password: true
+- name: ansible
+  privilege: 15
+  role: network-admin
+  sha512_password: $6$QJUtFkyu9yoecsq.$ysGzlb2YXaIMvezqGEna7RE8CMALJHnv7Q1i.27VygyKUtSeX.n2xRTyOtCR8eOAl.4imBLyhXFc4o97P5n071
+loopback_interfaces:
+- name: Loopback0
+  description: ROUTER_ID
+  shutdown: false
+  ip_address: 10.255.1.2/32
+  mpls:
+    ldp:
+      interface: true
+  isis_enable: CORE
+  isis_passive: true
+management_api_http:
+  enable_https: true
+  enable_vrfs:
+  - name: MGMT
+management_interfaces:
+- name: Management1
+  description: OOB_MANAGEMENT
+  shutdown: false
+  vrf: MGMT
+  ip_address: 172.16.1.102/24
+  type: oob
+  gateway: 172.16.1.1
+metadata:
+  platform: vEOS-lab
+mpls:
+  ip: true
+  ldp:
+    interface_disabled_default: true
+    router_id: 10.255.1.2
+    shutdown: false
+    transport_address_interface: Loopback0
+router_bfd:
+  multihop:
+    interval: 300
+    min_rx: 300
+    multiplier: 3
 router_bgp:
   as: '65001'
   router_id: 10.255.1.2
@@ -7,31 +135,21 @@ router_bgp:
     external_routes: 20
     internal_routes: 200
     local_routes: 200
-  bgp:
-    default:
-      ipv4_unicast: false
   maximum_paths:
     paths: 4
     ecmp: 4
+  bgp:
+    default:
+      ipv4_unicast: false
   peer_groups:
   - name: MPLS-OVERLAY-PEERS
     type: mpls
+    remote_as: '65001'
     update_source: Loopback0
     bfd: true
     password: $1c$G8BQN0ezkiJOX2cuAYpsEA==
     send_community: all
     maximum_routes: 0
-    remote_as: '65001'
-  address_family_ipv4:
-    peer_groups:
-    - name: MPLS-OVERLAY-PEERS
-      activate: false
-  address_family_vpn_ipv4:
-    neighbor_default_encapsulation_mpls_next_hop_self:
-      source_interface: Loopback0
-    peer_groups:
-    - name: MPLS-OVERLAY-PEERS
-      activate: true
   neighbors:
   - ip_address: 10.255.2.1
     peer_group: MPLS-OVERLAY-PEERS
@@ -41,6 +159,16 @@ router_bgp:
     peer_group: MPLS-OVERLAY-PEERS
     peer: rr2
     description: rr2_Loopback0
+  address_family_ipv4:
+    peer_groups:
+    - name: MPLS-OVERLAY-PEERS
+      activate: false
+  address_family_vpn_ipv4:
+    peer_groups:
+    - name: MPLS-OVERLAY-PEERS
+      activate: true
+    neighbor_default_encapsulation_mpls_next_hop_self:
+      source_interface: Loopback0
   vrfs:
   - name: C1_VRF1
     rd: 10.255.1.2:10
@@ -71,6 +199,12 @@ router_bgp:
         route_targets:
         - '20:20'
     router_id: 10.255.1.2
+    neighbors:
+    - ip_address: 10.1.1.3
+      remote_as: '65123'
+      description: C2_ROUTER1
+      send_community: standard
+      maximum_routes: 100
     redistribute:
       connected:
         enabled: true
@@ -78,170 +212,16 @@ router_bgp:
       neighbors:
       - ip_address: 10.1.1.3
         activate: true
-    neighbors:
-    - ip_address: 10.1.1.3
-      remote_as: '65123'
-      description: C2_ROUTER1
-      send_community: standard
-      maximum_routes: 100
-static_routes:
-- vrf: MGMT
-  destination_address_prefix: 0.0.0.0/0
-  gateway: 172.16.1.1
-service_routing_protocols_model: multi-agent
-ip_routing: true
-vlan_internal_order:
-  allocation: ascending
-  range:
-    beginning: 1006
-    ending: 1199
-aaa_root:
-  disabled: true
-config_end: true
-enable_password:
-  disabled: true
-transceiver_qsfp_default_mode_4x10: true
-spanning_tree:
-  mode: none
-local_users:
-- name: admin
-  privilege: 15
-  role: network-admin
-  no_password: true
-- name: ansible
-  privilege: 15
-  role: network-admin
-  sha512_password: $6$QJUtFkyu9yoecsq.$ysGzlb2YXaIMvezqGEna7RE8CMALJHnv7Q1i.27VygyKUtSeX.n2xRTyOtCR8eOAl.4imBLyhXFc4o97P5n071
-vrfs:
-- name: MGMT
-  ip_routing: false
-- name: C1_VRF1
-  tenant: CUSTOMER1
-  ip_routing: true
-- name: C2_VRF1
-  tenant: CUSTOMER2
-  ip_routing: true
-management_interfaces:
-- name: Management1
-  description: OOB_MANAGEMENT
-  shutdown: false
-  vrf: MGMT
-  ip_address: 172.16.1.102/24
-  gateway: 172.16.1.1
-  type: oob
-management_api_http:
-  enable_vrfs:
-  - name: MGMT
-  enable_https: true
-loopback_interfaces:
-- name: Loopback0
-  description: ROUTER_ID
-  shutdown: false
-  ip_address: 10.255.1.2/32
-  mpls:
-    ldp:
-      interface: true
-  isis_enable: CORE
-  isis_passive: true
 router_isis:
   instance: CORE
-  log_adjacency_changes: true
   net: 49.0001.0102.5500.1002.00
   router_id: 10.255.1.2
   is_type: level-2
+  log_adjacency_changes: true
+  mpls_ldp_sync_default: true
   address_family_ipv4:
     enabled: true
     maximum_paths: 4
-  mpls_ldp_sync_default: true
-mpls:
-  ip: true
-  ldp:
-    interface_disabled_default: true
-    router_id: 10.255.1.2
-    shutdown: false
-    transport_address_interface: Loopback0
-router_bfd:
-  multihop:
-    interval: 300
-    min_rx: 300
-    multiplier: 3
-ethernet_interfaces:
-- name: Ethernet1
-  peer: p2
-  peer_interface: Ethernet1
-  peer_type: p
-  switchport:
-    enabled: false
-  shutdown: false
-  mtu: 1500
-  ip_address: 10.255.3.4/31
-  isis_enable: CORE
-  isis_metric: 50
-  isis_network_point_to_point: true
-  isis_hello_padding: true
-  isis_circuit_type: level-2
-  isis_authentication:
-    both:
-      mode: md5
-      key: $1c$sTNAlR6rKSw=
-      key_type: '7'
-  mpls:
-    ip: true
-    ldp:
-      interface: true
-      igp_sync: true
-  description: P2P_p2_Ethernet1
-- name: Ethernet2
-  peer: p1
-  peer_interface: Ethernet2
-  peer_type: p
-  switchport:
-    enabled: false
-  shutdown: false
-  mtu: 1500
-  ip_address: 10.255.3.6/31
-  isis_enable: CORE
-  isis_metric: 50
-  isis_network_point_to_point: true
-  isis_hello_padding: true
-  isis_circuit_type: level-2
-  isis_authentication:
-    both:
-      mode: md5
-      key: $1c$sTNAlR6rKSw=
-      key_type: '7'
-  mpls:
-    ip: true
-    ldp:
-      interface: true
-      igp_sync: true
-  description: P2P_p1_Ethernet2
-- name: Ethernet4.10
-  peer_type: l3_interface
-  ip_address: 10.0.1.2/29
-  shutdown: false
-  description: C1_L3_SERVICE
-  encapsulation_dot1q:
-    vlan: 10
-  vrf: C1_VRF1
-  ospf_area: 0.0.0.0
-  ospf_network_point_to_point: false
-- name: Ethernet4.20
-  peer_type: l3_interface
-  ip_address: 10.1.1.2/29
-  shutdown: false
-  description: C2_L3_SERVICE
-  encapsulation_dot1q:
-    vlan: 20
-  vrf: C2_VRF1
-- name: Ethernet4
-  switchport:
-    enabled: false
-  peer_type: l3_interface
-  shutdown: false
-ip_igmp_snooping:
-  globally_enabled: true
-ip_virtual_router_mac_address: 00:1c:73:00:dc:00
 router_ospf:
   process_ids:
   - id: 10
@@ -253,5 +233,25 @@ router_ospf:
     redistribute:
       bgp:
         enabled: true
-metadata:
-  platform: vEOS-lab
+service_routing_protocols_model: multi-agent
+spanning_tree:
+  mode: none
+static_routes:
+- vrf: MGMT
+  destination_address_prefix: 0.0.0.0/0
+  gateway: 172.16.1.1
+transceiver_qsfp_default_mode_4x10: true
+vlan_internal_order:
+  allocation: ascending
+  range:
+    beginning: 1006
+    ending: 1199
+vrfs:
+- name: MGMT
+  ip_routing: false
+- name: C1_VRF1
+  ip_routing: true
+  tenant: CUSTOMER1
+- name: C2_VRF1
+  ip_routing: true
+  tenant: CUSTOMER2

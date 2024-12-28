@@ -35,7 +35,7 @@ The `arista.avd.cv_workflow` module is an Ansible Action Plugin providing the fo
 | <samp>cv_token</samp> | str | True | None |  | Service account token. It is strongly recommended to use Vault for this. |
 | <samp>cv_verify_certs</samp> | bool | optional | True |  | Verifies CloudVison server certificates. |
 | <samp>configuration_dir</samp> | str | True | None |  | Path to directory containing .cfg files with EOS configurations. |
-| <samp>structured_config_dir</samp> | str | True | None |  | Path to directory containing files with AVD structured configurations.<br>If found, the `serial_number` or `system_mac_address` will be used to identify the Device on CloudVision.<br>Any tags found in the structured configuration metadata will be applied to the Device and/or Interfaces. |
+| <samp>structured_config_dir</samp> | str | False | None |  | Path to directory containing files with AVD structured configurations.<br>If found, the `serial_number` or `system_mac_address` will be used to identify the Device on CloudVision.<br>Any tags found in the structured configuration metadata will be applied to the Device and/or Interfaces. |
 | <samp>structured_config_suffix</samp> | str | optional | yml |  | File suffix for AVD structured configuration files. |
 | <samp>device_list</samp> | list | True | None |  | List of devices to deploy. The names are used to find AVD structured configuration and EOS configuration files. |
 | <samp>strict_tags</samp> | bool | optional | False |  | If `true` other tags associated with the devices will get removed. Otherwise other tags will be left as-is. |

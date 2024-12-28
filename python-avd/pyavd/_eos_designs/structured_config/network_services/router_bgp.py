@@ -153,9 +153,13 @@ class RouterBgpMixin(UtilsMixin):
                 bgp_vrf = strip_empties_from_dict(
                     {
                         "eos_cli": vrf.bgp.raw_eos_cli,
-                        "struct_cfg": vrf.bgp.structured_config._as_dict() or None,
                     }
                 )
+
+                if vrf.bgp.structured_config:
+                    self.custom_structured_configs.nested.router_bgp.vrfs.obtain(vrf_name)._deepmerge(
+                        vrf.bgp.structured_config, list_merge=self.custom_structured_configs.list_merge_strategy
+                    )
 
                 if vrf_address_families := [af for af in vrf.address_families if af in self.shared_utils.overlay_address_families]:
                     # The called function in-place updates the bgp_vrf dict.
@@ -442,8 +446,6 @@ class RouterBgpMixin(UtilsMixin):
             for vrf in tenant.vrfs:
                 for svi in tenant_svis_l2vlans_dict[tenant.name]["svi_non_bundle"][vrf.name]:
                     if (vlan := self._router_bgp_vlans_vlan(svi, tenant, vrf)) is not None:
-                        vlan_id = svi.id
-                        vlan = {"id": vlan_id, **vlan}
                         append_if_not_duplicate(
                             list_of_dicts=vlans,
                             primary_key="id",
@@ -461,8 +463,6 @@ class RouterBgpMixin(UtilsMixin):
                             l2vlan, tenant, vrf=EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem.VrfsItem()
                         )
                     ) is not None:
-                        vlan_id = l2vlan.id
-                        vlan = {"id": vlan_id, **vlan}
                         append_if_not_duplicate(
                             list_of_dicts=vlans,
                             primary_key="id",
@@ -488,13 +488,19 @@ class RouterBgpMixin(UtilsMixin):
         vlan_rt = self.get_vlan_rt(vlan, tenant)
 
         bgp_vlan = {
-            "tenant": vlan._tenant,
+            "id": vlan.id,
+            "tenant": tenant.name,
             "rd": vlan_rd,
             "route_targets": {"both": [vlan_rt]},
             "redistribute_routes": ["learned"],
             "eos_cli": vlan.bgp.raw_eos_cli,
-            "struct_cfg": vlan.bgp.structured_config._as_dict() or None,
         }
+
+        if vlan.bgp.structured_config:
+            self.custom_structured_configs.nested.router_bgp.vlans.obtain(vlan.id)._deepmerge(
+                vlan.bgp.structured_config, list_merge=self.custom_structured_configs.list_merge_strategy
+            )
+
         if self.shared_utils.node_config.evpn_gateway.evpn_l2.enabled and default(
             vlan.evpn_l2_multi_domain, vrf.evpn_l2_multi_domain, tenant.evpn_l2_multi_domain
         ):
@@ -630,7 +636,8 @@ class RouterBgpMixin(UtilsMixin):
                         # Skip bundle since no vlans were enabled for vxlan.
                         continue
 
-                    # We are reusing the regular bgp vlan function so need to add vlan info
+                    # We are reusing the regular bgp vlan function so need to add vlan info and remove the vlan id.
+                    bundle.pop("id")
                     bundle["vlan"] = list_compress([l2vlan.id for l2vlan in l2vlans])
                     bundle = {"name": bundle_name, **bundle}
                     append_if_not_duplicate(
@@ -816,8 +823,12 @@ class RouterBgpMixin(UtilsMixin):
             "password": self.inputs.bgp_peer_groups.mlag_ipv4_underlay_peer.password,
             "maximum_routes": 12000,
             "send_community": "all",
-            "struct_cfg": self.inputs.bgp_peer_groups.mlag_ipv4_underlay_peer.structured_config._as_dict() or None,
         }
+
+        if self.inputs.bgp_peer_groups.mlag_ipv4_underlay_peer.structured_config:
+            self.custom_structured_configs.nested.router_bgp.peer_groups.obtain(peer_group_name)._deepmerge(
+                self.inputs.bgp_peer_groups.mlag_ipv4_underlay_peer.structured_config, list_merge=self.custom_structured_configs.list_merge_strategy
+            )
 
         if self.shared_utils.node_config.mlag_ibgp_origin_incomplete:
             peer_group["route_map_in"] = "RM-MLAG-PEER-IN"

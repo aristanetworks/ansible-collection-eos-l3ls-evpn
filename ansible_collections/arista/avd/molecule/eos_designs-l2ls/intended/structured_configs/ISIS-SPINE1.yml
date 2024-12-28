@@ -1,67 +1,32 @@
-hostname: ISIS-SPINE1
-is_deployed: true
-static_routes:
-- vrf: MGMT
-  destination_address_prefix: 0.0.0.0/0
-  gateway: 172.31.0.1
-- destination_address_prefix: 10.1.0.0/16
-  gateway: 10.1.100.100
-  vrf: default
-service_routing_protocols_model: multi-agent
-ip_routing: true
-vlan_internal_order:
-  allocation: ascending
-  range:
-    beginning: 1006
-    ending: 1199
 aaa_root:
   disabled: true
 config_end: true
 enable_password:
   disabled: true
-transceiver_qsfp_default_mode_4x10: true
-vrfs:
-- name: MGMT
-  ip_routing: false
-management_interfaces:
-- name: Management1
-  description: OOB_MANAGEMENT
-  shutdown: false
-  vrf: MGMT
-  ip_address: 192.168.200.101/24
-  gateway: 172.31.0.1
-  type: oob
-management_api_http:
-  enable_vrfs:
-  - name: MGMT
-  enable_https: true
 ethernet_interfaces:
 - name: Ethernet1
-  peer: ISIS-LEAF1
-  peer_interface: Ethernet1
-  peer_type: l2leaf
   description: L2_ISIS-LEAF1_Ethernet1
   shutdown: false
   channel_group:
     id: 1
     mode: active
+  peer: ISIS-LEAF1
+  peer_interface: Ethernet1
+  peer_type: l2leaf
 - name: Ethernet10
-  peer_type: network_port
   description: Endpoint
   shutdown: false
+  peer_type: network_port
   switchport:
     enabled: true
     mode: access
     access_vlan: 110
-port_channel_interfaces:
-- name: Port-Channel1
-  description: L2_ISIS-LEAF1_Port-Channel1
-  switchport:
-    enabled: true
-    mode: trunk
-    trunk:
-      allowed_vlan: 110,4092
-  shutdown: false
+hostname: ISIS-SPINE1
+ip_igmp_snooping:
+  globally_enabled: true
+ip_routing: true
+ip_virtual_router_mac_address: 00:1c:73:00:00:9a
+is_deployed: true
 loopback_interfaces:
 - name: Loopback0
   description: ROUTER_ID
@@ -69,43 +34,78 @@ loopback_interfaces:
   ip_address: 192.168.255.1/32
   isis_enable: EVPN_UNDERLAY
   isis_passive: true
+management_api_http:
+  enable_https: true
+  enable_vrfs:
+  - name: MGMT
+management_interfaces:
+- name: Management1
+  description: OOB_MANAGEMENT
+  shutdown: false
+  vrf: MGMT
+  ip_address: 192.168.200.101/24
+  type: oob
+  gateway: 172.31.0.1
+metadata:
+  platform: vEOS-LAB
+port_channel_interfaces:
+- name: Port-Channel1
+  description: L2_ISIS-LEAF1_Port-Channel1
+  shutdown: false
+  switchport:
+    enabled: true
+    mode: trunk
+    trunk:
+      allowed_vlan: 110,4092
 router_isis:
   instance: EVPN_UNDERLAY
-  log_adjacency_changes: true
   net: 49.0001.1921.6825.5001.00
   router_id: 192.168.255.1
   is_type: level-2
-  address_family_ipv4:
-    enabled: true
-    maximum_paths: 4
+  log_adjacency_changes: true
   redistribute_routes:
   - source_protocol: connected
   - source_protocol: static
+  address_family_ipv4:
+    enabled: true
+    maximum_paths: 4
+service_routing_protocols_model: multi-agent
+static_routes:
+- vrf: MGMT
+  destination_address_prefix: 0.0.0.0/0
+  gateway: 172.31.0.1
+- vrf: default
+  destination_address_prefix: 10.1.0.0/16
+  gateway: 10.1.100.100
+transceiver_qsfp_default_mode_4x10: true
+vlan_interfaces:
+- name: Vlan110
+  description: SVI_110
+  shutdown: false
+  ip_address_virtual: 10.0.110.1/24
+  tenant: L2LS_ISIS
+- name: Vlan4092
+  description: Inband Management
+  shutdown: false
+  ip_address: 172.23.254.2/24
+  ip_virtual_router_addresses:
+  - 172.23.254.1
+  mtu: 1500
+  ip_attached_host_route_export:
+    enabled: true
+    distance: 19
+vlan_internal_order:
+  allocation: ascending
+  range:
+    beginning: 1006
+    ending: 1199
 vlans:
 - id: 110
   name: SVI_110
   tenant: L2LS_ISIS
 - id: 4092
-  tenant: system
   name: INBAND_MGMT
-ip_igmp_snooping:
-  globally_enabled: true
-ip_virtual_router_mac_address: 00:1c:73:00:00:9a
-vlan_interfaces:
-- name: Vlan110
-  tenant: L2LS_ISIS
-  description: SVI_110
-  shutdown: false
-  ip_address_virtual: 10.0.110.1/24
-- name: Vlan4092
-  description: Inband Management
-  shutdown: false
-  mtu: 1500
-  ip_attached_host_route_export:
-    enabled: true
-    distance: 19
-  ip_address: 172.23.254.2/24
-  ip_virtual_router_addresses:
-  - 172.23.254.1
-metadata:
-  platform: vEOS-LAB
+  tenant: system
+vrfs:
+- name: MGMT
+  ip_routing: false

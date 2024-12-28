@@ -1,121 +1,14 @@
-hostname: evpn-to-ipvpn-gateway
-is_deployed: true
-router_bgp:
-  as: '65100.100'
-  router_id: 10.10.0.1
-  bgp:
-    default:
-      ipv4_unicast: false
-    bestpath:
-      d_path: true
-  maximum_paths:
-    paths: 4
-    ecmp: 4
-  redistribute:
-    connected:
-      enabled: true
-      route_map: RM-CONN-2-BGP
-  updates:
-    wait_install: true
-  peer_groups:
-  - name: IPv4-UNDERLAY-PEERS
-    type: ipv4
-    maximum_routes: 12000
-    send_community: all
-  - name: EVPN-OVERLAY-PEERS
-    type: evpn
-    update_source: Loopback0
-    bfd: true
-    send_community: all
-    maximum_routes: 0
-    ebgp_multihop: 3
-  - name: IPVPN-GATEWAY-PEERS
-    type: mpls
-    update_source: Loopback0
-    bfd: true
-    send_community: all
-    maximum_routes: 111
-    local_as: '65555.100'
-  address_family_ipv4:
-    peer_groups:
-    - name: IPv4-UNDERLAY-PEERS
-      activate: true
-    - name: EVPN-OVERLAY-PEERS
-      activate: false
-    - name: IPVPN-GATEWAY-PEERS
-      activate: false
-  address_family_evpn:
-    peer_groups:
-    - name: EVPN-OVERLAY-PEERS
-      activate: true
-    domain_identifier: '65100:10'
-  address_family_vpn_ipv4:
-    neighbor_default_encapsulation_mpls_next_hop_self:
-      source_interface: Loopback0
-    peer_groups:
-    - name: IPVPN-GATEWAY-PEERS
-      activate: true
-    domain_identifier: '65555:20'
-  neighbors:
-  - ip_address: 10.90.90.90
-    peer_group: IPVPN-GATEWAY-PEERS
-    peer: SOME-EBGP-PEER
-    description: SOME-EBGP-PEER
-    remote_as: '65099.900'
-    ebgp_multihop: 15
-  - ip_address: 10.80.80.80
-    peer_group: IPVPN-GATEWAY-PEERS
-    peer: SOME-IBGP-PEER
-    description: SOME-IBGP-PEER
-    remote_as: '65555.100'
-  vrfs:
-  - name: testvrf
-    rd: 10.10.0.1:1
-    route_targets:
-      import:
-      - address_family: evpn
-        route_targets:
-        - '1:1'
-      export:
-      - address_family: evpn
-        route_targets:
-        - '1:1'
-    router_id: 10.10.0.1
-    redistribute:
-      connected:
-        enabled: true
-  vlans:
-  - id: 10
-    tenant: mytenant
-    rd: 10.10.0.1:10010
-    route_targets:
-      both:
-      - 10010:10010
-    redistribute_routes:
-    - learned
-service_routing_protocols_model: multi-agent
-ip_routing: true
-vlan_internal_order:
-  allocation: ascending
-  range:
-    beginning: 1006
-    ending: 1199
 aaa_root:
   disabled: true
 config_end: true
 enable_password:
   disabled: true
-transceiver_qsfp_default_mode_4x10: true
-vrfs:
-- name: MGMT
-  ip_routing: false
-- name: testvrf
-  tenant: mytenant
-  ip_routing: true
-management_api_http:
-  enable_vrfs:
-  - name: MGMT
-  enable_https: true
+hostname: evpn-to-ipvpn-gateway
+ip_igmp_snooping:
+  globally_enabled: true
+ip_routing: true
+ip_virtual_router_mac_address: 00:1c:73:00:00:01
+is_deployed: true
 loopback_interfaces:
 - name: Loopback0
   description: ROUTER_ID
@@ -125,6 +18,10 @@ loopback_interfaces:
   description: VXLAN_TUNNEL_SOURCE
   shutdown: false
   ip_address: 10.11.0.1/32
+management_api_http:
+  enable_https: true
+  enable_vrfs:
+  - name: MGMT
 prefix_lists:
 - name: PL-LOOPBACKS-EVPN-OVERLAY
   sequence_numbers:
@@ -144,26 +41,129 @@ router_bfd:
     interval: 300
     min_rx: 300
     multiplier: 3
+router_bgp:
+  as: '65100.100'
+  router_id: 10.10.0.1
+  maximum_paths:
+    paths: 4
+    ecmp: 4
+  updates:
+    wait_install: true
+  bgp:
+    default:
+      ipv4_unicast: false
+    bestpath:
+      d_path: true
+  peer_groups:
+  - name: IPv4-UNDERLAY-PEERS
+    type: ipv4
+    send_community: all
+    maximum_routes: 12000
+  - name: EVPN-OVERLAY-PEERS
+    type: evpn
+    update_source: Loopback0
+    bfd: true
+    ebgp_multihop: 3
+    send_community: all
+    maximum_routes: 0
+  - name: IPVPN-GATEWAY-PEERS
+    type: mpls
+    local_as: '65555.100'
+    update_source: Loopback0
+    bfd: true
+    send_community: all
+    maximum_routes: 111
+  neighbors:
+  - ip_address: 10.90.90.90
+    peer_group: IPVPN-GATEWAY-PEERS
+    remote_as: '65099.900'
+    peer: SOME-EBGP-PEER
+    description: SOME-EBGP-PEER
+    ebgp_multihop: 15
+  - ip_address: 10.80.80.80
+    peer_group: IPVPN-GATEWAY-PEERS
+    remote_as: '65555.100'
+    peer: SOME-IBGP-PEER
+    description: SOME-IBGP-PEER
+  redistribute:
+    connected:
+      enabled: true
+      route_map: RM-CONN-2-BGP
+  vlans:
+  - id: 10
+    tenant: mytenant
+    rd: 10.10.0.1:10010
+    route_targets:
+      both:
+      - 10010:10010
+    redistribute_routes:
+    - learned
+  address_family_evpn:
+    domain_identifier: '65100:10'
+    peer_groups:
+    - name: EVPN-OVERLAY-PEERS
+      activate: true
+  address_family_ipv4:
+    peer_groups:
+    - name: IPv4-UNDERLAY-PEERS
+      activate: true
+    - name: EVPN-OVERLAY-PEERS
+      activate: false
+    - name: IPVPN-GATEWAY-PEERS
+      activate: false
+  address_family_vpn_ipv4:
+    domain_identifier: '65555:20'
+    peer_groups:
+    - name: IPVPN-GATEWAY-PEERS
+      activate: true
+    neighbor_default_encapsulation_mpls_next_hop_self:
+      source_interface: Loopback0
+  vrfs:
+  - name: testvrf
+    rd: 10.10.0.1:1
+    route_targets:
+      import:
+      - address_family: evpn
+        route_targets:
+        - '1:1'
+      export:
+      - address_family: evpn
+        route_targets:
+        - '1:1'
+    router_id: 10.10.0.1
+    redistribute:
+      connected:
+        enabled: true
+service_routing_protocols_model: multi-agent
+transceiver_qsfp_default_mode_4x10: true
+vlan_interfaces:
+- name: Vlan10
+  description: TEST_SVI_VLAN_10
+  shutdown: true
+  vrf: testvrf
+  ip_address_virtual: 10.10.10.10/24
+  tenant: mytenant
+vlan_internal_order:
+  allocation: ascending
+  range:
+    beginning: 1006
+    ending: 1199
 vlans:
 - id: 10
   name: TEST_SVI_VLAN_10
   tenant: mytenant
-ip_igmp_snooping:
-  globally_enabled: true
-ip_virtual_router_mac_address: 00:1c:73:00:00:01
-vlan_interfaces:
-- name: Vlan10
+vrfs:
+- name: MGMT
+  ip_routing: false
+- name: testvrf
+  ip_routing: true
   tenant: mytenant
-  description: TEST_SVI_VLAN_10
-  shutdown: true
-  ip_address_virtual: 10.10.10.10/24
-  vrf: testvrf
 vxlan_interface:
   vxlan1:
     description: evpn-to-ipvpn-gateway_VTEP
     vxlan:
-      udp_port: 4789
       source_interface: Loopback1
+      udp_port: 4789
       vlans:
       - id: 10
         vni: 10010

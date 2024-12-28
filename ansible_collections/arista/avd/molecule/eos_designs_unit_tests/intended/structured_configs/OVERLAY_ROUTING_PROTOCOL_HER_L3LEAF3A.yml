@@ -1,80 +1,191 @@
+aaa_root:
+  disabled: true
+config_end: true
+enable_password:
+  disabled: true
+ethernet_interfaces:
+- name: Eth1
+  description: MLAG_OVERLAY_ROUTING_PROTOCOL_HER_L3LEAF3B_Eth1
+  shutdown: false
+  channel_group:
+    id: 1
+    mode: active
+  peer: OVERLAY_ROUTING_PROTOCOL_HER_L3LEAF3B
+  peer_interface: Eth1
+  peer_type: mlag_peer
+- name: Eth2
+  description: MLAG_OVERLAY_ROUTING_PROTOCOL_HER_L3LEAF3B_Eth2
+  shutdown: false
+  channel_group:
+    id: 1
+    mode: active
+  peer: OVERLAY_ROUTING_PROTOCOL_HER_L3LEAF3B
+  peer_interface: Eth2
+  peer_type: mlag_peer
 hostname: OVERLAY_ROUTING_PROTOCOL_HER_L3LEAF3A
+ip_igmp_snooping:
+  globally_enabled: true
+ip_routing: true
 is_deployed: true
+loopback_interfaces:
+- name: Loopback0
+  description: ROUTER_ID
+  shutdown: false
+  ip_address: 192.168.254.3/32
+- name: Loopback1
+  description: VXLAN_TUNNEL_SOURCE
+  shutdown: false
+  ip_address: 192.168.253.3/32
+management_api_http:
+  enable_https: true
+  enable_vrfs:
+  - name: MGMT
+mlag_configuration:
+  domain_id: OVERLAY_ROUTING_PROTOCOL_HER_L3LEAF3
+  local_interface: Vlan4094
+  peer_address: 192.168.254.5
+  peer_link: Port-Channel1
+  reload_delay_mlag: '300'
+  reload_delay_non_mlag: '330'
+port_channel_interfaces:
+- name: Port-Channel1
+  description: MLAG_OVERLAY_ROUTING_PROTOCOL_HER_L3LEAF3B_Port-Channel1
+  shutdown: false
+  switchport:
+    enabled: true
+    mode: trunk
+    trunk:
+      groups:
+      - MLAG
+prefix_lists:
+- name: PL-LOOPBACKS-EVPN-OVERLAY
+  sequence_numbers:
+  - sequence: 10
+    action: permit 192.168.254.0/24 eq 32
+  - sequence: 20
+    action: permit 192.168.253.0/24 eq 32
+- name: PL-MLAG-PEER-VRFS
+  sequence_numbers:
+  - sequence: 10
+    action: permit 192.168.253.4/31
+route_maps:
+- name: RM-MLAG-PEER-IN
+  sequence_numbers:
+  - sequence: 10
+    type: permit
+    description: Make routes learned over MLAG Peer-link less preferred on spines to ensure optimal routing
+    set:
+    - origin incomplete
+- name: RM-CONN-2-BGP
+  sequence_numbers:
+  - sequence: 10
+    type: permit
+    match:
+    - ip address prefix-list PL-LOOPBACKS-EVPN-OVERLAY
+- name: RM-CONN-2-BGP-VRFS
+  sequence_numbers:
+  - sequence: 10
+    type: deny
+    match:
+    - ip address prefix-list PL-MLAG-PEER-VRFS
+  - sequence: 20
+    type: permit
 router_bgp:
   as: '65003'
   router_id: 192.168.254.3
-  bgp:
-    default:
-      ipv4_unicast: false
   maximum_paths:
     paths: 4
     ecmp: 4
-  redistribute:
-    connected:
-      enabled: true
-      route_map: RM-CONN-2-BGP
   updates:
     wait_install: true
+  bgp:
+    default:
+      ipv4_unicast: false
   peer_groups:
   - name: MLAG-IPv4-UNDERLAY-PEER
     type: ipv4
     remote_as: '65003'
-    next_hop_self: true
     description: OVERLAY_ROUTING_PROTOCOL_HER_L3LEAF3B
-    maximum_routes: 12000
+    next_hop_self: true
     send_community: all
+    maximum_routes: 12000
     route_map_in: RM-MLAG-PEER-IN
   - name: IPv4-UNDERLAY-PEERS
     type: ipv4
-    maximum_routes: 12000
     send_community: all
+    maximum_routes: 12000
+  neighbors:
+  - ip_address: 192.168.253.5
+    peer_group: MLAG-IPv4-UNDERLAY-PEER
+    peer: OVERLAY_ROUTING_PROTOCOL_HER_L3LEAF3B
+    description: OVERLAY_ROUTING_PROTOCOL_HER_L3LEAF3B_Vlan4093
+  redistribute:
+    connected:
+      enabled: true
+      route_map: RM-CONN-2-BGP
   address_family_ipv4:
     peer_groups:
     - name: MLAG-IPv4-UNDERLAY-PEER
       activate: true
     - name: IPv4-UNDERLAY-PEERS
       activate: true
-  neighbors:
-  - ip_address: 192.168.253.5
-    peer_group: MLAG-IPv4-UNDERLAY-PEER
-    peer: OVERLAY_ROUTING_PROTOCOL_HER_L3LEAF3B
-    description: OVERLAY_ROUTING_PROTOCOL_HER_L3LEAF3B_Vlan4093
 service_routing_protocols_model: multi-agent
-ip_routing: true
+spanning_tree:
+  no_spanning_tree_vlan: 4093-4094
+transceiver_qsfp_default_mode_4x10: true
+vlan_interfaces:
+- name: Vlan4093
+  description: MLAG_L3
+  shutdown: false
+  ip_address: 192.168.253.4/31
+  mtu: 9214
+- name: Vlan4094
+  description: MLAG
+  shutdown: false
+  ip_address: 192.168.254.4/31
+  mtu: 9214
+  no_autostate: true
+- name: Vlan3900
+  description: SVI_ON_ALL_LEAFS
+  shutdown: true
+  vrf: TEST
+  tenant: TEST
+  tags:
+  - leaf1
+  - leaf2
+  - leaf3
+- name: Vlan3903
+  description: SVI_ON_LEAF2-3
+  shutdown: true
+  vrf: TEST
+  tenant: TEST
+  tags:
+  - leaf2
+  - leaf3
+- name: Vlan3000
+  description: MLAG_L3_VRF_TEST
+  shutdown: false
+  vrf: TEST
+  ip_address: 192.168.253.4/31
+  mtu: 9214
+  tenant: TEST
+  type: underlay_peering
 vlan_internal_order:
   allocation: ascending
   range:
     beginning: 1006
     ending: 1199
-aaa_root:
-  disabled: true
-config_end: true
-enable_password:
-  disabled: true
-transceiver_qsfp_default_mode_4x10: true
-vrfs:
-- name: MGMT
-  ip_routing: false
-- name: TEST
-  tenant: TEST
-  ip_routing: true
-management_api_http:
-  enable_vrfs:
-  - name: MGMT
-  enable_https: true
-spanning_tree:
-  no_spanning_tree_vlan: 4093-4094
 vlans:
 - id: 4093
-  tenant: system
   name: MLAG_L3
   trunk_groups:
   - MLAG
-- id: 4094
   tenant: system
+- id: 4094
   name: MLAG
   trunk_groups:
   - MLAG
+  tenant: system
 - id: 3900
   name: SVI_ON_ALL_LEAFS
   tenant: TEST
@@ -92,129 +203,18 @@ vlans:
 - id: 2903
   name: L2VLAN_ON_LEAF2-3
   tenant: TEST
-vlan_interfaces:
-- name: Vlan4093
-  description: MLAG_L3
-  shutdown: false
-  mtu: 9214
-  ip_address: 192.168.253.4/31
-- name: Vlan4094
-  description: MLAG
-  shutdown: false
-  no_autostate: true
-  mtu: 9214
-  ip_address: 192.168.254.4/31
-- name: Vlan3900
+vrfs:
+- name: MGMT
+  ip_routing: false
+- name: TEST
+  ip_routing: true
   tenant: TEST
-  tags:
-  - leaf1
-  - leaf2
-  - leaf3
-  description: SVI_ON_ALL_LEAFS
-  shutdown: true
-  vrf: TEST
-- name: Vlan3903
-  tenant: TEST
-  tags:
-  - leaf2
-  - leaf3
-  description: SVI_ON_LEAF2-3
-  shutdown: true
-  vrf: TEST
-- name: Vlan3000
-  tenant: TEST
-  type: underlay_peering
-  shutdown: false
-  description: MLAG_L3_VRF_TEST
-  vrf: TEST
-  mtu: 9214
-  ip_address: 192.168.253.4/31
-port_channel_interfaces:
-- name: Port-Channel1
-  description: MLAG_OVERLAY_ROUTING_PROTOCOL_HER_L3LEAF3B_Port-Channel1
-  switchport:
-    enabled: true
-    mode: trunk
-    trunk:
-      groups:
-      - MLAG
-  shutdown: false
-ethernet_interfaces:
-- name: Eth1
-  peer: OVERLAY_ROUTING_PROTOCOL_HER_L3LEAF3B
-  peer_interface: Eth1
-  peer_type: mlag_peer
-  description: MLAG_OVERLAY_ROUTING_PROTOCOL_HER_L3LEAF3B_Eth1
-  shutdown: false
-  channel_group:
-    id: 1
-    mode: active
-- name: Eth2
-  peer: OVERLAY_ROUTING_PROTOCOL_HER_L3LEAF3B
-  peer_interface: Eth2
-  peer_type: mlag_peer
-  description: MLAG_OVERLAY_ROUTING_PROTOCOL_HER_L3LEAF3B_Eth2
-  shutdown: false
-  channel_group:
-    id: 1
-    mode: active
-mlag_configuration:
-  domain_id: OVERLAY_ROUTING_PROTOCOL_HER_L3LEAF3
-  local_interface: Vlan4094
-  peer_address: 192.168.254.5
-  peer_link: Port-Channel1
-  reload_delay_mlag: '300'
-  reload_delay_non_mlag: '330'
-route_maps:
-- name: RM-MLAG-PEER-IN
-  sequence_numbers:
-  - sequence: 10
-    type: permit
-    set:
-    - origin incomplete
-    description: Make routes learned over MLAG Peer-link less preferred on spines to ensure optimal routing
-- name: RM-CONN-2-BGP
-  sequence_numbers:
-  - sequence: 10
-    type: permit
-    match:
-    - ip address prefix-list PL-LOOPBACKS-EVPN-OVERLAY
-- name: RM-CONN-2-BGP-VRFS
-  sequence_numbers:
-  - sequence: 10
-    type: deny
-    match:
-    - ip address prefix-list PL-MLAG-PEER-VRFS
-  - sequence: 20
-    type: permit
-loopback_interfaces:
-- name: Loopback0
-  description: ROUTER_ID
-  shutdown: false
-  ip_address: 192.168.254.3/32
-- name: Loopback1
-  description: VXLAN_TUNNEL_SOURCE
-  shutdown: false
-  ip_address: 192.168.253.3/32
-prefix_lists:
-- name: PL-LOOPBACKS-EVPN-OVERLAY
-  sequence_numbers:
-  - sequence: 10
-    action: permit 192.168.254.0/24 eq 32
-  - sequence: 20
-    action: permit 192.168.253.0/24 eq 32
-- name: PL-MLAG-PEER-VRFS
-  sequence_numbers:
-  - sequence: 10
-    action: permit 192.168.253.4/31
-ip_igmp_snooping:
-  globally_enabled: true
 vxlan_interface:
   vxlan1:
     description: OVERLAY_ROUTING_PROTOCOL_HER_L3LEAF3A_VTEP
     vxlan:
-      udp_port: 4789
       source_interface: Loopback1
+      udp_port: 4789
       vlans:
       - id: 3900
         vni: 13900

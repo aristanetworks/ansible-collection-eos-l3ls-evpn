@@ -1,55 +1,54 @@
-hostname: IGMP-QUERIER-L2LEAF1A
-is_deployed: true
-static_routes:
-- vrf: MGMT
-  destination_address_prefix: 0.0.0.0/0
-  gateway: 192.168.200.5
-service_routing_protocols_model: multi-agent
-vlan_internal_order:
-  allocation: ascending
-  range:
-    beginning: 1006
-    ending: 1199
 aaa_root:
   disabled: true
 config_end: true
 enable_password:
   disabled: true
-transceiver_qsfp_default_mode_4x10: true
-vrfs:
-- name: MGMT
-  ip_routing: false
+ethernet_interfaces:
+- name: Ethernet1
+  description: L2_IGMP-QUERIER-L3LEAF1A_Ethernet1
+  shutdown: false
+  channel_group:
+    id: 1
+    mode: active
+  peer: IGMP-QUERIER-L3LEAF1A
+  peer_interface: Ethernet1
+  peer_type: l3leaf
+hostname: IGMP-QUERIER-L2LEAF1A
+ip_igmp_snooping:
+  globally_enabled: true
+is_deployed: true
+management_api_http:
+  enable_https: true
+  enable_vrfs:
+  - name: MGMT
 management_interfaces:
 - name: Management1
   description: OOB_MANAGEMENT
   shutdown: false
   vrf: MGMT
   ip_address: 192.168.200.101/24
-  gateway: 192.168.200.5
   type: oob
-management_api_http:
-  enable_vrfs:
-  - name: MGMT
-  enable_https: true
-ethernet_interfaces:
-- name: Ethernet1
-  peer: IGMP-QUERIER-L3LEAF1A
-  peer_interface: Ethernet1
-  peer_type: l3leaf
-  description: L2_IGMP-QUERIER-L3LEAF1A_Ethernet1
-  shutdown: false
-  channel_group:
-    id: 1
-    mode: active
+  gateway: 192.168.200.5
 port_channel_interfaces:
 - name: Port-Channel1
   description: L2_IGMP-QUERIER-L3LEAF1A_Port-Channel1
+  shutdown: false
   switchport:
     enabled: true
     mode: trunk
     trunk:
       allowed_vlan: 1-3,11-12,21-23,101-103,111-113,121-123
-  shutdown: false
+service_routing_protocols_model: multi-agent
+static_routes:
+- vrf: MGMT
+  destination_address_prefix: 0.0.0.0/0
+  gateway: 192.168.200.5
+transceiver_qsfp_default_mode_4x10: true
+vlan_internal_order:
+  allocation: ascending
+  range:
+    beginning: 1006
+    ending: 1199
 vlans:
 - id: 1
   name: VLAN_1
@@ -102,5 +101,6 @@ vlans:
 - id: 123
   name: VLAN_123
   tenant: Tenant_D
-ip_igmp_snooping:
-  globally_enabled: true
+vrfs:
+- name: MGMT
+  ip_routing: false
