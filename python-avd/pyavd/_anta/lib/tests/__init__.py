@@ -18,7 +18,7 @@ from anta.tests.mlag import VerifyMlagStatus
 from anta.tests.routing.bgp import VerifyBGPPeerMPCaps, VerifyBGPPeerSession
 from anta.tests.routing.generic import VerifyRoutingProtocolModel, VerifyRoutingTableEntry
 from anta.tests.security import VerifyAPIHttpsSSL, VerifySpecificIPSecConn
-from anta.tests.stun import VerifyStunClient
+from anta.tests.stun import VerifyStunClientTranslation
 from anta.tests.system import VerifyNTP, VerifyReloadCause
 
 __all__ = [
@@ -38,7 +38,7 @@ __all__ = [
     "VerifyRoutingProtocolModel",
     "VerifyRoutingTableEntry",
     "VerifySpecificIPSecConn",
-    "VerifyStunClient",
+    "VerifyStunClientTranslation",
     "VerifyTemperature",
     "VerifyTransceiversManufacturers",
     "VerifyTransceiversTemperature",

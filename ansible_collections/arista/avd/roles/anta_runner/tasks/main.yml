@@ -21,63 +21,37 @@
     mode: "0o775"
   loop:
     - "{{ anta_dir }}"
-    - "{{ output_dir }}"
-    - "{{ test_catalogs_dir }}"
-    - "{{ test_results_dir }}"
-    - "{{ custom_anta_catalogs_dir }}"
+    - "{{ anta_catalogs_dir }}"
+    - "{{ anta_reports_dir }}"
+    - "{{ custom_catalogs_dir }}"
   delegate_to: localhost
   run_once: true
   check_mode: false
 
-- name: Include device intended structured configuration variables
-  ansible.builtin.include_vars: "{{ filename }}"
-  delegate_to: localhost
-  when: structured_config is not defined and lookup('first_found', filename, skip=True, errors='ignore')
-  vars:
-    filename: "{{ structured_dir }}/{{ inventory_hostname }}.{{ avd_structured_config_file_format }}"
-
-- name: Run anta_runner
+- name: Run ANTA
   arista.avd.anta_workflow:
-    device_list: "{{ ansible_play_hosts }}"
-    anta_catalogs:
-      avd_catalog_dir: "{{ test_catalogs_dir }}"
-      avd_catalog_filters:
-        - device_list: "all"
-          run_tests: "{{ avd_catalog_filters.run_tests | default(omit) }}"
-          skip_tests: "{{ avd_catalog_filters.skip_tests | default(omit) }}"
+    device_list: "{{ anta_devices }}"
+    anta_catalog:
+      output_dir: "{{ anta_catalogs_dir }}"
       structured_config_dir: "{{ structured_dir }}"
-      structured_config_suffix: yml
-      user_catalog_dir: "{{ custom_anta_catalogs_dir }}"
-    anta_logging:
-      log_level: "{{ logging_level | default('INFO') }}"
-      log_file: "{{ root_dir }}/anta.log"
+      structured_config_suffix: "{{ avd_structured_config_file_format }}"
+      scope:
+        boundary: "{{ anta_catalog_boundary }}"
+        allow_bgp_external: "{{ anta_catalog_allow_bgp_external }}"
+        allow_bgp_vrfs: "{{ anta_catalog_allow_bgp_vrfs }}"
+      filters: "{{ anta_catalog_filters | arista.avd.default([]) }}"
+    custom_catalog:
+      input_dir: "{{ custom_catalogs_dir }}"
     anta_runner_settings:
-      timeout: "{{ timeout | default(30.0) }}"
-      disable_cache: "{{ disable_cache | default(False) }}"
-      tags: "{{ tags | default([]) }}"
+      timeout: "{{ anta_runner_timeout }}"
+      tags: "{{ anta_runner_tags | arista.avd.default([]) }}"
     report:
-      test_results_dir: "{{ test_results_dir }}"
-      csv_output: "{{ anta_csv_report_path }}"
-      md_output: "{{ anta_md_report_path }}"
+      csv_output: "{{ anta_report_csv_path }}"
+      md_output: "{{ anta_report_md_path }}"
+      json_output: "{{ anta_report_json_path }}"
       filters:
-        hide_statuses:
-          - success
-          - error
-  register: anta_results
+        hide_statuses: "{{ anta_report_filter_status | arista.avd.default([]) }}"
+  register: anta
+  delegate_to: localhost
+  run_once: true
   check_mode: false
-
-
-# - name: Create validation reports
-#   arista.avd.anta_reports:
-#     csv_report_path: "{{ anta_csv_report_path }}"
-#     md_report_path: "{{ anta_md_report_path }}"
-#     validation_report_csv: "{{ validation_report_csv }}"
-#     validation_report_md: "{{ validation_report_md }}"
-#     only_failed_tests: "{{ only_failed_tests }}"
-#     test_results_dir: "{{ test_results_dir }}"
-#     # cprofile_file: "anta_reports.prof"
-#   delegate_to: localhost
-#   run_once: true
-#   check_mode: false
-#   when:
-#     - validation_report_csv | bool or validation_report_md | bool

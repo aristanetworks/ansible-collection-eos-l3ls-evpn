@@ -81,7 +81,7 @@ PYAVD_TEST_INDEX: list[TestSpec] = [
         input_factory=VerifySpecificIPSecConnInputFactory,
     ),
     TestSpec(
-        test_class=VerifyStunClient,
+        test_class=VerifyStunClientTranslation,
         conditional_keys=[StructuredConfigKey.ROUTER_PATH_SELECTION_GROUPS],
         input_factory=VerifyStunClientTranslationInputFactory,
     ),

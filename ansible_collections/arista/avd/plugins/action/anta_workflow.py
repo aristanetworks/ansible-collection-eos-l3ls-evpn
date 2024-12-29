@@ -7,7 +7,6 @@ import json
 import logging
 from asyncio import run
 from concurrent.futures import Executor, ProcessPoolExecutor
-from itertools import chain
 from logging.handlers import QueueHandler, QueueListener
 from multiprocessing import Manager, Queue, get_start_method
 from pathlib import Path
@@ -18,16 +17,17 @@ from ansible.errors import AnsibleActionFail
 from ansible.plugins.action import ActionBase, display
 
 from ansible_collections.arista.avd.plugins.plugin_utils.utils import PythonToAnsibleHandler
+from pyavd._utils import strip_empties_from_dict
 
 if TYPE_CHECKING:
-    from collections.abc import Iterator, Mapping
+    from collections.abc import Mapping
 
     from pyavd.api.fabric_data import FabricData
 
 PLUGIN_NAME = "arista.avd.anta_workflow"
 
 try:
-    from pyavd._anta.lib import AntaCatalog, AntaInventory, AsyncEOSDevice, ResultManager, anta_runner
+    from pyavd._anta.lib import AntaCatalog, AntaInventory, AsyncEOSDevice, MDReportGenerator, ReportCsv, ResultManager, anta_runner
     from pyavd._utils import default, get
     from pyavd.get_device_anta_catalog import get_device_anta_catalog
     from pyavd.get_fabric_data import get_fabric_data
@@ -56,7 +56,7 @@ ANSIBLE_CONNECTION_VARS = [
 
 ARGUMENT_SPEC = {
     "device_list": {"type": "list", "elements": "str", "required": True},
-    "avd_catalog": {
+    "anta_catalog": {
         "type": "dict",
         "options": {
             "output_dir": {"type": "str"},
@@ -81,7 +81,7 @@ ARGUMENT_SPEC = {
             },
         },
     },
-    "user_catalog": {
+    "custom_catalog": {
         "type": "dict",
         "options": {
             "input_dir": {"type": "str"},
@@ -98,14 +98,12 @@ ARGUMENT_SPEC = {
         "type": "dict",
         "options": {
             "timeout": {"type": "float", "default": 30.0},
-            "disable_cache": {"type": "bool", "default": False},
             "tags": {"type": "list", "elements": "str"},
         },
     },
     "report": {
         "type": "dict",
         "options": {
-            "test_results_dir": {"type": "str"},
             "csv_output": {"type": "str"},
             "md_output": {"type": "str"},
             "json_output": {"type": "str"},
@@ -115,7 +113,7 @@ ARGUMENT_SPEC = {
                     "hide_statuses": {
                         "type": "list",
                         "elements": "str",
-                        "choices": ["success", "failure", "error", "skipped"],
+                        "choices": ["success", "failure", "error", "skipped", "unset"],
                     },
                 },
             },
@@ -127,14 +125,14 @@ ARGUMENT_SPEC = {
 FABRIC_DATA: FabricData | None = None
 STRUCTURED_CONFIGS: dict[str, dict[str, Any]] | None = None
 PLUGIN_ARGS: dict[str, Any] | None = None
-CONNECTION_VARS: dict[str, dict[str, Any]] | None = None
+ANSIBLE_VARS: dict[str, dict[str, Any]] | None = None
 USER_CATALOG: AntaCatalog | None = None
 DRY_RUN: bool = False
 
 
 class ActionModule(ActionBase):
     def run(self, tmp: Any = None, task_vars: dict | None = None) -> dict:
-        global FABRIC_DATA, STRUCTURED_CONFIGS, PLUGIN_ARGS, CONNECTION_VARS, USER_CATALOG, DRY_RUN  # noqa: PLW0603
+        global FABRIC_DATA, STRUCTURED_CONFIGS, PLUGIN_ARGS, ANSIBLE_VARS, USER_CATALOG, DRY_RUN  # noqa: PLW0603
 
         self._supports_check_mode = True
 
@@ -164,6 +162,7 @@ class ActionModule(ActionBase):
 
         # Get task arguments and validate them
         validation_result, validated_args = self.validate_argument_spec(ARGUMENT_SPEC)
+        validated_args = strip_empties_from_dict(validated_args)
 
         # Converting to json and back to remove any AnsibeUnsafe types
         PLUGIN_ARGS = json.loads(json.dumps(validated_args))
@@ -174,41 +173,38 @@ class ActionModule(ActionBase):
             raise AnsibleActionFail(msg)
 
         # Extract only the needed hostvars from each device
-        CONNECTION_VARS = extract_hostvars(device_list, task_vars["hostvars"])
+        ANSIBLE_VARS = extract_hostvars(device_list, task_vars["hostvars"])
+        deployed_devices = list(ANSIBLE_VARS.keys())
 
-        structured_config_dir = get(PLUGIN_ARGS, "avd_catalog.structured_config_dir")
-        user_catalog_dir = get(PLUGIN_ARGS, "user_catalog.input_dir")
+        structured_config_dir = get(PLUGIN_ARGS, "anta_catalog.structured_config_dir")
+        custom_catalog_dir = get(PLUGIN_ARGS, "custom_catalog.input_dir")
 
-        if structured_config_dir is None and user_catalog_dir is None:
+        if structured_config_dir is None and custom_catalog_dir is None:
             msg = (
-                "'structured_config_dir' must be provided to generate AVD catalogs. "
-                "Otherwise, provide a directory with user-defined ANTA catalogs using the 'user_catalog.input_dir' argument"
+                "'structured_config_dir' must be provided to generate ANTA catalogs. "
+                "Otherwise, provide a directory with user-defined custom ANTA catalogs using the 'custom_catalog.input_dir' argument"
             )
             raise AnsibleActionFail(msg)
 
         DRY_RUN = task_vars.get("ansible_check_mode", False)
 
         try:
-            # Load the user-defined ANTA catalogs if provided
-            if user_catalog_dir is not None:
-                USER_CATALOG = load_user_catalogs(user_catalog_dir)
+            # Load the user-defined custom ANTA catalogs if provided
+            if custom_catalog_dir is not None:
+                USER_CATALOG = load_user_catalogs(custom_catalog_dir)
 
             # Load the structured configs and build FabricData
             if structured_config_dir is not None:
-                STRUCTURED_CONFIGS = load_structured_configs(device_list, structured_config_dir, get(PLUGIN_ARGS, "avd_catalog.structured_config_suffix"))
-                FABRIC_DATA = get_fabric_data(structured_configs=STRUCTURED_CONFIGS, scope=get(PLUGIN_ARGS, "avd_catalog.scope"))
+                STRUCTURED_CONFIGS = load_structured_configs(deployed_devices, structured_config_dir, get(PLUGIN_ARGS, "anta_catalog.structured_config_suffix"))
+                FABRIC_DATA = get_fabric_data(structured_configs=STRUCTURED_CONFIGS, scope=get(PLUGIN_ARGS, "anta_catalog.scope"))
 
             # NOTE: 7 devices per batch is the sweet spot on 16 workers and 1040 devices
             # TODO: Make the batch size configurable
             with ProcessPoolExecutor(max_workers=max_workers) as executor:
-                batch_results = run_anta_batches(device_list, executor, batch_size=7)
+                batch_results = run_anta_batches(deployed_devices, executor, batch_size=7)
 
-            results = chain.from_iterable(manager.get_results() for manager in batch_results)
-
-            # TODO: Add support for multiple reports, e.g. CSV, MD
-            build_reports(results, get(PLUGIN_ARGS, "report"))
-
-            LOGGER.info("[anta_workflow]: completed successfully")
+            # Build the ANTA reports
+            build_reports(batch_results, get(PLUGIN_ARGS, "report"))
 
         except Exception as error:
             # Recast errors as AnsibleActionFail
@@ -244,22 +240,41 @@ def run_anta(devices: list[str]) -> ResultManager:
     return result_manager
 
 
-def build_reports(results: Iterator, report_settings: dict) -> None:
+def build_reports(batch_results: list[ResultManager], report_settings: dict) -> None:
     """Build the ANTA reports from the results iterator."""
+    hide_statuses = get(report_settings, "filters.hide_statuses")
+    csv_output_path = get(report_settings, "csv_output")
+    md_output_path = get(report_settings, "md_output")
     json_output_path = get(report_settings, "json_output")
-    dumped_results = [result.model_dump(exclude={"result_overwrite", "filters"}) for result in results]
-    sorted_results = sorted(
-        dumped_results,
-        key=lambda result: (
-            result.get("categories", [""])[0].lower(),
-            result.get("test", "").lower(),
-            result.get("custom_field", "").lower(),
-        ),
-    )
+
+    # Merge all results
+    result_manager = ResultManager()
+    for manager in batch_results:
+        for result in manager.results:
+            result_manager.add(result)
+
+    # Filter the results based on the hide_statuses if provided
+    if hide_statuses:
+        result_manager = result_manager.filter(hide=set(hide_statuses))
+
+    # Sort the internal results list
+    sorted_results = result_manager.get_results(sort_by=["name", "categories", "test", "result", "custom_field"])
+    result_manager.results = sorted_results
+
+    if csv_output_path:
+        path = Path(csv_output_path)
+        report_csv = ReportCsv()
+        report_csv.generate(result_manager, path)
+
+    if md_output_path:
+        path = Path(md_output_path)
+        md_report = MDReportGenerator()
+        md_report.generate(result_manager, path)
+
     if json_output_path:
         path = Path(json_output_path)
-        with path.open("w", encoding="UTF-8") as stream:
-            json.dump(sorted_results, stream, indent=2)
+        with path.open("w", encoding="UTF-8") as file:
+            file.write(result_manager.json)
 
 
 def extract_hostvars(device_list: list[str], hostvars: Mapping) -> dict:
@@ -273,11 +288,16 @@ def extract_hostvars(device_list: list[str], hostvars: Mapping) -> dict:
 
         host_hostvars = hostvars[device]
 
+        # Since we can run ANTA without any structured configs, i.e., only using user custom catalogs,
+        # we honor the `is_deployed` flag in the hostvars to skip devices that are not deployed.
         if get(host_hostvars, "is_deployed", default=True) is False:
             LOGGER.warning("<%s> [anta_workflow]: skipped - device not deployed", device)
             continue
 
         device_vars[device] = {key: get(host_hostvars, key) for key in ANSIBLE_CONNECTION_VARS}
+
+        # Same as above, we also honor the `anta_tags` variable if provided in the hostvars
+        device_vars[device]["anta_tags"] = get(host_hostvars, "anta_tags")
 
     return device_vars
 
@@ -304,8 +324,8 @@ def build_anta_runner_objects(devices: list[str]) -> tuple[ResultManager, AntaIn
                 hostname=device,
                 structured_config=STRUCTURED_CONFIGS[device],
                 fabric_data=FABRIC_DATA,
-                output_dir=get(PLUGIN_ARGS, "avd_catalog.output_dir"),
-                **get_avd_catalog_filters(device, get(PLUGIN_ARGS, "avd_catalog.filters", default=[])),
+                output_dir=get(PLUGIN_ARGS, "anta_catalog.output_dir"),
+                **get_avd_catalog_filters(device, get(PLUGIN_ARGS, "anta_catalog.filters", default=[])),
             )
             catalogs.append(catalog)
 
@@ -344,7 +364,7 @@ def get_avd_catalog_filters(device: str, avd_catalog_filters: list[dict]) -> dic
 
 def build_anta_device(device: str) -> AsyncEOSDevice:
     """Build the ANTA device object for a device using the provided connection variables."""
-    if CONNECTION_VARS is None or PLUGIN_ARGS is None:
+    if ANSIBLE_VARS is None or PLUGIN_ARGS is None:
         msg = "Required global variables not initialized"
         raise RuntimeError(msg)
 
@@ -352,29 +372,27 @@ def build_anta_device(device: str) -> AsyncEOSDevice:
     required_settings = ["host", "username", "password"]
 
     anta_runner_settings = get(PLUGIN_ARGS, "anta_runner_settings")
-    device_connection_vars = CONNECTION_VARS[device]
+    device_vars = ANSIBLE_VARS[device]
 
     # TODO: Confirm this is working with Ansible Vault
     device_settings = {
         "name": device,
-        "host": get(device_connection_vars, "ansible_host", default=get(device_connection_vars, "inventory_hostname")),
-        "username": get(device_connection_vars, "ansible_user"),
+        "host": get(device_vars, "ansible_host", default=get(device_vars, "inventory_hostname")),
+        "username": get(device_vars, "ansible_user"),
         "password": default(
-            get(device_connection_vars, "ansible_password"),
-            get(device_connection_vars, "ansible_httpapi_pass"),
-            get(device_connection_vars, "ansible_httpapi_password"),
+            get(device_vars, "ansible_password"),
+            get(device_vars, "ansible_httpapi_pass"),
+            get(device_vars, "ansible_httpapi_password"),
         ),
-        "enable": get(device_connection_vars, "ansible_become", default=False),
-        "enable_password": get(device_connection_vars, "ansible_become_password"),
+        "enable": get(device_vars, "ansible_become", default=False),
+        "enable_password": get(device_vars, "ansible_become_password"),
         "port": get(
-            device_connection_vars,
+            device_vars,
             "ansible_httpapi_port",
-            default=(80 if get(device_connection_vars, "ansible_httpapi_use_ssl", default=False) is False else 443),
+            default=(80 if get(device_vars, "ansible_httpapi_use_ssl", default=False) is False else 443),
         ),
         "timeout": get(anta_runner_settings, "timeout"),
-        "disable_cache": get(anta_runner_settings, "disable_cache"),
-        # TODO: Need to add anta_tags to the metadata schema
-        "tags": set(get(device_connection_vars, "metadata.anta_tags", default=[])),
+        "tags": set(get(device_vars, "anta_tags", default=[])),
     }
 
     # Make sure we found all required connection settings. Other settings have defaults in the ANTA device object
@@ -390,7 +408,7 @@ def build_anta_device(device: str) -> AsyncEOSDevice:
 
 
 def load_user_catalogs(catalog_dir: str) -> AntaCatalog:
-    """Load user-defined ANTA catalogs from the provided directory. Supported file formats are YAML and JSON."""
+    """Load user-defined ANTA custom catalogs from the provided directory. Supported file formats are YAML and JSON."""
     supported_formats = {".yml": "yaml", ".yaml": "yaml", ".json": "json"}
     catalogs = []
 
@@ -404,14 +422,12 @@ def load_user_catalogs(catalog_dir: str) -> AntaCatalog:
             LOGGER.warning("[anta_workflow]: skipped catalog file %s - unsupported format", path_obj)
             continue
 
-        LOGGER.debug("[anta_workflow]: loading catalog from %s", path_obj)
+        LOGGER.info("[anta_workflow]: loading catalog from %s", path_obj)
         catalog = AntaCatalog.parse(path_obj, file_format)
         catalogs.append(catalog)
 
     if not catalogs:
-        msg = f"No valid ANTA catalogs found in directory: {catalog_dir}"
-        # TODO: Might be too strict. Maybe just log a warning and continue
-        raise ValueError(msg)
+        LOGGER.info("[anta_workflow]: no user-defined custom ANTA catalogs found in directory: %s", catalog_dir)
 
     return AntaCatalog.merge_catalogs(catalogs)
 

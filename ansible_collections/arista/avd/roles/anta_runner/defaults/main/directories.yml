@@ -1,0 +1,34 @@
+---
+# Role defaults - directories and paths
+
+# Root directory
+root_dir: "{{ inventory_dir }}"
+
+# Main output directory
+output_dir_name: "intended"
+output_dir: "{{ root_dir }}/{{ output_dir_name }}"
+
+# Output for structured configuration YAML files
+structured_dir_name: "structured_configs"
+structured_dir: "{{ output_dir }}/{{ structured_dir_name }}"
+
+# Main ANTA directory
+anta_dir_name: "anta"
+anta_dir: "{{ root_dir }}/{{ anta_dir_name }}"
+
+# Input for ANTA user custom catalog files
+custom_catalogs_dir_name: "custom_catalogs"
+custom_catalogs_dir: "{{ anta_dir }}/{{ custom_catalogs_dir_name }}"
+
+# Output for ANTA AVD catalog files
+anta_catalogs_dir_name: "catalogs"
+anta_catalogs_dir: "{{ anta_dir }}/{{ anta_catalogs_dir_name }}"
+
+# Output for ANTA reports
+anta_reports_dir_name: "reports"
+anta_reports_dir: "{{ anta_dir }}/{{ anta_reports_dir_name }}"
+
+# ANTA report paths
+anta_report_json_path: "{{ anta_reports_dir }}/anta_report.json"
+anta_report_md_path: "{{ anta_reports_dir }}/anta_report.md"
+anta_report_csv_path: "{{ anta_reports_dir }}/anta_report.csv"

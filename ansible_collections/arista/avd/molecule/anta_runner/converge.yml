@@ -3,14 +3,12 @@
   hosts: FABRIC
   gather_facts: false
   vars:
-    root_dir: '{{ playbook_dir }}'
+    root_dir: "{{ playbook_dir }}"
   tasks:
     - name: Generate AVD Structured Configurations and Fabric Documentation
       ansible.builtin.import_role:
         name: arista.avd.eos_designs
-    - name: Test ANTA runner
+    - name: Run ANTA
       delegate_to: localhost
       ansible.builtin.import_role:
         name: arista.avd.anta_runner
-      vars:
-        save_catalog: true

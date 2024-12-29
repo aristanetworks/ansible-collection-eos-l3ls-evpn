@@ -56,3 +56,19 @@ custom_anta_catalogs_dir: "{{ root_dir }}/{{ custom_anta_catalogs_dir_name }}"
 # EOS snapshots directory name
 snapshots_backup_dir_name: 'snapshots'
 snapshots_backup_dir: '{{ root_dir }}/{{ snapshots_backup_dir_name }}'
+
+# Main ANTA directory
+anta_dir_name: "anta"
+anta_dir: "{{ root_dir }}/{{ anta_dir_name }}"
+
+# Input for ANTA user custom catalog files
+custom_catalogs_dir_name: "custom_catalogs"
+custom_catalogs_dir: "{{ anta_dir }}/{{ custom_catalogs_dir_name }}"
+
+# Output for ANTA AVD catalog files
+anta_catalogs_dir_name: "catalogs"
+anta_catalogs_dir: "{{ anta_dir }}/{{ anta_catalogs_dir_name }}"
+
+# Output for ANTA reports
+anta_reports_dir_name: "reports"
+anta_reports_dir: "{{ anta_dir }}/{{ anta_reports_dir_name }}"

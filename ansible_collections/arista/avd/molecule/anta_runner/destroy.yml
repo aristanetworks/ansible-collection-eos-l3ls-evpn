@@ -4,7 +4,7 @@
   gather_facts: false
   connection: local
   vars:
-    root_dir: '{{ playbook_dir }}'
+    root_dir: "{{ playbook_dir }}"
   tasks:
     - name: Delete local folders
       delegate_to: 127.0.0.1
@@ -16,4 +16,6 @@
         - documentation
         - intended
         - config_backup
+        - anta
         - reports
+        - custom_anta_catalogs

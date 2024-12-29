@@ -3,14 +3,9 @@
 # that can be found in the LICENSE file.
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
-
 from anta.tests.avt import VerifyAVTRole
 
 from ._base_classes import AntaTestInputFactory
-
-if TYPE_CHECKING:
-    from anta.tests.avt import VerifyAVTRole
 
 
 class VerifyAVTRoleInputFactory(AntaTestInputFactory):
@@ -27,4 +22,4 @@ class VerifyAVTRoleInputFactory(AntaTestInputFactory):
         if role and role in ["transit region", "transit zone"]:
             role = " ".join(reversed(role.split()))
 
-        return self.test.Input(role=role)
+        return VerifyAVTRole.Input(role=role)

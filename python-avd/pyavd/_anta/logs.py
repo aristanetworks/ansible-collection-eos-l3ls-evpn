@@ -98,8 +98,8 @@ class LogMessage(Enum):
 
     # IP-related messages
     IPV6_UNSUPPORTED = "{caller} skipped - IPv6 not supported"
-    LOOPBACK0_NO_IP = "{caller} skipped - no Loopback0 IP"
-    VTEP_NO_IP = "{caller} skipped - no VTEP IP"
+    LOOPBACK0_NO_IP = "skipped - no Loopback0 IP"
+    VTEP_NO_IP = "skipped - no VTEP IP"
 
     # Device role messages
     DEVICE_NOT_VTEP = "skipped - device is not a VTEP or is a WAN router"

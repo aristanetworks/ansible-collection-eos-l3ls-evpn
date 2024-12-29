@@ -1,3 +1,3 @@
 galaxy_info:
-  description: Validate states on EOS devices via eapi.
+  description: Run Arista Network Test Automation (ANTA) on EOS via eAPI
   standalone: false
