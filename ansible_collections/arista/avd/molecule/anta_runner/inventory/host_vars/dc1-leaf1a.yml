@@ -4,7 +4,8 @@ custom_structured_configuration_router_bgp:
     - ip_address: 10.1.1.1
       description: External peer
       peer_group: EVPN-OVERLAY-PEERS
-# Custom router path selection structured_config to test negative case for STUN client testcase
+
+# Custom router path selection structured_config to test negative case for STUN client test case
 custom_structured_configuration_router_path_selection:
   path_groups:
     - name: Test_local_interface

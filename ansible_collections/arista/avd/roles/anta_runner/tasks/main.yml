@@ -45,6 +45,7 @@
       input_dir: "{{ custom_catalogs_dir }}"
     anta_runner_settings:
       timeout: "{{ anta_runner_timeout }}"
+      batch_size: "{{ anta_runner_batch_size }}"
       tags: "{{ anta_runner_tags | arista.avd.default([]) }}"
     anta_logging:
       log_dir: "{{ anta_logs_dir }}"

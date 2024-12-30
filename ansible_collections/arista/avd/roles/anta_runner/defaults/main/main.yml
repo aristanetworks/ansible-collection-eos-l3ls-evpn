@@ -21,5 +21,8 @@ anta_catalog_allow_bgp_vrfs: true
 # Global timeout for the ANTA runner. It is recommended to set this to a high value to avoid timeouts during large ANTA runs.
 anta_runner_timeout: 30
 
+# ANTA runner batch size. This controls the number of devices that will be processed in parallel. 5-10 is a good starting point.
+anta_runner_batch_size: 5
+
 # Structured configuration file format. Supported formats: yml, yaml, json.
 avd_structured_config_file_format: "yml"

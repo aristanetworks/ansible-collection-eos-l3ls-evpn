@@ -2,7 +2,7 @@ type: wan_router
 
 overlay_routing_protocol: ibgp
 
-wan_router: # dynamic_key: node_type
+wan_router:
   defaults:
     cv_pathfinder_region: Global
     cv_pathfinder_site: DC1

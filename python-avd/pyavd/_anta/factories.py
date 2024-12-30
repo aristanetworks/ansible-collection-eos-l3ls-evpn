@@ -127,7 +127,7 @@ def create_device_data(hostname: str, structured_configs: dict, boundary: str) -
 
 
 def create_device_boundary_location(fabric_name: str | None, dc_name: str | None, pod_name: str | None, rack: str | None, boundary: str) -> BoundaryLocation:
-    """Create a BoundaryLocation tuple for the location of a device up to the specified boundary level."""
+    """Create a BoundaryLocation object for the location of a device up to the specified boundary level."""
     match boundary:
         case "unlimited":
             return BoundaryLocation()

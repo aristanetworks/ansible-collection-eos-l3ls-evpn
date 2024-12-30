@@ -1,4 +1,2 @@
 ---
-### group_vars/DC2_L2_LEAVES.yml
-
 type: l2leaf

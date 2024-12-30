@@ -90,7 +90,6 @@ ARGUMENT_SPEC = {
     "anta_logging": {
         "type": "dict",
         "options": {
-            "log_level": {"type": "str", "default": "WARNING", "choices": LOGGING_LEVELS},
             "log_dir": {"type": "str"},
         },
     },
@@ -98,6 +97,7 @@ ARGUMENT_SPEC = {
         "type": "dict",
         "options": {
             "timeout": {"type": "float", "default": 30.0},
+            "batch_size": {"type": "int", "default": 5},
             "tags": {"type": "list", "elements": "str"},
         },
     },
@@ -151,8 +151,13 @@ class ActionModule(ActionBase):
             msg = f"The {PLUGIN_NAME} plugin requires the 'fork' start method for multiprocessing"
             raise AnsibleActionFail(msg)
 
-        # TODO: Get the max_workers from Ansible forks (n - 1)
-        max_workers = 16
+        # Setup the module logging using a logging queue with a listener
+        queue = Queue()
+        setup_module_logging(queue)
+        listener = setup_queue_listener(result, queue)
+
+        DRY_RUN = task_vars.get("ansible_check_mode", False)
+        ansible_forks = task_vars.get("ansible_forks", 5)
 
         # Get task arguments and validate them
         validation_result, validated_args = self.validate_argument_spec(ARGUMENT_SPEC)
@@ -165,11 +170,6 @@ class ActionModule(ActionBase):
         if not device_list:
             msg = "'device_list' cannot be empty"
             raise AnsibleActionFail(msg)
-
-        # Setup the module logging using a logging queue with a listener
-        queue = Queue()
-        setup_module_logging(queue)
-        listener = setup_queue_listener(result, queue)
 
         # Extract only the needed hostvars from each device
         ANSIBLE_VARS = extract_hostvars(device_list, task_vars["hostvars"])
@@ -185,8 +185,6 @@ class ActionModule(ActionBase):
             )
             raise AnsibleActionFail(msg)
 
-        DRY_RUN = task_vars.get("ansible_check_mode", False)
-
         try:
             # Load the custom ANTA catalogs if provided
             if custom_catalog_dir is not None:
@@ -197,10 +195,8 @@ class ActionModule(ActionBase):
                 STRUCTURED_CONFIGS = load_structured_configs(deployed_devices, structured_config_dir, get(PLUGIN_ARGS, "anta_catalog.structured_config_suffix"))
                 FABRIC_DATA = get_fabric_data(structured_configs=STRUCTURED_CONFIGS, scope=get(PLUGIN_ARGS, "anta_catalog.scope"))
 
-            # NOTE: 5-10 devices per worker is a good starting point
-            # TODO: Make the batch size configurable in the plugin arguments
-            with Pool(processes=max_workers) as pool:
-                batch_size = get(PLUGIN_ARGS, "anta_runner_settings.batch_size", default=5)
+            with Pool(processes=(ansible_forks - 1)) as pool:
+                batch_size = get(PLUGIN_ARGS, "anta_runner_settings.batch_size")
                 batches = [deployed_devices[i : i + batch_size] for i in range(0, len(deployed_devices), batch_size)]
                 batch_results = pool.map(run_anta, batches)
 
@@ -324,7 +320,7 @@ def build_anta_runner_objects(devices: list[str]) -> tuple[ResultManager, AntaIn
                 structured_config=STRUCTURED_CONFIGS[device],
                 fabric_data=FABRIC_DATA,
                 output_dir=get(PLUGIN_ARGS, "anta_catalog.output_dir"),
-                **get_avd_catalog_filters(device, get(PLUGIN_ARGS, "anta_catalog.filters", default=[])),
+                **get_anta_catalog_filters(device, get(PLUGIN_ARGS, "anta_catalog.filters", default=[])),
             )
             catalogs.append(catalog)
 
@@ -333,8 +329,8 @@ def build_anta_runner_objects(devices: list[str]) -> tuple[ResultManager, AntaIn
     return result_manager, inventory, catalog
 
 
-def get_avd_catalog_filters(device: str, avd_catalog_filters: list[dict]) -> dict[str, list[str] | None]:
-    """Get the test filters for a device from the provided AVD catalog filters.
+def get_anta_catalog_filters(device: str, anta_catalog_filters: list[dict]) -> dict[str, list[str] | None]:
+    """Get the test filters for a device from the provided ANTA catalog filters.
 
     More specific filters (appearing later in the list) completely override earlier ones.
     For example, if a device matches both a group filter and an individual filter,
@@ -342,7 +338,7 @@ def get_avd_catalog_filters(device: str, avd_catalog_filters: list[dict]) -> dic
     """
     final_filters = {"run_tests": None, "skip_tests": None}
 
-    for filter_config in avd_catalog_filters:
+    for filter_config in anta_catalog_filters:
         if device in get(filter_config, "device_list", default=[]):
             run_tests = get(filter_config, "run_tests")
             skip_tests = get(filter_config, "skip_tests")

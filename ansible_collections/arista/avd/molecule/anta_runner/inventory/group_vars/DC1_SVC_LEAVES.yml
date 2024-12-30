@@ -1,4 +1,2 @@
 ---
-### group_vars/DC1_SVC_LEAVES.yml
-
 type: service_leaf

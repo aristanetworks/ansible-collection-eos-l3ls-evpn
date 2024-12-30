@@ -1,5 +1,4 @@
 ---
-# inventory.yml
 all:
   children:
     WAN:

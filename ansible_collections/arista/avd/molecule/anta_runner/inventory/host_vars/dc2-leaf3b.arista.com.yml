@@ -1,6 +1,7 @@
 ---
 # Custom interface structured_config with shutdown key missing to make sure the defaults are handled properly
-# keeping test for deprecated data-models (type, mode, vlans, native_vlan) to ensure that validate_state can still generate the tests for them.
+# Keeping test for deprecated data-models to ensure that validate_state can still generate the tests for them
+# Deprecated keys: type, mode, vlans, native_vlan, native_vlan_tag, trunk_groups, phone
 custom_structured_configuration_ethernet_interfaces:
   - name: Ethernet11
     peer: dc2-leaf3-fw1
@@ -26,4 +27,4 @@ custom_structured_configuration_port_channel_interfaces:
 
 custom_structured_configuration_interface_defaults:
   ethernet:
-    shutdown: True
+    shutdown: true

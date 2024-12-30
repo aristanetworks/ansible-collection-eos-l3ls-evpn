@@ -1,50 +1,34 @@
 ---
-### group_vars/FABRIC.yml
-
-# Ansible connectivity definitions
-# eAPI connectivity via HTTPS is specified (as opposed to CLI via SSH)
 ansible_connection: ansible.netcommon.httpapi
-# Specifies that we are indeed using Arista EOS
 ansible_network_os: arista.eos.eos
-# This user/password must exist on the switches to enable Ansible access
 ansible_user: ansible
 ansible_password: ansible
-# User escalation (to enter enable mode)
 ansible_become: true
 ansible_become_method: enable
-# Use SSL (HTTPS)
 ansible_httpapi_use_ssl: true
-# Do not try to validate certs
 ansible_httpapi_validate_certs: false
 
 # If a device is set to "is_deployed: false" at the host_vars level, then shutdown interfaces towards undeployed peers.
 shutdown_interfaces_towards_undeployed_peers: true
 
-# Common AVD group variables
 fabric_name: FABRIC
 
-# Define underlay and overlay routing protocol to be used
 underlay_routing_protocol: ebgp
 overlay_routing_protocol: ebgp
 
-# eAPI HTTPS SSL profile
 custom_structured_configuration_management_api_http:
   https_ssl_profile: eAPI_SSL_Profile
 
-# Local users
 local_users:
-  # Define a new user, which is called "ansible"
   - name: ansible
     privilege: 15
     role: network-admin
-    # Password set to "ansible". Same string as the device generates when configuring a username.
     sha512_password: $6$7u4j1rkb3VELgcZE$EJt2Qff8kd/TapRoci0XaIZsL4tFzgq1YZBLD9c6f/knXzvcYY0NcMKndZeCv0T268knGKhOEwZAxqKjlMm920
   - name: admin
     privilege: 15
     role: network-admin
     no_password: true
 
-# BGP peer groups passwords
 bgp_peer_groups:
   # all passwords set to "arista"
   evpn_overlay_peers:
@@ -58,12 +42,8 @@ bgp_peer_groups:
     listen_range_prefixes:
       - 10.0.0.0/8
 
-# P2P interfaces MTU, includes VLANs 4093 and 4094 that are over peer-link
-# If you're running vEOS-lab or cEOS, you should use MTU of 1500 instead as shown in the following line
-# p2p_uplinks_mtu: 1500
 p2p_uplinks_mtu: 1500
 
-# Define default interfaces
 default_interfaces:
   - types: [ spine ]
     platforms: [ vEOS-lab ]
@@ -78,19 +58,15 @@ default_interfaces:
     platforms: [ vEOS-lab ]
     uplink_interfaces: [ Ethernet1-2 ]
 
-# L3 Edge port definitions. This can be any port in the entire Fabric, where IP interfaces are defined.
 l3_edge:
-  # Define a new IP pool that will be used to assign IP addresses to L3 Edge interfaces.
   p2p_links_ip_pools:
     - name: DCI_IP_pool
       ipv4_pool: 192.168.100.0/24
-  # Define a new link profile which will match the IP pool, the used ASNs and include the defined interface into underlay routing
   p2p_links_profiles:
     - name: DCI_profile
       ip_pool: DCI_IP_pool
       as: [65102, 65202]
       include_in_underlay_protocol: true
-  # Define each P2P L3 link and link the nodes, the interfaces and the profile used.
   p2p_links:
     - id: 1
       nodes: [dc1-leaf2a, dc2-leaf2a]
@@ -101,7 +77,6 @@ l3_edge:
       interfaces: [Ethernet6, Ethernet6]
       profile: DCI_profile
 
-# Custom node types
 node_type_keys:
 
   - key: spine

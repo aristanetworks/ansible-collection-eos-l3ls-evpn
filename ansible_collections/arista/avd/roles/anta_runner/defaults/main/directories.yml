@@ -24,7 +24,7 @@ custom_catalogs_dir: "{{ anta_dir }}/{{ custom_catalogs_dir_name }}"
 anta_catalogs_dir_name: "catalogs"
 anta_catalogs_dir: "{{ anta_dir }}/{{ anta_catalogs_dir_name }}"
 
-# Output for ANTA debug files
+# Output for ANTA log files
 anta_logs_dir_name: "logs"
 anta_logs_dir: "{{ anta_dir }}/{{ anta_logs_dir_name }}"
 
