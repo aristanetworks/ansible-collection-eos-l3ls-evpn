@@ -365,7 +365,7 @@ class UplinksMixin:
     @cached_property
     def _default_downlink_interfaces(self: EosDesignsFacts) -> list:
         """
-        internal _default_downlink_interfaces set based on default_interfaces.
+        Internal _default_downlink_interfaces set based on default_interfaces.
 
         Parsed by downstream switches during eos_designs_facts phase.
         """

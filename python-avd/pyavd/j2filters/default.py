@@ -10,7 +10,7 @@ T = TypeVar("T")
 
 def default(*values: list[T]) -> T | None:
     """
-    default will test value if defined and is not none.
+    Default will test value if defined and is not none.
 
     Arista.avd.default will test if the first value is defined and is not none.
     If true return value else repeat for the next value.

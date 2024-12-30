@@ -24,7 +24,7 @@ class RouterPimSparseModeMixin(UtilsMixin):
     @cached_property
     def router_pim_sparse_mode(self: AvdStructuredConfigNetworkServices) -> dict | None:
         """
-        return structured config for router_pim.
+        Return structured config for router_pim.
 
         Used for to configure RPs on the VRF
         """
