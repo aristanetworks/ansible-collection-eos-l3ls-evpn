@@ -100,6 +100,7 @@ ARGUMENT_SPEC = {
             "timeout": {"type": "float", "default": 30.0},
             "batch_size": {"type": "int", "default": 5},
             "tags": {"type": "list", "elements": "str"},
+            "dry_run": {"type": "bool", "default": False},
         },
     },
     "report": {
@@ -128,14 +129,13 @@ STRUCTURED_CONFIGS: dict[str, dict[str, Any]] | None = None
 PLUGIN_ARGS: dict[str, Any] | None = None
 ANSIBLE_VARS: dict[str, dict[str, Any]] | None = None
 CUSTOM_CATALOG: AntaCatalog | None = None
-DRY_RUN: bool = False
 
 
 class ActionModule(ActionBase):
     def run(self, tmp: Any = None, task_vars: dict | None = None) -> dict:
-        global FABRIC_DATA, STRUCTURED_CONFIGS, PLUGIN_ARGS, ANSIBLE_VARS, CUSTOM_CATALOG, DRY_RUN  # noqa: PLW0603
+        global FABRIC_DATA, STRUCTURED_CONFIGS, PLUGIN_ARGS, ANSIBLE_VARS, CUSTOM_CATALOG  # noqa: PLW0603
 
-        self._supports_check_mode = True
+        self._supports_check_mode = False
 
         if task_vars is None:
             task_vars = {}
@@ -157,7 +157,6 @@ class ActionModule(ActionBase):
         setup_module_logging(queue)
         listener = setup_queue_listener(result, queue)
 
-        DRY_RUN = task_vars.get("ansible_check_mode", False)
         ansible_forks = task_vars.get("ansible_forks", 5)
 
         # Get task arguments and validate them
@@ -227,7 +226,7 @@ def run_anta(devices: list[str]) -> ResultManager:
     tags = set(get(PLUGIN_ARGS, "anta_runner_settings.tags", default=[])) or None
 
     LOGGER.info("running ANTA in process %s for devices: %s", current_process().name, ", ".join(devices))
-    run(anta_runner(result_manager, inventory, catalog, tags=tags, dry_run=DRY_RUN))
+    run(anta_runner(result_manager, inventory, catalog, tags=tags, dry_run=get(PLUGIN_ARGS, "anta_runner_settings.dry_run")))
 
     LOGGER.info("ANTA process %s completed", current_process().name)
     return result_manager
