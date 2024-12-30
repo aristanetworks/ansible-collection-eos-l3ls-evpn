@@ -24,6 +24,7 @@
     - "{{ anta_catalogs_dir }}"
     - "{{ anta_reports_dir }}"
     - "{{ custom_catalogs_dir }}"
+    - "{{ anta_logs_dir }}"
   delegate_to: localhost
   run_once: true
   check_mode: false
@@ -45,6 +46,8 @@
     anta_runner_settings:
       timeout: "{{ anta_runner_timeout }}"
       tags: "{{ anta_runner_tags | arista.avd.default([]) }}"
+    anta_logging:
+      log_dir: "{{ anta_logs_dir }}"
     report:
       csv_output: "{{ anta_report_csv_path }}"
       md_output: "{{ anta_report_md_path }}"

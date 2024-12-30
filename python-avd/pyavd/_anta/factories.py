@@ -28,7 +28,7 @@ if TYPE_CHECKING:
     from pyavd.api.fabric_data import FabricData
 
 
-LOGGER = getLogger("pyavd")
+LOGGER = getLogger(__name__)
 
 
 def create_fabric_data(structured_configs: dict, scope: dict | None = None) -> FabricData:
@@ -48,7 +48,7 @@ def create_fabric_data(structured_configs: dict, scope: dict | None = None) -> F
     wan_routers: set[str] = set()
 
     start_time = perf_counter()
-    LOGGER.info("[fabric_data]: creating FabricData object with scope %s", scope)
+    LOGGER.debug("creating FabricData object with scope %s", scope)
 
     # Build all the indexes
     for hostname in structured_configs:
@@ -57,7 +57,7 @@ def create_fabric_data(structured_configs: dict, scope: dict | None = None) -> F
 
         if scope_obj.boundary != "unlimited" and getattr(device_data.boundary_location, scope_obj.boundary) is None:
             field = "rack" if scope_obj.boundary == "rack" else f"{scope_obj.boundary}_name"
-            msg = f"device {hostname} is missing required metadata field '{field}' for boundary '{scope_obj.boundary}'"
+            msg = f"Device {hostname} is missing required metadata field '{field}' for boundary '{scope_obj.boundary}'"
             raise ValueError(msg)
 
         # Build boundary index
@@ -69,13 +69,13 @@ def create_fabric_data(structured_configs: dict, scope: dict | None = None) -> F
             loopback0_ips[hostname] = device_data.loopback0_ip
             special_ips[hostname].append(device_data.loopback0_ip)
         else:
-            LOGGER.info("<%s> [fabric_data]: skipped Loopback0 IP mapping - IP not found", hostname)
+            LOGGER.debug("<%s>: skipped Loopback0 IP mapping - IP not found", hostname)
 
         if device_data.vtep_ip:
             vtep_ips[hostname] = device_data.vtep_ip
             special_ips[hostname].append(device_data.vtep_ip)
         else:
-            LOGGER.info("<%s> [fabric_data]: skipped VTEP IP mapping - IP not found", hostname)
+            LOGGER.debug("<%s>: skipped VTEP IP mapping - IP not found", hostname)
 
         # Build role indexes
         if device_data.is_vtep:
@@ -95,7 +95,7 @@ def create_fabric_data(structured_configs: dict, scope: dict | None = None) -> F
     )
 
     stop_time = perf_counter()
-    LOGGER.info("[fabric_data]: created FabricData object in %.8f seconds", stop_time - start_time)
+    LOGGER.debug("created FabricData object in %.8f seconds", stop_time - start_time)
 
     return fabric_data
 
@@ -140,7 +140,7 @@ def create_device_boundary_location(fabric_name: str | None, dc_name: str | None
         case "rack":
             return BoundaryLocation(fabric=fabric_name, dc=dc_name, pod=pod_name, rack=rack)
         case _:
-            msg = f"invalid boundary level: {boundary} - must be one of: unlimited, fabric, dc, pod, rack"
+            msg = f"Invalid boundary level: {boundary} - must be one of: unlimited, fabric, dc, pod, rack"
             raise ValueError(msg)
 
 
@@ -179,7 +179,7 @@ def create_test_definition(test_spec: TestSpec, device_data: ExtendedDeviceData,
     # Skip the test if the conditional keys are not present in the structured config
     if test_spec.conditional_keys and not all(get_v2(device_data.structured_config, key.value) for key in test_spec.conditional_keys):
         keys = StructuredConfigKey.to_string_list(test_spec.conditional_keys)
-        logger.info(LogMessage.INPUT_NO_DATA_MODEL, caller=", ".join(keys))
+        logger.debug(LogMessage.INPUT_NO_DATA_MODEL, caller=", ".join(keys))
         return None
 
     # AntaTestDefinition takes `inputs=None` if the test does not require input
@@ -187,25 +187,25 @@ def create_test_definition(test_spec: TestSpec, device_data: ExtendedDeviceData,
 
     # Create the AntaTest.Input instance from the input dict if available
     if test_spec.input_dict:
-        logger.info(LogMessage.INPUT_RENDERING, caller="input dictionary")
+        logger.debug(LogMessage.INPUT_RENDERING, caller="input dictionary")
         rendered_inputs = {}
         for input_field, structured_config_key in test_spec.input_dict.items():
             field_value = get_v2(device_data.structured_config, structured_config_key.value)
             if field_value is not None:
                 rendered_inputs[input_field] = field_value
             else:
-                logger.info(LogMessage.INPUT_NO_DATA_MODEL, caller=structured_config_key.value)
+                logger.debug(LogMessage.INPUT_NO_DATA_MODEL, caller=structured_config_key.value)
                 return None
-        logger.info(LogMessage.INPUT_RENDERED, inputs=rendered_inputs)
+        logger.debug(LogMessage.INPUT_RENDERED, inputs=rendered_inputs)
         inputs = test_spec.test_class.Input(**rendered_inputs)
 
     # Else create the AntaTest.Input instance from the input factory if available
     elif test_spec.input_factory:
-        logger.info(LogMessage.INPUT_RENDERING, caller="input factory")
+        logger.debug(LogMessage.INPUT_RENDERING, caller="input factory")
         factory = test_spec.input_factory(device_data, logger)  # pylint: disable=not-callable
         inputs = factory.create()
         if inputs is None:
-            logger.info(LogMessage.INPUT_NONE_FOUND)
+            logger.debug(LogMessage.INPUT_NONE_FOUND)
             return None
 
     return AntaTestDefinition(test=test_spec.test_class, inputs=inputs)

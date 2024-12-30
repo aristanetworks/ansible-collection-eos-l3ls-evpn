@@ -72,3 +72,7 @@ anta_catalogs_dir: "{{ anta_dir }}/{{ anta_catalogs_dir_name }}"
 # Output for ANTA reports
 anta_reports_dir_name: "reports"
 anta_reports_dir: "{{ anta_dir }}/{{ anta_reports_dir_name }}"
+
+# Output for ANTA log files
+anta_logs_dir_name: "logs"
+anta_logs_dir: "{{ anta_dir }}/{{ anta_logs_dir_name }}"

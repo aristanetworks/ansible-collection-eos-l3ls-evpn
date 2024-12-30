@@ -38,17 +38,17 @@ class VerifyLLDPNeighborsInputFactory(AntaTestInputFactory):
         neighbors = []
         for intf in self.structured_config.ethernet_interfaces:
             if intf.validate_state is False or intf.validate_lldp is False:
-                self.logger.info(LogMessage.INTERFACE_VALIDATION_DISABLED, caller=intf.name)
+                self.logger.debug(LogMessage.INTERFACE_VALIDATION_DISABLED, caller=intf.name)
                 continue
             if "." in intf.name:
-                self.logger.info(LogMessage.INTERFACE_IS_SUBINTERFACE, caller=intf.name)
+                self.logger.debug(LogMessage.INTERFACE_IS_SUBINTERFACE, caller=intf.name)
                 continue
             if intf.shutdown or self.structured_config.interface_defaults.ethernet.shutdown:
-                self.logger.info(LogMessage.INTERFACE_SHUTDOWN, caller=intf.name)
+                self.logger.debug(LogMessage.INTERFACE_SHUTDOWN, caller=intf.name)
                 continue
 
             if not intf.peer or not intf.peer_interface:
-                self.logger.info(LogMessage.INPUT_MISSING_FIELDS, caller=intf.name, fields="peer, peer_interface")
+                self.logger.debug(LogMessage.INPUT_MISSING_FIELDS, caller=intf.name, fields="peer, peer_interface")
                 continue
 
             if not self.is_peer_available(intf.peer, caller=intf.name) or not self.is_peer_in_boundary(intf.peer, caller=intf.name):
@@ -139,22 +139,22 @@ class VerifyReachabilityInputFactory(AntaTestInputFactory):
         hosts = []
         for intf in self.structured_config.ethernet_interfaces:
             if intf.shutdown or self.structured_config.interface_defaults.ethernet.shutdown:
-                self.logger.info(LogMessage.INTERFACE_SHUTDOWN, caller=intf.name)
+                self.logger.debug(LogMessage.INTERFACE_SHUTDOWN, caller=intf.name)
                 continue
 
             if not intf.ip_address or not intf.peer or not intf.peer_interface:
-                self.logger.info(LogMessage.INPUT_MISSING_FIELDS, caller=intf.name, fields="ip_address, peer, peer_interface")
+                self.logger.debug(LogMessage.INPUT_MISSING_FIELDS, caller=intf.name, fields="ip_address, peer, peer_interface")
                 continue
 
             if intf.ip_address == "dhcp":
-                self.logger.info(LogMessage.INTERFACE_USING_DHCP, caller=intf.name)
+                self.logger.debug(LogMessage.INTERFACE_USING_DHCP, caller=intf.name)
                 continue
 
             if not self.is_peer_available(intf.peer, caller=intf.name) or not self.is_peer_in_boundary(intf.peer, caller=intf.name):
                 continue
 
             if (peer_interface_ip := self.fabric_data.devices[intf.peer].ip_by_interface.get(intf.peer_interface)) is None:
-                self.logger.info(LogMessage.PEER_INTERFACE_NO_IP, caller=intf.name, peer=intf.peer, peer_interface=intf.peer_interface)
+                self.logger.debug(LogMessage.PEER_INTERFACE_NO_IP, caller=intf.name, peer=intf.peer, peer_interface=intf.peer_interface)
                 continue
 
             hosts.append(
@@ -176,15 +176,15 @@ class VerifyReachabilityInputFactory(AntaTestInputFactory):
 
         for vlan_intf in self.structured_config.vlan_interfaces:
             if vlan_intf.shutdown:
-                self.logger.info(LogMessage.INTERFACE_SHUTDOWN, caller=vlan_intf.name)
+                self.logger.debug(LogMessage.INTERFACE_SHUTDOWN, caller=vlan_intf.name)
                 continue
 
             if vlan_intf.type != "inband_mgmt":
-                self.logger.info(LogMessage.INTERFACE_NOT_INBAND_MGMT, caller=vlan_intf.name)
+                self.logger.debug(LogMessage.INTERFACE_NOT_INBAND_MGMT, caller=vlan_intf.name)
                 continue
 
             if not vlan_intf.ip_address:
-                self.logger.info(LogMessage.INTERFACE_NO_IP, caller=vlan_intf.name)
+                self.logger.debug(LogMessage.INTERFACE_NO_IP, caller=vlan_intf.name)
                 break
 
             # Found valid interface
@@ -193,7 +193,7 @@ class VerifyReachabilityInputFactory(AntaTestInputFactory):
             break
 
         if inband_mgmt_ip is None:
-            self.logger.info(LogMessage.DEVICE_NO_INBAND_MGMT)
+            self.logger.debug(LogMessage.DEVICE_NO_INBAND_MGMT)
             return []
 
         # Build hosts list for inband MGMT SVI to all fabric Loopback0s
@@ -213,10 +213,10 @@ class VerifyReachabilityInputFactory(AntaTestInputFactory):
     def get_vtep_underlay_hosts(self) -> list[Host]:
         """Get reachability hosts between VTEP Loopback0 addresses for underlay connectivity."""
         if not self.device.is_vtep or self.device.is_wan_router:
-            self.logger.info(LogMessage.DEVICE_NOT_VTEP)
+            self.logger.debug(LogMessage.DEVICE_NOT_VTEP)
             return []
         if not self.device.loopback0_ip:
-            self.logger.info(LogMessage.LOOPBACK0_NO_IP)
+            self.logger.debug(LogMessage.LOOPBACK0_NO_IP)
             return []
 
         # Build hosts list for VTEP Loopback0 to all fabric Loopback0s
@@ -236,10 +236,10 @@ class VerifyReachabilityInputFactory(AntaTestInputFactory):
     def get_wan_dps_hosts(self) -> list[Host]:
         """Get reachability hosts between WAN router DPS addresses."""
         if not self.device.is_wan_router:
-            self.logger.info(LogMessage.DEVICE_NOT_WAN_ROUTER)
+            self.logger.debug(LogMessage.DEVICE_NOT_WAN_ROUTER)
             return []
         if not self.device.vtep_ip:
-            self.logger.info(LogMessage.VTEP_NO_IP)
+            self.logger.debug(LogMessage.VTEP_NO_IP)
             return []
 
         # Build hosts list for WAN router DPS to all WAN router DPS

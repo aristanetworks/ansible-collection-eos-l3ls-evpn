@@ -6,9 +6,9 @@ from __future__ import annotations
 import json
 import logging
 from asyncio import run
-from concurrent.futures import Executor, ProcessPoolExecutor
+from datetime import datetime, timezone
 from logging.handlers import QueueHandler, QueueListener
-from multiprocessing import Manager, Queue, get_start_method
+from multiprocessing import Pool, Queue, current_process, get_start_method
 from pathlib import Path
 from typing import TYPE_CHECKING, Any
 
@@ -91,7 +91,7 @@ ARGUMENT_SPEC = {
         "type": "dict",
         "options": {
             "log_level": {"type": "str", "default": "WARNING", "choices": LOGGING_LEVELS},
-            "log_file": {"type": "str"},
+            "log_dir": {"type": "str"},
         },
     },
     "anta_runner_settings": {
@@ -126,13 +126,13 @@ FABRIC_DATA: FabricData | None = None
 STRUCTURED_CONFIGS: dict[str, dict[str, Any]] | None = None
 PLUGIN_ARGS: dict[str, Any] | None = None
 ANSIBLE_VARS: dict[str, dict[str, Any]] | None = None
-USER_CATALOG: AntaCatalog | None = None
+CUSTOM_CATALOG: AntaCatalog | None = None
 DRY_RUN: bool = False
 
 
 class ActionModule(ActionBase):
     def run(self, tmp: Any = None, task_vars: dict | None = None) -> dict:
-        global FABRIC_DATA, STRUCTURED_CONFIGS, PLUGIN_ARGS, ANSIBLE_VARS, USER_CATALOG, DRY_RUN  # noqa: PLW0603
+        global FABRIC_DATA, STRUCTURED_CONFIGS, PLUGIN_ARGS, ANSIBLE_VARS, CUSTOM_CATALOG, DRY_RUN  # noqa: PLW0603
 
         self._supports_check_mode = True
 
@@ -151,12 +151,6 @@ class ActionModule(ActionBase):
             msg = f"The {PLUGIN_NAME} plugin requires the 'fork' start method for multiprocessing"
             raise AnsibleActionFail(msg)
 
-        # Setup the module logging using a multiprocessing manager queue
-        manager = Manager()
-        queue = manager.Queue(-1)
-        setup_module_logging(queue)
-        listener = setup_queue_listener(result, queue)
-
         # TODO: Get the max_workers from Ansible forks (n - 1)
         max_workers = 16
 
@@ -172,6 +166,11 @@ class ActionModule(ActionBase):
             msg = "'device_list' cannot be empty"
             raise AnsibleActionFail(msg)
 
+        # Setup the module logging using a logging queue with a listener
+        queue = Queue()
+        setup_module_logging(queue)
+        listener = setup_queue_listener(result, queue)
+
         # Extract only the needed hostvars from each device
         ANSIBLE_VARS = extract_hostvars(device_list, task_vars["hostvars"])
         deployed_devices = list(ANSIBLE_VARS.keys())
@@ -182,26 +181,28 @@ class ActionModule(ActionBase):
         if structured_config_dir is None and custom_catalog_dir is None:
             msg = (
                 "'structured_config_dir' must be provided to generate ANTA catalogs. "
-                "Otherwise, provide a directory with user-defined custom ANTA catalogs using the 'custom_catalog.input_dir' argument"
+                "Otherwise, provide a directory with custom ANTA catalogs using the 'custom_catalog.input_dir' argument"
             )
             raise AnsibleActionFail(msg)
 
         DRY_RUN = task_vars.get("ansible_check_mode", False)
 
         try:
-            # Load the user-defined custom ANTA catalogs if provided
+            # Load the custom ANTA catalogs if provided
             if custom_catalog_dir is not None:
-                USER_CATALOG = load_user_catalogs(custom_catalog_dir)
+                CUSTOM_CATALOG = load_custom_catalogs(custom_catalog_dir)
 
             # Load the structured configs and build FabricData
             if structured_config_dir is not None:
                 STRUCTURED_CONFIGS = load_structured_configs(deployed_devices, structured_config_dir, get(PLUGIN_ARGS, "anta_catalog.structured_config_suffix"))
                 FABRIC_DATA = get_fabric_data(structured_configs=STRUCTURED_CONFIGS, scope=get(PLUGIN_ARGS, "anta_catalog.scope"))
 
-            # NOTE: 7 devices per batch is the sweet spot on 16 workers and 1040 devices
-            # TODO: Make the batch size configurable
-            with ProcessPoolExecutor(max_workers=max_workers) as executor:
-                batch_results = run_anta_batches(deployed_devices, executor, batch_size=7)
+            # NOTE: 5-10 devices per worker is a good starting point
+            # TODO: Make the batch size configurable in the plugin arguments
+            with Pool(processes=max_workers) as pool:
+                batch_size = get(PLUGIN_ARGS, "anta_runner_settings.batch_size", default=5)
+                batches = [deployed_devices[i : i + batch_size] for i in range(0, len(deployed_devices), batch_size)]
+                batch_results = pool.map(run_anta, batches)
 
             # Build the ANTA reports
             build_reports(batch_results, get(PLUGIN_ARGS, "report"))
@@ -211,23 +212,16 @@ class ActionModule(ActionBase):
             msg = f"Error during plugin execution: {error}"
             raise AnsibleActionFail(msg) from error
         finally:
+            # Stop the logging queue listener
             listener.stop()
-            manager.shutdown()
 
         return result
 
 
-def run_anta_batches(device_list: list[str], executor: Executor, batch_size: int) -> list[ResultManager]:
-    """Run ANTA in parallel batches using the provided executor."""
-    # Create batches of devices
-    batches = [device_list[i : i + batch_size] for i in range(0, len(device_list), batch_size)]
-
-    # Map run_anta over the batches
-    return list(executor.map(run_anta, batches))
-
-
 def run_anta(devices: list[str]) -> ResultManager:
     """Run ANTA."""
+    setup_process_logging()
+
     if PLUGIN_ARGS is None:
         msg = "Plugin arguments not initialized"
         raise RuntimeError(msg)
@@ -235,8 +229,10 @@ def run_anta(devices: list[str]) -> ResultManager:
     result_manager, inventory, catalog = build_anta_runner_objects(devices)
     tags = set(get(PLUGIN_ARGS, "anta_runner_settings.tags", default=[])) or None
 
+    LOGGER.info("running ANTA in process %s for devices: %s", current_process().name, ", ".join(devices))
     run(anta_runner(result_manager, inventory, catalog, tags=tags, dry_run=DRY_RUN))
 
+    LOGGER.info("ANTA process %s completed", current_process().name)
     return result_manager
 
 
@@ -262,16 +258,19 @@ def build_reports(batch_results: list[ResultManager], report_settings: dict) -> 
     result_manager.results = sorted_results
 
     if csv_output_path:
+        LOGGER.info("generating CSV report at %s", csv_output_path)
         path = Path(csv_output_path)
         report_csv = ReportCsv()
         report_csv.generate(result_manager, path)
 
     if md_output_path:
+        LOGGER.info("generating Markdown report at %s", md_output_path)
         path = Path(md_output_path)
         md_report = MDReportGenerator()
         md_report.generate(result_manager, path)
 
     if json_output_path:
+        LOGGER.info("generating JSON report at %s", json_output_path)
         path = Path(json_output_path)
         with path.open("w", encoding="UTF-8") as file:
             file.write(result_manager.json)
@@ -288,10 +287,10 @@ def extract_hostvars(device_list: list[str], hostvars: Mapping) -> dict:
 
         host_hostvars = hostvars[device]
 
-        # Since we can run ANTA without any structured configs, i.e., only using user custom catalogs,
+        # Since we can run ANTA without any structured configs, i.e., only using custom catalogs,
         # we honor the `is_deployed` flag in the hostvars to skip devices that are not deployed.
         if get(host_hostvars, "is_deployed", default=True) is False:
-            LOGGER.warning("<%s> [anta_workflow]: skipped - device not deployed", device)
+            LOGGER.info("skipping %s - device marked as not deployed", device)
             continue
 
         device_vars[device] = {key: get(host_hostvars, key) for key in ANSIBLE_CONNECTION_VARS}
@@ -313,8 +312,8 @@ def build_anta_runner_objects(devices: list[str]) -> tuple[ResultManager, AntaIn
     inventory = AntaInventory()
     catalogs = []
 
-    if USER_CATALOG is not None:
-        catalogs.append(USER_CATALOG)
+    if CUSTOM_CATALOG is not None:
+        catalogs.append(CUSTOM_CATALOG)
 
     for device in devices:
         anta_device = build_anta_device(device)
@@ -351,12 +350,12 @@ def get_avd_catalog_filters(device: str, avd_catalog_filters: list[dict]) -> dic
             # Override previous filters if new ones are specified
             if run_tests is not None:
                 if final_filters["run_tests"] is not None:
-                    LOGGER.info("<%s> [filter] run_tests overridden from %s to %s", device, final_filters["run_tests"], run_tests)
+                    LOGGER.debug("<%s> run_tests overridden from %s to %s", device, final_filters["run_tests"], run_tests)
                 final_filters["run_tests"] = list(set(run_tests))
 
             if skip_tests is not None:
                 if final_filters["skip_tests"] is not None:
-                    LOGGER.info("<%s> [filter] skip_tests overridden from %s to %s", device, final_filters["skip_tests"], skip_tests)
+                    LOGGER.debug("<%s> skip_tests overridden from %s to %s", device, final_filters["skip_tests"], skip_tests)
                 final_filters["skip_tests"] = list(set(skip_tests))
 
     return final_filters
@@ -407,8 +406,8 @@ def build_anta_device(device: str) -> AsyncEOSDevice:
     return AsyncEOSDevice(**device_settings)
 
 
-def load_user_catalogs(catalog_dir: str) -> AntaCatalog:
-    """Load user-defined ANTA custom catalogs from the provided directory. Supported file formats are YAML and JSON."""
+def load_custom_catalogs(catalog_dir: str) -> AntaCatalog:
+    """Load custom ANTA catalogs from the provided directory. Supported file formats are YAML and JSON."""
     supported_formats = {".yml": "yaml", ".yaml": "yaml", ".json": "json"}
     catalogs = []
 
@@ -419,15 +418,15 @@ def load_user_catalogs(catalog_dir: str) -> AntaCatalog:
 
         file_format = supported_formats.get(path_obj.suffix.lower())
         if not file_format:
-            LOGGER.warning("[anta_workflow]: skipped catalog file %s - unsupported format", path_obj)
+            LOGGER.warning("skipped catalog file %s - unsupported format", path_obj)
             continue
 
-        LOGGER.info("[anta_workflow]: loading catalog from %s", path_obj)
+        LOGGER.info("loading catalog from %s", path_obj)
         catalog = AntaCatalog.parse(path_obj, file_format)
         catalogs.append(catalog)
 
     if not catalogs:
-        LOGGER.info("[anta_workflow]: no user-defined custom ANTA catalogs found in directory: %s", catalog_dir)
+        LOGGER.info("no custom ANTA catalogs found in directory: %s", catalog_dir)
 
     return AntaCatalog.merge_catalogs(catalogs)
 
@@ -451,27 +450,68 @@ def load_one_structured_config(device: str, structured_config_dir: str, structur
 
 
 def setup_queue_listener(result: dict, queue: Queue) -> QueueListener:
-    """Setup and start the queue listener with the Ansible handler."""
+    """Setup and start the queue listener with the Ansible handler. All logs are sent to this queue."""
     python_to_ansible_handler = PythonToAnsibleHandler(result, display)
-    listener = QueueListener(queue, python_to_ansible_handler, respect_handler_level=True)
+
+    console_formatter = logging.Formatter("%(name)s - %(message)s")
+    python_to_ansible_handler.setFormatter(console_formatter)
+
+    listener = QueueListener(queue, python_to_ansible_handler)
     listener.start()
     return listener
 
 
 def setup_module_logging(queue: Queue) -> None:
     """Setup logging for the module. All logs will be sent to the provided queue."""
-    # TODO: Improve ANTA logs (httpx, asyncssh, etc.)
+    # Clear handlers of `pyavd` logger and set it to propagate to use the root queue handler
+    pyavd_logger = logging.getLogger("pyavd")
+    pyavd_logger.handlers.clear()
+    pyavd_logger.propagate = True
+
+    # Setup the logging configuration
+    root_logger = logging.getLogger()
 
     # Create a handler to send logs to the queue
-    handler = QueueHandler(queue)
+    queue_handler = QueueHandler(queue)
 
-    # Add the handler to the root logger and set the level based on Ansible verbosity
-    root = logging.getLogger()
-    root.addHandler(handler)
-    if display.verbosity >= 3:
-        root.setLevel(logging.DEBUG)
-    elif display.verbosity >= 1:
-        root.setLevel(logging.INFO)
-        # HTTPX is too verbose at INFO level
-        logging.getLogger("httpx").setLevel(logging.WARNING)
-        logging.getLogger("anta").setLevel(logging.WARNING)
+    # Create a filter for ANTA and its underlying libraries
+    class QueueFilter(logging.Filter):
+        def __init__(self, logger_names: list[str]) -> None:
+            super().__init__()
+            self.logger_names = logger_names
+
+        def filter(self, record: logging.LogRecord) -> bool:
+            # Filter out logs from ANTA and its underlying libraries
+            if any(record.name.startswith(name) for name in self.logger_names):
+                return record.levelno >= logging.WARNING
+            return True
+
+    # Add the filter to the queue handler
+    anta_libraries = ["anta", "aiocache", "asyncio", "asyncssh", "httpcore", "httpx"]
+    queue_handler.addFilter(QueueFilter(anta_libraries))
+
+    # Add the handler to the root logger
+    root_logger.addHandler(queue_handler)
+
+    # Set the level based on Ansible verbosity
+    verbosity = display.verbosity
+    if verbosity >= 3:
+        root_logger.setLevel(logging.DEBUG)
+    elif verbosity > 0:
+        root_logger.setLevel(logging.INFO)
+    else:
+        root_logger.setLevel(logging.WARNING)
+
+
+def setup_process_logging() -> None:
+    """Initialize logging for the pool processes."""
+    anta_log_dir = get(PLUGIN_ARGS, "anta_logging.log_dir")
+    root_logger = logging.getLogger()
+
+    if root_logger.isEnabledFor(logging.DEBUG) and anta_log_dir:
+        timestamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
+        filename = f"{anta_log_dir}/anta_debug_{timestamp}_{current_process().name}.log"
+        file_handler = logging.FileHandler(filename)
+        file_formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
+        file_handler.setFormatter(file_formatter)
+        root_logger.addHandler(file_handler)

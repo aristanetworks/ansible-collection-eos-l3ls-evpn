@@ -17,7 +17,7 @@ if TYPE_CHECKING:
     from pyavd._eos_cli_config_gen.schema import EosCliConfigGen
     from pyavd.api.fabric_data import FabricData
 
-LOGGER = getLogger("pyavd")
+LOGGER = getLogger(__name__)
 
 
 # TODO: Check if we need Pydantic model for this class
@@ -102,39 +102,39 @@ class ExtendedDeviceData:
 
             # Skip neighbors or their peer groups that are shutdown
             if neighbor.shutdown is True:
-                LOGGER.info("<%s>: skipped BGP peer %s - shutdown", self.hostname, identifier)
+                LOGGER.debug("<%s>: skipped BGP peer %s - shutdown", self.hostname, identifier)
                 continue
             if (
                 neighbor.peer_group
                 and neighbor.peer_group in self.structured_config.router_bgp.peer_groups
                 and self.structured_config.router_bgp.peer_groups[neighbor.peer_group].shutdown is True
             ):
-                LOGGER.info("<%s>: skipped BGP peer %s - peer group %s shutdown", self.hostname, identifier, neighbor.peer_group)
+                LOGGER.debug("<%s>: skipped BGP peer %s - peer group %s shutdown", self.hostname, identifier, neighbor.peer_group)
                 continue
 
             # If peer field is set, validate it exists in FabricData, is deployed, and is in the boundary
             if neighbor.peer:
                 if neighbor.peer not in self.fabric_data.devices or not self.fabric_data.devices[neighbor.peer].is_deployed:
-                    LOGGER.info("<%s>: skipped BGP peer %s - peer not found or not deployed", self.hostname, identifier)
+                    LOGGER.debug("<%s>: skipped BGP peer %s - peer not found or not deployed", self.hostname, identifier)
                     continue
                 if (
                     self.fabric_data.scope.boundary != "unlimited"
                     and self.fabric_data.scope.allow_bgp_external is False
                     and neighbor.peer not in self.fabric_data.get_devices_by_attribute("boundary_location", self.device.boundary_location)
                 ):
-                    LOGGER.info("<%s>: skipped BGP peer %s - peer outside %s boundary", self.hostname, identifier, self.fabric_data.scope.boundary)
+                    LOGGER.debug("<%s>: skipped BGP peer %s - peer outside %s boundary", self.hostname, identifier, self.fabric_data.scope.boundary)
                     continue
 
             # TODO: IPv6 neighbors are not supported in ANTA yet
             ip_address = ip_interface(neighbor.ip_address).ip
             if isinstance(ip_address, IPv6Address):
-                LOGGER.info("<%s>: skipped BGP peer %s - IPv6 not supported", self.hostname, identifier)
+                LOGGER.debug("<%s>: skipped BGP peer %s - IPv6 not supported", self.hostname, identifier)
                 continue
 
             neighbors.append(BgpNeighbor(ip_address=ip_address, vrf="default", peer_group=neighbor.peer_group, peer=neighbor.peer))
 
         if not self.fabric_data.scope.allow_bgp_vrfs:
-            LOGGER.info("<%s>: skipped BGP VRF peers - VRF processing disabled", self.hostname)
+            LOGGER.debug("<%s>: skipped BGP VRF peers - VRF processing disabled", self.hostname)
             return neighbors
 
         for vrf in self.structured_config.router_bgp.vrfs:
@@ -143,20 +143,20 @@ class ExtendedDeviceData:
 
                 # Skip neighbors or their peer groups that are shutdown
                 if neighbor.shutdown is True:
-                    LOGGER.info("<%s>: skipped BGP peer %s - shutdown", self.hostname, identifier)
+                    LOGGER.debug("<%s>: skipped BGP peer %s - shutdown", self.hostname, identifier)
                     continue
                 if (
                     neighbor.peer_group
                     and neighbor.peer_group in self.structured_config.router_bgp.peer_groups
                     and self.structured_config.router_bgp.peer_groups[neighbor.peer_group].shutdown is True
                 ):
-                    LOGGER.info("<%s>: skipped BGP peer %s - peer group %s shutdown", self.hostname, identifier, neighbor.peer_group)
+                    LOGGER.debug("<%s>: skipped BGP peer %s - peer group %s shutdown", self.hostname, identifier, neighbor.peer_group)
                     continue
 
                 # TODO: IPv6 neighbors are not supported in ANTA yet
                 ip_address = ip_interface(neighbor.ip_address).ip
                 if isinstance(ip_address, IPv6Address):
-                    LOGGER.info("<%s>: skipped BGP peer %s - IPv6 not supported", self.hostname, identifier)
+                    LOGGER.debug("<%s>: skipped BGP peer %s - IPv6 not supported", self.hostname, identifier)
                     continue
 
                 neighbors.append(BgpNeighbor(ip_address=ip_address, vrf=vrf.name, peer_group=neighbor.peer_group))

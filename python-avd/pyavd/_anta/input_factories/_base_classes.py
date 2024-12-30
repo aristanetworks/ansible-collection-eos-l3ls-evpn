@@ -37,7 +37,7 @@ class AntaTestInputFactory(ABC):
             return True
 
         if peer not in self.fabric_data.get_devices_by_attribute("boundary_location", self.device.boundary_location):
-            self.logger.info(LogMessage.PEER_OUTSIDE_BOUNDARY, caller=caller, peer=peer, boundary=self.scope.boundary)
+            self.logger.debug(LogMessage.PEER_OUTSIDE_BOUNDARY, caller=caller, peer=peer, boundary=self.scope.boundary)
             return False
 
         return True
@@ -45,6 +45,6 @@ class AntaTestInputFactory(ABC):
     def is_peer_available(self, peer: str, caller: str) -> bool:
         """Check if a peer is deployed by looking at his `is_deployed` key."""
         if peer not in self.fabric_data.devices or not self.fabric_data.devices[peer].is_deployed:
-            self.logger.info(LogMessage.PEER_UNAVAILABLE, caller=caller, peer=peer)
+            self.logger.debug(LogMessage.PEER_UNAVAILABLE, caller=caller, peer=peer)
             return False
         return True

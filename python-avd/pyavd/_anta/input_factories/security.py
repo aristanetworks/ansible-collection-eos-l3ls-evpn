@@ -35,14 +35,14 @@ class VerifySpecificIPSecConnInputFactory(AntaTestInputFactory):
         for path_group in self.structured_config.router_path_selection.path_groups:
             # Check if the path group has static peers
             if not path_group.static_peers:
-                self.logger.info(LogMessage.STUN_NO_STATIC_PEERS, caller=path_group.name)
+                self.logger.debug(LogMessage.STUN_NO_STATIC_PEERS, caller=path_group.name)
                 continue
 
             # Add static peers to the list of IP security connections
             for static_peer in path_group.static_peers:
                 peer_ip = ip_interface(static_peer.router_ip).ip
                 if isinstance(peer_ip, IPv6Address):
-                    self.logger.info(LogMessage.IPV6_UNSUPPORTED, caller=f"Static peer ({static_peer.router_ip})")
+                    self.logger.debug(LogMessage.IPV6_UNSUPPORTED, caller=f"Static peer ({static_peer.router_ip})")
                     continue
                 if (static_peer.router_ip, "default") not in added_peers:
                     ip_security_connections.append(

@@ -27,7 +27,7 @@ class VerifyRoutingTableEntryInputFactory(AntaTestInputFactory):
         """Create Input for the VerifyRoutingTableEntry test."""
         # Skip the test if the device is not a VTEP or is a WAN VTEP
         if not self.device.is_vtep or self.device.is_wan_router:
-            self.logger.info(LogMessage.DEVICE_NOT_VTEP)
+            self.logger.debug(LogMessage.DEVICE_NOT_VTEP)
             return None
 
         # Using a set to avoid duplicate tests for the same IP address (e.g. MLAG VTEPs)

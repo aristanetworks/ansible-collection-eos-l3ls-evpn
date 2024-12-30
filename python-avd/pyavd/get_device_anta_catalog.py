@@ -14,7 +14,7 @@ if TYPE_CHECKING:
     from .api.anta_test_spec import TestSpec
     from .api.fabric_data import FabricData
 
-LOGGER = getLogger("pyavd")
+LOGGER = getLogger(__name__)
 
 
 def get_device_anta_catalog(
@@ -62,12 +62,7 @@ def get_device_anta_catalog(
     """
     from ._anta.factories import create_catalog
     from ._anta.index import PYAVD_TEST_INDEX, PYAVD_TEST_NAMES
-    from ._anta.lib import AntaCatalog
     from ._anta.utils import dump_anta_catalog
-
-    if fabric_data.devices[hostname].is_deployed is False:
-        LOGGER.info("<%s> [catalog]: skipped - device not deployed", hostname)
-        return AntaCatalog()
 
     # Normalize input parameters
     custom_test_specs = custom_test_specs or []
@@ -75,8 +70,8 @@ def get_device_anta_catalog(
     skip_tests = skip_tests or []
 
     start_time = perf_counter()
-    LOGGER.info(
-        "<%s> [catalog]: generating catalog with options (run_tests=%s, skip_tests=%s, output_dir=%s)",
+    LOGGER.debug(
+        "<%s>: generating catalog with options (run_tests=%s, skip_tests=%s, output_dir=%s)",
         hostname,
         run_tests,
         skip_tests,
@@ -91,7 +86,7 @@ def get_device_anta_catalog(
 
     for filter_type, invalid_names in invalid_tests.items():
         if invalid_names:
-            msg = f"invalid test names in {filter_type}: {', '.join(invalid_names)}"
+            msg = f"Invalid test names in {filter_type}: {', '.join(invalid_names)}"
             raise ValueError(msg)
 
     # Filter test specs based on skip_tests and run_tests
@@ -116,6 +111,6 @@ def get_device_anta_catalog(
         dump_anta_catalog(hostname, catalog, output_dir)
 
     stop_time = perf_counter()
-    LOGGER.info("<%s> [catalog]: generated catalog in %.8f seconds", hostname, stop_time - start_time)
+    LOGGER.debug("<%s>: generated catalog in %.4f seconds", hostname, stop_time - start_time)
 
     return catalog

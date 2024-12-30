@@ -139,3 +139,11 @@
     mode: "0o775"
   delegate_to: localhost
   run_once: true
+
+- name: "Create folder {{ anta_logs_dir_name }} for ANTA logs"
+  ansible.builtin.file:
+    path: "{{ anta_reports_dir }}"
+    state: directory
+    mode: "0o775"
+  delegate_to: localhost
+  run_once: true

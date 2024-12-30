@@ -4,7 +4,6 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from logging import getLogger
 from typing import TYPE_CHECKING, Any
 
 if TYPE_CHECKING:
@@ -12,8 +11,6 @@ if TYPE_CHECKING:
     from ipaddress import IPv4Address
 
     from pyavd._anta.models import BoundaryLocation, DeviceData, FabricScope
-
-LOGGER = getLogger("pyavd")
 
 
 @dataclass(frozen=True)

@@ -105,8 +105,9 @@ class VerifyBGPPeerMPCapsInputFactory(AntaTestInputFactory):
 
             if not_activated_afs:
                 with self.logger.context(identifier):
-                    self.logger.info(LogMessage.BGP_AF_NOT_ACTIVATED, capability=", ".join(not_activated_afs))
+                    self.logger.debug(LogMessage.BGP_AF_NOT_ACTIVATED, capability=", ".join(sorted(not_activated_afs)))
 
-            bgp_peers.append(BgpPeer(peer_address=neighbor.ip_address, vrf=neighbor.vrf, capabilities=list(multiprotocol_caps), strict=True))
+            capabilities = sorted(multiprotocol_caps)
+            bgp_peers.append(BgpPeer(peer_address=neighbor.ip_address, vrf=neighbor.vrf, capabilities=capabilities, strict=True))
 
         return VerifyBGPPeerMPCaps.Input(bgp_peers=bgp_peers) if bgp_peers else None

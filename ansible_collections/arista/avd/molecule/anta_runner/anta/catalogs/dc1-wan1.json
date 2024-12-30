@@ -87,10 +87,10 @@
             "peer_address": "10.255.255.10",
             "vrf": "default",
             "capabilities": [
-              "linkState",
               "dps",
               "ipv4SrTe",
-              "l2VpnEvpn"
+              "l2VpnEvpn",
+              "linkState"
             ],
             "strict": true
           },
@@ -98,10 +98,10 @@
             "peer_address": "10.255.255.20",
             "vrf": "default",
             "capabilities": [
-              "linkState",
               "dps",
               "ipv4SrTe",
-              "l2VpnEvpn"
+              "l2VpnEvpn",
+              "linkState"
             ],
             "strict": true
           },

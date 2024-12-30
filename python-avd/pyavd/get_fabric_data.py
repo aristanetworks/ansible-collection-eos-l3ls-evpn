@@ -3,13 +3,10 @@
 # that can be found in the LICENSE file.
 from __future__ import annotations
 
-from logging import getLogger
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from pyavd.api.fabric_data import FabricData
-
-LOGGER = getLogger("pyavd")
 
 
 def get_fabric_data(structured_configs: dict[str, dict], scope: dict | None = None) -> FabricData:

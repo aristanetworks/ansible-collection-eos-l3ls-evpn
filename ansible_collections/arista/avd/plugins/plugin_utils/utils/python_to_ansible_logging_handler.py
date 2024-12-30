@@ -18,7 +18,7 @@ class PythonToAnsibleHandler(Handler):
     Logging Handler that makes a bridge between Ansible display and plugin Result objects.
 
     It is used to:
-    * send ERROR or CRITICAL logs to result[stderr] and failed the plugins
+    * send ERROR or CRITICAL logs to result[stderr] and fail the plugins
     * send WARNING logs to result["warning"] for the plugins that will be display in the logs
     * send INFO logs to display.v which can be visualized using `-v` in the ansible-playbook argument
       provided the logger level is set to INFO or above
@@ -41,7 +41,7 @@ class PythonToAnsibleHandler(Handler):
                 self.result["failed"] = True
             else:
                 self.display.error(str(message))
-        elif record.levelno in [logging.WARNING, logging.WARNING]:
+        elif record.levelno == logging.WARNING:
             if self.result is not None:
                 self.result.setdefault("warnings", []).append(message)
             else:
