@@ -51,8 +51,8 @@ def create_fabric_data(structured_configs: dict, scope: dict | None = None) -> F
     LOGGER.debug("creating FabricData object with scope %s", scope)
 
     # Build all the indexes
-    for hostname in structured_configs:
-        device_data = create_device_data(hostname, structured_configs, scope_obj.boundary)
+    for hostname, structured_config in structured_configs.items():
+        device_data = create_device_data(hostname, structured_config, scope_obj.boundary)
         devices[hostname] = device_data
 
         if scope_obj.boundary != "unlimited" and getattr(device_data.boundary_location, scope_obj.boundary) is None:
@@ -100,9 +100,8 @@ def create_fabric_data(structured_configs: dict, scope: dict | None = None) -> F
     return fabric_data
 
 
-def create_device_data(hostname: str, structured_configs: dict, boundary: str) -> DeviceData:
+def create_device_data(hostname: str, structured_config: dict, boundary: str) -> DeviceData:
     """Create the DeviceData object for the given hostname."""
-    structured_config = structured_configs[hostname]
     fabric_name, dc_name, pod_name, rack = get_device_location_metadata(structured_config)
     boundary_location = create_device_boundary_location(fabric_name, dc_name, pod_name, rack, boundary)
     is_vtep, is_wan_router = get_device_roles(structured_config)

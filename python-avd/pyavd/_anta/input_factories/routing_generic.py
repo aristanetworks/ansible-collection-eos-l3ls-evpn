@@ -33,11 +33,13 @@ class VerifyRoutingTableEntryInputFactory(AntaTestInputFactory):
         # Using a set to avoid duplicate tests for the same IP address (e.g. MLAG VTEPs)
         routes = set()
 
-        # TODO: In eos_validate_state, WAN routers Loopback0 IPs are included in the mapping so their IPs are checked here. Not the case for their DPS IPs.
-        # This could be a bug in eos_validate_state, depending if we should/would like to check WAN routers Loopback0 IPs from a VTEP or not.
-        # In this new plugin, we need to decide if we want to include WAN routers Loopback0 IPs or not. Right now, we are not.
-        # Since we now have the scope boundary, we could include them when it is set to "unlimited" and setting the scope to "fabric" or "domain?"
-        # would exclude them.
+        # TODO: In eos_validate_state, WAN routers Loopback0 IPs are included in the mapping
+        # so their IPs are checked here. Not the case for their DPS IPs. This could be a bug
+        # in eos_validate_state, depending if we should/would like to check WAN routers
+        # Loopback0 IPs from a VTEP or not. In this new plugin, we need to decide if we want
+        # to include WAN routers Loopback0 IPs or not. Right now, we are not. Since we now have
+        # the scope boundary, we could include them when it is set to "unlimited" and setting
+        # the scope to "fabric" would exclude them.
         for peer, ips in self.fabric_data.get_ip_index("special_ips", is_wan_router=False).items():
             caller = ", ".join([str(ip) for ip in ips])
             if not self.is_peer_available(peer, caller=caller) or not self.is_peer_in_boundary(peer, caller=caller):

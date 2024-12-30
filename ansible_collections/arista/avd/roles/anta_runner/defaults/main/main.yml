@@ -10,7 +10,7 @@ anta_devices: "{{ ansible_play_hosts }}"
 # Tests will only be generated for devices within the same boundary level.
 # For example, if the boundary is set to 'dc', reachability tests will not be generated between devices in different data centers.
 # To use this feature, the devices must have the proper location metadata (fabric_name, pod_name, dc_name, rack) set in their structured configs.
-anta_catalog_boundary: "unlimited"   # Options: unlimited, rack, pod, dc, fabric
+anta_catalog_boundary: "unlimited"   # Options: unlimited, fabric, dc, pod, rack
 
 # Generate tests for BGP peers outside of the configured scope boundary.
 anta_catalog_allow_bgp_external: true

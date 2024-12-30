@@ -6,9 +6,10 @@ from __future__ import annotations
 import json
 import logging
 from asyncio import run
+from concurrent.futures import ProcessPoolExecutor
 from datetime import datetime, timezone
 from logging.handlers import QueueHandler, QueueListener
-from multiprocessing import Pool, Queue, current_process, get_start_method
+from multiprocessing import Queue, current_process, get_start_method
 from pathlib import Path
 from typing import TYPE_CHECKING, Any
 
@@ -195,10 +196,10 @@ class ActionModule(ActionBase):
                 STRUCTURED_CONFIGS = load_structured_configs(deployed_devices, structured_config_dir, get(PLUGIN_ARGS, "anta_catalog.structured_config_suffix"))
                 FABRIC_DATA = get_fabric_data(structured_configs=STRUCTURED_CONFIGS, scope=get(PLUGIN_ARGS, "anta_catalog.scope"))
 
-            with Pool(processes=(ansible_forks - 1)) as pool:
+            with ProcessPoolExecutor(max_workers=(ansible_forks - 1)) as executor:
                 batch_size = get(PLUGIN_ARGS, "anta_runner_settings.batch_size")
                 batches = [deployed_devices[i : i + batch_size] for i in range(0, len(deployed_devices), batch_size)]
-                batch_results = pool.map(run_anta, batches)
+                batch_results = executor.map(run_anta, batches)
 
             # Build the ANTA reports
             build_reports(batch_results, get(PLUGIN_ARGS, "report"))

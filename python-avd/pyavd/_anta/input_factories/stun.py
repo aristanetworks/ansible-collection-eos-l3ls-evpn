@@ -3,7 +3,7 @@
 # that can be found in the LICENSE file.
 from __future__ import annotations
 
-from ipaddress import IPv6Address, ip_interface
+from ipaddress import ip_interface
 
 from anta.input_models.stun import StunClientTranslation
 from anta.tests.stun import VerifyStunClientTranslation
@@ -38,16 +38,17 @@ class VerifyStunClientTranslationInputFactory(AntaTestInputFactory):
 
             for interface in stun_interfaces:
                 # Get the source IP address for the STUN client
-                if (
-                    interface in self.structured_config.ethernet_interfaces
-                    and (ip_address := self.structured_config.ethernet_interfaces[interface].ip_address) is None
-                ):
+                ip_address = (
+                    self.structured_config.ethernet_interfaces[interface].ip_address if interface in self.structured_config.ethernet_interfaces else None
+                )
+                if ip_address is None:
                     self.logger.debug(LogMessage.INTERFACE_NO_IP, caller=interface)
                     continue
-                source_address = ip_interface(ip_address).ip
-                if isinstance(source_address, IPv6Address):
-                    self.logger.debug(LogMessage.IPV6_UNSUPPORTED, caller=interface)
+                if ip_address == "dhcp":
+                    self.logger.debug(LogMessage.INTERFACE_USING_DHCP, caller=interface)
                     continue
+
+                source_address = ip_interface(ip_address).ip
                 stun_clients.append(StunClientTranslation(source_address=source_address))
 
         return VerifyStunClientTranslation.Input(stun_clients=stun_clients) if stun_clients else None

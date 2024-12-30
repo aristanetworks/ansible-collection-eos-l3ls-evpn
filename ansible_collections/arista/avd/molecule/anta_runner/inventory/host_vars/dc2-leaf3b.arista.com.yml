@@ -1,6 +1,6 @@
 ---
 # Custom interface structured_config with shutdown key missing to make sure the defaults are handled properly
-# Keeping test for deprecated data-models to ensure that validate_state can still generate the tests for them
+# Keeping test for deprecated data-models to ensure tests are still generated for them
 # Deprecated keys: type, mode, vlans, native_vlan, native_vlan_tag, trunk_groups, phone
 custom_structured_configuration_ethernet_interfaces:
   - name: Ethernet11
@@ -13,6 +13,13 @@ custom_structured_configuration_ethernet_interfaces:
     channel_group:
       id: 11
       mode: active
+  - name: Ethernet16
+    description: Test_dhcp_interface_connectivity
+    ip_address: dhcp
+    peer: dc2-leaf3a.arista.com
+    peer_interface: Ethernet16
+    switchport:
+      enabled: false
 
 custom_structured_configuration_port_channel_interfaces:
   - name: Port-Channel11

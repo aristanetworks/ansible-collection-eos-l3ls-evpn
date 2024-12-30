@@ -1,0 +1,10 @@
+---
+# anta.yml
+- name: Run ANTA
+  hosts: WAN
+  gather_facts: false
+  tasks:
+
+    - name: Run ANTA
+      ansible.builtin.import_role:
+        name: arista.avd.anta_runner

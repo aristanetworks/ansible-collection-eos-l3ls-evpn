@@ -30,7 +30,7 @@ class VerifyLLDPNeighborsInputFactory(AntaTestInputFactory):
 
     Notes:
       - Uses FQDN when peer has `dns_domain` set
-      - Can consider `interface_defaults.ethernet.shutdown`
+      - Consider `interface_defaults.ethernet.shutdown` if `shutdown` is not set
     """
 
     def create(self) -> VerifyLLDPNeighbors.Input | None:
@@ -43,7 +43,7 @@ class VerifyLLDPNeighborsInputFactory(AntaTestInputFactory):
             if "." in intf.name:
                 self.logger.debug(LogMessage.INTERFACE_IS_SUBINTERFACE, caller=intf.name)
                 continue
-            if intf.shutdown or self.structured_config.interface_defaults.ethernet.shutdown:
+            if intf.shutdown or (intf.shutdown is None and self.structured_config.interface_defaults.ethernet.shutdown):
                 self.logger.debug(LogMessage.INTERFACE_SHUTDOWN, caller=intf.name)
                 continue
 
@@ -138,7 +138,7 @@ class VerifyReachabilityInputFactory(AntaTestInputFactory):
         """Get reachability hosts for point-to-point interface connections."""
         hosts = []
         for intf in self.structured_config.ethernet_interfaces:
-            if intf.shutdown or self.structured_config.interface_defaults.ethernet.shutdown:
+            if intf.shutdown or (intf.shutdown is None and self.structured_config.interface_defaults.ethernet.shutdown):
                 self.logger.debug(LogMessage.INTERFACE_SHUTDOWN, caller=intf.name)
                 continue
 

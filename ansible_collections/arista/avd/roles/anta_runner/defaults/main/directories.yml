@@ -8,7 +8,7 @@ root_dir: "{{ inventory_dir }}"
 output_dir_name: "intended"
 output_dir: "{{ root_dir }}/{{ output_dir_name }}"
 
-# Output for structured configuration YAML files
+# Output for structured configuration files
 structured_dir_name: "structured_configs"
 structured_dir: "{{ output_dir }}/{{ structured_dir_name }}"
 

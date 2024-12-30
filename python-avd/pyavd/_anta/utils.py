@@ -34,7 +34,6 @@ def get_device_special_ips(structured_config: dict) -> tuple[IPv4Address | None,
         interface_model = get(structured_config, "loopback_interfaces", default=[])
     vtep_ip = get(get_item(interface_model, "name", get(structured_config, "vxlan_interface.vxlan1.vxlan.source_interface", ""), default={}), "ip_address")
 
-    # TODO: Handle IPv6Address
     return (
         ip_interface(loopback0_ip).ip if loopback0_ip else None,
         ip_interface(vtep_ip).ip if vtep_ip else None,
@@ -51,10 +50,9 @@ def get_device_roles(structured_config: dict) -> tuple[bool, bool]:
 
 def get_device_ip_by_interface(structured_config: dict) -> dict[str, IPv4Address]:
     """Extract IP ethernet interfaces from the structured configuration."""
-    # TODO: Handle IPv6Address
     ip_by_interface = {}
     for interface in get(structured_config, "ethernet_interfaces", default=[]):
-        if (ip_address := get(interface, "ip_address")) is not None and get(interface, "switchport.enabled", default=True) is False:
+        if (ip_address := get(interface, "ip_address")) is not None and ip_address != "dhcp" and get(interface, "switchport.enabled") is False:
             ip_by_interface[interface["name"]] = ip_interface(ip_address).ip
     return ip_by_interface
 

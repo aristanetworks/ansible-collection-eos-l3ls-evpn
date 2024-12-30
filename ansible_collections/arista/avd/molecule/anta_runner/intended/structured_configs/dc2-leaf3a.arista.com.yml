@@ -85,6 +85,8 @@ ethernet_interfaces:
   ip_address: dhcp
   peer: dc2-leaf3b.arista.com
   peer_interface: Ethernet16
+  switchport:
+    enabled: false
 hostname: dc2-leaf3a.arista.com
 ip_igmp_snooping:
   globally_enabled: true

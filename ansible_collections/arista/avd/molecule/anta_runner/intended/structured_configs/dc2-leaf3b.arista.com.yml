@@ -51,6 +51,13 @@ ethernet_interfaces:
   peer: dc2-leaf3-fw1
   peer_interface: e1
   peer_type: firewall
+- name: Ethernet16
+  description: Test_dhcp_interface_connectivity
+  ip_address: dhcp
+  peer: dc2-leaf3a.arista.com
+  peer_interface: Ethernet16
+  switchport:
+    enabled: false
 hostname: dc2-leaf3b.arista.com
 interface_defaults:
   ethernet:
