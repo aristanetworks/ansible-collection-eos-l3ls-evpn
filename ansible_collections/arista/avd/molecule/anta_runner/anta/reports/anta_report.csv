@@ -9,11 +9,19 @@ dc1-leaf1a,VerifyEnvironmentSystemCooling,unset,,Verifies the device's system co
 dc1-leaf1a,VerifyTemperature,unset,,Verifies if the device temperature is within acceptable limits.,Hardware
 dc1-leaf1a,VerifyTransceiversManufacturers,unset,,Verifies if all the transceivers come from approved manufacturers.,Hardware
 dc1-leaf1a,VerifyTransceiversTemperature,unset,,Verifies if all the transceivers are operating at an acceptable temperature.,Hardware
+dc1-leaf1a,VerifyInterfaceDiscards,unset,,Verifies that the interfaces packet discard counters are equal to zero.,Interfaces
+dc1-leaf1a,VerifyInterfaceErrDisabled,unset,,Verifies there are no interfaces in the errdisabled state.,Interfaces
+dc1-leaf1a,VerifyInterfaceErrors,unset,,Verifies that the interfaces error counters are equal to zero.,Interfaces
+dc1-leaf1a,VerifyInterfaceUtilization,unset,,Verifies that the utilization of interfaces is below a certain threshold.,Interfaces
 dc1-leaf1a,VerifyInterfacesStatus,unset,,Verifies the operational states of specified interfaces to ensure they match expected configurations.,Interfaces
+dc1-leaf1a,VerifyStormControlDrops,unset,,Verifies there are no interface storm-control drop counters.,Interfaces
 dc1-leaf1a,VerifyMlagStatus,unset,,Verifies the health status of the MLAG configuration.,MLAG
 dc1-leaf1a,VerifyRoutingProtocolModel,unset,,Verifies the configured routing protocol model.,Routing
 dc1-leaf1a,VerifyRoutingTableEntry,unset,,Verifies that the provided routes are present in the routing table of a specified VRF.,Routing
 dc1-leaf1a,VerifyAPIHttpsSSL,unset,,Verifies if the eAPI has a valid SSL profile.,Security
+dc1-leaf1a,VerifyEOSExtensions,unset,,Verifies that all EOS extensions installed on the device are enabled for boot persistence.,Software
+dc1-leaf1a,VerifyEOSVersion,unset,,Verifies the EOS version of the device.,Software
+dc1-leaf1a,VerifyTerminAttrVersion,unset,,Verifies the TerminAttr version of the device.,Software
 dc1-leaf1a,VerifyNTP,unset,,Verifies if NTP is synchronised.,System
 dc1-leaf1a,VerifyReloadCause,unset,,Verifies the last reload cause of the device.,System
 dc1-leaf1b,VerifyBGPPeerMPCaps,unset,,Verifies the multiprotocol capabilities of BGP peers.,BGP
@@ -26,11 +34,19 @@ dc1-leaf1b,VerifyEnvironmentSystemCooling,unset,,Verifies the device's system co
 dc1-leaf1b,VerifyTemperature,unset,,Verifies if the device temperature is within acceptable limits.,Hardware
 dc1-leaf1b,VerifyTransceiversManufacturers,unset,,Verifies if all the transceivers come from approved manufacturers.,Hardware
 dc1-leaf1b,VerifyTransceiversTemperature,unset,,Verifies if all the transceivers are operating at an acceptable temperature.,Hardware
+dc1-leaf1b,VerifyInterfaceDiscards,unset,,Verifies that the interfaces packet discard counters are equal to zero.,Interfaces
+dc1-leaf1b,VerifyInterfaceErrDisabled,unset,,Verifies there are no interfaces in the errdisabled state.,Interfaces
+dc1-leaf1b,VerifyInterfaceErrors,unset,,Verifies that the interfaces error counters are equal to zero.,Interfaces
+dc1-leaf1b,VerifyInterfaceUtilization,unset,,Verifies that the utilization of interfaces is below a certain threshold.,Interfaces
 dc1-leaf1b,VerifyInterfacesStatus,unset,,Verifies the operational states of specified interfaces to ensure they match expected configurations.,Interfaces
+dc1-leaf1b,VerifyStormControlDrops,unset,,Verifies there are no interface storm-control drop counters.,Interfaces
 dc1-leaf1b,VerifyMlagStatus,unset,,Verifies the health status of the MLAG configuration.,MLAG
 dc1-leaf1b,VerifyRoutingProtocolModel,unset,,Verifies the configured routing protocol model.,Routing
 dc1-leaf1b,VerifyRoutingTableEntry,unset,,Verifies that the provided routes are present in the routing table of a specified VRF.,Routing
 dc1-leaf1b,VerifyAPIHttpsSSL,unset,,Verifies if the eAPI has a valid SSL profile.,Security
+dc1-leaf1b,VerifyEOSExtensions,unset,,Verifies that all EOS extensions installed on the device are enabled for boot persistence.,Software
+dc1-leaf1b,VerifyEOSVersion,unset,,Verifies the EOS version of the device.,Software
+dc1-leaf1b,VerifyTerminAttrVersion,unset,,Verifies the TerminAttr version of the device.,Software
 dc1-leaf1b,VerifyNTP,unset,,Verifies if NTP is synchronised.,System
 dc1-leaf1b,VerifyReloadCause,unset,,Verifies the last reload cause of the device.,System
 dc1-leaf1c,VerifyLLDPNeighbors,unset,,Verifies the connection status of the specified LLDP (Link Layer Discovery Protocol) neighbors.,Connectivity
@@ -41,9 +57,17 @@ dc1-leaf1c,VerifyEnvironmentSystemCooling,unset,,Verifies the device's system co
 dc1-leaf1c,VerifyTemperature,unset,,Verifies if the device temperature is within acceptable limits.,Hardware
 dc1-leaf1c,VerifyTransceiversManufacturers,unset,,Verifies if all the transceivers come from approved manufacturers.,Hardware
 dc1-leaf1c,VerifyTransceiversTemperature,unset,,Verifies if all the transceivers are operating at an acceptable temperature.,Hardware
+dc1-leaf1c,VerifyInterfaceDiscards,unset,,Verifies that the interfaces packet discard counters are equal to zero.,Interfaces
+dc1-leaf1c,VerifyInterfaceErrDisabled,unset,,Verifies there are no interfaces in the errdisabled state.,Interfaces
+dc1-leaf1c,VerifyInterfaceErrors,unset,,Verifies that the interfaces error counters are equal to zero.,Interfaces
+dc1-leaf1c,VerifyInterfaceUtilization,unset,,Verifies that the utilization of interfaces is below a certain threshold.,Interfaces
 dc1-leaf1c,VerifyInterfacesStatus,unset,,Verifies the operational states of specified interfaces to ensure they match expected configurations.,Interfaces
+dc1-leaf1c,VerifyStormControlDrops,unset,,Verifies there are no interface storm-control drop counters.,Interfaces
 dc1-leaf1c,VerifyRoutingProtocolModel,unset,,Verifies the configured routing protocol model.,Routing
 dc1-leaf1c,VerifyAPIHttpsSSL,unset,,Verifies if the eAPI has a valid SSL profile.,Security
+dc1-leaf1c,VerifyEOSExtensions,unset,,Verifies that all EOS extensions installed on the device are enabled for boot persistence.,Software
+dc1-leaf1c,VerifyEOSVersion,unset,,Verifies the EOS version of the device.,Software
+dc1-leaf1c,VerifyTerminAttrVersion,unset,,Verifies the TerminAttr version of the device.,Software
 dc1-leaf1c,VerifyNTP,unset,,Verifies if NTP is synchronised.,System
 dc1-leaf1c,VerifyReloadCause,unset,,Verifies the last reload cause of the device.,System
 dc1-leaf2a,VerifyBGPPeerMPCaps,unset,,Verifies the multiprotocol capabilities of BGP peers.,BGP
@@ -56,11 +80,19 @@ dc1-leaf2a,VerifyEnvironmentSystemCooling,unset,,Verifies the device's system co
 dc1-leaf2a,VerifyTemperature,unset,,Verifies if the device temperature is within acceptable limits.,Hardware
 dc1-leaf2a,VerifyTransceiversManufacturers,unset,,Verifies if all the transceivers come from approved manufacturers.,Hardware
 dc1-leaf2a,VerifyTransceiversTemperature,unset,,Verifies if all the transceivers are operating at an acceptable temperature.,Hardware
+dc1-leaf2a,VerifyInterfaceDiscards,unset,,Verifies that the interfaces packet discard counters are equal to zero.,Interfaces
+dc1-leaf2a,VerifyInterfaceErrDisabled,unset,,Verifies there are no interfaces in the errdisabled state.,Interfaces
+dc1-leaf2a,VerifyInterfaceErrors,unset,,Verifies that the interfaces error counters are equal to zero.,Interfaces
+dc1-leaf2a,VerifyInterfaceUtilization,unset,,Verifies that the utilization of interfaces is below a certain threshold.,Interfaces
 dc1-leaf2a,VerifyInterfacesStatus,unset,,Verifies the operational states of specified interfaces to ensure they match expected configurations.,Interfaces
+dc1-leaf2a,VerifyStormControlDrops,unset,,Verifies there are no interface storm-control drop counters.,Interfaces
 dc1-leaf2a,VerifyMlagStatus,unset,,Verifies the health status of the MLAG configuration.,MLAG
 dc1-leaf2a,VerifyRoutingProtocolModel,unset,,Verifies the configured routing protocol model.,Routing
 dc1-leaf2a,VerifyRoutingTableEntry,unset,,Verifies that the provided routes are present in the routing table of a specified VRF.,Routing
 dc1-leaf2a,VerifyAPIHttpsSSL,unset,,Verifies if the eAPI has a valid SSL profile.,Security
+dc1-leaf2a,VerifyEOSExtensions,unset,,Verifies that all EOS extensions installed on the device are enabled for boot persistence.,Software
+dc1-leaf2a,VerifyEOSVersion,unset,,Verifies the EOS version of the device.,Software
+dc1-leaf2a,VerifyTerminAttrVersion,unset,,Verifies the TerminAttr version of the device.,Software
 dc1-leaf2a,VerifyNTP,unset,,Verifies if NTP is synchronised.,System
 dc1-leaf2a,VerifyReloadCause,unset,,Verifies the last reload cause of the device.,System
 dc1-leaf2c,VerifyLLDPNeighbors,unset,,Verifies the connection status of the specified LLDP (Link Layer Discovery Protocol) neighbors.,Connectivity
@@ -71,10 +103,18 @@ dc1-leaf2c,VerifyEnvironmentSystemCooling,unset,,Verifies the device's system co
 dc1-leaf2c,VerifyTemperature,unset,,Verifies if the device temperature is within acceptable limits.,Hardware
 dc1-leaf2c,VerifyTransceiversManufacturers,unset,,Verifies if all the transceivers come from approved manufacturers.,Hardware
 dc1-leaf2c,VerifyTransceiversTemperature,unset,,Verifies if all the transceivers are operating at an acceptable temperature.,Hardware
+dc1-leaf2c,VerifyInterfaceDiscards,unset,,Verifies that the interfaces packet discard counters are equal to zero.,Interfaces
+dc1-leaf2c,VerifyInterfaceErrDisabled,unset,,Verifies there are no interfaces in the errdisabled state.,Interfaces
+dc1-leaf2c,VerifyInterfaceErrors,unset,,Verifies that the interfaces error counters are equal to zero.,Interfaces
+dc1-leaf2c,VerifyInterfaceUtilization,unset,,Verifies that the utilization of interfaces is below a certain threshold.,Interfaces
 dc1-leaf2c,VerifyInterfacesStatus,unset,,Verifies the operational states of specified interfaces to ensure they match expected configurations.,Interfaces
+dc1-leaf2c,VerifyStormControlDrops,unset,,Verifies there are no interface storm-control drop counters.,Interfaces
 dc1-leaf2c,VerifyRoutingProtocolModel,unset,,Verifies the configured routing protocol model.,Routing
 dc1-leaf2c,VerifyRoutingTableEntry,unset,,Verifies that the provided routes are present in the routing table of a specified VRF.,Routing
 dc1-leaf2c,VerifyAPIHttpsSSL,unset,,Verifies if the eAPI has a valid SSL profile.,Security
+dc1-leaf2c,VerifyEOSExtensions,unset,,Verifies that all EOS extensions installed on the device are enabled for boot persistence.,Software
+dc1-leaf2c,VerifyEOSVersion,unset,,Verifies the EOS version of the device.,Software
+dc1-leaf2c,VerifyTerminAttrVersion,unset,,Verifies the TerminAttr version of the device.,Software
 dc1-leaf2c,VerifyNTP,unset,,Verifies if NTP is synchronised.,System
 dc1-leaf2c,VerifyReloadCause,unset,,Verifies the last reload cause of the device.,System
 dc1-spine1,VerifyBGPPeerMPCaps,unset,,Verifies the multiprotocol capabilities of BGP peers.,BGP
@@ -87,9 +127,17 @@ dc1-spine1,VerifyEnvironmentSystemCooling,unset,,Verifies the device's system co
 dc1-spine1,VerifyTemperature,unset,,Verifies if the device temperature is within acceptable limits.,Hardware
 dc1-spine1,VerifyTransceiversManufacturers,unset,,Verifies if all the transceivers come from approved manufacturers.,Hardware
 dc1-spine1,VerifyTransceiversTemperature,unset,,Verifies if all the transceivers are operating at an acceptable temperature.,Hardware
+dc1-spine1,VerifyInterfaceDiscards,unset,,Verifies that the interfaces packet discard counters are equal to zero.,Interfaces
+dc1-spine1,VerifyInterfaceErrDisabled,unset,,Verifies there are no interfaces in the errdisabled state.,Interfaces
+dc1-spine1,VerifyInterfaceErrors,unset,,Verifies that the interfaces error counters are equal to zero.,Interfaces
+dc1-spine1,VerifyInterfaceUtilization,unset,,Verifies that the utilization of interfaces is below a certain threshold.,Interfaces
 dc1-spine1,VerifyInterfacesStatus,unset,,Verifies the operational states of specified interfaces to ensure they match expected configurations.,Interfaces
+dc1-spine1,VerifyStormControlDrops,unset,,Verifies there are no interface storm-control drop counters.,Interfaces
 dc1-spine1,VerifyRoutingProtocolModel,unset,,Verifies the configured routing protocol model.,Routing
 dc1-spine1,VerifyAPIHttpsSSL,unset,,Verifies if the eAPI has a valid SSL profile.,Security
+dc1-spine1,VerifyEOSExtensions,unset,,Verifies that all EOS extensions installed on the device are enabled for boot persistence.,Software
+dc1-spine1,VerifyEOSVersion,unset,,Verifies the EOS version of the device.,Software
+dc1-spine1,VerifyTerminAttrVersion,unset,,Verifies the TerminAttr version of the device.,Software
 dc1-spine1,VerifyNTP,unset,,Verifies if NTP is synchronised.,System
 dc1-spine1,VerifyReloadCause,unset,,Verifies the last reload cause of the device.,System
 dc1-spine2,VerifyBGPPeerMPCaps,unset,,Verifies the multiprotocol capabilities of BGP peers.,BGP
@@ -102,9 +150,17 @@ dc1-spine2,VerifyEnvironmentSystemCooling,unset,,Verifies the device's system co
 dc1-spine2,VerifyTemperature,unset,,Verifies if the device temperature is within acceptable limits.,Hardware
 dc1-spine2,VerifyTransceiversManufacturers,unset,,Verifies if all the transceivers come from approved manufacturers.,Hardware
 dc1-spine2,VerifyTransceiversTemperature,unset,,Verifies if all the transceivers are operating at an acceptable temperature.,Hardware
+dc1-spine2,VerifyInterfaceDiscards,unset,,Verifies that the interfaces packet discard counters are equal to zero.,Interfaces
+dc1-spine2,VerifyInterfaceErrDisabled,unset,,Verifies there are no interfaces in the errdisabled state.,Interfaces
+dc1-spine2,VerifyInterfaceErrors,unset,,Verifies that the interfaces error counters are equal to zero.,Interfaces
+dc1-spine2,VerifyInterfaceUtilization,unset,,Verifies that the utilization of interfaces is below a certain threshold.,Interfaces
 dc1-spine2,VerifyInterfacesStatus,unset,,Verifies the operational states of specified interfaces to ensure they match expected configurations.,Interfaces
+dc1-spine2,VerifyStormControlDrops,unset,,Verifies there are no interface storm-control drop counters.,Interfaces
 dc1-spine2,VerifyRoutingProtocolModel,unset,,Verifies the configured routing protocol model.,Routing
 dc1-spine2,VerifyAPIHttpsSSL,unset,,Verifies if the eAPI has a valid SSL profile.,Security
+dc1-spine2,VerifyEOSExtensions,unset,,Verifies that all EOS extensions installed on the device are enabled for boot persistence.,Software
+dc1-spine2,VerifyEOSVersion,unset,,Verifies the EOS version of the device.,Software
+dc1-spine2,VerifyTerminAttrVersion,unset,,Verifies the TerminAttr version of the device.,Software
 dc1-spine2,VerifyNTP,unset,,Verifies if NTP is synchronised.,System
 dc1-spine2,VerifyReloadCause,unset,,Verifies the last reload cause of the device.,System
 dc1-svc-leaf1a,VerifyBGPPeerMPCaps,unset,,Verifies the multiprotocol capabilities of BGP peers.,BGP
@@ -117,11 +173,19 @@ dc1-svc-leaf1a,VerifyEnvironmentSystemCooling,unset,,Verifies the device's syste
 dc1-svc-leaf1a,VerifyTemperature,unset,,Verifies if the device temperature is within acceptable limits.,Hardware
 dc1-svc-leaf1a,VerifyTransceiversManufacturers,unset,,Verifies if all the transceivers come from approved manufacturers.,Hardware
 dc1-svc-leaf1a,VerifyTransceiversTemperature,unset,,Verifies if all the transceivers are operating at an acceptable temperature.,Hardware
+dc1-svc-leaf1a,VerifyInterfaceDiscards,unset,,Verifies that the interfaces packet discard counters are equal to zero.,Interfaces
+dc1-svc-leaf1a,VerifyInterfaceErrDisabled,unset,,Verifies there are no interfaces in the errdisabled state.,Interfaces
+dc1-svc-leaf1a,VerifyInterfaceErrors,unset,,Verifies that the interfaces error counters are equal to zero.,Interfaces
+dc1-svc-leaf1a,VerifyInterfaceUtilization,unset,,Verifies that the utilization of interfaces is below a certain threshold.,Interfaces
 dc1-svc-leaf1a,VerifyInterfacesStatus,unset,,Verifies the operational states of specified interfaces to ensure they match expected configurations.,Interfaces
+dc1-svc-leaf1a,VerifyStormControlDrops,unset,,Verifies there are no interface storm-control drop counters.,Interfaces
 dc1-svc-leaf1a,VerifyMlagStatus,unset,,Verifies the health status of the MLAG configuration.,MLAG
 dc1-svc-leaf1a,VerifyRoutingProtocolModel,unset,,Verifies the configured routing protocol model.,Routing
 dc1-svc-leaf1a,VerifyRoutingTableEntry,unset,,Verifies that the provided routes are present in the routing table of a specified VRF.,Routing
 dc1-svc-leaf1a,VerifyAPIHttpsSSL,unset,,Verifies if the eAPI has a valid SSL profile.,Security
+dc1-svc-leaf1a,VerifyEOSExtensions,unset,,Verifies that all EOS extensions installed on the device are enabled for boot persistence.,Software
+dc1-svc-leaf1a,VerifyEOSVersion,unset,,Verifies the EOS version of the device.,Software
+dc1-svc-leaf1a,VerifyTerminAttrVersion,unset,,Verifies the TerminAttr version of the device.,Software
 dc1-svc-leaf1a,VerifyNTP,unset,,Verifies if NTP is synchronised.,System
 dc1-svc-leaf1a,VerifyReloadCause,unset,,Verifies the last reload cause of the device.,System
 dc1-svc-leaf1b,VerifyBGPPeerMPCaps,unset,,Verifies the multiprotocol capabilities of BGP peers.,BGP
@@ -134,11 +198,19 @@ dc1-svc-leaf1b,VerifyEnvironmentSystemCooling,unset,,Verifies the device's syste
 dc1-svc-leaf1b,VerifyTemperature,unset,,Verifies if the device temperature is within acceptable limits.,Hardware
 dc1-svc-leaf1b,VerifyTransceiversManufacturers,unset,,Verifies if all the transceivers come from approved manufacturers.,Hardware
 dc1-svc-leaf1b,VerifyTransceiversTemperature,unset,,Verifies if all the transceivers are operating at an acceptable temperature.,Hardware
+dc1-svc-leaf1b,VerifyInterfaceDiscards,unset,,Verifies that the interfaces packet discard counters are equal to zero.,Interfaces
+dc1-svc-leaf1b,VerifyInterfaceErrDisabled,unset,,Verifies there are no interfaces in the errdisabled state.,Interfaces
+dc1-svc-leaf1b,VerifyInterfaceErrors,unset,,Verifies that the interfaces error counters are equal to zero.,Interfaces
+dc1-svc-leaf1b,VerifyInterfaceUtilization,unset,,Verifies that the utilization of interfaces is below a certain threshold.,Interfaces
 dc1-svc-leaf1b,VerifyInterfacesStatus,unset,,Verifies the operational states of specified interfaces to ensure they match expected configurations.,Interfaces
+dc1-svc-leaf1b,VerifyStormControlDrops,unset,,Verifies there are no interface storm-control drop counters.,Interfaces
 dc1-svc-leaf1b,VerifyMlagStatus,unset,,Verifies the health status of the MLAG configuration.,MLAG
 dc1-svc-leaf1b,VerifyRoutingProtocolModel,unset,,Verifies the configured routing protocol model.,Routing
 dc1-svc-leaf1b,VerifyRoutingTableEntry,unset,,Verifies that the provided routes are present in the routing table of a specified VRF.,Routing
 dc1-svc-leaf1b,VerifyAPIHttpsSSL,unset,,Verifies if the eAPI has a valid SSL profile.,Security
+dc1-svc-leaf1b,VerifyEOSExtensions,unset,,Verifies that all EOS extensions installed on the device are enabled for boot persistence.,Software
+dc1-svc-leaf1b,VerifyEOSVersion,unset,,Verifies the EOS version of the device.,Software
+dc1-svc-leaf1b,VerifyTerminAttrVersion,unset,,Verifies the TerminAttr version of the device.,Software
 dc1-svc-leaf1b,VerifyNTP,unset,,Verifies if NTP is synchronised.,System
 dc1-svc-leaf1b,VerifyReloadCause,unset,,Verifies the last reload cause of the device.,System
 dc1-wan1,VerifyAVTRole,unset,,Verifies the AVT role of a device.,AVT
@@ -152,10 +224,18 @@ dc1-wan1,VerifyEnvironmentSystemCooling,unset,,Verifies the device's system cool
 dc1-wan1,VerifyTemperature,unset,,Verifies if the device temperature is within acceptable limits.,Hardware
 dc1-wan1,VerifyTransceiversManufacturers,unset,,Verifies if all the transceivers come from approved manufacturers.,Hardware
 dc1-wan1,VerifyTransceiversTemperature,unset,,Verifies if all the transceivers are operating at an acceptable temperature.,Hardware
+dc1-wan1,VerifyInterfaceDiscards,unset,,Verifies that the interfaces packet discard counters are equal to zero.,Interfaces
+dc1-wan1,VerifyInterfaceErrDisabled,unset,,Verifies there are no interfaces in the errdisabled state.,Interfaces
+dc1-wan1,VerifyInterfaceErrors,unset,,Verifies that the interfaces error counters are equal to zero.,Interfaces
+dc1-wan1,VerifyInterfaceUtilization,unset,,Verifies that the utilization of interfaces is below a certain threshold.,Interfaces
 dc1-wan1,VerifyInterfacesStatus,unset,,Verifies the operational states of specified interfaces to ensure they match expected configurations.,Interfaces
+dc1-wan1,VerifyStormControlDrops,unset,,Verifies there are no interface storm-control drop counters.,Interfaces
 dc1-wan1,VerifyRoutingProtocolModel,unset,,Verifies the configured routing protocol model.,Routing
 dc1-wan1,VerifyAPIHttpsSSL,unset,,Verifies if the eAPI has a valid SSL profile.,Security
 dc1-wan1,VerifySpecificIPSecConn,unset,,Verifies the IPv4 security connections.,Security
+dc1-wan1,VerifyEOSExtensions,unset,,Verifies that all EOS extensions installed on the device are enabled for boot persistence.,Software
+dc1-wan1,VerifyEOSVersion,unset,,Verifies the EOS version of the device.,Software
+dc1-wan1,VerifyTerminAttrVersion,unset,,Verifies the TerminAttr version of the device.,Software
 dc1-wan1,VerifyStunClientTranslation,unset,,Verifies the translation for a source address on a STUN client.,STUN
 dc1-wan1,VerifyNTP,unset,,Verifies if NTP is synchronised.,System
 dc1-wan1,VerifyReloadCause,unset,,Verifies the last reload cause of the device.,System
@@ -170,10 +250,18 @@ dc1-wan2,VerifyEnvironmentSystemCooling,unset,,Verifies the device's system cool
 dc1-wan2,VerifyTemperature,unset,,Verifies if the device temperature is within acceptable limits.,Hardware
 dc1-wan2,VerifyTransceiversManufacturers,unset,,Verifies if all the transceivers come from approved manufacturers.,Hardware
 dc1-wan2,VerifyTransceiversTemperature,unset,,Verifies if all the transceivers are operating at an acceptable temperature.,Hardware
+dc1-wan2,VerifyInterfaceDiscards,unset,,Verifies that the interfaces packet discard counters are equal to zero.,Interfaces
+dc1-wan2,VerifyInterfaceErrDisabled,unset,,Verifies there are no interfaces in the errdisabled state.,Interfaces
+dc1-wan2,VerifyInterfaceErrors,unset,,Verifies that the interfaces error counters are equal to zero.,Interfaces
+dc1-wan2,VerifyInterfaceUtilization,unset,,Verifies that the utilization of interfaces is below a certain threshold.,Interfaces
 dc1-wan2,VerifyInterfacesStatus,unset,,Verifies the operational states of specified interfaces to ensure they match expected configurations.,Interfaces
+dc1-wan2,VerifyStormControlDrops,unset,,Verifies there are no interface storm-control drop counters.,Interfaces
 dc1-wan2,VerifyRoutingProtocolModel,unset,,Verifies the configured routing protocol model.,Routing
 dc1-wan2,VerifyAPIHttpsSSL,unset,,Verifies if the eAPI has a valid SSL profile.,Security
 dc1-wan2,VerifySpecificIPSecConn,unset,,Verifies the IPv4 security connections.,Security
+dc1-wan2,VerifyEOSExtensions,unset,,Verifies that all EOS extensions installed on the device are enabled for boot persistence.,Software
+dc1-wan2,VerifyEOSVersion,unset,,Verifies the EOS version of the device.,Software
+dc1-wan2,VerifyTerminAttrVersion,unset,,Verifies the TerminAttr version of the device.,Software
 dc1-wan2,VerifyStunClientTranslation,unset,,Verifies the translation for a source address on a STUN client.,STUN
 dc1-wan2,VerifyNTP,unset,,Verifies if NTP is synchronised.,System
 dc1-wan2,VerifyReloadCause,unset,,Verifies the last reload cause of the device.,System
@@ -187,11 +275,19 @@ dc2-leaf1a,VerifyEnvironmentSystemCooling,unset,,Verifies the device's system co
 dc2-leaf1a,VerifyTemperature,unset,,Verifies if the device temperature is within acceptable limits.,Hardware
 dc2-leaf1a,VerifyTransceiversManufacturers,unset,,Verifies if all the transceivers come from approved manufacturers.,Hardware
 dc2-leaf1a,VerifyTransceiversTemperature,unset,,Verifies if all the transceivers are operating at an acceptable temperature.,Hardware
+dc2-leaf1a,VerifyInterfaceDiscards,unset,,Verifies that the interfaces packet discard counters are equal to zero.,Interfaces
+dc2-leaf1a,VerifyInterfaceErrDisabled,unset,,Verifies there are no interfaces in the errdisabled state.,Interfaces
+dc2-leaf1a,VerifyInterfaceErrors,unset,,Verifies that the interfaces error counters are equal to zero.,Interfaces
+dc2-leaf1a,VerifyInterfaceUtilization,unset,,Verifies that the utilization of interfaces is below a certain threshold.,Interfaces
 dc2-leaf1a,VerifyInterfacesStatus,unset,,Verifies the operational states of specified interfaces to ensure they match expected configurations.,Interfaces
+dc2-leaf1a,VerifyStormControlDrops,unset,,Verifies there are no interface storm-control drop counters.,Interfaces
 dc2-leaf1a,VerifyMlagStatus,unset,,Verifies the health status of the MLAG configuration.,MLAG
 dc2-leaf1a,VerifyRoutingProtocolModel,unset,,Verifies the configured routing protocol model.,Routing
 dc2-leaf1a,VerifyRoutingTableEntry,unset,,Verifies that the provided routes are present in the routing table of a specified VRF.,Routing
 dc2-leaf1a,VerifyAPIHttpsSSL,unset,,Verifies if the eAPI has a valid SSL profile.,Security
+dc2-leaf1a,VerifyEOSExtensions,unset,,Verifies that all EOS extensions installed on the device are enabled for boot persistence.,Software
+dc2-leaf1a,VerifyEOSVersion,unset,,Verifies the EOS version of the device.,Software
+dc2-leaf1a,VerifyTerminAttrVersion,unset,,Verifies the TerminAttr version of the device.,Software
 dc2-leaf1a,VerifyNTP,unset,,Verifies if NTP is synchronised.,System
 dc2-leaf1a,VerifyReloadCause,unset,,Verifies the last reload cause of the device.,System
 dc2-leaf1b,VerifyBGPPeerMPCaps,unset,,Verifies the multiprotocol capabilities of BGP peers.,BGP
@@ -204,11 +300,19 @@ dc2-leaf1b,VerifyEnvironmentSystemCooling,unset,,Verifies the device's system co
 dc2-leaf1b,VerifyTemperature,unset,,Verifies if the device temperature is within acceptable limits.,Hardware
 dc2-leaf1b,VerifyTransceiversManufacturers,unset,,Verifies if all the transceivers come from approved manufacturers.,Hardware
 dc2-leaf1b,VerifyTransceiversTemperature,unset,,Verifies if all the transceivers are operating at an acceptable temperature.,Hardware
+dc2-leaf1b,VerifyInterfaceDiscards,unset,,Verifies that the interfaces packet discard counters are equal to zero.,Interfaces
+dc2-leaf1b,VerifyInterfaceErrDisabled,unset,,Verifies there are no interfaces in the errdisabled state.,Interfaces
+dc2-leaf1b,VerifyInterfaceErrors,unset,,Verifies that the interfaces error counters are equal to zero.,Interfaces
+dc2-leaf1b,VerifyInterfaceUtilization,unset,,Verifies that the utilization of interfaces is below a certain threshold.,Interfaces
 dc2-leaf1b,VerifyInterfacesStatus,unset,,Verifies the operational states of specified interfaces to ensure they match expected configurations.,Interfaces
+dc2-leaf1b,VerifyStormControlDrops,unset,,Verifies there are no interface storm-control drop counters.,Interfaces
 dc2-leaf1b,VerifyMlagStatus,unset,,Verifies the health status of the MLAG configuration.,MLAG
 dc2-leaf1b,VerifyRoutingProtocolModel,unset,,Verifies the configured routing protocol model.,Routing
 dc2-leaf1b,VerifyRoutingTableEntry,unset,,Verifies that the provided routes are present in the routing table of a specified VRF.,Routing
 dc2-leaf1b,VerifyAPIHttpsSSL,unset,,Verifies if the eAPI has a valid SSL profile.,Security
+dc2-leaf1b,VerifyEOSExtensions,unset,,Verifies that all EOS extensions installed on the device are enabled for boot persistence.,Software
+dc2-leaf1b,VerifyEOSVersion,unset,,Verifies the EOS version of the device.,Software
+dc2-leaf1b,VerifyTerminAttrVersion,unset,,Verifies the TerminAttr version of the device.,Software
 dc2-leaf1b,VerifyNTP,unset,,Verifies if NTP is synchronised.,System
 dc2-leaf1b,VerifyReloadCause,unset,,Verifies the last reload cause of the device.,System
 dc2-leaf1c,VerifyLLDPNeighbors,unset,,Verifies the connection status of the specified LLDP (Link Layer Discovery Protocol) neighbors.,Connectivity
@@ -218,9 +322,17 @@ dc2-leaf1c,VerifyEnvironmentSystemCooling,unset,,Verifies the device's system co
 dc2-leaf1c,VerifyTemperature,unset,,Verifies if the device temperature is within acceptable limits.,Hardware
 dc2-leaf1c,VerifyTransceiversManufacturers,unset,,Verifies if all the transceivers come from approved manufacturers.,Hardware
 dc2-leaf1c,VerifyTransceiversTemperature,unset,,Verifies if all the transceivers are operating at an acceptable temperature.,Hardware
+dc2-leaf1c,VerifyInterfaceDiscards,unset,,Verifies that the interfaces packet discard counters are equal to zero.,Interfaces
+dc2-leaf1c,VerifyInterfaceErrDisabled,unset,,Verifies there are no interfaces in the errdisabled state.,Interfaces
+dc2-leaf1c,VerifyInterfaceErrors,unset,,Verifies that the interfaces error counters are equal to zero.,Interfaces
+dc2-leaf1c,VerifyInterfaceUtilization,unset,,Verifies that the utilization of interfaces is below a certain threshold.,Interfaces
 dc2-leaf1c,VerifyInterfacesStatus,unset,,Verifies the operational states of specified interfaces to ensure they match expected configurations.,Interfaces
+dc2-leaf1c,VerifyStormControlDrops,unset,,Verifies there are no interface storm-control drop counters.,Interfaces
 dc2-leaf1c,VerifyRoutingProtocolModel,unset,,Verifies the configured routing protocol model.,Routing
 dc2-leaf1c,VerifyAPIHttpsSSL,unset,,Verifies if the eAPI has a valid SSL profile.,Security
+dc2-leaf1c,VerifyEOSExtensions,unset,,Verifies that all EOS extensions installed on the device are enabled for boot persistence.,Software
+dc2-leaf1c,VerifyEOSVersion,unset,,Verifies the EOS version of the device.,Software
+dc2-leaf1c,VerifyTerminAttrVersion,unset,,Verifies the TerminAttr version of the device.,Software
 dc2-leaf1c,VerifyNTP,unset,,Verifies if NTP is synchronised.,System
 dc2-leaf1c,VerifyReloadCause,unset,,Verifies the last reload cause of the device.,System
 dc2-leaf2a,VerifyBGPPeerMPCaps,unset,,Verifies the multiprotocol capabilities of BGP peers.,BGP
@@ -233,11 +345,19 @@ dc2-leaf2a,VerifyEnvironmentSystemCooling,unset,,Verifies the device's system co
 dc2-leaf2a,VerifyTemperature,unset,,Verifies if the device temperature is within acceptable limits.,Hardware
 dc2-leaf2a,VerifyTransceiversManufacturers,unset,,Verifies if all the transceivers come from approved manufacturers.,Hardware
 dc2-leaf2a,VerifyTransceiversTemperature,unset,,Verifies if all the transceivers are operating at an acceptable temperature.,Hardware
+dc2-leaf2a,VerifyInterfaceDiscards,unset,,Verifies that the interfaces packet discard counters are equal to zero.,Interfaces
+dc2-leaf2a,VerifyInterfaceErrDisabled,unset,,Verifies there are no interfaces in the errdisabled state.,Interfaces
+dc2-leaf2a,VerifyInterfaceErrors,unset,,Verifies that the interfaces error counters are equal to zero.,Interfaces
+dc2-leaf2a,VerifyInterfaceUtilization,unset,,Verifies that the utilization of interfaces is below a certain threshold.,Interfaces
 dc2-leaf2a,VerifyInterfacesStatus,unset,,Verifies the operational states of specified interfaces to ensure they match expected configurations.,Interfaces
+dc2-leaf2a,VerifyStormControlDrops,unset,,Verifies there are no interface storm-control drop counters.,Interfaces
 dc2-leaf2a,VerifyMlagStatus,unset,,Verifies the health status of the MLAG configuration.,MLAG
 dc2-leaf2a,VerifyRoutingProtocolModel,unset,,Verifies the configured routing protocol model.,Routing
 dc2-leaf2a,VerifyRoutingTableEntry,unset,,Verifies that the provided routes are present in the routing table of a specified VRF.,Routing
 dc2-leaf2a,VerifyAPIHttpsSSL,unset,,Verifies if the eAPI has a valid SSL profile.,Security
+dc2-leaf2a,VerifyEOSExtensions,unset,,Verifies that all EOS extensions installed on the device are enabled for boot persistence.,Software
+dc2-leaf2a,VerifyEOSVersion,unset,,Verifies the EOS version of the device.,Software
+dc2-leaf2a,VerifyTerminAttrVersion,unset,,Verifies the TerminAttr version of the device.,Software
 dc2-leaf2a,VerifyNTP,unset,,Verifies if NTP is synchronised.,System
 dc2-leaf2a,VerifyReloadCause,unset,,Verifies the last reload cause of the device.,System
 dc2-leaf2b,VerifyBGPPeerMPCaps,unset,,Verifies the multiprotocol capabilities of BGP peers.,BGP
@@ -250,11 +370,19 @@ dc2-leaf2b,VerifyEnvironmentSystemCooling,unset,,Verifies the device's system co
 dc2-leaf2b,VerifyTemperature,unset,,Verifies if the device temperature is within acceptable limits.,Hardware
 dc2-leaf2b,VerifyTransceiversManufacturers,unset,,Verifies if all the transceivers come from approved manufacturers.,Hardware
 dc2-leaf2b,VerifyTransceiversTemperature,unset,,Verifies if all the transceivers are operating at an acceptable temperature.,Hardware
+dc2-leaf2b,VerifyInterfaceDiscards,unset,,Verifies that the interfaces packet discard counters are equal to zero.,Interfaces
+dc2-leaf2b,VerifyInterfaceErrDisabled,unset,,Verifies there are no interfaces in the errdisabled state.,Interfaces
+dc2-leaf2b,VerifyInterfaceErrors,unset,,Verifies that the interfaces error counters are equal to zero.,Interfaces
+dc2-leaf2b,VerifyInterfaceUtilization,unset,,Verifies that the utilization of interfaces is below a certain threshold.,Interfaces
 dc2-leaf2b,VerifyInterfacesStatus,unset,,Verifies the operational states of specified interfaces to ensure they match expected configurations.,Interfaces
+dc2-leaf2b,VerifyStormControlDrops,unset,,Verifies there are no interface storm-control drop counters.,Interfaces
 dc2-leaf2b,VerifyMlagStatus,unset,,Verifies the health status of the MLAG configuration.,MLAG
 dc2-leaf2b,VerifyRoutingProtocolModel,unset,,Verifies the configured routing protocol model.,Routing
 dc2-leaf2b,VerifyRoutingTableEntry,unset,,Verifies that the provided routes are present in the routing table of a specified VRF.,Routing
 dc2-leaf2b,VerifyAPIHttpsSSL,unset,,Verifies if the eAPI has a valid SSL profile.,Security
+dc2-leaf2b,VerifyEOSExtensions,unset,,Verifies that all EOS extensions installed on the device are enabled for boot persistence.,Software
+dc2-leaf2b,VerifyEOSVersion,unset,,Verifies the EOS version of the device.,Software
+dc2-leaf2b,VerifyTerminAttrVersion,unset,,Verifies the TerminAttr version of the device.,Software
 dc2-leaf2b,VerifyNTP,unset,,Verifies if NTP is synchronised.,System
 dc2-leaf2b,VerifyReloadCause,unset,,Verifies the last reload cause of the device.,System
 dc2-leaf2c,VerifyLLDPNeighbors,unset,,Verifies the connection status of the specified LLDP (Link Layer Discovery Protocol) neighbors.,Connectivity
@@ -264,9 +392,17 @@ dc2-leaf2c,VerifyEnvironmentSystemCooling,unset,,Verifies the device's system co
 dc2-leaf2c,VerifyTemperature,unset,,Verifies if the device temperature is within acceptable limits.,Hardware
 dc2-leaf2c,VerifyTransceiversManufacturers,unset,,Verifies if all the transceivers come from approved manufacturers.,Hardware
 dc2-leaf2c,VerifyTransceiversTemperature,unset,,Verifies if all the transceivers are operating at an acceptable temperature.,Hardware
+dc2-leaf2c,VerifyInterfaceDiscards,unset,,Verifies that the interfaces packet discard counters are equal to zero.,Interfaces
+dc2-leaf2c,VerifyInterfaceErrDisabled,unset,,Verifies there are no interfaces in the errdisabled state.,Interfaces
+dc2-leaf2c,VerifyInterfaceErrors,unset,,Verifies that the interfaces error counters are equal to zero.,Interfaces
+dc2-leaf2c,VerifyInterfaceUtilization,unset,,Verifies that the utilization of interfaces is below a certain threshold.,Interfaces
 dc2-leaf2c,VerifyInterfacesStatus,unset,,Verifies the operational states of specified interfaces to ensure they match expected configurations.,Interfaces
+dc2-leaf2c,VerifyStormControlDrops,unset,,Verifies there are no interface storm-control drop counters.,Interfaces
 dc2-leaf2c,VerifyRoutingProtocolModel,unset,,Verifies the configured routing protocol model.,Routing
 dc2-leaf2c,VerifyAPIHttpsSSL,unset,,Verifies if the eAPI has a valid SSL profile.,Security
+dc2-leaf2c,VerifyEOSExtensions,unset,,Verifies that all EOS extensions installed on the device are enabled for boot persistence.,Software
+dc2-leaf2c,VerifyEOSVersion,unset,,Verifies the EOS version of the device.,Software
+dc2-leaf2c,VerifyTerminAttrVersion,unset,,Verifies the TerminAttr version of the device.,Software
 dc2-leaf2c,VerifyNTP,unset,,Verifies if NTP is synchronised.,System
 dc2-leaf2c,VerifyReloadCause,unset,,Verifies the last reload cause of the device.,System
 dc2-leaf3a.arista.com,VerifyBGPPeerMPCaps,unset,,Verifies the multiprotocol capabilities of BGP peers.,BGP
@@ -279,11 +415,19 @@ dc2-leaf3a.arista.com,VerifyEnvironmentSystemCooling,unset,,Verifies the device'
 dc2-leaf3a.arista.com,VerifyTemperature,unset,,Verifies if the device temperature is within acceptable limits.,Hardware
 dc2-leaf3a.arista.com,VerifyTransceiversManufacturers,unset,,Verifies if all the transceivers come from approved manufacturers.,Hardware
 dc2-leaf3a.arista.com,VerifyTransceiversTemperature,unset,,Verifies if all the transceivers are operating at an acceptable temperature.,Hardware
+dc2-leaf3a.arista.com,VerifyInterfaceDiscards,unset,,Verifies that the interfaces packet discard counters are equal to zero.,Interfaces
+dc2-leaf3a.arista.com,VerifyInterfaceErrDisabled,unset,,Verifies there are no interfaces in the errdisabled state.,Interfaces
+dc2-leaf3a.arista.com,VerifyInterfaceErrors,unset,,Verifies that the interfaces error counters are equal to zero.,Interfaces
+dc2-leaf3a.arista.com,VerifyInterfaceUtilization,unset,,Verifies that the utilization of interfaces is below a certain threshold.,Interfaces
 dc2-leaf3a.arista.com,VerifyInterfacesStatus,unset,,Verifies the operational states of specified interfaces to ensure they match expected configurations.,Interfaces
+dc2-leaf3a.arista.com,VerifyStormControlDrops,unset,,Verifies there are no interface storm-control drop counters.,Interfaces
 dc2-leaf3a.arista.com,VerifyMlagStatus,unset,,Verifies the health status of the MLAG configuration.,MLAG
 dc2-leaf3a.arista.com,VerifyRoutingProtocolModel,unset,,Verifies the configured routing protocol model.,Routing
 dc2-leaf3a.arista.com,VerifyRoutingTableEntry,unset,,Verifies that the provided routes are present in the routing table of a specified VRF.,Routing
 dc2-leaf3a.arista.com,VerifyAPIHttpsSSL,unset,,Verifies if the eAPI has a valid SSL profile.,Security
+dc2-leaf3a.arista.com,VerifyEOSExtensions,unset,,Verifies that all EOS extensions installed on the device are enabled for boot persistence.,Software
+dc2-leaf3a.arista.com,VerifyEOSVersion,unset,,Verifies the EOS version of the device.,Software
+dc2-leaf3a.arista.com,VerifyTerminAttrVersion,unset,,Verifies the TerminAttr version of the device.,Software
 dc2-leaf3a.arista.com,VerifyNTP,unset,,Verifies if NTP is synchronised.,System
 dc2-leaf3a.arista.com,VerifyReloadCause,unset,,Verifies the last reload cause of the device.,System
 dc2-leaf3b.arista.com,VerifyBGPPeerMPCaps,unset,,Verifies the multiprotocol capabilities of BGP peers.,BGP
@@ -296,11 +440,19 @@ dc2-leaf3b.arista.com,VerifyEnvironmentSystemCooling,unset,,Verifies the device'
 dc2-leaf3b.arista.com,VerifyTemperature,unset,,Verifies if the device temperature is within acceptable limits.,Hardware
 dc2-leaf3b.arista.com,VerifyTransceiversManufacturers,unset,,Verifies if all the transceivers come from approved manufacturers.,Hardware
 dc2-leaf3b.arista.com,VerifyTransceiversTemperature,unset,,Verifies if all the transceivers are operating at an acceptable temperature.,Hardware
+dc2-leaf3b.arista.com,VerifyInterfaceDiscards,unset,,Verifies that the interfaces packet discard counters are equal to zero.,Interfaces
+dc2-leaf3b.arista.com,VerifyInterfaceErrDisabled,unset,,Verifies there are no interfaces in the errdisabled state.,Interfaces
+dc2-leaf3b.arista.com,VerifyInterfaceErrors,unset,,Verifies that the interfaces error counters are equal to zero.,Interfaces
+dc2-leaf3b.arista.com,VerifyInterfaceUtilization,unset,,Verifies that the utilization of interfaces is below a certain threshold.,Interfaces
 dc2-leaf3b.arista.com,VerifyInterfacesStatus,unset,,Verifies the operational states of specified interfaces to ensure they match expected configurations.,Interfaces
+dc2-leaf3b.arista.com,VerifyStormControlDrops,unset,,Verifies there are no interface storm-control drop counters.,Interfaces
 dc2-leaf3b.arista.com,VerifyMlagStatus,unset,,Verifies the health status of the MLAG configuration.,MLAG
 dc2-leaf3b.arista.com,VerifyRoutingProtocolModel,unset,,Verifies the configured routing protocol model.,Routing
 dc2-leaf3b.arista.com,VerifyRoutingTableEntry,unset,,Verifies that the provided routes are present in the routing table of a specified VRF.,Routing
 dc2-leaf3b.arista.com,VerifyAPIHttpsSSL,unset,,Verifies if the eAPI has a valid SSL profile.,Security
+dc2-leaf3b.arista.com,VerifyEOSExtensions,unset,,Verifies that all EOS extensions installed on the device are enabled for boot persistence.,Software
+dc2-leaf3b.arista.com,VerifyEOSVersion,unset,,Verifies the EOS version of the device.,Software
+dc2-leaf3b.arista.com,VerifyTerminAttrVersion,unset,,Verifies the TerminAttr version of the device.,Software
 dc2-leaf3b.arista.com,VerifyNTP,unset,,Verifies if NTP is synchronised.,System
 dc2-leaf3b.arista.com,VerifyReloadCause,unset,,Verifies the last reload cause of the device.,System
 dc2-spine1,VerifyBGPPeerMPCaps,unset,,Verifies the multiprotocol capabilities of BGP peers.,BGP
@@ -313,9 +465,17 @@ dc2-spine1,VerifyEnvironmentSystemCooling,unset,,Verifies the device's system co
 dc2-spine1,VerifyTemperature,unset,,Verifies if the device temperature is within acceptable limits.,Hardware
 dc2-spine1,VerifyTransceiversManufacturers,unset,,Verifies if all the transceivers come from approved manufacturers.,Hardware
 dc2-spine1,VerifyTransceiversTemperature,unset,,Verifies if all the transceivers are operating at an acceptable temperature.,Hardware
+dc2-spine1,VerifyInterfaceDiscards,unset,,Verifies that the interfaces packet discard counters are equal to zero.,Interfaces
+dc2-spine1,VerifyInterfaceErrDisabled,unset,,Verifies there are no interfaces in the errdisabled state.,Interfaces
+dc2-spine1,VerifyInterfaceErrors,unset,,Verifies that the interfaces error counters are equal to zero.,Interfaces
+dc2-spine1,VerifyInterfaceUtilization,unset,,Verifies that the utilization of interfaces is below a certain threshold.,Interfaces
 dc2-spine1,VerifyInterfacesStatus,unset,,Verifies the operational states of specified interfaces to ensure they match expected configurations.,Interfaces
+dc2-spine1,VerifyStormControlDrops,unset,,Verifies there are no interface storm-control drop counters.,Interfaces
 dc2-spine1,VerifyRoutingProtocolModel,unset,,Verifies the configured routing protocol model.,Routing
 dc2-spine1,VerifyAPIHttpsSSL,unset,,Verifies if the eAPI has a valid SSL profile.,Security
+dc2-spine1,VerifyEOSExtensions,unset,,Verifies that all EOS extensions installed on the device are enabled for boot persistence.,Software
+dc2-spine1,VerifyEOSVersion,unset,,Verifies the EOS version of the device.,Software
+dc2-spine1,VerifyTerminAttrVersion,unset,,Verifies the TerminAttr version of the device.,Software
 dc2-spine1,VerifyNTP,unset,,Verifies if NTP is synchronised.,System
 dc2-spine1,VerifyReloadCause,unset,,Verifies the last reload cause of the device.,System
 dc2-spine2,VerifyBGPPeerMPCaps,unset,,Verifies the multiprotocol capabilities of BGP peers.,BGP
@@ -328,8 +488,16 @@ dc2-spine2,VerifyEnvironmentSystemCooling,unset,,Verifies the device's system co
 dc2-spine2,VerifyTemperature,unset,,Verifies if the device temperature is within acceptable limits.,Hardware
 dc2-spine2,VerifyTransceiversManufacturers,unset,,Verifies if all the transceivers come from approved manufacturers.,Hardware
 dc2-spine2,VerifyTransceiversTemperature,unset,,Verifies if all the transceivers are operating at an acceptable temperature.,Hardware
+dc2-spine2,VerifyInterfaceDiscards,unset,,Verifies that the interfaces packet discard counters are equal to zero.,Interfaces
+dc2-spine2,VerifyInterfaceErrDisabled,unset,,Verifies there are no interfaces in the errdisabled state.,Interfaces
+dc2-spine2,VerifyInterfaceErrors,unset,,Verifies that the interfaces error counters are equal to zero.,Interfaces
+dc2-spine2,VerifyInterfaceUtilization,unset,,Verifies that the utilization of interfaces is below a certain threshold.,Interfaces
 dc2-spine2,VerifyInterfacesStatus,unset,,Verifies the operational states of specified interfaces to ensure they match expected configurations.,Interfaces
+dc2-spine2,VerifyStormControlDrops,unset,,Verifies there are no interface storm-control drop counters.,Interfaces
 dc2-spine2,VerifyRoutingProtocolModel,unset,,Verifies the configured routing protocol model.,Routing
 dc2-spine2,VerifyAPIHttpsSSL,unset,,Verifies if the eAPI has a valid SSL profile.,Security
+dc2-spine2,VerifyEOSExtensions,unset,,Verifies that all EOS extensions installed on the device are enabled for boot persistence.,Software
+dc2-spine2,VerifyEOSVersion,unset,,Verifies the EOS version of the device.,Software
+dc2-spine2,VerifyTerminAttrVersion,unset,,Verifies the TerminAttr version of the device.,Software
 dc2-spine2,VerifyNTP,unset,,Verifies if NTP is synchronised.,System
 dc2-spine2,VerifyReloadCause,unset,,Verifies the last reload cause of the device.,System

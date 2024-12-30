@@ -1,0 +1,14 @@
+---
+# User-defined ANTA catalog for interfaces testing
+anta.tests.interfaces:
+  - VerifyInterfaceDiscards:
+      # Verifies that the interfaces packet discard counters are equal to zero.
+  - VerifyInterfaceErrDisabled:
+      # Verifies there are no interfaces in the errdisabled state.
+  - VerifyInterfaceErrors:
+      # Verifies that the interfaces error counters are equal to zero.
+  - VerifyInterfaceUtilization:
+      # Verifies that the utilization of interfaces is below a certain threshold.
+      threshold: 70.0
+  - VerifyStormControlDrops:
+      # Verifies there are no interface storm-control drop counters.
