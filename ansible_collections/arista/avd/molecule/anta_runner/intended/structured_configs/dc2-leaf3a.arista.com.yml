@@ -80,6 +80,11 @@ ethernet_interfaces:
   ip_address: 1.1.1.1/24
   peer: dc2-leaf2b
   peer_interface: Ethernet2
+- name: Ethernet16
+  description: Test_dhcp_interface_connectivity
+  ip_address: dhcp
+  peer: dc2-leaf3b.arista.com
+  peer_interface: Ethernet16
 hostname: dc2-leaf3a.arista.com
 ip_igmp_snooping:
   globally_enabled: true

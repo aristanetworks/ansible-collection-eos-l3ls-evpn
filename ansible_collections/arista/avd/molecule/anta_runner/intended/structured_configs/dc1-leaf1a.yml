@@ -107,6 +107,19 @@ ethernet_interfaces:
     enabled: true
     mode: access
     access_vlan: 11
+- name: Ethernet33
+  description: WORKSTATION_dc1-leaf1-workstationNoLLDP_e1
+  shutdown: false
+  spanning_tree_portfast: edge
+  peer: dc1-leaf1-workstationNoLLDP
+  peer_interface: e1
+  peer_type: workstation
+  port_profile: Workstations_NoLLDP
+  validate_lldp: false
+  switchport:
+    enabled: true
+    mode: access
+    access_vlan: 11
 hostname: dc1-leaf1a
 ip_igmp_snooping:
   globally_enabled: true

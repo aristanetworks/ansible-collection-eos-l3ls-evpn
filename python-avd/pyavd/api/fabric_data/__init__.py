@@ -89,9 +89,9 @@ class FabricData:
         """
         match attr:
             case "is_vtep":
-                return self._vteps if value is True else set()
+                return self._vteps if value is True else set(self.devices) - self._vteps
             case "is_wan_router":
-                return self._wan_routers if value is True else set()
+                return self._wan_routers if value is True else set(self.devices) - self._wan_routers
             case "boundary_location":
                 if self.scope.boundary == "unlimited":
                     return set(self.devices)

@@ -46,7 +46,7 @@ class VerifyInterfacesStatusInputFactory(AntaTestInputFactory):
             if intf.validate_state is False:
                 self.logger.debug(LogMessage.INTERFACE_VALIDATION_DISABLED, caller=intf.name)
                 continue
-            status = "adminDown" if intf.shutdown or self.structured_config.interface_defaults.ethernet.shutdown else "up"
+            status = "adminDown" if intf.shutdown or (intf.shutdown is None and self.structured_config.interface_defaults.ethernet.shutdown) else "up"
             interfaces.append(InterfaceState(name=intf.name, status=status))
 
         # Add Port-Channel interfaces, considering `validate_state` knob

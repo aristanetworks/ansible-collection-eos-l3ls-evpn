@@ -258,6 +258,10 @@
             "status": "up"
           },
           {
+            "name": "Ethernet16",
+            "status": "up"
+          },
+          {
             "name": "Port-Channel3",
             "status": "up"
           },
@@ -363,6 +367,11 @@
             "port": "Ethernet15",
             "neighbor_device": "dc2-leaf2b",
             "neighbor_port": "Ethernet2"
+          },
+          {
+            "port": "Ethernet16",
+            "neighbor_device": "dc2-leaf3b.arista.com",
+            "neighbor_port": "Ethernet16"
           }
         ]
       }
@@ -569,12 +578,8 @@
           "10.255.0.3",
           "10.255.0.4",
           "10.255.0.5",
-          "10.255.1.1",
-          "10.255.1.2",
           "10.255.1.3",
           "10.255.1.5",
-          "10.255.2.1",
-          "10.255.2.2",
           "10.255.128.11",
           "10.255.128.12",
           "10.255.128.13",

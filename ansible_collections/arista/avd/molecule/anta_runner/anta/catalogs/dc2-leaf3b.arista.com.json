@@ -227,19 +227,19 @@
         "interfaces": [
           {
             "name": "Ethernet3",
-            "status": "adminDown"
+            "status": "up"
           },
           {
             "name": "Ethernet4",
-            "status": "adminDown"
+            "status": "up"
           },
           {
             "name": "Ethernet1",
-            "status": "adminDown"
+            "status": "up"
           },
           {
             "name": "Ethernet2",
-            "status": "adminDown"
+            "status": "up"
           },
           {
             "name": "Ethernet11",
@@ -494,12 +494,8 @@
           "10.255.0.3",
           "10.255.0.4",
           "10.255.0.5",
-          "10.255.1.1",
-          "10.255.1.2",
           "10.255.1.3",
           "10.255.1.5",
-          "10.255.2.1",
-          "10.255.2.2",
           "10.255.128.11",
           "10.255.128.12",
           "10.255.128.13",
