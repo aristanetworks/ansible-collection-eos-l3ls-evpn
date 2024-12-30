@@ -8,9 +8,3 @@
     - name: Generate AVD Structured Configurations and Fabric Documentation
       ansible.builtin.import_role:
         name: arista.avd.eos_designs
-    - name: Run ANTA
-      delegate_to: localhost
-      ansible.builtin.import_role:
-        name: arista.avd.anta_runner
-      vars:
-        anta_runner_dry_run: true

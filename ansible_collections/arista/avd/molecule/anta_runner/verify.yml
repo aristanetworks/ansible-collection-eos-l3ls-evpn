@@ -1,0 +1,26 @@
+---
+- name: Verify
+  hosts: FABRIC
+  gather_facts: false
+  vars:
+    root_dir: "{{ playbook_dir }}"
+  tasks:
+    - name: ANTA Regular Run
+      delegate_to: 127.0.0.1
+      ansible.builtin.import_role:
+        name: arista.avd.anta_runner
+      vars:
+        anta_runner_dry_run: true
+        anta_catalogs_dir: "{{ root_dir }}/anta/catalogs/regular_run"
+        anta_reports_dir: "{{ root_dir }}/anta/reports/regular_run"
+      run_once: true
+
+    - name: ANTA Deny BGP VRFs Run
+      delegate_to: 127.0.0.1
+      ansible.builtin.import_role:
+        name: arista.avd.anta_runner
+      vars:
+        anta_runner_dry_run: true
+        anta_catalogs_dir: "{{ root_dir }}/anta/catalogs/deny_bgp_vrfs_run"
+        anta_reports_dir: "{{ root_dir }}/anta/reports/deny_bgp_vrfs_run"
+      run_once: true

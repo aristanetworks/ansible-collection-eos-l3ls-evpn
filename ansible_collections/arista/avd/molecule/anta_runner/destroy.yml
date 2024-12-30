@@ -13,6 +13,9 @@
         path: "{{ root_dir }}/{{ item }}"
         state: absent
       with_items:
+        - documentation
+        - reports
+        - config_backup
         - intended
         - anta/catalogs
         - anta/reports

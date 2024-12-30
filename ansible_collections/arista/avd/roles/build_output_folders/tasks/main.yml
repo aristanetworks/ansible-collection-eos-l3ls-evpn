@@ -108,6 +108,25 @@
   delegate_to: localhost
   run_once: true
 
+# anta_runner directories
+
+- name: "Cleanup existing folders in {{ anta_dir_name }}, preserving {{ custom_catalogs_dir_name }}"
+  ansible.builtin.find:
+    paths: "{{ anta_dir }}"
+    file_type: directory
+    excludes: "{{ custom_catalogs_dir_name }}"
+  register: dirs_to_clean
+  delegate_to: localhost
+  run_once: true
+
+- name: "Remove found directories in {{ anta_dir_name }}"
+  ansible.builtin.file:
+    path: "{{ item.path }}"
+    state: absent
+  loop: "{{ dirs_to_clean.files }}"
+  delegate_to: localhost
+  run_once: true
+
 - name: "Create folder {{ anta_dir_name }} for ANTA"
   ansible.builtin.file:
     path: "{{ anta_dir }}"
@@ -142,7 +161,7 @@
 
 - name: "Create folder {{ anta_logs_dir_name }} for ANTA logs"
   ansible.builtin.file:
-    path: "{{ anta_reports_dir }}"
+    path: "{{ anta_logs_dir }}"
     state: directory
     mode: "0o775"
   delegate_to: localhost

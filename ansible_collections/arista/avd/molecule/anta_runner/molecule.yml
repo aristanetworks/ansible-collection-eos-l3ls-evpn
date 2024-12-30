@@ -6,6 +6,7 @@ scenario:
     - create
     - converge
     - idempotence
+    - verify
   cleanup_sequence:
     - destroy
 dependency:
