@@ -45,18 +45,18 @@ bgp_peer_groups:
 p2p_uplinks_mtu: 1500
 
 default_interfaces:
-  - types: [ spine ]
-    platforms: [ vEOS-lab ]
-    uplink_interfaces: [ Ethernet1-2 ]
-    downlink_interfaces: [ Ethernet1-8 ]
-  - types: [ l3leaf, service_leaf ]
-    platforms: [ vEOS-lab ]
-    uplink_interfaces: [ Ethernet1-8 ]
-    mlag_interfaces: [ Ethernet3-4 ]
-    downlink_interfaces: [ Ethernet8, Ethernet8 ]
-  - types: [ l2leaf ]
-    platforms: [ vEOS-lab ]
-    uplink_interfaces: [ Ethernet1-2 ]
+  - types: [spine]
+    platforms: [vEOS-lab]
+    uplink_interfaces: [Ethernet1-2]
+    downlink_interfaces: [Ethernet1-8]
+  - types: [l3leaf, service_leaf]
+    platforms: [vEOS-lab]
+    uplink_interfaces: [Ethernet1-8]
+    mlag_interfaces: [Ethernet3-4]
+    downlink_interfaces: [Ethernet8, Ethernet8]
+  - types: [l2leaf]
+    platforms: [vEOS-lab]
+    uplink_interfaces: [Ethernet1-2]
 
 l3_edge:
   p2p_links_ip_pools:
@@ -78,7 +78,6 @@ l3_edge:
       profile: DCI_profile
 
 node_type_keys:
-
   - key: spine
     type: spine
     default_evpn_role: server
