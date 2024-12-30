@@ -153,7 +153,7 @@ class VerifyReachabilityInputFactory(AntaTestInputFactory):
             if not self.is_peer_available(intf.peer, caller=intf.name) or not self.is_peer_in_boundary(intf.peer, caller=intf.name):
                 continue
 
-            if (peer_interface_ip := self.fabric_data.devices[intf.peer].ip_by_interface.get(intf.peer_interface)) is None:
+            if (peer_interface_ip := self.fabric_data.devices[intf.peer].routed_interface_ips.get(intf.peer_interface)) is None:
                 self.logger.debug(LogMessage.PEER_INTERFACE_NO_IP, caller=intf.name, peer=intf.peer, peer_interface=intf.peer_interface)
                 continue
 

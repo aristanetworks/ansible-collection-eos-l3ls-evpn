@@ -99,7 +99,7 @@ class FabricData:
             case _:
                 return {hostname for hostname, device in self.devices.items() if getattr(device, attr, None) == value}
 
-    def get_ip_index(self, index_name: str, **filters: dict) -> dict[str, IPv4Address]:
+    def get_ip_index(self, index_name: str, **filters: dict) -> dict[str, IPv4Address | list[IPv4Address]]:
         """Get an IP index for devices matching the given filters. If no filters are provided, return all IPs.
 
         Available indexes:

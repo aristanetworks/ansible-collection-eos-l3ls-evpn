@@ -56,7 +56,7 @@ class DeviceData:
     hostname: str
     dns_domain: str | None
     is_deployed: bool
-    # TODO: Individual location fields are not needed for now. Consider removing them
+    # NOTE: Individual location fields are not used for now, but can be useful for future tests
     fabric_name: str | None
     dc_name: str | None
     pod_name: str | None
@@ -64,11 +64,9 @@ class DeviceData:
     boundary_location: BoundaryLocation
     is_vtep: bool
     is_wan_router: bool
-    # TODO: Consider using strings for IP addresses to avoid conversion (slow) in the factories
     loopback0_ip: IPv4Address | None
     vtep_ip: IPv4Address | None
-    # TODO: `interface_to_ip` might be a better name
-    ip_by_interface: dict[str, IPv4Address]
+    routed_interface_ips: dict[str, IPv4Address]
 
 
 @dataclass

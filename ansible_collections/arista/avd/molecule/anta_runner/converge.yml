@@ -12,3 +12,5 @@
       delegate_to: localhost
       ansible.builtin.import_role:
         name: arista.avd.anta_runner
+      vars:
+        anta_runner_dry_run: true

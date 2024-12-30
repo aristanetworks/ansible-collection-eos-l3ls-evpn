@@ -48,13 +48,13 @@ def get_device_roles(structured_config: dict) -> tuple[bool, bool]:
     return is_vtep, is_wan_router
 
 
-def get_device_ip_by_interface(structured_config: dict) -> dict[str, IPv4Address]:
-    """Extract IP ethernet interfaces from the structured configuration."""
-    ip_by_interface = {}
+def get_device_routed_interface_ips(structured_config: dict) -> dict[str, IPv4Address]:
+    """Extract routed ethernet interface IPs from the structured configuration. Interface in DHCP mode are excluded."""
+    routed_interface_ips = {}
     for interface in get(structured_config, "ethernet_interfaces", default=[]):
         if (ip_address := get(interface, "ip_address")) is not None and ip_address != "dhcp" and get(interface, "switchport.enabled") is False:
-            ip_by_interface[interface["name"]] = ip_interface(ip_address).ip
-    return ip_by_interface
+            routed_interface_ips[interface["name"]] = ip_interface(ip_address).ip
+    return routed_interface_ips
 
 
 def dump_anta_catalog(hostname: str, catalog: AntaCatalog, catalog_dir: str) -> None:

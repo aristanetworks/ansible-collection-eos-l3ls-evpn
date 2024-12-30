@@ -19,7 +19,7 @@ from pyavd._utils import get, get_v2
 from .constants import StructuredConfigKey
 from .logs import LogMessage, TestLoggerAdapter
 from .models import BoundaryLocation, DeviceData, ExtendedDeviceData, FabricScope
-from .utils import get_device_ip_by_interface, get_device_location_metadata, get_device_roles, get_device_special_ips
+from .utils import get_device_location_metadata, get_device_roles, get_device_routed_interface_ips, get_device_special_ips
 
 if TYPE_CHECKING:
     from ipaddress import IPv4Address
@@ -106,7 +106,7 @@ def create_device_data(hostname: str, structured_config: dict, boundary: str) ->
     boundary_location = create_device_boundary_location(fabric_name, dc_name, pod_name, rack, boundary)
     is_vtep, is_wan_router = get_device_roles(structured_config)
     loopback0_ip, vtep_ip = get_device_special_ips(structured_config)
-    ip_by_interface = get_device_ip_by_interface(structured_config)
+    routed_interface_ips = get_device_routed_interface_ips(structured_config)
 
     return DeviceData(
         hostname=hostname,
@@ -121,7 +121,7 @@ def create_device_data(hostname: str, structured_config: dict, boundary: str) ->
         is_wan_router=is_wan_router,
         loopback0_ip=loopback0_ip,
         vtep_ip=vtep_ip,
-        ip_by_interface=ip_by_interface,
+        routed_interface_ips=routed_interface_ips,
     )
 
 
