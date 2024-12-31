@@ -1555,8 +1555,8 @@ management security
       cipher-list ECDHE-RSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-SHA384
    !
    ssl profile SSL_PROFILE
-      fips restrictions
       tls versions 1.1 1.2
+      fips restrictions
       certificate SSL_CERT key SSL_KEY
    !
    ssl profile test1-chain-cert
@@ -1584,8 +1584,8 @@ management security
       tls versions 1.1
    !
    ssl profile tls-versions-profile
-      fips restrictions
       tls versions 1.0 1.1
+      fips restrictions
 ```
 
 ## Prompt Device Configuration
