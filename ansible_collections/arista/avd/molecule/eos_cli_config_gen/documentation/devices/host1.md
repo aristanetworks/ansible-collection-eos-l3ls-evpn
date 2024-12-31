@@ -10826,7 +10826,7 @@ router segment-security
 | ----------------- | --------- |
 | 200 | ingress |
 
-#### Interfaces metric bandwidth
+#### Interfaces Metric Bandwidth
 
 | Interface name | Transmit Bandwidth (Mbps) | Receive Bandwidth (Mbps) |
 | -------------- | ------------------------- | ------------------------ |
