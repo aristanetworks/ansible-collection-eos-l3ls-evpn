@@ -1,176 +1,76 @@
-hostname: site1-wan1
-is_deployed: true
-router_bgp:
-  as: '65000'
-  router_id: 192.168.255.3
-  bgp:
-    default:
-      ipv4_unicast: false
-  maximum_paths:
-    paths: 16
-  redistribute:
-    connected:
-      enabled: true
-      route_map: RM-CONN-2-BGP
-  peer_groups:
-  - name: IPv4-UNDERLAY-PEERS
-    type: ipv4
-    maximum_routes: 12000
-    send_community: all
-    route_map_in: RM-BGP-UNDERLAY-PEERS-IN
-    route_map_out: RM-BGP-UNDERLAY-PEERS-OUT
-    allowas_in:
-      enabled: true
-      times: 1
-  - name: WAN-OVERLAY-PEERS
-    type: wan
-    update_source: Dps1
-    bfd: true
-    password: htm4AZe9mIQOO1uiMuGgYQ==
-    send_community: all
-    maximum_routes: 0
-    remote_as: '65000'
-    ttl_maximum_hops: 1
-    bfd_timers:
-      interval: 1000
-      min_rx: 1000
-      multiplier: 10
-  address_family_ipv4:
-    peer_groups:
-    - name: IPv4-UNDERLAY-PEERS
-      activate: true
-    - name: WAN-OVERLAY-PEERS
-      activate: false
-  neighbors:
-  - ip_address: 10.0.1.8
-    peer_group: IPv4-UNDERLAY-PEERS
-    remote_as: '65101'
-    peer: site1-border1
-    description: site1-border1_Ethernet3
-  - ip_address: 10.0.1.10
-    peer_group: IPv4-UNDERLAY-PEERS
-    remote_as: '65101'
-    peer: site1-border2
-    description: site1-border2_Ethernet3
-  - ip_address: 192.168.42.1
-    peer_group: WAN-OVERLAY-PEERS
-    peer: pf1
-    description: pf1_Dps1
-  - ip_address: 192.168.42.2
-    peer_group: WAN-OVERLAY-PEERS
-    peer: pf2
-    description: pf2_Dps1
-  - ip_address: 192.168.42.4
-    peer: site1-wan2
-    description: site1-wan2
-    remote_as: '65000'
-    update_source: Dps1
-    route_reflector_client: true
-    send_community: all
-    route_map_in: RM-WAN-HA-PEER-IN
-    route_map_out: RM-WAN-HA-PEER-OUT
-  vrfs:
-  - name: BLUE
-    router_id: 192.168.255.3
-    neighbors:
-    - ip_address: 10.0.1.8
-      peer_group: IPv4-UNDERLAY-PEERS
-      remote_as: '65101'
-      description: site1-border1_Ethernet3.100_vrf_BLUE
-    - ip_address: 10.0.1.10
-      peer_group: IPv4-UNDERLAY-PEERS
-      remote_as: '65101'
-      description: site1-border2_Ethernet3.100_vrf_BLUE
-    rd: 192.168.255.3:100
-    route_targets:
-      import:
-      - address_family: evpn
-        route_targets:
-        - 100:100
-      export:
-      - address_family: evpn
-        route_targets:
-        - 100:100
-    redistribute:
-      connected:
-        enabled: true
-  - name: RED
-    router_id: 192.168.255.3
-    neighbors:
-    - ip_address: 10.0.1.8
-      peer_group: IPv4-UNDERLAY-PEERS
-      remote_as: '65101'
-      description: site1-border1_Ethernet3.101_vrf_RED
-    - ip_address: 10.0.1.10
-      peer_group: IPv4-UNDERLAY-PEERS
-      remote_as: '65101'
-      description: site1-border2_Ethernet3.101_vrf_RED
-    rd: 192.168.255.3:101
-    route_targets:
-      import:
-      - address_family: evpn
-        route_targets:
-        - 101:101
-      export:
-      - address_family: evpn
-        route_targets:
-        - 101:101
-    redistribute:
-      connected:
-        enabled: true
-  - name: default
-    rd: 192.168.255.3:1
-    route_targets:
-      import:
-      - address_family: evpn
-        route_targets:
-        - '1:1'
-      export:
-      - address_family: evpn
-        route_targets:
-        - '1:1'
-        - route-map RM-EVPN-EXPORT-VRF-DEFAULT
-  address_family_evpn:
-    peer_groups:
-    - name: WAN-OVERLAY-PEERS
-      activate: true
-      encapsulation: path-selection
-      route_map_in: RM-EVPN-SOO-IN
-      route_map_out: RM-EVPN-SOO-OUT
-    neighbor_default:
-      next_hop_self_received_evpn_routes:
-        enable: true
-    neighbors:
-    - ip_address: 192.168.42.4
-      activate: true
-      encapsulation: path-selection
-  address_family_ipv4_sr_te:
-    peer_groups:
-    - name: WAN-OVERLAY-PEERS
-      activate: true
-  address_family_link_state:
-    peer_groups:
-    - name: WAN-OVERLAY-PEERS
-      activate: true
-    path_selection:
-      roles:
-        producer: true
-  address_family_path_selection:
-    peer_groups:
-    - name: WAN-OVERLAY-PEERS
-      activate: true
-    bgp:
-      additional_paths:
-        receive: true
-        send: any
-static_routes:
-- vrf: MGMT
-  destination_address_prefix: 0.0.0.0/0
-  gateway: 192.168.17.1
-- destination_address_prefix: 172.18.0.0/16
-  gateway: 172.18.10.1
-service_routing_protocols_model: multi-agent
-ip_routing: true
+aaa_authorization:
+  exec:
+    default: local
+aaa_root:
+  disabled: true
+agents:
+- name: KernelFib
+  environment_variables:
+  - name: KERNELFIB_PROGRAM_ALL_ECMP
+    value: '1'
+application_traffic_recognition:
+  field_sets:
+    l4_ports:
+    - name: VIDEO-PORTS
+      port_values:
+      - 4242-4244
+    - name: VOICE-PORTS
+      port_values:
+      - 666-667
+    ipv4_prefixes:
+    - name: PFX-PATHFINDERS
+      prefix_values:
+      - 192.168.42.1/32
+      - 192.168.42.2/32
+  applications:
+    ipv4_applications:
+    - name: VIDEO-APP
+      protocols:
+      - tcp
+      - udp
+      udp_dest_port_set_name: VIDEO-PORTS
+      tcp_dest_port_set_name: VIDEO-PORTS
+    - name: VOICE-APP
+      protocols:
+      - tcp
+      tcp_dest_port_set_name: VOICE-PORTS
+    - name: CRITICAL-SECRET-DATA-APP
+      dscp_ranges:
+      - '46'
+    - name: NORMAL-DATA-APP
+      dscp_ranges:
+      - af23
+    - name: NOT-SO-IMPORTANT-DATA-APP
+      dscp_ranges:
+      - '0'
+    - name: APP-CONTROL-PLANE
+      dest_prefix_set_name: PFX-PATHFINDERS
+  application_profiles:
+  - name: VIDEO
+    applications:
+    - name: VIDEO-APP
+  - name: VOICE
+    applications:
+    - name: VOICE-APP
+  - name: CRITICAL-SECRET-DATA
+    applications:
+    - name: CRITICAL-SECRET-DATA-APP
+  - name: NORMAL-DATA
+    applications:
+    - name: NORMAL-DATA-APP
+  - name: NOT-SO-IMPORTANT-DATA
+    applications:
+    - name: NOT-SO-IMPORTANT-DATA-APP
+  - name: APP-PROFILE-CONTROL-PLANE
+    applications:
+    - name: APP-CONTROL-PLANE
+as_path:
+  access_lists:
+  - name: ASPATH-WAN
+    entries:
+    - type: permit
+      match: '65000'
+config_end: true
 daemon_terminattr:
   cvaddrs:
   - www.cv-staging.corp.arista.io:443
@@ -178,20 +78,204 @@ daemon_terminattr:
     method: token-secure
     token_file: /tmp/cv-onboarding-token
   cvvrf: MGMT
-  smashexcludes: ale,flexCounter,hardware,kni,pulse,strata
-  ingestexclude: /Sysdb/cell/1/agent,/Sysdb/cell/2/agent
   disable_aaa: false
-aaa_root:
-  disabled: true
-config_end: true
+  ingestexclude: /Sysdb/cell/1/agent,/Sysdb/cell/2/agent
+  smashexcludes: ale,flexCounter,hardware,kni,pulse,strata
+dns_domain: wan.example.local
+dps_interfaces:
+- name: Dps1
+  description: DPS Interface
+  mtu: 9194
+  ip_address: 192.168.42.3/32
+  flow_tracker:
+    hardware: FLOW-TRACKER
 enable_password:
   disabled: true
-transceiver_qsfp_default_mode_4x10: false
+ethernet_interfaces:
+- name: Ethernet1
+  description: P2P_site1-border1_Ethernet3
+  shutdown: false
+  mtu: 9214
+  flow_tracker:
+    hardware: FLOW-TRACKER
+  ip_address: 10.0.1.9/31
+  peer: site1-border1
+  peer_interface: Ethernet3
+  peer_type: l3leaf
+  switchport:
+    enabled: false
+- name: Ethernet1.100
+  description: P2P_site1-border1_Ethernet3.100_VRF_BLUE
+  shutdown: false
+  mtu: 9214
+  vrf: BLUE
+  flow_tracker:
+    hardware: FLOW-TRACKER
+  encapsulation_dot1q:
+    vlan: 100
+  ip_address: 10.0.1.9/31
+  peer: site1-border1
+  peer_interface: Ethernet3.100
+  peer_type: l3leaf
+- name: Ethernet1.101
+  description: P2P_site1-border1_Ethernet3.101_VRF_RED
+  shutdown: false
+  mtu: 9214
+  vrf: RED
+  flow_tracker:
+    hardware: FLOW-TRACKER
+  encapsulation_dot1q:
+    vlan: 101
+  ip_address: 10.0.1.9/31
+  peer: site1-border1
+  peer_interface: Ethernet3.101
+  peer_type: l3leaf
+- name: Ethernet2
+  description: P2P_site1-border2_Ethernet3
+  shutdown: false
+  mtu: 9214
+  flow_tracker:
+    hardware: FLOW-TRACKER
+  ip_address: 10.0.1.11/31
+  peer: site1-border2
+  peer_interface: Ethernet3
+  peer_type: l3leaf
+  switchport:
+    enabled: false
+- name: Ethernet2.100
+  description: P2P_site1-border2_Ethernet3.100_VRF_BLUE
+  shutdown: false
+  mtu: 9214
+  vrf: BLUE
+  flow_tracker:
+    hardware: FLOW-TRACKER
+  encapsulation_dot1q:
+    vlan: 100
+  ip_address: 10.0.1.11/31
+  peer: site1-border2
+  peer_interface: Ethernet3.100
+  peer_type: l3leaf
+- name: Ethernet2.101
+  description: P2P_site1-border2_Ethernet3.101_VRF_RED
+  shutdown: false
+  mtu: 9214
+  vrf: RED
+  flow_tracker:
+    hardware: FLOW-TRACKER
+  encapsulation_dot1q:
+    vlan: 101
+  ip_address: 10.0.1.11/31
+  peer: site1-border2
+  peer_interface: Ethernet3.101
+  peer_type: l3leaf
+- name: Ethernet3
+  description: ACME-MPLS-INC_mpls-site1-wan1_mpls-cloud_Ethernet5
+  shutdown: false
+  flow_tracker:
+    hardware: FLOW-TRACKER
+  ip_address: 172.18.10.2/24
+  peer: mpls-cloud
+  peer_interface: Ethernet5
+  peer_type: l3_interface
+  switchport:
+    enabled: false
+- name: Ethernet4
+  description: REGION1-INTERNET-CORP_inet-site1-wan1_inet-cloud_Ethernet5
+  shutdown: false
+  flow_tracker:
+    hardware: FLOW-TRACKER
+  ip_address: 100.64.10.2/24
+  access_group_in: ACL-INTERNET-IN_Ethernet4
+  peer: inet-cloud
+  peer_interface: Ethernet5
+  peer_type: l3_interface
+  switchport:
+    enabled: false
+flow_tracking:
+  hardware:
+    trackers:
+    - name: FLOW-TRACKER
+      record_export:
+        on_inactive_timeout: 70000
+        on_interval: 5000
+      exporters:
+      - name: CV-TELEMETRY
+        collector:
+          host: 127.0.0.1
+        local_interface: Loopback0
+    shutdown: false
+hostname: site1-wan1
+ip_access_lists:
+- name: ACL-INTERNET-IN_Ethernet4
+  entries:
+  - sequence: 1
+    remark: 'Not for PRODUCTION: This ACL is built this way because the lab has an out-of-band interface'
+  - sequence: 10
+    action: permit
+    protocol: udp
+    source: any
+    destination: 100.64.10.2
+    destination_ports_match: eq
+    destination_ports:
+    - isakmp
+    - non500-isakmp
+  - sequence: 30
+    action: permit
+    protocol: icmp
+    source: any
+    destination: 100.64.10.2
+  - action: deny
+    protocol: ip
+    source: any
+    destination: any
+ip_extcommunity_lists:
+- name: ECL-EVPN-SOO
+  entries:
+  - type: permit
+    extcommunities: soo 192.168.255.3:101
 ip_name_servers:
 - ip_address: 192.168.17.1
   vrf: MGMT
-spanning_tree:
-  mode: none
+ip_routing: true
+ip_security:
+  ike_policies:
+  - name: DP-IKE-POLICY
+    local_id: 192.168.42.3
+  - name: CP-IKE-POLICY
+    local_id: 192.168.42.3
+  sa_policies:
+  - name: DP-SA-POLICY
+    esp:
+      encryption: aes256gcm128
+    pfs_dh_group: 14
+  - name: CP-SA-POLICY
+    esp:
+      encryption: aes256gcm128
+    pfs_dh_group: 14
+  profiles:
+  - name: DP-PROFILE
+    ike_policy: DP-IKE-POLICY
+    sa_policy: DP-SA-POLICY
+    connection: start
+    shared_key: 141600021F102B
+    dpd:
+      interval: 10
+      time: 50
+      action: clear
+    mode: transport
+  - name: CP-PROFILE
+    ike_policy: CP-IKE-POLICY
+    sa_policy: CP-SA-POLICY
+    connection: start
+    shared_key: 045A190F1C354D
+    dpd:
+      interval: 10
+      time: 50
+      action: clear
+    mode: transport
+  key_controller:
+    profile: DP-PROFILE
+is_deployed: true
 local_users:
 - name: ansible
   privilege: 15
@@ -205,149 +289,115 @@ local_users:
   privilege: 15
   role: network-admin
   sha512_password: $6$a7LdQWHxWzYHpvVt$n62q.1mbm4kzQ5oBr0lhXCE9ntnTn.SNa16DovZHahFQLH.iPcPMZa5JUSFtncrDW4EDQ3oSWgP8G0S4FtOFx1
-vrfs:
-- name: MGMT
-  ip_routing: false
-- name: BLUE
-  tenant: WAN-EXAMPLE-TENANT
-  ip_routing: true
-- name: RED
-  tenant: WAN-EXAMPLE-TENANT
-  ip_routing: true
+loopback_interfaces:
+- name: Loopback0
+  description: ROUTER_ID
+  shutdown: false
+  ip_address: 192.168.255.3/32
+management_api_http:
+  enable_https: true
+  enable_vrfs:
+  - name: MGMT
 management_interfaces:
 - name: Management1
   description: OOB_MANAGEMENT
   shutdown: false
   vrf: MGMT
   ip_address: 192.168.17.12/24
-  gateway: 192.168.17.1
   type: oob
+  gateway: 192.168.17.1
   lldp:
     transmit: false
     receive: false
-management_api_http:
-  enable_vrfs:
-  - name: MGMT
-  enable_https: true
+management_security:
+  ssl_profiles:
+  - name: STUN-DTLS
+    tls_versions: '1.2'
+    trust_certificate:
+      certificates:
+      - aristaDeviceCertProvisionerDefaultRootCA.crt
+    certificate:
+      file: STUN-DTLS.crt
+      key: STUN-DTLS.key
+metadata:
+  cv_tags:
+    device_tags:
+    - name: Role
+      value: transit region
+    - name: Region
+      value: REGION1
+    - name: Zone
+      value: REGION1-ZONE
+    - name: Site
+      value: SITE1
+    interface_tags:
+    - interface: Ethernet1
+      tags:
+      - name: Type
+        value: lan
+    - interface: Ethernet1.100
+      tags:
+      - name: Type
+        value: lan
+    - interface: Ethernet1.101
+      tags:
+      - name: Type
+        value: lan
+    - interface: Ethernet2
+      tags:
+      - name: Type
+        value: lan
+    - interface: Ethernet2.100
+      tags:
+      - name: Type
+        value: lan
+    - interface: Ethernet2.101
+      tags:
+      - name: Type
+        value: lan
+    - interface: Ethernet3
+      tags:
+      - name: Type
+        value: wan
+      - name: Carrier
+        value: ACME-MPLS-INC
+      - name: Circuit
+        value: mpls-site1-wan1
+    - interface: Ethernet4
+      tags:
+      - name: Type
+        value: wan
+      - name: Carrier
+        value: REGION1-INTERNET-CORP
+      - name: Circuit
+        value: inet-site1-wan1
+  cv_pathfinder:
+    role: transit region
+    region: REGION1
+    zone: REGION1-ZONE
+    site: SITE1
+    vtep_ip: 192.168.42.3
+    ssl_profile: STUN-DTLS
+    pathfinders:
+    - vtep_ip: 192.168.42.1
+    - vtep_ip: 192.168.42.2
+    interfaces:
+    - name: Ethernet3
+      carrier: ACME-MPLS-INC
+      circuit_id: mpls-site1-wan1
+      pathgroup: MPLS
+    - name: Ethernet4
+      carrier: REGION1-INTERNET-CORP
+      circuit_id: inet-site1-wan1
+      pathgroup: INTERNET
 ntp:
   local_interface:
     name: Management1
     vrf: MGMT
   servers:
   - name: 0.pool.ntp.org
-    vrf: MGMT
     preferred: true
-ethernet_interfaces:
-- name: Ethernet1
-  peer: site1-border1
-  peer_interface: Ethernet3
-  peer_type: l3leaf
-  description: P2P_site1-border1_Ethernet3
-  shutdown: false
-  mtu: 9214
-  switchport:
-    enabled: false
-  flow_tracker:
-    hardware: FLOW-TRACKER
-  ip_address: 10.0.1.9/31
-- name: Ethernet1.100
-  peer: site1-border1
-  peer_interface: Ethernet3.100
-  peer_type: l3leaf
-  vrf: BLUE
-  description: P2P_site1-border1_Ethernet3.100_VRF_BLUE
-  shutdown: false
-  encapsulation_dot1q:
-    vlan: 100
-  flow_tracker:
-    hardware: FLOW-TRACKER
-  mtu: 9214
-  ip_address: 10.0.1.9/31
-- name: Ethernet1.101
-  peer: site1-border1
-  peer_interface: Ethernet3.101
-  peer_type: l3leaf
-  vrf: RED
-  description: P2P_site1-border1_Ethernet3.101_VRF_RED
-  shutdown: false
-  encapsulation_dot1q:
-    vlan: 101
-  flow_tracker:
-    hardware: FLOW-TRACKER
-  mtu: 9214
-  ip_address: 10.0.1.9/31
-- name: Ethernet2
-  peer: site1-border2
-  peer_interface: Ethernet3
-  peer_type: l3leaf
-  description: P2P_site1-border2_Ethernet3
-  shutdown: false
-  mtu: 9214
-  switchport:
-    enabled: false
-  flow_tracker:
-    hardware: FLOW-TRACKER
-  ip_address: 10.0.1.11/31
-- name: Ethernet2.100
-  peer: site1-border2
-  peer_interface: Ethernet3.100
-  peer_type: l3leaf
-  vrf: BLUE
-  description: P2P_site1-border2_Ethernet3.100_VRF_BLUE
-  shutdown: false
-  encapsulation_dot1q:
-    vlan: 100
-  flow_tracker:
-    hardware: FLOW-TRACKER
-  mtu: 9214
-  ip_address: 10.0.1.11/31
-- name: Ethernet2.101
-  peer: site1-border2
-  peer_interface: Ethernet3.101
-  peer_type: l3leaf
-  vrf: RED
-  description: P2P_site1-border2_Ethernet3.101_VRF_RED
-  shutdown: false
-  encapsulation_dot1q:
-    vlan: 101
-  flow_tracker:
-    hardware: FLOW-TRACKER
-  mtu: 9214
-  ip_address: 10.0.1.11/31
-- name: Ethernet3
-  peer_type: l3_interface
-  peer: mpls-cloud
-  peer_interface: Ethernet5
-  ip_address: 172.18.10.2/24
-  shutdown: false
-  switchport:
-    enabled: false
-  description: ACME-MPLS-INC_mpls-site1-wan1_mpls-cloud_Ethernet5
-  flow_tracker:
-    hardware: FLOW-TRACKER
-- name: Ethernet4
-  peer_type: l3_interface
-  peer: inet-cloud
-  peer_interface: Ethernet5
-  ip_address: 100.64.10.2/24
-  shutdown: false
-  switchport:
-    enabled: false
-  description: REGION1-INTERNET-CORP_inet-site1-wan1_inet-cloud_Ethernet5
-  access_group_in: ACL-INTERNET-IN_Ethernet4
-  flow_tracker:
-    hardware: FLOW-TRACKER
-loopback_interfaces:
-- name: Loopback0
-  description: ROUTER_ID
-  shutdown: false
-  ip_address: 192.168.255.3/32
-as_path:
-  access_lists:
-  - name: ASPATH-WAN
-    entries:
-    - type: permit
-      match: '65000'
+    vrf: MGMT
 prefix_lists:
 - name: PL-LOOPBACKS-EVPN-OVERLAY
   sequence_numbers:
@@ -448,87 +498,6 @@ route_maps:
     type: permit
     match:
     - extcommunity ECL-EVPN-SOO
-agents:
-- name: KernelFib
-  environment_variables:
-  - name: KERNELFIB_PROGRAM_ALL_ECMP
-    value: '1'
-ip_access_lists:
-- name: ACL-INTERNET-IN_Ethernet4
-  entries:
-  - sequence: 1
-    remark: 'Not for PRODUCTION: This ACL is built this way because the lab has an out-of-band interface'
-  - source: any
-    destination: 100.64.10.2
-    sequence: 10
-    action: permit
-    protocol: udp
-    destination_ports_match: eq
-    destination_ports:
-    - isakmp
-    - non500-isakmp
-  - source: any
-    destination: 100.64.10.2
-    sequence: 30
-    action: permit
-    protocol: icmp
-  - source: any
-    destination: any
-    action: deny
-    protocol: ip
-ip_extcommunity_lists:
-- name: ECL-EVPN-SOO
-  entries:
-  - type: permit
-    extcommunities: soo 192.168.255.3:101
-ip_security:
-  ike_policies:
-  - name: DP-IKE-POLICY
-    local_id: 192.168.42.3
-  - name: CP-IKE-POLICY
-    local_id: 192.168.42.3
-  sa_policies:
-  - name: DP-SA-POLICY
-    esp:
-      encryption: aes256gcm128
-    pfs_dh_group: 14
-  - name: CP-SA-POLICY
-    esp:
-      encryption: aes256gcm128
-    pfs_dh_group: 14
-  profiles:
-  - name: DP-PROFILE
-    ike_policy: DP-IKE-POLICY
-    sa_policy: DP-SA-POLICY
-    connection: start
-    shared_key: 141600021F102B
-    dpd:
-      interval: 10
-      time: 50
-      action: clear
-    mode: transport
-  - name: CP-PROFILE
-    ike_policy: CP-IKE-POLICY
-    sa_policy: CP-SA-POLICY
-    connection: start
-    shared_key: 045A190F1C354D
-    dpd:
-      interval: 10
-      time: 50
-      action: clear
-    mode: transport
-  key_controller:
-    profile: DP-PROFILE
-management_security:
-  ssl_profiles:
-  - name: STUN-DTLS
-    certificate:
-      file: STUN-DTLS.crt
-      key: STUN-DTLS.key
-    trust_certificate:
-      certificates:
-      - aristaDeviceCertProvisionerDefaultRootCA.crt
-    tls_versions: '1.2'
 router_adaptive_virtual_topology:
   topology_role: transit region
   region:
@@ -557,6 +526,30 @@ router_adaptive_virtual_topology:
     load_balance_policy: LB-DEFAULT-POLICY-CONTROL-PLANE
   - name: DEFAULT-POLICY-DEFAULT
     load_balance_policy: LB-DEFAULT-POLICY-DEFAULT
+  policies:
+  - name: BLUE-POLICY
+    matches:
+    - application_profile: VIDEO
+      avt_profile: BLUE-POLICY-VIDEO
+    - application_profile: VOICE
+      avt_profile: BLUE-POLICY-VOICE
+      dscp: 46
+    - application_profile: default
+      avt_profile: BLUE-POLICY-DEFAULT
+  - name: RED-POLICY
+    matches:
+    - application_profile: CRITICAL-SECRET-DATA
+      avt_profile: RED-POLICY-CRITICAL-SECRET-DATA
+    - application_profile: NORMAL-DATA
+      avt_profile: RED-POLICY-NORMAL-DATA
+    - application_profile: NOT-SO-IMPORTANT-DATA
+      avt_profile: RED-POLICY-NOT-SO-IMPORTANT-DATA
+  - name: DEFAULT-POLICY-WITH-CP
+    matches:
+    - application_profile: APP-PROFILE-CONTROL-PLANE
+      avt_profile: DEFAULT-POLICY-CONTROL-PLANE
+    - application_profile: default
+      avt_profile: DEFAULT-POLICY-DEFAULT
   vrfs:
   - name: BLUE
     policy: BLUE-POLICY
@@ -583,41 +576,179 @@ router_adaptive_virtual_topology:
       id: 254
     - name: DEFAULT-POLICY-DEFAULT
       id: 1
-  policies:
-  - name: BLUE-POLICY
-    matches:
-    - application_profile: VIDEO
-      avt_profile: BLUE-POLICY-VIDEO
-    - application_profile: VOICE
-      avt_profile: BLUE-POLICY-VOICE
-      dscp: 46
-    - application_profile: default
-      avt_profile: BLUE-POLICY-DEFAULT
-  - name: RED-POLICY
-    matches:
-    - application_profile: CRITICAL-SECRET-DATA
-      avt_profile: RED-POLICY-CRITICAL-SECRET-DATA
-    - application_profile: NORMAL-DATA
-      avt_profile: RED-POLICY-NORMAL-DATA
-    - application_profile: NOT-SO-IMPORTANT-DATA
-      avt_profile: RED-POLICY-NOT-SO-IMPORTANT-DATA
-  - name: DEFAULT-POLICY-WITH-CP
-    matches:
-    - application_profile: APP-PROFILE-CONTROL-PLANE
-      avt_profile: DEFAULT-POLICY-CONTROL-PLANE
-    - application_profile: default
-      avt_profile: DEFAULT-POLICY-DEFAULT
 router_bfd:
   multihop:
     interval: 300
     min_rx: 300
     multiplier: 3
+router_bgp:
+  as: '65000'
+  router_id: 192.168.255.3
+  maximum_paths:
+    paths: 16
+  bgp:
+    default:
+      ipv4_unicast: false
+  peer_groups:
+  - name: IPv4-UNDERLAY-PEERS
+    type: ipv4
+    send_community: all
+    maximum_routes: 12000
+    allowas_in:
+      enabled: true
+      times: 1
+    route_map_in: RM-BGP-UNDERLAY-PEERS-IN
+    route_map_out: RM-BGP-UNDERLAY-PEERS-OUT
+  - name: WAN-OVERLAY-PEERS
+    type: wan
+    remote_as: '65000'
+    update_source: Dps1
+    bfd: true
+    bfd_timers:
+      interval: 1000
+      min_rx: 1000
+      multiplier: 10
+    password: htm4AZe9mIQOO1uiMuGgYQ==
+    send_community: all
+    maximum_routes: 0
+    ttl_maximum_hops: 1
+  neighbors:
+  - ip_address: 10.0.1.8
+    peer_group: IPv4-UNDERLAY-PEERS
+    remote_as: '65101'
+    peer: site1-border1
+    description: site1-border1_Ethernet3
+  - ip_address: 10.0.1.10
+    peer_group: IPv4-UNDERLAY-PEERS
+    remote_as: '65101'
+    peer: site1-border2
+    description: site1-border2_Ethernet3
+  - ip_address: 192.168.42.1
+    peer_group: WAN-OVERLAY-PEERS
+    peer: pf1
+    description: pf1_Dps1
+  - ip_address: 192.168.42.2
+    peer_group: WAN-OVERLAY-PEERS
+    peer: pf2
+    description: pf2_Dps1
+  - ip_address: 192.168.42.4
+    remote_as: '65000'
+    peer: site1-wan2
+    description: site1-wan2
+    route_reflector_client: true
+    update_source: Dps1
+    route_map_in: RM-WAN-HA-PEER-IN
+    route_map_out: RM-WAN-HA-PEER-OUT
+    send_community: all
+  redistribute:
+    connected:
+      enabled: true
+      route_map: RM-CONN-2-BGP
+  address_family_evpn:
+    neighbor_default:
+      next_hop_self_received_evpn_routes:
+        enable: true
+    neighbors:
+    - ip_address: 192.168.42.4
+      activate: true
+      encapsulation: path-selection
+    peer_groups:
+    - name: WAN-OVERLAY-PEERS
+      activate: true
+      route_map_in: RM-EVPN-SOO-IN
+      route_map_out: RM-EVPN-SOO-OUT
+      encapsulation: path-selection
+  address_family_ipv4:
+    peer_groups:
+    - name: IPv4-UNDERLAY-PEERS
+      activate: true
+    - name: WAN-OVERLAY-PEERS
+      activate: false
+  address_family_ipv4_sr_te:
+    peer_groups:
+    - name: WAN-OVERLAY-PEERS
+      activate: true
+  address_family_link_state:
+    peer_groups:
+    - name: WAN-OVERLAY-PEERS
+      activate: true
+    path_selection:
+      roles:
+        producer: true
+  address_family_path_selection:
+    bgp:
+      additional_paths:
+        receive: true
+        send: any
+    peer_groups:
+    - name: WAN-OVERLAY-PEERS
+      activate: true
+  vrfs:
+  - name: BLUE
+    rd: 192.168.255.3:100
+    route_targets:
+      import:
+      - address_family: evpn
+        route_targets:
+        - 100:100
+      export:
+      - address_family: evpn
+        route_targets:
+        - 100:100
+    router_id: 192.168.255.3
+    neighbors:
+    - ip_address: 10.0.1.8
+      peer_group: IPv4-UNDERLAY-PEERS
+      remote_as: '65101'
+      description: site1-border1_Ethernet3.100_vrf_BLUE
+    - ip_address: 10.0.1.10
+      peer_group: IPv4-UNDERLAY-PEERS
+      remote_as: '65101'
+      description: site1-border2_Ethernet3.100_vrf_BLUE
+    redistribute:
+      connected:
+        enabled: true
+  - name: RED
+    rd: 192.168.255.3:101
+    route_targets:
+      import:
+      - address_family: evpn
+        route_targets:
+        - 101:101
+      export:
+      - address_family: evpn
+        route_targets:
+        - 101:101
+    router_id: 192.168.255.3
+    neighbors:
+    - ip_address: 10.0.1.8
+      peer_group: IPv4-UNDERLAY-PEERS
+      remote_as: '65101'
+      description: site1-border1_Ethernet3.101_vrf_RED
+    - ip_address: 10.0.1.10
+      peer_group: IPv4-UNDERLAY-PEERS
+      remote_as: '65101'
+      description: site1-border2_Ethernet3.101_vrf_RED
+    redistribute:
+      connected:
+        enabled: true
+  - name: default
+    rd: 192.168.255.3:1
+    route_targets:
+      import:
+      - address_family: evpn
+        route_targets:
+        - '1:1'
+      export:
+      - address_family: evpn
+        route_targets:
+        - '1:1'
+        - route-map RM-EVPN-EXPORT-VRF-DEFAULT
 router_path_selection:
-  tcp_mss_ceiling:
-    ipv4_segment_size: auto
   path_groups:
   - name: MPLS
     id: 101
+    ipsec_profile: CP-PROFILE
     local_interfaces:
     - name: Ethernet3
       stun:
@@ -635,9 +766,9 @@ router_path_selection:
       name: pf2
       ipv4_addresses:
       - 172.18.200.2
-    ipsec_profile: CP-PROFILE
   - name: INTERNET
     id: 102
+    ipsec_profile: CP-PROFILE
     local_interfaces:
     - name: Ethernet4
       stun:
@@ -655,9 +786,9 @@ router_path_selection:
       name: pf2
       ipv4_addresses:
       - 100.64.200.2
-    ipsec_profile: CP-PROFILE
   - name: LAN_HA
     id: 65535
+    ipsec_profile: DP-PROFILE
     flow_assignment: lan
     local_interfaces:
     - name: Ethernet1
@@ -668,7 +799,6 @@ router_path_selection:
       ipv4_addresses:
       - 10.0.1.13
       - 10.0.1.15
-    ipsec_profile: DP-PROFILE
   load_balance_policies:
   - name: LB-BLUE-POLICY-VIDEO
     path_groups:
@@ -677,15 +807,15 @@ router_path_selection:
       priority: 2
     - name: LAN_HA
   - name: LB-BLUE-POLICY-VOICE
+    lowest_hop_count: true
+    jitter: 30
+    latency: 150
+    loss_rate: '1'
     path_groups:
     - name: MPLS
     - name: INTERNET
       priority: 2
     - name: LAN_HA
-    jitter: 30
-    latency: 150
-    loss_rate: '1'
-    lowest_hop_count: true
   - name: LB-BLUE-POLICY-DEFAULT
     path_groups:
     - name: INTERNET
@@ -715,8 +845,19 @@ router_path_selection:
     - name: INTERNET
     - name: MPLS
     - name: LAN_HA
+  tcp_mss_ceiling:
+    ipv4_segment_size: auto
 router_traffic_engineering:
   enabled: true
+service_routing_protocols_model: multi-agent
+spanning_tree:
+  mode: none
+static_routes:
+- vrf: MGMT
+  destination_address_prefix: 0.0.0.0/0
+  gateway: 192.168.17.1
+- destination_address_prefix: 172.18.0.0/16
+  gateway: 172.18.10.1
 stun:
   client:
     server_profiles:
@@ -732,75 +873,22 @@ stun:
     - name: INTERNET-pf2-Ethernet2
       ip_address: 100.64.200.2
       ssl_profile: STUN-DTLS
-application_traffic_recognition:
-  application_profiles:
-  - name: VIDEO
-    applications:
-    - name: VIDEO-APP
-  - name: VOICE
-    applications:
-    - name: VOICE-APP
-  - name: CRITICAL-SECRET-DATA
-    applications:
-    - name: CRITICAL-SECRET-DATA-APP
-  - name: NORMAL-DATA
-    applications:
-    - name: NORMAL-DATA-APP
-  - name: NOT-SO-IMPORTANT-DATA
-    applications:
-    - name: NOT-SO-IMPORTANT-DATA-APP
-  - name: APP-PROFILE-CONTROL-PLANE
-    applications:
-    - name: APP-CONTROL-PLANE
-  applications:
-    ipv4_applications:
-    - name: VIDEO-APP
-      protocols:
-      - tcp
-      - udp
-      udp_dest_port_set_name: VIDEO-PORTS
-      tcp_dest_port_set_name: VIDEO-PORTS
-    - name: VOICE-APP
-      protocols:
-      - tcp
-      tcp_dest_port_set_name: VOICE-PORTS
-    - name: CRITICAL-SECRET-DATA-APP
-      dscp_ranges:
-      - '46'
-    - name: NORMAL-DATA-APP
-      dscp_ranges:
-      - af23
-    - name: NOT-SO-IMPORTANT-DATA-APP
-      dscp_ranges:
-      - '0'
-    - name: APP-CONTROL-PLANE
-      dest_prefix_set_name: PFX-PATHFINDERS
-  field_sets:
-    l4_ports:
-    - name: VIDEO-PORTS
-      port_values:
-      - 4242-4244
-    - name: VOICE-PORTS
-      port_values:
-      - 666-667
-    ipv4_prefixes:
-    - name: PFX-PATHFINDERS
-      prefix_values:
-      - 192.168.42.1/32
-      - 192.168.42.2/32
-dps_interfaces:
-- name: Dps1
-  description: DPS Interface
-  mtu: 9194
-  ip_address: 192.168.42.3/32
-  flow_tracker:
-    hardware: FLOW-TRACKER
+transceiver_qsfp_default_mode_4x10: false
+vrfs:
+- name: MGMT
+  ip_routing: false
+- name: BLUE
+  ip_routing: true
+  tenant: WAN-EXAMPLE-TENANT
+- name: RED
+  ip_routing: true
+  tenant: WAN-EXAMPLE-TENANT
 vxlan_interface:
   vxlan1:
     description: site1-wan1_VTEP
     vxlan:
-      udp_port: 4789
       source_interface: Dps1
+      udp_port: 4789
       vrfs:
       - name: BLUE
         vni: 100
@@ -808,91 +896,3 @@ vxlan_interface:
         vni: 101
       - name: default
         vni: 1
-flow_tracking:
-  hardware:
-    trackers:
-    - name: FLOW-TRACKER
-      record_export:
-        on_inactive_timeout: 70000
-        on_interval: 5000
-      exporters:
-      - name: CV-TELEMETRY
-        collector:
-          host: 127.0.0.1
-        local_interface: Loopback0
-    shutdown: false
-metadata:
-  cv_tags:
-    device_tags:
-    - name: Role
-      value: transit region
-    - name: Region
-      value: REGION1
-    - name: Zone
-      value: REGION1-ZONE
-    - name: Site
-      value: SITE1
-    interface_tags:
-    - interface: Ethernet1
-      tags:
-      - name: Type
-        value: lan
-    - interface: Ethernet1.100
-      tags:
-      - name: Type
-        value: lan
-    - interface: Ethernet1.101
-      tags:
-      - name: Type
-        value: lan
-    - interface: Ethernet2
-      tags:
-      - name: Type
-        value: lan
-    - interface: Ethernet2.100
-      tags:
-      - name: Type
-        value: lan
-    - interface: Ethernet2.101
-      tags:
-      - name: Type
-        value: lan
-    - interface: Ethernet3
-      tags:
-      - name: Type
-        value: wan
-      - name: Carrier
-        value: ACME-MPLS-INC
-      - name: Circuit
-        value: mpls-site1-wan1
-    - interface: Ethernet4
-      tags:
-      - name: Type
-        value: wan
-      - name: Carrier
-        value: REGION1-INTERNET-CORP
-      - name: Circuit
-        value: inet-site1-wan1
-  cv_pathfinder:
-    role: transit region
-    ssl_profile: STUN-DTLS
-    vtep_ip: 192.168.42.3
-    region: REGION1
-    zone: REGION1-ZONE
-    site: SITE1
-    interfaces:
-    - name: Ethernet3
-      carrier: ACME-MPLS-INC
-      circuit_id: mpls-site1-wan1
-      pathgroup: MPLS
-    - name: Ethernet4
-      carrier: REGION1-INTERNET-CORP
-      circuit_id: inet-site1-wan1
-      pathgroup: INTERNET
-    pathfinders:
-    - vtep_ip: 192.168.42.1
-    - vtep_ip: 192.168.42.2
-dns_domain: wan.example.local
-aaa_authorization:
-  exec:
-    default: local

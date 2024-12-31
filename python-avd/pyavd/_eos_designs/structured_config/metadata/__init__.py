@@ -5,14 +5,14 @@ from __future__ import annotations
 
 from functools import cached_property
 
-from pyavd._eos_designs.avdfacts import AvdFacts
+from pyavd._eos_designs.structured_config.structured_config_generator import StructuredConfigGenerator
 from pyavd._utils import strip_empties_from_dict
 
 from .cv_pathfinder import CvPathfinderMixin
 from .cv_tags import CvTagsMixin
 
 
-class AvdStructuredConfigMetadata(AvdFacts, CvTagsMixin, CvPathfinderMixin):
+class AvdStructuredConfigMetadata(StructuredConfigGenerator, CvTagsMixin, CvPathfinderMixin):
     """
     This returns the metadata data structure as per the below example.
 

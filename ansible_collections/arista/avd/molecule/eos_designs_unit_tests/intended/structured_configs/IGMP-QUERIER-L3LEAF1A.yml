@@ -1,88 +1,176 @@
+aaa_root:
+  disabled: true
+config_end: true
+enable_password:
+  disabled: true
+ethernet_interfaces:
+- name: Ethernet1
+  description: L2_IGMP-QUERIER-L2LEAF1A_Ethernet1
+  shutdown: false
+  channel_group:
+    id: 1
+    mode: active
+  peer: IGMP-QUERIER-L2LEAF1A
+  peer_interface: Ethernet1
+  peer_type: l2leaf
 hostname: IGMP-QUERIER-L3LEAF1A
+ip_igmp_snooping:
+  globally_enabled: true
+  vlans:
+  - id: 1
+    querier:
+      enabled: true
+      address: 192.168.255.1
+  - id: 2
+    querier:
+      enabled: true
+      address: 192.168.255.1
+      version: 3
+  - id: 3
+    querier:
+      enabled: false
+  - id: 101
+    querier:
+      enabled: true
+      address: 192.168.255.1
+  - id: 102
+    querier:
+      enabled: true
+      address: 192.168.255.1
+      version: 3
+  - id: 103
+    querier:
+      enabled: false
+  - id: 11
+    querier:
+      enabled: true
+      address: 1.1.1.1
+      version: 3
+  - id: 12
+    querier:
+      enabled: true
+      address: 1.1.1.1
+      version: 2
+  - id: 111
+    querier:
+      enabled: true
+      address: 1.1.1.1
+      version: 3
+  - id: 112
+    querier:
+      enabled: true
+      address: 1.1.1.1
+      version: 2
+  - id: 113
+    querier:
+      enabled: false
+  - id: 21
+    querier:
+      enabled: true
+      address: 192.168.255.1
+  - id: 22
+    querier:
+      enabled: true
+      address: 1.1.1.1
+      version: 3
+  - id: 23
+    querier:
+      enabled: true
+      address: 2.2.2.2
+      version: 1
+  - id: 121
+    querier:
+      enabled: true
+      address: 2.2.2.2
+      version: 1
+  - id: 122
+    querier:
+      enabled: true
+      address: 192.168.255.1
+  - id: 123
+    querier:
+      enabled: false
+ip_routing: true
+ip_virtual_router_mac_address: 00:dc:00:00:00:0a
 is_deployed: true
+loopback_interfaces:
+- name: Loopback0
+  description: ROUTER_ID
+  shutdown: false
+  ip_address: 192.168.255.1/32
+- name: Loopback1
+  description: VXLAN_TUNNEL_SOURCE
+  shutdown: false
+  ip_address: 192.168.254.1/32
+management_api_http:
+  enable_https: true
+  enable_vrfs:
+  - name: MGMT
+management_interfaces:
+- name: Management1
+  description: OOB_MANAGEMENT
+  shutdown: false
+  vrf: MGMT
+  ip_address: 192.168.200.101/24
+  type: oob
+  gateway: 192.168.200.5
+metadata:
+  platform: vEOS-LAB
+port_channel_interfaces:
+- name: Port-Channel1
+  description: L2_IGMP-QUERIER-L2LEAF1A_Port-Channel1
+  shutdown: false
+  switchport:
+    enabled: true
+    mode: trunk
+    trunk:
+      allowed_vlan: 1-3,11-12,21-23,101-103,111-113,121-123
+prefix_lists:
+- name: PL-LOOPBACKS-EVPN-OVERLAY
+  sequence_numbers:
+  - sequence: 10
+    action: permit 192.168.255.0/24 eq 32
+  - sequence: 20
+    action: permit 192.168.254.0/24 eq 32
+route_maps:
+- name: RM-CONN-2-BGP
+  sequence_numbers:
+  - sequence: 10
+    type: permit
+    match:
+    - ip address prefix-list PL-LOOPBACKS-EVPN-OVERLAY
+router_bfd:
+  multihop:
+    interval: 300
+    min_rx: 300
+    multiplier: 3
 router_bgp:
   as: '65101'
   router_id: 192.168.255.1
-  bgp:
-    default:
-      ipv4_unicast: false
   maximum_paths:
     paths: 4
     ecmp: 4
-  redistribute:
-    connected:
-      enabled: true
-      route_map: RM-CONN-2-BGP
   updates:
     wait_install: true
+  bgp:
+    default:
+      ipv4_unicast: false
   peer_groups:
   - name: IPv4-UNDERLAY-PEERS
     type: ipv4
-    maximum_routes: 12000
     send_community: all
+    maximum_routes: 12000
   - name: EVPN-OVERLAY-PEERS
     type: evpn
     update_source: Loopback0
     bfd: true
+    ebgp_multihop: 3
     send_community: all
     maximum_routes: 0
-    ebgp_multihop: 3
-  address_family_ipv4:
-    peer_groups:
-    - name: IPv4-UNDERLAY-PEERS
-      activate: true
-    - name: EVPN-OVERLAY-PEERS
-      activate: false
-  address_family_evpn:
-    peer_groups:
-    - name: EVPN-OVERLAY-PEERS
-      activate: true
-  vrfs:
-  - name: IGMP_QUERIER_TEST_1
-    rd: 192.168.255.1:11
-    route_targets:
-      import:
-      - address_family: evpn
-        route_targets:
-        - '11:11'
-      export:
-      - address_family: evpn
-        route_targets:
-        - '11:11'
-    router_id: 192.168.255.1
-    redistribute:
-      connected:
-        enabled: true
-  - name: IGMP_QUERIER_TEST_2
-    rd: 192.168.255.1:21
-    route_targets:
-      import:
-      - address_family: evpn
-        route_targets:
-        - '21:21'
-      export:
-      - address_family: evpn
-        route_targets:
-        - '21:21'
-    router_id: 192.168.255.1
-    redistribute:
-      connected:
-        enabled: true
-  - name: IGMP_QUERIER_TEST_3
-    rd: 192.168.255.1:41
-    route_targets:
-      import:
-      - address_family: evpn
-        route_targets:
-        - '41:41'
-      export:
-      - address_family: evpn
-        route_targets:
-        - '41:41'
-    router_id: 192.168.255.1
-    redistribute:
-      connected:
-        enabled: true
+  redistribute:
+    connected:
+      enabled: true
+      route_map: RM-CONN-2-BGP
   vlans:
   - id: 1
     tenant: Tenant_A
@@ -220,97 +308,138 @@ router_bgp:
       - 40123:40123
     redistribute_routes:
     - learned
+  address_family_evpn:
+    peer_groups:
+    - name: EVPN-OVERLAY-PEERS
+      activate: true
+  address_family_ipv4:
+    peer_groups:
+    - name: IPv4-UNDERLAY-PEERS
+      activate: true
+    - name: EVPN-OVERLAY-PEERS
+      activate: false
+  vrfs:
+  - name: IGMP_QUERIER_TEST_1
+    rd: 192.168.255.1:11
+    route_targets:
+      import:
+      - address_family: evpn
+        route_targets:
+        - '11:11'
+      export:
+      - address_family: evpn
+        route_targets:
+        - '11:11'
+    router_id: 192.168.255.1
+    redistribute:
+      connected:
+        enabled: true
+  - name: IGMP_QUERIER_TEST_2
+    rd: 192.168.255.1:21
+    route_targets:
+      import:
+      - address_family: evpn
+        route_targets:
+        - '21:21'
+      export:
+      - address_family: evpn
+        route_targets:
+        - '21:21'
+    router_id: 192.168.255.1
+    redistribute:
+      connected:
+        enabled: true
+  - name: IGMP_QUERIER_TEST_3
+    rd: 192.168.255.1:41
+    route_targets:
+      import:
+      - address_family: evpn
+        route_targets:
+        - '41:41'
+      export:
+      - address_family: evpn
+        route_targets:
+        - '41:41'
+    router_id: 192.168.255.1
+    redistribute:
+      connected:
+        enabled: true
+service_routing_protocols_model: multi-agent
 static_routes:
 - vrf: MGMT
   destination_address_prefix: 0.0.0.0/0
   gateway: 192.168.200.5
-service_routing_protocols_model: multi-agent
-ip_routing: true
+transceiver_qsfp_default_mode_4x10: true
+vlan_interfaces:
+- name: Vlan1
+  description: VLAN_1
+  shutdown: false
+  vrf: IGMP_QUERIER_TEST_1
+  ip_address_virtual: 10.0.1.1/24
+  tenant: Tenant_A
+  tags:
+  - test_l3
+- name: Vlan2
+  description: VLAN_2
+  shutdown: false
+  vrf: IGMP_QUERIER_TEST_1
+  ip_address_virtual: 10.0.2.1/24
+  tenant: Tenant_A
+  tags:
+  - test_l3
+- name: Vlan3
+  description: VLAN_3
+  shutdown: false
+  vrf: IGMP_QUERIER_TEST_1
+  ip_address_virtual: 10.0.3.1/24
+  tenant: Tenant_A
+  tags:
+  - test_l3
+- name: Vlan11
+  description: VLAN_11
+  shutdown: false
+  vrf: IGMP_QUERIER_TEST_2
+  ip_address_virtual: 10.0.11.1/24
+  tenant: Tenant_B
+  tags:
+  - test_l3
+- name: Vlan12
+  description: VLAN_12
+  shutdown: false
+  vrf: IGMP_QUERIER_TEST_2
+  ip_address_virtual: 10.0.12.1/24
+  tenant: Tenant_B
+  tags:
+  - test_l3
+- name: Vlan21
+  description: VLAN_21
+  shutdown: false
+  vrf: IGMP_QUERIER_TEST_3
+  ip_address_virtual: 10.0.21.1/24
+  tenant: Tenant_D
+  tags:
+  - test_l3
+- name: Vlan22
+  description: VLAN_22
+  shutdown: false
+  vrf: IGMP_QUERIER_TEST_3
+  ip_address_virtual: 10.0.22.1/24
+  tenant: Tenant_D
+  tags:
+  - test_l3
+- name: Vlan23
+  description: VLAN_23
+  shutdown: false
+  vrf: IGMP_QUERIER_TEST_3
+  ip_address_virtual: 10.0.23.1/24
+  tenant: Tenant_D
+  tags:
+  - test_l3
 vlan_internal_order:
   allocation: ascending
   range:
     beginning: 1006
     ending: 1199
-aaa_root:
-  disabled: true
-config_end: true
-enable_password:
-  disabled: true
-transceiver_qsfp_default_mode_4x10: true
-vrfs:
-- name: MGMT
-  ip_routing: false
-- name: IGMP_QUERIER_TEST_1
-  tenant: Tenant_A
-  ip_routing: true
-  description: IGMP_QUERIER_TEST_1
-- name: IGMP_QUERIER_TEST_2
-  tenant: Tenant_B
-  ip_routing: true
-  description: IGMP_QUERIER_TEST_2
-- name: IGMP_QUERIER_TEST_3
-  tenant: Tenant_D
-  ip_routing: true
-  description: IGMP_QUERIER_TEST_3
-management_interfaces:
-- name: Management1
-  description: OOB_MANAGEMENT
-  shutdown: false
-  vrf: MGMT
-  ip_address: 192.168.200.101/24
-  gateway: 192.168.200.5
-  type: oob
-management_api_http:
-  enable_vrfs:
-  - name: MGMT
-  enable_https: true
-ethernet_interfaces:
-- name: Ethernet1
-  peer: IGMP-QUERIER-L2LEAF1A
-  peer_interface: Ethernet1
-  peer_type: l2leaf
-  description: L2_IGMP-QUERIER-L2LEAF1A_Ethernet1
-  shutdown: false
-  channel_group:
-    id: 1
-    mode: active
-port_channel_interfaces:
-- name: Port-Channel1
-  description: L2_IGMP-QUERIER-L2LEAF1A_Port-Channel1
-  switchport:
-    enabled: true
-    mode: trunk
-    trunk:
-      allowed_vlan: 1-3,11-12,21-23,101-103,111-113,121-123
-  shutdown: false
-loopback_interfaces:
-- name: Loopback0
-  description: ROUTER_ID
-  shutdown: false
-  ip_address: 192.168.255.1/32
-- name: Loopback1
-  description: VXLAN_TUNNEL_SOURCE
-  shutdown: false
-  ip_address: 192.168.254.1/32
-prefix_lists:
-- name: PL-LOOPBACKS-EVPN-OVERLAY
-  sequence_numbers:
-  - sequence: 10
-    action: permit 192.168.255.0/24 eq 32
-  - sequence: 20
-    action: permit 192.168.254.0/24 eq 32
-route_maps:
-- name: RM-CONN-2-BGP
-  sequence_numbers:
-  - sequence: 10
-    type: permit
-    match:
-    - ip address prefix-list PL-LOOPBACKS-EVPN-OVERLAY
-router_bfd:
-  multihop:
-    interval: 300
-    min_rx: 300
-    multiplier: 3
 vlans:
 - id: 1
   name: VLAN_1
@@ -363,154 +492,27 @@ vlans:
 - id: 123
   name: VLAN_123
   tenant: Tenant_D
-ip_igmp_snooping:
-  globally_enabled: true
-  vlans:
-  - id: 1
-    querier:
-      enabled: true
-      address: 192.168.255.1
-  - id: 2
-    querier:
-      enabled: true
-      address: 192.168.255.1
-      version: 3
-  - id: 3
-    querier:
-      enabled: false
-  - id: 101
-    querier:
-      enabled: true
-      address: 192.168.255.1
-  - id: 102
-    querier:
-      enabled: true
-      address: 192.168.255.1
-      version: 3
-  - id: 103
-    querier:
-      enabled: false
-  - id: 11
-    querier:
-      enabled: true
-      address: 1.1.1.1
-      version: 3
-  - id: 12
-    querier:
-      enabled: true
-      address: 1.1.1.1
-      version: 2
-  - id: 111
-    querier:
-      enabled: true
-      address: 1.1.1.1
-      version: 3
-  - id: 112
-    querier:
-      enabled: true
-      address: 1.1.1.1
-      version: 2
-  - id: 113
-    querier:
-      enabled: false
-  - id: 21
-    querier:
-      enabled: true
-      address: 192.168.255.1
-  - id: 22
-    querier:
-      enabled: true
-      address: 1.1.1.1
-      version: 3
-  - id: 23
-    querier:
-      enabled: true
-      address: 2.2.2.2
-      version: 1
-  - id: 121
-    querier:
-      enabled: true
-      address: 2.2.2.2
-      version: 1
-  - id: 122
-    querier:
-      enabled: true
-      address: 192.168.255.1
-  - id: 123
-    querier:
-      enabled: false
-ip_virtual_router_mac_address: 00:dc:00:00:00:0a
-vlan_interfaces:
-- name: Vlan1
+vrfs:
+- name: MGMT
+  ip_routing: false
+- name: IGMP_QUERIER_TEST_1
+  description: IGMP_QUERIER_TEST_1
+  ip_routing: true
   tenant: Tenant_A
-  tags:
-  - test_l3
-  description: VLAN_1
-  shutdown: false
-  ip_address_virtual: 10.0.1.1/24
-  vrf: IGMP_QUERIER_TEST_1
-- name: Vlan2
-  tenant: Tenant_A
-  tags:
-  - test_l3
-  description: VLAN_2
-  shutdown: false
-  ip_address_virtual: 10.0.2.1/24
-  vrf: IGMP_QUERIER_TEST_1
-- name: Vlan3
-  tenant: Tenant_A
-  tags:
-  - test_l3
-  description: VLAN_3
-  shutdown: false
-  ip_address_virtual: 10.0.3.1/24
-  vrf: IGMP_QUERIER_TEST_1
-- name: Vlan11
+- name: IGMP_QUERIER_TEST_2
+  description: IGMP_QUERIER_TEST_2
+  ip_routing: true
   tenant: Tenant_B
-  tags:
-  - test_l3
-  description: VLAN_11
-  shutdown: false
-  ip_address_virtual: 10.0.11.1/24
-  vrf: IGMP_QUERIER_TEST_2
-- name: Vlan12
-  tenant: Tenant_B
-  tags:
-  - test_l3
-  description: VLAN_12
-  shutdown: false
-  ip_address_virtual: 10.0.12.1/24
-  vrf: IGMP_QUERIER_TEST_2
-- name: Vlan21
+- name: IGMP_QUERIER_TEST_3
+  description: IGMP_QUERIER_TEST_3
+  ip_routing: true
   tenant: Tenant_D
-  tags:
-  - test_l3
-  description: VLAN_21
-  shutdown: false
-  ip_address_virtual: 10.0.21.1/24
-  vrf: IGMP_QUERIER_TEST_3
-- name: Vlan22
-  tenant: Tenant_D
-  tags:
-  - test_l3
-  description: VLAN_22
-  shutdown: false
-  ip_address_virtual: 10.0.22.1/24
-  vrf: IGMP_QUERIER_TEST_3
-- name: Vlan23
-  tenant: Tenant_D
-  tags:
-  - test_l3
-  description: VLAN_23
-  shutdown: false
-  ip_address_virtual: 10.0.23.1/24
-  vrf: IGMP_QUERIER_TEST_3
 vxlan_interface:
   vxlan1:
     description: IGMP-QUERIER-L3LEAF1A_VTEP
     vxlan:
-      udp_port: 4789
       source_interface: Loopback1
+      udp_port: 4789
       vlans:
       - id: 1
         vni: 10001
@@ -553,5 +555,3 @@ vxlan_interface:
         vni: 21
       - name: IGMP_QUERIER_TEST_3
         vni: 41
-metadata:
-  platform: vEOS-LAB

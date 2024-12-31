@@ -1,81 +1,13 @@
-hostname: bgp-peer-groups-3
-is_deployed: true
-router_bgp:
-  as: '65001'
-  router_id: 192.168.255.114
-  bgp:
-    default:
-      ipv4_unicast: false
-    bestpath:
-      d_path: true
-  maximum_paths:
-    paths: 4
-    ecmp: 4
-  updates:
-    wait_install: true
-  peer_groups:
-  - name: MPLS-OVERLAY-PEERS
-    type: mpls
-    update_source: Loopback0
-    bfd: false
-    send_community: all
-    maximum_routes: 0
-    remote_as: '65001'
-    description: Description for mpls_overlay_peers via structured_config
-  - name: IPVPN-GATEWAY-PEERS
-    type: mpls
-    update_source: Loopback0
-    bfd: false
-    send_community: all
-    maximum_routes: 0
-    description: Description for ipvpn_gateway_peers via structured_config
-  address_family_evpn:
-    neighbor_default:
-      encapsulation: mpls
-      next_hop_self_source_interface: Loopback0
-    peer_groups:
-    - name: MPLS-OVERLAY-PEERS
-      activate: true
-    domain_identifier: '65535:1'
-  address_family_ipv4:
-    peer_groups:
-    - name: MPLS-OVERLAY-PEERS
-      activate: false
-    - name: IPVPN-GATEWAY-PEERS
-      activate: false
-  address_family_vpn_ipv4:
-    neighbor_default_encapsulation_mpls_next_hop_self:
-      source_interface: Loopback0
-    peer_groups:
-    - name: IPVPN-GATEWAY-PEERS
-      activate: true
-    - name: MPLS-OVERLAY-PEERS
-      activate: true
-    domain_identifier: '65535:2'
-static_routes:
-- vrf: MGMT
-  destination_address_prefix: 0.0.0.0/0
-  gateway: 192.168.0.1
-service_routing_protocols_model: multi-agent
-ip_routing: true
-vlan_internal_order:
-  allocation: ascending
-  range:
-    beginning: 1006
-    ending: 1199
 aaa_root:
   disabled: true
 config_end: true
 enable_password:
   disabled: true
-transceiver_qsfp_default_mode_4x10: true
-vrfs:
-- name: MGMT
-  ip_routing: false
-management_api_http:
-  enable_vrfs:
-  - name: MGMT
-  enable_https: true
+hostname: bgp-peer-groups-3
+ip_igmp_snooping:
+  globally_enabled: true
+ip_routing: true
+is_deployed: true
 loopback_interfaces:
 - name: Loopback0
   description: ROUTER_ID
@@ -85,20 +17,10 @@ loopback_interfaces:
   isis_passive: true
   node_segment:
     ipv4_index: 206
-router_isis:
-  instance: CORE
-  log_adjacency_changes: true
-  net: 49.0001.1921.6825.5114.00
-  router_id: 192.168.255.114
-  is_type: level-1-2
-  address_family_ipv4:
-    enabled: true
-    maximum_paths: 4
-  advertise:
-    passive_only: false
-  segment_routing_mpls:
-    router_id: 192.168.255.114
-    enabled: true
+management_api_http:
+  enable_https: true
+  enable_vrfs:
+  - name: MGMT
 mpls:
   ip: true
 router_bfd:
@@ -106,5 +28,83 @@ router_bfd:
     interval: 300
     min_rx: 300
     multiplier: 3
-ip_igmp_snooping:
-  globally_enabled: true
+router_bgp:
+  as: '65001'
+  router_id: 192.168.255.114
+  maximum_paths:
+    paths: 4
+    ecmp: 4
+  updates:
+    wait_install: true
+  bgp:
+    default:
+      ipv4_unicast: false
+    bestpath:
+      d_path: true
+  peer_groups:
+  - name: MPLS-OVERLAY-PEERS
+    type: mpls
+    remote_as: '65001'
+    description: Description for mpls_overlay_peers via structured_config
+    update_source: Loopback0
+    bfd: false
+    send_community: all
+    maximum_routes: 0
+  - name: IPVPN-GATEWAY-PEERS
+    type: mpls
+    description: Description for ipvpn_gateway_peers via structured_config
+    update_source: Loopback0
+    bfd: false
+    send_community: all
+    maximum_routes: 0
+  address_family_evpn:
+    domain_identifier: '65535:1'
+    neighbor_default:
+      encapsulation: mpls
+      next_hop_self_source_interface: Loopback0
+    peer_groups:
+    - name: MPLS-OVERLAY-PEERS
+      activate: true
+  address_family_ipv4:
+    peer_groups:
+    - name: MPLS-OVERLAY-PEERS
+      activate: false
+    - name: IPVPN-GATEWAY-PEERS
+      activate: false
+  address_family_vpn_ipv4:
+    domain_identifier: '65535:2'
+    peer_groups:
+    - name: IPVPN-GATEWAY-PEERS
+      activate: true
+    - name: MPLS-OVERLAY-PEERS
+      activate: true
+    neighbor_default_encapsulation_mpls_next_hop_self:
+      source_interface: Loopback0
+router_isis:
+  instance: CORE
+  net: 49.0001.1921.6825.5114.00
+  router_id: 192.168.255.114
+  is_type: level-1-2
+  log_adjacency_changes: true
+  advertise:
+    passive_only: false
+  address_family_ipv4:
+    enabled: true
+    maximum_paths: 4
+  segment_routing_mpls:
+    enabled: true
+    router_id: 192.168.255.114
+service_routing_protocols_model: multi-agent
+static_routes:
+- vrf: MGMT
+  destination_address_prefix: 0.0.0.0/0
+  gateway: 192.168.0.1
+transceiver_qsfp_default_mode_4x10: true
+vlan_internal_order:
+  allocation: ascending
+  range:
+    beginning: 1006
+    ending: 1199
+vrfs:
+- name: MGMT
+  ip_routing: false

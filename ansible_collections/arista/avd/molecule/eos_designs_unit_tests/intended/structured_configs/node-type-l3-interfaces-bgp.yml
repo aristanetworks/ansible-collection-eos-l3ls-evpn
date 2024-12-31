@@ -1,49 +1,30 @@
-hostname: node-type-l3-interfaces-bgp
-is_deployed: true
-router_bgp:
-  as: '65000'
-  router_id: 192.168.255.1
-  bgp:
-    default:
-      ipv4_unicast: false
-  maximum_paths:
-    paths: 4
-    ecmp: 4
-  redistribute:
-    connected:
-      enabled: true
-  updates:
-    wait_install: true
-  neighbors:
-  - ip_address: 192.168.42.1
-    remote_as: '65042'
-    description: INTERNET
-    route_map_in: RM-BGP-192.168.42.1-IN
-    route_map_out: RM-BGP-192.168.42.1-OUT
-  address_family_ipv4:
-    neighbors:
-    - ip_address: 192.168.42.1
-      activate: true
-service_routing_protocols_model: multi-agent
-ip_routing: true
-vlan_internal_order:
-  allocation: ascending
-  range:
-    beginning: 1006
-    ending: 1199
 aaa_root:
   disabled: true
 config_end: true
 enable_password:
   disabled: true
-transceiver_qsfp_default_mode_4x10: true
-vrfs:
-- name: MGMT
-  ip_routing: false
+ethernet_interfaces:
+- name: Ethernet43
+  description: INTERNET
+  shutdown: true
+  ip_address: 192.168.42.42/24
+  peer_type: l3_interface
+  switchport:
+    enabled: false
+hostname: node-type-l3-interfaces-bgp
+ip_igmp_snooping:
+  globally_enabled: true
+ip_routing: true
+is_deployed: true
+loopback_interfaces:
+- name: Loopback0
+  description: ROUTER_ID
+  shutdown: false
+  ip_address: 192.168.255.1/32
 management_api_http:
+  enable_https: true
   enable_vrfs:
   - name: MGMT
-  enable_https: true
 prefix_lists:
 - name: ALLOW-DEFAULT
   sequence_numbers:
@@ -62,18 +43,37 @@ route_maps:
   sequence_numbers:
   - sequence: 10
     type: deny
-ethernet_interfaces:
-- name: Ethernet43
-  peer_type: l3_interface
-  ip_address: 192.168.42.42/24
-  shutdown: true
-  switchport:
-    enabled: false
-  description: INTERNET
-loopback_interfaces:
-- name: Loopback0
-  description: ROUTER_ID
-  shutdown: false
-  ip_address: 192.168.255.1/32
-ip_igmp_snooping:
-  globally_enabled: true
+router_bgp:
+  as: '65000'
+  router_id: 192.168.255.1
+  maximum_paths:
+    paths: 4
+    ecmp: 4
+  updates:
+    wait_install: true
+  bgp:
+    default:
+      ipv4_unicast: false
+  neighbors:
+  - ip_address: 192.168.42.1
+    remote_as: '65042'
+    description: INTERNET
+    route_map_in: RM-BGP-192.168.42.1-IN
+    route_map_out: RM-BGP-192.168.42.1-OUT
+  redistribute:
+    connected:
+      enabled: true
+  address_family_ipv4:
+    neighbors:
+    - ip_address: 192.168.42.1
+      activate: true
+service_routing_protocols_model: multi-agent
+transceiver_qsfp_default_mode_4x10: true
+vlan_internal_order:
+  allocation: ascending
+  range:
+    beginning: 1006
+    ending: 1199
+vrfs:
+- name: MGMT
+  ip_routing: false

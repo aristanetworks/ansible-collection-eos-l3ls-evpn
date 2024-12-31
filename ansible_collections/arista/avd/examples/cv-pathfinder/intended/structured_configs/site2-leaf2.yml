@@ -1,46 +1,230 @@
+aaa_authorization:
+  exec:
+    default: local
+aaa_root:
+  disabled: true
+config_end: true
+daemon_terminattr:
+  cvaddrs:
+  - www.cv-staging.corp.arista.io:443
+  cvauth:
+    method: token-secure
+    token_file: /tmp/cv-onboarding-token
+  cvvrf: MGMT
+  disable_aaa: false
+  ingestexclude: /Sysdb/cell/1/agent,/Sysdb/cell/2/agent
+  smashexcludes: ale,flexCounter,hardware,kni,pulse,strata
+dns_domain: wan.example.local
+enable_password:
+  disabled: true
+ethernet_interfaces:
+- name: Ethernet5
+  description: MLAG_site2-leaf1_Ethernet5
+  shutdown: false
+  channel_group:
+    id: 5
+    mode: active
+  peer: site2-leaf1
+  peer_interface: Ethernet5
+  peer_type: mlag_peer
+- name: Ethernet6
+  description: MLAG_site2-leaf1_Ethernet6
+  shutdown: false
+  channel_group:
+    id: 5
+    mode: active
+  peer: site2-leaf1
+  peer_interface: Ethernet6
+  peer_type: mlag_peer
+- name: Ethernet3
+  description: P2P_site2-wan2_Ethernet1
+  shutdown: false
+  mtu: 9214
+  flow_tracker:
+    sampled: FLOW-TRACKER
+  ip_address: 10.0.2.14/31
+  peer: site2-wan2
+  peer_interface: Ethernet1
+  peer_type: wan_router
+  switchport:
+    enabled: false
+- name: Ethernet3.100
+  description: P2P_site2-wan2_Ethernet1.100_VRF_BLUE
+  shutdown: false
+  mtu: 9214
+  vrf: BLUE
+  flow_tracker:
+    sampled: FLOW-TRACKER
+  encapsulation_dot1q:
+    vlan: 100
+  ip_address: 10.0.2.14/31
+  peer: site2-wan2
+  peer_interface: Ethernet1.100
+  peer_type: wan_router
+- name: Ethernet3.101
+  description: P2P_site2-wan2_Ethernet1.101_VRF_RED
+  shutdown: false
+  mtu: 9214
+  vrf: RED
+  flow_tracker:
+    sampled: FLOW-TRACKER
+  encapsulation_dot1q:
+    vlan: 101
+  ip_address: 10.0.2.14/31
+  peer: site2-wan2
+  peer_interface: Ethernet1.101
+  peer_type: wan_router
+flow_tracking:
+  sampled:
+    sample: 10000
+    trackers:
+    - record_export:
+        on_inactive_timeout: 70000
+        on_interval: 5000
+      name: FLOW-TRACKER
+      exporters:
+      - name: CV-TELEMETRY
+        collector:
+          host: 127.0.0.1
+        local_interface: Loopback0
+    shutdown: false
 hostname: site2-leaf2
+ip_igmp_snooping:
+  globally_enabled: true
+ip_name_servers:
+- ip_address: 192.168.17.1
+  vrf: MGMT
+ip_routing: true
 is_deployed: true
+local_users:
+- name: ansible
+  privilege: 15
+  role: network-admin
+  sha512_password: $6$7u4j1rkb3VELgcZE$EJt2Qff8kd/TapRoci0XaIZsL4tFzgq1YZBLD9c6f/knXzvcYY0NcMKndZeCv0T268knGKhOEwZAxqKjlMm920
+- name: arista
+  privilege: 15
+  role: network-admin
+  sha512_password: $6$Enl0WfE32FthwyiJ$yTyGaEJ2uPKLU.F7314YtB7J1jrzrMi7ogXIRTEHQfLdLgKWWmr1UvNlZLN6AyuxET7G5aH3AI9OYRzxVTkB1.
+- name: cvpadmin
+  privilege: 15
+  role: network-admin
+  sha512_password: $6$a7LdQWHxWzYHpvVt$n62q.1mbm4kzQ5oBr0lhXCE9ntnTn.SNa16DovZHahFQLH.iPcPMZa5JUSFtncrDW4EDQ3oSWgP8G0S4FtOFx1
+loopback_interfaces:
+- name: Loopback0
+  description: ROUTER_ID
+  shutdown: false
+  ip_address: 192.168.255.10/32
+- name: Loopback1
+  description: VXLAN_TUNNEL_SOURCE
+  shutdown: false
+  ip_address: 192.168.42.9/32
+management_api_http:
+  enable_https: true
+  enable_vrfs:
+  - name: MGMT
+management_interfaces:
+- name: Management1
+  description: OOB_MANAGEMENT
+  shutdown: false
+  vrf: MGMT
+  ip_address: 192.168.17.19/24
+  type: oob
+  gateway: 192.168.17.1
+  lldp:
+    transmit: false
+    receive: false
+mlag_configuration:
+  domain_id: SITE2
+  local_interface: Vlan4094
+  peer_address: 10.255.252.16
+  peer_link: Port-Channel5
+  reload_delay_mlag: '300'
+  reload_delay_non_mlag: '330'
+ntp:
+  local_interface:
+    name: Management1
+    vrf: MGMT
+  servers:
+  - name: 0.pool.ntp.org
+    preferred: true
+    vrf: MGMT
+port_channel_interfaces:
+- name: Port-Channel5
+  description: MLAG_site2-leaf1_Port-Channel5
+  shutdown: false
+  switchport:
+    enabled: true
+    mode: trunk
+    trunk:
+      groups:
+      - MLAG
+prefix_lists:
+- name: PL-LOOPBACKS-EVPN-OVERLAY
+  sequence_numbers:
+  - sequence: 10
+    action: permit 192.168.255.0/24 eq 32
+  - sequence: 20
+    action: permit 192.168.42.0/24 eq 32
+- name: PL-MLAG-PEER-VRFS
+  sequence_numbers:
+  - sequence: 10
+    action: permit 10.255.251.16/31
+route_maps:
+- name: RM-MLAG-PEER-IN
+  sequence_numbers:
+  - sequence: 10
+    type: permit
+    description: Make routes learned over MLAG Peer-link less preferred on spines to ensure optimal routing
+    set:
+    - origin incomplete
+- name: RM-CONN-2-BGP
+  sequence_numbers:
+  - sequence: 10
+    type: permit
+    match:
+    - ip address prefix-list PL-LOOPBACKS-EVPN-OVERLAY
+- name: RM-CONN-2-BGP-VRFS
+  sequence_numbers:
+  - sequence: 10
+    type: deny
+    match:
+    - ip address prefix-list PL-MLAG-PEER-VRFS
+  - sequence: 20
+    type: permit
+router_bfd:
+  multihop:
+    interval: 300
+    min_rx: 300
+    multiplier: 3
 router_bgp:
   as: '65102'
   router_id: 192.168.255.10
-  bgp:
-    default:
-      ipv4_unicast: false
   maximum_paths:
     paths: 4
     ecmp: 4
-  redistribute:
-    connected:
-      enabled: true
-      route_map: RM-CONN-2-BGP
+  bgp:
+    default:
+      ipv4_unicast: false
   peer_groups:
   - name: MLAG-IPv4-UNDERLAY-PEER
     type: ipv4
     remote_as: '65102'
-    next_hop_self: true
     description: site2-leaf1
-    maximum_routes: 12000
+    next_hop_self: true
     send_community: all
+    maximum_routes: 12000
     route_map_in: RM-MLAG-PEER-IN
   - name: IPv4-UNDERLAY-PEERS
     type: ipv4
-    maximum_routes: 12000
     send_community: all
+    maximum_routes: 12000
   - name: EVPN-OVERLAY-PEERS
     type: evpn
     update_source: Loopback0
     bfd: true
+    ebgp_multihop: 3
     send_community: all
     maximum_routes: 0
-    ebgp_multihop: 3
-  address_family_ipv4:
-    peer_groups:
-    - name: MLAG-IPv4-UNDERLAY-PEER
-      activate: true
-    - name: IPv4-UNDERLAY-PEERS
-      activate: true
-    - name: EVPN-OVERLAY-PEERS
-      activate: false
   neighbors:
   - ip_address: 10.255.251.16
     peer_group: MLAG-IPv4-UNDERLAY-PEER
@@ -51,59 +235,10 @@ router_bgp:
     remote_as: '65000'
     peer: site2-wan2
     description: site2-wan2_Ethernet1
-  vrfs:
-  - name: BLUE
-    router_id: 192.168.255.10
-    neighbors:
-    - ip_address: 10.0.2.15
-      peer_group: IPv4-UNDERLAY-PEERS
-      remote_as: '65000'
-      description: site2-wan2_Ethernet1.100_vrf_BLUE
-    - ip_address: 10.255.251.16
-      peer_group: MLAG-IPv4-UNDERLAY-PEER
-      description: site2-leaf1_Vlan3099
-    rd: 192.168.255.10:100
-    route_targets:
-      import:
-      - address_family: evpn
-        route_targets:
-        - 100:100
-      export:
-      - address_family: evpn
-        route_targets:
-        - 100:100
-    redistribute:
-      connected:
-        enabled: true
-        route_map: RM-CONN-2-BGP-VRFS
-  - name: RED
-    router_id: 192.168.255.10
-    neighbors:
-    - ip_address: 10.0.2.15
-      peer_group: IPv4-UNDERLAY-PEERS
-      remote_as: '65000'
-      description: site2-wan2_Ethernet1.101_vrf_RED
-    - ip_address: 10.255.251.16
-      peer_group: MLAG-IPv4-UNDERLAY-PEER
-      description: site2-leaf1_Vlan3100
-    rd: 192.168.255.10:101
-    route_targets:
-      import:
-      - address_family: evpn
-        route_targets:
-        - 101:101
-      export:
-      - address_family: evpn
-        route_targets:
-        - 101:101
-    redistribute:
-      connected:
-        enabled: true
-        route_map: RM-CONN-2-BGP-VRFS
-  address_family_evpn:
-    peer_groups:
-    - name: EVPN-OVERLAY-PEERS
-      activate: true
+  redistribute:
+    connected:
+      enabled: true
+      route_map: RM-CONN-2-BGP
   vlans:
   - id: 666
     tenant: WAN-EXAMPLE-TENANT
@@ -121,94 +256,131 @@ router_bgp:
       - 10042:10042
     redistribute_routes:
     - learned
+  address_family_evpn:
+    peer_groups:
+    - name: EVPN-OVERLAY-PEERS
+      activate: true
+  address_family_ipv4:
+    peer_groups:
+    - name: MLAG-IPv4-UNDERLAY-PEER
+      activate: true
+    - name: IPv4-UNDERLAY-PEERS
+      activate: true
+    - name: EVPN-OVERLAY-PEERS
+      activate: false
+  vrfs:
+  - name: BLUE
+    rd: 192.168.255.10:100
+    route_targets:
+      import:
+      - address_family: evpn
+        route_targets:
+        - 100:100
+      export:
+      - address_family: evpn
+        route_targets:
+        - 100:100
+    router_id: 192.168.255.10
+    neighbors:
+    - ip_address: 10.0.2.15
+      peer_group: IPv4-UNDERLAY-PEERS
+      remote_as: '65000'
+      description: site2-wan2_Ethernet1.100_vrf_BLUE
+    - ip_address: 10.255.251.16
+      peer_group: MLAG-IPv4-UNDERLAY-PEER
+      description: site2-leaf1_Vlan3099
+    redistribute:
+      connected:
+        enabled: true
+        route_map: RM-CONN-2-BGP-VRFS
+  - name: RED
+    rd: 192.168.255.10:101
+    route_targets:
+      import:
+      - address_family: evpn
+        route_targets:
+        - 101:101
+      export:
+      - address_family: evpn
+        route_targets:
+        - 101:101
+    router_id: 192.168.255.10
+    neighbors:
+    - ip_address: 10.0.2.15
+      peer_group: IPv4-UNDERLAY-PEERS
+      remote_as: '65000'
+      description: site2-wan2_Ethernet1.101_vrf_RED
+    - ip_address: 10.255.251.16
+      peer_group: MLAG-IPv4-UNDERLAY-PEER
+      description: site2-leaf1_Vlan3100
+    redistribute:
+      connected:
+        enabled: true
+        route_map: RM-CONN-2-BGP-VRFS
+service_routing_protocols_model: multi-agent
+spanning_tree:
+  no_spanning_tree_vlan: 4093-4094
 static_routes:
 - vrf: MGMT
   destination_address_prefix: 0.0.0.0/0
   gateway: 192.168.17.1
-service_routing_protocols_model: multi-agent
-ip_routing: true
-daemon_terminattr:
-  cvaddrs:
-  - www.cv-staging.corp.arista.io:443
-  cvauth:
-    method: token-secure
-    token_file: /tmp/cv-onboarding-token
-  cvvrf: MGMT
-  smashexcludes: ale,flexCounter,hardware,kni,pulse,strata
-  ingestexclude: /Sysdb/cell/1/agent,/Sysdb/cell/2/agent
-  disable_aaa: false
+transceiver_qsfp_default_mode_4x10: true
+vlan_interfaces:
+- name: Vlan4093
+  description: MLAG_L3
+  shutdown: false
+  ip_address: 10.255.251.17/31
+  mtu: 9214
+- name: Vlan4094
+  description: MLAG
+  shutdown: false
+  ip_address: 10.255.252.17/31
+  mtu: 9214
+  no_autostate: true
+- name: Vlan666
+  description: BLUE-TEST
+  shutdown: false
+  vrf: BLUE
+  ip_address: 10.66.22.1/24
+  tenant: WAN-EXAMPLE-TENANT
+- name: Vlan3099
+  description: MLAG_L3_VRF_BLUE
+  shutdown: false
+  vrf: BLUE
+  ip_address: 10.255.251.17/31
+  mtu: 9214
+  tenant: WAN-EXAMPLE-TENANT
+  type: underlay_peering
+- name: Vlan42
+  description: RED-TEST
+  shutdown: false
+  vrf: RED
+  ip_address: 10.42.22.1/24
+  tenant: WAN-EXAMPLE-TENANT
+- name: Vlan3100
+  description: MLAG_L3_VRF_RED
+  shutdown: false
+  vrf: RED
+  ip_address: 10.255.251.17/31
+  mtu: 9214
+  tenant: WAN-EXAMPLE-TENANT
+  type: underlay_peering
 vlan_internal_order:
   allocation: ascending
   range:
     beginning: 1006
     ending: 1199
-aaa_root:
-  disabled: true
-config_end: true
-enable_password:
-  disabled: true
-transceiver_qsfp_default_mode_4x10: true
-ip_name_servers:
-- ip_address: 192.168.17.1
-  vrf: MGMT
-local_users:
-- name: ansible
-  privilege: 15
-  role: network-admin
-  sha512_password: $6$7u4j1rkb3VELgcZE$EJt2Qff8kd/TapRoci0XaIZsL4tFzgq1YZBLD9c6f/knXzvcYY0NcMKndZeCv0T268knGKhOEwZAxqKjlMm920
-- name: arista
-  privilege: 15
-  role: network-admin
-  sha512_password: $6$Enl0WfE32FthwyiJ$yTyGaEJ2uPKLU.F7314YtB7J1jrzrMi7ogXIRTEHQfLdLgKWWmr1UvNlZLN6AyuxET7G5aH3AI9OYRzxVTkB1.
-- name: cvpadmin
-  privilege: 15
-  role: network-admin
-  sha512_password: $6$a7LdQWHxWzYHpvVt$n62q.1mbm4kzQ5oBr0lhXCE9ntnTn.SNa16DovZHahFQLH.iPcPMZa5JUSFtncrDW4EDQ3oSWgP8G0S4FtOFx1
-vrfs:
-- name: MGMT
-  ip_routing: false
-- name: BLUE
-  tenant: WAN-EXAMPLE-TENANT
-  ip_routing: true
-- name: RED
-  tenant: WAN-EXAMPLE-TENANT
-  ip_routing: true
-management_interfaces:
-- name: Management1
-  description: OOB_MANAGEMENT
-  shutdown: false
-  vrf: MGMT
-  ip_address: 192.168.17.19/24
-  gateway: 192.168.17.1
-  type: oob
-  lldp:
-    transmit: false
-    receive: false
-management_api_http:
-  enable_vrfs:
-  - name: MGMT
-  enable_https: true
-ntp:
-  local_interface:
-    name: Management1
-    vrf: MGMT
-  servers:
-  - name: 0.pool.ntp.org
-    vrf: MGMT
-    preferred: true
-spanning_tree:
-  no_spanning_tree_vlan: 4093-4094
 vlans:
 - id: 4093
-  tenant: system
   name: MLAG_L3
   trunk_groups:
   - MLAG
-- id: 4094
   tenant: system
+- id: 4094
   name: MLAG
   trunk_groups:
   - MLAG
+  tenant: system
 - id: 666
   name: BLUE-TEST
   tenant: WAN-EXAMPLE-TENANT
@@ -225,175 +397,21 @@ vlans:
   trunk_groups:
   - MLAG
   tenant: WAN-EXAMPLE-TENANT
-vlan_interfaces:
-- name: Vlan4093
-  description: MLAG_L3
-  shutdown: false
-  mtu: 9214
-  ip_address: 10.255.251.17/31
-- name: Vlan4094
-  description: MLAG
-  shutdown: false
-  no_autostate: true
-  mtu: 9214
-  ip_address: 10.255.252.17/31
-- name: Vlan666
+vrfs:
+- name: MGMT
+  ip_routing: false
+- name: BLUE
+  ip_routing: true
   tenant: WAN-EXAMPLE-TENANT
-  description: BLUE-TEST
-  shutdown: false
-  ip_address: 10.66.22.1/24
-  vrf: BLUE
-- name: Vlan3099
+- name: RED
+  ip_routing: true
   tenant: WAN-EXAMPLE-TENANT
-  type: underlay_peering
-  shutdown: false
-  description: MLAG_L3_VRF_BLUE
-  vrf: BLUE
-  mtu: 9214
-  ip_address: 10.255.251.17/31
-- name: Vlan42
-  tenant: WAN-EXAMPLE-TENANT
-  description: RED-TEST
-  shutdown: false
-  ip_address: 10.42.22.1/24
-  vrf: RED
-- name: Vlan3100
-  tenant: WAN-EXAMPLE-TENANT
-  type: underlay_peering
-  shutdown: false
-  description: MLAG_L3_VRF_RED
-  vrf: RED
-  mtu: 9214
-  ip_address: 10.255.251.17/31
-port_channel_interfaces:
-- name: Port-Channel5
-  description: MLAG_site2-leaf1_Port-Channel5
-  switchport:
-    enabled: true
-    mode: trunk
-    trunk:
-      groups:
-      - MLAG
-  shutdown: false
-ethernet_interfaces:
-- name: Ethernet5
-  peer: site2-leaf1
-  peer_interface: Ethernet5
-  peer_type: mlag_peer
-  description: MLAG_site2-leaf1_Ethernet5
-  shutdown: false
-  channel_group:
-    id: 5
-    mode: active
-- name: Ethernet6
-  peer: site2-leaf1
-  peer_interface: Ethernet6
-  peer_type: mlag_peer
-  description: MLAG_site2-leaf1_Ethernet6
-  shutdown: false
-  channel_group:
-    id: 5
-    mode: active
-- name: Ethernet3
-  peer: site2-wan2
-  peer_interface: Ethernet1
-  peer_type: wan_router
-  description: P2P_site2-wan2_Ethernet1
-  shutdown: false
-  mtu: 9214
-  switchport:
-    enabled: false
-  flow_tracker:
-    sampled: FLOW-TRACKER
-  ip_address: 10.0.2.14/31
-- name: Ethernet3.100
-  peer: site2-wan2
-  peer_interface: Ethernet1.100
-  peer_type: wan_router
-  vrf: BLUE
-  description: P2P_site2-wan2_Ethernet1.100_VRF_BLUE
-  shutdown: false
-  encapsulation_dot1q:
-    vlan: 100
-  flow_tracker:
-    sampled: FLOW-TRACKER
-  mtu: 9214
-  ip_address: 10.0.2.14/31
-- name: Ethernet3.101
-  peer: site2-wan2
-  peer_interface: Ethernet1.101
-  peer_type: wan_router
-  vrf: RED
-  description: P2P_site2-wan2_Ethernet1.101_VRF_RED
-  shutdown: false
-  encapsulation_dot1q:
-    vlan: 101
-  flow_tracker:
-    sampled: FLOW-TRACKER
-  mtu: 9214
-  ip_address: 10.0.2.14/31
-mlag_configuration:
-  domain_id: SITE2
-  local_interface: Vlan4094
-  peer_address: 10.255.252.16
-  peer_link: Port-Channel5
-  reload_delay_mlag: '300'
-  reload_delay_non_mlag: '330'
-route_maps:
-- name: RM-MLAG-PEER-IN
-  sequence_numbers:
-  - sequence: 10
-    type: permit
-    set:
-    - origin incomplete
-    description: Make routes learned over MLAG Peer-link less preferred on spines to ensure optimal routing
-- name: RM-CONN-2-BGP
-  sequence_numbers:
-  - sequence: 10
-    type: permit
-    match:
-    - ip address prefix-list PL-LOOPBACKS-EVPN-OVERLAY
-- name: RM-CONN-2-BGP-VRFS
-  sequence_numbers:
-  - sequence: 10
-    type: deny
-    match:
-    - ip address prefix-list PL-MLAG-PEER-VRFS
-  - sequence: 20
-    type: permit
-loopback_interfaces:
-- name: Loopback0
-  description: ROUTER_ID
-  shutdown: false
-  ip_address: 192.168.255.10/32
-- name: Loopback1
-  description: VXLAN_TUNNEL_SOURCE
-  shutdown: false
-  ip_address: 192.168.42.9/32
-prefix_lists:
-- name: PL-LOOPBACKS-EVPN-OVERLAY
-  sequence_numbers:
-  - sequence: 10
-    action: permit 192.168.255.0/24 eq 32
-  - sequence: 20
-    action: permit 192.168.42.0/24 eq 32
-- name: PL-MLAG-PEER-VRFS
-  sequence_numbers:
-  - sequence: 10
-    action: permit 10.255.251.16/31
-router_bfd:
-  multihop:
-    interval: 300
-    min_rx: 300
-    multiplier: 3
-ip_igmp_snooping:
-  globally_enabled: true
 vxlan_interface:
   vxlan1:
     description: site2-leaf2_VTEP
     vxlan:
-      udp_port: 4789
       source_interface: Loopback1
+      udp_port: 4789
       virtual_router_encapsulation_mac_address: mlag-system-id
       vlans:
       - id: 666
@@ -405,21 +423,3 @@ vxlan_interface:
         vni: 100
       - name: RED
         vni: 101
-flow_tracking:
-  sampled:
-    sample: 10000
-    trackers:
-    - name: FLOW-TRACKER
-      record_export:
-        on_inactive_timeout: 70000
-        on_interval: 5000
-      exporters:
-      - name: CV-TELEMETRY
-        collector:
-          host: 127.0.0.1
-        local_interface: Loopback0
-    shutdown: false
-dns_domain: wan.example.local
-aaa_authorization:
-  exec:
-    default: local

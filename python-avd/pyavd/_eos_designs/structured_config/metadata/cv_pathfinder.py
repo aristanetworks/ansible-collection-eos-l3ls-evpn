@@ -6,7 +6,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from pyavd._errors import AristaAvdError, AristaAvdInvalidInputsError
-from pyavd._utils import get, get_all, get_item, strip_empties_from_list
+from pyavd._utils import default, strip_empties_from_list
 
 if TYPE_CHECKING:
     from . import AvdStructuredConfigMetadata
@@ -135,67 +135,73 @@ class CvPathfinderMixin:
 
     def _metadata_vrfs(self: AvdStructuredConfigMetadata) -> list:
         """Extracting metadata for VRFs by parsing the generated structured config and flatten it a bit (like hiding load-balance policies)."""
-        if (avt_vrfs := get(self._hostvars, "router_adaptive_virtual_topology.vrfs")) is None:
+        if not (avt_vrfs := self.structured_config.router_adaptive_virtual_topology.vrfs):
             return []
 
-        if (load_balance_policies := get(self._hostvars, "router_path_selection.load_balance_policies")) is None:
+        if not (load_balance_policies := self.structured_config.router_path_selection.load_balance_policies):
             return []
 
-        avt_policies = get(self._hostvars, "router_adaptive_virtual_topology.policies", required=True)
+        avt_policies = self.structured_config.router_adaptive_virtual_topology.policies
 
         if self.shared_utils.is_wan_server:
             # On pathfinders, verify that the Load Balance policies have at least one priority one except for the HA path-group
             for lb_policy in load_balance_policies:
                 if not any(
-                    path_group.get("priority", 1) == 1
-                    for path_group in lb_policy["path_groups"]
-                    if path_group["name"] != self.inputs.wan_ha.lan_ha_path_group_name
+                    default(path_group.priority, 1) == 1 for path_group in lb_policy.path_groups if path_group.name != self.inputs.wan_ha.lan_ha_path_group_name
                 ):
                     msg = (
                         "At least one path-group must be configured with preference '1' or 'preferred' for "
-                        f"load-balance policy {lb_policy['name']}' to use CloudVision integration. "
+                        f"load-balance policy {lb_policy.name}' to use CloudVision integration. "
                         "If this is an auto-generated policy, ensure that at least one default_preference "
                         "for a non excluded path-group is set to 'preferred' (or unset as this is the default)."
                     )
                     raise AristaAvdError(msg)
 
-        return strip_empties_from_list(
-            [
-                {
-                    "name": vrf["name"],
-                    "vni": self._get_vni_for_vrf_name(vrf["name"]),
-                    "avts": [
-                        {
-                            "constraints": {
-                                "jitter": lb_policy.get("jitter"),
-                                "latency": lb_policy.get("latency"),
-                                "lossrate": float(lb_policy["loss_rate"]) if "loss_rate" in lb_policy else None,
-                                "hop_count": "lowest" if lb_policy.get("lowest_hop_count") else None,
-                            },
-                            "description": "",  # TODO: Not sure we have this field anywhere
-                            "id": profile["id"],
-                            "name": profile["name"],
-                            "pathgroups": [
-                                {
-                                    "name": pathgroup["name"],
-                                    "preference": "alternate" if pathgroup.get("priority", 1) > 1 else "preferred",
-                                }
-                                for pathgroup in lb_policy["path_groups"]
-                            ],
-                            "application_profiles": [
-                                profile
-                                for profile in get_all(get_item(avt_policy["matches"], "avt_profile", profile["name"], default={}), "application_profile")
-                                if profile != "default"
-                            ],
-                        }
-                        for profile in vrf["profiles"]
-                        for lb_policy in [get_item(load_balance_policies, "name", self.shared_utils.generate_lb_policy_name(profile["name"]), required=True)]
-                    ],
-                }
-                for vrf in avt_vrfs
-                for avt_policy in [get_item(avt_policies, "name", vrf["policy"], required=True)]
-            ],
-        )
+        metadata_vrfs = []
+        for vrf in avt_vrfs:
+            if not vrf.policy:
+                continue
+
+            avt_policy = avt_policies[vrf.policy]
+            metadata_vrf = {
+                "name": vrf.name,
+                "vni": self._get_vni_for_vrf_name(vrf.name),
+                "avts": [],
+            }
+            for profile in vrf.profiles:
+                if not profile.name:
+                    continue
+                lb_policy = load_balance_policies[self.shared_utils.generate_lb_policy_name(profile.name)]
+                application_profiles = [
+                    match.application_profile
+                    for match in avt_policy.matches
+                    if match.avt_profile == profile.name and match.application_profile and match.application_profile != "default"
+                ]
+                metadata_vrf["avts"].append(
+                    {
+                        "constraints": {
+                            "jitter": lb_policy.jitter,
+                            "latency": lb_policy.latency,
+                            "lossrate": float(lb_policy.loss_rate) if lb_policy.loss_rate is not None else None,
+                            "hop_count": "lowest" if lb_policy.lowest_hop_count else None,
+                        },
+                        "description": "",  # TODO: Not sure we have this field anywhere
+                        "id": profile.id,
+                        "name": profile.name,
+                        "pathgroups": [
+                            {
+                                "name": pathgroup.name,
+                                "preference": "alternate" if default(pathgroup.priority, 1) > 1 else "preferred",
+                            }
+                            for pathgroup in lb_policy.path_groups
+                        ],
+                        "application_profiles": application_profiles,
+                    }
+                )
+
+            metadata_vrfs.append(metadata_vrf)
+
+        return strip_empties_from_list(metadata_vrfs)
 
     def _get_vni_for_vrf_name(self: AvdStructuredConfigMetadata, vrf_name: str) -> int:
         if vrf_name not in self.inputs.wan_virtual_topologies.vrfs or (wan_vni := self.inputs.wan_virtual_topologies.vrfs[vrf_name].wan_vni) is None:

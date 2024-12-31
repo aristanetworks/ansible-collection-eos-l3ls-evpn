@@ -1,90 +1,52 @@
-hostname: custom-ptp-profile
-is_deployed: true
-router_bgp:
-  as: '65042'
-  router_id: 10.42.42.42/32
-  bgp:
-    default:
-      ipv4_unicast: false
-  maximum_paths:
-    paths: 4
-    ecmp: 4
-  redistribute:
-    connected:
-      enabled: true
-      route_map: RM-CONN-2-BGP
-  updates:
-    wait_install: true
-  peer_groups:
-  - name: IPv4-UNDERLAY-PEERS
-    type: ipv4
-    maximum_routes: 12000
-    send_community: all
-  - name: EVPN-OVERLAY-PEERS
-    type: evpn
-    update_source: Loopback0
-    bfd: true
-    send_community: all
-    maximum_routes: 0
-    ebgp_multihop: 3
-  address_family_ipv4:
-    peer_groups:
-    - name: IPv4-UNDERLAY-PEERS
-      activate: true
-    - name: EVPN-OVERLAY-PEERS
-      activate: false
-  address_family_evpn:
-    peer_groups:
-    - name: EVPN-OVERLAY-PEERS
-      activate: true
-  vrfs:
-  - name: VRF1
-    rd: 10.42.42.42/32:1
-    route_targets:
-      import:
-      - address_family: evpn
-        route_targets:
-        - '1:1'
-      export:
-      - address_family: evpn
-        route_targets:
-        - '1:1'
-    router_id: 10.42.42.42/32
-    redistribute:
-      connected:
-        enabled: true
-  vlans:
-  - id: 11
-    tenant: PTP
-    rd: 10.42.42.42/32:10011
-    route_targets:
-      both:
-      - 10011:10011
-    redistribute_routes:
-    - learned
-service_routing_protocols_model: multi-agent
-ip_routing: true
-vlan_internal_order:
-  allocation: ascending
-  range:
-    beginning: 1006
-    ending: 1199
 aaa_root:
   disabled: true
 config_end: true
 enable_password:
   disabled: true
-transceiver_qsfp_default_mode_4x10: true
-vrfs:
-- name: MGMT
-  ip_routing: false
-- name: VRF1
-  tenant: PTP
-  ip_routing: true
+ethernet_interfaces:
+- name: Ethernet8
+  description: P2P_not-in-this-fabric_Ethernet8
+  shutdown: false
+  mtu: 9214
+  ptp:
+    enable: true
+    announce:
+      interval: 4
+      timeout: 3
+    delay_req: -6
+    sync_message:
+      interval: -7
+    transport: ipv4
+  peer: not-in-this-fabric
+  peer_interface: Ethernet8
+  peer_type: other
+  switchport:
+    enabled: false
+hostname: custom-ptp-profile
+ip_igmp_snooping:
+  globally_enabled: true
+ip_routing: true
+is_deployed: true
+loopback_interfaces:
+- name: Loopback0
+  description: ROUTER_ID
+  shutdown: false
+  ip_address: 10.42.42.42/32/32
+- name: Loopback1
+  description: VXLAN_TUNNEL_SOURCE
+  shutdown: false
+  ip_address: 10.42.42.42/32/32
 management_api_http:
+  enable_https: true
   enable_vrfs:
   - name: MGMT
-  enable_https: true
+prefix_lists:
+- name: PL-LOOPBACKS-EVPN-OVERLAY
+  sequence_numbers:
+  - sequence: 10
+    action: permit 10.10.10.0/24 eq 32
+  - sequence: 20
+    action: permit 10.10.10.0/24 eq 32
 ptp:
   mode: boundary
   clock_identity: 00:1C:73:1e:00:0c
@@ -103,22 +65,6 @@ ptp:
         delay_resp: 3
         follow_up: 3
         sync: 3
-loopback_interfaces:
-- name: Loopback0
-  description: ROUTER_ID
-  shutdown: false
-  ip_address: 10.42.42.42/32/32
-- name: Loopback1
-  description: VXLAN_TUNNEL_SOURCE
-  shutdown: false
-  ip_address: 10.42.42.42/32/32
-prefix_lists:
-- name: PL-LOOPBACKS-EVPN-OVERLAY
-  sequence_numbers:
-  - sequence: 10
-    action: permit 10.10.10.0/24 eq 32
-  - sequence: 20
-    action: permit 10.10.10.0/24 eq 32
 route_maps:
 - name: RM-CONN-2-BGP
   sequence_numbers:
@@ -131,44 +77,98 @@ router_bfd:
     interval: 300
     min_rx: 300
     multiplier: 3
-ethernet_interfaces:
-- name: Ethernet8
-  peer: not-in-this-fabric
-  peer_interface: Ethernet8
-  peer_type: other
-  switchport:
-    enabled: false
+router_bgp:
+  as: '65042'
+  router_id: 10.42.42.42/32
+  maximum_paths:
+    paths: 4
+    ecmp: 4
+  updates:
+    wait_install: true
+  bgp:
+    default:
+      ipv4_unicast: false
+  peer_groups:
+  - name: IPv4-UNDERLAY-PEERS
+    type: ipv4
+    send_community: all
+    maximum_routes: 12000
+  - name: EVPN-OVERLAY-PEERS
+    type: evpn
+    update_source: Loopback0
+    bfd: true
+    ebgp_multihop: 3
+    send_community: all
+    maximum_routes: 0
+  redistribute:
+    connected:
+      enabled: true
+      route_map: RM-CONN-2-BGP
+  vlans:
+  - id: 11
+    tenant: PTP
+    rd: 10.42.42.42/32:10011
+    route_targets:
+      both:
+      - 10011:10011
+    redistribute_routes:
+    - learned
+  address_family_evpn:
+    peer_groups:
+    - name: EVPN-OVERLAY-PEERS
+      activate: true
+  address_family_ipv4:
+    peer_groups:
+    - name: IPv4-UNDERLAY-PEERS
+      activate: true
+    - name: EVPN-OVERLAY-PEERS
+      activate: false
+  vrfs:
+  - name: VRF1
+    rd: 10.42.42.42/32:1
+    route_targets:
+      import:
+      - address_family: evpn
+        route_targets:
+        - '1:1'
+      export:
+      - address_family: evpn
+        route_targets:
+        - '1:1'
+    router_id: 10.42.42.42/32
+    redistribute:
+      connected:
+        enabled: true
+service_routing_protocols_model: multi-agent
+transceiver_qsfp_default_mode_4x10: true
+vlan_interfaces:
+- name: Vlan11
+  description: VLAN11
   shutdown: false
-  mtu: 9214
-  ptp:
-    announce:
-      interval: 4
-      timeout: 3
-    delay_req: -6
-    sync_message:
-      interval: -7
-    transport: ipv4
-    enable: true
-  description: P2P_not-in-this-fabric_Ethernet8
+  vrf: VRF1
+  ip_address: 172.16.11.1/24
+  tenant: PTP
+vlan_internal_order:
+  allocation: ascending
+  range:
+    beginning: 1006
+    ending: 1199
 vlans:
 - id: 11
   name: VLAN11
   tenant: PTP
-ip_igmp_snooping:
-  globally_enabled: true
-vlan_interfaces:
-- name: Vlan11
+vrfs:
+- name: MGMT
+  ip_routing: false
+- name: VRF1
+  ip_routing: true
   tenant: PTP
-  description: VLAN11
-  shutdown: false
-  ip_address: 172.16.11.1/24
-  vrf: VRF1
 vxlan_interface:
   vxlan1:
     description: custom-ptp-profile_VTEP
     vxlan:
-      udp_port: 4789
       source_interface: Loopback1
+      udp_port: 4789
       vlans:
       - id: 11
         vni: 10011

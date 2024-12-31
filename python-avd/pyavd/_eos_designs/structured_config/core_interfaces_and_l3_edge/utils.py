@@ -9,6 +9,7 @@ from ipaddress import ip_network
 from itertools import islice
 from typing import TYPE_CHECKING, TypeVar
 
+from pyavd._eos_cli_config_gen.schema import EosCliConfigGen
 from pyavd._eos_designs.schema import EosDesigns
 from pyavd._errors import AristaAvdInvalidInputsError, AristaAvdMissingVariableError
 from pyavd._utils import default
@@ -205,8 +206,21 @@ class UtilsMixin:
             "mtu": p2p_link._get("mtu", self.shared_utils.p2p_uplinks_mtu) if self.shared_utils.platform_settings.feature_support.per_interface_mtu else None,
             "service_profile": p2p_link._get("qos_profile", self.inputs.p2p_uplinks_qos_profile),
             "eos_cli": p2p_link.raw_eos_cli,
-            "struct_cfg": p2p_link.structured_config or None,
         }
+
+        if p2p_link.structured_config:
+            if str(interface_name := p2p_link_data["interface"]).lower().startswith("p"):
+                # Port-channel
+                self.custom_structured_configs.nested.port_channel_interfaces.obtain(interface_name)._deepmerge(
+                    EosCliConfigGen.PortChannelInterfacesItem._from_dict(p2p_link.structured_config),
+                    list_merge=self.custom_structured_configs.list_merge_strategy,
+                )
+            else:
+                # Ethernet
+                self.custom_structured_configs.nested.ethernet_interfaces.obtain(interface_name)._deepmerge(
+                    EosCliConfigGen.EthernetInterfacesItem._from_dict(p2p_link.structured_config),
+                    list_merge=self.custom_structured_configs.list_merge_strategy,
+                )
 
         if p2p_link.ip:
             interface_cfg["ip_address"] = p2p_link.ip[index]

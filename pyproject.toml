@@ -12,6 +12,7 @@ skip_glob = [
 line-length = 160
 extend-exclude = [
   "python-avd/pyavd/_cv/api/**/*",
+  "python-avd/tests/pyavd/schema/data_merging_schema_class.py",
   "ansible_collections/arista/avd/tests/**/*",
 ]
 target-version = "py310"

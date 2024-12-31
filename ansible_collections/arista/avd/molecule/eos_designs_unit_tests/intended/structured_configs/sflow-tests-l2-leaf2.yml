@@ -1,96 +1,96 @@
-hostname: sflow-tests-l2-leaf2
-is_deployed: true
-static_routes:
-- vrf: MGMT
-  destination_address_prefix: 0.0.0.0/0
-  gateway: 192.168.0.1
-- destination_address_prefix: 0.0.0.0/0
-  gateway: 10.254.254.1
-service_routing_protocols_model: multi-agent
-vlan_internal_order:
-  allocation: ascending
-  range:
-    beginning: 1006
-    ending: 1199
 aaa_root:
   disabled: true
 config_end: true
 enable_password:
   disabled: true
-transceiver_qsfp_default_mode_4x10: true
-vrfs:
-- name: MGMT
-  ip_routing: false
+ethernet_interfaces:
+- name: Ethernet1
+  description: L2_sflow-tests-leaf3_Ethernet17
+  shutdown: false
+  channel_group:
+    id: 1
+    mode: active
+  peer: sflow-tests-leaf3
+  peer_interface: Ethernet17
+  peer_type: l3leaf
+- name: Ethernet2
+  description: L2_sflow-tests-leaf4_Ethernet17
+  shutdown: false
+  channel_group:
+    id: 1
+    mode: active
+  peer: sflow-tests-leaf4
+  peer_interface: Ethernet17
+  peer_type: l3leaf
+hostname: sflow-tests-l2-leaf2
+ip_igmp_snooping:
+  globally_enabled: true
+is_deployed: true
+management_api_http:
+  enable_https: true
+  enable_vrfs:
+  - name: MGMT
 management_interfaces:
 - name: Management1
   description: OOB_MANAGEMENT
   shutdown: false
   vrf: MGMT
   ip_address: 192.168.0.202/24
-  gateway: 192.168.0.1
   type: oob
-management_api_http:
-  enable_vrfs:
-  - name: MGMT
-  enable_https: true
-ethernet_interfaces:
-- name: Ethernet1
-  peer: sflow-tests-leaf3
-  peer_interface: Ethernet17
-  peer_type: l3leaf
-  description: L2_sflow-tests-leaf3_Ethernet17
-  shutdown: false
-  channel_group:
-    id: 1
-    mode: active
-- name: Ethernet2
-  peer: sflow-tests-leaf4
-  peer_interface: Ethernet17
-  peer_type: l3leaf
-  description: L2_sflow-tests-leaf4_Ethernet17
-  shutdown: false
-  channel_group:
-    id: 1
-    mode: active
+  gateway: 192.168.0.1
+metadata:
+  platform: vEOS-lab
 port_channel_interfaces:
 - name: Port-Channel1
   description: L2_sflow-tests-leaf-mlag_Port-Channel17
+  shutdown: false
+  sflow:
+    enable: true
   switchport:
     enabled: true
     mode: trunk
     trunk:
       allowed_vlan: 11,4092
-  shutdown: false
-  sflow:
-    enable: true
-vlans:
-- id: 11
-  name: VLAN11
-  tenant: SFLOW
-- id: 4092
-  tenant: system
-  name: INBAND_MGMT
-ip_igmp_snooping:
-  globally_enabled: true
-vlan_interfaces:
-- name: Vlan4092
-  description: Inband Management
-  shutdown: false
-  mtu: 1500
-  ip_address: 10.254.254.5/24
-  type: inband_mgmt
+service_routing_protocols_model: multi-agent
 sflow:
-  run: true
-  polling_interval: 1
   sample: 10
-  destinations:
-  - destination: 10.10.10.10
-  - destination: 10.10.10.11
-  source_interface: Vlan4092
+  polling_interval: 1
   vrfs:
   - name: MGMT
     destinations:
     - destination: 10.10.10.12
     source_interface: Management1
-metadata:
-  platform: vEOS-lab
+  destinations:
+  - destination: 10.10.10.10
+  - destination: 10.10.10.11
+  source_interface: Vlan4092
+  run: true
+static_routes:
+- vrf: MGMT
+  destination_address_prefix: 0.0.0.0/0
+  gateway: 192.168.0.1
+- destination_address_prefix: 0.0.0.0/0
+  gateway: 10.254.254.1
+transceiver_qsfp_default_mode_4x10: true
+vlan_interfaces:
+- name: Vlan4092
+  description: Inband Management
+  shutdown: false
+  ip_address: 10.254.254.5/24
+  mtu: 1500
+  type: inband_mgmt
+vlan_internal_order:
+  allocation: ascending
+  range:
+    beginning: 1006
+    ending: 1199
+vlans:
+- id: 11
+  name: VLAN11
+  tenant: SFLOW
+- id: 4092
+  name: INBAND_MGMT
+  tenant: system
+vrfs:
+- name: MGMT
+  ip_routing: false

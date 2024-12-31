@@ -1,106 +1,14 @@
-hostname: DUP-LEAF2
-is_deployed: true
-router_bgp:
-  as: '65000'
-  router_id: 10.0.0.2
-  bgp:
-    default:
-      ipv4_unicast: false
-  maximum_paths:
-    paths: 4
-    ecmp: 4
-  redistribute:
-    connected:
-      enabled: true
-      route_map: RM-CONN-2-BGP
-  updates:
-    wait_install: true
-  peer_groups:
-  - name: IPv4-UNDERLAY-PEERS
-    type: ipv4
-    maximum_routes: 12000
-    send_community: all
-  - name: EVPN-OVERLAY-PEERS
-    type: evpn
-    update_source: Loopback0
-    bfd: true
-    send_community: all
-    maximum_routes: 0
-    ebgp_multihop: 3
-  address_family_ipv4:
-    peer_groups:
-    - name: IPv4-UNDERLAY-PEERS
-      activate: true
-    - name: EVPN-OVERLAY-PEERS
-      activate: false
-  address_family_evpn:
-    peer_groups:
-    - name: EVPN-OVERLAY-PEERS
-      activate: true
-  vrfs:
-  - name: TEST
-    rd: 10.0.0.2:10
-    route_targets:
-      import:
-      - address_family: evpn
-        route_targets:
-        - '10:10'
-      export:
-      - address_family: evpn
-        route_targets:
-        - '10:10'
-    router_id: 10.0.0.2
-    redistribute:
-      connected:
-        enabled: true
-  vlans:
-  - id: 100
-    tenant: Tenant_A
-    rd: 10.0.0.2:10100
-    route_targets:
-      both:
-      - 10100:10100
-    redistribute_routes:
-    - learned
-  - id: 200
-    tenant: Tenant_A
-    rd: 10.0.0.2:10200
-    route_targets:
-      both:
-      - 10200:10200
-    redistribute_routes:
-    - learned
-service_routing_protocols_model: multi-agent
-ip_routing: true
-vlan_internal_order:
-  allocation: ascending
-  range:
-    beginning: 1006
-    ending: 1199
 aaa_root:
   disabled: true
 config_end: true
 enable_password:
   disabled: true
-transceiver_qsfp_default_mode_4x10: true
-vrfs:
-- name: MGMT
-  ip_routing: false
-- name: TEST
-  tenant: Tenant_A
-  ip_routing: true
-  description: TEST
-management_interfaces:
-- name: Management1
-  description: OOB_MANAGEMENT
-  shutdown: false
-  vrf: MGMT
-  ip_address: 192.168.200.102/24
-  type: oob
-management_api_http:
-  enable_vrfs:
-  - name: MGMT
-  enable_https: true
+hostname: DUP-LEAF2
+ip_igmp_snooping:
+  globally_enabled: true
+ip_routing: true
+ip_virtual_router_mac_address: 00:dc:00:00:00:0a
+is_deployed: true
 loopback_interfaces:
 - name: Loopback0
   description: ROUTER_ID
@@ -110,6 +18,19 @@ loopback_interfaces:
   description: VXLAN_TUNNEL_SOURCE
   shutdown: false
   ip_address: 10.10.0.2/32
+management_api_http:
+  enable_https: true
+  enable_vrfs:
+  - name: MGMT
+management_interfaces:
+- name: Management1
+  description: OOB_MANAGEMENT
+  shutdown: false
+  vrf: MGMT
+  ip_address: 192.168.200.102/24
+  type: oob
+metadata:
+  platform: vEOS-LAB
 prefix_lists:
 - name: PL-LOOPBACKS-EVPN-OVERLAY
   sequence_numbers:
@@ -129,6 +50,91 @@ router_bfd:
     interval: 300
     min_rx: 300
     multiplier: 3
+router_bgp:
+  as: '65000'
+  router_id: 10.0.0.2
+  maximum_paths:
+    paths: 4
+    ecmp: 4
+  updates:
+    wait_install: true
+  bgp:
+    default:
+      ipv4_unicast: false
+  peer_groups:
+  - name: IPv4-UNDERLAY-PEERS
+    type: ipv4
+    send_community: all
+    maximum_routes: 12000
+  - name: EVPN-OVERLAY-PEERS
+    type: evpn
+    update_source: Loopback0
+    bfd: true
+    ebgp_multihop: 3
+    send_community: all
+    maximum_routes: 0
+  redistribute:
+    connected:
+      enabled: true
+      route_map: RM-CONN-2-BGP
+  vlans:
+  - id: 100
+    tenant: Tenant_A
+    rd: 10.0.0.2:10100
+    route_targets:
+      both:
+      - 10100:10100
+    redistribute_routes:
+    - learned
+  - id: 200
+    tenant: Tenant_A
+    rd: 10.0.0.2:10200
+    route_targets:
+      both:
+      - 10200:10200
+    redistribute_routes:
+    - learned
+  address_family_evpn:
+    peer_groups:
+    - name: EVPN-OVERLAY-PEERS
+      activate: true
+  address_family_ipv4:
+    peer_groups:
+    - name: IPv4-UNDERLAY-PEERS
+      activate: true
+    - name: EVPN-OVERLAY-PEERS
+      activate: false
+  vrfs:
+  - name: TEST
+    rd: 10.0.0.2:10
+    route_targets:
+      import:
+      - address_family: evpn
+        route_targets:
+        - '10:10'
+      export:
+      - address_family: evpn
+        route_targets:
+        - '10:10'
+    router_id: 10.0.0.2
+    redistribute:
+      connected:
+        enabled: true
+service_routing_protocols_model: multi-agent
+transceiver_qsfp_default_mode_4x10: true
+vlan_interfaces:
+- name: Vlan100
+  description: Duplicate_SVI_100_LEAF2
+  shutdown: false
+  vrf: TEST
+  tenant: Tenant_A
+  tags:
+  - DUP-LEAF2
+vlan_internal_order:
+  allocation: ascending
+  range:
+    beginning: 1006
+    ending: 1199
 vlans:
 - id: 100
   name: Duplicate_SVI_100_LEAF2
@@ -136,23 +142,19 @@ vlans:
 - id: 200
   name: Duplicate_L2VLAN_200_LEAF2
   tenant: Tenant_A
-ip_igmp_snooping:
-  globally_enabled: true
-ip_virtual_router_mac_address: 00:dc:00:00:00:0a
-vlan_interfaces:
-- name: Vlan100
+vrfs:
+- name: MGMT
+  ip_routing: false
+- name: TEST
+  description: TEST
+  ip_routing: true
   tenant: Tenant_A
-  tags:
-  - DUP-LEAF2
-  description: Duplicate_SVI_100_LEAF2
-  shutdown: false
-  vrf: TEST
 vxlan_interface:
   vxlan1:
     description: DUP-LEAF2_VTEP
     vxlan:
-      udp_port: 4789
       source_interface: Loopback1
+      udp_port: 4789
       vlans:
       - id: 100
         vni: 10100
@@ -161,5 +163,3 @@ vxlan_interface:
       vrfs:
       - name: TEST
         vni: 10
-metadata:
-  platform: vEOS-LAB

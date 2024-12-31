@@ -1,69 +1,32 @@
-hostname: host1
-is_deployed: true
-router_bgp:
-  as: '101'
-  router_id: 192.168.255.101
-  bgp:
-    default:
-      ipv4_unicast: false
-  maximum_paths:
-    paths: 4
-    ecmp: 4
-  redistribute:
-    connected:
-      enabled: true
-      route_map: RM-CONN-2-BGP
-  updates:
-    wait_install: true
-  peer_groups:
-  - name: IPv4-UNDERLAY-PEERS
-    type: ipv4
-    maximum_routes: 12000
-    send_community: all
-  - name: EVPN-OVERLAY-PEERS
-    type: evpn
-    update_source: Loopback0
-    bfd: true
-    send_community: all
-    maximum_routes: 0
-    ebgp_multihop: 3
-  address_family_ipv4:
-    peer_groups:
-    - name: IPv4-UNDERLAY-PEERS
-      activate: true
-    - name: EVPN-OVERLAY-PEERS
-      activate: false
-  address_family_evpn:
-    peer_groups:
-    - name: EVPN-OVERLAY-PEERS
-      activate: true
-service_routing_protocols_model: multi-agent
-ip_routing: true
-vlan_internal_order:
-  allocation: ascending
-  range:
-    beginning: 1006
-    ending: 1199
 aaa_root:
   disabled: true
 config_end: true
 enable_password:
   disabled: true
-transceiver_qsfp_default_mode_4x10: true
-vrfs:
-- name: MGMT
-  ip_routing: false
-management_interfaces:
-- name: Management1
-  description: OOB_MANAGEMENT
+ethernet_interfaces:
+- name: Ethernet1
+  description: SERVER_OLD_SW-1/2_Endpoint_port1
   shutdown: false
-  vrf: MGMT
-  ip_address: 192.168.0.103/24
-  type: oob
-management_api_http:
-  enable_vrfs:
-  - name: MGMT
-  enable_https: true
+  channel_group:
+    id: 1
+    mode: active
+  peer: OLD_SW-1/2
+  peer_interface: Endpoint_port1
+  peer_type: server
+- name: Ethernet2
+  description: SERVER_OLD_SW-1/2_ENDPOINT_PORT2
+  shutdown: false
+  channel_group:
+    id: 1
+    mode: active
+  peer: OLD_SW-1/2
+  peer_interface: ENDPOINT_PORT2
+  peer_type: server
+hostname: host1
+ip_igmp_snooping:
+  globally_enabled: true
+ip_routing: true
+is_deployed: true
 loopback_interfaces:
 - name: Loopback0
   description: CUSTOM_ROUTER_ID
@@ -73,6 +36,32 @@ loopback_interfaces:
   description: VXLAN_TUNNEL_SOURCE
   shutdown: false
   ip_address: 192.168.254.101/32
+management_api_http:
+  enable_https: true
+  enable_vrfs:
+  - name: MGMT
+management_interfaces:
+- name: Management1
+  description: OOB_MANAGEMENT
+  shutdown: false
+  vrf: MGMT
+  ip_address: 192.168.0.103/24
+  type: oob
+port_channel_interfaces:
+- name: Port-Channel1
+  description: SERVER_OLD_SW-1/2_ENDPOINT_PORT_CHANNEL
+  shutdown: false
+  ptp:
+    enable: true
+    announce:
+      interval: 0
+      timeout: 3
+    delay_req: -3
+    sync_message:
+      interval: -3
+    transport: ipv4
+  switchport:
+    enabled: true
 prefix_lists:
 - name: PL-LOOPBACKS-EVPN-OVERLAY
   sequence_numbers:
@@ -92,45 +81,56 @@ router_bfd:
     interval: 300
     min_rx: 300
     multiplier: 3
-ip_igmp_snooping:
-  globally_enabled: true
+router_bgp:
+  as: '101'
+  router_id: 192.168.255.101
+  maximum_paths:
+    paths: 4
+    ecmp: 4
+  updates:
+    wait_install: true
+  bgp:
+    default:
+      ipv4_unicast: false
+  peer_groups:
+  - name: IPv4-UNDERLAY-PEERS
+    type: ipv4
+    send_community: all
+    maximum_routes: 12000
+  - name: EVPN-OVERLAY-PEERS
+    type: evpn
+    update_source: Loopback0
+    bfd: true
+    ebgp_multihop: 3
+    send_community: all
+    maximum_routes: 0
+  redistribute:
+    connected:
+      enabled: true
+      route_map: RM-CONN-2-BGP
+  address_family_evpn:
+    peer_groups:
+    - name: EVPN-OVERLAY-PEERS
+      activate: true
+  address_family_ipv4:
+    peer_groups:
+    - name: IPv4-UNDERLAY-PEERS
+      activate: true
+    - name: EVPN-OVERLAY-PEERS
+      activate: false
+service_routing_protocols_model: multi-agent
+transceiver_qsfp_default_mode_4x10: true
+vlan_internal_order:
+  allocation: ascending
+  range:
+    beginning: 1006
+    ending: 1199
+vrfs:
+- name: MGMT
+  ip_routing: false
 vxlan_interface:
   vxlan1:
     description: host1_VTEP
     vxlan:
-      udp_port: 4789
       source_interface: Loopback1
-ethernet_interfaces:
-- name: Ethernet1
-  peer: OLD_SW-1/2
-  peer_interface: Endpoint_port1
-  peer_type: server
-  description: SERVER_OLD_SW-1/2_Endpoint_port1
-  shutdown: false
-  channel_group:
-    id: 1
-    mode: active
-- name: Ethernet2
-  peer: OLD_SW-1/2
-  peer_interface: ENDPOINT_PORT2
-  peer_type: server
-  description: SERVER_OLD_SW-1/2_ENDPOINT_PORT2
-  shutdown: false
-  channel_group:
-    id: 1
-    mode: active
-port_channel_interfaces:
-- name: Port-Channel1
-  description: SERVER_OLD_SW-1/2_ENDPOINT_PORT_CHANNEL
-  shutdown: false
-  ptp:
-    announce:
-      interval: 0
-      timeout: 3
-    delay_req: -3
-    sync_message:
-      interval: -3
-    transport: ipv4
-    enable: true
-  switchport:
-    enabled: true
+      udp_port: 4789

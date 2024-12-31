@@ -1,28 +1,137 @@
+aaa_root:
+  disabled: true
+config_end: true
+enable_password:
+  disabled: true
+ethernet_interfaces:
+- name: Ethernet1
+  description: P2P_UPLINK_P2P_VRFS_TESTS_SPINE1_Ethernet1
+  shutdown: false
+  mtu: 9214
+  ip_address: 10.42.42.9/31
+  mac_security:
+    profile: TEST
+  peer: UPLINK_P2P_VRFS_TESTS_SPINE1
+  peer_interface: Ethernet1
+  peer_type: spine
+  switchport:
+    enabled: false
+- name: Ethernet1.42
+  description: P2P_UPLINK_P2P_VRFS_TESTS_SPINE1_Ethernet1.42_VRF_PROD
+  shutdown: false
+  mtu: 9214
+  vrf: PROD
+  encapsulation_dot1q:
+    vlan: 42
+  ip_address: 10.42.42.9/31
+  peer: UPLINK_P2P_VRFS_TESTS_SPINE1
+  peer_interface: Ethernet1.42
+  peer_type: spine
+- name: Ethernet1.66
+  description: P2P_UPLINK_P2P_VRFS_TESTS_SPINE1_Ethernet1.66_VRF_ONLY-ON-L2LEAF
+  shutdown: false
+  mtu: 9214
+  vrf: ONLY-ON-L2LEAF
+  encapsulation_dot1q:
+    vlan: 66
+  ip_address: 10.42.42.9/31
+  peer: UPLINK_P2P_VRFS_TESTS_SPINE1
+  peer_interface: Ethernet1.66
+  peer_type: spine
+- name: Ethernet2
+  description: P2P_UPLINK_P2P_VRFS_TESTS_SPINE2_Ethernet2
+  shutdown: false
+  mtu: 9214
+  ip_address: 10.42.42.11/31
+  mac_security:
+    profile: TEST
+  peer: UPLINK_P2P_VRFS_TESTS_SPINE2
+  peer_interface: Ethernet2
+  peer_type: spine
+  switchport:
+    enabled: false
+- name: Ethernet2.100
+  description: P2P_UPLINK_P2P_VRFS_TESTS_SPINE2_Ethernet2.100_VRF_IT
+  shutdown: false
+  mtu: 9214
+  vrf: IT
+  encapsulation_dot1q:
+    vlan: 100
+  ip_address: 10.42.42.11/31
+  peer: UPLINK_P2P_VRFS_TESTS_SPINE2
+  peer_interface: Ethernet2.100
+  peer_type: spine
+- name: Ethernet2.42
+  description: P2P_UPLINK_P2P_VRFS_TESTS_SPINE2_Ethernet2.42_VRF_PROD
+  shutdown: false
+  mtu: 9214
+  vrf: PROD
+  encapsulation_dot1q:
+    vlan: 42
+  ip_address: 10.42.42.11/31
+  peer: UPLINK_P2P_VRFS_TESTS_SPINE2
+  peer_interface: Ethernet2.42
+  peer_type: spine
+- name: Ethernet51
+  description: L2_UPLINK_P2P_VRFS_TESTS_L2LEAF1_Ethernet1
+  shutdown: false
+  channel_group:
+    id: 51
+    mode: active
+  peer: UPLINK_P2P_VRFS_TESTS_L2LEAF1
+  peer_interface: Ethernet1
+  peer_type: l2leaf
+- name: Ethernet52
+  description: L2_UPLINK_P2P_VRFS_TESTS_L2LEAF1_Ethernet2
+  shutdown: false
+  channel_group:
+    id: 51
+    mode: active
+  peer: UPLINK_P2P_VRFS_TESTS_L2LEAF1
+  peer_interface: Ethernet2
+  peer_type: l2leaf
 hostname: UPLINK_P2P_VRFS_TESTS_LEAF1
+ip_igmp_snooping:
+  globally_enabled: true
+ip_routing: true
+ip_virtual_router_mac_address: cafe:cafe:cafe
 is_deployed: true
+loopback_interfaces:
+- name: Loopback0
+  description: ROUTER_ID
+  shutdown: false
+  ip_address: 192.168.42.3/32
+management_api_http:
+  enable_https: true
+  enable_vrfs:
+  - name: MGMT
+metadata:
+  platform: vEOS-LAB
+port_channel_interfaces:
+- name: Port-Channel51
+  description: L2_UPLINK_P2P_VRFS_TESTS_L2LEAF1_Port-Channel1
+  shutdown: false
+  switchport:
+    enabled: true
+    mode: trunk
+    trunk:
+      allowed_vlan: '66'
 router_bgp:
   as: '65000'
   router_id: 192.168.42.3
-  bgp:
-    default:
-      ipv4_unicast: false
   maximum_paths:
     paths: 4
     ecmp: 4
-  redistribute:
-    connected:
-      enabled: true
   updates:
     wait_install: true
+  bgp:
+    default:
+      ipv4_unicast: false
   peer_groups:
   - name: IPv4-UNDERLAY-PEERS
     type: ipv4
-    maximum_routes: 12000
     send_community: all
-  address_family_ipv4:
-    peer_groups:
-    - name: IPv4-UNDERLAY-PEERS
-      activate: true
+    maximum_routes: 12000
   neighbors:
   - ip_address: 10.42.42.8
     peer_group: IPv4-UNDERLAY-PEERS
@@ -34,6 +143,13 @@ router_bgp:
     remote_as: '65000'
     peer: UPLINK_P2P_VRFS_TESTS_SPINE2
     description: UPLINK_P2P_VRFS_TESTS_SPINE2_Ethernet2
+  redistribute:
+    connected:
+      enabled: true
+  address_family_ipv4:
+    peer_groups:
+    - name: IPv4-UNDERLAY-PEERS
+      activate: true
   vrfs:
   - name: PROD
     router_id: 192.168.42.3
@@ -70,150 +186,34 @@ router_bgp:
       connected:
         enabled: true
 service_routing_protocols_model: multi-agent
-ip_routing: true
+transceiver_qsfp_default_mode_4x10: true
+vlan_interfaces:
+- name: Vlan66
+  description: TEST-L2VLAN-ATTRACTION
+  shutdown: false
+  vrf: ONLY-ON-L2LEAF
+  ip_address_virtual: 172.16.0.1/24
+  tenant: TenantC
+  tags:
+  - not-on-spine-2
 vlan_internal_order:
   allocation: ascending
   range:
     beginning: 1006
     ending: 1199
-aaa_root:
-  disabled: true
-config_end: true
-enable_password:
-  disabled: true
-transceiver_qsfp_default_mode_4x10: true
-vrfs:
-- name: MGMT
-  ip_routing: false
-- name: IT
-  tenant: TenantA
-  ip_routing: true
-- name: PROD
-  tenant: TenantA
-  ip_routing: true
-- name: ONLY-ON-L2LEAF
-  tenant: TenantC
-  ip_routing: true
-management_api_http:
-  enable_vrfs:
-  - name: MGMT
-  enable_https: true
-ethernet_interfaces:
-- name: Ethernet1
-  peer: UPLINK_P2P_VRFS_TESTS_SPINE1
-  peer_interface: Ethernet1
-  peer_type: spine
-  description: P2P_UPLINK_P2P_VRFS_TESTS_SPINE1_Ethernet1
-  shutdown: false
-  mtu: 9214
-  mac_security:
-    profile: TEST
-  switchport:
-    enabled: false
-  ip_address: 10.42.42.9/31
-- name: Ethernet1.42
-  peer: UPLINK_P2P_VRFS_TESTS_SPINE1
-  peer_interface: Ethernet1.42
-  peer_type: spine
-  vrf: PROD
-  description: P2P_UPLINK_P2P_VRFS_TESTS_SPINE1_Ethernet1.42_VRF_PROD
-  shutdown: false
-  encapsulation_dot1q:
-    vlan: 42
-  mtu: 9214
-  ip_address: 10.42.42.9/31
-- name: Ethernet1.66
-  peer: UPLINK_P2P_VRFS_TESTS_SPINE1
-  peer_interface: Ethernet1.66
-  peer_type: spine
-  vrf: ONLY-ON-L2LEAF
-  description: P2P_UPLINK_P2P_VRFS_TESTS_SPINE1_Ethernet1.66_VRF_ONLY-ON-L2LEAF
-  shutdown: false
-  encapsulation_dot1q:
-    vlan: 66
-  mtu: 9214
-  ip_address: 10.42.42.9/31
-- name: Ethernet2
-  peer: UPLINK_P2P_VRFS_TESTS_SPINE2
-  peer_interface: Ethernet2
-  peer_type: spine
-  description: P2P_UPLINK_P2P_VRFS_TESTS_SPINE2_Ethernet2
-  shutdown: false
-  mtu: 9214
-  mac_security:
-    profile: TEST
-  switchport:
-    enabled: false
-  ip_address: 10.42.42.11/31
-- name: Ethernet2.100
-  peer: UPLINK_P2P_VRFS_TESTS_SPINE2
-  peer_interface: Ethernet2.100
-  peer_type: spine
-  vrf: IT
-  description: P2P_UPLINK_P2P_VRFS_TESTS_SPINE2_Ethernet2.100_VRF_IT
-  shutdown: false
-  encapsulation_dot1q:
-    vlan: 100
-  mtu: 9214
-  ip_address: 10.42.42.11/31
-- name: Ethernet2.42
-  peer: UPLINK_P2P_VRFS_TESTS_SPINE2
-  peer_interface: Ethernet2.42
-  peer_type: spine
-  vrf: PROD
-  description: P2P_UPLINK_P2P_VRFS_TESTS_SPINE2_Ethernet2.42_VRF_PROD
-  shutdown: false
-  encapsulation_dot1q:
-    vlan: 42
-  mtu: 9214
-  ip_address: 10.42.42.11/31
-- name: Ethernet51
-  peer: UPLINK_P2P_VRFS_TESTS_L2LEAF1
-  peer_interface: Ethernet1
-  peer_type: l2leaf
-  description: L2_UPLINK_P2P_VRFS_TESTS_L2LEAF1_Ethernet1
-  shutdown: false
-  channel_group:
-    id: 51
-    mode: active
-- name: Ethernet52
-  peer: UPLINK_P2P_VRFS_TESTS_L2LEAF1
-  peer_interface: Ethernet2
-  peer_type: l2leaf
-  description: L2_UPLINK_P2P_VRFS_TESTS_L2LEAF1_Ethernet2
-  shutdown: false
-  channel_group:
-    id: 51
-    mode: active
-port_channel_interfaces:
-- name: Port-Channel51
-  description: L2_UPLINK_P2P_VRFS_TESTS_L2LEAF1_Port-Channel1
-  switchport:
-    enabled: true
-    mode: trunk
-    trunk:
-      allowed_vlan: '66'
-  shutdown: false
-loopback_interfaces:
-- name: Loopback0
-  description: ROUTER_ID
-  shutdown: false
-  ip_address: 192.168.42.3/32
 vlans:
 - id: 66
   name: TEST-L2VLAN-ATTRACTION
   tenant: TenantC
-ip_igmp_snooping:
-  globally_enabled: true
-ip_virtual_router_mac_address: cafe:cafe:cafe
-vlan_interfaces:
-- name: Vlan66
+vrfs:
+- name: MGMT
+  ip_routing: false
+- name: IT
+  ip_routing: true
+  tenant: TenantA
+- name: PROD
+  ip_routing: true
+  tenant: TenantA
+- name: ONLY-ON-L2LEAF
+  ip_routing: true
   tenant: TenantC
-  tags:
-  - not-on-spine-2
-  description: TEST-L2VLAN-ATTRACTION
-  shutdown: false
-  ip_address_virtual: 172.16.0.1/24
-  vrf: ONLY-ON-L2LEAF
-metadata:
-  platform: vEOS-LAB
