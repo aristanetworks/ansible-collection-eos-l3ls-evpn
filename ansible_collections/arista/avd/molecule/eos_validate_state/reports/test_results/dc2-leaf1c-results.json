@@ -61,7 +61,7 @@
     "categories": [
       "configuration"
     ],
-    "description": "Verifies there is no difference between the running-config and the startup-config"
+    "description": "Verifies there is no difference between the running-config and the startup-config."
   },
   {
     "name": "dc2-leaf1c",
@@ -69,7 +69,7 @@
     "categories": [
       "configuration"
     ],
-    "description": "Verifies ZeroTouch is disabled"
+    "description": "Verifies ZeroTouch is disabled."
   },
   {
     "name": "dc2-leaf1c",
@@ -77,7 +77,7 @@
     "categories": [
       "connectivity"
     ],
-    "description": "Verifies that the provided LLDP neighbors are connected properly.",
+    "description": "Verifies the connection status of the specified LLDP (Link Layer Discovery Protocol) neighbors.",
     "custom_field": "Local: Ethernet1 - Remote: dc2-leaf1a Ethernet8"
   },
   {
@@ -86,7 +86,7 @@
     "categories": [
       "connectivity"
     ],
-    "description": "Verifies that the provided LLDP neighbors are connected properly.",
+    "description": "Verifies the connection status of the specified LLDP (Link Layer Discovery Protocol) neighbors.",
     "custom_field": "Local: Ethernet2 - Remote: dc2-leaf1b Ethernet8"
   },
   {
@@ -111,7 +111,7 @@
     "categories": [
       "greent"
     ],
-    "description": "Verifies if a GreenT policy is created."
+    "description": "Verifies if a GreenT policy other than the default is created."
   },
   {
     "name": "dc2-leaf1c",
@@ -169,7 +169,7 @@
     "categories": [
       "hardware"
     ],
-    "description": "Verifies the system cooling status."
+    "description": "Verifies the device's system cooling status."
   },
   {
     "name": "dc2-leaf1c",
@@ -177,7 +177,7 @@
     "categories": [
       "hardware"
     ],
-    "description": "Verifies the device temperature."
+    "description": "Verifies if the device temperature is within acceptable limits."
   },
   {
     "name": "dc2-leaf1c",
@@ -185,7 +185,7 @@
     "categories": [
       "hardware"
     ],
-    "description": "Verifies the device temperature."
+    "description": "Verifies if the device temperature is within acceptable limits."
   },
   {
     "name": "dc2-leaf1c",
@@ -193,7 +193,7 @@
     "categories": [
       "hardware"
     ],
-    "description": "Verifies if all transceivers come from approved manufacturers."
+    "description": "Verifies if all the transceivers come from approved manufacturers."
   },
   {
     "name": "dc2-leaf1c",
@@ -201,7 +201,7 @@
     "categories": [
       "hardware"
     ],
-    "description": "Verifies if all transceivers come from approved manufacturers.",
+    "description": "Verifies if all the transceivers come from approved manufacturers.",
     "custom_field": "Accepted Manufacturers: 'Arista Networks', 'Arastra, Inc.', 'Not Present'"
   },
   {
@@ -210,7 +210,7 @@
     "categories": [
       "hardware"
     ],
-    "description": "Verifies the transceivers temperature."
+    "description": "Verifies if all the transceivers are operating at an acceptable temperature."
   },
   {
     "name": "dc2-leaf1c",
@@ -218,7 +218,7 @@
     "categories": [
       "interfaces"
     ],
-    "description": "Verifies the status of the provided interfaces.",
+    "description": "Verifies the operational states of specified interfaces to ensure they match expected configurations.",
     "custom_field": "Interface Ethernet1 - L2_dc2-leaf1a_Ethernet8 = 'up'"
   },
   {
@@ -227,7 +227,7 @@
     "categories": [
       "interfaces"
     ],
-    "description": "Verifies the status of the provided interfaces.",
+    "description": "Verifies the operational states of specified interfaces to ensure they match expected configurations.",
     "custom_field": "Interface Ethernet2 - L2_dc2-leaf1b_Ethernet8 = 'up'"
   },
   {
@@ -236,7 +236,7 @@
     "categories": [
       "interfaces"
     ],
-    "description": "Verifies the status of the provided interfaces.",
+    "description": "Verifies the operational states of specified interfaces to ensure they match expected configurations.",
     "custom_field": "Interface Ethernet5 - SERVER_dc2-leaf1-server1_iLO = 'up'"
   },
   {
@@ -245,7 +245,7 @@
     "categories": [
       "interfaces"
     ],
-    "description": "Verifies the status of the provided interfaces.",
+    "description": "Verifies the operational states of specified interfaces to ensure they match expected configurations.",
     "custom_field": "Interface Port-Channel1 - L2_DC2_L3_LEAF1_Port-Channel8 = 'up'"
   },
   {
@@ -383,7 +383,7 @@
     "categories": [
       "security"
     ],
-    "description": "Verifies IPv4 security connections for a peer."
+    "description": "Verifies the IPv4 security connections."
   },
   {
     "name": "dc2-leaf1c",
@@ -431,7 +431,7 @@
     "categories": [
       "services"
     ],
-    "description": "Verifies if the DNS servers are correctly configured."
+    "description": "Verifies if the DNS (Domain Name Service) servers are correctly configured."
   },
   {
     "name": "dc2-leaf1c",
@@ -495,7 +495,7 @@
     "categories": [
       "stun"
     ],
-    "description": "Verifies the STUN client is configured with the specified IPv4 source address and port. Validate the public IP and port if provided."
+    "description": "(Deprecated) Verifies the translation for a source address on a STUN client."
   },
   {
     "name": "dc2-leaf1c",
