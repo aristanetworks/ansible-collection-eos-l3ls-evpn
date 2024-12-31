@@ -19,8 +19,8 @@
         state: directory
         mode: "0o775"
       loop:
-        - "{{ anta_catalogs_dir }}/regular_run"
-        - "{{ anta_catalogs_dir }}/deny_bgp_vrfs_run"
-        - "{{ anta_reports_dir }}/regular_run"
-        - "{{ anta_reports_dir }}/deny_bgp_vrfs_run"
+        - "{{ anta_catalogs_dir }}/default_run"
+        - "{{ anta_catalogs_dir }}/allow_bgp_vrfs_run"
+        - "{{ anta_reports_dir }}/default_run"
+        - "{{ anta_reports_dir }}/allow_bgp_vrfs_run"
       run_once: true

@@ -67,8 +67,8 @@ ARGUMENT_SPEC = {
                 "type": "dict",
                 "options": {
                     "boundary": {"type": "str", "choices": ["unlimited", "fabric", "dc", "pod", "rack"], "default": "unlimited"},
-                    "allow_bgp_external": {"type": "bool"},
-                    "allow_bgp_vrfs": {"type": "bool"},
+                    "allow_bgp_external": {"type": "bool", "default": False},
+                    "allow_bgp_vrfs": {"type": "bool", "default": False},
                 },
             },
             "filters": {

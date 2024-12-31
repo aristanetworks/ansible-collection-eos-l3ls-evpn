@@ -5,14 +5,14 @@
   vars:
     root_dir: "{{ playbook_dir }}"
   tasks:
-    - name: ANTA Regular Run
+    - name: ANTA Default Run
       delegate_to: 127.0.0.1
       ansible.builtin.import_role:
         name: arista.avd.anta_runner
       vars:
         anta_runner_dry_run: true
-        anta_catalogs_dir: "{{ root_dir }}/anta/catalogs/regular_run"
-        anta_reports_dir: "{{ root_dir }}/anta/reports/regular_run"
+        anta_catalogs_dir: "{{ root_dir }}/anta/catalogs/default_run"
+        anta_reports_dir: "{{ root_dir }}/anta/reports/default_run"
       run_once: true
 
     - name: ANTA Deny BGP VRFs Run
@@ -21,6 +21,7 @@
         name: arista.avd.anta_runner
       vars:
         anta_runner_dry_run: true
-        anta_catalogs_dir: "{{ root_dir }}/anta/catalogs/deny_bgp_vrfs_run"
-        anta_reports_dir: "{{ root_dir }}/anta/reports/deny_bgp_vrfs_run"
+        anta_catalogs_dir: "{{ root_dir }}/anta/catalogs/allow_bgp_vrfs_run"
+        anta_reports_dir: "{{ root_dir }}/anta/reports/allow_bgp_vrfs_run"
+        anta_catalog_allow_bgp_vrfs: true
       run_once: true

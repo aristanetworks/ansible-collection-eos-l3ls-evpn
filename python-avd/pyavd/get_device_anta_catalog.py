@@ -25,6 +25,7 @@ def get_device_anta_catalog(
     custom_test_specs: list[TestSpec] | None = None,
     run_tests: list[str] | None = None,
     skip_tests: list[str] | None = None,
+    ignore_is_deployed: bool = False,
 ) -> AntaCatalog:
     """Generate an ANTA catalog for a single device.
 
@@ -54,6 +55,8 @@ def get_device_anta_catalog(
         Optional list of test names to run from the default PyAVD test index.
     skip_tests : list[str]
         Optional list of test names to skip from the default PyAVD test index. Takes precedence over `run_tests`.
+    ignore_is_deployed : bool
+        If set to True, the catalog will be generated even if the device is marked as not deployed (is_deployed=False).
 
     Returns:
     -------
@@ -62,6 +65,7 @@ def get_device_anta_catalog(
     """
     from ._anta.factories import create_catalog
     from ._anta.index import PYAVD_TEST_INDEX, PYAVD_TEST_NAMES
+    from ._anta.lib import AntaCatalog
     from ._anta.utils import dump_anta_catalog
 
     # Normalize input parameters
@@ -71,12 +75,17 @@ def get_device_anta_catalog(
 
     start_time = perf_counter()
     LOGGER.debug(
-        "<%s>: generating catalog with options (run_tests=%s, skip_tests=%s, output_dir=%s)",
+        "<%s>: generating catalog with options (run_tests=%s, skip_tests=%s, output_dir=%s, ignore_is_deployed=%s)",
         hostname,
         run_tests,
         skip_tests,
         output_dir,
+        ignore_is_deployed,
     )
+
+    if ignore_is_deployed is False and not fabric_data.devices[hostname].is_deployed:
+        LOGGER.debug("<%s>: device is not deployed, returning an empty catalog", hostname)
+        return AntaCatalog()
 
     # Check for invalid test names across all filters
     invalid_tests = {

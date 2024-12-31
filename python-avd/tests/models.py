@@ -15,6 +15,7 @@ from ansible.vars.manager import VariableManager
 from yaml import CSafeLoader, load
 
 from pyavd import get_avd_facts
+from pyavd._anta.lib import AntaCatalog
 
 if TYPE_CHECKING:
     from ansible.inventory.host import Host as AnsibleHost
@@ -67,6 +68,24 @@ class MoleculeHost:
     def hostvars(self) -> dict:
         """The input vars for the host, as read from the Ansible inventory in the molecule scenario."""
         return json.loads(json.dumps(self.scenario._vars.get_vars(host=self.ansible_host)))
+
+    @cached_property
+    def anta_catalog_default(self) -> AntaCatalog:
+        """The intended ANTA catalog for a default run for the host, as read from the JSON file in the molecule scenario."""
+        catalog_path = self.scenario.path / "anta/catalogs/default_run" / f"{self.name}.json"
+        if not catalog_path.exists():
+            return AntaCatalog()
+
+        return AntaCatalog.parse(filename=catalog_path, file_format="json")
+
+    @cached_property
+    def anta_catalog_allow_bgp_vrfs(self) -> AntaCatalog:
+        """The intended ANTA catalog for a run with BGP VRFs for the host, as read from the JSON file in the molecule scenario."""
+        catalog_path = self.scenario.path / "anta/catalogs/allow_bgp_vrfs_run" / f"{self.name}.json"
+        if not catalog_path.exists():
+            return AntaCatalog()
+
+        return AntaCatalog.parse(filename=catalog_path, file_format="json")
 
 
 class MoleculeScenario:

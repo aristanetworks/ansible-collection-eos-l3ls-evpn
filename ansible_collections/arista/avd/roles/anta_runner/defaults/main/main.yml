@@ -13,10 +13,10 @@ anta_devices: "{{ ansible_play_hosts }}"
 anta_catalog_boundary: "unlimited"   # Options: unlimited, fabric, dc, pod, rack
 
 # Generate tests for BGP peers outside of the configured scope boundary.
-anta_catalog_allow_bgp_external: true
+anta_catalog_allow_bgp_external: false
 
 # Generate tests for BGP peers in VRFs.
-anta_catalog_allow_bgp_vrfs: true
+anta_catalog_allow_bgp_vrfs: false
 
 # Global timeout for the ANTA runner. It is recommended to set this to a high value to avoid timeouts during large ANTA runs.
 anta_runner_timeout: 30
