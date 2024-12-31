@@ -550,10 +550,6 @@ ok: [pf1 -> localhost] => (item=/home/user/Documents/git_projects/ansible-avd-ex
 (...)
 ```
 
-### Validation with ANTA
-
-To be completed.
-
 ## Troubleshooting
 
 For any question reach out to AVD maintainer over [Github discussions](https://github.com/aristanetworks/avd/discussions). Please share the relevant logs as well as the following information:

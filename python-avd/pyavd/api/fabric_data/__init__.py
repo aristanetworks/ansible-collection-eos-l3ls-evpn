@@ -52,8 +52,8 @@ class FabricData:
     """
 
     # Public attributes that tests can access. More attributes can be added as needed
-    devices: dict[str, DeviceData]
     scope: FabricScope
+    devices: dict[str, DeviceData]
     boundary_index: defaultdict[BoundaryLocation, set[str]]
 
     # IP indexes. Methods are provided to access these indexes

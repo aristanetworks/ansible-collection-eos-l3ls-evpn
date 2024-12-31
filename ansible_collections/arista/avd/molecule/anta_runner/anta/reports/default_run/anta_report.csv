@@ -110,7 +110,6 @@ dc1-leaf2c,VerifyInterfaceUtilization,unset,,Verifies that the utilization of in
 dc1-leaf2c,VerifyInterfacesStatus,unset,,Verifies the operational states of specified interfaces to ensure they match expected configurations.,Interfaces
 dc1-leaf2c,VerifyStormControlDrops,unset,,Verifies there are no interface storm-control drop counters.,Interfaces
 dc1-leaf2c,VerifyRoutingProtocolModel,unset,,Verifies the configured routing protocol model.,Routing
-dc1-leaf2c,VerifyRoutingTableEntry,unset,,Verifies that the provided routes are present in the routing table of a specified VRF.,Routing
 dc1-leaf2c,VerifyAPIHttpsSSL,unset,,Verifies if the eAPI has a valid SSL profile.,Security
 dc1-leaf2c,VerifyEOSExtensions,unset,,Verifies that all EOS extensions installed on the device are enabled for boot persistence.,Software
 dc1-leaf2c,VerifyEOSVersion,unset,,Verifies the EOS version of the device.,Software

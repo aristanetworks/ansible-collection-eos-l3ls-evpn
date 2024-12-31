@@ -14,7 +14,7 @@ from anta.catalog import AntaCatalog, AntaTestDefinition
 from anta.models import AntaTest
 
 from pyavd._eos_cli_config_gen.schema import EosCliConfigGen
-from pyavd._utils import get, get_v2
+from pyavd._utils import get_v2
 
 from .constants import StructuredConfigKey
 from .logs import LogMessage, TestLoggerAdapter
@@ -35,9 +35,9 @@ def create_fabric_data(structured_configs: dict, scope: dict | None = None) -> F
     """Factory function to create a FabricData instance from device structured configurations."""
     from pyavd.api.fabric_data import FabricData
 
-    devices: dict[str, DeviceData] = {}
     # TODO: Might need to handle Pydantic validation errors more gracefully
     scope_obj = FabricScope(**scope) if scope is not None else FabricScope()
+    devices: dict[str, DeviceData] = {}
     boundary_index: defaultdict[BoundaryLocation, set[str]] = defaultdict(set)
 
     loopback0_ips: dict[str, IPv4Address] = {}
@@ -52,7 +52,8 @@ def create_fabric_data(structured_configs: dict, scope: dict | None = None) -> F
 
     # Build all the indexes
     for hostname, structured_config in structured_configs.items():
-        device_data = create_device_data(hostname, structured_config, scope_obj.boundary)
+        structured_config_model = EosCliConfigGen._load(structured_config)
+        device_data = create_device_data(hostname, structured_config_model, scope_obj.boundary)
         devices[hostname] = device_data
 
         if scope_obj.boundary != "unlimited" and getattr(device_data.boundary_location, scope_obj.boundary) is None:
@@ -84,8 +85,8 @@ def create_fabric_data(structured_configs: dict, scope: dict | None = None) -> F
             wan_routers.add(hostname)
 
     fabric_data = FabricData(
-        devices=devices,
         scope=scope_obj,
+        devices=devices,
         boundary_index=boundary_index,
         _loopback0_ips=loopback0_ips,
         _vtep_ips=vtep_ips,
@@ -100,7 +101,7 @@ def create_fabric_data(structured_configs: dict, scope: dict | None = None) -> F
     return fabric_data
 
 
-def create_device_data(hostname: str, structured_config: dict, boundary: str) -> DeviceData:
+def create_device_data(hostname: str, structured_config: EosCliConfigGen, boundary: str) -> DeviceData:
     """Create the DeviceData object for the given hostname."""
     fabric_name, dc_name, pod_name, rack = get_device_location_metadata(structured_config)
     boundary_location = create_device_boundary_location(fabric_name, dc_name, pod_name, rack, boundary)
@@ -110,8 +111,8 @@ def create_device_data(hostname: str, structured_config: dict, boundary: str) ->
 
     return DeviceData(
         hostname=hostname,
-        dns_domain=get(structured_config, "dns_domain"),
-        is_deployed=get(structured_config, "is_deployed", default=True),
+        dns_domain=structured_config.dns_domain,
+        is_deployed=structured_config.is_deployed,
         fabric_name=fabric_name,
         dc_name=dc_name,
         pod_name=pod_name,

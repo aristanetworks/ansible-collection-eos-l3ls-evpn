@@ -15,7 +15,7 @@
         anta_reports_dir: "{{ root_dir }}/anta/reports/default_run"
       run_once: true
 
-    - name: ANTA Deny BGP VRFs Run
+    - name: ANTA Allow BGP VRFs Run
       delegate_to: 127.0.0.1
       ansible.builtin.import_role:
         name: arista.avd.anta_runner

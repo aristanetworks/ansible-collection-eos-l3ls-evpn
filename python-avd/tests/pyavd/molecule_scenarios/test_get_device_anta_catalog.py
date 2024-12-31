@@ -58,7 +58,7 @@ def test_get_fabric_data(molecule_scenario: MoleculeScenario) -> None:
         for intf_name, ip in data.routed_interface_ips.items():
             assert isinstance(ip, IPv4Address)
             # Test that the interface exists in structured config
-            assert any(intf.name == intf_name for intf in structured_configs[device].get("ethernet_interfaces", []))
+            assert any(intf["name"] == intf_name for intf in structured_configs[device].get("ethernet_interfaces", []))
 
     # Test filtering consistency
     for attr in ["is_deployed", "fabric_name", "dc_name", "pod_name", "rack"]:
@@ -68,7 +68,8 @@ def test_get_fabric_data(molecule_scenario: MoleculeScenario) -> None:
                 matching_devices = fabric_data.get_devices_by_attribute(attr, value)
                 assert device in matching_devices
 
-    # TODO: Test boundary relationships (boundary != unlimited):
+    # TODO: When https://github.com/aristanetworks/avd/pull/4827 is merged:
+    # Test boundary relationships (boundary != unlimited):
     #   - Verify all devices belong to a boundary
     #   - Test boundary hierarchy (rack -> pod -> dc)
     #   - Validate proper boundary nesting (racks in pods, pods in DCs)
@@ -80,7 +81,7 @@ def test_get_fabric_data(molecule_scenario: MoleculeScenario) -> None:
     [
         {
             "catalog_attr": "anta_catalog_default",
-            "fabric_scope": None,  # Default scope
+            "fabric_scope": None,
         },
         {"catalog_attr": "anta_catalog_allow_bgp_vrfs", "fabric_scope": {"allow_bgp_vrfs": True}},
     ],

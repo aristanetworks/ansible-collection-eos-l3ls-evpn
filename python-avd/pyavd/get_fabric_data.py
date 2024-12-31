@@ -6,10 +6,12 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
+    from pathlib import Path
+
     from pyavd.api.fabric_data import FabricData
 
 
-def get_fabric_data(structured_configs: dict[str, dict], scope: dict | None = None) -> FabricData:
+def get_fabric_data(structured_configs: dict[str, dict], scope: dict | None = None, filename: str | Path | None = None) -> FabricData:
     """Create a FabricData instance from device structured configurations.
 
     When FabricData is created, it will automatically create the required mappings
@@ -40,12 +42,19 @@ def get_fabric_data(structured_configs: dict[str, dict], scope: dict | None = No
             "allow_bgp_vrfs": bool,  # Allow BGP peers in VRFs
         }
         ```
+    filename : str | Path | None
+        An optional filename or path to save the FabricData instance as a JSON file.
 
     Returns:
     -------
     FabricData
         An instance of FabricData containing the processed fabric information.
     """
+    from pyavd._anta.utils import dump_fabric_data
     from pyavd.api.fabric_data import FabricData
 
-    return FabricData.create(structured_configs, scope)
+    fabric_data = FabricData.create(structured_configs, scope)
+    if filename:
+        dump_fabric_data(filename, fabric_data)
+
+    return fabric_data

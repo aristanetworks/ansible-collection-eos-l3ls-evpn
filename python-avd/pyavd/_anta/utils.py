@@ -5,34 +5,62 @@
 
 from __future__ import annotations
 
+from dataclasses import asdict
 from ipaddress import IPv4Address, ip_interface
+from json import JSONEncoder, dumps
+from logging import getLogger
 from pathlib import Path
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
-from pyavd._utils import get, get_item
+from pyavd._utils import get_v2
+
+from .models import FabricScope
 
 if TYPE_CHECKING:
     from anta.catalog import AntaCatalog
 
+    from pyavd._eos_cli_config_gen.schema import EosCliConfigGen
+    from pyavd.api.fabric_data import FabricData
 
-def get_device_location_metadata(structured_config: dict) -> tuple[str | None, str | None, str | None, str | None]:
-    """Extract the location metadata from the structured configuration."""
+LOGGER = getLogger(__name__)
+
+
+class FabricDataEncoder(JSONEncoder):
+    """Custom JSON encoder for FabricData objects."""
+
+    def default(self, o: Any) -> str:
+        if isinstance(o, FabricScope):
+            return o.model_dump()
+        if isinstance(o, IPv4Address):
+            return str(o)
+        if isinstance(o, set):
+            return list(o)
+        return super().default(o)
+
+
+def get_device_location_metadata(structured_config: EosCliConfigGen) -> tuple[str | None, str | None, str | None, str | None]:
+    """Extract the location metadata from the structured configuration.
+
+    # TODO: Can be removed when https://github.com/aristanetworks/avd/pull/4827 is merged
+    """
     return (
-        get(structured_config, "metadata.fabric_name"),
-        get(structured_config, "metadata.dc_name"),
-        get(structured_config, "metadata.pod_name"),
-        get(structured_config, "metadata.rack"),
+        get_v2(structured_config.metadata, "fabric_name"),
+        get_v2(structured_config.metadata, "dc_name"),
+        get_v2(structured_config.metadata, "pod_name"),
+        get_v2(structured_config.metadata, "rack"),
     )
 
 
-def get_device_special_ips(structured_config: dict) -> tuple[IPv4Address | None, IPv4Address | None]:
+def get_device_special_ips(structured_config: EosCliConfigGen) -> tuple[IPv4Address | None, IPv4Address | None]:
     """Extract Loopback0 and VTEP IP addresses from the structured configuration."""
-    loopback0_ip = get(get_item(get(structured_config, "loopback_interfaces", []), "name", "Loopback0", default={}), "ip_address")
-    if "Dps" in get(structured_config, "vxlan_interface.vxlan1.vxlan.source_interface", ""):
-        interface_model = get(structured_config, "dps_interfaces", default=[])
+    loopback0_ip = structured_config.loopback_interfaces["Loopback0"].ip_address if "Loopback0" in structured_config.loopback_interfaces else None
+
+    vxlan_source_intf = structured_config.vxlan_interface.vxlan1.vxlan.source_interface
+    if vxlan_source_intf:
+        interface_model = structured_config.dps_interfaces if "Dps" in vxlan_source_intf else structured_config.loopback_interfaces
+        vtep_ip = interface_model[vxlan_source_intf].ip_address if vxlan_source_intf in interface_model else None
     else:
-        interface_model = get(structured_config, "loopback_interfaces", default=[])
-    vtep_ip = get(get_item(interface_model, "name", get(structured_config, "vxlan_interface.vxlan1.vxlan.source_interface", ""), default={}), "ip_address")
+        vtep_ip = None
 
     return (
         ip_interface(loopback0_ip).ip if loopback0_ip else None,
@@ -40,20 +68,22 @@ def get_device_special_ips(structured_config: dict) -> tuple[IPv4Address | None,
     )
 
 
-def get_device_roles(structured_config: dict) -> tuple[bool, bool]:
+def get_device_roles(structured_config: EosCliConfigGen) -> tuple[bool, bool]:
     """Extract device roles from the structured configuration."""
-    is_vtep = get(structured_config, "vxlan_interface") is not None
-    is_wan_router = is_vtep and "Dps" in get(structured_config, "vxlan_interface.vxlan1.vxlan.source_interface", "")
+    vxlan_source_intf = structured_config.vxlan_interface.vxlan1.vxlan.source_interface
+    is_vtep = bool(vxlan_source_intf)
+    is_wan_router = is_vtep and "Dps" in vxlan_source_intf
 
     return is_vtep, is_wan_router
 
 
-def get_device_routed_interface_ips(structured_config: dict) -> dict[str, IPv4Address]:
+def get_device_routed_interface_ips(structured_config: EosCliConfigGen) -> dict[str, IPv4Address]:
     """Extract routed ethernet interface IPs from the structured configuration. Interface in DHCP mode are excluded."""
     routed_interface_ips = {}
-    for interface in get(structured_config, "ethernet_interfaces", default=[]):
-        if (ip_address := get(interface, "ip_address")) is not None and ip_address != "dhcp" and get(interface, "switchport.enabled") is False:
-            routed_interface_ips[interface["name"]] = ip_interface(ip_address).ip
+    for interface in structured_config.ethernet_interfaces:
+        if interface.ip_address and interface.ip_address != "dhcp" and interface.switchport.enabled is False:
+            routed_interface_ips[interface.name] = ip_interface(interface.ip_address).ip
+
     return routed_interface_ips
 
 
@@ -65,5 +95,17 @@ def dump_anta_catalog(hostname: str, catalog: AntaCatalog, catalog_dir: str) -> 
     catalog_path = Path(catalog_dir) / f"{hostname}.json"
     catalog_dump = catalog.dump()
 
+    LOGGER.debug("<%s> dumping ANTA catalog at %s", hostname, catalog_path)
     with catalog_path.open(mode="w", encoding="UTF-8") as stream:
         stream.write(catalog_dump.to_json())
+
+
+def dump_fabric_data(filename: str | Path, fabric_data: FabricData) -> None:
+    """Dump a FabricData instance to a JSON file."""
+    fabric_data_path = Path(filename)
+    fabric_data_dict = asdict(fabric_data)
+    fabric_data_json = dumps(fabric_data_dict, cls=FabricDataEncoder, indent=2)
+
+    LOGGER.debug("dumping FabricData at %s", fabric_data_path)
+    with fabric_data_path.open(mode="w", encoding="UTF-8") as stream:
+        stream.write(fabric_data_json)

@@ -18,7 +18,6 @@ from ansible.errors import AnsibleActionFail
 from ansible.plugins.action import ActionBase, display
 
 from ansible_collections.arista.avd.plugins.plugin_utils.utils import PythonToAnsibleHandler
-from pyavd._utils import strip_empties_from_dict
 
 if TYPE_CHECKING:
     from collections.abc import Mapping
@@ -29,7 +28,7 @@ PLUGIN_NAME = "arista.avd.anta_workflow"
 
 try:
     from pyavd._anta.lib import AntaCatalog, AntaInventory, AsyncEOSDevice, MDReportGenerator, ReportCsv, ResultManager, anta_runner
-    from pyavd._utils import default, get
+    from pyavd._utils import default, get, strip_empties_from_dict
     from pyavd.get_device_anta_catalog import get_device_anta_catalog
     from pyavd.get_fabric_data import get_fabric_data
 
@@ -62,7 +61,7 @@ ARGUMENT_SPEC = {
         "options": {
             "output_dir": {"type": "str"},
             "structured_config_dir": {"type": "str"},
-            "structured_config_suffix": {"type": "str", "default": "yml", "choices": ["yml", "yaml", "json"]},
+            "structured_config_suffix": {"type": "str", "choices": ["yml", "yaml", "json"], "default": "yml"},
             "scope": {
                 "type": "dict",
                 "options": {
@@ -106,6 +105,7 @@ ARGUMENT_SPEC = {
     "report": {
         "type": "dict",
         "options": {
+            "fabric_data_output": {"type": "str"},
             "csv_output": {"type": "str"},
             "md_output": {"type": "str"},
             "json_output": {"type": "str"},
@@ -193,7 +193,9 @@ class ActionModule(ActionBase):
             # Load the structured configs and build FabricData
             if structured_config_dir is not None:
                 STRUCTURED_CONFIGS = load_structured_configs(deployed_devices, structured_config_dir, get(PLUGIN_ARGS, "anta_catalog.structured_config_suffix"))
-                FABRIC_DATA = get_fabric_data(structured_configs=STRUCTURED_CONFIGS, scope=get(PLUGIN_ARGS, "anta_catalog.scope"))
+                FABRIC_DATA = get_fabric_data(
+                    structured_configs=STRUCTURED_CONFIGS, scope=get(PLUGIN_ARGS, "anta_catalog.scope"), filename=get(PLUGIN_ARGS, "report.fabric_data_output")
+                )
 
             with ProcessPoolExecutor(max_workers=(ansible_forks - 1)) as executor:
                 batch_size = get(PLUGIN_ARGS, "anta_runner_settings.batch_size")

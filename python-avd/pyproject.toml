@@ -34,6 +34,7 @@ repository = "https://github.com/aristanetworks/avd"
 [dependency-groups]
 pytest = [
     "ansible-core>=2.15.0,<2.19.0",
+    "anta>=1.2.0",
     "pytest",
     "pytest-asyncio",
     "PyYAML>=6.0.0",
@@ -50,7 +51,7 @@ ansible = [
     "pyavd[ansible-collection]",
 ]
 ansible-collection = [
-    "anta>=1.1.0",
+    "anta>=1.2.0",
     "cvprac>=1.4.0",
     "netaddr>=0.7.19",
     "PyYAML>=6.0.0",

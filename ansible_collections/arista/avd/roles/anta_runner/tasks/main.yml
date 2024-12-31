@@ -51,6 +51,7 @@
     anta_logging:
       log_dir: "{{ anta_logs_dir }}"
     report:
+      fabric_data_output: "{{ anta_report_fabric_data_path | arista.avd.default }}"
       csv_output: "{{ anta_report_csv_path }}"
       md_output: "{{ anta_report_md_path }}"
       json_output: "{{ anta_report_json_path }}"
