@@ -225,7 +225,7 @@ def run_anta(devices: list[str]) -> ResultManager:
         raise RuntimeError(msg)
 
     result_manager, inventory, catalog = build_anta_runner_objects(devices)
-    tags = set(get(PLUGIN_ARGS, "anta_runner_settings.tags", default=[])) or None
+    tags = set(get(PLUGIN_ARGS, "anta_runner_settings.tags")) or None
 
     LOGGER.info("running ANTA in process %s for devices: %s", current_process().name, ", ".join(devices))
     run(anta_runner(result_manager, inventory, catalog, tags=tags, dry_run=get(PLUGIN_ARGS, "anta_runner_settings.dry_run")))
@@ -360,7 +360,7 @@ def get_anta_catalog_filters(device: str, anta_catalog_filters: list[dict]) -> d
 
 
 def build_anta_device(device: str) -> AsyncEOSDevice:
-    """Build the ANTA device object for a device using the provided connection variables."""
+    """Build the ANTA device object for a device using the provided Ansible inventory variables."""
     if ANSIBLE_VARS is None or PLUGIN_ARGS is None:
         msg = "Required global variables not initialized"
         raise RuntimeError(msg)

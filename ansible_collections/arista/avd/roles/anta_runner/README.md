@@ -17,4 +17,4 @@ title: Ansible Collection Role anta_runner
 
 ## Overview
 
-**anta_runner** is a role leveraged to validate Arista EOS devices' operational states using the [Arista Network Test Automation (ANTA)](anta.arista.com) framework.
+**anta_runner** is a role leveraged to validate Arista EOS devices' operational states using the [Arista Network Test Automation (ANTA)](https://anta.arista.com) framework.

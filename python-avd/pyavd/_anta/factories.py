@@ -96,7 +96,7 @@ def create_fabric_data(structured_configs: dict, scope: dict | None = None) -> F
     )
 
     stop_time = perf_counter()
-    LOGGER.debug("created FabricData object in %.8f seconds", stop_time - start_time)
+    LOGGER.debug("created FabricData object in %.4f seconds", stop_time - start_time)
 
     return fabric_data
 
@@ -146,7 +146,7 @@ def create_device_boundary_location(fabric_name: str | None, dc_name: str | None
 
 def create_catalog(hostname: str, structured_config: dict, fabric_data: FabricData, test_specs: list[TestSpec]) -> AntaCatalog:
     """Create an ANTA catalog for a device from the provided test specs."""
-    # TODO: Remove this temporary workaround once the metadata is added in the structured config
+    # TODO: Remove this temporary workaround once https://github.com/aristanetworks/avd/pull/4827 is merged
     temporary_keys_to_remove = ["fabric_name", "dc_name", "pod_name", "rack"]
     for key in temporary_keys_to_remove:
         structured_config.get("metadata", {}).pop(key, None)
