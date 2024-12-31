@@ -5,7 +5,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from pyavd._eos_designs.avdfacts import AvdFacts
+from pyavd._eos_designs.structured_config.structured_config_generator import StructuredConfigGenerator
 
 from .ethernet_interfaces import EthernetInterfacesMixin
 from .port_channel_interfaces import PortChannelInterfacesMixin
@@ -19,7 +19,7 @@ DATA_MODELS = ["core_interfaces", "l3_edge"]
 
 
 class AvdStructuredConfigCoreInterfacesAndL3Edge(
-    AvdFacts,
+    StructuredConfigGenerator,
     EthernetInterfacesMixin,
     PortChannelInterfacesMixin,
     RouterBgpMixin,
@@ -32,7 +32,7 @@ class AvdStructuredConfigCoreInterfacesAndL3Edge(
     .render() runs all class methods not starting with _ and of type @cached property and inserts the returned data into
     a dict with the name of the method as key. This means that each key in the final dict corresponds to a method.
 
-    The Class uses AvdFacts, as the base class, to inherit the _hostvars, keys and other attributes.
+    The Class uses StructuredConfigGenerator, as the base class, to inherit the _hostvars, keys and other attributes.
     All other methods are included as "Mixins" to make the files more manageable.
 
     The order of the @cached_properties methods imported from Mixins will also control the order in the output.

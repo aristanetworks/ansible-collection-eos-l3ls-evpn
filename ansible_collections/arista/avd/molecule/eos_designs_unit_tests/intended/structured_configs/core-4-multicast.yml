@@ -1,98 +1,72 @@
-hostname: core-4-multicast
-is_deployed: true
-router_bgp:
-  as: '65000'
-  router_id: 10.0.0.4
-  bgp:
-    default:
-      ipv4_unicast: false
-  maximum_paths:
-    paths: 4
-    ecmp: 4
-  redistribute:
-    connected:
-      enabled: true
-      route_map: RM-CONN-2-BGP
-  updates:
-    wait_install: true
-  peer_groups:
-  - name: IPv4-UNDERLAY-PEERS
-    type: ipv4
-    maximum_routes: 12000
-    send_community: all
-  address_family_ipv4:
-    peer_groups:
-    - name: IPv4-UNDERLAY-PEERS
-      activate: true
-  address_family_ipv6:
-    peer_groups:
-    - name: IPv4-UNDERLAY-PEERS
-      activate: true
-  neighbors:
-  - ip_address: 100.64.48.19
-    remote_as: '65002'
-    peer: peer1
-    description: peer1
-    peer_group: IPv4-UNDERLAY-PEERS
-    local_as: '65001'
-  - ip_address: 100.64.48.21
-    remote_as: '65003'
-    peer: peer2
-    description: peer2
-    peer_group: IPv4-UNDERLAY-PEERS
-    local_as: '65001'
-  - ip_address: 100.64.48.23
-    remote_as: '65004'
-    peer: peer3
-    description: peer3
-    peer_group: IPv4-UNDERLAY-PEERS
-    local_as: '65001'
-static_routes:
-- vrf: MGMT
-  destination_address_prefix: 0.0.0.0/0
-  gateway: 192.168.0.1
-service_routing_protocols_model: multi-agent
-ip_routing: true
-ipv6_unicast_routing: true
-router_multicast:
-  ipv4:
-    routing: true
-vlan_internal_order:
-  allocation: ascending
-  range:
-    beginning: 1006
-    ending: 1199
 aaa_root:
   disabled: true
 config_end: true
 enable_password:
   disabled: true
-transceiver_qsfp_default_mode_4x10: true
-spanning_tree:
-  mode: none
-vrfs:
-- name: MGMT
-  ip_routing: false
-management_api_http:
-  enable_vrfs:
-  - name: MGMT
-  enable_https: true
+ethernet_interfaces:
+- name: Ethernet1
+  description: P2P_LINK_TO_PEER1_Ethernet1
+  shutdown: false
+  mtu: 1600
+  ip_address: 100.64.48.18/31
+  pim:
+    ipv4:
+      sparse_mode: true
+  mpls:
+    ip: true
+  peer: peer1
+  peer_interface: Ethernet1
+  peer_type: other
+  switchport:
+    enabled: false
+- name: Ethernet2
+  description: P2P_LINK_TO_PEER2_Ethernet2
+  shutdown: false
+  mtu: 1600
+  ip_address: 100.64.48.20/31
+  mpls:
+    ip: true
+  peer: peer2
+  peer_interface: Ethernet2
+  peer_type: other
+  switchport:
+    enabled: false
+- name: Ethernet3
+  description: P2P_LINK_TO_PEER3_Ethernet3
+  shutdown: false
+  mtu: 1600
+  ip_address: 100.64.48.22/31
+  mpls:
+    ip: true
+  peer: peer3
+  peer_interface: Ethernet3
+  peer_type: other
+  switchport:
+    enabled: false
+hostname: core-4-multicast
+ip_routing: true
+ipv6_prefix_lists:
+- name: PL-LOOPBACKS-EVPN-OVERLAY-V6
+  sequence_numbers:
+  - sequence: 10
+    action: permit 2000:1234:ffff:ffff::/64 eq 128
+ipv6_unicast_routing: true
+is_deployed: true
 loopback_interfaces:
 - name: Loopback0
   description: ROUTER_ID
   shutdown: false
   ip_address: 10.0.0.4/32
   ipv6_address: 2000:1234:ffff:ffff::4/128
+management_api_http:
+  enable_https: true
+  enable_vrfs:
+  - name: MGMT
 prefix_lists:
 - name: PL-LOOPBACKS-EVPN-OVERLAY
   sequence_numbers:
   - sequence: 10
     action: permit 10.0.0.0/24 eq 32
-ipv6_prefix_lists:
-- name: PL-LOOPBACKS-EVPN-OVERLAY-V6
-  sequence_numbers:
-  - sequence: 10
-    action: permit 2000:1234:ffff:ffff::/64 eq 128
 route_maps:
 - name: RM-CONN-2-BGP
   sequence_numbers:
@@ -104,43 +78,69 @@ route_maps:
     type: permit
     match:
     - ipv6 address prefix-list PL-LOOPBACKS-EVPN-OVERLAY-V6
-ethernet_interfaces:
-- name: Ethernet1
-  peer: peer1
-  peer_interface: Ethernet1
-  peer_type: other
-  switchport:
-    enabled: false
-  shutdown: false
-  mtu: 1600
-  ip_address: 100.64.48.18/31
-  pim:
-    ipv4:
-      sparse_mode: true
-  mpls:
-    ip: true
-  description: P2P_LINK_TO_PEER1_Ethernet1
-- name: Ethernet2
-  peer: peer2
-  peer_interface: Ethernet2
-  peer_type: other
-  switchport:
-    enabled: false
-  shutdown: false
-  mtu: 1600
-  ip_address: 100.64.48.20/31
-  mpls:
-    ip: true
-  description: P2P_LINK_TO_PEER2_Ethernet2
-- name: Ethernet3
-  peer: peer3
-  peer_interface: Ethernet3
-  peer_type: other
-  switchport:
-    enabled: false
-  shutdown: false
-  mtu: 1600
-  ip_address: 100.64.48.22/31
-  mpls:
-    ip: true
-  description: P2P_LINK_TO_PEER3_Ethernet3
+router_bgp:
+  as: '65000'
+  router_id: 10.0.0.4
+  maximum_paths:
+    paths: 4
+    ecmp: 4
+  updates:
+    wait_install: true
+  bgp:
+    default:
+      ipv4_unicast: false
+  peer_groups:
+  - name: IPv4-UNDERLAY-PEERS
+    type: ipv4
+    send_community: all
+    maximum_routes: 12000
+  neighbors:
+  - ip_address: 100.64.48.19
+    peer_group: IPv4-UNDERLAY-PEERS
+    remote_as: '65002'
+    local_as: '65001'
+    peer: peer1
+    description: peer1
+  - ip_address: 100.64.48.21
+    peer_group: IPv4-UNDERLAY-PEERS
+    remote_as: '65003'
+    local_as: '65001'
+    peer: peer2
+    description: peer2
+  - ip_address: 100.64.48.23
+    peer_group: IPv4-UNDERLAY-PEERS
+    remote_as: '65004'
+    local_as: '65001'
+    peer: peer3
+    description: peer3
+  redistribute:
+    connected:
+      enabled: true
+      route_map: RM-CONN-2-BGP
+  address_family_ipv4:
+    peer_groups:
+    - name: IPv4-UNDERLAY-PEERS
+      activate: true
+  address_family_ipv6:
+    peer_groups:
+    - name: IPv4-UNDERLAY-PEERS
+      activate: true
+router_multicast:
+  ipv4:
+    routing: true
+service_routing_protocols_model: multi-agent
+spanning_tree:
+  mode: none
+static_routes:
+- vrf: MGMT
+  destination_address_prefix: 0.0.0.0/0
+  gateway: 192.168.0.1
+transceiver_qsfp_default_mode_4x10: true
+vlan_internal_order:
+  allocation: ascending
+  range:
+    beginning: 1006
+    ending: 1199
+vrfs:
+- name: MGMT
+  ip_routing: false

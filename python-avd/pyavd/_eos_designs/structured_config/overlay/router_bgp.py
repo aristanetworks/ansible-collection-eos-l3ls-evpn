@@ -80,6 +80,12 @@ class RouterBgpMixin(UtilsMixin):
         update_source: str = "Loopback0",
     ) -> dict:
         peer_group = getattr(self.inputs.bgp_peer_groups, pg_name)
+
+        if peer_group.structured_config:
+            self.custom_structured_configs.nested.router_bgp.peer_groups.obtain(peer_group.name)._deepmerge(
+                peer_group.structured_config, list_merge=self.custom_structured_configs.list_merge_strategy
+            )
+
         return {
             "name": peer_group.name,
             "type": pg_type,
@@ -88,7 +94,6 @@ class RouterBgpMixin(UtilsMixin):
             "password": peer_group.password,
             "send_community": "all",
             "maximum_routes": maximum_routes,
-            "struct_cfg": peer_group.structured_config._as_dict() or None,
         }
 
     def _peer_groups(self: AvdStructuredConfigOverlay) -> list | None:

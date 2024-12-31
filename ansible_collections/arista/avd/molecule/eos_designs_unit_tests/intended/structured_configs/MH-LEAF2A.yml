@@ -1,117 +1,6 @@
-hostname: MH-LEAF2A
-is_deployed: true
-router_bgp:
-  as: '65153'
-  router_id: 192.168.255.35
-  bgp:
-    default:
-      ipv4_unicast: false
-  maximum_paths:
-    paths: 4
-    ecmp: 4
-  redistribute:
-    connected:
-      enabled: true
-      route_map: RM-CONN-2-BGP
-    static:
-      enabled: true
-  updates:
-    wait_install: true
-  peer_groups:
-  - name: UNDERLAY-PEERS
-    type: ipv4
-    password: 0nsCUm70mvSTxVO0ldytrg==
-    maximum_routes: 12000
-    send_community: all
-    route_map_out: RM-BGP-UNDERLAY-PEERS-OUT
-  - name: EVPN-OVERLAY-PEERS
-    type: evpn
-    update_source: Loopback0
-    bfd: true
-    password: q+VNViP5i4rVjW1cxFv2wA==
-    send_community: all
-    maximum_routes: 0
-    ebgp_multihop: 3
-  address_family_ipv4:
-    peer_groups:
-    - name: UNDERLAY-PEERS
-      activate: true
-    - name: EVPN-OVERLAY-PEERS
-      activate: false
-  neighbors:
-  - ip_address: 10.10.101.4
-    peer_group: UNDERLAY-PEERS
-    remote_as: '65001'
-    peer: DC1-SPINE1
-    description: DC1-SPINE1_Ethernet21
-  - ip_address: 192.168.255.1
-    peer_group: EVPN-OVERLAY-PEERS
-    peer: DC1-SPINE1
-    description: DC1-SPINE1
-    remote_as: '65001'
-  address_family_evpn:
-    peer_groups:
-    - name: EVPN-OVERLAY-PEERS
-      activate: true
-    evpn_hostflap_detection:
-      window: 180
-      threshold: 5
-      enabled: true
-      expiry_timeout: 10
-  vrfs:
-  - name: default
-    rd: 192.168.255.35:21
-    route_targets:
-      import:
-      - address_family: evpn
-        route_targets:
-        - '21:21'
-      export:
-      - address_family: evpn
-        route_targets:
-        - '21:21'
-        - route-map RM-EVPN-EXPORT-VRF-DEFAULT
-  - name: Tenant_X_OP_Zone
-    rd: 192.168.255.35:20
-    route_targets:
-      import:
-      - address_family: evpn
-        route_targets:
-        - '20:20'
-      export:
-      - address_family: evpn
-        route_targets:
-        - '20:20'
-    router_id: 192.168.255.35
-    redistribute:
-      connected:
-        enabled: true
-  vlan_aware_bundles:
-  - name: default
-    rd: 192.168.255.35:21
-    route_targets:
-      both:
-      - '21:21'
-    redistribute_routes:
-    - learned
-    vlan: '311'
-  - name: Tenant_X_OP_Zone
-    rd: 192.168.255.35:20
-    route_targets:
-      both:
-      - '20:20'
-    redistribute_routes:
-    - learned
-    vlan: '310'
-static_routes:
-- vrf: MGMT
-  destination_address_prefix: 0.0.0.0/0
-  gateway: 192.168.200.5
-- destination_address_prefix: 10.0.0.0/8
-  gateway: 10.2.10.100
-  vrf: default
-service_routing_protocols_model: multi-agent
-ip_routing: true
+aaa_root:
+  disabled: true
+config_end: true
 daemon_terminattr:
   cvaddrs:
   - 192.168.200.11:9910
@@ -119,20 +8,51 @@ daemon_terminattr:
     method: key
     key: telarista
   cvvrf: MGMT
-  smashexcludes: ale,flexCounter,hardware,kni,pulse,strata
-  ingestexclude: /Sysdb/cell/1/agent,/Sysdb/cell/2/agent
   disable_aaa: false
-vlan_internal_order:
-  allocation: ascending
-  range:
-    beginning: 1006
-    ending: 1199
-aaa_root:
-  disabled: true
-config_end: true
+  ingestexclude: /Sysdb/cell/1/agent,/Sysdb/cell/2/agent
+  smashexcludes: ale,flexCounter,hardware,kni,pulse,strata
 enable_password:
   disabled: true
-transceiver_qsfp_default_mode_4x10: true
+ethernet_interfaces:
+- name: Ethernet1
+  description: P2P_LINK_TO_DC1-SPINE1_Ethernet21
+  shutdown: false
+  mtu: 1500
+  link_tracking_groups:
+  - name: Eth-conn-to-router
+    direction: upstream
+  ip_address: 10.10.101.5/31
+  peer: DC1-SPINE1
+  peer_interface: Ethernet21
+  peer_type: spine
+  switchport:
+    enabled: false
+- name: Ethernet2
+  description: MH-L2LEAF1A_Ethernet1
+  shutdown: false
+  channel_group:
+    id: 2
+    mode: active
+  peer: MH-L2LEAF1A
+  peer_interface: Ethernet1
+  peer_type: l2leaf
+- name: Ethernet10
+  description: ROUTER01_Eth1
+  shutdown: false
+  link_tracking_groups:
+  - name: Eth-conn-to-router
+    direction: downstream
+  peer: ROUTER01
+  peer_interface: Eth1
+  peer_type: router
+  port_profile: Tenant_X_LT
+  switchport:
+    enabled: true
+    mode: access
+    access_vlan: 310
+hostname: MH-LEAF2A
+ip_igmp_snooping:
+  globally_enabled: true
 ip_name_servers:
 - ip_address: 192.168.200.5
   vrf: MGMT
@@ -142,6 +62,17 @@ ip_name_servers:
   vrf: MGMT
 - ip_address: 2001:db8::2
   vrf: MGMT
+ip_routing: true
+ip_virtual_router_mac_address: 00:1c:73:00:dc:01
+is_deployed: true
+lacp:
+  port_id:
+    range:
+      begin: 257
+      end: 768
+link_tracking_groups:
+- name: Eth-conn-to-router
+  recovery_delay: 520
 local_users:
 - name: admin
   disabled: true
@@ -156,92 +87,6 @@ local_users:
     cvpadmin@hostmachine.local
   secondary_ssh_key: ssh-rsa AAAAB3NzaC1yc2EAA82spi2mkxp4FgaLi4CjWkpnL1A/MD7WhrSNgqXToF7QCb9Lidagy9IHafQxfu7LwkFdyQIMu8XNwDZIycuf29wHbDdz1N+YNVK8zwyNAbMOeKMqblsEm2YIorgjzQX1m9+/rJeFBKz77PSgeMp/Rc3txFVuSmFmeTy3aMkz=
     cvpadmin@hostmachine.local
-vrfs:
-- name: MGMT
-  ip_routing: false
-- name: Tenant_X_OP_Zone
-  tenant: Tenant_X
-  ip_routing: true
-management_interfaces:
-- name: Management1
-  description: OOB_MANAGEMENT
-  shutdown: false
-  vrf: MGMT
-  ip_address: 192.168.201.106/24
-  gateway: 192.168.200.5
-  type: oob
-management_api_http:
-  enable_vrfs:
-  - name: MGMT
-  enable_https: true
-  default_services: false
-link_tracking_groups:
-- name: Eth-conn-to-router
-  recovery_delay: 520
-lacp:
-  port_id:
-    range:
-      begin: 257
-      end: 768
-ntp:
-  local_interface:
-    name: Management1
-    vrf: MGMT
-  servers:
-  - name: 192.168.200.5
-    vrf: MGMT
-    preferred: true
-  - name: 2001:db8::3
-    vrf: MGMT
-snmp_server:
-  contact: example@example.com
-  location: EOS_DESIGNS_UNIT_TESTS MH-LEAF2A
-ethernet_interfaces:
-- name: Ethernet1
-  peer: DC1-SPINE1
-  peer_interface: Ethernet21
-  peer_type: spine
-  description: P2P_LINK_TO_DC1-SPINE1_Ethernet21
-  shutdown: false
-  mtu: 1500
-  switchport:
-    enabled: false
-  link_tracking_groups:
-  - name: Eth-conn-to-router
-    direction: upstream
-  ip_address: 10.10.101.5/31
-- name: Ethernet2
-  peer: MH-L2LEAF1A
-  peer_interface: Ethernet1
-  peer_type: l2leaf
-  description: MH-L2LEAF1A_Ethernet1
-  shutdown: false
-  channel_group:
-    id: 2
-    mode: active
-- name: Ethernet10
-  peer: ROUTER01
-  peer_interface: Eth1
-  peer_type: router
-  port_profile: Tenant_X_LT
-  description: ROUTER01_Eth1
-  shutdown: false
-  switchport:
-    enabled: true
-    mode: access
-    access_vlan: 310
-  link_tracking_groups:
-  - name: Eth-conn-to-router
-    direction: downstream
-port_channel_interfaces:
-- name: Port-Channel2
-  description: MH-L2LEAF1A_Po1
-  switchport:
-    enabled: true
-    mode: trunk
-    trunk:
-      allowed_vlan: '310'
-  shutdown: false
 loopback_interfaces:
 - name: Loopback0
   description: ROUTER_ID
@@ -257,6 +102,40 @@ loopback_interfaces:
   vrf: Tenant_X_OP_Zone
   ip_address: 10.255.1.35/32
   ipv6_address: 2001:db8:1::3/128
+management_api_http:
+  enable_https: true
+  default_services: false
+  enable_vrfs:
+  - name: MGMT
+management_interfaces:
+- name: Management1
+  description: OOB_MANAGEMENT
+  shutdown: false
+  vrf: MGMT
+  ip_address: 192.168.201.106/24
+  type: oob
+  gateway: 192.168.200.5
+metadata:
+  platform: vEOS-LAB
+ntp:
+  local_interface:
+    name: Management1
+    vrf: MGMT
+  servers:
+  - name: 192.168.200.5
+    preferred: true
+    vrf: MGMT
+  - name: 2001:db8::3
+    vrf: MGMT
+port_channel_interfaces:
+- name: Port-Channel2
+  description: MH-L2LEAF1A_Po1
+  shutdown: false
+  switchport:
+    enabled: true
+    mode: trunk
+    trunk:
+      allowed_vlan: '310'
 prefix_lists:
 - name: PL-LOOPBACKS-EVPN-OVERLAY
   sequence_numbers:
@@ -310,6 +189,146 @@ router_bfd:
     interval: 1200
     min_rx: 1200
     multiplier: 3
+router_bgp:
+  as: '65153'
+  router_id: 192.168.255.35
+  maximum_paths:
+    paths: 4
+    ecmp: 4
+  updates:
+    wait_install: true
+  bgp:
+    default:
+      ipv4_unicast: false
+  peer_groups:
+  - name: UNDERLAY-PEERS
+    type: ipv4
+    password: 0nsCUm70mvSTxVO0ldytrg==
+    send_community: all
+    maximum_routes: 12000
+    route_map_out: RM-BGP-UNDERLAY-PEERS-OUT
+  - name: EVPN-OVERLAY-PEERS
+    type: evpn
+    update_source: Loopback0
+    bfd: true
+    ebgp_multihop: 3
+    password: q+VNViP5i4rVjW1cxFv2wA==
+    send_community: all
+    maximum_routes: 0
+  neighbors:
+  - ip_address: 10.10.101.4
+    peer_group: UNDERLAY-PEERS
+    remote_as: '65001'
+    peer: DC1-SPINE1
+    description: DC1-SPINE1_Ethernet21
+  - ip_address: 192.168.255.1
+    peer_group: EVPN-OVERLAY-PEERS
+    remote_as: '65001'
+    peer: DC1-SPINE1
+    description: DC1-SPINE1
+  redistribute:
+    connected:
+      enabled: true
+      route_map: RM-CONN-2-BGP
+    static:
+      enabled: true
+  vlan_aware_bundles:
+  - name: default
+    rd: 192.168.255.35:21
+    route_targets:
+      both:
+      - '21:21'
+    redistribute_routes:
+    - learned
+    vlan: '311'
+  - name: Tenant_X_OP_Zone
+    rd: 192.168.255.35:20
+    route_targets:
+      both:
+      - '20:20'
+    redistribute_routes:
+    - learned
+    vlan: '310'
+  address_family_evpn:
+    peer_groups:
+    - name: EVPN-OVERLAY-PEERS
+      activate: true
+    evpn_hostflap_detection:
+      enabled: true
+      window: 180
+      threshold: 5
+      expiry_timeout: 10
+  address_family_ipv4:
+    peer_groups:
+    - name: UNDERLAY-PEERS
+      activate: true
+    - name: EVPN-OVERLAY-PEERS
+      activate: false
+  vrfs:
+  - name: default
+    rd: 192.168.255.35:21
+    route_targets:
+      import:
+      - address_family: evpn
+        route_targets:
+        - '21:21'
+      export:
+      - address_family: evpn
+        route_targets:
+        - '21:21'
+        - route-map RM-EVPN-EXPORT-VRF-DEFAULT
+  - name: Tenant_X_OP_Zone
+    rd: 192.168.255.35:20
+    route_targets:
+      import:
+      - address_family: evpn
+        route_targets:
+        - '20:20'
+      export:
+      - address_family: evpn
+        route_targets:
+        - '20:20'
+    router_id: 192.168.255.35
+    redistribute:
+      connected:
+        enabled: true
+service_routing_protocols_model: multi-agent
+snmp_server:
+  contact: example@example.com
+  location: EOS_DESIGNS_UNIT_TESTS MH-LEAF2A
+static_routes:
+- vrf: MGMT
+  destination_address_prefix: 0.0.0.0/0
+  gateway: 192.168.200.5
+- vrf: default
+  destination_address_prefix: 10.0.0.0/8
+  gateway: 10.2.10.100
+transceiver_qsfp_default_mode_4x10: true
+virtual_source_nat_vrfs:
+- name: Tenant_X_OP_Zone
+  ip_address: 10.255.1.35
+  ipv6_address: 2001:db8:1::3
+vlan_interfaces:
+- name: Vlan311
+  description: Tenant_default_vrf
+  shutdown: false
+  ip_address_virtual: 10.2.10.1/24
+  tenant: Tenant_X
+  tags:
+  - default_vrf
+- name: Vlan310
+  description: Tenant_X_OP_Zone_1
+  shutdown: false
+  vrf: Tenant_X_OP_Zone
+  ip_address_virtual: 10.1.10.1/24
+  tenant: Tenant_X
+  tags:
+  - opzone
+vlan_internal_order:
+  allocation: ascending
+  range:
+    beginning: 1006
+    ending: 1199
 vlans:
 - id: 311
   name: Tenant_default_vrf
@@ -317,31 +336,18 @@ vlans:
 - id: 310
   name: Tenant_X_OP_Zone_1
   tenant: Tenant_X
-ip_igmp_snooping:
-  globally_enabled: true
-ip_virtual_router_mac_address: 00:1c:73:00:dc:01
-vlan_interfaces:
-- name: Vlan311
+vrfs:
+- name: MGMT
+  ip_routing: false
+- name: Tenant_X_OP_Zone
+  ip_routing: true
   tenant: Tenant_X
-  tags:
-  - default_vrf
-  description: Tenant_default_vrf
-  shutdown: false
-  ip_address_virtual: 10.2.10.1/24
-- name: Vlan310
-  tenant: Tenant_X
-  tags:
-  - opzone
-  description: Tenant_X_OP_Zone_1
-  shutdown: false
-  ip_address_virtual: 10.1.10.1/24
-  vrf: Tenant_X_OP_Zone
 vxlan_interface:
   vxlan1:
     description: MH-LEAF2A_VTEP
     vxlan:
-      udp_port: 4789
       source_interface: Loopback1
+      udp_port: 4789
       vlans:
       - id: 311
         vni: 11311
@@ -352,9 +358,3 @@ vxlan_interface:
         vni: 21
       - name: Tenant_X_OP_Zone
         vni: 20
-virtual_source_nat_vrfs:
-- name: Tenant_X_OP_Zone
-  ip_address: 10.255.1.35
-  ipv6_address: 2001:db8:1::3
-metadata:
-  platform: vEOS-LAB

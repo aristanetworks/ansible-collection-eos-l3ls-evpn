@@ -18,7 +18,6 @@ class SrcGenBase:
 
     # TODO: add deprecation handling
     #       dynamic_valid_values
-    #       Create a base model for lists so child items can be rendered by their own generators instead of trying to handle it inside lists.
 
     def generate_class_src(self, schema: AvdSchemaField, class_name: str | None = None) -> SrcData:
         """

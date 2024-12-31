@@ -70,9 +70,13 @@ class EthernetInterfacesMixin(UtilsMixin):
                                 "shutdown": not l3_interface.enabled,
                                 "description": interface_description,
                                 "eos_cli": l3_interface.raw_eos_cli,
-                                "struct_cfg": l3_interface.structured_config._as_dict() or None,
                                 "flow_tracker": self.shared_utils.get_flow_tracker(l3_interface.flow_tracking),
                             }
+
+                            if l3_interface.structured_config:
+                                self.custom_structured_configs.nested.ethernet_interfaces.obtain(interface_name)._deepmerge(
+                                    l3_interface.structured_config, list_merge=self.custom_structured_configs.list_merge_strategy
+                                )
 
                             if self.inputs.fabric_sflow.l3_interfaces is not None:
                                 interface["sflow"] = {"enable": self.inputs.fabric_sflow.l3_interfaces}

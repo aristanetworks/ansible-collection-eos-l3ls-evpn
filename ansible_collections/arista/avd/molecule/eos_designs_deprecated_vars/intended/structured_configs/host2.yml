@@ -1,54 +1,14 @@
-hostname: host2
-is_deployed: true
-router_bgp:
-  as: '102'
-  router_id: 10.42.0.102
-  bgp:
-    default:
-      ipv4_unicast: false
-  maximum_paths:
-    paths: 4
-    ecmp: 4
-  updates:
-    wait_install: true
-  peer_groups:
-  - name: MPLS-OVERLAY-PEERS
-    type: mpls
-    update_source: Loopback0
-    bfd: true
-    send_community: all
-    maximum_routes: 0
-    remote_as: '102'
-  address_family_ipv4:
-    peer_groups:
-    - name: MPLS-OVERLAY-PEERS
-      activate: false
-  address_family_vpn_ipv4:
-    neighbor_default_encapsulation_mpls_next_hop_self:
-      source_interface: Loopback0
-    peer_groups:
-    - name: MPLS-OVERLAY-PEERS
-      activate: true
-service_routing_protocols_model: multi-agent
-ip_routing: true
-vlan_internal_order:
-  allocation: ascending
-  range:
-    beginning: 1006
-    ending: 1199
 aaa_root:
   disabled: true
 config_end: true
 enable_password:
   disabled: true
-transceiver_qsfp_default_mode_4x10: true
-vrfs:
-- name: MGMT
-  ip_routing: false
-management_api_http:
-  enable_vrfs:
-  - name: MGMT
-  enable_https: true
+hostname: host2
+ip_igmp_snooping:
+  globally_enabled: true
+ip_routing: true
+ip_virtual_router_mac_address: 00:1c:73:00:dc:01
+is_deployed: true
 loopback_interfaces:
 - name: Loopback0
   description: MY_OVERLAY_LOOPBACK
@@ -58,20 +18,10 @@ loopback_interfaces:
   isis_passive: true
   node_segment:
     ipv4_index: 102
-router_isis:
-  instance: CORE
-  log_adjacency_changes: true
-  net: 49.0001.0100.4200.0102.00
-  router_id: 10.42.0.102
-  is_type: level-2
-  address_family_ipv4:
-    enabled: true
-    maximum_paths: 4
-  advertise:
-    passive_only: false
-  segment_routing_mpls:
-    router_id: 10.42.0.102
-    enabled: true
+management_api_http:
+  enable_https: true
+  enable_vrfs:
+  - name: MGMT
 mpls:
   ip: true
 router_bfd:
@@ -79,6 +29,56 @@ router_bfd:
     interval: 300
     min_rx: 300
     multiplier: 3
-ip_igmp_snooping:
-  globally_enabled: true
-ip_virtual_router_mac_address: 00:1c:73:00:dc:01
+router_bgp:
+  as: '102'
+  router_id: 10.42.0.102
+  maximum_paths:
+    paths: 4
+    ecmp: 4
+  updates:
+    wait_install: true
+  bgp:
+    default:
+      ipv4_unicast: false
+  peer_groups:
+  - name: MPLS-OVERLAY-PEERS
+    type: mpls
+    remote_as: '102'
+    update_source: Loopback0
+    bfd: true
+    send_community: all
+    maximum_routes: 0
+  address_family_ipv4:
+    peer_groups:
+    - name: MPLS-OVERLAY-PEERS
+      activate: false
+  address_family_vpn_ipv4:
+    peer_groups:
+    - name: MPLS-OVERLAY-PEERS
+      activate: true
+    neighbor_default_encapsulation_mpls_next_hop_self:
+      source_interface: Loopback0
+router_isis:
+  instance: CORE
+  net: 49.0001.0100.4200.0102.00
+  router_id: 10.42.0.102
+  is_type: level-2
+  log_adjacency_changes: true
+  advertise:
+    passive_only: false
+  address_family_ipv4:
+    enabled: true
+    maximum_paths: 4
+  segment_routing_mpls:
+    enabled: true
+    router_id: 10.42.0.102
+service_routing_protocols_model: multi-agent
+transceiver_qsfp_default_mode_4x10: true
+vlan_internal_order:
+  allocation: ascending
+  range:
+    beginning: 1006
+    ending: 1199
+vrfs:
+- name: MGMT
+  ip_routing: false

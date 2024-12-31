@@ -1,6 +1,8 @@
-hostname: hardware_counters
-is_deployed: true
-service_routing_protocols_model: multi-agent
+aaa_root:
+  disabled: true
+config_end: true
+enable_password:
+  disabled: true
 hardware_counters:
   features:
   - name: vlan-interface
@@ -31,23 +33,21 @@ hardware_counters:
   - name: route
     address_type: ipv6
     prefix: 2001:db8:cafe::/64
+hostname: hardware_counters
+ip_igmp_snooping:
+  globally_enabled: true
+is_deployed: true
+management_api_http:
+  enable_https: true
+  enable_vrfs:
+  - name: MGMT
+service_routing_protocols_model: multi-agent
+transceiver_qsfp_default_mode_4x10: true
 vlan_internal_order:
   allocation: ascending
   range:
     beginning: 1006
     ending: 1199
-aaa_root:
-  disabled: true
-config_end: true
-enable_password:
-  disabled: true
-transceiver_qsfp_default_mode_4x10: true
 vrfs:
 - name: MGMT
   ip_routing: false
-management_api_http:
-  enable_vrfs:
-  - name: MGMT
-  enable_https: true
-ip_igmp_snooping:
-  globally_enabled: true

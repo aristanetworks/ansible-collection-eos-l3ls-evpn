@@ -5,18 +5,18 @@ from __future__ import annotations
 
 from functools import cached_property
 
-from pyavd._eos_designs.avdfacts import AvdFacts
+from pyavd._eos_designs.structured_config.structured_config_generator import StructuredConfigGenerator
 from pyavd._utils import AvdStringFormatter, default, strip_empties_from_dict
 from pyavd.api.interface_descriptions import InterfaceDescriptionData
 from pyavd.j2filters import list_compress
 
 
-class AvdStructuredConfigMlag(AvdFacts):
-    def render(self) -> dict:
+class AvdStructuredConfigMlag(StructuredConfigGenerator):
+    def render(self) -> None:
         """Wrap class render function with a check for mlag is True."""
         if self.shared_utils.mlag is True:
             return super().render()
-        return {}
+        return None
 
     @cached_property
     def spanning_tree(self) -> dict:
@@ -70,9 +70,13 @@ class AvdStructuredConfigMlag(AvdFacts):
             ),
             "shutdown": False,
             "no_autostate": True,
-            "struct_cfg": self.shared_utils.node_config.mlag_peer_vlan_structured_config._as_dict() or None,
             "mtu": self.shared_utils.p2p_uplinks_mtu,
         }
+
+        if self.shared_utils.node_config.mlag_peer_vlan_structured_config:
+            self.custom_structured_configs.nested.vlan_interfaces.obtain(main_vlan_interface_name)._deepmerge(
+                self.shared_utils.node_config.mlag_peer_vlan_structured_config, list_merge=self.custom_structured_configs.list_merge_strategy
+            )
 
         if self.shared_utils.node_config.mlag_peer_address_family == "ipv6":
             main_vlan_interface["ipv6_address"] = f"{self.shared_utils.mlag_ip}/{self.inputs.fabric_ip_addressing.mlag.ipv6_prefix_length}"
@@ -82,7 +86,7 @@ class AvdStructuredConfigMlag(AvdFacts):
             return [strip_empties_from_dict(main_vlan_interface)]
 
         # Create L3 data which will go on either a dedicated l3 vlan or the main mlag vlan
-        l3_cfg = {"struct_cfg": self.shared_utils.node_config.mlag_peer_l3_vlan_structured_config._as_dict() or None}
+        l3_cfg = {}
         if self.shared_utils.underlay_routing_protocol == "ospf":
             l3_cfg.update(
                 {
@@ -119,9 +123,11 @@ class AvdStructuredConfigMlag(AvdFacts):
         # Add L3 config if the main interface is also used for L3 peering
         if self.shared_utils.mlag_peer_l3_vlan is None:
             main_vlan_interface.update(l3_cfg)
-            # Applying structured config again in the case it is set on both l3vlan and main vlan
-            if self.shared_utils.node_config.mlag_peer_vlan_structured_config is not None:
-                main_vlan_interface["struct_cfg"] = self.shared_utils.node_config.mlag_peer_vlan_structured_config._as_dict()
+            # Applying structured config from l3_vlan only when not set on the main vlan
+            if self.shared_utils.node_config.mlag_peer_l3_vlan_structured_config and not self.shared_utils.node_config.mlag_peer_vlan_structured_config:
+                self.custom_structured_configs.nested.vlan_interfaces.obtain(main_vlan_interface_name)._deepmerge(
+                    self.shared_utils.node_config.mlag_peer_l3_vlan_structured_config, list_merge=self.custom_structured_configs.list_merge_strategy
+                )
 
             return [strip_empties_from_dict(main_vlan_interface)]
 
@@ -139,6 +145,11 @@ class AvdStructuredConfigMlag(AvdFacts):
             l3_vlan_interface["ip_address"] = f"{self.shared_utils.mlag_l3_ip}/{self.inputs.fabric_ip_addressing.mlag.ipv4_prefix_length}"
 
         l3_vlan_interface.update(l3_cfg)
+
+        if self.shared_utils.node_config.mlag_peer_l3_vlan_structured_config:
+            self.custom_structured_configs.nested.vlan_interfaces.obtain(l3_vlan_interface_name)._deepmerge(
+                self.shared_utils.node_config.mlag_peer_l3_vlan_structured_config, list_merge=self.custom_structured_configs.list_merge_strategy
+            )
 
         return [
             strip_empties_from_dict(l3_vlan_interface),
@@ -169,9 +180,13 @@ class AvdStructuredConfigMlag(AvdFacts):
             },
             "shutdown": False,
             "service_profile": self.inputs.p2p_uplinks_qos_profile,
-            "struct_cfg": self.shared_utils.node_config.mlag_port_channel_structured_config._as_dict() or None,
             "flow_tracker": self.shared_utils.get_flow_tracker(self.inputs.fabric_flow_tracking.mlag_interfaces),
         }
+
+        if self.shared_utils.node_config.mlag_port_channel_structured_config:
+            self.custom_structured_configs.nested.port_channel_interfaces.obtain(port_channel_interface_name)._deepmerge(
+                self.shared_utils.node_config.mlag_port_channel_structured_config, list_merge=self.custom_structured_configs.list_merge_strategy
+            )
 
         if self.shared_utils.mlag_l3 is True and self.inputs.trunk_groups.mlag_l3.name != self.inputs.trunk_groups.mlag.name:
             # Add mlag_l3 trunk group even if we reuse the MLAG trunk group for underlay peering
@@ -350,8 +365,13 @@ class AvdStructuredConfigMlag(AvdFacts):
             "bfd": self.inputs.bgp_peer_groups.ipv4_underlay_peers.bfd or None,
             "maximum_routes": 12000,
             "send_community": "all",
-            "struct_cfg": self.inputs.bgp_peer_groups.mlag_ipv4_underlay_peer.structured_config._as_dict() or None,
         }
+
+        if self.inputs.bgp_peer_groups.mlag_ipv4_underlay_peer.structured_config:
+            self.custom_structured_configs.nested.router_bgp.peer_groups.obtain(peer_group_name)._deepmerge(
+                self.inputs.bgp_peer_groups.mlag_ipv4_underlay_peer.structured_config, list_merge=self.custom_structured_configs.list_merge_strategy
+            )
+
         if self.shared_utils.node_config.mlag_ibgp_origin_incomplete:
             peer_group["route_map_in"] = "RM-MLAG-PEER-IN"
 

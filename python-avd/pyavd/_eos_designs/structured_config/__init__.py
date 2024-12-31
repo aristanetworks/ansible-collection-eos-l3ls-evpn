@@ -3,12 +3,11 @@
 # that can be found in the LICENSE file.
 from __future__ import annotations
 
-from collections import ChainMap
 from typing import TYPE_CHECKING
 
+from pyavd._eos_cli_config_gen.schema import EosCliConfigGen
 from pyavd._eos_designs.schema import EosDesigns
 from pyavd._eos_designs.shared_utils import SharedUtils
-from pyavd._utils import get, merge
 
 from .base import AvdStructuredConfigBase
 from .connected_endpoints import AvdStructuredConfigConnectedEndpoints
@@ -20,13 +19,15 @@ from .metadata import AvdStructuredConfigMetadata
 from .mlag import AvdStructuredConfigMlag
 from .network_services import AvdStructuredConfigNetworkServices
 from .overlay import AvdStructuredConfigOverlay
+from .structured_config_generator import StructCfgs
 from .underlay import AvdStructuredConfigUnderlay
 
 if TYPE_CHECKING:
-    from pyavd._eos_designs.avdfacts import AvdFacts
     from pyavd.avd_schema_tools import AvdSchemaTools
 
-AVD_STRUCTURED_CONFIG_CLASSES = [
+    from .structured_config_generator import StructuredConfigGenerator
+
+AVD_STRUCTURED_CONFIG_CLASSES: list[type[StructuredConfigGenerator]] = [
     AvdStructuredConfigBase,
     AvdStructuredConfigMlag,
     AvdStructuredConfigUnderlay,
@@ -41,7 +42,8 @@ AVD_STRUCTURED_CONFIG_CLASSES = [
     # Metadata must be after anything else that can generate structured config, since CV tags can consume from structured config.
     AvdStructuredConfigMetadata,
     # The Custom Structured Configuration module must be rendered last,
-    # since it parses all supported object looking for `struct_cfg`.
+    # since it strips empties from all previously generated structured config and then
+    # applies the custom structured config snips gathered by the other generators.
     AvdStructuredConfigCustomStructuredConfiguration,
 ]
 """
@@ -53,7 +55,6 @@ The order is important, since later modules can overwrite or read config created
 def get_structured_config(
     vars: dict,  # noqa: A002
     input_schema_tools: AvdSchemaTools,
-    output_schema_tools: AvdSchemaTools,
     result: dict,
     templar: object | None = None,
     *,
@@ -67,8 +68,6 @@ def get_structured_config(
             The variable for the device
         input_schema_tools:
             An AvdSchemaTools object used to validate the input variables if enabled.
-        output_schema_tools:
-            An AvdSchemaTools object used to validate the structured_config.
         result:
             Dictionary to store results.
         templar:
@@ -86,36 +85,27 @@ def get_structured_config(
             # Input data validation failed so return empty dict. Calling function should check result.get("failed").
             return {}
 
-    structured_config = {}
-    module_vars = ChainMap(structured_config, vars)
-
     # Load input vars into the EosDesigns data class.
     inputs = EosDesigns._from_dict(vars)
 
     # Initialize SharedUtils class to be passed to each python_module below.
-    shared_utils = SharedUtils(hostvars=module_vars, inputs=inputs, templar=templar, schema=input_schema_tools.avdschema)
+    shared_utils = SharedUtils(hostvars=vars, inputs=inputs, templar=templar, schema=input_schema_tools.avdschema)
+
+    # Single structured config instance which will be in-place updated by each structured config generator.
+    structured_config = EosCliConfigGen()
+
+    # Placeholder for custom structured configs added by the structured config generators.
+    # Will be applied last by AvdStructuredConfigCustomStructuredConfiguration.
+    # "root" holds full device structured configs given under node-config or under VRFs. They will be applied at the root level of the final structured config.
+    # "nested" is one instance of structured config merged onto during parsing of various models supporting a "structured_config" option.
+    # We need these variants because the order of application is important (root first, then nested).
+    #
+    custom_structured_configs = StructCfgs.new_from_ansible_list_merge_strategy(inputs.custom_structured_configuration_list_merge)
 
     for cls in AVD_STRUCTURED_CONFIG_CLASSES:
-        eos_designs_module: AvdFacts = cls(hostvars=module_vars, inputs=inputs, shared_utils=shared_utils)
-        results = eos_designs_module.render()
+        eos_designs_module = cls(
+            hostvars=vars, inputs=inputs, shared_utils=shared_utils, structured_config=structured_config, custom_structured_configs=custom_structured_configs
+        )
+        eos_designs_module.render()
 
-        # Modules can return a dict or a list of dicts
-        if not isinstance(results, list):
-            results = [results]
-
-        # All lists will be merged with "append" except for custom structured configuration where
-        # the default list merge is "append_rp" and can be overridden.
-        # TODO: Each dict entry can contain a list_merge key, which will be picked up by the merge function for all underlying lists.
-        if issubclass(cls, AvdStructuredConfigCustomStructuredConfiguration):
-            list_merge = get(module_vars, "custom_structured_configuration_list_merge", default="append_rp")
-
-            # Only for structured config run conversion on the data in since we still have some structured config inputs without full schema validation.
-            for res in results:
-                output_schema_tools.convert_data(res)
-
-        else:
-            list_merge = "append"
-
-        merge(structured_config, *results, list_merge=list_merge, schema=output_schema_tools.avdschema)
-
-    return structured_config
+    return structured_config._as_dict()

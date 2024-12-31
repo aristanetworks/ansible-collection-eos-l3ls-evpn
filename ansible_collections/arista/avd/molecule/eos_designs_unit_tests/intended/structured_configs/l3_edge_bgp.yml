@@ -1,77 +1,143 @@
-hostname: l3_edge_bgp
-is_deployed: true
-router_bgp:
-  as: '65000'
-  router_id: 1.2.3.1
-  bgp:
-    default:
-      ipv4_unicast: false
-  maximum_paths:
-    paths: 4
-    ecmp: 4
-  redistribute:
-    connected:
-      enabled: true
-      route_map: RM-CONN-2-BGP
-  updates:
-    wait_install: true
-  peer_groups:
-  - name: IPv4-UNDERLAY-PEERS
-    type: ipv4
-    maximum_routes: 12000
-    send_community: all
-  address_family_ipv4:
-    peer_groups:
-    - name: IPv4-UNDERLAY-PEERS
-      activate: true
-  neighbors:
-  - ip_address: 192.168.0.3
-    remote_as: '65002'
-    peer: peer2
-    description: peer2
-    peer_group: IPv4-UNDERLAY-PEERS
-  - ip_address: 192.168.0.5
-    remote_as: '65003'
-    peer: peer3
-    description: peer3
-    peer_group: IPv4-UNDERLAY-PEERS
-  - ip_address: 192.168.0.7
-    remote_as: '65004'
-    peer: peer4
-    description: peer4
-    peer_group: IPv4-UNDERLAY-PEERS
-  - ip_address: 192.168.0.9
-    remote_as: '65005'
-    peer: peer5
-    description: peer5
-    peer_group: IPv4-UNDERLAY-PEERS
-  - ip_address: 192.168.0.11
-    remote_as: '65006'
-    peer: peer6
-    description: peer6
-    peer_group: IPv4-UNDERLAY-PEERS
-service_routing_protocols_model: multi-agent
-ip_routing: true
-vlan_internal_order:
-  allocation: ascending
-  range:
-    beginning: 1006
-    ending: 1199
 aaa_root:
   disabled: true
 config_end: true
 enable_password:
   disabled: true
-transceiver_qsfp_default_mode_4x10: true
-spanning_tree:
-  mode: none
-vrfs:
-- name: MGMT
-  ip_routing: false
+ethernet_interfaces:
+- name: ethernet1
+  description: P2P_peer1_ethernet1
+  shutdown: false
+  speed: forced 10000full
+  mtu: 2000
+  ip_address: 192.168.0.0/31
+  mac_security:
+    profile: TEST-MACSEC-PROFILE
+  ptp:
+    enable: true
+    announce:
+      interval: 0
+      timeout: 3
+    delay_req: -3
+    sync_message:
+      interval: -3
+    transport: ipv4
+  service_profile: TEST-QOS-PROFILE
+  service_policy:
+    qos:
+      input: TEST_POLICY
+  peer: peer1
+  peer_interface: ethernet1
+  peer_type: other
+  switchport:
+    enabled: false
+  eos_cli: '! TEST RAW_EOS_CLI
+
+    '
+- name: ethernet2
+  description: P2P_peer2_ethernet2
+  shutdown: false
+  mtu: 9214
+  ip_address: 192.168.0.2/31
+  ipv6_enable: true
+  peer: peer2
+  peer_interface: ethernet2
+  peer_type: other
+  switchport:
+    enabled: false
+- name: ethernet3
+  description: P2P_peer3_ethernet3
+  shutdown: false
+  mtu: 9214
+  ip_address: 192.168.0.4/31
+  peer: peer3
+  peer_interface: ethernet3
+  peer_type: other
+  switchport:
+    enabled: false
+- name: ethernet4
+  description: Custom description on l3_edge_bgp eth4
+  shutdown: false
+  mtu: 9214
+  ip_address: 192.168.0.6/31
+  peer: peer4
+  peer_interface: ethernet4
+  peer_type: other
+  switchport:
+    enabled: false
+- name: Ethernet5
+  description: P2P_peer5_Ethernet5
+  shutdown: false
+  channel_group:
+    id: 5
+    mode: active
+  peer: peer5
+  peer_interface: Ethernet5
+  peer_type: other
+- name: Ethernet6
+  description: P2P_peer5_Ethernet6
+  shutdown: false
+  channel_group:
+    id: 5
+    mode: active
+  peer: peer5
+  peer_interface: Ethernet6
+  peer_type: other
+- name: Ethernet7
+  description: P2P_peer6_Ethernet7
+  shutdown: false
+  channel_group:
+    id: 7
+    mode: active
+  peer: peer6
+  peer_interface: Ethernet7
+  peer_type: other
+- name: Ethernet8
+  description: P2P_peer6_Ethernet8
+  shutdown: false
+  channel_group:
+    id: 7
+    mode: active
+  peer: peer6
+  peer_interface: Ethernet8
+  peer_type: other
+hostname: l3_edge_bgp
+ip_routing: true
+is_deployed: true
+loopback_interfaces:
+- name: Loopback0
+  description: ROUTER_ID
+  shutdown: false
+  ip_address: 1.2.3.1/32
 management_api_http:
+  enable_https: true
   enable_vrfs:
   - name: MGMT
-  enable_https: true
+port_channel_interfaces:
+- name: Port-Channel5
+  description: P2P_peer5_Port-Channel5
+  shutdown: false
+  mtu: 9214
+  ip_address: 192.168.0.8/31
+  peer: peer5
+  peer_interface: Port-Channel5
+  peer_type: other
+  switchport:
+    enabled: false
+- name: Port-Channel7
+  description: P2P_peer6_Port-Channel7
+  shutdown: false
+  mtu: 9214
+  ip_address: 192.168.0.10/31
+  peer: peer6
+  peer_interface: Port-Channel7
+  peer_type: other
+  switchport:
+    enabled: false
+prefix_lists:
+- name: PL-LOOPBACKS-EVPN-OVERLAY
+  sequence_numbers:
+  - sequence: 10
+    action: permit 1.2.3.4/24 eq 32
 ptp:
   mode: boundary
   clock_identity: 00:1C:73:14:00:01
@@ -90,16 +156,6 @@ ptp:
         delay_resp: 3
         follow_up: 3
         sync: 3
-loopback_interfaces:
-- name: Loopback0
-  description: ROUTER_ID
-  shutdown: false
-  ip_address: 1.2.3.1/32
-prefix_lists:
-- name: PL-LOOPBACKS-EVPN-OVERLAY
-  sequence_numbers:
-  - sequence: 10
-    action: permit 1.2.3.4/24 eq 32
 route_maps:
 - name: RM-CONN-2-BGP
   sequence_numbers:
@@ -107,121 +163,65 @@ route_maps:
     type: permit
     match:
     - ip address prefix-list PL-LOOPBACKS-EVPN-OVERLAY
-ethernet_interfaces:
-- name: ethernet1
-  peer: peer1
-  peer_interface: ethernet1
-  peer_type: other
-  switchport:
-    enabled: false
-  shutdown: false
-  mtu: 2000
-  service_profile: TEST-QOS-PROFILE
-  eos_cli: '! TEST RAW_EOS_CLI
-
-    '
-  ip_address: 192.168.0.0/31
-  ptp:
-    announce:
-      interval: 0
-      timeout: 3
-    delay_req: -3
-    sync_message:
-      interval: -3
-    transport: ipv4
-    enable: true
-  mac_security:
-    profile: TEST-MACSEC-PROFILE
-  description: P2P_peer1_ethernet1
-  speed: forced 10000full
-  service_policy:
-    qos:
-      input: TEST_POLICY
-- name: ethernet2
-  peer: peer2
-  peer_interface: ethernet2
-  peer_type: other
-  switchport:
-    enabled: false
-  shutdown: false
-  mtu: 9214
-  ip_address: 192.168.0.2/31
-  ipv6_enable: true
-  description: P2P_peer2_ethernet2
-- name: ethernet3
-  peer: peer3
-  peer_interface: ethernet3
-  peer_type: other
-  switchport:
-    enabled: false
-  shutdown: false
-  mtu: 9214
-  ip_address: 192.168.0.4/31
-  description: P2P_peer3_ethernet3
-- name: ethernet4
-  peer: peer4
-  peer_interface: ethernet4
-  peer_type: other
-  switchport:
-    enabled: false
-  shutdown: false
-  mtu: 9214
-  ip_address: 192.168.0.6/31
-  description: Custom description on l3_edge_bgp eth4
-- name: Ethernet5
-  peer: peer5
-  peer_interface: Ethernet5
-  peer_type: other
-  shutdown: false
-  channel_group:
-    id: 5
-    mode: active
-  description: P2P_peer5_Ethernet5
-- name: Ethernet6
-  peer: peer5
-  peer_interface: Ethernet6
-  peer_type: other
-  shutdown: false
-  channel_group:
-    id: 5
-    mode: active
-  description: P2P_peer5_Ethernet6
-- name: Ethernet7
-  peer: peer6
-  peer_interface: Ethernet7
-  peer_type: other
-  shutdown: false
-  channel_group:
-    id: 7
-    mode: active
-  description: P2P_peer6_Ethernet7
-- name: Ethernet8
-  peer: peer6
-  peer_interface: Ethernet8
-  peer_type: other
-  shutdown: false
-  channel_group:
-    id: 7
-    mode: active
-  description: P2P_peer6_Ethernet8
-port_channel_interfaces:
-- name: Port-Channel5
-  peer: peer5
-  peer_interface: Port-Channel5
-  peer_type: other
-  switchport:
-    enabled: false
-  shutdown: false
-  mtu: 9214
-  ip_address: 192.168.0.8/31
-  description: P2P_peer5_Port-Channel5
-- name: Port-Channel7
-  peer: peer6
-  peer_interface: Port-Channel7
-  peer_type: other
-  switchport:
-    enabled: false
-  shutdown: false
-  mtu: 9214
-  ip_address: 192.168.0.10/31
-  description: P2P_peer6_Port-Channel7
+router_bgp:
+  as: '65000'
+  router_id: 1.2.3.1
+  maximum_paths:
+    paths: 4
+    ecmp: 4
+  updates:
+    wait_install: true
+  bgp:
+    default:
+      ipv4_unicast: false
+  peer_groups:
+  - name: IPv4-UNDERLAY-PEERS
+    type: ipv4
+    send_community: all
+    maximum_routes: 12000
+  neighbors:
+  - ip_address: 192.168.0.3
+    peer_group: IPv4-UNDERLAY-PEERS
+    remote_as: '65002'
+    peer: peer2
+    description: peer2
+  - ip_address: 192.168.0.5
+    peer_group: IPv4-UNDERLAY-PEERS
+    remote_as: '65003'
+    peer: peer3
+    description: peer3
+  - ip_address: 192.168.0.7
+    peer_group: IPv4-UNDERLAY-PEERS
+    remote_as: '65004'
+    peer: peer4
+    description: peer4
+  - ip_address: 192.168.0.9
+    peer_group: IPv4-UNDERLAY-PEERS
+    remote_as: '65005'
+    peer: peer5
+    description: peer5
+  - ip_address: 192.168.0.11
+    peer_group: IPv4-UNDERLAY-PEERS
+    remote_as: '65006'
+    peer: peer6
+    description: peer6
+  redistribute:
+    connected:
+      enabled: true
+      route_map: RM-CONN-2-BGP
+  address_family_ipv4:
+    peer_groups:
+    - name: IPv4-UNDERLAY-PEERS
+      activate: true
+service_routing_protocols_model: multi-agent
+spanning_tree:
+  mode: none
+transceiver_qsfp_default_mode_4x10: true
+vlan_internal_order:
+  allocation: ascending
+  range:
+    beginning: 1006
+    ending: 1199
+vrfs:
+- name: MGMT
+  ip_routing: false

@@ -1,124 +1,141 @@
-hostname: ipv4-acls
-is_deployed: true
-router_bgp:
-  as: '65000'
-  router_id: 192.168.0.1
-  bgp:
-    default:
-      ipv4_unicast: false
-  maximum_paths:
-    paths: 4
-    ecmp: 4
-  redistribute:
-    connected:
-      enabled: true
-      route_map: RM-CONN-2-BGP
-  updates:
-    wait_install: true
-  peer_groups:
-  - name: IPv4-UNDERLAY-PEERS
-    type: ipv4
-    maximum_routes: 12000
-    send_community: all
-  - name: EVPN-OVERLAY-PEERS
-    type: evpn
-    update_source: Loopback0
-    bfd: true
-    send_community: all
-    maximum_routes: 0
-    ebgp_multihop: 3
-    next_hop_unchanged: true
-  address_family_ipv4:
-    peer_groups:
-    - name: IPv4-UNDERLAY-PEERS
-      activate: true
-    - name: EVPN-OVERLAY-PEERS
-      activate: false
-  address_family_evpn:
-    peer_groups:
-    - name: EVPN-OVERLAY-PEERS
-      activate: true
-service_routing_protocols_model: multi-agent
-ip_routing: true
-vlan_internal_order:
-  allocation: ascending
-  range:
-    beginning: 1006
-    ending: 1199
 aaa_root:
   disabled: true
 config_end: true
 enable_password:
   disabled: true
-transceiver_qsfp_default_mode_4x10: true
-spanning_tree:
-  mode: none
-vrfs:
-- name: MGMT
-  ip_routing: false
-management_api_http:
-  enable_vrfs:
-  - name: MGMT
-  enable_https: true
 ethernet_interfaces:
 - name: Ethernet1
-  peer_type: l3_interface
-  ip_address: 172.16.0.2/30
   shutdown: false
-  switchport:
-    enabled: false
+  ip_address: 172.16.0.2/30
   access_group_in: TEST-IPV4-ACL-WITH-IP-FIELDS-IN_Ethernet1
   access_group_out: TEST-IPV4-ACL-WITH-IP-FIELDS-OUT_Ethernet1
-- name: Ethernet2
   peer_type: l3_interface
-  ip_address: dhcp
-  shutdown: false
   switchport:
     enabled: false
+- name: Ethernet2
+  shutdown: false
+  ip_address: dhcp
+  dhcp_client_accept_default_route: true
   access_group_in: TEST-IPV4-ACL-WITH-IP-FIELDS-IN_Ethernet2
   access_group_out: TEST-IPV4-ACL-WITH-IP-FIELDS-OUT_Ethernet2
-  dhcp_client_accept_default_route: true
+  peer_type: l3_interface
+  switchport:
+    enabled: false
 - name: Ethernet3
-  peer_type: l3_interface
+  shutdown: false
   ip_address: dhcp
-  shutdown: false
-  switchport:
-    enabled: false
-  access_group_in: TEST-IPV4-ACL-WITH-NO-FIELDS-IN
-  access_group_out: TEST-IPV4-ACL-WITH-NO-FIELDS-OUT
   dhcp_client_accept_default_route: true
-- name: Ethernet4
-  peer_type: l3_interface
-  ip_address: 172.19.19.0/31
-  shutdown: false
-  switchport:
-    enabled: false
   access_group_in: TEST-IPV4-ACL-WITH-NO-FIELDS-IN
   access_group_out: TEST-IPV4-ACL-WITH-NO-FIELDS-OUT
-- name: Ethernet5/1
   peer_type: l3_interface
-  ip_address: 172.20.20.0/31
-  shutdown: false
   switchport:
     enabled: false
-  access_group_in: TEST-IPV4-ACL-WITH-IP-FIELDS-IN_Ethernet5_1
-- name: Ethernet6/6.6
-  peer_type: l3_interface
-  ip_address: 172.21.21.0/31
+- name: Ethernet4
   shutdown: false
-  access_group_out: TEST-IPV4-ACL-WITH-IP-FIELDS-OUT_Ethernet6_6.6
+  ip_address: 172.19.19.0/31
+  access_group_in: TEST-IPV4-ACL-WITH-NO-FIELDS-IN
+  access_group_out: TEST-IPV4-ACL-WITH-NO-FIELDS-OUT
+  peer_type: l3_interface
+  switchport:
+    enabled: false
+- name: Ethernet5/1
+  shutdown: false
+  ip_address: 172.20.20.0/31
+  access_group_in: TEST-IPV4-ACL-WITH-IP-FIELDS-IN_Ethernet5_1
+  peer_type: l3_interface
+  switchport:
+    enabled: false
+- name: Ethernet6/6.6
+  shutdown: false
   encapsulation_dot1q:
     vlan: 6
+  ip_address: 172.21.21.0/31
+  access_group_out: TEST-IPV4-ACL-WITH-IP-FIELDS-OUT_Ethernet6_6.6
+  peer_type: l3_interface
 - name: Ethernet6/6
+  shutdown: false
+  peer_type: l3_interface
   switchport:
     enabled: false
-  peer_type: l3_interface
-  shutdown: false
+hostname: ipv4-acls
+ip_access_lists:
+- name: TEST-IPV4-ACL-WITH-IP-FIELDS-IN_Ethernet1
+  entries:
+  - sequence: 15
+    action: deny
+    protocol: ip
+    source: any
+    destination: 172.16.0.2
+  - action: permit
+    protocol: ip
+    source: 172.16.0.1/30
+    destination: 172.16.0.2
+- name: TEST-IPV4-ACL-WITH-IP-FIELDS-IN_Ethernet2
+  entries:
+  - sequence: 15
+    action: deny
+    protocol: ip
+    source: any
+    destination: 172.17.17.17
+  - action: permit
+    protocol: ip
+    source: 172.17.17.1
+    destination: 172.17.17.17
+- name: TEST-IPV4-ACL-WITH-IP-FIELDS-IN_Ethernet5_1
+  entries:
+  - sequence: 15
+    action: deny
+    protocol: ip
+    source: any
+    destination: 172.20.20.0
+  - action: permit
+    protocol: ip
+    source: 172.20.20.1/30
+    destination: 172.20.20.0
+- name: TEST-IPV4-ACL-WITH-IP-FIELDS-OUT_Ethernet1
+  entries:
+  - remark: Some remark will not require source and destination fields.
+  - action: permit
+    protocol: ip
+    source: 172.16.0.2
+    destination: any
+- name: TEST-IPV4-ACL-WITH-IP-FIELDS-OUT_Ethernet2
+  entries:
+  - remark: Some remark will not require source and destination fields.
+  - action: permit
+    protocol: ip
+    source: 172.17.17.17
+    destination: any
+- name: TEST-IPV4-ACL-WITH-IP-FIELDS-OUT_Ethernet6_6.6
+  entries:
+  - remark: Some remark will not require source and destination fields.
+  - action: permit
+    protocol: ip
+    source: 172.21.21.0
+    destination: any
+- name: TEST-IPV4-ACL-WITH-NO-FIELDS-IN
+  entries:
+  - action: permit
+    protocol: ip
+    source: 172.18.18.18
+    destination: any
+- name: TEST-IPV4-ACL-WITH-NO-FIELDS-OUT
+  entries:
+  - action: permit
+    protocol: ip
+    source: 172.18.18.18
+    destination: any
+ip_routing: true
+is_deployed: true
 loopback_interfaces:
 - name: Loopback0
   description: ROUTER_ID
   shutdown: false
   ip_address: 192.168.0.1/32
+management_api_http:
+  enable_https: true
+  enable_vrfs:
+  - name: MGMT
 prefix_lists:
 - name: PL-LOOPBACKS-EVPN-OVERLAY
   sequence_numbers:
@@ -131,75 +148,58 @@ route_maps:
     type: permit
     match:
     - ip address prefix-list PL-LOOPBACKS-EVPN-OVERLAY
-ip_access_lists:
-- name: TEST-IPV4-ACL-WITH-IP-FIELDS-IN_Ethernet1
-  entries:
-  - source: any
-    destination: 172.16.0.2
-    sequence: 15
-    action: deny
-    protocol: ip
-  - source: 172.16.0.1/30
-    destination: 172.16.0.2
-    action: permit
-    protocol: ip
-- name: TEST-IPV4-ACL-WITH-IP-FIELDS-IN_Ethernet2
-  entries:
-  - source: any
-    destination: 172.17.17.17
-    sequence: 15
-    action: deny
-    protocol: ip
-  - source: 172.17.17.1
-    destination: 172.17.17.17
-    action: permit
-    protocol: ip
-- name: TEST-IPV4-ACL-WITH-IP-FIELDS-IN_Ethernet5_1
-  entries:
-  - source: any
-    destination: 172.20.20.0
-    sequence: 15
-    action: deny
-    protocol: ip
-  - source: 172.20.20.1/30
-    destination: 172.20.20.0
-    action: permit
-    protocol: ip
-- name: TEST-IPV4-ACL-WITH-IP-FIELDS-OUT_Ethernet1
-  entries:
-  - remark: Some remark will not require source and destination fields.
-  - source: 172.16.0.2
-    destination: any
-    action: permit
-    protocol: ip
-- name: TEST-IPV4-ACL-WITH-IP-FIELDS-OUT_Ethernet2
-  entries:
-  - remark: Some remark will not require source and destination fields.
-  - source: 172.17.17.17
-    destination: any
-    action: permit
-    protocol: ip
-- name: TEST-IPV4-ACL-WITH-IP-FIELDS-OUT_Ethernet6_6.6
-  entries:
-  - remark: Some remark will not require source and destination fields.
-  - source: 172.21.21.0
-    destination: any
-    action: permit
-    protocol: ip
-- name: TEST-IPV4-ACL-WITH-NO-FIELDS-IN
-  entries:
-  - source: 172.18.18.18
-    destination: any
-    action: permit
-    protocol: ip
-- name: TEST-IPV4-ACL-WITH-NO-FIELDS-OUT
-  entries:
-  - source: 172.18.18.18
-    destination: any
-    action: permit
-    protocol: ip
 router_bfd:
   multihop:
     interval: 300
     min_rx: 300
     multiplier: 3
+router_bgp:
+  as: '65000'
+  router_id: 192.168.0.1
+  maximum_paths:
+    paths: 4
+    ecmp: 4
+  updates:
+    wait_install: true
+  bgp:
+    default:
+      ipv4_unicast: false
+  peer_groups:
+  - name: IPv4-UNDERLAY-PEERS
+    type: ipv4
+    send_community: all
+    maximum_routes: 12000
+  - name: EVPN-OVERLAY-PEERS
+    type: evpn
+    next_hop_unchanged: true
+    update_source: Loopback0
+    bfd: true
+    ebgp_multihop: 3
+    send_community: all
+    maximum_routes: 0
+  redistribute:
+    connected:
+      enabled: true
+      route_map: RM-CONN-2-BGP
+  address_family_evpn:
+    peer_groups:
+    - name: EVPN-OVERLAY-PEERS
+      activate: true
+  address_family_ipv4:
+    peer_groups:
+    - name: IPv4-UNDERLAY-PEERS
+      activate: true
+    - name: EVPN-OVERLAY-PEERS
+      activate: false
+service_routing_protocols_model: multi-agent
+spanning_tree:
+  mode: none
+transceiver_qsfp_default_mode_4x10: true
+vlan_internal_order:
+  allocation: ascending
+  range:
+    beginning: 1006
+    ending: 1199
+vrfs:
+- name: MGMT
+  ip_routing: false

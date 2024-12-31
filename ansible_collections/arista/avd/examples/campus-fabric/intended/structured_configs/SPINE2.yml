@@ -1,74 +1,311 @@
-hostname: SPINE2
-is_deployed: true
-static_routes:
-- vrf: MGMT
-  destination_address_prefix: 0.0.0.0/0
-  gateway: 172.16.100.1
-service_routing_protocols_model: multi-agent
-ip_routing: true
-vlan_internal_order:
-  allocation: ascending
-  range:
-    beginning: 1006
-    ending: 1199
 aaa_root:
   disabled: true
 config_end: true
 enable_password:
   disabled: true
-transceiver_qsfp_default_mode_4x10: true
+ethernet_interfaces:
+- name: Ethernet55/1
+  description: MLAG_SPINE1_Ethernet55/1
+  shutdown: false
+  channel_group:
+    id: 551
+    mode: active
+  peer: SPINE1
+  peer_interface: Ethernet55/1
+  peer_type: mlag_peer
+- name: Ethernet56/1
+  description: MLAG_SPINE1_Ethernet56/1
+  shutdown: false
+  channel_group:
+    id: 551
+    mode: active
+  peer: SPINE1
+  peer_interface: Ethernet56/1
+  peer_type: mlag_peer
+- name: Ethernet1
+  description: L2_LEAF1B_Ethernet51
+  shutdown: false
+  channel_group:
+    id: 1
+    mode: active
+  peer: LEAF1B
+  peer_interface: Ethernet51
+  peer_type: l2leaf
+- name: Ethernet49/1
+  description: L2_LEAF2A_Ethernet1/3
+  shutdown: false
+  channel_group:
+    id: 491
+    mode: active
+  peer: LEAF2A
+  peer_interface: Ethernet1/3
+  peer_type: l2leaf
+- name: Ethernet50/1
+  description: L2_LEAF3A_Ethernet97/2
+  shutdown: false
+  channel_group:
+    id: 501
+    mode: active
+  peer: LEAF3A
+  peer_interface: Ethernet97/2
+  peer_type: l2leaf
+- name: Ethernet51/1
+  description: L2_LEAF3B_Ethernet97/2
+  shutdown: false
+  channel_group:
+    id: 501
+    mode: active
+  peer: LEAF3B
+  peer_interface: Ethernet97/2
+  peer_type: l2leaf
+- name: Ethernet52/1
+  description: P2P_WAN_Ethernet1/1
+  shutdown: false
+  mtu: 1500
+  ip_address: 10.0.0.5/31
+  ospf_network_point_to_point: true
+  ospf_area: 0.0.0.0
+  peer: WAN
+  peer_interface: Ethernet1/1
+  peer_type: other
+  switchport:
+    enabled: false
+hostname: SPINE2
+ip_igmp_snooping:
+  globally_enabled: true
 ip_name_servers:
 - ip_address: 8.8.4.4
   vrf: MGMT
 - ip_address: 8.8.8.8
   vrf: MGMT
-spanning_tree:
-  mode: mstp
-  mst_instances:
-  - id: '0'
-    priority: 4096
-  no_spanning_tree_vlan: 4093-4094
+ip_routing: true
+ip_virtual_router_mac_address: 00:1c:73:00:dc:01
+is_deployed: true
 local_users:
 - name: admin
   privilege: 15
   role: network-admin
   sha512_password: $6$eucN5ngreuExDgwS$xnD7T8jO..GBDX0DUlp.hn.W7yW94xTjSanqgaQGBzPIhDAsyAl9N4oScHvOMvf07uVBFI4mKMxwdVEUVKgY/.
-vrfs:
-- name: MGMT
-  ip_routing: false
+loopback_interfaces:
+- name: Loopback0
+  description: ROUTER_ID
+  shutdown: false
+  ip_address: 172.16.1.2/32
+  ospf_area: 0.0.0.0
+management_api_http:
+  enable_https: true
+  enable_vrfs:
+  - name: MGMT
 management_interfaces:
 - name: Management0
   description: OOB_MANAGEMENT
   shutdown: false
   vrf: MGMT
   ip_address: 172.16.100.102/24
-  gateway: 172.16.100.1
   type: oob
-management_api_http:
-  enable_vrfs:
-  - name: MGMT
-  enable_https: true
+  gateway: 172.16.100.1
+metadata:
+  platform: cEOSLab
+mlag_configuration:
+  domain_id: SPINES
+  local_interface: Vlan4094
+  peer_address: 192.168.0.0
+  peer_link: Port-Channel551
+  reload_delay_mlag: '300'
+  reload_delay_non_mlag: '330'
 ntp:
   local_interface:
     name: Management0
     vrf: MGMT
   servers:
   - name: time.google.com
-    vrf: MGMT
     preferred: true
+    vrf: MGMT
   - name: pool.ntp.org
     vrf: MGMT
+port_channel_interfaces:
+- name: Port-Channel551
+  description: MLAG_SPINE1_Port-Channel551
+  shutdown: false
+  switchport:
+    enabled: true
+    mode: trunk
+    trunk:
+      groups:
+      - MLAG
+- name: Port-Channel1
+  description: L2_IDF1_Port-Channel51
+  shutdown: false
+  mlag: 1
+  switchport:
+    enabled: true
+    mode: trunk
+    trunk:
+      allowed_vlan: 10,110,120,130
+- name: Port-Channel491
+  description: L2_LEAF2A_Port-Channel11
+  shutdown: false
+  mlag: 491
+  switchport:
+    enabled: true
+    mode: trunk
+    trunk:
+      allowed_vlan: 10,210,220,230
+- name: Port-Channel501
+  description: L2_IDF3_AGG_Port-Channel971
+  shutdown: false
+  mlag: 501
+  switchport:
+    enabled: true
+    mode: trunk
+    trunk:
+      allowed_vlan: 10,310,320,330
+router_ospf:
+  process_ids:
+  - id: 100
+    passive_interface_default: true
+    router_id: 172.16.1.2
+    bfd_enable: false
+    no_passive_interfaces:
+    - Vlan4093
+    - Ethernet52/1
+    max_lsa: 12000
+    redistribute:
+      connected:
+        enabled: true
+service_routing_protocols_model: multi-agent
+spanning_tree:
+  mode: mstp
+  mst_instances:
+  - id: '0'
+    priority: 4096
+  no_spanning_tree_vlan: 4093-4094
+static_routes:
+- vrf: MGMT
+  destination_address_prefix: 0.0.0.0/0
+  gateway: 172.16.100.1
+transceiver_qsfp_default_mode_4x10: true
+vlan_interfaces:
+- name: Vlan4093
+  description: MLAG_L3
+  shutdown: false
+  ip_address: 10.1.1.1/31
+  ospf_network_point_to_point: true
+  ospf_area: 0.0.0.0
+  mtu: 1500
+- name: Vlan4094
+  description: MLAG
+  shutdown: false
+  ip_address: 192.168.0.1/31
+  mtu: 1500
+  no_autostate: true
+- name: Vlan110
+  description: IDF1-Data
+  shutdown: false
+  ip_address: 10.1.10.3/23
+  ip_virtual_router_addresses:
+  - 10.1.10.1
+  tenant: MY_FABRIC
+  tags:
+  - '110'
+- name: Vlan120
+  description: IDF1-Voice
+  shutdown: false
+  ip_address: 10.1.20.3/23
+  ip_virtual_router_addresses:
+  - 10.1.20.1
+  tenant: MY_FABRIC
+  tags:
+  - '120'
+- name: Vlan130
+  description: IDF1-Guest
+  shutdown: false
+  ip_address: 10.1.30.3/23
+  ip_virtual_router_addresses:
+  - 10.1.30.1
+  tenant: MY_FABRIC
+  tags:
+  - '130'
+- name: Vlan210
+  description: IDF2-Data
+  shutdown: false
+  ip_address: 10.2.10.3/23
+  ip_virtual_router_addresses:
+  - 10.2.10.1
+  tenant: MY_FABRIC
+  tags:
+  - '210'
+- name: Vlan220
+  description: IDF2-Voice
+  shutdown: false
+  ip_address: 10.2.20.3/23
+  ip_virtual_router_addresses:
+  - 10.2.20.1
+  tenant: MY_FABRIC
+  tags:
+  - '220'
+- name: Vlan230
+  description: IDF2-Guest
+  shutdown: false
+  ip_address: 10.2.30.3/23
+  ip_virtual_router_addresses:
+  - 10.2.30.1
+  tenant: MY_FABRIC
+  tags:
+  - '230'
+- name: Vlan310
+  description: IDF3-Data
+  shutdown: false
+  ip_address: 10.3.10.3/23
+  ip_virtual_router_addresses:
+  - 10.3.10.1
+  tenant: MY_FABRIC
+  tags:
+  - '310'
+- name: Vlan320
+  description: IDF3-Voice
+  shutdown: false
+  ip_address: 10.3.20.3/23
+  ip_virtual_router_addresses:
+  - 10.3.20.1
+  tenant: MY_FABRIC
+  tags:
+  - '320'
+- name: Vlan330
+  description: IDF3-Guest
+  shutdown: false
+  ip_address: 10.3.30.3/23
+  ip_virtual_router_addresses:
+  - 10.3.30.1
+  tenant: MY_FABRIC
+  tags:
+  - '330'
+- name: Vlan10
+  description: Inband Management
+  shutdown: false
+  ip_address: 10.10.10.3/24
+  ip_virtual_router_addresses:
+  - 10.10.10.1
+  mtu: 1500
+  ip_attached_host_route_export:
+    enabled: true
+    distance: 19
+vlan_internal_order:
+  allocation: ascending
+  range:
+    beginning: 1006
+    ending: 1199
 vlans:
 - id: 4093
-  tenant: system
   name: MLAG_L3
   trunk_groups:
   - MLAG
-- id: 4094
   tenant: system
+- id: 4094
   name: MLAG
   trunk_groups:
   - MLAG
+  tenant: system
 - id: 110
   name: IDF1-Data
   tenant: MY_FABRIC
@@ -97,245 +334,8 @@ vlans:
   name: IDF3-Guest
   tenant: MY_FABRIC
 - id: 10
-  tenant: system
   name: INBAND_MGMT
-vlan_interfaces:
-- name: Vlan4093
-  description: MLAG_L3
-  shutdown: false
-  mtu: 1500
-  ip_address: 10.1.1.1/31
-  ospf_network_point_to_point: true
-  ospf_area: 0.0.0.0
-- name: Vlan4094
-  description: MLAG
-  shutdown: false
-  no_autostate: true
-  mtu: 1500
-  ip_address: 192.168.0.1/31
-- name: Vlan110
-  tenant: MY_FABRIC
-  tags:
-  - '110'
-  description: IDF1-Data
-  shutdown: false
-  ip_address: 10.1.10.3/23
-  ip_virtual_router_addresses:
-  - 10.1.10.1
-- name: Vlan120
-  tenant: MY_FABRIC
-  tags:
-  - '120'
-  description: IDF1-Voice
-  shutdown: false
-  ip_address: 10.1.20.3/23
-  ip_virtual_router_addresses:
-  - 10.1.20.1
-- name: Vlan130
-  tenant: MY_FABRIC
-  tags:
-  - '130'
-  description: IDF1-Guest
-  shutdown: false
-  ip_address: 10.1.30.3/23
-  ip_virtual_router_addresses:
-  - 10.1.30.1
-- name: Vlan210
-  tenant: MY_FABRIC
-  tags:
-  - '210'
-  description: IDF2-Data
-  shutdown: false
-  ip_address: 10.2.10.3/23
-  ip_virtual_router_addresses:
-  - 10.2.10.1
-- name: Vlan220
-  tenant: MY_FABRIC
-  tags:
-  - '220'
-  description: IDF2-Voice
-  shutdown: false
-  ip_address: 10.2.20.3/23
-  ip_virtual_router_addresses:
-  - 10.2.20.1
-- name: Vlan230
-  tenant: MY_FABRIC
-  tags:
-  - '230'
-  description: IDF2-Guest
-  shutdown: false
-  ip_address: 10.2.30.3/23
-  ip_virtual_router_addresses:
-  - 10.2.30.1
-- name: Vlan310
-  tenant: MY_FABRIC
-  tags:
-  - '310'
-  description: IDF3-Data
-  shutdown: false
-  ip_address: 10.3.10.3/23
-  ip_virtual_router_addresses:
-  - 10.3.10.1
-- name: Vlan320
-  tenant: MY_FABRIC
-  tags:
-  - '320'
-  description: IDF3-Voice
-  shutdown: false
-  ip_address: 10.3.20.3/23
-  ip_virtual_router_addresses:
-  - 10.3.20.1
-- name: Vlan330
-  tenant: MY_FABRIC
-  tags:
-  - '330'
-  description: IDF3-Guest
-  shutdown: false
-  ip_address: 10.3.30.3/23
-  ip_virtual_router_addresses:
-  - 10.3.30.1
-- name: Vlan10
-  description: Inband Management
-  shutdown: false
-  mtu: 1500
-  ip_attached_host_route_export:
-    enabled: true
-    distance: 19
-  ip_address: 10.10.10.3/24
-  ip_virtual_router_addresses:
-  - 10.10.10.1
-port_channel_interfaces:
-- name: Port-Channel551
-  description: MLAG_SPINE1_Port-Channel551
-  switchport:
-    enabled: true
-    mode: trunk
-    trunk:
-      groups:
-      - MLAG
-  shutdown: false
-- name: Port-Channel1
-  description: L2_IDF1_Port-Channel51
-  switchport:
-    enabled: true
-    mode: trunk
-    trunk:
-      allowed_vlan: 10,110,120,130
-  shutdown: false
-  mlag: 1
-- name: Port-Channel491
-  description: L2_LEAF2A_Port-Channel11
-  switchport:
-    enabled: true
-    mode: trunk
-    trunk:
-      allowed_vlan: 10,210,220,230
-  shutdown: false
-  mlag: 491
-- name: Port-Channel501
-  description: L2_IDF3_AGG_Port-Channel971
-  switchport:
-    enabled: true
-    mode: trunk
-    trunk:
-      allowed_vlan: 10,310,320,330
-  shutdown: false
-  mlag: 501
-ethernet_interfaces:
-- name: Ethernet55/1
-  peer: SPINE1
-  peer_interface: Ethernet55/1
-  peer_type: mlag_peer
-  description: MLAG_SPINE1_Ethernet55/1
-  shutdown: false
-  channel_group:
-    id: 551
-    mode: active
-- name: Ethernet56/1
-  peer: SPINE1
-  peer_interface: Ethernet56/1
-  peer_type: mlag_peer
-  description: MLAG_SPINE1_Ethernet56/1
-  shutdown: false
-  channel_group:
-    id: 551
-    mode: active
-- name: Ethernet1
-  peer: LEAF1B
-  peer_interface: Ethernet51
-  peer_type: l2leaf
-  description: L2_LEAF1B_Ethernet51
-  shutdown: false
-  channel_group:
-    id: 1
-    mode: active
-- name: Ethernet49/1
-  peer: LEAF2A
-  peer_interface: Ethernet1/3
-  peer_type: l2leaf
-  description: L2_LEAF2A_Ethernet1/3
-  shutdown: false
-  channel_group:
-    id: 491
-    mode: active
-- name: Ethernet50/1
-  peer: LEAF3A
-  peer_interface: Ethernet97/2
-  peer_type: l2leaf
-  description: L2_LEAF3A_Ethernet97/2
-  shutdown: false
-  channel_group:
-    id: 501
-    mode: active
-- name: Ethernet51/1
-  peer: LEAF3B
-  peer_interface: Ethernet97/2
-  peer_type: l2leaf
-  description: L2_LEAF3B_Ethernet97/2
-  shutdown: false
-  channel_group:
-    id: 501
-    mode: active
-- name: Ethernet52/1
-  peer: WAN
-  peer_interface: Ethernet1/1
-  peer_type: other
-  switchport:
-    enabled: false
-  shutdown: false
-  mtu: 1500
-  ip_address: 10.0.0.5/31
-  ospf_network_point_to_point: true
-  ospf_area: 0.0.0.0
-  description: P2P_WAN_Ethernet1/1
-mlag_configuration:
-  domain_id: SPINES
-  local_interface: Vlan4094
-  peer_address: 192.168.0.0
-  peer_link: Port-Channel551
-  reload_delay_mlag: '300'
-  reload_delay_non_mlag: '330'
-loopback_interfaces:
-- name: Loopback0
-  description: ROUTER_ID
-  shutdown: false
-  ip_address: 172.16.1.2/32
-  ospf_area: 0.0.0.0
-router_ospf:
-  process_ids:
-  - id: 100
-    passive_interface_default: true
-    router_id: 172.16.1.2
-    max_lsa: 12000
-    no_passive_interfaces:
-    - Vlan4093
-    - Ethernet52/1
-    bfd_enable: false
-    redistribute:
-      connected:
-        enabled: true
-ip_igmp_snooping:
-  globally_enabled: true
-ip_virtual_router_mac_address: 00:1c:73:00:dc:01
-metadata:
-  platform: cEOSLab
+  tenant: system
+vrfs:
+- name: MGMT
+  ip_routing: false
