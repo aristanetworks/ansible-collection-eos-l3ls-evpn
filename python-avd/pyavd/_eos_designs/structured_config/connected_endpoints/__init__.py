@@ -1,7 +1,7 @@
 # Copyright (c) 2023-2024 Arista Networks, Inc.
 # Use of this source code is governed by the Apache License 2.0
 # that can be found in the LICENSE file.
-from pyavd._eos_designs.avdfacts import AvdFacts
+from pyavd._eos_designs.structured_config.structured_config_generator import StructuredConfigGenerator
 
 from .ethernet_interfaces import EthernetInterfacesMixin
 from .monitor_sessions import MonitorSessionsMixin
@@ -9,7 +9,7 @@ from .port_channel_interfaces import PortChannelInterfacesMixin
 
 
 class AvdStructuredConfigConnectedEndpoints(
-    AvdFacts,
+    StructuredConfigGenerator,
     EthernetInterfacesMixin,
     PortChannelInterfacesMixin,
     MonitorSessionsMixin,
@@ -21,14 +21,15 @@ class AvdStructuredConfigConnectedEndpoints(
     .render() runs all class methods not starting with _ and of type @cached property and inserts the returned data into
     a dict with the name of the method as key. This means that each key in the final dict corresponds to a method.
 
-    The Class uses AvdFacts, as the base class, to inherit the _hostvars, keys and other attributes.
+    The Class uses StructuredConfigGenerator, as the base class, to inherit the _hostvars, keys and other attributes.
     All other methods are included as "Mixins" to make the files more manageable.
 
     The order of the @cached_properties methods imported from Mixins will also control the order in the output.
     """
 
-    def render(self) -> dict:
+    def render(self) -> None:
         """Wrap class render function with a check if connected_endpoints feature is enabled."""
         if self.shared_utils.connected_endpoints:
             return super().render()
-        return {}
+
+        return None
