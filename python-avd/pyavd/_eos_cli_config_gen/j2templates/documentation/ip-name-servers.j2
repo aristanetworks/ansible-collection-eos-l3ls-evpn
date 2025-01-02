@@ -13,7 +13,7 @@
 | Name Server | VRF | Priority |
 | ----------- | --- | -------- |
 {%     for name_server in ip_name_servers | arista.avd.default([]) %}
-| {{ name_server.ip_address }} | {{ name_server.vrf | arista.avd.default('-') }} | {{ name_server.priority | arista.avd.default('-') }} |
+| {{ name_server.ip_address }} | {{ name_server.vrf | arista.avd.default('default') }} | {{ name_server.priority | arista.avd.default('-') }} |
 {%     endfor %}
 
 #### IP Name Servers Device Configuration
