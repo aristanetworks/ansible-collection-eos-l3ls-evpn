@@ -1,123 +1,34 @@
-hostname: AUTO_NODE_TYPE_LEAF01
-is_deployed: true
-router_bgp:
-  as: '65101'
-  router_id: 192.168.255.3
-  bgp_defaults:
-  - distance bgp 20 200 200
-  bgp:
-    default:
-      ipv4_unicast: false
-  maximum_paths:
-    paths: 4
-    ecmp: 4
-  redistribute:
-    connected:
-      enabled: true
-      route_map: RM-CONN-2-BGP
-  updates:
-    wait_install: true
-  peer_groups:
-  - name: IPv4-UNDERLAY-PEERS
-    type: ipv4
-    maximum_routes: 12000
-    send_community: all
-  - name: EVPN-OVERLAY-PEERS
-    type: evpn
-    update_source: Loopback0
-    bfd: true
-    send_community: all
-    maximum_routes: 0
-    ebgp_multihop: 3
-  address_family_ipv4:
-    peer_groups:
-    - name: IPv4-UNDERLAY-PEERS
-      activate: true
-    - name: EVPN-OVERLAY-PEERS
-      activate: false
-  neighbors:
-  - ip_address: 172.31.255.0
-    peer_group: IPv4-UNDERLAY-PEERS
-    remote_as: '65100'
-    peer: AUTO_NODE_TYPE_SPINE01
-    description: AUTO_NODE_TYPE_SPINE01_Ethernet1
-  - ip_address: 172.31.255.2
-    peer_group: IPv4-UNDERLAY-PEERS
-    remote_as: '65100'
-    peer: AUTO_NODE_TYPE_SPINE02
-    description: AUTO_NODE_TYPE_SPINE02_Ethernet1
-  - ip_address: 192.168.255.1
-    peer_group: EVPN-OVERLAY-PEERS
-    peer: AUTO_NODE_TYPE_SPINE01
-    description: AUTO_NODE_TYPE_SPINE01_Loopback0
-    remote_as: '65100'
-  - ip_address: 192.168.255.2
-    peer_group: EVPN-OVERLAY-PEERS
-    peer: AUTO_NODE_TYPE_SPINE02
-    description: AUTO_NODE_TYPE_SPINE02_Loopback0
-    remote_as: '65100'
-  address_family_evpn:
-    peer_groups:
-    - name: EVPN-OVERLAY-PEERS
-      activate: true
-static_routes:
-- vrf: MGMT
-  destination_address_prefix: 0.0.0.0/0
-  gateway: 192.168.203.1
-service_routing_protocols_model: multi-agent
-ip_routing: true
-vlan_internal_order:
-  allocation: ascending
-  range:
-    beginning: 1006
-    ending: 1199
 aaa_root:
   disabled: true
 config_end: true
 enable_password:
   disabled: true
-transceiver_qsfp_default_mode_4x10: true
-spanning_tree:
-  mode: mstp
-  mst_instances:
-  - id: '0'
-    priority: 4096
-vrfs:
-- name: MGMT
-  ip_routing: false
-management_interfaces:
-- name: Management1
-  description: OOB_MANAGEMENT
-  shutdown: false
-  vrf: MGMT
-  ip_address: 192.168.203.12/24
-  gateway: 192.168.203.1
-  type: oob
-management_api_http:
-  enable_vrfs:
-  - name: MGMT
-  enable_https: true
 ethernet_interfaces:
 - name: Ethernet1
-  peer: AUTO_NODE_TYPE_SPINE01
-  peer_interface: Ethernet1
-  peer_type: spine
   description: P2P_AUTO_NODE_TYPE_SPINE01_Ethernet1
   shutdown: false
   mtu: 9214
-  switchport:
-    enabled: false
   ip_address: 172.31.255.1/31
-- name: Ethernet2
-  peer: AUTO_NODE_TYPE_SPINE02
+  peer: AUTO_NODE_TYPE_SPINE01
   peer_interface: Ethernet1
   peer_type: spine
+  switchport:
+    enabled: false
+- name: Ethernet2
   description: P2P_AUTO_NODE_TYPE_SPINE02_Ethernet1
   shutdown: false
   mtu: 9214
+  ip_address: 172.31.255.3/31
+  peer: AUTO_NODE_TYPE_SPINE02
+  peer_interface: Ethernet1
+  peer_type: spine
   switchport:
     enabled: false
-  ip_address: 172.31.255.3/31
+hostname: AUTO_NODE_TYPE_LEAF01
+ip_igmp_snooping:
+  globally_enabled: true
+ip_routing: true
+is_deployed: true
 loopback_interfaces:
 - name: Loopback0
   description: ROUTER_ID
@@ -127,6 +38,20 @@ loopback_interfaces:
   description: VXLAN_TUNNEL_SOURCE
   shutdown: false
   ip_address: 192.168.254.3/32
+management_api_http:
+  enable_https: true
+  enable_vrfs:
+  - name: MGMT
+management_interfaces:
+- name: Management1
+  description: OOB_MANAGEMENT
+  shutdown: false
+  vrf: MGMT
+  ip_address: 192.168.203.12/24
+  type: oob
+  gateway: 192.168.203.1
+metadata:
+  platform: vEOS-LAB
 prefix_lists:
 - name: PL-LOOPBACKS-EVPN-OVERLAY
   sequence_numbers:
@@ -146,13 +71,88 @@ router_bfd:
     interval: 300
     min_rx: 300
     multiplier: 3
-ip_igmp_snooping:
-  globally_enabled: true
+router_bgp:
+  as: '65101'
+  router_id: 192.168.255.3
+  maximum_paths:
+    paths: 4
+    ecmp: 4
+  updates:
+    wait_install: true
+  bgp_defaults:
+  - distance bgp 20 200 200
+  bgp:
+    default:
+      ipv4_unicast: false
+  peer_groups:
+  - name: IPv4-UNDERLAY-PEERS
+    type: ipv4
+    send_community: all
+    maximum_routes: 12000
+  - name: EVPN-OVERLAY-PEERS
+    type: evpn
+    update_source: Loopback0
+    bfd: true
+    ebgp_multihop: 3
+    send_community: all
+    maximum_routes: 0
+  neighbors:
+  - ip_address: 172.31.255.0
+    peer_group: IPv4-UNDERLAY-PEERS
+    remote_as: '65100'
+    peer: AUTO_NODE_TYPE_SPINE01
+    description: AUTO_NODE_TYPE_SPINE01_Ethernet1
+  - ip_address: 172.31.255.2
+    peer_group: IPv4-UNDERLAY-PEERS
+    remote_as: '65100'
+    peer: AUTO_NODE_TYPE_SPINE02
+    description: AUTO_NODE_TYPE_SPINE02_Ethernet1
+  - ip_address: 192.168.255.1
+    peer_group: EVPN-OVERLAY-PEERS
+    remote_as: '65100'
+    peer: AUTO_NODE_TYPE_SPINE01
+    description: AUTO_NODE_TYPE_SPINE01_Loopback0
+  - ip_address: 192.168.255.2
+    peer_group: EVPN-OVERLAY-PEERS
+    remote_as: '65100'
+    peer: AUTO_NODE_TYPE_SPINE02
+    description: AUTO_NODE_TYPE_SPINE02_Loopback0
+  redistribute:
+    connected:
+      enabled: true
+      route_map: RM-CONN-2-BGP
+  address_family_evpn:
+    peer_groups:
+    - name: EVPN-OVERLAY-PEERS
+      activate: true
+  address_family_ipv4:
+    peer_groups:
+    - name: IPv4-UNDERLAY-PEERS
+      activate: true
+    - name: EVPN-OVERLAY-PEERS
+      activate: false
+service_routing_protocols_model: multi-agent
+spanning_tree:
+  mode: mstp
+  mst_instances:
+  - id: '0'
+    priority: 4096
+static_routes:
+- vrf: MGMT
+  destination_address_prefix: 0.0.0.0/0
+  gateway: 192.168.203.1
+transceiver_qsfp_default_mode_4x10: true
+vlan_internal_order:
+  allocation: ascending
+  range:
+    beginning: 1006
+    ending: 1199
+vrfs:
+- name: MGMT
+  ip_routing: false
 vxlan_interface:
   vxlan1:
     description: AUTO_NODE_TYPE_LEAF01_VTEP
     vxlan:
-      udp_port: 4789
       source_interface: Loopback1
-metadata:
-  platform: vEOS-LAB
+      udp_port: 4789

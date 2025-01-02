@@ -1,4 +1,4 @@
-# Copyright (c) 2023-2024 Arista Networks, Inc.
+# Copyright (c) 2023-2025 Arista Networks, Inc.
 # Use of this source code is governed by the Apache License 2.0
 # that can be found in the LICENSE file.
 from __future__ import annotations
@@ -158,8 +158,11 @@ class PortChannelInterfacesMixin(UtilsMixin):
             "validate_state": None if (adapter.validate_state if adapter.validate_state is not None else True) else False,
             "validate_lldp": None if (adapter.validate_lldp if adapter.validate_lldp is not None else True) else False,
             "eos_cli": adapter.port_channel.raw_eos_cli,
-            "struct_cfg": adapter.port_channel.structured_config._as_dict() or None,
         }
+        if adapter.port_channel.structured_config:
+            self.custom_structured_configs.nested.port_channel_interfaces.obtain(port_channel_interface_name)._deepmerge(
+                adapter.port_channel.structured_config, list_merge=self.custom_structured_configs.list_merge_strategy
+            )
 
         if adapter.port_channel.subinterfaces:
             port_channel_interface.update({"switchport": {"enabled": False}})

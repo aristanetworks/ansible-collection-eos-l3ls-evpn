@@ -1,133 +1,104 @@
-hostname: autovpn-edge
-is_deployed: true
-router_bgp:
-  as: '65000'
-  router_id: 192.168.30.1
-  bgp:
-    default:
-      ipv4_unicast: false
-  maximum_paths:
-    paths: 16
-  redistribute:
-    connected:
-      enabled: true
-      route_map: RM-CONN-2-BGP
-  updates:
-    wait_install: true
-  peer_groups:
-  - name: WAN-OVERLAY-PEERS
-    type: wan
-    update_source: Dps1
-    bfd: true
-    password: htm4AZe9mIQOO1uiMuGgYQ==
-    send_community: all
-    maximum_routes: 0
-    remote_as: '65000'
-    ttl_maximum_hops: 1
-    bfd_timers:
-      interval: 1000
-      min_rx: 1000
-      multiplier: 10
-  address_family_evpn:
-    peer_groups:
-    - name: WAN-OVERLAY-PEERS
-      activate: true
-      encapsulation: path-selection
-      route_map_in: RM-EVPN-SOO-IN
-      route_map_out: RM-EVPN-SOO-OUT
-  address_family_ipv4:
-    peer_groups:
-    - name: WAN-OVERLAY-PEERS
-      activate: false
-  address_family_path_selection:
-    peer_groups:
-    - name: WAN-OVERLAY-PEERS
-      activate: true
-    bgp:
-      additional_paths:
-        receive: true
-        send: any
-  neighbors:
-  - ip_address: 192.168.131.1
-    peer_group: WAN-OVERLAY-PEERS
-    peer: autovpn-rr1
-    description: autovpn-rr1_Dps1
-  - ip_address: 192.168.131.2
-    peer_group: WAN-OVERLAY-PEERS
-    peer: autovpn-rr2
-    description: autovpn-rr2_Dps1
-  vrfs:
-  - name: default
-    rd: 192.168.30.1:1
-    route_targets:
-      import:
-      - address_family: evpn
-        route_targets:
-        - '1:1'
-      export:
-      - address_family: evpn
-        route_targets:
-        - '1:1'
-        - route-map RM-EVPN-EXPORT-VRF-DEFAULT
-  - name: PROD
-    rd: 192.168.30.1:42
-    route_targets:
-      import:
-      - address_family: evpn
-        route_targets:
-        - '42:42'
-      export:
-      - address_family: evpn
-        route_targets:
-        - '42:42'
-    router_id: 192.168.30.1
-    redistribute:
-      connected:
-        enabled: true
-service_routing_protocols_model: multi-agent
-ip_routing: true
 aaa_root:
   disabled: true
+agents:
+- name: KernelFib
+  environment_variables:
+  - name: KERNELFIB_PROGRAM_ALL_ECMP
+    value: '1'
+application_traffic_recognition:
+  field_sets:
+    ipv4_prefixes:
+    - name: PFX-PATHFINDERS
+      prefix_values:
+      - 192.168.131.1/32
+      - 192.168.131.2/32
+  applications:
+    ipv4_applications:
+    - name: APP-CONTROL-PLANE
+      dest_prefix_set_name: PFX-PATHFINDERS
+  application_profiles:
+  - name: IT
+  - name: VOICE
+  - name: VIDEO
+  - name: APP-PROFILE-CONTROL-PLANE
+    applications:
+    - name: APP-CONTROL-PLANE
 config_end: true
+dps_interfaces:
+- name: Dps1
+  description: DPS Interface
+  mtu: 9194
+  ip_address: 192.168.130.1/32
+  flow_tracker:
+    hardware: FLOW-TRACKER
 enable_password:
   disabled: true
-transceiver_qsfp_default_mode_4x10: false
-spanning_tree:
-  mode: none
-vrfs:
-- name: MGMT
-  ip_routing: false
-- name: IT
-  tenant: TenantA
-  ip_routing: true
-- name: PROD
-  tenant: TenantA
-  ip_routing: true
-management_api_http:
-  enable_vrfs:
-  - name: MGMT
-  enable_https: true
 ethernet_interfaces:
 - name: Ethernet1
-  peer_type: l3_interface
-  ip_address: dhcp
-  shutdown: false
-  switchport:
-    enabled: false
   description: Comcast_666
-  dhcp_client_accept_default_route: true
-- name: Ethernet2
-  peer_type: l3_interface
-  ip_address: 10.14.14.14/31
   shutdown: false
+  ip_address: dhcp
+  dhcp_client_accept_default_route: true
+  peer_type: l3_interface
   switchport:
     enabled: false
+- name: Ethernet2
   description: MPLS-SP-1_Cat6
+  shutdown: false
+  ip_address: 10.14.14.14/31
+  peer_type: l3_interface
+  switchport:
+    enabled: false
+flow_tracking:
+  hardware:
+    trackers:
+    - name: FLOW-TRACKER
+      record_export:
+        on_inactive_timeout: 70000
+        on_interval: 300000
+      exporters:
+      - name: CV-TELEMETRY
+        collector:
+          host: 127.0.0.1
+        local_interface: Loopback0
+        template_interval: 3600000
+    shutdown: false
+hostname: autovpn-edge
+ip_extcommunity_lists:
+- name: ECL-EVPN-SOO
+  entries:
+  - type: permit
+    extcommunities: soo 192.168.30.1:0
+ip_routing: true
+ip_security:
+  ike_policies:
+  - name: AUTOVPN-IKE
+    local_id: 192.168.130.1
+  sa_policies:
+  - name: AUTOVPN-SA
+  profiles:
+  - name: AUTOVPN
+    ike_policy: AUTOVPN-IKE
+    sa_policy: AUTOVPN-SA
+    connection: start
+    shared_key: ABCDEF1234567890
+    dpd:
+      interval: 10
+      time: 50
+      action: clear
+    mode: transport
+  key_controller:
+    profile: AUTOVPN
+is_deployed: true
 loopback_interfaces:
 - name: Loopback0
   description: ROUTER_ID
   shutdown: false
   ip_address: 192.168.30.1/32
+management_api_http:
+  enable_https: true
+  enable_vrfs:
+  - name: MGMT
 prefix_lists:
 - name: PL-LOOPBACKS-EVPN-OVERLAY
   sequence_numbers:
@@ -162,46 +133,100 @@ route_maps:
     type: permit
     match:
     - extcommunity ECL-EVPN-SOO
-agents:
-- name: KernelFib
-  environment_variables:
-  - name: KERNELFIB_PROGRAM_ALL_ECMP
-    value: '1'
-ip_extcommunity_lists:
-- name: ECL-EVPN-SOO
-  entries:
-  - type: permit
-    extcommunities: soo 192.168.30.1:0
-ip_security:
-  ike_policies:
-  - name: AUTOVPN-IKE
-    local_id: 192.168.130.1
-  sa_policies:
-  - name: AUTOVPN-SA
-  profiles:
-  - name: AUTOVPN
-    ike_policy: AUTOVPN-IKE
-    sa_policy: AUTOVPN-SA
-    connection: start
-    shared_key: ABCDEF1234567890
-    dpd:
-      interval: 10
-      time: 50
-      action: clear
-    mode: transport
-  key_controller:
-    profile: AUTOVPN
 router_bfd:
   multihop:
     interval: 300
     min_rx: 300
     multiplier: 3
+router_bgp:
+  as: '65000'
+  router_id: 192.168.30.1
+  maximum_paths:
+    paths: 16
+  updates:
+    wait_install: true
+  bgp:
+    default:
+      ipv4_unicast: false
+  peer_groups:
+  - name: WAN-OVERLAY-PEERS
+    type: wan
+    remote_as: '65000'
+    update_source: Dps1
+    bfd: true
+    bfd_timers:
+      interval: 1000
+      min_rx: 1000
+      multiplier: 10
+    password: htm4AZe9mIQOO1uiMuGgYQ==
+    send_community: all
+    maximum_routes: 0
+    ttl_maximum_hops: 1
+  neighbors:
+  - ip_address: 192.168.131.1
+    peer_group: WAN-OVERLAY-PEERS
+    peer: autovpn-rr1
+    description: autovpn-rr1_Dps1
+  - ip_address: 192.168.131.2
+    peer_group: WAN-OVERLAY-PEERS
+    peer: autovpn-rr2
+    description: autovpn-rr2_Dps1
+  redistribute:
+    connected:
+      enabled: true
+      route_map: RM-CONN-2-BGP
+  address_family_evpn:
+    peer_groups:
+    - name: WAN-OVERLAY-PEERS
+      activate: true
+      route_map_in: RM-EVPN-SOO-IN
+      route_map_out: RM-EVPN-SOO-OUT
+      encapsulation: path-selection
+  address_family_ipv4:
+    peer_groups:
+    - name: WAN-OVERLAY-PEERS
+      activate: false
+  address_family_path_selection:
+    bgp:
+      additional_paths:
+        receive: true
+        send: any
+    peer_groups:
+    - name: WAN-OVERLAY-PEERS
+      activate: true
+  vrfs:
+  - name: default
+    rd: 192.168.30.1:1
+    route_targets:
+      import:
+      - address_family: evpn
+        route_targets:
+        - '1:1'
+      export:
+      - address_family: evpn
+        route_targets:
+        - '1:1'
+        - route-map RM-EVPN-EXPORT-VRF-DEFAULT
+  - name: PROD
+    rd: 192.168.30.1:42
+    route_targets:
+      import:
+      - address_family: evpn
+        route_targets:
+        - '42:42'
+      export:
+      - address_family: evpn
+        route_targets:
+        - '42:42'
+    router_id: 192.168.30.1
+    redistribute:
+      connected:
+        enabled: true
 router_path_selection:
-  tcp_mss_ceiling:
-    ipv4_segment_size: auto
   path_groups:
   - name: INET
     id: 101
+    ipsec_profile: AUTOVPN
     local_interfaces:
     - name: Ethernet1
       stun:
@@ -219,7 +244,6 @@ router_path_selection:
       name: autovpn-rr2
       ipv4_addresses:
       - 10.8.8.8
-    ipsec_profile: AUTOVPN
   - name: MPLS
     id: 100
     local_interfaces:
@@ -257,6 +281,8 @@ router_path_selection:
       application_profile: IT
       load_balance: LB-DEFAULT-AUTOVPN-POLICY-IT
   - name: PROD-AUTOVPN-POLICY
+    default_match:
+      load_balance: LB-PROD-AUTOVPN-POLICY-DEFAULT
     rules:
     - id: 10
       application_profile: VOICE
@@ -264,13 +290,16 @@ router_path_selection:
     - id: 20
       application_profile: VIDEO
       load_balance: LB-PROD-AUTOVPN-POLICY-VIDEO
-    default_match:
-      load_balance: LB-PROD-AUTOVPN-POLICY-DEFAULT
   vrfs:
   - name: default
     path_selection_policy: DEFAULT-AUTOVPN-POLICY-WITH-CP
   - name: PROD
     path_selection_policy: PROD-AUTOVPN-POLICY
+  tcp_mss_ceiling:
+    ipv4_segment_size: auto
+service_routing_protocols_model: multi-agent
+spanning_tree:
+  mode: none
 stun:
   client:
     server_profiles:
@@ -278,53 +307,24 @@ stun:
       ip_address: 10.7.7.7
     - name: INET-autovpn-rr2-Ethernet1
       ip_address: 10.8.8.8
-application_traffic_recognition:
-  application_profiles:
-  - name: IT
-  - name: VOICE
-  - name: VIDEO
-  - name: APP-PROFILE-CONTROL-PLANE
-    applications:
-    - name: APP-CONTROL-PLANE
-  applications:
-    ipv4_applications:
-    - name: APP-CONTROL-PLANE
-      dest_prefix_set_name: PFX-PATHFINDERS
-  field_sets:
-    ipv4_prefixes:
-    - name: PFX-PATHFINDERS
-      prefix_values:
-      - 192.168.131.1/32
-      - 192.168.131.2/32
-dps_interfaces:
-- name: Dps1
-  description: DPS Interface
-  mtu: 9194
-  ip_address: 192.168.130.1/32
-  flow_tracker:
-    hardware: FLOW-TRACKER
+transceiver_qsfp_default_mode_4x10: false
+vrfs:
+- name: MGMT
+  ip_routing: false
+- name: IT
+  ip_routing: true
+  tenant: TenantA
+- name: PROD
+  ip_routing: true
+  tenant: TenantA
 vxlan_interface:
   vxlan1:
     description: autovpn-edge_VTEP
     vxlan:
-      udp_port: 4789
       source_interface: Dps1
+      udp_port: 4789
       vrfs:
       - name: default
         vni: 1
       - name: PROD
         vni: 42
-flow_tracking:
-  hardware:
-    trackers:
-    - name: FLOW-TRACKER
-      record_export:
-        on_inactive_timeout: 70000
-        on_interval: 300000
-      exporters:
-      - name: CV-TELEMETRY
-        collector:
-          host: 127.0.0.1
-        local_interface: Loopback0
-        template_interval: 3600000
-    shutdown: false

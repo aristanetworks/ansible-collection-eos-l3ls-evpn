@@ -1,24 +1,53 @@
+aaa_root:
+  disabled: true
+config_end: true
+enable_password:
+  disabled: true
 hostname: isis-system-id-format-using-node-id
+ip_igmp_snooping:
+  globally_enabled: true
+ip_routing: true
+ip_virtual_router_mac_address: 00:c1:00:00:00:11
 is_deployed: true
+loopback_interfaces:
+- name: Loopback0
+  description: ROUTER_ID
+  shutdown: false
+  ip_address: 172.28.4.99/32
+  isis_enable: CORE
+  isis_passive: true
+  node_segment:
+    ipv4_index: 199
+management_api_http:
+  enable_https: true
+  enable_vrfs:
+  - name: MGMT
+mpls:
+  ip: true
+router_bfd:
+  multihop:
+    interval: 300
+    min_rx: 300
+    multiplier: 3
 router_bgp:
   as: '65000'
   router_id: 172.28.4.99
-  bgp:
-    default:
-      ipv4_unicast: false
   maximum_paths:
     paths: 4
     ecmp: 4
   updates:
     wait_install: true
+  bgp:
+    default:
+      ipv4_unicast: false
   peer_groups:
   - name: MPLS-OVERLAY-PEERS
     type: mpls
+    remote_as: '65000'
     update_source: Loopback0
     bfd: true
     send_community: all
     maximum_routes: 0
-    remote_as: '65000'
   address_family_evpn:
     neighbor_default:
       encapsulation: mpls
@@ -30,56 +59,27 @@ router_bgp:
     peer_groups:
     - name: MPLS-OVERLAY-PEERS
       activate: false
+router_isis:
+  instance: CORE
+  net: 49.0001.0000.0001.0099.00
+  router_id: 172.28.4.99
+  is_type: level-2
+  log_adjacency_changes: true
+  advertise:
+    passive_only: false
+  address_family_ipv4:
+    enabled: true
+    maximum_paths: 4
+  segment_routing_mpls:
+    enabled: true
+    router_id: 172.28.4.99
 service_routing_protocols_model: multi-agent
-ip_routing: true
+transceiver_qsfp_default_mode_4x10: true
 vlan_internal_order:
   allocation: ascending
   range:
     beginning: 1006
     ending: 1199
-aaa_root:
-  disabled: true
-config_end: true
-enable_password:
-  disabled: true
-transceiver_qsfp_default_mode_4x10: true
 vrfs:
 - name: MGMT
   ip_routing: false
-management_api_http:
-  enable_vrfs:
-  - name: MGMT
-  enable_https: true
-loopback_interfaces:
-- name: Loopback0
-  description: ROUTER_ID
-  shutdown: false
-  ip_address: 172.28.4.99/32
-  isis_enable: CORE
-  isis_passive: true
-  node_segment:
-    ipv4_index: 199
-router_isis:
-  instance: CORE
-  log_adjacency_changes: true
-  net: 49.0001.0000.0001.0099.00
-  router_id: 172.28.4.99
-  is_type: level-2
-  address_family_ipv4:
-    enabled: true
-    maximum_paths: 4
-  advertise:
-    passive_only: false
-  segment_routing_mpls:
-    router_id: 172.28.4.99
-    enabled: true
-mpls:
-  ip: true
-router_bfd:
-  multihop:
-    interval: 300
-    min_rx: 300
-    multiplier: 3
-ip_igmp_snooping:
-  globally_enabled: true
-ip_virtual_router_mac_address: 00:c1:00:00:00:11

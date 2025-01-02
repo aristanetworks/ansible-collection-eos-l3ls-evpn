@@ -1,43 +1,188 @@
+aaa_root:
+  disabled: true
+config_end: true
+daemon_terminattr:
+  cvaddrs:
+  - 192.168.200.11:9910
+  cvauth:
+    method: key
+    key: telarista
+  cvvrf: MGMT
+  disable_aaa: false
+  ingestexclude: /Sysdb/cell/1/agent,/Sysdb/cell/2/agent
+  smashexcludes: ale,flexCounter,hardware,kni,pulse,strata
+enable_password:
+  disabled: true
+ethernet_interfaces:
+- name: Ethernet1
+  description: CUSTOM_P2P_LINK_TO_DC1-LEAF1A_Ethernet2
+  shutdown: false
+  speed: forced 100gfull
+  mtu: 1500
+  ip_address: 172.31.255.2/31
+  peer: DC1-LEAF1A
+  peer_interface: Ethernet2
+  peer_type: l3leaf
+  switchport:
+    enabled: false
+- name: Ethernet2
+  description: CUSTOM_P2P_LINK_TO_DC1-LEAF2A_Ethernet2
+  shutdown: false
+  speed: forced 100gfull
+  mtu: 1500
+  ip_address: 172.31.255.18/31
+  peer: DC1-LEAF2A
+  peer_interface: Ethernet2
+  peer_type: l3leaf
+  switchport:
+    enabled: false
+- name: Ethernet3
+  description: CUSTOM_P2P_LINK_TO_DC1-LEAF2B_Ethernet2
+  shutdown: false
+  speed: forced 100gfull
+  mtu: 1500
+  ip_address: 172.31.255.34/31
+  peer: DC1-LEAF2B
+  peer_interface: Ethernet2
+  peer_type: l3leaf
+  switchport:
+    enabled: false
+- name: Ethernet4
+  description: CUSTOM_P2P_LINK_TO_DC1-SVC3A_Ethernet42
+  shutdown: false
+  speed: forced 100gfull
+  mtu: 1500
+  ip_address: 172.31.255.50/31
+  peer: DC1-SVC3A
+  peer_interface: Ethernet42
+  peer_type: l3leaf
+  switchport:
+    enabled: false
+- name: Ethernet5
+  description: CUSTOM_P2P_LINK_TO_DC1-SVC3B_Ethernet42
+  shutdown: false
+  speed: forced 100gfull
+  mtu: 1500
+  ip_address: 172.31.255.66/31
+  peer: DC1-SVC3B
+  peer_interface: Ethernet42
+  peer_type: l3leaf
+  switchport:
+    enabled: false
+- name: Ethernet6
+  description: CUSTOM_P2P_LINK_TO_DC1-BL1A_Ethernet42
+  shutdown: false
+  speed: forced 100gfull
+  mtu: 1500
+  ip_address: 172.31.255.82/31
+  peer: DC1-BL1A
+  peer_interface: Ethernet42
+  peer_type: l3leaf
+  switchport:
+    enabled: false
+- name: Ethernet7
+  description: CUSTOM_P2P_LINK_TO_DC1-BL1B_Ethernet46
+  shutdown: false
+  speed: forced 100gfull
+  mtu: 1500
+  ip_address: 172.31.255.98/31
+  peer: DC1-BL1B
+  peer_interface: Ethernet46
+  peer_type: l3leaf
+  switchport:
+    enabled: false
 hostname: DC1-SPINE2
+ip_name_servers:
+- ip_address: 192.168.200.5
+  vrf: MGMT
+- ip_address: 8.8.8.8
+  vrf: MGMT
+ip_routing: true
 is_deployed: true
+local_users:
+- name: admin
+  privilege: 15
+  role: network-admin
+  no_password: true
+- name: cvpadmin
+  privilege: 15
+  role: network-admin
+  sha512_password: $6$rZKcbIZ7iWGAWTUM$TCgDn1KcavS0s.OV8lacMTUkxTByfzcGlFlYUWroxYuU7M/9bIodhRO7nXGzMweUxvbk8mJmQl8Bh44cRktUj.
+loopback_interfaces:
+- name: Loopback0
+  description: ROUTER_ID
+  shutdown: false
+  ip_address: 192.168.255.2/32
+management_api_http:
+  enable_https: true
+  enable_vrfs:
+  - name: MGMT
+management_interfaces:
+- name: Management1
+  description: OOB_MANAGEMENT
+  shutdown: false
+  vrf: MGMT
+  ip_address: 192.168.200.102/24
+  type: oob
+  gateway: 192.168.200.5
+metadata:
+  platform: 7050SX3
+ntp:
+  local_interface:
+    name: Management1
+    vrf: MGMT
+  servers:
+  - name: 192.168.200.5
+    preferred: true
+    vrf: MGMT
+prefix_lists:
+- name: PL-LOOPBACKS-EVPN-OVERLAY
+  sequence_numbers:
+  - sequence: 10
+    action: permit 192.168.255.0/24 eq 32
+queue_monitor_length:
+  enabled: true
+  log: 5
+route_maps:
+- name: RM-CONN-2-BGP
+  sequence_numbers:
+  - sequence: 10
+    type: permit
+    match:
+    - ip address prefix-list PL-LOOPBACKS-EVPN-OVERLAY
+router_bfd:
+  multihop:
+    interval: 1200
+    min_rx: 1200
+    multiplier: 3
 router_bgp:
   as: '65001'
   router_id: 192.168.255.2
+  maximum_paths:
+    paths: 4
+    ecmp: 4
+  updates:
+    wait_install: true
   bgp_defaults:
   - distance bgp 20 200 200
   bgp:
     default:
       ipv4_unicast: false
-  maximum_paths:
-    paths: 4
-    ecmp: 4
-  redistribute:
-    connected:
-      enabled: true
-      route_map: RM-CONN-2-BGP
-  updates:
-    wait_install: true
   peer_groups:
   - name: UNDERLAY-PEERS
     type: ipv4
     password: 0nsCUm70mvSTxVO0ldytrg==
-    maximum_routes: 12000
     send_community: all
+    maximum_routes: 12000
   - name: EVPN-OVERLAY-PEERS
     type: evpn
+    next_hop_unchanged: true
     update_source: Loopback0
     bfd: true
+    ebgp_multihop: 3
     password: q+VNViP5i4rVjW1cxFv2wA==
     send_community: all
     maximum_routes: 0
-    ebgp_multihop: 3
-    next_hop_unchanged: true
-  address_family_ipv4:
-    peer_groups:
-    - name: UNDERLAY-PEERS
-      activate: true
-    - name: EVPN-OVERLAY-PEERS
-      activate: false
   neighbors:
   - ip_address: 172.31.255.3
     peer_group: UNDERLAY-PEERS
@@ -76,214 +221,69 @@ router_bgp:
     description: DC1-BL1B_Ethernet46
   - ip_address: 192.168.255.14
     peer_group: EVPN-OVERLAY-PEERS
+    remote_as: '65104'
     peer: DC1-BL1A
     description: DC1-BL1A_Loopback0
-    remote_as: '65104'
   - ip_address: 192.168.255.15
     peer_group: EVPN-OVERLAY-PEERS
+    remote_as: '65105'
     peer: DC1-BL1B
     description: DC1-BL1B_Loopback0
-    remote_as: '65105'
   - ip_address: 192.168.255.9
     peer_group: EVPN-OVERLAY-PEERS
+    remote_as: '65101'
     peer: DC1-LEAF1A
     description: DC1-LEAF1A_Loopback0
-    remote_as: '65101'
   - ip_address: 192.168.255.10
     peer_group: EVPN-OVERLAY-PEERS
+    remote_as: '65102'
     peer: DC1-LEAF2A
     description: DC1-LEAF2A_Loopback0
-    remote_as: '65102'
   - ip_address: 192.168.255.11
     peer_group: EVPN-OVERLAY-PEERS
+    remote_as: '65102'
     peer: DC1-LEAF2B
     description: DC1-LEAF2B_Loopback0
-    remote_as: '65102'
   - ip_address: 192.168.255.12
     peer_group: EVPN-OVERLAY-PEERS
+    remote_as: '65103'
     peer: DC1-SVC3A
     description: DC1-SVC3A_Loopback0
-    remote_as: '65103'
   - ip_address: 192.168.255.13
     peer_group: EVPN-OVERLAY-PEERS
+    remote_as: '65103'
     peer: DC1-SVC3B
     description: DC1-SVC3B_Loopback0
-    remote_as: '65103'
+  redistribute:
+    connected:
+      enabled: true
+      route_map: RM-CONN-2-BGP
   address_family_evpn:
     peer_groups:
     - name: EVPN-OVERLAY-PEERS
       activate: true
+  address_family_ipv4:
+    peer_groups:
+    - name: UNDERLAY-PEERS
+      activate: true
+    - name: EVPN-OVERLAY-PEERS
+      activate: false
+service_routing_protocols_model: multi-agent
+snmp_server:
+  contact: example@example.com
+  location: DC1_FABRIC DC1-SPINE2
+spanning_tree:
+  mode: none
 static_routes:
 - vrf: MGMT
   destination_address_prefix: 0.0.0.0/0
   gateway: 192.168.200.5
-service_routing_protocols_model: multi-agent
-ip_routing: true
-daemon_terminattr:
-  cvaddrs:
-  - 192.168.200.11:9910
-  cvauth:
-    method: key
-    key: telarista
-  cvvrf: MGMT
-  smashexcludes: ale,flexCounter,hardware,kni,pulse,strata
-  ingestexclude: /Sysdb/cell/1/agent,/Sysdb/cell/2/agent
-  disable_aaa: false
+transceiver_qsfp_default_mode_4x10: true
 vlan_internal_order:
   allocation: ascending
   range:
     beginning: 1006
     ending: 1199
-aaa_root:
-  disabled: true
-config_end: true
-enable_password:
-  disabled: true
-transceiver_qsfp_default_mode_4x10: true
-queue_monitor_length:
-  enabled: true
-  log: 5
-ip_name_servers:
-- ip_address: 192.168.200.5
-  vrf: MGMT
-- ip_address: 8.8.8.8
-  vrf: MGMT
-spanning_tree:
-  mode: none
-local_users:
-- name: admin
-  privilege: 15
-  role: network-admin
-  no_password: true
-- name: cvpadmin
-  privilege: 15
-  role: network-admin
-  sha512_password: $6$rZKcbIZ7iWGAWTUM$TCgDn1KcavS0s.OV8lacMTUkxTByfzcGlFlYUWroxYuU7M/9bIodhRO7nXGzMweUxvbk8mJmQl8Bh44cRktUj.
 vrfs:
 - name: MGMT
   ip_routing: false
-management_interfaces:
-- name: Management1
-  description: OOB_MANAGEMENT
-  shutdown: false
-  vrf: MGMT
-  ip_address: 192.168.200.102/24
-  gateway: 192.168.200.5
-  type: oob
-management_api_http:
-  enable_vrfs:
-  - name: MGMT
-  enable_https: true
-ntp:
-  local_interface:
-    name: Management1
-    vrf: MGMT
-  servers:
-  - name: 192.168.200.5
-    vrf: MGMT
-    preferred: true
-snmp_server:
-  contact: example@example.com
-  location: DC1_FABRIC DC1-SPINE2
-ethernet_interfaces:
-- name: Ethernet1
-  peer: DC1-LEAF1A
-  peer_interface: Ethernet2
-  peer_type: l3leaf
-  description: CUSTOM_P2P_LINK_TO_DC1-LEAF1A_Ethernet2
-  speed: forced 100gfull
-  shutdown: false
-  mtu: 1500
-  switchport:
-    enabled: false
-  ip_address: 172.31.255.2/31
-- name: Ethernet2
-  peer: DC1-LEAF2A
-  peer_interface: Ethernet2
-  peer_type: l3leaf
-  description: CUSTOM_P2P_LINK_TO_DC1-LEAF2A_Ethernet2
-  speed: forced 100gfull
-  shutdown: false
-  mtu: 1500
-  switchport:
-    enabled: false
-  ip_address: 172.31.255.18/31
-- name: Ethernet3
-  peer: DC1-LEAF2B
-  peer_interface: Ethernet2
-  peer_type: l3leaf
-  description: CUSTOM_P2P_LINK_TO_DC1-LEAF2B_Ethernet2
-  speed: forced 100gfull
-  shutdown: false
-  mtu: 1500
-  switchport:
-    enabled: false
-  ip_address: 172.31.255.34/31
-- name: Ethernet4
-  peer: DC1-SVC3A
-  peer_interface: Ethernet42
-  peer_type: l3leaf
-  description: CUSTOM_P2P_LINK_TO_DC1-SVC3A_Ethernet42
-  speed: forced 100gfull
-  shutdown: false
-  mtu: 1500
-  switchport:
-    enabled: false
-  ip_address: 172.31.255.50/31
-- name: Ethernet5
-  peer: DC1-SVC3B
-  peer_interface: Ethernet42
-  peer_type: l3leaf
-  description: CUSTOM_P2P_LINK_TO_DC1-SVC3B_Ethernet42
-  speed: forced 100gfull
-  shutdown: false
-  mtu: 1500
-  switchport:
-    enabled: false
-  ip_address: 172.31.255.66/31
-- name: Ethernet6
-  peer: DC1-BL1A
-  peer_interface: Ethernet42
-  peer_type: l3leaf
-  description: CUSTOM_P2P_LINK_TO_DC1-BL1A_Ethernet42
-  speed: forced 100gfull
-  shutdown: false
-  mtu: 1500
-  switchport:
-    enabled: false
-  ip_address: 172.31.255.82/31
-- name: Ethernet7
-  peer: DC1-BL1B
-  peer_interface: Ethernet46
-  peer_type: l3leaf
-  description: CUSTOM_P2P_LINK_TO_DC1-BL1B_Ethernet46
-  speed: forced 100gfull
-  shutdown: false
-  mtu: 1500
-  switchport:
-    enabled: false
-  ip_address: 172.31.255.98/31
-loopback_interfaces:
-- name: Loopback0
-  description: ROUTER_ID
-  shutdown: false
-  ip_address: 192.168.255.2/32
-prefix_lists:
-- name: PL-LOOPBACKS-EVPN-OVERLAY
-  sequence_numbers:
-  - sequence: 10
-    action: permit 192.168.255.0/24 eq 32
-route_maps:
-- name: RM-CONN-2-BGP
-  sequence_numbers:
-  - sequence: 10
-    type: permit
-    match:
-    - ip address prefix-list PL-LOOPBACKS-EVPN-OVERLAY
-router_bfd:
-  multihop:
-    interval: 1200
-    min_rx: 1200
-    multiplier: 3
-metadata:
-  platform: 7050SX3

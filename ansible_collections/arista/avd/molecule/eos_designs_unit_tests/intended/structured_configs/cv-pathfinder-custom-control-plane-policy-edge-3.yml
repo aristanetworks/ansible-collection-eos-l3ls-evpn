@@ -1,51 +1,304 @@
+aaa_root:
+  disabled: true
+agents:
+- name: KernelFib
+  environment_variables:
+  - name: KERNELFIB_PROGRAM_ALL_ECMP
+    value: '1'
+application_traffic_recognition:
+  application_profiles:
+  - name: CUSTOM-CP-APP-PROFILE
+    applications:
+    - name: google
+  - name: VIDEO
+    applications:
+    - name: CUSTOM-APPLICATION-1
+    - name: skype
+config_end: true
+dps_interfaces:
+- name: Dps1
+  description: DPS Interface
+  mtu: 9194
+  ip_address: 192.168.142.3/32
+  flow_tracker:
+    hardware: FLOW-TRACKER
+enable_password:
+  disabled: true
+ethernet_interfaces:
+- name: Ethernet1
+  description: ATT_666_peer3_Ethernet42
+  shutdown: false
+  ip_address: dhcp
+  dhcp_client_accept_default_route: true
+  peer: peer3
+  peer_interface: Ethernet42
+  peer_type: l3_interface
+  switchport:
+    enabled: false
+flow_tracking:
+  hardware:
+    trackers:
+    - name: FLOW-TRACKER
+      record_export:
+        on_inactive_timeout: 70000
+        on_interval: 300000
+      exporters:
+      - name: CV-TELEMETRY
+        collector:
+          host: 127.0.0.1
+        local_interface: Loopback0
+        template_interval: 3600000
+    shutdown: false
 hostname: cv-pathfinder-custom-control-plane-policy-edge-3
+ip_extcommunity_lists:
+- name: ECL-EVPN-SOO
+  entries:
+  - type: permit
+    extcommunities: soo 192.168.42.3:511
+ip_routing: true
+ip_security:
+  ike_policies:
+  - name: CP-IKE-POLICY
+    local_id: 192.168.142.3
+  sa_policies:
+  - name: DP-SA-POLICY
+    esp:
+      encryption: aes256gcm128
+    pfs_dh_group: 14
+  - name: CP-SA-POLICY
+    esp:
+      encryption: aes256gcm128
+    pfs_dh_group: 14
+  profiles:
+  - name: DP-PROFILE
+    sa_policy: DP-SA-POLICY
+    connection: start
+    shared_key: ABCDEF1234567890666
+    dpd:
+      interval: 10
+      time: 50
+      action: clear
+    mode: transport
+  - name: CP-PROFILE
+    ike_policy: CP-IKE-POLICY
+    sa_policy: CP-SA-POLICY
+    connection: start
+    shared_key: ABCDEF1234567890
+    dpd:
+      interval: 10
+      time: 50
+      action: clear
+    mode: transport
+  key_controller:
+    profile: DP-PROFILE
 is_deployed: true
+loopback_interfaces:
+- name: Loopback0
+  description: ROUTER_ID
+  shutdown: false
+  ip_address: 192.168.42.3/32
+management_api_http:
+  enable_https: true
+  enable_vrfs:
+  - name: MGMT
+management_security:
+  ssl_profiles:
+  - name: profileA
+    tls_versions: '1.2'
+    trust_certificate:
+      certificates:
+      - aristaDeviceCertProvisionerDefaultRootCA.crt
+    certificate:
+      file: profileA.crt
+      key: profileA.key
+metadata:
+  cv_tags:
+    device_tags:
+    - name: Role
+      value: edge
+    - name: Region
+      value: AVD_Land_East
+    - name: Zone
+      value: AVD_Land_East-ZONE
+    - name: Site
+      value: Site511
+    interface_tags:
+    - interface: Ethernet1
+      tags:
+      - name: Type
+        value: wan
+      - name: Carrier
+        value: ATT
+      - name: Circuit
+        value: '666'
+  cv_pathfinder:
+    role: edge
+    region: AVD_Land_East
+    zone: AVD_Land_East-ZONE
+    site: Site511
+    vtep_ip: 192.168.142.3
+    ssl_profile: profileA
+    pathfinders:
+    - vtep_ip: 192.168.144.1
+    interfaces:
+    - name: Ethernet1
+      carrier: ATT
+      circuit_id: '666'
+      pathgroup: INET
+prefix_lists:
+- name: PL-LOOPBACKS-EVPN-OVERLAY
+  sequence_numbers:
+  - sequence: 10
+    action: permit 192.168.42.0/24 eq 32
+route_maps:
+- name: RM-CONN-2-BGP
+  sequence_numbers:
+  - sequence: 10
+    type: permit
+    match:
+    - ip address prefix-list PL-LOOPBACKS-EVPN-OVERLAY
+    set:
+    - extcommunity soo 192.168.42.3:511 additive
+- name: RM-BGP-UNDERLAY-PEERS-IN
+  sequence_numbers:
+  - sequence: 40
+    type: permit
+    description: Mark prefixes originated from the LAN
+    set:
+    - extcommunity soo 192.168.42.3:511 additive
+- name: RM-EVPN-SOO-IN
+  sequence_numbers:
+  - sequence: 10
+    type: deny
+    match:
+    - extcommunity ECL-EVPN-SOO
+  - sequence: 20
+    type: permit
+- name: RM-EVPN-SOO-OUT
+  sequence_numbers:
+  - sequence: 10
+    type: permit
+    set:
+    - extcommunity soo 192.168.42.3:511 additive
+- name: RM-EVPN-EXPORT-VRF-DEFAULT
+  sequence_numbers:
+  - sequence: 10
+    type: permit
+    match:
+    - extcommunity ECL-EVPN-SOO
+router_adaptive_virtual_topology:
+  topology_role: edge
+  region:
+    name: AVD_Land_East
+    id: 43
+  zone:
+    name: AVD_Land_East-ZONE
+    id: 1
+  site:
+    name: Site511
+    id: 511
+  profiles:
+  - name: CUSTOM-CP-POLICY
+    load_balance_policy: LB-CUSTOM-CP-POLICY
+  - name: DEFAULT-POLICY-VIDEO
+    load_balance_policy: LB-DEFAULT-POLICY-VIDEO
+  - name: DEFAULT-POLICY-DEFAULT
+    load_balance_policy: LB-DEFAULT-POLICY-DEFAULT
+  policies:
+  - name: DEFAULT-POLICY-WITH-CP
+    matches:
+    - application_profile: CUSTOM-CP-APP-PROFILE
+      avt_profile: CUSTOM-CP-POLICY
+    - application_profile: VIDEO
+      avt_profile: DEFAULT-POLICY-VIDEO
+    - application_profile: default
+      avt_profile: DEFAULT-POLICY-DEFAULT
+  - name: DEFAULT-POLICY
+    matches:
+    - application_profile: VIDEO
+      avt_profile: DEFAULT-POLICY-VIDEO
+    - application_profile: default
+      avt_profile: DEFAULT-POLICY-DEFAULT
+  vrfs:
+  - name: default
+    policy: DEFAULT-POLICY-WITH-CP
+    profiles:
+    - name: CUSTOM-CP-POLICY
+      id: 254
+    - name: DEFAULT-POLICY-VIDEO
+      id: 3
+    - name: DEFAULT-POLICY-DEFAULT
+      id: 1
+  - name: PROD
+    policy: DEFAULT-POLICY
+    profiles:
+    - name: DEFAULT-POLICY-VIDEO
+      id: 3
+    - name: DEFAULT-POLICY-DEFAULT
+      id: 1
+  - name: IT
+    policy: DEFAULT-POLICY
+    profiles:
+    - name: DEFAULT-POLICY-VIDEO
+      id: 3
+    - name: DEFAULT-POLICY-DEFAULT
+      id: 1
+router_bfd:
+  multihop:
+    interval: 300
+    min_rx: 300
+    multiplier: 3
 router_bgp:
   as: '65000'
   router_id: 192.168.42.3
+  maximum_paths:
+    paths: 16
+  updates:
+    wait_install: true
   bgp:
     default:
       ipv4_unicast: false
-  maximum_paths:
-    paths: 16
-  redistribute:
-    connected:
-      enabled: true
-      route_map: RM-CONN-2-BGP
-  updates:
-    wait_install: true
   peer_groups:
   - name: IPv4-UNDERLAY-PEERS
     type: ipv4
-    maximum_routes: 12000
     send_community: all
+    maximum_routes: 12000
     route_map_in: RM-BGP-UNDERLAY-PEERS-IN
   - name: WAN-OVERLAY-PEERS
     type: wan
+    remote_as: '65000'
     update_source: Dps1
     bfd: true
-    password: htm4AZe9mIQOO1uiMuGgYQ==
-    send_community: all
-    maximum_routes: 0
-    remote_as: '65000'
-    ttl_maximum_hops: 1
     bfd_timers:
       interval: 1000
       min_rx: 1000
       multiplier: 10
+    password: htm4AZe9mIQOO1uiMuGgYQ==
+    send_community: all
+    maximum_routes: 0
+    ttl_maximum_hops: 1
+  neighbors:
+  - ip_address: 192.168.144.1
+    peer_group: WAN-OVERLAY-PEERS
+    peer: cv-pathfinder-pathfinder
+    description: cv-pathfinder-pathfinder_Dps1
+  redistribute:
+    connected:
+      enabled: true
+      route_map: RM-CONN-2-BGP
+  address_family_evpn:
+    peer_groups:
+    - name: WAN-OVERLAY-PEERS
+      activate: true
+      route_map_in: RM-EVPN-SOO-IN
+      route_map_out: RM-EVPN-SOO-OUT
+      encapsulation: path-selection
   address_family_ipv4:
     peer_groups:
     - name: IPv4-UNDERLAY-PEERS
       activate: true
     - name: WAN-OVERLAY-PEERS
       activate: false
-  address_family_evpn:
-    peer_groups:
-    - name: WAN-OVERLAY-PEERS
-      activate: true
-      encapsulation: path-selection
-      route_map_in: RM-EVPN-SOO-IN
-      route_map_out: RM-EVPN-SOO-OUT
   address_family_ipv4_sr_te:
     peer_groups:
     - name: WAN-OVERLAY-PEERS
@@ -58,18 +311,13 @@ router_bgp:
       roles:
         producer: true
   address_family_path_selection:
-    peer_groups:
-    - name: WAN-OVERLAY-PEERS
-      activate: true
     bgp:
       additional_paths:
         receive: true
         send: any
-  neighbors:
-  - ip_address: 192.168.144.1
-    peer_group: WAN-OVERLAY-PEERS
-    peer: cv-pathfinder-pathfinder
-    description: cv-pathfinder-pathfinder_Dps1
+    peer_groups:
+    - name: WAN-OVERLAY-PEERS
+      activate: true
   vrfs:
   - name: default
     rd: 192.168.42.3:1
@@ -113,209 +361,11 @@ router_bgp:
     redistribute:
       connected:
         enabled: true
-service_routing_protocols_model: multi-agent
-ip_routing: true
-aaa_root:
-  disabled: true
-config_end: true
-enable_password:
-  disabled: true
-transceiver_qsfp_default_mode_4x10: false
-spanning_tree:
-  mode: none
-vrfs:
-- name: MGMT
-  ip_routing: false
-- name: IT
-  tenant: TenantA
-  ip_routing: true
-- name: PROD
-  tenant: TenantA
-  ip_routing: true
-management_api_http:
-  enable_vrfs:
-  - name: MGMT
-  enable_https: true
-ethernet_interfaces:
-- name: Ethernet1
-  peer_type: l3_interface
-  peer: peer3
-  peer_interface: Ethernet42
-  ip_address: dhcp
-  shutdown: false
-  switchport:
-    enabled: false
-  description: ATT_666_peer3_Ethernet42
-  dhcp_client_accept_default_route: true
-loopback_interfaces:
-- name: Loopback0
-  description: ROUTER_ID
-  shutdown: false
-  ip_address: 192.168.42.3/32
-prefix_lists:
-- name: PL-LOOPBACKS-EVPN-OVERLAY
-  sequence_numbers:
-  - sequence: 10
-    action: permit 192.168.42.0/24 eq 32
-route_maps:
-- name: RM-CONN-2-BGP
-  sequence_numbers:
-  - sequence: 10
-    type: permit
-    match:
-    - ip address prefix-list PL-LOOPBACKS-EVPN-OVERLAY
-    set:
-    - extcommunity soo 192.168.42.3:511 additive
-- name: RM-BGP-UNDERLAY-PEERS-IN
-  sequence_numbers:
-  - sequence: 40
-    type: permit
-    description: Mark prefixes originated from the LAN
-    set:
-    - extcommunity soo 192.168.42.3:511 additive
-- name: RM-EVPN-SOO-IN
-  sequence_numbers:
-  - sequence: 10
-    type: deny
-    match:
-    - extcommunity ECL-EVPN-SOO
-  - sequence: 20
-    type: permit
-- name: RM-EVPN-SOO-OUT
-  sequence_numbers:
-  - sequence: 10
-    type: permit
-    set:
-    - extcommunity soo 192.168.42.3:511 additive
-- name: RM-EVPN-EXPORT-VRF-DEFAULT
-  sequence_numbers:
-  - sequence: 10
-    type: permit
-    match:
-    - extcommunity ECL-EVPN-SOO
-agents:
-- name: KernelFib
-  environment_variables:
-  - name: KERNELFIB_PROGRAM_ALL_ECMP
-    value: '1'
-ip_extcommunity_lists:
-- name: ECL-EVPN-SOO
-  entries:
-  - type: permit
-    extcommunities: soo 192.168.42.3:511
-ip_security:
-  ike_policies:
-  - name: CP-IKE-POLICY
-    local_id: 192.168.142.3
-  sa_policies:
-  - name: DP-SA-POLICY
-    esp:
-      encryption: aes256gcm128
-    pfs_dh_group: 14
-  - name: CP-SA-POLICY
-    esp:
-      encryption: aes256gcm128
-    pfs_dh_group: 14
-  profiles:
-  - name: DP-PROFILE
-    sa_policy: DP-SA-POLICY
-    connection: start
-    shared_key: ABCDEF1234567890666
-    dpd:
-      interval: 10
-      time: 50
-      action: clear
-    mode: transport
-  - name: CP-PROFILE
-    ike_policy: CP-IKE-POLICY
-    sa_policy: CP-SA-POLICY
-    connection: start
-    shared_key: ABCDEF1234567890
-    dpd:
-      interval: 10
-      time: 50
-      action: clear
-    mode: transport
-  key_controller:
-    profile: DP-PROFILE
-management_security:
-  ssl_profiles:
-  - name: profileA
-    certificate:
-      file: profileA.crt
-      key: profileA.key
-    trust_certificate:
-      certificates:
-      - aristaDeviceCertProvisionerDefaultRootCA.crt
-    tls_versions: '1.2'
-router_adaptive_virtual_topology:
-  topology_role: edge
-  region:
-    name: AVD_Land_East
-    id: 43
-  zone:
-    name: AVD_Land_East-ZONE
-    id: 1
-  site:
-    name: Site511
-    id: 511
-  profiles:
-  - name: CUSTOM-CP-POLICY
-    load_balance_policy: LB-CUSTOM-CP-POLICY
-  - name: DEFAULT-POLICY-VIDEO
-    load_balance_policy: LB-DEFAULT-POLICY-VIDEO
-  - name: DEFAULT-POLICY-DEFAULT
-    load_balance_policy: LB-DEFAULT-POLICY-DEFAULT
-  vrfs:
-  - name: default
-    policy: DEFAULT-POLICY-WITH-CP
-    profiles:
-    - name: CUSTOM-CP-POLICY
-      id: 254
-    - name: DEFAULT-POLICY-VIDEO
-      id: 3
-    - name: DEFAULT-POLICY-DEFAULT
-      id: 1
-  - name: PROD
-    policy: DEFAULT-POLICY
-    profiles:
-    - name: DEFAULT-POLICY-VIDEO
-      id: 3
-    - name: DEFAULT-POLICY-DEFAULT
-      id: 1
-  - name: IT
-    policy: DEFAULT-POLICY
-    profiles:
-    - name: DEFAULT-POLICY-VIDEO
-      id: 3
-    - name: DEFAULT-POLICY-DEFAULT
-      id: 1
-  policies:
-  - name: DEFAULT-POLICY-WITH-CP
-    matches:
-    - application_profile: CUSTOM-CP-APP-PROFILE
-      avt_profile: CUSTOM-CP-POLICY
-    - application_profile: VIDEO
-      avt_profile: DEFAULT-POLICY-VIDEO
-    - application_profile: default
-      avt_profile: DEFAULT-POLICY-DEFAULT
-  - name: DEFAULT-POLICY
-    matches:
-    - application_profile: VIDEO
-      avt_profile: DEFAULT-POLICY-VIDEO
-    - application_profile: default
-      avt_profile: DEFAULT-POLICY-DEFAULT
-router_bfd:
-  multihop:
-    interval: 300
-    min_rx: 300
-    multiplier: 3
 router_path_selection:
-  tcp_mss_ceiling:
-    ipv4_segment_size: auto
   path_groups:
   - name: INET
     id: 101
+    ipsec_profile: CP-PROFILE
     local_interfaces:
     - name: Ethernet1
       stun:
@@ -330,21 +380,25 @@ router_path_selection:
       ipv4_addresses:
       - 172.17.7.7
       - 10.9.9.9
-    ipsec_profile: CP-PROFILE
   load_balance_policies:
   - name: LB-CUSTOM-CP-POLICY
+    lowest_hop_count: true
+    jitter: 5
     path_groups:
     - name: INET
-    jitter: 5
-    lowest_hop_count: true
   - name: LB-DEFAULT-POLICY-VIDEO
     path_groups:
     - name: INET
   - name: LB-DEFAULT-POLICY-DEFAULT
     path_groups:
     - name: INET
+  tcp_mss_ceiling:
+    ipv4_segment_size: auto
 router_traffic_engineering:
   enabled: true
+service_routing_protocols_model: multi-agent
+spanning_tree:
+  mode: none
 stun:
   client:
     server_profiles:
@@ -354,28 +408,22 @@ stun:
     - name: INET-cv-pathfinder-pathfinder-Ethernet3
       ip_address: 10.9.9.9
       ssl_profile: profileA
-application_traffic_recognition:
-  application_profiles:
-  - name: CUSTOM-CP-APP-PROFILE
-    applications:
-    - name: google
-  - name: VIDEO
-    applications:
-    - name: CUSTOM-APPLICATION-1
-    - name: skype
-dps_interfaces:
-- name: Dps1
-  description: DPS Interface
-  mtu: 9194
-  ip_address: 192.168.142.3/32
-  flow_tracker:
-    hardware: FLOW-TRACKER
+transceiver_qsfp_default_mode_4x10: false
+vrfs:
+- name: MGMT
+  ip_routing: false
+- name: IT
+  ip_routing: true
+  tenant: TenantA
+- name: PROD
+  ip_routing: true
+  tenant: TenantA
 vxlan_interface:
   vxlan1:
     description: cv-pathfinder-custom-control-plane-policy-edge-3_VTEP
     vxlan:
-      udp_port: 4789
       source_interface: Dps1
+      udp_port: 4789
       vrfs:
       - name: default
         vni: 1
@@ -383,51 +431,3 @@ vxlan_interface:
         vni: 13
       - name: PROD
         vni: 42
-flow_tracking:
-  hardware:
-    trackers:
-    - name: FLOW-TRACKER
-      record_export:
-        on_inactive_timeout: 70000
-        on_interval: 300000
-      exporters:
-      - name: CV-TELEMETRY
-        collector:
-          host: 127.0.0.1
-        local_interface: Loopback0
-        template_interval: 3600000
-    shutdown: false
-metadata:
-  cv_tags:
-    device_tags:
-    - name: Role
-      value: edge
-    - name: Region
-      value: AVD_Land_East
-    - name: Zone
-      value: AVD_Land_East-ZONE
-    - name: Site
-      value: Site511
-    interface_tags:
-    - interface: Ethernet1
-      tags:
-      - name: Type
-        value: wan
-      - name: Carrier
-        value: ATT
-      - name: Circuit
-        value: '666'
-  cv_pathfinder:
-    role: edge
-    ssl_profile: profileA
-    vtep_ip: 192.168.142.3
-    region: AVD_Land_East
-    zone: AVD_Land_East-ZONE
-    site: Site511
-    interfaces:
-    - name: Ethernet1
-      carrier: ATT
-      circuit_id: '666'
-      pathgroup: INET
-    pathfinders:
-    - vtep_ip: 192.168.144.1

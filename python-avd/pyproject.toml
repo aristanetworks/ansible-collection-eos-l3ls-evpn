@@ -50,7 +50,7 @@ ansible = [
     "pyavd[ansible-collection]",
 ]
 ansible-collection = [
-    "anta>=1.1.0",
+    "anta==1.1.0",
     "cvprac>=1.4.0",
     "netaddr>=0.7.19",
     "PyYAML>=6.0.0",

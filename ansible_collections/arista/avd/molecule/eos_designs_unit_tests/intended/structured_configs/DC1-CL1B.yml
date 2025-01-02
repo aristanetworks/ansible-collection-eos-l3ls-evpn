@@ -1,53 +1,229 @@
+aaa_root:
+  disabled: true
+config_end: true
+daemon_terminattr:
+  cvaddrs:
+  - 192.168.200.11:9910
+  cvauth:
+    method: key
+    key: telarista
+  cvvrf: MGMT
+  disable_aaa: false
+  ingestexclude: /Sysdb/cell/1/agent,/Sysdb/cell/2/agent
+  smashexcludes: ale,flexCounter,hardware,kni,pulse,strata
+enable_password:
+  disabled: true
+ethernet_interfaces:
+- name: Ethernet1/31/1
+  description: MLAG_PEER_DC1-CL1A_Ethernet1/31/1
+  shutdown: false
+  speed: 100g
+  channel_group:
+    id: 1311
+    mode: active
+  peer: DC1-CL1A
+  peer_interface: Ethernet1/31/1
+  peer_type: mlag_peer
+- name: Ethernet1/32/1
+  description: MLAG_PEER_DC1-CL1A_Ethernet1/32/1
+  shutdown: false
+  speed: 100g
+  channel_group:
+    id: 1311
+    mode: active
+  peer: DC1-CL1A
+  peer_interface: Ethernet1/32/1
+  peer_type: mlag_peer
+- name: Ethernet1
+  description: P2P_LINK_TO_DC1-SPINE1_Ethernet27
+  shutdown: false
+  speed: forced 100gfull
+  mtu: 1500
+  ip_address: 172.31.255.65/31
+  peer: DC1-SPINE1
+  peer_interface: Ethernet27
+  peer_type: spine
+  switchport:
+    enabled: false
+- name: Ethernet2
+  description: P2P_LINK_TO_DC1-SPINE2_Ethernet27
+  shutdown: false
+  speed: forced 100gfull
+  mtu: 1500
+  ip_address: 172.31.255.67/31
+  peer: DC1-SPINE2
+  peer_interface: Ethernet27
+  peer_type: spine
+  switchport:
+    enabled: false
+- name: Ethernet3
+  description: P2P_LINK_TO_DC1-SPINE3_Ethernet27
+  shutdown: false
+  speed: forced 100gfull
+  mtu: 1500
+  ip_address: 172.31.255.69/31
+  peer: DC1-SPINE3
+  peer_interface: Ethernet27
+  peer_type: spine
+  switchport:
+    enabled: false
+- name: Ethernet4
+  description: P2P_LINK_TO_DC1-SPINE4_Ethernet27
+  shutdown: false
+  speed: forced 100gfull
+  mtu: 1500
+  ip_address: 172.31.255.71/31
+  peer: DC1-SPINE4
+  peer_interface: Ethernet27
+  peer_type: spine
+  switchport:
+    enabled: false
 hostname: DC1-CL1B
+ip_igmp_snooping:
+  globally_enabled: true
+  vlans:
+  - id: 120
+    enabled: false
+ip_name_servers:
+- ip_address: 192.168.200.5
+  vrf: MGMT
+- ip_address: 8.8.8.8
+  vrf: MGMT
+- ip_address: 2001:db8::1
+  vrf: MGMT
+- ip_address: 2001:db8::2
+  vrf: MGMT
+ip_routing: true
 is_deployed: true
+local_users:
+- name: admin
+  disabled: true
+  privilege: 15
+  role: network-admin
+  no_password: true
+- name: cvpadmin
+  privilege: 15
+  role: network-admin
+  sha512_password: $6$rZKcbIZ7iWGAWTUM$TCgDn1KcavS0s.OV8lacMTUkxTByfzcGlFlYUWroxYuU7M/9bIodhRO7nXGzMweUxvbk8mJmQl8Bh44cRktUj.
+  ssh_key: ssh-rsa AAAAB3NzaC1yc2EAA82spi2mkxp4FgaLi4CjWkpnL1A/MD7WhrSNgqXToF7QCb9Lidagy9IHafQxfu7LwkFdyQIMu8XNwDZIycuf29wHbDdz1N+YNVK8zwyNAbMOeKMqblsEm2YIorgjzQX1m9+/rJeFBKz77PSgeMp/Rc3txFVuSmFmeTy3aMkU=
+    cvpadmin@hostmachine.local
+  secondary_ssh_key: ssh-rsa AAAAB3NzaC1yc2EAA82spi2mkxp4FgaLi4CjWkpnL1A/MD7WhrSNgqXToF7QCb9Lidagy9IHafQxfu7LwkFdyQIMu8XNwDZIycuf29wHbDdz1N+YNVK8zwyNAbMOeKMqblsEm2YIorgjzQX1m9+/rJeFBKz77PSgeMp/Rc3txFVuSmFmeTy3aMkz=
+    cvpadmin@hostmachine.local
+loopback_interfaces:
+- name: Loopback0
+  description: ROUTER_ID
+  shutdown: false
+  ip_address: 192.168.255.19/32
+- name: Loopback1
+  description: VXLAN_TUNNEL_SOURCE
+  shutdown: false
+  ip_address: 192.168.254.18/32
+management_api_http:
+  enable_https: true
+  default_services: false
+  enable_vrfs:
+  - name: MGMT
+management_interfaces:
+- name: Management0
+  description: OOB_MANAGEMENT
+  shutdown: false
+  vrf: MGMT
+  ip_address: 192.168.200.120/24
+  type: oob
+  gateway: 192.168.200.5
+metadata:
+  platform: 7300X3
+mlag_configuration:
+  domain_id: DC1_CL1
+  local_interface: Vlan4092
+  peer_address: 10.255.252.18
+  peer_link: Port-Channel1311
+  reload_delay_mlag: '1200'
+  reload_delay_non_mlag: '1320'
+ntp:
+  local_interface:
+    name: Management0
+    vrf: MGMT
+  servers:
+  - name: 192.168.200.5
+    preferred: true
+    vrf: MGMT
+  - name: 2001:db8::3
+    vrf: MGMT
+port_channel_interfaces:
+- name: Port-Channel1311
+  description: MLAG_PEER_DC1-CL1A_Po1311
+  shutdown: false
+  switchport:
+    enabled: true
+    mode: trunk
+    trunk:
+      allowed_vlan: 1-4094
+      groups:
+      - MLAG
+      - LEAF_PEER_L3
+prefix_lists:
+- name: PL-LOOPBACKS-EVPN-OVERLAY
+  sequence_numbers:
+  - sequence: 10
+    action: permit 192.168.255.0/24 eq 32
+  - sequence: 20
+    action: permit 192.168.254.0/24 eq 32
+route_maps:
+- name: RM-MLAG-PEER-IN
+  sequence_numbers:
+  - sequence: 10
+    type: permit
+    description: Make routes learned over MLAG Peer-link less preferred on spines to ensure optimal routing
+    set:
+    - origin incomplete
+- name: RM-CONN-2-BGP
+  sequence_numbers:
+  - sequence: 10
+    type: permit
+    match:
+    - ip address prefix-list PL-LOOPBACKS-EVPN-OVERLAY
+router_bfd:
+  multihop:
+    interval: 1200
+    min_rx: 1200
+    multiplier: 3
 router_bgp:
   as: '65109'
   router_id: 192.168.255.19
+  maximum_paths:
+    paths: 4
+    ecmp: 4
+  updates:
+    wait_install: true
   bgp_defaults:
   - distance bgp 20 200 200
   bgp:
     default:
       ipv4_unicast: false
-  maximum_paths:
-    paths: 4
-    ecmp: 4
-  redistribute:
-    connected:
-      enabled: true
-      route_map: RM-CONN-2-BGP
-  updates:
-    wait_install: true
   peer_groups:
   - name: MLAG-PEERS
     type: ipv4
     remote_as: '65109'
-    next_hop_self: true
     description: MLAG_PEER_DC1-CL1A
+    next_hop_self: true
     password: 15AwQNBEJ1nyF/kBEtoAGw==
-    maximum_routes: 12000
     send_community: all
+    maximum_routes: 12000
     route_map_in: RM-MLAG-PEER-IN
   - name: UNDERLAY-PEERS
     type: ipv4
     password: 0nsCUm70mvSTxVO0ldytrg==
-    maximum_routes: 12000
     send_community: all
+    maximum_routes: 12000
   - name: EVPN-OVERLAY-PEERS
     type: evpn
     update_source: Loopback0
     bfd: true
+    ebgp_multihop: 3
     password: q+VNViP5i4rVjW1cxFv2wA==
     send_community: all
     maximum_routes: 0
-    ebgp_multihop: 3
-  address_family_ipv4:
-    peer_groups:
-    - name: MLAG-PEERS
-      activate: true
-    - name: UNDERLAY-PEERS
-      activate: true
-    - name: EVPN-OVERLAY-PEERS
-      activate: false
   neighbors:
   - ip_address: 10.255.251.18
     peer_group: MLAG-PEERS
@@ -75,33 +251,28 @@ router_bgp:
     description: DC1-SPINE4_Ethernet27
   - ip_address: 192.168.255.1
     peer_group: EVPN-OVERLAY-PEERS
+    remote_as: '65001'
     peer: DC1-SPINE1
     description: DC1-SPINE1
-    remote_as: '65001'
   - ip_address: 192.168.255.2
     peer_group: EVPN-OVERLAY-PEERS
+    remote_as: '65001'
     peer: DC1-SPINE2
     description: DC1-SPINE2
-    remote_as: '65001'
   - ip_address: 192.168.255.3
     peer_group: EVPN-OVERLAY-PEERS
+    remote_as: '65001'
     peer: DC1-SPINE3
     description: DC1-SPINE3
-    remote_as: '65001'
   - ip_address: 192.168.255.4
     peer_group: EVPN-OVERLAY-PEERS
+    remote_as: '65001'
     peer: DC1-SPINE4
     description: DC1-SPINE4
-    remote_as: '65001'
-  address_family_evpn:
-    peer_groups:
-    - name: EVPN-OVERLAY-PEERS
-      activate: true
-    evpn_hostflap_detection:
-      window: 180
-      threshold: 5
+  redistribute:
+    connected:
       enabled: true
-      expiry_timeout: 10
+      route_map: RM-CONN-2-BGP
   vlan_aware_bundles:
   - name: Tenant_A_APP_Zone
     rd: 192.168.255.19:12
@@ -193,42 +364,27 @@ router_bgp:
     redistribute_routes:
     - learned
     vlan: '350'
-static_routes:
-- vrf: MGMT
-  destination_address_prefix: 0.0.0.0/0
-  gateway: 192.168.200.5
+  address_family_evpn:
+    peer_groups:
+    - name: EVPN-OVERLAY-PEERS
+      activate: true
+    evpn_hostflap_detection:
+      enabled: true
+      window: 180
+      threshold: 5
+      expiry_timeout: 10
+  address_family_ipv4:
+    peer_groups:
+    - name: MLAG-PEERS
+      activate: true
+    - name: UNDERLAY-PEERS
+      activate: true
+    - name: EVPN-OVERLAY-PEERS
+      activate: false
 service_routing_protocols_model: multi-agent
-ip_routing: true
-daemon_terminattr:
-  cvaddrs:
-  - 192.168.200.11:9910
-  cvauth:
-    method: key
-    key: telarista
-  cvvrf: MGMT
-  smashexcludes: ale,flexCounter,hardware,kni,pulse,strata
-  ingestexclude: /Sysdb/cell/1/agent,/Sysdb/cell/2/agent
-  disable_aaa: false
-vlan_internal_order:
-  allocation: ascending
-  range:
-    beginning: 1006
-    ending: 1199
-aaa_root:
-  disabled: true
-config_end: true
-enable_password:
-  disabled: true
-transceiver_qsfp_default_mode_4x10: true
-ip_name_servers:
-- ip_address: 192.168.200.5
-  vrf: MGMT
-- ip_address: 8.8.8.8
-  vrf: MGMT
-- ip_address: 2001:db8::1
-  vrf: MGMT
-- ip_address: 2001:db8::2
-  vrf: MGMT
+snmp_server:
+  contact: example@example.com
+  location: EOS_DESIGNS_UNIT_TESTS DC1-CL1B
 spanning_tree:
   root_super: true
   mode: mstp
@@ -236,60 +392,39 @@ spanning_tree:
   - id: '0'
     priority: 4096
   no_spanning_tree_vlan: 4090,4092
-local_users:
-- name: admin
-  disabled: true
-  privilege: 15
-  role: network-admin
-  no_password: true
-- name: cvpadmin
-  privilege: 15
-  role: network-admin
-  sha512_password: $6$rZKcbIZ7iWGAWTUM$TCgDn1KcavS0s.OV8lacMTUkxTByfzcGlFlYUWroxYuU7M/9bIodhRO7nXGzMweUxvbk8mJmQl8Bh44cRktUj.
-  ssh_key: ssh-rsa AAAAB3NzaC1yc2EAA82spi2mkxp4FgaLi4CjWkpnL1A/MD7WhrSNgqXToF7QCb9Lidagy9IHafQxfu7LwkFdyQIMu8XNwDZIycuf29wHbDdz1N+YNVK8zwyNAbMOeKMqblsEm2YIorgjzQX1m9+/rJeFBKz77PSgeMp/Rc3txFVuSmFmeTy3aMkU=
-    cvpadmin@hostmachine.local
-  secondary_ssh_key: ssh-rsa AAAAB3NzaC1yc2EAA82spi2mkxp4FgaLi4CjWkpnL1A/MD7WhrSNgqXToF7QCb9Lidagy9IHafQxfu7LwkFdyQIMu8XNwDZIycuf29wHbDdz1N+YNVK8zwyNAbMOeKMqblsEm2YIorgjzQX1m9+/rJeFBKz77PSgeMp/Rc3txFVuSmFmeTy3aMkz=
-    cvpadmin@hostmachine.local
-vrfs:
-- name: MGMT
-  ip_routing: false
-management_interfaces:
-- name: Management0
-  description: OOB_MANAGEMENT
-  shutdown: false
-  vrf: MGMT
-  ip_address: 192.168.200.120/24
+static_routes:
+- vrf: MGMT
+  destination_address_prefix: 0.0.0.0/0
   gateway: 192.168.200.5
-  type: oob
-management_api_http:
-  enable_vrfs:
-  - name: MGMT
-  enable_https: true
-  default_services: false
-ntp:
-  local_interface:
-    name: Management0
-    vrf: MGMT
-  servers:
-  - name: 192.168.200.5
-    vrf: MGMT
-    preferred: true
-  - name: 2001:db8::3
-    vrf: MGMT
-snmp_server:
-  contact: example@example.com
-  location: EOS_DESIGNS_UNIT_TESTS DC1-CL1B
+transceiver_qsfp_default_mode_4x10: true
+vlan_interfaces:
+- name: Vlan4090
+  description: MLAG_PEER_L3_PEERING
+  shutdown: false
+  ip_address: 10.255.251.19/31
+  mtu: 1500
+- name: Vlan4092
+  description: MLAG_PEER
+  shutdown: false
+  ip_address: 10.255.252.19/31
+  mtu: 1500
+  no_autostate: true
+vlan_internal_order:
+  allocation: ascending
+  range:
+    beginning: 1006
+    ending: 1199
 vlans:
 - id: 4090
-  tenant: system
   name: LEAF_PEER_L3
   trunk_groups:
   - LEAF_PEER_L3
-- id: 4092
   tenant: system
+- id: 4092
   name: MLAG_PEER
   trunk_groups:
   - MLAG
+  tenant: system
 - id: 130
   name: Tenant_A_APP_Zone_1
   tenant: Tenant_A
@@ -344,148 +479,15 @@ vlans:
 - id: 350
   name: Tenant_C_WAN_Zone_1
   tenant: Tenant_C
-vlan_interfaces:
-- name: Vlan4090
-  description: MLAG_PEER_L3_PEERING
-  shutdown: false
-  mtu: 1500
-  ip_address: 10.255.251.19/31
-- name: Vlan4092
-  description: MLAG_PEER
-  shutdown: false
-  no_autostate: true
-  mtu: 1500
-  ip_address: 10.255.252.19/31
-port_channel_interfaces:
-- name: Port-Channel1311
-  description: MLAG_PEER_DC1-CL1A_Po1311
-  switchport:
-    enabled: true
-    mode: trunk
-    trunk:
-      groups:
-      - MLAG
-      - LEAF_PEER_L3
-      allowed_vlan: 1-4094
-  shutdown: false
-ethernet_interfaces:
-- name: Ethernet1/31/1
-  peer: DC1-CL1A
-  peer_interface: Ethernet1/31/1
-  peer_type: mlag_peer
-  description: MLAG_PEER_DC1-CL1A_Ethernet1/31/1
-  shutdown: false
-  channel_group:
-    id: 1311
-    mode: active
-  speed: 100g
-- name: Ethernet1/32/1
-  peer: DC1-CL1A
-  peer_interface: Ethernet1/32/1
-  peer_type: mlag_peer
-  description: MLAG_PEER_DC1-CL1A_Ethernet1/32/1
-  shutdown: false
-  channel_group:
-    id: 1311
-    mode: active
-  speed: 100g
-- name: Ethernet1
-  peer: DC1-SPINE1
-  peer_interface: Ethernet27
-  peer_type: spine
-  description: P2P_LINK_TO_DC1-SPINE1_Ethernet27
-  speed: forced 100gfull
-  shutdown: false
-  mtu: 1500
-  switchport:
-    enabled: false
-  ip_address: 172.31.255.65/31
-- name: Ethernet2
-  peer: DC1-SPINE2
-  peer_interface: Ethernet27
-  peer_type: spine
-  description: P2P_LINK_TO_DC1-SPINE2_Ethernet27
-  speed: forced 100gfull
-  shutdown: false
-  mtu: 1500
-  switchport:
-    enabled: false
-  ip_address: 172.31.255.67/31
-- name: Ethernet3
-  peer: DC1-SPINE3
-  peer_interface: Ethernet27
-  peer_type: spine
-  description: P2P_LINK_TO_DC1-SPINE3_Ethernet27
-  speed: forced 100gfull
-  shutdown: false
-  mtu: 1500
-  switchport:
-    enabled: false
-  ip_address: 172.31.255.69/31
-- name: Ethernet4
-  peer: DC1-SPINE4
-  peer_interface: Ethernet27
-  peer_type: spine
-  description: P2P_LINK_TO_DC1-SPINE4_Ethernet27
-  speed: forced 100gfull
-  shutdown: false
-  mtu: 1500
-  switchport:
-    enabled: false
-  ip_address: 172.31.255.71/31
-mlag_configuration:
-  domain_id: DC1_CL1
-  local_interface: Vlan4092
-  peer_address: 10.255.252.18
-  peer_link: Port-Channel1311
-  reload_delay_mlag: '1200'
-  reload_delay_non_mlag: '1320'
-route_maps:
-- name: RM-MLAG-PEER-IN
-  sequence_numbers:
-  - sequence: 10
-    type: permit
-    set:
-    - origin incomplete
-    description: Make routes learned over MLAG Peer-link less preferred on spines to ensure optimal routing
-- name: RM-CONN-2-BGP
-  sequence_numbers:
-  - sequence: 10
-    type: permit
-    match:
-    - ip address prefix-list PL-LOOPBACKS-EVPN-OVERLAY
-loopback_interfaces:
-- name: Loopback0
-  description: ROUTER_ID
-  shutdown: false
-  ip_address: 192.168.255.19/32
-- name: Loopback1
-  description: VXLAN_TUNNEL_SOURCE
-  shutdown: false
-  ip_address: 192.168.254.18/32
-prefix_lists:
-- name: PL-LOOPBACKS-EVPN-OVERLAY
-  sequence_numbers:
-  - sequence: 10
-    action: permit 192.168.255.0/24 eq 32
-  - sequence: 20
-    action: permit 192.168.254.0/24 eq 32
-router_bfd:
-  multihop:
-    interval: 1200
-    min_rx: 1200
-    multiplier: 3
-ip_igmp_snooping:
-  globally_enabled: true
-  vlans:
-  - id: 120
-    enabled: false
+vrfs:
+- name: MGMT
+  ip_routing: false
 vxlan_interface:
   vxlan1:
     description: DC1-CL1B_VTEP
     vxlan:
-      udp_port: 4789
       source_interface: Loopback1
+      udp_port: 4789
       vlans:
       - id: 130
         vni: 10130
@@ -523,5 +525,3 @@ vxlan_interface:
         vni: 30311
       - id: 350
         vni: 30350
-metadata:
-  platform: 7300X3

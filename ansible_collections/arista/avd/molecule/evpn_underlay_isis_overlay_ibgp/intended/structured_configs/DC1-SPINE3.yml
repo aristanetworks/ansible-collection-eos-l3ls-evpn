@@ -1,11 +1,6 @@
-hostname: DC1-SPINE3
-is_deployed: true
-static_routes:
-- vrf: MGMT
-  destination_address_prefix: 0.0.0.0/0
-  gateway: 192.168.200.5
-service_routing_protocols_model: multi-agent
-ip_routing: true
+aaa_root:
+  disabled: true
+config_end: true
 daemon_terminattr:
   cvaddrs:
   - 192.168.200.11:9910
@@ -13,27 +8,125 @@ daemon_terminattr:
     method: key
     key: telarista
   cvvrf: MGMT
-  smashexcludes: ale,flexCounter,hardware,kni,pulse,strata
-  ingestexclude: /Sysdb/cell/1/agent,/Sysdb/cell/2/agent
   disable_aaa: true
-vlan_internal_order:
-  allocation: ascending
-  range:
-    beginning: 1006
-    ending: 1199
-aaa_root:
-  disabled: true
-config_end: true
+  ingestexclude: /Sysdb/cell/1/agent,/Sysdb/cell/2/agent
+  smashexcludes: ale,flexCounter,hardware,kni,pulse,strata
 enable_password:
   disabled: true
-transceiver_qsfp_default_mode_4x10: true
+ethernet_interfaces:
+- name: Ethernet1
+  description: P2P_DC1-LEAF1A_Ethernet3
+  shutdown: false
+  mtu: 1500
+  ip_address: 172.31.255.4/31
+  isis_enable: EVPN_UNDERLAY
+  isis_bfd: true
+  isis_metric: 50
+  isis_network_point_to_point: true
+  isis_circuit_type: level-2
+  peer: DC1-LEAF1A
+  peer_interface: Ethernet3
+  peer_type: l3leaf
+  switchport:
+    enabled: false
+- name: Ethernet2
+  description: P2P_DC1-LEAF2A_Ethernet3
+  shutdown: false
+  mtu: 1500
+  ip_address: 172.31.255.12/31
+  isis_enable: EVPN_UNDERLAY
+  isis_bfd: true
+  isis_metric: 50
+  isis_network_point_to_point: true
+  isis_circuit_type: level-2
+  peer: DC1-LEAF2A
+  peer_interface: Ethernet3
+  peer_type: l3leaf
+  switchport:
+    enabled: false
+- name: Ethernet3
+  description: P2P_DC1-LEAF2B_Ethernet3
+  shutdown: false
+  mtu: 1500
+  ip_address: 172.31.255.20/31
+  isis_enable: EVPN_UNDERLAY
+  isis_bfd: true
+  isis_metric: 50
+  isis_network_point_to_point: true
+  isis_circuit_type: level-2
+  peer: DC1-LEAF2B
+  peer_interface: Ethernet3
+  peer_type: l3leaf
+  switchport:
+    enabled: false
+- name: Ethernet4
+  description: P2P_DC1-SVC3A_Ethernet3
+  shutdown: false
+  mtu: 1500
+  ip_address: 172.31.255.28/31
+  isis_enable: EVPN_UNDERLAY
+  isis_bfd: true
+  isis_metric: 50
+  isis_network_point_to_point: true
+  isis_circuit_type: level-2
+  peer: DC1-SVC3A
+  peer_interface: Ethernet3
+  peer_type: l3leaf
+  switchport:
+    enabled: false
+- name: Ethernet5
+  description: P2P_DC1-SVC3B_Ethernet3
+  shutdown: false
+  mtu: 1500
+  ip_address: 172.31.255.36/31
+  isis_enable: EVPN_UNDERLAY
+  isis_bfd: true
+  isis_metric: 50
+  isis_network_point_to_point: true
+  isis_circuit_type: level-2
+  peer: DC1-SVC3B
+  peer_interface: Ethernet3
+  peer_type: l3leaf
+  switchport:
+    enabled: false
+- name: Ethernet6
+  description: P2P_DC1-BL1A_Ethernet3
+  shutdown: false
+  mtu: 1500
+  ip_address: 172.31.255.44/31
+  isis_enable: EVPN_UNDERLAY
+  isis_bfd: true
+  isis_metric: 50
+  isis_network_point_to_point: true
+  isis_circuit_type: level-2
+  peer: DC1-BL1A
+  peer_interface: Ethernet3
+  peer_type: l3leaf
+  switchport:
+    enabled: false
+- name: Ethernet7
+  description: P2P_DC1-BL1B_Ethernet3
+  shutdown: false
+  mtu: 1500
+  ip_address: 172.31.255.52/31
+  isis_enable: EVPN_UNDERLAY
+  isis_bfd: true
+  isis_metric: 50
+  isis_network_point_to_point: true
+  isis_circuit_type: level-2
+  peer: DC1-BL1B
+  peer_interface: Ethernet3
+  peer_type: l3leaf
+  switchport:
+    enabled: false
+hostname: DC1-SPINE3
 ip_name_servers:
 - ip_address: 192.168.200.5
   vrf: MGMT
 - ip_address: 8.8.8.8
   vrf: MGMT
-spanning_tree:
-  mode: none
+ip_routing: true
+is_deployed: true
 local_users:
 - name: admin
   privilege: 15
@@ -43,135 +136,6 @@ local_users:
   privilege: 15
   role: network-admin
   sha512_password: $6$rZKcbIZ7iWGAWTUM$TCgDn1KcavS0s.OV8lacMTUkxTByfzcGlFlYUWroxYuU7M/9bIodhRO7nXGzMweUxvbk8mJmQl8Bh44cRktUj.
-vrfs:
-- name: MGMT
-  ip_routing: false
-management_interfaces:
-- name: Management1
-  description: OOB_MANAGEMENT
-  shutdown: false
-  vrf: MGMT
-  ip_address: 192.168.200.103/24
-  gateway: 192.168.200.5
-  type: oob
-management_api_http:
-  enable_vrfs:
-  - name: MGMT
-  enable_https: true
-ntp:
-  local_interface:
-    name: Management1
-    vrf: MGMT
-  servers:
-  - name: 192.168.200.5
-    vrf: MGMT
-    preferred: true
-ethernet_interfaces:
-- name: Ethernet1
-  peer: DC1-LEAF1A
-  peer_interface: Ethernet3
-  peer_type: l3leaf
-  description: P2P_DC1-LEAF1A_Ethernet3
-  shutdown: false
-  mtu: 1500
-  switchport:
-    enabled: false
-  ip_address: 172.31.255.4/31
-  isis_enable: EVPN_UNDERLAY
-  isis_bfd: true
-  isis_metric: 50
-  isis_network_point_to_point: true
-  isis_circuit_type: level-2
-- name: Ethernet2
-  peer: DC1-LEAF2A
-  peer_interface: Ethernet3
-  peer_type: l3leaf
-  description: P2P_DC1-LEAF2A_Ethernet3
-  shutdown: false
-  mtu: 1500
-  switchport:
-    enabled: false
-  ip_address: 172.31.255.12/31
-  isis_enable: EVPN_UNDERLAY
-  isis_bfd: true
-  isis_metric: 50
-  isis_network_point_to_point: true
-  isis_circuit_type: level-2
-- name: Ethernet3
-  peer: DC1-LEAF2B
-  peer_interface: Ethernet3
-  peer_type: l3leaf
-  description: P2P_DC1-LEAF2B_Ethernet3
-  shutdown: false
-  mtu: 1500
-  switchport:
-    enabled: false
-  ip_address: 172.31.255.20/31
-  isis_enable: EVPN_UNDERLAY
-  isis_bfd: true
-  isis_metric: 50
-  isis_network_point_to_point: true
-  isis_circuit_type: level-2
-- name: Ethernet4
-  peer: DC1-SVC3A
-  peer_interface: Ethernet3
-  peer_type: l3leaf
-  description: P2P_DC1-SVC3A_Ethernet3
-  shutdown: false
-  mtu: 1500
-  switchport:
-    enabled: false
-  ip_address: 172.31.255.28/31
-  isis_enable: EVPN_UNDERLAY
-  isis_bfd: true
-  isis_metric: 50
-  isis_network_point_to_point: true
-  isis_circuit_type: level-2
-- name: Ethernet5
-  peer: DC1-SVC3B
-  peer_interface: Ethernet3
-  peer_type: l3leaf
-  description: P2P_DC1-SVC3B_Ethernet3
-  shutdown: false
-  mtu: 1500
-  switchport:
-    enabled: false
-  ip_address: 172.31.255.36/31
-  isis_enable: EVPN_UNDERLAY
-  isis_bfd: true
-  isis_metric: 50
-  isis_network_point_to_point: true
-  isis_circuit_type: level-2
-- name: Ethernet6
-  peer: DC1-BL1A
-  peer_interface: Ethernet3
-  peer_type: l3leaf
-  description: P2P_DC1-BL1A_Ethernet3
-  shutdown: false
-  mtu: 1500
-  switchport:
-    enabled: false
-  ip_address: 172.31.255.44/31
-  isis_enable: EVPN_UNDERLAY
-  isis_bfd: true
-  isis_metric: 50
-  isis_network_point_to_point: true
-  isis_circuit_type: level-2
-- name: Ethernet7
-  peer: DC1-BL1B
-  peer_interface: Ethernet3
-  peer_type: l3leaf
-  description: P2P_DC1-BL1B_Ethernet3
-  shutdown: false
-  mtu: 1500
-  switchport:
-    enabled: false
-  ip_address: 172.31.255.52/31
-  isis_enable: EVPN_UNDERLAY
-  isis_bfd: true
-  isis_metric: 50
-  isis_network_point_to_point: true
-  isis_circuit_type: level-2
 loopback_interfaces:
 - name: Loopback0
   description: ROUTER_ID
@@ -179,14 +143,50 @@ loopback_interfaces:
   ip_address: 192.168.255.3/32
   isis_enable: EVPN_UNDERLAY
   isis_passive: true
+management_api_http:
+  enable_https: true
+  enable_vrfs:
+  - name: MGMT
+management_interfaces:
+- name: Management1
+  description: OOB_MANAGEMENT
+  shutdown: false
+  vrf: MGMT
+  ip_address: 192.168.200.103/24
+  type: oob
+  gateway: 192.168.200.5
+metadata:
+  platform: vEOS-LAB
+ntp:
+  local_interface:
+    name: Management1
+    vrf: MGMT
+  servers:
+  - name: 192.168.200.5
+    preferred: true
+    vrf: MGMT
 router_isis:
   instance: EVPN_UNDERLAY
-  log_adjacency_changes: true
   net: 49.0001.1921.6825.5003.00
   router_id: 192.168.255.3
   is_type: level-2
+  log_adjacency_changes: true
   address_family_ipv4:
     enabled: true
     maximum_paths: 4
-metadata:
-  platform: vEOS-LAB
+service_routing_protocols_model: multi-agent
+spanning_tree:
+  mode: none
+static_routes:
+- vrf: MGMT
+  destination_address_prefix: 0.0.0.0/0
+  gateway: 192.168.200.5
+transceiver_qsfp_default_mode_4x10: true
+vlan_internal_order:
+  allocation: ascending
+  range:
+    beginning: 1006
+    ending: 1199
+vrfs:
+- name: MGMT
+  ip_routing: false

@@ -1,4 +1,4 @@
-# Copyright (c) 2023-2024 Arista Networks, Inc.
+# Copyright (c) 2023-2025 Arista Networks, Inc.
 # Use of this source code is governed by the Apache License 2.0
 # that can be found in the LICENSE file.
 from __future__ import annotations
@@ -161,32 +161,53 @@ class AvdList(Sequence[T_ItemType], Generic[T_ItemType], AvdBase):
         cls = type(self)
         return cls(filter(function, self._items))
 
-    def _deepmerge(self, other: Self, list_merge: Literal["append", "replace"] = "append") -> None:
+    def _deepmerge(self, other: Self, list_merge: Literal["append_unique", "append", "replace", "keep", "prepend", "prepend_unique"] = "append_unique") -> None:
         """
         Update instance by appending or replacing the items from the other instance.
 
         Args:
             other: The other instance of the same type to merge into this instance.
             list_merge: Merge strategy used on this and any nested lists.
-                - "append" will first try to deep merge on the primary key, and if not found it will append non-existing items.
-                - "replace" will replace the full list.
+
+        List merge strategies:
+        - "append_unique" will first try to deep merge on the primary key, and if not found it will append non-existing items.
+        - "append" will first try to deep merge on the primary key, and if not found it will append all other items (including duplicates).\
+            (For AvdIndexedList this works the same as append_unique)
+        - "replace" will replace the full list.
+        - "keep" will only use the new list if there is no existing list or existing list is `None`.
+        - "prepend_unique" will first try to deep merge on the primary key, and if not found it will prepend non-existing items.
+        - "prepend" will first try to deep merge on the primary key, and if not found it will prepend all other items (including duplicates).\
+            (For AvdIndexedList this works the same as prepend_unique)
         """
         cls = type(self)
         if not isinstance(other, cls):
             msg = f"Unable to merge type '{type(other)}' into '{cls}'"
             raise TypeError(msg)
 
-        if self._created_from_null:
-            # Overwrite all data from other and clear the flag.
-            self._created_from_null = False
+        if self._created_from_null or other._created_from_null:
+            # Set the flag to the value of other and set list_merge to replace so we overwrite with data from other below.
+            self._created_from_null = other._created_from_null
             list_merge = "replace"
 
-        if list_merge == "replace":
-            self._items = other._items.copy()
-            return
-
-        # Append non-existing items.
-        self._items.extend(new_item for new_item in other._items if new_item not in self._items)
+        match list_merge:
+            case "append_unique":
+                # Append non-existing items.
+                self._items.extend(new_item for new_item in other._items if new_item not in self._items)
+            case "append":
+                # Append all items.
+                self._items.extend(other._items)
+            case "replace":
+                # Replace with the "other" list.
+                self._items = other._items.copy()
+                return
+            case "keep":
+                # We only get here if there was a defined instance of the old list, so we "keep" the existing list as-is.
+                return
+            case "prepend_unique":
+                # Prepend non-existing items.
+                self._items[:0] = [new_item for new_item in other._items if new_item not in self._items]
+            case "prepend":
+                self._items[:0] = other._items
 
     def _cast_as(self, new_type: type[T_AvdList], ignore_extra_keys: bool = False) -> T_AvdList:
         """

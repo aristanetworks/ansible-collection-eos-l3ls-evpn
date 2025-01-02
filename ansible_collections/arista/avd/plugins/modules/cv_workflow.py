@@ -1,4 +1,4 @@
-# Copyright (c) 2024 Arista Networks, Inc.
+# Copyright (c) 2024-2025 Arista Networks, Inc.
 # Use of this source code is governed by the Apache License 2.0
 # that can be found in the LICENSE file.
 
@@ -41,7 +41,7 @@ options:
       Path to directory containing files with AVD structured configurations.
       If found, the `serial_number` or `system_mac_address` will be used to identify the Device on CloudVision.
       Any tags found in the structured configuration metadata will be applied to the Device and/or Interfaces.
-    required: true
+    required: false
     type: str
   structured_config_suffix:
     description: File suffix for AVD structured configuration files.

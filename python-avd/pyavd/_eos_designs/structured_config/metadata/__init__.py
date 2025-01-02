@@ -1,18 +1,18 @@
-# Copyright (c) 2023-2024 Arista Networks, Inc.
+# Copyright (c) 2023-2025 Arista Networks, Inc.
 # Use of this source code is governed by the Apache License 2.0
 # that can be found in the LICENSE file.
 from __future__ import annotations
 
 from functools import cached_property
 
-from pyavd._eos_designs.avdfacts import AvdFacts
+from pyavd._eos_designs.structured_config.structured_config_generator import StructuredConfigGenerator
 from pyavd._utils import strip_empties_from_dict
 
 from .cv_pathfinder import CvPathfinderMixin
 from .cv_tags import CvTagsMixin
 
 
-class AvdStructuredConfigMetadata(AvdFacts, CvTagsMixin, CvPathfinderMixin):
+class AvdStructuredConfigMetadata(StructuredConfigGenerator, CvTagsMixin, CvPathfinderMixin):
     """
     This returns the metadata data structure as per the below example.
 

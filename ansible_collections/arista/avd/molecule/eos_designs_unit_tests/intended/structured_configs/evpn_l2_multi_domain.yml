@@ -1,37 +1,255 @@
+aaa_root:
+  disabled: true
+config_end: true
+enable_password:
+  disabled: true
 hostname: evpn_l2_multi_domain
+ip_igmp_snooping:
+  globally_enabled: true
+ip_routing: true
+ip_virtual_router_mac_address: 00:dc:00:00:00:0a
 is_deployed: true
+loopback_interfaces:
+- name: Loopback0
+  description: ROUTER_ID
+  shutdown: false
+  ip_address: 192.168.255.1/32
+- name: Loopback1
+  description: VXLAN_TUNNEL_SOURCE
+  shutdown: false
+  ip_address: 192.168.254.1/32
+management_api_http:
+  enable_https: true
+  enable_vrfs:
+  - name: MGMT
+management_interfaces:
+- name: Management1
+  description: OOB_MANAGEMENT
+  shutdown: false
+  vrf: MGMT
+  ip_address: 192.168.100.101/24
+  type: oob
+metadata:
+  platform: vEOS
+prefix_lists:
+- name: PL-LOOPBACKS-EVPN-OVERLAY
+  sequence_numbers:
+  - sequence: 10
+    action: permit 192.168.255.0/24 eq 32
+  - sequence: 20
+    action: permit 192.168.254.0/24 eq 32
+route_maps:
+- name: RM-CONN-2-BGP
+  sequence_numbers:
+  - sequence: 10
+    type: permit
+    match:
+    - ip address prefix-list PL-LOOPBACKS-EVPN-OVERLAY
+router_bfd:
+  multihop:
+    interval: 300
+    min_rx: 300
+    multiplier: 3
 router_bgp:
   as: '65001'
   router_id: 192.168.255.1
-  bgp:
-    default:
-      ipv4_unicast: false
   maximum_paths:
     paths: 4
     ecmp: 4
-  redistribute:
-    connected:
-      enabled: true
-      route_map: RM-CONN-2-BGP
+  bgp:
+    default:
+      ipv4_unicast: false
   peer_groups:
   - name: IPv4-UNDERLAY-PEERS
     type: ipv4
-    maximum_routes: 12000
     send_community: all
+    maximum_routes: 12000
   - name: EVPN-OVERLAY-PEERS
     type: evpn
     update_source: Loopback0
     bfd: true
+    ebgp_multihop: 3
     send_community: all
     maximum_routes: 0
-    ebgp_multihop: 3
   - name: EVPN-OVERLAY-CORE
     type: evpn
     update_source: Loopback0
     bfd: true
+    ebgp_multihop: 15
     send_community: all
     maximum_routes: 0
-    ebgp_multihop: 15
+  neighbors:
+  - ip_address: 192.168.100.10
+    peer_group: EVPN-OVERLAY-CORE
+    remote_as: '65002'
+    peer: DCI_TEST
+    description: DCI_TEST
+  redistribute:
+    connected:
+      enabled: true
+      route_map: RM-CONN-2-BGP
+  vlans:
+  - id: 150
+    tenant: L2_MULTI_DOMAIN_DISABLED
+    rd: 192.168.255.1:10150
+    rd_evpn_domain:
+      domain: remote
+      rd: 192.168.255.1:10150
+    route_targets:
+      both:
+      - 10150:10150
+      import_export_evpn_domains:
+      - domain: remote
+        route_target: 10150:10150
+    redistribute_routes:
+    - learned
+  - id: 160
+    tenant: L2_MULTI_DOMAIN_DISABLED
+    rd: 192.168.255.1:10160
+    rd_evpn_domain:
+      domain: remote
+      rd: 192.168.255.1:10160
+    route_targets:
+      both:
+      - 10160:10160
+      import_export_evpn_domains:
+      - domain: remote
+        route_target: 10160:10160
+    redistribute_routes:
+    - learned
+  - id: 170
+    tenant: L2_MULTI_DOMAIN_DISABLED
+    rd: 192.168.255.1:10170
+    route_targets:
+      both:
+      - 10170:10170
+    redistribute_routes:
+    - learned
+  - id: 110
+    tenant: L2_MULTI_DOMAIN_DISABLED
+    rd: 192.168.255.1:10110
+    route_targets:
+      both:
+      - 10110:10110
+    redistribute_routes:
+    - learned
+  - id: 111
+    tenant: L2_MULTI_DOMAIN_DISABLED
+    rd: 192.168.255.1:10111
+    rd_evpn_domain:
+      domain: remote
+      rd: 192.168.255.1:10111
+    route_targets:
+      both:
+      - 10111:10111
+      import_export_evpn_domains:
+      - domain: remote
+        route_target: 10111:10111
+    redistribute_routes:
+    - learned
+  - id: 190
+    tenant: L2_MULTI_DOMAIN_DISABLED
+    rd: 192.168.255.1:10190
+    rd_evpn_domain:
+      domain: remote
+      rd: 192.168.255.1:10190
+    route_targets:
+      both:
+      - 10190:10190
+      import_export_evpn_domains:
+      - domain: remote
+        route_target: 10190:10190
+    redistribute_routes:
+    - learned
+  - id: 180
+    tenant: L2_MULTI_DOMAIN_DISABLED
+    rd: 192.168.255.1:10180
+    route_targets:
+      both:
+      - 10180:10180
+    redistribute_routes:
+    - learned
+  - id: 250
+    tenant: L2_MULTI_DOMAIN_ENABLED
+    rd: 192.168.255.1:20250
+    route_targets:
+      both:
+      - 20250:20250
+    redistribute_routes:
+    - learned
+  - id: 260
+    tenant: L2_MULTI_DOMAIN_ENABLED
+    rd: 192.168.255.1:20260
+    route_targets:
+      both:
+      - 20260:20260
+    redistribute_routes:
+    - learned
+  - id: 270
+    tenant: L2_MULTI_DOMAIN_ENABLED
+    rd: 192.168.255.1:20270
+    rd_evpn_domain:
+      domain: remote
+      rd: 192.168.255.1:20270
+    route_targets:
+      both:
+      - 20270:20270
+      import_export_evpn_domains:
+      - domain: remote
+        route_target: 20270:20270
+    redistribute_routes:
+    - learned
+  - id: 210
+    tenant: L2_MULTI_DOMAIN_ENABLED
+    rd: 192.168.255.1:20210
+    rd_evpn_domain:
+      domain: remote
+      rd: 192.168.255.1:20210
+    route_targets:
+      both:
+      - 20210:20210
+      import_export_evpn_domains:
+      - domain: remote
+        route_target: 20210:20210
+    redistribute_routes:
+    - learned
+  - id: 211
+    tenant: L2_MULTI_DOMAIN_ENABLED
+    rd: 192.168.255.1:20211
+    route_targets:
+      both:
+      - 20211:20211
+    redistribute_routes:
+    - learned
+  - id: 290
+    tenant: L2_MULTI_DOMAIN_ENABLED
+    rd: 192.168.255.1:20290
+    route_targets:
+      both:
+      - 20290:20290
+    redistribute_routes:
+    - learned
+  - id: 280
+    tenant: L2_MULTI_DOMAIN_ENABLED
+    rd: 192.168.255.1:20280
+    rd_evpn_domain:
+      domain: remote
+      rd: 192.168.255.1:20280
+    route_targets:
+      both:
+      - 20280:20280
+      import_export_evpn_domains:
+      - domain: remote
+        route_target: 20280:20280
+    redistribute_routes:
+    - learned
+  address_family_evpn:
+    peer_groups:
+    - name: EVPN-OVERLAY-CORE
+      activate: true
+      domain_remote: true
+    - name: EVPN-OVERLAY-PEERS
+      activate: true
   address_family_ipv4:
     peer_groups:
     - name: IPv4-UNDERLAY-PEERS
@@ -40,19 +258,6 @@ router_bgp:
       activate: false
     - name: EVPN-OVERLAY-CORE
       activate: false
-  address_family_evpn:
-    peer_groups:
-    - name: EVPN-OVERLAY-CORE
-      domain_remote: true
-      activate: true
-    - name: EVPN-OVERLAY-PEERS
-      activate: true
-  neighbors:
-  - ip_address: 192.168.100.10
-    peer_group: EVPN-OVERLAY-CORE
-    peer: DCI_TEST
-    description: DCI_TEST
-    remote_as: '65002'
   vrfs:
   - name: L2_MULTI_DOMAIN_ENABLED
     rd: 192.168.255.1:11
@@ -114,228 +319,74 @@ router_bgp:
     redistribute:
       connected:
         enabled: true
-  vlans:
-  - id: 150
-    tenant: L2_MULTI_DOMAIN_DISABLED
-    rd: 192.168.255.1:10150
-    route_targets:
-      both:
-      - 10150:10150
-      import_export_evpn_domains:
-      - domain: remote
-        route_target: 10150:10150
-    redistribute_routes:
-    - learned
-    rd_evpn_domain:
-      domain: remote
-      rd: 192.168.255.1:10150
-  - id: 160
-    tenant: L2_MULTI_DOMAIN_DISABLED
-    rd: 192.168.255.1:10160
-    route_targets:
-      both:
-      - 10160:10160
-      import_export_evpn_domains:
-      - domain: remote
-        route_target: 10160:10160
-    redistribute_routes:
-    - learned
-    rd_evpn_domain:
-      domain: remote
-      rd: 192.168.255.1:10160
-  - id: 170
-    tenant: L2_MULTI_DOMAIN_DISABLED
-    rd: 192.168.255.1:10170
-    route_targets:
-      both:
-      - 10170:10170
-    redistribute_routes:
-    - learned
-  - id: 110
-    tenant: L2_MULTI_DOMAIN_DISABLED
-    rd: 192.168.255.1:10110
-    route_targets:
-      both:
-      - 10110:10110
-    redistribute_routes:
-    - learned
-  - id: 111
-    tenant: L2_MULTI_DOMAIN_DISABLED
-    rd: 192.168.255.1:10111
-    route_targets:
-      both:
-      - 10111:10111
-      import_export_evpn_domains:
-      - domain: remote
-        route_target: 10111:10111
-    redistribute_routes:
-    - learned
-    rd_evpn_domain:
-      domain: remote
-      rd: 192.168.255.1:10111
-  - id: 190
-    tenant: L2_MULTI_DOMAIN_DISABLED
-    rd: 192.168.255.1:10190
-    route_targets:
-      both:
-      - 10190:10190
-      import_export_evpn_domains:
-      - domain: remote
-        route_target: 10190:10190
-    redistribute_routes:
-    - learned
-    rd_evpn_domain:
-      domain: remote
-      rd: 192.168.255.1:10190
-  - id: 180
-    tenant: L2_MULTI_DOMAIN_DISABLED
-    rd: 192.168.255.1:10180
-    route_targets:
-      both:
-      - 10180:10180
-    redistribute_routes:
-    - learned
-  - id: 250
-    tenant: L2_MULTI_DOMAIN_ENABLED
-    rd: 192.168.255.1:20250
-    route_targets:
-      both:
-      - 20250:20250
-    redistribute_routes:
-    - learned
-  - id: 260
-    tenant: L2_MULTI_DOMAIN_ENABLED
-    rd: 192.168.255.1:20260
-    route_targets:
-      both:
-      - 20260:20260
-    redistribute_routes:
-    - learned
-  - id: 270
-    tenant: L2_MULTI_DOMAIN_ENABLED
-    rd: 192.168.255.1:20270
-    route_targets:
-      both:
-      - 20270:20270
-      import_export_evpn_domains:
-      - domain: remote
-        route_target: 20270:20270
-    redistribute_routes:
-    - learned
-    rd_evpn_domain:
-      domain: remote
-      rd: 192.168.255.1:20270
-  - id: 210
-    tenant: L2_MULTI_DOMAIN_ENABLED
-    rd: 192.168.255.1:20210
-    route_targets:
-      both:
-      - 20210:20210
-      import_export_evpn_domains:
-      - domain: remote
-        route_target: 20210:20210
-    redistribute_routes:
-    - learned
-    rd_evpn_domain:
-      domain: remote
-      rd: 192.168.255.1:20210
-  - id: 211
-    tenant: L2_MULTI_DOMAIN_ENABLED
-    rd: 192.168.255.1:20211
-    route_targets:
-      both:
-      - 20211:20211
-    redistribute_routes:
-    - learned
-  - id: 290
-    tenant: L2_MULTI_DOMAIN_ENABLED
-    rd: 192.168.255.1:20290
-    route_targets:
-      both:
-      - 20290:20290
-    redistribute_routes:
-    - learned
-  - id: 280
-    tenant: L2_MULTI_DOMAIN_ENABLED
-    rd: 192.168.255.1:20280
-    route_targets:
-      both:
-      - 20280:20280
-      import_export_evpn_domains:
-      - domain: remote
-        route_target: 20280:20280
-    redistribute_routes:
-    - learned
-    rd_evpn_domain:
-      domain: remote
-      rd: 192.168.255.1:20280
 service_routing_protocols_model: multi-agent
-ip_routing: true
+transceiver_qsfp_default_mode_4x10: true
+vlan_interfaces:
+- name: Vlan150
+  description: L2_MULTI_DOMAIN_NEUTRAL
+  shutdown: false
+  vrf: L2_MULTI_DOMAIN_ENABLED
+  ip_address_virtual: 10.1.50.1/24
+  tenant: L2_MULTI_DOMAIN_DISABLED
+- name: Vlan160
+  description: L2_MULTI_DOMAIN_NEUTRAL
+  shutdown: false
+  vrf: L2_MULTI_DOMAIN_ENABLED
+  ip_address_virtual: 10.1.60.1/24
+  tenant: L2_MULTI_DOMAIN_DISABLED
+- name: Vlan170
+  description: L2_MULTI_DOMAIN_DISABLED
+  shutdown: false
+  vrf: L2_MULTI_DOMAIN_ENABLED
+  ip_address_virtual: 10.1.70.1/24
+  tenant: L2_MULTI_DOMAIN_DISABLED
+- name: Vlan110
+  description: L2_MULTI_DOMAIN_NEUTRAL
+  shutdown: false
+  vrf: L2_MULTI_DOMAIN_NEUTRAL_1
+  ip_address_virtual: 10.1.10.1/24
+  tenant: L2_MULTI_DOMAIN_DISABLED
+- name: Vlan111
+  description: L2_MULTI_DOMAIN_ENABLED
+  shutdown: false
+  vrf: L2_MULTI_DOMAIN_NEUTRAL_1
+  ip_address_virtual: 10.1.11.1/24
+  tenant: L2_MULTI_DOMAIN_DISABLED
+- name: Vlan250
+  description: L2_MULTI_DOMAIN_NEUTRAL
+  shutdown: false
+  vrf: L2_MULTI_DOMAIN_DISBLED
+  ip_address_virtual: 10.2.50.1/24
+  tenant: L2_MULTI_DOMAIN_ENABLED
+- name: Vlan260
+  description: L2_MULTI_DOMAIN_NEUTRAL
+  shutdown: false
+  vrf: L2_MULTI_DOMAIN_DISBLED
+  ip_address_virtual: 10.2.60.1/24
+  tenant: L2_MULTI_DOMAIN_ENABLED
+- name: Vlan270
+  description: L2_MULTI_DOMAIN_ENABLED
+  shutdown: false
+  vrf: L2_MULTI_DOMAIN_DISBLED
+  ip_address_virtual: 10.2.70.1/24
+  tenant: L2_MULTI_DOMAIN_ENABLED
+- name: Vlan210
+  description: L2_MULTI_DOMAIN_NEUTRAL
+  shutdown: false
+  vrf: L2_MULTI_DOMAIN_NEUTRAL_2
+  ip_address_virtual: 10.2.10.1/24
+  tenant: L2_MULTI_DOMAIN_ENABLED
+- name: Vlan211
+  description: L2_MULTI_DOMAIN_DISABLED
+  shutdown: false
+  vrf: L2_MULTI_DOMAIN_NEUTRAL_2
+  ip_address_virtual: 10.2.11.1/24
+  tenant: L2_MULTI_DOMAIN_ENABLED
 vlan_internal_order:
   allocation: ascending
   range:
     beginning: 1006
     ending: 1199
-aaa_root:
-  disabled: true
-config_end: true
-enable_password:
-  disabled: true
-transceiver_qsfp_default_mode_4x10: true
-vrfs:
-- name: MGMT
-  ip_routing: false
-- name: L2_MULTI_DOMAIN_ENABLED
-  tenant: L2_MULTI_DOMAIN_DISABLED
-  ip_routing: true
-- name: L2_MULTI_DOMAIN_NEUTRAL_1
-  tenant: L2_MULTI_DOMAIN_DISABLED
-  ip_routing: true
-- name: L2_MULTI_DOMAIN_DISBLED
-  tenant: L2_MULTI_DOMAIN_ENABLED
-  ip_routing: true
-- name: L2_MULTI_DOMAIN_NEUTRAL_2
-  tenant: L2_MULTI_DOMAIN_ENABLED
-  ip_routing: true
-management_interfaces:
-- name: Management1
-  description: OOB_MANAGEMENT
-  shutdown: false
-  vrf: MGMT
-  ip_address: 192.168.100.101/24
-  type: oob
-management_api_http:
-  enable_vrfs:
-  - name: MGMT
-  enable_https: true
-loopback_interfaces:
-- name: Loopback0
-  description: ROUTER_ID
-  shutdown: false
-  ip_address: 192.168.255.1/32
-- name: Loopback1
-  description: VXLAN_TUNNEL_SOURCE
-  shutdown: false
-  ip_address: 192.168.254.1/32
-prefix_lists:
-- name: PL-LOOPBACKS-EVPN-OVERLAY
-  sequence_numbers:
-  - sequence: 10
-    action: permit 192.168.255.0/24 eq 32
-  - sequence: 20
-    action: permit 192.168.254.0/24 eq 32
-route_maps:
-- name: RM-CONN-2-BGP
-  sequence_numbers:
-  - sequence: 10
-    type: permit
-    match:
-    - ip address prefix-list PL-LOOPBACKS-EVPN-OVERLAY
-router_bfd:
-  multihop:
-    interval: 300
-    min_rx: 300
-    multiplier: 3
 vlans:
 - id: 150
   name: L2_MULTI_DOMAIN_NEUTRAL
@@ -379,76 +430,27 @@ vlans:
 - id: 290
   name: L2_MULTI_DOMAIN_DISABLED
   tenant: L2_MULTI_DOMAIN_ENABLED
-ip_igmp_snooping:
-  globally_enabled: true
-ip_virtual_router_mac_address: 00:dc:00:00:00:0a
-vlan_interfaces:
-- name: Vlan150
+vrfs:
+- name: MGMT
+  ip_routing: false
+- name: L2_MULTI_DOMAIN_ENABLED
+  ip_routing: true
   tenant: L2_MULTI_DOMAIN_DISABLED
-  description: L2_MULTI_DOMAIN_NEUTRAL
-  shutdown: false
-  ip_address_virtual: 10.1.50.1/24
-  vrf: L2_MULTI_DOMAIN_ENABLED
-- name: Vlan160
+- name: L2_MULTI_DOMAIN_NEUTRAL_1
+  ip_routing: true
   tenant: L2_MULTI_DOMAIN_DISABLED
-  description: L2_MULTI_DOMAIN_NEUTRAL
-  shutdown: false
-  ip_address_virtual: 10.1.60.1/24
-  vrf: L2_MULTI_DOMAIN_ENABLED
-- name: Vlan170
-  tenant: L2_MULTI_DOMAIN_DISABLED
-  description: L2_MULTI_DOMAIN_DISABLED
-  shutdown: false
-  ip_address_virtual: 10.1.70.1/24
-  vrf: L2_MULTI_DOMAIN_ENABLED
-- name: Vlan110
-  tenant: L2_MULTI_DOMAIN_DISABLED
-  description: L2_MULTI_DOMAIN_NEUTRAL
-  shutdown: false
-  ip_address_virtual: 10.1.10.1/24
-  vrf: L2_MULTI_DOMAIN_NEUTRAL_1
-- name: Vlan111
-  tenant: L2_MULTI_DOMAIN_DISABLED
-  description: L2_MULTI_DOMAIN_ENABLED
-  shutdown: false
-  ip_address_virtual: 10.1.11.1/24
-  vrf: L2_MULTI_DOMAIN_NEUTRAL_1
-- name: Vlan250
+- name: L2_MULTI_DOMAIN_DISBLED
+  ip_routing: true
   tenant: L2_MULTI_DOMAIN_ENABLED
-  description: L2_MULTI_DOMAIN_NEUTRAL
-  shutdown: false
-  ip_address_virtual: 10.2.50.1/24
-  vrf: L2_MULTI_DOMAIN_DISBLED
-- name: Vlan260
+- name: L2_MULTI_DOMAIN_NEUTRAL_2
+  ip_routing: true
   tenant: L2_MULTI_DOMAIN_ENABLED
-  description: L2_MULTI_DOMAIN_NEUTRAL
-  shutdown: false
-  ip_address_virtual: 10.2.60.1/24
-  vrf: L2_MULTI_DOMAIN_DISBLED
-- name: Vlan270
-  tenant: L2_MULTI_DOMAIN_ENABLED
-  description: L2_MULTI_DOMAIN_ENABLED
-  shutdown: false
-  ip_address_virtual: 10.2.70.1/24
-  vrf: L2_MULTI_DOMAIN_DISBLED
-- name: Vlan210
-  tenant: L2_MULTI_DOMAIN_ENABLED
-  description: L2_MULTI_DOMAIN_NEUTRAL
-  shutdown: false
-  ip_address_virtual: 10.2.10.1/24
-  vrf: L2_MULTI_DOMAIN_NEUTRAL_2
-- name: Vlan211
-  tenant: L2_MULTI_DOMAIN_ENABLED
-  description: L2_MULTI_DOMAIN_DISABLED
-  shutdown: false
-  ip_address_virtual: 10.2.11.1/24
-  vrf: L2_MULTI_DOMAIN_NEUTRAL_2
 vxlan_interface:
   vxlan1:
     description: evpn_l2_multi_domain_VTEP
     vxlan:
-      udp_port: 4789
       source_interface: Loopback1
+      udp_port: 4789
       vlans:
       - id: 150
         vni: 10150
@@ -487,5 +489,3 @@ vxlan_interface:
         vni: 21
       - name: L2_MULTI_DOMAIN_NEUTRAL_2
         vni: 20
-metadata:
-  platform: vEOS
