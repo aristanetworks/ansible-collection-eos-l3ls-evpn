@@ -55,7 +55,7 @@ local_users:
 
 | Name | Type | Description |
 | ---- | ---- | ----------- |
-| _value | string | The hash digest. |
+| _value | string | The hash digest |
 
 ## Authors
 
