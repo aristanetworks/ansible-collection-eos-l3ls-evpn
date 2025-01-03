@@ -22,7 +22,7 @@ class RouterIsisMixin(UtilsMixin):
     @cached_property
     def router_isis(self: AvdStructuredConfigNetworkServices) -> dict | None:
         """
-        return structured config for router_isis.
+        Return structured config for router_isis.
 
         Used for non-EVPN where underlay_routing_protocol is ISIS,
         static routes in VRF "default" should be redistributed into ISIS
