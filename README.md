@@ -4,7 +4,7 @@
   ~ that can be found in the LICENSE file.
   -->
 
-# Arista Validated Designs - UPDATE!
+# Arista Validated Designs - UPDATE
 
 ![Arista AVD](https://img.shields.io/badge/Arista-AVD%20Automation-blue) ![collection version](https://img.shields.io/github/v/release/aristanetworks/avd) ![License](https://img.shields.io/github/license/aristanetworks/avd)
 
