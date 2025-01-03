@@ -1452,18 +1452,18 @@ address locking
 
 ### Management Security SSL Profiles
 
-| SSL Profile Name | TLS protocol accepted | Certificate filename | Key filename | Ciphers | CRLs |
-| ---------------- | --------------------- | -------------------- | ------------ | ------- | ---- |
-| certificate-profile | - | eAPI.crt | eAPI.key | - | ca.crl<br>intermediate.crl |
-| cipher-list-profile | - | - | - | ECDHE-RSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-SHA384 | - |
-| SSL_PROFILE | 1.1 1.2 | SSL_CERT | SSL_KEY | - | - |
-| test1-chain-cert | - | - | - | - | - |
-| test1-trust-cert | - | - | - | - | - |
-| test2-chain-cert | - | - | - | - | - |
-| test2-trust-cert | - | - | - | - | - |
-| tls-single-version-profile-as-float | 1.0 | - | - | - | - |
-| tls-single-version-profile-as-string | 1.1 | - | - | - | - |
-| tls-versions-profile | 1.0 1.1 | - | - | - | - |
+| SSL Profile Name | TLS protocol accepted | Certificate filename | Key filename | Ciphers | CRLs | FIPS restrictions |
+| ---------------- | --------------------- | -------------------- | ------------ | ------- | ---- | ----------------- |
+| certificate-profile | - | eAPI.crt | eAPI.key | - | ca.crl<br>intermediate.crl | - |
+| cipher-list-profile | - | - | - | ECDHE-RSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-SHA384 | - | - |
+| SSL_PROFILE | 1.1 1.2 | SSL_CERT | SSL_KEY | - | - | enabled |
+| test1-chain-cert | - | - | - | - | - | - |
+| test1-trust-cert | - | - | - | - | - | - |
+| test2-chain-cert | - | - | - | - | - | - |
+| test2-trust-cert | - | - | - | - | - | - |
+| tls-single-version-profile-as-float | 1.0 | - | - | - | - | - |
+| tls-single-version-profile-as-string | 1.1 | - | - | - | - | - |
+| tls-versions-profile | 1.0 1.1 | - | - | - | - | enabled |
 
 ### SSL profile test1-chain-cert Certificates Summary
 
