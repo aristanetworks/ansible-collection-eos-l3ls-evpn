@@ -75,7 +75,7 @@ repos:
 
   - repo: https://github.com/astral-sh/ruff-pre-commit
     # Ruff version.
-    rev: v0.8.3
+    rev: v0.8.5
     hooks:
       # Run the linter.
       - id: ruff
@@ -85,7 +85,7 @@ repos:
       - id: ruff-format
 
   - repo: https://github.com/pycqa/pylint
-    rev: "v3.3.2"
+    rev: "v3.3.3"
     hooks:
       - id: pylint # Use pylintrc file in repository
         name: Check for Linting errors on Python files outside the Ansible collection.

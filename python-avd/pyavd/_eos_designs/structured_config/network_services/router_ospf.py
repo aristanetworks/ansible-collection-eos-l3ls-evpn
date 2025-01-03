@@ -25,7 +25,7 @@ class RouterOspfMixin(UtilsMixin):
     @cached_property
     def router_ospf(self: AvdStructuredConfigNetworkServices) -> dict | None:
         """
-        return structured config for router_ospf.
+        Return structured config for router_ospf.
 
         If we have static_routes in default VRF and not EPVN, and underlay is OSPF
         Then add redistribute static to the underlay OSPF process.

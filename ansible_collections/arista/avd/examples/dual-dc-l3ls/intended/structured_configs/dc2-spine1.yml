@@ -75,6 +75,7 @@ management_interfaces:
   gateway: 172.16.1.1
 metadata:
   platform: vEOS-lab
+  fabric_name: FABRIC
 prefix_lists:
 - name: PL-LOOPBACKS-EVPN-OVERLAY
   sequence_numbers:

@@ -25,6 +25,8 @@ management_api_http:
   enable_https: true
   enable_vrfs:
   - name: MGMT
+metadata:
+  fabric_name: EOS_DESIGNS_UNIT_TESTS
 port_channel_interfaces:
 - name: Port-Channel1
   description: L2_override_uplink_type-d_Port-Channel1

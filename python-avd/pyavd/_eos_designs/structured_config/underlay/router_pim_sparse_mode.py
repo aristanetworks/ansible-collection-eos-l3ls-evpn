@@ -24,7 +24,7 @@ class RouterPimSparseModeMixin(UtilsMixin):
     @cached_property
     def router_pim_sparse_mode(self: AvdStructuredConfigUnderlay) -> dict | None:
         """
-        return structured config for router_pim_sparse_mode.
+        Return structured config for router_pim_sparse_mode.
 
         Used for to configure multicast RPs for the underlay
         """

@@ -147,6 +147,7 @@ management_security:
       file: profileB.crt
       key: profileB.key
 metadata:
+  fabric_name: EOS_DESIGNS_UNIT_TESTS
   cv_tags:
     device_tags:
     - name: Role
