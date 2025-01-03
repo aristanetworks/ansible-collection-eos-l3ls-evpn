@@ -28,7 +28,7 @@ DOCUMENTATION = r"""
 name: secure_hash
 collection: arista.avd
 author: Arista Ansible Team (@aristanetworks)
-version_added: "5.5.0"
+version_added: "5.2.0"
 short_description: Generate an EOS supported hash digest.
 description: |-
   This filter generates an EOS supported hash digest. The algorithm for the hash is defined with the `output_type` key. `sha512_password` can be
@@ -82,7 +82,7 @@ RETURN = r"""
 ---
 _value:
   description:
-    - The hash digest.
+    - The hash digest
   type: string
 """
 
