@@ -24295,6 +24295,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 "local_interfaces": {"type": str},
                 "address_only": {"type": bool, "default": True},
                 "url": {"type": str},
+                "icmp_echo_size": {"type": int},
                 "_custom_data": {"type": dict},
             }
             name: str
@@ -24313,6 +24314,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             Default value: `True`
             """
             url: str | None
+            icmp_echo_size: int | None
+            """Size of ICMP probe in bytes."""
             _custom_data: dict[str, Any]
 
             if TYPE_CHECKING:
@@ -24326,6 +24329,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                     local_interfaces: str | None | UndefinedType = Undefined,
                     address_only: bool | UndefinedType = Undefined,
                     url: str | None | UndefinedType = Undefined,
+                    icmp_echo_size: int | None | UndefinedType = Undefined,
                     _custom_data: dict[str, Any] | UndefinedType = Undefined,
                 ) -> None:
                     """
@@ -24346,6 +24350,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                            When set to `false`, the probe uses the
                            interface to exit the device.
                         url: url
+                        icmp_echo_size: Size of ICMP probe in bytes.
                         _custom_data: _custom_data
 
                     """
@@ -24405,6 +24410,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                     "local_interfaces": {"type": str},
                     "address_only": {"type": bool, "default": True},
                     "url": {"type": str},
+                    "icmp_echo_size": {"type": int},
                     "_custom_data": {"type": dict},
                 }
                 name: str
@@ -24423,6 +24429,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 Default value: `True`
                 """
                 url: str | None
+                icmp_echo_size: int | None
+                """Size of ICMP probe in bytes."""
                 _custom_data: dict[str, Any]
 
                 if TYPE_CHECKING:
@@ -24436,6 +24444,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                         local_interfaces: str | None | UndefinedType = Undefined,
                         address_only: bool | UndefinedType = Undefined,
                         url: str | None | UndefinedType = Undefined,
+                        icmp_echo_size: int | None | UndefinedType = Undefined,
                         _custom_data: dict[str, Any] | UndefinedType = Undefined,
                     ) -> None:
                         """
@@ -24456,6 +24465,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                                When set to `false`, the probe uses the
                                interface to exit the device.
                             url: url
+                            icmp_echo_size: Size of ICMP probe in bytes.
                             _custom_data: _custom_data
 
                         """

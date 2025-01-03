@@ -8421,6 +8421,13 @@ keys:
               default: true
             url:
               type: str
+            icmp_echo_size:
+              type: int
+              description: Size of ICMP probe in bytes.
+              convert_types:
+              - str
+              min: 36
+              max: 18024
       vrfs:
         type: list
         primary_key: name
@@ -8481,6 +8488,13 @@ keys:
                     default: true
                   url:
                     type: str
+                  icmp_echo_size:
+                    type: int
+                    description: Size of ICMP probe in bytes.
+                    convert_types:
+                    - str
+                    min: 36
+                    max: 18024
   monitor_layer1:
     type: dict
     description: Enable SYSLOG messages on transceiver SMBus communication failures.

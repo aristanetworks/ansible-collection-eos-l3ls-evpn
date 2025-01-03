@@ -50,6 +50,9 @@ monitor connectivity
 {%                     if host.url is arista.avd.defined %}
          url {{ host.url }}
 {%                     endif %}
+{%                     if host.icmp_echo_size is arista.avd.defined %}
+         icmp echo size {{ host.icmp_echo_size }}
+{%                     endif %}
 {%                 endif %}
 {%             endfor %}
 {%         endif %}
@@ -94,6 +97,9 @@ monitor connectivity
 {%             endif %}
 {%             if host.url is arista.avd.defined %}
       url {{ host.url }}
+{%             endif %}
+{%             if host.icmp_echo_size is arista.avd.defined %}
+      icmp echo size {{ host.icmp_echo_size }}
 {%             endif %}
 {%         endif %}
 {%     endfor %}
