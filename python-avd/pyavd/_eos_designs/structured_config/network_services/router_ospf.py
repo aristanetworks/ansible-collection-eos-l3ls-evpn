@@ -1,4 +1,4 @@
-# Copyright (c) 2023-2024 Arista Networks, Inc.
+# Copyright (c) 2023-2025 Arista Networks, Inc.
 # Use of this source code is governed by the Apache License 2.0
 # that can be found in the LICENSE file.
 from __future__ import annotations
@@ -25,7 +25,7 @@ class RouterOspfMixin(UtilsMixin):
     @cached_property
     def router_ospf(self: AvdStructuredConfigNetworkServices) -> dict | None:
         """
-        return structured config for router_ospf.
+        Return structured config for router_ospf.
 
         If we have static_routes in default VRF and not EPVN, and underlay is OSPF
         Then add redistribute static to the underlay OSPF process.

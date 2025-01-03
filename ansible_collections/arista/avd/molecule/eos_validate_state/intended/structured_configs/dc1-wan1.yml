@@ -1,141 +1,138 @@
-hostname: dc1-wan1
-is_deployed: true
-router_bgp:
-  as: '65101'
-  router_id: 10.255.2.1
-  bgp:
-    default:
-      ipv4_unicast: false
-  maximum_paths:
-    paths: 16
-  redistribute:
-    connected:
-      enabled: true
-      route_map: RM-CONN-2-BGP
-  updates:
-    wait_install: true
-  peer_groups:
-  - name: IPv4-UNDERLAY-PEERS
-    type: ipv4
-    password: 7x4B4rnJhZB438m9+BrBfQ==
-    maximum_routes: 12000
-    send_community: all
-    route_map_in: RM-BGP-UNDERLAY-PEERS-IN
-    route_map_out: RM-BGP-UNDERLAY-PEERS-OUT
-    allowas_in:
-      enabled: true
-      times: 1
-  - name: WAN-OVERLAY-PEERS
-    type: wan
-    update_source: Dps1
-    bfd: true
-    password: htm4AZe9mIQOO1uiMuGgYQ==
-    send_community: all
-    maximum_routes: 0
-    remote_as: '65101'
-    ttl_maximum_hops: 1
-    bfd_timers:
-      interval: 1000
-      min_rx: 1000
-      multiplier: 10
-  address_family_ipv4:
-    peer_groups:
-    - name: IPv4-UNDERLAY-PEERS
-      activate: true
-    - name: WAN-OVERLAY-PEERS
-      activate: false
-  neighbors:
-  - ip_address: 10.255.255.0
-    peer_group: IPv4-UNDERLAY-PEERS
-    remote_as: '65101'
-    peer: dc1-leaf1a
-    description: dc1-leaf1a_Ethernet6
-  - ip_address: 10.255.255.2
-    peer_group: IPv4-UNDERLAY-PEERS
-    remote_as: '65101'
-    peer: dc1-leaf1b
-    description: dc1-leaf1b_Ethernet6
-  - ip_address: 10.255.255.10
-    peer_group: WAN-OVERLAY-PEERS
-    peer: dc1-leaf1a
-    description: dc1-leaf1a_Dps1
-  - ip_address: 10.255.255.20
-    peer_group: WAN-OVERLAY-PEERS
-    peer: dc1-leaf1b
-    description: dc1-leaf1b_Dps1
-  - ip_address: 10.255.1.2
-    peer: dc1-wan2
-    description: dc1-wan2
-    remote_as: '65101'
-    update_source: Dps1
-    route_reflector_client: true
-    send_community: all
-    route_map_in: RM-WAN-HA-PEER-IN
-    route_map_out: RM-WAN-HA-PEER-OUT
-  address_family_evpn:
-    peer_groups:
-    - name: WAN-OVERLAY-PEERS
-      activate: true
-      encapsulation: path-selection
-      route_map_in: RM-EVPN-SOO-IN
-      route_map_out: RM-EVPN-SOO-OUT
-    neighbor_default:
-      next_hop_self_received_evpn_routes:
-        enable: true
-    neighbors:
-    - ip_address: 10.255.1.2
-      activate: true
-      encapsulation: path-selection
-  address_family_ipv4_sr_te:
-    peer_groups:
-    - name: WAN-OVERLAY-PEERS
-      activate: true
-  address_family_link_state:
-    peer_groups:
-    - name: WAN-OVERLAY-PEERS
-      activate: true
-    path_selection:
-      roles:
-        producer: true
-  address_family_path_selection:
-    peer_groups:
-    - name: WAN-OVERLAY-PEERS
-      activate: true
-    bgp:
-      additional_paths:
-        receive: true
-        send: any
-  vrfs:
-  - name: default
-    rd: 10.255.2.1:1
-    route_targets:
-      import:
-      - address_family: evpn
-        route_targets:
-        - '1:1'
-      export:
-      - address_family: evpn
-        route_targets:
-        - '1:1'
-        - route-map RM-EVPN-EXPORT-VRF-DEFAULT
-static_routes:
-- vrf: MGMT
-  destination_address_prefix: 0.0.0.0/0
-  gateway: 172.16.1.1
-- destination_address_prefix: 172.18.0.0/16
-  gateway: 172.18.3.1
-- destination_address_prefix: 100.64.0.0/16
-  gateway: 100.64.3.1
-service_routing_protocols_model: multi-agent
-ip_routing: true
 aaa_root:
   disabled: true
+agents:
+- name: KernelFib
+  environment_variables:
+  - name: KERNELFIB_PROGRAM_ALL_ECMP
+    value: '1'
+application_traffic_recognition:
+  field_sets:
+    ipv4_prefixes:
+    - name: PFX-PATHFINDERS
+      prefix_values:
+      - 10.255.255.10/32
+      - 10.255.255.20/32
+  applications:
+    ipv4_applications:
+    - name: APP-CONTROL-PLANE
+      dest_prefix_set_name: PFX-PATHFINDERS
+  application_profiles:
+  - name: APP-PROFILE-CONTROL-PLANE
+    applications:
+    - name: APP-CONTROL-PLANE
+as_path:
+  access_lists:
+  - name: ASPATH-WAN
+    entries:
+    - type: permit
+      match: '65101'
 config_end: true
+dns_domain: dc1.local
+dps_interfaces:
+- name: Dps1
+  description: DPS Interface
+  mtu: 9194
+  ip_address: 10.255.1.1/32
+  flow_tracker:
+    sampled: FLOW-TRACKER
 enable_password:
   disabled: true
-transceiver_qsfp_default_mode_4x10: false
-spanning_tree:
-  mode: none
+ethernet_interfaces:
+- name: Ethernet1
+  description: P2P_dc1-leaf1a_Ethernet6
+  shutdown: false
+  mtu: 1500
+  ip_address: 10.255.255.1/31
+  peer: dc1-leaf1a
+  peer_interface: Ethernet6
+  peer_type: l3leaf
+  switchport:
+    enabled: false
+- name: Ethernet2
+  description: P2P_dc1-leaf1b_Ethernet6
+  shutdown: false
+  mtu: 1500
+  ip_address: 10.255.255.3/31
+  peer: dc1-leaf1b
+  peer_interface: Ethernet6
+  peer_type: l3leaf
+  switchport:
+    enabled: false
+- name: Ethernet3
+  description: mpls-sp-1_DC1-MPLS-3
+  shutdown: false
+  ip_address: 172.18.3.2/24
+  peer_type: l3_interface
+  switchport:
+    enabled: false
+- name: Ethernet4
+  description: isp-1_DC1-INET-3
+  shutdown: false
+  ip_address: 100.64.3.2/24
+  peer_type: l3_interface
+  switchport:
+    enabled: false
+flow_tracking:
+  sampled:
+    sample: 10000
+    trackers:
+    - record_export:
+        on_inactive_timeout: 70000
+        on_interval: 300000
+      name: FLOW-TRACKER
+      exporters:
+      - name: CV-TELEMETRY
+        collector:
+          host: 127.0.0.1
+        local_interface: Loopback0
+        template_interval: 3600000
+    shutdown: false
+hostname: dc1-wan1
+ip_extcommunity_lists:
+- name: ECL-EVPN-SOO
+  entries:
+  - type: permit
+    extcommunities: soo 10.255.2.1:100
+ip_routing: true
+ip_security:
+  ike_policies:
+  - name: DP-IKE-POLICY
+    local_id: 10.255.1.1
+  - name: CP-IKE-POLICY
+    local_id: 10.255.1.1
+  sa_policies:
+  - name: DP-SA-POLICY
+    esp:
+      encryption: aes256gcm128
+    pfs_dh_group: 14
+  - name: CP-SA-POLICY
+    esp:
+      encryption: aes256gcm128
+    pfs_dh_group: 14
+  profiles:
+  - name: DP-PROFILE
+    ike_policy: DP-IKE-POLICY
+    sa_policy: DP-SA-POLICY
+    connection: start
+    shared_key: 0110100A480E0A0E231D1E
+    dpd:
+      interval: 10
+      time: 50
+      action: clear
+    mode: transport
+  - name: CP-PROFILE
+    ike_policy: CP-IKE-POLICY
+    sa_policy: CP-SA-POLICY
+    connection: start
+    shared_key: 0110100A480E0A0E231D1E
+    dpd:
+      interval: 10
+      time: 50
+      action: clear
+    mode: transport
+  key_controller:
+    profile: DP-PROFILE
+is_deployed: true
 local_users:
 - name: admin
   privilege: 15
@@ -145,68 +142,89 @@ local_users:
   privilege: 15
   role: network-admin
   sha512_password: $6$7u4j1rkb3VELgcZE$EJt2Qff8kd/TapRoci0XaIZsL4tFzgq1YZBLD9c6f/knXzvcYY0NcMKndZeCv0T268knGKhOEwZAxqKjlMm920
-vrfs:
-- name: MGMT
-  ip_routing: false
+loopback_interfaces:
+- name: Loopback0
+  description: ROUTER_ID
+  shutdown: false
+  ip_address: 10.255.2.1/32
+management_api_http:
+  enable_https: true
+  https_ssl_profile: eAPI_SSL_Profile
+  enable_vrfs:
+  - name: MGMT
 management_interfaces:
 - name: Management1
   description: OOB_MANAGEMENT
   shutdown: false
   vrf: MGMT
   ip_address: 172.16.1.15/24
-  gateway: 172.16.1.1
   type: oob
-management_api_http:
-  enable_vrfs:
-  - name: MGMT
-  enable_https: true
-  https_ssl_profile: eAPI_SSL_Profile
-ethernet_interfaces:
-- name: Ethernet1
-  peer: dc1-leaf1a
-  peer_interface: Ethernet6
-  peer_type: l3leaf
-  description: P2P_dc1-leaf1a_Ethernet6
-  shutdown: false
-  mtu: 1500
-  switchport:
-    enabled: false
-  ip_address: 10.255.255.1/31
-- name: Ethernet2
-  peer: dc1-leaf1b
-  peer_interface: Ethernet6
-  peer_type: l3leaf
-  description: P2P_dc1-leaf1b_Ethernet6
-  shutdown: false
-  mtu: 1500
-  switchport:
-    enabled: false
-  ip_address: 10.255.255.3/31
-- name: Ethernet3
-  peer_type: l3_interface
-  ip_address: 172.18.3.2/24
-  shutdown: false
-  switchport:
-    enabled: false
-  description: mpls-sp-1_DC1-MPLS-3
-- name: Ethernet4
-  peer_type: l3_interface
-  ip_address: 100.64.3.2/24
-  shutdown: false
-  switchport:
-    enabled: false
-  description: isp-1_DC1-INET-3
-loopback_interfaces:
-- name: Loopback0
-  description: ROUTER_ID
-  shutdown: false
-  ip_address: 10.255.2.1/32
-as_path:
-  access_lists:
-  - name: ASPATH-WAN
-    entries:
-    - type: permit
-      match: '65101'
+  gateway: 172.16.1.1
+management_security:
+  ssl_profiles:
+  - name: STUN-DTLS
+    tls_versions: '1.2'
+    trust_certificate:
+      certificates:
+      - aristaDeviceCertProvisionerDefaultRootCA.crt
+    certificate:
+      file: STUN-DTLS.crt
+      key: STUN-DTLS.key
+metadata:
+  cv_tags:
+    device_tags:
+    - name: Role
+      value: edge
+    - name: Region
+      value: Global
+    - name: Zone
+      value: Global-ZONE
+    - name: Site
+      value: DC1
+    interface_tags:
+    - interface: Ethernet1
+      tags:
+      - name: Type
+        value: lan
+    - interface: Ethernet2
+      tags:
+      - name: Type
+        value: lan
+    - interface: Ethernet3
+      tags:
+      - name: Type
+        value: wan
+      - name: Carrier
+        value: mpls-sp-1
+      - name: Circuit
+        value: DC1-MPLS-3
+    - interface: Ethernet4
+      tags:
+      - name: Type
+        value: wan
+      - name: Carrier
+        value: isp-1
+      - name: Circuit
+        value: DC1-INET-3
+  cv_pathfinder:
+    role: edge
+    region: Global
+    zone: Global-ZONE
+    site: DC1
+    vtep_ip: 10.255.1.1
+    ssl_profile: STUN-DTLS
+    pathfinders:
+    - vtep_ip: 10.255.255.10
+    - vtep_ip: 10.255.255.20
+    interfaces:
+    - name: Ethernet3
+      carrier: mpls-sp-1
+      circuit_id: DC1-MPLS-3
+      pathgroup: mpls
+    - name: Ethernet4
+      carrier: isp-1
+      circuit_id: DC1-INET-3
+      pathgroup: internet
 prefix_lists:
 - name: PL-LOOPBACKS-EVPN-OVERLAY
   sequence_numbers:
@@ -307,64 +325,6 @@ route_maps:
     type: permit
     match:
     - extcommunity ECL-EVPN-SOO
-agents:
-- name: KernelFib
-  environment_variables:
-  - name: KERNELFIB_PROGRAM_ALL_ECMP
-    value: '1'
-ip_extcommunity_lists:
-- name: ECL-EVPN-SOO
-  entries:
-  - type: permit
-    extcommunities: soo 10.255.2.1:100
-ip_security:
-  ike_policies:
-  - name: DP-IKE-POLICY
-    local_id: 10.255.1.1
-  - name: CP-IKE-POLICY
-    local_id: 10.255.1.1
-  sa_policies:
-  - name: DP-SA-POLICY
-    esp:
-      encryption: aes256gcm128
-    pfs_dh_group: 14
-  - name: CP-SA-POLICY
-    esp:
-      encryption: aes256gcm128
-    pfs_dh_group: 14
-  profiles:
-  - name: DP-PROFILE
-    ike_policy: DP-IKE-POLICY
-    sa_policy: DP-SA-POLICY
-    connection: start
-    shared_key: 0110100A480E0A0E231D1E
-    dpd:
-      interval: 10
-      time: 50
-      action: clear
-    mode: transport
-  - name: CP-PROFILE
-    ike_policy: CP-IKE-POLICY
-    sa_policy: CP-SA-POLICY
-    connection: start
-    shared_key: 0110100A480E0A0E231D1E
-    dpd:
-      interval: 10
-      time: 50
-      action: clear
-    mode: transport
-  key_controller:
-    profile: DP-PROFILE
-management_security:
-  ssl_profiles:
-  - name: STUN-DTLS
-    certificate:
-      file: STUN-DTLS.crt
-      key: STUN-DTLS.key
-    trust_certificate:
-      certificates:
-      - aristaDeviceCertProvisionerDefaultRootCA.crt
-    tls_versions: '1.2'
 router_adaptive_virtual_topology:
   topology_role: edge
   region:
@@ -381,6 +341,13 @@ router_adaptive_virtual_topology:
     load_balance_policy: LB-DEFAULT-POLICY-CONTROL-PLANE
   - name: DEFAULT-POLICY-DEFAULT
     load_balance_policy: LB-DEFAULT-POLICY-DEFAULT
+  policies:
+  - name: DEFAULT-POLICY-WITH-CP
+    matches:
+    - application_profile: APP-PROFILE-CONTROL-PLANE
+      avt_profile: DEFAULT-POLICY-CONTROL-PLANE
+    - application_profile: default
+      avt_profile: DEFAULT-POLICY-DEFAULT
   vrfs:
   - name: default
     policy: DEFAULT-POLICY-WITH-CP
@@ -389,24 +356,134 @@ router_adaptive_virtual_topology:
       id: 254
     - name: DEFAULT-POLICY-DEFAULT
       id: 1
-  policies:
-  - name: DEFAULT-POLICY-WITH-CP
-    matches:
-    - application_profile: APP-PROFILE-CONTROL-PLANE
-      avt_profile: DEFAULT-POLICY-CONTROL-PLANE
-    - application_profile: default
-      avt_profile: DEFAULT-POLICY-DEFAULT
 router_bfd:
   multihop:
     interval: 300
     min_rx: 300
     multiplier: 3
+router_bgp:
+  as: '65101'
+  router_id: 10.255.2.1
+  maximum_paths:
+    paths: 16
+  updates:
+    wait_install: true
+  bgp:
+    default:
+      ipv4_unicast: false
+  peer_groups:
+  - name: IPv4-UNDERLAY-PEERS
+    type: ipv4
+    password: 7x4B4rnJhZB438m9+BrBfQ==
+    send_community: all
+    maximum_routes: 12000
+    allowas_in:
+      enabled: true
+      times: 1
+    route_map_in: RM-BGP-UNDERLAY-PEERS-IN
+    route_map_out: RM-BGP-UNDERLAY-PEERS-OUT
+  - name: WAN-OVERLAY-PEERS
+    type: wan
+    remote_as: '65101'
+    update_source: Dps1
+    bfd: true
+    bfd_timers:
+      interval: 1000
+      min_rx: 1000
+      multiplier: 10
+    password: htm4AZe9mIQOO1uiMuGgYQ==
+    send_community: all
+    maximum_routes: 0
+    ttl_maximum_hops: 1
+  neighbors:
+  - ip_address: 10.255.255.0
+    peer_group: IPv4-UNDERLAY-PEERS
+    remote_as: '65101'
+    peer: dc1-leaf1a
+    description: dc1-leaf1a_Ethernet6
+  - ip_address: 10.255.255.2
+    peer_group: IPv4-UNDERLAY-PEERS
+    remote_as: '65101'
+    peer: dc1-leaf1b
+    description: dc1-leaf1b_Ethernet6
+  - ip_address: 10.255.255.10
+    peer_group: WAN-OVERLAY-PEERS
+    peer: dc1-leaf1a
+    description: dc1-leaf1a_Dps1
+  - ip_address: 10.255.255.20
+    peer_group: WAN-OVERLAY-PEERS
+    peer: dc1-leaf1b
+    description: dc1-leaf1b_Dps1
+  - ip_address: 10.255.1.2
+    remote_as: '65101'
+    peer: dc1-wan2
+    description: dc1-wan2
+    route_reflector_client: true
+    update_source: Dps1
+    route_map_in: RM-WAN-HA-PEER-IN
+    route_map_out: RM-WAN-HA-PEER-OUT
+    send_community: all
+  redistribute:
+    connected:
+      enabled: true
+      route_map: RM-CONN-2-BGP
+  address_family_evpn:
+    neighbor_default:
+      next_hop_self_received_evpn_routes:
+        enable: true
+    neighbors:
+    - ip_address: 10.255.1.2
+      activate: true
+      encapsulation: path-selection
+    peer_groups:
+    - name: WAN-OVERLAY-PEERS
+      activate: true
+      route_map_in: RM-EVPN-SOO-IN
+      route_map_out: RM-EVPN-SOO-OUT
+      encapsulation: path-selection
+  address_family_ipv4:
+    peer_groups:
+    - name: IPv4-UNDERLAY-PEERS
+      activate: true
+    - name: WAN-OVERLAY-PEERS
+      activate: false
+  address_family_ipv4_sr_te:
+    peer_groups:
+    - name: WAN-OVERLAY-PEERS
+      activate: true
+  address_family_link_state:
+    peer_groups:
+    - name: WAN-OVERLAY-PEERS
+      activate: true
+    path_selection:
+      roles:
+        producer: true
+  address_family_path_selection:
+    bgp:
+      additional_paths:
+        receive: true
+        send: any
+    peer_groups:
+    - name: WAN-OVERLAY-PEERS
+      activate: true
+  vrfs:
+  - name: default
+    rd: 10.255.2.1:1
+    route_targets:
+      import:
+      - address_family: evpn
+        route_targets:
+        - '1:1'
+      export:
+      - address_family: evpn
+        route_targets:
+        - '1:1'
+        - route-map RM-EVPN-EXPORT-VRF-DEFAULT
 router_path_selection:
-  tcp_mss_ceiling:
-    ipv4_segment_size: auto
   path_groups:
   - name: mpls
     id: 101
+    ipsec_profile: CP-PROFILE
     local_interfaces:
     - name: Ethernet3
       stun:
@@ -424,9 +501,9 @@ router_path_selection:
       name: dc1-leaf1b
       ipv4_addresses:
       - 172.18.2.2
-    ipsec_profile: CP-PROFILE
   - name: internet
     id: 102
+    ipsec_profile: CP-PROFILE
     local_interfaces:
     - name: Ethernet4
       stun:
@@ -444,9 +521,9 @@ router_path_selection:
       name: dc1-leaf1b
       ipv4_addresses:
       - 100.64.2.2
-    ipsec_profile: CP-PROFILE
   - name: LAN_HA
     id: 65535
+    ipsec_profile: DP-PROFILE
     flow_assignment: lan
     local_interfaces:
     - name: Ethernet1
@@ -457,7 +534,6 @@ router_path_selection:
       ipv4_addresses:
       - 10.255.255.5
       - 10.255.255.7
-    ipsec_profile: DP-PROFILE
   load_balance_policies:
   - name: LB-DEFAULT-POLICY-CONTROL-PLANE
     path_groups:
@@ -469,8 +545,21 @@ router_path_selection:
     - name: internet
     - name: mpls
     - name: LAN_HA
+  tcp_mss_ceiling:
+    ipv4_segment_size: auto
 router_traffic_engineering:
   enabled: true
+service_routing_protocols_model: multi-agent
+spanning_tree:
+  mode: none
+static_routes:
+- vrf: MGMT
+  destination_address_prefix: 0.0.0.0/0
+  gateway: 172.16.1.1
+- destination_address_prefix: 172.18.0.0/16
+  gateway: 172.18.3.1
+- destination_address_prefix: 100.64.0.0/16
+  gateway: 100.64.3.1
 stun:
   client:
     server_profiles:
@@ -486,105 +575,16 @@ stun:
     - name: internet-dc1-leaf1b-Ethernet7
       ip_address: 100.64.2.2
       ssl_profile: STUN-DTLS
-application_traffic_recognition:
-  application_profiles:
-  - name: APP-PROFILE-CONTROL-PLANE
-    applications:
-    - name: APP-CONTROL-PLANE
-  applications:
-    ipv4_applications:
-    - name: APP-CONTROL-PLANE
-      dest_prefix_set_name: PFX-PATHFINDERS
-  field_sets:
-    ipv4_prefixes:
-    - name: PFX-PATHFINDERS
-      prefix_values:
-      - 10.255.255.10/32
-      - 10.255.255.20/32
-dps_interfaces:
-- name: Dps1
-  description: DPS Interface
-  mtu: 9194
-  ip_address: 10.255.1.1/32
-  flow_tracker:
-    sampled: FLOW-TRACKER
+transceiver_qsfp_default_mode_4x10: false
+vrfs:
+- name: MGMT
+  ip_routing: false
 vxlan_interface:
   vxlan1:
     description: dc1-wan1_VTEP
     vxlan:
-      udp_port: 4789
       source_interface: Dps1
+      udp_port: 4789
       vrfs:
       - name: default
         vni: 1
-flow_tracking:
-  sampled:
-    sample: 10000
-    trackers:
-    - name: FLOW-TRACKER
-      record_export:
-        on_inactive_timeout: 70000
-        on_interval: 300000
-      exporters:
-      - name: CV-TELEMETRY
-        collector:
-          host: 127.0.0.1
-        local_interface: Loopback0
-        template_interval: 3600000
-    shutdown: false
-metadata:
-  cv_tags:
-    device_tags:
-    - name: Role
-      value: edge
-    - name: Region
-      value: Global
-    - name: Zone
-      value: Global-ZONE
-    - name: Site
-      value: DC1
-    interface_tags:
-    - interface: Ethernet1
-      tags:
-      - name: Type
-        value: lan
-    - interface: Ethernet2
-      tags:
-      - name: Type
-        value: lan
-    - interface: Ethernet3
-      tags:
-      - name: Type
-        value: wan
-      - name: Carrier
-        value: mpls-sp-1
-      - name: Circuit
-        value: DC1-MPLS-3
-    - interface: Ethernet4
-      tags:
-      - name: Type
-        value: wan
-      - name: Carrier
-        value: isp-1
-      - name: Circuit
-        value: DC1-INET-3
-  cv_pathfinder:
-    role: edge
-    ssl_profile: STUN-DTLS
-    vtep_ip: 10.255.1.1
-    region: Global
-    zone: Global-ZONE
-    site: DC1
-    interfaces:
-    - name: Ethernet3
-      carrier: mpls-sp-1
-      circuit_id: DC1-MPLS-3
-      pathgroup: mpls
-    - name: Ethernet4
-      carrier: isp-1
-      circuit_id: DC1-INET-3
-      pathgroup: internet
-    pathfinders:
-    - vtep_ip: 10.255.255.10
-    - vtep_ip: 10.255.255.20
-dns_domain: dc1.local

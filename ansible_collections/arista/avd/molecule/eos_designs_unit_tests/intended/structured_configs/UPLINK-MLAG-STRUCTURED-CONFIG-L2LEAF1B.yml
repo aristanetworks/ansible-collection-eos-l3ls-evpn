@@ -1,123 +1,63 @@
-hostname: UPLINK-MLAG-STRUCTURED-CONFIG-L2LEAF1B
-is_deployed: true
-static_routes:
-- vrf: MGMT
-  destination_address_prefix: 0.0.0.0/0
-  gateway: 192.168.200.5
-service_routing_protocols_model: multi-agent
-vlan_internal_order:
-  allocation: ascending
-  range:
-    beginning: 1006
-    ending: 1199
 aaa_root:
   disabled: true
 config_end: true
 enable_password:
   disabled: true
-transceiver_qsfp_default_mode_4x10: true
-spanning_tree:
-  mode: mstp
-  mst_instances:
-  - id: '0'
-    priority: 16384
-  no_spanning_tree_vlan: '4094'
-vrfs:
-- name: MGMT
-  ip_routing: false
+ethernet_interfaces:
+- name: Ethernet3
+  description: MLAG_UPLINK-MLAG-STRUCTURED-CONFIG-L2LEAF1A_Ethernet3
+  shutdown: false
+  channel_group:
+    id: 3
+    mode: active
+  peer: UPLINK-MLAG-STRUCTURED-CONFIG-L2LEAF1A
+  peer_interface: Ethernet3
+  peer_type: mlag_peer
+- name: Ethernet4
+  description: MLAG_UPLINK-MLAG-STRUCTURED-CONFIG-L2LEAF1A_Ethernet4
+  shutdown: false
+  channel_group:
+    id: 3
+    mode: active
+  peer: UPLINK-MLAG-STRUCTURED-CONFIG-L2LEAF1A
+  peer_interface: Ethernet4
+  peer_type: mlag_peer
+- name: Ethernet1
+  description: L2_UPLINK-MLAG-STRUCTURED-CONFIG-L3LEAF1A_Ethernet6
+  shutdown: false
+  channel_group:
+    id: 1
+    mode: active
+  peer: UPLINK-MLAG-STRUCTURED-CONFIG-L3LEAF1A
+  peer_interface: Ethernet6
+  peer_type: l3leaf
+- name: Ethernet2
+  description: L2_UPLINK-MLAG-STRUCTURED-CONFIG-L3LEAF1B_Ethernet6
+  shutdown: false
+  channel_group:
+    id: 1
+    mode: active
+  peer: UPLINK-MLAG-STRUCTURED-CONFIG-L3LEAF1B
+  peer_interface: Ethernet6
+  peer_type: l3leaf
+hostname: UPLINK-MLAG-STRUCTURED-CONFIG-L2LEAF1B
+ip_igmp_snooping:
+  globally_enabled: true
+is_deployed: true
+management_api_http:
+  enable_https: true
+  enable_vrfs:
+  - name: MGMT
 management_interfaces:
 - name: Management1
   description: OOB_MANAGEMENT
   shutdown: false
   vrf: MGMT
   ip_address: 192.168.201.201/24
-  gateway: 192.168.200.5
   type: oob
-management_api_http:
-  enable_vrfs:
-  - name: MGMT
-  enable_https: true
-vlans:
-- id: 4094
-  tenant: system
-  name: MLAG
-  trunk_groups:
-  - MLAG
-vlan_interfaces:
-- name: Vlan4094
-  description: MLAG
-  shutdown: false
-  no_autostate: true
-  mtu: 9214
-  ip_address: 10.255.252.1/31
-port_channel_interfaces:
-- name: Port-Channel3
-  description: MLAG_UPLINK-MLAG-STRUCTURED-CONFIG-L2LEAF1A_Port-Channel3
-  switchport:
-    enabled: true
-    mode: trunk
-    trunk:
-      groups:
-      - MLAG
-      native_vlan_tag: true
-  shutdown: false
-  storm_control:
-    broadcast:
-      level: '25'
-    unknown_unicast:
-      level: '25'
-- name: Port-Channel1
-  description: L2_DC1_LEAF1_Port-Channel5
-  switchport:
-    enabled: true
-    mode: trunk
-    trunk:
-      allowed_vlan: none
-      native_vlan_tag: true
-  shutdown: false
-  mlag: 1
-  storm_control:
-    broadcast:
-      level: '25'
-    unknown_unicast:
-      level: '25'
-ethernet_interfaces:
-- name: Ethernet3
-  peer: UPLINK-MLAG-STRUCTURED-CONFIG-L2LEAF1A
-  peer_interface: Ethernet3
-  peer_type: mlag_peer
-  description: MLAG_UPLINK-MLAG-STRUCTURED-CONFIG-L2LEAF1A_Ethernet3
-  shutdown: false
-  channel_group:
-    id: 3
-    mode: active
-- name: Ethernet4
-  peer: UPLINK-MLAG-STRUCTURED-CONFIG-L2LEAF1A
-  peer_interface: Ethernet4
-  peer_type: mlag_peer
-  description: MLAG_UPLINK-MLAG-STRUCTURED-CONFIG-L2LEAF1A_Ethernet4
-  shutdown: false
-  channel_group:
-    id: 3
-    mode: active
-- name: Ethernet1
-  peer: UPLINK-MLAG-STRUCTURED-CONFIG-L3LEAF1A
-  peer_interface: Ethernet6
-  peer_type: l3leaf
-  description: L2_UPLINK-MLAG-STRUCTURED-CONFIG-L3LEAF1A_Ethernet6
-  shutdown: false
-  channel_group:
-    id: 1
-    mode: active
-- name: Ethernet2
-  peer: UPLINK-MLAG-STRUCTURED-CONFIG-L3LEAF1B
-  peer_interface: Ethernet6
-  peer_type: l3leaf
-  description: L2_UPLINK-MLAG-STRUCTURED-CONFIG-L3LEAF1B_Ethernet6
-  shutdown: false
-  channel_group:
-    id: 1
-    mode: active
+  gateway: 192.168.200.5
+metadata:
+  platform: vEOS-LAB
 mlag_configuration:
   domain_id: UPLINK-MLAG-STRUCTURED-CONFIG-L2LEAF1
   local_interface: Vlan4094
@@ -125,7 +65,67 @@ mlag_configuration:
   peer_link: Port-Channel3
   reload_delay_mlag: '300'
   reload_delay_non_mlag: '330'
-ip_igmp_snooping:
-  globally_enabled: true
-metadata:
-  platform: vEOS-LAB
+port_channel_interfaces:
+- name: Port-Channel3
+  description: MLAG_UPLINK-MLAG-STRUCTURED-CONFIG-L2LEAF1A_Port-Channel3
+  shutdown: false
+  storm_control:
+    broadcast:
+      level: '25'
+    unknown_unicast:
+      level: '25'
+  switchport:
+    enabled: true
+    mode: trunk
+    trunk:
+      native_vlan_tag: true
+      groups:
+      - MLAG
+- name: Port-Channel1
+  description: L2_DC1_LEAF1_Port-Channel5
+  shutdown: false
+  mlag: 1
+  storm_control:
+    broadcast:
+      level: '25'
+    unknown_unicast:
+      level: '25'
+  switchport:
+    enabled: true
+    mode: trunk
+    trunk:
+      allowed_vlan: none
+      native_vlan_tag: true
+service_routing_protocols_model: multi-agent
+spanning_tree:
+  mode: mstp
+  mst_instances:
+  - id: '0'
+    priority: 16384
+  no_spanning_tree_vlan: '4094'
+static_routes:
+- vrf: MGMT
+  destination_address_prefix: 0.0.0.0/0
+  gateway: 192.168.200.5
+transceiver_qsfp_default_mode_4x10: true
+vlan_interfaces:
+- name: Vlan4094
+  description: MLAG
+  shutdown: false
+  ip_address: 10.255.252.1/31
+  mtu: 9214
+  no_autostate: true
+vlan_internal_order:
+  allocation: ascending
+  range:
+    beginning: 1006
+    ending: 1199
+vlans:
+- id: 4094
+  name: MLAG
+  trunk_groups:
+  - MLAG
+  tenant: system
+vrfs:
+- name: MGMT
+  ip_routing: false

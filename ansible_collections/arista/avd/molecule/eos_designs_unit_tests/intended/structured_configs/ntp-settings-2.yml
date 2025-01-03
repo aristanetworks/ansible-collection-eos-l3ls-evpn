@@ -1,46 +1,46 @@
-hostname: ntp-settings-2
-is_deployed: true
-service_routing_protocols_model: multi-agent
-vlan_internal_order:
-  allocation: ascending
-  range:
-    beginning: 1006
-    ending: 1199
 aaa_root:
   disabled: true
 config_end: true
 enable_password:
   disabled: true
-transceiver_qsfp_default_mode_4x10: true
-vrfs:
-- name: MGMT
-  ip_routing: false
-- name: INBAND_MGMT
+hostname: ntp-settings-2
+ip_igmp_snooping:
+  globally_enabled: true
+is_deployed: true
 management_api_http:
+  enable_https: true
   enable_vrfs:
   - name: MGMT
-  enable_https: true
 ntp:
   local_interface:
     name: Vlan4092
     vrf: INBAND_MGMT
   servers:
   - name: 10.10.10.1
-    vrf: INBAND_MGMT
     preferred: true
+    vrf: INBAND_MGMT
   - name: 10.10.10.2
     vrf: INBAND_MGMT
-ip_igmp_snooping:
-  globally_enabled: true
-vlans:
-- id: 4092
-  tenant: system
-  name: INBAND_MGMT
+service_routing_protocols_model: multi-agent
+transceiver_qsfp_default_mode_4x10: true
 vlan_interfaces:
 - name: Vlan4092
   description: Inband Management
   shutdown: false
-  mtu: 1500
   vrf: INBAND_MGMT
   ip_address: 192.168.1.2/24
+  mtu: 1500
   type: inband_mgmt
+vlan_internal_order:
+  allocation: ascending
+  range:
+    beginning: 1006
+    ending: 1199
+vlans:
+- id: 4092
+  name: INBAND_MGMT
+  tenant: system
+vrfs:
+- name: MGMT
+  ip_routing: false
+- name: INBAND_MGMT

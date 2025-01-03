@@ -1,126 +1,31 @@
-hostname: MLAG-ISIS-L3LEAF1B
-is_deployed: true
-router_bgp:
-  as: '65161'
-  router_id: 192.168.255.37
-  bgp:
-    default:
-      ipv4_unicast: false
-  maximum_paths:
-    paths: 4
-    ecmp: 4
-  updates:
-    wait_install: true
-  peer_groups:
-  - name: EVPN-OVERLAY-PEERS
-    type: evpn
-    update_source: Loopback0
-    bfd: true
-    send_community: all
-    maximum_routes: 0
-    ebgp_multihop: 3
-  address_family_evpn:
-    peer_groups:
-    - name: EVPN-OVERLAY-PEERS
-      activate: true
-  address_family_ipv4:
-    peer_groups:
-    - name: EVPN-OVERLAY-PEERS
-      activate: false
-  neighbors:
-  - ip_address: 10.10.10.1
-    peer_group: EVPN-OVERLAY-PEERS
-    peer: MLAG-ISIS-SPINE
-    description: MLAG-ISIS-SPINE_Loopback0
-    remote_as: '65000'
-service_routing_protocols_model: multi-agent
-ip_routing: true
-vlan_internal_order:
-  allocation: ascending
-  range:
-    beginning: 1006
-    ending: 1199
 aaa_root:
   disabled: true
 config_end: true
 enable_password:
   disabled: true
-transceiver_qsfp_default_mode_4x10: true
-vrfs:
-- name: MGMT
-  ip_routing: false
-management_interfaces:
-- name: Management1
-  description: OOB_MANAGEMENT
-  shutdown: false
-  vrf: MGMT
-  ip_address: 192.168.201.117/24
-  type: oob
-management_api_http:
-  enable_vrfs:
-  - name: MGMT
-  enable_https: true
-spanning_tree:
-  no_spanning_tree_vlan: '4094'
-vlans:
-- id: 4094
-  tenant: system
-  name: MLAG
-  trunk_groups:
-  - MLAG
-vlan_interfaces:
-- name: Vlan4094
-  description: MLAG
-  shutdown: false
-  no_autostate: true
-  mtu: 9214
-  ip_address: 10.10.255.7/31
-  isis_enable: EVPN_UNDERLAY
-  isis_metric: 50
-  isis_network_point_to_point: true
-  isis_authentication:
-    both:
-      mode: md5
-      key: $1c$sTNAlR6rKSw=
-      key_type: '7'
-port_channel_interfaces:
-- name: Port-Channel5
-  description: MLAG_MLAG-ISIS-L3LEAF1A_Port-Channel5
-  switchport:
-    enabled: true
-    mode: trunk
-    trunk:
-      groups:
-      - MLAG
-  shutdown: false
 ethernet_interfaces:
 - name: Ethernet5
-  peer: MLAG-ISIS-L3LEAF1A
-  peer_interface: Ethernet5
-  peer_type: mlag_peer
   description: MLAG_MLAG-ISIS-L3LEAF1A_Ethernet5
   shutdown: false
   channel_group:
     id: 5
     mode: active
-- name: Ethernet6
   peer: MLAG-ISIS-L3LEAF1A
-  peer_interface: Ethernet6
+  peer_interface: Ethernet5
   peer_type: mlag_peer
+- name: Ethernet6
   description: MLAG_MLAG-ISIS-L3LEAF1A_Ethernet6
   shutdown: false
   channel_group:
     id: 5
     mode: active
+  peer: MLAG-ISIS-L3LEAF1A
+  peer_interface: Ethernet6
+  peer_type: mlag_peer
 - name: Ethernet1
-  peer: MLAG-ISIS-SPINE
-  peer_interface: Ethernet31
-  peer_type: spine
   description: P2P_MLAG-ISIS-SPINE_Ethernet31
   shutdown: false
   mtu: 9214
-  switchport:
-    enabled: false
   ip_address: 10.10.101.9/31
   isis_enable: EVPN_UNDERLAY
   isis_metric: 50
@@ -128,16 +33,19 @@ ethernet_interfaces:
   isis_circuit_type: level-2
   isis_authentication:
     both:
-      mode: md5
-      key: $1c$sTNAlR6rKSw=
       key_type: '7'
-mlag_configuration:
-  domain_id: MLAG_ISIS_L3LEAF1
-  local_interface: Vlan4094
-  peer_address: 10.10.255.6
-  peer_link: Port-Channel5
-  reload_delay_mlag: '300'
-  reload_delay_non_mlag: '330'
+      key: $1c$sTNAlR6rKSw=
+      mode: md5
+  peer: MLAG-ISIS-SPINE
+  peer_interface: Ethernet31
+  peer_type: spine
+  switchport:
+    enabled: false
+hostname: MLAG-ISIS-L3LEAF1B
+ip_igmp_snooping:
+  globally_enabled: true
+ip_routing: true
+is_deployed: true
 loopback_interfaces:
 - name: Loopback0
   description: ROUTER_ID
@@ -151,28 +59,120 @@ loopback_interfaces:
   ip_address: 192.168.254.36/32
   isis_enable: EVPN_UNDERLAY
   isis_passive: true
-router_isis:
-  instance: EVPN_UNDERLAY
-  log_adjacency_changes: true
-  net: 49.0001.1921.6825.5037.00
-  router_id: 192.168.255.37
-  is_type: level-2
-  address_family_ipv4:
+management_api_http:
+  enable_https: true
+  enable_vrfs:
+  - name: MGMT
+management_interfaces:
+- name: Management1
+  description: OOB_MANAGEMENT
+  shutdown: false
+  vrf: MGMT
+  ip_address: 192.168.201.117/24
+  type: oob
+metadata:
+  platform: vEOS-LAB
+mlag_configuration:
+  domain_id: MLAG_ISIS_L3LEAF1
+  local_interface: Vlan4094
+  peer_address: 10.10.255.6
+  peer_link: Port-Channel5
+  reload_delay_mlag: '300'
+  reload_delay_non_mlag: '330'
+port_channel_interfaces:
+- name: Port-Channel5
+  description: MLAG_MLAG-ISIS-L3LEAF1A_Port-Channel5
+  shutdown: false
+  switchport:
     enabled: true
-    maximum_paths: 4
+    mode: trunk
+    trunk:
+      groups:
+      - MLAG
 router_bfd:
   multihop:
     interval: 300
     min_rx: 300
     multiplier: 3
-ip_igmp_snooping:
-  globally_enabled: true
+router_bgp:
+  as: '65161'
+  router_id: 192.168.255.37
+  maximum_paths:
+    paths: 4
+    ecmp: 4
+  updates:
+    wait_install: true
+  bgp:
+    default:
+      ipv4_unicast: false
+  peer_groups:
+  - name: EVPN-OVERLAY-PEERS
+    type: evpn
+    update_source: Loopback0
+    bfd: true
+    ebgp_multihop: 3
+    send_community: all
+    maximum_routes: 0
+  neighbors:
+  - ip_address: 10.10.10.1
+    peer_group: EVPN-OVERLAY-PEERS
+    remote_as: '65000'
+    peer: MLAG-ISIS-SPINE
+    description: MLAG-ISIS-SPINE_Loopback0
+  address_family_evpn:
+    peer_groups:
+    - name: EVPN-OVERLAY-PEERS
+      activate: true
+  address_family_ipv4:
+    peer_groups:
+    - name: EVPN-OVERLAY-PEERS
+      activate: false
+router_isis:
+  instance: EVPN_UNDERLAY
+  net: 49.0001.1921.6825.5037.00
+  router_id: 192.168.255.37
+  is_type: level-2
+  log_adjacency_changes: true
+  address_family_ipv4:
+    enabled: true
+    maximum_paths: 4
+service_routing_protocols_model: multi-agent
+spanning_tree:
+  no_spanning_tree_vlan: '4094'
+transceiver_qsfp_default_mode_4x10: true
+vlan_interfaces:
+- name: Vlan4094
+  description: MLAG
+  shutdown: false
+  ip_address: 10.10.255.7/31
+  isis_enable: EVPN_UNDERLAY
+  isis_metric: 50
+  isis_network_point_to_point: true
+  isis_authentication:
+    both:
+      key_type: '7'
+      key: $1c$sTNAlR6rKSw=
+      mode: md5
+  mtu: 9214
+  no_autostate: true
+vlan_internal_order:
+  allocation: ascending
+  range:
+    beginning: 1006
+    ending: 1199
+vlans:
+- id: 4094
+  name: MLAG
+  trunk_groups:
+  - MLAG
+  tenant: system
+vrfs:
+- name: MGMT
+  ip_routing: false
 vxlan_interface:
   vxlan1:
     description: MLAG-ISIS-L3LEAF1B_VTEP
     vxlan:
-      udp_port: 4789
       source_interface: Loopback1
+      udp_port: 4789
       virtual_router_encapsulation_mac_address: mlag-system-id
-metadata:
-  platform: vEOS-LAB

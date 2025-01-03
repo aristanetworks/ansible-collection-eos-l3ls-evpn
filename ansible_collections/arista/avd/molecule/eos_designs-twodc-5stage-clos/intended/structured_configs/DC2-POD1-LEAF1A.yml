@@ -1,43 +1,175 @@
+aaa_root:
+  disabled: true
+config_end: true
+domain_list:
+- structured-config.set.under.vrf.common-vrf
+enable_password:
+  disabled: true
+eos_cli: "interface Loopback1010\n  description Loopback created from raw_eos_cli under l3leaf defaults in DC2 POD1\n\ninterface Loopback1111\n
+  \ description Loopback created from raw_eos_cli under platform_settings vEOS-LAB\n\ninterface Loopback1000\n  description Loopback
+  created from raw_eos_cli under VRF Common_VRF\n"
+ethernet_interfaces:
+- name: Ethernet1
+  description: P2P_DC2-POD1-SPINE1_Ethernet3
+  shutdown: false
+  ip_address: 172.17.210.1/31
+  ptp:
+    enable: true
+  service_profile: QOS-PROFILE
+  peer: DC2-POD1-SPINE1
+  peer_interface: Ethernet3
+  peer_type: spine
+  switchport:
+    enabled: false
+- name: Ethernet2
+  description: P2P_DC2-POD1-SPINE2_Ethernet3
+  shutdown: false
+  ip_address: 172.17.210.3/31
+  ptp:
+    enable: true
+  service_profile: QOS-PROFILE
+  peer: DC2-POD1-SPINE2
+  peer_interface: Ethernet3
+  peer_type: spine
+  switchport:
+    enabled: false
+- name: Ethernet3
+  description: L2_DC2-POD1-L2LEAF1A_Ethernet1
+  shutdown: false
+  channel_group:
+    id: 3
+    mode: active
+  peer: DC2-POD1-L2LEAF1A
+  peer_interface: Ethernet1
+  peer_type: l2leaf
+- name: Ethernet6
+  description: P2P_DC1.POD1.LEAF2A_Ethernet7
+  shutdown: false
+  ip_address: 100.100.100.201/24
+  peer: DC1.POD1.LEAF2A
+  peer_interface: Ethernet7
+  peer_type: l3leaf
+  switchport:
+    enabled: false
+- name: Ethernet7
+  description: P2P_DC1-POD1-LEAF2B_Ethernet7
+  shutdown: false
+  ip_address: 11.1.0.39/31
+  ptp:
+    enable: true
+  peer: DC1-POD1-LEAF2B
+  peer_interface: Ethernet7
+  peer_type: l3leaf
+  switchport:
+    enabled: false
 hostname: DC2-POD1-LEAF1A
+ip_igmp_snooping:
+  globally_enabled: true
+ip_routing: true
+ip_virtual_router_mac_address: 00:1c:73:00:dc:01
 is_deployed: true
+local_users:
+- name: admin
+  privilege: 15
+  role: network-admin
+  sha512_password: $6$eJ5TvI8oru5i9e8G$R1X/SbtGTk9xoEHEBQASc7SC2nHYmi.crVgp2pXuCXwxsXEA81e4E0cXgQ6kX08fIeQzauqhv2kS.RGJFCon5/
+  no_password: true
+loopback_interfaces:
+- name: Loopback0
+  description: ROUTER_ID
+  shutdown: false
+  ip_address: 172.16.210.3/32
+- name: Loopback1
+  description: VXLAN_TUNNEL_SOURCE
+  shutdown: false
+  ip_address: 172.18.210.3/32
+- name: Loopback100
+  description: DIAG_VRF_vrf_with_loopbacks_from_overlapping_pool
+  shutdown: false
+  vrf: vrf_with_loopbacks_from_overlapping_pool
+  ip_address: 10.100.0.3/32
+- name: Loopback101
+  description: DIAG_VRF_vrf_with_loopbacks_from_pod_pools
+  shutdown: false
+  vrf: vrf_with_loopbacks_from_pod_pools
+  ip_address: 10.101.201.3/32
+management_api_http:
+  enable_https: true
+  enable_vrfs:
+  - name: MGMT
+management_interfaces:
+- name: Management1
+  description: OOB_MANAGEMENT
+  shutdown: false
+  vrf: MGMT
+  ip_address: 192.168.1.22/24
+  type: oob
+  gateway: 192.168.1.254
+metadata:
+  platform: vEOS-LAB
+port_channel_interfaces:
+- name: Port-Channel3
+  description: L2_DC2-POD1-L2LEAF1A_Port-Channel1
+  shutdown: false
+  service_profile: QOS-PROFILE
+  switchport:
+    enabled: true
+    mode: trunk
+    trunk:
+      allowed_vlan: '4092'
+prefix_lists:
+- name: PL-LOOPBACKS-EVPN-OVERLAY
+  sequence_numbers:
+  - sequence: 10
+    action: permit 172.16.210.0/24 eq 32
+  - sequence: 20
+    action: permit 172.18.210.0/24 eq 32
+- name: PL-L2LEAF-INBAND-MGMT
+  sequence_numbers:
+  - sequence: 10
+    action: permit 172.21.210.0/24
+route_maps:
+- name: RM-CONN-2-BGP
+  sequence_numbers:
+  - sequence: 10
+    type: permit
+    match:
+    - ip address prefix-list PL-LOOPBACKS-EVPN-OVERLAY
+  - sequence: 20
+    type: permit
+    match:
+    - ip address prefix-list PL-L2LEAF-INBAND-MGMT
+router_bfd:
+  multihop:
+    interval: 300
+    min_rx: 300
+    multiplier: 3
 router_bgp:
   as: '65211'
   router_id: 172.16.210.3
+  maximum_paths:
+    paths: 4
+    ecmp: 4
+  updates:
+    wait_install: true
   bgp_defaults:
   - distance bgp 20 200 200
   bgp:
     default:
       ipv4_unicast: false
-  maximum_paths:
-    paths: 4
-    ecmp: 4
-  redistribute:
-    connected:
-      enabled: true
-      route_map: RM-CONN-2-BGP
-    attached_host:
-      enabled: true
-  updates:
-    wait_install: true
   peer_groups:
   - name: IPv4-UNDERLAY-PEERS
     type: ipv4
-    maximum_routes: 12000
     send_community: all
+    maximum_routes: 12000
   - name: EVPN-OVERLAY-PEERS
     type: evpn
+    next_hop_unchanged: true
     update_source: Loopback0
     bfd: true
+    ebgp_multihop: 5
     send_community: all
     maximum_routes: 0
-    ebgp_multihop: 5
-    next_hop_unchanged: true
-  address_family_ipv4:
-    peer_groups:
-    - name: IPv4-UNDERLAY-PEERS
-      activate: true
-    - name: EVPN-OVERLAY-PEERS
-      activate: false
   neighbors:
   - ip_address: 172.17.210.0
     peer_group: IPv4-UNDERLAY-PEERS
@@ -51,40 +183,46 @@ router_bgp:
     description: DC2-POD1-SPINE2_Ethernet3
   - ip_address: 172.16.110.3
     peer_group: EVPN-OVERLAY-PEERS
+    remote_as: '65111.100'
     peer: DC1-POD1-LEAF1A
     description: DC1-POD1-LEAF1A_Loopback0
-    remote_as: '65111.100'
   - ip_address: 172.16.110.1
     peer_group: EVPN-OVERLAY-PEERS
+    remote_as: '65110.100'
     peer: DC1-POD1-SPINE1
     description: DC1-POD1-SPINE1_Loopback0
-    remote_as: '65110.100'
   - ip_address: 172.16.10.1
     peer_group: EVPN-OVERLAY-PEERS
+    remote_as: '65101'
     peer: DC1-RS1
     description: DC1-RS1_Loopback0
-    remote_as: '65101'
   - ip_address: 172.16.10.2
     peer_group: EVPN-OVERLAY-PEERS
+    remote_as: '65102'
     peer: DC1-RS2
     description: DC1-RS2_Loopback0
-    remote_as: '65102'
   - ip_address: 172.16.210.4
     peer_group: EVPN-OVERLAY-PEERS
+    remote_as: '65212'
     peer: DC2-POD1-LEAF2A
     description: DC2-POD1-LEAF2A_Loopback0
-    remote_as: '65212'
   - ip_address: 100.100.100.101
+    peer_group: IPv4-UNDERLAY-PEERS
     remote_as: '65112.100'
     peer: DC1.POD1.LEAF2A
     description: DC1.POD1.LEAF2A
-    peer_group: IPv4-UNDERLAY-PEERS
   - ip_address: 11.1.0.38
+    peer_group: IPv4-UNDERLAY-PEERS
     remote_as: '65120'
     peer: DC1-POD1-LEAF2B
     description: DC1-POD1-LEAF2B
-    peer_group: IPv4-UNDERLAY-PEERS
     bfd: true
+  redistribute:
+    attached_host:
+      enabled: true
+    connected:
+      enabled: true
+      route_map: RM-CONN-2-BGP
   address_family_evpn:
     peer_groups:
     - name: EVPN-OVERLAY-PEERS
@@ -95,15 +233,14 @@ router_bgp:
       activate: true
       default_route_target:
         only: true
+  address_family_ipv4:
+    peer_groups:
+    - name: IPv4-UNDERLAY-PEERS
+      activate: true
+    - name: EVPN-OVERLAY-PEERS
+      activate: false
   vrfs:
   - name: Common_VRF
-    eos_cli: 'comment
-
-      Comment created from raw_eos_cli under BGP for VRF Common_VRF
-
-      EOF
-
-      '
     rd: 172.16.210.3:1025
     route_targets:
       import:
@@ -118,6 +255,13 @@ router_bgp:
     redistribute:
       connected:
         enabled: true
+    eos_cli: 'comment
+
+      Comment created from raw_eos_cli under BGP for VRF Common_VRF
+
+      EOF
+
+      '
   - name: vrf_with_loopbacks_dc1_pod1_only
     rd: 172.16.210.3:1102
     route_targets:
@@ -163,183 +307,62 @@ router_bgp:
     redistribute:
       connected:
         enabled: true
+service_routing_protocols_model: multi-agent
+snmp_server:
+  location: TWODC_5STAGE_CLOS DC2 DC2_POD1 DC2-POD1-LEAF1A
+spanning_tree:
+  mode: rstp
+  rstp_priority: 4096
 static_routes:
 - vrf: MGMT
   destination_address_prefix: 0.0.0.0/0
   gateway: 192.168.1.254
-service_routing_protocols_model: multi-agent
-ip_routing: true
+transceiver_qsfp_default_mode_4x10: true
+virtual_source_nat_vrfs:
+- name: vrf_with_loopbacks_from_overlapping_pool
+  ip_address: 10.100.0.3
+- name: vrf_with_loopbacks_from_pod_pools
+  ip_address: 10.101.201.3
+vlan_interfaces:
+- name: Vlan4092
+  description: Inband Management
+  shutdown: false
+  ip_address: 172.21.210.2/24
+  ip_virtual_router_addresses:
+  - 172.21.210.1
+  ip_attached_host_route_export:
+    enabled: true
+    distance: 19
 vlan_internal_order:
   allocation: ascending
   range:
     beginning: 1006
     ending: 1199
-aaa_root:
-  disabled: true
-config_end: true
-enable_password:
-  disabled: true
-transceiver_qsfp_default_mode_4x10: true
-spanning_tree:
-  mode: rstp
-  rstp_priority: 4096
-local_users:
-- name: admin
-  privilege: 15
-  role: network-admin
-  sha512_password: $6$eJ5TvI8oru5i9e8G$R1X/SbtGTk9xoEHEBQASc7SC2nHYmi.crVgp2pXuCXwxsXEA81e4E0cXgQ6kX08fIeQzauqhv2kS.RGJFCon5/
-  no_password: true
+vlans:
+- id: 4092
+  name: INBAND_MGMT
+  tenant: system
 vrfs:
 - name: MGMT
   ip_routing: false
 - name: Common_VRF
-  tenant: Tenant_A
   ip_routing: true
+  tenant: Tenant_A
 - name: vrf_with_loopbacks_dc1_pod1_only
-  tenant: Tenant_A
   ip_routing: true
+  tenant: Tenant_A
 - name: vrf_with_loopbacks_from_overlapping_pool
-  tenant: Tenant_A
   ip_routing: true
+  tenant: Tenant_A
 - name: vrf_with_loopbacks_from_pod_pools
-  tenant: Tenant_A
   ip_routing: true
-management_interfaces:
-- name: Management1
-  description: OOB_MANAGEMENT
-  shutdown: false
-  vrf: MGMT
-  ip_address: 192.168.1.22/24
-  gateway: 192.168.1.254
-  type: oob
-management_api_http:
-  enable_vrfs:
-  - name: MGMT
-  enable_https: true
-eos_cli: "interface Loopback1010\n  description Loopback created from raw_eos_cli under l3leaf defaults in DC2 POD1\n\ninterface Loopback1111\n
-  \ description Loopback created from raw_eos_cli under platform_settings vEOS-LAB\n\ninterface Loopback1000\n  description Loopback
-  created from raw_eos_cli under VRF Common_VRF\n"
-snmp_server:
-  location: TWODC_5STAGE_CLOS DC2 DC2_POD1 DC2-POD1-LEAF1A
-ethernet_interfaces:
-- name: Ethernet1
-  peer: DC2-POD1-SPINE1
-  peer_interface: Ethernet3
-  peer_type: spine
-  description: P2P_DC2-POD1-SPINE1_Ethernet3
-  shutdown: false
-  service_profile: QOS-PROFILE
-  switchport:
-    enabled: false
-  ptp:
-    enable: true
-  ip_address: 172.17.210.1/31
-- name: Ethernet2
-  peer: DC2-POD1-SPINE2
-  peer_interface: Ethernet3
-  peer_type: spine
-  description: P2P_DC2-POD1-SPINE2_Ethernet3
-  shutdown: false
-  service_profile: QOS-PROFILE
-  switchport:
-    enabled: false
-  ptp:
-    enable: true
-  ip_address: 172.17.210.3/31
-- name: Ethernet3
-  peer: DC2-POD1-L2LEAF1A
-  peer_interface: Ethernet1
-  peer_type: l2leaf
-  description: L2_DC2-POD1-L2LEAF1A_Ethernet1
-  shutdown: false
-  channel_group:
-    id: 3
-    mode: active
-- name: Ethernet6
-  peer: DC1.POD1.LEAF2A
-  peer_interface: Ethernet7
-  peer_type: l3leaf
-  switchport:
-    enabled: false
-  shutdown: false
-  ip_address: 100.100.100.201/24
-  description: P2P_DC1.POD1.LEAF2A_Ethernet7
-- name: Ethernet7
-  peer: DC1-POD1-LEAF2B
-  peer_interface: Ethernet7
-  peer_type: l3leaf
-  switchport:
-    enabled: false
-  shutdown: false
-  ip_address: 11.1.0.39/31
-  ptp:
-    enable: true
-  description: P2P_DC1-POD1-LEAF2B_Ethernet7
-port_channel_interfaces:
-- name: Port-Channel3
-  description: L2_DC2-POD1-L2LEAF1A_Port-Channel1
-  switchport:
-    enabled: true
-    mode: trunk
-    trunk:
-      allowed_vlan: '4092'
-  shutdown: false
-  service_profile: QOS-PROFILE
-loopback_interfaces:
-- name: Loopback0
-  description: ROUTER_ID
-  shutdown: false
-  ip_address: 172.16.210.3/32
-- name: Loopback1
-  description: VXLAN_TUNNEL_SOURCE
-  shutdown: false
-  ip_address: 172.18.210.3/32
-- name: Loopback100
-  description: DIAG_VRF_vrf_with_loopbacks_from_overlapping_pool
-  shutdown: false
-  vrf: vrf_with_loopbacks_from_overlapping_pool
-  ip_address: 10.100.0.3/32
-- name: Loopback101
-  description: DIAG_VRF_vrf_with_loopbacks_from_pod_pools
-  shutdown: false
-  vrf: vrf_with_loopbacks_from_pod_pools
-  ip_address: 10.101.201.3/32
-prefix_lists:
-- name: PL-LOOPBACKS-EVPN-OVERLAY
-  sequence_numbers:
-  - sequence: 10
-    action: permit 172.16.210.0/24 eq 32
-  - sequence: 20
-    action: permit 172.18.210.0/24 eq 32
-- name: PL-L2LEAF-INBAND-MGMT
-  sequence_numbers:
-  - sequence: 10
-    action: permit 172.21.210.0/24
-route_maps:
-- name: RM-CONN-2-BGP
-  sequence_numbers:
-  - sequence: 10
-    type: permit
-    match:
-    - ip address prefix-list PL-LOOPBACKS-EVPN-OVERLAY
-  - sequence: 20
-    type: permit
-    match:
-    - ip address prefix-list PL-L2LEAF-INBAND-MGMT
-router_bfd:
-  multihop:
-    interval: 300
-    min_rx: 300
-    multiplier: 3
-ip_igmp_snooping:
-  globally_enabled: true
-ip_virtual_router_mac_address: 00:1c:73:00:dc:01
+  tenant: Tenant_A
 vxlan_interface:
   vxlan1:
     description: DC2-POD1-LEAF1A_VTEP
     vxlan:
-      udp_port: 4789
       source_interface: Loopback1
+      udp_port: 4789
       vrfs:
       - name: Common_VRF
         vni: 1025
@@ -349,26 +372,3 @@ vxlan_interface:
         vni: 1100
       - name: vrf_with_loopbacks_from_pod_pools
         vni: 1101
-virtual_source_nat_vrfs:
-- name: vrf_with_loopbacks_from_overlapping_pool
-  ip_address: 10.100.0.3
-- name: vrf_with_loopbacks_from_pod_pools
-  ip_address: 10.101.201.3
-vlans:
-- id: 4092
-  tenant: system
-  name: INBAND_MGMT
-vlan_interfaces:
-- name: Vlan4092
-  description: Inband Management
-  shutdown: false
-  ip_attached_host_route_export:
-    enabled: true
-    distance: 19
-  ip_address: 172.21.210.2/24
-  ip_virtual_router_addresses:
-  - 172.21.210.1
-metadata:
-  platform: vEOS-LAB
-domain_list:
-- structured-config.set.under.vrf.common-vrf

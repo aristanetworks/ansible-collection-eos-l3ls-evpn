@@ -48,3 +48,6 @@ keys:
           items:
             type: str
             description: Interface range or interface.
+        uplink_interface_speed:
+          type: str
+          description: Set point-to-Point uplink interface speed.

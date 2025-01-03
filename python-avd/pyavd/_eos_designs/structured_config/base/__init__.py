@@ -1,4 +1,4 @@
-# Copyright (c) 2023-2024 Arista Networks, Inc.
+# Copyright (c) 2023-2025 Arista Networks, Inc.
 # Use of this source code is governed by the Apache License 2.0
 # that can be found in the LICENSE file.
 from __future__ import annotations
@@ -6,7 +6,7 @@ from __future__ import annotations
 from functools import cached_property
 from typing import TYPE_CHECKING
 
-from pyavd._eos_designs.avdfacts import AvdFacts
+from pyavd._eos_designs.structured_config.structured_config_generator import StructuredConfigGenerator
 from pyavd._errors import AristaAvdInvalidInputsError, AristaAvdMissingVariableError
 from pyavd._utils import default, get, strip_empties_from_dict, strip_null_from_data
 from pyavd.j2filters import natural_sort
@@ -19,7 +19,7 @@ if TYPE_CHECKING:
     from pyavd._eos_designs.schema import EosDesigns
 
 
-class AvdStructuredConfigBase(AvdFacts, NtpMixin, SnmpServerMixin, RouterGeneralMixin):
+class AvdStructuredConfigBase(StructuredConfigGenerator, NtpMixin, SnmpServerMixin, RouterGeneralMixin):
     """
     The AvdStructuredConfig Class is imported by "get_structured_config" to render parts of the structured config.
 
@@ -27,7 +27,7 @@ class AvdStructuredConfigBase(AvdFacts, NtpMixin, SnmpServerMixin, RouterGeneral
     .render() runs all class methods not starting with _ and of type @cached property and inserts the returned data into
     a dict with the name of the method as key. This means that each key in the final dict corresponds to a method.
 
-    The Class uses AvdFacts, as the base class, to inherit the _hostvars, keys and other attributes.
+    The Class uses StructuredConfigGenerator, as the base class, to inherit the _hostvars, keys and other attributes.
     Other methods are included as "Mixins" to make the files more manageable.
 
     The order of the @cached_properties methods imported from Mixins will also control the order in the output.
@@ -232,7 +232,7 @@ class AvdStructuredConfigBase(AvdFacts, NtpMixin, SnmpServerMixin, RouterGeneral
     @cached_property
     def hardware(self) -> dict | None:
         """
-        hardware set based on platform_speed_groups variable and switch.platform fact.
+        Hardware set based on platform_speed_groups variable and switch.platform fact.
 
         Converting nested dict to list of dict to support avd_v4.0.
         """
@@ -505,7 +505,7 @@ class AvdStructuredConfigBase(AvdFacts, NtpMixin, SnmpServerMixin, RouterGeneral
     @cached_property
     def platform(self) -> dict | None:
         """
-        platform set based on.
+        Platform set based on.
 
         * platform_settings.lag_hardware_only,
         * platform_settings.trident_forwarding_table_partition and switch.evpn_multicast facts
@@ -778,8 +778,6 @@ class AvdStructuredConfigBase(AvdFacts, NtpMixin, SnmpServerMixin, RouterGeneral
         return route_maps or None
 
     @cached_property
-    def struct_cfgs(self) -> list | None:
+    def struct_cfgs(self) -> None:
         if self.shared_utils.platform_settings.structured_config:
-            return [self.shared_utils.platform_settings.structured_config._as_dict(strip_values=())]
-
-        return None
+            self.custom_structured_configs.root.append(self.shared_utils.platform_settings.structured_config)

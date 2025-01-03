@@ -1,24 +1,19 @@
-hostname: SNMP_SYSTEM_MAC_ENGINEID_2
-is_deployed: true
-service_routing_protocols_model: multi-agent
-vlan_internal_order:
-  allocation: ascending
-  range:
-    beginning: 1006
-    ending: 1199
 aaa_root:
   disabled: true
 config_end: true
 enable_password:
   disabled: true
-transceiver_qsfp_default_mode_4x10: true
-vrfs:
-- name: MGMT
-  ip_routing: false
+hostname: SNMP_SYSTEM_MAC_ENGINEID_2
+ip_igmp_snooping:
+  globally_enabled: true
+is_deployed: true
 management_api_http:
+  enable_https: true
   enable_vrfs:
   - name: MGMT
-  enable_https: true
+metadata:
+  system_mac_address: 12:34:56:78:90:AB
+service_routing_protocols_model: multi-agent
 snmp_server:
   engine_ids:
     local: f5717f1234567890ab00
@@ -46,7 +41,12 @@ snmp_server:
   - name: usertest-v2c
     group: usergroup
     version: v2c
-ip_igmp_snooping:
-  globally_enabled: true
-metadata:
-  system_mac_address: 12:34:56:78:90:AB
+transceiver_qsfp_default_mode_4x10: true
+vlan_internal_order:
+  allocation: ascending
+  range:
+    beginning: 1006
+    ending: 1199
+vrfs:
+- name: MGMT
+  ip_routing: false

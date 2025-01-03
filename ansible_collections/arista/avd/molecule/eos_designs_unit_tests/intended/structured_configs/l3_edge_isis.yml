@@ -1,27 +1,109 @@
-hostname: l3_edge_isis
-is_deployed: true
-service_routing_protocols_model: multi-agent
-ip_routing: true
-vlan_internal_order:
-  allocation: ascending
-  range:
-    beginning: 1006
-    ending: 1199
 aaa_root:
   disabled: true
 config_end: true
 enable_password:
   disabled: true
-transceiver_qsfp_default_mode_4x10: true
-spanning_tree:
-  mode: none
-vrfs:
-- name: MGMT
-  ip_routing: false
+ethernet_interfaces:
+- name: ethernet1
+  description: P2P_peer1_ethernet1
+  shutdown: false
+  speed: forced 10000full
+  mtu: 2000
+  ip_address: 192.168.0.0/31
+  mac_security:
+    profile: TEST-MACSEC-PROFILE
+  ptp:
+    enable: true
+    announce:
+      interval: 0
+      timeout: 3
+    delay_req: -3
+    sync_message:
+      interval: -3
+    transport: ipv4
+  service_profile: TEST-QOS-PROFILE
+  peer: peer1
+  peer_interface: ethernet1
+  peer_type: other
+  switchport:
+    enabled: false
+- name: ethernet2
+  description: P2P_peer2_ethernet2
+  shutdown: false
+  mtu: 9214
+  ip_address: 192.168.0.2/31
+  isis_enable: EVPN_UNDERLAY
+  isis_bfd: true
+  isis_metric: 60
+  isis_network_point_to_point: true
+  isis_circuit_type: level-2
+  isis_hello_padding: false
+  isis_authentication:
+    both:
+      key_type: '7'
+      key: $1c$sTNAlR6rKSw=
+      mode: md5
+  peer: peer2
+  peer_interface: ethernet2
+  peer_type: other
+  switchport:
+    enabled: false
+- name: ethernet3
+  description: P2P_peer3_ethernet3
+  shutdown: false
+  mtu: 9214
+  ip_address: 192.168.0.4/31
+  isis_enable: EVPN_UNDERLAY
+  isis_bfd: true
+  isis_metric: 50
+  isis_network_point_to_point: true
+  isis_circuit_type: level-2
+  isis_hello_padding: true
+  isis_authentication:
+    both:
+      key_type: '7'
+      key: $1c$sTNAlR6rKSw=
+      mode: text
+  peer: peer3
+  peer_interface: ethernet3
+  peer_type: other
+  switchport:
+    enabled: false
+- name: ethernet4
+  description: P2P_peer4_ethernet4
+  shutdown: false
+  mtu: 9214
+  ip_address: 192.168.0.6/31
+  isis_enable: EVPN_UNDERLAY
+  isis_bfd: true
+  isis_metric: 50
+  isis_network_point_to_point: true
+  isis_circuit_type: level-2
+  isis_hello_padding: true
+  isis_authentication:
+    both:
+      key_type: '7'
+      key: $1c$sTNAlR6rKSw=
+      mode: text
+  peer: peer4
+  peer_interface: ethernet4
+  peer_type: other
+  switchport:
+    enabled: false
+hostname: l3_edge_isis
+ip_routing: true
+is_deployed: true
+loopback_interfaces:
+- name: Loopback0
+  description: ROUTER_ID
+  shutdown: false
+  ip_address: 1.2.3.1/32
+  isis_enable: EVPN_UNDERLAY
+  isis_passive: true
 management_api_http:
+  enable_https: true
   enable_vrfs:
   - name: MGMT
-  enable_https: true
 ptp:
   mode: boundary
   clock_identity: 00:1C:73:14:00:01
@@ -40,106 +122,24 @@ ptp:
         delay_resp: 3
         follow_up: 3
         sync: 3
-loopback_interfaces:
-- name: Loopback0
-  description: ROUTER_ID
-  shutdown: false
-  ip_address: 1.2.3.1/32
-  isis_enable: EVPN_UNDERLAY
-  isis_passive: true
 router_isis:
   instance: EVPN_UNDERLAY
-  log_adjacency_changes: true
   net: 49.0001.0010.0200.3001.00
   router_id: 1.2.3.1
   is_type: level-2
+  log_adjacency_changes: true
   address_family_ipv4:
     enabled: true
     maximum_paths: 4
-ethernet_interfaces:
-- name: ethernet1
-  peer: peer1
-  peer_interface: ethernet1
-  peer_type: other
-  switchport:
-    enabled: false
-  shutdown: false
-  mtu: 2000
-  service_profile: TEST-QOS-PROFILE
-  ip_address: 192.168.0.0/31
-  ptp:
-    announce:
-      interval: 0
-      timeout: 3
-    delay_req: -3
-    sync_message:
-      interval: -3
-    transport: ipv4
-    enable: true
-  mac_security:
-    profile: TEST-MACSEC-PROFILE
-  description: P2P_peer1_ethernet1
-  speed: forced 10000full
-- name: ethernet2
-  peer: peer2
-  peer_interface: ethernet2
-  peer_type: other
-  switchport:
-    enabled: false
-  shutdown: false
-  mtu: 9214
-  ip_address: 192.168.0.2/31
-  isis_enable: EVPN_UNDERLAY
-  isis_bfd: true
-  isis_metric: 60
-  isis_network_point_to_point: true
-  isis_hello_padding: false
-  isis_circuit_type: level-2
-  isis_authentication:
-    both:
-      mode: md5
-      key: $1c$sTNAlR6rKSw=
-      key_type: '7'
-  description: P2P_peer2_ethernet2
-- name: ethernet3
-  peer: peer3
-  peer_interface: ethernet3
-  peer_type: other
-  switchport:
-    enabled: false
-  shutdown: false
-  mtu: 9214
-  ip_address: 192.168.0.4/31
-  isis_enable: EVPN_UNDERLAY
-  isis_bfd: true
-  isis_metric: 50
-  isis_network_point_to_point: true
-  isis_hello_padding: true
-  isis_circuit_type: level-2
-  isis_authentication:
-    both:
-      mode: text
-      key: $1c$sTNAlR6rKSw=
-      key_type: '7'
-  description: P2P_peer3_ethernet3
-- name: ethernet4
-  peer: peer4
-  peer_interface: ethernet4
-  peer_type: other
-  switchport:
-    enabled: false
-  shutdown: false
-  mtu: 9214
-  ip_address: 192.168.0.6/31
-  isis_enable: EVPN_UNDERLAY
-  isis_bfd: true
-  isis_metric: 50
-  isis_network_point_to_point: true
-  isis_hello_padding: true
-  isis_circuit_type: level-2
-  isis_authentication:
-    both:
-      mode: text
-      key: $1c$sTNAlR6rKSw=
-      key_type: '7'
-  description: P2P_peer4_ethernet4
+service_routing_protocols_model: multi-agent
+spanning_tree:
+  mode: none
+transceiver_qsfp_default_mode_4x10: true
+vlan_internal_order:
+  allocation: ascending
+  range:
+    beginning: 1006
+    ending: 1199
+vrfs:
+- name: MGMT
+  ip_routing: false

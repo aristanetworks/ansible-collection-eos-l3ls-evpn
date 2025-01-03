@@ -1,322 +1,328 @@
-hostname: cv-pathfinder-edge2A
-is_deployed: true
-router_bgp:
-  as: '65000'
-  router_id: 192.168.42.2
-  bgp:
-    default:
-      ipv4_unicast: false
-  maximum_paths:
-    paths: 16
-  redistribute:
-    connected:
-      enabled: true
-      route_map: RM-CONN-2-BGP
-  updates:
-    wait_install: true
-  peer_groups:
-  - name: IPv4-UNDERLAY-PEERS
-    type: ipv4
-    maximum_routes: 12000
-    send_community: all
-    route_map_in: RM-BGP-UNDERLAY-PEERS-IN
-    route_map_out: RM-BGP-UNDERLAY-PEERS-OUT
-    allowas_in:
-      enabled: true
-      times: 1
-  - name: WAN-OVERLAY-PEERS
-    type: wan
-    update_source: Dps1
-    bfd: true
-    password: htm4AZe9mIQOO1uiMuGgYQ==
-    send_community: all
-    maximum_routes: 0
-    remote_as: '65000'
-    ttl_maximum_hops: 1
-    bfd_timers:
-      interval: 1000
-      min_rx: 1000
-      multiplier: 10
-  address_family_ipv4:
-    peer_groups:
-    - name: IPv4-UNDERLAY-PEERS
-      activate: true
-    - name: WAN-OVERLAY-PEERS
-      activate: false
-  neighbors:
-  - ip_address: 172.17.0.4
-    peer_group: IPv4-UNDERLAY-PEERS
-    remote_as: '65199'
-    peer: site-ha-enabled-leaf2A
-    description: site-ha-enabled-leaf2A_Ethernet1
-  - ip_address: 172.17.0.6
-    peer_group: IPv4-UNDERLAY-PEERS
-    remote_as: '65199'
-    peer: site-ha-enabled-leaf2B
-    description: site-ha-enabled-leaf2B_Ethernet1
-  - ip_address: 192.168.144.1
-    peer_group: WAN-OVERLAY-PEERS
-    peer: cv-pathfinder-pathfinder
-    description: cv-pathfinder-pathfinder_Dps1
-  - ip_address: 192.168.142.3
-    peer: cv-pathfinder-edge2B
-    description: cv-pathfinder-edge2B
-    remote_as: '65000'
-    update_source: Dps1
-    route_reflector_client: true
-    send_community: all
-    route_map_in: RM-WAN-HA-PEER-IN
-    route_map_out: RM-WAN-HA-PEER-OUT
-  vrfs:
-  - name: IT
-    router_id: 192.168.42.2
-    neighbors:
-    - ip_address: 172.17.0.4
-      peer_group: IPv4-UNDERLAY-PEERS
-      remote_as: '65199'
-      description: site-ha-enabled-leaf2A_Ethernet1.1000_vrf_IT
-    - ip_address: 172.17.0.6
-      peer_group: IPv4-UNDERLAY-PEERS
-      remote_as: '65199'
-      description: site-ha-enabled-leaf2B_Ethernet1.1000_vrf_IT
-    rd: 192.168.42.2:1000
-    route_targets:
-      import:
-      - address_family: evpn
-        route_targets:
-        - 1000:1000
-      export:
-      - address_family: evpn
-        route_targets:
-        - 1000:1000
-    redistribute:
-      connected:
-        enabled: true
-  - name: PROD
-    router_id: 192.168.42.2
-    neighbors:
-    - ip_address: 172.17.0.4
-      peer_group: IPv4-UNDERLAY-PEERS
-      remote_as: '65199'
-      description: site-ha-enabled-leaf2A_Ethernet1.142_vrf_PROD
-    - ip_address: 172.17.0.6
-      peer_group: IPv4-UNDERLAY-PEERS
-      remote_as: '65199'
-      description: site-ha-enabled-leaf2B_Ethernet1.142_vrf_PROD
-    rd: 192.168.42.2:142
-    route_targets:
-      import:
-      - address_family: evpn
-        route_targets:
-        - 142:142
-      export:
-      - address_family: evpn
-        route_targets:
-        - 142:142
-    redistribute:
-      connected:
-        enabled: true
-  - name: ATTRACTED-VRF-FROM-UPLINK
-    router_id: 192.168.42.2
-    neighbors:
-    - ip_address: 172.17.0.4
-      peer_group: IPv4-UNDERLAY-PEERS
-      remote_as: '65199'
-      description: site-ha-enabled-leaf2A_Ethernet1.666_vrf_ATTRACTED-VRF-FROM-UPLINK
-    - ip_address: 172.17.0.6
-      peer_group: IPv4-UNDERLAY-PEERS
-      remote_as: '65199'
-      description: site-ha-enabled-leaf2B_Ethernet1.666_vrf_ATTRACTED-VRF-FROM-UPLINK
-    rd: 192.168.42.2:666
-    route_targets:
-      import:
-      - address_family: evpn
-        route_targets:
-        - 666:666
-      export:
-      - address_family: evpn
-        route_targets:
-        - 666:666
-    redistribute:
-      connected:
-        enabled: true
-  - name: default
-    rd: 192.168.42.2:1
-    route_targets:
-      import:
-      - address_family: evpn
-        route_targets:
-        - '1:1'
-      export:
-      - address_family: evpn
-        route_targets:
-        - '1:1'
-        - route-map RM-EVPN-EXPORT-VRF-DEFAULT
-  address_family_evpn:
-    peer_groups:
-    - name: WAN-OVERLAY-PEERS
-      activate: true
-      encapsulation: path-selection
-      route_map_in: RM-EVPN-SOO-IN
-      route_map_out: RM-EVPN-SOO-OUT
-    neighbor_default:
-      next_hop_self_received_evpn_routes:
-        enable: true
-    neighbors:
-    - ip_address: 192.168.142.3
-      activate: true
-      encapsulation: path-selection
-  address_family_ipv4_sr_te:
-    peer_groups:
-    - name: WAN-OVERLAY-PEERS
-      activate: true
-  address_family_link_state:
-    peer_groups:
-    - name: WAN-OVERLAY-PEERS
-      activate: true
-    path_selection:
-      roles:
-        producer: true
-  address_family_path_selection:
-    peer_groups:
-    - name: WAN-OVERLAY-PEERS
-      activate: true
-    bgp:
-      additional_paths:
-        receive: true
-        send: any
-service_routing_protocols_model: multi-agent
-ip_routing: true
 aaa_root:
   disabled: true
-config_end: true
-enable_password:
-  disabled: true
-transceiver_qsfp_default_mode_4x10: false
-spanning_tree:
-  mode: none
-vrfs:
-- name: MGMT
-  ip_routing: false
-- name: IT
-  tenant: TenantA
-  ip_routing: true
-- name: PROD
-  tenant: TenantA
-  ip_routing: true
-- name: ATTRACTED-VRF-FROM-UPLINK
-  tenant: TenantC
-  ip_routing: true
-management_api_http:
-  enable_vrfs:
-  - name: MGMT
-  enable_https: true
-ethernet_interfaces:
-- name: Ethernet52
-  peer: site-ha-enabled-leaf2A
-  peer_interface: Ethernet1
-  peer_type: l3leaf
-  description: P2P_site-ha-enabled-leaf2A_Ethernet1
-  shutdown: false
-  mtu: 9214
-  switchport:
-    enabled: false
-  ip_address: 172.17.0.5/31
-- name: Ethernet52.1000
-  peer: site-ha-enabled-leaf2A
-  peer_interface: Ethernet1.1000
-  peer_type: l3leaf
-  vrf: IT
-  description: P2P_site-ha-enabled-leaf2A_Ethernet1.1000_VRF_IT
-  shutdown: false
-  encapsulation_dot1q:
-    vlan: 1000
-  mtu: 9214
-  ip_address: 172.17.0.5/31
-- name: Ethernet52.142
-  peer: site-ha-enabled-leaf2A
-  peer_interface: Ethernet1.142
-  peer_type: l3leaf
-  vrf: PROD
-  description: P2P_site-ha-enabled-leaf2A_Ethernet1.142_VRF_PROD
-  shutdown: false
-  encapsulation_dot1q:
-    vlan: 142
-  mtu: 9214
-  ip_address: 172.17.0.5/31
-- name: Ethernet52.666
-  peer: site-ha-enabled-leaf2A
-  peer_interface: Ethernet1.666
-  peer_type: l3leaf
-  vrf: ATTRACTED-VRF-FROM-UPLINK
-  description: P2P_site-ha-enabled-leaf2A_Ethernet1.666_VRF_ATTRACTED-VRF-FROM-UPLINK
-  shutdown: false
-  encapsulation_dot1q:
-    vlan: 666
-  mtu: 9214
-  ip_address: 172.17.0.5/31
-- name: Ethernet53
-  peer: site-ha-enabled-leaf2B
-  peer_interface: Ethernet1
-  peer_type: l3leaf
-  description: P2P_site-ha-enabled-leaf2B_Ethernet1
-  shutdown: false
-  mtu: 9214
-  switchport:
-    enabled: false
-  ip_address: 172.17.0.7/31
-- name: Ethernet53.1000
-  peer: site-ha-enabled-leaf2B
-  peer_interface: Ethernet1.1000
-  peer_type: l3leaf
-  vrf: IT
-  description: P2P_site-ha-enabled-leaf2B_Ethernet1.1000_VRF_IT
-  shutdown: false
-  encapsulation_dot1q:
-    vlan: 1000
-  mtu: 9214
-  ip_address: 172.17.0.7/31
-- name: Ethernet53.142
-  peer: site-ha-enabled-leaf2B
-  peer_interface: Ethernet1.142
-  peer_type: l3leaf
-  vrf: PROD
-  description: P2P_site-ha-enabled-leaf2B_Ethernet1.142_VRF_PROD
-  shutdown: false
-  encapsulation_dot1q:
-    vlan: 142
-  mtu: 9214
-  ip_address: 172.17.0.7/31
-- name: Ethernet53.666
-  peer: site-ha-enabled-leaf2B
-  peer_interface: Ethernet1.666
-  peer_type: l3leaf
-  vrf: ATTRACTED-VRF-FROM-UPLINK
-  description: P2P_site-ha-enabled-leaf2B_Ethernet1.666_VRF_ATTRACTED-VRF-FROM-UPLINK
-  shutdown: false
-  encapsulation_dot1q:
-    vlan: 666
-  mtu: 9214
-  ip_address: 172.17.0.7/31
-- name: Ethernet1
-  peer_type: l3_interface
-  ip_address: dhcp
-  shutdown: false
-  switchport:
-    enabled: false
-  description: ATT_423-01
-  dhcp_client_accept_default_route: true
-loopback_interfaces:
-- name: Loopback0
-  description: ROUTER_ID
-  shutdown: false
-  ip_address: 192.168.42.2/32
+agents:
+- name: KernelFib
+  environment_variables:
+  - name: KERNELFIB_PROGRAM_ALL_ECMP
+    value: '1'
+application_traffic_recognition:
+  categories:
+  - name: VIDEO1
+    applications:
+    - name: CUSTOM-APPLICATION-2
+    - name: CUSTOM-DSCP-APPLICATION
+    - name: microsoft-teams
+  field_sets:
+    l4_ports:
+    - name: TCP-SRC-2
+      port_values:
+      - '42'
+    - name: TCP-DEST-2
+      port_values:
+      - '666'
+      - '777'
+    ipv4_prefixes:
+    - name: CUSTOM-SRC-PREFIX-1
+      prefix_values:
+      - 42.42.42.0/24
+    - name: CUSTOM-DEST-PREFIX-1
+      prefix_values:
+      - 6.6.6.0/24
+    - name: PFX-PATHFINDERS
+      prefix_values:
+      - 192.168.144.1/32
+  applications:
+    ipv4_applications:
+    - name: CUSTOM-APPLICATION-1
+      src_prefix_set_name: CUSTOM-SRC-PREFIX-1
+      dest_prefix_set_name: CUSTOM-DEST-PREFIX-1
+      protocols:
+      - tcp
+    - name: CUSTOM-APPLICATION-2
+      protocols:
+      - tcp
+      tcp_src_port_set_name: TCP-SRC-2
+      tcp_dest_port_set_name: TCP-DEST-2
+    - name: CUSTOM-DSCP-APPLICATION
+      dscp_ranges:
+      - ef
+      - 12-14
+      - cs6
+      - '42'
+    - name: APP-CONTROL-PLANE
+      dest_prefix_set_name: PFX-PATHFINDERS
+  application_profiles:
+  - name: VIDEO
+    applications:
+    - name: CUSTOM-APPLICATION-1
+    - name: skype
+    application_transports:
+    - rtp
+    categories:
+    - name: VIDEO1
+  - name: VOICE
+    applications:
+    - name: CUSTOM-VOICE-APPLICATION
+  - name: MPLS-ONLY
+  - name: APP-PROFILE-CONTROL-PLANE
+    applications:
+    - name: APP-CONTROL-PLANE
 as_path:
   access_lists:
   - name: ASPATH-WAN
     entries:
     - type: permit
       match: '65000'
+config_end: true
+dps_interfaces:
+- name: Dps1
+  description: DPS Interface
+  mtu: 9194
+  ip_address: 192.168.142.2/32
+  flow_tracker:
+    hardware: FLOW-TRACKER
+enable_password:
+  disabled: true
+ethernet_interfaces:
+- name: Ethernet52
+  description: P2P_site-ha-enabled-leaf2A_Ethernet1
+  shutdown: false
+  mtu: 9214
+  ip_address: 172.17.0.5/31
+  peer: site-ha-enabled-leaf2A
+  peer_interface: Ethernet1
+  peer_type: l3leaf
+  switchport:
+    enabled: false
+- name: Ethernet52.1000
+  description: P2P_site-ha-enabled-leaf2A_Ethernet1.1000_VRF_IT
+  shutdown: false
+  mtu: 9214
+  vrf: IT
+  encapsulation_dot1q:
+    vlan: 1000
+  ip_address: 172.17.0.5/31
+  peer: site-ha-enabled-leaf2A
+  peer_interface: Ethernet1.1000
+  peer_type: l3leaf
+- name: Ethernet52.142
+  description: P2P_site-ha-enabled-leaf2A_Ethernet1.142_VRF_PROD
+  shutdown: false
+  mtu: 9214
+  vrf: PROD
+  encapsulation_dot1q:
+    vlan: 142
+  ip_address: 172.17.0.5/31
+  peer: site-ha-enabled-leaf2A
+  peer_interface: Ethernet1.142
+  peer_type: l3leaf
+- name: Ethernet52.666
+  description: P2P_site-ha-enabled-leaf2A_Ethernet1.666_VRF_ATTRACTED-VRF-FROM-UPLINK
+  shutdown: false
+  mtu: 9214
+  vrf: ATTRACTED-VRF-FROM-UPLINK
+  encapsulation_dot1q:
+    vlan: 666
+  ip_address: 172.17.0.5/31
+  peer: site-ha-enabled-leaf2A
+  peer_interface: Ethernet1.666
+  peer_type: l3leaf
+- name: Ethernet53
+  description: P2P_site-ha-enabled-leaf2B_Ethernet1
+  shutdown: false
+  mtu: 9214
+  ip_address: 172.17.0.7/31
+  peer: site-ha-enabled-leaf2B
+  peer_interface: Ethernet1
+  peer_type: l3leaf
+  switchport:
+    enabled: false
+- name: Ethernet53.1000
+  description: P2P_site-ha-enabled-leaf2B_Ethernet1.1000_VRF_IT
+  shutdown: false
+  mtu: 9214
+  vrf: IT
+  encapsulation_dot1q:
+    vlan: 1000
+  ip_address: 172.17.0.7/31
+  peer: site-ha-enabled-leaf2B
+  peer_interface: Ethernet1.1000
+  peer_type: l3leaf
+- name: Ethernet53.142
+  description: P2P_site-ha-enabled-leaf2B_Ethernet1.142_VRF_PROD
+  shutdown: false
+  mtu: 9214
+  vrf: PROD
+  encapsulation_dot1q:
+    vlan: 142
+  ip_address: 172.17.0.7/31
+  peer: site-ha-enabled-leaf2B
+  peer_interface: Ethernet1.142
+  peer_type: l3leaf
+- name: Ethernet53.666
+  description: P2P_site-ha-enabled-leaf2B_Ethernet1.666_VRF_ATTRACTED-VRF-FROM-UPLINK
+  shutdown: false
+  mtu: 9214
+  vrf: ATTRACTED-VRF-FROM-UPLINK
+  encapsulation_dot1q:
+    vlan: 666
+  ip_address: 172.17.0.7/31
+  peer: site-ha-enabled-leaf2B
+  peer_interface: Ethernet1.666
+  peer_type: l3leaf
+- name: Ethernet1
+  description: ATT_423-01
+  shutdown: false
+  ip_address: dhcp
+  dhcp_client_accept_default_route: true
+  peer_type: l3_interface
+  switchport:
+    enabled: false
+flow_tracking:
+  hardware:
+    trackers:
+    - name: FLOW-TRACKER
+      record_export:
+        on_inactive_timeout: 70000
+        on_interval: 300000
+      exporters:
+      - name: CV-TELEMETRY
+        collector:
+          host: 127.0.0.1
+        local_interface: Loopback0
+        template_interval: 3600000
+    shutdown: false
+hostname: cv-pathfinder-edge2A
+ip_extcommunity_lists:
+- name: ECL-EVPN-SOO
+  entries:
+  - type: permit
+    extcommunities: soo 192.168.42.2:423
+ip_routing: true
+ip_security:
+  ike_policies:
+  - name: DP-IKE-POLICY
+    local_id: 192.168.142.2
+  - name: CP-IKE-POLICY
+    local_id: 192.168.142.2
+  sa_policies:
+  - name: DP-SA-POLICY
+    esp:
+      encryption: aes256gcm128
+    pfs_dh_group: 14
+  - name: CP-SA-POLICY
+    esp:
+      encryption: aes256gcm128
+    pfs_dh_group: 14
+  profiles:
+  - name: DP-PROFILE
+    ike_policy: DP-IKE-POLICY
+    sa_policy: DP-SA-POLICY
+    connection: start
+    shared_key: ABCDEF1234567890666
+    dpd:
+      interval: 10
+      time: 50
+      action: clear
+    mode: transport
+  - name: CP-PROFILE
+    ike_policy: CP-IKE-POLICY
+    sa_policy: CP-SA-POLICY
+    connection: start
+    shared_key: ABCDEF1234567890
+    dpd:
+      interval: 10
+      time: 50
+      action: clear
+    mode: transport
+  key_controller:
+    profile: DP-PROFILE
+is_deployed: true
+loopback_interfaces:
+- name: Loopback0
+  description: ROUTER_ID
+  shutdown: false
+  ip_address: 192.168.42.2/32
+management_api_http:
+  enable_https: true
+  enable_vrfs:
+  - name: MGMT
+management_security:
+  ssl_profiles:
+  - name: profileA
+    tls_versions: '1.2'
+    trust_certificate:
+      certificates:
+      - aristaDeviceCertProvisionerDefaultRootCA.crt
+    certificate:
+      file: profileA.crt
+      key: profileA.key
+metadata:
+  cv_tags:
+    device_tags:
+    - name: Role
+      value: edge
+    - name: Region
+      value: AVD_Land_West
+    - name: Zone
+      value: AVD_Land_West-ZONE
+    - name: Site
+      value: Site423
+    interface_tags:
+    - interface: Ethernet52
+      tags:
+      - name: Type
+        value: lan
+    - interface: Ethernet52.1000
+      tags:
+      - name: Type
+        value: lan
+    - interface: Ethernet52.142
+      tags:
+      - name: Type
+        value: lan
+    - interface: Ethernet52.666
+      tags:
+      - name: Type
+        value: lan
+    - interface: Ethernet53
+      tags:
+      - name: Type
+        value: lan
+    - interface: Ethernet53.1000
+      tags:
+      - name: Type
+        value: lan
+    - interface: Ethernet53.142
+      tags:
+      - name: Type
+        value: lan
+    - interface: Ethernet53.666
+      tags:
+      - name: Type
+        value: lan
+    - interface: Ethernet1
+      tags:
+      - name: Type
+        value: wan
+      - name: Carrier
+        value: ATT
+      - name: Circuit
+        value: 423-01
+  cv_pathfinder:
+    role: edge
+    region: AVD_Land_West
+    zone: AVD_Land_West-ZONE
+    site: Site423
+    vtep_ip: 192.168.142.2
+    ssl_profile: profileA
+    pathfinders:
+    - vtep_ip: 192.168.144.1
+    interfaces:
+    - name: Ethernet1
+      carrier: ATT
+      circuit_id: 423-01
+      pathgroup: INET
 prefix_lists:
 - name: PL-LOOPBACKS-EVPN-OVERLAY
   sequence_numbers:
@@ -417,64 +423,6 @@ route_maps:
     type: permit
     match:
     - extcommunity ECL-EVPN-SOO
-agents:
-- name: KernelFib
-  environment_variables:
-  - name: KERNELFIB_PROGRAM_ALL_ECMP
-    value: '1'
-ip_extcommunity_lists:
-- name: ECL-EVPN-SOO
-  entries:
-  - type: permit
-    extcommunities: soo 192.168.42.2:423
-ip_security:
-  ike_policies:
-  - name: DP-IKE-POLICY
-    local_id: 192.168.142.2
-  - name: CP-IKE-POLICY
-    local_id: 192.168.142.2
-  sa_policies:
-  - name: DP-SA-POLICY
-    esp:
-      encryption: aes256gcm128
-    pfs_dh_group: 14
-  - name: CP-SA-POLICY
-    esp:
-      encryption: aes256gcm128
-    pfs_dh_group: 14
-  profiles:
-  - name: DP-PROFILE
-    ike_policy: DP-IKE-POLICY
-    sa_policy: DP-SA-POLICY
-    connection: start
-    shared_key: ABCDEF1234567890666
-    dpd:
-      interval: 10
-      time: 50
-      action: clear
-    mode: transport
-  - name: CP-PROFILE
-    ike_policy: CP-IKE-POLICY
-    sa_policy: CP-SA-POLICY
-    connection: start
-    shared_key: ABCDEF1234567890
-    dpd:
-      interval: 10
-      time: 50
-      action: clear
-    mode: transport
-  key_controller:
-    profile: DP-PROFILE
-management_security:
-  ssl_profiles:
-  - name: profileA
-    certificate:
-      file: profileA.crt
-      key: profileA.key
-    trust_certificate:
-      certificates:
-      - aristaDeviceCertProvisionerDefaultRootCA.crt
-    tls_versions: '1.2'
 router_adaptive_virtual_topology:
   topology_role: edge
   region:
@@ -503,6 +451,35 @@ router_adaptive_virtual_topology:
     load_balance_policy: LB-PROD-AVT-POLICY-DEFAULT
   - name: DEFAULT-POLICY-DEFAULT
     load_balance_policy: LB-DEFAULT-POLICY-DEFAULT
+  policies:
+  - name: DEFAULT-AVT-POLICY-WITH-CP
+    matches:
+    - application_profile: APP-PROFILE-CONTROL-PLANE
+      avt_profile: DEFAULT-AVT-POLICY-CONTROL-PLANE
+    - application_profile: VIDEO
+      avt_profile: DEFAULT-AVT-POLICY-VIDEO
+    - application_profile: default
+      avt_profile: DEFAULT-AVT-POLICY-DEFAULT
+  - name: PROD-AVT-POLICY
+    matches:
+    - application_profile: VOICE
+      avt_profile: PROD-AVT-POLICY-VOICE
+    - application_profile: VIDEO
+      avt_profile: PROD-AVT-POLICY-VIDEO
+    - application_profile: MPLS-ONLY
+      avt_profile: PROD-AVT-POLICY-MPLS-ONLY
+    - application_profile: default
+      avt_profile: PROD-AVT-POLICY-DEFAULT
+  - name: DEFAULT-AVT-POLICY
+    matches:
+    - application_profile: VIDEO
+      avt_profile: DEFAULT-AVT-POLICY-VIDEO
+    - application_profile: default
+      avt_profile: DEFAULT-AVT-POLICY-DEFAULT
+  - name: DEFAULT-POLICY
+    matches:
+    - application_profile: default
+      avt_profile: DEFAULT-POLICY-DEFAULT
   vrfs:
   - name: default
     policy: DEFAULT-AVT-POLICY-WITH-CP
@@ -536,46 +513,201 @@ router_adaptive_virtual_topology:
     profiles:
     - name: DEFAULT-POLICY-DEFAULT
       id: 1
-  policies:
-  - name: DEFAULT-AVT-POLICY-WITH-CP
-    matches:
-    - application_profile: APP-PROFILE-CONTROL-PLANE
-      avt_profile: DEFAULT-AVT-POLICY-CONTROL-PLANE
-    - application_profile: VIDEO
-      avt_profile: DEFAULT-AVT-POLICY-VIDEO
-    - application_profile: default
-      avt_profile: DEFAULT-AVT-POLICY-DEFAULT
-  - name: PROD-AVT-POLICY
-    matches:
-    - application_profile: VOICE
-      avt_profile: PROD-AVT-POLICY-VOICE
-    - application_profile: VIDEO
-      avt_profile: PROD-AVT-POLICY-VIDEO
-    - application_profile: MPLS-ONLY
-      avt_profile: PROD-AVT-POLICY-MPLS-ONLY
-    - application_profile: default
-      avt_profile: PROD-AVT-POLICY-DEFAULT
-  - name: DEFAULT-AVT-POLICY
-    matches:
-    - application_profile: VIDEO
-      avt_profile: DEFAULT-AVT-POLICY-VIDEO
-    - application_profile: default
-      avt_profile: DEFAULT-AVT-POLICY-DEFAULT
-  - name: DEFAULT-POLICY
-    matches:
-    - application_profile: default
-      avt_profile: DEFAULT-POLICY-DEFAULT
 router_bfd:
   multihop:
     interval: 300
     min_rx: 300
     multiplier: 3
+router_bgp:
+  as: '65000'
+  router_id: 192.168.42.2
+  maximum_paths:
+    paths: 16
+  updates:
+    wait_install: true
+  bgp:
+    default:
+      ipv4_unicast: false
+  peer_groups:
+  - name: IPv4-UNDERLAY-PEERS
+    type: ipv4
+    send_community: all
+    maximum_routes: 12000
+    allowas_in:
+      enabled: true
+      times: 1
+    route_map_in: RM-BGP-UNDERLAY-PEERS-IN
+    route_map_out: RM-BGP-UNDERLAY-PEERS-OUT
+  - name: WAN-OVERLAY-PEERS
+    type: wan
+    remote_as: '65000'
+    update_source: Dps1
+    bfd: true
+    bfd_timers:
+      interval: 1000
+      min_rx: 1000
+      multiplier: 10
+    password: htm4AZe9mIQOO1uiMuGgYQ==
+    send_community: all
+    maximum_routes: 0
+    ttl_maximum_hops: 1
+  neighbors:
+  - ip_address: 172.17.0.4
+    peer_group: IPv4-UNDERLAY-PEERS
+    remote_as: '65199'
+    peer: site-ha-enabled-leaf2A
+    description: site-ha-enabled-leaf2A_Ethernet1
+  - ip_address: 172.17.0.6
+    peer_group: IPv4-UNDERLAY-PEERS
+    remote_as: '65199'
+    peer: site-ha-enabled-leaf2B
+    description: site-ha-enabled-leaf2B_Ethernet1
+  - ip_address: 192.168.144.1
+    peer_group: WAN-OVERLAY-PEERS
+    peer: cv-pathfinder-pathfinder
+    description: cv-pathfinder-pathfinder_Dps1
+  - ip_address: 192.168.142.3
+    remote_as: '65000'
+    peer: cv-pathfinder-edge2B
+    description: cv-pathfinder-edge2B
+    route_reflector_client: true
+    update_source: Dps1
+    route_map_in: RM-WAN-HA-PEER-IN
+    route_map_out: RM-WAN-HA-PEER-OUT
+    send_community: all
+  redistribute:
+    connected:
+      enabled: true
+      route_map: RM-CONN-2-BGP
+  address_family_evpn:
+    neighbor_default:
+      next_hop_self_received_evpn_routes:
+        enable: true
+    neighbors:
+    - ip_address: 192.168.142.3
+      activate: true
+      encapsulation: path-selection
+    peer_groups:
+    - name: WAN-OVERLAY-PEERS
+      activate: true
+      route_map_in: RM-EVPN-SOO-IN
+      route_map_out: RM-EVPN-SOO-OUT
+      encapsulation: path-selection
+  address_family_ipv4:
+    peer_groups:
+    - name: IPv4-UNDERLAY-PEERS
+      activate: true
+    - name: WAN-OVERLAY-PEERS
+      activate: false
+  address_family_ipv4_sr_te:
+    peer_groups:
+    - name: WAN-OVERLAY-PEERS
+      activate: true
+  address_family_link_state:
+    peer_groups:
+    - name: WAN-OVERLAY-PEERS
+      activate: true
+    path_selection:
+      roles:
+        producer: true
+  address_family_path_selection:
+    bgp:
+      additional_paths:
+        receive: true
+        send: any
+    peer_groups:
+    - name: WAN-OVERLAY-PEERS
+      activate: true
+  vrfs:
+  - name: IT
+    rd: 192.168.42.2:1000
+    route_targets:
+      import:
+      - address_family: evpn
+        route_targets:
+        - 1000:1000
+      export:
+      - address_family: evpn
+        route_targets:
+        - 1000:1000
+    router_id: 192.168.42.2
+    neighbors:
+    - ip_address: 172.17.0.4
+      peer_group: IPv4-UNDERLAY-PEERS
+      remote_as: '65199'
+      description: site-ha-enabled-leaf2A_Ethernet1.1000_vrf_IT
+    - ip_address: 172.17.0.6
+      peer_group: IPv4-UNDERLAY-PEERS
+      remote_as: '65199'
+      description: site-ha-enabled-leaf2B_Ethernet1.1000_vrf_IT
+    redistribute:
+      connected:
+        enabled: true
+  - name: PROD
+    rd: 192.168.42.2:142
+    route_targets:
+      import:
+      - address_family: evpn
+        route_targets:
+        - 142:142
+      export:
+      - address_family: evpn
+        route_targets:
+        - 142:142
+    router_id: 192.168.42.2
+    neighbors:
+    - ip_address: 172.17.0.4
+      peer_group: IPv4-UNDERLAY-PEERS
+      remote_as: '65199'
+      description: site-ha-enabled-leaf2A_Ethernet1.142_vrf_PROD
+    - ip_address: 172.17.0.6
+      peer_group: IPv4-UNDERLAY-PEERS
+      remote_as: '65199'
+      description: site-ha-enabled-leaf2B_Ethernet1.142_vrf_PROD
+    redistribute:
+      connected:
+        enabled: true
+  - name: ATTRACTED-VRF-FROM-UPLINK
+    rd: 192.168.42.2:666
+    route_targets:
+      import:
+      - address_family: evpn
+        route_targets:
+        - 666:666
+      export:
+      - address_family: evpn
+        route_targets:
+        - 666:666
+    router_id: 192.168.42.2
+    neighbors:
+    - ip_address: 172.17.0.4
+      peer_group: IPv4-UNDERLAY-PEERS
+      remote_as: '65199'
+      description: site-ha-enabled-leaf2A_Ethernet1.666_vrf_ATTRACTED-VRF-FROM-UPLINK
+    - ip_address: 172.17.0.6
+      peer_group: IPv4-UNDERLAY-PEERS
+      remote_as: '65199'
+      description: site-ha-enabled-leaf2B_Ethernet1.666_vrf_ATTRACTED-VRF-FROM-UPLINK
+    redistribute:
+      connected:
+        enabled: true
+  - name: default
+    rd: 192.168.42.2:1
+    route_targets:
+      import:
+      - address_family: evpn
+        route_targets:
+        - '1:1'
+      export:
+      - address_family: evpn
+        route_targets:
+        - '1:1'
+        - route-map RM-EVPN-EXPORT-VRF-DEFAULT
 router_path_selection:
-  tcp_mss_ceiling:
-    ipv4_segment_size: auto
   path_groups:
   - name: INET
     id: 101
+    ipsec_profile: CP-PROFILE
     local_interfaces:
     - name: Ethernet1
       stun:
@@ -590,9 +722,9 @@ router_path_selection:
       ipv4_addresses:
       - 172.17.7.7
       - 10.9.9.9
-    ipsec_profile: CP-PROFILE
   - name: LAN_HA
     id: 65535
+    ipsec_profile: DP-PROFILE
     flow_assignment: lan
     local_interfaces:
     - name: Ethernet52
@@ -603,7 +735,6 @@ router_path_selection:
       ipv4_addresses:
       - 172.17.0.9
       - 172.17.0.11
-    ipsec_profile: DP-PROFILE
   load_balance_policies:
   - name: LB-DEFAULT-AVT-POLICY-CONTROL-PLANE
     path_groups:
@@ -618,18 +749,18 @@ router_path_selection:
     - name: INET
     - name: LAN_HA
   - name: LB-PROD-AVT-POLICY-VOICE
-    path_groups:
-    - name: INET
-      priority: 2
-    - name: LAN_HA
-    jitter: 42
     lowest_hop_count: true
-  - name: LB-PROD-AVT-POLICY-VIDEO
+    jitter: 42
     path_groups:
     - name: INET
       priority: 2
     - name: LAN_HA
+  - name: LB-PROD-AVT-POLICY-VIDEO
     loss_rate: '42.0'
+    path_groups:
+    - name: INET
+      priority: 2
+    - name: LAN_HA
   - name: LB-PROD-AVT-POLICY-MPLS-ONLY
     path_groups:
     - name: LAN_HA
@@ -641,8 +772,13 @@ router_path_selection:
     path_groups:
     - name: INET
     - name: LAN_HA
+  tcp_mss_ceiling:
+    ipv4_segment_size: auto
 router_traffic_engineering:
   enabled: true
+service_routing_protocols_model: multi-agent
+spanning_tree:
+  mode: none
 stun:
   client:
     server_profiles:
@@ -652,81 +788,25 @@ stun:
     - name: INET-cv-pathfinder-pathfinder-Ethernet3
       ip_address: 10.9.9.9
       ssl_profile: profileA
-application_traffic_recognition:
-  application_profiles:
-  - name: VIDEO
-    applications:
-    - name: CUSTOM-APPLICATION-1
-    - name: skype
-    application_transports:
-    - rtp
-    categories:
-    - name: VIDEO1
-  - name: VOICE
-    applications:
-    - name: CUSTOM-VOICE-APPLICATION
-  - name: MPLS-ONLY
-  - name: APP-PROFILE-CONTROL-PLANE
-    applications:
-    - name: APP-CONTROL-PLANE
-  categories:
-  - name: VIDEO1
-    applications:
-    - name: CUSTOM-APPLICATION-2
-    - name: CUSTOM-DSCP-APPLICATION
-    - name: microsoft-teams
-  applications:
-    ipv4_applications:
-    - name: CUSTOM-APPLICATION-1
-      src_prefix_set_name: CUSTOM-SRC-PREFIX-1
-      dest_prefix_set_name: CUSTOM-DEST-PREFIX-1
-      protocols:
-      - tcp
-    - name: CUSTOM-APPLICATION-2
-      protocols:
-      - tcp
-      tcp_src_port_set_name: TCP-SRC-2
-      tcp_dest_port_set_name: TCP-DEST-2
-    - name: CUSTOM-DSCP-APPLICATION
-      dscp_ranges:
-      - ef
-      - 12-14
-      - cs6
-      - '42'
-    - name: APP-CONTROL-PLANE
-      dest_prefix_set_name: PFX-PATHFINDERS
-  field_sets:
-    l4_ports:
-    - name: TCP-SRC-2
-      port_values:
-      - '42'
-    - name: TCP-DEST-2
-      port_values:
-      - '666'
-      - '777'
-    ipv4_prefixes:
-    - name: CUSTOM-SRC-PREFIX-1
-      prefix_values:
-      - 42.42.42.0/24
-    - name: CUSTOM-DEST-PREFIX-1
-      prefix_values:
-      - 6.6.6.0/24
-    - name: PFX-PATHFINDERS
-      prefix_values:
-      - 192.168.144.1/32
-dps_interfaces:
-- name: Dps1
-  description: DPS Interface
-  mtu: 9194
-  ip_address: 192.168.142.2/32
-  flow_tracker:
-    hardware: FLOW-TRACKER
+transceiver_qsfp_default_mode_4x10: false
+vrfs:
+- name: MGMT
+  ip_routing: false
+- name: IT
+  ip_routing: true
+  tenant: TenantA
+- name: PROD
+  ip_routing: true
+  tenant: TenantA
+- name: ATTRACTED-VRF-FROM-UPLINK
+  ip_routing: true
+  tenant: TenantC
 vxlan_interface:
   vxlan1:
     description: cv-pathfinder-edge2A_VTEP
     vxlan:
-      udp_port: 4789
       source_interface: Dps1
+      udp_port: 4789
       vrfs:
       - name: default
         vni: 1
@@ -736,83 +816,3 @@ vxlan_interface:
         vni: 42
       - name: ATTRACTED-VRF-FROM-UPLINK
         vni: 166
-flow_tracking:
-  hardware:
-    trackers:
-    - name: FLOW-TRACKER
-      record_export:
-        on_inactive_timeout: 70000
-        on_interval: 300000
-      exporters:
-      - name: CV-TELEMETRY
-        collector:
-          host: 127.0.0.1
-        local_interface: Loopback0
-        template_interval: 3600000
-    shutdown: false
-metadata:
-  cv_tags:
-    device_tags:
-    - name: Role
-      value: edge
-    - name: Region
-      value: AVD_Land_West
-    - name: Zone
-      value: AVD_Land_West-ZONE
-    - name: Site
-      value: Site423
-    interface_tags:
-    - interface: Ethernet52
-      tags:
-      - name: Type
-        value: lan
-    - interface: Ethernet52.1000
-      tags:
-      - name: Type
-        value: lan
-    - interface: Ethernet52.142
-      tags:
-      - name: Type
-        value: lan
-    - interface: Ethernet52.666
-      tags:
-      - name: Type
-        value: lan
-    - interface: Ethernet53
-      tags:
-      - name: Type
-        value: lan
-    - interface: Ethernet53.1000
-      tags:
-      - name: Type
-        value: lan
-    - interface: Ethernet53.142
-      tags:
-      - name: Type
-        value: lan
-    - interface: Ethernet53.666
-      tags:
-      - name: Type
-        value: lan
-    - interface: Ethernet1
-      tags:
-      - name: Type
-        value: wan
-      - name: Carrier
-        value: ATT
-      - name: Circuit
-        value: 423-01
-  cv_pathfinder:
-    role: edge
-    ssl_profile: profileA
-    vtep_ip: 192.168.142.2
-    region: AVD_Land_West
-    zone: AVD_Land_West-ZONE
-    site: Site423
-    interfaces:
-    - name: Ethernet1
-      carrier: ATT
-      circuit_id: 423-01
-      pathgroup: INET
-    pathfinders:
-    - vtep_ip: 192.168.144.1

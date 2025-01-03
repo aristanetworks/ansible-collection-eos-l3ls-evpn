@@ -1,73 +1,6 @@
-hostname: inband-mgmt-parent
-is_deployed: true
-router_bgp:
-  as: '65000'
-  router_id: 10.0.255.1
-  bgp:
-    default:
-      ipv4_unicast: false
-  maximum_paths:
-    paths: 4
-    ecmp: 4
-  redistribute:
-    connected:
-      enabled: true
-      route_map: RM-CONN-2-BGP
-    attached_host:
-      enabled: true
-  updates:
-    wait_install: true
-  peer_groups:
-  - name: IPv4-UNDERLAY-PEERS
-    type: ipv4
-    maximum_routes: 12000
-    send_community: all
-  - name: EVPN-OVERLAY-PEERS
-    type: evpn
-    update_source: Loopback0
-    bfd: true
-    send_community: all
-    maximum_routes: 0
-    ebgp_multihop: 3
-  address_family_ipv4:
-    peer_groups:
-    - name: IPv4-UNDERLAY-PEERS
-      activate: true
-    - name: EVPN-OVERLAY-PEERS
-      activate: false
-  neighbors:
-  - ip_address: 172.16.255.0
-    peer_group: IPv4-UNDERLAY-PEERS
-    remote_as: '64999'
-    peer: inband-mgmt-spine1-ztp
-    description: inband-mgmt-spine1-ztp_Ethernet1
-  - ip_address: 10.0.254.1
-    peer_group: EVPN-OVERLAY-PEERS
-    peer: inband-mgmt-spine1-ztp
-    description: inband-mgmt-spine1-ztp_Loopback0
-    remote_as: '64999'
-  address_family_evpn:
-    peer_groups:
-    - name: EVPN-OVERLAY-PEERS
-      activate: true
-  vrfs:
-  - name: INBANDMGMT
-    rd: 10.0.255.1:1
-    route_targets:
-      import:
-      - address_family: evpn
-        route_targets:
-        - '1:1'
-      export:
-      - address_family: evpn
-        route_targets:
-        - '1:1'
-    router_id: 10.0.255.1
-    redistribute:
-      connected:
-        enabled: true
-service_routing_protocols_model: multi-agent
-ip_routing: true
+aaa_root:
+  disabled: true
+config_end: true
 daemon_terminattr:
   cvaddrs:
   - apiserver.arista.io:443
@@ -75,156 +8,94 @@ daemon_terminattr:
     method: token-secure
     token_file: /tmp/cv-onboarding-token
   cvvrf: MGMT
-  smashexcludes: ale,flexCounter,hardware,kni,pulse,strata
-  ingestexclude: /Sysdb/cell/1/agent,/Sysdb/cell/2/agent
   disable_aaa: false
-vlan_internal_order:
-  allocation: ascending
-  range:
-    beginning: 1006
-    ending: 1199
-aaa_root:
-  disabled: true
-config_end: true
+  ingestexclude: /Sysdb/cell/1/agent,/Sysdb/cell/2/agent
+  smashexcludes: ale,flexCounter,hardware,kni,pulse,strata
 enable_password:
   disabled: true
-transceiver_qsfp_default_mode_4x10: true
-ip_name_servers:
-- ip_address: 1.1.1.1
-  vrf: MGMT
-- ip_address: 8.8.8.8
-  vrf: MGMT
-vrfs:
-- name: MGMT
-  ip_routing: false
-- name: INBANDMGMT
-  tenant: INBAND_MGMT_TESTS
-  ip_routing: true
-management_api_http:
-  enable_vrfs:
-  - name: MGMT
-  enable_https: true
-ntp:
-  local_interface:
-    name: null
-    vrf: null
-  servers:
-  - name: 2.2.2.55
-    vrf: null
-    preferred: true
-  - name: pool.ntp.org
-    vrf: null
 ethernet_interfaces:
 - name: Ethernet1
-  peer: inband-mgmt-spine1-ztp
-  peer_interface: Ethernet1
-  peer_type: spine
   description: P2P_inband-mgmt-spine1-ztp_Ethernet1
   shutdown: false
   mtu: 9214
+  ip_address: 172.16.255.1/31
+  peer: inband-mgmt-spine1-ztp
+  peer_interface: Ethernet1
+  peer_type: spine
   switchport:
     enabled: false
-  ip_address: 172.16.255.1/31
 - name: Ethernet21
-  peer: inband-mgmt-subnet
-  peer_interface: Ethernet1
-  peer_type: l2leaf
   description: INBAND-MGMT-SUBNET_Ethernet1
   shutdown: false
   channel_group:
     id: 21
     mode: active
+  peer: inband-mgmt-subnet
+  peer_interface: Ethernet1
+  peer_type: l2leaf
   switchport:
     enabled: true
     mode: access
     access_vlan: 101
 - name: Ethernet22
-  peer: inband-mgmt-subnet-vrf
-  peer_interface: Ethernet1
-  peer_type: l2leaf
   description: INBAND-MGMT-SUBNET-VRF_Ethernet1
   shutdown: false
   channel_group:
     id: 22
     mode: active
+  peer: inband-mgmt-subnet-vrf
+  peer_interface: Ethernet1
+  peer_type: l2leaf
   switchport:
     enabled: true
     mode: access
     access_vlan: 102
 - name: Ethernet23
-  peer: inband-mgmt-ip
-  peer_interface: Ethernet1
-  peer_type: l2leaf
   description: INBAND-MGMT-IP_Ethernet1
   shutdown: false
   channel_group:
     id: 23
     mode: active
-- name: Ethernet101
-  peer: inband-mgmt-mlag-a
+  peer: inband-mgmt-ip
   peer_interface: Ethernet1
   peer_type: l2leaf
+- name: Ethernet101
   description: INBAND-MGMT-MLAG-A_Ethernet1
   shutdown: false
   channel_group:
     id: 101
     mode: active
+  peer: inband-mgmt-mlag-a
+  peer_interface: Ethernet1
+  peer_type: l2leaf
   switchport:
     enabled: true
     mode: access
     access_vlan: 101
 - name: Ethernet102
-  peer: inband-mgmt-mlag-b
-  peer_interface: Ethernet1
-  peer_type: l2leaf
   description: INBAND-MGMT-MLAG-B_Ethernet1
   shutdown: false
   channel_group:
     id: 101
     mode: active
+  peer: inband-mgmt-mlag-b
+  peer_interface: Ethernet1
+  peer_type: l2leaf
   switchport:
     enabled: true
     mode: access
     access_vlan: 101
-port_channel_interfaces:
-- name: Port-Channel21
-  description: INBAND-MGMT-SUBNET_Po1
-  switchport:
-    enabled: true
-    mode: trunk
-    trunk:
-      allowed_vlan: '101'
-  shutdown: false
-  lacp_fallback_mode: individual
-  lacp_fallback_timeout: 30
-- name: Port-Channel22
-  description: INBAND-MGMT-SUBNET-VRF_Po1
-  switchport:
-    enabled: true
-    mode: trunk
-    trunk:
-      allowed_vlan: '102'
-  shutdown: false
-  lacp_fallback_mode: individual
-  lacp_fallback_timeout: 90
-- name: Port-Channel23
-  description: INBAND-MGMT-IP_Po1
-  switchport:
-    enabled: true
-    mode: trunk
-    trunk:
-      allowed_vlan: '103'
-  shutdown: false
-- name: Port-Channel101
-  description: inband-mgmt-mlag-test_Po1
-  switchport:
-    enabled: true
-    mode: trunk
-    trunk:
-      allowed_vlan: '101'
-  shutdown: false
-  lacp_fallback_mode: individual
-  lacp_fallback_timeout: 30
+hostname: inband-mgmt-parent
+ip_igmp_snooping:
+  globally_enabled: true
+ip_name_servers:
+- ip_address: 1.1.1.1
+  vrf: MGMT
+- ip_address: 8.8.8.8
+  vrf: MGMT
+ip_routing: true
+ip_virtual_router_mac_address: 00:1c:73:00:dc:01
+is_deployed: true
 loopback_interfaces:
 - name: Loopback0
   description: ROUTER_ID
@@ -234,6 +105,54 @@ loopback_interfaces:
   description: VXLAN_TUNNEL_SOURCE
   shutdown: false
   ip_address: 10.0.254.1/32
+management_api_http:
+  enable_https: true
+  enable_vrfs:
+  - name: MGMT
+ntp:
+  servers:
+  - name: 2.2.2.55
+    preferred: true
+  - name: pool.ntp.org
+port_channel_interfaces:
+- name: Port-Channel21
+  description: INBAND-MGMT-SUBNET_Po1
+  shutdown: false
+  lacp_fallback_timeout: 30
+  lacp_fallback_mode: individual
+  switchport:
+    enabled: true
+    mode: trunk
+    trunk:
+      allowed_vlan: '101'
+- name: Port-Channel22
+  description: INBAND-MGMT-SUBNET-VRF_Po1
+  shutdown: false
+  lacp_fallback_timeout: 90
+  lacp_fallback_mode: individual
+  switchport:
+    enabled: true
+    mode: trunk
+    trunk:
+      allowed_vlan: '102'
+- name: Port-Channel23
+  description: INBAND-MGMT-IP_Po1
+  shutdown: false
+  switchport:
+    enabled: true
+    mode: trunk
+    trunk:
+      allowed_vlan: '103'
+- name: Port-Channel101
+  description: inband-mgmt-mlag-test_Po1
+  shutdown: false
+  lacp_fallback_timeout: 30
+  lacp_fallback_mode: individual
+  switchport:
+    enabled: true
+    mode: trunk
+    trunk:
+      allowed_vlan: '101'
 prefix_lists:
 - name: PL-LOOPBACKS-EVPN-OVERLAY
   sequence_numbers:
@@ -263,52 +182,128 @@ router_bfd:
     interval: 300
     min_rx: 300
     multiplier: 3
+router_bgp:
+  as: '65000'
+  router_id: 10.0.255.1
+  maximum_paths:
+    paths: 4
+    ecmp: 4
+  updates:
+    wait_install: true
+  bgp:
+    default:
+      ipv4_unicast: false
+  peer_groups:
+  - name: IPv4-UNDERLAY-PEERS
+    type: ipv4
+    send_community: all
+    maximum_routes: 12000
+  - name: EVPN-OVERLAY-PEERS
+    type: evpn
+    update_source: Loopback0
+    bfd: true
+    ebgp_multihop: 3
+    send_community: all
+    maximum_routes: 0
+  neighbors:
+  - ip_address: 172.16.255.0
+    peer_group: IPv4-UNDERLAY-PEERS
+    remote_as: '64999'
+    peer: inband-mgmt-spine1-ztp
+    description: inband-mgmt-spine1-ztp_Ethernet1
+  - ip_address: 10.0.254.1
+    peer_group: EVPN-OVERLAY-PEERS
+    remote_as: '64999'
+    peer: inband-mgmt-spine1-ztp
+    description: inband-mgmt-spine1-ztp_Loopback0
+  redistribute:
+    attached_host:
+      enabled: true
+    connected:
+      enabled: true
+      route_map: RM-CONN-2-BGP
+  address_family_evpn:
+    peer_groups:
+    - name: EVPN-OVERLAY-PEERS
+      activate: true
+  address_family_ipv4:
+    peer_groups:
+    - name: IPv4-UNDERLAY-PEERS
+      activate: true
+    - name: EVPN-OVERLAY-PEERS
+      activate: false
+  vrfs:
+  - name: INBANDMGMT
+    rd: 10.0.255.1:1
+    route_targets:
+      import:
+      - address_family: evpn
+        route_targets:
+        - '1:1'
+      export:
+      - address_family: evpn
+        route_targets:
+        - '1:1'
+    router_id: 10.0.255.1
+    redistribute:
+      connected:
+        enabled: true
+service_routing_protocols_model: multi-agent
+transceiver_qsfp_default_mode_4x10: true
+vlan_interfaces:
+- name: Vlan103
+  description: Inband management vlan
+  shutdown: true
+  vrf: INBANDMGMT
+  ip_address: 192.168.103.1/24
+  tenant: INBAND_MGMT_TESTS
+- name: Vlan101
+  description: Inband Management
+  shutdown: false
+  ip_address: 192.168.101.2/24
+  ip_virtual_router_addresses:
+  - 192.168.101.1
+  mtu: 1500
+  ip_attached_host_route_export:
+    enabled: true
+    distance: 19
+- name: Vlan102
+  description: Inband Management
+  shutdown: false
+  ip_address: 192.168.102.2/24
+  ip_virtual_router_addresses:
+  - 192.168.102.1
+  mtu: 1500
+  ip_attached_host_route_export:
+    enabled: true
+    distance: 19
+vlan_internal_order:
+  allocation: ascending
+  range:
+    beginning: 1006
+    ending: 1199
 vlans:
 - id: 103
   name: Inband management vlan
   tenant: INBAND_MGMT_TESTS
 - id: 101
-  tenant: system
   name: INBAND_MGMT
+  tenant: system
 - id: 102
-  tenant: system
   name: INBAND_MGMT
-ip_igmp_snooping:
-  globally_enabled: true
-ip_virtual_router_mac_address: 00:1c:73:00:dc:01
-vlan_interfaces:
-- name: Vlan103
+  tenant: system
+vrfs:
+- name: MGMT
+  ip_routing: false
+- name: INBANDMGMT
+  ip_routing: true
   tenant: INBAND_MGMT_TESTS
-  description: Inband management vlan
-  shutdown: true
-  ip_address: 192.168.103.1/24
-  vrf: INBANDMGMT
-- name: Vlan101
-  description: Inband Management
-  shutdown: false
-  mtu: 1500
-  ip_attached_host_route_export:
-    enabled: true
-    distance: 19
-  ip_address: 192.168.101.2/24
-  ip_virtual_router_addresses:
-  - 192.168.101.1
-- name: Vlan102
-  description: Inband Management
-  shutdown: false
-  mtu: 1500
-  ip_attached_host_route_export:
-    enabled: true
-    distance: 19
-  ip_address: 192.168.102.2/24
-  ip_virtual_router_addresses:
-  - 192.168.102.1
 vxlan_interface:
   vxlan1:
     description: inband-mgmt-parent_VTEP
     vxlan:
-      udp_port: 4789
       source_interface: Loopback1
+      udp_port: 4789
       vrfs:
       - name: INBANDMGMT
         vni: 1

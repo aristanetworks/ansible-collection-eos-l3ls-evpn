@@ -1,408 +1,247 @@
-hostname: cv-pathfinder-edge1
-is_deployed: true
-router_bgp:
-  as: '65000'
-  router_id: 192.168.42.2
-  bgp:
-    default:
-      ipv4_unicast: false
-  maximum_paths:
-    paths: 16
-  redistribute:
-    connected:
-      enabled: true
-      route_map: RM-CONN-2-BGP
-  updates:
-    wait_install: true
-  neighbors:
-  - ip_address: 172.29.0.13
-    remote_as: '64520'
-    route_map_in: RM-BGP-172.29.0.13-IN
-    route_map_out: RM-BGP-172.29.0.13-OUT
-  - ip_address: 172.28.0.14
-    remote_as: '64520'
-    route_map_out: RM-BGP-172.28.0.14-OUT
-  - ip_address: 172.17.0.2
-    peer_group: IPv4-UNDERLAY-PEERS
-    remote_as: '65199'
-    peer: site-ha-disabled-leaf
-    description: site-ha-disabled-leaf_Ethernet2
-  - ip_address: 192.168.144.2
-    peer_group: WAN-OVERLAY-PEERS
-    peer: cv-pathfinder-pathfinder1
-    description: cv-pathfinder-pathfinder1_Dps1
-  - ip_address: 192.168.144.3
-    peer_group: WAN-OVERLAY-PEERS
-    peer: cv-pathfinder-pathfinder2
-    description: cv-pathfinder-pathfinder2_Dps1
-  address_family_ipv4:
-    neighbors:
-    - ip_address: 172.29.0.13
-      activate: true
-    - ip_address: 172.28.0.14
-      activate: true
-    peer_groups:
-    - name: IPv4-UNDERLAY-PEERS
-      activate: true
-    - name: WAN-OVERLAY-PEERS
-      activate: false
-  peer_groups:
-  - name: IPv4-UNDERLAY-PEERS
-    type: ipv4
-    maximum_routes: 12000
-    send_community: all
-    route_map_in: RM-BGP-UNDERLAY-PEERS-IN
-  - name: WAN-OVERLAY-PEERS
-    type: wan
-    update_source: Dps1
-    bfd: true
-    password: htm4AZe9mIQOO1uiMuGgYQ==
-    send_community: all
-    maximum_routes: 0
-    remote_as: '65000'
-    ttl_maximum_hops: 1
-    bfd_timers:
-      interval: 1000
-      min_rx: 1000
-      multiplier: 10
-  vrfs:
-  - name: IT
-    router_id: 192.168.42.2
-    neighbors:
-    - ip_address: 172.17.0.2
-      peer_group: IPv4-UNDERLAY-PEERS
-      remote_as: '65199'
-      description: site-ha-disabled-leaf_Ethernet2.1000_vrf_IT
-    rd: 192.168.42.2:1000
-    route_targets:
-      import:
-      - address_family: evpn
-        route_targets:
-        - 1000:1000
-      export:
-      - address_family: evpn
-        route_targets:
-        - 1000:1000
-    redistribute:
-      connected:
-        enabled: true
-  - name: PROD
-    router_id: 192.168.42.2
-    neighbors:
-    - ip_address: 172.17.0.2
-      peer_group: IPv4-UNDERLAY-PEERS
-      remote_as: '65199'
-      description: site-ha-disabled-leaf_Ethernet2.142_vrf_PROD
-    rd: 192.168.42.2:142
-    route_targets:
-      import:
-      - address_family: evpn
-        route_targets:
-        - 142:142
-      export:
-      - address_family: evpn
-        route_targets:
-        - 142:142
-    redistribute:
-      connected:
-        enabled: true
-  - name: ATTRACTED-VRF-FROM-UPLINK
-    router_id: 192.168.42.2
-    neighbors:
-    - ip_address: 172.17.0.2
-      peer_group: IPv4-UNDERLAY-PEERS
-      remote_as: '65199'
-      description: site-ha-disabled-leaf_Ethernet2.666_vrf_ATTRACTED-VRF-FROM-UPLINK
-    rd: 192.168.42.2:666
-    route_targets:
-      import:
-      - address_family: evpn
-        route_targets:
-        - 666:666
-      export:
-      - address_family: evpn
-        route_targets:
-        - 666:666
-    redistribute:
-      connected:
-        enabled: true
-  - name: default
-    rd: 192.168.42.2:1
-    route_targets:
-      import:
-      - address_family: evpn
-        route_targets:
-        - '1:1'
-      export:
-      - address_family: evpn
-        route_targets:
-        - '1:1'
-        - route-map RM-EVPN-EXPORT-VRF-DEFAULT
-  address_family_evpn:
-    peer_groups:
-    - name: WAN-OVERLAY-PEERS
-      activate: true
-      encapsulation: path-selection
-      route_map_in: RM-EVPN-SOO-IN
-      route_map_out: RM-EVPN-SOO-OUT
-  address_family_ipv4_sr_te:
-    peer_groups:
-    - name: WAN-OVERLAY-PEERS
-      activate: true
-  address_family_link_state:
-    peer_groups:
-    - name: WAN-OVERLAY-PEERS
-      activate: true
-    path_selection:
-      roles:
-        producer: true
-  address_family_path_selection:
-    peer_groups:
-    - name: WAN-OVERLAY-PEERS
-      activate: true
-    bgp:
-      additional_paths:
-        receive: true
-        send: any
-service_routing_protocols_model: multi-agent
-ip_routing: true
 aaa_root:
   disabled: true
-config_end: true
-enable_password:
-  disabled: true
-transceiver_qsfp_default_mode_4x10: false
-spanning_tree:
-  mode: none
-vrfs:
-- name: MGMT
-  ip_routing: false
-- name: IT
-  tenant: TenantA
-  ip_routing: true
-- name: PROD
-  tenant: TenantA
-  ip_routing: true
-- name: ATTRACTED-VRF-FROM-UPLINK
-  tenant: TenantC
-  ip_routing: true
-management_api_http:
-  enable_vrfs:
-  - name: MGMT
-  enable_https: true
-prefix_lists:
-- name: PL2
-  sequence_numbers:
-  - sequence: 10
-    action: permit 5.0.0.0/0
-  - sequence: 20
-    action: deny 10.00.0.0/24
-- name: ALLOW-DEFAULT
-  sequence_numbers:
-  - sequence: 10
-    action: permit 0.0.0.0/0
-- name: PL-LOOPBACKS-EVPN-OVERLAY
-  sequence_numbers:
-  - sequence: 10
-    action: permit 192.168.42.0/24 eq 32
-route_maps:
-- name: RM-BGP-172.29.0.13-IN
-  sequence_numbers:
-  - sequence: 10
-    type: permit
-    match:
-    - ip address prefix-list PL2
-- name: RM-BGP-172.29.0.13-OUT
-  sequence_numbers:
-  - sequence: 10
-    type: permit
-    match:
-    - ip address prefix-list ALLOW-DEFAULT
-  - sequence: 20
-    type: deny
-- name: RM-BGP-172.28.0.14-OUT
-  sequence_numbers:
-  - sequence: 10
-    type: permit
-    match:
-    - ip address prefix-list PL2
-  - sequence: 20
-    type: deny
-- name: RM-CONN-2-BGP
-  sequence_numbers:
-  - sequence: 10
-    type: permit
-    match:
-    - ip address prefix-list PL-LOOPBACKS-EVPN-OVERLAY
-    set:
-    - extcommunity soo 192.168.42.2:511 additive
-- name: RM-BGP-UNDERLAY-PEERS-IN
-  sequence_numbers:
-  - sequence: 40
-    type: permit
-    description: Mark prefixes originated from the LAN
-    set:
-    - extcommunity soo 192.168.42.2:511 additive
-- name: RM-EVPN-SOO-IN
-  sequence_numbers:
-  - sequence: 10
-    type: deny
-    match:
-    - extcommunity ECL-EVPN-SOO
-  - sequence: 20
-    type: permit
-- name: RM-EVPN-SOO-OUT
-  sequence_numbers:
-  - sequence: 10
-    type: permit
-    set:
-    - extcommunity soo 192.168.42.2:511 additive
-- name: RM-EVPN-EXPORT-VRF-DEFAULT
-  sequence_numbers:
-  - sequence: 10
-    type: permit
-    match:
-    - extcommunity ECL-EVPN-SOO
-ethernet_interfaces:
-- name: Ethernet52
-  peer: site-ha-disabled-leaf
-  peer_interface: Ethernet2
-  peer_type: l3leaf
-  description: P2P_site-ha-disabled-leaf_Ethernet2
-  shutdown: false
-  mtu: 9214
-  switchport:
-    enabled: false
-  ip_address: 172.17.0.3/31
-- name: Ethernet52.1000
-  peer: site-ha-disabled-leaf
-  peer_interface: Ethernet2.1000
-  peer_type: l3leaf
-  vrf: IT
-  description: P2P_site-ha-disabled-leaf_Ethernet2.1000_VRF_IT
-  shutdown: false
-  encapsulation_dot1q:
-    vlan: 1000
-  mtu: 9214
-  ip_address: 172.17.0.3/31
-- name: Ethernet52.142
-  peer: site-ha-disabled-leaf
-  peer_interface: Ethernet2.142
-  peer_type: l3leaf
-  vrf: PROD
-  description: P2P_site-ha-disabled-leaf_Ethernet2.142_VRF_PROD
-  shutdown: false
-  encapsulation_dot1q:
-    vlan: 142
-  mtu: 9214
-  ip_address: 172.17.0.3/31
-- name: Ethernet52.666
-  peer: site-ha-disabled-leaf
-  peer_interface: Ethernet2.666
-  peer_type: l3leaf
-  vrf: ATTRACTED-VRF-FROM-UPLINK
-  description: P2P_site-ha-disabled-leaf_Ethernet2.666_VRF_ATTRACTED-VRF-FROM-UPLINK
-  shutdown: false
-  encapsulation_dot1q:
-    vlan: 666
-  mtu: 9214
-  ip_address: 172.17.0.3/31
-- name: Ethernet1/49.3
-  peer_type: l3_interface
-  ip_address: dhcp
-  shutdown: false
-  description: Inmrasat_S511
-  access_group_in: TEST-IPV4-ACL-WITH-IP-FIELDS-IN_Ethernet1_49.3
-  encapsulation_dot1q:
-    vlan: 3
-- name: Ethernet2
-  peer_type: l3_interface
-  ip_address: dhcp
-  shutdown: false
-  switchport:
-    enabled: false
-  description: AWS-1_212
-  dhcp_client_accept_default_route: true
-- name: Ethernet3
-  peer_type: l3_interface
-  ip_address: dhcp
-  shutdown: false
-  switchport:
-    enabled: false
-  description: ATT_404
-  dhcp_client_accept_default_route: true
-  ip_nat:
-    service_profile: NAT-IE-DIRECT
-- name: Ethernet4
-  peer_type: l3_interface
-  ip_address: dhcp
-  shutdown: false
-  switchport:
-    enabled: false
-  dhcp_client_accept_default_route: true
-- name: Ethernet5
-  peer_type: l3_interface
-  ip_address: dhcp
-  shutdown: false
-  switchport:
-    enabled: false
-  dhcp_client_accept_default_route: true
-- name: Ethernet1/49
-  switchport:
-    enabled: false
-  peer_type: l3_interface
-  shutdown: false
-loopback_interfaces:
-- name: Loopback0
-  description: ROUTER_ID
-  shutdown: false
-  ip_address: 192.168.42.2/32
 agents:
 - name: KernelFib
   environment_variables:
   - name: KERNELFIB_PROGRAM_ALL_ECMP
     value: '1'
+application_traffic_recognition:
+  categories:
+  - name: VIDEO1
+    applications:
+    - name: CUSTOM-APPLICATION-2
+    - name: CUSTOM-DSCP-APPLICATION
+    - name: microsoft-teams
+  field_sets:
+    l4_ports:
+    - name: TCP-SRC-2
+      port_values:
+      - '42'
+    - name: TCP-DEST-2
+      port_values:
+      - '666'
+      - '777'
+    ipv4_prefixes:
+    - name: CUSTOM-SRC-PREFIX-1
+      prefix_values:
+      - 42.42.42.0/24
+    - name: CUSTOM-DEST-PREFIX-1
+      prefix_values:
+      - 6.6.6.0/24
+    - name: PFX-PATHFINDERS
+      prefix_values:
+      - 192.168.144.2/32
+      - 192.168.144.3/32
+  applications:
+    ipv4_applications:
+    - name: CUSTOM-APPLICATION-1
+      src_prefix_set_name: CUSTOM-SRC-PREFIX-1
+      dest_prefix_set_name: CUSTOM-DEST-PREFIX-1
+      protocols:
+      - tcp
+    - name: CUSTOM-APPLICATION-2
+      protocols:
+      - tcp
+      tcp_src_port_set_name: TCP-SRC-2
+      tcp_dest_port_set_name: TCP-DEST-2
+    - name: CUSTOM-DSCP-APPLICATION
+      dscp_ranges:
+      - ef
+      - 12-14
+      - cs6
+      - '42'
+    - name: APP-CONTROL-PLANE
+      dest_prefix_set_name: PFX-PATHFINDERS
+  application_profiles:
+  - name: VIDEO
+    applications:
+    - name: CUSTOM-APPLICATION-1
+    - name: skype
+    application_transports:
+    - rtp
+    categories:
+    - name: VIDEO1
+  - name: VOICE
+    applications:
+    - name: CUSTOM-VOICE-APPLICATION
+  - name: APP-PROFILE-CONTROL-PLANE
+    applications:
+    - name: APP-CONTROL-PLANE
+config_end: true
+dps_interfaces:
+- name: Dps1
+  description: DPS Interface
+  mtu: 9194
+  ip_address: 192.168.142.2/32
+  flow_tracker:
+    hardware: FLOW-TRACKER
+enable_password:
+  disabled: true
+ethernet_interfaces:
+- name: Ethernet52
+  description: P2P_site-ha-disabled-leaf_Ethernet2
+  shutdown: false
+  mtu: 9214
+  ip_address: 172.17.0.3/31
+  peer: site-ha-disabled-leaf
+  peer_interface: Ethernet2
+  peer_type: l3leaf
+  switchport:
+    enabled: false
+- name: Ethernet52.1000
+  description: P2P_site-ha-disabled-leaf_Ethernet2.1000_VRF_IT
+  shutdown: false
+  mtu: 9214
+  vrf: IT
+  encapsulation_dot1q:
+    vlan: 1000
+  ip_address: 172.17.0.3/31
+  peer: site-ha-disabled-leaf
+  peer_interface: Ethernet2.1000
+  peer_type: l3leaf
+- name: Ethernet52.142
+  description: P2P_site-ha-disabled-leaf_Ethernet2.142_VRF_PROD
+  shutdown: false
+  mtu: 9214
+  vrf: PROD
+  encapsulation_dot1q:
+    vlan: 142
+  ip_address: 172.17.0.3/31
+  peer: site-ha-disabled-leaf
+  peer_interface: Ethernet2.142
+  peer_type: l3leaf
+- name: Ethernet52.666
+  description: P2P_site-ha-disabled-leaf_Ethernet2.666_VRF_ATTRACTED-VRF-FROM-UPLINK
+  shutdown: false
+  mtu: 9214
+  vrf: ATTRACTED-VRF-FROM-UPLINK
+  encapsulation_dot1q:
+    vlan: 666
+  ip_address: 172.17.0.3/31
+  peer: site-ha-disabled-leaf
+  peer_interface: Ethernet2.666
+  peer_type: l3leaf
+- name: Ethernet1/49.3
+  description: Inmrasat_S511
+  shutdown: false
+  encapsulation_dot1q:
+    vlan: 3
+  ip_address: dhcp
+  access_group_in: TEST-IPV4-ACL-WITH-IP-FIELDS-IN_Ethernet1_49.3
+  peer_type: l3_interface
+- name: Ethernet2
+  description: AWS-1_212
+  shutdown: false
+  ip_address: dhcp
+  dhcp_client_accept_default_route: true
+  peer_type: l3_interface
+  switchport:
+    enabled: false
+- name: Ethernet3
+  description: ATT_404
+  shutdown: false
+  ip_address: dhcp
+  dhcp_client_accept_default_route: true
+  ip_nat:
+    service_profile: NAT-IE-DIRECT
+  peer_type: l3_interface
+  switchport:
+    enabled: false
+- name: Ethernet4
+  shutdown: false
+  ip_address: dhcp
+  dhcp_client_accept_default_route: true
+  peer_type: l3_interface
+  switchport:
+    enabled: false
+- name: Ethernet5
+  shutdown: false
+  ip_address: dhcp
+  dhcp_client_accept_default_route: true
+  peer_type: l3_interface
+  switchport:
+    enabled: false
+- name: Ethernet1/49
+  shutdown: false
+  peer_type: l3_interface
+  switchport:
+    enabled: false
+flow_tracking:
+  hardware:
+    trackers:
+    - name: FLOW-TRACKER
+      record_export:
+        on_inactive_timeout: 70000
+        on_interval: 300000
+      exporters:
+      - name: CV-TELEMETRY
+        collector:
+          host: 127.0.0.1
+        local_interface: Loopback0
+        template_interval: 3600000
+    shutdown: false
+hostname: cv-pathfinder-edge1
 ip_access_lists:
 - name: TEST-IPV4-ACL-WITH-IP-FIELDS-IN_Ethernet1_49.3
   entries:
-  - source: any
-    destination: 172.24.49.3
-    sequence: 15
+  - sequence: 15
     action: deny
     protocol: ip
-  - source: 172.24.49.2
+    source: any
     destination: 172.24.49.3
-    action: permit
+  - action: permit
     protocol: ip
+    source: 172.24.49.2
+    destination: 172.24.49.3
 - name: ACL-NAT-IE-DIRECT
   entries:
-  - source: any
-    destination: 5.0.0.0/24
-    sequence: 10
+  - sequence: 10
     action: deny
     protocol: ip
-  - source: any
-    destination: any
-    sequence: 20
+    source: any
+    destination: 5.0.0.0/24
+  - sequence: 20
     action: permit
     protocol: ip
+    source: any
+    destination: any
 - name: ACL-NAT-IE-ZSCALER
   entries:
-  - source: any
-    destination: 10.0.0.0/24
-    sequence: 10
+  - sequence: 10
     action: permit
     protocol: ip
-  - source: any
-    destination: any
-    sequence: 20
+    source: any
+    destination: 10.0.0.0/24
+  - sequence: 20
     action: deny
     protocol: ip
+    source: any
+    destination: any
 ip_extcommunity_lists:
 - name: ECL-EVPN-SOO
   entries:
   - type: permit
     extcommunities: soo 192.168.42.2:511
+ip_nat:
+  profiles:
+  - name: NAT-IE-DIRECT
+    source:
+      dynamic:
+      - access_list: ACL-NAT-IE-DIRECT
+        nat_type: overload
+  - name: NAT-IE-ZSCALER
+    source:
+      dynamic:
+      - access_list: ACL-NAT-IE-ZSCALER
+        nat_type: pool
+        pool_name: PORT-ONLY-POOL
+  pools:
+  - name: PORT-ONLY-POOL
+    type: port-only
+    ranges:
+    - first_port: 1500
+      last_port: 65535
+ip_routing: true
 ip_security:
   ike_policies:
   - name: CP-IKE-POLICY
@@ -427,19 +266,19 @@ ip_security:
       encryption: aes256gcm128
     pfs_dh_group: 14
   - name: IE-ZSCALER-EXIT-POLICY-1-SA-POLICY
-    pfs_dh_group: 24
     sa_lifetime:
       value: 8
     esp:
       integrity: sha256
       encryption: aes256
+    pfs_dh_group: 24
   - name: IE-ZSCALER-EXIT-POLICY-2-SA-POLICY
-    pfs_dh_group: 24
     sa_lifetime:
       value: 8
     esp:
       integrity: sha256
       encryption: aes256
+    pfs_dh_group: 24
   profiles:
   - name: DP-PROFILE
     sa_policy: DP-SA-POLICY
@@ -463,507 +302,130 @@ ip_security:
   - name: IE-ZSCALER-EXIT-POLICY-1-PROFILE
     ike_policy: IE-ZSCALER-EXIT-POLICY-1-IKE-POLICY
     sa_policy: IE-ZSCALER-EXIT-POLICY-1-SA-POLICY
+    connection: start
     shared_key: 0007054B145A1F0E0928424A0C0B4812160C09551511170B121907214A333B286214687C782720215B0867637B7B666B3873293274733B31233B6D2A332315696A
     dpd:
       interval: 10
       time: 60
       action: clear
-    connection: start
   - name: IE-ZSCALER-EXIT-POLICY-2-PROFILE
     ike_policy: IE-ZSCALER-EXIT-POLICY-2-IKE-POLICY
     sa_policy: IE-ZSCALER-EXIT-POLICY-2-SA-POLICY
+    connection: start
     shared_key: 0007054B145A1F0E0928424A0C0B4812160C09551511170B121907214A333B286214687C782720215B0B67637B7B666B3873293274733B31233B6D2A332315696A
     dpd:
       interval: 10
       time: 60
       action: clear
-    connection: start
   key_controller:
     profile: DP-PROFILE
+is_deployed: true
+loopback_interfaces:
+- name: Loopback0
+  description: ROUTER_ID
+  shutdown: false
+  ip_address: 192.168.42.2/32
+management_api_http:
+  enable_https: true
+  enable_vrfs:
+  - name: MGMT
 management_security:
   ssl_profiles:
   - name: profileA
-    certificate:
-      file: profileA.crt
-      key: profileA.key
+    tls_versions: '1.2'
     trust_certificate:
       certificates:
       - aristaDeviceCertProvisionerDefaultRootCA.crt
-    tls_versions: '1.2'
-router_adaptive_virtual_topology:
-  topology_role: edge
-  region:
-    name: AVD_Land_East
-    id: 43
-  zone:
-    name: AVD_Land_East-ZONE
-    id: 1
-  site:
-    name: Site511
-    id: 511
-  profiles:
-  - name: DEFAULT-AVT-POLICY-CONTROL-PLANE
-    load_balance_policy: LB-DEFAULT-AVT-POLICY-CONTROL-PLANE
-  - name: DEFAULT-AVT-POLICY-VIDEO
-    load_balance_policy: LB-DEFAULT-AVT-POLICY-VIDEO
-    internet_exit_policy: DIRECT-EXIT-POLICY-1
-  - name: DEFAULT-AVT-POLICY-DEFAULT
-    load_balance_policy: LB-DEFAULT-AVT-POLICY-DEFAULT
-  - name: PROD-AVT-POLICY-VOICE
-    load_balance_policy: LB-PROD-AVT-POLICY-VOICE
-    internet_exit_policy: ZSCALER-EXIT-POLICY-1
-  - name: PROD-AVT-POLICY-VIDEO
-    load_balance_policy: LB-PROD-AVT-POLICY-VIDEO
-    internet_exit_policy: ZSCALER-EXIT-POLICY-2
-  - name: PROD-AVT-POLICY-DEFAULT
-    load_balance_policy: LB-PROD-AVT-POLICY-DEFAULT
-  - name: DEFAULT-POLICY-DEFAULT
-    load_balance_policy: LB-DEFAULT-POLICY-DEFAULT
-  vrfs:
-  - name: default
-    policy: DEFAULT-AVT-POLICY-WITH-CP
-    profiles:
-    - name: DEFAULT-AVT-POLICY-CONTROL-PLANE
-      id: 254
-    - name: DEFAULT-AVT-POLICY-VIDEO
-      id: 3
-    - name: DEFAULT-AVT-POLICY-DEFAULT
-      id: 1
-  - name: PROD
-    policy: PROD-AVT-POLICY
-    profiles:
-    - name: PROD-AVT-POLICY-VOICE
-      id: 2
-    - name: PROD-AVT-POLICY-VIDEO
-      id: 4
-    - name: PROD-AVT-POLICY-DEFAULT
-      id: 1
-  - name: IT
-    policy: DEFAULT-AVT-POLICY
-    profiles:
-    - name: DEFAULT-AVT-POLICY-VIDEO
-      id: 3
-    - name: DEFAULT-AVT-POLICY-DEFAULT
-      id: 1
-  - name: ATTRACTED-VRF-FROM-UPLINK
-    policy: DEFAULT-POLICY
-    profiles:
-    - name: DEFAULT-POLICY-DEFAULT
-      id: 1
-  policies:
-  - name: DEFAULT-AVT-POLICY-WITH-CP
-    matches:
-    - application_profile: APP-PROFILE-CONTROL-PLANE
-      avt_profile: DEFAULT-AVT-POLICY-CONTROL-PLANE
-    - application_profile: VIDEO
-      avt_profile: DEFAULT-AVT-POLICY-VIDEO
-    - application_profile: default
-      avt_profile: DEFAULT-AVT-POLICY-DEFAULT
-  - name: PROD-AVT-POLICY
-    matches:
-    - application_profile: VOICE
-      avt_profile: PROD-AVT-POLICY-VOICE
-    - application_profile: VIDEO
-      avt_profile: PROD-AVT-POLICY-VIDEO
-    - application_profile: default
-      avt_profile: PROD-AVT-POLICY-DEFAULT
-  - name: DEFAULT-AVT-POLICY
-    matches:
-    - application_profile: VIDEO
-      avt_profile: DEFAULT-AVT-POLICY-VIDEO
-    - application_profile: default
-      avt_profile: DEFAULT-AVT-POLICY-DEFAULT
-  - name: DEFAULT-POLICY
-    matches:
-    - application_profile: default
-      avt_profile: DEFAULT-POLICY-DEFAULT
-router_bfd:
-  multihop:
-    interval: 300
-    min_rx: 300
-    multiplier: 3
-router_path_selection:
-  tcp_mss_ceiling:
-    ipv4_segment_size: auto
-  path_groups:
-  - name: Satellite
-    id: 104
-    local_interfaces:
-    - name: Ethernet1/49.3
-    dynamic_peers:
-      enabled: true
-    ipsec_profile: CP-PROFILE
-    keepalive:
-      auto: true
-  - name: AWS
-    id: 105
-    local_interfaces:
-    - name: Ethernet2
-    dynamic_peers:
-      enabled: true
-    ipsec_profile: CP-PROFILE
-  - name: INET
-    id: 101
-    local_interfaces:
-    - name: Ethernet3
-      stun:
-        server_profiles:
-        - INET-cv-pathfinder-pathfinder1-Ethernet1
-        - INET-cv-pathfinder-pathfinder2-Ethernet1
-    dynamic_peers:
-      enabled: true
-    static_peers:
-    - router_ip: 192.168.144.2
-      name: cv-pathfinder-pathfinder1
-      ipv4_addresses:
-      - 10.8.8.8
-    - router_ip: 192.168.144.3
-      name: cv-pathfinder-pathfinder2
-      ipv4_addresses:
-      - 10.9.9.6
-    ipsec_profile: CP-PROFILE
-  load_balance_policies:
-  - name: LB-DEFAULT-AVT-POLICY-CONTROL-PLANE
-    path_groups:
-    - name: INET
-    - name: Satellite
-      priority: 2
-  - name: LB-DEFAULT-AVT-POLICY-VIDEO
-    path_groups:
-    - name: INET
-  - name: LB-DEFAULT-AVT-POLICY-DEFAULT
-    path_groups:
-    - name: INET
-  - name: LB-PROD-AVT-POLICY-VOICE
-    path_groups:
-    - name: INET
-      priority: 2
-    jitter: 42
-    lowest_hop_count: true
-  - name: LB-PROD-AVT-POLICY-VIDEO
-    path_groups:
-    - name: INET
-      priority: 2
-    loss_rate: '42.0'
-  - name: LB-PROD-AVT-POLICY-DEFAULT
-    path_groups:
-    - name: INET
-  - name: LB-DEFAULT-POLICY-DEFAULT
-    path_groups:
-    - name: AWS
-    - name: INET
-    - name: Satellite
-      priority: 2
-router_traffic_engineering:
-  enabled: true
-stun:
-  client:
-    server_profiles:
-    - name: INET-cv-pathfinder-pathfinder1-Ethernet1
-      ip_address: 10.8.8.8
-      ssl_profile: profileA
-    - name: INET-cv-pathfinder-pathfinder2-Ethernet1
-      ip_address: 10.9.9.6
-      ssl_profile: profileA
-application_traffic_recognition:
-  application_profiles:
-  - name: VIDEO
-    applications:
-    - name: CUSTOM-APPLICATION-1
-    - name: skype
-    application_transports:
-    - rtp
-    categories:
-    - name: VIDEO1
-  - name: VOICE
-    applications:
-    - name: CUSTOM-VOICE-APPLICATION
-  - name: APP-PROFILE-CONTROL-PLANE
-    applications:
-    - name: APP-CONTROL-PLANE
-  categories:
-  - name: VIDEO1
-    applications:
-    - name: CUSTOM-APPLICATION-2
-    - name: CUSTOM-DSCP-APPLICATION
-    - name: microsoft-teams
-  applications:
-    ipv4_applications:
-    - name: CUSTOM-APPLICATION-1
-      src_prefix_set_name: CUSTOM-SRC-PREFIX-1
-      dest_prefix_set_name: CUSTOM-DEST-PREFIX-1
-      protocols:
-      - tcp
-    - name: CUSTOM-APPLICATION-2
-      protocols:
-      - tcp
-      tcp_src_port_set_name: TCP-SRC-2
-      tcp_dest_port_set_name: TCP-DEST-2
-    - name: CUSTOM-DSCP-APPLICATION
-      dscp_ranges:
-      - ef
-      - 12-14
-      - cs6
-      - '42'
-    - name: APP-CONTROL-PLANE
-      dest_prefix_set_name: PFX-PATHFINDERS
-  field_sets:
-    l4_ports:
-    - name: TCP-SRC-2
-      port_values:
-      - '42'
-    - name: TCP-DEST-2
-      port_values:
-      - '666'
-      - '777'
-    ipv4_prefixes:
-    - name: CUSTOM-SRC-PREFIX-1
-      prefix_values:
-      - 42.42.42.0/24
-    - name: CUSTOM-DEST-PREFIX-1
-      prefix_values:
-      - 6.6.6.0/24
-    - name: PFX-PATHFINDERS
-      prefix_values:
-      - 192.168.144.2/32
-      - 192.168.144.3/32
-ip_nat:
-  profiles:
-  - name: NAT-IE-DIRECT
-    source:
-      dynamic:
-      - access_list: ACL-NAT-IE-DIRECT
-        nat_type: overload
-  - name: NAT-IE-ZSCALER
-    source:
-      dynamic:
-      - access_list: ACL-NAT-IE-ZSCALER
-        pool_name: PORT-ONLY-POOL
-        nat_type: pool
-  pools:
-  - name: PORT-ONLY-POOL
-    type: port-only
-    ranges:
-    - first_port: 1500
-      last_port: 65535
-static_routes:
-- destination_address_prefix: 10.37.121.1/32
-  name: IE-ZSCALER-PRI
-  gateway: 172.31.0.1
-- destination_address_prefix: 10.39.77.1/32
-  name: IE-ZSCALER-SEC
-  gateway: 172.31.0.1
-- destination_address_prefix: 10.50.9.1/32
-  name: IE-ZSCALER-TER
-  gateway: 172.31.0.1
-router_service_insertion:
-  enabled: true
-  connections:
-  - name: IE-Ethernet3
-    monitor_connectivity_host: IE-Ethernet3
-    ethernet_interface:
-      name: Ethernet3
-      next_hop: 172.31.0.1
-  - name: IE-Tunnel100
-    monitor_connectivity_host: IE-Tunnel100
-    tunnel_interface:
-      primary: Tunnel100
-  - name: IE-Tunnel101
-    monitor_connectivity_host: IE-Tunnel101
-    tunnel_interface:
-      primary: Tunnel101
-  - name: IE-Tunnel102
-    monitor_connectivity_host: IE-Tunnel102
-    tunnel_interface:
-      primary: Tunnel102
-  - name: IE-Tunnel110
-    monitor_connectivity_host: IE-Tunnel110
-    tunnel_interface:
-      primary: Tunnel110
-  - name: IE-Tunnel111
-    monitor_connectivity_host: IE-Tunnel111
-    tunnel_interface:
-      primary: Tunnel111
-  - name: IE-Tunnel112
-    monitor_connectivity_host: IE-Tunnel112
-    tunnel_interface:
-      primary: Tunnel112
-router_internet_exit:
-  exit_groups:
-  - name: DIRECT-EXIT-POLICY-1
-    local_connections:
-    - name: IE-Ethernet3
-  - name: ZSCALER-EXIT-POLICY-1_PRI
-    local_connections:
-    - name: IE-Tunnel100
-  - name: ZSCALER-EXIT-POLICY-1_SEC
-    local_connections:
-    - name: IE-Tunnel101
-  - name: ZSCALER-EXIT-POLICY-1_TER
-    local_connections:
-    - name: IE-Tunnel102
-  - name: ZSCALER-EXIT-POLICY-2_PRI
-    local_connections:
-    - name: IE-Tunnel110
-  - name: ZSCALER-EXIT-POLICY-2_SEC
-    local_connections:
-    - name: IE-Tunnel111
-  - name: ZSCALER-EXIT-POLICY-2_TER
-    local_connections:
-    - name: IE-Tunnel112
-  policies:
-  - name: DIRECT-EXIT-POLICY-1
-    exit_groups:
-    - name: DIRECT-EXIT-POLICY-1
-  - name: ZSCALER-EXIT-POLICY-1
-    exit_groups:
-    - name: ZSCALER-EXIT-POLICY-1_PRI
-    - name: ZSCALER-EXIT-POLICY-1_SEC
-    - name: ZSCALER-EXIT-POLICY-1_TER
-    - name: system-default-exit-group
-  - name: ZSCALER-EXIT-POLICY-2
-    exit_groups:
-    - name: ZSCALER-EXIT-POLICY-2_PRI
-    - name: ZSCALER-EXIT-POLICY-2_SEC
-    - name: ZSCALER-EXIT-POLICY-2_TER
-dps_interfaces:
-- name: Dps1
-  description: DPS Interface
-  mtu: 9194
-  ip_address: 192.168.142.2/32
-  flow_tracker:
-    hardware: FLOW-TRACKER
-vxlan_interface:
-  vxlan1:
-    description: cv-pathfinder-edge1_VTEP
-    vxlan:
-      udp_port: 4789
-      source_interface: Dps1
-      vrfs:
-      - name: default
-        vni: 1
-      - name: IT
-        vni: 100
-      - name: PROD
-        vni: 42
-      - name: ATTRACTED-VRF-FROM-UPLINK
-        vni: 166
-tunnel_interfaces:
-- name: Tunnel100
-  description: Internet Exit ZSCALER-EXIT-POLICY-1 PRI
-  mtu: 1394
-  ip_address: unnumbered Loopback0
-  tunnel_mode: ipsec
-  source_interface: Ethernet3
-  destination: 10.37.121.1
-  ipsec_profile: IE-ZSCALER-EXIT-POLICY-1-PROFILE
-  nat_profile: NAT-IE-ZSCALER
-- name: Tunnel101
-  description: Internet Exit ZSCALER-EXIT-POLICY-1 SEC
-  mtu: 1394
-  ip_address: unnumbered Loopback0
-  tunnel_mode: ipsec
-  source_interface: Ethernet3
-  destination: 10.39.77.1
-  ipsec_profile: IE-ZSCALER-EXIT-POLICY-1-PROFILE
-  nat_profile: NAT-IE-ZSCALER
-- name: Tunnel102
-  description: Internet Exit ZSCALER-EXIT-POLICY-1 TER
-  mtu: 1394
-  ip_address: unnumbered Loopback0
-  tunnel_mode: ipsec
-  source_interface: Ethernet3
-  destination: 10.50.9.1
-  ipsec_profile: IE-ZSCALER-EXIT-POLICY-1-PROFILE
-  nat_profile: NAT-IE-ZSCALER
-- name: Tunnel110
-  description: Internet Exit ZSCALER-EXIT-POLICY-2 PRI
-  mtu: 1394
-  ip_address: unnumbered Loopback0
-  tunnel_mode: ipsec
-  source_interface: Ethernet3
-  destination: 10.37.121.1
-  ipsec_profile: IE-ZSCALER-EXIT-POLICY-2-PROFILE
-  nat_profile: NAT-IE-ZSCALER
-- name: Tunnel111
-  description: Internet Exit ZSCALER-EXIT-POLICY-2 SEC
-  mtu: 1394
-  ip_address: unnumbered Loopback0
-  tunnel_mode: ipsec
-  source_interface: Ethernet3
-  destination: 10.39.77.1
-  ipsec_profile: IE-ZSCALER-EXIT-POLICY-2-PROFILE
-  nat_profile: NAT-IE-ZSCALER
-- name: Tunnel112
-  description: Internet Exit ZSCALER-EXIT-POLICY-2 TER
-  mtu: 1394
-  ip_address: unnumbered Loopback0
-  tunnel_mode: ipsec
-  source_interface: Ethernet3
-  destination: 10.50.9.1
-  ipsec_profile: IE-ZSCALER-EXIT-POLICY-2-PROFILE
-  nat_profile: NAT-IE-ZSCALER
-monitor_connectivity:
-  interface_sets:
-  - name: SET-Ethernet3
-    interfaces: Ethernet3
-  - name: SET-Tunnel100
-    interfaces: Tunnel100
-  - name: SET-Tunnel101
-    interfaces: Tunnel101
-  - name: SET-Tunnel102
-    interfaces: Tunnel102
-  - name: SET-Tunnel110
-    interfaces: Tunnel110
-  - name: SET-Tunnel111
-    interfaces: Tunnel111
-  - name: SET-Tunnel112
-    interfaces: Tunnel112
-  hosts:
-  - name: IE-Ethernet3
-    description: Internet Exit DIRECT-EXIT-POLICY-1
-    ip: 172.31.0.1
-    local_interfaces: SET-Ethernet3
-    address_only: false
-  - name: IE-Tunnel100
-    description: Internet Exit ZSCALER-EXIT-POLICY-1 PRI
-    ip: 10.37.121.1
-    local_interfaces: SET-Tunnel100
-    address_only: false
-    url: http://gateway.zscalerbeta.net/vpntest
-  - name: IE-Tunnel101
-    description: Internet Exit ZSCALER-EXIT-POLICY-1 SEC
-    ip: 10.39.77.1
-    local_interfaces: SET-Tunnel101
-    address_only: false
-    url: http://gateway.zscalerbeta.net/vpntest
-  - name: IE-Tunnel102
-    description: Internet Exit ZSCALER-EXIT-POLICY-1 TER
-    ip: 10.50.9.1
-    local_interfaces: SET-Tunnel102
-    address_only: false
-    url: http://gateway.zscalerbeta.net/vpntest
-  - name: IE-Tunnel110
-    description: Internet Exit ZSCALER-EXIT-POLICY-2 PRI
-    ip: 10.37.121.1
-    local_interfaces: SET-Tunnel110
-    address_only: false
-    url: http://gateway.zscalerbeta.net/vpntest
-  - name: IE-Tunnel111
-    description: Internet Exit ZSCALER-EXIT-POLICY-2 SEC
-    ip: 10.39.77.1
-    local_interfaces: SET-Tunnel111
-    address_only: false
-    url: http://gateway.zscalerbeta.net/vpntest
-  - name: IE-Tunnel112
-    description: Internet Exit ZSCALER-EXIT-POLICY-2 TER
-    ip: 10.50.9.1
-    local_interfaces: SET-Tunnel112
-    address_only: false
-    url: http://gateway.zscalerbeta.net/vpntest
-  shutdown: false
+    certificate:
+      file: profileA.crt
+      key: profileA.key
 metadata:
+  cv_tags:
+    device_tags:
+    - name: Role
+      value: edge
+    - name: Region
+      value: AVD_Land_East
+    - name: Zone
+      value: AVD_Land_East-ZONE
+    - name: Site
+      value: Site511
+    interface_tags:
+    - interface: Ethernet52
+      tags:
+      - name: Type
+        value: lan
+    - interface: Ethernet52.1000
+      tags:
+      - name: Type
+        value: lan
+    - interface: Ethernet52.142
+      tags:
+      - name: Type
+        value: lan
+    - interface: Ethernet52.666
+      tags:
+      - name: Type
+        value: lan
+    - interface: Ethernet1/49.3
+      tags:
+      - name: Type
+        value: wan
+      - name: Carrier
+        value: Inmrasat
+      - name: Circuit
+        value: S511
+    - interface: Ethernet2
+      tags:
+      - name: Type
+        value: wan
+      - name: Carrier
+        value: AWS-1
+      - name: Circuit
+        value: '212'
+    - interface: Ethernet3
+      tags:
+      - name: Type
+        value: wan
+      - name: Carrier
+        value: ATT
+      - name: Circuit
+        value: '404'
+    - interface: Ethernet4
+      tags:
+      - name: Type
+        value: lan
+    - interface: Ethernet5
+      tags:
+      - name: Type
+        value: lan
+    - interface: Ethernet1/49
+      tags:
+      - name: Type
+        value: lan
   cv_pathfinder:
+    role: edge
+    region: AVD_Land_East
+    zone: AVD_Land_East-ZONE
+    site: Site511
+    vtep_ip: 192.168.142.2
+    ssl_profile: profileA
+    pathfinders:
+    - vtep_ip: 192.168.144.2
+    - vtep_ip: 192.168.144.3
+    interfaces:
+    - name: Ethernet1/49.3
+      carrier: Inmrasat
+      circuit_id: S511
+      pathgroup: Satellite
+    - name: Ethernet2
+      carrier: AWS-1
+      circuit_id: '212'
+      pathgroup: AWS
+    - name: Ethernet3
+      carrier: ATT
+      circuit_id: '404'
+      pathgroup: INET
     internet_exit_policies:
     - name: ZSCALER-EXIT-POLICY-1
       type: zscaler
@@ -1049,102 +511,640 @@ metadata:
           region: eu-west1
           latitude: '50'
           longitude: '9'
-    role: edge
-    ssl_profile: profileA
-    vtep_ip: 192.168.142.2
-    region: AVD_Land_East
-    zone: AVD_Land_East-ZONE
-    site: Site511
-    interfaces:
+monitor_connectivity:
+  shutdown: false
+  interface_sets:
+  - name: SET-Ethernet3
+    interfaces: Ethernet3
+  - name: SET-Tunnel100
+    interfaces: Tunnel100
+  - name: SET-Tunnel101
+    interfaces: Tunnel101
+  - name: SET-Tunnel102
+    interfaces: Tunnel102
+  - name: SET-Tunnel110
+    interfaces: Tunnel110
+  - name: SET-Tunnel111
+    interfaces: Tunnel111
+  - name: SET-Tunnel112
+    interfaces: Tunnel112
+  hosts:
+  - name: IE-Ethernet3
+    description: Internet Exit DIRECT-EXIT-POLICY-1
+    ip: 172.31.0.1
+    local_interfaces: SET-Ethernet3
+    address_only: false
+  - name: IE-Tunnel100
+    description: Internet Exit ZSCALER-EXIT-POLICY-1 PRI
+    ip: 10.37.121.1
+    local_interfaces: SET-Tunnel100
+    address_only: false
+    url: http://gateway.zscalerbeta.net/vpntest
+  - name: IE-Tunnel101
+    description: Internet Exit ZSCALER-EXIT-POLICY-1 SEC
+    ip: 10.39.77.1
+    local_interfaces: SET-Tunnel101
+    address_only: false
+    url: http://gateway.zscalerbeta.net/vpntest
+  - name: IE-Tunnel102
+    description: Internet Exit ZSCALER-EXIT-POLICY-1 TER
+    ip: 10.50.9.1
+    local_interfaces: SET-Tunnel102
+    address_only: false
+    url: http://gateway.zscalerbeta.net/vpntest
+  - name: IE-Tunnel110
+    description: Internet Exit ZSCALER-EXIT-POLICY-2 PRI
+    ip: 10.37.121.1
+    local_interfaces: SET-Tunnel110
+    address_only: false
+    url: http://gateway.zscalerbeta.net/vpntest
+  - name: IE-Tunnel111
+    description: Internet Exit ZSCALER-EXIT-POLICY-2 SEC
+    ip: 10.39.77.1
+    local_interfaces: SET-Tunnel111
+    address_only: false
+    url: http://gateway.zscalerbeta.net/vpntest
+  - name: IE-Tunnel112
+    description: Internet Exit ZSCALER-EXIT-POLICY-2 TER
+    ip: 10.50.9.1
+    local_interfaces: SET-Tunnel112
+    address_only: false
+    url: http://gateway.zscalerbeta.net/vpntest
+prefix_lists:
+- name: PL2
+  sequence_numbers:
+  - sequence: 10
+    action: permit 5.0.0.0/0
+  - sequence: 20
+    action: deny 10.00.0.0/24
+- name: ALLOW-DEFAULT
+  sequence_numbers:
+  - sequence: 10
+    action: permit 0.0.0.0/0
+- name: PL-LOOPBACKS-EVPN-OVERLAY
+  sequence_numbers:
+  - sequence: 10
+    action: permit 192.168.42.0/24 eq 32
+route_maps:
+- name: RM-BGP-172.29.0.13-IN
+  sequence_numbers:
+  - sequence: 10
+    type: permit
+    match:
+    - ip address prefix-list PL2
+- name: RM-BGP-172.29.0.13-OUT
+  sequence_numbers:
+  - sequence: 10
+    type: permit
+    match:
+    - ip address prefix-list ALLOW-DEFAULT
+  - sequence: 20
+    type: deny
+- name: RM-BGP-172.28.0.14-OUT
+  sequence_numbers:
+  - sequence: 10
+    type: permit
+    match:
+    - ip address prefix-list PL2
+  - sequence: 20
+    type: deny
+- name: RM-CONN-2-BGP
+  sequence_numbers:
+  - sequence: 10
+    type: permit
+    match:
+    - ip address prefix-list PL-LOOPBACKS-EVPN-OVERLAY
+    set:
+    - extcommunity soo 192.168.42.2:511 additive
+- name: RM-BGP-UNDERLAY-PEERS-IN
+  sequence_numbers:
+  - sequence: 40
+    type: permit
+    description: Mark prefixes originated from the LAN
+    set:
+    - extcommunity soo 192.168.42.2:511 additive
+- name: RM-EVPN-SOO-IN
+  sequence_numbers:
+  - sequence: 10
+    type: deny
+    match:
+    - extcommunity ECL-EVPN-SOO
+  - sequence: 20
+    type: permit
+- name: RM-EVPN-SOO-OUT
+  sequence_numbers:
+  - sequence: 10
+    type: permit
+    set:
+    - extcommunity soo 192.168.42.2:511 additive
+- name: RM-EVPN-EXPORT-VRF-DEFAULT
+  sequence_numbers:
+  - sequence: 10
+    type: permit
+    match:
+    - extcommunity ECL-EVPN-SOO
+router_adaptive_virtual_topology:
+  topology_role: edge
+  region:
+    name: AVD_Land_East
+    id: 43
+  zone:
+    name: AVD_Land_East-ZONE
+    id: 1
+  site:
+    name: Site511
+    id: 511
+  profiles:
+  - name: DEFAULT-AVT-POLICY-CONTROL-PLANE
+    load_balance_policy: LB-DEFAULT-AVT-POLICY-CONTROL-PLANE
+  - name: DEFAULT-AVT-POLICY-VIDEO
+    load_balance_policy: LB-DEFAULT-AVT-POLICY-VIDEO
+    internet_exit_policy: DIRECT-EXIT-POLICY-1
+  - name: DEFAULT-AVT-POLICY-DEFAULT
+    load_balance_policy: LB-DEFAULT-AVT-POLICY-DEFAULT
+  - name: PROD-AVT-POLICY-VOICE
+    load_balance_policy: LB-PROD-AVT-POLICY-VOICE
+    internet_exit_policy: ZSCALER-EXIT-POLICY-1
+  - name: PROD-AVT-POLICY-VIDEO
+    load_balance_policy: LB-PROD-AVT-POLICY-VIDEO
+    internet_exit_policy: ZSCALER-EXIT-POLICY-2
+  - name: PROD-AVT-POLICY-DEFAULT
+    load_balance_policy: LB-PROD-AVT-POLICY-DEFAULT
+  - name: DEFAULT-POLICY-DEFAULT
+    load_balance_policy: LB-DEFAULT-POLICY-DEFAULT
+  policies:
+  - name: DEFAULT-AVT-POLICY-WITH-CP
+    matches:
+    - application_profile: APP-PROFILE-CONTROL-PLANE
+      avt_profile: DEFAULT-AVT-POLICY-CONTROL-PLANE
+    - application_profile: VIDEO
+      avt_profile: DEFAULT-AVT-POLICY-VIDEO
+    - application_profile: default
+      avt_profile: DEFAULT-AVT-POLICY-DEFAULT
+  - name: PROD-AVT-POLICY
+    matches:
+    - application_profile: VOICE
+      avt_profile: PROD-AVT-POLICY-VOICE
+    - application_profile: VIDEO
+      avt_profile: PROD-AVT-POLICY-VIDEO
+    - application_profile: default
+      avt_profile: PROD-AVT-POLICY-DEFAULT
+  - name: DEFAULT-AVT-POLICY
+    matches:
+    - application_profile: VIDEO
+      avt_profile: DEFAULT-AVT-POLICY-VIDEO
+    - application_profile: default
+      avt_profile: DEFAULT-AVT-POLICY-DEFAULT
+  - name: DEFAULT-POLICY
+    matches:
+    - application_profile: default
+      avt_profile: DEFAULT-POLICY-DEFAULT
+  vrfs:
+  - name: default
+    policy: DEFAULT-AVT-POLICY-WITH-CP
+    profiles:
+    - name: DEFAULT-AVT-POLICY-CONTROL-PLANE
+      id: 254
+    - name: DEFAULT-AVT-POLICY-VIDEO
+      id: 3
+    - name: DEFAULT-AVT-POLICY-DEFAULT
+      id: 1
+  - name: PROD
+    policy: PROD-AVT-POLICY
+    profiles:
+    - name: PROD-AVT-POLICY-VOICE
+      id: 2
+    - name: PROD-AVT-POLICY-VIDEO
+      id: 4
+    - name: PROD-AVT-POLICY-DEFAULT
+      id: 1
+  - name: IT
+    policy: DEFAULT-AVT-POLICY
+    profiles:
+    - name: DEFAULT-AVT-POLICY-VIDEO
+      id: 3
+    - name: DEFAULT-AVT-POLICY-DEFAULT
+      id: 1
+  - name: ATTRACTED-VRF-FROM-UPLINK
+    policy: DEFAULT-POLICY
+    profiles:
+    - name: DEFAULT-POLICY-DEFAULT
+      id: 1
+router_bfd:
+  multihop:
+    interval: 300
+    min_rx: 300
+    multiplier: 3
+router_bgp:
+  as: '65000'
+  router_id: 192.168.42.2
+  maximum_paths:
+    paths: 16
+  updates:
+    wait_install: true
+  bgp:
+    default:
+      ipv4_unicast: false
+  peer_groups:
+  - name: IPv4-UNDERLAY-PEERS
+    type: ipv4
+    send_community: all
+    maximum_routes: 12000
+    route_map_in: RM-BGP-UNDERLAY-PEERS-IN
+  - name: WAN-OVERLAY-PEERS
+    type: wan
+    remote_as: '65000'
+    update_source: Dps1
+    bfd: true
+    bfd_timers:
+      interval: 1000
+      min_rx: 1000
+      multiplier: 10
+    password: htm4AZe9mIQOO1uiMuGgYQ==
+    send_community: all
+    maximum_routes: 0
+    ttl_maximum_hops: 1
+  neighbors:
+  - ip_address: 172.29.0.13
+    remote_as: '64520'
+    route_map_in: RM-BGP-172.29.0.13-IN
+    route_map_out: RM-BGP-172.29.0.13-OUT
+  - ip_address: 172.28.0.14
+    remote_as: '64520'
+    route_map_out: RM-BGP-172.28.0.14-OUT
+  - ip_address: 172.17.0.2
+    peer_group: IPv4-UNDERLAY-PEERS
+    remote_as: '65199'
+    peer: site-ha-disabled-leaf
+    description: site-ha-disabled-leaf_Ethernet2
+  - ip_address: 192.168.144.2
+    peer_group: WAN-OVERLAY-PEERS
+    peer: cv-pathfinder-pathfinder1
+    description: cv-pathfinder-pathfinder1_Dps1
+  - ip_address: 192.168.144.3
+    peer_group: WAN-OVERLAY-PEERS
+    peer: cv-pathfinder-pathfinder2
+    description: cv-pathfinder-pathfinder2_Dps1
+  redistribute:
+    connected:
+      enabled: true
+      route_map: RM-CONN-2-BGP
+  address_family_evpn:
+    peer_groups:
+    - name: WAN-OVERLAY-PEERS
+      activate: true
+      route_map_in: RM-EVPN-SOO-IN
+      route_map_out: RM-EVPN-SOO-OUT
+      encapsulation: path-selection
+  address_family_ipv4:
+    peer_groups:
+    - name: IPv4-UNDERLAY-PEERS
+      activate: true
+    - name: WAN-OVERLAY-PEERS
+      activate: false
+    neighbors:
+    - ip_address: 172.29.0.13
+      activate: true
+    - ip_address: 172.28.0.14
+      activate: true
+  address_family_ipv4_sr_te:
+    peer_groups:
+    - name: WAN-OVERLAY-PEERS
+      activate: true
+  address_family_link_state:
+    peer_groups:
+    - name: WAN-OVERLAY-PEERS
+      activate: true
+    path_selection:
+      roles:
+        producer: true
+  address_family_path_selection:
+    bgp:
+      additional_paths:
+        receive: true
+        send: any
+    peer_groups:
+    - name: WAN-OVERLAY-PEERS
+      activate: true
+  vrfs:
+  - name: IT
+    rd: 192.168.42.2:1000
+    route_targets:
+      import:
+      - address_family: evpn
+        route_targets:
+        - 1000:1000
+      export:
+      - address_family: evpn
+        route_targets:
+        - 1000:1000
+    router_id: 192.168.42.2
+    neighbors:
+    - ip_address: 172.17.0.2
+      peer_group: IPv4-UNDERLAY-PEERS
+      remote_as: '65199'
+      description: site-ha-disabled-leaf_Ethernet2.1000_vrf_IT
+    redistribute:
+      connected:
+        enabled: true
+  - name: PROD
+    rd: 192.168.42.2:142
+    route_targets:
+      import:
+      - address_family: evpn
+        route_targets:
+        - 142:142
+      export:
+      - address_family: evpn
+        route_targets:
+        - 142:142
+    router_id: 192.168.42.2
+    neighbors:
+    - ip_address: 172.17.0.2
+      peer_group: IPv4-UNDERLAY-PEERS
+      remote_as: '65199'
+      description: site-ha-disabled-leaf_Ethernet2.142_vrf_PROD
+    redistribute:
+      connected:
+        enabled: true
+  - name: ATTRACTED-VRF-FROM-UPLINK
+    rd: 192.168.42.2:666
+    route_targets:
+      import:
+      - address_family: evpn
+        route_targets:
+        - 666:666
+      export:
+      - address_family: evpn
+        route_targets:
+        - 666:666
+    router_id: 192.168.42.2
+    neighbors:
+    - ip_address: 172.17.0.2
+      peer_group: IPv4-UNDERLAY-PEERS
+      remote_as: '65199'
+      description: site-ha-disabled-leaf_Ethernet2.666_vrf_ATTRACTED-VRF-FROM-UPLINK
+    redistribute:
+      connected:
+        enabled: true
+  - name: default
+    rd: 192.168.42.2:1
+    route_targets:
+      import:
+      - address_family: evpn
+        route_targets:
+        - '1:1'
+      export:
+      - address_family: evpn
+        route_targets:
+        - '1:1'
+        - route-map RM-EVPN-EXPORT-VRF-DEFAULT
+router_internet_exit:
+  policies:
+  - name: DIRECT-EXIT-POLICY-1
+    exit_groups:
+    - name: DIRECT-EXIT-POLICY-1
+  - name: ZSCALER-EXIT-POLICY-1
+    exit_groups:
+    - name: ZSCALER-EXIT-POLICY-1_PRI
+    - name: ZSCALER-EXIT-POLICY-1_SEC
+    - name: ZSCALER-EXIT-POLICY-1_TER
+    - name: system-default-exit-group
+  - name: ZSCALER-EXIT-POLICY-2
+    exit_groups:
+    - name: ZSCALER-EXIT-POLICY-2_PRI
+    - name: ZSCALER-EXIT-POLICY-2_SEC
+    - name: ZSCALER-EXIT-POLICY-2_TER
+  exit_groups:
+  - name: DIRECT-EXIT-POLICY-1
+    local_connections:
+    - name: IE-Ethernet3
+  - name: ZSCALER-EXIT-POLICY-1_PRI
+    local_connections:
+    - name: IE-Tunnel100
+  - name: ZSCALER-EXIT-POLICY-1_SEC
+    local_connections:
+    - name: IE-Tunnel101
+  - name: ZSCALER-EXIT-POLICY-1_TER
+    local_connections:
+    - name: IE-Tunnel102
+  - name: ZSCALER-EXIT-POLICY-2_PRI
+    local_connections:
+    - name: IE-Tunnel110
+  - name: ZSCALER-EXIT-POLICY-2_SEC
+    local_connections:
+    - name: IE-Tunnel111
+  - name: ZSCALER-EXIT-POLICY-2_TER
+    local_connections:
+    - name: IE-Tunnel112
+router_path_selection:
+  path_groups:
+  - name: Satellite
+    id: 104
+    ipsec_profile: CP-PROFILE
+    local_interfaces:
     - name: Ethernet1/49.3
-      carrier: Inmrasat
-      circuit_id: S511
-      pathgroup: Satellite
+    dynamic_peers:
+      enabled: true
+    keepalive:
+      auto: true
+  - name: AWS
+    id: 105
+    ipsec_profile: CP-PROFILE
+    local_interfaces:
     - name: Ethernet2
-      carrier: AWS-1
-      circuit_id: '212'
-      pathgroup: AWS
+    dynamic_peers:
+      enabled: true
+  - name: INET
+    id: 101
+    ipsec_profile: CP-PROFILE
+    local_interfaces:
     - name: Ethernet3
-      carrier: ATT
-      circuit_id: '404'
-      pathgroup: INET
-    pathfinders:
-    - vtep_ip: 192.168.144.2
-    - vtep_ip: 192.168.144.3
-  cv_tags:
-    device_tags:
-    - name: Role
-      value: edge
-    - name: Region
-      value: AVD_Land_East
-    - name: Zone
-      value: AVD_Land_East-ZONE
-    - name: Site
-      value: Site511
-    interface_tags:
-    - interface: Ethernet52
-      tags:
-      - name: Type
-        value: lan
-    - interface: Ethernet52.1000
-      tags:
-      - name: Type
-        value: lan
-    - interface: Ethernet52.142
-      tags:
-      - name: Type
-        value: lan
-    - interface: Ethernet52.666
-      tags:
-      - name: Type
-        value: lan
-    - interface: Ethernet1/49.3
-      tags:
-      - name: Type
-        value: wan
-      - name: Carrier
-        value: Inmrasat
-      - name: Circuit
-        value: S511
-    - interface: Ethernet2
-      tags:
-      - name: Type
-        value: wan
-      - name: Carrier
-        value: AWS-1
-      - name: Circuit
-        value: '212'
-    - interface: Ethernet3
-      tags:
-      - name: Type
-        value: wan
-      - name: Carrier
-        value: ATT
-      - name: Circuit
-        value: '404'
-    - interface: Ethernet4
-      tags:
-      - name: Type
-        value: lan
-    - interface: Ethernet5
-      tags:
-      - name: Type
-        value: lan
-    - interface: Ethernet1/49
-      tags:
-      - name: Type
-        value: lan
-flow_tracking:
-  hardware:
-    trackers:
-    - name: FLOW-TRACKER
-      record_export:
-        on_inactive_timeout: 70000
-        on_interval: 300000
-      exporters:
-      - name: CV-TELEMETRY
-        collector:
-          host: 127.0.0.1
-        local_interface: Loopback0
-        template_interval: 3600000
-    shutdown: false
+      stun:
+        server_profiles:
+        - INET-cv-pathfinder-pathfinder1-Ethernet1
+        - INET-cv-pathfinder-pathfinder2-Ethernet1
+    dynamic_peers:
+      enabled: true
+    static_peers:
+    - router_ip: 192.168.144.2
+      name: cv-pathfinder-pathfinder1
+      ipv4_addresses:
+      - 10.8.8.8
+    - router_ip: 192.168.144.3
+      name: cv-pathfinder-pathfinder2
+      ipv4_addresses:
+      - 10.9.9.6
+  load_balance_policies:
+  - name: LB-DEFAULT-AVT-POLICY-CONTROL-PLANE
+    path_groups:
+    - name: INET
+    - name: Satellite
+      priority: 2
+  - name: LB-DEFAULT-AVT-POLICY-VIDEO
+    path_groups:
+    - name: INET
+  - name: LB-DEFAULT-AVT-POLICY-DEFAULT
+    path_groups:
+    - name: INET
+  - name: LB-PROD-AVT-POLICY-VOICE
+    lowest_hop_count: true
+    jitter: 42
+    path_groups:
+    - name: INET
+      priority: 2
+  - name: LB-PROD-AVT-POLICY-VIDEO
+    loss_rate: '42.0'
+    path_groups:
+    - name: INET
+      priority: 2
+  - name: LB-PROD-AVT-POLICY-DEFAULT
+    path_groups:
+    - name: INET
+  - name: LB-DEFAULT-POLICY-DEFAULT
+    path_groups:
+    - name: AWS
+    - name: INET
+    - name: Satellite
+      priority: 2
+  tcp_mss_ceiling:
+    ipv4_segment_size: auto
+router_service_insertion:
+  enabled: true
+  connections:
+  - name: IE-Ethernet3
+    ethernet_interface:
+      name: Ethernet3
+      next_hop: 172.31.0.1
+    monitor_connectivity_host: IE-Ethernet3
+  - name: IE-Tunnel100
+    tunnel_interface:
+      primary: Tunnel100
+    monitor_connectivity_host: IE-Tunnel100
+  - name: IE-Tunnel101
+    tunnel_interface:
+      primary: Tunnel101
+    monitor_connectivity_host: IE-Tunnel101
+  - name: IE-Tunnel102
+    tunnel_interface:
+      primary: Tunnel102
+    monitor_connectivity_host: IE-Tunnel102
+  - name: IE-Tunnel110
+    tunnel_interface:
+      primary: Tunnel110
+    monitor_connectivity_host: IE-Tunnel110
+  - name: IE-Tunnel111
+    tunnel_interface:
+      primary: Tunnel111
+    monitor_connectivity_host: IE-Tunnel111
+  - name: IE-Tunnel112
+    tunnel_interface:
+      primary: Tunnel112
+    monitor_connectivity_host: IE-Tunnel112
+router_traffic_engineering:
+  enabled: true
+service_routing_protocols_model: multi-agent
+spanning_tree:
+  mode: none
+static_routes:
+- destination_address_prefix: 10.37.121.1/32
+  gateway: 172.31.0.1
+  name: IE-ZSCALER-PRI
+- destination_address_prefix: 10.39.77.1/32
+  gateway: 172.31.0.1
+  name: IE-ZSCALER-SEC
+- destination_address_prefix: 10.50.9.1/32
+  gateway: 172.31.0.1
+  name: IE-ZSCALER-TER
+stun:
+  client:
+    server_profiles:
+    - name: INET-cv-pathfinder-pathfinder1-Ethernet1
+      ip_address: 10.8.8.8
+      ssl_profile: profileA
+    - name: INET-cv-pathfinder-pathfinder2-Ethernet1
+      ip_address: 10.9.9.6
+      ssl_profile: profileA
+transceiver_qsfp_default_mode_4x10: false
+tunnel_interfaces:
+- name: Tunnel100
+  description: Internet Exit ZSCALER-EXIT-POLICY-1 PRI
+  mtu: 1394
+  ip_address: unnumbered Loopback0
+  tunnel_mode: ipsec
+  source_interface: Ethernet3
+  destination: 10.37.121.1
+  ipsec_profile: IE-ZSCALER-EXIT-POLICY-1-PROFILE
+  nat_profile: NAT-IE-ZSCALER
+- name: Tunnel101
+  description: Internet Exit ZSCALER-EXIT-POLICY-1 SEC
+  mtu: 1394
+  ip_address: unnumbered Loopback0
+  tunnel_mode: ipsec
+  source_interface: Ethernet3
+  destination: 10.39.77.1
+  ipsec_profile: IE-ZSCALER-EXIT-POLICY-1-PROFILE
+  nat_profile: NAT-IE-ZSCALER
+- name: Tunnel102
+  description: Internet Exit ZSCALER-EXIT-POLICY-1 TER
+  mtu: 1394
+  ip_address: unnumbered Loopback0
+  tunnel_mode: ipsec
+  source_interface: Ethernet3
+  destination: 10.50.9.1
+  ipsec_profile: IE-ZSCALER-EXIT-POLICY-1-PROFILE
+  nat_profile: NAT-IE-ZSCALER
+- name: Tunnel110
+  description: Internet Exit ZSCALER-EXIT-POLICY-2 PRI
+  mtu: 1394
+  ip_address: unnumbered Loopback0
+  tunnel_mode: ipsec
+  source_interface: Ethernet3
+  destination: 10.37.121.1
+  ipsec_profile: IE-ZSCALER-EXIT-POLICY-2-PROFILE
+  nat_profile: NAT-IE-ZSCALER
+- name: Tunnel111
+  description: Internet Exit ZSCALER-EXIT-POLICY-2 SEC
+  mtu: 1394
+  ip_address: unnumbered Loopback0
+  tunnel_mode: ipsec
+  source_interface: Ethernet3
+  destination: 10.39.77.1
+  ipsec_profile: IE-ZSCALER-EXIT-POLICY-2-PROFILE
+  nat_profile: NAT-IE-ZSCALER
+- name: Tunnel112
+  description: Internet Exit ZSCALER-EXIT-POLICY-2 TER
+  mtu: 1394
+  ip_address: unnumbered Loopback0
+  tunnel_mode: ipsec
+  source_interface: Ethernet3
+  destination: 10.50.9.1
+  ipsec_profile: IE-ZSCALER-EXIT-POLICY-2-PROFILE
+  nat_profile: NAT-IE-ZSCALER
+vrfs:
+- name: MGMT
+  ip_routing: false
+- name: IT
+  ip_routing: true
+  tenant: TenantA
+- name: PROD
+  ip_routing: true
+  tenant: TenantA
+- name: ATTRACTED-VRF-FROM-UPLINK
+  ip_routing: true
+  tenant: TenantC
+vxlan_interface:
+  vxlan1:
+    description: cv-pathfinder-edge1_VTEP
+    vxlan:
+      source_interface: Dps1
+      udp_port: 4789
+      vrfs:
+      - name: default
+        vni: 1
+      - name: IT
+        vni: 100
+      - name: PROD
+        vni: 42
+      - name: ATTRACTED-VRF-FROM-UPLINK
+        vni: 166

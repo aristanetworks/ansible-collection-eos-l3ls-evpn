@@ -1,4 +1,4 @@
-# Copyright (c) 2024 Arista Networks, Inc.
+# Copyright (c) 2025 Arista Networks, Inc.
 # Use of this source code is governed by the Apache License 2.0
 # that can be found in the LICENSE file.
 
@@ -5707,11 +5707,70 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class AddressLocking(AvdModel):
             """Subclass of AvdModel."""
 
-            _fields: ClassVar[dict] = {"ipv4": {"type": bool}, "ipv6": {"type": bool}, "_custom_data": {"type": dict}}
+            class AddressFamily(AvdModel):
+                """Subclass of AvdModel."""
+
+                _fields: ClassVar[dict] = {"ipv4": {"type": bool}, "ipv6": {"type": bool}, "_custom_data": {"type": dict}}
+                ipv4: bool | None
+                """Enable/disable address locking for IPv4."""
+                ipv6: bool | None
+                """Enable/disable address locking for IPv6."""
+                _custom_data: dict[str, Any]
+
+                if TYPE_CHECKING:
+
+                    def __init__(
+                        self,
+                        *,
+                        ipv4: bool | None | UndefinedType = Undefined,
+                        ipv6: bool | None | UndefinedType = Undefined,
+                        _custom_data: dict[str, Any] | UndefinedType = Undefined,
+                    ) -> None:
+                        """
+                        AddressFamily.
+
+
+                        Subclass of AvdModel.
+
+                        Args:
+                            ipv4: Enable/disable address locking for IPv4.
+                            ipv6: Enable/disable address locking for IPv6.
+                            _custom_data: _custom_data
+
+                        """
+
+            _fields: ClassVar[dict] = {
+                "ipv4": {"type": bool},
+                "ipv6": {"type": bool},
+                "address_family": {"type": AddressFamily},
+                "ipv4_enforcement_disabled": {"type": bool},
+                "_custom_data": {"type": dict},
+            }
             ipv4: bool | None
-            """Enable address locking for IPv4."""
+            """
+            Enable address locking for IPv4.
+            For EOS version 4.31 and above, the `address_family.ipv4` parameter
+            should be used instead.
+            """
             ipv6: bool | None
-            """Enable address locking for IPv6."""
+            """
+            Enable address locking for IPv6.
+            For EOS version 4.31 and above, the `address_family.ipv6` parameter
+            should be used instead.
+            """
+            address_family: AddressFamily
+            """
+            Configure address locking per address family.
+            The `address_locking.ipv4/ipv6` and
+            `address_locking.address_family.ipv4/ipv6` are mutually exclusive and
+            `address_locking.address_family.ipv4/ipv6` take precedence.
+            Introduced in EOS 4.31.0F.
+
+            Subclass of
+            AvdModel.
+            """
+            ipv4_enforcement_disabled: bool | None
+            """Disable enforcement for IPv4 locked addresses."""
             _custom_data: dict[str, Any]
 
             if TYPE_CHECKING:
@@ -5721,6 +5780,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                     *,
                     ipv4: bool | None | UndefinedType = Undefined,
                     ipv6: bool | None | UndefinedType = Undefined,
+                    address_family: AddressFamily | UndefinedType = Undefined,
+                    ipv4_enforcement_disabled: bool | None | UndefinedType = Undefined,
                     _custom_data: dict[str, Any] | UndefinedType = Undefined,
                 ) -> None:
                     """
@@ -5730,8 +5791,24 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                     Subclass of AvdModel.
 
                     Args:
-                        ipv4: Enable address locking for IPv4.
-                        ipv6: Enable address locking for IPv6.
+                        ipv4:
+                           Enable address locking for IPv4.
+                           For EOS version 4.31 and above, the `address_family.ipv4` parameter
+                           should be used instead.
+                        ipv6:
+                           Enable address locking for IPv6.
+                           For EOS version 4.31 and above, the `address_family.ipv6` parameter
+                           should be used instead.
+                        address_family:
+                           Configure address locking per address family.
+                           The `address_locking.ipv4/ipv6` and
+                           `address_locking.address_family.ipv4/ipv6` are mutually exclusive and
+                           `address_locking.address_family.ipv4/ipv6` take precedence.
+                           Introduced in EOS 4.31.0F.
+
+                           Subclass of
+                           AvdModel.
+                        ipv4_enforcement_disabled: Disable enforcement for IPv4 locked addresses.
                         _custom_data: _custom_data
 
                     """
@@ -11317,6 +11394,706 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                         """
 
+            class Tap(AvdModel):
+                """Subclass of AvdModel."""
+
+                class Default(AvdModel):
+                    """Subclass of AvdModel."""
+
+                    class Groups(AvdList[str]):
+                        """Subclass of AvdList with `str` items."""
+
+                    Groups._item_type = str
+
+                    class Interfaces(AvdList[str]):
+                        """Subclass of AvdList with `str` items."""
+
+                    Interfaces._item_type = str
+
+                    class NexthopGroups(AvdList[str]):
+                        """Subclass of AvdList with `str` items."""
+
+                    NexthopGroups._item_type = str
+
+                    _fields: ClassVar[dict] = {
+                        "groups": {"type": Groups},
+                        "interfaces": {"type": Interfaces},
+                        "nexthop_groups": {"type": NexthopGroups},
+                        "_custom_data": {"type": dict},
+                    }
+                    groups: Groups
+                    """
+                    Tap group names for the interface.
+
+                    Subclass of AvdList with `str` items.
+                    """
+                    interfaces: Interfaces
+                    """
+                    Interfaces like -  Ethernet1, InternalRecirc1, Port-Channel1, Recirc-Channel1.
+
+                    Subclass of AvdList
+                    with `str` items.
+                    """
+                    nexthop_groups: NexthopGroups
+                    """
+                    Default nexthop-group names.
+
+                    Subclass of AvdList with `str` items.
+                    """
+                    _custom_data: dict[str, Any]
+
+                    if TYPE_CHECKING:
+
+                        def __init__(
+                            self,
+                            *,
+                            groups: Groups | UndefinedType = Undefined,
+                            interfaces: Interfaces | UndefinedType = Undefined,
+                            nexthop_groups: NexthopGroups | UndefinedType = Undefined,
+                            _custom_data: dict[str, Any] | UndefinedType = Undefined,
+                        ) -> None:
+                            """
+                            Default.
+
+
+                            Subclass of AvdModel.
+
+                            Args:
+                                groups:
+                                   Tap group names for the interface.
+
+                                   Subclass of AvdList with `str` items.
+                                interfaces:
+                                   Interfaces like -  Ethernet1, InternalRecirc1, Port-Channel1, Recirc-Channel1.
+
+                                   Subclass of AvdList
+                                   with `str` items.
+                                nexthop_groups:
+                                   Default nexthop-group names.
+
+                                   Subclass of AvdList with `str` items.
+                                _custom_data: _custom_data
+
+                            """
+
+                class Identity(AvdModel):
+                    """Subclass of AvdModel."""
+
+                    _fields: ClassVar[dict] = {"id": {"type": int}, "inner_vlan": {"type": int}, "_custom_data": {"type": dict}}
+                    id: int | None
+                    """Tap port VLAN ID (1-4094) or DzGRE extended ID (1-65535)."""
+                    inner_vlan: int | None
+                    """Tap port inner VLAN ID. Only applicable if `id` is a VLAN ID (1-4094)."""
+                    _custom_data: dict[str, Any]
+
+                    if TYPE_CHECKING:
+
+                        def __init__(
+                            self,
+                            *,
+                            id: int | None | UndefinedType = Undefined,
+                            inner_vlan: int | None | UndefinedType = Undefined,
+                            _custom_data: dict[str, Any] | UndefinedType = Undefined,
+                        ) -> None:
+                            """
+                            Identity.
+
+
+                            Subclass of AvdModel.
+
+                            Args:
+                                id: Tap port VLAN ID (1-4094) or DzGRE extended ID (1-65535).
+                                inner_vlan: Tap port inner VLAN ID. Only applicable if `id` is a VLAN ID (1-4094).
+                                _custom_data: _custom_data
+
+                            """
+
+                class Truncation(AvdModel):
+                    """Subclass of AvdModel."""
+
+                    _fields: ClassVar[dict] = {"enabled": {"type": bool}, "size": {"type": int}, "_custom_data": {"type": dict}}
+                    enabled: bool | None
+                    size: int | None
+                    """Ingress packet truncation size in bytes."""
+                    _custom_data: dict[str, Any]
+
+                    if TYPE_CHECKING:
+
+                        def __init__(
+                            self,
+                            *,
+                            enabled: bool | None | UndefinedType = Undefined,
+                            size: int | None | UndefinedType = Undefined,
+                            _custom_data: dict[str, Any] | UndefinedType = Undefined,
+                        ) -> None:
+                            """
+                            Truncation.
+
+
+                            Subclass of AvdModel.
+
+                            Args:
+                                enabled: enabled
+                                size: Ingress packet truncation size in bytes.
+                                _custom_data: _custom_data
+
+                            """
+
+                class MacAddress(AvdModel):
+                    """Subclass of AvdModel."""
+
+                    _fields: ClassVar[dict] = {"source": {"type": str}, "destination": {"type": str}, "_custom_data": {"type": dict}}
+                    source: str | None
+                    """MAC address for the source."""
+                    destination: str | None
+                    """MAC address for the destination."""
+                    _custom_data: dict[str, Any]
+
+                    if TYPE_CHECKING:
+
+                        def __init__(
+                            self,
+                            *,
+                            source: str | None | UndefinedType = Undefined,
+                            destination: str | None | UndefinedType = Undefined,
+                            _custom_data: dict[str, Any] | UndefinedType = Undefined,
+                        ) -> None:
+                            """
+                            MacAddress.
+
+
+                            Subclass of AvdModel.
+
+                            Args:
+                                source: MAC address for the source.
+                                destination: MAC address for the destination.
+                                _custom_data: _custom_data
+
+                            """
+
+                class Encapsulation(AvdModel):
+                    """Subclass of AvdModel."""
+
+                    class Gre(AvdModel):
+                        """Subclass of AvdModel."""
+
+                        class ProtocolsItem(AvdModel):
+                            """Subclass of AvdModel."""
+
+                            _fields: ClassVar[dict] = {
+                                "protocol": {"type": str},
+                                "strip": {"type": bool},
+                                "feature_header_length": {"type": int},
+                                "re_encapsulation_ethernet_header": {"type": bool},
+                                "_custom_data": {"type": dict},
+                            }
+                            protocol: str
+                            """
+                            Protocol type in GRE header.
+                            Valid range: 0x0-0xFFFF. The value must be enclosed in quotes, e.g.,
+                            "0x0".
+                            """
+                            strip: bool | None
+                            """This is a required key to strip GRE encapsulation header with protocols."""
+                            feature_header_length: int | None
+                            """
+                            Feature header length in bytes.
+                            Note: This setting does not appear in the EOS running-config for
+                            protocol 0x0.
+                            """
+                            re_encapsulation_ethernet_header: bool | None
+                            """
+                            Extra ethernet header to prepend to the terminated packet.
+                            Note: This setting does not appear in the
+                            EOS running-config for protocol 0x0.
+                            """
+                            _custom_data: dict[str, Any]
+
+                            if TYPE_CHECKING:
+
+                                def __init__(
+                                    self,
+                                    *,
+                                    protocol: str | UndefinedType = Undefined,
+                                    strip: bool | None | UndefinedType = Undefined,
+                                    feature_header_length: int | None | UndefinedType = Undefined,
+                                    re_encapsulation_ethernet_header: bool | None | UndefinedType = Undefined,
+                                    _custom_data: dict[str, Any] | UndefinedType = Undefined,
+                                ) -> None:
+                                    """
+                                    ProtocolsItem.
+
+
+                                    Subclass of AvdModel.
+
+                                    Args:
+                                        protocol:
+                                           Protocol type in GRE header.
+                                           Valid range: 0x0-0xFFFF. The value must be enclosed in quotes, e.g.,
+                                           "0x0".
+                                        strip: This is a required key to strip GRE encapsulation header with protocols.
+                                        feature_header_length:
+                                           Feature header length in bytes.
+                                           Note: This setting does not appear in the EOS running-config for
+                                           protocol 0x0.
+                                        re_encapsulation_ethernet_header:
+                                           Extra ethernet header to prepend to the terminated packet.
+                                           Note: This setting does not appear in the
+                                           EOS running-config for protocol 0x0.
+                                        _custom_data: _custom_data
+
+                                    """
+
+                        class Protocols(AvdIndexedList[str, ProtocolsItem]):
+                            """Subclass of AvdIndexedList with `ProtocolsItem` items. Primary key is `protocol` (`str`)."""
+
+                            _primary_key: ClassVar[str] = "protocol"
+
+                        Protocols._item_type = ProtocolsItem
+
+                        class DestinationsItem(AvdModel):
+                            """Subclass of AvdModel."""
+
+                            class ProtocolsItem(AvdModel):
+                                """Subclass of AvdModel."""
+
+                                _fields: ClassVar[dict] = {
+                                    "protocol": {"type": str},
+                                    "strip": {"type": bool},
+                                    "feature_header_length": {"type": int},
+                                    "re_encapsulation_ethernet_header": {"type": bool},
+                                    "_custom_data": {"type": dict},
+                                }
+                                protocol: str
+                                """
+                                Protocol type in GRE header.
+                                Valid range: 0x0-0xFFFF. The value must be enclosed in quotes, e.g.,
+                                "0x0".
+                                """
+                                strip: bool | None
+                                """This is a required key to strip GRE encapsulation header for specific destination with protocols."""
+                                feature_header_length: int | None
+                                """
+                                Feature header length in bytes.
+                                Note: This setting does not appear in the EOS running-config for
+                                protocol 0x0.
+                                """
+                                re_encapsulation_ethernet_header: bool | None
+                                """
+                                Extra ethernet header to prepend to the terminated packet.
+                                Note: This setting does not appear in the
+                                EOS running-config for protocol 0x0.
+                                """
+                                _custom_data: dict[str, Any]
+
+                                if TYPE_CHECKING:
+
+                                    def __init__(
+                                        self,
+                                        *,
+                                        protocol: str | UndefinedType = Undefined,
+                                        strip: bool | None | UndefinedType = Undefined,
+                                        feature_header_length: int | None | UndefinedType = Undefined,
+                                        re_encapsulation_ethernet_header: bool | None | UndefinedType = Undefined,
+                                        _custom_data: dict[str, Any] | UndefinedType = Undefined,
+                                    ) -> None:
+                                        """
+                                        ProtocolsItem.
+
+
+                                        Subclass of AvdModel.
+
+                                        Args:
+                                            protocol:
+                                               Protocol type in GRE header.
+                                               Valid range: 0x0-0xFFFF. The value must be enclosed in quotes, e.g.,
+                                               "0x0".
+                                            strip: This is a required key to strip GRE encapsulation header for specific destination with protocols.
+                                            feature_header_length:
+                                               Feature header length in bytes.
+                                               Note: This setting does not appear in the EOS running-config for
+                                               protocol 0x0.
+                                            re_encapsulation_ethernet_header:
+                                               Extra ethernet header to prepend to the terminated packet.
+                                               Note: This setting does not appear in the
+                                               EOS running-config for protocol 0x0.
+                                            _custom_data: _custom_data
+
+                                        """
+
+                            class Protocols(AvdIndexedList[str, ProtocolsItem]):
+                                """Subclass of AvdIndexedList with `ProtocolsItem` items. Primary key is `protocol` (`str`)."""
+
+                                _primary_key: ClassVar[str] = "protocol"
+
+                            Protocols._item_type = ProtocolsItem
+
+                            _fields: ClassVar[dict] = {
+                                "destination": {"type": str},
+                                "source": {"type": str},
+                                "strip": {"type": bool},
+                                "protocols": {"type": Protocols},
+                                "_custom_data": {"type": dict},
+                            }
+                            destination: str
+                            """Destination IP address of tunnel packets."""
+                            source: str | None
+                            """
+                            Source IP address of tunnel packets. Applied only when destination is defined. When not defined; any
+                            GRE packet that matches the `destination` is terminated.
+                            """
+                            strip: bool | None
+                            """Strip GRE encapsulation header for specific destination."""
+                            protocols: Protocols
+                            """Subclass of AvdIndexedList with `ProtocolsItem` items. Primary key is `protocol` (`str`)."""
+                            _custom_data: dict[str, Any]
+
+                            if TYPE_CHECKING:
+
+                                def __init__(
+                                    self,
+                                    *,
+                                    destination: str | UndefinedType = Undefined,
+                                    source: str | None | UndefinedType = Undefined,
+                                    strip: bool | None | UndefinedType = Undefined,
+                                    protocols: Protocols | UndefinedType = Undefined,
+                                    _custom_data: dict[str, Any] | UndefinedType = Undefined,
+                                ) -> None:
+                                    """
+                                    DestinationsItem.
+
+
+                                    Subclass of AvdModel.
+
+                                    Args:
+                                        destination: Destination IP address of tunnel packets.
+                                        source:
+                                           Source IP address of tunnel packets. Applied only when destination is defined. When not defined; any
+                                           GRE packet that matches the `destination` is terminated.
+                                        strip: Strip GRE encapsulation header for specific destination.
+                                        protocols: Subclass of AvdIndexedList with `ProtocolsItem` items. Primary key is `protocol` (`str`).
+                                        _custom_data: _custom_data
+
+                                    """
+
+                        class Destinations(AvdIndexedList[str, DestinationsItem]):
+                            """Subclass of AvdIndexedList with `DestinationsItem` items. Primary key is `destination` (`str`)."""
+
+                            _primary_key: ClassVar[str] = "destination"
+
+                        Destinations._item_type = DestinationsItem
+
+                        _fields: ClassVar[dict] = {
+                            "strip": {"type": bool},
+                            "protocols": {"type": Protocols},
+                            "destinations": {"type": Destinations},
+                            "_custom_data": {"type": dict},
+                        }
+                        strip: bool | None
+                        """Strip GRE encapsulation header for all GRE tunnels."""
+                        protocols: Protocols
+                        """
+                        Protocols for all destinations; destination-specific protocols should be set under the
+                        `destinations[].protocols` key.
+
+                        Subclass of AvdIndexedList with `ProtocolsItem` items. Primary key
+                        is `protocol` (`str`).
+                        """
+                        destinations: Destinations
+                        """
+                        In EOS, `gre.strip` and `destinations.destination/source.strip` (without defining protocols) are
+                        mutually exclusive.
+
+                        Subclass of AvdIndexedList with `DestinationsItem` items. Primary key is
+                        `destination` (`str`).
+                        """
+                        _custom_data: dict[str, Any]
+
+                        if TYPE_CHECKING:
+
+                            def __init__(
+                                self,
+                                *,
+                                strip: bool | None | UndefinedType = Undefined,
+                                protocols: Protocols | UndefinedType = Undefined,
+                                destinations: Destinations | UndefinedType = Undefined,
+                                _custom_data: dict[str, Any] | UndefinedType = Undefined,
+                            ) -> None:
+                                """
+                                Gre.
+
+
+                                Subclass of AvdModel.
+
+                                Args:
+                                    strip: Strip GRE encapsulation header for all GRE tunnels.
+                                    protocols:
+                                       Protocols for all destinations; destination-specific protocols should be set under the
+                                       `destinations[].protocols` key.
+
+                                       Subclass of AvdIndexedList with `ProtocolsItem` items. Primary key
+                                       is `protocol` (`str`).
+                                    destinations:
+                                       In EOS, `gre.strip` and `destinations.destination/source.strip` (without defining protocols) are
+                                       mutually exclusive.
+
+                                       Subclass of AvdIndexedList with `DestinationsItem` items. Primary key is
+                                       `destination` (`str`).
+                                    _custom_data: _custom_data
+
+                                """
+
+                    _fields: ClassVar[dict] = {"vxlan_strip": {"type": bool}, "gre": {"type": Gre}, "_custom_data": {"type": dict}}
+                    vxlan_strip: bool | None
+                    """
+                    Strip VXLAN encapsulation header.
+                    `encapsulation.vxlan_strip` and `mpls_pop_all` are mutually
+                    exclusive.
+                    `mpls_pop_all` takes precedence.
+                    """
+                    gre: Gre
+                    """Subclass of AvdModel."""
+                    _custom_data: dict[str, Any]
+
+                    if TYPE_CHECKING:
+
+                        def __init__(
+                            self,
+                            *,
+                            vxlan_strip: bool | None | UndefinedType = Undefined,
+                            gre: Gre | UndefinedType = Undefined,
+                            _custom_data: dict[str, Any] | UndefinedType = Undefined,
+                        ) -> None:
+                            """
+                            Encapsulation.
+
+
+                            Subclass of AvdModel.
+
+                            Args:
+                                vxlan_strip:
+                                   Strip VXLAN encapsulation header.
+                                   `encapsulation.vxlan_strip` and `mpls_pop_all` are mutually
+                                   exclusive.
+                                   `mpls_pop_all` takes precedence.
+                                gre: Subclass of AvdModel.
+                                _custom_data: _custom_data
+
+                            """
+
+                _fields: ClassVar[dict] = {
+                    "allowed_vlan": {"type": str},
+                    "default": {"type": Default},
+                    "identity": {"type": Identity},
+                    "mpls_pop_all": {"type": bool},
+                    "native_vlan": {"type": int},
+                    "truncation": {"type": Truncation},
+                    "mac_address": {"type": MacAddress},
+                    "encapsulation": {"type": Encapsulation},
+                    "_custom_data": {"type": dict},
+                }
+                allowed_vlan: str | None
+                """VLAN ID or range(s) of VLAN IDs within range 1-4094."""
+                default: Default
+                """
+                Default tap destination config.
+
+                Subclass of AvdModel.
+                """
+                identity: Identity
+                """Subclass of AvdModel."""
+                mpls_pop_all: bool | None
+                """Pop all MPLS labels."""
+                native_vlan: int | None
+                """Native VLAN ID when interface is in tap mode."""
+                truncation: Truncation
+                """Subclass of AvdModel."""
+                mac_address: MacAddress
+                """Subclass of AvdModel."""
+                encapsulation: Encapsulation
+                """Subclass of AvdModel."""
+                _custom_data: dict[str, Any]
+
+                if TYPE_CHECKING:
+
+                    def __init__(
+                        self,
+                        *,
+                        allowed_vlan: str | None | UndefinedType = Undefined,
+                        default: Default | UndefinedType = Undefined,
+                        identity: Identity | UndefinedType = Undefined,
+                        mpls_pop_all: bool | None | UndefinedType = Undefined,
+                        native_vlan: int | None | UndefinedType = Undefined,
+                        truncation: Truncation | UndefinedType = Undefined,
+                        mac_address: MacAddress | UndefinedType = Undefined,
+                        encapsulation: Encapsulation | UndefinedType = Undefined,
+                        _custom_data: dict[str, Any] | UndefinedType = Undefined,
+                    ) -> None:
+                        """
+                        Tap.
+
+
+                        Subclass of AvdModel.
+
+                        Args:
+                            allowed_vlan: VLAN ID or range(s) of VLAN IDs within range 1-4094.
+                            default:
+                               Default tap destination config.
+
+                               Subclass of AvdModel.
+                            identity: Subclass of AvdModel.
+                            mpls_pop_all: Pop all MPLS labels.
+                            native_vlan: Native VLAN ID when interface is in tap mode.
+                            truncation: Subclass of AvdModel.
+                            mac_address: Subclass of AvdModel.
+                            encapsulation: Subclass of AvdModel.
+                            _custom_data: _custom_data
+
+                        """
+
+            class Tool(AvdModel):
+                """Subclass of AvdModel."""
+
+                class Encapsulation(AvdModel):
+                    """Subclass of AvdModel."""
+
+                    _fields: ClassVar[dict] = {"dot1br_strip": {"type": bool}, "vn_tag_strip": {"type": bool}, "_custom_data": {"type": dict}}
+                    dot1br_strip: bool | None
+                    """Remove a 802.1 BR tag in packet header. 'mpls_pop_all' takes precedence over 'dot1br_strip' in EOS."""
+                    vn_tag_strip: bool | None
+                    """Remove a VN-tag in packet header. 'mpls_pop_all' takes precedence over 'vn_tag_strip' in EOS."""
+                    _custom_data: dict[str, Any]
+
+                    if TYPE_CHECKING:
+
+                        def __init__(
+                            self,
+                            *,
+                            dot1br_strip: bool | None | UndefinedType = Undefined,
+                            vn_tag_strip: bool | None | UndefinedType = Undefined,
+                            _custom_data: dict[str, Any] | UndefinedType = Undefined,
+                        ) -> None:
+                            """
+                            Encapsulation.
+
+
+                            Subclass of AvdModel.
+
+                            Args:
+                                dot1br_strip: Remove a 802.1 BR tag in packet header. 'mpls_pop_all' takes precedence over 'dot1br_strip' in EOS.
+                                vn_tag_strip: Remove a VN-tag in packet header. 'mpls_pop_all' takes precedence over 'vn_tag_strip' in EOS.
+                                _custom_data: _custom_data
+
+                            """
+
+                class Identity(AvdModel):
+                    """Subclass of AvdModel."""
+
+                    _fields: ClassVar[dict] = {
+                        "tag": {"type": str},
+                        "dot1q_dzgre_source": {"type": str},
+                        "qinq_dzgre_source": {"type": str},
+                        "_custom_data": {"type": dict},
+                    }
+                    tag: Literal["dot1q", "qinq"] | None
+                    dot1q_dzgre_source: Literal["policy", "port"] | None
+                    qinq_dzgre_source: Literal["policy inner port", "port inner policy"] | None
+                    _custom_data: dict[str, Any]
+
+                    if TYPE_CHECKING:
+
+                        def __init__(
+                            self,
+                            *,
+                            tag: Literal["dot1q", "qinq"] | None | UndefinedType = Undefined,
+                            dot1q_dzgre_source: Literal["policy", "port"] | None | UndefinedType = Undefined,
+                            qinq_dzgre_source: Literal["policy inner port", "port inner policy"] | None | UndefinedType = Undefined,
+                            _custom_data: dict[str, Any] | UndefinedType = Undefined,
+                        ) -> None:
+                            """
+                            Identity.
+
+
+                            Subclass of AvdModel.
+
+                            Args:
+                                tag: tag
+                                dot1q_dzgre_source: dot1q_dzgre_source
+                                qinq_dzgre_source: qinq_dzgre_source
+                                _custom_data: _custom_data
+
+                            """
+
+                class Groups(AvdList[str]):
+                    """Subclass of AvdList with `str` items."""
+
+                Groups._item_type = str
+
+                _fields: ClassVar[dict] = {
+                    "mpls_pop_all": {"type": bool},
+                    "encapsulation": {"type": Encapsulation},
+                    "allowed_vlan": {"type": str},
+                    "identity": {"type": Identity},
+                    "groups": {"type": Groups},
+                    "dot1q_remove_outer_vlan_tag": {"type": str},
+                    "_custom_data": {"type": dict},
+                }
+                mpls_pop_all: bool | None
+                """Pop all MPLS labels."""
+                encapsulation: Encapsulation
+                """Subclass of AvdModel."""
+                allowed_vlan: str | None
+                """VLAN ID or range of VLAN IDs within range 1-4094."""
+                identity: Identity
+                """Subclass of AvdModel."""
+                groups: Groups
+                """
+                Tool groups for the interface.
+
+                Subclass of AvdList with `str` items.
+                """
+                dot1q_remove_outer_vlan_tag: str | None
+                """
+                Indices of vlan tags to be removed.
+                Range: 1-2
+                """
+                _custom_data: dict[str, Any]
+
+                if TYPE_CHECKING:
+
+                    def __init__(
+                        self,
+                        *,
+                        mpls_pop_all: bool | None | UndefinedType = Undefined,
+                        encapsulation: Encapsulation | UndefinedType = Undefined,
+                        allowed_vlan: str | None | UndefinedType = Undefined,
+                        identity: Identity | UndefinedType = Undefined,
+                        groups: Groups | UndefinedType = Undefined,
+                        dot1q_remove_outer_vlan_tag: str | None | UndefinedType = Undefined,
+                        _custom_data: dict[str, Any] | UndefinedType = Undefined,
+                    ) -> None:
+                        """
+                        Tool.
+
+
+                        Subclass of AvdModel.
+
+                        Args:
+                            mpls_pop_all: Pop all MPLS labels.
+                            encapsulation: Subclass of AvdModel.
+                            allowed_vlan: VLAN ID or range of VLAN IDs within range 1-4094.
+                            identity: Subclass of AvdModel.
+                            groups:
+                               Tool groups for the interface.
+
+                               Subclass of AvdList with `str` items.
+                            dot1q_remove_outer_vlan_tag:
+                               Indices of vlan tags to be removed.
+                               Range: 1-2
+                            _custom_data: _custom_data
+
+                        """
+
             _fields: ClassVar[dict] = {
                 "enabled": {"type": bool},
                 "mode": {"type": str},
@@ -11331,6 +12108,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 "backup_link": {"type": BackupLink},
                 "backup": {"type": Backup},
                 "port_security": {"type": PortSecurity},
+                "tap": {"type": Tap},
+                "tool": {"type": Tool},
                 "_custom_data": {"type": dict},
             }
             enabled: bool | None
@@ -11384,6 +12163,24 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             """
             port_security: PortSecurity
             """Subclass of AvdModel."""
+            tap: Tap
+            """
+            In tap mode, the interface operates as a tap port.
+            Tap ports receive traffic for replication on one
+            or more tool ports.
+            This setting applies only to parent interfaces.
+
+            Subclass of AvdModel.
+            """
+            tool: Tool
+            """
+            In tool mode, the interface operates as a tool port.
+            Tool ports replicate traffic received by tap
+            ports.
+            This setting applies only to parent interfaces.
+
+            Subclass of AvdModel.
+            """
             _custom_data: dict[str, Any]
 
             if TYPE_CHECKING:
@@ -11404,6 +12201,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                     backup_link: BackupLink | UndefinedType = Undefined,
                     backup: Backup | UndefinedType = Undefined,
                     port_security: PortSecurity | UndefinedType = Undefined,
+                    tap: Tap | UndefinedType = Undefined,
+                    tool: Tool | UndefinedType = Undefined,
                     _custom_data: dict[str, Any] | UndefinedType = Undefined,
                 ) -> None:
                     """
@@ -11446,6 +12245,66 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                            Subclass of AvdModel.
                         port_security: Subclass of AvdModel.
+                        tap:
+                           In tap mode, the interface operates as a tap port.
+                           Tap ports receive traffic for replication on one
+                           or more tool ports.
+                           This setting applies only to parent interfaces.
+
+                           Subclass of AvdModel.
+                        tool:
+                           In tool mode, the interface operates as a tool port.
+                           Tool ports replicate traffic received by tap
+                           ports.
+                           This setting applies only to parent interfaces.
+
+                           Subclass of AvdModel.
+                        _custom_data: _custom_data
+
+                    """
+
+        class TrafficEngineering(AvdModel):
+            """Subclass of AvdModel."""
+
+            class AdministrativeGroups(AvdList[str]):
+                """Subclass of AvdList with `str` items."""
+
+            AdministrativeGroups._item_type = str
+
+            _fields: ClassVar[dict] = {"enabled": {"type": bool}, "administrative_groups": {"type": AdministrativeGroups}, "_custom_data": {"type": dict}}
+            enabled: bool | None
+            """Whether to enable traffic-engineering on this interface."""
+            administrative_groups: AdministrativeGroups
+            """
+            List of traffic-engineering administrative groups, valid values are names, ranges 0-127, or single
+            integers 0-127.
+
+            Subclass of AvdList with `str` items.
+            """
+            _custom_data: dict[str, Any]
+
+            if TYPE_CHECKING:
+
+                def __init__(
+                    self,
+                    *,
+                    enabled: bool | None | UndefinedType = Undefined,
+                    administrative_groups: AdministrativeGroups | UndefinedType = Undefined,
+                    _custom_data: dict[str, Any] | UndefinedType = Undefined,
+                ) -> None:
+                    """
+                    TrafficEngineering.
+
+
+                    Subclass of AvdModel.
+
+                    Args:
+                        enabled: Whether to enable traffic-engineering on this interface.
+                        administrative_groups:
+                           List of traffic-engineering administrative groups, valid values are names, ranges 0-127, or single
+                           integers 0-127.
+
+                           Subclass of AvdList with `str` items.
                         _custom_data: _custom_data
 
                     """
@@ -11564,6 +12423,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             "validate_state": {"type": bool},
             "validate_lldp": {"type": bool},
             "switchport": {"type": Switchport},
+            "traffic_engineering": {"type": TrafficEngineering},
             "eos_cli": {"type": str},
             "_custom_data": {"type": dict},
         }
@@ -11829,6 +12689,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         Subclass of
         AvdModel.
         """
+        traffic_engineering: TrafficEngineering
+        """Subclass of AvdModel."""
         eos_cli: str | None
         """Multiline EOS CLI rendered directly on the ethernet interface in the final EOS configuration."""
         _custom_data: dict[str, Any]
@@ -11951,6 +12813,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 validate_state: bool | None | UndefinedType = Undefined,
                 validate_lldp: bool | None | UndefinedType = Undefined,
                 switchport: Switchport | UndefinedType = Undefined,
+                traffic_engineering: TrafficEngineering | UndefinedType = Undefined,
                 eos_cli: str | None | UndefinedType = Undefined,
                 _custom_data: dict[str, Any] | UndefinedType = Undefined,
             ) -> None:
@@ -12125,6 +12988,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                        Subclass of
                        AvdModel.
+                    traffic_engineering: Subclass of AvdModel.
                     eos_cli: Multiline EOS CLI rendered directly on the ethernet interface in the final EOS configuration.
                     _custom_data: _custom_data
 
@@ -31041,6 +31905,706 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                         """
 
+            class Tap(AvdModel):
+                """Subclass of AvdModel."""
+
+                class Default(AvdModel):
+                    """Subclass of AvdModel."""
+
+                    class Groups(AvdList[str]):
+                        """Subclass of AvdList with `str` items."""
+
+                    Groups._item_type = str
+
+                    class Interfaces(AvdList[str]):
+                        """Subclass of AvdList with `str` items."""
+
+                    Interfaces._item_type = str
+
+                    class NexthopGroups(AvdList[str]):
+                        """Subclass of AvdList with `str` items."""
+
+                    NexthopGroups._item_type = str
+
+                    _fields: ClassVar[dict] = {
+                        "groups": {"type": Groups},
+                        "interfaces": {"type": Interfaces},
+                        "nexthop_groups": {"type": NexthopGroups},
+                        "_custom_data": {"type": dict},
+                    }
+                    groups: Groups
+                    """
+                    Tap group names for the interface.
+
+                    Subclass of AvdList with `str` items.
+                    """
+                    interfaces: Interfaces
+                    """
+                    Interfaces like -  Ethernet1, InternalRecirc1, Port-Channel1, Recirc-Channel1.
+
+                    Subclass of AvdList
+                    with `str` items.
+                    """
+                    nexthop_groups: NexthopGroups
+                    """
+                    Default nexthop-group names.
+
+                    Subclass of AvdList with `str` items.
+                    """
+                    _custom_data: dict[str, Any]
+
+                    if TYPE_CHECKING:
+
+                        def __init__(
+                            self,
+                            *,
+                            groups: Groups | UndefinedType = Undefined,
+                            interfaces: Interfaces | UndefinedType = Undefined,
+                            nexthop_groups: NexthopGroups | UndefinedType = Undefined,
+                            _custom_data: dict[str, Any] | UndefinedType = Undefined,
+                        ) -> None:
+                            """
+                            Default.
+
+
+                            Subclass of AvdModel.
+
+                            Args:
+                                groups:
+                                   Tap group names for the interface.
+
+                                   Subclass of AvdList with `str` items.
+                                interfaces:
+                                   Interfaces like -  Ethernet1, InternalRecirc1, Port-Channel1, Recirc-Channel1.
+
+                                   Subclass of AvdList
+                                   with `str` items.
+                                nexthop_groups:
+                                   Default nexthop-group names.
+
+                                   Subclass of AvdList with `str` items.
+                                _custom_data: _custom_data
+
+                            """
+
+                class Identity(AvdModel):
+                    """Subclass of AvdModel."""
+
+                    _fields: ClassVar[dict] = {"id": {"type": int}, "inner_vlan": {"type": int}, "_custom_data": {"type": dict}}
+                    id: int | None
+                    """Tap port VLAN ID (1-4094) or DzGRE extended ID (1-65535)."""
+                    inner_vlan: int | None
+                    """Tap port inner VLAN ID. Only applicable if `id` is a VLAN ID (1-4094)."""
+                    _custom_data: dict[str, Any]
+
+                    if TYPE_CHECKING:
+
+                        def __init__(
+                            self,
+                            *,
+                            id: int | None | UndefinedType = Undefined,
+                            inner_vlan: int | None | UndefinedType = Undefined,
+                            _custom_data: dict[str, Any] | UndefinedType = Undefined,
+                        ) -> None:
+                            """
+                            Identity.
+
+
+                            Subclass of AvdModel.
+
+                            Args:
+                                id: Tap port VLAN ID (1-4094) or DzGRE extended ID (1-65535).
+                                inner_vlan: Tap port inner VLAN ID. Only applicable if `id` is a VLAN ID (1-4094).
+                                _custom_data: _custom_data
+
+                            """
+
+                class Truncation(AvdModel):
+                    """Subclass of AvdModel."""
+
+                    _fields: ClassVar[dict] = {"enabled": {"type": bool}, "size": {"type": int}, "_custom_data": {"type": dict}}
+                    enabled: bool | None
+                    size: int | None
+                    """Ingress packet truncation size in bytes."""
+                    _custom_data: dict[str, Any]
+
+                    if TYPE_CHECKING:
+
+                        def __init__(
+                            self,
+                            *,
+                            enabled: bool | None | UndefinedType = Undefined,
+                            size: int | None | UndefinedType = Undefined,
+                            _custom_data: dict[str, Any] | UndefinedType = Undefined,
+                        ) -> None:
+                            """
+                            Truncation.
+
+
+                            Subclass of AvdModel.
+
+                            Args:
+                                enabled: enabled
+                                size: Ingress packet truncation size in bytes.
+                                _custom_data: _custom_data
+
+                            """
+
+                class MacAddress(AvdModel):
+                    """Subclass of AvdModel."""
+
+                    _fields: ClassVar[dict] = {"source": {"type": str}, "destination": {"type": str}, "_custom_data": {"type": dict}}
+                    source: str | None
+                    """MAC address for the source."""
+                    destination: str | None
+                    """MAC address for the destination."""
+                    _custom_data: dict[str, Any]
+
+                    if TYPE_CHECKING:
+
+                        def __init__(
+                            self,
+                            *,
+                            source: str | None | UndefinedType = Undefined,
+                            destination: str | None | UndefinedType = Undefined,
+                            _custom_data: dict[str, Any] | UndefinedType = Undefined,
+                        ) -> None:
+                            """
+                            MacAddress.
+
+
+                            Subclass of AvdModel.
+
+                            Args:
+                                source: MAC address for the source.
+                                destination: MAC address for the destination.
+                                _custom_data: _custom_data
+
+                            """
+
+                class Encapsulation(AvdModel):
+                    """Subclass of AvdModel."""
+
+                    class Gre(AvdModel):
+                        """Subclass of AvdModel."""
+
+                        class ProtocolsItem(AvdModel):
+                            """Subclass of AvdModel."""
+
+                            _fields: ClassVar[dict] = {
+                                "protocol": {"type": str},
+                                "strip": {"type": bool},
+                                "feature_header_length": {"type": int},
+                                "re_encapsulation_ethernet_header": {"type": bool},
+                                "_custom_data": {"type": dict},
+                            }
+                            protocol: str
+                            """
+                            Protocol type in GRE header.
+                            Valid range: 0x0-0xFFFF. The value must be enclosed in quotes, e.g.,
+                            "0x0".
+                            """
+                            strip: bool | None
+                            """This is a required key to strip GRE encapsulation header with protocols."""
+                            feature_header_length: int | None
+                            """
+                            Feature header length in bytes.
+                            Note: This setting does not appear in the EOS running-config for
+                            protocol 0x0.
+                            """
+                            re_encapsulation_ethernet_header: bool | None
+                            """
+                            Extra ethernet header to prepend to the terminated packet.
+                            Note: This setting does not appear in the
+                            EOS running-config for protocol 0x0.
+                            """
+                            _custom_data: dict[str, Any]
+
+                            if TYPE_CHECKING:
+
+                                def __init__(
+                                    self,
+                                    *,
+                                    protocol: str | UndefinedType = Undefined,
+                                    strip: bool | None | UndefinedType = Undefined,
+                                    feature_header_length: int | None | UndefinedType = Undefined,
+                                    re_encapsulation_ethernet_header: bool | None | UndefinedType = Undefined,
+                                    _custom_data: dict[str, Any] | UndefinedType = Undefined,
+                                ) -> None:
+                                    """
+                                    ProtocolsItem.
+
+
+                                    Subclass of AvdModel.
+
+                                    Args:
+                                        protocol:
+                                           Protocol type in GRE header.
+                                           Valid range: 0x0-0xFFFF. The value must be enclosed in quotes, e.g.,
+                                           "0x0".
+                                        strip: This is a required key to strip GRE encapsulation header with protocols.
+                                        feature_header_length:
+                                           Feature header length in bytes.
+                                           Note: This setting does not appear in the EOS running-config for
+                                           protocol 0x0.
+                                        re_encapsulation_ethernet_header:
+                                           Extra ethernet header to prepend to the terminated packet.
+                                           Note: This setting does not appear in the
+                                           EOS running-config for protocol 0x0.
+                                        _custom_data: _custom_data
+
+                                    """
+
+                        class Protocols(AvdIndexedList[str, ProtocolsItem]):
+                            """Subclass of AvdIndexedList with `ProtocolsItem` items. Primary key is `protocol` (`str`)."""
+
+                            _primary_key: ClassVar[str] = "protocol"
+
+                        Protocols._item_type = ProtocolsItem
+
+                        class DestinationsItem(AvdModel):
+                            """Subclass of AvdModel."""
+
+                            class ProtocolsItem(AvdModel):
+                                """Subclass of AvdModel."""
+
+                                _fields: ClassVar[dict] = {
+                                    "protocol": {"type": str},
+                                    "strip": {"type": bool},
+                                    "feature_header_length": {"type": int},
+                                    "re_encapsulation_ethernet_header": {"type": bool},
+                                    "_custom_data": {"type": dict},
+                                }
+                                protocol: str
+                                """
+                                Protocol type in GRE header.
+                                Valid range: 0x0-0xFFFF. The value must be enclosed in quotes, e.g.,
+                                "0x0".
+                                """
+                                strip: bool | None
+                                """This is a required key to strip GRE encapsulation header for specific destination with protocols."""
+                                feature_header_length: int | None
+                                """
+                                Feature header length in bytes.
+                                Note: This setting does not appear in the EOS running-config for
+                                protocol 0x0.
+                                """
+                                re_encapsulation_ethernet_header: bool | None
+                                """
+                                Extra ethernet header to prepend to the terminated packet.
+                                Note: This setting does not appear in the
+                                EOS running-config for protocol 0x0.
+                                """
+                                _custom_data: dict[str, Any]
+
+                                if TYPE_CHECKING:
+
+                                    def __init__(
+                                        self,
+                                        *,
+                                        protocol: str | UndefinedType = Undefined,
+                                        strip: bool | None | UndefinedType = Undefined,
+                                        feature_header_length: int | None | UndefinedType = Undefined,
+                                        re_encapsulation_ethernet_header: bool | None | UndefinedType = Undefined,
+                                        _custom_data: dict[str, Any] | UndefinedType = Undefined,
+                                    ) -> None:
+                                        """
+                                        ProtocolsItem.
+
+
+                                        Subclass of AvdModel.
+
+                                        Args:
+                                            protocol:
+                                               Protocol type in GRE header.
+                                               Valid range: 0x0-0xFFFF. The value must be enclosed in quotes, e.g.,
+                                               "0x0".
+                                            strip: This is a required key to strip GRE encapsulation header for specific destination with protocols.
+                                            feature_header_length:
+                                               Feature header length in bytes.
+                                               Note: This setting does not appear in the EOS running-config for
+                                               protocol 0x0.
+                                            re_encapsulation_ethernet_header:
+                                               Extra ethernet header to prepend to the terminated packet.
+                                               Note: This setting does not appear in the
+                                               EOS running-config for protocol 0x0.
+                                            _custom_data: _custom_data
+
+                                        """
+
+                            class Protocols(AvdIndexedList[str, ProtocolsItem]):
+                                """Subclass of AvdIndexedList with `ProtocolsItem` items. Primary key is `protocol` (`str`)."""
+
+                                _primary_key: ClassVar[str] = "protocol"
+
+                            Protocols._item_type = ProtocolsItem
+
+                            _fields: ClassVar[dict] = {
+                                "destination": {"type": str},
+                                "source": {"type": str},
+                                "strip": {"type": bool},
+                                "protocols": {"type": Protocols},
+                                "_custom_data": {"type": dict},
+                            }
+                            destination: str
+                            """Destination IP address of tunnel packets."""
+                            source: str | None
+                            """
+                            Source IP address of tunnel packets. Applied only when destination is defined. When not defined; any
+                            GRE packet that matches the `destination` is terminated.
+                            """
+                            strip: bool | None
+                            """Strip GRE encapsulation header for specific destination."""
+                            protocols: Protocols
+                            """Subclass of AvdIndexedList with `ProtocolsItem` items. Primary key is `protocol` (`str`)."""
+                            _custom_data: dict[str, Any]
+
+                            if TYPE_CHECKING:
+
+                                def __init__(
+                                    self,
+                                    *,
+                                    destination: str | UndefinedType = Undefined,
+                                    source: str | None | UndefinedType = Undefined,
+                                    strip: bool | None | UndefinedType = Undefined,
+                                    protocols: Protocols | UndefinedType = Undefined,
+                                    _custom_data: dict[str, Any] | UndefinedType = Undefined,
+                                ) -> None:
+                                    """
+                                    DestinationsItem.
+
+
+                                    Subclass of AvdModel.
+
+                                    Args:
+                                        destination: Destination IP address of tunnel packets.
+                                        source:
+                                           Source IP address of tunnel packets. Applied only when destination is defined. When not defined; any
+                                           GRE packet that matches the `destination` is terminated.
+                                        strip: Strip GRE encapsulation header for specific destination.
+                                        protocols: Subclass of AvdIndexedList with `ProtocolsItem` items. Primary key is `protocol` (`str`).
+                                        _custom_data: _custom_data
+
+                                    """
+
+                        class Destinations(AvdIndexedList[str, DestinationsItem]):
+                            """Subclass of AvdIndexedList with `DestinationsItem` items. Primary key is `destination` (`str`)."""
+
+                            _primary_key: ClassVar[str] = "destination"
+
+                        Destinations._item_type = DestinationsItem
+
+                        _fields: ClassVar[dict] = {
+                            "strip": {"type": bool},
+                            "protocols": {"type": Protocols},
+                            "destinations": {"type": Destinations},
+                            "_custom_data": {"type": dict},
+                        }
+                        strip: bool | None
+                        """Strip GRE encapsulation header for all GRE tunnels."""
+                        protocols: Protocols
+                        """
+                        Protocols for all destinations; destination-specific protocols should be set under the
+                        `destinations[].protocols` key.
+
+                        Subclass of AvdIndexedList with `ProtocolsItem` items. Primary key
+                        is `protocol` (`str`).
+                        """
+                        destinations: Destinations
+                        """
+                        In EOS, `gre.strip` and `destinations.destination/source.strip` (without defining protocols) are
+                        mutually exclusive.
+
+                        Subclass of AvdIndexedList with `DestinationsItem` items. Primary key is
+                        `destination` (`str`).
+                        """
+                        _custom_data: dict[str, Any]
+
+                        if TYPE_CHECKING:
+
+                            def __init__(
+                                self,
+                                *,
+                                strip: bool | None | UndefinedType = Undefined,
+                                protocols: Protocols | UndefinedType = Undefined,
+                                destinations: Destinations | UndefinedType = Undefined,
+                                _custom_data: dict[str, Any] | UndefinedType = Undefined,
+                            ) -> None:
+                                """
+                                Gre.
+
+
+                                Subclass of AvdModel.
+
+                                Args:
+                                    strip: Strip GRE encapsulation header for all GRE tunnels.
+                                    protocols:
+                                       Protocols for all destinations; destination-specific protocols should be set under the
+                                       `destinations[].protocols` key.
+
+                                       Subclass of AvdIndexedList with `ProtocolsItem` items. Primary key
+                                       is `protocol` (`str`).
+                                    destinations:
+                                       In EOS, `gre.strip` and `destinations.destination/source.strip` (without defining protocols) are
+                                       mutually exclusive.
+
+                                       Subclass of AvdIndexedList with `DestinationsItem` items. Primary key is
+                                       `destination` (`str`).
+                                    _custom_data: _custom_data
+
+                                """
+
+                    _fields: ClassVar[dict] = {"vxlan_strip": {"type": bool}, "gre": {"type": Gre}, "_custom_data": {"type": dict}}
+                    vxlan_strip: bool | None
+                    """
+                    Strip VXLAN encapsulation header.
+                    `encapsulation.vxlan_strip` and `mpls_pop_all` are mutually
+                    exclusive.
+                    `mpls_pop_all` takes precedence.
+                    """
+                    gre: Gre
+                    """Subclass of AvdModel."""
+                    _custom_data: dict[str, Any]
+
+                    if TYPE_CHECKING:
+
+                        def __init__(
+                            self,
+                            *,
+                            vxlan_strip: bool | None | UndefinedType = Undefined,
+                            gre: Gre | UndefinedType = Undefined,
+                            _custom_data: dict[str, Any] | UndefinedType = Undefined,
+                        ) -> None:
+                            """
+                            Encapsulation.
+
+
+                            Subclass of AvdModel.
+
+                            Args:
+                                vxlan_strip:
+                                   Strip VXLAN encapsulation header.
+                                   `encapsulation.vxlan_strip` and `mpls_pop_all` are mutually
+                                   exclusive.
+                                   `mpls_pop_all` takes precedence.
+                                gre: Subclass of AvdModel.
+                                _custom_data: _custom_data
+
+                            """
+
+                _fields: ClassVar[dict] = {
+                    "allowed_vlan": {"type": str},
+                    "default": {"type": Default},
+                    "identity": {"type": Identity},
+                    "mpls_pop_all": {"type": bool},
+                    "native_vlan": {"type": int},
+                    "truncation": {"type": Truncation},
+                    "mac_address": {"type": MacAddress},
+                    "encapsulation": {"type": Encapsulation},
+                    "_custom_data": {"type": dict},
+                }
+                allowed_vlan: str | None
+                """VLAN ID or range(s) of VLAN IDs within range 1-4094."""
+                default: Default
+                """
+                Default tap destination config.
+
+                Subclass of AvdModel.
+                """
+                identity: Identity
+                """Subclass of AvdModel."""
+                mpls_pop_all: bool | None
+                """Pop all MPLS labels."""
+                native_vlan: int | None
+                """Native VLAN ID when interface is in tap mode."""
+                truncation: Truncation
+                """Subclass of AvdModel."""
+                mac_address: MacAddress
+                """Subclass of AvdModel."""
+                encapsulation: Encapsulation
+                """Subclass of AvdModel."""
+                _custom_data: dict[str, Any]
+
+                if TYPE_CHECKING:
+
+                    def __init__(
+                        self,
+                        *,
+                        allowed_vlan: str | None | UndefinedType = Undefined,
+                        default: Default | UndefinedType = Undefined,
+                        identity: Identity | UndefinedType = Undefined,
+                        mpls_pop_all: bool | None | UndefinedType = Undefined,
+                        native_vlan: int | None | UndefinedType = Undefined,
+                        truncation: Truncation | UndefinedType = Undefined,
+                        mac_address: MacAddress | UndefinedType = Undefined,
+                        encapsulation: Encapsulation | UndefinedType = Undefined,
+                        _custom_data: dict[str, Any] | UndefinedType = Undefined,
+                    ) -> None:
+                        """
+                        Tap.
+
+
+                        Subclass of AvdModel.
+
+                        Args:
+                            allowed_vlan: VLAN ID or range(s) of VLAN IDs within range 1-4094.
+                            default:
+                               Default tap destination config.
+
+                               Subclass of AvdModel.
+                            identity: Subclass of AvdModel.
+                            mpls_pop_all: Pop all MPLS labels.
+                            native_vlan: Native VLAN ID when interface is in tap mode.
+                            truncation: Subclass of AvdModel.
+                            mac_address: Subclass of AvdModel.
+                            encapsulation: Subclass of AvdModel.
+                            _custom_data: _custom_data
+
+                        """
+
+            class Tool(AvdModel):
+                """Subclass of AvdModel."""
+
+                class Encapsulation(AvdModel):
+                    """Subclass of AvdModel."""
+
+                    _fields: ClassVar[dict] = {"dot1br_strip": {"type": bool}, "vn_tag_strip": {"type": bool}, "_custom_data": {"type": dict}}
+                    dot1br_strip: bool | None
+                    """Remove a 802.1 BR tag in packet header. 'mpls_pop_all' takes precedence over 'dot1br_strip' in EOS."""
+                    vn_tag_strip: bool | None
+                    """Remove a VN-tag in packet header. 'mpls_pop_all' takes precedence over 'vn_tag_strip' in EOS."""
+                    _custom_data: dict[str, Any]
+
+                    if TYPE_CHECKING:
+
+                        def __init__(
+                            self,
+                            *,
+                            dot1br_strip: bool | None | UndefinedType = Undefined,
+                            vn_tag_strip: bool | None | UndefinedType = Undefined,
+                            _custom_data: dict[str, Any] | UndefinedType = Undefined,
+                        ) -> None:
+                            """
+                            Encapsulation.
+
+
+                            Subclass of AvdModel.
+
+                            Args:
+                                dot1br_strip: Remove a 802.1 BR tag in packet header. 'mpls_pop_all' takes precedence over 'dot1br_strip' in EOS.
+                                vn_tag_strip: Remove a VN-tag in packet header. 'mpls_pop_all' takes precedence over 'vn_tag_strip' in EOS.
+                                _custom_data: _custom_data
+
+                            """
+
+                class Identity(AvdModel):
+                    """Subclass of AvdModel."""
+
+                    _fields: ClassVar[dict] = {
+                        "tag": {"type": str},
+                        "dot1q_dzgre_source": {"type": str},
+                        "qinq_dzgre_source": {"type": str},
+                        "_custom_data": {"type": dict},
+                    }
+                    tag: Literal["dot1q", "qinq"] | None
+                    dot1q_dzgre_source: Literal["policy", "port"] | None
+                    qinq_dzgre_source: Literal["policy inner port", "port inner policy"] | None
+                    _custom_data: dict[str, Any]
+
+                    if TYPE_CHECKING:
+
+                        def __init__(
+                            self,
+                            *,
+                            tag: Literal["dot1q", "qinq"] | None | UndefinedType = Undefined,
+                            dot1q_dzgre_source: Literal["policy", "port"] | None | UndefinedType = Undefined,
+                            qinq_dzgre_source: Literal["policy inner port", "port inner policy"] | None | UndefinedType = Undefined,
+                            _custom_data: dict[str, Any] | UndefinedType = Undefined,
+                        ) -> None:
+                            """
+                            Identity.
+
+
+                            Subclass of AvdModel.
+
+                            Args:
+                                tag: tag
+                                dot1q_dzgre_source: dot1q_dzgre_source
+                                qinq_dzgre_source: qinq_dzgre_source
+                                _custom_data: _custom_data
+
+                            """
+
+                class Groups(AvdList[str]):
+                    """Subclass of AvdList with `str` items."""
+
+                Groups._item_type = str
+
+                _fields: ClassVar[dict] = {
+                    "mpls_pop_all": {"type": bool},
+                    "encapsulation": {"type": Encapsulation},
+                    "allowed_vlan": {"type": str},
+                    "identity": {"type": Identity},
+                    "groups": {"type": Groups},
+                    "dot1q_remove_outer_vlan_tag": {"type": str},
+                    "_custom_data": {"type": dict},
+                }
+                mpls_pop_all: bool | None
+                """Pop all MPLS labels."""
+                encapsulation: Encapsulation
+                """Subclass of AvdModel."""
+                allowed_vlan: str | None
+                """VLAN ID or range of VLAN IDs within range 1-4094."""
+                identity: Identity
+                """Subclass of AvdModel."""
+                groups: Groups
+                """
+                Tool groups for the interface.
+
+                Subclass of AvdList with `str` items.
+                """
+                dot1q_remove_outer_vlan_tag: str | None
+                """
+                Indices of vlan tags to be removed.
+                Range: 1-2
+                """
+                _custom_data: dict[str, Any]
+
+                if TYPE_CHECKING:
+
+                    def __init__(
+                        self,
+                        *,
+                        mpls_pop_all: bool | None | UndefinedType = Undefined,
+                        encapsulation: Encapsulation | UndefinedType = Undefined,
+                        allowed_vlan: str | None | UndefinedType = Undefined,
+                        identity: Identity | UndefinedType = Undefined,
+                        groups: Groups | UndefinedType = Undefined,
+                        dot1q_remove_outer_vlan_tag: str | None | UndefinedType = Undefined,
+                        _custom_data: dict[str, Any] | UndefinedType = Undefined,
+                    ) -> None:
+                        """
+                        Tool.
+
+
+                        Subclass of AvdModel.
+
+                        Args:
+                            mpls_pop_all: Pop all MPLS labels.
+                            encapsulation: Subclass of AvdModel.
+                            allowed_vlan: VLAN ID or range of VLAN IDs within range 1-4094.
+                            identity: Subclass of AvdModel.
+                            groups:
+                               Tool groups for the interface.
+
+                               Subclass of AvdList with `str` items.
+                            dot1q_remove_outer_vlan_tag:
+                               Indices of vlan tags to be removed.
+                               Range: 1-2
+                            _custom_data: _custom_data
+
+                        """
+
             _fields: ClassVar[dict] = {
                 "enabled": {"type": bool},
                 "mode": {"type": str},
@@ -31055,6 +32619,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 "backup_link": {"type": BackupLink},
                 "backup": {"type": Backup},
                 "port_security": {"type": PortSecurity},
+                "tap": {"type": Tap},
+                "tool": {"type": Tool},
                 "_custom_data": {"type": dict},
             }
             enabled: bool | None
@@ -31104,6 +32670,24 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             """
             port_security: PortSecurity
             """Subclass of AvdModel."""
+            tap: Tap
+            """
+            In tap mode, the interface operates as a tap port.
+            Tap ports receive traffic for replication on one
+            or more tool ports.
+            This setting applies only to parent interfaces.
+
+            Subclass of AvdModel.
+            """
+            tool: Tool
+            """
+            In tool mode, the interface operates as a tool port.
+            Tool ports replicate traffic received by tap
+            ports.
+            This setting applies only to parent interfaces.
+
+            Subclass of AvdModel.
+            """
             _custom_data: dict[str, Any]
 
             if TYPE_CHECKING:
@@ -31124,6 +32708,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                     backup_link: BackupLink | UndefinedType = Undefined,
                     backup: Backup | UndefinedType = Undefined,
                     port_security: PortSecurity | UndefinedType = Undefined,
+                    tap: Tap | UndefinedType = Undefined,
+                    tool: Tool | UndefinedType = Undefined,
                     _custom_data: dict[str, Any] | UndefinedType = Undefined,
                 ) -> None:
                     """
@@ -31163,6 +32749,66 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                            Subclass of AvdModel.
                         port_security: Subclass of AvdModel.
+                        tap:
+                           In tap mode, the interface operates as a tap port.
+                           Tap ports receive traffic for replication on one
+                           or more tool ports.
+                           This setting applies only to parent interfaces.
+
+                           Subclass of AvdModel.
+                        tool:
+                           In tool mode, the interface operates as a tool port.
+                           Tool ports replicate traffic received by tap
+                           ports.
+                           This setting applies only to parent interfaces.
+
+                           Subclass of AvdModel.
+                        _custom_data: _custom_data
+
+                    """
+
+        class TrafficEngineering(AvdModel):
+            """Subclass of AvdModel."""
+
+            class AdministrativeGroups(AvdList[str]):
+                """Subclass of AvdList with `str` items."""
+
+            AdministrativeGroups._item_type = str
+
+            _fields: ClassVar[dict] = {"enabled": {"type": bool}, "administrative_groups": {"type": AdministrativeGroups}, "_custom_data": {"type": dict}}
+            enabled: bool | None
+            """Whether to enable traffic-engineering on this interface."""
+            administrative_groups: AdministrativeGroups
+            """
+            List of traffic-engineering administrative groups, valid values are names, ranges 0-127, or single
+            integers 0-127.
+
+            Subclass of AvdList with `str` items.
+            """
+            _custom_data: dict[str, Any]
+
+            if TYPE_CHECKING:
+
+                def __init__(
+                    self,
+                    *,
+                    enabled: bool | None | UndefinedType = Undefined,
+                    administrative_groups: AdministrativeGroups | UndefinedType = Undefined,
+                    _custom_data: dict[str, Any] | UndefinedType = Undefined,
+                ) -> None:
+                    """
+                    TrafficEngineering.
+
+
+                    Subclass of AvdModel.
+
+                    Args:
+                        enabled: Whether to enable traffic-engineering on this interface.
+                        administrative_groups:
+                           List of traffic-engineering administrative groups, valid values are names, ranges 0-127, or single
+                           integers 0-127.
+
+                           Subclass of AvdList with `str` items.
                         _custom_data: _custom_data
 
                     """
@@ -31257,6 +32903,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             "peer_type": {"type": str},
             "sflow": {"type": Sflow},
             "switchport": {"type": Switchport},
+            "traffic_engineering": {"type": TrafficEngineering},
             "validate_state": {"type": bool},
             "validate_lldp": {"type": bool},
             "eos_cli": {"type": str},
@@ -31443,6 +33090,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         """Subclass of AvdModel."""
         switchport: Switchport
         """Subclass of AvdModel."""
+        traffic_engineering: TrafficEngineering
+        """Subclass of AvdModel."""
         validate_state: bool | None
         """
         Set to false to disable interface state and LLDP topology validation performed by the
@@ -31548,6 +33197,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 peer_type: str | None | UndefinedType = Undefined,
                 sflow: Sflow | UndefinedType = Undefined,
                 switchport: Switchport | UndefinedType = Undefined,
+                traffic_engineering: TrafficEngineering | UndefinedType = Undefined,
                 validate_state: bool | None | UndefinedType = Undefined,
                 validate_lldp: bool | None | UndefinedType = Undefined,
                 eos_cli: str | None | UndefinedType = Undefined,
@@ -31673,6 +33323,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                     peer_type: Key only used for documentation or validation purposes.
                     sflow: Subclass of AvdModel.
                     switchport: Subclass of AvdModel.
+                    traffic_engineering: Subclass of AvdModel.
                     validate_state:
                        Set to false to disable interface state and LLDP topology validation performed by the
                        `eos_validate_state` role.
@@ -67463,6 +69114,70 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
     class VlansItem(AvdModel):
         """Subclass of AvdModel."""
 
+        class AddressLocking(AvdModel):
+            """Subclass of AvdModel."""
+
+            class AddressFamily(AvdModel):
+                """Subclass of AvdModel."""
+
+                _fields: ClassVar[dict] = {"ipv4": {"type": bool}, "ipv6": {"type": bool}, "_custom_data": {"type": dict}}
+                ipv4: bool | None
+                """Enable address locking for IPv4."""
+                ipv6: bool | None
+                """Enable address locking for IPv6."""
+                _custom_data: dict[str, Any]
+
+                if TYPE_CHECKING:
+
+                    def __init__(
+                        self,
+                        *,
+                        ipv4: bool | None | UndefinedType = Undefined,
+                        ipv6: bool | None | UndefinedType = Undefined,
+                        _custom_data: dict[str, Any] | UndefinedType = Undefined,
+                    ) -> None:
+                        """
+                        AddressFamily.
+
+
+                        Subclass of AvdModel.
+
+                        Args:
+                            ipv4: Enable address locking for IPv4.
+                            ipv6: Enable address locking for IPv6.
+                            _custom_data: _custom_data
+
+                        """
+
+            _fields: ClassVar[dict] = {"address_family": {"type": AddressFamily}, "ipv4_enforcement_disabled": {"type": bool}, "_custom_data": {"type": dict}}
+            address_family: AddressFamily
+            """Subclass of AvdModel."""
+            ipv4_enforcement_disabled: bool | None
+            """Disable enforcement for IPv4 locked addresses."""
+            _custom_data: dict[str, Any]
+
+            if TYPE_CHECKING:
+
+                def __init__(
+                    self,
+                    *,
+                    address_family: AddressFamily | UndefinedType = Undefined,
+                    ipv4_enforcement_disabled: bool | None | UndefinedType = Undefined,
+                    _custom_data: dict[str, Any] | UndefinedType = Undefined,
+                ) -> None:
+                    """
+                    AddressLocking.
+
+
+                    Subclass of AvdModel.
+
+                    Args:
+                        address_family: Subclass of AvdModel.
+                        ipv4_enforcement_disabled: Disable enforcement for IPv4 locked addresses.
+                        _custom_data: _custom_data
+
+                    """
+
         class TrunkGroups(AvdList[str]):
             """Subclass of AvdList with `str` items."""
 
@@ -67503,6 +69218,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             "id": {"type": int},
             "name": {"type": str},
             "state": {"type": str},
+            "address_locking": {"type": AddressLocking},
             "trunk_groups": {"type": TrunkGroups},
             "private_vlan": {"type": PrivateVlan},
             "tenant": {"type": str},
@@ -67513,6 +69229,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         name: str | None
         """VLAN Name."""
         state: Literal["active", "suspend"] | None
+        address_locking: AddressLocking
+        """Subclass of AvdModel."""
         trunk_groups: TrunkGroups
         """Subclass of AvdList with `str` items."""
         private_vlan: PrivateVlan
@@ -67529,6 +69247,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 id: int | UndefinedType = Undefined,
                 name: str | None | UndefinedType = Undefined,
                 state: Literal["active", "suspend"] | None | UndefinedType = Undefined,
+                address_locking: AddressLocking | UndefinedType = Undefined,
                 trunk_groups: TrunkGroups | UndefinedType = Undefined,
                 private_vlan: PrivateVlan | UndefinedType = Undefined,
                 tenant: str | None | UndefinedType = Undefined,
@@ -67544,6 +69263,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                     id: VLAN ID.
                     name: VLAN Name.
                     state: state
+                    address_locking: Subclass of AvdModel.
                     trunk_groups: Subclass of AvdList with `str` items.
                     private_vlan: Subclass of AvdModel.
                     tenant: Key only used for documentation or validation purposes.
