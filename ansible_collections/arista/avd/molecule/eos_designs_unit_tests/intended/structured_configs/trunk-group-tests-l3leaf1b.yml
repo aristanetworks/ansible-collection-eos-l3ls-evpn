@@ -77,6 +77,9 @@ management_api_http:
   enable_https: true
   enable_vrfs:
   - name: MGMT
+metadata:
+  pod_name: TRUNK_GROUP_TESTS
+  fabric_name: EOS_DESIGNS_UNIT_TESTS
 mlag_configuration:
   domain_id: TRUNK_GROUP_TESTS_L3LEAF1
   local_interface: Vlan4094

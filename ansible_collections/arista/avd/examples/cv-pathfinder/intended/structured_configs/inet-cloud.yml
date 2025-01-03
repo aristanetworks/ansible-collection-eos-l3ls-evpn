@@ -102,6 +102,8 @@ management_interfaces:
   lldp:
     transmit: false
     receive: false
+metadata:
+  fabric_name: WAN
 ntp:
   local_interface:
     name: Management1

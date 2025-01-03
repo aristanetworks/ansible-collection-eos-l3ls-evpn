@@ -49,6 +49,7 @@ management_interfaces:
   type: oob
 metadata:
   platform: 7010TX
+  fabric_name: EOS_DESIGNS_UNIT_TESTS
 mlag_configuration:
   domain_id: MLAG_PER_MTU_INTERFACE
   local_interface: Vlan4094

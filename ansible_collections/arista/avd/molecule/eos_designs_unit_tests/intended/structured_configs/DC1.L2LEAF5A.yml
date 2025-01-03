@@ -95,6 +95,8 @@ management_interfaces:
   gateway: 192.168.200.5
 metadata:
   platform: vEOS-LAB
+  rack: rackE
+  fabric_name: EOS_DESIGNS_UNIT_TESTS
 mlag_configuration:
   domain_id: DC1_L2LEAF5
   local_interface: Vlan4091

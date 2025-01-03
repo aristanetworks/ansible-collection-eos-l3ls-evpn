@@ -89,6 +89,8 @@ management_api_http:
   enable_https: true
   enable_vrfs:
   - name: MGMT
+metadata:
+  fabric_name: EOS_DESIGNS_UNIT_TESTS
 platform:
   sfe:
     data_plane_cpu_allocation_max: 2

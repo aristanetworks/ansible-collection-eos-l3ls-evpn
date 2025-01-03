@@ -169,6 +169,7 @@ management_interfaces:
   gateway: 172.16.1.1
 metadata:
   platform: vEOS-lab
+  fabric_name: FABRIC
 mlag_configuration:
   domain_id: DC1_L3_LEAF1
   local_interface: Vlan4094

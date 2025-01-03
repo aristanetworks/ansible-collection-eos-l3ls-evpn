@@ -65,6 +65,9 @@ management_api_http:
   enable_https: true
   enable_vrfs:
   - name: MGMT
+metadata:
+  pod_name: L2LS_BGP
+  fabric_name: L2LS
 mlag_configuration:
   domain_id: BGP_SPINES
   local_interface: Vlan4094

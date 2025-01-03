@@ -98,6 +98,8 @@ management_security:
     certificate:
       file: STUN-DTLS.crt
       key: STUN-DTLS.key
+metadata:
+  fabric_name: EOS_DESIGNS_UNIT_TESTS
 prefix_lists:
 - name: PL-LOOPBACKS-EVPN-OVERLAY
   sequence_numbers:

@@ -104,6 +104,8 @@ management_api_http:
   enable_https: true
   enable_vrfs:
   - name: MGMT
+metadata:
+  fabric_name: EOS_DESIGNS_UNIT_TESTS
 ptp:
   mode: boundary
   clock_identity: 00:1C:73:14:00:01

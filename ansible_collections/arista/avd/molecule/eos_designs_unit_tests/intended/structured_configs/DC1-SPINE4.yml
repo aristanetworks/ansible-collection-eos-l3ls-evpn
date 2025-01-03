@@ -225,6 +225,7 @@ management_interfaces:
   gateway: 192.168.200.5
 metadata:
   platform: 7280R3
+  fabric_name: EOS_DESIGNS_UNIT_TESTS
 ntp:
   local_interface:
     name: Management1
