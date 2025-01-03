@@ -171,6 +171,7 @@ management_security:
       file: STUN-DTLS.crt
       key: STUN-DTLS.key
 metadata:
+  fabric_name: FABRIC
   cv_tags:
     device_tags:
     - name: Role
@@ -225,7 +226,6 @@ metadata:
       carrier: isp-1
       circuit_id: DC1-INET-3
       pathgroup: internet
-  fabric_name: FABRIC
 prefix_lists:
 - name: PL-LOOPBACKS-EVPN-OVERLAY
   sequence_numbers:
