@@ -43,17 +43,14 @@ def _user_password_hash(clear_password: str, salt: str | None = None) -> str:
     """
     Generate a SHA-512 password hash from a cleartext password for a local user.
 
-    Parameters:
-    ----------
+    Args:
         clear_password: The cleartext password provided by the user that will be hashed.
         salt: Salt value to be used when creating password hash. A randomly generated salt will be used unless the user specifies one.
 
     Returns:
-    -------
         The SHA-512 password hash.
 
     Raises:
-    ------
         TypeError: If the password is not of type 'str'.
         ValueError: If sha512_crypt fails for any reason.
     """
@@ -75,17 +72,14 @@ def secure_hash(user_input: str, salt: str | None = None, output_type: str | Non
     """
     Returns a hash for a given input.
 
-    Parameters:
-    ----------
+    Args:
         user_input: the user input cleartext that will be hashed.
         output_type: the use case for the cleartext provided by the user.
 
     Returns:
-    -------
         The hash digest.
 
     Raises:
-    ------
         ValueError: if the output_type value provided by the user is not supported.
     """
     if output_type is not None and output_type not in HASH_INPUT_TYPE:
