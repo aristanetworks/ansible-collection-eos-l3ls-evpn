@@ -4,15 +4,8 @@
 
 - [Management](#management)
   - [Management Interfaces](#management-interfaces)
-<<<<<<< HEAD:ansible_collections/arista/avd/molecule/eos_cli_config_gen/documentation/devices/host6.md
 - [Monitoring](#monitoring)
   - [SNMP](#snmp)
-=======
-- [Authentication](#authentication)
-  - [Local Users](#local-users)
-  - [TACACS Servers](#tacacs-servers)
-
->>>>>>> 762c5af13 (adding support for salt arg):ansible_collections/arista/avd/molecule/eos_cli_config_gen/documentation/devices/host4_inline_jinja.md
 
 ## Management
 
@@ -44,32 +37,7 @@ interface Management1
 
 ## Monitoring
 
-<<<<<<< HEAD:ansible_collections/arista/avd/molecule/eos_cli_config_gen/documentation/devices/host6.md
-
 ### SNMP
-
-=======
-
-### Local Users
-
-#### Local Users Summary
-
-| User | Privilege | Role | Disabled | Shell |
-| ---- | --------- | ---- | -------- | ----- |
-| sha-user | 15 | network-admin | False | - |
-| sha-user-the-second | 15 | network-admin | False | - |
-
-#### Local Users Device Configuration
-
-```eos
-!
-username sha-user privilege 15 role network-admin secret sha512 <removed>
-username sha-user-the-second privilege 15 role network-admin secret sha512 <removed>
-```
-
-### TACACS Servers
->>>>>>>
->>>>>>> 762c5af13 (adding support for salt arg):ansible_collections/arista/avd/molecule/eos_cli_config_gen/documentation/devices/host4_inline_jinja.md
 
 #### SNMP Configuration Summary
 
