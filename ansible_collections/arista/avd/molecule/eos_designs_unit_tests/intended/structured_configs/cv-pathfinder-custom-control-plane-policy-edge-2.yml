@@ -161,6 +161,7 @@ management_security:
       file: profileA.crt
       key: profileA.key
 metadata:
+  fabric_name: EOS_DESIGNS_UNIT_TESTS
   cv_tags:
     device_tags:
     - name: Role
@@ -194,7 +195,6 @@ metadata:
       carrier: ATT
       circuit_id: '666'
       pathgroup: INET
-  fabric_name: EOS_DESIGNS_UNIT_TESTS
 prefix_lists:
 - name: PL-LOOPBACKS-EVPN-OVERLAY
   sequence_numbers:

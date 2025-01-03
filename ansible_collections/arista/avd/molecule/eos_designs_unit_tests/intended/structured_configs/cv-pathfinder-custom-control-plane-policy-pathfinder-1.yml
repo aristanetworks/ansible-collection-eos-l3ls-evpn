@@ -157,6 +157,7 @@ management_security:
       file: profileA.crt
       key: profileA.key
 metadata:
+  fabric_name: EOS_DESIGNS_UNIT_TESTS
   cv_tags:
     device_tags:
     - name: Role
@@ -371,7 +372,6 @@ metadata:
           category: VIDEO1
         - name: CUSTOM-DSCP-APPLICATION
           category: VIDEO1
-  fabric_name: EOS_DESIGNS_UNIT_TESTS
 platform:
   sfe:
     data_plane_cpu_allocation_max: 1

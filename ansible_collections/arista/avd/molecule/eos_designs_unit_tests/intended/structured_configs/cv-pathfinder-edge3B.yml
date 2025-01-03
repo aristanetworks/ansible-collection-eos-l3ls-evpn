@@ -176,6 +176,7 @@ management_security:
       file: profileA.crt
       key: profileA.key
 metadata:
+  fabric_name: EOS_DESIGNS_UNIT_TESTS
   cv_tags:
     device_tags:
     - name: Role
@@ -213,7 +214,6 @@ metadata:
       carrier: Colt
       circuit_id: '10423'
       pathgroup: MPLS
-  fabric_name: EOS_DESIGNS_UNIT_TESTS
 prefix_lists:
 - name: PL-LOOPBACKS-EVPN-OVERLAY
   sequence_numbers:

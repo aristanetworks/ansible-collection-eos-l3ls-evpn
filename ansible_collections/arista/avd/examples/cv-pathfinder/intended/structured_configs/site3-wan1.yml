@@ -252,6 +252,7 @@ management_security:
       file: STUN-DTLS.crt
       key: STUN-DTLS.key
 metadata:
+  fabric_name: WAN
   cv_tags:
     device_tags:
     - name: Role
@@ -298,7 +299,6 @@ metadata:
       carrier: REGION2-INTERNET-CORP
       circuit_id: inet-site3-wan1
       pathgroup: INTERNET
-  fabric_name: WAN
 ntp:
   local_interface:
     name: Management1

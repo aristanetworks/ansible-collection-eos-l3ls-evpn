@@ -188,6 +188,7 @@ management_security:
       file: profileA.crt
       key: profileA.key
 metadata:
+  fabric_name: EOS_DESIGNS_UNIT_TESTS
   cv_tags:
     device_tags:
     - name: Role
@@ -230,7 +231,6 @@ metadata:
     - name: Ethernet1.42
       carrier: Comcast
       pathgroup: INET
-  fabric_name: EOS_DESIGNS_UNIT_TESTS
 port_channel_interfaces:
 - name: Port-Channel666
   description: WAN_HA_cv-pathfinder-edge4B_Port-Channel666

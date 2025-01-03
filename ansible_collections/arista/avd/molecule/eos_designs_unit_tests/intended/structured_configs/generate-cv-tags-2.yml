@@ -16,13 +16,13 @@ management_api_http:
   enable_vrfs:
   - name: MGMT
 metadata:
+  fabric_name: EOS_DESIGNS_UNIT_TESTS
   cv_tags:
     device_tags:
     - name: topology_hint_fabric
       value: EOS_DESIGNS_UNIT_TESTS
     - name: topology_hint_type
       value: edge
-  fabric_name: EOS_DESIGNS_UNIT_TESTS
 prefix_lists:
 - name: PL-LOOPBACKS-EVPN-OVERLAY
   sequence_numbers:
