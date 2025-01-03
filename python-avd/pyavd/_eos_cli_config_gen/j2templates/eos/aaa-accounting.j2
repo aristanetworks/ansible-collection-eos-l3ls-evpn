@@ -53,7 +53,7 @@ aaa accounting commands {{ command_console.commands }} console {{ command_consol
 {%                 elif command_console.group is arista.avd.defined or command_console.logging is arista.avd.defined(true) %}
 {%                     set commands_console_cli = "aaa accounting commands " ~ command_console.commands ~ " console " ~ command_console.type %}
 {%                     if command_console.group is arista.avd.defined %}
-{%                         set commands_console_cli = commands_console_cli ~ " group " ~ command_default.group %}
+{%                         set commands_console_cli = commands_console_cli ~ " group " ~ command_console.group %}
 {%                     endif %}
 {%                     if command_console.logging is arista.avd.defined(true) %}
 {%                         set commands_console_cli = commands_console_cli ~ " logging" %}
