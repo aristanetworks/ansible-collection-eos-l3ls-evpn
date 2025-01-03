@@ -17,6 +17,7 @@ ethernet_interfaces:
 - name: Ethernet1
   description: P2P_LINK_TO_DC1-SPINE1_Ethernet21
   shutdown: false
+  speed: forced 40gfull
   mtu: 1500
   link_tracking_groups:
   - name: Eth-conn-to-router
