@@ -340,7 +340,7 @@ class AvdStructuredConfigBase(StructuredConfigGenerator, NtpMixin, SnmpServerMix
     @cached_property
     def event_monitor(self) -> dict | None:
         """event_monitor set based on event_monitor data-model."""
-        return self.inputs.event_monitor.as_dict() or None
+        return self.inputs.event_monitor._as_dict() or None
 
     @cached_property
     def event_handlers(self) -> list | None:
@@ -350,9 +350,7 @@ class AvdStructuredConfigBase(StructuredConfigGenerator, NtpMixin, SnmpServerMix
     @cached_property
     def load_interval(self) -> dict | None:
         """load_interval set based on load_interval_default variable."""
-        if (load_interval_default := get(self._hostvars, "load_interval.default")) is not None:
-            return {"default": load_interval_default}
-        return None
+        return self.inputs.load_interval._as_dict() or None
 
     @cached_property
     def queue_monitor_length(self) -> dict | None:
@@ -425,10 +423,7 @@ class AvdStructuredConfigBase(StructuredConfigGenerator, NtpMixin, SnmpServerMix
     @cached_property
     def service_unsupported_transceiver(self) -> dict | None:
         """service_unsupported_transceiver based on unsupported_transceiver data-model."""
-        if (unsupported_transceiver := get(self._hostvars, "unsupported_transceiver")) is not None:
-            return {"license_name": unsupported_transceiver.get("license_name"), "license_key": unsupported_transceiver.get("license_key")}
-
-        return None
+        return self.inputs.service_unsupported_transceiver._as_dict() or None
 
     @cached_property
     def local_users(self) -> list | None:
@@ -539,7 +534,7 @@ class AvdStructuredConfigBase(StructuredConfigGenerator, NtpMixin, SnmpServerMix
     @cached_property
     def queue_monitor_streaming(self) -> dict | None:
         """queue_monitor_streaming set based on queue_monitor_streaming data-model."""
-        return get(self._hostvars, "queue_monitor_streaming")
+        return self.inputs.queue_monitor_streaming._as_dict() or None
 
     @cached_property
     def management_api_http(self) -> dict:

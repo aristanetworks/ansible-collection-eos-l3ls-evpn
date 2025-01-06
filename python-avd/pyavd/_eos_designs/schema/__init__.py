@@ -12729,6 +12729,9 @@ class EosDesigns(EosDesignsRootModel):
 
                 """
 
+    class ServiceUnsupportedTransceiver(EosCliConfigGen.ServiceUnsupportedTransceiver):
+        """Subclass of AvdModel."""
+
     class SflowSettings(AvdModel):
         """Subclass of AvdModel."""
 
@@ -15859,9 +15862,6 @@ class EosDesigns(EosDesignsRootModel):
                     _custom_data: _custom_data
 
                 """
-
-    class UnsupportedTransceiver(EosCliConfigGen.ServiceUnsupportedTransceiver):
-        """Subclass of AvdModel."""
 
     class UplinkPtp(AvdModel):
         """Subclass of AvdModel."""
@@ -54623,6 +54623,7 @@ class EosDesigns(EosDesignsRootModel):
         "redundancy": {"type": Redundancy},
         "router_id_loopback_description": {"type": str, "default": "ROUTER_ID"},
         "serial_number": {"type": str},
+        "service_unsupported_transceiver": {"type": ServiceUnsupportedTransceiver},
         "sflow_settings": {"type": SflowSettings},
         "shutdown_bgp_towards_undeployed_peers": {"type": bool, "default": True},
         "shutdown_interfaces_towards_undeployed_peers": {"type": bool, "default": True},
@@ -54656,7 +54657,6 @@ class EosDesigns(EosDesignsRootModel):
         "underlay_ospf_process_id": {"type": int, "default": 100},
         "underlay_rfc5549": {"type": bool, "default": False},
         "underlay_routing_protocol": {"type": str},
-        "unsupported_transceiver": {"type": UnsupportedTransceiver},
         "uplink_ptp": {"type": UplinkPtp},
         "use_cv_topology": {"type": bool},
         "use_router_general_for_router_id": {"type": bool, "default": False},
@@ -56014,6 +56014,8 @@ class EosDesigns(EosDesignsRootModel):
     type settings.
     If both are set, the value under node type settings takes precedence.
     """
+    service_unsupported_transceiver: ServiceUnsupportedTransceiver
+    """Subclass of AvdModel."""
     sflow_settings: SflowSettings
     """
     sFlow settings.
@@ -56303,8 +56305,6 @@ class EosDesigns(EosDesignsRootModel):
     *Only supported with
     core_interfaces data model.
     """
-    unsupported_transceiver: UnsupportedTransceiver
-    """Subclass of AvdModel."""
     uplink_ptp: UplinkPtp
     """
     Enable PTP on all infrastructure links.
@@ -56579,6 +56579,7 @@ class EosDesigns(EosDesignsRootModel):
             redundancy: Redundancy | UndefinedType = Undefined,
             router_id_loopback_description: str | UndefinedType = Undefined,
             serial_number: str | None | UndefinedType = Undefined,
+            service_unsupported_transceiver: ServiceUnsupportedTransceiver | UndefinedType = Undefined,
             sflow_settings: SflowSettings | UndefinedType = Undefined,
             shutdown_bgp_towards_undeployed_peers: bool | UndefinedType = Undefined,
             shutdown_interfaces_towards_undeployed_peers: bool | UndefinedType = Undefined,
@@ -56614,7 +56615,6 @@ class EosDesigns(EosDesignsRootModel):
             underlay_routing_protocol: Literal["ebgp", "ospf", "ospf-ldp", "isis", "isis-sr", "isis-ldp", "isis-sr-ldp", "none"]
             | None
             | UndefinedType = Undefined,
-            unsupported_transceiver: UnsupportedTransceiver | UndefinedType = Undefined,
             uplink_ptp: UplinkPtp | UndefinedType = Undefined,
             use_cv_topology: bool | None | UndefinedType = Undefined,
             use_router_general_for_router_id: bool | UndefinedType = Undefined,
@@ -57593,6 +57593,7 @@ class EosDesigns(EosDesignsRootModel):
                    "serial_number" can also be set directly under node
                    type settings.
                    If both are set, the value under node type settings takes precedence.
+                service_unsupported_transceiver: Subclass of AvdModel.
                 sflow_settings:
                    sFlow settings.
                    The sFlow process will only be configured if any interface is enabled for sFlow.
@@ -57806,7 +57807,6 @@ class EosDesigns(EosDesignsRootModel):
                    - The variables should be applied to all devices in the fabric.
                    *Only supported with
                    core_interfaces data model.
-                unsupported_transceiver: Subclass of AvdModel.
                 uplink_ptp:
                    Enable PTP on all infrastructure links.
 
