@@ -340,9 +340,7 @@ class AvdStructuredConfigBase(StructuredConfigGenerator, NtpMixin, SnmpServerMix
     @cached_property
     def event_monitor(self) -> dict | None:
         """event_monitor set based on event_monitor data-model."""
-        if get(self._hostvars, "event_monitor.enabled") is True:
-            return {"enabled": True}
-        return None
+        return self.inputs.event_monitor.as_dict() or None
 
     @cached_property
     def event_handlers(self) -> list | None:
