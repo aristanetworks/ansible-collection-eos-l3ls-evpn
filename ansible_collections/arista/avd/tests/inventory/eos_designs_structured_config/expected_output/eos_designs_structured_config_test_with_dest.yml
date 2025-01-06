@@ -11,6 +11,8 @@ management_api_http:
   enable_https: true
   enable_vrfs:
   - name: MGMT
+metadata:
+  fabric_name: integration_tests
 service_routing_protocols_model: multi-agent
 transceiver_qsfp_default_mode_4x10: true
 vlan_internal_order:

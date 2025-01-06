@@ -35,6 +35,7 @@ ethernet_interfaces:
 - name: Ethernet1
   description: P2P_LINK_TO_DC1-SPINE1_Ethernet220
   shutdown: false
+  speed: forced 40gfull
   mtu: 1500
   ip_address: 10.10.101.9/31
   ospf_network_point_to_point: true
@@ -106,6 +107,7 @@ management_interfaces:
   gateway: 192.168.200.5
 metadata:
   platform: vEOS-LAB
+  fabric_name: EOS_DESIGNS_UNIT_TESTS
 mlag_configuration:
   domain_id: MLAG_OSPF_L3LEAF1
   local_interface: Vlan4094

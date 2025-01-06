@@ -50,6 +50,7 @@ management_interfaces:
   type: oob
 metadata:
   platform: vEOS-LAB
+  fabric_name: FABRIC_IP_ADDRESSING
 mlag_configuration:
   domain_id: MLAG_SAME_SUBNET_L3LEAF2
   local_interface: Vlan4094

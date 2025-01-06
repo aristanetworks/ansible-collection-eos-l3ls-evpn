@@ -1,4 +1,4 @@
-# Copyright (c) 2024 Arista Networks, Inc.
+# Copyright (c) 2025 Arista Networks, Inc.
 # Use of this source code is governed by the Apache License 2.0
 # that can be found in the LICENSE file.
 
@@ -24082,12 +24082,20 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         _fields: ClassVar[dict] = {
             "platform": {"type": str},
             "system_mac_address": {"type": str},
+            "rack": {"type": str},
+            "pod_name": {"type": str},
+            "dc_name": {"type": str},
+            "fabric_name": {"type": str},
             "cv_tags": {"type": CvTags},
             "cv_pathfinder": {"type": CvPathfinder},
             "_custom_data": {"type": dict},
         }
         platform: str | None
         system_mac_address: str | None
+        rack: str | None
+        pod_name: str | None
+        dc_name: str | None
+        fabric_name: str | None
         cv_tags: CvTags
         """Subclass of AvdModel."""
         cv_pathfinder: CvPathfinder
@@ -24105,6 +24113,10 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 *,
                 platform: str | None | UndefinedType = Undefined,
                 system_mac_address: str | None | UndefinedType = Undefined,
+                rack: str | None | UndefinedType = Undefined,
+                pod_name: str | None | UndefinedType = Undefined,
+                dc_name: str | None | UndefinedType = Undefined,
+                fabric_name: str | None | UndefinedType = Undefined,
                 cv_tags: CvTags | UndefinedType = Undefined,
                 cv_pathfinder: CvPathfinder | UndefinedType = Undefined,
                 _custom_data: dict[str, Any] | UndefinedType = Undefined,
@@ -24118,6 +24130,10 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 Args:
                     platform: platform
                     system_mac_address: system_mac_address
+                    rack: rack
+                    pod_name: pod_name
+                    dc_name: dc_name
+                    fabric_name: fabric_name
                     cv_tags: Subclass of AvdModel.
                     cv_pathfinder:
                        Metadata used for CV Pathfinder visualization on CloudVision.

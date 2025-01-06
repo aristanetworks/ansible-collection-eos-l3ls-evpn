@@ -340,6 +340,7 @@ management_security:
       file: profileA.crt
       key: profileA.key
 metadata:
+  fabric_name: EOS_DESIGNS_UNIT_TESTS
   cv_tags:
     device_tags:
     - name: Role

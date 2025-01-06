@@ -47,6 +47,8 @@ management_interfaces:
   vrf: MGMT
   ip_address: 192.168.0.103/24
   type: oob
+metadata:
+  fabric_name: EOS_DESIGNS_DEPRECATED_VARS
 port_channel_interfaces:
 - name: Port-Channel1
   description: SERVER_OLD_SW-1/2_ENDPOINT_PORT_CHANNEL

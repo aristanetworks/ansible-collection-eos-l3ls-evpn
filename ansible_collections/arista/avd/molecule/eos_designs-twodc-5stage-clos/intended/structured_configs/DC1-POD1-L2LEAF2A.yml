@@ -58,6 +58,9 @@ management_api_http:
   - name: MGMT
 metadata:
   platform: vEOS-LAB
+  pod_name: DC1_POD1
+  dc_name: DC1
+  fabric_name: TWODC_5STAGE_CLOS
 mlag_configuration:
   domain_id: RACK2_MLAG
   local_interface: Vlan4094

@@ -25,6 +25,10 @@ management_api_http:
   enable_vrfs:
   - name: MGMT
 metadata:
+  rack: ABC567
+  pod_name: POD1
+  dc_name: DC23
+  fabric_name: EOS_DESIGNS_UNIT_TESTS
   cv_tags:
     device_tags:
     - name: topology_hint_datacenter
