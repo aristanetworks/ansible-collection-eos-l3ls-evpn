@@ -74,6 +74,7 @@ def secure_hash(user_input: str, salt: str | None = None, output_type: str | Non
 
     Args:
         user_input: the user input cleartext that will be hashed.
+        salt: Salt value to be used when creating password hash. A randomly generated salt will be used unless the user specifies one.
         output_type: the use case for the cleartext provided by the user.
 
     Returns:
