@@ -488,8 +488,8 @@ jobs:
   #         cd ansible_collections/arista/avd/
   #         ansible-test integration -vv
 
-  ansible_test_sanity:
-    name: Run ansible-test sanity validation
+  install_dependencies:
+    name: Install dependencies
     runs-on: ubuntu-latest
     needs: [ file-changes ]
     steps:
@@ -547,9 +547,39 @@ jobs:
           name: pyavd-wheel
           path: ${{ env.WHEEL_FILE }}
 
+  ansible_test_sanity:
+    name: Run ansible-test sanity validation
+    runs-on: ubuntu-latest
+    needs: [ file-changes, install_dependencies ]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python 3
+        uses: actions/setup-python@v5
+        with:
+          python-version: |
+            3.10
+            3.11
+            3.12
+            3.13
+          cache: 'pip'
+          check-latest: true
+      - name: Download wheel artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: pyavd-wheel
+          path: ./artifacts
+      - name: 'Install Python requirements'
+        run: |
+          pip install "ansible-core<2.19.0" --upgrade
+          pip install ./artifacts/pyavd-5.2.0.dev2-py3-none-any.whl
+      - name: 'Run ansible-test sanity'
+        run: |
+          cd ansible_collections/arista/avd/
+          ansible-test sanity --color yes -v
+
   ansible_unit_tests:
     runs-on: ubuntu-latest
-    needs: ansible_test_sanity
+    needs: install_dependencies
     steps:
       - uses: actions/checkout@v4
       - name: Set up Python 3
@@ -565,15 +595,6 @@ jobs:
         with:
           name: pyavd-wheel
           path: ./artifacts
-
-      # - name: Install the wheel file
-      #   run: |
-      #     # Verify the downloaded artifact
-      #     echo "Contents of artifacts directory:"
-      #     ls -al ./artifacts
-
-      #     # Install the wheel file
-      #     pip install ./artifacts/pyavd-5.2.0.dev2-py3-none-any.whl
       - name: 'Install Python requirements'
         run: |
           pip install mock pytest pytest-mock pytest-xdist pyyaml "ansible-core<2.19.0" -r ansible_collections/arista/avd/requirements-dev.txt --upgrade
@@ -582,59 +603,11 @@ jobs:
         run: |
           cd ansible_collections/arista/avd/
           ansible-test units -vv
-      # - name: Print runner path
-      #   run: |
-      #     WHEEL_CACHE_ROOT="$(pip cache dir)/wheels"
-      #     echo "Wheel cache root: $WHEEL_CACHE_ROOT"
-
-      #     FULL_WHEEL_PATH=$(find "$WHEEL_CACHE_ROOT" -type d -mindepth 4 -maxdepth 4)
-      #     if [ -z "$FULL_WHEEL_PATH" ]; then
-      #       echo "No wheel files found."
-      #       exit 1
-      #     fi
-
-      #     echo "Full wheel path: $FULL_WHEEL_PATH"
-      #     echo "FULL_WHEEL_PATH=$FULL_WHEEL_PATH" >> $GITHUB_ENV
-
-      # - name: Use the full pip wheel path
-      #   run: |
-      #     echo "Full wheel path from environment: $FULL_WHEEL_PATH"
-      #     ls -l $FULL_WHEEL_PATH
-      # - name: 'Install Python requirements'
-      #   run: |
-      #     pip install "ansible-core<2.19.0" -r .github/requirements-ci.txt --upgrade
-
-      # - name: 'Run ansible-test sanity'
-      #   run: |
-      #     cd ansible_collections/arista/avd/
-      #     ansible-test sanity --color yes -v
-
-  # ansible_test_units:
-  #   name: Run ansible-test units test cases
-  #   runs-on: ubuntu-latest
-  #   needs: [ file-changes ]
-  #   steps:
-  #     - uses: actions/checkout@v4
-  #     - name: Set up Python 3
-  #       uses: actions/setup-python@v5
-  #       id: pipcache
-  #       with:
-  #         python-version: |
-  #           3.10
-  #         cache: 'pip'
-  #         check-latest: true
-  #     - name: 'Install Python requirements'
-  #       run: |
-  #         pip install mock pytest pytest-mock pytest-xdist pyyaml "ansible-core<2.19.0" -r .github/requirements-ci.txt --upgrade
-  #     - name: 'Run ansible-test units test cases'
-  #       run: |
-  #         cd ansible_collections/arista/avd/
-  #         ansible-test units -vv
 
   ansible_test_integration:
     name: Run ansible-test integration test cases
     runs-on: ubuntu-latest
-    needs: [ file-changes, ansible_test_sanity]
+    needs: [ file-changes, install_dependencies]
     steps:
       - uses: actions/checkout@v4
       - name: Set up Python 3
@@ -663,7 +636,7 @@ jobs:
   ansible_lint:
     name: Run ansible-lint test case
     runs-on: ubuntu-latest
-    needs: [ file-changes, ansible_test_sanity ]
+    needs: [ file-changes, install_dependencies ]
     steps:
       - uses: actions/checkout@v4
       - name: Set up Python 3
