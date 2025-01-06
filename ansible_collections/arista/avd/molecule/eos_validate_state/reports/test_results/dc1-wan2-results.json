@@ -69,7 +69,7 @@
     "categories": [
       "avt"
     ],
-    "description": "Verifies the status and type of an AVT path for a specified VRF.",
+    "description": "Verifies the Adaptive Virtual Topology (AVT) path.",
     "custom_field": "AVT profile: DEFAULT-POLICY-CONTROL-PLANE, VRF: default, Destination IPv4 Address: 10.255.1.1, Nexthop VTEP: 10.255.1.1"
   },
   {
@@ -78,7 +78,7 @@
     "categories": [
       "avt"
     ],
-    "description": "Verifies the status and type of an AVT path for a specified VRF.",
+    "description": "Verifies the Adaptive Virtual Topology (AVT) path.",
     "custom_field": "AVT profile: DEFAULT-POLICY-CONTROL-PLANE, VRF: default, Destination IPv4 Address: 10.255.255.10, Nexthop VTEP: 10.255.255.10"
   },
   {
@@ -87,7 +87,7 @@
     "categories": [
       "avt"
     ],
-    "description": "Verifies the status and type of an AVT path for a specified VRF.",
+    "description": "Verifies the Adaptive Virtual Topology (AVT) path.",
     "custom_field": "AVT profile: DEFAULT-POLICY-CONTROL-PLANE, VRF: default, Destination IPv4 Address: 10.255.255.20, Nexthop VTEP: 10.255.255.20"
   },
   {
@@ -96,7 +96,7 @@
     "categories": [
       "avt"
     ],
-    "description": "Verifies the status and type of an AVT path for a specified VRF.",
+    "description": "Verifies the Adaptive Virtual Topology (AVT) path.",
     "custom_field": "AVT profile: DEFAULT-POLICY-DEFAULT, VRF: default, Destination IPv4 Address: 10.255.1.1, Nexthop VTEP: 10.255.1.1"
   },
   {
@@ -105,7 +105,7 @@
     "categories": [
       "avt"
     ],
-    "description": "Verifies the status and type of an AVT path for a specified VRF.",
+    "description": "Verifies the Adaptive Virtual Topology (AVT) path.",
     "custom_field": "AVT profile: DEFAULT-POLICY-DEFAULT, VRF: default, Destination IPv4 Address: 10.255.255.10, Nexthop VTEP: 10.255.255.10"
   },
   {
@@ -114,7 +114,7 @@
     "categories": [
       "avt"
     ],
-    "description": "Verifies the status and type of an AVT path for a specified VRF.",
+    "description": "Verifies the Adaptive Virtual Topology (AVT) path.",
     "custom_field": "AVT profile: DEFAULT-POLICY-DEFAULT, VRF: default, Destination IPv4 Address: 10.255.255.20, Nexthop VTEP: 10.255.255.20"
   },
   {
@@ -123,7 +123,7 @@
     "categories": [
       "bgp"
     ],
-    "description": "Verifies the health of specific BGP peer(s).",
+    "description": "Verifies the health of specific BGP peer(s) for given address families.",
     "custom_field": "BGP EVPN Peer: dc1-leaf1a (IP: 10.255.255.10)"
   },
   {
@@ -132,7 +132,7 @@
     "categories": [
       "bgp"
     ],
-    "description": "Verifies the health of specific BGP peer(s).",
+    "description": "Verifies the health of specific BGP peer(s) for given address families.",
     "custom_field": "BGP EVPN Peer: dc1-leaf1b (IP: 10.255.255.20)"
   },
   {
@@ -141,7 +141,7 @@
     "categories": [
       "bgp"
     ],
-    "description": "Verifies the health of specific BGP peer(s).",
+    "description": "Verifies the health of specific BGP peer(s) for given address families.",
     "custom_field": "BGP EVPN Peer: dc1-wan1 (IP: 10.255.1.1)"
   },
   {
@@ -150,7 +150,7 @@
     "categories": [
       "bgp"
     ],
-    "description": "Verifies the health of specific BGP peer(s).",
+    "description": "Verifies the health of specific BGP peer(s) for given address families.",
     "custom_field": "BGP IPv4 SR-TE Peer: dc1-leaf1a (IP: 10.255.255.10)"
   },
   {
@@ -159,7 +159,7 @@
     "categories": [
       "bgp"
     ],
-    "description": "Verifies the health of specific BGP peer(s).",
+    "description": "Verifies the health of specific BGP peer(s) for given address families.",
     "custom_field": "BGP IPv4 SR-TE Peer: dc1-leaf1b (IP: 10.255.255.20)"
   },
   {
@@ -168,7 +168,7 @@
     "categories": [
       "bgp"
     ],
-    "description": "Verifies the health of specific BGP peer(s).",
+    "description": "Verifies the health of specific BGP peer(s) for given address families.",
     "custom_field": "BGP IPv4 Unicast Peer: dc1-leaf1a (IP: 10.255.255.4)"
   },
   {
@@ -177,7 +177,7 @@
     "categories": [
       "bgp"
     ],
-    "description": "Verifies the health of specific BGP peer(s).",
+    "description": "Verifies the health of specific BGP peer(s) for given address families.",
     "custom_field": "BGP IPv4 Unicast Peer: dc1-leaf1b (IP: 10.255.255.6)"
   },
   {
@@ -186,7 +186,7 @@
     "categories": [
       "bgp"
     ],
-    "description": "Verifies the health of specific BGP peer(s).",
+    "description": "Verifies the health of specific BGP peer(s) for given address families.",
     "custom_field": "BGP Link-State Peer: dc1-leaf1a (IP: 10.255.255.10)"
   },
   {
@@ -195,7 +195,7 @@
     "categories": [
       "bgp"
     ],
-    "description": "Verifies the health of specific BGP peer(s).",
+    "description": "Verifies the health of specific BGP peer(s) for given address families.",
     "custom_field": "BGP Link-State Peer: dc1-leaf1b (IP: 10.255.255.20)"
   },
   {
@@ -204,7 +204,7 @@
     "categories": [
       "bgp"
     ],
-    "description": "Verifies the health of specific BGP peer(s).",
+    "description": "Verifies the health of specific BGP peer(s) for given address families.",
     "custom_field": "BGP Path-Selection Peer: dc1-leaf1a (IP: 10.255.255.10)"
   },
   {
@@ -213,7 +213,7 @@
     "categories": [
       "bgp"
     ],
-    "description": "Verifies the health of specific BGP peer(s).",
+    "description": "Verifies the health of specific BGP peer(s) for given address families.",
     "custom_field": "BGP Path-Selection Peer: dc1-leaf1b (IP: 10.255.255.20)"
   },
   {
@@ -222,7 +222,7 @@
     "categories": [
       "configuration"
     ],
-    "description": "Verifies there is no difference between the running-config and the startup-config"
+    "description": "Verifies there is no difference between the running-config and the startup-config."
   },
   {
     "name": "dc1-wan2",
@@ -230,7 +230,7 @@
     "categories": [
       "configuration"
     ],
-    "description": "Verifies ZeroTouch is disabled"
+    "description": "Verifies ZeroTouch is disabled."
   },
   {
     "name": "dc1-wan2",
@@ -238,7 +238,7 @@
     "categories": [
       "connectivity"
     ],
-    "description": "Verifies that the provided LLDP neighbors are connected properly.",
+    "description": "Verifies the connection status of the specified LLDP (Link Layer Discovery Protocol) neighbors.",
     "custom_field": "Local: Ethernet1 - Remote: dc1-leaf1a Ethernet7"
   },
   {
@@ -247,7 +247,7 @@
     "categories": [
       "connectivity"
     ],
-    "description": "Verifies that the provided LLDP neighbors are connected properly.",
+    "description": "Verifies the connection status of the specified LLDP (Link Layer Discovery Protocol) neighbors.",
     "custom_field": "Local: Ethernet2 - Remote: dc1-leaf1b Ethernet7"
   },
   {
@@ -256,7 +256,7 @@
     "categories": [
       "connectivity"
     ],
-    "description": "Test the network reachability to one or many destination IP(s).",
+    "description": "Test network reachability to one or many destination IP(s).",
     "custom_field": "Source: Dps1 (IP: 10.255.1.2) - Destination: dc1-wan1 Dps1 (IP: 10.255.1.1)"
   },
   {
@@ -265,7 +265,7 @@
     "categories": [
       "connectivity"
     ],
-    "description": "Test the network reachability to one or many destination IP(s).",
+    "description": "Test network reachability to one or many destination IP(s).",
     "custom_field": "Source: Dps1 (IP: 10.255.1.2) - Destination: dc1-wan2 Dps1 (IP: 10.255.1.2)"
   },
   {
@@ -274,7 +274,7 @@
     "categories": [
       "connectivity"
     ],
-    "description": "Test the network reachability to one or many destination IP(s).",
+    "description": "Test network reachability to one or many destination IP(s).",
     "custom_field": "Source: P2P Interface Ethernet1 (IP: 10.255.255.5) - Destination: dc1-leaf1a Ethernet7 (IP: 10.255.255.4)"
   },
   {
@@ -283,7 +283,7 @@
     "categories": [
       "connectivity"
     ],
-    "description": "Test the network reachability to one or many destination IP(s).",
+    "description": "Test network reachability to one or many destination IP(s).",
     "custom_field": "Source: P2P Interface Ethernet2 (IP: 10.255.255.7) - Destination: dc1-leaf1b Ethernet7 (IP: 10.255.255.6)"
   },
   {
@@ -308,7 +308,7 @@
     "categories": [
       "greent"
     ],
-    "description": "Verifies if a GreenT policy is created."
+    "description": "Verifies if a GreenT policy other than the default is created."
   },
   {
     "name": "dc1-wan2",
@@ -366,7 +366,7 @@
     "categories": [
       "hardware"
     ],
-    "description": "Verifies the system cooling status."
+    "description": "Verifies the device's system cooling status."
   },
   {
     "name": "dc1-wan2",
@@ -374,7 +374,7 @@
     "categories": [
       "hardware"
     ],
-    "description": "Verifies the device temperature."
+    "description": "Verifies if the device temperature is within acceptable limits."
   },
   {
     "name": "dc1-wan2",
@@ -382,7 +382,7 @@
     "categories": [
       "hardware"
     ],
-    "description": "Verifies the device temperature."
+    "description": "Verifies if the device temperature is within acceptable limits."
   },
   {
     "name": "dc1-wan2",
@@ -390,7 +390,7 @@
     "categories": [
       "hardware"
     ],
-    "description": "Verifies if all transceivers come from approved manufacturers."
+    "description": "Verifies if all the transceivers come from approved manufacturers."
   },
   {
     "name": "dc1-wan2",
@@ -398,7 +398,7 @@
     "categories": [
       "hardware"
     ],
-    "description": "Verifies if all transceivers come from approved manufacturers.",
+    "description": "Verifies if all the transceivers come from approved manufacturers.",
     "custom_field": "Accepted Manufacturers: 'Arista Networks', 'Arastra, Inc.', 'Not Present'"
   },
   {
@@ -407,7 +407,7 @@
     "categories": [
       "hardware"
     ],
-    "description": "Verifies the transceivers temperature."
+    "description": "Verifies if all the transceivers are operating at an acceptable temperature."
   },
   {
     "name": "dc1-wan2",
@@ -415,7 +415,7 @@
     "categories": [
       "interfaces"
     ],
-    "description": "Verifies the status of the provided interfaces.",
+    "description": "Verifies the operational states of specified interfaces to ensure they match expected configurations.",
     "custom_field": "Interface Dps1 - DPS Interface = 'up'"
   },
   {
@@ -424,7 +424,7 @@
     "categories": [
       "interfaces"
     ],
-    "description": "Verifies the status of the provided interfaces.",
+    "description": "Verifies the operational states of specified interfaces to ensure they match expected configurations.",
     "custom_field": "Interface Ethernet1 - P2P_dc1-leaf1a_Ethernet7 = 'up'"
   },
   {
@@ -433,7 +433,7 @@
     "categories": [
       "interfaces"
     ],
-    "description": "Verifies the status of the provided interfaces.",
+    "description": "Verifies the operational states of specified interfaces to ensure they match expected configurations.",
     "custom_field": "Interface Ethernet2 - P2P_dc1-leaf1b_Ethernet7 = 'up'"
   },
   {
@@ -442,7 +442,7 @@
     "categories": [
       "interfaces"
     ],
-    "description": "Verifies the status of the provided interfaces.",
+    "description": "Verifies the operational states of specified interfaces to ensure they match expected configurations.",
     "custom_field": "Interface Ethernet3 - mpls-sp-1_DC1-MPLS-4 = 'up'"
   },
   {
@@ -451,7 +451,7 @@
     "categories": [
       "interfaces"
     ],
-    "description": "Verifies the status of the provided interfaces.",
+    "description": "Verifies the operational states of specified interfaces to ensure they match expected configurations.",
     "custom_field": "Interface Ethernet4 - isp-1_DC1-INET-4 = 'up'"
   },
   {
@@ -460,7 +460,7 @@
     "categories": [
       "interfaces"
     ],
-    "description": "Verifies the status of the provided interfaces.",
+    "description": "Verifies the operational states of specified interfaces to ensure they match expected configurations.",
     "custom_field": "Interface Loopback0 - ROUTER_ID = 'up'"
   },
   {
@@ -469,7 +469,7 @@
     "categories": [
       "interfaces"
     ],
-    "description": "Verifies the status of the provided interfaces.",
+    "description": "Verifies the operational states of specified interfaces to ensure they match expected configurations.",
     "custom_field": "Interface Vxlan1 = 'up'"
   },
   {
@@ -616,7 +616,7 @@
     "categories": [
       "security"
     ],
-    "description": "Verifies IPv4 security connections for a peer."
+    "description": "Verifies the IPv4 security connections."
   },
   {
     "name": "dc1-wan2",
@@ -624,7 +624,7 @@
     "categories": [
       "security"
     ],
-    "description": "Verifies IPv4 security connections for a peer.",
+    "description": "Verifies the IPv4 security connections.",
     "custom_field": "IPv4 Peer: 10.255.1.1 VRF: default"
   },
   {
@@ -633,7 +633,7 @@
     "categories": [
       "security"
     ],
-    "description": "Verifies IPv4 security connections for a peer.",
+    "description": "Verifies the IPv4 security connections.",
     "custom_field": "IPv4 Peer: 10.255.255.10 VRF: default"
   },
   {
@@ -642,7 +642,7 @@
     "categories": [
       "security"
     ],
-    "description": "Verifies IPv4 security connections for a peer.",
+    "description": "Verifies the IPv4 security connections.",
     "custom_field": "IPv4 Peer: 10.255.255.20 VRF: default"
   },
   {
@@ -691,7 +691,7 @@
     "categories": [
       "services"
     ],
-    "description": "Verifies if the DNS servers are correctly configured."
+    "description": "Verifies if the DNS (Domain Name Service) servers are correctly configured."
   },
   {
     "name": "dc1-wan2",
@@ -755,7 +755,7 @@
     "categories": [
       "stun"
     ],
-    "description": "Verifies the STUN client is configured with the specified IPv4 source address and port. Validate the public IP and port if provided."
+    "description": "(Deprecated) Verifies the translation for a source address on a STUN client."
   },
   {
     "name": "dc1-wan2",
@@ -763,7 +763,7 @@
     "categories": [
       "stun"
     ],
-    "description": "Verifies the STUN client is configured with the specified IPv4 source address and port. Validate the public IP and port if provided.",
+    "description": "(Deprecated) Verifies the translation for a source address on a STUN client.",
     "custom_field": "Source IPv4 Address: 172.18.4.2 Source Port: 4500"
   },
   {

@@ -50,6 +50,7 @@ management_api_http:
   - name: MGMT
 metadata:
   platform: vEOS-LAB
+  fabric_name: SINGLE_LINK_TO_MLAG_PAIR
 mlag_configuration:
   domain_id: SL-LEAF2
   local_interface: Vlan4094

@@ -23,6 +23,9 @@ management_interfaces:
   vrf: MGMT
   ip_address: 192.168.254.254/23
   type: oob
+metadata:
+  dc_name: OVERLAY_ROUTING_PROTOCOL_CVX_TESTS
+  fabric_name: EOS_DESIGNS_UNIT_TESTS
 service_routing_protocols_model: multi-agent
 spanning_tree:
   mode: none

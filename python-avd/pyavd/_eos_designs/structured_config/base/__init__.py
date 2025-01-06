@@ -232,7 +232,7 @@ class AvdStructuredConfigBase(StructuredConfigGenerator, NtpMixin, SnmpServerMix
     @cached_property
     def hardware(self) -> dict | None:
         """
-        hardware set based on platform_speed_groups variable and switch.platform fact.
+        Hardware set based on platform_speed_groups variable and switch.platform fact.
 
         Converting nested dict to list of dict to support avd_v4.0.
         """
@@ -505,7 +505,7 @@ class AvdStructuredConfigBase(StructuredConfigGenerator, NtpMixin, SnmpServerMix
     @cached_property
     def platform(self) -> dict | None:
         """
-        platform set based on.
+        Platform set based on.
 
         * platform_settings.lag_hardware_only,
         * platform_settings.trident_forwarding_table_partition and switch.evpn_multicast facts

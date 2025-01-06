@@ -145,6 +145,7 @@ management_interfaces:
   gateway: 192.168.0.1
 metadata:
   platform: vEOS-lab
+  fabric_name: PTP_TESTS
 mlag_configuration:
   domain_id: ptp-test-leaf
   local_interface: Vlan4094

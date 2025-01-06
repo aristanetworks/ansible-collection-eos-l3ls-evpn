@@ -22,7 +22,7 @@ class StandardAccessListsMixin(UtilsMixin):
     @cached_property
     def standard_access_lists(self: AvdStructuredConfigUnderlay) -> list | None:
         """
-        return structured config for standard_access_lists.
+        Return structured config for standard_access_lists.
 
         Used for to configure ACLs used by multicast RPs for the underlay
         """

@@ -40,6 +40,8 @@ management_interfaces:
   vrf: MGMT
   ip_address: 10.1.1.1/24
   type: oob
+metadata:
+  fabric_name: EOS_DESIGNS_UNIT_TESTS
 mlag_configuration:
   domain_id: GROUP1
   local_interface: Vlan4094

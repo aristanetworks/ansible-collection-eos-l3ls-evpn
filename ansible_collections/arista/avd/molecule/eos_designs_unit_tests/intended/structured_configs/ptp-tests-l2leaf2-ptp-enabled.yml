@@ -32,6 +32,7 @@ management_api_http:
   - name: MGMT
 metadata:
   platform: vEOS-lab
+  fabric_name: PTP_TESTS
 port_channel_interfaces:
 - name: Port-Channel1
   description: L2_ptp-test-leaf_Port-Channel12

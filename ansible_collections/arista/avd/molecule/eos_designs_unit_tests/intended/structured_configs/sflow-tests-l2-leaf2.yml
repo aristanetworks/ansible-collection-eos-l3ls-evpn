@@ -40,6 +40,7 @@ management_interfaces:
   gateway: 192.168.0.1
 metadata:
   platform: vEOS-lab
+  fabric_name: SFLOW_TESTS
 port_channel_interfaces:
 - name: Port-Channel1
   description: L2_sflow-tests-leaf-mlag_Port-Channel17
