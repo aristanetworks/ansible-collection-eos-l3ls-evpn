@@ -2,6 +2,9 @@
 
 ## Table of Contents
 
+- [Banner](#banner)
+  - [Login Banner](#login-banner)
+  - [MOTD Banner](#motd-banner)
 - [Management](#management)
   - [Agents](#agents)
   - [Management Interfaces](#management-interfaces)
@@ -268,6 +271,21 @@
   - [Interface Groups](#interface-groups)
   - [Maintenance](#maintenance)
 - [EOS CLI Device Configuration](#eos-cli-device-configuration)
+
+## Banner
+
+### Login Banner
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!***!!!Unauthorized access prohibited!!!***!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+### MOTD Banner
+
+.         Switch       : $(hostname)                            .
+.         Site         : DC1                      .
+.         Type info for information about the device            .
+.         Type help for information about the aliases           .
 
 ## Management
 

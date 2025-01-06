@@ -2,6 +2,9 @@
 
 ## Table of Contents
 
+- [Banner](#banner)
+  - [Login Banner](#login-banner)
+  - [MOTD Banner](#motd-banner)
 - [Management](#management)
   - [Management Interfaces](#management-interfaces)
   - [Management SSH](#management-ssh)
@@ -84,6 +87,23 @@
 - [STUN](#stun)
   - [STUN Server](#stun-server)
   - [STUN Device Configuration](#stun-device-configuration)
+
+## Banner
+
+### Login Banner
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!***!!!Unauthorized access prohibited!!!***!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+EOF
+
+### MOTD Banner
+
+.         Switch       : $(hostname)                            .
+.         Site         : DC1                      .
+.         Type info for information about the device            .
+.         Type help for information about the aliases           .
+EOF
 
 ## Management
 
