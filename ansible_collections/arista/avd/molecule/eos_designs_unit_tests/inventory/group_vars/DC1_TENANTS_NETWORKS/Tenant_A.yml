@@ -287,7 +287,7 @@ tenant_a:
         vrf_id: 16
         ospf:
           enabled: true
-          router_id: vtep_diagnostic
+          router_id: diagnostic_loopback
         l3_interfaces:
           - interfaces:
               - Ethernet22

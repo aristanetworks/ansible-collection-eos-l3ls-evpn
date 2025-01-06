@@ -35028,12 +35028,13 @@ class EosDesigns(EosDesignsRootModel):
                         """
                         Router ID to use for OSPF in this VRF.
                         This can be an IPv4 address, "main_router_id", "none" or
-                        "vtep_diagnostic".
-                        - "main_router_id" will reuse the main OSPF Router ID which is the IP address of
-                        Loopback0.
-                        - "none" will not configure a OSPF Router ID for this VRF. EOS will use the main OSPF
-                        Router ID.
-                        - "vtep_diagnostic" will use the IP address of the VRF Diagnostic Loopback interface.
+                        "diagnostic_loopback".
+                        - "main_router_id" will use the IP address of Loopback0 or the common `router
+                        general` Router ID if `use_router_general_for_router_id` is set."
+                        - "none" will not configure a OSPF
+                        Router ID for this VRF. EOS will use the main OSPF Router ID.
+                        - "diagnostic_loopback" will use the
+                        IP address of the VRF Diagnostic Loopback interface.
 
                         Default value: `"main_router_id"`
                         """
@@ -35075,12 +35076,13 @@ class EosDesigns(EosDesignsRootModel):
                                     router_id:
                                        Router ID to use for OSPF in this VRF.
                                        This can be an IPv4 address, "main_router_id", "none" or
-                                       "vtep_diagnostic".
-                                       - "main_router_id" will reuse the main OSPF Router ID which is the IP address of
-                                       Loopback0.
-                                       - "none" will not configure a OSPF Router ID for this VRF. EOS will use the main OSPF
-                                       Router ID.
-                                       - "vtep_diagnostic" will use the IP address of the VRF Diagnostic Loopback interface.
+                                       "diagnostic_loopback".
+                                       - "main_router_id" will use the IP address of Loopback0 or the common `router
+                                       general` Router ID if `use_router_general_for_router_id` is set."
+                                       - "none" will not configure a OSPF
+                                       Router ID for this VRF. EOS will use the main OSPF Router ID.
+                                       - "diagnostic_loopback" will use the
+                                       IP address of the VRF Diagnostic Loopback interface.
                                     max_lsa: max_lsa
                                     bfd: bfd
                                     redistribute_bgp: Subclass of AvdModel.
@@ -37788,12 +37790,13 @@ class EosDesigns(EosDesignsRootModel):
                         """
                         Router ID to use for BGP in this VRF.
                         This can be an IPv4 address, "main_router_id", "none" or
-                        "vtep_diagnostic".
-                        - "main_router_id" will reuse the main BGP Router ID which is the IP address of
-                        Loopback0.
-                        - "none" will not configure a BGP Router ID for this VRF. EOS will use the main BGP
-                        Router ID.
-                        - "vtep_diagnostic" will use the IP address of the VRF Diagnostic Loopback interface.
+                        "diagnostic_loopback".
+                        - "main_router_id" will use the IP address of Loopback0 or the common `router
+                        general` Router ID if `use_router_general_for_router_id` is set."
+                        - "none" will not configure a BGP
+                        Router ID for this VRF. EOS will use the main BGP Router ID.
+                        - "diagnostic_loopback" will use the IP
+                        address of the VRF Diagnostic Loopback interface.
 
                         Default value: `"main_router_id"`
                         """
@@ -37839,12 +37842,13 @@ class EosDesigns(EosDesignsRootModel):
                                     router_id:
                                        Router ID to use for BGP in this VRF.
                                        This can be an IPv4 address, "main_router_id", "none" or
-                                       "vtep_diagnostic".
-                                       - "main_router_id" will reuse the main BGP Router ID which is the IP address of
-                                       Loopback0.
-                                       - "none" will not configure a BGP Router ID for this VRF. EOS will use the main BGP
-                                       Router ID.
-                                       - "vtep_diagnostic" will use the IP address of the VRF Diagnostic Loopback interface.
+                                       "diagnostic_loopback".
+                                       - "main_router_id" will use the IP address of Loopback0 or the common `router
+                                       general` Router ID if `use_router_general_for_router_id` is set."
+                                       - "none" will not configure a BGP
+                                       Router ID for this VRF. EOS will use the main BGP Router ID.
+                                       - "diagnostic_loopback" will use the IP
+                                       address of the VRF Diagnostic Loopback interface.
                                     raw_eos_cli: EOS CLI rendered directly on the Router BGP, VRF definition in the final EOS configuration.
                                     structured_config:
                                        Custom structured config added under router_bgp.vrfs.[name=<vrf>] for eos_cli_config_gen.

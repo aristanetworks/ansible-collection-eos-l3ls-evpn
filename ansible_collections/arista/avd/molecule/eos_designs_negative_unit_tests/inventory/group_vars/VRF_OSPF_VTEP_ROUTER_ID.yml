@@ -29,7 +29,7 @@ tenants:
             enabled: true
         ospf:
           enabled: true
-          router_id: vtep_diagnostic
+          router_id: diagnostic_loopback
 
 expected_error_message: >-
   Invalid configuration on VRF 'Tenant_X_OP_Zone' in Tenant 'Tenant_X'.

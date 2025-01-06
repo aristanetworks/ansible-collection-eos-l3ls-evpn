@@ -418,13 +418,13 @@ class UtilsMixin(UtilsWanMixin, UtilsZscalerMixin):
             tenant_name: The name of the tenant to which the VRF belongs.
 
         Returns:
-            str | None: The resolved router ID as a string, or None if the router ID is not applicable.
+            The resolved router ID as a string, or None if the router ID is not applicable.
 
         Raises:
             AristaAvdInvalidInputsError: If required configuration for "vtep_diagnostic" router ID is missing.
         """
         # Handle "vtep_diagnostic" router ID case
-        if router_id == "vtep_diagnostic":
+        if router_id == "diagnostic_loopback":
             # Validate required configuration
             if (interface_data := self._get_vtep_diagnostic_loopback_for_vrf(vrf)) is None:
                 msg = (

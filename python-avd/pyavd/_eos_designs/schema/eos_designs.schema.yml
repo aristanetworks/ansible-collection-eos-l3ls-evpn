@@ -6517,15 +6517,16 @@ $defs:
                     type: str
                     description: 'Router ID to use for OSPF in this VRF.
 
-                      This can be an IPv4 address, "main_router_id", "none" or "vtep_diagnostic".
+                      This can be an IPv4 address, "main_router_id", "none" or "diagnostic_loopback".
 
-                      - "main_router_id" will reuse the main OSPF Router ID which
-                      is the IP address of Loopback0.
+                      - "main_router_id" will use the IP address of Loopback0 or the
+                      common `router general` Router ID if `use_router_general_for_router_id`
+                      is set."
 
                       - "none" will not configure a OSPF Router ID for this VRF. EOS
                       will use the main OSPF Router ID.
 
-                      - "vtep_diagnostic" will use the IP address of the VRF Diagnostic
+                      - "diagnostic_loopback" will use the IP address of the VRF Diagnostic
                       Loopback interface.'
                     default: main_router_id
                   max_lsa:
@@ -7215,15 +7216,16 @@ $defs:
                     type: str
                     description: 'Router ID to use for BGP in this VRF.
 
-                      This can be an IPv4 address, "main_router_id", "none" or "vtep_diagnostic".
+                      This can be an IPv4 address, "main_router_id", "none" or "diagnostic_loopback".
 
-                      - "main_router_id" will reuse the main BGP Router ID which is
-                      the IP address of Loopback0.
+                      - "main_router_id" will use the IP address of Loopback0 or the
+                      common `router general` Router ID if `use_router_general_for_router_id`
+                      is set."
 
                       - "none" will not configure a BGP Router ID for this VRF. EOS
                       will use the main BGP Router ID.
 
-                      - "vtep_diagnostic" will use the IP address of the VRF Diagnostic
+                      - "diagnostic_loopback" will use the IP address of the VRF Diagnostic
                       Loopback interface.'
                     default: main_router_id
                   raw_eos_cli:
