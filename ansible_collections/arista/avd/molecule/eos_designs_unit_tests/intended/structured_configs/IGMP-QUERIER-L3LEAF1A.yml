@@ -116,6 +116,7 @@ management_interfaces:
   gateway: 192.168.200.5
 metadata:
   platform: vEOS-LAB
+  fabric_name: EOS_DESIGNS_UNIT_TESTS
 port_channel_interfaces:
 - name: Port-Channel1
   description: L2_IGMP-QUERIER-L2LEAF1A_Port-Channel1

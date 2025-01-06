@@ -18,6 +18,8 @@ management_interfaces:
   vrf: MGMT
   ip_address: 192.168.200.106
   type: oob
+metadata:
+  fabric_name: EOS_DESIGNS_UNIT_TESTS
 service_routing_protocols_model: multi-agent
 transceiver_qsfp_default_mode_4x10: true
 vlan_internal_order:

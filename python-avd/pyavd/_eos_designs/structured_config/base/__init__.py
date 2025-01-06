@@ -1,4 +1,4 @@
-# Copyright (c) 2023-2024 Arista Networks, Inc.
+# Copyright (c) 2023-2025 Arista Networks, Inc.
 # Use of this source code is governed by the Apache License 2.0
 # that can be found in the LICENSE file.
 from __future__ import annotations
@@ -232,7 +232,7 @@ class AvdStructuredConfigBase(StructuredConfigGenerator, NtpMixin, SnmpServerMix
     @cached_property
     def hardware(self) -> dict | None:
         """
-        hardware set based on platform_speed_groups variable and switch.platform fact.
+        Hardware set based on platform_speed_groups variable and switch.platform fact.
 
         Converting nested dict to list of dict to support avd_v4.0.
         """
@@ -505,7 +505,7 @@ class AvdStructuredConfigBase(StructuredConfigGenerator, NtpMixin, SnmpServerMix
     @cached_property
     def platform(self) -> dict | None:
         """
-        platform set based on.
+        Platform set based on.
 
         * platform_settings.lag_hardware_only,
         * platform_settings.trident_forwarding_table_partition and switch.evpn_multicast facts

@@ -29,6 +29,8 @@ management_interfaces:
   ip_address: 192.168.200.101/24
   type: oob
   gateway: 192.168.200.5
+metadata:
+  fabric_name: EOS_DESIGNS_UNIT_TESTS
 port_channel_interfaces:
 - name: Port-Channel1
   description: L2_IGMP-QUERIER-L3LEAF1A_Port-Channel1

@@ -68,6 +68,8 @@ management_interfaces:
   ip_address: 192.168.0.101/24
   type: oob
   gateway: 192.168.200.5
+metadata:
+  fabric_name: EOS_DESIGNS_UNIT_TESTS
 ntp:
   local_interface:
     name: Management1

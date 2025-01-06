@@ -107,6 +107,9 @@ management_interfaces:
   gateway: 192.168.1.254
 metadata:
   platform: vEOS-LAB
+  pod_name: DC2_POD1
+  dc_name: DC2
+  fabric_name: TWODC_5STAGE_CLOS
 port_channel_interfaces:
 - name: Port-Channel3
   description: L2_DC2-POD1-L2LEAF1A_Port-Channel1

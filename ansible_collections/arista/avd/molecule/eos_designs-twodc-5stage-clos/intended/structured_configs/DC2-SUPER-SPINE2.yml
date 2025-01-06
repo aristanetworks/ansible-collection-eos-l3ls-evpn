@@ -66,6 +66,8 @@ management_interfaces:
   gateway: 192.168.1.254
 metadata:
   platform: vEOS-LAB
+  dc_name: DC2
+  fabric_name: TWODC_5STAGE_CLOS
 prefix_lists:
 - name: PL-LOOPBACKS-EVPN-OVERLAY
   sequence_numbers:

@@ -13,6 +13,7 @@ management_api_http:
   - name: MGMT
 metadata:
   system_mac_address: 12:34:56:78:90:AB
+  fabric_name: EOS_DESIGNS_UNIT_TESTS
 service_routing_protocols_model: multi-agent
 snmp_server:
   engine_ids:

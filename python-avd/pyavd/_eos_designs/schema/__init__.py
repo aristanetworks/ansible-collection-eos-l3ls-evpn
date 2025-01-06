@@ -1,4 +1,4 @@
-# Copyright (c) 2024 Arista Networks, Inc.
+# Copyright (c) 2025 Arista Networks, Inc.
 # Use of this source code is governed by the Apache License 2.0
 # that can be found in the LICENSE file.
 
@@ -2674,6 +2674,7 @@ class EosDesigns(EosDesignsRootModel):
             "uplink_interfaces": {"type": UplinkInterfaces},
             "mlag_interfaces": {"type": MlagInterfaces},
             "downlink_interfaces": {"type": DownlinkInterfaces},
+            "uplink_interface_speed": {"type": str},
             "_custom_data": {"type": dict},
         }
         types: Types
@@ -2709,6 +2710,8 @@ class EosDesigns(EosDesignsRootModel):
 
         Subclass of AvdList with `str` items.
         """
+        uplink_interface_speed: str | None
+        """Set point-to-Point uplink interface speed."""
         _custom_data: dict[str, Any]
 
         if TYPE_CHECKING:
@@ -2721,6 +2724,7 @@ class EosDesigns(EosDesignsRootModel):
                 uplink_interfaces: UplinkInterfaces | UndefinedType = Undefined,
                 mlag_interfaces: MlagInterfaces | UndefinedType = Undefined,
                 downlink_interfaces: DownlinkInterfaces | UndefinedType = Undefined,
+                uplink_interface_speed: str | None | UndefinedType = Undefined,
                 _custom_data: dict[str, Any] | UndefinedType = Undefined,
             ) -> None:
                 """
@@ -2753,6 +2757,7 @@ class EosDesigns(EosDesignsRootModel):
                        List of downlink interfaces or downlink interface ranges.
 
                        Subclass of AvdList with `str` items.
+                    uplink_interface_speed: Set point-to-Point uplink interface speed.
                     _custom_data: _custom_data
 
                 """

@@ -55,6 +55,7 @@ management_interfaces:
   gateway: 192.168.0.1
 metadata:
   platform: vEOS-lab
+  fabric_name: FLOW_TRACKING_TESTS
 port_channel_interfaces:
 - name: Port-Channel1
   description: L2_flow-tracking-tests-leaf-mlag_Port-Channel32

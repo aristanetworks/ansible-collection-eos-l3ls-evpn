@@ -60,6 +60,8 @@ local_users:
 management_api_http:
   enable_https: null
   enable_vrfs: []
+metadata:
+  fabric_name: EOS_DESIGNS_UNIT_TESTS
 service_routing_protocols_model: multi-agent
 transceiver_qsfp_default_mode_4x10: true
 vlan_internal_order:

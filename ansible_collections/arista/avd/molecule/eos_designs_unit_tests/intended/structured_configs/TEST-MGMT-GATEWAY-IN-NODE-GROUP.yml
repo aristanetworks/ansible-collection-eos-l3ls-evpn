@@ -26,6 +26,8 @@ management_interfaces:
   type: oob
   gateway: 192.168.201.254
   ipv6_gateway: 2001:db8::2
+metadata:
+  fabric_name: EOS_DESIGNS_UNIT_TESTS
 service_routing_protocols_model: multi-agent
 static_routes:
 - vrf: MGMT

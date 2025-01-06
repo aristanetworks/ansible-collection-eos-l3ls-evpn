@@ -1,5 +1,5 @@
 <!--
-  ~ Copyright (c) 2024 Arista Networks, Inc.
+  ~ Copyright (c) 2025 Arista Networks, Inc.
   ~ Use of this source code is governed by the Apache License 2.0
   ~ that can be found in the LICENSE file.
   -->
@@ -10,6 +10,10 @@
     | [<samp>metadata</samp>](## "metadata") | Dictionary |  |  |  | The data under `metadata` is used for documentation, validation or integration purposes.<br>It will not affect the generated EOS configuration. |
     | [<samp>&nbsp;&nbsp;platform</samp>](## "metadata.platform") | String |  |  |  |  |
     | [<samp>&nbsp;&nbsp;system_mac_address</samp>](## "metadata.system_mac_address") | String |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;rack</samp>](## "metadata.rack") | String |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;pod_name</samp>](## "metadata.pod_name") | String |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;dc_name</samp>](## "metadata.dc_name") | String |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;fabric_name</samp>](## "metadata.fabric_name") | String |  |  |  |  |
     | [<samp>&nbsp;&nbsp;cv_tags</samp>](## "metadata.cv_tags") | Dictionary |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;device_tags</samp>](## "metadata.cv_tags.device_tags") | List, items: Dictionary |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;name</samp>](## "metadata.cv_tags.device_tags.[].name") | String | Required |  |  |  |
@@ -127,6 +131,10 @@
     metadata:
       platform: <str>
       system_mac_address: <str>
+      rack: <str>
+      pod_name: <str>
+      dc_name: <str>
+      fabric_name: <str>
       cv_tags:
         device_tags:
           - name: <str; required>

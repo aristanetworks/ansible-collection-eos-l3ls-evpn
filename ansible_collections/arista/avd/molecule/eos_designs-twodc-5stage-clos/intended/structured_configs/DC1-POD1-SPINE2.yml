@@ -131,6 +131,9 @@ management_interfaces:
   gateway: 192.168.1.254
 metadata:
   platform: vEOS-LAB
+  pod_name: DC1_POD1
+  dc_name: DC1
+  fabric_name: TWODC_5STAGE_CLOS
 router_bgp:
   as: '65110.100'
   router_id: 172.16.110.2

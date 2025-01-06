@@ -46,6 +46,9 @@ management_api_http:
   enable_https: true
   enable_vrfs:
   - name: MGMT
+metadata:
+  pod_name: L2LS_L2ONLY
+  fabric_name: L2LS
 port_channel_interfaces:
 - name: Port-Channel1
   description: L2_L2ONLY_SPINES_Port-Channel1
