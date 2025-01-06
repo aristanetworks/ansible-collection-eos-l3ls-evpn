@@ -10,4 +10,5 @@ local_users:
     role: network-admin
     sha512_password: "{{ clear_password | arista.avd.secure_hash(salt='Yar49ahkzKddRVYS', output_type='sha512_password') }}"
 
+# Note: this clear_password should be in a vault for production use
 clear_password: "arista"
