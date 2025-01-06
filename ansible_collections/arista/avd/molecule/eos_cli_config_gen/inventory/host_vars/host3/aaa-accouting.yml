@@ -1,0 +1,34 @@
+---
+aaa_accounting:
+  exec:
+    console:
+      type: start-stop
+      methods:
+    default:
+      type: start-stop
+      methods:
+  dot1x:
+    # Test - methods are not defined
+    default:
+      type: start-stop
+      methods:
+  system:
+    default:
+      type: start-stop
+      methods:
+  commands:
+    console:
+      - commands: all
+        type: start-stop
+        methods:
+      - commands: 0
+        type: start-stop
+        methods:
+    default:
+    console:
+      - commands: all
+        type: start-stop
+        methods:
+      - commands: 0
+        type: start-stop
+        methods:

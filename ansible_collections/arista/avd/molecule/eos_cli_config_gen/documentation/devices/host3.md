@@ -28,6 +28,24 @@ interface Management1
    ip address 10.73.255.122/24
 ```
 
+## Authentication
+
+### AAA Accounting
+
+#### AAA Accounting Summary
+
+| Type | Commands | Record type | Group | Logging |
+| ---- | -------- | ----------- | ----- | ------- |
+| Exec - Console | - | start-stop | - | - |
+| Commands - Console | all | start-stop |  -  | False |
+| Commands - Console | 0 | start-stop |  -  | False |
+| Exec - Default | - | start-stop | - | - |
+
+#### AAA Accounting Device Configuration
+
+```eos
+```
+
 ## Monitoring
 
 ### TerminAttr Daemon
