@@ -354,13 +354,20 @@ no aaa authorization config-commands
 | Type | Commands | Record type | Group | Logging |
 | ---- | -------- | ----------- | ----- | ------- |
 | Exec - Console | - | none | - | True |
+| Commands - Console | all | none |  -  | False |
+| Commands - Console | 0 | none |  -  | False |
 | Exec - Default | - | none | - | - |
 
 #### AAA Accounting Device Configuration
 
 ```eos
 aaa accounting exec console none
+aaa accounting commands all console none
+aaa accounting commands 0 console none
 aaa accounting exec default none
+aaa accounting system default none
+aaa accounting commands all default none
+aaa accounting commands 0 default none
 ```
 
 ## Management Security

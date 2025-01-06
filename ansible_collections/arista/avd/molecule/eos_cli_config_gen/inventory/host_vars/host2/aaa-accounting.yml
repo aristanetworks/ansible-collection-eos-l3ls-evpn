@@ -8,7 +8,17 @@ aaa_accounting:
         - method: logging
     default:
       type: none
-  dot1x:
-    # Test - methods are not defined
+  system:
     default:
-      type: start-stop
+      type: none
+  commands:
+    console:
+      - commands: all
+        type: none
+      - commands: 0
+        type: none
+    default:
+      - commands: all
+        type: none
+      - commands: 0
+        type: none
