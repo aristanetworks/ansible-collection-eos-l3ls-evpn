@@ -25,7 +25,6 @@ aaa_accounting:
         type: start-stop
         methods:
     default:
-    console:
       - commands: all
         type: start-stop
         methods:
