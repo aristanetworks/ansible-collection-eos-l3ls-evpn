@@ -264,6 +264,7 @@ management_interfaces:
   gateway: 192.168.200.5
 metadata:
   platform: 7280R
+  fabric_name: EOS_DESIGNS_UNIT_TESTS
   cv_tags:
     device_tags:
     - name: topology_hint_fabric

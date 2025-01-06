@@ -133,6 +133,7 @@ management_interfaces:
   gateway: 192.168.200.5
 metadata:
   platform: 7368X4
+  fabric_name: EOS_DESIGNS_UNIT_TESTS
 mlag_configuration:
   domain_id: DC1_CL1
   local_interface: Vlan4092

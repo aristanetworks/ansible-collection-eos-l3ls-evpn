@@ -84,6 +84,7 @@ management_interfaces:
   gateway: 172.16.100.1
 metadata:
   platform: cEOS-LAB
+  fabric_name: DC1_FABRIC
 mlag_configuration:
   domain_id: RACK1
   local_interface: Vlan4094

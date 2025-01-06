@@ -19,6 +19,8 @@ management_interfaces:
   ip_address: 10.10.10.43/26
   type: oob
   gateway: 10.10.10.1
+metadata:
+  fabric_name: EOS_DESIGNS_UNIT_TESTS
 service_routing_protocols_model: multi-agent
 snmp_server:
   contact: example@example.com

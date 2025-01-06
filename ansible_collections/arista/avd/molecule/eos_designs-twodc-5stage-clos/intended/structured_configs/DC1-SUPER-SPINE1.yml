@@ -104,6 +104,8 @@ management_api_http:
   - name: MGMT
 metadata:
   platform: vEOS-LAB
+  dc_name: DC1
+  fabric_name: TWODC_5STAGE_CLOS
 prefix_lists:
 - name: PL-LOOPBACKS-EVPN-OVERLAY
   sequence_numbers:

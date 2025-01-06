@@ -40,6 +40,7 @@ management_interfaces:
   gateway: 192.168.200.1
 metadata:
   platform: vEOS-LAB
+  fabric_name: EOS_DESIGNS_UNIT_TESTS
 port_channel_interfaces:
 - name: Port-Channel1
   description: L2_EVPN_MULTICAST_L3LEAF1_Port-Channel6
