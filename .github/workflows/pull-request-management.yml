@@ -324,170 +324,6 @@ jobs:
   # Ansible tests
   # ----------------------------------- #
 
-  # python_requirements:
-  #   name: Install and cache Python requirements
-  #   runs-on: ubuntu-latest
-  #   needs: [file-changes]
-  #   if: needs.file-changes.outputs.requirements == 'true'
-  #   strategy:
-  #     fail-fast: true
-  #     matrix:
-  #       python_version:
-  #         - "3.10"
-  #         - "3.11"
-  #         - "3.12"
-  #         - "3.13"
-  #   steps:
-  #     - uses: actions/checkout@v4
-
-  #     # Set up Python version
-  #     - name: Set up Python ${{ matrix.python_version }}
-  #       uses: actions/setup-python@v5
-  #       with:
-  #         python-version: ${{ matrix.python_version }}
-  #         cache: pip
-
-  #     # Restore cache for requirements-ci.txt
-  #     - name: Restore cache for requirements-ci.txt
-  #       uses: actions/cache@v3
-  #       with:
-  #         path: ~/.cache/pip
-  #         key: ${{ runner.os }}-pip-requirements-ci-${{ hashFiles('.github/requirements-ci.txt') }}-${{ matrix.python_version }}
-
-  #     # Restore cache for requirements-dev.txt
-  #     - name: Restore cache for requirements-dev.txt
-  #       uses: actions/cache@v3
-  #       with:
-  #         path: ~/.cache/pip
-  #         key: ${{ runner.os }}-pip-requirements-dev-${{ hashFiles('ansible_collections/arista/avd/requirements-dev.txt') }}-${{ matrix.python_version }}
-
-  #     # Restore cache for ansible-core
-  #     - name: Restore cache for ansible-core
-  #       uses: actions/cache@v3
-  #       with:
-  #         path: ~/.cache/ansible
-  #         key: ${{ runner.os }}-pip-ansible-core-${{ matrix.python_version }}
-
-  #     - name: Install ansible requirements
-  #       run: |
-  #         pip install "ansible-core<2.19.0" --upgrade
-
-  #     # Install Python requirements (both requirements files)
-  #     - name: Install Python requirements
-  #       run: |
-  #         pip install -r .github/requirements-ci.txt --upgrade
-  #         pip install -r ansible_collections/arista/avd/requirements-dev.txt --upgrade
-
-  # ansible_test_sanity:
-  #   name: Run ansible-test sanity validation
-  #   runs-on: ubuntu-latest
-  #   needs: [python_requirements, file-changes]
-  #   steps:
-  #     - uses: actions/checkout@v4
-  #     - name: Set up Python 3
-  #       uses: actions/setup-python@v5
-  #       with:
-  #         python-version: |
-  #           3.10
-  #           3.11
-  #           3.12
-  #           3.13
-
-  #     # - name: Restore cache for requirements-ci.txt
-  #     #   uses: actions/cache@v3
-  #     #   with:
-  #     #     path: ~/.cache/pip
-  #     #     key: ${{ runner.os }}-pip-requirements-ci-${{ hashFiles('.github/requirements-ci.txt') }}-${{ matrix.python_version }}
-  #     #     restore-keys: |
-  #     #       ${{ runner.os }}-pip-requirements-ci-${{ hashFiles('.github/requirements-ci.txt') }}-3.10
-  #     #       ${{ runner.os }}-pip-requirements-ci-${{ hashFiles('.github/requirements-ci.txt') }}-3.11
-  #     #       ${{ runner.os }}-pip-requirements-ci-${{ hashFiles('.github/requirements-ci.txt') }}-3.12
-  #     #       ${{ runner.os }}-pip-requirements-ci-${{ hashFiles('.github/requirements-ci.txt') }}-3.13
-
-  #     # - name: Restore cache for ansible-core<2.19.0
-  #     #   uses: actions/cache@v3
-  #     #   with:
-  #     #     path: ~/.cache/ansible
-  #     #     key: ${{ runner.os }}-pip-ansible-core-${{ matrix.python_version }}
-  #     #     restore-keys: |
-  #     #       ${{ runner.os }}-pip-ansible-core-3.10
-  #     #       ${{ runner.os }}-pip-ansible-core-3.11
-  #     #       ${{ runner.os }}-pip-ansible-core-3.12
-  #     #       ${{ runner.os }}-pip-ansible-core-3.13
-
-  #     - name: 'Run ansible-test sanity'
-  #       run: |
-  #         cd ansible_collections/arista/avd/
-  #         ansible-test sanity --color yes -v
-
-  # ansible_test_integration:
-  #   name: Run ansible-test integration test cases
-  #   runs-on: ubuntu-latest
-  #   needs: [ python_requirements, file-changes ]
-  #   steps:
-  #     - uses: actions/checkout@v4
-  #     - name: Set up Python 3
-  #       uses: actions/setup-python@v5
-  #       with:
-  #         python-version: |
-  #           3.12
-  #           3.13
-  #     - name: Restore cache for requirements-ci.txt
-  #       uses: actions/cache@v3
-  #       with:
-  #         path: ~/.cache/pip
-  #         key: ${{ runner.os }}-pip-requirements-ci-${{ hashFiles('.github/requirements-ci.txt') }}-3.13
-  #         restore-keys: |
-  #           ${{ runner.os }}-pip-requirements-ci-${{ hashFiles('.github/requirements-ci.txt') }}-3.12
-  #           ${{ runner.os }}-pip-requirements-ci-${{ hashFiles('.github/requirements-ci.txt') }}-3.13
-
-  #     - name: Restore cache for ansible-core<2.19.0
-  #       uses: actions/cache@v3
-  #       with:
-  #         path: ~/.cache/ansible
-  #         key: ${{ runner.os }}-pip-ansible-core-3.13
-  #         restore-keys: |
-  #           ${{ runner.os }}-pip-ansible-core-3.12
-  #           ${{ runner.os }}-pip-ansible-core-3.13
-
-  #     # # Restore dependencies cache
-  #     # - name: Restore dependencies cache
-  #     #   uses: actions/cache@v3
-  #     #   with:
-  #     #     path: ~/.cache/pip
-  #     #     key: ${{ runner.os }}-pip-requirements-${{ hashFiles('.github/requirements-ci.txt') }}-${{ matrix.python_version }}
-  #     #     restore-keys: |
-  #     #       ${{ runner.os }}-pip-requirements-
-
-  #     # Check dependencies without installation
-  #     - name: Check Python requirements (dry-run)
-  #       run: |
-  #         pip install --cache-dir ~/.cache/pip -r .github/requirements-ci.txt --upgrade --dry-run
-
-  #     - name: Check ansible requirements (dry-run)
-  #       run: |
-  #         pip install --cache-dir ~/.cache/ansible -r ansible-core<2.19.0 --upgrade --dry-run
-
-  #     # Install dependencies if needed
-  #     - name: Install Python requirements
-  #       if: failure()  # Runs only if the dry-run step fails
-  #       run: |
-  #         pip install --cache-dir ~/.cache/pip -r .github/requirements-ci.txt --upgrade
-
-  #     - name: Print pip list
-  #       run: |
-  #         echo "Installed Python packages for Python version ${{ matrix.python_version }}:"
-  #         pip list
-
-  #     # - name: 'Install Python requirements'
-  #     #   run: |
-  #     #     pip install "ansible-core<2.19.0" -r .github/requirements-ci.txt --upgrade
-
-  #     - name: 'Run ansible-test integration test cases'
-  #       run: |
-  #         cd ansible_collections/arista/avd/
-  #         ansible-test integration -vv
-
   install_dependencies:
     name: Install dependencies
     runs-on: ubuntu-latest
@@ -674,58 +510,56 @@ jobs:
         run: |
           cd ansible_collections/arista/avd/
           ansible-lint --force-color --strict -v
-  # # ----------------------------------- #
-  # # Galaxy Importer
-  # # ----------------------------------- #
-  # galaxy_importer:
-  #   name: Test galaxy-importer
-  #   runs-on: ubuntu-20.04 # Older version to be compatible with old python
-  #   env:
-  #     GALAXY_IMPORTER_CONFIG: galaxy-importer/galaxy-importer.cfg
-  #   steps:
-  #     - uses: actions/checkout@v4
-  #     - uses: actions/setup-python@v5
-  #       with:
-  #         python-version: |
-  #           3.10
-  #         cache: 'pip'
-  #         check-latest: true
-  #     - name: 'Install Python & Ansible requirements'
-  #       run: |
-  #         pip install "ansible-core<2.19.0" -r .github/requirements-ci.txt --upgrade
-  #     - name: Cache Ansible Galaxy Collections
-  #       uses: actions/cache@v3
-  #       with:
-  #         path: ~/.ansible/collections
-  #         key: ansible-galaxy-${{ hashFiles('ansible_collections/arista/avd/collections.yml') }}
-  #         restore-keys: |
-  #           ansible-galaxy-
-  #     - name: Install Ansible Galaxy Collections
-  #       run: ansible-galaxy collection install -r ansible_collections/arista/avd/collections.yml
+  # ----------------------------------- #
+  # Galaxy Importer
+  # ----------------------------------- #
+  galaxy_importer:
+    name: Test galaxy-importer
+    runs-on: ubuntu-20.04 # Older version to be compatible with old python
+    needs: [ install_dependencies ]
+    env:
+      GALAXY_IMPORTER_CONFIG: galaxy-importer/galaxy-importer.cfg
+    steps:
+      - uses: actions/setup-python@v5
+        with:
+          python-version: |
+            3.10
+      - uses: actions/checkout@v4
+      - name: Download wheel artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: pyavd-wheel
+          path: ./artifacts
+      - name: 'Install Python & Ansible requirements'
+        run: |
+          pip install "ansible-core<2.19.0" --upgrade
+          pip install ./artifacts/pyavd-5.2.0.dev2-py3-none-any.whl
 
-  #     - name: Cache galaxy-importer
-  #       id: cache-galaxy-importer
-  #       uses: actions/cache@v3
-  #       with:
-  #         path: ~/.cache/pip
-  #         key: pip-galaxy-importer-${{ runner.os }}-galaxy-importer-0.4.25
-  #         restore-keys: |
-  #           pip-galaxy-importer-${{ runner.os }}-
-
-  #     - name: Install galaxy-importer
-  #       # Install the specific version of galaxy-importer used on galaxy.ansible.com
-  #       # The version conflicts with our requirements,
-  #       # so we let the galaxy-importer version resolve remaining requirements.
-  #       run: |
-  #         pip install "galaxy-importer==0.4.25"
-  #     - name: 'Build ansible package'
-  #       run: make collection-build
-  #     - name: 'Run galaxy-importer checks'
-  #       run: python -m galaxy_importer.main *.tar.gz
-  #     - uses: actions/upload-artifact@v4
-  #       with:
-  #         name: importer-logs
-  #         path: ./importer_result.json
+      - name: Cache Ansible Galaxy Collections
+        uses: actions/cache@v3
+        with:
+          path: ~/.ansible/collections
+          key: ansible-galaxy-${{ hashFiles('ansible_collections/arista/avd/collections.yml') }}
+          restore-keys: |
+            ansible-galaxy-
+  
+      - name: Install Ansible Galaxy Collections
+        run: ansible-galaxy collection install -r ansible_collections/arista/avd/collections.yml
+      
+      - name: Install galaxy-importer
+        # Install the specific version of galaxy-importer used on galaxy.ansible.com
+        # The version conflicts with our requirements,
+        # so we let the galaxy-importer version resolve remaining requirements.
+        run: |
+          pip install "galaxy-importer==0.4.26"
+      - name: 'Build ansible package'
+        run: make collection-build
+      - name: 'Run galaxy-importer checks'
+        run: python -m galaxy_importer.main *.tar.gz
+      - uses: actions/upload-artifact@v4
+        with:
+          name: importer-logs
+          path: ./importer_result.json
 
   # ----------------------------------- #
   # Test of pyavd
