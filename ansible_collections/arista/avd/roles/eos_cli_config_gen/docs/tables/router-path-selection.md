@@ -64,7 +64,7 @@
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;direction</samp>](## "router_path_selection.tcp_mss_ceiling.direction") | String |  | `ingress` | Valid Values:<br>- <code>ingress</code> | Enforce on packets through DPS tunnel for a specific direction.<br>Only 'ingress' direction is supported. |
     | [<samp>&nbsp;&nbsp;interfaces</samp>](## "router_path_selection.interfaces") | List, items: Dictionary |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;name</samp>](## "router_path_selection.interfaces.[].name") | String | Required, Unique |  |  |  |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;metric_bandwidth</samp>](## "router_path_selection.interfaces.[].metric_bandwidth") | Dictionary |  |  |  | Allow maximum metric bandwidth. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;metric_bandwidth</samp>](## "router_path_selection.interfaces.[].metric_bandwidth") | Dictionary |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;receive</samp>](## "router_path_selection.interfaces.[].metric_bandwidth.receive") | Integer |  |  | Min: 1<br>Max: 4294967295 | Maximum receive bandwidth in Mbps. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;transmit</samp>](## "router_path_selection.interfaces.[].metric_bandwidth.transmit") | Integer |  |  | Min: 1<br>Max: 4294967295 | Maximum transmit bandwidth in Mbps. |
 
@@ -207,8 +207,6 @@
         direction: <str; "ingress"; default="ingress">
       interfaces:
         - name: <str; required; unique>
-
-          # Allow maximum metric bandwidth.
           metric_bandwidth:
 
             # Maximum receive bandwidth in Mbps.

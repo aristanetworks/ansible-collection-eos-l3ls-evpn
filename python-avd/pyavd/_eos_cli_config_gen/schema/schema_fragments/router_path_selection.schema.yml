@@ -265,7 +265,6 @@ keys:
             name:
               type: str
             metric_bandwidth:
-              description: Allow maximum metric bandwidth.
               type: dict
               keys:
                 receive:

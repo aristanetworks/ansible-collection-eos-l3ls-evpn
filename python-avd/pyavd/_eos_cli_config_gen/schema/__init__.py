@@ -61209,11 +61209,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             _fields: ClassVar[dict] = {"name": {"type": str}, "metric_bandwidth": {"type": MetricBandwidth}, "_custom_data": {"type": dict}}
             name: str
             metric_bandwidth: MetricBandwidth
-            """
-            Allow maximum metric bandwidth.
-
-            Subclass of AvdModel.
-            """
+            """Subclass of AvdModel."""
             _custom_data: dict[str, Any]
 
             if TYPE_CHECKING:
@@ -61233,10 +61229,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                     Args:
                         name: name
-                        metric_bandwidth:
-                           Allow maximum metric bandwidth.
-
-                           Subclass of AvdModel.
+                        metric_bandwidth: Subclass of AvdModel.
                         _custom_data: _custom_data
 
                     """
