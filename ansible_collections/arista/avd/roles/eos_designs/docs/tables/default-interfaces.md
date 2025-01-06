@@ -18,6 +18,7 @@
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;&lt;str&gt;</samp>](## "default_interfaces.[].mlag_interfaces.[]") | String |  |  |  | Interface range or interface. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;downlink_interfaces</samp>](## "default_interfaces.[].downlink_interfaces") | List, items: String |  |  |  | List of downlink interfaces or downlink interface ranges. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;&lt;str&gt;</samp>](## "default_interfaces.[].downlink_interfaces.[]") | String |  |  |  | Interface range or interface. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;uplink_interface_speed</samp>](## "default_interfaces.[].uplink_interface_speed") | String |  |  |  | Set point-to-Point uplink interface speed. |
 
 === "YAML"
 
@@ -53,4 +54,7 @@
 
             # Interface range or interface.
           - <str>
+
+        # Set point-to-Point uplink interface speed.
+        uplink_interface_speed: <str>
     ```

@@ -127,6 +127,7 @@ management_interfaces:
   gateway: 192.168.200.5
 metadata:
   platform: 7280SR
+  fabric_name: MPLS_CORE
 mpls:
   ip: true
   ldp:

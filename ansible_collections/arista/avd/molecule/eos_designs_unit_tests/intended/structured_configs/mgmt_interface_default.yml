@@ -58,6 +58,8 @@ management_interfaces:
   ip_address: 1.1.1.2
   type: oob
   gateway: 1.1.1.1
+metadata:
+  fabric_name: EOS_DESIGNS_UNIT_TESTS
 ntp:
   local_interface:
     name: Management1

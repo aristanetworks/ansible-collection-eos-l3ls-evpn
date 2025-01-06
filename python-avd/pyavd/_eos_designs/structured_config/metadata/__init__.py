@@ -58,5 +58,9 @@ class AvdStructuredConfigMetadata(StructuredConfigGenerator, CvTagsMixin, CvPath
             "system_mac_address": self.shared_utils.system_mac_address,
             "cv_tags": self._cv_tags(),
             "cv_pathfinder": self._cv_pathfinder(),
+            "rack": self.shared_utils.node_config.rack,
+            "pod_name": self.inputs.pod_name,
+            "dc_name": self.inputs.dc_name,
+            "fabric_name": self.shared_utils.fabric_name,
         }
         return strip_empties_from_dict(metadata) or None

@@ -39,6 +39,8 @@ management_interfaces:
   vrf: default
   ip_address: 192.168.0.2/24
   type: oob
+metadata:
+  fabric_name: EOS_DESIGNS_UNIT_TESTS
 service_routing_protocols_model: multi-agent
 snmp_server:
   local_interfaces:

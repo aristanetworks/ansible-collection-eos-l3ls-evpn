@@ -94,6 +94,7 @@ ethernet_interfaces:
 - name: Ethernet18
   description: P2P_LINK_TO_MLAG-OSPF-L3LEAF1A_Ethernet1
   shutdown: false
+  speed: forced 40gfull
   mtu: 1500
   ip_address: 10.10.101.6/31
   peer: MLAG-OSPF-L3LEAF1A
@@ -104,6 +105,7 @@ ethernet_interfaces:
 - name: Ethernet19
   description: P2P_LINK_TO_MH-LEAF1A_Ethernet1
   shutdown: false
+  speed: forced 40gfull
   mtu: 1500
   ip_address: 10.10.101.0/31
   peer: MH-LEAF1A
@@ -114,6 +116,7 @@ ethernet_interfaces:
 - name: Ethernet20
   description: P2P_LINK_TO_MH-LEAF1B_Ethernet1
   shutdown: false
+  speed: forced 40gfull
   mtu: 1500
   ip_address: 10.10.101.2/31
   peer: MH-LEAF1B
@@ -124,6 +127,7 @@ ethernet_interfaces:
 - name: Ethernet21
   description: P2P_LINK_TO_MH-LEAF2A_Ethernet1
   shutdown: false
+  speed: forced 40gfull
   mtu: 1500
   ip_address: 10.10.101.4/31
   peer: MH-LEAF2A
@@ -222,6 +226,7 @@ ethernet_interfaces:
 - name: Ethernet220
   description: P2P_LINK_TO_MLAG-OSPF-L3LEAF1B_Ethernet1
   shutdown: false
+  speed: forced 40gfull
   mtu: 1500
   ip_address: 10.10.101.8/31
   peer: MLAG-OSPF-L3LEAF1B
@@ -275,6 +280,7 @@ management_interfaces:
   gateway: 192.168.200.5
 metadata:
   platform: 7050SX3
+  fabric_name: EOS_DESIGNS_UNIT_TESTS
 ntp:
   local_interface:
     name: Management1
