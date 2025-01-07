@@ -3692,9 +3692,6 @@ keys:
     type: str
     convert_types:
     - int
-  service_unsupported_transceiver:
-    type: dict
-    $ref: eos_cli_config_gen#/keys/service_unsupported_transceiver
   sflow_settings:
     documentation_options:
       table: management-sflow-settings
@@ -4562,6 +4559,9 @@ keys:
     - isis-ldp
     - isis-sr-ldp
     - none
+  unsupported_transceiver:
+    type: dict
+    $ref: eos_cli_config_gen#/keys/service_unsupported_transceiver
   uplink_ptp:
     documentation_options:
       table: fabric-settings

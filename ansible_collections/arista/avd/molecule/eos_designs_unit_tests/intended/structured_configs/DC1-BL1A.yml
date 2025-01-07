@@ -786,3 +786,6 @@ vxlan_interface:
         vni: 31
       - name: TENANT_D_WAN_ZONE
         vni: 42
+unsupported_transceiver:
+  license_name: key1
+  license_key: dsafDSFfvadskjh3424
