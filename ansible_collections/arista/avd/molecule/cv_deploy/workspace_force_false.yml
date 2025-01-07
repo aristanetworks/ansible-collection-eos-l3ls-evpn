@@ -17,6 +17,7 @@
 
   tasks:
     - name: "{{ test_id | upper }} Banner"
+      tags: ["{{ test_id }}"]
       run_once: true
       ansible.builtin.debug:
         msg:
@@ -25,21 +26,25 @@
           - "######################################################################"
 
     - name: "{{ test_id | upper }} Generate random string"
+      tags: ["{{ test_id }}"]
       ansible.builtin.set_fact:
         r: "{{ lookup('password', '/dev/null chars=ascii_lowercase,digits length=4') }}"
       run_once: true
 
     - name: "{{ test_id | upper }} Dynamically add inactive device avd-ci-core1 to group INACTIVE"
+      tags: ["{{ test_id }}"]
       run_once: true
       ansible.legacy.add_host:
         name: avd-ci-core1
         groups: INACTIVE
 
     - name: "{{ test_id | upper }} Provision with cv_submit_workspace_force = false"
+      tags: ["{{ test_id }}"]
       run_once: true
       delegate_to: localhost
       block:
         - name: Trigger errors
+          tags: ["{{ test_id }}"]
           ansible.builtin.import_role:
             name: arista.avd.cv_deploy
           vars:
@@ -52,11 +57,13 @@
             cv_submit_workspace_force: false
       rescue:
         - name: "{{ test_id | upper }} Display CVP result"
+          tags: ["{{ test_id }}"]
           run_once: true
           ansible.builtin.debug:
             msg: '{{ cv_deploy_results }}'
 
         - name: "{{ test_id | upper }} Check CVP returns"
+          tags: ["{{ test_id }}"]
           run_once: true
           ansible.builtin.assert:
             that:
@@ -64,6 +71,7 @@
               - "'Failed to submit workspace' in cv_deploy_results.errors[0]"
 
     - name: "{{ test_id | upper }} Cleanup orphan workspace"
+      tags: ["{{ test_id }}"]
       run_once: true
       ansible.legacy.uri:
         url: https://{{ cv_server }}/api/resources/workspace/v1/WorkspaceConfig/some
@@ -99,6 +107,7 @@
       when: cv_deploy_results.workspace.id is not none and cv_deploy_results.workspace.id | length > 0
 
     - name: "{{ test_id | upper }}  Cleanup"
+      tags: ["{{ test_id }}"]
       run_once: true
       delegate_to: localhost
       ansible.builtin.import_role:
@@ -117,4 +126,5 @@
 
     # Clear failed state of failed hosts for next engaged playbook (no impact within running playbook)
     - name: Reset ansible_play_hosts for next playbook (no impact within running playbook)
+      tags: ["{{ test_id }}"]
       ansible.builtin.meta: clear_host_errors

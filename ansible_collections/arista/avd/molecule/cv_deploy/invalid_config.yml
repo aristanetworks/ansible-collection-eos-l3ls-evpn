@@ -17,6 +17,7 @@
 
   tasks:
     - name: "{{ test_id | upper }} Banner"
+      tags: ["{{ test_id }}"]
       run_once: true
       ansible.builtin.debug:
         msg:
@@ -25,15 +26,18 @@
           - "######################################################################"
 
     - name: "{{ test_id | upper }} Generate random string"
+      tags: ["{{ test_id }}"]
       run_once: true
       ansible.builtin.set_fact:
         r: "{{ lookup('password', '/dev/null chars=ascii_lowercase,digits length=4') }}"
 
     - name: "{{ test_id | upper }} Build Workspace with default errors and warnings handling"
+      tags: ["{{ test_id }}"]
       run_once: true
       delegate_to: localhost
       block:
         - name: Trigger errors by building WS with EOS CLI errors
+          tags: ["{{ test_id }}"]
           ansible.builtin.import_role:
             name: arista.avd.cv_deploy
           vars:
@@ -46,11 +50,13 @@
             cv_submit_workspace: false
       rescue:
         - name: "{{ test_id | upper }} Display CVP result with default errors and warnings handling"
+          tags: ["{{ test_id }}"]
           run_once: true
           ansible.builtin.debug:
             msg: '{{ cv_deploy_results }}'
 
         - name: "{{ test_id | upper }} Check CVP returns with default errors and warnings handling"
+          tags: ["{{ test_id }}"]
           run_once: true
           ansible.builtin.assert:
             that:
@@ -106,6 +112,7 @@
                 list | length == 3
       always:
         - name: "{{ test_id | upper }} Cleanup orphan workspace with default errors and warnings handling"
+          tags: ["{{ test_id }}"]
           run_once: true
           ansible.legacy.uri:
             url: https://{{ cv_server }}/api/resources/workspace/v1/WorkspaceConfig/some
@@ -141,10 +148,12 @@
           when: cv_deploy_results.workspace.id is not none and cv_deploy_results.workspace.id | length > 0
 
     - name: "{{ test_id | upper }} Build Workspace with portfast warning suppressed by knob"
+      tags: ["{{ test_id }}"]
       run_once: true
       delegate_to: localhost
       block:
         - name: Trigger errors by building WS with EOS CLI errors
+          tags: ["{{ test_id }}"]
           ansible.builtin.import_role:
             name: arista.avd.cv_deploy
           vars:
@@ -158,11 +167,13 @@
             cv_workspace_build_warnings_suppress_portfast: true
       rescue:
         - name: "{{ test_id | upper }} Display CVP result with portfast warning suppressed by knob"
+          tags: ["{{ test_id }}"]
           run_once: true
           ansible.builtin.debug:
             msg: '{{ cv_deploy_results }}'
 
         - name: "{{ test_id | upper }} Check CVP returns with portfast warning suppressed by knob"
+          tags: ["{{ test_id }}"]
           run_once: true
           ansible.builtin.assert:
             that:
@@ -209,6 +220,7 @@
                 list | length == 1
       always:
         - name: "{{ test_id | upper }} Cleanup orphan workspace with portfast warning suppressed by knob"
+          tags: ["{{ test_id }}"]
           run_once: true
           ansible.legacy.uri:
             url: https://{{ cv_server }}/api/resources/workspace/v1/WorkspaceConfig/some
@@ -244,10 +256,12 @@
           when: cv_deploy_results.workspace.id is not none and cv_deploy_results.workspace.id | length > 0
 
     - name: "{{ test_id | upper }} Build Workspace with manually suppressed warning"
+      tags: ["{{ test_id }}"]
       run_once: true
       delegate_to: localhost
       block:
         - name: Trigger errors by building WS with EOS CLI errors
+          tags: ["{{ test_id }}"]
           ansible.builtin.import_role:
             name: arista.avd.cv_deploy
           vars:
@@ -262,11 +276,13 @@
               - ".*! /32 IPv4 address is not [a-z]+ on the.*"
       rescue:
         - name: "{{ test_id | upper }} Display CVP result with manually suppressed warning"
+          tags: ["{{ test_id }}"]
           run_once: true
           ansible.builtin.debug:
             msg: '{{ cv_deploy_results }}'
 
         - name: "{{ test_id | upper }} Check CVP returns with manually suppressed warning"
+          tags: ["{{ test_id }}"]
           run_once: true
           ansible.builtin.assert:
             that:
@@ -315,6 +331,7 @@
                 list | length == 2
       always:
         - name: "{{ test_id | upper }} Cleanup orphan workspace with manually suppressed warning"
+          tags: ["{{ test_id }}"]
           run_once: true
           ansible.legacy.uri:
             url: https://{{ cv_server }}/api/resources/workspace/v1/WorkspaceConfig/some
@@ -350,10 +367,12 @@
           when: cv_deploy_results.workspace.id is not none and cv_deploy_results.workspace.id | length > 0
 
     - name: "{{ test_id | upper }} Build Workspace with two manually suppressed warnings"
+      tags: ["{{ test_id }}"]
       run_once: true
       delegate_to: localhost
       block:
         - name: Trigger errors by building WS with EOS CLI errors
+          tags: ["{{ test_id }}"]
           ansible.builtin.import_role:
             name: arista.avd.cv_deploy
           vars:
@@ -371,11 +390,13 @@
                 to this interface when portfast is enabled can cause temporary bridging loops.*
       rescue:
         - name: "{{ test_id | upper }} Display CVP result with two manually suppressed warnings"
+          tags: ["{{ test_id }}"]
           run_once: true
           ansible.builtin.debug:
             msg: '{{ cv_deploy_results }}'
 
         - name: "{{ test_id | upper }} Check CVP returns with two manually suppressed warnings"
+          tags: ["{{ test_id }}"]
           run_once: true
           ansible.builtin.assert:
             that:
@@ -415,6 +436,7 @@
                 list | length == 0
       always:
         - name: "{{ test_id | upper }} Cleanup orphan workspace with two manually suppressed warnings"
+          tags: ["{{ test_id }}"]
           run_once: true
           ansible.legacy.uri:
             url: https://{{ cv_server }}/api/resources/workspace/v1/WorkspaceConfig/some
@@ -450,10 +472,12 @@
           when: cv_deploy_results.workspace.id is not none and cv_deploy_results.workspace.id | length > 0
 
     - name: "{{ test_id | upper }} Build Workspace with mix of manual and knob-based suppressed warnings"
+      tags: ["{{ test_id }}"]
       run_once: true
       delegate_to: localhost
       block:
         - name: Trigger errors by building WS with EOS CLI errors
+          tags: ["{{ test_id }}"]
           ansible.builtin.import_role:
             name: arista.avd.cv_deploy
           vars:
@@ -469,11 +493,13 @@
             cv_workspace_build_warnings_suppress_portfast: true
       rescue:
         - name: "{{ test_id | upper }} Display CVP result with mix of manual and knob-based suppressed warnings"
+          tags: ["{{ test_id }}"]
           run_once: true
           ansible.builtin.debug:
             msg: '{{ cv_deploy_results }}'
 
         - name: "{{ test_id | upper }} Check CVP returns with mix of manual and knob-based suppressed warnings"
+          tags: ["{{ test_id }}"]
           run_once: true
           ansible.builtin.assert:
             that:
@@ -513,6 +539,7 @@
                 list | length == 0
       always:
         - name: "{{ test_id | upper }} Cleanup orphan workspace with mix of manual and knob-based suppressed warnings"
+          tags: ["{{ test_id }}"]
           run_once: true
           ansible.legacy.uri:
             url: https://{{ cv_server }}/api/resources/workspace/v1/WorkspaceConfig/some
@@ -548,10 +575,12 @@
           when: cv_deploy_results.workspace.id is not none and cv_deploy_results.workspace.id | length > 0
 
     - name: "{{ test_id | upper }} Build Workspace with invalid regex suppression pattern"
+      tags: ["{{ test_id }}"]
       run_once: true
       delegate_to: localhost
       block:
         - name: Trigger errors by building WS with EOS CLI errors
+          tags: ["{{ test_id }}"]
           ansible.builtin.import_role:
             name: arista.avd.cv_deploy
           vars:
@@ -566,11 +595,13 @@
               - r"^! /32 IPv4 address is not configured on the interface\z$"
       rescue:
         - name: "{{ test_id | upper }} Display CVP result with invalid regex suppression pattern"
+          tags: ["{{ test_id }}"]
           run_once: true
           ansible.builtin.debug:
             msg: '{{ cv_deploy_results }}'
 
         - name: "{{ test_id | upper }} Check CVP returns with invalid regex suppression pattern"
+          tags: ["{{ test_id }}"]
           run_once: true
           ansible.builtin.assert:
             that:
@@ -626,6 +657,7 @@
                 list | length == 3
       always:
         - name: "{{ test_id | upper }} Cleanup orphan workspace with invalid regex suppression pattern"
+          tags: ["{{ test_id }}"]
           run_once: true
           ansible.legacy.uri:
             url: https://{{ cv_server }}/api/resources/workspace/v1/WorkspaceConfig/some
@@ -661,10 +693,12 @@
           when: cv_deploy_results.workspace.id is not none and cv_deploy_results.workspace.id | length > 0
 
     - name: "{{ test_id | upper }} Build Workspace with portfast warning suppressed by both knob and regex pattern"
+      tags: ["{{ test_id }}"]
       run_once: true
       delegate_to: localhost
       block:
         - name: Trigger errors by building WS with EOS CLI errors
+          tags: ["{{ test_id }}"]
           ansible.builtin.import_role:
             name: arista.avd.cv_deploy
           vars:
@@ -680,11 +714,13 @@
             cv_workspace_build_warnings_suppress_portfast: true
       rescue:
         - name: "{{ test_id | upper }} Display CVP result with portfast warning suppressed by both knob and regex pattern"
+          tags: ["{{ test_id }}"]
           run_once: true
           ansible.builtin.debug:
             msg: '{{ cv_deploy_results }}'
 
         - name: "{{ test_id | upper }} Check CVP returns with portfast warning suppressed by both knob and regex pattern"
+          tags: ["{{ test_id }}"]
           run_once: true
           ansible.builtin.assert:
             that:
@@ -731,6 +767,7 @@
                 list | length == 1
       always:
         - name: "{{ test_id | upper }} Cleanup orphan workspace with portfast warning suppressed by both knob and regex pattern"
+          tags: ["{{ test_id }}"]
           run_once: true
           ansible.legacy.uri:
             url: https://{{ cv_server }}/api/resources/workspace/v1/WorkspaceConfig/some
@@ -766,10 +803,12 @@
           when: cv_deploy_results.workspace.id is not none and cv_deploy_results.workspace.id | length > 0
 
     - name: "{{ test_id | upper }} Build Workspace with suppressed warnings"
+      tags: ["{{ test_id }}"]
       run_once: true
       delegate_to: localhost
       block:
         - name: Trigger errors by building WS with EOS CLI errors
+          tags: ["{{ test_id }}"]
           ansible.builtin.import_role:
             name: arista.avd.cv_deploy
           vars:
@@ -783,11 +822,13 @@
             cv_workspace_build_warnings_enabled: false
       rescue:
         - name: "{{ test_id | upper }} Display CVP result with suppressed warnings"
+          tags: ["{{ test_id }}"]
           run_once: true
           ansible.builtin.debug:
             msg: '{{ cv_deploy_results }}'
 
         - name: "{{ test_id | upper }} Check CVP returns with suppressed warnings"
+          tags: ["{{ test_id }}"]
           run_once: true
           ansible.builtin.assert:
             that:
@@ -827,6 +868,7 @@
                 list | length == 0
       always:
         - name: "{{ test_id | upper }} Cleanup orphan workspace with suppressed warnings"
+          tags: ["{{ test_id }}"]
           run_once: true
           ansible.legacy.uri:
             url: https://{{ cv_server }}/api/resources/workspace/v1/WorkspaceConfig/some
@@ -862,6 +904,7 @@
           when: cv_deploy_results.workspace.id is not none and cv_deploy_results.workspace.id | length > 0
 
     - name: "{{ test_id | upper }}  Cleanup"
+      tags: ["{{ test_id }}"]
       run_once: true
       delegate_to: localhost
       ansible.builtin.import_role:
@@ -880,4 +923,5 @@
 
     # Clear failed state of failed hosts for next engaged playbook (no impact within running playbook)
     - name: Reset ansible_play_hosts for next playbook (no impact within running playbook)
+      tags: ["{{ test_id }}"]
       ansible.builtin.meta: clear_host_errors

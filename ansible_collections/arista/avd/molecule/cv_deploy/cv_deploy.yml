@@ -17,6 +17,7 @@
 
   tasks:
     - name: "{{ test_id | upper }} Banner"
+      tags: ["{{ test_id }}"]
       run_once: true
       ansible.builtin.debug:
         msg:
@@ -25,11 +26,13 @@
           - "######################################################################"
 
     - name: "{{ test_id | upper }} Generate random string"
+      tags: ["{{ test_id }}"]
       run_once: true
       ansible.builtin.set_fact:
         r: "{{ lookup('password', '/dev/null chars=ascii_lowercase,digits length=4') }}"
 
     - name: "{{ test_id | upper }} Provision CVP with AVD configuration"
+      tags: ["{{ test_id }}"]
       run_once: true
       delegate_to: localhost
       ansible.builtin.import_role:
@@ -44,11 +47,13 @@
         cv_run_change_control: true
 
     - name: "{{ test_id | upper }} Display CVP result"
+      tags: ["{{ test_id }}"]
       run_once: true
       ansible.builtin.debug:
         msg: '{{ cv_deploy_results }}'
 
     - name: "{{ test_id | upper }} Check CVP returns"
+      tags: ["{{ test_id }}"]
       run_once: true
       ansible.builtin.assert:
         that:
@@ -74,6 +79,7 @@
         cv_change_control_description: "{{ (cv_common_pattern + '-' + r + '-converge') | upper }}"
 
     - name: "{{ test_id | upper }} Check tags from output"
+      tags: ["{{ test_id }}"]
       run_once: true
       ansible.builtin.assert:
         that:
@@ -82,12 +88,14 @@
       loop: "{{ cv_deploy_results.deployed_device_tags | zip(cv_deploy_results.device_tags) | list }}"
 
     - name: "{{ test_id | upper }} Extract all device tags from structured configs"
+      tags: ["{{ test_id }}"]
       run_once: true
       ansible.builtin.set_fact:
         expected_device_tags: "{{ intended_tags.metadata.cv_tags.device_tags }}"
         output_device_tags: "{{ cv_deploy_results.deployed_device_tags }}"
 
     - name: "{{ test_id | upper }} Check output device tags == intended device tags"
+      tags: ["{{ test_id }}"]
       run_once: true
       ansible.builtin.assert:
         that:
@@ -96,11 +104,13 @@
       loop: "{{ expected_device_tags | zip(output_device_tags) | list }}"
 
     - name: "{{ test_id | upper }} Extract all interface tags from role output"
+      tags: ["{{ test_id }}"]
       run_once: true
       ansible.builtin.set_fact:
         output_interface_tags: "{{ cv_deploy_results.deployed_interface_tags }}"
 
     - name: "{{ test_id | upper }} Extract all interface tags from structured configs"
+      tags: ["{{ test_id }}"]
       run_once: true
       ansible.builtin.set_fact:
         expected_interface_tags: "{{ expected_interface_tags | default([]) + [item.tags | list | first | combine({'interface': item.interface})] }}"
@@ -109,6 +119,7 @@
         label: "{{ item.interface }}"
 
     - name: "{{ test_id | upper }} Check output interface tags == intended interface tags"
+      tags: ["{{ test_id }}"]
       run_once: true
       ansible.builtin.assert:
         that:
@@ -117,12 +128,14 @@
       loop: "{{ expected_interface_tags | zip(output_interface_tags) | list }}"
 
     - name: "{{ test_id | upper }} Convert unstructed data into yaml"
+      tags: ["{{ test_id }}"]
       run_once: true
       ansible.builtin.set_fact:
         deivces_structure: '{{ cv_deploy_results.deployed_configs | from_yaml }}'
         output_devices: []
 
     - name: "{{ test_id | upper }} Extract devices from output"
+      tags: ["{{ test_id }}"]
       run_once: true
       ansible.builtin.set_fact:
         output_devices: "{{ output_devices + [item.device.hostname] }}"
@@ -131,12 +144,14 @@
         label: "{{ item.configlet_name }}"
 
     - name: "{{ test_id | upper }} Check output devices == intended devices"
+      tags: ["{{ test_id }}"]
       run_once: true
       ansible.builtin.assert:
         that:
           - output_devices == cv_devices
 
     - name: "{{ test_id | upper }} Cleanup"
+      tags: ["{{ test_id }}"]
       run_once: true
       delegate_to: localhost
       ansible.builtin.import_role:
