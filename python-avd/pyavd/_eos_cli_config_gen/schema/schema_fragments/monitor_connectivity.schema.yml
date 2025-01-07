@@ -117,7 +117,7 @@ keys:
                     convert_types:
                       - str
                     min: 36
-                    max: 18024                  
+                    max: 18024
                   local_interfaces:
                     type: str
                   address_only:
