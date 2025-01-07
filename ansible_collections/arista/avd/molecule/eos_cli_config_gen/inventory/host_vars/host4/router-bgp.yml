@@ -12,6 +12,11 @@ router_bgp:
     bgp:
       additional_paths:
         send: ecmp
+  address_family_ipv6:
+    bgp:
+      additional_paths:
+        send: limit
+        send_limit: 20
   address_family_ipv4_labeled_unicast:
     bgp:
       additional_paths:

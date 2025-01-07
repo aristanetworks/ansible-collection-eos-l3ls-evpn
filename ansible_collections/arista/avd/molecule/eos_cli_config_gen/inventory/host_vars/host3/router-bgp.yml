@@ -27,6 +27,9 @@ router_bgp:
         send: limit
         send_limit: 10
   address_family_ipv6:
+    bgp:
+      additional_paths:
+        send: disabled
     redistribute:
       ospfv3:
         enabled: true

@@ -117,6 +117,9 @@ router bgp 65001
    !
    address-family ipv4 labeled-unicast
       bgp additional-paths send limit 10
+   !
+   address-family ipv6
+      bgp additional-paths send limit 20
 ```
 
 ## Multicast

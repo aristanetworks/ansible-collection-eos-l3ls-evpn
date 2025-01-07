@@ -1053,6 +1053,7 @@ ASN Notation: asplain
 
 | Settings | Value |
 | -------- | ----- |
+| Graceful-restart | Enabled |
 
 #### Router BGP Path-Selection Address Family
 
@@ -1102,8 +1103,10 @@ router bgp 65101
    !
    address-family ipv4 labeled-unicast
       bgp additional-paths send any
+      graceful-restart
    !
    address-family ipv4 multicast
+      redistribute ospf match internal route-map AFIPV4M_OSPF_INTERNAL
       redistribute ospfv3 route-map AFIPV4M_OSPFV3
       redistribute ospf match external route-map AFIPV4M_OSPF_EXTERNAL
    !

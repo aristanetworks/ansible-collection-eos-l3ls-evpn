@@ -613,6 +613,7 @@ router_bgp:
         activate: true
         additional_paths:
           send: any
+          prefix_list: AF_IPV6_PG_PL
         route_map_in: RM-HIDE-AS-PATH
         route_map_out: RM-HIDE-AS-PATH
       - name: IPV6-UNDERLAY-MLAG
@@ -840,6 +841,7 @@ router_bgp:
           send: ecmp
           send_limit: 10
         next_hop_unchanged: true
+        graceful_restart: true
         maximum_advertised_routes: 120000
         maximum_advertised_routes_warning_limit: 1000
         missing_policy:
@@ -867,6 +869,10 @@ router_bgp:
         additional_paths:
           send: limit
         next_hop_self_source_interface: Ethernet2
+      - name: PG-BGP-LU4
+        additional_paths:
+          send: limit
+          send_limit: 10
   address_family_link_state:
     bgp:
       missing_policy:

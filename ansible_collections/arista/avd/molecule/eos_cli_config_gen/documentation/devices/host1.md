@@ -7804,6 +7804,7 @@ ASN Notation: asdot
 | PG-BGP-LU1 | False | - | - | RCF_BGP_LU_IN() | RCF_BGP_LU_OUT() |
 | PG-BGP-LU2 | False | - | - | - | - |
 | PG-BGP-LU3 | False | - | - | - | - |
+| PG-BGP-LU4 | False | - | - | - | - |
 
 ##### IPv4 BGP-LU Neighbors
 
@@ -8491,6 +8492,7 @@ router bgp 65101
       neighbor default next-hop-self
       next-hop resolution ribs tunnel-rib colored system-colored-tunnel-rib tunnel-rib test-rib system-connected
       neighbor PG-BGP-LU activate
+      neighbor PG-BGP-LU graceful-restart
       neighbor PG-BGP-LU route-map RM_BGP_LU_IN in
       neighbor PG-BGP-LU route-map RM_BGP_LU_OUT out
       neighbor PG-BGP-LU additional-paths send ecmp limit 10
@@ -8511,6 +8513,8 @@ router bgp 65101
       neighbor PG-BGP-LU2 next-hop-self v4-mapped-v6 source-interface Ethernet1
       no neighbor PG-BGP-LU3 activate
       neighbor PG-BGP-LU3 next-hop-self source-interface Ethernet2
+      no neighbor PG-BGP-LU4 activate
+      neighbor PG-BGP-LU4 additional-paths send limit 10
       no neighbor 192.168.66.21 activate
       neighbor 192.168.66.21 additional-paths send limit 11
       no neighbor 192.168.66.22 activate
