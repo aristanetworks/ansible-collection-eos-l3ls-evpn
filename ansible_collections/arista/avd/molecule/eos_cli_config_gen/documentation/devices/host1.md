@@ -2844,6 +2844,7 @@ monitor connectivity
          local-interfaces VRF_HOST_SET address-only
          ip 10.10.20.1
          url https://server2.local.com
+         icmp echo size 1300
    !
    vrf yellow
    interval 5
@@ -2871,6 +2872,7 @@ monitor connectivity
       server3_connectivity_monitor
       local-interfaces HOST_SET
       ip 10.10.10.3
+      icmp echo size 1200
    !
    host server4
 ```
