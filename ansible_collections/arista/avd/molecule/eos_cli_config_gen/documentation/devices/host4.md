@@ -8,6 +8,7 @@
   - [TerminAttr Daemon](#terminattr-daemon)
 - [Routing](#routing)
   - [Router ISIS](#router-isis)
+  - [Router BGP](#router-bgp)
 - [Multicast](#multicast)
   - [Router Multicast](#router-multicast)
 
@@ -80,6 +81,42 @@ daemon TerminAttr
 router isis EVPN_UNDERLAY
    authentication mode sha key-id 4 rx-disabled
    !
+```
+
+### Router BGP
+
+ASN Notation: asplain
+
+#### Router BGP Summary
+
+| BGP AS | Router ID |
+| ------ | --------- |
+| 65001 | 192.168.255.3 |
+
+| BGP Tuning |
+| ---------- |
+| graceful-restart-helper long-lived |
+
+#### Router BGP IPv4 Labeled Unicast
+
+##### General Settings
+
+| Settings | Value |
+| -------- | ----- |
+
+#### Router BGP Device Configuration
+
+```eos
+!
+router bgp 65001
+   router-id 192.168.255.3
+   graceful-restart-helper long-lived
+   !
+   address-family ipv4
+      bgp additional-paths send ecmp
+   !
+   address-family ipv4 labeled-unicast
+      bgp additional-paths send limit 10
 ```
 
 ## Multicast

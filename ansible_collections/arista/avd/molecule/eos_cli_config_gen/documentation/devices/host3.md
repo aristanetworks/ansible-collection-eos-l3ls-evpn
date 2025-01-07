@@ -277,6 +277,15 @@ ASN Notation: asplain
 | graceful-restart-helper long-lived |
 | bgp additional-paths send limit 5 |
 
+#### Router BGP EVPN Address Family
+
+#### Router BGP IPv4 Labeled Unicast
+
+##### General Settings
+
+| Settings | Value |
+| -------- | ----- |
+
 #### Router BGP Device Configuration
 
 ```eos
@@ -292,6 +301,15 @@ router bgp 65101.0001
    bgp additional-paths send limit 5
    redistribute ospf include leaked route-map RM-OSPF-TO-BGP
    redistribute static
+   !
+   address-family evpn
+      bgp additional-paths send ecmp limit 10
+   !
+   address-family ipv4
+      bgp additional-paths send limit 10
+   !
+   address-family ipv4 labeled-unicast
+      no bgp additional-paths send
    !
    address-family ipv4 multicast
       redistribute attached-host

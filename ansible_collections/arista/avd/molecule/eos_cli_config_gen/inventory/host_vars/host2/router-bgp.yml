@@ -10,6 +10,8 @@ router_bgp:
     additional_paths:
       receive: false
       send: disabled
+  neighbor_default:
+    send_community: large
   graceful_restart:
     enabled: true
   graceful_restart_helper:

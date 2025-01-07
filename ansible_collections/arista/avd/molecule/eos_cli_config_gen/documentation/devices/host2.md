@@ -1068,6 +1068,7 @@ router bgp 65101
    bgp route-reflector preserve-attributes
    no bgp additional-paths receive
    no bgp additional-paths send
+   neighbor default send-community large
    bgp redistribute-internal
    redistribute connected include leaked route-map RM-CONN-2-BGP
    redistribute isis level-2 include leaked rcf RCF_CONN_2_BGP()

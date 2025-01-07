@@ -20,6 +20,13 @@ router_bgp:
   maximum_paths:
     paths: 32
     ecmp: 32
+  timers:
+    keepalive_time: 300
+    hold_time: 300
+    min_hold_time: 300
+    send_failure_hold_time: 300
+  neighbor_default:
+    send_community: all
   bgp:
     default:
       ipv4_unicast: true
@@ -452,6 +459,7 @@ router_bgp:
       - prefix: 192.168.0.0/16
         route_map: RM-FOO-MATCH
     bgp:
+      redistribute_internal: false
       additional_paths:
         receive: true
         install: true
@@ -766,6 +774,8 @@ router_bgp:
           include_prefix_list: true
           include_sub_route_map: true
       next_hop_unchanged: true
+    neighbor_default:
+      next_hop_self: true
     next_hop_resolution_ribs:
       - rib_type: "tunnel-rib-colored"
       - rib_type: "tunnel-rib"
