@@ -2843,8 +2843,8 @@ monitor connectivity
          server2_connectivity_monitor
          local-interfaces VRF_HOST_SET address-only
          ip 10.10.20.1
-         url https://server2.local.com
          icmp echo size 1300
+         url https://server2.local.com
    !
    vrf yellow
    interval 5
