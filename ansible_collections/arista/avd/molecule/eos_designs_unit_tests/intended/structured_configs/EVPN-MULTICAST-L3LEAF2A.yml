@@ -160,6 +160,7 @@ management_interfaces:
   gateway: 192.168.200.1
 metadata:
   platform: 7050X3
+  fabric_name: EOS_DESIGNS_UNIT_TESTS
 platform:
   trident:
     forwarding_table_partition: flexible exact-match 16384 l2-shared 98304 l3-shared 131072

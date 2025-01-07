@@ -133,6 +133,8 @@ management_interfaces:
   lldp:
     transmit: false
     receive: false
+metadata:
+  fabric_name: WAN
 mlag_configuration:
   domain_id: SITE2
   local_interface: Vlan4094

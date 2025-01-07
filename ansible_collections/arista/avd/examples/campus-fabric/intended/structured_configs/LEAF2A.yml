@@ -10130,6 +10130,7 @@ management_interfaces:
   gateway: 172.16.100.1
 metadata:
   platform: 720XP
+  fabric_name: DC1_FABRIC
 ntp:
   local_interface:
     name: Management0

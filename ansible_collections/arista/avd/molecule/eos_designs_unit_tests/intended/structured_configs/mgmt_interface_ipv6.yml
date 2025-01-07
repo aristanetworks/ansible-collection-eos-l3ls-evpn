@@ -24,6 +24,8 @@ management_interfaces:
   ipv6_address: 0200::105/64
   type: oob
   ipv6_gateway: 0200::2
+metadata:
+  fabric_name: EOS_DESIGNS_UNIT_TESTS
 service_routing_protocols_model: multi-agent
 transceiver_qsfp_default_mode_4x10: true
 vlan_internal_order:

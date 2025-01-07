@@ -133,6 +133,9 @@ management_api_http:
   - name: MGMT
 metadata:
   platform: vEOS-LAB
+  pod_name: DC1_POD1
+  dc_name: DC1
+  fabric_name: TWODC_5STAGE_CLOS
 route_maps:
 - name: RM-EVPN-FILTER-AS65200
   sequence_numbers:

@@ -71,6 +71,8 @@ management_interfaces:
   gateway: 192.168.200.5
 metadata:
   platform: vEOS-LAB
+  rack: rackE
+  fabric_name: DC1_FABRIC
 ntp:
   local_interface:
     name: Management1

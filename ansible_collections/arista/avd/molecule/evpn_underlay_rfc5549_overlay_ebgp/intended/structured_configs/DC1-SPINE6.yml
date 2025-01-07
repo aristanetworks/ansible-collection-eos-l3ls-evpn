@@ -77,6 +77,7 @@ management_interfaces:
   gateway: 192.168.200.5
 metadata:
   platform: 7050X3
+  fabric_name: DC1_FABRIC
 ntp:
   local_interface:
     name: Management1

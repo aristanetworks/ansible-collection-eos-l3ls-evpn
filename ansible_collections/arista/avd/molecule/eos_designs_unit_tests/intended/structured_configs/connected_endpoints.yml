@@ -266,6 +266,7 @@ management_api_http:
   - name: MGMT
 metadata:
   platform: 720XP
+  fabric_name: EOS_DESIGNS_UNIT_TESTS
 port_channel_interfaces:
 - name: Port-Channel1
   description: Port channel description server_OLD_SW-1/2_Po1_ENDPOINT_PORT_CHANNEL_INTERFACE DESCRIPTION SERVER_OLD_SW-1/2_ENDPOINT_PORT_CHANNEL

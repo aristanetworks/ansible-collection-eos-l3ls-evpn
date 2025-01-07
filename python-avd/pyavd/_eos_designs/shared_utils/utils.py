@@ -32,7 +32,7 @@ class UtilsMixin:
 
     def get_peer_facts(self: SharedUtils, peer_name: str, required: bool = True) -> EosDesignsFacts | dict | None:
         """
-        util function to retrieve peer_facts for peer_name.
+        Util function to retrieve peer_facts for peer_name.
 
         returns avd_switch_facts.{peer_name}.switch
 
