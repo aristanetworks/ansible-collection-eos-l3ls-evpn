@@ -421,7 +421,7 @@ class AvdStructuredConfigBase(StructuredConfigGenerator, NtpMixin, SnmpServerMix
         return spanning_tree
 
     @cached_property
-    def unsupported_transceiver(self) -> dict | None:
+    def service_unsupported_transceiver(self) -> dict | None:
         """service_unsupported_transceiver based on unsupported_transceiver data-model."""
         return self.inputs.unsupported_transceiver._as_dict() or None
 
