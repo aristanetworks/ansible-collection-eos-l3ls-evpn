@@ -131,28 +131,34 @@ async def verify_devices_in_topology_studio(existing_devices: list[CVDevice], wo
     """
     existing_device_tuples = {(device.serial_number, device.hostname, device.system_mac_address) for device in existing_devices}
 
-    cv_topology_inputs = await cv_client.get_topology_studio_inputs(
-        workspace_id=workspace_id,
-        device_ids=list({device.serial_number for device in existing_devices}),
-    )
+    cv_studio_topology = await cv_client.get_studio_topology(workspace_id=workspace_id, device_ids=list({device.serial_number for device in existing_devices}))
     LOGGER.info("verify_devices_in_topology_studio: %s unique devices for %s device objects.", len(existing_device_tuples), len(existing_devices))
-    LOGGER.info("verify_devices_in_topology_studio: got %s devices from I&T Studio.", len(cv_topology_inputs))
-    topology_inputs_dict_by_serial = {topology_input["device_id"]: topology_input for topology_input in cv_topology_inputs}
+    LOGGER.info("verify_devices_in_topology_studio: got %s devices from I&T Studio.", len(cv_studio_topology))
+    studio_topology_dict_by_serial = {device_topology["device_id"]: device_topology for device_topology in cv_studio_topology}
 
     # List of tuples holding the info we need to update in I&T Studio
     # [(<device_id>, <hostname>, <system_mac>)]
     update_topology_inputs = []
 
     for serial_number, hostname, system_mac_address in existing_device_tuples:
-        if serial_number not in topology_inputs_dict_by_serial or (
-            hostname != topology_inputs_dict_by_serial[serial_number]["hostname"]
-            or system_mac_address != topology_inputs_dict_by_serial[serial_number]["mac_address"]
+        if serial_number not in studio_topology_dict_by_serial or (
+            hostname != studio_topology_dict_by_serial[serial_number]["hostname"]
+            or system_mac_address != studio_topology_dict_by_serial[serial_number]["mac_address"]
         ):
+            LOGGER.info(
+                "verify_devices_in_topology_studio: Missing or wrong device in I&T. Inventory: %s, %s, %s. I&T Studio: %s, %s, %s",
+                serial_number,
+                hostname,
+                system_mac_address,
+                serial_number if studio_topology_dict_by_serial.get(serial_number) else None,
+                studio_topology_dict_by_serial.get(serial_number, {}).get("hostname"),
+                studio_topology_dict_by_serial.get(serial_number, {}).get("mac_address"),
+            )
             update_topology_inputs.append((serial_number, hostname, system_mac_address))
 
     if update_topology_inputs:
         LOGGER.info("verify_devices_in_topology_studio: need updates for %s unique devices in I&T Studio.", len(update_topology_inputs))
-        await cv_client.set_topology_studio_inputs(workspace_id=workspace_id, device_inputs=update_topology_inputs)
+        await cv_client.set_studio_topology(workspace_id=workspace_id, device_inputs=update_topology_inputs)
 
 
 def missing_devices_handler(*, missing_devices: list[CVDevice], skip_missing_devices: bool, context: str) -> Exception:
