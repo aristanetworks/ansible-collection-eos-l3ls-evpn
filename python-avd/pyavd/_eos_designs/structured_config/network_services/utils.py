@@ -330,7 +330,7 @@ class UtilsMixin(UtilsWanMixin, UtilsZscalerMixin):
         rd_override = vrf.rd_override
 
         if rd_override is not None:
-            if isinstance(rd_override, str) and (":" in rd_override or rd_override == "auto"):
+            if ":" in rd_override or rd_override == "auto":
                 return rd_override
 
             return f"{self.shared_utils.overlay_rd_type_vrf_admin_subfield}:{rd_override}"
@@ -341,7 +341,7 @@ class UtilsMixin(UtilsWanMixin, UtilsZscalerMixin):
         """Return a string with the route-target for one VRF."""
         rt_override = vrf.rt_override
 
-        if isinstance(rt_override, str) and (":" in rt_override or rt_override == "auto"):
+        if rt_override is not None and (":" in rt_override or rt_override == "auto"):
             return rt_override
 
         if self._vrf_rt_admin_subfield is not None:
@@ -368,7 +368,7 @@ class UtilsMixin(UtilsWanMixin, UtilsZscalerMixin):
         admin_subfield = self.shared_utils.overlay_rd_type_vrf_admin_subfield if is_vrf else self.shared_utils.overlay_rd_type_admin_subfield
 
         if rd_override is not None:
-            if isinstance(rd_override, str) and (":" in rd_override or rd_override == "auto"):
+            if ":" in rd_override or rd_override == "auto":
                 return rd_override
 
             return f"{admin_subfield}:{rd_override}"
@@ -385,7 +385,7 @@ class UtilsMixin(UtilsWanMixin, UtilsZscalerMixin):
         rt_override: str | None = None,
     ) -> str:
         """Return a string with the route-target for one VLAN Aware Bundle."""
-        if isinstance(rt_override, str) and (":" in rt_override or rt_override == "auto"):
+        if rt_override is not None and (":" in rt_override or rt_override == "auto"):
             return rt_override
 
         bundle_number = id + tenant.vlan_aware_bundle_number_base
