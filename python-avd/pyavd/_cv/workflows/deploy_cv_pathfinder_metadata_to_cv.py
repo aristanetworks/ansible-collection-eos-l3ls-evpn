@@ -93,7 +93,7 @@ def update_general_metadata(metadata: dict, studio_inputs: dict, studio_schema: 
             constraints: dict = avt.setdefault("constraints", {})
             constraints.setdefault("latency", 4294967295)
             constraints.setdefault("jitter", 4294967295)
-            constraints.setdefault("lossrate", 99.0)
+            constraints["lossrate"] = float(constraints.get("lossrate", 99.0))
             if is_avt_hop_count_supported(studio_schema):
                 constraints["hopCount"] = constraints.pop("hop_count", "")
             elif constraints.pop("hop_count", ""):
