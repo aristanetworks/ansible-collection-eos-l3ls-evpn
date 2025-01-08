@@ -80,3 +80,4 @@ ip_security:
   key_controller:
     profile: Profile-1
   hardware_encryption_disabled: true
+  connection_tx_interface_match_source_ip: true
