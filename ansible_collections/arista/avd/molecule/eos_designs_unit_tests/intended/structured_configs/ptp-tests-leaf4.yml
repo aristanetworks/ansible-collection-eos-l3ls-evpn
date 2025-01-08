@@ -60,6 +60,8 @@ management_api_http:
   enable_https: true
   enable_vrfs:
   - name: MGMT
+metadata:
+  fabric_name: PTP_TESTS
 prefix_lists:
 - name: PL-LOOPBACKS-EVPN-OVERLAY
   sequence_numbers:
