@@ -33,4 +33,4 @@ tenants:
 expected_error_message: >-
   Invalid configuration on VRF 'Tenant_X_OP_Zone' in Tenant 'Tenant_X'.
   'vtep_diagnostic.loopback' along with either 'vtep_diagnostic.loopback_ip_pools' or 'vtep_diagnostic.loopback_ip_range' must be defined
-  when 'router_id' is set to 'vtep_diagnostic' on the VRF.
+  when 'router_id' is set to 'diagnostic_loopback' on the VRF.

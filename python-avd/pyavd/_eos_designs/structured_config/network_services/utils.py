@@ -430,7 +430,7 @@ class UtilsMixin(UtilsWanMixin, UtilsZscalerMixin):
                 msg = (
                     f"Invalid configuration on VRF '{vrf.name}' in Tenant '{tenant_name}'. "
                     "'vtep_diagnostic.loopback' along with either 'vtep_diagnostic.loopback_ip_pools' or 'vtep_diagnostic.loopback_ip_range' must be defined "
-                    "when 'router_id' is set to 'vtep_diagnostic' on the VRF."
+                    "when 'router_id' is set to 'diagnostic_loopback' on the VRF."
                 )
                 raise AristaAvdInvalidInputsError(msg)
             # Resolve router ID from loopback interface
