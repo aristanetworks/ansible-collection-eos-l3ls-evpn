@@ -11,6 +11,10 @@
 
 - Hardware encryption is disabled
 {%     endif %}
+{%     if ip_security.connection_tx_interface_match_source_ip is arista.avd.defined(true) %}
+
+- Match source interface of the IPSec connection is enabled
+{%     endif %}
 {%     if ip_security.ike_policies is arista.avd.defined %}
 
 ### IKE policies
