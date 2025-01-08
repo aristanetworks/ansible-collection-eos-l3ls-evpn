@@ -16,7 +16,6 @@ from pyavd._cv.api.arista.workspace.v1 import (
     WorkspaceBuildDetailsKey,
     WorkspaceBuildDetailsServiceStub,
     WorkspaceBuildDetailsStreamRequest,
-    WorkspaceBuildDetailsStreamResponse,
     WorkspaceConfig,
     WorkspaceConfigDeleteRequest,
     WorkspaceConfigServiceStub,
@@ -291,7 +290,7 @@ class WorkspaceMixin:
 
         try:
             responses = client.get_all(request, metadata=self._metadata, timeout=timeout)
-            workspace_build_details = [response.value async for response in responses if isinstance(response, WorkspaceBuildDetailsStreamResponse)]
+            workspace_build_details = [response.value async for response in responses]
         except Exception as e:
             raise get_cv_client_exception(e, f"Workspace ID '{workspace_id}'") or e
 
