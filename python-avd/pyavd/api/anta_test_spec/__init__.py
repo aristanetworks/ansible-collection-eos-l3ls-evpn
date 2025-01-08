@@ -1,15 +1,18 @@
-# Copyright (c) 2023-2024 Arista Networks, Inc.
+# Copyright (c) 2023-2025 Arista Networks, Inc.
 # Use of this source code is governed by the Apache License 2.0
 # that can be found in the LICENSE file.
 from __future__ import annotations
 
-from typing import Self
+from typing import TYPE_CHECKING
 
 from pydantic import BaseModel, model_validator
 
 from pyavd._anta.constants import StructuredConfigKey
 from pyavd._anta.input_factories._base_classes import AntaTestInputFactory
 from pyavd._anta.lib import AntaTest
+
+if TYPE_CHECKING:
+    from typing_extensions import Self
 
 
 class TestSpec(BaseModel):

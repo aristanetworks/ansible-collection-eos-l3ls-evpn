@@ -1,4 +1,4 @@
-# Copyright (c) 2023-2024 Arista Networks, Inc.
+# Copyright (c) 2023-2025 Arista Networks, Inc.
 # Use of this source code is governed by the Apache License 2.0
 # that can be found in the LICENSE file.
 from __future__ import annotations
@@ -225,7 +225,7 @@ def run_anta(devices: list[str]) -> ResultManager:
         raise RuntimeError(msg)
 
     result_manager, inventory, catalog = build_anta_runner_objects(devices)
-    tags = set(get(PLUGIN_ARGS, "anta_runner_settings.tags")) or None
+    tags = set(get(PLUGIN_ARGS, "anta_runner_settings.tags", default=[])) or None
 
     LOGGER.info("running ANTA in process %s for devices: %s", current_process().name, ", ".join(devices))
     run(anta_runner(result_manager, inventory, catalog, tags=tags, dry_run=get(PLUGIN_ARGS, "anta_runner_settings.dry_run")))
