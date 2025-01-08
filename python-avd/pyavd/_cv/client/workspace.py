@@ -266,9 +266,9 @@ class WorkspaceMixin:
         build_id: str,
         time: datetime | None = None,
         timeout: float = DEFAULT_API_TIMEOUT,
-    ) -> WorkspaceBuildDetailsStreamResponse:
+    ) -> list[WorkspaceBuildDetails]:
         """
-        Get Workspace Build Details Response using arista.workspace.v1.WorkspaceBuildDetailsService.GetAll API.
+        Get Workspace Build Details using arista.workspace.v1.WorkspaceBuildDetailsService.GetAll API.
 
         Parameters:
             workspace_id: Unique identifier the workspace.
@@ -277,7 +277,7 @@ class WorkspaceMixin:
             timeout: Timeout in seconds.
 
         Returns:
-            WorkspaceBuildDetailsStreamResponse Async generator.
+            List of WorkspaceBuildDetails objects.
         """
         request = WorkspaceBuildDetailsStreamRequest(
             partial_eq_filter=[
@@ -291,7 +291,8 @@ class WorkspaceMixin:
 
         try:
             responses = client.get_all(request, metadata=self._metadata, timeout=timeout)
+            workspace_build_details = [response.value async for response in responses if isinstance(response, WorkspaceBuildDetailsStreamResponse)]
         except Exception as e:
             raise get_cv_client_exception(e, f"Workspace ID '{workspace_id}'") or e
 
-        return responses
+        return workspace_build_details
