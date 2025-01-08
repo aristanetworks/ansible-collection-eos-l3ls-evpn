@@ -198,3 +198,6 @@ keys:
         description: |-
           Disable hardware encryption.
           An SFE restart is needed for this change to take effect.
+      connection_tx_interface_match_source_ip:
+        type: bool
+        description: Match source interface of the IPsec connection.
