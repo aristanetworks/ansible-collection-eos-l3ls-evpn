@@ -105,6 +105,7 @@ keys:
                 description: |-
                   Set VNI on range of vlans.
                   If vni is set on the vlan in `vxlan_interface.vxlan1.vxlan.vlans`, it should not overlap in `vlan_range.vlans`.
+                  Number of `vlans` must equal number of `vnis`.
                 keys:
                   vlans:
                     type: str
