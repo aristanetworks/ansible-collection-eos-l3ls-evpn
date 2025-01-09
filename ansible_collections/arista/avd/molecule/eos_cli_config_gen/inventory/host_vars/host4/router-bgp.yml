@@ -7,7 +7,7 @@ router_bgp:
     long_lived: true
   bgp:
     additional_paths:
-      send: limit
+      send: ecmp
   address_family_ipv4:
     bgp:
       additional_paths:

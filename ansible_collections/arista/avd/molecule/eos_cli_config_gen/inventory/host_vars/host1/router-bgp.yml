@@ -604,6 +604,7 @@ router_bgp:
       - prefix: 2001:db8:200::/40
         route_map: RM-BAR-MATCH
     bgp:
+      redistribute_internal: true
       additional_paths:
         receive: true
         install_ecmp_primary: true
@@ -613,7 +614,6 @@ router_bgp:
         activate: true
         additional_paths:
           send: any
-          prefix_list: AF_IPV6_PG_PL
         route_map_in: RM-HIDE-AS-PATH
         route_map_out: RM-HIDE-AS-PATH
       - name: IPV6-UNDERLAY-MLAG
@@ -646,7 +646,6 @@ router_bgp:
           receive: true
           send: ecmp
           send_limit: 20
-          prefix_list: PL2
       - ip_address: 2001:db8::2
         activate: true
         additional_paths:
@@ -798,6 +797,7 @@ router_bgp:
     neighbors:
       - ip_address: 198.51.100.1
         activate: true
+        graceful_restart: true
         additional_paths:
           receive: true
           send: ecmp
@@ -1782,6 +1782,11 @@ router_bgp:
             receive: true
             send: ecmp
             send_limit: 24
+      bgp:
+        additional_paths:
+          send: limit
+          send_limit: 20
+          install_ecmp_primary: true
       address_family_ipv4:
         bgp:
           additional_paths:

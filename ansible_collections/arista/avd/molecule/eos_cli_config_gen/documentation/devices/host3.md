@@ -286,6 +286,8 @@ ASN Notation: asplain
 | Settings | Value |
 | -------- | ----- |
 
+#### Router BGP Path-Selection Address Family
+
 #### Router BGP Device Configuration
 
 ```eos
@@ -326,6 +328,9 @@ router bgp 65101.0001
       no bgp additional-paths send
       redistribute ospfv3 include leaked route-map RM-REDISTRIBUTE-OSPFV3
       redistribute ospfv3 match external include leaked route-map RM-REDISTRIBUTE-OSPFV3-EXTERNAL
+   !
+   address-family path-selection
+      bgp additional-paths send limit 20
 ```
 
 ## MPLS

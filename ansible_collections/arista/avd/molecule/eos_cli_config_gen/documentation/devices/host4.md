@@ -96,6 +96,7 @@ ASN Notation: asplain
 | BGP Tuning |
 | ---------- |
 | graceful-restart-helper long-lived |
+| bgp additional-paths send ecmp |
 
 #### Router BGP IPv4 Labeled Unicast
 
@@ -111,6 +112,7 @@ ASN Notation: asplain
 router bgp 65001
    router-id 192.168.255.3
    graceful-restart-helper long-lived
+   bgp additional-paths send ecmp
    !
    address-family ipv4
       bgp additional-paths send ecmp
