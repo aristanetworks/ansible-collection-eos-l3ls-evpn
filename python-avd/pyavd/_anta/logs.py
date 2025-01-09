@@ -84,7 +84,7 @@ class LogMessage(Enum):
     """
 
     # Peer-related messages
-    PEER_UNAVAILABLE = "{caller} skipped - peer {peer} not found or not deployed"
+    PEER_UNAVAILABLE = "{caller} skipped - peer {peer} not in fabric or not deployed"
     PEER_OUTSIDE_BOUNDARY = "{caller} skipped - peer {peer} not in {boundary} boundary"
     PEER_INTERFACE_NO_IP = "{caller} skipped - peer {peer} interface {peer_interface} has no IP"
 

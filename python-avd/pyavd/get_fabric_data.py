@@ -38,7 +38,6 @@ def get_fabric_data(structured_configs: dict[str, dict], scope: dict | None = No
         ```python
         {
             "boundary": "unlimited" | "fabric" | "dc" | "pod" | "rack",
-            "allow_bgp_external": bool,  # Allow BGP peers that are external to the fabric boundary
             "allow_bgp_vrfs": bool,  # Allow BGP peers in VRFs
         }
         ```

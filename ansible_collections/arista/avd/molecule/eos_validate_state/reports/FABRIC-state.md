@@ -755,16 +755,16 @@
 | 671 | dc1-spine1 | BFD | VerifyBFDPeersHealth | Verifies the health of IPv4 BFD peers across all VRFs. | - | NOT RUN | - |
 | 672 | dc1-spine1 | BFD | VerifyBFDPeersIntervals | Verifies the timers of IPv4 BFD peer sessions. | - | NOT RUN | - |
 | 673 | dc1-spine1 | BFD | VerifyBFDSpecificPeers | Verifies the state of IPv4 BFD peer sessions. | - | NOT RUN | - |
-| 674 | dc1-spine1 | BGP | VerifyBGPAdvCommunities | Verifies that advertised communities are standard, extended and large for BGP peers. | - | NOT RUN | - |
-| 675 | dc1-spine1 | BGP | VerifyBGPExchangedRoutes | Verifies the advertised and received routes of BGP peers. | - | NOT RUN | - |
-| 676 | dc1-spine1 | BGP | VerifyBGPPeerASNCap | Verifies the four octet ASN capability of BGP peers. | - | NOT RUN | - |
+| 674 | dc1-spine1 | BGP | VerifyBGPAdvCommunities | Verifies that advertised communities are standard, extended and large for BGP IPv4 peer(s). | - | NOT RUN | - |
+| 675 | dc1-spine1 | BGP | VerifyBGPExchangedRoutes | Verifies the advertised and received routes of BGP IPv4 peer(s). | - | NOT RUN | - |
+| 676 | dc1-spine1 | BGP | VerifyBGPPeerASNCap | Verifies the four octet ASN capability of BGP IPv4 peer(s). | - | NOT RUN | - |
 | 677 | dc1-spine1 | BGP | VerifyBGPPeerCount | Verifies the count of BGP peers for given address families. | - | NOT RUN | - |
-| 678 | dc1-spine1 | BGP | VerifyBGPPeerMD5Auth | Verifies the MD5 authentication and state of IPv4 BGP peers in a specified VRF. | - | NOT RUN | - |
-| 679 | dc1-spine1 | BGP | VerifyBGPPeerMPCaps | Verifies the multiprotocol capabilities of BGP peers. | - | NOT RUN | - |
-| 680 | dc1-spine1 | BGP | VerifyBGPPeerRouteRefreshCap | Verifies the route refresh capabilities of a BGP peer in a specified VRF. | - | NOT RUN | - |
+| 678 | dc1-spine1 | BGP | VerifyBGPPeerMD5Auth | Verifies the MD5 authentication and state of IPv4 BGP peer(s) in a specified VRF. | - | NOT RUN | - |
+| 679 | dc1-spine1 | BGP | VerifyBGPPeerMPCaps | Verifies the multiprotocol capabilities of BGP IPv4 peer(s). | - | NOT RUN | - |
+| 680 | dc1-spine1 | BGP | VerifyBGPPeerRouteRefreshCap | Verifies the route refresh capabilities of IPv4 BGP peer(s) in a specified VRF. | - | NOT RUN | - |
 | 681 | dc1-spine1 | BGP | VerifyBGPPeersHealth | Verifies the health of BGP peers for given address families. | - | NOT RUN | - |
 | 682 | dc1-spine1 | BGP | VerifyBGPSpecificPeers | Verifies the health of specific BGP peer(s) for given address families. | - | NOT RUN | - |
-| 683 | dc1-spine1 | BGP | VerifyBGPTimers | Verifies the timers of BGP peers. | - | NOT RUN | - |
+| 683 | dc1-spine1 | BGP | VerifyBGPTimers | Verifies the timers of BGP IPv4 peer(s). | - | NOT RUN | - |
 | 684 | dc1-spine1 | BGP | VerifyEVPNType2Route | Verifies the EVPN Type-2 routes for a given IPv4 or MAC address and VNI. | - | NOT RUN | - |
 | 685 | dc1-spine1 | Configuration | VerifyRunningConfigDiffs | Verifies there is no difference between the running-config and the startup-config. | - | NOT RUN | - |
 | 686 | dc1-spine1 | Configuration | VerifyZeroTouch | Verifies ZeroTouch is disabled. | - | NOT RUN | - |
@@ -871,16 +871,16 @@
 | 787 | dc1-spine2 | BFD | VerifyBFDPeersHealth | Verifies the health of IPv4 BFD peers across all VRFs. | - | NOT RUN | - |
 | 788 | dc1-spine2 | BFD | VerifyBFDPeersIntervals | Verifies the timers of IPv4 BFD peer sessions. | - | NOT RUN | - |
 | 789 | dc1-spine2 | BFD | VerifyBFDSpecificPeers | Verifies the state of IPv4 BFD peer sessions. | - | NOT RUN | - |
-| 790 | dc1-spine2 | BGP | VerifyBGPAdvCommunities | Verifies that advertised communities are standard, extended and large for BGP peers. | - | NOT RUN | - |
-| 791 | dc1-spine2 | BGP | VerifyBGPExchangedRoutes | Verifies the advertised and received routes of BGP peers. | - | NOT RUN | - |
-| 792 | dc1-spine2 | BGP | VerifyBGPPeerASNCap | Verifies the four octet ASN capability of BGP peers. | - | NOT RUN | - |
+| 790 | dc1-spine2 | BGP | VerifyBGPAdvCommunities | Verifies that advertised communities are standard, extended and large for BGP IPv4 peer(s). | - | NOT RUN | - |
+| 791 | dc1-spine2 | BGP | VerifyBGPExchangedRoutes | Verifies the advertised and received routes of BGP IPv4 peer(s). | - | NOT RUN | - |
+| 792 | dc1-spine2 | BGP | VerifyBGPPeerASNCap | Verifies the four octet ASN capability of BGP IPv4 peer(s). | - | NOT RUN | - |
 | 793 | dc1-spine2 | BGP | VerifyBGPPeerCount | Verifies the count of BGP peers for given address families. | - | NOT RUN | - |
-| 794 | dc1-spine2 | BGP | VerifyBGPPeerMD5Auth | Verifies the MD5 authentication and state of IPv4 BGP peers in a specified VRF. | - | NOT RUN | - |
-| 795 | dc1-spine2 | BGP | VerifyBGPPeerMPCaps | Verifies the multiprotocol capabilities of BGP peers. | - | NOT RUN | - |
-| 796 | dc1-spine2 | BGP | VerifyBGPPeerRouteRefreshCap | Verifies the route refresh capabilities of a BGP peer in a specified VRF. | - | NOT RUN | - |
+| 794 | dc1-spine2 | BGP | VerifyBGPPeerMD5Auth | Verifies the MD5 authentication and state of IPv4 BGP peer(s) in a specified VRF. | - | NOT RUN | - |
+| 795 | dc1-spine2 | BGP | VerifyBGPPeerMPCaps | Verifies the multiprotocol capabilities of BGP IPv4 peer(s). | - | NOT RUN | - |
+| 796 | dc1-spine2 | BGP | VerifyBGPPeerRouteRefreshCap | Verifies the route refresh capabilities of IPv4 BGP peer(s) in a specified VRF. | - | NOT RUN | - |
 | 797 | dc1-spine2 | BGP | VerifyBGPPeersHealth | Verifies the health of BGP peers for given address families. | - | NOT RUN | - |
 | 798 | dc1-spine2 | BGP | VerifyBGPSpecificPeers | Verifies the health of specific BGP peer(s) for given address families. | - | NOT RUN | - |
-| 799 | dc1-spine2 | BGP | VerifyBGPTimers | Verifies the timers of BGP peers. | - | NOT RUN | - |
+| 799 | dc1-spine2 | BGP | VerifyBGPTimers | Verifies the timers of BGP IPv4 peer(s). | - | NOT RUN | - |
 | 800 | dc1-spine2 | BGP | VerifyEVPNType2Route | Verifies the EVPN Type-2 routes for a given IPv4 or MAC address and VNI. | - | NOT RUN | - |
 | 801 | dc1-spine2 | Configuration | VerifyRunningConfigDiffs | Verifies there is no difference between the running-config and the startup-config. | - | NOT RUN | - |
 | 802 | dc1-spine2 | Configuration | VerifyZeroTouch | Verifies ZeroTouch is disabled. | - | NOT RUN | - |

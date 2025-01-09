@@ -12,9 +12,6 @@ anta_devices: "{{ ansible_play_hosts }}"
 # To use this feature, the devices must have the proper location metadata (fabric_name, pod_name, dc_name, rack) set in their structured configs.
 anta_catalog_boundary: "unlimited"   # Options: unlimited, fabric, dc, pod, rack
 
-# Generate tests for BGP peers outside of the configured scope boundary.
-anta_catalog_allow_bgp_external: false
-
 # Generate tests for BGP peers in VRFs.
 anta_catalog_allow_bgp_vrfs: false
 

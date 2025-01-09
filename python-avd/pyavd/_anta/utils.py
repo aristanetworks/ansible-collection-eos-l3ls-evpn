@@ -34,7 +34,7 @@ class FabricDataEncoder(JSONEncoder):
         if isinstance(o, IPv4Address):
             return str(o)
         if isinstance(o, set):
-            return list(o)
+            return sorted(o)
         return super().default(o)
 
 

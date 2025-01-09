@@ -25,7 +25,6 @@ class FabricScope(BaseModel):
     """Defines scope and permissions for fabric boundary test input generation."""
 
     boundary: Literal["unlimited", "fabric", "dc", "pod", "rack"] = "unlimited"
-    allow_bgp_external: bool = False
     allow_bgp_vrfs: bool = False
 
 
@@ -93,16 +92,22 @@ class ExtendedDeviceData:
         return getattr(self._base, name)
 
     @cached_property
+    def devices_in_boundary(self) -> set[str]:
+        """Generate a set of device hostnames within the same boundary."""
+        return self.fabric_data.get_devices_by_attribute("boundary_location", self.boundary_location)
+
+    @cached_property
     def bgp_neighbors(self) -> list[BgpNeighbor]:
         """Generate a list of BGP neighbors for the device."""
         neighbors = []
         for neighbor in self.structured_config.router_bgp.neighbors:
             identifier = f"{neighbor.ip_address}" if neighbor.peer is None else f"{neighbor.peer} ({neighbor.ip_address})"
 
-            # Skip neighbors or their peer groups that are shutdown
+            # Skip neighbors that are shutdown
             if neighbor.shutdown is True:
                 LOGGER.debug("<%s>: skipped BGP peer %s - shutdown", self.hostname, identifier)
                 continue
+            # Skip neighbors in shutdown peer groups
             if (
                 neighbor.peer_group
                 and neighbor.peer_group in self.structured_config.router_bgp.peer_groups
@@ -111,18 +116,10 @@ class ExtendedDeviceData:
                 LOGGER.debug("<%s>: skipped BGP peer %s - peer group %s shutdown", self.hostname, identifier, neighbor.peer_group)
                 continue
 
-            # If peer field is set, validate it exists in FabricData, is deployed, and is in the boundary
-            if neighbor.peer:
-                if neighbor.peer not in self.fabric_data.devices or not self.fabric_data.devices[neighbor.peer].is_deployed:
-                    LOGGER.debug("<%s>: skipped BGP peer %s - peer not found or not deployed", self.hostname, identifier)
-                    continue
-                if (
-                    self.fabric_data.scope.boundary != "unlimited"
-                    and self.fabric_data.scope.allow_bgp_external is False
-                    and neighbor.peer not in self.fabric_data.get_devices_by_attribute("boundary_location", self.device.boundary_location)
-                ):
-                    LOGGER.debug("<%s>: skipped BGP peer %s - peer outside %s boundary", self.hostname, identifier, self.fabric_data.scope.boundary)
-                    continue
+            # When peer field is set, check if the peer device is in the fabric and deployed
+            if neighbor.peer and (neighbor.peer not in self.fabric_data.devices or not self.fabric_data.devices[neighbor.peer].is_deployed):
+                LOGGER.debug("<%s>: skipped BGP peer %s - peer not in fabric or not deployed", self.hostname, identifier)
+                continue
 
             # TODO: IPv6 neighbors are not supported in ANTA yet
             ip_address = ip_interface(neighbor.ip_address).ip
@@ -140,10 +137,11 @@ class ExtendedDeviceData:
             for neighbor in vrf.neighbors:
                 identifier = f"{neighbor.ip_address} (VRF {vrf.name})"
 
-                # Skip neighbors or their peer groups that are shutdown
+                # Skip neighbors that are shutdown
                 if neighbor.shutdown is True:
                     LOGGER.debug("<%s>: skipped BGP peer %s - shutdown", self.hostname, identifier)
                     continue
+                # Skip neighbors in shutdown peer groups
                 if (
                     neighbor.peer_group
                     and neighbor.peer_group in self.structured_config.router_bgp.peer_groups

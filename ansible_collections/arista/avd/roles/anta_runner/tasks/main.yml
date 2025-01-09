@@ -38,7 +38,6 @@
       structured_config_suffix: "{{ avd_structured_config_file_format }}"
       scope:
         boundary: "{{ anta_catalog_boundary }}"
-        allow_bgp_external: "{{ anta_catalog_allow_bgp_external }}"
         allow_bgp_vrfs: "{{ anta_catalog_allow_bgp_vrfs }}"
       filters: "{{ anta_catalog_filters | arista.avd.default([]) }}"
     custom_catalog:

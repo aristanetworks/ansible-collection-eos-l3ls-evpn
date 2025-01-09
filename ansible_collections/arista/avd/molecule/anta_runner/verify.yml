@@ -13,6 +13,7 @@
         anta_runner_dry_run: true
         anta_catalogs_dir: "{{ root_dir }}/anta/catalogs/default_run"
         anta_reports_dir: "{{ root_dir }}/anta/reports/default_run"
+        anta_report_fabric_data_path: "{{ root_dir }}/anta/reports/default_run/fabric_data.json"
       run_once: true
 
     - name: ANTA Allow BGP VRFs Run
@@ -23,5 +24,6 @@
         anta_runner_dry_run: true
         anta_catalogs_dir: "{{ root_dir }}/anta/catalogs/allow_bgp_vrfs_run"
         anta_reports_dir: "{{ root_dir }}/anta/reports/allow_bgp_vrfs_run"
+        anta_report_fabric_data_path: "{{ root_dir }}/anta/reports/allow_bgp_vrfs_run/fabric_data.json"
         anta_catalog_allow_bgp_vrfs: true
       run_once: true

@@ -39,7 +39,6 @@ class FabricData:
     ```python
     scope = {
         "boundary": "pod",           # Options: unlimited, fabric, dc, pod, rack
-        "allow_bgp_external": True,  # Allow BGP peers that are external to the fabric boundary
         "allow_bgp_vrfs": True,      # Allow BGP peers in VRFs
     }
     structured_configs = {
