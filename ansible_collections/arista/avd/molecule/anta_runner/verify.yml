@@ -68,7 +68,7 @@
               - VerifyLLDPNeighbors
 
     - name: ANTA User-Defined Catalogs Run
-      delegate_to:
+      delegate_to: 127.0.0.1
       ansible.builtin.import_role:
         name: arista.avd.anta_runner
       vars:
