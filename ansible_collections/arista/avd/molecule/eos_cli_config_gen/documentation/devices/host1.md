@@ -3244,6 +3244,8 @@ mac address-table notification host-flap detection moves 2
 
 - Hardware encryption is disabled
 
+- Match source interface of the IPSec connection is enabled
+
 ### IKE policies
 
 | Policy name | IKE lifetime | Encryption | DH group | Local ID | Integrity |
@@ -3354,6 +3356,7 @@ ip security
    key controller
       profile Profile-1
    hardware encryption disabled
+   connection tx-interface match source-ip
 ```
 
 ## Interfaces
