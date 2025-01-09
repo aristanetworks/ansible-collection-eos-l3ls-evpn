@@ -2433,10 +2433,10 @@ router bgp {{ router_bgp.as }}
 {%             if peer_group.additional_paths.send is arista.avd.defined %}
 {%                 if peer_group.additional_paths.send == 'disabled' %}
       no neighbor {{ peer_group.name }} additional-paths send
-{%                 elif peer_group.additional_paths.send_limit is arista.avd.defined and peer_group.additional_paths.send == 'ecmp' %}
+{%                 elif peer_group.additional_paths.send_limit is arista.avd.defined %}
+{%                     if peer_group.additional_paths.send == 'ecmp' %}
       neighbor {{ peer_group.name }} additional-paths send ecmp limit {{ peer_group.additional_paths.send_limit }}
-{%                 elif peer_group.additional_paths.send == 'limit' %}
-{%                     if peer_group.additional_paths.send_limit is arista.avd.defined %}
+{%                     elif peer_group.additional_paths.send == 'limit' %}
       neighbor {{ peer_group.name }} additional-paths send limit {{ peer_group.additional_paths.send_limit }}
 {%                     endif %}
 {%                 else %}
