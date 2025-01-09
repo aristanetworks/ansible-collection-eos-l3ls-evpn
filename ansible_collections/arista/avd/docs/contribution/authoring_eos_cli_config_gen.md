@@ -1,5 +1,5 @@
 <!--
-  ~ Copyright (c) 2023-2024 Arista Networks, Inc.
+  ~ Copyright (c) 2023-2025 Arista Networks, Inc.
   ~ Use of this source code is governed by the Apache License 2.0
   ~ that can be found in the LICENSE file.
   -->
@@ -84,17 +84,18 @@ These commands should be executed whenever the schema or templates are modified,
 
 ### Validate Changes and Test Configurations
 
-1. Add some molecule tests in the `ansible_collections/arista/avd/molecule/eos_cli_config_gen` scenario exercising the new knob configuration.
+1. Add some molecule tests in the `ansible_collections/arista/avd/molecule/eos_cli_config_gen` scenario or other relevant molecule scenario exercising the new knob configuration.
 2. Update the `host_vars` files:
-   - Modify or add the `molecule/eos_cli_config_gen/host_vars/hostX/xxx.yml` file to include the new configuration knobs.
+   - Modify or add the `molecule/<scenario_name>/host_vars/hostX/xxx.yml` file to include the new configuration knobs.
    - If multiple files are required to cover all the test cases:
         - Add the additional test cases to the next host directory, e.g., `host_vars/host2/xxx.yml`, `host_vars/host3/xxx.yml`, etc.
         - Ensure each file represents unique scenarios or configurations to validate different combinations.
    - Ensure that the new keys are thoroughly tested with various valid values and edge cases.
 3. When marking any key as "deprecated", move the related tests to the `eos_cli_config_gen_deprecated_vars` molecule scenario and add any missing tests if necessary.
-4. Run `molecule converge -s eos_cli_config_gen` from the path `ansible_collections/arista/avd/` to execute the molecule tests locally and generate the new expected configuration and documentation for newly added test-cases.
-5. Check the PyAVD test coverage report by running `tox -e coverage,report` and work on improving the coverage where possible.
-6. Test the generated configuration using EAPI or CVP in a relevant lab, if available, to ensure it works as intended.
+4. Run `molecule converge -s <scenario_name>` from the path `ansible_collections/arista/avd/` to execute the molecule tests locally and generate the new expected configuration and documentation for newly added test-cases.
+5. To execute all the molecule scenarios, run `make refresh-facts` from the path `ansible_collections/arista/avd/molecule` and verify the tests.
+6. Check the PyAVD test coverage report by running `tox -e coverage,report` and work on improving the coverage where possible.
+7. Test the generated configuration using EAPI or CVP in a relevant lab, if available, to ensure it works as intended.
 
 ### Update Documentation
 
