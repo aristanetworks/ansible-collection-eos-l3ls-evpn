@@ -26,6 +26,7 @@ jobs:
       plugins: ${{ steps.filter.outputs.plugins }}
       requirements: ${{ steps.filter.outputs.requirements }}
       docs: ${{ steps.filter.outputs.docs }}
+      anta_runner: ${{ steps.filter.outputs.anta_runner }}
     steps:
       - uses: actions/checkout@v4
       - uses: dorny/paths-filter@v3
@@ -85,6 +86,15 @@ jobs:
             pyavd:
               - 'python_avd/*'
               - 'python_avd/**/*'
+            anta_runner:
+              - 'ansible_collections/arista/avd/roles/anta_runner/*'
+              - 'ansible_collections/arista/avd/roles/anta_runner/**/*'
+              - 'python-avd/pyavd/_anta/*'
+              - 'python-avd/pyavd/_anta/**/*'
+              - 'python-avd/pyavd/api/anta_test_spec/*'
+              - 'python-avd/pyavd/api/fabric_data/*'
+              - 'python-avd/pyavd/get_fabric_data.py'
+              - 'python-avd/pyavd/get_device_anta_catalog.py'
 
   # ----------------------------------- #
   # Test Requirements
@@ -289,6 +299,38 @@ jobs:
       #     name: molecule-${{ matrix.avd_scenario }}-artifacts
       #     path: ${PWD}/ansible_collections/arista/avd/molecule/${{ matrix.avd_scenario }}
       #
+  # ----------------------------------- #
+  # ANTA Runner MOLECULE
+  # ----------------------------------- #
+  molecule_anta_runner:
+    name: Validate anta_runner
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: true
+      matrix:
+        avd_scenario:
+          - 'anta_runner'
+        ansible_version:
+          - 'ansible-core<2.19.0 --upgrade'
+        include:
+          - avd_scenario: 'anta_runner'
+            ansible_version: 'ansible-core==2.15.0'
+    needs: [ file-changes ]
+    if: needs.file-changes.outputs.eos_design == 'true' || needs.file-changes.outputs.anta_runner == 'true'
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run molecule action
+        uses: arista-netdevops-community/action-molecule-avd@v1.8.1
+        with:
+          molecule_parentdir: 'ansible_collections/arista/avd'
+          molecule_command: 'test'
+          molecule_args: '--scenario-name ${{ matrix.avd_scenario }}'
+          pip_file: .github/requirements-ci.txt
+          galaxy_file: "ansible_collections/arista/avd/collections.yml"
+          ansible: ${{ matrix.ansible_version }}
+          check_git: true
+          check_git_enforced: true
+
   # ----------------------------------- #
   # EOS Validate State MOLECULE
   # ----------------------------------- #
