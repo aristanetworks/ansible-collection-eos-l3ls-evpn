@@ -30,6 +30,10 @@ sflow:
       destinations:
         - destination: 10.6.75.62
       source: 1.1.1.1
+    - name: EEE
+      destinations:
+        - destination: 10.6.75.62
+      source: 1.1.1.1
   destinations:
     - destination: 10.6.75.62
       port: 123

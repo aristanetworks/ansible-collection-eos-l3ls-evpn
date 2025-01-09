@@ -2269,6 +2269,8 @@ tap aggregation
 | CCC | Management1 | - | - |
 | DDD | - | 10.6.75.62 | 6343 |
 | DDD | 1.1.1.1 | - | - |
+| EEE | - | 10.6.75.62 | 6343 |
+| EEE | 1.1.1.1 | - | - |
 | MGMT | - | 10.6.75.59 | 6343 |
 | MGMT | - | 10.6.75.62 | 123 |
 | MGMT | - | 10.6.75.63 | 333 |
@@ -2341,6 +2343,8 @@ sflow vrf CCC destination 10.6.75.62
 sflow vrf CCC source-interface Management1
 sflow vrf DDD destination 10.6.75.62
 sflow vrf DDD source 1.1.1.1
+sflow vrf EEE destination 10.6.75.62
+sflow vrf EEE source 1.1.1.1
 sflow vrf MGMT destination 10.6.75.59
 sflow vrf MGMT destination 10.6.75.62 123
 sflow vrf MGMT destination 10.6.75.63 333

@@ -1,5 +1,4 @@
 ---
 logging:
-  console: disabled
   format:
     timestamp: traditional year timezone

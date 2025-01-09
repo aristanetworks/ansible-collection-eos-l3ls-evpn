@@ -28,21 +28,6 @@ interface Management1
    ip address 10.73.255.122/24
 ```
 
-### PTP
-
-#### PTP Summary
-
-| Clock ID | Source IP | Priority 1 | Priority 2 | TTL | Domain | Mode | Forward Unicast |
-| -------- | --------- | ---------- | ---------- | --- | ------ | ---- | --------------- |
-| - | - | - | - | - | - | - | - |
-
-#### PTP Device Configuration
-
-```eos
-!
-no ptp monitor
-```
-
 ### Management SSH
 
 #### SSH Timeout and Management
@@ -80,21 +65,11 @@ management ssh
 
 ## CVX
 
-CVX is enabled
-
-### CVX Services
-
-| Service | Enabled | Settings |
-| ------- | ------- | -------- |
-| MCS | - | Redis Password Set |
-| VXLAN | - | VTEP MAC learning: control-plane |
-
 ### CVX Device Configuration
 
 ```eos
 !
 cvx
-   no shutdown
    !
    service mcs
       redis password 7 <removed>
@@ -118,7 +93,7 @@ cvx
 ```eos
 !
 daemon TerminAttr
-   exec /usr/bin/TerminAttr -cvaddr=apiserver.arista.io:443 -cvauth=token-secure,/tmp/cv-onboarding-token -cvvrf=mgt -smashexcludes=ale,flexCounter,hardware,kni,pulse,strata -ingestexclude=/Sysdb/cell/1/agent,/Sysdb/cell/2/agent -taillogs -ipfix=false -sflow=false
+   exec /usr/bin/TerminAttr -cvaddr=apiserver.arista.io:443 -cvauth=token-secure,/tmp/cv-onboarding-token -cvvrf=mgt -smashexcludes=ale,flexCounter,hardware,kni,pulse,strata -ingestexclude=/Sysdb/cell/1/agent,/Sysdb/cell/2/agent -taillogs
    no shutdown
 ```
 
@@ -128,7 +103,6 @@ daemon TerminAttr
 
 | Type | Level |
 | -----| ----- |
-| Console | disabled |
 
 | Format Type | Setting |
 | ----------- | ------- |
@@ -141,7 +115,6 @@ daemon TerminAttr
 
 ```eos
 !
-no logging console
 logging format timestamp traditional year timezone
 ```
 
@@ -161,26 +134,6 @@ mcs client
    shutdown
    !
    cvx secondary default
-```
-
-### Tap Aggregation
-
-#### Tap Aggregation Summary
-
-| Settings | Values |
-| -------- | ------ |
-| Mode Exclusive | True |
-| Mac Timestamp | Replace Source-Mac |
-| Mac FCS Error | pass-through |
-
-#### Tap Aggregation Device Configuration
-
-```eos
-!
-tap aggregation
-   mode exclusive
-   mac timestamp replace source-mac
-   mac fcs-error pass-through
 ```
 
 ## Spanning Tree

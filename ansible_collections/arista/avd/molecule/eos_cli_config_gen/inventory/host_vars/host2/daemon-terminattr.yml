@@ -6,6 +6,8 @@ daemon_terminattr:
   cvauth:
     method: key
     key: ""
+  ipfix: false
+  sflow: false
   clusters:
     - name: DC1
       cvaddrs:

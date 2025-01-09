@@ -1,5 +1,0 @@
----
-### ptp
-ptp:
-  monitor:
-    enabled: false
