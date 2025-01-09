@@ -502,6 +502,7 @@ def setup_module_logging(queue: Queue) -> None:
 
 def setup_process_logging() -> None:
     """Initialize logging for the pool processes."""
+    # TODO: Add process prefix to console logs
     anta_log_dir = get(PLUGIN_ARGS, "anta_logging.log_dir")
     root_logger = logging.getLogger()
 

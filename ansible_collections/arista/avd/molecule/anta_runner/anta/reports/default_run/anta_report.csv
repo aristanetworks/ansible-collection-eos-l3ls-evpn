@@ -95,6 +95,11 @@ dc1-leaf2a,VerifyEOSVersion,unset,,Verifies the EOS version of the device.,Softw
 dc1-leaf2a,VerifyTerminAttrVersion,unset,,Verifies the TerminAttr version of the device.,Software
 dc1-leaf2a,VerifyNTP,unset,,Verifies if NTP is synchronised.,System
 dc1-leaf2a,VerifyReloadCause,unset,,Verifies the last reload cause of the device.,System
+dc1-leaf2a,VerifyVxlan1ConnSettings,unset,,Verifies the interface vxlan1 source interface and UDP port.,VXLAN
+dc1-leaf2a,VerifyVxlan1Interface,unset,,Verifies the Vxlan1 interface status.,VXLAN
+dc1-leaf2a,VerifyVxlanConfigSanity,unset,,Verifies there are no VXLAN config-sanity inconsistencies.,VXLAN
+dc1-leaf2a,VerifyVxlanVniBinding,unset,,Verifies the VNI-VLAN bindings of the Vxlan1 interface.,VXLAN
+dc1-leaf2a,VerifyVxlanVtep,unset,,Verifies the VTEP peers of the Vxlan1 interface.,VXLAN
 dc1-leaf2c,VerifyLLDPNeighbors,unset,,Verifies the connection status of the specified LLDP (Link Layer Discovery Protocol) neighbors.,Connectivity
 dc1-leaf2c,VerifyReachability,unset,,Test network reachability to one or many destination IP(s).,Connectivity
 dc1-leaf2c,VerifyEnvironmentCooling,unset,,Verifies the status of power supply fans and all fan trays.,Hardware
@@ -359,6 +364,11 @@ dc2-leaf2a,VerifyEOSVersion,unset,,Verifies the EOS version of the device.,Softw
 dc2-leaf2a,VerifyTerminAttrVersion,unset,,Verifies the TerminAttr version of the device.,Software
 dc2-leaf2a,VerifyNTP,unset,,Verifies if NTP is synchronised.,System
 dc2-leaf2a,VerifyReloadCause,unset,,Verifies the last reload cause of the device.,System
+dc2-leaf2a,VerifyVxlan1ConnSettings,unset,,Verifies the interface vxlan1 source interface and UDP port.,VXLAN
+dc2-leaf2a,VerifyVxlan1Interface,unset,,Verifies the Vxlan1 interface status.,VXLAN
+dc2-leaf2a,VerifyVxlanConfigSanity,unset,,Verifies there are no VXLAN config-sanity inconsistencies.,VXLAN
+dc2-leaf2a,VerifyVxlanVniBinding,unset,,Verifies the VNI-VLAN bindings of the Vxlan1 interface.,VXLAN
+dc2-leaf2a,VerifyVxlanVtep,unset,,Verifies the VTEP peers of the Vxlan1 interface.,VXLAN
 dc2-leaf2b,VerifyBGPPeerMPCaps,unset,,Verifies the multiprotocol capabilities of BGP IPv4 peer(s).,BGP
 dc2-leaf2b,VerifyBGPPeerSession,unset,,Verifies the session state of BGP IPv4 peer(s).,BGP
 dc2-leaf2b,VerifyLLDPNeighbors,unset,,Verifies the connection status of the specified LLDP (Link Layer Discovery Protocol) neighbors.,Connectivity
@@ -384,6 +394,11 @@ dc2-leaf2b,VerifyEOSVersion,unset,,Verifies the EOS version of the device.,Softw
 dc2-leaf2b,VerifyTerminAttrVersion,unset,,Verifies the TerminAttr version of the device.,Software
 dc2-leaf2b,VerifyNTP,unset,,Verifies if NTP is synchronised.,System
 dc2-leaf2b,VerifyReloadCause,unset,,Verifies the last reload cause of the device.,System
+dc2-leaf2b,VerifyVxlan1ConnSettings,unset,,Verifies the interface vxlan1 source interface and UDP port.,VXLAN
+dc2-leaf2b,VerifyVxlan1Interface,unset,,Verifies the Vxlan1 interface status.,VXLAN
+dc2-leaf2b,VerifyVxlanConfigSanity,unset,,Verifies there are no VXLAN config-sanity inconsistencies.,VXLAN
+dc2-leaf2b,VerifyVxlanVniBinding,unset,,Verifies the VNI-VLAN bindings of the Vxlan1 interface.,VXLAN
+dc2-leaf2b,VerifyVxlanVtep,unset,,Verifies the VTEP peers of the Vxlan1 interface.,VXLAN
 dc2-leaf2c,VerifyLLDPNeighbors,unset,,Verifies the connection status of the specified LLDP (Link Layer Discovery Protocol) neighbors.,Connectivity
 dc2-leaf2c,VerifyEnvironmentCooling,unset,,Verifies the status of power supply fans and all fan trays.,Hardware
 dc2-leaf2c,VerifyEnvironmentPower,unset,,Verifies the power supplies status.,Hardware

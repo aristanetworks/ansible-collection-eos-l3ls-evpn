@@ -27,3 +27,61 @@
         anta_report_fabric_data_path: "{{ root_dir }}/anta/reports/allow_bgp_vrfs_run/fabric_data.json"
         anta_catalog_allow_bgp_vrfs: true
       run_once: true
+
+    - name: ANTA DC Boundary Run
+      delegate_to:
+      ansible.builtin.import_role:
+        name: arista.avd.anta_runner
+      vars:
+        anta_runner_dry_run: true
+        anta_catalogs_dir: "{{ root_dir }}/anta/catalogs/dc_boundary_run"
+        anta_reports_dir: "{{ root_dir }}/anta/reports/dc_boundary_run"
+        anta_report_fabric_data_path: "{{ root_dir }}/anta/reports/dc_boundary_run/fabric_data.json"
+        anta_catalog_boundary: dc
+      run_once: true
+
+    - name: ANTA Filtered Run
+      delegate_to:
+      ansible.builtin.import_role:
+        name: arista.avd.anta_runner
+      vars:
+        anta_runner_dry_run: true
+        anta_catalogs_dir: "{{ root_dir }}/anta/catalogs/filtered_run"
+        anta_reports_dir: "{{ root_dir }}/anta/reports/filtered_run"
+        anta_report_fabric_data_path: "{{ root_dir }}/anta/reports/filtered_run/fabric_data.json"
+        # When a device is part of multiple filters, the last filter will be applied so the order is important
+        anta_catalog_filters:
+          # Skip VerifyNTP for all fabric devices
+          - device_list: "{{ groups['FABRIC'] }}"
+            skip_tests:
+              - VerifyNTP
+          # Only VerifyReachability will run on DC1_SVC_LEAVES devices
+          - device_list: "{{ groups['DC1_SVC_LEAVES'] }}"
+            run_tests:
+              - VerifyReachability
+          # Skip tests take precedence over run_tests
+          # All tests except VerifyLLDPNeighbors will run on DC2_SPINES devices
+          - device_list: "{{ groups['DC2_SPINES'] }}"
+            run_tests:
+              - VerifyLLDPNeighbors
+            skip_tests:
+              - VerifyLLDPNeighbors
+
+    - name: ANTA User-Defined Catalogs Run
+      delegate_to:
+      ansible.builtin.import_role:
+        name: arista.avd.anta_runner
+      vars:
+        anta_runner_dry_run: true
+        structured_dir: null
+        anta_reports_dir: "{{ root_dir }}/anta/reports/user_defined_catalogs_run"
+
+    - name: ANTA User-Defined Catalogs Run with Tags
+      delegate_to:
+      ansible.builtin.import_role:
+        name: arista.avd.anta_runner
+      vars:
+        anta_runner_dry_run: true
+        structured_dir: null
+        anta_reports_dir: "{{ root_dir }}/anta/reports/user_defined_catalogs_with_tags_run"
+        anta_runner_tags: ["border_leaf"]

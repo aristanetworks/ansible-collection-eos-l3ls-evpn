@@ -19,7 +19,7 @@ from pyavd._utils import get_v2
 from .constants import StructuredConfigKey
 from .logs import LogMessage, TestLoggerAdapter
 from .models import BoundaryLocation, DeviceData, ExtendedDeviceData, FabricScope
-from .utils import get_device_location_metadata, get_device_roles, get_device_routed_interface_ips, get_device_special_ips
+from .utils import get_device_roles, get_device_routed_interface_ips, get_device_special_ips
 
 if TYPE_CHECKING:
     from ipaddress import IPv4Address
@@ -103,8 +103,7 @@ def create_fabric_data(structured_configs: dict, scope: dict | None = None) -> F
 
 def create_device_data(hostname: str, structured_config: EosCliConfigGen, boundary: str) -> DeviceData:
     """Create the DeviceData object for the given hostname."""
-    fabric_name, dc_name, pod_name, rack = get_device_location_metadata(structured_config)
-    boundary_location = create_device_boundary_location(fabric_name, dc_name, pod_name, rack, boundary)
+    boundary_location = create_device_boundary_location(structured_config, boundary)
     is_vtep, is_wan_router = get_device_roles(structured_config)
     loopback0_ip, vtep_ip = get_device_special_ips(structured_config)
     routed_interface_ips = get_device_routed_interface_ips(structured_config)
@@ -113,10 +112,10 @@ def create_device_data(hostname: str, structured_config: EosCliConfigGen, bounda
         hostname=hostname,
         dns_domain=structured_config.dns_domain,
         is_deployed=structured_config.is_deployed,
-        fabric_name=fabric_name,
-        dc_name=dc_name,
-        pod_name=pod_name,
-        rack=rack,
+        fabric_name=structured_config.metadata.fabric_name,
+        dc_name=structured_config.metadata.dc_name,
+        pod_name=structured_config.metadata.pod_name,
+        rack=structured_config.metadata.rack,
         boundary_location=boundary_location,
         is_vtep=is_vtep,
         is_wan_router=is_wan_router,
@@ -126,8 +125,15 @@ def create_device_data(hostname: str, structured_config: EosCliConfigGen, bounda
     )
 
 
-def create_device_boundary_location(fabric_name: str | None, dc_name: str | None, pod_name: str | None, rack: str | None, boundary: str) -> BoundaryLocation:
+def create_device_boundary_location(structured_config: EosCliConfigGen, boundary: str) -> BoundaryLocation:
     """Create a BoundaryLocation object for the location of a device up to the specified boundary level."""
+    fabric_name, dc_name, pod_name, rack = (
+        structured_config.metadata.fabric_name,
+        structured_config.metadata.dc_name,
+        structured_config.metadata.pod_name,
+        structured_config.metadata.rack,
+    )
+
     match boundary:
         case "unlimited":
             return BoundaryLocation()
@@ -146,11 +152,6 @@ def create_device_boundary_location(fabric_name: str | None, dc_name: str | None
 
 def create_catalog(hostname: str, structured_config: dict, fabric_data: FabricData, test_specs: list[TestSpec]) -> AntaCatalog:
     """Create an ANTA catalog for a device from the provided test specs."""
-    # TODO: Remove this temporary workaround once https://github.com/aristanetworks/avd/pull/4827 is merged
-    temporary_keys_to_remove = ["fabric_name", "dc_name", "pod_name", "rack"]
-    for key in temporary_keys_to_remove:
-        structured_config.get("metadata", {}).pop(key, None)
-
     device_data = ExtendedDeviceData(
         hostname=hostname,
         fabric_data=fabric_data,

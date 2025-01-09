@@ -1,3 +1,4 @@
+---
 type: wan_router
 
 overlay_routing_protocol: ibgp

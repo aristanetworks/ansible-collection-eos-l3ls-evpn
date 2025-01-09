@@ -128,3 +128,41 @@ class FabricData:
 
         # Return filtered IP index
         return {hostname: ip_index[hostname] for hostname in matching_devices if hostname in ip_index}
+
+    def to_dict(self) -> dict:
+        """Convert FabricData to a JSON-seralizable dictionary."""
+        return {
+            "scope": self.scope.model_dump(mode="json"),
+            "devices": {
+                hostname: {
+                    "hostname": device.hostname,
+                    "dns_domain": device.dns_domain,
+                    "is_deployed": device.is_deployed,
+                    "fabric_name": device.fabric_name,
+                    "dc_name": device.dc_name,
+                    "pod_name": device.pod_name,
+                    "rack": device.rack,
+                    "boundary_location": "/".join(
+                        filter(
+                            None, (device.boundary_location.fabric, device.boundary_location.dc, device.boundary_location.pod, device.boundary_location.rack)
+                        )
+                    )
+                    if self.scope.boundary != "unlimited"
+                    else None,
+                    "is_vtep": device.is_vtep,
+                    "is_wan_router": device.is_wan_router,
+                    "loopback0_ip": str(device.loopback0_ip) if device.loopback0_ip else None,
+                    "vtep_ip": str(device.vtep_ip) if device.vtep_ip else None,
+                    "routed_interface_ips": {intf: str(ip) for intf, ip in device.routed_interface_ips.items()},
+                }
+                for hostname, device in self.devices.items()
+            },
+            "boundary_index": {
+                "/".join(filter(None, (loc.fabric, loc.dc, loc.pod, loc.rack))): sorted(devices) for loc, devices in self.boundary_index.items()
+            },
+            "_loopback0_ips": {device: str(ip) for device, ip in self._loopback0_ips.items()},
+            "_vtep_ips": {device: str(ip) for device, ip in self._vtep_ips.items()},
+            "_special_ips": {device: [str(ip) for ip in ips] for device, ips in self._special_ips.items()},
+            "_vteps": sorted(self._vteps),
+            "_wan_routers": sorted(self._wan_routers),
+        }

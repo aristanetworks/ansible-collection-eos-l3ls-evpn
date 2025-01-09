@@ -61,6 +61,7 @@ management_interfaces:
   gateway: 172.16.1.1
 metadata:
   platform: vEOS-lab
+  dc_name: DC2
   fabric_name: FABRIC
 port_channel_interfaces:
 - name: Port-Channel1

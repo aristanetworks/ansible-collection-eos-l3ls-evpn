@@ -34,7 +34,7 @@ dps_interfaces:
   mtu: 9194
   ip_address: 10.255.1.2/32
   flow_tracker:
-    sampled: FLOW-TRACKER
+    hardware: FLOW-TRACKER
 enable_password:
   disabled: true
 ethernet_interfaces:
@@ -73,13 +73,12 @@ ethernet_interfaces:
   switchport:
     enabled: false
 flow_tracking:
-  sampled:
-    sample: 10000
+  hardware:
     trackers:
-    - record_export:
+    - name: FLOW-TRACKER
+      record_export:
         on_inactive_timeout: 70000
         on_interval: 300000
-      name: FLOW-TRACKER
       exporters:
       - name: CV-TELEMETRY
         collector:
@@ -171,6 +170,7 @@ management_security:
       file: STUN-DTLS.crt
       key: STUN-DTLS.key
 metadata:
+  dc_name: DC1
   fabric_name: FABRIC
   cv_tags:
     device_tags:

@@ -5,16 +5,11 @@
 
 from __future__ import annotations
 
-from dataclasses import asdict
 from ipaddress import IPv4Address, ip_interface
-from json import JSONEncoder, dumps
+from json import dumps
 from logging import getLogger
 from pathlib import Path
-from typing import TYPE_CHECKING, Any
-
-from pyavd._utils import get_v2
-
-from .models import FabricScope
+from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from anta.catalog import AntaCatalog
@@ -23,32 +18,6 @@ if TYPE_CHECKING:
     from pyavd.api.fabric_data import FabricData
 
 LOGGER = getLogger(__name__)
-
-
-class FabricDataEncoder(JSONEncoder):
-    """Custom JSON encoder for FabricData objects."""
-
-    def default(self, o: Any) -> str:
-        if isinstance(o, FabricScope):
-            return o.model_dump()
-        if isinstance(o, IPv4Address):
-            return str(o)
-        if isinstance(o, set):
-            return sorted(o)
-        return super().default(o)
-
-
-def get_device_location_metadata(structured_config: EosCliConfigGen) -> tuple[str | None, str | None, str | None, str | None]:
-    """Extract the location metadata from the structured configuration.
-
-    # TODO: Can be removed when https://github.com/aristanetworks/avd/pull/4827 is merged
-    """
-    return (
-        get_v2(structured_config.metadata, "fabric_name"),
-        get_v2(structured_config.metadata, "dc_name"),
-        get_v2(structured_config.metadata, "pod_name"),
-        get_v2(structured_config.metadata, "rack"),
-    )
 
 
 def get_device_special_ips(structured_config: EosCliConfigGen) -> tuple[IPv4Address | None, IPv4Address | None]:
@@ -103,8 +72,7 @@ def dump_anta_catalog(hostname: str, catalog: AntaCatalog, catalog_dir: str) -> 
 def dump_fabric_data(filename: str | Path, fabric_data: FabricData) -> None:
     """Dump a FabricData instance to a JSON file."""
     fabric_data_path = Path(filename)
-    fabric_data_dict = asdict(fabric_data)
-    fabric_data_json = dumps(fabric_data_dict, cls=FabricDataEncoder, indent=2)
+    fabric_data_json = dumps(fabric_data.to_dict(), indent=2)
 
     LOGGER.debug("dumping FabricData at %s", fabric_data_path)
     with fabric_data_path.open(mode="w", encoding="UTF-8") as stream:

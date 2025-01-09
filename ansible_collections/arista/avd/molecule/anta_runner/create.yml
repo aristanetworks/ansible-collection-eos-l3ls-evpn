@@ -21,6 +21,15 @@
       loop:
         - "{{ anta_catalogs_dir }}/default_run"
         - "{{ anta_catalogs_dir }}/allow_bgp_vrfs_run"
+        - "{{ anta_catalogs_dir }}/dc_boundary_run"
+        - "{{ anta_catalogs_dir }}/filtered_run"
+        - "{{ anta_reports_dir }}/user_defined_catalogs_run"
+        - "{{ anta_reports_dir }}/user_defined_catalogs_with_tags_run"
         - "{{ anta_reports_dir }}/default_run"
         - "{{ anta_reports_dir }}/allow_bgp_vrfs_run"
+        - "{{ anta_reports_dir }}/dc_boundary_run"
+        - "{{ anta_reports_dir }}/filtered_run"
+        - "{{ anta_reports_dir }}/user_defined_catalogs_run"
+        - "{{ anta_reports_dir }}/user_defined_catalogs_with_tags_run"
+
       run_once: true

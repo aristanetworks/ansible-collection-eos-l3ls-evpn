@@ -74,7 +74,7 @@ def get_device_anta_catalog(
     skip_tests = skip_tests or []
 
     start_time = perf_counter()
-    LOGGER.debug(
+    LOGGER.info(
         "<%s>: generating catalog with options (run_tests=%s, skip_tests=%s, output_dir=%s, ignore_is_deployed=%s)",
         hostname,
         run_tests,
@@ -97,6 +97,11 @@ def get_device_anta_catalog(
         if invalid_names:
             msg = f"Invalid test names in {filter_type}: {', '.join(invalid_names)}"
             raise ValueError(msg)
+
+    # Remove any tests from run_tests that are in skip_tests
+    if run_tests and skip_tests:
+        run_tests = [test for test in run_tests if test not in skip_tests]
+        LOGGER.debug("<%s>: cleaned up run_tests after removing skipped tests: %s", hostname, run_tests)
 
     # Filter test specs based on skip_tests and run_tests
     filtered_test_specs = []

@@ -1,5 +1,0 @@
----
-eos_designs_documentation:
-  enable: false
-eos_cli_config_gen_documentation:
-  enable: false

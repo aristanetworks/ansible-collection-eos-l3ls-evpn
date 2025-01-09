@@ -1,4 +1,9 @@
 ---
+eos_designs_documentation:
+  enable: false
+eos_cli_config_gen_documentation:
+  enable: false
+
 ansible_connection: ansible.netcommon.httpapi
 ansible_network_os: arista.eos.eos
 ansible_user: ansible
@@ -77,59 +82,7 @@ l3_edge:
       interfaces: [Ethernet6, Ethernet6]
       profile: DCI_profile
 
-node_type_keys:
-  - key: spine
-    type: spine
-    default_evpn_role: server
-    default_ptp_priority1: 20
-
-  - key: l3leaf
-    type: l3leaf
-    connected_endpoints: true
-    default_evpn_role: client
-    default_ptp_priority1: 30
-    mlag_support: true
-    network_services:
-      l2: true
-      l3: true
-    vtep: true
-
-  - key: l2leaf
-    type: l2leaf
-    connected_endpoints: true
-    mlag_support: true
-    network_services:
-      l2: true
-    underlay_router: false
-    uplink_type: port-channel
-
-  - key: super_spine
-    type: super-spine
-
-  - key: overlay_controller
-    type: overlay-controller
-    default_evpn_role: server
-
-  - key: wan_router
-    type: wan_router
-    default_evpn_role: client
-    default_wan_role: client
-    default_underlay_routing_protocol: none
-    default_overlay_routing_protocol: ibgp
-    network_services:
-      l3: true
-    vtep: true
-
-  - key: wan_rr
-    type: wan_rr
-    default_evpn_role: server
-    default_wan_role: server
-    default_underlay_routing_protocol: none
-    default_overlay_routing_protocol: ibgp
-    network_services:
-      l3: true
-    vtep: true
-
+custom_node_type_keys:
   - key: service_leaf
     type: service_leaf
     connected_endpoints: true

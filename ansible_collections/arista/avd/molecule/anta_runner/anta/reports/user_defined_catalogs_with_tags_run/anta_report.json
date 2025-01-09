@@ -1,0 +1,167 @@
+[
+    {
+        "name": "dc1-leaf2a",
+        "test": "VerifyVxlan1ConnSettings",
+        "categories": [
+            "vxlan"
+        ],
+        "description": "Verifies the interface vxlan1 source interface and UDP port.",
+        "result": "unset",
+        "messages": [],
+        "custom_field": null
+    },
+    {
+        "name": "dc1-leaf2a",
+        "test": "VerifyVxlan1Interface",
+        "categories": [
+            "vxlan"
+        ],
+        "description": "Verifies the Vxlan1 interface status.",
+        "result": "unset",
+        "messages": [],
+        "custom_field": null
+    },
+    {
+        "name": "dc1-leaf2a",
+        "test": "VerifyVxlanConfigSanity",
+        "categories": [
+            "vxlan"
+        ],
+        "description": "Verifies there are no VXLAN config-sanity inconsistencies.",
+        "result": "unset",
+        "messages": [],
+        "custom_field": null
+    },
+    {
+        "name": "dc1-leaf2a",
+        "test": "VerifyVxlanVniBinding",
+        "categories": [
+            "vxlan"
+        ],
+        "description": "Verifies the VNI-VLAN bindings of the Vxlan1 interface.",
+        "result": "unset",
+        "messages": [],
+        "custom_field": null
+    },
+    {
+        "name": "dc1-leaf2a",
+        "test": "VerifyVxlanVtep",
+        "categories": [
+            "vxlan"
+        ],
+        "description": "Verifies the VTEP peers of the Vxlan1 interface.",
+        "result": "unset",
+        "messages": [],
+        "custom_field": null
+    },
+    {
+        "name": "dc2-leaf2a",
+        "test": "VerifyVxlan1ConnSettings",
+        "categories": [
+            "vxlan"
+        ],
+        "description": "Verifies the interface vxlan1 source interface and UDP port.",
+        "result": "unset",
+        "messages": [],
+        "custom_field": null
+    },
+    {
+        "name": "dc2-leaf2a",
+        "test": "VerifyVxlan1Interface",
+        "categories": [
+            "vxlan"
+        ],
+        "description": "Verifies the Vxlan1 interface status.",
+        "result": "unset",
+        "messages": [],
+        "custom_field": null
+    },
+    {
+        "name": "dc2-leaf2a",
+        "test": "VerifyVxlanConfigSanity",
+        "categories": [
+            "vxlan"
+        ],
+        "description": "Verifies there are no VXLAN config-sanity inconsistencies.",
+        "result": "unset",
+        "messages": [],
+        "custom_field": null
+    },
+    {
+        "name": "dc2-leaf2a",
+        "test": "VerifyVxlanVniBinding",
+        "categories": [
+            "vxlan"
+        ],
+        "description": "Verifies the VNI-VLAN bindings of the Vxlan1 interface.",
+        "result": "unset",
+        "messages": [],
+        "custom_field": null
+    },
+    {
+        "name": "dc2-leaf2a",
+        "test": "VerifyVxlanVtep",
+        "categories": [
+            "vxlan"
+        ],
+        "description": "Verifies the VTEP peers of the Vxlan1 interface.",
+        "result": "unset",
+        "messages": [],
+        "custom_field": null
+    },
+    {
+        "name": "dc2-leaf2b",
+        "test": "VerifyVxlan1ConnSettings",
+        "categories": [
+            "vxlan"
+        ],
+        "description": "Verifies the interface vxlan1 source interface and UDP port.",
+        "result": "unset",
+        "messages": [],
+        "custom_field": null
+    },
+    {
+        "name": "dc2-leaf2b",
+        "test": "VerifyVxlan1Interface",
+        "categories": [
+            "vxlan"
+        ],
+        "description": "Verifies the Vxlan1 interface status.",
+        "result": "unset",
+        "messages": [],
+        "custom_field": null
+    },
+    {
+        "name": "dc2-leaf2b",
+        "test": "VerifyVxlanConfigSanity",
+        "categories": [
+            "vxlan"
+        ],
+        "description": "Verifies there are no VXLAN config-sanity inconsistencies.",
+        "result": "unset",
+        "messages": [],
+        "custom_field": null
+    },
+    {
+        "name": "dc2-leaf2b",
+        "test": "VerifyVxlanVniBinding",
+        "categories": [
+            "vxlan"
+        ],
+        "description": "Verifies the VNI-VLAN bindings of the Vxlan1 interface.",
+        "result": "unset",
+        "messages": [],
+        "custom_field": null
+    },
+    {
+        "name": "dc2-leaf2b",
+        "test": "VerifyVxlanVtep",
+        "categories": [
+            "vxlan"
+        ],
+        "description": "Verifies the VTEP peers of the Vxlan1 interface.",
+        "result": "unset",
+        "messages": [],
+        "custom_field": null
+    }
+]
