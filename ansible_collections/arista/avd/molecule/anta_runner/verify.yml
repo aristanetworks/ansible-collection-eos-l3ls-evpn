@@ -73,7 +73,7 @@
         name: arista.avd.anta_runner
       vars:
         anta_runner_dry_run: true
-        structured_dir: null
+        structured_dir: ""
         anta_reports_dir: "{{ root_dir }}/anta/reports/user_defined_catalogs_run"
 
     - name: ANTA User-Defined Catalogs Run with Tags
@@ -82,6 +82,6 @@
         name: arista.avd.anta_runner
       vars:
         anta_runner_dry_run: true
-        structured_dir: null
+        structured_dir: ""
         anta_reports_dir: "{{ root_dir }}/anta/reports/user_defined_catalogs_with_tags_run"
         anta_runner_tags: ["border_leaf"]
