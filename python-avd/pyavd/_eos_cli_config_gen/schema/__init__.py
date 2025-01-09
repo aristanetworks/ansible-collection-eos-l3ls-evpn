@@ -2776,12 +2776,55 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                         """
 
+            class Dscp(AvdModel):
+                """Subclass of AvdModel."""
+
+                _fields: ClassVar[dict] = {"dscp_value": {"type": str}, "ecn": {"type": str}, "_custom_data": {"type": dict}}
+                dscp_value: str | None
+                """
+                DSCP/ECN match classifies the precedence of incoming packets based on the value present in the IP
+                header.
+                """
+                ecn: Literal["ce", "ect", "ect-ce", "non-ect"] | None
+                """
+                DSCP is the six most significant bits and ECN represents the two least significant bits of the IPv4
+                8-bit ToS field and IPv6 8-bit TC field.
+                """
+                _custom_data: dict[str, Any]
+
+                if TYPE_CHECKING:
+
+                    def __init__(
+                        self,
+                        *,
+                        dscp_value: str | None | UndefinedType = Undefined,
+                        ecn: Literal["ce", "ect", "ect-ce", "non-ect"] | None | UndefinedType = Undefined,
+                        _custom_data: dict[str, Any] | UndefinedType = Undefined,
+                    ) -> None:
+                        """
+                        Dscp.
+
+
+                        Subclass of AvdModel.
+
+                        Args:
+                            dscp_value:
+                               DSCP/ECN match classifies the precedence of incoming packets based on the value present in the IP
+                               header.
+                            ecn:
+                               DSCP is the six most significant bits and ECN represents the two least significant bits of the IPv4
+                               8-bit ToS field and IPv6 8-bit TC field.
+                            _custom_data: _custom_data
+
+                        """
+
             _fields: ClassVar[dict] = {
                 "name": {"type": str},
                 "vlan": {"type": str},
                 "cos": {"type": str},
                 "ip": {"type": Ip},
                 "ipv6": {"type": Ipv6},
+                "dscp": {"type": Dscp},
                 "_custom_data": {"type": dict},
             }
             name: str
@@ -2794,6 +2837,12 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             """Subclass of AvdModel."""
             ipv6: Ipv6
             """Subclass of AvdModel."""
+            dscp: Dscp
+            """
+            It allows match on either DSCP, ECN or both for the IPV4 and IPV6 packets.
+
+            Subclass of AvdModel.
+            """
             _custom_data: dict[str, Any]
 
             if TYPE_CHECKING:
@@ -2806,6 +2855,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                     cos: str | None | UndefinedType = Undefined,
                     ip: Ip | UndefinedType = Undefined,
                     ipv6: Ipv6 | UndefinedType = Undefined,
+                    dscp: Dscp | UndefinedType = Undefined,
                     _custom_data: dict[str, Any] | UndefinedType = Undefined,
                 ) -> None:
                     """
@@ -2820,6 +2870,10 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                         cos: CoS value(s) or range(s) of CoS values.
                         ip: Subclass of AvdModel.
                         ipv6: Subclass of AvdModel.
+                        dscp:
+                           It allows match on either DSCP, ECN or both for the IPV4 and IPV6 packets.
+
+                           Subclass of AvdModel.
                         _custom_data: _custom_data
 
                     """

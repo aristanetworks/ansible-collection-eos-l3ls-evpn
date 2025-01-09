@@ -12031,6 +12031,11 @@ qos random-detect ecn allow non-ect chip-based
 | cmap_tc5_v4 | acl | acl_qos_tc5_v4 |
 | cmap_tc5_v6 | - | - |
 | COS_RANGE | vlan | 1-3 |
+| DSCP_TEST_1 | dscp | af11 ecn ect-ce |
+| DSCP_TEST_2 | dscp | 2, 4 ecn non-ect |
+| DSCP_TEST_3 | dscp | cs0 |
+| DSCP_TEST_4 | dscp | ef ecn ce |
+| DSCP_TEST_5 | - | - |
 | VLAN_RANGE | vlan | 200-400 |
 
 #### Class-maps Device Configuration
@@ -12063,6 +12068,20 @@ class-map type qos match-any cmap_tc5_v6
 !
 class-map type qos match-any COS_RANGE
    match vlan 1-3
+!
+class-map type qos match-any DSCP_TEST_1
+   match dscp af11 ecn ect-ce
+!
+class-map type qos match-any DSCP_TEST_2
+   match dscp 2, 4 ecn non-ect
+!
+class-map type qos match-any DSCP_TEST_3
+   match dscp cs0
+!
+class-map type qos match-any DSCP_TEST_4
+   match dscp ef ecn ce
+!
+class-map type qos match-any DSCP_TEST_5
 !
 class-map type qos match-any VLAN_RANGE
    match vlan 200-400
