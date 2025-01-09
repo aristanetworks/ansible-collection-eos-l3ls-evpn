@@ -69855,8 +69855,10 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 Set VNI on range of vlans.
                 If vni is set on the vlan in `vxlan_interface.vxlan1.vxlan.vlans`, it
                 should not overlap in `vlan_range.vlans`.
+                Number of `vlans` must equal number of `vnis`.
 
-                Subclass of AvdModel.
+                Subclass
+                of AvdModel.
                 """
                 vrfs: Vrfs
                 """Subclass of AvdIndexedList with `VrfsItem` items. Primary key is `name` (`str`)."""
@@ -69917,8 +69919,10 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                                Set VNI on range of vlans.
                                If vni is set on the vlan in `vxlan_interface.vxlan1.vxlan.vlans`, it
                                should not overlap in `vlan_range.vlans`.
+                               Number of `vlans` must equal number of `vnis`.
 
-                               Subclass of AvdModel.
+                               Subclass
+                               of AvdModel.
                             vrfs: Subclass of AvdIndexedList with `VrfsItem` items. Primary key is `name` (`str`).
                             flood_vteps: Subclass of AvdList with `str` items.
                             flood_vtep_learned_data_plane: flood_vtep_learned_data_plane
@@ -70291,8 +70295,10 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 Set VNI on range of vlans.
                 If vni is set on the vlan in `vxlan_interface.vxlan1.vxlan.vlans`, it
                 should not overlap in `vlan_range.vlans`.
+                Number of `vlans` must equal number of `vnis`.
 
-                Subclass of AvdModel.
+                Subclass
+                of AvdModel.
                 """
                 vrfs: Vrfs
                 """Subclass of AvdIndexedList with `VrfsItem` items. Primary key is `name` (`str`)."""
@@ -70353,8 +70359,10 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                                Set VNI on range of vlans.
                                If vni is set on the vlan in `vxlan_interface.vxlan1.vxlan.vlans`, it
                                should not overlap in `vlan_range.vlans`.
+                               Number of `vlans` must equal number of `vnis`.
 
-                               Subclass of AvdModel.
+                               Subclass
+                               of AvdModel.
                             vrfs: Subclass of AvdIndexedList with `VrfsItem` items. Primary key is `name` (`str`).
                             flood_vteps: Subclass of AvdList with `str` items.
                             flood_vtep_learned_data_plane: flood_vtep_learned_data_plane

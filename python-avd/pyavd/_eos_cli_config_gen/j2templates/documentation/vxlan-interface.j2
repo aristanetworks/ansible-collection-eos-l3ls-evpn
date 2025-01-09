@@ -76,7 +76,7 @@
 | VLAN | VNI | Flood List | Multicast Group |
 | ---- | --- | ---------- | --------------- |
 {%         set all_vlans = {} %}
-{%         for vlan in vxlan_config.vxlan.vlans %}
+{%         for vlan in vxlan_config.vxlan.vlans | arista.avd.default([]) %}
 {%             do all_vlans.setdefault(vlan.id, {}) %}
 {%             if vlan.vni is arista.avd.defined %}
 {%                 do all_vlans[vlan.id].update({"vni": vlan.vni}) %}
