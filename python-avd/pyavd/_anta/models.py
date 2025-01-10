@@ -20,7 +20,7 @@ if TYPE_CHECKING:
 LOGGER = getLogger(__name__)
 
 
-# TODO: Check if we need Pydantic model for this class
+# TODO: Pydantic might be overkill for this. Consider using a dataclass instead.
 class FabricScope(BaseModel):
     """Defines scope and permissions for fabric boundary test input generation."""
 

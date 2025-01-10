@@ -77,7 +77,7 @@
         anta_reports_dir: "{{ root_dir }}/anta/reports/user_defined_catalogs_run"
 
     - name: ANTA User-Defined Catalogs Run with Tags
-      delegate_to:
+      delegate_to: 127.0.0.1
       ansible.builtin.import_role:
         name: arista.avd.anta_runner
       vars:

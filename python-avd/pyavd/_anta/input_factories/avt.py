@@ -11,7 +11,7 @@ from ._base_classes import AntaTestInputFactory
 class VerifyAVTRoleInputFactory(AntaTestInputFactory):
     """Input factory class for the VerifyAVTRole test.
 
-    It collects the expected AVT topology role and reverses the role name
+    It collects the expected AVT `topology_role` and reverses the role name
     if it is either `transit region` or `transit zone` to match EOS output.
     """
 

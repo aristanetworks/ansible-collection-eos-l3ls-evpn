@@ -163,7 +163,7 @@ def create_catalog(hostname: str, structured_config: dict, fabric_data: FabricDa
         test_logger = TestLoggerAdapter.create(device=hostname, test=test.test_class.name, logger=LOGGER)
         test_definition = create_test_definition(test, device_data, test_logger)
 
-        # Skip the test if we couldn't create the test definition. Logging is done in the TestSpec class
+        # Skip the test if we couldn't create the test definition. Logging is done when creating the test definition
         if test_definition is None:
             continue
 
@@ -173,7 +173,7 @@ def create_catalog(hostname: str, structured_config: dict, fabric_data: FabricDa
         test_definitions.append(test_definition)
 
     # Sort by module and test name for consistent output
-    # TODO: Add a proper sort method in the AntaCatalog class to also sort the inputs
+    # TODO: Consider adding sort method in the AntaCatalog class to also sort the inputs
     test_definitions.sort(key=lambda x: (x.test.__module__, x.test.name))
     return AntaCatalog(tests=test_definitions)
 
@@ -186,7 +186,7 @@ def create_test_definition(test_spec: TestSpec, device_data: ExtendedDeviceData,
         logger.debug(LogMessage.INPUT_NO_DATA_MODEL, caller=", ".join(keys))
         return None
 
-    # AntaTestDefinition takes `inputs=None` if the test does not require input
+    # AntaTestDefinition takes `inputs=None` if the test does not require any input
     inputs = None
 
     # Create the AntaTest.Input instance from the input dict if available

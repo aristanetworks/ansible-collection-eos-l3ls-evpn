@@ -13,14 +13,12 @@ from ._base_classes import AntaTestInputFactory
 class VerifyRoutingTableEntryInputFactory(AntaTestInputFactory):
     """Input factory class for the VerifyRoutingTableEntry test.
 
-    Requirements:
-      - Device is VTEP (not WAN router)
-      - Peers exist, are deployed and are not WAN routers
-      - Peers within boundary scope if configured
+    This factory generates test inputs for verifying routing table entries on VTEP devices,
+    excluding WAN routers.
 
-    Notes:
-      - Validates routes for all peer (excluding WAN routers) Loopback0 and VTEP IPs
-      - Deduplicates routes (e.g., MLAG VTEP IPs)
+    For applicable devices, it collects the Loopback0 and VTEP IPs (usually Loopback1) from
+    all fabric peers (excluding WAN routers) that are available (`is_deployed: true`) and within
+    the configured boundary scope, if set.
     """
 
     def create(self) -> VerifyRoutingTableEntry.Input | None:

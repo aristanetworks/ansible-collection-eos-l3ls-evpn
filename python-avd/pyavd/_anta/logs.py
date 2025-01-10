@@ -79,7 +79,6 @@ class TestLoggerAdapter(LoggerAdapter):
 class LogMessage(Enum):
     """Log message templates for test input generation.
 
-    Format: `skipped - {reason}`
     Adapter adds: `<device> [test] (context):`
     """
 
@@ -107,7 +106,7 @@ class LogMessage(Enum):
     DEVICE_NO_INBAND_MGMT = "skipped - no inband management SVI found"
 
     # BGP-specific messages
-    BGP_AF_NOT_ACTIVATED = "address families {capability} skipped - not activated"
+    BGP_AF_NOT_ACTIVATED = "{caller} - address families {capability} skipped"
 
     # STUN-specific messages
     STUN_NO_CLIENT_INTERFACE = "path group {caller} skipped - no STUN client interfaces found"

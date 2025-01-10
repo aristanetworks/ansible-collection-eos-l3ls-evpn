@@ -189,7 +189,7 @@ class ActionModule(ActionBase):
             if custom_catalog_dir is not None:
                 CUSTOM_CATALOG = load_custom_catalogs(custom_catalog_dir)
 
-            # Load the structured configs and build FabricData
+            # Load the structured configs and build FabricData if structured_config_dir is provided
             if structured_config_dir is not None:
                 STRUCTURED_CONFIGS = load_structured_configs(deployed_devices, structured_config_dir, get(PLUGIN_ARGS, "anta_catalog.structured_config_suffix"))
                 FABRIC_DATA = get_fabric_data(
@@ -219,17 +219,13 @@ def run_anta(devices: list[str]) -> ResultManager:
     """Run ANTA."""
     setup_process_logging()
 
-    if PLUGIN_ARGS is None:
-        msg = "Plugin arguments not initialized"
-        raise RuntimeError(msg)
-
     result_manager, inventory, catalog = build_anta_runner_objects(devices)
     tags = set(get(PLUGIN_ARGS, "anta_runner_settings.tags", default=[])) or None
 
     LOGGER.info("running ANTA in process %s for devices: %s", current_process().name, ", ".join(devices))
     run(anta_runner(result_manager, inventory, catalog, tags=tags, dry_run=get(PLUGIN_ARGS, "anta_runner_settings.dry_run")))
-
     LOGGER.info("ANTA process %s completed", current_process().name)
+
     return result_manager
 
 
@@ -250,9 +246,8 @@ def build_reports(batch_results: list[ResultManager], report_settings: dict) -> 
     if hide_statuses:
         result_manager = result_manager.filter(hide=set(hide_statuses))
 
-    # Sort the internal results list
-    sorted_results = result_manager.get_results(sort_by=["name", "categories", "test", "result", "custom_field"])
-    result_manager.results = sorted_results
+    # Sort the result manager
+    result_manager.sort(sort_by=["name", "categories", "test", "result", "custom_field"])
 
     if csv_output_path:
         LOGGER.info("generating CSV report at %s", csv_output_path)
@@ -290,6 +285,7 @@ def extract_hostvars(device_list: list[str], hostvars: Mapping) -> dict:
             LOGGER.info("skipping %s - device marked as not deployed", device)
             continue
 
+        # Adding the Ansible connection variables following the HTTPAPI connection plugin settings
         device_vars[device] = {key: get(host_hostvars, key) for key in ANSIBLE_CONNECTION_VARS}
 
         # Same as above, we also honor the `anta_tags` variable if provided in the hostvars
@@ -300,10 +296,6 @@ def extract_hostvars(device_list: list[str], hostvars: Mapping) -> dict:
 
 def build_anta_runner_objects(devices: list[str]) -> tuple[ResultManager, AntaInventory, AntaCatalog]:
     """Build the ANTA objects required to run an ANTA batch."""
-    if PLUGIN_ARGS is None:
-        msg = "Plugin arguments not initialized"
-        raise RuntimeError(msg)
-
     # Create the ANTA objects
     result_manager = ResultManager()
     inventory = AntaInventory()
@@ -315,6 +307,7 @@ def build_anta_runner_objects(devices: list[str]) -> tuple[ResultManager, AntaIn
     for device in devices:
         anta_device = build_anta_device(device)
         inventory.add_device(anta_device)
+        # We generate the device's ANTA catalog only if structured configs are provided
         if FABRIC_DATA is not None and STRUCTURED_CONFIGS is not None:
             catalog = get_device_anta_catalog(
                 hostname=device,
@@ -333,9 +326,10 @@ def build_anta_runner_objects(devices: list[str]) -> tuple[ResultManager, AntaIn
 def get_anta_catalog_filters(device: str, anta_catalog_filters: list[dict]) -> dict[str, list[str] | None]:
     """Get the test filters for a device from the provided ANTA catalog filters.
 
-    More specific filters (appearing later in the list) completely override earlier ones.
+    More specific filters (appearing later in the list) override earlier ones.
     For example, if a device matches both a group filter and an individual filter,
-    the individual filter's tests will completely replace the group's tests.
+    the individual filter's tests will completely replace the group's run_tests or
+    skip_tests if they are specified.
     """
     final_filters = {"run_tests": None, "skip_tests": None}
 
@@ -360,10 +354,6 @@ def get_anta_catalog_filters(device: str, anta_catalog_filters: list[dict]) -> d
 
 def build_anta_device(device: str) -> AsyncEOSDevice:
     """Build the ANTA device object for a device using the provided Ansible inventory variables."""
-    if ANSIBLE_VARS is None or PLUGIN_ARGS is None:
-        msg = "Required global variables not initialized"
-        raise RuntimeError(msg)
-
     # Required settings to create the AsyncEOSDevice object
     required_settings = ["host", "username", "password"]
 
@@ -447,7 +437,16 @@ def load_one_structured_config(device: str, structured_config_dir: str, structur
 
 
 def setup_queue_listener(result: dict, queue: Queue) -> QueueListener:
-    """Setup and start the queue listener with the Ansible handler. All logs are sent to this queue."""
+    """Setup and start the queue listener for centralized log handling.
+
+    This function establishes the logging pipeline by:
+    1. Creating a handler to convert Python logs to Ansible display format
+    2. Setting up a formatter for console output
+    3. Starting a queue listener thread to process logs from all processes, including the main process
+
+    The queue listener processes logs from the central queue configured in `setup_module_logging`
+    and displays them in the Ansible console.
+    """
     python_to_ansible_handler = PythonToAnsibleHandler(result, display)
 
     console_formatter = logging.Formatter("%(name)s - %(message)s")
@@ -459,7 +458,20 @@ def setup_queue_listener(result: dict, queue: Queue) -> QueueListener:
 
 
 def setup_module_logging(queue: Queue) -> None:
-    """Setup logging for the module. All logs will be sent to the provided queue."""
+    """Setup logging configuration for the module to handle logs across multiple processes.
+
+    This function configures logging for the module in the following way:
+    1. Clears existing handlers for the 'pyavd' logger and enables propagation to use root queue handler
+    2. Sets up a queue-based logging system where all logs are sent to a central queue
+    3. Implements filtering for ANTA and its dependencies (anta, aiocache, asyncio, asyncssh, httpcore, httpx)
+       to reduce noise in the Ansible console:
+       - Only warnings and above from these libraries are sent to the queue
+       - When running with -vvv, all logs are still written to per-process debug files
+    4. Sets appropriate log levels based on Ansible verbosity:
+       - verbosity >= 3: DEBUG level
+       - verbosity > 0: INFO level
+       - verbosity = 0: WARNING level
+    """
     # Clear handlers of `pyavd` logger and set it to propagate to use the root queue handler
     pyavd_logger = logging.getLogger("pyavd")
     pyavd_logger.handlers.clear()
@@ -501,7 +513,13 @@ def setup_module_logging(queue: Queue) -> None:
 
 
 def setup_process_logging() -> None:
-    """Initialize logging for the pool processes."""
+    """Initialize logging for the child processes.
+
+    The child processes inherit the logging configuration from the parent process,
+    configured by `setup_module_logging`. Here, each process will add their own file
+    handler when the logging level is DEBUG `-vvv`. All logs including ANTA and its
+    underlying libraries will be written to a file per process for debugging purposes.
+    """
     # TODO: Add process prefix to console logs
     anta_log_dir = get(PLUGIN_ARGS, "anta_logging.log_dir")
     root_logger = logging.getLogger()

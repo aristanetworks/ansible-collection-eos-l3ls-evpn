@@ -13,8 +13,11 @@ from ._base_classes import AntaTestInputFactory
 class VerifyEnvironmentPowerInputFactory(AntaTestInputFactory):
     """Input factory class for the VerifyEnvironmentPower test.
 
-    Required config:
-      - accepted_pwr_supply_states (default: ["ok"])
+    This factory generates test inputs for verifying the power supply states.
+
+    The test verifies that the power supply states are 'ok'.
+
+    Other states will be configurable in the future.
     """
 
     def create(self) -> VerifyEnvironmentPower.Input:
@@ -28,8 +31,11 @@ class VerifyEnvironmentPowerInputFactory(AntaTestInputFactory):
 class VerifyEnvironmentCoolingInputFactory(AntaTestInputFactory):
     """Input factory class for the VerifyEnvironmentCooling test.
 
-    Required config:
-      - accepted_fan_states (default: ["ok"])
+    This factory generates test inputs for verifying the fan states.
+
+    The test verifies that the fan states are 'ok'.
+
+    Other states will be configurable in the future.
     """
 
     def create(self) -> VerifyEnvironmentCooling.Input:
@@ -43,11 +49,13 @@ class VerifyEnvironmentCoolingInputFactory(AntaTestInputFactory):
 class VerifyTransceiversManufacturersInputFactory(AntaTestInputFactory):
     """Input factory class for the VerifyTransceiversManufacturers test.
 
-    Required config:
-      - accepted_xcvr_manufacturers (default: ["Arista Networks", "Arastra, Inc."])
+    This factory generates test inputs for verifying the transceiver manufacturers.
 
-    Notes:
-      - "Not Present" state is always included
+    The test verifites that the transceiver manufacturers are 'Arista Networks' and 'Arastra, Inc.'.
+
+    Other manufacturers will be configurable in the future.
+
+    'Not Present' state is always included.
     """
 
     def create(self) -> VerifyTransceiversManufacturers.Input:

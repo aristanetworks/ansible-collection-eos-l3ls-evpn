@@ -16,15 +16,12 @@ from ._base_classes import AntaTestInputFactory
 class VerifySpecificIPSecConnInputFactory(AntaTestInputFactory):
     """Input factory class for the VerifySpecificIPSecConn test.
 
-    Required config:
-      - router_path_selection.path_groups.[].static_peers
+    This factory generates test inputs for verifying IPsec connections.
 
-    Requirements:
-      - IPv4 static peers only
+    It collects `static_peers` IP addresses from the dynamic path selection
+    `path_groups` to build the list of IPSec connections to verify.
 
-    Notes:
-      - Deduplicates connections (router_ip, vrf) pairs
-      - Always uses default VRF
+    It deduplicates connections and always uses the default VRF.
     """
 
     def create(self) -> VerifySpecificIPSecConn.Input | None:

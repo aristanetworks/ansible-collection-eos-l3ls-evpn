@@ -16,21 +16,16 @@ from ._base_classes import AntaTestInputFactory
 class VerifyLLDPNeighborsInputFactory(AntaTestInputFactory):
     """Input factory class for the VerifyLLDPNeighbors test.
 
-    Required config:
-      - ethernet_interfaces.[].peer
-      - ethernet_interfaces.[].peer_interface
-      - ethernet_interfaces.[].validate_state != False
-      - ethernet_interfaces.[].validate_lldp != False
+    This factory collects LLDP neighbors for Ethernet interfaces that have
+    `peer` and `peer_interface` fields defined in their configuration.
 
-    Requirements:
-      - Interface is not shutdown
-      - Interface is not a subinterface
-      - Peer exists and is deployed in fabric data
-      - Peer within boundary scope if configured
+    Peers must be available (`is_deployed: true`) and within the boundary scope
+    if configured.
 
-    Notes:
-      - Uses FQDN when peer has `dns_domain` set
-      - Consider `interface_defaults.ethernet.shutdown` if `shutdown` is not set
+    The factory respects `validate_state` and `validate_lldp` settings, excludes
+    subinterfaces and shutdown interfaces (considering `interface_defaults.ethernet.shutdown`
+    when not set), and uses peer FQDN when `dns_domain` is configured to match EOS
+    LLDP format.
     """
 
     def create(self) -> VerifyLLDPNeighbors.Input | None:
@@ -71,45 +66,26 @@ class VerifyLLDPNeighborsInputFactory(AntaTestInputFactory):
 class VerifyReachabilityInputFactory(AntaTestInputFactory):
     """Input factory class for the VerifyReachability test.
 
-    Point-to-point links:
-    - Required config:
-      * ethernet_interfaces.[].peer
-      * ethernet_interfaces.[].peer_interface
-      * ethernet_interfaces.[].ip_address != `dhcp`
-    - Requirements:
-      * Interfaces not shutdown
-      * Peers exist and are deployed
-      * Peers within boundary scope
-      * Peer interfaces have IP addresses
+    This factory generates test inputs for verifying reachability between devices.
 
-    Inband management to Loopback0:
-    - Required config:
-      * vlan_interfaces.[].type = `inband_mgmt`
-      * vlan_interfaces.[].ip_address
-    - Requirements:
-      * Interface not shutdown
-      * Peers exist and are deployed
-      * Peers within boundary scope
-      * Peers have Loopback0 IPs
+    Four types of reachability are checked:
 
-    VTEP underlay:
-    - Required config:
-      * loopback_interfaces.Loopback0.ip_address
-    - Requirements:
-      * Device is VTEP (not WAN router)
-      * Peers exist and are deployed
-      * Peers within boundary scope
-      * Peers have Loopback0 IPs
+    - Verifies point-to-point links between Ethernet interfaces where `peer`, `peer_interface`,
+    `ip_address` (non-dhcp) are configured. Links are checked when interfaces are not `shutdown`,
+    fabric peers exist and are deployed (`is_deployed: true`), peers are within boundary scope,
+    and peer interfaces have IP addresses.
 
-    WAN DPS connectivity:
-    - Required config:
-      * dps_interfaces.Dps1.ip_address
-    - Requirements:
-      * Device is WAN router
-      * Device has VTEP IP (Dps1)
-      * Peers exist, are deployed and are WAN routers
-      * Peers within boundary scope
-      * Peers have VTEP IPs (Dps1)
+    - For inband management, it verifies connectivity from inband VLAN interfaces (`type: inband_mgmt`)
+    to fabric peer Loopback0 IP addresses. Interfaces must not be `shutdown`, and peers must exist,
+    be deployed, be within boundary scope, and have Loopback0 IPs.
+
+    - For VTEP underlay, it verifies connectivity between VTEP (excluding WAN routers) Loopback0 IP
+    addresses and fabric peer Loopback0 IPs. Peers must exist, be deployed, be within boundary scope,
+    and have Loopback0 IPs.
+
+    - For WAN DPS connectivity, it verifies reachability between WAN router VTEP IPs (Dps1). The
+    device must be a WAN router with VTEP IP, and fabric peers must be deployed WAN routers within
+    boundary scope that have VTEP IPs.
     """
 
     def create(self) -> VerifyReachability.Input | None:

@@ -16,25 +16,21 @@ from ._base_classes import AntaTestInputFactory
 class VerifyInterfacesStatusInputFactory(AntaTestInputFactory):
     """Input factory class for the VerifyInterfacesStatus test.
 
-    Ethernet/Port-Channel interfaces:
-    - Required config:
-      * validate_state != False
-    - Requirements:
-      * Interface exists in config
-      * Interface is not shutdown
+    This factory generates test inputs for verifying the status of interfaces.
 
-    VLAN/Loopback/DPS interfaces:
-    - Requirements:
-      * Interface exists in config
-      * Interface is not shutdown
+    The following interfaces are considered:
+    - Ethernet interfaces - `ethernet_interfaces`
+    - Port-Channel interfaces - `port_channel_interfaces`
+    - VLAN interfaces - `vlan_interfaces`
+    - Loopback interfaces - `loopback_interfaces`
+    - DPS interfaces - `dps_interfaces`
+    - Vxlan1 interface, if the device is a VTEP
 
-    Vxlan1 interface:
-    - Requirements:
-      * Device is VTEP
+    The expected status is 'adminDown' when the interface is shutdown, 'up' otherwise.
 
-    Notes:
-      - Expected status is 'adminDown' when the interface is shutdown, 'up' otherwise
-      - Ethernet interfaces can consider `interface_defaults.ethernet.shutdown`
+    For Ethernet and Port-Channel interfaces, state validation depends on the `validate_state` knob (default: True).
+
+    For Ethernet interfaces, `interface_defaults.ethernet.shutdown` is considered when `shutdown` is not set
     """
 
     def create(self) -> VerifyInterfacesStatus.Input | None:

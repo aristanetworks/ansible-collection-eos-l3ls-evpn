@@ -16,13 +16,12 @@ from ._base_classes import AntaTestInputFactory
 class VerifyStunClientTranslationInputFactory(AntaTestInputFactory):
     """Input factory class for the VerifyStunClientTranslation test.
 
-    Required config:
-      - router_path_selection.path_groups.[].local_interfaces.[].stun.server_profiles
-      - ethernet_interfaces.[].ip_address (for referenced interfaces)
+    This factory generates test inputs for verifying STUN client translations.
 
-    Requirements:
-      - Path groups have local interfaces with STUN server profiles
-      - IPv4 source address for the STUN client
+    It collects the source IP address for each STUN client from `local_interfaces`
+    of the dynamic path selection `path_groups` that have STUN `server_profiles` configured.
+
+    The STUN clients use a source port of 4500 by default.
     """
 
     def create(self) -> VerifyStunClientTranslation.Input | None:
