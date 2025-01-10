@@ -98,8 +98,8 @@
 {%                 do all_vlans[vlan_int].update({"vni": vni}) %}
 {%             endfor %}
 {%         endif %}
-{%         for vlan, data in all_vlans.items() | arista.avd.natural_sort %}
-| {{ vlan }} | {{ data.vni | arista.avd.default('-') }} | {{ data.flood_list | arista.avd.default('-') }} | {{ data.multicast_group | arista.avd.default('-') }} |
+{%         for vlan, vlan_data in all_vlans.items() | arista.avd.natural_sort %}
+| {{ vlan }} | {{ vlan_data.vni | arista.avd.default('-') }} | {{ vlan_data.flood_list | arista.avd.default('-') }} | {{ vlan_data.multicast_group | arista.avd.default('-') }} |
 {%         endfor %}
 {%     endif %}
 {%     if vxlan_config.vxlan.vrfs is arista.avd.defined %}
