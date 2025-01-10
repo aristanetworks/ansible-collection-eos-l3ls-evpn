@@ -20,7 +20,7 @@ aaa_accounting:
     console:
       - commands: all
         type: start-stop
-        methods: []   
+        methods: []
       - commands: 0
         type: start-stop
     default:
@@ -28,4 +28,4 @@ aaa_accounting:
         type: start-stop
       - commands: 0
         type: start-stop
-        methods: [] 
+        methods: []
