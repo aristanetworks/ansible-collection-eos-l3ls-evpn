@@ -47,6 +47,7 @@ Please refer to the schema documentation for details on the various keys in the 
 5. **Defaults:** Avoid using `default` in eos_cli_config_gen.
 6. **Min/Max:** Specify min/max values in the schema if they are defined in the EOS CLI. Make sure to check on different hardware platforms.
 7. **Valid_Values:** Specify valid options in the schema as per the EOS CLI and ensure compatibility across different hardware platforms.
+8. **Required:** Set `required: true` if the key must be provided to produce a valid configuration.
 
 ### Creating Jinja2 Templates
 
