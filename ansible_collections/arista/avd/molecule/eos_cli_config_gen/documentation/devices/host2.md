@@ -92,7 +92,7 @@
 
 #### Login Banner
 
-```json
+```text
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !***!!!Unauthorized access prohibited!!!***!
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -101,7 +101,7 @@ EOF
 
 #### MOTD Banner
 
-```json
+```text
 .         Switch       : $(hostname)                            .
 .         Site         : DC1                      .
 .         Type info for information about the device            .
