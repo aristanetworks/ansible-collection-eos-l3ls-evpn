@@ -22954,9 +22954,9 @@ keys:
                 description: 'Set VNI on range of vlans.
 
                   If vni is set on the vlan in `vxlan_interface.vxlan1.vxlan.vlans`,
-                  it should not overlap in `vlan_range.vlans`.
+                  it should not overlap with `vxlan_interface.vxlan1.vxlan.vlans`.
 
-                  Number of `vlans` must equal number of `vnis`.'
+                  Number of VLANs must equal number of VNIs.'
                 keys:
                   vlans:
                     type: str
@@ -22965,7 +22965,7 @@ keys:
                   vnis:
                     type: str
                     required: true
-                    description: 'Set `vnis` in the correct sequence for the `vlans`.
+                    description: 'Set `vnis` in the correct sequence as `vlans`.
 
                       e.g. "10094,10096,10100-10110".'
               vrfs:
