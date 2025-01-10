@@ -36,10 +36,13 @@ interface Management1
 
 | Type | Commands | Record type | Group | Logging |
 | ---- | -------- | ----------- | ----- | ------- |
-| Exec - Console | - | start-stop | - | - |
-| Commands - Console | all | start-stop |  -  | False |
+| Exec - Console | - | start-stop | - | False |
+| Commands - Console | all | start-stop | - | False |
 | Commands - Console | 0 | start-stop |  -  | False |
-| Exec - Default | - | start-stop | - | - |
+| Exec - Default | - | start-stop | - | False |
+| System - Default | - | start-stop | - | False |
+| Dot1x - Default | - | start-stop | - | False |
+| Commands - Default | 0 | start-stop | - | False |
 
 #### AAA Accounting Device Configuration
 

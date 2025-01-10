@@ -3,31 +3,29 @@ aaa_accounting:
   exec:
     console:
       type: start-stop
-      methods:
+      methods: []
     default:
       type: start-stop
-      methods:
+      methods: []
   dot1x:
     # Test - methods are not defined
     default:
       type: start-stop
-      methods:
+      methods: []
   system:
     default:
       type: start-stop
-      methods:
+      methods: []
   commands:
     console:
       - commands: all
         type: start-stop
-        methods:
+        methods: []     
       - commands: 0
         type: start-stop
-        methods:
     default:
       - commands: all
         type: start-stop
-        methods:
       - commands: 0
         type: start-stop
-        methods:
+        methods: []     
