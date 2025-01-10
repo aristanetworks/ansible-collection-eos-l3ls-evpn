@@ -9,6 +9,7 @@ from anta.input_models.connectivity import Host, LLDPNeighbor
 from anta.tests.connectivity import VerifyLLDPNeighbors, VerifyReachability
 
 from pyavd._anta.logs import LogMessage
+from pyavd.j2filters import natural_sort
 
 from ._base_classes import AntaTestInputFactory
 
@@ -60,7 +61,7 @@ class VerifyLLDPNeighborsInputFactory(AntaTestInputFactory):
                 )
             )
 
-        return VerifyLLDPNeighbors.Input(neighbors=neighbors) if neighbors else None
+        return VerifyLLDPNeighbors.Input(neighbors=natural_sort(neighbors, sort_key="port")) if neighbors else None
 
 
 class VerifyReachabilityInputFactory(AntaTestInputFactory):
@@ -108,7 +109,7 @@ class VerifyReachabilityInputFactory(AntaTestInputFactory):
         with self.logger.context("WAN Router DPS Connectivity"):
             hosts.extend(self.get_wan_dps_hosts())
 
-        return VerifyReachability.Input(hosts=hosts) if hosts else None
+        return VerifyReachability.Input(hosts=natural_sort(hosts, sort_key="destination")) if hosts else None
 
     def get_point_to_point_hosts(self) -> list[Host]:
         """Get reachability hosts for point-to-point interface connections."""

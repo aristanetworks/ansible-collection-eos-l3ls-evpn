@@ -6,6 +6,7 @@ from __future__ import annotations
 from anta.tests.hardware import VerifyEnvironmentCooling, VerifyEnvironmentPower, VerifyTransceiversManufacturers
 
 from pyavd._utils import get_v2
+from pyavd.j2filters import natural_sort
 
 from ._base_classes import AntaTestInputFactory
 
@@ -25,7 +26,7 @@ class VerifyEnvironmentPowerInputFactory(AntaTestInputFactory):
         # TODO: `accepted_pwr_supply_states` is not yet implemented in the AVD EosCliConfigGen schema.
         states = get_v2(self.structured_config, "accepted_pwr_supply_states", default=["ok"])
 
-        return VerifyEnvironmentPower.Input(states=states)
+        return VerifyEnvironmentPower.Input(states=natural_sort(states))
 
 
 class VerifyEnvironmentCoolingInputFactory(AntaTestInputFactory):
@@ -43,7 +44,7 @@ class VerifyEnvironmentCoolingInputFactory(AntaTestInputFactory):
         # TODO: `accepted_fan_states` is not yet implemented in the AVD EosCliConfigGen schema.
         states = get_v2(self.structured_config, "accepted_fan_states", default=["ok"])
 
-        return VerifyEnvironmentCooling.Input(states=states)
+        return VerifyEnvironmentCooling.Input(states=natural_sort(states))
 
 
 class VerifyTransceiversManufacturersInputFactory(AntaTestInputFactory):
@@ -64,4 +65,4 @@ class VerifyTransceiversManufacturersInputFactory(AntaTestInputFactory):
         manufacturers = get_v2(self.structured_config, "accepted_xcvr_manufacturers", default=["Arista Networks", "Arastra, Inc."])
         manufacturers.append("Not Present")
 
-        return VerifyTransceiversManufacturers.Input(manufacturers=manufacturers)
+        return VerifyTransceiversManufacturers.Input(manufacturers=natural_sort(manufacturers))

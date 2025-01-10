@@ -161,8 +161,8 @@
           ]
         },
         "manufacturers": [
-          "Arista Networks",
           "Arastra, Inc.",
+          "Arista Networks",
           "Not Present"
         ]
       }
@@ -237,54 +237,6 @@
         },
         "bgp_peers": [
           {
-            "peer_address": "10.255.255.105",
-            "vrf": "default",
-            "capabilities": [
-              "ipv4Unicast"
-            ],
-            "strict": true
-          },
-          {
-            "peer_address": "10.255.255.109",
-            "vrf": "default",
-            "capabilities": [
-              "ipv4Unicast"
-            ],
-            "strict": true
-          },
-          {
-            "peer_address": "10.255.255.113",
-            "vrf": "default",
-            "capabilities": [
-              "ipv4Unicast"
-            ],
-            "strict": true
-          },
-          {
-            "peer_address": "10.255.255.117",
-            "vrf": "default",
-            "capabilities": [
-              "ipv4Unicast"
-            ],
-            "strict": true
-          },
-          {
-            "peer_address": "10.255.255.121",
-            "vrf": "default",
-            "capabilities": [
-              "ipv4Unicast"
-            ],
-            "strict": true
-          },
-          {
-            "peer_address": "10.255.255.125",
-            "vrf": "default",
-            "capabilities": [
-              "ipv4Unicast"
-            ],
-            "strict": true
-          },
-          {
             "peer_address": "10.255.128.13",
             "vrf": "default",
             "capabilities": [
@@ -329,6 +281,54 @@
             "vrf": "default",
             "capabilities": [
               "l2VpnEvpn"
+            ],
+            "strict": true
+          },
+          {
+            "peer_address": "10.255.255.105",
+            "vrf": "default",
+            "capabilities": [
+              "ipv4Unicast"
+            ],
+            "strict": true
+          },
+          {
+            "peer_address": "10.255.255.109",
+            "vrf": "default",
+            "capabilities": [
+              "ipv4Unicast"
+            ],
+            "strict": true
+          },
+          {
+            "peer_address": "10.255.255.113",
+            "vrf": "default",
+            "capabilities": [
+              "ipv4Unicast"
+            ],
+            "strict": true
+          },
+          {
+            "peer_address": "10.255.255.117",
+            "vrf": "default",
+            "capabilities": [
+              "ipv4Unicast"
+            ],
+            "strict": true
+          },
+          {
+            "peer_address": "10.255.255.121",
+            "vrf": "default",
+            "capabilities": [
+              "ipv4Unicast"
+            ],
+            "strict": true
+          },
+          {
+            "peer_address": "10.255.255.125",
+            "vrf": "default",
+            "capabilities": [
+              "ipv4Unicast"
             ],
             "strict": true
           }
@@ -347,30 +347,6 @@
         },
         "bgp_peers": [
           {
-            "peer_address": "10.255.255.105",
-            "vrf": "default"
-          },
-          {
-            "peer_address": "10.255.255.109",
-            "vrf": "default"
-          },
-          {
-            "peer_address": "10.255.255.113",
-            "vrf": "default"
-          },
-          {
-            "peer_address": "10.255.255.117",
-            "vrf": "default"
-          },
-          {
-            "peer_address": "10.255.255.121",
-            "vrf": "default"
-          },
-          {
-            "peer_address": "10.255.255.125",
-            "vrf": "default"
-          },
-          {
             "peer_address": "10.255.128.13",
             "vrf": "default"
           },
@@ -392,6 +368,30 @@
           },
           {
             "peer_address": "10.255.128.18",
+            "vrf": "default"
+          },
+          {
+            "peer_address": "10.255.255.105",
+            "vrf": "default"
+          },
+          {
+            "peer_address": "10.255.255.109",
+            "vrf": "default"
+          },
+          {
+            "peer_address": "10.255.255.113",
+            "vrf": "default"
+          },
+          {
+            "peer_address": "10.255.255.117",
+            "vrf": "default"
+          },
+          {
+            "peer_address": "10.255.255.121",
+            "vrf": "default"
+          },
+          {
+            "peer_address": "10.255.255.125",
             "vrf": "default"
           }
         ]

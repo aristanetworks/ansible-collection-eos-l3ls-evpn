@@ -9,6 +9,7 @@ from anta.input_models.security import IPSecPeer
 from anta.tests.security import VerifySpecificIPSecConn
 
 from pyavd._anta.logs import LogMessage
+from pyavd.j2filters import natural_sort
 
 from ._base_classes import AntaTestInputFactory
 
@@ -47,4 +48,6 @@ class VerifySpecificIPSecConnInputFactory(AntaTestInputFactory):
                     )
                     added_peers.add((static_peer.router_ip, "default"))
 
-        return VerifySpecificIPSecConn.Input(ip_security_connections=ip_security_connections) if ip_security_connections else None
+        return (
+            VerifySpecificIPSecConn.Input(ip_security_connections=natural_sort(ip_security_connections, sort_key="peer")) if ip_security_connections else None
+        )

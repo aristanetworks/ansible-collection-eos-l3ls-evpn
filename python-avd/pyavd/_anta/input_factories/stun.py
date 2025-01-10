@@ -9,6 +9,7 @@ from anta.input_models.stun import StunClientTranslation
 from anta.tests.stun import VerifyStunClientTranslation
 
 from pyavd._anta.logs import LogMessage
+from pyavd.j2filters import natural_sort
 
 from ._base_classes import AntaTestInputFactory
 
@@ -50,4 +51,4 @@ class VerifyStunClientTranslationInputFactory(AntaTestInputFactory):
                 source_address = ip_interface(ip_address).ip
                 stun_clients.append(StunClientTranslation(source_address=source_address))
 
-        return VerifyStunClientTranslation.Input(stun_clients=stun_clients) if stun_clients else None
+        return VerifyStunClientTranslation.Input(stun_clients=natural_sort(stun_clients, sort_key="source_address")) if stun_clients else None

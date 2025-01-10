@@ -9,6 +9,7 @@ from anta.input_models.interfaces import InterfaceState
 from anta.tests.interfaces import VerifyInterfacesStatus
 
 from pyavd._anta.logs import LogMessage
+from pyavd.j2filters import natural_sort
 
 from ._base_classes import AntaTestInputFactory
 
@@ -64,4 +65,4 @@ class VerifyInterfacesStatusInputFactory(AntaTestInputFactory):
         if self.device.is_vtep:
             interfaces.append(InterfaceState(name="Vxlan1", status="up"))
 
-        return VerifyInterfacesStatus.Input(interfaces=interfaces) if interfaces else None
+        return VerifyInterfacesStatus.Input(interfaces=natural_sort(interfaces, sort_key="name")) if interfaces else None

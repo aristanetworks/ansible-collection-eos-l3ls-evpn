@@ -6,6 +6,7 @@ from __future__ import annotations
 from anta.tests.routing.generic import VerifyRoutingTableEntry
 
 from pyavd._anta.logs import LogMessage
+from pyavd.j2filters import natural_sort
 
 from ._base_classes import AntaTestInputFactory
 
@@ -45,4 +46,4 @@ class VerifyRoutingTableEntryInputFactory(AntaTestInputFactory):
 
             routes.update(ips)
 
-        return VerifyRoutingTableEntry.Input(routes=sorted(routes), collect="all") if routes else None
+        return VerifyRoutingTableEntry.Input(routes=natural_sort(routes), collect="all") if routes else None

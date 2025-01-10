@@ -12,16 +12,6 @@
         },
         "neighbors": [
           {
-            "port": "Ethernet3",
-            "neighbor_device": "dc2-leaf2a",
-            "neighbor_port": "Ethernet3"
-          },
-          {
-            "port": "Ethernet4",
-            "neighbor_device": "dc2-leaf2a",
-            "neighbor_port": "Ethernet4"
-          },
-          {
             "port": "Ethernet1",
             "neighbor_device": "dc2-spine1",
             "neighbor_port": "Ethernet4"
@@ -29,6 +19,16 @@
           {
             "port": "Ethernet2",
             "neighbor_device": "dc2-spine2",
+            "neighbor_port": "Ethernet4"
+          },
+          {
+            "port": "Ethernet3",
+            "neighbor_device": "dc2-leaf2a",
+            "neighbor_port": "Ethernet3"
+          },
+          {
+            "port": "Ethernet4",
+            "neighbor_device": "dc2-leaf2a",
             "neighbor_port": "Ethernet4"
           },
           {
@@ -51,14 +51,14 @@
         },
         "hosts": [
           {
-            "destination": "10.255.255.116",
-            "source": "10.255.255.117",
+            "destination": "10.33.0.5",
+            "source": "10.255.128.16",
             "vrf": "default",
             "repeat": 1
           },
           {
-            "destination": "10.255.255.118",
-            "source": "10.255.255.119",
+            "destination": "10.33.0.6",
+            "source": "10.255.128.16",
             "vrf": "default",
             "repeat": 1
           },
@@ -105,18 +105,6 @@
             "repeat": 1
           },
           {
-            "destination": "10.33.0.5",
-            "source": "10.255.128.16",
-            "vrf": "default",
-            "repeat": 1
-          },
-          {
-            "destination": "10.33.0.6",
-            "source": "10.255.128.16",
-            "vrf": "default",
-            "repeat": 1
-          },
-          {
             "destination": "10.255.128.11",
             "source": "10.255.128.16",
             "vrf": "default",
@@ -155,6 +143,18 @@
           {
             "destination": "10.255.128.18",
             "source": "10.255.128.16",
+            "vrf": "default",
+            "repeat": 1
+          },
+          {
+            "destination": "10.255.255.116",
+            "source": "10.255.255.117",
+            "vrf": "default",
+            "repeat": 1
+          },
+          {
+            "destination": "10.255.255.118",
+            "source": "10.255.255.119",
             "vrf": "default",
             "repeat": 1
           }
@@ -228,8 +228,8 @@
           ]
         },
         "manufacturers": [
-          "Arista Networks",
           "Arastra, Inc.",
+          "Arista Networks",
           "Not Present"
         ]
       }
@@ -260,14 +260,6 @@
         },
         "interfaces": [
           {
-            "name": "Ethernet3",
-            "status": "up"
-          },
-          {
-            "name": "Ethernet4",
-            "status": "up"
-          },
-          {
             "name": "Ethernet1",
             "status": "up"
           },
@@ -276,11 +268,11 @@
             "status": "up"
           },
           {
-            "name": "Ethernet8",
+            "name": "Ethernet3",
             "status": "up"
           },
           {
-            "name": "Ethernet6",
+            "name": "Ethernet4",
             "status": "up"
           },
           {
@@ -288,47 +280,11 @@
             "status": "up"
           },
           {
-            "name": "Port-Channel3",
+            "name": "Ethernet6",
             "status": "up"
           },
           {
-            "name": "Port-Channel8",
-            "status": "up"
-          },
-          {
-            "name": "Port-Channel5",
-            "status": "up"
-          },
-          {
-            "name": "Vlan4093",
-            "status": "up"
-          },
-          {
-            "name": "Vlan4094",
-            "status": "up"
-          },
-          {
-            "name": "Vlan11",
-            "status": "up"
-          },
-          {
-            "name": "Vlan12",
-            "status": "up"
-          },
-          {
-            "name": "Vlan3009",
-            "status": "up"
-          },
-          {
-            "name": "Vlan21",
-            "status": "up"
-          },
-          {
-            "name": "Vlan22",
-            "status": "up"
-          },
-          {
-            "name": "Vlan3010",
+            "name": "Ethernet8",
             "status": "up"
           },
           {
@@ -345,6 +301,50 @@
           },
           {
             "name": "Loopback11",
+            "status": "up"
+          },
+          {
+            "name": "Port-Channel3",
+            "status": "up"
+          },
+          {
+            "name": "Port-Channel5",
+            "status": "up"
+          },
+          {
+            "name": "Port-Channel8",
+            "status": "up"
+          },
+          {
+            "name": "Vlan11",
+            "status": "up"
+          },
+          {
+            "name": "Vlan12",
+            "status": "up"
+          },
+          {
+            "name": "Vlan21",
+            "status": "up"
+          },
+          {
+            "name": "Vlan22",
+            "status": "up"
+          },
+          {
+            "name": "Vlan3009",
+            "status": "up"
+          },
+          {
+            "name": "Vlan3010",
+            "status": "up"
+          },
+          {
+            "name": "Vlan4093",
+            "status": "up"
+          },
+          {
+            "name": "Vlan4094",
             "status": "up"
           },
           {
@@ -382,30 +382,6 @@
         },
         "bgp_peers": [
           {
-            "peer_address": "10.255.129.120",
-            "vrf": "default",
-            "capabilities": [
-              "ipv4Unicast"
-            ],
-            "strict": true
-          },
-          {
-            "peer_address": "10.255.255.116",
-            "vrf": "default",
-            "capabilities": [
-              "ipv4Unicast"
-            ],
-            "strict": true
-          },
-          {
-            "peer_address": "10.255.255.118",
-            "vrf": "default",
-            "capabilities": [
-              "ipv4Unicast"
-            ],
-            "strict": true
-          },
-          {
             "peer_address": "10.255.128.11",
             "vrf": "default",
             "capabilities": [
@@ -423,6 +399,14 @@
           },
           {
             "peer_address": "10.255.129.120",
+            "vrf": "default",
+            "capabilities": [
+              "ipv4Unicast"
+            ],
+            "strict": true
+          },
+          {
+            "peer_address": "10.255.129.120",
             "vrf": "VRF10",
             "capabilities": [
               "ipv4Unicast"
@@ -432,6 +416,22 @@
           {
             "peer_address": "10.255.129.120",
             "vrf": "VRF11",
+            "capabilities": [
+              "ipv4Unicast"
+            ],
+            "strict": true
+          },
+          {
+            "peer_address": "10.255.255.116",
+            "vrf": "default",
+            "capabilities": [
+              "ipv4Unicast"
+            ],
+            "strict": true
+          },
+          {
+            "peer_address": "10.255.255.118",
+            "vrf": "default",
             "capabilities": [
               "ipv4Unicast"
             ],
@@ -452,18 +452,6 @@
         },
         "bgp_peers": [
           {
-            "peer_address": "10.255.129.120",
-            "vrf": "default"
-          },
-          {
-            "peer_address": "10.255.255.116",
-            "vrf": "default"
-          },
-          {
-            "peer_address": "10.255.255.118",
-            "vrf": "default"
-          },
-          {
             "peer_address": "10.255.128.11",
             "vrf": "default"
           },
@@ -473,11 +461,23 @@
           },
           {
             "peer_address": "10.255.129.120",
+            "vrf": "default"
+          },
+          {
+            "peer_address": "10.255.129.120",
             "vrf": "VRF10"
           },
           {
             "peer_address": "10.255.129.120",
             "vrf": "VRF11"
+          },
+          {
+            "peer_address": "10.255.255.116",
+            "vrf": "default"
+          },
+          {
+            "peer_address": "10.255.255.118",
+            "vrf": "default"
           }
         ]
       }

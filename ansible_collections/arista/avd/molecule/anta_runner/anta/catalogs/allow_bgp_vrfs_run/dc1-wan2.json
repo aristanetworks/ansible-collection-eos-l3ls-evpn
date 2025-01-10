@@ -51,6 +51,12 @@
         },
         "hosts": [
           {
+            "destination": "10.255.1.1",
+            "source": "10.255.1.2",
+            "vrf": "default",
+            "repeat": 1
+          },
+          {
             "destination": "10.255.255.4",
             "source": "10.255.255.5",
             "vrf": "default",
@@ -59,12 +65,6 @@
           {
             "destination": "10.255.255.6",
             "source": "10.255.255.7",
-            "vrf": "default",
-            "repeat": 1
-          },
-          {
-            "destination": "10.255.1.1",
-            "source": "10.255.1.2",
             "vrf": "default",
             "repeat": 1
           }
@@ -138,8 +138,8 @@
           ]
         },
         "manufacturers": [
-          "Arista Networks",
           "Arastra, Inc.",
+          "Arista Networks",
           "Not Present"
         ]
       }
@@ -170,6 +170,10 @@
         },
         "interfaces": [
           {
+            "name": "Dps1",
+            "status": "up"
+          },
+          {
             "name": "Ethernet1",
             "status": "up"
           },
@@ -187,10 +191,6 @@
           },
           {
             "name": "Loopback0",
-            "status": "up"
-          },
-          {
-            "name": "Dps1",
             "status": "up"
           },
           {
@@ -214,6 +214,14 @@
         },
         "bgp_peers": [
           {
+            "peer_address": "10.255.1.1",
+            "vrf": "default",
+            "capabilities": [
+              "l2VpnEvpn"
+            ],
+            "strict": true
+          },
+          {
             "peer_address": "10.255.255.4",
             "vrf": "default",
             "capabilities": [
@@ -248,14 +256,6 @@
               "ipv4SrTe",
               "l2VpnEvpn",
               "linkState"
-            ],
-            "strict": true
-          },
-          {
-            "peer_address": "10.255.1.1",
-            "vrf": "default",
-            "capabilities": [
-              "l2VpnEvpn"
             ],
             "strict": true
           }
@@ -274,6 +274,10 @@
         },
         "bgp_peers": [
           {
+            "peer_address": "10.255.1.1",
+            "vrf": "default"
+          },
+          {
             "peer_address": "10.255.255.4",
             "vrf": "default"
           },
@@ -287,10 +291,6 @@
           },
           {
             "peer_address": "10.255.255.20",
-            "vrf": "default"
-          },
-          {
-            "peer_address": "10.255.1.1",
             "vrf": "default"
           }
         ]
@@ -338,15 +338,15 @@
         },
         "ip_security_connections": [
           {
+            "peer": "10.255.1.1",
+            "vrf": "default"
+          },
+          {
             "peer": "10.255.255.10",
             "vrf": "default"
           },
           {
             "peer": "10.255.255.20",
-            "vrf": "default"
-          },
-          {
-            "peer": "10.255.1.1",
             "vrf": "default"
           }
         ]
@@ -366,10 +366,10 @@
         },
         "stun_clients": [
           {
-            "source_address": "172.18.4.2"
+            "source_address": "100.64.4.2"
           },
           {
-            "source_address": "100.64.4.2"
+            "source_address": "172.18.4.2"
           }
         ]
       }

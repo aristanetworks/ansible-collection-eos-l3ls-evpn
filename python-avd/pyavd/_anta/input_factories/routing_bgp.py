@@ -7,6 +7,7 @@ from anta.input_models.routing.bgp import BgpPeer
 from anta.tests.routing.bgp import VerifyBGPPeerMPCaps, VerifyBGPPeerSession
 
 from pyavd._anta.logs import LogMessage
+from pyavd.j2filters import natural_sort
 
 from ._base_classes import AntaTestInputFactory
 from ._constants import DEFAULT_VRF_ADDRESS_FAMILIES, VRF_ADDRESS_FAMILIES
@@ -34,7 +35,7 @@ class VerifyBGPPeerSessionInputFactory(AntaTestInputFactory):
             )
             for neighbor in self.device.bgp_neighbors
         ]
-        return VerifyBGPPeerSession.Input(bgp_peers=bgp_peers) if bgp_peers else None
+        return VerifyBGPPeerSession.Input(bgp_peers=natural_sort(bgp_peers, sort_key="peer_address")) if bgp_peers else None
 
 
 class VerifyBGPPeerMPCapsInputFactory(AntaTestInputFactory):
@@ -121,10 +122,9 @@ class VerifyBGPPeerMPCapsInputFactory(AntaTestInputFactory):
 
             if not_activated_afs:
                 caller = f"Peer {neighbor.peer if neighbor.peer else neighbor_ip} in VRF {neighbor.vrf}"
-                self.logger.debug(LogMessage.BGP_AF_NOT_ACTIVATED, caller=caller, capability=", ".join(sorted(not_activated_afs)))
+                self.logger.debug(LogMessage.BGP_AF_NOT_ACTIVATED, caller=caller, capability=", ".join(natural_sort(not_activated_afs)))
 
-            capabilities = sorted(multiprotocol_caps)
-            if capabilities:
-                bgp_peers.append(BgpPeer(peer_address=neighbor.ip_address, vrf=neighbor.vrf, capabilities=capabilities, strict=True))
+            if multiprotocol_caps:
+                bgp_peers.append(BgpPeer(peer_address=neighbor.ip_address, vrf=neighbor.vrf, capabilities=natural_sort(multiprotocol_caps), strict=True))
 
-        return VerifyBGPPeerMPCaps.Input(bgp_peers=bgp_peers) if bgp_peers else None
+        return VerifyBGPPeerMPCaps.Input(bgp_peers=natural_sort(bgp_peers, sort_key="peer_address")) if bgp_peers else None
