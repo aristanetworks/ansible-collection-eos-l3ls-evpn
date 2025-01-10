@@ -4,6 +4,95 @@
     "allow_bgp_vrfs": false
   },
   "devices": {
+    "dc1-leaf1a": {
+      "hostname": "dc1-leaf1a",
+      "dns_domain": "dc1.local",
+      "is_deployed": true,
+      "fabric_name": "FABRIC",
+      "dc_name": "DC1",
+      "pod_name": null,
+      "rack": null,
+      "boundary_location": null,
+      "is_vtep": true,
+      "is_wan_router": false,
+      "loopback0_ip": "10.255.0.3",
+      "vtep_ip": "10.255.1.3",
+      "routed_interface_ips": {
+        "Ethernet1": "10.255.255.1",
+        "Ethernet2": "10.255.255.3",
+        "Ethernet6": "10.255.255.0",
+        "Ethernet7": "10.255.255.4"
+      }
+    },
+    "dc1-leaf1b": {
+      "hostname": "dc1-leaf1b",
+      "dns_domain": "dc1.local",
+      "is_deployed": true,
+      "fabric_name": "FABRIC",
+      "dc_name": "DC1",
+      "pod_name": null,
+      "rack": null,
+      "boundary_location": null,
+      "is_vtep": true,
+      "is_wan_router": false,
+      "loopback0_ip": "10.255.0.4",
+      "vtep_ip": "10.255.1.3",
+      "routed_interface_ips": {
+        "Ethernet1": "10.255.255.5",
+        "Ethernet2": "10.255.255.7",
+        "Ethernet6": "10.255.255.2",
+        "Ethernet7": "10.255.255.6"
+      }
+    },
+    "dc1-leaf1c": {
+      "hostname": "dc1-leaf1c",
+      "dns_domain": "dc1.local",
+      "is_deployed": true,
+      "fabric_name": "FABRIC",
+      "dc_name": "DC1",
+      "pod_name": null,
+      "rack": null,
+      "boundary_location": null,
+      "is_vtep": false,
+      "is_wan_router": false,
+      "loopback0_ip": null,
+      "vtep_ip": null,
+      "routed_interface_ips": {}
+    },
+    "dc1-leaf2a": {
+      "hostname": "dc1-leaf2a",
+      "dns_domain": "dc1.local",
+      "is_deployed": true,
+      "fabric_name": "FABRIC",
+      "dc_name": "DC1",
+      "pod_name": null,
+      "rack": null,
+      "boundary_location": null,
+      "is_vtep": true,
+      "is_wan_router": false,
+      "loopback0_ip": "10.255.0.5",
+      "vtep_ip": "10.255.1.5",
+      "routed_interface_ips": {
+        "Ethernet1": "10.255.255.9",
+        "Ethernet2": "10.255.255.11",
+        "Ethernet6": "192.168.100.0"
+      }
+    },
+    "dc1-leaf2c": {
+      "hostname": "dc1-leaf2c",
+      "dns_domain": "dc1.local",
+      "is_deployed": true,
+      "fabric_name": "FABRIC",
+      "dc_name": "DC1",
+      "pod_name": null,
+      "rack": null,
+      "boundary_location": null,
+      "is_vtep": false,
+      "is_wan_router": false,
+      "loopback0_ip": null,
+      "vtep_ip": null,
+      "routed_interface_ips": {}
+    },
     "dc1-spine1": {
       "hostname": "dc1-spine1",
       "dns_domain": "dc1.local",
@@ -48,8 +137,8 @@
         "Ethernet6": "10.33.255.22"
       }
     },
-    "dc1-leaf1a": {
-      "hostname": "dc1-leaf1a",
+    "dc1-svc-leaf1a": {
+      "hostname": "dc1-svc-leaf1a",
       "dns_domain": "dc1.local",
       "is_deployed": true,
       "fabric_name": "FABRIC",
@@ -59,17 +148,15 @@
       "boundary_location": null,
       "is_vtep": true,
       "is_wan_router": false,
-      "loopback0_ip": "10.255.0.3",
-      "vtep_ip": "10.255.1.3",
+      "loopback0_ip": "10.33.0.5",
+      "vtep_ip": "10.33.1.5",
       "routed_interface_ips": {
-        "Ethernet1": "10.255.255.1",
-        "Ethernet2": "10.255.255.3",
-        "Ethernet6": "10.255.255.0",
-        "Ethernet7": "10.255.255.4"
+        "Ethernet1": "10.33.255.17",
+        "Ethernet2": "10.33.255.19"
       }
     },
-    "dc1-leaf1b": {
-      "hostname": "dc1-leaf1b",
+    "dc1-svc-leaf1b": {
+      "hostname": "dc1-svc-leaf1b",
       "dns_domain": "dc1.local",
       "is_deployed": true,
       "fabric_name": "FABRIC",
@@ -79,63 +166,12 @@
       "boundary_location": null,
       "is_vtep": true,
       "is_wan_router": false,
-      "loopback0_ip": "10.255.0.4",
-      "vtep_ip": "10.255.1.3",
+      "loopback0_ip": "10.33.0.6",
+      "vtep_ip": "10.33.1.5",
       "routed_interface_ips": {
-        "Ethernet1": "10.255.255.5",
-        "Ethernet2": "10.255.255.7",
-        "Ethernet6": "10.255.255.2",
-        "Ethernet7": "10.255.255.6"
+        "Ethernet1": "10.33.255.21",
+        "Ethernet2": "10.33.255.23"
       }
-    },
-    "dc1-leaf2a": {
-      "hostname": "dc1-leaf2a",
-      "dns_domain": "dc1.local",
-      "is_deployed": true,
-      "fabric_name": "FABRIC",
-      "dc_name": "DC1",
-      "pod_name": null,
-      "rack": null,
-      "boundary_location": null,
-      "is_vtep": true,
-      "is_wan_router": false,
-      "loopback0_ip": "10.255.0.5",
-      "vtep_ip": "10.255.1.5",
-      "routed_interface_ips": {
-        "Ethernet1": "10.255.255.9",
-        "Ethernet2": "10.255.255.11",
-        "Ethernet6": "192.168.100.0"
-      }
-    },
-    "dc1-leaf1c": {
-      "hostname": "dc1-leaf1c",
-      "dns_domain": "dc1.local",
-      "is_deployed": true,
-      "fabric_name": "FABRIC",
-      "dc_name": "DC1",
-      "pod_name": null,
-      "rack": null,
-      "boundary_location": null,
-      "is_vtep": false,
-      "is_wan_router": false,
-      "loopback0_ip": null,
-      "vtep_ip": null,
-      "routed_interface_ips": {}
-    },
-    "dc1-leaf2c": {
-      "hostname": "dc1-leaf2c",
-      "dns_domain": "dc1.local",
-      "is_deployed": true,
-      "fabric_name": "FABRIC",
-      "dc_name": "DC1",
-      "pod_name": null,
-      "rack": null,
-      "boundary_location": null,
-      "is_vtep": false,
-      "is_wan_router": false,
-      "loopback0_ip": null,
-      "vtep_ip": null,
-      "routed_interface_ips": {}
     },
     "dc1-wan1": {
       "hostname": "dc1-wan1",
@@ -177,40 +213,144 @@
         "Ethernet4": "100.64.4.2"
       }
     },
-    "dc1-svc-leaf1a": {
-      "hostname": "dc1-svc-leaf1a",
-      "dns_domain": "dc1.local",
+    "dc2-leaf1a": {
+      "hostname": "dc2-leaf1a",
+      "dns_domain": null,
       "is_deployed": true,
       "fabric_name": "FABRIC",
-      "dc_name": "DC1",
+      "dc_name": "DC2",
       "pod_name": null,
       "rack": null,
       "boundary_location": null,
       "is_vtep": true,
       "is_wan_router": false,
-      "loopback0_ip": "10.33.0.5",
-      "vtep_ip": "10.33.1.5",
+      "loopback0_ip": "10.255.128.13",
+      "vtep_ip": "10.255.129.13",
       "routed_interface_ips": {
-        "Ethernet1": "10.33.255.17",
-        "Ethernet2": "10.33.255.19"
+        "Ethernet1": "10.255.255.105",
+        "Ethernet2": "10.255.255.107"
       }
     },
-    "dc1-svc-leaf1b": {
-      "hostname": "dc1-svc-leaf1b",
-      "dns_domain": "dc1.local",
+    "dc2-leaf1b": {
+      "hostname": "dc2-leaf1b",
+      "dns_domain": null,
       "is_deployed": true,
       "fabric_name": "FABRIC",
-      "dc_name": "DC1",
+      "dc_name": "DC2",
       "pod_name": null,
       "rack": null,
       "boundary_location": null,
       "is_vtep": true,
       "is_wan_router": false,
-      "loopback0_ip": "10.33.0.6",
-      "vtep_ip": "10.33.1.5",
+      "loopback0_ip": "10.255.128.14",
+      "vtep_ip": "10.255.129.13",
       "routed_interface_ips": {
-        "Ethernet1": "10.33.255.21",
-        "Ethernet2": "10.33.255.23"
+        "Ethernet1": "10.255.255.109",
+        "Ethernet2": "10.255.255.111"
+      }
+    },
+    "dc2-leaf1c": {
+      "hostname": "dc2-leaf1c",
+      "dns_domain": null,
+      "is_deployed": true,
+      "fabric_name": "FABRIC",
+      "dc_name": "DC2",
+      "pod_name": null,
+      "rack": null,
+      "boundary_location": null,
+      "is_vtep": false,
+      "is_wan_router": false,
+      "loopback0_ip": null,
+      "vtep_ip": null,
+      "routed_interface_ips": {}
+    },
+    "dc2-leaf2a": {
+      "hostname": "dc2-leaf2a",
+      "dns_domain": null,
+      "is_deployed": true,
+      "fabric_name": "FABRIC",
+      "dc_name": "DC2",
+      "pod_name": null,
+      "rack": null,
+      "boundary_location": null,
+      "is_vtep": true,
+      "is_wan_router": false,
+      "loopback0_ip": "10.255.128.15",
+      "vtep_ip": "10.255.129.15",
+      "routed_interface_ips": {
+        "Ethernet1": "10.255.255.113",
+        "Ethernet2": "10.255.255.115",
+        "Ethernet6": "192.168.100.1"
+      }
+    },
+    "dc2-leaf2b": {
+      "hostname": "dc2-leaf2b",
+      "dns_domain": null,
+      "is_deployed": true,
+      "fabric_name": "FABRIC",
+      "dc_name": "DC2",
+      "pod_name": null,
+      "rack": null,
+      "boundary_location": null,
+      "is_vtep": true,
+      "is_wan_router": false,
+      "loopback0_ip": "10.255.128.16",
+      "vtep_ip": "10.255.129.15",
+      "routed_interface_ips": {
+        "Ethernet1": "10.255.255.117",
+        "Ethernet2": "10.255.255.119",
+        "Ethernet6": "192.168.100.3"
+      }
+    },
+    "dc2-leaf2c": {
+      "hostname": "dc2-leaf2c",
+      "dns_domain": null,
+      "is_deployed": true,
+      "fabric_name": "FABRIC",
+      "dc_name": "DC2",
+      "pod_name": null,
+      "rack": null,
+      "boundary_location": null,
+      "is_vtep": false,
+      "is_wan_router": false,
+      "loopback0_ip": null,
+      "vtep_ip": null,
+      "routed_interface_ips": {}
+    },
+    "dc2-leaf3a.arista.com": {
+      "hostname": "dc2-leaf3a.arista.com",
+      "dns_domain": null,
+      "is_deployed": true,
+      "fabric_name": "FABRIC",
+      "dc_name": "DC2",
+      "pod_name": null,
+      "rack": null,
+      "boundary_location": null,
+      "is_vtep": true,
+      "is_wan_router": false,
+      "loopback0_ip": "10.255.128.17",
+      "vtep_ip": "10.255.129.17",
+      "routed_interface_ips": {
+        "Ethernet1": "10.255.255.121",
+        "Ethernet2": "10.255.255.123"
+      }
+    },
+    "dc2-leaf3b.arista.com": {
+      "hostname": "dc2-leaf3b.arista.com",
+      "dns_domain": null,
+      "is_deployed": true,
+      "fabric_name": "FABRIC",
+      "dc_name": "DC2",
+      "pod_name": null,
+      "rack": null,
+      "boundary_location": null,
+      "is_vtep": true,
+      "is_wan_router": false,
+      "loopback0_ip": "10.255.128.18",
+      "vtep_ip": "10.255.129.17",
+      "routed_interface_ips": {
+        "Ethernet1": "10.255.255.125",
+        "Ethernet2": "10.255.255.127"
       }
     },
     "dc2-spine1": {
@@ -256,176 +396,36 @@
         "Ethernet5": "10.255.255.122",
         "Ethernet6": "10.255.255.126"
       }
-    },
-    "dc2-leaf1a": {
-      "hostname": "dc2-leaf1a",
-      "dns_domain": null,
-      "is_deployed": true,
-      "fabric_name": "FABRIC",
-      "dc_name": "DC2",
-      "pod_name": null,
-      "rack": null,
-      "boundary_location": null,
-      "is_vtep": true,
-      "is_wan_router": false,
-      "loopback0_ip": "10.255.128.13",
-      "vtep_ip": "10.255.129.13",
-      "routed_interface_ips": {
-        "Ethernet1": "10.255.255.105",
-        "Ethernet2": "10.255.255.107"
-      }
-    },
-    "dc2-leaf1b": {
-      "hostname": "dc2-leaf1b",
-      "dns_domain": null,
-      "is_deployed": true,
-      "fabric_name": "FABRIC",
-      "dc_name": "DC2",
-      "pod_name": null,
-      "rack": null,
-      "boundary_location": null,
-      "is_vtep": true,
-      "is_wan_router": false,
-      "loopback0_ip": "10.255.128.14",
-      "vtep_ip": "10.255.129.13",
-      "routed_interface_ips": {
-        "Ethernet1": "10.255.255.109",
-        "Ethernet2": "10.255.255.111"
-      }
-    },
-    "dc2-leaf2a": {
-      "hostname": "dc2-leaf2a",
-      "dns_domain": null,
-      "is_deployed": true,
-      "fabric_name": "FABRIC",
-      "dc_name": "DC2",
-      "pod_name": null,
-      "rack": null,
-      "boundary_location": null,
-      "is_vtep": true,
-      "is_wan_router": false,
-      "loopback0_ip": "10.255.128.15",
-      "vtep_ip": "10.255.129.15",
-      "routed_interface_ips": {
-        "Ethernet1": "10.255.255.113",
-        "Ethernet2": "10.255.255.115",
-        "Ethernet6": "192.168.100.1"
-      }
-    },
-    "dc2-leaf2b": {
-      "hostname": "dc2-leaf2b",
-      "dns_domain": null,
-      "is_deployed": true,
-      "fabric_name": "FABRIC",
-      "dc_name": "DC2",
-      "pod_name": null,
-      "rack": null,
-      "boundary_location": null,
-      "is_vtep": true,
-      "is_wan_router": false,
-      "loopback0_ip": "10.255.128.16",
-      "vtep_ip": "10.255.129.15",
-      "routed_interface_ips": {
-        "Ethernet1": "10.255.255.117",
-        "Ethernet2": "10.255.255.119",
-        "Ethernet6": "192.168.100.3"
-      }
-    },
-    "dc2-leaf3a.arista.com": {
-      "hostname": "dc2-leaf3a.arista.com",
-      "dns_domain": null,
-      "is_deployed": true,
-      "fabric_name": "FABRIC",
-      "dc_name": "DC2",
-      "pod_name": null,
-      "rack": null,
-      "boundary_location": null,
-      "is_vtep": true,
-      "is_wan_router": false,
-      "loopback0_ip": "10.255.128.17",
-      "vtep_ip": "10.255.129.17",
-      "routed_interface_ips": {
-        "Ethernet1": "10.255.255.121",
-        "Ethernet2": "10.255.255.123"
-      }
-    },
-    "dc2-leaf3b.arista.com": {
-      "hostname": "dc2-leaf3b.arista.com",
-      "dns_domain": null,
-      "is_deployed": true,
-      "fabric_name": "FABRIC",
-      "dc_name": "DC2",
-      "pod_name": null,
-      "rack": null,
-      "boundary_location": null,
-      "is_vtep": true,
-      "is_wan_router": false,
-      "loopback0_ip": "10.255.128.18",
-      "vtep_ip": "10.255.129.17",
-      "routed_interface_ips": {
-        "Ethernet1": "10.255.255.125",
-        "Ethernet2": "10.255.255.127"
-      }
-    },
-    "dc2-leaf1c": {
-      "hostname": "dc2-leaf1c",
-      "dns_domain": null,
-      "is_deployed": true,
-      "fabric_name": "FABRIC",
-      "dc_name": "DC2",
-      "pod_name": null,
-      "rack": null,
-      "boundary_location": null,
-      "is_vtep": false,
-      "is_wan_router": false,
-      "loopback0_ip": null,
-      "vtep_ip": null,
-      "routed_interface_ips": {}
-    },
-    "dc2-leaf2c": {
-      "hostname": "dc2-leaf2c",
-      "dns_domain": null,
-      "is_deployed": true,
-      "fabric_name": "FABRIC",
-      "dc_name": "DC2",
-      "pod_name": null,
-      "rack": null,
-      "boundary_location": null,
-      "is_vtep": false,
-      "is_wan_router": false,
-      "loopback0_ip": null,
-      "vtep_ip": null,
-      "routed_interface_ips": {}
     }
   },
   "boundary_index": {},
   "_loopback0_ips": {
-    "dc1-spine1": "10.255.0.1",
-    "dc1-spine2": "10.255.0.2",
     "dc1-leaf1a": "10.255.0.3",
     "dc1-leaf1b": "10.255.0.4",
     "dc1-leaf2a": "10.255.0.5",
-    "dc1-wan1": "10.255.2.1",
-    "dc1-wan2": "10.255.2.2",
+    "dc1-spine1": "10.255.0.1",
+    "dc1-spine2": "10.255.0.2",
     "dc1-svc-leaf1a": "10.33.0.5",
     "dc1-svc-leaf1b": "10.33.0.6",
-    "dc2-spine1": "10.255.128.11",
-    "dc2-spine2": "10.255.128.12",
+    "dc1-wan1": "10.255.2.1",
+    "dc1-wan2": "10.255.2.2",
     "dc2-leaf1a": "10.255.128.13",
     "dc2-leaf1b": "10.255.128.14",
     "dc2-leaf2a": "10.255.128.15",
     "dc2-leaf2b": "10.255.128.16",
     "dc2-leaf3a.arista.com": "10.255.128.17",
-    "dc2-leaf3b.arista.com": "10.255.128.18"
+    "dc2-leaf3b.arista.com": "10.255.128.18",
+    "dc2-spine1": "10.255.128.11",
+    "dc2-spine2": "10.255.128.12"
   },
   "_vtep_ips": {
     "dc1-leaf1a": "10.255.1.3",
     "dc1-leaf1b": "10.255.1.3",
     "dc1-leaf2a": "10.255.1.5",
-    "dc1-wan1": "10.255.1.1",
-    "dc1-wan2": "10.255.1.2",
     "dc1-svc-leaf1a": "10.33.1.5",
     "dc1-svc-leaf1b": "10.33.1.5",
+    "dc1-wan1": "10.255.1.1",
+    "dc1-wan2": "10.255.1.2",
     "dc2-leaf1a": "10.255.129.13",
     "dc2-leaf1b": "10.255.129.13",
     "dc2-leaf2a": "10.255.129.15",
@@ -434,12 +434,6 @@
     "dc2-leaf3b.arista.com": "10.255.129.17"
   },
   "_special_ips": {
-    "dc1-spine1": [
-      "10.255.0.1"
-    ],
-    "dc1-spine2": [
-      "10.255.0.2"
-    ],
     "dc1-leaf1a": [
       "10.255.0.3",
       "10.255.1.3"
@@ -452,13 +446,11 @@
       "10.255.0.5",
       "10.255.1.5"
     ],
-    "dc1-wan1": [
-      "10.255.2.1",
-      "10.255.1.1"
+    "dc1-spine1": [
+      "10.255.0.1"
     ],
-    "dc1-wan2": [
-      "10.255.2.2",
-      "10.255.1.2"
+    "dc1-spine2": [
+      "10.255.0.2"
     ],
     "dc1-svc-leaf1a": [
       "10.33.0.5",
@@ -468,11 +460,13 @@
       "10.33.0.6",
       "10.33.1.5"
     ],
-    "dc2-spine1": [
-      "10.255.128.11"
+    "dc1-wan1": [
+      "10.255.1.1",
+      "10.255.2.1"
     ],
-    "dc2-spine2": [
-      "10.255.128.12"
+    "dc1-wan2": [
+      "10.255.1.2",
+      "10.255.2.2"
     ],
     "dc2-leaf1a": [
       "10.255.128.13",
@@ -497,6 +491,12 @@
     "dc2-leaf3b.arista.com": [
       "10.255.128.18",
       "10.255.129.17"
+    ],
+    "dc2-spine1": [
+      "10.255.128.11"
+    ],
+    "dc2-spine2": [
+      "10.255.128.12"
     ]
   },
   "_vteps": [

@@ -6,6 +6,8 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import TYPE_CHECKING, Any
 
+from pyavd.j2filters import natural_sort
+
 if TYPE_CHECKING:
     from collections import defaultdict
     from ipaddress import IPv4Address
@@ -130,7 +132,7 @@ class FabricData:
         return {hostname: ip_index[hostname] for hostname in matching_devices if hostname in ip_index}
 
     def to_dict(self) -> dict:
-        """Convert FabricData to a JSON-seralizable dictionary."""
+        """Convert FabricData to a JSON-seralizable dictionary. Data is sorted for consistent output."""
         return {
             "scope": self.scope.model_dump(mode="json"),
             "devices": {
@@ -153,16 +155,17 @@ class FabricData:
                     "is_wan_router": device.is_wan_router,
                     "loopback0_ip": str(device.loopback0_ip) if device.loopback0_ip else None,
                     "vtep_ip": str(device.vtep_ip) if device.vtep_ip else None,
-                    "routed_interface_ips": {intf: str(ip) for intf, ip in device.routed_interface_ips.items()},
+                    "routed_interface_ips": {intf: str(ip) for intf, ip in natural_sort(device.routed_interface_ips.items())},
                 }
-                for hostname, device in self.devices.items()
+                for hostname, device in natural_sort(self.devices.items())
             },
             "boundary_index": {
-                "/".join(filter(None, (loc.fabric, loc.dc, loc.pod, loc.rack))): sorted(devices) for loc, devices in self.boundary_index.items()
+                "/".join(filter(None, (loc.fabric, loc.dc, loc.pod, loc.rack))): natural_sort(devices)
+                for loc, devices in natural_sort(self.boundary_index.items())
             },
-            "_loopback0_ips": {device: str(ip) for device, ip in self._loopback0_ips.items()},
-            "_vtep_ips": {device: str(ip) for device, ip in self._vtep_ips.items()},
-            "_special_ips": {device: [str(ip) for ip in ips] for device, ips in self._special_ips.items()},
-            "_vteps": sorted(self._vteps),
-            "_wan_routers": sorted(self._wan_routers),
+            "_loopback0_ips": {device: str(ip) for device, ip in natural_sort(self._loopback0_ips.items())},
+            "_vtep_ips": {device: str(ip) for device, ip in natural_sort(self._vtep_ips.items())},
+            "_special_ips": {device: [str(ip) for ip in natural_sort(ips)] for device, ips in natural_sort(self._special_ips.items())},
+            "_vteps": natural_sort(self._vteps),
+            "_wan_routers": natural_sort(self._wan_routers),
         }
