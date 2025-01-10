@@ -88,7 +88,7 @@
 {%                 do all_vlans[vlan.id].update({'flood_list': vlan.flood_vteps | join('<br/>')}) %}
 {%             endif %}
 {%         endfor %}
-{%         if vxlan_config.vxlan.vlan_range.vlans is arista.avd.defined %}
+{%         if vxlan_config.vxlan.vlan_range is arista.avd.defined %}
 {%             set vlans = vxlan_config.vxlan.vlan_range.vlans | arista.avd.range_expand %}
 {%             set vnis = vxlan_config.vxlan.vlan_range.vnis | arista.avd.range_expand %}
 {%             for vlan in vlans %}
