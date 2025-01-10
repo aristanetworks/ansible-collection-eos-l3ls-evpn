@@ -59,14 +59,14 @@ The following documents the lifecycle of work within AVD:
    - If a bug, please see [reporting bugs](#reporting-bugs).
    - If feature request or enhancement, continue.
 2. Open a GitHub Issue
-    - The issue will be reviewed and approved by a maintainer.
+   - The issue will be reviewed and approved by a maintainer.
 3. Submit a [Pull Request (PR)](#submitting-pull-requests) referencing the issue with `Fixes #<issue number>`.
 
 If you follow these steps, a GitHub Issue will be opened before you submit a PR. However, a PR may come in without being discussed in an Issue or Discussion. While we don't advocate for this, you should be aware of the process that will be followed for those circumstances.
 
 Should this happen, and if you followed the project guidelines, have sample tests, and code quality, you will first be acknowledged for your work; thank you in advance. After that, the PR will be quickly reviewed to ensure that it makes sense as a contribution to the project and to gauge the work effort or issues with merging into the *devel* branch. If the effort required by the core team is manageable, it'll likely still be a few weeks before it gets thoroughly reviewed and merged. After that, it will just depend on the current backlog.
 
-### Contributing to Arista Validated Designs
+### Contributing to AVD
 
 Contributing pull requests are gladly welcomed for this repository. If you are planning a significant change, please start a discussion first to ensure we can merge it.
 
@@ -118,6 +118,8 @@ The issue will be reviewed by a moderator after submission, and the appropriate 
 
 #### Submitting Pull Requests
 
+- If you are submitting a Pull Request towards `eos_cli_config_gen`, also follow this [guide](./authoring_eos_cli_config_gen.md).
+
 - If you're interested in contributing to AVD, check out our [development tooling](development-tooling.md) documentation for tips on setting up your development environment.
 
 - It's recommended to open an issue **before** starting work on a pull request and discuss your idea with the AVD maintainers before beginning work. This will save time on something we might be unable to implement. When suggesting a new feature, ensure it will be consistent with any work already in progress.
@@ -131,6 +133,7 @@ The issue will be reviewed by a moderator after submission, and the appropriate 
 - In most cases, adding a changelog entry is unnecessary: A maintainer will take care of this when the PR is merged. This helps avoid merge conflicts resulting from multiple PRs being submitted simultaneously.
 
 - All code submissions should meet the following criteria (CI will enforce these checks):
+
   - Jinja2 templates follow our [guidelines](style-guide.md).
   - Molecule is updated with data covering your fix.
   - Molecule artifacts are updated with your coverage.
@@ -160,4 +163,4 @@ The issue will be reviewed by a moderator after submission, and the appropriate 
     - `requirements`: To use when using the `Bump` type and when any AVD requirement is updated
 
     !!! info "Scopes"
-        The scope is optional and can be ignored safely if your PR covers an undefined scope.
+    The scope is optional and can be ignored safely if your PR covers an undefined scope.
