@@ -7,6 +7,9 @@ l3leaf:
     uplink_ipv4_pool: 192.168.1.0/24
     vtep_loopback_ipv4_pool: 192.168.2.0/24
     loopback_ipv4_pool: 192.168.3.0/24
+    ptp:
+      enabled: true
+      uplinks: [Ethernet1]
   nodes:
     - name: ptp-tests-leaf3
       id: 1
