@@ -115,7 +115,7 @@ keys:
                     type: str
                     required: true
                     description: |-
-                      Set `vnis` in the correct sequence for the `vlans`.
+                      Set `vnis` in the correct sequence as `vlans`.
                       e.g. "10094,10096,10100-10110".
               vrfs:
                 type: list
