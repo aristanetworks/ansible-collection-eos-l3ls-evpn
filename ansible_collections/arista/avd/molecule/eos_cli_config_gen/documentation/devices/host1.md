@@ -408,15 +408,11 @@ ip name-server vrf TEST 2001:db8::2 priority 3
 
 ##### mynameserver0
 
-DNS Domain : arista.avd.com
-
-IP Domain List : domain-list0
-
 | IP Address | VRF | Priority |
 | ---------- | --- | -------- |
-| 1.1.1.1 | - | - |
-| 2.2.2.2 | - | 1 |
-| 8.8.8.8 | - | - |
+| 1.1.1.1 | default | - |
+| 2.2.2.2 | default | 1 |
+| 8.8.8.8 | default | - |
 
 ##### mynameserver1
 
@@ -426,7 +422,7 @@ IP Domain List : domain-list1
 
 | IP Address | VRF | Priority |
 | ---------- | --- | -------- |
-| 1.1.1.1 | - | - |
+| 1.1.1.1 | default | - |
 | 2.2.2.1 | vrf1 | - |
 | 2.2.2.2 | vrf1 | 1 |
 | 2.2.2.4 | vrf1 | 4 |
@@ -446,8 +442,6 @@ ip name-server group mynameserver0
    name-server vrf default 1.1.1.1
    name-server vrf default 8.8.8.8
    name-server vrf default 2.2.2.2 priority 1
-   dns domain arista.avd.com
-   ip domain-list domain-list0
 !
 ip name-server group mynameserver1
    name-server vrf default 1.1.1.1

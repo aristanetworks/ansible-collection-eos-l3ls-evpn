@@ -27,16 +27,17 @@ keys:
               vrf:
                 description: VRF Name.
                 type: str
-                default: default
+                required: true
                 convert_types:
                   - int
               priority:
                 description: Priority value (lower is first).
                 type: int
+                default: 0
                 convert_types:
                   - str
                 min: 0
-                max: 4
+                max: 15
         dns_domain:
           type: str
         ip_domain_list:
