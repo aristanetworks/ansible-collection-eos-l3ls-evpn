@@ -2,10 +2,8 @@
 
 ## Table of Contents
 
-- [Banner](#banner)
-  - [Login Banner](#login-banner)
-  - [MOTD Banner](#motd-banner)
 - [Management](#management)
+  - [Banner](#banner)
   - [Management Interfaces](#management-interfaces)
   - [Management SSH](#management-ssh)
   - [Management API gNMI](#management-api-gnmi)
@@ -88,24 +86,28 @@
   - [STUN Server](#stun-server)
   - [STUN Device Configuration](#stun-device-configuration)
 
-## Banner
+## Management
 
-### Login Banner
+### Banner
 
+#### Login Banner
+
+```json
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !***!!!Unauthorized access prohibited!!!***!
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 EOF
+```
 
-### MOTD Banner
+#### MOTD Banner
 
+```json
 .         Switch       : $(hostname)                            .
 .         Site         : DC1                      .
 .         Type info for information about the device            .
 .         Type help for information about the aliases           .
 EOF
-
-## Management
+```
 
 ### Management Interfaces
 
