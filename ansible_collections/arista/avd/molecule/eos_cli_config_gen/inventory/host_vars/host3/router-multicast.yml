@@ -1,4 +1,4 @@
 ---
 router_multicast:
   ipv4:
-    multipath: "deterministic"
+    multipath: deterministic
