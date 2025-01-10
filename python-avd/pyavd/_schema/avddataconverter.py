@@ -160,7 +160,7 @@ class AvdDataConverter:
         self, deprecation: dict, _data: Any, _schema: dict, path: list[str | int], parent_dict: dict | None
     ) -> Generator[AvdDeprecationWarning, None, None]:
         """
-        deprecation.
+        Deprecation.
 
           warning: bool, default = True
           new_key: str

@@ -19,6 +19,8 @@ management_interfaces:
   ip_address: 1.1.1.2/24
   type: oob
   gateway: 1.1.1.254
+metadata:
+  fabric_name: EOS_DESIGNS_UNIT_TESTS
 service_routing_protocols_model: multi-agent
 static_routes:
 - vrf: MGMT

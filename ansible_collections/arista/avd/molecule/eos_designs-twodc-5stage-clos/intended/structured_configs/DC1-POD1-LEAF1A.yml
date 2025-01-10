@@ -80,6 +80,9 @@ management_api_http:
   - name: MGMT
 metadata:
   platform: vEOS-LAB
+  pod_name: DC1_POD1
+  dc_name: DC1
+  fabric_name: TWODC_5STAGE_CLOS
 port_channel_interfaces:
 - name: Port-Channel3
   description: L2_DC1-POD1-L2LEAF1A_Port-Channel1

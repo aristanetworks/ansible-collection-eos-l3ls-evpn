@@ -77,6 +77,8 @@ management_interfaces:
   gateway: 192.168.200.5
 metadata:
   platform: vEOS-LAB
+  rack: rackE
+  fabric_name: EOS_DESIGNS_UNIT_TESTS
 ntp:
   local_interface:
     name: Management1

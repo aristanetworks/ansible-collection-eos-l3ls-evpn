@@ -25,7 +25,7 @@ class RouterMsdpMixin(UtilsMixin):
     @cached_property
     def router_msdp(self: AvdStructuredConfigUnderlay) -> dict | None:
         """
-        return structured config for router_msdp.
+        Return structured config for router_msdp.
 
         Used for to configure multicast anycast RPs for the underlay
         """

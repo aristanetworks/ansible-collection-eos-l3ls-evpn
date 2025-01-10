@@ -24,7 +24,7 @@ class RouterMulticastMixin(UtilsMixin):
     @cached_property
     def router_multicast(self: AvdStructuredConfigNetworkServices) -> dict | None:
         """
-        return structured config for router_multicast.
+        Return structured config for router_multicast.
 
         Used to enable multicast routing on the VRF.
         """

@@ -18,7 +18,7 @@ def defined(
     value: Any, test_value: Any = None, var_type: str | None = None, fail_action: str | None = None, var_name: str | None = None, *, run_tests: bool = False
 ) -> bool | tuple[bool, int]:
     """
-    defined - Ansible test plugin to test if a variable is defined and not none.
+    Defined - Ansible test plugin to test if a variable is defined and not none.
 
     Arista.avd.defined will test value if defined and is not none and return true or false.
     If test_value is supplied, the value must also pass == test_value to return true.

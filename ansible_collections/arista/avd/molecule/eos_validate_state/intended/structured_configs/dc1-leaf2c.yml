@@ -54,6 +54,7 @@ management_api_http:
   - name: MGMT
 metadata:
   platform: vEOS-lab
+  fabric_name: FABRIC
 port_channel_interfaces:
 - name: Port-Channel1
   description: L2_DC1_L3_LEAF2_Port-Channel8

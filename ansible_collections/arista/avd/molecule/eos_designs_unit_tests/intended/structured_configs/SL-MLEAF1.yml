@@ -23,6 +23,7 @@ management_api_http:
   - name: MGMT
 metadata:
   platform: vEOS-LAB
+  fabric_name: SINGLE_LINK_TO_MLAG_PAIR
 port_channel_interfaces:
 - name: Port-Channel16
   description: L2_SL-LEAF1_Port-Channel28

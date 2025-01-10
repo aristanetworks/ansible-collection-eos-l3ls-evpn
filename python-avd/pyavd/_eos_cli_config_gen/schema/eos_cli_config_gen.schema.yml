@@ -6057,6 +6057,9 @@ keys:
         description: 'Disable hardware encryption.
 
           An SFE restart is needed for this change to take effect.'
+      connection_tx_interface_match_source_ip:
+        type: bool
+        description: Match source interface of the IPsec connection.
   ip_ssh_client_source_interfaces:
     type: list
     items:
@@ -8004,6 +8007,14 @@ keys:
       platform:
         type: str
       system_mac_address:
+        type: str
+      rack:
+        type: str
+      pod_name:
+        type: str
+      dc_name:
+        type: str
+      fabric_name:
         type: str
       cv_tags:
         type: dict

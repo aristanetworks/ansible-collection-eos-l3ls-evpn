@@ -17200,6 +17200,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             "profiles": {"type": Profiles},
             "key_controller": {"type": KeyController},
             "hardware_encryption_disabled": {"type": bool, "default": False},
+            "connection_tx_interface_match_source_ip": {"type": bool},
             "_custom_data": {"type": dict},
         }
         ike_policies: IkePolicies
@@ -17232,6 +17233,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
         Default value: `False`
         """
+        connection_tx_interface_match_source_ip: bool | None
+        """Match source interface of the IPsec connection."""
         _custom_data: dict[str, Any]
 
         if TYPE_CHECKING:
@@ -17244,6 +17247,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 profiles: Profiles | UndefinedType = Undefined,
                 key_controller: KeyController | UndefinedType = Undefined,
                 hardware_encryption_disabled: bool | UndefinedType = Undefined,
+                connection_tx_interface_match_source_ip: bool | None | UndefinedType = Undefined,
                 _custom_data: dict[str, Any] | UndefinedType = Undefined,
             ) -> None:
                 """
@@ -17272,6 +17276,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                     hardware_encryption_disabled:
                        Disable hardware encryption.
                        An SFE restart is needed for this change to take effect.
+                    connection_tx_interface_match_source_ip: Match source interface of the IPsec connection.
                     _custom_data: _custom_data
 
                 """
@@ -24183,12 +24188,20 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         _fields: ClassVar[dict] = {
             "platform": {"type": str},
             "system_mac_address": {"type": str},
+            "rack": {"type": str},
+            "pod_name": {"type": str},
+            "dc_name": {"type": str},
+            "fabric_name": {"type": str},
             "cv_tags": {"type": CvTags},
             "cv_pathfinder": {"type": CvPathfinder},
             "_custom_data": {"type": dict},
         }
         platform: str | None
         system_mac_address: str | None
+        rack: str | None
+        pod_name: str | None
+        dc_name: str | None
+        fabric_name: str | None
         cv_tags: CvTags
         """Subclass of AvdModel."""
         cv_pathfinder: CvPathfinder
@@ -24206,6 +24219,10 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 *,
                 platform: str | None | UndefinedType = Undefined,
                 system_mac_address: str | None | UndefinedType = Undefined,
+                rack: str | None | UndefinedType = Undefined,
+                pod_name: str | None | UndefinedType = Undefined,
+                dc_name: str | None | UndefinedType = Undefined,
+                fabric_name: str | None | UndefinedType = Undefined,
                 cv_tags: CvTags | UndefinedType = Undefined,
                 cv_pathfinder: CvPathfinder | UndefinedType = Undefined,
                 _custom_data: dict[str, Any] | UndefinedType = Undefined,
@@ -24219,6 +24236,10 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 Args:
                     platform: platform
                     system_mac_address: system_mac_address
+                    rack: rack
+                    pod_name: pod_name
+                    dc_name: dc_name
+                    fabric_name: fabric_name
                     cv_tags: Subclass of AvdModel.
                     cv_pathfinder:
                        Metadata used for CV Pathfinder visualization on CloudVision.

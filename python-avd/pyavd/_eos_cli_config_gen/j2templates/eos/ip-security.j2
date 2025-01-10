@@ -89,4 +89,7 @@ ip security
 {%     if ip_security.hardware_encryption_disabled is arista.avd.defined(true) %}
    hardware encryption disabled
 {%     endif %}
+{%     if ip_security.connection_tx_interface_match_source_ip is arista.avd.defined(true) %}
+   connection tx-interface match source-ip
+{%     endif %}
 {% endif %}
