@@ -3772,6 +3772,8 @@ interface Dps1
 | Ethernet65 | Multiple VRIDs | - | 2001:db8::2/64 | default | - | False | - | - | - | - |
 | Ethernet66 | Multiple VRIDs and tracking | - | 2001:db8::2/64 | default | - | False | - | - | - | - |
 
+*Inherited from Port-Channel Interface
+
 ##### VRRP Details
 
 | Interface | VRRP-ID | Priority | Advertisement Interval | Preempt | Tracked Object Name(s) | Tracked Object Action(s) | IPv4 Virtual IP | IPv4 VRRP Version | IPv6 Virtual IP |
@@ -3808,6 +3810,7 @@ interface Dps1
 | Ethernet77 | 8 | *EVPN_UNDERLAY | - | *- | *- | *- | *- | *Level-1: md5<br>Level-2: md5 |
 | Ethernet78 | 15 | *- | - | *- | *- | *- | *- | *md5 |
 | Ethernet79 | 16 | *EVPN_UNDERLAY | - | *- | *- | *- | *- | *md5 |
+| Ethernet81/1 | 111 | *- | - | *- | *passive | *- | *- | *- |
 | Ethernet81/10 | 110 | *ISIS_TEST | True | *99 | *point-to-point | *level-2 | *True | *- |
 
 *Inherited from Port-Channel Interface
@@ -5037,11 +5040,9 @@ interface Ethernet84
 
 | Interface | Description | MLAG ID | IP Address | VRF | MTU | Shutdown | ACL In | ACL Out |
 | --------- | ----------- | ------- | ---------- | --- | --- | -------- | ------ | ------- |
-| Port-Channel8.101 | to Dev02 Port-Channel8.101 - VRF-C1 | - | 10.1.2.3/31 | default | - | - | - | - |
 | Port-Channel9 | - | - | 10.9.2.3/31 | default | - | - | - | - |
 | Port-Channel17 | PBR Description | - | 192.0.2.3/31 | default | - | - | - | - |
 | Port-Channel99 | MCAST | - | 192.0.2.10/31 | default | - | - | - | - |
-| Port-Channel100.101 | IFL for TENANT01 | - | 10.1.1.3/31 | default | 1500 | - | - | - |
 | Port-Channel100.102 | IFL for TENANT02 | - | 10.1.2.3/31 | C2 | 1500 | - | - | - |
 | Port-Channel111.400 | TENANT_A pseudowire 3 interface | - | dhcp | default | - | - | - | - |
 | Port-Channel112 | LACP fallback individual | - | dhcp | default | - | - | - | - |
@@ -5074,6 +5075,13 @@ interface Ethernet84
 | --------- | ----------- | --------- | -------- | ------- |
 | Port-Channel130 | ACL1 | POOL1 | 0 | - |
 
+##### IPv6
+
+| Interface | Description | MLAG ID | IPv6 Address | VRF | MTU | Shutdown | ND RA Disabled | Managed Config Flag | IPv6 ACL In | IPv6 ACL Out |
+| --------- | ----------- | ------- | -------------| --- | --- | -------- | -------------- | ------------------- | ----------- | ------------ |
+| Port-Channel8.101 | to Dev02 Port-Channel8.101 - VRF-C1 | - | cafe::b4 | default | - | - | - | - | - | - |
+| Port-Channel100.101 | IFL for TENANT01 | - | cafe::b4 | default | 1500 | - | - | True | - | - |
+
 ##### ISIS
 
 | Interface | ISIS Instance | ISIS BFD | ISIS Metric | Mode | ISIS Circuit Type | Hello Padding | ISIS Authentication Mode |
@@ -5091,6 +5099,7 @@ interface Ethernet84
 | Port-Channel51 | EVPN_UNDERLAY | - | - | - | - | - | shared-secret |
 | Port-Channel100 | EVPN_UNDERLAY | - | - | - | - | - | Level-1: md5<br>Level-2: text |
 | Port-Channel110 | ISIS_TEST | True | 99 | point-to-point | level-2 | True | - |
+| Port-Channel111 | - | - | - | passive | - | - | - |
 
 #### Traffic Engineering
 
@@ -5169,7 +5178,7 @@ interface Port-Channel8
 interface Port-Channel8.101
    description to Dev02 Port-Channel8.101 - VRF-C1
    encapsulation dot1q vlan 101
-   ip address 10.1.2.3/31
+   ipv6 address cafe::b4
 !
 interface Port-Channel9
    no switchport
@@ -5380,7 +5389,8 @@ interface Port-Channel100.101
    mtu 1500
    logging event link-status
    encapsulation dot1q vlan 101
-   ip address 10.1.1.3/31
+   ipv6 address cafe::b4
+   ipv6 nd managed-config-flag
 !
 interface Port-Channel100.102
    description IFL for TENANT02
@@ -5470,6 +5480,7 @@ interface Port-Channel110
 interface Port-Channel111
    description Flexencap Port-Channel
    no switchport
+   isis passive
 !
 interface Port-Channel111.1
    description TENANT_A pseudowire 1 interface
