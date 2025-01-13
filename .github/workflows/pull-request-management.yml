@@ -107,11 +107,7 @@ jobs:
       - name: Convert GitHub username to lowercase
         id: lowercase
         run: |
-          echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]' > lowercase_username.txt
-          echo "::set-output name=lowercase::$(cat lowercase_username.txt)"
-  
-      - name: log lowercase repo owner name
-        run: echo ${{ steps.lowercase.outputs.lowercase }}
+          echo "::set-output name=lowercase::$(echo '${{ github.repository_owner }}' | tr '[:upper:]' '[:lower:]')"
 
       - name: Log in to GitHub Container Registry
         uses: docker/login-action@v2
@@ -194,11 +190,7 @@ jobs:
       - name: Convert GitHub username to lowercase
         id: lowercase
         run: |
-          echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]' > lowercase_username.txt
-          echo "::set-output name=lowercase::$(cat lowercase_username.txt)"
-
-      - name: log lowercase repo owner name
-        run: echo ${{ steps.lowercase.outputs.lowercase }}
+          echo "::set-output name=lowercase::$(echo '${{ github.repository_owner }}' | tr '[:upper:]' '[:lower:]')"
 
       - name: Log in to GitHub Container Registry
         uses: docker/login-action@v2
@@ -224,11 +216,7 @@ jobs:
       - name: Convert GitHub username to lowercase
         id: lowercase
         run: |
-          echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]' > lowercase_username.txt
-          echo "::set-output name=lowercase::$(cat lowercase_username.txt)"
-
-      - name: log lowercase repo owner name
-        run: echo ${{ steps.lowercase.outputs.lowercase }}
+          echo "::set-output name=lowercase::$(echo '${{ github.repository_owner }}' | tr '[:upper:]' '[:lower:]')"
 
       - name: Log in to GitHub Container Registry
         uses: docker/login-action@v2
@@ -253,11 +241,7 @@ jobs:
       - name: Convert GitHub username to lowercase
         id: lowercase
         run: |
-          echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]' > lowercase_username.txt
-          echo "::set-output name=lowercase::$(cat lowercase_username.txt)"
-
-      - name: log lowercase repo owner name
-        run: echo ${{ steps.lowercase.outputs.lowercase }}
+          echo "::set-output name=lowercase::$(echo '${{ github.repository_owner }}' | tr '[:upper:]' '[:lower:]')"
 
       - name: Log in to GitHub Container Registry
         uses: docker/login-action@v2
