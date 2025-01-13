@@ -25,7 +25,7 @@
     validation_mode: "{{ avd_data_validation_mode }}"
     generate_device_config: "{{ eos_cli_config_gen_configuration.enable | arista.avd.default(true) }}"
     generate_device_doc: "{{ eos_cli_config_gen_documentation.enable | arista.avd.default(generate_device_documentation, true) }}"
-    device_doc_toc: true
+    device_doc_toc: "{{ eos_cli_config_gen_documentation.toc | arista.avd.default(true) }}"
     cprofile_file: "{{ eos_cli_config_gen_cprofile_file | default(omit) }}"
   delegate_to: localhost
   vars:

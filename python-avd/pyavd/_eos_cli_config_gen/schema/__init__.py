@@ -5493,7 +5493,12 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
     class EosCliConfigGenDocumentation(AvdModel):
         """Subclass of AvdModel."""
 
-        _fields: ClassVar[dict] = {"enable": {"type": bool, "default": True}, "hide_passwords": {"type": bool, "default": True}, "_custom_data": {"type": dict}}
+        _fields: ClassVar[dict] = {
+            "enable": {"type": bool, "default": True},
+            "hide_passwords": {"type": bool, "default": True},
+            "toc": {"type": bool, "default": True},
+            "_custom_data": {"type": dict},
+        }
         enable: bool
         """
         Generate device Markdown documentation.
@@ -5507,6 +5512,12 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
         Default value: `True`
         """
+        toc: bool
+        """
+        Generate the table of content(TOC) on device documentation.
+
+        Default value: `True`
+        """
         _custom_data: dict[str, Any]
 
         if TYPE_CHECKING:
@@ -5516,6 +5527,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 *,
                 enable: bool | UndefinedType = Undefined,
                 hide_passwords: bool | UndefinedType = Undefined,
+                toc: bool | UndefinedType = Undefined,
                 _custom_data: dict[str, Any] | UndefinedType = Undefined,
             ) -> None:
                 """
@@ -5529,6 +5541,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                     hide_passwords:
                        Replace the input data using the `hide_passwords` filter in the Jinja2 templates by '<removed>' in
                        the documentation if true.
+                    toc: Generate the table of content(TOC) on device documentation.
                     _custom_data: _custom_data
 
                 """
@@ -17099,6 +17112,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             "profiles": {"type": Profiles},
             "key_controller": {"type": KeyController},
             "hardware_encryption_disabled": {"type": bool, "default": False},
+            "connection_tx_interface_match_source_ip": {"type": bool},
             "_custom_data": {"type": dict},
         }
         ike_policies: IkePolicies
@@ -17131,6 +17145,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
         Default value: `False`
         """
+        connection_tx_interface_match_source_ip: bool | None
+        """Match source interface of the IPsec connection."""
         _custom_data: dict[str, Any]
 
         if TYPE_CHECKING:
@@ -17143,6 +17159,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 profiles: Profiles | UndefinedType = Undefined,
                 key_controller: KeyController | UndefinedType = Undefined,
                 hardware_encryption_disabled: bool | UndefinedType = Undefined,
+                connection_tx_interface_match_source_ip: bool | None | UndefinedType = Undefined,
                 _custom_data: dict[str, Any] | UndefinedType = Undefined,
             ) -> None:
                 """
@@ -17171,6 +17188,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                     hardware_encryption_disabled:
                        Disable hardware encryption.
                        An SFE restart is needed for this change to take effect.
+                    connection_tx_interface_match_source_ip: Match source interface of the IPsec connection.
                     _custom_data: _custom_data
 
                 """

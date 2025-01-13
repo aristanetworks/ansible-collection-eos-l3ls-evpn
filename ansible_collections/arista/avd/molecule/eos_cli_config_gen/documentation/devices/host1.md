@@ -3242,6 +3242,8 @@ mac address-table notification host-flap detection moves 2
 
 - Hardware encryption is disabled
 
+- Match source interface of the IPSec connection is enabled
+
 ### IKE policies
 
 | Policy name | IKE lifetime | Encryption | DH group | Local ID | Integrity |
@@ -3352,6 +3354,7 @@ ip security
    key controller
       profile Profile-1
    hardware encryption disabled
+   connection tx-interface match source-ip
 ```
 
 ## Interfaces
@@ -8609,7 +8612,7 @@ router bgp 65101
       bgp additional-paths send ecmp limit 42
       neighbor PATH-SELECTION-PG-1 activate
       neighbor PATH-SELECTION-PG-1 additional-paths receive
-      no neighbor PATH-SELECTION-PG-1 send
+      no neighbor PATH-SELECTION-PG-1 additional-paths send
       neighbor PATH-SELECTION-PG-2 activate
       neighbor PATH-SELECTION-PG-2 additional-paths send backup
       neighbor PATH-SELECTION-PG-3 activate

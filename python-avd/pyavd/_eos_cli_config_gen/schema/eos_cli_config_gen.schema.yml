@@ -1965,6 +1965,10 @@ keys:
 
           '
         default: true
+      toc:
+        type: bool
+        default: true
+        description: Generate the table of content(TOC) on device documentation.
   errdisable:
     type: dict
     keys:
@@ -6020,6 +6024,9 @@ keys:
         description: 'Disable hardware encryption.
 
           An SFE restart is needed for this change to take effect.'
+      connection_tx_interface_match_source_ip:
+        type: bool
+        description: Match source interface of the IPsec connection.
   ip_ssh_client_source_interfaces:
     type: list
     items:
