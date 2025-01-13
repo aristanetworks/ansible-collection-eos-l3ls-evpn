@@ -7,11 +7,14 @@
 
     | Variable | Type | Required | Default | Value Restrictions | Description |
     | -------- | ---- | -------- | ------- | ------------------ | ----------- |
-    | [<samp>use_router_general_for_router_id</samp>](## "use_router_general_for_router_id") | Boolean |  | `False` |  | Use `router general` to set router ID for all routing protocols and VRFs. |
+    | [<samp>load_interval</samp>](## "load_interval") | Dictionary |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;default</samp>](## "load_interval.default") | Integer |  |  |  | Default load interval in seconds. |
 
 === "YAML"
 
     ```yaml
-    # Use `router general` to set router ID for all routing protocols and VRFs.
-    use_router_general_for_router_id: <bool; default=False>
+    load_interval:
+
+      # Default load interval in seconds.
+      default: <int>
     ```

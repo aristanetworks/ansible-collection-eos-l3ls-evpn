@@ -25,9 +25,13 @@
        or ip_ftp_client_source_interfaces is arista.avd.defined
        or ip_tftp_client_source_interfaces is arista.avd.defined
        or ip_telnet_client_source_interfaces is arista.avd.defined
-       or agent is arista.avd.defined %}
+       or agent is arista.avd.defined
+       or banners.login is arista.avd.defined
+       or banners.motd is arista.avd.defined %}
 
 ## Management
+{## Banner #}
+{%     include 'documentation/banners.j2' %}
 {## Agents #}
 {%     include 'documentation/agents.j2' %}
 {## Management Interface #}

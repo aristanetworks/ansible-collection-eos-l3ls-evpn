@@ -5493,7 +5493,12 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
     class EosCliConfigGenDocumentation(AvdModel):
         """Subclass of AvdModel."""
 
-        _fields: ClassVar[dict] = {"enable": {"type": bool, "default": True}, "hide_passwords": {"type": bool, "default": True}, "_custom_data": {"type": dict}}
+        _fields: ClassVar[dict] = {
+            "enable": {"type": bool, "default": True},
+            "hide_passwords": {"type": bool, "default": True},
+            "toc": {"type": bool, "default": True},
+            "_custom_data": {"type": dict},
+        }
         enable: bool
         """
         Generate device Markdown documentation.
@@ -5507,6 +5512,12 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
         Default value: `True`
         """
+        toc: bool
+        """
+        Generate the table of content(TOC) on device documentation.
+
+        Default value: `True`
+        """
         _custom_data: dict[str, Any]
 
         if TYPE_CHECKING:
@@ -5516,6 +5527,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 *,
                 enable: bool | UndefinedType = Undefined,
                 hide_passwords: bool | UndefinedType = Undefined,
+                toc: bool | UndefinedType = Undefined,
                 _custom_data: dict[str, Any] | UndefinedType = Undefined,
             ) -> None:
                 """
@@ -5529,6 +5541,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                     hide_passwords:
                        Replace the input data using the `hide_passwords` filter in the Jinja2 templates by '<removed>' in
                        the documentation if true.
+                    toc: Generate the table of content(TOC) on device documentation.
                     _custom_data: _custom_data
 
                 """
