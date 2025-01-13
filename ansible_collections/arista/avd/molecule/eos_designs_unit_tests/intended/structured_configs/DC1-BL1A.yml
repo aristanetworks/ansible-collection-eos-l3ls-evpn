@@ -162,6 +162,8 @@ event_handlers:
   trigger_on_logging:
     regex: EVPN-3-BLACKLISTED_DUPLICATE_MAC
   asynchronous: true
+event_monitor:
+  enabled: true
 hardware:
   speed_groups:
   - speed_group: '1'
@@ -220,6 +222,8 @@ ip_name_servers:
 ip_routing: true
 ip_virtual_router_mac_address: 00:dc:00:00:00:0a
 is_deployed: true
+load_interval:
+  default: 6
 local_users:
 - name: admin
   disabled: true
@@ -287,6 +291,12 @@ prefix_lists:
     action: permit 192.168.254.0/24 eq 32
   - sequence: 30
     action: permit 192.168.255.255/32
+queue_monitor_streaming:
+  enable: true
+  ip_access_group: ACL-QMS
+  ipv6_access_group: ACLv6-QMS
+  max_connections: 8
+  vrf: vrf1
 route_maps:
 - name: RM-CONN-2-BGP
   sequence_numbers:
@@ -642,6 +652,9 @@ router_ospf:
       bgp:
         enabled: true
 service_routing_protocols_model: multi-agent
+service_unsupported_transceiver:
+  license_name: key1
+  license_key: dsafDSFfvadskjh3424
 sflow:
   vrfs:
   - name: OOB
