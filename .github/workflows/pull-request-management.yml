@@ -88,9 +88,14 @@ jobs:
   requirements_container:
     name: Test all requirements installation and create container image.
     runs-on: ubuntu-latest
-    container:
+    # strategy:
+    #   matrix:
+    #     python-version: [3.12] # Python versions
+    # Docker Hub image that `container-job` executes in
+    container: 
       image: ubuntu:latest
       options: --cpus 1
+
     steps:
       - name: Check out repository code
         uses: actions/checkout@v4
@@ -98,12 +103,12 @@ jobs:
         run: |
           apt-get update
           apt-get install -y docker.io
-
+      
       - id: string
         uses: vishalmamidi/lowercase-action@v1
         with:
           string: ${{ github.repository_owner }}
-
+        
       - name: log lowercase repo name
         run: echo ${{ steps.string.outputs.lowercase }}
 
@@ -124,7 +129,7 @@ jobs:
           FROM ubuntu:latest
 
           # Install pre-requisites
-          RUN apt-get update && apt-get install -y git parallel make python3-pip python3.12 docker-buildx-plugin
+          RUN apt-get update && apt-get install -y git parallel make python3-pip python3.12
 
           # Install UV
           RUN pip install uv --break-system-packages
@@ -137,28 +142,28 @@ jobs:
 
           WORKDIR /avd
 
-          Create virtual env
-          RUN uv venv --python 3.10 UV3.10  && \
-              UV3.10/bin/python -m ensurepip --upgrade
-          RUN uv venv --python 3.11 UV3.11 && \
-              UV3.11/bin/python -m ensurepip --upgrade
+          # Create virtual env
+          # RUN uv venv --python 3.10 UV3.10  && \
+          #     UV3.10/bin/python -m ensurepip --upgrade 
+          # RUN uv venv --python 3.11 UV3.11 && \
+          #     UV3.11/bin/python -m ensurepip --upgrade 
           RUN uv venv --python 3.12 UV3.12 && \
-              UV3.12/bin/python -m ensurepip --upgrade
+              UV3.12/bin/python -m ensurepip --upgrade 
           RUN uv venv --python 3.13 UV3.13 && \
-              UV3.13/bin/python -m ensurepip --upgrade
+              UV3.13/bin/python -m ensurepip --upgrade 
 
-          # Activate virtual env
-          RUN . UV3.10/bin/activate && \
-            UV3.10/bin/python -m pip install mock pytest pytest-mock pytest-xdist pyyaml "ansible-core<2.19.0" -r .github/requirements-ci.txt -r ansible_collections/arista/avd/requirements-dev.txt --upgrade
-
-          # Activate virtual env
-          RUN . UV3.11/bin/activate && \
-            UV3.11/bin/python -m pip install mock pytest pytest-mock pytest-xdist pyyaml "ansible-core<2.19.0" -r .github/requirements-ci.txt -r ansible_collections/arista/avd/requirements-dev.txt --upgrade
-
+          # # Activate virtual env
+          # RUN . UV3.10/bin/activate && \
+          #   UV3.10/bin/python -m pip install mock pytest pytest-mock pytest-xdist pyyaml "ansible-core<2.19.0" -r .github/requirements-ci.txt -r ansible_collections/arista/avd/requirements-dev.txt --upgrade
+          
+          # # Activate virtual env
+          # RUN . UV3.11/bin/activate && \
+          #   UV3.11/bin/python -m pip install mock pytest pytest-mock pytest-xdist pyyaml "ansible-core<2.19.0" -r .github/requirements-ci.txt -r ansible_collections/arista/avd/requirements-dev.txt --upgrade
+          
           # Activate virtual env
           RUN . UV3.12/bin/activate && \
             UV3.12/bin/python -m pip install mock pytest pytest-mock pytest-xdist pyyaml "ansible-core<2.19.0" -r .github/requirements-ci.txt -r ansible_collections/arista/avd/requirements-dev.txt --upgrade
-
+          
           # RUN parallel --link --tag 'bash -c' ::: \
           #   ". UV3.12/bin/activate && UV3.12/bin/python -m pip install mock pytest pytest-mock pytest-xdist pyyaml 'ansible-core<2.19.0' -r .github/requirements-ci.txt -r ansible_collections/arista/avd/requirements-dev.txt --upgrade" \
           #   ". UV3.13/bin/activate && UV3.13/bin/python -m pip install mock pytest pytest-mock pytest-xdist pyyaml 'ansible-core<2.19.0' -r .github/requirements-ci.txt -r ansible_collections/arista/avd/requirements-dev.txt --upgrade"
@@ -173,11 +178,12 @@ jobs:
 
       - name: Build Docker Image
         run: |
-          docker buildx build -t ghcr.io/${{ steps.string.outputs.lowercase }}/avd/python_avd:0.0.1 .
+          docker build -t ghcr.io/${{ steps.string.outputs.lowercase }}/avd/python_avd:0.0.1 .
 
       - name: Push Docker Image
         run: |
           docker push ghcr.io/${{ steps.string.outputs.lowercase }}/avd/python_avd:0.0.1
+
   # ----------------------------------- #
   # Ansible tests
   # ----------------------------------- #
