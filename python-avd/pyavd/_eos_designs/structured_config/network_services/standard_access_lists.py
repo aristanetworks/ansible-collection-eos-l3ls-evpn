@@ -1,4 +1,4 @@
-# Copyright (c) 2023-2024 Arista Networks, Inc.
+# Copyright (c) 2023-2025 Arista Networks, Inc.
 # Use of this source code is governed by the Apache License 2.0
 # that can be found in the LICENSE file.
 from __future__ import annotations
@@ -24,7 +24,7 @@ class StandardAccessListsMixin(UtilsMixin):
     @cached_property
     def standard_access_lists(self: AvdStructuredConfigNetworkServices) -> list | None:
         """
-        return structured config for standard_access_lists.
+        Return structured config for standard_access_lists.
 
         Used for to configure ACLs used by multicast RPs in each VRF
         """

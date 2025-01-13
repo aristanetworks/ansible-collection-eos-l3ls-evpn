@@ -3,7 +3,7 @@
 title: Input variables for eos_designs
 ---
 <!--
-  ~ Copyright (c) 2023-2024 Arista Networks, Inc.
+  ~ Copyright (c) 2023-2025 Arista Networks, Inc.
   ~ Use of this source code is governed by the Apache License 2.0
   ~ that can be found in the LICENSE file.
   -->
@@ -980,6 +980,28 @@ roles/eos_designs/docs/tables/management-flow-tracking-settings.md
 
 --8<--
 roles/eos_designs/docs/tables/management-snmp-settings.md
+--8<--
+
+## Monitoring
+
+### Event monitor
+
+--8<--
+roles/eos_designs/docs/tables/event-monitor.md
+--8<--
+
+### Load interval
+
+--8<--
+roles/eos_designs/docs/tables/load-interval.md
+--8<--
+
+## Quality of Service
+
+### Queue monitor-streaming
+
+--8<--
+roles/eos_designs/docs/tables/queue-monitor-streaming.md
 --8<--
 
 ## System settings

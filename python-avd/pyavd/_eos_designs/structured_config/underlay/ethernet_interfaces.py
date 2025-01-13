@@ -1,4 +1,4 @@
-# Copyright (c) 2023-2024 Arista Networks, Inc.
+# Copyright (c) 2023-2025 Arista Networks, Inc.
 # Use of this source code is governed by the Apache License 2.0
 # that can be found in the LICENSE file.
 from __future__ import annotations
@@ -6,6 +6,7 @@ from __future__ import annotations
 from functools import cached_property
 from typing import TYPE_CHECKING
 
+from pyavd._eos_cli_config_gen.schema import EosCliConfigGen
 from pyavd._errors import AristaAvdError, AristaAvdMissingVariableError
 from pyavd._utils import append_if_not_duplicate, get, strip_null_from_data
 from pyavd.api.interface_descriptions import InterfaceDescriptionData
@@ -153,7 +154,10 @@ class EthernetInterfacesMixin(UtilsMixin):
                     ethernet_interface["dhcp_server_ipv4"] = True
 
                 # Structured Config
-                ethernet_interface["struct_cfg"] = link.get("structured_config")
+                if structured_config := link.get("structured_config"):
+                    self.custom_structured_configs.nested.ethernet_interfaces.obtain(link["interface"])._deepmerge(
+                        EosCliConfigGen.EthernetInterfacesItem._from_dict(structured_config), list_merge=self.custom_structured_configs.list_merge_strategy
+                    )
 
             # L2 interface
             elif link["type"] == "underlay_l2":

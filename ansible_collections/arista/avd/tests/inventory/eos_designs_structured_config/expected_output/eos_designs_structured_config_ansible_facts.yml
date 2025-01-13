@@ -26,3 +26,5 @@ switch:
   id: 1
   uplinks: []
   vlans: ""
+metadata:
+  fabric_name: integration_tests

@@ -25,6 +25,7 @@ monitor_connectivity:
     - name: server3
       description: server3_connectivity_monitor
       ip: 10.10.10.3
+      icmp_echo_size: 1200
       local_interfaces: HOST_SET
       address_only: false
     - name: server4
@@ -41,6 +42,7 @@ monitor_connectivity:
         - name: server2
           description: server2_connectivity_monitor
           ip: 10.10.20.1
+          icmp_echo_size: 1300
           local_interfaces: VRF_HOST_SET
           url: https://server2.local.com
     - name: blue

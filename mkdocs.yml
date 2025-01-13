@@ -189,6 +189,7 @@ nav:
       - Code Style: docs/contribution/style-guide.md
       - Validation of Input Variables: docs/contribution/input-variable-validation.md
       - EOS Designs internal notes: docs/contribution/eos_designs_internal_notes.md
+      - Authoring eos_cli_config_gen Role Guide: docs/contribution/authoring_eos_cli_config_gen.md
   - External Resources:
       - Ansible Collection User Guide: https://docs.ansible.com/ansible/latest/user_guide/collections_using.html
       - Ansible User Guide: https://docs.ansible.com/ansible/latest/user_guide/index.html

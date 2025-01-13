@@ -1,4 +1,4 @@
-# Copyright (c) 2023-2024 Arista Networks, Inc.
+# Copyright (c) 2023-2025 Arista Networks, Inc.
 # Use of this source code is governed by the Apache License 2.0
 # that can be found in the LICENSE file.
 from __future__ import annotations
@@ -18,7 +18,6 @@ class SrcGenBase:
 
     # TODO: add deprecation handling
     #       dynamic_valid_values
-    #       Create a base model for lists so child items can be rendered by their own generators instead of trying to handle it inside lists.
 
     def generate_class_src(self, schema: AvdSchemaField, class_name: str | None = None) -> SrcData:
         """

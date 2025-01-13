@@ -101,3 +101,9 @@ csc_2_management_api_http:
 csc_1_ip_igmp_snooping: null  # Replacing the default dict with null.
 
 csc_2_ip_igmp_snooping: {}  # Replacing the  null above with an empty dict.
+
+# Test Creating an AvdList (list without primary key) and merging null on top. Should render null.
+csc_1_domain_list:
+  - foo.foo
+  - bar.bar
+csc_2_domain_list: null

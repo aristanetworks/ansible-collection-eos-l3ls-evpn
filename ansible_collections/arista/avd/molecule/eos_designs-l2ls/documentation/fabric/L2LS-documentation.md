@@ -1,19 +1,5 @@
 # L2LS
 
-## Table of Contents
-
-- [Fabric Switches and Management IP](#fabric-switches-and-management-ip)
-  - [Fabric Switches with inband Management IP](#fabric-switches-with-inband-management-ip)
-- [Fabric Topology](#fabric-topology)
-- [Fabric IP Allocation](#fabric-ip-allocation)
-  - [Fabric Point-To-Point Links](#fabric-point-to-point-links)
-  - [Point-To-Point Links Node Allocation](#point-to-point-links-node-allocation)
-  - [Loopback Interfaces (BGP EVPN Peering)](#loopback-interfaces-bgp-evpn-peering)
-  - [Loopback0 Interfaces Node Allocation](#loopback0-interfaces-node-allocation)
-  - [ISIS CLNS interfaces](#isis-clns-interfaces)
-  - [VTEP Loopback VXLAN Tunnel Source Interfaces (VTEPs Only)](#vtep-loopback-vxlan-tunnel-source-interfaces-vteps-only)
-  - [VTEP Loopback Node allocation](#vtep-loopback-node-allocation)
-
 ## Fabric Switches and Management IP
 
 | POD | Type | Node | Management IP | Platform | Provisioned in CloudVision | Serial Number |

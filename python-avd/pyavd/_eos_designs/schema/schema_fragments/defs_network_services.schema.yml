@@ -508,7 +508,13 @@ $defs:
                     description: If not set, "vrf_id" will be used.
                   router_id:
                     type: str
-                    description: If not set, switch router_id will be used.
+                    description: |-
+                      Router ID to use for OSPF in this VRF.
+                      This can be an IPv4 address, "main_router_id", "none" or "diagnostic_loopback".
+                      - "main_router_id" will use the IP address of Loopback0 or the common `router general` Router ID if `use_router_general_for_router_id` is set."
+                      - "none" will not configure a OSPF Router ID for this VRF. EOS will use the main OSPF Router ID.
+                      - "diagnostic_loopback" will use the IP address of the VRF Diagnostic Loopback interface.
+                    default: main_router_id
                   max_lsa:
                     type: int
                     convert_types:
@@ -1079,6 +1085,15 @@ $defs:
                       - If the VRF is part of an overlay (`evpn` or `mpls`), BGP will be configured for it.
                       - If any BGP peers are configured under the VRF, BGP will be configured for it. This is useful for L2LS designs with VRFs.
                       - If uplink type is `p2p-vrfs` *and* the vrf is included in the uplink VRFs, BGP will be configured for it.
+                  router_id:
+                    type: str
+                    description: |-
+                      Router ID to use for BGP in this VRF.
+                      This can be an IPv4 address, "main_router_id", "none" or "diagnostic_loopback".
+                      - "main_router_id" will use the IP address of Loopback0 or the common `router general` Router ID if `use_router_general_for_router_id` is set."
+                      - "none" will not configure a BGP Router ID for this VRF. EOS will use the main BGP Router ID.
+                      - "diagnostic_loopback" will use the IP address of the VRF Diagnostic Loopback interface.
+                    default: main_router_id
                   raw_eos_cli:
                     type: str
                     description: |

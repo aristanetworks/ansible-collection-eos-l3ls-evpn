@@ -1,4 +1,4 @@
-# Copyright (c) 2023-2024 Arista Networks, Inc.
+# Copyright (c) 2023-2025 Arista Networks, Inc.
 # Use of this source code is governed by the Apache License 2.0
 # that can be found in the LICENSE file.
 from __future__ import annotations
@@ -166,15 +166,23 @@ class AvdIndexedList(Sequence[T_AvdModel], Generic[T_PrimaryKey, T_AvdModel], Av
         cls = type(self)
         return cls(sorted(self.values(), key=key))
 
-    def _deepmerge(self, other: Self, list_merge: Literal["append", "replace"] = "append") -> None:
+    def _deepmerge(self, other: Self, list_merge: Literal["append_unique", "append", "replace", "keep", "prepend", "prepend_unique"] = "append_unique") -> None:
         """
         Update instance by deepmerging the other instance in.
 
         Args:
             other: The other instance of the same type to merge into this instance.
             list_merge: Merge strategy used on this and any nested lists.
-                - "append" will first try to deep merge on the primary key, and if not found it will append non-existing items.
-                - "replace" will replace the full list.
+
+        List merge strategies:
+        - "append_unique" will first try to deep merge on the primary key, and if not found it will append non-existing items.
+        - "append" will first try to deep merge on the primary key, and if not found it will append all other items (including duplicates).\
+            (For AvdIndexedList this works the same as append_unique)
+        - "replace" will replace the full list.
+        - "keep" will only use the new list if there is no existing list or existing list is `None`.
+        - "prepend_unique" will first try to deep merge on the primary key, and if not found it will prepend non-existing items.
+        - "prepend" will first try to deep merge on the primary key, and if not found it will prepend all other items (including duplicates).\
+            (For AvdIndexedList this works the same as prepend_unique)
         """
         cls = type(self)
         if not isinstance(other, cls):
@@ -183,26 +191,46 @@ class AvdIndexedList(Sequence[T_AvdModel], Generic[T_PrimaryKey, T_AvdModel], Av
 
         if self._created_from_null or other._created_from_null:
             # Clear the flag and set list_merge to replace so we overwrite with data from other below.
-            self._created_from_null = False
+            self._created_from_null = other._created_from_null
             list_merge = "replace"
 
-        if list_merge == "replace":
-            self._items = other._items.copy()
-            return
+        match list_merge:
+            case "replace":
+                # Replace with the "other" list.
+                self._items = other._items.copy()
+                return
+            case "keep":
+                # We only get here if there was a defined instance of the old list, so we "keep" the existing list as-is.
+                return
+            case _:
+                # For the other strategies we need to merge on primary key for existing items and otherwise append/prepend.
+                # There is no difference for _unique for indexed lists since it can only hold one item per primary key.
+                pass
 
+        prepend_items = {}
         for primary_key, new_item in other.items():
             if new_item._created_from_null:
                 # Remove the complete item when merging in a Null item.
                 self._items.pop(primary_key, None)
                 continue
 
-            if (old_value := self.get(primary_key)) is Undefined or not isinstance(old_value, type(new_item)):
-                # New item or different type so we can just replace
+            if self.get(primary_key) is Undefined:
+                # New item so we can just append/prepend.
+                if list_merge.startswith("prepend"):
+                    # Prepending requires us to rebuild the internal dict to maintain the correct order.
+                    # We do that at the end to maintain the order of <new-list> + <old-list>. If we prepended per item we would reverse the new list.
+                    prepend_items[primary_key] = new_item
+                    continue
+
+                # Appending the new item.
                 self[primary_key] = new_item
                 continue
 
             # Existing item of same type, so deepmerge.
             self[primary_key]._deepmerge(new_item, list_merge=list_merge)
+
+        if prepend_items:
+            self._items = {**prepend_items, **self._items}
 
     def _deepinherit(self, other: Self) -> None:
         """Update instance by recursively inheriting from other instance for all existing items. New items are *not* added."""

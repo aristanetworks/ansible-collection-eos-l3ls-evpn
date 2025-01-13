@@ -1,4 +1,4 @@
-# Copyright (c) 2023-2024 Arista Networks, Inc.
+# Copyright (c) 2023-2025 Arista Networks, Inc.
 # Use of this source code is governed by the Apache License 2.0
 # that can be found in the LICENSE file.
 from collections import ChainMap
@@ -21,7 +21,7 @@ def get_device_structured_config(hostname: str, inputs: dict, avd_facts: dict) -
     from ._eos_designs.structured_config import get_structured_config
     from ._errors import AristaAvdError
     from .avd_schema_tools import AvdSchemaTools
-    from .constants import EOS_CLI_CONFIG_GEN_SCHEMA_ID, EOS_DESIGNS_SCHEMA_ID
+    from .constants import EOS_DESIGNS_SCHEMA_ID
 
     # pylint: enable=import-outside-toplevel
     #
@@ -37,14 +37,12 @@ def get_device_structured_config(hostname: str, inputs: dict, avd_facts: dict) -
     )
 
     input_schema_tools = AvdSchemaTools(schema_id=EOS_DESIGNS_SCHEMA_ID)
-    output_schema_tools = AvdSchemaTools(schema_id=EOS_CLI_CONFIG_GEN_SCHEMA_ID)
     result = {}
 
     # We do not validate input variables in this stage (done in "validate_inputs")
     structured_config = get_structured_config(
         vars=mapped_hostvars,
         input_schema_tools=input_schema_tools,
-        output_schema_tools=output_schema_tools,
         result=result,
         templar=None,
         validate=False,

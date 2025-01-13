@@ -1,4 +1,4 @@
-# Copyright (c) 2024 Arista Networks, Inc.
+# Copyright (c) 2024-2025 Arista Networks, Inc.
 # Use of this source code is governed by the Apache License 2.0
 # that can be found in the LICENSE file.
 from __future__ import annotations
@@ -57,7 +57,7 @@ class UtilsZscalerMixin:
         if self.shared_utils.wan_site is None or not self.shared_utils.wan_site.location:
             region_key = f"name={self.shared_utils.wan_region.name}" if self.shared_utils.wan_region is not None else ""
             site_key = f"name={self.shared_utils.wan_site.name}" if self.shared_utils.wan_site is not None else ""
-            msg = f"{context} and requires 'cv_pathfinder_regions[{region_key}]" f".sites[{site_key}].location' to be set."
+            msg = f"{context} and requires 'cv_pathfinder_regions[{region_key}].sites[{site_key}].location' to be set."
             raise AristaAvdInvalidInputsError(msg)
 
         wan_site_location = self.shared_utils.wan_site.location

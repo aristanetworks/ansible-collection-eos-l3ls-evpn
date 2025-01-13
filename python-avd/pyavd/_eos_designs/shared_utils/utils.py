@@ -1,4 +1,4 @@
-# Copyright (c) 2023-2024 Arista Networks, Inc.
+# Copyright (c) 2023-2025 Arista Networks, Inc.
 # Use of this source code is governed by the Apache License 2.0
 # that can be found in the LICENSE file.
 from __future__ import annotations
@@ -32,7 +32,7 @@ class UtilsMixin:
 
     def get_peer_facts(self: SharedUtils, peer_name: str, required: bool = True) -> EosDesignsFacts | dict | None:
         """
-        util function to retrieve peer_facts for peer_name.
+        Util function to retrieve peer_facts for peer_name.
 
         returns avd_switch_facts.{peer_name}.switch
 

@@ -1,0 +1,17 @@
+type: dict
+allow_other_keys: true
+keys:
+  some_indexed_list:
+    type: list
+    primary_key: name
+    items:
+      type: dict
+      keys:
+        name:
+          type: str
+        some_int:
+          type: int
+  some_list:
+    type: list
+    items:
+      type: int

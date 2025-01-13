@@ -57,6 +57,7 @@ tenant_a:
                   key: "AQQvKeimxJu+uGQ/yYvv9w=="
         ospf:
           enabled: true
+          router_id: 10.10.10.10
           nodes:
             - DC1-LEAF1A
       - name: Tenant_A_WEB_Zone
@@ -112,6 +113,8 @@ tenant_a:
               - 10.1.32.254
               - 10.2.32.254/24
               - 10.3.32.254/24
+        bgp:
+          router_id: none
       - name: Tenant_A_DB_Zone
         vrf_vni: 13
         svis:
@@ -125,10 +128,13 @@ tenant_a:
             tags: ['db']
             enabled: true
             ip_address_virtual: 10.1.41.1/24
+        bgp:
+          router_id: 11.11.11.11
       - name: Tenant_A_WAN_Zone
         vrf_id: 14
         ospf:
           enabled: true
+          router_id: none
           max_lsa: 15000
           redistribute_bgp:
             enabled: true
@@ -281,6 +287,7 @@ tenant_a:
         vrf_id: 16
         ospf:
           enabled: true
+          router_id: diagnostic_loopback
         l3_interfaces:
           - interfaces:
               - Ethernet22

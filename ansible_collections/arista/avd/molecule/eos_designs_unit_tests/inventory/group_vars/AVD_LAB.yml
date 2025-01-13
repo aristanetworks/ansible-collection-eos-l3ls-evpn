@@ -91,48 +91,56 @@ default_interfaces:
     uplink_interfaces: [ Ethernet49-54/1 ]
     mlag_interfaces: [ Ethernet55-56/1 ]
     downlink_interfaces: [ Ethernet1-32/1 ]
+    uplink_interface_speed: forced 40gfull
 
   - types: [ spine ]
     platforms: [ "7[58]00R3", 7500R ]
     uplink_interfaces: [ Ethernet1/31-34/1 ]
     mlag_interfaces: [ Ethernet1/35-36/1 ]
     downlink_interfaces: [ Ethernet1/1-30/1 ]
+    uplink_interface_speed: forced 40gfull
 
   - types: [ spine, l3leaf ]
     platforms: [ "7050[SC]X3" ]
     uplink_interfaces: [ Ethernet49-52/1 ]
     mlag_interfaces: [ Ethernet53-54/1 ]
     downlink_interfaces: [ Ethernet1-30/1 ]
+    uplink_interface_speed: forced 40gfull
 
   - types: [ l3leaf, spine ]
     platforms: [ VEOS, vEOS, vEOS.*, VEOS.* ]
     uplink_interfaces: [ Ethernet27-34 ]
     mlag_interfaces: [ Ethernet35-36 ]
     downlink_interfaces: [ Ethernet1-26 ]
+    uplink_interface_speed: forced 40gfull
 
   - types: [ l3leaf ]
     platforms: [ default ]
     uplink_interfaces: [ Ethernet49-52/1 ]
     mlag_interfaces: [ Ethernet53-54/1 ]
     downlink_interfaces: [ Ethernet1-30/1 ]
+    uplink_interface_speed: forced 40gfull
 
   - types: [ l3leaf ]
     platforms: [ 7280R, 7280R2, my_custom_platform ]
     uplink_interfaces: [ Ethernet49-56/1 ]
     mlag_interfaces: [ Ethernet57-58/1 ]
     downlink_interfaces: [ Ethernet1-30/1 ]
+    uplink_interface_speed: forced 40gfull
 
   - types: [ l3leaf ]
     platforms: [ 7368.* ]
     uplink_interfaces: [ Ethernet1/9-14/1 ]
     mlag_interfaces: [ Ethernet1/15-16/1 ]
     downlink_interfaces: [ Ethernet1/1-8/1 ]
+    uplink_interface_speed: forced 40gfull
 
   - types: [ l3leaf ]
     platforms: [ 7300X3 ]
     uplink_interfaces: [ Ethernet1/27-30/1 ]
     mlag_interfaces: [ Ethernet1/31-32/1 ]
     downlink_interfaces: [ Ethernet1/1-26/1 ]
+    uplink_interface_speed: forced 40gfull
 
 # Custom platform with Management42 as the management interface
 custom_platform_settings:

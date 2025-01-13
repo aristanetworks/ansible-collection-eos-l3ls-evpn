@@ -1,4 +1,4 @@
-# Copyright (c) 2023-2024 Arista Networks, Inc.
+# Copyright (c) 2023-2025 Arista Networks, Inc.
 # Use of this source code is governed by the Apache License 2.0
 # that can be found in the LICENSE file.
 from __future__ import annotations
@@ -63,26 +63,44 @@ class AvdBase(ABC):
         """Recast a class instance as another similar subclass if they are compatible."""
 
     @abstractmethod
-    def _deepmerge(self, other: Self, list_merge: Literal["append", "replace"] = "append") -> None:
+    def _deepmerge(self, other: Self, list_merge: Literal["append_unique", "append", "replace", "keep", "prepend", "prepend_unique"] = "append_unique") -> None:
         """
         Update instance by deepmerging the other instance in.
 
         Args:
             other: The other instance of the same type to merge on this instance.
             list_merge: Merge strategy used on any nested lists.
-                - "append" will first try to deep merge on the primary key, and if not found it will append non-existing items.
-                - "replace" will replace the full list.
+
+        List merge strategies:
+        - "append_unique" will first try to deep merge on the primary key, and if not found it will append non-existing items.
+        - "append" will first try to deep merge on the primary key, and if not found it will append all other items (including duplicates).\
+            (For AvdIndexedList this works the same as append_unique)
+        - "replace" will replace the full list.
+        - "keep" will only use the new list if there is no existing list or existing list is `None`.
+        - "prepend_unique" will first try to deep merge on the primary key, and if not found it will prepend non-existing items.
+        - "prepend" will first try to deep merge on the primary key, and if not found it will prepend all other items (including duplicates).\
+            (For AvdIndexedList this works the same as prepend_unique)
         """
 
-    def _deepmerged(self, other: Self, list_merge: Literal["append", "replace"] = "append") -> Self:
+    def _deepmerged(
+        self, other: Self, list_merge: Literal["append_unique", "append", "replace", "keep", "prepend", "prepend_unique"] = "append_unique"
+    ) -> Self:
         """
         Return new instance with the result of the deepmerge of "other" on this instance.
 
         Args:
             other: The other instance of the same type to merge on this instance.
             list_merge: Merge strategy used on any nested lists.
-                - "append" will first try to deep merge on the primary key, and if not found it will append non-existing items.
-                - "replace" will replace the full list.
+
+        List merge strategies:
+        - "append_unique" will first try to deep merge on the primary key, and if not found it will append non-existing items.
+        - "append" will first try to deep merge on the primary key, and if not found it will append all other items (including duplicates).\
+            (For AvdIndexedList this works the same as append_unique)
+        - "replace" will replace the full list.
+        - "keep" will only use the new list if there is no existing list or existing list is `None`.
+        - "prepend_unique" will first try to deep merge on the primary key, and if not found it will prepend non-existing items.
+        - "prepend" will first try to deep merge on the primary key, and if not found it will prepend all other items (including duplicates).\
+            (For AvdIndexedList this works the same as prepend_unique)
         """
         new_instance = deepcopy(self)
         new_instance._deepmerge(other=other, list_merge=list_merge)

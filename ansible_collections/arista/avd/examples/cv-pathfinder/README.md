@@ -3,7 +3,7 @@
 title: AVD example for CV Pathfinder
 ---
 <!--
-  ~ Copyright (c) 2023-2024 Arista Networks, Inc.
+  ~ Copyright (c) 2023-2025 Arista Networks, Inc.
   ~ Use of this source code is governed by the Apache License 2.0
   ~ that can be found in the LICENSE file.
   -->
@@ -529,10 +529,10 @@ To build and deploy the configurations to CVaaS, run first the `build.yml` playb
 
 ``` bash
 ### Build the configurations
-ansible-playbook playbooks/build.yml
+ansible-playbook build.yml
 
 ### Deploy Configurations to CVaaS
-ansible-playbook playbooks/deploy.yml
+ansible-playbook deploy.yml
 ```
 
 ```shell

@@ -7,6 +7,7 @@ ignore-paths=
   # The schema/__init__.py are generated, so they should not be linted.
   python-avd/pyavd/_eos_cli_config_gen/schema/__init__.py,
   python-avd/pyavd/_eos_designs/schema/__init__.py,
+  python-avd/tests/pyavd/schema/data_merging_schema_class.py,
 
 [MESSAGES CONTROL]
 disable=

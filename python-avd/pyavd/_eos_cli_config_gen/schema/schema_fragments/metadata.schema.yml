@@ -16,6 +16,14 @@ keys:
         type: str
       system_mac_address:
         type: str
+      rack:
+        type: str
+      pod_name:
+        type: str
+      dc_name:
+        type: str
+      fabric_name:
+        type: str
       cv_tags:
         type: dict
         keys:

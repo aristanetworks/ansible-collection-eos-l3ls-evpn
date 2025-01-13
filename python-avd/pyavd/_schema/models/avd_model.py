@@ -1,4 +1,4 @@
-# Copyright (c) 2023-2024 Arista Networks, Inc.
+# Copyright (c) 2023-2025 Arista Networks, Inc.
 # Use of this source code is governed by the Apache License 2.0
 # that can be found in the LICENSE file.
 from __future__ import annotations
@@ -134,8 +134,6 @@ class AvdModel(AvdBase):
         Get attribute or Undefined.
 
         Avoids the overridden __getattr__ to avoid default values.
-
-        Falls back to __getattr__ in case of _created_from_null to always insert None or default value.
         """
         if name not in self._fields:
             msg = f"'{type(self).__name__}' object has no attribute '{name}'"
@@ -225,7 +223,7 @@ class AvdModel(AvdBase):
         """
         Behave like dict.get() to get a field value only if set.
 
-        If the field balue is not set, this will not insert a default schema values but will instead return the given 'default' value (or None).
+        If the field value is not set, this will not insert a default schema values but will instead return the given 'default' value (or None).
         """
         if (value := self._get_defined_attr(name)) is Undefined:
             return default
@@ -240,15 +238,24 @@ class AvdModel(AvdBase):
             self.__init__(*args, **kwargs)
             return self
 
-    def _deepmerge(self, other: Self, list_merge: Literal["append", "replace"] = "append") -> None:
+    def _deepmerge(self, other: Self, list_merge: Literal["append_unique", "append", "replace", "keep", "prepend", "prepend_unique"] = "append_unique") -> None:
         """
         Update instance by deepmerging the other instance in.
 
         Args:
             other: The other instance of the same type to merge on this instance.
             list_merge: Merge strategy used on any nested lists.
-                - "append" will first try to deep merge on the primary key, and if not found it will append non-existing items.
-                - "replace" will replace the full list.
+
+        List merge strategies:
+        - "append_unique" will first try to deep merge on the primary key, and if not found it will append non-existing items.
+        - "append" will first try to deep merge on the primary key, and if not found it will append all other items (including duplicates).\
+            (For AvdIndexedList this works the same as append_unique)
+        - "replace" will replace the full list.
+        - "keep" will only use the new list if there is no existing list or existing list is `None`.
+        - "prepend_unique" will first try to deep merge on the primary key, and if not found it will prepend non-existing items.
+        - "prepend" will first try to deep merge on the primary key, and if not found it will prepend all other items (including duplicates).\
+            (For AvdIndexedList this works the same as prepend_unique)
+
         """
         cls = type(self)
         if not isinstance(other, cls):
@@ -283,7 +290,8 @@ class AvdModel(AvdBase):
             if field_type is dict:
                 # In-place deepmerge in to the existing dict without schema.
                 # Deepcopying since merge() does not copy.
-                merge(old_value, new_value, list_merge=list_merge)
+                legacy_list_merge = list_merge.replace("_unique", "_rp")
+                merge(old_value, new_value, list_merge=legacy_list_merge)
                 continue
 
             setattr(self, field, new_value)
@@ -294,30 +302,6 @@ class AvdModel(AvdBase):
         elif self._created_from_null:
             # We merged into a "null" class, but since we now have proper data, we clear the flag.
             self._created_from_null = False
-
-    def _inherit(self, other: Self) -> None:
-        """Update unset fields on this instance with fields from other instance. No merging."""
-        cls = type(self)
-        if not isinstance(other, cls):
-            msg = f"Unable to inherit from type '{type(other)}' into '{cls}'"
-            raise TypeError(msg)
-
-        if self._created_from_null:
-            # Null always wins, so no inheritance.
-            return
-
-        if other._created_from_null:
-            # Nothing to inherit, but we set the flag to prevent inheriting from something else later.
-            self._created_from_null = True
-            return
-
-        for field in cls._fields:
-            if self._get_defined_attr(field) is not Undefined:
-                continue
-            if (new_value := other._get_defined_attr(field)) is Undefined:
-                continue
-
-            setattr(self, field, deepcopy(new_value))
 
     def _deepinherit(self, other: Self) -> None:
         """Update instance by recursively inheriting unset fields from other instance. Lists are not merged."""

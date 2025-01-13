@@ -4,12 +4,18 @@ vlans:
   - id: 110
     tenant: Tenant_A
     name: PR01-DMZ
+    address_locking:
+      address_family:
+        ipv4: true
+        ipv6: true
   - id: 111
     tenant: Tenant_A
     name: PRIVATE_VLAN_COMMUNITY
     private_vlan:
       type: community
       primary_vlan: 110
+    address_locking:
+      ipv4_enforcement_disabled: true
   - id: 112
     tenant: Tenant_A
     name: PRIVATE_VLAN_ISOLATED

@@ -23,6 +23,21 @@ keys:
         state:
           type: str
           valid_values: ["active", "suspend"]
+        address_locking:
+          type: dict
+          keys:
+            address_family:
+              type: dict
+              keys:
+                ipv4:
+                  type: bool
+                  description: Enable address locking for IPv4.
+                ipv6:
+                  type: bool
+                  description: Enable address locking for IPv6.
+            ipv4_enforcement_disabled:
+              type: bool
+              description: Disable enforcement for IPv4 locked addresses.
         trunk_groups:
           type: list
           items:
