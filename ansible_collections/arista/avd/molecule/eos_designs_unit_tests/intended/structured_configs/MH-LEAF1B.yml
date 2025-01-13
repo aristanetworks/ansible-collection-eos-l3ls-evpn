@@ -554,7 +554,7 @@ router_bgp:
       - address_family: evpn
         route_targets:
         - '20:20'
-    router_id: 192.168.255.34
+    router_id: 10.255.1.34
     redistribute:
       connected:
         enabled: true

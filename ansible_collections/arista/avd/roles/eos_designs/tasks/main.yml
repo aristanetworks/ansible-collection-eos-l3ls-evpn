@@ -63,6 +63,7 @@
     topology_csv: "{{ eos_designs_documentation.topology_csv | arista.avd.default(false) }}"
     p2p_links_csv_file: "{{ fabric_dir }}/{{ fabric_name }}-p2p-links.csv"
     p2p_links_csv: "{{ eos_designs_documentation.p2p_links_csv | arista.avd.default(false) }}"
+    toc: "{{ eos_designs_documentation.toc | arista.avd.default(true) }}"
     mode: "0o664"
   delegate_to: localhost
   check_mode: false
