@@ -196,7 +196,7 @@ class ActionModule(ActionBase):
                     structured_configs=STRUCTURED_CONFIGS, scope=get(PLUGIN_ARGS, "anta_catalog.scope"), filename=get(PLUGIN_ARGS, "report.fabric_data_output")
                 )
 
-            with ProcessPoolExecutor(max_workers=(ansible_forks - 1)) as executor:
+            with ProcessPoolExecutor(max_workers=min((ansible_forks - 1), 1)) as executor:
                 batch_size = get(PLUGIN_ARGS, "anta_runner_settings.batch_size")
                 batches = [deployed_devices[i : i + batch_size] for i in range(0, len(deployed_devices), batch_size)]
                 batch_results = executor.map(run_anta, batches)
