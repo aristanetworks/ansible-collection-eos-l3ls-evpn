@@ -1390,6 +1390,7 @@ aaa authorization commands 10,15 default group tacacs+ local
 | Commands - Default | 0 | start-stop | - | True |
 | Commands - Default | 1 | start-stop | TACACS | False |
 | Commands - Default | 2 | none | - | True |
+| Commands - Default | 3 | start-stop | - | True |
 
 #### AAA Accounting Device Configuration
 
@@ -1406,6 +1407,7 @@ aaa accounting commands all default start-stop group TACACS logging
 aaa accounting commands 0 default start-stop logging
 aaa accounting commands 1 default start-stop group TACACS
 aaa accounting commands 2 default none
+aaa accounting commands 3 default start-stop logging
 ```
 
 ## Address Locking

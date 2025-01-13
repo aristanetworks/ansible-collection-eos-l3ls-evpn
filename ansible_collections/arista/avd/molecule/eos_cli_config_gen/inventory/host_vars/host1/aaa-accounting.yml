@@ -75,3 +75,5 @@ aaa_accounting:
           - method: logging
       - commands: 3
         type: start-stop
+        methods:
+          - method: logging
