@@ -748,7 +748,6 @@ router_bgp:
       - address_family: evpn
         route_targets:
         - '100000:12'
-    router_id: 192.168.255.10
     redistribute:
       connected:
         enabled: true
@@ -763,7 +762,7 @@ router_bgp:
       - address_family: evpn
         route_targets:
         - '100000:13'
-    router_id: 192.168.255.10
+    router_id: 11.11.11.11
     redistribute:
       connected:
         enabled: true
@@ -881,7 +880,7 @@ router_ospf:
   - id: 16
     vrf: Tenant_A_OSPF
     passive_interface_default: true
-    router_id: 192.168.255.10
+    router_id: 10.255.11.10
     no_passive_interfaces:
     - Ethernet22
     - Ethernet23

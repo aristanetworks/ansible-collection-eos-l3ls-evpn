@@ -1,0 +1,26 @@
+{#
+ Copyright (c) 2025 Arista Networks, Inc.
+ Use of this source code is governed by the Apache License 2.0
+ that can be found in the LICENSE file.
+#}
+{# doc - banners #}
+{% if banners.login is arista.avd.defined or banners.motd is arista.avd.defined %}
+
+### Banner
+{%     if banners.login is arista.avd.defined %}
+
+#### Login Banner
+
+```text
+{{ banners.login.rstrip() }}
+```
+{%     endif %}
+{%     if banners.motd is arista.avd.defined %}
+
+#### MOTD Banner
+
+```text
+{{ banners.motd.rstrip() }}
+```
+{%     endif %}
+{% endif %}
