@@ -1,4 +1,4 @@
-# Copyright (c) 2023-2024 Arista Networks, Inc.
+# Copyright (c) 2023-2025 Arista Networks, Inc.
 # Use of this source code is governed by the Apache License 2.0
 # that can be found in the LICENSE file.
 """AVD Jinja2 test defined.
@@ -18,7 +18,7 @@ def defined(
     value: Any, test_value: Any = None, var_type: str | None = None, fail_action: str | None = None, var_name: str | None = None, *, run_tests: bool = False
 ) -> bool | tuple[bool, int]:
     """
-    defined - Ansible test plugin to test if a variable is defined and not none.
+    Defined - Ansible test plugin to test if a variable is defined and not none.
 
     Arista.avd.defined will test value if defined and is not none and return true or false.
     If test_value is supplied, the value must also pass == test_value to return true.

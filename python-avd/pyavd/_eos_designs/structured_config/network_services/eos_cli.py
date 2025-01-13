@@ -1,12 +1,10 @@
-# Copyright (c) 2023-2024 Arista Networks, Inc.
+# Copyright (c) 2023-2025 Arista Networks, Inc.
 # Use of this source code is governed by the Apache License 2.0
 # that can be found in the LICENSE file.
 from __future__ import annotations
 
 from functools import cached_property
 from typing import TYPE_CHECKING
-
-from pyavd._utils import get
 
 from .utils import UtilsMixin
 
@@ -28,7 +26,7 @@ class EosCliMixin(UtilsMixin):
             return None
 
         eos_clis = []
-        if (eos_cli := get(self._hostvars, "eos_cli")) is not None:
+        if (eos_cli := self.structured_config.eos_cli) is not None:
             eos_clis.append(eos_cli)
 
         eos_clis.extend(vrf.raw_eos_cli for tenant in self.shared_utils.filtered_tenants for vrf in tenant.vrfs if vrf.raw_eos_cli is not None)

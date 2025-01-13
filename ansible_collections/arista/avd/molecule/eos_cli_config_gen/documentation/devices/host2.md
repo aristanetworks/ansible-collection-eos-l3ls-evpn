@@ -3,6 +3,7 @@
 ## Table of Contents
 
 - [Management](#management)
+  - [Banner](#banner)
   - [Management Interfaces](#management-interfaces)
   - [Management SSH](#management-ssh)
   - [Management API gNMI](#management-api-gnmi)
@@ -56,6 +57,10 @@
   - [PBR Policy Maps](#pbr-policy-maps)
 - [BFD](#bfd)
   - [Router BFD](#router-bfd)
+- [MPLS](#mpls)
+  - [MPLS and LDP](#mpls-and-ldp)
+  - [MPLS RSVP](#mpls-rsvp)
+  - [MPLS Device Configuration](#mpls-device-configuration)
 - [Queue Monitor](#queue-monitor)
   - [Queue Monitor Length](#queue-monitor-length)
   - [Queue Monitor Configuration](#queue-monitor-configuration)
@@ -77,8 +82,32 @@
 - [IP NAT](#ip-nat)
   - [IP NAT Device Configuration](#ip-nat-device-configuration)
   - [Traffic Policies information](#traffic-policies-information)
+- [STUN](#stun)
+  - [STUN Server](#stun-server)
+  - [STUN Device Configuration](#stun-device-configuration)
 
 ## Management
+
+### Banner
+
+#### Login Banner
+
+```text
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!***!!!Unauthorized access prohibited!!!***!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+EOF
+```
+
+#### MOTD Banner
+
+```text
+.         Switch       : $(hostname)                            .
+.         Site         : DC1                      .
+.         Type info for information about the device            .
+.         Type help for information about the aliases           .
+EOF
+```
 
 ### Management Interfaces
 
@@ -906,6 +935,76 @@ router bfd
    session stats snapshot interval dangerous 8
 ```
 
+## MPLS
+
+### MPLS and LDP
+
+#### MPLS and LDP Summary
+
+| Setting | Value |
+| -------- | ---- |
+| MPLS IP Enabled | True |
+| LDP Enabled | False |
+| LDP Router ID | - |
+| LDP Interface Disabled Default | False |
+| LDP Transport-Address Interface | - |
+| ICMP TTL-Exceeded Tunneling Enabled | True |
+
+### MPLS RSVP
+
+#### MPLS RSVP Summary
+
+| Setting | Value |
+| ------- | ----- |
+| Refresh interval | 4 |
+| Authentication type | - |
+| Authentication sequence-number window | - |
+| Authentication active index | 766 |
+| SRLG | Enabled |
+| Preemption method | hard |
+| Fast reroute mode | node-protection |
+| Fast reroute reversion | - |
+| Fast reroute  bypass tunnel optimization interval | - |
+| Hitless restart | Active |
+| Hitless restart recovery timer | - |
+| P2MP | True |
+| Shutdown | False |
+
+##### RSVP Graceful Restart
+
+| Role | Recovery timer | Restart timer |
+| ---- | -------------- | ------------- |
+| Helper | - | - |
+| Speaker | - | - |
+
+### MPLS Device Configuration
+
+```eos
+!
+mpls ip
+!
+mpls ldp
+   shutdown
+!
+mpls icmp ttl-exceeded tunneling
+!
+mpls rsvp
+   refresh interval 4
+   authentication index 766 active
+   fast-reroute mode node-protection
+   srlg
+   preemption method hard
+   !
+   hitless-restart
+   !
+   graceful-restart role helper
+   !
+   graceful-restart role speaker
+   !
+   p2mp
+   no shutdown
+```
+
 ## Queue Monitor
 
 ### Queue Monitor Length
@@ -1102,4 +1201,22 @@ traffic-policies
       11:22:33:44:55:66:77:88
    !
    field-set ipv6 prefix IPv6-DEMO-2
+```
+
+## STUN
+
+### STUN Server
+
+| Server Local Interfaces | Bindings Timeout (s) | SSL Profile | SSL Connection Lifetime | Port |
+| ----------------------- | -------------------- | ----------- | ----------------------- | ---- |
+| Ethernet1 | - | - | 3 hours | 3478 |
+
+### STUN Device Configuration
+
+```eos
+!
+stun
+   server
+      local-interface Ethernet1
+      ssl connection lifetime 3 hours
 ```

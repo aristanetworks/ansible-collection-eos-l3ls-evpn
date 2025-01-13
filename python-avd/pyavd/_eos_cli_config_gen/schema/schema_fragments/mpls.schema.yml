@@ -33,3 +33,252 @@ keys:
           ttl_exceeded_tunneling:
             type: bool
             description: Enables the MPLS tunneling of TTL exceeded ICMP replies.
+      rsvp:
+        type: dict
+        keys:
+          refresh:
+            type: dict
+            keys:
+              interval:
+                description: Time between refreshes.
+                type: int
+                convert_types:
+                  - str
+                min: 1
+                max: 65535
+              method:
+                description: |-
+                  Neighbor refresh mechanism.
+                  bundled: Refresh states using message identifier lists.
+                  explicit: Send each message individually.
+                type: str
+                valid_values:
+                  - bundled
+                  - explicit
+          authentication:
+            description: Cryptographic authentication.
+            type: dict
+            keys:
+              password_indexes:
+                type: list
+                primary_key: index
+                items:
+                  type: dict
+                  keys:
+                    index:
+                      description: Password index.
+                      type: int
+                      convert_types:
+                        - str
+                      min: 1
+                      max: 4294967295
+                    password_type:
+                      description: Authentication password type.
+                      type: str
+                      convert_types:
+                        - int
+                      default: '7'
+                      valid_values:
+                        - '0'
+                        - '7'
+                        - '8a'
+                    password:
+                      type: str
+                      description: Password string.
+              active_index:
+                description: Use index as active password.
+                type: int
+                convert_types:
+                  - str
+              sequence_number_window:
+                description: Size of reorder window for index in the sequence.
+                type: int
+                convert_types:
+                  - str
+                min: 1
+                max: 255
+              type:
+                description: Authentication mechanism.
+                type: str
+                valid_values:
+                  - md5
+                  - none
+          neighbors:
+            type: list
+            items:
+              type: dict
+              keys:
+                ip_address:
+                  description: Neighbor's interface IPv4 address.
+                  type: str
+                ipv6_address:
+                  description: Neighbor's interface IPv6 address.
+                  type: str
+                authentication:
+                  description: Cryptographic authentication.
+                  type: dict
+                  keys:
+                    index:
+                      description: Password index.
+                      type: int
+                      min: 1
+                      max: 4294967295
+                    type:
+                      description: Authentication mechanism.
+                      type: str
+                      valid_values:
+                        - md5
+                        - none
+          ip_access_group:
+            description: IPv4 Access list name.
+            type: str
+          ipv6_access_group:
+            description: IPv6 access list name.
+            type: str
+          fast_reroute:
+            type: dict
+            keys:
+              mode:
+                description: |-
+                  Fast reroute mode.
+                  link-protection: Protect against failure of the next link.
+                  node-protection: Protect against failure of the next node.
+                  none: Disable fast reroute.
+                type: str
+                valid_values:
+                  - link-protection
+                  - node-protection
+                  - none
+              reversion:
+                description: |-
+                  Reversion behavior.
+                  Global revertive repair.
+                  Local revertive repair.
+                type: str
+                valid_values:
+                  - global
+                  - local
+              bypass_tunnel_optimization_interval:
+                description: |-
+                  Fast-reroute bypass configuration.
+                  Interval between each re-optimization attempt in seconds.
+                type: int
+                convert_types:
+                  - str
+                min: 1
+                max: 65535
+          srlg:
+            type: dict
+            keys:
+              enabled:
+                description: Select SRLG behavior.
+                type: bool
+              strict:
+                description: Apply strict SRLG constraint.
+                type: bool
+          label_local_termination:
+            description: Local termination label to be advertised.
+            type: str
+            valid_values:
+              - implicit-null
+              - explicit-null
+          preemption_method:
+            type: dict
+            keys:
+              preemption:
+                type: str
+                valid_values:
+                  - hard
+                  - soft
+              timer:
+                description: Timer value in units of seconds.
+                type: int
+                convert_types:
+                  - str
+                min: 1
+                max: 65535
+          mtu_signaling:
+            description: Enable MTU signaling.
+            type: bool
+          graceful_restart:
+            description: RSVP graceful restart.
+            type: dict
+            keys:
+              role_helper:
+                type: dict
+                keys:
+                  enabled:
+                    type: bool
+                  timer_recovery:
+                    type: int
+                    convert_types:
+                      - str
+                    min: 1
+                    max: 320
+                    description: Maximum recovery timer value in seconds.
+                  timer_restart:
+                    type: int
+                    convert_types:
+                      - str
+                    min: 1
+                    max: 320
+                    description: Maximum restart timer value in seconds.
+              role_speaker:
+                type: dict
+                keys:
+                  enabled:
+                    type: bool
+                  timer_recovery:
+                    type: int
+                    convert_types:
+                      - str
+                    min: 1
+                    max: 320
+                    description: Maximum recovery timer value in seconds.
+                  timer_restart:
+                    type: int
+                    convert_types:
+                      - str
+                    min: 1
+                    max: 320
+                    description: Maximum restart timer value in seconds.
+          hello:
+            type: dict
+            keys:
+              interval:
+                description: Time between hello messages in seconds.
+                type: int
+                convert_types:
+                  - str
+                min: 1
+                max: 60
+              multiplier:
+                description: Number of missed hellos after which the neighbor is expired.
+                type: int
+                convert_types:
+                  - str
+                min: 1
+                max: 255
+          hitless_restart:
+            description: RSVP hitless restart.
+            type: dict
+            keys:
+              enabled:
+                type: bool
+              timer_recovery:
+                description: |-
+                  Time stale states will be preserved after restart.
+                  Value in seconds.
+                type: int
+                convert_types:
+                  - str
+                min: 1
+                max: 320
+          p2mp:
+            type: dict
+            keys:
+              enabled:
+                type: bool
+          shutdown:
+            type: bool
+            description: Make `shutdown` key false for `no shutdown` cli.

@@ -1,16 +1,18 @@
 {#
- Copyright (c) 2023-2024 Arista Networks, Inc.
+ Copyright (c) 2023-2025 Arista Networks, Inc.
  Use of this source code is governed by the Apache License 2.0
  that can be found in the LICENSE file.
 #}
 {# context used to hide password and keys #}
 {% set hide_passwords = eos_cli_config_gen_documentation.hide_passwords | arista.avd.default(true) %}
 # {{ hostname | arista.avd.default(inventory_hostname) }}
+{% if eos_cli_config_gen_documentation.toc is not arista.avd.defined(false) %}
 
 ## Table of Contents
 
 <!-- toc -->
 <!-- toc -->
+{% endif %}
 {# Management #}
 {% include 'documentation/management.j2' %}
 {# CVX #}

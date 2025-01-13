@@ -1,5 +1,5 @@
 - name: Test without prefix and configlet_dir
-  ignore_errors: yes
+  ignore_errors: true
   configlet_build_config:
     configlet_extension: 'yml'
     destination: "{{ actual_output }}"

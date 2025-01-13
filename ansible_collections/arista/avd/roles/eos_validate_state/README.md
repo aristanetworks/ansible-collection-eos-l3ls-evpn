@@ -3,7 +3,7 @@
 title: Ansible Collection Role eos_validate_state
 ---
 <!--
-  ~ Copyright (c) 2023-2024 Arista Networks, Inc.
+  ~ Copyright (c) 2023-2025 Arista Networks, Inc.
   ~ Use of this source code is governed by the Apache License 2.0
   ~ that can be found in the LICENSE file.
   -->
@@ -284,7 +284,7 @@ all:
 ansible_user: arista
 ansible_password: arista
 ansible_network_os: eos
-ansible_become: yes
+ansible_become: true
 ansible_become_method: enable
 ansible_become_password: arista
 ansible_connection: httpapi

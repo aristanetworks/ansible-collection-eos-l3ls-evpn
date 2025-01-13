@@ -10,4 +10,4 @@ keys:
     documentation_options:
       table: cloudvision-settings
     type: bool
-    default: False
+    default: false

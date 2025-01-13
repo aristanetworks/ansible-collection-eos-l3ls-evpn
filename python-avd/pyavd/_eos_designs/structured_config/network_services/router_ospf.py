@@ -1,4 +1,4 @@
-# Copyright (c) 2023-2024 Arista Networks, Inc.
+# Copyright (c) 2023-2025 Arista Networks, Inc.
 # Use of this source code is governed by the Apache License 2.0
 # that can be found in the LICENSE file.
 from __future__ import annotations
@@ -25,7 +25,7 @@ class RouterOspfMixin(UtilsMixin):
     @cached_property
     def router_ospf(self: AvdStructuredConfigNetworkServices) -> dict | None:
         """
-        return structured config for router_ospf.
+        Return structured config for router_ospf.
 
         If we have static_routes in default VRF and not EPVN, and underlay is OSPF
         Then add redistribute static to the underlay OSPF process.
@@ -65,7 +65,7 @@ class RouterOspfMixin(UtilsMixin):
                     "id": process_id,
                     "vrf": vrf.name if vrf.name != "default" else None,
                     "passive_interface_default": True,
-                    "router_id": default(vrf.ospf.router_id, self.shared_utils.router_id if not self.inputs.use_router_general_for_router_id else None),
+                    "router_id": self.get_vrf_router_id(vrf, vrf.ospf.router_id, tenant.name),
                     "no_passive_interfaces": ospf_interfaces,
                     "bfd_enable": vrf.ospf.bfd or None,  # Historic behavior is to only output if True.
                     "max_lsa": vrf.ospf.max_lsa,

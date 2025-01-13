@@ -51,7 +51,7 @@
         # configlet_name_template: "AVD-${hostname}"
         cv_servers: [ '{{ cv_server }}' ]
         cv_token: '{{ token }}'
-        # cv_verify_certs: True
+        # cv_verify_certs: true
         workspace:
           name: '{{ ws_name }}'
           description: '{{ ws_description }}'

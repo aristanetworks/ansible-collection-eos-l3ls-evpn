@@ -3,7 +3,7 @@
 title: Ansible Collection Role cvp_configlet_upload
 ---
 <!--
-  ~ Copyright (c) 2023-2024 Arista Networks, Inc.
+  ~ Copyright (c) 2023-2025 Arista Networks, Inc.
   ~ Use of this source code is governed by the Apache License 2.0
   ~ that can be found in the LICENSE file.
   -->
@@ -49,8 +49,8 @@ all:
           ansible_user: ansible
           ansible_password: ansible
           ansible_connection: httpapi
-          ansible_httpapi_use_ssl: True
-          ansible_httpapi_validate_certs: False
+          ansible_httpapi_use_ssl: true
+          ansible_httpapi_validate_certs: false
           ansible_network_os: eos
           ansible_httpapi_port: 443
 ```

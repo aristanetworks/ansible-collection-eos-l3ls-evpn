@@ -1,5 +1,5 @@
 {#
- Copyright (c) 2023-2024 Arista Networks, Inc.
+ Copyright (c) 2023-2025 Arista Networks, Inc.
  Use of this source code is governed by the Apache License 2.0
  that can be found in the LICENSE file.
 #}
@@ -25,9 +25,13 @@
        or ip_ftp_client_source_interfaces is arista.avd.defined
        or ip_tftp_client_source_interfaces is arista.avd.defined
        or ip_telnet_client_source_interfaces is arista.avd.defined
-       or agent is arista.avd.defined %}
+       or agent is arista.avd.defined
+       or banners.login is arista.avd.defined
+       or banners.motd is arista.avd.defined %}
 
 ## Management
+{## Banner #}
+{%     include 'documentation/banners.j2' %}
 {## Agents #}
 {%     include 'documentation/agents.j2' %}
 {## Management Interface #}

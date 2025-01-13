@@ -1,4 +1,4 @@
-# Copyright (c) 2023-2024 Arista Networks, Inc.
+# Copyright (c) 2023-2025 Arista Networks, Inc.
 # Use of this source code is governed by the Apache License 2.0
 # that can be found in the LICENSE file.
 import warnings
@@ -46,7 +46,7 @@ CSC_TESTS = [
 
 
 @pytest.mark.parametrize(("prefix", "expected_data"), CSC_TESTS)
-def test_eos_designs_custom_structured_configuration(prefix: str | None, expected_data: dict) -> None:
+def test_eos_designs_custom_structured_configuration(prefix: str | None, expected_data: EosDesigns._CustomStructuredConfigurations) -> None:
     data = CSC_DATA.copy()
     if prefix:
         data.update({"custom_structured_configuration_prefix": prefix})
@@ -57,7 +57,7 @@ def test_eos_designs_custom_structured_configuration(prefix: str | None, expecte
     for entry in loaded_model._custom_structured_configurations:
         assert isinstance(entry, EosDesigns._CustomStructuredConfigurationsItem)
 
-    assert loaded_model._custom_structured_configurations == expected_data
+    assert repr(loaded_model._custom_structured_configurations) == repr(expected_data)
 
 
 # eos_cli_config_gen inputs are validated by `validate_structured_config` in another file.

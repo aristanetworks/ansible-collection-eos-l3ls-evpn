@@ -1,19 +1,5 @@
 # host3
 
-## Table of Contents
-
-- [Management](#management)
-  - [Management Interfaces](#management-interfaces)
-- [Monitoring](#monitoring)
-  - [TerminAttr Daemon](#terminattr-daemon)
-- [Spanning Tree](#spanning-tree)
-  - [Spanning Tree Summary](#spanning-tree-summary)
-  - [Spanning Tree Device Configuration](#spanning-tree-device-configuration)
-- [Routing](#routing)
-  - [Router ISIS](#router-isis)
-  - [Router BGP](#router-bgp)
-  - [Traffic Policies information](#traffic-policies-information)
-
 ## Management
 
 ### Management Interfaces
@@ -185,6 +171,40 @@ router bgp 65101.0001
    address-family ipv6
       redistribute ospfv3 include leaked route-map RM-REDISTRIBUTE-OSPFV3
       redistribute ospfv3 match external include leaked route-map RM-REDISTRIBUTE-OSPFV3-EXTERNAL
+```
+
+## MPLS
+
+### MPLS and LDP
+
+#### MPLS and LDP Summary
+
+| Setting | Value |
+| -------- | ---- |
+| MPLS IP Enabled | True |
+| LDP Enabled | False |
+| LDP Router ID | 192.168.1.2 |
+| LDP Interface Disabled Default | True |
+| LDP Transport-Address Interface | - |
+
+### MPLS RSVP
+
+#### MPLS RSVP Summary
+
+| Setting | Value |
+| ------- | ----- |
+
+### MPLS Device Configuration
+
+```eos
+!
+mpls ip
+!
+mpls ldp
+   router-id 192.168.1.2
+   interface disabled default
+!
+mpls rsvp
 ```
 
 ### Traffic Policies information

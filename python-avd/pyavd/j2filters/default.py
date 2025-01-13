@@ -1,4 +1,4 @@
-# Copyright (c) 2024 Arista Networks, Inc.
+# Copyright (c) 2024-2025 Arista Networks, Inc.
 # Use of this source code is governed by the Apache License 2.0
 # that can be found in the LICENSE file.
 from typing import TypeVar
@@ -10,7 +10,7 @@ T = TypeVar("T")
 
 def default(*values: list[T]) -> T | None:
     """
-    default will test value if defined and is not none.
+    Default will test value if defined and is not none.
 
     Arista.avd.default will test if the first value is defined and is not none.
     If true return value else repeat for the next value.
