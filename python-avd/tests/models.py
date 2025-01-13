@@ -87,6 +87,24 @@ class MoleculeHost:
 
         return AntaCatalog.parse(filename=catalog_path, file_format="json")
 
+    @cached_property
+    def anta_catalog_dc_boundary(self) -> AntaCatalog:
+        """The intended ANTA catalog for a run with a DC boundary for the host, as read from the JSON file in the molecule scenario."""
+        catalog_path = self.scenario.path / "anta/catalogs/dc_boundary_run" / f"{self.name}.json"
+        if not catalog_path.exists():
+            return AntaCatalog()
+
+        return AntaCatalog.parse(filename=catalog_path, file_format="json")
+
+    @cached_property
+    def anta_catalog_filtered(self) -> AntaCatalog:
+        """The intended ANTA catalog for a run with a filtered test for the host, as read from the JSON file in the molecule scenario."""
+        catalog_path = self.scenario.path / "anta/catalogs/filtered_run" / f"{self.name}.json"
+        if not catalog_path.exists():
+            return AntaCatalog()
+
+        return AntaCatalog.parse(filename=catalog_path, file_format="json")
+
 
 class MoleculeScenario:
     """Class representing one Molecule scenario."""
