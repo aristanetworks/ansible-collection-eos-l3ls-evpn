@@ -1189,6 +1189,9 @@ keys:
     documentation_options:
       table: management-settings
     type: list
+  event_monitor:
+    type: dict
+    $ref: eos_cli_config_gen#/keys/event_monitor
   evpn_ebgp_gateway_inter_domain:
     documentation_options:
       table: evpn-settings
@@ -2045,6 +2048,9 @@ keys:
           type: str
           description: L3 interface profile name. Any variable supported under `l3_interfaces`
             can be inherited from a profile.
+  load_interval:
+    type: dict
+    $ref: eos_cli_config_gen#/keys/load_interval
   local_users:
     documentation_options:
       table: management-settings
@@ -3650,6 +3656,9 @@ keys:
           `platform_settings.[].feature_support.queue_monitor_length_notify` setting.
 
           '
+  queue_monitor_streaming:
+    type: dict
+    $ref: eos_cli_config_gen#/keys/queue_monitor_streaming
   redundancy:
     documentation_options:
       table: system-settings
@@ -4550,6 +4559,9 @@ keys:
     - isis-ldp
     - isis-sr-ldp
     - none
+  unsupported_transceiver:
+    type: dict
+    $ref: eos_cli_config_gen#/keys/service_unsupported_transceiver
   uplink_ptp:
     documentation_options:
       table: fabric-settings
