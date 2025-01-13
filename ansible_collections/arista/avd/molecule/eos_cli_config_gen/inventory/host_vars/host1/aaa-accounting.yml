@@ -5,137 +5,73 @@ aaa_accounting:
     console:
       type: start-stop
       methods:
-        - method: logging
         - method: group
           group: TACACS
-        - method: group
-          group: RADIUS1
-        - method: group
         - method: logging
     default:
       type: start-stop
       methods:
-        - method: logging
         - method: group
           group: TACACS
-        - method: group
-          group: RADIUS1
-        - method: group
         - method: logging
   system:
     default:
       type: start-stop
       methods:
-        - method: logging
         - method: group
-          group: RADIUS1
-        - method: group
-          group: RADIUS2
-        - method: group
+          group: TACACS
         - method: logging
   dot1x:
     default:
-      type: stop-only
+      type: start-stop
       methods:
-        - method: logging
         - method: group
-          group: RADIUS1
-        - method: group
-          group: RADIUS2
+          group: RADIUS
           multicast: true
-        - method: group
         - method: logging
   commands:
     console:
       - commands: all
         type: start-stop
         methods:
-          - method: logging
           - method: group
             group: TACACS
-          - method: group
-            group: RADIUS1
-          - method: group
           - method: logging
       - commands: 0
         type: start-stop
         methods:
-          - method: group
-            group: TACACS
-          - method: group
-            group: RADIUS1
-          - method: group
+          - method: logging
       - commands: 1
         type: start-stop
         methods:
-          - method: logging
           - method: group
-            group: RADIUS1
-          - method: group
-            group: RADIUS2
-          - method: group
+            group: TACACS1
       # As type is none hence logging will not render in config as per actual EOS
       - commands: 2
         type: none
         methods:
           - method: logging
-          - method: group
-            group: RADIUS1
-          - method: group
-            group: RADIUS2
-          - method: group
       - commands: 3
         type: start-stop
-        methods:
-          - method: logging
-          - method: group
-            group: RADIUS1
-          - method: group
-            group: RADIUS2
-          - method: group
     default:
       - commands: all
         type: start-stop
         methods:
+          - method: group
+            group: TACACS
           - method: logging
-          - method: group
-            group: RADIUS1
-          - method: group
-            group: RADIUS2
-          - method: group
       - commands: 0
         type: start-stop
         methods:
           - method: logging
-          - method: group
-            group: RADIUS1
-          - method: group
-            group: RADIUS2
-          - method: group
       - commands: 1
         type: start-stop
         methods:
-          - method: logging
           - method: group
-            group: RADIUS1
-          - method: group
-            group: RADIUS2
-          - method: group
+            group: TACACS
       - commands: 2
         type: none
         methods:
           - method: logging
-          - method: group
-            group: RADIUS1
-          - method: group
-            group: RADIUS2
-          - method: group
       - commands: 3
         type: start-stop
-        methods:
-          - method: logging
-          - method: group
-            group: RADIUS1
-          - method: group
-            group: RADIUS2
-          - method: group

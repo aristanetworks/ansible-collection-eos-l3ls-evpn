@@ -1377,38 +1377,35 @@ aaa authorization commands 10,15 default group tacacs+ local
 
 | Type | Commands | Record type | Group | Logging |
 | ---- | -------- | ----------- | ----- | ------- |
-| Exec - Console | - | start-stop | TACACS, RADIUS1 | True |
-| Commands - Console | all | start-stop | TACACS, RADIUS1 | True |
-| Commands - Console | 0 | start-stop | TACACS, RADIUS1 | False |
-| Commands - Console | 1 | start-stop | RADIUS1, RADIUS2 | True |
-| Commands - Console | 2 | none | RADIUS1, RADIUS2 | True |
-| Commands - Console | 3 | start-stop | RADIUS1, RADIUS2 | True |
-| Exec - Default | - | start-stop | TACACS, RADIUS1 | True |
-| System - Default | - | start-stop | RADIUS1, RADIUS2 | True |
-| Dot1x - Default | - | stop-only | RADIUS1, RADIUS2 | True |
-| Commands - Default | all | start-stop | RADIUS1, RADIUS2 | True |
-| Commands - Default | 0 | start-stop | RADIUS1, RADIUS2 | True |
-| Commands - Default | 1 | start-stop | RADIUS1, RADIUS2 | True |
-| Commands - Default | 2 | none | RADIUS1, RADIUS2 | True |
-| Commands - Default | 3 | start-stop | RADIUS1, RADIUS2 | True |
+| Exec - Console | - | start-stop | TACACS | True |
+| Commands - Console | all | start-stop | TACACS | True |
+| Commands - Console | 0 | start-stop | - | True |
+| Commands - Console | 1 | start-stop | TACACS1 | False |
+| Commands - Console | 2 | none | - | True |
+| Commands - Console | 3 | start-stop |  -  | False |
+| Exec - Default | - | start-stop | TACACS | True |
+| System - Default | - | start-stop | TACACS | True |
+| Dot1x - Default | - | start-stop | RADIUS | True |
+| Commands - Default | all | start-stop | TACACS | True |
+| Commands - Default | 0 | start-stop | - | True |
+| Commands - Default | 1 | start-stop | TACACS | False |
+| Commands - Default | 2 | none | - | True |
 
 #### AAA Accounting Device Configuration
 
 ```eos
-aaa accounting exec console start-stop logging group TACACS group RADIUS1 logging
-aaa accounting commands all console start-stop logging group TACACS group RADIUS1 logging
-aaa accounting commands 0 console start-stop group TACACS group RADIUS1
-aaa accounting commands 1 console start-stop logging group RADIUS1 group RADIUS2
+aaa accounting exec console start-stop group TACACS logging
+aaa accounting commands all console start-stop group TACACS logging
+aaa accounting commands 0 console start-stop logging
+aaa accounting commands 1 console start-stop group TACACS1
 aaa accounting commands 2 console none
-aaa accounting commands 3 console start-stop logging group RADIUS1 group RADIUS2
-aaa accounting exec default start-stop logging group TACACS group RADIUS1 logging
-aaa accounting system default start-stop logging group RADIUS1 group RADIUS2 logging
-aaa accounting dot1x default stop-only logging group RADIUS1 group RADIUS2 multicast logging
-aaa accounting commands all default start-stop logging group RADIUS1 group RADIUS2
-aaa accounting commands 0 default start-stop logging group RADIUS1 group RADIUS2
-aaa accounting commands 1 default start-stop logging group RADIUS1 group RADIUS2
+aaa accounting exec default start-stop group TACACS logging
+aaa accounting system default start-stop group TACACS logging
+aaa accounting dot1x default start-stop group RADIUS multicast logging
+aaa accounting commands all default start-stop group TACACS logging
+aaa accounting commands 0 default start-stop logging
+aaa accounting commands 1 default start-stop group TACACS
 aaa accounting commands 2 default none
-aaa accounting commands 3 default start-stop logging group RADIUS1 group RADIUS2
 ```
 
 ## Address Locking

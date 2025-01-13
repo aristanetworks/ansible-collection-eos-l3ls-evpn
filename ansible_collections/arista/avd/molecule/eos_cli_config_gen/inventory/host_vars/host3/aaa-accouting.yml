@@ -29,3 +29,8 @@ aaa_accounting:
       - commands: 0
         type: start-stop
         methods: []
+      - commands: 1
+        type: start-stop
+        methods:
+          - method: group
+            group: TACACS

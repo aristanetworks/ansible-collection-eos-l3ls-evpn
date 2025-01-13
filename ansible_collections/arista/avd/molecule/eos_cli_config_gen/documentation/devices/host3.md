@@ -43,10 +43,12 @@ interface Management1
 | System - Default | - | start-stop | - | False |
 | Dot1x - Default | - | start-stop | - | False |
 | Commands - Default | 0 | start-stop | - | False |
+| Commands - Default | 1 | start-stop | TACACS | False |
 
 #### AAA Accounting Device Configuration
 
 ```eos
+aaa accounting commands 1 default start-stop group TACACS
 ```
 
 ## Monitoring
