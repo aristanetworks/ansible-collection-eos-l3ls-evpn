@@ -124,7 +124,7 @@ jobs:
           FROM ubuntu:latest
 
           # Install pre-requisites
-          RUN apt-get update && apt-get install -y git parallel make python3-pip python3.12
+          RUN apt-get update && apt-get install -y git parallel make python3-pip python3.12 docker-buildx-plugin
 
           # Install UV
           RUN pip install uv --break-system-packages
@@ -173,7 +173,7 @@ jobs:
 
       - name: Build Docker Image
         run: |
-          docker build -t ghcr.io/${{ steps.string.outputs.lowercase }}/avd/python_avd:0.0.1 .
+          docker buildx build -t ghcr.io/${{ steps.string.outputs.lowercase }}/avd/python_avd:0.0.1 .
 
       - name: Push Docker Image
         run: |
