@@ -31,11 +31,11 @@
 
 #### Host Parameters
 
-| Host Name | Description | IPv4 Address | Probing Interface Set | Address Only | URL |
-| --------- | ----------- | ------------ | --------------------- | ------------ | --- |
+| Host Name | Description | IPv4 Address | ICMP Echo Size | Probing Interface Set | Address Only | URL |
+| --------- | ----------- | ------------ | -------------- | --------------------- | ------------ | --- |
 {%         for host in monitor_connectivity.hosts | arista.avd.natural_sort('name') %}
 {%             if host.name is arista.avd.defined %}
-| {{ host.name }} | {{ host.description | arista.avd.default('-') }} | {{ host.ip | arista.avd.default('-') }} | {{ host.local_interfaces | arista.avd.default('-') }} | {{ host.address_only | arista.avd.default(true) }} | {{ host.url | arista.avd.default('-') }} |
+| {{ host.name }} | {{ host.description | arista.avd.default('-') }} | {{ host.ip | arista.avd.default('-') }} | {{ host.icmp_echo_size | arista.avd.default('-') }} | {{ host.local_interfaces | arista.avd.default('-') }} | {{ host.address_only | arista.avd.default(true) }} | {{ host.url | arista.avd.default('-') }} |
 {%             endif %}
 {%         endfor %}
 {%     endif %}
@@ -70,11 +70,11 @@
 
 ##### Host Parameters
 
-| Host Name | Description | IPv4 Address | Probing Interface Set | Address Only | URL |
-| --------- | ----------- | ------------ | --------------------- | ------------ | --- |
+| Host Name | Description | IPv4 Address | ICMP Echo Size | Probing Interface Set | Address Only | URL |
+| --------- | ----------- | ------------ | -------------- | --------------------- | ------------ | --- |
 {%                     for host in vrf.hosts | arista.avd.natural_sort('name') %}
 {%                         if host.name is arista.avd.defined %}
-| {{ host.name }} | {{ host.description | arista.avd.default('-') }} | {{ host.ip | arista.avd.default('-') }} | {{ host.local_interfaces | arista.avd.default('-') }} | {{ host.address_only | arista.avd.default(true) }} | {{ host.url | arista.avd.default('-') }} |
+| {{ host.name }} | {{ host.description | arista.avd.default('-') }} | {{ host.ip | arista.avd.default('-') }} | {{ host.icmp_echo_size | arista.avd.default('-') }} | {{ host.local_interfaces | arista.avd.default('-') }} | {{ host.address_only | arista.avd.default(true) }} | {{ host.url | arista.avd.default('-') }} |
 {%                         endif %}
 {%                     endfor %}
 {%                 endif %}
