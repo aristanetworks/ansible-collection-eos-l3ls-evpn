@@ -1,4 +1,5 @@
 ---
+# Tests for undefined methods
 aaa_accounting:
   exec:
     console:
@@ -8,7 +9,6 @@ aaa_accounting:
       type: start-stop
       methods: []
   dot1x:
-    # Test - methods are not defined
     default:
       type: start-stop
       methods: []
