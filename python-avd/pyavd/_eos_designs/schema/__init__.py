@@ -35034,7 +35034,7 @@ class EosDesigns(EosDesignsRootModel):
                         _fields: ClassVar[dict] = {
                             "enabled": {"type": bool},
                             "process_id": {"type": int},
-                            "router_id": {"type": str},
+                            "router_id": {"type": str, "default": "main_router_id"},
                             "max_lsa": {"type": int},
                             "bfd": {"type": bool, "default": False},
                             "redistribute_bgp": {"type": RedistributeBgp},
@@ -35045,8 +35045,20 @@ class EosDesigns(EosDesignsRootModel):
                         enabled: bool | None
                         process_id: int | None
                         """If not set, "vrf_id" will be used."""
-                        router_id: str | None
-                        """If not set, switch router_id will be used."""
+                        router_id: str
+                        """
+                        Router ID to use for OSPF in this VRF.
+                        This can be an IPv4 address, "main_router_id", "none" or
+                        "diagnostic_loopback".
+                        - "main_router_id" will use the IP address of Loopback0 or the common `router
+                        general` Router ID if `use_router_general_for_router_id` is set."
+                        - "none" will not configure a OSPF
+                        Router ID for this VRF. EOS will use the main OSPF Router ID.
+                        - "diagnostic_loopback" will use the
+                        IP address of the VRF Diagnostic Loopback interface.
+
+                        Default value: `"main_router_id"`
+                        """
                         max_lsa: int | None
                         bfd: bool
                         """Default value: `False`"""
@@ -35065,7 +35077,7 @@ class EosDesigns(EosDesignsRootModel):
                                 *,
                                 enabled: bool | None | UndefinedType = Undefined,
                                 process_id: int | None | UndefinedType = Undefined,
-                                router_id: str | None | UndefinedType = Undefined,
+                                router_id: str | UndefinedType = Undefined,
                                 max_lsa: int | None | UndefinedType = Undefined,
                                 bfd: bool | UndefinedType = Undefined,
                                 redistribute_bgp: RedistributeBgp | UndefinedType = Undefined,
@@ -35082,7 +35094,16 @@ class EosDesigns(EosDesignsRootModel):
                                 Args:
                                     enabled: enabled
                                     process_id: If not set, "vrf_id" will be used.
-                                    router_id: If not set, switch router_id will be used.
+                                    router_id:
+                                       Router ID to use for OSPF in this VRF.
+                                       This can be an IPv4 address, "main_router_id", "none" or
+                                       "diagnostic_loopback".
+                                       - "main_router_id" will use the IP address of Loopback0 or the common `router
+                                       general` Router ID if `use_router_general_for_router_id` is set."
+                                       - "none" will not configure a OSPF
+                                       Router ID for this VRF. EOS will use the main OSPF Router ID.
+                                       - "diagnostic_loopback" will use the
+                                       IP address of the VRF Diagnostic Loopback interface.
                                     max_lsa: max_lsa
                                     bfd: bfd
                                     redistribute_bgp: Subclass of AvdModel.
@@ -37769,6 +37790,7 @@ class EosDesigns(EosDesignsRootModel):
 
                         _fields: ClassVar[dict] = {
                             "enabled": {"type": bool},
+                            "router_id": {"type": str, "default": "main_router_id"},
                             "raw_eos_cli": {"type": str},
                             "structured_config": {"type": StructuredConfig},
                             "_custom_data": {"type": dict},
@@ -37784,6 +37806,20 @@ class EosDesigns(EosDesignsRootModel):
                         This is useful for L2LS designs with VRFs.
                         - If uplink type is `p2p-vrfs` *and* the vrf is included
                         in the uplink VRFs, BGP will be configured for it.
+                        """
+                        router_id: str
+                        """
+                        Router ID to use for BGP in this VRF.
+                        This can be an IPv4 address, "main_router_id", "none" or
+                        "diagnostic_loopback".
+                        - "main_router_id" will use the IP address of Loopback0 or the common `router
+                        general` Router ID if `use_router_general_for_router_id` is set."
+                        - "none" will not configure a BGP
+                        Router ID for this VRF. EOS will use the main BGP Router ID.
+                        - "diagnostic_loopback" will use the IP
+                        address of the VRF Diagnostic Loopback interface.
+
+                        Default value: `"main_router_id"`
                         """
                         raw_eos_cli: str | None
                         """EOS CLI rendered directly on the Router BGP, VRF definition in the final EOS configuration."""
@@ -37802,6 +37838,7 @@ class EosDesigns(EosDesignsRootModel):
                                 self,
                                 *,
                                 enabled: bool | None | UndefinedType = Undefined,
+                                router_id: str | UndefinedType = Undefined,
                                 raw_eos_cli: str | None | UndefinedType = Undefined,
                                 structured_config: StructuredConfig | UndefinedType = Undefined,
                                 _custom_data: dict[str, Any] | UndefinedType = Undefined,
@@ -37823,6 +37860,16 @@ class EosDesigns(EosDesignsRootModel):
                                        This is useful for L2LS designs with VRFs.
                                        - If uplink type is `p2p-vrfs` *and* the vrf is included
                                        in the uplink VRFs, BGP will be configured for it.
+                                    router_id:
+                                       Router ID to use for BGP in this VRF.
+                                       This can be an IPv4 address, "main_router_id", "none" or
+                                       "diagnostic_loopback".
+                                       - "main_router_id" will use the IP address of Loopback0 or the common `router
+                                       general` Router ID if `use_router_general_for_router_id` is set."
+                                       - "none" will not configure a BGP
+                                       Router ID for this VRF. EOS will use the main BGP Router ID.
+                                       - "diagnostic_loopback" will use the IP
+                                       address of the VRF Diagnostic Loopback interface.
                                     raw_eos_cli: EOS CLI rendered directly on the Router BGP, VRF definition in the final EOS configuration.
                                     structured_config:
                                        Custom structured config added under router_bgp.vrfs.[name=<vrf>] for eos_cli_config_gen.

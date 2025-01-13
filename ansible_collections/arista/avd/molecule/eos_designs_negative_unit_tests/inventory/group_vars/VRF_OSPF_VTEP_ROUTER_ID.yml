@@ -1,0 +1,37 @@
+l3leaf:
+  defaults:
+    loopback_ipv4_pool: 10.42.0.0/24
+    vtep_loopback_ipv4_pool: 10.43.0.0/24
+    mlag_interfaces: [ Ethernet5, Ethernet6 ]
+    mlag_peer_ipv4_pool: 10.255.252.0/24
+    mlag_peer_l3_ipv4_pool: 10.255.251.0/24
+
+  node_groups:
+    - group: vrf-router-id
+      nodes:
+        - name: vrf-ospf-vtep-router-id
+          bgp_as: 42
+          id: 42
+
+type: l3leaf
+
+tenants:
+  # Tenant A Specific Information - VRFs / VLANs
+  - name: Tenant_X
+    mac_vrf_vni_base: 11000
+    vrfs:
+      - name: Tenant_X_OP_Zone
+        vrf_id: 20
+        svis:
+          - id: 310
+            name: Tenant_X_OP_Zone_1
+            tags: [opzone]
+            enabled: true
+        ospf:
+          enabled: true
+          router_id: diagnostic_loopback
+
+expected_error_message: >-
+  Invalid configuration on VRF 'Tenant_X_OP_Zone' in Tenant 'Tenant_X'.
+  'vtep_diagnostic.loopback' along with either 'vtep_diagnostic.loopback_ip_pools' or 'vtep_diagnostic.loopback_ip_range' must be defined
+  when 'router_id' is set to 'diagnostic_loopback' on the VRF.
