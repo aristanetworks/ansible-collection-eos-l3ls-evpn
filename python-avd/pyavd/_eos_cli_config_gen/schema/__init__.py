@@ -26688,7 +26688,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 "vrf": {"type": str},
                 "_custom_data": {"type": dict},
             }
-            name: str | None
+            name: str
             """IP or hostname e.g., 2.2.2.55, 2001:db8::55, ie.pool.ntp.org."""
             burst: bool | None
             iburst: bool | None
@@ -26710,7 +26710,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 def __init__(
                     self,
                     *,
-                    name: str | None | UndefinedType = Undefined,
+                    name: str | UndefinedType = Undefined,
                     burst: bool | None | UndefinedType = Undefined,
                     iburst: bool | None | UndefinedType = Undefined,
                     key: int | None | UndefinedType = Undefined,
@@ -26760,8 +26760,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             }
             id: int
             """Key identifier."""
-            hash_algorithm: Literal["md5", "sha1"] | None
-            key: str | None
+            hash_algorithm: Literal["md5", "sha1"]
+            key: str
             """Obfuscated key."""
             key_type: Literal["0", "7", "8a"] | None
             _custom_data: dict[str, Any]
@@ -26772,8 +26772,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                     self,
                     *,
                     id: int | UndefinedType = Undefined,
-                    hash_algorithm: Literal["md5", "sha1"] | None | UndefinedType = Undefined,
-                    key: str | None | UndefinedType = Undefined,
+                    hash_algorithm: Literal["md5", "sha1"] | UndefinedType = Undefined,
+                    key: str | UndefinedType = Undefined,
                     key_type: Literal["0", "7", "8a"] | None | UndefinedType = Undefined,
                     _custom_data: dict[str, Any] | UndefinedType = Undefined,
                 ) -> None:

@@ -9223,6 +9223,7 @@ keys:
             name:
               type: str
               description: IP or hostname e.g., 2.2.2.55, 2001:db8::55, ie.pool.ntp.org.
+              required: true
             burst:
               type: bool
             iburst:
@@ -9285,9 +9286,11 @@ keys:
               valid_values:
               - md5
               - sha1
+              required: true
             key:
               type: str
               description: Obfuscated key.
+              required: true
             key_type:
               type: str
               convert_types:
