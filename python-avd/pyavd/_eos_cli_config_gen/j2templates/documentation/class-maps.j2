@@ -23,7 +23,7 @@
 {%         elif class_map.ip.access_group is arista.avd.defined %}
 {%             set row.type = 'acl' %}
 {%             set row.value = class_map.ip.access_group %}
-{%         elif class_map.dscp.dscp_value is arista.avd.defined %}
+{%         elif class_map.dscp is arista.avd.defined %}
 {%             set row.type = 'dscp' %}
 {%             set row.value = class_map.dscp.dscp_value %}
 {%             if class_map.dscp.ecn is arista.avd.defined %}

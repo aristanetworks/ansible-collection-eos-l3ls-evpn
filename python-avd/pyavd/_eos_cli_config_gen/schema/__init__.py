@@ -2780,11 +2780,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 """Subclass of AvdModel."""
 
                 _fields: ClassVar[dict] = {"dscp_value": {"type": str}, "ecn": {"type": str}, "_custom_data": {"type": dict}}
-                dscp_value: str | None
-                """
-                DSCP/ECN match classifies the precedence of incoming packets based on the value present in the IP
-                header.
-                """
+                dscp_value: str
+                """DSCP value(s) or range(s) of CoS values."""
                 ecn: Literal["ce", "ect", "ect-ce", "non-ect"] | None
                 """
                 DSCP is the six most significant bits and ECN represents the two least significant bits of the IPv4
@@ -2797,7 +2794,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                     def __init__(
                         self,
                         *,
-                        dscp_value: str | None | UndefinedType = Undefined,
+                        dscp_value: str | UndefinedType = Undefined,
                         ecn: Literal["ce", "ect", "ect-ce", "non-ect"] | None | UndefinedType = Undefined,
                         _custom_data: dict[str, Any] | UndefinedType = Undefined,
                     ) -> None:
@@ -2808,9 +2805,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                         Subclass of AvdModel.
 
                         Args:
-                            dscp_value:
-                               DSCP/ECN match classifies the precedence of incoming packets based on the value present in the IP
-                               header.
+                            dscp_value: DSCP value(s) or range(s) of CoS values.
                             ecn:
                                DSCP is the six most significant bits and ECN represents the two least significant bits of the IPv4
                                8-bit ToS field and IPv6 8-bit TC field.
