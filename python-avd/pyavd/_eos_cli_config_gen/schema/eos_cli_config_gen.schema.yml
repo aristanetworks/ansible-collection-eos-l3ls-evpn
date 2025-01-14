@@ -6449,7 +6449,7 @@ keys:
         convert_types:
         - int
       receive_packet_tagged_drop:
-        type: str
+        type: bool
       tlvs:
         type: list
         primary_key: name

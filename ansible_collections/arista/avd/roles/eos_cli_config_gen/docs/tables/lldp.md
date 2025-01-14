@@ -13,7 +13,7 @@
     | [<samp>&nbsp;&nbsp;holdtime</samp>](## "lldp.holdtime") | Integer |  |  |  |  |
     | [<samp>&nbsp;&nbsp;management_address</samp>](## "lldp.management_address") | String |  |  |  |  |
     | [<samp>&nbsp;&nbsp;vrf</samp>](## "lldp.vrf") | String |  |  |  |  |
-    | [<samp>&nbsp;&nbsp;receive_packet_tagged_drop</samp>](## "lldp.receive_packet_tagged_drop") | String |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;receive_packet_tagged_drop</samp>](## "lldp.receive_packet_tagged_drop") | Boolean |  |  |  |  |
     | [<samp>&nbsp;&nbsp;tlvs</samp>](## "lldp.tlvs") | List, items: Dictionary |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;name</samp>](## "lldp.tlvs.[].name") | String | Required, Unique |  | Valid Values:<br>- <code>link-aggregation</code><br>- <code>management-address</code><br>- <code>max-frame-size</code><br>- <code>med</code><br>- <code>port-description</code><br>- <code>port-vlan</code><br>- <code>power-via-mdi</code><br>- <code>system-capabilities</code><br>- <code>system-description</code><br>- <code>system-name</code><br>- <code>vlan-name</code> |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;transmit</samp>](## "lldp.tlvs.[].transmit") | Boolean |  |  |  |  |
@@ -28,7 +28,7 @@
       holdtime: <int>
       management_address: <str>
       vrf: <str>
-      receive_packet_tagged_drop: <str>
+      receive_packet_tagged_drop: <bool>
       tlvs:
         - name: <str; "link-aggregation" | "management-address" | "max-frame-size" | "med" | "port-description" | "port-vlan" | "power-via-mdi" | "system-capabilities" | "system-description" | "system-name" | "vlan-name"; required; unique>
           transmit: <bool>
