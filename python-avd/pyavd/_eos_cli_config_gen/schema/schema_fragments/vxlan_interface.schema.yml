@@ -104,7 +104,7 @@ keys:
                 type: dict
                 description: |-
                   Set VNI on range of vlans.
-                  If vni is set on the vlan in `vxlan_interface.vxlan1.vxlan.vlans`, it should not overlap with `vxlan_interface.vxlan1.vxlan.vlans`.
+                  If vni is set on the vlan in `vxlan_interface.vxlan1.vxlan.vlans`, it should not overlap with `vxlan_interface.vxlan1.vxlan.vlan_range.vlans`.
                   Number of VLANs must equal number of VNIs.
                 keys:
                   vlans:

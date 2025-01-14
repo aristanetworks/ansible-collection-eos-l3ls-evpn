@@ -35,7 +35,7 @@
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;multicast_group</samp>](## "vxlan_interface.vxlan1.vxlan.vlans.[].multicast_group") | String |  |  |  | IP Multicast Group Address. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;flood_vteps</samp>](## "vxlan_interface.vxlan1.vxlan.vlans.[].flood_vteps") | List, items: String |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;&lt;str&gt;</samp>](## "vxlan_interface.vxlan1.vxlan.vlans.[].flood_vteps.[]") | String |  |  |  | Remote VTEP IP Address. |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;vlan_range</samp>](## "vxlan_interface.vxlan1.vxlan.vlan_range") | Dictionary |  |  |  | Set VNI on range of vlans.<br>If vni is set on the vlan in `vxlan_interface.vxlan1.vxlan.vlans`, it should not overlap with `vxlan_interface.vxlan1.vxlan.vlans`.<br>Number of VLANs must equal number of VNIs. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;vlan_range</samp>](## "vxlan_interface.vxlan1.vxlan.vlan_range") | Dictionary |  |  |  | Set VNI on range of vlans.<br>If vni is set on the vlan in `vxlan_interface.vxlan1.vxlan.vlans`, it should not overlap with `vxlan_interface.vxlan1.vxlan.vlan_range.vlans`.<br>Number of VLANs must equal number of VNIs. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;vlans</samp>](## "vxlan_interface.vxlan1.vxlan.vlan_range.vlans") | String | Required |  |  | e.g. "94,96,100-110". |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;vnis</samp>](## "vxlan_interface.vxlan1.vxlan.vlan_range.vnis") | String | Required |  |  | Set `vnis` in the correct sequence as `vlans`.<br>e.g. "10094,10096,10100-10110". |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;vrfs</samp>](## "vxlan_interface.vxlan1.vxlan.vrfs") | List, items: Dictionary |  |  |  |  |
@@ -73,7 +73,7 @@
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;multicast_group</samp>](## "vxlan_interface.Vxlan1.vxlan.vlans.[].multicast_group") | String |  |  |  | IP Multicast Group Address. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;flood_vteps</samp>](## "vxlan_interface.Vxlan1.vxlan.vlans.[].flood_vteps") | List, items: String |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;&lt;str&gt;</samp>](## "vxlan_interface.Vxlan1.vxlan.vlans.[].flood_vteps.[]") | String |  |  |  | Remote VTEP IP Address. |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;vlan_range</samp>](## "vxlan_interface.Vxlan1.vxlan.vlan_range") | Dictionary |  |  |  | Set VNI on range of vlans.<br>If vni is set on the vlan in `vxlan_interface.vxlan1.vxlan.vlans`, it should not overlap with `vxlan_interface.vxlan1.vxlan.vlans`.<br>Number of VLANs must equal number of VNIs. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;vlan_range</samp>](## "vxlan_interface.Vxlan1.vxlan.vlan_range") | Dictionary |  |  |  | Set VNI on range of vlans.<br>If vni is set on the vlan in `vxlan_interface.vxlan1.vxlan.vlans`, it should not overlap with `vxlan_interface.vxlan1.vxlan.vlan_range.vlans`.<br>Number of VLANs must equal number of VNIs. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;vlans</samp>](## "vxlan_interface.Vxlan1.vxlan.vlan_range.vlans") | String | Required |  |  | e.g. "94,96,100-110". |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;vnis</samp>](## "vxlan_interface.Vxlan1.vxlan.vlan_range.vnis") | String | Required |  |  | Set `vnis` in the correct sequence as `vlans`.<br>e.g. "10094,10096,10100-10110". |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;vrfs</samp>](## "vxlan_interface.Vxlan1.vxlan.vrfs") | List, items: Dictionary |  |  |  |  |
@@ -137,7 +137,7 @@
                 - <str>
 
           # Set VNI on range of vlans.
-          # If vni is set on the vlan in `vxlan_interface.vxlan1.vxlan.vlans`, it should not overlap with `vxlan_interface.vxlan1.vxlan.vlans`.
+          # If vni is set on the vlan in `vxlan_interface.vxlan1.vxlan.vlans`, it should not overlap with `vxlan_interface.vxlan1.vxlan.vlan_range.vlans`.
           # Number of VLANs must equal number of VNIs.
           vlan_range:
 
@@ -214,7 +214,7 @@
                 - <str>
 
           # Set VNI on range of vlans.
-          # If vni is set on the vlan in `vxlan_interface.vxlan1.vxlan.vlans`, it should not overlap with `vxlan_interface.vxlan1.vxlan.vlans`.
+          # If vni is set on the vlan in `vxlan_interface.vxlan1.vxlan.vlans`, it should not overlap with `vxlan_interface.vxlan1.vxlan.vlan_range.vlans`.
           # Number of VLANs must equal number of VNIs.
           vlan_range:
 
