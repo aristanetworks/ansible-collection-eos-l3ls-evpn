@@ -2,76 +2,149 @@
 # When there is a merge conflict for this file, rebase the branch, accept all current changes for this file, and re-run AVD.
 node_id_pools:
 - assignments:
-  - key: ('DC1-POD1-L2LEAF1A',)
+  - key:
+      hostname: DC1-POD1-L2LEAF1A
     value: 1
-  - key: ('DC1-POD1-L2LEAF2A',)
+  - key:
+      hostname: DC1-POD1-L2LEAF2A
     value: 2
-  - key: ('DC1-POD1-L2LEAF2B',)
+  - key:
+      hostname: DC1-POD1-L2LEAF2B
     value: 3
-  pool_key: ('TWODC_5STAGE_CLOS', 'DC1', 'DC1_POD1', 'l2leaf')
+  pool_key:
+    dc_name: DC1
+    fabric_name: TWODC_5STAGE_CLOS
+    pod_name: DC1_POD1
+    type: l2leaf
 - assignments:
-  - key: ('DC1-POD1-LEAF1A',)
+  - key:
+      hostname: DC1-POD1-LEAF1A
     value: 1
-  - key: ('DC1.POD1.LEAF2A',)
+  - key:
+      hostname: DC1.POD1.LEAF2A
     value: 2
-  - key: ('DC1-POD1-LEAF2B',)
+  - key:
+      hostname: DC1-POD1-LEAF2B
     value: 3
-  pool_key: ('TWODC_5STAGE_CLOS', 'DC1', 'DC1_POD1', 'l3leaf')
+  pool_key:
+    dc_name: DC1
+    fabric_name: TWODC_5STAGE_CLOS
+    pod_name: DC1_POD1
+    type: l3leaf
 - assignments:
-  - key: ('DC1-POD1-SPINE1',)
+  - key:
+      hostname: DC1-POD1-SPINE1
     value: 1
-  - key: ('DC1-POD1-SPINE2',)
+  - key:
+      hostname: DC1-POD1-SPINE2
     value: 2
-  pool_key: ('TWODC_5STAGE_CLOS', 'DC1', 'DC1_POD1', 'spine')
+  pool_key:
+    dc_name: DC1
+    fabric_name: TWODC_5STAGE_CLOS
+    pod_name: DC1_POD1
+    type: spine
 - assignments:
-  - key: ('DC1-POD2-LEAF1A',)
+  - key:
+      hostname: DC1-POD2-LEAF1A
     value: 1
-  pool_key: ('TWODC_5STAGE_CLOS', 'DC1', 'DC1_POD2', 'l3leaf')
+  pool_key:
+    dc_name: DC1
+    fabric_name: TWODC_5STAGE_CLOS
+    pod_name: DC1_POD2
+    type: l3leaf
 - assignments:
-  - key: ('DC1-POD2-SPINE1',)
+  - key:
+      hostname: DC1-POD2-SPINE1
     value: 1
-  - key: ('DC1-POD2-SPINE2',)
+  - key:
+      hostname: DC1-POD2-SPINE2
     value: 2
-  pool_key: ('TWODC_5STAGE_CLOS', 'DC1', 'DC1_POD2', 'spine')
+  pool_key:
+    dc_name: DC1
+    fabric_name: TWODC_5STAGE_CLOS
+    pod_name: DC1_POD2
+    type: spine
 - assignments:
-  - key: ('DC1-RS1',)
+  - key:
+      hostname: DC1-RS1
     value: 1
-  - key: ('DC1-RS2',)
+  - key:
+      hostname: DC1-RS2
     value: 2
-  pool_key: ('TWODC_5STAGE_CLOS', 'DC1', None, 'overlay-controller')
+  pool_key:
+    dc_name: DC1
+    fabric_name: TWODC_5STAGE_CLOS
+    pod_name: null
+    type: overlay-controller
 - assignments:
-  - key: ('DC1-SUPER-SPINE1',)
+  - key:
+      hostname: DC1-SUPER-SPINE1
     value: 1
-  - key: ('DC1-SUPER-SPINE2',)
+  - key:
+      hostname: DC1-SUPER-SPINE2
     value: 2
-  pool_key: ('TWODC_5STAGE_CLOS', 'DC1', None, 'super-spine')
+  pool_key:
+    dc_name: DC1
+    fabric_name: TWODC_5STAGE_CLOS
+    pod_name: null
+    type: super-spine
 - assignments:
-  - key: ('DC2-POD1-L2LEAF1A',)
+  - key:
+      hostname: DC2-POD1-L2LEAF1A
     value: 1
-  - key: ('DC2-POD1-L2LEAF2A',)
+  - key:
+      hostname: DC2-POD1-L2LEAF2A
     value: 2
-  pool_key: ('TWODC_5STAGE_CLOS', 'DC2', 'DC2_POD1', 'l2leaf')
+  pool_key:
+    dc_name: DC2
+    fabric_name: TWODC_5STAGE_CLOS
+    pod_name: DC2_POD1
+    type: l2leaf
 - assignments:
-  - key: ('DC2-POD1-LEAF1A',)
+  - key:
+      hostname: DC2-POD1-LEAF1A
     value: 1
-  - key: ('DC2-POD1-LEAF2A',)
+  - key:
+      hostname: DC2-POD1-LEAF2A
     value: 2
-  pool_key: ('TWODC_5STAGE_CLOS', 'DC2', 'DC2_POD1', 'l3leaf')
+  pool_key:
+    dc_name: DC2
+    fabric_name: TWODC_5STAGE_CLOS
+    pod_name: DC2_POD1
+    type: l3leaf
 - assignments:
-  - key: ('DC2-POD1-SPINE1',)
+  - key:
+      hostname: DC2-POD1-SPINE1
     value: 1
-  - key: ('DC2-POD1-SPINE2',)
+  - key:
+      hostname: DC2-POD1-SPINE2
     value: 2
-  pool_key: ('TWODC_5STAGE_CLOS', 'DC2', 'DC2_POD1', 'spine')
+  pool_key:
+    dc_name: DC2
+    fabric_name: TWODC_5STAGE_CLOS
+    pod_name: DC2_POD1
+    type: spine
 - assignments:
-  - key: ('DC2-RS1',)
+  - key:
+      hostname: DC2-RS1
     value: 1
-  - key: ('DC2-RS2',)
+  - key:
+      hostname: DC2-RS2
     value: 2
-  pool_key: ('TWODC_5STAGE_CLOS', 'DC2', None, 'overlay-controller')
+  pool_key:
+    dc_name: DC2
+    fabric_name: TWODC_5STAGE_CLOS
+    pod_name: null
+    type: overlay-controller
 - assignments:
-  - key: ('DC2-SUPER-SPINE1',)
+  - key:
+      hostname: DC2-SUPER-SPINE1
     value: 1
-  - key: ('DC2-SUPER-SPINE2',)
+  - key:
+      hostname: DC2-SUPER-SPINE2
     value: 2
-  pool_key: ('TWODC_5STAGE_CLOS', 'DC2', None, 'super-spine')
+  pool_key:
+    dc_name: DC2
+    fabric_name: TWODC_5STAGE_CLOS
+    pod_name: null
+    type: super-spine

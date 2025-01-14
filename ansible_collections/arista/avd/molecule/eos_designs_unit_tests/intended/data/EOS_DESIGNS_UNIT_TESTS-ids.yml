@@ -2,6 +2,11 @@
 # When there is a merge conflict for this file, rebase the branch, accept all current changes for this file, and re-run AVD.
 node_id_pools:
 - assignments:
-  - key: ('fabric_numbering_node_id',)
+  - key:
+      hostname: fabric_numbering_node_id
     value: 1
-  pool_key: ('EOS_DESIGNS_UNIT_TESTS', None, None, 'spine')
+  pool_key:
+    dc_name: null
+    fabric_name: EOS_DESIGNS_UNIT_TESTS
+    pod_name: null
+    type: spine
