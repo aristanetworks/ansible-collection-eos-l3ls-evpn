@@ -23,6 +23,16 @@
 | ----------------- | --------- |
 | {{ router_path_selection.tcp_mss_ceiling.ipv4_segment_size }} | {{ router_path_selection.tcp_mss_ceiling.direction | arista.avd.default("ingress") }} |
 {%     endif %}
+{%     if router_path_selection.interfaces is arista.avd.defined %}
+
+#### Interfaces Metric Bandwidth
+
+| Interface name | Transmit Bandwidth (Mbps) | Receive Bandwidth (Mbps) |
+| -------------- | ------------------------- | ------------------------ |
+{%         for interface_data in router_path_selection.interfaces | arista.avd.natural_sort('name') %}
+| {{ interface_data.name }} | {{ interface_data.metric_bandwidth.transmit | arista.avd.default("-") }} | {{ interface_data.metric_bandwidth.receive | arista.avd.default("-") }} |
+{%         endfor %}
+{%     endif %}
 {%     if router_path_selection.path_groups is arista.avd.defined %}
 
 #### Path Groups
