@@ -1965,6 +1965,10 @@ keys:
 
           '
         default: true
+      toc:
+        type: bool
+        default: true
+        description: Generate the table of content(TOC) on device documentation.
   errdisable:
     type: dict
     keys:
@@ -8422,6 +8426,13 @@ keys:
               type: str
             ip:
               type: str
+            icmp_echo_size:
+              type: int
+              description: Size of ICMP probe in bytes.
+              convert_types:
+              - str
+              min: 36
+              max: 18024
             local_interfaces:
               type: str
             address_only:
@@ -8481,6 +8492,13 @@ keys:
                     type: str
                   ip:
                     type: str
+                  icmp_echo_size:
+                    type: int
+                    description: Size of ICMP probe in bytes.
+                    convert_types:
+                    - str
+                    min: 36
+                    max: 18024
                   local_interfaces:
                     type: str
                   address_only:

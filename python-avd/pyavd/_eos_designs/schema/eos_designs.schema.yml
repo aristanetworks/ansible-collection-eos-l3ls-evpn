@@ -1184,11 +1184,18 @@ keys:
           devices.
         type: bool
         default: false
+      toc:
+        type: bool
+        default: true
+        description: Generate the table of content(TOC) on fabric documentation.
   event_handlers:
     $ref: eos_cli_config_gen#/keys/event_handlers
     documentation_options:
       table: management-settings
     type: list
+  event_monitor:
+    type: dict
+    $ref: eos_cli_config_gen#/keys/event_monitor
   evpn_ebgp_gateway_inter_domain:
     documentation_options:
       table: evpn-settings
@@ -2045,6 +2052,9 @@ keys:
           type: str
           description: L3 interface profile name. Any variable supported under `l3_interfaces`
             can be inherited from a profile.
+  load_interval:
+    type: dict
+    $ref: eos_cli_config_gen#/keys/load_interval
   local_users:
     documentation_options:
       table: management-settings
@@ -3650,6 +3660,9 @@ keys:
           `platform_settings.[].feature_support.queue_monitor_length_notify` setting.
 
           '
+  queue_monitor_streaming:
+    type: dict
+    $ref: eos_cli_config_gen#/keys/queue_monitor_streaming
   redundancy:
     documentation_options:
       table: system-settings
@@ -4550,6 +4563,9 @@ keys:
     - isis-ldp
     - isis-sr-ldp
     - none
+  unsupported_transceiver:
+    type: dict
+    $ref: eos_cli_config_gen#/keys/service_unsupported_transceiver
   uplink_ptp:
     documentation_options:
       table: fabric-settings
@@ -4567,6 +4583,8 @@ keys:
 
       See `cv_topology` for details.'
   use_router_general_for_router_id:
+    documentation_options:
+      table: fabric-settings
     type: bool
     description: Use `router general` to set router ID for all routing protocols and
       VRFs.
@@ -6513,7 +6531,20 @@ $defs:
                     description: If not set, "vrf_id" will be used.
                   router_id:
                     type: str
-                    description: If not set, switch router_id will be used.
+                    description: 'Router ID to use for OSPF in this VRF.
+
+                      This can be an IPv4 address, "main_router_id", "none" or "diagnostic_loopback".
+
+                      - "main_router_id" will use the IP address of Loopback0 or the
+                      common `router general` Router ID if `use_router_general_for_router_id`
+                      is set."
+
+                      - "none" will not configure a OSPF Router ID for this VRF. EOS
+                      will use the main OSPF Router ID.
+
+                      - "diagnostic_loopback" will use the IP address of the VRF Diagnostic
+                      Loopback interface.'
+                    default: main_router_id
                   max_lsa:
                     type: int
                     convert_types:
@@ -7197,6 +7228,22 @@ $defs:
 
                       - If uplink type is `p2p-vrfs` *and* the vrf is included in
                       the uplink VRFs, BGP will be configured for it.'
+                  router_id:
+                    type: str
+                    description: 'Router ID to use for BGP in this VRF.
+
+                      This can be an IPv4 address, "main_router_id", "none" or "diagnostic_loopback".
+
+                      - "main_router_id" will use the IP address of Loopback0 or the
+                      common `router general` Router ID if `use_router_general_for_router_id`
+                      is set."
+
+                      - "none" will not configure a BGP Router ID for this VRF. EOS
+                      will use the main BGP Router ID.
+
+                      - "diagnostic_loopback" will use the IP address of the VRF Diagnostic
+                      Loopback interface.'
+                    default: main_router_id
                   raw_eos_cli:
                     type: str
                     description: 'EOS CLI rendered directly on the Router BGP, VRF

@@ -19,7 +19,7 @@ from .node_config import NodeConfigMixin
 from .node_type import NodeTypeMixin
 from .node_type_keys import NodeTypeKeysMixin
 from .overlay import OverlayMixin
-from .platform import PlatformMixin
+from .platform_mixin import PlatformMixin
 from .ptp import PtpMixin
 from .routing import RoutingMixin
 from .underlay import UnderlayMixin

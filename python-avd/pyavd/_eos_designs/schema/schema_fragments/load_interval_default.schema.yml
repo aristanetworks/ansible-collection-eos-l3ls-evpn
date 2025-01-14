@@ -6,9 +6,6 @@
 # Use Ctrl + Space to get suggestions for every field. Autocomplete will pop up after typing 2 letters.
 type: dict
 keys:
-  use_router_general_for_router_id:
-    documentation_options:
-      table: fabric-settings
-    type: bool
-    description: Use `router general` to set router ID for all routing protocols and VRFs.
-    default: false
+  load_interval:
+    type: dict
+    $ref: "eos_cli_config_gen#/keys/load_interval"

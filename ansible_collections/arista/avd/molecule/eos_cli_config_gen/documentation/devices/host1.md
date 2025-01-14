@@ -3,6 +3,7 @@
 ## Table of Contents
 
 - [Management](#management)
+  - [Banner](#banner)
   - [Agents](#agents)
   - [Management Interfaces](#management-interfaces)
   - [DNS Domain](#dns-domain)
@@ -270,6 +271,25 @@
 - [EOS CLI Device Configuration](#eos-cli-device-configuration)
 
 ## Management
+
+### Banner
+
+#### Login Banner
+
+```text
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!***!!!Unauthorized access prohibited!!!***!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+```
+
+#### MOTD Banner
+
+```text
+.         Switch       : $(hostname)                            .
+.         Site         : DC1                      .
+.         Type info for information about the device            .
+.         Type help for information about the aliases           .
+```
 
 ### Agents
 
@@ -2755,12 +2775,12 @@ monitor server radius
 
 #### Host Parameters
 
-| Host Name | Description | IPv4 Address | Probing Interface Set | Address Only | URL |
-| --------- | ----------- | ------------ | --------------------- | ------------ | --- |
-| server1 | server1_connectivity_monitor | 10.10.10.1 | HOST_SET | True | https://server1.local.com |
-| server2 | server2_connectivity_monitor | 10.10.10.2 | HOST_SET | True | https://server2.local.com |
-| server3 | server3_connectivity_monitor | 10.10.10.3 | HOST_SET | False | - |
-| server4 | - | - | - | True | - |
+| Host Name | Description | IPv4 Address | ICMP Echo Size | Probing Interface Set | Address Only | URL |
+| --------- | ----------- | ------------ | -------------- | --------------------- | ------------ | --- |
+| server1 | server1_connectivity_monitor | 10.10.10.1 | - | HOST_SET | True | https://server1.local.com |
+| server2 | server2_connectivity_monitor | 10.10.10.2 | - | HOST_SET | True | https://server2.local.com |
+| server3 | server3_connectivity_monitor | 10.10.10.3 | 1200 | HOST_SET | False | - |
+| server4 | - | - | - | - | True | - |
 
 ### VRF Configuration
 
@@ -2780,11 +2800,11 @@ monitor server radius
 
 ##### Host Parameters
 
-| Host Name | Description | IPv4 Address | Probing Interface Set | Address Only | URL |
-| --------- | ----------- | ------------ | --------------------- | ------------ | --- |
-| server4 | server4_connectivity_monitor | 10.10.20.1 | VRF_GLOBAL_SET | False | https://server2.local.com |
-| server5 | server5_connectivity_monitor | 10.10.20.11 | VRF_GLOBAL_SET | True | https://server5.local.com |
-| server6 | - | - | - | True | - |
+| Host Name | Description | IPv4 Address | ICMP Echo Size | Probing Interface Set | Address Only | URL |
+| --------- | ----------- | ------------ | -------------- | --------------------- | ------------ | --- |
+| server4 | server4_connectivity_monitor | 10.10.20.1 | - | VRF_GLOBAL_SET | False | https://server2.local.com |
+| server5 | server5_connectivity_monitor | 10.10.20.11 | - | VRF_GLOBAL_SET | True | https://server5.local.com |
+| server6 | - | - | - | - | True | - |
 
 #### Vrf red Configuration
 
@@ -2797,9 +2817,9 @@ monitor server radius
 
 ##### Host Parameters
 
-| Host Name | Description | IPv4 Address | Probing Interface Set | Address Only | URL |
-| --------- | ----------- | ------------ | --------------------- | ------------ | --- |
-| server2 | server2_connectivity_monitor | 10.10.20.1 | VRF_HOST_SET | True | https://server2.local.com |
+| Host Name | Description | IPv4 Address | ICMP Echo Size | Probing Interface Set | Address Only | URL |
+| --------- | ----------- | ------------ | -------------- | --------------------- | ------------ | --- |
+| server2 | server2_connectivity_monitor | 10.10.20.1 | 1300 | VRF_HOST_SET | True | https://server2.local.com |
 
 #### Vrf yellow Configuration
 
@@ -2845,6 +2865,7 @@ monitor connectivity
          server2_connectivity_monitor
          local-interfaces VRF_HOST_SET address-only
          ip 10.10.20.1
+         icmp echo size 1300
          url https://server2.local.com
    !
    vrf yellow
@@ -2873,6 +2894,7 @@ monitor connectivity
       server3_connectivity_monitor
       local-interfaces HOST_SET
       ip 10.10.10.3
+      icmp echo size 1200
    !
    host server4
 ```
@@ -8614,7 +8636,7 @@ router bgp 65101
       bgp additional-paths send ecmp limit 42
       neighbor PATH-SELECTION-PG-1 activate
       neighbor PATH-SELECTION-PG-1 additional-paths receive
-      no neighbor PATH-SELECTION-PG-1 send
+      no neighbor PATH-SELECTION-PG-1 additional-paths send
       neighbor PATH-SELECTION-PG-2 activate
       neighbor PATH-SELECTION-PG-2 additional-paths send backup
       neighbor PATH-SELECTION-PG-3 activate
