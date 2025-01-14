@@ -1,0 +1,10 @@
+---
+- name: Converge
+  hosts: FABRIC
+  gather_facts: false
+  vars:
+    root_dir: "{{ playbook_dir }}"
+  tasks:
+    - name: Generate AVD Structured Configurations and Fabric Documentation
+      ansible.builtin.import_role:
+        name: arista.avd.eos_designs

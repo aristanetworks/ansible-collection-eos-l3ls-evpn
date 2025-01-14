@@ -85,7 +85,7 @@
     "categories": [
       "bgp"
     ],
-    "description": "Verifies that advertised communities are standard, extended and large for BGP peers."
+    "description": "Verifies that advertised communities are standard, extended and large for BGP IPv4 peer(s)."
   },
   {
     "name": "dc1-spine1",
@@ -93,7 +93,7 @@
     "categories": [
       "bgp"
     ],
-    "description": "Verifies the advertised and received routes of BGP peers."
+    "description": "Verifies the advertised and received routes of BGP IPv4 peer(s)."
   },
   {
     "name": "dc1-spine1",
@@ -101,7 +101,7 @@
     "categories": [
       "bgp"
     ],
-    "description": "Verifies the four octet ASN capability of BGP peers."
+    "description": "Verifies the four octet ASN capability of BGP IPv4 peer(s)."
   },
   {
     "name": "dc1-spine1",
@@ -117,7 +117,7 @@
     "categories": [
       "bgp"
     ],
-    "description": "Verifies the MD5 authentication and state of IPv4 BGP peers in a specified VRF."
+    "description": "Verifies the MD5 authentication and state of IPv4 BGP peer(s) in a specified VRF."
   },
   {
     "name": "dc1-spine1",
@@ -125,7 +125,7 @@
     "categories": [
       "bgp"
     ],
-    "description": "Verifies the multiprotocol capabilities of BGP peers."
+    "description": "Verifies the multiprotocol capabilities of BGP IPv4 peer(s)."
   },
   {
     "name": "dc1-spine1",
@@ -133,7 +133,7 @@
     "categories": [
       "bgp"
     ],
-    "description": "Verifies the route refresh capabilities of a BGP peer in a specified VRF."
+    "description": "Verifies the route refresh capabilities of IPv4 BGP peer(s) in a specified VRF."
   },
   {
     "name": "dc1-spine1",
@@ -157,7 +157,7 @@
     "categories": [
       "bgp"
     ],
-    "description": "Verifies the timers of BGP peers."
+    "description": "Verifies the timers of BGP IPv4 peer(s)."
   },
   {
     "name": "dc1-spine1",

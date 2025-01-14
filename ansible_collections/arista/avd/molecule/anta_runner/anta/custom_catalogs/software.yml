@@ -1,0 +1,14 @@
+---
+# User-defined ANTA catalog for software testing
+anta.tests.software:
+  - VerifyEOSExtensions:
+      # Verifies that all EOS extensions installed on the device are enabled for boot persistence.
+  - VerifyEOSVersion:
+      # Verifies the EOS version of the device.
+      versions:
+        - 4.33.1F
+        - 4.32.3M
+  - VerifyTerminAttrVersion:
+      # Verifies the TerminAttr version of the device.
+      versions:
+        - v1.35.1

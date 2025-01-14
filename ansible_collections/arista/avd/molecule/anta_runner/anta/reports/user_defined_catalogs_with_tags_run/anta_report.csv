@@ -1,0 +1,16 @@
+Device,Test Name,Test Status,Message(s),Test description,Test category
+dc1-leaf2a,VerifyVxlan1ConnSettings,unset,,Verifies the interface vxlan1 source interface and UDP port.,VXLAN
+dc1-leaf2a,VerifyVxlan1Interface,unset,,Verifies the Vxlan1 interface status.,VXLAN
+dc1-leaf2a,VerifyVxlanConfigSanity,unset,,Verifies there are no VXLAN config-sanity inconsistencies.,VXLAN
+dc1-leaf2a,VerifyVxlanVniBinding,unset,,Verifies the VNI-VLAN bindings of the Vxlan1 interface.,VXLAN
+dc1-leaf2a,VerifyVxlanVtep,unset,,Verifies the VTEP peers of the Vxlan1 interface.,VXLAN
+dc2-leaf2a,VerifyVxlan1ConnSettings,unset,,Verifies the interface vxlan1 source interface and UDP port.,VXLAN
+dc2-leaf2a,VerifyVxlan1Interface,unset,,Verifies the Vxlan1 interface status.,VXLAN
+dc2-leaf2a,VerifyVxlanConfigSanity,unset,,Verifies there are no VXLAN config-sanity inconsistencies.,VXLAN
+dc2-leaf2a,VerifyVxlanVniBinding,unset,,Verifies the VNI-VLAN bindings of the Vxlan1 interface.,VXLAN
+dc2-leaf2a,VerifyVxlanVtep,unset,,Verifies the VTEP peers of the Vxlan1 interface.,VXLAN
+dc2-leaf2b,VerifyVxlan1ConnSettings,unset,,Verifies the interface vxlan1 source interface and UDP port.,VXLAN
+dc2-leaf2b,VerifyVxlan1Interface,unset,,Verifies the Vxlan1 interface status.,VXLAN
+dc2-leaf2b,VerifyVxlanConfigSanity,unset,,Verifies there are no VXLAN config-sanity inconsistencies.,VXLAN
+dc2-leaf2b,VerifyVxlanVniBinding,unset,,Verifies the VNI-VLAN bindings of the Vxlan1 interface.,VXLAN
+dc2-leaf2b,VerifyVxlanVtep,unset,,Verifies the VTEP peers of the Vxlan1 interface.,VXLAN

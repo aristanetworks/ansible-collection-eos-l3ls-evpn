@@ -1,0 +1,112 @@
+aaa_root:
+  disabled: true
+config_end: true
+enable_password:
+  disabled: true
+ethernet_interfaces:
+- name: Ethernet1
+  description: L2_dc2-leaf2a_Ethernet8
+  shutdown: false
+  channel_group:
+    id: 1
+    mode: active
+  peer: dc2-leaf2a
+  peer_interface: Ethernet8
+  peer_type: l3leaf
+- name: Ethernet2
+  description: L2_dc2-leaf2b_Ethernet8
+  shutdown: false
+  channel_group:
+    id: 1
+    mode: active
+  peer: dc2-leaf2b
+  peer_interface: Ethernet8
+  peer_type: l3leaf
+- name: Ethernet5
+  description: SERVER_dc2-leaf2-server1_iLO
+  shutdown: false
+  spanning_tree_portfast: edge
+  peer: dc2-leaf2-server1
+  peer_interface: iLO
+  peer_type: server
+  switchport:
+    enabled: true
+    mode: access
+    access_vlan: 11
+hostname: dc2-leaf2c
+ip_igmp_snooping:
+  globally_enabled: true
+is_deployed: true
+local_users:
+- name: admin
+  privilege: 15
+  role: network-admin
+  no_password: true
+- name: ansible
+  privilege: 15
+  role: network-admin
+  sha512_password: $6$7u4j1rkb3VELgcZE$EJt2Qff8kd/TapRoci0XaIZsL4tFzgq1YZBLD9c6f/knXzvcYY0NcMKndZeCv0T268knGKhOEwZAxqKjlMm920
+management_api_http:
+  enable_https: true
+  https_ssl_profile: eAPI_SSL_Profile
+  enable_vrfs:
+  - name: MGMT
+management_interfaces:
+- name: Management1
+  description: OOB_MANAGEMENT
+  shutdown: false
+  vrf: MGMT
+  ip_address: 172.16.1.162/24
+  type: oob
+  gateway: 172.16.1.1
+metadata:
+  platform: vEOS-lab
+  dc_name: DC2
+  fabric_name: FABRIC
+port_channel_interfaces:
+- name: Port-Channel1
+  description: L2_DC2_L3_LEAF2_Port-Channel8
+  shutdown: false
+  switchport:
+    enabled: true
+    mode: trunk
+    trunk:
+      allowed_vlan: 11-12,21-22,3401-3402
+service_routing_protocols_model: multi-agent
+spanning_tree:
+  mode: mstp
+  mst_instances:
+  - id: '0'
+    priority: 32768
+static_routes:
+- vrf: MGMT
+  destination_address_prefix: 0.0.0.0/0
+  gateway: 172.16.1.1
+transceiver_qsfp_default_mode_4x10: true
+vlan_internal_order:
+  allocation: ascending
+  range:
+    beginning: 1006
+    ending: 1199
+vlans:
+- id: 11
+  name: VRF10_VLAN11
+  tenant: TENANT1
+- id: 12
+  name: VRF10_VLAN12
+  tenant: TENANT1
+- id: 21
+  name: VRF11_VLAN21
+  tenant: TENANT1
+- id: 22
+  name: VRF11_VLAN22
+  tenant: TENANT1
+- id: 3401
+  name: L2_VLAN3401
+  tenant: TENANT1
+- id: 3402
+  name: L2_VLAN3402
+  tenant: TENANT1
+vrfs:
+- name: MGMT
+  ip_routing: false

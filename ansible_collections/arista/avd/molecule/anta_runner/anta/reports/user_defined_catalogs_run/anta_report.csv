@@ -1,0 +1,184 @@
+Device,Test Name,Test Status,Message(s),Test description,Test category
+dc1-leaf1a,VerifyInterfaceDiscards,unset,,Verifies that the interfaces packet discard counters are equal to zero.,Interfaces
+dc1-leaf1a,VerifyInterfaceErrDisabled,unset,,Verifies there are no interfaces in the errdisabled state.,Interfaces
+dc1-leaf1a,VerifyInterfaceErrors,unset,,Verifies that the interfaces error counters are equal to zero.,Interfaces
+dc1-leaf1a,VerifyInterfaceUtilization,unset,,Verifies that the utilization of interfaces is below a certain threshold.,Interfaces
+dc1-leaf1a,VerifyStormControlDrops,unset,,Verifies there are no interface storm-control drop counters.,Interfaces
+dc1-leaf1a,VerifyEOSExtensions,unset,,Verifies that all EOS extensions installed on the device are enabled for boot persistence.,Software
+dc1-leaf1a,VerifyEOSVersion,unset,,Verifies the EOS version of the device.,Software
+dc1-leaf1a,VerifyTerminAttrVersion,unset,,Verifies the TerminAttr version of the device.,Software
+dc1-leaf1b,VerifyInterfaceDiscards,unset,,Verifies that the interfaces packet discard counters are equal to zero.,Interfaces
+dc1-leaf1b,VerifyInterfaceErrDisabled,unset,,Verifies there are no interfaces in the errdisabled state.,Interfaces
+dc1-leaf1b,VerifyInterfaceErrors,unset,,Verifies that the interfaces error counters are equal to zero.,Interfaces
+dc1-leaf1b,VerifyInterfaceUtilization,unset,,Verifies that the utilization of interfaces is below a certain threshold.,Interfaces
+dc1-leaf1b,VerifyStormControlDrops,unset,,Verifies there are no interface storm-control drop counters.,Interfaces
+dc1-leaf1b,VerifyEOSExtensions,unset,,Verifies that all EOS extensions installed on the device are enabled for boot persistence.,Software
+dc1-leaf1b,VerifyEOSVersion,unset,,Verifies the EOS version of the device.,Software
+dc1-leaf1b,VerifyTerminAttrVersion,unset,,Verifies the TerminAttr version of the device.,Software
+dc1-leaf1c,VerifyInterfaceDiscards,unset,,Verifies that the interfaces packet discard counters are equal to zero.,Interfaces
+dc1-leaf1c,VerifyInterfaceErrDisabled,unset,,Verifies there are no interfaces in the errdisabled state.,Interfaces
+dc1-leaf1c,VerifyInterfaceErrors,unset,,Verifies that the interfaces error counters are equal to zero.,Interfaces
+dc1-leaf1c,VerifyInterfaceUtilization,unset,,Verifies that the utilization of interfaces is below a certain threshold.,Interfaces
+dc1-leaf1c,VerifyStormControlDrops,unset,,Verifies there are no interface storm-control drop counters.,Interfaces
+dc1-leaf1c,VerifyEOSExtensions,unset,,Verifies that all EOS extensions installed on the device are enabled for boot persistence.,Software
+dc1-leaf1c,VerifyEOSVersion,unset,,Verifies the EOS version of the device.,Software
+dc1-leaf1c,VerifyTerminAttrVersion,unset,,Verifies the TerminAttr version of the device.,Software
+dc1-leaf2a,VerifyInterfaceDiscards,unset,,Verifies that the interfaces packet discard counters are equal to zero.,Interfaces
+dc1-leaf2a,VerifyInterfaceErrDisabled,unset,,Verifies there are no interfaces in the errdisabled state.,Interfaces
+dc1-leaf2a,VerifyInterfaceErrors,unset,,Verifies that the interfaces error counters are equal to zero.,Interfaces
+dc1-leaf2a,VerifyInterfaceUtilization,unset,,Verifies that the utilization of interfaces is below a certain threshold.,Interfaces
+dc1-leaf2a,VerifyStormControlDrops,unset,,Verifies there are no interface storm-control drop counters.,Interfaces
+dc1-leaf2a,VerifyEOSExtensions,unset,,Verifies that all EOS extensions installed on the device are enabled for boot persistence.,Software
+dc1-leaf2a,VerifyEOSVersion,unset,,Verifies the EOS version of the device.,Software
+dc1-leaf2a,VerifyTerminAttrVersion,unset,,Verifies the TerminAttr version of the device.,Software
+dc1-leaf2a,VerifyVxlan1ConnSettings,unset,,Verifies the interface vxlan1 source interface and UDP port.,VXLAN
+dc1-leaf2a,VerifyVxlan1Interface,unset,,Verifies the Vxlan1 interface status.,VXLAN
+dc1-leaf2a,VerifyVxlanConfigSanity,unset,,Verifies there are no VXLAN config-sanity inconsistencies.,VXLAN
+dc1-leaf2a,VerifyVxlanVniBinding,unset,,Verifies the VNI-VLAN bindings of the Vxlan1 interface.,VXLAN
+dc1-leaf2a,VerifyVxlanVtep,unset,,Verifies the VTEP peers of the Vxlan1 interface.,VXLAN
+dc1-leaf2c,VerifyInterfaceDiscards,unset,,Verifies that the interfaces packet discard counters are equal to zero.,Interfaces
+dc1-leaf2c,VerifyInterfaceErrDisabled,unset,,Verifies there are no interfaces in the errdisabled state.,Interfaces
+dc1-leaf2c,VerifyInterfaceErrors,unset,,Verifies that the interfaces error counters are equal to zero.,Interfaces
+dc1-leaf2c,VerifyInterfaceUtilization,unset,,Verifies that the utilization of interfaces is below a certain threshold.,Interfaces
+dc1-leaf2c,VerifyStormControlDrops,unset,,Verifies there are no interface storm-control drop counters.,Interfaces
+dc1-leaf2c,VerifyEOSExtensions,unset,,Verifies that all EOS extensions installed on the device are enabled for boot persistence.,Software
+dc1-leaf2c,VerifyEOSVersion,unset,,Verifies the EOS version of the device.,Software
+dc1-leaf2c,VerifyTerminAttrVersion,unset,,Verifies the TerminAttr version of the device.,Software
+dc1-spine1,VerifyInterfaceDiscards,unset,,Verifies that the interfaces packet discard counters are equal to zero.,Interfaces
+dc1-spine1,VerifyInterfaceErrDisabled,unset,,Verifies there are no interfaces in the errdisabled state.,Interfaces
+dc1-spine1,VerifyInterfaceErrors,unset,,Verifies that the interfaces error counters are equal to zero.,Interfaces
+dc1-spine1,VerifyInterfaceUtilization,unset,,Verifies that the utilization of interfaces is below a certain threshold.,Interfaces
+dc1-spine1,VerifyStormControlDrops,unset,,Verifies there are no interface storm-control drop counters.,Interfaces
+dc1-spine1,VerifyEOSExtensions,unset,,Verifies that all EOS extensions installed on the device are enabled for boot persistence.,Software
+dc1-spine1,VerifyEOSVersion,unset,,Verifies the EOS version of the device.,Software
+dc1-spine1,VerifyTerminAttrVersion,unset,,Verifies the TerminAttr version of the device.,Software
+dc1-spine2,VerifyInterfaceDiscards,unset,,Verifies that the interfaces packet discard counters are equal to zero.,Interfaces
+dc1-spine2,VerifyInterfaceErrDisabled,unset,,Verifies there are no interfaces in the errdisabled state.,Interfaces
+dc1-spine2,VerifyInterfaceErrors,unset,,Verifies that the interfaces error counters are equal to zero.,Interfaces
+dc1-spine2,VerifyInterfaceUtilization,unset,,Verifies that the utilization of interfaces is below a certain threshold.,Interfaces
+dc1-spine2,VerifyStormControlDrops,unset,,Verifies there are no interface storm-control drop counters.,Interfaces
+dc1-spine2,VerifyEOSExtensions,unset,,Verifies that all EOS extensions installed on the device are enabled for boot persistence.,Software
+dc1-spine2,VerifyEOSVersion,unset,,Verifies the EOS version of the device.,Software
+dc1-spine2,VerifyTerminAttrVersion,unset,,Verifies the TerminAttr version of the device.,Software
+dc1-svc-leaf1a,VerifyInterfaceDiscards,unset,,Verifies that the interfaces packet discard counters are equal to zero.,Interfaces
+dc1-svc-leaf1a,VerifyInterfaceErrDisabled,unset,,Verifies there are no interfaces in the errdisabled state.,Interfaces
+dc1-svc-leaf1a,VerifyInterfaceErrors,unset,,Verifies that the interfaces error counters are equal to zero.,Interfaces
+dc1-svc-leaf1a,VerifyInterfaceUtilization,unset,,Verifies that the utilization of interfaces is below a certain threshold.,Interfaces
+dc1-svc-leaf1a,VerifyStormControlDrops,unset,,Verifies there are no interface storm-control drop counters.,Interfaces
+dc1-svc-leaf1a,VerifyEOSExtensions,unset,,Verifies that all EOS extensions installed on the device are enabled for boot persistence.,Software
+dc1-svc-leaf1a,VerifyEOSVersion,unset,,Verifies the EOS version of the device.,Software
+dc1-svc-leaf1a,VerifyTerminAttrVersion,unset,,Verifies the TerminAttr version of the device.,Software
+dc1-svc-leaf1b,VerifyInterfaceDiscards,unset,,Verifies that the interfaces packet discard counters are equal to zero.,Interfaces
+dc1-svc-leaf1b,VerifyInterfaceErrDisabled,unset,,Verifies there are no interfaces in the errdisabled state.,Interfaces
+dc1-svc-leaf1b,VerifyInterfaceErrors,unset,,Verifies that the interfaces error counters are equal to zero.,Interfaces
+dc1-svc-leaf1b,VerifyInterfaceUtilization,unset,,Verifies that the utilization of interfaces is below a certain threshold.,Interfaces
+dc1-svc-leaf1b,VerifyStormControlDrops,unset,,Verifies there are no interface storm-control drop counters.,Interfaces
+dc1-svc-leaf1b,VerifyEOSExtensions,unset,,Verifies that all EOS extensions installed on the device are enabled for boot persistence.,Software
+dc1-svc-leaf1b,VerifyEOSVersion,unset,,Verifies the EOS version of the device.,Software
+dc1-svc-leaf1b,VerifyTerminAttrVersion,unset,,Verifies the TerminAttr version of the device.,Software
+dc1-wan1,VerifyInterfaceDiscards,unset,,Verifies that the interfaces packet discard counters are equal to zero.,Interfaces
+dc1-wan1,VerifyInterfaceErrDisabled,unset,,Verifies there are no interfaces in the errdisabled state.,Interfaces
+dc1-wan1,VerifyInterfaceErrors,unset,,Verifies that the interfaces error counters are equal to zero.,Interfaces
+dc1-wan1,VerifyInterfaceUtilization,unset,,Verifies that the utilization of interfaces is below a certain threshold.,Interfaces
+dc1-wan1,VerifyStormControlDrops,unset,,Verifies there are no interface storm-control drop counters.,Interfaces
+dc1-wan1,VerifyEOSExtensions,unset,,Verifies that all EOS extensions installed on the device are enabled for boot persistence.,Software
+dc1-wan1,VerifyEOSVersion,unset,,Verifies the EOS version of the device.,Software
+dc1-wan1,VerifyTerminAttrVersion,unset,,Verifies the TerminAttr version of the device.,Software
+dc1-wan2,VerifyInterfaceDiscards,unset,,Verifies that the interfaces packet discard counters are equal to zero.,Interfaces
+dc1-wan2,VerifyInterfaceErrDisabled,unset,,Verifies there are no interfaces in the errdisabled state.,Interfaces
+dc1-wan2,VerifyInterfaceErrors,unset,,Verifies that the interfaces error counters are equal to zero.,Interfaces
+dc1-wan2,VerifyInterfaceUtilization,unset,,Verifies that the utilization of interfaces is below a certain threshold.,Interfaces
+dc1-wan2,VerifyStormControlDrops,unset,,Verifies there are no interface storm-control drop counters.,Interfaces
+dc1-wan2,VerifyEOSExtensions,unset,,Verifies that all EOS extensions installed on the device are enabled for boot persistence.,Software
+dc1-wan2,VerifyEOSVersion,unset,,Verifies the EOS version of the device.,Software
+dc1-wan2,VerifyTerminAttrVersion,unset,,Verifies the TerminAttr version of the device.,Software
+dc2-leaf1a,VerifyInterfaceDiscards,unset,,Verifies that the interfaces packet discard counters are equal to zero.,Interfaces
+dc2-leaf1a,VerifyInterfaceErrDisabled,unset,,Verifies there are no interfaces in the errdisabled state.,Interfaces
+dc2-leaf1a,VerifyInterfaceErrors,unset,,Verifies that the interfaces error counters are equal to zero.,Interfaces
+dc2-leaf1a,VerifyInterfaceUtilization,unset,,Verifies that the utilization of interfaces is below a certain threshold.,Interfaces
+dc2-leaf1a,VerifyStormControlDrops,unset,,Verifies there are no interface storm-control drop counters.,Interfaces
+dc2-leaf1a,VerifyEOSExtensions,unset,,Verifies that all EOS extensions installed on the device are enabled for boot persistence.,Software
+dc2-leaf1a,VerifyEOSVersion,unset,,Verifies the EOS version of the device.,Software
+dc2-leaf1a,VerifyTerminAttrVersion,unset,,Verifies the TerminAttr version of the device.,Software
+dc2-leaf1b,VerifyInterfaceDiscards,unset,,Verifies that the interfaces packet discard counters are equal to zero.,Interfaces
+dc2-leaf1b,VerifyInterfaceErrDisabled,unset,,Verifies there are no interfaces in the errdisabled state.,Interfaces
+dc2-leaf1b,VerifyInterfaceErrors,unset,,Verifies that the interfaces error counters are equal to zero.,Interfaces
+dc2-leaf1b,VerifyInterfaceUtilization,unset,,Verifies that the utilization of interfaces is below a certain threshold.,Interfaces
+dc2-leaf1b,VerifyStormControlDrops,unset,,Verifies there are no interface storm-control drop counters.,Interfaces
+dc2-leaf1b,VerifyEOSExtensions,unset,,Verifies that all EOS extensions installed on the device are enabled for boot persistence.,Software
+dc2-leaf1b,VerifyEOSVersion,unset,,Verifies the EOS version of the device.,Software
+dc2-leaf1b,VerifyTerminAttrVersion,unset,,Verifies the TerminAttr version of the device.,Software
+dc2-leaf1c,VerifyInterfaceDiscards,unset,,Verifies that the interfaces packet discard counters are equal to zero.,Interfaces
+dc2-leaf1c,VerifyInterfaceErrDisabled,unset,,Verifies there are no interfaces in the errdisabled state.,Interfaces
+dc2-leaf1c,VerifyInterfaceErrors,unset,,Verifies that the interfaces error counters are equal to zero.,Interfaces
+dc2-leaf1c,VerifyInterfaceUtilization,unset,,Verifies that the utilization of interfaces is below a certain threshold.,Interfaces
+dc2-leaf1c,VerifyStormControlDrops,unset,,Verifies there are no interface storm-control drop counters.,Interfaces
+dc2-leaf1c,VerifyEOSExtensions,unset,,Verifies that all EOS extensions installed on the device are enabled for boot persistence.,Software
+dc2-leaf1c,VerifyEOSVersion,unset,,Verifies the EOS version of the device.,Software
+dc2-leaf1c,VerifyTerminAttrVersion,unset,,Verifies the TerminAttr version of the device.,Software
+dc2-leaf2a,VerifyInterfaceDiscards,unset,,Verifies that the interfaces packet discard counters are equal to zero.,Interfaces
+dc2-leaf2a,VerifyInterfaceErrDisabled,unset,,Verifies there are no interfaces in the errdisabled state.,Interfaces
+dc2-leaf2a,VerifyInterfaceErrors,unset,,Verifies that the interfaces error counters are equal to zero.,Interfaces
+dc2-leaf2a,VerifyInterfaceUtilization,unset,,Verifies that the utilization of interfaces is below a certain threshold.,Interfaces
+dc2-leaf2a,VerifyStormControlDrops,unset,,Verifies there are no interface storm-control drop counters.,Interfaces
+dc2-leaf2a,VerifyEOSExtensions,unset,,Verifies that all EOS extensions installed on the device are enabled for boot persistence.,Software
+dc2-leaf2a,VerifyEOSVersion,unset,,Verifies the EOS version of the device.,Software
+dc2-leaf2a,VerifyTerminAttrVersion,unset,,Verifies the TerminAttr version of the device.,Software
+dc2-leaf2a,VerifyVxlan1ConnSettings,unset,,Verifies the interface vxlan1 source interface and UDP port.,VXLAN
+dc2-leaf2a,VerifyVxlan1Interface,unset,,Verifies the Vxlan1 interface status.,VXLAN
+dc2-leaf2a,VerifyVxlanConfigSanity,unset,,Verifies there are no VXLAN config-sanity inconsistencies.,VXLAN
+dc2-leaf2a,VerifyVxlanVniBinding,unset,,Verifies the VNI-VLAN bindings of the Vxlan1 interface.,VXLAN
+dc2-leaf2a,VerifyVxlanVtep,unset,,Verifies the VTEP peers of the Vxlan1 interface.,VXLAN
+dc2-leaf2b,VerifyInterfaceDiscards,unset,,Verifies that the interfaces packet discard counters are equal to zero.,Interfaces
+dc2-leaf2b,VerifyInterfaceErrDisabled,unset,,Verifies there are no interfaces in the errdisabled state.,Interfaces
+dc2-leaf2b,VerifyInterfaceErrors,unset,,Verifies that the interfaces error counters are equal to zero.,Interfaces
+dc2-leaf2b,VerifyInterfaceUtilization,unset,,Verifies that the utilization of interfaces is below a certain threshold.,Interfaces
+dc2-leaf2b,VerifyStormControlDrops,unset,,Verifies there are no interface storm-control drop counters.,Interfaces
+dc2-leaf2b,VerifyEOSExtensions,unset,,Verifies that all EOS extensions installed on the device are enabled for boot persistence.,Software
+dc2-leaf2b,VerifyEOSVersion,unset,,Verifies the EOS version of the device.,Software
+dc2-leaf2b,VerifyTerminAttrVersion,unset,,Verifies the TerminAttr version of the device.,Software
+dc2-leaf2b,VerifyVxlan1ConnSettings,unset,,Verifies the interface vxlan1 source interface and UDP port.,VXLAN
+dc2-leaf2b,VerifyVxlan1Interface,unset,,Verifies the Vxlan1 interface status.,VXLAN
+dc2-leaf2b,VerifyVxlanConfigSanity,unset,,Verifies there are no VXLAN config-sanity inconsistencies.,VXLAN
+dc2-leaf2b,VerifyVxlanVniBinding,unset,,Verifies the VNI-VLAN bindings of the Vxlan1 interface.,VXLAN
+dc2-leaf2b,VerifyVxlanVtep,unset,,Verifies the VTEP peers of the Vxlan1 interface.,VXLAN
+dc2-leaf2c,VerifyInterfaceDiscards,unset,,Verifies that the interfaces packet discard counters are equal to zero.,Interfaces
+dc2-leaf2c,VerifyInterfaceErrDisabled,unset,,Verifies there are no interfaces in the errdisabled state.,Interfaces
+dc2-leaf2c,VerifyInterfaceErrors,unset,,Verifies that the interfaces error counters are equal to zero.,Interfaces
+dc2-leaf2c,VerifyInterfaceUtilization,unset,,Verifies that the utilization of interfaces is below a certain threshold.,Interfaces
+dc2-leaf2c,VerifyStormControlDrops,unset,,Verifies there are no interface storm-control drop counters.,Interfaces
+dc2-leaf2c,VerifyEOSExtensions,unset,,Verifies that all EOS extensions installed on the device are enabled for boot persistence.,Software
+dc2-leaf2c,VerifyEOSVersion,unset,,Verifies the EOS version of the device.,Software
+dc2-leaf2c,VerifyTerminAttrVersion,unset,,Verifies the TerminAttr version of the device.,Software
+dc2-leaf3a.arista.com,VerifyInterfaceDiscards,unset,,Verifies that the interfaces packet discard counters are equal to zero.,Interfaces
+dc2-leaf3a.arista.com,VerifyInterfaceErrDisabled,unset,,Verifies there are no interfaces in the errdisabled state.,Interfaces
+dc2-leaf3a.arista.com,VerifyInterfaceErrors,unset,,Verifies that the interfaces error counters are equal to zero.,Interfaces
+dc2-leaf3a.arista.com,VerifyInterfaceUtilization,unset,,Verifies that the utilization of interfaces is below a certain threshold.,Interfaces
+dc2-leaf3a.arista.com,VerifyStormControlDrops,unset,,Verifies there are no interface storm-control drop counters.,Interfaces
+dc2-leaf3a.arista.com,VerifyEOSExtensions,unset,,Verifies that all EOS extensions installed on the device are enabled for boot persistence.,Software
+dc2-leaf3a.arista.com,VerifyEOSVersion,unset,,Verifies the EOS version of the device.,Software
+dc2-leaf3a.arista.com,VerifyTerminAttrVersion,unset,,Verifies the TerminAttr version of the device.,Software
+dc2-leaf3b.arista.com,VerifyInterfaceDiscards,unset,,Verifies that the interfaces packet discard counters are equal to zero.,Interfaces
+dc2-leaf3b.arista.com,VerifyInterfaceErrDisabled,unset,,Verifies there are no interfaces in the errdisabled state.,Interfaces
+dc2-leaf3b.arista.com,VerifyInterfaceErrors,unset,,Verifies that the interfaces error counters are equal to zero.,Interfaces
+dc2-leaf3b.arista.com,VerifyInterfaceUtilization,unset,,Verifies that the utilization of interfaces is below a certain threshold.,Interfaces
+dc2-leaf3b.arista.com,VerifyStormControlDrops,unset,,Verifies there are no interface storm-control drop counters.,Interfaces
+dc2-leaf3b.arista.com,VerifyEOSExtensions,unset,,Verifies that all EOS extensions installed on the device are enabled for boot persistence.,Software
+dc2-leaf3b.arista.com,VerifyEOSVersion,unset,,Verifies the EOS version of the device.,Software
+dc2-leaf3b.arista.com,VerifyTerminAttrVersion,unset,,Verifies the TerminAttr version of the device.,Software
+dc2-spine1,VerifyInterfaceDiscards,unset,,Verifies that the interfaces packet discard counters are equal to zero.,Interfaces
+dc2-spine1,VerifyInterfaceErrDisabled,unset,,Verifies there are no interfaces in the errdisabled state.,Interfaces
+dc2-spine1,VerifyInterfaceErrors,unset,,Verifies that the interfaces error counters are equal to zero.,Interfaces
+dc2-spine1,VerifyInterfaceUtilization,unset,,Verifies that the utilization of interfaces is below a certain threshold.,Interfaces
+dc2-spine1,VerifyStormControlDrops,unset,,Verifies there are no interface storm-control drop counters.,Interfaces
+dc2-spine1,VerifyEOSExtensions,unset,,Verifies that all EOS extensions installed on the device are enabled for boot persistence.,Software
+dc2-spine1,VerifyEOSVersion,unset,,Verifies the EOS version of the device.,Software
+dc2-spine1,VerifyTerminAttrVersion,unset,,Verifies the TerminAttr version of the device.,Software
+dc2-spine2,VerifyInterfaceDiscards,unset,,Verifies that the interfaces packet discard counters are equal to zero.,Interfaces
+dc2-spine2,VerifyInterfaceErrDisabled,unset,,Verifies there are no interfaces in the errdisabled state.,Interfaces
+dc2-spine2,VerifyInterfaceErrors,unset,,Verifies that the interfaces error counters are equal to zero.,Interfaces
+dc2-spine2,VerifyInterfaceUtilization,unset,,Verifies that the utilization of interfaces is below a certain threshold.,Interfaces
+dc2-spine2,VerifyStormControlDrops,unset,,Verifies there are no interface storm-control drop counters.,Interfaces
+dc2-spine2,VerifyEOSExtensions,unset,,Verifies that all EOS extensions installed on the device are enabled for boot persistence.,Software
+dc2-spine2,VerifyEOSVersion,unset,,Verifies the EOS version of the device.,Software
+dc2-spine2,VerifyTerminAttrVersion,unset,,Verifies the TerminAttr version of the device.,Software

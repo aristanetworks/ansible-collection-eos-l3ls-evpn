@@ -1,0 +1,39 @@
+---
+tenants:
+  - name: TENANT1
+    mac_vrf_vni_base: 10000
+    vrfs:
+      - name: VRF10
+        vrf_vni: 10
+        vtep_diagnostic:
+          loopback: 10
+          loopback_ip_range: 10.255.10.0/27
+        svis:
+          - id: 11
+            name: VRF10_VLAN11
+            enabled: true
+            ip_address_virtual: 10.10.11.1/24
+          - id: 12
+            name: VRF10_VLAN12
+            enabled: true
+            ip_address_virtual: 10.10.12.1/24
+      - name: VRF11
+        vrf_vni: 11
+        vtep_diagnostic:
+          loopback: 11
+          loopback_ip_range: 10.255.11.0/27
+        svis:
+          - id: 21
+            name: VRF11_VLAN21
+            enabled: true
+            ip_address_virtual: 10.10.21.1/24
+          - id: 22
+            name: VRF11_VLAN22
+            enabled: true
+            ip_address_virtual: 10.10.22.1/24
+
+    l2vlans:
+      - id: 3401
+        name: L2_VLAN3401
+      - id: 3402
+        name: L2_VLAN3402

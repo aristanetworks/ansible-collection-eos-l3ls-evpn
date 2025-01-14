@@ -1,0 +1,100 @@
+---
+type: spine
+
+spine:
+  defaults:
+    platform: vEOS-lab
+    loopback_ipv4_pool: 10.255.0.0/27
+    bgp_as: 65100
+
+  nodes:
+    - name: dc1-spine1
+      id: 1
+      mgmt_ip: 172.16.1.11/24
+      # Custom BGP configuration for BGP tests
+      structured_config:
+        router_bgp:
+          address_family_ipv4:
+            neighbors:
+              - ip_address: 123.1.1.10
+                activate: true
+              - ip_address: 123.1.1.11
+                activate: true
+          neighbors:
+            - ip_address: 123.1.1.10
+              remote_as: '1234'
+              password: oBztv71m2uhR7hh58/OCNA==
+              description: External IPv4 BGP peer
+              send_community: standard extended
+              maximum_routes: 0
+              default_originate:
+                always: false
+                route_map: RM-Tenant_A_WAN_Zone-123.1.1.10-SET-NEXT-HOP-OUT
+              update_source: Loopback123
+              ebgp_multihop: 3
+              route_map_in: RM-123-1-1-10-IN
+              route_map_out: RM-Tenant_A_WAN_Zone-123.1.1.10-SET-NEXT-HOP-OUT
+              local_as: '123'
+            - ip_address: 123.1.1.11
+              remote_as: '1234'
+              password: oBztv71m2uhR7hh58/OCNA==
+              description: External IPv4 BGP peer
+              send_community: standard extended
+              maximum_routes: 0
+              default_originate:
+                always: false
+              update_source: Loopback123
+              ebgp_multihop: 3
+              route_map_in: RM-123-1-1-11-IN
+              route_map_out: RM-123-1-1-11-OUT
+              local_as: '123'
+            - ip_address: fd5a:fe45:8831:06c5::a
+              remote_as: '12345'
+              send_community: all
+              route_map_out: RM-Tenant_A_WAN_Zone-fd5a:fe45:8831:06c5::a-SET-NEXT-HOP-OUT
+            - ip_address: fd5a:fe45:8831:06c5::b
+              remote_as: '12345'
+          address_family_ipv6:
+            neighbors:
+              - ip_address: fd5a:fe45:8831:06c5::a
+                activate: true
+              - ip_address: fd5a:fe45:8831:06c5::b
+                activate: true
+    - name: dc1-spine2
+      id: 2
+      mgmt_ip: 172.16.1.12/24
+      # Custom BGP configuration for BGP tests
+      structured_config:
+        router_bgp:
+          peer_groups:
+            - name: IPv4-EXTERNAL-PEERS
+              type: ipv4
+              remote_as: 577
+            - name: IPv6-EXTERNAL-PEERS
+              type: ipv6
+              remote_as: 577
+            - name: EVPN-EXTERNAL-PEERS
+              type: evpn
+              remote_as: 577
+          neighbors:
+            - ip_address: 142.112.39.2
+              peer_group: IPv4-EXTERNAL-PEERS
+              description: Primary_ISP_IPv4
+            - ip_address: 2001:db8:1::2
+              peer_group: IPv6-EXTERNAL-PEERS
+              description: Primary_ISP_IPv6
+            - ip_address: 142.112.41.2
+              peer_group: EVPN-EXTERNAL-PEERS
+              description: Primary_ISP_EVPN
+          address_family_ipv4:
+            peer_groups:
+              - name: IPv4-EXTERNAL-PEERS
+                activate: true
+          address_family_ipv6:
+            peer_groups:
+              - name: IPv6-EXTERNAL-PEERS
+                activate: true
+          address_family_evpn:
+            peer_groups:
+              - name: EVPN-EXTERNAL-PEERS
+                activate: true

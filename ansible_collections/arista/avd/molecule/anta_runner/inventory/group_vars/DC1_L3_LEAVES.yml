@@ -1,0 +1,62 @@
+---
+type: l3leaf
+
+l3leaf:
+  defaults:
+
+    platform: vEOS-lab
+    loopback_ipv4_pool: 10.255.0.0/27
+    loopback_ipv4_offset: 2
+    vtep_loopback_ipv4_pool: 10.255.1.0/27
+    uplink_switches: [dc1-spine1, dc1-spine2]
+    uplink_ipv4_pool: 10.255.255.0/26
+    mlag_peer_ipv4_pool: 10.255.1.64/27
+    mlag_peer_l3_ipv4_pool: 10.255.1.96/27
+    virtual_router_mac_address: 00:1c:73:00:00:99
+    spanning_tree_priority: 4096
+    spanning_tree_mode: mstp
+
+  node_groups:
+    - group: DC1_L3_LEAF1
+      bgp_as: 65101
+      nodes:
+        - name: dc1-leaf1a
+          id: 1
+          mgmt_ip: 172.16.1.101/24
+          uplink_switch_interfaces:
+            - Ethernet1
+            - Ethernet1
+        - name: dc1-leaf1b
+          id: 2
+          mgmt_ip: 172.16.1.102/24
+          uplink_switch_interfaces:
+            - Ethernet2
+            - Ethernet2
+
+    - group: DC1_L3_LEAF2
+      bgp_as: 65102
+      evpn_gateway:
+        evpn_l2:
+          enabled: true
+        evpn_l3:
+          enabled: true
+          inter_domain: true
+      nodes:
+        - name: dc1-leaf2a
+          id: 3
+          mgmt_ip: 172.16.1.103/24
+          uplink_switch_interfaces:
+            - Ethernet3
+            - Ethernet3
+          evpn_gateway:
+            remote_peers:
+              - hostname: dc2-leaf2a
+        - name: dc1-leaf2b
+          id: 4
+          mgmt_ip: 172.16.1.104/24
+          uplink_switch_interfaces:
+            - Ethernet4
+            - Ethernet4
+          evpn_gateway:
+            remote_peers:
+              - hostname: dc2-leaf2b

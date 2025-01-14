@@ -5,12 +5,12 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from typing_extensions import Self
-
 from .constants import EOS_CLI_CONFIG_GEN_SCHEMA_ID, EOS_DESIGNS_SCHEMA_ID
 
 if TYPE_CHECKING:
     from collections.abc import Generator
+
+    from typing_extensions import Self
 
     from .validation_result import ValidationResult
 
