@@ -3,6 +3,7 @@
 # that can be found in the LICENSE file.
 from __future__ import annotations
 
+from dataclasses import dataclass
 from pathlib import Path
 from unittest import mock
 
@@ -269,3 +270,90 @@ def test_avdpoolmanager_pool(
             assert "mode" in kwargs
             assert kwargs["mode"] == "r"
             mocked_file_write.assert_not_called()
+
+
+@dataclass
+class DummySharedUtils:
+    fabric_name: str
+    type: str
+    dc_name: str | None = None
+    pod_name: str | None = None
+
+
+@pytest.mark.parametrize(
+    ("mock_file_data", "shared_utils", "expected_exception"),
+    [
+        pytest.param(
+            {"node_id_pools": "test"},
+            DummySharedUtils(fabric_name="Test", type="test"),
+            TypeError("Invalid type '<class 'str'>'. Expected a list."),
+            id="invalid_pools_type",
+        ),
+        pytest.param(
+            {"node_id_pools": [{"pool_key": "wrong"}]},
+            DummySharedUtils(fabric_name="Test", type="test"),
+            TypeError("Invalid type for 'pool_key' '<class 'str'>'. Expected a dict."),
+            id="invalid_pool_key_type",
+        ),
+        pytest.param(
+            {"node_id_pools": [{"pool_key": {"foo": "bar"}}]},
+            DummySharedUtils(fabric_name="Test", type="test"),
+            TypeError(r"NodeIdPoolKey.__init__\(\) got an unexpected keyword argument 'foo'"),
+            id="invalid_pool_key_dict_keys",
+        ),
+        pytest.param(
+            {"node_id_pools": [{"pool_key": {"pod_name": "foo", "type": "mytype"}}]},
+            DummySharedUtils(fabric_name="Test", type="test"),
+            TypeError(r"NodeIdPoolKey.__init__\(\) missing 2 required positional arguments: 'fabric_name' and 'dc_name'"),
+            id="missing_pool_key_dict_keys",
+        ),
+        pytest.param(
+            {"node_id_pools": [{"pool_key": {"fabric_name": "fabric", "dc_name": "dc", "pod_name": "pod", "type": "mytype"}}]},
+            DummySharedUtils(fabric_name="Test", type="test"),
+            TypeError("assignments"),
+            id="missing_pool_assignments",
+        ),
+        pytest.param(
+            {"node_id_pools": [{"pool_key": {"fabric_name": "fabric", "dc_name": "dc", "pod_name": "pod", "type": "mytype"}, "assignments": "foo"}]},
+            DummySharedUtils(fabric_name="Test", type="test"),
+            TypeError("Invalid type for 'assignments' '<class 'str'>'. Expected a list."),
+            id="invalid_pool_assignments_type",
+        ),
+        pytest.param(
+            {"node_id_pools": [{"pool_key": {"fabric_name": "fabric", "dc_name": "dc", "pod_name": "pod", "type": "mytype"}, "assignments": ["foo"]}]},
+            DummySharedUtils(fabric_name="Test", type="test"),
+            TypeError("Invalid assignment type '<class 'str'>'. Expected a dict."),
+            id="invalid_pool_assignment_type",
+        ),
+        pytest.param(
+            {"node_id_pools": [{"pool_key": {"fabric_name": "fabric", "dc_name": "dc", "pod_name": "pod", "type": "mytype"}, "assignments": [{"key": "foo"}]}]},
+            DummySharedUtils(fabric_name="Test", type="test"),
+            TypeError("Invalid type for assignment 'key' '<class 'str'>'. Expected a dict."),
+            id="invalid_pool_assignment_key",
+        ),
+        pytest.param(
+            {
+                "node_id_pools": [
+                    {
+                        "pool_key": {"fabric_name": "fabric", "dc_name": "dc", "pod_name": "pod", "type": "mytype"},
+                        "assignments": [{"key": {"hostname": "myhost"}, "value": "foo"}],
+                    }
+                ]
+            },
+            DummySharedUtils(fabric_name="Test", type="test"),
+            TypeError("Invalid type for assignment 'value' '<class 'str'>'. Expected a int."),
+            id="invalid_pool_assignment_value",
+        ),
+    ],
+)
+def test_avdpoolmanager_load_data_negative(mock_file_data: dict, shared_utils: DummySharedUtils, expected_exception: Exception) -> None:
+    with (
+        mock.patch.object(Path, "exists", mock.Mock()),
+        mock.patch.object(Path, "open", mock.mock_open(read_data=get_file_content(mock_file_data))),
+        mock.patch.object(Path, "parent", mock.PropertyMock(mkdir=mock.MagicMock())),
+        mock.patch.object(Path, "touch", mock.Mock()),
+    ):
+        shared_utils.inputs = mock.MagicMock()
+        pool_manager = PoolManager(Path(DUMMYDIR))
+        with pytest.raises(type(expected_exception), match=str(expected_exception)):
+            pool_manager.get_pool("node_id_pools", shared_utils)
