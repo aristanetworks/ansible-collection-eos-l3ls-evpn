@@ -44,6 +44,7 @@ class_maps:
         ecn: ce
     - name: DSCP_TEST_5
       dscp:
+        dscp_value: af23
         ecn: ce
   pbr:
     - name: CM_PBR_EXCLUDE

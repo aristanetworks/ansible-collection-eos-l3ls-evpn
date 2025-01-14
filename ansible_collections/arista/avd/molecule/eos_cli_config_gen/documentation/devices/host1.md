@@ -12035,7 +12035,7 @@ qos random-detect ecn allow non-ect chip-based
 | DSCP_TEST_2 | dscp | 2, 4 ecn non-ect |
 | DSCP_TEST_3 | dscp | cs0 |
 | DSCP_TEST_4 | dscp | ef ecn ce |
-| DSCP_TEST_5 | - | - |
+| DSCP_TEST_5 | dscp | af23 ecn ce |
 | VLAN_RANGE | vlan | 200-400 |
 
 #### Class-maps Device Configuration
@@ -12082,6 +12082,7 @@ class-map type qos match-any DSCP_TEST_4
    match dscp ef ecn ce
 !
 class-map type qos match-any DSCP_TEST_5
+   match dscp af23 ecn ce
 !
 class-map type qos match-any VLAN_RANGE
    match vlan 200-400

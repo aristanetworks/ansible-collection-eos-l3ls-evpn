@@ -881,8 +881,8 @@ keys:
               keys:
                 dscp_value:
                   type: str
-                  description: DSCP/ECN match classifies the precedence of incoming
-                    packets based on the value present in the IP header.
+                  required: true
+                  description: DSCP value(s) or range(s) of CoS values.
                 ecn:
                   type: str
                   valid_values:
