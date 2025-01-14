@@ -101,6 +101,9 @@ keys:
           keys:
             name:
               type: str
+            fips_restrictions:
+              type: bool
+              description: Use FIPS compliant algorithms.
             tls_versions:
               type: str
               description: |

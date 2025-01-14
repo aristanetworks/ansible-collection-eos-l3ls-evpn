@@ -23,15 +23,19 @@ management_security:
           sequential: 7
   ssl_profiles:
     - name: SSL_PROFILE
+      fips_restrictions: true
       tls_versions: 1.1 1.2
       certificate:
         file: SSL_CERT
         key: SSL_KEY
     - name: tls-versions-profile
+      fips_restrictions: true
       tls_versions: "1.0 1.1"
     - name: cipher-list-profile
+      fips_restrictions: false
       cipher_list: ECDHE-RSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-SHA384
     - name: certificate-profile
+      fips_restrictions: false
       certificate:
         file: eAPI.crt
         key: eAPI.key

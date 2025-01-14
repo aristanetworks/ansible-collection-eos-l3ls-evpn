@@ -239,9 +239,9 @@ aaa authorization exec default local
 
 ### Management Security SSL Profiles
 
-| SSL Profile Name | TLS protocol accepted | Certificate filename | Key filename | Ciphers | CRLs |
-| ---------------- | --------------------- | -------------------- | ------------ | ------- | ---- |
-| STUN-DTLS | 1.2 | STUN-DTLS.crt | STUN-DTLS.key | - | - |
+| SSL Profile Name | TLS protocol accepted | Certificate filename | Key filename | Ciphers | CRLs | FIPS restrictions enabled |
+| ---------------- | --------------------- | -------------------- | ------------ | ------- | ---- | ------------------------- |
+| STUN-DTLS | 1.2 | STUN-DTLS.crt | STUN-DTLS.key | - | - | - |
 
 ### SSL profile STUN-DTLS Certificates Summary
 

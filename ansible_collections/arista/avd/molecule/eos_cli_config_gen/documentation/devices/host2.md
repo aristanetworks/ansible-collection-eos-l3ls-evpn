@@ -357,9 +357,9 @@ aaa accounting exec default none
 
 ### Management Security SSL Profiles
 
-| SSL Profile Name | TLS protocol accepted | Certificate filename | Key filename | Ciphers | CRLs |
-| ---------------- | --------------------- | -------------------- | ------------ | ------- | ---- |
-| cipher-v1.0-v1.3 | - | - | - | v1.0 to v1.2: SHA256:SHA384<br>v1.3: TLS_AES_256_GCM_SHA384:TLS_CHACHA20_POLY1305_SHA256 | - |
+| SSL Profile Name | TLS protocol accepted | Certificate filename | Key filename | Ciphers | CRLs | FIPS restrictions enabled |
+| ---------------- | --------------------- | -------------------- | ------------ | ------- | ---- | ------------------------- |
+| cipher-v1.0-v1.3 | - | - | - | v1.0 to v1.2: SHA256:SHA384<br>v1.3: TLS_AES_256_GCM_SHA384:TLS_CHACHA20_POLY1305_SHA256 | - | - |
 
 ### Management Security Device Configuration
 

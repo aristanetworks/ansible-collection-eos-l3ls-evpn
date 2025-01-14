@@ -30,6 +30,7 @@
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sequential</samp>](## "management_security.password.policies.[].maximum.sequential") | Integer |  |  | Min: 1<br>Max: 65535 |  |
     | [<samp>&nbsp;&nbsp;ssl_profiles</samp>](## "management_security.ssl_profiles") | List, items: Dictionary |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;name</samp>](## "management_security.ssl_profiles.[].name") | String |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fips_restrictions</samp>](## "management_security.ssl_profiles.[].fips_restrictions") | Boolean |  |  |  | Use FIPS compliant algorithms. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;tls_versions</samp>](## "management_security.ssl_profiles.[].tls_versions") | String |  |  |  | List of allowed TLS versions as string.<br>Examples:<br>  - "1.0"<br>  - "1.0 1.1"<br> |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cipher_list</samp>](## "management_security.ssl_profiles.[].cipher_list") | String |  |  |  | cipher_list syntax follows the openssl cipher strings format.<br>Colon (:) separated list of allowed ciphers as a string.<br>Not supported on EOS version starting 4.32.0F, use the `ciphers` setting instead.<br> |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ciphers</samp>](## "management_security.ssl_profiles.[].ciphers") | Dictionary |  |  |  | This setting is applicable to EOS versions 4.32.0F and later. |
@@ -107,6 +108,9 @@
               sequential: <int; 1-65535>
       ssl_profiles:
         - name: <str>
+
+          # Use FIPS compliant algorithms.
+          fips_restrictions: <bool>
 
           # List of allowed TLS versions as string.
           # Examples:
