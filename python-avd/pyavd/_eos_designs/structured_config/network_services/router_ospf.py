@@ -65,7 +65,7 @@ class RouterOspfMixin(UtilsMixin):
                     "id": process_id,
                     "vrf": vrf.name if vrf.name != "default" else None,
                     "passive_interface_default": True,
-                    "router_id": default(vrf.ospf.router_id, self.shared_utils.router_id if not self.inputs.use_router_general_for_router_id else None),
+                    "router_id": self.get_vrf_router_id(vrf, vrf.ospf.router_id, tenant.name),
                     "no_passive_interfaces": ospf_interfaces,
                     "bfd_enable": vrf.ospf.bfd or None,  # Historic behavior is to only output if True.
                     "max_lsa": vrf.ospf.max_lsa,

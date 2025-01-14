@@ -6,11 +6,13 @@
 {# context used to hide password and keys #}
 {% set hide_passwords = eos_cli_config_gen_documentation.hide_passwords | arista.avd.default(true) %}
 # {{ hostname | arista.avd.default(inventory_hostname) }}
+{% if eos_cli_config_gen_documentation.toc is not arista.avd.defined(false) %}
 
 ## Table of Contents
 
 <!-- toc -->
 <!-- toc -->
+{% endif %}
 {# Management #}
 {% include 'documentation/management.j2' %}
 {# CVX #}

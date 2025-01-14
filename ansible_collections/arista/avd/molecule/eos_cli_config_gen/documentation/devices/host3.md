@@ -1,23 +1,5 @@
 # host3
 
-## Table of Contents
-
-- [Management](#management)
-  - [Management Interfaces](#management-interfaces)
-- [Monitoring](#monitoring)
-  - [TerminAttr Daemon](#terminattr-daemon)
-- [Spanning Tree](#spanning-tree)
-  - [Spanning Tree Summary](#spanning-tree-summary)
-  - [Spanning Tree Device Configuration](#spanning-tree-device-configuration)
-- [Routing](#routing)
-  - [Router ISIS](#router-isis)
-  - [Router BGP](#router-bgp)
-- [MPLS](#mpls)
-  - [MPLS and LDP](#mpls-and-ldp)
-  - [MPLS RSVP](#mpls-rsvp)
-  - [MPLS Device Configuration](#mpls-device-configuration)
-  - [Traffic Policies information](#traffic-policies-information)
-
 ## Management
 
 ### Management Interfaces

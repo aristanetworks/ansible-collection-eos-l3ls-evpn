@@ -3,6 +3,7 @@
 ## Table of Contents
 
 - [Management](#management)
+  - [Banner](#banner)
   - [Management Interfaces](#management-interfaces)
   - [Management SSH](#management-ssh)
   - [Management API gNMI](#management-api-gnmi)
@@ -86,6 +87,27 @@
   - [STUN Device Configuration](#stun-device-configuration)
 
 ## Management
+
+### Banner
+
+#### Login Banner
+
+```text
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!***!!!Unauthorized access prohibited!!!***!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+EOF
+```
+
+#### MOTD Banner
+
+```text
+.         Switch       : $(hostname)                            .
+.         Site         : DC1                      .
+.         Type info for information about the device            .
+.         Type help for information about the aliases           .
+EOF
+```
 
 ### Management Interfaces
 

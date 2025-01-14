@@ -5493,7 +5493,12 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
     class EosCliConfigGenDocumentation(AvdModel):
         """Subclass of AvdModel."""
 
-        _fields: ClassVar[dict] = {"enable": {"type": bool, "default": True}, "hide_passwords": {"type": bool, "default": True}, "_custom_data": {"type": dict}}
+        _fields: ClassVar[dict] = {
+            "enable": {"type": bool, "default": True},
+            "hide_passwords": {"type": bool, "default": True},
+            "toc": {"type": bool, "default": True},
+            "_custom_data": {"type": dict},
+        }
         enable: bool
         """
         Generate device Markdown documentation.
@@ -5507,6 +5512,12 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
         Default value: `True`
         """
+        toc: bool
+        """
+        Generate the table of content(TOC) on device documentation.
+
+        Default value: `True`
+        """
         _custom_data: dict[str, Any]
 
         if TYPE_CHECKING:
@@ -5516,6 +5527,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 *,
                 enable: bool | UndefinedType = Undefined,
                 hide_passwords: bool | UndefinedType = Undefined,
+                toc: bool | UndefinedType = Undefined,
                 _custom_data: dict[str, Any] | UndefinedType = Undefined,
             ) -> None:
                 """
@@ -5529,6 +5541,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                     hide_passwords:
                        Replace the input data using the `hide_passwords` filter in the Jinja2 templates by '<removed>' in
                        the documentation if true.
+                    toc: Generate the table of content(TOC) on device documentation.
                     _custom_data: _custom_data
 
                 """
@@ -24313,6 +24326,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 "name": {"type": str},
                 "description": {"type": str},
                 "ip": {"type": str},
+                "icmp_echo_size": {"type": int},
                 "local_interfaces": {"type": str},
                 "address_only": {"type": bool, "default": True},
                 "url": {"type": str},
@@ -24322,6 +24336,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             """Host Name."""
             description: str | None
             ip: str | None
+            icmp_echo_size: int | None
+            """Size of ICMP probe in bytes."""
             local_interfaces: str | None
             address_only: bool
             """
@@ -24344,6 +24360,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                     name: str | UndefinedType = Undefined,
                     description: str | None | UndefinedType = Undefined,
                     ip: str | None | UndefinedType = Undefined,
+                    icmp_echo_size: int | None | UndefinedType = Undefined,
                     local_interfaces: str | None | UndefinedType = Undefined,
                     address_only: bool | UndefinedType = Undefined,
                     url: str | None | UndefinedType = Undefined,
@@ -24359,6 +24376,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                         name: Host Name.
                         description: description
                         ip: ip
+                        icmp_echo_size: Size of ICMP probe in bytes.
                         local_interfaces: local_interfaces
                         address_only:
                            When address-only is configured, the source IP of the packet is set to the interface
@@ -24423,6 +24441,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                     "name": {"type": str},
                     "description": {"type": str},
                     "ip": {"type": str},
+                    "icmp_echo_size": {"type": int},
                     "local_interfaces": {"type": str},
                     "address_only": {"type": bool, "default": True},
                     "url": {"type": str},
@@ -24432,6 +24451,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 """Host name."""
                 description: str | None
                 ip: str | None
+                icmp_echo_size: int | None
+                """Size of ICMP probe in bytes."""
                 local_interfaces: str | None
                 address_only: bool
                 """
@@ -24454,6 +24475,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                         name: str | UndefinedType = Undefined,
                         description: str | None | UndefinedType = Undefined,
                         ip: str | None | UndefinedType = Undefined,
+                        icmp_echo_size: int | None | UndefinedType = Undefined,
                         local_interfaces: str | None | UndefinedType = Undefined,
                         address_only: bool | UndefinedType = Undefined,
                         url: str | None | UndefinedType = Undefined,
@@ -24469,6 +24491,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                             name: Host name.
                             description: description
                             ip: ip
+                            icmp_echo_size: Size of ICMP probe in bytes.
                             local_interfaces: local_interfaces
                             address_only:
                                When address-only is configured, the source IP of the packet is set to the interface
