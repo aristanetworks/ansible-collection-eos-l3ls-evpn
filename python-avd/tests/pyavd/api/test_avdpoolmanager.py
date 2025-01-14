@@ -12,7 +12,8 @@ from yaml import safe_dump
 from pyavd._eos_designs.schema import EosDesigns
 from pyavd._eos_designs.shared_utils import SharedUtils
 from pyavd._schema.avdschema import AvdSchema
-from pyavd.api.pool_manager import FILE_HEADER, PoolManager
+from pyavd.api.pool_manager import PoolManager
+from pyavd.api.pool_manager.base_classes import FILE_HEADER
 
 DUMMYDIR = "mydir"
 """ Files will be mocked throughout. This will be the fake directory under which the data folder holding the pool files will be created. """
@@ -24,12 +25,17 @@ TESTHOST4 = {"inventory_hostname": "testhost4", "fabric_name": "pool_manager_tes
 
 
 def get_assignment(hostvars: dict, node_id: int) -> dict:
-    return {"key": f"('{hostvars['inventory_hostname']}',)", "value": node_id}
+    return {"key": {"hostname": hostvars["inventory_hostname"]}, "value": node_id}
 
 
 def get_pool(hostvars: dict, assignments: list[dict] | None = None) -> dict:
     return {
-        "pool_key": str((hostvars.get("fabric_name"), hostvars.get("dc_name"), hostvars.get("pod_name"), hostvars.get("type"))),
+        "pool_key": {
+            "fabric_name": hostvars.get("fabric_name"),
+            "dc_name": hostvars.get("dc_name"),
+            "pod_name": hostvars.get("pod_name"),
+            "type": hostvars.get("type"),
+        },
         "assignments": assignments or [],
     }
 
@@ -201,7 +207,7 @@ def get_file_content(data: dict) -> str:
     ],
 )
 def test_avdpoolmanager_pool(
-    hostvars_list: list[dict], expected_ids: list[int], mock_file_data: str, expected_data: dict, requested_ids: list[int | None] | None
+    hostvars_list: list[dict], expected_ids: list[int], mock_file_data: dict, expected_data: dict, requested_ids: list[int | None] | None
 ) -> None:
     """
     Test PoolManager.
