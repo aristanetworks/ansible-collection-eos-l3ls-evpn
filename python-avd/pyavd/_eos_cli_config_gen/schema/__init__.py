@@ -61199,6 +61199,76 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                     """
 
+        class InterfacesItem(AvdModel):
+            """Subclass of AvdModel."""
+
+            class MetricBandwidth(AvdModel):
+                """Subclass of AvdModel."""
+
+                _fields: ClassVar[dict] = {"receive": {"type": int}, "transmit": {"type": int}, "_custom_data": {"type": dict}}
+                receive: int | None
+                """Maximum receive bandwidth in Mbps."""
+                transmit: int | None
+                """Maximum transmit bandwidth in Mbps."""
+                _custom_data: dict[str, Any]
+
+                if TYPE_CHECKING:
+
+                    def __init__(
+                        self,
+                        *,
+                        receive: int | None | UndefinedType = Undefined,
+                        transmit: int | None | UndefinedType = Undefined,
+                        _custom_data: dict[str, Any] | UndefinedType = Undefined,
+                    ) -> None:
+                        """
+                        MetricBandwidth.
+
+
+                        Subclass of AvdModel.
+
+                        Args:
+                            receive: Maximum receive bandwidth in Mbps.
+                            transmit: Maximum transmit bandwidth in Mbps.
+                            _custom_data: _custom_data
+
+                        """
+
+            _fields: ClassVar[dict] = {"name": {"type": str}, "metric_bandwidth": {"type": MetricBandwidth}, "_custom_data": {"type": dict}}
+            name: str
+            metric_bandwidth: MetricBandwidth
+            """Subclass of AvdModel."""
+            _custom_data: dict[str, Any]
+
+            if TYPE_CHECKING:
+
+                def __init__(
+                    self,
+                    *,
+                    name: str | UndefinedType = Undefined,
+                    metric_bandwidth: MetricBandwidth | UndefinedType = Undefined,
+                    _custom_data: dict[str, Any] | UndefinedType = Undefined,
+                ) -> None:
+                    """
+                    InterfacesItem.
+
+
+                    Subclass of AvdModel.
+
+                    Args:
+                        name: name
+                        metric_bandwidth: Subclass of AvdModel.
+                        _custom_data: _custom_data
+
+                    """
+
+        class Interfaces(AvdIndexedList[str, InterfacesItem]):
+            """Subclass of AvdIndexedList with `InterfacesItem` items. Primary key is `name` (`str`)."""
+
+            _primary_key: ClassVar[str] = "name"
+
+        Interfaces._item_type = InterfacesItem
+
         _fields: ClassVar[dict] = {
             "peer_dynamic_source": {"type": str},
             "path_groups": {"type": PathGroups},
@@ -61206,6 +61276,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             "policies": {"type": Policies},
             "vrfs": {"type": Vrfs},
             "tcp_mss_ceiling": {"type": TcpMssCeiling},
+            "interfaces": {"type": Interfaces},
             "_custom_data": {"type": dict},
         }
         peer_dynamic_source: Literal["stun"] | None
@@ -61220,6 +61291,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         """Subclass of AvdIndexedList with `VrfsItem` items. Primary key is `name` (`str`)."""
         tcp_mss_ceiling: TcpMssCeiling
         """Subclass of AvdModel."""
+        interfaces: Interfaces
+        """Subclass of AvdIndexedList with `InterfacesItem` items. Primary key is `name` (`str`)."""
         _custom_data: dict[str, Any]
 
         if TYPE_CHECKING:
@@ -61233,6 +61306,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 policies: Policies | UndefinedType = Undefined,
                 vrfs: Vrfs | UndefinedType = Undefined,
                 tcp_mss_ceiling: TcpMssCeiling | UndefinedType = Undefined,
+                interfaces: Interfaces | UndefinedType = Undefined,
                 _custom_data: dict[str, Any] | UndefinedType = Undefined,
             ) -> None:
                 """
@@ -61248,6 +61322,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                     policies: Subclass of AvdIndexedList with `PoliciesItem` items. Primary key is `name` (`str`).
                     vrfs: Subclass of AvdIndexedList with `VrfsItem` items. Primary key is `name` (`str`).
                     tcp_mss_ceiling: Subclass of AvdModel.
+                    interfaces: Subclass of AvdIndexedList with `InterfacesItem` items. Primary key is `name` (`str`).
                     _custom_data: _custom_data
 
                 """
