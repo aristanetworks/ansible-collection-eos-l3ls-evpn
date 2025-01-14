@@ -7521,6 +7521,9 @@ keys:
           keys:
             name:
               type: str
+            fips_restrictions:
+              type: bool
+              description: Use FIPS compliant algorithms.
             tls_versions:
               type: str
               description: "List of allowed TLS versions as string.\nExamples:\n  -
@@ -20090,6 +20093,31 @@ keys:
             description: 'Enforce on packets through DPS tunnel for a specific direction.
 
               Only ''ingress'' direction is supported.'
+      interfaces:
+        type: list
+        primary_key: name
+        items:
+          type: dict
+          keys:
+            name:
+              type: str
+            metric_bandwidth:
+              type: dict
+              keys:
+                receive:
+                  description: Maximum receive bandwidth in Mbps.
+                  type: int
+                  min: 1
+                  max: 4294967295
+                  convert_types:
+                  - str
+                transmit:
+                  description: Maximum transmit bandwidth in Mbps.
+                  type: int
+                  min: 1
+                  max: 4294967295
+                  convert_types:
+                  - str
   router_pim_sparse_mode:
     type: dict
     keys:

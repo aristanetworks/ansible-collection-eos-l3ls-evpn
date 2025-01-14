@@ -1472,18 +1472,18 @@ address locking
 
 ### Management Security SSL Profiles
 
-| SSL Profile Name | TLS protocol accepted | Certificate filename | Key filename | Ciphers | CRLs |
-| ---------------- | --------------------- | -------------------- | ------------ | ------- | ---- |
-| certificate-profile | - | eAPI.crt | eAPI.key | - | ca.crl<br>intermediate.crl |
-| cipher-list-profile | - | - | - | ECDHE-RSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-SHA384 | - |
-| SSL_PROFILE | 1.1 1.2 | SSL_CERT | SSL_KEY | - | - |
-| test1-chain-cert | - | - | - | - | - |
-| test1-trust-cert | - | - | - | - | - |
-| test2-chain-cert | - | - | - | - | - |
-| test2-trust-cert | - | - | - | - | - |
-| tls-single-version-profile-as-float | 1.0 | - | - | - | - |
-| tls-single-version-profile-as-string | 1.1 | - | - | - | - |
-| tls-versions-profile | 1.0 1.1 | - | - | - | - |
+| SSL Profile Name | TLS protocol accepted | Certificate filename | Key filename | Ciphers | CRLs | FIPS restrictions enabled |
+| ---------------- | --------------------- | -------------------- | ------------ | ------- | ---- | ------------------------- |
+| certificate-profile | - | eAPI.crt | eAPI.key | - | ca.crl<br>intermediate.crl | False |
+| cipher-list-profile | - | - | - | ECDHE-RSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-SHA384 | - | False |
+| SSL_PROFILE | 1.1 1.2 | SSL_CERT | SSL_KEY | - | - | True |
+| test1-chain-cert | - | - | - | - | - | - |
+| test1-trust-cert | - | - | - | - | - | - |
+| test2-chain-cert | - | - | - | - | - | - |
+| test2-trust-cert | - | - | - | - | - | - |
+| tls-single-version-profile-as-float | 1.0 | - | - | - | - | - |
+| tls-single-version-profile-as-string | 1.1 | - | - | - | - | - |
+| tls-versions-profile | 1.0 1.1 | - | - | - | - | True |
 
 ### SSL profile test1-chain-cert Certificates Summary
 
@@ -1576,6 +1576,7 @@ management security
    !
    ssl profile SSL_PROFILE
       tls versions 1.1 1.2
+      fips restrictions
       certificate SSL_CERT key SSL_KEY
    !
    ssl profile test1-chain-cert
@@ -1604,6 +1605,7 @@ management security
    !
    ssl profile tls-versions-profile
       tls versions 1.0 1.1
+      fips restrictions
 ```
 
 ## Prompt Device Configuration
@@ -10851,6 +10853,15 @@ router segment-security
 | ----------------- | --------- |
 | 200 | ingress |
 
+#### Interfaces Metric Bandwidth
+
+| Interface name | Transmit Bandwidth (Mbps) | Receive Bandwidth (Mbps) |
+| -------------- | ------------------------- | ------------------------ |
+| Ethernet1 | - | 100 |
+| Ethernet2 | - | - |
+| Ethernet3 | 200 | - |
+| Port-Channel4 | 200 | 100 |
+
 #### Path Groups
 
 ##### Path Group PG-1
@@ -10968,6 +10979,18 @@ router segment-security
 router path-selection
    peer dynamic source stun
    tcp mss ceiling ipv4 200 ingress
+   !
+   interface Ethernet1
+      metric bandwidth receive 100 Mbps
+   !
+   interface Ethernet2
+   !
+   interface Ethernet3
+      metric bandwidth transmit 200 Mbps
+   !
+   interface Port-Channel4
+      metric bandwidth transmit 200 Mbps
+      metric bandwidth receive 100 Mbps
    !
    path-group PG-1 id 666
       keepalive interval 200 milliseconds failure-threshold 3 intervals
