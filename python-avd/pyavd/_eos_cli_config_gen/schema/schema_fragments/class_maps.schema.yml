@@ -59,3 +59,15 @@ keys:
                   type: str
                   description: IPv6 Access-List Name.
                   convert_types: [ int ]
+            dscp:
+              type: dict
+              description: It allows match on either DSCP, ECN or both for the IPV4 and IPV6 packets.
+              keys:
+                dscp_value:
+                  type: str
+                  required: true
+                  description: DSCP value(s) or range(s) of CoS values.
+                ecn:
+                  type: str
+                  valid_values: ["ce", "ect", "ect-ce", "non-ect"]
+                  description: DSCP is the six most significant bits and ECN represents the two least significant bits of the IPv4 8-bit ToS field and IPv6 8-bit TC field.
