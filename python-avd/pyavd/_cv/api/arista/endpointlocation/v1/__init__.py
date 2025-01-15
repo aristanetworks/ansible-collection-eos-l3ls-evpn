@@ -202,7 +202,10 @@ class IdentifierType(aristaproto.Enum):
     """IDENTIFIER_TYPE_HOSTNAME indicates a hostname identifier."""
 
     USERNAME = 7
-    """IDENTIFIER_TYPE_USERNAME indicates a username identifier."""
+    """
+    IDENTIFIER_TYPE_USERNAME indicates a username identifier.
+     Deprecated - do not return usernames of wifi endpoints anymore
+    """
 
     OTHER = 99999
     """IDENTIFIER_TYPE_OTHER is used for an unknown identifier."""
@@ -244,6 +247,7 @@ class IdentifierSource(aristaproto.Enum):
     """
     IDENTIFIER_SOURCE_WIFI indicates a WiFi endpoint that was learned through
      a wireless manager.
+     Deprecated - do not support searches for wifi endpoints anymore
     """
 
 
@@ -336,7 +340,7 @@ class DeviceType(aristaproto.Enum):
 
     ENDPOINT = 2
     """
-    DEVICE_TYPE_ENDPOINT indicates a non-WiFi endpoint that does not exist
+    DEVICE_TYPE_ENDPOINT indicates an endpoint that does not exist
      in the CloudVision inventory.
     """
 
@@ -344,6 +348,7 @@ class DeviceType(aristaproto.Enum):
     """
     DEVICE_TYPE_WIFI_ENDPOINT indicates a WiFi client/endpoint that does not
      exist in the CloudVision inventory.
+     Deprecated - do not support searches for wifi endpoints anymore
     """
 
 

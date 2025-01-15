@@ -318,6 +318,12 @@ class Event(aristaproto.Message):
     )
     """rule_id is the label of the rule associated with the event"""
 
+    delete_time: datetime = aristaproto.message_field(13)
+    """
+    delete_time is the time when the event ended.
+     It is nil if event is still ongoing
+    """
+
 
 @dataclass(eq=False, repr=False)
 class UserEventCreationKey(aristaproto.Message):
