@@ -8,7 +8,13 @@
 
 ![Arista AVD](https://img.shields.io/badge/Arista-AVD%20Automation-blue) ![collection version](https://img.shields.io/github/v/release/aristanetworks/avd) ![License](https://img.shields.io/github/license/aristanetworks/avd)
 
-<center><img src="ansible_collections/arista/avd/media/avd-logo.png" alt="Arista AVD Overview" width="800"/></center>
+<center><img src="ansible_collections/arista/avd/media/arista-avd-header.png" alt="Arista AVD Overview" width="800"/></center>
+
+<center>
+**[Documentation](https://avd.arista.com)** |
+ **[Source Code](https://github.com/aristanetworks/avd)** |
+ **[Examples](https://github.com/aristanetworks/avd/tree/devel/ansible_collections/arista/avd/examples)**
+</center>
 
 Arista Validated Designs (AVD) is an extensible data model that defines Arista's Unified Cloud Network architecture as "code".
 
