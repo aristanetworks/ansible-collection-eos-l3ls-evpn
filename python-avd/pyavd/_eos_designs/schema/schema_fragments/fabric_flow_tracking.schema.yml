@@ -50,6 +50,10 @@ keys:
         description: Enable flow-tracking on all node.l3_interfaces and network-services tenants.vrfs.l3_interfaces.
         type: dict
         $ref: eos_designs#/keys/fabric_flow_tracking/keys/uplinks
+      l3_port_channels:
+        description: Enable flow-tracking on all node.l3_port_channels.
+        type: dict
+        $ref: eos_designs#/keys/fabric_flow_tracking/keys/uplinks
       dps_interfaces:
         description: Enable flow-tracking on all dps_interfaces.
         type: dict

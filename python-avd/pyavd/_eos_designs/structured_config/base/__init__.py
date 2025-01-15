@@ -101,7 +101,7 @@ class AvdStructuredConfigBase(StructuredConfigGenerator, NtpMixin, SnmpServerMix
             )
 
         l3_interfaces_neighbors = []
-        for neighbor_info in self.shared_utils.l3_interfaces_bgp_neighbors:
+        for neighbor_info in self.shared_utils.l3_bgp_neighbors:
             neighbor = {
                 "ip_address": neighbor_info["ip_address"],
                 "remote_as": neighbor_info["remote_as"],
@@ -695,7 +695,7 @@ class AvdStructuredConfigBase(StructuredConfigGenerator, NtpMixin, SnmpServerMix
     def prefix_lists(self) -> list | None:
         prefix_lists = []
         prefix_lists_in_use = set()
-        for neighbor in self.shared_utils.l3_interfaces_bgp_neighbors:
+        for neighbor in self.shared_utils.l3_bgp_neighbors:
             if (prefix_list_in := get(neighbor, "ipv4_prefix_list_in")) and prefix_list_in not in prefix_lists_in_use:
                 pfx_list = self._get_prefix_list(prefix_list_in)._as_dict()
                 prefix_lists.append(pfx_list)
@@ -717,7 +717,7 @@ class AvdStructuredConfigBase(StructuredConfigGenerator, NtpMixin, SnmpServerMix
     @cached_property
     def route_maps(self) -> list | None:
         route_maps = []
-        for neighbor in self.shared_utils.l3_interfaces_bgp_neighbors:
+        for neighbor in self.shared_utils.l3_bgp_neighbors:
             # RM-BGP-<PEER-IP>-IN
             if prefix_list_in := get(neighbor, "ipv4_prefix_list_in"):
                 sequence_numbers = [

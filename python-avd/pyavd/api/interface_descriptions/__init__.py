@@ -105,7 +105,9 @@ class AvdInterfaceDescriptions(AvdFacts):
             - mpls_overlay_role
             - mpls_lsr
             - overlay_routing_protocol
-            - type.
+            - type
+            - wan_carrier
+            - wan_circuit_id.
         """
         if template_path := self.shared_utils.node_type_key_data.interface_descriptions.underlay_port_channel_interfaces:
             return self._template(
@@ -123,9 +125,13 @@ class AvdInterfaceDescriptions(AvdFacts):
             description = data.port_channel_description
         elif data.link_type in ("l3_edge", "core_interfaces"):
             description = self.inputs.default_underlay_p2p_port_channel_description
-        else:
+        elif data.link_type == "underlay_l2":
             # This is for L2 port-channels
             description = self.inputs.underlay_l2_port_channel_description
+        else:
+            # This is for L3 port-channels
+            elems = [data.wan_carrier, data.wan_circuit_id, data.peer, data.peer_interface]
+            return "_".join([elem for elem in elems if elem])
 
         return AvdStringFormatter().format(
             description,

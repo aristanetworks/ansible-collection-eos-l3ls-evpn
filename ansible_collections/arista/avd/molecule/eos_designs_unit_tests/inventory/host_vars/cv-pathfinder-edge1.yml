@@ -21,6 +21,13 @@ ipv4_acls:
         protocol: ip
         source: peer_ip
         destination: interface_ip
+  - name: TEST-IPV4-ACL-WITH-IP-FIELDS-OUT
+    entries:
+      - remark: Some remark will not require source and destination fields.
+      - action: permit
+        protocol: ip
+        source: interface_ip
+        destination: any
   - name: ACL-NAT-IE-ZSCALER
     entries:
       - sequence: 10

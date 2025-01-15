@@ -29,6 +29,9 @@
     | [<samp>&nbsp;&nbsp;l3_interfaces</samp>](## "fabric_flow_tracking.l3_interfaces") | Dictionary |  |  |  | Enable flow-tracking on all node.l3_interfaces and network-services tenants.vrfs.l3_interfaces. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "fabric_flow_tracking.l3_interfaces.enabled") | Boolean |  | `False` |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;name</samp>](## "fabric_flow_tracking.l3_interfaces.name") | String |  | `FLOW-TRACKER` |  | Flow tracker name as defined in flow_tracking_settings. |
+    | [<samp>&nbsp;&nbsp;l3_port_channels</samp>](## "fabric_flow_tracking.l3_port_channels") | Dictionary |  |  |  | Enable flow-tracking on all node.l3_port_channels. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "fabric_flow_tracking.l3_port_channels.enabled") | Boolean |  | `False` |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;name</samp>](## "fabric_flow_tracking.l3_port_channels.name") | String |  | `FLOW-TRACKER` |  | Flow tracker name as defined in flow_tracking_settings. |
     | [<samp>&nbsp;&nbsp;dps_interfaces</samp>](## "fabric_flow_tracking.dps_interfaces") | Dictionary |  |  |  | Enable flow-tracking on all dps_interfaces. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "fabric_flow_tracking.dps_interfaces.enabled") | Boolean |  | `True` |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;name</samp>](## "fabric_flow_tracking.dps_interfaces.name") | String |  | `FLOW-TRACKER` |  | Flow tracker name as defined in flow_tracking_settings. |
@@ -119,6 +122,13 @@
 
       # Enable flow-tracking on all node.l3_interfaces and network-services tenants.vrfs.l3_interfaces.
       l3_interfaces:
+        enabled: <bool; default=False>
+
+        # Flow tracker name as defined in flow_tracking_settings.
+        name: <str; default="FLOW-TRACKER">
+
+      # Enable flow-tracking on all node.l3_port_channels.
+      l3_port_channels:
         enabled: <bool; default=False>
 
         # Flow tracker name as defined in flow_tracking_settings.

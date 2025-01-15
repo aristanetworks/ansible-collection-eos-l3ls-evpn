@@ -631,11 +631,21 @@ class UtilsWanMixin:
                     if internet_exit_policy.name in wan_interface.cv_pathfinder_internet_exit.policies
                 ]
             )
+            local_interfaces.extend(
+                EosDesigns._DynamicKeys.DynamicNodeTypesItem.NodeTypes.NodesItem.L3PortChannels(
+                    [
+                        wan_port_channel
+                        for wan_port_channel in self.shared_utils.wan_port_channels
+                        if internet_exit_policy.name in wan_port_channel.cv_pathfinder_internet_exit.policies
+                    ]
+                )
+            )
             if not local_interfaces:
                 # No local interface for this policy
                 # TODO: Decide if we should raise here instead
                 continue
-
+            # fetch connections associated with given internet exit policy that
+            # applies to one or more wan interfaces (L3 interfaces, L3 Port-Channels type)
             connections = self.get_internet_exit_connections(internet_exit_policy, local_interfaces)
             internet_exit_policies.append((internet_exit_policy, connections))
 
@@ -644,7 +654,10 @@ class UtilsWanMixin:
     def get_internet_exit_connections(
         self: AvdStructuredConfigNetworkServices,
         internet_exit_policy: EosDesigns.CvPathfinderInternetExitPoliciesItem,
-        local_interfaces: EosDesigns._DynamicKeys.DynamicNodeTypesItem.NodeTypes.NodesItem.L3Interfaces,
+        local_interfaces: (
+            EosDesigns._DynamicKeys.DynamicNodeTypesItem.NodeTypes.NodesItem.L3Interfaces
+            | EosDesigns._DynamicKeys.DynamicNodeTypesItem.NodeTypes.NodesItem.L3PortChannels
+        ),
     ) -> list:
         """
         Return a list of connections (dicts) for the given internet_exit_policy.
@@ -663,11 +676,19 @@ class UtilsWanMixin:
     def get_direct_internet_exit_connections(
         self: AvdStructuredConfigNetworkServices,
         internet_exit_policy: EosDesigns.CvPathfinderInternetExitPoliciesItem,
-        local_interfaces: EosDesigns._DynamicKeys.DynamicNodeTypesItem.NodeTypes.NodesItem.L3Interfaces,
+        local_interfaces: (
+            EosDesigns._DynamicKeys.DynamicNodeTypesItem.NodeTypes.NodesItem.L3Interfaces
+            | EosDesigns._DynamicKeys.DynamicNodeTypesItem.NodeTypes.NodesItem.L3PortChannels
+        ),
     ) -> list[dict]:
         """Return a list of connections (dicts) for the given internet_exit_policy of type direct."""
         if internet_exit_policy.type != "direct":
             return []
+
+        # bool to check if the input `local_interafces` is of type L3 Port-Channels v/s L3 Interfaces
+        is_port_channel = False
+        if isinstance(local_interfaces, EosDesigns._DynamicKeys.DynamicNodeTypesItem.NodeTypes.NodesItem.L3PortChannels):
+            is_port_channel = True
 
         connections = []
 
@@ -694,7 +715,7 @@ class UtilsWanMixin:
             sanitized_interface_name = self.shared_utils.sanitize_interface_name(wan_interface.name)
             connections.append(
                 {
-                    "type": "ethernet",
+                    "type": "port_channel" if is_port_channel else "ethernet",
                     "name": f"IE-{sanitized_interface_name}",
                     "source_interface_ip_address": ip_address,
                     "monitor_name": f"IE-{sanitized_interface_name}",
@@ -710,7 +731,10 @@ class UtilsWanMixin:
     def get_zscaler_internet_exit_connections(
         self: AvdStructuredConfigNetworkServices,
         internet_exit_policy: EosDesigns.CvPathfinderInternetExitPoliciesItem,
-        local_interfaces: EosDesigns._DynamicKeys.DynamicNodeTypesItem.NodeTypes.NodesItem.L3Interfaces,
+        local_interfaces: (
+            EosDesigns._DynamicKeys.DynamicNodeTypesItem.NodeTypes.NodesItem.L3Interfaces
+            | EosDesigns._DynamicKeys.DynamicNodeTypesItem.NodeTypes.NodesItem.L3PortChannels
+        ),
     ) -> list:
         """Return a list of connections (dicts) for the given internet_exit_policy of type zscaler."""
         if internet_exit_policy.type != "zscaler":

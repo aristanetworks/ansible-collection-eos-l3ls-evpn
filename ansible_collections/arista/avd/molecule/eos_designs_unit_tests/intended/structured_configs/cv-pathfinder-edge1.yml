@@ -14,6 +14,12 @@ application_traffic_recognition:
     - name: microsoft-teams
   field_sets:
     l4_ports:
+    - name: TCP-SRC-3
+      port_values:
+      - '400'
+    - name: TCP-DEST-3
+      port_values:
+      - '880'
     - name: TCP-SRC-2
       port_values:
       - '42'
@@ -39,6 +45,11 @@ application_traffic_recognition:
       dest_prefix_set_name: CUSTOM-DEST-PREFIX-1
       protocols:
       - tcp
+    - name: CUSTOM-APPLICATION-3
+      protocols:
+      - tcp
+      tcp_src_port_set_name: TCP-SRC-3
+      tcp_dest_port_set_name: TCP-DEST-3
     - name: CUSTOM-APPLICATION-2
       protocols:
       - tcp
@@ -64,6 +75,9 @@ application_traffic_recognition:
   - name: VOICE
     applications:
     - name: CUSTOM-VOICE-APPLICATION
+  - name: CRITICAL-APP
+    applications:
+    - name: CUSTOM-APPLICATION-3
   - name: APP-PROFILE-CONTROL-PLANE
     applications:
     - name: APP-CONTROL-PLANE
@@ -166,6 +180,72 @@ ethernet_interfaces:
   peer_type: l3_interface
   switchport:
     enabled: false
+- name: Ethernet6
+  description: ATT_404_peerDevice1_PeerDevIntf1
+  shutdown: false
+  speed: forced 10000full
+  channel_group:
+    id: 1
+    mode: active
+  peer: peerDevice1
+  peer_interface: PeerDevIntf1
+  peer_type: l3_port_channel_member
+  switchport:
+    enabled: false
+- name: Ethernet7
+  description: ATT_404_peerDeviceA
+  shutdown: false
+  speed: forced 10000full
+  channel_group:
+    id: 1
+    mode: active
+  peer: peerDeviceA
+  peer_type: l3_port_channel_member
+  switchport:
+    enabled: false
+- name: Ethernet1/10
+  description: Orange_peerDevice10
+  shutdown: false
+  speed: forced 10000full
+  channel_group:
+    id: 450
+    mode: 'on'
+  peer: peerDevice10
+  peer_type: l3_port_channel_member
+  switchport:
+    enabled: false
+- name: Ethernet1/16
+  description: Comcast_peerDevice11
+  shutdown: false
+  speed: auto 10000full
+  channel_group:
+    id: 540
+    mode: active
+  peer: peerDevice11
+  peer_type: l3_port_channel_member
+  switchport:
+    enabled: false
+- name: Ethernet1/17
+  description: Comcast_peerDevice11
+  shutdown: false
+  channel_group:
+    id: 540
+    mode: active
+  peer: peerDevice11
+  peer_type: l3_port_channel_member
+  switchport:
+    enabled: false
+- name: Ethernet1/18
+  description: Comcast_peerDevice11
+  shutdown: false
+  speed: 1000full
+  channel_group:
+    id: 540
+    mode: active
+  peer: peerDevice11
+  peer_type: l3_port_channel_member
+  switchport:
+    enabled: false
 flow_tracking:
   hardware:
     trackers:
@@ -193,6 +273,24 @@ ip_access_lists:
     protocol: ip
     source: 172.24.49.2
     destination: 172.24.49.3
+- name: TEST-IPV4-ACL-WITH-IP-FIELDS-IN_Port-Channel540
+  entries:
+  - sequence: 15
+    action: deny
+    protocol: ip
+    source: any
+    destination: 172.15.6.9
+  - action: permit
+    protocol: ip
+    source: 172.31.0.11
+    destination: 172.15.6.9
+- name: TEST-IPV4-ACL-WITH-IP-FIELDS-OUT_Port-Channel540
+  entries:
+  - remark: Some remark will not require source and destination fields.
+  - action: permit
+    protocol: ip
+    source: 172.15.6.9
+    destination: any
 - name: ACL-NAT-IE-DIRECT
   entries:
   - sequence: 10
@@ -256,6 +354,11 @@ ip_security:
     ike_lifetime: 24
     encryption: aes256
     dh_group: 24
+  - name: IE-ZSCALER-EXIT-POLICY-3-IKE-POLICY
+    local_id_fqdn: cv-pathfinder-edge1_ZSCALER-EXIT-POLICY-3@test.local
+    ike_lifetime: 24
+    encryption: aes256
+    dh_group: 24
   sa_policies:
   - name: DP-SA-POLICY
     esp:
@@ -273,6 +376,13 @@ ip_security:
       encryption: aes256
     pfs_dh_group: 24
   - name: IE-ZSCALER-EXIT-POLICY-2-SA-POLICY
+    sa_lifetime:
+      value: 8
+    esp:
+      integrity: sha256
+      encryption: aes256
+    pfs_dh_group: 24
+  - name: IE-ZSCALER-EXIT-POLICY-3-SA-POLICY
     sa_lifetime:
       value: 8
     esp:
@@ -313,6 +423,15 @@ ip_security:
     sa_policy: IE-ZSCALER-EXIT-POLICY-2-SA-POLICY
     connection: start
     shared_key: 0007054B145A1F0E0928424A0C0B4812160C09551511170B121907214A333B286214687C782720215B0B67637B7B666B3873293274733B31233B6D2A332315696A
+    dpd:
+      interval: 10
+      time: 60
+      action: clear
+  - name: IE-ZSCALER-EXIT-POLICY-3-PROFILE
+    ike_policy: IE-ZSCALER-EXIT-POLICY-3-IKE-POLICY
+    sa_policy: IE-ZSCALER-EXIT-POLICY-3-SA-POLICY
+    connection: start
+    shared_key: 0007054B145A1F0E0928424A0C0B4812160C09551511170B121907214A333B286214687C782720215B0A67637B7B666B3873293274733B31233B6D2A332315696A
     dpd:
       interval: 10
       time: 60
@@ -427,6 +546,16 @@ metadata:
       carrier: ATT
       circuit_id: '404'
       pathgroup: INET
+    - name: Port-Channel1
+      carrier: ATT
+      circuit_id: '404'
+      pathgroup: INET
+    - name: Port-Channel450
+      carrier: Orange
+      pathgroup: INET
+    - name: Port-Channel540
+      carrier: Comcast
+      pathgroup: INET
     internet_exit_policies:
     - name: ZSCALER-EXIT-POLICY-1
       type: zscaler
@@ -512,6 +641,48 @@ metadata:
           region: eu-west1
           latitude: '50'
           longitude: '9'
+    - name: ZSCALER-EXIT-POLICY-3
+      type: zscaler
+      city: Santa Clara, CA
+      country: United States
+      firewall: false
+      ips_control: false
+      acceptable_use_policy: false
+      vpn_credentials:
+      - fqdn: cv-pathfinder-edge1_ZSCALER-EXIT-POLICY-3@test.local
+        vpn_type: UFQDN
+        pre_shared_key: 0007054B145A1F0E0928424A0C0B4812160C09551511170B121907214A333B286214687C782720215B0A67637B7B666B3873293274733B31233B6D2A332315696A
+      tunnels:
+      - name: Tunnel200
+        preference: Preferred
+        endpoint:
+          ip_address: 10.37.121.1
+          datacenter: FMT1
+          city: Fremont, CA
+          country: United States
+          region: us-west1
+          latitude: '37'
+          longitude: '-121'
+      - name: Tunnel201
+        preference: Alternate
+        endpoint:
+          ip_address: 10.39.77.1
+          datacenter: WAS1
+          city: Washington, DC
+          country: United States
+          region: us-east1
+          latitude: '39'
+          longitude: '-77'
+      - name: Tunnel202
+        preference: Alternate
+        endpoint:
+          ip_address: 10.50.9.1
+          datacenter: FRA4
+          city: Frankfurt
+          country: Germany
+          region: eu-west1
+          latitude: '50'
+          longitude: '9'
 monitor_connectivity:
   shutdown: false
   interface_sets:
@@ -529,6 +700,12 @@ monitor_connectivity:
     interfaces: Tunnel111
   - name: SET-Tunnel112
     interfaces: Tunnel112
+  - name: SET-Tunnel200
+    interfaces: Tunnel200
+  - name: SET-Tunnel201
+    interfaces: Tunnel201
+  - name: SET-Tunnel202
+    interfaces: Tunnel202
   hosts:
   - name: IE-Ethernet3
     description: Internet Exit DIRECT-EXIT-POLICY-1
@@ -571,13 +748,63 @@ monitor_connectivity:
     local_interfaces: SET-Tunnel112
     address_only: false
     url: http://gateway.zscalerbeta.net/vpntest
+  - name: IE-Tunnel200
+    description: Internet Exit ZSCALER-EXIT-POLICY-3 PRI
+    ip: 10.37.121.1
+    local_interfaces: SET-Tunnel200
+    address_only: false
+    url: http://gateway.zscalerbeta.net/vpntest
+  - name: IE-Tunnel201
+    description: Internet Exit ZSCALER-EXIT-POLICY-3 SEC
+    ip: 10.39.77.1
+    local_interfaces: SET-Tunnel201
+    address_only: false
+    url: http://gateway.zscalerbeta.net/vpntest
+  - name: IE-Tunnel202
+    description: Internet Exit ZSCALER-EXIT-POLICY-3 TER
+    ip: 10.50.9.1
+    local_interfaces: SET-Tunnel202
+    address_only: false
+    url: http://gateway.zscalerbeta.net/vpntest
+port_channel_interfaces:
+- name: Port-Channel1
+  description: ATT_404_peerDeviceA_Port-Channel2
+  shutdown: false
+  ip_address: 172.15.5.7/31
+  flow_tracker:
+    hardware: FLOW-TRACKER
+  peer: peerDeviceA
+  peer_interface: Port-Channel2
+  peer_type: l3_port_channel
+  switchport:
+    enabled: false
+- name: Port-Channel450
+  description: Orange_peerDevice10_Port-Channel455
+  shutdown: false
+  ip_address: 172.15.5.8/31
+  peer: peerDevice10
+  peer_interface: Port-Channel455
+  peer_type: l3_port_channel
+  switchport:
+    enabled: false
+- name: Port-Channel540
+  description: Comcast_peerDevice11_Port-Channel545
+  shutdown: false
+  ip_address: 172.15.6.9/31
+  access_group_in: TEST-IPV4-ACL-WITH-IP-FIELDS-IN_Port-Channel540
+  access_group_out: TEST-IPV4-ACL-WITH-IP-FIELDS-OUT_Port-Channel540
+  peer: peerDevice11
+  peer_interface: Port-Channel545
+  peer_type: l3_port_channel
+  switchport:
+    enabled: false
 prefix_lists:
 - name: PL2
   sequence_numbers:
   - sequence: 10
     action: permit 5.0.0.0/0
   - sequence: 20
-    action: deny 10.00.0.0/24
+    action: deny 10.0.0.0/24
 - name: ALLOW-DEFAULT
   sequence_numbers:
   - sequence: 10
@@ -608,6 +835,34 @@ route_maps:
     match:
     - ip address prefix-list PL2
   - sequence: 20
+    type: deny
+- name: RM-BGP-172.31.0.1-IN
+  sequence_numbers:
+  - sequence: 10
+    type: permit
+    match:
+    - ip address prefix-list PL2
+    set:
+    - community no-advertise additive
+- name: RM-BGP-172.31.0.1-OUT
+  sequence_numbers:
+  - sequence: 10
+    type: permit
+    match:
+    - ip address prefix-list ALLOW-DEFAULT
+  - sequence: 20
+    type: deny
+- name: RM-BGP-172.31.0.10-IN
+  sequence_numbers:
+  - sequence: 10
+    type: permit
+    match:
+    - ip address prefix-list PL2
+    set:
+    - community no-advertise additive
+- name: RM-BGP-172.31.0.10-OUT
+  sequence_numbers:
+  - sequence: 10
     type: deny
 - name: RM-CONN-2-BGP
   sequence_numbers:
@@ -669,6 +924,9 @@ router_adaptive_virtual_topology:
   - name: PROD-AVT-POLICY-VIDEO
     load_balance_policy: LB-PROD-AVT-POLICY-VIDEO
     internet_exit_policy: ZSCALER-EXIT-POLICY-2
+  - name: PROD-AVT-POLICY-CRITICAL-APP
+    load_balance_policy: LB-PROD-AVT-POLICY-CRITICAL-APP
+    internet_exit_policy: ZSCALER-EXIT-POLICY-3
   - name: PROD-AVT-POLICY-DEFAULT
     load_balance_policy: LB-PROD-AVT-POLICY-DEFAULT
   - name: DEFAULT-POLICY-DEFAULT
@@ -688,6 +946,8 @@ router_adaptive_virtual_topology:
       avt_profile: PROD-AVT-POLICY-VOICE
     - application_profile: VIDEO
       avt_profile: PROD-AVT-POLICY-VIDEO
+    - application_profile: CRITICAL-APP
+      avt_profile: PROD-AVT-POLICY-CRITICAL-APP
     - application_profile: default
       avt_profile: PROD-AVT-POLICY-DEFAULT
   - name: DEFAULT-AVT-POLICY
@@ -717,6 +977,8 @@ router_adaptive_virtual_topology:
       id: 2
     - name: PROD-AVT-POLICY-VIDEO
       id: 4
+    - name: PROD-AVT-POLICY-CRITICAL-APP
+      id: 6
     - name: PROD-AVT-POLICY-DEFAULT
       id: 1
   - name: IT
@@ -773,6 +1035,16 @@ router_bgp:
   - ip_address: 172.28.0.14
     remote_as: '64520'
     route_map_out: RM-BGP-172.28.0.14-OUT
+  - ip_address: 172.31.0.1
+    remote_as: '64520'
+    description: ATT_404_peerDeviceA_Port-Channel2
+    route_map_in: RM-BGP-172.31.0.1-IN
+    route_map_out: RM-BGP-172.31.0.1-OUT
+  - ip_address: 172.31.0.10
+    remote_as: '64520'
+    description: Orange_peerDevice10_Port-Channel455
+    route_map_in: RM-BGP-172.31.0.10-IN
+    route_map_out: RM-BGP-172.31.0.10-OUT
   - ip_address: 172.17.0.2
     peer_group: IPv4-UNDERLAY-PEERS
     remote_as: '65199'
@@ -807,6 +1079,10 @@ router_bgp:
     - ip_address: 172.29.0.13
       activate: true
     - ip_address: 172.28.0.14
+      activate: true
+    - ip_address: 172.31.0.1
+      activate: true
+    - ip_address: 172.31.0.10
       activate: true
   address_family_ipv4_sr_te:
     peer_groups:
@@ -916,6 +1192,11 @@ router_internet_exit:
     - name: ZSCALER-EXIT-POLICY-2_PRI
     - name: ZSCALER-EXIT-POLICY-2_SEC
     - name: ZSCALER-EXIT-POLICY-2_TER
+  - name: ZSCALER-EXIT-POLICY-3
+    exit_groups:
+    - name: ZSCALER-EXIT-POLICY-3_PRI
+    - name: ZSCALER-EXIT-POLICY-3_SEC
+    - name: ZSCALER-EXIT-POLICY-3_TER
   exit_groups:
   - name: DIRECT-EXIT-POLICY-1
     local_connections:
@@ -938,6 +1219,15 @@ router_internet_exit:
   - name: ZSCALER-EXIT-POLICY-2_TER
     local_connections:
     - name: IE-Tunnel112
+  - name: ZSCALER-EXIT-POLICY-3_PRI
+    local_connections:
+    - name: IE-Tunnel200
+  - name: ZSCALER-EXIT-POLICY-3_SEC
+    local_connections:
+    - name: IE-Tunnel201
+  - name: ZSCALER-EXIT-POLICY-3_TER
+    local_connections:
+    - name: IE-Tunnel202
 router_path_selection:
   path_groups:
   - name: Satellite
@@ -961,6 +1251,21 @@ router_path_selection:
     ipsec_profile: CP-PROFILE
     local_interfaces:
     - name: Ethernet3
+      stun:
+        server_profiles:
+        - INET-cv-pathfinder-pathfinder1-Ethernet1
+        - INET-cv-pathfinder-pathfinder2-Ethernet1
+    - name: Port-Channel1
+      stun:
+        server_profiles:
+        - INET-cv-pathfinder-pathfinder1-Ethernet1
+        - INET-cv-pathfinder-pathfinder2-Ethernet1
+    - name: Port-Channel450
+      stun:
+        server_profiles:
+        - INET-cv-pathfinder-pathfinder1-Ethernet1
+        - INET-cv-pathfinder-pathfinder2-Ethernet1
+    - name: Port-Channel540
       stun:
         server_profiles:
         - INET-cv-pathfinder-pathfinder1-Ethernet1
@@ -998,6 +1303,12 @@ router_path_selection:
     loss_rate: '42.0'
     path_groups:
     - name: INET
+      priority: 2
+  - name: LB-PROD-AVT-POLICY-CRITICAL-APP
+    loss_rate: '45.0'
+    path_groups:
+    - name: INET
+    - name: AWS
       priority: 2
   - name: LB-PROD-AVT-POLICY-DEFAULT
     path_groups:
@@ -1042,12 +1353,30 @@ router_service_insertion:
     tunnel_interface:
       primary: Tunnel112
     monitor_connectivity_host: IE-Tunnel112
+  - name: IE-Tunnel200
+    tunnel_interface:
+      primary: Tunnel200
+    monitor_connectivity_host: IE-Tunnel200
+  - name: IE-Tunnel201
+    tunnel_interface:
+      primary: Tunnel201
+    monitor_connectivity_host: IE-Tunnel201
+  - name: IE-Tunnel202
+    tunnel_interface:
+      primary: Tunnel202
+    monitor_connectivity_host: IE-Tunnel202
 router_traffic_engineering:
   enabled: true
 service_routing_protocols_model: multi-agent
 spanning_tree:
   mode: none
 static_routes:
+- destination_address_prefix: 172.16.0.0/16
+  gateway: 172.31.0.1
+- destination_address_prefix: 172.17.0.0/16
+  gateway: 172.31.0.10
+- destination_address_prefix: 172.18.0.0/16
+  gateway: 172.31.0.11
 - destination_address_prefix: 10.37.121.1/32
   gateway: 172.31.0.1
   name: IE-ZSCALER-PRI
@@ -1121,6 +1450,33 @@ tunnel_interfaces:
   source_interface: Ethernet3
   destination: 10.50.9.1
   ipsec_profile: IE-ZSCALER-EXIT-POLICY-2-PROFILE
+  nat_profile: NAT-IE-ZSCALER
+- name: Tunnel200
+  description: Internet Exit ZSCALER-EXIT-POLICY-3 PRI
+  mtu: 1394
+  ip_address: unnumbered Loopback0
+  tunnel_mode: ipsec
+  source_interface: Port-Channel1
+  destination: 10.37.121.1
+  ipsec_profile: IE-ZSCALER-EXIT-POLICY-3-PROFILE
+  nat_profile: NAT-IE-ZSCALER
+- name: Tunnel201
+  description: Internet Exit ZSCALER-EXIT-POLICY-3 SEC
+  mtu: 1394
+  ip_address: unnumbered Loopback0
+  tunnel_mode: ipsec
+  source_interface: Port-Channel1
+  destination: 10.39.77.1
+  ipsec_profile: IE-ZSCALER-EXIT-POLICY-3-PROFILE
+  nat_profile: NAT-IE-ZSCALER
+- name: Tunnel202
+  description: Internet Exit ZSCALER-EXIT-POLICY-3 TER
+  mtu: 1394
+  ip_address: unnumbered Loopback0
+  tunnel_mode: ipsec
+  source_interface: Port-Channel1
+  destination: 10.50.9.1
+  ipsec_profile: IE-ZSCALER-EXIT-POLICY-3-PROFILE
   nat_profile: NAT-IE-ZSCALER
 vrfs:
 - name: MGMT
