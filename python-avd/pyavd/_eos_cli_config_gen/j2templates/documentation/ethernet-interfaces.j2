@@ -805,12 +805,24 @@
 
 #### Traffic Engineering
 
-| Interface | Enabled | Administrative Groups |
-| --------- | ------- | --------------------- |
+| Interface | Enabled | Administrative Groups | Metric | Max Reservable Bandwidth | Min-delay | SRLG |
+| --------- | ------- | --------------------- | ------ | ------------------------ | --------- | ---- |
 {%         for te_interface in te_interfaces %}
 {%             set admin_groups = te_interface.traffic_engineering.administrative_groups | arista.avd.default (["-"]) | join(",") %}
-{%             set te_enabled = te_interface.traffic_engineering.enabled | arista.avd.default ("-") %}
-| {{ te_interface.name }} | {{ te_enabled }} | {{ admin_groups }} |
+{%             set te_enabled = te_interface.traffic_engineering.enabled | arista.avd.default("-") %}
+{%             set te_srlg = te_interface.traffic_engineering.srlg | arista.avd.default("-") %}
+{%             set te_metric = te_interface.traffic_engineering.metric | arista.avd.default("-") %}
+{%             if te_interface.traffic_engineering.bandwidth is arista.avd.defined %}
+{%                 set te_bandwidth = te_interface.traffic_engineering.bandwidth.number ~ " " ~ te_interface.traffic_engineering.bandwidth.unit %}
+{%             else %}
+{%                 set te_bandwidth = "-" %}
+{%             endif %}
+{%             if te_interface.traffic_engineering.min_delay_static is arista.avd.defined %}
+{%                 set te_min_del = te_interface.traffic_engineering.min_delay_static.number ~ " " ~ te_interface.traffic_engineering.min_delay_static.unit %}
+{%             else %}
+{%                 set te_min_del = "-" %}
+{%             endif %}
+| {{ te_interface.name }} | {{ te_enabled }} | {{ admin_groups }} | {{ te_metric }} | {{ te_bandwidth }} | {{ te_min_del }} | {{ te_srlg }} |
 {%         endfor %}
 {%     endif %}
 

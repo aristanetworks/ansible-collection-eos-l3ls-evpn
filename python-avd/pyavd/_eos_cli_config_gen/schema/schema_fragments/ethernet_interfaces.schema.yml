@@ -2216,6 +2216,51 @@ keys:
                 type: str
                 convert_types:
                   - int
+            srlg:
+              description: SRLG name or number.
+              type: str
+              convert_types:
+                - int
+            metric:
+              type: int
+              convert_types:
+                - str
+              min: 1
+              max: 16777215
+            bandwidth:
+              type: dict
+              description: Interface maximum reservable bandwidth.
+              keys:
+                number:
+                  type: int
+                  required: true
+                  convert_types:
+                    - str
+                  min: 0
+                  max: 10000
+                unit:
+                  type: str
+                  required: true
+                  valid_values:
+                    - gbps
+                    - mbps
+                    - percent
+            min_delay_static:
+              type: dict
+              keys:
+                number:
+                  type: int
+                  required: true
+                  convert_types:
+                    - str
+                  min: 1
+                  max: 16777215
+                unit:
+                  type: str
+                  required: true
+                  valid_values:
+                    - microseconds
+                    - milliseconds
         eos_cli:
           type: str
           description: Multiline EOS CLI rendered directly on the ethernet interface in the final EOS configuration.

@@ -421,12 +421,24 @@
 
 #### Traffic Engineering
 
-| Interface | Enabled | Administrative Groups |
-| --------- | ------- | --------------------- |
+| Interface | Enabled | Administrative Groups | Metric | Max Reservable Bandwidth | Min-delay | SRLG |
+| --------- | ------- | --------------------- | ------ | ------------------------ | --------- | ---- |
 {%         for po_te_interface in port_channel_te_interfaces %}
-{%             set admin_groups = po_te_interface.traffic_engineering.administrative_groups | arista.avd.default(["-"]) | join(",") %}
+{%             set admin_groups = po_te_interface.traffic_engineering.administrative_groups | arista.avd.default (["-"]) | join(",") %}
 {%             set te_enabled = po_te_interface.traffic_engineering.enabled | arista.avd.default("-") %}
-| {{ po_te_interface.name }} | {{ te_enabled }} | {{ admin_groups }} |
+{%             set te_srlg = po_te_interface.traffic_engineering.srlg | arista.avd.default("-") %}
+{%             set te_metric = po_te_interface.traffic_engineering.metric | arista.avd.default("-") %}
+{%             if po_te_interface.traffic_engineering.bandwidth is arista.avd.defined %}
+{%                 set te_bandwidth = po_te_interface.traffic_engineering.bandwidth.number ~ " " ~ po_te_interface.traffic_engineering.bandwidth.unit %}
+{%             else %}
+{%                 set te_bandwidth = "-" %}
+{%             endif %}
+{%             if po_te_interface.traffic_engineering.min_delay_static is arista.avd.defined %}
+{%                 set te_min_del = po_te_interface.traffic_engineering.min_delay_static.number ~ " " ~ po_te_interface.traffic_engineering.min_delay_static.unit %}
+{%             else %}
+{%                 set te_min_del = "-" %}
+{%             endif %}
+| {{ po_te_interface.name }} | {{ te_enabled }} | {{ admin_groups }} | {{ te_metric }} | {{ te_bandwidth }} | {{ te_min_del }} | {{ te_srlg }} |
 {%         endfor %}
 {%     endif %}
 

@@ -1068,3 +1068,11 @@ port_channel_interfaces:
         - 4
         - 7-100
         - testgrp
+      srlg: 16
+      metric: 2
+      bandwidth:
+        number: 100
+        unit: mbps
+      min_delay_static:
+        number: 2
+        unit: milliseconds

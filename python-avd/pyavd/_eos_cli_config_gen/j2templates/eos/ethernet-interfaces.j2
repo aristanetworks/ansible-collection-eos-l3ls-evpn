@@ -1124,8 +1124,20 @@ interface {{ ethernet_interface.name }}
 {%     if ethernet_interface.traffic_engineering.enabled is arista.avd.defined(true) %}
    traffic-engineering
 {%     endif %}
+{%     if ethernet_interface.traffic_engineering.bandwidth is arista.avd.defined %}
+   traffic-engineering bandwidth {{ ethernet_interface.traffic_engineering.bandwidth.number }} {{ ethernet_interface.traffic_engineering.bandwidth.unit }}
+{%     endif %}
 {%     if ethernet_interface.traffic_engineering.administrative_groups is arista.avd.defined %}
    traffic-engineering administrative-group {{ ethernet_interface.traffic_engineering.administrative_groups | join(",") }}
+{%     endif %}
+{%     if ethernet_interface.traffic_engineering.srlg is arista.avd.defined %}
+   traffic-engineering srlg {{ ethernet_interface.traffic_engineering.srlg }}
+{%     endif %}
+{%     if ethernet_interface.traffic_engineering.metric is arista.avd.defined %}
+   traffic-engineering metric {{ ethernet_interface.traffic_engineering.metric }}
+{%     endif %}
+{%     if ethernet_interface.traffic_engineering.min_delay_static is arista.avd.defined %}
+   traffic-engineering min-delay static {{ ethernet_interface.traffic_engineering.min_delay_static.number }} {{ ethernet_interface.traffic_engineering.min_delay_static.unit }}
 {%     endif %}
 {%     for link_tracking_group in ethernet_interface.link_tracking_groups | arista.avd.natural_sort %}
 {%         if link_tracking_group.name is arista.avd.defined and link_tracking_group.direction is arista.avd.defined %}
