@@ -212,6 +212,20 @@ repos:
         pass_filenames: false
         additional_dependencies: ['Jinja2>=3.0.0', 'cryptography>=38.0.4', 'deepmerge>=1.1.0']
 
+      - id: check-missing-schema-tables
+        name: Catch schema tables not covered in docs
+        entry: sh -c 'exec python-avd/scripts/find_missing_tables.py'
+        args:
+         - '--table_files_glob "ansible_collections/arista/avd/roles/eos_cli_config_gen/docs/tables/*.md"'
+         - '--markdown_files_glob "ansible_collections/arista/avd/roles/eos_cli_config_gen/docs/*.md"'
+         - '--table_files_glob "ansible_collections/arista/avd/roles/eos_designs/docs/tables/*.md"'
+         - '--markdown_files_glob "ansible_collections/arista/avd/roles/eos_designs/docs/*.md"'
+         - '--root_path "ansible_collections/arista/avd"'
+         - '--ignore_files "roles\eos_cli_config_gen\docs\tables\service-unsupported-transceiver.md"'
+        language: system
+        files: ansible_collections/arista/avd/roles/[a-z_]+/docs
+        pass_filenames: false
+
   - repo: https://github.com/igorshubovych/markdownlint-cli
     rev: v0.43.0
     hooks:
