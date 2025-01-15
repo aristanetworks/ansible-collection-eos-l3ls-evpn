@@ -14,6 +14,7 @@ from pyavd._utils import get_all
 
 from .avd_list import AvdList
 from .avd_model import AvdModel
+from .input_path import InputPath
 
 if TYPE_CHECKING:
     from pyavd._eos_designs.schema import EosDesigns
@@ -23,7 +24,9 @@ SKIP_KEYS = ["custom_structured_configuration_list_merge", "custom_structured_co
 
 class EosDesignsRootModel(AvdModel):
     @classmethod
-    def _from_dict(cls: type[EosDesigns], data: Mapping, keep_extra_keys: bool = False, load_custom_structured_config: bool = True) -> EosDesigns:
+    def _from_dict(
+        cls: type[EosDesigns], data: Mapping, data_source: InputPath | None = None, *, keep_extra_keys: bool = False, load_custom_structured_config: bool = True
+    ) -> EosDesigns:
         """
         Returns a new instance loaded with the data from the given dict.
 
@@ -36,6 +39,7 @@ class EosDesignsRootModel(AvdModel):
 
         Args:
             data: A mapping containing the EosDesigns input data to be loaded.
+            data_source: The data_source (e.g. InputPath) for this model.
             keep_extra_keys: Store all unknown keys in the _custom_data dict and include it again in the output of _to_dict().
                 By default only keys starting with _ will be stored in _custom_data. This will change the behavior to store _all_ keys.
             load_custom_structured_config: Some custom structured config contains inline Jinja templates relying on variables produced by EosDesignsFacts.
@@ -52,7 +56,7 @@ class EosDesignsRootModel(AvdModel):
         if load_custom_structured_config:
             root_data["_custom_structured_configurations"] = cls._CustomStructuredConfigurations(cls._get_csc_items(data))
 
-        return super()._from_dict(ChainMap(root_data, data), keep_extra_keys=keep_extra_keys)
+        return super()._from_dict(ChainMap(root_data, data), data_source=data_source or InputPath(), keep_extra_keys=keep_extra_keys)
 
     @classmethod
     def _get_csc_items(cls: type[EosDesigns], data: Mapping) -> Iterator[EosDesigns._CustomStructuredConfigurationsItem]:

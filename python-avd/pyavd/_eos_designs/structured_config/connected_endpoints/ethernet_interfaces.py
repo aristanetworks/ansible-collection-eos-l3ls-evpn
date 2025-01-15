@@ -48,7 +48,6 @@ class EthernetInterfacesMixin(UtilsMixin):
             network_port_as_adapter = network_port._cast_as(
                 EosDesigns._DynamicKeys.DynamicConnectedEndpointsItem.ConnectedEndpointsItem.AdaptersItem, ignore_extra_keys=True
             )
-            network_port_as_adapter._context = network_port._context
             for ethernet_interface_name in range_expand(network_port.switch_ports):
                 # Override switches and switch_ports to only render for a single interface
                 network_port_as_adapter.switch_ports = EosDesigns._DynamicKeys.DynamicConnectedEndpointsItem.ConnectedEndpointsItem.AdaptersItem.SwitchPorts(
@@ -205,10 +204,9 @@ class EthernetInterfacesMixin(UtilsMixin):
                     )
                     raise AristaAvdInvalidInputsError(msg)
 
-                profile = self.shared_utils.get_merged_port_profile(profile_name, context=f"{adapter._context}.port_channel.lacp_fallback.individual")._cast_as(
+                profile = self.shared_utils.get_merged_port_profile(profile_name, context=f"{adapter._source}.port_channel.lacp_fallback.individual")._cast_as(
                     EosDesigns._DynamicKeys.DynamicConnectedEndpointsItem.ConnectedEndpointsItem.AdaptersItem
                 )
-                profile._context = adapter._context
                 ethernet_interface = self._update_ethernet_interface_cfg(profile, ethernet_interface, connected_endpoint)
 
             if adapter.port_channel.mode != "on" and adapter.port_channel.lacp_timer.mode is not None:

@@ -235,7 +235,7 @@ class UtilsMixin:
 
                 # Apply PTP profile defined for the p2p_link
                 elif p2p_link.ptp.profile not in self.inputs.ptp_profiles:
-                    msg = f"PTP Profile '{p2p_link.ptp.profile}' referenced under {self.data_model}.p2p_links does not exist in `ptp_profiles`."
+                    msg = f"PTP Profile '{p2p_link.ptp.profile}' referenced under '{p2p_link._source}' does not exist in 'ptp_profiles'."
                     raise AristaAvdInvalidInputsError(msg)
 
                 else:

@@ -26,4 +26,4 @@ l3_edge:
         profile: PROFILE DOES NOT EXIST
 
 expected_error_message: >-
-  PTP Profile 'PROFILE DOES NOT EXIST' referenced under l3_edge.p2p_links does not exist in `ptp_profiles`.
+  PTP Profile 'PROFILE DOES NOT EXIST' referenced under 'l3_edge.p2p_links[0]' does not exist in 'ptp_profiles'.

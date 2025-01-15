@@ -36,7 +36,8 @@ class PtpMixin:
     @cached_property
     def ptp_profile(self: SharedUtils) -> EosDesigns.PtpProfilesItem:
         if self.ptp_profile_name not in self.inputs.ptp_profiles:
-            msg = f"PTP Profile '{self.ptp_profile_name}' referenced under `ptp.profile` node variables does not exist in `ptp_profiles`."
+            # TODO: when inheritance works replace 'ptp.profile' node variables with the actual source of ptp_profile_name
+            msg = f"PTP Profile '{self.ptp_profile_name}' referenced under 'ptp.profile' node variables does not exist in 'ptp_profiles'."
             raise AristaAvdInvalidInputsError(msg)
 
         return self.inputs.ptp_profiles[self.ptp_profile_name]

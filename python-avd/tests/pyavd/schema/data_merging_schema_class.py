@@ -3,9 +3,9 @@
 # that can be found in the LICENSE file.
 
 from __future__ import annotations
-from pyavd._schema.models.eos_cli_config_gen_root_model import EosCliConfigGenRootModel
 from typing import ClassVar
 from typing import Any
+from pyavd._schema.models.eos_cli_config_gen_root_model import EosCliConfigGenRootModel
 from typing import TYPE_CHECKING
 
 from pyavd._schema.models.avd_indexed_list import AvdIndexedList
