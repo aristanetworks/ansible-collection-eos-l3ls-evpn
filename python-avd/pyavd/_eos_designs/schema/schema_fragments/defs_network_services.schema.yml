@@ -184,7 +184,7 @@ $defs:
               type: bool
             underlay_l2_multicast_group_ipv4_pool:
               type: str
-              description: IPv4_address/Mask.
+              description: Comma separated list of prefixes (IPv4 address/Mask) or ranges (IPv4_address-IPv4_address).
             underlay_l2_multicast_group_ipv4_pool_offset:
               type: int
               default: 0
@@ -224,7 +224,7 @@ $defs:
               type: bool
             evpn_underlay_l3_multicast_group_ipv4_pool:
               type: str
-              description: IPv4_address/Mask.
+              description: Comma separated list of prefixes (IPv4 address/Mask) or ranges (IPv4_address-IPv4_address).
               required: true
             evpn_underlay_l3_multicast_group_ipv4_pool_offset:
               type: int
@@ -389,9 +389,8 @@ $defs:
               mlag_ibgp_peering_ipv4_pool:
                 type: str
                 description: |
-                  IPv4_address/Mask
-                  The subnet used for iBGP peering in the VRF.
-                  Each MLAG pair will be assigned a subnet based on the ID of the primary MLAG switch.
+                  Comma separated list of prefixes (IPv4 address/Mask) or ranges (IPv4_address-IPv4_address).
+                  The subnet used for the iBGP peering in the VRF is derived from this pool based on the ID of the first MLAG switch.
                   If not set, "mlag_peer_l3_ipv4_pool" or "mlag_peer_ipv4_pool" will be used.
               ip_helpers:
                 type: list
@@ -485,10 +484,10 @@ $defs:
                           description: POD name.
                         ipv4_pool:
                           type: str
-                          description: IPv4_address/Mask.
+                          description: Comma separated list of prefixes (IPv4 address/Mask) or ranges (IPv4_address-IPv4_address).
                         ipv6_pool:
                           type: str
-                          description: IPv6_address/Mask.
+                          description: Comma separated list of prefixes (IPv6 address/Mask) or ranges (IPv6_address-IPv6_address).
               ospf:
                 documentation_options:
                   table: network-services-vrfs-ospf-settings
