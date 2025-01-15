@@ -1,0 +1,217 @@
+// Copyright (c) 2024 Arista Networks, Inc.  All rights reserved.
+// Arista Networks, Inc. Confidential and Proprietary.
+// Subject to Arista Networks, Inc.'s EULA.
+
+syntax = "proto3";
+package arista.studio_topology.v1;
+option go_package = "arista/resources/arista/studio_topology.v1;studio_topology";
+import "fmp/extensions.proto";
+import "fmp/yang.proto";
+import "arista/workspace.v1/workspace.proto";
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/wrappers.proto";
+option (fmp.disable_yang) = "repeated-key-fields";
+// Element defines the fundamental types of elements in topology.
+enum Element {
+	// ELEMENT_UNSPECIFIED indicates an unspecified element type.
+	ELEMENT_UNSPECIFIED = 0;
+	// ELEMENT_DEVICE indicates a device.
+	ELEMENT_DEVICE = 1;
+	// ELEMENT_INTERFACE indicates an interface.
+	ELEMENT_INTERFACE = 2;
+	// ELEMENT_CONNECTION indicates a connection.
+	ELEMENT_CONNECTION = 3;
+}
+// Operation defines the operations that may be performed on the topology.
+enum Operation {
+	// OPERATION_UNSPECIFIED indicates an unspecified operation.
+	OPERATION_UNSPECIFIED = 0;
+	// OPERATION_ADDED indicates addition of an Element.
+	OPERATION_ADDED = 1;
+	// OPERATION_MODIFIED indicates modification of an Element.
+	OPERATION_MODIFIED = 2;
+	// OPERATION_REMOVED indicates removal of an Element.
+	OPERATION_REMOVED = 3;
+}
+// UpdateStatus defines the set of statuses that apply to individual topology updates.
+enum UpdateStatus {
+	// UPDATE_STATUS_UNSPECIFIED indicates an unspecified update status.
+	UPDATE_STATUS_UNSPECIFIED = 0;
+	// UPDATE_STATUS_NEW indicates the update is new.
+	UPDATE_STATUS_NEW = 1;
+	// UPDATE_STATUS_ACCEPTED indicates the update is accepted.
+	UPDATE_STATUS_ACCEPTED = 2;
+	// UPDATE_STATUS_IGNORED indicates the update is ignored.
+	UPDATE_STATUS_IGNORED = 3;
+}
+// DeviceInfo contains device properties.
+message DeviceInfo {
+	// device_id identifies the device uniquely.
+	google.protobuf.StringValue device_id = 1;
+	// model_name indicates the model of the device.
+	google.protobuf.StringValue model_name = 2;
+	// mac_address indicates the MAC address of the device.
+	fmp.MACAddress mac_address = 3;
+	// hostname indicates the hostname of the device.
+	google.protobuf.StringValue hostname = 4;
+}
+// InterfaceInfo contains interface properties.
+message InterfaceInfo {
+	// name is the name of an interface.
+	google.protobuf.StringValue name = 1;
+	// neighbor_device_id indicates the device ID of the neighbor to which
+	// this interface is connected.
+	google.protobuf.StringValue neighbor_device_id = 2;
+	// neighbor_interface_name indicates the interface on the neighbor to which
+	// this interface is connected.
+	google.protobuf.StringValue neighbor_interface_name = 3;
+}
+// InterfaceInfos is a list of InterfaceInfo.
+message InterfaceInfos {
+	// values is a list of InterfaceInfo.
+	repeated InterfaceInfo values = 1;
+}
+// DeviceKey uniquely identifies the device for a workspace.
+message DeviceKey {
+	option (fmp.model_key) = true;
+	// workspace_id identifies the workspace uniquely.
+	google.protobuf.StringValue workspace_id = 1;
+	// device_id identifies the device uniquely.
+	google.protobuf.StringValue device_id = 2;
+}
+// DeviceInputConfig is the desired topology input for a device.
+message DeviceInputConfig {
+	option (fmp.model) = "rw";
+	// key uniquely identifies the device ID for a given workspace.
+	DeviceKey key = 1;
+	// device_info contains device properties.
+	DeviceInfo device_info = 2;
+	// remove if set to true will remove the device from mainline
+	// post workspace merge
+	google.protobuf.BoolValue remove = 3;
+}
+// InterfaceInputKey is the set of inputs that uniquely identify
+// the interface for a workspace.
+message InterfaceInputKey {
+	option (fmp.model_key) = true;
+	// workspace_id identifies the workspace uniquely.
+	google.protobuf.StringValue workspace_id = 1;
+	// device_id identifies the device uniquely.
+	google.protobuf.StringValue device_id = 2;
+	// interface_id along with device_id identifies the interface uniquely.
+	google.protobuf.StringValue interface_id = 3;
+}
+// InterfaceInputConfig is the resource for manually adding
+// an interface in I&T studios
+message InterfaceInputConfig {
+	option (fmp.model) = "rw";
+	// key uniquely identifies the interface for a given workspace.
+	InterfaceInputKey key = 1;
+	// interface_info contains interface properties.
+	InterfaceInfo interface_info = 2;
+	// remove if set to true will remove the interface from mainline
+	// post workspace merge
+	google.protobuf.BoolValue remove = 3;
+}
+// DeviceState is the state of a device written by
+// InterfaceInputConfig, DeviceInputConfig and
+// UpdateConfig resources
+message DeviceState {
+	option (fmp.model) = "ro";
+	// key uniquely identifies the device for a given workspace.
+	DeviceKey key = 1;
+	// device_info contains device properties
+	DeviceInfo device_info = 2;
+	// interface_infos contains interface properties of all the interfaces
+	// belonging to the device
+	InterfaceInfos interface_infos = 3;
+}
+// UpdateKey uniquely identifies a workspace topology update.
+message UpdateKey {
+	option (fmp.model_key) = true;
+	// workspace_id identifies the workspace uniquely.
+	google.protobuf.StringValue workspace_id = 1;
+	// update_id identifies the update uniquely.
+	google.protobuf.StringValue update_id = 2;
+}
+// UpdateConfig contains the acceptance status of an Update.
+message UpdateConfig {
+	option (fmp.model) = "rw";
+	// key uniquely identifies the update.
+	UpdateKey key = 1;
+	// status indicates the status of the topology update.
+	UpdateStatus status = 2;
+	// remove if set to true will remove the update key from mainline
+	// post workspace merge. This can only be set true for ignored keys
+	// since we don't carry accepted keys to mainline post workspace
+	// merge
+	google.protobuf.BoolValue remove = 3;
+}
+// Update represents an update on to the workspace.
+message Update {
+	option (fmp.model) = "ro";
+	// key uniquely identifies the update.
+	UpdateKey key = 1;
+	// element indicates the type of a network element.
+	Element element = 2;
+	// operation indicates the type of operation on the topology update.
+	Operation operation = 3;
+	// status indicates the status of the topology update.
+	UpdateStatus status = 4;
+	// description describes the topology update in short.
+	google.protobuf.StringValue description = 5;
+}
+// UpdateSyncConfig model represents a point in time all updates
+// are to be accepted.
+message UpdateSyncConfig {
+	option (fmp.model) = "rw";
+	// key uniquely identifies the workspace.
+	arista.workspace.v1.WorkspaceKey key = 1;
+	// sync_time indicates the desired synchronization time with the live topology.
+	// If the sync_time indicated in the config takes effect without error,
+	// it will appear in the state model, and then all updates that occurred up to
+	// and including the timestamp in the state model will be accepted.
+	google.protobuf.Timestamp sync_time = 2;
+}
+// RevertConfig is the model provided to revert a workspace.
+message RevertConfig {
+	option (fmp.model) = "rw";
+	// key uniquely identifies the workspace.
+	arista.workspace.v1.WorkspaceKey key = 1;
+}
+// DecommissionConfig is the resource for decommissioning
+// the device from the studio.
+message DecommissionConfig {
+	option (fmp.model) = "rw";
+	// key uniquely identifies the device for a given workspace.
+	DeviceKey key = 1;
+}
+// Decommission is the resource that holds the decommissioning
+// state of a device.
+message Decommission {
+	option (fmp.model) = "ro";
+	// key uniquely identifies the device in a given workspace.
+	DeviceKey key = 1;
+	// created_at is the time at which decommissioning was first initiated.
+	google.protobuf.Timestamp created_at = 2;
+	// created_by is the name of the user who first initiated decommissioning.
+	google.protobuf.StringValue created_by = 3;
+	// last_modified_at is the time at which the decommissioning was last modified.
+	google.protobuf.Timestamp last_modified_at = 4;
+	// last_modified_by is the name of the user that last modified the status.
+	google.protobuf.StringValue last_modified_by = 5;
+	// status indicates the status of the decommissioned device
+	DecommissionStatus status = 6;
+	// error indicates an error message
+	google.protobuf.StringValue error = 7;
+}
+// DecommissionStatus enumerates the status of decommissioning a device.
+enum DecommissionStatus {
+	// DECOMMISSION_STATUS_UNSPECIFIED indicates that the device was decommissioned with
+	// an unspecified state.
+	DECOMMISSION_STATUS_UNSPECIFIED = 0;
+	// DECOMMISSION_STATUS_SUCCESS indicates that the device was successfully decommissioned.
+	DECOMMISSION_STATUS_SUCCESS = 1;
+	// DECOMMISSION_STATUS_FAILURE indicates an error with decommissioning the device.
+	DECOMMISSION_STATUS_FAILURE = 2;
+}

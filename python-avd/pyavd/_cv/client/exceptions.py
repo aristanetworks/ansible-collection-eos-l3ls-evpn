@@ -34,6 +34,8 @@ def get_cv_client_exception(exception: Exception, cv_client_details: str | None 
             new_exception.max_size = int(matches.group("max"))
             new_exception.size = int(matches.group("size"))
             return new_exception
+        if status == Status.FAILED_PRECONDITION:
+            return CVFeatureUnavailable(cv_client_details, *exception.args)
     if isinstance(exception, AsyncioTimeoutError):
         return CVTimeoutError(cv_client_details, *exception.args)
 
@@ -84,3 +86,7 @@ class CVMessageSizeExceeded(CVClientException):
     """Maximum GRPC message size"""
     size: int
     """Actual GRPC message size"""
+
+
+class CVFeatureUnavailable(CVClientException):
+    """CloudVision Feature is unavailable. Maybe missing a feature toggle."""

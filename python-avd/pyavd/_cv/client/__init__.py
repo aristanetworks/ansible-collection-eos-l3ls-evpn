@@ -14,6 +14,7 @@ from .configlet import ConfigletMixin
 from .exceptions import CVClientException
 from .inventory import InventoryMixin
 from .studio import StudioMixin
+from .studio_topology import StudioTopologyMixin
 from .swg import SwgMixin
 from .tag import TagMixin
 from .utils import UtilsMixin
@@ -31,6 +32,7 @@ class CVClient(
     ConfigletMixin,
     InventoryMixin,
     StudioMixin,
+    StudioTopologyMixin,
     SwgMixin,
     TagMixin,
     UtilsMixin,

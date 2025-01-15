@@ -1,8 +1,7 @@
 # Example to add experimental protos:
 # EXTRA_EXTRA_DIRS="-I ~/go/src/arista/resources" EXTRA_EXTRA_PROTOS="~/go/src/arista/resources/arista/configlet.v1/configlet.proto ~/go/src/arista/resources/arista/configlet.v1/services.gen.proto" make
 VENDORPATH=cloudvision-apis
-EXTRA_PROTOS=${PWD}/extra_cv_protos/arista/swg.v1/swg.proto ${PWD}/extra_cv_protos/arista/swg.v1/services.gen.proto
-EXTRA_DIRS=-I ${PWD}/extra_cv_protos
+EXTRAPATH=${PWD}/extra_cv_protos
 EXTRA_EXTRA_DIRS?=
 EXTRA_EXTRA_PROTOS?=
 DUMMY := $(shell \
@@ -14,7 +13,8 @@ APIPATH=api
 
 PYTHON ?= python3
 
-ALL_PROTOS=$(shell find $(VENDORPATH) -name "*.proto")
+VENDOR_PROTOS=$(shell find $(VENDORPATH) -name "*.proto")
+EXTRA_PROTOS=$(shell find $(EXTRAPATH) -name "*.proto")
 
 default: api
 
@@ -28,7 +28,7 @@ api-dir:
 	touch ./api/__init__.py
 
 api-models: api-dir
-	$(PYTHON) -m grpc_tools.protoc -I $(VENDORPATH) $(EXTRA_DIRS) $(EXTRA_EXTRA_DIRS) --python_aristaproto_out=$(APIPATH) $(ALL_PROTOS) $(EXTRA_PROTOS) $(EXTRA_EXTRA_PROTOS)
+	$(PYTHON) -m grpc_tools.protoc -I $(VENDORPATH) -I $(EXTRAPATH) $(EXTRA_EXTRA_DIRS) --python_aristaproto_out=$(APIPATH) $(VENDOR_PROTOS) $(EXTRA_PROTOS) $(EXTRA_EXTRA_PROTOS)
 
 api: api-dir api-models  ## Build/refresh gRPC bindings in ./api
 	@rm -rf $(VENDORPATH)
