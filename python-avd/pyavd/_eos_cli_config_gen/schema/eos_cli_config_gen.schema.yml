@@ -22849,6 +22849,25 @@ keys:
                       items:
                         type: str
                         description: Remote VTEP IP Address.
+              vlan_range:
+                type: dict
+                description: 'Set VNI on range of vlans.
+
+                  If vni is set on the vlan in `vxlan_interface.vxlan1.vxlan.vlans`,
+                  it should not overlap with `vxlan_interface.vxlan1.vxlan.vlan_range.vlans`.
+
+                  Number of VLANs must equal number of VNIs.'
+                keys:
+                  vlans:
+                    type: str
+                    required: true
+                    description: e.g. "94,96,100-110".
+                  vnis:
+                    type: str
+                    required: true
+                    description: 'Set `vnis` in the correct sequence as `vlans`.
+
+                      e.g. "10094,10096,10100-10110".'
               vrfs:
                 type: list
                 primary_key: name
