@@ -24,8 +24,9 @@
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;password</samp>](## "bgp_peer_groups.ipv4_underlay_peers.password") | String |  |  |  | Type 7 encrypted password. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;bfd</samp>](## "bgp_peer_groups.ipv4_underlay_peers.bfd") | Boolean |  | `False` |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;structured_config</samp>](## "bgp_peer_groups.ipv4_underlay_peers.structured_config") | Dictionary |  |  |  | Custom structured config added under router_bgp.peer_groups.[name=<name>] for eos_cli_config_gen. |
+    | [<samp>&nbsp;&nbsp;use_separate_mlag_peer_group_for_overlay</samp>](## "bgp_peer_groups.use_separate_mlag_peer_group_for_overlay") | Boolean |  | `False` |  | To set default BGP peer group name for MLAG overlay to MLAG-IPv4-OVERLAY-PEER. |
     | [<samp>&nbsp;&nbsp;mlag_ipv4_underlay_peer</samp>](## "bgp_peer_groups.mlag_ipv4_underlay_peer") | Dictionary |  |  |  |  |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;name</samp>](## "bgp_peer_groups.mlag_ipv4_underlay_peer.name") | String |  | `MLAG-IPv4-UNDERLAY-PEER` |  | Name of peer group. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;name</samp>](## "bgp_peer_groups.mlag_ipv4_underlay_peer.name") | String |  | `MLAG-IPv4-UNDERLAY-PEER` |  | Name of peer group.<br>Default name for OVERLAY changes to MLAG-IPv4-OVERLAY-PEER if `use_separate_mlag_peer_group_for_overlay` is true. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;password</samp>](## "bgp_peer_groups.mlag_ipv4_underlay_peer.password") | String |  |  |  | Type 7 encrypted password. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;bfd</samp>](## "bgp_peer_groups.mlag_ipv4_underlay_peer.bfd") | Boolean |  | `False` |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;structured_config</samp>](## "bgp_peer_groups.mlag_ipv4_underlay_peer.structured_config") | Dictionary |  |  |  | Custom structured config added under router_bgp.peer_groups.[name=<name>] for eos_cli_config_gen. |
@@ -126,9 +127,13 @@
 
         # Custom structured config added under router_bgp.peer_groups.[name=<name>] for eos_cli_config_gen.
         structured_config: <dict>
+
+      # To set default BGP peer group name for MLAG overlay to MLAG-IPv4-OVERLAY-PEER.
+      use_separate_mlag_peer_group_for_overlay: <bool; default=False>
       mlag_ipv4_underlay_peer:
 
         # Name of peer group.
+        # Default name for OVERLAY changes to MLAG-IPv4-OVERLAY-PEER if `use_separate_mlag_peer_group_for_overlay` is true.
         name: <str; default="MLAG-IPv4-UNDERLAY-PEER">
 
         # Type 7 encrypted password.

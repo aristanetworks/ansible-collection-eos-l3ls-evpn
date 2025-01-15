@@ -29,6 +29,7 @@ node_type_keys:
     default_evpn_encapsulation: mpls
 
 bgp_peer_groups:
+  use_separate_mlag_peer_group_for_overlay: true
   ipv4_underlay_peers:
     bfd: true
     # Custom structured config added under router_bgp.peer_groups.<name> for eos_cli_config_gen

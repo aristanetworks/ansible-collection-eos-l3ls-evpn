@@ -176,6 +176,8 @@ class EosDesigns(EosDesignsRootModel):
             name: str
             """
             Name of peer group.
+            Default name for OVERLAY changes to MLAG-IPv4-OVERLAY-PEER if
+            `use_separate_mlag_peer_group_for_overlay` is true.
 
             Default value: `"MLAG-IPv4-UNDERLAY-PEER"`
             """
@@ -208,7 +210,10 @@ class EosDesigns(EosDesignsRootModel):
                     Subclass of AvdModel.
 
                     Args:
-                        name: Name of peer group.
+                        name:
+                           Name of peer group.
+                           Default name for OVERLAY changes to MLAG-IPv4-OVERLAY-PEER if
+                           `use_separate_mlag_peer_group_for_overlay` is true.
                         password: Type 7 encrypted password.
                         bfd: bfd
                         structured_config:
@@ -827,6 +832,7 @@ class EosDesigns(EosDesignsRootModel):
 
         _fields: ClassVar[dict] = {
             "ipv4_underlay_peers": {"type": Ipv4UnderlayPeers},
+            "use_separate_mlag_peer_group_for_overlay": {"type": bool, "default": False},
             "mlag_ipv4_underlay_peer": {"type": MlagIpv4UnderlayPeer},
             "evpn_overlay_peers": {"type": EvpnOverlayPeers},
             "evpn_overlay_core": {"type": EvpnOverlayCore},
@@ -839,6 +845,12 @@ class EosDesigns(EosDesignsRootModel):
         }
         ipv4_underlay_peers: Ipv4UnderlayPeers
         """Subclass of AvdModel."""
+        use_separate_mlag_peer_group_for_overlay: bool
+        """
+        To set default BGP peer group name for MLAG overlay to MLAG-IPv4-OVERLAY-PEER.
+
+        Default value: `False`
+        """
         mlag_ipv4_underlay_peer: MlagIpv4UnderlayPeer
         """Subclass of AvdModel."""
         evpn_overlay_peers: EvpnOverlayPeers
@@ -866,6 +878,7 @@ class EosDesigns(EosDesignsRootModel):
                 self,
                 *,
                 ipv4_underlay_peers: Ipv4UnderlayPeers | UndefinedType = Undefined,
+                use_separate_mlag_peer_group_for_overlay: bool | UndefinedType = Undefined,
                 mlag_ipv4_underlay_peer: MlagIpv4UnderlayPeer | UndefinedType = Undefined,
                 evpn_overlay_peers: EvpnOverlayPeers | UndefinedType = Undefined,
                 evpn_overlay_core: EvpnOverlayCore | UndefinedType = Undefined,
@@ -884,6 +897,7 @@ class EosDesigns(EosDesignsRootModel):
 
                 Args:
                     ipv4_underlay_peers: Subclass of AvdModel.
+                    use_separate_mlag_peer_group_for_overlay: To set default BGP peer group name for MLAG overlay to MLAG-IPv4-OVERLAY-PEER.
                     mlag_ipv4_underlay_peer: Subclass of AvdModel.
                     evpn_overlay_peers: Subclass of AvdModel.
                     evpn_overlay_core: Subclass of AvdModel.

@@ -20,6 +20,9 @@ sflow_settings:
 fabric_sflow:
   l3_interfaces: true
 
+bgp_peer_groups:
+  use_separate_mlag_peer_group_for_overlay: true
+
 tenants:
   - name: Tenant_A
     mac_vrf_vni_base: 10000
