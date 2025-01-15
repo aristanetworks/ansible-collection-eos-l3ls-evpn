@@ -847,7 +847,7 @@ class EosDesigns(EosDesignsRootModel):
         """Subclass of AvdModel."""
         use_separate_mlag_peer_group_for_overlay: bool
         """
-        To set default BGP peer group name for MLAG overlay to MLAG-IPv4-OVERLAY-PEER.
+        Configure a different BGP peer group for MLAG for underlay and overlay.
 
         Default value: `False`
         """
@@ -897,7 +897,7 @@ class EosDesigns(EosDesignsRootModel):
 
                 Args:
                     ipv4_underlay_peers: Subclass of AvdModel.
-                    use_separate_mlag_peer_group_for_overlay: To set default BGP peer group name for MLAG overlay to MLAG-IPv4-OVERLAY-PEER.
+                    use_separate_mlag_peer_group_for_overlay: Configure a different BGP peer group for MLAG for underlay and overlay.
                     mlag_ipv4_underlay_peer: Subclass of AvdModel.
                     evpn_overlay_peers: Subclass of AvdModel.
                     evpn_overlay_core: Subclass of AvdModel.

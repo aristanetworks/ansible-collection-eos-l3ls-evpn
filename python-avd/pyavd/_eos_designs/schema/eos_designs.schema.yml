@@ -215,7 +215,8 @@ keys:
       use_separate_mlag_peer_group_for_overlay:
         type: bool
         default: false
-        description: To set default BGP peer group name for MLAG overlay to MLAG-IPv4-OVERLAY-PEER.
+        description: Configure a different BGP peer group for MLAG for underlay and
+          overlay.
       mlag_ipv4_underlay_peer:
         type: dict
         keys:
