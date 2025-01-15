@@ -8,6 +8,7 @@ monitor_connectivity:
     - name: HOST_SET
       interfaces: Loopback2-4, Loopback10-12
   local_interfaces: GLOBAL_SET
+  name_server_group: mynameserver1
   hosts:
     - name: server1
       description: server1_connectivity_monitor

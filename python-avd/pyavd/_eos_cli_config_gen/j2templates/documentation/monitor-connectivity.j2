@@ -81,6 +81,12 @@
 {%             endif %}
 {%         endfor %}
 {%     endif %}
+{%     if monitor_connectivity.name_server_group is arista.avd.defined %}
+
+##### Name-server
+
+Name-server Group: {{ monitor_connectivity.name_server_group }}
+{%     endif %}
 
 ### Monitor Connectivity Device Configuration
 

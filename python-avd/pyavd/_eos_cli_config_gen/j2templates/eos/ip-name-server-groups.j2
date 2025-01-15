@@ -1,0 +1,32 @@
+{#
+ Copyright (c) 2023-2025 Arista Networks, Inc.
+ Use of this source code is governed by the Apache License 2.0
+ that can be found in the LICENSE file.
+#}
+{% for name_server_group in ip_name_server_groups | arista.avd.natural_sort("name") %}
+!
+ip name-server group {{ name_server_group.name }}
+{%     set all_name_servers = [] %}
+{%     for server in name_server_group.name_servers | arista.avd.default([]) %}
+{%         set name_server = {} %}
+{%         if server.priority is not arista.avd.defined %}
+{%             do name_server.setdefault('priority', 0) %}
+{%         endif %}
+{%         do name_server.update(server) %}
+{%         do all_name_servers.append(name_server) %}
+{%     endfor %}
+{%     for server in all_name_servers | arista.avd.natural_sort("ip_address") | arista.avd.natural_sort("vrf") | arista.avd.natural_sort("priority") %}
+{%         if server.priority != 0 %}
+{%             set name_server_cli = "name-server vrf " ~ server["vrf"] ~ " " ~ server["ip_address"] ~ " priority " ~ server["priority"] %}
+{%         else %}
+{%             set name_server_cli = "name-server vrf " ~ server["vrf"] ~ " " ~ server["ip_address"] %}
+{%         endif %}
+   {{ name_server_cli }}
+{%     endfor %}
+{%     if name_server_group.dns_domain is arista.avd.defined %}
+   dns domain {{ name_server_group.dns_domain }}
+{%     endif %}
+{%     if name_server_group.ip_domain_list is arista.avd.defined %}
+   ip domain-list {{ name_server_group.ip_domain_list }}
+{%     endif %}
+{% endfor %}
