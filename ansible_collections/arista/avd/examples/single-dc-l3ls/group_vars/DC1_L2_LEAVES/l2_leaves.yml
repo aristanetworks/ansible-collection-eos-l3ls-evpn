@@ -1,0 +1,23 @@
+---
+type: l2leaf
+
+l2leaf:
+  defaults:
+    platform: vEOS-lab
+    spanning_tree_mode: mstp
+
+  node_groups:
+    - group: DC1_L2_LEAF1
+      uplink_switches: [dc1-leaf1a, dc1-leaf1b]
+      nodes:
+        - name: dc1-leaf1c
+          id: 1
+          mgmt_ip: 172.16.1.151/24
+          uplink_switch_interfaces: [Ethernet8, Ethernet8]
+    - group: DC1_L2_LEAF2
+      uplink_switches: [dc1-leaf2a, dc1-leaf2b]
+      nodes:
+        - name: dc1-leaf2c
+          id: 2
+          mgmt_ip: 172.16.1.152/24
+          uplink_switch_interfaces: [Ethernet8, Ethernet8]
