@@ -1,0 +1,14 @@
+---
+type: l3leaf
+
+l3leaf:
+  defaults:
+    bgp_as: 65042
+    loopback_ipv4_pool: 192.168.45.0/24
+    vtep_loopback_ipv4_pool: 192.168.255.0/24
+    virtual_router_mac_address: 00:1c:73:00:00:01
+    filter:
+      always_include_vrfs_in_tenants: [TenantA]
+  nodes:
+    - name: leaf-wan-use-evpn-on-lan
+      id: 13

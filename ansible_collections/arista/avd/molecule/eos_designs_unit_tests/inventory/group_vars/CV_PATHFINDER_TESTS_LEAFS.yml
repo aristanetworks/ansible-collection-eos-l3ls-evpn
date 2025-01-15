@@ -1,0 +1,3 @@
+---
+# Setting back to ebgp for Leaves
+overlay_routing_protocol: ebgp

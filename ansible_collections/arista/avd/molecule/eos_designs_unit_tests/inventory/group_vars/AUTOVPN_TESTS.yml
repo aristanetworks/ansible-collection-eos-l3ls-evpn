@@ -124,6 +124,7 @@ tenants:
             ip_address_virtual: 10.0.100.1/24
       - name: IT
         vrf_id: 100
+        # Removing the default address family
         address_families: []
     l2vlans:
       - id: 101

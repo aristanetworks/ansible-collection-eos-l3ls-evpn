@@ -1,0 +1,18 @@
+# Copyright (c) 2023-2024 Arista Networks, Inc.
+# Use of this source code is governed by the Apache License 2.0
+# that can be found in the LICENSE file.
+# yaml-language-server: $schema=../../../_schema/avd_meta_schema.json
+# Line above is used by RedHat's YAML Schema vscode extension
+# Use Ctrl + Space to get suggestions for every field. Autocomplete will pop up after typing 2 letters.
+type: dict
+keys:
+  wan_use_evpn_node_settings_for_lan:
+    type: bool
+    # TODO: AVD 6.0.0 remove this
+    documentation_options:
+      table: wan-settings
+    default: false
+    description: |-
+      Setting to start using `overlay_routing_protocol`, `evpn_role` and `vtep`
+      node settings for LAN side on WAN devices (they were enforced before).
+      This will be the default starting 6.0.0.

@@ -35,7 +35,9 @@ class UtilsMixin(UtilsWanMixin, UtilsZscalerMixin):
     @cached_property
     def _vrf_default_evpn(self: AvdStructuredConfigNetworkServices) -> bool:
         """Return boolean telling if VRF "default" is running EVPN or not."""
-        if not (self.shared_utils.network_services_l3 and self.shared_utils.overlay_vtep and self.shared_utils.overlay_evpn):
+        if not (
+            self.shared_utils.network_services_l3 and ((self.shared_utils.overlay_vtep and self.shared_utils.overlay_evpn) or self.shared_utils.is_wan_router)
+        ):
             return False
 
         for tenant in self.shared_utils.filtered_tenants:
@@ -102,7 +104,7 @@ class UtilsMixin(UtilsWanMixin, UtilsZscalerMixin):
 
             vrf_default_redistribute_static = default(tenant.vrfs["default"].redistribute_static, vrf_default_redistribute_static)
 
-        if self.shared_utils.overlay_evpn and self.shared_utils.overlay_vtep:
+        if (self.shared_utils.overlay_evpn and self.shared_utils.overlay_vtep) or self.shared_utils.is_wan_router:
             # This is an EVPN VTEP
             redistribute_in_underlay = False
             redistribute_in_overlay = vrf_default_redistribute_static and vrf_default_ipv4_static_routes

@@ -29,11 +29,13 @@ class RoutingMixin:
     @cached_property
     def overlay_routing_protocol(self: SharedUtils) -> str:
         default_overlay_routing_protocol = self.node_type_key_data.default_overlay_routing_protocol
+        if self.is_wan_router and self.inputs.wan_use_evpn_node_settings_for_lan:
+            default_overlay_routing_protocol = "none"
         return (self.inputs.overlay_routing_protocol or default_overlay_routing_protocol).lower()
 
     @cached_property
     def overlay_address_families(self: SharedUtils) -> list[str]:
-        if self.overlay_routing_protocol in ["ebgp", "ibgp"]:
+        if self.overlay_routing_protocol in ["ebgp", "ibgp"] or self.is_wan_router:
             default_overlay_address_families = self.node_type_key_data.default_overlay_address_families
             return self.node_config.overlay_address_families._as_list() or default_overlay_address_families._as_list()
         return []

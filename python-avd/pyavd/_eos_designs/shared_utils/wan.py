@@ -30,17 +30,7 @@ class WanMixin:
             return None
 
         default_wan_role = self.node_type_key_data.default_wan_role
-        wan_role = self.node_config.wan_role or default_wan_role
-        if wan_role is not None and self.overlay_routing_protocol != "ibgp":
-            msg = "Only 'ibgp' is supported as 'overlay_routing_protocol' for WAN nodes."
-            raise AristaAvdError(msg)
-        if wan_role == "server" and self.evpn_role != "server":
-            msg = "'wan_role' server requires 'evpn_role' server."
-            raise AristaAvdError(msg)
-        if wan_role == "client" and self.evpn_role != "client":
-            msg = "'wan_role' client requires 'evpn_role' client."
-            raise AristaAvdError(msg)
-        return wan_role
+        return self.node_config.wan_role or default_wan_role
 
     @cached_property
     def is_wan_router(self: SharedUtils) -> bool:
@@ -592,3 +582,7 @@ class WanMixin:
             return None
 
         return self.inputs.wan_stun_dtls_profile_name
+
+    def vrf_has_wan_vni(self: SharedUtils, vrf_name: str) -> bool:
+        """Returns True if the VRF `vrf_name` is present under wan_virtual_topologies and wan_vni is set."""
+        return vrf_name in self.inputs.wan_virtual_topologies.vrfs and self.inputs.wan_virtual_topologies.vrfs[vrf_name].wan_vni

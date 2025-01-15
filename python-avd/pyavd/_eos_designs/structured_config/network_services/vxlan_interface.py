@@ -154,7 +154,7 @@ class VxlanInterfaceMixin(UtilsMixin):
                         context_keys=["id", "vni"],
                     )
 
-        if self.shared_utils.network_services_l3 and self.shared_utils.overlay_evpn_vxlan:
+        if self.shared_utils.network_services_l3 and (self.shared_utils.overlay_evpn_vxlan or self.shared_utils.is_wan_router):
             vrf_name = vrf.name
 
             # Only configure VNI for VRF if the VRF is EVPN enabled

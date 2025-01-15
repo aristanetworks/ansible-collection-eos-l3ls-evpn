@@ -24,6 +24,7 @@
     | [<samp>wan_mode</samp>](## "wan_mode") | String |  | `cv-pathfinder` | Valid Values:<br>- <code>autovpn</code><br>- <code>cv-pathfinder</code> | Select if the WAN should be run using CV Pathfinder or AutoVPN only. |
     | [<samp>wan_stun_dtls_disable</samp>](## "wan_stun_dtls_disable") | Boolean |  | `False` |  | WAN STUN connections are authenticated and secured with DTLS by default.<br>For CV Pathfinder deployments CloudVision will automatically deploy certificates on the devices.<br>In case of AutoVPN the certificates must be deployed manually to all devices.<br><br>For LAB environments this can be disabled, if there are no certificates available.<br>This should NOT be disabled for a WAN network connected to the internet, since it will leave the STUN service exposed with no authentication. |
     | [<samp>wan_stun_dtls_profile_name</samp>](## "wan_stun_dtls_profile_name") | String |  | `STUN-DTLS` |  | Name of the SSL profile used for DTLS on WAN STUN connections.<br>When using automatic ceritficate deployment via CloudVision this name must be the same on all WAN routers. |
+    | [<samp>wan_use_evpn_node_settings_for_lan</samp>](## "wan_use_evpn_node_settings_for_lan") | Boolean |  | `False` |  | Setting to start using `overlay_routing_protocol`, `evpn_role` and `vtep`<br>node settings for LAN side on WAN devices (they were enforced before).<br>This will be the default starting 6.0.0. |
 
 === "YAML"
 
@@ -85,4 +86,9 @@
     # Name of the SSL profile used for DTLS on WAN STUN connections.
     # When using automatic ceritficate deployment via CloudVision this name must be the same on all WAN routers.
     wan_stun_dtls_profile_name: <str; default="STUN-DTLS">
+
+    # Setting to start using `overlay_routing_protocol`, `evpn_role` and `vtep`
+    # node settings for LAN side on WAN devices (they were enforced before).
+    # This will be the default starting 6.0.0.
+    wan_use_evpn_node_settings_for_lan: <bool; default=False>
     ```

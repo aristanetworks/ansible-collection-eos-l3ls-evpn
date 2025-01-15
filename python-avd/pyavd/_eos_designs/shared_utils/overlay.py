@@ -33,6 +33,8 @@ class OverlayMixin:
     def evpn_role(self: SharedUtils) -> str | None:
         if self.underlay_router:
             default_evpn_role = self.node_type_key_data.default_evpn_role
+            if self.is_wan_router and self.inputs.wan_use_evpn_node_settings_for_lan:
+                default_evpn_role = None
             return default(self.node_config.evpn_role, default_evpn_role)
         return None
 

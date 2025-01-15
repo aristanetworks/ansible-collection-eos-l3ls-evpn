@@ -634,10 +634,10 @@ router_bgp:
       route_map: RM-CONN-2-BGP
   address_family_evpn:
     peer_groups:
-    - name: WAN-RR-OVERLAY-PEERS
+    - name: WAN-OVERLAY-PEERS
       activate: true
       encapsulation: path-selection
-    - name: WAN-OVERLAY-PEERS
+    - name: WAN-RR-OVERLAY-PEERS
       activate: true
       encapsulation: path-selection
     next_hop:

@@ -1,0 +1,247 @@
+aaa_root:
+  disabled: true
+config_end: true
+enable_password:
+  disabled: true
+hostname: leaf-wan-use-evpn-on-lan
+ip_igmp_snooping:
+  globally_enabled: true
+ip_routing: true
+ip_virtual_router_mac_address: 00:1c:73:00:00:01
+is_deployed: true
+loopback_interfaces:
+- name: Loopback0
+  description: ROUTER_ID
+  shutdown: false
+  ip_address: 192.168.45.13/32
+- name: Loopback1
+  description: VXLAN_TUNNEL_SOURCE
+  shutdown: false
+  ip_address: 192.168.255.13/32
+management_api_http:
+  enable_https: true
+  enable_vrfs:
+  - name: MGMT
+metadata:
+  fabric_name: EOS_DESIGNS_UNIT_TESTS
+prefix_lists:
+- name: PL-LOOPBACKS-EVPN-OVERLAY
+  sequence_numbers:
+  - sequence: 10
+    action: permit 192.168.45.0/24 eq 32
+  - sequence: 20
+    action: permit 192.168.255.0/24 eq 32
+route_maps:
+- name: RM-CONN-2-BGP
+  sequence_numbers:
+  - sequence: 10
+    type: permit
+    match:
+    - ip address prefix-list PL-LOOPBACKS-EVPN-OVERLAY
+router_bfd:
+  multihop:
+    interval: 300
+    min_rx: 300
+    multiplier: 3
+router_bgp:
+  as: '65042'
+  router_id: 192.168.45.13
+  maximum_paths:
+    paths: 4
+    ecmp: 4
+  updates:
+    wait_install: true
+  bgp:
+    default:
+      ipv4_unicast: false
+  peer_groups:
+  - name: IPv4-UNDERLAY-PEERS
+    type: ipv4
+    send_community: all
+    maximum_routes: 12000
+  - name: EVPN-OVERLAY-PEERS
+    type: evpn
+    update_source: Loopback0
+    bfd: true
+    ebgp_multihop: 3
+    send_community: all
+    maximum_routes: 0
+  redistribute:
+    connected:
+      enabled: true
+      route_map: RM-CONN-2-BGP
+  vlans:
+  - id: 1000
+    tenant: TenantA
+    rd: 192.168.45.13:2000
+    route_targets:
+      both:
+      - 2000:2000
+    redistribute_routes:
+    - learned
+  - id: 100
+    tenant: TenantA
+    rd: 192.168.45.13:1100
+    route_targets:
+      both:
+      - 1100:1100
+    redistribute_routes:
+    - learned
+  - id: 101
+    tenant: TenantA
+    rd: 192.168.45.13:1101
+    route_targets:
+      both:
+      - 1101:1101
+    redistribute_routes:
+    - learned
+  - id: 666
+    tenant: TenantC
+    rd: 192.168.45.13:1666
+    route_targets:
+      both:
+      - 1666:1666
+    redistribute_routes:
+    - learned
+  address_family_evpn:
+    peer_groups:
+    - name: EVPN-OVERLAY-PEERS
+      activate: true
+  address_family_ipv4:
+    peer_groups:
+    - name: IPv4-UNDERLAY-PEERS
+      activate: true
+    - name: EVPN-OVERLAY-PEERS
+      activate: false
+  vrfs:
+  - name: default
+    rd: 192.168.45.13:1
+    route_targets:
+      import:
+      - address_family: evpn
+        route_targets:
+        - '1:1'
+      export:
+      - address_family: evpn
+        route_targets:
+        - '1:1'
+  - name: IT
+    rd: 192.168.45.13:1000
+    route_targets:
+      import:
+      - address_family: evpn
+        route_targets:
+        - 1000:1000
+      export:
+      - address_family: evpn
+        route_targets:
+        - 1000:1000
+    router_id: 192.168.45.13
+    redistribute:
+      connected:
+        enabled: true
+  - name: PROD
+    rd: 192.168.45.13:142
+    route_targets:
+      import:
+      - address_family: evpn
+        route_targets:
+        - 142:142
+      export:
+      - address_family: evpn
+        route_targets:
+        - 142:142
+    router_id: 192.168.45.13
+    redistribute:
+      connected:
+        enabled: true
+  - name: ATTRACTED-VRF-FROM-UPLINK
+    rd: 192.168.45.13:666
+    route_targets:
+      import:
+      - address_family: evpn
+        route_targets:
+        - 666:666
+      export:
+      - address_family: evpn
+        route_targets:
+        - 666:666
+    router_id: 192.168.45.13
+    redistribute:
+      connected:
+        enabled: true
+service_routing_protocols_model: multi-agent
+transceiver_qsfp_default_mode_4x10: true
+vlan_interfaces:
+- name: Vlan1000
+  description: VLAN1000
+  shutdown: true
+  vrf: IT
+  ip_address_virtual: 10.0.100.1/24
+  tenant: TenantA
+- name: Vlan100
+  description: VLAN100
+  shutdown: true
+  vrf: PROD
+  ip_address_virtual: 10.0.100.1/24
+  tenant: TenantA
+- name: Vlan666
+  description: VLAN666
+  shutdown: true
+  vrf: ATTRACTED-VRF-FROM-UPLINK
+  ip_address_virtual: 10.66.66.66/24
+  tenant: TenantC
+vlan_internal_order:
+  allocation: ascending
+  range:
+    beginning: 1006
+    ending: 1199
+vlans:
+- id: 1000
+  name: VLAN1000
+  tenant: TenantA
+- id: 100
+  name: VLAN100
+  tenant: TenantA
+- id: 101
+  name: VLAN101
+  tenant: TenantA
+- id: 666
+  name: VLAN666
+  tenant: TenantC
+vrfs:
+- name: MGMT
+  ip_routing: false
+- name: IT
+  ip_routing: true
+  tenant: TenantA
+- name: PROD
+  ip_routing: true
+  tenant: TenantA
+- name: ATTRACTED-VRF-FROM-UPLINK
+  ip_routing: true
+  tenant: TenantC
+vxlan_interface:
+  vxlan1:
+    description: leaf-wan-use-evpn-on-lan_VTEP
+    vxlan:
+      source_interface: Loopback1
+      udp_port: 4789
+      vlans:
+      - id: 1000
+        vni: 2000
+      - id: 100
+        vni: 1100
+      - id: 101
+        vni: 1101
+      - id: 666
+        vni: 1666
+      vrfs:
+      - name: default
+        vni: 1
+      - name: IT
+        vni: 1000
+      - name: PROD
+        vni: 142
+      - name: ATTRACTED-VRF-FROM-UPLINK
+        vni: 666

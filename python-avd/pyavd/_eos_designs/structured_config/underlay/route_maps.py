@@ -35,7 +35,7 @@ class RouteMapsMixin(UtilsMixin):
 
         route_maps = []
 
-        if self.shared_utils.overlay_routing_protocol != "none" and self.inputs.underlay_filter_redistribute_connected:
+        if (self.shared_utils.overlay_routing_protocol != "none" or self.shared_utils.is_wan_router) and self.inputs.underlay_filter_redistribute_connected:
             # RM-CONN-2-BGP
             sequence_10 = {
                 "sequence": 10,

@@ -4,6 +4,8 @@ wan_mode: cv-pathfinder
 # Have all the router in the examples use eBGP as underlay routing protocol -
 # the default is "none" for WAN routers"
 underlay_routing_protocol: ebgp
+# the default is currently ibgp for WAN routers but need to change it soon.
+overlay_routing_protocol: none
 
 ipv4_prefix_list_catalog:
   - name: ALLOW-DEFAULT
@@ -34,6 +36,9 @@ cv_pathfinder_regions:
       - name: Site423
         id: 423
         location: Somewhere-warm
+      - name: Site12
+        id: 12
+        location: 12 Downing Street, London
   - name: AVD_Land_East
     id: 43
     description: AVD Region
@@ -105,8 +110,8 @@ wan_router:
     # cv-pathfinder-edge is not configured on cv-pathfinder-edge1
     - group: Site511
       uplink_type: p2p-vrfs
-      uplink_switches: [ site-ha-disabled-leaf ]
-      uplink_interfaces: [ Ethernet52 ]
+      uplink_switches: [site-ha-disabled-leaf]
+      uplink_interfaces: [Ethernet52]
       cv_pathfinder_region: AVD_Land_East
       cv_pathfinder_site: Site511
       wan_ha:
@@ -220,8 +225,8 @@ wan_router:
       cv_pathfinder_region: AVD_Land_West
       cv_pathfinder_site: Site423
       uplink_type: p2p-vrfs
-      uplink_switches: [ site-ha-enabled-leaf2A, site-ha-enabled-leaf2B ]
-      uplink_interfaces: [ Ethernet52, Ethernet53 ]
+      uplink_switches: [site-ha-enabled-leaf2A, site-ha-enabled-leaf2B]
+      uplink_interfaces: [Ethernet52, Ethernet53]
       wan_ha:
         enabled: true # TODO AVD4.8.0: Remove once WAN HA is GA.
       nodes:
@@ -251,8 +256,8 @@ wan_router:
         always_include_vrfs_in_tenants: [TenantA, TenantB]
       uplink_ipv4_pool: 172.17.0.0/16
       uplink_type: p2p-vrfs
-      uplink_switches: [ site-ha-enabled-leaf1 ]
-      uplink_interfaces: [ Ethernet52 ]
+      uplink_switches: [site-ha-enabled-leaf1]
+      uplink_interfaces: [Ethernet52]
       cv_pathfinder_transit_mode: region
       # Disable HA IPsec
       wan_ha:
@@ -520,6 +525,12 @@ tenants:
             ip_address_virtual: 10.0.100.1/24
       - name: IT
         vrf_id: 1000
+        svis:
+          - id: 1000
+            name: VLAN1000
+            ip_address_virtual: 10.0.100.1/24
+            nodes:
+              - node: leaf-use-wan-evpn-on-lan
     l2vlans:
       - id: 101
         name: VLAN101

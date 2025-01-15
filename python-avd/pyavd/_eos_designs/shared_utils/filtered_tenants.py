@@ -421,6 +421,7 @@ class FilteredTenantsMixin:
 
         Otherwise we will autodetect:
         - If the VRF is part of an overlay we will configure BGP for it.
+        - If the VRF is on a WAN router, we will configure BGP for it.
         - If any BGP peers are configured we will configure BGP for it.
         - If uplink type is p2p_vrfs and the vrf is included in uplink VRFs.
         """
@@ -430,6 +431,7 @@ class FilteredTenantsMixin:
         vrf_address_families = [af for af in vrf.address_families if af in self.overlay_address_families]
         return any(
             [
+                (self.is_wan_router and self.vrf_has_wan_vni(vrf.name)),
                 vrf_address_families,
                 vrf.bgp_peers,
                 (self.uplink_type == "p2p-vrfs" and vrf.name in (self.get_switch_fact("uplink_switch_vrfs", required=False) or [])),

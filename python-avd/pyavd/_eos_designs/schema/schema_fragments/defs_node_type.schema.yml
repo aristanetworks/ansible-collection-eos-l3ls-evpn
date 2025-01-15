@@ -499,9 +499,9 @@ $defs:
             documentation_options:
               table: node-type-bgp-configuration
             description: |-
-                BGP AS <1-4294967295> or AS number in asdot notation "<1-65535>.<0-65535>".
-                For asdot notation in YAML inputs, the value must be put in quotes, to prevent it from being interpreted as a float number.
-                Required with eBGP.
+              BGP AS <1-4294967295> or AS number in asdot notation "<1-65535>.<0-65535>".
+              For asdot notation in YAML inputs, the value must be put in quotes, to prevent it from being interpreted as a float number.
+              Required with eBGP.
             type: str
             convert_types:
               - int
@@ -1265,8 +1265,6 @@ $defs:
               This is used both for AutoVPN and Pathfinder designs.
               That means if `wan_mode` root key is set to `autovpn` or `cv-pathfinder`.
               `server` indicates that the router is a route-reflector.
-
-              Only supported if `overlay_routing_protocol` is set to `ibgp`.
           cv_pathfinder_transit_mode:
             documentation_options:
               table: node-type-wan-configuration

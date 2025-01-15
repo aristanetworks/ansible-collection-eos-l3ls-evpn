@@ -22,13 +22,13 @@ class IpExtCommunityListsMixin(UtilsMixin):
     @cached_property
     def ip_extcommunity_lists(self: AvdStructuredConfigOverlay) -> list | None:
         """Return structured config for ip_extcommunity_lists."""
-        if self.shared_utils.overlay_routing_protocol != "ibgp":
+        if self.shared_utils.overlay_routing_protocol != "ibgp" and not self.shared_utils.is_wan_router:
             return None
 
         if self.shared_utils.evpn_role == "server" and not self.shared_utils.is_wan_router:
             return None
 
-        if self.shared_utils.overlay_vtep:
+        if self.shared_utils.overlay_vtep or self.shared_utils.is_wan_router:
             return [
                 {
                     "name": "ECL-EVPN-SOO",

@@ -29,7 +29,7 @@ class PrefixListsMixin(UtilsMixin):
         if self.shared_utils.underlay_bgp is not True and not self.shared_utils.is_wan_router:
             return None
 
-        if self.shared_utils.overlay_routing_protocol == "none":
+        if self.shared_utils.overlay_routing_protocol == "none" and not self.shared_utils.is_wan_router:
             return None
 
         if not self.inputs.underlay_filter_redistribute_connected:
