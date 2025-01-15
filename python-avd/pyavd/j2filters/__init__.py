@@ -10,6 +10,7 @@ from .is_in_filter import is_in_filter
 from .list_compress import list_compress
 from .natural_sort import natural_sort
 from .range_expand import range_expand
+from .secure_hash import secure_hash
 from .snmp_hash import snmp_hash
 from .status_render import status_render
 
@@ -23,6 +24,7 @@ __all__ = [
     "list_compress",
     "natural_sort",
     "range_expand",
+    "secure_hash",
     "snmp_hash",
     "status_render",
 ]
