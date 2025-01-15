@@ -5,6 +5,7 @@ lldp:
   timer: 30
   holdtime: 90
   management_address: 192.168.1.1/24
+  receive_packet_tagged_drop: true
   vrf: Management
   tlvs:
     - name: system-capabilities
