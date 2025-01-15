@@ -1,0 +1,3 @@
+---
+queue_monitor_streaming:
+  enable: false

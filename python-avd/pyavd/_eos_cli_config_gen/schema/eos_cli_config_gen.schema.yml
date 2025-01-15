@@ -6439,7 +6439,9 @@ keys:
       timer:
         type: int
       timer_reinitialization:
-        type: str
+        type: int
+        convert_types:
+        - str
       holdtime:
         type: int
       management_address:

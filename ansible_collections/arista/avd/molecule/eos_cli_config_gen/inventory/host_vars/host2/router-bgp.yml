@@ -10,6 +10,8 @@ router_bgp:
     additional_paths:
       receive: false
       send: disabled
+  neighbor_default:
+    send_community: large
   graceful_restart:
     enabled: true
   graceful_restart_helper:
@@ -150,6 +152,9 @@ router_bgp:
   address_family_ipv4_multicast:
     redistribute:
       ospf:
+        match_internal:
+          enabled: true
+          route_map: AFIPV4M_OSPF_INTERNAL
         match_external:
           enabled: true
           route_map: AFIPV4M_OSPF_EXTERNAL
@@ -170,6 +175,7 @@ router_bgp:
           enabled: true
           route_map:  RM-address_family_ipv6_multicast-OSPFv3
   address_family_ipv4_labeled_unicast:
+    graceful_restart: true
     bgp:
       additional_paths:
         send: any

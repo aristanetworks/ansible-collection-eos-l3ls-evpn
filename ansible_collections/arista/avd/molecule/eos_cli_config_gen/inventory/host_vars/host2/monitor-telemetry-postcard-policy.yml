@@ -1,0 +1,13 @@
+---
+monitor_telemetry_postcard_policy:
+  disabled: true
+  ingress:
+    collection:
+      source: 10.3.3.3
+      destination: 10.3.3.4
+    sample:
+      tcp_udp_checksum:
+        value: 65000
+        mask: "0xffff"
+  marker_vxlan:
+    enabled: true

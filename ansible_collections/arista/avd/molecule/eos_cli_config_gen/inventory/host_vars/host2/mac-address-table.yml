@@ -1,0 +1,5 @@
+---
+### MAC address table ###
+mac_address_table:
+  notification_host_flap:
+    logging: false

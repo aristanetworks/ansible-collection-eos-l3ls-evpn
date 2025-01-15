@@ -1,0 +1,4 @@
+---
+priority_flow_control:
+  watchdog:
+    override_action_drop: true

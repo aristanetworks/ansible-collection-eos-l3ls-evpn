@@ -8,9 +8,6 @@ monitor_telemetry_postcard_policy:
       version: 2
     sample:
       rate: 16384
-      tcp_udp_checksum:
-        value: 65000
-        mask: "0xffff"
   marker_vxlan:
     enabled: true
     header_word_zero_bit: 30
@@ -19,6 +16,7 @@ monitor_telemetry_postcard_policy:
       ingress_sample_policy: samplepo1
     - name: profile2
       ingress_sample_policy: samplepo2
+    - name: profile3
   sample_policies:
     - name: samplepo1
       match_rules:
@@ -60,3 +58,10 @@ monitor_telemetry_postcard_policy:
                 - bgp
               destination_ports:
                 - https
+      # sample policy with undefined protocols
+    - name: samplepo4
+      match_rules:
+        - name: rule1
+          type: ipv4
+          destination_prefix: 10.3.3.0/24
+          source_prefix: 3.4.5.0/24

@@ -18,3 +18,10 @@ daemon_terminattr:
   grpcreadonly: true
   cvconfig: true
   cvsourceintf: Vlan100
+  cvsourceip: 10.10.10.10
+  cvobscurekeyfile: true
+  ecodhcpaddr: 127.0.0.1:67
+  ipfix: true
+  sflow: true
+  sflowaddr: 10.10.10.11
+  ipfixaddr: 10.10.10.12

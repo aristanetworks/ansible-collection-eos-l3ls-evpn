@@ -1,0 +1,5 @@
+---
+ipv6_dhcp_relay:
+  option:
+    link_layer_address: false
+    remote_id_format: "%m:%p"

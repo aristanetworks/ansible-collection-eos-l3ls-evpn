@@ -1,0 +1,7 @@
+---
+### QOS ###
+qos:
+  map:
+    cos:
+      - "1 2 3 4 to traffic-class 2"
+      - "3 to traffic-class 3"

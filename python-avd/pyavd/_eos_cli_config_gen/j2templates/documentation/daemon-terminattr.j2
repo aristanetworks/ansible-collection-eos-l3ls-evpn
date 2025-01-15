@@ -19,7 +19,7 @@
 {%         elif cluster.cvauth.method is arista.avd.defined('token') and cluster.cvauth.token_file is arista.avd.defined %}
 {%             set auth = 'token,' ~ cluster.cvauth.token_file %}
 {%         elif cluster.cvauth.method is arista.avd.defined('token-secure') and cluster.cvauth.token_file is arista.avd.defined %}
-{%             set auth = 'token-secure,' ~ cluster.cvauth.token_file %}+
+{%             set auth = 'token-secure,' ~ cluster.cvauth.token_file %}
 {%         elif cluster.cvauth.method is arista.avd.defined('certs') and cluster.cvauth.cert_file is arista.avd.defined and cluster.cvauth.key_file is arista.avd.defined %}
 {%             set auth = 'certs,' ~ cluster.cvauth.cert_file ~ "," ~ cluster.cvauth.key_file %}
 {%             if  cluster.cvauth.ca_file is arista.avd.defined %}

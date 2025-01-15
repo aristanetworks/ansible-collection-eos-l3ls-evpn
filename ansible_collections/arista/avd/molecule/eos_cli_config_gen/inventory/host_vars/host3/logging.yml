@@ -1,0 +1,4 @@
+---
+logging:
+  format:
+    timestamp: traditional year timezone

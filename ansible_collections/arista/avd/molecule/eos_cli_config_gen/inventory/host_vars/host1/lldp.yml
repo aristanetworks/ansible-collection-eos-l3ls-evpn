@@ -4,8 +4,11 @@ lldp:
   run: false
   timer: 30
   holdtime: 90
+  timer_reinitialization: 10
   management_address: 192.168.1.1/24
   vrf: Management
+  # Uncomment below line when issue 4794 is gets fixed
+  # receive_packet_tagged_drop: true
   tlvs:
     - name: system-capabilities
       transmit: false

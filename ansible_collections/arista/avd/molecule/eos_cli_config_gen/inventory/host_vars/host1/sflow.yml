@@ -26,6 +26,14 @@ sflow:
         - destination: 10.6.75.62
       source_interface: Management1
       source: 1.1.1.1
+    - name: DDD
+      destinations:
+        - destination: 10.6.75.62
+      source: 1.1.1.1
+    - name: EEE
+      destinations:
+        - destination: 10.6.75.62
+      source: 1.1.1.1
   destinations:
     - destination: 10.6.75.62
       port: 123
