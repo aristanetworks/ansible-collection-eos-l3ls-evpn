@@ -65,7 +65,9 @@ ipv6_prefix_lists:
 - name: PL-LOOPBACKS-EVPN-OVERLAY-V6
   sequence_numbers:
   - sequence: 10
-    action: permit 2001:1::/64 eq 128
+    action: permit 2001:1::/116 eq 128
+  - sequence: 20
+    action: permit 2001:1::1000/128 eq 128
 ipv6_unicast_routing: true
 is_deployed: true
 local_users:

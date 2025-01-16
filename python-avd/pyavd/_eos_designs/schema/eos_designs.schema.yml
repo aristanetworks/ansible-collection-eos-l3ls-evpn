@@ -5862,6 +5862,7 @@ $defs:
               type: str
               description: Comma separated list of prefixes (IPv4 address/Mask) or
                 ranges (IPv4_address-IPv4_address).
+              format: ipv4_pool
             prefix_size:
               type: int
               convert_types:
@@ -6117,6 +6118,7 @@ $defs:
               type: str
               description: Comma separated list of prefixes (IPv4 address/Mask) or
                 ranges (IPv4_address-IPv4_address).
+              format: ipv4_pool
             underlay_l2_multicast_group_ipv4_pool_offset:
               type: int
               default: 0
@@ -6169,6 +6171,7 @@ $defs:
               type: str
               description: Comma separated list of prefixes (IPv4 address/Mask) or
                 ranges (IPv4_address-IPv4_address).
+              format: ipv4_pool
               required: true
             evpn_underlay_l3_multicast_group_ipv4_pool_offset:
               type: int
@@ -6387,9 +6390,8 @@ $defs:
                   this pool based on the ID of the first MLAG switch.
 
                   If not set, "mlag_peer_l3_ipv4_pool" or "mlag_peer_ipv4_pool" will
-                  be used.
-
-                  '
+                  be used.'
+                format: ipv4_pool
               ip_helpers:
                 type: list
                 primary_key: ip_helper
@@ -6518,10 +6520,12 @@ $defs:
                           type: str
                           description: Comma separated list of prefixes (IPv4 address/Mask)
                             or ranges (IPv4_address-IPv4_address).
+                          format: ipv4_pool
                         ipv6_pool:
                           type: str
                           description: Comma separated list of prefixes (IPv6 address/Mask)
                             or ranges (IPv6_address-IPv6_address).
+                          format: ipv6_pool
               ospf:
                 documentation_options:
                   table: network-services-vrfs-ospf-settings
@@ -7894,7 +7898,7 @@ $defs:
 
               uplink interface index, ''max_uplink_switches'' and ''max_parallel_uplinks''.'
             type: str
-            format: ipv4_cidr
+            format: ipv4_pool
           uplink_interfaces:
             documentation_options:
               table: node-type-uplink-configuration
@@ -8208,7 +8212,7 @@ $defs:
               The IPv4 address used for Loopback0 will be derived from this pool based
               on the node id and loopback_ipv4_offset.'
             type: str
-            format: ipv4_cidr
+            format: ipv4_pool
           loopback_ipv4_address:
             documentation_options:
               table: node-type-loopback-vtep-configuration
@@ -8227,7 +8231,7 @@ $defs:
               (IPv4_address-IPv4_address). The IPv4 address used for VTEP-Loopback
               will be derived from this pool based on the node id and loopback_ipv4_offset.
             type: str
-            format: ipv4_cidr
+            format: ipv4_pool
           vtep_loopback_ipv4_address:
             documentation_options:
               table: node-type-loopback-vtep-configuration
@@ -8262,7 +8266,7 @@ $defs:
               (IPv6_address-IPv6_address). The IPv6 address used for Loopback0 will
               be derived from this pool based on the node id and 'loopback_ipv6_offset'.
             type: str
-            format: ipv6_cidr
+            format: ipv6_pool
           loopback_ipv6_offset:
             documentation_options:
               table: node-type-loopback-vtep-configuration
@@ -8648,7 +8652,7 @@ $defs:
 
               '
             type: str
-            format: ipv4_cidr
+            format: ipv4_pool
           mlag_peer_vlan:
             documentation_options:
               table: node-type-l2-mlag-configuration
@@ -8689,6 +8693,7 @@ $defs:
 
               Required for MLAG leafs when `mlag_peer_address_family` is `ipv4` (default).'
             type: str
+            format: ipv4_pool
           mlag_peer_ipv6_pool:
             documentation_options:
               table: node-type-l2-mlag-configuration
@@ -8700,6 +8705,7 @@ $defs:
 
               Required for MLAG leafs when `mlag_peer_address_family` is `ipv6`.'
             type: str
+            format: ipv6_pool
           mlag_port_channel_id:
             documentation_options:
               table: node-type-l2-mlag-configuration
@@ -9349,6 +9355,7 @@ $defs:
 
                   Not used for uplink interfaces.'
                 type: str
+                format: ipv4_pool
               max_ha_interfaces:
                 type: int
                 convert_types:
@@ -9479,7 +9486,7 @@ $defs:
                 keys:
                   ipv4_pool:
                     type: str
-                    format: ipv4_cidr
+                    format: ipv4_pool
                     description: 'Comma separated list of prefixes (IPv4 address/Mask)
                       or ranges (IPv4_address-IPv4_address).
 

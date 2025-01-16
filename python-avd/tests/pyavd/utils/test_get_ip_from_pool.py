@@ -70,6 +70,16 @@ POOLS_AND_RANGES = "10.10.10.0/24, 10.20.20.20-10.20.20.29"
             IP_OFFSET,
             "Invalid IP pool(s) '10.0.0.0/24,1.1.1.1-0.0.0.0'. Unable to load '1.1.1.1-0.0.0.0' as an IP range.",
         ),
+        (
+            "10.10.10.10-20",
+            24,
+            1,
+            IP_OFFSET,
+            (
+                "Invalid format of IP pool(s) '10.10.10.10-20'. "
+                "Must be one or more prefixes (like 10.10.10.0/24) and/or ranges (like 10.10.10.10-10.10.10.20) separated by commas."
+            ),
+        ),
     ],
 )
 def test_get_ip_from_pool_invalid(pool: str, prefixlen: int, subnet_offset: int, ip_offset: int, expected: str) -> None:

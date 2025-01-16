@@ -4,20 +4,27 @@
 import ipaddress
 import re
 from collections.abc import Iterator
+from functools import partial
 
 from pyavd._errors import AristaAvdError
+from pyavd._utils import ensure_type
 
 # Not using f-strings since more {} in there would just make it harder to follow.
 # These do not match valid IP addresses, but just something that looks like an IP at first glance.
-LAZY_IPv4_ADDRESS_PATTERN = r"(\d{1,3}\.){3}\d{1,3}"
-LAZY_IPv4_PREFIX_PATTERN = LAZY_IPv4_ADDRESS_PATTERN + r"/\d{1,2}"
-LAZY_IPv4_RANGE_PATTERN = LAZY_IPv4_ADDRESS_PATTERN + r"-" + LAZY_IPv4_ADDRESS_PATTERN
-LAZY_IPv6_ADDRESS_PATTERN = r"([A-Za-z0-9]{0,4}::?){0,7}(?<=:)([A-Za-z0-9]{1,4})?"
-LAZY_IPv6_PREFIX_PATTERN = LAZY_IPv6_ADDRESS_PATTERN + r"/\d{1,3}"
-LAZY_IPv6_RANGE_PATTERN = LAZY_IPv6_ADDRESS_PATTERN + r"-" + LAZY_IPv6_ADDRESS_PATTERN
-PREFIX_PATTERN = r"(" + LAZY_IPv4_PREFIX_PATTERN + r"|" + LAZY_IPv6_PREFIX_PATTERN + r")"
-RANGE_PATTERN = r"(" + LAZY_IPv4_RANGE_PATTERN + r"|" + LAZY_IPv6_RANGE_PATTERN + r")"
+LAZY_IPV4_ADDRESS_PATTERN = r"(\d{1,3}\.){3}\d{1,3}"
+LAZY_IPV4_PREFIX_PATTERN = LAZY_IPV4_ADDRESS_PATTERN + r"/\d{1,2}"
+LAZY_IPV4_RANGE_PATTERN = LAZY_IPV4_ADDRESS_PATTERN + r"-" + LAZY_IPV4_ADDRESS_PATTERN
+LAZY_IPV6_ADDRESS_PATTERN = r"([A-Za-z0-9]{0,4}::?){0,7}(?<=:)([A-Za-z0-9]{1,4})?"
+LAZY_IPV6_PREFIX_PATTERN = LAZY_IPV6_ADDRESS_PATTERN + r"/\d{1,3}"
+LAZY_IPV6_RANGE_PATTERN = LAZY_IPV6_ADDRESS_PATTERN + r"-" + LAZY_IPV6_ADDRESS_PATTERN
+PREFIX_PATTERN = r"(" + LAZY_IPV4_PREFIX_PATTERN + r"|" + LAZY_IPV6_PREFIX_PATTERN + r")"
+RANGE_PATTERN = r"(" + LAZY_IPV4_RANGE_PATTERN + r"|" + LAZY_IPV6_RANGE_PATTERN + r")"
 POOLS_AND_RANGES_PATTERN = re.compile(r"((?P<prefix>" + PREFIX_PATTERN + r")|(?P<range>" + RANGE_PATTERN + r"))([,\ ]+|$)")
+
+# The following are imported by schema validation, but it is easier to maintain in one place.
+FULLMATCH_IP_POOLS_AND_RANGES_PATTERN = re.compile(rf"({POOLS_AND_RANGES_PATTERN.pattern})+")
+FULLMATCH_IPV4_POOLS_AND_RANGES_PATTERN = re.compile(r"((" + LAZY_IPV4_PREFIX_PATTERN + r"|" + LAZY_IPV4_RANGE_PATTERN + r")([,\ ]+|$))+")
+FULLMATCH_IPV6_POOLS_AND_RANGES_PATTERN = re.compile(r"((" + LAZY_IPV6_PREFIX_PATTERN + r"|" + LAZY_IPV6_RANGE_PATTERN + r")([,\ ]+|$))+")
 
 
 def get_ip_from_pool(pool: str, prefixlen: int, subnet_offset: int, ip_offset: int) -> str:
@@ -38,7 +45,7 @@ def get_ip_from_pool(pool: str, prefixlen: int, subnet_offset: int, ip_offset: i
     """
     subnet = None
     remaining_subnet_offset = subnet_offset
-    for pool_network in _pools_from_str(pool):
+    for pool_network in get_networks_from_pool(pool):
         # Storing these since they involve calculations:
         pool_network_size = pool_network.num_addresses
         prefixlen_diff = prefixlen - pool_network.prefixlen
@@ -85,7 +92,25 @@ def get_ip_from_pool(pool: str, prefixlen: int, subnet_offset: int, ip_offset: i
     return str(ip)
 
 
-def _pools_from_str(pool: str) -> Iterator[ipaddress.IPv4Network | ipaddress.IPv6Network]:
+def get_ipv4_networks_from_pool(pool: str) -> Iterator[ipaddress.IPv4Network]:
+    ensure_ipv4_type = partial(ensure_type, item_type=ipaddress.IPv4Network)
+    try:
+        yield from map(ensure_ipv4_type, get_networks_from_pool(pool))
+    except TypeError as e:
+        msg = f"Invalid IP pool(s) '{pool}': {e}"
+        raise AristaAvdError(msg) from e
+
+
+def get_ipv6_networks_from_pool(pool: str) -> Iterator[ipaddress.IPv6Network]:
+    ensure_ipv6_type = partial(ensure_type, item_type=ipaddress.IPv6Network)
+    try:
+        yield from map(ensure_ipv6_type, get_networks_from_pool(pool))
+    except TypeError as e:
+        msg = f"Invalid IP pool(s) '{pool}': {e}"
+        raise AristaAvdError(msg) from e
+
+
+def get_networks_from_pool(pool: str) -> Iterator[ipaddress.IPv4Network | ipaddress.IPv6Network]:
     counter = 0
     matches = re.finditer(POOLS_AND_RANGES_PATTERN, pool)
     for match in matches:
@@ -95,18 +120,16 @@ def _pools_from_str(pool: str) -> Iterator[ipaddress.IPv4Network | ipaddress.IPv
         ip_range = match_dict["range"]
         if ip_prefix:
             try:
-                ip_network = ipaddress.ip_network(ip_prefix, strict=False)
+                yield ipaddress.ip_network(ip_prefix, strict=False)
             except ValueError as e:
-                msg = f"Invalid IP pool(s) '{pool}'. Unable to load '{ip_prefix}' as an IP prefix."
+                msg = f"Invalid IP pool(s) '{pool}'. Unable to load '{ip_prefix}' as an IP prefix: {e}"
                 raise AristaAvdError(msg) from e
-            yield ip_network
 
         if ip_range:
             try:
-                ip_networks_gen = ipaddress.summarize_address_range(*(ipaddress.ip_address(ip) for ip in ip_range.split("-")))
-                yield from ip_networks_gen
-            except ValueError as e:
-                msg = f"Invalid IP pool(s) '{pool}'. Unable to load '{ip_range}' as an IP range."
+                yield from ipaddress.summarize_address_range(*(ipaddress.ip_address(ip) for ip in ip_range.split("-")))
+            except (TypeError, ValueError) as e:
+                msg = f"Invalid IP pool(s) '{pool}'. Unable to load '{ip_range}' as an IP range: {e}"
                 raise AristaAvdError(msg) from e
 
     if not counter:

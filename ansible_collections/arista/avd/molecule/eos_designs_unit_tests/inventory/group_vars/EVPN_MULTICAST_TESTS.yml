@@ -121,7 +121,8 @@ tenants:
     mac_vrf_vni_base: 10000
     evpn_l2_multicast:
       enabled: false
-      underlay_l2_multicast_group_ipv4_pool: 232.0.16.0/20
+      # Testing multiple pools and ranges to represent 232.0.16.0/20
+      underlay_l2_multicast_group_ipv4_pool: 232.0.16.0/31, 232.0.16.2-232.0.19.255, 232.0.20.0/22, 232.0.24.0-232.0.31.255
       underlay_l2_multicast_group_ipv4_pool_offset: 1
     igmp_snooping_querier:
       version: 3
@@ -245,7 +246,8 @@ tenants:
       #  - Enable multicast-routing on VRF
       #  - If node is a vtep and evpn enabled, enable EVPN multicast
       enabled: true
-      evpn_underlay_l3_multicast_group_ipv4_pool: 232.0.32.0/20
+      # Testing multiple pools and ranges to represent 232.0.32.0/20
+      evpn_underlay_l3_multicast_group_ipv4_pool: 232.0.32.0/24, 232.0.33.0-232.0.31.255
       evpn_underlay_l3_multicast_group_ipv4_pool_offset: 1
     vrfs:
       # Inherits from Tenant C
