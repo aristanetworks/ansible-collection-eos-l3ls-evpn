@@ -6,6 +6,7 @@ lldp:
   holdtime: 90
   timer_reinitialization: 10
   management_address: 192.168.1.1/24
+  receive_packet_tagged_drop: true
   vrf: Management
   # Uncomment below line when issue 4794 is gets fixed
   # receive_packet_tagged_drop: true

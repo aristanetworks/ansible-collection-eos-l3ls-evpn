@@ -130,7 +130,7 @@ jobs:
         # Also test minimum ansible version for one scenario.
         include:
           - avd_scenario: 'eos_cli_config_gen'
-            ansible_version: 'ansible-core==2.15.0'
+            ansible_version: 'ansible-core==2.16.0'
     needs: [ file-changes ]
     if: needs.file-changes.outputs.config_gen == 'true'
     steps:
@@ -216,10 +216,7 @@ jobs:
         # Also test minimum ansible version for one scenario.
         include:
           - avd_scenario: 'eos_designs_unit_tests'
-            ansible_version: 'ansible-core==2.15.0'
-            pip_requirements: 'tmp-requirements-minimum.txt'
-          - avd_scenario: 'eos_designs_unit_tests'
-            ansible_version: 'ansible-core>=2.15.0,<2.16.0 --upgrade'
+            ansible_version: 'ansible-core==2.16.0 --upgrade'
             pip_requirements: '.github/requirements-ci.txt'
           - avd_scenario: 'eos_designs_unit_tests'
             ansible_version: 'ansible-core<2.18.0 --upgrade'
@@ -267,7 +264,7 @@ jobs:
           - 'ansible-core<2.19.0 --upgrade'
         include:
           - avd_scenario: 'eos_config_deploy_cvp'
-            ansible_version: 'ansible-core==2.15.0'
+            ansible_version: 'ansible-core==2.16.0'
     needs: [ file-changes ]
     if: needs.file-changes.outputs.cloudvision == 'true' || needs.file-changes.outputs.eos_design == 'true' || needs.file-changes.outputs.config_gen == 'true'
 
@@ -304,7 +301,7 @@ jobs:
           - 'ansible-core<2.19.0 --upgrade'
         include:
           - avd_scenario: 'eos_validate_state'
-            ansible_version: 'ansible-core==2.15.0'
+            ansible_version: 'ansible-core==2.16.0'
     needs: [ file-changes ]
     if: needs.file-changes.outputs.eos_design == 'true' || needs.file-changes.outputs.validate_state == 'true'
     steps:
