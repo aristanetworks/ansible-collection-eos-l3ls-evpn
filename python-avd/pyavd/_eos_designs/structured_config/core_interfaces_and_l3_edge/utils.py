@@ -73,7 +73,7 @@ class UtilsMixin:
 
         if p2p_link.subnet:
             # Resolve IPs from subnet
-            network = ip_network(p2p_link.subnet)
+            network = ip_network(p2p_link.subnet, strict=False)
             p2p_link.ip.extend([f"{ip}/{network.prefixlen}" for ip in islice(network.hosts(), 2)])
 
         elif p2p_link.ip_pool and p2p_link.id and p2p_link.ip_pool in self.inputs_data.p2p_links_ip_pools:
