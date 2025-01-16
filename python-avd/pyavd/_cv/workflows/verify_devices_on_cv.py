@@ -6,7 +6,7 @@ from __future__ import annotations
 from logging import getLogger
 from typing import TYPE_CHECKING
 
-from pyavd._cv.client.exceptions import CVResourceNotFound
+from pyavd._cv.client.exceptions import CVDuplicatedDeviceInfo, CVResourceNotFound
 
 from .models import CVDevice
 
@@ -17,7 +17,7 @@ LOGGER = getLogger(__name__)
 
 
 async def verify_devices_on_cv(
-    *, devices: list[CVDevice], workspace_id: str, skip_missing_devices: bool, warnings: list[Exception], cv_client: CVClient
+    *, devices: list[CVDevice], workspace_id: str, skip_missing_devices: bool, tolerate_duplicated_devices: bool, warnings: list[Exception], cv_client: CVClient
 ) -> None:
     """Verify that the given Devices are already present in the CloudVision Inventory & I&T Studio."""
     LOGGER.info("verify_devices_on_cv: %s", len(devices))
@@ -25,6 +25,9 @@ async def verify_devices_on_cv(
     # Return if we have nothing to do.
     if not devices:
         return
+
+    # Check if structured config of the inventory devices contains overlapping `serial_number`s or `system_mac_address`es.
+    check_for_duplicated_devices(devices=devices, tolerate_duplicated_devices=tolerate_duplicated_devices, warnings=warnings)
 
     existing_devices = await verify_devices_in_cloudvision_inventory(
         devices=devices, skip_missing_devices=skip_missing_devices, warnings=warnings, cv_client=cv_client
@@ -175,6 +178,84 @@ def missing_devices_handler(*, missing_devices: list[CVDevice], skip_missing_dev
     )
     exception = CVResourceNotFound("Missing devices on CloudVision", *unique_missing_devices)
     if not skip_missing_devices:
+        raise exception
+
+    return exception
+
+
+def check_for_duplicated_devices(*, devices: list[CVDevice], tolerate_duplicated_devices: bool, warnings: list[Exception]) -> None:
+    """Check for the duplicated `serial_number` or `metadata.system_mac_address` values in structured config of the inventory devices."""
+    duplicated_serial_number: dict[str, str | list[str]] = {}
+    duplicated_system_mac_address: dict[str, str | list[str]] = {}
+
+    for device in devices:
+        if (
+            device.serial_number
+            and (current_serial_number := device.serial_number.strip().lower()) not in duplicated_serial_number
+            and (
+                len(
+                    matching_devices_serial := {
+                        item.hostname for item in devices if (item.serial_number and (item.serial_number.strip().lower() == current_serial_number))
+                    }
+                )
+                > 1
+            )
+        ):
+            duplicated_serial_number.update(
+                {"problematic_serial_number": current_serial_number, "overlapping_inventory_hostnames": sorted(matching_devices_serial)}
+            )
+        if (
+            device.system_mac_address
+            and (current_system_mac_address := device.system_mac_address.strip().lower().replace(":", "").replace(".", "")) not in duplicated_system_mac_address
+            and (
+                len(
+                    matching_devices_system_mac := {
+                        item.hostname
+                        for item in devices
+                        if (
+                            item.system_mac_address
+                            and (item.system_mac_address.strip().lower().replace(":", "").replace(".", "") == current_system_mac_address)
+                        )
+                    }
+                )
+                > 1
+            )
+        ):
+            duplicated_system_mac_address.update(
+                {"problematic_system_mac_address": current_system_mac_address, "overlapping_inventory_hostnames": sorted(matching_devices_system_mac)}
+            )
+
+    if duplicated_serial_number or duplicated_system_mac_address:
+        warnings.append(
+            duplicated_devices_handler(
+                duplicated_serial_number=duplicated_serial_number,
+                duplicated_system_mac_address=duplicated_system_mac_address,
+                tolerate_duplicated_devices=tolerate_duplicated_devices,
+            )
+        )
+
+
+def duplicated_devices_handler(
+    *, duplicated_serial_number: dict[str, str | list[str]], duplicated_system_mac_address: dict[str, str | list[str]], tolerate_duplicated_devices: bool
+) -> Exception:
+    """
+    Handle input devices with duplicated `serial_number`s or `metadata.system_mac_address`es.
+
+      - Raise an exception if tolerate_duplicated_devices is set to False.
+      - Return an Exception if tolerate_duplicated_devices is set to True.
+    """
+    if duplicated_serial_number:
+        LOGGER.warning(
+            "verify_devices_on_cv: Devices with duplicated serial_number discovered in inventory (structured config): %s",
+            duplicated_serial_number,
+        )
+    if duplicated_system_mac_address:
+        LOGGER.warning(
+            "verify_devices_on_cv: Devices with duplicated system_mac_address discovered in inventory (structured config): %s",
+            duplicated_system_mac_address,
+        )
+    exception = CVDuplicatedDeviceInfo("Duplicated devices found in inventory", duplicated_serial_number, duplicated_system_mac_address)
+    if not tolerate_duplicated_devices:
         raise exception
 
     return exception

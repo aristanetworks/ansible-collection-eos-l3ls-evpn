@@ -185,6 +185,14 @@ It is possible to ignore other missing devices by simply skipping them and conti
 cv_skip_missing_devices: true
 ```
 
+Role will by default tolerate the presence of the same `serial_number` or `metadata.system_mac_address` values in the structured configuration of multiple EOS devices (although this may be an indicator of a potential issue and may eventually lead to the unexpected behavior on the CV side due to the possibility of pushing designed configuration of one device to another device). Information about devices with duplicated `serial_number` or `metadata.system_mac_address` values will be appended to the role's returned `cv_deploy_results.warnings`.
+
+Setting role's variable `cv_tolerate_duplicated_devices` to `false` will change this default behavior and will cause role to raise an error if same `serial_number` or `metadata.system_mac_address` is assigned in the structured config to more than one device.
+
+```yaml
+cv_tolerate_duplicated_devices: false
+```
+
 #### Role behavior configuration
 
 By default the role will

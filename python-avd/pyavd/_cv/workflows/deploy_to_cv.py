@@ -42,6 +42,7 @@ async def deploy_to_cv(
     studio_inputs: list[CVStudioInputs] | None = None,
     cv_pathfinder_metadata: list[CVPathfinderMetadata] | None = None,
     skip_missing_devices: bool = False,
+    tolerate_duplicated_devices: bool = True,
     strict_tags: bool = True,
     timeouts: CVTimeOuts | None = None,  # pylint: disable=unused-argument # noqa: ARG001
 ) -> DeployToCvResult:
@@ -72,6 +73,7 @@ async def deploy_to_cv(
         cv_pathfinder_metadata: Special metadata for CV Pathfinder solution. Metadata will be combined and deployed to the hidden metadata studio.
         skip_missing_devices: If `True` anything that can be deployed will get deployed. \
             Otherwise the Workspace will be abandoned on any issue.
+        tolerate_duplicated_devices: If `False`, then raise an error if duplicated `serial_number` or `metadata.system_mac_address` are present.
         strict_tags: If `True` other tags associated with the devices will get removed. \
             Otherwise other tags will be left as-is. \
             Other Tags with the same label are always removed.
@@ -144,6 +146,7 @@ async def deploy_to_cv(
                     ),
                     workspace_id=result.workspace.id,
                     skip_missing_devices=skip_missing_devices,
+                    tolerate_duplicated_devices=tolerate_duplicated_devices,
                     warnings=result.warnings,
                     cv_client=cv_client,
                 )

@@ -1,0 +1,134 @@
+---
+- name: "{{ test_id | upper }} Converge - cv_deploy with no duplicated devices in inventory"
+  hosts: SITE1_FABRIC
+  connection: local
+  gather_facts: false
+  vars:
+    cv_server: www.cv-staging.corp.arista.io
+    cv_token: "{{ lookup('env', 'CVAAS_AAWG_CI') }}"
+    cv_verify_certs: true
+    cv_skip_missing_devices: true
+    eos_config_dir: "{{ playbook_dir }}/intended/configs/test_configs"
+    original_structured_dir: "{{ playbook_dir }}/intended/structured_configs/test_configs"
+    structured_dir: "{{ playbook_dir }}/intended/structured_configs/test_duplicated_devices_configs"
+    intended_tag_device: avd-ci-leaf1
+    intended_tags: "{{ lookup('file', structured_dir ~ '/' ~ intended_tag_device ~ '.yml')| from_yaml }}"
+    test_id: "no-duplicated-inventory-devices"
+    cv_common_pattern: "avd-cv-deploy-{{ test_id }}"
+
+  tasks:
+    - name: "{{ test_id | upper }} Banner"
+      tags: ["{{ test_id }}"]
+      run_once: true
+      ansible.builtin.debug:
+        msg:
+          - "######################################################################"
+          - "### STARTING MOLECULE TEST {{ '{:<38}'.format(test_id[:38]) | upper }} ####"
+          - "######################################################################"
+
+    - name: "{{ test_id | upper }} Create target scturtured_config directory if it doesn't exist"
+      tags: ["{{ test_id }}"]
+      ansible.builtin.file:
+        path: "{{ structured_dir }}"
+        state: directory
+        mode: '0755'
+
+    - name: "{{ test_id | upper }} Remove interesting files inside scturtured_config directory (if they exist)"
+      tags: ["{{ test_id }}"]
+      ansible.builtin.file:
+        path: "{{ structured_dir }}/{{ inventory_hostname }}.yml"
+        state: absent
+
+    - name: "{{ test_id | upper }} Fetch device inventory stats from CV {{ cv_server }} for all targeted devices"
+      tags: ["{{ test_id }}"]
+      delegate_to: localhost
+      ansible.legacy.uri:
+        url: "https://{{ cv_server }}/api/resources/inventory/v1/Device/all"
+        validate_certs: true
+        return_content: true
+        headers:
+          Accept: "application/json"
+          Content-Type: "application/json"
+          Authorization: "Bearer {{ cv_token }}"
+        method: POST
+        body_format: json
+        body:
+          {
+            "partialEqFilter": [
+              {
+                "hostname": "{{ inventory_hostname }}"
+              }
+            ]
+          }
+        timeout: 10
+      register: device_inventory_status_on_cv
+      until: >
+        device_inventory_status_on_cv.status == 200 and (device_inventory_status_on_cv.json.result.value.key.deviceId | default('') | length > 0) and
+        (device_inventory_status_on_cv.json.result.value.systemMacAddress | default('') | length > 0)
+      retries: 10
+      delay: 10
+
+    - name: "{{ test_id | upper }} Process raw device_inventory_status_on_cv variables"
+      tags: ["{{ test_id }}"]
+      ansible.builtin.set_fact:
+        serial_number: "{{ device_inventory_status_on_cv.json.result.value.key.deviceId }}"
+        metadata:
+          system_mac_address: "{{ device_inventory_status_on_cv.json.result.value.systemMacAddress }}"
+
+    - name: "{{ test_id | upper }} Expose new variables set on DUTs"
+      tags: ["{{ test_id }}"]
+      ansible.builtin.debug:
+        msg:
+          - "DEVICE {{ inventory_hostname }} | SERIAL_NUMBER: {{ serial_number }} | SYSTEM_MAC_ADDRESS: {{ metadata.system_mac_address }}"
+
+    - name: "{{ test_id | upper }} Copy content of the original test's structured_config files into new structured_config files"
+      tags: ["{{ test_id }}"]
+      ansible.builtin.copy:
+        src: "{{ original_structured_dir }}/{{ inventory_hostname }}.yml"
+        dest: "{{ structured_dir }}/{{ inventory_hostname }}.yml"
+
+    - name: "{{ test_id | upper }} Update content of the structured_config files with new serial_number variable"
+      ansible.builtin.lineinfile:
+        line: "serial_number: {{ serial_number }}"
+        path: "{{ structured_dir }}/{{ inventory_hostname }}.yml"
+        create: true
+        mode: '0644'
+        insertbefore: BOF
+      no_log: true
+
+    - name: "{{ test_id | upper }} Read current contetnt of the structured files"
+      ansible.builtin.slurp:
+        src: "{{ structured_dir }}/{{ inventory_hostname }}.yml"
+      register: structured_config_file_content
+
+    - name: "{{ test_id | upper }} Update content of the structured_config files with new metadata.system_mac_address variable if metadata is not present"
+      ansible.builtin.lineinfile:
+        line: "metadata:\n  system_mac_address: {{ metadata.system_mac_address }}"
+        path: "{{ structured_dir }}/{{ inventory_hostname }}.yml"
+        create: true
+        mode: '0644'
+        insertbefore: BOF
+      no_log: true
+      when: "'metadata:' not in structured_config_file_content.content | b64decode"
+
+    - name: "{{ test_id | upper }} Update metadata in the structured_config files with new metadata.system_mac_address variable if metadata is already present"
+      ansible.builtin.lineinfile:
+        line: "metadata:\n  system_mac_address: {{ metadata.system_mac_address }}"
+        path: "{{ structured_dir }}/{{ inventory_hostname }}.yml"
+        regexp: '^metadata:'
+      no_log: true
+      when: "'metadata:' in structured_config_file_content.content | b64decode"
+
+    - name: "{{ test_id | upper }} Engage normal cv_deploy workflow"
+      tags: ["{{ test_id }}"]
+      run_once: true
+      ansible.builtin.debug:
+        msg:
+          - "######################################################################"
+          - "### ENGAGE REGULAR CV_DEPLOY WORKFLOW TO TEST DEPLOYMENT WITH UNIQUELY SET SERIAL_NUMBERS AND SYSTEM_MACS"
+          - "######################################################################"
+
+- name: "{{ test_id | upper }} Test regular cv_deploy when all SNs and SYSTEM_MACs are uniquely set"
+  import_playbook: cv_deploy.yml
+  vars:
+    structured_dir: "{{ playbook_dir }}/intended/structured_configs/test_duplicated_devices_configs"
