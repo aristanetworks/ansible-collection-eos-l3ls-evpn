@@ -10745,6 +10745,9 @@ keys:
         dhcp_client_accept_default_route:
           type: bool
           description: Install default-route obtained via DHCP.
+        dhcp_server_ipv4:
+          type: bool
+          description: Enable IPv4 DHCP server.
         ip_verify_unicast_source_reachable_via:
           type: str
           valid_values:
