@@ -107,7 +107,7 @@ router_bgp:
     default:
       ipv4_unicast: false
   peer_groups:
-  - name: MLAG-IPv4-OVERLAY-PEER
+  - name: MLAG-IPv4-UNDERLAY-PEER
     type: ipv4
     remote_as: '65001'
     description: Description for mlag_ipv4_underlay_peer via structured_config
@@ -132,7 +132,7 @@ router_bgp:
     maximum_routes: 0
   neighbors:
   - ip_address: 192.168.253.205
-    peer_group: MLAG-IPv4-OVERLAY-PEER
+    peer_group: MLAG-IPv4-UNDERLAY-PEER
     peer: bgp-peer-groups-2
     description: bgp-peer-groups-2_Vlan4094
   - ip_address: 192.168.255.112
@@ -151,7 +151,7 @@ router_bgp:
       route_map_out: RM-EVPN-SOO-OUT
   address_family_ipv4:
     peer_groups:
-    - name: MLAG-IPv4-OVERLAY-PEER
+    - name: MLAG-IPv4-UNDERLAY-PEER
       activate: true
     - name: IPv4-UNDERLAY-PEERS
       activate: true

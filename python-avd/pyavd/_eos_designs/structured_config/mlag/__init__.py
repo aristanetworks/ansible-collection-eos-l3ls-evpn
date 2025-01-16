@@ -306,13 +306,7 @@ class AvdStructuredConfigMlag(StructuredConfigGenerator):
             return None
 
         # MLAG Peer group
-        if (
-            self.inputs.bgp_peer_groups.use_separate_mlag_peer_group_for_overlay
-            and self.inputs.bgp_peer_groups.mlag_ipv4_underlay_peer.name == "MLAG-IPv4-UNDERLAY-PEER"
-        ):
-            peer_group_name = "MLAG-IPv4-OVERLAY-PEER"
-        else:
-            peer_group_name = self.inputs.bgp_peer_groups.mlag_ipv4_underlay_peer.name
+        peer_group_name = self.inputs.bgp_peer_groups.mlag_ipv4_underlay_peer.name
         router_bgp = self._router_bgp_mlag_peer_group()
 
         vlan = default(self.shared_utils.mlag_peer_l3_vlan, self.shared_utils.node_config.mlag_peer_vlan)
@@ -359,13 +353,7 @@ class AvdStructuredConfigMlag(StructuredConfigGenerator):
 
         TODO: Duplicated in network_services. Should be moved to a common class
         """
-        if (
-            self.inputs.bgp_peer_groups.use_separate_mlag_peer_group_for_overlay
-            and self.inputs.bgp_peer_groups.mlag_ipv4_underlay_peer.name == "MLAG-IPv4-UNDERLAY-PEER"
-        ):
-            peer_group_name = "MLAG-IPv4-OVERLAY-PEER"
-        else:
-            peer_group_name = self.inputs.bgp_peer_groups.mlag_ipv4_underlay_peer.name
+        peer_group_name = self.inputs.bgp_peer_groups.mlag_ipv4_underlay_peer.name
         router_bgp = {}
         peer_group = {
             "name": peer_group_name,
