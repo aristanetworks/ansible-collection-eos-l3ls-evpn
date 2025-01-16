@@ -217,16 +217,34 @@ keys:
         default: false
         description: Configure a different BGP peer group for MLAG for underlay and
           overlay.
+      mlag_ipv4_overlay_peer:
+        type: dict
+        keys:
+          name:
+            type: str
+            default: MLAG-IPv4-OVERLAY-PEER
+            description: Name of peer group.
+          password:
+            type: str
+            description: Type 7 encrypted password.
+          bfd:
+            type: bool
+            default: false
+          structured_config:
+            type: dict
+            relaxed_validation: true
+            description: Custom structured config added under router_bgp.peer_groups.[name=<name>]
+              for eos_cli_config_gen.
+            documentation_options:
+              hide_keys: true
+            $ref: eos_cli_config_gen#/keys/router_bgp/keys/peer_groups/items
       mlag_ipv4_underlay_peer:
         type: dict
         keys:
           name:
             type: str
             default: MLAG-IPv4-UNDERLAY-PEER
-            description: 'Name of peer group.
-
-              Default name for OVERLAY changes to MLAG-IPv4-OVERLAY-PEER if `use_separate_mlag_peer_group_for_overlay`
-              is true.'
+            description: Name of peer group.
           password:
             type: str
             description: Type 7 encrypted password.
