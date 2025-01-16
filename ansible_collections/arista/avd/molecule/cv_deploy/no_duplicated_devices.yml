@@ -86,13 +86,14 @@
       ansible.builtin.copy:
         src: "{{ original_structured_dir }}/{{ inventory_hostname }}.yml"
         dest: "{{ structured_dir }}/{{ inventory_hostname }}.yml"
+        mode: "0644"
 
     - name: "{{ test_id | upper }} Update content of the structured_config files with new serial_number variable"
       ansible.builtin.lineinfile:
         line: "serial_number: {{ serial_number }}"
         path: "{{ structured_dir }}/{{ inventory_hostname }}.yml"
         create: true
-        mode: '0644'
+        mode: "0644"
         insertbefore: BOF
       no_log: true
 
@@ -106,7 +107,7 @@
         line: "metadata:\n  system_mac_address: {{ metadata.system_mac_address }}"
         path: "{{ structured_dir }}/{{ inventory_hostname }}.yml"
         create: true
-        mode: '0644'
+        mode: "0644"
         insertbefore: BOF
       no_log: true
       when: "'metadata:' not in structured_config_file_content.content | b64decode"

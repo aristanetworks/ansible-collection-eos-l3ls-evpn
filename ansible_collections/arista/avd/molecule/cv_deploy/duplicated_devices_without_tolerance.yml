@@ -90,6 +90,7 @@
       ansible.builtin.copy:
         src: "{{ original_structured_dir }}/{{ inventory_hostname }}.yml"
         dest: "{{ structured_dir }}/{{ inventory_hostname }}.yml"
+        mode: "0644"
 
     - name: "{{ test_id | upper }} Update content of the structured_config files with new serial_number variable"
       tags: ["{{ test_id }}"]
@@ -97,7 +98,7 @@
         line: "serial_number: {{ hostvars['avd-ci-leaf1'].serial_number if inventory_hostname == 'avd-ci-leaf2' else serial_number }}"
         path: "{{ structured_dir }}/{{ inventory_hostname }}.yml"
         create: true
-        mode: '0644'
+        mode: "0644"
         insertbefore: BOF
       no_log: true
 
@@ -118,7 +119,7 @@
             }}
         path: "{{ structured_dir }}/{{ inventory_hostname }}.yml"
         create: true
-        mode: '0644'
+        mode: "0644"
         insertbefore: BOF
       no_log: true
       when: "'metadata:' not in structured_config_file_content.content | b64decode"
