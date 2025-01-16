@@ -17,6 +17,16 @@ router path-selection
 {%         endif %}
    {{ tcp_mss_ceiling_cli }} {{ router_path_selection.tcp_mss_ceiling.direction | arista.avd.default("ingress") }}
 {%     endif %}
+{%     for interface_data in router_path_selection.interfaces | arista.avd.natural_sort('name') %}
+   !
+   interface {{ interface_data.name }}
+{%         if interface_data.metric_bandwidth.transmit is arista.avd.defined %}
+      metric bandwidth transmit {{ interface_data.metric_bandwidth.transmit }} Mbps
+{%         endif %}
+{%         if interface_data.metric_bandwidth.receive is arista.avd.defined %}
+      metric bandwidth receive {{ interface_data.metric_bandwidth.receive }} Mbps
+{%         endif %}
+{%     endfor %}
 {#  path group #}
 {%     for path_group in router_path_selection.path_groups | arista.avd.natural_sort('name') %}
 {%         set path_group_def = "path-group " ~ path_group.name %}

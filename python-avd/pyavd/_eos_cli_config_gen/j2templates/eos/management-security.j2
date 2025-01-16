@@ -90,6 +90,9 @@ management security
 {%         if ssl_profile.tls_versions is arista.avd.defined %}
       tls versions {{ ssl_profile.tls_versions }}
 {%         endif %}
+{%         if ssl_profile.fips_restrictions is arista.avd.defined(true) %}
+      fips restrictions
+{%         endif %}
 {%         if ssl_profile.ciphers.v1_0 is arista.avd.defined %}
       cipher v1.0 {{ ssl_profile.ciphers.v1_0 }}
 {%         elif ssl_profile.cipher_list is arista.avd.defined %}
