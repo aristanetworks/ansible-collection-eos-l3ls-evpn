@@ -9320,6 +9320,35 @@ keys:
           shutdown:
             type: bool
             description: Make `shutdown` key false for `no shutdown` cli.
+      tunnel:
+        description: Configure tunnel termination model.
+        type: dict
+        keys:
+          termination_model:
+            type: str
+            description: 'TTL and DSCP configuration as a string.
+
+              Example:
+
+              - "ttl pipe dscp pipe"
+
+              '
+            valid_values:
+            - ttl pipe dscp pipe
+            - ttl uniform dscp pipe
+            - ttl uniform dscp uniform
+          termination_php_model:
+            type: str
+            description: 'TTL and DSCP configuration as a string.
+
+              Example:
+
+              - "ttl pipe dscp pipe"
+
+              '
+            valid_values:
+            - ttl pipe dscp pipe
+            - ttl uniform dscp pipe
   name_server:
     documentation_options:
       table: ip-name-servers

@@ -26851,7 +26851,60 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                     """
 
-        _fields: ClassVar[dict] = {"ip": {"type": bool}, "ldp": {"type": Ldp}, "icmp": {"type": Icmp}, "rsvp": {"type": Rsvp}, "_custom_data": {"type": dict}}
+        class Tunnel(AvdModel):
+            """Subclass of AvdModel."""
+
+            _fields: ClassVar[dict] = {"termination_model": {"type": str}, "termination_php_model": {"type": str}, "_custom_data": {"type": dict}}
+            termination_model: Literal["ttl pipe dscp pipe", "ttl uniform dscp pipe", "ttl uniform dscp uniform"] | None
+            """
+            TTL and DSCP configuration as a string.
+            Example:
+            - "ttl pipe dscp pipe"
+            """
+            termination_php_model: Literal["ttl pipe dscp pipe", "ttl uniform dscp pipe"] | None
+            """
+            TTL and DSCP configuration as a string.
+            Example:
+            - "ttl pipe dscp pipe"
+            """
+            _custom_data: dict[str, Any]
+
+            if TYPE_CHECKING:
+
+                def __init__(
+                    self,
+                    *,
+                    termination_model: Literal["ttl pipe dscp pipe", "ttl uniform dscp pipe", "ttl uniform dscp uniform"] | None | UndefinedType = Undefined,
+                    termination_php_model: Literal["ttl pipe dscp pipe", "ttl uniform dscp pipe"] | None | UndefinedType = Undefined,
+                    _custom_data: dict[str, Any] | UndefinedType = Undefined,
+                ) -> None:
+                    """
+                    Tunnel.
+
+
+                    Subclass of AvdModel.
+
+                    Args:
+                        termination_model:
+                           TTL and DSCP configuration as a string.
+                           Example:  # fmt: skip
+                           - "ttl pipe dscp pipe"
+                        termination_php_model:
+                           TTL and DSCP configuration as a string.
+                           Example:  # fmt: skip
+                           - "ttl pipe dscp pipe"
+                        _custom_data: _custom_data
+
+                    """
+
+        _fields: ClassVar[dict] = {
+            "ip": {"type": bool},
+            "ldp": {"type": Ldp},
+            "icmp": {"type": Icmp},
+            "rsvp": {"type": Rsvp},
+            "tunnel": {"type": Tunnel},
+            "_custom_data": {"type": dict},
+        }
         ip: bool | None
         ldp: Ldp
         """Subclass of AvdModel."""
@@ -26864,6 +26917,12 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         """
         rsvp: Rsvp
         """Subclass of AvdModel."""
+        tunnel: Tunnel
+        """
+        Configure tunnel termination model.
+
+        Subclass of AvdModel.
+        """
         _custom_data: dict[str, Any]
 
         if TYPE_CHECKING:
@@ -26875,6 +26934,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 ldp: Ldp | UndefinedType = Undefined,
                 icmp: Icmp | UndefinedType = Undefined,
                 rsvp: Rsvp | UndefinedType = Undefined,
+                tunnel: Tunnel | UndefinedType = Undefined,
                 _custom_data: dict[str, Any] | UndefinedType = Undefined,
             ) -> None:
                 """
@@ -26892,6 +26952,10 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                        Subclass
                        of AvdModel.
                     rsvp: Subclass of AvdModel.
+                    tunnel:
+                       Configure tunnel termination model.
+
+                       Subclass of AvdModel.
                     _custom_data: _custom_data
 
                 """

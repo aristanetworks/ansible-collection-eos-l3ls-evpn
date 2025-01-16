@@ -8,6 +8,12 @@
 !
 mpls ip
 {% endif %}
+{% if mpls.tunnel.termination_model is arista.avd.defined %}
+mpls tunnel termination model {{ mpls.tunnel.termination_model }}
+{% endif %}
+{% if mpls.tunnel.termination_php_model is arista.avd.defined %}
+mpls tunnel termination php model {{ mpls.tunnel.termination_php_model }}
+{% endif %}
 {% if mpls.ldp is arista.avd.defined %}
 !
 mpls ldp
