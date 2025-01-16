@@ -130,6 +130,15 @@ router_bgp:
     bfd: false
     send_community: all
     maximum_routes: 0
+  - name: MLAG-IPv4-OVERLAY-PEER
+    type: ipv4
+    remote_as: '65001'
+    update_source: Loopback0
+    bfd: false
+    next_hop_self: true
+    send_community: all
+    maximum_routes: 12000
+    route_map_in: RM-MLAG-PEER-IN
   neighbors:
   - ip_address: 192.168.253.205
     peer_group: MLAG-IPv4-UNDERLAY-PEER
@@ -157,6 +166,8 @@ router_bgp:
       activate: true
     - name: EVPN-OVERLAY-PEERS
       activate: false
+    - name: MLAG-IPv4-OVERLAY-PEER
+      activate: true
 service_routing_protocols_model: multi-agent
 spanning_tree:
   no_spanning_tree_vlan: '4094'

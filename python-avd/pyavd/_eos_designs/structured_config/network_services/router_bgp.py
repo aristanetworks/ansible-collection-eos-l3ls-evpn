@@ -337,11 +337,15 @@ class RouterBgpMixin(UtilsMixin):
             bgp_vrf["redistribute"]["connected"] = {"enabled": True, "route_map": "RM-CONN-2-BGP-VRFS"}
 
         interface_name = f"Vlan{vlan_id}"
+        peer_group_name = self.inputs.bgp_peer_groups.mlag_ipv4_underlay_peer.name
+        if self.inputs.bgp_peer_groups.use_separate_mlag_peer_group_for_overlay:
+            peer_group_name = self.inputs.bgp_peer_groups.mlag_ipv4_overlay_peer.name
+
         if self.inputs.underlay_rfc5549 and self.inputs.overlay_mlag_rfc5549:
             bgp_vrf.setdefault("neighbor_interfaces", []).append(
                 {
                     "name": interface_name,
-                    "peer_group": self.inputs.bgp_peer_groups.mlag_ipv4_underlay_peer.name,
+                    "peer_group": peer_group_name,
                     "remote_as": self.shared_utils.bgp_as,
                     "description": AvdStringFormatter().format(
                         self.inputs.mlag_bgp_peer_description,
@@ -362,7 +366,7 @@ class RouterBgpMixin(UtilsMixin):
             bgp_vrf.setdefault("neighbors", []).append(
                 {
                     "ip_address": ip_address,
-                    "peer_group": self.inputs.bgp_peer_groups.mlag_ipv4_underlay_peer.name,
+                    "peer_group": peer_group_name,
                     "description": AvdStringFormatter().format(
                         self.inputs.mlag_bgp_peer_description,
                         **strip_empties_from_dict(

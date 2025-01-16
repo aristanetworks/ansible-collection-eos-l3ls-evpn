@@ -183,6 +183,18 @@ class RouterBgpMixin(UtilsMixin):
                 },
             )
 
+        # To configure a different BGP peer group for mlag_ipv4_overlay_peer
+        if self.inputs.bgp_peer_groups.use_separate_mlag_peer_group_for_overlay is True:
+            peer_groups.append(
+                {
+                    **self._generate_base_peer_group("ipv4", "mlag_ipv4_overlay_peer"),
+                    "remote_as": self.shared_utils.bgp_as,
+                    "next_hop_self": True,
+                    "maximum_routes": 12000,
+                    "route_map_in": "RM-MLAG-PEER-IN",
+                },
+            )
+
         return peer_groups
 
     def _address_family_ipv4(self: AvdStructuredConfigOverlay) -> dict:
@@ -213,6 +225,9 @@ class RouterBgpMixin(UtilsMixin):
 
         if self.shared_utils.overlay_ipvpn_gateway is True:
             peer_groups.append({"name": self.inputs.bgp_peer_groups.ipvpn_gateway_peers.name, "activate": False})
+
+        if self.inputs.bgp_peer_groups.use_separate_mlag_peer_group_for_overlay is True:
+            peer_groups.append({"name": self.inputs.bgp_peer_groups.mlag_ipv4_overlay_peer.name, "activate": True})
 
         return {"peer_groups": peer_groups}
 

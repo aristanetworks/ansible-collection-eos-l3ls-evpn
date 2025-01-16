@@ -59,6 +59,15 @@ router_bgp:
     bfd: false
     send_community: all
     maximum_routes: 0
+  - name: MLAG-IPv4-OVERLAY-PEER
+    type: ipv4
+    remote_as: '65001'
+    update_source: Loopback0
+    bfd: false
+    next_hop_self: true
+    send_community: all
+    maximum_routes: 12000
+    route_map_in: RM-MLAG-PEER-IN
   address_family_evpn:
     domain_identifier: '65535:1'
     neighbor_default:
@@ -73,6 +82,8 @@ router_bgp:
       activate: false
     - name: IPVPN-GATEWAY-PEERS
       activate: false
+    - name: MLAG-IPv4-OVERLAY-PEER
+      activate: true
   address_family_vpn_ipv4:
     domain_identifier: '65535:2'
     peer_groups:
