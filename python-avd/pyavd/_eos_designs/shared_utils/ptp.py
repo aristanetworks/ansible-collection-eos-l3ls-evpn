@@ -29,10 +29,6 @@ class PtpMixin:
         return bool(default(self.node_config.ptp.enabled, default_ptp_enabled))
 
     @cached_property
-    def ptp_uplinks(self: SharedUtils) -> list:
-        return self.node_config.ptp.uplinks
-
-    @cached_property
     def ptp_profile_name(self: SharedUtils) -> str:
         default_ptp_profile = self.inputs.ptp_settings.profile
         return self.node_config.ptp.profile or default_ptp_profile

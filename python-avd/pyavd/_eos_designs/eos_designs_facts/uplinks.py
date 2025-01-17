@@ -188,7 +188,7 @@ class UplinksMixin:
 
         if uplink_ptp := self.shared_utils.node_config.uplink_ptp:
             uplink["ptp"] = uplink_ptp._as_dict()
-        elif self.shared_utils.ptp_enabled and (not (ptp_uplinks := self.shared_utils.ptp_uplinks) or (uplink_interface in ptp_uplinks)):
+        elif self.shared_utils.ptp_enabled and (not (ptp_uplinks := self.shared_utils.node_config.ptp.uplinks) or (uplink_interface in ptp_uplinks)):
             uplink["ptp"] = {"enable": True}
 
         if self.shared_utils.node_config.uplink_macsec.profile:
