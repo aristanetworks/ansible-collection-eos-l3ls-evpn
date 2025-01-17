@@ -5495,6 +5495,7 @@ interface Port-Channel112
    ip address dhcp
    dhcp client accept default-route
    dhcp server ipv4
+   dhcp server ipv6
    port-channel lacp fallback individual
    port-channel lacp fallback timeout 5
 !

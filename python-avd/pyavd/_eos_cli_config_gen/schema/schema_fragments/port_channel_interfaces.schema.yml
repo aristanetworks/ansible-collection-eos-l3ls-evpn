@@ -817,6 +817,9 @@ keys:
         dhcp_server_ipv4:
           type: bool
           description: Enable IPv4 DHCP server.
+        dhcp_server_ipv6:
+          type: bool
+          description: Enable IPv6 DHCP server.
         ip_verify_unicast_source_reachable_via:
           type: str
           valid_values:
