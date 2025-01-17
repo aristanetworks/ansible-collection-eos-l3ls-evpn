@@ -1,4 +1,4 @@
-# Copyright (c) 2023-2024 Arista Networks, Inc.
+# Copyright (c) 2023-2025 Arista Networks, Inc.
 # Use of this source code is governed by the Apache License 2.0
 # that can be found in the LICENSE file.
 #
@@ -60,7 +60,7 @@ tasks:
 - name: Generate fabric documentation
   run_once: true
   delegate_to: localhost
-  check_mode: no
+  check_mode: false
   copy:
     content: "{{ lookup('template','documentation/fabric-documentation.j2') | arista.avd.add_md_toc(skip_lines=3) }}"
     dest: "{{ fabric_dir }}/{{ fabric_name }}-documentation.md"

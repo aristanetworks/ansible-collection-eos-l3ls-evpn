@@ -3,7 +3,7 @@
 title: arista.avd.eos_designs_facts
 ---
 <!--
-  ~ Copyright (c) 2023-2024 Arista Networks, Inc.
+  ~ Copyright (c) 2023-2025 Arista Networks, Inc.
   ~ Use of this source code is governed by the Apache License 2.0
   ~ that can be found in the LICENSE file.
   -->
@@ -46,8 +46,8 @@ The module is used in `arista.avd.eos_designs` to set facts for devices, which a
 - name: Set eos_designs facts
   arista.avd.eos_designs_facts:
     schema_id: eos_designs
-  check_mode: False
-  run_once: True
+  check_mode: false
+  run_once: true
 
 - name: Set eos_designs facts per device
   ansible.builtin.set_fact:

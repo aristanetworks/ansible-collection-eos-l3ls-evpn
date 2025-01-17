@@ -1,4 +1,4 @@
-# Copyright (c) 2023-2024 Arista Networks, Inc.
+# Copyright (c) 2023-2025 Arista Networks, Inc.
 # Use of this source code is governed by the Apache License 2.0
 # that can be found in the LICENSE file.
 from __future__ import annotations
@@ -6,7 +6,7 @@ from __future__ import annotations
 from functools import cached_property
 from typing import TYPE_CHECKING
 
-from pyavd._eos_designs.avdfacts import AvdFacts
+from pyavd._eos_designs.structured_config.structured_config_generator import StructuredConfigGenerator
 from pyavd._errors import AristaAvdInvalidInputsError, AristaAvdMissingVariableError
 from pyavd._utils import default, get, strip_empties_from_dict, strip_null_from_data
 from pyavd.j2filters import natural_sort
@@ -19,7 +19,7 @@ if TYPE_CHECKING:
     from pyavd._eos_designs.schema import EosDesigns
 
 
-class AvdStructuredConfigBase(AvdFacts, NtpMixin, SnmpServerMixin, RouterGeneralMixin):
+class AvdStructuredConfigBase(StructuredConfigGenerator, NtpMixin, SnmpServerMixin, RouterGeneralMixin):
     """
     The AvdStructuredConfig Class is imported by "get_structured_config" to render parts of the structured config.
 
@@ -27,7 +27,7 @@ class AvdStructuredConfigBase(AvdFacts, NtpMixin, SnmpServerMixin, RouterGeneral
     .render() runs all class methods not starting with _ and of type @cached property and inserts the returned data into
     a dict with the name of the method as key. This means that each key in the final dict corresponds to a method.
 
-    The Class uses AvdFacts, as the base class, to inherit the _hostvars, keys and other attributes.
+    The Class uses StructuredConfigGenerator, as the base class, to inherit the _hostvars, keys and other attributes.
     Other methods are included as "Mixins" to make the files more manageable.
 
     The order of the @cached_properties methods imported from Mixins will also control the order in the output.
@@ -108,6 +108,8 @@ class AvdStructuredConfigBase(AvdFacts, NtpMixin, SnmpServerMixin, RouterGeneral
                 "description": neighbor_info["description"],
                 "route_map_in": get(neighbor_info, "route_map_in"),
                 "route_map_out": get(neighbor_info, "route_map_out"),
+                "rcf_in": get(neighbor_info, "rcf_in"),
+                "rcf_out": get(neighbor_info, "rcf_out"),
             }
             l3_interfaces_neighbors.append(strip_empties_from_dict(neighbor))
 
@@ -230,7 +232,7 @@ class AvdStructuredConfigBase(AvdFacts, NtpMixin, SnmpServerMixin, RouterGeneral
     @cached_property
     def hardware(self) -> dict | None:
         """
-        hardware set based on platform_speed_groups variable and switch.platform fact.
+        Hardware set based on platform_speed_groups variable and switch.platform fact.
 
         Converting nested dict to list of dict to support avd_v4.0.
         """
@@ -337,10 +339,8 @@ class AvdStructuredConfigBase(AvdFacts, NtpMixin, SnmpServerMixin, RouterGeneral
 
     @cached_property
     def event_monitor(self) -> dict | None:
-        """event_monitor set based on event_monitor data-model. TODO: add to schema."""
-        if get(self._hostvars, "event_monitor") is True:
-            return {"enabled": "true"}
-        return None
+        """event_monitor set based on event_monitor data-model."""
+        return self.inputs.event_monitor._as_dict() or None
 
     @cached_property
     def event_handlers(self) -> list | None:
@@ -349,10 +349,8 @@ class AvdStructuredConfigBase(AvdFacts, NtpMixin, SnmpServerMixin, RouterGeneral
 
     @cached_property
     def load_interval(self) -> dict | None:
-        """load_interval set based on load_interval_default variable. TODO: add to schema."""
-        if (load_interval_default := get(self._hostvars, "load_interval_default")) is not None:
-            return {"default": load_interval_default}
-        return None
+        """load_interval set based on load_interval_default variable."""
+        return self.inputs.load_interval._as_dict() or None
 
     @cached_property
     def queue_monitor_length(self) -> dict | None:
@@ -424,11 +422,8 @@ class AvdStructuredConfigBase(AvdFacts, NtpMixin, SnmpServerMixin, RouterGeneral
 
     @cached_property
     def service_unsupported_transceiver(self) -> dict | None:
-        """service_unsupported_transceiver based on unsupported_transceiver data-model. TODO: Add to schema - maybe as hidden."""
-        if (unsupported_transceiver := get(self._hostvars, "unsupported_transceiver")) is not None:
-            return {"license_name": unsupported_transceiver.get("license_name"), "license_key": unsupported_transceiver.get("license_key")}
-
-        return None
+        """service_unsupported_transceiver based on unsupported_transceiver data-model."""
+        return self.inputs.unsupported_transceiver._as_dict() or None
 
     @cached_property
     def local_users(self) -> list | None:
@@ -503,7 +498,7 @@ class AvdStructuredConfigBase(AvdFacts, NtpMixin, SnmpServerMixin, RouterGeneral
     @cached_property
     def platform(self) -> dict | None:
         """
-        platform set based on.
+        Platform set based on.
 
         * platform_settings.lag_hardware_only,
         * platform_settings.trident_forwarding_table_partition and switch.evpn_multicast facts
@@ -538,20 +533,8 @@ class AvdStructuredConfigBase(AvdFacts, NtpMixin, SnmpServerMixin, RouterGeneral
 
     @cached_property
     def queue_monitor_streaming(self) -> dict | None:
-        """queue_monitor_streaming set based on queue_monitor_streaming data-model. TODO: Add to schema."""
-        enable = get(self._hostvars, "queue_monitor_streaming.enable")
-        vrf = get(self._hostvars, "queue_monitor_streaming.vrf")
-        if enable is not True or vrf is None:
-            # TODO: Fix bug where queue monitor enable without VRF will not return any config.
-            return None
-
-        queue_monitor = {}
-        if enable is True:
-            queue_monitor["enable"] = enable
-
-        queue_monitor["vrf"] = vrf
-
-        return queue_monitor
+        """queue_monitor_streaming set based on queue_monitor_streaming data-model."""
+        return self.inputs.queue_monitor_streaming._as_dict() or None
 
     @cached_property
     def management_api_http(self) -> dict:
@@ -776,8 +759,6 @@ class AvdStructuredConfigBase(AvdFacts, NtpMixin, SnmpServerMixin, RouterGeneral
         return route_maps or None
 
     @cached_property
-    def struct_cfgs(self) -> list | None:
+    def struct_cfgs(self) -> None:
         if self.shared_utils.platform_settings.structured_config:
-            return [self.shared_utils.platform_settings.structured_config._as_dict(strip_values=())]
-
-        return None
+            self.custom_structured_configs.root.append(self.shared_utils.platform_settings.structured_config)

@@ -1,4 +1,4 @@
-# Copyright (c) 2024 Arista Networks, Inc.
+# Copyright (c) 2025 Arista Networks, Inc.
 # Use of this source code is governed by the Apache License 2.0
 # that can be found in the LICENSE file.
 # yaml-language-server: $schema=../../_schema/avd_meta_schema.json
@@ -204,6 +204,7 @@ keys:
             default: false
           structured_config:
             type: dict
+            relaxed_validation: true
             description: Custom structured config added under router_bgp.peer_groups.[name=<name>]
               for eos_cli_config_gen.
             documentation_options:
@@ -224,6 +225,7 @@ keys:
             default: false
           structured_config:
             type: dict
+            relaxed_validation: true
             description: Custom structured config added under router_bgp.peer_groups.[name=<name>]
               for eos_cli_config_gen.
             documentation_options:
@@ -244,6 +246,7 @@ keys:
             default: true
           structured_config:
             type: dict
+            relaxed_validation: true
             description: Custom structured config added under router_bgp.peer_groups.[name=<name>]
               for eos_cli_config_gen.
             documentation_options:
@@ -264,6 +267,7 @@ keys:
             default: true
           structured_config:
             type: dict
+            relaxed_validation: true
             description: Custom structured config added under router_bgp.peer_groups.[name=<name>]
               for eos_cli_config_gen.
             documentation_options:
@@ -284,6 +288,7 @@ keys:
             default: true
           structured_config:
             type: dict
+            relaxed_validation: true
             description: Custom structured config added under router_bgp.peer_groups.[name=<name>]
               for eos_cli_config_gen.
             documentation_options:
@@ -304,6 +309,7 @@ keys:
             default: true
           structured_config:
             type: dict
+            relaxed_validation: true
             description: Custom structured config added under router_bgp.peer_groups.[name=<name>]
               for eos_cli_config_gen.
             documentation_options:
@@ -324,6 +330,7 @@ keys:
             default: true
           structured_config:
             type: dict
+            relaxed_validation: true
             description: Custom structured config added under router_bgp.peer_groups.[name=<name>]
               for eos_cli_config_gen.
             documentation_options:
@@ -389,6 +396,7 @@ keys:
             default: 1
           structured_config:
             type: dict
+            relaxed_validation: true
             description: Custom structured config added under router_bgp.peer_groups.[name=<name>]
               for eos_cli_config_gen.
             documentation_options:
@@ -446,6 +454,7 @@ keys:
             default: 1
           structured_config:
             type: dict
+            relaxed_validation: true
             description: Custom structured config added under router_bgp.peer_groups.[name=<name>]
               for eos_cli_config_gen.
             documentation_options:
@@ -979,6 +988,9 @@ keys:
           items:
             type: str
             description: Interface range or interface.
+        uplink_interface_speed:
+          type: str
+          description: Set point-to-Point uplink interface speed.
   default_mgmt_method:
     documentation_options:
       table: management-interface-settings
@@ -1172,11 +1184,18 @@ keys:
           devices.
         type: bool
         default: false
+      toc:
+        type: bool
+        default: true
+        description: Generate the table of content(TOC) on fabric documentation.
   event_handlers:
     $ref: eos_cli_config_gen#/keys/event_handlers
     documentation_options:
       table: management-settings
     type: list
+  event_monitor:
+    type: dict
+    $ref: eos_cli_config_gen#/keys/event_monitor
   evpn_ebgp_gateway_inter_domain:
     documentation_options:
       table: evpn-settings
@@ -2033,6 +2052,9 @@ keys:
           type: str
           description: L3 interface profile name. Any variable supported under `l3_interfaces`
             can be inherited from a profile.
+  load_interval:
+    type: dict
+    $ref: eos_cli_config_gen#/keys/load_interval
   local_users:
     documentation_options:
       table: management-settings
@@ -3294,6 +3316,7 @@ keys:
               description: Only use entropy from the hardware source.
         structured_config:
           type: dict
+          relaxed_validation: true
           documentation_options:
             hide_keys: true
           description: Custom structured config for eos_cli_config_gen.
@@ -3649,6 +3672,9 @@ keys:
           `platform_settings.[].feature_support.queue_monitor_length_notify` setting.
 
           '
+  queue_monitor_streaming:
+    type: dict
+    $ref: eos_cli_config_gen#/keys/queue_monitor_streaming
   redundancy:
     documentation_options:
       table: system-settings
@@ -3693,6 +3719,11 @@ keys:
       For default enabling of sFlow for various interface types across the fabric
       see `fabric_sflow`.'
     keys:
+      polling_interval:
+        type: int
+        convert_types:
+        - str
+        description: Interval in seconds for sending counter data to the sFlow collector.
       sample:
         type: dict
         keys:
@@ -4544,6 +4575,9 @@ keys:
     - isis-ldp
     - isis-sr-ldp
     - none
+  unsupported_transceiver:
+    type: dict
+    $ref: eos_cli_config_gen#/keys/service_unsupported_transceiver
   uplink_ptp:
     documentation_options:
       table: fabric-settings
@@ -4561,6 +4595,8 @@ keys:
 
       See `cv_topology` for details.'
   use_router_general_for_router_id:
+    documentation_options:
+      table: fabric-settings
     type: bool
     description: Use `router general` to set router ID for all routing protocols and
       VRFs.
@@ -5276,11 +5312,21 @@ $defs:
             default: false
           endpoint_role:
             type: str
+            description: 'PTP role of the endpoint.
+
+              `follower` will configure the switch port as `ptp role master`.
+
+              `dynamic` will use BMCA.
+
+              `default` is deprecated in favor of `follower`.
+
+              `bmca` is deprecated in favor of `dynamic`.'
             default: follower
             valid_values:
+            - follower
+            - dynamic
             - bmca
             - default
-            - follower
           profile:
             type: str
             default: aes67-r16-2016
@@ -5667,6 +5713,7 @@ $defs:
               the final EOS configuration.
           structured_config:
             type: dict
+            relaxed_validation: true
             description: Custom structured config added under port_channel_interfaces.[name=<interface>]
               for eos_cli_config_gen.
             documentation_options:
@@ -5694,6 +5741,7 @@ $defs:
           EOS configuration.
       structured_config:
         type: dict
+        relaxed_validation: true
         description: Custom structured config added under ethernet_interfaces.[name=<interface>]
           for eos_cli_config_gen.
         documentation_options:
@@ -5997,6 +6045,16 @@ $defs:
                   route_map_out:
                     type: str
                     description: Outbound route-map name.
+                  rcf_in:
+                    type: str
+                    description: 'Inbound RCF function name with parenthesis.
+
+                      Example: MyFunction(myarg).'
+                  rcf_out:
+                    type: str
+                    description: 'Outbound RCF function name with parenthesis.
+
+                      Example: MyFunction(myarg).'
                   default_originate:
                     type: dict
                     $ref: eos_cli_config_gen#/keys/router_bgp/keys/address_family_ipv4/keys/peer_groups/items/keys/default_originate
@@ -6020,6 +6078,16 @@ $defs:
                   route_map_out:
                     type: str
                     description: Outbound route-map name.
+                  rcf_in:
+                    type: str
+                    description: 'Inbound RCF function name with parenthesis.
+
+                      Example: MyFunction(myarg).'
+                  rcf_out:
+                    type: str
+                    description: 'Outbound RCF function name with parenthesis.
+
+                      Example: MyFunction(myarg).'
                   prefix_list_in:
                     type: str
                     description: Inbound prefix-list name.
@@ -6475,7 +6543,20 @@ $defs:
                     description: If not set, "vrf_id" will be used.
                   router_id:
                     type: str
-                    description: If not set, switch router_id will be used.
+                    description: 'Router ID to use for OSPF in this VRF.
+
+                      This can be an IPv4 address, "main_router_id", "none" or "diagnostic_loopback".
+
+                      - "main_router_id" will use the IP address of Loopback0 or the
+                      common `router general` Router ID if `use_router_general_for_router_id`
+                      is set."
+
+                      - "none" will not configure a OSPF Router ID for this VRF. EOS
+                      will use the main OSPF Router ID.
+
+                      - "diagnostic_loopback" will use the IP address of the VRF Diagnostic
+                      Loopback interface.'
+                    default: main_router_id
                   max_lsa:
                     type: int
                     convert_types:
@@ -6834,6 +6915,7 @@ $defs:
                         `fabric_flow_tracking.l3_interfaces` setting.
                     structured_config:
                       type: dict
+                      relaxed_validation: true
                       description: Custom structured config added under ethernet_interfaces.[name=<interface>]
                         for eos_cli_config_gen.
                       documentation_options:
@@ -7158,6 +7240,22 @@ $defs:
 
                       - If uplink type is `p2p-vrfs` *and* the vrf is included in
                       the uplink VRFs, BGP will be configured for it.'
+                  router_id:
+                    type: str
+                    description: 'Router ID to use for BGP in this VRF.
+
+                      This can be an IPv4 address, "main_router_id", "none" or "diagnostic_loopback".
+
+                      - "main_router_id" will use the IP address of Loopback0 or the
+                      common `router general` Router ID if `use_router_general_for_router_id`
+                      is set."
+
+                      - "none" will not configure a BGP Router ID for this VRF. EOS
+                      will use the main BGP Router ID.
+
+                      - "diagnostic_loopback" will use the IP address of the VRF Diagnostic
+                      Loopback interface.'
+                    default: main_router_id
                   raw_eos_cli:
                     type: str
                     description: 'EOS CLI rendered directly on the Router BGP, VRF
@@ -7166,6 +7264,7 @@ $defs:
                       '
                   structured_config:
                     type: dict
+                    relaxed_validation: true
                     description: Custom structured config added under router_bgp.vrfs.[name=<vrf>]
                       for eos_cli_config_gen.
                     documentation_options:
@@ -7215,6 +7314,16 @@ $defs:
                         route_map_out:
                           type: str
                           description: Outbound route-map name.
+                        rcf_in:
+                          type: str
+                          description: 'Inbound RCF function name with parenthesis.
+
+                            Example: MyFunction(myarg).'
+                        rcf_out:
+                          type: str
+                          description: 'Outbound RCF function name with parenthesis.
+
+                            Example: MyFunction(myarg).'
                         default_originate:
                           type: dict
                           $ref: eos_cli_config_gen#/keys/router_bgp/keys/address_family_ipv4/keys/peer_groups/items/keys/default_originate
@@ -7238,6 +7347,16 @@ $defs:
                         route_map_out:
                           type: str
                           description: Outbound route-map name.
+                        rcf_in:
+                          type: str
+                          description: 'Inbound RCF function name with parenthesis.
+
+                            Example: MyFunction(myarg).'
+                        rcf_out:
+                          type: str
+                          description: 'Outbound RCF function name with parenthesis.
+
+                            Example: MyFunction(myarg).'
                         prefix_list_in:
                           type: str
                           description: Inbound prefix-list name.
@@ -7274,6 +7393,7 @@ $defs:
                   EOS configuration.
               structured_config:
                 type: dict
+                relaxed_validation: true
                 description: Custom structured config for eos_cli_config_gen.
                 documentation_options:
                   hide_keys: true
@@ -7454,6 +7574,7 @@ $defs:
                 keys:
                   structured_config:
                     type: dict
+                    relaxed_validation: true
                     description: 'Custom structured config added under router_bgp.vlans.[id=<vlan>]
                       for eos_cli_config_gen.
 
@@ -7742,6 +7863,7 @@ $defs:
               hide_keys: true
             description: Custom structured config for eos_cli_config_gen.
             type: dict
+            relaxed_validation: true
             $ref: eos_cli_config_gen#
           uplink_type:
             documentation_options:
@@ -7950,6 +8072,7 @@ $defs:
               table: node-type-uplink-configuration
               hide_keys: true
             type: dict
+            relaxed_validation: true
             description: 'Custom structured config applied to "uplink_interfaces",
               and "uplink_switch_interfaces".
 
@@ -7974,6 +8097,7 @@ $defs:
               table: node-type-l2-mlag-configuration
               hide_keys: true
             type: dict
+            relaxed_validation: true
             description: 'Custom structured config applied to MLAG peer link port-channel
               id.
 
@@ -7991,6 +8115,7 @@ $defs:
               table: node-type-l2-mlag-configuration
               hide_keys: true
             type: dict
+            relaxed_validation: true
             description: 'Custom structured config applied to MLAG Peer Link (control
               link) SVI interface id.
 
@@ -8008,6 +8133,7 @@ $defs:
               table: node-type-l2-mlag-configuration
               hide_keys: true
             type: dict
+            relaxed_validation: true
             description: 'Custom structured config applied to MLAG underlay L3 peering
               SVI interface id.
 
@@ -9520,6 +9646,7 @@ $defs:
             setting.
         structured_config:
           type: dict
+          relaxed_validation: true
           documentation_options:
             hide_keys: true
           description: Custom structured config for the Ethernet interface.
@@ -9662,6 +9789,20 @@ $defs:
               type: bool
               default: false
               description: Enable PTP.
+            roles:
+              type: list
+              description: Role in boundary clock mode for each node. Default is `dynamic`.
+              items:
+                type: str
+                default: dynamic
+                valid_values:
+                - dynamic
+                - master
+            profile:
+              type: str
+              default: aes67-r16-2016
+              description: "Default available profiles are:\n  - \"aes67\"\n  - \"aes67-r16-2016\"\n
+                \ - \"smpte2059-2\""
         sflow:
           type: bool
           description: Enable sFlow. Overrides `fabric_sflow` setting.
@@ -9734,6 +9875,7 @@ $defs:
             - ebgp: Enforce plain IPv4 BGP peering'
         structured_config:
           type: dict
+          relaxed_validation: true
           documentation_options:
             hide_keys: true
           description: 'Custom structured config for interfaces.
@@ -10076,6 +10218,7 @@ $defs:
         keys:
           structured_config:
             type: dict
+            relaxed_validation: true
             description: 'Structured configuration and EOS CLI commands rendered on
               router_bgp.vlans.[id=<vlan>].
 
@@ -10099,6 +10242,7 @@ $defs:
           '
       structured_config:
         type: dict
+        relaxed_validation: true
         description: 'Custom structured config added under vlan_interfaces.[name=<interface>]
           for eos_cli_config_gen.
 

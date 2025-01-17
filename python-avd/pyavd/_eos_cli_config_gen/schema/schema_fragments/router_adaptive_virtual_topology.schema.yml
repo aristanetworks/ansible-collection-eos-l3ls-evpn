@@ -82,6 +82,55 @@ keys:
             internet_exit_policy:
               type: str
               description: Name of the internet exit policy.
+            metric_order:
+              description: Metric order to be used for path comparison.
+              type: dict
+              keys:
+                preferred_metric:
+                  type: str
+                  required: true
+                  valid_values:
+                    - jitter
+                    - latency
+                    - load
+                    - loss-rate
+            outlier_elimination:
+              description: AVT path outlier elimination.
+              type: dict
+              keys:
+                disabled:
+                  description: Set true to disable the AVT path outlier elimination.
+                  type: bool
+                threshold:
+                  description: Change the threshold values for path comparison.
+                  type: dict
+                  keys:
+                    jitter:
+                      description: Jitter threshold in millisecond.
+                      type: int
+                      convert_types:
+                        - str
+                      min: 0
+                      max: 10000
+                    latency:
+                      description: Latency threshold in millisecond.
+                      type: int
+                      convert_types:
+                        - str
+                      min: 0
+                      max: 10000
+                    load:
+                      description: Load threshold percentage. Valid range <0.00-100.00>.
+                      type: str
+                      convert_types:
+                        - float
+                        - int
+                    loss_rate:
+                      description: Loss-rate threshold percentage. Valid range <0.00-100.00>.
+                      type: str
+                      convert_types:
+                        - float
+                        - int
       policies:
         type: list
         primary_key: name

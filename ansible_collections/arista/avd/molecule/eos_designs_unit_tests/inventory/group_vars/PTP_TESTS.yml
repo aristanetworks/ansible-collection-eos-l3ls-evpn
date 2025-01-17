@@ -14,11 +14,13 @@ core_interfaces:
       interfaces: [ Ethernet6, Ethernet6 ]
       ptp:
         enabled: true
+        profile: myptpprofile
       include_in_underlay_protocol: false
     - nodes: [ ptp-tests-spine1, ptp-tests-spine2 ]
       interfaces: [ Ethernet7, Ethernet7 ]
       ptp:
         enabled: true
+        roles: ["master", "dynamic"]
       include_in_underlay_protocol: false
 
 # Testing the same as above with l3_edge
@@ -59,20 +61,20 @@ tenants:
                 ip_address: 172.17.11.1/24
 
 port_profiles:
-  - profile: PTP-profile-BMCA
+  - profile: PTP-profile-dynamic
     vlans: 11
     mode: access
     ptp:
       enabled: true
-      endpoint_role: bmca
+      endpoint_role: dynamic
 
 servers:
-  - name: bmca-endpoint
+  - name: dynamic-endpoint
     adapters:
       - endpoint_ports: [ eth1 ]
         switch_ports: [ Ethernet13 ]
         switches: [ ptp-tests-leaf1 ]
-        profile: PTP-profile-BMCA
+        profile: PTP-profile-dynamic
 
   - name: video-endpoint
     adapters:

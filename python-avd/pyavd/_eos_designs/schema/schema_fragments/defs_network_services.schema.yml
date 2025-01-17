@@ -62,7 +62,7 @@ $defs:
           documentation_options:
             table: network-services-vrfs-settings
           type: bool
-          default: True
+          default: true
           description: |
             MLAG iBGP peering per VRF.
             By default an iBGP peering is configured per VRF between MLAG peers on separate VLANs.
@@ -117,6 +117,16 @@ $defs:
                   route_map_out:
                     type: str
                     description: Outbound route-map name.
+                  rcf_in:
+                    type: str
+                    description: |-
+                      Inbound RCF function name with parenthesis.
+                      Example: MyFunction(myarg).
+                  rcf_out:
+                    type: str
+                    description: |-
+                      Outbound RCF function name with parenthesis.
+                      Example: MyFunction(myarg).
                   default_originate:
                     type: dict
                     $ref: "eos_cli_config_gen#/keys/router_bgp/keys/address_family_ipv4/keys/peer_groups/items/keys/default_originate"
@@ -140,6 +150,16 @@ $defs:
                   route_map_out:
                     type: str
                     description: Outbound route-map name.
+                  rcf_in:
+                    type: str
+                    description: |-
+                      Inbound RCF function name with parenthesis.
+                      Example: MyFunction(myarg).
+                  rcf_out:
+                    type: str
+                    description: |-
+                      Outbound RCF function name with parenthesis.
+                      Example: MyFunction(myarg).
                   prefix_list_in:
                     type: str
                     description: Inbound prefix-list name.
@@ -488,7 +508,13 @@ $defs:
                     description: If not set, "vrf_id" will be used.
                   router_id:
                     type: str
-                    description: If not set, switch router_id will be used.
+                    description: |-
+                      Router ID to use for OSPF in this VRF.
+                      This can be an IPv4 address, "main_router_id", "none" or "diagnostic_loopback".
+                      - "main_router_id" will use the IP address of Loopback0 or the common `router general` Router ID if `use_router_general_for_router_id` is set."
+                      - "none" will not configure a OSPF Router ID for this VRF. EOS will use the main OSPF Router ID.
+                      - "diagnostic_loopback" will use the IP address of the VRF Diagnostic Loopback interface.
+                    default: main_router_id
                   max_lsa:
                     type: int
                     convert_types:
@@ -602,7 +628,7 @@ $defs:
                   table: network-services-vrfs-svis-settings
                 type: list
                 primary_key: id
-                allow_duplicate_primary_key: True
+                allow_duplicate_primary_key: true
                 description: |
                   List of SVIs.
                   This will create both the L3 SVI and L2 VLAN based on filters applied to the node.
@@ -787,6 +813,7 @@ $defs:
                         Configures flow-tracking on the interface. Overrides `fabric_flow_tracking.l3_interfaces` setting.
                     structured_config:
                       type: dict
+                      relaxed_validation: true
                       description: Custom structured config added under ethernet_interfaces.[name=<interface>] for eos_cli_config_gen.
                       documentation_options:
                         hide_keys: true
@@ -820,14 +847,14 @@ $defs:
                       type: str
                     enabled:
                       type: bool
-                      default: True
+                      default: true
                     ospf:
                       type: dict
                       description: OSPF interface configuration.
                       keys:
                         enabled:
                           type: bool
-                          default: False
+                          default: false
                         area:
                           type: str
                           convert_types:
@@ -937,7 +964,7 @@ $defs:
                   table: network-services-vrfs-bgp-settings
                 type: list
                 primary_key: ip_address
-                allow_duplicate_primary_key: True
+                allow_duplicate_primary_key: true
                 description: |
                   List of BGP peer definitions.
                   This will configure BGP neighbors inside the tenant VRF for peering with external devices.
@@ -1058,12 +1085,22 @@ $defs:
                       - If the VRF is part of an overlay (`evpn` or `mpls`), BGP will be configured for it.
                       - If any BGP peers are configured under the VRF, BGP will be configured for it. This is useful for L2LS designs with VRFs.
                       - If uplink type is `p2p-vrfs` *and* the vrf is included in the uplink VRFs, BGP will be configured for it.
+                  router_id:
+                    type: str
+                    description: |-
+                      Router ID to use for BGP in this VRF.
+                      This can be an IPv4 address, "main_router_id", "none" or "diagnostic_loopback".
+                      - "main_router_id" will use the IP address of Loopback0 or the common `router general` Router ID if `use_router_general_for_router_id` is set."
+                      - "none" will not configure a BGP Router ID for this VRF. EOS will use the main BGP Router ID.
+                      - "diagnostic_loopback" will use the IP address of the VRF Diagnostic Loopback interface.
+                    default: main_router_id
                   raw_eos_cli:
                     type: str
                     description: |
                       EOS CLI rendered directly on the Router BGP, VRF definition in the final EOS configuration.
                   structured_config:
                     type: dict
+                    relaxed_validation: true
                     description: Custom structured config added under router_bgp.vrfs.[name=<vrf>] for eos_cli_config_gen.
                     documentation_options:
                       hide_keys: true
@@ -1102,6 +1139,16 @@ $defs:
                         route_map_out:
                           type: str
                           description: Outbound route-map name.
+                        rcf_in:
+                          type: str
+                          description: |-
+                            Inbound RCF function name with parenthesis.
+                            Example: MyFunction(myarg).
+                        rcf_out:
+                          type: str
+                          description: |-
+                            Outbound RCF function name with parenthesis.
+                            Example: MyFunction(myarg).
                         default_originate:
                           type: dict
                           $ref: "eos_cli_config_gen#/keys/router_bgp/keys/address_family_ipv4/keys/peer_groups/items/keys/default_originate"
@@ -1125,6 +1172,16 @@ $defs:
                         route_map_out:
                           type: str
                           description: Outbound route-map name.
+                        rcf_in:
+                          type: str
+                          description: |-
+                            Inbound RCF function name with parenthesis.
+                            Example: MyFunction(myarg).
+                        rcf_out:
+                          type: str
+                          description: |-
+                            Outbound RCF function name with parenthesis.
+                            Example: MyFunction(myarg).
                         prefix_list_in:
                           type: str
                           description: Inbound prefix-list name.
@@ -1158,6 +1215,7 @@ $defs:
                 description: EOS CLI rendered directly on the root level of the final EOS configuration.
               structured_config:
                 type: dict
+                relaxed_validation: true
                 description: Custom structured config for eos_cli_config_gen.
                 documentation_options:
                   hide_keys: true
@@ -1167,7 +1225,7 @@ $defs:
             table: network-services-l2vlans-settings
           type: list
           primary_key: id
-          allow_duplicate_primary_key: True
+          allow_duplicate_primary_key: true
           description: Define L2 network services organized by vlan id.
           items:
             type: dict
@@ -1304,6 +1362,7 @@ $defs:
                 keys:
                   structured_config:
                     type: dict
+                    relaxed_validation: true
                     description: |
                       Custom structured config added under router_bgp.vlans.[id=<vlan>] for eos_cli_config_gen.
                       This configuration will not be applied to vlan aware bundles.

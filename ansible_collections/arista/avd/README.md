@@ -1,5 +1,5 @@
 <!--
-  ~ Copyright (c) 2023-2024 Arista Networks, Inc.
+  ~ Copyright (c) 2023-2025 Arista Networks, Inc.
   ~ Use of this source code is governed by the Apache License 2.0
   ~ that can be found in the LICENSE file.
   -->
@@ -22,7 +22,7 @@ AVD Documentation:
 The AVD collection has the following requirements:
 
 - Python 3.10 or above
-- Ansible Core 2.15.0 to 2.17.x
+- Ansible Core 2.16.0 to 2.18.x
 - [Additional Python Dependencies](#additional-python-dependencies)
 - Modify the `ansible.cfg` file to support additional Jinja2 extensions
 

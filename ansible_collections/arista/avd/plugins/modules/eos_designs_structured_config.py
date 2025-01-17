@@ -1,4 +1,4 @@
-# Copyright (c) 2021-2024 Arista Networks, Inc.
+# Copyright (c) 2021-2025 Arista Networks, Inc.
 # Use of this source code is governed by the Apache License 2.0
 # that can be found in the LICENSE file.
 
@@ -91,6 +91,6 @@ EXAMPLES = r"""
         options:
           list_merge: replace
           strip_empty_keys: false
-  check_mode: no
-  changed_when: False
+  check_mode: false
+  changed_when: false
 """

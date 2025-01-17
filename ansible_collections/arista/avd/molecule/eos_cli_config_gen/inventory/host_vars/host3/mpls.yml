@@ -1,6 +1,8 @@
-# test for mpls.ldp.shutdown and mpls.icmp not defined
+---
 mpls:
   ip: true
   ldp:
     interface_disabled_default: true
     router_id: 192.168.1.2
+  rsvp:
+    graceful_restart:

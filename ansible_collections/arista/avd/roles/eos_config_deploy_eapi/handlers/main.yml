@@ -1,4 +1,4 @@
-# Copyright (c) 2023-2024 Arista Networks, Inc.
+# Copyright (c) 2023-2025 Arista Networks, Inc.
 # Use of this source code is governed by the Apache License 2.0
 # that can be found in the LICENSE file.
 ---
@@ -6,7 +6,7 @@
 
 - name: Backup running config
   arista.eos.eos_config:
-    backup: yes
+    backup: true
     backup_options:
       filename: "{{ post_running_config_backup_filename }}"
       dir_path: "{{ post_running_config_backup_dir }}"
