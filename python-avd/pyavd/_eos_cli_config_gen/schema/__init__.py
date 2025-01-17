@@ -70578,6 +70578,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         "ip_telnet_client_source_interfaces": {"type": IpTelnetClientSourceInterfaces},
         "ip_tftp_client_source_interfaces": {"type": IpTftpClientSourceInterfaces},
         "ip_virtual_router_mac_address": {"type": str},
+        "ip_virtual_router_mac_address_advertisement_interval": {"type": int},
         "ipv6_access_lists": {"type": Ipv6AccessLists},
         "ipv6_dhcp_relay": {"type": Ipv6DhcpRelay},
         "ipv6_hardware": {"type": Ipv6Hardware},
@@ -70957,6 +70958,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
     """Subclass of AvdList with `IpTftpClientSourceInterfacesItem` items."""
     ip_virtual_router_mac_address: str | None
     """MAC address (hh:hh:hh:hh:hh:hh)."""
+    ip_virtual_router_mac_address_advertisement_interval: int | None
+    """Advertisement interval in seconds."""
     ipv6_access_lists: Ipv6AccessLists
     """Subclass of AvdIndexedList with `Ipv6AccessListsItem` items. Primary key is `name` (`str`)."""
     ipv6_dhcp_relay: Ipv6DhcpRelay
@@ -71313,6 +71316,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             ip_telnet_client_source_interfaces: IpTelnetClientSourceInterfaces | UndefinedType = Undefined,
             ip_tftp_client_source_interfaces: IpTftpClientSourceInterfaces | UndefinedType = Undefined,
             ip_virtual_router_mac_address: str | None | UndefinedType = Undefined,
+            ip_virtual_router_mac_address_advertisement_interval: int | None | UndefinedType = Undefined,
             ipv6_access_lists: Ipv6AccessLists | UndefinedType = Undefined,
             ipv6_dhcp_relay: Ipv6DhcpRelay | UndefinedType = Undefined,
             ipv6_hardware: Ipv6Hardware | UndefinedType = Undefined,
@@ -71607,6 +71611,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 ip_telnet_client_source_interfaces: Subclass of AvdList with `IpTelnetClientSourceInterfacesItem` items.
                 ip_tftp_client_source_interfaces: Subclass of AvdList with `IpTftpClientSourceInterfacesItem` items.
                 ip_virtual_router_mac_address: MAC address (hh:hh:hh:hh:hh:hh).
+                ip_virtual_router_mac_address_advertisement_interval: Advertisement interval in seconds.
                 ipv6_access_lists: Subclass of AvdIndexedList with `Ipv6AccessListsItem` items. Primary key is `name` (`str`).
                 ipv6_dhcp_relay: Subclass of AvdModel.
                 ipv6_hardware: Subclass of AvdModel.
