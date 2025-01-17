@@ -1794,6 +1794,7 @@ dhcp server vrf VRF01
 | Interface name | DHCP IPv4 | DHCP IPv6 |
 | -------------- | --------- | --------- |
 | Ethernet64 | True | True |
+| Port-Channel112 | True | True |
 
 ## System Boot Settings
 

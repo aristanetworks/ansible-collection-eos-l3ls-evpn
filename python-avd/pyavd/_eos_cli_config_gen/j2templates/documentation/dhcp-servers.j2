@@ -138,5 +138,8 @@
 {%         for ethernet_interface in ethernet_interfaces_dhcp_server | arista.avd.natural_sort %}
 | {{ ethernet_interface.name }} | {{ ethernet_interface.dhcp_server_ipv4 | arista.avd.default(false) }} | {{ ethernet_interface.dhcp_server_ipv6 | arista.avd.default(false) }} |
 {%         endfor %}
+{%         for port_channel_interface in port_channel_interfaces_dhcp_server | arista.avd.natural_sort %}
+| {{ port_channel_interface.name }} | {{ port_channel_interface.dhcp_server_ipv4 | arista.avd.default(false) }} | {{ port_channel_interface.dhcp_server_ipv6 | arista.avd.default(false) }} |
+{%         endfor %}
 {%     endif %}
 {% endif %}
