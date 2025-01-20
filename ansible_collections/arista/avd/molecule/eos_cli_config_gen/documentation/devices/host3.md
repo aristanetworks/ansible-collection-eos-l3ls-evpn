@@ -65,11 +65,21 @@ management ssh
 
 ## CVX
 
+CVX is enabled
+
+### CVX Services
+
+| Service | Enabled | Settings |
+| ------- | ------- | -------- |
+| MCS | - | Redis Password Set |
+| VXLAN | - | VTEP MAC learning: control-plane |
+
 ### CVX Device Configuration
 
 ```eos
 !
 cvx
+   no shutdown
    !
    service mcs
       redis password 7 <removed>
