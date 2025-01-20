@@ -33102,6 +33102,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             "ptp": {"type": Ptp},
             "ip_address": {"type": str},
             "dhcp_client_accept_default_route": {"type": bool},
+            "dhcp_server_ipv4": {"type": bool},
+            "dhcp_server_ipv6": {"type": bool},
             "ip_verify_unicast_source_reachable_via": {"type": str},
             "ip_nat": {"type": IpNat},
             "ipv6_enable": {"type": bool},
@@ -33267,6 +33269,10 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         """IPv4 address/mask or "dhcp"."""
         dhcp_client_accept_default_route: bool | None
         """Install default-route obtained via DHCP."""
+        dhcp_server_ipv4: bool | None
+        """Enable IPv4 DHCP server."""
+        dhcp_server_ipv6: bool | None
+        """Enable IPv6 DHCP server."""
         ip_verify_unicast_source_reachable_via: Literal["any", "rx"] | None
         ip_nat: IpNat
         """Subclass of AvdModel."""
@@ -33396,6 +33402,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 ptp: Ptp | UndefinedType = Undefined,
                 ip_address: str | None | UndefinedType = Undefined,
                 dhcp_client_accept_default_route: bool | None | UndefinedType = Undefined,
+                dhcp_server_ipv4: bool | None | UndefinedType = Undefined,
+                dhcp_server_ipv6: bool | None | UndefinedType = Undefined,
                 ip_verify_unicast_source_reachable_via: Literal["any", "rx"] | None | UndefinedType = Undefined,
                 ip_nat: IpNat | UndefinedType = Undefined,
                 ipv6_enable: bool | None | UndefinedType = Undefined,
@@ -33522,6 +33530,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                     ptp: Subclass of AvdModel.
                     ip_address: IPv4 address/mask or "dhcp".
                     dhcp_client_accept_default_route: Install default-route obtained via DHCP.
+                    dhcp_server_ipv4: Enable IPv4 DHCP server.
+                    dhcp_server_ipv6: Enable IPv6 DHCP server.
                     ip_verify_unicast_source_reachable_via: ip_verify_unicast_source_reachable_via
                     ip_nat: Subclass of AvdModel.
                     ipv6_enable: ipv6_enable
