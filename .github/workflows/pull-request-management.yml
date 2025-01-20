@@ -85,25 +85,130 @@ jobs:
             pyavd:
               - 'python_avd/*'
               - 'python_avd/**/*'
-  requirements_container:
-    name: Test all requirements installation and create container image.
+  # create-avd-slim:
+  #   runs-on: ubuntu-latest
+  #   container:
+  #     image: ubuntu:latest
+  #     options: --cpus 1
+  #   steps:
+  #     - name: Check out repository code
+  #       uses: actions/checkout@v4
+  #     - name: Set up Docker
+  #       run: |
+  #         apt-get update
+  #         apt-get install -y docker.io
+
+  #     - name: Convert GitHub username to lowercase
+  #       id: lowercase
+  #       run: |
+  #         echo "::set-output name=lowercase::$(echo '${{ github.repository_owner }}' | tr '[:upper:]' '[:lower:]')"
+
+  #     - name: Log in to GitHub Container Registry
+  #       uses: docker/login-action@v2
+  #       with:
+  #         registry: ghcr.io
+  #         username: ${{ steps.lowercase.outputs.lowercase }}
+  #         password: ${{ secrets.GITHUB_TOKEN }}
+
+  #     - name: Create Dockerfile
+  #       run: |
+  #         cat <<EOF > Dockerfile
+  #         FROM ubuntu:latest
+  #         RUN apt-get update && apt-get install -y --no-install-recommends \\
+  #             openssh-client git make python3-pip python3-dev docker.io \\
+  #             && pip install uv --break-system-packages \\
+  #             && apt-get clean \\
+  #             && rm -rf /var/lib/apt/lists/*
+
+  #         # Copy repository code into the image
+  #         COPY . /avd
+
+  #         # Install UV and Python virtual environments
+  #         RUN uv python install 3.10 3.11 3.12 3.13 && \\
+  #             uv venv --python 3.10 /UV3.10 && /UV3.10/bin/python -m ensurepip --upgrade && \\
+  #             uv venv --python 3.11 /UV3.11 && /UV3.11/bin/python -m ensurepip --upgrade && \\
+  #             uv venv --python 3.12 /UV3.12 && /UV3.12/bin/python -m ensurepip --upgrade && \\
+  #             uv venv --python 3.13 /UV3.13 && /UV3.13/bin/python -m ensurepip --upgrade && \\
+  #             /UV3.10/bin/python -m pip install -r /avd/ansible_collections/arista/avd/requirements-dev.txt --upgrade && \\
+  #             /UV3.11/bin/python -m pip install -r /avd/ansible_collections/arista/avd/requirements-dev.txt --upgrade && \\
+  #             /UV3.12/bin/python -m pip install -r /avd/ansible_collections/arista/avd/requirements-dev.txt --upgrade && \\
+  #             /UV3.13/bin/python -m pip install -r /avd/ansible_collections/arista/avd/requirements-dev.txt --upgrade
+
+  #         EOF
+
+  #     - name: Build and Push Docker Image
+  #       id: build-image
+  #       run: |
+  #         IMAGE_TAG=ghcr.io/${{ steps.lowercase.outputs.lowercase }}/avd-slim-test:0.1
+  #         docker build -t $IMAGE_TAG .
+  #         docker push $IMAGE_TAG
+
+
+  setup-avd:
+    name: Install AVD Requirements and Build Image
+    needs: [ file-changes ]
     runs-on: ubuntu-latest
-    # strategy:
-    #   matrix:
-    #     python-version: [3.12] # Python versions
-    # Docker Hub image that `container-job` executes in
-    container: 
-      image: ubuntu:latest
+    container:
+      image: ghcr.io/maheshgslab/avd-slim-test:0.1
       options: --cpus 1
+
+    outputs:
+      image_tag: ${{ steps.build-image.outputs.image_tag }}
 
     steps:
       - name: Check out repository code
         uses: actions/checkout@v4
-      - name: Set up Docker
+
+      - name: Convert GitHub username to lowercase
+        id: lowercase
         run: |
-          apt-get update
-          apt-get install -y docker.io
-      
+          echo "::set-output name=lowercase::$(echo '${{ github.repository_owner }}' | tr '[:upper:]' '[:lower:]')"
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ steps.lowercase.outputs.lowercase }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Install Requirements and Build Image
+        id: build-image
+        run: |
+          # Install Python requirements in the container
+          PYTHON_VERSIONS="UV3.10 UV3.11 UV3.12 UV3.13"
+          REQUIREMENTS_FILE="ansible_collections/arista/avd/requirements-dev.txt"
+          PACKAGES="mock pytest pytest-mock pytest-xdist pyyaml"
+
+          # Loop through the Python versions and install requirements
+          for PYTHON_VERSION in $PYTHON_VERSIONS; do
+            /$PYTHON_VERSION/bin/python -m pip install $PACKAGES "ansible-core<2.19.0" -r $REQUIREMENTS_FILE --upgrade
+          done
+
+          # Create a new image from the running container
+          SHORT_SHA=$(echo "9f89f9bbc6f1a222870b9ad45c13fdce3a4ee1b0" | cut -c1-8)
+          IMAGE_TAG="ghcr.io/maheshgslab/avd-slim-test:10-$SHORT_SHA"
+
+          # Commit the running container to create a new image
+          CONTAINER_ID=$(docker ps -q --filter ancestor=ghcr.io/maheshgslab/avd-slim-test:0.1)
+          docker commit $CONTAINER_ID $IMAGE_TAG
+
+          # Push the newly created image to GitHub Container Registry
+          docker push $IMAGE_TAG
+
+          # Set output for the image tag
+          echo "::set-output name=image_tag::$IMAGE_TAG"
+
+  build-pyavd:
+    name: Install pyavd and Build Image
+    needs: setup-avd
+    runs-on: ubuntu-latest
+    container:
+      image: ${{ needs.setup-avd.outputs.image_tag }}
+      options: --cpus 1
+    outputs:
+      image_tag: ${{ steps.wheel-image-tag.outputs.wheel_image_tag }}
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v4
       - name: Convert GitHub username to lowercase
         id: lowercase
         run: |
@@ -116,76 +221,52 @@ jobs:
           username: ${{ steps.lowercase.outputs.lowercase }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      # Dynamically create Dockerfile
-      - name: Create Dockerfile dynamically
+      - name: Additional Task in Second Container
+        id: wheel-image-tag
         run: |
-          echo "Creating Dockerfile..."
-          cat <<EOF > Dockerfile
-          FROM ubuntu:latest
+          cd python-avd
+          python3 -m pip install --break-system-packages build
+          python3 -m build --wheel --outdir /tmp/wheels
 
-          # Install pre-requisites
-          RUN apt-get update && apt-get install -y git parallel make python3-pip python3.12
+          # Install the generated wheel for all required Python versions
+          for VERSION in UV3.10 UV3.11 UV3.12 UV3.13; do
+            /$VERSION/bin/python -m pip install /tmp/wheels/*.whl
+          done
+          cd ..
+          cp -rT ./ /avd
+          # Generate a unique tag using run number and truncated commit SHA
+          WHEEL_IMAGE_TAG=${{ needs.setup-avd.outputs.image_tag }}-2
 
-          # Install UV
-          RUN pip install uv --break-system-packages
+          # Build the updated image from the current container state
+          docker commit $(docker ps -q --filter ancestor=${{ needs.setup-avd.outputs.image_tag }}) $WHEEL_IMAGE_TAG
 
-          # Install python versions
-          RUN uv python install 3.10 3.11 3.12 3.13
+          # Push the updated image to GitHub Container Registry
+          docker push $WHEEL_IMAGE_TAG
+          echo "::set-output name=wheel_image_tag::$WHEEL_IMAGE_TAG"
 
-          # Clone the repository in the Docker image
-          RUN git clone https://github.com/${{ github.repository }}
-
-          WORKDIR /avd
-
-          # Create virtual env
-          # RUN uv venv --python 3.10 UV3.10  && \
-          #     UV3.10/bin/python -m ensurepip --upgrade 
-          # RUN uv venv --python 3.11 UV3.11 && \
-          #     UV3.11/bin/python -m ensurepip --upgrade 
-          RUN uv venv --python 3.12 UV3.12 && \
-              UV3.12/bin/python -m ensurepip --upgrade 
-          RUN uv venv --python 3.13 UV3.13 && \
-              UV3.13/bin/python -m ensurepip --upgrade 
-
-          # # Activate virtual env
-          # RUN . UV3.10/bin/activate && \
-          #   UV3.10/bin/python -m pip install mock pytest pytest-mock pytest-xdist pyyaml "ansible-core<2.19.0" -r .github/requirements-ci.txt -r ansible_collections/arista/avd/requirements-dev.txt --upgrade
-          
-          # # Activate virtual env
-          # RUN . UV3.11/bin/activate && \
-          #   UV3.11/bin/python -m pip install mock pytest pytest-mock pytest-xdist pyyaml "ansible-core<2.19.0" -r .github/requirements-ci.txt -r ansible_collections/arista/avd/requirements-dev.txt --upgrade
-          
-          # Activate virtual env
-          RUN . UV3.12/bin/activate && \
-            UV3.12/bin/python -m pip install mock pytest pytest-mock pytest-xdist pyyaml "ansible-core<2.19.0" -r .github/requirements-ci.txt -r ansible_collections/arista/avd/requirements-dev.txt --upgrade
-          
-          # RUN parallel --link --tag 'bash -c' ::: \
-          #   ". UV3.12/bin/activate && UV3.12/bin/python -m pip install mock pytest pytest-mock pytest-xdist pyyaml 'ansible-core<2.19.0' -r .github/requirements-ci.txt -r ansible_collections/arista/avd/requirements-dev.txt --upgrade" \
-          #   ". UV3.13/bin/activate && UV3.13/bin/python -m pip install mock pytest pytest-mock pytest-xdist pyyaml 'ansible-core<2.19.0' -r .github/requirements-ci.txt -r ansible_collections/arista/avd/requirements-dev.txt --upgrade"
-
-          # Activate virtual env
-          RUN . UV3.13/bin/activate && \
-            UV3.13/bin/python -m pip install mock pytest pytest-mock pytest-xdist pyyaml "ansible-core<2.19.0" -r .github/requirements-ci.txt -r ansible_collections/arista/avd/requirements-dev.txt --upgrade
-
-          CMD ["python"]
-          EOF
-          echo "Dockerfile created successfully."
-
-      - name: Build Docker Image
-        run: |
-          docker build -t ghcr.io/${{ steps.lowercase.outputs.lowercase }}/avd/python_avd:0.0.1 .
-
-      - name: Push Docker Image
-        run: |
-          docker push ghcr.io/${{ steps.lowercase.outputs.lowercase }}/avd/python_avd:0.0.1
-
-  # ----------------------------------- #
-  # Ansible tests
-  # ----------------------------------- #
-  ansible_test_sanity:
-    name: Run ansible-test sanity validation
+  run-ansible-tests:
+    name: Run Ansible
+    needs: build-pyavd
     runs-on: ubuntu-latest
-    needs: [ file-changes, requirements_container ]
+    container:
+      image: ${{ needs.build-pyavd.outputs.image_tag }}
+      options: --cpus 1
+
+    strategy:
+      matrix:
+        task:
+          - name: Unit Tests 3.12
+            command: ". /UV3.12/bin/activate && cd /avd/ansible_collections/arista/avd && ansible-test units -vv"
+          - name: Integration Tests 3.12
+            command: ". /UV3.12/bin/activate && cd /avd/ansible_collections/arista/avd && ansible-test integration -vv"
+          - name: Integration Tests 3.13
+            command: ". /UV3.13/bin/activate && cd /avd/ansible_collections/arista/avd && ansible-test integration -vv"
+          - name: Sanity Tests 3.13
+            command: ". /UV3.13/bin/activate && cd /avd/ansible_collections/arista/avd && ansible-test sanity --color yes -v"
+          - name: Sanity Tests 3.12
+            command: ". /UV3.12/bin/activate && cd /avd/ansible_collections/arista/avd && ansible-test sanity --color yes -v"
+          - name: Lint Tests 3.11
+            command: ". /UV3.11/bin/activate && ansible-galaxy collection install -r /avd/ansible_collections/arista/avd/collections.yml && cd /avd/ansible_collections/arista/avd && ansible-lint --force-color --strict -v"
     steps:
       - name: Convert GitHub username to lowercase
         id: lowercase
@@ -198,89 +279,10 @@ jobs:
           registry: ghcr.io
           username: ${{ steps.lowercase.outputs.lowercase }}
           password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Run Docker Container
+      - name: Run Task - ${{ matrix.task.name }}
         run: |
-          docker run -dit --name avd-python-container ghcr.io/${{ steps.lowercase.outputs.lowercase }}/avd/python_avd:0.0.1 bash
-
-      - name: Execute Ansible sanity tests in python3.12 & python3.13
-        run: |
-          docker exec avd-python-container bash -c "source UV3.12/bin/activate && cd ansible_collections/arista/avd && ansible-test sanity --color yes -v"
-          docker exec avd-python-container bash -c "source UV3.13/bin/activate && cd ansible_collections/arista/avd && ansible-test sanity --color yes -v"
-
-  ansible_test_units:
-    name: Run ansible-test units test cases
-    runs-on: ubuntu-latest
-    needs: [ file-changes, requirements_container ]
-    steps:
-      - name: Convert GitHub username to lowercase
-        id: lowercase
-        run: |
-          echo "::set-output name=lowercase::$(echo '${{ github.repository_owner }}' | tr '[:upper:]' '[:lower:]')"
-
-      - name: Log in to GitHub Container Registry
-        uses: docker/login-action@v2
-        with:
-          registry: ghcr.io
-          username: ${{ steps.lowercase.outputs.lowercase }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Run Docker Container
-        run: |
-          docker run -dit --name avd-python-container ghcr.io/${{ steps.lowercase.outputs.lowercase }}/avd/python_avd:0.0.1 bash
-
-      - name: Execute Ansible unit tests
-        run: |
-          docker exec avd-python-container bash -c "source UV3.12/bin/activate && cd ansible_collections/arista/avd && ansible-test units -vv"
-
-  ansible_test_integration:
-    name: Run ansible-test integration test cases
-    runs-on: ubuntu-latest
-    needs: [ file-changes, requirements_container ]
-    steps:
-      - name: Convert GitHub username to lowercase
-        id: lowercase
-        run: |
-          echo "::set-output name=lowercase::$(echo '${{ github.repository_owner }}' | tr '[:upper:]' '[:lower:]')"
-
-      - name: Log in to GitHub Container Registry
-        uses: docker/login-action@v2
-        with:
-          registry: ghcr.io
-          username: ${{ steps.lowercase.outputs.lowercase }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Run Docker Container
-        run: |
-          docker run -dit --name avd-python-container ghcr.io/${{ steps.lowercase.outputs.lowercase }}/avd/python_avd:0.0.1 bash
-
-      - name: Execute Ansible integration tests in python3.12 and python3.13
-        run: |
-          docker exec avd-python-container bash -c "source UV3.12/bin/activate && cd ansible_collections/arista/avd && ansible-test integration -vv"
-          docker exec avd-python-container bash -c "source UV3.13/bin/activate && cd ansible_collections/arista/avd && ansible-test integration -vv"
-
-  # ansible_lint:
-  #   name: Run ansible-lint test case
-  #   runs-on: ubuntu-latest
-  #   needs: [ file-changes, requirements_container ]
-  #   steps:
-  #     - uses: actions/checkout@v4
-  #     - name: Set up Python 3
-  #       uses: actions/setup-python@v5
-  #       with:
-  #         python-version: |
-  #           3.10
-  #           3.11
-  #           3.12
-  #           3.13
-  #     - name: 'Install Python & Ansible requirements'
-  #       run: |
-  #         pip install -r .github/requirements-ci.txt -r ansible_collections/arista/avd/requirements-dev.txt --upgrade
-  #         ansible-galaxy collection install -r ansible_collections/arista/avd/collections.yml
-  #     - name: 'Run ansible-test integration test cases'
-  #       run: |
-  #         cd ansible_collections/arista/avd/
-  #         ansible-lint --force-color --strict -v
+          git config --global --add safe.directory /__w/avd/avd
+          ${{ matrix.task.command }}
   # # ----------------------------------- #
   # # EOS CLI CONFIG GEN MOLECULE
   # # ----------------------------------- #
