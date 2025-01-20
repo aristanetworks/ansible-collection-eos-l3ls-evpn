@@ -6,15 +6,33 @@ from __future__ import annotations
 import re
 from functools import cached_property
 from hashlib import sha256
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Literal
 
+from pyavd._eos_cli_config_gen.schema import EosCliConfigGen
 from pyavd._errors import AristaAvdError, AristaAvdInvalidInputsError
-from pyavd._utils import default, get_v2, short_esi_to_route_target
+from pyavd._utils import Undefined, UndefinedType, default, get_v2, short_esi_to_route_target
 
 if TYPE_CHECKING:
+    from typing import TypeVar
+
     from pyavd._eos_designs.schema import EosDesigns
 
     from . import AvdStructuredConfigConnectedEndpoints
+
+    T_Ptp = TypeVar("T_Ptp", EosCliConfigGen.EthernetInterfacesItem.Ptp, EosCliConfigGen.PortChannelInterfacesItem.Ptp)
+    T_Link_Tracking_Groups = TypeVar(
+        "T_Link_Tracking_Groups", EosCliConfigGen.EthernetInterfacesItem.LinkTrackingGroups, EosCliConfigGen.PortChannelInterfacesItem.LinkTrackingGroups
+    )
+    T_Sflow = TypeVar("T_Sflow", EosCliConfigGen.EthernetInterfacesItem.Sflow, EosCliConfigGen.PortChannelInterfacesItem.Sflow)
+    T_FlowTracker = TypeVar("T_FlowTracker", EosCliConfigGen.EthernetInterfacesItem.FlowTracker, EosCliConfigGen.PortChannelInterfacesItem.FlowTracker)
+    T_StormControl = TypeVar("T_StormControl", EosCliConfigGen.EthernetInterfacesItem.StormControl, EosCliConfigGen.PortChannelInterfacesItem.StormControl)
+    T_TrunkGroups = TypeVar(
+        "T_TrunkGroups", EosCliConfigGen.EthernetInterfacesItem.Switchport.Trunk.Groups, EosCliConfigGen.PortChannelInterfacesItem.Switchport.Trunk.Groups
+    )
+    T_EvpnEthernetSegment = TypeVar(
+        "T_EvpnEthernetSegment", EosCliConfigGen.EthernetInterfacesItem.EvpnEthernetSegment, EosCliConfigGen.PortChannelInterfacesItem.EvpnEthernetSegment
+    )
+    T_Phone = TypeVar("T_Phone", EosCliConfigGen.EthernetInterfacesItem.Switchport.Phone, EosCliConfigGen.PortChannelInterfacesItem.Switchport.Phone)
 
 
 class UtilsMixin:
@@ -123,26 +141,28 @@ class UtilsMixin:
         self: AvdStructuredConfigConnectedEndpoints,
         adapter: EosDesigns._DynamicKeys.DynamicConnectedEndpointsItem.ConnectedEndpointsItem.AdaptersItem,
         connected_endpoint: EosDesigns._DynamicKeys.DynamicConnectedEndpointsItem.ConnectedEndpointsItem,
-    ) -> list | None:
+        output_type: type[T_TrunkGroups],
+    ) -> T_TrunkGroups | UndefinedType:
         """Return trunk_groups for one adapter."""
         if not self.inputs.enable_trunk_groups or adapter.mode not in ["trunk", "trunk phone"]:
-            return None
+            return Undefined
 
         if adapter._get("trunk_groups") is None:
             msg = f"'trunk_groups' for the connected_endpoint {connected_endpoint.name} is required."
             raise AristaAvdInvalidInputsError(msg)
 
-        return adapter.trunk_groups._as_list()
+        return output_type(adapter.trunk_groups)
 
     def _get_adapter_storm_control(
         self: AvdStructuredConfigConnectedEndpoints,
         adapter: EosDesigns._DynamicKeys.DynamicConnectedEndpointsItem.ConnectedEndpointsItem.AdaptersItem,
-    ) -> dict | None:
+        output_type: type[T_StormControl],
+    ) -> T_StormControl | UndefinedType:
         """Return storm_control for one adapter."""
         if self.shared_utils.platform_settings.feature_support.interface_storm_control:
-            return adapter.storm_control._as_dict()
+            return adapter.storm_control._cast_as(output_type)
 
-        return None
+        return Undefined
 
     def _get_adapter_evpn_ethernet_segment_cfg(
         self: AvdStructuredConfigConnectedEndpoints,
@@ -150,31 +170,32 @@ class UtilsMixin:
         short_esi: str | None,
         node_index: int,
         connected_endpoint: EosDesigns._DynamicKeys.DynamicConnectedEndpointsItem.ConnectedEndpointsItem,
+        output_type: type[T_EvpnEthernetSegment],
         default_df_algo: str | None = None,
-        default_redundancy: str | None = None,
-    ) -> dict | None:
+        default_redundancy: Literal["all-active", "single-active"] | None = None,
+    ) -> T_EvpnEthernetSegment | UndefinedType:
         """Return evpn_ethernet_segment_cfg for one adapter."""
         if short_esi is None:
-            return None
+            return Undefined
 
-        evpn_ethernet_segment = {
-            "identifier": f"{self.inputs.evpn_short_esi_prefix}{short_esi}",
-            "redundancy": adapter.ethernet_segment.redundancy or default_redundancy,
-            "route_target": short_esi_to_route_target(short_esi),
-        }
+        evpn_ethernet_segment = output_type(
+            identifier=f"{self.inputs.evpn_short_esi_prefix}{short_esi}",
+            redundancy=adapter.ethernet_segment.redundancy or default_redundancy,
+            route_target=short_esi_to_route_target(short_esi),
+        )
         if (designated_forwarder_algorithm := adapter.ethernet_segment.designated_forwarder_algorithm or default_df_algo) is None:
             return evpn_ethernet_segment
 
         if designated_forwarder_algorithm == "modulus":
-            evpn_ethernet_segment["designated_forwarder_election"] = {"algorithm": "modulus"}
+            evpn_ethernet_segment.designated_forwarder_election.algorithm = "modulus"
 
         elif designated_forwarder_algorithm == "auto":
             auto_preferences = range((len(adapter.switches) - 1) * 100, -1, -100)
-            evpn_ethernet_segment["designated_forwarder_election"] = {
-                "algorithm": "preference",
-                "preference_value": auto_preferences[node_index],
-                "dont_preempt": adapter.ethernet_segment.dont_preempt,
-            }
+            evpn_ethernet_segment.designated_forwarder_election._update(
+                algorithm="preference",
+                preference_value=auto_preferences[node_index],
+                dont_preempt=adapter.ethernet_segment._get_defined_attr("dont_preempt"),
+            )
 
         elif designated_forwarder_algorithm == "preference":
             # TODO: Add check for length of designated_forwarder_preferences
@@ -184,37 +205,35 @@ class UtilsMixin:
                 required=True,
                 custom_error_msg=f"ethernet_segment.designated_forwarder_preferences for the connected_endpoint {connected_endpoint.name}.",
             )
-            evpn_ethernet_segment["designated_forwarder_election"] = {
-                "algorithm": "preference",
-                "preference_value": designated_forwarder_preferences[node_index],
-                "dont_preempt": adapter.ethernet_segment.dont_preempt,
-            }
+            evpn_ethernet_segment.designated_forwarder_election._update(
+                algorithm="preference",
+                preference_value=designated_forwarder_preferences[node_index],
+                dont_preempt=adapter.ethernet_segment._get_defined_attr("dont_preempt"),
+            )
 
         return evpn_ethernet_segment
 
     def _get_adapter_link_tracking_groups(
         self: AvdStructuredConfigConnectedEndpoints,
         adapter: EosDesigns._DynamicKeys.DynamicConnectedEndpointsItem.ConnectedEndpointsItem.AdaptersItem,
-    ) -> list | None:
+        output_type: type[T_Link_Tracking_Groups],
+    ) -> T_Link_Tracking_Groups | UndefinedType:
         """Return link_tracking_groups for one adapter."""
         if self.shared_utils.link_tracking_groups is None or not adapter.link_tracking.enabled:
-            return None
+            return Undefined
 
-        return [
-            {
-                "name": adapter.link_tracking.name or self.shared_utils.link_tracking_groups[0]["name"],
-                "direction": "downstream",
-            },
-        ]
+        output = output_type()
+        output.append_new(name=adapter.link_tracking.name or self.shared_utils.link_tracking_groups[0]["name"], direction="downstream")
+        return output
 
     def _get_adapter_ptp(
-        self: AvdStructuredConfigConnectedEndpoints, adapter: EosDesigns._DynamicKeys.DynamicConnectedEndpointsItem.ConnectedEndpointsItem.AdaptersItem
-    ) -> dict | None:
+        self: AvdStructuredConfigConnectedEndpoints,
+        adapter: EosDesigns._DynamicKeys.DynamicConnectedEndpointsItem.ConnectedEndpointsItem.AdaptersItem,
+        output_type: type[T_Ptp],
+    ) -> T_Ptp | UndefinedType:
         """Return ptp for one adapter."""
         if not adapter.ptp.enabled:
-            return None
-
-        ptp_config = {}
+            return Undefined
 
         # Apply PTP profile config
         if (ptp_profile_name := adapter.ptp.profile or self.shared_utils.ptp_profile_name) is not None:
@@ -222,35 +241,39 @@ class UtilsMixin:
                 msg = f"PTP Profile '{ptp_profile_name}' referenced under {adapter._context} does not exist in `ptp_profiles`."
                 raise AristaAvdInvalidInputsError(msg)
 
-            ptp_config.update(self.inputs.ptp_profiles[ptp_profile_name]._as_dict(include_default_values=True))
+            # Create a copy and removes the .profile attribute since the target model has a .profile key with a different schema.
+            ptp_profile_config = self.inputs.ptp_profiles[ptp_profile_name]._deepcopy()
+            delattr(ptp_profile_config, "profile")
+            ptp_config = ptp_profile_config._cast_as(output_type, ignore_extra_keys=True)
+        else:
+            ptp_config = output_type()
 
-        ptp_config["enable"] = True
+        ptp_config.enable = True
 
         if adapter.ptp.endpoint_role not in ["dynamic", "bmca"]:
-            ptp_config["role"] = "master"
-
-        ptp_config.pop("profile", None)
+            ptp_config.role = "master"
 
         return ptp_config
 
     def _get_adapter_poe(
         self: AvdStructuredConfigConnectedEndpoints,
         adapter: EosDesigns._DynamicKeys.DynamicConnectedEndpointsItem.ConnectedEndpointsItem.AdaptersItem,
-    ) -> dict | None:
+    ) -> EosCliConfigGen.EthernetInterfacesItem.Poe | UndefinedType:
         """Return poe settings for one adapter."""
-        if self.shared_utils.platform_settings.feature_support.poe:
-            return adapter.poe._as_dict() or None
+        if self.shared_utils.platform_settings.feature_support.poe and adapter.poe:
+            return adapter.poe._cast_as(EosCliConfigGen.EthernetInterfacesItem.Poe)
 
-        return None
+        return Undefined
 
     def _get_adapter_phone(
         self: AvdStructuredConfigConnectedEndpoints,
         adapter: EosDesigns._DynamicKeys.DynamicConnectedEndpointsItem.ConnectedEndpointsItem.AdaptersItem,
         connected_endpoint: EosDesigns._DynamicKeys.DynamicConnectedEndpointsItem.ConnectedEndpointsItem,
-    ) -> dict | None:
+        output_type: type[T_Phone],
+    ) -> T_Phone | UndefinedType:
         """Return phone settings for one adapter."""
         if not adapter.phone_vlan:
-            return None
+            return Undefined
 
         # Verify that "mode" is set to "trunk phone"
         if adapter.mode != "trunk phone":
@@ -265,16 +288,29 @@ class UtilsMixin:
             )
             raise AristaAvdError(msg)
 
-        return {
-            "vlan": adapter.phone_vlan,
-            "trunk": adapter.phone_trunk_mode,
-        }
+        return output_type(trunk=adapter.phone_trunk_mode, vlan=adapter.phone_vlan)
 
     def _get_adapter_sflow(
         self: AvdStructuredConfigConnectedEndpoints,
         adapter: EosDesigns._DynamicKeys.DynamicConnectedEndpointsItem.ConnectedEndpointsItem.AdaptersItem,
-    ) -> dict | None:
+        output_type: type[T_Sflow],
+    ) -> T_Sflow | UndefinedType:
         if (adapter_sflow := default(adapter.sflow, self.inputs.fabric_sflow.endpoints)) is not None:
-            return {"enable": adapter_sflow}
+            return output_type(enable=adapter_sflow)
 
-        return None
+        return Undefined
+
+    def _get_adapter_flowtracker(
+        self: AvdStructuredConfigConnectedEndpoints,
+        adapter: EosDesigns._DynamicKeys.DynamicConnectedEndpointsItem.ConnectedEndpointsItem.AdaptersItem,
+        output_type: type[T_FlowTracker],
+    ) -> T_FlowTracker | UndefinedType:
+        if default(adapter.flow_tracking.enabled, self.inputs.fabric_flow_tracking.endpoints.enabled):
+            name: str = default(adapter.flow_tracking.name, self.inputs.fabric_flow_tracking.endpoints.name)
+            match self.shared_utils.flow_tracking_type:
+                case "hardware":
+                    return output_type(hardware=name)
+                case "sampled":
+                    return output_type(sampled=name)
+
+        return Undefined

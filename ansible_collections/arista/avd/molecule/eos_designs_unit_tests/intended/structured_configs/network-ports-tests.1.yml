@@ -13,6 +13,14 @@ ethernet_interfaces:
   peer: network-ports-tests-2
   peer_interface: Ethernet10/1
   peer_type: mlag_peer
+- name: Ethernet14
+  description: SERVER_CONNECTED_ENDPOINT_OVERWRITING_NETWORK_PORT_Eth42
+  shutdown: false
+  peer: CONNECTED_ENDPOINT_OVERWRITING_NETWORK_PORT
+  peer_interface: Eth42
+  peer_type: server
+  switchport:
+    enabled: true
 - name: Ethernet1
   description: PCs
   shutdown: false
@@ -667,14 +675,6 @@ ethernet_interfaces:
   description: Base config which may be overwritten
   shutdown: false
   peer_type: network_port
-  switchport:
-    enabled: true
-- name: Ethernet14
-  description: SERVER_CONNECTED_ENDPOINT_OVERWRITING_NETWORK_PORT_Eth42
-  shutdown: false
-  peer: CONNECTED_ENDPOINT_OVERWRITING_NETWORK_PORT
-  peer_interface: Eth42
-  peer_type: server
   switchport:
     enabled: true
 - name: Ethernet51
