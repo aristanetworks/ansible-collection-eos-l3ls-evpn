@@ -436,9 +436,9 @@ ip name-server vrf TEST 2001:db8::2 priority 3
 
 ##### mynameserver1
 
-DNS Domain : arista.avd.com
+DNS Domain: arista.avd.com
 
-IP Domain List : domain-list1
+IP Domain List: domain-list1
 
 | IP Address | VRF | Priority |
 | ---------- | --- | -------- |
@@ -452,7 +452,7 @@ IP Domain List : domain-list1
 
 ##### mynameserver2
 
-DNS Domain : anta.avd.com
+DNS Domain: anta.avd.com
 
 #### IP Name Server Groups Device Configuration
 

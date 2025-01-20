@@ -14,11 +14,11 @@
 ##### {{ group.name }}
 {%         if group.dns_domain is arista.avd.defined %}
 
-DNS Domain : {{ group.dns_domain }}
+DNS Domain: {{ group.dns_domain }}
 {%         endif %}
 {%         if group.ip_domain_list is arista.avd.defined %}
 
-IP Domain List : {{ group.ip_domain_list }}
+IP Domain List: {{ group.ip_domain_list }}
 {%         endif %}
 {%         if group.name_servers is arista.avd.defined %}
 
