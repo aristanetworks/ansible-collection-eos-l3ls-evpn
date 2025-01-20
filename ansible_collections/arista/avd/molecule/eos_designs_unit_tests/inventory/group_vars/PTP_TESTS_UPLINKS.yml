@@ -17,14 +17,12 @@ l3leaf:
       ptp:
         enabled: true
         # PTP configured on below interfaces.
-        uplinks: ['Ethernet1']
+        uplinks: [Ethernet1, Ethernet2]
     - name: ptp-tests-leaf4
       id: 2
       uplink_switch_interfaces: [Ethernet16, Ethernet16]
       ptp:
-        enabled: true
-        uplinks: ['Ethernet1', 'Ethernet2']
-      # PTP configured on all uplinks when 'ptp.uplinks' is not set.
+        enabled: false
     - name: ptp-tests-leaf5
       id: 3
       uplink_switch_interfaces: [Ethernet17, Ethernet17]

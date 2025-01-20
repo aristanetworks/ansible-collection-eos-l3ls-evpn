@@ -9,15 +9,6 @@ ethernet_interfaces:
   shutdown: false
   mtu: 9214
   ip_address: 192.168.1.5/31
-  ptp:
-    enable: true
-    announce:
-      interval: 0
-      timeout: 3
-    delay_req: -3
-    sync_message:
-      interval: -3
-    transport: ipv4
   peer: ptp-tests-spine1
   peer_interface: Ethernet16
   peer_type: spine
@@ -28,15 +19,6 @@ ethernet_interfaces:
   shutdown: false
   mtu: 9214
   ip_address: 192.168.1.7/31
-  ptp:
-    enable: true
-    announce:
-      interval: 0
-      timeout: 3
-    delay_req: -3
-    sync_message:
-      interval: -3
-    transport: ipv4
   peer: ptp-tests-spine2
   peer_interface: Ethernet16
   peer_type: spine
@@ -69,24 +51,6 @@ prefix_lists:
     action: permit 192.168.3.0/24 eq 32
   - sequence: 20
     action: permit 192.168.2.0/24 eq 32
-ptp:
-  mode: boundary
-  clock_identity: 00:1C:73:1e:00:02
-  priority1: 30
-  priority2: 2
-  domain: 127
-  monitor:
-    enabled: true
-    threshold:
-      offset_from_master: 250
-      mean_path_delay: 1500
-    missing_message:
-      sequence_ids:
-        enabled: true
-        announce: 3
-        delay_resp: 3
-        follow_up: 3
-        sync: 3
 route_maps:
 - name: RM-CONN-2-BGP
   sequence_numbers:

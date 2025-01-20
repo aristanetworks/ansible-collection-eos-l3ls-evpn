@@ -9,6 +9,15 @@ ethernet_interfaces:
   shutdown: false
   mtu: 9214
   ip_address: 192.168.1.2/31
+  ptp:
+    enable: true
+    announce:
+      interval: 0
+      timeout: 3
+    delay_req: -3
+    sync_message:
+      interval: -3
+    transport: ipv4
   peer: ptp-tests-leaf3
   peer_interface: Ethernet2
   peer_type: l3leaf
@@ -19,15 +28,6 @@ ethernet_interfaces:
   shutdown: false
   mtu: 9214
   ip_address: 192.168.1.6/31
-  ptp:
-    enable: true
-    announce:
-      interval: 0
-      timeout: 3
-    delay_req: -3
-    sync_message:
-      interval: -3
-    transport: ipv4
   peer: ptp-tests-leaf4
   peer_interface: Ethernet2
   peer_type: l3leaf
