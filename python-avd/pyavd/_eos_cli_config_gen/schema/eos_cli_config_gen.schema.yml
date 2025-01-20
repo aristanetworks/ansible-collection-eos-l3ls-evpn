@@ -2029,6 +2029,9 @@ keys:
       keys:
         name:
           type: str
+        comment:
+          type: str
+          description: Text comment added under ethernet interface.
         description:
           type: str
         shutdown:
@@ -9900,6 +9903,9 @@ keys:
       keys:
         name:
           type: str
+        comment:
+          type: str
+          description: Text comment added under port-channel interface.
         description:
           type: str
         profile:
