@@ -47,6 +47,9 @@
 - [Hardware TCAM Profile](#hardware-tcam-profile)
   - [Custom TCAM Profiles](#custom-tcam-profiles)
   - [Hardware TCAM Device Configuration](#hardware-tcam-device-configuration)
+- [LLDP](#lldp)
+  - [LLDP Summary](#lldp-summary)
+  - [LLDP Device Configuration](#lldp-device-configuration)
 - [LACP](#lacp)
   - [LACP Summary](#lacp-summary)
   - [LACP Device Configuration](#lacp-device-configuration)
@@ -716,6 +719,23 @@ hardware tcam
    profile MY_TCAM_PROFILE
 Thisisnotaidealinput
    !
+```
+
+## LLDP
+
+### LLDP Summary
+
+#### LLDP Global Settings
+
+| Enabled | Management Address | Management VRF | Timer | Hold-Time | Re-initialization Timer | Drop Received Tagged Packets |
+| ------- | ------------------ | -------------- | ----- | --------- | ----------------------- | ---------------------------- |
+| False | - | Default | 30 | 120 | 2 | - |
+
+### LLDP Device Configuration
+
+```eos
+!
+no lldp run
 ```
 
 ## LACP
