@@ -2,4 +2,5 @@
 management_api_http:
   enable_http: true
   enable_https: false
+  enable_unix: false
   default_services: false

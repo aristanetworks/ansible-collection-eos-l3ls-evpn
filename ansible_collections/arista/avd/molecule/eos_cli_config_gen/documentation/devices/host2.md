@@ -229,9 +229,9 @@ management cvx
 
 #### Management API HTTP Summary
 
-| HTTP | HTTPS | Default Services |
-| ---- | ----- | ---------------- |
-| True | False | False |
+| HTTP | HTTPS | UNIX-Socket | Default Services |
+| ---- | ----- | ----------- | ---------------- |
+| True | False | False | False |
 
 #### Management API HTTP Device Configuration
 
@@ -240,6 +240,7 @@ management cvx
 management api http-commands
    no protocol https
    protocol http
+   no protocol unix-socket
    no default-services
    no shutdown
 ```

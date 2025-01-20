@@ -7317,6 +7317,8 @@ keys:
         type: bool
       enable_https:
         type: bool
+      enable_unix:
+        type: bool
       https_ssl_profile:
         description: SSL Profile Name.
         type: str
