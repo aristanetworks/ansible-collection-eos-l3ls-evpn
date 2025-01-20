@@ -18,9 +18,6 @@ l2leaf:
       uplink_switch_interfaces:
         - Ethernet11
         - Ethernet11
-      # Test when ptp.enabled is not set but uplinks is set.
-      ptp:
-        uplinks: [ Ethernet1 ]
 
     - name: ptp-tests-l2leaf2-ptp-enabled
       id: 2
