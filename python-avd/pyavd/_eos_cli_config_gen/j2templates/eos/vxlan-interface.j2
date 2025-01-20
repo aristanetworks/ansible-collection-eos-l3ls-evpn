@@ -69,9 +69,11 @@ interface Vxlan1
 {%             endif %}
 {%         endfor %}
 {%     endif %}
-{%     for vlan in vxlan_config.vxlan.vlans | arista.avd.natural_sort('id') if vlan.multicast_group is arista.avd.defined and not vlan_range %}
+{%     if not vlan_range %}
+{%         for vlan in vxlan_config.vxlan.vlans | arista.avd.natural_sort('id') if vlan.multicast_group is arista.avd.defined %}
    vxlan vlan {{ vlan.id }} multicast group {{ vlan.multicast_group }}
-{%     endfor %}
+{%         endfor %}
+{%     endif %}
 {%     for vrf in vxlan_config.vxlan.vrfs | arista.avd.natural_sort('name') if vrf.multicast_group is arista.avd.defined %}
    vxlan vrf {{ vrf.name }} multicast group {{ vrf.multicast_group }}
 {%     endfor %}

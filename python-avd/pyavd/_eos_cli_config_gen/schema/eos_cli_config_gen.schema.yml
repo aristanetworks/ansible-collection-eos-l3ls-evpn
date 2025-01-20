@@ -22933,7 +22933,7 @@ keys:
                   `vxlan_interface.vxlan1.vxlan.vlan_range` and `vxlan_interface.vxlan1.vxlan.vlans`
                   are mutually exclusive.
 
-                  `vxlan_interface.vxlan1.vxlan.vlan_range.vlan_range` takes precedence.
+                  `vxlan_interface.vxlan1.vxlan.vlan_range` takes precedence.
 
                   Number of VLANs must equal number of VNIs.'
                 keys:
@@ -22955,7 +22955,7 @@ keys:
                   `vxlan_interface.vxlan1.vxlan.vlans` and `vxlan_interface.vxlan1.vxlan.vlan_range`
                   are mutually exclusive.
 
-                  `vxlan_interface.vxlan1.vxlan.vlan_range.vlan_range` takes precedence.'
+                  `vxlan_interface.vxlan1.vxlan.vlan_range` takes precedence.'
                 items:
                   type: dict
                   keys:
