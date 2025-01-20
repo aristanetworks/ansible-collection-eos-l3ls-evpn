@@ -30,13 +30,16 @@ interface Vxlan1
 {%     if vxlan_config.vxlan.flood_vtep_learned_data_plane is arista.avd.defined(true) %}
    vxlan flood vtep learned data-plane
 {%     endif %}
-{%     for vlan in vxlan_config.vxlan.vlans | arista.avd.natural_sort('id') %}
-{%         if vlan.vni is arista.avd.defined %}
-   vxlan vlan {{ vlan.id }} vni {{ vlan.vni }}
-{%         endif %}
-{%     endfor %}
+{%     set vlan_range = False %}
 {%     if vxlan_config.vxlan.vlan_range is arista.avd.defined %}
+{%         set vlan_range = True %}
    vxlan vlan {{ vxlan_config.vxlan.vlan_range.vlans }} vni {{ vxlan_config.vxlan.vlan_range.vnis }}
+{%     else %}
+{%         for vlan in vxlan_config.vxlan.vlans | arista.avd.natural_sort('id') %}
+{%             if vlan.vni is arista.avd.defined %}
+   vxlan vlan {{ vlan.id }} vni {{ vlan.vni }}
+{%             endif %}
+{%         endfor %}
 {%     endif %}
 {%     for vrf in vxlan_config.vxlan.vrfs | arista.avd.natural_sort('name') %}
 {%         if vrf.vni is arista.avd.defined %}
@@ -59,12 +62,14 @@ interface Vxlan1
 {%     if vxlan_config.vxlan.flood_vteps is arista.avd.defined %}
    vxlan flood vtep {{ vxlan_config.vxlan.flood_vteps | join(' ') }}
 {%     endif %}
-{%     for vlan in vxlan_config.vxlan.vlans | arista.avd.natural_sort('id') %}
-{%         if vlan.flood_vteps is arista.avd.defined %}
+{%     if not vlan_range %}
+{%         for vlan in vxlan_config.vxlan.vlans | arista.avd.natural_sort('id') %}
+{%             if vlan.flood_vteps is arista.avd.defined %}
    vxlan vlan {{ vlan.id }} flood vtep {{ vlan.flood_vteps | join(' ') }}
-{%         endif %}
-{%     endfor %}
-{%     for vlan in vxlan_config.vxlan.vlans | arista.avd.natural_sort('id') if vlan.multicast_group is arista.avd.defined %}
+{%             endif %}
+{%         endfor %}
+{%     endif %}
+{%     for vlan in vxlan_config.vxlan.vlans | arista.avd.natural_sort('id') if vlan.multicast_group is arista.avd.defined and not vlan_range %}
    vxlan vlan {{ vlan.id }} multicast group {{ vlan.multicast_group }}
 {%     endfor %}
 {%     for vrf in vxlan_config.vxlan.vrfs | arista.avd.natural_sort('name') if vrf.multicast_group is arista.avd.defined %}

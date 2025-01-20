@@ -77,9 +77,31 @@ keys:
                       Enable copying the ECN marking to/from encapsulated packets.
                   map_dscp_to_traffic_class_decapsulation:
                     type: bool
+              vlan_range:
+                type: dict
+                description: |-
+                  Set VNI on range of vlans.
+                  `vxlan_interface.vxlan1.vxlan.vlan_range` and `vxlan_interface.vxlan1.vxlan.vlans` are mutually exclusive.
+                  `vxlan_interface.vxlan1.vxlan.vlan_range.vlan_range` takes precedence.
+                  Number of VLANs must equal number of VNIs.
+                keys:
+                  vlans:
+                    type: str
+                    required: true
+                    description: e.g. "94,96,100-110".
+                  vnis:
+                    type: str
+                    required: true
+                    description: |-
+                      Set `vnis` in the correct sequence as `vlans`.
+                      e.g. "10094,10096,10100-10110".
               vlans:
                 type: list
                 primary_key: id
+                description: |-
+                  Set VNI/multicast group/remote vtep on a vlan.
+                  `vxlan_interface.vxlan1.vxlan.vlans` and `vxlan_interface.vxlan1.vxlan.vlan_range` are mutually exclusive.
+                  `vxlan_interface.vxlan1.vxlan.vlan_range.vlan_range` takes precedence.
                 items:
                   type: dict
                   keys:
@@ -100,23 +122,6 @@ keys:
                       items:
                         type: str
                         description: Remote VTEP IP Address.
-              vlan_range:
-                type: dict
-                description: |-
-                  Set VNI on range of vlans.
-                  If vni is set on the vlan in `vxlan_interface.vxlan1.vxlan.vlans`, it should not overlap with `vxlan_interface.vxlan1.vxlan.vlan_range.vlans`.
-                  Number of VLANs must equal number of VNIs.
-                keys:
-                  vlans:
-                    type: str
-                    required: true
-                    description: e.g. "94,96,100-110".
-                  vnis:
-                    type: str
-                    required: true
-                    description: |-
-                      Set `vnis` in the correct sequence as `vlans`.
-                      e.g. "10094,10096,10100-10110".
               vrfs:
                 type: list
                 primary_key: name

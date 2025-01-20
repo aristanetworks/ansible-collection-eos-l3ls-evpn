@@ -34,11 +34,6 @@ vxlan_interface:
             - 10.1.1.11
         - id: 112
           multicast_group: 239.9.1.6
-        - id: 113
-          multicast_group: 239.2.2.2
-      vlan_range:
-        vlans: 113,115-118
-        vnis: 10113,10115-10118
 
       vrfs:
         - name: Tenant_A_OP_Zone

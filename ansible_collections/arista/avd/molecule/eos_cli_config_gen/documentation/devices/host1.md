@@ -6573,11 +6573,6 @@ interface Vlan4094
 | 110 | 10110 | - | 239.9.1.4 |
 | 111 | 10111 | 10.1.1.10<br/>10.1.1.11 | - |
 | 112 | - | - | 239.9.1.6 |
-| 113 | 10113 | - | 239.2.2.2 |
-| 115 | 10115 | - | - |
-| 116 | 10116 | - | - |
-| 117 | 10117 | - | - |
-| 118 | 10118 | - | - |
 
 ##### VRF to VNI and Multicast Group Mappings
 
@@ -6606,7 +6601,6 @@ interface Vxlan1
    vxlan flood vtep learned data-plane
    vxlan vlan 110 vni 10110
    vxlan vlan 111 vni 10111
-   vxlan vlan 113,115-118 vni 10113,10115-10118
    vxlan vrf Tenant_A_OP_Zone vni 10
    vxlan vrf Tenant_A_WEB_Zone vni 11
    vxlan mlag source-interface Loopback1
@@ -6616,7 +6610,6 @@ interface Vxlan1
    vxlan vlan 111 flood vtep 10.1.1.10 10.1.1.11
    vxlan vlan 110 multicast group 239.9.1.4
    vxlan vlan 112 multicast group 239.9.1.6
-   vxlan vlan 113 multicast group 239.2.2.2
    vxlan vrf Tenant_A_OP_Zone multicast group 232.0.0.10
    vxlan multicast headend-replication
    vxlan qos ecn propagation
