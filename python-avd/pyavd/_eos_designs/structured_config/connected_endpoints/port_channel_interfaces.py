@@ -4,11 +4,11 @@
 from __future__ import annotations
 
 import re
-from functools import cached_property
 from typing import TYPE_CHECKING
 
 from pyavd._eos_cli_config_gen.schema import EosCliConfigGen
 from pyavd._eos_designs.schema import EosDesigns
+from pyavd._eos_designs.structured_config.structured_config_generator import structured_config_contributor
 from pyavd._errors import AristaAvdInvalidInputsError
 from pyavd._utils import Undefined, short_esi_to_route_target, strip_null_from_data
 from pyavd.api.interface_descriptions import InterfaceDescriptionData
@@ -27,8 +27,8 @@ class PortChannelInterfacesMixin(UtilsMixin):
     Class should only be used as Mixin to a AvdStructuredConfig class.
     """
 
-    @cached_property
-    def port_channel_interfaces(self: AvdStructuredConfigConnectedEndpoints) -> list | None:
+    @structured_config_contributor
+    def port_channel_interfaces(self: AvdStructuredConfigConnectedEndpoints) -> None:
         """
         Return structured config for port_channel_interfaces.
 
@@ -101,8 +101,6 @@ class PortChannelInterfacesMixin(UtilsMixin):
 
         if network_ports_port_channel_interfaces:
             self.structured_config.port_channel_interfaces.extend(network_ports_port_channel_interfaces)
-
-        return None
 
     def _get_port_channel_interface_cfg(
         self: AvdStructuredConfigConnectedEndpoints,
