@@ -18424,7 +18424,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             "holdtime": {"type": int},
             "management_address": {"type": str},
             "vrf": {"type": str},
-            "receive_packet_tagged_drop": {"type": str},
+            "receive_packet_tagged_drop": {"type": bool},
             "tlvs": {"type": Tlvs},
             "run": {"type": bool},
             "_custom_data": {"type": dict},
@@ -18434,7 +18434,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         holdtime: int | None
         management_address: str | None
         vrf: str | None
-        receive_packet_tagged_drop: str | None
+        receive_packet_tagged_drop: bool | None
         tlvs: Tlvs
         """Subclass of AvdIndexedList with `TlvsItem` items. Primary key is `name` (`str`)."""
         run: bool | None
@@ -18450,7 +18450,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 holdtime: int | None | UndefinedType = Undefined,
                 management_address: str | None | UndefinedType = Undefined,
                 vrf: str | None | UndefinedType = Undefined,
-                receive_packet_tagged_drop: str | None | UndefinedType = Undefined,
+                receive_packet_tagged_drop: bool | None | UndefinedType = Undefined,
                 tlvs: Tlvs | UndefinedType = Undefined,
                 run: bool | None | UndefinedType = Undefined,
                 _custom_data: dict[str, Any] | UndefinedType = Undefined,

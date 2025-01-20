@@ -2996,7 +2996,7 @@ mlag configuration
 
 | Enabled | Management Address | Management VRF | Timer | Hold-Time | Re-initialization Timer | Drop Received Tagged Packets |
 | ------- | ------------------ | -------------- | ----- | --------- | ----------------------- | ---------------------------- |
-| False | 192.168.1.1/24 | Management | 30 | 90 | 2 | - |
+| False | 192.168.1.1/24 | Management | 30 | 90 | 2 | True |
 
 #### LLDP Explicit TLV Transmit Settings
 
@@ -3029,6 +3029,7 @@ lldp tlv transmit system-description
 no lldp run
 lldp management-address 192.168.1.1/24
 lldp management-address vrf Management
+lldp receive packet tagged drop
 ```
 
 ## L2 Protocol Forwarding
