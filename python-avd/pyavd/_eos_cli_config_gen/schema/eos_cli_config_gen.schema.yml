@@ -2029,6 +2029,9 @@ keys:
       keys:
         name:
           type: str
+        comment:
+          type: str
+          description: Text comment added under ethernet interface.
         description:
           type: str
         shutdown:
@@ -9900,6 +9903,9 @@ keys:
       keys:
         name:
           type: str
+        comment:
+          type: str
+          description: Text comment added under port-channel interface.
         description:
           type: str
         profile:
@@ -10745,6 +10751,12 @@ keys:
         dhcp_client_accept_default_route:
           type: bool
           description: Install default-route obtained via DHCP.
+        dhcp_server_ipv4:
+          type: bool
+          description: Enable IPv4 DHCP server.
+        dhcp_server_ipv6:
+          type: bool
+          description: Enable IPv6 DHCP server.
         ip_verify_unicast_source_reachable_via:
           type: str
           valid_values:

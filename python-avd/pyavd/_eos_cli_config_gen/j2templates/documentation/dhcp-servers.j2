@@ -5,12 +5,18 @@
 #}
 {# doc - dhcp server #}
 {% set ethernet_interfaces_dhcp_server = [] %}
+{% set port_channel_interfaces_dhcp_server = [] %}
 {% for ethernet_interface in ethernet_interfaces | arista.avd.natural_sort('name') %}
-{%     if ethernet_interface.dhcp_server_ipv4 is arista.avd.defined(true) or ethernet_interface.dhcp_server_ipv4 is arista.avd.defined(true) %}
+{%     if ethernet_interface.dhcp_server_ipv4 is arista.avd.defined(true) or ethernet_interface.dhcp_server_ipv6 is arista.avd.defined(true) %}
 {%         do ethernet_interfaces_dhcp_server.append(ethernet_interface) %}
 {%     endif %}
 {% endfor %}
-{% if (ethernet_interfaces_dhcp_server | length > 0 or dhcp_servers is arista.avd.defined) %}
+{% for port_channel_interface in port_channel_interfaces | arista.avd.natural_sort('name') %}
+{%     if port_channel_interface.dhcp_server_ipv4 is arista.avd.defined(true) or port_channel_interfaces.dhcp_server_ipv6 is arista.avd.defined(true) %}
+{%         do port_channel_interfaces_dhcp_server.append(port_channel_interface) %}
+{%     endif %}
+{% endfor %}
+{% if (ethernet_interfaces_dhcp_server | length > 0 or port_channel_interfaces_dhcp_server | length > 0 or dhcp_servers is arista.avd.defined) %}
 
 ## DHCP Server
 {%     if dhcp_servers is arista.avd.defined %}
@@ -123,14 +129,21 @@
 {%         include 'eos/dhcp-servers.j2' %}
 ```
 {%     endif %}
-{%     if ethernet_interfaces_dhcp_server | length > 0 %}
+{%     if ethernet_interfaces_dhcp_server | length > 0 or port_channel_interfaces_dhcp_server | length > 0 %}
 
 ### DHCP Server Interfaces
 
 | Interface name | DHCP IPv4 | DHCP IPv6 |
 | -------------- | --------- | --------- |
-{%         for ethernet_interface in ethernet_interfaces_dhcp_server | arista.avd.natural_sort %}
-| {{ ethernet_interface.name }} | {{ ethernet_interface.dhcp_server_ipv4 | arista.avd.default(false) }} | {{ ethernet_interface.dhcp_server_ipv6 | arista.avd.default(false) }} |
-{%         endfor %}
+{%         if ethernet_interfaces_dhcp_server | length > 0 %}
+{%             for ethernet_interface in ethernet_interfaces_dhcp_server | arista.avd.natural_sort %}
+| {{ ethernet_interface.name }} | {{ ethernet_interface.dhcp_server_ipv4 | arista.avd.default("-") }} | {{ ethernet_interface.dhcp_server_ipv6 | arista.avd.default("-") }} |
+{%             endfor %}
+{%         endif %}
+{%         if port_channel_interfaces_dhcp_server | length > 0 %}
+{%             for port_channel_interface in port_channel_interfaces_dhcp_server | arista.avd.natural_sort %}
+| {{ port_channel_interface.name }} | {{ port_channel_interface.dhcp_server_ipv4 | arista.avd.default("-") }} | {{ port_channel_interface.dhcp_server_ipv6 | arista.avd.default("-") }} |
+{%             endfor %}
+{%         endif %}
 {%     endif %}
 {% endif %}
