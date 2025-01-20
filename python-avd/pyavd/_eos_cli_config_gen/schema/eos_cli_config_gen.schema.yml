@@ -5633,7 +5633,6 @@ keys:
               priority:
                 description: Priority value (lower is first).
                 type: int
-                default: 0
                 convert_types:
                 - str
                 min: 0

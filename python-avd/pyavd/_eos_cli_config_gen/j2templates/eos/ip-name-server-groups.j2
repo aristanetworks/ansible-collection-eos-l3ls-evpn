@@ -6,20 +6,10 @@
 {% for name_server_group in ip_name_server_groups | arista.avd.natural_sort("name") %}
 !
 ip name-server group {{ name_server_group.name }}
-{%     set all_name_servers = [] %}
-{%     for server in name_server_group.name_servers | arista.avd.default([]) %}
-{%         set name_server = {} %}
-{%         if server.priority is not arista.avd.defined %}
-{%             do name_server.setdefault('priority', 0) %}
-{%         endif %}
-{%         do name_server.update(server) %}
-{%         do all_name_servers.append(name_server) %}
-{%     endfor %}
-{%     for server in all_name_servers | arista.avd.natural_sort("ip_address") | arista.avd.natural_sort("vrf") | arista.avd.natural_sort("priority") %}
-{%         if server.priority != 0 %}
-{%             set name_server_cli = "name-server vrf " ~ server["vrf"] ~ " " ~ server["ip_address"] ~ " priority " ~ server["priority"] %}
-{%         else %}
-{%             set name_server_cli = "name-server vrf " ~ server["vrf"] ~ " " ~ server["ip_address"] %}
+{%     for server in name_server_group.name_servers | arista.avd.natural_sort("ip_address") | arista.avd.natural_sort("vrf") | arista.avd.natural_sort("priority", strict=False) %}
+{%         set name_server_cli = "name-server vrf " ~ server.vrf ~ " " ~ server.ip_address %}
+{%         if server.priority is arista.avd.defined %}
+{%             set name_server_cli = name_server_cli ~ " priority " ~ server.priority %}
 {%         endif %}
    {{ name_server_cli }}
 {%     endfor %}

@@ -15856,22 +15856,13 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class NameServersItem(AvdModel):
             """Subclass of AvdModel."""
 
-            _fields: ClassVar[dict] = {
-                "ip_address": {"type": str},
-                "vrf": {"type": str},
-                "priority": {"type": int, "default": 0},
-                "_custom_data": {"type": dict},
-            }
+            _fields: ClassVar[dict] = {"ip_address": {"type": str}, "vrf": {"type": str}, "priority": {"type": int}, "_custom_data": {"type": dict}}
             ip_address: str
             """IPv4 or IPv6 address for DNS server."""
             vrf: str
             """VRF Name."""
-            priority: int
-            """
-            Priority value (lower is first).
-
-            Default value: `0`
-            """
+            priority: int | None
+            """Priority value (lower is first)."""
             _custom_data: dict[str, Any]
 
             if TYPE_CHECKING:
@@ -15881,7 +15872,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                     *,
                     ip_address: str | UndefinedType = Undefined,
                     vrf: str | UndefinedType = Undefined,
-                    priority: int | UndefinedType = Undefined,
+                    priority: int | None | UndefinedType = Undefined,
                     _custom_data: dict[str, Any] | UndefinedType = Undefined,
                 ) -> None:
                     """
