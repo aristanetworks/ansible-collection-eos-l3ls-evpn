@@ -430,7 +430,7 @@ ip name-server vrf TEST 2001:db8::2 priority 3
 
 | IP Address | VRF | Priority |
 | ---------- | --- | -------- |
-| 1.1.1.1 | default | - |
+| 1.1.1.1 | default | 0 |
 | 2.2.2.2 | default | 1 |
 | 8.8.8.8 | default | - |
 
@@ -459,8 +459,8 @@ DNS Domain: anta.avd.com
 ```eos
 !
 ip name-server group mynameserver0
-   name-server vrf default 2.2.2.2 priority 1
    name-server vrf default 1.1.1.1
+   name-server vrf default 2.2.2.2 priority 1
    name-server vrf default 8.8.8.8
 !
 ip name-server group mynameserver1

@@ -29,6 +29,7 @@ ip_name_server_groups:
         vrf: default
       - ip_address: 1.1.1.1
         vrf: default
+        priority: 0
       - ip_address: 2.2.2.2
         vrf: default
         priority: 1
