@@ -1794,6 +1794,7 @@ dhcp server vrf VRF01
 | Interface name | DHCP IPv4 | DHCP IPv6 |
 | -------------- | --------- | --------- |
 | Ethernet64 | True | True |
+| Port-Channel112 | True | True |
 
 ## System Boot Settings
 
@@ -5494,6 +5495,8 @@ interface Port-Channel112
    switchport
    ip address dhcp
    dhcp client accept default-route
+   dhcp server ipv4
+   dhcp server ipv6
    port-channel lacp fallback individual
    port-channel lacp fallback timeout 5
 !

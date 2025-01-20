@@ -356,6 +356,12 @@ interface {{ port_channel_interface.name }}
    bfd per-link
 {%         endif %}
 {%     endif %}
+{%     if port_channel_interface.dhcp_server_ipv4 is arista.avd.defined(true) %}
+   dhcp server ipv4
+{%     endif %}
+{%     if port_channel_interface.dhcp_server_ipv6 is arista.avd.defined(true) %}
+   dhcp server ipv6
+{%     endif %}
 {%     if port_channel_interface.ip_igmp_host_proxy.enabled is arista.avd.defined(true) %}
 {%         set host_proxy_cli =  "ip igmp host-proxy" %}
    {{ host_proxy_cli }}

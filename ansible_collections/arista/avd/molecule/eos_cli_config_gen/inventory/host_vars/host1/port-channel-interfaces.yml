@@ -721,6 +721,8 @@ port_channel_interfaces:
     lacp_fallback_mode: individual
     ip_address: dhcp
     dhcp_client_accept_default_route: true
+    dhcp_server_ipv4: true
+    dhcp_server_ipv6: true
 
   - name: Port-Channel113
     description: interface_with_mpls_enabled
@@ -729,6 +731,8 @@ port_channel_interfaces:
     ip_address: 172.31.128.9/31
     # This won't be rendered because IP address is not DHCP
     dhcp_client_accept_default_route: true
+    dhcp_server_ipv4: false
+    dhcp_server_ipv6: false
     mpls:
       ip: true
       ldp:
