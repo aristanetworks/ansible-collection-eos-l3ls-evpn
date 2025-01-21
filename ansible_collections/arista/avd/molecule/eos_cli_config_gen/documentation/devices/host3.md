@@ -113,6 +113,7 @@ daemon TerminAttr
 
 | Type | Level |
 | -----| ----- |
+| Synchronous | critical |
 
 | Format Type | Setting |
 | ----------- | ------- |
@@ -125,6 +126,7 @@ daemon TerminAttr
 
 ```eos
 !
+logging synchronous level critical
 logging format timestamp traditional year timezone
 ```
 

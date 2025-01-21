@@ -5,6 +5,6 @@ cvx:
   shutdown: true
   services:
     mcs:
-      shutdown: false
+      shutdown: true
     vxlan:
       shutdown: true

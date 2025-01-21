@@ -2,3 +2,5 @@
 logging:
   format:
     timestamp: traditional year timezone
+  synchronous:
+    level:

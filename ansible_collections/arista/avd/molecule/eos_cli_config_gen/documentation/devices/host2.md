@@ -313,7 +313,7 @@ cvx
    shutdown
    !
    service mcs
-      no shutdown
+      shutdown
    !
    service vxlan
       shutdown
