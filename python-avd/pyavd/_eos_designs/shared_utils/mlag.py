@@ -186,3 +186,12 @@ class MlagMixin:
             return self.mlag_peer_l3_ip
 
         return self.mlag_peer_ip
+
+    @cached_property
+    def mlag_ipv4_peers(self: SharedUtils) -> dict:
+        if (
+            self.inputs.bgp_peer_groups.mlag_ipv4_vrfs_peer
+            and self.inputs.bgp_peer_groups.mlag_ipv4_vrfs_peer.name != self.inputs.bgp_peer_groups.mlag_ipv4_underlay_peer.name
+        ):
+            return self.inputs.bgp_peer_groups.mlag_ipv4_vrfs_peer
+        return self.inputs.bgp_peer_groups.mlag_ipv4_underlay_peer

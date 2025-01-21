@@ -337,9 +337,7 @@ class RouterBgpMixin(UtilsMixin):
             bgp_vrf["redistribute"]["connected"] = {"enabled": True, "route_map": "RM-CONN-2-BGP-VRFS"}
 
         interface_name = f"Vlan{vlan_id}"
-        peer_group_name = self.inputs.bgp_peer_groups.mlag_ipv4_underlay_peer.name
-        if self.inputs.bgp_peer_groups.use_separate_mlag_peer_group_for_overlay:
-            peer_group_name = self.inputs.bgp_peer_groups.mlag_ipv4_overlay_peer.name
+        peer_group_name = self.shared_utils.mlag_ipv4_peers.name
 
         if self.inputs.underlay_rfc5549 and self.inputs.overlay_mlag_rfc5549:
             bgp_vrf.setdefault("neighbor_interfaces", []).append(

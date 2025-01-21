@@ -21,7 +21,8 @@ fabric_sflow:
   l3_interfaces: true
 
 bgp_peer_groups:
-  use_separate_mlag_peer_group_for_overlay: true
+  mlag_ipv4_vrfs_peer:
+    name: MLAG-IPv4-OVERLAY-PEER
 
 tenants:
   - name: Tenant_A

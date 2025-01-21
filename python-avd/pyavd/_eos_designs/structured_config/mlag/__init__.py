@@ -377,6 +377,29 @@ class AvdStructuredConfigMlag(StructuredConfigGenerator):
 
         router_bgp["peer_groups"] = [strip_empties_from_dict(peer_group)]
 
+        # If self.inputs.mlag_ipv4_vrfs_peer is defined in the input
+        if (
+            self.inputs.bgp_peer_groups.mlag_ipv4_vrfs_peer
+            and self.inputs.bgp_peer_groups.mlag_ipv4_vrfs_peer.name != self.inputs.bgp_peer_groups.mlag_ipv4_underlay_peer.name
+        ):
+            router_bgp["peer_groups"].append(
+                {
+                    "name": self.inputs.bgp_peer_groups.mlag_ipv4_vrfs_peer.name,
+                    "type": "ipv4",
+                    "remote_as": self.shared_utils.bgp_as,
+                    "next_hop_self": True,
+                    "description": AvdStringFormatter().format(self.inputs.mlag_bgp_peer_group_description, mlag_peer=self.shared_utils.mlag_peer),
+                    "password": self.inputs.bgp_peer_groups.mlag_ipv4_vrfs_peer.password,
+                    "bfd": self.inputs.bgp_peer_groups.mlag_ipv4_vrfs_peer.bfd or None,
+                    "maximum_routes": 12000,
+                    "route_map_in": "RM-MLAG-PEER-IN",
+                },
+            )
+            if self.inputs.bgp_peer_groups.mlag_ipv4_vrfs_peer.structured_config:
+                self.custom_structured_configs.nested.router_bgp.peer_groups.obtain(self.inputs.bgp_peer_groups.mlag_ipv4_vrfs_peer.name)._deepmerge(
+                    self.inputs.bgp_peer_groups.mlag_ipv4_vrfs_peer.structured_config, list_merge=self.custom_structured_configs.list_merge_strategy
+                )
+
         if self.shared_utils.underlay_ipv6:
             router_bgp["address_family_ipv6"] = {
                 "peer_groups": [
