@@ -160,7 +160,7 @@ class EosDesigns(EosDesignsRootModel):
 
                     """
 
-        class MlagIpv4OverlayPeer(AvdModel):
+        class MlagIpv4VrfsPeer(AvdModel):
             """Subclass of AvdModel."""
 
             class StructuredConfig(EosCliConfigGen.RouterBgp.PeerGroupsItem):
@@ -202,7 +202,7 @@ class EosDesigns(EosDesignsRootModel):
                     _custom_data: dict[str, Any] | UndefinedType = Undefined,
                 ) -> None:
                     """
-                    MlagIpv4OverlayPeer.
+                    MlagIpv4VrfsPeer.
 
 
                     Subclass of AvdModel.
@@ -886,7 +886,7 @@ class EosDesigns(EosDesignsRootModel):
         _fields: ClassVar[dict] = {
             "ipv4_underlay_peers": {"type": Ipv4UnderlayPeers},
             "use_separate_mlag_peer_group_for_overlay": {"type": bool, "default": False},
-            "mlag_ipv4_overlay_peer": {"type": MlagIpv4OverlayPeer},
+            "mlag_ipv4_vrfs_peer": {"type": MlagIpv4VrfsPeer},
             "mlag_ipv4_underlay_peer": {"type": MlagIpv4UnderlayPeer},
             "evpn_overlay_peers": {"type": EvpnOverlayPeers},
             "evpn_overlay_core": {"type": EvpnOverlayCore},
@@ -905,7 +905,7 @@ class EosDesigns(EosDesignsRootModel):
 
         Default value: `False`
         """
-        mlag_ipv4_overlay_peer: MlagIpv4OverlayPeer
+        mlag_ipv4_vrfs_peer: MlagIpv4VrfsPeer
         """Subclass of AvdModel."""
         mlag_ipv4_underlay_peer: MlagIpv4UnderlayPeer
         """Subclass of AvdModel."""
@@ -935,7 +935,7 @@ class EosDesigns(EosDesignsRootModel):
                 *,
                 ipv4_underlay_peers: Ipv4UnderlayPeers | UndefinedType = Undefined,
                 use_separate_mlag_peer_group_for_overlay: bool | UndefinedType = Undefined,
-                mlag_ipv4_overlay_peer: MlagIpv4OverlayPeer | UndefinedType = Undefined,
+                mlag_ipv4_vrfs_peer: MlagIpv4VrfsPeer | UndefinedType = Undefined,
                 mlag_ipv4_underlay_peer: MlagIpv4UnderlayPeer | UndefinedType = Undefined,
                 evpn_overlay_peers: EvpnOverlayPeers | UndefinedType = Undefined,
                 evpn_overlay_core: EvpnOverlayCore | UndefinedType = Undefined,
@@ -955,7 +955,7 @@ class EosDesigns(EosDesignsRootModel):
                 Args:
                     ipv4_underlay_peers: Subclass of AvdModel.
                     use_separate_mlag_peer_group_for_overlay: Configure a different BGP peer group for MLAG for underlay and overlay.
-                    mlag_ipv4_overlay_peer: Subclass of AvdModel.
+                    mlag_ipv4_vrfs_peer: Subclass of AvdModel.
                     mlag_ipv4_underlay_peer: Subclass of AvdModel.
                     evpn_overlay_peers: Subclass of AvdModel.
                     evpn_overlay_core: Subclass of AvdModel.

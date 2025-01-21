@@ -217,7 +217,7 @@ keys:
         default: false
         description: Configure a different BGP peer group for MLAG for underlay and
           overlay.
-      mlag_ipv4_overlay_peer:
+      mlag_ipv4_vrfs_peer:
         type: dict
         keys:
           name:
