@@ -11,6 +11,8 @@ from typing import Any
 from jinja2.runtime import Undefined
 from jinja2.utils import Namespace
 
+SPLIT_PATTERN = re.compile(r"(\d+)")
+
 
 def natural_sort(iterable: Iterable | None, sort_key: str | None = None, *, strict: bool = True, ignore_case: bool = True, default_value: Any = None) -> list:
     """
@@ -39,22 +41,21 @@ def natural_sort(iterable: Iterable | None, sort_key: str | None = None, *, stri
 
 def _alphanum_key(item: Any, sort_key: str | None = None, *, strict: bool = True, ignore_case: bool = True, default_value: Any = None) -> list:
     """Get the key to natural sort by. Falling back to the item itself."""
-    pattern = r"(\d+)"
     if sort_key is not None and isinstance(item, Mapping):
         if strict and sort_key not in item and default_value is None:
             msg = f"Missing key '{sort_key}' in item to sort {item}."
             raise KeyError(msg)
         if default_value is None:
             default_value = item
-        return [_convert(c, ignore_case) for c in re.split(pattern, str(item.get(sort_key, default_value)))]
+        return [_convert(c, ignore_case) for c in re.split(SPLIT_PATTERN, str(item.get(sort_key, default_value)))]
     if sort_key is not None and isinstance(item, Namespace):
         if strict and not hasattr(item, sort_key) and default_value is None:
             msg = f"Missing attribute '{sort_key}' in item to sort {item}."
             raise AttributeError(msg)
         if default_value is None:
             default_value = item
-        return [_convert(c, ignore_case) for c in re.split(pattern, str(getattr(item, sort_key, default_value)))]
-    return [_convert(c, ignore_case) for c in re.split(pattern, str(item))]
+        return [_convert(c, ignore_case) for c in re.split(SPLIT_PATTERN, str(getattr(item, sort_key, default_value)))]
+    return [_convert(c, ignore_case) for c in re.split(SPLIT_PATTERN, str(item))]
 
 
 def _convert(text: str, ignore_case: bool) -> int | str:
