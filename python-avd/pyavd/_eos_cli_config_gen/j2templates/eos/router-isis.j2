@@ -1,5 +1,5 @@
 {#
- Copyright (c) 2023-2024 Arista Networks, Inc.
+ Copyright (c) 2023-2025 Arista Networks, Inc.
  Use of this source code is governed by the Apache License 2.0
  that can be found in the LICENSE file.
 #}
@@ -10,8 +10,22 @@ router isis {{ router_isis.instance }}
 {%     if router_isis.net is arista.avd.defined %}
    net {{ router_isis.net }}
 {%     endif %}
+{%     if router_isis.is_hostname is arista.avd.defined %}
+   is-hostname {{ router_isis.is_hostname }}
+{%     endif %}
+{%     if router_isis.router_id is arista.avd.defined %}
+   router-id ipv4 {{ router_isis.router_id }}
+{%     endif %}
 {%     if router_isis.is_type is arista.avd.defined %}
    is-type {{ router_isis.is_type }}
+{%     endif %}
+{%     if router_isis.log_adjacency_changes is arista.avd.defined(true) %}
+   log-adjacency-changes
+{%     elif router_isis.log_adjacency_changes is arista.avd.defined(false) %}
+   no log-adjacency-changes
+{%     endif %}
+{%     if router_isis.mpls_ldp_sync_default is arista.avd.defined(true) %}
+   mpls ldp sync default
 {%     endif %}
 {%     for redistribute_route in router_isis.redistribute_routes | arista.avd.natural_sort('source_protocol') %}
 {%         if redistribute_route.source_protocol is arista.avd.defined %}
@@ -42,17 +56,6 @@ router isis {{ router_isis.instance }}
    {{ redistribute_route_cli }}
 {%         endif %}
 {%     endfor %}
-{%     if router_isis.router_id is arista.avd.defined %}
-   router-id ipv4 {{ router_isis.router_id }}
-{%     endif %}
-{%     if router_isis.log_adjacency_changes is arista.avd.defined(true) %}
-   log-adjacency-changes
-{%     elif router_isis.log_adjacency_changes is arista.avd.defined(false) %}
-   no log-adjacency-changes
-{%     endif %}
-{%     if router_isis.mpls_ldp_sync_default is arista.avd.defined(true) %}
-   mpls ldp sync default
-{%     endif %}
 {%     if router_isis.timers.local_convergence.protected_prefixes is arista.avd.defined(true) %}
 {%         if router_isis.timers.local_convergence.delay is arista.avd.defined %}
    timers local-convergence-delay {{ router_isis.timers.local_convergence.delay }} protected-prefixes
@@ -90,6 +93,31 @@ router isis {{ router_isis.instance }}
 {%             endif %}
 {%         endif %}
    {{ spf_interval_cli }}
+{%     endif %}
+{%     if router_isis.timers.csnp.generation.interval is arista.avd.defined %}
+   timers csnp generation interval {{ router_isis.timers.csnp.generation.interval }} seconds
+{%     endif %}
+{%     if router_isis.timers.csnp.generation.p2p_disabled is arista.avd.defined(true) %}
+   timers csnp generation p2p disabled
+{%     endif %}
+{%     if router_isis.timers.lsp.out_delay is arista.avd.defined %}
+   timers lsp out-delay {{ router_isis.timers.lsp.out_delay }}
+{%     endif %}
+{%     if router_isis.timers.lsp.refresh_interval is arista.avd.defined %}
+   timers lsp refresh {{ router_isis.timers.lsp.refresh_interval }}
+{%     endif %}
+{%     if router_isis.timers.lsp.generation.interval is arista.avd.defined %}
+{%         set timers_lsp_generation =  "timers lsp generation " ~ router_isis.timers.lsp.generation.interval %}
+{%         if router_isis.timers.lsp.generation.initial_wait_time is arista.avd.defined %}
+{%             set timers_lsp_generation = timers_lsp_generation ~ " " ~ router_isis.timers.lsp.generation.initial_wait_time %}
+{%             if router_isis.timers.lsp.generation.wait_time is arista.avd.defined %}
+{%                 set timers_lsp_generation = timers_lsp_generation ~ " " ~ router_isis.timers.lsp.generation.wait_time %}
+{%             endif %}
+{%         endif %}
+   {{ timers_lsp_generation }}
+{%     endif %}
+{%     if router_isis.timers.lsp.min_remaining_lifetime is arista.avd.defined %}
+   timers lsp min-remaining-lifetime {{ router_isis.timers.lsp.min_remaining_lifetime }}
 {%     endif %}
 {%     if router_isis.authentication.both.mode is arista.avd.defined
           and (router_isis.authentication.both.mode in ["md5", "text"]
@@ -252,11 +280,11 @@ router isis {{ router_isis.instance }}
 {%     endif %}
 {%     if router_isis.address_family_ipv6.enabled is arista.avd.defined(true) %}
    address-family ipv6 unicast
-{%         if router_isis.address_family_ipv6.maximum_paths is arista.avd.defined %}
-      maximum-paths {{ router_isis.address_family_ipv6.maximum_paths }}
-{%         endif %}
 {%         if router_isis.address_family_ipv6.bfd_all_interfaces is arista.avd.defined(true) %}
       bfd all-interfaces
+{%         endif %}
+{%         if router_isis.address_family_ipv6.maximum_paths is arista.avd.defined %}
+      maximum-paths {{ router_isis.address_family_ipv6.maximum_paths }}
 {%         endif %}
 {%         if router_isis.address_family_ipv6.fast_reroute_ti_lfa.mode is arista.avd.defined %}
 {%             set ti_lfa_cli = "fast-reroute ti-lfa mode " ~ router_isis.address_family_ipv6.fast_reroute_ti_lfa.mode %}

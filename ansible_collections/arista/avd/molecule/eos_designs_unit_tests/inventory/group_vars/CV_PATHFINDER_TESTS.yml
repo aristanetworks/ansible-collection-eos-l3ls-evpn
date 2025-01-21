@@ -24,7 +24,10 @@ cv_pathfinder_regions:
     sites:
       - name: Site404
         id: 404
-        location: Not Found
+        location: Atlantis
+      - name: Site405
+        id: 405
+        location: El Dorado
       - name: Site422
         id: 422
         location: Somewhere
@@ -107,7 +110,7 @@ wan_router:
       cv_pathfinder_region: AVD_Land_East
       cv_pathfinder_site: Site511
       wan_ha:
-        enabled: False
+        enabled: false
       nodes:
         - name: cv-pathfinder-edge
           id: 1
@@ -292,6 +295,8 @@ wan_router:
               ip_address: 172.16.6.6/31
 
     # SITE_HA_ENABLED_DIRECT_HA
+    # One interface disable usage of port-channel
+    # test flow-tracking on ethernet interface for direct HA
     - group: Site404
       cv_pathfinder_region: AVD_Land_West
       cv_pathfinder_site: Site404
@@ -301,6 +306,10 @@ wan_router:
         # Test wan_ha mtu
         mtu: 9100
         ha_ipv4_pool: 10.10.10.0/24
+        # Check flow tracking on ethernet interface
+        flow_tracking:
+          enabled: true
+        use_port_channel_for_direct_ha: false
       nodes:
         - name: cv-pathfinder-edge3A
           id: 6
@@ -317,6 +326,41 @@ wan_router:
               wan_carrier: Colt
               wan_circuit_id: 10423
               ip_address: 172.15.6.6/31
+
+    # SITE_HA_ENABLED_DIRECT_HA
+    # Multiple interfaces in port-channel for direct HA
+    # test changing port-channel ID
+    - group: SITE_DIRECT_HA_PORT_CHANNEL
+      cv_pathfinder_transit_mode: region
+      cv_pathfinder_region: AVD_Land_West
+      cv_pathfinder_site: Site405
+      # Disable HA IPsec
+      wan_ha:
+        enabled: true # TODO AVD4.8.0: Remove once WAN HA is GA.
+        ipsec: false
+        ha_interfaces: [Ethernet42, Ethernet43]
+        ha_ipv4_pool: 10.10.10.0/24
+        # Check flow tracking on port-channel
+        flow_tracking:
+          enabled: true
+        # Testing overwriting port-channel ID
+        port_channel_id: 666
+      nodes:
+        - name: cv-pathfinder-edge4A
+          id: 8
+          l3_interfaces:
+            - name: Ethernet1.42
+              wan_carrier: Comcast
+              dhcp_accept_default_route: true
+              ip_address: dhcp
+        - name: cv-pathfinder-edge4B
+          cv_pathfinder_region: AVD_Land_West
+          id: 9
+          l3_interfaces:
+            - name: Ethernet1.42
+              wan_carrier: Comcast
+              dhcp_accept_default_route: true
+              ip_address: dhcp
 
 # Fake DC1
 l3leaf:
@@ -485,7 +529,7 @@ tenants:
         vrf_id: 1
       - name: TRANSIT
         vrf_id: 66
-      # Test that a VRF with address_families: [] on a WAN router is not configured on Vxlan1 interface. Only configured for BGP because we force enabled: True
+      # Test that a VRF with address_families: [] on a WAN router is not configured on Vxlan1 interface. Only configured for BGP because we force enabled: true
       - name: NOT-WAN-VRF
         vrf_id: 13
         address_families: []
@@ -689,13 +733,13 @@ cv_pathfinder_internet_exit_policies:
       domain_name: test.local
       ipsec_key_salt: THIS_SHOULD_BE_VAULTED
   - name: ZSCALER-EXIT-POLICY-2
-    fallback_to_system_default: False
+    fallback_to_system_default: false
     type: zscaler
     zscaler:
       domain_name: test.local
       ipsec_key_salt: THIS_SHOULD_BE_VAULTED
   - name: DIRECT-EXIT-POLICY-1
-    fallback_to_system_default: False
+    fallback_to_system_default: false
     type: direct
   - name: DIRECT-EXIT-POLICY-2
     type: direct
@@ -709,6 +753,7 @@ zscaler_endpoints:
     city: Fremont, CA
     datacenter: FMT1
     country: United States
+    region: us-west1
     latitude: 37
     longitude: -121
     ip_address: 10.37.121.1 # Not the correct address
@@ -716,6 +761,7 @@ zscaler_endpoints:
     city: Washington, DC
     datacenter: WAS1
     country: United States
+    region: us-east1
     latitude: 39
     longitude: -77
     ip_address: 10.39.77.1 # Not the correct address
@@ -723,6 +769,7 @@ zscaler_endpoints:
     city: Frankfurt
     datacenter: FRA4
     country: Germany
+    region: eu-west1
     latitude: 50
     longitude: 9
     ip_address: 10.50.9.1 # Not the correct address

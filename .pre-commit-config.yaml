@@ -4,7 +4,7 @@ ci:
   autoupdate_commit_msg: "CI: pre-commit autoupdate"
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.6.0
+    rev: v5.0.0
     hooks:
       - id: trailing-whitespace
         name: Trims trailing whitespace.
@@ -15,7 +15,7 @@ repos:
         exclude: ansible_collections/arista/avd/molecule
       - id: check-added-large-files
         name: Prevents giant files from being committed.
-        exclude: (ansible_collections/arista/avd/molecule|pickle$)
+        exclude: (ansible_collections/arista/avd/molecule|pickle$|python-avd/pyavd/_(eos_cli_config_gen|eos_designs)/schema/__init__.py)
       - id: check-merge-conflict
         name: Checks for files that contain merge conflict strings.
         exclude: ansible_collections/arista/avd/molecule
@@ -75,7 +75,7 @@ repos:
 
   - repo: https://github.com/astral-sh/ruff-pre-commit
     # Ruff version.
-    rev: v0.6.7
+    rev: v0.9.2
     hooks:
       # Run the linter.
       - id: ruff
@@ -85,7 +85,7 @@ repos:
       - id: ruff-format
 
   - repo: https://github.com/pycqa/pylint
-    rev: "v3.3.0"
+    rev: "v3.3.3"
     hooks:
       - id: pylint # Use pylintrc file in repository
         name: Check for Linting errors on Python files outside the Ansible collection.
@@ -152,7 +152,7 @@ repos:
           --markdown "ansible_collections/arista/avd/docs/plugins/Modules_and_action_plugins/"
         language: python
         types: [python]
-        additional_dependencies: ['ansible-doc-extractor>=0.1.10', 'ansible-core>=2.15.0,<2.18.0']
+        additional_dependencies: ['ansible-doc-extractor>=0.1.10', 'ansible-core>=2.16.0,<2.19.0']
         files: ansible_collections/arista/avd/plugins/modules/
 
       - id: docs-plugin-filter
@@ -162,7 +162,7 @@ repos:
           --markdown "ansible_collections/arista/avd/docs/plugins/Filter_plugins/"
         language: python
         types_or: [python, yaml]
-        additional_dependencies: ['ansible-doc-extractor>=0.1.10', 'ansible-core>=2.15.0,<2.18.0']
+        additional_dependencies: ['ansible-doc-extractor>=0.1.10', 'ansible-core>=2.16.0,<2.19.0']
         files: ansible_collections/arista/avd/plugins/filter/
         exclude: ^(ansible_collections/arista/avd/plugins/filter/deprecated_filters.py)$
 
@@ -173,7 +173,7 @@ repos:
           --markdown "ansible_collections/arista/avd/docs/plugins/Lookup_plugins/"
         language: python
         types: [python]
-        additional_dependencies: ['ansible-doc-extractor>=0.1.10', 'ansible-core>=2.15.0,<2.18.0']
+        additional_dependencies: ['ansible-doc-extractor>=0.1.10', 'ansible-core>=2.16.0,<2.19.0']
         files: ansible_collections/arista/avd/plugins/lookup/
 
       - id: docs-plugin-test
@@ -183,7 +183,7 @@ repos:
           --markdown "ansible_collections/arista/avd/docs/plugins/Test_plugins/"
         language: python
         types: [python]
-        additional_dependencies: ['ansible-doc-extractor>=0.1.10', 'ansible-core>=2.15.0,<2.18.0']
+        additional_dependencies: ['ansible-doc-extractor>=0.1.10', 'ansible-core>=2.16.0,<2.19.0']
         files: ansible_collections/arista/avd/plugins/test/
 
       - id: docs-plugin-vars
@@ -193,16 +193,16 @@ repos:
           --markdown "ansible_collections/arista/avd/docs/plugins/Vars_plugins/"
         language: python
         types: [python]
-        additional_dependencies: ['ansible-doc-extractor>=0.1.10', 'ansible-core>=2.15.0,<2.18.0']
+        additional_dependencies: ['ansible-doc-extractor>=0.1.10', 'ansible-core>=2.16.0,<2.19.0']
         files: ansible_collections/arista/avd/plugins/vars/
 
       - id: schemas
         name: Build AVD schemas and documentation.
-        entry: sh -c 'exec python-avd/scripts/build-schemas.py'
+        entry: sh -c 'exec python-avd/scripts/build_schemas.py'
         language: python
         files: python-avd/pyavd/[a-z_]+/schema
         pass_filenames: false
-        additional_dependencies: ['deepmerge>=1.1.0', 'PyYAML>=6.0.0', 'pydantic>=2.3.0', 'jsonschema>=4.10.3', 'referencing>=0.35.0']
+        additional_dependencies: ['deepmerge>=1.1.0', 'PyYAML>=6.0.0', 'pydantic>=2.3.0', 'jsonschema-rs>=0.24', 'referencing>=0.35.0', 'ruff==0.7.2']
 
       - id: templates
         name: Precompile Jinja2 templates
@@ -213,7 +213,7 @@ repos:
         additional_dependencies: ['Jinja2>=3.0.0', 'cryptography>=38.0.4', 'deepmerge>=1.1.0']
 
   - repo: https://github.com/igorshubovych/markdownlint-cli
-    rev: v0.41.0
+    rev: v0.43.0
     hooks:
       - id: markdownlint
         name: Check for Linting errors on Markdown files with settings defined in `.github/.markdownlint.yaml`.

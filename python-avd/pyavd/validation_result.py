@@ -1,4 +1,4 @@
-# Copyright (c) 2023-2024 Arista Networks, Inc.
+# Copyright (c) 2023-2025 Arista Networks, Inc.
 # Use of this source code is governed by the Apache License 2.0
 # that can be found in the LICENSE file.
 from __future__ import annotations
@@ -27,3 +27,13 @@ class ValidationResult:
         self.failed = failed
         self.validation_errors = validation_errors or []
         self.deprecation_warnings = deprecation_warnings or []
+
+    def merge(self, other: ValidationResult) -> None:
+        """Merge another ValidationResult instance into this instance."""
+        if not isinstance(other, ValidationResult):
+            msg = f"Unable to merge type '{type(other)}' into 'ValidationResult"
+            raise TypeError(msg)
+
+        self.failed = self.failed or other.failed
+        self.validation_errors.extend(other.validation_errors)
+        self.deprecation_warnings.extend(other.deprecation_warnings)

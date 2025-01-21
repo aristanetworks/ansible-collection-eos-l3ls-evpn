@@ -1,9 +1,10 @@
+---
 type: spine
 spine:
   nodes:
     - name: node-type-l3-interfaces
       id: 1
-      evpn_role: "none"
+      evpn_role: none
       loopback_ipv4_pool: 1.2.3.4/24
       bgp_as: 65000
       l3_interfaces:

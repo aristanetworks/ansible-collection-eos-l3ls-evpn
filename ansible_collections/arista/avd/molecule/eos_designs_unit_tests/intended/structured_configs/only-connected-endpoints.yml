@@ -1,0 +1,177 @@
+aaa_root: null
+config_end: null
+enable_password: null
+ethernet_interfaces:
+- name: Ethernet20
+  description: Network Port
+  shutdown: false
+  peer: Network Port
+  peer_type: network_port
+  port_profile: MY_PROFILE
+  switchport:
+    enabled: true
+    mode: trunk
+    trunk:
+      allowed_vlan: 1-100
+      native_vlan: 1000
+- name: Ethernet21
+  description: Network Port
+  shutdown: false
+  peer: Network Port
+  peer_type: network_port
+  port_profile: MY_PROFILE
+  switchport:
+    enabled: true
+    mode: trunk
+    trunk:
+      allowed_vlan: 1-100
+      native_vlan: 1000
+- name: Ethernet22
+  description: Network Port
+  shutdown: false
+  peer: Network Port
+  peer_type: network_port
+  port_profile: MY_PROFILE
+  switchport:
+    enabled: true
+    mode: trunk
+    trunk:
+      allowed_vlan: 1-100
+      native_vlan: 1000
+- name: Ethernet23
+  description: Network Port
+  shutdown: false
+  peer: Network Port
+  peer_type: network_port
+  port_profile: MY_PROFILE
+  switchport:
+    enabled: true
+    mode: trunk
+    trunk:
+      allowed_vlan: 1-100
+      native_vlan: 1000
+- name: Ethernet24
+  description: Network Port
+  shutdown: false
+  peer: Network Port
+  peer_type: network_port
+  port_profile: MY_PROFILE
+  switchport:
+    enabled: true
+    mode: trunk
+    trunk:
+      allowed_vlan: 1-100
+      native_vlan: 1000
+- name: Ethernet25
+  description: Network Port
+  shutdown: false
+  peer: Network Port
+  peer_type: network_port
+  port_profile: MY_PROFILE
+  switchport:
+    enabled: true
+    mode: trunk
+    trunk:
+      allowed_vlan: 1-100
+      native_vlan: 1000
+- name: Ethernet26
+  description: Network Port
+  shutdown: false
+  peer: Network Port
+  peer_type: network_port
+  port_profile: MY_PROFILE
+  switchport:
+    enabled: true
+    mode: trunk
+    trunk:
+      allowed_vlan: 1-100
+      native_vlan: 1000
+- name: Ethernet27
+  description: Network Port
+  shutdown: false
+  peer: Network Port
+  peer_type: network_port
+  port_profile: MY_PROFILE
+  switchport:
+    enabled: true
+    mode: trunk
+    trunk:
+      allowed_vlan: 1-100
+      native_vlan: 1000
+- name: Ethernet28
+  description: Network Port
+  shutdown: false
+  peer: Network Port
+  peer_type: network_port
+  port_profile: MY_PROFILE
+  switchport:
+    enabled: true
+    mode: trunk
+    trunk:
+      allowed_vlan: 1-100
+      native_vlan: 1000
+- name: Ethernet29
+  description: Network Port
+  shutdown: false
+  peer: Network Port
+  peer_type: network_port
+  port_profile: MY_PROFILE
+  switchport:
+    enabled: true
+    mode: trunk
+    trunk:
+      allowed_vlan: 1-100
+      native_vlan: 1000
+- name: Ethernet12
+  description: SERVER_TEST_SERVER_01_Nic1
+  shutdown: false
+  peer: TEST_SERVER_01
+  peer_interface: Nic1
+  peer_type: server
+  port_profile: MY_PROFILE
+  switchport:
+    enabled: true
+    mode: trunk
+    trunk:
+      allowed_vlan: 1-100
+      native_vlan: 1000
+- name: Ethernet1
+  description: SERVER_TEST_SERVER_01_Nic1
+  shutdown: false
+  channel_group:
+    id: 1
+    mode: active
+  peer: TEST_SERVER_01
+  peer_interface: Nic1
+  peer_type: server
+  port_profile: MY_PROFILE
+- name: Ethernet2
+  description: SERVER_TEST_SERVER_01_Nic2
+  shutdown: false
+  channel_group:
+    id: 1
+    mode: active
+  peer: TEST_SERVER_01
+  peer_interface: Nic2
+  peer_type: server
+  port_profile: MY_PROFILE
+hostname: only-connected-endpoints
+is_deployed: null
+management_api_http: null
+metadata:
+  fabric_name: EOS_DESIGNS_UNIT_TESTS
+port_channel_interfaces:
+- name: Port-Channel1
+  description: SERVER_TEST_SERVER_01
+  shutdown: false
+  switchport:
+    enabled: true
+    mode: trunk
+    trunk:
+      allowed_vlan: 1-100
+      native_vlan: 1000
+service_routing_protocols_model: null
+spanning_tree: null
+transceiver_qsfp_default_mode_4x10: null
+vlan_internal_order: null
+vrfs: null

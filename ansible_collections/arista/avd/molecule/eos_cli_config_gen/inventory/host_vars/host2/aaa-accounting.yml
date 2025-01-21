@@ -1,0 +1,9 @@
+---
+## AAA Accounting for none console
+aaa_accounting:
+  exec:
+    console:
+      type: none
+      logging: true
+    default:
+      type: none

@@ -162,7 +162,7 @@ Enable password has been disabled
 
 | CV Compression | CloudVision Servers | VRF | Authentication | Smash Excludes | Ingest Exclude | Bypass AAA |
 | -------------- | ------------------- | --- | -------------- | -------------- | -------------- | ---------- |
-| gzip | 192.168.200.11:9910 | MGMT | key,telarista | ale,flexCounter,hardware,kni,pulse,strata | /Sysdb/cell/1/agent,/Sysdb/cell/2/agent | False |
+| gzip | 192.168.200.11:9910 | MGMT | key,<removed> | ale,flexCounter,hardware,kni,pulse,strata | /Sysdb/cell/1/agent,/Sysdb/cell/2/agent | False |
 
 #### TerminAttr Daemon Device Configuration
 
@@ -218,62 +218,62 @@ vlan internal order ascending range 1006 1199
 
 | Interface | Description | Channel Group | IP Address | VRF |  MTU | Shutdown | ACL In | ACL Out |
 | --------- | ----------- | ------------- | ---------- | ----| ---- | -------- | ------ | ------- |
-| Ethernet1 | P2P_LINK_TO_DC1-LEAF1A_Ethernet2 | - | 172.31.255.2/31 | default | 1500 | False | - | - |
-| Ethernet2 | P2P_LINK_TO_DC1-LEAF2A_Ethernet2 | - | 172.31.255.10/31 | default | 1500 | False | - | - |
-| Ethernet3 | P2P_LINK_TO_DC1-LEAF2B_Ethernet2 | - | 172.31.255.18/31 | default | 1500 | False | - | - |
-| Ethernet4 | P2P_LINK_TO_DC1-SVC3A_Ethernet2 | - | 172.31.255.26/31 | default | 1500 | True | - | - |
-| Ethernet5 | P2P_LINK_TO_DC1-SVC3B_Ethernet2 | - | 172.31.255.34/31 | default | 1500 | True | - | - |
-| Ethernet6 | P2P_LINK_TO_DC1-BL1A_Ethernet2 | - | 172.31.255.42/31 | default | 1500 | False | - | - |
-| Ethernet7 | P2P_LINK_TO_DC1-BL1B_Ethernet2 | - | 172.31.255.50/31 | default | 1500 | False | - | - |
+| Ethernet1 | P2P_DC1-LEAF1A_Ethernet2 | - | 172.31.255.2/31 | default | 1500 | False | - | - |
+| Ethernet2 | P2P_DC1-LEAF2A_Ethernet2 | - | 172.31.255.10/31 | default | 1500 | False | - | - |
+| Ethernet3 | P2P_DC1-LEAF2B_Ethernet2 | - | 172.31.255.18/31 | default | 1500 | False | - | - |
+| Ethernet4 | P2P_DC1-SVC3A_Ethernet2 | - | 172.31.255.26/31 | default | 1500 | True | - | - |
+| Ethernet5 | P2P_DC1-SVC3B_Ethernet2 | - | 172.31.255.34/31 | default | 1500 | True | - | - |
+| Ethernet6 | P2P_DC1-BL1A_Ethernet2 | - | 172.31.255.42/31 | default | 1500 | False | - | - |
+| Ethernet7 | P2P_DC1-BL1B_Ethernet2 | - | 172.31.255.50/31 | default | 1500 | False | - | - |
 
 #### Ethernet Interfaces Device Configuration
 
 ```eos
 !
 interface Ethernet1
-   description P2P_LINK_TO_DC1-LEAF1A_Ethernet2
+   description P2P_DC1-LEAF1A_Ethernet2
    no shutdown
    mtu 1500
    no switchport
    ip address 172.31.255.2/31
 !
 interface Ethernet2
-   description P2P_LINK_TO_DC1-LEAF2A_Ethernet2
+   description P2P_DC1-LEAF2A_Ethernet2
    no shutdown
    mtu 1500
    no switchport
    ip address 172.31.255.10/31
 !
 interface Ethernet3
-   description P2P_LINK_TO_DC1-LEAF2B_Ethernet2
+   description P2P_DC1-LEAF2B_Ethernet2
    no shutdown
    mtu 1500
    no switchport
    ip address 172.31.255.18/31
 !
 interface Ethernet4
-   description P2P_LINK_TO_DC1-SVC3A_Ethernet2
+   description P2P_DC1-SVC3A_Ethernet2
    shutdown
    mtu 1500
    no switchport
    ip address 172.31.255.26/31
 !
 interface Ethernet5
-   description P2P_LINK_TO_DC1-SVC3B_Ethernet2
+   description P2P_DC1-SVC3B_Ethernet2
    shutdown
    mtu 1500
    no switchport
    ip address 172.31.255.34/31
 !
 interface Ethernet6
-   description P2P_LINK_TO_DC1-BL1A_Ethernet2
+   description P2P_DC1-BL1A_Ethernet2
    no shutdown
    mtu 1500
    no switchport
    ip address 172.31.255.42/31
 !
 interface Ethernet7
-   description P2P_LINK_TO_DC1-BL1B_Ethernet2
+   description P2P_DC1-BL1B_Ethernet2
    no shutdown
    mtu 1500
    no switchport
@@ -420,9 +420,9 @@ ASN Notation: asplain
 
 ##### EVPN Peer Groups
 
-| Peer Group | Activate | Encapsulation |
-| ---------- | -------- | ------------- |
-| EVPN-OVERLAY-PEERS | True | default |
+| Peer Group | Activate | Route-map In | Route-map Out | Encapsulation |
+| ---------- | -------- | ------------ | ------------- | ------------- |
+| EVPN-OVERLAY-PEERS | True |  - | - | default |
 
 #### Router BGP Device Configuration
 
@@ -430,9 +430,9 @@ ASN Notation: asplain
 !
 router bgp 65001
    router-id 192.168.255.2
-   maximum-paths 4 ecmp 4
    update wait-install
    no bgp default ipv4-unicast
+   maximum-paths 4 ecmp 4
    distance bgp 20 200 200
    neighbor EVPN-OVERLAY-PEERS peer group
    neighbor EVPN-OVERLAY-PEERS next-hop-unchanged

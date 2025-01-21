@@ -1,0 +1,28 @@
+# Copyright (c) 2023-2024 Arista Networks, Inc.
+# Use of this source code is governed by the Apache License 2.0
+# that can be found in the LICENSE file.
+# yaml-language-server: $schema=../../../_schema/avd_meta_schema.json
+# Line above is used by RedHat's YAML Schema vscode extension
+# Use Ctrl + Space to get suggestions for every field. Autocomplete will pop up after typing 2 letters.
+type: dict
+keys:
+  underlay_l2_port_channel_description:
+    type: str
+    documentation_options:
+      table: fabric-settings
+    description: |-
+      The description or description template to be used on L2 port-channel interfaces.
+      The interfaces using this are port-channel uplinks.
+      This can be a template using the AVD string formatter syntax: https://avd.arista.com/devel/roles/eos_designs/docs/how-to/custom-descriptions-names.html#avd-string-formatter-syntax.
+      The available template fields are:
+        - `peer`: The name of the peer.
+        - `interface`: The local interface name.
+        - `peer_interface`: The interface on the peer.
+        - `port_channel_id`: The local port-channel ID.
+        - `peer_port_channel_id`: The ID of the port-channel on the peer.
+        - `peer_node_group`: The node group of the peer if the peer is an MLAG member or running EVPN A/A.
+        - `peer_node_group_or_peer`: Helper alias of the peer_node_group or peer.
+        - `peer_node_group_or_uppercase_peer`: Helper alias of the peer_node_group or peer hostname in uppercase.
+
+      By default the description is templated from the peer's node group (for MLAG or EVPN A/A) or hostname and port-channel interface of the peer.
+    default: "L2_{peer_node_group_or_peer}_{peer_interface}"

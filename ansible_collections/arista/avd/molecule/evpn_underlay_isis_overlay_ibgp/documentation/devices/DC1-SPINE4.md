@@ -160,7 +160,7 @@ Enable password has been disabled
 
 | CV Compression | CloudVision Servers | VRF | Authentication | Smash Excludes | Ingest Exclude | Bypass AAA |
 | -------------- | ------------------- | --- | -------------- | -------------- | -------------- | ---------- |
-| gzip | 192.168.200.11:9910 | MGMT | key,telarista | ale,flexCounter,hardware,kni,pulse,strata | /Sysdb/cell/1/agent,/Sysdb/cell/2/agent | True |
+| gzip | 192.168.200.11:9910 | MGMT | key,<removed> | ale,flexCounter,hardware,kni,pulse,strata | /Sysdb/cell/1/agent,/Sysdb/cell/2/agent | True |
 
 #### TerminAttr Daemon Device Configuration
 
@@ -216,18 +216,18 @@ vlan internal order ascending range 1006 1199
 
 | Interface | Description | Channel Group | IP Address | VRF |  MTU | Shutdown | ACL In | ACL Out |
 | --------- | ----------- | ------------- | ---------- | ----| ---- | -------- | ------ | ------- |
-| Ethernet1 | P2P_LINK_TO_DC1-LEAF1A_Ethernet4 | - | 172.31.255.6/31 | default | 1500 | False | - | - |
-| Ethernet2 | P2P_LINK_TO_DC1-LEAF2A_Ethernet4 | - | 172.31.255.14/31 | default | 1500 | False | - | - |
-| Ethernet3 | P2P_LINK_TO_DC1-LEAF2B_Ethernet4 | - | 172.31.255.22/31 | default | 1500 | False | - | - |
-| Ethernet4 | P2P_LINK_TO_DC1-SVC3A_Ethernet4 | - | 172.31.255.30/31 | default | 1500 | False | - | - |
-| Ethernet5 | P2P_LINK_TO_DC1-SVC3B_Ethernet4 | - | 172.31.255.38/31 | default | 1500 | False | - | - |
-| Ethernet6 | P2P_LINK_TO_DC1-BL1A_Ethernet4 | - | 172.31.255.46/31 | default | 1500 | False | - | - |
-| Ethernet7 | P2P_LINK_TO_DC1-BL1B_Ethernet4 | - | 172.31.255.54/31 | default | 1500 | False | - | - |
+| Ethernet1 | P2P_DC1-LEAF1A_Ethernet4 | - | 172.31.255.6/31 | default | 1500 | False | - | - |
+| Ethernet2 | P2P_DC1-LEAF2A_Ethernet4 | - | 172.31.255.14/31 | default | 1500 | False | - | - |
+| Ethernet3 | P2P_DC1-LEAF2B_Ethernet4 | - | 172.31.255.22/31 | default | 1500 | False | - | - |
+| Ethernet4 | P2P_DC1-SVC3A_Ethernet4 | - | 172.31.255.30/31 | default | 1500 | False | - | - |
+| Ethernet5 | P2P_DC1-SVC3B_Ethernet4 | - | 172.31.255.38/31 | default | 1500 | False | - | - |
+| Ethernet6 | P2P_DC1-BL1A_Ethernet4 | - | 172.31.255.46/31 | default | 1500 | False | - | - |
+| Ethernet7 | P2P_DC1-BL1B_Ethernet4 | - | 172.31.255.54/31 | default | 1500 | False | - | - |
 
 ##### ISIS
 
-| Interface | Channel Group | ISIS Instance | ISIS BFD | ISIS Metric | Mode | ISIS Circuit Type | Hello Padding | Authentication Mode |
-| --------- | ------------- | ------------- | -------- | ----------- | ---- | ----------------- | ------------- | ------------------- |
+| Interface | Channel Group | ISIS Instance | ISIS BFD | ISIS Metric | Mode | ISIS Circuit Type | Hello Padding | ISIS Authentication Mode |
+| --------- | ------------- | ------------- | -------- | ----------- | ---- | ----------------- | ------------- | ------------------------ |
 | Ethernet1 | - | EVPN_UNDERLAY | True | 50 | point-to-point | level-2 | - | - |
 | Ethernet2 | - | EVPN_UNDERLAY | True | 50 | point-to-point | level-2 | - | - |
 | Ethernet3 | - | EVPN_UNDERLAY | True | 50 | point-to-point | level-2 | - | - |
@@ -241,7 +241,7 @@ vlan internal order ascending range 1006 1199
 ```eos
 !
 interface Ethernet1
-   description P2P_LINK_TO_DC1-LEAF1A_Ethernet4
+   description P2P_DC1-LEAF1A_Ethernet4
    no shutdown
    mtu 1500
    no switchport
@@ -253,7 +253,7 @@ interface Ethernet1
    isis network point-to-point
 !
 interface Ethernet2
-   description P2P_LINK_TO_DC1-LEAF2A_Ethernet4
+   description P2P_DC1-LEAF2A_Ethernet4
    no shutdown
    mtu 1500
    no switchport
@@ -265,7 +265,7 @@ interface Ethernet2
    isis network point-to-point
 !
 interface Ethernet3
-   description P2P_LINK_TO_DC1-LEAF2B_Ethernet4
+   description P2P_DC1-LEAF2B_Ethernet4
    no shutdown
    mtu 1500
    no switchport
@@ -277,7 +277,7 @@ interface Ethernet3
    isis network point-to-point
 !
 interface Ethernet4
-   description P2P_LINK_TO_DC1-SVC3A_Ethernet4
+   description P2P_DC1-SVC3A_Ethernet4
    no shutdown
    mtu 1500
    no switchport
@@ -289,7 +289,7 @@ interface Ethernet4
    isis network point-to-point
 !
 interface Ethernet5
-   description P2P_LINK_TO_DC1-SVC3B_Ethernet4
+   description P2P_DC1-SVC3B_Ethernet4
    no shutdown
    mtu 1500
    no switchport
@@ -301,7 +301,7 @@ interface Ethernet5
    isis network point-to-point
 !
 interface Ethernet6
-   description P2P_LINK_TO_DC1-BL1A_Ethernet4
+   description P2P_DC1-BL1A_Ethernet4
    no shutdown
    mtu 1500
    no switchport
@@ -313,7 +313,7 @@ interface Ethernet6
    isis network point-to-point
 !
 interface Ethernet7
-   description P2P_LINK_TO_DC1-BL1B_Ethernet4
+   description P2P_DC1-BL1B_Ethernet4
    no shutdown
    mtu 1500
    no switchport
@@ -449,8 +449,8 @@ ip route vrf MGMT 0.0.0.0/0 192.168.200.5
 !
 router isis EVPN_UNDERLAY
    net 49.0001.1921.6825.5004.00
-   is-type level-2
    router-id ipv4 192.168.255.4
+   is-type level-2
    log-adjacency-changes
    !
    address-family ipv4 unicast
@@ -509,9 +509,9 @@ ASN Notation: asplain
 
 ##### EVPN Peer Groups
 
-| Peer Group | Activate | Encapsulation |
-| ---------- | -------- | ------------- |
-| OVERLAY-PEERS | True | default |
+| Peer Group | Activate | Route-map In | Route-map Out | Encapsulation |
+| ---------- | -------- | ------------ | ------------- | ------------- |
+| OVERLAY-PEERS | True |  - | - | default |
 
 #### Router BGP Device Configuration
 
@@ -519,16 +519,16 @@ ASN Notation: asplain
 !
 router bgp 65000
    router-id 192.168.255.4
-   maximum-paths 4 ecmp 4
    update wait-install
    no bgp default ipv4-unicast
    bgp cluster-id 192.168.255.4
+   maximum-paths 4 ecmp 4
    distance bgp 20 200 200
    neighbor OVERLAY-PEERS peer group
    neighbor OVERLAY-PEERS remote-as 65000
    neighbor OVERLAY-PEERS update-source Loopback0
-   neighbor OVERLAY-PEERS route-reflector-client
    neighbor OVERLAY-PEERS bfd
+   neighbor OVERLAY-PEERS route-reflector-client
    neighbor OVERLAY-PEERS password 7 <removed>
    neighbor OVERLAY-PEERS send-community
    neighbor OVERLAY-PEERS maximum-routes 0

@@ -1,5 +1,5 @@
 {#
- Copyright (c) 2023-2024 Arista Networks, Inc.
+ Copyright (c) 2023-2025 Arista Networks, Inc.
  Use of this source code is governed by the Apache License 2.0
  that can be found in the LICENSE file.
 #}
@@ -30,18 +30,6 @@ interface {{ tunnel_interface.name }}
 {%     if tunnel_interface.ipv6_address is arista.avd.defined %}
    ipv6 address {{ tunnel_interface.ipv6_address }}
 {%     endif %}
-{%     if tunnel_interface.access_group_in is arista.avd.defined %}
-   ip access-group {{ tunnel_interface.access_group_in }} in
-{%     endif %}
-{%     if tunnel_interface.access_group_out is arista.avd.defined %}
-   ip access-group {{ tunnel_interface.access_group_out }} out
-{%     endif %}
-{%     if tunnel_interface.ipv6_access_group_in is arista.avd.defined %}
-   ipv6 access-group {{ tunnel_interface.ipv6_access_group_in }} in
-{%     endif %}
-{%     if tunnel_interface.ipv6_access_group_out is arista.avd.defined %}
-   ipv6 access-group {{ tunnel_interface.ipv6_access_group_out }} out
-{%     endif %}
 {%     if tunnel_interface.tcp_mss_ceiling is arista.avd.defined %}
 {%         set tcp_mss_ceiling_cli = "tcp mss ceiling" %}
 {%         if tunnel_interface.tcp_mss_ceiling.ipv4 is arista.avd.defined %}
@@ -55,6 +43,18 @@ interface {{ tunnel_interface.name }}
 {%         endif %}
    {{ tcp_mss_ceiling_cli }}
 {%     endif %}
+{%     if tunnel_interface.access_group_in is arista.avd.defined %}
+   ip access-group {{ tunnel_interface.access_group_in }} in
+{%     endif %}
+{%     if tunnel_interface.access_group_out is arista.avd.defined %}
+   ip access-group {{ tunnel_interface.access_group_out }} out
+{%     endif %}
+{%     if tunnel_interface.ipv6_access_group_in is arista.avd.defined %}
+   ipv6 access-group {{ tunnel_interface.ipv6_access_group_in }} in
+{%     endif %}
+{%     if tunnel_interface.ipv6_access_group_out is arista.avd.defined %}
+   ipv6 access-group {{ tunnel_interface.ipv6_access_group_out }} out
+{%     endif %}
 {%     if tunnel_interface.nat_profile is arista.avd.defined %}
    ip nat service-profile {{ tunnel_interface.nat_profile }}
 {%     endif %}
@@ -67,14 +67,14 @@ interface {{ tunnel_interface.name }}
 {%     if tunnel_interface.destination is arista.avd.defined %}
    tunnel destination {{ tunnel_interface.destination }}
 {%     endif %}
-{%     if tunnel_interface.underlay_vrf is arista.avd.defined %}
-   tunnel underlay vrf {{ tunnel_interface.underlay_vrf }}
-{%     endif %}
 {%     if tunnel_interface.path_mtu_discovery is arista.avd.defined(true) %}
    tunnel path-mtu-discovery
 {%     endif %}
 {%     if tunnel_interface.ipsec_profile is arista.avd.defined %}
    tunnel ipsec profile {{ tunnel_interface.ipsec_profile }}
+{%     endif %}
+{%     if tunnel_interface.underlay_vrf is arista.avd.defined %}
+   tunnel underlay vrf {{ tunnel_interface.underlay_vrf }}
 {%     endif %}
 {%     if tunnel_interface.eos_cli is arista.avd.defined %}
    {{ tunnel_interface.eos_cli | indent(3, false) }}

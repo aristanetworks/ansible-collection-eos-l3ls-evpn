@@ -158,7 +158,7 @@ Enable password has been disabled
 
 | CV Compression | CloudVision Servers | VRF | Authentication | Smash Excludes | Ingest Exclude | Bypass AAA |
 | -------------- | ------------------- | --- | -------------- | -------------- | -------------- | ---------- |
-| gzip | 192.168.200.11:9910 | MGMT | key,telarista | ale,flexCounter,hardware,kni,pulse,strata | /Sysdb/cell/1/agent,/Sysdb/cell/2/agent | True |
+| gzip | 192.168.200.11:9910 | MGMT | key,<removed> | ale,flexCounter,hardware,kni,pulse,strata | /Sysdb/cell/1/agent,/Sysdb/cell/2/agent | True |
 
 #### TerminAttr Daemon Device Configuration
 
@@ -214,8 +214,8 @@ vlan internal order ascending range 1006 1199
 
 | Interface | Description | Mode | VLANs | Native VLAN | Trunk Group | Channel-Group |
 | --------- | ----------- | ---- | ----- | ----------- | ----------- | ------------- |
-| Ethernet1 | DC1-LEAF2A_Ethernet7 | *trunk | *none | *- | *- | 1 |
-| Ethernet2 | DC1-LEAF2B_Ethernet7 | *trunk | *none | *- | *- | 1 |
+| Ethernet1 | L2_DC1-LEAF2A_Ethernet7 | *trunk | *none | *- | *- | 1 |
+| Ethernet2 | L2_DC1-LEAF2B_Ethernet7 | *trunk | *none | *- | *- | 1 |
 
 *Inherited from Port-Channel Interface
 
@@ -224,12 +224,12 @@ vlan internal order ascending range 1006 1199
 ```eos
 !
 interface Ethernet1
-   description DC1-LEAF2A_Ethernet7
+   description L2_DC1-LEAF2A_Ethernet7
    no shutdown
    channel-group 1 mode active
 !
 interface Ethernet2
-   description DC1-LEAF2B_Ethernet7
+   description L2_DC1-LEAF2B_Ethernet7
    no shutdown
    channel-group 1 mode active
 ```
@@ -242,14 +242,14 @@ interface Ethernet2
 
 | Interface | Description | Mode | VLANs | Native VLAN | Trunk Group | LACP Fallback Timeout | LACP Fallback Mode | MLAG ID | EVPN ESI |
 | --------- | ----------- | ---- | ----- | ----------- | ------------| --------------------- | ------------------ | ------- | -------- |
-| Port-Channel1 | DC1_LEAF2_Po7 | trunk | none | - | - | - | - | - | - |
+| Port-Channel1 | L2_DC1_LEAF2_Port-Channel7 | trunk | none | - | - | - | - | - | - |
 
 #### Port-Channel Interfaces Device Configuration
 
 ```eos
 !
 interface Port-Channel1
-   description DC1_LEAF2_Po7
+   description L2_DC1_LEAF2_Port-Channel7
    no shutdown
    switchport trunk allowed vlan none
    switchport mode trunk

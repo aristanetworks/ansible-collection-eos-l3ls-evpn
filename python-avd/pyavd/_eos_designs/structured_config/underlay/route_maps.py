@@ -1,4 +1,4 @@
-# Copyright (c) 2023-2024 Arista Networks, Inc.
+# Copyright (c) 2023-2025 Arista Networks, Inc.
 # Use of this source code is governed by the Apache License 2.0
 # that can be found in the LICENSE file.
 from __future__ import annotations
@@ -35,7 +35,7 @@ class RouteMapsMixin(UtilsMixin):
 
         route_maps = []
 
-        if self.shared_utils.overlay_routing_protocol != "none" and self.shared_utils.underlay_filter_redistribute_connected:
+        if self.shared_utils.overlay_routing_protocol != "none" and self.inputs.underlay_filter_redistribute_connected:
             # RM-CONN-2-BGP
             sequence_10 = {
                 "sequence": 10,
@@ -73,6 +73,30 @@ class RouteMapsMixin(UtilsMixin):
                         "type": "permit",
                         "match": ["ip address prefix-list PL-WAN-HA-PREFIXES"],
                     },
+                )
+
+            add_p2p_links = False
+            for peer in self._avd_peers:
+                peer_facts = self.shared_utils.get_peer_facts(peer, required=True)
+                for uplink in peer_facts["uplinks"]:
+                    if (
+                        uplink["peer"] == self.shared_utils.hostname
+                        and uplink["type"] == "underlay_p2p"
+                        and uplink.get("ip_address")
+                        and "unnumbered" not in uplink["ip_address"]
+                        and get(peer_facts, "inband_ztp")
+                    ):
+                        add_p2p_links = True
+                        break
+                if add_p2p_links:
+                    break
+            if add_p2p_links:
+                sequence_numbers.append(
+                    {
+                        "sequence": 70,
+                        "type": "permit",
+                        "match": ["ip address prefix-list PL-P2P-LINKS"],
+                    }
                 )
 
             route_maps.append({"name": "RM-CONN-2-BGP", "sequence_numbers": sequence_numbers})
@@ -143,46 +167,6 @@ class RouteMapsMixin(UtilsMixin):
                     },
                 ]
                 route_maps.append({"name": "RM-BGP-UNDERLAY-PEERS-OUT", "sequence_numbers": sequence_numbers})
-
-        for neighbor in self.shared_utils.l3_interfaces_bgp_neighbors:
-            # RM-BGP-<PEER-IP>-IN
-            if prefix_list_in := get(neighbor, "ipv4_prefix_list_in"):
-                sequence_numbers = [
-                    {
-                        "sequence": 10,
-                        "type": "permit",
-                        "match": [f"ip address prefix-list {prefix_list_in}"],
-                    },
-                ]
-                # set no advertise is set only for wan neighbors, which will also have
-                # prefix_list_in
-                if neighbor.get("set_no_advertise"):
-                    sequence_numbers[0]["set"] = ["community no-advertise additive"]
-
-                route_maps.append({"name": neighbor["route_map_in"], "sequence_numbers": sequence_numbers})
-
-            # RM-BGP-<PEER-IP>-OUT
-            if prefix_list_out := get(neighbor, "ipv4_prefix_list_out"):
-                sequence_numbers = [
-                    {
-                        "sequence": 10,
-                        "type": "permit",
-                        "match": [f"ip address prefix-list {prefix_list_out}"],
-                    },
-                    {
-                        "sequence": 20,
-                        "type": "deny",
-                    },
-                ]
-            else:
-                sequence_numbers = [
-                    {
-                        "sequence": 10,
-                        "type": "deny",
-                    },
-                ]
-
-            route_maps.append({"name": neighbor["route_map_out"], "sequence_numbers": sequence_numbers})
 
         if route_maps:
             return route_maps

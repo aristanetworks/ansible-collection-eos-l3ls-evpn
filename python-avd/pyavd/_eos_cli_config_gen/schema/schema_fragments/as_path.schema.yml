@@ -14,6 +14,7 @@ keys:
         valid_values: ["asn", "string"]
       access_lists:
         type: list
+        primary_key: name
         items:
           type: dict
           keys:

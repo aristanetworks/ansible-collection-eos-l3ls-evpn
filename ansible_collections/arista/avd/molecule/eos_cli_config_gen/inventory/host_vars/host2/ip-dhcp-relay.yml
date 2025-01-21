@@ -1,0 +1,5 @@
+---
+### IP DHCP Relay ###
+
+ip_dhcp_relay:
+  information_option: true

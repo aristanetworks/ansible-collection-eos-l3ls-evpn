@@ -1,12 +1,10 @@
-# Copyright (c) 2023-2024 Arista Networks, Inc.
+# Copyright (c) 2023-2025 Arista Networks, Inc.
 # Use of this source code is governed by the Apache License 2.0
 # that can be found in the LICENSE file.
 from __future__ import annotations
 
 from functools import cached_property
 from typing import TYPE_CHECKING
-
-from pyavd._utils import get, get_item
 
 if TYPE_CHECKING:
     from . import SharedUtils
@@ -55,41 +53,27 @@ class UnderlayMixin:
 
     @cached_property
     def underlay_ipv6(self: SharedUtils) -> bool:
-        return get(self.hostvars, "underlay_ipv6", default=False) and self.underlay_router
+        return self.inputs.underlay_ipv6 and self.underlay_router
 
     @cached_property
     def underlay_multicast(self: SharedUtils) -> bool:
-        return get(self.hostvars, "underlay_multicast") and self.underlay_router
-
-    @cached_property
-    def underlay_multicast_rps(self: SharedUtils) -> list[dict] | None:
-        if not self.underlay_multicast:
-            return None
-
-        return get(self.hostvars, "underlay_multicast_rps")
-
-    @cached_property
-    def underlay_multicast_anycast_rp_mode(self: SharedUtils) -> str:
-        return get(self.hostvars, "underlay_multicast_anycast_rp.mode", default="pim")
+        return self.inputs.underlay_multicast and self.underlay_router
 
     @cached_property
     def underlay_multicast_rp_interfaces(self: SharedUtils) -> list[dict] | None:
-        if self.underlay_multicast_rps is None:
+        if not self.underlay_multicast or not self.inputs.underlay_multicast_rps:
             return None
 
         underlay_multicast_rp_interfaces = []
-        for rp_entry in self.underlay_multicast_rps:
-            if (nodes := get(rp_entry, "nodes")) is None:
-                continue
-
-            if (node_entry := get_item(nodes, "name", self.hostname)) is None:
+        for rp_entry in self.inputs.underlay_multicast_rps:
+            if self.hostname not in rp_entry.nodes:
                 continue
 
             underlay_multicast_rp_interfaces.append(
                 {
-                    "name": f"Loopback{node_entry['loopback_number']}",
-                    "description": get(node_entry, "description", default="PIM RP"),
-                    "ip_address": f"{rp_entry['rp']}/32",
+                    "name": f"Loopback{rp_entry.nodes[self.hostname].loopback_number}",
+                    "description": rp_entry.nodes[self.hostname].description,
+                    "ip_address": f"{rp_entry.rp}/32",
                 },
             )
 
@@ -97,23 +81,3 @@ class UnderlayMixin:
             return underlay_multicast_rp_interfaces
 
         return None
-
-    @cached_property
-    def underlay_filter_redistribute_connected(self: SharedUtils) -> bool:
-        return get(self.hostvars, "underlay_filter_redistribute_connected", default=True) is True
-
-    @cached_property
-    def underlay_rfc5549(self: SharedUtils) -> bool:
-        return get(self.hostvars, "underlay_rfc5549") is True
-
-    @cached_property
-    def underlay_ospf_process_id(self: SharedUtils) -> int:
-        return get(self.hostvars, "underlay_ospf_process_id", default=100)
-
-    @cached_property
-    def underlay_ospf_area(self: SharedUtils) -> str:
-        return get(self.hostvars, "underlay_ospf_area", default="0.0.0.0")  # noqa: S104
-
-    @cached_property
-    def underlay_filter_peer_as(self: SharedUtils) -> bool:
-        return get(self.hostvars, "underlay_filter_peer_as") is True

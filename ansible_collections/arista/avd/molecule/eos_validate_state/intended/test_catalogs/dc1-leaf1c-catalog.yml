@@ -266,13 +266,13 @@ anta.tests.interfaces:
     - name: Ethernet1
       status: up
     result_overwrite:
-      custom_field: Interface Ethernet1 - DC1-LEAF1A_Ethernet8 = 'up'
+      custom_field: Interface Ethernet1 - L2_dc1-leaf1a_Ethernet8 = 'up'
 - VerifyInterfacesStatus:
     interfaces:
     - name: Ethernet2
       status: up
     result_overwrite:
-      custom_field: Interface Ethernet2 - DC1-LEAF1B_Ethernet8 = 'up'
+      custom_field: Interface Ethernet2 - L2_dc1-leaf1b_Ethernet8 = 'up'
 - VerifyInterfacesStatus:
     interfaces:
     - name: Ethernet5
@@ -284,7 +284,7 @@ anta.tests.interfaces:
     - name: Port-Channel1
       status: up
     result_overwrite:
-      custom_field: Interface Port-Channel1 - DC1_L3_LEAF1_Po8 = 'up'
+      custom_field: Interface Port-Channel1 - L2_DC1_L3_LEAF1_Port-Channel8 = 'up'
 - VerifyInterfacesStatus:
     interfaces:
     - name: Vlan4085

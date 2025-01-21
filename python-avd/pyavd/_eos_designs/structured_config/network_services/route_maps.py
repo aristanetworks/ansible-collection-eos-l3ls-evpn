@@ -1,4 +1,4 @@
-# Copyright (c) 2023-2024 Arista Networks, Inc.
+# Copyright (c) 2023-2025 Arista Networks, Inc.
 # Use of this source code is governed by the Apache License 2.0
 # that can be found in the LICENSE file.
 from __future__ import annotations
@@ -37,16 +37,16 @@ class RouteMapsMixin(UtilsMixin):
         route_maps = []
 
         for tenant in self.shared_utils.filtered_tenants:
-            for vrf in tenant["vrfs"]:
+            for vrf in tenant.vrfs:
                 # BGP Peers are already filtered in filtered_tenants
                 #  so we only have entries with our hostname in them.
-                for bgp_peer in vrf["bgp_peers"]:
-                    ipv4_next_hop = bgp_peer.get("set_ipv4_next_hop")
-                    ipv6_next_hop = bgp_peer.get("set_ipv6_next_hop")
+                for bgp_peer in vrf.bgp_peers:
+                    ipv4_next_hop = bgp_peer.set_ipv4_next_hop
+                    ipv6_next_hop = bgp_peer.set_ipv6_next_hop
                     if ipv4_next_hop is None and ipv6_next_hop is None:
                         continue
 
-                    route_map_name = f"RM-{vrf['name']}-{bgp_peer['ip_address']}-SET-NEXT-HOP-OUT"
+                    route_map_name = f"RM-{vrf.name}-{bgp_peer.ip_address}-SET-NEXT-HOP-OUT"
                     set_action = f"ip next-hop {ipv4_next_hop}" if ipv4_next_hop is not None else f"ipv6 next-hop {ipv6_next_hop}"
 
                     route_map = {
@@ -70,7 +70,7 @@ class RouteMapsMixin(UtilsMixin):
         if (route_maps_vrf_default := self._route_maps_vrf_default) is not None:
             route_maps.extend(route_maps_vrf_default)
 
-        if self._configure_bgp_mlag_peer_group and self.shared_utils.mlag_ibgp_origin_incomplete:
+        if self._configure_bgp_mlag_peer_group and self.shared_utils.node_config.mlag_ibgp_origin_incomplete:
             route_maps.append(self._bgp_mlag_peer_group_route_map())
 
         if self._mlag_ibgp_peering_subnets_without_redistribution:
@@ -239,7 +239,7 @@ class RouteMapsMixin(UtilsMixin):
 
         sequence 10 is set in underlay and sequence 20 in inband management, so avoid setting those here
         """
-        if not self.shared_utils.underlay_filter_redistribute_connected:
+        if not self.inputs.underlay_filter_redistribute_connected:
             return None
 
         sequence_numbers = []

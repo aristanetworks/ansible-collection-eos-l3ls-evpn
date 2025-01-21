@@ -26,6 +26,7 @@
 - [MPLS](#mpls)
   - [MPLS and LDP](#mpls-and-ldp)
   - [MPLS Interfaces](#mpls-interfaces)
+  - [MPLS Device Configuration](#mpls-device-configuration)
 - [VRF Instances](#vrf-instances)
   - [VRF Instances Summary](#vrf-instances-summary)
   - [VRF Instances Device Configuration](#vrf-instances-device-configuration)
@@ -137,11 +138,11 @@ vlan internal order ascending range 1006 1199
 
 | Interface | Description | Channel Group | IP Address | VRF |  MTU | Shutdown | ACL In | ACL Out |
 | --------- | ----------- | ------------- | ---------- | ----| ---- | -------- | ------ | ------- |
-| Ethernet3 | P2P_LINK_TO_SITE1-LSR2_Ethernet3 | - | 100.64.48.11/31 | default | 9178 | False | - | - |
-| Ethernet12 | P2P_LINK_TO_SITE2-LER1_Ethernet11 | 12 | *100.64.49.1/30 | **default | *9178 | *False | **- | **- |
-| Ethernet13 | P2P_LINK_TO_SITE2-LER1_Ethernet12 | 12 | *100.64.49.1/30 | **default | *9178 | *False | **- | **- |
-| Ethernet14 | P2P_LINK_TO_SITE2-LER1_Ethernet13 | 110 | *100.64.49.5/30 | **default | *9178 | *False | **- | **- |
-| Ethernet15 | P2P_LINK_TO_SITE2-LER1_Ethernet14 | 110 | *100.64.49.5/30 | **default | *9178 | *False | **- | **- |
+| Ethernet3 | P2P_SITE1-LSR2_Ethernet3 | - | 100.64.48.11/31 | default | 9178 | False | - | - |
+| Ethernet12 | P2P_SITE2-LER1_Ethernet11 | 12 | *100.64.49.1/30 | **default | *9178 | *False | **- | **- |
+| Ethernet13 | P2P_SITE2-LER1_Ethernet12 | 12 | *100.64.49.1/30 | **default | *9178 | *False | **- | **- |
+| Ethernet14 | P2P_SITE2-LER1_Ethernet13 | 110 | *100.64.49.5/30 | **default | *9178 | *False | **- | **- |
+| Ethernet15 | P2P_SITE2-LER1_Ethernet14 | 110 | *100.64.49.5/30 | **default | *9178 | *False | **- | **- |
 
 *Inherited from Port-Channel Interface
 
@@ -149,18 +150,18 @@ vlan internal order ascending range 1006 1199
 
 | Interface | Description | Channel Group | IPv6 Address | VRF | MTU | Shutdown | ND RA Disabled | Managed Config Flag | IPv6 ACL In | IPv6 ACL Out |
 | --------- | ----------- | --------------| ------------ | --- | --- | -------- | -------------- | -------------------| ----------- | ------------ |
-| Ethernet3 | P2P_LINK_TO_SITE1-LSR2_Ethernet3 | - | - | default | 9178 | False | - | - | - | - |
-| Ethernet12 | P2P_LINK_TO_SITE2-LER1_Ethernet11 | 12 | *- | *default | *9178 | *False | *- | *- | *- | *- |
-| Ethernet13 | P2P_LINK_TO_SITE2-LER1_Ethernet12 | 12 | *- | *default | *9178 | *False | *- | *- | *- | *- |
-| Ethernet14 | P2P_LINK_TO_SITE2-LER1_Ethernet13 | 110 | *- | *default | *9178 | *False | *- | *- | *- | *- |
-| Ethernet15 | P2P_LINK_TO_SITE2-LER1_Ethernet14 | 110 | *- | *default | *9178 | *False | *- | *- | *- | *- |
+| Ethernet3 | P2P_SITE1-LSR2_Ethernet3 | - | - | default | 9178 | False | - | - | - | - |
+| Ethernet12 | P2P_SITE2-LER1_Ethernet11 | 12 | *- | *default | *9178 | *False | *- | *- | *- | *- |
+| Ethernet13 | P2P_SITE2-LER1_Ethernet12 | 12 | *- | *default | *9178 | *False | *- | *- | *- | *- |
+| Ethernet14 | P2P_SITE2-LER1_Ethernet13 | 110 | *- | *default | *9178 | *False | *- | *- | *- | *- |
+| Ethernet15 | P2P_SITE2-LER1_Ethernet14 | 110 | *- | *default | *9178 | *False | *- | *- | *- | *- |
 
 *Inherited from Port-Channel Interface
 
 ##### ISIS
 
-| Interface | Channel Group | ISIS Instance | ISIS BFD | ISIS Metric | Mode | ISIS Circuit Type | Hello Padding | Authentication Mode |
-| --------- | ------------- | ------------- | -------- | ----------- | ---- | ----------------- | ------------- | ------------------- |
+| Interface | Channel Group | ISIS Instance | ISIS BFD | ISIS Metric | Mode | ISIS Circuit Type | Hello Padding | ISIS Authentication Mode |
+| --------- | ------------- | ------------- | -------- | ----------- | ---- | ----------------- | ------------- | ------------------------ |
 | Ethernet3 | - | CUSTOM_NAME | - | 60 | point-to-point | level-2 | False | md5 |
 | Ethernet12 | 12 | *CUSTOM_NAME | - | *60 | *point-to-point | *level-2 | *False | *md5 |
 | Ethernet13 | 12 | *CUSTOM_NAME | - | *60 | *point-to-point | *level-2 | *False | *md5 |
@@ -174,7 +175,7 @@ vlan internal order ascending range 1006 1199
 ```eos
 !
 interface Ethernet3
-   description P2P_LINK_TO_SITE1-LSR2_Ethernet3
+   description P2P_SITE1-LSR2_Ethernet3
    no shutdown
    mtu 9178
    speed forced 40gfull
@@ -195,25 +196,25 @@ interface Ethernet3
 
 !
 interface Ethernet12
-   description P2P_LINK_TO_SITE2-LER1_Ethernet11
+   description P2P_SITE2-LER1_Ethernet11
    no shutdown
    speed forced 40gfull
    channel-group 12 mode active
 !
 interface Ethernet13
-   description P2P_LINK_TO_SITE2-LER1_Ethernet12
+   description P2P_SITE2-LER1_Ethernet12
    no shutdown
    speed forced 40gfull
    channel-group 12 mode active
 !
 interface Ethernet14
-   description P2P_LINK_TO_SITE2-LER1_Ethernet13
+   description P2P_SITE2-LER1_Ethernet13
    no shutdown
    speed forced 40gfull
    channel-group 110 mode active
 !
 interface Ethernet15
-   description P2P_LINK_TO_SITE2-LER1_Ethernet14
+   description P2P_SITE2-LER1_Ethernet14
    no shutdown
    speed forced 40gfull
    channel-group 110 mode active
@@ -232,13 +233,13 @@ interface Ethernet15
 
 | Interface | Description | MLAG ID | IP Address | VRF | MTU | Shutdown | ACL In | ACL Out |
 | --------- | ----------- | ------- | ---------- | --- | --- | -------- | ------ | ------- |
-| Port-Channel12 | P2P_LINK_TO_SITE2-LER1_Port-Channel11 | - | 100.64.49.1/30 | default | 9178 | False | - | - |
-| Port-Channel110 | P2P_LINK_TO_SITE2-LER1_Port-Channel220 | - | 100.64.49.5/30 | default | 9178 | False | - | - |
+| Port-Channel12 | P2P_SITE2-LER1_Port-Channel11 | - | 100.64.49.1/30 | default | 9178 | False | - | - |
+| Port-Channel110 | P2P_SITE2-LER1_Port-Channel220 | - | 100.64.49.5/30 | default | 9178 | False | - | - |
 
 ##### ISIS
 
-| Interface | ISIS Instance | ISIS BFD | ISIS Metric | Mode | ISIS Circuit Type | Hello Padding | Authentication Mode |
-| --------- | ------------- | -------- | ----------- | ---- | ----------------- | ------------- | ------------------- |
+| Interface | ISIS Instance | ISIS BFD | ISIS Metric | Mode | ISIS Circuit Type | Hello Padding | ISIS Authentication Mode |
+| --------- | ------------- | -------- | ----------- | ---- | ----------------- | ------------- | ------------------------ |
 | Port-Channel12 | CUSTOM_NAME | - | 60 | point-to-point | level-2 | False | md5 |
 | Port-Channel110 | CUSTOM_NAME | - | 60 | point-to-point | level-2 | False | md5 |
 
@@ -247,40 +248,40 @@ interface Ethernet15
 ```eos
 !
 interface Port-Channel12
-   description P2P_LINK_TO_SITE2-LER1_Port-Channel11
+   description P2P_SITE2-LER1_Port-Channel11
    no shutdown
    mtu 9178
    no switchport
    ip address 100.64.49.1/30
    ipv6 enable
-   mpls ip
-   mpls ldp interface
    mpls ldp igp sync
+   mpls ldp interface
+   mpls ip
    isis enable CUSTOM_NAME
    isis circuit-type level-2
    isis metric 60
-   isis network point-to-point
    no isis hello padding
+   isis network point-to-point
    isis authentication mode md5
    isis authentication key 7 <removed>
    link-debounce time 1600
 
 !
 interface Port-Channel110
-   description P2P_LINK_TO_SITE2-LER1_Port-Channel220
+   description P2P_SITE2-LER1_Port-Channel220
    no shutdown
    mtu 9178
    no switchport
    ip address 100.64.49.5/30
    ipv6 enable
-   mpls ip
-   mpls ldp interface
    mpls ldp igp sync
+   mpls ldp interface
+   mpls ip
    isis enable CUSTOM_NAME
    isis circuit-type level-2
    isis metric 60
-   isis network point-to-point
    no isis hello padding
+   isis network point-to-point
    isis authentication mode md5
    isis authentication key 7 <removed>
    link-debounce time 1600
@@ -396,9 +397,14 @@ ip route vrf MGMT 0.0.0.0/0 192.168.200.5
 | Router-ID | 100.70.0.4 |
 | Log Adjacency Changes | True |
 | MPLS LDP Sync Default | True |
-| Local Convergence Delay (ms) | 15000 |
 | Advertise Passive-only | True |
 | SR MPLS Enabled | True |
+
+#### ISIS Route Timers
+
+| Settings | Value |
+| -------- | ----- |
+| Local Convergence Delay | 15000 milliseconds |
 
 #### ISIS Interfaces Summary
 
@@ -435,8 +441,8 @@ ip route vrf MGMT 0.0.0.0/0 192.168.200.5
 !
 router isis CUSTOM_NAME
    net 49.0001.1000.7000.0004.00
-   is-type level-2
    router-id ipv4 100.70.0.4
+   is-type level-2
    log-adjacency-changes
    mpls ldp sync default
    timers local-convergence-delay 15000 protected-prefixes
@@ -468,7 +474,16 @@ router isis CUSTOM_NAME
 | LDP Interface Disabled Default | True |
 | LDP Transport-Address Interface | Loopback0 |
 
-#### MPLS and LDP Device Configuration
+### MPLS Interfaces
+
+| Interface | MPLS IP Enabled | LDP Enabled | IGP Sync |
+| --------- | --------------- | ----------- | -------- |
+| Ethernet3 | True | True | True |
+| Loopback0 | - | True | - |
+| Port-Channel12 | True | True | True |
+| Port-Channel110 | True | True | True |
+
+### MPLS Device Configuration
 
 ```eos
 !
@@ -480,15 +495,6 @@ mpls ldp
    interface disabled default
    no shutdown
 ```
-
-### MPLS Interfaces
-
-| Interface | MPLS IP Enabled | LDP Enabled | IGP Sync |
-| --------- | --------------- | ----------- | -------- |
-| Ethernet3 | True | True | True |
-| Loopback0 | - | True | - |
-| Port-Channel12 | True | True | True |
-| Port-Channel110 | True | True | True |
 
 ## VRF Instances
 

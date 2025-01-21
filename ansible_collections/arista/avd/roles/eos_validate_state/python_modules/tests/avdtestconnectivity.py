@@ -1,4 +1,4 @@
-# Copyright (c) 2023-2024 Arista Networks, Inc.
+# Copyright (c) 2023-2025 Arista Networks, Inc.
 # Use of this source code is governed by the Apache License 2.0
 # that can be found in the LICENSE file.
 from __future__ import annotations
@@ -37,6 +37,10 @@ class AvdTestP2PIPReachability(AvdTestBase):
         for idx, interface in enumerate(ethernet_interfaces):
             self.update_interface_shutdown(interface)
             if not self.validate_data(data=interface, data_path=f"ethernet_interfaces.[{idx}]", required_keys=required_keys, shutdown=False):
+                continue
+
+            if self.is_dhcp_interface(interface):
+                LOGGER.info("Interface '%s' is a DHCP interface. %s is skipped.", interface["name"], self.__class__.__name__)
                 continue
 
             if not self.is_peer_available(peer := interface["peer"]):
@@ -86,6 +90,10 @@ class AvdTestInbandReachability(AvdTestBase):
         for idx, interface in enumerate(vlan_interfaces):
             self.update_interface_shutdown(interface)
             if not self.validate_data(data=interface, data_path=f"vlan_interfaces.[{idx}]", required_keys=required_keys, type="inband_mgmt", shutdown=False):
+                continue
+
+            if self.is_dhcp_interface(interface):
+                LOGGER.info("Interface '%s' is a DHCP interface. %s is skipped.", interface["name"], self.__class__.__name__)
                 continue
 
             vrf = interface.get("vrf", "default")
@@ -226,6 +234,14 @@ class AvdTestLLDPTopology(AvdTestBase):
         required_keys = ["name", "peer", "peer_interface"]
 
         for idx, interface in enumerate(ethernet_interfaces):
+            if interface.get("validate_state", True) is False:
+                LOGGER.info("Interface '%s' variable 'validate_state' is set to False. %s is skipped.", interface["name"], self.__class__.__name__)
+                continue
+
+            if interface.get("validate_lldp", True) is False:
+                LOGGER.info("Interface '%s' variable 'validate_lldp' is set to False. %s is skipped.", interface["name"], self.__class__.__name__)
+                continue
+
             if self.is_subinterface(interface):
                 LOGGER.info("Interface '%s' is a subinterface. %s is skipped.", interface["name"], self.__class__.__name__)
                 continue

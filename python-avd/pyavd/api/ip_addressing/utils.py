@@ -1,4 +1,4 @@
-# Copyright (c) 2023-2024 Arista Networks, Inc.
+# Copyright (c) 2023-2025 Arista Networks, Inc.
 # Use of this source code is governed by the Apache License 2.0
 # that can be found in the LICENSE file.
 from __future__ import annotations
@@ -6,7 +6,7 @@ from __future__ import annotations
 from functools import cached_property
 from typing import TYPE_CHECKING
 
-from pyavd._errors import AristaAvdError, AristaAvdMissingVariableError
+from pyavd._errors import AristaAvdError, AristaAvdInvalidInputsError
 from pyavd._utils import get
 from pyavd.j2filters import range_expand
 
@@ -24,32 +24,16 @@ class UtilsMixin:
     @cached_property
     def _mlag_primary_id(self: AvdIpAddressing) -> int:
         if self.shared_utils.mlag_switch_ids is None or self.shared_utils.mlag_switch_ids.get("primary") is None:
-            msg = "'mlag_switch_ids' is required to calculate MLAG IP addresses"
-            raise AristaAvdMissingVariableError(msg)
+            msg = "'mlag_switch_ids' is required to calculate MLAG IP addresses."
+            raise AristaAvdInvalidInputsError(msg)
         return self.shared_utils.mlag_switch_ids["primary"]
 
     @cached_property
     def _mlag_secondary_id(self: AvdIpAddressing) -> int:
         if self.shared_utils.mlag_switch_ids is None or self.shared_utils.mlag_switch_ids.get("secondary") is None:
-            msg = "'mlag_switch_ids' is required to calculate MLAG IP addresses"
-            raise AristaAvdMissingVariableError(msg)
+            msg = "'mlag_switch_ids' is required to calculate MLAG IP addresses."
+            raise AristaAvdInvalidInputsError(msg)
         return self.shared_utils.mlag_switch_ids["secondary"]
-
-    @cached_property
-    def _fabric_ipaddress_mlag_algorithm(self: AvdIpAddressing) -> str:
-        return self.shared_utils.fabric_ip_addressing_mlag_algorithm
-
-    @cached_property
-    def _fabric_ip_addressing_mlag_ipv4_prefix_length(self: AvdIpAddressing) -> int:
-        return self.shared_utils.fabric_ip_addressing_mlag_ipv4_prefix_length
-
-    @cached_property
-    def _fabric_ip_addressing_mlag_ipv6_prefix_length(self: AvdIpAddressing) -> int:
-        return self.shared_utils.fabric_ip_addressing_mlag_ipv6_prefix_length
-
-    @cached_property
-    def _fabric_ip_addressing_p2p_uplinks_ipv4_prefix_length(self: AvdIpAddressing) -> int:
-        return self.shared_utils.fabric_ip_addressing_p2p_uplinks_ipv4_prefix_length
 
     @cached_property
     def _mlag_peer_ipv4_pool(self: AvdIpAddressing) -> str:
@@ -65,16 +49,16 @@ class UtilsMixin:
 
     @cached_property
     def _uplink_ipv4_pool(self: AvdIpAddressing) -> str:
-        if self.shared_utils.uplink_ipv4_pool is None:
-            msg = "'uplink_ipv4_pool' is required to calculate uplink IP addresses"
-            raise AristaAvdMissingVariableError(msg)
-        return self.shared_utils.uplink_ipv4_pool
+        if self.shared_utils.node_config.uplink_ipv4_pool is None:
+            msg = "'uplink_ipv4_pool' is required to calculate uplink IP addresses."
+            raise AristaAvdInvalidInputsError(msg)
+        return self.shared_utils.node_config.uplink_ipv4_pool
 
     @cached_property
     def _id(self: AvdIpAddressing) -> int:
         if self.shared_utils.id is None:
-            msg = "'id' is required to calculate IP addresses"
-            raise AristaAvdMissingVariableError(msg)
+            msg = "'id' is required to calculate IP addresses."
+            raise AristaAvdInvalidInputsError(msg)
         return self.shared_utils.id
 
     @cached_property
@@ -83,11 +67,11 @@ class UtilsMixin:
 
     @cached_property
     def _max_parallel_uplinks(self: AvdIpAddressing) -> int:
-        return self.shared_utils.max_parallel_uplinks
+        return self.shared_utils.node_config.max_parallel_uplinks
 
     @cached_property
-    def _loopback_ipv4_address(self: AvdIpAddressing) -> str:
-        return self.shared_utils.loopback_ipv4_address
+    def _loopback_ipv4_address(self: AvdIpAddressing) -> str | None:
+        return self.shared_utils.node_config.loopback_ipv4_address
 
     @cached_property
     def _loopback_ipv4_pool(self: AvdIpAddressing) -> str:
@@ -95,7 +79,7 @@ class UtilsMixin:
 
     @cached_property
     def _loopback_ipv4_offset(self: AvdIpAddressing) -> int:
-        return self.shared_utils.loopback_ipv4_offset
+        return self.shared_utils.node_config.loopback_ipv4_offset
 
     @cached_property
     def _loopback_ipv6_pool(self: AvdIpAddressing) -> str:
@@ -103,11 +87,11 @@ class UtilsMixin:
 
     @cached_property
     def _loopback_ipv6_offset(self: AvdIpAddressing) -> int:
-        return self.shared_utils.loopback_ipv6_offset
+        return self.shared_utils.node_config.loopback_ipv6_offset
 
     @cached_property
-    def _vtep_loopback_ipv4_address(self: AvdIpAddressing) -> str:
-        return self.shared_utils.vtep_loopback_ipv4_address
+    def _vtep_loopback_ipv4_address(self: AvdIpAddressing) -> str | None:
+        return self.shared_utils.node_config.vtep_loopback_ipv4_address
 
     @cached_property
     def _vtep_loopback_ipv4_pool(self: AvdIpAddressing) -> str:
@@ -158,9 +142,7 @@ class UtilsMixin:
             f"'downlink_pools' was defined at uplink_switch, but one of the 'uplink_switch_interfaces' ({uplink_switch_interface}) "
             "in the downlink_switch does not match any of the downlink_pools"
         )
-        raise AristaAvdError(
-            msg,
-        )
+        raise AristaAvdError(msg)
 
     def _get_p2p_ipv4_pool_and_offset(self: AvdIpAddressing, uplink_switch_index: int) -> tuple[str, int]:
         """
@@ -172,7 +154,7 @@ class UtilsMixin:
 
         One and only one of these pools are required to be set, otherwise an error will be thrown
         """
-        uplink_pool = self.shared_utils.uplink_ipv4_pool
+        uplink_pool = self.shared_utils.node_config.uplink_ipv4_pool
         if uplink_pool is not None:
             uplink_offset = ((self._id - 1) * self._max_uplink_switches * self._max_parallel_uplinks) + uplink_switch_index
 
@@ -186,8 +168,8 @@ class UtilsMixin:
             raise AristaAvdError(msg)
 
         if uplink_pool is None and downlink_pool is None:
-            msg = "Unable to assign IPs for uplinks. Either 'uplink_ipv4_pool' on this switch or 'downlink_pools' on all the uplink switches"
-            raise AristaAvdMissingVariableError(msg)
+            msg = "Unable to assign IPs for uplinks. Either 'uplink_ipv4_pool' on this switch or 'downlink_pools' on all the uplink switches must be set."
+            raise AristaAvdInvalidInputsError(msg)
 
         if uplink_pool is not None:
             return (uplink_pool, uplink_offset)

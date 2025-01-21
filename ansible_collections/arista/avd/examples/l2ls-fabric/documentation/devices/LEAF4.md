@@ -290,8 +290,8 @@ vlan 4094
 
 | Interface | Description | Mode | VLANs | Native VLAN | Trunk Group | Channel-Group |
 | --------- | ----------- | ---- | ----- | ----------- | ----------- | ------------- |
-| Ethernet1 | SPINE1_Ethernet4 | *trunk | *10,30 | *- | *- | 1 |
-| Ethernet2 | SPINE2_Ethernet4 | *trunk | *10,30 | *- | *- | 1 |
+| Ethernet1 | L2_SPINE1_Ethernet4 | *trunk | *10,30 | *- | *- | 1 |
+| Ethernet2 | L2_SPINE2_Ethernet4 | *trunk | *10,30 | *- | *- | 1 |
 | Ethernet3 | SERVER_Host2_Eth1 | access | 30 | - | - | - |
 | Ethernet47 | MLAG_LEAF3_Ethernet47 | *trunk | *- | *- | *MLAG | 47 |
 | Ethernet48 | MLAG_LEAF3_Ethernet48 | *trunk | *- | *- | *MLAG | 47 |
@@ -303,12 +303,12 @@ vlan 4094
 ```eos
 !
 interface Ethernet1
-   description SPINE1_Ethernet4
+   description L2_SPINE1_Ethernet4
    no shutdown
    channel-group 1 mode active
 !
 interface Ethernet2
-   description SPINE2_Ethernet4
+   description L2_SPINE2_Ethernet4
    no shutdown
    channel-group 1 mode active
 !
@@ -339,7 +339,7 @@ interface Ethernet48
 
 | Interface | Description | Mode | VLANs | Native VLAN | Trunk Group | LACP Fallback Timeout | LACP Fallback Mode | MLAG ID | EVPN ESI |
 | --------- | ----------- | ---- | ----- | ----------- | ------------| --------------------- | ------------------ | ------- | -------- |
-| Port-Channel1 | SPINES_Po3 | trunk | 10,30 | - | - | - | - | 1 | - |
+| Port-Channel1 | L2_SPINES_Port-Channel3 | trunk | 10,30 | - | - | - | - | 1 | - |
 | Port-Channel47 | MLAG_LEAF3_Port-Channel47 | trunk | - | - | MLAG | - | - | - | - |
 
 #### Port-Channel Interfaces Device Configuration
@@ -347,7 +347,7 @@ interface Ethernet48
 ```eos
 !
 interface Port-Channel1
-   description SPINES_Po3
+   description L2_SPINES_Port-Channel3
    no shutdown
    switchport trunk allowed vlan 10,30
    switchport mode trunk

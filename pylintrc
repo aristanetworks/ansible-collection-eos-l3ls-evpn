@@ -3,7 +3,11 @@ ignore-paths=
   # We will Pylint for ansible_collections separately since it uses it's own pylintrc in the collection root.
   ansible_collections,
   # The cv_client api is generated from proto files, so it should not be linted.
-  python-avd/pyavd/_cv/api
+  python-avd/pyavd/_cv/api,
+  # The schema/__init__.py are generated, so they should not be linted.
+  python-avd/pyavd/_eos_cli_config_gen/schema/__init__.py,
+  python-avd/pyavd/_eos_designs/schema/__init__.py,
+  python-avd/tests/pyavd/schema/data_merging_schema_class.py,
 
 [MESSAGES CONTROL]
 disable=

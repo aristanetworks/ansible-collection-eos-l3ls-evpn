@@ -1,4 +1,4 @@
-# Copyright (c) 2023-2024 Arista Networks, Inc.
+# Copyright (c) 2023-2025 Arista Networks, Inc.
 # Use of this source code is governed by the Apache License 2.0
 # that can be found in the LICENSE file.
 from __future__ import annotations
@@ -6,7 +6,7 @@ from __future__ import annotations
 from functools import cached_property
 from typing import TYPE_CHECKING
 
-from pyavd._utils import append_if_not_duplicate, get
+from pyavd._utils import append_if_not_duplicate
 
 from .utils import UtilsMixin
 
@@ -24,7 +24,7 @@ class RouterPimSparseModeMixin(UtilsMixin):
     @cached_property
     def router_pim_sparse_mode(self: AvdStructuredConfigNetworkServices) -> dict | None:
         """
-        return structured config for router_pim.
+        Return structured config for router_pim.
 
         Used for to configure RPs on the VRF
         """
@@ -33,10 +33,10 @@ class RouterPimSparseModeMixin(UtilsMixin):
 
         vrfs = []
         for tenant in self.shared_utils.filtered_tenants:
-            for vrf in tenant["vrfs"]:
-                if vrf_rps := get(vrf, "_pim_rp_addresses"):
+            for vrf in tenant.vrfs:
+                if vrf_rps := getattr(vrf, "_pim_rp_addresses", None):
                     vrf_config = {
-                        "name": vrf["name"],
+                        "name": vrf.name,
                         "ipv4": {
                             "rp_addresses": vrf_rps,
                         },

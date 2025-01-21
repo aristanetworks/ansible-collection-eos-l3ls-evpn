@@ -162,7 +162,7 @@ Enable password has been disabled
 
 | CV Compression | CloudVision Servers | VRF | Authentication | Smash Excludes | Ingest Exclude | Bypass AAA |
 | -------------- | ------------------- | --- | -------------- | -------------- | -------------- | ---------- |
-| gzip | 192.168.200.11:9910 | MGMT | key,telarista | ale,flexCounter,hardware,kni,pulse,strata | /Sysdb/cell/1/agent,/Sysdb/cell/2/agent | False |
+| gzip | 192.168.200.11:9910 | MGMT | key,<removed> | ale,flexCounter,hardware,kni,pulse,strata | /Sysdb/cell/1/agent,/Sysdb/cell/2/agent | False |
 
 #### TerminAttr Daemon Device Configuration
 
@@ -218,62 +218,62 @@ vlan internal order ascending range 1006 1199
 
 | Interface | Description | Channel Group | IPv6 Address | VRF | MTU | Shutdown | ND RA Disabled | Managed Config Flag | IPv6 ACL In | IPv6 ACL Out |
 | --------- | ----------- | --------------| ------------ | --- | --- | -------- | -------------- | -------------------| ----------- | ------------ |
-| Ethernet1 | P2P_LINK_TO_DC1-LEAF1A_Ethernet3 | - | - | default | 1500 | False | - | - | - | - |
-| Ethernet2 | P2P_LINK_TO_DC1-LEAF2A_Ethernet3 | - | - | default | 1500 | False | - | - | - | - |
-| Ethernet3 | P2P_LINK_TO_DC1-LEAF2B_Ethernet3 | - | - | default | 1500 | False | - | - | - | - |
-| Ethernet4 | P2P_LINK_TO_DC1-SVC3A_Ethernet3 | - | - | default | 1500 | False | - | - | - | - |
-| Ethernet5 | P2P_LINK_TO_DC1-SVC3B_Ethernet3 | - | - | default | 1500 | False | - | - | - | - |
-| Ethernet6 | P2P_LINK_TO_DC1-BL1A_Ethernet3 | - | - | default | 1500 | False | - | - | - | - |
-| Ethernet7 | P2P_LINK_TO_DC1-BL1B_Ethernet3 | - | - | default | 1500 | False | - | - | - | - |
+| Ethernet1 | P2P_DC1-LEAF1A_Ethernet3 | - | - | default | 1500 | False | - | - | - | - |
+| Ethernet2 | P2P_DC1-LEAF2A_Ethernet3 | - | - | default | 1500 | False | - | - | - | - |
+| Ethernet3 | P2P_DC1-LEAF2B_Ethernet3 | - | - | default | 1500 | False | - | - | - | - |
+| Ethernet4 | P2P_DC1-SVC3A_Ethernet3 | - | - | default | 1500 | False | - | - | - | - |
+| Ethernet5 | P2P_DC1-SVC3B_Ethernet3 | - | - | default | 1500 | False | - | - | - | - |
+| Ethernet6 | P2P_DC1-BL1A_Ethernet3 | - | - | default | 1500 | False | - | - | - | - |
+| Ethernet7 | P2P_DC1-BL1B_Ethernet3 | - | - | default | 1500 | False | - | - | - | - |
 
 #### Ethernet Interfaces Device Configuration
 
 ```eos
 !
 interface Ethernet1
-   description P2P_LINK_TO_DC1-LEAF1A_Ethernet3
+   description P2P_DC1-LEAF1A_Ethernet3
    no shutdown
    mtu 1500
    no switchport
    ipv6 enable
 !
 interface Ethernet2
-   description P2P_LINK_TO_DC1-LEAF2A_Ethernet3
+   description P2P_DC1-LEAF2A_Ethernet3
    no shutdown
    mtu 1500
    no switchport
    ipv6 enable
 !
 interface Ethernet3
-   description P2P_LINK_TO_DC1-LEAF2B_Ethernet3
+   description P2P_DC1-LEAF2B_Ethernet3
    no shutdown
    mtu 1500
    no switchport
    ipv6 enable
 !
 interface Ethernet4
-   description P2P_LINK_TO_DC1-SVC3A_Ethernet3
+   description P2P_DC1-SVC3A_Ethernet3
    no shutdown
    mtu 1500
    no switchport
    ipv6 enable
 !
 interface Ethernet5
-   description P2P_LINK_TO_DC1-SVC3B_Ethernet3
+   description P2P_DC1-SVC3B_Ethernet3
    no shutdown
    mtu 1500
    no switchport
    ipv6 enable
 !
 interface Ethernet6
-   description P2P_LINK_TO_DC1-BL1A_Ethernet3
+   description P2P_DC1-BL1A_Ethernet3
    no shutdown
    mtu 1500
    no switchport
    ipv6 enable
 !
 interface Ethernet7
-   description P2P_LINK_TO_DC1-BL1B_Ethernet3
+   description P2P_DC1-BL1B_Ethernet3
    no shutdown
    mtu 1500
    no switchport
@@ -432,9 +432,9 @@ ASN Notation: asplain
 
 ##### EVPN Peer Groups
 
-| Peer Group | Activate | Encapsulation |
-| ---------- | -------- | ------------- |
-| EVPN-OVERLAY-PEERS | True | default |
+| Peer Group | Activate | Route-map In | Route-map Out | Encapsulation |
+| ---------- | -------- | ------------ | ------------- | ------------- |
+| EVPN-OVERLAY-PEERS | True |  - | - | default |
 
 #### Router BGP Device Configuration
 
@@ -442,9 +442,9 @@ ASN Notation: asplain
 !
 router bgp 65001
    router-id 192.168.255.3
-   maximum-paths 4 ecmp 4
    update wait-install
    no bgp default ipv4-unicast
+   maximum-paths 4 ecmp 4
    distance bgp 20 200 200
    neighbor EVPN-OVERLAY-PEERS peer group
    neighbor EVPN-OVERLAY-PEERS next-hop-unchanged
@@ -458,13 +458,6 @@ router bgp 65001
    neighbor UNDERLAY_PEERS password 7 <removed>
    neighbor UNDERLAY_PEERS send-community
    neighbor UNDERLAY_PEERS maximum-routes 12000
-   neighbor interface Ethernet1 peer-group UNDERLAY_PEERS remote-as 65101
-   neighbor interface Ethernet2 peer-group UNDERLAY_PEERS remote-as 65102
-   neighbor interface Ethernet3 peer-group UNDERLAY_PEERS remote-as 65102
-   neighbor interface Ethernet4 peer-group UNDERLAY_PEERS remote-as 65103
-   neighbor interface Ethernet5 peer-group UNDERLAY_PEERS remote-as 65103
-   neighbor interface Ethernet6 peer-group UNDERLAY_PEERS remote-as 65104
-   neighbor interface Ethernet7 peer-group UNDERLAY_PEERS remote-as 65105
    neighbor 192.168.255.5 peer group EVPN-OVERLAY-PEERS
    neighbor 192.168.255.5 remote-as 65101
    neighbor 192.168.255.5 description DC1-LEAF1A_Loopback0
@@ -487,14 +480,21 @@ router bgp 65001
    neighbor 192.168.255.11 remote-as 65105
    neighbor 192.168.255.11 description DC1-BL1B_Loopback0
    redistribute connected route-map RM-CONN-2-BGP
+   neighbor interface Ethernet1 peer-group UNDERLAY_PEERS remote-as 65101
+   neighbor interface Ethernet2 peer-group UNDERLAY_PEERS remote-as 65102
+   neighbor interface Ethernet3 peer-group UNDERLAY_PEERS remote-as 65102
+   neighbor interface Ethernet4 peer-group UNDERLAY_PEERS remote-as 65103
+   neighbor interface Ethernet5 peer-group UNDERLAY_PEERS remote-as 65103
+   neighbor interface Ethernet6 peer-group UNDERLAY_PEERS remote-as 65104
+   neighbor interface Ethernet7 peer-group UNDERLAY_PEERS remote-as 65105
    !
    address-family evpn
       neighbor EVPN-OVERLAY-PEERS activate
    !
    address-family ipv4
       no neighbor EVPN-OVERLAY-PEERS activate
-      neighbor UNDERLAY_PEERS next-hop address-family ipv6 originate
       neighbor UNDERLAY_PEERS activate
+      neighbor UNDERLAY_PEERS next-hop address-family ipv6 originate
 ```
 
 ## BFD

@@ -1,4 +1,4 @@
-# Copyright (c) 2023-2024 Arista Networks, Inc.
+# Copyright (c) 2023-2025 Arista Networks, Inc.
 # Use of this source code is governed by the Apache License 2.0
 # that can be found in the LICENSE file.
 from __future__ import annotations
@@ -31,4 +31,8 @@ class WanMixin:
         if not self.shared_utils.is_wan_router:
             return None
 
-        return self.shared_utils.wan_local_path_groups
+        wan_path_groups = self.shared_utils.wan_local_path_groups._as_list()
+        for wan_path_group in wan_path_groups:
+            wan_path_group["_interfaces"] = self.shared_utils.wan_local_path_groups[wan_path_group["name"]]._interfaces
+
+        return wan_path_groups

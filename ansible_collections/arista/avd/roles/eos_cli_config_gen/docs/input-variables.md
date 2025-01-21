@@ -3,7 +3,7 @@
 title: Input variables for eos_cli_config_gen
 ---
 <!--
-  ~ Copyright (c) 2023-2024 Arista Networks, Inc.
+  ~ Copyright (c) 2023-2025 Arista Networks, Inc.
   ~ Use of this source code is governed by the Apache License 2.0
   ~ that can be found in the LICENSE file.
   -->
@@ -12,7 +12,7 @@ title: Input variables for eos_cli_config_gen
 
 This document describes the supported input variables for the role `arista.avd.eos_cli_config_gen`.
 
-Since several data models have changed between AVD versions 3.x and 4.x, it is recommended to study the [Porting Guide for AVD 4.x.x](../../../docs/porting-guides/4.x.x.md) for existing deployments.
+Since several data models have changed between AVD versions 4.x and 5.x, it is recommended to study the [Porting Guide for AVD 5.x.x](../../../docs/porting-guides/5.x.x.md) for existing deployments.
 
 The input variables are documented below in tables and YAML.
 
@@ -80,10 +80,10 @@ roles/eos_cli_config_gen/docs/tables/ip-tacacs-source-interfaces.md
 roles/eos_cli_config_gen/docs/tables/local-users.md
 --8<--
 
-### Radius servers
+### Radius server
 
 --8<--
-roles/eos_cli_config_gen/docs/tables/radius-servers.md
+roles/eos_cli_config_gen/docs/tables/radius-server.md
 --8<--
 
 ### Roles
@@ -645,6 +645,12 @@ roles/eos_cli_config_gen/docs/tables/management-api-gnmi.md
 
 --8<--
 roles/eos_cli_config_gen/docs/tables/monitor-connectivity.md
+--8<--
+
+### Monitor server Radius
+
+--8<--
+roles/eos_cli_config_gen/docs/tables/monitor-server-radius.md
 --8<--
 
 ### Monitor sessions

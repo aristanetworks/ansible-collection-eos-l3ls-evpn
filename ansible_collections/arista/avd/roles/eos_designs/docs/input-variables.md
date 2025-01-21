@@ -3,7 +3,7 @@
 title: Input variables for eos_designs
 ---
 <!--
-  ~ Copyright (c) 2023-2024 Arista Networks, Inc.
+  ~ Copyright (c) 2023-2025 Arista Networks, Inc.
   ~ Use of this source code is governed by the Apache License 2.0
   ~ that can be found in the LICENSE file.
   -->
@@ -12,7 +12,7 @@ title: Input variables for eos_designs
 
 This document describes the supported input variables for the role `arista.avd.eos_designs`.
 
-Since several data models have changed between AVD versions 3.x and 4.x, it is recommended to study the [Porting Guide for AVD 4.x.x](../../../docs/porting-guides/4.x.x.md) for existing deployments.
+Since several data models have changed between AVD versions 4.x and 5.x, it is recommended to study the [Porting Guide for AVD 5.x.x](../../../docs/porting-guides/5.x.x.md) for existing deployments.
 
 The input variables are documented below in tables and YAML.
 
@@ -147,9 +147,9 @@ To customize or create new node types, please refer to [node type customization]
 | overlay_controller | ✅              | p2p          | server    | ✘           | ✘                   | ✘                   | ✘    | ✘            | ✘                   | ✘        | eBGP                      | eBGP                     | |
 | wan_rr             | ✅              | p2p          | server    | ✘           | ✘                   | ✅                  | ✅   | ✘            | ✘                   | server   | none                      | iBGP                     | AutoVPN RR or Pathfinder depending on the e` value. |
 | wan_router         | ✅              | p2p          | client    | ✘           | ✘                   | ✅                  | ✅   | ✘            | ✘                   | client   | none                      | iBGP                     | Edge routers for AutoVPN or Edge and Transit routers for CV Pathfindeing on the `wan_mode` value. |
-| p                  | ✅              | p2p          | none      | none, LSR   | ✘                   | ✘                   | ✘    | ✘            | ✘                   | ✘        | iBGP                      | ISIS-SR                  | |
-| rr                 | ✅              | p2p          | server    | server, LSR | ✘                   | ✘                   | ✘    | ✘            | ✘                   | ✘        | iBGP                      | ISIR                     | EVPN with MPLS encapsulation |
-| pe                 | ✅              | p2p          | client    | client, LSR | ✅                  | ✅                  | ✅   | ✘            | ✅                  | ✘        | iBGP                      | ISIS-SR                  | EVPN with MPLS encapsulation, L1 Network Services (PW) |
+| p                  | ✅              | p2p          | none      | none, LSR   | ✘                   | ✘                   | ✘    | ✘            | ✘                   | ✘        | ISIS-SR                   | iBGP                     | |
+| rr                 | ✅              | p2p          | server    | server, LSR | ✘                   | ✘                   | ✘    | ✘            | ✘                   | ✘        | ISIS-SR                   | iBGP                     | EVPN with MPLS encapsulation |
+| pe                 | ✅              | p2p          | client    | client, LSR | ✅                  | ✅                  | ✘    | ✘            | ✅                  | ✘        | ISIS-SR                   | iBGP                     | EVPN with MPLS encapsulation, L1 Network Services (PW) |
 
 ## Node type customization
 
@@ -722,16 +722,17 @@ The following underlay routing protocols are supported:
 - EBGP (default for l3ls-evpn)
 - OSPF.
 - ISIS.
-- ISIS-SR*.
-- ISIS-LDP*.
-- ISIS-SR-LDP*.
-- OSPF-LDP*.
-- none**.
+- ISIS-SR¹.
+- ISIS-LDP¹.
+- ISIS-SR-LDP¹.
+- OSPF-LDP¹.
+- none².
 
-\* Only supported with core_interfaces data model.<br />
-\** For use with design type "l2ls" or other designs where there is no requirement for a routing protocol for underlay and/or overlay on l3 devices.
+¹ Only supported with core_interfaces data model.<br />
+² For use with design type "l2ls" or other designs where there is no requirement for a routing protocol for underlay and/or overlay on l3 devices.
 
 ??? note "Details on `enable_trunk_groups`"
+    <a id="details-on-enable_trunk_groups"></a>
     Enabling the use of trunk groups will change the behavior of several components in AVD.
 
     Changes:
@@ -814,12 +815,12 @@ The following overlay routing protocols are supported:
 
 - EBGP (default for l3ls-evpn)
 - IBGP (only with OSPF or ISIS variants in underlay)
-- none*
-- HER (Head-End Replication)**
+- none¹
+- HER (Head-End Replication)²
 - CVX (CloudVision eXchange)
 
-\* For use with design type "l2ls" or other designs where there is no requirement for a routing protocol for underlay and/or overlay on l3 devices.<br />
-\** By setting `overlay_routing_protocol:HER`, `eos_designs` will configure static VXLAN flood-lists instead of using a dynamic overlay protocol.
+¹ For use with design type "l2ls" or other designs where there is no requirement for a routing protocol for underlay and/or overlay on l3 devices.<br />
+² By setting `overlay_routing_protocol:HER`, `eos_designs` will configure static VXLAN flood-lists instead of using a dynamic overlay protocol.
 
 --8<--
 roles/eos_designs/docs/tables/overlay-settings.md
@@ -924,6 +925,28 @@ roles/eos_designs/docs/tables/management-flow-tracking-settings.md
 
 --8<--
 roles/eos_designs/docs/tables/management-snmp-settings.md
+--8<--
+
+## Monitoring
+
+### Event monitor
+
+--8<--
+roles/eos_designs/docs/tables/event-monitor.md
+--8<--
+
+### Load interval
+
+--8<--
+roles/eos_designs/docs/tables/load-interval.md
+--8<--
+
+## Quality of Service
+
+### Queue monitor-streaming
+
+--8<--
+roles/eos_designs/docs/tables/queue-monitor-streaming.md
 --8<--
 
 ## System settings
@@ -1395,7 +1418,10 @@ roles/eos_designs/docs/tables/svi-profiles.md
 
 ### EVPN VLAN aware bundles settings
 
-Optional VLAN aware bundles to share common settings for l2vlans which are supposed to use the same vlan-aware-bundle.
+EVPN VLAN aware bundles referenced by name in `<network_services_key>[].evpn_vlan_bundle` or `<network_services_key>[].vrfs[].evpn_vlan_bundle`
+or `<network_services_key>[].vrfs[].svis[].evpn_vlan_bundle` or `<network_services_key>[].l2vlans[].evpn_vlan_bundle`.
+
+An EVPN VLAN aware bundle will only be configured if at least one VLAN is associated with it.
 
 --8<--
 roles/eos_designs/docs/tables/evpn-vlan-bundles.md
@@ -1476,7 +1502,7 @@ This feature currently provides the following configurations based on the given 
     `max_uplink_switches` and `max_parallel_uplinks` to ensure consistent IP addressing.
 
 ??? example "`cv_topology` example"
-    To use this feature set `default_interfaces` according to the intended design (see [default_intefaces](#default-interface-settings) for details) and set `use_cv_topology` to `true`.
+    To use this feature set `default_interfaces` according to the intended design (see [default_interfaces](#default-interface-settings) for details) and set `use_cv_topology` to `true`.
     Provide a full topology under `cv_topology` like this example:
 
     ```yaml

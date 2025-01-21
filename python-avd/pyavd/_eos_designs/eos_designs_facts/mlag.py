@@ -1,4 +1,4 @@
-# Copyright (c) 2023-2024 Arista Networks, Inc.
+# Copyright (c) 2023-2025 Arista Networks, Inc.
 # Use of this source code is governed by the Apache License 2.0
 # that can be found in the LICENSE file.
 from __future__ import annotations
@@ -56,7 +56,7 @@ class MlagMixin:
         if (
             self.shared_utils.mlag_l3
             and self.shared_utils.mlag_peer_l3_vlan is not None
-            and not (self.shared_utils.underlay_rfc5549 and self.shared_utils.overlay_mlag_rfc5549)
+            and not (self.inputs.underlay_rfc5549 and self.inputs.overlay_mlag_rfc5549)
         ):
             return self.shared_utils.mlag_l3_ip
         return None

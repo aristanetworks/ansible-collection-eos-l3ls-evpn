@@ -183,7 +183,7 @@ Enable password has been disabled
 
 | CV Compression | CloudVision Servers | VRF | Authentication | Smash Excludes | Ingest Exclude | Bypass AAA |
 | -------------- | ------------------- | --- | -------------- | -------------- | -------------- | ---------- |
-| gzip | 192.168.200.11:9910 | MGMT | key,telarista | ale,flexCounter,hardware,kni,pulse,strata | /Sysdb/cell/1/agent,/Sysdb/cell/2/agent | False |
+| gzip | 192.168.200.11:9910 | MGMT | key,<removed> | ale,flexCounter,hardware,kni,pulse,strata | /Sysdb/cell/1/agent,/Sysdb/cell/2/agent | False |
 
 #### TerminAttr Daemon Device Configuration
 
@@ -396,22 +396,22 @@ vlan 4094
 
 | Interface | Description | Channel Group | IPv6 Address | VRF | MTU | Shutdown | ND RA Disabled | Managed Config Flag | IPv6 ACL In | IPv6 ACL Out |
 | --------- | ----------- | --------------| ------------ | --- | --- | -------- | -------------- | -------------------| ----------- | ------------ |
-| Ethernet1 | P2P_LINK_TO_DC1-SPINE5_Ethernet1 | - | - | default | 1500 | False | - | - | - | - |
-| Ethernet2 | P2P_LINK_TO_DC1-SPINE5_Ethernet3 | - | - | default | 1500 | False | - | - | - | - |
+| Ethernet1 | P2P_DC1-SPINE5_Ethernet1 | - | - | default | 1500 | False | - | - | - | - |
+| Ethernet2 | P2P_DC1-SPINE5_Ethernet3 | - | - | default | 1500 | False | - | - | - | - |
 
 #### Ethernet Interfaces Device Configuration
 
 ```eos
 !
 interface Ethernet1
-   description P2P_LINK_TO_DC1-SPINE5_Ethernet1
+   description P2P_DC1-SPINE5_Ethernet1
    no shutdown
    mtu 1500
    no switchport
    ipv6 enable
 !
 interface Ethernet2
-   description P2P_LINK_TO_DC1-SPINE5_Ethernet3
+   description P2P_DC1-SPINE5_Ethernet3
    no shutdown
    mtu 1500
    no switchport
@@ -460,7 +460,7 @@ interface Port-Channel5
 | --------- | ----------- | --- | ---------- |
 | Loopback0 | ROUTER_ID | default | 192.168.255.12/32 |
 | Loopback1 | VXLAN_TUNNEL_SOURCE | default | 192.168.254.12/32 |
-| Loopback100 | Tenant_A_OP_Zone_VTEP_DIAGNOSTICS | Tenant_A_OP_Zone | 10.255.1.12/32 |
+| Loopback100 | DIAG_VRF_Tenant_A_OP_Zone | Tenant_A_OP_Zone | 10.255.1.12/32 |
 
 ##### IPv6
 
@@ -468,7 +468,7 @@ interface Port-Channel5
 | --------- | ----------- | --- | ------------ |
 | Loopback0 | ROUTER_ID | default | 2001:1::c/128 |
 | Loopback1 | VXLAN_TUNNEL_SOURCE | default | - |
-| Loopback100 | Tenant_A_OP_Zone_VTEP_DIAGNOSTICS | Tenant_A_OP_Zone | - |
+| Loopback100 | DIAG_VRF_Tenant_A_OP_Zone | Tenant_A_OP_Zone | - |
 
 #### Loopback Interfaces Device Configuration
 
@@ -486,7 +486,7 @@ interface Loopback1
    ip address 192.168.254.12/32
 !
 interface Loopback100
-   description Tenant_A_OP_Zone_VTEP_DIAGNOSTICS
+   description DIAG_VRF_Tenant_A_OP_Zone
    no shutdown
    vrf Tenant_A_OP_Zone
    ip address 10.255.1.12/32
@@ -918,9 +918,9 @@ ASN Notation: asplain
 
 ##### EVPN Peer Groups
 
-| Peer Group | Activate | Encapsulation |
-| ---------- | -------- | ------------- |
-| EVPN-OVERLAY-PEERS | True | default |
+| Peer Group | Activate | Route-map In | Route-map Out | Encapsulation |
+| ---------- | -------- | ------------ | ------------- | ------------- |
+| EVPN-OVERLAY-PEERS | True |  - | - | default |
 
 ##### EVPN Host Flapping Settings
 
@@ -958,9 +958,9 @@ ASN Notation: asplain
 !
 router bgp 65106
    router-id 192.168.255.12
-   maximum-paths 4 ecmp 4
    update wait-install
    no bgp default ipv4-unicast
+   maximum-paths 4 ecmp 4
    distance bgp 20 200 200
    neighbor EVPN-OVERLAY-PEERS peer group
    neighbor EVPN-OVERLAY-PEERS update-source Loopback0
@@ -973,21 +973,21 @@ router bgp 65106
    neighbor MLAG_PEER remote-as 65106
    neighbor MLAG_PEER next-hop-self
    neighbor MLAG_PEER description DC1-LEAF3B
+   neighbor MLAG_PEER route-map RM-MLAG-PEER-IN in
    neighbor MLAG_PEER password 7 <removed>
    neighbor MLAG_PEER send-community
    neighbor MLAG_PEER maximum-routes 12000
-   neighbor MLAG_PEER route-map RM-MLAG-PEER-IN in
    neighbor UNDERLAY_PEERS peer group
    neighbor UNDERLAY_PEERS password 7 <removed>
    neighbor UNDERLAY_PEERS send-community
    neighbor UNDERLAY_PEERS maximum-routes 12000
-   neighbor interface Ethernet1 peer-group UNDERLAY_PEERS remote-as 65001
-   neighbor interface Ethernet2 peer-group UNDERLAY_PEERS remote-as 65001
-   neighbor interface Vlan4093 peer-group MLAG_PEER remote-as 65106
    neighbor 2001:1::5 peer group EVPN-OVERLAY-PEERS
    neighbor 2001:1::5 remote-as 65001
    neighbor 2001:1::5 description DC1-SPINE5_Loopback0
    redistribute connected route-map RM-CONN-2-BGP
+   neighbor interface Ethernet1 peer-group UNDERLAY_PEERS remote-as 65001
+   neighbor interface Ethernet2 peer-group UNDERLAY_PEERS remote-as 65001
+   neighbor interface Vlan4093 peer-group MLAG_PEER remote-as 65106
    !
    vlan-aware-bundle Tenant_A_APP_Zone
       rd 192.168.255.12:12
@@ -1038,15 +1038,15 @@ router bgp 65106
       vlan 310-311
    !
    address-family evpn
-      host-flap detection window 20 threshold 30
       neighbor EVPN-OVERLAY-PEERS activate
+      host-flap detection window 20 threshold 30
    !
    address-family ipv4
       no neighbor EVPN-OVERLAY-PEERS activate
-      neighbor MLAG_PEER next-hop address-family ipv6 originate
       neighbor MLAG_PEER activate
-      neighbor UNDERLAY_PEERS next-hop address-family ipv6 originate
+      neighbor MLAG_PEER next-hop address-family ipv6 originate
       neighbor UNDERLAY_PEERS activate
+      neighbor UNDERLAY_PEERS next-hop address-family ipv6 originate
    !
    address-family ipv6
       neighbor MLAG_PEER activate
@@ -1057,48 +1057,48 @@ router bgp 65106
       route-target import evpn 12:12
       route-target export evpn 12:12
       router-id 192.168.255.12
+      redistribute connected route-map RM-CONN-2-BGP-VRFS
       neighbor interface Vlan3011 peer-group MLAG_PEER remote-as 65106
-      redistribute connected
    !
    vrf Tenant_A_DB_Zone
       rd 192.168.255.12:13
       route-target import evpn 13:13
       route-target export evpn 13:13
       router-id 192.168.255.12
+      redistribute connected route-map RM-CONN-2-BGP-VRFS
       neighbor interface Vlan3012 peer-group MLAG_PEER remote-as 65106
-      redistribute connected
    !
    vrf Tenant_A_OP_Zone
       rd 192.168.255.12:10
       route-target import evpn 10:10
       route-target export evpn 10:10
       router-id 192.168.255.12
+      redistribute connected route-map RM-CONN-2-BGP-VRFS
       neighbor interface Vlan3009 peer-group MLAG_PEER remote-as 65106
-      redistribute connected
    !
    vrf Tenant_A_WEB_Zone
       rd 192.168.255.12:11
       route-target import evpn 11:11
       route-target export evpn 11:11
       router-id 192.168.255.12
+      redistribute connected route-map RM-CONN-2-BGP-VRFS
       neighbor interface Vlan3010 peer-group MLAG_PEER remote-as 65106
-      redistribute connected
    !
    vrf Tenant_B_OP_Zone
       rd 192.168.255.12:20
       route-target import evpn 20:20
       route-target export evpn 20:20
       router-id 192.168.255.12
+      redistribute connected route-map RM-CONN-2-BGP-VRFS
       neighbor interface Vlan3019 peer-group MLAG_PEER remote-as 65106
-      redistribute connected
    !
    vrf Tenant_C_OP_Zone
       rd 192.168.255.12:30
       route-target import evpn 30:30
       route-target export evpn 30:30
       router-id 192.168.255.12
+      redistribute connected route-map RM-CONN-2-BGP-VRFS
       neighbor interface Vlan2 peer-group MLAG_PEER remote-as 65106
-      redistribute connected
 ```
 
 ## BFD
@@ -1251,9 +1251,9 @@ vrf instance Tenant_C_OP_Zone
 
 ### Virtual Source NAT Summary
 
-| Source NAT VRF | Source NAT IP Address |
-| -------------- | --------------------- |
-| Tenant_A_OP_Zone | 10.255.1.12 |
+| Source NAT VRF | Source NAT IPv4 Address | Source NAT IPv6 Address |
+| -------------- | ----------------------- | ----------------------- |
+| Tenant_A_OP_Zone | 10.255.1.12 | - |
 
 ### Virtual Source NAT Configuration
 

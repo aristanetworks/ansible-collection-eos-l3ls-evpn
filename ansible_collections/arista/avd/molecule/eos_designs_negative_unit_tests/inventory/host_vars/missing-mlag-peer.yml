@@ -15,4 +15,4 @@ l2leaf:
 expected_error_message: >-
   Facts not found for node 'some-missing-device'. Something in the input vars is pointing to this node.
   Check that 'some-missing-device' is in the inventory and is part of the group set by 'fabric_name'.
-  Node is required but was not found for host 'missing-mlag-peer'
+  Node is required for host 'missing-mlag-peer'.

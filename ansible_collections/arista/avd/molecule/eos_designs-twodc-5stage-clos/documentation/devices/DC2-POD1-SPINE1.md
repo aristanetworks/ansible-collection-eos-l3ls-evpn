@@ -173,18 +173,18 @@ vlan internal order ascending range 1006 1199
 
 | Interface | Description | Channel Group | IP Address | VRF |  MTU | Shutdown | ACL In | ACL Out |
 | --------- | ----------- | ------------- | ---------- | ----| ---- | -------- | ------ | ------- |
-| Ethernet1 | P2P_LINK_TO_DC2-SUPER-SPINE1_Ethernet1 | - | 172.16.21.1/31 | default | - | False | - | - |
-| Ethernet2 | P2P_LINK_TO_DC2-SUPER-SPINE2_Ethernet1 | - | 172.16.21.65/31 | default | - | False | - | - |
-| Ethernet3 | P2P_LINK_TO_DC2-POD1-LEAF1A_Ethernet1 | - | 172.17.210.0/31 | default | - | False | - | - |
-| Ethernet4 | P2P_LINK_TO_DC2-POD1-LEAF2A_Ethernet1 | - | 172.17.210.4/31 | default | - | False | - | - |
-| Ethernet5 | P2P_LINK_TO_DC1-POD2-SPINE1_Ethernet5 | - | 11.1.1.19/31 | default | - | False | - | - |
+| Ethernet1 | P2P_DC2-SUPER-SPINE1_Ethernet1 | - | 172.16.21.1/31 | default | - | False | - | - |
+| Ethernet2 | P2P_DC2-SUPER-SPINE2_Ethernet1 | - | 172.16.21.65/31 | default | - | False | - | - |
+| Ethernet3 | P2P_DC2-POD1-LEAF1A_Ethernet1 | - | 172.17.210.0/31 | default | - | False | - | - |
+| Ethernet4 | P2P_DC2-POD1-LEAF2A_Ethernet1 | - | 172.17.210.4/31 | default | - | False | - | - |
+| Ethernet5 | P2P_DC1-POD2-SPINE1_Ethernet5 | - | 11.1.1.19/31 | default | - | False | - | - |
 
 #### Ethernet Interfaces Device Configuration
 
 ```eos
 !
 interface Ethernet1
-   description P2P_LINK_TO_DC2-SUPER-SPINE1_Ethernet1
+   description P2P_DC2-SUPER-SPINE1_Ethernet1
    no shutdown
    no switchport
    ip address 172.16.21.1/31
@@ -192,7 +192,7 @@ interface Ethernet1
    service-profile QOS-PROFILE
 !
 interface Ethernet2
-   description P2P_LINK_TO_DC2-SUPER-SPINE2_Ethernet1
+   description P2P_DC2-SUPER-SPINE2_Ethernet1
    no shutdown
    no switchport
    ip address 172.16.21.65/31
@@ -200,7 +200,7 @@ interface Ethernet2
    service-profile QOS-PROFILE
 !
 interface Ethernet3
-   description P2P_LINK_TO_DC2-POD1-LEAF1A_Ethernet1
+   description P2P_DC2-POD1-LEAF1A_Ethernet1
    no shutdown
    no switchport
    ip address 172.17.210.0/31
@@ -208,7 +208,7 @@ interface Ethernet3
    service-profile QOS-PROFILE
 !
 interface Ethernet4
-   description P2P_LINK_TO_DC2-POD1-LEAF2A_Ethernet1
+   description P2P_DC2-POD1-LEAF2A_Ethernet1
    no shutdown
    no switchport
    ip address 172.17.210.4/31
@@ -216,7 +216,7 @@ interface Ethernet4
    service-profile QOS-PROFILE
 !
 interface Ethernet5
-   description P2P_LINK_TO_DC1-POD2-SPINE1_Ethernet5
+   description P2P_DC1-POD2-SPINE1_Ethernet5
    no shutdown
    no switchport
    ip address 11.1.1.19/31
@@ -357,9 +357,9 @@ ASN Notation: asplain
 
 ##### EVPN Peer Groups
 
-| Peer Group | Activate | Encapsulation |
-| ---------- | -------- | ------------- |
-| EVPN-OVERLAY-PEERS | True | default |
+| Peer Group | Activate | Route-map In | Route-map Out | Encapsulation |
+| ---------- | -------- | ------------ | ------------- | ------------- |
+| EVPN-OVERLAY-PEERS | True |  - | - | default |
 
 #### Router BGP Device Configuration
 
@@ -367,9 +367,9 @@ ASN Notation: asplain
 !
 router bgp 65210
    router-id 172.16.210.1
-   maximum-paths 4 ecmp 4
    update wait-install
    no bgp default ipv4-unicast
+   maximum-paths 4 ecmp 4
    distance bgp 20 200 200
    neighbor EVPN-OVERLAY-PEERS peer group
    neighbor EVPN-OVERLAY-PEERS next-hop-unchanged
@@ -413,13 +413,13 @@ router bgp 65210
    address-family evpn
       neighbor EVPN-OVERLAY-PEERS activate
    !
-   address-family rt-membership
-      neighbor EVPN-OVERLAY-PEERS activate
-      neighbor EVPN-OVERLAY-PEERS default-route-target only
-   !
    address-family ipv4
       no neighbor EVPN-OVERLAY-PEERS activate
       neighbor IPv4-UNDERLAY-PEERS activate
+   !
+   address-family rt-membership
+      neighbor EVPN-OVERLAY-PEERS activate
+      neighbor EVPN-OVERLAY-PEERS default-route-target only
 ```
 
 ## BFD

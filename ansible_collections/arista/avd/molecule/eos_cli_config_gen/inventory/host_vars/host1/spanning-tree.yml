@@ -1,0 +1,19 @@
+---
+### Spanning-Tree (Test bpduguard and bpdufilter disable)
+spanning_tree:
+  edge_port:
+    bpduguard_default: false
+    bpdufilter_default: false
+  bpduguard_rate_limit:
+    default: true
+    count: 100
+### Spanning-Tree (Rapid-PVST settings)
+  mode: rapid-pvst
+  rapid_pvst_instances:
+    - id: "1,2,3,4,5,10-15"
+      priority: 4096
+    - id: "3"
+      priority: 8192
+    - id: "100-500"
+      priority: 16384
+  no_spanning_tree_vlan: 105,202,505-506

@@ -1,4 +1,4 @@
-# Copyright (c) 2023-2024 Arista Networks, Inc.
+# Copyright (c) 2023-2025 Arista Networks, Inc.
 # Use of this source code is governed by the Apache License 2.0
 # that can be found in the LICENSE file.
 from __future__ import annotations
@@ -69,21 +69,21 @@ class AvdSchemaTools:
 
         self.validation_mode = validation_mode
 
-    def convert_data(self, data: dict) -> None:
+    def convert_data(self, data: dict) -> int:
         """
         Convert data according to the schema (convert_types).
 
         The data conversion is done in-place (updating the original "data" dict).
 
-        The conversion code will also emit deprecation warnings.
+        The conversion code will also emit deprecation warnings and fatal errors for removed vars or conflicts.
 
         Returns:
         -------
-        None
+        int : number of validation errors
         """
         # avd_schema.convert returns a generator, which we iterate through in handle_exceptions to perform the actual conversions.
         exceptions = self.avdschema.convert(data)
-        self.handle_validation_exceptions(exceptions, None)
+        return self.handle_validation_exceptions(exceptions, "error")
 
     def validate_data(self, data: dict) -> int:
         """
@@ -112,10 +112,13 @@ class AvdSchemaTools:
         result = {}
 
         # Perform data conversions
-        self.convert_data(data)
+        validation_errors = self.convert_data(data)
+        # All errors raised from conversion are fatal.
+        if validation_errors:
+            result["failed"] = True
 
         # Perform validation
-        validation_errors = self.validate_data(data)
+        validation_errors += self.validate_data(data)
         if validation_errors and self.validation_mode == "error":
             result["failed"] = True
 
@@ -135,40 +138,38 @@ class AvdSchemaTools:
         It displays various messages depending on the `mode` parameter
 
         Returns:
-        - counter: <int> the number of AristaAvdError in the exceptions Generator
+        - counter: <int> the number of AristaAvdError in the exceptions Generator (not including deprecation warnings)
         """
         counter = 0
         for exception in exceptions:
             if not isinstance(exception, AristaAvdError):
                 continue
 
+            message = f"[{self.hostname}]: {exception}"
             if isinstance(exception, AvdDeprecationWarning):
                 # Deprecation warnings are displayed using Ansible's deprecation notices.
-                message = f"[{self.hostname}]: {exception}"
                 if exception.removed:
                     # Thank you! ansible-core>=2.16 broke support for removed=True and
                     # they do not test it, so apparently we were the only ones using it.
-                    raise AristaAvdError(
-                        self.ansible_display.get_deprecation_message(
-                            msg=message,
-                            version=exception.version,
-                            date=exception.date,
-                            collection_name=self.plugin_name,
-                            removed=exception.removed,
-                        ),
+                    message = self.ansible_display.get_deprecation_message(
+                        msg=message,
+                        version=exception.version,
+                        date=exception.date,
+                        collection_name=self.plugin_name,
+                        removed=exception.removed,
                     )
-
-                self.ansible_display.deprecated(
-                    msg=message,
-                    version=exception.version,
-                    date=exception.date,
-                    collection_name=self.plugin_name,
-                    removed=exception.removed,
-                )
-                continue
+                # Conflicts are handled as errors below.
+                elif not exception.conflict:
+                    self.ansible_display.deprecated(
+                        msg=message,
+                        version=exception.version,
+                        date=exception.date,
+                        collection_name=self.plugin_name,
+                        removed=exception.removed,
+                    )
+                    continue
 
             counter += 1
-            message = f"[{self.hostname}]: {exception}"
             if mode == "warning":
                 self.ansible_display.warning(message)
             else:

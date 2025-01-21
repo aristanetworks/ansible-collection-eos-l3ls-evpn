@@ -1,5 +1,5 @@
 {#
- Copyright (c) 2023-2024 Arista Networks, Inc.
+ Copyright (c) 2023-2025 Arista Networks, Inc.
  Use of this source code is governed by the Apache License 2.0
  that can be found in the LICENSE file.
 #}
@@ -16,6 +16,9 @@
 
 | Settings | Value |
 | -------- | ----- |
+{%             if platform.trident.l3.routing_mac_address_per_vlan is arista.avd.defined(true) %}
+| Routing MAC Address per VLAN | true |
+{%             endif %}
 {%             if platform.trident.forwarding_table_partition is arista.avd.defined %}
 | Forwarding Table Partition | {{ platform.trident.forwarding_table_partition }} |
 {%             endif %}

@@ -3,7 +3,7 @@
 title: Ansible Collection Role eos_config_deploy_eapi
 ---
 <!--
-  ~ Copyright (c) 2023-2024 Arista Networks, Inc.
+  ~ Copyright (c) 2023-2025 Arista Networks, Inc.
   ~ Use of this source code is governed by the Apache License 2.0
   ~ that can be found in the LICENSE file.
   -->
@@ -53,7 +53,7 @@ roles/eos_config_deploy_eapi/defaults/main.yml
 
 ## Requirements
 
-Requirements are located here: [avd-requirements](../../docs/installation/collection-installation.md#additional-python-libraries-required)
+Requirements are located here: [avd-requirements](../../docs/installation/collection-installation.md#python-requirements-installation)
 
 ## License
 

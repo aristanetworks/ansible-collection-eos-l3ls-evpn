@@ -181,7 +181,7 @@ Enable password has been disabled
 
 | CV Compression | CloudVision Servers | VRF | Authentication | Smash Excludes | Ingest Exclude | Bypass AAA |
 | -------------- | ------------------- | --- | -------------- | -------------- | -------------- | ---------- |
-| gzip | 192.168.200.11:9910 | MGMT | key,telarista | ale,flexCounter,hardware,kni,pulse,strata | /Sysdb/cell/1/agent,/Sysdb/cell/2/agent | False |
+| gzip | 192.168.200.11:9910 | MGMT | key,<removed> | ale,flexCounter,hardware,kni,pulse,strata | /Sysdb/cell/1/agent,/Sysdb/cell/2/agent | False |
 
 #### TerminAttr Daemon Device Configuration
 
@@ -495,10 +495,10 @@ interface Ethernet11
    switchport trunk allowed vlan 1-4094
    switchport mode trunk
    switchport
-   storm-control all level 10
    storm-control broadcast level pps 100
    storm-control multicast level 1
    storm-control unknown-unicast level 2
+   storm-control all level 10
    spanning-tree portfast
    spanning-tree bpdufilter enable
 !
@@ -508,10 +508,10 @@ interface Ethernet12
    switchport trunk allowed vlan 1-4094
    switchport mode trunk
    switchport
-   storm-control all level 10
    storm-control broadcast level pps 100
    storm-control multicast level 1
    storm-control unknown-unicast level 2
+   storm-control all level 10
    spanning-tree portfast
    spanning-tree bpdufilter enable
 !
@@ -522,10 +522,10 @@ interface Ethernet13
    switchport access vlan 210
    switchport mode access
    switchport
-   storm-control all level pps 20
    storm-control broadcast level 200
    storm-control multicast level 1
    storm-control unknown-unicast level 2
+   storm-control all level pps 20
    spanning-tree portfast network
    spanning-tree bpduguard enable
 !
@@ -546,10 +546,10 @@ interface Ethernet16
    switchport access vlan 210
    switchport mode access
    switchport
-   storm-control all level pps 20
    storm-control broadcast level 200
    storm-control multicast level 1
    storm-control unknown-unicast level 2
+   storm-control all level pps 20
    spanning-tree portfast network
    spanning-tree bpduguard enable
 !
@@ -632,7 +632,7 @@ interface Ethernet44
 | Interface | Description | Mode | VLANs | Native VLAN | Trunk Group | LACP Fallback Timeout | LACP Fallback Mode | MLAG ID | EVPN ESI |
 | --------- | ----------- | ---- | ----- | ----------- | ------------| --------------------- | ------------------ | ------- | -------- |
 | Port-Channel5 | CUSTOM_MLAG_PEER_DC1-SVC3B_Po5 | trunk | - | - | MLAG | - | - | - | - |
-| Port-Channel7 | CUSTOM_DC1_L2LEAF2_Po1 | trunk | 110-111,120-124,130-131,140-141,150,160-162,210-211,250,310-311,350 | - | - | - | - | 7 | - |
+| Port-Channel7 | CUSTOM_DC1-L2LEAF2A_Po1 | trunk | 110-111,120-124,130-131,140-141,150,160-162,210-211,250,310-311,350 | - | - | - | - | 7 | - |
 | Port-Channel10 | CUSTOM_server03_ESI_PortChanne1 | trunk | 110-111,210-211 | - | - | - | - | - | 0000:1234:0303:0202:0101 |
 | Port-Channel14 | CUSTOM_server07_inherit_all_from_profile_port_channel_ALL_WITH_SECURITY_PORT_CHANNEL | trunk | 1-4094 | - | - | - | - | 14 | - |
 | Port-Channel15 | CUSTOM_server08_no_profile_port_channel_server08_no_profile_port_channel | trunk | 1-4094 | - | - | - | - | 15 | - |
@@ -661,7 +661,7 @@ interface Port-Channel5
    switchport
 !
 interface Port-Channel7
-   description CUSTOM_DC1_L2LEAF2_Po1
+   description CUSTOM_DC1-L2LEAF2A_Po1
    no shutdown
    switchport trunk allowed vlan 110-111,120-124,130-131,140-141,150,160-162,210-211,250,310-311,350
    switchport mode trunk
@@ -674,6 +674,7 @@ interface Port-Channel10
    switchport trunk allowed vlan 110-111,210-211
    switchport mode trunk
    switchport
+   !
    evpn ethernet-segment
       identifier 0000:1234:0303:0202:0101
       route-target import 03:03:02:02:01:01
@@ -687,12 +688,12 @@ interface Port-Channel14
    switchport
    l2 mtu 8000
    mlag 14
-   spanning-tree portfast
-   spanning-tree bpdufilter enable
-   storm-control all level 10
    storm-control broadcast level pps 100
    storm-control multicast level 1
    storm-control unknown-unicast level 2
+   storm-control all level 10
+   spanning-tree portfast
+   spanning-tree bpdufilter enable
 !
 interface Port-Channel15
    description CUSTOM_server08_no_profile_port_channel_server08_no_profile_port_channel
@@ -701,12 +702,12 @@ interface Port-Channel15
    switchport mode trunk
    switchport
    mlag 15
-   spanning-tree portfast
-   spanning-tree bpdufilter enable
-   storm-control all level 10
    storm-control broadcast level pps 100
    storm-control multicast level 1
    storm-control unknown-unicast level 2
+   storm-control all level 10
+   spanning-tree portfast
+   spanning-tree bpdufilter enable
 !
 interface Port-Channel17
    description CUSTOM_server10_no_profile_port_channel_lacp_fallback_server10_no_profile_port_channel_lacp_fallback
@@ -714,15 +715,15 @@ interface Port-Channel17
    switchport trunk allowed vlan 1-4094
    switchport mode trunk
    switchport
-   port-channel lacp fallback timeout 90
    port-channel lacp fallback static
+   port-channel lacp fallback timeout 90
    mlag 17
-   spanning-tree portfast
-   spanning-tree bpdufilter enable
-   storm-control all level 10
    storm-control broadcast level pps 100
    storm-control multicast level 1
    storm-control unknown-unicast level 2
+   storm-control all level 10
+   spanning-tree portfast
+   spanning-tree bpdufilter enable
 !
 interface Port-Channel18
    description CUSTOM_server11_inherit_profile_port_channel_lacp_fallback_ALL_WITH_SECURITY_PORT_CHANNEL
@@ -730,16 +731,16 @@ interface Port-Channel18
    switchport trunk allowed vlan 1-4094
    switchport mode trunk
    switchport
-   l2 mtu 8000
-   port-channel lacp fallback timeout 10
    port-channel lacp fallback static
+   port-channel lacp fallback timeout 10
+   l2 mtu 8000
    mlag 18
-   spanning-tree portfast
-   spanning-tree bpdufilter enable
-   storm-control all level 10
    storm-control broadcast level pps 100
    storm-control multicast level 1
    storm-control unknown-unicast level 2
+   storm-control all level 10
+   spanning-tree portfast
+   spanning-tree bpdufilter enable
 !
 interface Port-Channel19
    description CUSTOM_server12_inherit_nested_profile_port_channel_lacp_fallback_NESTED_ALL_WITH_SECURITY_PORT_CHANNEL
@@ -747,16 +748,16 @@ interface Port-Channel19
    switchport trunk allowed vlan 1-4094
    switchport mode trunk
    switchport
-   l2 mtu 8000
-   port-channel lacp fallback timeout 10
    port-channel lacp fallback static
+   port-channel lacp fallback timeout 10
+   l2 mtu 8000
    mlag 19
-   spanning-tree portfast
-   spanning-tree bpdufilter enable
-   storm-control all level 10
    storm-control broadcast level pps 100
    storm-control multicast level 1
    storm-control unknown-unicast level 2
+   storm-control all level 10
+   spanning-tree portfast
+   spanning-tree bpdufilter enable
 !
 interface Port-Channel22
    description CUSTOM_server15_port_channel_disabled_interfaces_
@@ -1322,9 +1323,9 @@ ASN Notation: asplain
 
 ##### EVPN Peer Groups
 
-| Peer Group | Activate | Encapsulation |
-| ---------- | -------- | ------------- |
-| EVPN-OVERLAY-PEERS | True | default |
+| Peer Group | Activate | Route-map In | Route-map Out | Encapsulation |
+| ---------- | -------- | ------------ | ------------- | ------------- |
+| EVPN-OVERLAY-PEERS | True |  - | - | default |
 
 ##### EVPN Host Flapping Settings
 
@@ -1368,9 +1369,9 @@ ASN Notation: asplain
 !
 router bgp 65103
    router-id 192.168.255.12
-   maximum-paths 4 ecmp 4
    update wait-install
    no bgp default ipv4-unicast
+   maximum-paths 4 ecmp 4
    distance bgp 20 200 200
    neighbor EVPN-OVERLAY-PEERS peer group
    neighbor EVPN-OVERLAY-PEERS update-source Loopback0
@@ -1383,10 +1384,10 @@ router bgp 65103
    neighbor MLAG-PEERS remote-as 65103
    neighbor MLAG-PEERS next-hop-self
    neighbor MLAG-PEERS description DC1-SVC3B
+   neighbor MLAG-PEERS route-map RM-MLAG-PEER-IN in
    neighbor MLAG-PEERS password 7 <removed>
    neighbor MLAG-PEERS send-community
    neighbor MLAG-PEERS maximum-routes 12000
-   neighbor MLAG-PEERS route-map RM-MLAG-PEER-IN in
    neighbor UNDERLAY-PEERS peer group
    neighbor UNDERLAY-PEERS password 7 <removed>
    neighbor UNDERLAY-PEERS send-community
@@ -1486,8 +1487,8 @@ router bgp 65103
       vlan 310-311
    !
    address-family evpn
-      no host-flap detection
       neighbor EVPN-OVERLAY-PEERS activate
+      no host-flap detection
    !
    address-family ipv4
       no neighbor EVPN-OVERLAY-PEERS activate
@@ -1502,7 +1503,7 @@ router bgp 65103
       update wait-install
       neighbor 10.255.252.7 peer group MLAG-PEERS
       neighbor 10.255.252.7 description DC1-SVC3B_Vlan3011
-      redistribute connected
+      redistribute connected route-map RM-CONN-2-BGP-VRFS
    !
    vrf Tenant_A_DB_Zone
       rd 192.168.255.12:13
@@ -1512,7 +1513,7 @@ router bgp 65103
       update wait-install
       neighbor 10.255.252.7 peer group MLAG-PEERS
       neighbor 10.255.252.7 description DC1-SVC3B_Vlan3012
-      redistribute connected
+      redistribute connected route-map RM-CONN-2-BGP-VRFS
    !
    vrf Tenant_A_OP_Zone
       rd 192.168.255.12:10
@@ -1522,7 +1523,7 @@ router bgp 65103
       update wait-install
       neighbor 10.255.252.7 peer group MLAG-PEERS
       neighbor 10.255.252.7 description DC1-SVC3B_Vlan3009
-      redistribute connected
+      redistribute connected route-map RM-CONN-2-BGP-VRFS
    !
    vrf Tenant_A_WAN_Zone
       rd 192.168.255.12:14
@@ -1534,7 +1535,7 @@ router bgp 65103
       update wait-install
       neighbor 10.255.252.7 peer group MLAG-PEERS
       neighbor 10.255.252.7 description DC1-SVC3B_Vlan3013
-      redistribute connected
+      redistribute connected route-map RM-CONN-2-BGP-VRFS
       redistribute static
    !
    vrf Tenant_A_WEB_Zone
@@ -1545,7 +1546,7 @@ router bgp 65103
       update wait-install
       neighbor 10.255.252.7 peer group MLAG-PEERS
       neighbor 10.255.252.7 description DC1-SVC3B_Vlan3010
-      redistribute connected
+      redistribute connected route-map RM-CONN-2-BGP-VRFS
    !
    vrf Tenant_B_OP_Zone
       rd 192.168.255.12:20
@@ -1555,7 +1556,7 @@ router bgp 65103
       update wait-install
       neighbor 10.255.252.7 peer group MLAG-PEERS
       neighbor 10.255.252.7 description DC1-SVC3B_Vlan3019
-      redistribute connected
+      redistribute connected route-map RM-CONN-2-BGP-VRFS
    !
    vrf Tenant_B_WAN_Zone
       rd 192.168.255.12:21
@@ -1565,7 +1566,7 @@ router bgp 65103
       update wait-install
       neighbor 10.255.252.7 peer group MLAG-PEERS
       neighbor 10.255.252.7 description DC1-SVC3B_Vlan3020
-      redistribute connected
+      redistribute connected route-map RM-CONN-2-BGP-VRFS
    !
    vrf Tenant_C_OP_Zone
       rd 192.168.255.12:30
@@ -1575,7 +1576,7 @@ router bgp 65103
       update wait-install
       neighbor 10.255.252.7 peer group MLAG-PEERS
       neighbor 10.255.252.7 description DC1-SVC3B_Vlan2
-      redistribute connected
+      redistribute connected route-map RM-CONN-2-BGP-VRFS
    !
    vrf Tenant_C_WAN_Zone
       rd 192.168.255.12:31
@@ -1585,7 +1586,7 @@ router bgp 65103
       update wait-install
       neighbor 10.255.252.7 peer group MLAG-PEERS
       neighbor 10.255.252.7 description DC1-SVC3B_Vlan3030
-      redistribute connected
+      redistribute connected route-map RM-CONN-2-BGP-VRFS
 ```
 
 ## BFD
@@ -1663,6 +1664,12 @@ no ip igmp snooping vlan 161
 | 10 | permit 192.168.255.0/24 eq 32 |
 | 20 | permit 192.168.254.0/24 eq 32 |
 
+##### PL-MLAG-PEER-VRFS
+
+| Sequence | Action |
+| -------- | ------ |
+| 10 | permit 10.255.252.6/31 |
+
 #### Prefix-lists Device Configuration
 
 ```eos
@@ -1670,6 +1677,9 @@ no ip igmp snooping vlan 161
 ip prefix-list PL-LOOPBACKS-EVPN-OVERLAY
    seq 10 permit 192.168.255.0/24 eq 32
    seq 20 permit 192.168.254.0/24 eq 32
+!
+ip prefix-list PL-MLAG-PEER-VRFS
+   seq 10 permit 10.255.252.6/31
 ```
 
 ### Route-maps
@@ -1681,6 +1691,13 @@ ip prefix-list PL-LOOPBACKS-EVPN-OVERLAY
 | Sequence | Type | Match | Set | Sub-Route-Map | Continue |
 | -------- | ---- | ----- | --- | ------------- | -------- |
 | 10 | permit | ip address prefix-list PL-LOOPBACKS-EVPN-OVERLAY | - | - | - |
+
+##### RM-CONN-2-BGP-VRFS
+
+| Sequence | Type | Match | Set | Sub-Route-Map | Continue |
+| -------- | ---- | ----- | --- | ------------- | -------- |
+| 10 | deny | ip address prefix-list PL-MLAG-PEER-VRFS | - | - | - |
+| 20 | permit | - | - | - | - |
 
 ##### RM-MLAG-PEER-IN
 
@@ -1694,6 +1711,11 @@ ip prefix-list PL-LOOPBACKS-EVPN-OVERLAY
 !
 route-map RM-CONN-2-BGP permit 10
    match ip address prefix-list PL-LOOPBACKS-EVPN-OVERLAY
+!
+route-map RM-CONN-2-BGP-VRFS deny 10
+   match ip address prefix-list PL-MLAG-PEER-VRFS
+!
+route-map RM-CONN-2-BGP-VRFS permit 20
 !
 route-map RM-MLAG-PEER-IN permit 10
    description Make routes learned over MLAG Peer-link less preferred on spines to ensure optimal routing
@@ -1746,9 +1768,9 @@ vrf instance Tenant_C_WAN_Zone
 
 ### Virtual Source NAT Summary
 
-| Source NAT VRF | Source NAT IP Address |
-| -------------- | --------------------- |
-| Tenant_A_OP_Zone | 10.255.1.12 |
+| Source NAT VRF | Source NAT IPv4 Address | Source NAT IPv6 Address |
+| -------------- | ----------------------- | ----------------------- |
+| Tenant_A_OP_Zone | 10.255.1.12 | - |
 
 ### Virtual Source NAT Configuration
 

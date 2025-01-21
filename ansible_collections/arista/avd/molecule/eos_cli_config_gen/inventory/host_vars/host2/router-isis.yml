@@ -1,0 +1,53 @@
+### Routing - ISIS ###
+router_isis:
+  instance: EVPN_UNDERLAY
+  net: 49.0001.0001.0001.0001.00
+  router_id: 192.168.255.3
+  is_type: level-2
+  log_adjacency_changes: true
+  mpls_ldp_sync_default: false
+  spf_interval:
+    interval: 250
+  graceful_restart:
+    enabled: false
+  timers:
+    local_convergence:
+      protected_prefixes: true
+  address_family_ipv4:
+    enabled: true
+    tunnel_source_labeled_unicast:
+      enabled: true
+  segment_routing_mpls:
+    enabled: false
+  address_family_ipv6:
+    enabled: true
+    bfd_all_interfaces: true
+    fast_reroute_ti_lfa:
+      level: level-2
+      srlg:
+        enable: true
+        strict: false
+  set_overload_bit:
+    on_startup:
+      wait_for_bgp:
+        enabled: true
+  authentication:
+    both:
+      key_type: 0
+      key: password
+      rx_disabled: true
+    level_1:
+      key_type: 0
+      key: password
+      mode: sha
+      sha:
+        key_id: 5
+      rx_disabled: true
+    level_2:
+      key_type: 0
+      key: password
+      mode: shared-secret
+      shared_secret:
+        profile: test2
+        algorithm: md5
+      rx_disabled: true

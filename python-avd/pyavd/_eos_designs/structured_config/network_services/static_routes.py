@@ -1,4 +1,4 @@
-# Copyright (c) 2023-2024 Arista Networks, Inc.
+# Copyright (c) 2023-2025 Arista Networks, Inc.
 # Use of this source code is governed by the Apache License 2.0
 # that can be found in the LICENSE file.
 from __future__ import annotations
@@ -34,39 +34,40 @@ class StaticRoutesMixin(UtilsMixin):
 
         static_routes = []
         for tenant in self.shared_utils.filtered_tenants:
-            for vrf in tenant["vrfs"]:
+            for vrf in tenant.vrfs:
                 # Static routes are already filtered inside filtered_tenants
-                for static_route in vrf["static_routes"]:
-                    static_route["vrf"] = vrf["name"]
-                    static_route.pop("nodes", None)
+                for static_route in vrf.static_routes:
+                    static_route_dict = static_route._as_dict()
+                    static_route_dict["vrf"] = vrf.name
+                    static_route_dict.pop("nodes", None)
 
                     # Ignore duplicate items in case of duplicate VRF definitions across multiple tenants.
-                    if static_route not in static_routes:
-                        static_routes.append(static_route)
+                    if static_route_dict not in static_routes:
+                        static_routes.append(static_route_dict)
 
-                for svi in vrf["svis"]:
-                    if "ip_virtual_router_addresses" not in svi or "ip_address" not in svi:
+                for svi in vrf.svis:
+                    if not svi.ip_virtual_router_addresses or not svi.ip_address:
                         # Skip svi if VARP is not set or if there is no unique ip_address
                         continue
 
-                    for virtual_router_address in svi["ip_virtual_router_addresses"]:
+                    for virtual_router_address in svi.ip_virtual_router_addresses:
                         if "/" not in virtual_router_address:
                             # Only create static routes for VARP entries with masks
                             continue
 
                         static_route = {
                             "destination_address_prefix": str(ipaddress.ip_network(virtual_router_address, strict=False)),
-                            "vrf": vrf["name"],
+                            "vrf": vrf.name,
                             "name": "VARP",
-                            "interface": f"Vlan{svi['id']}",
+                            "interface": f"Vlan{svi.id}",
                         }
 
                         # Ignore duplicate items in case of duplicate VRF definitions across multiple tenants.
                         if static_route not in static_routes:
                             static_routes.append(static_route)
 
-        for internet_exit_policy in self._filtered_internet_exit_policies:
-            for connection in internet_exit_policy.get("connections", []):
+        for _internet_exit_policy, connections in self._filtered_internet_exit_policies_and_connections:
+            for connection in connections:
                 if connection["type"] == "tunnel":
                     static_route = {
                         "destination_address_prefix": f"{connection['tunnel_destination_ip']}/32",

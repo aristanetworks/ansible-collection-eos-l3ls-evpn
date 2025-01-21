@@ -1,4 +1,4 @@
-# Copyright (c) 2023-2024 Arista Networks, Inc.
+# Copyright (c) 2023-2025 Arista Networks, Inc.
 # Use of this source code is governed by the Apache License 2.0
 # that can be found in the LICENSE file.
 from __future__ import annotations
@@ -30,8 +30,8 @@ class RouteMapsMixin(UtilsMixin):
         route_maps = []
 
         if self.shared_utils.overlay_routing_protocol == "ebgp":
-            if self.shared_utils.evpn_prevent_readvertise_to_server is True:
-                remote_asns = natural_sort({rs_dict.get("bgp_as") for route_server, rs_dict in self._evpn_route_servers.items()})
+            if self.inputs.evpn_prevent_readvertise_to_server:
+                remote_asns = natural_sort({rs_dict.get("bgp_as") for rs_dict in self._evpn_route_servers.values()})
                 for remote_asn in remote_asns:
                     route_map_name = f"RM-EVPN-FILTER-AS{remote_asn}"
                     route_maps.append(

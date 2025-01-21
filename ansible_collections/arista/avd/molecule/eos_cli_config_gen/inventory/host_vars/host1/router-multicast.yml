@@ -1,0 +1,31 @@
+---
+#### router multicast ####
+
+router_multicast:
+  ipv4:
+    activity_polling_interval: 10
+    rpf:
+      routes:
+        - source_prefix: 10.10.10.1/32
+          destinations:
+            - nexthop: 10.9.9.9
+              distance: 2
+            - nexthop: Ethernet1
+              distance: 1
+        - source_prefix: 10.10.10.2/32
+          destinations:
+            - nexthop: Ethernet2
+    counters:
+      rate_period_decay: 300
+    routing: true
+    multipath: "deterministic router-id"
+    software_forwarding: sfe
+  ipv6:
+    activity_polling_interval: 20
+  vrfs:
+    - name: MCAST_VRF1
+      ipv4:
+        routing: true
+    - name: MCAST_VRF2
+      ipv4:
+        routing: true

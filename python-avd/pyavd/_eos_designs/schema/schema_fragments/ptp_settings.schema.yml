@@ -16,13 +16,15 @@ keys:
         type: bool
       profile:
         type: str
-        valid_values:
-          - "aes67"
-          - "smpte2059-2"
-          - "aes67-r16-2016"
         default: "aes67-r16-2016"
+        description: |-
+          Default available profiles are:
+            - "aes67"
+            - "aes67-r16-2016"
+            - "smpte2059-2"
       domain:
         type: int
+        default: 127
         $ref: "eos_cli_config_gen#/keys/ptp/keys/domain"
       auto_clock_identity:
         type: bool

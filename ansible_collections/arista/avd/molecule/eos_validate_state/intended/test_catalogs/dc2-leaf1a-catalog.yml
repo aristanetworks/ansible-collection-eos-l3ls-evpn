@@ -317,19 +317,19 @@ anta.tests.interfaces:
     - name: Ethernet1
       status: up
     result_overwrite:
-      custom_field: Interface Ethernet1 - P2P_LINK_TO_DC2-SPINE1_Ethernet1 = 'up'
+      custom_field: Interface Ethernet1 - P2P_dc2-spine1_Ethernet1 = 'up'
 - VerifyInterfacesStatus:
     interfaces:
     - name: Ethernet2
       status: up
     result_overwrite:
-      custom_field: Interface Ethernet2 - P2P_LINK_TO_DC2-SPINE2_Ethernet1 = 'up'
+      custom_field: Interface Ethernet2 - P2P_dc2-spine2_Ethernet1 = 'up'
 - VerifyInterfacesStatus:
     interfaces:
     - name: Ethernet8
       status: up
     result_overwrite:
-      custom_field: Interface Ethernet8 - DC2-LEAF1C_Ethernet1 = 'up'
+      custom_field: Interface Ethernet8 - L2_dc2-leaf1c_Ethernet1 = 'up'
 - VerifyInterfacesStatus:
     interfaces:
     - name: Ethernet5
@@ -347,7 +347,7 @@ anta.tests.interfaces:
     - name: Port-Channel8
       status: up
     result_overwrite:
-      custom_field: Interface Port-Channel8 - DC2-LEAF1C_Po1 = 'up'
+      custom_field: Interface Port-Channel8 - L2_dc2-leaf1c_Port-Channel1 = 'up'
 - VerifyInterfacesStatus:
     interfaces:
     - name: Port-Channel5
@@ -419,13 +419,13 @@ anta.tests.interfaces:
     - name: Loopback10
       status: up
     result_overwrite:
-      custom_field: Interface Loopback10 - VRF10_VTEP_DIAGNOSTICS = 'up'
+      custom_field: Interface Loopback10 - DIAG_VRF_VRF10 = 'up'
 - VerifyInterfacesStatus:
     interfaces:
     - name: Loopback11
       status: up
     result_overwrite:
-      custom_field: Interface Loopback11 - VRF11_VTEP_DIAGNOSTICS = 'up'
+      custom_field: Interface Loopback11 - DIAG_VRF_VRF11 = 'up'
 - VerifyInterfacesStatus:
     interfaces:
     - name: Vxlan1

@@ -2,7 +2,7 @@ tenant_a:
   - name: Tenant_A
     mac_vrf_vni_base: 10000
     mac_vrf_id_base: 20000
-    redistribute_mlag_ibgp_peering_vrfs: false
+    redistribute_mlag_ibgp_peering_vrfs: true
     vrfs:
       - name: Tenant_A_OP_Zone
         description: "Tenant_A_OP_Zone"
@@ -11,13 +11,13 @@ tenant_a:
         vtep_diagnostic:
           loopback: 100
           loopback_ip_range: 10.255.1.0/24
-        redistribute_mlag_ibgp_peering_vrfs: true
+        redistribute_mlag_ibgp_peering_vrfs: false
         svis:
           # SVI as string
           - id: '110'
             name: Tenant_A_OP_Zone_1
             tags: ['opzone']
-            enabled: True
+            enabled: true
             ipv4_acl_in: TEST-IPV4-ACL-WITH-IP-FIELDS-IN
             ipv4_acl_out: TEST-IPV4-ACL-WITH-IP-FIELDS-OUT
             ip_address_virtual: 10.1.10.1/24
@@ -26,7 +26,7 @@ tenant_a:
             vni_override: 50111 # 10111 would be the calculated value.
             name: Tenant_A_OP_Zone_2
             tags: ['opzone']
-            enabled: True
+            enabled: true
             ip_address_virtual: 10.1.11.1/24
             ip_helpers:
               - ip_helper: 1.1.1.1
@@ -37,14 +37,15 @@ tenant_a:
             name: Tenant_A_OP_Zone_3
             profile: DERIVED_DHCP
             tags: ['opzone']
-            enabled: True
+            enabled: true
           # test ospf authentication on vlan interface
           - id: 113
             name: Tenant_A_OP_Zone_4
             tags: [ DC1_LEAF1 ]
-            enabled: True
+            enabled: true
             ospf:
               enabled: true
+              # Keeping to make sure using '0' still works
               area: 0
               authentication: message-digest
               point_to_point: true
@@ -56,6 +57,7 @@ tenant_a:
                   key: "AQQvKeimxJu+uGQ/yYvv9w=="
         ospf:
           enabled: true
+          router_id: 10.10.10.10
           nodes:
             - DC1-LEAF1A
       - name: Tenant_A_WEB_Zone
@@ -74,6 +76,19 @@ tenant_a:
             name: Tenant_A_WEBZone_2
             tags: ['web']
             profile: GENERIC_FULL
+      - name: Tenant_A_ERP_Zone
+        vrf_vni: 17
+        redistribute_connected: false
+        mlag_ibgp_peering_ipv4_pool: 172.31.12.0/24
+        svis:
+          - id: 122
+            name: Tenant_A_ERP_Zone_1
+            tags: ['erp3']
+            profile: WITH_DHCP_AND_SNOOPING
+            ip_address_virtual: 10.1.30.1/24
+            ip_address_virtual_secondaries:
+              - 10.2.30.1/24
+              - 10.2.31.1/24
       - name: Tenant_A_APP_Zone
         vrf_vni: 12
         svis:
@@ -85,12 +100,12 @@ tenant_a:
           - id: 131
             name: Tenant_A_APP_Zone_2
             tags: ['app']
-            enabled: True
+            enabled: true
             ip_address_virtual: 10.1.31.1/24
           - id: 132
             name: Tenant_A_APP_Zone_3
             tags: ['erp2']
-            enabled: True
+            enabled: true
             nodes:
               - node: DC1-LEAF1A
                 ip_address: 10.1.32.1/24
@@ -98,23 +113,28 @@ tenant_a:
               - 10.1.32.254
               - 10.2.32.254/24
               - 10.3.32.254/24
+        bgp:
+          router_id: none
       - name: Tenant_A_DB_Zone
         vrf_vni: 13
         svis:
           - id: 140
             name: Tenant_A_DB_BZone_1
             tags: ['db', 'erp1']
-            enabled: True
+            enabled: true
             ip_address_virtual: 10.1.40.1/24
           - id: 141
             name: Tenant_A_DB_Zone_2
             tags: ['db']
-            enabled: True
+            enabled: true
             ip_address_virtual: 10.1.41.1/24
+        bgp:
+          router_id: 11.11.11.11
       - name: Tenant_A_WAN_Zone
         vrf_id: 14
         ospf:
           enabled: true
+          router_id: none
           max_lsa: 15000
           redistribute_bgp:
             enabled: true
@@ -129,11 +149,10 @@ tenant_a:
             ip_addresses: [10.10.10.10/24]
             nodes: [DC1-BL1A]
             mtu: 9000
-            enabled: True
+            enabled: true
             description: "test"
             ospf:
               enabled: true
-              area: 0
               cost: 100
               authentication: message-digest
               point_to_point: true
@@ -147,7 +166,7 @@ tenant_a:
             ip_addresses: [10.10.20.20/24]
             nodes: [DC1-BL1B]
             mtu: 9000
-            enabled: True
+            enabled: true
             description: "test"
         static_routes:
           - destination_address_prefix: 10.3.4.0/24
@@ -203,7 +222,7 @@ tenant_a:
           - id: 150
             name: Tenant_A_WAN_Zone_1
             tags: ['wan']
-            enabled: True
+            enabled: true
             ip_address_virtual: 10.1.40.1/24
             ospf:
               enabled: true
@@ -213,7 +232,7 @@ tenant_a:
               simple_auth_key: "AQQvKeimxJu+uGQ/yYvv9w=="
           - id: 151
             name: svi_with_no_tags
-            enabled: True
+            enabled: true
             ip_address_virtual: 10.1.51.1/24
             # No "tags" defined - should render on switches with tag "all" or no tags
         additional_route_targets:
@@ -240,26 +259,26 @@ tenant_a:
             ip_addresses: [10.10.10.10/24, 10.10.20.20/24, 10.10.30.10/24, 10.10.40.20/24]
             nodes: [DC1-BL1A, DC1-BL1A, DC1-BL1B, DC1-BL1B]
             mtu: 9000
-            enabled: True
+            enabled: true
             description: "test"
           - interfaces: [Ethernet10, Ethernet10]
             ip_addresses: [10.10.30.10/24, 10.10.40.20/24]
             nodes: [DC1-BL1A, DC1-BL1B]
             mtu: 9000
-            enabled: True
+            enabled: true
             descriptions: ["test-DC1-BL1A", "test-DC1-BL1B"]
           - interfaces: [Ethernet11, Ethernet11]
             ip_addresses: [10.10.30.10/24, 10.10.40.20/24]
             nodes: [DC1-BL1A, DC1-BL1B]
             mtu: 9000
-            enabled: True
+            enabled: true
             description: "Single description"
             descriptions: ["DC1-BL1A descriptions preferred over single description", "DC1-BL1B descriptions preferred over single description"]
           - interfaces: [Ethernet12, Ethernet13.10, Ethernet12, Ethernet13.10]
             ip_addresses: [10.10.40.10/24, 10.10.40.20/24, 10.10.50.10/24, 10.10.50.20/24]
             nodes: [DC1-BL1A, DC1-BL1A, DC1-BL1B, DC1-BL1B]
             mtu: 9000
-            enabled: True
+            enabled: true
             description: "test l3 interfaces acls"
             ipv4_acl_in: TEST-IPV4-ACL-WITH-IP-FIELDS-IN
             ipv4_acl_out: TEST-IPV4-ACL-WITH-IP-FIELDS-OUT
@@ -268,6 +287,7 @@ tenant_a:
         vrf_id: 16
         ospf:
           enabled: true
+          router_id: diagnostic_loopback
         l3_interfaces:
           - interfaces:
               - Ethernet22
@@ -284,7 +304,6 @@ tenant_a:
             ospf:
               enabled: true
               point_to_point: true
-              area: 0
         loopbacks:
           - loopback: 123
             ip_address: 10.1.53.0/32

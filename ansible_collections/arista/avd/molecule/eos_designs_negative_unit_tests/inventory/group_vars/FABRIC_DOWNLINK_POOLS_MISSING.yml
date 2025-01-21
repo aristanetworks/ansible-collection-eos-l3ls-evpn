@@ -31,4 +31,4 @@ l3leaf:
 
 expected_error_message: >-
   Unable to assign IPs for uplinks. Either 'uplink_ipv4_pool' on this switch or 'downlink_pools' on
-  all the uplink switches is required but was not found for host 'downlink-pools-missing-l3leaf'
+  all the uplink switches must be set for host 'downlink-pools-missing-l3leaf'.

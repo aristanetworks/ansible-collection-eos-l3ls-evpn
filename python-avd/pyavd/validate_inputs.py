@@ -1,4 +1,4 @@
-# Copyright (c) 2023-2024 Arista Networks, Inc.
+# Copyright (c) 2023-2025 Arista Networks, Inc.
 # Use of this source code is governed by the Apache License 2.0
 # that can be found in the LICENSE file.
 from __future__ import annotations
@@ -29,9 +29,8 @@ def validate_inputs(inputs: dict) -> ValidationResult:
     eos_designs_schema_tools = EosDesignsAvdSchemaTools()
 
     # Inplace conversion of data
-    deprecation_warnings = eos_designs_schema_tools.convert_data(inputs)
+    validation_result = eos_designs_schema_tools.convert_data(inputs)
 
     # Validate input data
-    validation_result = eos_designs_schema_tools.validate_data(inputs)
-    validation_result.deprecation_warnings.extend(deprecation_warnings)
+    validation_result.merge(eos_designs_schema_tools.validate_data(inputs))
     return validation_result

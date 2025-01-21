@@ -294,10 +294,10 @@ vlan 4094
 
 | Interface | Description | Mode | VLANs | Native VLAN | Trunk Group | Channel-Group |
 | --------- | ----------- | ---- | ----- | ----------- | ----------- | ------------- |
-| Ethernet1 | LEAF1_Ethernet1 | *trunk | *10,20 | *- | *- | 1 |
-| Ethernet2 | LEAF2_Ethernet1 | *trunk | *10,20 | *- | *- | 1 |
-| Ethernet3 | LEAF3_Ethernet1 | *trunk | *10,30 | *- | *- | 3 |
-| Ethernet4 | LEAF4_Ethernet1 | *trunk | *10,30 | *- | *- | 3 |
+| Ethernet1 | L2_LEAF1_Ethernet1 | *trunk | *10,20 | *- | *- | 1 |
+| Ethernet2 | L2_LEAF2_Ethernet1 | *trunk | *10,20 | *- | *- | 1 |
+| Ethernet3 | L2_LEAF3_Ethernet1 | *trunk | *10,30 | *- | *- | 3 |
+| Ethernet4 | L2_LEAF4_Ethernet1 | *trunk | *10,30 | *- | *- | 3 |
 | Ethernet5 | FIREWALL_FIREWALL_Eth1 | *trunk | *10,20,30 | *- | *- | 5 |
 | Ethernet47 | MLAG_SPINE2_Ethernet47 | *trunk | *- | *- | *MLAG | 47 |
 | Ethernet48 | MLAG_SPINE2_Ethernet48 | *trunk | *- | *- | *MLAG | 47 |
@@ -309,22 +309,22 @@ vlan 4094
 ```eos
 !
 interface Ethernet1
-   description LEAF1_Ethernet1
+   description L2_LEAF1_Ethernet1
    no shutdown
    channel-group 1 mode active
 !
 interface Ethernet2
-   description LEAF2_Ethernet1
+   description L2_LEAF2_Ethernet1
    no shutdown
    channel-group 1 mode active
 !
 interface Ethernet3
-   description LEAF3_Ethernet1
+   description L2_LEAF3_Ethernet1
    no shutdown
    channel-group 3 mode active
 !
 interface Ethernet4
-   description LEAF4_Ethernet1
+   description L2_LEAF4_Ethernet1
    no shutdown
    channel-group 3 mode active
 !
@@ -352,8 +352,8 @@ interface Ethernet48
 
 | Interface | Description | Mode | VLANs | Native VLAN | Trunk Group | LACP Fallback Timeout | LACP Fallback Mode | MLAG ID | EVPN ESI |
 | --------- | ----------- | ---- | ----- | ----------- | ------------| --------------------- | ------------------ | ------- | -------- |
-| Port-Channel1 | RACK1_Po1 | trunk | 10,20 | - | - | - | - | 1 | - |
-| Port-Channel3 | RACK2_Po1 | trunk | 10,30 | - | - | - | - | 3 | - |
+| Port-Channel1 | L2_RACK1_Port-Channel1 | trunk | 10,20 | - | - | - | - | 1 | - |
+| Port-Channel3 | L2_RACK2_Port-Channel1 | trunk | 10,30 | - | - | - | - | 3 | - |
 | Port-Channel5 | FIREWALL_FIREWALL | trunk | 10,20,30 | - | - | - | - | 5 | - |
 | Port-Channel47 | MLAG_SPINE2_Port-Channel47 | trunk | - | - | MLAG | - | - | - | - |
 
@@ -362,7 +362,7 @@ interface Ethernet48
 ```eos
 !
 interface Port-Channel1
-   description RACK1_Po1
+   description L2_RACK1_Port-Channel1
    no shutdown
    switchport trunk allowed vlan 10,20
    switchport mode trunk
@@ -370,7 +370,7 @@ interface Port-Channel1
    mlag 1
 !
 interface Port-Channel3
-   description RACK2_Po1
+   description L2_RACK2_Port-Channel1
    no shutdown
    switchport trunk allowed vlan 10,30
    switchport mode trunk

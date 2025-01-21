@@ -1,0 +1,30 @@
+---
+### MAC ACLs ###
+mac_access_lists:
+  - name: TEST1
+    entries:
+      - sequence: 10
+        action: "deny any 01:80:c2:00:00:00 00:00:00:00:00:00"
+      - sequence: 5
+        action: "permit any 01:00:0c:cc:cc:cd 00:00:00:00:00:00"
+  - name: TEST2
+    counters_per_entry: true
+    entries:
+      - sequence: 5
+        action: "permit any 01:00:0c:cc:cc:cd 00:00:00:00:00:00"
+      - sequence: 10
+        action: "deny any 01:80:c2:00:00:00 00:00:00:00:00:00"
+  - name: TEST3
+    counters_per_entry: false
+    entries:
+      - sequence: 5
+        action: "permit any 01:00:0c:cc:cc:cd 00:00:00:00:00:00"
+      - sequence: 10
+        action: "deny any 01:80:c2:00:00:00 00:00:00:00:00:00"
+  - name: TEST4
+    entries:
+      - action: "permit any 01:00:0c:cc:cc:cd 00:00:00:00:00:00"
+      - action: "deny any 01:80:c2:00:00:00 00:00:00:00:00:00"
+      - action: "remark A comment in the middle"
+      - action: "permit any 02:00:00:12:34:56 00:00:00:00:00:00"
+      - action: "deny any 02:00:00:ab:cd:ef 00:00:00:00:00:00"

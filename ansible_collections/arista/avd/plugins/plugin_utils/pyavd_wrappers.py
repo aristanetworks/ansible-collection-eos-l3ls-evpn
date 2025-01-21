@@ -1,4 +1,4 @@
-# Copyright (c) 2019-2024 Arista Networks, Inc.
+# Copyright (c) 2019-2025 Arista Networks, Inc.
 # Use of this source code is governed by the Apache License 2.0
 # that can be found in the LICENSE file.
 from __future__ import annotations
@@ -31,6 +31,11 @@ class RaiseOnUse:
 
     def __call__(self, *_args: Any, **_kwargs: Any) -> NoReturn:
         raise self.exception
+
+    def __getattr__(self, name: str) -> Any:
+        if not name.startswith("__"):
+            raise self.exception
+        return self.__getattribute__(name)
 
 
 def wrap_plugin(plugin_type: Literal["filter", "test"], name: str) -> Callable:

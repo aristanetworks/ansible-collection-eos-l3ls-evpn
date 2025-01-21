@@ -175,7 +175,7 @@ Enable password has been disabled
 
 | CV Compression | CloudVision Servers | VRF | Authentication | Smash Excludes | Ingest Exclude | Bypass AAA |
 | -------------- | ------------------- | --- | -------------- | -------------- | -------------- | ---------- |
-| gzip | 192.168.200.11:9910 | MGMT | key,telarista | ale,flexCounter,hardware,kni,pulse,strata | /Sysdb/cell/1/agent,/Sysdb/cell/2/agent | True |
+| gzip | 192.168.200.11:9910 | MGMT | key,<removed> | ale,flexCounter,hardware,kni,pulse,strata | /Sysdb/cell/1/agent,/Sysdb/cell/2/agent | True |
 
 #### TerminAttr Daemon Device Configuration
 
@@ -283,7 +283,7 @@ vlan 4094
 | --------- | ----------- | ---- | ----- | ----------- | ----------- | ------------- |
 | Ethernet5 | MLAG_DC1-LEAF2B_Ethernet5 | *trunk | *- | *- | *MLAG | 5 |
 | Ethernet6 | MLAG_DC1-LEAF2B_Ethernet6 | *trunk | *- | *- | *MLAG | 5 |
-| Ethernet7 | DC1-L2LEAF1A_Ethernet1 | *trunk | *none | *- | *- | 7 |
+| Ethernet7 | L2_DC1-L2LEAF1A_Ethernet1 | *trunk | *none | *- | *- | 7 |
 
 *Inherited from Port-Channel Interface
 
@@ -291,15 +291,15 @@ vlan 4094
 
 | Interface | Description | Channel Group | IP Address | VRF |  MTU | Shutdown | ACL In | ACL Out |
 | --------- | ----------- | ------------- | ---------- | ----| ---- | -------- | ------ | ------- |
-| Ethernet1 | P2P_LINK_TO_DC1-SPINE1_Ethernet2 | - | 172.31.255.9/31 | default | 1500 | False | - | - |
-| Ethernet2 | P2P_LINK_TO_DC1-SPINE2_Ethernet2 | - | 172.31.255.11/31 | default | 1500 | False | - | - |
-| Ethernet3 | P2P_LINK_TO_DC1-SPINE3_Ethernet2 | - | 172.31.255.13/31 | default | 1500 | False | - | - |
-| Ethernet4 | P2P_LINK_TO_DC1-SPINE4_Ethernet2 | - | 172.31.255.15/31 | default | 1500 | False | - | - |
+| Ethernet1 | P2P_DC1-SPINE1_Ethernet2 | - | 172.31.255.9/31 | default | 1500 | False | - | - |
+| Ethernet2 | P2P_DC1-SPINE2_Ethernet2 | - | 172.31.255.11/31 | default | 1500 | False | - | - |
+| Ethernet3 | P2P_DC1-SPINE3_Ethernet2 | - | 172.31.255.13/31 | default | 1500 | False | - | - |
+| Ethernet4 | P2P_DC1-SPINE4_Ethernet2 | - | 172.31.255.15/31 | default | 1500 | False | - | - |
 
 ##### ISIS
 
-| Interface | Channel Group | ISIS Instance | ISIS BFD | ISIS Metric | Mode | ISIS Circuit Type | Hello Padding | Authentication Mode |
-| --------- | ------------- | ------------- | -------- | ----------- | ---- | ----------------- | ------------- | ------------------- |
+| Interface | Channel Group | ISIS Instance | ISIS BFD | ISIS Metric | Mode | ISIS Circuit Type | Hello Padding | ISIS Authentication Mode |
+| --------- | ------------- | ------------- | -------- | ----------- | ---- | ----------------- | ------------- | ------------------------ |
 | Ethernet1 | - | EVPN_UNDERLAY | True | 50 | point-to-point | level-2 | - | - |
 | Ethernet2 | - | EVPN_UNDERLAY | True | 50 | point-to-point | level-2 | - | - |
 | Ethernet3 | - | EVPN_UNDERLAY | True | 50 | point-to-point | level-2 | - | - |
@@ -310,7 +310,7 @@ vlan 4094
 ```eos
 !
 interface Ethernet1
-   description P2P_LINK_TO_DC1-SPINE1_Ethernet2
+   description P2P_DC1-SPINE1_Ethernet2
    no shutdown
    mtu 1500
    no switchport
@@ -322,7 +322,7 @@ interface Ethernet1
    isis network point-to-point
 !
 interface Ethernet2
-   description P2P_LINK_TO_DC1-SPINE2_Ethernet2
+   description P2P_DC1-SPINE2_Ethernet2
    no shutdown
    mtu 1500
    no switchport
@@ -334,7 +334,7 @@ interface Ethernet2
    isis network point-to-point
 !
 interface Ethernet3
-   description P2P_LINK_TO_DC1-SPINE3_Ethernet2
+   description P2P_DC1-SPINE3_Ethernet2
    no shutdown
    mtu 1500
    no switchport
@@ -346,7 +346,7 @@ interface Ethernet3
    isis network point-to-point
 !
 interface Ethernet4
-   description P2P_LINK_TO_DC1-SPINE4_Ethernet2
+   description P2P_DC1-SPINE4_Ethernet2
    no shutdown
    mtu 1500
    no switchport
@@ -368,7 +368,7 @@ interface Ethernet6
    channel-group 5 mode active
 !
 interface Ethernet7
-   description DC1-L2LEAF1A_Ethernet1
+   description L2_DC1-L2LEAF1A_Ethernet1
    no shutdown
    channel-group 7 mode active
 ```
@@ -382,7 +382,7 @@ interface Ethernet7
 | Interface | Description | Mode | VLANs | Native VLAN | Trunk Group | LACP Fallback Timeout | LACP Fallback Mode | MLAG ID | EVPN ESI |
 | --------- | ----------- | ---- | ----- | ----------- | ------------| --------------------- | ------------------ | ------- | -------- |
 | Port-Channel5 | MLAG_DC1-LEAF2B_Port-Channel5 | trunk | - | - | MLAG | - | - | - | - |
-| Port-Channel7 | DC1-L2LEAF1A_Po1 | trunk | none | - | - | - | - | 7 | - |
+| Port-Channel7 | L2_DC1-L2LEAF1A_Port-Channel1 | trunk | none | - | - | - | - | 7 | - |
 
 #### Port-Channel Interfaces Device Configuration
 
@@ -396,7 +396,7 @@ interface Port-Channel5
    switchport
 !
 interface Port-Channel7
-   description DC1-L2LEAF1A_Po1
+   description L2_DC1-L2LEAF1A_Port-Channel1
    no shutdown
    switchport trunk allowed vlan none
    switchport mode trunk
@@ -615,8 +615,8 @@ ip route vrf MGMT 0.0.0.0/0 192.168.200.5
 !
 router isis EVPN_UNDERLAY
    net 49.0001.1921.6825.5006.00
-   is-type level-2
    router-id ipv4 192.168.255.6
+   is-type level-2
    log-adjacency-changes
    !
    address-family ipv4 unicast
@@ -665,9 +665,9 @@ ASN Notation: asplain
 
 ##### EVPN Peer Groups
 
-| Peer Group | Activate | Encapsulation |
-| ---------- | -------- | ------------- |
-| OVERLAY-PEERS | True | default |
+| Peer Group | Activate | Route-map In | Route-map Out | Encapsulation |
+| ---------- | -------- | ------------ | ------------- | ------------- |
+| OVERLAY-PEERS | True |  RM-EVPN-SOO-IN | RM-EVPN-SOO-OUT | default |
 
 #### Router BGP Device Configuration
 
@@ -675,9 +675,9 @@ ASN Notation: asplain
 !
 router bgp 65000
    router-id 192.168.255.6
-   maximum-paths 4 ecmp 4
    update wait-install
    no bgp default ipv4-unicast
+   maximum-paths 4 ecmp 4
    distance bgp 20 200 200
    neighbor OVERLAY-PEERS peer group
    neighbor OVERLAY-PEERS remote-as 65000
@@ -692,9 +692,9 @@ router bgp 65000
    neighbor 192.168.255.4 description DC1-SPINE4_Loopback0
    !
    address-family evpn
+      neighbor OVERLAY-PEERS activate
       neighbor OVERLAY-PEERS route-map RM-EVPN-SOO-IN in
       neighbor OVERLAY-PEERS route-map RM-EVPN-SOO-OUT out
-      neighbor OVERLAY-PEERS activate
    !
    address-family ipv4
       no neighbor OVERLAY-PEERS activate

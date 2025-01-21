@@ -1,5 +1,5 @@
 {#
- Copyright (c) 2023-2024 Arista Networks, Inc.
+ Copyright (c) 2023-2025 Arista Networks, Inc.
  Use of this source code is governed by the Apache License 2.0
  that can be found in the LICENSE file.
 #}
@@ -11,13 +11,13 @@
       !! {{ comment_line }}
 {%     endfor %}
 {% endif %}
+{% if tx_queue.priority is arista.avd.defined %}
+      {{ tx_queue.priority }}
+{% endif %}
 {% if tx_queue.bandwidth_percent is arista.avd.defined %}
       bandwidth percent {{ tx_queue.bandwidth_percent }}
 {% elif tx_queue.bandwidth_guaranteed_percent is arista.avd.defined %}
       bandwidth guaranteed percent {{ tx_queue.bandwidth_guaranteed_percent }}
-{% endif %}
-{% if tx_queue.priority is arista.avd.defined %}
-      {{ tx_queue.priority }}
 {% endif %}
 {% if tx_queue.shape.rate is arista.avd.defined %}
       shape rate {{ tx_queue.shape.rate }}

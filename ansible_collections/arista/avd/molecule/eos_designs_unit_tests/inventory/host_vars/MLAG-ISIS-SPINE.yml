@@ -1,0 +1,13 @@
+---
+underlay_routing_protocol: isis
+underlay_isis_authentication_mode: md5
+underlay_isis_authentication_key: $1c$sTNAlR6rKSw=
+
+type: spine
+
+spine:
+  nodes:
+  - name: MLAG-ISIS-SPINE
+    bgp_as: 65000
+    loopback_ipv4_pool: 10.10.10.0/24
+    id: 1

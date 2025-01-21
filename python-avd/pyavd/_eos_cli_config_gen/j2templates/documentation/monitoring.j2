@@ -1,5 +1,5 @@
 {#
- Copyright (c) 2023-2024 Arista Networks, Inc.
+ Copyright (c) 2023-2025 Arista Networks, Inc.
  Use of this source code is governed by the Apache License 2.0
  that can be found in the LICENSE file.
 #}
@@ -25,12 +25,14 @@
        or tap_aggregation is arista.avd.defined
        or sflow is arista.avd.defined
        or hardware_counters is arista.avd.defined
+       or hardware is arista.avd.defined
        or vmtracer_sessions is arista.avd.defined
        or event_handlers is arista.avd.defined
        or flow_tracking is arista.avd.defined
        or trackers is arista.avd.defined
        or sflow_interfaces | length > 0
-       or monitor_telemetry_postcard_policy is arista.avd.defined %}
+       or monitor_telemetry_postcard_policy is arista.avd.defined
+       or monitor_server_radius is arista.avd.defined %}
 
 ## Monitoring
 {## TerminAttr Daemon #}
@@ -49,8 +51,8 @@
 {%     include 'documentation/tap-aggregation.j2' %}
 {## SFlow #}
 {%     include 'documentation/sflow.j2' %}
-{## Hardware Counters #}
-{%     include 'documentation/hardware-counters.j2' %}
+{## Hardware #}
+{%     include 'documentation/hardware.j2' %}
 {## VM Tracer Sessions #}
 {%     include 'documentation/vmtracer-sessions.j2' %}
 {## Event Handler #}
@@ -61,4 +63,6 @@
 {%     include 'documentation/trackers.j2' %}
 {## Monitor Telemetry Postcard #}
 {%     include 'documentation/monitor-telemetry-postcard-policy.j2' %}
+{## Monitor Server Radius #}
+{%     include 'documentation/monitor-server-radius.j2' %}
 {% endif %}

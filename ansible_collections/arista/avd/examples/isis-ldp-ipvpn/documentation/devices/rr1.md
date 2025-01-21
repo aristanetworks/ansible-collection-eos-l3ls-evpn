@@ -32,6 +32,7 @@
 - [MPLS](#mpls)
   - [MPLS and LDP](#mpls-and-ldp)
   - [MPLS Interfaces](#mpls-interfaces)
+  - [MPLS Device Configuration](#mpls-device-configuration)
 - [VRF Instances](#vrf-instances)
   - [VRF Instances Summary](#vrf-instances-summary)
   - [VRF Instances Device Configuration](#vrf-instances-device-configuration)
@@ -175,14 +176,14 @@ vlan internal order ascending range 1006 1199
 
 | Interface | Description | Channel Group | IP Address | VRF |  MTU | Shutdown | ACL In | ACL Out |
 | --------- | ----------- | ------------- | ---------- | ----| ---- | -------- | ------ | ------- |
-| Ethernet2 | P2P_LINK_TO_p3_Ethernet2 | - | 10.255.3.12/31 | default | 1500 | False | - | - |
-| Ethernet3 | P2P_LINK_TO_p1_Ethernet3 | - | 10.255.3.10/31 | default | 1500 | False | - | - |
-| Ethernet4 | P2P_LINK_TO_rr2_Ethernet4 | - | 10.255.3.14/31 | default | 1500 | False | - | - |
+| Ethernet2 | P2P_p3_Ethernet2 | - | 10.255.3.12/31 | default | 1500 | False | - | - |
+| Ethernet3 | P2P_p1_Ethernet3 | - | 10.255.3.10/31 | default | 1500 | False | - | - |
+| Ethernet4 | P2P_rr2_Ethernet4 | - | 10.255.3.14/31 | default | 1500 | False | - | - |
 
 ##### ISIS
 
-| Interface | Channel Group | ISIS Instance | ISIS BFD | ISIS Metric | Mode | ISIS Circuit Type | Hello Padding | Authentication Mode |
-| --------- | ------------- | ------------- | -------- | ----------- | ---- | ----------------- | ------------- | ------------------- |
+| Interface | Channel Group | ISIS Instance | ISIS BFD | ISIS Metric | Mode | ISIS Circuit Type | Hello Padding | ISIS Authentication Mode |
+| --------- | ------------- | ------------- | -------- | ----------- | ---- | ----------------- | ------------- | ------------------------ |
 | Ethernet2 | - | CORE | - | 50 | point-to-point | level-2 | True | md5 |
 | Ethernet3 | - | CORE | - | 50 | point-to-point | level-2 | True | md5 |
 | Ethernet4 | - | CORE | - | 50 | point-to-point | level-2 | True | md5 |
@@ -192,7 +193,7 @@ vlan internal order ascending range 1006 1199
 ```eos
 !
 interface Ethernet2
-   description P2P_LINK_TO_p3_Ethernet2
+   description P2P_p3_Ethernet2
    no shutdown
    mtu 1500
    no switchport
@@ -209,7 +210,7 @@ interface Ethernet2
    isis authentication key 7 <removed>
 !
 interface Ethernet3
-   description P2P_LINK_TO_p1_Ethernet3
+   description P2P_p1_Ethernet3
    no shutdown
    mtu 1500
    no switchport
@@ -226,7 +227,7 @@ interface Ethernet3
    isis authentication key 7 <removed>
 !
 interface Ethernet4
-   description P2P_LINK_TO_rr2_Ethernet4
+   description P2P_rr2_Ethernet4
    no shutdown
    mtu 1500
    no switchport
@@ -365,8 +366,8 @@ ip route vrf MGMT 0.0.0.0/0 172.16.1.1
 !
 router isis CORE
    net 49.0001.0102.5500.2001.00
-   is-type level-2
    router-id ipv4 10.255.2.1
+   is-type level-2
    log-adjacency-changes
    mpls ldp sync default
    !
@@ -444,15 +445,15 @@ ASN Notation: asplain
 !
 router bgp 65001
    router-id 10.255.2.1
-   distance bgp 20 200 200
-   maximum-paths 4 ecmp 4
    no bgp default ipv4-unicast
+   distance bgp 20 200 200
    bgp cluster-id 10.255.2.1
+   maximum-paths 4 ecmp 4
    neighbor MPLS-OVERLAY-PEERS peer group
    neighbor MPLS-OVERLAY-PEERS remote-as 65001
    neighbor MPLS-OVERLAY-PEERS update-source Loopback0
-   neighbor MPLS-OVERLAY-PEERS route-reflector-client
    neighbor MPLS-OVERLAY-PEERS bfd
+   neighbor MPLS-OVERLAY-PEERS route-reflector-client
    neighbor MPLS-OVERLAY-PEERS password 7 <removed>
    neighbor MPLS-OVERLAY-PEERS send-community
    neighbor MPLS-OVERLAY-PEERS maximum-routes 0
@@ -513,7 +514,16 @@ router bfd
 | LDP Interface Disabled Default | True |
 | LDP Transport-Address Interface | Loopback0 |
 
-#### MPLS and LDP Device Configuration
+### MPLS Interfaces
+
+| Interface | MPLS IP Enabled | LDP Enabled | IGP Sync |
+| --------- | --------------- | ----------- | -------- |
+| Ethernet2 | True | True | True |
+| Ethernet3 | True | True | True |
+| Ethernet4 | True | True | True |
+| Loopback0 | - | True | - |
+
+### MPLS Device Configuration
 
 ```eos
 !
@@ -525,15 +535,6 @@ mpls ldp
    interface disabled default
    no shutdown
 ```
-
-### MPLS Interfaces
-
-| Interface | MPLS IP Enabled | LDP Enabled | IGP Sync |
-| --------- | --------------- | ----------- | -------- |
-| Ethernet2 | True | True | True |
-| Ethernet3 | True | True | True |
-| Ethernet4 | True | True | True |
-| Loopback0 | - | True | - |
 
 ## VRF Instances
 

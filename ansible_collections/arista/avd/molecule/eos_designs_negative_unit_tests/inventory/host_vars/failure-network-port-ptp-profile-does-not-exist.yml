@@ -1,0 +1,29 @@
+---
+type: l3leaf
+
+# Using default value of ptp_profiles
+
+l3leaf:
+  defaults:
+    loopback_ipv4_pool: 10.254.1.0/27
+    vtep_loopback_ipv4_pool: 10.254.11.0/27
+    mlag_interfaces: ['Ethernet9', 'Ethernet10']
+    mlag_peer_ipv4_pool: 10.254.1.64/27
+    mlag_peer_l3_ipv4_pool: 10.254.1.96/27
+    ptp:
+      enabled: true
+  nodes:
+    - name: failure-network-port-ptp-profile-does-not-exist
+      id: 1
+      bgp_as: 65101
+      mgmt_ip: 192.168.0.101/24
+
+network_ports:
+  - switches: [failure-network-port-ptp-profile-does-not-exist]
+    switch_ports: [Ethernet14, Ethernet15]
+    ptp:
+      enabled: true
+      profile: THIS-PROFILE-DOES-NOT-EXIST
+
+expected_error_message: >-
+  PTP Profile 'THIS-PROFILE-DOES-NOT-EXIST' referenced under network_ports[0] does not exist in `ptp_profiles`.

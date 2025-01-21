@@ -1,4 +1,4 @@
-# Copyright (c) 2023-2024 Arista Networks, Inc.
+# Copyright (c) 2023-2025 Arista Networks, Inc.
 # Use of this source code is governed by the Apache License 2.0
 # that can be found in the LICENSE file.
 from __future__ import annotations
@@ -7,15 +7,19 @@ from functools import cached_property
 from typing import TYPE_CHECKING, Any
 
 if TYPE_CHECKING:
+    from pyavd._eos_designs.schema import EosDesigns
+
     from .shared_utils import SharedUtils
 
 
 class AvdFacts:
     _hostvars: dict
+    inputs: EosDesigns
     shared_utils: SharedUtils
 
-    def __init__(self, hostvars: dict, shared_utils: SharedUtils) -> None:
+    def __init__(self, hostvars: dict, inputs: EosDesigns, shared_utils: SharedUtils) -> None:
         self._hostvars = hostvars
+        self.inputs = inputs
         self.shared_utils = shared_utils
 
     @classmethod

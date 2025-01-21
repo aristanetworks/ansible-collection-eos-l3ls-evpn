@@ -13,6 +13,7 @@
 - [Monitoring](#monitoring)
   - [TerminAttr Daemon](#terminattr-daemon)
   - [SNMP](#snmp)
+  - [Hardware](#hardware)
 - [Hardware TCAM Profile](#hardware-tcam-profile)
   - [Hardware TCAM Device Configuration](#hardware-tcam-device-configuration)
 - [Spanning Tree](#spanning-tree)
@@ -183,7 +184,7 @@ Enable password has been disabled
 
 | CV Compression | CloudVision Servers | VRF | Authentication | Smash Excludes | Ingest Exclude | Bypass AAA |
 | -------------- | ------------------- | --- | -------------- | -------------- | -------------- | ---------- |
-| gzip | 192.168.200.11:9910 | MGMT | key,telarista | ale,flexCounter,hardware,kni,pulse,strata | /Sysdb/cell/1/agent,/Sysdb/cell/2/agent | False |
+| gzip | 192.168.200.11:9910 | MGMT | key,<removed> | ale,flexCounter,hardware,kni,pulse,strata | /Sysdb/cell/1/agent,/Sysdb/cell/2/agent | False |
 
 #### TerminAttr Daemon Device Configuration
 
@@ -208,6 +209,18 @@ daemon TerminAttr
 !
 snmp-server contact example@example.com
 snmp-server location DC1_FABRIC rackD DC1-LEAF2B
+```
+
+### Hardware
+
+#### Hardware Device Configuration
+
+```eos
+!
+hardware speed-group 1 serdes 10G
+hardware speed-group 2 serdes 25G
+hardware speed-group 3 serdes 25G
+hardware speed-group 4 serdes 10G
 ```
 
 ## Hardware TCAM Profile
@@ -467,7 +480,7 @@ interface Ethernet21
 
 | Interface | Description | Mode | VLANs | Native VLAN | Trunk Group | LACP Fallback Timeout | LACP Fallback Mode | MLAG ID | EVPN ESI |
 | --------- | ----------- | ---- | ----- | ----------- | ------------| --------------------- | ------------------ | ------- | -------- |
-| Port-Channel7 | CUSTOM_DC1_L2LEAF1_Po1 | trunk | 110-111,120-124,130-131,160-162 | - | - | - | - | - | 0000:1234:0808:0707:0606 |
+| Port-Channel7 | CUSTOM_DC1-L2LEAF1A_Po1 | trunk | 110-111,120-124,130-131,160-162 | - | - | - | - | - | 0000:1234:0808:0707:0606 |
 | Port-Channel9 | CUSTOM_DC1-L2LEAF3A_Po1 | trunk | 110-111,120-124,130-131,160-162 | - | - | - | - | - | 0000:1234:0606:0707:0808 |
 | Port-Channel10 | CUSTOM_server01_MLAG_PortChanne1 | trunk | 210-211 | - | - | - | - | - | - |
 | Port-Channel11 | CUSTOM_server01_MTU_PROFILE_MLAG_PortChanne1 | access | 110 | - | - | - | - | - | - |
@@ -488,11 +501,12 @@ interface Ethernet21
 ```eos
 !
 interface Port-Channel7
-   description CUSTOM_DC1_L2LEAF1_Po1
+   description CUSTOM_DC1-L2LEAF1A_Po1
    no shutdown
    switchport trunk allowed vlan 110-111,120-124,130-131,160-162
    switchport mode trunk
    switchport
+   !
    evpn ethernet-segment
       identifier 0000:1234:0808:0707:0606
       route-target import 08:08:07:07:06:06
@@ -504,6 +518,7 @@ interface Port-Channel9
    switchport trunk allowed vlan 110-111,120-124,130-131,160-162
    switchport mode trunk
    switchport
+   !
    evpn ethernet-segment
       identifier 0000:1234:0606:0707:0808
       route-target import 06:06:07:07:08:08
@@ -936,9 +951,9 @@ ASN Notation: asplain
 
 ##### EVPN Peer Groups
 
-| Peer Group | Activate | Encapsulation |
-| ---------- | -------- | ------------- |
-| EVPN-OVERLAY-PEERS | True | default |
+| Peer Group | Activate | Route-map In | Route-map Out | Encapsulation |
+| ---------- | -------- | ------------ | ------------- | ------------- |
+| EVPN-OVERLAY-PEERS | True |  - | - | default |
 
 ##### EVPN Host Flapping Settings
 
@@ -977,9 +992,9 @@ ASN Notation: asplain
 !
 router bgp 65102
    router-id 192.168.255.11
-   maximum-paths 4 ecmp 4
    update wait-install
    no bgp default ipv4-unicast
+   maximum-paths 4 ecmp 4
    distance bgp 20 200 200
    neighbor EVPN-OVERLAY-PEERS peer group
    neighbor EVPN-OVERLAY-PEERS update-source Loopback0
@@ -1073,8 +1088,8 @@ router bgp 65102
       vlan 310-311
    !
    address-family evpn
-      no host-flap detection
       neighbor EVPN-OVERLAY-PEERS activate
+      no host-flap detection
    !
    address-family ipv4
       no neighbor EVPN-OVERLAY-PEERS activate
@@ -1263,9 +1278,9 @@ vrf instance Tenant_C_OP_Zone
 
 ### Virtual Source NAT Summary
 
-| Source NAT VRF | Source NAT IP Address |
-| -------------- | --------------------- |
-| Tenant_A_OP_Zone | 10.255.1.11 |
+| Source NAT VRF | Source NAT IPv4 Address | Source NAT IPv6 Address |
+| -------------- | ----------------------- | ----------------------- |
+| Tenant_A_OP_Zone | 10.255.1.11 | - |
 
 ### Virtual Source NAT Configuration
 

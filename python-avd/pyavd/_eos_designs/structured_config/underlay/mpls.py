@@ -1,10 +1,12 @@
-# Copyright (c) 2023-2024 Arista Networks, Inc.
+# Copyright (c) 2023-2025 Arista Networks, Inc.
 # Use of this source code is governed by the Apache License 2.0
 # that can be found in the LICENSE file.
 from __future__ import annotations
 
 from functools import cached_property
 from typing import TYPE_CHECKING
+
+from pyavd._utils import strip_empties_from_dict
 
 from .utils import UtilsMixin
 
@@ -26,14 +28,16 @@ class MplsMixin(UtilsMixin):
             return None
 
         if self.shared_utils.underlay_ldp is True:
-            return {
-                "ip": True,
-                "ldp": {
-                    "interface_disabled_default": True,
-                    "router_id": self.shared_utils.router_id,
-                    "shutdown": False,
-                    "transport_address_interface": "Loopback0",
-                },
-            }
+            return strip_empties_from_dict(
+                {
+                    "ip": True,
+                    "ldp": {
+                        "interface_disabled_default": True,
+                        "router_id": self.shared_utils.router_id if not self.inputs.use_router_general_for_router_id else None,
+                        "shutdown": False,
+                        "transport_address_interface": "Loopback0",
+                    },
+                }
+            )
 
         return {"ip": True}

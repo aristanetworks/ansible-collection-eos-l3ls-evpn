@@ -1,4 +1,4 @@
-# Copyright (c) 2023-2024 Arista Networks, Inc.
+# Copyright (c) 2023-2025 Arista Networks, Inc.
 # Use of this source code is governed by the Apache License 2.0
 # that can be found in the LICENSE file.
 ---
@@ -34,23 +34,17 @@
   check_mode: false
   run_once: true
 
-- name: Generate YAML file with hostvars (only for debugging)
-  when: avd_eos_designs_debug | arista.avd.default(false)
-  ansible.builtin.template:
-    src: debug/generate-debug-vars.j2
-    dest: "{{ structured_dir }}/{{ inventory_hostname }}-debug-vars.yml"
-    mode: "0o664"
-  delegate_to: localhost
-  changed_when: false
-
 - name: Generate device configuration in structured format
-  when: avd_eos_designs_structured_config | arista.avd.default(true)
+  when: avd_eos_designs_structured_config | arista.avd.default(true) or avd_eos_designs_debug | arista.avd.default(false)
   arista.avd.eos_designs_structured_config:
     eos_designs_custom_templates: "{{ eos_designs_custom_templates | arista.avd.default([]) }}"
     dest: "{{ structured_dir }}/{{ inventory_hostname }}.{{ avd_structured_config_file_format }}"
     # cprofile_file: "structured-{{inventory_hostname}}.prof"
     template_output: true
     validation_mode: "{{ avd_data_validation_mode }}"
+    structured_config: "{{ avd_eos_designs_structured_config | arista.avd.default(true) }}"
+    debug_vars: "{{ avd_eos_designs_debug | arista.avd.default(false) }}"
+    debug_vars_file: "{{ structured_dir }}/{{ inventory_hostname }}-debug-vars.yml"
   delegate_to: localhost
   check_mode: false
   register: structured_config
@@ -69,6 +63,7 @@
     topology_csv: "{{ eos_designs_documentation.topology_csv | arista.avd.default(false) }}"
     p2p_links_csv_file: "{{ fabric_dir }}/{{ fabric_name }}-p2p-links.csv"
     p2p_links_csv: "{{ eos_designs_documentation.p2p_links_csv | arista.avd.default(false) }}"
+    toc: "{{ eos_designs_documentation.toc | arista.avd.default(true) }}"
     mode: "0o664"
   delegate_to: localhost
   check_mode: false

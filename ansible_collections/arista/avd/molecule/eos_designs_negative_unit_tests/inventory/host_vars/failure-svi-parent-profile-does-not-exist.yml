@@ -24,5 +24,4 @@ tenants:
               - node: failure-svi-parent-profile-does-not-exist
 
 expected_error_message: >-
-  Profile 'THIS-PROFILE-DOES-NOT-EXIST' applied under SVI 'TEST-SVI' does
-  not exist in `svi_profiles`.
+  Profile 'THIS-PROFILE-DOES-NOT-EXIST' applied under SVI 'TEST-SVI' does not exist in `svi_profiles`.

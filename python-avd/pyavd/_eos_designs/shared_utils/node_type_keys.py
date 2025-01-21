@@ -1,4 +1,4 @@
-# Copyright (c) 2023-2024 Arista Networks, Inc.
+# Copyright (c) 2023-2025 Arista Networks, Inc.
 # Use of this source code is governed by the Apache License 2.0
 # that can be found in the LICENSE file.
 from __future__ import annotations
@@ -6,8 +6,9 @@ from __future__ import annotations
 from functools import cached_property
 from typing import TYPE_CHECKING
 
-from pyavd._errors import AristaAvdMissingVariableError
-from pyavd._utils import get, get_item, replace_or_append_item
+from pyavd._eos_designs.schema import EosDesigns
+from pyavd._errors import AristaAvdInvalidInputsError
+from pyavd._utils import get, get_item
 
 if TYPE_CHECKING:
     from . import SharedUtils
@@ -191,27 +192,19 @@ class NodeTypeKeysMixin:
     """
 
     @cached_property
-    def node_type_keys(self: SharedUtils) -> list:
-        """NOTE: This method is called _before_ any schema validation, since we need to resolve node_type_keys dynamically."""
-        design_type = get(self.hostvars, "design.type", default="l3ls-evpn")
-        default_node_type_keys_for_our_design = get(DEFAULT_NODE_TYPE_KEYS, design_type)
-
-        # Using list() to force a copy of node_type_keys so we don't modify the default when we apply custom_node_type_keys
-        node_type_keys = list(get(self.hostvars, "node_type_keys", default=default_node_type_keys_for_our_design))
-        custom_node_type_keys = get(self.hostvars, "custom_node_type_keys", default=[])
-
-        for node_type_key in custom_node_type_keys:
-            replace_or_append_item(node_type_keys, "key", node_type_key)
-
-        return node_type_keys
-
-    @cached_property
-    def node_type_key_data(self: SharedUtils) -> dict:
+    def node_type_key_data(self: SharedUtils) -> EosDesigns.NodeTypeKeysItem:
         """node_type_key_data containing settings for this node_type."""
-        for node_type_key in self.node_type_keys:
-            if node_type_key["type"] == self.type:
+        for node_type_key in self.inputs.custom_node_type_keys:
+            if node_type_key.type == self.type:
+                return node_type_key._cast_as(EosDesigns.NodeTypeKeysItem)
+
+        design_type = self.inputs.design.type
+        default_node_type_keys_for_our_design = EosDesigns.NodeTypeKeys._from_list(get(DEFAULT_NODE_TYPE_KEYS, design_type, default=[]))
+        node_type_keys = self.inputs.node_type_keys or default_node_type_keys_for_our_design
+        for node_type_key in node_type_keys:
+            if node_type_key.type == self.type:
                 return node_type_key
 
         # Not found
-        msg = f"node_type_keys.[type=={self.type}]"
-        raise AristaAvdMissingVariableError(msg)
+        msg = f"Could not find the given type '{self.type}' in node_type_keys or custom_node_type_keys."
+        raise AristaAvdInvalidInputsError(msg)

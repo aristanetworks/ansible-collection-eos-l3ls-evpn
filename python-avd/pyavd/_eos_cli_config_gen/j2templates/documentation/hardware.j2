@@ -1,0 +1,41 @@
+{#
+ Copyright (c) 2023-2025 Arista Networks, Inc.
+ Use of this source code is governed by the Apache License 2.0
+ that can be found in the LICENSE file.
+#}
+{# doc - hardware #}
+{% if hardware is arista.avd.defined or hardware_counters is arista.avd.defined %}
+
+### Hardware
+{%     if hardware_counters is arista.avd.defined %}
+
+#### Hardware Counters
+
+##### Hardware Counters Summary
+{%         if hardware_counters.features is arista.avd.defined %}
+
+###### Hardware Counter Features
+
+**NOTE:** Not all options (columns) in the table below are compatible with every available feature, it is the user responsibility to configure valid options for each feature.
+
+| Feature | Flow Direction | Address Type | Layer3 | VRF | Prefix | Units Packets |
+| ------- | -------------- | ------------ | ------ | --- | ------ | ------------- |
+{%             for feature in hardware_counters.features | arista.avd.natural_sort("name") %}
+{%                 set feature_direction = feature.direction | arista.avd.default("-") %}
+{%                 set feature_address_type = feature.address_type | arista.avd.default("-") %}
+{%                 set feature_vrf = feature.vrf | arista.avd.default("-") %}
+{%                 set feature_layer3 = feature.layer3 | arista.avd.default("-") %}
+{%                 set feature_prefix = feature.prefix | arista.avd.default("-") %}
+{%                 set feature_units_packets = feature.units_packets | arista.avd.default("-") %}
+| {{     feature.name }} | {{ feature_direction }} | {{ feature_address_type }} | {{ feature_vrf }} | {{ feature_layer3 }} | {{ feature_prefix }} | {{ feature_units_packets }} |
+{%             endfor %}
+{%         endif %}
+{%     endif %}
+
+#### Hardware Device Configuration
+
+```eos
+{%     include 'eos/hardware.j2' %}
+{%     include 'eos/hardware-speed-groups.j2' %}
+```
+{% endif %}

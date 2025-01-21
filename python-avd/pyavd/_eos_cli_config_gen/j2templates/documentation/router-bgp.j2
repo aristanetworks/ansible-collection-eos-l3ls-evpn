@@ -1,5 +1,5 @@
 {#
- Copyright (c) 2023-2024 Arista Networks, Inc.
+ Copyright (c) 2023-2025 Arista Networks, Inc.
  Use of this source code is governed by the Apache License 2.0
  that can be found in the LICENSE file.
 #}
@@ -48,6 +48,27 @@ ASN Notation: {{ router_bgp.as_notation | arista.avd.default('asplain') }}
 {%         endif %}
 {%         if router_bgp.bgp.bestpath.d_path is arista.avd.defined(true) %}
 | bgp bestpath d-path |
+{%         endif %}
+{%         if router_bgp.bgp.additional_paths.receive is arista.avd.defined(true) %}
+| bgp additional-paths receive |
+{%         endif %}
+{%         if router_bgp.bgp.additional_paths.receive is arista.avd.defined(false) %}
+| no bgp additional-paths receive |
+{%         endif %}
+{%         if router_bgp.bgp.additional_paths.send is arista.avd.defined %}
+{%             if router_bgp.bgp.additional_paths.send == 'disabled' %}
+| no bgp additional-paths send |
+{%             elif router_bgp.bgp.additional_paths.send == 'any' %}
+| bgp additional-paths send any |
+{%             elif router_bgp.bgp.additional_paths.send == 'backup' %}
+| bgp additional-paths send backup |
+{%             elif router_bgp.bgp.additional_paths.send_limit is arista.avd.defined and router_bgp.bgp.additional_paths.send == 'ecmp' %}
+| bgp additional-paths send ecmp limit {{ router_bgp.bgp.additional_paths.send_limit }} |
+{%             elif router_bgp.bgp.additional_paths.send == 'ecmp' %}
+| bgp additional-paths send ecmp |
+{%             elif router_bgp.bgp.additional_paths.send_limit is arista.avd.defined and router_bgp.bgp.additional_paths.send == 'limit' %}
+| bgp additional-paths send limit {{ router_bgp.bgp.additional_paths.send_limit }} |
+{%             endif %}
 {%         endif %}
 {%         if router_bgp.updates.wait_for_convergence is arista.avd.defined(true) %}
 | update wait-for-convergence |
@@ -551,20 +572,20 @@ ASN Notation: {{ router_bgp.as_notation | arista.avd.default('asplain') }}
 
 ##### EVPN Peer Groups
 
-| Peer Group | Activate | Encapsulation |
-| ---------- | -------- | ------------- |
+| Peer Group | Activate | Route-map In | Route-map Out | Encapsulation |
+| ---------- | -------- | ------------ | ------------- | ------------- |
 {%             for peer_group in router_bgp.address_family_evpn.peer_groups | arista.avd.natural_sort('name') %}
-| {{ peer_group.name }} | {{ peer_group.activate | arista.avd.default(false) }} | {{ peer_group.encapsulation | arista.avd.default("default") }} |
+| {{ peer_group.name }} | {{ peer_group.activate | arista.avd.default(false) }} |  {{ peer_group.route_map_in | arista.avd.default("-") }} | {{ peer_group.route_map_out | arista.avd.default("-") }} | {{ peer_group.encapsulation | arista.avd.default("default") }} |
 {%             endfor %}
 {%         endif %}
 {%         if router_bgp.address_family_evpn.neighbors is arista.avd.defined %}
 
 ##### EVPN Neighbors
 
-| Neighbor | Activate | Encapsulation |
-| -------- | -------- | ------------- |
+| Neighbor | Activate | Route-map In | Route-map Out | Encapsulation |
+| -------- | -------- | ------------ | ------------- | ------------- |
 {%             for neighbor in router_bgp.address_family_evpn.neighbors | arista.avd.natural_sort('ip_address') %}
-| {{ neighbor.ip_address }} | {{ neighbor.activate | arista.avd.default(false) }} | {{ neighbor.encapsulation | arista.avd.default("default") }} |
+| {{ neighbor.ip_address }} | {{ neighbor.activate | arista.avd.default(false) }} | {{ neighbor.route_map_in | arista.avd.default("-") }} | {{ neighbor.route_map_out | arista.avd.default("-") }} | {{ neighbor.encapsulation | arista.avd.default("default") }} |
 {%             endfor %}
 {%         endif %}
 {%         if router_bgp.address_family_evpn.neighbor_default.encapsulation is arista.avd.defined %}
@@ -624,6 +645,12 @@ ASN Notation: {{ router_bgp.as_notation | arista.avd.default('asplain') }}
 
 | Settings | Value |
 | -------- | ----- |
+{%         if router_bgp.address_family_evpn.domain_identifier is arista.avd.defined %}
+| Local Domain | {{ router_bgp.address_family_evpn.domain_identifier }} |
+{%         endif %}
+{%         if router_bgp.address_family_evpn.domain_identifier_remote is arista.avd.defined %}
+| Remote Domain | {{ router_bgp.address_family_evpn.domain_identifier_remote }} |
+{%         endif %}
 {%         if evpn_gw_config.peer_groups | length > 0 %}
 | Remote Domain Peer Groups | {{ evpn_gw_config.peer_groups | join(", ") }} |
 {%         endif %}
@@ -633,6 +660,14 @@ ASN Notation: {{ router_bgp.as_notation | arista.avd.default('asplain') }}
 {%         if router_bgp.address_family_evpn.neighbor_default.next_hop_self_received_evpn_routes.inter_domain is arista.avd.defined(true) %}
 | L3 Gateway Inter-domain | True |
 {%         endif %}
+{%         for segment in router_bgp.address_family_evpn.evpn_ethernet_segment | arista.avd.natural_sort('domain') %}
+{%             if segment.identifier is arista.avd.defined %}
+| {{ segment.domain | title }} Domain: Ethernet-Segment Identifier | {{ segment.identifier }} |
+{%             endif %}
+{%             if segment.route_target_import is arista.avd.defined %}
+| {{ segment.domain | title }} Domain: Ethernet-Segment import Route-Target | {{ segment.route_target_import }} |
+{%             endif %}
+{%         endfor %}
 {%     endif %}
 {%     if router_bgp.address_family_ipv4_labeled_unicast is arista.avd.defined %}
 
@@ -986,7 +1021,11 @@ ASN Notation: {{ router_bgp.as_notation | arista.avd.default('asplain') }}
 {%         endif %}
 {%         for vrf in router_bgp.vrfs | arista.avd.natural_sort('name') %}
 {%             set route_distinguisher = vrf.rd | arista.avd.default("-") %}
-{%             set redistribute = vrf.redistribute_routes | arista.avd.default([{'source_protocol':'-'}]) | map(attribute='source_protocol') %}
+{%             if vrf.redistribute is arista.avd.defined %}
+{%                 set redistribute = vrf.redistribute.keys() %}
+{%             else %}
+{%                 set redistribute = vrf.redistribute_routes | arista.avd.default([{'source_protocol':'-'}]) | map(attribute='source_protocol') %}
+{%             endif %}
 {%             set multicast = vrf.evpn_multicast | arista.avd.default(false) %}
 {%             set multicast_transit = vrf.evpn_multicast_address_family.ipv4.transit | arista.avd.default(false) %}
 {%             set multicast_out = [] %}

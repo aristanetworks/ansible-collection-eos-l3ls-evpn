@@ -164,12 +164,17 @@ $defs:
               hide_keys: true
             description: Custom structured config for eos_cli_config_gen.
             type: dict
+            relaxed_validation: true
             $ref: "eos_cli_config_gen#"
           uplink_type:
             documentation_options:
               table: node-type-uplink-configuration
             type: str
-            $ref: "eos_designs#/keys/node_type_keys/items/keys/uplink_type"
+            valid_values:
+              - p2p
+              - port-channel
+              - p2p-vrfs
+              - lan
             description: |-
               Override the default `uplink_type` set at the `node_type_key` level.
               `uplink_type` must be "p2p" if `vtep` or `underlay_router` is true for the `node_type_key` definition.
@@ -248,6 +253,7 @@ $defs:
             documentation_options:
               table: node-type-uplink-configuration
             type: int
+            default: 1
             convert_types:
               - str
             description: |
@@ -335,6 +341,7 @@ $defs:
               hide_keys: true
             # TODO: Add deprecation warning when introducing new keys for specific configuration.
             type: dict
+            relaxed_validation: true
             description: |
               Custom structured config applied to "uplink_interfaces", and "uplink_switch_interfaces".
               When uplink_type == "p2p", custom structured config added under ethernet_interfaces.[name=<interface>] for eos_cli_config_gen overrides the settings on the ethernet interface level.
@@ -349,6 +356,7 @@ $defs:
               table: node-type-l2-mlag-configuration
               hide_keys: true
             type: dict
+            relaxed_validation: true
             description: |
               Custom structured config applied to MLAG peer link port-channel id.
               Added under port_channel_interfaces.[name=<interface>] for eos_cli_config_gen.
@@ -360,6 +368,7 @@ $defs:
               table: node-type-l2-mlag-configuration
               hide_keys: true
             type: dict
+            relaxed_validation: true
             description: |
               Custom structured config applied to MLAG Peer Link (control link) SVI interface id.
               Added under vlan_interfaces.[name=<interface>] for eos_cli_config_gen.
@@ -371,6 +380,7 @@ $defs:
               table: node-type-l2-mlag-configuration
               hide_keys: true
             type: dict
+            relaxed_validation: true
             description: |
               Custom structured config applied to MLAG underlay L3 peering SVI interface id.
               Added under vlan_interfaces.[name=<interface>] for eos_cli_config_gen.
@@ -405,7 +415,7 @@ $defs:
               - level-1-2
               - level-1
               - level-2
-            default: level-2
+            description: Overrides `isis_default_is_type`.
           node_sid_base:
             documentation_options:
               table: node-type-isis-configuration
@@ -595,7 +605,6 @@ $defs:
               table: node-type-evpn-services-configuration
             description: Activate or deactivate IGMP snooping on device level.
             type: bool
-            default: true
           evpn_gateway:
             documentation_options:
               table: node-type-evpn-multi-domain-gateway-configuration
@@ -612,6 +621,7 @@ $defs:
                   If the hostname can be found in the inventory, ip_address and BGP ASN will be automatically populated. Manual override takes precedence.
                   If the peer's hostname can not be found in the inventory, ip_address and bgp_as must be defined.
                 type: list
+                primary_key: hostname
                 items:
                   type: dict
                   keys:
@@ -684,7 +694,6 @@ $defs:
                 type: str
                 convert_types:
                   - int
-                default: none
               address_families:
                 description: IPVPN address families to enable for remote peers.
                 type: list
@@ -693,13 +702,13 @@ $defs:
                 default: [vpn-ipv4]
               remote_peers:
                 type: list
+                primary_key: hostname
                 items:
                   type: dict
                   keys:
                     hostname:
                       description: Hostname of remote IPVPN Peer.
                       type: str
-                      required: true
                     ip_address:
                       description: Peering IP of remote IPVPN Peer.
                       type: str
@@ -981,7 +990,7 @@ $defs:
               Name configured on the Inband Management VLAN.
               This setting is only applied on the devices where it is set, it does not automatically affect any parent/child devices configuration, so it must be set on each applicable node/node-group/node-type as needed.
             type: str
-            default: Inband Management
+            default: INBAND_MGMT
           inband_mgmt_vrf:
             documentation_options:
               table: node-type-inband-management-configuration
@@ -1005,8 +1014,10 @@ $defs:
             documentation_options:
               table: node-type-inband-management-configuration
             description: |-
-              Enable to configure upstream device with proper configuration to allow downstream devices to ZTP inband.
-              This setting also requires that the `inband_mgmt_vlan` is set for the node.
+              Enable to configure upstream device with proper configuration to allow downstream devices to be Zero-Touch-Provisioned over the uplink interfaces.
+              For L2 devices this setting also requires that the `inband_mgmt_vlan` is set for the node.
+
+              PREVIEW: Support for L3 devices is marked as "preview", meaning the data models or generated configuration can change at any time.
             type: bool
             default: false
           inband_ztp_lacp_fallback_delay:
@@ -1064,14 +1075,13 @@ $defs:
             keys:
               enabled:
                 type: bool
-                default: false
               profile:
                 type: str
-                valid_values:
-                  - "aes67"
-                  - "smpte2059-2"
-                  - "aes67-r16-2016"
-                default: "aes67-r16-2016"
+                description: |-
+                  Default available profiles are:
+                    - "aes67"
+                    - "aes67-r16-2016"
+                    - "smpte2059-2"
               mlag:
                 description: Configure PTP on the MLAG peer-link port-channel when PTP is enabled. By default PTP will not be configured on the MLAG peer-link port-channel.
                 type: bool
@@ -1101,12 +1111,12 @@ $defs:
                   default -> (node_id modulus 256).
               auto_clock_identity:
                 type: bool
-                default: true
                 description: |
                   If you prefer to have PTP clock identity be the system MAC-address of the switch, which is the default EOS behaviour, simply disable the automatic PTP clock identity.
                   default -> (clock_identity_prefix = 00:1C:73 (default)) + (PTP priority 1 as HEX) + ":00:" + (PTP priority 2 as HEX).
               clock_identity_prefix:
                 type: str
+                default: "00:1C:73"
                 description: |
                   PTP clock idetentiy 3-byte prefix. i.e. "01:02:03".
                   By default the 3-byte prefix is "00:1C:73".
@@ -1253,7 +1263,7 @@ $defs:
               Override the default WAN role.
 
               This is used both for AutoVPN and Pathfinder designs.
-              That means if `wan_mode` root key is set to `legacy-autovpn` or `cv-pathfinder`.
+              That means if `wan_mode` root key is set to `autovpn` or `cv-pathfinder`.
               `server` indicates that the router is a route-reflector.
 
               Only supported if `overlay_routing_protocol` is set to `ibgp`.
@@ -1301,7 +1311,6 @@ $defs:
             keys:
               enabled:
                 type: bool
-                default: true
                 description: Enable / Disable auto CV-Pathfinder HA, when two nodes are defined in the same node_group.
               ipsec:
                 type: bool
@@ -1341,6 +1350,18 @@ $defs:
                 description: |-
                   Number of parallel links towards HA switches.
                   Can be used to reserve IP addresses for future parallel HA links.
+              port_channel_id:
+                type: int
+                convert_types:
+                  - str
+                description: |-
+                  Port-channel ID to use for direct HA.
+              use_port_channel_for_direct_ha:
+                type: bool
+                default: true
+                description: |-
+                  Enable or disable using a port-channel interface for direct HA when there is only one interface.
+                  This feature was introduced in EOS 4.33.0F.
               flow_tracking:
                 type: dict
                 $ref: "eos_designs#/$defs/flow_tracking_link"

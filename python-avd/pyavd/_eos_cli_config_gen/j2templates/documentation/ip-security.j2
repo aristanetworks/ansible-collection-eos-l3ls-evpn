@@ -1,5 +1,5 @@
 {#
- Copyright (c) 2023-2024 Arista Networks, Inc.
+ Copyright (c) 2023-2025 Arista Networks, Inc.
  Use of this source code is governed by the Apache License 2.0
  that can be found in the LICENSE file.
 #}
@@ -11,14 +11,18 @@
 
 - Hardware encryption is disabled
 {%     endif %}
+{%     if ip_security.connection_tx_interface_match_source_ip is arista.avd.defined(true) %}
+
+- Match source interface of the IPSec connection is enabled
+{%     endif %}
 {%     if ip_security.ike_policies is arista.avd.defined %}
 
 ### IKE policies
 
-| Policy name | IKE lifetime | Encryption | DH group | Local ID |
-| ----------- | ------------ | ---------- | -------- | -------- |
+| Policy name | IKE lifetime | Encryption | DH group | Local ID | Integrity |
+| ----------- | ------------ | ---------- | -------- | -------- | --------- |
 {%         for ike_policy in ip_security.ike_policies | arista.avd.natural_sort('name') %}
-| {{ ike_policy.name }} | {{ ike_policy.ike_lifetime | arista.avd.default("-") }} | {{ ike_policy.encryption | arista.avd.default("-") }} | {{ ike_policy.dh_group | arista.avd.default("-") }} | {{ ike_policy.local_id_fqdn | arista.avd.default(ike_policy.local_id, "-") }} |
+| {{ ike_policy.name }} | {{ ike_policy.ike_lifetime | arista.avd.default("-") }} | {{ ike_policy.encryption | arista.avd.default("-") }} | {{ ike_policy.dh_group | arista.avd.default("-") }} | {{ ike_policy.local_id_fqdn | arista.avd.default(ike_policy.local_id, "-") }} | {{ ike_policy.integrity | arista.avd.default("-") }} |
 {%         endfor %}
 {%     endif %}
 {%     if ip_security.sa_policies is arista.avd.defined %}

@@ -1,4 +1,4 @@
-# Copyright (c) 2023-2024 Arista Networks, Inc.
+# Copyright (c) 2023-2025 Arista Networks, Inc.
 # Use of this source code is governed by the Apache License 2.0
 # that can be found in the LICENSE file.
 
@@ -11,8 +11,8 @@ import pytest
 from pyavd.j2filters import range_expand
 
 RANGE_TO_EXPAND_INVALID_VALUES = [
-    pytest.param(True, TypeError, "value must be of type list or str, got <class 'bool'>", id="Wrong input type - bool"),
-    pytest.param({"key": "value"}, TypeError, "value must be of type list or str, got <class 'dict'>", id="Wrong input type - dict"),
+    pytest.param(True, TypeError, "value must be a Sequence, got <class 'bool'>", id="Wrong input type - bool"),
+    pytest.param({"key": "value"}, TypeError, "value must be a Sequence, got <class 'dict'>", id="Wrong input type - dict"),
     pytest.param(33, TypeError, "", id="Wrong input type - int"),
     pytest.param(
         "Ethernet4-2",

@@ -155,38 +155,38 @@ vlan internal order ascending range 1006 1199
 
 | Interface | Description | Channel Group | IP Address | VRF |  MTU | Shutdown | ACL In | ACL Out |
 | --------- | ----------- | ------------- | ---------- | ----| ---- | -------- | ------ | ------- |
-| Ethernet1 | P2P_LINK_TO_DC1-LEAF1A_Ethernet2 | - | 10.255.255.2/31 | default | 1500 | False | - | - |
-| Ethernet2 | P2P_LINK_TO_DC1-LEAF1B_Ethernet2 | - | 10.255.255.6/31 | default | 1500 | False | - | - |
-| Ethernet3 | P2P_LINK_TO_DC1-LEAF2A_Ethernet2 | - | 10.255.255.10/31 | default | 1500 | False | - | - |
-| Ethernet4 | P2P_LINK_TO_DC1-LEAF2B_Ethernet2 | - | 10.255.255.14/31 | default | 1500 | False | - | - |
+| Ethernet1 | P2P_dc1-leaf1a_Ethernet2 | - | 10.255.255.2/31 | default | 1500 | False | - | - |
+| Ethernet2 | P2P_dc1-leaf1b_Ethernet2 | - | 10.255.255.6/31 | default | 1500 | False | - | - |
+| Ethernet3 | P2P_dc1-leaf2a_Ethernet2 | - | 10.255.255.10/31 | default | 1500 | False | - | - |
+| Ethernet4 | P2P_dc1-leaf2b_Ethernet2 | - | 10.255.255.14/31 | default | 1500 | False | - | - |
 
 #### Ethernet Interfaces Device Configuration
 
 ```eos
 !
 interface Ethernet1
-   description P2P_LINK_TO_DC1-LEAF1A_Ethernet2
+   description P2P_dc1-leaf1a_Ethernet2
    no shutdown
    mtu 1500
    no switchport
    ip address 10.255.255.2/31
 !
 interface Ethernet2
-   description P2P_LINK_TO_DC1-LEAF1B_Ethernet2
+   description P2P_dc1-leaf1b_Ethernet2
    no shutdown
    mtu 1500
    no switchport
    ip address 10.255.255.6/31
 !
 interface Ethernet3
-   description P2P_LINK_TO_DC1-LEAF2A_Ethernet2
+   description P2P_dc1-leaf2a_Ethernet2
    no shutdown
    mtu 1500
    no switchport
    ip address 10.255.255.10/31
 !
 interface Ethernet4
-   description P2P_LINK_TO_DC1-LEAF2B_Ethernet2
+   description P2P_dc1-leaf2b_Ethernet2
    no shutdown
    mtu 1500
    no switchport
@@ -325,9 +325,9 @@ ASN Notation: asplain
 
 ##### EVPN Peer Groups
 
-| Peer Group | Activate | Encapsulation |
-| ---------- | -------- | ------------- |
-| EVPN-OVERLAY-PEERS | True | default |
+| Peer Group | Activate | Route-map In | Route-map Out | Encapsulation |
+| ---------- | -------- | ------------ | ------------- | ------------- |
+| EVPN-OVERLAY-PEERS | True |  - | - | default |
 
 #### Router BGP Device Configuration
 
@@ -335,8 +335,8 @@ ASN Notation: asplain
 !
 router bgp 65100
    router-id 10.255.0.2
-   maximum-paths 4 ecmp 4
    no bgp default ipv4-unicast
+   maximum-paths 4 ecmp 4
    neighbor EVPN-OVERLAY-PEERS peer group
    neighbor EVPN-OVERLAY-PEERS next-hop-unchanged
    neighbor EVPN-OVERLAY-PEERS update-source Loopback0

@@ -169,7 +169,7 @@ Enable password has been disabled
 
 | CV Compression | CloudVision Servers | VRF | Authentication | Smash Excludes | Ingest Exclude | Bypass AAA |
 | -------------- | ------------------- | --- | -------------- | -------------- | -------------- | ---------- |
-| gzip | 192.168.200.11:9910 | MGMT | key,telarista | ale,flexCounter,hardware,kni,pulse,strata | /Sysdb/cell/1/agent,/Sysdb/cell/2/agent | False |
+| gzip | 192.168.200.11:9910 | MGMT | key,<removed> | ale,flexCounter,hardware,kni,pulse,strata | /Sysdb/cell/1/agent,/Sysdb/cell/2/agent | False |
 
 #### TerminAttr Daemon Device Configuration
 
@@ -374,7 +374,7 @@ interface Ethernet4
 
 | Interface | Description | Mode | VLANs | Native VLAN | Trunk Group | LACP Fallback Timeout | LACP Fallback Mode | MLAG ID | EVPN ESI |
 | --------- | ----------- | ---- | ----- | ----------- | ------------| --------------------- | ------------------ | ------- | -------- |
-| Port-Channel1 | CUSTOM_DC1_LEAF2_Po7 | trunk | 110-111,120-124,130-131,160-162 | - | - | - | - | 1 | - |
+| Port-Channel1 | CUSTOM_DC1-LEAF2A_Po7 | trunk | 110-111,120-124,130-131,160-162 | - | - | - | - | 1 | - |
 | Port-Channel3 | MLAG_DC1-L2LEAF1A_Port-Channel3 | trunk | - | - | MLAG | - | - | - | - |
 
 #### Port-Channel Interfaces Device Configuration
@@ -382,7 +382,7 @@ interface Ethernet4
 ```eos
 !
 interface Port-Channel1
-   description CUSTOM_DC1_LEAF2_Po7
+   description CUSTOM_DC1-LEAF2A_Po7
    no shutdown
    switchport trunk allowed vlan 110-111,120-124,130-131,160-162
    switchport mode trunk

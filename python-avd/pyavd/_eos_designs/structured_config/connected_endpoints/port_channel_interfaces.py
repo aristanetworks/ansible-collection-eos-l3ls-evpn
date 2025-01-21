@@ -1,14 +1,15 @@
-# Copyright (c) 2023-2024 Arista Networks, Inc.
+# Copyright (c) 2023-2025 Arista Networks, Inc.
 # Use of this source code is governed by the Apache License 2.0
 # that can be found in the LICENSE file.
 from __future__ import annotations
 
 import re
-from collections import ChainMap
 from functools import cached_property
 from typing import TYPE_CHECKING
 
-from pyavd._utils import append_if_not_duplicate, get, short_esi_to_route_target, strip_null_from_data
+from pyavd._eos_designs.schema import EosDesigns
+from pyavd._errors import AristaAvdInvalidInputsError
+from pyavd._utils import Undefined, append_if_not_duplicate, get, short_esi_to_route_target, strip_null_from_data
 from pyavd.api.interface_descriptions import InterfaceDescriptionData
 from pyavd.j2filters import range_expand
 
@@ -36,12 +37,12 @@ class PortChannelInterfacesMixin(UtilsMixin):
         """
         port_channel_interfaces = []
         for connected_endpoint in self._filtered_connected_endpoints:
-            for adapter in connected_endpoint["adapters"]:
-                if get(adapter, "port_channel.mode") is None:
+            for adapter in connected_endpoint.adapters:
+                if not adapter.port_channel or not adapter.port_channel.mode:
                     continue
 
-                default_channel_group_id = int("".join(re.findall(r"\d", adapter["switch_ports"][0])))
-                channel_group_id = get(adapter, "port_channel.channel_id", default=default_channel_group_id)
+                default_channel_group_id = int("".join(re.findall(r"\d", adapter.switch_ports[0])))
+                channel_group_id = adapter.port_channel.channel_id or default_channel_group_id
 
                 port_channel_interface_name = f"Port-Channel{channel_group_id}"
                 port_channel_config = self._get_port_channel_interface_cfg(adapter, port_channel_interface_name, channel_group_id, connected_endpoint)
@@ -53,14 +54,11 @@ class PortChannelInterfacesMixin(UtilsMixin):
                     context_keys=["name"],
                 )
 
-                if (subinterfaces := get(adapter, "port_channel.subinterfaces")) is None:
-                    continue
-
-                for subinterface in subinterfaces:
-                    if "number" not in subinterface:
+                for subinterface in adapter.port_channel.subinterfaces:
+                    if not subinterface.number:
                         continue
 
-                    port_channel_subinterface_name = f"Port-Channel{channel_group_id}.{subinterface['number']}"
+                    port_channel_subinterface_name = f"Port-Channel{channel_group_id}.{subinterface.number}"
                     port_channel_subinterface_config = self._get_port_channel_subinterface_cfg(
                         subinterface,
                         adapter,
@@ -76,31 +74,34 @@ class PortChannelInterfacesMixin(UtilsMixin):
                     )
 
         for network_port in self._filtered_network_ports:
-            if get(network_port, "port_channel.mode") is None:
+            if not network_port.port_channel.mode:
                 continue
 
-            connected_endpoint = {
-                "name": network_port.get("endpoint"),
-                "type": "network_port",
-            }
-            for ethernet_interface_name in range_expand(network_port["switch_ports"]):
+            connected_endpoint = EosDesigns._DynamicKeys.DynamicConnectedEndpointsItem.ConnectedEndpointsItem(name=network_port.endpoint or Undefined)
+            connected_endpoint._type = "network_port"
+            network_port_as_adapter = network_port._cast_as(
+                EosDesigns._DynamicKeys.DynamicConnectedEndpointsItem.ConnectedEndpointsItem.AdaptersItem, ignore_extra_keys=True
+            )
+            for ethernet_interface_name in range_expand(network_port.switch_ports):
                 # Override switches and switch_ports to only render for a single interface
                 # The blank extra switch is only inserted to work around port_channel validations
                 # This also means that port-channels defined with network_ports data model will be single-port per switch.
                 # Caveat: "short_esi: auto" and "designated_forwarder_algorithm: auto" will not work correctly.
-                tmp_network_port = ChainMap(
-                    {
-                        "switch_ports": [ethernet_interface_name, ""],
-                        "switches": [self.shared_utils.hostname, ""],
-                    },
-                    network_port,
+                network_port_as_adapter.switch_ports = EosDesigns._DynamicKeys.DynamicConnectedEndpointsItem.ConnectedEndpointsItem.AdaptersItem.SwitchPorts(
+                    [ethernet_interface_name, ""]
+                )
+                network_port_as_adapter.switches = EosDesigns._DynamicKeys.DynamicConnectedEndpointsItem.ConnectedEndpointsItem.AdaptersItem.Switches(
+                    [self.shared_utils.hostname, ""]
                 )
 
                 default_channel_group_id = int("".join(re.findall(r"\d", ethernet_interface_name)))
-                channel_group_id = get(tmp_network_port, "port_channel.channel_id", default=default_channel_group_id)
+                channel_group_id = network_port_as_adapter.port_channel.channel_id or default_channel_group_id
 
                 port_channel_interface_name = f"Port-Channel{channel_group_id}"
-                port_channel_config = self._get_port_channel_interface_cfg(tmp_network_port, port_channel_interface_name, channel_group_id, connected_endpoint)
+
+                port_channel_config = self._get_port_channel_interface_cfg(
+                    network_port_as_adapter, port_channel_interface_name, channel_group_id, connected_endpoint
+                )
                 append_if_not_duplicate(
                     list_of_dicts=port_channel_interfaces,
                     primary_key="name",
@@ -116,24 +117,21 @@ class PortChannelInterfacesMixin(UtilsMixin):
 
     def _get_port_channel_interface_cfg(
         self: AvdStructuredConfigConnectedEndpoints,
-        adapter: dict,
+        adapter: EosDesigns._DynamicKeys.DynamicConnectedEndpointsItem.ConnectedEndpointsItem.AdaptersItem,
         port_channel_interface_name: str,
         channel_group_id: int,
-        connected_endpoint: dict,
+        connected_endpoint: EosDesigns._DynamicKeys.DynamicConnectedEndpointsItem.ConnectedEndpointsItem,
     ) -> dict:
         """Return structured_config for one port_channel_interface."""
-        peer = connected_endpoint["name"]
-        adapter_description = get(adapter, "description")
-        port_channel_description = get(adapter, "port_channel.description")
-        port_channel_mode = get(adapter, "port_channel.mode")
-        peer_interface = get(adapter, "port_channel.endpoint_port_channel")
-        node_index = adapter["switches"].index(self.shared_utils.hostname)
+        peer = connected_endpoint.name
+        adapter_description = adapter.description
+        port_channel_description = adapter.port_channel.description
+        port_channel_mode = adapter.port_channel.mode
+        peer_interface = adapter.port_channel.endpoint_port_channel
+        node_index = adapter.switches.index(self.shared_utils.hostname)
 
         # if 'descriptions' is set, it is preferred
-        if (interface_descriptions := adapter.get("descriptions")) is not None:
-            adapter_description = interface_descriptions[node_index]
-        else:
-            adapter_description = adapter.get("description")
+        adapter_description = interface_descriptions[node_index] if (interface_descriptions := adapter.descriptions) else adapter.description
 
         # Common port_channel_interface settings
         port_channel_interface = {
@@ -144,47 +142,62 @@ class PortChannelInterfacesMixin(UtilsMixin):
                     interface=port_channel_interface_name,
                     peer=peer,
                     peer_interface=peer_interface,
-                    peer_type=connected_endpoint["type"],
+                    peer_type=connected_endpoint._type,
                     description=adapter_description,
                     port_channel_id=channel_group_id,
                     port_channel_description=port_channel_description,
                 ),
             ),
-            "shutdown": not get(adapter, "port_channel.enabled", default=True),
-            "mtu": adapter.get("mtu") if self.shared_utils.platform_settings_feature_support_per_interface_mtu else None,
-            "service_profile": adapter.get("qos_profile"),
+            "shutdown": not (adapter.port_channel.enabled if adapter.port_channel.enabled is not None else True),
+            "mtu": adapter.mtu if self.shared_utils.platform_settings.feature_support.per_interface_mtu else None,
+            "service_profile": adapter.qos_profile,
             "link_tracking_groups": self._get_adapter_link_tracking_groups(adapter),
             "ptp": self._get_adapter_ptp(adapter),
             "sflow": self._get_adapter_sflow(adapter),
-            "flow_tracker": self._get_adapter_flow_tracking(adapter),
-            "validate_state": None if adapter.get("validate_state", True) else False,
-            "eos_cli": get(adapter, "port_channel.raw_eos_cli"),
-            "struct_cfg": get(adapter, "port_channel.structured_config"),
+            "flow_tracker": self.shared_utils.get_flow_tracker(adapter.flow_tracking),
+            "validate_state": None if (adapter.validate_state if adapter.validate_state is not None else True) else False,
+            "validate_lldp": None if (adapter.validate_lldp if adapter.validate_lldp is not None else True) else False,
+            "eos_cli": adapter.port_channel.raw_eos_cli,
         }
+        if adapter.port_channel.structured_config:
+            self.custom_structured_configs.nested.port_channel_interfaces.obtain(port_channel_interface_name)._deepmerge(
+                adapter.port_channel.structured_config, list_merge=self.custom_structured_configs.list_merge_strategy
+            )
 
-        if get(adapter, "port_channel.subinterfaces"):
+        if adapter.port_channel.subinterfaces:
             port_channel_interface.update({"switchport": {"enabled": False}})
         else:
             # switchport
+            if (vlans := adapter.vlans) is not None and adapter.mode in ["access", "dot1q-tunnel"]:
+                try:
+                    # For access ports we use the 'vlans' field (str) as 'access_vlan' (int). Attempting to convert.
+                    vlans = int(vlans)
+                except ValueError as e:
+                    msg = (
+                        "Adapter 'vlans' value must be a single vlan ID when mode is 'access' or 'dot1q-tunnel'. "
+                        f"Got {vlans} for interface {port_channel_interface['name']}."
+                    )
+                    raise AristaAvdInvalidInputsError(msg) from e
+
             port_channel_interface.update(
                 {
                     "switchport": {
                         "enabled": True,
-                        "mode": adapter.get("mode"),
+                        "mode": adapter.mode,
                         "trunk": {
-                            "allowed_vlan": adapter.get("vlans") if adapter.get("mode") == "trunk" else None,
+                            "allowed_vlan": vlans if adapter.mode == "trunk" else None,
                             "groups": self._get_adapter_trunk_groups(adapter, connected_endpoint),
-                            "native_vlan_tag": adapter.get("native_vlan_tag"),
-                            "native_vlan": adapter.get("native_vlan"),
+                            "native_vlan_tag": adapter.native_vlan_tag,
+                            "native_vlan": adapter.native_vlan,
                         },
                         "phone": self._get_adapter_phone(adapter, connected_endpoint),
-                        "access_vlan": adapter.get("vlans") if adapter.get("mode") in ["access", "dot1q-tunnel"] else None,
+                        "access_vlan": vlans if adapter.mode in ["access", "dot1q-tunnel"] else None,
                     },
-                    "l2_mtu": adapter.get("l2_mtu"),
-                    "l2_mru": adapter.get("l2_mru"),
-                    "spanning_tree_portfast": adapter.get("spanning_tree_portfast"),
-                    "spanning_tree_bpdufilter": adapter.get("spanning_tree_bpdufilter"),
-                    "spanning_tree_bpduguard": adapter.get("spanning_tree_bpduguard"),
+                    "l2_mtu": adapter.l2_mtu,
+                    "l2_mru": adapter.l2_mru,
+                    "spanning_tree_portfast": adapter.spanning_tree_portfast,
+                    "spanning_tree_bpdufilter": adapter.spanning_tree_bpdufilter,
+                    "spanning_tree_bpduguard": adapter.spanning_tree_bpduguard,
                     "storm_control": self._get_adapter_storm_control(adapter),
                 },
             )
@@ -196,17 +209,17 @@ class PortChannelInterfacesMixin(UtilsMixin):
                 port_channel_interface["lacp_id"] = short_esi.replace(":", ".")
 
         # Set MLAG ID on port-channel if connection is multi-homed and this switch is running MLAG
-        elif self.shared_utils.mlag and len(set(adapter["switches"])) > 1:
-            if get(port_channel_interface, "ptp.enable") is True and get(adapter, "port_channel.ptp_mpass") is True:
+        elif self.shared_utils.mlag and len(set(adapter.switches)) > 1:
+            if get(port_channel_interface, "ptp.enable") is True and adapter.port_channel.ptp_mpass:
                 port_channel_interface["ptp"]["mpass"] = True
             port_channel_interface["mlag"] = channel_group_id
 
         # LACP Fallback
-        if port_channel_mode in ["active", "passive"] and (lacp_fallback_mode := get(adapter, "port_channel.lacp_fallback.mode")) in ["static", "individual"]:
+        if port_channel_mode in ["active", "passive"] and (lacp_fallback_mode := adapter.port_channel.lacp_fallback.mode) in ["static", "individual"]:
             port_channel_interface.update(
                 {
                     "lacp_fallback_mode": lacp_fallback_mode,
-                    "lacp_fallback_timeout": get(adapter, "port_channel.lacp_fallback.timeout", default=90),
+                    "lacp_fallback_timeout": adapter.port_channel.lacp_fallback.timeout or 90,
                 },
             )
 
@@ -214,8 +227,8 @@ class PortChannelInterfacesMixin(UtilsMixin):
 
     def _get_port_channel_subinterface_cfg(
         self: AvdStructuredConfigConnectedEndpoints,
-        subinterface: dict,
-        adapter: dict,
+        subinterface: EosDesigns._DynamicKeys.DynamicConnectedEndpointsItem.ConnectedEndpointsItem.AdaptersItem.PortChannel.SubinterfacesItem,
+        adapter: EosDesigns._DynamicKeys.DynamicConnectedEndpointsItem.ConnectedEndpointsItem.AdaptersItem,
         port_channel_subinterface_name: str,
         channel_group_id: int,
     ) -> dict:
@@ -223,11 +236,11 @@ class PortChannelInterfacesMixin(UtilsMixin):
         # Common port_channel_interface settings
         port_channel_interface = {
             "name": port_channel_subinterface_name,
-            "vlan_id": subinterface.get("vlan_id", subinterface["number"]),
+            "vlan_id": subinterface.vlan_id or subinterface.number,
             "encapsulation_vlan": {
                 "client": {
                     "encapsulation": "dot1q",
-                    "vlan": get(subinterface, "encapsulation_vlan.client_dot1q", default=subinterface["number"]),
+                    "vlan": subinterface.encapsulation_vlan.client_dot1q or subinterface.number,
                 },
                 "network": {
                     "encapsulation": "client",
@@ -237,10 +250,10 @@ class PortChannelInterfacesMixin(UtilsMixin):
 
         # EVPN A/A
         if (
-            short_esi := self._get_short_esi(adapter, channel_group_id, short_esi=subinterface.get("short_esi"), hash_extra_value=str(subinterface["number"]))
+            short_esi := self._get_short_esi(adapter, channel_group_id, short_esi=subinterface.short_esi, hash_extra_value=str(subinterface.number))
         ) is not None:
             port_channel_interface["evpn_ethernet_segment"] = {
-                "identifier": f"{self.shared_utils.evpn_short_esi_prefix}{short_esi}",
+                "identifier": f"{self.inputs.evpn_short_esi_prefix}{short_esi}",
                 "route_target": short_esi_to_route_target(short_esi),
             }
 

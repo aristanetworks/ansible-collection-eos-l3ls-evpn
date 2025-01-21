@@ -5,6 +5,8 @@ my_special_dci_ethernet_interfaces:
 
 custom_structured_configuration_list_merge: append
 
+use_router_general_for_router_id: true
+
 # Test appending to list of ip name-servers.
 override_ip_name_servers:
   - ip_address: 1.1.1.1
@@ -17,6 +19,27 @@ cvp_ingestauth_key: ""
 router_id_loopback_description: "MY_ROUTER_ID_LOOPBACK"
 
 vtep_vvtep_ip: 192.168.255.255/32
+
+# Testing event_monitor
+event_monitor:
+  enabled: true
+
+# Testing load_interval_default
+load_interval:
+  default: 6
+
+# Testing unsupported_transceiver
+unsupported_transceiver:
+  license_name: key1
+  license_key: dsafDSFfvadskjh3424
+
+# Testing queue_monitor_streaming
+queue_monitor_streaming:
+  enable: true
+  ip_access_group: ACL-QMS
+  ipv6_access_group: ACLv6-QMS
+  max_connections: 8
+  vrf: vrf1
 
 # Testing event_handlers
 event_handlers:

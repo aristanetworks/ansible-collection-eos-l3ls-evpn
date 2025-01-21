@@ -1,4 +1,4 @@
-# Copyright (c) 2023-2024 Arista Networks, Inc.
+# Copyright (c) 2023-2025 Arista Networks, Inc.
 # Use of this source code is governed by the Apache License 2.0
 # that can be found in the LICENSE file.
 from __future__ import annotations
@@ -77,11 +77,11 @@ class PrefixListsMixin(UtilsMixin):
         """Return sorted list of MLAG peerings for VRFs where MLAG iBGP peering should not be redistributed."""
         mlag_prefixes = set()
         for tenant in self.shared_utils.filtered_tenants:
-            for vrf in tenant["vrfs"]:
+            for vrf in tenant.vrfs:
                 if self._mlag_ibgp_peering_vlan_vrf(vrf, tenant) is None:
                     continue
 
-                if self._mlag_ibgp_peering_redistribute(vrf, tenant):
+                if not self._exclude_mlag_ibgp_peering_from_redistribute(vrf, tenant):
                     # By default the BGP peering is redistributed, so we only need the prefix-list for the false case.
                     continue
 

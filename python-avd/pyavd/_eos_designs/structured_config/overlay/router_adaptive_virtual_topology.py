@@ -1,10 +1,12 @@
-# Copyright (c) 2023-2024 Arista Networks, Inc.
+# Copyright (c) 2023-2025 Arista Networks, Inc.
 # Use of this source code is governed by the Apache License 2.0
 # that can be found in the LICENSE file.
 from __future__ import annotations
 
 from functools import cached_property
 from typing import TYPE_CHECKING
+
+from pyavd._errors import AristaAvdInvalidInputsError
 
 from .utils import UtilsMixin
 
@@ -29,16 +31,26 @@ class RouterAdaptiveVirtualTopologyMixin(UtilsMixin):
         if self.shared_utils.is_cv_pathfinder_server:
             return {"topology_role": "pathfinder"}
 
+        if self.shared_utils.wan_region is None:
+            # Should never happen but just in case.
+            msg = "Could not find 'cv_pathfinder_region' so it is not possible to generate config for router_adaptive_virtual_topology."
+            raise AristaAvdInvalidInputsError(msg)
+
+        if self.shared_utils.wan_site is None:
+            # Should never happen but just in case.
+            msg = "Could not find 'cv_pathfinder_site' so it is not possible to generate config for router_adaptive_virtual_topology."
+            raise AristaAvdInvalidInputsError(msg)
+
         # Edge or Transit
         return {
             "topology_role": self.shared_utils.cv_pathfinder_role,
             "region": {
-                "name": self.shared_utils.wan_region["name"],
-                "id": self.shared_utils.wan_region["id"],
+                "name": self.shared_utils.wan_region.name,
+                "id": self.shared_utils.wan_region.id,
             },
             "zone": self.shared_utils.wan_zone,
             "site": {
-                "name": self.shared_utils.wan_site["name"],
-                "id": self.shared_utils.wan_site["id"],
+                "name": self.shared_utils.wan_site.name,
+                "id": self.shared_utils.wan_site.id,
             },
         }

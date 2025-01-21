@@ -10,10 +10,9 @@ keys:
     type: str
     documentation_options:
       table: fabric-settings
-    # TODO: Insert link to format string syntax article.
     description: |-
       Description or description template to be used on MLAG peer-link port-channel interfaces.
-      This can be a template using the format string syntax.
+      This can be a template using the AVD string formatter syntax: https://avd.arista.com/devel/roles/eos_designs/docs/how-to/custom-descriptions-names.html#avd-string-formatter-syntax.
       The available template fields are:
         - `mlag_peer`: The name of the MLAG peer.
         - `interface`: The local MLAG port-channel interface.

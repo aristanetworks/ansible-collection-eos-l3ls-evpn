@@ -1,5 +1,5 @@
 {#
- Copyright (c) 2023-2024 Arista Networks, Inc.
+ Copyright (c) 2023-2025 Arista Networks, Inc.
  Use of this source code is governed by the Apache License 2.0
  that can be found in the LICENSE file.
 #}
@@ -20,12 +20,10 @@
 {% include 'eos/address-locking.j2' %}
 {# Agents #}
 {% include 'eos/agents.j2' %}
-{# hardware counters #}
-{% include 'eos/hardware-counters.j2' %}
+{# hardware configuration #}
+{% include 'eos/hardware.j2' %}
 {# service routing configuration #}
 {% include 'eos/service-routing-configuration-bgp.j2' %}
-{# management api http #}
-{% include 'eos/management-api-http.j2' %}
 {# cli prompt #}
 {% include 'eos/prompt.j2' %}
 {# terminal settings #}
@@ -64,8 +62,6 @@
 {% include 'eos/logging-event-congestion-drops.j2' %}
 {# load-interval #}
 {% include 'eos/load-interval.j2' %}
-{# hardware configuration #}
-{% include 'eos/hardware.j2' %}
 {# transceiver qsfp default mode #}
 {% include 'eos/transceiver-qsfp-default-mode.j2' %}
 {# interface defaults #}
@@ -90,6 +86,8 @@
 {% include 'eos/match-list-input.j2' %}
 {# mcs client #}
 {% include 'eos/mcs-client.j2' %}
+{# monitor server radius #}
+{% include 'eos/monitor-server-radius.j2' %}
 {# platform - trident#}
 {% include 'eos/platform-trident.j2' %}
 {# IP NAT - Part 1#}
@@ -134,6 +132,8 @@
 {% include 'eos/sflow.j2' %}
 {# snmp settings #}
 {% include 'eos/snmp-server.j2' %}
+{# hardware speed-groups #}
+{% include 'eos/hardware-speed-groups.j2' %}
 {# spanning-tree #}
 {% include 'eos/spanning-tree.j2' %}
 {# sync-e #}
@@ -158,6 +158,8 @@
 {% include 'eos/banners.j2' %}
 {# management accounts #}
 {% include 'eos/management-accounts.j2' %}
+{# management api http #}
+{% include 'eos/management-api-http.j2' %}
 {# management console #}
 {% include 'eos/management-console.j2' %}
 {# management cvx #}

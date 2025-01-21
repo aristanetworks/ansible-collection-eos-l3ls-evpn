@@ -352,37 +352,44 @@ anta.tests.interfaces:
     - name: Ethernet1
       status: up
     result_overwrite:
-      custom_field: Interface Ethernet1 - P2P_LINK_TO_DC1-SPINE1_Ethernet1 = 'up'
+      custom_field: Interface Ethernet1 - P2P_dc1-spine1_Ethernet1 = 'up'
 - VerifyInterfacesStatus:
     interfaces:
     - name: Ethernet2
       status: up
     result_overwrite:
-      custom_field: Interface Ethernet2 - P2P_LINK_TO_DC1-SPINE2_Ethernet1 = 'up'
+      custom_field: Interface Ethernet2 - P2P_dc1-spine2_Ethernet1 = 'up'
 - VerifyInterfacesStatus:
     interfaces:
     - name: Ethernet6
       status: up
     result_overwrite:
-      custom_field: Interface Ethernet6 - P2P_LINK_TO_DC1-WAN1_Ethernet1 = 'up'
+      custom_field: Interface Ethernet6 - P2P_dc1-wan1_Ethernet1 = 'up'
 - VerifyInterfacesStatus:
     interfaces:
     - name: Ethernet7
       status: up
     result_overwrite:
-      custom_field: Interface Ethernet7 - P2P_LINK_TO_DC1-WAN2_Ethernet1 = 'up'
+      custom_field: Interface Ethernet7 - P2P_dc1-wan2_Ethernet1 = 'up'
 - VerifyInterfacesStatus:
     interfaces:
     - name: Ethernet8
       status: up
     result_overwrite:
-      custom_field: Interface Ethernet8 - DC1-LEAF1C_Ethernet1 = 'up'
+      custom_field: Interface Ethernet8 - L2_dc1-leaf1c_Ethernet1 = 'up'
 - VerifyInterfacesStatus:
     interfaces:
     - name: Ethernet5
       status: up
     result_overwrite:
       custom_field: Interface Ethernet5 - SERVER_dc1-leaf1-server1_PCI1 = 'up'
+- VerifyInterfacesStatus:
+    interfaces:
+    - name: Ethernet33
+      status: up
+    result_overwrite:
+      custom_field: Interface Ethernet33 - WORKSTATION_dc1-leaf1-workstationNoLLDP_e1
+        = 'up'
 - VerifyInterfacesStatus:
     interfaces:
     - name: Port-Channel3
@@ -394,7 +401,7 @@ anta.tests.interfaces:
     - name: Port-Channel8
       status: up
     result_overwrite:
-      custom_field: Interface Port-Channel8 - DC1-LEAF1C_Po1 = 'up'
+      custom_field: Interface Port-Channel8 - L2_dc1-leaf1c_Port-Channel1 = 'up'
 - VerifyInterfacesStatus:
     interfaces:
     - name: Port-Channel5
@@ -472,13 +479,13 @@ anta.tests.interfaces:
     - name: Loopback10
       status: up
     result_overwrite:
-      custom_field: Interface Loopback10 - VRF10_VTEP_DIAGNOSTICS = 'up'
+      custom_field: Interface Loopback10 - DIAG_VRF_VRF10 = 'up'
 - VerifyInterfacesStatus:
     interfaces:
     - name: Loopback11
       status: up
     result_overwrite:
-      custom_field: Interface Loopback11 - VRF11_VTEP_DIAGNOSTICS = 'up'
+      custom_field: Interface Loopback11 - DIAG_VRF_VRF11 = 'up'
 - VerifyInterfacesStatus:
     interfaces:
     - name: Vxlan1

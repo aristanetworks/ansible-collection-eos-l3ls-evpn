@@ -1,4 +1,4 @@
-# Copyright (c) 2024 Arista Networks, Inc.
+# Copyright (c) 2024-2025 Arista Networks, Inc.
 # Use of this source code is governed by the Apache License 2.0
 # that can be found in the LICENSE file.
 from __future__ import annotations
@@ -7,7 +7,7 @@ from functools import cached_property
 from typing import TYPE_CHECKING, Literal
 
 from pyavd._errors import AristaAvdError
-from pyavd._utils import append_if_not_duplicate, get, get_ip_from_ip_prefix
+from pyavd._utils import append_if_not_duplicate, get_ip_from_ip_prefix
 from pyavd.j2filters import natural_sort
 
 from .utils import UtilsMixin
@@ -41,9 +41,9 @@ class IpAccesslistsMixin(UtilsMixin):
     @cached_property
     def _acl_internet_exit_direct(self: AvdStructuredConfigNetworkServices) -> dict | None:
         interface_ips = set()
-        for ie_policy in self._filtered_internet_exit_policies:
-            if ie_policy["type"] == "direct":
-                for connection in ie_policy["connections"]:
+        for ie_policy, connections in self._filtered_internet_exit_policies_and_connections:
+            if ie_policy.type == "direct":
+                for connection in connections:
                     interface_ips.add(connection["source_interface_ip_address"])
 
         if interface_ips:
@@ -76,24 +76,24 @@ class IpAccesslistsMixin(UtilsMixin):
             }
         return None
 
-    def _acl_internet_exit_user_defined(self: AvdStructuredConfigNetworkServices, internet_exit_policy_type: Literal["zscaler", "direct"]) -> dict | None:
+    def _acl_internet_exit_user_defined(self: AvdStructuredConfigNetworkServices, internet_exit_policy_type: Literal["zscaler", "direct"]) -> list[dict] | None:
         acl_name = self.get_internet_exit_nat_acl_name(internet_exit_policy_type)
-        acl = get(self.shared_utils.ipv4_acls, acl_name)
-        if not acl:
+        if acl_name not in self.inputs.ipv4_acls:
+            # TODO: Evaluate if we should continue so we raise when there is no ACL.
             return None
 
         # pass substitution fields as anything to check if acl requires substitution or not
         acl = self.shared_utils.get_ipv4_acl(acl_name, "random", interface_ip="random", peer_ip="random")
-        if acl["name"] == acl_name:
+        if acl.name == acl_name:
             # ACL doesn't need replacement
-            return [acl]
+            return [acl._as_dict()]
 
         # TODO: We still have one nat for all interfaces, need to also add logic to make nat per interface
         # if acl needs substitution
         msg = f"ipv4_acls[name={acl_name}] field substitution is not supported for internet exit access lists"
         raise AristaAvdError(msg)
 
-    def _acl_internet_exit(self: AvdStructuredConfigNetworkServices, internet_exit_policy_type: Literal["zscaler", "direct"]) -> dict | None:
+    def _acl_internet_exit(self: AvdStructuredConfigNetworkServices, internet_exit_policy_type: Literal["zscaler", "direct"]) -> list[dict] | None:
         acls = self._acl_internet_exit_user_defined(internet_exit_policy_type)
         if acls:
             return acls

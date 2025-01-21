@@ -1,10 +1,10 @@
 - name: Test with dest (no change) - first run to ensure no change
-  ignore_errors: no
+  ignore_errors: false
   arista.avd.eos_designs_structured_config:
     dest: "{{ actual_output_dir }}/eos_designs_structured_config_test_with_dest.yml"
 
 - name: Test with dest (no change)
-  ignore_errors: no
+  ignore_errors: false
   register: result
   arista.avd.eos_designs_structured_config:
     dest: "{{ actual_output_dir }}/eos_designs_structured_config_test_with_dest.yml"

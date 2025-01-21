@@ -1,10 +1,15 @@
 {#
- Copyright (c) 2023-2024 Arista Networks, Inc.
+ Copyright (c) 2023-2025 Arista Networks, Inc.
  Use of this source code is governed by the Apache License 2.0
  that can be found in the LICENSE file.
 #}
 {# eos - ip virtual router mac address #}
-{% if ip_virtual_router_mac_address is arista.avd.defined %}
+{% if ip_virtual_router_mac_address is arista.avd.defined or ip_virtual_router_mac_address_advertisement_interval is arista.avd.defined %}
 !
+{%     if ip_virtual_router_mac_address is arista.avd.defined %}
 ip virtual-router mac-address {{ ip_virtual_router_mac_address }}
+{%     endif %}
+{%     if ip_virtual_router_mac_address_advertisement_interval is arista.avd.defined %}
+ip virtual-router mac-address advertisement-interval {{ ip_virtual_router_mac_address_advertisement_interval }}
+{%     endif %}
 {% endif %}

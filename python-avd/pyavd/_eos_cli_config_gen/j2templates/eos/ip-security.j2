@@ -1,5 +1,5 @@
 {#
- Copyright (c) 2023-2024 Arista Networks, Inc.
+ Copyright (c) 2023-2025 Arista Networks, Inc.
  Use of this source code is governed by the Apache License 2.0
  that can be found in the LICENSE file.
 #}
@@ -12,6 +12,9 @@ ip security
    !
 {%         endif %}
    ike policy {{ ike_policy.name }}
+{%         if ike_policy.integrity is arista.avd.defined %}
+      integrity {{ ike_policy.integrity }}
+{%         endif %}
 {%         if ike_policy.ike_lifetime is arista.avd.defined %}
       ike-lifetime {{ ike_policy.ike_lifetime }}
 {%         endif %}
@@ -85,5 +88,8 @@ ip security
 {%     endif %}
 {%     if ip_security.hardware_encryption_disabled is arista.avd.defined(true) %}
    hardware encryption disabled
+{%     endif %}
+{%     if ip_security.connection_tx_interface_match_source_ip is arista.avd.defined(true) %}
+   connection tx-interface match source-ip
 {%     endif %}
 {% endif %}

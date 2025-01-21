@@ -1,5 +1,5 @@
 {#
- Copyright (c) 2023-2024 Arista Networks, Inc.
+ Copyright (c) 2023-2025 Arista Networks, Inc.
  Use of this source code is governed by the Apache License 2.0
  that can be found in the LICENSE file.
 #}
@@ -334,6 +334,9 @@
 | {{ link_tracking_interface.name }} | {{ link_tracking_group.name }} | {{ link_tracking_group.direction }} |
 {%                 endif %}
 {%             endfor %}
+{%             if link_tracking_interface.link_tracking.direction is arista.avd.defined and link_tracking_interface.link_tracking.groups is arista.avd.defined %}
+| {{ link_tracking_interface.name }} | {{ link_tracking_interface.link_tracking.groups | join(', ') }} | {{ link_tracking_interface.link_tracking.direction }} |
+{%             endif %}
 {%         endfor %}
 {%     endif %}
 {# Phone Interfaces #}
@@ -528,7 +531,10 @@
                ethernet_interface.isis_network_point_to_point is arista.avd.defined or
                ethernet_interface.isis_passive is arista.avd.defined or
                ethernet_interface.isis_hello_padding is arista.avd.defined or
-               ethernet_interface.isis_authentication_mode is arista.avd.defined %}
+               ethernet_interface.isis_authentication_mode is arista.avd.defined or
+               ethernet_interface.isis_authentication.both.mode is arista.avd.defined or
+               ethernet_interface.isis_authentication.level_1.mode is arista.avd.defined or
+               ethernet_interface.isis_authentication.level_2.mode is arista.avd.defined %}
 {%             do ethernet_interfaces_isis.append(ethernet_interface) %}
 {%         endif %}
 {%     endfor %}
@@ -541,7 +547,10 @@
                port_channel_interface.isis_network_point_to_point is arista.avd.defined or
                port_channel_interface.isis_passive is arista.avd.defined or
                port_channel_interface.isis_hello_padding is arista.avd.defined or
-               port_channel_interface.isis_authentication_mode is arista.avd.defined %}
+               port_channel_interface.isis_authentication_mode is arista.avd.defined or
+               port_channel_interface.isis_authentication.both.mode is arista.avd.defined or
+               port_channel_interface.isis_authentication.level_1.mode is arista.avd.defined or
+               port_channel_interface.isis_authentication.level_2.mode is arista.avd.defined %}
 {%             do port_channel_interfaces_isis.append(port_channel_interface) %}
 {%         endif %}
 {%     endfor %}
@@ -592,8 +601,8 @@
 
 ##### ISIS
 
-| Interface | Channel Group | ISIS Instance | ISIS BFD | ISIS Metric | Mode | ISIS Circuit Type | Hello Padding | Authentication Mode |
-| --------- | ------------- | ------------- | -------- | ----------- | ---- | ----------------- | ------------- | ------------------- |
+| Interface | Channel Group | ISIS Instance | ISIS BFD | ISIS Metric | Mode | ISIS Circuit Type | Hello Padding | ISIS Authentication Mode |
+| --------- | ------------- | ------------- | -------- | ----------- | ---- | ----------------- | ------------- | ------------------------ |
 {%         for ethernet_interface in ethernet_interfaces | arista.avd.natural_sort('name') %}
 {%             if ethernet_interface.channel_group.id is arista.avd.defined %}
 {%                 set port_channel_interface_name = 'Port-Channel' ~ ethernet_interface.channel_group.id %}
@@ -606,7 +615,17 @@
 {%                     set isis_metric = port_channel_interface.isis_metric | arista.avd.default("-") %}
 {%                     set isis_circuit_type = port_channel_interface.isis_circuit_type | arista.avd.default("-") %}
 {%                     set isis_hello_padding = port_channel_interface.isis_hello_padding | arista.avd.default("-") %}
-{%                     set isis_authentication_mode = port_channel_interface.isis_authentication_mode | arista.avd.default("-") %}
+{%                     if port_channel_interface.isis_authentication.both.mode is arista.avd.defined %}
+{%                         set isis_authentication_mode = port_channel_interface.isis_authentication.both.mode %}
+{%                     elif port_channel_interface.isis_authentication.level_1.mode is arista.avd.defined and port_channel_interface.isis_authentication.level_2.mode is arista.avd.defined %}
+{%                         set isis_authentication_mode = "Level-1: " ~ port_channel_interface.isis_authentication.level_1.mode ~ "<br>" ~ "Level-2: " ~ port_channel_interface.isis_authentication.level_2.mode %}
+{%                     elif port_channel_interface.isis_authentication.level_1.mode is arista.avd.defined %}
+{%                         set isis_authentication_mode = "Level-1: " ~ port_channel_interface.isis_authentication.level_1.mode %}
+{%                     elif port_channel_interface.isis_authentication.level_2.mode is arista.avd.defined %}
+{%                         set isis_authentication_mode = "Level-2: " ~ port_channel_interface.isis_authentication.level_2.mode %}
+{%                     else %}
+{%                         set isis_authentication_mode = port_channel_interface.isis_authentication_mode | arista.avd.default("-") %}
+{%                     endif %}
 {%                     if port_channel_interface.isis_network_point_to_point is arista.avd.defined(true) %}
 {%                         set mode = "point-to-point" %}
 {%                     elif port_channel_interface.isis_passive is arista.avd.defined(true) %}
@@ -624,7 +643,17 @@
 {%                     set isis_metric = ethernet_interface.isis_metric | arista.avd.default("-") %}
 {%                     set isis_circuit_type = ethernet_interface.isis_circuit_type | arista.avd.default("-") %}
 {%                     set isis_hello_padding = ethernet_interface.isis_hello_padding | arista.avd.default("-") %}
-{%                     set isis_authentication_mode = ethernet_interface.isis_authentication_mode | arista.avd.default("-") %}
+{%                     if ethernet_interface.isis_authentication.both.mode is arista.avd.defined %}
+{%                         set isis_authentication_mode = ethernet_interface.isis_authentication.both.mode %}
+{%                     elif ethernet_interface.isis_authentication.level_1.mode is arista.avd.defined and ethernet_interface.isis_authentication.level_2.mode is arista.avd.defined %}
+{%                         set isis_authentication_mode = "Level-1: " ~ ethernet_interface.isis_authentication.level_1.mode ~ "<br>" ~ "Level-2: " ~ ethernet_interface.isis_authentication.level_2.mode %}
+{%                     elif ethernet_interface.isis_authentication.level_1.mode is arista.avd.defined %}
+{%                         set isis_authentication_mode = "Level-1: " ~ ethernet_interface.isis_authentication.level_1.mode %}
+{%                     elif ethernet_interface.isis_authentication.level_2.mode is arista.avd.defined %}
+{%                         set isis_authentication_mode = "Level-2: " ~ ethernet_interface.isis_authentication.level_2.mode %}
+{%                     else %}
+{%                         set isis_authentication_mode = ethernet_interface.isis_authentication_mode | arista.avd.default("-") %}
+{%                     endif %}
 {%                     if ethernet_interface.isis_network_point_to_point is arista.avd.defined(true) %}
 {%                         set mode = "point-to-point" %}
 {%                     elif ethernet_interface.isis_passive is arista.avd.defined(true) %}
@@ -764,6 +793,36 @@
 | --------- | -------- |
 {%         for sync_e_interface in sync_e_interfaces %}
 | {{ sync_e_interface.name }} | {{ sync_e_interface.sync_e.priority | arista.avd.default('127') }} |
+{%         endfor %}
+{%     endif %}
+{%     set te_interfaces = [] %}
+{%     for ethernet_interface in ethernet_interfaces | arista.avd.natural_sort('name') %}
+{%         if ethernet_interface.traffic_engineering.enabled is arista.avd.defined(true) %}
+{%             do te_interfaces.append(ethernet_interface) %}
+{%         endif %}
+{%     endfor %}
+{%     if te_interfaces | length > 0 %}
+
+#### Traffic Engineering
+
+| Interface | Enabled | Administrative Groups | Metric | Max Reservable Bandwidth | Min-delay | SRLG |
+| --------- | ------- | --------------------- | ------ | ------------------------ | --------- | ---- |
+{%         for te_interface in te_interfaces %}
+{%             set admin_groups = te_interface.traffic_engineering.administrative_groups | arista.avd.default (["-"]) | join(",") %}
+{%             set te_enabled = te_interface.traffic_engineering.enabled | arista.avd.default("-") %}
+{%             set te_srlg = te_interface.traffic_engineering.srlg | arista.avd.default("-") %}
+{%             set te_metric = te_interface.traffic_engineering.metric | arista.avd.default("-") %}
+{%             if te_interface.traffic_engineering.bandwidth is arista.avd.defined %}
+{%                 set te_bandwidth = te_interface.traffic_engineering.bandwidth.number ~ " " ~ te_interface.traffic_engineering.bandwidth.unit %}
+{%             else %}
+{%                 set te_bandwidth = "-" %}
+{%             endif %}
+{%             if te_interface.traffic_engineering.min_delay_static is arista.avd.defined %}
+{%                 set te_min_del = te_interface.traffic_engineering.min_delay_static.number ~ " " ~ te_interface.traffic_engineering.min_delay_static.unit %}
+{%             else %}
+{%                 set te_min_del = "-" %}
+{%             endif %}
+| {{ te_interface.name }} | {{ te_enabled }} | {{ admin_groups }} | {{ te_metric }} | {{ te_bandwidth }} | {{ te_min_del }} | {{ te_srlg }} |
 {%         endfor %}
 {%     endif %}
 

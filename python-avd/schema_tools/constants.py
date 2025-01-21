@@ -1,4 +1,4 @@
-# Copyright (c) 2023-2024 Arista Networks, Inc.
+# Copyright (c) 2023-2025 Arista Networks, Inc.
 # Use of this source code is governed by the Apache License 2.0
 # that can be found in the LICENSE file.
 """AVD schematools constants."""
@@ -37,6 +37,10 @@ PICKLED_SCHEMAS = {
     "avd_meta_schema": METASCHEMA_PICKLED_SCHEMA_PATH,
     "eos_cli_config_gen": EOS_CLI_CONFIG_GEN_PICKLED_SCHEMA_PATH,
     "eos_designs": EOS_DESIGNS_PICKLED_SCHEMA_PATH,
+}
+PYTHON_CLASS_PATHS = {
+    "eos_cli_config_gen": EOS_CLI_CONFIG_GEN_SCHEMA_DIR.joinpath("__init__.py"),
+    "eos_designs": EOS_DESIGNS_SCHEMA_DIR.joinpath("__init__.py"),
 }
 DOCS_PATHS = {
     "eos_cli_config_gen": EOS_CLI_CONFIG_GEN_DOCS_PATH,

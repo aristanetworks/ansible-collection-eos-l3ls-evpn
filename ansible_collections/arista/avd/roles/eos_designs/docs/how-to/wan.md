@@ -3,7 +3,7 @@
 title: Ansible Collection Role eos_designs - WAN
 ---
 <!--
-  ~ Copyright (c) 2023-2024 Arista Networks, Inc.
+  ~ Copyright (c) 2023-2025 Arista Networks, Inc.
   ~ Use of this source code is governed by the Apache License 2.0
   ~ that can be found in the LICENSE file.
   -->
@@ -17,8 +17,8 @@ title: Ansible Collection Role eos_designs - WAN
 
 ???+ warning "About PREVIEW keys in the schema"
 
-    Some of the WAN functionality is still in PREVIEW. When this is the case it is indicated as such in the documentation.
-    For these PREVIEW features, Everything is subject to change, is not supported and may not be complete.
+    Some of the WAN functionality is still in preview. When this is the case it is indicated as such in the documentation.
+    For these preview features, Everything is subject to change, is not supported and may not be complete.
 
     If you have any questions, please leverage the GitHub [discussions board](https://github.com/aristanetworks/avd/discussions)
 
@@ -45,14 +45,13 @@ Please familiarize yourself with the Arista WAN terminology before proceeding:
     role, as CloudVision relies on metadata sent by AVD for visualization and to
     generate and deliver certificates for STUN to devices.
 
-### Features in PREVIEW
+### Features in preview
 
-- WAN HA is in PREVIEW
-
+- WAN HA is in preview
   - While HA is in preview, it is required to either enable or disable HA if exactly two WAN routers are in one node group.
   - For HA, the considered interfaces are only the `uplink_interfaces` in VRF default or the interfaces defined under `wan_ha.ha_interfaces` node settings. This key can be used either to select only some `uplink_interfaces` available for establishing the HA tunnel OR to select one interface that is not an `uplink_interfaces`, for instance for direct HA connectivity.
   - HA for AutoVPN is not supported
-- Internet-exit for Zscaler is in PREVIEW
+- Internet-exit for Zscaler is in preview
 - `eos_validate_state` is being enriched to support new tests for WAN designs.
 
 ### Known limitations
@@ -73,7 +72,6 @@ Please familiarize yourself with the Arista WAN terminology before proceeding:
 - WAN Internet exit for other type than Zscaler
 - `import path-group` functionality
 - Indirect connectivity to pathfinder
-- BGP peerings on WAN L3 interfaces and associated route filtering.
 - Extra STUN server for a given path-group not connected to pathfinder
 - Auto generation of Path-group IDs and other IDs.
 - Proper OSPF-BGP redistribution in VRF default.
@@ -106,7 +104,7 @@ The following table list the `eos_designs` top level keys used for WAN and how t
 
 | Key | Must be the same for all the WAN routers | Comment |
 | --- | ---------------------------------------- | ------- |
-| `wan_mode` | ✅ | Two possible modes, `legacy-autovpn` and `cv-pathfinder` (default). |
+| `wan_mode` | ✅ | Two possible modes, `autovpn` and `cv-pathfinder` (default). |
 | `wan_encapsulation` | ✅ | Two possible encapsulations, `vxlan` and `path-selection` (default). |
 | `wan_virtual_topologies` | ✅ | to define the Policies and the VRF to policy mappings. |
 | `wan_path_groups` | ✅ | to define the list of path-groups in the network. |
@@ -135,14 +133,14 @@ Additionally, following keys must be set for the WAN route servers for the conne
 
 AVD supports two design types for WAN:
 
-- Legacy AutoVPN
+- AutoVPN
 - CV Pathfinder
 
 By default the mode is set to `cv-pathfinder` and can be changed using:
 
 ```yaml
 ---
-wan_mode: legacy-autovpn | cv-pathfinder # default: cv-pathfinder
+wan_mode: autovpn | cv-pathfinder # default: cv-pathfinder
 ```
 
 #### WAN encapsulation
@@ -396,16 +394,26 @@ wan_router:
             peer_ip: 172.16.5.4
             static_routes:
               - prefix: 172.16.0.0/16
-            connected_to_pathfinder: False
+            connected_to_pathfinder: false
+            # Configure BGP peering with peer
+            bgp:
+              peer_as: 65042
+              ipv4_prefix_list_in: ALLOW-DEFAULT  # (4)!
           # This is NOT a WAN interface
           - name: Ethernet3
             ip_address: 172.20.20.20/31
+
+ipv4_prefix_list_catalog:
+  - name: ALLOW-DEFAULT
+    sequence_numbers:
+      - sequence: 10
 ```
 
 1. `peer` and `peer_interface` are optionals and used for description.
 2. `wan_circuit_id` is optional and used for description.
 3. Configure IPv4 ACLs in and out for the L3 interface. The access lists must
     be defined under `ipv4_acls` top level key.
+4. For BGP peering for WAN interfaces, the `ipv4_prefix_list_in` is mandatory for security reaasons. It is defined in the `ipv4_prefix_list_catalog`.
 
 ### WAN policies
 
@@ -514,7 +522,7 @@ cv_pathfinder_internet_exit_policies:
     type: zscaler
     # [...] type specific options
   - name: ZSCALER-EXIT-POLICY-2
-    fallback_to_system_default: False
+    fallback_to_system_default: false
     type: zscaler
     # [...] type specific options
   - name: DIRECT-EXIT-POLICY-1
@@ -709,13 +717,32 @@ reused when adding LAN protocols to help understand the changes.
 
 #### LAN HA common configuration
 
-EOS (and hence AVD) supports maximum 2 routers for HA. To establish LAN HA the requirements are the following:
+EOS (and hence AVD) supports maximum 2 routers for HA. To be considered as HA nodes, they need to belong to the same node_group as below:
+
+```yaml
+wan_router:
+  node_groups:
+    - group: Site42
+      cv_pathfinder_region: AVD_Land_West
+      cv_pathfinder_site: Site42
+      wan_ha:
+      enabled: true
+      nodes:
+        - name: node1
+          id: 1
+          [...]
+        - name: node2
+          id: 1
+          [...]
+```
+
+To establish LAN HA the requirements are the following:
 
 - The HA tunnels can be established only in the default VRF (EOS limitation)
 - The HA interfaces must be able to establish IPSec tunnels between each other. This implies that if the interfaces are on different subnet, the LAN must be able to route traffic between each interface.
 - EVPN Gateway is used to exchange the routes between the HA peers configured as follow - the advantage is that it caters for all VRFs and the default VRF export route-map is still valid.
 
-By default, AVD uses the uplinks as the HA links. It is possible to override this by setting a single interface to be used as the *Direct HA link*:
+By default, AVD uses the uplinks as the HA links. It is possible to override this by setting a list of interfaces to be used as the *Direct HA links*:
 
 ```yaml
 wan_router:
@@ -729,12 +756,17 @@ wan_router:
         ha_ipv4_pool: 10.10.10.0/24 # (2)!
 ```
 
-1. Select the interface for HA, it can either be a way to select ONE interface for Direct HA, or to filter some of the uplink HA interfaces.
+1. Select the interface for HA, it can either be a way to select one or more interface(s) for Direct HA, or to filter some of the uplink HA interfaces.
 2. Prefix to use to allocate the IP address for the direct HA link.
 
 !!! warning
 
-    Only one interface can be used for Direct HA today in AVD.
+    For direct HA, AVD will configure a port-channel by default.
+    <span style="color:red">This feature was introduced recently in EOS and may not be supported on your version.</span>
+
+    If it is the case, only one interface can be used for Direct HA, and the port-channel creation can be disabled using `wan_ha.use_port_channel_for_direct_ha: false`.
+
+    It is *not* possible to use multiple direct HA links while disabling the port-channel.
 
 From a configuration standpoint:
 
@@ -808,6 +840,15 @@ In the situation where the LAN is EBGP but HA is configured over a direct link, 
 <div style="text-align:center">
   <img src="../../../../media/wan_ebgp_lan_ha_direct.png" alt="WAN eBGP LAN with Direct HA link"/>
 </div>
+
+!!! warning
+
+    For direct HA, AVD will configure a port-channel by default.
+    <span style="color:red">This feature was introduced recently in EOS and may not be supported on your version.</span>
+
+    If it is the case, only one interface can be used for Direct HA, and the port-channel creation can be disabled using `wan_ha.use_port_channel_for_direct_ha: false`.
+
+    It is *not* possible to use multiple direct HA links while disabling the port-channel.
 
 #### OSPF LAN (NOT SUPPORTED)
 
@@ -1009,6 +1050,8 @@ wan_virtual_topologies:
 | AvdTestIPSecurity | VerifySpecificIPSecConn | Validate the establishment of IP security connections for each static peer under the `router path-selection` section of the configuration. |
 | AvdTestStun | VerifyStunClient | Validate the presence of a STUN client translation for a given source IPv4 address and port. The list of expected translations for each device is built by searching local interfaces in each path-group. |
 | AvdTestDpsReachability | VerifyReachability | Validate DPS reachability between devices. |
+| AvdTestAvtPath | VerifyAVTSpecificPath | Validate that the status is active and the type is direct for an Adaptive Virtual Topology (AVT) path in a specified VRF for the static peers. |
+| AvdTestAvtRole | VerifyAVTRole | Validate the Adaptive Virtual Topology (AVT) role of a device. |
 
 !!! note
     More WAN-related tests are available directly in ANTA and can be added using custom catalogs.

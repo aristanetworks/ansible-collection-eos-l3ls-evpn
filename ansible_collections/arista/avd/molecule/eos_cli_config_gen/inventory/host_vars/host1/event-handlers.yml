@@ -1,0 +1,121 @@
+event_handlers:
+  - name: CONFIG_VERSIONING
+    actions:
+      bash_command: >-
+        FN=/mnt/flash/startup-config; LFN="`ls -1 $FN.*-* | tail -n 1`";
+        if [ -z "$LFN" -o -n "`diff -I 'last modified' $FN $LFN`" ];
+        then cp $FN $FN.`date +%Y%m%d-%H%M%S`; ls -1r $FN.*-* | tail -n +11 | xargs -I % rm %;
+        fi
+    delay: 0
+    trigger: on-startup-config
+  - name: trigger-on-boot
+    trigger: on-boot
+    actions:
+      bash_command: |-
+        if [ 15 -gt 10 ]
+        then
+          echo "a is greater than 10"
+        fi
+      increment_device_health_metric: Metric1
+      log: true
+  - name: trigger-on-maintenance1
+    trigger: on-maintenance
+    trigger_on_maintenance:
+      operation: enter
+      interface: Management3
+      action: after
+      stage: linkdown
+  - name: trigger-on-maintenance2
+    trigger: on-maintenance
+    trigger_on_maintenance:
+      operation: exit
+      unit: unit1
+      action: before
+      stage: bgp
+    actions:
+      bash_command: echo "on-maintenance"
+  - name: trigger-on-maintenance3
+    trigger: on-maintenance
+    trigger_on_maintenance:
+      operation: enter
+      bgp_peer: 10.0.0.2
+      vrf: vrf1
+      action: all
+    actions:
+      bash_command: echo "on-maintenance"
+  - name: trigger-on-maintenance4
+    trigger: on-maintenance
+    trigger_on_maintenance:
+      operation: enter
+      action: all
+  - name: trigger-on-maintenance5
+    trigger: on-maintenance
+    trigger_on_maintenance:
+      operation: enter
+      action: before
+      bgp_peer: test
+  - name: trigger-on-logging
+    trigger: on-logging
+    trigger_on_logging:
+      poll_interval: 10
+      regex: "ab*"
+    actions:
+      increment_device_health_metric: Metric2
+  - name: trigger-on-logging2
+    trigger: on-logging
+    trigger_on_logging:
+      regex: "ab*"
+  - name: trigger-on-logging3
+    trigger: on-logging
+  - name: trigger-on-counters
+    trigger: on-counters
+    trigger_on_counters:
+      poll_interval: 10
+      condition: ( Arad*.IptCrcErrCnt.delta > 100 ) and ( Arad*.UcFifoFullDrop.delta > 100 )
+      granularity_per_source: true
+    actions:
+      log: true
+  - name: trigger-on-counters2
+    trigger: on-counters
+    trigger_on_counters:
+      condition: ( Arad*.IptCrcErrCnt.delta > 100 ) and ( Arad*.UcFifoFullDrop.delta > 100 )
+      granularity_per_source: true
+  - name: trigger-on-counters3
+    trigger: on-counters
+  - name: trigger-on-intf
+    trigger: on-intf
+    trigger_on_intf:
+      interface: Ethernet4
+      ip: true
+      ipv6: true
+      operstatus: true
+  - name: trigger-on-intf2
+    trigger: on-intf
+  - name: trigger-on-intf3
+    trigger: on-intf
+    trigger_on_intf:
+      interface: Ethernet3
+  - name: trigger-on-intf4
+    trigger: on-intf
+    trigger_on_intf:
+      interface: Ethernet4
+      ip: true
+  - name: trigger-on-intf5
+    trigger: on-intf
+    trigger_on_intf:
+      interface: Ethernet5
+      ipv6: true
+  - name: trigger-on-intf6
+    trigger: on-intf
+    trigger_on_intf:
+      interface: Ethernet6
+      operstatus: true
+  - name: trigger-vm-tracer
+    trigger: "vm-tracer vm"
+    actions:
+      bash_command: echo "vm-tracer vm"
+  - name: trigger-vm-tracer2
+    trigger: "vm-tracer vm"
+    actions:
+      bash_command: echo "vm-tracer vm"\nEOF
+  - name: without-trigger-key

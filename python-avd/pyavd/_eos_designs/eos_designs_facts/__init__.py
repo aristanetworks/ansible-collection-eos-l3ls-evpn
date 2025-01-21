@@ -1,4 +1,4 @@
-# Copyright (c) 2023-2024 Arista Networks, Inc.
+# Copyright (c) 2023-2025 Arista Networks, Inc.
 # Use of this source code is governed by the Apache License 2.0
 # that can be found in the LICENSE file.
 from __future__ import annotations
@@ -7,7 +7,6 @@ from functools import cached_property
 
 from pyavd._eos_designs.avdfacts import AvdFacts
 from pyavd._errors import AristaAvdError
-from pyavd._utils import get
 
 from .mlag import MlagMixin
 from .overlay import OverlayMixin
@@ -47,7 +46,7 @@ class EosDesignsFacts(AvdFacts, MlagMixin, ShortEsiMixin, OverlayMixin, WanMixin
     @cached_property
     def is_deployed(self) -> bool:
         """Exposed in avd_switch_facts."""
-        return self.shared_utils.is_deployed
+        return self.inputs.is_deployed
 
     @cached_property
     def serial_number(self) -> str | None:
@@ -62,7 +61,7 @@ class EosDesignsFacts(AvdFacts, MlagMixin, ShortEsiMixin, OverlayMixin, WanMixin
     @cached_property
     def mgmt_ip(self) -> str | None:
         """Exposed in avd_switch_facts."""
-        return self.shared_utils.mgmt_ip
+        return self.shared_utils.node_config.mgmt_ip
 
     @cached_property
     def mpls_lsr(self) -> bool:
@@ -80,8 +79,8 @@ class EosDesignsFacts(AvdFacts, MlagMixin, ShortEsiMixin, OverlayMixin, WanMixin
         """
         if "evpn" not in self.shared_utils.overlay_address_families:
             return None
-        if get(self._hostvars, "evpn_multicast") is True and self.shared_utils.vtep is True:
-            if not (self.shared_utils.underlay_multicast is True and self.shared_utils.igmp_snooping_enabled is not False):
+        if self.inputs.evpn_multicast and self.shared_utils.vtep:
+            if not (self.shared_utils.underlay_multicast and self.shared_utils.igmp_snooping_enabled):
                 msg = "'evpn_multicast: True' is only supported in combination with 'underlay_multicast: True' and 'igmp_snooping_enabled : True'"
                 raise AristaAvdError(msg)
 
@@ -96,7 +95,7 @@ class EosDesignsFacts(AvdFacts, MlagMixin, ShortEsiMixin, OverlayMixin, WanMixin
     @cached_property
     def loopback_ipv4_pool(self) -> str | None:
         """Exposed in avd_switch_facts."""
-        if self.shared_utils.underlay_router is True:
+        if self.shared_utils.underlay_router:
             return self.shared_utils.loopback_ipv4_pool
         return None
 
@@ -104,14 +103,14 @@ class EosDesignsFacts(AvdFacts, MlagMixin, ShortEsiMixin, OverlayMixin, WanMixin
     def uplink_ipv4_pool(self) -> str | None:
         """Exposed in avd_switch_facts."""
         if self.shared_utils.underlay_router:
-            return self.shared_utils.uplink_ipv4_pool
+            return self.shared_utils.node_config.uplink_ipv4_pool
         return None
 
     @cached_property
-    def downlink_pools(self) -> dict | None:
+    def downlink_pools(self) -> list | None:
         """Exposed in avd_switch_facts."""
         if self.shared_utils.underlay_router:
-            return self.shared_utils.downlink_pools
+            return [downlink_pool._as_dict() for downlink_pool in self.shared_utils.node_config.downlink_pools]
         return None
 
     @cached_property
@@ -137,44 +136,46 @@ class EosDesignsFacts(AvdFacts, MlagMixin, ShortEsiMixin, OverlayMixin, WanMixin
     def inband_mgmt_subnet(self) -> str | None:
         """Exposed in avd_switch_facts."""
         if self.shared_utils.configure_parent_for_inband_mgmt:
-            return self.shared_utils.inband_mgmt_subnet
+            return self.shared_utils.node_config.inband_mgmt_subnet
         return None
 
     @cached_property
     def inband_mgmt_ipv6_subnet(self) -> str | None:
         """Exposed in avd_switch_facts."""
         if self.shared_utils.configure_parent_for_inband_mgmt_ipv6:
-            return self.shared_utils.inband_mgmt_ipv6_subnet
+            return self.shared_utils.node_config.inband_mgmt_ipv6_subnet
         return None
 
     @cached_property
     def inband_mgmt_vlan(self) -> int | None:
         """Exposed in avd_switch_facts."""
         if self.shared_utils.configure_parent_for_inband_mgmt or self.shared_utils.configure_parent_for_inband_mgmt_ipv6:
-            return self.shared_utils.inband_mgmt_vlan
+            return self.shared_utils.node_config.inband_mgmt_vlan
         return None
 
     @cached_property
     def inband_ztp(self) -> bool | None:
         """Exposed in avd_switch_facts."""
-        return self.shared_utils.inband_ztp
+        return self.shared_utils.node_config.inband_ztp
 
     @cached_property
     def inband_ztp_vlan(self) -> int | None:
         """Exposed in avd_switch_facts."""
-        if self.shared_utils.inband_ztp:
-            return self.shared_utils.inband_mgmt_vlan
+        if self.shared_utils.node_config.inband_ztp:
+            return self.shared_utils.node_config.inband_mgmt_vlan
         return None
 
     @cached_property
     def inband_ztp_lacp_fallback_delay(self) -> int | None:
         """Exposed in avd_switch_facts."""
-        return self.shared_utils.inband_ztp_lacp_fallback_delay
+        if self.shared_utils.node_config.inband_ztp:
+            return self.shared_utils.node_config.inband_ztp_lacp_fallback_delay
+        return None
 
     @cached_property
     def dc_name(self) -> str | None:
         """Exposed in avd_switch_facts."""
-        return self.shared_utils.dc_name
+        return self.inputs.dc_name
 
     @cached_property
     def group(self) -> str | None:
@@ -211,16 +212,18 @@ class EosDesignsFacts(AvdFacts, MlagMixin, ShortEsiMixin, OverlayMixin, WanMixin
 
         Used for fabric docs
         """
-        return self.shared_utils.pod_name or self.shared_utils.dc_name or self.shared_utils.fabric_name
+        return self.inputs.pod_name or self.inputs.dc_name or self.shared_utils.fabric_name
 
     @cached_property
-    def connected_endpoints_keys(self) -> list:
+    def connected_endpoints_keys(self) -> list[dict]:
         """
+        List of connected_endpoints_keys in use on this device.
+
         Exposed in avd_switch_facts.
 
         Used for fabric docs
         """
-        return self.shared_utils.connected_endpoints_keys
+        return [entry._as_dict() for entry in self.inputs.connected_endpoints_keys if entry.key in self.inputs._dynamic_keys.connected_endpoints]
 
     @cached_property
     def port_profile_names(self) -> list:
@@ -229,4 +232,4 @@ class EosDesignsFacts(AvdFacts, MlagMixin, ShortEsiMixin, OverlayMixin, WanMixin
 
         Used for fabric docs
         """
-        return [{"profile": profile["profile"], "parent_profile": profile.get("parent_profile")} for profile in self.shared_utils.port_profiles]
+        return [{"profile": profile.profile, "parent_profile": profile.parent_profile} for profile in self.inputs.port_profiles]

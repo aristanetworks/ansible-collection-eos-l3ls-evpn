@@ -1,4 +1,4 @@
-# Copyright (c) 2023-2024 Arista Networks, Inc.
+# Copyright (c) 2023-2025 Arista Networks, Inc.
 # Use of this source code is governed by the Apache License 2.0
 # that can be found in the LICENSE file.
 from __future__ import annotations
@@ -91,12 +91,25 @@ class DeviceUtilsMixin:
         interfaces = get(host_struct_cfg, interface_model, default=[])
         interface = get_item(interfaces, "name", interface_name, default={})
         ip_address = get(interface, "ip_address")
-        if ip_address is None:
+        if ip_address is None or ip_address == "dhcp":
             log_msg = f"Host '{host or self.device_name}' interface '{interface_name}' IP address is unavailable. {self.__class__.__name__} is skipped."
             LOGGER.warning(log_msg)
             return None
 
         return ip_address
+
+    def is_dhcp_interface(self, interface: dict) -> bool:
+        """Check if the interface is a DHCP interface.
+
+        Args:
+        ----
+            interface (dict): The interface to verify.
+
+        Returns:
+        -------
+            bool: True if the interface is a DHCP interface, False otherwise.
+        """
+        return interface["ip_address"] == "dhcp"
 
     def is_subinterface(self, interface: dict) -> bool:
         """Check if the interface is a subinterface.

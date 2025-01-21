@@ -1,4 +1,4 @@
-# Copyright (c) 2023-2024 Arista Networks, Inc.
+# Copyright (c) 2023-2025 Arista Networks, Inc.
 # Use of this source code is governed by the Apache License 2.0
 # that can be found in the LICENSE file.
 from __future__ import annotations
@@ -9,7 +9,7 @@ from functools import cached_property
 from ansible_collections.arista.avd.plugins.plugin_utils.eos_validate_state_utils.avdtestbase import AvdTestBase
 from ansible_collections.arista.avd.plugins.plugin_utils.utils import default, get
 
-from ..bgp_constants import BGP_ADDRESS_FAMILIES  # noqa: TID252 Will be fixed when moving to pyavd
+from ..bgp_constants import BGP_ADDRESS_FAMILIES  # noqa: TID252 will be fixed when moving to pyavd
 
 LOGGER = logging.getLogger(__name__)
 

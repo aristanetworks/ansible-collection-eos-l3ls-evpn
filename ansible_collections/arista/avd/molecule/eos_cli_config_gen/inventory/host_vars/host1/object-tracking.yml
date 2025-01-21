@@ -1,0 +1,7 @@
+---
+trackers:
+  - name: MyTrackNoProperty
+    interface: Ethernet1/1
+  - name: MyTrackSetProperty
+    interface: Ethernet2/1
+    tracked_property: line-protocol

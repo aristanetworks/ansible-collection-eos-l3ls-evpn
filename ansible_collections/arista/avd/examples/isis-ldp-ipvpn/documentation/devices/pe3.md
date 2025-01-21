@@ -34,6 +34,7 @@
 - [MPLS](#mpls)
   - [MPLS and LDP](#mpls-and-ldp)
   - [MPLS Interfaces](#mpls-interfaces)
+  - [MPLS Device Configuration](#mpls-device-configuration)
 - [Multicast](#multicast)
   - [IP IGMP Snooping](#ip-igmp-snooping)
 - [VRF Instances](#vrf-instances)
@@ -179,15 +180,15 @@ vlan internal order ascending range 1006 1199
 
 | Interface | Description | Channel Group | IP Address | VRF |  MTU | Shutdown | ACL In | ACL Out |
 | --------- | ----------- | ------------- | ---------- | ----| ---- | -------- | ------ | ------- |
-| Ethernet1 | P2P_LINK_TO_p3_Ethernet1 | - | 10.255.3.22/31 | default | 1500 | False | - | - |
+| Ethernet1 | P2P_p3_Ethernet1 | - | 10.255.3.22/31 | default | 1500 | False | - | - |
 | Ethernet2 | C1_L3_SERVICE | - | 10.0.1.9/30 | C1_VRF1 | - | False | - | - |
-| Ethernet3 | P2P_LINK_TO_p4_Ethernet3 | - | 10.255.3.24/31 | default | 1500 | False | - | - |
+| Ethernet3 | P2P_p4_Ethernet3 | - | 10.255.3.24/31 | default | 1500 | False | - | - |
 | Ethernet4 | C2_L3_SERVICE | - | 10.1.1.9/30 | C2_VRF1 | - | False | - | - |
 
 ##### ISIS
 
-| Interface | Channel Group | ISIS Instance | ISIS BFD | ISIS Metric | Mode | ISIS Circuit Type | Hello Padding | Authentication Mode |
-| --------- | ------------- | ------------- | -------- | ----------- | ---- | ----------------- | ------------- | ------------------- |
+| Interface | Channel Group | ISIS Instance | ISIS BFD | ISIS Metric | Mode | ISIS Circuit Type | Hello Padding | ISIS Authentication Mode |
+| --------- | ------------- | ------------- | -------- | ----------- | ---- | ----------------- | ------------- | ------------------------ |
 | Ethernet1 | - | CORE | - | 50 | point-to-point | level-2 | True | md5 |
 | Ethernet3 | - | CORE | - | 50 | point-to-point | level-2 | True | md5 |
 
@@ -196,7 +197,7 @@ vlan internal order ascending range 1006 1199
 ```eos
 !
 interface Ethernet1
-   description P2P_LINK_TO_p3_Ethernet1
+   description P2P_p3_Ethernet1
    no shutdown
    mtu 1500
    no switchport
@@ -218,10 +219,10 @@ interface Ethernet2
    no switchport
    vrf C1_VRF1
    ip address 10.0.1.9/30
-   ip ospf area 0
+   ip ospf area 0.0.0.0
 !
 interface Ethernet3
-   description P2P_LINK_TO_p4_Ethernet3
+   description P2P_p4_Ethernet3
    no shutdown
    mtu 1500
    no switchport
@@ -369,7 +370,7 @@ ip route vrf MGMT 0.0.0.0/0 172.16.1.1
 
 | Interface | Area | Cost | Point To Point |
 | -------- | -------- | -------- | -------- |
-| Ethernet2 | 0 | - | False |
+| Ethernet2 | 0.0.0.0 | - | False |
 
 #### Router OSPF Device Configuration
 
@@ -416,8 +417,8 @@ router ospf 10 vrf C1_VRF1
 !
 router isis CORE
    net 49.0001.0102.5500.1003.00
-   is-type level-2
    router-id ipv4 10.255.1.3
+   is-type level-2
    log-adjacency-changes
    mpls ldp sync default
    !
@@ -484,9 +485,9 @@ ASN Notation: asplain
 !
 router bgp 65001
    router-id 10.255.1.3
+   no bgp default ipv4-unicast
    distance bgp 20 200 200
    maximum-paths 4 ecmp 4
-   no bgp default ipv4-unicast
    neighbor MPLS-OVERLAY-PEERS peer group
    neighbor MPLS-OVERLAY-PEERS remote-as 65001
    neighbor MPLS-OVERLAY-PEERS update-source Loopback0
@@ -561,7 +562,15 @@ router bfd
 | LDP Interface Disabled Default | True |
 | LDP Transport-Address Interface | Loopback0 |
 
-#### MPLS and LDP Device Configuration
+### MPLS Interfaces
+
+| Interface | MPLS IP Enabled | LDP Enabled | IGP Sync |
+| --------- | --------------- | ----------- | -------- |
+| Ethernet1 | True | True | True |
+| Ethernet3 | True | True | True |
+| Loopback0 | - | True | - |
+
+### MPLS Device Configuration
 
 ```eos
 !
@@ -573,14 +582,6 @@ mpls ldp
    interface disabled default
    no shutdown
 ```
-
-### MPLS Interfaces
-
-| Interface | MPLS IP Enabled | LDP Enabled | IGP Sync |
-| --------- | --------------- | ----------- | -------- |
-| Ethernet1 | True | True | True |
-| Ethernet3 | True | True | True |
-| Loopback0 | - | True | - |
 
 ## Multicast
 

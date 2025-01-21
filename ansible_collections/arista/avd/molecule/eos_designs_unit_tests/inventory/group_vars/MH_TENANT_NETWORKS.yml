@@ -10,12 +10,15 @@ tenants:
         vtep_diagnostic:
           loopback: 100
           loopback_ip_range: 10.255.1.0/24
+          loopback_ipv6_range: 2001:db8:1::/48
         svis:
           - id: 310
             name: Tenant_X_OP_Zone_1
             tags: [opzone]
             enabled: true
             ip_address_virtual: 10.1.10.1/24
+        bgp:
+          router_id: diagnostic_loopback
       - name: default
         vrf_id: 21
         svis:

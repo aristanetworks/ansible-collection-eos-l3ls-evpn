@@ -1,5 +1,5 @@
 {#
- Copyright (c) 2023-2024 Arista Networks, Inc.
+ Copyright (c) 2023-2025 Arista Networks, Inc.
  Use of this source code is governed by the Apache License 2.0
  that can be found in the LICENSE file.
 #}
@@ -164,7 +164,7 @@ NAT profile VRF is: {{ profile.vrf }}
 {%         if ip_nat.synchronization.shutdown | arista.avd.default(false) %}
 | State | Disabled |
 {%         else %}
-| State | Enabled !
+| State | Enabled |
 {%         endif %}
 {%         if ip_nat.synchronization.expiry_interval is arista.avd.defined %}
 | Expiry Interval | {{ ip_nat.synchronization.expiry_interval }} Seconds |

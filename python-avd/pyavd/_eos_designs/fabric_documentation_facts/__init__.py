@@ -1,4 +1,4 @@
-# Copyright (c) 2024 Arista Networks, Inc.
+# Copyright (c) 2024-2025 Arista Networks, Inc.
 # Use of this source code is governed by the Apache License 2.0
 # that can be found in the LICENSE file.
 from functools import cached_property
@@ -30,16 +30,22 @@ class FabricDocumentationFacts(AvdFacts):
     _hostvars = NotImplemented
     shared_utils = NotImplemented
 
-    def __init__(self, avd_facts: dict[str, dict], structured_configs: dict[str, dict], fabric_name: str, include_connected_endpoints: bool) -> None:  # pylint: disable=super-init-not-called
+    def __init__(self, avd_facts: dict[str, dict], structured_configs: dict[str, dict], fabric_name: str, include_connected_endpoints: bool, toc: bool) -> None:  # pylint: disable=super-init-not-called
         self.avd_switch_facts = {hostname: facts["switch"] for hostname, facts in get(avd_facts, "avd_switch_facts", required=True).items()}
         self._fabric_name = fabric_name
         self.structured_configs = structured_configs
         self._include_connected_endpoints = include_connected_endpoints
+        self._toc = toc
 
     @cached_property
     def fabric_name(self) -> str:
         """Fabric Name used for heading of Markdown doc."""
         return self._fabric_name
+
+    @cached_property
+    def toc(self) -> bool:
+        """Generate the table of content(TOC) on fabric documentation."""
+        return self._toc
 
     @cached_property
     def fabric_switches(self) -> list[dict]:

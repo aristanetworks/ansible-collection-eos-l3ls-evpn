@@ -311,10 +311,10 @@ vlan 4094
 
 | Interface | Description | Mode | VLANs | Native VLAN | Trunk Group | Channel-Group |
 | --------- | ----------- | ---- | ----- | ----------- | ----------- | ------------- |
-| Ethernet1 | LEAF1A_Ethernet51 | *trunk | *10,110,120,130 | *- | *- | 1 |
-| Ethernet49/1 | LEAF2A_Ethernet1/1 | *trunk | *10,210,220,230 | *- | *- | 491 |
-| Ethernet50/1 | LEAF3A_Ethernet97/1 | *trunk | *10,310,320,330 | *- | *- | 501 |
-| Ethernet51/1 | LEAF3B_Ethernet97/1 | *trunk | *10,310,320,330 | *- | *- | 501 |
+| Ethernet1 | L2_LEAF1A_Ethernet51 | *trunk | *10,110,120,130 | *- | *- | 1 |
+| Ethernet49/1 | L2_LEAF2A_Ethernet1/1 | *trunk | *10,210,220,230 | *- | *- | 491 |
+| Ethernet50/1 | L2_LEAF3A_Ethernet97/1 | *trunk | *10,310,320,330 | *- | *- | 501 |
+| Ethernet51/1 | L2_LEAF3B_Ethernet97/1 | *trunk | *10,310,320,330 | *- | *- | 501 |
 | Ethernet55/1 | MLAG_SPINE2_Ethernet55/1 | *trunk | *- | *- | *MLAG | 551 |
 | Ethernet56/1 | MLAG_SPINE2_Ethernet56/1 | *trunk | *- | *- | *MLAG | 551 |
 
@@ -324,34 +324,34 @@ vlan 4094
 
 | Interface | Description | Channel Group | IP Address | VRF |  MTU | Shutdown | ACL In | ACL Out |
 | --------- | ----------- | ------------- | ---------- | ----| ---- | -------- | ------ | ------- |
-| Ethernet52/1 | P2P_LINK_TO_WAN_Ethernet1/1 | - | 10.0.0.3/31 | default | 1500 | False | - | - |
+| Ethernet52/1 | P2P_WAN_Ethernet1/1 | - | 10.0.0.3/31 | default | 1500 | False | - | - |
 
 #### Ethernet Interfaces Device Configuration
 
 ```eos
 !
 interface Ethernet1
-   description LEAF1A_Ethernet51
+   description L2_LEAF1A_Ethernet51
    no shutdown
    channel-group 1 mode active
 !
 interface Ethernet49/1
-   description LEAF2A_Ethernet1/1
+   description L2_LEAF2A_Ethernet1/1
    no shutdown
    channel-group 491 mode active
 !
 interface Ethernet50/1
-   description LEAF3A_Ethernet97/1
+   description L2_LEAF3A_Ethernet97/1
    no shutdown
    channel-group 501 mode active
 !
 interface Ethernet51/1
-   description LEAF3B_Ethernet97/1
+   description L2_LEAF3B_Ethernet97/1
    no shutdown
    channel-group 501 mode active
 !
 interface Ethernet52/1
-   description P2P_LINK_TO_WAN_Ethernet1/1
+   description P2P_WAN_Ethernet1/1
    no shutdown
    mtu 1500
    no switchport
@@ -378,9 +378,9 @@ interface Ethernet56/1
 
 | Interface | Description | Mode | VLANs | Native VLAN | Trunk Group | LACP Fallback Timeout | LACP Fallback Mode | MLAG ID | EVPN ESI |
 | --------- | ----------- | ---- | ----- | ----------- | ------------| --------------------- | ------------------ | ------- | -------- |
-| Port-Channel1 | IDF1_Po51 | trunk | 10,110,120,130 | - | - | - | - | 1 | - |
-| Port-Channel491 | LEAF2A_Po11 | trunk | 10,210,220,230 | - | - | - | - | 491 | - |
-| Port-Channel501 | IDF3_AGG_Po971 | trunk | 10,310,320,330 | - | - | - | - | 501 | - |
+| Port-Channel1 | L2_IDF1_Port-Channel51 | trunk | 10,110,120,130 | - | - | - | - | 1 | - |
+| Port-Channel491 | L2_LEAF2A_Port-Channel11 | trunk | 10,210,220,230 | - | - | - | - | 491 | - |
+| Port-Channel501 | L2_IDF3_AGG_Port-Channel971 | trunk | 10,310,320,330 | - | - | - | - | 501 | - |
 | Port-Channel551 | MLAG_SPINE2_Port-Channel551 | trunk | - | - | MLAG | - | - | - | - |
 
 #### Port-Channel Interfaces Device Configuration
@@ -388,7 +388,7 @@ interface Ethernet56/1
 ```eos
 !
 interface Port-Channel1
-   description IDF1_Po51
+   description L2_IDF1_Port-Channel51
    no shutdown
    switchport trunk allowed vlan 10,110,120,130
    switchport mode trunk
@@ -396,7 +396,7 @@ interface Port-Channel1
    mlag 1
 !
 interface Port-Channel491
-   description LEAF2A_Po11
+   description L2_LEAF2A_Port-Channel11
    no shutdown
    switchport trunk allowed vlan 10,210,220,230
    switchport mode trunk
@@ -404,7 +404,7 @@ interface Port-Channel491
    mlag 491
 !
 interface Port-Channel501
-   description IDF3_AGG_Po971
+   description L2_IDF3_AGG_Port-Channel971
    no shutdown
    switchport trunk allowed vlan 10,310,320,330
    switchport mode trunk
@@ -658,10 +658,10 @@ ip route vrf MGMT 0.0.0.0/0 172.16.100.1
 router ospf 100
    router-id 172.16.1.1
    passive-interface default
-   no passive-interface Vlan4093
    no passive-interface Ethernet52/1
-   max-lsa 12000
+   no passive-interface Vlan4093
    redistribute connected
+   max-lsa 12000
 ```
 
 ## Multicast

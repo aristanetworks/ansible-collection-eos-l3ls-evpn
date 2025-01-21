@@ -265,8 +265,8 @@ vlan 4094
 
 | Interface | Description | Mode | VLANs | Native VLAN | Trunk Group | Channel-Group |
 | --------- | ----------- | ---- | ----- | ----------- | ----------- | ------------- |
-| Ethernet1 | DC1.POD1.LEAF2A_Ethernet4 | *trunk | *110-113,1100-1102,2500,2600-2601,4085 | *- | *- | 1 |
-| Ethernet2 | DC1-POD1-LEAF2B_Ethernet4 | *trunk | *110-113,1100-1102,2500,2600-2601,4085 | *- | *- | 1 |
+| Ethernet1 | L2_DC1.POD1.LEAF2A_Ethernet4 | *trunk | *110-113,1100-1102,2500,2600-2601,4085 | *- | *- | 1 |
+| Ethernet2 | L2_DC1-POD1-LEAF2B_Ethernet4 | *trunk | *110-113,1100-1102,2500,2600-2601,4085 | *- | *- | 1 |
 | Ethernet3 | MLAG_DC1-POD1-L2LEAF2A_Ethernet3 | *trunk | *- | *- | *MLAG | 3 |
 | Ethernet4 | MLAG_DC1-POD1-L2LEAF2A_Ethernet4 | *trunk | *- | *- | *MLAG | 3 |
 
@@ -277,12 +277,12 @@ vlan 4094
 ```eos
 !
 interface Ethernet1
-   description DC1.POD1.LEAF2A_Ethernet4
+   description L2_DC1.POD1.LEAF2A_Ethernet4
    no shutdown
    channel-group 1 mode active
 !
 interface Ethernet2
-   description DC1-POD1-LEAF2B_Ethernet4
+   description L2_DC1-POD1-LEAF2B_Ethernet4
    no shutdown
    channel-group 1 mode active
 !
@@ -305,7 +305,7 @@ interface Ethernet4
 
 | Interface | Description | Mode | VLANs | Native VLAN | Trunk Group | LACP Fallback Timeout | LACP Fallback Mode | MLAG ID | EVPN ESI |
 | --------- | ----------- | ---- | ----- | ----------- | ------------| --------------------- | ------------------ | ------- | -------- |
-| Port-Channel1 | RACK2_MLAG_Po3 | trunk | 110-113,1100-1102,2500,2600-2601,4085 | - | - | - | - | 1 | - |
+| Port-Channel1 | L2_RACK2_MLAG_Port-Channel3 | trunk | 110-113,1100-1102,2500,2600-2601,4085 | - | - | - | - | 1 | - |
 | Port-Channel3 | MLAG_DC1-POD1-L2LEAF2A_Port-Channel3 | trunk | - | - | MLAG | - | - | - | - |
 
 #### Port-Channel Interfaces Device Configuration
@@ -313,7 +313,7 @@ interface Ethernet4
 ```eos
 !
 interface Port-Channel1
-   description RACK2_MLAG_Po3
+   description L2_RACK2_MLAG_Port-Channel3
    no shutdown
    switchport trunk allowed vlan 110-113,1100-1102,2500,2600-2601,4085
    switchport mode trunk
@@ -410,8 +410,8 @@ no ip routing vrf MGMT
 
 ```eos
 !
-ip route vrf MGMT 0.0.0.0/0 192.168.1.254
 ip route 0.0.0.0/0 172.21.110.1
+ip route vrf MGMT 0.0.0.0/0 192.168.1.254
 ```
 
 ## Multicast

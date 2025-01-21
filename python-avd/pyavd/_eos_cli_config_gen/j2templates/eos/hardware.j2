@@ -1,5 +1,5 @@
 {#
- Copyright (c) 2023-2024 Arista Networks, Inc.
+ Copyright (c) 2023-2025 Arista Networks, Inc.
  Use of this source code is governed by the Apache License 2.0
  that can be found in the LICENSE file.
 #}
@@ -12,15 +12,32 @@ hardware port-group {{ port_group.port_group }} select {{ port_group.select }}
 {%         endif %}
 {%     endfor %}
 {% endif %}
+{% if hardware_counters.features is arista.avd.defined %}
+!
+{%     for feature in hardware_counters.features | arista.avd.natural_sort("name") %}
+{%         set hardware_counters_cli = "hardware counter feature " ~ feature.name %}
+{%         if feature.direction is arista.avd.defined %}
+{%             set hardware_counters_cli = hardware_counters_cli ~ " " ~ feature.direction %}
+{%         endif %}
+{%         if feature.address_type is arista.avd.defined %}
+{%             set hardware_counters_cli = hardware_counters_cli ~ " " ~ feature.address_type %}
+{%         endif %}
+{%         if feature.layer3 is arista.avd.defined(true) %}
+{%             set hardware_counters_cli = hardware_counters_cli ~ " layer3" %}
+{%         endif %}
+{%         if feature.vrf is arista.avd.defined %}
+{%             set hardware_counters_cli = hardware_counters_cli ~ " vrf " ~ feature.vrf %}
+{%         endif %}
+{%         if feature.prefix is arista.avd.defined %}
+{%             set hardware_counters_cli = hardware_counters_cli ~ " " ~ feature.prefix %}
+{%         endif %}
+{%         if feature.units_packets is arista.avd.defined(true) %}
+{%             set hardware_counters_cli = hardware_counters_cli ~ " units packets" %}
+{%         endif %}
+{{ hardware_counters_cli }}
+{%     endfor %}
+{% endif %}
 {% if hardware.access_list.mechanism is arista.avd.defined %}
 !
 hardware access-list mechanism {{ hardware.access_list.mechanism }}
-{% endif %}
-{% if hardware.speed_groups is arista.avd.defined %}
-!
-{%     for speed_group in hardware.speed_groups %}
-{%         if speed_group.serdes is arista.avd.defined %}
-hardware speed-group {{ speed_group.speed_group }} serdes {{ speed_group.serdes }}
-{%         endif %}
-{%     endfor %}
 {% endif %}

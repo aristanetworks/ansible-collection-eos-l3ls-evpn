@@ -1,4 +1,4 @@
-# Copyright (c) 2023-2024 Arista Networks, Inc.
+# Copyright (c) 2023-2025 Arista Networks, Inc.
 # Use of this source code is governed by the Apache License 2.0
 # that can be found in the LICENSE file.
 from __future__ import annotations
@@ -27,17 +27,16 @@ class CvxMixin(UtilsMixin):
         if not self.shared_utils.overlay_cvx:
             return None
 
-        overlay_cvx_servers = get(self._hostvars, "overlay_cvx_servers", default=[])
-        if self.shared_utils.hostname not in overlay_cvx_servers:
+        if self.shared_utils.hostname not in self.inputs.overlay_cvx_servers:
             return None
 
         peer_hosts = []
-        for overlay_cvx_server in overlay_cvx_servers:
+        for overlay_cvx_server in self.inputs.overlay_cvx_servers:
             if overlay_cvx_server == self.shared_utils.hostname:
                 continue
 
             peer_switch_facts = self.shared_utils.get_peer_facts(overlay_cvx_server, required=True)
-            cvx_server_ip = get(peer_switch_facts, "mgmt_ip", required=True, org_key=f"'mgmt_ip' for CVX Server {overlay_cvx_server}")
+            cvx_server_ip = get(peer_switch_facts, "mgmt_ip", required=True, custom_error_msg=f"'mgmt_ip' for CVX Server {overlay_cvx_server} is required.")
             peer_hosts.append(get_ip_from_ip_prefix(cvx_server_ip))
 
         return {

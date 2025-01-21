@@ -1,5 +1,5 @@
 <!--
-  ~ Copyright (c) 2023-2024 Arista Networks, Inc.
+  ~ Copyright (c) 2023-2025 Arista Networks, Inc.
   ~ Use of this source code is governed by the Apache License 2.0
   ~ that can be found in the LICENSE file.
   -->
@@ -35,7 +35,15 @@ will be interpreted as an integer in YAML, unless it is enclosed in quotes `bgp_
 `convert_types` option is configured to `['int']` which means AVD Action Plugins will automatically convert
 `bgp_as: 65001` to `bgp_as: "65001"`.
 
-Data conversion processing also handles deprecation warnings.
+## Data model deprecations
+
+Deprecation status can be set for every data model and can contain information about when the key will be removed or if it is already removed.
+The deprecation details can also contain a pointer to a data model to use instead and a URL for further information.
+
+If a deprecated key is set in the inputs, a deprecation warning will be shown. If the deprecation details point to a new data model and this new model
+is also given in the inputs, there is a conflict leading to validation error to be raised and the task will fail.
+
+If a removed key is set in the inputs, a validation error will be raised and the task will fail.
 
 ## Validation Options
 
@@ -100,6 +108,8 @@ All schema options (ex. `type`, `max`, `valid_values`) are validated individuall
 conform to all the rules given by the schema options.
 This means that the validator may report multiple errors about the same piece of data if it violates more than on rule.
 This also means that a poorly written schema could have conflicting schema options, which may not allow any value. For example `type: str` schema with `min_length: 10` and `max_length: 5` would never be satisfied.
+
+The `deprecation.new_key` field is used for detecting conflicts with old and new data models. To properly detect conflicts the `new_key` must be a relative path to the new data model or multiple relative paths separated by `" or "`. Conflict detection only works if the new data model in or below the same dict as the deprecated model.
 
 ### Schema Options for type `int` (Integer)
 

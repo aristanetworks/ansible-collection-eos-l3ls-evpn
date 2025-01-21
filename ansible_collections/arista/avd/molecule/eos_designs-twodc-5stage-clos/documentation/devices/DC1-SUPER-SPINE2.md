@@ -171,62 +171,62 @@ vlan internal order ascending range 1006 1199
 
 | Interface | Description | Channel Group | IP Address | VRF |  MTU | Shutdown | ACL In | ACL Out |
 | --------- | ----------- | ------------- | ---------- | ----| ---- | -------- | ------ | ------- |
-| Ethernet1 | P2P_LINK_TO_DC1-POD1-SPINE1_Ethernet2 | - | 172.16.11.64/31 | default | - | False | - | - |
-| Ethernet2 | P2P_LINK_TO_DC1-POD1-SPINE2_Ethernet2 | - | 172.16.11.66/31 | default | - | False | - | - |
-| Ethernet3 | P2P_LINK_TO_DC1-POD2-SPINE1_Ethernet2 | - | 172.16.12.64/31 | default | - | False | - | - |
-| Ethernet4 | P2P_LINK_TO_DC1-POD2-SPINE2_Ethernet2 | - | 172.16.12.66/31 | default | - | False | - | - |
-| Ethernet5 | P2P_LINK_TO_DC1-RS2_Ethernet1 | - | 172.17.10.8/31 | default | - | False | - | - |
-| Ethernet6 | P2P_LINK_TO_DC2-SUPER-SPINE2_Ethernet4 | - | 11.1.2.2/31 | default | - | False | - | - |
+| Ethernet1 | P2P_DC1-POD1-SPINE1_Ethernet2 | - | 172.16.11.64/31 | default | - | False | - | - |
+| Ethernet2 | P2P_DC1-POD1-SPINE2_Ethernet2 | - | 172.16.11.66/31 | default | - | False | - | - |
+| Ethernet3 | P2P_DC1-POD2-SPINE1_Ethernet2 | - | 172.16.12.64/31 | default | - | False | - | - |
+| Ethernet4 | P2P_DC1-POD2-SPINE2_Ethernet2 | - | 172.16.12.66/31 | default | - | False | - | - |
+| Ethernet5 | P2P_DC1-RS2_Ethernet1 | - | 172.17.10.8/31 | default | - | False | - | - |
+| Ethernet6 | P2P_DC2-SUPER-SPINE2_Ethernet4 | - | 11.1.2.2/31 | default | - | False | - | - |
 
 #### Ethernet Interfaces Device Configuration
 
 ```eos
 !
 interface Ethernet1
-   description P2P_LINK_TO_DC1-POD1-SPINE1_Ethernet2
+   description P2P_DC1-POD1-SPINE1_Ethernet2
    no shutdown
-   mac security profile MACSEC_PROFILE
    no switchport
    ip address 172.16.11.64/31
+   mac security profile MACSEC_PROFILE
    ptp enable
    service-profile QOS-PROFILE
 !
 interface Ethernet2
-   description P2P_LINK_TO_DC1-POD1-SPINE2_Ethernet2
+   description P2P_DC1-POD1-SPINE2_Ethernet2
    no shutdown
-   mac security profile MACSEC_PROFILE
    no switchport
    ip address 172.16.11.66/31
+   mac security profile MACSEC_PROFILE
    ptp enable
    service-profile QOS-PROFILE
 !
 interface Ethernet3
-   description P2P_LINK_TO_DC1-POD2-SPINE1_Ethernet2
+   description P2P_DC1-POD2-SPINE1_Ethernet2
    no shutdown
-   mac security profile MACSEC_PROFILE
    no switchport
    ip address 172.16.12.64/31
+   mac security profile MACSEC_PROFILE
    ptp enable
    service-profile QOS-PROFILE
 !
 interface Ethernet4
-   description P2P_LINK_TO_DC1-POD2-SPINE2_Ethernet2
+   description P2P_DC1-POD2-SPINE2_Ethernet2
    no shutdown
-   mac security profile MACSEC_PROFILE
    no switchport
    ip address 172.16.12.66/31
+   mac security profile MACSEC_PROFILE
    ptp enable
    service-profile QOS-PROFILE
 !
 interface Ethernet5
-   description P2P_LINK_TO_DC1-RS2_Ethernet1
+   description P2P_DC1-RS2_Ethernet1
    no shutdown
    no switchport
    ip address 172.17.10.8/31
    service-profile QOS-PROFILE
 !
 interface Ethernet6
-   description P2P_LINK_TO_DC2-SUPER-SPINE2_Ethernet4
+   description P2P_DC2-SUPER-SPINE2_Ethernet4
    no shutdown
    no switchport
    ip address 11.1.2.2/31
@@ -354,9 +354,9 @@ ASN Notation: asplain
 !
 router bgp 65100
    router-id 172.16.100.2
-   maximum-paths 4 ecmp 4
    update wait-install
    no bgp default ipv4-unicast
+   maximum-paths 4 ecmp 4
    distance bgp 20 200 200
    neighbor IPv4-UNDERLAY-PEERS peer group
    neighbor IPv4-UNDERLAY-PEERS password 7 <removed>
@@ -379,8 +379,8 @@ router bgp 65100
    neighbor 172.16.12.67 description DC1-POD2-SPINE2_Ethernet2
    neighbor 172.17.10.9 peer group IPv4-UNDERLAY-PEERS
    neighbor 172.17.10.9 remote-as 65102
-   neighbor 172.17.10.9 description DC1-RS2_Ethernet1
    neighbor 172.17.10.9 bfd
+   neighbor 172.17.10.9 description DC1-RS2_Ethernet1
    redistribute connected route-map RM-CONN-2-BGP
    !
    address-family ipv4

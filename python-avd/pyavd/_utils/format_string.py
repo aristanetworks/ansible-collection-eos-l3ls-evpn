@@ -1,4 +1,4 @@
-# Copyright (c) 2024 Arista Networks, Inc.
+# Copyright (c) 2024-2025 Arista Networks, Inc.
 # Use of this source code is governed by the Apache License 2.0
 # that can be found in the LICENSE file.
 from collections.abc import Iterable
@@ -132,6 +132,7 @@ class AvdStringFormatter(Formatter):
 
         Mostly a copy from the base class, but only supporting !u for upper().
         """
+        # TODO: !l for lowercase, !t for TitleCase and shorten interface names i.e Ethernet -> Et
         # do any conversion on the resulting object
         if conversion is None:
             return value

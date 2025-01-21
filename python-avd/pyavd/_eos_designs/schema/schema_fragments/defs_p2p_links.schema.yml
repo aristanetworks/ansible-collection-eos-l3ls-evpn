@@ -66,16 +66,26 @@ $defs:
             description: The values can be like ["node_a_as", "node_b_as"].
         descriptions:
           type: list
-          description: Interface description.
+          description: Interface descriptions.
           items:
             type: str
+            description: |-
+              Description or description template to be used on the ethernet interface.
+              This can be a template using the AVD string formatter syntax: https://avd.arista.com/devel/roles/eos_designs/docs/how-to/custom-descriptions-names.html#avd-string-formatter-syntax.
+              The available template fields are:
+                - `peer`: The name of the peer.
+                - `interface`: The local interface name.
+                - `peer_interface`: The interface on the peer.
+
+              The default description is set by `default_underlay_p2p_ethernet_description`.
+              By default the description is templated from the name and interface of the peer.
         include_in_underlay_protocol:
           type: bool
           default: true
           description: Add this interface to underlay routing protocol.
         isis_hello_padding:
           type: bool
-          default: false
+          default: true
         isis_metric:
           type: int
           convert_types:
@@ -94,6 +104,12 @@ $defs:
         isis_authentication_key:
           type: str
           description: Type-7 encrypted password.
+        isis_network_type:
+          type: str
+          default: point-to-point
+          valid_values:
+            - point-to-point
+            - broadcast
         mpls_ip:
           type: bool
           description: MPLS parameters. Default value is true if switch.mpls_lsr is true.
@@ -107,7 +123,6 @@ $defs:
           description: MTU for this P2P link. Default value same as p2p_uplinks_mtu.
         bfd:
           type: bool
-          default: false
           description: Enable BFD (only considered for BGP).
         ptp:
           description: PTP parameters.
@@ -117,6 +132,23 @@ $defs:
               type: bool
               default: false
               description: Enable PTP.
+            roles:
+              type: list
+              description: Role in boundary clock mode for each node. Default is `dynamic`.
+              items:
+                type: str
+                default: "dynamic"
+                valid_values:
+                  - "dynamic"
+                  - "master"
+            profile:
+              type: str
+              default: "aes67-r16-2016"
+              description: |-
+                Default available profiles are:
+                  - "aes67"
+                  - "aes67-r16-2016"
+                  - "smpte2059-2"
         sflow:
           type: bool
           description: Enable sFlow. Overrides `fabric_sflow` setting.
@@ -138,6 +170,20 @@ $defs:
           description: Port-channel parameters.
           type: dict
           keys:
+            description:
+              type: str
+              description: |-
+                Description or description template to be used on the port-channel interface.
+                This can be a template using the AVD string formatter syntax: https://avd.arista.com/devel/roles/eos_designs/docs/how-to/custom-descriptions-names.html#avd-string-formatter-syntax.
+                The available template fields are:
+                  - `peer`: The name of the peer.
+                  - `interface`: The local port-channel interface name.
+                  - `peer_interface`: The port-channel interface on the peer.
+                  - `port_channel_id`: The local port-channel ID.
+                  - `peer_port_channel_id`: The ID of the port-channel on the peer.
+
+                Falls back to the description on the `p2p_link` if set. Otherwise default description is set by `default_underlay_p2p_port_channel_description`.
+                By default the description is templated from the name and port_channel interface of the peer.
             mode:
               type: str
               default: active
@@ -171,6 +217,7 @@ $defs:
             - ebgp: Enforce plain IPv4 BGP peering
         structured_config:
           type: dict
+          relaxed_validation: true
           documentation_options:
             hide_keys: true
           description: |-

@@ -165,7 +165,7 @@ Enable password has been disabled
 
 | CV Compression | CloudVision Servers | VRF | Authentication | Smash Excludes | Ingest Exclude | Bypass AAA |
 | -------------- | ------------------- | --- | -------------- | -------------- | -------------- | ---------- |
-| gzip | 192.168.200.11:9910 | MGMT | key,telarista | ale,flexCounter,hardware,kni,pulse,strata | /Sysdb/cell/1/agent,/Sysdb/cell/2/agent | False |
+| gzip | 192.168.200.11:9910 | MGMT | key,<removed> | ale,flexCounter,hardware,kni,pulse,strata | /Sysdb/cell/1/agent,/Sysdb/cell/2/agent | False |
 
 #### TerminAttr Daemon Device Configuration
 
@@ -326,8 +326,8 @@ vlan 4094
 
 | Interface | Description | Mode | VLANs | Native VLAN | Trunk Group | Channel-Group |
 | --------- | ----------- | ---- | ----- | ----------- | ----------- | ------------- |
-| Ethernet1 | DC1-SVC3A_Ethernet7 | *trunk | *110-111,120-121,130-131,140-141,150,210-211,250,310-311,350 | *- | *- | 1 |
-| Ethernet2 | DC1-SVC3B_Ethernet7 | *trunk | *110-111,120-121,130-131,140-141,150,210-211,250,310-311,350 | *- | *- | 1 |
+| Ethernet1 | L2_DC1-SVC3A_Ethernet7 | *trunk | *110-111,120-121,130-131,140-141,150,210-211,250,310-311,350 | *- | *- | 1 |
+| Ethernet2 | L2_DC1-SVC3B_Ethernet7 | *trunk | *110-111,120-121,130-131,140-141,150,210-211,250,310-311,350 | *- | *- | 1 |
 | Ethernet3 | MLAG_DC1-L2LEAF2B_Ethernet3 | *trunk | *- | *- | *MLAG | 3 |
 | Ethernet4 | MLAG_DC1-L2LEAF2B_Ethernet4 | *trunk | *- | *- | *MLAG | 3 |
 
@@ -338,12 +338,12 @@ vlan 4094
 ```eos
 !
 interface Ethernet1
-   description DC1-SVC3A_Ethernet7
+   description L2_DC1-SVC3A_Ethernet7
    shutdown
    channel-group 1 mode active
 !
 interface Ethernet2
-   description DC1-SVC3B_Ethernet7
+   description L2_DC1-SVC3B_Ethernet7
    shutdown
    channel-group 1 mode active
 !
@@ -366,7 +366,7 @@ interface Ethernet4
 
 | Interface | Description | Mode | VLANs | Native VLAN | Trunk Group | LACP Fallback Timeout | LACP Fallback Mode | MLAG ID | EVPN ESI |
 | --------- | ----------- | ---- | ----- | ----------- | ------------| --------------------- | ------------------ | ------- | -------- |
-| Port-Channel1 | DC1_SVC3_Po7 | trunk | 110-111,120-121,130-131,140-141,150,210-211,250,310-311,350 | - | - | - | - | 1 | - |
+| Port-Channel1 | L2_DC1_SVC3_Port-Channel7 | trunk | 110-111,120-121,130-131,140-141,150,210-211,250,310-311,350 | - | - | - | - | 1 | - |
 | Port-Channel3 | MLAG_DC1-L2LEAF2B_Port-Channel3 | trunk | - | - | MLAG | - | - | - | - |
 
 #### Port-Channel Interfaces Device Configuration
@@ -374,7 +374,7 @@ interface Ethernet4
 ```eos
 !
 interface Port-Channel1
-   description DC1_SVC3_Po7
+   description L2_DC1_SVC3_Port-Channel7
    no shutdown
    switchport trunk allowed vlan 110-111,120-121,130-131,140-141,150,210-211,250,310-311,350
    switchport mode trunk

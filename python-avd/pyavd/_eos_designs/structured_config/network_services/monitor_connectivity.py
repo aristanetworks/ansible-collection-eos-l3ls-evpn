@@ -1,4 +1,4 @@
-# Copyright (c) 2023-2024 Arista Networks, Inc.
+# Copyright (c) 2023-2025 Arista Networks, Inc.
 # Use of this source code is governed by the Apache License 2.0
 # that can be found in the LICENSE file.
 from __future__ import annotations
@@ -28,15 +28,15 @@ class MonitorConnectivityMixin(UtilsMixin):
 
         Only used for CV Pathfinder edge routers today
         """
-        if not self._filtered_internet_exit_policies:
+        if not self._filtered_internet_exit_policies_and_connections:
             return None
 
         monitor_connectivity = {}
         interface_sets = []
         hosts = []
 
-        for policy in self._filtered_internet_exit_policies:
-            for connection in policy["connections"]:
+        for _policy, connections in self._filtered_internet_exit_policies_and_connections:
+            for connection in connections:
                 interface_name = f"Tunnel{connection['tunnel_id']}" if connection["type"] == "tunnel" else connection["source_interface"]
 
                 interface_set_name = f"SET-{self.shared_utils.sanitize_interface_name(interface_name)}"

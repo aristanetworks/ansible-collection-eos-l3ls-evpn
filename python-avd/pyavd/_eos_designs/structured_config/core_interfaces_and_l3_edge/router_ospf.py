@@ -1,4 +1,4 @@
-# Copyright (c) 2023-2024 Arista Networks, Inc.
+# Copyright (c) 2023-2025 Arista Networks, Inc.
 # Use of this source code is governed by the Apache License 2.0
 # that can be found in the LICENSE file.
 from __future__ import annotations
@@ -25,14 +25,12 @@ class RouterOspfMixin(UtilsMixin):
         if not self.shared_utils.underlay_ospf:
             return None
 
-        no_passive_interfaces = [
-            p2p_link["data"]["interface"] for p2p_link in self._filtered_p2p_links if p2p_link.get("include_in_underlay_protocol", True) is True
-        ]
+        no_passive_interfaces = [p2p_link_data["interface"] for p2p_link, p2p_link_data in self._filtered_p2p_links if p2p_link.include_in_underlay_protocol]
         if no_passive_interfaces:
             return {
                 "process_ids": [
                     {
-                        "id": self.shared_utils.underlay_ospf_process_id,
+                        "id": self.inputs.underlay_ospf_process_id,
                         "no_passive_interfaces": no_passive_interfaces,
                     },
                 ],

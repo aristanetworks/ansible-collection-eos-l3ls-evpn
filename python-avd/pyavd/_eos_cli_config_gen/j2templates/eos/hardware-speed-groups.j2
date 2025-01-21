@@ -1,0 +1,14 @@
+{#
+ Copyright (c) 2023-2025 Arista Networks, Inc.
+ Use of this source code is governed by the Apache License 2.0
+ that can be found in the LICENSE file.
+#}
+{# eos - hardware-speed-groups #}
+{% if hardware.speed_groups is arista.avd.defined %}
+!
+{%     for speed_group in hardware.speed_groups %}
+{%         if speed_group.serdes is arista.avd.defined %}
+hardware speed-group {{ speed_group.speed_group }} serdes {{ speed_group.serdes }}
+{%         endif %}
+{%     endfor %}
+{% endif %}
