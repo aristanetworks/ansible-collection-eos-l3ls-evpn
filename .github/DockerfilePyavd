@@ -1,0 +1,8 @@
+FROM ghcr.io/maheshgslab/avd-slim-test5:0.1
+COPY . /avd
+WORKDIR /avd/python-avd
+RUN python3 -m pip install --break-system-packages build && \
+    python3 -m build --wheel --outdir /tmp/wheels
+RUN for VERSION in UV3.10 UV3.11 UV3.12 UV3.13; do \
+      /$VERSION/bin/python -m pip install --no-cache-dir /tmp/wheels/*.whl; \
+    done

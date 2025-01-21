@@ -1,0 +1,4 @@
+FROM ubuntu:latest
+RUN apt-get update && apt-get install -y --no-install-recommends openssh-client git make python3-pip python3-dev docker.io && pip install uv --break-system-packages && apt-get clean && rm -rf /var/lib/apt/lists
+# Copy repository code into the image
+COPY ansible_collections/arista/avd/requirements-dev.txt /requirements-dev.txt
