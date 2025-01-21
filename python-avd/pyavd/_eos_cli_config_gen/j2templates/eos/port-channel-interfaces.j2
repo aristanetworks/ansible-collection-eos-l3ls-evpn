@@ -7,6 +7,11 @@
 {% for port_channel_interface in port_channel_interfaces | arista.avd.natural_sort('name') %}
 !
 interface {{ port_channel_interface.name }}
+{%     if port_channel_interface.comment is arista.avd.defined %}
+{%         for comment_line in port_channel_interface.comment.splitlines() | arista.avd.default([]) %}
+   !! {{ comment_line }}
+{%         endfor %}
+{%     endif %}
 {%     if port_channel_interface.profile is arista.avd.defined %}
    profile {{ port_channel_interface.profile }}
 {%     endif %}

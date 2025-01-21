@@ -14,6 +14,9 @@ keys:
       keys:
         name:
           type: str
+        comment:
+          type: str
+          description: Text comment added under ethernet interface.
         description:
           type: str
         shutdown:

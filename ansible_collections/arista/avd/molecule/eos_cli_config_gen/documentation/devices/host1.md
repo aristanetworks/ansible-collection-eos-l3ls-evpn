@@ -3875,6 +3875,8 @@ interface Dps1
 ```eos
 !
 interface Ethernet1
+   !! testing multi line comment with |-
+   !! connection to dc1-spine1
    traffic-policy input BLUE-C1-POLICY
    traffic-policy output BLUE-C2-POLICY
    description P2P_LINK_TO_DC1-SPINE1_Ethernet1
@@ -3954,6 +3956,8 @@ interface Ethernet1
 
 !
 interface Ethernet2
+   !! testing multi line comments with |
+   !! connection to server in pod02
    description SRV-POD02_Eth1
    switchport dot1q vlan tag disallowed
    switchport trunk allowed vlan 110-111,210-211
@@ -3980,6 +3984,7 @@ interface Ethernet2
    spanning-tree bpdufilter disable
 !
 interface Ethernet3
+   !! testing single line comment
    description P2P_LINK_TO_DC1-SPINE2_Ethernet2
    mtu 1500
    switchport trunk native vlan 5
@@ -5137,6 +5142,8 @@ interface Port-Channel3
    isis authentication key 0 <removed>
 !
 interface Port-Channel5
+   !! testing multi line comments with |-
+   !! applied to port-channel 5
    description DC1_L2LEAF1_Po1
    bgp session tracker ST2
    switchport trunk allowed vlan 110,201
@@ -5257,6 +5264,8 @@ interface Port-Channel14
       route-target import 00:00:01:02:03:05
 !
 interface Port-Channel15
+   !! testing multi line comments with |
+   !! applied to port-channel 15
    traffic-policy input BLUE-C1-POLICY
    traffic-policy output BLUE-C2-POLICY
    description DC1_L2LEAF3_Po1
@@ -5274,6 +5283,7 @@ interface Port-Channel15
    link tracking group EVPN_MH_ES2 upstream
 !
 interface Port-Channel16
+   !! testing single line comment
    description DC1_L2LEAF4_Po1
    switchport trunk native vlan 10
    switchport dot1q vlan tag disallowed
@@ -6583,12 +6593,14 @@ service routing protocols model multi-agent
 #### Virtual Router MAC Address Summary
 
 Virtual Router MAC Address: 00:1c:73:00:dc:01
+Virtual Router MAC Address Advertisement Interval: 40
 
 #### Virtual Router MAC Address Device Configuration
 
 ```eos
 !
 ip virtual-router mac-address 00:1c:73:00:dc:01
+ip virtual-router mac-address advertisement-interval 40
 ```
 
 ### IP Routing
