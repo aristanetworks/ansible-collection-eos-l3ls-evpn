@@ -34,8 +34,8 @@
 
 ### Management Security SSL Profiles
 
-| SSL Profile Name | TLS protocol accepted | Certificate filename | Key filename | Ciphers | CRLs |
-| ---------------- | --------------------- | -------------------- | ------------ | ------- | ---- |
+| SSL Profile Name | TLS protocol accepted | Certificate filename | Key filename | Ciphers | CRLs | FIPS restrictions enabled |
+| ---------------- | --------------------- | -------------------- | ------------ | ------- | ---- | ------------------------- |
 {%         set ssl_profiles_certs = [] %}
 {%         for ssl_profile in management_security.ssl_profiles | arista.avd.natural_sort %}
 {%             set crls = "-" %}
@@ -53,7 +53,7 @@
 {%             elif ssl_profile.cipher_list is arista.avd.defined %}
 {%                 set ciphers = [ssl_profile.cipher_list] %}
 {%             endif %}
-| {{ ssl_profile.name | arista.avd.default('-') }} | {{ ssl_profile.tls_versions | arista.avd.default('-') }} | {{ ssl_profile.certificate.file | arista.avd.default('-') }} | {{ ssl_profile.certificate.key | arista.avd.default('-') }} | {{ ciphers | arista.avd.default(['-']) | join('<br>') }} | {{ crls }} |
+| {{ ssl_profile.name | arista.avd.default('-') }} | {{ ssl_profile.tls_versions | arista.avd.default('-') }} | {{ ssl_profile.certificate.file | arista.avd.default('-') }} | {{ ssl_profile.certificate.key | arista.avd.default('-') }} | {{ ciphers | arista.avd.default(['-']) | join('<br>') }} | {{ crls }} | {{ ssl_profile.fips_restrictions | arista.avd.default('-') }} |
 {%             set tmp_cert = {} %}
 {%             if ssl_profile.trust_certificate is arista.avd.defined %}
 {%                 set tmp_cert = {'trust_certificate': ssl_profile.trust_certificate} %}

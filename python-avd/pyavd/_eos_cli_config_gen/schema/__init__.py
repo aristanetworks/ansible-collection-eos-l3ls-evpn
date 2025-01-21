@@ -5493,7 +5493,12 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
     class EosCliConfigGenDocumentation(AvdModel):
         """Subclass of AvdModel."""
 
-        _fields: ClassVar[dict] = {"enable": {"type": bool, "default": True}, "hide_passwords": {"type": bool, "default": True}, "_custom_data": {"type": dict}}
+        _fields: ClassVar[dict] = {
+            "enable": {"type": bool, "default": True},
+            "hide_passwords": {"type": bool, "default": True},
+            "toc": {"type": bool, "default": True},
+            "_custom_data": {"type": dict},
+        }
         enable: bool
         """
         Generate device Markdown documentation.
@@ -5507,6 +5512,12 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
         Default value: `True`
         """
+        toc: bool
+        """
+        Generate the table of content(TOC) on device documentation.
+
+        Default value: `True`
+        """
         _custom_data: dict[str, Any]
 
         if TYPE_CHECKING:
@@ -5516,6 +5527,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 *,
                 enable: bool | UndefinedType = Undefined,
                 hide_passwords: bool | UndefinedType = Undefined,
+                toc: bool | UndefinedType = Undefined,
                 _custom_data: dict[str, Any] | UndefinedType = Undefined,
             ) -> None:
                 """
@@ -5529,6 +5541,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                     hide_passwords:
                        Replace the input data using the `hide_passwords` filter in the Jinja2 templates by '<removed>' in
                        the documentation if true.
+                    toc: Generate the table of content(TOC) on device documentation.
                     _custom_data: _custom_data
 
                 """
@@ -12271,7 +12284,75 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
             AdministrativeGroups._item_type = str
 
-            _fields: ClassVar[dict] = {"enabled": {"type": bool}, "administrative_groups": {"type": AdministrativeGroups}, "_custom_data": {"type": dict}}
+            class Bandwidth(AvdModel):
+                """Subclass of AvdModel."""
+
+                _fields: ClassVar[dict] = {"number": {"type": int}, "unit": {"type": str}, "_custom_data": {"type": dict}}
+                number: int
+                unit: Literal["gbps", "mbps", "percent"]
+                _custom_data: dict[str, Any]
+
+                if TYPE_CHECKING:
+
+                    def __init__(
+                        self,
+                        *,
+                        number: int | UndefinedType = Undefined,
+                        unit: Literal["gbps", "mbps", "percent"] | UndefinedType = Undefined,
+                        _custom_data: dict[str, Any] | UndefinedType = Undefined,
+                    ) -> None:
+                        """
+                        Bandwidth.
+
+
+                        Subclass of AvdModel.
+
+                        Args:
+                            number: number
+                            unit: unit
+                            _custom_data: _custom_data
+
+                        """
+
+            class MinDelayStatic(AvdModel):
+                """Subclass of AvdModel."""
+
+                _fields: ClassVar[dict] = {"number": {"type": int}, "unit": {"type": str}, "_custom_data": {"type": dict}}
+                number: int
+                unit: Literal["microseconds", "milliseconds"]
+                _custom_data: dict[str, Any]
+
+                if TYPE_CHECKING:
+
+                    def __init__(
+                        self,
+                        *,
+                        number: int | UndefinedType = Undefined,
+                        unit: Literal["microseconds", "milliseconds"] | UndefinedType = Undefined,
+                        _custom_data: dict[str, Any] | UndefinedType = Undefined,
+                    ) -> None:
+                        """
+                        MinDelayStatic.
+
+
+                        Subclass of AvdModel.
+
+                        Args:
+                            number: number
+                            unit: unit
+                            _custom_data: _custom_data
+
+                        """
+
+            _fields: ClassVar[dict] = {
+                "enabled": {"type": bool},
+                "administrative_groups": {"type": AdministrativeGroups},
+                "srlg": {"type": str},
+                "metric": {"type": int},
+                "bandwidth": {"type": Bandwidth},
+                "min_delay_static": {"type": MinDelayStatic},
+                "_custom_data": {"type": dict},
+            }
             enabled: bool | None
             """Whether to enable traffic-engineering on this interface."""
             administrative_groups: AdministrativeGroups
@@ -12281,6 +12362,17 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
             Subclass of AvdList with `str` items.
             """
+            srlg: str | None
+            """SRLG name or number."""
+            metric: int | None
+            bandwidth: Bandwidth
+            """
+            Interface maximum reservable bandwidth.
+
+            Subclass of AvdModel.
+            """
+            min_delay_static: MinDelayStatic
+            """Subclass of AvdModel."""
             _custom_data: dict[str, Any]
 
             if TYPE_CHECKING:
@@ -12290,6 +12382,10 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                     *,
                     enabled: bool | None | UndefinedType = Undefined,
                     administrative_groups: AdministrativeGroups | UndefinedType = Undefined,
+                    srlg: str | None | UndefinedType = Undefined,
+                    metric: int | None | UndefinedType = Undefined,
+                    bandwidth: Bandwidth | UndefinedType = Undefined,
+                    min_delay_static: MinDelayStatic | UndefinedType = Undefined,
                     _custom_data: dict[str, Any] | UndefinedType = Undefined,
                 ) -> None:
                     """
@@ -12305,12 +12401,20 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                            integers 0-127.
 
                            Subclass of AvdList with `str` items.
+                        srlg: SRLG name or number.
+                        metric: metric
+                        bandwidth:
+                           Interface maximum reservable bandwidth.
+
+                           Subclass of AvdModel.
+                        min_delay_static: Subclass of AvdModel.
                         _custom_data: _custom_data
 
                     """
 
         _fields: ClassVar[dict] = {
             "name": {"type": str},
+            "comment": {"type": str},
             "description": {"type": str},
             "shutdown": {"type": bool},
             "load_interval": {"type": int},
@@ -12428,6 +12532,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             "_custom_data": {"type": dict},
         }
         name: str
+        comment: str | None
+        """Text comment added under ethernet interface."""
         description: str | None
         shutdown: bool | None
         load_interval: int | None
@@ -12701,6 +12807,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 self,
                 *,
                 name: str | UndefinedType = Undefined,
+                comment: str | None | UndefinedType = Undefined,
                 description: str | None | UndefinedType = Undefined,
                 shutdown: bool | None | UndefinedType = Undefined,
                 load_interval: int | None | UndefinedType = Undefined,
@@ -12825,6 +12932,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                 Args:
                     name: name
+                    comment: Text comment added under ethernet interface.
                     description: description
                     shutdown: shutdown
                     load_interval: Interval in seconds for updating interface counters.
@@ -18321,7 +18429,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             "holdtime": {"type": int},
             "management_address": {"type": str},
             "vrf": {"type": str},
-            "receive_packet_tagged_drop": {"type": str},
+            "receive_packet_tagged_drop": {"type": bool},
             "tlvs": {"type": Tlvs},
             "run": {"type": bool},
             "_custom_data": {"type": dict},
@@ -18331,7 +18439,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         holdtime: int | None
         management_address: str | None
         vrf: str | None
-        receive_packet_tagged_drop: str | None
+        receive_packet_tagged_drop: bool | None
         tlvs: Tlvs
         """Subclass of AvdIndexedList with `TlvsItem` items. Primary key is `name` (`str`)."""
         run: bool | None
@@ -18347,7 +18455,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 holdtime: int | None | UndefinedType = Undefined,
                 management_address: str | None | UndefinedType = Undefined,
                 vrf: str | None | UndefinedType = Undefined,
-                receive_packet_tagged_drop: str | None | UndefinedType = Undefined,
+                receive_packet_tagged_drop: bool | None | UndefinedType = Undefined,
                 tlvs: Tlvs | UndefinedType = Undefined,
                 run: bool | None | UndefinedType = Undefined,
                 _custom_data: dict[str, Any] | UndefinedType = Undefined,
@@ -21592,6 +21700,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
             _fields: ClassVar[dict] = {
                 "name": {"type": str},
+                "fips_restrictions": {"type": bool},
                 "tls_versions": {"type": str},
                 "cipher_list": {"type": str},
                 "ciphers": {"type": Ciphers},
@@ -21602,6 +21711,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 "_custom_data": {"type": dict},
             }
             name: str | None
+            fips_restrictions: bool | None
+            """Use FIPS compliant algorithms."""
             tls_versions: str | None
             """
             List of allowed TLS versions as string.
@@ -21647,6 +21758,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                     self,
                     *,
                     name: str | None | UndefinedType = Undefined,
+                    fips_restrictions: bool | None | UndefinedType = Undefined,
                     tls_versions: str | None | UndefinedType = Undefined,
                     cipher_list: str | None | UndefinedType = Undefined,
                     ciphers: Ciphers | UndefinedType = Undefined,
@@ -21664,6 +21776,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                     Args:
                         name: name
+                        fips_restrictions: Use FIPS compliant algorithms.
                         tls_versions:
                            List of allowed TLS versions as string.
                            Examples:  # fmt: skip
@@ -24313,6 +24426,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 "name": {"type": str},
                 "description": {"type": str},
                 "ip": {"type": str},
+                "icmp_echo_size": {"type": int},
                 "local_interfaces": {"type": str},
                 "address_only": {"type": bool, "default": True},
                 "url": {"type": str},
@@ -24322,6 +24436,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             """Host Name."""
             description: str | None
             ip: str | None
+            icmp_echo_size: int | None
+            """Size of ICMP probe in bytes."""
             local_interfaces: str | None
             address_only: bool
             """
@@ -24344,6 +24460,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                     name: str | UndefinedType = Undefined,
                     description: str | None | UndefinedType = Undefined,
                     ip: str | None | UndefinedType = Undefined,
+                    icmp_echo_size: int | None | UndefinedType = Undefined,
                     local_interfaces: str | None | UndefinedType = Undefined,
                     address_only: bool | UndefinedType = Undefined,
                     url: str | None | UndefinedType = Undefined,
@@ -24359,6 +24476,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                         name: Host Name.
                         description: description
                         ip: ip
+                        icmp_echo_size: Size of ICMP probe in bytes.
                         local_interfaces: local_interfaces
                         address_only:
                            When address-only is configured, the source IP of the packet is set to the interface
@@ -24423,6 +24541,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                     "name": {"type": str},
                     "description": {"type": str},
                     "ip": {"type": str},
+                    "icmp_echo_size": {"type": int},
                     "local_interfaces": {"type": str},
                     "address_only": {"type": bool, "default": True},
                     "url": {"type": str},
@@ -24432,6 +24551,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 """Host name."""
                 description: str | None
                 ip: str | None
+                icmp_echo_size: int | None
+                """Size of ICMP probe in bytes."""
                 local_interfaces: str | None
                 address_only: bool
                 """
@@ -24454,6 +24575,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                         name: str | UndefinedType = Undefined,
                         description: str | None | UndefinedType = Undefined,
                         ip: str | None | UndefinedType = Undefined,
+                        icmp_echo_size: int | None | UndefinedType = Undefined,
                         local_interfaces: str | None | UndefinedType = Undefined,
                         address_only: bool | UndefinedType = Undefined,
                         url: str | None | UndefinedType = Undefined,
@@ -24469,6 +24591,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                             name: Host name.
                             description: description
                             ip: ip
+                            icmp_echo_size: Size of ICMP probe in bytes.
                             local_interfaces: local_interfaces
                             address_only:
                                When address-only is configured, the source IP of the packet is set to the interface
@@ -32796,7 +32919,75 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
             AdministrativeGroups._item_type = str
 
-            _fields: ClassVar[dict] = {"enabled": {"type": bool}, "administrative_groups": {"type": AdministrativeGroups}, "_custom_data": {"type": dict}}
+            class Bandwidth(AvdModel):
+                """Subclass of AvdModel."""
+
+                _fields: ClassVar[dict] = {"number": {"type": int}, "unit": {"type": str}, "_custom_data": {"type": dict}}
+                number: int
+                unit: Literal["gbps", "mbps", "percent"]
+                _custom_data: dict[str, Any]
+
+                if TYPE_CHECKING:
+
+                    def __init__(
+                        self,
+                        *,
+                        number: int | UndefinedType = Undefined,
+                        unit: Literal["gbps", "mbps", "percent"] | UndefinedType = Undefined,
+                        _custom_data: dict[str, Any] | UndefinedType = Undefined,
+                    ) -> None:
+                        """
+                        Bandwidth.
+
+
+                        Subclass of AvdModel.
+
+                        Args:
+                            number: number
+                            unit: unit
+                            _custom_data: _custom_data
+
+                        """
+
+            class MinDelayStatic(AvdModel):
+                """Subclass of AvdModel."""
+
+                _fields: ClassVar[dict] = {"number": {"type": int}, "unit": {"type": str}, "_custom_data": {"type": dict}}
+                number: int
+                unit: Literal["microseconds", "milliseconds"]
+                _custom_data: dict[str, Any]
+
+                if TYPE_CHECKING:
+
+                    def __init__(
+                        self,
+                        *,
+                        number: int | UndefinedType = Undefined,
+                        unit: Literal["microseconds", "milliseconds"] | UndefinedType = Undefined,
+                        _custom_data: dict[str, Any] | UndefinedType = Undefined,
+                    ) -> None:
+                        """
+                        MinDelayStatic.
+
+
+                        Subclass of AvdModel.
+
+                        Args:
+                            number: number
+                            unit: unit
+                            _custom_data: _custom_data
+
+                        """
+
+            _fields: ClassVar[dict] = {
+                "enabled": {"type": bool},
+                "administrative_groups": {"type": AdministrativeGroups},
+                "srlg": {"type": str},
+                "metric": {"type": int},
+                "bandwidth": {"type": Bandwidth},
+                "min_delay_static": {"type": MinDelayStatic},
+                "_custom_data": {"type": dict},
+            }
             enabled: bool | None
             """Whether to enable traffic-engineering on this interface."""
             administrative_groups: AdministrativeGroups
@@ -32806,6 +32997,17 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
             Subclass of AvdList with `str` items.
             """
+            srlg: str | None
+            """SRLG name or number."""
+            metric: int | None
+            bandwidth: Bandwidth
+            """
+            Interface maximum reservable bandwidth.
+
+            Subclass of AvdModel.
+            """
+            min_delay_static: MinDelayStatic
+            """Subclass of AvdModel."""
             _custom_data: dict[str, Any]
 
             if TYPE_CHECKING:
@@ -32815,6 +33017,10 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                     *,
                     enabled: bool | None | UndefinedType = Undefined,
                     administrative_groups: AdministrativeGroups | UndefinedType = Undefined,
+                    srlg: str | None | UndefinedType = Undefined,
+                    metric: int | None | UndefinedType = Undefined,
+                    bandwidth: Bandwidth | UndefinedType = Undefined,
+                    min_delay_static: MinDelayStatic | UndefinedType = Undefined,
                     _custom_data: dict[str, Any] | UndefinedType = Undefined,
                 ) -> None:
                     """
@@ -32830,12 +33036,20 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                            integers 0-127.
 
                            Subclass of AvdList with `str` items.
+                        srlg: SRLG name or number.
+                        metric: metric
+                        bandwidth:
+                           Interface maximum reservable bandwidth.
+
+                           Subclass of AvdModel.
+                        min_delay_static: Subclass of AvdModel.
                         _custom_data: _custom_data
 
                     """
 
         _fields: ClassVar[dict] = {
             "name": {"type": str},
+            "comment": {"type": str},
             "description": {"type": str},
             "profile": {"type": str},
             "logging": {"type": Logging},
@@ -32894,6 +33108,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             "ptp": {"type": Ptp},
             "ip_address": {"type": str},
             "dhcp_client_accept_default_route": {"type": bool},
+            "dhcp_server_ipv4": {"type": bool},
+            "dhcp_server_ipv6": {"type": bool},
             "ip_verify_unicast_source_reachable_via": {"type": str},
             "ip_nat": {"type": IpNat},
             "ipv6_enable": {"type": bool},
@@ -32931,6 +33147,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             "_custom_data": {"type": dict},
         }
         name: str
+        comment: str | None
+        """Text comment added under port-channel interface."""
         description: str | None
         profile: str | None
         """Interface profile."""
@@ -33059,6 +33277,10 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         """IPv4 address/mask or "dhcp"."""
         dhcp_client_accept_default_route: bool | None
         """Install default-route obtained via DHCP."""
+        dhcp_server_ipv4: bool | None
+        """Enable IPv4 DHCP server."""
+        dhcp_server_ipv6: bool | None
+        """Enable IPv6 DHCP server."""
         ip_verify_unicast_source_reachable_via: Literal["any", "rx"] | None
         ip_nat: IpNat
         """Subclass of AvdModel."""
@@ -33130,6 +33352,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 self,
                 *,
                 name: str | UndefinedType = Undefined,
+                comment: str | None | UndefinedType = Undefined,
                 description: str | None | UndefinedType = Undefined,
                 profile: str | None | UndefinedType = Undefined,
                 logging: Logging | UndefinedType = Undefined,
@@ -33188,6 +33411,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 ptp: Ptp | UndefinedType = Undefined,
                 ip_address: str | None | UndefinedType = Undefined,
                 dhcp_client_accept_default_route: bool | None | UndefinedType = Undefined,
+                dhcp_server_ipv4: bool | None | UndefinedType = Undefined,
+                dhcp_server_ipv6: bool | None | UndefinedType = Undefined,
                 ip_verify_unicast_source_reachable_via: Literal["any", "rx"] | None | UndefinedType = Undefined,
                 ip_nat: IpNat | UndefinedType = Undefined,
                 ipv6_enable: bool | None | UndefinedType = Undefined,
@@ -33232,6 +33457,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                 Args:
                     name: name
+                    comment: Text comment added under port-channel interface.
                     description: description
                     profile: Interface profile.
                     logging: Subclass of AvdModel.
@@ -33314,6 +33540,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                     ptp: Subclass of AvdModel.
                     ip_address: IPv4 address/mask or "dhcp".
                     dhcp_client_accept_default_route: Install default-route obtained via DHCP.
+                    dhcp_server_ipv4: Enable IPv4 DHCP server.
+                    dhcp_server_ipv6: Enable IPv6 DHCP server.
                     ip_verify_unicast_source_reachable_via: ip_verify_unicast_source_reachable_via
                     ip_nat: Subclass of AvdModel.
                     ipv6_enable: ipv6_enable
@@ -61176,6 +61404,76 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                     """
 
+        class InterfacesItem(AvdModel):
+            """Subclass of AvdModel."""
+
+            class MetricBandwidth(AvdModel):
+                """Subclass of AvdModel."""
+
+                _fields: ClassVar[dict] = {"receive": {"type": int}, "transmit": {"type": int}, "_custom_data": {"type": dict}}
+                receive: int | None
+                """Maximum receive bandwidth in Mbps."""
+                transmit: int | None
+                """Maximum transmit bandwidth in Mbps."""
+                _custom_data: dict[str, Any]
+
+                if TYPE_CHECKING:
+
+                    def __init__(
+                        self,
+                        *,
+                        receive: int | None | UndefinedType = Undefined,
+                        transmit: int | None | UndefinedType = Undefined,
+                        _custom_data: dict[str, Any] | UndefinedType = Undefined,
+                    ) -> None:
+                        """
+                        MetricBandwidth.
+
+
+                        Subclass of AvdModel.
+
+                        Args:
+                            receive: Maximum receive bandwidth in Mbps.
+                            transmit: Maximum transmit bandwidth in Mbps.
+                            _custom_data: _custom_data
+
+                        """
+
+            _fields: ClassVar[dict] = {"name": {"type": str}, "metric_bandwidth": {"type": MetricBandwidth}, "_custom_data": {"type": dict}}
+            name: str
+            metric_bandwidth: MetricBandwidth
+            """Subclass of AvdModel."""
+            _custom_data: dict[str, Any]
+
+            if TYPE_CHECKING:
+
+                def __init__(
+                    self,
+                    *,
+                    name: str | UndefinedType = Undefined,
+                    metric_bandwidth: MetricBandwidth | UndefinedType = Undefined,
+                    _custom_data: dict[str, Any] | UndefinedType = Undefined,
+                ) -> None:
+                    """
+                    InterfacesItem.
+
+
+                    Subclass of AvdModel.
+
+                    Args:
+                        name: name
+                        metric_bandwidth: Subclass of AvdModel.
+                        _custom_data: _custom_data
+
+                    """
+
+        class Interfaces(AvdIndexedList[str, InterfacesItem]):
+            """Subclass of AvdIndexedList with `InterfacesItem` items. Primary key is `name` (`str`)."""
+
+            _primary_key: ClassVar[str] = "name"
+
+        Interfaces._item_type = InterfacesItem
+
         _fields: ClassVar[dict] = {
             "peer_dynamic_source": {"type": str},
             "path_groups": {"type": PathGroups},
@@ -61183,6 +61481,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             "policies": {"type": Policies},
             "vrfs": {"type": Vrfs},
             "tcp_mss_ceiling": {"type": TcpMssCeiling},
+            "interfaces": {"type": Interfaces},
             "_custom_data": {"type": dict},
         }
         peer_dynamic_source: Literal["stun"] | None
@@ -61197,6 +61496,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         """Subclass of AvdIndexedList with `VrfsItem` items. Primary key is `name` (`str`)."""
         tcp_mss_ceiling: TcpMssCeiling
         """Subclass of AvdModel."""
+        interfaces: Interfaces
+        """Subclass of AvdIndexedList with `InterfacesItem` items. Primary key is `name` (`str`)."""
         _custom_data: dict[str, Any]
 
         if TYPE_CHECKING:
@@ -61210,6 +61511,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 policies: Policies | UndefinedType = Undefined,
                 vrfs: Vrfs | UndefinedType = Undefined,
                 tcp_mss_ceiling: TcpMssCeiling | UndefinedType = Undefined,
+                interfaces: Interfaces | UndefinedType = Undefined,
                 _custom_data: dict[str, Any] | UndefinedType = Undefined,
             ) -> None:
                 """
@@ -61225,6 +61527,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                     policies: Subclass of AvdIndexedList with `PoliciesItem` items. Primary key is `name` (`str`).
                     vrfs: Subclass of AvdIndexedList with `VrfsItem` items. Primary key is `name` (`str`).
                     tcp_mss_ceiling: Subclass of AvdModel.
+                    interfaces: Subclass of AvdIndexedList with `InterfacesItem` items. Primary key is `name` (`str`).
                     _custom_data: _custom_data
 
                 """
@@ -70295,6 +70598,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         "ip_telnet_client_source_interfaces": {"type": IpTelnetClientSourceInterfaces},
         "ip_tftp_client_source_interfaces": {"type": IpTftpClientSourceInterfaces},
         "ip_virtual_router_mac_address": {"type": str},
+        "ip_virtual_router_mac_address_advertisement_interval": {"type": int},
         "ipv6_access_lists": {"type": Ipv6AccessLists},
         "ipv6_dhcp_relay": {"type": Ipv6DhcpRelay},
         "ipv6_hardware": {"type": Ipv6Hardware},
@@ -70674,6 +70978,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
     """Subclass of AvdList with `IpTftpClientSourceInterfacesItem` items."""
     ip_virtual_router_mac_address: str | None
     """MAC address (hh:hh:hh:hh:hh:hh)."""
+    ip_virtual_router_mac_address_advertisement_interval: int | None
+    """Advertisement interval in seconds."""
     ipv6_access_lists: Ipv6AccessLists
     """Subclass of AvdIndexedList with `Ipv6AccessListsItem` items. Primary key is `name` (`str`)."""
     ipv6_dhcp_relay: Ipv6DhcpRelay
@@ -71030,6 +71336,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             ip_telnet_client_source_interfaces: IpTelnetClientSourceInterfaces | UndefinedType = Undefined,
             ip_tftp_client_source_interfaces: IpTftpClientSourceInterfaces | UndefinedType = Undefined,
             ip_virtual_router_mac_address: str | None | UndefinedType = Undefined,
+            ip_virtual_router_mac_address_advertisement_interval: int | None | UndefinedType = Undefined,
             ipv6_access_lists: Ipv6AccessLists | UndefinedType = Undefined,
             ipv6_dhcp_relay: Ipv6DhcpRelay | UndefinedType = Undefined,
             ipv6_hardware: Ipv6Hardware | UndefinedType = Undefined,
@@ -71324,6 +71631,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 ip_telnet_client_source_interfaces: Subclass of AvdList with `IpTelnetClientSourceInterfacesItem` items.
                 ip_tftp_client_source_interfaces: Subclass of AvdList with `IpTftpClientSourceInterfacesItem` items.
                 ip_virtual_router_mac_address: MAC address (hh:hh:hh:hh:hh:hh).
+                ip_virtual_router_mac_address_advertisement_interval: Advertisement interval in seconds.
                 ipv6_access_lists: Subclass of AvdIndexedList with `Ipv6AccessListsItem` items. Primary key is `name` (`str`).
                 ipv6_dhcp_relay: Subclass of AvdModel.
                 ipv6_hardware: Subclass of AvdModel.

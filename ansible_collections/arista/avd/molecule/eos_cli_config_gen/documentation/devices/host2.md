@@ -3,6 +3,7 @@
 ## Table of Contents
 
 - [Management](#management)
+  - [Banner](#banner)
   - [Management Interfaces](#management-interfaces)
   - [Management SSH](#management-ssh)
   - [Management API gNMI](#management-api-gnmi)
@@ -86,6 +87,27 @@
   - [STUN Device Configuration](#stun-device-configuration)
 
 ## Management
+
+### Banner
+
+#### Login Banner
+
+```text
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!***!!!Unauthorized access prohibited!!!***!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+EOF
+```
+
+#### MOTD Banner
+
+```text
+.         Switch       : $(hostname)                            .
+.         Site         : DC1                      .
+.         Type info for information about the device            .
+.         Type help for information about the aliases           .
+EOF
+```
 
 ### Management Interfaces
 
@@ -335,9 +357,9 @@ aaa accounting exec default none
 
 ### Management Security SSL Profiles
 
-| SSL Profile Name | TLS protocol accepted | Certificate filename | Key filename | Ciphers | CRLs |
-| ---------------- | --------------------- | -------------------- | ------------ | ------- | ---- |
-| cipher-v1.0-v1.3 | - | - | - | v1.0 to v1.2: SHA256:SHA384<br>v1.3: TLS_AES_256_GCM_SHA384:TLS_CHACHA20_POLY1305_SHA256 | - |
+| SSL Profile Name | TLS protocol accepted | Certificate filename | Key filename | Ciphers | CRLs | FIPS restrictions enabled |
+| ---------------- | --------------------- | -------------------- | ------------ | ------- | ---- | ------------------------- |
+| cipher-v1.0-v1.3 | - | - | - | v1.0 to v1.2: SHA256:SHA384<br>v1.3: TLS_AES_256_GCM_SHA384:TLS_CHACHA20_POLY1305_SHA256 | - | - |
 
 ### Management Security Device Configuration
 

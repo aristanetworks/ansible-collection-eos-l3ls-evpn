@@ -7,11 +7,11 @@
 
     | Variable | Type | Required | Default | Value Restrictions | Description |
     | -------- | ---- | -------- | ------- | ------------------ | ----------- |
-    | [<samp>use_router_general_for_router_id</samp>](## "use_router_general_for_router_id") | Boolean |  | `False` |  | Use `router general` to set router ID for all routing protocols and VRFs. |
+    | [<samp>ip_virtual_router_mac_address_advertisement_interval</samp>](## "ip_virtual_router_mac_address_advertisement_interval") | Integer |  |  | Min: 0<br>Max: 86400 | Advertisement interval in seconds. |
 
 === "YAML"
 
     ```yaml
-    # Use `router general` to set router ID for all routing protocols and VRFs.
-    use_router_general_for_router_id: <bool; default=False>
+    # Advertisement interval in seconds.
+    ip_virtual_router_mac_address_advertisement_interval: <int; 0-86400>
     ```

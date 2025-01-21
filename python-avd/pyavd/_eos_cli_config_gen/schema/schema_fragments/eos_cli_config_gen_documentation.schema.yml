@@ -20,3 +20,7 @@ keys:
         description: |
           Replace the input data using the `hide_passwords` filter in the Jinja2 templates by '<removed>' in the documentation if true.
         default: true
+      toc:
+        type: bool
+        default: true
+        description: Generate the table of content(TOC) on device documentation.

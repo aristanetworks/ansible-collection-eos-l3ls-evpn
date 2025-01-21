@@ -6,6 +6,9 @@ ethernet_interfaces:
     peer_interface: Ethernet1
     peer_type: spine
     description: P2P_LINK_TO_DC1-SPINE1_Ethernet1
+    comment: |-
+      testing multi line comment with |-
+      connection to dc1-spine1
     speed: forced 100gfull
     mtu: 1500
     l2_mtu: 8000
@@ -161,6 +164,9 @@ ethernet_interfaces:
     peer_interface: Eth1
     peer_type: server
     description: SRV-POD02_Eth1
+    comment: |
+      testing multi line comments with |
+      connection to server in pod02
     tcp_mss_ceiling:
       ipv4_segment_size: 70
       direction: ingress
@@ -217,6 +223,7 @@ ethernet_interfaces:
     peer_interface: Ethernet2
     peer_type: spine
     description: P2P_LINK_TO_DC1-SPINE2_Ethernet2
+    comment: testing single line comment
     mtu: 1500
     ip_address: 172.31.128.1/31
     snmp_trap_link_change: false
@@ -1874,6 +1881,14 @@ ethernet_interfaces:
         - 3
         - 15-29
         - testgrp
+      srlg: TEST-SRLG
+      metric: 4
+      bandwidth:
+        number: 10
+        unit: percent
+      min_delay_static:
+        number: 5
+        unit: microseconds
 
   - name: Ethernet81/4
     description: Traffic Engineering Interface
@@ -1887,6 +1902,14 @@ ethernet_interfaces:
         - 4
         - 7-100
         - testgrp
+      srlg: 16
+      metric: 2
+      bandwidth:
+        number: 100
+        unit: mbps
+      min_delay_static:
+        number: 2
+        unit: milliseconds
 
   - name: Ethernet82
     description: Switchport_tap_tool
