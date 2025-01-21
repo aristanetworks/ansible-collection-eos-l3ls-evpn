@@ -7,7 +7,6 @@ updates:
       - "/"
       - "/python-avd/"
       - "/ansible_collections/arista/avd/"
-      - "/.github/"
     schedule:
       interval: "weekly"
       day: "monday"
