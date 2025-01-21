@@ -26,9 +26,9 @@ jobs:
       fail-fast: true
       matrix:
         avd_scenario:
-          - 'cv_workflow'
+          - "cv_workflow"
         ansible_version:
-          - 'ansible-core<2.19.0 --upgrade'
+          - "ansible-core<2.19.0 --upgrade"
     steps:
       - uses: actions/checkout@v4
       - name: Run molecule action
@@ -36,10 +36,10 @@ jobs:
           CVAAS_AAWG_CI: ${{ secrets.CVAAS_AAWG_CI }}
         uses: arista-netdevops-community/action-molecule-avd@v1.8.1
         with:
-          molecule_parentdir: 'ansible_collections/arista/avd'
-          molecule_command: 'test'
-          molecule_args: '--scenario-name ${{ matrix.avd_scenario }}'
-          pip_file: .github/requirements-ci.txt
+          molecule_parentdir: "ansible_collections/arista/avd"
+          molecule_command: "test"
+          molecule_args: "--scenario-name ${{ matrix.avd_scenario }}"
+          pip_file: .github/requirements-ci-dev.txt
           galaxy_file: "ansible_collections/arista/avd/collections.yml"
           ansible: ${{ matrix.ansible_version }}
           check_git: true
@@ -55,9 +55,9 @@ jobs:
       fail-fast: true
       matrix:
         avd_scenario:
-          - 'cv_deploy'
+          - "cv_deploy"
         ansible_version:
-          - 'ansible-core<2.19.0 --upgrade'
+          - "ansible-core<2.19.0 --upgrade"
     steps:
       - uses: actions/checkout@v4
       - name: Run molecule action
@@ -65,10 +65,10 @@ jobs:
           CVAAS_AAWG_CI: ${{ secrets.CVAAS_AAWG_CI }}
         uses: arista-netdevops-community/action-molecule-avd@v1.8.1
         with:
-          molecule_parentdir: 'ansible_collections/arista/avd'
-          molecule_command: 'test'
-          molecule_args: '--scenario-name ${{ matrix.avd_scenario }}'
-          pip_file: .github/requirements-ci.txt
+          molecule_parentdir: "ansible_collections/arista/avd"
+          molecule_command: "test"
+          molecule_args: "--scenario-name ${{ matrix.avd_scenario }}"
+          pip_file: .github/requirements-ci-dev.txt
           galaxy_file: "ansible_collections/arista/avd/collections.yml"
           ansible: ${{ matrix.ansible_version }}
           check_git: true
