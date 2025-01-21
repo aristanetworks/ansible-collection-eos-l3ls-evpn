@@ -22,6 +22,7 @@ if TYPE_CHECKING:
 
 
 def structured_config_contributor(func: Callable[[T_StructuredConfigGeneratorSubclass], None]) -> Callable[[T_StructuredConfigGeneratorSubclass], None]:
+    """Decorator to mark methods that contribute to the structured config."""
     func._is_structured_config_contributor = True
     return func
 
