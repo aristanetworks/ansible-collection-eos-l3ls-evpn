@@ -26855,15 +26855,17 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             """Subclass of AvdModel."""
 
             _fields: ClassVar[dict] = {"termination_model": {"type": str}, "termination_php_model": {"type": str}, "_custom_data": {"type": dict}}
-            termination_model: Literal["ttl pipe dscp pipe", "ttl uniform dscp pipe", "ttl uniform dscp uniform"] | None
+            termination_model: Literal["ttl pipe dscp pipe", "ttl pipe dscp uniform", "ttl uniform dscp pipe", "ttl uniform dscp uniform"] | None
             """
             TTL and DSCP configuration as a string.
+            Make sure to check for compatibility with your Platform.
             Example:
             - "ttl pipe dscp pipe"
             """
-            termination_php_model: Literal["ttl pipe dscp pipe", "ttl uniform dscp pipe"] | None
+            termination_php_model: Literal["ttl pipe dscp pipe", "ttl pipe dscp uniform", "ttl uniform dscp pipe", "ttl uniform dscp uniform"] | None
             """
             TTL and DSCP configuration as a string.
+            Make sure to check for compatibility with your Platform.
             Example:
             - "ttl pipe dscp pipe"
             """
@@ -26874,8 +26876,12 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 def __init__(
                     self,
                     *,
-                    termination_model: Literal["ttl pipe dscp pipe", "ttl uniform dscp pipe", "ttl uniform dscp uniform"] | None | UndefinedType = Undefined,
-                    termination_php_model: Literal["ttl pipe dscp pipe", "ttl uniform dscp pipe"] | None | UndefinedType = Undefined,
+                    termination_model: Literal["ttl pipe dscp pipe", "ttl pipe dscp uniform", "ttl uniform dscp pipe", "ttl uniform dscp uniform"]
+                    | None
+                    | UndefinedType = Undefined,
+                    termination_php_model: Literal["ttl pipe dscp pipe", "ttl pipe dscp uniform", "ttl uniform dscp pipe", "ttl uniform dscp uniform"]
+                    | None
+                    | UndefinedType = Undefined,
                     _custom_data: dict[str, Any] | UndefinedType = Undefined,
                 ) -> None:
                     """
@@ -26887,10 +26893,12 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                     Args:
                         termination_model:
                            TTL and DSCP configuration as a string.
+                           Make sure to check for compatibility with your Platform.
                            Example:  # fmt: skip
                            - "ttl pipe dscp pipe"
                         termination_php_model:
                            TTL and DSCP configuration as a string.
+                           Make sure to check for compatibility with your Platform.
                            Example:  # fmt: skip
                            - "ttl pipe dscp pipe"
                         _custom_data: _custom_data

@@ -68,8 +68,8 @@
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "mpls.rsvp.p2mp.enabled") | Boolean |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;shutdown</samp>](## "mpls.rsvp.shutdown") | Boolean |  |  |  | Make `shutdown` key false for `no shutdown` cli. |
     | [<samp>&nbsp;&nbsp;tunnel</samp>](## "mpls.tunnel") | Dictionary |  |  |  | Configure tunnel termination model. |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;termination_model</samp>](## "mpls.tunnel.termination_model") | String |  |  | Valid Values:<br>- <code>ttl pipe dscp pipe</code><br>- <code>ttl uniform dscp pipe</code><br>- <code>ttl uniform dscp uniform</code> | TTL and DSCP configuration as a string.<br>Example:<br>- "ttl pipe dscp pipe"<br> |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;termination_php_model</samp>](## "mpls.tunnel.termination_php_model") | String |  |  | Valid Values:<br>- <code>ttl pipe dscp pipe</code><br>- <code>ttl uniform dscp pipe</code> | TTL and DSCP configuration as a string.<br>Example:<br>- "ttl pipe dscp pipe"<br> |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;termination_model</samp>](## "mpls.tunnel.termination_model") | String |  |  | Valid Values:<br>- <code>ttl pipe dscp pipe</code><br>- <code>ttl pipe dscp uniform</code><br>- <code>ttl uniform dscp pipe</code><br>- <code>ttl uniform dscp uniform</code> | TTL and DSCP configuration as a string.<br>Make sure to check for compatibility with your Platform.<br>Example:<br>- "ttl pipe dscp pipe"<br> |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;termination_php_model</samp>](## "mpls.tunnel.termination_php_model") | String |  |  | Valid Values:<br>- <code>ttl pipe dscp pipe</code><br>- <code>ttl pipe dscp uniform</code><br>- <code>ttl uniform dscp pipe</code><br>- <code>ttl uniform dscp uniform</code> | TTL and DSCP configuration as a string.<br>Make sure to check for compatibility with your Platform.<br>Example:<br>- "ttl pipe dscp pipe"<br> |
 
 === "YAML"
 
@@ -224,12 +224,14 @@
       tunnel:
 
         # TTL and DSCP configuration as a string.
+        # Make sure to check for compatibility with your Platform.
         # Example:
         # - "ttl pipe dscp pipe"
-        termination_model: <str; "ttl pipe dscp pipe" | "ttl uniform dscp pipe" | "ttl uniform dscp uniform">
+        termination_model: <str; "ttl pipe dscp pipe" | "ttl pipe dscp uniform" | "ttl uniform dscp pipe" | "ttl uniform dscp uniform">
 
         # TTL and DSCP configuration as a string.
+        # Make sure to check for compatibility with your Platform.
         # Example:
         # - "ttl pipe dscp pipe"
-        termination_php_model: <str; "ttl pipe dscp pipe" | "ttl uniform dscp pipe">
+        termination_php_model: <str; "ttl pipe dscp pipe" | "ttl pipe dscp uniform" | "ttl uniform dscp pipe" | "ttl uniform dscp uniform">
     ```

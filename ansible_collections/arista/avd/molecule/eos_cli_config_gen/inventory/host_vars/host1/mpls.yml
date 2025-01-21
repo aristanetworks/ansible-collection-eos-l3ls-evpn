@@ -7,7 +7,8 @@ mpls:
     shutdown: false
     transport_address_interface: Loopback0
   tunnel:
-    termination_model: "ttl uniform dscp uniform"
+    termination_model: ttl uniform dscp uniform
+    termination_php_model: ttl pipe dscp pipe
   icmp:
     fragmentation_needed_tunneling: true
   rsvp:

@@ -9289,6 +9289,7 @@ router bfd
 | LDP Transport-Address Interface | Loopback0 |
 | ICMP Fragmentation-Needed Tunneling Enabled | True |
 | Tunnel Termination Model | ttl uniform dscp uniform |
+| Tunnel Termination PHP Model | ttl pipe dscp pipe |
 
 ### MPLS Interfaces
 
@@ -9355,6 +9356,7 @@ router bfd
 !
 mpls ip
 mpls tunnel termination model ttl uniform dscp uniform
+mpls tunnel termination php model ttl pipe dscp pipe
 !
 mpls ldp
    router-id 192.168.1.1

@@ -290,18 +290,23 @@ keys:
             type: str
             description: |
               TTL and DSCP configuration as a string.
+              Make sure to check for compatibility with your Platform.
               Example:
               - "ttl pipe dscp pipe"
             valid_values:
               - "ttl pipe dscp pipe"
+              - "ttl pipe dscp uniform"
               - "ttl uniform dscp pipe"
               - "ttl uniform dscp uniform"
           termination_php_model:
             type: str
             description: |
               TTL and DSCP configuration as a string.
+              Make sure to check for compatibility with your Platform.
               Example:
               - "ttl pipe dscp pipe"
             valid_values:
               - "ttl pipe dscp pipe"
+              - "ttl pipe dscp uniform"
               - "ttl uniform dscp pipe"
+              - "ttl uniform dscp uniform"
