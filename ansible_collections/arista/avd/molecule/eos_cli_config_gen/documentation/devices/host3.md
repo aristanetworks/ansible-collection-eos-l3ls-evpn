@@ -28,29 +28,6 @@ interface Management1
    ip address 10.73.255.122/24
 ```
 
-## Authentication
-
-### AAA Accounting
-
-#### AAA Accounting Summary
-
-| Type | Commands | Record type | Group | Logging |
-| ---- | -------- | ----------- | ----- | ------- |
-| Exec - Console | - | start-stop | - | False |
-| Commands - Console | all | start-stop | - | False |
-| Commands - Console | 0 | start-stop |  -  | False |
-| Exec - Default | - | start-stop | - | False |
-| System - Default | - | start-stop | - | False |
-| Dot1x - Default | - | start-stop | - | False |
-| Commands - Default | 0 | start-stop | - | False |
-| Commands - Default | 1 | start-stop | TACACS | False |
-
-#### AAA Accounting Device Configuration
-
-```eos
-aaa accounting commands 1 default start-stop group TACACS
-```
-
 ## Monitoring
 
 ### TerminAttr Daemon

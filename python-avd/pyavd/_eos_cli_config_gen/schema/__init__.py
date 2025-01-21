@@ -31,7 +31,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                     """Subclass of AvdModel."""
 
                     _fields: ClassVar[dict] = {"method": {"type": str}, "group": {"type": str}, "_custom_data": {"type": dict}}
-                    method: Literal["logging", "group"] | None
+                    method: Literal["logging", "group"]
                     group: str | None
                     """
                     Specify the server group to be used.
@@ -45,7 +45,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                         def __init__(
                             self,
                             *,
-                            method: Literal["logging", "group"] | None | UndefinedType = Undefined,
+                            method: Literal["logging", "group"] | UndefinedType = Undefined,
                             group: str | None | UndefinedType = Undefined,
                             _custom_data: dict[str, Any] | UndefinedType = Undefined,
                         ) -> None:
@@ -118,7 +118,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                     """Subclass of AvdModel."""
 
                     _fields: ClassVar[dict] = {"method": {"type": str}, "group": {"type": str}, "_custom_data": {"type": dict}}
-                    method: Literal["logging", "group"] | None
+                    method: Literal["logging", "group"]
                     group: str | None
                     """
                     Specify the server group to be used.
@@ -132,7 +132,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                         def __init__(
                             self,
                             *,
-                            method: Literal["logging", "group"] | None | UndefinedType = Undefined,
+                            method: Literal["logging", "group"] | UndefinedType = Undefined,
                             group: str | None | UndefinedType = Undefined,
                             _custom_data: dict[str, Any] | UndefinedType = Undefined,
                         ) -> None:
@@ -237,7 +237,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                     """Subclass of AvdModel."""
 
                     _fields: ClassVar[dict] = {"method": {"type": str}, "group": {"type": str}, "_custom_data": {"type": dict}}
-                    method: Literal["logging", "group"] | None
+                    method: Literal["logging", "group"]
                     group: str | None
                     """
                     Specify the server group to be used.
@@ -251,7 +251,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                         def __init__(
                             self,
                             *,
-                            method: Literal["logging", "group"] | None | UndefinedType = Undefined,
+                            method: Literal["logging", "group"] | UndefinedType = Undefined,
                             group: str | None | UndefinedType = Undefined,
                             _custom_data: dict[str, Any] | UndefinedType = Undefined,
                         ) -> None:
@@ -338,7 +338,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                     """Subclass of AvdModel."""
 
                     _fields: ClassVar[dict] = {"method": {"type": str}, "group": {"type": str}, "multicast": {"type": bool}, "_custom_data": {"type": dict}}
-                    method: Literal["logging", "group"] | None
+                    method: Literal["logging", "group"]
                     group: str | None
                     """
                     Specify the server group to be used.
@@ -358,7 +358,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                         def __init__(
                             self,
                             *,
-                            method: Literal["logging", "group"] | None | UndefinedType = Undefined,
+                            method: Literal["logging", "group"] | UndefinedType = Undefined,
                             group: str | None | UndefinedType = Undefined,
                             multicast: bool | None | UndefinedType = Undefined,
                             _custom_data: dict[str, Any] | UndefinedType = Undefined,
@@ -450,7 +450,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                     """Subclass of AvdModel."""
 
                     _fields: ClassVar[dict] = {"method": {"type": str}, "group": {"type": str}, "_custom_data": {"type": dict}}
-                    method: Literal["logging", "group"] | None
+                    method: Literal["logging", "group"]
                     group: str | None
                     """
                     Specify the server group to be used.
@@ -464,7 +464,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                         def __init__(
                             self,
                             *,
-                            method: Literal["logging", "group"] | None | UndefinedType = Undefined,
+                            method: Literal["logging", "group"] | UndefinedType = Undefined,
                             group: str | None | UndefinedType = Undefined,
                             _custom_data: dict[str, Any] | UndefinedType = Undefined,
                         ) -> None:
@@ -547,7 +547,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                     """Subclass of AvdModel."""
 
                     _fields: ClassVar[dict] = {"method": {"type": str}, "group": {"type": str}, "_custom_data": {"type": dict}}
-                    method: Literal["logging", "group"] | None
+                    method: Literal["logging", "group"]
                     group: str | None
                     """
                     Specify the server group to be used.
@@ -561,7 +561,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                         def __init__(
                             self,
                             *,
-                            method: Literal["logging", "group"] | None | UndefinedType = Undefined,
+                            method: Literal["logging", "group"] | UndefinedType = Undefined,
                             group: str | None | UndefinedType = Undefined,
                             _custom_data: dict[str, Any] | UndefinedType = Undefined,
                         ) -> None:

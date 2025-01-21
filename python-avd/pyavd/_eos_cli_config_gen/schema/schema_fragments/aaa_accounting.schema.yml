@@ -39,7 +39,9 @@ keys:
                   keys:
                     method:
                       type: str
+                      required: true
                       valid_values: ["logging", "group"]
+                      min_length: 1
                     group:
                       type: str
                       description: |-
