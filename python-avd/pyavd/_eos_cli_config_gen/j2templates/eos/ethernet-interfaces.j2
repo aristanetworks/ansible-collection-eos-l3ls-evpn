@@ -8,6 +8,11 @@
 {% for ethernet_interface in ethernet_interfaces | arista.avd.natural_sort('name') %}
 !
 interface {{ ethernet_interface.name }}
+{%     if ethernet_interface.comment is arista.avd.defined %}
+{%         for comment_line in ethernet_interface.comment.splitlines() | arista.avd.default([]) %}
+   !! {{ comment_line }}
+{%         endfor %}
+{%     endif %}
 {%     if ethernet_interface.profile is arista.avd.defined %}
    profile {{ ethernet_interface.profile }}
 {%     endif %}
