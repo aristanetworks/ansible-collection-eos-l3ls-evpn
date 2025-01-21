@@ -6,7 +6,7 @@ from __future__ import annotations
 from logging import getLogger
 from typing import TYPE_CHECKING
 
-from pyavd._cv.client.exceptions import CVDuplicatedDeviceInfo, CVResourceNotFound
+from pyavd._cv.client.exceptions import CVDuplicatedDevices, CVResourceNotFound
 
 from .models import CVDevice
 
@@ -254,7 +254,7 @@ def duplicated_devices_handler(
             "verify_devices_on_cv: Devices with duplicated system_mac_address discovered in inventory (structured config): %s",
             duplicated_system_mac_address,
         )
-    exception = CVDuplicatedDeviceInfo("Duplicated devices found in inventory", duplicated_serial_number, duplicated_system_mac_address)
+    exception = CVDuplicatedDevices("Duplicated devices found in inventory", duplicated_serial_number, duplicated_system_mac_address)
     if not tolerate_duplicated_devices:
         raise exception
 
