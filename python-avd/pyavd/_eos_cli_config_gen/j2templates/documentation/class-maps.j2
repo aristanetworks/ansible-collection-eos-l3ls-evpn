@@ -25,10 +25,10 @@
 {%             set row.value = class_map.ip.access_group %}
 {%         elif class_map.dscp is arista.avd.defined %}
 {%             set row.type = 'dscp' %}
-{%             set row.value = class_map.dscp.dscp_value %}
-{%             if class_map.dscp.ecn is arista.avd.defined %}
-{%                 set row.value = row.value ~ " ecn " ~ class_map.dscp.ecn %}
-{%             endif %}
+{%             set row.value = class_map.dscp %}
+{%         elif class_map.ecn is arista.avd.defined %}
+{%             set row.type = 'ecn' %}
+{%             set row.value = class_map.ecn %}
 {%         else %}
 {%             set row.type = '-' %}
 {%             set row.value = '-' %}
