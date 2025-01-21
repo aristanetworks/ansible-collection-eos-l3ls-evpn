@@ -19,7 +19,7 @@ def natural_sort(iterable: Iterable | None, sort_key: str | None = None, *, stri
     Args:
         iterable: Input iterable.
         sort_key: Key to sort by, defaults to None.
-        strict: If strict is True, raise an error is the sort_key is missing and no default value is given.
+        strict: If strict is True, raise an error if the sort_key is missing and no default value is given.
         ignore_case: If ignore_case is True, strings are applied lower() function.
         default_value: Default value to use if the sort_key is missing.
 
