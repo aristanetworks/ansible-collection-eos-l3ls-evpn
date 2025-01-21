@@ -529,8 +529,6 @@ tenants:
           - id: 1000
             name: VLAN1000
             ip_address_virtual: 10.0.100.1/24
-            nodes:
-              - node: leaf-wan-use-evpn-on-lan
     l2vlans:
       - id: 101
         name: VLAN101
