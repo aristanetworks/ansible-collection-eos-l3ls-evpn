@@ -358,6 +358,8 @@ no aaa authorization config-commands
 | Commands - Console | 0 | none |  -  | False |
 | Exec - Default | - | none | - | - |
 | System - Default | - | none | - | - |
+| Commands - Default | all | none | - | - |
+| Commands - Default | 0 | none | - | - |
 
 #### AAA Accounting Device Configuration
 

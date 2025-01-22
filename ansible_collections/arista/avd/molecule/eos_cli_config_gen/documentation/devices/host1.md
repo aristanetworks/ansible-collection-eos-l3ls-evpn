@@ -1382,7 +1382,6 @@ aaa authorization commands 10,15 default group tacacs+ local
 | Commands - Console | 0 | start-stop | - | True |
 | Commands - Console | 1 | start-stop | TACACS1 | False |
 | Commands - Console | 2 | none | - | True |
-| Commands - Console | 3 | start-stop |  -  | False |
 | Exec - Default | - | start-stop | TACACS | True |
 | System - Default | - | start-stop | TACACS | True |
 | Dot1x - Default | - | start-stop | RADIUS | True |

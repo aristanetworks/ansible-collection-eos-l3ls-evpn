@@ -34,6 +34,7 @@ keys:
                   remove_in_version: v6.0.0
               methods:
                 type: list
+                min_length: 1
                 items:
                   type: dict
                   keys:
@@ -41,7 +42,6 @@ keys:
                       type: str
                       required: true
                       valid_values: ["logging", "group"]
-                      min_length: 1
                     group:
                       type: str
                       description: |-

@@ -40,6 +40,7 @@ keys:
                   remove_in_version: v6.0.0
               methods:
                 type: list
+                min_length: 1
                 items:
                   type: dict
                   keys:
@@ -49,7 +50,6 @@ keys:
                       valid_values:
                       - logging
                       - group
-                      min_length: 1
                     group:
                       type: str
                       description: 'Specify the server group to be used.
