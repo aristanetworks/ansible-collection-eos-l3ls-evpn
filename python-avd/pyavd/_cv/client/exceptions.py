@@ -87,4 +87,4 @@ class CVMessageSizeExceeded(CVClientException):
 
 
 class CVDuplicatedDevices(CVClientException):
-    """Discovered CVDevices with duplicated serial_number or system_mac_address."""
+    """Device inputs contain duplicated serial_number or system_mac_address."""

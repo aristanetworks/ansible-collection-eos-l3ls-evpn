@@ -28,6 +28,7 @@ from .models import (
     DeployToCvResult,
 )
 from .verify_devices_on_cv import verify_devices_on_cv
+from .verify_inputs import verify_device_inputs
 
 LOGGER = getLogger(__name__)
 
@@ -93,6 +94,7 @@ async def deploy_to_cv(
             - Add objects to result.deployed_x/skipped_x as we go through each of the following steps.
         + Initialize CVClient
         + Gather all devices from the given lists.
+        + Verify that device inputs have no overlapping serial numbers or System MAC addresses
         + On CV Identify all devices based on hostname, serial number or System MAC address.
             + In-place update device objects.
         + On CV Create or update existing Workspace with name and description.
@@ -133,20 +135,24 @@ async def deploy_to_cv(
             # Create workspace
             await create_workspace_on_cv(workspace=result.workspace, cv_client=cv_client)
 
+            # Form the list of targeted CVDevices
+            devices = (
+                [tag.device for tag in device_tags if tag.device is not None]
+                + [tag.device for tag in interface_tags if tag.device is not None]
+                + [config.device for config in configs if config.device is not None]
+            )
+            # Verify that structured config of the targeted devices has no overlapping `serial_number`s or `system_mac_address`es.
+            verify_device_inputs(devices=devices, tolerate_duplicated_devices=tolerate_duplicated_devices, warnings=result.warnings)
+
             try:
                 # Verify devices exist and update CVDevice objects with _exists_on_cv.
                 # Depending on skip_missing_devices we will raise or skip missing devices.
                 # Since verify_devices will silently return if _exists_on_cv is already set,
                 # we can just send all the items even if we have duplicate device objects.
                 await verify_devices_on_cv(
-                    devices=(
-                        [tag.device for tag in device_tags if tag.device is not None]
-                        + [tag.device for tag in interface_tags if tag.device is not None]
-                        + [config.device for config in configs if config.device is not None]
-                    ),
+                    devices=devices,
                     workspace_id=result.workspace.id,
                     skip_missing_devices=skip_missing_devices,
-                    tolerate_duplicated_devices=tolerate_duplicated_devices,
                     warnings=result.warnings,
                     cv_client=cv_client,
                 )
