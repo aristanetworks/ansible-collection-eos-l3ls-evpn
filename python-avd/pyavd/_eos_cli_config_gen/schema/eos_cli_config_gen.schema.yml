@@ -9265,13 +9265,13 @@ keys:
             - int
       servers:
         type: list
+        primary_key: name
         items:
           type: dict
           keys:
             name:
               type: str
               description: IP or hostname e.g., 2.2.2.55, 2001:db8::55, ie.pool.ntp.org.
-              required: true
             burst:
               type: bool
             iburst:

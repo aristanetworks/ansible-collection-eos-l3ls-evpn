@@ -26838,8 +26838,10 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                     """
 
-        class Servers(AvdList[ServersItem]):
-            """Subclass of AvdList with `ServersItem` items."""
+        class Servers(AvdIndexedList[str, ServersItem]):
+            """Subclass of AvdIndexedList with `ServersItem` items. Primary key is `name` (`str`)."""
+
+            _primary_key: ClassVar[str] = "name"
 
         Servers._item_type = ServersItem
 
@@ -26906,7 +26908,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         local_interface: LocalInterface
         """Subclass of AvdModel."""
         servers: Servers
-        """Subclass of AvdList with `ServersItem` items."""
+        """Subclass of AvdIndexedList with `ServersItem` items. Primary key is `name` (`str`)."""
         authenticate: bool | None
         authenticate_servers_only: bool | None
         authentication_keys: AuthenticationKeys
@@ -26936,7 +26938,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                 Args:
                     local_interface: Subclass of AvdModel.
-                    servers: Subclass of AvdList with `ServersItem` items.
+                    servers: Subclass of AvdIndexedList with `ServersItem` items. Primary key is `name` (`str`).
                     authenticate: authenticate
                     authenticate_servers_only: authenticate_servers_only
                     authentication_keys: Subclass of AvdIndexedList with `AuthenticationKeysItem` items. Primary key is `id` (`int`).
