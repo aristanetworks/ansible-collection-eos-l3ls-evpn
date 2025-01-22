@@ -459,18 +459,18 @@ DNS Domain: anta.avd.com
 ```eos
 !
 ip name-server group mynameserver0
-   name-server vrf default 1.1.1.1
-   name-server vrf default 2.2.2.2 priority 1
+   name-server vrf default 1.1.1.1 priority 0
    name-server vrf default 8.8.8.8
+   name-server vrf default 2.2.2.2 priority 1
 !
 ip name-server group mynameserver1
+   name-server vrf default 1.1.1.1
+   name-server vrf vrf1 2.2.2.1
+   name-server vrf vrf1 8.8.8.8
    name-server vrf vrf1 2.2.2.2 priority 1
    name-server vrf a_vrf 2.2.2.7 priority 3
    name-server vrf b_vrf 2.2.2.6 priority 3
    name-server vrf vrf1 2.2.2.4 priority 4
-   name-server vrf default 1.1.1.1
-   name-server vrf vrf1 2.2.2.1
-   name-server vrf vrf1 8.8.8.8
    dns domain arista.avd.com
    ip domain-list domain-list1
 !
