@@ -66,6 +66,7 @@ keys:
                 - str
             vrf:
               type: str
+              # TODO(AVD 6.0.0): Move the vrf key outside to servers list as all the server should be configured in single vrf.
               description: VRF name.
               convert_types:
                 - int
