@@ -1161,7 +1161,7 @@ roles/eos_designs/docs/tables/default-connected-endpoints-description.md
 The `network_ports` data model is intended to be used with `port_profiles` and `parent_profiles` to keep the configuration generic and compact,
 but all features and keys supported under `connected_endpoints.adapters` are also supported directly under `network_ports`.
 
-To filter what switches to configure, match on a switch's full hostname or platform type using regex patterns. When both criteria are used together, the switch must match both in order to generate the assigned port configuration.
+To filter what switches to configure, match on a switch full hostname or platform type using regex patterns. When both criteria are used together, the switch must match both in order to generate the assigned port configuration.
 
 All ranges defined under `switch_ports` will be expanded to individual port configuration which leads to a some behavioral differences to `connected_endpoints`:
 
