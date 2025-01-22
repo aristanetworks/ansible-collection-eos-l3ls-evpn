@@ -24,7 +24,7 @@ keys:
         platforms:
           type: list
           min_length: 1
-          description: |
+          description: |-
             Regex matching the full platform name of one or more switches. If used in combination with switch hostname matching, both criteria must match for configuration.
             If you need to add custom platforms to match specific port quantities, create them under `custom_platform_settings`. Entries under `custom_platform_settings` should
             match the platform match criteria.
