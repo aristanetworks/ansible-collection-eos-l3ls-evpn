@@ -88,7 +88,7 @@ class UtilsMixin:
         """
         Match a list of regexes with the supplied value.
 
-        Regex must match the full value to pass, so regex is wrapped in ^$.
+        Regex must match the full value to pass.
         """
         return any(re.fullmatch(regex, value) for regex in regexes)
 
