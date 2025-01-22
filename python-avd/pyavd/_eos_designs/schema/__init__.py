@@ -896,9 +896,14 @@ class EosDesigns(EosDesignsRootModel):
         """Subclass of AvdModel."""
         mlag_ipv4_vrfs_peer: MlagIpv4VrfsPeer
         """
-        If the names of `mlag_ipv4_vrfs_peer.name` and `mlag_ipv4_underlay_peer.name` are same
+        Set this peer group name to use a different peer-group for MLAG peerings in VRFs.
+        By default AVD
+        uses the `mlag_ipv4_underlay_peer` peer group for the Underlay and for all the VRFS.
+
+        If the names
+        of `mlag_ipv4_vrfs_peer.name` and `mlag_ipv4_underlay_peer.name` are the same
         then all the
-        attributes of key `mlag_ipv4_vrfs_peer` will be ignored.
+        attributes of key `mlag_ipv4_vrfs_peer` are ignored.
 
         Subclass of AvdModel.
         """
@@ -949,9 +954,14 @@ class EosDesigns(EosDesignsRootModel):
                 Args:
                     ipv4_underlay_peers: Subclass of AvdModel.
                     mlag_ipv4_vrfs_peer:
-                       If the names of `mlag_ipv4_vrfs_peer.name` and `mlag_ipv4_underlay_peer.name` are same
+                       Set this peer group name to use a different peer-group for MLAG peerings in VRFs.
+                       By default AVD
+                       uses the `mlag_ipv4_underlay_peer` peer group for the Underlay and for all the VRFS.
+
+                       If the names
+                       of `mlag_ipv4_vrfs_peer.name` and `mlag_ipv4_underlay_peer.name` are the same
                        then all the
-                       attributes of key `mlag_ipv4_vrfs_peer` will be ignored.
+                       attributes of key `mlag_ipv4_vrfs_peer` are ignored.
 
                        Subclass of AvdModel.
                     mlag_ipv4_underlay_peer: Subclass of AvdModel.
