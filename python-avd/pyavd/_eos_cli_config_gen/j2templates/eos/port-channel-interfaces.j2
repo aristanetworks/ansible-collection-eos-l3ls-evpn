@@ -7,6 +7,11 @@
 {% for port_channel_interface in port_channel_interfaces | arista.avd.natural_sort('name') %}
 !
 interface {{ port_channel_interface.name }}
+{%     if port_channel_interface.comment is arista.avd.defined %}
+{%         for comment_line in port_channel_interface.comment.splitlines() | arista.avd.default([]) %}
+   !! {{ comment_line }}
+{%         endfor %}
+{%     endif %}
 {%     if port_channel_interface.profile is arista.avd.defined %}
    profile {{ port_channel_interface.profile }}
 {%     endif %}
@@ -355,6 +360,12 @@ interface {{ port_channel_interface.name }}
 {%         else %}
    bfd per-link
 {%         endif %}
+{%     endif %}
+{%     if port_channel_interface.dhcp_server_ipv4 is arista.avd.defined(true) %}
+   dhcp server ipv4
+{%     endif %}
+{%     if port_channel_interface.dhcp_server_ipv6 is arista.avd.defined(true) %}
+   dhcp server ipv6
 {%     endif %}
 {%     if port_channel_interface.ip_igmp_host_proxy.enabled is arista.avd.defined(true) %}
 {%         set host_proxy_cli =  "ip igmp host-proxy" %}

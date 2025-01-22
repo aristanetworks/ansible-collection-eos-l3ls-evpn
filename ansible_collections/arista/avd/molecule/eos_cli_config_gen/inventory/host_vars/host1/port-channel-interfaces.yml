@@ -3,6 +3,9 @@
 port_channel_interfaces:
   - name: Port-Channel5
     description: DC1_L2LEAF1_Po1
+    comment: |-
+      testing multi line comments with |-
+      applied to port-channel 5
     link_tracking_groups:
       - name: EVPN_MH_ES1
         direction: downstream
@@ -70,6 +73,9 @@ port_channel_interfaces:
           destination_mac_address: forwardable
 
   - name: Port-Channel15
+    comment: |
+      testing multi line comments with |
+      applied to port-channel 15
     description: DC1_L2LEAF3_Po1
     link_tracking_groups:
       - name: EVPN_MH_ES2
@@ -111,6 +117,7 @@ port_channel_interfaces:
       output: BLUE-C2-POLICY
 
   - name: Port-Channel16
+    comment: testing single line comment
     description: DC1_L2LEAF4_Po1
     snmp_trap_link_change: true
     mlag: 16
@@ -721,6 +728,8 @@ port_channel_interfaces:
     lacp_fallback_mode: individual
     ip_address: dhcp
     dhcp_client_accept_default_route: true
+    dhcp_server_ipv4: true
+    dhcp_server_ipv6: true
 
   - name: Port-Channel113
     description: interface_with_mpls_enabled
@@ -729,6 +738,8 @@ port_channel_interfaces:
     ip_address: 172.31.128.9/31
     # This won't be rendered because IP address is not DHCP
     dhcp_client_accept_default_route: true
+    dhcp_server_ipv4: false
+    dhcp_server_ipv6: false
     mpls:
       ip: true
       ldp:

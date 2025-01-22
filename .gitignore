@@ -31,9 +31,6 @@ __pycache__/
 # ansible_collections/arista/avd/tests ignores
 ansible_collections/arista/avd/tests/.mypy_cache/
 
-# ansible-lint ignores
-ansible_collections/arista/avd/.ansible
-
 # Development
 ## pyenv
 .python-version
