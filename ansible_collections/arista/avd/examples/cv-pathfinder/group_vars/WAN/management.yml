@@ -84,10 +84,10 @@ ipv4_acls:
         destination: any
 
 # DNS
-name_servers:
-  - 192.168.17.1
-
-custom_structured_configuration_dns_domain: wan.example.local
+dns_settings:
+  domain: wan.example.local
+  servers:
+    - ip_address: 192.168.17.1
 
 # AAA
 custom_structured_configuration_aaa_authorization:

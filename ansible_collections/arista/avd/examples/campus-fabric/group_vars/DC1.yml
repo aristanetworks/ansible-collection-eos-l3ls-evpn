@@ -21,9 +21,7 @@ mgmt_interface: Management0
 dns_settings:
   servers:
     - ip_address: 8.8.4.4
-      use_mgmt_interface_vrf: true
     - ip_address: 8.8.8.8
-      use_mgmt_interface_vrf: true
 
 # NTP Servers IP or DNS name, first NTP server will be preferred, and sourced from Management VRF
 ntp_settings:

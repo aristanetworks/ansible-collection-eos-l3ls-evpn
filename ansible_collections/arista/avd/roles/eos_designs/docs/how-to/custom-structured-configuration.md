@@ -49,9 +49,10 @@ A good example to demonstrate the various behaviors is to use the `ip name-serve
 ```yaml
 ---
 # Only eos_designs name_servers variables
-name_servers:
-  - 192.168.42.10
-  - 192.168.42.40
+dns_settings:
+  servers:
+    - ip_address: 192.168.42.10
+    - ip_address: 192.168.42.40
 ```
 
 will generate as intended config:
@@ -87,9 +88,10 @@ ip name-server vrf EOS_CLI 192.168.42.10
 # Both name_servers from eos_designs and ip_name_servers from
 # eos_ci_config_gen. The second ones WON'T be displayed
 # as they are overwritten by the generated structured_configuration
-name_servers:
-  - 192.168.42.10
-  - 192.168.42.40
+dns_settings:
+  servers:
+    - ip_address: 192.168.42.10
+    - ip_address: 192.168.42.40
 
 ip_name_servers:
   - ip_address: 192.168.42.1
@@ -111,9 +113,10 @@ ip name-server vrf MGMT 192.168.42.40
 ---
 # Both name_servers from eos_designs and ip_name_servers from
 # custom_structured_configuration will make it to the intended config
-name_servers:
-  - 192.168.42.10
-  - 192.168.42.40
+dns_settings:
+  servers:
+    - ip_address: 192.168.42.10
+    - ip_address: 192.168.42.40
 
 custom_structured_configuration_ip_name_servers:
   - ip_address: 192.168.42.1
@@ -364,9 +367,10 @@ In this example `Ethernet4000` will be added to the `ethernet_interfaces` list i
 #### Example with `append` list_merge strategy
 
 ```yaml
-name_servers:
-  - 10.10.10.10
-  - 10.10.10.11
+dns_settings:
+  servers:
+    - ip_address: 10.10.10.10
+    - ip_address: 10.10.10.11
 custom_structured_configuration_list_merge: append
 custom_structured_configuration_prefix: [ override_ ]
 override_ip_name_servers:

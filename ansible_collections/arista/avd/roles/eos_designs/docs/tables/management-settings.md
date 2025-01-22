@@ -9,10 +9,10 @@
     | -------- | ---- | -------- | ------- | ------------------ | ----------- |
     | [<samp>dns_settings</samp>](## "dns_settings") | Dictionary |  |  |  | DNS settings<br>For DNS source-interfaces see "source_interfaces.domain_lookup" |
     | [<samp>&nbsp;&nbsp;domain</samp>](## "dns_settings.domain") | String |  |  |  | DNS domain name like 'fabric.local' |
-    | [<samp>&nbsp;&nbsp;servers</samp>](## "dns_settings.servers") | List, items: Dictionary |  |  |  | This key replaces the deprecated `name_servers`. Both keys should not be used at the same time. |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;vrf</samp>](## "dns_settings.servers.[].vrf") | String |  |  |  | VRF Name.<br>Can be used in combination with "use_mgmt_interface_vrf" and "use_inband_mgmt_vrf" to configure the DNS server under multiple VRFs. |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;use_mgmt_interface_vrf</samp>](## "dns_settings.servers.[].use_mgmt_interface_vrf") | Boolean |  |  |  | Configure the DNS server under the VRF set with "mgmt_interface_vrf". Ignored if 'mgmt_ip' or 'ipv6_mgmt_ip' are not configured for the device, so if the host is only configured with this VRF, the server will not be configured at all. Can be used in combination with "vrf" and "use_inband_mgmt_vrf" to configure the DNS server under multiple VRFs. |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;use_inband_mgmt_vrf</samp>](## "dns_settings.servers.[].use_inband_mgmt_vrf") | Boolean |  |  |  | Configure the DNS server under the VRF set with "inband_mgmt_vrf". Ignored if inband management is not configured for the device, so if the host is only configured with this VRF, the server will not be configured at all. Can be used in combination with "vrf" and "use_mgmt_interface_vrf" to configure the DNS server under multiple VRFs. |
+    | [<samp>&nbsp;&nbsp;servers</samp>](## "dns_settings.servers") | List, items: Dictionary |  |  |  | This key replaces the deprecated `name_servers` and `source_interfaces.ip_domain_lookup` models. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;vrf</samp>](## "dns_settings.servers.[].vrf") | String |  |  |  | VRF Name. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;use_mgmt_interface_vrf</samp>](## "dns_settings.servers.[].use_mgmt_interface_vrf") | Boolean |  |  |  | Configure the DNS server under the VRF set with "mgmt_interface_vrf". Ignored if 'mgmt_ip' or 'ipv6_mgmt_ip' are not configured for the device, so if the host is only configured with this VRF, the server will not be configured at all. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;use_inband_mgmt_vrf</samp>](## "dns_settings.servers.[].use_inband_mgmt_vrf") | Boolean |  |  |  | Configure the DNS server under the VRF set with "inband_mgmt_vrf". Ignored if inband management is not configured for the device, so if the host is only configured with this VRF, the server will not be configured at all. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ip_address</samp>](## "dns_settings.servers.[].ip_address") | String | Required |  |  | IPv4 or IPv6 address for DNS server. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;priority</samp>](## "dns_settings.servers.[].priority") | Integer |  |  | Min: 0<br>Max: 4 | Priority value (lower is first). |
     | [<samp>event_handlers</samp>](## "event_handlers") | List, items: Dictionary |  |  |  | Gives the ability to monitor and react to Syslog messages.<br>Event Handlers provide a powerful and flexible tool that can be used to apply self-healing actions,<br>customize the system behavior, and implement workarounds to problems discovered in the field.<br> |
@@ -96,17 +96,16 @@
       # DNS domain name like 'fabric.local'
       domain: <str>
 
-      # This key replaces the deprecated `name_servers`. Both keys should not be used at the same time.
+      # This key replaces the deprecated `name_servers` and `source_interfaces.ip_domain_lookup` models.
       servers:
 
           # VRF Name.
-          # Can be used in combination with "use_mgmt_interface_vrf" and "use_inband_mgmt_vrf" to configure the DNS server under multiple VRFs.
         - vrf: <str>
 
-          # Configure the DNS server under the VRF set with "mgmt_interface_vrf". Ignored if 'mgmt_ip' or 'ipv6_mgmt_ip' are not configured for the device, so if the host is only configured with this VRF, the server will not be configured at all. Can be used in combination with "vrf" and "use_inband_mgmt_vrf" to configure the DNS server under multiple VRFs.
+          # Configure the DNS server under the VRF set with "mgmt_interface_vrf". Ignored if 'mgmt_ip' or 'ipv6_mgmt_ip' are not configured for the device, so if the host is only configured with this VRF, the server will not be configured at all.
           use_mgmt_interface_vrf: <bool>
 
-          # Configure the DNS server under the VRF set with "inband_mgmt_vrf". Ignored if inband management is not configured for the device, so if the host is only configured with this VRF, the server will not be configured at all. Can be used in combination with "vrf" and "use_mgmt_interface_vrf" to configure the DNS server under multiple VRFs.
+          # Configure the DNS server under the VRF set with "inband_mgmt_vrf". Ignored if inband management is not configured for the device, so if the host is only configured with this VRF, the server will not be configured at all.
           use_inband_mgmt_vrf: <bool>
 
           # IPv4 or IPv6 address for DNS server.

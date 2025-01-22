@@ -229,6 +229,10 @@ ip_access_lists:
     protocol: ip
     source: any
     destination: any
+ip_domain_lookup:
+  source_interfaces:
+  - name: Management1
+    vrf: MGMT
 ip_extcommunity_lists:
 - name: ECL-EVPN-SOO
   entries:

@@ -1568,6 +1568,10 @@ ethernet_interfaces:
       vlan: 120
       trunk: untagged
 hostname: LEAF1A
+ip_domain_lookup:
+  source_interfaces:
+  - name: Management0
+    vrf: MGMT
 ip_igmp_snooping:
   globally_enabled: true
 ip_name_servers:

@@ -75,6 +75,10 @@ ethernet_interfaces:
   switchport:
     enabled: false
 hostname: DC1-LEAF1A
+ip_domain_lookup:
+  source_interfaces:
+  - name: Management1
+    vrf: MGMT
 ip_extcommunity_lists:
 - name: ECL-EVPN-SOO
   entries:

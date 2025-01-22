@@ -30,9 +30,10 @@ default_mgmt_method: none
 cvp_instance_ips:
   - apiserver.arista.io
 
-name_servers:
-  - 1.1.1.1
-  - 8.8.8.8
+dns_settings:
+  servers:
+    - ip_address: 1.1.1.1
+    - ip_address: 8.8.8.8
 
 ntp_settings:
   servers:

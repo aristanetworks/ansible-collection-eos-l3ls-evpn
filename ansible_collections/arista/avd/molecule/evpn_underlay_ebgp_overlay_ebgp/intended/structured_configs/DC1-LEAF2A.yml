@@ -155,6 +155,10 @@ hardware:
   - speed_group: '4'
     serdes: 10G
 hostname: DC1-LEAF2A
+ip_domain_lookup:
+  source_interfaces:
+  - name: Management1
+    vrf: MGMT
 ip_igmp_snooping:
   globally_enabled: true
   vlans:

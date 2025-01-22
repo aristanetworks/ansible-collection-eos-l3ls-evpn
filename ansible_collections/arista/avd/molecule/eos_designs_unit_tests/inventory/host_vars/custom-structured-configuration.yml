@@ -10,10 +10,11 @@ custom_structured_configuration_prefix:
 
 # DATA MODEL WITH NO PRIMARY KEY
 
-name_servers:
-  - 192.168.42.10  # Collides with csc_1_ip_name_servers
-  - 192.168.42.40  # Collides with csc_2_ip_name_servers
-  - 192.168.42.50  # Unique value
+dns_settings:
+  servers:
+    - ip_address: 192.168.42.10  # Collides with csc_1_ip_name_servers
+    - ip_address: 192.168.42.40  # Collides with csc_2_ip_name_servers
+    - ip_address: 192.168.42.50  # Unique value
 
 csc_1_ip_name_servers:
   - ip_address: 192.168.42.1  # Collides with csc_2_ip_name_servers

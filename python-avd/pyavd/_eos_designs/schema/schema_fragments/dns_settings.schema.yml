@@ -20,16 +20,20 @@ keys:
       servers:
         type: list
         $ref: eos_cli_config_gen#/keys/ip_name_servers
-        # TODO: Remove this comment in AVD5.0 when the old key has been removed.
-        description: This key replaces the deprecated `name_servers`. Both keys should not be used at the same time.
+        # TODO: Remove this comment in AVD6.0 when the old keys have been removed.
+        description: This key replaces the deprecated `name_servers` and `source_interfaces.ip_domain_lookup` models.
         items:
           type: dict
+          description: |-
+            List of DNS servers.
+            Each server can be configured under different VRFs by using the keys "vrf", "use_mgmt_interface_vrf" and "use_inband_mgmt_vrf".
+            When used in combination the DNS server is configured under multiple VRFs.
+            If no VRF is set using either method, the DNS server will be configured according to the "default_mgmt_method" setting.
+            Source interfaces are configured for inband or out-of-band management VRFs.
           keys:
             vrf:
               type: str
-              description: |-
-                VRF Name.
-                Can be used in combination with "use_mgmt_interface_vrf" and "use_inband_mgmt_vrf" to configure the DNS server under multiple VRFs.
+              description: VRF Name.
               convert_types:
                 - int
             use_mgmt_interface_vrf:
@@ -37,10 +41,8 @@ keys:
               description:
                 Configure the DNS server under the VRF set with "mgmt_interface_vrf".
                 Ignored if 'mgmt_ip' or 'ipv6_mgmt_ip' are not configured for the device, so if the host is only configured with this VRF, the server will not be configured at all.
-                Can be used in combination with "vrf" and "use_inband_mgmt_vrf" to configure the DNS server under multiple VRFs.
             use_inband_mgmt_vrf:
               type: bool
               description:
                 Configure the DNS server under the VRF set with "inband_mgmt_vrf".
                 Ignored if inband management is not configured for the device, so if the host is only configured with this VRF, the server will not be configured at all.
-                Can be used in combination with "vrf" and "use_mgmt_interface_vrf" to configure the DNS server under multiple VRFs.

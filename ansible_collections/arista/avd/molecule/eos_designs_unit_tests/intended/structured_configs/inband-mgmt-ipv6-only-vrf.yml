@@ -37,9 +37,9 @@ ip_igmp_snooping:
   globally_enabled: true
 ip_name_servers:
 - ip_address: 1.1.1.1
-  vrf: MGMT
+  vrf: default
 - ip_address: 8.8.8.8
-  vrf: MGMT
+  vrf: default
 ipv6_static_routes:
 - vrf: INBANDMGMT
   destination_address_prefix: ::/0

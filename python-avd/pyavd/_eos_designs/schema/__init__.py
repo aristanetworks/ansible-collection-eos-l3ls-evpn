@@ -2865,24 +2865,18 @@ class EosDesigns(EosDesignsRootModel):
                 "_custom_data": {"type": dict},
             }
             vrf: str | None
-            """
-            VRF Name.
-            Can be used in combination with "use_mgmt_interface_vrf" and "use_inband_mgmt_vrf" to
-            configure the DNS server under multiple VRFs.
-            """
+            """VRF Name."""
             use_mgmt_interface_vrf: bool | None
             """
             Configure the DNS server under the VRF set with "mgmt_interface_vrf". Ignored if 'mgmt_ip' or
             'ipv6_mgmt_ip' are not configured for the device, so if the host is only configured with this VRF,
-            the server will not be configured at all. Can be used in combination with "vrf" and
-            "use_inband_mgmt_vrf" to configure the DNS server under multiple VRFs.
+            the server will not be configured at all.
             """
             use_inband_mgmt_vrf: bool | None
             """
             Configure the DNS server under the VRF set with "inband_mgmt_vrf". Ignored if inband management is
             not configured for the device, so if the host is only configured with this VRF, the server will not
-            be configured at all. Can be used in combination with "vrf" and "use_mgmt_interface_vrf" to
-            configure the DNS server under multiple VRFs.
+            be configured at all.
             """
             ip_address: str
             """IPv4 or IPv6 address for DNS server."""
@@ -2909,20 +2903,15 @@ class EosDesigns(EosDesignsRootModel):
                     Subclass of AvdModel.
 
                     Args:
-                        vrf:
-                           VRF Name.
-                           Can be used in combination with "use_mgmt_interface_vrf" and "use_inband_mgmt_vrf" to
-                           configure the DNS server under multiple VRFs.
+                        vrf: VRF Name.
                         use_mgmt_interface_vrf:
                            Configure the DNS server under the VRF set with "mgmt_interface_vrf". Ignored if 'mgmt_ip' or
                            'ipv6_mgmt_ip' are not configured for the device, so if the host is only configured with this VRF,
-                           the server will not be configured at all. Can be used in combination with "vrf" and
-                           "use_inband_mgmt_vrf" to configure the DNS server under multiple VRFs.
+                           the server will not be configured at all.
                         use_inband_mgmt_vrf:
                            Configure the DNS server under the VRF set with "inband_mgmt_vrf". Ignored if inband management is
                            not configured for the device, so if the host is only configured with this VRF, the server will not
-                           be configured at all. Can be used in combination with "vrf" and "use_mgmt_interface_vrf" to
-                           configure the DNS server under multiple VRFs.
+                           be configured at all.
                         ip_address: IPv4 or IPv6 address for DNS server.
                         priority: Priority value (lower is first).
                         _custom_data: _custom_data
@@ -2939,7 +2928,7 @@ class EosDesigns(EosDesignsRootModel):
         """DNS domain name like 'fabric.local'"""
         servers: Servers
         """
-        This key replaces the deprecated `name_servers`. Both keys should not be used at the same time.
+        This key replaces the deprecated `name_servers` and `source_interfaces.ip_domain_lookup` models.
         Subclass of AvdList with `ServersItem` items.
         """
         _custom_data: dict[str, Any]
@@ -2962,7 +2951,7 @@ class EosDesigns(EosDesignsRootModel):
                 Args:
                     domain: DNS domain name like 'fabric.local'
                     servers:
-                       This key replaces the deprecated `name_servers`. Both keys should not be used at the same time.
+                       This key replaces the deprecated `name_servers` and `source_interfaces.ip_domain_lookup` models.
                        Subclass of AvdList with `ServersItem` items.
                     _custom_data: _custom_data
 
