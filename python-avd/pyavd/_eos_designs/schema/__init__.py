@@ -900,10 +900,10 @@ class EosDesigns(EosDesignsRootModel):
         By default AVD
         uses the `mlag_ipv4_underlay_peer` peer group for the Underlay and for all the VRFS.
 
-        If the names
-        of `mlag_ipv4_vrfs_peer.name` and `mlag_ipv4_underlay_peer.name` are the same
-        then all the
-        attributes of key `mlag_ipv4_vrfs_peer` are ignored.
+        If
+        `mlag_ipv4_vrfs_peer.name` and `mlag_ipv4_underlay_peer.name` are the same,
+        then all the attributes
+        set here are ignored.
 
         Subclass of AvdModel.
         """
@@ -958,10 +958,10 @@ class EosDesigns(EosDesignsRootModel):
                        By default AVD
                        uses the `mlag_ipv4_underlay_peer` peer group for the Underlay and for all the VRFS.
 
-                       If the names
-                       of `mlag_ipv4_vrfs_peer.name` and `mlag_ipv4_underlay_peer.name` are the same
-                       then all the
-                       attributes of key `mlag_ipv4_vrfs_peer` are ignored.
+                       If
+                       `mlag_ipv4_vrfs_peer.name` and `mlag_ipv4_underlay_peer.name` are the same,
+                       then all the attributes
+                       set here are ignored.
 
                        Subclass of AvdModel.
                     mlag_ipv4_underlay_peer: Subclass of AvdModel.

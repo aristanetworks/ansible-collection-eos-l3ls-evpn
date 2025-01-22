@@ -221,10 +221,10 @@ keys:
           and for all the VRFS.
 
 
-          If the names of `mlag_ipv4_vrfs_peer.name` and `mlag_ipv4_underlay_peer.name`
-          are the same
+          If `mlag_ipv4_vrfs_peer.name` and `mlag_ipv4_underlay_peer.name` are the
+          same,
 
-          then all the attributes of key `mlag_ipv4_vrfs_peer` are ignored.'
+          then all the attributes set here are ignored.'
         keys:
           name:
             type: str

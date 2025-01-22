@@ -24,7 +24,7 @@
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;password</samp>](## "bgp_peer_groups.ipv4_underlay_peers.password") | String |  |  |  | Type 7 encrypted password. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;bfd</samp>](## "bgp_peer_groups.ipv4_underlay_peers.bfd") | Boolean |  | `False` |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;structured_config</samp>](## "bgp_peer_groups.ipv4_underlay_peers.structured_config") | Dictionary |  |  |  | Custom structured config added under router_bgp.peer_groups.[name=<name>] for eos_cli_config_gen. |
-    | [<samp>&nbsp;&nbsp;mlag_ipv4_vrfs_peer</samp>](## "bgp_peer_groups.mlag_ipv4_vrfs_peer") | Dictionary |  |  |  | Set this peer group name to use a different peer-group for MLAG peerings in VRFs.<br>By default AVD uses the `mlag_ipv4_underlay_peer` peer group for the Underlay and for all the VRFS.<br><br>If the names of `mlag_ipv4_vrfs_peer.name` and `mlag_ipv4_underlay_peer.name` are the same<br>then all the attributes of key `mlag_ipv4_vrfs_peer` are ignored. |
+    | [<samp>&nbsp;&nbsp;mlag_ipv4_vrfs_peer</samp>](## "bgp_peer_groups.mlag_ipv4_vrfs_peer") | Dictionary |  |  |  | Set this peer group name to use a different peer-group for MLAG peerings in VRFs.<br>By default AVD uses the `mlag_ipv4_underlay_peer` peer group for the Underlay and for all the VRFS.<br><br>If `mlag_ipv4_vrfs_peer.name` and `mlag_ipv4_underlay_peer.name` are the same,<br>then all the attributes set here are ignored. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;name</samp>](## "bgp_peer_groups.mlag_ipv4_vrfs_peer.name") | String |  |  |  | Name of peer group. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;password</samp>](## "bgp_peer_groups.mlag_ipv4_vrfs_peer.password") | String |  |  |  | Type 7 encrypted password. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;bfd</samp>](## "bgp_peer_groups.mlag_ipv4_vrfs_peer.bfd") | Boolean |  | `False` |  |  |
@@ -135,8 +135,8 @@
       # Set this peer group name to use a different peer-group for MLAG peerings in VRFs.
       # By default AVD uses the `mlag_ipv4_underlay_peer` peer group for the Underlay and for all the VRFS.
       #
-      # If the names of `mlag_ipv4_vrfs_peer.name` and `mlag_ipv4_underlay_peer.name` are the same
-      # then all the attributes of key `mlag_ipv4_vrfs_peer` are ignored.
+      # If `mlag_ipv4_vrfs_peer.name` and `mlag_ipv4_underlay_peer.name` are the same,
+      # then all the attributes set here are ignored.
       mlag_ipv4_vrfs_peer:
 
         # Name of peer group.
