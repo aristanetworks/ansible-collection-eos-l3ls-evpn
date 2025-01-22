@@ -21893,7 +21893,7 @@ class EosDesigns(EosDesignsRootModel):
                     Comma separated list of prefixes (IPv4 address/Mask) or ranges (IPv4_address-IPv4_address).
                     The IPv4
                     address used for Loopback0 will be derived from this pool based on the node id and
-                    loopback_ipv4_offset.
+                    'loopback_ipv4_offset'.
                     """
                     loopback_ipv4_address: str | None
                     """
@@ -21905,7 +21905,7 @@ class EosDesigns(EosDesignsRootModel):
                     """
                     Comma separated list of prefixes (IPv4 address/Mask) or ranges (IPv4_address-IPv4_address). The IPv4
                     address used for VTEP-Loopback will be derived from this pool based on the node id and
-                    loopback_ipv4_offset.
+                    'loopback_ipv4_offset'.
                     """
                     vtep_loopback_ipv4_address: str | None
                     """
@@ -22729,7 +22729,7 @@ class EosDesigns(EosDesignsRootModel):
                                    Comma separated list of prefixes (IPv4 address/Mask) or ranges (IPv4_address-IPv4_address).
                                    The IPv4
                                    address used for Loopback0 will be derived from this pool based on the node id and
-                                   loopback_ipv4_offset.
+                                   'loopback_ipv4_offset'.
                                 loopback_ipv4_address:
                                    IPv4 address without mask for Loopback0.
                                    When set, it takes precedence over `loopback_ipv4_pool`.
@@ -22737,7 +22737,7 @@ class EosDesigns(EosDesignsRootModel):
                                 vtep_loopback_ipv4_pool:
                                    Comma separated list of prefixes (IPv4 address/Mask) or ranges (IPv4_address-IPv4_address). The IPv4
                                    address used for VTEP-Loopback will be derived from this pool based on the node id and
-                                   loopback_ipv4_offset.
+                                   'loopback_ipv4_offset'.
                                 vtep_loopback_ipv4_address:
                                    IPv4 address without mask for VTEP-Loopback.
                                    When set, it takes precedence over
@@ -25440,7 +25440,7 @@ class EosDesigns(EosDesignsRootModel):
                         Comma separated list of prefixes (IPv4 address/Mask) or ranges (IPv4_address-IPv4_address).
                         The IPv4
                         address used for Loopback0 will be derived from this pool based on the node id and
-                        loopback_ipv4_offset.
+                        'loopback_ipv4_offset'.
                         """
                         loopback_ipv4_address: str | None
                         """
@@ -25452,7 +25452,7 @@ class EosDesigns(EosDesignsRootModel):
                         """
                         Comma separated list of prefixes (IPv4 address/Mask) or ranges (IPv4_address-IPv4_address). The IPv4
                         address used for VTEP-Loopback will be derived from this pool based on the node id and
-                        loopback_ipv4_offset.
+                        'loopback_ipv4_offset'.
                         """
                         vtep_loopback_ipv4_address: str | None
                         """
@@ -26285,7 +26285,7 @@ class EosDesigns(EosDesignsRootModel):
                                        Comma separated list of prefixes (IPv4 address/Mask) or ranges (IPv4_address-IPv4_address).
                                        The IPv4
                                        address used for Loopback0 will be derived from this pool based on the node id and
-                                       loopback_ipv4_offset.
+                                       'loopback_ipv4_offset'.
                                     loopback_ipv4_address:
                                        IPv4 address without mask for Loopback0.
                                        When set, it takes precedence over `loopback_ipv4_pool`.
@@ -26293,7 +26293,7 @@ class EosDesigns(EosDesignsRootModel):
                                     vtep_loopback_ipv4_pool:
                                        Comma separated list of prefixes (IPv4 address/Mask) or ranges (IPv4_address-IPv4_address). The IPv4
                                        address used for VTEP-Loopback will be derived from this pool based on the node id and
-                                       loopback_ipv4_offset.
+                                       'loopback_ipv4_offset'.
                                     vtep_loopback_ipv4_address:
                                        IPv4 address without mask for VTEP-Loopback.
                                        When set, it takes precedence over
@@ -28932,7 +28932,7 @@ class EosDesigns(EosDesignsRootModel):
                     Comma separated list of prefixes (IPv4 address/Mask) or ranges (IPv4_address-IPv4_address).
                     The IPv4
                     address used for Loopback0 will be derived from this pool based on the node id and
-                    loopback_ipv4_offset.
+                    'loopback_ipv4_offset'.
                     """
                     loopback_ipv4_address: str | None
                     """
@@ -28944,7 +28944,7 @@ class EosDesigns(EosDesignsRootModel):
                     """
                     Comma separated list of prefixes (IPv4 address/Mask) or ranges (IPv4_address-IPv4_address). The IPv4
                     address used for VTEP-Loopback will be derived from this pool based on the node id and
-                    loopback_ipv4_offset.
+                    'loopback_ipv4_offset'.
                     """
                     vtep_loopback_ipv4_address: str | None
                     """
@@ -29779,7 +29779,7 @@ class EosDesigns(EosDesignsRootModel):
                                    Comma separated list of prefixes (IPv4 address/Mask) or ranges (IPv4_address-IPv4_address).
                                    The IPv4
                                    address used for Loopback0 will be derived from this pool based on the node id and
-                                   loopback_ipv4_offset.
+                                   'loopback_ipv4_offset'.
                                 loopback_ipv4_address:
                                    IPv4 address without mask for Loopback0.
                                    When set, it takes precedence over `loopback_ipv4_pool`.
@@ -29787,7 +29787,7 @@ class EosDesigns(EosDesignsRootModel):
                                 vtep_loopback_ipv4_pool:
                                    Comma separated list of prefixes (IPv4 address/Mask) or ranges (IPv4_address-IPv4_address). The IPv4
                                    address used for VTEP-Loopback will be derived from this pool based on the node id and
-                                   loopback_ipv4_offset.
+                                   'loopback_ipv4_offset'.
                                 vtep_loopback_ipv4_address:
                                    IPv4 address without mask for VTEP-Loopback.
                                    When set, it takes precedence over
@@ -32492,7 +32492,7 @@ class EosDesigns(EosDesignsRootModel):
                     Comma separated list of prefixes (IPv4 address/Mask) or ranges (IPv4_address-IPv4_address).
                     The IPv4
                     address used for Loopback0 will be derived from this pool based on the node id and
-                    loopback_ipv4_offset.
+                    'loopback_ipv4_offset'.
                     """
                     loopback_ipv4_address: str | None
                     """
@@ -32504,7 +32504,7 @@ class EosDesigns(EosDesignsRootModel):
                     """
                     Comma separated list of prefixes (IPv4 address/Mask) or ranges (IPv4_address-IPv4_address). The IPv4
                     address used for VTEP-Loopback will be derived from this pool based on the node id and
-                    loopback_ipv4_offset.
+                    'loopback_ipv4_offset'.
                     """
                     vtep_loopback_ipv4_address: str | None
                     """
@@ -33337,7 +33337,7 @@ class EosDesigns(EosDesignsRootModel):
                                    Comma separated list of prefixes (IPv4 address/Mask) or ranges (IPv4_address-IPv4_address).
                                    The IPv4
                                    address used for Loopback0 will be derived from this pool based on the node id and
-                                   loopback_ipv4_offset.
+                                   'loopback_ipv4_offset'.
                                 loopback_ipv4_address:
                                    IPv4 address without mask for Loopback0.
                                    When set, it takes precedence over `loopback_ipv4_pool`.
@@ -33345,7 +33345,7 @@ class EosDesigns(EosDesignsRootModel):
                                 vtep_loopback_ipv4_pool:
                                    Comma separated list of prefixes (IPv4 address/Mask) or ranges (IPv4_address-IPv4_address). The IPv4
                                    address used for VTEP-Loopback will be derived from this pool based on the node id and
-                                   loopback_ipv4_offset.
+                                   'loopback_ipv4_offset'.
                                 vtep_loopback_ipv4_address:
                                    IPv4 address without mask for VTEP-Loopback.
                                    When set, it takes precedence over
@@ -42898,7 +42898,7 @@ class EosDesigns(EosDesignsRootModel):
                     Comma separated list of prefixes (IPv4 address/Mask) or ranges (IPv4_address-IPv4_address).
                     The IPv4
                     address used for Loopback0 will be derived from this pool based on the node id and
-                    loopback_ipv4_offset.
+                    'loopback_ipv4_offset'.
                     """
                     loopback_ipv4_address: str | None
                     """
@@ -42910,7 +42910,7 @@ class EosDesigns(EosDesignsRootModel):
                     """
                     Comma separated list of prefixes (IPv4 address/Mask) or ranges (IPv4_address-IPv4_address). The IPv4
                     address used for VTEP-Loopback will be derived from this pool based on the node id and
-                    loopback_ipv4_offset.
+                    'loopback_ipv4_offset'.
                     """
                     vtep_loopback_ipv4_address: str | None
                     """
@@ -43734,7 +43734,7 @@ class EosDesigns(EosDesignsRootModel):
                                    Comma separated list of prefixes (IPv4 address/Mask) or ranges (IPv4_address-IPv4_address).
                                    The IPv4
                                    address used for Loopback0 will be derived from this pool based on the node id and
-                                   loopback_ipv4_offset.
+                                   'loopback_ipv4_offset'.
                                 loopback_ipv4_address:
                                    IPv4 address without mask for Loopback0.
                                    When set, it takes precedence over `loopback_ipv4_pool`.
@@ -43742,7 +43742,7 @@ class EosDesigns(EosDesignsRootModel):
                                 vtep_loopback_ipv4_pool:
                                    Comma separated list of prefixes (IPv4 address/Mask) or ranges (IPv4_address-IPv4_address). The IPv4
                                    address used for VTEP-Loopback will be derived from this pool based on the node id and
-                                   loopback_ipv4_offset.
+                                   'loopback_ipv4_offset'.
                                 vtep_loopback_ipv4_address:
                                    IPv4 address without mask for VTEP-Loopback.
                                    When set, it takes precedence over
@@ -46445,7 +46445,7 @@ class EosDesigns(EosDesignsRootModel):
                         Comma separated list of prefixes (IPv4 address/Mask) or ranges (IPv4_address-IPv4_address).
                         The IPv4
                         address used for Loopback0 will be derived from this pool based on the node id and
-                        loopback_ipv4_offset.
+                        'loopback_ipv4_offset'.
                         """
                         loopback_ipv4_address: str | None
                         """
@@ -46457,7 +46457,7 @@ class EosDesigns(EosDesignsRootModel):
                         """
                         Comma separated list of prefixes (IPv4 address/Mask) or ranges (IPv4_address-IPv4_address). The IPv4
                         address used for VTEP-Loopback will be derived from this pool based on the node id and
-                        loopback_ipv4_offset.
+                        'loopback_ipv4_offset'.
                         """
                         vtep_loopback_ipv4_address: str | None
                         """
@@ -47290,7 +47290,7 @@ class EosDesigns(EosDesignsRootModel):
                                        Comma separated list of prefixes (IPv4 address/Mask) or ranges (IPv4_address-IPv4_address).
                                        The IPv4
                                        address used for Loopback0 will be derived from this pool based on the node id and
-                                       loopback_ipv4_offset.
+                                       'loopback_ipv4_offset'.
                                     loopback_ipv4_address:
                                        IPv4 address without mask for Loopback0.
                                        When set, it takes precedence over `loopback_ipv4_pool`.
@@ -47298,7 +47298,7 @@ class EosDesigns(EosDesignsRootModel):
                                     vtep_loopback_ipv4_pool:
                                        Comma separated list of prefixes (IPv4 address/Mask) or ranges (IPv4_address-IPv4_address). The IPv4
                                        address used for VTEP-Loopback will be derived from this pool based on the node id and
-                                       loopback_ipv4_offset.
+                                       'loopback_ipv4_offset'.
                                     vtep_loopback_ipv4_address:
                                        IPv4 address without mask for VTEP-Loopback.
                                        When set, it takes precedence over
@@ -49937,7 +49937,7 @@ class EosDesigns(EosDesignsRootModel):
                     Comma separated list of prefixes (IPv4 address/Mask) or ranges (IPv4_address-IPv4_address).
                     The IPv4
                     address used for Loopback0 will be derived from this pool based on the node id and
-                    loopback_ipv4_offset.
+                    'loopback_ipv4_offset'.
                     """
                     loopback_ipv4_address: str | None
                     """
@@ -49949,7 +49949,7 @@ class EosDesigns(EosDesignsRootModel):
                     """
                     Comma separated list of prefixes (IPv4 address/Mask) or ranges (IPv4_address-IPv4_address). The IPv4
                     address used for VTEP-Loopback will be derived from this pool based on the node id and
-                    loopback_ipv4_offset.
+                    'loopback_ipv4_offset'.
                     """
                     vtep_loopback_ipv4_address: str | None
                     """
@@ -50784,7 +50784,7 @@ class EosDesigns(EosDesignsRootModel):
                                    Comma separated list of prefixes (IPv4 address/Mask) or ranges (IPv4_address-IPv4_address).
                                    The IPv4
                                    address used for Loopback0 will be derived from this pool based on the node id and
-                                   loopback_ipv4_offset.
+                                   'loopback_ipv4_offset'.
                                 loopback_ipv4_address:
                                    IPv4 address without mask for Loopback0.
                                    When set, it takes precedence over `loopback_ipv4_pool`.
@@ -50792,7 +50792,7 @@ class EosDesigns(EosDesignsRootModel):
                                 vtep_loopback_ipv4_pool:
                                    Comma separated list of prefixes (IPv4 address/Mask) or ranges (IPv4_address-IPv4_address). The IPv4
                                    address used for VTEP-Loopback will be derived from this pool based on the node id and
-                                   loopback_ipv4_offset.
+                                   'loopback_ipv4_offset'.
                                 vtep_loopback_ipv4_address:
                                    IPv4 address without mask for VTEP-Loopback.
                                    When set, it takes precedence over
@@ -53497,7 +53497,7 @@ class EosDesigns(EosDesignsRootModel):
                     Comma separated list of prefixes (IPv4 address/Mask) or ranges (IPv4_address-IPv4_address).
                     The IPv4
                     address used for Loopback0 will be derived from this pool based on the node id and
-                    loopback_ipv4_offset.
+                    'loopback_ipv4_offset'.
                     """
                     loopback_ipv4_address: str | None
                     """
@@ -53509,7 +53509,7 @@ class EosDesigns(EosDesignsRootModel):
                     """
                     Comma separated list of prefixes (IPv4 address/Mask) or ranges (IPv4_address-IPv4_address). The IPv4
                     address used for VTEP-Loopback will be derived from this pool based on the node id and
-                    loopback_ipv4_offset.
+                    'loopback_ipv4_offset'.
                     """
                     vtep_loopback_ipv4_address: str | None
                     """
@@ -54342,7 +54342,7 @@ class EosDesigns(EosDesignsRootModel):
                                    Comma separated list of prefixes (IPv4 address/Mask) or ranges (IPv4_address-IPv4_address).
                                    The IPv4
                                    address used for Loopback0 will be derived from this pool based on the node id and
-                                   loopback_ipv4_offset.
+                                   'loopback_ipv4_offset'.
                                 loopback_ipv4_address:
                                    IPv4 address without mask for Loopback0.
                                    When set, it takes precedence over `loopback_ipv4_pool`.
@@ -54350,7 +54350,7 @@ class EosDesigns(EosDesignsRootModel):
                                 vtep_loopback_ipv4_pool:
                                    Comma separated list of prefixes (IPv4 address/Mask) or ranges (IPv4_address-IPv4_address). The IPv4
                                    address used for VTEP-Loopback will be derived from this pool based on the node id and
-                                   loopback_ipv4_offset.
+                                   'loopback_ipv4_offset'.
                                 vtep_loopback_ipv4_address:
                                    IPv4 address without mask for VTEP-Loopback.
                                    When set, it takes precedence over

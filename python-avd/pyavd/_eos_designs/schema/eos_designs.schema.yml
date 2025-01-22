@@ -8210,7 +8210,7 @@ $defs:
               ranges (IPv4_address-IPv4_address).
 
               The IPv4 address used for Loopback0 will be derived from this pool based
-              on the node id and loopback_ipv4_offset.'
+              on the node id and ''loopback_ipv4_offset''.'
             type: str
             format: ipv4_pool
           loopback_ipv4_address:
@@ -8229,7 +8229,7 @@ $defs:
               table: node-type-loopback-vtep-configuration
             description: Comma separated list of prefixes (IPv4 address/Mask) or ranges
               (IPv4_address-IPv4_address). The IPv4 address used for VTEP-Loopback
-              will be derived from this pool based on the node id and loopback_ipv4_offset.
+              will be derived from this pool based on the node id and 'loopback_ipv4_offset'.
             type: str
             format: ipv4_pool
           vtep_loopback_ipv4_address:
