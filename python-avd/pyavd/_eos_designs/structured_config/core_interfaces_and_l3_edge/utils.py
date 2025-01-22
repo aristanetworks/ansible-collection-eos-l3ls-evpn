@@ -250,7 +250,7 @@ class UtilsMixin:
 
             interface_cfg["ptp"] = ptp_config
 
-        if p2p_link.include_in_underlay_protocol and p2p_link:
+        if p2p_link.include_in_underlay_protocol:
             if p2p_link.underlay_multicast and self.shared_utils.underlay_multicast:
                 interface_cfg["pim"] = {"ipv4": {"sparse_mode": True}}
 
