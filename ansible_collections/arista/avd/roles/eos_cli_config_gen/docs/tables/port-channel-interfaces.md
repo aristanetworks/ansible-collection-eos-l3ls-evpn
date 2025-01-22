@@ -9,6 +9,7 @@
     | -------- | ---- | -------- | ------- | ------------------ | ----------- |
     | [<samp>port_channel_interfaces</samp>](## "port_channel_interfaces") | List, items: Dictionary |  |  |  |  |
     | [<samp>&nbsp;&nbsp;-&nbsp;name</samp>](## "port_channel_interfaces.[].name") | String | Required, Unique |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;comment</samp>](## "port_channel_interfaces.[].comment") | String |  |  |  | Text comment added under port-channel interface. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;description</samp>](## "port_channel_interfaces.[].description") | String |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;profile</samp>](## "port_channel_interfaces.[].profile") | String |  |  |  | Interface profile. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;logging</samp>](## "port_channel_interfaces.[].logging") | Dictionary |  |  |  |  |
@@ -451,6 +452,9 @@
     ```yaml
     port_channel_interfaces:
       - name: <str; required; unique>
+
+        # Text comment added under port-channel interface.
+        comment: <str>
         description: <str>
 
         # Interface profile.
