@@ -22,6 +22,7 @@ RANGE_PATTERN = r"(" + LAZY_IPV4_RANGE_PATTERN + r"|" + LAZY_IPV6_RANGE_PATTERN 
 POOLS_AND_RANGES_PATTERN = re.compile(r"((?P<prefix>" + PREFIX_PATTERN + r")|(?P<range>" + RANGE_PATTERN + r"))([,\ ]+|$)")
 
 # The following are imported by schema validation, but it is easier to maintain in one place.
+# TODO: Move to some centralized constants.
 FULLMATCH_IP_POOLS_AND_RANGES_PATTERN = re.compile(rf"({POOLS_AND_RANGES_PATTERN.pattern})+")
 FULLMATCH_IPV4_POOLS_AND_RANGES_PATTERN = re.compile(r"((" + LAZY_IPV4_PREFIX_PATTERN + r"|" + LAZY_IPV4_RANGE_PATTERN + r")([,\ ]+|$))+")
 FULLMATCH_IPV6_POOLS_AND_RANGES_PATTERN = re.compile(r"((" + LAZY_IPV6_PREFIX_PATTERN + r"|" + LAZY_IPV6_RANGE_PATTERN + r")([,\ ]+|$))+")
