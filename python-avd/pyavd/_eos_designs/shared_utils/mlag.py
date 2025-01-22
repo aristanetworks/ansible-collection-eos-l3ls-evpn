@@ -188,10 +188,14 @@ class MlagMixin:
         return self.mlag_peer_ip
 
     @cached_property
-    def mlag_ipv4_peers(self: SharedUtils) -> dict:
-        if (
+    def use_separate_peer_group_for_mlag_vrfs(self: SharedUtils) -> bool:
+        return (
             self.inputs.bgp_peer_groups.mlag_ipv4_vrfs_peer
             and self.inputs.bgp_peer_groups.mlag_ipv4_vrfs_peer.name != self.inputs.bgp_peer_groups.mlag_ipv4_underlay_peer.name
-        ):
-            return self.inputs.bgp_peer_groups.mlag_ipv4_vrfs_peer
-        return self.inputs.bgp_peer_groups.mlag_ipv4_underlay_peer
+        )
+
+    @cached_property
+    def mlag_vrfs_peer_group_name(self: SharedUtils) -> dict:
+        if self.use_separate_peer_group_for_mlag_vrfs:
+            return self.inputs.bgp_peer_groups.mlag_ipv4_vrfs_peer.name
+        return self.inputs.bgp_peer_groups.mlag_ipv4_underlay_peer.name

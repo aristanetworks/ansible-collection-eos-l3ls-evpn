@@ -22,7 +22,7 @@ fabric_sflow:
 
 bgp_peer_groups:
   mlag_ipv4_vrfs_peer:
-    name: MLAG-IPv4-OVERLAY-PEER
+    name: MLAG-IPv4-VRFS-PEER
 
 tenants:
   - name: Tenant_A

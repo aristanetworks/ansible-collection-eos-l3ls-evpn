@@ -320,7 +320,7 @@ router_bgp:
     send_community: all
     maximum_routes: 12000
     route_map_in: RM-MLAG-PEER-IN
-  - name: MLAG-IPv4-OVERLAY-PEER
+  - name: MLAG-IPv4-VRFS-PEER
     type: ipv4
     remote_as: '65101'
     description: EVPN-MULTICAST-L3LEAF1A
@@ -589,7 +589,7 @@ router_bgp:
       wait_install: true
     neighbors:
     - ip_address: 10.255.251.0
-      peer_group: MLAG-IPv4-OVERLAY-PEER
+      peer_group: MLAG-IPv4-VRFS-PEER
       description: EVPN-MULTICAST-L3LEAF1A_Vlan3012
     redistribute:
       connected:
@@ -611,7 +611,7 @@ router_bgp:
       wait_install: true
     neighbors:
     - ip_address: 10.255.251.0
-      peer_group: MLAG-IPv4-OVERLAY-PEER
+      peer_group: MLAG-IPv4-VRFS-PEER
       description: EVPN-MULTICAST-L3LEAF1A_Vlan3010
     redistribute:
       connected:
@@ -633,7 +633,7 @@ router_bgp:
       wait_install: true
     neighbors:
     - ip_address: 10.255.251.0
-      peer_group: MLAG-IPv4-OVERLAY-PEER
+      peer_group: MLAG-IPv4-VRFS-PEER
       description: EVPN-MULTICAST-L3LEAF1A_Vlan3011
     redistribute:
       connected:
@@ -655,7 +655,7 @@ router_bgp:
       wait_install: true
     neighbors:
     - ip_address: 10.255.251.0
-      peer_group: MLAG-IPv4-OVERLAY-PEER
+      peer_group: MLAG-IPv4-VRFS-PEER
       description: EVPN-MULTICAST-L3LEAF1A_Vlan3022
     redistribute:
       connected:
@@ -677,7 +677,7 @@ router_bgp:
       wait_install: true
     neighbors:
     - ip_address: 10.255.251.0
-      peer_group: MLAG-IPv4-OVERLAY-PEER
+      peer_group: MLAG-IPv4-VRFS-PEER
       description: EVPN-MULTICAST-L3LEAF1A_Vlan3020
     redistribute:
       connected:
@@ -699,7 +699,7 @@ router_bgp:
       wait_install: true
     neighbors:
     - ip_address: 10.255.251.0
-      peer_group: MLAG-IPv4-OVERLAY-PEER
+      peer_group: MLAG-IPv4-VRFS-PEER
       description: EVPN-MULTICAST-L3LEAF1A_Vlan3021
     redistribute:
       connected:
@@ -722,7 +722,7 @@ router_bgp:
       wait_install: true
     neighbors:
     - ip_address: 10.255.251.0
-      peer_group: MLAG-IPv4-OVERLAY-PEER
+      peer_group: MLAG-IPv4-VRFS-PEER
       description: EVPN-MULTICAST-L3LEAF1A_Vlan3032
     redistribute:
       connected:
@@ -745,7 +745,7 @@ router_bgp:
       wait_install: true
     neighbors:
     - ip_address: 10.255.251.0
-      peer_group: MLAG-IPv4-OVERLAY-PEER
+      peer_group: MLAG-IPv4-VRFS-PEER
       description: EVPN-MULTICAST-L3LEAF1A_Vlan3065
     redistribute:
       connected:
@@ -768,7 +768,7 @@ router_bgp:
       wait_install: true
     neighbors:
     - ip_address: 10.255.251.0
-      peer_group: MLAG-IPv4-OVERLAY-PEER
+      peer_group: MLAG-IPv4-VRFS-PEER
       description: EVPN-MULTICAST-L3LEAF1A_Vlan3031
     redistribute:
       connected:
@@ -791,7 +791,7 @@ router_bgp:
       wait_install: true
     neighbors:
     - ip_address: 10.255.251.0
-      peer_group: MLAG-IPv4-OVERLAY-PEER
+      peer_group: MLAG-IPv4-VRFS-PEER
       description: EVPN-MULTICAST-L3LEAF1A_Vlan3041
     redistribute:
       connected:
@@ -814,7 +814,7 @@ router_bgp:
       wait_install: true
     neighbors:
     - ip_address: 10.255.251.0
-      peer_group: MLAG-IPv4-OVERLAY-PEER
+      peer_group: MLAG-IPv4-VRFS-PEER
       description: EVPN-MULTICAST-L3LEAF1A_Vlan3040
     redistribute:
       connected:
@@ -837,7 +837,7 @@ router_bgp:
       wait_install: true
     neighbors:
     - ip_address: 10.255.251.0
-      peer_group: MLAG-IPv4-OVERLAY-PEER
+      peer_group: MLAG-IPv4-VRFS-PEER
       description: EVPN-MULTICAST-L3LEAF1A_Vlan3054
     redistribute:
       connected:
@@ -863,7 +863,7 @@ router_bgp:
       wait_install: true
     neighbors:
     - ip_address: 10.255.251.0
-      peer_group: MLAG-IPv4-OVERLAY-PEER
+      peer_group: MLAG-IPv4-VRFS-PEER
       description: EVPN-MULTICAST-L3LEAF1A_Vlan3059
     redistribute:
       connected:
@@ -889,7 +889,7 @@ router_bgp:
       wait_install: true
     neighbors:
     - ip_address: 10.255.251.0
-      peer_group: MLAG-IPv4-OVERLAY-PEER
+      peer_group: MLAG-IPv4-VRFS-PEER
       description: EVPN-MULTICAST-L3LEAF1A_Vlan3051
     redistribute:
       connected:
@@ -912,7 +912,7 @@ router_bgp:
       wait_install: true
     neighbors:
     - ip_address: 10.255.251.0
-      peer_group: MLAG-IPv4-OVERLAY-PEER
+      peer_group: MLAG-IPv4-VRFS-PEER
       description: EVPN-MULTICAST-L3LEAF1A_Vlan3050
     redistribute:
       connected:

@@ -378,10 +378,7 @@ class AvdStructuredConfigMlag(StructuredConfigGenerator):
         router_bgp["peer_groups"] = [strip_empties_from_dict(peer_group)]
 
         # If self.inputs.mlag_ipv4_vrfs_peer is defined in the input
-        if (
-            self.inputs.bgp_peer_groups.mlag_ipv4_vrfs_peer
-            and self.inputs.bgp_peer_groups.mlag_ipv4_vrfs_peer.name != self.inputs.bgp_peer_groups.mlag_ipv4_underlay_peer.name
-        ):
+        if self.shared_utils.use_separate_peer_group_for_mlag_vrfs:
             router_bgp["peer_groups"].append(
                 {
                     "name": self.inputs.bgp_peer_groups.mlag_ipv4_vrfs_peer.name,
