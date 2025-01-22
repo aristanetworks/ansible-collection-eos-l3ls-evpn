@@ -33,6 +33,8 @@ class EthernetInterfacesMixin(UtilsMixin):
                 ethernet_interface = self._get_common_interface_cfg(p2p_link, p2p_link_data)
                 ethernet_interface["description"] = self._p2p_link_ethernet_description(p2p_link_data)
                 ethernet_interface.update(self._get_ethernet_cfg(p2p_link))
+                if p2p_link.underlay_multicast_ipv4_static:
+                    ethernet_interface["multicast"] = {"ipv4": {"static": True}}
 
                 # Remove None values
                 ethernet_interface = {key: value for key, value in ethernet_interface.items() if value is not None}

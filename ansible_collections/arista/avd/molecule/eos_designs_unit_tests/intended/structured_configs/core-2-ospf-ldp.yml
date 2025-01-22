@@ -29,6 +29,9 @@ ethernet_interfaces:
   speed: 100full
   mtu: 1601
   ip_address: 100.123.123.3/31
+  multicast:
+    ipv4:
+      static: true
   ospf_network_point_to_point: true
   ospf_area: 0.0.0.0
   service_profile: test_qos_profile
@@ -49,6 +52,9 @@ ethernet_interfaces:
   mtu: 1500
   ip_address: 100.64.48.5/31
   ipv6_enable: true
+  multicast:
+    ipv4:
+      static: true
   ospf_network_point_to_point: true
   ospf_area: 0.0.0.0
   mpls:
@@ -68,6 +74,9 @@ ethernet_interfaces:
   mtu: 1500
   ip_address: 100.64.48.7/31
   ipv6_enable: true
+  multicast:
+    ipv4:
+      static: true
   ospf_network_point_to_point: true
   ospf_area: 0.0.0.0
   peer: core-1-isis-sr-ldp
@@ -82,6 +91,9 @@ ethernet_interfaces:
   mtu: 1500
   ip_address: 100.64.48.9/31
   ipv6_enable: true
+  multicast:
+    ipv4:
+      static: true
   ospf_network_point_to_point: true
   ospf_area: 0.0.0.0
   mpls:
@@ -98,6 +110,9 @@ ethernet_interfaces:
   mtu: 1602
   ip_address: unnumbered loopback0
   ipv6_enable: true
+  multicast:
+    ipv4:
+      static: true
   ospf_network_point_to_point: true
   ospf_area: 0.0.0.0
   service_profile: test_qos_profile

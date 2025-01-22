@@ -37,6 +37,9 @@ ethernet_interfaces:
   speed: 100full
   mtu: 1601
   ip_address: 100.123.123.2/31
+  multicast:
+    ipv4:
+      static: true
   isis_enable: CORE
   isis_metric: 60
   isis_network_point_to_point: false
@@ -60,6 +63,9 @@ ethernet_interfaces:
   mtu: 1500
   ip_address: 100.64.48.4/31
   ipv6_enable: true
+  multicast:
+    ipv4:
+      static: true
   isis_enable: CORE
   isis_metric: 60
   isis_network_point_to_point: true
@@ -87,6 +93,9 @@ ethernet_interfaces:
   mtu: 1500
   ip_address: 100.64.48.6/31
   ipv6_enable: true
+  multicast:
+    ipv4:
+      static: true
   isis_enable: CORE
   isis_metric: 60
   isis_network_point_to_point: true
@@ -109,6 +118,9 @@ ethernet_interfaces:
   mtu: 1500
   ip_address: 100.64.48.8/31
   ipv6_enable: true
+  multicast:
+    ipv4:
+      static: true
   isis_enable: CORE
   isis_metric: 60
   isis_network_point_to_point: true
@@ -133,6 +145,9 @@ ethernet_interfaces:
   mtu: 1602
   ip_address: unnumbered loopback0
   ipv6_enable: true
+  multicast:
+    ipv4:
+      static: true
   isis_enable: CORE
   isis_metric: 70
   isis_network_point_to_point: true
@@ -302,6 +317,9 @@ ethernet_interfaces:
   shutdown: false
   mtu: 1600
   ip_address: 172.16.1.9/29
+  multicast:
+    ipv4:
+      static: true
   mpls:
     ip: true
   peer: peer6
