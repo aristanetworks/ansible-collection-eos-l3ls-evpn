@@ -353,9 +353,9 @@ no aaa authorization config-commands
 
 | Type | Commands | Record type | Group | Logging |
 | ---- | -------- | ----------- | ----- | ------- |
-| Exec - Console | - | none | - | True |
-| Commands - Console | all | none |  -  | False |
-| Commands - Console | 0 | none |  -  | False |
+| Exec - Console | - | none | - | - |
+| Commands - Console | all | none | - | - |
+| Commands - Console | 0 | none | - | - |
 | Exec - Default | - | none | - | - |
 | System - Default | - | none | - | - |
 | Commands - Default | all | none | - | - |
