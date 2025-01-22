@@ -8217,9 +8217,8 @@ class EosDesigns(EosDesignsRootModel):
           - 720XP
           - 720XP-48Y6
 
-
-        Subclass of AvdList
-        with `str` items.
+        Subclass of AvdList with
+        `str` items.
         """
         switch_ports: SwitchPorts
         """
@@ -8478,9 +8477,8 @@ class EosDesigns(EosDesignsRootModel):
                          - 720XP
                          - 720XP-48Y6
 
-
-                       Subclass of AvdList
-                       with `str` items.
+                       Subclass of AvdList with
+                       `str` items.
                     switch_ports:
                        List of ranges using AVD range_expand syntax.
                        For example:
