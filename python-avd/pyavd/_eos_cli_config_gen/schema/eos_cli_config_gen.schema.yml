@@ -9275,6 +9275,7 @@ keys:
             - int
       servers:
         type: list
+        primary_key: name
         items:
           type: dict
           keys:
@@ -9343,9 +9344,11 @@ keys:
               valid_values:
               - md5
               - sha1
+              required: true
             key:
               type: str
               description: Obfuscated key.
+              required: true
             key_type:
               type: str
               convert_types:
