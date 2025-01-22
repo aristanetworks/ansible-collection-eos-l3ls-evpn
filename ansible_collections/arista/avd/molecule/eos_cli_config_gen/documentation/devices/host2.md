@@ -5,6 +5,7 @@
 - [Management](#management)
   - [Banner](#banner)
   - [Management Interfaces](#management-interfaces)
+  - [NTP](#ntp)
   - [PTP](#ptp)
   - [Management SSH](#management-ssh)
   - [Management API gNMI](#management-api-gnmi)
@@ -168,6 +169,21 @@ interface Management1
    description OOB_MANAGEMENT
    vrf MGMT
    ip address 10.73.255.122/24
+```
+
+### NTP
+
+#### NTP Summary
+
+##### NTP Authentication
+
+- Authentication enabled
+
+#### NTP Device Configuration
+
+```eos
+!
+ntp authenticate
 ```
 
 ### PTP
