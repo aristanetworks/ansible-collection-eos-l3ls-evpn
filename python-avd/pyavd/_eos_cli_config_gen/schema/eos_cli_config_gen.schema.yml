@@ -6450,6 +6450,8 @@ keys:
         type: int
       timer_reinitialization:
         type: int
+        min: 1
+        max: 10
         convert_types:
         - str
       holdtime:
