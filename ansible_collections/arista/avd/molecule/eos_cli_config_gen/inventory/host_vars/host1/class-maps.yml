@@ -31,7 +31,7 @@ class_maps:
       dscp: af11
       ecn: ect-ce
     - name: DSCP_TEST_2
-      dscp: 2-4, 6
+      dscp: 2-4,6
       ecn: non-ect
     - name: DSCP_TEST_3
       dscp: cs0
