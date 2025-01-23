@@ -21,7 +21,7 @@
 | Commands - Console | all | start-stop | TACACS | True |
 | Commands - Console | 0 | start-stop |  -  | True |
 | Commands - Console | 1 | start-stop | TACACS1 | False |
-| Commands - Console | 2 | none |  -  | True |
+| Commands - Console | 2 | none | - | - |
 | Commands - Console | 3 | start-stop |  -  | False |
 | Exec - Default | - | start-stop | TACACS | True |
 | System - Default | - | start-stop | TACACS | - |
