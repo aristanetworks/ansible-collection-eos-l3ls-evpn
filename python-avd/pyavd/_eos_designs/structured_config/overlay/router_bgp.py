@@ -150,7 +150,7 @@ class RouterBgpMixin(UtilsMixin):
             if self._is_mpls_server is True:
                 peer_groups.append({**self._generate_base_peer_group("mpls", "rr_overlay_peers"), "remote_as": self.shared_utils.bgp_as})
 
-        # Always render WAN routers
+        # Always render the WAN routers
         # TODO: probably should move from overlay
         if self.shared_utils.is_wan_router:
             # WAN OVERLAY peer group only is supported iBGP
@@ -226,19 +226,21 @@ class RouterBgpMixin(UtilsMixin):
 
         overlay_peer_group = {}
         if self.shared_utils.is_wan_router:
-            overlay_peer_group = {
+            wan_overlay_peer_group = {
                 "name": self.inputs.bgp_peer_groups.wan_overlay_peers.name,
                 "activate": True,
                 "encapsulation": self.inputs.wan_encapsulation,
             }
             if self.shared_utils.wan_role != "server":
-                overlay_peer_group.update(
+                wan_overlay_peer_group.update(
                     {
                         "route_map_in": "RM-EVPN-SOO-IN",
                         "route_map_out": "RM-EVPN-SOO-OUT",
                     },
                 )
-        elif self.shared_utils.overlay_evpn_vxlan is True:
+            peer_groups.append(wan_overlay_peer_group)
+
+        if self.shared_utils.overlay_evpn_vxlan is True:
             overlay_peer_group = {"name": self.inputs.bgp_peer_groups.evpn_overlay_peers.name, "activate": True}
 
         if self.shared_utils.overlay_routing_protocol == "ebgp":
@@ -270,6 +272,7 @@ class RouterBgpMixin(UtilsMixin):
                 if self._is_mpls_server is True:
                     peer_groups.append({"name": self.inputs.bgp_peer_groups.rr_overlay_peers.name, "activate": True})
 
+            # TODO: this is written for matching either evpn_mpls or evpn_vlxan based for iBGP see if we cannot make this better.
             if self.shared_utils.overlay_vtep is True and self.shared_utils.evpn_role != "server" and overlay_peer_group:
                 overlay_peer_group.update(
                     {
@@ -277,7 +280,6 @@ class RouterBgpMixin(UtilsMixin):
                         "route_map_out": "RM-EVPN-SOO-OUT",
                     },
                 )
-
         if overlay_peer_group:
             peer_groups.append(overlay_peer_group)
 
@@ -625,7 +627,7 @@ class RouterBgpMixin(UtilsMixin):
                 }
                 neighbors.append(neighbor)
 
-        if self.shared_utils.is_wan_server:
+        elif self.shared_utils.is_wan_server:
             # No neighbor configured on the `wan_overlay_peers` peer group as it is covered by listen ranges
             for wan_route_server in self.shared_utils.filtered_wan_route_servers:
                 neighbor = self._create_neighbor(
