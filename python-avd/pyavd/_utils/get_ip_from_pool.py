@@ -32,6 +32,9 @@ def get_ip_from_pool(pool: str, prefixlen: int, subnet_offset: int, ip_offset: i
     """
     get_ip_from_pool returns one IP address from a subnet of the given prefix length size from the given pool.
 
+    The "pool" string is lazily evaluated, so an invalid IP address may be allowed if we never need to parse it.
+    E.g. if you ask for offset 1 and the first pool is valid, but the pool for offset 256 is invalid.
+
     Args:
         pool: IP pool(s) and/or IP range(s) in string format, example: "192.168.0.0/24, 10.10.10.10-10.10.10.20"
         prefixlen: Prefix length for subnet to fetch from the pool
@@ -41,8 +44,8 @@ def get_ip_from_pool(pool: str, prefixlen: int, subnet_offset: int, ip_offset: i
     Returns:
         IP address without mask
 
-    The "pool" string is lazily evaluated, so an invalid IP address may be allowed if we never need to parse it.
-    E.g. if you ask for offset 1 and the first pool is valid, but the pool for offset 256 is invalid.
+    Raises:
+        AristaAvdError: If the pool string is invalid or if the requested offset is not available in the pool.
     """
     subnet = None
     remaining_subnet_offset = subnet_offset
@@ -94,6 +97,18 @@ def get_ip_from_pool(pool: str, prefixlen: int, subnet_offset: int, ip_offset: i
 
 
 def get_ipv4_networks_from_pool(pool: str) -> Iterator[ipaddress.IPv4Network]:
+    """
+    Get IPv4 networks from a pool string.
+
+    Args:
+        pool: Comma separated string of IPv4 pools and ranges.
+
+    Returns:
+        Iterator of IPv4Network objects.
+
+    Raises:
+        AristaAvdError: If the pool string is invalid.
+    """
     ensure_ipv4_type = partial(ensure_type, item_type=ipaddress.IPv4Network)
     try:
         yield from map(ensure_ipv4_type, get_networks_from_pool(pool))
@@ -103,6 +118,18 @@ def get_ipv4_networks_from_pool(pool: str) -> Iterator[ipaddress.IPv4Network]:
 
 
 def get_ipv6_networks_from_pool(pool: str) -> Iterator[ipaddress.IPv6Network]:
+    """
+    Get IPv6 networks from a pool string.
+
+    Args:
+        pool: Comma separated string of IPv6 pools and ranges.
+
+    Returns:
+        Iterator of IPv6Network objects.
+
+    Raises:
+        AristaAvdError: If the pool string is invalid.
+    """
     ensure_ipv6_type = partial(ensure_type, item_type=ipaddress.IPv6Network)
     try:
         yield from map(ensure_ipv6_type, get_networks_from_pool(pool))
@@ -112,6 +139,18 @@ def get_ipv6_networks_from_pool(pool: str) -> Iterator[ipaddress.IPv6Network]:
 
 
 def get_networks_from_pool(pool: str) -> Iterator[ipaddress.IPv4Network | ipaddress.IPv6Network]:
+    """
+    Get IP networks from a pool string.
+
+    Args:
+        pool: Comma separated string of IP pools and ranges.
+
+    Returns:
+        Iterator of IPv4Network and/or IPv6Network objects.
+
+    Raises:
+        AristaAvdError: If the pool string is invalid.
+    """
     counter = 0
     matches = re.finditer(POOLS_AND_RANGES_PATTERN, pool)
     for match in matches:
