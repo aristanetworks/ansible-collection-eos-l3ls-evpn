@@ -30,13 +30,8 @@ keys:
         type: list
         primary_key: name
         description: |-
-          Keys `dscp` and `ecn` are not mutually exclusive.
-          If both dscp and ecn are defined, CLI command would be:
-           - match dscp <dscp> ecn <ecn>.
-          If only dscp is defined, CLI command would be:
-            - match dscp <dscp>.
-          If only ecn is defined, CLI command would be:
-            - match ecn <ecn>.
+          The keys `vlan`, `cos`, `ip`, `ipv6`, `dscp`, `ecn` are mutually exclusive,
+          except `dscp` and `ecn` which can be given separate or together.
         items:
           type: dict
           keys:
