@@ -2,7 +2,7 @@
 site_name: Arista AVD
 site_author: Arista Ansible Team
 site_description: Arista Validated Designs documentation
-copyright: Copyright &copy; 2019 - 2023 Arista Networks
+copyright: Copyright &copy; 2019 - 2025 Arista Networks
 strict: true
 exclude_docs: |
   /README.md
@@ -32,7 +32,7 @@ theme:
     repo: fontawesome/brands/github
     logo: fontawesome/solid/book
     edit: fontawesome/solid/file-pen
-  favicon: _media/favicon.ico
+  favicon: docs/_media/favicon.ico
   font:
     code: Fira Mono
   language: en
@@ -63,11 +63,11 @@ extra:
     default: stable
 
 extra_css:
-  - stylesheets/extra.material.css
+  - docs/stylesheets/extra.material.css
 
 extra_javascript:
   - https://unpkg.com/tablesort@5.3.0/dist/tablesort.min.js
-  - stylesheets/tables.js
+  - docs/stylesheets/tables.js
 
 plugins:
   - exclude:
