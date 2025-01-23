@@ -4897,11 +4897,13 @@ keys:
     default: false
     description: 'PREVIEW: This key is currently not supported
 
-      Setting to start using `overlay_routing_protocol`, `evpn_role` and `vtep`
+      When true, `eos_designs` will use `overlay_routing_protocol`, `evpn_role` and
+      `vtep`
 
-      node settings for LAN side on WAN devices (they were enforced before).
+      node settings for LAN side on WAN devices. Otherwise these will be ignored for
+      WAN.
 
-      This will be the default starting 6.0.0.'
+      This will be the default in AVD version 6.0.0 and this option will be removed.'
   wan_virtual_topologies:
     type: dict
     description: 'Configure Virtual Topologies for CV Pathfinder and AutoVPN.
