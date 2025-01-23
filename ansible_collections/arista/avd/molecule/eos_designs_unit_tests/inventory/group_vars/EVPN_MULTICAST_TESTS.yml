@@ -479,6 +479,7 @@ tenants:
       # Only router multicast on LEAF2
       # No transit
       - name: TEN_E_PEG_L3_MULTICAST_ENABLED
+        enable_mlag_ibgp_peering_vrfs: false
         description: "PEG_L3_MULTICAST_ENABLED in Tenant E"
         vtep_diagnostic:
           loopback: 51
