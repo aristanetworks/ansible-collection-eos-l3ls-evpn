@@ -418,7 +418,7 @@ class UtilsWanMixin(UtilsZscalerMixin, StructuredConfigGenerator):
         ]
 
     @cached_property
-    def _svi_acls(self) -> dict[str, dict[str, dict]] | None:
+    def _svi_acls(self) -> dict[str, dict[str, dict]]:
         """
         Returns a dict of SVI ACLs.
 
@@ -431,7 +431,7 @@ class UtilsWanMixin(UtilsZscalerMixin, StructuredConfigGenerator):
         so use `get(self._svi_acls, f"{interface_name}.ipv4_acl_in")` to get the value.
         """
         if not self.shared_utils.network_services_l3:
-            return None
+            return {}
 
         svi_acls = {}
         for tenant in self.shared_utils.filtered_tenants:

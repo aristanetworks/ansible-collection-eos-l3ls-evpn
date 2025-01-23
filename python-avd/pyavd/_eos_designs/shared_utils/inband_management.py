@@ -5,17 +5,15 @@ from __future__ import annotations
 
 from functools import cached_property
 from ipaddress import ip_network
-from typing import TYPE_CHECKING
 
 from pyavd._errors import AristaAvdInvalidInputsError
 from pyavd._utils import get
 from pyavd.j2filters import natural_sort
 
-if TYPE_CHECKING:
-    from . import SharedUtils
+from .utils import UtilsMixin
 
 
-class InbandManagementMixin:
+class InbandManagementMixin(UtilsMixin):
     """
     Mixin Class providing a subset of SharedUtils.
 
@@ -24,37 +22,37 @@ class InbandManagementMixin:
     """
 
     @cached_property
-    def configure_inband_mgmt(self: SharedUtils) -> bool:
-        return bool(self.uplink_type == "port-channel" and self.inband_mgmt_ip)
+    def configure_inband_mgmt(self) -> bool:
+        return bool(self.shared_utils.uplink_type == "port-channel" and self.inband_mgmt_ip)
 
     @cached_property
-    def configure_inband_mgmt_ipv6(self: SharedUtils) -> bool:
-        return bool(self.uplink_type == "port-channel" and self.inband_mgmt_ipv6_address)
+    def configure_inband_mgmt_ipv6(self) -> bool:
+        return bool(self.shared_utils.uplink_type == "port-channel" and self.inband_mgmt_ipv6_address)
 
     @cached_property
-    def configure_parent_for_inband_mgmt(self: SharedUtils) -> bool:
-        return self.configure_inband_mgmt and not self.node_config.inband_mgmt_ip
+    def configure_parent_for_inband_mgmt(self) -> bool:
+        return self.configure_inband_mgmt and not self.shared_utils.node_config.inband_mgmt_ip
 
     @cached_property
-    def configure_parent_for_inband_mgmt_ipv6(self: SharedUtils) -> bool:
-        return self.configure_inband_mgmt_ipv6 and not self.node_config.inband_mgmt_ipv6_address
+    def configure_parent_for_inband_mgmt_ipv6(self) -> bool:
+        return self.configure_inband_mgmt_ipv6 and not self.shared_utils.node_config.inband_mgmt_ipv6_address
 
     @cached_property
-    def inband_mgmt_mtu(self: SharedUtils) -> int | None:
-        if not self.platform_settings.feature_support.per_interface_mtu:
+    def inband_mgmt_mtu(self) -> int | None:
+        if not self.shared_utils.platform_settings.feature_support.per_interface_mtu:
             return None
 
-        return self.node_config.inband_mgmt_mtu
+        return self.shared_utils.node_config.inband_mgmt_mtu
 
     @cached_property
-    def inband_mgmt_vrf(self: SharedUtils) -> str | None:
-        if (inband_mgmt_vrf := self.node_config.inband_mgmt_vrf) != "default":
+    def inband_mgmt_vrf(self) -> str | None:
+        if (inband_mgmt_vrf := self.shared_utils.node_config.inband_mgmt_vrf) != "default":
             return inband_mgmt_vrf
 
         return None
 
     @cached_property
-    def inband_mgmt_gateway(self: SharedUtils) -> str | None:
+    def inband_mgmt_gateway(self) -> str | None:
         """
         Inband management gateway.
 
@@ -68,16 +66,16 @@ class InbandManagementMixin:
             return None
 
         if not self.configure_parent_for_inband_mgmt:
-            return self.node_config.inband_mgmt_gateway
+            return self.shared_utils.node_config.inband_mgmt_gateway
 
-        if not self.node_config.inband_mgmt_subnet:
+        if not self.shared_utils.node_config.inband_mgmt_subnet:
             return None
 
-        subnet = ip_network(self.node_config.inband_mgmt_subnet, strict=False)
+        subnet = ip_network(self.shared_utils.node_config.inband_mgmt_subnet, strict=False)
         return f"{subnet[1]!s}"
 
     @cached_property
-    def inband_mgmt_ipv6_gateway(self: SharedUtils) -> str | None:
+    def inband_mgmt_ipv6_gateway(self) -> str | None:
         """
         Inband management ipv6 gateway.
 
@@ -91,16 +89,16 @@ class InbandManagementMixin:
             return None
 
         if not self.configure_parent_for_inband_mgmt_ipv6:
-            return self.node_config.inband_mgmt_ipv6_gateway
+            return self.shared_utils.node_config.inband_mgmt_ipv6_gateway
 
-        if not self.node_config.inband_mgmt_ipv6_subnet:
+        if not self.shared_utils.node_config.inband_mgmt_ipv6_subnet:
             return None
 
-        subnet = ip_network(self.node_config.inband_mgmt_ipv6_subnet, strict=False)
+        subnet = ip_network(self.shared_utils.node_config.inband_mgmt_ipv6_subnet, strict=False)
         return f"{subnet[1]!s}"
 
     @cached_property
-    def inband_mgmt_ip(self: SharedUtils) -> str | None:
+    def inband_mgmt_ip(self) -> str | None:
         """
         Inband management IP.
 
@@ -109,22 +107,22 @@ class InbandManagementMixin:
           - deducted IP from inband_mgmt_subnet & id
           - None.
         """
-        if inband_mgmt_ip := self.node_config.inband_mgmt_ip:
+        if inband_mgmt_ip := self.shared_utils.node_config.inband_mgmt_ip:
             return inband_mgmt_ip
 
-        if not self.node_config.inband_mgmt_subnet:
+        if not self.shared_utils.node_config.inband_mgmt_subnet:
             return None
 
-        if self.id is None:
-            msg = f"'id' is not set on '{self.hostname}' and is required to set inband_mgmt_ip from inband_mgmt_subnet"
+        if self.shared_utils.id is None:
+            msg = f"'id' is not set on '{self.shared_utils.hostname}' and is required to set inband_mgmt_ip from inband_mgmt_subnet"
             raise AristaAvdInvalidInputsError(msg)
 
-        subnet = ip_network(self.node_config.inband_mgmt_subnet, strict=False)
-        inband_mgmt_ip = str(subnet[3 + self.id])
+        subnet = ip_network(self.shared_utils.node_config.inband_mgmt_subnet, strict=False)
+        inband_mgmt_ip = str(subnet[3 + self.shared_utils.id])
         return f"{inband_mgmt_ip}/{subnet.prefixlen}"
 
     @cached_property
-    def inband_mgmt_ipv6_address(self: SharedUtils) -> str | None:
+    def inband_mgmt_ipv6_address(self) -> str | None:
         """
         Inband management IPv6 Address.
 
@@ -133,47 +131,47 @@ class InbandManagementMixin:
           - deduced IP from inband_mgmt_ipv6_subnet & id
           - None.
         """
-        if inband_mgmt_ipv6_address := self.node_config.inband_mgmt_ipv6_address:
+        if inband_mgmt_ipv6_address := self.shared_utils.node_config.inband_mgmt_ipv6_address:
             return inband_mgmt_ipv6_address
 
-        if not self.node_config.inband_mgmt_ipv6_subnet:
+        if not self.shared_utils.node_config.inband_mgmt_ipv6_subnet:
             return None
 
-        if self.id is None:
-            msg = f"'id' is not set on '{self.hostname}' and is required to set inband_mgmt_ipv6_address from inband_mgmt_ipv6_subnet"
+        if self.shared_utils.id is None:
+            msg = f"'id' is not set on '{self.shared_utils.hostname}' and is required to set inband_mgmt_ipv6_address from inband_mgmt_ipv6_subnet"
             raise AristaAvdInvalidInputsError(msg)
 
-        subnet = ip_network(self.node_config.inband_mgmt_ipv6_subnet, strict=False)
-        inband_mgmt_ipv6_address = str(subnet[3 + self.id])
+        subnet = ip_network(self.shared_utils.node_config.inband_mgmt_ipv6_subnet, strict=False)
+        inband_mgmt_ipv6_address = str(subnet[3 + self.shared_utils.id])
         return f"{inband_mgmt_ipv6_address}/{subnet.prefixlen}"
 
     @cached_property
-    def inband_mgmt_interface(self: SharedUtils) -> str | None:
+    def inband_mgmt_interface(self) -> str | None:
         """
         Inband management Interface used only to set as source interface on various management protocols.
 
         For L2 switches defaults to Vlan<inband_mgmt_vlan>
         For all other devices set to value of inband_mgmt_interface or None
         """
-        if inband_mgmt_interface := self.node_config.inband_mgmt_interface:
+        if inband_mgmt_interface := self.shared_utils.node_config.inband_mgmt_interface:
             return inband_mgmt_interface
 
         if self.configure_inband_mgmt or self.configure_inband_mgmt_ipv6:
-            return f"Vlan{self.node_config.inband_mgmt_vlan}"
+            return f"Vlan{self.shared_utils.node_config.inband_mgmt_vlan}"
 
         return None
 
     @cached_property
-    def inband_management_parent_vlans(self: SharedUtils) -> dict:
-        if not self.underlay_router:
+    def inband_management_parent_vlans(self) -> dict:
+        if not self.shared_utils.underlay_router:
             return {}
 
         svis = {}
         subnets = []
         ipv6_subnets = []
-        peers = natural_sort(get(self.hostvars, f"avd_topology_peers..{self.hostname}", separator="..", default=[]))
+        peers = natural_sort(get(self.shared_utils._hostvars, f"avd_topology_peers..{self.shared_utils.hostname}", separator="..", default=[]))
         for peer in peers:
-            peer_facts = self.get_peer_facts(peer, required=True)
+            peer_facts = self.get_peer_facts(peer)
             if (vlan := peer_facts.get("inband_mgmt_vlan")) is None:
                 continue
 

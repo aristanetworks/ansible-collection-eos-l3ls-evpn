@@ -5,7 +5,7 @@ from __future__ import annotations
 
 import ipaddress
 from functools import cached_property
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
 from pyavd._errors import AristaAvdError
 from pyavd._utils import AvdStringFormatter, default, strip_empties_from_dict
@@ -131,7 +131,7 @@ class RouterBgpMixin(UtilsMixin):
                 peer_groups.append(mpls_peer_group)
 
             if self.shared_utils.overlay_evpn_vxlan is True:
-                peer_group_config = {"remote_as": self.shared_utils.bgp_as}
+                peer_group_config: dict[str, Any] = {"remote_as": self.shared_utils.bgp_as}
                 if self.shared_utils.is_wan_router:
                     # WAN OVERLAY peer group
                     peer_group_config["ttl_maximum_hops"] = self.inputs.bgp_peer_groups.wan_overlay_peers.ttl_maximum_hops
@@ -343,7 +343,7 @@ class RouterBgpMixin(UtilsMixin):
         if not self.shared_utils.is_cv_pathfinder_router:
             return None
 
-        address_family_link_state = {
+        address_family_link_state: dict[str, Any] = {
             "peer_groups": [
                 {
                     "name": self.inputs.bgp_peer_groups.wan_overlay_peers.name,
@@ -400,7 +400,7 @@ class RouterBgpMixin(UtilsMixin):
         address_family_rtc = {}
 
         peer_groups = []
-        evpn_overlay_peers = {"name": self.inputs.bgp_peer_groups.evpn_overlay_peers.name}
+        evpn_overlay_peers: dict[str, Any] = {"name": self.inputs.bgp_peer_groups.evpn_overlay_peers.name}
         if self.shared_utils.overlay_evpn_vxlan is True:
             evpn_overlay_peers["activate"] = True
 
@@ -473,7 +473,7 @@ class RouterBgpMixin(UtilsMixin):
         remote_as: str | None = None,
         overlay_peering_interface: str | None = None,
     ) -> dict:
-        neighbor = {
+        neighbor: dict[str, Any] = {
             "ip_address": ip_address,
             "peer_group": peer_group,
             "peer": name,
@@ -489,7 +489,7 @@ class RouterBgpMixin(UtilsMixin):
             neighbor["remote_as"] = remote_as
 
         if self.inputs.shutdown_bgp_towards_undeployed_peers and name in self._avd_overlay_peers:
-            peer_facts = self.shared_utils.get_peer_facts(name)
+            peer_facts = self.shared_utils.get_peer_facts_dict(name)
             if peer_facts["is_deployed"] is False:
                 neighbor["shutdown"] = True
 

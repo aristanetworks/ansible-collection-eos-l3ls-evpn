@@ -9,13 +9,13 @@ from typing import TYPE_CHECKING
 from pyavd._errors import AristaAvdInvalidInputsError
 from pyavd._utils import default
 
+from .utils import UtilsMixin
+
 if TYPE_CHECKING:
     from pyavd._eos_designs.schema import EosDesigns
 
-    from . import SharedUtils
 
-
-class PtpMixin:
+class PtpMixin(UtilsMixin):
     """
     Mixin Class providing a subset of SharedUtils.
 
@@ -24,17 +24,17 @@ class PtpMixin:
     """
 
     @cached_property
-    def ptp_enabled(self: SharedUtils) -> bool:
+    def ptp_enabled(self) -> bool:
         default_ptp_enabled = self.inputs.ptp_settings.enabled
-        return bool(default(self.node_config.ptp.enabled, default_ptp_enabled))
+        return bool(default(self.shared_utils.node_config.ptp.enabled, default_ptp_enabled))
 
     @cached_property
-    def ptp_profile_name(self: SharedUtils) -> str:
+    def ptp_profile_name(self) -> str:
         default_ptp_profile = self.inputs.ptp_settings.profile
-        return self.node_config.ptp.profile or default_ptp_profile
+        return self.shared_utils.node_config.ptp.profile or default_ptp_profile
 
     @cached_property
-    def ptp_profile(self: SharedUtils) -> EosDesigns.PtpProfilesItem:
+    def ptp_profile(self) -> EosDesigns.PtpProfilesItem:
         if self.ptp_profile_name not in self.inputs.ptp_profiles:
             msg = f"PTP Profile '{self.ptp_profile_name}' referenced under `ptp.profile` node variables does not exist in `ptp_profiles`."
             raise AristaAvdInvalidInputsError(msg)

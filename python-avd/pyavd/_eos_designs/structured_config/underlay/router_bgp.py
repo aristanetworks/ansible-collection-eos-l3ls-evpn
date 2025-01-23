@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 from functools import cached_property
+from typing import Any
 
 from pyavd._utils import append_if_not_duplicate, get, strip_empties_from_dict
 
@@ -51,7 +52,7 @@ class RouterBgpMixin(UtilsMixin):
 
         # Address Families
         # TODO: - see if it makes sense to extract logic in method
-        address_family_ipv4_peer_group = {"activate": True}
+        address_family_ipv4_peer_group: dict[str, Any] = {"activate": True}
 
         if self.inputs.underlay_rfc5549 is True:
             address_family_ipv4_peer_group["next_hop"] = {"address_family_ipv6": {"enabled": True, "originate": True}}

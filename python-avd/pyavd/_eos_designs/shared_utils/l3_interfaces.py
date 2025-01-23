@@ -4,17 +4,15 @@
 from __future__ import annotations
 
 from functools import cached_property
-from typing import TYPE_CHECKING
 
 from pyavd._eos_designs.schema import EosDesigns
 from pyavd._errors import AristaAvdInvalidInputsError
 from pyavd.api.interface_descriptions import InterfaceDescriptionData
 
-if TYPE_CHECKING:
-    from . import SharedUtils
+from .utils import UtilsMixin
 
 
-class L3InterfacesMixin:
+class L3InterfacesMixin(UtilsMixin):
     """
     Mixin Class providing a subset of SharedUtils.
 
@@ -22,17 +20,8 @@ class L3InterfacesMixin:
     Using type-hint on self to get proper type-hints on attributes across all Mixins.
     """
 
-    def sanitize_interface_name(self: SharedUtils, interface_name: str) -> str:
-        """
-        Interface name is used as value for certain fields, but `/` are not allowed in the value.
-
-        So we transform `/` to `_`
-        Ethernet1/1.1 is transformed into Ethernet1_1.1
-        """
-        return interface_name.replace("/", "_")
-
     def apply_l3_interfaces_profile(
-        self: SharedUtils, l3_interface: EosDesigns._DynamicKeys.DynamicNodeTypesItem.NodeTypes.NodesItem.L3InterfacesItem
+        self, l3_interface: EosDesigns._DynamicKeys.DynamicNodeTypesItem.NodeTypes.NodesItem.L3InterfacesItem
     ) -> EosDesigns._DynamicKeys.DynamicNodeTypesItem.NodeTypes.NodesItem.L3InterfacesItem:
         """Apply a profile to an l3_interface."""
         if not l3_interface.profile:
@@ -49,14 +38,14 @@ class L3InterfacesMixin:
         return l3_interface._deepinherited(profile_as_interface)
 
     @cached_property
-    def l3_interfaces(self: SharedUtils) -> EosDesigns._DynamicKeys.DynamicNodeTypesItem.NodeTypes.NodesItem.L3Interfaces:
+    def l3_interfaces(self) -> EosDesigns._DynamicKeys.DynamicNodeTypesItem.NodeTypes.NodesItem.L3Interfaces:
         """Returns the list of l3_interfaces, where any referenced profiles are applied."""
         return EosDesigns._DynamicKeys.DynamicNodeTypesItem.NodeTypes.NodesItem.L3Interfaces(
-            [self.apply_l3_interfaces_profile(l3_interface) for l3_interface in self.node_config.l3_interfaces]
+            [self.apply_l3_interfaces_profile(l3_interface) for l3_interface in self.shared_utils.node_config.l3_interfaces]
         )
 
     @cached_property
-    def l3_interfaces_bgp_neighbors(self: SharedUtils) -> list:
+    def l3_interfaces_bgp_neighbors(self) -> list:
         neighbors = []
         for interface in self.l3_interfaces:
             if not (interface.peer_ip and interface.bgp):
@@ -75,9 +64,9 @@ class L3InterfacesMixin:
 
             description = interface.description
             if not description:
-                description = self.interface_descriptions.underlay_ethernet_interface(
+                description = self.shared_utils.interface_descriptions.underlay_ethernet_interface(
                     InterfaceDescriptionData(
-                        shared_utils=self,
+                        shared_utils=self.shared_utils,
                         interface=interface.name,
                         peer=interface.peer,
                         peer_interface=interface.peer_interface,

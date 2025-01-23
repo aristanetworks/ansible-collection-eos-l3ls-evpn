@@ -5,16 +5,14 @@ from __future__ import annotations
 
 from functools import cached_property
 from re import search
-from typing import TYPE_CHECKING
 
 from pyavd._eos_designs.schema import EosDesigns
 from pyavd._utils import default
 
-if TYPE_CHECKING:
-    from . import SharedUtils
+from .utils import UtilsMixin
 
 
-class PlatformMixin:
+class PlatformMixin(UtilsMixin):
     """
     Mixin Class providing a subset of SharedUtils.
 
@@ -23,11 +21,11 @@ class PlatformMixin:
     """
 
     @cached_property
-    def platform(self: SharedUtils) -> str | None:
-        return default(self.node_config.platform, self.cv_topology_platform)
+    def platform(self) -> str | None:
+        return default(self.shared_utils.node_config.platform, self.shared_utils.cv_topology_platform)
 
     @cached_property
-    def platform_settings(self: SharedUtils) -> EosDesigns.PlatformSettingsItem | EosDesigns.CustomPlatformSettingsItem:
+    def platform_settings(self) -> EosDesigns.PlatformSettingsItem | EosDesigns.CustomPlatformSettingsItem:
         # First look for a matching platform setting specifying our platform
         if self.platform is not None:
             for platform_setting in self.inputs.custom_platform_settings:
@@ -48,20 +46,20 @@ class PlatformMixin:
         return EosDesigns.PlatformSettingsItem()
 
     @cached_property
-    def default_interfaces(self: SharedUtils) -> EosDesigns.DefaultInterfacesItem:
+    def default_interfaces(self) -> EosDesigns.DefaultInterfacesItem:
         """default_interfaces set based on default_interfaces."""
         device_platform = self.platform or "default"
 
         # First look for a matching default interface set that matches our platform and type
         for default_interface in self.inputs.default_interfaces:
             for platform in default_interface.platforms:
-                if search(f"^{platform}$", device_platform) and self.type in default_interface.types:
+                if search(f"^{platform}$", device_platform) and self.shared_utils.type in default_interface.types:
                     return default_interface
 
         # If not found, then look for a default default_interface that matches our type
         for default_interface in self.inputs.default_interfaces:
             for platform in default_interface.platforms:
-                if search(f"^{platform}$", "default") and self.type in default_interface.types:
+                if search(f"^{platform}$", "default") and self.shared_utils.type in default_interface.types:
                     return default_interface
 
         return EosDesigns.DefaultInterfacesItem()

@@ -78,15 +78,15 @@ class UtilsZscalerMixin(StructuredConfigGenerator):
                     "Set 'serial_number' for the device in AVD vars, to ensure a unique match."
                 )
                 raise AristaAvdError(msg)
-            device_id: str = cv_inventory_devices[0].serial_number
+            device_id: str = cv_inventory_devices[0].serial_number or ""
             request_time, _ = await cv_client.set_swg_device(device_id=device_id, service="zscaler", location=wan_site_location)
             cv_endpoint_status = await cv_client.wait_for_swg_endpoint_status(device_id=device_id, service="zscaler", start_time=request_time)
 
         device_location: Location = cv_endpoint_status.device_location
 
         zscaler_endpoints = EosDesigns.ZscalerEndpoints(
-            cloud_name=cv_endpoint_status.cloud_name,
-            device_location=EosDesigns.ZscalerEndpoints.DeviceLocation(city=device_location.city, country=device_location.country),
+            cloud_name=cv_endpoint_status.cloud_name or "",
+            device_location=EosDesigns.ZscalerEndpoints.DeviceLocation(city=device_location.city or "", country=device_location.country or ""),
         )
         if not getattr(cv_endpoint_status, "vpn_endpoints", None) or not getattr(cv_endpoint_status.vpn_endpoints, "values", None):
             msg = f"{context} but did not get any IPsec Tunnel endpoints back from the Zscaler API."
@@ -105,12 +105,12 @@ class UtilsZscalerMixin(StructuredConfigGenerator):
                     key,
                     cls(
                         ip_address=vpn_endpoint.ip_address.value,
-                        datacenter=vpn_endpoint.datacenter,
-                        city=location.city,
-                        country=location.country,
-                        region=location.region,
-                        latitude=location.latitude,
-                        longitude=location.longitude,
+                        datacenter=vpn_endpoint.datacenter or "",
+                        city=location.city or "",
+                        country=location.country or "",
+                        region=location.region or "",
+                        latitude=str(location.latitude or ""),
+                        longitude=str(location.longitude or ""),
                     ),
                 )
 

@@ -4,7 +4,7 @@
 from __future__ import annotations
 
 from functools import cached_property
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any, cast
 
 from pyavd._errors import AristaAvdInvalidInputsError
 from pyavd._utils import append_if_not_duplicate, default, unique
@@ -36,7 +36,7 @@ class VxlanInterfaceMixin(UtilsMixin):
         if not (self.shared_utils.overlay_vtep or self.shared_utils.is_wan_router):
             return None
 
-        vxlan = {
+        vxlan: dict[str, Any] = {
             "udp_port": 4789,
         }
 
@@ -179,7 +179,7 @@ class VxlanInterfaceMixin(UtilsMixin):
                 return
 
             # NOTE: this can never be None here, it would be caught previously in the code
-            vrf_id: int = default(vrf.vrf_id, vrf.vrf_vni)
+            vrf_id = cast(int, default(vrf.vrf_id, vrf.vrf_vni))
 
             vrf_data = {"name": vrf_name, "vni": vni}
 
@@ -230,7 +230,7 @@ class VxlanInterfaceMixin(UtilsMixin):
         if not vlan.vxlan:
             return {}
 
-        vxlan_interface_vlan = {"id": vlan.id}
+        vxlan_interface_vlan: dict[str, Any] = {"id": vlan.id}
         if vlan.vni_override:
             vxlan_interface_vlan["vni"] = vlan.vni_override
         else:

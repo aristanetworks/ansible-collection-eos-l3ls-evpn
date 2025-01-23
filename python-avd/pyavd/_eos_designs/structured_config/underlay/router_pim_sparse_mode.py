@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 from functools import cached_property
+from typing import Any
 
 from pyavd._utils import get
 
@@ -30,7 +31,7 @@ class RouterPimSparseModeMixin(UtilsMixin):
         rp_addresses = []
         anycast_rps = []
         for rp_entry in self.inputs.underlay_multicast_rps:
-            rp_address = {"address": rp_entry.rp}
+            rp_address: dict[str, Any] = {"address": rp_entry.rp}
             if rp_entry.groups:
                 if rp_entry.access_list_name:
                     rp_address["access_lists"] = [rp_entry.access_list_name]

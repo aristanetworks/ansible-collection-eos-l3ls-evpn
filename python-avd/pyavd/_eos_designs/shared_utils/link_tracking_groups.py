@@ -4,15 +4,13 @@
 from __future__ import annotations
 
 from functools import cached_property
-from typing import TYPE_CHECKING
 
 from pyavd._utils import default, strip_empties_from_list
 
-if TYPE_CHECKING:
-    from . import SharedUtils
+from .utils import UtilsMixin
 
 
-class LinkTrackingGroupsMixin:
+class LinkTrackingGroupsMixin(UtilsMixin):
     """
     Mixin Class providing a subset of SharedUtils.
 
@@ -21,12 +19,12 @@ class LinkTrackingGroupsMixin:
     """
 
     @cached_property
-    def link_tracking_groups(self: SharedUtils) -> list | None:
-        if self.node_config.link_tracking.enabled:
+    def link_tracking_groups(self) -> list | None:
+        if self.shared_utils.node_config.link_tracking.enabled:
             link_tracking_groups = []
-            default_recovery_delay = default(self.platform_settings.reload_delay.mlag, 300)
-            if len(self.node_config.link_tracking.groups) > 0:
-                for lt_group in self.node_config.link_tracking.groups:
+            default_recovery_delay = default(self.shared_utils.platform_settings.reload_delay.mlag, 300)
+            if len(self.shared_utils.node_config.link_tracking.groups) > 0:
+                for lt_group in self.shared_utils.node_config.link_tracking.groups:
                     lt_group_dict = lt_group._as_dict(include_default_values=True)
                     lt_group_dict["recovery_delay"] = default(lt_group.recovery_delay, default_recovery_delay)
                     link_tracking_groups.append(lt_group_dict)

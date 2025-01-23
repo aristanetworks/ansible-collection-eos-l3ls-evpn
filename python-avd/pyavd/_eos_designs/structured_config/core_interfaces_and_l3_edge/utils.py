@@ -7,7 +7,7 @@ import re
 from functools import cached_property
 from ipaddress import ip_network
 from itertools import islice
-from typing import TypeVar
+from typing import Any, TypeVar
 
 from pyavd._eos_cli_config_gen.schema import EosCliConfigGen
 from pyavd._eos_designs.schema import EosDesigns
@@ -193,7 +193,7 @@ class UtilsMixin(StructuredConfigGenerator):
         This config will only be used on the main interface - so not port-channel members.
         """
         index = p2p_link.nodes.index(self.shared_utils.hostname)
-        interface_cfg = {
+        interface_cfg: dict[str, Any] = {
             "name": p2p_link_data["interface"],
             "peer": p2p_link_data["peer"],
             "peer_interface": p2p_link_data["peer_interface"],

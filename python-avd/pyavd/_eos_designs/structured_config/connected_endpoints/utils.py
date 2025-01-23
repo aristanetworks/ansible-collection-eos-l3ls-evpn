@@ -13,6 +13,8 @@ from pyavd._errors import AristaAvdError, AristaAvdInvalidInputsError
 from pyavd._utils import default, get_v2, short_esi_to_route_target
 
 if TYPE_CHECKING:
+    from collections.abc import Iterable
+
     from pyavd._eos_designs.schema import EosDesigns
 
 
@@ -74,14 +76,16 @@ class UtilsMixin(StructuredConfigGenerator):
                 continue
             if network_port_settings.switches and not self._match_regexes(network_port_settings.switches, self.shared_utils.hostname):
                 continue
-            if network_port_settings.platforms and not self._match_regexes(network_port_settings.platforms, self.shared_utils.platform):
+            if network_port_settings.platforms and not (
+                self.shared_utils.platform and self._match_regexes(network_port_settings.platforms, self.shared_utils.platform)
+            ):
                 continue
 
             filtered_network_ports.append(network_port_settings)
 
         return filtered_network_ports
 
-    def _match_regexes(self, regexes: list, value: str) -> bool:
+    def _match_regexes(self, regexes: Iterable[str], value: str) -> bool:
         """
         Match a list of regexes with the supplied value.
 

@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 from functools import cached_property
+from typing import Any
 
 from pyavd._eos_cli_config_gen.schema import EosCliConfigGen
 from pyavd._errors import AristaAvdError, AristaAvdMissingVariableError
@@ -25,6 +26,9 @@ class EthernetInterfacesMixin(UtilsMixin):
     def ethernet_interfaces(self) -> list | None:
         """Return structured config for ethernet_interfaces."""
         ethernet_interfaces = []
+
+        # Added to help type checker, but overwritten later.
+        ethernet_subinterfaces = []
 
         for link in self._underlay_links:
             # common values
@@ -77,7 +81,7 @@ class EthernetInterfacesMixin(UtilsMixin):
 
                 # MPLS
                 if self.shared_utils.underlay_mpls is True:
-                    mpls_dict = {"ip": True}
+                    mpls_dict: dict[str, Any] = {"ip": True}
                     if self.shared_utils.underlay_ldp is True:
                         mpls_dict["ldp"] = {
                             "interface": True,

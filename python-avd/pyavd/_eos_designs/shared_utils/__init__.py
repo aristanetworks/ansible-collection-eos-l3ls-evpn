@@ -1,8 +1,9 @@
 # Copyright (c) 2023-2025 Arista Networks, Inc.
 # Use of this source code is governed by the Apache License 2.0
 # that can be found in the LICENSE file.
-from pyavd._eos_designs.schema import EosDesigns
-from pyavd._schema.avdschema import AvdSchema
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
 
 from .cv_topology import CvTopology
 from .filtered_tenants import FilteredTenantsMixin
@@ -26,6 +27,10 @@ from .underlay import UnderlayMixin
 from .utils import UtilsMixin
 from .wan import WanMixin
 
+if TYPE_CHECKING:
+    from pyavd._eos_designs.schema import EosDesigns
+    from pyavd._schema.avdschema import AvdSchema
+
 
 class SharedUtils(
     FilteredTenantsMixin,
@@ -47,8 +52,8 @@ class SharedUtils(
     WanMixin,
     RoutingMixin,
     UnderlayMixin,
-    UtilsMixin,
     FlowTrackingMixin,
+    UtilsMixin,
 ):
     """
     Class with commonly used methods / cached_properties to be shared between all the python modules loaded in eos_designs.
@@ -65,7 +70,6 @@ class SharedUtils(
     """
 
     def __init__(self, hostvars: dict, inputs: EosDesigns, templar: object, schema: AvdSchema) -> None:
-        self.hostvars = hostvars
-        self.inputs = inputs
         self.templar = templar
         self.schema = schema
+        super().__init__(hostvars=hostvars, inputs=inputs, shared_utils=self)

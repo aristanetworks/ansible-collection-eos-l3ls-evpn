@@ -146,7 +146,7 @@ class UtilsMixin(StructuredConfigGenerator):
     def _uplinks(self) -> list:
         return get(self._hostvars, "switch.uplinks")
 
-    def _get_l3_interface_cfg(self, l3_interface: EosDesigns._DynamicKeys.DynamicNodeTypesItem.NodeTypes.NodesItem.L3InterfacesItem) -> dict | None:
+    def _get_l3_interface_cfg(self, l3_interface: EosDesigns._DynamicKeys.DynamicNodeTypesItem.NodeTypes.NodesItem.L3InterfacesItem) -> dict:
         """Returns structured_configuration for one L3 interface."""
         interface_description = l3_interface.description
         if not interface_description:

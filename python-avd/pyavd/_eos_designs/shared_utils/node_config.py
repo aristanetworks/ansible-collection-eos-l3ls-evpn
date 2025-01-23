@@ -4,16 +4,14 @@
 from __future__ import annotations
 
 from functools import cached_property
-from typing import TYPE_CHECKING
 
 from pyavd._eos_designs.schema import EosDesigns
 from pyavd._errors import AristaAvdInvalidInputsError
 
-if TYPE_CHECKING:
-    from . import SharedUtils
+from .utils import UtilsMixin
 
 
-class NodeConfigMixin:
+class NodeConfigMixin(UtilsMixin):
     """
     Mixin Class providing a subset of SharedUtils.
 
@@ -22,13 +20,13 @@ class NodeConfigMixin:
     """
 
     @cached_property
-    def node_type_config(self: SharedUtils) -> EosDesigns._DynamicKeys.DynamicNodeTypesItem.NodeTypes:
+    def node_type_config(self) -> EosDesigns._DynamicKeys.DynamicNodeTypesItem.NodeTypes:
         """
         The object representing the `<node_type_key like l3leaf, spine etc>:` containing the `defaults`, `nodes`, `node_groups` etc.
 
         The relevant dynamic key is found in self.inputs._dynamic_keys which is populated by the _from_dict() loader on the EosDesigns class.
         """
-        node_type_key = self.node_type_key_data.key
+        node_type_key = self.shared_utils.node_type_key_data.key
 
         if node_type_key in self.inputs._dynamic_keys.custom_node_types:
             return self.inputs._dynamic_keys.custom_node_types[node_type_key].value._cast_as(EosDesigns._DynamicKeys.DynamicNodeTypesItem.NodeTypes)
@@ -36,24 +34,24 @@ class NodeConfigMixin:
         if node_type_key in self.inputs._dynamic_keys.node_types:
             return self.inputs._dynamic_keys.node_types[node_type_key].value
 
-        msg = f"'type' is set to '{self.type}', for which node configs should use the key '{node_type_key}'. '{node_type_key}' was not found."
+        msg = f"'type' is set to '{self.shared_utils.type}', for which node configs should use the key '{node_type_key}'. '{node_type_key}' was not found."
         raise AristaAvdInvalidInputsError(msg)
 
     @cached_property
-    def node_group_config(self: SharedUtils) -> EosDesigns._DynamicKeys.DynamicNodeTypesItem.NodeTypes.NodeGroupsItem | None:
+    def node_group_config(self) -> EosDesigns._DynamicKeys.DynamicNodeTypesItem.NodeTypes.NodeGroupsItem | None:
         """
         The object representing the `<node_type_key like l3leaf, spine etc>.node_groups[]` where this node is found.
 
         Used by MLAG and WAN HA logic to find out who our MLAG / WAN HA peer is.
         """
         for node_group in self.node_type_config.node_groups:
-            if self.hostname in node_group.nodes:
+            if self.shared_utils.hostname in node_group.nodes:
                 return node_group
 
         return None
 
     @cached_property
-    def node_config(self: SharedUtils) -> EosDesigns._DynamicKeys.DynamicNodeTypesItem.NodeTypes.NodesItem:
+    def node_config(self) -> EosDesigns._DynamicKeys.DynamicNodeTypesItem.NodeTypes.NodesItem:
         """
         NodesItem object containing the fully inherited node config.
 
@@ -64,14 +62,16 @@ class NodeConfigMixin:
                     <node_type_key>.nodes.[<node>]
         """
         node_config = (
-            self.node_type_config.nodes[self.hostname]
-            if self.hostname in self.node_type_config.nodes
+            self.node_type_config.nodes[self.shared_utils.hostname]
+            if self.shared_utils.hostname in self.node_type_config.nodes
             else EosDesigns._DynamicKeys.DynamicNodeTypesItem.NodeTypes.NodesItem()
         )
 
         if self.node_group_config is not None:
             node_config._deepinherit(
-                self.node_group_config.nodes[self.hostname]._cast_as(EosDesigns._DynamicKeys.DynamicNodeTypesItem.NodeTypes.NodesItem, ignore_extra_keys=True)
+                self.node_group_config.nodes[self.shared_utils.hostname]._cast_as(
+                    EosDesigns._DynamicKeys.DynamicNodeTypesItem.NodeTypes.NodesItem, ignore_extra_keys=True
+                )
             )
             node_config._deepinherit(self.node_group_config._cast_as(EosDesigns._DynamicKeys.DynamicNodeTypesItem.NodeTypes.NodesItem, ignore_extra_keys=True))
 
@@ -82,7 +82,7 @@ class NodeConfigMixin:
         return node_config
 
     @cached_property
-    def node_group_is_primary_and_peer_hostname(self: SharedUtils) -> tuple[bool, str] | None:
+    def node_group_is_primary_and_peer_hostname(self) -> tuple[bool, str] | None:
         """
         Node group position and peer used for MLAG and WAN HA.
 
@@ -94,6 +94,6 @@ class NodeConfigMixin:
             return None
 
         nodes = list(self.node_group_config.nodes.keys())
-        index = nodes.index(self.hostname)
+        index = nodes.index(self.shared_utils.hostname)
         peer_index = not index  # (0->1 and 1>0)
         return index == 0, nodes[peer_index]

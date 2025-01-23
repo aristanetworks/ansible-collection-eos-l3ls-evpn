@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 from functools import cached_property
+from typing import Any
 
 from pyavd._errors import AristaAvdMissingVariableError
 from pyavd._utils import get, strip_null_from_data
@@ -55,7 +56,7 @@ class IpSecurityMixin(UtilsMixin):
         key = get(data_plane_config, "shared_key", required=True)
 
         # IKE policy for data-plane is not required for dynamic tunnels except for HA cases
-        if self.shared_utils.wan_ha_ipsec:
+        if ike_policy_name:
             ip_security["ike_policies"].append(self._ike_policy(ike_policy_name))
         ip_security["sa_policies"].append(self._sa_policy(sa_policy_name))
         ip_security["profiles"].append(self._profile(profile_name, ike_policy_name, sa_policy_name, key))
@@ -95,7 +96,7 @@ class IpSecurityMixin(UtilsMixin):
 
         By default using aes256gcm128 as GCM variants give higher performance.
         """
-        sa_policy = {"name": name}
+        sa_policy: dict[str, Any] = {"name": name}
         if self.shared_utils.is_cv_pathfinder_router:
             # TODO: provide options to change this cv_pathfinder_wide
             sa_policy["esp"] = {"encryption": "aes256gcm128"}
