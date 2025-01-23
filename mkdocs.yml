@@ -72,8 +72,7 @@ extra_javascript:
 plugins:
   - exclude:
       glob:
-        - .*
-        - ansible_collections/arista/avd/README.md
+        - README.md
         - ansible_collections/arista/avd/changelogs/*
         - ansible_collections/arista/avd/molecule/*
         - ansible_collections/arista/avd/tests/*
@@ -147,7 +146,7 @@ markdown_extensions:
 # TOC
 docs_dir: .
 nav:
-  - Home: docs/index.md
+  - Home: index.md
   - Getting Started:
       - Introduction to Ansible and AVD: docs/getting-started/intro-to-ansible-and-avd.md
       - AVD and Ansible Automation Platform: docs/getting-started/avd-aap.md
