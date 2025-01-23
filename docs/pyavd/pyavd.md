@@ -12,9 +12,9 @@ PyAVD does not provide any inventory or variable management, so PyAVD cannot rep
 
 Supported features:
 
-- Validation of inputs based on the [`eos_designs` input schema](../ansible_collections/arista/avd/roles/eos_designs/docs/input-variables.md).
+- Validation of inputs based on the [`eos_designs` input schema](../../ansible_collections/arista/avd/roles/eos_designs/docs/input-variables.md).
 - Generation of "avd_facts" and "structured config" to be used in other PyAVD functions.
-- Validation of "structured config" based on the [`eos_cli_config_gen` input schema](../ansible_collections/arista/avd/roles/eos_cli_config_gen/docs/input-variables.md).
+- Validation of "structured config" based on the [`eos_cli_config_gen` input schema](../../ansible_collections/arista/avd/roles/eos_cli_config_gen/docs/input-variables.md).
 - Generation of device configuration.
 - Generation of device documentation.
 
@@ -22,8 +22,8 @@ Feedback is very welcome. Please use [GitHub discussions](https://github.com/ari
 
 ## Functions overview
 
-![Arista AVD Overview](_media/pyavd_functions_dark.svg#only-dark)
-![Arista AVD Overview](_media/pyavd_functions_light.svg#only-light)
+![Arista AVD Overview](../_media/pyavd_functions_dark.svg#only-dark)
+![Arista AVD Overview](../_media/pyavd_functions_light.svg#only-light)
 
 ## Known limitations
 
@@ -67,7 +67,7 @@ Python dependencies are automatically installed with above command.
 
 ### Optional requirements
 
-To install Ansible [AVD collection Python requirements](installation/collection-installation.md#python-requirements-installation) install with extra `ansible`:
+To install Ansible [AVD collection Python requirements](../installation/collection-installation.md#python-requirements-installation) install with extra `ansible`:
 
 ```sh
 pip install pyavd[ansible]

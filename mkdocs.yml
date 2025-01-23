@@ -78,13 +78,16 @@ plugins:
         - ansible_collections/arista/avd/molecule/*
         - ansible_collections/arista/avd/tests/*
         - ansible_collections/arista/avd/plugins/README.md
-        - release-notes/1.0.x.md
-        - release-notes/1.1.x.md
-        - release-notes/2.x.x.md
-        - release-notes/3.x.x.md
-        - release-notes/4.x.x.md
-        - porting-guides/4.x.x.md
+        - docs/release-notes/1.0.x.md
+        - docs/release-notes/1.1.x.md
+        - docs/release-notes/2.x.x.md
+        - docs/release-notes/3.x.x.md
+        - docs/release-notes/4.x.x.md
+        - docs/porting-guides/4.x.x.md
         - ansible_collections/arista/avd/roles/*/docs/tables/*
+        - development/*
+        - galaxy-importer/*
+        - python-avd/*
       regex:
         # Exclude examples common md snippets
         - '^examples\/common/.*'
@@ -144,7 +147,7 @@ markdown_extensions:
 # TOC
 docs_dir: .
 nav:
-  - Home: ansible_collections/arista/avd/index.md
+  - Home: docs/index.md
   - Getting Started:
       - Introduction to Ansible and AVD: docs/getting-started/intro-to-ansible-and-avd.md
       - AVD and Ansible Automation Platform: docs/getting-started/avd-aap.md
@@ -198,8 +201,8 @@ nav:
       - Ansible User Guide: https://docs.ansible.com/ansible/latest/user_guide/index.html
   - Release Notes: docs/release-notes/5.x.x.md
   - Porting Guide: docs/porting-guides/5.x.x.md
-  - PyAVD: docs/pyavd.md
-  - Versioning: docs/semantic-versioning.md
+  - PyAVD: docs/pyavd/pyavd.md
+  - Versioning: docs/versioning/semantic-versioning.md
   - AVD Dev Containers:
       - Overview: docs/containers/overview.md
   - About:
