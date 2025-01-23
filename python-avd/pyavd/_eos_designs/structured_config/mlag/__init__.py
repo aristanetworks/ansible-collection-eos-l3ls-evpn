@@ -377,7 +377,7 @@ class AvdStructuredConfigMlag(StructuredConfigGenerator):
 
         router_bgp["peer_groups"] = [strip_empties_from_dict(peer_group)]
 
-        address_family_ipv4_vrf_peer_group = {}
+        router_bgp["address_family_ipv4"] = {"peer_groups": []}
         if self.shared_utils.use_separate_peer_group_for_mlag_vrfs:
             router_bgp["peer_groups"].append(
                 {
@@ -397,6 +397,7 @@ class AvdStructuredConfigMlag(StructuredConfigGenerator):
                     self.inputs.bgp_peer_groups.mlag_ipv4_vrfs_peer.structured_config, list_merge=self.custom_structured_configs.list_merge_strategy
                 )
             address_family_ipv4_vrf_peer_group = {"name": self.inputs.bgp_peer_groups.mlag_ipv4_vrfs_peer.name, "activate": True}
+            router_bgp["address_family_ipv4"]["peer_groups"].append(address_family_ipv4_vrf_peer_group)
 
         if self.shared_utils.underlay_ipv6:
             router_bgp["address_family_ipv6"] = {
@@ -412,10 +413,6 @@ class AvdStructuredConfigMlag(StructuredConfigGenerator):
         if self.inputs.underlay_rfc5549:
             address_family_ipv4_peer_group["next_hop"] = {"address_family_ipv6": {"enabled": True, "originate": True}}
 
-        if address_family_ipv4_vrf_peer_group:
-            address_family_peer_group = [address_family_ipv4_peer_group, address_family_ipv4_vrf_peer_group]
-            router_bgp["address_family_ipv4"] = {"peer_groups": address_family_peer_group}
-        else:
-            router_bgp["address_family_ipv4"] = {"peer_groups": [address_family_ipv4_peer_group]}
+        router_bgp["address_family_ipv4"]["peer_groups"].append(address_family_ipv4_peer_group)
 
         return router_bgp
