@@ -2800,12 +2800,11 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             """
             Match packets based on the DSCP value(s).
             Accepted formats:
-              - Single AF/EF PBH DSCP. Example:
-            af12.
-              - or Single CS DSCP. Example: cs1.
-              - or Single decimal DSCP value. Example: 23.
-              - or
-            Range of decimal DSCP values. Examples: 1,3-10.
+              - Single AF/CS/EF DSCP name like
+            "af12".
+              - Single decimal DSCP value. Example: "23".
+              - Range of decimal DSCP values. Examples:
+            "1,3-10".
             """
             ecn: Literal["ce", "ect", "ect-ce", "non-ect"] | None
             """
@@ -2848,12 +2847,11 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                         dscp:
                            Match packets based on the DSCP value(s).
                            Accepted formats:
-                             - Single AF/EF PBH DSCP. Example:  # fmt: skip
-                           af12.
-                             - or Single CS DSCP. Example: cs1.
-                             - or Single decimal DSCP value. Example: 23.
-                             - or
-                           Range of decimal DSCP values. Examples: 1,3-10.
+                             - Single AF/CS/EF DSCP name like
+                           "af12".
+                             - Single decimal DSCP value. Example: "23".
+                             - Range of decimal DSCP values. Examples:  # fmt: skip
+                           "1,3-10".
                         ecn:
                            Match packets based on the ECN value.
                            Accepted values:
@@ -2878,18 +2876,12 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         """Subclass of AvdIndexedList with `PbrItem` items. Primary key is `name` (`str`)."""
         qos: Qos
         """
-        Keys `dscp` and `ecn` are not mutually exclusive.
-        If both dscp and ecn are defined, CLI command
-        would be:
-         - match dscp <dscp> ecn <ecn>.
-        If only dscp is defined, CLI command would be:
-          - match
-        dscp <dscp>.
-        If only ecn is defined, CLI command would be:
-          - match ecn <ecn>.
+        The keys `vlan`, `cos`, `ip`, `ipv6`, `dscp`, `ecn` are mutually exclusive,
+        except `dscp` and `ecn`
+        which can be given separate or together.
 
-        Subclass of
-        AvdIndexedList with `QosItem` items. Primary key is `name` (`str`).
+        Subclass of AvdIndexedList with `QosItem` items. Primary
+        key is `name` (`str`).
         """
         _custom_data: dict[str, Any]
 
@@ -2907,18 +2899,12 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 Args:
                     pbr: Subclass of AvdIndexedList with `PbrItem` items. Primary key is `name` (`str`).
                     qos:
-                       Keys `dscp` and `ecn` are not mutually exclusive.
-                       If both dscp and ecn are defined, CLI command
-                       would be:
-                        - match dscp <dscp> ecn <ecn>.
-                       If only dscp is defined, CLI command would be:
-                         - match
-                       dscp <dscp>.
-                       If only ecn is defined, CLI command would be:
-                         - match ecn <ecn>.
+                       The keys `vlan`, `cos`, `ip`, `ipv6`, `dscp`, `ecn` are mutually exclusive,
+                       except `dscp` and `ecn`
+                       which can be given separate or together.
 
-                       Subclass of
-                       AvdIndexedList with `QosItem` items. Primary key is `name` (`str`).
+                       Subclass of AvdIndexedList with `QosItem` items. Primary
+                       key is `name` (`str`).
                     _custom_data: _custom_data
 
                 """
