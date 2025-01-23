@@ -67,6 +67,9 @@ keys:
               default: true
             url:
               type: str
+      name_server_group:
+        type: str
+        description: Set name-server group.
       vrfs:
         type: list
         primary_key: name

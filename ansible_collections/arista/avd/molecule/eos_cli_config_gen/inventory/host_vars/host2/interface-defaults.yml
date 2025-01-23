@@ -1,0 +1,4 @@
+---
+interface_defaults:
+  ethernet:
+    shutdown: false
