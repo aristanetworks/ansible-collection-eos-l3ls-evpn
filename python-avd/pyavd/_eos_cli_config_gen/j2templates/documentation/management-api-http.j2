@@ -12,7 +12,7 @@
 
 | HTTP | HTTPS | UNIX-Socket | Default Services |
 | ---- | ----- | ----------- | ---------------- |
-| {{ management_api_http.enable_http | arista.avd.default(false) }} | {{ management_api_http.enable_https | arista.avd.default(true) }} | {{ management_api_http.enable_unix | arista.avd.default(false) }} | {{ management_api_http.default_services | arista.avd.default('-') }} |
+| {{ management_api_http.enable_http | arista.avd.default(false) }} | {{ management_api_http.enable_https | arista.avd.default(true) }} | {{ management_api_http.enable_unix | arista.avd.default('-') }} | {{ management_api_http.default_services | arista.avd.default('-') }} |
 {%     if management_api_http.enable_https is arista.avd.defined(true) and management_api_http.https_ssl_profile is arista.avd.defined %}
 
 Management HTTPS is using the SSL profile {{ management_api_http.https_ssl_profile }}
