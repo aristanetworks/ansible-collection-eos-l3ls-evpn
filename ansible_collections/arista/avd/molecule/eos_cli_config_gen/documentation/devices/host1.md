@@ -1923,22 +1923,23 @@ daemon random
 | default | Loopback0 |
 | mgt | Management0 |
 
-| VRF | Hosts | Ports | Protocol |
-| --- | ----- | ----- | -------- |
-| default | 20.20.20.7 | Default | UDP |
-| default | 50.50.50.7 | 100, 200 | TCP |
-| default | 60.60.60.7 | 100, 200 | UDP |
-| default | 2001:db8::20:7 | Default | UDP |
-| default | 2001:db8::50:7 | 100, 200 | TCP |
-| default | 2001:db8::60:7 | 100, 200 | UDP |
-| mgt | 10.10.10.7 | Default | UDP |
-| mgt | 30.30.30.7 | 100, 200 | TCP |
-| mgt | 40.40.40.7 | 300, 400 | UDP |
-| mgt | 2001:db8::10:7 | Default | UDP |
-| mgt | 2001:db8::30:7 | 100, 200 | TCP |
-| mgt | 2001:db8::40:7 | 300, 400 | UDP |
-| vrf_with_no_source_interface | 1.2.3.4 | Default | UDP |
-| vrf_with_no_source_interface | 2001:db8::1:2:3:4 | Default | UDP |
+| VRF | Hosts | Ports | Protocol | SSL-profile |
+| --- | ----- | ----- | -------- | ----------- |
+| default | 20.20.20.7 | Default | UDP | - |
+| default | 50.50.50.7 | 100, 200 | TCP | - |
+| default | 60.60.60.7 | 100, 200 | UDP | - |
+| default | 2001:db8::20:7 | Default | UDP | - |
+| default | 2001:db8::50:7 | 100, 200 | TCP | - |
+| default | 2001:db8::60:7 | 100, 200 | UDP | - |
+| mgt | 10.10.10.7 | Default | UDP | - |
+| mgt | 30.30.30.7 | 100, 200 | TCP | - |
+| mgt | 40.40.40.7 | 300, 400 | UDP | - |
+| mgt | 2001:db8::10:7 | Default | UDP | - |
+| mgt | 2001:db8::30:7 | 100, 200 | TCP | - |
+| mgt | 2001:db8::40:7 | 300, 400 | UDP | - |
+| mgt | sslhost.net | 6515 | TLS | logging-ssl |
+| vrf_with_no_source_interface | 1.2.3.4 | Default | UDP | - |
+| vrf_with_no_source_interface | 2001:db8::1:2:3:4 | Default | UDP | - |
 
 | Facility | Severity |
 | -------- | -------- |
@@ -1972,6 +1973,7 @@ logging vrf mgt host 40.40.40.7 300 400
 logging vrf mgt host 2001:db8::10:7
 logging vrf mgt host 2001:db8::30:7 100 200 protocol tcp
 logging vrf mgt host 2001:db8::40:7 300 400
+logging vrf mgt host sslhost.net 6515 protocol tls ssl-profile logging-ssl
 logging vrf vrf_with_no_source_interface host 1.2.3.4
 logging vrf vrf_with_no_source_interface host 2001:db8::1:2:3:4
 logging format timestamp traditional year timezone

@@ -18826,14 +18826,17 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                     "name": {"type": str},
                     "protocol": {"type": str, "default": "udp"},
                     "ports": {"type": Ports},
+                    "ssl_profile": {"type": str},
                     "_custom_data": {"type": dict},
                 }
                 name: str
                 """Syslog server name."""
-                protocol: Literal["tcp", "udp"]
+                protocol: Literal["tcp", "udp", "tls"]
                 """Default value: `"udp"`"""
                 ports: Ports
                 """Subclass of AvdList with `int` items."""
+                ssl_profile: str | None
+                """Used when host protocol is 'tls'. Profiles are defined under `management_security.ssl_profiles`."""
                 _custom_data: dict[str, Any]
 
                 if TYPE_CHECKING:
@@ -18842,8 +18845,9 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                         self,
                         *,
                         name: str | UndefinedType = Undefined,
-                        protocol: Literal["tcp", "udp"] | UndefinedType = Undefined,
+                        protocol: Literal["tcp", "udp", "tls"] | UndefinedType = Undefined,
                         ports: Ports | UndefinedType = Undefined,
+                        ssl_profile: str | None | UndefinedType = Undefined,
                         _custom_data: dict[str, Any] | UndefinedType = Undefined,
                     ) -> None:
                         """
@@ -18856,6 +18860,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                             name: Syslog server name.
                             protocol: protocol
                             ports: Subclass of AvdList with `int` items.
+                            ssl_profile: Used when host protocol is 'tls'. Profiles are defined under `management_security.ssl_profiles`.
                             _custom_data: _custom_data
 
                         """

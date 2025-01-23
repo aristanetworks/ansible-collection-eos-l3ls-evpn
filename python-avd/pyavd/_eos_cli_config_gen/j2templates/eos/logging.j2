@@ -57,6 +57,9 @@ logging synchronous level {{ logging.synchronous.level | arista.avd.default("cri
 {%             if host.protocol is arista.avd.defined() and host.protocol is not arista.avd.defined("udp") %}
 {%                 set logging_host_cli = logging_host_cli ~ " protocol " ~ host.protocol | lower %}
 {%             endif %}
+{%             if host.protocol is arista.avd.defined("tls") and host.ssl_profile is arista.avd.defined() %}
+{%                 set logging_host_cli = logging_host_cli ~ " ssl-profile " ~ host.ssl_profile %}
+{%             endif %}
 {{ logging_host_cli }}
 {%         endfor %}
 {%     endfor %}

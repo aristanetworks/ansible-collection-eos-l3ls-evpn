@@ -36,6 +36,11 @@ logging:
           ports:
             - 300
             - 400
+        - name: sslhost.net
+          protocol: tls
+          ssl_profile: logging-ssl
+          ports:
+            - 6515
     - name: vrf_with_no_source_interface
       hosts:
         - name: 1.2.3.4
