@@ -833,14 +833,12 @@ router bgp {{ router_bgp.as }}
 {%         if router_bgp.address_family_evpn.next_hop_unchanged is arista.avd.defined(true) %}
       bgp next-hop-unchanged
 {%         endif %}
-{%         if router_bgp.address_family_evpn.neighbor_default.encapsulation is arista.avd.defined("mpls") %}
-{%             set evpn_neighbor_default_encap_cli = "neighbor default encapsulation mpls" %}
-{%             if router_bgp.address_family_evpn.neighbor_default.next_hop_self_source_interface is arista.avd.defined %}
-{%                 set evpn_neighbor_default_encap_cli = evpn_neighbor_default_encap_cli ~ " next-hop-self source-interface " ~ router_bgp.address_family_evpn.neighbor_default.next_hop_self_source_interface %}
+{%         if router_bgp.address_family_evpn.neighbor_default.encapsulation is arista.avd.defined %}
+{%             set encapsulation_cli = "neighbor default encapsulation " ~ router_bgp.address_family_evpn.neighbor_default.encapsulation %}
+{%             if router_bgp.address_family_evpn.neighbor_default.encapsulation is arista.avd.defined("mpls") and router_bgp.address_family_evpn.neighbor_default.next_hop_self_source_interface is arista.avd.defined %}
+{%                 set encapsulation_cli = encapsulation_cli ~ " next-hop-self source-interface " ~ router_bgp.address_family_evpn.neighbor_default.next_hop_self_source_interface %}
 {%             endif %}
-      {{ evpn_neighbor_default_encap_cli }}
-{%         elif router_bgp.address_family_evpn.neighbor_default.encapsulation is arista.avd.defined("path-selection") %}
-      neighbor default encapsulation path-selection
+      {{ encapsulation_cli }}
 {%         endif %}
 {%         if router_bgp.address_family_evpn.next_hop_mpls_resolution_ribs is arista.avd.defined %}
 {%             set evpn_mpls_resolution_ribs = [] %}
@@ -901,7 +899,11 @@ router bgp {{ router_bgp.as }}
 {%                 endif %}
 {%             endif %}
 {%             if peer_group.encapsulation is arista.avd.defined %}
-      neighbor {{ peer_group.name }} encapsulation {{ peer_group.encapsulation }}
+{%                 set encapsulation_cli = "neighbor " ~ peer_group.name ~ " encapsulation " ~ peer_group.encapsulation %}
+{%                 if peer_group.encapsulation == "mpls" and peer_group.next_hop_self_source_interface is arista.avd.defined %}
+{%                     set encapsulation_cli = encapsulation_cli ~ " next-hop-self source-interface " ~ peer_group.next_hop_self_source_interface %}
+{%                 endif %}
+      {{ encapsulation_cli }}
 {%             endif %}
 {%             if peer_group.domain_remote is arista.avd.defined(true) %}
       neighbor {{ peer_group.name }} domain remote
