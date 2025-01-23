@@ -67,10 +67,9 @@ keys:
               description: |-
                 Match packets based on the DSCP value(s).
                 Accepted formats:
-                  - Single AF/EF PBH DSCP. Example: af12.
-                  - or Single CS DSCP. Example: cs1.
-                  - or Single decimal DSCP value. Example: 23.
-                  - or Range of decimal DSCP values. Examples: 1,3-10.
+                  - Single AF/CS/EF DSCP name like "af12".
+                  - Single decimal DSCP value. Example: "23".
+                  - Range of decimal DSCP values. Examples: "1,3-10".
             ecn:
               type: str
               valid_values: ["ce", "ect", "ect-ce", "non-ect"]
