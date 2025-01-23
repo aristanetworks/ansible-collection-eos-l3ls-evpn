@@ -7777,33 +7777,34 @@ ASN Notation: asdot
 
 ##### EVPN Peer Groups
 
-| Peer Group | Activate | Route-map In | Route-map Out | Encapsulation |
-| ---------- | -------- | ------------ | ------------- | ------------- |
-| ADDITIONAL-PATH-PG-1 | True |  - | - | default |
-| ADDITIONAL-PATH-PG-2 | True |  - | - | default |
-| ADDITIONAL-PATH-PG-3 | True |  - | - | default |
-| ADDITIONAL-PATH-PG-4 | True |  - | - | default |
-| ADDITIONAL-PATH-PG-5 | True |  - | - | default |
-| ADDITIONAL-PATH-PG-6 | True |  - | - | default |
-| EVPN-OVERLAY | True |  RM-HIDE-AS-PATH | RM-HIDE-AS-PATH | default |
-| EVPN-OVERLAY-PEERS | True |  - | - | vxlan |
-| IPv4-UNDERLAY-PEERS | False |  - | - | default |
-| MLAG-IPv4-UNDERLAY-PEER | False |  - | - | default |
-| RCF_TEST | False |  - | - | default |
-| TEST-ENCAPSULATION | True |  - | - | mpls |
-| TEST-ENCAPSULATION-2 | True |  - | - | path-selection |
+| Peer Group | Activate | Route-map In | Route-map Out | Encapsulation | Next-hop-self Source Interface |
+| ---------- | -------- | ------------ | ------------- | ------------- | ------------------------------ |
+| ADDITIONAL-PATH-PG-1 | True |  - | - | default | - |
+| ADDITIONAL-PATH-PG-2 | True |  - | - | default | - |
+| ADDITIONAL-PATH-PG-3 | True |  - | - | default | - |
+| ADDITIONAL-PATH-PG-4 | True |  - | - | default | - |
+| ADDITIONAL-PATH-PG-5 | True |  - | - | default | - |
+| ADDITIONAL-PATH-PG-6 | True |  - | - | default | - |
+| EVPN-OVERLAY | True |  RM-HIDE-AS-PATH | RM-HIDE-AS-PATH | default | - |
+| EVPN-OVERLAY-PEERS | True |  - | - | vxlan | - |
+| IPv4-UNDERLAY-PEERS | False |  - | - | default | - |
+| MLAG-IPv4-UNDERLAY-PEER | False |  - | - | default | - |
+| RCF_TEST | False |  - | - | default | - |
+| TEST-ENCAPSULATION | True |  - | - | mpls | - |
+| TEST-ENCAPSULATION-2 | True |  - | - | path-selection | - |
+| TEST-ENCAPSULATION-SRC-INTERFACE | True |  - | - | mpls | Loopback3 |
 
 ##### EVPN Neighbors
 
-| Neighbor | Activate | Route-map In | Route-map Out | Encapsulation |
-| -------- | -------- | ------------ | ------------- | ------------- |
-| 10.100.100.1 | True | - | - | default |
-| 10.100.100.2 | True | - | - | default |
-| 10.100.100.3 | True | - | - | default |
-| 10.100.100.4 | True | RM1 | RM2 | path-selection |
-| 10.100.100.5 | True | - | - | mpls |
-| 192.168.255.3 | False | - | - | default |
-| 192.168.255.4 | False | - | - | mpls |
+| Neighbor | Activate | Route-map In | Route-map Out | Encapsulation | Next-hop-self Source Interface |
+| -------- | -------- | ------------ | ------------- | ------------- | ------------------------------ |
+| 10.100.100.1 | True | - | - | default | - |
+| 10.100.100.2 | True | - | - | default | - |
+| 10.100.100.3 | True | - | - | default | - |
+| 10.100.100.4 | True | RM1 | RM2 | path-selection | - |
+| 10.100.100.5 | True | - | - | mpls | - |
+| 192.168.255.3 | False | - | - | default | - |
+| 192.168.255.4 | False | - | - | mpls | Ethernet1 |
 
 ##### EVPN Neighbor Default Encapsulation
 
@@ -8415,6 +8416,8 @@ router bgp 65101
       neighbor TEST-ENCAPSULATION encapsulation mpls
       neighbor TEST-ENCAPSULATION-2 activate
       neighbor TEST-ENCAPSULATION-2 encapsulation path-selection
+      neighbor TEST-ENCAPSULATION-SRC-INTERFACE activate
+      neighbor TEST-ENCAPSULATION-SRC-INTERFACE encapsulation mpls next-hop-self source-interface Loopback3
       neighbor 10.100.100.1 activate
       neighbor 10.100.100.1 additional-paths receive
       neighbor 10.100.100.1 default-route
