@@ -217,7 +217,7 @@ class FabricDocumentationFacts(AvdFacts):
 
     def render_networks_as_list(self, networks: list[T_Network], addresses: list[T_Network]) -> list:
         """Helper function to build IP pool data for a list of pools."""
-        return natural_sort([self.get_network_data(network, addresses) for network in networks], sort_key="pool")
+        return natural_sort([self.get_network_data(network, addresses) for network in networks], sort_key="network")
 
     def get_network_data(self, network: T_Network, addresses: list[T_Network]) -> dict:
         """Helper function to build IP pool data for one IP pool."""
