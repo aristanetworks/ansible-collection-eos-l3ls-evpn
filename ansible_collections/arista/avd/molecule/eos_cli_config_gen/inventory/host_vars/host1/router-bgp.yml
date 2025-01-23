@@ -415,6 +415,10 @@ router_bgp:
       - name: TEST-ENCAPSULATION
         activate: true
         encapsulation: mpls
+      - name: TEST-ENCAPSULATION-SRC-INTERFACE
+        activate: true
+        encapsulation: mpls
+        next_hop_self_source_interface: Loopback3
       - name: TEST-ENCAPSULATION-2
         activate: true
         encapsulation: path-selection
