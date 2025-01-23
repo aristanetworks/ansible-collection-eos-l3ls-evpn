@@ -26,8 +26,8 @@ ansible-galaxy collection install arista.cvp
 
 Figure 1 below provides a visualization of the role's inputs, outputs, and tasks in order executed by the role.
 
-![Figure 1: Ansible Role cvp_configlet_upload](../../docs/_media/cvp_configlet_upload_dark.svg#only-dark)
-![Figure 1: Ansible Role cvp_configlet_upload](../../docs/_media/cvp_configlet_upload_light.svg#only-light)
+![Figure 1: Ansible Role cvp_configlet_upload](../../../../../docs/_media/cvp_configlet_upload_dark.svg#only-dark)
+![Figure 1: Ansible Role cvp_configlet_upload](../../../../../docs/_media/cvp_configlet_upload_light.svg#only-light)
 
 1. Read content of `{{ configlet_directory }}` and create **cv_configlet** input structure.
 2. Collect CloudVision facts.
@@ -101,7 +101,7 @@ ansible-playbook playbook.to.deploy.with.cvp.yml --tags "provision"
 
 ## Requirements
 
-Requirements are located here: [avd-requirements](../../docs/installation/collection-installation.md#python-requirements-installation)
+Requirements are located here: [avd-requirements](../../../../../docs/installation/collection-installation.md#python-requirements-installation)
 
 ## License
 

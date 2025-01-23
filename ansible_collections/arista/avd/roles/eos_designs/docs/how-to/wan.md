@@ -906,7 +906,7 @@ The tags will only be generated when `wan_mode` is set to `cv-pathfinder`.
 As described in the design principles, the goal is to be able to distribute the
 WAN routers in separate Ansible inventories.
 
-When leveraging multiple inventories, the arista.avd collection provide capabilities to create [global variables](../../../../docs/plugins/Vars_plugins/global_vars.md).
+When leveraging multiple inventories, the arista.avd collection provide capabilities to create [global variables](../../../../../../../docs/plugins/Vars_plugins/global_vars.md).
 The following example will be leveraging this capability to share required WAN variables across multiple inventories.
 
 This example contains contains two sites, SITE1 and SITE2 and a dedicate inventory for pathfinder nodes.

@@ -55,7 +55,7 @@ The API to CloudVision is using gRPC over encrypted HTTP/2.
   - Configuration deployment is based on the "Static Configuration Studio" which was a Beta feature on CloudVision 2024.1.0.
     Make sure to enable "Studios - End-to-End Provisioning" under Settings, Features.
 
-    ![Figure 1: Ansible Role arista.avd.cv_deploy](../../docs/_media/studios_end_to_end_provisioning.png)
+    ![Figure 1: Ansible Role arista.avd.cv_deploy](../../../../../docs/_media/studios_end_to_end_provisioning.png)
 - Currently only the first of the given cv_servers is being used.
 
 ## Roadmap
@@ -96,8 +96,8 @@ The workspace will be built and submitted, and a change control will be created 
 
 Figure 2 below provides a visualization of the role's inputs, outputs executed by the role.
 
-![Figure 2: Ansible Role arista.avd.cv_deploy](../../docs/_media/cv_deploy_dark.svg#only-dark)
-![Figure 2: Ansible Role arista.avd.cv_deploy](../../docs/_media/cv_deploy_light.svg#only-light)
+![Figure 2: Ansible Role arista.avd.cv_deploy](../../../../../docs/_media/cv_deploy_dark.svg#only-dark)
+![Figure 2: Ansible Role arista.avd.cv_deploy](../../../../../docs/_media/cv_deploy_light.svg#only-light)
 
 ### Inputs
 

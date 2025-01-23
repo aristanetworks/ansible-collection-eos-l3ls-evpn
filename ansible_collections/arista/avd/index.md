@@ -35,7 +35,7 @@ Arista Validated Designs (AVD) is an extensible data model that defines Arista's
 
 ### Collection installation
 
-Ansible galaxy hosts all stable versions of the `arista.avd` collection. Installation from ansible-galaxy is the most convenient approach for consuming `arista.avd` content. Please follow the collection installation [guide](docs/installation/collection-installation.md).
+Ansible galaxy hosts all stable versions of the `arista.avd` collection. Installation from ansible-galaxy is the most convenient approach for consuming `arista.avd` content. Please follow the collection installation [guide](../../../docs/installation/collection-installation.md).
 
 ```shell
 ansible-galaxy collection install arista.avd
@@ -53,7 +53,7 @@ pip3 install pyavd
 
 ## Examples
 
-- [Getting started](docs/getting-started/intro-to-ansible-and-avd.md)
+- [Getting started](../../../docs/getting-started/intro-to-ansible-and-avd.md)
 - [Arista NetDevOps GitHub repository](https://github.com/aristanetworks/netdevops-examples)
 
 ## Additional resources
@@ -70,7 +70,7 @@ pip3 install pyavd
 
 ## Contributing
 
-Contributing pull requests are gladly welcomed for this repository. If you are planning a big change, please start a discussion first to make sure we'll be able to merge it. Please see [contribution guide](docs/contribution/overview.md) for additional details.
+Contributing pull requests are gladly welcomed for this repository. If you are planning a big change, please start a discussion first to make sure we'll be able to merge it. Please see [contribution guide](../../../docs/contribution/overview.md) for additional details.
 
 You can also open an [issue](https://github.com/aristanetworks/avd/issues) to report any problems or submit enhancements.
 

@@ -447,7 +447,7 @@ ok: [dc1-leaf1a -> localhost] => (item=/home/user/Documents/git_projects/ansible
 
 If similar output is not shown, make sure:
 
-1. The documented [requirements](../../docs/installation/collection-installation.md) are met.
+1. The documented [requirements](../../../../../docs/installation/collection-installation.md) are met.
 2. The latest `arista.avd` collection is installed.
 
 ## Troubleshooting

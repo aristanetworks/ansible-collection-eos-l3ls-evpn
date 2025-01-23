@@ -12,7 +12,7 @@ title: AVD example for a single data center using L3LS
 
 ## Introduction
 
-This example is meant to be used as the logical second step in introducing AVD to new users, directly following the [Introduction to Ansible and AVD](../../docs/getting-started/intro-to-ansible-and-avd.md) section. New users with access to virtual switches (using Arista vEOS-lab or cEOS) can learn how to generate configuration and documentation for a complete fabric environment. Users with access to physical switches will have to adapt a few settings. This is all documented inline in the comments included in the YAML files. If a lab with virtual or physical switches is not accessible, this example can be used only to generate the output from AVD if required.
+This example is meant to be used as the logical second step in introducing AVD to new users, directly following the [Introduction to Ansible and AVD](../../../../../docs/getting-started/intro-to-ansible-and-avd.md) section. New users with access to virtual switches (using Arista vEOS-lab or cEOS) can learn how to generate configuration and documentation for a complete fabric environment. Users with access to physical switches will have to adapt a few settings. This is all documented inline in the comments included in the YAML files. If a lab with virtual or physical switches is not accessible, this example can be used only to generate the output from AVD if required.
 
 The example includes and describes all the AVD files and their content used to build an L3LS EVPN/VXLAN Symmetric IRB network covering a single DC using the following:
 
@@ -782,7 +782,7 @@ ok: [dc1-leaf1a -> localhost] => (item=/home/user/Documents/git_projects/ansible
 
 If similar output is not shown, make sure:
 
-1. The documented [requirements](../../docs/installation/collection-installation.md) are met.
+1. The documented [requirements](../../../../../docs/installation/collection-installation.md) are met.
 2. The latest `arista.avd` collection is installed.
 
 ## Troubleshooting

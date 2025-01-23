@@ -30,8 +30,8 @@ The **eos_designs** role:
 
 Figure 1 below provides a visualization of the role's inputs, outputs, and tasks in order executed by the role.
 
-![EOS Designs Overview](../../docs/_media/eos_designs_dark.svg#only-dark)
-![EOS Designs Overview](../../docs/_media/eos_designs_light.svg#only-light)
+![EOS Designs Overview](../../../../../docs/_media/eos_designs_dark.svg#only-dark)
+![EOS Designs Overview](../../../../../docs/_media/eos_designs_light.svg#only-light)
 
 **Inputs:**
 
@@ -148,7 +148,7 @@ Across all designs, the following functionality is provided:
 
 ## Requirements
 
-Requirements are located in the [collection installation guide](../../docs/installation/collection-installation.md)
+Requirements are located in the [collection installation guide](../../../../../docs/installation/collection-installation.md)
 
 ## Input Variables
 
