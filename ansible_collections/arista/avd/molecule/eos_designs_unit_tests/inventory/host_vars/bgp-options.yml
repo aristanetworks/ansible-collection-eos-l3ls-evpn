@@ -10,3 +10,6 @@ bgp_distance:
   external_routes: 20
   internal_routes: 200
   local_routes: 200
+
+bgp_maximum_paths: 600
+bgp_ecmp: 600
