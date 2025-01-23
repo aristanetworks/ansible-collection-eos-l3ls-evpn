@@ -95,7 +95,7 @@ keys:
                     description: Syslog server name.
                   protocol:
                     type: str
-                    valid_values: ["tcp", "udp"]
+                    valid_values: ["tcp", "udp", "tls"]
                     default: udp
                   ports:
                     type: list
@@ -103,6 +103,9 @@ keys:
                       type: int
                       convert_types:
                         - str
+                  ssl_profile:
+                    type: str
+                    description: Used when host protocol is 'tls'. Profiles are defined under `management_security.ssl_profiles`.
       policy:
         type: dict
         keys:

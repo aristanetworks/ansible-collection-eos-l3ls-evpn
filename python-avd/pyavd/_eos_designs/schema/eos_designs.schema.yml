@@ -127,6 +127,8 @@ keys:
       The default value is 4 except for WAN Routers where the default value is unset
       (falls back to EOS default).'
     type: int
+    min: 1
+    max: 600
     convert_types:
     - str
   bgp_graceful_restart:
@@ -166,7 +168,7 @@ keys:
     convert_types:
     - str
     min: 1
-    max: 512
+    max: 600
   bgp_mesh_pes:
     documentation_options:
       table: overlay-settings

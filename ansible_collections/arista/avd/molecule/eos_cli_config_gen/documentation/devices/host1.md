@@ -9,6 +9,7 @@
   - [DNS Domain](#dns-domain)
   - [IP Domain-list](#ip-domain-list)
   - [IP Name Servers](#ip-name-servers)
+  - [IP Name Server Groups](#ip-name-server-groups)
   - [Domain Lookup](#domain-lookup)
   - [Clock Settings](#clock-settings)
   - [NTP](#ntp)
@@ -419,6 +420,62 @@ ip name-server 2001:db8::1
 ip name-server vrf mgmt 2001:db8::1
 ip name-server 2001:db8::2 priority 0
 ip name-server vrf TEST 2001:db8::2 priority 3
+```
+
+### IP Name Server Groups
+
+#### IP Name Server Groups Summary
+
+##### mynameserver0
+
+| IP Address | VRF | Priority |
+| ---------- | --- | -------- |
+| 1.1.1.1 | default | 0 |
+| 2.2.2.2 | default | 1 |
+| 8.8.8.8 | default | - |
+
+##### mynameserver1
+
+DNS Domain: arista.avd.com
+
+IP Domain List: domain-list1
+
+| IP Address | VRF | Priority |
+| ---------- | --- | -------- |
+| 1.1.1.1 | default | - |
+| 2.2.2.1 | vrf1 | - |
+| 2.2.2.2 | vrf1 | 1 |
+| 2.2.2.4 | vrf1 | 4 |
+| 2.2.2.6 | b_vrf | 3 |
+| 2.2.2.7 | a_vrf | 3 |
+| 8.8.8.8 | vrf1 | - |
+
+##### mynameserver2
+
+DNS Domain: anta.avd.com
+
+#### IP Name Server Groups Device Configuration
+
+```eos
+!
+ip name-server group mynameserver0
+   name-server vrf default 1.1.1.1 priority 0
+   name-server vrf default 8.8.8.8
+   name-server vrf default 2.2.2.2 priority 1
+!
+ip name-server group mynameserver1
+   name-server vrf default 1.1.1.1
+   name-server vrf vrf1 2.2.2.1
+   name-server vrf vrf1 8.8.8.8
+   name-server vrf vrf1 2.2.2.2 priority 1
+   name-server vrf a_vrf 2.2.2.7 priority 3
+   name-server vrf b_vrf 2.2.2.6 priority 3
+   name-server vrf vrf1 2.2.2.4 priority 4
+   dns domain arista.avd.com
+   ip domain-list domain-list1
+!
+ip name-server group mynameserver2
+   dns domain anta.avd.com
 ```
 
 ### Domain Lookup
@@ -1868,22 +1925,23 @@ daemon random
 | default | Loopback0 |
 | mgt | Management0 |
 
-| VRF | Hosts | Ports | Protocol |
-| --- | ----- | ----- | -------- |
-| default | 20.20.20.7 | Default | UDP |
-| default | 50.50.50.7 | 100, 200 | TCP |
-| default | 60.60.60.7 | 100, 200 | UDP |
-| default | 2001:db8::20:7 | Default | UDP |
-| default | 2001:db8::50:7 | 100, 200 | TCP |
-| default | 2001:db8::60:7 | 100, 200 | UDP |
-| mgt | 10.10.10.7 | Default | UDP |
-| mgt | 30.30.30.7 | 100, 200 | TCP |
-| mgt | 40.40.40.7 | 300, 400 | UDP |
-| mgt | 2001:db8::10:7 | Default | UDP |
-| mgt | 2001:db8::30:7 | 100, 200 | TCP |
-| mgt | 2001:db8::40:7 | 300, 400 | UDP |
-| vrf_with_no_source_interface | 1.2.3.4 | Default | UDP |
-| vrf_with_no_source_interface | 2001:db8::1:2:3:4 | Default | UDP |
+| VRF | Hosts | Ports | Protocol | SSL-profile |
+| --- | ----- | ----- | -------- | ----------- |
+| default | 20.20.20.7 | Default | UDP | - |
+| default | 50.50.50.7 | 100, 200 | TCP | - |
+| default | 60.60.60.7 | 100, 200 | UDP | - |
+| default | 2001:db8::20:7 | Default | UDP | - |
+| default | 2001:db8::50:7 | 100, 200 | TCP | - |
+| default | 2001:db8::60:7 | 100, 200 | UDP | - |
+| mgt | 10.10.10.7 | Default | UDP | - |
+| mgt | 30.30.30.7 | 100, 200 | TCP | - |
+| mgt | 40.40.40.7 | 300, 400 | UDP | - |
+| mgt | 2001:db8::10:7 | Default | UDP | - |
+| mgt | 2001:db8::30:7 | 100, 200 | TCP | - |
+| mgt | 2001:db8::40:7 | 300, 400 | UDP | - |
+| mgt | sslhost.net | 6515 | TLS | logging-ssl |
+| vrf_with_no_source_interface | 1.2.3.4 | Default | UDP | - |
+| vrf_with_no_source_interface | 2001:db8::1:2:3:4 | Default | UDP | - |
 
 | Facility | Severity |
 | -------- | -------- |
@@ -1918,6 +1976,7 @@ logging vrf mgt host 40.40.40.7 300 400
 logging vrf mgt host 2001:db8::10:7
 logging vrf mgt host 2001:db8::30:7 100 200 protocol tcp
 logging vrf mgt host 2001:db8::40:7 300 400
+logging vrf mgt host sslhost.net 6515 protocol tls ssl-profile logging-ssl
 logging vrf vrf_with_no_source_interface host 1.2.3.4
 logging vrf vrf_with_no_source_interface host 2001:db8::1:2:3:4
 logging format timestamp traditional year timezone
@@ -2866,6 +2925,10 @@ monitor server radius
 | Name | Interfaces |
 | ---- | ---------- |
 
+##### Name-server
+
+Name-server Group: mynameserver1
+
 ### Monitor Connectivity Device Configuration
 
 ```eos
@@ -2907,6 +2970,7 @@ monitor connectivity
          url https://server2.local.com
    !
    vrf yellow
+   name-server group mynameserver1
    interval 5
    no shutdown
    interface set GLOBAL_SET Ethernet1-4

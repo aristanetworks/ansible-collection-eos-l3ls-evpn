@@ -13,11 +13,11 @@
     | [<samp>&nbsp;&nbsp;external_routes</samp>](## "bgp_distance.external_routes") | Integer | Required |  | Min: 1<br>Max: 255 |  |
     | [<samp>&nbsp;&nbsp;internal_routes</samp>](## "bgp_distance.internal_routes") | Integer | Required |  | Min: 1<br>Max: 255 |  |
     | [<samp>&nbsp;&nbsp;local_routes</samp>](## "bgp_distance.local_routes") | Integer | Required |  | Min: 1<br>Max: 255 |  |
-    | [<samp>bgp_ecmp</samp>](## "bgp_ecmp") | Integer |  |  |  | Maximum ECMP for BGP multi-path.<br>The default value is 4 except for WAN Routers where the default value is unset (falls back to EOS default). |
+    | [<samp>bgp_ecmp</samp>](## "bgp_ecmp") | Integer |  |  | Min: 1<br>Max: 600 | Maximum ECMP for BGP multi-path.<br>The default value is 4 except for WAN Routers where the default value is unset (falls back to EOS default). |
     | [<samp>bgp_graceful_restart</samp>](## "bgp_graceful_restart") | Dictionary |  |  |  | BGP graceful-restart allows a BGP speaker with separate control plane and data plane processing to continue forwarding traffic during a BGP restart.<br>Its neighbors (receiving speakers) may retain routing information from the restarting speaker while a BGP session with it is being re-established, reducing route flapping.<br> |
     | [<samp>&nbsp;&nbsp;enabled</samp>](## "bgp_graceful_restart.enabled") | Boolean | Required | `False` |  | Enable or disable graceful-restart for all BGP peers. |
     | [<samp>&nbsp;&nbsp;restart_time</samp>](## "bgp_graceful_restart.restart_time") | Integer |  | `300` | Min: 1<br>Max: 3600 | Restart time in seconds. |
-    | [<samp>bgp_maximum_paths</samp>](## "bgp_maximum_paths") | Integer |  |  | Min: 1<br>Max: 512 | Maximum Paths for BGP multi-path.<br>The default value is 4 except for WAN Routers where the default value is 16. |
+    | [<samp>bgp_maximum_paths</samp>](## "bgp_maximum_paths") | Integer |  |  | Min: 1<br>Max: 600 | Maximum Paths for BGP multi-path.<br>The default value is 4 except for WAN Routers where the default value is 16. |
     | [<samp>bgp_peer_groups</samp>](## "bgp_peer_groups") | Dictionary |  |  |  | Leverage an Arista EOS switch to generate the encrypted password using the correct peer group name.<br>Note that the name of the peer groups use '-' instead of '_' in EOS configuration.<br> |
     | [<samp>&nbsp;&nbsp;ipv4_underlay_peers</samp>](## "bgp_peer_groups.ipv4_underlay_peers") | Dictionary |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;name</samp>](## "bgp_peer_groups.ipv4_underlay_peers.name") | String |  | `IPv4-UNDERLAY-PEERS` |  | Name of peer group. |
@@ -96,7 +96,7 @@
 
     # Maximum ECMP for BGP multi-path.
     # The default value is 4 except for WAN Routers where the default value is unset (falls back to EOS default).
-    bgp_ecmp: <int>
+    bgp_ecmp: <int; 1-600>
 
     # BGP graceful-restart allows a BGP speaker with separate control plane and data plane processing to continue forwarding traffic during a BGP restart.
     # Its neighbors (receiving speakers) may retain routing information from the restarting speaker while a BGP session with it is being re-established, reducing route flapping.
@@ -110,7 +110,7 @@
 
     # Maximum Paths for BGP multi-path.
     # The default value is 4 except for WAN Routers where the default value is 16.
-    bgp_maximum_paths: <int; 1-512>
+    bgp_maximum_paths: <int; 1-600>
 
     # Leverage an Arista EOS switch to generate the encrypted password using the correct peer group name.
     # Note that the name of the peer groups use '-' instead of '_' in EOS configuration.
