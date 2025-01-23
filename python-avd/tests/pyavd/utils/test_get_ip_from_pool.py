@@ -53,14 +53,17 @@ POOLS_AND_RANGES = "10.10.10.0/24, 10.20.20.20-10.20.20.29"
             PREFIXLEN,
             SUBNET_OFFSET,
             IP_OFFSET,
-            "Invalid IP pool(s) '300.300.300.300/32'. Unable to load '300.300.300.300/32' as an IP prefix.",
+            (
+                "Invalid IP pool(s) '300.300.300.300/32'. Unable to load '300.300.300.300/32' as an IP prefix: "
+                "'300.300.300.300/32' does not appear to be an IPv4 or IPv6 network"
+            ),
         ),
         (
             "1.1.1.1-0.0.0.0",
             PREFIXLEN,
             SUBNET_OFFSET,
             IP_OFFSET,
-            "Invalid IP pool(s) '1.1.1.1-0.0.0.0'. Unable to load '1.1.1.1-0.0.0.0' as an IP range.",
+            "Invalid IP pool(s) '1.1.1.1-0.0.0.0'. Unable to load '1.1.1.1-0.0.0.0' as an IP range: last IP address must be greater than first",
         ),
         (POOLS_AND_RANGES, PREFIXLEN, 266, IP_OFFSET, f"Unable to get 267 /{PREFIXLEN} subnets from pool {POOLS_AND_RANGES}"),
         (
@@ -68,7 +71,7 @@ POOLS_AND_RANGES = "10.10.10.0/24, 10.20.20.20-10.20.20.29"
             24,
             1,
             IP_OFFSET,
-            "Invalid IP pool(s) '10.0.0.0/24,1.1.1.1-0.0.0.0'. Unable to load '1.1.1.1-0.0.0.0' as an IP range.",
+            "Invalid IP pool(s) '10.0.0.0/24,1.1.1.1-0.0.0.0'. Unable to load '1.1.1.1-0.0.0.0' as an IP range: last IP address must be greater than first",
         ),
         (
             "10.10.10.10-20",
