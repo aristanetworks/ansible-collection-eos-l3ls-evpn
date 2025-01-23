@@ -181,9 +181,12 @@ $defs:
           uplink_ipv4_pool:
             documentation_options:
               table: node-type-uplink-configuration
-            description: IPv4 subnet to use to connect to uplink switches.
+            description: |-
+              Comma separated list of prefixes (IPv4 address/Mask) or ranges (IPv4_address-IPv4_address).
+              IPv4 subnets used to connect to uplink switches will be deviced from this pool based on the node id,
+              uplink interface index, 'max_uplink_switches' and 'max_parallel_uplinks'.
             type: str
-            format: ipv4_cidr
+            format: ipv4_pool
           uplink_interfaces:
             documentation_options:
               table: node-type-uplink-configuration
@@ -427,9 +430,11 @@ $defs:
           loopback_ipv4_pool:
             documentation_options:
               table: node-type-loopback-vtep-configuration
-            description: IPv4 subnet for Loopback0 allocation.
+            description: |-
+              Comma separated list of prefixes (IPv4 address/Mask) or ranges (IPv4_address-IPv4_address).
+              The IPv4 address used for Loopback0 will be derived from this pool based on the node id and 'loopback_ipv4_offset'.
             type: str
-            format: ipv4_cidr
+            format: ipv4_pool
           loopback_ipv4_address:
             documentation_options:
               table: node-type-loopback-vtep-configuration
@@ -442,9 +447,11 @@ $defs:
           vtep_loopback_ipv4_pool:
             documentation_options:
               table: node-type-loopback-vtep-configuration
-            description: IPv4 subnet for VTEP-Loopback allocation.
+            description:
+              Comma separated list of prefixes (IPv4 address/Mask) or ranges (IPv4_address-IPv4_address).
+              The IPv4 address used for VTEP-Loopback will be derived from this pool based on the node id and 'loopback_ipv4_offset'.
             type: str
-            format: ipv4_cidr
+            format: ipv4_pool
           vtep_loopback_ipv4_address:
             documentation_options:
               table: node-type-loopback-vtep-configuration
@@ -459,7 +466,7 @@ $defs:
               table: node-type-loopback-vtep-configuration
             description: |
               Offset all assigned loopback IP addresses.
-              Required when the < loopback_ipv4_pool > is same for 2 different node_types (like spine and l3leaf) to avoid over-lapping IPs.
+              Required when the 'loopback_ipv4_pool' is the same for 2 different node_types (like spine and l3leaf) to avoid overlapping IPs.
               For example, set the minimum offset l3leaf.defaults.loopback_ipv4_offset: < total # spine switches > or vice versa.
             type: int
             convert_types:
@@ -468,15 +475,17 @@ $defs:
           loopback_ipv6_pool:
             documentation_options:
               table: node-type-loopback-vtep-configuration
-            description: IPv6 subnet for Loopback0 allocation.
+            description:
+              Comma separated list of prefixes (IPv6 address/Mask) or ranges (IPv6_address-IPv6_address).
+              The IPv6 address used for Loopback0 will be derived from this pool based on the node id and 'loopback_ipv6_offset'.
             type: str
-            format: ipv6_cidr
+            format: ipv6_pool
           loopback_ipv6_offset:
             documentation_options:
               table: node-type-loopback-vtep-configuration
             description: |
               Offset all assigned loopback IPv6 addresses.
-              Required when the < loopback_ipv6_pool > is same for 2 different node_types (like spine and l3leaf) to avoid overlapping IPs.
+              Required when the 'loopback_ipv6_pool' is same for 2 different node_types (like spine and l3leaf) to avoid overlapping IPs.
               For example, set the minimum offset l3leaf.defaults.loopback_ipv6_offset: < total # spine switches > or vice versa.
             type: int
             convert_types:
@@ -777,10 +786,11 @@ $defs:
             documentation_options:
               table: node-type-l2-mlag-configuration
             description: |
-              IP address pool used for MLAG underlay L3 peering. IP is derived from the node id.
+              Comma separated list of prefixes (IPv4 address/Mask) or ranges (IPv4_address-IPv4_address).
+              The IPv4 subnet used for MLAG underlay L3 peering is derived from this pool based on the node id of the first MLAG switch.
               Required when MLAG leafs present in topology and they are using a separate L3 peering VLAN.
             type: str
-            format: ipv4_cidr
+            format: ipv4_pool
           mlag_peer_vlan:
             documentation_options:
               table: node-type-l2-mlag-configuration
@@ -811,18 +821,20 @@ $defs:
             documentation_options:
               table: node-type-l2-mlag-configuration
             description: |-
-              IPv4 address pool used for MLAG Peer Link (control link). IP is derived from the node id.
+              Comma separated list of prefixes (IPv4 address/Mask) or ranges (IPv4_address-IPv4_address).
+              The IPv4 address used for MLAG Peer Link (control link) is derived from this pool based on the node id of the first MLAG switch.
               Required for MLAG leafs when `mlag_peer_address_family` is `ipv4` (default).
             type: str
-            format: ipv4_cidr
+            format: ipv4_pool
           mlag_peer_ipv6_pool:
             documentation_options:
               table: node-type-l2-mlag-configuration
             description: |-
-              IPv6 address pool used for MLAG Peer Link (control link). IP is derived from the node id.
+              Comma separated list of prefixes (IPv6 address/Mask) or ranges (IPv6_address-IPv6_address).
+              The IPv6 address used for MLAG Peer Link (control link) is derived from this pool based on the node id of the first MLAG switch.
               Required for MLAG leafs when `mlag_peer_address_family` is `ipv6`.
             type: str
-            format: ipv6_cidr
+            format: ipv6_pool
           mlag_port_channel_id:
             documentation_options:
               table: node-type-l2-mlag-configuration
@@ -1338,11 +1350,11 @@ $defs:
                   pattern: "Ethernet[\\d/]+"
               ha_ipv4_pool:
                 description: |-
-                  IP address pool used for WAN HA connectivity.
-                  IP is derived from the node ID.
+                  Comma separated list of prefixes (IPv4 address/Mask) or ranges (IPv4_address-IPv4_address).
+                  The IPv4 subnet used for direct WAN HA connectivity is derived from this pool based on the node ID of the first WAN router.
                   Not used for uplink interfaces.
                 type: str
-                format: ipv4_cidr
+                format: ipv4_pool
               max_ha_interfaces:
                 type: int
                 convert_types:
@@ -1462,8 +1474,10 @@ $defs:
                 keys:
                   ipv4_pool:
                     type: str
-                    format: ipv4_cidr
-                    description: IPv4 pool from which subnets will be allocated for links to downlink switches.
+                    format: ipv4_pool
+                    description: |-
+                      Comma separated list of prefixes (IPv4 address/Mask) or ranges (IPv4_address-IPv4_address).
+                      IPv4 subnets used for links to downlink switches will be derived from this pool based on index the peer's uplink interface's index in 'downlink_interfaces'.
                   downlink_interfaces:
                     type: list
                     description: List of downlink interfaces or ranges of interfaces to use this pool. The index of the interface in this list will determine which subnet will be taken from the pool.
