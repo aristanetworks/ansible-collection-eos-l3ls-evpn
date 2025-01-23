@@ -20,7 +20,8 @@ $defs:
               description: P2P pool name.
             ipv4_pool:
               type: str
-              description: IPv4 address/Mask.
+              description: Comma separated list of prefixes (IPv4 address/Mask) or ranges (IPv4_address-IPv4_address).
+              format: ipv4_pool
             prefix_size:
               type: int
               convert_types:
