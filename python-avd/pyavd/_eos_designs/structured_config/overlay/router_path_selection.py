@@ -131,7 +131,7 @@ class RouterPathSelectionMixin(UtilsMixin):
         return [uplink for uplink in self.shared_utils.get_switch_fact("uplinks") if get(uplink, "vrf") is None]
 
     def _wan_ha_peer_vtep_ip(self) -> str:
-        peer_facts = self.shared_utils.get_peer_facts(self.shared_utils.wan_ha_peer, required=True)
+        peer_facts = self.shared_utils.get_peer_facts_dict(self.shared_utils.wan_ha_peer)
         return get(peer_facts, "vtep_ip", required=True)
 
     def _get_path_group_id(self, path_group_name: str, config_id: int | None = None) -> int:

@@ -73,7 +73,7 @@ class RouteMapsMixin(UtilsMixin):
 
             add_p2p_links = False
             for peer in self._avd_peers:
-                peer_facts = self.shared_utils.get_peer_facts(peer, required=True)
+                peer_facts = self.shared_utils.get_peer_facts_dict(peer)
                 for uplink in peer_facts["uplinks"]:
                     if (
                         uplink["peer"] == self.shared_utils.hostname

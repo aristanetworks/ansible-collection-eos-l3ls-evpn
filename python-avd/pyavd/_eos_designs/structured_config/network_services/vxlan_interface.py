@@ -284,7 +284,7 @@ class VxlanInterfaceMixin(UtilsMixin):
             if peer == self.shared_utils.hostname:
                 continue
 
-            peer_facts = self.shared_utils.get_peer_facts(peer, required=True)
+            peer_facts = self.shared_utils.get_peer_facts_dict(peer)
 
             if overlay_her_flood_list_scope == "dc" and peer_facts.get("dc_name") != self.inputs.dc_name:
                 continue

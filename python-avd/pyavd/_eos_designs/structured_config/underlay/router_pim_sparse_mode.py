@@ -48,7 +48,7 @@ class RouterPimSparseModeMixin(UtilsMixin):
                     "address": rp_entry.rp,
                     "other_anycast_rp_addresses": [
                         {
-                            "address": get(self.shared_utils.get_peer_facts(node.name), "router_id", required=True),
+                            "address": get(self.shared_utils.get_peer_facts_dict(node.name), "router_id"),
                         }
                         for node in rp_entry.nodes
                     ],

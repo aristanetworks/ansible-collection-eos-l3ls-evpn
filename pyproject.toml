@@ -106,3 +106,13 @@ known-first-party = ["pyavd", "schema_tools"]
 
 [tool.ruff.format]
 docstring-code-format = true
+
+[tool.pyright]
+include = [
+  ".github",
+  "python-avd/pyavd/_eos_designs",
+]
+exclude = [
+    "python-avd/pyavd/_eos_designs/schema/__init__.py",
+]
+pythonVersion = "3.10"

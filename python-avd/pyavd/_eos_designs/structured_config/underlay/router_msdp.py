@@ -46,7 +46,7 @@ class RouterMsdpMixin(UtilsMixin):
             "originator_id_local_interface": "Loopback0",
             "peers": [
                 {
-                    "ipv4_address": get(self.shared_utils.get_peer_facts(peer), "router_id", required=True),
+                    "ipv4_address": get(self.shared_utils.get_peer_facts_dict(peer), "router_id"),
                     "local_interface": "Loopback0",
                     "description": peer,
                     "mesh_groups": [{"name": "ANYCAST-RP"}],

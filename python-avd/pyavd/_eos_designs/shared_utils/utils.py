@@ -6,13 +6,13 @@ from __future__ import annotations
 from functools import lru_cache
 from typing import TYPE_CHECKING
 
+from pyavd._eos_designs.eos_designs_facts import EosDesignsFacts
 from pyavd._errors import AristaAvdError, AristaAvdInvalidInputsError
 from pyavd._utils import get, template_var
 
 if TYPE_CHECKING:
     from typing import TypeVar
 
-    from pyavd._eos_designs.eos_designs_facts import EosDesignsFacts
     from pyavd._eos_designs.schema import EosDesigns
 
     from . import SharedUtils
@@ -29,6 +29,20 @@ class UtilsMixin:
     Class should only be used as Mixin to the SharedUtils class.
     Using type-hint on self to get proper type-hints on attributes across all Mixins.
     """
+
+    def get_peer_facts_dict_or_none(self: SharedUtils, peer_name: str) -> dict | None:
+        peer_facts = self.get_peer_facts(peer_name, required=False)
+        if isinstance(peer_facts, EosDesignsFacts):
+            msg = "Expected peer_facts to be a dict or None."
+            raise AristaAvdError(msg)
+        return peer_facts
+
+    def get_peer_facts_dict(self: SharedUtils, peer_name: str) -> dict:
+        peer_facts = self.get_peer_facts(peer_name, required=True)
+        if not peer_facts or isinstance(peer_facts, EosDesignsFacts):
+            msg = "Expected peer_facts to be a dict."
+            raise AristaAvdError(msg)
+        return peer_facts
 
     def get_peer_facts(self: SharedUtils, peer_name: str, required: bool = True) -> EosDesignsFacts | dict | None:
         """

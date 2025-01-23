@@ -60,7 +60,7 @@ class UtilsMixin(StructuredConfigGenerator):
         downlinks_flow_tracker = self.shared_utils.get_flow_tracker(self.inputs.fabric_flow_tracking.downlinks)
 
         for peer in self._avd_peers:
-            peer_facts = self.shared_utils.get_peer_facts(peer, required=True)
+            peer_facts = self.shared_utils.get_peer_facts_dict(peer)
             for uplink in peer_facts["uplinks"]:
                 if uplink["peer"] == self.shared_utils.hostname:
                     link = {
@@ -124,7 +124,7 @@ class UtilsMixin(StructuredConfigGenerator):
         trunk_groups = []
 
         for peer in self._avd_peers:
-            peer_facts = self.shared_utils.get_peer_facts(peer, required=True)
+            peer_facts = self.shared_utils.get_peer_facts_dict(peer)
             for uplink in peer_facts["uplinks"]:
                 if uplink["peer"] == self.shared_utils.hostname:
                     if (peer_trunk_groups := get(uplink, "peer_trunk_groups")) is None:

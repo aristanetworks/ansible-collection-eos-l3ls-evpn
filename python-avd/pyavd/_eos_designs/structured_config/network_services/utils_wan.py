@@ -304,13 +304,12 @@ class UtilsWanMixin(UtilsZscalerMixin, StructuredConfigGenerator):
         if path_group_preference == "alternate":
             return 2
 
-        failed_conversion = False
         try:
             priority = int(path_group_preference)
         except ValueError:
-            failed_conversion = True
+            priority = 0
 
-        if failed_conversion or not 1 <= priority <= 65535:
+        if not 1 <= priority <= 65535:
             msg = (
                 f"Invalid value '{path_group_preference}' for Path-Group preference - should be either 'preferred', "
                 f"'alternate' or an integer[1-65535] for {context_path}."

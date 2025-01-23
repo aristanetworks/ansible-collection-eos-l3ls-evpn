@@ -113,7 +113,7 @@ class UtilsMixin(StructuredConfigGenerator):
         index = p2p_link.nodes.index(self.shared_utils.hostname)
         peer_index = (index + 1) % 2
         peer = p2p_link.nodes[peer_index]
-        peer_facts = self.shared_utils.get_peer_facts(peer, required=False)
+        peer_facts = self.shared_utils.get_peer_facts_dict_or_none(peer)
         peer_type = "other" if peer_facts is None else peer_facts.get("type", "other")
 
         # Set ip or fallback to list with None values

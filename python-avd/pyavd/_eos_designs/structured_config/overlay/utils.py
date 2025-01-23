@@ -47,7 +47,7 @@ class UtilsMixin(StructuredConfigGenerator):
                 }
             )
 
-            peer_facts = self.shared_utils.get_peer_facts(remote_peer_name, required=False)
+            peer_facts = self.shared_utils.get_peer_facts_dict_or_none(remote_peer_name)
             if peer_facts is None:
                 # No matching host found in the inventory for this remote gateway
                 evpn_gateway_remote_peers[remote_peer_name] = gw_info
@@ -74,7 +74,7 @@ class UtilsMixin(StructuredConfigGenerator):
         evpn_route_clients = {}
 
         for avd_peer in self._avd_overlay_peers:
-            peer_facts = self.shared_utils.get_peer_facts(avd_peer, required=True)
+            peer_facts = self.shared_utils.get_peer_facts_dict(avd_peer)
             if (
                 self.shared_utils.hostname in peer_facts.get("evpn_route_servers", [])
                 and peer_facts.get("evpn_role") in ["server", "client"]
@@ -92,7 +92,7 @@ class UtilsMixin(StructuredConfigGenerator):
         evpn_route_servers = {}
 
         for route_server in natural_sort(get(self._hostvars, "switch.evpn_route_servers", default=[])):
-            peer_facts = self.shared_utils.get_peer_facts(route_server, required=True)
+            peer_facts = self.shared_utils.get_peer_facts_dict(route_server)
             if peer_facts.get("evpn_role") != "server":
                 continue
 
@@ -143,7 +143,7 @@ class UtilsMixin(StructuredConfigGenerator):
         mpls_route_clients = {}
 
         for avd_peer in self._avd_overlay_peers:
-            peer_facts = self.shared_utils.get_peer_facts(avd_peer, required=True)
+            peer_facts = self.shared_utils.get_peer_facts_dict(avd_peer)
             if self._is_peer_mpls_client(peer_facts) is not True:
                 continue
 
@@ -164,7 +164,7 @@ class UtilsMixin(StructuredConfigGenerator):
             if fabric_switch == self.shared_utils.hostname:
                 continue
 
-            peer_facts = self.shared_utils.get_peer_facts(fabric_switch, required=True)
+            peer_facts = self.shared_utils.get_peer_facts_dict(fabric_switch)
             if self._is_peer_mpls_client(peer_facts) is not True:
                 continue
 
@@ -183,7 +183,7 @@ class UtilsMixin(StructuredConfigGenerator):
             if route_reflector == self.shared_utils.hostname:
                 continue
 
-            peer_facts = self.shared_utils.get_peer_facts(route_reflector, required=True)
+            peer_facts = self.shared_utils.get_peer_facts_dict(route_reflector)
             if self._is_peer_mpls_server(peer_facts) is not True:
                 continue
 
@@ -202,14 +202,14 @@ class UtilsMixin(StructuredConfigGenerator):
             if route_reflector == self.shared_utils.hostname:
                 continue
 
-            peer_facts = self.shared_utils.get_peer_facts(route_reflector, required=True)
+            peer_facts = self.shared_utils.get_peer_facts_dict(route_reflector)
             if self._is_peer_mpls_server(peer_facts) is not True:
                 continue
 
             self._append_peer(mpls_rr_peers, route_reflector, peer_facts)
 
         for avd_peer in self._avd_overlay_peers:
-            peer_facts = self.shared_utils.get_peer_facts(avd_peer, required=True)
+            peer_facts = self.shared_utils.get_peer_facts_dict(avd_peer)
             if self._is_peer_mpls_server(peer_facts) is not True:
                 continue
 
@@ -277,5 +277,5 @@ class UtilsMixin(StructuredConfigGenerator):
         return stun_server_profiles
 
     def _wan_ha_peer_vtep_ip(self) -> str:
-        peer_facts = self.shared_utils.get_peer_facts(self.shared_utils.wan_ha_peer, required=True)
+        peer_facts = self.shared_utils.get_peer_facts_dict(self.shared_utils.wan_ha_peer)
         return get(peer_facts, "vtep_ip", required=True)
