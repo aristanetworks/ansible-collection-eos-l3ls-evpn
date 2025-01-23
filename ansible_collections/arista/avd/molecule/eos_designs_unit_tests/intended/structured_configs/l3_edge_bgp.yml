@@ -139,7 +139,7 @@ prefix_lists:
 - name: PL-LOOPBACKS-EVPN-OVERLAY
   sequence_numbers:
   - sequence: 10
-    action: permit 1.2.3.4/24 eq 32
+    action: permit 1.2.3.0/24 eq 32
 ptp:
   mode: boundary
   clock_identity: 00:1C:73:14:00:01

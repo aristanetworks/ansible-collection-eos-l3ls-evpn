@@ -2316,6 +2316,18 @@ keys:
             '
           items:
             type: str
+        platforms:
+          type: list
+          min_length: 1
+          description: "Regex matching the full platform name of one or more switches.
+            If used in combination with switch hostname matching, both criteria must
+            match for configuration.\nIf you need to add custom platforms to match
+            specific port quantities, create them under `custom_platform_settings`.
+            Entries under `custom_platform_settings` should\nmatch the platform match
+            criteria.\n\nFor example, `720XP-48Y6` would require a custom platform
+            type:\n\nplatforms:\n  - 720XP\n  - 720XP-48Y6"
+          items:
+            type: str
         switch_ports:
           type: list
           description: "List of ranges using AVD range_expand syntax.\nFor example:\n\nswitch_ports:\n
