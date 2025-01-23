@@ -12,17 +12,16 @@ from pyavd._cv.client import CVClient
 from pyavd._cv.workflows.models import CVDevice
 from pyavd._cv.workflows.verify_devices_on_cv import verify_devices_in_cloudvision_inventory
 from pyavd._eos_designs.schema import EosDesigns
+from pyavd._eos_designs.structured_config.structured_config_generator import StructuredConfigGenerator
 from pyavd._errors import AristaAvdError, AristaAvdInvalidInputsError
 
 if TYPE_CHECKING:
     from pyavd._cv.api.arista.swg.v1 import Location, VpnEndpoint
 
-    from . import AvdStructuredConfigNetworkServices
-
 LOGGER = getLogger(__name__)
 
 
-class UtilsZscalerMixin:
+class UtilsZscalerMixin(StructuredConfigGenerator):
     """
     Mixin Class with internal functions for Zscaler.
 
@@ -30,7 +29,7 @@ class UtilsZscalerMixin:
     """
 
     @cached_property
-    def _zscaler_endpoints(self: AvdStructuredConfigNetworkServices) -> EosDesigns.ZscalerEndpoints:
+    def _zscaler_endpoints(self) -> EosDesigns.ZscalerEndpoints:
         """
         Returns zscaler_endpoints data model built via CloudVision API calls, unless they are provided in the input variables.
 
@@ -38,7 +37,7 @@ class UtilsZscalerMixin:
         """
         return self.inputs.zscaler_endpoints or asyncio.run(self._generate_zscaler_endpoints())
 
-    async def _generate_zscaler_endpoints(self: AvdStructuredConfigNetworkServices) -> EosDesigns.ZscalerEndpoints:
+    async def _generate_zscaler_endpoints(self) -> EosDesigns.ZscalerEndpoints:
         """
         Call CloudVision SWG APIs to generate the zscaler_endpoints model.
 

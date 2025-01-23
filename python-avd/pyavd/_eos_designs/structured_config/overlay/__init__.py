@@ -18,7 +18,6 @@ from .stun import StunMixin
 
 
 class AvdStructuredConfigOverlay(
-    StructuredConfigGenerator,
     CvxMixin,
     IpExtCommunityListsMixin,
     IpSecurityMixin,
@@ -31,6 +30,7 @@ class AvdStructuredConfigOverlay(
     RouterPathSelectionMixin,
     RouterTrafficEngineering,
     StunMixin,
+    StructuredConfigGenerator,
 ):
     """
     The AvdStructuredConfig Class is imported used "get_structured_config" to render parts of the structured config.

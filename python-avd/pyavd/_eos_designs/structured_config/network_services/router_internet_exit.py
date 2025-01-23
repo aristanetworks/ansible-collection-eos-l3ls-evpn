@@ -5,12 +5,8 @@ from __future__ import annotations
 
 from collections import defaultdict
 from functools import cached_property
-from typing import TYPE_CHECKING
 
 from .utils import UtilsMixin
-
-if TYPE_CHECKING:
-    from . import AvdStructuredConfigNetworkServices
 
 
 class RouterInternetExitMixin(UtilsMixin):
@@ -21,7 +17,7 @@ class RouterInternetExitMixin(UtilsMixin):
     """
 
     @cached_property
-    def router_internet_exit(self: AvdStructuredConfigNetworkServices) -> dict | None:
+    def router_internet_exit(self) -> dict | None:
         """
         Return structured config for router_internet_exit.
 

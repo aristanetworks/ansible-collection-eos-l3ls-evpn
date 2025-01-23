@@ -4,14 +4,10 @@
 from __future__ import annotations
 
 from functools import cached_property
-from typing import TYPE_CHECKING
 
 from pyavd._utils import append_if_not_duplicate
 
 from .utils import UtilsMixin
-
-if TYPE_CHECKING:
-    from . import AvdStructuredConfigNetworkServices
 
 
 class RouterPimSparseModeMixin(UtilsMixin):
@@ -22,7 +18,7 @@ class RouterPimSparseModeMixin(UtilsMixin):
     """
 
     @cached_property
-    def router_pim_sparse_mode(self: AvdStructuredConfigNetworkServices) -> dict | None:
+    def router_pim_sparse_mode(self) -> dict | None:
         """
         Return structured config for router_pim.
 

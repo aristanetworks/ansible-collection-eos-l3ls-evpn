@@ -4,12 +4,8 @@
 from __future__ import annotations
 
 from functools import cached_property
-from typing import TYPE_CHECKING
 
 from .utils import UtilsMixin
-
-if TYPE_CHECKING:
-    from . import AvdStructuredConfigOverlay
 
 
 class RouterBfdMixin(UtilsMixin):
@@ -20,7 +16,7 @@ class RouterBfdMixin(UtilsMixin):
     """
 
     @cached_property
-    def router_bfd(self: AvdStructuredConfigOverlay) -> dict | None:
+    def router_bfd(self) -> dict | None:
         """Return structured config for router_bfd."""
         if self.shared_utils.overlay_cvx:
             return None

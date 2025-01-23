@@ -4,17 +4,14 @@
 from __future__ import annotations
 
 from functools import cached_property
-from typing import TYPE_CHECKING
 
+from pyavd._eos_designs.structured_config import StructuredConfigGenerator
 from pyavd._errors import AristaAvdError
 from pyavd._utils import get, strip_empties_from_dict
 from pyavd.j2filters import natural_sort
 
-if TYPE_CHECKING:
-    from . import AvdStructuredConfigOverlay
 
-
-class UtilsMixin:
+class UtilsMixin(StructuredConfigGenerator):
     """
     Mixin Class with internal functions.
 
@@ -22,7 +19,7 @@ class UtilsMixin:
     """
 
     @cached_property
-    def _avd_overlay_peers(self: AvdStructuredConfigOverlay) -> list:
+    def _avd_overlay_peers(self) -> list:
         """
         Returns a list of overlay peers for the device.
 
@@ -32,7 +29,7 @@ class UtilsMixin:
         return get(self._hostvars, f"avd_overlay_peers..{self.shared_utils.hostname}", separator="..", default=[])
 
     @cached_property
-    def _evpn_gateway_remote_peers(self: AvdStructuredConfigOverlay) -> dict:
+    def _evpn_gateway_remote_peers(self) -> dict:
         if not self.shared_utils.overlay_evpn:
             return {}
 
@@ -67,7 +64,7 @@ class UtilsMixin:
         return evpn_gateway_remote_peers
 
     @cached_property
-    def _evpn_route_clients(self: AvdStructuredConfigOverlay) -> dict:
+    def _evpn_route_clients(self) -> dict:
         if not self.shared_utils.overlay_evpn:
             return {}
 
@@ -88,7 +85,7 @@ class UtilsMixin:
         return evpn_route_clients
 
     @cached_property
-    def _evpn_route_servers(self: AvdStructuredConfigOverlay) -> dict:
+    def _evpn_route_servers(self) -> dict:
         if not self.shared_utils.overlay_evpn:
             return {}
 
@@ -105,21 +102,21 @@ class UtilsMixin:
 
     # The next four should probably be moved to facts
     @cached_property
-    def _is_mpls_client(self: AvdStructuredConfigOverlay) -> bool:
+    def _is_mpls_client(self) -> bool:
         return self.shared_utils.mpls_overlay_role == "client" or (self.shared_utils.evpn_role == "client" and self.shared_utils.overlay_evpn_mpls)
 
     @cached_property
-    def _is_mpls_server(self: AvdStructuredConfigOverlay) -> bool:
+    def _is_mpls_server(self) -> bool:
         return self.shared_utils.mpls_overlay_role == "server" or (self.shared_utils.evpn_role == "server" and self.shared_utils.overlay_evpn_mpls)
 
-    def _is_peer_mpls_client(self: AvdStructuredConfigOverlay, peer_facts: dict) -> bool:
+    def _is_peer_mpls_client(self, peer_facts: dict) -> bool:
         return peer_facts.get("mpls_overlay_role") == "client" or (peer_facts.get("evpn_role") == "client" and get(peer_facts, "overlay.evpn_mpls") is True)
 
-    def _is_peer_mpls_server(self: AvdStructuredConfigOverlay, peer_facts: dict) -> bool:
+    def _is_peer_mpls_server(self, peer_facts: dict) -> bool:
         return peer_facts.get("mpls_overlay_role") == "server" or (peer_facts.get("evpn_role") == "server" and get(peer_facts, "overlay.evpn_mpls") is True)
 
     @cached_property
-    def _ipvpn_gateway_remote_peers(self: AvdStructuredConfigOverlay) -> dict:
+    def _ipvpn_gateway_remote_peers(self) -> dict:
         if self.shared_utils.overlay_ipvpn_gateway is not True:
             return {}
 
@@ -139,7 +136,7 @@ class UtilsMixin:
         return ipvpn_gateway_remote_peers
 
     @cached_property
-    def _mpls_route_clients(self: AvdStructuredConfigOverlay) -> dict:
+    def _mpls_route_clients(self) -> dict:
         if self._is_mpls_server is not True:
             return {}
 
@@ -156,7 +153,7 @@ class UtilsMixin:
         return mpls_route_clients
 
     @cached_property
-    def _mpls_mesh_pe(self: AvdStructuredConfigOverlay) -> dict:
+    def _mpls_mesh_pe(self) -> dict:
         if not self.shared_utils.overlay_mpls or not self.inputs.bgp_mesh_pes:
             return {}
 
@@ -176,7 +173,7 @@ class UtilsMixin:
         return mpls_mesh_pe
 
     @cached_property
-    def _mpls_route_reflectors(self: AvdStructuredConfigOverlay) -> dict:
+    def _mpls_route_reflectors(self) -> dict:
         if self._is_mpls_client is not True:
             return {}
 
@@ -195,7 +192,7 @@ class UtilsMixin:
         return mpls_route_reflectors
 
     @cached_property
-    def _mpls_rr_peers(self: AvdStructuredConfigOverlay) -> dict:
+    def _mpls_rr_peers(self) -> dict:
         if self._is_mpls_server is not True:
             return {}
 
@@ -225,7 +222,7 @@ class UtilsMixin:
 
         return mpls_rr_peers
 
-    def _append_peer(self: AvdStructuredConfigOverlay, peers_dict: dict, peer_name: str, peer_facts: dict) -> None:
+    def _append_peer(self, peers_dict: dict, peer_name: str, peer_facts: dict) -> None:
         """
         Retrieve bgp_as and "overlay.peering_address" from peer_facts and append a new peer to peers_dict.
 
@@ -250,10 +247,10 @@ class UtilsMixin:
         }
 
     @cached_property
-    def _is_wan_server_with_peers(self: AvdStructuredConfigOverlay) -> bool:
+    def _is_wan_server_with_peers(self) -> bool:
         return self.shared_utils.is_wan_server and len(self.shared_utils.filtered_wan_route_servers) > 0
 
-    def _stun_server_profile_name(self: AvdStructuredConfigOverlay, wan_route_server_name: str, path_group_name: str, interface_name: str) -> str:
+    def _stun_server_profile_name(self, wan_route_server_name: str, path_group_name: str, interface_name: str) -> str:
         """
         Return a string to use as the name of the stun server_profile.
 
@@ -264,7 +261,7 @@ class UtilsMixin:
         return f"{path_group_name}-{wan_route_server_name}-{sanitized_interface_name}"
 
     @cached_property
-    def _stun_server_profiles(self: AvdStructuredConfigOverlay) -> dict:
+    def _stun_server_profiles(self) -> dict:
         """Return a dictionary of _stun_server_profiles with ip_address per local path_group."""
         stun_server_profiles = {}
         for wan_route_server in self.shared_utils.filtered_wan_route_servers:
@@ -279,6 +276,6 @@ class UtilsMixin:
                 )
         return stun_server_profiles
 
-    def _wan_ha_peer_vtep_ip(self: AvdStructuredConfigOverlay) -> str:
+    def _wan_ha_peer_vtep_ip(self) -> str:
         peer_facts = self.shared_utils.get_peer_facts(self.shared_utils.wan_ha_peer, required=True)
         return get(peer_facts, "vtep_ip", required=True)

@@ -4,15 +4,11 @@
 from __future__ import annotations
 
 from functools import cached_property
-from typing import TYPE_CHECKING
 
 from pyavd._errors import AristaAvdMissingVariableError
 from pyavd._utils import get, strip_null_from_data
 
 from .utils import UtilsMixin
-
-if TYPE_CHECKING:
-    from . import AvdStructuredConfigOverlay
 
 
 class IpSecurityMixin(UtilsMixin):
@@ -23,7 +19,7 @@ class IpSecurityMixin(UtilsMixin):
     """
 
     @cached_property
-    def ip_security(self: AvdStructuredConfigOverlay) -> dict | None:
+    def ip_security(self) -> dict | None:
         """
         ip_security set based on wan_ipsec_profiles data_model.
 
@@ -51,7 +47,7 @@ class IpSecurityMixin(UtilsMixin):
 
         return strip_null_from_data(ip_security)
 
-    def _append_data_plane(self: AvdStructuredConfigOverlay, ip_security: dict, data_plane_config: dict) -> None:
+    def _append_data_plane(self, ip_security: dict, data_plane_config: dict) -> None:
         """In place update of ip_security for DataPlane."""
         ike_policy_name = get(data_plane_config, "ike_policy_name", default="DP-IKE-POLICY") if self.shared_utils.wan_ha_ipsec else None
         sa_policy_name = get(data_plane_config, "sa_policy_name", default="DP-SA-POLICY")
@@ -67,7 +63,7 @@ class IpSecurityMixin(UtilsMixin):
         # For data plane, adding key_controller by default
         ip_security["key_controller"] = self._key_controller(profile_name)
 
-    def _append_control_plane(self: AvdStructuredConfigOverlay, ip_security: dict, control_plane_config: dict) -> None:
+    def _append_control_plane(self, ip_security: dict, control_plane_config: dict) -> None:
         """
         In place update of ip_security for control plane data.
 
@@ -86,14 +82,14 @@ class IpSecurityMixin(UtilsMixin):
             # If there is no data plane IPSec profile, use the control plane one for key controller
             ip_security["key_controller"] = self._key_controller(profile_name)
 
-    def _ike_policy(self: AvdStructuredConfigOverlay, name: str) -> dict | None:
+    def _ike_policy(self, name: str) -> dict | None:
         """Return an IKE policy."""
         return {
             "name": name,
             "local_id": self.shared_utils.vtep_ip,
         }
 
-    def _sa_policy(self: AvdStructuredConfigOverlay, name: str) -> dict | None:
+    def _sa_policy(self, name: str) -> dict | None:
         """
         Return an SA policy.
 
@@ -106,7 +102,7 @@ class IpSecurityMixin(UtilsMixin):
             sa_policy["pfs_dh_group"] = 14
         return sa_policy
 
-    def _profile(self: AvdStructuredConfigOverlay, profile_name: str, ike_policy_name: str | None, sa_policy_name: str, key: str) -> dict | None:
+    def _profile(self, profile_name: str, ike_policy_name: str | None, sa_policy_name: str, key: str) -> dict | None:
         """
         Return one IPsec Profile.
 
@@ -129,6 +125,6 @@ class IpSecurityMixin(UtilsMixin):
             "mode": "transport",
         }
 
-    def _key_controller(self: AvdStructuredConfigOverlay, profile_name: str) -> dict | None:
+    def _key_controller(self, profile_name: str) -> dict | None:
         """Return a key_controller structure if the device is not a RR or pathfinder."""
         return None if self.shared_utils.is_wan_server else {"profile": profile_name}

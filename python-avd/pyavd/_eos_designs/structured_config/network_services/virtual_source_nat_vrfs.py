@@ -4,14 +4,10 @@
 from __future__ import annotations
 
 from functools import cached_property
-from typing import TYPE_CHECKING
 
 from pyavd._utils import append_if_not_duplicate, get_ip_from_ip_prefix, strip_null_from_data
 
 from .utils import UtilsMixin
-
-if TYPE_CHECKING:
-    from . import AvdStructuredConfigNetworkServices
 
 
 class VirtualSourceNatVrfsMixin(UtilsMixin):
@@ -21,8 +17,10 @@ class VirtualSourceNatVrfsMixin(UtilsMixin):
     Class should only be used as Mixin to a AvdStructuredConfig class.
     """
 
+    loopback_interfaces: list[dict] | None
+
     @cached_property
-    def virtual_source_nat_vrfs(self: AvdStructuredConfigNetworkServices) -> list | None:
+    def virtual_source_nat_vrfs(self) -> list | None:
         """
         Return structured config for virtual_source_nat_vrfs.
 

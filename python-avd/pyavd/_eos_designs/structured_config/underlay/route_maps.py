@@ -4,14 +4,10 @@
 from __future__ import annotations
 
 from functools import cached_property
-from typing import TYPE_CHECKING
 
 from pyavd._utils import get
 
 from .utils import UtilsMixin
-
-if TYPE_CHECKING:
-    from . import AvdStructuredConfigUnderlay
 
 
 class RouteMapsMixin(UtilsMixin):
@@ -22,7 +18,7 @@ class RouteMapsMixin(UtilsMixin):
     """
 
     @cached_property
-    def route_maps(self: AvdStructuredConfigUnderlay) -> list | None:
+    def route_maps(self) -> list | None:
         """
         Return structured config for route_maps.
 

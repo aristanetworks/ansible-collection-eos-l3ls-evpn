@@ -5,17 +5,15 @@ from __future__ import annotations
 
 import re
 from functools import cached_property
-from typing import TYPE_CHECKING
 
 from pyavd._errors import AristaAvdError
 from pyavd._utils import append_if_not_duplicate
 from pyavd.j2filters import list_compress, natural_sort, range_expand
 
-if TYPE_CHECKING:
-    from . import EosDesignsFacts
+from .utils import UtilsMixin
 
 
-class UplinksMixin:
+class UplinksMixin(UtilsMixin):
     """
     Mixin Class used to generate some of the EosDesignsFacts.
 
@@ -24,17 +22,17 @@ class UplinksMixin:
     """
 
     @cached_property
-    def max_parallel_uplinks(self: EosDesignsFacts) -> int:
+    def max_parallel_uplinks(self) -> int:
         """Exposed in avd_switch_facts."""
         return self.shared_utils.node_config.max_parallel_uplinks
 
     @cached_property
-    def max_uplink_switches(self: EosDesignsFacts) -> int:
+    def max_uplink_switches(self) -> int:
         """Exposed in avd_switch_facts."""
         return self.shared_utils.max_uplink_switches
 
     @cached_property
-    def _uplink_port_channel_id(self: EosDesignsFacts) -> int:
+    def _uplink_port_channel_id(self) -> int:
         """
         For MLAG secondary get the uplink_port_channel_id from the peer's facts.
 
@@ -72,7 +70,7 @@ class UplinksMixin:
         return uplink_port_channel_id
 
     @cached_property
-    def _uplink_switch_port_channel_id(self: EosDesignsFacts) -> int:
+    def _uplink_switch_port_channel_id(self) -> int:
         """
         For MLAG secondary get the uplink_switch_port_channel_id from the peer's facts.
 
@@ -104,7 +102,7 @@ class UplinksMixin:
             uplink_switch_port_channel_id = int("".join(re.findall(r"\d", self.shared_utils.uplink_switch_interfaces[0])))
 
         # produce an error if the uplink switch is MLAG and port-channel ID is above 2000
-        uplink_switch_facts: EosDesignsFacts = self.shared_utils.get_peer_facts(self.shared_utils.uplink_switches[0], required=True)
+        uplink_switch_facts = self.shared_utils.get_peer_facts(self.shared_utils.uplink_switches[0], required=True)
 
         if uplink_switch_facts.shared_utils.mlag and not 1 <= uplink_switch_port_channel_id <= 2000:
             msg = f"'uplink_switch_port_channel_id' must be between 1 and 2000 for MLAG switches. Got '{uplink_switch_port_channel_id}'."
@@ -113,7 +111,7 @@ class UplinksMixin:
         return uplink_switch_port_channel_id
 
     @cached_property
-    def uplinks(self: EosDesignsFacts) -> list:
+    def uplinks(self) -> list:
         """
         Exposed in avd_switch_facts.
 
@@ -165,9 +163,9 @@ class UplinksMixin:
 
         return uplinks
 
-    def _get_p2p_uplink(self: EosDesignsFacts, uplink_index: int, uplink_interface: str, uplink_switch: str, uplink_switch_interface: str) -> dict:
+    def _get_p2p_uplink(self, uplink_index: int, uplink_interface: str, uplink_switch: str, uplink_switch_interface: str) -> dict:
         """Return a single uplink dictionary for uplink_type p2p."""
-        uplink_switch_facts: EosDesignsFacts = self.shared_utils.get_peer_facts(uplink_switch, required=True)
+        uplink_switch_facts = self.shared_utils.get_peer_facts(uplink_switch, required=True)
         uplink = {
             "interface": uplink_interface,
             "peer": uplink_switch,
@@ -211,9 +209,9 @@ class UplinksMixin:
 
         return uplink
 
-    def _get_port_channel_uplink(self: EosDesignsFacts, uplink_index: int, uplink_interface: str, uplink_switch: str, uplink_switch_interface: str) -> dict:
+    def _get_port_channel_uplink(self, uplink_index: int, uplink_interface: str, uplink_switch: str, uplink_switch_interface: str) -> dict:
         """Return a single uplink dictionary for uplink_type port-channel."""
-        uplink_switch_facts: EosDesignsFacts = self.shared_utils.get_peer_facts(uplink_switch, required=True)
+        uplink_switch_facts = self.shared_utils.get_peer_facts(uplink_switch, required=True)
 
         # Reusing get_l2_uplink
         uplink = self._get_l2_uplink(uplink_index, uplink_interface, uplink_switch, uplink_switch_interface)
@@ -240,14 +238,14 @@ class UplinksMixin:
         return uplink
 
     def _get_l2_uplink(
-        self: EosDesignsFacts,
+        self,
         uplink_index: int,  # pylint: disable=unused-argument # noqa: ARG002
         uplink_interface: str,
         uplink_switch: str,
         uplink_switch_interface: str,
     ) -> dict:
         """Return a single uplink dictionary for an L2 uplink. Reused for both uplink_type port-channel, lan and TODO: lan-port-channel."""
-        uplink_switch_facts: EosDesignsFacts = self.shared_utils.get_peer_facts(uplink_switch, required=True)
+        uplink_switch_facts = self.shared_utils.get_peer_facts(uplink_switch, required=True)
         uplink = {
             "interface": uplink_interface,
             "peer": uplink_switch,
@@ -302,9 +300,9 @@ class UplinksMixin:
 
         return uplink
 
-    def _get_p2p_vrfs_uplink(self: EosDesignsFacts, uplink_index: int, uplink_interface: str, uplink_switch: str, uplink_switch_interface: str) -> dict:
+    def _get_p2p_vrfs_uplink(self, uplink_index: int, uplink_interface: str, uplink_switch: str, uplink_switch_interface: str) -> dict:
         """Return a single uplink dictionary for uplink_type p2p-vrfs."""
-        uplink_switch_facts: EosDesignsFacts = self.shared_utils.get_peer_facts(uplink_switch, required=True)
+        uplink_switch_facts = self.shared_utils.get_peer_facts(uplink_switch, required=True)
 
         # Reusing regular p2p logic for main interface.
         uplink = self._get_p2p_uplink(uplink_index, uplink_interface, uplink_switch, uplink_switch_interface)
@@ -348,7 +346,7 @@ class UplinksMixin:
         return uplink
 
     @cached_property
-    def uplink_peers(self: EosDesignsFacts) -> list:
+    def uplink_peers(self) -> list:
         """
         Exposed in avd_switch_facts.
 
@@ -363,7 +361,7 @@ class UplinksMixin:
         return natural_sort(unique_uplink_switches)
 
     @cached_property
-    def _default_downlink_interfaces(self: EosDesignsFacts) -> list:
+    def _default_downlink_interfaces(self) -> list:
         """
         Internal _default_downlink_interfaces set based on default_interfaces.
 
@@ -372,7 +370,7 @@ class UplinksMixin:
         return range_expand(self.shared_utils.default_interfaces.downlink_interfaces)
 
     @cached_property
-    def uplink_switch_vrfs(self: EosDesignsFacts) -> list[str] | None:
+    def uplink_switch_vrfs(self) -> list[str] | None:
         """
         Exposed in avd_switch_facts.
 

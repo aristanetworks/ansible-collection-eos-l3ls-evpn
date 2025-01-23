@@ -4,14 +4,10 @@
 from __future__ import annotations
 
 from functools import cached_property
-from typing import TYPE_CHECKING
 
 from pyavd._utils import strip_null_from_data
 
 from .utils import UtilsMixin
-
-if TYPE_CHECKING:
-    from . import AvdStructuredConfigNetworkServices
 
 
 class IpSecurityMixin(UtilsMixin):
@@ -22,7 +18,7 @@ class IpSecurityMixin(UtilsMixin):
     """
 
     @cached_property
-    def ip_security(self: AvdStructuredConfigNetworkServices) -> dict | None:
+    def ip_security(self) -> dict | None:
         """ip_security set based on cv_pathfinder_internet_exit_policies."""
         if not self._filtered_internet_exit_policies_and_connections:
             return None

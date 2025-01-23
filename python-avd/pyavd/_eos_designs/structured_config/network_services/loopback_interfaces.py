@@ -4,16 +4,10 @@
 from __future__ import annotations
 
 from functools import cached_property
-from typing import TYPE_CHECKING
 
-from pyavd._utils import AvdStringFormatter, append_if_not_duplicate, default, strip_empties_from_dict
+from pyavd._utils import append_if_not_duplicate
 
 from .utils import UtilsMixin
-
-if TYPE_CHECKING:
-    from pyavd._eos_designs.schema import EosDesigns
-
-    from . import AvdStructuredConfigNetworkServices
 
 
 class LoopbackInterfacesMixin(UtilsMixin):
@@ -24,7 +18,7 @@ class LoopbackInterfacesMixin(UtilsMixin):
     """
 
     @cached_property
-    def loopback_interfaces(self: AvdStructuredConfigNetworkServices) -> list | None:
+    def loopback_interfaces(self) -> list | None:
         """
         Return structured config for loopback_interfaces.
 
@@ -78,33 +72,3 @@ class LoopbackInterfacesMixin(UtilsMixin):
             return loopback_interfaces
 
         return None
-
-    def _get_vtep_diagnostic_loopback_for_vrf(
-        self: AvdStructuredConfigNetworkServices, vrf: EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem.VrfsItem
-    ) -> dict | None:
-        if (loopback := vrf.vtep_diagnostic.loopback) is None:
-            return None
-
-        pod_name = self.inputs.pod_name
-        loopback_ip_pools = vrf.vtep_diagnostic.loopback_ip_pools
-        if not (loopback_ipv4_pool := vrf.vtep_diagnostic.loopback_ip_range) and pod_name and loopback_ip_pools and pod_name in loopback_ip_pools:
-            loopback_ipv4_pool = loopback_ip_pools[pod_name].ipv4_pool
-
-        if not (loopback_ipv6_pool := vrf.vtep_diagnostic.loopback_ipv6_range) and pod_name and loopback_ip_pools and pod_name in loopback_ip_pools:
-            loopback_ipv6_pool = loopback_ip_pools[pod_name].ipv6_pool
-
-        if not loopback_ipv4_pool and not loopback_ipv6_pool:
-            return None
-
-        interface_name = f"Loopback{loopback}"
-        description_template = default(vrf.vtep_diagnostic.loopback_description, self.inputs.default_vrf_diag_loopback_description)
-        return strip_empties_from_dict(
-            {
-                "name": interface_name,
-                "description": AvdStringFormatter().format(description_template, interface=interface_name, vrf=vrf.name, tenant=vrf._tenant),
-                "shutdown": False,
-                "vrf": vrf.name,
-                "ip_address": f"{self.shared_utils.ip_addressing.vrf_loopback_ip(loopback_ipv4_pool)}/32" if loopback_ipv4_pool else None,
-                "ipv6_address": f"{self.shared_utils.ip_addressing.vrf_loopback_ipv6(loopback_ipv6_pool)}/128" if loopback_ipv6_pool else None,
-            }
-        )

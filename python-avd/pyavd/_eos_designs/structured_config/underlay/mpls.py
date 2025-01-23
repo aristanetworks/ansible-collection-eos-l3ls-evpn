@@ -4,14 +4,10 @@
 from __future__ import annotations
 
 from functools import cached_property
-from typing import TYPE_CHECKING
 
 from pyavd._utils import strip_empties_from_dict
 
 from .utils import UtilsMixin
-
-if TYPE_CHECKING:
-    from . import AvdStructuredConfigUnderlay
 
 
 class MplsMixin(UtilsMixin):
@@ -22,7 +18,7 @@ class MplsMixin(UtilsMixin):
     """
 
     @cached_property
-    def mpls(self: AvdStructuredConfigUnderlay) -> dict | None:
+    def mpls(self) -> dict | None:
         """Return structured config for mpls."""
         if self.shared_utils.underlay_mpls is not True:
             return None

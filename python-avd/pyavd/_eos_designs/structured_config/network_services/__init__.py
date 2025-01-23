@@ -42,7 +42,6 @@ from .vxlan_interface import VxlanInterfaceMixin
 
 
 class AvdStructuredConfigNetworkServices(
-    StructuredConfigGenerator,
     ApplicationTrafficRecognitionMixin,
     SpanningTreeMixin,
     PatchPanelMixin,
@@ -79,6 +78,7 @@ class AvdStructuredConfigNetworkServices(
     TunnelInterfacesMixin,
     MonitorConnectivityMixin,
     MetadataMixin,
+    StructuredConfigGenerator,
 ):
     """
     The AvdStructuredConfig Class is imported by "get_structured_config" to render parts of the structured config.

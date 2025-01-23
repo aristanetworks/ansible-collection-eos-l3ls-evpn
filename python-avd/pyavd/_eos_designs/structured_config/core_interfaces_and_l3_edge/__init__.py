@@ -3,8 +3,6 @@
 # that can be found in the LICENSE file.
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
-
 from pyavd._eos_designs.structured_config.structured_config_generator import StructuredConfigGenerator
 
 from .ethernet_interfaces import EthernetInterfacesMixin
@@ -12,18 +10,15 @@ from .port_channel_interfaces import PortChannelInterfacesMixin
 from .router_bgp import RouterBgpMixin
 from .router_ospf import RouterOspfMixin
 
-if TYPE_CHECKING:
-    from pyavd._eos_designs.schema import EosDesigns
-
 DATA_MODELS = ["core_interfaces", "l3_edge"]
 
 
 class AvdStructuredConfigCoreInterfacesAndL3Edge(
-    StructuredConfigGenerator,
     EthernetInterfacesMixin,
     PortChannelInterfacesMixin,
     RouterBgpMixin,
     RouterOspfMixin,
+    StructuredConfigGenerator,
 ):
     """
     The AvdStructuredConfig Class is imported by "get_structured_config" to render parts of the structured config.
@@ -38,9 +33,7 @@ class AvdStructuredConfigCoreInterfacesAndL3Edge(
     The order of the @cached_properties methods imported from Mixins will also control the order in the output.
     """
 
-    inputs_data: EosDesigns.CoreInterfaces | EosDesigns.L3Edge
-
-    def render(self) -> dict:
+    def render(self) -> list:
         """Render structured configs for core_interfaces and l3_Edge."""
         result_list = []
 

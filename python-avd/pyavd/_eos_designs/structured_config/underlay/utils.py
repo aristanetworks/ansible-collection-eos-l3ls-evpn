@@ -7,6 +7,7 @@ from functools import cached_property
 from typing import TYPE_CHECKING
 
 from pyavd._eos_cli_config_gen.schema import EosCliConfigGen
+from pyavd._eos_designs.structured_config import StructuredConfigGenerator
 from pyavd._errors import AristaAvdError, AristaAvdMissingVariableError
 from pyavd._utils import default, get, get_ip_from_ip_prefix, get_item, strip_empties_from_dict
 from pyavd.api.interface_descriptions import InterfaceDescriptionData
@@ -15,10 +16,8 @@ from pyavd.j2filters import natural_sort, range_expand
 if TYPE_CHECKING:
     from pyavd._eos_designs.schema import EosDesigns
 
-    from . import AvdStructuredConfigUnderlay
 
-
-class UtilsMixin:
+class UtilsMixin(StructuredConfigGenerator):
     """
     Mixin Class with internal functions.
 
@@ -26,7 +25,7 @@ class UtilsMixin:
     """
 
     @cached_property
-    def _avd_peers(self: AvdStructuredConfigUnderlay) -> list:
+    def _avd_peers(self) -> list:
         """
         Returns a list of peers.
 
@@ -36,7 +35,7 @@ class UtilsMixin:
         return natural_sort(get(self._hostvars, f"avd_topology_peers..{self.shared_utils.hostname}", separator="..", default=[]))
 
     @cached_property
-    def _underlay_filter_peer_as_route_maps_asns(self: AvdStructuredConfigUnderlay) -> list:
+    def _underlay_filter_peer_as_route_maps_asns(self) -> list:
         """Filtered ASNs."""
         if not self.inputs.underlay_filter_peer_as:
             return []
@@ -45,7 +44,7 @@ class UtilsMixin:
         return natural_sort({link["peer_bgp_as"] for link in self._underlay_links if link["type"] == "underlay_p2p"})
 
     @cached_property
-    def _underlay_links(self: AvdStructuredConfigUnderlay) -> list:
+    def _underlay_links(self) -> list:
         """Returns the list of underlay links for this device."""
         underlay_links = []
         underlay_links.extend(self._uplinks)
@@ -117,7 +116,7 @@ class UtilsMixin:
         return natural_sort(underlay_links, "interface")
 
     @cached_property
-    def _underlay_vlan_trunk_groups(self: AvdStructuredConfigUnderlay) -> list:
+    def _underlay_vlan_trunk_groups(self) -> list:
         """Returns a list of trunk groups to configure on the underlay link."""
         if self.inputs.enable_trunk_groups is not True:
             return []
@@ -144,12 +143,10 @@ class UtilsMixin:
         return []
 
     @cached_property
-    def _uplinks(self: AvdStructuredConfigUnderlay) -> list:
+    def _uplinks(self) -> list:
         return get(self._hostvars, "switch.uplinks")
 
-    def _get_l3_interface_cfg(
-        self: AvdStructuredConfigUnderlay, l3_interface: EosDesigns._DynamicKeys.DynamicNodeTypesItem.NodeTypes.NodesItem.L3InterfacesItem
-    ) -> dict | None:
+    def _get_l3_interface_cfg(self, l3_interface: EosDesigns._DynamicKeys.DynamicNodeTypesItem.NodeTypes.NodesItem.L3InterfacesItem) -> dict | None:
         """Returns structured_configuration for one L3 interface."""
         interface_description = l3_interface.description
         if not interface_description:
@@ -214,7 +211,7 @@ class UtilsMixin:
 
         return strip_empties_from_dict(interface)
 
-    def _get_l3_uplink_with_l2_as_subint(self: AvdStructuredConfigUnderlay, link: dict) -> tuple[dict, list[dict]]:
+    def _get_l3_uplink_with_l2_as_subint(self, link: dict) -> tuple[dict, list[dict]]:
         """Return a tuple with main uplink interface, list of subinterfaces representing each SVI."""
         vlans = [int(vlan) for vlan in range_expand(link["vlans"])]
 
@@ -246,7 +243,7 @@ class UtilsMixin:
         return main_interface, [interface for interface in interfaces if interface["name"] != link["interface"]]
 
     def _get_l2_as_subint(
-        self: AvdStructuredConfigUnderlay,
+        self,
         link: dict,
         svi: EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem.VrfsItem.SvisItem,
         vrf: EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem.VrfsItem,
@@ -306,7 +303,7 @@ class UtilsMixin:
         return strip_empties_from_dict(subinterface)
 
     @cached_property
-    def _l3_interface_acls(self: AvdStructuredConfigUnderlay) -> dict[str, dict[str, dict]]:
+    def _l3_interface_acls(self) -> dict[str, dict[str, dict]]:
         """
         Return dict of l3 interface ACLs.
 

@@ -19,7 +19,7 @@ if TYPE_CHECKING:
     from pyavd._eos_designs.schema import EosDesigns
 
 
-class AvdStructuredConfigBase(StructuredConfigGenerator, NtpMixin, SnmpServerMixin, RouterGeneralMixin):
+class AvdStructuredConfigBase(NtpMixin, SnmpServerMixin, RouterGeneralMixin, StructuredConfigGenerator):
     """
     The AvdStructuredConfig Class is imported by "get_structured_config" to render parts of the structured config.
 

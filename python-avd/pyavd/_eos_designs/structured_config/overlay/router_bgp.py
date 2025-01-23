@@ -16,8 +16,6 @@ from .utils import UtilsMixin
 if TYPE_CHECKING:
     from pyavd._eos_designs.schema import EosDesigns
 
-    from . import AvdStructuredConfigOverlay
-
 
 class RouterBgpMixin(UtilsMixin):
     """
@@ -27,7 +25,7 @@ class RouterBgpMixin(UtilsMixin):
     """
 
     @cached_property
-    def router_bgp(self: AvdStructuredConfigOverlay) -> dict | None:
+    def router_bgp(self) -> dict | None:
         """Return the structured config for router_bgp."""
         if self.shared_utils.overlay_cvx:
             return None
@@ -51,14 +49,14 @@ class RouterBgpMixin(UtilsMixin):
         # Need to keep potentially empty dict for redistribute_routes
         return strip_empties_from_dict(router_bgp, strip_values_tuple=(None, ""))
 
-    def _bgp_cluster_id(self: AvdStructuredConfigOverlay) -> str | None:
+    def _bgp_cluster_id(self) -> str | None:
         if self.shared_utils.overlay_routing_protocol == "ibgp" and (
             self.shared_utils.evpn_role == "server" or self.shared_utils.mpls_overlay_role == "server"
         ):
             return default(self.shared_utils.node_config.bgp_cluster_id, self.shared_utils.router_id)
         return None
 
-    def _bgp_listen_ranges(self: AvdStructuredConfigOverlay) -> list | None:
+    def _bgp_listen_ranges(self) -> list | None:
         """Generate listen-ranges. Currently only supported for WAN RR."""
         if not self.shared_utils.is_wan_server:
             return None
@@ -73,7 +71,7 @@ class RouterBgpMixin(UtilsMixin):
         ] or None
 
     def _generate_base_peer_group(
-        self: AvdStructuredConfigOverlay,
+        self,
         pg_type: str,
         pg_name: str,
         maximum_routes: int = 0,
@@ -96,7 +94,7 @@ class RouterBgpMixin(UtilsMixin):
             "maximum_routes": maximum_routes,
         }
 
-    def _peer_groups(self: AvdStructuredConfigOverlay) -> list | None:
+    def _peer_groups(self) -> list | None:
         peer_groups = []
 
         if self.shared_utils.overlay_routing_protocol == "ebgp":
@@ -185,7 +183,7 @@ class RouterBgpMixin(UtilsMixin):
 
         return peer_groups
 
-    def _address_family_ipv4(self: AvdStructuredConfigOverlay) -> dict:
+    def _address_family_ipv4(self) -> dict:
         """Deactivate the relevant peer_groups in address_family_ipv4."""
         peer_groups = []
 
@@ -216,7 +214,7 @@ class RouterBgpMixin(UtilsMixin):
 
         return {"peer_groups": peer_groups}
 
-    def _address_family_evpn(self: AvdStructuredConfigOverlay) -> dict | None:
+    def _address_family_evpn(self) -> dict | None:
         address_family_evpn = {}
 
         peer_groups = []
@@ -321,7 +319,7 @@ class RouterBgpMixin(UtilsMixin):
 
         return address_family_evpn or None
 
-    def _address_family_ipv4_sr_te(self: AvdStructuredConfigOverlay) -> dict | None:
+    def _address_family_ipv4_sr_te(self) -> dict | None:
         """Generate structured config for IPv4 SR-TE address family."""
         if not self.shared_utils.is_cv_pathfinder_router:
             return None
@@ -340,7 +338,7 @@ class RouterBgpMixin(UtilsMixin):
 
         return address_family_ipv4_sr_te
 
-    def _address_family_link_state(self: AvdStructuredConfigOverlay) -> dict | None:
+    def _address_family_link_state(self) -> dict | None:
         """Generate structured config for link-state address family."""
         if not self.shared_utils.is_cv_pathfinder_router:
             return None
@@ -371,7 +369,7 @@ class RouterBgpMixin(UtilsMixin):
 
         return address_family_link_state
 
-    def _address_family_path_selection(self: AvdStructuredConfigOverlay) -> dict | None:
+    def _address_family_path_selection(self) -> dict | None:
         if not self.shared_utils.is_wan_router:
             return None
 
@@ -390,7 +388,7 @@ class RouterBgpMixin(UtilsMixin):
 
         return address_family_path_selection
 
-    def _address_family_rtc(self: AvdStructuredConfigOverlay) -> dict | None:
+    def _address_family_rtc(self) -> dict | None:
         """
         Activate EVPN OVERLAY peer group and EVPN OVERLAY CORE peer group (if present) in address_family_rtc.
 
@@ -434,7 +432,7 @@ class RouterBgpMixin(UtilsMixin):
 
         return address_family_rtc
 
-    def _address_family_vpn_ipvx(self: AvdStructuredConfigOverlay, version: int) -> dict | None:
+    def _address_family_vpn_ipvx(self, version: int) -> dict | None:
         if version not in [4, 6]:
             msg = "_address_family_vpn_ipvx should be called with version 4 or 6 only"
             raise AristaAvdError(msg)
@@ -468,7 +466,7 @@ class RouterBgpMixin(UtilsMixin):
         return address_family_vpn_ipvx
 
     def _create_neighbor(
-        self: AvdStructuredConfigOverlay,
+        self,
         ip_address: str,
         name: str,
         peer_group: str,
@@ -497,7 +495,7 @@ class RouterBgpMixin(UtilsMixin):
 
         return neighbor
 
-    def _neighbors(self: AvdStructuredConfigOverlay) -> list | None:
+    def _neighbors(self) -> list | None:
         neighbors = []
 
         if self.shared_utils.overlay_routing_protocol == "ebgp":
@@ -649,14 +647,12 @@ class RouterBgpMixin(UtilsMixin):
 
         return None
 
-    def _ip_in_listen_ranges(
-        self: AvdStructuredConfigOverlay, source_ip: str, listen_range_prefixes: EosDesigns.BgpPeerGroups.WanOverlayPeers.ListenRangePrefixes
-    ) -> bool:
+    def _ip_in_listen_ranges(self, source_ip: str, listen_range_prefixes: EosDesigns.BgpPeerGroups.WanOverlayPeers.ListenRangePrefixes) -> bool:
         """Check if our source IP is in any of the listen range prefixes."""
         ip = ipaddress.ip_address(source_ip)
         return any(ip in ipaddress.ip_network(prefix) for prefix in listen_range_prefixes)
 
-    def _bgp_overlay_dpath(self: AvdStructuredConfigOverlay) -> dict | None:
+    def _bgp_overlay_dpath(self) -> dict | None:
         if self.shared_utils.overlay_dpath is True:
             return {
                 "bestpath": {

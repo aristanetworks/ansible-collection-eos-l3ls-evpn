@@ -4,12 +4,8 @@
 from __future__ import annotations
 
 from functools import cached_property
-from typing import TYPE_CHECKING
 
 from .utils import UtilsMixin
-
-if TYPE_CHECKING:
-    from . import AvdStructuredConfigCoreInterfacesAndL3Edge
 
 
 class RouterOspfMixin(UtilsMixin):
@@ -20,7 +16,7 @@ class RouterOspfMixin(UtilsMixin):
     """
 
     @cached_property
-    def router_ospf(self: AvdStructuredConfigCoreInterfacesAndL3Edge) -> dict | None:
+    def router_ospf(self) -> dict | None:
         """Return structured config for router_ospf."""
         if not self.shared_utils.underlay_ospf:
             return None

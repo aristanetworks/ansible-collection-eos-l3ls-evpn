@@ -7,44 +7,45 @@ import re
 from functools import cached_property
 from ipaddress import ip_network
 from itertools import islice
-from typing import TYPE_CHECKING, TypeVar
+from typing import TypeVar
 
 from pyavd._eos_cli_config_gen.schema import EosCliConfigGen
 from pyavd._eos_designs.schema import EosDesigns
+from pyavd._eos_designs.structured_config.structured_config_generator import StructuredConfigGenerator
 from pyavd._errors import AristaAvdInvalidInputsError, AristaAvdMissingVariableError
 from pyavd._utils import default, get_ip_from_pool
-
-if TYPE_CHECKING:
-    from . import AvdStructuredConfigCoreInterfacesAndL3Edge
 
 T_P2pLinksItem = TypeVar("T_P2pLinksItem", EosDesigns.CoreInterfaces.P2pLinksItem, EosDesigns.L3Edge.P2pLinksItem)
 T_P2pLinksProfiles = TypeVar("T_P2pLinksProfiles", EosDesigns.CoreInterfaces.P2pLinksProfiles, EosDesigns.L3Edge.P2pLinksProfiles)
 
 
-class UtilsMixin:
+class UtilsMixin(StructuredConfigGenerator):
     """
     Mixin Class with internal functions.
 
     Class should only be used as Mixin to a AvdStructuredConfig class.
     """
 
+    data_model: str
+    inputs_data: EosDesigns.CoreInterfaces | EosDesigns.L3Edge
+
     @cached_property
-    def _p2p_links_sflow(self: AvdStructuredConfigCoreInterfacesAndL3Edge) -> bool | None:
+    def _p2p_links_sflow(self) -> bool | None:
         return self.inputs.fabric_sflow.core_interfaces if self.data_model == "core_interfaces" else self.inputs.fabric_sflow.l3_edge
 
     @cached_property
-    def _filtered_p2p_links(self: AvdStructuredConfigCoreInterfacesAndL3Edge) -> list[tuple[T_P2pLinksItem, dict]]:
+    def _filtered_p2p_links(self) -> list[tuple[T_P2pLinksItem, dict]]:
         """
         Returns a filtered list of p2p_links, which only contains links with our hostname.
 
         For each links any referenced profiles are applied and IP addresses are resolved
         from pools or subnets.
         """
-        if not (p2p_links := self.inputs_data.p2p_links):
+        if not self.inputs_data.p2p_links:
             return []
 
         # Apply p2p_profiles if set. Silently ignoring missing profile.
-        p2p_links: list[T_P2pLinksItem] = [self._apply_p2p_links_profile(p2p_link) for p2p_link in p2p_links]
+        p2p_links: list[T_P2pLinksItem] = [self._apply_p2p_links_profile(p2p_link) for p2p_link in self.inputs_data.p2p_links]
 
         # Filter to only include p2p_links with our hostname under "nodes"
         p2p_links = [p2p_link for p2p_link in p2p_links if self.shared_utils.hostname in p2p_link.nodes]
@@ -57,7 +58,7 @@ class UtilsMixin:
         # Parse P2P data model and create simplified data
         return [(p2p_link, self._get_p2p_data(p2p_link)) for p2p_link in p2p_links]
 
-    def _apply_p2p_links_profile(self: AvdStructuredConfigCoreInterfacesAndL3Edge, p2p_link: T_P2pLinksItem) -> T_P2pLinksItem:
+    def _apply_p2p_links_profile(self, p2p_link: T_P2pLinksItem) -> T_P2pLinksItem:
         """Apply a profile to a p2p_link. Always returns a new instance. TODO: Raise if profile is missing."""
         if not p2p_link.profile or p2p_link.profile not in self.inputs_data.p2p_links_profiles:
             # Nothing to do
@@ -66,7 +67,7 @@ class UtilsMixin:
         profile_as_p2p_link_item = self.inputs_data.p2p_links_profiles[p2p_link.profile]._cast_as(type(p2p_link), ignore_extra_keys=True)
         return p2p_link._deepinherited(profile_as_p2p_link_item)
 
-    def _resolve_p2p_ips(self: AvdStructuredConfigCoreInterfacesAndL3Edge, p2p_link: T_P2pLinksItem) -> T_P2pLinksItem:
+    def _resolve_p2p_ips(self, p2p_link: T_P2pLinksItem) -> T_P2pLinksItem:
         if p2p_link.ip:
             # ip already set, so nothing to do
             return p2p_link
@@ -89,7 +90,7 @@ class UtilsMixin:
 
         return p2p_link
 
-    def _get_p2p_data(self: AvdStructuredConfigCoreInterfacesAndL3Edge, p2p_link: T_P2pLinksItem) -> dict:
+    def _get_p2p_data(self, p2p_link: T_P2pLinksItem) -> dict:
         """
         Parses p2p_link data model and extracts information which is easier to parse.
 
@@ -184,7 +185,7 @@ class UtilsMixin:
         msg = f"{self.data_model}.p2p_links must have either 'interfaces' or 'port_channel' with correct members set."
         raise AristaAvdInvalidInputsError(msg)
 
-    def _get_common_interface_cfg(self: AvdStructuredConfigCoreInterfacesAndL3Edge, p2p_link: T_P2pLinksItem, p2p_link_data: dict) -> dict:
+    def _get_common_interface_cfg(self, p2p_link: T_P2pLinksItem, p2p_link_data: dict) -> dict:
         """
         Return partial structured_config for one p2p_link.
 
@@ -299,7 +300,7 @@ class UtilsMixin:
 
         return interface_cfg
 
-    def _get_ethernet_cfg(self: AvdStructuredConfigCoreInterfacesAndL3Edge, p2p_link: T_P2pLinksItem) -> dict:
+    def _get_ethernet_cfg(self, p2p_link: T_P2pLinksItem) -> dict:
         """
         Return partial structured_config for one p2p_link.
 
@@ -308,7 +309,7 @@ class UtilsMixin:
         """
         return {"speed": p2p_link.speed}
 
-    def _get_port_channel_member_cfg(self: AvdStructuredConfigCoreInterfacesAndL3Edge, p2p_link: T_P2pLinksItem, p2p_link_data: dict, member: dict) -> dict:
+    def _get_port_channel_member_cfg(self, p2p_link: T_P2pLinksItem, p2p_link_data: dict, member: dict) -> dict:
         """
         Return partial structured_config for one p2p_link.
 

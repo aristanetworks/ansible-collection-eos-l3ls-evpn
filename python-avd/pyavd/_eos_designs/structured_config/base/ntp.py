@@ -4,15 +4,11 @@
 from __future__ import annotations
 
 from functools import cached_property
-from typing import TYPE_CHECKING
 
 from pyavd._errors import AristaAvdError
 from pyavd._utils import strip_null_from_data
 
 from .utils import UtilsMixin
-
-if TYPE_CHECKING:
-    from . import AvdStructuredConfigBase
 
 
 class NtpMixin(UtilsMixin):
@@ -23,7 +19,7 @@ class NtpMixin(UtilsMixin):
     """
 
     @cached_property
-    def ntp(self: AvdStructuredConfigBase) -> dict | None:
+    def ntp(self) -> dict | None:
         """Ntp set based on "ntp_settings" data-model."""
         if not (ntp_settings := self.inputs.ntp_settings):
             return None

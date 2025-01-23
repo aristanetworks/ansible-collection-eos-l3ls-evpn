@@ -8,12 +8,7 @@ from .monitor_sessions import MonitorSessionsMixin
 from .port_channel_interfaces import PortChannelInterfacesMixin
 
 
-class AvdStructuredConfigConnectedEndpoints(
-    StructuredConfigGenerator,
-    EthernetInterfacesMixin,
-    PortChannelInterfacesMixin,
-    MonitorSessionsMixin,
-):
+class AvdStructuredConfigConnectedEndpoints(EthernetInterfacesMixin, PortChannelInterfacesMixin, MonitorSessionsMixin, StructuredConfigGenerator):
     """
     The AvdStructuredConfig Class is imported by "get_structured_config" to render parts of the structured config.
 

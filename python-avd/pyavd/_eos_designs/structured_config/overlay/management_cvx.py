@@ -4,15 +4,11 @@
 from __future__ import annotations
 
 from functools import cached_property
-from typing import TYPE_CHECKING
 
 from pyavd._errors import AristaAvdMissingVariableError
 from pyavd._utils import get, get_ip_from_ip_prefix
 
 from .utils import UtilsMixin
-
-if TYPE_CHECKING:
-    from . import AvdStructuredConfigOverlay
 
 
 class ManagementCvxMixin(UtilsMixin):
@@ -23,7 +19,7 @@ class ManagementCvxMixin(UtilsMixin):
     """
 
     @cached_property
-    def management_cvx(self: AvdStructuredConfigOverlay) -> dict | None:
+    def management_cvx(self) -> dict | None:
         if not (self.shared_utils.overlay_cvx and self.shared_utils.overlay_vtep):
             return None
 

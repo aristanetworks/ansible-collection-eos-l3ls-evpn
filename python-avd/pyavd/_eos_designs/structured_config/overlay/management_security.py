@@ -4,12 +4,8 @@
 from __future__ import annotations
 
 from functools import cached_property
-from typing import TYPE_CHECKING
 
 from .utils import UtilsMixin
-
-if TYPE_CHECKING:
-    from . import AvdStructuredConfigOverlay
 
 
 class ManagementSecurityMixin(UtilsMixin):
@@ -20,7 +16,7 @@ class ManagementSecurityMixin(UtilsMixin):
     """
 
     @cached_property
-    def management_security(self: AvdStructuredConfigOverlay) -> dict | None:
+    def management_security(self) -> dict | None:
         """
         Return structured config for management_security.
 

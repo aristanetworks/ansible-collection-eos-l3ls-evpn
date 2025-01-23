@@ -13,8 +13,6 @@ from .utils import UtilsMixin
 if TYPE_CHECKING:
     from pyavd._eos_designs.schema import EosDesigns
 
-    from . import AvdStructuredConfigNetworkServices
-
 
 class VrfsMixin(UtilsMixin):
     """
@@ -24,7 +22,7 @@ class VrfsMixin(UtilsMixin):
     """
 
     @cached_property
-    def vrfs(self: AvdStructuredConfigNetworkServices) -> list | None:
+    def vrfs(self) -> list | None:
         """
         Return structured config for vrfs.
 
@@ -75,7 +73,7 @@ class VrfsMixin(UtilsMixin):
 
         return None
 
-    def _has_ipv6(self: AvdStructuredConfigNetworkServices, vrf: EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem.VrfsItem) -> bool:
+    def _has_ipv6(self, vrf: EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem.VrfsItem) -> bool:
         """
         Return bool if IPv6 is configured in the given VRF.
 

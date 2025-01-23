@@ -5,7 +5,6 @@ from __future__ import annotations
 
 import re
 from functools import cached_property
-from typing import TYPE_CHECKING
 
 from pyavd._eos_designs.schema import EosDesigns
 from pyavd._errors import AristaAvdInvalidInputsError
@@ -14,9 +13,6 @@ from pyavd.api.interface_descriptions import InterfaceDescriptionData
 from pyavd.j2filters import range_expand
 
 from .utils import UtilsMixin
-
-if TYPE_CHECKING:
-    from . import AvdStructuredConfigConnectedEndpoints
 
 
 class PortChannelInterfacesMixin(UtilsMixin):
@@ -27,7 +23,7 @@ class PortChannelInterfacesMixin(UtilsMixin):
     """
 
     @cached_property
-    def port_channel_interfaces(self: AvdStructuredConfigConnectedEndpoints) -> list | None:
+    def port_channel_interfaces(self) -> list | None:
         """
         Return structured config for port_channel_interfaces.
 
@@ -116,7 +112,7 @@ class PortChannelInterfacesMixin(UtilsMixin):
         return None
 
     def _get_port_channel_interface_cfg(
-        self: AvdStructuredConfigConnectedEndpoints,
+        self,
         adapter: EosDesigns._DynamicKeys.DynamicConnectedEndpointsItem.ConnectedEndpointsItem.AdaptersItem,
         port_channel_interface_name: str,
         channel_group_id: int,
@@ -226,7 +222,7 @@ class PortChannelInterfacesMixin(UtilsMixin):
         return strip_null_from_data(port_channel_interface, strip_values_tuple=(None, "", {}))
 
     def _get_port_channel_subinterface_cfg(
-        self: AvdStructuredConfigConnectedEndpoints,
+        self,
         subinterface: EosDesigns._DynamicKeys.DynamicConnectedEndpointsItem.ConnectedEndpointsItem.AdaptersItem.PortChannel.SubinterfacesItem,
         adapter: EosDesigns._DynamicKeys.DynamicConnectedEndpointsItem.ConnectedEndpointsItem.AdaptersItem,
         port_channel_subinterface_name: str,

@@ -4,7 +4,6 @@
 from __future__ import annotations
 
 from functools import cached_property
-from typing import TYPE_CHECKING
 
 from pyavd._eos_cli_config_gen.schema import EosCliConfigGen
 from pyavd._errors import AristaAvdError, AristaAvdMissingVariableError
@@ -13,9 +12,6 @@ from pyavd.api.interface_descriptions import InterfaceDescriptionData
 from pyavd.j2filters import encrypt, natural_sort
 
 from .utils import UtilsMixin
-
-if TYPE_CHECKING:
-    from . import AvdStructuredConfigUnderlay
 
 
 class EthernetInterfacesMixin(UtilsMixin):
@@ -26,7 +22,7 @@ class EthernetInterfacesMixin(UtilsMixin):
     """
 
     @cached_property
-    def ethernet_interfaces(self: AvdStructuredConfigUnderlay) -> list | None:
+    def ethernet_interfaces(self) -> list | None:
         """Return structured config for ethernet_interfaces."""
         ethernet_interfaces = []
 
@@ -312,7 +308,7 @@ class EthernetInterfacesMixin(UtilsMixin):
 
         return None
 
-    def _get_direct_ha_ethernet_interfaces(self: AvdStructuredConfigUnderlay) -> list:
+    def _get_direct_ha_ethernet_interfaces(self) -> list:
         """
         Return a list of ethernet interfaces to be configured for WAN direct HA.
 

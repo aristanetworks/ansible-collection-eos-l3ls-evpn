@@ -4,14 +4,10 @@
 from __future__ import annotations
 
 from functools import cached_property
-from typing import TYPE_CHECKING
 
 from pyavd.j2filters import list_compress
 
 from .utils import UtilsMixin
-
-if TYPE_CHECKING:
-    from . import AvdStructuredConfigNetworkServices
 
 
 class SpanningTreeMixin(UtilsMixin):
@@ -22,7 +18,7 @@ class SpanningTreeMixin(UtilsMixin):
     """
 
     @cached_property
-    def spanning_tree(self: AvdStructuredConfigNetworkServices) -> dict | None:
+    def spanning_tree(self) -> dict | None:
         """spanning_tree priorities set per VLAN if spanning_tree mode is "rapid-pvst"."""
         if not self.shared_utils.network_services_l2:
             return None

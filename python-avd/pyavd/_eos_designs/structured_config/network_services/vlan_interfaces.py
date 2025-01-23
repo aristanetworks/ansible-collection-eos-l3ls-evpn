@@ -15,8 +15,6 @@ from .utils import UtilsMixin
 if TYPE_CHECKING:
     from pyavd._eos_designs.schema import EosDesigns
 
-    from . import AvdStructuredConfigNetworkServices
-
 
 class VlanInterfacesMixin(UtilsMixin):
     """
@@ -26,7 +24,7 @@ class VlanInterfacesMixin(UtilsMixin):
     """
 
     @cached_property
-    def vlan_interfaces(self: AvdStructuredConfigNetworkServices) -> list | None:
+    def vlan_interfaces(self) -> list | None:
         """
         Return structured config for vlan_interfaces.
 
@@ -70,7 +68,7 @@ class VlanInterfacesMixin(UtilsMixin):
         return None
 
     def _get_vlan_interface_config_for_svi(
-        self: AvdStructuredConfigNetworkServices,
+        self,
         svi: EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem.VrfsItem.SvisItem,
         vrf: EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem.VrfsItem,
     ) -> dict:
@@ -165,7 +163,7 @@ class VlanInterfacesMixin(UtilsMixin):
         return strip_empties_from_dict(vlan_interface_config)
 
     def _get_vlan_interface_config_for_mlag_peering(
-        self: AvdStructuredConfigNetworkServices, vrf: EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem.VrfsItem, vlan_id: int
+        self, vrf: EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem.VrfsItem, vlan_id: int
     ) -> dict:
         """Build full config for MLAG peering SVI for the given VRF."""
         vlan_interface_config = {
@@ -180,32 +178,3 @@ class VlanInterfacesMixin(UtilsMixin):
         }
         vlan_interface_config.update(self._get_vlan_ip_config_for_mlag_peering(vrf))
         return vlan_interface_config
-
-    def _get_vlan_ip_config_for_mlag_peering(
-        self: AvdStructuredConfigNetworkServices, vrf: EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem.VrfsItem
-    ) -> dict:
-        """
-        Build IP config for MLAG peering SVI for the given VRF.
-
-        Called from _get_vlan_interface_config_for_mlag_peering and prefix_lists.
-        """
-        if self.inputs.underlay_rfc5549 and self.inputs.overlay_mlag_rfc5549:
-            return {"ipv6_enable": True}
-
-        if vrf.mlag_ibgp_peering_ipv4_pool:
-            if self.shared_utils.mlag_role == "primary":
-                return {
-                    "ip_address": (
-                        f"{self.shared_utils.ip_addressing.mlag_ibgp_peering_ip_primary(vrf.mlag_ibgp_peering_ipv4_pool)}/"
-                        f"{self.inputs.fabric_ip_addressing.mlag.ipv4_prefix_length}"
-                    )
-                }
-
-            return {
-                "ip_address": (
-                    f"{self.shared_utils.ip_addressing.mlag_ibgp_peering_ip_secondary(vrf.mlag_ibgp_peering_ipv4_pool)}/"
-                    f"{self.inputs.fabric_ip_addressing.mlag.ipv4_prefix_length}"
-                )
-            }
-
-        return {"ip_address": f"{self.shared_utils.mlag_ibgp_ip}/{self.inputs.fabric_ip_addressing.mlag.ipv4_prefix_length}"}

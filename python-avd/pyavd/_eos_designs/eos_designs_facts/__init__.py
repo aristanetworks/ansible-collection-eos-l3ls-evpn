@@ -10,13 +10,12 @@ from pyavd._errors import AristaAvdError
 
 from .mlag import MlagMixin
 from .overlay import OverlayMixin
-from .short_esi import ShortEsiMixin
 from .uplinks import UplinksMixin
 from .vlans import VlansMixin
 from .wan import WanMixin
 
 
-class EosDesignsFacts(AvdFacts, MlagMixin, ShortEsiMixin, OverlayMixin, WanMixin, UplinksMixin, VlansMixin):
+class EosDesignsFacts(MlagMixin, OverlayMixin, WanMixin, UplinksMixin, VlansMixin, AvdFacts):
     """
     `EosDesignsFacts` is based on `AvdFacts`, so make sure to read the description there first.
 

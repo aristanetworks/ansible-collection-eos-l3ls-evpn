@@ -5,16 +5,12 @@ from __future__ import annotations
 
 import re
 from functools import cached_property
-from typing import TYPE_CHECKING
 
 from pyavd._errors import AristaAvdError
 from pyavd._utils import append_if_not_duplicate, get
 from pyavd.j2filters import natural_sort
 
 from .utils import UtilsMixin
-
-if TYPE_CHECKING:
-    from . import AvdStructuredConfigNetworkServices
 
 
 class EthernetInterfacesMixin(UtilsMixin):
@@ -25,7 +21,7 @@ class EthernetInterfacesMixin(UtilsMixin):
     """
 
     @cached_property
-    def ethernet_interfaces(self: AvdStructuredConfigNetworkServices) -> list | None:
+    def ethernet_interfaces(self) -> list | None:
         """
         Return structured config for ethernet_interfaces.
 
