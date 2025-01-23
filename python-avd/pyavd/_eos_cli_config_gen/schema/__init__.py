@@ -41071,6 +41071,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                     "default_route": {"type": DefaultRoute},
                     "domain_remote": {"type": bool},
                     "encapsulation": {"type": str},
+                    "next_hop_self_source_interface": {"type": str},
                     "additional_paths": {"type": AdditionalPaths},
                     "_custom_data": {"type": dict},
                 }
@@ -41096,6 +41097,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 domain_remote: bool | None
                 encapsulation: Literal["vxlan", "mpls", "path-selection"] | None
                 """Transport encapsulation for the peer-group."""
+                next_hop_self_source_interface: str | None
+                """Source interface name for MPLS encapsulation. Requires `encapsulation` to be set as `mpls`."""
                 additional_paths: AdditionalPaths
                 """Subclass of AvdModel."""
                 _custom_data: dict[str, Any]
@@ -41114,6 +41117,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                         default_route: DefaultRoute | UndefinedType = Undefined,
                         domain_remote: bool | None | UndefinedType = Undefined,
                         encapsulation: Literal["vxlan", "mpls", "path-selection"] | None | UndefinedType = Undefined,
+                        next_hop_self_source_interface: str | None | UndefinedType = Undefined,
                         additional_paths: AdditionalPaths | UndefinedType = Undefined,
                         _custom_data: dict[str, Any] | UndefinedType = Undefined,
                     ) -> None:
@@ -41137,6 +41141,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                             default_route: Subclass of AvdModel.
                             domain_remote: domain_remote
                             encapsulation: Transport encapsulation for the peer-group.
+                            next_hop_self_source_interface: Source interface name for MPLS encapsulation. Requires `encapsulation` to be set as `mpls`.
                             additional_paths: Subclass of AvdModel.
                             _custom_data: _custom_data
 
