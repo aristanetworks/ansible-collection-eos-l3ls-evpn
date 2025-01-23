@@ -62,7 +62,8 @@ tenant_a:
             - DC1-LEAF1A
       - name: Tenant_A_WEB_Zone
         vrf_vni: 11
-        mlag_ibgp_peering_ipv4_pool: 172.31.11.0/24
+        # Testing multiple pools and ranges to represent 172.31.11.0/24
+        mlag_ibgp_peering_ipv4_pool: 172.31.11.0/30, 172.31.11.4/30, 172.31.11.8-172.31.11.255
         svis:
           - id: 120
             name: Tenant_A_WEB_Zone_1
