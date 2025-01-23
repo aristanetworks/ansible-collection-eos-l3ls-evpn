@@ -40,6 +40,7 @@
     | [<samp>&nbsp;&nbsp;key_controller</samp>](## "ip_security.key_controller") | Dictionary |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;profile</samp>](## "ip_security.key_controller.profile") | String |  |  |  | IPsec profile name to use. |
     | [<samp>&nbsp;&nbsp;hardware_encryption_disabled</samp>](## "ip_security.hardware_encryption_disabled") | Boolean |  | `False` |  | Disable hardware encryption.<br>An SFE restart is needed for this change to take effect. |
+    | [<samp>&nbsp;&nbsp;connection_tx_interface_match_source_ip</samp>](## "ip_security.connection_tx_interface_match_source_ip") | Boolean |  |  |  | Match source interface of the IPsec connection. |
 
 === "YAML"
 
@@ -141,4 +142,7 @@
       # Disable hardware encryption.
       # An SFE restart is needed for this change to take effect.
       hardware_encryption_disabled: <bool; default=False>
+
+      # Match source interface of the IPsec connection.
+      connection_tx_interface_match_source_ip: <bool>
     ```

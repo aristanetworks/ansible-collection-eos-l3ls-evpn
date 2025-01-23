@@ -166,6 +166,7 @@ management_interfaces:
   gateway: 192.168.200.5
 metadata:
   platform: my_custom_platform
+  fabric_name: EOS_DESIGNS_UNIT_TESTS
 mlag_configuration:
   domain_id: DC1_UNDEPLOYED_LEAF1
   local_interface: Vlan4092
@@ -203,9 +204,21 @@ prefix_lists:
 - name: PL-LOOPBACKS-EVPN-OVERLAY
   sequence_numbers:
   - sequence: 10
-    action: permit 192.168.255.0/24 eq 32
+    action: permit 192.168.255.0/25 eq 32
   - sequence: 20
-    action: permit 192.168.254.0/24 eq 32
+    action: permit 192.168.255.128/26 eq 32
+  - sequence: 30
+    action: permit 192.168.255.192/29 eq 32
+  - sequence: 40
+    action: permit 192.168.255.200/32 eq 32
+  - sequence: 50
+    action: permit 192.168.254.0/25 eq 32
+  - sequence: 60
+    action: permit 192.168.254.128/26 eq 32
+  - sequence: 70
+    action: permit 192.168.254.192/29 eq 32
+  - sequence: 80
+    action: permit 192.168.254.200/32 eq 32
 - name: PL-MLAG-PEER-VRFS
   sequence_numbers:
   - sequence: 10
@@ -442,7 +455,6 @@ router_bgp:
       - address_family: evpn
         route_targets:
         - '12:12'
-    router_id: 192.168.255.22
     updates:
       wait_install: true
     neighbors:
@@ -463,7 +475,7 @@ router_bgp:
       - address_family: evpn
         route_targets:
         - '13:13'
-    router_id: 192.168.255.22
+    router_id: 11.11.11.11
     updates:
       wait_install: true
     neighbors:

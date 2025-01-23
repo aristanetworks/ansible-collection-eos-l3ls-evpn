@@ -141,6 +141,37 @@ network_ports:
       channel_id: 43
       mode: "active"
 
+  # Tests for issue #4786
+  # Test regex match all switches and specific platform match criteria.
+  - switches:
+      - network-ports-tests.*
+    platforms:
+      - 720XPM-48Y6
+    switch_ports:
+      - Ethernet48
+    description: Matched on all hostnames and 48 port platform
+
+  # Test only platform match.
+  - platforms:
+      - 720\w+-24Y6
+    switch_ports:
+      - Ethernet24
+    description: Matched on only 24 port platform
+
+  # Test criteria must match both hostname/platform.
+  - switches:
+      - network-ports-no-match
+    platforms:
+      - 720XPM-48Y6
+    switch_ports:
+      - Ethernet49
+    description: Should not match hostname and platform
+
+  # Test no match criteria
+  - switch_ports:
+      - Ethernet25
+    description: No criteria, no config
+
 servers:
   - name: CONNECTED_ENDPOINT_OVERWRITING_NETWORK_PORT
     adapters:
@@ -171,7 +202,23 @@ l2leaf:
       nodes:
         - name: network-ports-tests.1
           id: 1
+          platform: 720XPM-48Y6
         - name: network-ports-tests-2
           filter:
             only_vlans_in_use: true
           id: 2
+          platform: 720XPM-24Y6
+
+# Used for platform filtering tests
+custom_platform_settings:
+  - platforms:
+      - 720XPM-48Y6
+      - 720XPM-24Y6
+    feature_support:
+      poe: true
+      queue_monitor_length_notify: false
+    reload_delay:
+      mlag: 300
+      non_mlag: 330
+    trident_forwarding_table_partition: flexible exact-match 16000 l2-shared 18000 l3-shared
+      22000

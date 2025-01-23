@@ -17,6 +17,7 @@ ethernet_interfaces:
 - name: Ethernet1
   description: P2P_LINK_TO_DC1-SPINE1_Ethernet19
   shutdown: false
+  speed: forced 40gfull
   mtu: 1500
   link_tracking_groups:
   - name: LT_GROUP1
@@ -277,6 +278,7 @@ management_interfaces:
   gateway: 192.168.200.5
 metadata:
   platform: vEOS-LAB
+  fabric_name: EOS_DESIGNS_UNIT_TESTS
 ntp:
   local_interface:
     name: Management1
@@ -552,7 +554,7 @@ router_bgp:
       - address_family: evpn
         route_targets:
         - '20:20'
-    router_id: 192.168.255.33
+    router_id: 10.255.1.33
     redistribute:
       connected:
         enabled: true

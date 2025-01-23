@@ -1965,6 +1965,10 @@ keys:
 
           '
         default: true
+      toc:
+        type: bool
+        default: true
+        description: Generate the table of content(TOC) on device documentation.
   errdisable:
     type: dict
     keys:
@@ -2025,6 +2029,9 @@ keys:
       keys:
         name:
           type: str
+        comment:
+          type: str
+          description: Text comment added under ethernet interface.
         description:
           type: str
         shutdown:
@@ -4430,6 +4437,51 @@ keys:
                 type: str
                 convert_types:
                 - int
+            srlg:
+              description: SRLG name or number.
+              type: str
+              convert_types:
+              - int
+            metric:
+              type: int
+              convert_types:
+              - str
+              min: 1
+              max: 16777215
+            bandwidth:
+              type: dict
+              description: Interface maximum reservable bandwidth.
+              keys:
+                number:
+                  type: int
+                  required: true
+                  convert_types:
+                  - str
+                  min: 0
+                  max: 10000
+                unit:
+                  type: str
+                  required: true
+                  valid_values:
+                  - gbps
+                  - mbps
+                  - percent
+            min_delay_static:
+              type: dict
+              keys:
+                number:
+                  type: int
+                  required: true
+                  convert_types:
+                  - str
+                  min: 1
+                  max: 16777215
+                unit:
+                  type: str
+                  required: true
+                  valid_values:
+                  - microseconds
+                  - milliseconds
         eos_cli:
           type: str
           description: Multiline EOS CLI rendered directly on the ethernet interface
@@ -6020,6 +6072,9 @@ keys:
         description: 'Disable hardware encryption.
 
           An SFE restart is needed for this change to take effect.'
+      connection_tx_interface_match_source_ip:
+        type: bool
+        description: Match source interface of the IPsec connection.
   ip_ssh_client_source_interfaces:
     type: list
     items:
@@ -6074,6 +6129,13 @@ keys:
   ip_virtual_router_mac_address:
     type: str
     description: MAC address (hh:hh:hh:hh:hh:hh).
+  ip_virtual_router_mac_address_advertisement_interval:
+    type: int
+    description: Advertisement interval in seconds.
+    convert_types:
+    - str
+    min: 0
+    max: 86400
   ipv6_access_lists:
     type: list
     primary_key: name
@@ -6397,7 +6459,7 @@ keys:
         convert_types:
         - int
       receive_packet_tagged_drop:
-        type: str
+        type: bool
       tlvs:
         type: list
         primary_key: name
@@ -7514,6 +7576,9 @@ keys:
           keys:
             name:
               type: str
+            fips_restrictions:
+              type: bool
+              description: Use FIPS compliant algorithms.
             tls_versions:
               type: str
               description: "List of allowed TLS versions as string.\nExamples:\n  -
@@ -7968,6 +8033,14 @@ keys:
         type: str
       system_mac_address:
         type: str
+      rack:
+        type: str
+      pod_name:
+        type: str
+      dc_name:
+        type: str
+      fabric_name:
+        type: str
       cv_tags:
         type: dict
         keys:
@@ -8408,6 +8481,13 @@ keys:
               type: str
             ip:
               type: str
+            icmp_echo_size:
+              type: int
+              description: Size of ICMP probe in bytes.
+              convert_types:
+              - str
+              min: 36
+              max: 18024
             local_interfaces:
               type: str
             address_only:
@@ -8467,6 +8547,13 @@ keys:
                     type: str
                   ip:
                     type: str
+                  icmp_echo_size:
+                    type: int
+                    description: Size of ICMP probe in bytes.
+                    convert_types:
+                    - str
+                    min: 36
+                    max: 18024
                   local_interfaces:
                     type: str
                   address_only:
@@ -9188,6 +9275,7 @@ keys:
             - int
       servers:
         type: list
+        primary_key: name
         items:
           type: dict
           keys:
@@ -9256,9 +9344,11 @@ keys:
               valid_values:
               - md5
               - sha1
+              required: true
             key:
               type: str
               description: Obfuscated key.
+              required: true
             key_type:
               type: str
               convert_types:
@@ -9823,6 +9913,9 @@ keys:
       keys:
         name:
           type: str
+        comment:
+          type: str
+          description: Text comment added under port-channel interface.
         description:
           type: str
         profile:
@@ -10668,6 +10761,12 @@ keys:
         dhcp_client_accept_default_route:
           type: bool
           description: Install default-route obtained via DHCP.
+        dhcp_server_ipv4:
+          type: bool
+          description: Enable IPv4 DHCP server.
+        dhcp_server_ipv6:
+          type: bool
+          description: Enable IPv6 DHCP server.
         ip_verify_unicast_source_reachable_via:
           type: str
           valid_values:
@@ -11264,6 +11363,51 @@ keys:
                 type: str
                 convert_types:
                 - int
+            srlg:
+              description: SRLG name or number.
+              type: str
+              convert_types:
+              - int
+            metric:
+              type: int
+              convert_types:
+              - str
+              min: 1
+              max: 16777215
+            bandwidth:
+              type: dict
+              description: Interface maximum reservable bandwidth.
+              keys:
+                number:
+                  type: int
+                  required: true
+                  convert_types:
+                  - str
+                  min: 0
+                  max: 10000
+                unit:
+                  type: str
+                  required: true
+                  valid_values:
+                  - gbps
+                  - mbps
+                  - percent
+            min_delay_static:
+              type: dict
+              keys:
+                number:
+                  type: int
+                  required: true
+                  convert_types:
+                  - str
+                  min: 1
+                  max: 16777215
+                unit:
+                  type: str
+                  required: true
+                  valid_values:
+                  - microseconds
+                  - milliseconds
         validate_state:
           type: bool
           description: Set to false to disable interface state and LLDP topology validation
@@ -14154,6 +14298,10 @@ keys:
                   - mpls
                   - path-selection
                   description: Transport encapsulation for the peer-group.
+                next_hop_self_source_interface:
+                  description: Source interface name for MPLS encapsulation. Requires
+                    `encapsulation` to be set as `mpls`.
+                  type: str
                 additional_paths:
                   type: dict
                   $ref: eos_cli_config_gen#/$defs/bgp_additional_paths
@@ -20061,6 +20209,31 @@ keys:
             description: 'Enforce on packets through DPS tunnel for a specific direction.
 
               Only ''ingress'' direction is supported.'
+      interfaces:
+        type: list
+        primary_key: name
+        items:
+          type: dict
+          keys:
+            name:
+              type: str
+            metric_bandwidth:
+              type: dict
+              keys:
+                receive:
+                  description: Maximum receive bandwidth in Mbps.
+                  type: int
+                  min: 1
+                  max: 4294967295
+                  convert_types:
+                  - str
+                transmit:
+                  description: Maximum transmit bandwidth in Mbps.
+                  type: int
+                  min: 1
+                  max: 4294967295
+                  convert_types:
+                  - str
   router_pim_sparse_mode:
     type: dict
     keys:

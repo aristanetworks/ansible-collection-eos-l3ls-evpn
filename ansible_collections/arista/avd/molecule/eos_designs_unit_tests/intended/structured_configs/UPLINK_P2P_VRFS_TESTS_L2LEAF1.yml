@@ -37,6 +37,7 @@ management_api_http:
   - name: MGMT
 metadata:
   platform: vEOS-LAB
+  fabric_name: EOS_DESIGNS_UNIT_TESTS
 port_channel_interfaces:
 - name: Port-Channel1
   description: L2_UPLINK_P2P_VRFS_TESTS_LEAF1_Port-Channel51

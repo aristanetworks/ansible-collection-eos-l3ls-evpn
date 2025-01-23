@@ -3,6 +3,7 @@
 ## Table of Contents
 
 - [Management](#management)
+  - [Banner](#banner)
   - [Agents](#agents)
   - [Management Interfaces](#management-interfaces)
   - [DNS Domain](#dns-domain)
@@ -270,6 +271,25 @@
 - [EOS CLI Device Configuration](#eos-cli-device-configuration)
 
 ## Management
+
+### Banner
+
+#### Login Banner
+
+```text
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!***!!!Unauthorized access prohibited!!!***!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+```
+
+#### MOTD Banner
+
+```text
+.         Switch       : $(hostname)                            .
+.         Site         : DC1                      .
+.         Type info for information about the device            .
+.         Type help for information about the aliases           .
+```
 
 ### Agents
 
@@ -1452,18 +1472,18 @@ address locking
 
 ### Management Security SSL Profiles
 
-| SSL Profile Name | TLS protocol accepted | Certificate filename | Key filename | Ciphers | CRLs |
-| ---------------- | --------------------- | -------------------- | ------------ | ------- | ---- |
-| certificate-profile | - | eAPI.crt | eAPI.key | - | ca.crl<br>intermediate.crl |
-| cipher-list-profile | - | - | - | ECDHE-RSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-SHA384 | - |
-| SSL_PROFILE | 1.1 1.2 | SSL_CERT | SSL_KEY | - | - |
-| test1-chain-cert | - | - | - | - | - |
-| test1-trust-cert | - | - | - | - | - |
-| test2-chain-cert | - | - | - | - | - |
-| test2-trust-cert | - | - | - | - | - |
-| tls-single-version-profile-as-float | 1.0 | - | - | - | - |
-| tls-single-version-profile-as-string | 1.1 | - | - | - | - |
-| tls-versions-profile | 1.0 1.1 | - | - | - | - |
+| SSL Profile Name | TLS protocol accepted | Certificate filename | Key filename | Ciphers | CRLs | FIPS restrictions enabled |
+| ---------------- | --------------------- | -------------------- | ------------ | ------- | ---- | ------------------------- |
+| certificate-profile | - | eAPI.crt | eAPI.key | - | ca.crl<br>intermediate.crl | False |
+| cipher-list-profile | - | - | - | ECDHE-RSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-SHA384 | - | False |
+| SSL_PROFILE | 1.1 1.2 | SSL_CERT | SSL_KEY | - | - | True |
+| test1-chain-cert | - | - | - | - | - | - |
+| test1-trust-cert | - | - | - | - | - | - |
+| test2-chain-cert | - | - | - | - | - | - |
+| test2-trust-cert | - | - | - | - | - | - |
+| tls-single-version-profile-as-float | 1.0 | - | - | - | - | - |
+| tls-single-version-profile-as-string | 1.1 | - | - | - | - | - |
+| tls-versions-profile | 1.0 1.1 | - | - | - | - | True |
 
 ### SSL profile test1-chain-cert Certificates Summary
 
@@ -1556,6 +1576,7 @@ management security
    !
    ssl profile SSL_PROFILE
       tls versions 1.1 1.2
+      fips restrictions
       certificate SSL_CERT key SSL_KEY
    !
    ssl profile test1-chain-cert
@@ -1584,6 +1605,7 @@ management security
    !
    ssl profile tls-versions-profile
       tls versions 1.0 1.1
+      fips restrictions
 ```
 
 ## Prompt Device Configuration
@@ -1772,6 +1794,7 @@ dhcp server vrf VRF01
 | Interface name | DHCP IPv4 | DHCP IPv6 |
 | -------------- | --------- | --------- |
 | Ethernet64 | True | True |
+| Port-Channel112 | True | True |
 
 ## System Boot Settings
 
@@ -2753,12 +2776,12 @@ monitor server radius
 
 #### Host Parameters
 
-| Host Name | Description | IPv4 Address | Probing Interface Set | Address Only | URL |
-| --------- | ----------- | ------------ | --------------------- | ------------ | --- |
-| server1 | server1_connectivity_monitor | 10.10.10.1 | HOST_SET | True | https://server1.local.com |
-| server2 | server2_connectivity_monitor | 10.10.10.2 | HOST_SET | True | https://server2.local.com |
-| server3 | server3_connectivity_monitor | 10.10.10.3 | HOST_SET | False | - |
-| server4 | - | - | - | True | - |
+| Host Name | Description | IPv4 Address | ICMP Echo Size | Probing Interface Set | Address Only | URL |
+| --------- | ----------- | ------------ | -------------- | --------------------- | ------------ | --- |
+| server1 | server1_connectivity_monitor | 10.10.10.1 | - | HOST_SET | True | https://server1.local.com |
+| server2 | server2_connectivity_monitor | 10.10.10.2 | - | HOST_SET | True | https://server2.local.com |
+| server3 | server3_connectivity_monitor | 10.10.10.3 | 1200 | HOST_SET | False | - |
+| server4 | - | - | - | - | True | - |
 
 ### VRF Configuration
 
@@ -2778,11 +2801,11 @@ monitor server radius
 
 ##### Host Parameters
 
-| Host Name | Description | IPv4 Address | Probing Interface Set | Address Only | URL |
-| --------- | ----------- | ------------ | --------------------- | ------------ | --- |
-| server4 | server4_connectivity_monitor | 10.10.20.1 | VRF_GLOBAL_SET | False | https://server2.local.com |
-| server5 | server5_connectivity_monitor | 10.10.20.11 | VRF_GLOBAL_SET | True | https://server5.local.com |
-| server6 | - | - | - | True | - |
+| Host Name | Description | IPv4 Address | ICMP Echo Size | Probing Interface Set | Address Only | URL |
+| --------- | ----------- | ------------ | -------------- | --------------------- | ------------ | --- |
+| server4 | server4_connectivity_monitor | 10.10.20.1 | - | VRF_GLOBAL_SET | False | https://server2.local.com |
+| server5 | server5_connectivity_monitor | 10.10.20.11 | - | VRF_GLOBAL_SET | True | https://server5.local.com |
+| server6 | - | - | - | - | True | - |
 
 #### Vrf red Configuration
 
@@ -2795,9 +2818,9 @@ monitor server radius
 
 ##### Host Parameters
 
-| Host Name | Description | IPv4 Address | Probing Interface Set | Address Only | URL |
-| --------- | ----------- | ------------ | --------------------- | ------------ | --- |
-| server2 | server2_connectivity_monitor | 10.10.20.1 | VRF_HOST_SET | True | https://server2.local.com |
+| Host Name | Description | IPv4 Address | ICMP Echo Size | Probing Interface Set | Address Only | URL |
+| --------- | ----------- | ------------ | -------------- | --------------------- | ------------ | --- |
+| server2 | server2_connectivity_monitor | 10.10.20.1 | 1300 | VRF_HOST_SET | True | https://server2.local.com |
 
 #### Vrf yellow Configuration
 
@@ -2843,6 +2866,7 @@ monitor connectivity
          server2_connectivity_monitor
          local-interfaces VRF_HOST_SET address-only
          ip 10.10.20.1
+         icmp echo size 1300
          url https://server2.local.com
    !
    vrf yellow
@@ -2871,6 +2895,7 @@ monitor connectivity
       server3_connectivity_monitor
       local-interfaces HOST_SET
       ip 10.10.10.3
+      icmp echo size 1200
    !
    host server4
 ```
@@ -2972,7 +2997,7 @@ mlag configuration
 
 | Enabled | Management Address | Management VRF | Timer | Hold-Time | Re-initialization Timer | Drop Received Tagged Packets |
 | ------- | ------------------ | -------------- | ----- | --------- | ----------------------- | ---------------------------- |
-| False | 192.168.1.1/24 | Management | 30 | 90 | 2 | - |
+| False | 192.168.1.1/24 | Management | 30 | 90 | 2 | True |
 
 #### LLDP Explicit TLV Transmit Settings
 
@@ -3005,6 +3030,7 @@ lldp tlv transmit system-description
 no lldp run
 lldp management-address 192.168.1.1/24
 lldp management-address vrf Management
+lldp receive packet tagged drop
 ```
 
 ## L2 Protocol Forwarding
@@ -3242,6 +3268,8 @@ mac address-table notification host-flap detection moves 2
 
 - Hardware encryption is disabled
 
+- Match source interface of the IPSec connection is enabled
+
 ### IKE policies
 
 | Policy name | IKE lifetime | Encryption | DH group | Local ID | Integrity |
@@ -3352,6 +3380,7 @@ ip security
    key controller
       profile Profile-1
    hardware encryption disabled
+   connection tx-interface match source-ip
 ```
 
 ## Interfaces
@@ -3796,15 +3825,17 @@ interface Dps1
 
 #### Traffic Engineering
 
-| Interface | Enabled | Administrative Groups |
-| --------- | ------- | --------------------- |
-| Ethernet81/3 | True | 3,15-29,testgrp |
+| Interface | Enabled | Administrative Groups | Metric | Max Reservable Bandwidth | Min-delay | SRLG |
+| --------- | ------- | --------------------- | ------ | ------------------------ | --------- | ---- |
+| Ethernet81/3 | True | 3,15-29,testgrp | 4 | 10 percent | 5 microseconds | TEST-SRLG |
 
 #### Ethernet Interfaces Device Configuration
 
 ```eos
 !
 interface Ethernet1
+   !! testing multi line comment with |-
+   !! connection to dc1-spine1
    traffic-policy input BLUE-C1-POLICY
    traffic-policy output BLUE-C2-POLICY
    description P2P_LINK_TO_DC1-SPINE1_Ethernet1
@@ -3884,6 +3915,8 @@ interface Ethernet1
 
 !
 interface Ethernet2
+   !! testing multi line comments with |
+   !! connection to server in pod02
    description SRV-POD02_Eth1
    switchport dot1q vlan tag disallowed
    switchport trunk allowed vlan 110-111,210-211
@@ -3910,6 +3943,7 @@ interface Ethernet2
    spanning-tree bpdufilter disable
 !
 interface Ethernet3
+   !! testing single line comment
    description P2P_LINK_TO_DC1-SPINE2_Ethernet2
    mtu 1500
    switchport trunk native vlan 5
@@ -4789,14 +4823,22 @@ interface Ethernet81/3
    no switchport
    ip address 100.64.127.0/31
    traffic-engineering
+   traffic-engineering bandwidth 10 percent
    traffic-engineering administrative-group 3,15-29,testgrp
+   traffic-engineering srlg TEST-SRLG
+   traffic-engineering metric 4
+   traffic-engineering min-delay static 5 microseconds
 !
 interface Ethernet81/4
    description Traffic Engineering Interface
    no shutdown
    no switchport
    ip address 100.64.127.0/31
+   traffic-engineering bandwidth 100 mbps
    traffic-engineering administrative-group 4,7-100,testgrp
+   traffic-engineering srlg 16
+   traffic-engineering metric 2
+   traffic-engineering min-delay static 2 milliseconds
 !
 interface Ethernet81/10
    description isis_port_channel_member
@@ -5031,9 +5073,9 @@ interface Ethernet84
 
 #### Traffic Engineering
 
-| Interface | Enabled | Administrative Groups |
-| --------- | ------- | --------------------- |
-| Port-Channel136 | True | 7 |
+| Interface | Enabled | Administrative Groups | Metric | Max Reservable Bandwidth | Min-delay | SRLG |
+| --------- | ------- | --------------------- | ------ | ------------------------ | --------- | ---- |
+| Port-Channel136 | True | 7 | - | - | - | - |
 
 #### Port-Channel Interfaces Device Configuration
 
@@ -5053,6 +5095,8 @@ interface Port-Channel3
    isis authentication key 0 <removed>
 !
 interface Port-Channel5
+   !! testing multi line comments with |-
+   !! applied to port-channel 5
    description DC1_L2LEAF1_Po1
    bgp session tracker ST2
    switchport trunk allowed vlan 110,201
@@ -5173,6 +5217,8 @@ interface Port-Channel14
       route-target import 00:00:01:02:03:05
 !
 interface Port-Channel15
+   !! testing multi line comments with |
+   !! applied to port-channel 15
    traffic-policy input BLUE-C1-POLICY
    traffic-policy output BLUE-C2-POLICY
    description DC1_L2LEAF3_Po1
@@ -5190,6 +5236,7 @@ interface Port-Channel15
    link tracking group EVPN_MH_ES2 upstream
 !
 interface Port-Channel16
+   !! testing single line comment
    description DC1_L2LEAF4_Po1
    switchport trunk native vlan 10
    switchport dot1q vlan tag disallowed
@@ -5458,6 +5505,8 @@ interface Port-Channel112
    switchport
    ip address dhcp
    dhcp client accept default-route
+   dhcp server ipv4
+   dhcp server ipv6
    port-channel lacp fallback individual
    port-channel lacp fallback timeout 5
 !
@@ -5649,7 +5698,11 @@ interface Port-Channel137
    description Traffic Engineering Interface
    no switchport
    ip address 100.64.127.4/31
+   traffic-engineering bandwidth 100 mbps
    traffic-engineering administrative-group 4,7-100,testgrp
+   traffic-engineering srlg 16
+   traffic-engineering metric 2
+   traffic-engineering min-delay static 2 milliseconds
 ```
 
 ### Loopback Interfaces
@@ -6491,12 +6544,14 @@ service routing protocols model multi-agent
 #### Virtual Router MAC Address Summary
 
 Virtual Router MAC Address: 00:1c:73:00:dc:01
+Virtual Router MAC Address Advertisement Interval: 40
 
 #### Virtual Router MAC Address Device Configuration
 
 ```eos
 !
 ip virtual-router mac-address 00:1c:73:00:dc:01
+ip virtual-router mac-address advertisement-interval 40
 ```
 
 ### IP Routing
@@ -7673,33 +7728,34 @@ ASN Notation: asdot
 
 ##### EVPN Peer Groups
 
-| Peer Group | Activate | Route-map In | Route-map Out | Encapsulation |
-| ---------- | -------- | ------------ | ------------- | ------------- |
-| ADDITIONAL-PATH-PG-1 | True |  - | - | default |
-| ADDITIONAL-PATH-PG-2 | True |  - | - | default |
-| ADDITIONAL-PATH-PG-3 | True |  - | - | default |
-| ADDITIONAL-PATH-PG-4 | True |  - | - | default |
-| ADDITIONAL-PATH-PG-5 | True |  - | - | default |
-| ADDITIONAL-PATH-PG-6 | True |  - | - | default |
-| EVPN-OVERLAY | True |  RM-HIDE-AS-PATH | RM-HIDE-AS-PATH | default |
-| EVPN-OVERLAY-PEERS | True |  - | - | vxlan |
-| IPv4-UNDERLAY-PEERS | False |  - | - | default |
-| MLAG-IPv4-UNDERLAY-PEER | False |  - | - | default |
-| RCF_TEST | False |  - | - | default |
-| TEST-ENCAPSULATION | True |  - | - | mpls |
-| TEST-ENCAPSULATION-2 | True |  - | - | path-selection |
+| Peer Group | Activate | Route-map In | Route-map Out | Encapsulation | Next-hop-self Source Interface |
+| ---------- | -------- | ------------ | ------------- | ------------- | ------------------------------ |
+| ADDITIONAL-PATH-PG-1 | True |  - | - | default | - |
+| ADDITIONAL-PATH-PG-2 | True |  - | - | default | - |
+| ADDITIONAL-PATH-PG-3 | True |  - | - | default | - |
+| ADDITIONAL-PATH-PG-4 | True |  - | - | default | - |
+| ADDITIONAL-PATH-PG-5 | True |  - | - | default | - |
+| ADDITIONAL-PATH-PG-6 | True |  - | - | default | - |
+| EVPN-OVERLAY | True |  RM-HIDE-AS-PATH | RM-HIDE-AS-PATH | default | - |
+| EVPN-OVERLAY-PEERS | True |  - | - | vxlan | - |
+| IPv4-UNDERLAY-PEERS | False |  - | - | default | - |
+| MLAG-IPv4-UNDERLAY-PEER | False |  - | - | default | - |
+| RCF_TEST | False |  - | - | default | - |
+| TEST-ENCAPSULATION | True |  - | - | mpls | - |
+| TEST-ENCAPSULATION-2 | True |  - | - | path-selection | - |
+| TEST-ENCAPSULATION-SRC-INTERFACE | True |  - | - | mpls | Loopback3 |
 
 ##### EVPN Neighbors
 
-| Neighbor | Activate | Route-map In | Route-map Out | Encapsulation |
-| -------- | -------- | ------------ | ------------- | ------------- |
-| 10.100.100.1 | True | - | - | default |
-| 10.100.100.2 | True | - | - | default |
-| 10.100.100.3 | True | - | - | default |
-| 10.100.100.4 | True | RM1 | RM2 | path-selection |
-| 10.100.100.5 | True | - | - | mpls |
-| 192.168.255.3 | False | - | - | default |
-| 192.168.255.4 | False | - | - | mpls |
+| Neighbor | Activate | Route-map In | Route-map Out | Encapsulation | Next-hop-self Source Interface |
+| -------- | -------- | ------------ | ------------- | ------------- | ------------------------------ |
+| 10.100.100.1 | True | - | - | default | - |
+| 10.100.100.2 | True | - | - | default | - |
+| 10.100.100.3 | True | - | - | default | - |
+| 10.100.100.4 | True | RM1 | RM2 | path-selection | - |
+| 10.100.100.5 | True | - | - | mpls | - |
+| 192.168.255.3 | False | - | - | default | - |
+| 192.168.255.4 | False | - | - | mpls | Ethernet1 |
 
 ##### EVPN Neighbor Default Encapsulation
 
@@ -8307,6 +8363,8 @@ router bgp 65101
       neighbor TEST-ENCAPSULATION encapsulation mpls
       neighbor TEST-ENCAPSULATION-2 activate
       neighbor TEST-ENCAPSULATION-2 encapsulation path-selection
+      neighbor TEST-ENCAPSULATION-SRC-INTERFACE activate
+      neighbor TEST-ENCAPSULATION-SRC-INTERFACE encapsulation mpls next-hop-self source-interface Loopback3
       neighbor 10.100.100.1 activate
       neighbor 10.100.100.1 additional-paths receive
       neighbor 10.100.100.1 default-route
@@ -8609,7 +8667,7 @@ router bgp 65101
       bgp additional-paths send ecmp limit 42
       neighbor PATH-SELECTION-PG-1 activate
       neighbor PATH-SELECTION-PG-1 additional-paths receive
-      no neighbor PATH-SELECTION-PG-1 send
+      no neighbor PATH-SELECTION-PG-1 additional-paths send
       neighbor PATH-SELECTION-PG-2 activate
       neighbor PATH-SELECTION-PG-2 additional-paths send backup
       neighbor PATH-SELECTION-PG-3 activate
@@ -10826,6 +10884,15 @@ router segment-security
 | ----------------- | --------- |
 | 200 | ingress |
 
+#### Interfaces Metric Bandwidth
+
+| Interface name | Transmit Bandwidth (Mbps) | Receive Bandwidth (Mbps) |
+| -------------- | ------------------------- | ------------------------ |
+| Ethernet1 | - | 100 |
+| Ethernet2 | - | - |
+| Ethernet3 | 200 | - |
+| Port-Channel4 | 200 | 100 |
+
 #### Path Groups
 
 ##### Path Group PG-1
@@ -10943,6 +11010,18 @@ router segment-security
 router path-selection
    peer dynamic source stun
    tcp mss ceiling ipv4 200 ingress
+   !
+   interface Ethernet1
+      metric bandwidth receive 100 Mbps
+   !
+   interface Ethernet2
+   !
+   interface Ethernet3
+      metric bandwidth transmit 200 Mbps
+   !
+   interface Port-Channel4
+      metric bandwidth transmit 200 Mbps
+      metric bandwidth receive 100 Mbps
    !
    path-group PG-1 id 666
       keepalive interval 200 milliseconds failure-threshold 3 intervals

@@ -48,6 +48,8 @@ management_interfaces:
   gateway: 172.31.0.1
 metadata:
   platform: vEOS-LAB
+  pod_name: L2LS_ISIS
+  fabric_name: L2LS
 port_channel_interfaces:
 - name: Port-Channel1
   description: L2_ISIS-LEAF1_Port-Channel1

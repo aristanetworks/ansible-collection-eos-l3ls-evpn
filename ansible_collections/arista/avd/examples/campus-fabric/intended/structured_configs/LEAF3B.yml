@@ -3167,6 +3167,7 @@ management_interfaces:
   gateway: 172.16.100.1
 metadata:
   platform: cEOSLab
+  fabric_name: DC1_FABRIC
 mlag_configuration:
   domain_id: IDF3_AGG
   local_interface: Vlan4094

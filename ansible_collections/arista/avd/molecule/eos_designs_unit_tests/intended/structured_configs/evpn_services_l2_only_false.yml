@@ -89,6 +89,8 @@ management_interfaces:
   ip_address: 192.168.0.101/24
   type: oob
   gateway: 192.168.200.5
+metadata:
+  fabric_name: EOS_DESIGNS_UNIT_TESTS
 ntp:
   local_interface:
     name: Management1
@@ -325,7 +327,6 @@ router_bgp:
       - address_family: evpn
         route_targets:
         - '12:12'
-    router_id: 192.168.255.109
     redistribute:
       connected:
         enabled: true
@@ -340,7 +341,7 @@ router_bgp:
       - address_family: evpn
         route_targets:
         - '13:13'
-    router_id: 192.168.255.109
+    router_id: 11.11.11.11
     redistribute:
       connected:
         enabled: true

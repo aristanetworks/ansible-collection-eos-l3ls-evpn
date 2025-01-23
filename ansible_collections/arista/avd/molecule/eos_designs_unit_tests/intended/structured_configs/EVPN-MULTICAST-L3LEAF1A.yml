@@ -235,6 +235,7 @@ management_interfaces:
   gateway: 192.168.200.1
 metadata:
   platform: vEOS-LAB
+  fabric_name: EOS_DESIGNS_UNIT_TESTS
 mlag_configuration:
   domain_id: EVPN_MULTICAST_L3LEAF1
   local_interface: Vlan4094

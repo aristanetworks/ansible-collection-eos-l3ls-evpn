@@ -158,6 +158,8 @@ ethernet_interfaces:
 hostname: only-connected-endpoints
 is_deployed: null
 management_api_http: null
+metadata:
+  fabric_name: EOS_DESIGNS_UNIT_TESTS
 port_channel_interfaces:
 - name: Port-Channel1
   description: SERVER_TEST_SERVER_01

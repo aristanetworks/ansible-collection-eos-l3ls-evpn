@@ -52,6 +52,7 @@ management_api_http:
   - name: MGMT
 metadata:
   platform: vEOS-LAB
+  fabric_name: EOS_DESIGNS_UNIT_TESTS
 router_bgp:
   as: '65000'
   router_id: 192.168.42.2

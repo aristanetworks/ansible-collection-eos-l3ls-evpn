@@ -402,6 +402,8 @@ management_interfaces:
   gateway: 192.168.200.5
 metadata:
   platform: 7280R
+  rack: rackC
+  fabric_name: EOS_DESIGNS_UNIT_TESTS
 ntp:
   local_interface:
     name: Management99
@@ -528,9 +530,21 @@ prefix_lists:
 - name: PL-LOOPBACKS-EVPN-OVERLAY
   sequence_numbers:
   - sequence: 10
-    action: permit 192.168.255.0/24 eq 32
+    action: permit 192.168.255.0/25 eq 32
   - sequence: 20
-    action: permit 192.168.254.0/24 eq 32
+    action: permit 192.168.255.128/26 eq 32
+  - sequence: 30
+    action: permit 192.168.255.192/29 eq 32
+  - sequence: 40
+    action: permit 192.168.255.200/32 eq 32
+  - sequence: 50
+    action: permit 192.168.254.0/25 eq 32
+  - sequence: 60
+    action: permit 192.168.254.128/26 eq 32
+  - sequence: 70
+    action: permit 192.168.254.192/29 eq 32
+  - sequence: 80
+    action: permit 192.168.254.200/32 eq 32
 route_maps:
 - name: RM-CONN-2-BGP
   sequence_numbers:
@@ -746,7 +760,6 @@ router_bgp:
       - address_family: evpn
         route_targets:
         - '100000:12'
-    router_id: 192.168.255.10
     redistribute:
       connected:
         enabled: true
@@ -761,7 +774,7 @@ router_bgp:
       - address_family: evpn
         route_targets:
         - '100000:13'
-    router_id: 192.168.255.10
+    router_id: 11.11.11.11
     redistribute:
       connected:
         enabled: true
@@ -879,7 +892,7 @@ router_ospf:
   - id: 16
     vrf: Tenant_A_OSPF
     passive_interface_default: true
-    router_id: 192.168.255.10
+    router_id: 10.255.11.10
     no_passive_interfaces:
     - Ethernet22
     - Ethernet23

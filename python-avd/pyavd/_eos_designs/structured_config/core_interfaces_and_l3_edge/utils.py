@@ -12,7 +12,7 @@ from typing import TYPE_CHECKING, TypeVar
 from pyavd._eos_cli_config_gen.schema import EosCliConfigGen
 from pyavd._eos_designs.schema import EosDesigns
 from pyavd._errors import AristaAvdInvalidInputsError, AristaAvdMissingVariableError
-from pyavd._utils import default
+from pyavd._utils import default, get_ip_from_pool
 
 if TYPE_CHECKING:
     from . import AvdStructuredConfigCoreInterfacesAndL3Edge
@@ -72,25 +72,21 @@ class UtilsMixin:
             return p2p_link
 
         if p2p_link.subnet:
-            # Resolve ip from subnet
-            subnet = ip_network(p2p_link.subnet, strict=False)
+            # Resolve IPs from subnet
+            network = ip_network(p2p_link.subnet, strict=False)
+            p2p_link.ip.extend([f"{ip}/{network.prefixlen}" for ip in islice(network.hosts(), 2)])
 
-        elif not p2p_link.ip_pool or not p2p_link.id or not self.inputs_data.p2p_links_ip_pools:
-            # Subnet not set and not possible to resolve from pool. Returning original
-            return p2p_link
-        else:
-            # Resolving subnet from pool
-            if p2p_link.ip_pool not in self.inputs_data.p2p_links_ip_pools:
-                return p2p_link
+        elif p2p_link.ip_pool and p2p_link.id and p2p_link.ip_pool in self.inputs_data.p2p_links_ip_pools:
+            # Subnet not set but we have what we need to resolve IPs from pool.
             ip_pool = self.inputs_data.p2p_links_ip_pools[p2p_link.ip_pool]
             if not ip_pool.ipv4_pool:
+                # The pool was missing ipv4_pool so we give up.
                 return p2p_link
-            subnet = next(iter(islice(ip_network(ip_pool.ipv4_pool).subnets(new_prefix=ip_pool.prefix_size), p2p_link.id - 1, p2p_link.id)))
 
-        # hosts() return an iterator of all hosts in subnet.
-        # islice() return a generator with only the first two iterations of hosts.
-        # List comprehension runs through the generator creating string from each.
-        p2p_link.ip = [f"{ip}/{subnet.prefixlen}" for ip in islice(subnet.hosts(), 2)]
+            p2p_link.ip.extend(
+                [f"{get_ip_from_pool(ip_pool.ipv4_pool, ip_pool.prefix_size, p2p_link.id - 1, host_offset)}/{ip_pool.prefix_size}" for host_offset in [0, 1]]
+            )
+
         return p2p_link
 
     def _get_p2p_data(self: AvdStructuredConfigCoreInterfacesAndL3Edge, p2p_link: T_P2pLinksItem) -> dict:
