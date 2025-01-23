@@ -109,7 +109,7 @@ For more information please read the [WAN how-to guide](./how-to/wan.md).
 ## Fabric topology hierarchy
 
 <div style="text-align:center">
-  <img src="../../../media/5-stage-topology.gif" alt="5 stage topology"/>
+  <img src="../../../../../../docs/_media/5-stage-topology.gif" alt="5 stage topology"/>
 </div>
 
 As per the diagram above, the topology hierarchy is the following:
@@ -745,7 +745,7 @@ The following underlay routing protocols are supported:
       - The port-channel towards the L2 switch will be assigned to this trunk group only
       - Add `UPLINK` Trunk Group to all vlans on the L2 Switch and assign this to the uplink port-channel
 
-    ![Figure: Enable Trunk Groups](../../../media/enable_trunk_groups.png)
+    ![Figure: Enable Trunk Groups](../../../../../../docs/_media/enable_trunk_groups.png)
 
     While it is recommended for consistency to set `enable_trunk_groups` for all devices in the fabric,
     it can also be set in group_vars or host_vars since trunk-groups are only local to a switch.
@@ -761,7 +761,7 @@ The following underlay routing protocols are supported:
     Using the figure under [Details on `enable_trunk_groups`](#details-on-enable_trunk_groups) as basis
     enabling with feature would remove the unmatched trunk groups like this:
 
-    ![Figure: Enable only_local_vlan_trunk_groups](../../../media/only_local_vlan_trunk_groups.png)
+    ![Figure: Enable only_local_vlan_trunk_groups](../../../../../../docs/_media/only_local_vlan_trunk_groups.png)
 
 --8<--
 roles/eos_designs/docs/tables/fabric-settings.md

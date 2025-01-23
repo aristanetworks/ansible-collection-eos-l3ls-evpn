@@ -93,13 +93,13 @@ Across all designs, the following functionality is provided:
 **5 Stage topology example:**
 
 <div style="text-align:center">
-  <img src="../../media/5-stage-topology.gif" alt="5 Stage topology example"/>
+  <img src="../../../../../docs/_media/5-stage-topology.gif" alt="5 Stage topology example"/>
 </div>
 
 **Disaggregated topology example:**
 
 <div style="text-align:center">
-  <img src="../../media/dissag-topology.gif" alt="Disaggregated topology example"/>
+  <img src="../../../../../docs/_media/dissag-topology.gif" alt="Disaggregated topology example"/>
 </div>
 
 ### Layer 2 Leaf Spine
@@ -115,7 +115,7 @@ Across all designs, the following functionality is provided:
 **L2LS topology example:**
 
 <div style="text-align:center">
-  <img src="../../media/l2ls-topology.svg" alt="L2LS topology example"/>
+  <img src="../../../../../docs/_media/l2ls-topology.svg" alt="L2LS topology example"/>
 </div>
 
 ### MPLS Core with MPLS EVPN, VPN-IPv4, VPN-IPv6
@@ -130,7 +130,7 @@ Across all designs, the following functionality is provided:
 **MPLS topology example:**
 
 <div style="text-align:center">
-  <img src="../../media/mpls-topology.svg" alt="MPLS topology example"/>
+  <img src="../../../../../docs/_media/mpls-topology.svg" alt="MPLS topology example"/>
 </div>
 
 ### WAN AutoVPN / CV Pathfinder
@@ -143,7 +143,7 @@ Across all designs, the following functionality is provided:
 **WAN topology example:**
 
 <div style="text-align:center">
-  <img src="../../media/wan-topology.svg" alt="WAN topology example"/>
+  <img src="../../../../../docs/_media/wan-topology.svg" alt="WAN topology example"/>
 </div>
 
 ## Requirements
