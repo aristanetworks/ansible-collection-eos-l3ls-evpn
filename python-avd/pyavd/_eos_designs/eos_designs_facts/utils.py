@@ -8,10 +8,9 @@ from functools import cached_property
 from hashlib import sha256
 from typing import TYPE_CHECKING
 
-from j2filters import list_compress, range_expand
-
 from pyavd._eos_designs.avdfacts import AvdFacts
 from pyavd._utils import default
+from pyavd.j2filters import list_compress, range_expand
 
 if TYPE_CHECKING:
     from pyavd._eos_designs.schema import EosDesigns
@@ -34,7 +33,7 @@ class UtilsMixin(AvdFacts):
         as primary MLAG switch.
         """
         # On the MLAG Secondary use short-esi from MLAG primary
-        if self.shared_utils.mlag_role == "secondary" and (peer_short_esi := self.shared_utils.mlag_peer_facts._short_esi) is not None:
+        if self.shared_utils.mlag_role == "secondary" and (peer_short_esi := self.shared_utils.mlag_peer_facts_cls._short_esi) is not None:
             return peer_short_esi
         short_esi = self.shared_utils.node_config.short_esi
         if short_esi == "auto":
@@ -118,7 +117,7 @@ class UtilsMixin(AvdFacts):
         vlans = set()
         trunk_groups = set()
         for fabric_switch in self.shared_utils.all_fabric_devices:
-            fabric_switch_facts = self.shared_utils.get_peer_facts(fabric_switch, required=True)
+            fabric_switch_facts = self.shared_utils.get_peer_facts_cls(fabric_switch)
             if fabric_switch_facts.shared_utils.uplink_type == "port-channel" and self.shared_utils.hostname in fabric_switch_facts.uplink_peers:
                 fabric_switch_endpoint_vlans, fabric_switch_endpoint_trunk_groups = fabric_switch_facts._endpoint_vlans_and_trunk_groups
                 vlans.update(fabric_switch_endpoint_vlans)
@@ -136,9 +135,7 @@ class UtilsMixin(AvdFacts):
         if not self.shared_utils.mlag:
             return set(), set()
 
-        mlag_peer_facts = self.shared_utils.mlag_peer_facts
-
-        return mlag_peer_facts._endpoint_vlans_and_trunk_groups
+        return self.shared_utils.mlag_peer_facts_cls._endpoint_vlans_and_trunk_groups
 
     @cached_property
     def _endpoint_vlans_and_trunk_groups(self) -> tuple[set, set]:

@@ -4,12 +4,11 @@
 from __future__ import annotations
 
 from functools import lru_cache
-from typing import TYPE_CHECKING, Any
-
-from _eos_designs.schema import EosDesigns
+from typing import TYPE_CHECKING, Any, cast
 
 from pyavd._eos_designs.avdfacts import AvdFacts
 from pyavd._eos_designs.eos_designs_facts import EosDesignsFacts
+from pyavd._eos_designs.schema import EosDesigns
 from pyavd._errors import AristaAvdError, AristaAvdInvalidInputsError
 from pyavd._utils import get, template_var
 
@@ -86,11 +85,7 @@ class UtilsMixin(AvdFacts):
         return self._get_peer_facts(peer_name, required=False)
 
     def get_peer_facts(self, peer_name: str) -> EosDesignsFacts | dict:
-        peer_facts = self._get_peer_facts(peer_name, required=True)
-        if not peer_facts or isinstance(peer_facts, EosDesignsFacts):
-            msg = "Expected peer_facts to be a dict."
-            raise AristaAvdError(msg)
-        return peer_facts
+        return cast(EosDesignsFacts | dict, self._get_peer_facts(peer_name, required=True))
 
     def _get_peer_facts(self, peer_name: str, required: bool = True) -> EosDesignsFacts | dict | None:
         """

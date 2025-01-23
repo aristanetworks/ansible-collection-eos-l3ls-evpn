@@ -8,11 +8,9 @@ from functools import cached_property
 from re import fullmatch as re_fullmatch
 from typing import TYPE_CHECKING
 
-from _utils import append_if_not_duplicate, get_item
-
 from pyavd._eos_designs.structured_config.structured_config_generator import StructuredConfigGenerator
 from pyavd._errors import AristaAvdError, AristaAvdInvalidInputsError
-from pyavd._utils import default, get, get_ip_from_ip_prefix
+from pyavd._utils import append_if_not_duplicate, default, get, get_ip_from_ip_prefix, get_item
 from pyavd._utils.format_string import AvdStringFormatter
 from pyavd._utils.strip_empties import strip_empties_from_dict, strip_empties_from_list
 from pyavd.j2filters import natural_sort

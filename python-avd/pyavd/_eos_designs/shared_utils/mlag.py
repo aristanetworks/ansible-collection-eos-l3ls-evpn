@@ -120,6 +120,11 @@ class MlagMixin(UtilsMixin):
         return self.get_peer_facts(self.mlag_peer)
 
     @cached_property
+    def mlag_peer_facts_cls(self) -> EosDesignsFacts:
+        """Should only be called from eos_designs_facts."""
+        return self.get_peer_facts_cls(self.mlag_peer)
+
+    @cached_property
     def mlag_peer_mgmt_ip(self) -> str | None:
         if (mlag_peer_mgmt_ip := self.get_mlag_peer_fact("mgmt_ip", required=False)) is None:
             return None

@@ -5,7 +5,7 @@ from __future__ import annotations
 
 from functools import cached_property
 
-from pyavd._eos_designs.structured_config import StructuredConfigGenerator
+from pyavd._eos_designs.structured_config.structured_config_generator import StructuredConfigGenerator
 from pyavd._errors import AristaAvdError
 from pyavd._utils import get, strip_empties_from_dict
 from pyavd.j2filters import natural_sort

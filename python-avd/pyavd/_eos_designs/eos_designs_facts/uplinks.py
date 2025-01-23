@@ -47,7 +47,7 @@ class UplinksMixin(UtilsMixin):
 
         if self.shared_utils.mlag_role == "secondary":
             # MLAG Secondary
-            peer_uplink_port_channel_id = self.shared_utils.mlag_peer_facts._uplink_port_channel_id
+            peer_uplink_port_channel_id = self.shared_utils.mlag_peer_facts_cls._uplink_port_channel_id
             # check that port-channel IDs are the same as on primary
             if uplink_port_channel_id is not None and uplink_port_channel_id != peer_uplink_port_channel_id:
                 msg = (
@@ -86,7 +86,7 @@ class UplinksMixin(UtilsMixin):
 
         if self.shared_utils.mlag_role == "secondary":
             # MLAG Secondary
-            peer_uplink_switch_port_channel_id = self.shared_utils.mlag_peer_facts._uplink_switch_port_channel_id
+            peer_uplink_switch_port_channel_id = self.shared_utils.mlag_peer_facts_cls._uplink_switch_port_channel_id
             # check that port-channel IDs are the same as on primary
             if uplink_switch_port_channel_id is not None and uplink_switch_port_channel_id != peer_uplink_switch_port_channel_id:
                 msg = (
@@ -102,7 +102,7 @@ class UplinksMixin(UtilsMixin):
             uplink_switch_port_channel_id = int("".join(re.findall(r"\d", self.shared_utils.uplink_switch_interfaces[0])))
 
         # produce an error if the uplink switch is MLAG and port-channel ID is above 2000
-        uplink_switch_facts = self.shared_utils.get_peer_facts(self.shared_utils.uplink_switches[0], required=True)
+        uplink_switch_facts = self.shared_utils.get_peer_facts_cls(self.shared_utils.uplink_switches[0])
 
         if uplink_switch_facts.shared_utils.mlag and not 1 <= uplink_switch_port_channel_id <= 2000:
             msg = f"'uplink_switch_port_channel_id' must be between 1 and 2000 for MLAG switches. Got '{uplink_switch_port_channel_id}'."
@@ -165,7 +165,7 @@ class UplinksMixin(UtilsMixin):
 
     def _get_p2p_uplink(self, uplink_index: int, uplink_interface: str, uplink_switch: str, uplink_switch_interface: str) -> dict:
         """Return a single uplink dictionary for uplink_type p2p."""
-        uplink_switch_facts = self.shared_utils.get_peer_facts(uplink_switch, required=True)
+        uplink_switch_facts = self.shared_utils.get_peer_facts_cls(uplink_switch)
         uplink = {
             "interface": uplink_interface,
             "peer": uplink_switch,
@@ -211,7 +211,7 @@ class UplinksMixin(UtilsMixin):
 
     def _get_port_channel_uplink(self, uplink_index: int, uplink_interface: str, uplink_switch: str, uplink_switch_interface: str) -> dict:
         """Return a single uplink dictionary for uplink_type port-channel."""
-        uplink_switch_facts = self.shared_utils.get_peer_facts(uplink_switch, required=True)
+        uplink_switch_facts = self.shared_utils.get_peer_facts_cls(uplink_switch)
 
         # Reusing get_l2_uplink
         uplink = self._get_l2_uplink(uplink_index, uplink_interface, uplink_switch, uplink_switch_interface)
@@ -227,7 +227,7 @@ class UplinksMixin(UtilsMixin):
             uplink["node_group"] = self.shared_utils.group
 
             # Updating unique_uplink_switches with our mlag peer's uplink switches
-            unique_uplink_switches.update(self.shared_utils.mlag_peer_facts.shared_utils.uplink_switches)
+            unique_uplink_switches.update(self.shared_utils.mlag_peer_facts_cls.shared_utils.uplink_switches)
 
         # Only enable mlag for this port-channel on the uplink switch if there are multiple unique uplink switches
         uplink["peer_mlag"] = len(unique_uplink_switches) > 1
@@ -245,7 +245,7 @@ class UplinksMixin(UtilsMixin):
         uplink_switch_interface: str,
     ) -> dict:
         """Return a single uplink dictionary for an L2 uplink. Reused for both uplink_type port-channel, lan and TODO: lan-port-channel."""
-        uplink_switch_facts = self.shared_utils.get_peer_facts(uplink_switch, required=True)
+        uplink_switch_facts = self.shared_utils.get_peer_facts_cls(uplink_switch)
         uplink = {
             "interface": uplink_interface,
             "peer": uplink_switch,
@@ -302,7 +302,7 @@ class UplinksMixin(UtilsMixin):
 
     def _get_p2p_vrfs_uplink(self, uplink_index: int, uplink_interface: str, uplink_switch: str, uplink_switch_interface: str) -> dict:
         """Return a single uplink dictionary for uplink_type p2p-vrfs."""
-        uplink_switch_facts = self.shared_utils.get_peer_facts(uplink_switch, required=True)
+        uplink_switch_facts = self.shared_utils.get_peer_facts_cls(uplink_switch)
 
         # Reusing regular p2p logic for main interface.
         uplink = self._get_p2p_uplink(uplink_index, uplink_interface, uplink_switch, uplink_switch_interface)
@@ -381,7 +381,7 @@ class UplinksMixin(UtilsMixin):
 
         vrfs = set()
         for uplink_switch in self.uplink_peers:
-            uplink_switch_facts = self.shared_utils.get_peer_facts(uplink_switch)
+            uplink_switch_facts = self.shared_utils.get_peer_facts_cls(uplink_switch)
             vrfs.update(uplink_switch_facts.shared_utils.vrfs)
 
         return natural_sort(vrfs) or None

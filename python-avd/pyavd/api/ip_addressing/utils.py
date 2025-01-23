@@ -121,8 +121,8 @@ class UtilsMixin(AvdFacts):
         """
         uplink_switch_interface = self.shared_utils.uplink_switch_interfaces[uplink_switch_index]
         uplink_switch = self.shared_utils.uplink_switches[uplink_switch_index]
-        peer_facts = self.shared_utils.get_peer_facts(uplink_switch, required=True)
-        downlink_pools = get(peer_facts, "downlink_pools")
+        peer_facts = self.shared_utils.get_peer_facts(uplink_switch)
+        downlink_pools = peer_facts.get("downlink_pools")
 
         if not downlink_pools:
             return (None, None)

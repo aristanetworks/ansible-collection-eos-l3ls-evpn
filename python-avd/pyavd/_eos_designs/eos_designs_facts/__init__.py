@@ -84,7 +84,7 @@ class EosDesignsFacts(MlagMixin, OverlayMixin, WanMixin, UplinksMixin, VlansMixi
                 raise AristaAvdError(msg)
 
             if self.shared_utils.mlag is True:
-                peer_eos_designs_facts: EosDesignsFacts = self.shared_utils.mlag_peer_facts
+                peer_eos_designs_facts = self.shared_utils.mlag_peer_facts_cls
                 if self.shared_utils.overlay_rd_type_admin_subfield == peer_eos_designs_facts.shared_utils.overlay_rd_type_admin_subfield:
                     msg = "For MLAG devices Route Distinguisher must be unique when 'evpn_multicast: True' since it will create a multi-vtep configuration."
                     raise AristaAvdError(msg)
