@@ -3,7 +3,8 @@ fabric_ip_addressing:
 l3leaf:
   defaults:
     mlag_peer_address_family: ipv6
-    mlag_peer_ipv6_pool: 2001:DB8::/56
+    # Testing using multiple prefixes and ranges to represent 2001:DB8::/56
+    mlag_peer_ipv6_pool: 2001:DB8::-2001:DB8::007f:ffff:ffff:ffff:ffff, 2001:DB8:0:80::/57
     mlag_peer_l3_ipv4_pool: 10.10.224.0/24
     loopback_ipv4_pool: 192.168.255.0/24
     loopback_ipv4_offset: 32

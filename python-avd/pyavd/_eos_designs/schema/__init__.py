@@ -955,7 +955,7 @@ class EosDesigns(EosDesignsRootModel):
             name: str
             """P2P pool name."""
             ipv4_pool: str | None
-            """IPv4 address/Mask."""
+            """Comma separated list of prefixes (IPv4 address/Mask) or ranges (IPv4_address-IPv4_address)."""
             prefix_size: int
             """
             Subnet mask size.
@@ -982,7 +982,7 @@ class EosDesigns(EosDesignsRootModel):
 
                     Args:
                         name: P2P pool name.
-                        ipv4_pool: IPv4 address/Mask.
+                        ipv4_pool: Comma separated list of prefixes (IPv4 address/Mask) or ranges (IPv4_address-IPv4_address).
                         prefix_size: Subnet mask size.
                         _custom_data: _custom_data
 
@@ -2946,6 +2946,7 @@ class EosDesigns(EosDesignsRootModel):
             "connected_endpoints": {"type": bool, "default": False},
             "topology_csv": {"type": bool, "default": False},
             "p2p_links_csv": {"type": bool, "default": False},
+            "toc": {"type": bool, "default": True},
             "_custom_data": {"type": dict},
         }
         enable: bool
@@ -2974,6 +2975,12 @@ class EosDesigns(EosDesignsRootModel):
 
         Default value: `False`
         """
+        toc: bool
+        """
+        Generate the table of content(TOC) on fabric documentation.
+
+        Default value: `True`
+        """
         _custom_data: dict[str, Any]
 
         if TYPE_CHECKING:
@@ -2985,6 +2992,7 @@ class EosDesigns(EosDesignsRootModel):
                 connected_endpoints: bool | UndefinedType = Undefined,
                 topology_csv: bool | UndefinedType = Undefined,
                 p2p_links_csv: bool | UndefinedType = Undefined,
+                toc: bool | UndefinedType = Undefined,
                 _custom_data: dict[str, Any] | UndefinedType = Undefined,
             ) -> None:
                 """
@@ -3001,12 +3009,16 @@ class EosDesigns(EosDesignsRootModel):
                        cluttering documentation for projects with thousands of endpoints.
                     topology_csv: Generate Topology CSV with all interfaces towards other devices.
                     p2p_links_csv: Generate P2P links CSV with all routed point-to-point links between devices.
+                    toc: Generate the table of content(TOC) on fabric documentation.
                     _custom_data: _custom_data
 
                 """
 
     class EventHandlers(EosCliConfigGen.EventHandlers):
         pass
+
+    class EventMonitor(EosCliConfigGen.EventMonitor):
+        """Subclass of AvdModel."""
 
     class EvpnHostflapDetection(AvdModel):
         """Subclass of AvdModel."""
@@ -5099,7 +5111,7 @@ class EosDesigns(EosDesignsRootModel):
             name: str
             """P2P pool name."""
             ipv4_pool: str | None
-            """IPv4 address/Mask."""
+            """Comma separated list of prefixes (IPv4 address/Mask) or ranges (IPv4_address-IPv4_address)."""
             prefix_size: int
             """
             Subnet mask size.
@@ -5126,7 +5138,7 @@ class EosDesigns(EosDesignsRootModel):
 
                     Args:
                         name: P2P pool name.
-                        ipv4_pool: IPv4 address/Mask.
+                        ipv4_pool: Comma separated list of prefixes (IPv4 address/Mask) or ranges (IPv4_address-IPv4_address).
                         prefix_size: Subnet mask size.
                         _custom_data: _custom_data
 
@@ -6842,6 +6854,9 @@ class EosDesigns(EosDesignsRootModel):
 
     L3InterfaceProfiles._item_type = L3InterfaceProfilesItem
 
+    class LoadInterval(EosCliConfigGen.LoadInterval):
+        """Subclass of AvdModel."""
+
     class LocalUsers(EosCliConfigGen.LocalUsers):
         pass
 
@@ -6953,6 +6968,11 @@ class EosDesigns(EosDesignsRootModel):
             """Subclass of AvdList with `str` items."""
 
         Switches._item_type = str
+
+        class Platforms(AvdList[str]):
+            """Subclass of AvdList with `str` items."""
+
+        Platforms._item_type = str
 
         class SwitchPorts(AvdList[str]):
             """Subclass of AvdList with `str` items."""
@@ -8134,6 +8154,7 @@ class EosDesigns(EosDesignsRootModel):
 
         _fields: ClassVar[dict] = {
             "switches": {"type": Switches},
+            "platforms": {"type": Platforms},
             "switch_ports": {"type": SwitchPorts},
             "description": {"type": str},
             "endpoint": {"type": str},
@@ -8179,6 +8200,25 @@ class EosDesigns(EosDesignsRootModel):
 
 
         Subclass of AvdList with `str` items.
+        """
+        platforms: Platforms
+        """
+        Regex matching the full platform name of one or more switches. If used in combination with switch
+        hostname matching, both criteria must match for configuration.
+        If you need to add custom platforms
+        to match specific port quantities, create them under `custom_platform_settings`. Entries under
+        `custom_platform_settings` should
+        match the platform match criteria.
+
+        For example, `720XP-48Y6`
+        would require a custom platform type:
+
+        platforms:
+          - 720XP
+          - 720XP-48Y6
+
+        Subclass of AvdList with
+        `str` items.
         """
         switch_ports: SwitchPorts
         """
@@ -8370,6 +8410,7 @@ class EosDesigns(EosDesignsRootModel):
                 self,
                 *,
                 switches: Switches | UndefinedType = Undefined,
+                platforms: Platforms | UndefinedType = Undefined,
                 switch_ports: SwitchPorts | UndefinedType = Undefined,
                 description: str | None | UndefinedType = Undefined,
                 endpoint: str | None | UndefinedType = Undefined,
@@ -8421,6 +8462,23 @@ class EosDesigns(EosDesignsRootModel):
 
 
                        Subclass of AvdList with `str` items.
+                    platforms:
+                       Regex matching the full platform name of one or more switches. If used in combination with switch
+                       hostname matching, both criteria must match for configuration.
+                       If you need to add custom platforms
+                       to match specific port quantities, create them under `custom_platform_settings`. Entries under
+                       `custom_platform_settings` should
+                       match the platform match criteria.
+
+                       For example, `720XP-48Y6`
+                       would require a custom platform type:
+
+                       platforms:
+                         - 720XP
+                         - 720XP-48Y6
+
+                       Subclass of AvdList with
+                       `str` items.
                     switch_ports:
                        List of ranges using AVD range_expand syntax.
                        For example:
@@ -12696,6 +12754,9 @@ class EosDesigns(EosDesignsRootModel):
 
                 """
 
+    class QueueMonitorStreaming(EosCliConfigGen.QueueMonitorStreaming):
+        """Subclass of AvdModel."""
+
     class Redundancy(AvdModel):
         """Subclass of AvdModel."""
 
@@ -15850,6 +15911,9 @@ class EosDesigns(EosDesignsRootModel):
                     _custom_data: _custom_data
 
                 """
+
+    class UnsupportedTransceiver(EosCliConfigGen.ServiceUnsupportedTransceiver):
+        """Subclass of AvdModel."""
 
     class UplinkPtp(AvdModel):
         """Subclass of AvdModel."""
@@ -20821,10 +20885,11 @@ class EosDesigns(EosDesignsRootModel):
                         """
                         ha_ipv4_pool: str | None
                         """
-                        IP address pool used for WAN HA connectivity.
-                        IP is derived from the node ID.
-                        Not used for uplink
-                        interfaces.
+                        Comma separated list of prefixes (IPv4 address/Mask) or ranges (IPv4_address-IPv4_address).
+                        The IPv4
+                        subnet used for direct WAN HA connectivity is derived from this pool based on the node ID of the
+                        first WAN router.
+                        Not used for uplink interfaces.
                         """
                         max_ha_interfaces: int | None
                         """
@@ -20888,10 +20953,11 @@ class EosDesigns(EosDesignsRootModel):
 
                                        Subclass of AvdList with `str` items.
                                     ha_ipv4_pool:
-                                       IP address pool used for WAN HA connectivity.
-                                       IP is derived from the node ID.
-                                       Not used for uplink
-                                       interfaces.
+                                       Comma separated list of prefixes (IPv4 address/Mask) or ranges (IPv4_address-IPv4_address).
+                                       The IPv4
+                                       subnet used for direct WAN HA connectivity is derived from this pool based on the node ID of the
+                                       first WAN router.
+                                       Not used for uplink interfaces.
                                     max_ha_interfaces:
                                        Number of parallel links towards HA switches.
                                        Can be used to reserve IP addresses for future
@@ -21625,7 +21691,12 @@ class EosDesigns(EosDesignsRootModel):
                     `vtep` or `underlay_router` is true for the `node_type_key` definition.
                     """
                     uplink_ipv4_pool: str | None
-                    """IPv4 subnet to use to connect to uplink switches."""
+                    """
+                    Comma separated list of prefixes (IPv4 address/Mask) or ranges (IPv4_address-IPv4_address).
+                    IPv4
+                    subnets used to connect to uplink switches will be deviced from this pool based on the node id,
+                    uplink interface index, 'max_uplink_switches' and 'max_parallel_uplinks'.
+                    """
                     uplink_interfaces: UplinkInterfaces
                     """
                     Local uplink interfaces.
@@ -21818,7 +21889,12 @@ class EosDesigns(EosDesignsRootModel):
                     Default value: `0`
                     """
                     loopback_ipv4_pool: str | None
-                    """IPv4 subnet for Loopback0 allocation."""
+                    """
+                    Comma separated list of prefixes (IPv4 address/Mask) or ranges (IPv4_address-IPv4_address).
+                    The IPv4
+                    address used for Loopback0 will be derived from this pool based on the node id and
+                    'loopback_ipv4_offset'.
+                    """
                     loopback_ipv4_address: str | None
                     """
                     IPv4 address without mask for Loopback0.
@@ -21826,7 +21902,11 @@ class EosDesigns(EosDesignsRootModel):
                     Note: AVD does not check for validity of the IPv4 address and does not catch duplicates.
                     """
                     vtep_loopback_ipv4_pool: str | None
-                    """IPv4 subnet for VTEP-Loopback allocation."""
+                    """
+                    Comma separated list of prefixes (IPv4 address/Mask) or ranges (IPv4_address-IPv4_address). The IPv4
+                    address used for VTEP-Loopback will be derived from this pool based on the node id and
+                    'loopback_ipv4_offset'.
+                    """
                     vtep_loopback_ipv4_address: str | None
                     """
                     IPv4 address without mask for VTEP-Loopback.
@@ -21838,19 +21918,23 @@ class EosDesigns(EosDesignsRootModel):
                     loopback_ipv4_offset: int
                     """
                     Offset all assigned loopback IP addresses.
-                    Required when the < loopback_ipv4_pool > is same for 2
-                    different node_types (like spine and l3leaf) to avoid over-lapping IPs.
+                    Required when the 'loopback_ipv4_pool' is the same for 2
+                    different node_types (like spine and l3leaf) to avoid overlapping IPs.
                     For example, set the minimum
                     offset l3leaf.defaults.loopback_ipv4_offset: < total # spine switches > or vice versa.
 
                     Default value: `0`
                     """
                     loopback_ipv6_pool: str | None
-                    """IPv6 subnet for Loopback0 allocation."""
+                    """
+                    Comma separated list of prefixes (IPv6 address/Mask) or ranges (IPv6_address-IPv6_address). The IPv6
+                    address used for Loopback0 will be derived from this pool based on the node id and
+                    'loopback_ipv6_offset'.
+                    """
                     loopback_ipv6_offset: int
                     """
                     Offset all assigned loopback IPv6 addresses.
-                    Required when the < loopback_ipv6_pool > is same for 2
+                    Required when the 'loopback_ipv6_pool' is same for 2
                     different node_types (like spine and l3leaf) to avoid overlapping IPs.
                     For example, set the minimum
                     offset l3leaf.defaults.loopback_ipv6_offset: < total # spine switches > or vice versa.
@@ -21983,9 +22067,12 @@ class EosDesigns(EosDesignsRootModel):
                     """
                     mlag_peer_l3_ipv4_pool: str | None
                     """
-                    IP address pool used for MLAG underlay L3 peering. IP is derived from the node id.
-                    Required when
-                    MLAG leafs present in topology and they are using a separate L3 peering VLAN.
+                    Comma separated list of prefixes (IPv4 address/Mask) or ranges (IPv4_address-IPv4_address).
+                    The IPv4
+                    subnet used for MLAG underlay L3 peering is derived from this pool based on the node id of the first
+                    MLAG switch.
+                    Required when MLAG leafs present in topology and they are using a separate L3 peering
+                    VLAN.
                     """
                     mlag_peer_vlan: int
                     """
@@ -22006,15 +22093,19 @@ class EosDesigns(EosDesignsRootModel):
                     """
                     mlag_peer_ipv4_pool: str | None
                     """
-                    IPv4 address pool used for MLAG Peer Link (control link). IP is derived from the node id.
-                    Required
-                    for MLAG leafs when `mlag_peer_address_family` is `ipv4` (default).
+                    Comma separated list of prefixes (IPv4 address/Mask) or ranges (IPv4_address-IPv4_address).
+                    The IPv4
+                    address used for MLAG Peer Link (control link) is derived from this pool based on the node id of the
+                    first MLAG switch.
+                    Required for MLAG leafs when `mlag_peer_address_family` is `ipv4` (default).
                     """
                     mlag_peer_ipv6_pool: str | None
                     """
-                    IPv6 address pool used for MLAG Peer Link (control link). IP is derived from the node id.
-                    Required
-                    for MLAG leafs when `mlag_peer_address_family` is `ipv6`.
+                    Comma separated list of prefixes (IPv6 address/Mask) or ranges (IPv6_address-IPv6_address).
+                    The IPv6
+                    address used for MLAG Peer Link (control link) is derived from this pool based on the node id of the
+                    first MLAG switch.
+                    Required for MLAG leafs when `mlag_peer_address_family` is `ipv6`.
                     """
                     mlag_port_channel_id: int | None
                     """
@@ -22487,7 +22578,11 @@ class EosDesigns(EosDesignsRootModel):
                                    Override the default `uplink_type` set at the `node_type_key` level.
                                    `uplink_type` must be "p2p" if
                                    `vtep` or `underlay_router` is true for the `node_type_key` definition.
-                                uplink_ipv4_pool: IPv4 subnet to use to connect to uplink switches.
+                                uplink_ipv4_pool:
+                                   Comma separated list of prefixes (IPv4 address/Mask) or ranges (IPv4_address-IPv4_address).
+                                   IPv4
+                                   subnets used to connect to uplink switches will be deviced from this pool based on the node id,
+                                   uplink interface index, 'max_uplink_switches' and 'max_parallel_uplinks'.
                                 uplink_interfaces:
                                    Local uplink interfaces.
                                    Each list item supports range syntax that can be expanded into a list of
@@ -22630,12 +22725,19 @@ class EosDesigns(EosDesignsRootModel):
                                 isis_maximum_paths: Number of path to configure in ECMP for ISIS.
                                 is_type: Overrides `isis_default_is_type`.
                                 node_sid_base: Node-SID base for isis-sr underlay variants. Combined with node id to generate ISIS-SR node-SID.
-                                loopback_ipv4_pool: IPv4 subnet for Loopback0 allocation.
+                                loopback_ipv4_pool:
+                                   Comma separated list of prefixes (IPv4 address/Mask) or ranges (IPv4_address-IPv4_address).
+                                   The IPv4
+                                   address used for Loopback0 will be derived from this pool based on the node id and
+                                   'loopback_ipv4_offset'.
                                 loopback_ipv4_address:
                                    IPv4 address without mask for Loopback0.
                                    When set, it takes precedence over `loopback_ipv4_pool`.
                                    Note: AVD does not check for validity of the IPv4 address and does not catch duplicates.
-                                vtep_loopback_ipv4_pool: IPv4 subnet for VTEP-Loopback allocation.
+                                vtep_loopback_ipv4_pool:
+                                   Comma separated list of prefixes (IPv4 address/Mask) or ranges (IPv4_address-IPv4_address). The IPv4
+                                   address used for VTEP-Loopback will be derived from this pool based on the node id and
+                                   'loopback_ipv4_offset'.
                                 vtep_loopback_ipv4_address:
                                    IPv4 address without mask for VTEP-Loopback.
                                    When set, it takes precedence over
@@ -22644,14 +22746,17 @@ class EosDesigns(EosDesignsRootModel):
                                    catch duplicates.
                                 loopback_ipv4_offset:
                                    Offset all assigned loopback IP addresses.
-                                   Required when the < loopback_ipv4_pool > is same for 2
-                                   different node_types (like spine and l3leaf) to avoid over-lapping IPs.
+                                   Required when the 'loopback_ipv4_pool' is the same for 2
+                                   different node_types (like spine and l3leaf) to avoid overlapping IPs.
                                    For example, set the minimum
                                    offset l3leaf.defaults.loopback_ipv4_offset: < total # spine switches > or vice versa.
-                                loopback_ipv6_pool: IPv6 subnet for Loopback0 allocation.
+                                loopback_ipv6_pool:
+                                   Comma separated list of prefixes (IPv6 address/Mask) or ranges (IPv6_address-IPv6_address). The IPv6
+                                   address used for Loopback0 will be derived from this pool based on the node id and
+                                   'loopback_ipv6_offset'.
                                 loopback_ipv6_offset:
                                    Offset all assigned loopback IPv6 addresses.
-                                   Required when the < loopback_ipv6_pool > is same for 2
+                                   Required when the 'loopback_ipv6_pool' is same for 2
                                    different node_types (like spine and l3leaf) to avoid overlapping IPs.
                                    For example, set the minimum
                                    offset l3leaf.defaults.loopback_ipv6_offset: < total # spine switches > or vice versa.
@@ -22736,9 +22841,12 @@ class EosDesigns(EosDesignsRootModel):
                                    If set to 0 or the same vlan as mlag_peer_vlan, the
                                    mlag_peer_vlan will be used for L3 peering.
                                 mlag_peer_l3_ipv4_pool:
-                                   IP address pool used for MLAG underlay L3 peering. IP is derived from the node id.
-                                   Required when
-                                   MLAG leafs present in topology and they are using a separate L3 peering VLAN.
+                                   Comma separated list of prefixes (IPv4 address/Mask) or ranges (IPv4_address-IPv4_address).
+                                   The IPv4
+                                   subnet used for MLAG underlay L3 peering is derived from this pool based on the node id of the first
+                                   MLAG switch.
+                                   Required when MLAG leafs present in topology and they are using a separate L3 peering
+                                   VLAN.
                                 mlag_peer_vlan: MLAG Peer Link (control link) SVI interface id.
                                 mlag_peer_link_allowed_vlans: mlag_peer_link_allowed_vlans
                                 mlag_peer_address_family:
@@ -22748,13 +22856,17 @@ class EosDesigns(EosDesignsRootModel):
                                    Note: `ipv6` is not supported in combination with a common MLAG peer link VLAN
                                    (ex. `mlag_peer_l3_vlan` set to 4094).
                                 mlag_peer_ipv4_pool:
-                                   IPv4 address pool used for MLAG Peer Link (control link). IP is derived from the node id.
-                                   Required
-                                   for MLAG leafs when `mlag_peer_address_family` is `ipv4` (default).
+                                   Comma separated list of prefixes (IPv4 address/Mask) or ranges (IPv4_address-IPv4_address).
+                                   The IPv4
+                                   address used for MLAG Peer Link (control link) is derived from this pool based on the node id of the
+                                   first MLAG switch.
+                                   Required for MLAG leafs when `mlag_peer_address_family` is `ipv4` (default).
                                 mlag_peer_ipv6_pool:
-                                   IPv6 address pool used for MLAG Peer Link (control link). IP is derived from the node id.
-                                   Required
-                                   for MLAG leafs when `mlag_peer_address_family` is `ipv6`.
+                                   Comma separated list of prefixes (IPv6 address/Mask) or ranges (IPv6_address-IPv6_address).
+                                   The IPv6
+                                   address used for MLAG Peer Link (control link) is derived from this pool based on the node id of the
+                                   first MLAG switch.
+                                   Required for MLAG leafs when `mlag_peer_address_family` is `ipv6`.
                                 mlag_port_channel_id:
                                    If not set, the mlag port-channel id is generated based on the digits of the first interface present
                                    in 'mlag_interfaces'.
@@ -22991,7 +23103,12 @@ class EosDesigns(EosDesignsRootModel):
                                 "_custom_data": {"type": dict},
                             }
                             ipv4_pool: str | None
-                            """IPv4 pool from which subnets will be allocated for links to downlink switches."""
+                            """
+                            Comma separated list of prefixes (IPv4 address/Mask) or ranges (IPv4_address-IPv4_address).
+                            IPv4
+                            subnets used for links to downlink switches will be derived from this pool based on index the peer's
+                            uplink interface's index in 'downlink_interfaces'.
+                            """
                             downlink_interfaces: DownlinkInterfaces
                             """
                             List of downlink interfaces or ranges of interfaces to use this pool. The index of the interface in
@@ -23018,7 +23135,11 @@ class EosDesigns(EosDesignsRootModel):
                                     Subclass of AvdModel.
 
                                     Args:
-                                        ipv4_pool: IPv4 pool from which subnets will be allocated for links to downlink switches.
+                                        ipv4_pool:
+                                           Comma separated list of prefixes (IPv4 address/Mask) or ranges (IPv4_address-IPv4_address).
+                                           IPv4
+                                           subnets used for links to downlink switches will be derived from this pool based on index the peer's
+                                           uplink interface's index in 'downlink_interfaces'.
                                         downlink_interfaces:
                                            List of downlink interfaces or ranges of interfaces to use this pool. The index of the interface in
                                            this list will determine which subnet will be taken from the pool.
@@ -24299,10 +24420,11 @@ class EosDesigns(EosDesignsRootModel):
                             """
                             ha_ipv4_pool: str | None
                             """
-                            IP address pool used for WAN HA connectivity.
-                            IP is derived from the node ID.
-                            Not used for uplink
-                            interfaces.
+                            Comma separated list of prefixes (IPv4 address/Mask) or ranges (IPv4_address-IPv4_address).
+                            The IPv4
+                            subnet used for direct WAN HA connectivity is derived from this pool based on the node ID of the
+                            first WAN router.
+                            Not used for uplink interfaces.
                             """
                             max_ha_interfaces: int | None
                             """
@@ -24366,10 +24488,11 @@ class EosDesigns(EosDesignsRootModel):
 
                                            Subclass of AvdList with `str` items.
                                         ha_ipv4_pool:
-                                           IP address pool used for WAN HA connectivity.
-                                           IP is derived from the node ID.
-                                           Not used for uplink
-                                           interfaces.
+                                           Comma separated list of prefixes (IPv4 address/Mask) or ranges (IPv4_address-IPv4_address).
+                                           The IPv4
+                                           subnet used for direct WAN HA connectivity is derived from this pool based on the node ID of the
+                                           first WAN router.
+                                           Not used for uplink interfaces.
                                         max_ha_interfaces:
                                            Number of parallel links towards HA switches.
                                            Can be used to reserve IP addresses for future
@@ -25115,7 +25238,12 @@ class EosDesigns(EosDesignsRootModel):
                         `vtep` or `underlay_router` is true for the `node_type_key` definition.
                         """
                         uplink_ipv4_pool: str | None
-                        """IPv4 subnet to use to connect to uplink switches."""
+                        """
+                        Comma separated list of prefixes (IPv4 address/Mask) or ranges (IPv4_address-IPv4_address).
+                        IPv4
+                        subnets used to connect to uplink switches will be deviced from this pool based on the node id,
+                        uplink interface index, 'max_uplink_switches' and 'max_parallel_uplinks'.
+                        """
                         uplink_interfaces: UplinkInterfaces
                         """
                         Local uplink interfaces.
@@ -25308,7 +25436,12 @@ class EosDesigns(EosDesignsRootModel):
                         Default value: `0`
                         """
                         loopback_ipv4_pool: str | None
-                        """IPv4 subnet for Loopback0 allocation."""
+                        """
+                        Comma separated list of prefixes (IPv4 address/Mask) or ranges (IPv4_address-IPv4_address).
+                        The IPv4
+                        address used for Loopback0 will be derived from this pool based on the node id and
+                        'loopback_ipv4_offset'.
+                        """
                         loopback_ipv4_address: str | None
                         """
                         IPv4 address without mask for Loopback0.
@@ -25316,7 +25449,11 @@ class EosDesigns(EosDesignsRootModel):
                         Note: AVD does not check for validity of the IPv4 address and does not catch duplicates.
                         """
                         vtep_loopback_ipv4_pool: str | None
-                        """IPv4 subnet for VTEP-Loopback allocation."""
+                        """
+                        Comma separated list of prefixes (IPv4 address/Mask) or ranges (IPv4_address-IPv4_address). The IPv4
+                        address used for VTEP-Loopback will be derived from this pool based on the node id and
+                        'loopback_ipv4_offset'.
+                        """
                         vtep_loopback_ipv4_address: str | None
                         """
                         IPv4 address without mask for VTEP-Loopback.
@@ -25328,19 +25465,23 @@ class EosDesigns(EosDesignsRootModel):
                         loopback_ipv4_offset: int
                         """
                         Offset all assigned loopback IP addresses.
-                        Required when the < loopback_ipv4_pool > is same for 2
-                        different node_types (like spine and l3leaf) to avoid over-lapping IPs.
+                        Required when the 'loopback_ipv4_pool' is the same for 2
+                        different node_types (like spine and l3leaf) to avoid overlapping IPs.
                         For example, set the minimum
                         offset l3leaf.defaults.loopback_ipv4_offset: < total # spine switches > or vice versa.
 
                         Default value: `0`
                         """
                         loopback_ipv6_pool: str | None
-                        """IPv6 subnet for Loopback0 allocation."""
+                        """
+                        Comma separated list of prefixes (IPv6 address/Mask) or ranges (IPv6_address-IPv6_address). The IPv6
+                        address used for Loopback0 will be derived from this pool based on the node id and
+                        'loopback_ipv6_offset'.
+                        """
                         loopback_ipv6_offset: int
                         """
                         Offset all assigned loopback IPv6 addresses.
-                        Required when the < loopback_ipv6_pool > is same for 2
+                        Required when the 'loopback_ipv6_pool' is same for 2
                         different node_types (like spine and l3leaf) to avoid overlapping IPs.
                         For example, set the minimum
                         offset l3leaf.defaults.loopback_ipv6_offset: < total # spine switches > or vice versa.
@@ -25473,9 +25614,12 @@ class EosDesigns(EosDesignsRootModel):
                         """
                         mlag_peer_l3_ipv4_pool: str | None
                         """
-                        IP address pool used for MLAG underlay L3 peering. IP is derived from the node id.
-                        Required when
-                        MLAG leafs present in topology and they are using a separate L3 peering VLAN.
+                        Comma separated list of prefixes (IPv4 address/Mask) or ranges (IPv4_address-IPv4_address).
+                        The IPv4
+                        subnet used for MLAG underlay L3 peering is derived from this pool based on the node id of the first
+                        MLAG switch.
+                        Required when MLAG leafs present in topology and they are using a separate L3 peering
+                        VLAN.
                         """
                         mlag_peer_vlan: int
                         """
@@ -25496,15 +25640,19 @@ class EosDesigns(EosDesignsRootModel):
                         """
                         mlag_peer_ipv4_pool: str | None
                         """
-                        IPv4 address pool used for MLAG Peer Link (control link). IP is derived from the node id.
-                        Required
-                        for MLAG leafs when `mlag_peer_address_family` is `ipv4` (default).
+                        Comma separated list of prefixes (IPv4 address/Mask) or ranges (IPv4_address-IPv4_address).
+                        The IPv4
+                        address used for MLAG Peer Link (control link) is derived from this pool based on the node id of the
+                        first MLAG switch.
+                        Required for MLAG leafs when `mlag_peer_address_family` is `ipv4` (default).
                         """
                         mlag_peer_ipv6_pool: str | None
                         """
-                        IPv6 address pool used for MLAG Peer Link (control link). IP is derived from the node id.
-                        Required
-                        for MLAG leafs when `mlag_peer_address_family` is `ipv6`.
+                        Comma separated list of prefixes (IPv6 address/Mask) or ranges (IPv6_address-IPv6_address).
+                        The IPv6
+                        address used for MLAG Peer Link (control link) is derived from this pool based on the node id of the
+                        first MLAG switch.
+                        Required for MLAG leafs when `mlag_peer_address_family` is `ipv6`.
                         """
                         mlag_port_channel_id: int | None
                         """
@@ -25986,7 +26134,11 @@ class EosDesigns(EosDesignsRootModel):
                                        Override the default `uplink_type` set at the `node_type_key` level.
                                        `uplink_type` must be "p2p" if
                                        `vtep` or `underlay_router` is true for the `node_type_key` definition.
-                                    uplink_ipv4_pool: IPv4 subnet to use to connect to uplink switches.
+                                    uplink_ipv4_pool:
+                                       Comma separated list of prefixes (IPv4 address/Mask) or ranges (IPv4_address-IPv4_address).
+                                       IPv4
+                                       subnets used to connect to uplink switches will be deviced from this pool based on the node id,
+                                       uplink interface index, 'max_uplink_switches' and 'max_parallel_uplinks'.
                                     uplink_interfaces:
                                        Local uplink interfaces.
                                        Each list item supports range syntax that can be expanded into a list of
@@ -26129,12 +26281,19 @@ class EosDesigns(EosDesignsRootModel):
                                     isis_maximum_paths: Number of path to configure in ECMP for ISIS.
                                     is_type: Overrides `isis_default_is_type`.
                                     node_sid_base: Node-SID base for isis-sr underlay variants. Combined with node id to generate ISIS-SR node-SID.
-                                    loopback_ipv4_pool: IPv4 subnet for Loopback0 allocation.
+                                    loopback_ipv4_pool:
+                                       Comma separated list of prefixes (IPv4 address/Mask) or ranges (IPv4_address-IPv4_address).
+                                       The IPv4
+                                       address used for Loopback0 will be derived from this pool based on the node id and
+                                       'loopback_ipv4_offset'.
                                     loopback_ipv4_address:
                                        IPv4 address without mask for Loopback0.
                                        When set, it takes precedence over `loopback_ipv4_pool`.
                                        Note: AVD does not check for validity of the IPv4 address and does not catch duplicates.
-                                    vtep_loopback_ipv4_pool: IPv4 subnet for VTEP-Loopback allocation.
+                                    vtep_loopback_ipv4_pool:
+                                       Comma separated list of prefixes (IPv4 address/Mask) or ranges (IPv4_address-IPv4_address). The IPv4
+                                       address used for VTEP-Loopback will be derived from this pool based on the node id and
+                                       'loopback_ipv4_offset'.
                                     vtep_loopback_ipv4_address:
                                        IPv4 address without mask for VTEP-Loopback.
                                        When set, it takes precedence over
@@ -26143,14 +26302,17 @@ class EosDesigns(EosDesignsRootModel):
                                        catch duplicates.
                                     loopback_ipv4_offset:
                                        Offset all assigned loopback IP addresses.
-                                       Required when the < loopback_ipv4_pool > is same for 2
-                                       different node_types (like spine and l3leaf) to avoid over-lapping IPs.
+                                       Required when the 'loopback_ipv4_pool' is the same for 2
+                                       different node_types (like spine and l3leaf) to avoid overlapping IPs.
                                        For example, set the minimum
                                        offset l3leaf.defaults.loopback_ipv4_offset: < total # spine switches > or vice versa.
-                                    loopback_ipv6_pool: IPv6 subnet for Loopback0 allocation.
+                                    loopback_ipv6_pool:
+                                       Comma separated list of prefixes (IPv6 address/Mask) or ranges (IPv6_address-IPv6_address). The IPv6
+                                       address used for Loopback0 will be derived from this pool based on the node id and
+                                       'loopback_ipv6_offset'.
                                     loopback_ipv6_offset:
                                        Offset all assigned loopback IPv6 addresses.
-                                       Required when the < loopback_ipv6_pool > is same for 2
+                                       Required when the 'loopback_ipv6_pool' is same for 2
                                        different node_types (like spine and l3leaf) to avoid overlapping IPs.
                                        For example, set the minimum
                                        offset l3leaf.defaults.loopback_ipv6_offset: < total # spine switches > or vice versa.
@@ -26235,9 +26397,12 @@ class EosDesigns(EosDesignsRootModel):
                                        If set to 0 or the same vlan as mlag_peer_vlan, the
                                        mlag_peer_vlan will be used for L3 peering.
                                     mlag_peer_l3_ipv4_pool:
-                                       IP address pool used for MLAG underlay L3 peering. IP is derived from the node id.
-                                       Required when
-                                       MLAG leafs present in topology and they are using a separate L3 peering VLAN.
+                                       Comma separated list of prefixes (IPv4 address/Mask) or ranges (IPv4_address-IPv4_address).
+                                       The IPv4
+                                       subnet used for MLAG underlay L3 peering is derived from this pool based on the node id of the first
+                                       MLAG switch.
+                                       Required when MLAG leafs present in topology and they are using a separate L3 peering
+                                       VLAN.
                                     mlag_peer_vlan: MLAG Peer Link (control link) SVI interface id.
                                     mlag_peer_link_allowed_vlans: mlag_peer_link_allowed_vlans
                                     mlag_peer_address_family:
@@ -26247,13 +26412,17 @@ class EosDesigns(EosDesignsRootModel):
                                        Note: `ipv6` is not supported in combination with a common MLAG peer link VLAN
                                        (ex. `mlag_peer_l3_vlan` set to 4094).
                                     mlag_peer_ipv4_pool:
-                                       IPv4 address pool used for MLAG Peer Link (control link). IP is derived from the node id.
-                                       Required
-                                       for MLAG leafs when `mlag_peer_address_family` is `ipv4` (default).
+                                       Comma separated list of prefixes (IPv4 address/Mask) or ranges (IPv4_address-IPv4_address).
+                                       The IPv4
+                                       address used for MLAG Peer Link (control link) is derived from this pool based on the node id of the
+                                       first MLAG switch.
+                                       Required for MLAG leafs when `mlag_peer_address_family` is `ipv4` (default).
                                     mlag_peer_ipv6_pool:
-                                       IPv6 address pool used for MLAG Peer Link (control link). IP is derived from the node id.
-                                       Required
-                                       for MLAG leafs when `mlag_peer_address_family` is `ipv6`.
+                                       Comma separated list of prefixes (IPv6 address/Mask) or ranges (IPv6_address-IPv6_address).
+                                       The IPv6
+                                       address used for MLAG Peer Link (control link) is derived from this pool based on the node id of the
+                                       first MLAG switch.
+                                       Required for MLAG leafs when `mlag_peer_address_family` is `ipv6`.
                                     mlag_port_channel_id:
                                        If not set, the mlag port-channel id is generated based on the digits of the first interface present
                                        in 'mlag_interfaces'.
@@ -27740,10 +27909,11 @@ class EosDesigns(EosDesignsRootModel):
                         """
                         ha_ipv4_pool: str | None
                         """
-                        IP address pool used for WAN HA connectivity.
-                        IP is derived from the node ID.
-                        Not used for uplink
-                        interfaces.
+                        Comma separated list of prefixes (IPv4 address/Mask) or ranges (IPv4_address-IPv4_address).
+                        The IPv4
+                        subnet used for direct WAN HA connectivity is derived from this pool based on the node ID of the
+                        first WAN router.
+                        Not used for uplink interfaces.
                         """
                         max_ha_interfaces: int | None
                         """
@@ -27807,10 +27977,11 @@ class EosDesigns(EosDesignsRootModel):
 
                                        Subclass of AvdList with `str` items.
                                     ha_ipv4_pool:
-                                       IP address pool used for WAN HA connectivity.
-                                       IP is derived from the node ID.
-                                       Not used for uplink
-                                       interfaces.
+                                       Comma separated list of prefixes (IPv4 address/Mask) or ranges (IPv4_address-IPv4_address).
+                                       The IPv4
+                                       subnet used for direct WAN HA connectivity is derived from this pool based on the node ID of the
+                                       first WAN router.
+                                       Not used for uplink interfaces.
                                     max_ha_interfaces:
                                        Number of parallel links towards HA switches.
                                        Can be used to reserve IP addresses for future
@@ -28559,7 +28730,12 @@ class EosDesigns(EosDesignsRootModel):
                     `vtep` or `underlay_router` is true for the `node_type_key` definition.
                     """
                     uplink_ipv4_pool: str | None
-                    """IPv4 subnet to use to connect to uplink switches."""
+                    """
+                    Comma separated list of prefixes (IPv4 address/Mask) or ranges (IPv4_address-IPv4_address).
+                    IPv4
+                    subnets used to connect to uplink switches will be deviced from this pool based on the node id,
+                    uplink interface index, 'max_uplink_switches' and 'max_parallel_uplinks'.
+                    """
                     uplink_interfaces: UplinkInterfaces
                     """
                     Local uplink interfaces.
@@ -28752,7 +28928,12 @@ class EosDesigns(EosDesignsRootModel):
                     Default value: `0`
                     """
                     loopback_ipv4_pool: str | None
-                    """IPv4 subnet for Loopback0 allocation."""
+                    """
+                    Comma separated list of prefixes (IPv4 address/Mask) or ranges (IPv4_address-IPv4_address).
+                    The IPv4
+                    address used for Loopback0 will be derived from this pool based on the node id and
+                    'loopback_ipv4_offset'.
+                    """
                     loopback_ipv4_address: str | None
                     """
                     IPv4 address without mask for Loopback0.
@@ -28760,7 +28941,11 @@ class EosDesigns(EosDesignsRootModel):
                     Note: AVD does not check for validity of the IPv4 address and does not catch duplicates.
                     """
                     vtep_loopback_ipv4_pool: str | None
-                    """IPv4 subnet for VTEP-Loopback allocation."""
+                    """
+                    Comma separated list of prefixes (IPv4 address/Mask) or ranges (IPv4_address-IPv4_address). The IPv4
+                    address used for VTEP-Loopback will be derived from this pool based on the node id and
+                    'loopback_ipv4_offset'.
+                    """
                     vtep_loopback_ipv4_address: str | None
                     """
                     IPv4 address without mask for VTEP-Loopback.
@@ -28772,19 +28957,23 @@ class EosDesigns(EosDesignsRootModel):
                     loopback_ipv4_offset: int
                     """
                     Offset all assigned loopback IP addresses.
-                    Required when the < loopback_ipv4_pool > is same for 2
-                    different node_types (like spine and l3leaf) to avoid over-lapping IPs.
+                    Required when the 'loopback_ipv4_pool' is the same for 2
+                    different node_types (like spine and l3leaf) to avoid overlapping IPs.
                     For example, set the minimum
                     offset l3leaf.defaults.loopback_ipv4_offset: < total # spine switches > or vice versa.
 
                     Default value: `0`
                     """
                     loopback_ipv6_pool: str | None
-                    """IPv6 subnet for Loopback0 allocation."""
+                    """
+                    Comma separated list of prefixes (IPv6 address/Mask) or ranges (IPv6_address-IPv6_address). The IPv6
+                    address used for Loopback0 will be derived from this pool based on the node id and
+                    'loopback_ipv6_offset'.
+                    """
                     loopback_ipv6_offset: int
                     """
                     Offset all assigned loopback IPv6 addresses.
-                    Required when the < loopback_ipv6_pool > is same for 2
+                    Required when the 'loopback_ipv6_pool' is same for 2
                     different node_types (like spine and l3leaf) to avoid overlapping IPs.
                     For example, set the minimum
                     offset l3leaf.defaults.loopback_ipv6_offset: < total # spine switches > or vice versa.
@@ -28917,9 +29106,12 @@ class EosDesigns(EosDesignsRootModel):
                     """
                     mlag_peer_l3_ipv4_pool: str | None
                     """
-                    IP address pool used for MLAG underlay L3 peering. IP is derived from the node id.
-                    Required when
-                    MLAG leafs present in topology and they are using a separate L3 peering VLAN.
+                    Comma separated list of prefixes (IPv4 address/Mask) or ranges (IPv4_address-IPv4_address).
+                    The IPv4
+                    subnet used for MLAG underlay L3 peering is derived from this pool based on the node id of the first
+                    MLAG switch.
+                    Required when MLAG leafs present in topology and they are using a separate L3 peering
+                    VLAN.
                     """
                     mlag_peer_vlan: int
                     """
@@ -28940,15 +29132,19 @@ class EosDesigns(EosDesignsRootModel):
                     """
                     mlag_peer_ipv4_pool: str | None
                     """
-                    IPv4 address pool used for MLAG Peer Link (control link). IP is derived from the node id.
-                    Required
-                    for MLAG leafs when `mlag_peer_address_family` is `ipv4` (default).
+                    Comma separated list of prefixes (IPv4 address/Mask) or ranges (IPv4_address-IPv4_address).
+                    The IPv4
+                    address used for MLAG Peer Link (control link) is derived from this pool based on the node id of the
+                    first MLAG switch.
+                    Required for MLAG leafs when `mlag_peer_address_family` is `ipv4` (default).
                     """
                     mlag_peer_ipv6_pool: str | None
                     """
-                    IPv6 address pool used for MLAG Peer Link (control link). IP is derived from the node id.
-                    Required
-                    for MLAG leafs when `mlag_peer_address_family` is `ipv6`.
+                    Comma separated list of prefixes (IPv6 address/Mask) or ranges (IPv6_address-IPv6_address).
+                    The IPv6
+                    address used for MLAG Peer Link (control link) is derived from this pool based on the node id of the
+                    first MLAG switch.
+                    Required for MLAG leafs when `mlag_peer_address_family` is `ipv6`.
                     """
                     mlag_port_channel_id: int | None
                     """
@@ -29432,7 +29628,11 @@ class EosDesigns(EosDesignsRootModel):
                                    Override the default `uplink_type` set at the `node_type_key` level.
                                    `uplink_type` must be "p2p" if
                                    `vtep` or `underlay_router` is true for the `node_type_key` definition.
-                                uplink_ipv4_pool: IPv4 subnet to use to connect to uplink switches.
+                                uplink_ipv4_pool:
+                                   Comma separated list of prefixes (IPv4 address/Mask) or ranges (IPv4_address-IPv4_address).
+                                   IPv4
+                                   subnets used to connect to uplink switches will be deviced from this pool based on the node id,
+                                   uplink interface index, 'max_uplink_switches' and 'max_parallel_uplinks'.
                                 uplink_interfaces:
                                    Local uplink interfaces.
                                    Each list item supports range syntax that can be expanded into a list of
@@ -29575,12 +29775,19 @@ class EosDesigns(EosDesignsRootModel):
                                 isis_maximum_paths: Number of path to configure in ECMP for ISIS.
                                 is_type: Overrides `isis_default_is_type`.
                                 node_sid_base: Node-SID base for isis-sr underlay variants. Combined with node id to generate ISIS-SR node-SID.
-                                loopback_ipv4_pool: IPv4 subnet for Loopback0 allocation.
+                                loopback_ipv4_pool:
+                                   Comma separated list of prefixes (IPv4 address/Mask) or ranges (IPv4_address-IPv4_address).
+                                   The IPv4
+                                   address used for Loopback0 will be derived from this pool based on the node id and
+                                   'loopback_ipv4_offset'.
                                 loopback_ipv4_address:
                                    IPv4 address without mask for Loopback0.
                                    When set, it takes precedence over `loopback_ipv4_pool`.
                                    Note: AVD does not check for validity of the IPv4 address and does not catch duplicates.
-                                vtep_loopback_ipv4_pool: IPv4 subnet for VTEP-Loopback allocation.
+                                vtep_loopback_ipv4_pool:
+                                   Comma separated list of prefixes (IPv4 address/Mask) or ranges (IPv4_address-IPv4_address). The IPv4
+                                   address used for VTEP-Loopback will be derived from this pool based on the node id and
+                                   'loopback_ipv4_offset'.
                                 vtep_loopback_ipv4_address:
                                    IPv4 address without mask for VTEP-Loopback.
                                    When set, it takes precedence over
@@ -29589,14 +29796,17 @@ class EosDesigns(EosDesignsRootModel):
                                    catch duplicates.
                                 loopback_ipv4_offset:
                                    Offset all assigned loopback IP addresses.
-                                   Required when the < loopback_ipv4_pool > is same for 2
-                                   different node_types (like spine and l3leaf) to avoid over-lapping IPs.
+                                   Required when the 'loopback_ipv4_pool' is the same for 2
+                                   different node_types (like spine and l3leaf) to avoid overlapping IPs.
                                    For example, set the minimum
                                    offset l3leaf.defaults.loopback_ipv4_offset: < total # spine switches > or vice versa.
-                                loopback_ipv6_pool: IPv6 subnet for Loopback0 allocation.
+                                loopback_ipv6_pool:
+                                   Comma separated list of prefixes (IPv6 address/Mask) or ranges (IPv6_address-IPv6_address). The IPv6
+                                   address used for Loopback0 will be derived from this pool based on the node id and
+                                   'loopback_ipv6_offset'.
                                 loopback_ipv6_offset:
                                    Offset all assigned loopback IPv6 addresses.
-                                   Required when the < loopback_ipv6_pool > is same for 2
+                                   Required when the 'loopback_ipv6_pool' is same for 2
                                    different node_types (like spine and l3leaf) to avoid overlapping IPs.
                                    For example, set the minimum
                                    offset l3leaf.defaults.loopback_ipv6_offset: < total # spine switches > or vice versa.
@@ -29681,9 +29891,12 @@ class EosDesigns(EosDesignsRootModel):
                                    If set to 0 or the same vlan as mlag_peer_vlan, the
                                    mlag_peer_vlan will be used for L3 peering.
                                 mlag_peer_l3_ipv4_pool:
-                                   IP address pool used for MLAG underlay L3 peering. IP is derived from the node id.
-                                   Required when
-                                   MLAG leafs present in topology and they are using a separate L3 peering VLAN.
+                                   Comma separated list of prefixes (IPv4 address/Mask) or ranges (IPv4_address-IPv4_address).
+                                   The IPv4
+                                   subnet used for MLAG underlay L3 peering is derived from this pool based on the node id of the first
+                                   MLAG switch.
+                                   Required when MLAG leafs present in topology and they are using a separate L3 peering
+                                   VLAN.
                                 mlag_peer_vlan: MLAG Peer Link (control link) SVI interface id.
                                 mlag_peer_link_allowed_vlans: mlag_peer_link_allowed_vlans
                                 mlag_peer_address_family:
@@ -29693,13 +29906,17 @@ class EosDesigns(EosDesignsRootModel):
                                    Note: `ipv6` is not supported in combination with a common MLAG peer link VLAN
                                    (ex. `mlag_peer_l3_vlan` set to 4094).
                                 mlag_peer_ipv4_pool:
-                                   IPv4 address pool used for MLAG Peer Link (control link). IP is derived from the node id.
-                                   Required
-                                   for MLAG leafs when `mlag_peer_address_family` is `ipv4` (default).
+                                   Comma separated list of prefixes (IPv4 address/Mask) or ranges (IPv4_address-IPv4_address).
+                                   The IPv4
+                                   address used for MLAG Peer Link (control link) is derived from this pool based on the node id of the
+                                   first MLAG switch.
+                                   Required for MLAG leafs when `mlag_peer_address_family` is `ipv4` (default).
                                 mlag_peer_ipv6_pool:
-                                   IPv6 address pool used for MLAG Peer Link (control link). IP is derived from the node id.
-                                   Required
-                                   for MLAG leafs when `mlag_peer_address_family` is `ipv6`.
+                                   Comma separated list of prefixes (IPv6 address/Mask) or ranges (IPv6_address-IPv6_address).
+                                   The IPv6
+                                   address used for MLAG Peer Link (control link) is derived from this pool based on the node id of the
+                                   first MLAG switch.
+                                   Required for MLAG leafs when `mlag_peer_address_family` is `ipv6`.
                                 mlag_port_channel_id:
                                    If not set, the mlag port-channel id is generated based on the digits of the first interface present
                                    in 'mlag_interfaces'.
@@ -29940,7 +30157,12 @@ class EosDesigns(EosDesignsRootModel):
                             "_custom_data": {"type": dict},
                         }
                         ipv4_pool: str | None
-                        """IPv4 pool from which subnets will be allocated for links to downlink switches."""
+                        """
+                        Comma separated list of prefixes (IPv4 address/Mask) or ranges (IPv4_address-IPv4_address).
+                        IPv4
+                        subnets used for links to downlink switches will be derived from this pool based on index the peer's
+                        uplink interface's index in 'downlink_interfaces'.
+                        """
                         downlink_interfaces: DownlinkInterfaces
                         """
                         List of downlink interfaces or ranges of interfaces to use this pool. The index of the interface in
@@ -29967,7 +30189,11 @@ class EosDesigns(EosDesignsRootModel):
                                 Subclass of AvdModel.
 
                                 Args:
-                                    ipv4_pool: IPv4 pool from which subnets will be allocated for links to downlink switches.
+                                    ipv4_pool:
+                                       Comma separated list of prefixes (IPv4 address/Mask) or ranges (IPv4_address-IPv4_address).
+                                       IPv4
+                                       subnets used for links to downlink switches will be derived from this pool based on index the peer's
+                                       uplink interface's index in 'downlink_interfaces'.
                                     downlink_interfaces:
                                        List of downlink interfaces or ranges of interfaces to use this pool. The index of the interface in
                                        this list will determine which subnet will be taken from the pool.
@@ -31246,10 +31472,11 @@ class EosDesigns(EosDesignsRootModel):
                         """
                         ha_ipv4_pool: str | None
                         """
-                        IP address pool used for WAN HA connectivity.
-                        IP is derived from the node ID.
-                        Not used for uplink
-                        interfaces.
+                        Comma separated list of prefixes (IPv4 address/Mask) or ranges (IPv4_address-IPv4_address).
+                        The IPv4
+                        subnet used for direct WAN HA connectivity is derived from this pool based on the node ID of the
+                        first WAN router.
+                        Not used for uplink interfaces.
                         """
                         max_ha_interfaces: int | None
                         """
@@ -31313,10 +31540,11 @@ class EosDesigns(EosDesignsRootModel):
 
                                        Subclass of AvdList with `str` items.
                                     ha_ipv4_pool:
-                                       IP address pool used for WAN HA connectivity.
-                                       IP is derived from the node ID.
-                                       Not used for uplink
-                                       interfaces.
+                                       Comma separated list of prefixes (IPv4 address/Mask) or ranges (IPv4_address-IPv4_address).
+                                       The IPv4
+                                       subnet used for direct WAN HA connectivity is derived from this pool based on the node ID of the
+                                       first WAN router.
+                                       Not used for uplink interfaces.
                                     max_ha_interfaces:
                                        Number of parallel links towards HA switches.
                                        Can be used to reserve IP addresses for future
@@ -32062,7 +32290,12 @@ class EosDesigns(EosDesignsRootModel):
                     `vtep` or `underlay_router` is true for the `node_type_key` definition.
                     """
                     uplink_ipv4_pool: str | None
-                    """IPv4 subnet to use to connect to uplink switches."""
+                    """
+                    Comma separated list of prefixes (IPv4 address/Mask) or ranges (IPv4_address-IPv4_address).
+                    IPv4
+                    subnets used to connect to uplink switches will be deviced from this pool based on the node id,
+                    uplink interface index, 'max_uplink_switches' and 'max_parallel_uplinks'.
+                    """
                     uplink_interfaces: UplinkInterfaces
                     """
                     Local uplink interfaces.
@@ -32255,7 +32488,12 @@ class EosDesigns(EosDesignsRootModel):
                     Default value: `0`
                     """
                     loopback_ipv4_pool: str | None
-                    """IPv4 subnet for Loopback0 allocation."""
+                    """
+                    Comma separated list of prefixes (IPv4 address/Mask) or ranges (IPv4_address-IPv4_address).
+                    The IPv4
+                    address used for Loopback0 will be derived from this pool based on the node id and
+                    'loopback_ipv4_offset'.
+                    """
                     loopback_ipv4_address: str | None
                     """
                     IPv4 address without mask for Loopback0.
@@ -32263,7 +32501,11 @@ class EosDesigns(EosDesignsRootModel):
                     Note: AVD does not check for validity of the IPv4 address and does not catch duplicates.
                     """
                     vtep_loopback_ipv4_pool: str | None
-                    """IPv4 subnet for VTEP-Loopback allocation."""
+                    """
+                    Comma separated list of prefixes (IPv4 address/Mask) or ranges (IPv4_address-IPv4_address). The IPv4
+                    address used for VTEP-Loopback will be derived from this pool based on the node id and
+                    'loopback_ipv4_offset'.
+                    """
                     vtep_loopback_ipv4_address: str | None
                     """
                     IPv4 address without mask for VTEP-Loopback.
@@ -32275,19 +32517,23 @@ class EosDesigns(EosDesignsRootModel):
                     loopback_ipv4_offset: int
                     """
                     Offset all assigned loopback IP addresses.
-                    Required when the < loopback_ipv4_pool > is same for 2
-                    different node_types (like spine and l3leaf) to avoid over-lapping IPs.
+                    Required when the 'loopback_ipv4_pool' is the same for 2
+                    different node_types (like spine and l3leaf) to avoid overlapping IPs.
                     For example, set the minimum
                     offset l3leaf.defaults.loopback_ipv4_offset: < total # spine switches > or vice versa.
 
                     Default value: `0`
                     """
                     loopback_ipv6_pool: str | None
-                    """IPv6 subnet for Loopback0 allocation."""
+                    """
+                    Comma separated list of prefixes (IPv6 address/Mask) or ranges (IPv6_address-IPv6_address). The IPv6
+                    address used for Loopback0 will be derived from this pool based on the node id and
+                    'loopback_ipv6_offset'.
+                    """
                     loopback_ipv6_offset: int
                     """
                     Offset all assigned loopback IPv6 addresses.
-                    Required when the < loopback_ipv6_pool > is same for 2
+                    Required when the 'loopback_ipv6_pool' is same for 2
                     different node_types (like spine and l3leaf) to avoid overlapping IPs.
                     For example, set the minimum
                     offset l3leaf.defaults.loopback_ipv6_offset: < total # spine switches > or vice versa.
@@ -32420,9 +32666,12 @@ class EosDesigns(EosDesignsRootModel):
                     """
                     mlag_peer_l3_ipv4_pool: str | None
                     """
-                    IP address pool used for MLAG underlay L3 peering. IP is derived from the node id.
-                    Required when
-                    MLAG leafs present in topology and they are using a separate L3 peering VLAN.
+                    Comma separated list of prefixes (IPv4 address/Mask) or ranges (IPv4_address-IPv4_address).
+                    The IPv4
+                    subnet used for MLAG underlay L3 peering is derived from this pool based on the node id of the first
+                    MLAG switch.
+                    Required when MLAG leafs present in topology and they are using a separate L3 peering
+                    VLAN.
                     """
                     mlag_peer_vlan: int
                     """
@@ -32443,15 +32692,19 @@ class EosDesigns(EosDesignsRootModel):
                     """
                     mlag_peer_ipv4_pool: str | None
                     """
-                    IPv4 address pool used for MLAG Peer Link (control link). IP is derived from the node id.
-                    Required
-                    for MLAG leafs when `mlag_peer_address_family` is `ipv4` (default).
+                    Comma separated list of prefixes (IPv4 address/Mask) or ranges (IPv4_address-IPv4_address).
+                    The IPv4
+                    address used for MLAG Peer Link (control link) is derived from this pool based on the node id of the
+                    first MLAG switch.
+                    Required for MLAG leafs when `mlag_peer_address_family` is `ipv4` (default).
                     """
                     mlag_peer_ipv6_pool: str | None
                     """
-                    IPv6 address pool used for MLAG Peer Link (control link). IP is derived from the node id.
-                    Required
-                    for MLAG leafs when `mlag_peer_address_family` is `ipv6`.
+                    Comma separated list of prefixes (IPv6 address/Mask) or ranges (IPv6_address-IPv6_address).
+                    The IPv6
+                    address used for MLAG Peer Link (control link) is derived from this pool based on the node id of the
+                    first MLAG switch.
+                    Required for MLAG leafs when `mlag_peer_address_family` is `ipv6`.
                     """
                     mlag_port_channel_id: int | None
                     """
@@ -32933,7 +33186,11 @@ class EosDesigns(EosDesignsRootModel):
                                    Override the default `uplink_type` set at the `node_type_key` level.
                                    `uplink_type` must be "p2p" if
                                    `vtep` or `underlay_router` is true for the `node_type_key` definition.
-                                uplink_ipv4_pool: IPv4 subnet to use to connect to uplink switches.
+                                uplink_ipv4_pool:
+                                   Comma separated list of prefixes (IPv4 address/Mask) or ranges (IPv4_address-IPv4_address).
+                                   IPv4
+                                   subnets used to connect to uplink switches will be deviced from this pool based on the node id,
+                                   uplink interface index, 'max_uplink_switches' and 'max_parallel_uplinks'.
                                 uplink_interfaces:
                                    Local uplink interfaces.
                                    Each list item supports range syntax that can be expanded into a list of
@@ -33076,12 +33333,19 @@ class EosDesigns(EosDesignsRootModel):
                                 isis_maximum_paths: Number of path to configure in ECMP for ISIS.
                                 is_type: Overrides `isis_default_is_type`.
                                 node_sid_base: Node-SID base for isis-sr underlay variants. Combined with node id to generate ISIS-SR node-SID.
-                                loopback_ipv4_pool: IPv4 subnet for Loopback0 allocation.
+                                loopback_ipv4_pool:
+                                   Comma separated list of prefixes (IPv4 address/Mask) or ranges (IPv4_address-IPv4_address).
+                                   The IPv4
+                                   address used for Loopback0 will be derived from this pool based on the node id and
+                                   'loopback_ipv4_offset'.
                                 loopback_ipv4_address:
                                    IPv4 address without mask for Loopback0.
                                    When set, it takes precedence over `loopback_ipv4_pool`.
                                    Note: AVD does not check for validity of the IPv4 address and does not catch duplicates.
-                                vtep_loopback_ipv4_pool: IPv4 subnet for VTEP-Loopback allocation.
+                                vtep_loopback_ipv4_pool:
+                                   Comma separated list of prefixes (IPv4 address/Mask) or ranges (IPv4_address-IPv4_address). The IPv4
+                                   address used for VTEP-Loopback will be derived from this pool based on the node id and
+                                   'loopback_ipv4_offset'.
                                 vtep_loopback_ipv4_address:
                                    IPv4 address without mask for VTEP-Loopback.
                                    When set, it takes precedence over
@@ -33090,14 +33354,17 @@ class EosDesigns(EosDesignsRootModel):
                                    catch duplicates.
                                 loopback_ipv4_offset:
                                    Offset all assigned loopback IP addresses.
-                                   Required when the < loopback_ipv4_pool > is same for 2
-                                   different node_types (like spine and l3leaf) to avoid over-lapping IPs.
+                                   Required when the 'loopback_ipv4_pool' is the same for 2
+                                   different node_types (like spine and l3leaf) to avoid overlapping IPs.
                                    For example, set the minimum
                                    offset l3leaf.defaults.loopback_ipv4_offset: < total # spine switches > or vice versa.
-                                loopback_ipv6_pool: IPv6 subnet for Loopback0 allocation.
+                                loopback_ipv6_pool:
+                                   Comma separated list of prefixes (IPv6 address/Mask) or ranges (IPv6_address-IPv6_address). The IPv6
+                                   address used for Loopback0 will be derived from this pool based on the node id and
+                                   'loopback_ipv6_offset'.
                                 loopback_ipv6_offset:
                                    Offset all assigned loopback IPv6 addresses.
-                                   Required when the < loopback_ipv6_pool > is same for 2
+                                   Required when the 'loopback_ipv6_pool' is same for 2
                                    different node_types (like spine and l3leaf) to avoid overlapping IPs.
                                    For example, set the minimum
                                    offset l3leaf.defaults.loopback_ipv6_offset: < total # spine switches > or vice versa.
@@ -33182,9 +33449,12 @@ class EosDesigns(EosDesignsRootModel):
                                    If set to 0 or the same vlan as mlag_peer_vlan, the
                                    mlag_peer_vlan will be used for L3 peering.
                                 mlag_peer_l3_ipv4_pool:
-                                   IP address pool used for MLAG underlay L3 peering. IP is derived from the node id.
-                                   Required when
-                                   MLAG leafs present in topology and they are using a separate L3 peering VLAN.
+                                   Comma separated list of prefixes (IPv4 address/Mask) or ranges (IPv4_address-IPv4_address).
+                                   The IPv4
+                                   subnet used for MLAG underlay L3 peering is derived from this pool based on the node id of the first
+                                   MLAG switch.
+                                   Required when MLAG leafs present in topology and they are using a separate L3 peering
+                                   VLAN.
                                 mlag_peer_vlan: MLAG Peer Link (control link) SVI interface id.
                                 mlag_peer_link_allowed_vlans: mlag_peer_link_allowed_vlans
                                 mlag_peer_address_family:
@@ -33194,13 +33464,17 @@ class EosDesigns(EosDesignsRootModel):
                                    Note: `ipv6` is not supported in combination with a common MLAG peer link VLAN
                                    (ex. `mlag_peer_l3_vlan` set to 4094).
                                 mlag_peer_ipv4_pool:
-                                   IPv4 address pool used for MLAG Peer Link (control link). IP is derived from the node id.
-                                   Required
-                                   for MLAG leafs when `mlag_peer_address_family` is `ipv4` (default).
+                                   Comma separated list of prefixes (IPv4 address/Mask) or ranges (IPv4_address-IPv4_address).
+                                   The IPv4
+                                   address used for MLAG Peer Link (control link) is derived from this pool based on the node id of the
+                                   first MLAG switch.
+                                   Required for MLAG leafs when `mlag_peer_address_family` is `ipv4` (default).
                                 mlag_peer_ipv6_pool:
-                                   IPv6 address pool used for MLAG Peer Link (control link). IP is derived from the node id.
-                                   Required
-                                   for MLAG leafs when `mlag_peer_address_family` is `ipv6`.
+                                   Comma separated list of prefixes (IPv6 address/Mask) or ranges (IPv6_address-IPv6_address).
+                                   The IPv6
+                                   address used for MLAG Peer Link (control link) is derived from this pool based on the node id of the
+                                   first MLAG switch.
+                                   Required for MLAG leafs when `mlag_peer_address_family` is `ipv6`.
                                 mlag_port_channel_id:
                                    If not set, the mlag port-channel id is generated based on the digits of the first interface present
                                    in 'mlag_interfaces'.
@@ -34416,7 +34690,7 @@ class EosDesigns(EosDesignsRootModel):
                     }
                     enabled: bool | None
                     underlay_l2_multicast_group_ipv4_pool: str | None
-                    """IPv4_address/Mask."""
+                    """Comma separated list of prefixes (IPv4 address/Mask) or ranges (IPv4_address-IPv4_address)."""
                     underlay_l2_multicast_group_ipv4_pool_offset: int
                     """Default value: `0`"""
                     fast_leave: bool | None
@@ -34456,7 +34730,7 @@ class EosDesigns(EosDesignsRootModel):
 
                             Args:
                                 enabled: enabled
-                                underlay_l2_multicast_group_ipv4_pool: IPv4_address/Mask.
+                                underlay_l2_multicast_group_ipv4_pool: Comma separated list of prefixes (IPv4 address/Mask) or ranges (IPv4_address-IPv4_address).
                                 underlay_l2_multicast_group_ipv4_pool_offset: underlay_l2_multicast_group_ipv4_pool_offset
                                 fast_leave: Enable IGMP snooping fast-leave feature for all SVIs and l2vlans within the Tenant.
                                 always_redistribute_igmp:
@@ -34537,7 +34811,7 @@ class EosDesigns(EosDesignsRootModel):
                     }
                     enabled: bool | None
                     evpn_underlay_l3_multicast_group_ipv4_pool: str
-                    """IPv4_address/Mask."""
+                    """Comma separated list of prefixes (IPv4 address/Mask) or ranges (IPv4_address-IPv4_address)."""
                     evpn_underlay_l3_multicast_group_ipv4_pool_offset: int
                     """Default value: `0`"""
                     evpn_peg: EvpnPeg
@@ -34571,7 +34845,7 @@ class EosDesigns(EosDesignsRootModel):
 
                             Args:
                                 enabled: enabled
-                                evpn_underlay_l3_multicast_group_ipv4_pool: IPv4_address/Mask.
+                                evpn_underlay_l3_multicast_group_ipv4_pool: Comma separated list of prefixes (IPv4 address/Mask) or ranges (IPv4_address-IPv4_address).
                                 evpn_underlay_l3_multicast_group_ipv4_pool_offset: evpn_underlay_l3_multicast_group_ipv4_pool_offset
                                 evpn_peg:
                                    For each group of nodes, allow configuration of EVPN PEG options.
@@ -34788,9 +35062,9 @@ class EosDesigns(EosDesignsRootModel):
                             pod: str
                             """POD name."""
                             ipv4_pool: str | None
-                            """IPv4_address/Mask."""
+                            """Comma separated list of prefixes (IPv4 address/Mask) or ranges (IPv4_address-IPv4_address)."""
                             ipv6_pool: str | None
-                            """IPv6_address/Mask."""
+                            """Comma separated list of prefixes (IPv6 address/Mask) or ranges (IPv6_address-IPv6_address)."""
                             _custom_data: dict[str, Any]
 
                             if TYPE_CHECKING:
@@ -34811,8 +35085,8 @@ class EosDesigns(EosDesignsRootModel):
 
                                     Args:
                                         pod: POD name.
-                                        ipv4_pool: IPv4_address/Mask.
-                                        ipv6_pool: IPv6_address/Mask.
+                                        ipv4_pool: Comma separated list of prefixes (IPv4 address/Mask) or ranges (IPv4_address-IPv4_address).
+                                        ipv6_pool: Comma separated list of prefixes (IPv6 address/Mask) or ranges (IPv6_address-IPv6_address).
                                         _custom_data: _custom_data
 
                                     """
@@ -35013,7 +35287,7 @@ class EosDesigns(EosDesignsRootModel):
                         _fields: ClassVar[dict] = {
                             "enabled": {"type": bool},
                             "process_id": {"type": int},
-                            "router_id": {"type": str},
+                            "router_id": {"type": str, "default": "main_router_id"},
                             "max_lsa": {"type": int},
                             "bfd": {"type": bool, "default": False},
                             "redistribute_bgp": {"type": RedistributeBgp},
@@ -35024,8 +35298,20 @@ class EosDesigns(EosDesignsRootModel):
                         enabled: bool | None
                         process_id: int | None
                         """If not set, "vrf_id" will be used."""
-                        router_id: str | None
-                        """If not set, switch router_id will be used."""
+                        router_id: str
+                        """
+                        Router ID to use for OSPF in this VRF.
+                        This can be an IPv4 address, "main_router_id", "none" or
+                        "diagnostic_loopback".
+                        - "main_router_id" will use the IP address of Loopback0 or the common `router
+                        general` Router ID if `use_router_general_for_router_id` is set."
+                        - "none" will not configure a OSPF
+                        Router ID for this VRF. EOS will use the main OSPF Router ID.
+                        - "diagnostic_loopback" will use the
+                        IP address of the VRF Diagnostic Loopback interface.
+
+                        Default value: `"main_router_id"`
+                        """
                         max_lsa: int | None
                         bfd: bool
                         """Default value: `False`"""
@@ -35044,7 +35330,7 @@ class EosDesigns(EosDesignsRootModel):
                                 *,
                                 enabled: bool | None | UndefinedType = Undefined,
                                 process_id: int | None | UndefinedType = Undefined,
-                                router_id: str | None | UndefinedType = Undefined,
+                                router_id: str | UndefinedType = Undefined,
                                 max_lsa: int | None | UndefinedType = Undefined,
                                 bfd: bool | UndefinedType = Undefined,
                                 redistribute_bgp: RedistributeBgp | UndefinedType = Undefined,
@@ -35061,7 +35347,16 @@ class EosDesigns(EosDesignsRootModel):
                                 Args:
                                     enabled: enabled
                                     process_id: If not set, "vrf_id" will be used.
-                                    router_id: If not set, switch router_id will be used.
+                                    router_id:
+                                       Router ID to use for OSPF in this VRF.
+                                       This can be an IPv4 address, "main_router_id", "none" or
+                                       "diagnostic_loopback".
+                                       - "main_router_id" will use the IP address of Loopback0 or the common `router
+                                       general` Router ID if `use_router_general_for_router_id` is set."
+                                       - "none" will not configure a OSPF
+                                       Router ID for this VRF. EOS will use the main OSPF Router ID.
+                                       - "diagnostic_loopback" will use the
+                                       IP address of the VRF Diagnostic Loopback interface.
                                     max_lsa: max_lsa
                                     bfd: bfd
                                     redistribute_bgp: Subclass of AvdModel.
@@ -37748,6 +38043,7 @@ class EosDesigns(EosDesignsRootModel):
 
                         _fields: ClassVar[dict] = {
                             "enabled": {"type": bool},
+                            "router_id": {"type": str, "default": "main_router_id"},
                             "raw_eos_cli": {"type": str},
                             "structured_config": {"type": StructuredConfig},
                             "_custom_data": {"type": dict},
@@ -37763,6 +38059,20 @@ class EosDesigns(EosDesignsRootModel):
                         This is useful for L2LS designs with VRFs.
                         - If uplink type is `p2p-vrfs` *and* the vrf is included
                         in the uplink VRFs, BGP will be configured for it.
+                        """
+                        router_id: str
+                        """
+                        Router ID to use for BGP in this VRF.
+                        This can be an IPv4 address, "main_router_id", "none" or
+                        "diagnostic_loopback".
+                        - "main_router_id" will use the IP address of Loopback0 or the common `router
+                        general` Router ID if `use_router_general_for_router_id` is set."
+                        - "none" will not configure a BGP
+                        Router ID for this VRF. EOS will use the main BGP Router ID.
+                        - "diagnostic_loopback" will use the IP
+                        address of the VRF Diagnostic Loopback interface.
+
+                        Default value: `"main_router_id"`
                         """
                         raw_eos_cli: str | None
                         """EOS CLI rendered directly on the Router BGP, VRF definition in the final EOS configuration."""
@@ -37781,6 +38091,7 @@ class EosDesigns(EosDesignsRootModel):
                                 self,
                                 *,
                                 enabled: bool | None | UndefinedType = Undefined,
+                                router_id: str | UndefinedType = Undefined,
                                 raw_eos_cli: str | None | UndefinedType = Undefined,
                                 structured_config: StructuredConfig | UndefinedType = Undefined,
                                 _custom_data: dict[str, Any] | UndefinedType = Undefined,
@@ -37802,6 +38113,16 @@ class EosDesigns(EosDesignsRootModel):
                                        This is useful for L2LS designs with VRFs.
                                        - If uplink type is `p2p-vrfs` *and* the vrf is included
                                        in the uplink VRFs, BGP will be configured for it.
+                                    router_id:
+                                       Router ID to use for BGP in this VRF.
+                                       This can be an IPv4 address, "main_router_id", "none" or
+                                       "diagnostic_loopback".
+                                       - "main_router_id" will use the IP address of Loopback0 or the common `router
+                                       general` Router ID if `use_router_general_for_router_id` is set."
+                                       - "none" will not configure a BGP
+                                       Router ID for this VRF. EOS will use the main BGP Router ID.
+                                       - "diagnostic_loopback" will use the IP
+                                       address of the VRF Diagnostic Loopback interface.
                                     raw_eos_cli: EOS CLI rendered directly on the Router BGP, VRF definition in the final EOS configuration.
                                     structured_config:
                                        Custom structured config added under router_bgp.vrfs.[name=<vrf>] for eos_cli_config_gen.
@@ -38848,12 +39169,11 @@ class EosDesigns(EosDesignsRootModel):
                     """
                     mlag_ibgp_peering_ipv4_pool: str | None
                     """
-                    IPv4_address/Mask
-                    The subnet used for iBGP peering in the VRF.
-                    Each MLAG pair will be assigned a
-                    subnet based on the ID of the primary MLAG switch.
-                    If not set, "mlag_peer_l3_ipv4_pool" or
-                    "mlag_peer_ipv4_pool" will be used.
+                    Comma separated list of prefixes (IPv4 address/Mask) or ranges (IPv4_address-IPv4_address).
+                    The
+                    subnet used for the iBGP peering in the VRF is derived from this pool based on the ID of the first
+                    MLAG switch.
+                    If not set, "mlag_peer_l3_ipv4_pool" or "mlag_peer_ipv4_pool" will be used.
                     """
                     ip_helpers: IpHelpers
                     """
@@ -39121,12 +39441,11 @@ class EosDesigns(EosDesignsRootModel):
                                    RT).
                                      - A full RT string with colon separator which will override the full RT.
                                 mlag_ibgp_peering_ipv4_pool:
-                                   IPv4_address/Mask
-                                   The subnet used for iBGP peering in the VRF.
-                                   Each MLAG pair will be assigned a
-                                   subnet based on the ID of the primary MLAG switch.
-                                   If not set, "mlag_peer_l3_ipv4_pool" or
-                                   "mlag_peer_ipv4_pool" will be used.
+                                   Comma separated list of prefixes (IPv4 address/Mask) or ranges (IPv4_address-IPv4_address).
+                                   The
+                                   subnet used for the iBGP peering in the VRF is derived from this pool based on the ID of the first
+                                   MLAG switch.
+                                   If not set, "mlag_peer_l3_ipv4_pool" or "mlag_peer_ipv4_pool" will be used.
                                 ip_helpers:
                                    IP helper for DHCP relay.
 
@@ -41571,10 +41890,11 @@ class EosDesigns(EosDesignsRootModel):
                         """
                         ha_ipv4_pool: str | None
                         """
-                        IP address pool used for WAN HA connectivity.
-                        IP is derived from the node ID.
-                        Not used for uplink
-                        interfaces.
+                        Comma separated list of prefixes (IPv4 address/Mask) or ranges (IPv4_address-IPv4_address).
+                        The IPv4
+                        subnet used for direct WAN HA connectivity is derived from this pool based on the node ID of the
+                        first WAN router.
+                        Not used for uplink interfaces.
                         """
                         max_ha_interfaces: int | None
                         """
@@ -41638,10 +41958,11 @@ class EosDesigns(EosDesignsRootModel):
 
                                        Subclass of AvdList with `str` items.
                                     ha_ipv4_pool:
-                                       IP address pool used for WAN HA connectivity.
-                                       IP is derived from the node ID.
-                                       Not used for uplink
-                                       interfaces.
+                                       Comma separated list of prefixes (IPv4 address/Mask) or ranges (IPv4_address-IPv4_address).
+                                       The IPv4
+                                       subnet used for direct WAN HA connectivity is derived from this pool based on the node ID of the
+                                       first WAN router.
+                                       Not used for uplink interfaces.
                                     max_ha_interfaces:
                                        Number of parallel links towards HA switches.
                                        Can be used to reserve IP addresses for future
@@ -42375,7 +42696,12 @@ class EosDesigns(EosDesignsRootModel):
                     `vtep` or `underlay_router` is true for the `node_type_key` definition.
                     """
                     uplink_ipv4_pool: str | None
-                    """IPv4 subnet to use to connect to uplink switches."""
+                    """
+                    Comma separated list of prefixes (IPv4 address/Mask) or ranges (IPv4_address-IPv4_address).
+                    IPv4
+                    subnets used to connect to uplink switches will be deviced from this pool based on the node id,
+                    uplink interface index, 'max_uplink_switches' and 'max_parallel_uplinks'.
+                    """
                     uplink_interfaces: UplinkInterfaces
                     """
                     Local uplink interfaces.
@@ -42568,7 +42894,12 @@ class EosDesigns(EosDesignsRootModel):
                     Default value: `0`
                     """
                     loopback_ipv4_pool: str | None
-                    """IPv4 subnet for Loopback0 allocation."""
+                    """
+                    Comma separated list of prefixes (IPv4 address/Mask) or ranges (IPv4_address-IPv4_address).
+                    The IPv4
+                    address used for Loopback0 will be derived from this pool based on the node id and
+                    'loopback_ipv4_offset'.
+                    """
                     loopback_ipv4_address: str | None
                     """
                     IPv4 address without mask for Loopback0.
@@ -42576,7 +42907,11 @@ class EosDesigns(EosDesignsRootModel):
                     Note: AVD does not check for validity of the IPv4 address and does not catch duplicates.
                     """
                     vtep_loopback_ipv4_pool: str | None
-                    """IPv4 subnet for VTEP-Loopback allocation."""
+                    """
+                    Comma separated list of prefixes (IPv4 address/Mask) or ranges (IPv4_address-IPv4_address). The IPv4
+                    address used for VTEP-Loopback will be derived from this pool based on the node id and
+                    'loopback_ipv4_offset'.
+                    """
                     vtep_loopback_ipv4_address: str | None
                     """
                     IPv4 address without mask for VTEP-Loopback.
@@ -42588,19 +42923,23 @@ class EosDesigns(EosDesignsRootModel):
                     loopback_ipv4_offset: int
                     """
                     Offset all assigned loopback IP addresses.
-                    Required when the < loopback_ipv4_pool > is same for 2
-                    different node_types (like spine and l3leaf) to avoid over-lapping IPs.
+                    Required when the 'loopback_ipv4_pool' is the same for 2
+                    different node_types (like spine and l3leaf) to avoid overlapping IPs.
                     For example, set the minimum
                     offset l3leaf.defaults.loopback_ipv4_offset: < total # spine switches > or vice versa.
 
                     Default value: `0`
                     """
                     loopback_ipv6_pool: str | None
-                    """IPv6 subnet for Loopback0 allocation."""
+                    """
+                    Comma separated list of prefixes (IPv6 address/Mask) or ranges (IPv6_address-IPv6_address). The IPv6
+                    address used for Loopback0 will be derived from this pool based on the node id and
+                    'loopback_ipv6_offset'.
+                    """
                     loopback_ipv6_offset: int
                     """
                     Offset all assigned loopback IPv6 addresses.
-                    Required when the < loopback_ipv6_pool > is same for 2
+                    Required when the 'loopback_ipv6_pool' is same for 2
                     different node_types (like spine and l3leaf) to avoid overlapping IPs.
                     For example, set the minimum
                     offset l3leaf.defaults.loopback_ipv6_offset: < total # spine switches > or vice versa.
@@ -42733,9 +43072,12 @@ class EosDesigns(EosDesignsRootModel):
                     """
                     mlag_peer_l3_ipv4_pool: str | None
                     """
-                    IP address pool used for MLAG underlay L3 peering. IP is derived from the node id.
-                    Required when
-                    MLAG leafs present in topology and they are using a separate L3 peering VLAN.
+                    Comma separated list of prefixes (IPv4 address/Mask) or ranges (IPv4_address-IPv4_address).
+                    The IPv4
+                    subnet used for MLAG underlay L3 peering is derived from this pool based on the node id of the first
+                    MLAG switch.
+                    Required when MLAG leafs present in topology and they are using a separate L3 peering
+                    VLAN.
                     """
                     mlag_peer_vlan: int
                     """
@@ -42756,15 +43098,19 @@ class EosDesigns(EosDesignsRootModel):
                     """
                     mlag_peer_ipv4_pool: str | None
                     """
-                    IPv4 address pool used for MLAG Peer Link (control link). IP is derived from the node id.
-                    Required
-                    for MLAG leafs when `mlag_peer_address_family` is `ipv4` (default).
+                    Comma separated list of prefixes (IPv4 address/Mask) or ranges (IPv4_address-IPv4_address).
+                    The IPv4
+                    address used for MLAG Peer Link (control link) is derived from this pool based on the node id of the
+                    first MLAG switch.
+                    Required for MLAG leafs when `mlag_peer_address_family` is `ipv4` (default).
                     """
                     mlag_peer_ipv6_pool: str | None
                     """
-                    IPv6 address pool used for MLAG Peer Link (control link). IP is derived from the node id.
-                    Required
-                    for MLAG leafs when `mlag_peer_address_family` is `ipv6`.
+                    Comma separated list of prefixes (IPv6 address/Mask) or ranges (IPv6_address-IPv6_address).
+                    The IPv6
+                    address used for MLAG Peer Link (control link) is derived from this pool based on the node id of the
+                    first MLAG switch.
+                    Required for MLAG leafs when `mlag_peer_address_family` is `ipv6`.
                     """
                     mlag_port_channel_id: int | None
                     """
@@ -43237,7 +43583,11 @@ class EosDesigns(EosDesignsRootModel):
                                    Override the default `uplink_type` set at the `node_type_key` level.
                                    `uplink_type` must be "p2p" if
                                    `vtep` or `underlay_router` is true for the `node_type_key` definition.
-                                uplink_ipv4_pool: IPv4 subnet to use to connect to uplink switches.
+                                uplink_ipv4_pool:
+                                   Comma separated list of prefixes (IPv4 address/Mask) or ranges (IPv4_address-IPv4_address).
+                                   IPv4
+                                   subnets used to connect to uplink switches will be deviced from this pool based on the node id,
+                                   uplink interface index, 'max_uplink_switches' and 'max_parallel_uplinks'.
                                 uplink_interfaces:
                                    Local uplink interfaces.
                                    Each list item supports range syntax that can be expanded into a list of
@@ -43380,12 +43730,19 @@ class EosDesigns(EosDesignsRootModel):
                                 isis_maximum_paths: Number of path to configure in ECMP for ISIS.
                                 is_type: Overrides `isis_default_is_type`.
                                 node_sid_base: Node-SID base for isis-sr underlay variants. Combined with node id to generate ISIS-SR node-SID.
-                                loopback_ipv4_pool: IPv4 subnet for Loopback0 allocation.
+                                loopback_ipv4_pool:
+                                   Comma separated list of prefixes (IPv4 address/Mask) or ranges (IPv4_address-IPv4_address).
+                                   The IPv4
+                                   address used for Loopback0 will be derived from this pool based on the node id and
+                                   'loopback_ipv4_offset'.
                                 loopback_ipv4_address:
                                    IPv4 address without mask for Loopback0.
                                    When set, it takes precedence over `loopback_ipv4_pool`.
                                    Note: AVD does not check for validity of the IPv4 address and does not catch duplicates.
-                                vtep_loopback_ipv4_pool: IPv4 subnet for VTEP-Loopback allocation.
+                                vtep_loopback_ipv4_pool:
+                                   Comma separated list of prefixes (IPv4 address/Mask) or ranges (IPv4_address-IPv4_address). The IPv4
+                                   address used for VTEP-Loopback will be derived from this pool based on the node id and
+                                   'loopback_ipv4_offset'.
                                 vtep_loopback_ipv4_address:
                                    IPv4 address without mask for VTEP-Loopback.
                                    When set, it takes precedence over
@@ -43394,14 +43751,17 @@ class EosDesigns(EosDesignsRootModel):
                                    catch duplicates.
                                 loopback_ipv4_offset:
                                    Offset all assigned loopback IP addresses.
-                                   Required when the < loopback_ipv4_pool > is same for 2
-                                   different node_types (like spine and l3leaf) to avoid over-lapping IPs.
+                                   Required when the 'loopback_ipv4_pool' is the same for 2
+                                   different node_types (like spine and l3leaf) to avoid overlapping IPs.
                                    For example, set the minimum
                                    offset l3leaf.defaults.loopback_ipv4_offset: < total # spine switches > or vice versa.
-                                loopback_ipv6_pool: IPv6 subnet for Loopback0 allocation.
+                                loopback_ipv6_pool:
+                                   Comma separated list of prefixes (IPv6 address/Mask) or ranges (IPv6_address-IPv6_address). The IPv6
+                                   address used for Loopback0 will be derived from this pool based on the node id and
+                                   'loopback_ipv6_offset'.
                                 loopback_ipv6_offset:
                                    Offset all assigned loopback IPv6 addresses.
-                                   Required when the < loopback_ipv6_pool > is same for 2
+                                   Required when the 'loopback_ipv6_pool' is same for 2
                                    different node_types (like spine and l3leaf) to avoid overlapping IPs.
                                    For example, set the minimum
                                    offset l3leaf.defaults.loopback_ipv6_offset: < total # spine switches > or vice versa.
@@ -43486,9 +43846,12 @@ class EosDesigns(EosDesignsRootModel):
                                    If set to 0 or the same vlan as mlag_peer_vlan, the
                                    mlag_peer_vlan will be used for L3 peering.
                                 mlag_peer_l3_ipv4_pool:
-                                   IP address pool used for MLAG underlay L3 peering. IP is derived from the node id.
-                                   Required when
-                                   MLAG leafs present in topology and they are using a separate L3 peering VLAN.
+                                   Comma separated list of prefixes (IPv4 address/Mask) or ranges (IPv4_address-IPv4_address).
+                                   The IPv4
+                                   subnet used for MLAG underlay L3 peering is derived from this pool based on the node id of the first
+                                   MLAG switch.
+                                   Required when MLAG leafs present in topology and they are using a separate L3 peering
+                                   VLAN.
                                 mlag_peer_vlan: MLAG Peer Link (control link) SVI interface id.
                                 mlag_peer_link_allowed_vlans: mlag_peer_link_allowed_vlans
                                 mlag_peer_address_family:
@@ -43498,13 +43861,17 @@ class EosDesigns(EosDesignsRootModel):
                                    Note: `ipv6` is not supported in combination with a common MLAG peer link VLAN
                                    (ex. `mlag_peer_l3_vlan` set to 4094).
                                 mlag_peer_ipv4_pool:
-                                   IPv4 address pool used for MLAG Peer Link (control link). IP is derived from the node id.
-                                   Required
-                                   for MLAG leafs when `mlag_peer_address_family` is `ipv4` (default).
+                                   Comma separated list of prefixes (IPv4 address/Mask) or ranges (IPv4_address-IPv4_address).
+                                   The IPv4
+                                   address used for MLAG Peer Link (control link) is derived from this pool based on the node id of the
+                                   first MLAG switch.
+                                   Required for MLAG leafs when `mlag_peer_address_family` is `ipv4` (default).
                                 mlag_peer_ipv6_pool:
-                                   IPv6 address pool used for MLAG Peer Link (control link). IP is derived from the node id.
-                                   Required
-                                   for MLAG leafs when `mlag_peer_address_family` is `ipv6`.
+                                   Comma separated list of prefixes (IPv6 address/Mask) or ranges (IPv6_address-IPv6_address).
+                                   The IPv6
+                                   address used for MLAG Peer Link (control link) is derived from this pool based on the node id of the
+                                   first MLAG switch.
+                                   Required for MLAG leafs when `mlag_peer_address_family` is `ipv6`.
                                 mlag_port_channel_id:
                                    If not set, the mlag port-channel id is generated based on the digits of the first interface present
                                    in 'mlag_interfaces'.
@@ -43741,7 +44108,12 @@ class EosDesigns(EosDesignsRootModel):
                                 "_custom_data": {"type": dict},
                             }
                             ipv4_pool: str | None
-                            """IPv4 pool from which subnets will be allocated for links to downlink switches."""
+                            """
+                            Comma separated list of prefixes (IPv4 address/Mask) or ranges (IPv4_address-IPv4_address).
+                            IPv4
+                            subnets used for links to downlink switches will be derived from this pool based on index the peer's
+                            uplink interface's index in 'downlink_interfaces'.
+                            """
                             downlink_interfaces: DownlinkInterfaces
                             """
                             List of downlink interfaces or ranges of interfaces to use this pool. The index of the interface in
@@ -43768,7 +44140,11 @@ class EosDesigns(EosDesignsRootModel):
                                     Subclass of AvdModel.
 
                                     Args:
-                                        ipv4_pool: IPv4 pool from which subnets will be allocated for links to downlink switches.
+                                        ipv4_pool:
+                                           Comma separated list of prefixes (IPv4 address/Mask) or ranges (IPv4_address-IPv4_address).
+                                           IPv4
+                                           subnets used for links to downlink switches will be derived from this pool based on index the peer's
+                                           uplink interface's index in 'downlink_interfaces'.
                                         downlink_interfaces:
                                            List of downlink interfaces or ranges of interfaces to use this pool. The index of the interface in
                                            this list will determine which subnet will be taken from the pool.
@@ -45049,10 +45425,11 @@ class EosDesigns(EosDesignsRootModel):
                             """
                             ha_ipv4_pool: str | None
                             """
-                            IP address pool used for WAN HA connectivity.
-                            IP is derived from the node ID.
-                            Not used for uplink
-                            interfaces.
+                            Comma separated list of prefixes (IPv4 address/Mask) or ranges (IPv4_address-IPv4_address).
+                            The IPv4
+                            subnet used for direct WAN HA connectivity is derived from this pool based on the node ID of the
+                            first WAN router.
+                            Not used for uplink interfaces.
                             """
                             max_ha_interfaces: int | None
                             """
@@ -45116,10 +45493,11 @@ class EosDesigns(EosDesignsRootModel):
 
                                            Subclass of AvdList with `str` items.
                                         ha_ipv4_pool:
-                                           IP address pool used for WAN HA connectivity.
-                                           IP is derived from the node ID.
-                                           Not used for uplink
-                                           interfaces.
+                                           Comma separated list of prefixes (IPv4 address/Mask) or ranges (IPv4_address-IPv4_address).
+                                           The IPv4
+                                           subnet used for direct WAN HA connectivity is derived from this pool based on the node ID of the
+                                           first WAN router.
+                                           Not used for uplink interfaces.
                                         max_ha_interfaces:
                                            Number of parallel links towards HA switches.
                                            Can be used to reserve IP addresses for future
@@ -45865,7 +46243,12 @@ class EosDesigns(EosDesignsRootModel):
                         `vtep` or `underlay_router` is true for the `node_type_key` definition.
                         """
                         uplink_ipv4_pool: str | None
-                        """IPv4 subnet to use to connect to uplink switches."""
+                        """
+                        Comma separated list of prefixes (IPv4 address/Mask) or ranges (IPv4_address-IPv4_address).
+                        IPv4
+                        subnets used to connect to uplink switches will be deviced from this pool based on the node id,
+                        uplink interface index, 'max_uplink_switches' and 'max_parallel_uplinks'.
+                        """
                         uplink_interfaces: UplinkInterfaces
                         """
                         Local uplink interfaces.
@@ -46058,7 +46441,12 @@ class EosDesigns(EosDesignsRootModel):
                         Default value: `0`
                         """
                         loopback_ipv4_pool: str | None
-                        """IPv4 subnet for Loopback0 allocation."""
+                        """
+                        Comma separated list of prefixes (IPv4 address/Mask) or ranges (IPv4_address-IPv4_address).
+                        The IPv4
+                        address used for Loopback0 will be derived from this pool based on the node id and
+                        'loopback_ipv4_offset'.
+                        """
                         loopback_ipv4_address: str | None
                         """
                         IPv4 address without mask for Loopback0.
@@ -46066,7 +46454,11 @@ class EosDesigns(EosDesignsRootModel):
                         Note: AVD does not check for validity of the IPv4 address and does not catch duplicates.
                         """
                         vtep_loopback_ipv4_pool: str | None
-                        """IPv4 subnet for VTEP-Loopback allocation."""
+                        """
+                        Comma separated list of prefixes (IPv4 address/Mask) or ranges (IPv4_address-IPv4_address). The IPv4
+                        address used for VTEP-Loopback will be derived from this pool based on the node id and
+                        'loopback_ipv4_offset'.
+                        """
                         vtep_loopback_ipv4_address: str | None
                         """
                         IPv4 address without mask for VTEP-Loopback.
@@ -46078,19 +46470,23 @@ class EosDesigns(EosDesignsRootModel):
                         loopback_ipv4_offset: int
                         """
                         Offset all assigned loopback IP addresses.
-                        Required when the < loopback_ipv4_pool > is same for 2
-                        different node_types (like spine and l3leaf) to avoid over-lapping IPs.
+                        Required when the 'loopback_ipv4_pool' is the same for 2
+                        different node_types (like spine and l3leaf) to avoid overlapping IPs.
                         For example, set the minimum
                         offset l3leaf.defaults.loopback_ipv4_offset: < total # spine switches > or vice versa.
 
                         Default value: `0`
                         """
                         loopback_ipv6_pool: str | None
-                        """IPv6 subnet for Loopback0 allocation."""
+                        """
+                        Comma separated list of prefixes (IPv6 address/Mask) or ranges (IPv6_address-IPv6_address). The IPv6
+                        address used for Loopback0 will be derived from this pool based on the node id and
+                        'loopback_ipv6_offset'.
+                        """
                         loopback_ipv6_offset: int
                         """
                         Offset all assigned loopback IPv6 addresses.
-                        Required when the < loopback_ipv6_pool > is same for 2
+                        Required when the 'loopback_ipv6_pool' is same for 2
                         different node_types (like spine and l3leaf) to avoid overlapping IPs.
                         For example, set the minimum
                         offset l3leaf.defaults.loopback_ipv6_offset: < total # spine switches > or vice versa.
@@ -46223,9 +46619,12 @@ class EosDesigns(EosDesignsRootModel):
                         """
                         mlag_peer_l3_ipv4_pool: str | None
                         """
-                        IP address pool used for MLAG underlay L3 peering. IP is derived from the node id.
-                        Required when
-                        MLAG leafs present in topology and they are using a separate L3 peering VLAN.
+                        Comma separated list of prefixes (IPv4 address/Mask) or ranges (IPv4_address-IPv4_address).
+                        The IPv4
+                        subnet used for MLAG underlay L3 peering is derived from this pool based on the node id of the first
+                        MLAG switch.
+                        Required when MLAG leafs present in topology and they are using a separate L3 peering
+                        VLAN.
                         """
                         mlag_peer_vlan: int
                         """
@@ -46246,15 +46645,19 @@ class EosDesigns(EosDesignsRootModel):
                         """
                         mlag_peer_ipv4_pool: str | None
                         """
-                        IPv4 address pool used for MLAG Peer Link (control link). IP is derived from the node id.
-                        Required
-                        for MLAG leafs when `mlag_peer_address_family` is `ipv4` (default).
+                        Comma separated list of prefixes (IPv4 address/Mask) or ranges (IPv4_address-IPv4_address).
+                        The IPv4
+                        address used for MLAG Peer Link (control link) is derived from this pool based on the node id of the
+                        first MLAG switch.
+                        Required for MLAG leafs when `mlag_peer_address_family` is `ipv4` (default).
                         """
                         mlag_peer_ipv6_pool: str | None
                         """
-                        IPv6 address pool used for MLAG Peer Link (control link). IP is derived from the node id.
-                        Required
-                        for MLAG leafs when `mlag_peer_address_family` is `ipv6`.
+                        Comma separated list of prefixes (IPv6 address/Mask) or ranges (IPv6_address-IPv6_address).
+                        The IPv6
+                        address used for MLAG Peer Link (control link) is derived from this pool based on the node id of the
+                        first MLAG switch.
+                        Required for MLAG leafs when `mlag_peer_address_family` is `ipv6`.
                         """
                         mlag_port_channel_id: int | None
                         """
@@ -46736,7 +47139,11 @@ class EosDesigns(EosDesignsRootModel):
                                        Override the default `uplink_type` set at the `node_type_key` level.
                                        `uplink_type` must be "p2p" if
                                        `vtep` or `underlay_router` is true for the `node_type_key` definition.
-                                    uplink_ipv4_pool: IPv4 subnet to use to connect to uplink switches.
+                                    uplink_ipv4_pool:
+                                       Comma separated list of prefixes (IPv4 address/Mask) or ranges (IPv4_address-IPv4_address).
+                                       IPv4
+                                       subnets used to connect to uplink switches will be deviced from this pool based on the node id,
+                                       uplink interface index, 'max_uplink_switches' and 'max_parallel_uplinks'.
                                     uplink_interfaces:
                                        Local uplink interfaces.
                                        Each list item supports range syntax that can be expanded into a list of
@@ -46879,12 +47286,19 @@ class EosDesigns(EosDesignsRootModel):
                                     isis_maximum_paths: Number of path to configure in ECMP for ISIS.
                                     is_type: Overrides `isis_default_is_type`.
                                     node_sid_base: Node-SID base for isis-sr underlay variants. Combined with node id to generate ISIS-SR node-SID.
-                                    loopback_ipv4_pool: IPv4 subnet for Loopback0 allocation.
+                                    loopback_ipv4_pool:
+                                       Comma separated list of prefixes (IPv4 address/Mask) or ranges (IPv4_address-IPv4_address).
+                                       The IPv4
+                                       address used for Loopback0 will be derived from this pool based on the node id and
+                                       'loopback_ipv4_offset'.
                                     loopback_ipv4_address:
                                        IPv4 address without mask for Loopback0.
                                        When set, it takes precedence over `loopback_ipv4_pool`.
                                        Note: AVD does not check for validity of the IPv4 address and does not catch duplicates.
-                                    vtep_loopback_ipv4_pool: IPv4 subnet for VTEP-Loopback allocation.
+                                    vtep_loopback_ipv4_pool:
+                                       Comma separated list of prefixes (IPv4 address/Mask) or ranges (IPv4_address-IPv4_address). The IPv4
+                                       address used for VTEP-Loopback will be derived from this pool based on the node id and
+                                       'loopback_ipv4_offset'.
                                     vtep_loopback_ipv4_address:
                                        IPv4 address without mask for VTEP-Loopback.
                                        When set, it takes precedence over
@@ -46893,14 +47307,17 @@ class EosDesigns(EosDesignsRootModel):
                                        catch duplicates.
                                     loopback_ipv4_offset:
                                        Offset all assigned loopback IP addresses.
-                                       Required when the < loopback_ipv4_pool > is same for 2
-                                       different node_types (like spine and l3leaf) to avoid over-lapping IPs.
+                                       Required when the 'loopback_ipv4_pool' is the same for 2
+                                       different node_types (like spine and l3leaf) to avoid overlapping IPs.
                                        For example, set the minimum
                                        offset l3leaf.defaults.loopback_ipv4_offset: < total # spine switches > or vice versa.
-                                    loopback_ipv6_pool: IPv6 subnet for Loopback0 allocation.
+                                    loopback_ipv6_pool:
+                                       Comma separated list of prefixes (IPv6 address/Mask) or ranges (IPv6_address-IPv6_address). The IPv6
+                                       address used for Loopback0 will be derived from this pool based on the node id and
+                                       'loopback_ipv6_offset'.
                                     loopback_ipv6_offset:
                                        Offset all assigned loopback IPv6 addresses.
-                                       Required when the < loopback_ipv6_pool > is same for 2
+                                       Required when the 'loopback_ipv6_pool' is same for 2
                                        different node_types (like spine and l3leaf) to avoid overlapping IPs.
                                        For example, set the minimum
                                        offset l3leaf.defaults.loopback_ipv6_offset: < total # spine switches > or vice versa.
@@ -46985,9 +47402,12 @@ class EosDesigns(EosDesignsRootModel):
                                        If set to 0 or the same vlan as mlag_peer_vlan, the
                                        mlag_peer_vlan will be used for L3 peering.
                                     mlag_peer_l3_ipv4_pool:
-                                       IP address pool used for MLAG underlay L3 peering. IP is derived from the node id.
-                                       Required when
-                                       MLAG leafs present in topology and they are using a separate L3 peering VLAN.
+                                       Comma separated list of prefixes (IPv4 address/Mask) or ranges (IPv4_address-IPv4_address).
+                                       The IPv4
+                                       subnet used for MLAG underlay L3 peering is derived from this pool based on the node id of the first
+                                       MLAG switch.
+                                       Required when MLAG leafs present in topology and they are using a separate L3 peering
+                                       VLAN.
                                     mlag_peer_vlan: MLAG Peer Link (control link) SVI interface id.
                                     mlag_peer_link_allowed_vlans: mlag_peer_link_allowed_vlans
                                     mlag_peer_address_family:
@@ -46997,13 +47417,17 @@ class EosDesigns(EosDesignsRootModel):
                                        Note: `ipv6` is not supported in combination with a common MLAG peer link VLAN
                                        (ex. `mlag_peer_l3_vlan` set to 4094).
                                     mlag_peer_ipv4_pool:
-                                       IPv4 address pool used for MLAG Peer Link (control link). IP is derived from the node id.
-                                       Required
-                                       for MLAG leafs when `mlag_peer_address_family` is `ipv4` (default).
+                                       Comma separated list of prefixes (IPv4 address/Mask) or ranges (IPv4_address-IPv4_address).
+                                       The IPv4
+                                       address used for MLAG Peer Link (control link) is derived from this pool based on the node id of the
+                                       first MLAG switch.
+                                       Required for MLAG leafs when `mlag_peer_address_family` is `ipv4` (default).
                                     mlag_peer_ipv6_pool:
-                                       IPv6 address pool used for MLAG Peer Link (control link). IP is derived from the node id.
-                                       Required
-                                       for MLAG leafs when `mlag_peer_address_family` is `ipv6`.
+                                       Comma separated list of prefixes (IPv6 address/Mask) or ranges (IPv6_address-IPv6_address).
+                                       The IPv6
+                                       address used for MLAG Peer Link (control link) is derived from this pool based on the node id of the
+                                       first MLAG switch.
+                                       Required for MLAG leafs when `mlag_peer_address_family` is `ipv6`.
                                     mlag_port_channel_id:
                                        If not set, the mlag port-channel id is generated based on the digits of the first interface present
                                        in 'mlag_interfaces'.
@@ -48490,10 +48914,11 @@ class EosDesigns(EosDesignsRootModel):
                         """
                         ha_ipv4_pool: str | None
                         """
-                        IP address pool used for WAN HA connectivity.
-                        IP is derived from the node ID.
-                        Not used for uplink
-                        interfaces.
+                        Comma separated list of prefixes (IPv4 address/Mask) or ranges (IPv4_address-IPv4_address).
+                        The IPv4
+                        subnet used for direct WAN HA connectivity is derived from this pool based on the node ID of the
+                        first WAN router.
+                        Not used for uplink interfaces.
                         """
                         max_ha_interfaces: int | None
                         """
@@ -48557,10 +48982,11 @@ class EosDesigns(EosDesignsRootModel):
 
                                        Subclass of AvdList with `str` items.
                                     ha_ipv4_pool:
-                                       IP address pool used for WAN HA connectivity.
-                                       IP is derived from the node ID.
-                                       Not used for uplink
-                                       interfaces.
+                                       Comma separated list of prefixes (IPv4 address/Mask) or ranges (IPv4_address-IPv4_address).
+                                       The IPv4
+                                       subnet used for direct WAN HA connectivity is derived from this pool based on the node ID of the
+                                       first WAN router.
+                                       Not used for uplink interfaces.
                                     max_ha_interfaces:
                                        Number of parallel links towards HA switches.
                                        Can be used to reserve IP addresses for future
@@ -49309,7 +49735,12 @@ class EosDesigns(EosDesignsRootModel):
                     `vtep` or `underlay_router` is true for the `node_type_key` definition.
                     """
                     uplink_ipv4_pool: str | None
-                    """IPv4 subnet to use to connect to uplink switches."""
+                    """
+                    Comma separated list of prefixes (IPv4 address/Mask) or ranges (IPv4_address-IPv4_address).
+                    IPv4
+                    subnets used to connect to uplink switches will be deviced from this pool based on the node id,
+                    uplink interface index, 'max_uplink_switches' and 'max_parallel_uplinks'.
+                    """
                     uplink_interfaces: UplinkInterfaces
                     """
                     Local uplink interfaces.
@@ -49502,7 +49933,12 @@ class EosDesigns(EosDesignsRootModel):
                     Default value: `0`
                     """
                     loopback_ipv4_pool: str | None
-                    """IPv4 subnet for Loopback0 allocation."""
+                    """
+                    Comma separated list of prefixes (IPv4 address/Mask) or ranges (IPv4_address-IPv4_address).
+                    The IPv4
+                    address used for Loopback0 will be derived from this pool based on the node id and
+                    'loopback_ipv4_offset'.
+                    """
                     loopback_ipv4_address: str | None
                     """
                     IPv4 address without mask for Loopback0.
@@ -49510,7 +49946,11 @@ class EosDesigns(EosDesignsRootModel):
                     Note: AVD does not check for validity of the IPv4 address and does not catch duplicates.
                     """
                     vtep_loopback_ipv4_pool: str | None
-                    """IPv4 subnet for VTEP-Loopback allocation."""
+                    """
+                    Comma separated list of prefixes (IPv4 address/Mask) or ranges (IPv4_address-IPv4_address). The IPv4
+                    address used for VTEP-Loopback will be derived from this pool based on the node id and
+                    'loopback_ipv4_offset'.
+                    """
                     vtep_loopback_ipv4_address: str | None
                     """
                     IPv4 address without mask for VTEP-Loopback.
@@ -49522,19 +49962,23 @@ class EosDesigns(EosDesignsRootModel):
                     loopback_ipv4_offset: int
                     """
                     Offset all assigned loopback IP addresses.
-                    Required when the < loopback_ipv4_pool > is same for 2
-                    different node_types (like spine and l3leaf) to avoid over-lapping IPs.
+                    Required when the 'loopback_ipv4_pool' is the same for 2
+                    different node_types (like spine and l3leaf) to avoid overlapping IPs.
                     For example, set the minimum
                     offset l3leaf.defaults.loopback_ipv4_offset: < total # spine switches > or vice versa.
 
                     Default value: `0`
                     """
                     loopback_ipv6_pool: str | None
-                    """IPv6 subnet for Loopback0 allocation."""
+                    """
+                    Comma separated list of prefixes (IPv6 address/Mask) or ranges (IPv6_address-IPv6_address). The IPv6
+                    address used for Loopback0 will be derived from this pool based on the node id and
+                    'loopback_ipv6_offset'.
+                    """
                     loopback_ipv6_offset: int
                     """
                     Offset all assigned loopback IPv6 addresses.
-                    Required when the < loopback_ipv6_pool > is same for 2
+                    Required when the 'loopback_ipv6_pool' is same for 2
                     different node_types (like spine and l3leaf) to avoid overlapping IPs.
                     For example, set the minimum
                     offset l3leaf.defaults.loopback_ipv6_offset: < total # spine switches > or vice versa.
@@ -49667,9 +50111,12 @@ class EosDesigns(EosDesignsRootModel):
                     """
                     mlag_peer_l3_ipv4_pool: str | None
                     """
-                    IP address pool used for MLAG underlay L3 peering. IP is derived from the node id.
-                    Required when
-                    MLAG leafs present in topology and they are using a separate L3 peering VLAN.
+                    Comma separated list of prefixes (IPv4 address/Mask) or ranges (IPv4_address-IPv4_address).
+                    The IPv4
+                    subnet used for MLAG underlay L3 peering is derived from this pool based on the node id of the first
+                    MLAG switch.
+                    Required when MLAG leafs present in topology and they are using a separate L3 peering
+                    VLAN.
                     """
                     mlag_peer_vlan: int
                     """
@@ -49690,15 +50137,19 @@ class EosDesigns(EosDesignsRootModel):
                     """
                     mlag_peer_ipv4_pool: str | None
                     """
-                    IPv4 address pool used for MLAG Peer Link (control link). IP is derived from the node id.
-                    Required
-                    for MLAG leafs when `mlag_peer_address_family` is `ipv4` (default).
+                    Comma separated list of prefixes (IPv4 address/Mask) or ranges (IPv4_address-IPv4_address).
+                    The IPv4
+                    address used for MLAG Peer Link (control link) is derived from this pool based on the node id of the
+                    first MLAG switch.
+                    Required for MLAG leafs when `mlag_peer_address_family` is `ipv4` (default).
                     """
                     mlag_peer_ipv6_pool: str | None
                     """
-                    IPv6 address pool used for MLAG Peer Link (control link). IP is derived from the node id.
-                    Required
-                    for MLAG leafs when `mlag_peer_address_family` is `ipv6`.
+                    Comma separated list of prefixes (IPv6 address/Mask) or ranges (IPv6_address-IPv6_address).
+                    The IPv6
+                    address used for MLAG Peer Link (control link) is derived from this pool based on the node id of the
+                    first MLAG switch.
+                    Required for MLAG leafs when `mlag_peer_address_family` is `ipv6`.
                     """
                     mlag_port_channel_id: int | None
                     """
@@ -50182,7 +50633,11 @@ class EosDesigns(EosDesignsRootModel):
                                    Override the default `uplink_type` set at the `node_type_key` level.
                                    `uplink_type` must be "p2p" if
                                    `vtep` or `underlay_router` is true for the `node_type_key` definition.
-                                uplink_ipv4_pool: IPv4 subnet to use to connect to uplink switches.
+                                uplink_ipv4_pool:
+                                   Comma separated list of prefixes (IPv4 address/Mask) or ranges (IPv4_address-IPv4_address).
+                                   IPv4
+                                   subnets used to connect to uplink switches will be deviced from this pool based on the node id,
+                                   uplink interface index, 'max_uplink_switches' and 'max_parallel_uplinks'.
                                 uplink_interfaces:
                                    Local uplink interfaces.
                                    Each list item supports range syntax that can be expanded into a list of
@@ -50325,12 +50780,19 @@ class EosDesigns(EosDesignsRootModel):
                                 isis_maximum_paths: Number of path to configure in ECMP for ISIS.
                                 is_type: Overrides `isis_default_is_type`.
                                 node_sid_base: Node-SID base for isis-sr underlay variants. Combined with node id to generate ISIS-SR node-SID.
-                                loopback_ipv4_pool: IPv4 subnet for Loopback0 allocation.
+                                loopback_ipv4_pool:
+                                   Comma separated list of prefixes (IPv4 address/Mask) or ranges (IPv4_address-IPv4_address).
+                                   The IPv4
+                                   address used for Loopback0 will be derived from this pool based on the node id and
+                                   'loopback_ipv4_offset'.
                                 loopback_ipv4_address:
                                    IPv4 address without mask for Loopback0.
                                    When set, it takes precedence over `loopback_ipv4_pool`.
                                    Note: AVD does not check for validity of the IPv4 address and does not catch duplicates.
-                                vtep_loopback_ipv4_pool: IPv4 subnet for VTEP-Loopback allocation.
+                                vtep_loopback_ipv4_pool:
+                                   Comma separated list of prefixes (IPv4 address/Mask) or ranges (IPv4_address-IPv4_address). The IPv4
+                                   address used for VTEP-Loopback will be derived from this pool based on the node id and
+                                   'loopback_ipv4_offset'.
                                 vtep_loopback_ipv4_address:
                                    IPv4 address without mask for VTEP-Loopback.
                                    When set, it takes precedence over
@@ -50339,14 +50801,17 @@ class EosDesigns(EosDesignsRootModel):
                                    catch duplicates.
                                 loopback_ipv4_offset:
                                    Offset all assigned loopback IP addresses.
-                                   Required when the < loopback_ipv4_pool > is same for 2
-                                   different node_types (like spine and l3leaf) to avoid over-lapping IPs.
+                                   Required when the 'loopback_ipv4_pool' is the same for 2
+                                   different node_types (like spine and l3leaf) to avoid overlapping IPs.
                                    For example, set the minimum
                                    offset l3leaf.defaults.loopback_ipv4_offset: < total # spine switches > or vice versa.
-                                loopback_ipv6_pool: IPv6 subnet for Loopback0 allocation.
+                                loopback_ipv6_pool:
+                                   Comma separated list of prefixes (IPv6 address/Mask) or ranges (IPv6_address-IPv6_address). The IPv6
+                                   address used for Loopback0 will be derived from this pool based on the node id and
+                                   'loopback_ipv6_offset'.
                                 loopback_ipv6_offset:
                                    Offset all assigned loopback IPv6 addresses.
-                                   Required when the < loopback_ipv6_pool > is same for 2
+                                   Required when the 'loopback_ipv6_pool' is same for 2
                                    different node_types (like spine and l3leaf) to avoid overlapping IPs.
                                    For example, set the minimum
                                    offset l3leaf.defaults.loopback_ipv6_offset: < total # spine switches > or vice versa.
@@ -50431,9 +50896,12 @@ class EosDesigns(EosDesignsRootModel):
                                    If set to 0 or the same vlan as mlag_peer_vlan, the
                                    mlag_peer_vlan will be used for L3 peering.
                                 mlag_peer_l3_ipv4_pool:
-                                   IP address pool used for MLAG underlay L3 peering. IP is derived from the node id.
-                                   Required when
-                                   MLAG leafs present in topology and they are using a separate L3 peering VLAN.
+                                   Comma separated list of prefixes (IPv4 address/Mask) or ranges (IPv4_address-IPv4_address).
+                                   The IPv4
+                                   subnet used for MLAG underlay L3 peering is derived from this pool based on the node id of the first
+                                   MLAG switch.
+                                   Required when MLAG leafs present in topology and they are using a separate L3 peering
+                                   VLAN.
                                 mlag_peer_vlan: MLAG Peer Link (control link) SVI interface id.
                                 mlag_peer_link_allowed_vlans: mlag_peer_link_allowed_vlans
                                 mlag_peer_address_family:
@@ -50443,13 +50911,17 @@ class EosDesigns(EosDesignsRootModel):
                                    Note: `ipv6` is not supported in combination with a common MLAG peer link VLAN
                                    (ex. `mlag_peer_l3_vlan` set to 4094).
                                 mlag_peer_ipv4_pool:
-                                   IPv4 address pool used for MLAG Peer Link (control link). IP is derived from the node id.
-                                   Required
-                                   for MLAG leafs when `mlag_peer_address_family` is `ipv4` (default).
+                                   Comma separated list of prefixes (IPv4 address/Mask) or ranges (IPv4_address-IPv4_address).
+                                   The IPv4
+                                   address used for MLAG Peer Link (control link) is derived from this pool based on the node id of the
+                                   first MLAG switch.
+                                   Required for MLAG leafs when `mlag_peer_address_family` is `ipv4` (default).
                                 mlag_peer_ipv6_pool:
-                                   IPv6 address pool used for MLAG Peer Link (control link). IP is derived from the node id.
-                                   Required
-                                   for MLAG leafs when `mlag_peer_address_family` is `ipv6`.
+                                   Comma separated list of prefixes (IPv6 address/Mask) or ranges (IPv6_address-IPv6_address).
+                                   The IPv6
+                                   address used for MLAG Peer Link (control link) is derived from this pool based on the node id of the
+                                   first MLAG switch.
+                                   Required for MLAG leafs when `mlag_peer_address_family` is `ipv6`.
                                 mlag_port_channel_id:
                                    If not set, the mlag port-channel id is generated based on the digits of the first interface present
                                    in 'mlag_interfaces'.
@@ -50690,7 +51162,12 @@ class EosDesigns(EosDesignsRootModel):
                             "_custom_data": {"type": dict},
                         }
                         ipv4_pool: str | None
-                        """IPv4 pool from which subnets will be allocated for links to downlink switches."""
+                        """
+                        Comma separated list of prefixes (IPv4 address/Mask) or ranges (IPv4_address-IPv4_address).
+                        IPv4
+                        subnets used for links to downlink switches will be derived from this pool based on index the peer's
+                        uplink interface's index in 'downlink_interfaces'.
+                        """
                         downlink_interfaces: DownlinkInterfaces
                         """
                         List of downlink interfaces or ranges of interfaces to use this pool. The index of the interface in
@@ -50717,7 +51194,11 @@ class EosDesigns(EosDesignsRootModel):
                                 Subclass of AvdModel.
 
                                 Args:
-                                    ipv4_pool: IPv4 pool from which subnets will be allocated for links to downlink switches.
+                                    ipv4_pool:
+                                       Comma separated list of prefixes (IPv4 address/Mask) or ranges (IPv4_address-IPv4_address).
+                                       IPv4
+                                       subnets used for links to downlink switches will be derived from this pool based on index the peer's
+                                       uplink interface's index in 'downlink_interfaces'.
                                     downlink_interfaces:
                                        List of downlink interfaces or ranges of interfaces to use this pool. The index of the interface in
                                        this list will determine which subnet will be taken from the pool.
@@ -51996,10 +52477,11 @@ class EosDesigns(EosDesignsRootModel):
                         """
                         ha_ipv4_pool: str | None
                         """
-                        IP address pool used for WAN HA connectivity.
-                        IP is derived from the node ID.
-                        Not used for uplink
-                        interfaces.
+                        Comma separated list of prefixes (IPv4 address/Mask) or ranges (IPv4_address-IPv4_address).
+                        The IPv4
+                        subnet used for direct WAN HA connectivity is derived from this pool based on the node ID of the
+                        first WAN router.
+                        Not used for uplink interfaces.
                         """
                         max_ha_interfaces: int | None
                         """
@@ -52063,10 +52545,11 @@ class EosDesigns(EosDesignsRootModel):
 
                                        Subclass of AvdList with `str` items.
                                     ha_ipv4_pool:
-                                       IP address pool used for WAN HA connectivity.
-                                       IP is derived from the node ID.
-                                       Not used for uplink
-                                       interfaces.
+                                       Comma separated list of prefixes (IPv4 address/Mask) or ranges (IPv4_address-IPv4_address).
+                                       The IPv4
+                                       subnet used for direct WAN HA connectivity is derived from this pool based on the node ID of the
+                                       first WAN router.
+                                       Not used for uplink interfaces.
                                     max_ha_interfaces:
                                        Number of parallel links towards HA switches.
                                        Can be used to reserve IP addresses for future
@@ -52812,7 +53295,12 @@ class EosDesigns(EosDesignsRootModel):
                     `vtep` or `underlay_router` is true for the `node_type_key` definition.
                     """
                     uplink_ipv4_pool: str | None
-                    """IPv4 subnet to use to connect to uplink switches."""
+                    """
+                    Comma separated list of prefixes (IPv4 address/Mask) or ranges (IPv4_address-IPv4_address).
+                    IPv4
+                    subnets used to connect to uplink switches will be deviced from this pool based on the node id,
+                    uplink interface index, 'max_uplink_switches' and 'max_parallel_uplinks'.
+                    """
                     uplink_interfaces: UplinkInterfaces
                     """
                     Local uplink interfaces.
@@ -53005,7 +53493,12 @@ class EosDesigns(EosDesignsRootModel):
                     Default value: `0`
                     """
                     loopback_ipv4_pool: str | None
-                    """IPv4 subnet for Loopback0 allocation."""
+                    """
+                    Comma separated list of prefixes (IPv4 address/Mask) or ranges (IPv4_address-IPv4_address).
+                    The IPv4
+                    address used for Loopback0 will be derived from this pool based on the node id and
+                    'loopback_ipv4_offset'.
+                    """
                     loopback_ipv4_address: str | None
                     """
                     IPv4 address without mask for Loopback0.
@@ -53013,7 +53506,11 @@ class EosDesigns(EosDesignsRootModel):
                     Note: AVD does not check for validity of the IPv4 address and does not catch duplicates.
                     """
                     vtep_loopback_ipv4_pool: str | None
-                    """IPv4 subnet for VTEP-Loopback allocation."""
+                    """
+                    Comma separated list of prefixes (IPv4 address/Mask) or ranges (IPv4_address-IPv4_address). The IPv4
+                    address used for VTEP-Loopback will be derived from this pool based on the node id and
+                    'loopback_ipv4_offset'.
+                    """
                     vtep_loopback_ipv4_address: str | None
                     """
                     IPv4 address without mask for VTEP-Loopback.
@@ -53025,19 +53522,23 @@ class EosDesigns(EosDesignsRootModel):
                     loopback_ipv4_offset: int
                     """
                     Offset all assigned loopback IP addresses.
-                    Required when the < loopback_ipv4_pool > is same for 2
-                    different node_types (like spine and l3leaf) to avoid over-lapping IPs.
+                    Required when the 'loopback_ipv4_pool' is the same for 2
+                    different node_types (like spine and l3leaf) to avoid overlapping IPs.
                     For example, set the minimum
                     offset l3leaf.defaults.loopback_ipv4_offset: < total # spine switches > or vice versa.
 
                     Default value: `0`
                     """
                     loopback_ipv6_pool: str | None
-                    """IPv6 subnet for Loopback0 allocation."""
+                    """
+                    Comma separated list of prefixes (IPv6 address/Mask) or ranges (IPv6_address-IPv6_address). The IPv6
+                    address used for Loopback0 will be derived from this pool based on the node id and
+                    'loopback_ipv6_offset'.
+                    """
                     loopback_ipv6_offset: int
                     """
                     Offset all assigned loopback IPv6 addresses.
-                    Required when the < loopback_ipv6_pool > is same for 2
+                    Required when the 'loopback_ipv6_pool' is same for 2
                     different node_types (like spine and l3leaf) to avoid overlapping IPs.
                     For example, set the minimum
                     offset l3leaf.defaults.loopback_ipv6_offset: < total # spine switches > or vice versa.
@@ -53170,9 +53671,12 @@ class EosDesigns(EosDesignsRootModel):
                     """
                     mlag_peer_l3_ipv4_pool: str | None
                     """
-                    IP address pool used for MLAG underlay L3 peering. IP is derived from the node id.
-                    Required when
-                    MLAG leafs present in topology and they are using a separate L3 peering VLAN.
+                    Comma separated list of prefixes (IPv4 address/Mask) or ranges (IPv4_address-IPv4_address).
+                    The IPv4
+                    subnet used for MLAG underlay L3 peering is derived from this pool based on the node id of the first
+                    MLAG switch.
+                    Required when MLAG leafs present in topology and they are using a separate L3 peering
+                    VLAN.
                     """
                     mlag_peer_vlan: int
                     """
@@ -53193,15 +53697,19 @@ class EosDesigns(EosDesignsRootModel):
                     """
                     mlag_peer_ipv4_pool: str | None
                     """
-                    IPv4 address pool used for MLAG Peer Link (control link). IP is derived from the node id.
-                    Required
-                    for MLAG leafs when `mlag_peer_address_family` is `ipv4` (default).
+                    Comma separated list of prefixes (IPv4 address/Mask) or ranges (IPv4_address-IPv4_address).
+                    The IPv4
+                    address used for MLAG Peer Link (control link) is derived from this pool based on the node id of the
+                    first MLAG switch.
+                    Required for MLAG leafs when `mlag_peer_address_family` is `ipv4` (default).
                     """
                     mlag_peer_ipv6_pool: str | None
                     """
-                    IPv6 address pool used for MLAG Peer Link (control link). IP is derived from the node id.
-                    Required
-                    for MLAG leafs when `mlag_peer_address_family` is `ipv6`.
+                    Comma separated list of prefixes (IPv6 address/Mask) or ranges (IPv6_address-IPv6_address).
+                    The IPv6
+                    address used for MLAG Peer Link (control link) is derived from this pool based on the node id of the
+                    first MLAG switch.
+                    Required for MLAG leafs when `mlag_peer_address_family` is `ipv6`.
                     """
                     mlag_port_channel_id: int | None
                     """
@@ -53683,7 +54191,11 @@ class EosDesigns(EosDesignsRootModel):
                                    Override the default `uplink_type` set at the `node_type_key` level.
                                    `uplink_type` must be "p2p" if
                                    `vtep` or `underlay_router` is true for the `node_type_key` definition.
-                                uplink_ipv4_pool: IPv4 subnet to use to connect to uplink switches.
+                                uplink_ipv4_pool:
+                                   Comma separated list of prefixes (IPv4 address/Mask) or ranges (IPv4_address-IPv4_address).
+                                   IPv4
+                                   subnets used to connect to uplink switches will be deviced from this pool based on the node id,
+                                   uplink interface index, 'max_uplink_switches' and 'max_parallel_uplinks'.
                                 uplink_interfaces:
                                    Local uplink interfaces.
                                    Each list item supports range syntax that can be expanded into a list of
@@ -53826,12 +54338,19 @@ class EosDesigns(EosDesignsRootModel):
                                 isis_maximum_paths: Number of path to configure in ECMP for ISIS.
                                 is_type: Overrides `isis_default_is_type`.
                                 node_sid_base: Node-SID base for isis-sr underlay variants. Combined with node id to generate ISIS-SR node-SID.
-                                loopback_ipv4_pool: IPv4 subnet for Loopback0 allocation.
+                                loopback_ipv4_pool:
+                                   Comma separated list of prefixes (IPv4 address/Mask) or ranges (IPv4_address-IPv4_address).
+                                   The IPv4
+                                   address used for Loopback0 will be derived from this pool based on the node id and
+                                   'loopback_ipv4_offset'.
                                 loopback_ipv4_address:
                                    IPv4 address without mask for Loopback0.
                                    When set, it takes precedence over `loopback_ipv4_pool`.
                                    Note: AVD does not check for validity of the IPv4 address and does not catch duplicates.
-                                vtep_loopback_ipv4_pool: IPv4 subnet for VTEP-Loopback allocation.
+                                vtep_loopback_ipv4_pool:
+                                   Comma separated list of prefixes (IPv4 address/Mask) or ranges (IPv4_address-IPv4_address). The IPv4
+                                   address used for VTEP-Loopback will be derived from this pool based on the node id and
+                                   'loopback_ipv4_offset'.
                                 vtep_loopback_ipv4_address:
                                    IPv4 address without mask for VTEP-Loopback.
                                    When set, it takes precedence over
@@ -53840,14 +54359,17 @@ class EosDesigns(EosDesignsRootModel):
                                    catch duplicates.
                                 loopback_ipv4_offset:
                                    Offset all assigned loopback IP addresses.
-                                   Required when the < loopback_ipv4_pool > is same for 2
-                                   different node_types (like spine and l3leaf) to avoid over-lapping IPs.
+                                   Required when the 'loopback_ipv4_pool' is the same for 2
+                                   different node_types (like spine and l3leaf) to avoid overlapping IPs.
                                    For example, set the minimum
                                    offset l3leaf.defaults.loopback_ipv4_offset: < total # spine switches > or vice versa.
-                                loopback_ipv6_pool: IPv6 subnet for Loopback0 allocation.
+                                loopback_ipv6_pool:
+                                   Comma separated list of prefixes (IPv6 address/Mask) or ranges (IPv6_address-IPv6_address). The IPv6
+                                   address used for Loopback0 will be derived from this pool based on the node id and
+                                   'loopback_ipv6_offset'.
                                 loopback_ipv6_offset:
                                    Offset all assigned loopback IPv6 addresses.
-                                   Required when the < loopback_ipv6_pool > is same for 2
+                                   Required when the 'loopback_ipv6_pool' is same for 2
                                    different node_types (like spine and l3leaf) to avoid overlapping IPs.
                                    For example, set the minimum
                                    offset l3leaf.defaults.loopback_ipv6_offset: < total # spine switches > or vice versa.
@@ -53932,9 +54454,12 @@ class EosDesigns(EosDesignsRootModel):
                                    If set to 0 or the same vlan as mlag_peer_vlan, the
                                    mlag_peer_vlan will be used for L3 peering.
                                 mlag_peer_l3_ipv4_pool:
-                                   IP address pool used for MLAG underlay L3 peering. IP is derived from the node id.
-                                   Required when
-                                   MLAG leafs present in topology and they are using a separate L3 peering VLAN.
+                                   Comma separated list of prefixes (IPv4 address/Mask) or ranges (IPv4_address-IPv4_address).
+                                   The IPv4
+                                   subnet used for MLAG underlay L3 peering is derived from this pool based on the node id of the first
+                                   MLAG switch.
+                                   Required when MLAG leafs present in topology and they are using a separate L3 peering
+                                   VLAN.
                                 mlag_peer_vlan: MLAG Peer Link (control link) SVI interface id.
                                 mlag_peer_link_allowed_vlans: mlag_peer_link_allowed_vlans
                                 mlag_peer_address_family:
@@ -53944,13 +54469,17 @@ class EosDesigns(EosDesignsRootModel):
                                    Note: `ipv6` is not supported in combination with a common MLAG peer link VLAN
                                    (ex. `mlag_peer_l3_vlan` set to 4094).
                                 mlag_peer_ipv4_pool:
-                                   IPv4 address pool used for MLAG Peer Link (control link). IP is derived from the node id.
-                                   Required
-                                   for MLAG leafs when `mlag_peer_address_family` is `ipv4` (default).
+                                   Comma separated list of prefixes (IPv4 address/Mask) or ranges (IPv4_address-IPv4_address).
+                                   The IPv4
+                                   address used for MLAG Peer Link (control link) is derived from this pool based on the node id of the
+                                   first MLAG switch.
+                                   Required for MLAG leafs when `mlag_peer_address_family` is `ipv4` (default).
                                 mlag_peer_ipv6_pool:
-                                   IPv6 address pool used for MLAG Peer Link (control link). IP is derived from the node id.
-                                   Required
-                                   for MLAG leafs when `mlag_peer_address_family` is `ipv6`.
+                                   Comma separated list of prefixes (IPv6 address/Mask) or ranges (IPv6_address-IPv6_address).
+                                   The IPv6
+                                   address used for MLAG Peer Link (control link) is derived from this pool based on the node id of the
+                                   first MLAG switch.
+                                   Required for MLAG leafs when `mlag_peer_address_family` is `ipv6`.
                                 mlag_port_channel_id:
                                    If not set, the mlag port-channel id is generated based on the digits of the first interface present
                                    in 'mlag_interfaces'.
@@ -54379,6 +54908,7 @@ class EosDesigns(EosDesignsRootModel):
         "eos_designs_custom_templates": {"type": EosDesignsCustomTemplates},
         "eos_designs_documentation": {"type": EosDesignsDocumentation},
         "event_handlers": {"type": EventHandlers},
+        "event_monitor": {"type": EventMonitor},
         "evpn_ebgp_gateway_inter_domain": {"type": bool},
         "evpn_ebgp_gateway_multihop": {"type": int, "default": 15},
         "evpn_ebgp_multihop": {"type": int, "default": 3},
@@ -54417,6 +54947,7 @@ class EosDesigns(EosDesignsRootModel):
         "isis_ti_lfa": {"type": IsisTiLfa},
         "l3_edge": {"type": L3Edge},
         "l3_interface_profiles": {"type": L3InterfaceProfiles},
+        "load_interval": {"type": LoadInterval},
         "local_users": {"type": LocalUsers},
         "mac_address_table": {"type": MacAddressTable},
         "management_eapi": {"type": ManagementEapi},
@@ -54605,6 +55136,7 @@ class EosDesigns(EosDesignsRootModel):
         },
         "ptp_settings": {"type": PtpSettings},
         "queue_monitor_length": {"type": QueueMonitorLength},
+        "queue_monitor_streaming": {"type": QueueMonitorStreaming},
         "redundancy": {"type": Redundancy},
         "router_id_loopback_description": {"type": str, "default": "ROUTER_ID"},
         "serial_number": {"type": str},
@@ -54641,6 +55173,7 @@ class EosDesigns(EosDesignsRootModel):
         "underlay_ospf_process_id": {"type": int, "default": 100},
         "underlay_rfc5549": {"type": bool, "default": False},
         "underlay_routing_protocol": {"type": str},
+        "unsupported_transceiver": {"type": UnsupportedTransceiver},
         "uplink_ptp": {"type": UplinkPtp},
         "use_cv_topology": {"type": bool},
         "use_router_general_for_router_id": {"type": bool, "default": False},
@@ -55203,6 +55736,8 @@ class EosDesigns(EosDesignsRootModel):
     customize the system behavior, and
     implement workarounds to problems discovered in the field.
     """
+    event_monitor: EventMonitor
+    """Subclass of AvdModel."""
     evpn_ebgp_gateway_inter_domain: bool | None
     evpn_ebgp_gateway_multihop: int
     """
@@ -55449,6 +55984,8 @@ class EosDesigns(EosDesignsRootModel):
     Subclass of AvdIndexedList with
     `L3InterfaceProfilesItem` items. Primary key is `profile` (`str`).
     """
+    load_interval: LoadInterval
+    """Subclass of AvdModel."""
     local_users: LocalUsers
     mac_address_table: MacAddressTable
     """
@@ -55971,6 +56508,8 @@ class EosDesigns(EosDesignsRootModel):
     """
     queue_monitor_length: QueueMonitorLength
     """Subclass of AvdModel."""
+    queue_monitor_streaming: QueueMonitorStreaming
+    """Subclass of AvdModel."""
     redundancy: Redundancy
     """
     Redundancy for chassis platforms with dual supervisors | Optional.
@@ -56281,6 +56820,8 @@ class EosDesigns(EosDesignsRootModel):
     *Only supported with
     core_interfaces data model.
     """
+    unsupported_transceiver: UnsupportedTransceiver
+    """Subclass of AvdModel."""
     uplink_ptp: UplinkPtp
     """
     Enable PTP on all infrastructure links.
@@ -56466,6 +57007,7 @@ class EosDesigns(EosDesignsRootModel):
             eos_designs_custom_templates: EosDesignsCustomTemplates | UndefinedType = Undefined,
             eos_designs_documentation: EosDesignsDocumentation | UndefinedType = Undefined,
             event_handlers: EventHandlers | UndefinedType = Undefined,
+            event_monitor: EventMonitor | UndefinedType = Undefined,
             evpn_ebgp_gateway_inter_domain: bool | None | UndefinedType = Undefined,
             evpn_ebgp_gateway_multihop: int | UndefinedType = Undefined,
             evpn_ebgp_multihop: int | UndefinedType = Undefined,
@@ -56501,6 +57043,7 @@ class EosDesigns(EosDesignsRootModel):
             isis_ti_lfa: IsisTiLfa | UndefinedType = Undefined,
             l3_edge: L3Edge | UndefinedType = Undefined,
             l3_interface_profiles: L3InterfaceProfiles | UndefinedType = Undefined,
+            load_interval: LoadInterval | UndefinedType = Undefined,
             local_users: LocalUsers | UndefinedType = Undefined,
             mac_address_table: MacAddressTable | UndefinedType = Undefined,
             management_eapi: ManagementEapi | UndefinedType = Undefined,
@@ -56549,6 +57092,7 @@ class EosDesigns(EosDesignsRootModel):
             ptp_profiles: PtpProfiles | UndefinedType = Undefined,
             ptp_settings: PtpSettings | UndefinedType = Undefined,
             queue_monitor_length: QueueMonitorLength | UndefinedType = Undefined,
+            queue_monitor_streaming: QueueMonitorStreaming | UndefinedType = Undefined,
             redundancy: Redundancy | UndefinedType = Undefined,
             router_id_loopback_description: str | UndefinedType = Undefined,
             serial_number: str | None | UndefinedType = Undefined,
@@ -56587,6 +57131,7 @@ class EosDesigns(EosDesignsRootModel):
             underlay_routing_protocol: Literal["ebgp", "ospf", "ospf-ldp", "isis", "isis-sr", "isis-ldp", "isis-sr-ldp", "none"]
             | None
             | UndefinedType = Undefined,
+            unsupported_transceiver: UnsupportedTransceiver | UndefinedType = Undefined,
             uplink_ptp: UplinkPtp | UndefinedType = Undefined,
             use_cv_topology: bool | None | UndefinedType = Undefined,
             use_router_general_for_router_id: bool | UndefinedType = Undefined,
@@ -57016,6 +57561,7 @@ class EosDesigns(EosDesignsRootModel):
                    flexible tool that can be used to apply self-healing actions,
                    customize the system behavior, and
                    implement workarounds to problems discovered in the field.
+                event_monitor: Subclass of AvdModel.
                 evpn_ebgp_gateway_inter_domain: evpn_ebgp_gateway_inter_domain
                 evpn_ebgp_gateway_multihop:
                    Default of 15, considering a large value to avoid BGP reachability issues in very complex DCI
@@ -57173,6 +57719,7 @@ class EosDesigns(EosDesignsRootModel):
 
                    Subclass of AvdIndexedList with
                    `L3InterfaceProfilesItem` items. Primary key is `profile` (`str`).
+                load_interval: Subclass of AvdModel.
                 local_users: local_users
                 mac_address_table:
                    MAC address-table aging time.
@@ -57550,6 +58097,7 @@ class EosDesigns(EosDesignsRootModel):
 
                    Subclass of AvdModel.
                 queue_monitor_length: Subclass of AvdModel.
+                queue_monitor_streaming: Subclass of AvdModel.
                 redundancy:
                    Redundancy for chassis platforms with dual supervisors | Optional.
 
@@ -57775,6 +58323,7 @@ class EosDesigns(EosDesignsRootModel):
                    - The variables should be applied to all devices in the fabric.
                    *Only supported with
                    core_interfaces data model.
+                unsupported_transceiver: Subclass of AvdModel.
                 uplink_ptp:
                    Enable PTP on all infrastructure links.
 

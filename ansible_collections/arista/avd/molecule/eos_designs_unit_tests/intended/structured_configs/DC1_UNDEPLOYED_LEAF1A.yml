@@ -204,9 +204,21 @@ prefix_lists:
 - name: PL-LOOPBACKS-EVPN-OVERLAY
   sequence_numbers:
   - sequence: 10
-    action: permit 192.168.255.0/24 eq 32
+    action: permit 192.168.255.0/25 eq 32
   - sequence: 20
-    action: permit 192.168.254.0/24 eq 32
+    action: permit 192.168.255.128/26 eq 32
+  - sequence: 30
+    action: permit 192.168.255.192/29 eq 32
+  - sequence: 40
+    action: permit 192.168.255.200/32 eq 32
+  - sequence: 50
+    action: permit 192.168.254.0/25 eq 32
+  - sequence: 60
+    action: permit 192.168.254.128/26 eq 32
+  - sequence: 70
+    action: permit 192.168.254.192/29 eq 32
+  - sequence: 80
+    action: permit 192.168.254.200/32 eq 32
 - name: PL-MLAG-PEER-VRFS
   sequence_numbers:
   - sequence: 10
@@ -443,7 +455,6 @@ router_bgp:
       - address_family: evpn
         route_targets:
         - '12:12'
-    router_id: 192.168.255.21
     updates:
       wait_install: true
     neighbors:
@@ -464,7 +475,7 @@ router_bgp:
       - address_family: evpn
         route_targets:
         - '13:13'
-    router_id: 192.168.255.21
+    router_id: 11.11.11.11
     updates:
       wait_install: true
     neighbors:
