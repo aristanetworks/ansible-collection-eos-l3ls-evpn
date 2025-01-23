@@ -4,8 +4,8 @@
   connection: local
   gather_facts: false
   vars:
-    cv_server: www.cv-staging.corp.arista.io
-    cv_token: "{{ lookup('env', 'CVAAS_AAWG_CI') }}"
+    cv_server: "{{ lookup('env', 'CV_SERVER') }}"
+    cv_token: "{{ lookup('env', 'CV_ACCESS_TOKEN') }}"
     cv_verify_certs: true
     cv_skip_missing_devices: true
     eos_config_dir: "{{ playbook_dir }}/intended/configs/base_configs"
