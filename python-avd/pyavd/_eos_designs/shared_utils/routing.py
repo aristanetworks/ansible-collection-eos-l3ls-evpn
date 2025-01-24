@@ -29,8 +29,9 @@ class RoutingMixin:
     @cached_property
     def overlay_routing_protocol(self: SharedUtils) -> str:
         default_overlay_routing_protocol = self.node_type_key_data.default_overlay_routing_protocol
-        if self.is_wan_router and self.inputs.wan_use_evpn_node_settings_for_lan:
-            default_overlay_routing_protocol = "none"
+        if self.is_wan_router and not self.inputs.wan_use_evpn_node_settings_for_lan:
+            # For WAN routers without the knob, overlay_routing_protocol should be ignored.
+            return None
         return (self.inputs.overlay_routing_protocol or default_overlay_routing_protocol).lower()
 
     @cached_property
