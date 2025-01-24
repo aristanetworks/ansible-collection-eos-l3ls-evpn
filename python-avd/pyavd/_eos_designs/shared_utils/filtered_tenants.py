@@ -431,7 +431,7 @@ class FilteredTenantsMixin:
         vrf_address_families = [af for af in vrf.address_families if af in self.overlay_address_families]
         return any(
             [
-                (self.is_wan_router and self.vrf_has_wan_vni(vrf.name)),
+                (self.is_wan_router and self.vrf_wan_vni(vrf.name) is not None),
                 vrf_address_families,
                 vrf.bgp_peers,
                 (self.uplink_type == "p2p-vrfs" and vrf.name in (self.get_switch_fact("uplink_switch_vrfs", required=False) or [])),

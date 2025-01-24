@@ -204,7 +204,7 @@ class CvPathfinderMixin:
         return strip_empties_from_list(metadata_vrfs)
 
     def _get_vni_for_vrf_name(self: AvdStructuredConfigMetadata, vrf_name: str) -> int:
-        if vrf_name in self.inputs.wan_virtual_topologies.vrfs and (wan_vni := self.inputs.wan_virtual_topologies.vrfs[vrf_name].wan_vni) is not None:
+        if (wan_vni := self.shared_utils.vrf_wan_vni(vrf_name)) is not None:
             return wan_vni
         if vrf_name == "default":
             return 1

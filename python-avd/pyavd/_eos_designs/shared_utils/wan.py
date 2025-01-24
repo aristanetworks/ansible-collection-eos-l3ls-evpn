@@ -583,6 +583,8 @@ class WanMixin:
 
         return self.inputs.wan_stun_dtls_profile_name
 
-    def vrf_has_wan_vni(self: SharedUtils, vrf_name: str) -> bool:
-        """Returns True if the VRF `vrf_name` is present under wan_virtual_topologies and wan_vni is set."""
-        return vrf_name in self.inputs.wan_virtual_topologies.vrfs and self.inputs.wan_virtual_topologies.vrfs[vrf_name].wan_vni
+    def vrf_wan_vni(self: SharedUtils, vrf_name: str) -> int | None:
+        """Returns the VRF WAN VNI or None."""
+        if vrf_name not in self.inputs.wan_virtual_topologies.vrfs:
+            return None
+        return self.inputs.wan_virtual_topologies.vrfs[vrf_name].wan_vni
