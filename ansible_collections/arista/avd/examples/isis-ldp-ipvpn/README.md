@@ -25,7 +25,7 @@ This example does not include Integration with CloudVision to keep everything as
 ## Installation
 
 --8<--
-docs/installation/example-installation.md
+ansible_collections/arista/avd/examples/common/example-installation.md
 --8<--
 
 ```shell

@@ -28,7 +28,7 @@ The example is meant as a starting foundation. You may build more advanced fabri
 ## Installation & Requirements
 
 --8<--
-docs/installation/example-installation.md
+ansible_collections/arista/avd/examples/common/example-installation.md
 --8<--
 
 ``` shell

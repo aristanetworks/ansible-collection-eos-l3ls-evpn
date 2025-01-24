@@ -29,7 +29,7 @@ Ansible playbooks are included to show the following:
 ## Installation
 
 --8<--
-docs/installation/example-installation.md
+ansible_collections/arista/avd/examples/common/example-installation.md
 --8<--
 
 ```shell
