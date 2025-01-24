@@ -144,7 +144,8 @@ markdown_extensions:
   - pymdownx.smartsymbols:
       fractions: false
   - pymdownx.snippets:
-      base_path: './'
+      base_path:
+        - './'
   - pymdownx.superfences:
       custom_fences:
         - name: mermaid
