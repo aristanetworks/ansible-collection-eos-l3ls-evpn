@@ -33,8 +33,8 @@ ansible-galaxy collection install arista.cvp
 
 Figure 1 below provides a visualization of the role's inputs, outputs, and tasks in order executed by the role.
 
-![Figure 1: Ansible Role eos_config_deploy_eapi](../../docs/_media/eos_config_deploy_cvp_dark.svg#only-dark)
-![Figure 1: Ansible Role eos_config_deploy_eapi](../../docs/_media/eos_config_deploy_cvp_light.svg#only-light)
+![Figure 1: Ansible Role eos_config_deploy_eapi](../../../../../docs/_media/eos_config_deploy_cvp_dark.svg#only-dark)
+![Figure 1: Ansible Role eos_config_deploy_eapi](../../../../../docs/_media/eos_config_deploy_cvp_light.svg#only-light)
 
 1. Read inventory
    1. Build containers topology
@@ -78,7 +78,7 @@ Default output directories can be updated by modifying the default role variable
 
 ``` yaml
 --8<--
-roles/eos_config_deploy_cvp/defaults/main/output_directories.yml
+ansible_collections/arista/avd/roles/eos_config_deploy_cvp/defaults/main/output_directories.yml
 --8<--
 ```
 
@@ -308,8 +308,8 @@ ansible-playbook playbook.to.deploy.with.cvp.yml --skip-tags "containers,apply"
 
 ## Requirements
 
-Requirements are located here: [avd-requirements](../../docs/installation/collection-installation.md#python-requirements-installation)
+Requirements are located here: [avd-requirements](../../../../../docs/installation/collection-installation.md#python-requirements-installation)
 
 ## License
 
-Project is published under [Apache 2.0 License](../../LICENSE)
+Project is published under [Apache 2.0 License](https://github.com/aristanetworks/avd/blob/devel/LICENSE)

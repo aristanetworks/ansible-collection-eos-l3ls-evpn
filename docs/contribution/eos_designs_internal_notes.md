@@ -47,7 +47,7 @@ The module is used in `arista.avd.eos_designs` to set facts for devices, which a
   cprofile_file: <Filename for storing cprofile data used to debug performance issues>
 ```
 
-See the full argument spec [here](../../plugins/modules/eos_designs_facts.py)
+See the full argument spec [here](../plugins/Modules_and_action_plugins/eos_designs_facts.md)
 
 #### Output data model
 
