@@ -90,7 +90,12 @@ class UtilsMixin:
         for index, network_port in enumerate(self.inputs.network_ports):
             network_port._context = f"network_ports[{index}]"
             network_port_settings = self.shared_utils.get_merged_adapter_settings(network_port)
-            if not self._match_regexes(network_port_settings.switches, self.shared_utils.hostname):
+
+            if not network_port_settings.switches and not network_port_settings.platforms:
+                continue
+            if network_port_settings.switches and not self._match_regexes(network_port_settings.switches, self.shared_utils.hostname):
+                continue
+            if network_port_settings.platforms and not self._match_regexes(network_port_settings.platforms, self.shared_utils.platform):
                 continue
 
             filtered_network_ports.append(network_port_settings)
@@ -101,9 +106,9 @@ class UtilsMixin:
         """
         Match a list of regexes with the supplied value.
 
-        Regex must match the full value to pass, so regex is wrapped in ^$.
+        Regex must match the full value to pass.
         """
-        return any(re.match(rf"^{regex}$", value) for regex in regexes)
+        return any(re.fullmatch(regex, value) for regex in regexes)
 
     def _get_short_esi(
         self: AvdStructuredConfigConnectedEndpoints,

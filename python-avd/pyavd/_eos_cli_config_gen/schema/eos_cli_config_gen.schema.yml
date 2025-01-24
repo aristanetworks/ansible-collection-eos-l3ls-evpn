@@ -5609,6 +5609,42 @@ keys:
                 per-vlan.
 
                 '
+  ip_name_server_groups:
+    type: list
+    primary_key: name
+    items:
+      type: dict
+      keys:
+        name:
+          type: str
+        name_servers:
+          type: list
+          primary_key: ip_address
+          allow_duplicate_primary_key: true
+          items:
+            type: dict
+            keys:
+              ip_address:
+                type: str
+                description: IPv4 or IPv6 address for DNS server.
+              vrf:
+                description: VRF Name.
+                type: str
+                required: true
+                convert_types:
+                - int
+              priority:
+                description: Priority value (lower is first).
+                type: int
+                convert_types:
+                - str
+                min: 0
+                max: 15
+        dns_domain:
+          type: str
+        ip_domain_list:
+          type: str
+          description: Set domain names to complete unqualified host names.
   ip_name_servers:
     type: list
     items:
@@ -6129,6 +6165,13 @@ keys:
   ip_virtual_router_mac_address:
     type: str
     description: MAC address (hh:hh:hh:hh:hh:hh).
+  ip_virtual_router_mac_address_advertisement_interval:
+    type: int
+    description: Advertisement interval in seconds.
+    convert_types:
+    - str
+    min: 0
+    max: 86400
   ipv6_access_lists:
     type: list
     primary_key: name
@@ -6442,7 +6485,11 @@ keys:
       timer:
         type: int
       timer_reinitialization:
-        type: str
+        type: int
+        min: 1
+        max: 10
+        convert_types:
+        - str
       holdtime:
         type: int
       management_address:
@@ -6715,6 +6762,7 @@ keys:
                     valid_values:
                     - tcp
                     - udp
+                    - tls
                     default: udp
                   ports:
                     type: list
@@ -6722,6 +6770,10 @@ keys:
                       type: int
                       convert_types:
                       - str
+                  ssl_profile:
+                    type: str
+                    description: Used when host protocol is 'tls'. Profiles are defined
+                      under `management_security.ssl_profiles`.
       policy:
         type: dict
         keys:
@@ -8494,6 +8546,9 @@ keys:
               default: true
             url:
               type: str
+      name_server_group:
+        type: str
+        description: Set name-server group.
       vrfs:
         type: list
         primary_key: name
@@ -9268,6 +9323,7 @@ keys:
             - int
       servers:
         type: list
+        primary_key: name
         items:
           type: dict
           keys:
@@ -9336,9 +9392,11 @@ keys:
               valid_values:
               - md5
               - sha1
+              required: true
             key:
               type: str
               description: Obfuscated key.
+              required: true
             key_type:
               type: str
               convert_types:
@@ -14288,6 +14346,10 @@ keys:
                   - mpls
                   - path-selection
                   description: Transport encapsulation for the peer-group.
+                next_hop_self_source_interface:
+                  description: Source interface name for MPLS encapsulation. Requires
+                    `encapsulation` to be set as `mpls`.
+                  type: str
                 additional_paths:
                   type: dict
                   $ref: eos_cli_config_gen#/$defs/bgp_additional_paths

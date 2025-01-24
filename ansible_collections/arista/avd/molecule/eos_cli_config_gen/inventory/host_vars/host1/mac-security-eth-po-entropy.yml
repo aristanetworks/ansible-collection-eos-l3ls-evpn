@@ -19,6 +19,8 @@ mac_security:
           encrypted_key: 10195F4C5144405A
           fallback: true
       l2_protocols:
+        ethernet_flow_control:
+          mode: bypass
         lldp:
           mode: bypass unauthorized
       traffic_unprotected:

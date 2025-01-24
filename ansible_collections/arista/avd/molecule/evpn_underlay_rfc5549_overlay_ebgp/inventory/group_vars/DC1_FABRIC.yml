@@ -66,7 +66,8 @@ spine:
       id: 5
       mgmt_ip: 192.168.200.105/24
       mac_address: '0c:1d:c0:1d:62:01'
-      loopback_ipv6_pool: 2001:1::/64
+      # Testing using multiple prefixes and ranges to represent 2001:1::-2001:1::1000. This will break into multiple entries in the EVPN overlay prefix-list.
+      loopback_ipv6_pool: 2001:1::/127, 2001:1::2-2001:1::1000
     - name: DC1-SPINE6
       # Testing underlay IPv6 peers
       id: 6
