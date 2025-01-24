@@ -18,12 +18,12 @@ super_spine:
       - distance bgp 20 200 200
   nodes:
     - name: DC1-SUPER-SPINE1
-      id: 1
+      # id: 1 Using pool manager for ID
       # mgmt_ip: 192.168.1.1/24 Test without management IP
       # evpn_role: none
       # evpn_route_servers: []
     - name: DC1-SUPER-SPINE2
-      id: 2
+      # id: 2 Using pool manager for ID
       mgmt_ip: 192.168.1.2/24
       # evpn_role: none
       # evpn_route_servers: []
@@ -39,7 +39,7 @@ overlay_controller:
       - distance bgp 20 200 200
   nodes:
     - name: DC1-RS1
-      id: 1
+      # id: 1 Using pool manager for ID
       # mgmt_ip: 192.168.1.3/24 Test without management IP
       bgp_as: 65101
       evpn_role: server
@@ -49,7 +49,7 @@ overlay_controller:
       # uplink_interfaces: ['Ethernet1', 'Ethernet2', 'Ethernet3'] Test using "use_cv_topology
       # uplink_switches: ['DC1-SUPER-SPINE1', 'DC1-POD1-SPINE1', 'DC1-POD1-LEAF1A'] Test using "use_cv_topology
     - name: DC1-RS2
-      id: 2
+      # id: 2 Using pool manager for ID
       mgmt_ip: 192.168.1.4/24
       bgp_as: 65102
       evpn_role: server

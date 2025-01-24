@@ -250,6 +250,26 @@
               - ansible_failed_result is defined
               - ansible_failed_result.msg == expected_error_message
 
+- name: Converge Negative tests for 'eos_designs_facts'
+  hosts: FABRIC_ID_STATIC_AND_POOL_MANAGER
+  connection: local
+  tasks:
+    - name: Run failure scenario Test
+      block:
+        - name: Trigger Error
+          ansible.builtin.import_role:
+            name: arista.avd.eos_designs
+      rescue:
+        - name: Error message
+          run_once: true
+          ansible.builtin.debug:
+            var: ansible_failed_result.msg
+        - name: Assert eos_designs failed with the expected error message
+          ansible.builtin.assert:
+            that:
+              - ansible_failed_result is defined
+              - ansible_failed_result.msg == expected_error_message
+
 - name: Converge Negative tests for 'eos_designs_structured_config'
   hosts: EOS_DESIGNS_FAILURES_INCLUDED
   gather_facts: false

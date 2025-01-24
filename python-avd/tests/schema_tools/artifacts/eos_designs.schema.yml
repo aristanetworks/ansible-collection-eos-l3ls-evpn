@@ -895,6 +895,36 @@ keys:
       in the Fabric, **must** be an inventory group name.
     type: str
     required: true
+  fabric_numbering:
+    description: Automatic assignment of numbers for settings like Node ID.
+    type: dict
+    keys:
+      id:
+        type: dict
+        description: Assignment of Node ID.
+        keys:
+          algorithm:
+            type: str
+            default: static
+            valid_values:
+            - static
+            - pool_manager
+            description: 'IDs will be automatically assigned according to the configured
+              algorithm.
+
+              - `static` will use the statically set IDs under node setting.
+
+              - `pool_manager` will activate the pool manager for ID pools.'
+          pools_file:
+            type: str
+            description: 'Path to file to use for storing ID pool data when using
+              "pool_manager" as algorithm.
+
+              By default the path is "intended/data/<fabric_name>-ids.yml".
+
+
+              Note: Since the pool manager will remove stale entries after every run,
+              each fabric should be using it''s own file.'
   hardware_counters:
     documentation_options:
       table: system-settings
