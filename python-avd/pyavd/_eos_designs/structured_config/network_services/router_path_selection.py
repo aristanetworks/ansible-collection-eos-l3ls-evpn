@@ -35,7 +35,8 @@ class RouterPathSelectionMixin(UtilsMixin):
         # for AutoVPN, need also vrfs and policies.
         if self.inputs.wan_mode == "autovpn":
             vrfs = [
-                {"name": vrf.name, "path_selection_policy": f"{vrf.policy}-WITH-CP" if vrf.name == "default" else vrf.policy} for vrf in self._filtered_wan_vrfs
+                {"name": vrf.name, "path_selection_policy": f"{vrf.policy}-WITH-CP" if vrf.name == "default" else vrf.policy}
+                for vrf in self.shared_utils._filtered_wan_vrfs
             ]
 
             router_path_selection.update(

@@ -150,18 +150,19 @@ class RouterBgpMixin(UtilsMixin):
                     continue
 
                 vrf_name = vrf.name
-                bgp_vrf = strip_empties_from_dict(
-                    {
-                        "eos_cli": vrf.bgp.raw_eos_cli,
-                    }
-                )
+                bgp_vrf = {
+                    "name": vrf.name,
+                    "eos_cli": vrf.bgp.raw_eos_cli,
+                }
 
                 if vrf.bgp.structured_config:
                     self.custom_structured_configs.nested.router_bgp.vrfs.obtain(vrf_name)._deepmerge(
                         vrf.bgp.structured_config, list_merge=self.custom_structured_configs.list_merge_strategy
                     )
 
-                if vrf_address_families := [af for af in vrf.address_families if af in self.shared_utils.overlay_address_families]:
+                if (
+                    vrf_address_families := [af for af in vrf.address_families if af in self.shared_utils.overlay_address_families]
+                ) or self.shared_utils.vrf_wan_vni(vrf_name) is not None:
                     # The called function in-place updates the bgp_vrf dict.
                     self._update_router_bgp_vrf_evpn_or_mpls_cfg(bgp_vrf, vrf, vrf_address_families)
 
@@ -269,7 +270,7 @@ class RouterBgpMixin(UtilsMixin):
                     append_if_not_duplicate(
                         list_of_dicts=router_bgp["vrfs"],
                         primary_key="name",
-                        new_dict={"name": vrf_name, **bgp_vrf},
+                        new_dict=bgp_vrf,
                         context="BGP VRFs defined under network services",
                         context_keys=["name"],
                     )
@@ -286,6 +287,18 @@ class RouterBgpMixin(UtilsMixin):
         bgp_vrf["rd"] = self.get_vrf_rd(vrf)
         vrf_rt = self.get_vrf_rt(vrf)
         route_targets = {"import": [], "export": []}
+
+        # if "evpn" in vrf_address_families the RTs will be added
+        if self.shared_utils.vrf_wan_vni(bgp_vrf["name"]) and "evpn" not in vrf_address_families:
+            if (target := get_item(route_targets["import"], "address_family", "evpn")) is None:
+                route_targets["import"].append({"address_family": "evpn", "route_targets": [vrf_rt]})
+            else:
+                target["route_targets"].append(vrf_rt)
+
+            if (target := get_item(route_targets["export"], "address_family", "evpn")) is None:
+                route_targets["export"].append({"address_family": "evpn", "route_targets": [vrf_rt]})
+            else:
+                target["route_targets"].append(vrf_rt)
 
         for af in vrf_address_families:
             if (target := get_item(route_targets["import"], "address_family", af)) is None:

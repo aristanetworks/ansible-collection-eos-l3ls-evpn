@@ -40,7 +40,7 @@ class RouterAdaptiveVirtualTopologyMixin(UtilsMixin):
         # For CV Pathfinder, it is required to go through all the AVT profiles in the policy to assign an ID.
         wan_vrfs = []
 
-        for vrf in self._filtered_wan_vrfs:
+        for vrf in self.shared_utils._filtered_wan_vrfs:
             wan_vrf = {"name": vrf.name, "policy": f"{vrf.policy}-WITH-CP" if vrf.name == "default" else vrf.policy, "profiles": []}
 
             # Need to allocate an ID for each profile in the policy, for now picked up from the input.

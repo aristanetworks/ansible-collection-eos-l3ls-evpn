@@ -585,6 +585,17 @@ class WanMixin:
 
     def vrf_wan_vni(self: SharedUtils, vrf_name: str) -> int | None:
         """Returns the VRF WAN VNI or None."""
-        if vrf_name not in self.inputs.wan_virtual_topologies.vrfs:
+        if vrf_name not in self._filtered_wan_vrfs:
             return None
-        return self.inputs.wan_virtual_topologies.vrfs[vrf_name].wan_vni
+        return self._filtered_wan_vrfs[vrf_name].wan_vni
+
+    @cached_property
+    def _filtered_wan_vrfs(self: AvdStructuredConfigNetworkServices) -> EosDesigns.WanVirtualTopologies.Vrfs:
+        """Loop through all the VRFs defined under `wan_virtual_topologies.vrfs` and returns a list of mode."""
+        wan_vrfs = EosDesigns.WanVirtualTopologies.Vrfs(vrf for vrf in self.inputs.wan_virtual_topologies.vrfs if vrf.name in self.vrfs or self.is_wan_server)
+
+        # Check that default is in the list as it is required everywhere
+        if "default" not in wan_vrfs:
+            wan_vrfs.append(EosDesigns.WanVirtualTopologies.VrfsItem(name="default", wan_vni=1))
+
+        return wan_vrfs
