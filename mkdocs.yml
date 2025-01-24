@@ -208,8 +208,3 @@ nav:
   - Versioning: docs/versioning/semantic-versioning.md
   - AVD Dev Containers:
       - Overview: docs/containers/overview.md
-  - About:
-      - AVD on Ansible Galaxy: https://galaxy.ansible.com/arista/avd
-      - Arista CVP Collection: https://cvp.avd.sh/en/latest/
-      - Arista Installation Script: https://github.com/arista-netdevops-community/avd-install
-      - Arista NetDevOps Community: https://aristanetworks.github.io/netdevops-examples/
