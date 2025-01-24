@@ -121,7 +121,7 @@
       - any-glob-to-any-file:
           - development/requirements-dev.txt
           - development/requirements.txt
-          - ansible_collections/arista/avd/docs/requirements.txt
+          - docs/requirements.txt
 
 "state: CI Updated":
   - changed-files:
