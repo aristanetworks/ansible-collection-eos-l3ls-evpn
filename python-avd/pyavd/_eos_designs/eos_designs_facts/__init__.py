@@ -10,13 +10,12 @@ from pyavd._errors import AristaAvdError
 
 from .mlag import MlagMixin
 from .overlay import OverlayMixin
-from .short_esi import ShortEsiMixin
 from .uplinks import UplinksMixin
 from .vlans import VlansMixin
 from .wan import WanMixin
 
 
-class EosDesignsFacts(AvdFacts, MlagMixin, ShortEsiMixin, OverlayMixin, WanMixin, UplinksMixin, VlansMixin):
+class EosDesignsFacts(MlagMixin, OverlayMixin, WanMixin, UplinksMixin, VlansMixin, AvdFacts):
     """
     `EosDesignsFacts` is based on `AvdFacts`, so make sure to read the description there first.
 
@@ -85,7 +84,7 @@ class EosDesignsFacts(AvdFacts, MlagMixin, ShortEsiMixin, OverlayMixin, WanMixin
                 raise AristaAvdError(msg)
 
             if self.shared_utils.mlag is True:
-                peer_eos_designs_facts: EosDesignsFacts = self.shared_utils.mlag_peer_facts
+                peer_eos_designs_facts = self.shared_utils.mlag_peer_facts_cls
                 if self.shared_utils.overlay_rd_type_admin_subfield == peer_eos_designs_facts.shared_utils.overlay_rd_type_admin_subfield:
                     msg = "For MLAG devices Route Distinguisher must be unique when 'evpn_multicast: True' since it will create a multi-vtep configuration."
                     raise AristaAvdError(msg)

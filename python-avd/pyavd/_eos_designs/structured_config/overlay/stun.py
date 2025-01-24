@@ -5,14 +5,10 @@ from __future__ import annotations
 
 import itertools
 from functools import cached_property
-from typing import TYPE_CHECKING
 
 from pyavd._utils import strip_empties_from_dict
 
 from .utils import UtilsMixin
-
-if TYPE_CHECKING:
-    from . import AvdStructuredConfigOverlay
 
 
 class StunMixin(UtilsMixin):
@@ -23,7 +19,7 @@ class StunMixin(UtilsMixin):
     """
 
     @cached_property
-    def stun(self: AvdStructuredConfigOverlay) -> dict | None:
+    def stun(self) -> dict | None:
         """Return structured config for stun."""
         if not self.shared_utils.is_wan_router:
             return None

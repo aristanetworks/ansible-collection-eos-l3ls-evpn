@@ -4,12 +4,8 @@
 from __future__ import annotations
 
 from functools import cached_property
-from typing import TYPE_CHECKING
 
 from .utils import UtilsMixin
-
-if TYPE_CHECKING:
-    from . import AvdStructuredConfigNetworkServices
 
 
 class IpVirtualRouterMacAddressMixin(UtilsMixin):
@@ -20,7 +16,7 @@ class IpVirtualRouterMacAddressMixin(UtilsMixin):
     """
 
     @cached_property
-    def ip_virtual_router_mac_address(self: AvdStructuredConfigNetworkServices) -> str | None:
+    def ip_virtual_router_mac_address(self) -> str | None:
         """Return structured config for ip_virtual_router_mac_address."""
         if (
             self.shared_utils.network_services_l2

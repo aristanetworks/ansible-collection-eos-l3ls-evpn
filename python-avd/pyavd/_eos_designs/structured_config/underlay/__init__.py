@@ -24,7 +24,6 @@ from .vlans import VlansMixin
 
 
 class AvdStructuredConfigUnderlay(
-    StructuredConfigGenerator,
     VlansMixin,
     EthernetInterfacesMixin,
     PortChannelInterfacesMixin,
@@ -43,6 +42,7 @@ class AvdStructuredConfigUnderlay(
     AgentsMixin,
     IpAccesslistsMixin,
     DhcpServersMixin,
+    StructuredConfigGenerator,
 ):
     """
     The AvdStructuredConfig Class is imported used "get_structured_config" to render parts of the structured config.
@@ -53,6 +53,4 @@ class AvdStructuredConfigUnderlay(
 
     The Class uses StructuredConfigGenerator, as the base class, to get the render, keys and other attributes.
     All other methods are included as "Mixins" to make the files more manageable.
-
-    The order of the @cached_properties methods imported from Mixins will also control the order in the output.
     """

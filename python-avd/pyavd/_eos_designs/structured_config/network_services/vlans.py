@@ -14,8 +14,6 @@ from .utils import UtilsMixin
 if TYPE_CHECKING:
     from pyavd._eos_designs.schema import EosDesigns
 
-    from . import AvdStructuredConfigNetworkServices
-
 
 class VlansMixin(UtilsMixin):
     """
@@ -25,7 +23,7 @@ class VlansMixin(UtilsMixin):
     """
 
     @cached_property
-    def vlans(self: AvdStructuredConfigNetworkServices) -> list | None:
+    def vlans(self) -> list | None:
         """
         Return structured config for vlans.
 
@@ -91,7 +89,7 @@ class VlansMixin(UtilsMixin):
         return None
 
     def _get_vlan_config(
-        self: AvdStructuredConfigNetworkServices,
+        self,
         vlan: EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem.VrfsItem.SvisItem
         | EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem.L2vlansItem,
     ) -> dict:

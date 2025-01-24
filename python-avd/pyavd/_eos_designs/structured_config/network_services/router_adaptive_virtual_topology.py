@@ -4,14 +4,10 @@
 from __future__ import annotations
 
 from functools import cached_property
-from typing import TYPE_CHECKING
 
 from pyavd._utils import append_if_not_duplicate, get, get_item, strip_empties_from_dict
 
 from .utils import UtilsMixin
-
-if TYPE_CHECKING:
-    from . import AvdStructuredConfigNetworkServices
 
 
 class RouterAdaptiveVirtualTopologyMixin(UtilsMixin):
@@ -22,7 +18,7 @@ class RouterAdaptiveVirtualTopologyMixin(UtilsMixin):
     """
 
     @cached_property
-    def router_adaptive_virtual_topology(self: AvdStructuredConfigNetworkServices) -> dict | None:
+    def router_adaptive_virtual_topology(self) -> dict | None:
         """Return structured config for profiles, policies and VRFs for router adaptive-virtual-topology (AVT)."""
         if not self.shared_utils.is_cv_pathfinder_router:
             return None
@@ -35,7 +31,7 @@ class RouterAdaptiveVirtualTopologyMixin(UtilsMixin):
 
         return strip_empties_from_dict(router_adaptive_virtual_topology)
 
-    def _cv_pathfinder_wan_vrfs(self: AvdStructuredConfigNetworkServices) -> list:
+    def _cv_pathfinder_wan_vrfs(self) -> list:
         """Return a list of WAN VRFs based on filtered tenants and the AVT."""
         # For CV Pathfinder, it is required to go through all the AVT profiles in the policy to assign an ID.
         wan_vrfs = []
@@ -71,7 +67,7 @@ class RouterAdaptiveVirtualTopologyMixin(UtilsMixin):
 
         return wan_vrfs
 
-    def _cv_pathfinder_policies(self: AvdStructuredConfigNetworkServices) -> list:
+    def _cv_pathfinder_policies(self) -> list:
         """
         Build and return the CV Pathfinder policies based on the computed _filtered_wan_policies.
 
@@ -101,7 +97,7 @@ class RouterAdaptiveVirtualTopologyMixin(UtilsMixin):
 
         return policies
 
-    def _cv_pathfinder_profiles(self: AvdStructuredConfigNetworkServices) -> list:
+    def _cv_pathfinder_profiles(self) -> list:
         """Return a list of router adaptive-virtual-topology profiles for this router."""
         profiles = []
         for policy in self._filtered_wan_policies:

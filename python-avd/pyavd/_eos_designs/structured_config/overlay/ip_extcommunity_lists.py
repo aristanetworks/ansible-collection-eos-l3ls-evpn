@@ -4,12 +4,8 @@
 from __future__ import annotations
 
 from functools import cached_property
-from typing import TYPE_CHECKING
 
 from .utils import UtilsMixin
-
-if TYPE_CHECKING:
-    from . import AvdStructuredConfigOverlay
 
 
 class IpExtCommunityListsMixin(UtilsMixin):
@@ -20,7 +16,7 @@ class IpExtCommunityListsMixin(UtilsMixin):
     """
 
     @cached_property
-    def ip_extcommunity_lists(self: AvdStructuredConfigOverlay) -> list | None:
+    def ip_extcommunity_lists(self) -> list | None:
         """Return structured config for ip_extcommunity_lists."""
         if self.shared_utils.overlay_routing_protocol != "ibgp":
             return None

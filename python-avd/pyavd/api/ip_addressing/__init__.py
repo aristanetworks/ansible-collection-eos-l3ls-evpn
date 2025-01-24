@@ -12,7 +12,7 @@ from pyavd._utils import get_ip_from_pool
 from .utils import UtilsMixin
 
 
-class AvdIpAddressing(AvdFacts, UtilsMixin):
+class AvdIpAddressing(UtilsMixin, AvdFacts):
     """
     Class used to render IP addresses either from custom Jinja2 templates or using default Python Logic.
 

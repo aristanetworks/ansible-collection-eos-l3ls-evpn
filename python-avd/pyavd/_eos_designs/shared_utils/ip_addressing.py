@@ -4,17 +4,15 @@
 from __future__ import annotations
 
 from functools import cached_property
-from typing import TYPE_CHECKING
 
 from pyavd._errors import AristaAvdMissingVariableError
 from pyavd._utils import load_python_class
 from pyavd.api.ip_addressing import AvdIpAddressing
 
-if TYPE_CHECKING:
-    from . import SharedUtils
+from .utils import UtilsMixin
 
 
-class IpAddressingMixin:
+class IpAddressingMixin(UtilsMixin):
     """
     Mixin Class providing a subset of SharedUtils.
 
@@ -23,52 +21,52 @@ class IpAddressingMixin:
     """
 
     @cached_property
-    def loopback_ipv6_pool(self: SharedUtils) -> str:
-        if not self.node_config.loopback_ipv6_pool:
+    def loopback_ipv6_pool(self) -> str:
+        if not self.shared_utils.node_config.loopback_ipv6_pool:
             msg = "loopback_ipv6_pool"
             raise AristaAvdMissingVariableError(msg)
 
-        return self.node_config.loopback_ipv6_pool
+        return self.shared_utils.node_config.loopback_ipv6_pool
 
     @cached_property
-    def loopback_ipv4_pool(self: SharedUtils) -> str:
-        if not self.node_config.loopback_ipv4_pool:
+    def loopback_ipv4_pool(self) -> str:
+        if not self.shared_utils.node_config.loopback_ipv4_pool:
             msg = "loopback_ipv4_pool"
             raise AristaAvdMissingVariableError(msg)
 
-        return self.node_config.loopback_ipv4_pool
+        return self.shared_utils.node_config.loopback_ipv4_pool
 
     @cached_property
-    def vtep_loopback_ipv4_pool(self: SharedUtils) -> str:
-        if not self.node_config.vtep_loopback_ipv4_pool:
+    def vtep_loopback_ipv4_pool(self) -> str:
+        if not self.shared_utils.node_config.vtep_loopback_ipv4_pool:
             msg = "vtep_loopback_ipv4_pool"
             raise AristaAvdMissingVariableError(msg)
 
-        return self.node_config.vtep_loopback_ipv4_pool
+        return self.shared_utils.node_config.vtep_loopback_ipv4_pool
 
     @cached_property
-    def vtep_ip(self: SharedUtils) -> str:
+    def vtep_ip(self) -> str:
         """Render ipv4 address for vtep_ip using dynamically loaded python module."""
-        if self.mlag is True:
+        if self.shared_utils.mlag is True:
             return self.ip_addressing.vtep_ip_mlag()
 
         return self.ip_addressing.vtep_ip()
 
     @cached_property
-    def ip_addressing(self: SharedUtils) -> AvdIpAddressing:
+    def ip_addressing(self) -> AvdIpAddressing:
         """
         Load the python_module defined in `templates.ip_addressing.python_module`.
 
         Return an instance of the class defined by `templates.ip_addressing.python_class_name` as cached_property.
         """
-        module_path = self.node_type_key_data.ip_addressing.python_module
+        module_path = self.shared_utils.node_type_key_data.ip_addressing.python_module
         if module_path is None:
-            return AvdIpAddressing(hostvars=self.hostvars, inputs=self.inputs, shared_utils=self)
+            return AvdIpAddressing(hostvars=self.shared_utils._hostvars, inputs=self.inputs, shared_utils=self.shared_utils)
 
         cls: type[AvdIpAddressing] = load_python_class(
             module_path,
-            self.node_type_key_data.ip_addressing.python_class_name,
+            self.shared_utils.node_type_key_data.ip_addressing.python_class_name,
             AvdIpAddressing,
         )
 
-        return cls(hostvars=self.hostvars, inputs=self.inputs, shared_utils=self)
+        return cls(hostvars=self.shared_utils._hostvars, inputs=self.inputs, shared_utils=self)

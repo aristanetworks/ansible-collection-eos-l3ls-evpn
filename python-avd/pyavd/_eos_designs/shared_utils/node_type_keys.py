@@ -4,14 +4,12 @@
 from __future__ import annotations
 
 from functools import cached_property
-from typing import TYPE_CHECKING
 
 from pyavd._eos_designs.schema import EosDesigns
 from pyavd._errors import AristaAvdInvalidInputsError
 from pyavd._utils import get, get_item
 
-if TYPE_CHECKING:
-    from . import SharedUtils
+from .utils import UtilsMixin
 
 MPLS_DEFAULT_NODE_TYPE_KEYS = [
     {
@@ -183,7 +181,7 @@ DEFAULT_NODE_TYPE_KEYS = {
 }
 
 
-class NodeTypeKeysMixin:
+class NodeTypeKeysMixin(UtilsMixin):
     """
     Mixin Class providing a subset of SharedUtils.
 
@@ -192,19 +190,19 @@ class NodeTypeKeysMixin:
     """
 
     @cached_property
-    def node_type_key_data(self: SharedUtils) -> EosDesigns.NodeTypeKeysItem:
+    def node_type_key_data(self) -> EosDesigns.NodeTypeKeysItem:
         """node_type_key_data containing settings for this node_type."""
         for node_type_key in self.inputs.custom_node_type_keys:
-            if node_type_key.type == self.type:
+            if node_type_key.type == self.shared_utils.type:
                 return node_type_key._cast_as(EosDesigns.NodeTypeKeysItem)
 
         design_type = self.inputs.design.type
         default_node_type_keys_for_our_design = EosDesigns.NodeTypeKeys._from_list(get(DEFAULT_NODE_TYPE_KEYS, design_type, default=[]))
         node_type_keys = self.inputs.node_type_keys or default_node_type_keys_for_our_design
         for node_type_key in node_type_keys:
-            if node_type_key.type == self.type:
+            if node_type_key.type == self.shared_utils.type:
                 return node_type_key
 
         # Not found
-        msg = f"Could not find the given type '{self.type}' in node_type_keys or custom_node_type_keys."
+        msg = f"Could not find the given type '{self.shared_utils.type}' in node_type_keys or custom_node_type_keys."
         raise AristaAvdInvalidInputsError(msg)

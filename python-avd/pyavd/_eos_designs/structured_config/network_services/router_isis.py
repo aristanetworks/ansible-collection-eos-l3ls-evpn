@@ -4,12 +4,8 @@
 from __future__ import annotations
 
 from functools import cached_property
-from typing import TYPE_CHECKING
 
 from .utils import UtilsMixin
-
-if TYPE_CHECKING:
-    from . import AvdStructuredConfigNetworkServices
 
 
 class RouterIsisMixin(UtilsMixin):
@@ -20,7 +16,7 @@ class RouterIsisMixin(UtilsMixin):
     """
 
     @cached_property
-    def router_isis(self: AvdStructuredConfigNetworkServices) -> dict | None:
+    def router_isis(self) -> dict | None:
         """
         Return structured config for router_isis.
 

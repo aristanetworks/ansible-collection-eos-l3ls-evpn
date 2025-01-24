@@ -4,12 +4,8 @@
 from __future__ import annotations
 
 from functools import cached_property
-from typing import TYPE_CHECKING
 
 from .utils import UtilsMixin
-
-if TYPE_CHECKING:
-    from . import AvdStructuredConfigNetworkServices
 
 
 class EosCliMixin(UtilsMixin):
@@ -20,7 +16,7 @@ class EosCliMixin(UtilsMixin):
     """
 
     @cached_property
-    def eos_cli(self: AvdStructuredConfigNetworkServices) -> str | None:
+    def eos_cli(self) -> str | None:
         """Return existing eos_cli plus any eos_cli from VRFs."""
         if not self.shared_utils.network_services_l3:
             return None

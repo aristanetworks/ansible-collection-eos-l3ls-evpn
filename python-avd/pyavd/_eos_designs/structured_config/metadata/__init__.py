@@ -12,7 +12,7 @@ from .cv_pathfinder import CvPathfinderMixin
 from .cv_tags import CvTagsMixin
 
 
-class AvdStructuredConfigMetadata(StructuredConfigGenerator, CvTagsMixin, CvPathfinderMixin):
+class AvdStructuredConfigMetadata(CvTagsMixin, CvPathfinderMixin, StructuredConfigGenerator):
     """
     This returns the metadata data structure as per the below example.
 

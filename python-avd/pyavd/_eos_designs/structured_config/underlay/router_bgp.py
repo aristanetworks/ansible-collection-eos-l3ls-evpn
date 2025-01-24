@@ -4,14 +4,11 @@
 from __future__ import annotations
 
 from functools import cached_property
-from typing import TYPE_CHECKING
+from typing import Any
 
 from pyavd._utils import append_if_not_duplicate, get, strip_empties_from_dict
 
 from .utils import UtilsMixin
-
-if TYPE_CHECKING:
-    from . import AvdStructuredConfigUnderlay
 
 
 class RouterBgpMixin(UtilsMixin):
@@ -22,7 +19,7 @@ class RouterBgpMixin(UtilsMixin):
     """
 
     @cached_property
-    def router_bgp(self: AvdStructuredConfigUnderlay) -> dict | None:
+    def router_bgp(self) -> dict | None:
         """Return the structured config for router_bgp."""
         if not self.shared_utils.underlay_bgp:
             return None
@@ -55,7 +52,7 @@ class RouterBgpMixin(UtilsMixin):
 
         # Address Families
         # TODO: - see if it makes sense to extract logic in method
-        address_family_ipv4_peer_group = {"activate": True}
+        address_family_ipv4_peer_group: dict[str, Any] = {"activate": True}
 
         if self.inputs.underlay_rfc5549 is True:
             address_family_ipv4_peer_group["next_hop"] = {"address_family_ipv6": {"enabled": True, "originate": True}}

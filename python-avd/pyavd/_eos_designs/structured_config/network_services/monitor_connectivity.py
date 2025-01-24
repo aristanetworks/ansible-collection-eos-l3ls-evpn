@@ -4,14 +4,10 @@
 from __future__ import annotations
 
 from functools import cached_property
-from typing import TYPE_CHECKING
 
 from pyavd._utils import append_if_not_duplicate, strip_empties_from_dict
 
 from .utils import UtilsMixin
-
-if TYPE_CHECKING:
-    from . import AvdStructuredConfigNetworkServices
 
 
 class MonitorConnectivityMixin(UtilsMixin):
@@ -22,7 +18,7 @@ class MonitorConnectivityMixin(UtilsMixin):
     """
 
     @cached_property
-    def monitor_connectivity(self: AvdStructuredConfigNetworkServices) -> dict | None:
+    def monitor_connectivity(self) -> dict | None:
         """
         Return structured config for monitor_connectivity.
 

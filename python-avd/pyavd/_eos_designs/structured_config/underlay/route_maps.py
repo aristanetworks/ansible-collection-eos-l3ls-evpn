@@ -4,14 +4,10 @@
 from __future__ import annotations
 
 from functools import cached_property
-from typing import TYPE_CHECKING
 
 from pyavd._utils import get
 
 from .utils import UtilsMixin
-
-if TYPE_CHECKING:
-    from . import AvdStructuredConfigUnderlay
 
 
 class RouteMapsMixin(UtilsMixin):
@@ -22,7 +18,7 @@ class RouteMapsMixin(UtilsMixin):
     """
 
     @cached_property
-    def route_maps(self: AvdStructuredConfigUnderlay) -> list | None:
+    def route_maps(self) -> list | None:
         """
         Return structured config for route_maps.
 
@@ -77,7 +73,7 @@ class RouteMapsMixin(UtilsMixin):
 
             add_p2p_links = False
             for peer in self._avd_peers:
-                peer_facts = self.shared_utils.get_peer_facts(peer, required=True)
+                peer_facts = self.shared_utils.get_peer_facts_dict(peer)
                 for uplink in peer_facts["uplinks"]:
                     if (
                         uplink["peer"] == self.shared_utils.hostname

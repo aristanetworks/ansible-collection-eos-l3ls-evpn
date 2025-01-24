@@ -4,16 +4,14 @@
 from __future__ import annotations
 
 from functools import cached_property
-from typing import TYPE_CHECKING
 
 from pyavd._utils import load_python_class
 from pyavd.api.interface_descriptions import AvdInterfaceDescriptions
 
-if TYPE_CHECKING:
-    from . import SharedUtils
+from .utils import UtilsMixin
 
 
-class InterfaceDescriptionsMixin:
+class InterfaceDescriptionsMixin(UtilsMixin):
     """
     Mixin Class providing a subset of SharedUtils.
 
@@ -22,20 +20,20 @@ class InterfaceDescriptionsMixin:
     """
 
     @cached_property
-    def interface_descriptions(self: SharedUtils) -> AvdInterfaceDescriptions:
+    def interface_descriptions(self) -> AvdInterfaceDescriptions:
         """
         Load the python_module defined in `templates.interface_descriptions.python_module`.
 
         Return an instance of the class defined by `templates.interface_descriptions.python_class_name` as cached_property.
         """
-        module_path = self.node_type_key_data.interface_descriptions.python_module
+        module_path = self.shared_utils.node_type_key_data.interface_descriptions.python_module
         if module_path is None:
-            return AvdInterfaceDescriptions(hostvars=self.hostvars, inputs=self.inputs, shared_utils=self)
+            return AvdInterfaceDescriptions(hostvars=self.shared_utils._hostvars, inputs=self.inputs, shared_utils=self.shared_utils)
 
         cls: type[AvdInterfaceDescriptions] = load_python_class(
             module_path,
-            self.node_type_key_data.interface_descriptions.python_class_name,
+            self.shared_utils.node_type_key_data.interface_descriptions.python_class_name,
             AvdInterfaceDescriptions,
         )
 
-        return cls(hostvars=self.hostvars, inputs=self.inputs, shared_utils=self)
+        return cls(hostvars=self.shared_utils._hostvars, inputs=self.inputs, shared_utils=self)

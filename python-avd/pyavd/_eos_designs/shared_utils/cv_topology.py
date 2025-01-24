@@ -9,13 +9,13 @@ from typing import TYPE_CHECKING
 from pyavd._errors import AristaAvdInvalidInputsError
 from pyavd.j2filters import range_expand
 
+from .utils import UtilsMixin
+
 if TYPE_CHECKING:
     from pyavd._eos_designs.schema import EosDesigns
 
-    from . import SharedUtils
 
-
-class CvTopology:
+class CvTopology(UtilsMixin):
     """
     Mixin Class providing a subset of SharedUtils.
 
@@ -24,7 +24,7 @@ class CvTopology:
     """
 
     @cached_property
-    def cv_topology(self: SharedUtils) -> EosDesigns.CvTopologyItem | None:
+    def cv_topology(self) -> EosDesigns.CvTopologyItem | None:
         """
         Returns the cv_topology for this device.
 
@@ -47,20 +47,20 @@ class CvTopology:
             msg = "Found 'use_cv_topology:true' so 'cv_topology' is required."
             raise AristaAvdInvalidInputsError(msg)
 
-        if self.hostname not in self.inputs.cv_topology:
+        if self.shared_utils.hostname not in self.inputs.cv_topology:
             # Ignoring missing data for this device in cv_topology. Historic behavior and needed for hybrid scenarios.
             return None
 
-        return self.inputs.cv_topology[self.hostname]
+        return self.inputs.cv_topology[self.shared_utils.hostname]
 
     @cached_property
-    def cv_topology_platform(self: SharedUtils) -> str | None:
+    def cv_topology_platform(self) -> str | None:
         if self.cv_topology is not None:
             return self.cv_topology.platform
         return None
 
     @cached_property
-    def cv_topology_config(self: SharedUtils) -> dict:
+    def cv_topology_config(self) -> dict:
         """
         Returns dict with keys derived from cv topology (or empty dict).
 
@@ -78,25 +78,25 @@ class CvTopology:
 
         cv_interfaces = self.cv_topology.interfaces
 
-        if not self.default_interfaces.uplink_interfaces:
+        if not self.shared_utils.default_interfaces.uplink_interfaces:
             msg = "Found 'use_cv_topology:true' so 'default_interfaces.[].uplink_interfaces' is required."
             raise AristaAvdInvalidInputsError(msg)
 
         config = {}
-        for uplink_interface in range_expand(self.default_interfaces.uplink_interfaces):
+        for uplink_interface in range_expand(self.shared_utils.default_interfaces.uplink_interfaces):
             if cv_interface := cv_interfaces.get(uplink_interface):
                 config.setdefault("uplink_interfaces", []).append(cv_interface.name)
                 config.setdefault("uplink_switches", []).append(cv_interface.neighbor)
                 config.setdefault("uplink_switch_interfaces", []).append(cv_interface.neighbor_interface)
 
-        if not self.mlag:
+        if not self.shared_utils.mlag:
             return config
 
-        if not self.default_interfaces.mlag_interfaces:
+        if not self.shared_utils.default_interfaces.mlag_interfaces:
             msg = "Found 'use_cv_topology:true' so 'default_interfaces.[].mlag_interfaces' is required."
             raise AristaAvdInvalidInputsError(msg)
 
-        for mlag_interface in range_expand(self.default_interfaces.mlag_interfaces):
+        for mlag_interface in range_expand(self.shared_utils.default_interfaces.mlag_interfaces):
             if cv_interface := cv_interfaces.get(mlag_interface, default=None):
                 config.setdefault("mlag_interfaces", []).append(cv_interface.name)
                 # TODO: Set mlag_peer once we get a user-defined var for that.

@@ -16,8 +16,6 @@ from .utils import UtilsMixin
 if TYPE_CHECKING:
     from pyavd._eos_designs.schema import EosDesigns
 
-    from . import AvdStructuredConfigConnectedEndpoints
-
 
 class MonitorSessionsMixin(UtilsMixin):
     """
@@ -27,7 +25,7 @@ class MonitorSessionsMixin(UtilsMixin):
     """
 
     @cached_property
-    def monitor_sessions(self: AvdStructuredConfigConnectedEndpoints) -> list | None:
+    def monitor_sessions(self) -> list | None:
         """Return structured_config for monitor_sessions."""
         if not self._monitor_session_configs:
             return None
@@ -87,7 +85,7 @@ class MonitorSessionsMixin(UtilsMixin):
 
     @cached_property
     def _monitor_session_configs(
-        self: AvdStructuredConfigConnectedEndpoints,
+        self,
     ) -> list[EosDesigns._DynamicKeys.DynamicConnectedEndpointsItem.ConnectedEndpointsItem.AdaptersItem.MonitorSessionsItem]:
         """Return list of monitor session configs extracted from every interface."""
         monitor_session_configs = []

@@ -5,7 +5,6 @@ from __future__ import annotations
 
 import re
 from functools import cached_property
-from typing import TYPE_CHECKING
 
 from pyavd._eos_designs.schema import EosDesigns
 from pyavd._errors import AristaAvdError, AristaAvdInvalidInputsError
@@ -14,9 +13,6 @@ from pyavd.api.interface_descriptions import InterfaceDescriptionData
 from pyavd.j2filters import range_expand
 
 from .utils import UtilsMixin
-
-if TYPE_CHECKING:
-    from . import AvdStructuredConfigConnectedEndpoints
 
 
 class EthernetInterfacesMixin(UtilsMixin):
@@ -27,7 +23,7 @@ class EthernetInterfacesMixin(UtilsMixin):
     """
 
     @cached_property
-    def ethernet_interfaces(self: AvdStructuredConfigConnectedEndpoints) -> list | None:
+    def ethernet_interfaces(self) -> list | None:
         """
         Return structured config for ethernet_interfaces.
 
@@ -83,7 +79,7 @@ class EthernetInterfacesMixin(UtilsMixin):
         return None
 
     def _update_ethernet_interface_cfg(
-        self: AvdStructuredConfigConnectedEndpoints,
+        self,
         adapter: EosDesigns._DynamicKeys.DynamicConnectedEndpointsItem.ConnectedEndpointsItem.AdaptersItem,
         ethernet_interface: dict,
         connected_endpoint: EosDesigns._DynamicKeys.DynamicConnectedEndpointsItem.ConnectedEndpointsItem,
@@ -130,7 +126,7 @@ class EthernetInterfacesMixin(UtilsMixin):
         return strip_null_from_data(ethernet_interface, strip_values_tuple=(None, "", {}))
 
     def _get_ethernet_interface_cfg(
-        self: AvdStructuredConfigConnectedEndpoints,
+        self,
         adapter: EosDesigns._DynamicKeys.DynamicConnectedEndpointsItem.ConnectedEndpointsItem.AdaptersItem,
         node_index: int,
         connected_endpoint: EosDesigns._DynamicKeys.DynamicConnectedEndpointsItem.ConnectedEndpointsItem,

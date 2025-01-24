@@ -5,12 +5,8 @@ from __future__ import annotations
 
 import ipaddress
 from functools import cached_property
-from typing import TYPE_CHECKING
 
 from .utils import UtilsMixin
-
-if TYPE_CHECKING:
-    from . import AvdStructuredConfigNetworkServices
 
 
 class StaticRoutesMixin(UtilsMixin):
@@ -21,7 +17,7 @@ class StaticRoutesMixin(UtilsMixin):
     """
 
     @cached_property
-    def static_routes(self: AvdStructuredConfigNetworkServices) -> list[dict] | None:
+    def static_routes(self) -> list[dict] | None:
         """
         Returns structured config for static_routes.
 

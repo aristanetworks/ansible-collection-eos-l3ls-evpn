@@ -5,14 +5,10 @@ from __future__ import annotations
 
 import re
 from functools import cached_property
-from typing import TYPE_CHECKING
 
 from pyavd._utils import append_if_not_duplicate, short_esi_to_route_target
 
 from .utils import UtilsMixin
-
-if TYPE_CHECKING:
-    from . import AvdStructuredConfigNetworkServices
 
 
 class PortChannelInterfacesMixin(UtilsMixin):
@@ -23,7 +19,7 @@ class PortChannelInterfacesMixin(UtilsMixin):
     """
 
     @cached_property
-    def port_channel_interfaces(self: AvdStructuredConfigNetworkServices) -> list | None:
+    def port_channel_interfaces(self) -> list | None:
         """
         Return structured config for port_channel_interfaces.
 

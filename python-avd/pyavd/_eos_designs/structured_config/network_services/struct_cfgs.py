@@ -4,12 +4,8 @@
 from __future__ import annotations
 
 from functools import cached_property
-from typing import TYPE_CHECKING
 
 from .utils import UtilsMixin
-
-if TYPE_CHECKING:
-    from . import AvdStructuredConfigNetworkServices
 
 
 class StructCfgsMixin(UtilsMixin):
@@ -20,7 +16,7 @@ class StructCfgsMixin(UtilsMixin):
     """
 
     @cached_property
-    def struct_cfgs(self: AvdStructuredConfigNetworkServices) -> None:
+    def struct_cfgs(self) -> None:
         """Return the combined structured config from VRFs."""
         if not self.shared_utils.network_services_l3:
             return None

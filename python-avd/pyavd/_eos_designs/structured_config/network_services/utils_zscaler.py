@@ -12,17 +12,16 @@ from pyavd._cv.client import CVClient
 from pyavd._cv.workflows.models import CVDevice
 from pyavd._cv.workflows.verify_devices_on_cv import verify_devices_in_cloudvision_inventory
 from pyavd._eos_designs.schema import EosDesigns
+from pyavd._eos_designs.structured_config.structured_config_generator import StructuredConfigGenerator
 from pyavd._errors import AristaAvdError, AristaAvdInvalidInputsError
 
 if TYPE_CHECKING:
     from pyavd._cv.api.arista.swg.v1 import Location, VpnEndpoint
 
-    from . import AvdStructuredConfigNetworkServices
-
 LOGGER = getLogger(__name__)
 
 
-class UtilsZscalerMixin:
+class UtilsZscalerMixin(StructuredConfigGenerator):
     """
     Mixin Class with internal functions for Zscaler.
 
@@ -30,7 +29,7 @@ class UtilsZscalerMixin:
     """
 
     @cached_property
-    def _zscaler_endpoints(self: AvdStructuredConfigNetworkServices) -> EosDesigns.ZscalerEndpoints:
+    def _zscaler_endpoints(self) -> EosDesigns.ZscalerEndpoints:
         """
         Returns zscaler_endpoints data model built via CloudVision API calls, unless they are provided in the input variables.
 
@@ -38,7 +37,7 @@ class UtilsZscalerMixin:
         """
         return self.inputs.zscaler_endpoints or asyncio.run(self._generate_zscaler_endpoints())
 
-    async def _generate_zscaler_endpoints(self: AvdStructuredConfigNetworkServices) -> EosDesigns.ZscalerEndpoints:
+    async def _generate_zscaler_endpoints(self) -> EosDesigns.ZscalerEndpoints:
         """
         Call CloudVision SWG APIs to generate the zscaler_endpoints model.
 
@@ -79,15 +78,15 @@ class UtilsZscalerMixin:
                     "Set 'serial_number' for the device in AVD vars, to ensure a unique match."
                 )
                 raise AristaAvdError(msg)
-            device_id: str = cv_inventory_devices[0].serial_number
+            device_id: str = cv_inventory_devices[0].serial_number or ""
             request_time, _ = await cv_client.set_swg_device(device_id=device_id, service="zscaler", location=wan_site_location)
             cv_endpoint_status = await cv_client.wait_for_swg_endpoint_status(device_id=device_id, service="zscaler", start_time=request_time)
 
         device_location: Location = cv_endpoint_status.device_location
 
         zscaler_endpoints = EosDesigns.ZscalerEndpoints(
-            cloud_name=cv_endpoint_status.cloud_name,
-            device_location=EosDesigns.ZscalerEndpoints.DeviceLocation(city=device_location.city, country=device_location.country),
+            cloud_name=cv_endpoint_status.cloud_name or "",
+            device_location=EosDesigns.ZscalerEndpoints.DeviceLocation(city=device_location.city or "", country=device_location.country or ""),
         )
         if not getattr(cv_endpoint_status, "vpn_endpoints", None) or not getattr(cv_endpoint_status.vpn_endpoints, "values", None):
             msg = f"{context} but did not get any IPsec Tunnel endpoints back from the Zscaler API."
@@ -106,12 +105,12 @@ class UtilsZscalerMixin:
                     key,
                     cls(
                         ip_address=vpn_endpoint.ip_address.value,
-                        datacenter=vpn_endpoint.datacenter,
-                        city=location.city,
-                        country=location.country,
-                        region=location.region,
-                        latitude=location.latitude,
-                        longitude=location.longitude,
+                        datacenter=vpn_endpoint.datacenter or "",
+                        city=location.city or "",
+                        country=location.country or "",
+                        region=location.region or "",
+                        latitude=str(location.latitude or ""),
+                        longitude=str(location.longitude or ""),
                     ),
                 )
 

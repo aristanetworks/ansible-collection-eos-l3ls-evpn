@@ -5,14 +5,13 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any
 
+from pyavd._eos_designs.structured_config.structured_config_generator import StructuredConfigGenerator
 from pyavd._errors import AristaAvdError
 from pyavd._schema.models.avd_base import AvdBase
 from pyavd._utils import default, get_v2, strip_empties_from_dict, strip_empties_from_list
 
 if TYPE_CHECKING:
     from pyavd._eos_cli_config_gen.schema import EosCliConfigGen
-
-    from . import AvdStructuredConfigMetadata
 
 INVALID_CUSTOM_DEVICE_TAGS = [
     "topology_hint_type",
@@ -40,14 +39,14 @@ INVALID_CUSTOM_DEVICE_TAGS = [
 """These tag names overlap with CV system tags or topology_hints"""
 
 
-class CvTagsMixin:
+class CvTagsMixin(StructuredConfigGenerator):
     """
     Mixin Class used to generate structured config for one key.
 
     Class should only be used as Mixin to a AvdStructuredConfig class.
     """
 
-    def _cv_tags(self: AvdStructuredConfigMetadata) -> dict | None:
+    def _cv_tags(self) -> dict | None:
         """Generate the data structure `metadata.cv_tags`."""
         if not self.inputs.generate_cv_tags and not self.shared_utils.is_cv_pathfinder_router:
             return None
@@ -66,7 +65,7 @@ class CvTagsMixin:
             return None
         return {"name": name, "value": str(value)}
 
-    def _get_topology_hints(self: AvdStructuredConfigMetadata) -> list:
+    def _get_topology_hints(self) -> list:
         """Return list of topology_hint tags."""
         if not self.inputs.generate_cv_tags.topology_hints:
             return []
@@ -82,7 +81,7 @@ class CvTagsMixin:
             ],
         )
 
-    def _get_cv_pathfinder_device_tags(self: AvdStructuredConfigMetadata) -> list:
+    def _get_cv_pathfinder_device_tags(self) -> list:
         """
         Return list of device_tags for cv_pathfinder solution.
 
@@ -116,7 +115,7 @@ class CvTagsMixin:
 
         return strip_empties_from_list(device_tags)
 
-    def _get_device_tags(self: AvdStructuredConfigMetadata) -> list:
+    def _get_device_tags(self) -> list:
         """Return list of device_tags."""
         if not (tags_to_generate := self.inputs.generate_cv_tags.device_tags):
             return []
@@ -151,7 +150,7 @@ class CvTagsMixin:
 
         return device_tags
 
-    def _get_interface_tags(self: AvdStructuredConfigMetadata) -> list:
+    def _get_interface_tags(self) -> list:
         """Return list of interface_tags."""
         if not (tags_to_generate := self.inputs.generate_cv_tags.interface_tags) and not self.shared_utils.is_cv_pathfinder_router:
             return []
@@ -187,7 +186,7 @@ class CvTagsMixin:
 
         return interface_tags
 
-    def _get_cv_pathfinder_interface_tags(self: AvdStructuredConfigMetadata, ethernet_interface: EosCliConfigGen.EthernetInterfacesItem) -> list:
+    def _get_cv_pathfinder_interface_tags(self, ethernet_interface: EosCliConfigGen.EthernetInterfacesItem) -> list:
         """
         Return list of device_tags for cv_pathfinder solution.
 

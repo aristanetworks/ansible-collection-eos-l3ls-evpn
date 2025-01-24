@@ -4,7 +4,7 @@
 from __future__ import annotations
 
 from functools import cached_property
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any, cast
 
 from pyavd._errors import AristaAvdInvalidInputsError
 from pyavd._utils import append_if_not_duplicate, default, unique
@@ -15,8 +15,6 @@ from .utils import UtilsMixin
 if TYPE_CHECKING:
     from pyavd._eos_designs.schema import EosDesigns
 
-    from . import AvdStructuredConfigNetworkServices
-
 
 class VxlanInterfaceMixin(UtilsMixin):
     """
@@ -26,7 +24,7 @@ class VxlanInterfaceMixin(UtilsMixin):
     """
 
     @cached_property
-    def vxlan_interface(self: AvdStructuredConfigNetworkServices) -> dict | None:
+    def vxlan_interface(self) -> dict | None:
         """
         Returns structured config for vxlan_interface.
 
@@ -38,7 +36,7 @@ class VxlanInterfaceMixin(UtilsMixin):
         if not (self.shared_utils.overlay_vtep or self.shared_utils.is_wan_router):
             return None
 
-        vxlan = {
+        vxlan: dict[str, Any] = {
             "udp_port": 4789,
         }
 
@@ -125,7 +123,7 @@ class VxlanInterfaceMixin(UtilsMixin):
         }
 
     def _get_vxlan_interface_config_for_vrf(
-        self: AvdStructuredConfigNetworkServices,
+        self,
         vrf: EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem.VrfsItem,
         tenant: EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem,
         vrfs: list[dict],
@@ -181,7 +179,7 @@ class VxlanInterfaceMixin(UtilsMixin):
                 return
 
             # NOTE: this can never be None here, it would be caught previously in the code
-            vrf_id: int = default(vrf.vrf_id, vrf.vrf_vni)
+            vrf_id = cast(int, default(vrf.vrf_id, vrf.vrf_vni))
 
             vrf_data = {"name": vrf_name, "vni": vni}
 
@@ -219,7 +217,7 @@ class VxlanInterfaceMixin(UtilsMixin):
             )
 
     def _get_vxlan_interface_config_for_vlan(
-        self: AvdStructuredConfigNetworkServices,
+        self,
         vlan: EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem.VrfsItem.SvisItem
         | EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem.L2vlansItem,
         tenant: EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem,
@@ -232,7 +230,7 @@ class VxlanInterfaceMixin(UtilsMixin):
         if not vlan.vxlan:
             return {}
 
-        vxlan_interface_vlan = {"id": vlan.id}
+        vxlan_interface_vlan: dict[str, Any] = {"id": vlan.id}
         if vlan.vni_override:
             vxlan_interface_vlan["vni"] = vlan.vni_override
         else:
@@ -259,7 +257,7 @@ class VxlanInterfaceMixin(UtilsMixin):
         return vxlan_interface_vlan
 
     @cached_property
-    def _overlay_her_flood_lists(self: AvdStructuredConfigNetworkServices) -> dict[str | int, list]:
+    def _overlay_her_flood_lists(self) -> dict[str | int, list]:
         """
         Returns a dict with HER Flood Lists.
 
@@ -286,7 +284,7 @@ class VxlanInterfaceMixin(UtilsMixin):
             if peer == self.shared_utils.hostname:
                 continue
 
-            peer_facts = self.shared_utils.get_peer_facts(peer, required=True)
+            peer_facts = self.shared_utils.get_peer_facts_dict(peer)
 
             if overlay_her_flood_list_scope == "dc" and peer_facts.get("dc_name") != self.inputs.dc_name:
                 continue
@@ -308,5 +306,5 @@ class VxlanInterfaceMixin(UtilsMixin):
         return overlay_her_flood_lists
 
     @cached_property
-    def _multi_vtep(self: AvdStructuredConfigNetworkServices) -> bool:
+    def _multi_vtep(self) -> bool:
         return self.shared_utils.mlag is True and self.shared_utils.evpn_multicast is True

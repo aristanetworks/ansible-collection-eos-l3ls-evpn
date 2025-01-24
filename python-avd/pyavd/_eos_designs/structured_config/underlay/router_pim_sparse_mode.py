@@ -4,14 +4,11 @@
 from __future__ import annotations
 
 from functools import cached_property
-from typing import TYPE_CHECKING
+from typing import Any
 
 from pyavd._utils import get
 
 from .utils import UtilsMixin
-
-if TYPE_CHECKING:
-    from . import AvdStructuredConfigUnderlay
 
 
 class RouterPimSparseModeMixin(UtilsMixin):
@@ -22,7 +19,7 @@ class RouterPimSparseModeMixin(UtilsMixin):
     """
 
     @cached_property
-    def router_pim_sparse_mode(self: AvdStructuredConfigUnderlay) -> dict | None:
+    def router_pim_sparse_mode(self) -> dict | None:
         """
         Return structured config for router_pim_sparse_mode.
 
@@ -34,7 +31,7 @@ class RouterPimSparseModeMixin(UtilsMixin):
         rp_addresses = []
         anycast_rps = []
         for rp_entry in self.inputs.underlay_multicast_rps:
-            rp_address = {"address": rp_entry.rp}
+            rp_address: dict[str, Any] = {"address": rp_entry.rp}
             if rp_entry.groups:
                 if rp_entry.access_list_name:
                     rp_address["access_lists"] = [rp_entry.access_list_name]
@@ -52,7 +49,7 @@ class RouterPimSparseModeMixin(UtilsMixin):
                     "address": rp_entry.rp,
                     "other_anycast_rp_addresses": [
                         {
-                            "address": get(self.shared_utils.get_peer_facts(node.name), "router_id", required=True),
+                            "address": get(self.shared_utils.get_peer_facts_dict(node.name), "router_id"),
                         }
                         for node in rp_entry.nodes
                     ],

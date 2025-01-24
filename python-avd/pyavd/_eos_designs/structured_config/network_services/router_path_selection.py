@@ -4,14 +4,10 @@
 from __future__ import annotations
 
 from functools import cached_property
-from typing import TYPE_CHECKING
 
 from pyavd._utils import append_if_not_duplicate, get, strip_empties_from_dict
 
 from .utils import UtilsMixin
-
-if TYPE_CHECKING:
-    from . import AvdStructuredConfigNetworkServices
 
 
 class RouterPathSelectionMixin(UtilsMixin):
@@ -22,7 +18,7 @@ class RouterPathSelectionMixin(UtilsMixin):
     """
 
     @cached_property
-    def router_path_selection(self: AvdStructuredConfigNetworkServices) -> dict | None:
+    def router_path_selection(self) -> dict | None:
         """Return structured config for router path-selection (DPS)."""
         if not self.shared_utils.is_wan_router:
             return None
@@ -47,7 +43,7 @@ class RouterPathSelectionMixin(UtilsMixin):
 
         return strip_empties_from_dict(router_path_selection)
 
-    def _wan_load_balance_policies(self: AvdStructuredConfigNetworkServices) -> list:
+    def _wan_load_balance_policies(self) -> list:
         """Return a list of load balance policies."""
         load_balance_policies = []
         for policy in self._filtered_wan_policies:
@@ -70,7 +66,7 @@ class RouterPathSelectionMixin(UtilsMixin):
 
         return load_balance_policies
 
-    def _autovpn_policies(self: AvdStructuredConfigNetworkServices) -> list:
+    def _autovpn_policies(self) -> list:
         """Return a list of policies for AutoVPN."""
         policies = []
         for policy in self._filtered_wan_policies:

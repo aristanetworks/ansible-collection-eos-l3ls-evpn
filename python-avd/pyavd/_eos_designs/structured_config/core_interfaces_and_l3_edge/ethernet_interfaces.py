@@ -4,15 +4,11 @@
 from __future__ import annotations
 
 from functools import cached_property
-from typing import TYPE_CHECKING
 
 from pyavd._utils import append_if_not_duplicate
 from pyavd.api.interface_descriptions import InterfaceDescriptionData
 
 from .utils import UtilsMixin
-
-if TYPE_CHECKING:
-    from . import AvdStructuredConfigCoreInterfacesAndL3Edge
 
 
 class EthernetInterfacesMixin(UtilsMixin):
@@ -23,7 +19,7 @@ class EthernetInterfacesMixin(UtilsMixin):
     """
 
     @cached_property
-    def ethernet_interfaces(self: AvdStructuredConfigCoreInterfacesAndL3Edge) -> list | None:
+    def ethernet_interfaces(self) -> list | None:
         """Return structured config for ethernet_interfaces."""
         ethernet_interfaces = []
 
@@ -67,7 +63,7 @@ class EthernetInterfacesMixin(UtilsMixin):
 
         return None
 
-    def _p2p_link_ethernet_description(self: AvdStructuredConfigCoreInterfacesAndL3Edge, p2p_link_data: dict) -> str:
+    def _p2p_link_ethernet_description(self, p2p_link_data: dict) -> str:
         return self.shared_utils.interface_descriptions.underlay_ethernet_interface(
             InterfaceDescriptionData(
                 shared_utils=self.shared_utils,
@@ -79,7 +75,7 @@ class EthernetInterfacesMixin(UtilsMixin):
             ),
         )
 
-    def _port_channel_member_description(self: AvdStructuredConfigCoreInterfacesAndL3Edge, p2p_link_data: dict, member: dict) -> str:
+    def _port_channel_member_description(self, p2p_link_data: dict, member: dict) -> str:
         return self.shared_utils.interface_descriptions.underlay_ethernet_interface(
             InterfaceDescriptionData(
                 shared_utils=self.shared_utils,

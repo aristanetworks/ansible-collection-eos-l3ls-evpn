@@ -4,15 +4,11 @@
 from __future__ import annotations
 
 from functools import cached_property
-from typing import TYPE_CHECKING
 
 from pyavd._utils import get
 from pyavd.j2filters import natural_sort
 
 from .utils import UtilsMixin
-
-if TYPE_CHECKING:
-    from . import AvdStructuredConfigUnderlay
 
 
 class RouterMsdpMixin(UtilsMixin):
@@ -23,7 +19,7 @@ class RouterMsdpMixin(UtilsMixin):
     """
 
     @cached_property
-    def router_msdp(self: AvdStructuredConfigUnderlay) -> dict | None:
+    def router_msdp(self) -> dict | None:
         """
         Return structured config for router_msdp.
 
@@ -50,7 +46,7 @@ class RouterMsdpMixin(UtilsMixin):
             "originator_id_local_interface": "Loopback0",
             "peers": [
                 {
-                    "ipv4_address": get(self.shared_utils.get_peer_facts(peer), "router_id", required=True),
+                    "ipv4_address": get(self.shared_utils.get_peer_facts_dict(peer), "router_id"),
                     "local_interface": "Loopback0",
                     "description": peer,
                     "mesh_groups": [{"name": "ANYCAST-RP"}],

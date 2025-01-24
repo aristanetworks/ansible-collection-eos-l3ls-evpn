@@ -4,14 +4,10 @@
 from __future__ import annotations
 
 from functools import cached_property
-from typing import TYPE_CHECKING
 
 from pyavd._utils import append_if_not_duplicate
 
 from .utils import UtilsMixin
-
-if TYPE_CHECKING:
-    from . import AvdStructuredConfigNetworkServices
 
 
 class StandardAccessListsMixin(UtilsMixin):
@@ -22,7 +18,7 @@ class StandardAccessListsMixin(UtilsMixin):
     """
 
     @cached_property
-    def standard_access_lists(self: AvdStructuredConfigNetworkServices) -> list | None:
+    def standard_access_lists(self) -> list | None:
         """
         Return structured config for standard_access_lists.
 
