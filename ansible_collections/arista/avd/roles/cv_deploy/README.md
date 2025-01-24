@@ -280,4 +280,4 @@ Click "Save" to exit the dialogue box.
 
 ## License
 
-Project is published under [Apache 2.0 License](../../LICENSE)
+Project is published under [Apache 2.0 License](https://github.com/aristanetworks/avd/blob/devel/LICENSE)

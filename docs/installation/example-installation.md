@@ -6,7 +6,7 @@
 
 Requirements to use this example:
 
-- Follow the [installation guide](../../../../../docs/installation/collection-installation.md) for AVD
+- Follow the [installation guide](collection-installation.md) for AVD
 - Run the following playbook to copy the AVD **examples** to your current working directory, for example `ansible-avd-examples`:
 
 ```shell

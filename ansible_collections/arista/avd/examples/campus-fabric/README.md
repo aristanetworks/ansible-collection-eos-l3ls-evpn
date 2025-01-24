@@ -17,7 +17,7 @@ This example describes and includes all the AVD files used to build a Campus Fab
 ## Installation & Requirements
 
 --8<--
-ansible_collections/arista/avd/ansible_collections/arista/avd/examples/common/installation.md
+docs/installation/example-installation.md
 --8<--
 
 ``` shell

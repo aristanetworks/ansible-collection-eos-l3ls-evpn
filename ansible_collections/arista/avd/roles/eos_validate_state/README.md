@@ -353,7 +353,7 @@ ansible-playbook playbooks/pb_validate_yml --inventory inventory/inventory.yml
 
 ## License
 
-Project is published under [Apache 2.0 License](../../LICENSE)
+Project is published under [Apache 2.0 License](https://github.com/aristanetworks/avd/blob/devel/LICENSE)
 
 ## Known issues
 
