@@ -60,9 +60,11 @@ The `arista.avd.cv_workflow` module is an Ansible Action Plugin providing the fo
 
 - When interacting with CVaaS the regional URL where the tenant is deployed should be used, e.g:
   `cv_servers: [ www.cv-prod-euwest-2.arista.io ]`
-  To see the full list of regional URLs, please visit the [cv_deploy](../../../roles/cv_deploy/README.md#overview)
+  To see the full list of regional URLs, please visit the
+  [cv_deploy](../../../ansible_collections/arista/avd/roles/cv_deploy/README.md#overview)
   role documentation.
-- To generate service accounts check [cv_deploy](../../../roles/cv_deploy/README.md#steps-to-create-service-accounts-on-cloudvision)
+- To generate service accounts check
+  [cv_deploy](../../../ansible_collections/arista/avd/roles/cv_deploy/README.md#steps-to-create-service-accounts-on-cloudvision)
   role documentation or the CloudVision Help Center.
 
 ## Examples
