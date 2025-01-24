@@ -168,7 +168,7 @@ Each pool will assign the first available ID starting from 1. Any statically set
 It is important to make sure the *combination* of the variables above is unique for each intended pool of devices.
 
 !!! warning
-    This means changing any of these fields may renumber the node IDs, and in turn lead to renumbering of IP addresses etc!
+    This means changing any of these fields may renumber the node IDs and, in turn, lead to the renumbering of IP addresses, etc.
 
 Stale entries will be reclaimed from each pool automatically after every run.
 A stale entry is an entry that was not accessed during the run.
