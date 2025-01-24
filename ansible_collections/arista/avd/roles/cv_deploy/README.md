@@ -253,7 +253,7 @@ The directories are configured with the same variables as for the other AVD role
 
 ```yaml
 --8<--
-roles/cv_deploy/defaults/main/directories.yml
+ansible_collections/arista/avd/roles/cv_deploy/defaults/main/directories.yml
 --8<--
 ```
 

@@ -89,12 +89,12 @@ plugins:
         - python-avd/*
       regex:
         # Exclude examples common md snippets
-        - '^examples\/common/.*'
+        - 'ansible_collections\/arista\/avd\/^examples\/common/.*'
         # Exclude all examples but single-dc-l3ls which is referenced in getting getting-started
-        - '^examples\/((?!single-dc-l3ls).*)\/documentation\/.*'
+        - 'ansible_collections\/arista\/avd\/^examples\/((?!single-dc-l3ls).*)\/documentation\/.*'
         # Exclude all single-dc-l3ls files not referenced in getting getting-started
-        - '^examples\/single-dc-l3ls\/documentation\/fabric\/((?!FABRIC-documentation.md).*)'
-        - '^examples\/single-dc-l3ls\/documentation\/devices\/((?!dc1-leaf1a.md).*)'
+        - 'ansible_collections\/arista\/avd\/^examples\/single-dc-l3ls\/documentation\/fabric\/((?!FABRIC-documentation.md).*)'
+        - 'ansible_collections\/arista\/avd\/^examples\/single-dc-l3ls\/documentation\/devices\/((?!dc1-leaf1a.md).*)'
   - include_dir_to_nav
   - git-revision-date-localized:
       type: date

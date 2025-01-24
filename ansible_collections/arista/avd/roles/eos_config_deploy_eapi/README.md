@@ -47,7 +47,7 @@ Figure 1 below provides a visualization of the role's inputs, outputs, and tasks
 
 ``` yaml
 --8<--
-roles/eos_config_deploy_eapi/defaults/main.yml
+ansible_collections/arista/avd/roles/eos_config_deploy_eapi/defaults/main.yml
 --8<--
 ```
 

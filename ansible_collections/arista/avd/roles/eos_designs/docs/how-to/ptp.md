@@ -77,7 +77,7 @@ spine:
 Common PTP settings can be specified for the entire topology to greatly simplify the configuration of PTP:
 
 --8<--
-roles/eos_designs/docs/tables/ptp.md
+ansible_collections/arista/avd/roles/eos_designs/docs/tables/ptp.md
 --8<--
 
 These settings can also be defined on a more specific group_vars level, if the network design requires this.
@@ -299,7 +299,7 @@ ptp monitor threshold missing-message sync 3 sequence-ids
 All parameters can be overridden if required:
 
 --8<--
-roles/eos_designs/docs/tables/node-type-ptp-configuration.md
+ansible_collections/arista/avd/roles/eos_designs/docs/tables/node-type-ptp-configuration.md
 --8<--
 
 ### Setting PTP DSCP values

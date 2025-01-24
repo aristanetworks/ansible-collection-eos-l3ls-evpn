@@ -78,7 +78,7 @@ Default output directories can be updated by modifying the default role variable
 
 ``` yaml
 --8<--
-roles/eos_config_deploy_cvp/defaults/main/output_directories.yml
+ansible_collections/arista/avd/roles/eos_config_deploy_cvp/defaults/main/output_directories.yml
 --8<--
 ```
 

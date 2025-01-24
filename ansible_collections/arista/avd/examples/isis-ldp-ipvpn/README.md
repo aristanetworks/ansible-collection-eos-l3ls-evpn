@@ -25,7 +25,7 @@ This example does not include Integration with CloudVision to keep everything as
 ## Installation
 
 --8<--
-examples/common/installation.md
+ansible_collections/arista/avd/examples/common/installation.md
 --8<--
 
 ```shell
@@ -98,7 +98,7 @@ Below is the basic configuration file for `p1`:
 
 ```eos title="p1-basic-configuration.txt"
 --8<--
-examples/isis-ldp-ipvpn/switch-basic-configurations/p1-basic-configuration.txt
+ansible_collections/arista/avd/examples/isis-ldp-ipvpn/switch-basic-configurations/p1-basic-configuration.txt
 --8<--
 ```
 
@@ -230,7 +230,7 @@ Since this example covers building a MPLS WAN network, AVD must know about the d
 
     ```yaml
     --8<--
-    examples/isis-ldp-ipvpn/group_vars/WAN1_P_ROUTERS.yml
+    ansible_collections/arista/avd/examples/isis-ldp-ipvpn/group_vars/WAN1_P_ROUTERS.yml
     --8<--
     ```
 
@@ -238,7 +238,7 @@ Since this example covers building a MPLS WAN network, AVD must know about the d
 
     ```yaml
     --8<--
-    examples/isis-ldp-ipvpn/group_vars/WAN1_PE_ROUTERS.yml
+    ansible_collections/arista/avd/examples/isis-ldp-ipvpn/group_vars/WAN1_PE_ROUTERS.yml
     --8<--
     ```
 
@@ -246,7 +246,7 @@ Since this example covers building a MPLS WAN network, AVD must know about the d
 
     ```yaml
     --8<--
-    examples/isis-ldp-ipvpn/group_vars/WAN1_RR_ROUTERS.yml
+    ansible_collections/arista/avd/examples/isis-ldp-ipvpn/group_vars/WAN1_RR_ROUTERS.yml
     --8<--
     ```
 
@@ -441,7 +441,7 @@ core_interfaces:
 
 ```yaml title="NETWORK_SERVICES.yml"
 --8<--
-examples/isis-ldp-ipvpn/group_vars/NETWORK_SERVICES.yml
+ansible_collections/arista/avd/examples/isis-ldp-ipvpn/group_vars/NETWORK_SERVICES.yml
 --8<--
 ```
 
@@ -480,7 +480,7 @@ In this example, the deploy playbook looks like the following:
 
 ```yaml title="deploy.yml"
 --8<--
-examples/isis-ldp-ipvpn/deploy.yml
+ansible_collections/arista/avd/examples/isis-ldp-ipvpn/deploy.yml
 --8<--
 ```
 
@@ -495,7 +495,7 @@ Example of using the build playbook without devices (local tasks):
 
 ```yaml title="build.yml"
 --8<--
-examples/isis-ldp-ipvpn/build.yml
+ansible_collections/arista/avd/examples/isis-ldp-ipvpn/build.yml
 --8<--
 ```
 

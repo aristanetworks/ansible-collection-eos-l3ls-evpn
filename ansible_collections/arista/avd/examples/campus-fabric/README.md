@@ -17,7 +17,7 @@ This example describes and includes all the AVD files used to build a Campus Fab
 ## Installation & Requirements
 
 --8<--
-examples/common/installation.md
+ansible_collections/arista/avd/ansible_collections/arista/avd/examples/common/installation.md
 --8<--
 
 ``` shell
@@ -69,7 +69,7 @@ Below is the basic configuration file for SPINE1:
 
 ``` shell
 --8<--
-examples/campus-fabric/switch-basic-configurations/SPINE1.cfg
+ansible_collections/arista/avd/examples/campus-fabric/switch-basic-configurations/SPINE1.cfg
 --8<--
 ```
 
@@ -106,7 +106,7 @@ If DNS is unavailable, define the variable ansible_host as an IP address for eac
 
 ``` yaml
 --8<--
-examples/campus-fabric/inventory.yml
+ansible_collections/arista/avd/examples/campus-fabric/inventory.yml
 --8<--
 ```
 
@@ -172,7 +172,7 @@ The tabs below show the Ansible **group_vars** used in this example.
 
     ``` yaml
     --8<--
-    examples/campus-fabric/group_vars/DC1.yml
+    ansible_collections/arista/avd/examples/campus-fabric/group_vars/DC1.yml
     --8<--
     ```
 
@@ -185,7 +185,7 @@ The tabs below show the Ansible **group_vars** used in this example.
 
     ``` yaml
     --8<--
-    examples/campus-fabric/group_vars/DC1_FABRIC.yml
+    ansible_collections/arista/avd/examples/campus-fabric/group_vars/DC1_FABRIC.yml
     --8<--
     ```
 
@@ -194,7 +194,7 @@ The tabs below show the Ansible **group_vars** used in this example.
 
     ``` yaml
     --8<--
-    examples/campus-fabric/group_vars/DC1_SPINES.yml
+    ansible_collections/arista/avd/examples/campus-fabric/group_vars/DC1_SPINES.yml
     --8<--
     ```
 
@@ -203,7 +203,7 @@ The tabs below show the Ansible **group_vars** used in this example.
 
     ``` yaml
     --8<--
-    examples/campus-fabric/group_vars/DC1_LEAFS.yml
+    ansible_collections/arista/avd/examples/campus-fabric/group_vars/DC1_LEAFS.yml
     --8<--
     ```
 
@@ -212,7 +212,7 @@ The tabs below show the Ansible **group_vars** used in this example.
 
     ``` yaml
     --8<--
-    examples/campus-fabric/group_vars/DC1_NETWORK_SERVICES.yml
+    ansible_collections/arista/avd/examples/campus-fabric/group_vars/DC1_NETWORK_SERVICES.yml
     --8<--
     ```
 
@@ -221,7 +221,7 @@ The tabs below show the Ansible **group_vars** used in this example.
 
     ``` yaml
     --8<--
-    examples/campus-fabric/group_vars/DC1_NETWORK_PORTS.yml
+    ansible_collections/arista/avd/examples/campus-fabric/group_vars/DC1_NETWORK_PORTS.yml
     --8<--
     ```
 
@@ -276,7 +276,7 @@ Now that we have defined all of our Ansible variables (AVD inputs), it is time t
 
     ``` yaml
     --8<--
-    examples/campus-fabric/build.yml
+    ansible_collections/arista/avd/examples/campus-fabric/build.yml
     --8<--
     ```
 
@@ -284,7 +284,7 @@ Now that we have defined all of our Ansible variables (AVD inputs), it is time t
 
     ``` yaml
     --8<--
-    examples/campus-fabric/deploy.yml
+    ansible_collections/arista/avd/examples/campus-fabric/deploy.yml
     --8<--
     ```
 
@@ -314,7 +314,7 @@ Your configuration files should be similar to these.
 
     ``` shell
     --8<--
-    examples/campus-fabric/intended/configs/SPINE1.cfg
+    ansible_collections/arista/avd/examples/campus-fabric/intended/configs/SPINE1.cfg
     --8<--
     ```
 
@@ -322,7 +322,7 @@ Your configuration files should be similar to these.
 
     ``` shell
     --8<--
-    examples/campus-fabric/intended/configs/SPINE2.cfg
+    ansible_collections/arista/avd/examples/campus-fabric/intended/configs/SPINE2.cfg
     --8<--
     ```
 
@@ -330,7 +330,7 @@ Your configuration files should be similar to these.
 
     ``` shell
     --8<--
-    examples/campus-fabric/intended/configs/LEAF1A.cfg
+    ansible_collections/arista/avd/examples/campus-fabric/intended/configs/LEAF1A.cfg
     --8<--
     ```
 
@@ -338,7 +338,7 @@ Your configuration files should be similar to these.
 
     ``` shell
     --8<--
-    examples/campus-fabric/intended/configs/LEAF1B.cfg
+    ansible_collections/arista/avd/examples/campus-fabric/intended/configs/LEAF1B.cfg
     --8<--
     ```
 
@@ -346,7 +346,7 @@ Your configuration files should be similar to these.
 
     ``` shell
     --8<--
-    examples/campus-fabric/intended/configs/LEAF2A.cfg
+    ansible_collections/arista/avd/examples/campus-fabric/intended/configs/LEAF2A.cfg
     --8<--
     ```
 
@@ -354,7 +354,7 @@ Your configuration files should be similar to these.
 
     ``` shell
     --8<--
-    examples/campus-fabric/intended/configs/LEAF3A.cfg
+    ansible_collections/arista/avd/examples/campus-fabric/intended/configs/LEAF3A.cfg
     --8<--
     ```
 
@@ -362,7 +362,7 @@ Your configuration files should be similar to these.
 
     ``` shell
     --8<--
-    examples/campus-fabric/intended/configs/LEAF3B.cfg
+    ansible_collections/arista/avd/examples/campus-fabric/intended/configs/LEAF3B.cfg
     --8<--
     ```
 
@@ -370,7 +370,7 @@ Your configuration files should be similar to these.
 
     ``` shell
     --8<--
-    examples/campus-fabric/intended/configs/LEAF3C.cfg
+    ansible_collections/arista/avd/examples/campus-fabric/intended/configs/LEAF3C.cfg
     --8<--
     ```
 
@@ -378,7 +378,7 @@ Your configuration files should be similar to these.
 
     ``` shell
     --8<--
-    examples/campus-fabric/intended/configs/LEAF3D.cfg
+    ansible_collections/arista/avd/examples/campus-fabric/intended/configs/LEAF3D.cfg
     --8<--
     ```
 
@@ -386,7 +386,7 @@ Your configuration files should be similar to these.
 
     ``` shell
     --8<--
-    examples/campus-fabric/intended/configs/LEAF3E.cfg
+    ansible_collections/arista/avd/examples/campus-fabric/intended/configs/LEAF3E.cfg
     --8<--
     ```
 
