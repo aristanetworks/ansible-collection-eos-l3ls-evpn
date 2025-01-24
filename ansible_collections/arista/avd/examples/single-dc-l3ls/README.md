@@ -222,7 +222,7 @@ all:
 
    - Please note that the username (`ansible`) and password (`ansible`) defined here must exist in CloudVision.
 
-   - More information is available [here](https://avd.sh/en/stable/roles/eos_config_deploy_cvp/index.html?h=is_deployed#inputs)
+   - More information is available [here](https://avd.arista.com/stable/roles/eos_config_deploy_cvp/index.html?h=is_deployed#inputs)
 
 2. `NETWORK_SERVICES`
 
