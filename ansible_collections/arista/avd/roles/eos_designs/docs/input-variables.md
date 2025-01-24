@@ -147,7 +147,7 @@ IDs will be automatically assigned according to the configured algorithm.
     It is strongly encouraged to use the same Node ID algorithm for all devices in the fabric.
     Using different algorithms for groups of devices may lead to duplicates or inconsistent allocations.
 
-    The pool manager will not change IDs if already set under the node settings,
+    The pool manager will not change IDs if they are already set under the node settings,
     so it is possible to enable the pool manager on an existing inventory without changes.
 
 --8<--
