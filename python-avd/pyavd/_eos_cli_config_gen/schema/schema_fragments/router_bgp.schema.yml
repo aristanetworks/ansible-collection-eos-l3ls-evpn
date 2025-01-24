@@ -1439,6 +1439,9 @@ keys:
                     - "mpls"
                     - "path-selection"
                   description: Transport encapsulation for the peer-group.
+                next_hop_self_source_interface:
+                  description: Source interface name for MPLS encapsulation. Requires `encapsulation` to be set as `mpls`.
+                  type: str
                 additional_paths:
                   type: dict
                   $ref: "eos_cli_config_gen#/$defs/bgp_additional_paths"

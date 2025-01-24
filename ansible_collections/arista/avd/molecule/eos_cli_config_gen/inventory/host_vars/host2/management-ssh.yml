@@ -1,5 +1,7 @@
 ---
 management_ssh:
+  authentication:
+    empty_passwords: permit
   cipher:
     - aes256-cbc
     - aes256-ctr
@@ -21,7 +23,7 @@ management_ssh:
   idle_timeout: 15
   connection:
     limit: 55
-  enable: true
+  enable: false
   vrfs:
     - name: mgt
       enable: true

@@ -69,14 +69,17 @@ l3leaf:
   defaults:
     # Set to test automatic uplink/downlink allocation
     max_parallel_uplinks: 2
-    loopback_ipv4_pool: 192.168.255.0/24
+    # Testing multiple pools and ranges to represent 192.168.255.0-192.168.255.200. This will break into multiple entries in the EVPN overlay prefix-list.
+    loopback_ipv4_pool: 192.168.255.0-192.168.255.3, 192.168.255.4/30, 192.168.255.8-192.168.255.200
     loopback_ipv4_offset: 8
-    vtep_loopback_ipv4_pool: 192.168.254.0/24
+    # Testing multiple pools and ranges to represent 192.168.254.0-192.168.254.200. This will break into multiple entries in the EVPN overlay prefix-list.
+    vtep_loopback_ipv4_pool: 192.168.254.0-192.168.254.127, 192.168.254.128/26, 192.168.254.192-192.168.254.200
     # Commented out for automatic uplink allocation
     # uplink_interfaces: ['Ethernet1', 'Ethernet2', 'Ethernet3', 'Ethernet4']
     uplink_switches: ['DC1-SPINE1', 'DC1-SPINE2', 'DC1-SPINE3', 'DC1-SPINE4']
     max_uplink_switches: 8
-    uplink_ipv4_pool: 172.31.254.0/23
+      # Testing multiple pools and ranges to represent 172.31.254.0/23
+    uplink_ipv4_pool: 172.31.254.0/30, 172.31.254.4-172.31.254.127, 172.31.254.128/25, 172.31.255.0/24
     uplink_interface_speed: forced 100gfull
     bgp_defaults: ['distance bgp 20 200 200']
     platform: 7280R
@@ -94,8 +97,10 @@ l3leaf:
     filter:
       tenants: [ Tenant_A, Tenant_B, Tenant_C, Tenant_D ]
       tags: [ opzone, web, app, db, vmotion, nfs, v6wan, v6opzone ]
-    mlag_peer_l3_ipv4_pool: 10.255.251.0/24
-    mlag_peer_ipv4_pool: 10.255.252.0/24
+    # Testing multiple pools and ranges to represent 10.255.251.0/24
+    mlag_peer_l3_ipv4_pool: 10.255.251.0/29, 10.255.251.8-10.255.251.127, 10.255.251.128/25
+    # Testing multiple pools and ranges to represent 10.255.252.0/24
+    mlag_peer_ipv4_pool: 10.255.252.0/29, 10.255.252.8-10.255.252.127, 10.255.252.128/25
   node_groups:
     - group: DC1_LEAF1
       platform: VEOS

@@ -37,6 +37,7 @@ router_msdp:
       originator_id_local_interface: Loopback12
       rejected_limit: 10
       connection_retry_interval: 10
+      forward_register_packets: true
       group_limits:
         - limit: 22
           source_prefix: 10.0.22.0/24
@@ -53,3 +54,11 @@ router_msdp:
             out_list: ACL4
           description: Some other kind of MSDP Peer
           sa_limit: 100
+        - ipv4_address: 2.3.4.6
+          default_peer:
+            enabled: true
+            prefix_list: PL1
+          mesh_groups:
+            - name: MG1
+            - name: MG2
+          disabled: true

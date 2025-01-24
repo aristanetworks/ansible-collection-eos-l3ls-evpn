@@ -1,0 +1,38 @@
+---
+ip_name_server_groups:
+  - name: mynameserver1
+    ip_domain_list: domain-list1
+    dns_domain: arista.avd.com
+    name_servers:
+      - ip_address: 8.8.8.8
+        vrf: vrf1
+      - ip_address: 1.1.1.1
+        vrf: default
+      - ip_address: 2.2.2.2
+        vrf: vrf1
+        priority: 1
+      - ip_address: 2.2.2.1
+        vrf: vrf1
+      - ip_address: 2.2.2.4
+        vrf: vrf1
+        priority: 4
+      - ip_address: 2.2.2.6
+        vrf: b_vrf
+        priority: 3
+      - ip_address: 2.2.2.7
+        vrf: a_vrf
+        priority: 3
+
+  - name: mynameserver0
+    name_servers:
+      - ip_address: 8.8.8.8
+        vrf: default
+      - ip_address: 1.1.1.1
+        vrf: default
+        priority: 0
+      - ip_address: 2.2.2.2
+        vrf: default
+        priority: 1
+
+  - name: mynameserver2
+    dns_domain: anta.avd.com

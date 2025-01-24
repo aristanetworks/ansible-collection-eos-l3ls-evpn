@@ -330,6 +330,9 @@ class AvdSchemaStr(AvdSchemaBaseModel):
         ipv6_cidr = "ipv6_cidr"
         ip = "ip"
         cidr = "cidr"
+        ip_pool = "ip_pool"
+        ipv4_pool = "ipv4_pool"
+        ipv6_pool = "ipv6_pool"
         mac = "mac"
 
         def __str__(self) -> str:

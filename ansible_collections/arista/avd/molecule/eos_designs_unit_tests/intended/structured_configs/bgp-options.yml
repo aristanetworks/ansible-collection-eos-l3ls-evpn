@@ -42,8 +42,8 @@ router_bgp:
     internal_routes: 200
     local_routes: 200
   maximum_paths:
-    paths: 4
-    ecmp: 4
+    paths: 600
+    ecmp: 600
   updates:
     wait_install: true
   bgp:

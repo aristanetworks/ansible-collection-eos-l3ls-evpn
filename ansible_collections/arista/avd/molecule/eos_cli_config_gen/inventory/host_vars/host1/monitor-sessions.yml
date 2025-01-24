@@ -18,6 +18,8 @@ monitor_sessions:
     header_remove_size: 32
     truncate:
       enabled: true
+    rate_limit_per_ingress_chip: 100 kbps
+    rate_limit_per_egress_chip: 100 kbps
   - name: myMonitoringSession2
     sources:
       - name: Ethernet12
@@ -41,6 +43,9 @@ monitor_sessions:
       type: ip
       name: ipv4ACL
     sample: 50
+    truncate:
+      enabled: true
+      size: 100
   - name: myMonitoringSession3
     sources:
       - name: Ethernet20
