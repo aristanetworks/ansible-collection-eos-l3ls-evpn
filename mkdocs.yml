@@ -74,7 +74,20 @@ plugins:
       glob:
         - README.md
         - contributing.md
+        - ansible_collections/arista/avd/bindep.txt
+        - ansible_collections/arista/avd/CHANGELOG.rst
+        - ansible_collections/arista/avd/CNAME
+        - ansible_collections/arista/avd/collections.yml
+        - ansible_collections/arista/avd/galaxy.yml
+        - ansible_collections/arista/avd/LICENSE
+        - ansible_collections/arista/avd/pylintrc
+        - ansible_collections/arista/avd/pytest.ini
         - ansible_collections/arista/avd/README.md
+        - ansible_collections/arista/avd/requirements-dev.txt
+        - ansible_collections/arista/avd/requirements.txt
+        - ansible_collections/arista/avd/meta/*
+        - ansible_collections/arista/avd/playbooks/*
+        - ansible_collections/arista/avd/plugins/*
         - ansible_collections/arista/avd/changelogs/*
         - ansible_collections/arista/avd/molecule/*
         - ansible_collections/arista/avd/tests/*
@@ -99,6 +112,7 @@ plugins:
         - 'ansible_collections\/arista\/avd\/examples\/single-dc-l3ls\/documentation\/devices\/((?!dc1-leaf1a.md).*)'
         - '.*.py$'
         - '.*.pyc$'
+        - '.*.j2$'
   - include_dir_to_nav
   - git-revision-date-localized:
       type: date
