@@ -1,0 +1,17 @@
+---
+fabric_name: FABRIC_ID_STATIC_AND_POOL_MANAGER
+type: l2leaf
+
+fabric_numbering:
+  node_id:
+    algorithm: pool_manager
+
+l2leaf:
+  nodes:
+    - name: id-static-and-pool-manager
+      id: 0
+
+expected_error_message: >-
+  When 'fabric_numbering.node_id.algorithm' is set to 'pool_manager', any 'id' set for the node will be reserved in the pool if possible.
+  Unfortunately the 'id: 0' is not available in the Node ID pool at this time. The 'id' setting must either be removed or changed.
+  If you prefer to keep the 'id' setting, the next available value is 1 for host 'id-static-and-pool-manager'.
