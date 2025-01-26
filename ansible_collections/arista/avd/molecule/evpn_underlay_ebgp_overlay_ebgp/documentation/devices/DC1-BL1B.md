@@ -104,7 +104,7 @@ ip name-server vrf MGMT 192.168.200.5
 
 | HTTP | HTTPS | UNIX-Socket | Default Services |
 | ---- | ----- | ----------- | ---------------- |
-| False | True | False | - |
+| False | True | - | - |
 
 #### Management API VRF Access
 

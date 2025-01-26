@@ -96,7 +96,7 @@ ip domain-list structured-config.set.under.vrf.common-vrf
 
 | HTTP | HTTPS | UNIX-Socket | Default Services |
 | ---- | ----- | ----------- | ---------------- |
-| False | True | False | - |
+| False | True | - | - |
 
 #### Management API VRF Access
 

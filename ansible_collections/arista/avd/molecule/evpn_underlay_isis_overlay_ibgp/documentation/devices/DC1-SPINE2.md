@@ -106,7 +106,7 @@ ntp server vrf MGMT 192.168.200.5 prefer
 
 | HTTP | HTTPS | UNIX-Socket | Default Services |
 | ---- | ----- | ----------- | ---------------- |
-| False | True | False | - |
+| False | True | - | - |
 
 #### Management API VRF Access
 

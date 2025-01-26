@@ -136,7 +136,7 @@ ntp server vrf MGMT 0.pool.ntp.org prefer
 
 | HTTP | HTTPS | UNIX-Socket | Default Services |
 | ---- | ----- | ----------- | ---------------- |
-| False | True | False | - |
+| False | True | - | - |
 
 #### Management API VRF Access
 

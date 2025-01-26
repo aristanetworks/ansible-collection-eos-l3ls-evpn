@@ -81,7 +81,7 @@ interface Management1
 
 | HTTP | HTTPS | UNIX-Socket | Default Services |
 | ---- | ----- | ----------- | ---------------- |
-| False | True | False | - |
+| False | True | - | - |
 
 #### Management API VRF Access
 
