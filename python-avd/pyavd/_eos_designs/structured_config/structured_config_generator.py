@@ -125,4 +125,4 @@ class StructuredConfigGenerator(AvdFacts):
     @classmethod
     def structured_config_methods(cls) -> list[Callable[[Self], None]]:
         """Return the list of methods decorated with 'structured_config_contributor'."""
-        return [method for key in cls._keys() if hasattr(method := getattr(cls, key), "_is_structured_config_contributor")]
+        return [method for key in cls._keys() if getattr(method := getattr(cls, key), "_is_structured_config_contributor", False)]
