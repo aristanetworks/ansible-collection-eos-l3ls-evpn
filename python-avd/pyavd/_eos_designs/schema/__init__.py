@@ -173,7 +173,7 @@ class EosDesigns(EosDesignsRootModel):
                 "structured_config": {"type": StructuredConfig},
                 "_custom_data": {"type": dict},
             }
-            name: str | None
+            name: str
             """Name of peer group."""
             password: str | None
             """Type 7 encrypted password."""
@@ -191,7 +191,7 @@ class EosDesigns(EosDesignsRootModel):
                 def __init__(
                     self,
                     *,
-                    name: str | None | UndefinedType = Undefined,
+                    name: str | UndefinedType = Undefined,
                     password: str | None | UndefinedType = Undefined,
                     bfd: bool | UndefinedType = Undefined,
                     structured_config: StructuredConfig | UndefinedType = Undefined,

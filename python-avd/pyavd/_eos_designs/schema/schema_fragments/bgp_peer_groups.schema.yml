@@ -46,6 +46,7 @@ keys:
           name:
             type: str
             description: Name of peer group.
+            required: true
           password:
             type: str
             description: Type 7 encrypted password.

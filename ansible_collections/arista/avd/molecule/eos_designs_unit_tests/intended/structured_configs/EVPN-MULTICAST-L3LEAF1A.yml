@@ -325,6 +325,7 @@ router_bgp:
     remote_as: '65101'
     description: EVPN-MULTICAST-L3LEAF1B
     next_hop_self: true
+    send_community: all
     maximum_routes: 12000
     route_map_in: RM-MLAG-PEER-IN
   - name: IPv4-UNDERLAY-PEERS
