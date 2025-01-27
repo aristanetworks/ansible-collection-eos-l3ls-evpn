@@ -156,7 +156,6 @@ class RouterBgpMixin(UtilsMixin):
                         vrf.bgp.structured_config, list_merge=self.custom_structured_configs.list_merge_strategy
                     )
 
-
                 vrf_address_families = {af for af in vrf.address_families if af in self.shared_utils.overlay_address_families}
                 if self.shared_utils.is_wan_vrf(vrf.name):
                     # If the VRF is a WAN VRF, EVPN RTs are needed.
