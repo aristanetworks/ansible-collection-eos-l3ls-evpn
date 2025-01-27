@@ -286,7 +286,7 @@ class RouterBgpMixin(UtilsMixin):
         vrf_rt = self.get_vrf_rt(vrf)
         route_targets = {"import": [], "export": []}
 
-        for af in vrf_address_families:
+        for af in sorted(vrf_address_families):
             if (target := get_item(route_targets["import"], "address_family", af)) is None:
                 route_targets["import"].append({"address_family": af, "route_targets": [vrf_rt]})
             else:
