@@ -21219,6 +21219,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         _fields: ClassVar[dict] = {
             "enable_http": {"type": bool},
             "enable_https": {"type": bool},
+            "enable_unix": {"type": bool},
             "https_ssl_profile": {"type": str},
             "default_services": {"type": bool},
             "enable_vrfs": {"type": EnableVrfs},
@@ -21227,6 +21228,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         }
         enable_http: bool | None
         enable_https: bool | None
+        enable_unix: bool | None
         https_ssl_profile: str | None
         """SSL Profile Name."""
         default_services: bool | None
@@ -21244,6 +21246,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 *,
                 enable_http: bool | None | UndefinedType = Undefined,
                 enable_https: bool | None | UndefinedType = Undefined,
+                enable_unix: bool | None | UndefinedType = Undefined,
                 https_ssl_profile: str | None | UndefinedType = Undefined,
                 default_services: bool | None | UndefinedType = Undefined,
                 enable_vrfs: EnableVrfs | UndefinedType = Undefined,
@@ -21259,6 +21262,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 Args:
                     enable_http: enable_http
                     enable_https: enable_https
+                    enable_unix: enable_unix
                     https_ssl_profile: SSL Profile Name.
                     default_services: Enable default services: capi-doc and tapagg.
                     enable_vrfs: Subclass of AvdIndexedList with `EnableVrfsItem` items. Primary key is `name` (`str`).

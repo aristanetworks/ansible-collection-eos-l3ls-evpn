@@ -922,9 +922,9 @@ management console
 
 #### Management API HTTP Summary
 
-| HTTP | HTTPS | Default Services |
-| ---- | ----- | ---------------- |
-| False | True | True |
+| HTTP | HTTPS | UNIX-Socket | Default Services |
+| ---- | ----- | ----------- | ---------------- |
+| False | True | True | True |
 
 Management HTTPS is using the SSL profile SSL_PROFILE
 
@@ -944,6 +944,7 @@ HTTPS certificate and private key are configured.
 management api http-commands
    protocol https
    no protocol http
+   protocol unix-socket
    default-services
    protocol https ssl profile SSL_PROFILE
    no shutdown
